@@ -186,7 +186,11 @@ class HTTP_WebDAV_Server
         $uri .= $this->_SERVER["SCRIPT_NAME"];
 
         // HostEurope hack
-        if (isset($this->_SERVER["HTTP_VIA"]) && isset($this->_SERVER["HTTP_X_FORWARDED_HOST"])) {
+        /* if (isset($this->_SERVER["HTTP_VIA"]) && isset($this->_SERVER["HTTP_X_FORWARDED_HOST"])) { */
+        /*     $uri = '/'.$this->_SERVER["HTTP_HOST"].$uri; */
+        /* } */
+        if (isset($this->_SERVER["HTTP_X_FORWARDED_HOST"]) &&
+            $this->_SERVER["HTTP_X_FORWARDED_HOST"] == "ssl.webpack.de") {
             $uri = '/'.$this->_SERVER["HTTP_HOST"].$uri;
         }
 
