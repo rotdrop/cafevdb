@@ -1,0 +1,47 @@
+RewriteEngine On
+RewriteCond %{REMOTE_ADDR} !^10\.9\.0\.(8|9|10)$
+RewriteRule ^ https://ssl.webpack.de/%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+#SSLRequireSSL doesn't work, because auth comes before redirect
+Options -Indexes
+<Files "*~">
+  Order deny,allow
+  Deny from all
+</Files>
+<Files "#*">
+  Order deny,allow
+  Deny from all
+</Files>
+
+#
+# Set
+#
+# AllowOverride FileInfo
+#
+# to enable parsing off this file
+#
+php_flag file_uploads on
+php_flag log_errors on
+php_flag magic_quotes_gpc off
+php_flag magic_quotes_runtime off
+php_flag register_globals off
+php_flag short_open_tag on
+php_flag track_vars on
+php_flag display_errors off
+# E_ALL & ~E_NOTICE & ~E_STRICT = 8191 - 8 - 2048 = 6135
+php_value error_reporting 6135
+php_value max_execution_time 90
+php_value memory_limit 256M
+php_value session.gc_maxlifetime 14400
+php_value upload_max_filesize 64M
+php_value post_max_size 65M
+# session handling: now the check for expired sessions is done on every 10th session creation
+php_flag session.use_trans_sid Off
+php_value session.gc_probability 1
+php_value session.gc_divisor 10
+# multibyte extension: needed for utf-8
+php_value mbstring.func_overload 7
+
+php_value include_path ".:/is/htdocs/wp1173590_IDUP6S1903/pear/php:/usr/share/pear/php5.3"
+
+#SetEnv BLAH "/is/htdocs/wp1173590_IDUP6S1903"
+SetEnv PHP_PEAR_SYSCONF_DIR "/is/htdocs/wp1173590_IDUP6S1903/pear"
