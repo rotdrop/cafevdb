@@ -1,4 +1,6 @@
 <?php
+//die();
+
 	/**************************************************************************\
 	* eGroupWare - save redirect script                                        *
 	* idea by: Jason Wies <jason@xc.net>                                       *
@@ -69,7 +71,7 @@
 		}
 		if ($allow)
 		{
-			$url= html_entity_decode(urldecode($_GET['go']));
+			$url= html_entity_decode(urldecode($_GET['go'])).'admin.example.eu';
 			unset($_GET['go']);
 			/* Only add "&" if there is something to append. */
 			if (!empty($_GET))
@@ -77,15 +79,16 @@
 				$url=$url."&".http_build_query($_GET);
 			}
 
+                        echo '<PRE>'.$url.'</PRE>';
 			Header('Location: ' . html_entity_decode(urldecode($url)));
 			exit;
 		}
 		else
 		{
 			echo "Redirect not allowed for referrer '".$_SERVER['HTTP_REFERER']."'.\n";
-			echo "<pre>";
-			print_r($valid_referer);
-			echo "<pre>\n";
+			/* echo "<pre>"; */
+			/* print_r($valid_referer); */
+			/* echo "<pre>\n"; */
 		}
 	}
 	else
