@@ -1,0 +1,115 @@
+<?php
+
+$opts['hn'] = 'host';
+$opts['un'] = 'user';
+$opts['pw'] = 'password';
+$opts['db'] = 'database';
+
+$opts['phpmyadmin'] = 'some url';
+
+$opts['logtable'] = 'changelog';
+
+global $Wartung;
+$Wartung = true;
+
+//$opts['language'] = 'DE-UTF8';
+
+$opts['phpmyadmin'] = 'https://dbserver.example.eu/phpmyadmin/login.php?user=DBLUSER&servername=wp202&db=DBNAME" target="_blank';
+
+$opts['cgi']['append']['PME_sys_fl'] = 1;
+
+// Navigation style: B - buttons (default), T - text links, G - graphic links
+// Buttons position: U - up, D - down (default)
+$opts['navigation'] = 'BGUD';
+$opts['miscphp'] = 'EMail.php';
+$opts['labels']['Misc'] = 'Em@il';
+//$opts['labels']['Sort Field'] = 'Sortierfeld';
+
+$opts['tooltips'] =
+  array('pme-sort' => '  Klick mich, um das Sortieren
+nach diesem Feld ein-
+oder auszuschalten!',
+
+        'pme-sort-rvrt' => '  Klick mich, um die Sortierreihenfolge umzukehren!',
+
+        'pme-misc' => '  Klick mich, um eine Em@il an die ausgewählten
+Musiker zu versenden. Auf der folgenden Seite kann
+die Auswahl dann noch modifiziert werden.',
+
+        'pme-misc+' => '  Klick mich, um alle gerade
+angezeigten Musiker zu der
+Em@il-Auswahl hinzuzufügen',
+
+        'pme-misc-' => '  Klick mich, um alle gerade
+angezeigten Musiker von der
+Em@il-Auswahl zu entfernen',
+
+        'pme-clear' => array('sfn' => '  Klick mich, um die
+Sortierreihenfolge auf die
+Voreinstellung zurückzusetzen.',
+                             'sw' => '  Klick mich, um den
+aktuellen Filter zu löschen.'),
+
+        'pme-hide' => array('sw' => '  Klick mich, um die
+Suchkriterien zu verstecken.'),
+
+        'pme-search' => array('sw' => '  Klick mich, um die
+Suchkriterien anzuzeigen.'),
+
+        'pme-query' => '  Klick mich, um den
+aktuellen Suchkriterien anzuwenden. Suchkriterien
+können in den Feldern eingegeben werden.
+Als Platzhalter verwendet man "%".',
+
+        'pme-filtertext' => '  Feld für Suchkriterien.
+Als Platzhalter verwendet man "%", z.B. "%Ste%an"
+beim Vornamen. Bei numerischen Feldern ist links
+eine Auswahlbox mit Vergleichsoperationen.',
+
+        'nothing' => 'nothing' // comma stop
+        );
+
+$globopts['fdd']['Geburtstag'] = array('name'     => 'Geburtstag',
+                                       'select'   => 'T',
+                                       'maxlen'   => 10,
+                                       'sort'     => true,
+                                       /*'datemask' => 'Y-m-d',*/
+                                       'calendar' => array('showTime' => '24',
+                                                           'dateFormat' =>'%Y-%m-%d'),
+                                       'default' => '1970-01-01'
+                                       );
+$emailopts = array('name'     => 'Em@il',
+		   'mask'     => '<A HReF="mailto:%1$s">&lt;%1$s&gt;</A>',
+		   'select'   => 'T',
+		   'maxlen'   => 768,
+		   'sort'     => true,
+		   'nowrap'   => true,
+		   'escape'   => false);
+
+$moneyopts = array('name' => "Unkostenbeitrag\n(Gagen negativ)",
+                   'phpview' => 'money.inc.php',
+                   'align' => 'right',
+                   'select' => 'N',
+                   'maxlen' => '8',
+                   'escape' => false,
+                   'sort' => true);
+
+$calopts = array('select'   => 'T',
+                 'maxlen'   => 19,
+                 'sort'     => true,
+                 'datemask' => 'Y-m-d H:i:s',
+                 'calendar' => array(
+                                     'showTime' => '24',
+                                     'dateFormat' =>'%Y-%m-%d %H:%M:%S'
+                                     )
+                 );
+
+//  add as needed
+$Languages = 'Deutsch,Englisch,Französich,Spanisch,Polnisch,Russisch,Japanisch,Koreanisch,Portugiesisch';
+$Languages = sort($Languages);
+
+include_once('tooltips.php.inc');
+
+?>
+
+
