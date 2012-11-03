@@ -951,6 +951,8 @@ class groupdav_principals extends groupdav_handler
 		return $this->add_principal($name, array(
 			'getetag' => $this->get_resource_etag($resource),
 			'displayname' => $displayname,
+			'calendar-home-set' => HTTP_WebDAV_Server::mkprop(groupdav::CALDAV,'calendar-home-set',array(
+				HTTP_WebDAV_Server::mkprop('href',$this->base_uri.'/'.$displayname.'/'))),
 			'calendar-user-address-set' => HTTP_WebDAV_Server::mkprop(groupdav::CALDAV,'calendar-user-address-set',array(
 				HTTP_WebDAV_Server::mkprop('href','urn:uuid:'.common::generate_uid('resources', $resource['res_id'])),
 				HTTP_WebDAV_Server::mkprop('href',$this->base_uri.'/principals/'.$name.'/'))),
