@@ -9,6 +9,10 @@
  * @license http://opensource.org/licenses/gpl-license.php GPL - GNU General Public License
  * @version $Id: index.php 32205 2010-09-18 17:11:47Z ralfbecker $
  */
+ini_set('include_path',
+        ini_get('include_path').
+        PATH_SEPARATOR.
+        '/is/htdocs/wp1173590_IDUP6S1903/pear/php');
 
 $GLOBALS['DEBUG'] = False;
 include('./inc/functions.inc.php');
