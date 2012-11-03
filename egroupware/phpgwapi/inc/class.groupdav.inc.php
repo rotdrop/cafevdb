@@ -264,15 +264,32 @@ class groupdav extends HTTP_WebDAV_Server
 		}
 		else
 		{
-			$this->current_user_principal = (@$_SERVER["HTTPS"] === "on" ? "https:" : "http:") .
-				'//' . $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'] . '/';
+                  // HostEurope hack
+                  //echo '<PRE>';
+		  //print_r($this->_SERVER);
+		  //echo '</PRE>';
+
+                  // if (isset($this->_SERVER["HTTP_VIA"]) &&
+                  //    isset($this->_SERVER["HTTP_X_FORWARDED_HOST"])) {
+                  if (isset($this->_SERVER["HTTP_X_FORWARDED_HOST"]) &&
+                      $this->_SERVER["HTTP_X_FORWARDED_HOST"] == "ssl.webpack.de") {
+                    $this->current_user_principal =
+                      'https://'.$this->_SERVER["HTTP_X_FORWARDED_HOST"].'/'
+                      .$_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'] . '/';
+                    //echo '<PRE>.$this->current_user_principal.'<BR/></PRE>';
+                  } else {
+                    $this->current_user_principal = (@$_SERVER["HTTPS"] === "on" ? "https:" : "http:") .
+                      '//' . $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'] . '/';
+                  }
 		}
 		$this->current_user_principal .= 'principals/users/'.$GLOBALS['egw_info']['user']['account_lid'].'/';
+                //echo '<PRE>principal: '.$this->current_user_principal.'</PRE>';
 
 		// if client requires pathes instead of URLs
 		if (!$this->client_require_href_as_url)
 		{
-			$this->current_user_principal = parse_url($this->current_user_principal,PHP_URL_PATH);
+                  $this->current_user_principal = parse_url($this->current_user_principal,PHP_URL_PATH);
+                  //echo '<PRE>principal2: '.$this->current_user_principal.'</PRE>';
 		}
 		$this->accounts = $GLOBALS['egw']->accounts;
 	}
@@ -942,6 +959,7 @@ class groupdav extends HTTP_WebDAV_Server
 		$path = '/groupdav.php';
 		foreach(explode('/',$this->_unslashify($options['path'])) as $n => $name)
 		{
+                  //                                    echo '<PRE>Name: '.$name.'</PRE>';
 			$path .= ($n != 1 ? '/' : '').$name;
 			echo html::a_href(htmlspecialchars($name.'/'),$path);
 		}
@@ -957,6 +975,11 @@ class groupdav extends HTTP_WebDAV_Server
 			//'DAV:current-user-privilege-set' => 'current-user-privilege-set',
 			//'DAV:getcontentlength' => 'Size',
 		);
+
+//echo '<PRE>';
+//print_r($files);
+//echo '</PRE>';
+
 		$n = 0;
 		foreach($files['files'] as $file)
 		{
