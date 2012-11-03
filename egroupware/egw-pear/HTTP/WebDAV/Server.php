@@ -185,6 +185,11 @@ class HTTP_WebDAV_Server
         }
         $uri .= $this->_SERVER["SCRIPT_NAME"];
 
+        // HostEurope hack
+        if (isset($this->_SERVER["HTTP_VIA"]) && isset($this->_SERVER["HTTP_X_FORWARDED_HOST"])) {
+            $uri = '/'.$this->_SERVER["HTTP_HOST"].$uri;
+        }
+
         // WebDAV has no concept of a query string and clients (including cadaver)
         // seem to pass '?' unencoded, so we need to extract the path info out
         // of the request URI ourselves
