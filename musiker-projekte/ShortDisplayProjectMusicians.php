@@ -3,7 +3,10 @@
   echo "<h3>Besetzung Projekt $Projekt</h3>
 <H4>Achtung: Musiker k&ouml;nnen hier entfernt werden, auch das Projekt-Instrument kann man &auml;ndern.
  Allerdings kann man Musiker <B>nicht</B> in andere Projekte verschieben. Um Daten (Tel. etc.) zu &auml;ndern, mu&szlig;
- man die detaillierte Ansicht ausw&auml;hlen (oder die Gesamt&uuml;bersicht &uuml;ber alle Musiker). Die Besetzungszahlen kann mit &uuml;ber den \"Instrumentation\"-Button oben ansehen (Ist-Besetzung) bzw. &auml;ndern (Soll-Besetzung).</H4>";
+ man die detaillierte Ansicht ausw&auml;hlen (oder die Gesamt&uuml;bersicht &uuml;ber alle Musiker). Die Besetzungszahlen kann mit &uuml;ber den \"Instrumentation\"-Button oben ansehen (Ist-Besetzung) bzw. &auml;ndern (Soll-Besetzung).
+<P>
+<span style=\"color:red\">Musiker können ausschließlich über die \"Detailed Display ...\"-Option hinzugefügt werden (siehe oben).</span>
+</H4>";
 
   /*
    * IMPORTANT NOTE: This generated file contains only a subset of huge amount
@@ -45,7 +48,7 @@
   // Options you wish to give the users
   // A - add,  C - change, P - copy, V - view, D - delete,
   // F - filter, I - initial sort suppressed
-  $opts['options'] = 'ACPVDFM';
+  $opts['options'] = 'CPVDFM';
 
   // Number of lines to display on multiple selection filters
   $opts['multiple'] = '4';
