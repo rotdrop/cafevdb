@@ -4,8 +4,10 @@
 
   echo <<<__EOT__
 <H4>Achtung: Musiker können hier nicht entfernt werden, außerdem kann
-man <EM>entweder</EM> das Projekt-Instrument zusammen mit den
-Projekt-Bemerkungen ändern <EM>oder</EM> die allgemeinen Musiker-Daten,
+man
+<EM style="color:red">entweder</EM>
+Projekt-bezogene Daten ändern
+<EM style="color:red">oder</EM> die allgemeinen Musiker-Daten,
 aber nicht beides zusammen. Änderungen werden an die zugrundeliegenden
 Musiker- und Projekt-Tabellen weiterreicht. In diesem Sinne ist diese
 Tabelle nur eine kombinierte "View" auf andere Tabellen.</H4>
