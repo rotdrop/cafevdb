@@ -10,7 +10,10 @@ Projekt-bezogene Daten ändern
 <EM style="color:red">oder</EM> die allgemeinen Musiker-Daten,
 aber nicht beides zusammen. Änderungen werden an die zugrundeliegenden
 Musiker- und Projekt-Tabellen weiterreicht. In diesem Sinne ist diese
-Tabelle nur eine kombinierte "View" auf andere Tabellen.</H4>
+Tabelle nur eine kombinierte "View" auf andere Tabellen.
+<P>
+<span style="color:red">Musiker für dieses Projekt können ausschließlich über die "Add more Musicians ..."-Option hinzugefügt werden (siehe oben).</span>
+</H4>
 __EOT__;
   
   /*
