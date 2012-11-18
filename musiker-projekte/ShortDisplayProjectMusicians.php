@@ -1,12 +1,22 @@
 <?php  
 
-  echo "<h3>Besetzung Projekt $Projekt</h3>
-<H4>Achtung: Musiker k&ouml;nnen hier entfernt werden, auch das Projekt-Instrument kann man &auml;ndern.
- Allerdings kann man Musiker <B>nicht</B> in andere Projekte verschieben. Um Daten (Tel. etc.) zu &auml;ndern, mu&szlig;
- man die detaillierte Ansicht ausw&auml;hlen (oder die Gesamt&uuml;bersicht &uuml;ber alle Musiker). Die Besetzungszahlen kann mit &uuml;ber den \"Instrumentation\"-Button oben ansehen (Ist-Besetzung) bzw. &auml;ndern (Soll-Besetzung).
-<P>
-<span style=\"color:red\">Musiker können ausschließlich über die \"Detailed Display ...\"-Option hinzugefügt werden (siehe oben).</span>
-</H4>";
+echo "<h3>Besetzung Projekt $Projekt</h3>";
+echo <<<__EOT__
+<H4><ul>
+<li><span style="color:red">Musiker hinzufügen</span>
+<span style="font-style:italic">"Add more Musicians to $Projekt"</span>
+<li><span style="color:red">Musiker entfernen</span>
+<span style="font-style:italic">diese Tabelle</span>
+("x"-Button)
+<li><span style="color:red">Projekt-Daten</span>
+<span style="font-style:italic">diese Tabelle</span>
+(Projekt-Instrument, Stimmführer, Projekt-Bemerkungen etc.)
+<li><span style="color:red">Personen-Daten</span>
+<span style="font-style:italic">"Detailed Display for $Projekt"</span>
+(Adresse, Email, Name etc.)
+</ul>
+</H4>
+__EOT__;
 
   /*
    * IMPORTANT NOTE: This generated file contains only a subset of huge amount

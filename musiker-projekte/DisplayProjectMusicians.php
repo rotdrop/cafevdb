@@ -155,6 +155,7 @@ __EOT__;
   $opts['fdd']['Instrument']['values'] = $Instrumente;
   $opts['fdd']['Instrument']['options'] = $ROopts;
   $opts['fdd']['Reihung'] = array('name' => 'Stimme',
+                                  'options' => $ROopts,
 				  'select' => 'N',
 				  'maxlen' => '3',
 				  'sort' => true);
@@ -162,11 +163,11 @@ __EOT__;
 				  'nowrap' => true,
 				  'select' => 'M',
 				  'maxlen' => 64,
-				  'options'  => 'CLFPVR', // auto increment
+				  'options'  => $ROopts,
 				  'sort' => 'true');
   $opts['fdd']['Familie']['values'] = $InstrumentenFamilie;
   $opts['fdd']['Stimmführer'] = array('name' => ' &alpha;',
-				      'options'  => 'LVCPD',
+				      'options'  => $ROopts,
 				      'select' => 'T',
 				      'maxlen' => '3',
 				      'escape' => false,
@@ -241,6 +242,7 @@ __EOT__;
                                'sort'     => true);
   $opts['fdd']['ProjektBemerkungen'] = array('name'     =>  'Bemerkungen ('.$Projekt.')',
 					     'select'   => 'T',
+                                             'options' => $ROopts,
 					     'maxlen'   => 65535,
                                              'css'      => array('postfix' => 'rem'),
 					     'textarea' => array('html' => 'Editor',
@@ -251,12 +253,15 @@ __EOT__;
 					     );
   $opts['fdd']['Unkostenbeitrag'] = $moneyopts;
   $opts['fdd']['Unkostenbeitrag']['name'] = "Unkostenbeitrag\n(Gagen negativ)";
+  $opts['fdd']['Unkostenbeitrag']['options'] = $ROopts;
+
 
   // Generate input fields for the extra columns
   foreach ($UserExtraFields as $field) {
     $name = $field['name'];    
     $opts['fdd']["$name"] = array('name' => $name.' ('.$Projekt.')',
 				  'select'   => 'T',
+                                  'options' => $ROopts,
 				  'maxlen'   => 65535,
 				  'textarea' => array('html' => 'NoEditor',
 						      'rows' => 2,
@@ -297,7 +302,9 @@ __EOT__;
   $opts['fdd']['Aktualisiert']['nowrap'] = true;
   $opts['fdd']['Aktualisiert']['options'] = 'LAVCPDR'; // Set by update trigger.
 
-  $opts['triggers']['update']['before'][0]  = 'BesetzungChangeInstrument.TUB.inc.php';
+// No need to check for the project-instrument any longer, as it can
+//no longer be changed here.
+//$opts['triggers']['update']['before'][0]  = 'BesetzungChangeInstrument.TUB.inc.php';
   $opts['triggers']['update']['before'][1]  = 'RemoveUnchanged.TUB.php.inc';
   $opts['triggers']['update']['before'][2]  = 'UpdateProjectMusicianTimestamp.TUB.php.inc';
 

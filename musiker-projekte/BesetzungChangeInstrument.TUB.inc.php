@@ -23,6 +23,11 @@ global $MusikerId;
 /* echo '</PRE> */
 /* '; */
 
+if (!isset($newvals['Instrument'])) {
+  // No need to check.
+  return true;
+}
+
 if ($MusikerId < 0) {
   if (isset($newvals['MusikerId'])) {
     $MusikerId = $newvals['MusikerId'];
