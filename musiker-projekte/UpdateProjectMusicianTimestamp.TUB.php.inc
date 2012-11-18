@@ -18,7 +18,7 @@ $stampkeys = array('AlleInstrumente',
                    'Name','Vorname',
                    'Email',
                    'Telefon','Telefon2',
-                   'Strasse','Postleitzahl','Start','Land',
+                   'Strasse','Postleitzahl','Stadt','Land',
                    'Sprachpräferenz','Geburtstag','Status',
                    'Bemerkung');
 
