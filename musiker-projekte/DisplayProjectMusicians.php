@@ -3,19 +3,21 @@
   echo "<h3>Besetzung Projekt $Projekt.</h3>";
 
   echo <<<__EOT__
-<H4>Achtung: Musiker können hier nicht entfernt werden, außerdem kann
-man
-<EM style="color:red">entweder</EM>
-Projekt-bezogene Daten ändern
-<EM style="color:red">oder</EM> die allgemeinen Musiker-Daten,
-aber nicht beides zusammen. Änderungen werden an die zugrundeliegenden
-Musiker- und Projekt-Tabellen weiterreicht. In diesem Sinne ist diese
-Tabelle nur eine kombinierte "View" auf andere Tabellen.
-<P>
-<span style="color:red">Musiker für dieses Projekt können ausschließlich über die "Add more Musicians ..."-Option hinzugefügt werden (siehe oben).</span>
+<H4><ul>
+<li><span style="color:red">Musiker entfernen:</span>
+<span style="font-style:italic">"Short Display for $Projekt"</span>
+<li><span style="color:red">Projekt-Daten</span>
+<span style="font-style:italic">"Short Display for $Projekt"</span>
+(Projekt-Instrument, Stimmführer, Projekt-Bemerkungen etc.)
+<li><span style="color:red">Personen-Daten</span>
+<span style="font-style:italic">diese Tabelle</span>
+(Adresse, Email, Name etc.)
+</ul>
 </H4>
 __EOT__;
-  
+
+  $ROopts = 'CLFPVR'; // read-only options for all project specific fields.
+
   /*
    * IMPORTANT NOTE: This generated file contains only a subset of huge amount
    * of options that can be used with phpMyEdit. To get information about all
@@ -151,6 +153,7 @@ __EOT__;
                                      'sort'     => true
                                      );
   $opts['fdd']['Instrument']['values'] = $Instrumente;
+  $opts['fdd']['Instrument']['options'] = $ROopts;
   $opts['fdd']['Reihung'] = array('name' => 'Stimme',
 				  'select' => 'N',
 				  'maxlen' => '3',
