@@ -154,7 +154,7 @@ $opts['fdd']['Id'] = array(
   'sort'     => true
 );
 $opts['fdd']['Name'] = array(
-  'name'     => 'Name',
+  'name'     => 'Projekt-Name',
   'select'   => 'T',
   'maxlen'   => 64,
   'sort'     => true,
