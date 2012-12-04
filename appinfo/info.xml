@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<info>
+	<id>cafevdb</id>
+	<name>Cafevdb</name>
+	<description>The Our Ensemble e.V.. project data-base application.</description>
+	<version>1.0</version>
+	<licence>Not for public use, contact the author.</licence>
+	<author>Claus-Justus Heine</author>
+	<require>4</require>
+</info>
