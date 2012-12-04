@@ -1,0 +1,15 @@
+SSLRequireSSL
+Options -Indexes
+<Files "*~">
+  Order deny,allow
+  Deny from all
+</Files>
+<Files "#*">
+  Order deny,allow
+  Deny from all
+</Files>
+
+AuthName "Our Ensemble e.V.."
+AuthType Basic
+AuthUserFile "/var/www/localhost/secrets/htpasswd.cafev"
+Require valid-user

@@ -1,0 +1,40 @@
+Changes from last version
+-------------------------
+Used phpMyEdit.class.php Version 1.215 - the latest in cvs
+Used phpMyEditSetup.php Version 1.51 - the latest in cvs
+Multiselect was not working in the previous version. Works in this.
+You will need to edit one line in phpMyEdit.class.php to suite your site.
+Line # 289 :
+                $base="http://www.yoursite.com/pme";
+
+Previous version Notes
+----------------------
+Currene versions of phpMyEdit.class.php and the mce-cal extensions, the calendar does not work, and it's a pain to get tinymce working.
+Here is a fully functional version of the base class which includes tinymce and jscal2. You don't need any extensions for this to work.
+Everything is bundled here. Unzip, set up your db, set up test table (see screenshot.png for the structure), edit test.php and change 
+db credentials and you should be ready to go. All of the jscal2 parameters should work.
+
+phpMyEdit class version : 1.215
+tinymce version: 3.4.5
+jscal version : jscal2-1.9
+
+phpMyEdit - http://www.phpmyedit.org/
+tinymce - http://www.tinymce.com/
+jscal - http://www.dynarch.com/projects/calendar/
+
+By default shows a calendar image next to the date field. If you don't want this modify phpMyEdit.class.php, lines:
+ if ($do_button) {
+                $base=(basename(dirname(__FILE__)));
+                echo '<button id="',$cal_ar['button'],'" style="background: url(',"'",$base,"/images/pme-calendar.png')",'">',$label,'</button>';
+            } else {
+                echo '<span style="cursor: pointer" id="',$cal_ar['button'],'">',$label,'</span>';
+            }
+to:
+            if ($do_button) {
+                echo '<button id="',$cal_ar['button'],'">',$label,'</button>';
+            } else {
+                echo '<span style="cursor: pointer" id="',$cal_ar['button'],'">',$label,'</span>';
+            }
+  
+-bugs/improvements/queries - onglipo@gmail.com
+
