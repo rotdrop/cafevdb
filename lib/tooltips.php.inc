@@ -4,7 +4,7 @@
  *
  */
 
-$opts['tooltips'] =
+self::$pmeopts['tooltips'] =
   array('pme-sort' => '  Klick mich, um das Sortieren
 nach diesem Feld ein-
 oder auszuschalten!',
