@@ -175,7 +175,7 @@ Störung.';
      ****************************************************************/
 
        // Now connect to the data-base
-    $dbh = CAFEVmyconnect($opts);
+    $dbh = CAFEVDB_mySQL::connect($opts);
 
     // Get the current list of instruments for the filter
     if ($ProjektId >= 0) {
@@ -212,7 +212,7 @@ Störung.';
   
 
   // Fetch the result or die
-  $result = CAFEVmyquery($query, $dbh);
+  $result = CAFEVDB_mySQL::query($query, $dbh);
 
   // Stuff all emails into one array for later usage.
   $NoMail = array();
@@ -233,7 +233,7 @@ Störung.';
   }
 
   // Not needed anymore
-  CAFEVmyclose($dbh);
+  CAFEVDB_mySQL::close($dbh);
 
     // Now define one huge form. This is really somewhat ugly.
     echo '
@@ -596,17 +596,17 @@ Unfortunately, attachments (if any) have to be specified again.
       }
       $logquery .= ")";
 
-      $handle = CAFEVmyconnect($opts);
+      $handle = CAFEVDB_mySQL::connect($opts);
 
       // Check for duplicates
       $loggedquery = "SELECT * FROM `SentEmail` WHERE";
       $loggedquery .= " `MD5Text` LIKE '$textMD5'";
       $loggedquery .= " AND `MD5BulkRecipients` LIKE '$bulkMD5'";
-      $result = CAFEVmyquery($loggedquery, $handle);
+      $result = CAFEVDB_mySQL::query($loggedquery, $handle);
       
       $cnt = 0;
       $loggedDates = '';
-      if ($line = CAFEVmyfetch($result)) {
+      if ($line = CAFEVDB_mySQL::fetch($result)) {
         $loggedDates .= ','.$line['Date'];
         ++$cnt;
       }
@@ -632,7 +632,7 @@ __EOT__;
         } else {
           // Log the message to our data-base
 
-          CAFEVmyquery($logquery, $handle);
+          CAFEVDB_mySQL::query($logquery, $handle);
 
         }
       } catch (Exception $e) {
@@ -642,7 +642,7 @@ __EOT__;
         echo "</PRE><HR/>\n";
       }
 
-      CAFEVmyclose($handle);
+      CAFEVDB_mySQL::close($handle);
 
       if (false) {
 	// Now, this is really the fault of our provider. Sad

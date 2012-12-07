@@ -63,13 +63,13 @@ class CAFEVmailFilter {
     $this->Table     = CAFEVcgiValue($this->mtabKey,'');
 
     // Now connect to the data-base
-    $dbh = CAFEVmyconnect($this->opts);
+    $dbh = CAFEVDB_mySQL::connect($this->opts);
 
     $this->getInstrumentsFromDB($dbh);
     $this->getMusiciansFromDB($dbh);
 
     // Not needed anymore
-    CAFEVmyclose($dbh);
+    CAFEVDB_mySQL::close($dbh);
 
     /* At this point we have the Email-List, either in global or project
      * context, and possibly a selection of Musicians by Id from the
@@ -239,7 +239,7 @@ __EOT__;
   ON `'.$this->Table.'`.`'.$this->MId.'` = `Besetzungen`.`MusikerId` WHERE 1';
 
       // Fetch the result or die and remap the Ids
-      $result = CAFEVmyquery($query, $dbh);
+      $result = CAFEVDB_mySQL::query($query, $dbh);
       $map = array();
       while ($line = mysql_fetch_assoc($result)) {
         $map[$line['BesetzungsId']] = $line['MusikerId'];
@@ -274,7 +274,7 @@ __EOT__;
     $query .= "0 ) AND NOT `".$this->Restrict."` LIKE '%Taktstock%'\n";
 
     // Fetch the result or die
-    $result = CAFEVmyquery($query, $dbh);
+    $result = CAFEVDB_mySQL::query($query, $dbh);
 
     /* Stuff all emails into one array for later usage, remember the Id in
      * order to combine any selection from the new "multi-select"
@@ -480,10 +480,10 @@ Anfangswerten.'));
         /* Ok, this means we must re-fetch some stuff from the DB */
         $this->filterSelect->setValue(array(0));
 
-        $dbh = CAFEVmyconnect($this->opts);
+        $dbh = CAFEVDB_mySQL::connect($this->opts);
         $this->getInstrumentsFromDB($dbh, array(0));
         $this->getMusiciansFromDB($dbh);
-        CAFEVmyclose($dbh);
+        CAFEVDB_mySQL::close($dbh);
         
         /* Now we need to reinstall the musicians into dualSelect */
         $this->dualSelect->loadOptions($this->EMailsDpy);

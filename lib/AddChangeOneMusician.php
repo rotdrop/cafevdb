@@ -224,28 +224,28 @@
   if ($saved_action == "AddOneMusician") {
 
     // Fetch all needed data from Musiker table
-    $handle = CAFEVmyconnect($opts);
+    $handle = CAFEVDB_mySQL::connect($opts);
 
     $musquery = "SELECT `Instrumente` FROM Musiker WHERE `Id` = $MusikerId";
-    $musres = CAFEVmyquery($musquery, $handle);
+    $musres = CAFEVDB_mySQL::query($musquery, $handle);
     $musnumrows = mysql_num_rows($musres);
 
     if ($musnumrows != 1) {
       CAFEVerror("Data inconsisteny, $MusikerId is not a unique Id");
     }
 
-    $musrow = CAFEVmyfetch($musres);
+    $musrow = CAFEVDB_mySQL::fetch($musres);
     $instruments = explode(',',$musrow['Instrumente']);
 
     $instquery = "SELECT `Besetzung` FROM `Projekte` WHERE `Id` = $ProjektId";
-    $instres = CAFEVmyquery($instquery, $handle);
+    $instres = CAFEVDB_mySQL::query($instquery, $handle);
     $instnumrows = mysql_num_rows($instres);
 
     if ($instnumrows != 1) {
       CAFEVerror("Data inconsisteny, $ProjektId is not a unique Id");
     }
 
-    $instrow = CAFEVmyfetch($instres);
+    $instrow = CAFEVDB_mySQL::fetch($instres);
     $instrumentation = explode(',',$instrow['Besetzung']);
 
     unset($musinst);
@@ -275,38 +275,38 @@ Choosing "'.$musinst.'" as instrument.<H4>';
     $prjquery = "INSERT INTO `Besetzungen` (`MusikerId`,`ProjektId`,`Instrument`)
  VALUES ('$MusikerId','$ProjektId','$musinst')";
 
-    CAFEVmyquery($prjquery, $handle);
-    CAFEVmyclose($handle);
+    CAFEVDB_mySQL::query($prjquery, $handle);
+    CAFEVDB_mySQL::close($handle);
 
   } else if ($forcedInstrument != false) {
     // Add to musicans list in Musiker data-base and to musician Besetzungen
 
     // Fetch all needed data from Musiker table
-    $handle = CAFEVmyconnect($opts);
+    $handle = CAFEVDB_mySQL::connect($opts);
 
     $musquery = "SELECT `Instrumente` FROM Musiker WHERE `Id` = $MusikerId";
 
-    $musres = CAFEVmyquery($musquery, $handle);
+    $musres = CAFEVDB_mySQL::query($musquery, $handle);
     $musnumrows = mysql_num_rows($musres);
 
     if ($musnumrows != 1) {
       die ("Data inconsisteny, $MusikerId is not a unique Id");
     }
 
-    $musrow = CAFEVmyfetch($musres);
+    $musrow = CAFEVDB_mySQL::fetch($musres);
     $instruments = $musrow['Instrumente'] . "," . $forcedInstrument;
     
     $musquery = "UPDATE `Musiker` SET `Instrumente`='$instruments'
  WHERE `Id` = $MusikerId";
   
-    CAFEVmyquery($musquery, $handle);
+    CAFEVDB_mySQL::query($musquery, $handle);
 
     $prjquery = "UPDATE `Besetzungen` SET `Instrument`='$forcedInstrument'
  WHERE `MusikerId` = $MusikerId AND `ProjektId` = $ProjektId";
 
-    CAFEVmyquery($prjquery, $handle);
+    CAFEVDB_mySQL::query($prjquery, $handle);
 
-    CAFEVmyclose();
+    CAFEVDB_mySQL::close();
   }
 
   require_once 'pme/phpMyEdit.class.php';

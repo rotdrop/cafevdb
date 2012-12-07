@@ -612,7 +612,7 @@ Unfortunately, attachments (if any) have to be specified again.
   }
   
   // Now insert the stuff into the SentEmail table  
-  $handle = CAFEVmyconnect($opts);
+  $handle = CAFEVDB_mySQL::connect($opts);
 
   $logquery = "INSERT INTO `SentEmail`
 (`user`,`host`,`BulkRecipients`,`MD5BulkRecipients`,`Cc`,`Bcc`,`Subject`,`HtmlBody`,`MD5Text`";
@@ -641,11 +641,11 @@ Unfortunately, attachments (if any) have to be specified again.
   $loggedquery = "SELECT * FROM `SentEmail` WHERE";
   $loggedquery .= " `MD5Text` LIKE '$textMD5'";
   $loggedquery .= " AND `MD5BulkRecipients` LIKE '$bulkMD5'";
-  $result = CAFEVmyquery($loggedquery, $handle);
+  $result = CAFEVDB_mySQL::query($loggedquery, $handle);
   
   $cnt = 0;
   $loggedDates = '';
-  if ($line = CAFEVmyfetch($result)) {
+  if ($line = CAFEVDB_mySQL::fetch($result)) {
     $loggedDates .= ','.$line['Date'];
     ++$cnt;
   }
@@ -671,7 +671,7 @@ __EOT__;
     } else {
       // Log the message to our data-base
       
-      CAFEVmyquery($logquery, $handle);
+      CAFEVDB_mySQL::query($logquery, $handle);
       
     }
   } catch (Exception $e) {
@@ -681,7 +681,7 @@ __EOT__;
     echo "</PRE><HR/>\n";
   }
 
-  CAFEVmyclose($handle);
+  CAFEVDB_mySQL::close($handle);
 
   if (false) {
     // Now, this is really the fault of our provider. Sad

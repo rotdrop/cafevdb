@@ -17,11 +17,11 @@ include('config.php.inc');
 include('functions.php.inc');
 include('Instruments.php');
 
-$handle = CAFEVmyconnect($opts);
+$handle = CAFEVDB_mySQL::connect($opts);
 
 sanitizeInstrumentsTable($handle);
 
-CAFEVmyclose($handle);
+CAFEVDB_mySQL::close($handle);
 
 echo '</body></html>';
 

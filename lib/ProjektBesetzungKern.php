@@ -34,7 +34,7 @@ $RecordsPerPage = $opts['cgi']['persist']['RecordsPerPage'];
 
 // Fetch some data we probably will need anyway
 
-$handle = CAFEVmyconnect($opts);
+$handle = CAFEVDB_mySQL::connect($opts);
 
 // List of instruments
 $Instrumente = fetchInstruments($handle);
@@ -54,7 +54,7 @@ if ($ProjektId >= 0) {
 /* checkInstruments($handle); */
 /* sanitizeInstrumentsTable($handle); */
 
-CAFEVmyclose($handle);
+CAFEVDB_mySQL::close($handle);
 
 if ($CAFEV_action == "DisplayProjectMusicians") {
 

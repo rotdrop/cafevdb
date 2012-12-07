@@ -17,7 +17,7 @@ include('config.php.inc');
 include('functions.php.inc');
 
 // Fetch the actual list of instruments, we will need it anyway
-$handle = CAFEVmyconnect($opts);
+$handle = CAFEVDB_mySQL::connect($opts);
 
 $Instruments = sql_multikeys('Musiker', 'Instrumente', $handle);
 
@@ -26,10 +26,10 @@ $Instruments = sql_multikeys('Musiker', 'Instrumente', $handle);
 
 foreach ($Instruments as $instr) {
   $query = 'ALTER TABLE `BesetzungsZahl` ADD COLUMN `'.$instr.'` TINYINT NOT NULL DEFAULT '0'";
-  $result = CAFEVmyquery($query, $handle); // simply ignore any error
+  $result = CAFEVDB_mySQL::query($query, $handle); // simply ignore any error
 }
 
-CAFEVmyclose($handle);
+CAFEVDB_mySQL::close($handle);
 
 echo '</body></html>';
 

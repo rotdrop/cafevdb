@@ -18,13 +18,13 @@ include('config.php.inc');
 
 // Connect to the data-base
 
-$handle = CAFEVmyconnect($opts);
+$handle = CAFEVDB_mySQL::connect($opts);
 
 // Fetch the list of projects
 $query = 'SELECT `Id` FROM `Projekte` WHERE 1';
-$result = CAFEVmyquery($query, $handle);
+$result = CAFEVDB_mySQL::query($query, $handle);
 
-while ($line = CAFEVmyfetch($result)) {
+while ($line = CAFEVDB_mySQL::fetch($result)) {
   $ProjektId = $line['Id'];
 
   print '<H4>Recreating view for project '.$ProjektId.'</H4><BR/>';
@@ -35,7 +35,7 @@ while ($line = CAFEVmyfetch($result)) {
   CAFEVerror("After Create ".$ProjektId, false);
 }
 
-CAFEVmyclose($handle);
+CAFEVDB_mySQL::close($handle);
 
 echo '</body></html>';
 

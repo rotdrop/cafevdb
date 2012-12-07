@@ -42,7 +42,7 @@ Projektbesetzung</A> hinzuf&uuml;gen:</B>
 
     if ($CAFEV_subaction == 'SyncInstrumentation') {
       // Ok, let's do it.
-      $handle = CAFEVmyconnect($opts);
+      $handle = CAFEVDB_mySQL::connect($opts);
       updateProjectInstrumentationFromMusicians($ProjektId, $handle, false /* don't replace */);
       echo '(wurde eingetragen)';
     } else {
@@ -120,9 +120,9 @@ Projektbesetzung</A> hinzuf&uuml;gen:</B>
   if ($ProjektId >= 0) {
     $opts['filters'] = "`ProjektId` = ".$ProjektId;
     // Also restrict the instruments to the instruments which are required for this project.
-    $handle = CAFEVmyconnect($opts);
+    $handle = CAFEVDB_mySQL::connect($opts);
     $ProjektInstrumente = fetchProjectInstruments($ProjektId, $handle);
-    CAFEVmyclose($handle);
+    CAFEVDB_mySQL::close($handle);
     if (count($ProjektInstrumente) == 0) {
       echo '<H4><span style="color:red">Keine Besetzung f&uuml;r das Projekt gefunden,
 bitte bei den <A HREF="Projekte.php?PME_sys_rec='.$ProjektId.'&PME_sys_operation=PME_op_Change">Projekteigenschaften</A> die Instrumente eintragen, oder mit dem Button oben die Instrumente der bereits "registrierten" Musiker automatisch eintragen lassen.</span></H4>';

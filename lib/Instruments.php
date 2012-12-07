@@ -1,6 +1,6 @@
 <?php
 
-class CAFEV_DB_Instruments
+class CAFEVDB_Instruments
 {
 
   // Sort the given list of instruments according to orchestral ordering
@@ -8,10 +8,10 @@ class CAFEV_DB_Instruments
   public static function sortInstrumentsOrchestral($list, $handle)
   {
     $query = 'SELECT `Instrument`,`Sortierung` FROM `Instrumente` WHERE  1 ORDER BY `Sortierung` ASC';
-    $result = CAFEV_DB_Util::myquery($query, $handle);
+    $result = CAFEVDB_mySQL::query($query, $handle);
   
     $final = array();
-    while ($line = CAFEV_DB_Util::myfetch($result)) {
+    while ($line = CAFEVDB_mySQL::fetch($result)) {
       $tblInst = $line['Instrument'];
       if (array_search($tblInst, $list) !== false) {
         $final[] = $tblInst;
@@ -25,10 +25,10 @@ class CAFEV_DB_Instruments
   public static function fetchProjectInstruments($ProjektId, $handle) {
 
     $query = 'SELECT `Besetzung` FROM `Projekte` WHERE `Id` = '.$ProjektId;
-    $result = CAFEV_DB_Util::myquery($query);
+    $result = CAFEVDB_mySQL::query($query);
 
     // Ok there should be only one row
-    if (!($line = CAFEV_DB_Util::myfetch($result))) {
+    if (!($line = CAFEVDB_mySQL::fetch($result))) {
       CAFEVerror("Could not fetch instruments for project", true);
     }
     $ProjInsts = explode(',',$line['Besetzung']);
@@ -43,10 +43,10 @@ class CAFEV_DB_Instruments
   public static function fetchProjectMusiciansInstruments($ProjektId, $handle)
   {
     $query = 'SELECT DISTINCT `Instrument` FROM `Besetzungen` WHERE `ProjektId` = '.$ProjektId;
-    $result = CAFEV_DB_Util::myquery($query);
+    $result = CAFEVDB_mySQL::query($query);
   
     $instruments = array();
-    while ($line = CAFEV_DB_Util::myfetch($result)) {
+    while ($line = CAFEVDB_mySQL::fetch($result)) {
       $instruments[] = $line['Instrument'];
     }
 
@@ -71,7 +71,7 @@ class CAFEV_DB_Instruments
     $prjinst = sortInstrumentsOrchestral($prjinst, $handle);
 
     $query = "UPDATE `Projekte` SET `Besetzung`='".implode(',',$prjinst)."' WHERE `Id` = $ProjektId";
-    CAFEV_DB_Util::myquery($query, $handle);
+    CAFEVDB_mySQL::query($query, $handle);
     //CAFEVerror($query, false);
   
     return $prjinst;
@@ -80,13 +80,13 @@ class CAFEV_DB_Instruments
   // Fetch the instruments and sort them according to Instruments.Sortierung
   public static function fetchInstruments($handle) {
 
-    $Instruments = CAFEV_DB_Util::sqlMultikeys('Musiker', 'Instrumente', $handle);
+    $Instruments = CAFEVDB_mySQL::multiKeys('Musiker', 'Instrumente', $handle);
 
     $query = 'SELECT `Instrument`,`Sortierung` FROM `Instrumente` WHERE  1 ORDER BY `Sortierung` ASC';
-    $result = CAFEV_DB_Util::myquery($query, $handle);
+    $result = CAFEVDB_mySQL::query($query, $handle);
   
     $final = array();
-    while ($line = CAFEV_DB_Util::myfetch($result)) {
+    while ($line = CAFEVDB_mySQL::fetch($result)) {
       //CAFEVerror("huh".$line['Instrument'],false);
       $tblInst = $line['Instrument'];
       if (array_search($tblInst, $Instruments) === false) {
@@ -101,8 +101,8 @@ class CAFEV_DB_Instruments
   // Check for consistency
   public static function checkInstruments($handle) {
 
-    $InstrumentsSet  = CAFEV_DB_Util::sqlMultikeys('Musiker', 'Instrumente', $handle);
-    $InstrumentsEnum = CAFEV_DB_Util::sqlMultikeys('Besetzungen', 'Instrument', $handle);
+    $InstrumentsSet  = CAFEVDB_mySQL::multiKeys('Musiker', 'Instrumente', $handle);
+    $InstrumentsEnum = CAFEVDB_mySQL::multiKeys('Besetzungen', 'Instrument', $handle);
 
   
     sort($InstrumentsSet);
@@ -143,11 +143,11 @@ class CAFEV_DB_Instruments
   // table. Delete everything else.
   public static function sanitizeInstrumentsTable($handle) {
 
-    $Instrumente = CAFEV_DB_Util::sqlMultikeys('Musiker', 'Instrumente', $handle);
+    $Instrumente = CAFEVDB_mySQL::multiKeys('Musiker', 'Instrumente', $handle);
 
     foreach ($Instrumente as $value) {
       $query = "INSERT IGNORE INTO `Instrumente` (`Instrument`) VALUES ('$value')";
-      $result = CAFEV_DB_Util::myquery($query, $handle);
+      $result = CAFEVDB_mySQL::query($query, $handle);
     }
 
     // Now the table contains at least all instruments, now remove excess elements.
@@ -157,10 +157,10 @@ class CAFEV_DB_Instruments
     $query = "SELECT `Instrument` FROM `Instrumente` WHERE 1";
 
     // Fetch the result or die
-    $result = CAFEV_DB_Util::myquery($query, $query);
+    $result = CAFEVDB_mySQL::query($query, $query);
 
     $dropList = array();
-    while ($line = CAFEV_DB_Util::myfetch($result)) {
+    while ($line = CAFEVDB_mySQL::fetch($result)) {
       $tblInst = $line['Instrument'];
       if (array_search($tblInst, $Instrumente) === false) {
         $dropList[$tblInst] = true;
@@ -169,7 +169,7 @@ class CAFEV_DB_Instruments
 
     foreach ($dropList as $key => $value) {
       $query = "DELETE FROM `Instrumente` WHERE `Instrument` = '$key'";
-      $result = CAFEV_DB_Util::myquery($query);
+      $result = CAFEVDB_mySQL::query($query);
     }
   }
 
