@@ -4,7 +4,7 @@
 
 // Create the view and make sure we have enough extra fields in the
 // Besetzungen table
-CAFEVDB_Projects::reateView($this->rec, $newvals['Name'], $this->dbh);
+CAFEVDB_Projects::createView($this->rec, $newvals['Name'], $this->dbh);
 
 // Add also a new line to the BesetzungsZahlen table
 $sqlquery = 'INSERT IGNORE INTO `BesetzungsZahlen` (`ProjektId`) VALUES ('.$this->rec.')';

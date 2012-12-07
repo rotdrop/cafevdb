@@ -1,0 +1,10 @@
+SSLRequireSSL
+Options -Indexes
+<Files "*.png">
+  Order deny,allow
+  Allow from all
+</Files>
+<Files "*.svg">
+  Order deny,allow
+  Allow from all
+</Files>
