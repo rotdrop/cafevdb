@@ -120,6 +120,7 @@ class phpMyEdit
 	var $fdd;		// field definitions
 	var $qfn;		// value of all filters used during the last pass
 	var $sfn;		// sort field number (- = descending sort order)
+        var $dfltsfn;           // default sort field number
 	var $cur_tab;	// current selected tab
 	var $page_type;	// current page type
 
@@ -723,10 +724,11 @@ class phpMyEdit
 		$qparts['from']  = @$this->get_SQL_join_clause();
 		$qparts['where'] = $this->get_SQL_where_from_query_opts();
 		// build up the ORDER BY clause
-		if (isset($this->sfn)) {
+		if (isset($this->sfn) || isset($this->dfltsfn)) {
+                        $sfn = array_merge($this->sfn, $this->dfltsfn);
 			$sort_fields   = array();
 			$sort_fields_w = array();
-			foreach ($this->sfn as $field) {
+			foreach ($sfn as $field) {
 				if ($field[0] == '-') {
 					$field = substr($field, 1);
 					$desc  = true;
@@ -2728,15 +2730,6 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
                                 $sfnidx = count($this->sfn);
                         }
 			if (! $this->displayed[$k]) {
-                                /* cH: as I have changed to
-                                 * communicate the sorting order by
-                                 * the values of the sort buttons, we
-                                 * have to emit an appropriate hidden
-                                 * field here:
-                                 */
-                                if ($sorted) {
-                                        echo $this->htmlHiddenSys('sfn['.$sfnidx.']',($backward ? "-$k" : $k));
-                                }
 				continue;
 			}
 			$css_postfix    = @$this->fdd[$k]['css']['postfix'];
@@ -3610,6 +3603,45 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			}
 		}
 		$this->sfn = array_unique($this->sfn);
+
+		$this->dfltsfn = array_unique($this->dfltsfn);
+                /*
+                 * Well: unfortunately portions of this code treat
+                 * this as an associative array. Actually, a problem
+                 * which is built into PHP. Gnah.
+                 */
+                ksort($this->dfltsfn, SORT_NUMERIC);
+		$check_ar = array();
+		foreach ($this->dfltsfn as $key => $val) {
+			if (preg_match('/^[-]?\d+$/', $val)) { // skipping numeric keys
+				$val = abs($val);
+				if (in_array($val, $check_ar) || $this->password($val)) {
+					unset($this->dfltsfn[$key]);
+				} else {
+					$check_ar[] = $val;
+				}
+				continue;
+			}
+			if ($val[0] == '-') {
+				$val = substr($val, 1);
+				$minus = '-';
+			} else {
+				$minus = '';
+			}
+			if (($val = array_search($val, $this->fds)) === false || $this->password($val)) {
+				unset($this->dfltsfn[$key]);
+			} else {
+				$val = intval($val);
+				if (in_array($val, $check_ar)) {
+					unset($this->dfltsfn[$key]);
+				} else {
+					$this->dfltsfn[$key] = $minus.$val;
+					$check_ar[] = $val;
+				}
+			}
+		}
+		$this->dfltsfn = array_unique($this->dfltsfn);
+
 		return true;
 	} /* }}} */
 
@@ -3934,10 +3966,11 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 
 		isset($opts['sort_field'])    || $opts['sort_field'] = array();
 		is_array($opts['sort_field']) || $opts['sort_field'] = array($opts['sort_field']);
-		$this->sfn   = array_merge($this->sfn, $opts['sort_field']);
+		$this->dfltsfn = $opts['sort_field'];
                 if (false) {
                         echo '<PRE>';
                         print_r($this->sfn);
+                        print_r($sort);
                         echo '</PRE>';
                 }
 		// Get operation.
