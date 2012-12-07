@@ -3800,7 +3800,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 	/*
 	 * Class constructor
 	 */
-	function phpMyEdit($opts) /* {{{ */
+        function __construct($opts) /* {{{ */
 	{
 		$error_reporting = error_reporting(E_ALL & ~E_NOTICE);
 		// Database handle variables

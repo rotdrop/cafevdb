@@ -7,91 +7,104 @@
 
 class CAFEVDB_Instrumentation
 {
+  static $action;
+  static $subaction;
+  static $MusikerId;
+  static $ProjektId;
+  static $Projekt;
+  static $RecordsPerPage;
 
-  //$debug_query = true;
+  static public function display()
+  {
+    CAFEVDB_Config::init();
 
-  if (isset($debug_query) && $debug_query) {
-    echo "<PRE>\n";
-    print_r($_POST);
-    print_r($_GET);
-    echo "</PRE>\n";
-  }
+    //CAFEVDB_Config::$debug_query = true;
 
-  // Not needed globally, AFAIK
-  global $Projekt;
-  global $ProjektId;
-  global $CAFEV_action;
-  global $MusikerId;
+    if (CAFEVDB_Config::$debug_query) {
+      echo "<PRE>\n";
+      print_r($_POST);
+      print_r($_GET);
+      echo "</PRE>\n";
+    }
 
-  foreach ($CAFEVcgiVars as $key => $value) {
-    $opts['cgi']['persist']["$key"] = $value = CAFEVcgiValue("$key");
-    //echo "$key =&gt; $value <BR/>";
-  }
+    // Not needed globally, AFAIK
+    /* global $Projekt; */
+    /* global $ProjektId; */
+    /* global $CAFEV_action; */
+    /* global $MusikerId; */
 
-  $CAFEV_action = $opts['cgi']['persist']['Action'];
-  $CAFEV_subaction = $opts['cgi']['persist']['Subaction'];
-  $MusikerId = $opts['cgi']['persist']['MusikerId'];
-  $ProjektId = $opts['cgi']['persist']['ProjektId'];
-  $Projekt = $opts['cgi']['persist']['Projekt'];;
-  $RecordsPerPage = $opts['cgi']['persist']['RecordsPerPage'];
+    $opts = CAFEVDB_Config::$pmeopts;
+    foreach (CAFEVDB_Config::$cgiVars as $key => $value) {
+      $opts['cgi']['persist']["$key"] = $value = CAFEVDB_Util::cgiValue("$key");
+      //echo "$key =&gt; $value <BR/>";
+    }
 
-  // Fetch some data we probably will need anyway
+    $action = $opts['cgi']['persist']['Action'];
+    $subaction = $opts['cgi']['persist']['Subaction'];
+    $MusikerId = $opts['cgi']['persist']['MusikerId'];
+    $ProjektId = $opts['cgi']['persist']['ProjektId'];
+    $Projekt = $opts['cgi']['persist']['Projekt'];;
+    $RecordsPerPage = $opts['cgi']['persist']['RecordsPerPage'];
 
-  $handle = CAFEVDB_mySQL::connect($opts);
+    // Fetch some data we probably will need anyway
 
-  // List of instruments
-  $Instrumente = fetchInstruments($handle);
-  $InstrumentenFamilie = sql_multikeys('Instrumente', 'Familie', $handle);
+    $handle = CAFEVDB_mySQL::connect($opts);
 
-  // Fetch project specific user fields
-  if ($ProjektId >= 0) {
-    //  echo "Id: $ProjektId <BR/>";
-    $UserExtraFields = ProjektExtraFelder($ProjektId, $handle);
-  }
+    // List of instruments
+    $Instrumente = CAFEVDB_Instruments::fetch($handle);
+    $InstrumentenFamilie = CAFEVDB_mySQL::multiKeys('Instrumente', 'Familie', $handle);
 
-  /* echo "<PRE>\n"; */
-  /* print_r($Instrumente); */
-  /* /\*print_r($Instrumente2);*\/ */
-  /* echo "</PRE>\n"; */
+    // Fetch project specific user fields
+    if ($ProjektId >= 0) {
+      //  echo "Id: $ProjektId <BR/>";
+      $UserExtraFields = CAFEVDB_Projects::extraFields($ProjektId, $handle);
+    }
 
-  /* checkInstruments($handle); */
-  /* sanitizeInstrumentsTable($handle); */
+    /* echo "<PRE>\n"; */
+    /* print_r($Instrumente); */
+    /* /\*print_r($Instrumente2);*\/ */
+    /* echo "</PRE>\n"; */
 
-  CAFEVDB_mySQL::close($handle);
+    /* checkInstruments($handle); */
+    /* sanitizeInstrumentsTable($handle); */
 
-  if ($CAFEV_action == "DisplayProjectMusicians") {
+    CAFEVDB_mySQL::close($handle);
 
-    include('DisplayProjectMusicians.php');
+    /* if ($CAFEV_action == "DisplayProjectMusicians") { */
 
-  } else if ($CAFEV_action == "ShortDisplayProjectMusicians") {
+    /*   include('DisplayProjectMusicians.php'); */
 
-    include('ShortDisplayProjectMusicians.php');
+    /* } else */
+    if ($action == "ShortDisplayProjectMusicians") {
 
-  } else if ($CAFEV_action == "DisplayProjectsNeeds") {
+      new CAFEVDB_ShortDisplayProjectMusicians($opts);
 
-    include('DisplayProjectNeeds.php');
+    /* } else if ($CAFEV_action == "DisplayProjectsNeeds") { */
 
-  } else if ($CAFEV_action == "TODO") {
+    /*   include('DisplayProjectNeeds.php'); */
 
-    include('TODO.php');
+    /* } else if ($CAFEV_action == "TODO") { */
 
-  } else if ($CAFEV_action == "AddMusicians") {
-    // !display, i.e Add.
+    /*   include('TODO.php'); */
 
-    include('AddMusicians.php');
+    /* } else if ($CAFEV_action == "AddMusicians") { */
+    /*   // !display, i.e Add. */
 
-  } else if ($CAFEV_action == "DisplayMusicians") {
+    /*   include('AddMusicians.php'); */
 
-    include('DisplayMusicians.php');
+    /* } else if ($CAFEV_action == "DisplayMusicians") { */
 
-  } else if ($CAFEV_action == "AddOneMusician" || $CAFEV_action == "ChangeOneMusician") {  
+    /*   include('DisplayMusicians.php'); */
 
-    include('AddChangeOneMusician.php');
+    /* } else if ($CAFEV_action == "AddOneMusician" || $CAFEV_action == "ChangeOneMusician") {   */
 
-  } else if ($CAFEV_action == "AddInstruments") {
+    /*   include('AddChangeOneMusician.php'); */
 
-    include('AddInstruments.php');
+    /* } else if ($CAFEV_action == "AddInstruments") { */
 
+    /*   include('AddInstruments.php'); */
+
+    }
   }
 
 }; // class CAFEVDB_Instrumentation

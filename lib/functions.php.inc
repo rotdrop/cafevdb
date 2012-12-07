@@ -101,7 +101,7 @@ document.onkeypress = stopRKey;
 
 class CAFEVDB_mySQL
 {
-  public static function myconnect($opts, $die = true)
+  public static function connect($opts, $die = true)
   {
     // Fetch the actual list of instruments, we will need it anyway
     $handle = mysql_connect($opts['hn'], $opts['un'], $opts['pw']);

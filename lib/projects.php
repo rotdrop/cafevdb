@@ -18,9 +18,9 @@ class CAFEVDB_Projects
     /* print_r($_SERVER); */
     /* echo '</PRE>'; */
 
-    $handle = CAFEVDB_mySQL::myconnect(CAFEVDB_Config::$pmeopts);
+    $handle = CAFEVDB_mySQL::connect(CAFEVDB_Config::$pmeopts);
 
-    $Instrumente = CAFEVDB_Instruments::fetchInstruments($handle);
+    $Instrumente = CAFEVDB_Instruments::fetch($handle);
 
     CAFEVDB_mySQL::close($handle);
 

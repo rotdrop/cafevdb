@@ -6,6 +6,8 @@ OC::$CLASSPATH['CAFEVDB_mySQL'] = 'apps/cafevdb/lib/functions.php.inc';
 OC::$CLASSPATH['CAFEVDB_Email'] = 'apps/cafevdb/lib/functions.php.inc';
 OC::$CLASSPATH['CAFEVDB_Instruments'] = 'apps/cafevdb/lib/instruments.php';
 OC::$CLASSPATH['CAFEVDB_Projects'] = 'apps/cafevdb/lib/projects.php';
+OC::$CLASSPATH['CAFEVDB_Instrumentation'] = 'apps/cafevdb/lib/instrumentation.php';
+OC::$CLASSPATH['CAFEVDB_ShortDisplayInstrumentation'] = 'apps/cafevdb/lib/short-instrumentation.php';
 
 OCP\App::registerAdmin( 'cafevdb', 'settings' );
 

@@ -5,7 +5,7 @@ class CAFEVDB_Instruments
 
   // Sort the given list of instruments according to orchestral ordering
   // as defined in the Instrumente table.
-  public static function sortInstrumentsOrchestral($list, $handle)
+  public static function sortOrchestral($list, $handle)
   {
     $query = 'SELECT `Instrument`,`Sortierung` FROM `Instrumente` WHERE  1 ORDER BY `Sortierung` ASC';
     $result = CAFEVDB_mySQL::query($query, $handle);
@@ -78,7 +78,7 @@ class CAFEVDB_Instruments
   }
 
   // Fetch the instruments and sort them according to Instruments.Sortierung
-  public static function fetchInstruments($handle) {
+  public static function fetch($handle) {
 
     $Instruments = CAFEVDB_mySQL::multiKeys('Musiker', 'Instrumente', $handle);
 
@@ -99,7 +99,7 @@ class CAFEVDB_Instruments
   }
 
   // Check for consistency
-  public static function checkInstruments($handle) {
+  public static function check($handle) {
 
     $InstrumentsSet  = CAFEVDB_mySQL::multiKeys('Musiker', 'Instrumente', $handle);
     $InstrumentsEnum = CAFEVDB_mySQL::multiKeys('Besetzungen', 'Instrument', $handle);
@@ -141,7 +141,7 @@ class CAFEVDB_Instruments
 
   // Make sure the Instrumente table as all instruments used in the Musiker
   // table. Delete everything else.
-  public static function sanitizeInstrumentsTable($handle) {
+  public static function sanitizeTable($handle) {
 
     $Instrumente = CAFEVDB_mySQL::multiKeys('Musiker', 'Instrumente', $handle);
 

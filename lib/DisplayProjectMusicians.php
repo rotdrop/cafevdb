@@ -1,5 +1,8 @@
 <?php
 
+static private function displayProjectMusiscians()
+{
+
   echo "<h3>Besetzung Projekt $Projekt.</h3>";
 
   echo <<<__EOT__
