@@ -14,15 +14,15 @@ class CAFEVDB_Projects
   {
     CAFEVDB_Config::init();
 
-    echo '<PRE>';
-    print_r($_SERVER);
-    echo '</PRE>';
+    /* echo '<PRE>'; */
+    /* print_r($_SERVER); */
+    /* echo '</PRE>'; */
 
     $handle = CAFEVDB_mySQL::myconnect(CAFEVDB_Config::$pmeopts);
 
     $Instrumente = CAFEVDB_Instruments::fetchInstruments($handle);
 
-    CAFEVDB_Util::myclose($handle);
+    CAFEVDB_mySQL::close($handle);
 
     $cafevclass = 'cafev-pme';
     echo '<div class="'.$cafevclass.'">'."\n";
