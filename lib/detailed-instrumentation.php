@@ -4,6 +4,10 @@ class CAFEVDB_DetailedInstrumentation
 {
   function __construct(&$opts)
   {
+    global $debug_query;
+    //CAFEVDB_Config::$debug_query = true;
+    $debug_query = true;
+
     $action          = CAFEVDB_Instrumentation::$action;
     $project         = CAFEVDB_Instrumentation::$project;
     $projectId       = CAFEVDB_Instrumentation::$projectId;
@@ -25,7 +29,7 @@ class CAFEVDB_DetailedInstrumentation
       (Adresse, Email, Name etc.)
       </ul>
       </H4>
-      __EOT__;
+__EOT__;
 
     $ROopts = 'CLFPVR'; // read-only options for all project specific fields.
 
@@ -44,9 +48,6 @@ class CAFEVDB_DetailedInstrumentation
      *            phpMyEditSetup.php script: 1.50
      *              generating setup script: 1.50
      */
-
-    // MySQL host name, user name, password, database, and table
-    include('config.php.inc');
 
     $opts['inc'] = $recordsPerPage;
 
@@ -163,7 +164,7 @@ class CAFEVDB_DetailedInstrumentation
                                        'maxlen'   => 36,
                                        'sort'     => true
                                        );
-    $opts['fdd']['Instrument']['values'] = $Instrumente;
+    $opts['fdd']['Instrument']['values'] = CAFEVDB_Instrumentation::$instruments;
     $opts['fdd']['Instrument']['options'] = $ROopts;
     $opts['fdd']['Reihung'] = array('name' => 'Stimme',
                                     'options' => $ROopts,
@@ -176,7 +177,7 @@ class CAFEVDB_DetailedInstrumentation
                                     'maxlen' => 64,
                                     'options'  => $ROopts,
                                     'sort' => 'true');
-    $opts['fdd']['Familie']['values'] = $InstrumentenFamilie;
+    $opts['fdd']['Familie']['values'] = CAFEVDB_Instrumentation::$instrumentFamilies;
     $opts['fdd']['Stimmführer'] = array('name' => ' &alpha;',
                                         'options'  => $ROopts,
                                         'select' => 'T',
@@ -197,7 +198,7 @@ class CAFEVDB_DetailedInstrumentation
                                             'maxlen'   => 136,
                                             'sort'     => true
                                             );
-    $opts['fdd']['AlleInstrumente']['values'] = $Instrumente;
+    $opts['fdd']['AlleInstrumente']['values'] = CAFEVDB_Instrumentation::$instruments;
 
 
     $opts['fdd']['Name'] = array(
@@ -212,7 +213,7 @@ class CAFEVDB_DetailedInstrumentation
                                     'maxlen'   => 384,
                                     'sort'     => true
                                     );
-    $opts['fdd']['Email'] = $emailopts;
+    $opts['fdd']['Email'] = CAFEVDB_Config::$opts['email'];
     $opts['fdd']['Telefon'] = array(
                                     'name'     => 'Telefon',
                                     'nowrap' => true,
@@ -262,7 +263,7 @@ class CAFEVDB_DetailedInstrumentation
                                                'escape' => false,
                                                'sort'     => true
                                                );
-    $opts['fdd']['Unkostenbeitrag'] = $moneyopts;
+    $opts['fdd']['Unkostenbeitrag'] = CAFEVDB_Config::$opts['money'];
     $opts['fdd']['Unkostenbeitrag']['name'] = "Unkostenbeitrag\n(Gagen negativ)";
     $opts['fdd']['Unkostenbeitrag']['options'] = $ROopts;
 
@@ -288,7 +289,7 @@ class CAFEVDB_DetailedInstrumentation
                                             'sort'     => true,
                                             'values'   => $Languages);
 
-    $opts['fdd']['Geburtstag'] = $globopts['fdd']['Geburtstag'];
+    $opts['fdd']['Geburtstag'] = CAFEVDB_Config::$opts['geburtstag'];
     $opts['fdd']['Status'] = array(
                                    'name'     => 'Status',
                                    'select'   => 'T',
@@ -307,7 +308,7 @@ class CAFEVDB_DetailedInstrumentation
                                       'escape' => false,
                                       'sort'     => true
                                       );
-    $opts['fdd']['Aktualisiert'] = $calopts;
+    $opts['fdd']['Aktualisiert'] = CAFEVDB_Config::$opts['calendar'];
     $opts['fdd']['Aktualisiert']['name'] = 'Aktualisiert';
     $opts['fdd']['Aktualisiert']['default'] = date("Y-m-d H:i:s");
     $opts['fdd']['Aktualisiert']['nowrap'] = true;

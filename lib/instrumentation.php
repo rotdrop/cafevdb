@@ -14,6 +14,8 @@ class CAFEVDB_Instrumentation
   public static $project;
   public static $recordsPerPage;
   public static $userExtraFields;
+  public static $instruments;
+  public static $instrumentFamilies;
 
   static public function display()
   {
@@ -47,8 +49,8 @@ class CAFEVDB_Instrumentation
     $handle = CAFEVDB_mySQL::connect($opts);
 
     // List of instruments
-    $Instrumente = CAFEVDB_Instruments::fetch($handle);
-    $InstrumentenFamilie = CAFEVDB_mySQL::multiKeys('Instrumente', 'Familie', $handle);
+    self::$instruments = CAFEVDB_Instruments::fetch($handle);
+    $instrumentFamilies = CAFEVDB_mySQL::multiKeys('Instrumente', 'Familie', $handle);
 
     // Fetch project specific user fields
     if (self::$projectId >= 0) {
@@ -57,8 +59,8 @@ class CAFEVDB_Instrumentation
     }
 
     /* echo "<PRE>\n"; */
-    /* print_r($Instrumente); */
-    /* /\*print_r($Instrumente2);*\/ */
+    /* print_r(self::$instruments); */
+    /* /\*print_r(self::$instruments);*\/ */
     /* echo "</PRE>\n"; */
 
     /* checkInstruments($handle); */
@@ -66,13 +68,16 @@ class CAFEVDB_Instrumentation
 
     CAFEVDB_mySQL::close($handle);
 
-    if ($CAFEV_action == "DetailedInstrumentation") {
-
+    switch (self::$action) {
+    case "DetailedInstrumentation": {
       new CAFEVDB_DetailedInstrumentation($opts);
-
-    } else if (self::$action == "BriefInstrumentation") {
-
+      break;
+    }
+    case "BriefInstrumentation": {
       new CAFEVDB_BriefInstrumentation($opts);
+      break;
+    }
+    }
 
     /* } else if ($CAFEV_action == "DisplayProjectsNeeds") { */
 
@@ -99,9 +104,7 @@ class CAFEVDB_Instrumentation
 
     /*   include('AddInstruments.php'); */
 
-    }
   }
-
 }; // class CAFEVDB_Instrumentation
 
 ?>

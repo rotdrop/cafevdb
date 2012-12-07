@@ -1,11 +1,15 @@
 <?php
 
-/* Tool-tips for the phpmyadmin-forms.
+
+/** Tool-tips for the phpmyadmin-forms.
  *
  */
-
-self::$pmeopts['tooltips'] =
-  array('pme-sort' => '  Klick mich, um das Sortieren
+class CAFEVDB_Tooltips
+{
+  static function pmeToolTips()
+  {
+    return 
+      array('pme-sort' => '  Klick mich, um das Sortieren
 nach diesem Feld ein-
 oder auszuschalten!',
 
@@ -82,6 +86,8 @@ Think thrice about it.',
         
 
         'nothing' => 'nothing' // comma stop
-        );
+            );
+  }
+}; // class CAFEVDB_toolTips
 
 ?>
