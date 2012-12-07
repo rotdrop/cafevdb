@@ -1,0 +1,82 @@
+.cafev-mail-filter fieldset.filter {
+    white-space:nowrap;
+}
+.cafev-mail-filter fieldset.filter div.row
+{
+    vertical-align:top;
+    width:10em;
+    display:inline-block;
+    float:none;
+}
+.cafev-mail-filter fieldset.filter div.element
+{
+    display:inline-block;
+    float:left;
+}
+.cafev-mail-filter fieldset.filter select {
+     font-size:90%;
+}
+.cafev-mail-filter fieldset.filter label.element {
+    float:left;
+    width:100%;
+    text-align:left;
+    margin: 0.7em 0 0 0;
+}
+.cafev-mail-filter fieldset.filter select.filter {
+    width:auto;
+}
+.cafev-mail-filter fieldset.filter select.dualselect {
+    width:350px;
+}
+.cafev-mail-filter fieldset.filter p.label {
+    float:left;
+    width:100%;
+    text-align:left;
+    padding: 0;
+    margin: 0.7em 0 0 0;
+}
+
+.cafev-mail-filter fieldset.submit {
+    white-space:nowrap;
+}
+.cafev-mail-filter fieldset.submit div.row
+{
+    display:inline-block;
+}
+
+.cafev-email-form {
+   font-size:100%;
+ }
+table.cafev-email-form {
+    border:1px solid #808080;
+}
+.cafev-email-form tr.submit td {
+    border: 1px solid #808080;
+}
+.cafev-email-form tr.submit td.send {
+   width:auto;
+   text-align:full;
+   padding:0;
+   margin:0;
+}
+.cafev-email-form td.subject {
+   width:80px;
+ }
+.cafev-email-form tr.submit td.addresses input {
+   width:auto;
+ }
+.cafev-email-form tr.submit td.addresses {
+   width:auto;
+   text-align:full;
+   padding:0;
+   margin:0;
+}
+.cafev-email-form tr.submit td.reset {
+   width:auto;
+   text-align:right;
+   padding:0;
+   margin:0;
+}
+.cafev-error h4 {
+   color:red;
+}
