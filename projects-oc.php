@@ -9,6 +9,7 @@ OCP\App::setActiveNavigationEntry( 'cafevdb' );
 
 //OCP\Util::addScript('cafevdb', 'cafevdb');
 OCP\Util::addStyle('cafevdb', 'cafevdb');
+OCP\Util::addStyle('cafevdb', 'email');
 
 $tmplname = isset( $_GET['Template'] ) ? $_GET['Template'] : 'projects';
 

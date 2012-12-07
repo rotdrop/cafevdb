@@ -1,9 +1,6 @@
 <?php
 
 set_include_path(dirname(__FILE__).'/QuickForm2' . PATH_SEPARATOR . get_include_path());
-
-require_once('functions.php.inc');
-require_once('Instruments.php');
 require_once('QuickForm2/DualSelect.php');
 
 /* Wrap the email form into a class to make things a little less crowded
@@ -12,16 +9,16 @@ require_once('QuickForm2/DualSelect.php');
 
 class CAFEVmailFilter {
 
-  private $ProjektId;   // Project id or NULL or -1 or ''
-  private $Projekt;     // Project name of NULL or ''
-  private $Filter;      // Current instrument filter
+  private $projectId;   // Project id or NULL or -1 or ''
+  private $project;     // Project name of NULL or ''
+  private $filter;      // Current instrument filter
   private $EmailsRecs;  // Copy of email records from CGI env
   private $emailKey;    // Key for EmailsRecs into _POST or _GET
 
-  private $Table;       // Table-name, either Musiker of some project view
+  private $table;       // Table-name, either Musiker of some project view
   private $MId;         // Key for the musicians id, Id, or MusikerId
-  private $Restrict;    // Instrument filter keyword, Instrument or ...s
-  private $Instruments; // List of instruments for filtering
+  private $restrict;    // Instrument filter keyword, Instrument or ...s
+  private $instruments; // List of instruments for filtering
   
   private $opts;        // Copy of global options
 
@@ -46,21 +43,21 @@ class CAFEVmailFilter {
   /* 
    * constructor
    */
-  public function CAFEVmailFilter(&$_opts, $action = NULL)
+  public function __construct(&$_opts, $action = NULL)
   {
     $this->frozen = false;
 
     $this->opts = $_opts;
 
-    $this->ProjektId = CAFEVcgiValue('ProjektId',-1);
-    $this->Projekt   = CAFEVcgiValue('Projekt','');
+    $this->projectId = CAFEVDB_Util::cgiValue('ProjektId',-1);
+    $this->project   = CAFEVDB_Util::cgiValue('Projekt','');
 
     // See wether we were passed specific variables ...
     $pmepfx          = $this->opts['cgi']['prefix']['sys'];
     $this->emailKey  = $pmepfx.'mrecs';
     $this->mtabKey   = $pmepfx.'mtable';
-    $this->EmailRecs = CAFEVcgiValue($this->emailKey,array());
-    $this->Table     = CAFEVcgiValue($this->mtabKey,'');
+    $this->EmailRecs = CAFEVDB_Util::cgiValue($this->emailKey,array());
+    $this->table     = CAFEVDB_Util::cgiValue($this->mtabKey,'');
 
     // Now connect to the data-base
     $dbh = CAFEVDB_mySQL::connect($this->opts);
@@ -85,59 +82,6 @@ class CAFEVmailFilter {
     $this->emitPersistent();   
   }
 
-  static public function defaultStyle()
-  {
-    $style =<<<__EOT__
-.cafev-mail-filter fieldset.filter {
-    white-space:nowrap;
-}
-.cafev-mail-filter fieldset.filter div.row
-{
-    vertical-align:top;
-    width:10em;
-    display:inline-block;
-    float:none;
-}
-.cafev-mail-filter fieldset.filter div.element
-{
-    display:inline-block;
-    float:left;
-}
-.cafev-mail-filter fieldset.filter select {
-     font-size:90%;
-}
-.cafev-mail-filter fieldset.filter label.element {
-    float:left;
-    width:100%;
-    text-align:left;
-    margin: 0.7em 0 0 0;
-}
-.cafev-mail-filter fieldset.filter select.filter {
-    width:auto;
-}
-.cafev-mail-filter fieldset.filter select.dualselect {
-    width:350px;
-}
-.cafev-mail-filter fieldset.filter p.label {
-    float:left;
-    width:100%;
-    text-align:left;
-    padding: 0;
-    margin: 0.7em 0 0 0;
-}
-
-.cafev-mail-filter fieldset.submit {
-    white-space:nowrap;
-}
-.cafev-mail-filter fieldset.submit div.row
-{
-    display:inline-block;
-}
-
-__EOT__;
-    return $style;
-  }
-  
   /* 
    * Include hidden fields to remember stuff across submit.
    */
@@ -162,8 +106,8 @@ __EOT__;
    */
   public function emitPersistent(&$form = NULL) {
     
-    $this->addPersistentCGI('ProjektId', $this->ProjektId);
-    $this->addPersistentCGI('Projekt', $this->Projekt);
+    $this->addPersistentCGI('ProjektId', $this->projectId);
+    $this->addPersistentCGI('Projekt', $this->project);
     $this->addPersistentCGI($this->emailKey, $this->EmailRecs);
   }
 
@@ -174,8 +118,8 @@ __EOT__;
   {
     $form = new HTML_QuickForm2('dummy');
     
-    $this->addPersistentCGI('ProjektId', $this->ProjektId, $form);
-    $this->addPersistentCGI('Projekt', $this->Projekt, $form);
+    $this->addPersistentCGI('ProjektId', $this->projectId, $form);
+    $this->addPersistentCGI('Projekt', $this->project, $form);
     $this->addPersistentCGI($this->emailKey, $this->EmailRecs, $form);
 
     $value = $this->form->getValue();
@@ -202,24 +146,24 @@ __EOT__;
   private function getInstrumentsFromDb($dbh, $filterNumbers = NULL)
   {
     // Get the current list of instruments for the filter
-    if ($this->ProjektId >= 0) {
+    if ($this->projectId >= 0) {
       $this->MId         = 'MusikerId';
       $this->Restrict    = 'Instrument';
-      $this->Instruments = fetchProjectMusiciansInstruments($this->ProjektId, $dbh);
+      $this->instruments = CAFEVDB_Instruments::fetchProjectMusiciansInstruments($this->projectId, $dbh);
     } else {
       $this->MId         = 'Id';
       $this->Restrict    = 'Instrumente';
-      $this->Instruments = fetchInstruments($dbh);
+      $this->instruments = CAFEVDB_Instruments::fetch($dbh);
     }
-    array_unshift($this->Instruments, '*');
+    array_unshift($this->instruments, '*');
 
     /* Construct the filter */
     if (!$filterNumbers) {
-      $filterNumbers = CAFEVcgiValue('InstrumentenFilter',array('0'));
+      $filterNumbers = CAFEVDB_Util::cgiValue('InstrumentenFilter',array('0'));
     }
-    $this->Filter = array();
+    $this->filter = array();
     foreach ($filterNumbers as $idx) {
-      $this->Filter[] = $this->Instruments[$idx];
+      $this->filter[] = $this->instruments[$idx];
     }
   }  
 
@@ -228,15 +172,15 @@ __EOT__;
    */
   private function getMusiciansFromDB($dbh)
   {
-    if ($this->Table == 'Besetzungen') {
+    if ($this->table == 'Besetzungen') {
       /*
        * Then we need to remap the stuff. To keep things clean we remap now
        */
-      $this->Table = $this->Projekt.'View';
+      $this->table = $this->project.'View';
       $query = 'SELECT `Besetzungen`.`Id` AS \'BesetzungsId\',
-  `'.$this->Table.'`.`'.$this->MId.'` AS \'MusikerId\'
-  FROM `'.$this->Table.'` LEFT JOIN `Besetzungen`
-  ON `'.$this->Table.'`.`'.$this->MId.'` = `Besetzungen`.`MusikerId` WHERE 1';
+  `'.$this->table.'`.`'.$this->MId.'` AS \'MusikerId\'
+  FROM `'.$this->table.'` LEFT JOIN `Besetzungen`
+  ON `'.$this->table.'`.`'.$this->MId.'` = `Besetzungen`.`MusikerId` WHERE 1';
 
       // Fetch the result or die and remap the Ids
       $result = CAFEVDB_mySQL::query($query, $dbh);
@@ -247,7 +191,7 @@ __EOT__;
       $newEmailRecs = array();
       foreach ($this->EmailRecs as $key) {
         if (!isset($map[$key])) {
-          CAFEVerror('Musician in Besetzungen, but has no Id as Musician');
+          CAFEVDB_Util::error('Musician in Besetzungen, but has no Id as Musician');
         }
         $newEmailRecs[] = $map[$key];
       }
@@ -255,15 +199,15 @@ __EOT__;
     }
     
     /*** Now continue as if from 'ordinary' View-Table ****/
-    if ($this->ProjektId < 0) {
-      $this->Table = 'Musiker';
+    if ($this->projectId < 0) {
+      $this->table = 'Musiker';
     } else {
-      $this->Table = $this->Projekt.'View';
+      $this->table = $this->project.'View';
     }
 
-    $query = 'SELECT `'.$this->MId.'`,`Vorname`,`Name`,`Email` FROM '.$this->Table.' WHERE
+    $query = 'SELECT `'.$this->MId.'`,`Vorname`,`Name`,`Email` FROM '.$this->table.' WHERE
        ( ';
-    foreach ($this->Filter as $value) {
+    foreach ($this->filter as $value) {
       if ($value == '*') {
         $query .= "1 OR\n";
       } else {
@@ -332,9 +276,9 @@ __EOT__;
     $this->filterSelect = $this->selectFieldSet->addElement(
       'select', 'InstrumentenFilter',
       array('multiple' => 'multiple', 'size' => 15, 'class' => 'filter'),
-      array('options' => $this->Instruments, 'label' => 'Instrumenten-Filter'));
+      array('options' => $this->instruments, 'label' => 'Instrumenten-Filter'));
 
-    if (!CAFEVcgiValue('InstrumentenFilter',false)) {
+    if (!CAFEVDB_Util::cgiValue('InstrumentenFilter',false)) {
       $this->filterSelect->setValue(array(0));
     }
 
@@ -461,9 +405,9 @@ Anfangswerten.'));
        * hand and initialize the quick-form class accordingly
        * 
        */
-      if (CAFEVcgiValue('eraseAll','') != '') {
+      if (CAFEVDB_Util::cgiValue('eraseAll','') != '') {
         /* actually, this simply means nothing to do */
-      } elseif (CAFEVcgiValue('modifyAddresses','') != '') {
+      } elseif (CAFEVDB_Util::cgiValue('modifyAddresses','') != '') {
         /* we are already in our default state because the script was
          * called from another form. So install the previous
          * selection.
@@ -471,7 +415,7 @@ Anfangswerten.'));
         $this->dualSelect->toggleFrozen(false);
         $this->frozen = false;
 
-        $this->dualSelect->setValue(CAFEVcgiValue('SelectedMusicians'), array());
+        $this->dualSelect->setValue(CAFEVDB_Util::cgiValue('SelectedMusicians'), array());
         
       } elseif (!empty($value['filterReset'])) {
         $this->dualSelect->toggleFrozen(false);
@@ -491,11 +435,11 @@ Anfangswerten.'));
 
         /* Also update the "no email" notice. */
         $this->updateNoEmailForm();
-      } elseif (!empty($value['writeMail']) || CAFEVcgiValue('sendEmail')) {
-        if (CAFEVcgiValue('sendEmail')) {
+      } elseif (!empty($value['writeMail']) || CAFEVDB_Util::cgiValue('sendEmail')) {
+        if (CAFEVDB_Util::cgiValue('sendEmail')) {
           // Re-install the filter from the form
           $this->dualSelect->toggleFrozen(false);
-          $this->dualSelect->setValue(CAFEVcgiValue('SelectedMusicians'), array());
+          $this->dualSelect->setValue(CAFEVDB_Util::cgiValue('SelectedMusicians'), array());
         }
         $this->frozen = true;
         $this->dualSelect->toggleFrozen(true);
