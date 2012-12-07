@@ -272,13 +272,6 @@ __EOT__;
     $opts['triggers']['update']['before'][0]  = CAFEVDB_Config::$triggers.'remove-unchanged.TUB.php.inc';
     $opts['triggers']['update']['before'][1]  = CAFEVDB_Config::$triggers.'update-musician-timestamp.TUB.php.inc';
 
-    // Now important call to phpMyEdit
-    //require_once 'phpMyEdit.class.php';
-    //new phpMyEdit($opts);
-    //require_once 'extensions/phpMyEdit-mce-cal.class.php';
-    //new phpMyEdit_mce_cal($opts);
-
-    require_once 'pme/phpMyEdit.class.php';
     new phpMyEdit($opts);
   } // display()
   
@@ -519,12 +512,6 @@ __EOT__;
     // data-base. Otherwise add id on request.
     $opts['triggers']['update']['before']  = CAFEVDB_Config::$triggers.'instrumentation-change-instrument.TUB.inc.php';
 
-    // Now important call to phpMyEdit
-    //require_once 'phpMyEdit.class.php';
-    //$mypme = new phpMyEdit($opts);
-    //require_once 'extensions/phpMyEdit-mce-cal.class.php';
-    //$mypme = new phpMyEdit_mce_cal($opts);
-
     if ($saved_action == "AddOneMusician") {
 
       // Fetch all needed data from Musiker table
@@ -613,7 +600,6 @@ Choosing "'.$musinst.'" as instrument.<H4>';
       CAFEVDB_mySQL::close();
     }
 
-    require_once 'pme/phpMyEdit.class.php';
     new phpMyEdit($opts);
   }
 

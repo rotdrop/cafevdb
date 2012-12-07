@@ -311,14 +311,6 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
     // Maybe we want to keep the view.
     // $opts['triggers']['delete']['after']  = 'Projekte.TDA.inc.php';
 
-    // Now important call to phpMyEdit
-    //require_once 'phpMyEdit.class.php';
-    //require_once 'phpMyEdit.class.php';
-    //new phpMyEdit($opts);
-    //require_once 'extensions/phpMyEdit-mce-cal.class.php';
-    //new phpMyEdit_mce_cal($opts);
-
-    require_once 'pme/phpMyEdit.class.php';
     new phpMyEdit($opts);
   }
 

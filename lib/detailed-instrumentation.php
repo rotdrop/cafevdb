@@ -325,7 +325,6 @@ __EOT__;
     //new phpMyEdit($opts);
     //require_once 'extensions/phpMyEdit-mce-cal.class.php';
     //new phpMyEdit_mce_cal($opts);
-    require_once 'pme/phpMyEdit.class.php';
     new phpMyEdit($opts);
   }
 

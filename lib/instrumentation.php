@@ -1,10 +1,5 @@
 <?php
 
-/* require_once("functions.php.inc"); */
-/* require_once("ProjektFunktionen.php"); */
-/* require_once('Instruments.php'); */
-/* include('config.php.inc'); */
-
 class CAFEVDB_Instrumentation
 {
   public static $action;

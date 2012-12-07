@@ -168,13 +168,6 @@ Auch den Instrumentennamen sollte man nicht ändern.').'</H4>';
     $opts['triggers']['update']['before']  = CAFEVDB_Config::$triggers.'instruments.TUB.inc.php';
     $opts['triggers']['insert']['before']  = CAFEVDB_Config::$triggers.'instruments.TIB.inc.php';
 
-    // Now important call to phpMyEdit
-    //require_once 'phpMyEdit.class.php';
-    //new phpMyEdit($opts);
-    //require_once 'extensions/phpMyEdit-mce-cal.class.php';
-    //new phpMyEdit_mce_cal($opts);
-
-    require_once 'pme/phpMyEdit.class.php';
     new phpMyEdit($opts);
   }
 
