@@ -65,12 +65,12 @@ if (!strstr($instruments, $instrument)) {
   echo "$musname only plays " . $musrow['Instrumente'] . "!";
   echo "</H4><HR/>\n";
   echo "<H4>Click on the following button to enforce your decision:</H4>
-<form name=\"CAFEV_form_besetzung\" method=\"post\" action=\"ProjektBesetzung.php\">
+<form name=\"CAFEV_form_besetzung\" method=\"post\" action=\"?app=cafevdb&Template=instrumentation\">
   <input type=\"submit\" name=\"\" value=\"Really Change $musname's instrument!!!\">
   <input type=\"hidden\" name=\"Action\" value=\"ChangeOneMusician\">
-  <input type=\"hidden\" name=\"Projekt\" value=\"$project\" />
-  <input type=\"hidden\" name=\"ProjektId\" value=\"$projectId\" />
-  <input type=\"hidden\" name=\"MusikerId\" value=\"$musicianId\" />
+  <input type=\"hidden\" name=\"Project\" value=\"$project\" />
+  <input type=\"hidden\" name=\"ProjectId\" value=\"$projectId\" />
+  <input type=\"hidden\" name=\"MusicianId\" value=\"$musicianId\" />
   <input type=\"hidden\" name=\"ForcedInstrument\" value=\"$instrument\" />
 </form>
 <p>

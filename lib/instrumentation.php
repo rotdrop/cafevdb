@@ -92,6 +92,7 @@ class CAFEVDB_Instrumentation
     }
     case "AddOneMusician":
     case "ChangeOneMusician": {
+      CAFEVDB_Musicians::displayAddChangeOne($opts);
       break;
     }
     case "AddInstruments": {
