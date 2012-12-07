@@ -159,7 +159,7 @@ Eigenschaften bitte die "add", "change" etc. Buttons unten anklicken.</h4>';
                                  'maxlen'   => 64,
                                  'sort'     => true,
                                  );
-    $opts['fdd']['Name']['URL'] = 'ProjektBesetzung.php?Projekt=$value&ProjektId=$key&Action=ShortDisplayProjectMusicians';
+    $opts['fdd']['Name']['URL'] = '?app=cafevdb&Template=instrumentation&Projekt=$value&ProjektId=$key&Action=ShortDisplayProjectMusicians';
 
     $opts['fdd']['Programm'] = array(
                                      'name'     => 'Programm',
