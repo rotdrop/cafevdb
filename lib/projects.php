@@ -1,11 +1,5 @@
 <?php
 
-/* require_once("favicon.php"); */
-/* require ("pme/enablejscal.html"); */
-/* require ("pme/enabletinymce.html"); */
-/* require_once("ProjektFunktionen.php"); */
-/* require_once('Instruments.php'); */
-
 /** Helper class for displaying projects.
  */
 class CAFEVDB_Projects
@@ -159,7 +153,7 @@ Eigenschaften bitte die "add", "change" etc. Buttons unten anklicken.</h4>';
                                  'maxlen'   => 64,
                                  'sort'     => true,
                                  );
-    $opts['fdd']['Name']['URL'] = '?app=cafevdb&Template=instrumentation&Projekt=$value&ProjektId=$key&Action=ShortInstrumentation';
+    $opts['fdd']['Name']['URL'] = '?app=cafevdb&Template=instrumentation&Project=$value&ProjectId=$key&Action=BriefInstrumentation';
 
     $opts['fdd']['Programm'] = array(
                                      'name'     => 'Programm',
@@ -342,11 +336,11 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
    *
    * Note: field names must be unique.
    */
-  public static function extraFields($ProjektId, $handle = false)
+  public static function extraFields($projectId, $handle = false)
   {
-    CAFEVDB_Util::debugMsg(">>>>ProjektExtraFelder: Id = $ProjektId");
+    CAFEVDB_Util::debugMsg(">>>>ProjektExtraFelder: Id = $projectId");
 
-    $query = 'SELECT `ExtraFelder` FROM `Projekte` WHERE `Id` = '.$ProjektId;
+    $query = 'SELECT `ExtraFelder` FROM `Projekte` WHERE `Id` = '.$projectId;
     $result = CAFEVDB_mySQL::query($query, $handle);
     
     // Get the single line
@@ -382,9 +376,9 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
     return $fields;
   }
 
-  public static function fetchName($ProjektId, $handle = false)
+  public static function fetchName($projectId, $handle = false)
   {
-    $query = 'SELECT `Name` FROM `Projekte` WHERE `Id` = '.$ProjektId;
+    $query = 'SELECT `Name` FROM `Projekte` WHERE `Id` = '.$projectId;
     $result = CAFEVDB_mySQL::query($query, $handle);
 
     // Get the single line
@@ -397,12 +391,12 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
    * extra-fields are text-fields.
    *
    */
-  public static function createExtraFields($ProjektId, $handle = false)
+  public static function createExtraFields($projectId, $handle = false)
   {
     CAFEVDB_Util::debugMsg(">>>> ProjektCreateExtraFelder");
 
     // Fetch the extra-fields.
-    $extra = self::extraFields($ProjektId, $handle);
+    $extra = self::extraFields($projectId, $handle);
     if (CAFEVDB_Util::debugMode()) {
       print_r($extra);
     }
@@ -454,20 +448,20 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
 
   // Create a sensibly sorted view, fit for being exported via
   // phpmyadmin. Take all extra-fields into account, add them at end.
-  public static function createView($ProjektId, $Projekt = false, $handle = false)
+  public static function createView($projectId, $project = false, $handle = false)
   {
     CAFEVDB_Util::debugMsg(">>>> ProjektCreateView");
 
-    if (! $Projekt) {
+    if (! $project) {
       // Get the name
-      $Projekt = ProjektFetchName($ProjektId, $handle);
+      $project = self::fetchName($projectId, $handle);
     }
 
     // Make sure all extra-fields exist
-    self::createExtraFields($ProjektId, $handle);
+    self::createExtraFields($projectId, $handle);
 
     // Fetch the extra-fields
-    $extra = self::extraFields($ProjektId, $handle);
+    $extra = self::extraFields($projectId, $handle);
 
     // "Extra"'s will be added at end. Generate a suitable "SELECT"
     // string for that. Ordering of field in the table is just the
@@ -481,7 +475,7 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
 
     // Now do all the stuff, do not forget the proper sorting to satisfy
     // all dummies on earth
-    $sqlquery = 'CREATE OR REPLACE VIEW `'.$Projekt.'View` AS
+    $sqlquery = 'CREATE OR REPLACE VIEW `'.$project.'View` AS
  SELECT
    `Musiker`.`Id` AS `MusikerId`,
    `Besetzungen`.`Instrument`,`Besetzungen`.`Reihung`,
@@ -498,7 +492,7 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
     // Now do the join
     $sqlquery .= ' FROM `Musiker`
    JOIN `Besetzungen`
-     ON `Musiker`.`Id` = MusikerId AND '.$ProjektId.'= `ProjektId`
+     ON `Musiker`.`Id` = MusikerId AND '.$projectId.'= `ProjektId`
    LEFT JOIN `Instrumente`
      ON `Besetzungen`.`Instrument` = `Instrumente`.`Instrument`';
 

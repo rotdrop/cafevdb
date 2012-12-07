@@ -1,8 +1,8 @@
 <?php
 
-global $ProjektId;
-global $Projekt;
-global $MusikerId;
+$project = CAFEVDB_Instrumentation::$project;
+$projectId = CAFEVDB_Instrumentation::$projectId;
+$musicianId = CAFEVDB_Instrumentation::$musicianId;
 
 // We check here whether the change of the instrument or player is in
 // some sense consistent with the Musiker table. We know that only
@@ -16,7 +16,7 @@ global $MusikerId;
 
 // For an unknown reason the project Id is zero ....
 
-$newvals['ProjektId'] = $ProjektId;
+$newvals['ProjektId'] = $projectId;
 
 return true;
 

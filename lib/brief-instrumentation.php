@@ -1,24 +1,25 @@
 <?php  
 
-class CAFEVDB_ShortInstrumentation
+class CAFEVDB_BriefInstrumentation
 {
   function __construct(&$opts)
   {
-    CAFEVDB_Config::$debug_query = true;
-    $debug_query = true;
+    global $debug_query;
+    //CAFEVDB_Config::$debug_query = true;
+    //$debug_query = true;
 
     $action          = CAFEVDB_Instrumentation::$action;
-    $Projekt         = CAFEVDB_Instrumentation::$Projekt;
-    $ProjektId       = CAFEVDB_Instrumentation::$ProjektId;
+    $project         = CAFEVDB_Instrumentation::$project;
+    $projectId       = CAFEVDB_Instrumentation::$projectId;
 
-    $RecordsPerPage  = CAFEVDB_Instrumentation::$RecordsPerPage;
-    $UserExtraFields = CAFEVDB_Instrumentation::$UserExtraFields;
+    $recordsPerPage  = CAFEVDB_Instrumentation::$recordsPerPage;
+    $userExtraFields = CAFEVDB_Instrumentation::$userExtraFields;
 
-    echo "<h3>Besetzung Projekt $Projekt</h3>";
+    echo "<h3>Besetzung Projekt $project</h3>";
     echo <<<__EOT__
       <H4><ul>
       <li><span style="color:red">Musiker hinzufügen</span>
-      <span style="font-style:italic">"Add more Musicians to $Projekt"</span>
+      <span style="font-style:italic">"Add more Musicians to $project"</span>
       <li><span style="color:red">Musiker entfernen</span>
       <span style="font-style:italic">diese Tabelle</span>
       ("x"-Button)
@@ -26,7 +27,7 @@ class CAFEVDB_ShortInstrumentation
       <span style="font-style:italic">diese Tabelle</span>
       (Projekt-Instrument, Stimmführer, Projekt-Bemerkungen etc.)
       <li><span style="color:red">Personen-Daten</span>
-      <span style="font-style:italic">"Detailed Display for $Projekt"</span>
+      <span style="font-style:italic">"Detailed Display for $project"</span>
       (Adresse, Email, Name etc.)
       </ul>
       </H4>
@@ -52,11 +53,11 @@ __EOT__;
 
     // Number of records to display on the screen
     // Value of -1 lists all records in a table
-    $opts['inc'] = $RecordsPerPage;
+    $opts['inc'] = $recordsPerPage;
 
     // Don't want everything persistent.
-    $opts['cgi']['persist'] = array('Projekt' => $Projekt,
-                                    'ProjektId' => $ProjektId,
+    $opts['cgi']['persist'] = array('Projekt' => $project,
+                                    'ProjektId' => $projectId,
                                     'Action' => $action,
                                     'Table' => $opts['tb']);
 
@@ -111,7 +112,7 @@ __EOT__;
        $opts['filters'] = "PMEtable0.sessions_count > 200";
     */
 
-    $opts['filters'] = "ProjektId = $ProjektId";
+    $opts['filters'] = "ProjektId = $projectId";
 
     /* Field definitions
    
@@ -169,7 +170,7 @@ __EOT__;
                                                         'table' => 'Projekte',
                                                         'column' => 'Id',
                                                         'description' => 'Name',
-                                                        'filters' => "Id = $ProjektId"
+                                                        'filters' => "Id = $projectId"
                                                         )
                                       );
     $opts['fdd']['MusikerId'] = array(
@@ -224,7 +225,7 @@ __EOT__;
     $opts['fdd']['Unkostenbeitrag']['name'] = "Unkostenbeitrag\n(Gagen negativ)";
 
     // Generate input fields for the extra columns
-    foreach ($UserExtraFields as $field) {
+    foreach ($userExtraFields as $field) {
       $name = sprintf('ExtraFeld%02d', $field['pos']);
     
       $opts['fdd']["$name"] = array('name' => $field['name'],

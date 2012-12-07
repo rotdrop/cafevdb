@@ -8,12 +8,12 @@
 class CAFEVDB_Instrumentation
 {
   public static $action;
-  public static $subaction;
-  public static $MusikerId;
-  public static $ProjektId;
-  public static $Projekt;
-  public static $RecordsPerPage;
-  public static $UserExtraFields;
+  public static $subAction;
+  public static $musicianId;
+  public static $projectId;
+  public static $project;
+  public static $recordsPerPage;
+  public static $userExtraFields;
 
   static public function display()
   {
@@ -27,12 +27,6 @@ class CAFEVDB_Instrumentation
       echo "</PRE>\n";
     }
 
-    // Not needed globally, AFAIK
-    /* global $Projekt; */
-    /* global $ProjektId; */
-    /* global $CAFEV_action; */
-    /* global $MusikerId; */
-
     $opts = CAFEVDB_Config::$pmeopts;
     global $HTTP_SERVER_VARS;
     $opts['page_name'] = $HTTP_SERVER_VARS['PHP_SELF'].'?app=cafevdb'.'&Template=instrumentation';
@@ -42,11 +36,11 @@ class CAFEVDB_Instrumentation
     }
 
     self::$action = $opts['cgi']['persist']['Action'];
-    self::$subaction = $opts['cgi']['persist']['Subaction'];
-    self::$MusikerId = $opts['cgi']['persist']['MusikerId'];
-    self::$ProjektId = $opts['cgi']['persist']['ProjektId'];
-    self::$Projekt = $opts['cgi']['persist']['Projekt'];;
-    self::$RecordsPerPage = $opts['cgi']['persist']['RecordsPerPage'];
+    self::$subAction = $opts['cgi']['persist']['SubAction'];
+    self::$musicianId = $opts['cgi']['persist']['MusicianId'];
+    self::$projectId = $opts['cgi']['persist']['ProjectId'];
+    self::$project = $opts['cgi']['persist']['Project'];;
+    self::$recordsPerPage = $opts['cgi']['persist']['RecordsPerPage'];
 
     // Fetch some data we probably will need anyway
 
@@ -57,9 +51,9 @@ class CAFEVDB_Instrumentation
     $InstrumentenFamilie = CAFEVDB_mySQL::multiKeys('Instrumente', 'Familie', $handle);
 
     // Fetch project specific user fields
-    if (self::$ProjektId >= 0) {
-      //  echo "Id: self::$ProjektId <BR/>";
-      self::$UserExtraFields = CAFEVDB_Projects::extraFields(self::$ProjektId, $handle);
+    if (self::$projectId >= 0) {
+      //  echo "Id: self::$projectId <BR/>";
+      self::$userExtraFields = CAFEVDB_Projects::extraFields(self::$projectId, $handle);
     }
 
     /* echo "<PRE>\n"; */
@@ -72,14 +66,13 @@ class CAFEVDB_Instrumentation
 
     CAFEVDB_mySQL::close($handle);
 
-    /* if ($CAFEV_action == "DisplayProjectMusicians") { */
+    if ($CAFEV_action == "DetailedInstrumentation") {
 
-    /*   include('DisplayProjectMusicians.php'); */
+      new CAFEVDB_DetailedInstrumentation($opts);
 
-    /* } else */
-    if (self::$action == "ShortInstrumentation") {
+    } else if (self::$action == "BriefInstrumentation") {
 
-      new CAFEVDB_ShortInstrumentation($opts);
+      new CAFEVDB_BriefInstrumentation($opts);
 
     /* } else if ($CAFEV_action == "DisplayProjectsNeeds") { */
 

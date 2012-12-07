@@ -1,8 +1,8 @@
 <?php
 
-global $ProjektId;
-global $Projekt;
-global $MusikerId;
+$project = CAFEVDB_Instrumentation::$project;
+$projectId = CAFEVDB_Instrumentation::$projectId;
+$musicianId = CAFEVDB_Instrumentation::$musicianId;
 
 // We check here whether the change of the instrument or player is in
 // some sense consistent with the Musiker table. We know that only
@@ -28,27 +28,27 @@ if (!isset($newvals['Instrument'])) {
   return true;
 }
 
-if ($MusikerId < 0) {
+if ($musicianId < 0) {
   if (isset($newvals['MusikerId'])) {
-    $MusikerId = $newvals['MusikerId'];
+    $musicianId = $newvals['MusikerId'];
   } else {
     // otherwise it must be this->rec
-    $MusikerId = $this->rec;
+    $musicianId = $this->rec;
   }
-} else if ($MusikerId != $newvals['MusikerId']) {
-  echo "Data inconsistency: Ids do not match (" . $newvals['MusikerId'] . " != $MusikerId)";
+} else if ($musicianId != $newvals['MusikerId']) {
+  echo "Data inconsistency: Ids do not match (" . $newvals['MusikerId'] . " != $musicianId)";
   return false;
 }
 
 // Fetch the list of instruments from the Musiker data-base
 
-$musquery = "SELECT `Instrumente`,`Vorname`,`Name` FROM Musiker WHERE `Id` = $MusikerId";
+$musquery = "SELECT `Instrumente`,`Vorname`,`Name` FROM Musiker WHERE `Id` = $musicianId";
 
 $musres = $this->myquery($musquery) or die ("Could not execute the query. " . mysql_error());
 $musnumrows = mysql_num_rows($musres);
 
 if ($musnumrows != 1) {
-  echo "Data inconsisteny, " . $MusikerId . " is not a unique Id\n";
+  echo "Data inconsisteny, " . $musicianId . " is not a unique Id\n";
   return false;
 }
 
@@ -56,10 +56,10 @@ $musrow = $this->sql_fetch($musres);
 //$instruments = explode(',',$musrow['Instrumente']);
 
 $musname = $musrow['Vorname'] . " " . $musrow['Name'];
-$instrumente = $musrow['Instrumente'];
+$instruments = $musrow['Instrumente'];
 $instrument  = $newvals['Instrument'];
 
-if (!strstr($instrumente, $instrument)) {
+if (!strstr($instruments, $instrument)) {
   echo "<HR/><H4>";
   echo "Instrument not known by $musname, correct that first! ";
   echo "$musname only plays " . $musrow['Instrumente'] . "!";
@@ -68,9 +68,9 @@ if (!strstr($instrumente, $instrument)) {
 <form name=\"CAFEV_form_besetzung\" method=\"post\" action=\"ProjektBesetzung.php\">
   <input type=\"submit\" name=\"\" value=\"Really Change $musname's instrument!!!\">
   <input type=\"hidden\" name=\"Action\" value=\"ChangeOneMusician\">
-  <input type=\"hidden\" name=\"Projekt\" value=\"$Projekt\" />
-  <input type=\"hidden\" name=\"ProjektId\" value=\"$ProjektId\" />
-  <input type=\"hidden\" name=\"MusikerId\" value=\"$MusikerId\" />
+  <input type=\"hidden\" name=\"Projekt\" value=\"$project\" />
+  <input type=\"hidden\" name=\"ProjektId\" value=\"$projectId\" />
+  <input type=\"hidden\" name=\"MusikerId\" value=\"$musicianId\" />
   <input type=\"hidden\" name=\"ForcedInstrument\" value=\"$instrument\" />
 </form>
 <p>
