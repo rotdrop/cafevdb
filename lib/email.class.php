@@ -1,13 +1,19 @@
 <?php
 
 set_include_path(dirname(__FILE__).'/QuickForm2' . PATH_SEPARATOR . get_include_path());
+set_include_path(dirname(dirname(dirname(__FILE__))).'/pear/php' . PATH_SEPARATOR . get_include_path());
+
+require_once("class.html2text.inc");
 require_once('QuickForm2/DualSelect.php');
+require_once("PHPMailer/class.phpmailer.php");
+require_once("Net/IMAP.php");
 
-/* Wrap the email form into a class to make things a little less crowded
- *
+/**Wrap the email filter form into a class to make things a little
+ * less crowded. This is actually not to filter emails, but rather to
+ * select specific groups of musicians (depending on instrument and
+ * project).
  */
-
-class CAFEVmailFilter {
+class CAFEVDB_EMailFilter {
 
   private $projectId;   // Project id or NULL or -1 or ''
   private $project;     // Project name of NULL or ''
@@ -466,5 +472,15 @@ Anfangswerten.'));
 
 };
 
+/**One further class which actually only acts as kind of a namespace
+ * and contains one monolythic static function display().
+ */
+class CAFEVDB_EMail
+{
+  public static display()
+  {
+    
+  }
+};
 
 ?>
