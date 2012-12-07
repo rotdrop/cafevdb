@@ -316,8 +316,8 @@ class CAFEVDB_DetailedInstrumentation
     // No need to check for the project-instrument any longer, as it can
     //no longer be changed here.
     //$opts['triggers']['update']['before'][0]  = 'BesetzungChangeInstrument.TUB.inc.php';
-    $opts['triggers']['update']['before'][1]  = 'RemoveUnchanged.TUB.php.inc';
-    $opts['triggers']['update']['before'][2]  = 'UpdateProjectMusicianTimestamp.TUB.php.inc';
+    $opts['triggers']['update']['before'][1]  = CAFEVDB_Config::$triggers.'remove-unchanged.TUB.php.inc';
+    $opts['triggers']['update']['before'][2]  = CAFEVDB_Config::$triggers.'update-musician-timestamp.TUB.php.inc';
 
     // Now important call to phpMyEdit
     //require_once 'phpMyEdit.class.php';
