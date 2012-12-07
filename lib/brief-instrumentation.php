@@ -2,7 +2,7 @@
 
 class CAFEVDB_BriefInstrumentation
 {
-  function __construct(&$opts)
+  static function display(&$opts)
   {
     global $debug_query;
     //CAFEVDB_Config::$debug_query = true;
@@ -15,22 +15,26 @@ class CAFEVDB_BriefInstrumentation
     $recordsPerPage  = CAFEVDB_Instrumentation::$recordsPerPage;
     $userExtraFields = CAFEVDB_Instrumentation::$userExtraFields;
 
-    echo "<h3>Besetzung Projekt $project</h3>";
     echo <<<__EOT__
-      <H4><ul>
+<div class="cafevdb-pme-header">
+  <h3>Besetzung Projekt $project</h3>
+  <H4>
+    <ul>
       <li><span style="color:red">Musiker hinzufügen</span>
-      <span style="font-style:italic">"Add more Musicians to $project"</span>
+        <span style="font-style:italic">"Add more Musicians to $project"</span>
       <li><span style="color:red">Musiker entfernen</span>
-      <span style="font-style:italic">diese Tabelle</span>
-      ("x"-Button)
+          <span style="font-style:italic">diese Tabelle</span>
+          ("x"-Button)
       <li><span style="color:red">Projekt-Daten</span>
-      <span style="font-style:italic">diese Tabelle</span>
-      (Projekt-Instrument, Stimmführer, Projekt-Bemerkungen etc.)
+        <span style="font-style:italic">diese Tabelle</span>
+        (Projekt-Instrument, Stimmführer, Projekt-Bemerkungen etc.)
       <li><span style="color:red">Personen-Daten</span>
-      <span style="font-style:italic">"Detailed Display for $project"</span>
-      (Adresse, Email, Name etc.)
-      </ul>
-      </H4>
+        <span style="font-style:italic">"Detailed Display for $project"</span>
+        (Adresse, Email, Name etc.)
+    </ul>
+  </H4>
+</div>
+
 __EOT__;
 
     /*
@@ -56,8 +60,8 @@ __EOT__;
     $opts['inc'] = $recordsPerPage;
 
     // Don't want everything persistent.
-    $opts['cgi']['persist'] = array('Projekt' => $project,
-                                    'ProjektId' => $projectId,
+    $opts['cgi']['persist'] = array('Project' => $project,
+                                    'ProjectId' => $projectId,
                                     'Action' => $action,
                                     'Table' => $opts['tb']);
 

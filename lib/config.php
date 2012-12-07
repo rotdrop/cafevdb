@@ -89,7 +89,7 @@ class CAFEVDB_Config
 
     self::$cgiVars = array('Action' => 'BriefInstrumentation',
                            'SubAction' => '',
-                           'MusicanId' => -1,
+                           'MusicianId' => -1,
                            'ProjectId' => -1,
                            'Project' => '',
                            'RecordsPerPage' => -1);

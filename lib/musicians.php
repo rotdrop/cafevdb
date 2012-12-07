@@ -1,8 +1,12 @@
 <?php
 
-class CAFEVDB_DetailedInstrumentation
+class CAFEVDB_Musicians
 {
-  static function display(&$opts)
+  /**Display the list of all musicians. Is $projectMode == true,
+   * filter out all musicians present in $projectId and add a
+   * hyperlink which will add the Musician to the respective project.
+   */
+  public static function display(&$opts, $projectMode = false)
   {
     global $debug_query;
     //CAFEVDB_Config::$debug_query = true;
@@ -11,27 +15,31 @@ class CAFEVDB_DetailedInstrumentation
     $action          = CAFEVDB_Instrumentation::$action;
     $project         = CAFEVDB_Instrumentation::$project;
     $projectId       = CAFEVDB_Instrumentation::$projectId;
-
     $recordsPerPage  = CAFEVDB_Instrumentation::$recordsPerPage;
-    $userExtraFields = CAFEVDB_Instrumentation::$userExtraFields;
 
-    echo "<h3>Besetzung Projekt $project.</h3>";
+    if (!$projectMode) {
 
-    echo <<<__EOT__
-      <H4><ul>
-      <li><span style="color:red">Musiker entfernen:</span>
-      <span style="font-style:italic">"Short Display for $project"</span>
-      <li><span style="color:red">Projekt-Daten</span>
-      <span style="font-style:italic">"Short Display for $project"</span>
-      (Projekt-Instrument, Stimmführer, Projekt-Bemerkungen etc.)
-      <li><span style="color:red">Personen-Daten</span>
-      <span style="font-style:italic">diese Tabelle</span>
-      (Adresse, Email, Name etc.)
-      </ul>
-      </H4>
+      echo <<<__EOT__
+<div class="cafevdb-pme-header">
+  <h2>&Uuml;berblick &uuml;ber alle Musiker</h2>
+</div>
+
 __EOT__;
 
-    $ROopts = 'CLFPVR'; // read-only options for all project specific fields.
+    } else {
+
+      echo <<<__EOT__
+<div class="cafevdb-pme-header">
+  <h3>Besetzung &auml;ndern f&uuml;r Projekt $project</h3>
+  <h4>F&uuml;r die aktuelle Teilnehmerliste bitte die Buttons "... Display for ... "
+    benutzen.<P> Der Weg in ein Projekt f&uuml;hrt nur &uuml;ber
+    <EM style="color:#ff0000"><B>diese</B></EM> Tabelle, die Musiker werden dann automatisch in unseren
+    Fundus mit aufgenommen (<A HREF="hinzufuegen.html" target="_blank">Anleitung</A>)
+  </h4>
+</div>
+
+__EOT__;
+    }
 
     /*
      * IMPORTANT NOTE: This generated file contains only a subset of huge amount
@@ -49,9 +57,11 @@ __EOT__;
      *              generating setup script: 1.50
      */
 
-    $opts['inc'] = $recordsPerPage;
+    $opts['tb'] = 'Musiker';
 
-    $opts['tb'] = $project . 'View';
+    // Number of records to display on the screen
+    // Value of -1 lists all records in a table
+    $opts['inc'] = $recordsPerPage;
 
     $opts['cgi']['persist'] = array('Project' => $project,
                                     'ProjectId' => $projectId,
@@ -59,22 +69,21 @@ __EOT__;
                                     'Table' => $opts['tb']);
 
     // Name of field which is the unique key
-    $opts['key'] = 'MusikerId';
+    $opts['key'] = 'Id';
 
     // Type of key field (int/real/string/date etc.)
     $opts['key_type'] = 'int';
 
     // Sorting field(s)
-    $opts['sort_field'] = array('Sortierung','Reihung','-Stimmführer','Name','Vorname');
+    $opts['sort_field'] = array('Instrumente','Name','Vorname','Id');
 
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
     // F - filter, I - initial sort suppressed
-    // This is a view, undeletable.
-    $opts['options'] = 'CPVFM';
+    $opts['options'] = 'ACPVDFM';
 
     // Number of lines to display on multiple selection filters
-    $opts['multiple'] = '6';
+    $opts['multiple'] = '5';
 
     // Navigation style: B - buttons (default), T - text links, G - graphic links
     // Buttons position: U - up, D - down (default)
@@ -96,8 +105,6 @@ __EOT__;
     $opts['cgi']['prefix']['sys']       = 'PME_sys_';
     $opts['cgi']['prefix']['data']      = 'PME_data_';
 
-    //$opts['cgi']['append']['PME_sys_fl'] = 1;
-
     /* Get the user's default language and use it if possible or you can
        specify particular one you want to use. Refer to official documentation
        for list of available languages. */
@@ -111,6 +118,10 @@ __EOT__;
        $opts['filters'] = "section_id = 9";
        $opts['filters'] = "PMEtable0.sessions_count > 200";
     */
+
+    if ($projectMode) {
+       $opts['filters'] = "(SELECT COUNT(*) FROM `Besetzungen` WHERE MusikerId = PMEtable0.Id AND ProjektId = $projectId) = 0";
+    }
 
     /* Field definitions
    
@@ -150,89 +161,56 @@ __EOT__;
        descriptions fields are also possible. Check documentation for this.
     */
 
-    $opts['fdd']['MusikerId'] = array(
-                                      'name'     => 'MusikerId',
-                                      'select'   => 'T',
-                                      'options'  => 'LAVCPDR', // auto increment
-                                      'maxlen'   => 11,
-                                      'default'  => '0',
-                                      'sort'     => true
-                                      );
-    $opts['fdd']['Instrument'] = array(
-                                       'name'     => 'Projekt-Instrument',
-                                       'select'   => 'T',
-                                       'maxlen'   => 36,
-                                       'sort'     => true
-                                       );
-    $opts['fdd']['Instrument']['values'] = CAFEVDB_Instrumentation::$instruments;
-    $opts['fdd']['Instrument']['options'] = $ROopts;
-    $opts['fdd']['Reihung'] = array('name' => 'Stimme',
-                                    'options' => $ROopts,
-                                    'select' => 'N',
-                                    'maxlen' => '3',
-                                    'sort' => true);
-    $opts['fdd']['Familie'] = array('name' => 'Intrumenten Familie',
-                                    'nowrap' => true,
-                                    'select' => 'M',
-                                    'maxlen' => 64,
-                                    'options'  => $ROopts,
-                                    'sort' => 'true');
-    $opts['fdd']['Familie']['values'] = CAFEVDB_Instrumentation::$instrumentFamilies;
-    $opts['fdd']['Stimmführer'] = array('name' => ' &alpha;',
-                                        'options'  => $ROopts,
-                                        'select' => 'T',
-                                        'maxlen' => '3',
-                                        'escape' => false,
-                                        'sort' => true);
-    $opts['fdd']['Stimmführer']['values2'] = array('0' => '', '1' => '&alpha;');
-    $opts['fdd']['Sortierung'] = array('name'     => 'Orchester Sortierung',
-                                       'select'   => 'T',
-                                       'options'  => 'VCPR',
-                                       'maxlen'   => 8,
-                                       'default'  => '0',
-                                       'sort'     => true);
-    $opts['fdd']['AlleInstrumente'] = array(
-                                            'name'     => 'Alle Instrumente',
-                                            'options'  => 'AVCPD',
-                                            'select'   => 'C',
-                                            'maxlen'   => 136,
-                                            'sort'     => true
-                                            );
-    $opts['fdd']['AlleInstrumente']['values'] = CAFEVDB_Instrumentation::$instruments;
-
+    $opts['fdd']['Id'] = array(
+                               'name'     => 'Id',
+                               'select'   => 'T',
+                               'options'  => 'AVCPDR', // auto increment
+                               'maxlen'   => 11,
+                               'default'  => '0',
+                               'sort'     => true
+                               );
+    if ($projectMode) {
+      $opts['fdd']['Hinzufuegen'] = array(
+                                          'name' => 'Hinzuf&uuml;gen',
+                                          'select' => 'T',
+                                          'options' => 'VLR',
+                                          'input' => 'V',
+                                          'sql' => "\"Add to $project\"",
+                                          'nowrap' => true
+                                          //'php' => "AddMusician.php"
+                                          );
+      $opts['fdd']['Hinzufuegen']['URL'] = "?app=cafevdb&Template=instrumentation&Project=$project&ProjectId=$projectId&MusicianId=\$key&Action=AddOneMusician";
+    }
+    $opts['fdd']['Instrumente'] = array(
+                                        'name'     => 'Instrumente',
+                                        'select'   => 'C',
+                                        'maxlen'   => 137,
+                                        'sort'     => true
+                                        );
+    $opts['fdd']['Instrumente']['values'] = CAFEVDB_Instrumentation::$instruments;
 
     $opts['fdd']['Name'] = array(
                                  'name'     => 'Name',
                                  'select'   => 'T',
-                                 'maxlen'   => 384,
+                                 'maxlen'   => 128,
                                  'sort'     => true
                                  );
     $opts['fdd']['Vorname'] = array(
                                     'name'     => 'Vorname',
                                     'select'   => 'T',
-                                    'maxlen'   => 384,
+                                    'maxlen'   => 128,
                                     'sort'     => true
                                     );
-    $opts['fdd']['Email'] = CAFEVDB_Config::$opts['email'];
-    $opts['fdd']['Telefon'] = array(
-                                    'name'     => 'Telefon',
-                                    'nowrap' => true,
-                                    'select'   => 'T',
-                                    'maxlen'   => 384,
-                                    'sort'     => true
-                                    );
-    $opts['fdd']['Telefon2'] = array(
-                                     'name'     => 'Telefon2',
-                                     'nowrap' => true,
-                                     'select'   => 'T',
-                                     'maxlen'   => 384,
-                                     'sort'     => true
-                                     );
+    $opts['fdd']['Stadt'] = array(
+                                  'name'     => 'Stadt',
+                                  'select'   => 'T',
+                                  'maxlen'   => 128,
+                                  'sort'     => true
+                                  );
     $opts['fdd']['Strasse'] = array(
                                     'name'     => 'Strasse',
-                                    'nowrap' => true,
                                     'select'   => 'T',
-                                    'maxlen'   => 384,
+                                    'maxlen'   => 128,
                                     'sort'     => true
                                     );
     $opts['fdd']['Postleitzahl'] = array(
@@ -241,64 +219,40 @@ __EOT__;
                                          'maxlen'   => 11,
                                          'sort'     => true
                                          );
-    $opts['fdd']['Stadt'] = array(
-                                  'name'     => 'Stadt',
-                                  'select'   => 'T',
-                                  'maxlen'   => 384,
-                                  'sort'     => true
-                                  );
     $opts['fdd']['Land'] = array('name'     => 'Land',
                                  'select'   => 'T',
-                                 'maxlen'   => 384,
+                                 'maxlen'   => 128,
                                  'default'  => 'Deutschland',
                                  'sort'     => true);
-    $opts['fdd']['ProjektBemerkungen'] = array('name'     =>  'Bemerkungen ('.$project.')',
-                                               'select'   => 'T',
-                                               'options' => $ROopts,
-                                               'maxlen'   => 65535,
-                                               'css'      => array('postfix' => 'rem'),
-                                               'textarea' => array('html' => 'Editor',
-                                                                   'rows' => 5,
-                                                                   'cols' => 50),
-                                               'escape' => false,
-                                               'sort'     => true
-                                               );
-    $opts['fdd']['Unkostenbeitrag'] = CAFEVDB_Config::$opts['money'];
-    $opts['fdd']['Unkostenbeitrag']['name'] = "Unkostenbeitrag\n(Gagen negativ)";
-    $opts['fdd']['Unkostenbeitrag']['options'] = $ROopts;
-
-
-    // Generate input fields for the extra columns
-    foreach ($userExtraFields as $field) {
-      $name = $field['name'];    
-      $opts['fdd']["$name"] = array('name' => $name.' ('.$project.')',
-                                    'select'   => 'T',
-                                    'options' => $ROopts,
-                                    'maxlen'   => 65535,
-                                    'textarea' => array('html' => 'NoEditor',
-                                                        'rows' => 2,
-                                                        'cols' => 32),
-                                    'escape' => false,
-                                    'sort'     => true);
-    }
-
     $opts['fdd']['Sprachpräferenz'] = array('name'     => 'Spachpräferenz',
                                             'select'   => 'T',
                                             'maxlen'   => 128,
-                                            'default'  => 'Deutsch',
+                                            'default'  => 'Deutschland',
                                             'sort'     => true,
                                             'values'   => CAFEVDB_Config::$opts['languages']);
-
+    $opts['fdd']['Telefon'] = array(
+                                    'name'     => 'Telefon',
+                                    'select'   => 'T',
+                                    'maxlen'   => 128,
+                                    'sort'     => true
+                                    );
+    $opts['fdd']['Telefon2'] = array(
+                                     'name'     => 'Telefon2',
+                                     'select'   => 'T',
+                                     'maxlen'   => 128,
+                                     'sort'     => true
+                                     );
     $opts['fdd']['Geburtstag'] = CAFEVDB_Config::$opts['geburtstag'];
+    $opts['fdd']['Email'] = CAFEVDB_Config::$opts['email'];
     $opts['fdd']['Status'] = array(
                                    'name'     => 'Status',
-                                   'select'   => 'T',
                                    'css'      => array('postfix' => 'rem'),
-                                   'maxlen'   => 384,
+                                   'select'   => 'T',
+                                   'maxlen'   => 128,
                                    'sort'     => true
                                    );
     $opts['fdd']['Bemerkung'] = array(
-                                      'name'     => 'Allgemeine Bemerkungen',
+                                      'name'     => 'Bemerkung',
                                       'select'   => 'T',
                                       'maxlen'   => 65535,
                                       'css'      => array('postfix' => 'rem'),
@@ -310,31 +264,23 @@ __EOT__;
                                       );
     $opts['fdd']['Aktualisiert'] = CAFEVDB_Config::$opts['calendar'];
     $opts['fdd']['Aktualisiert']['name'] = 'Aktualisiert';
-    $opts['fdd']['Aktualisiert']['default'] = date("Y-m-d H:i:s");
+    $opts['fdd']['Aktualisiert']['default'] = date('Y-m-d H:i:s');
     $opts['fdd']['Aktualisiert']['nowrap'] = true;
     $opts['fdd']['Aktualisiert']['options'] = 'LAVCPDR'; // Set by update trigger.
 
-    // No need to check for the project-instrument any longer, as it can
-    //no longer be changed here.
-    //$opts['triggers']['update']['before'][0]  = 'BesetzungChangeInstrument.TUB.inc.php';
-    $opts['triggers']['update']['before'][1]  = CAFEVDB_Config::$triggers.'remove-unchanged.TUB.php.inc';
-    $opts['triggers']['update']['before'][2]  = CAFEVDB_Config::$triggers.'update-musician-timestamp.TUB.php.inc';
+    $opts['triggers']['update']['before'][0]  = CAFEVDB_Config::$triggers.'remove-unchanged.TUB.php.inc';
+    $opts['triggers']['update']['before'][1]  = CAFEVDB_Config::$triggers.'update-musician-timestamp.TUB.php.inc';
 
     // Now important call to phpMyEdit
     //require_once 'phpMyEdit.class.php';
     //new phpMyEdit($opts);
     //require_once 'extensions/phpMyEdit-mce-cal.class.php';
     //new phpMyEdit_mce_cal($opts);
+
     require_once 'pme/phpMyEdit.class.php';
     new phpMyEdit($opts);
-  }
+  } // display()
 
-}; // class CAFEVDB_DetailedInstrumentation
+}; // class definition.
 
 ?>
-
-
-
-
-
-

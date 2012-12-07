@@ -34,7 +34,7 @@ class CAFEVDB_Instrumentation
     $opts['page_name'] = $HTTP_SERVER_VARS['PHP_SELF'].'?app=cafevdb'.'&Template=instrumentation';
     foreach (CAFEVDB_Config::$cgiVars as $key => $value) {
       $opts['cgi']['persist']["$key"] = $value = CAFEVDB_Util::cgiValue("$key");
-      //echo "$key =&gt; $value <BR/>";
+      // echo "$key =&gt; $value <BR/>";
     }
 
     self::$action = $opts['cgi']['persist']['Action'];
@@ -70,40 +70,38 @@ class CAFEVDB_Instrumentation
 
     switch (self::$action) {
     case "DetailedInstrumentation": {
-      new CAFEVDB_DetailedInstrumentation($opts);
+      CAFEVDB_DetailedInstrumentation::display($opts);
       break;
     }
     case "BriefInstrumentation": {
-      new CAFEVDB_BriefInstrumentation($opts);
+      CAFEVDB_BriefInstrumentation::display($opts);
       break;
     }
+    case "TODO": {
+      // ... the TODO-table actually has nothing to do with the
+      // instrumentation.
+      break;
     }
-
-    /* } else if ($CAFEV_action == "DisplayProjectsNeeds") { */
-
-    /*   include('DisplayProjectNeeds.php'); */
-
-    /* } else if ($CAFEV_action == "TODO") { */
-
-    /*   include('TODO.php'); */
-
-    /* } else if ($CAFEV_action == "AddMusicians") { */
-    /*   // !display, i.e Add. */
-
-    /*   include('AddMusicians.php'); */
-
-    /* } else if ($CAFEV_action == "DisplayMusicians") { */
-
-    /*   include('DisplayMusicians.php'); */
-
-    /* } else if ($CAFEV_action == "AddOneMusician" || $CAFEV_action == "ChangeOneMusician") {   */
-
-    /*   include('AddChangeOneMusician.php'); */
-
-    /* } else if ($CAFEV_action == "AddInstruments") { */
-
-    /*   include('AddInstruments.php'); */
-
+    case "AddMusicians": {
+      CAFEVDB_Musicians::display($opts, true);
+      break;
+    }
+    case "DisplayAllMusicians": {
+      CAFEVDB_Musicians::display($opts, false);
+      break;
+    }
+    case "AddOneMusician":
+    case "ChangeOneMusician": {
+      break;
+    }
+    case "AddInstruments": {
+      CAFEVDB_Instruments::display($opts);
+      break;
+    }
+    default: {
+      // should emit an error here ...
+    }
+    }
   }
 }; // class CAFEVDB_Instrumentation
 

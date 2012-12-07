@@ -18,12 +18,16 @@ class CAFEVDB_Projects
 
     CAFEVDB_mySQL::close($handle);
 
-    $cafevclass = 'cafev-pme';
-    echo '<div class="'.$cafevclass.'">'."\n";
-
-    echo '<h2>Camerata Projekte</h2> <h4>Bitte auf das Projekt-K&uuml;rzel
+    echo <<<__EOT__
+<div class="cafevdb-pme-header">
+  <h2>Camerata Projekte</h2>
+  <h4>Bitte auf das Projekt-K&uuml;rzel
 klicken, um die Besetzungliste zu editieren. F&uuml;r allgemeine
-Eigenschaften bitte die "add", "change" etc. Buttons unten anklicken.</h4>';
+Eigenschaften bitte die "add", "change" etc. Buttons unten anklicken.
+  </h4>
+</div>
+
+__EOT__;
 
     /*
      * IMPORTANT NOTE: This generated file contains only a subset of huge amount
@@ -53,7 +57,7 @@ Eigenschaften bitte die "add", "change" etc. Buttons unten anklicken.</h4>';
     $opts['key_type'] = 'int';
 
     // Sorting field(s)
-    $opts['sort_field'] = array('Name');
+    $opts['sort_field'] = array('Id');
 
     // Number of records to display on the screen
     // Value of -1 lists all records in a table
@@ -316,9 +320,6 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
 
     require_once 'pme/phpMyEdit.class.php';
     new phpMyEdit($opts);
-
-    echo '</div>
-';
   }
 
   /**Generate an associative array of extra-fields. The key is the

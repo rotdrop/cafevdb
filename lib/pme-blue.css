@@ -35,13 +35,30 @@ div[class|='cafev-nav']>div {
   opacity:0.98;
 }
 
-div.cafev-pme {
-  border:1px solid;
-  border-top-width:0;
-  border-bottom-width:0;
+/* div.cafevdb-pme {
+  position:fixed;
   margin-top:0em;
-  padding-top:1em;
-  padding-bottom:1em;
+  padding-top:8ex;
+  padding-bottom:0em;
+} */
+div.cafevdb-pme-header {
+  position:fixed;
+  padding-top:6ex;
+  z-index:25;
+  background-color:#FFFFFF;
+  opacity:1.0;
+  width:100%;
+}
+/* table.pme-navigation { */
+/*   position:fixed; */
+/*   background-color:#FFFFFF; */
+/*   z-index:25; */
+/*   opacity:1.0; */
+/* } */
+form.pme-form {
+  position:relative;
+  padding-top:20ex;
+/* overflow:hidden; */
 }
 
 div.cafev-email {
