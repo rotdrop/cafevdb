@@ -25,7 +25,7 @@ input:hover,/*select:hover,*/option:hover,button:hover {
 }
 
 div[class|='cafev-nav'] {
-  background-image:url(images/logo-greyf128x128);
+  background-image:url('%appswebroot%/cafevdb/img/logo-greyf128x128');
   background-repeat:repeat-x;
   background-position:center;
 }
@@ -246,7 +246,7 @@ input.pme-sort[type=checkbox]:checked ~ div.pme-sort {
   display:inline-block;
 }
 input.pme-sort-rvrt[type=submit] {
-  background-image:url(images/ok_process-16x16.png);
+  background-image:url('%appswebroot%/cafevdb/img/ok_process-16x16.png');
   background-repeat:no-repeat;
   background-position:0px;
   background-origin:padding-box;
@@ -257,7 +257,7 @@ input.pme-sort-rvrt[type=submit] {
 }
 
 input.pme-misc-[type=submit] {
-  background-image:url(images/e_mail_X.png);
+  background-image:url('%appswebroot%/cafevdb/img/e_mail_X.png');
   background-repeat:no-repeat;
   width:28px;
   height:28px;
@@ -265,7 +265,7 @@ input.pme-misc-[type=submit] {
   vertical-align:middle;
 }
 input.pme-misc+[type=submit] {
-  background-image:url(images/e_mail_checked.png);
+  background-image:url('%appswebroot%/cafevdb/img/e_mail_checked.png');
   background-repeat:no-repeat;
   width:28px;
   height:28px;
@@ -273,7 +273,7 @@ input.pme-misc+[type=submit] {
   vertical-align:middle;
 }
 input.pme-misc[type=submit] {
-  background-image:url(images/e_mail.png);
+  background-image:url('%appswebroot%/cafevdb/img/e_mail.png');
   background-repeat:no-repeat;
   background-position:0px;
   padding-left:24px;

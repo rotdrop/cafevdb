@@ -12,11 +12,15 @@ class CAFEV_DB_Projects
   {
     CAFEV_DB_Config::init();
 
-    $handle = CAFEV_DB_Util::myconnect(CAFEV_DB_Config::$pmeopts);
+    echo '<PRE>';
+    print_r($_SERVER);
+    echo '</PRE>';
 
-    $Instrumente = CAFEV_DB_Instruments::fetchInstruments($handle);
+    $handle = CAFEVDB_Util::myconnect(CAFEVDB_Config::$pmeopts);
 
-    CAFEV_DB_Util::myclose($handle);
+    $Instrumente = CAFEVDB_Instruments::fetchInstruments($handle);
+
+    CAFEVDB_Util::myclose($handle);
 
     $cafevclass = 'cafev-pme';
     echo '<div class="'.$cafevclass.'">'."\n";
@@ -41,8 +45,8 @@ Eigenschaften bitte die "add", "change" etc. Buttons unten anklicken.</h4>';
      *              generating setup script: 1.50
      */
 
-    $opts = CAFEV_DB_Config::$pmeopts;
-    $opts['cgi']['persist'] = CAFEV_DB_Util::cgiValue('app');
+    $opts = CAFEVDB_Config::$pmeopts;
+    $opts['cgi']['persist'] = CAFEVDB_Util::cgiValue('app');
 
     $opts['tb'] = 'Projekte';
 
@@ -53,7 +57,7 @@ Eigenschaften bitte die "add", "change" etc. Buttons unten anklicken.</h4>';
     $opts['key_type'] = 'int';
 
     // Sorting field(s)
-    $opts['sort_field'] = array('Id');
+    $opts['sort_field'] = array('Name');
 
     // Number of records to display on the screen
     // Value of -1 lists all records in a table
@@ -62,7 +66,7 @@ Eigenschaften bitte die "add", "change" etc. Buttons unten anklicken.</h4>';
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
     // F - filter, I - initial sort suppressed
-    $opts['options'] = 'ACPVDFM';
+    $opts['options'] = 'ACPVDF';
 
     // Number of lines to display on multiple selection filters
     $opts['multiple'] = '6';
@@ -218,7 +222,7 @@ zur Extra-Spalte in der Datenbank angeben, z.B. so:
 Dann wird die Reihenfolge bei der Anzeige der Tabelle geändert, aber die
 Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
 
-    $opts['fdd']['Konzert1'] = CAFEV_DB_Config::$opts['calendar'];
+    $opts['fdd']['Konzert1'] = CAFEVDB_Config::$opts['calendar'];
     $opts['fdd']['Konzert1']['name'] = 'Konzert1';
 
     $opts['fdd']['KonzertOrt1'] = array(
@@ -232,7 +236,7 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
                                         'escape' => false
                                         );
 
-    $opts['fdd']['Konzert2'] = CAFEV_DB_Config::$opts['calendar'];
+    $opts['fdd']['Konzert2'] = CAFEVDB_Config::$opts['calendar'];
     $opts['fdd']['Konzert2']['name'] = 'Konzert2';
     $opts['fdd']['KonzertOrt2'] = array(
                                         'name'     => 'KonzertOrt2',
@@ -245,7 +249,7 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
                                         'escape' => false
                                         );
 
-    $opts['fdd']['Proben1'] = CAFEV_DB_Config::$opts['calendar'];
+    $opts['fdd']['Proben1'] = CAFEVDB_Config::$opts['calendar'];
     $opts['fdd']['Proben1']['name'] = 'Proben1';
     $opts['fdd']['ProbenKommentar1'] = array(
                                              'name'     => 'ProbenKommentar1',
@@ -259,7 +263,7 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
                                              'escape' => false,
                                              );
 
-    $opts['fdd']['Proben2'] = CAFEV_DB_Config::$opts['calendar'];
+    $opts['fdd']['Proben2'] = CAFEVDB_Config::$opts['calendar'];
     $opts['fdd']['Proben2']['name'] = 'Proben2';
     $opts['fdd']['ProbenKommentar2'] = array(
                                              'name'     => 'ProbenKommentar2',
@@ -273,7 +277,7 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
                                              'escape' => false,
                                              );
 
-    $opts['fdd']['Proben3'] = CAFEV_DB_Config::$opts['calendar'];
+    $opts['fdd']['Proben3'] = CAFEVDB_Config::$opts['calendar'];
     $opts['fdd']['Proben3']['name'] = 'Proben3';
     $opts['fdd']['ProbenKommentar3'] = array(
                                              'name'     => 'ProbenKommentar3',
@@ -287,7 +291,7 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
                                              'escape' => false,
                                              );
 
-    $opts['fdd']['Proben4'] = CAFEV_DB_Config::$opts['calendar'];
+    $opts['fdd']['Proben4'] = CAFEVDB_Config::$opts['calendar'];
     $opts['fdd']['Proben4']['name'] = 'Proben4';
     $opts['fdd']['ProbenKommentar4'] = array(
                                              'name'     => 'ProbenKommentar4',
@@ -301,8 +305,9 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
                                              'escape' => false,
                                              );
 
-    $opts['triggers']['update']['after'] = 'Projekte.TUB.inc.php';
+    $opts['triggers']['update']['after'] = 'Projekte.TUA.inc.php';
     $opts['triggers']['insert']['after'] = 'Projekte.TIA.inc.php';
+
     // Maybe we want to keep the view.
     // $opts['triggers']['delete']['after']  = 'Projekte.TDA.inc.php';
 
