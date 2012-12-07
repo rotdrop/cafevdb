@@ -73,7 +73,7 @@ div.cafev-pme h2,div.cafev-email h2 {
   padding-left:12pt;
 }
 div.cafev-pme h2:before,div.cafev-email h2:before {
-  content: url(images/logo-greyf32x32) " ";
+  content: url(%appswebroot%/cafevdb/img/logo-greyf32x32) " ";
 }
 
 div.cafev-pme h3, div.cafev-email h3 {
@@ -81,7 +81,7 @@ div.cafev-pme h3, div.cafev-email h3 {
   padding-left:12pt;
 }
 div.cafev-pme h3:before, div.cafev-email h3:before {
-  content: url(images/logo-greyf32x32) " ";
+  content: url(%appswebroot%/cafevdb/img/logo-greyf32x32) " ";
 }
 
 div.cafev-pme h4,div.cafev-email h4 {
@@ -217,13 +217,49 @@ td[class|='pme-filter'] {
 :not(.lt-ie9) div.pme-misc-check {
   width:24px;
   height:24px;
-  background:url(images/e_mail.png);
+  background:url(%appswebroot%/cafevdb/img/e_mail.png);
   cursor:crosshair;
 }
 :not(.lt-ie9) input.pme-misc-check[type=checkbox]:checked ~ div.pme-misc-check {
   width:24px;
   height:24px;
-  background:url(images/e_mail_checked.png);
+  background:url(%appswebroot%/cafevdb/img/e_mail_checked.png);
+}
+
+input.pme-view-navigation {
+  background:url(%appswebroot%/cafevdb/lib/images/alt/pme-view.png) !important;
+  no-repeat !important;
+  width:16px !important;
+  height:15px !important;
+  border:0 !important;
+  font-size:0 !important;
+}
+
+input.pme-copy-navigation {
+  background:url(%appswebroot%/cafevdb/lib/images/alt/pme-copy.png) !important;
+  no-repeat !important;
+  width:16px !important;
+  height:15px !important;
+  border:0 !important;
+  font-size:0 !important;
+}
+
+input.pme-change-navigation {
+  background:url(%appswebroot%/cafevdb/lib/images/alt/pme-change.png) !important;
+  no-repeat !important;
+  width:16px !important;
+  height:15px !important;
+  border:0 !important;
+  font-size:0 !important;
+}
+
+input.pme-delete-navigation {
+  background:url(%appswebroot%/cafevdb/lib/images/alt/pme-delete.png) !important;
+  no-repeat !important;
+  width:16px !important;
+  height:15px !important;
+  border:0 !important;
+  font-size:0 !important;
 }
 
 :not(.lt-ie9) input.pme-sort[type=checkbox] { 
@@ -240,13 +276,13 @@ div.pme-sort {
 input.pme-sort[type=checkbox]:checked ~ div.pme-sort {
   /* width:93px; */
   /* height:14px; */
-  /* background:url(images/sortierfeld.png); */
+  /* background:url(%appswebroot%/cafevdb/img/sortierfeld.png); */
   /* text-align:center; */
   opacity:1.0;
   display:inline-block;
 }
 input.pme-sort-rvrt[type=submit] {
-  background-image:url('%appswebroot%/cafevdb/img/ok_process-16x16.png');
+  background-image:url(%appswebroot%/cafevdb/img/ok_process-16x16.png);
   background-repeat:no-repeat;
   background-position:0px;
   background-origin:padding-box;
@@ -284,7 +320,7 @@ input.pme-misc[type=submit] {
 }
 
 /* input.pme-misc[type=submit]:selected { */
-/*   background-image:url(images/e_mail.png); */
+/*   background-image:url(%appswebroot%/cafevdb/img/e_mail.png); */
 /*   background-repeat:no-repeat; */
 /*   background-position:0px; */
 /*   background-origin:padding-box; */

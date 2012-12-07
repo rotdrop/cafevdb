@@ -1,9 +1,19 @@
 <?php  
 
-class CAFEVDB_ShortInstrumentation()
+class CAFEVDB_ShortInstrumentation
 {
-  function __construct(@$opts)
+  function __construct(&$opts)
   {
+    CAFEVDB_Config::$debug_query = true;
+    $debug_query = true;
+
+    $action          = CAFEVDB_Instrumentation::$action;
+    $Projekt         = CAFEVDB_Instrumentation::$Projekt;
+    $ProjektId       = CAFEVDB_Instrumentation::$ProjektId;
+
+    $RecordsPerPage  = CAFEVDB_Instrumentation::$RecordsPerPage;
+    $UserExtraFields = CAFEVDB_Instrumentation::$UserExtraFields;
+
     echo "<h3>Besetzung Projekt $Projekt</h3>";
     echo <<<__EOT__
       <H4><ul>
@@ -20,13 +30,7 @@ class CAFEVDB_ShortInstrumentation()
       (Adresse, Email, Name etc.)
       </ul>
       </H4>
-      __EOT__;
-
-
-    $ProjektId = $opts['cgi']['persist']['ProjektId'];
-    $Projekt = $opts['cgi']['persist']['Projekt'];;
-    $action = $opts['cgi']['persist']['Action'];
-    $RecordsPerPage = $opts['cgi']['persist']['RecordsPerPage'];
+__EOT__;
 
     /*
      * IMPORTANT NOTE: This generated file contains only a subset of huge amount
@@ -216,7 +220,7 @@ class CAFEVDB_ShortInstrumentation()
                                                             'cols' => 50),
                                         'escape' => false,
                                         'sort'     => true);
-    $opts['fdd']['Unkostenbeitrag'] = $moneyopts;
+    $opts['fdd']['Unkostenbeitrag'] = CAFEVDB_Config::$opts['money'];
     $opts['fdd']['Unkostenbeitrag']['name'] = "Unkostenbeitrag\n(Gagen negativ)";
 
     // Generate input fields for the extra columns
@@ -235,8 +239,8 @@ class CAFEVDB_ShortInstrumentation()
 
     // Check whether the instrument is also mentioned in the musicians
     // data-base. Otherwise add id on request.
-    $opts['triggers']['insert']['before']  = 'BesetzungFixProject.TIB.inc.php';
-    $opts['triggers']['update']['before']  = 'BesetzungChangeInstrument.TUB.inc.php';
+    $opts['triggers']['insert']['before']  = CAFEVDB_Config::$triggers.'instrumentation-fix-project.TIB.inc.php';
+    $opts['triggers']['update']['before']  = CAFEVDB_Config::$triggers.'instrumentation-change-instrument.TUB.inc.php';
 
     // Now important call to phpMyEdit
     //require_once 'phpMyEdit.class.php';
@@ -247,6 +251,5 @@ class CAFEVDB_ShortInstrumentation()
     require_once 'pme/phpMyEdit.class.php';
     new phpMyEdit($opts);
   }
-}; // class ShortDisplayProjectMusicians
-
+}
 ?>

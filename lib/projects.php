@@ -63,7 +63,7 @@ Eigenschaften bitte die "add", "change" etc. Buttons unten anklicken.</h4>';
 
     // Number of records to display on the screen
     // Value of -1 lists all records in a table
-    $opts['inc'] = 15;
+    $opts['inc'] = -1;
 
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
