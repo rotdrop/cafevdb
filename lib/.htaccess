@@ -4,3 +4,7 @@ Options -Indexes
   Order deny,allow
   Deny from all
 </Files>
+<Files "*.html">
+  Order deny,allow
+  Allow from all
+</Files>

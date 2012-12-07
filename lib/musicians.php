@@ -27,6 +27,7 @@ class CAFEVDB_Musicians
 __EOT__;
 
     } else {
+      $help = CAFEVDB_Config::$prefix . 'hinzufuegen.html';
 
       echo <<<__EOT__
 <div class="cafevdb-pme-header">
@@ -34,7 +35,7 @@ __EOT__;
   <h4>F&uuml;r die aktuelle Teilnehmerliste bitte die Buttons "... Display for ... "
     benutzen.<P> Der Weg in ein Projekt f&uuml;hrt nur &uuml;ber
     <EM style="color:#ff0000"><B>diese</B></EM> Tabelle, die Musiker werden dann automatisch in unseren
-    Fundus mit aufgenommen (<A HREF="hinzufuegen.html" target="_blank">Anleitung</A>)
+    Fundus mit aufgenommen (<A HREF="$help" target="_blank">Anleitung</A>)
   </h4>
 </div>
 
