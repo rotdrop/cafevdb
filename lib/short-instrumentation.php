@@ -1,6 +1,6 @@
 <?php  
 
-class CAFEVDB_shortDisplayProjectMusicians()
+class CAFEVDB_ShortInstrumentation()
 {
   function __construct(@$opts)
   {

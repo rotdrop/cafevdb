@@ -75,9 +75,9 @@ class CAFEVDB_Instrumentation
     /*   include('DisplayProjectMusicians.php'); */
 
     /* } else */
-    if ($action == "ShortDisplayProjectMusicians") {
+    if ($action == "ShortInstrumentation") {
 
-      new CAFEVDB_ShortDisplayProjectMusicians($opts);
+      new CAFEVDB_ShortInstrumentation($opts);
 
     /* } else if ($CAFEV_action == "DisplayProjectsNeeds") { */
 
