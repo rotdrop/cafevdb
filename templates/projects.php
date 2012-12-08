@@ -3,6 +3,6 @@
    <input type="text" id="cafevdb_add_blah" placeholder="<?php echo $l->t('Blah'); ?>" class="cafevdb_input" />
    <input type="submit" value="<?php echo $l->t('Save Blah'); ?>" id="cafevdb_add_submit" />
 </div>
-<div class="cafevdb-pme">
-   <?php CAFEVDB_Projects::display(); ?>
+<div class="cafevdb-general">
+   <?php CAFEVDB\Projects::display(); ?>
 </div>

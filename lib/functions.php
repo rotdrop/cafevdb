@@ -1,11 +1,13 @@
 <?php
 
-class CAFEVDB_Util
+namespace CAFEVDB;
+
+class Util
 {
 
   public static function debugMode()
   {
-    if (CAFEVDB_Config::$debug_query) {
+    if (Config::$debug_query) {
       return true;
     } else {
       return false;
@@ -27,8 +29,8 @@ class CAFEVDB_Util
 
   public static function debugMsg($msg)
   {
-    if (CAFEVDB_Util::debugMode()) {
-      CAFEVDB_Util::error($msg, false);
+    if (Util::debugMode()) {
+      Util::error($msg, false);
     }
   }
 
@@ -61,11 +63,11 @@ class CAFEVDB_Util
       $uri   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
     }
     $redirect = "Location: $proto://$host$port$uri/$page";
-    if (CAFEVDB_Util::debugMode()) {
+    if (Util::debugMode()) {
       echo '<PRE>';
       print_r($_SERVER);
       echo '</PRE><HR/>';
-      CAFEVDB_Util::error('Redirect attempt to "'.$redirect.'"');
+      Util::error('Redirect attempt to "'.$redirect.'"');
     } else {
       header($redirect);
     }
@@ -78,8 +80,8 @@ class CAFEVDB_Util
       return $_POST["$key"];
     } elseif (isset($_GET["$key"])) {
       return $_GET["$key"];
-    } elseif (isset(CAFEVDB_Config::$cgiVars["$key"])) {
-      return CAFEVDB_Config::$cgiVars["$key"];
+    } elseif (isset(Config::$cgiVars["$key"])) {
+      return Config::$cgiVars["$key"];
     } else {
       return $default;
     }
@@ -99,25 +101,25 @@ document.onkeypress = stopRKey;
   }
 };
 
-class CAFEVDB_mySQL
+class mySQL
 {
   public static function connect($opts, $die = true)
   {
     // Fetch the actual list of instruments, we will need it anyway
     $handle = mysql_connect($opts['hn'], $opts['un'], $opts['pw']);
     if ($handle === false) {
-      CAFEVDB_Util::error('Could not connect to data-base server: "'.@mysql_error().'"');
+      Util::error('Could not connect to data-base server: "'.@mysql_error().'"');
     }
 
     // Fucking shit
     $query = "SET NAMES 'utf8'";
-    CAFEVDB_mySQL::query($query, $handle);
+    mySQL::query($query, $handle);
 
     //specify database
     $dbres = mysql_select_db($opts['db'], $handle);
   
     if (!$dbres) {
-      CAFEVDB_Util::error('Unable to select '.$opts['db']);
+      Util::error('Unable to select '.$opts['db']);
     }
     return $handle;
   }
@@ -133,7 +135,7 @@ class CAFEVDB_mySQL
 
   public static function query($query, $handle = false, $die = true, $silent = false)
   {
-    if (CAFEVDB_Util::debugMode()) {
+    if (Util::debugMode()) {
       echo '<HR/><PRE>'.htmlspecialchars($query).'</PRE><HR/><BR>';
     }
     if ($handle) {
@@ -146,7 +148,7 @@ class CAFEVDB_mySQL
       }
     }
     if (!$result && (!$silent || $die)) {
-      CAFEVDB_Util::error('mysql_query() failed: "'.$err.'"', $die);
+      Util::error('mysql_query() failed: "'.$err.'"', $die);
     }
     return $result;
   }
@@ -154,7 +156,7 @@ class CAFEVDB_mySQL
   public static function fetch(&$res, $type = MYSQL_ASSOC)
   {
     $result = mysql_fetch_array($res, $type);
-    if (CAFEVDB_Util::debugMode()) {
+    if (Util::debugMode()) {
       print_r($result);
     }
     return $result;
@@ -176,9 +178,9 @@ class CAFEVDB_mySQL
     $query = "SHOW COLUMNS FROM $table LIKE '$column'";
 
     // Fetch the result or die
-    $result = CAFEVDB_mySQL::query($query, $handle) or die("Couldn't execute query");
+    $result = mySQL::query($query, $handle) or die("Couldn't execute query");
 
-    $line = CAFEVDB_mySQL::fetch($result);
+    $line = mySQL::fetch($result);
 
     $set = $line['Type'];
 
@@ -194,106 +196,8 @@ class CAFEVDB_mySQL
 
     return preg_split("/','/",$set); // Split into an array
   }
+
 };
-
-/** Helper functions for email.
- */
-class CAFEVDB_Email
-{
-  /** Split a comma separated address list into an array.
-   */
-  public static function parseAddrListToArray($list)
-  {
-    $t = str_getcsv($list);
-
-    foreach($t as $k => $v) {
-      if (strpos($v,',') !== false) {
-        $t[$k] = '"'.str_replace(' <','" <',$v);
-      }
-    }
-
-    foreach ($t as $addr) {
-      if (strpos($addr, '<')) {
-        preg_match('!(.*?)\s?<\s*(.*?)\s*>!', $addr, $matches);
-        $emails[] = array(
-                          'email' => $matches[2],
-                          'name' => $matches[1]
-                          );
-      } else {
-        $emails[] = array(
-                          'email' => $addr,
-                          'name' => ''
-                          );
-      }
-    }
-
-    return $emails;
-  }
-
-  /** Issue an error message.
-   */
-  public static function echoInvalid($kind, $email)
-  {
-    echo '<HR/><H4>The '.$kind.' address "'.$email.'" seems to be invalid.
-<p>
-Please correct that first and then click on the "Send"-button again.
-<P>
-Unfortunately, attachments (if any) have to be specified again.
-</H4>';
-  }
-
-  public static function addAddress($phpmailer, $address, $name = '')
-  {
-    if (!$phpmailer->AddAddress($address, $name)) {
-      EmailEchoInvalid('recipient', $address);
-      return false;
-    }
-    return true;
-  }
-
-  public static function addCC($phpmailer, $address, $name = '')
-  {
-    if (!$phpmailer->AddCC($address, $name)) {
-      EmailEchoInvalid('"Cc:"', $address);
-      return false;
-    }
-    return true;
-  }
-
-  public static function addBCC($phpmailer, $address, $name = '')
-  {
-    if (!$phpmailer->AddBCC($address, $name)) {
-      EmailEchoInvalid('"Bcc:"', $address);
-      return false;
-    }
-    return true;
-  }
-
-  public static function setFrom($phpmailer, $address, $name = '')
-  {
-    if ($phpmailer->SetFrom($address, $name) != true) {
-      EmailEchoInvalid('"From:"', $address);
-      return false;
-    }
-    return true;
-  }
-
-  public static function addReplyTo($phpmailer, $address, $name = '')
-  {
-    if ($phpmailer->AddReplyTo($address, $name) != true) {
-      EmailEchoInvalid('"ReplyTo:"', $address);
-      return false;
-    }
-    return true;
-  }
-
-  // Maybe not needed.
-  public static function callback($isSent, $to, $cc, $bcc, $subject, $body)
-  {
-
-
-  }
-}; // CAFEVDB_Email
 
 
 ?>

@@ -1,38 +1,42 @@
 <?php  
 
-class CAFEVDB_BriefInstrumentation
+namespace CAFEVDB;
+
+class BriefInstrumentation
 {
   static function display(&$opts)
   {
     global $debug_query;
-    //CAFEVDB_Config::$debug_query = true;
+    //Config::$debug_query = true;
     //$debug_query = true;
 
-    $action          = CAFEVDB_Instrumentation::$action;
-    $project         = CAFEVDB_Instrumentation::$project;
-    $projectId       = CAFEVDB_Instrumentation::$projectId;
+    $action          = Instrumentation::$action;
+    $project         = Instrumentation::$project;
+    $projectId       = Instrumentation::$projectId;
 
-    $recordsPerPage  = CAFEVDB_Instrumentation::$recordsPerPage;
-    $userExtraFields = CAFEVDB_Instrumentation::$userExtraFields;
+    $recordsPerPage  = Instrumentation::$recordsPerPage;
+    $userExtraFields = Instrumentation::$userExtraFields;
 
     echo <<<__EOT__
-<div class="cafevdb-pme-header">
-  <h3>Besetzung Projekt $project</h3>
-  <H4>
-    <ul>
-      <li><span style="color:red">Musiker hinzufügen</span>
-        <span style="font-style:italic">"Add more Musicians to $project"</span>
-      <li><span style="color:red">Musiker entfernen</span>
+<div class="cafevdb-pme-header-box">
+  <div class="cafevdb-pme-header">
+    <h3>Besetzung Projekt $project</h3>
+    <H4>
+      <ul>
+        <li><span style="color:red">Musiker hinzufügen</span>
+          <span style="font-style:italic">"Add more Musicians to $project"</span>
+        <li><span style="color:red">Musiker entfernen</span>
+            <span style="font-style:italic">diese Tabelle</span>
+            ("x"-Button)
+        <li><span style="color:red">Projekt-Daten</span>
           <span style="font-style:italic">diese Tabelle</span>
-          ("x"-Button)
-      <li><span style="color:red">Projekt-Daten</span>
-        <span style="font-style:italic">diese Tabelle</span>
-        (Projekt-Instrument, Stimmführer, Projekt-Bemerkungen etc.)
-      <li><span style="color:red">Personen-Daten</span>
-        <span style="font-style:italic">"Detailed Display for $project"</span>
-        (Adresse, Email, Name etc.)
-    </ul>
-  </H4>
+          (Projekt-Instrument, Stimmführer, Projekt-Bemerkungen etc.)
+        <li><span style="color:red">Personen-Daten</span>
+          <span style="font-style:italic">"Detailed Display for $project"</span>
+          (Adresse, Email, Name etc.)
+      </ul>
+    </H4>
+  </div>
 </div>
 
 __EOT__;
@@ -198,7 +202,7 @@ __EOT__;
                                                            'description' => array('columns' => array('Instrument'))),
                                        'sort'     => true
                                        );
-    //$opts['fdd']['Instrument']['values'] = $Instrumente;
+    //$opts['fdd']['Instrument']['values'] = Instrumentation::$instruments;
     $opts['fdd']['Sortierung'] = array('name' => 'Orchester-Sortierung',
                                        'select' => 'T',
                                        'options' => 'VCPR',
@@ -225,7 +229,7 @@ __EOT__;
                                                             'cols' => 50),
                                         'escape' => false,
                                         'sort'     => true);
-    $opts['fdd']['Unkostenbeitrag'] = CAFEVDB_Config::$opts['money'];
+    $opts['fdd']['Unkostenbeitrag'] = Config::$opts['money'];
     $opts['fdd']['Unkostenbeitrag']['name'] = "Unkostenbeitrag\n(Gagen negativ)";
 
     // Generate input fields for the extra columns
@@ -244,15 +248,15 @@ __EOT__;
 
     // Check whether the instrument is also mentioned in the musicians
     // data-base. Otherwise add id on request.
-    $opts['triggers']['insert']['before']  = CAFEVDB_Config::$triggers.'instrumentation-fix-project.TIB.inc.php';
-    $opts['triggers']['update']['before']  = CAFEVDB_Config::$triggers.'instrumentation-change-instrument.TUB.inc.php';
+    $opts['triggers']['insert']['before']  = Config::$triggers.'instrumentation-fix-project.TIB.inc.php';
+    $opts['triggers']['update']['before']  = Config::$triggers.'instrumentation-change-instrument.TUB.inc.php';
 
     // Now important call to phpMyEdit
     //require_once 'phpMyEdit.class.php';
     //new phpMyEdit($opts);
     //require_once 'extensions/phpMyEdit-mce-cal.class.php';
     //new phpMyEdit_mce_cal($opts);
-    new phpMyEdit($opts);
+    new \phpMyEdit($opts);
   }
 }
 ?>

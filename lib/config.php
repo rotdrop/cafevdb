@@ -1,9 +1,11 @@
 <?php
 
+namespace CAFEVDB;
+
 // PHP shit
 date_default_timezone_set('Europe/Berlin');
 
-class CAFEVDB_Config
+class Config
 {
   public static $appbase = "apps/cafevdb/";
   public static $prefix = false;
@@ -45,7 +47,7 @@ class CAFEVDB_Config
     // Navigation style: B - buttons (default), T - text links, G - graphic links
     // Buttons position: U - up, D - down (default)
     self::$pmeopts['navigation'] = 'GUDM';
-    self::$pmeopts['miscphp'] = 'EMail.php';
+    self::$pmeopts['miscphp'] = 'Email::display';
     self::$pmeopts['labels']['Misc'] = 'Em@il';
     //self::$pmeopts['labels']['Sort Field'] = 'Sortierfeld';
 
@@ -93,7 +95,7 @@ class CAFEVDB_Config
                            'ProjectId' => -1,
                            'Project' => '',
                            'RecordsPerPage' => -1);
-    self::$pmeopts['tooltips'] = CAFEVDB_ToolTips::pmeToolTips();
+    self::$pmeopts['tooltips'] = ToolTips::pmeToolTips();
   }
 };
 

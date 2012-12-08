@@ -151,7 +151,7 @@ class phpMyEdit
 	var $message;		// informational message to print
 	var $notify;		// change notification e-mail adresses
 	var $logtable;		// name of optional logtable
-        var $miscphp;           // callback script or multi-purpose custom misc button 
+        var $miscphp;           // callback function for multi-purpose custom misc button 
 	var $navigation;	// navigation style
 	var $buttons;
 	var $tabs;			// TAB names
@@ -3810,7 +3810,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
                  */
                 elseif ($this->misc_operation()) {
                         $this->sql_disconnect();
-                        return include($this->miscphp);
+                        return call_user_func($this->miscphp);
                 }
 
 		/*

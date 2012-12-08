@@ -1,531 +1,539 @@
 <?php
 
-set_include_path(dirname(__FILE__).'/QuickForm2' . PATH_SEPARATOR . get_include_path());
-set_include_path(dirname(dirname(dirname(__FILE__))).'/pear/php' . PATH_SEPARATOR . get_include_path());
+namespace {
 
-require_once("class.html2text.inc");
-require_once('QuickForm2/DualSelect.php');
-require_once("PHPMailer/class.phpmailer.php");
-require_once("Net/IMAP.php");
+  $incPath = __DIR__.'/../3rdparty';
+  set_include_path($incPath . PATH_SEPARATOR . get_include_path());
+  $incPath = __DIR__.'/../3rdparty/QuickForm2';
+  set_include_path($incPath . PATH_SEPARATOR . get_include_path());
+  $incPath = __DIR__.'/../3rdparty/pear/php';
+  set_include_path($incPath . PATH_SEPARATOR . get_include_path());
 
-/**Wrap the email filter form into a class to make things a little
- * less crowded. This is actually not to filter emails, but rather to
- * select specific groups of musicians (depending on instrument and
- * project).
- */
-class CAFEVDB_EmailFilter {
+  require_once('QuickForm2/DualSelect.php');
+  require_once("PHPMailer/class.phpmailer.php");
+  require_once("Net/IMAP.php");
 
-  private $projectId;   // Project id or NULL or -1 or ''
-  private $project;     // Project name of NULL or ''
-  private $filter;      // Current instrument filter
-  private $EmailsRecs;  // Copy of email records from CGI env
-  private $emailKey;    // Key for EmailsRecs into _POST or _GET
+}
 
-  private $table;       // Table-name, either Musiker of some project view
-  private $MId;         // Key for the musicians id, Id, or MusikerId
-  private $restrict;    // Instrument filter keyword, Instrument or ...s
-  private $instruments; // List of instruments for filtering
-  
-  private $opts;        // Copy of global options
+namespace CAFEVDB {
 
-  private $NoMail;      // List of people without email
-  private $EMails;      // List of people with email  
-  private $EMailsDpy;   // Display list with namee an email
-
-  // Form elements
-  private $form;           // QuickForm2 form
-  private $selectFieldSet; // Field-set for the filter
-  private $dualSelect;     // QF2 dual-select
-  private $filterSelect;   // Filter by instrument.
-  private $submitFieldSet; // Field-set for the select buttons
-  private $resetButton;    // Reset to default state
-  private $submitButton;   // Guess what.
-  private $freezeButton;   // Display emails as list.
-  private $nopeFieldSet;   // No email.
-  private $nopeStatic;     // Actual static form
-
-  private $frozen;         // Whether or not we are active.
-
-  /* 
-   * constructor
+  /**Wrap the email filter form into a class to make things a little
+   * less crowded. This is actually not to filter emails, but rather to
+   * select specific groups of musicians (depending on instrument and
+   * project).
    */
-  public function __construct(&$_opts, $action = NULL)
-  {
-    $this->frozen = false;
+  class EmailFilter {
 
-    $this->opts = $_opts;
+    private $projectId;   // Project id or NULL or -1 or ''
+    private $project;     // Project name of NULL or ''
+    private $filter;      // Current instrument filter
+    private $EmailsRecs;  // Copy of email records from CGI env
+    private $emailKey;    // Key for EmailsRecs into _POST or _GET
 
-    $this->projectId = CAFEVDB_Util::cgiValue('ProjektId',-1);
-    $this->project   = CAFEVDB_Util::cgiValue('Projekt','');
+    private $table;       // Table-name, either Musiker of some project view
+    private $MId;         // Key for the musicians id, Id, or MusikerId
+    private $restrict;    // Instrument filter keyword, Instrument or ...s
+    private $instruments; // List of instruments for filtering
+  
+    private $opts;        // Copy of global options
 
-    // See wether we were passed specific variables ...
-    $pmepfx          = $this->opts['cgi']['prefix']['sys'];
-    $this->emailKey  = $pmepfx.'mrecs';
-    $this->mtabKey   = $pmepfx.'mtable';
-    $this->EmailRecs = CAFEVDB_Util::cgiValue($this->emailKey,array());
-    $this->table     = CAFEVDB_Util::cgiValue($this->mtabKey,'');
+    private $NoMail;      // List of people without email
+    private $EMails;      // List of people with email  
+    private $EMailsDpy;   // Display list with namee an email
 
-    // Now connect to the data-base
-    $dbh = CAFEVDB_mySQL::connect($this->opts);
+    // Form elements
+    private $form;           // QuickForm2 form
+    private $selectFieldSet; // Field-set for the filter
+    private $dualSelect;     // QF2 dual-select
+    private $filterSelect;   // Filter by instrument.
+    private $submitFieldSet; // Field-set for the select buttons
+    private $resetButton;    // Reset to default state
+    private $submitButton;   // Guess what.
+    private $freezeButton;   // Display emails as list.
+    private $nopeFieldSet;   // No email.
+    private $nopeStatic;     // Actual static form
 
-    $this->getInstrumentsFromDB($dbh);
-    $this->getMusiciansFromDB($dbh);
+    private $frozen;         // Whether or not we are active.
 
-    // Not needed anymore
-    CAFEVDB_mySQL::close($dbh);
-
-    /* At this point we have the Email-List, either in global or project
-     * context, and possibly a selection of Musicians by Id from the
-     * script which called us. We build a "dual-select" box where the Ids
-     * in the MiscRecs field are remembered.
+    /* 
+     * constructor
      */
-    $this->createForm();
-    
-    if ($action) {
-      $this->form->setAttribute('action', $action);
-    }
+    public function __construct(&$_opts, $action = NULL)
+    {
+      $this->frozen = false;
 
-    $this->emitPersistent();   
-  }
+      $this->opts = $_opts;
 
-  /* 
-   * Include hidden fields to remember stuff across submit.
-   */
-  public function addPersistentCGI($key, $value, &$form = NULL) {
-    if (!$form) {
-      $form = $this->form;
-    }
+      $this->projectId = Util::cgiValue('ProjectId',-1);
+      $this->project   = Util::cgiValue('Project','');
 
-    if (is_array($value)) {
-      // One could recurse ...
-      foreach($value as $idx => $val) {
-        $form->addElement('hidden', $key.'['.$idx.']')->setValue($val);
-      }
-    } else {
-      $form->addElement('hidden', $key)->setValue($value);
-    }
-  }
+      // See wether we were passed specific variables ...
+      $pmepfx          = $this->opts['cgi']['prefix']['sys'];
+      $this->emailKey  = $pmepfx.'mrecs';
+      $this->mtabKey   = $pmepfx.'mtable';
+      $this->EmailRecs = Util::cgiValue($this->emailKey,array());
+      $this->table     = Util::cgiValue($this->mtabKey,'');
 
-  /* 
-   * Inject sufficient "hidden" form fields to make data persistent
-   * across reloads
-   */
-  public function emitPersistent(&$form = NULL) {
-    
-    $this->addPersistentCGI('ProjektId', $this->projectId);
-    $this->addPersistentCGI('Projekt', $this->project);
-    $this->addPersistentCGI($this->emailKey, $this->EmailRecs);
-  }
+      // Now connect to the data-base
+      $dbh = mySQL::connect($this->opts);
 
-  /*
-   * Return a string with our needed data.
-   */
-  public function getPersistent()
-  {
-    $form = new HTML_QuickForm2('dummy');
-    
-    $this->addPersistentCGI('ProjektId', $this->projectId, $form);
-    $this->addPersistentCGI('Projekt', $this->project, $form);
-    $this->addPersistentCGI($this->emailKey, $this->EmailRecs, $form);
+      $this->getInstrumentsFromDB($dbh);
+      $this->getMusiciansFromDB($dbh);
 
-    $value = $this->form->getValue();
-    if (isset($value['SelectedMusicians'])) {
-      $this->addPersistentCGI('SelectedMusicians', $value['SelectedMusicians'], $form);
-    }
-    if (isset($value['InstrumentenFilter'])) {
-      $this->addPersistentCGI('InstrumentenFilter', $value['InstrumentenFilter'], $form);
-    }
-    
-    $out = '';
-    foreach ($form as $element) {
-      $out .= $element."\n";
-    }
+      // Not needed anymore
+      mySQL::close($dbh);
 
-    return $out;
-  }
-  
-  /*
-   * Fetch the list of instruments (either only for project or all)
-   *
-   * Also: construct the filter by instrument.
-   */
-  private function getInstrumentsFromDb($dbh, $filterNumbers = NULL)
-  {
-    // Get the current list of instruments for the filter
-    if ($this->projectId >= 0) {
-      $this->MId         = 'MusikerId';
-      $this->Restrict    = 'Instrument';
-      $this->instruments = CAFEVDB_Instruments::fetchProjectMusiciansInstruments($this->projectId, $dbh);
-    } else {
-      $this->MId         = 'Id';
-      $this->Restrict    = 'Instrumente';
-      $this->instruments = CAFEVDB_Instruments::fetch($dbh);
-    }
-    array_unshift($this->instruments, '*');
-
-    /* Construct the filter */
-    if (!$filterNumbers) {
-      $filterNumbers = CAFEVDB_Util::cgiValue('InstrumentenFilter',array('0'));
-    }
-    $this->filter = array();
-    foreach ($filterNumbers as $idx) {
-      $this->filter[] = $this->instruments[$idx];
-    }
-  }  
-
-  /*
-   * Fetch the list of musicians for the given context (project/gloabl)
-   */
-  private function getMusiciansFromDB($dbh)
-  {
-    if ($this->table == 'Besetzungen') {
-      /*
-       * Then we need to remap the stuff. To keep things clean we remap now
+      /* At this point we have the Email-List, either in global or project
+       * context, and possibly a selection of Musicians by Id from the
+       * script which called us. We build a "dual-select" box where the Ids
+       * in the MiscRecs field are remembered.
        */
-      $this->table = $this->project.'View';
-      $query = 'SELECT `Besetzungen`.`Id` AS \'BesetzungsId\',
+      $this->createForm();
+    
+      if ($action) {
+        $this->form->setAttribute('action', $action);
+      }
+
+      $this->emitPersistent();   
+    }
+
+    /* 
+     * Include hidden fields to remember stuff across submit.
+     */
+    public function addPersistentCGI($key, $value, &$form = NULL) {
+      if (!$form) {
+        $form = $this->form;
+      }
+
+      if (is_array($value)) {
+        // One could recurse ...
+        foreach($value as $idx => $val) {
+          $form->addElement('hidden', $key.'['.$idx.']')->setValue($val);
+        }
+      } else {
+        $form->addElement('hidden', $key)->setValue($value);
+      }
+    }
+
+    /* 
+     * Inject sufficient "hidden" form fields to make data persistent
+     * across reloads
+     */
+    public function emitPersistent(&$form = NULL) {
+    
+      $this->addPersistentCGI('ProjectId', $this->projectId);
+      $this->addPersistentCGI('Project', $this->project);
+      $this->addPersistentCGI($this->emailKey, $this->EmailRecs);
+    }
+
+    /*
+     * Return a string with our needed data.
+     */
+    public function getPersistent()
+    {
+      $form = new \HTML_QuickForm2('dummy');
+    
+      $this->addPersistentCGI('ProjectId', $this->projectId, $form);
+      $this->addPersistentCGI('Project', $this->project, $form);
+      $this->addPersistentCGI($this->emailKey, $this->EmailRecs, $form);
+
+      $value = $this->form->getValue();
+      if (isset($value['SelectedMusicians'])) {
+        $this->addPersistentCGI('SelectedMusicians', $value['SelectedMusicians'], $form);
+      }
+      if (isset($value['InstrumentenFilter'])) {
+        $this->addPersistentCGI('InstrumentenFilter', $value['InstrumentenFilter'], $form);
+      }
+    
+      $out = '';
+      foreach ($form as $element) {
+        $out .= $element."\n";
+      }
+
+      return $out;
+    }
+  
+    /*
+     * Fetch the list of instruments (either only for project or all)
+     *
+     * Also: construct the filter by instrument.
+     */
+    private function getInstrumentsFromDb($dbh, $filterNumbers = NULL)
+    {
+      // Get the current list of instruments for the filter
+      if ($this->projectId >= 0) {
+        $this->MId         = 'MusikerId';
+        $this->Restrict    = 'Instrument';
+        $this->instruments = Instruments::fetchProjectMusiciansInstruments($this->projectId, $dbh);
+      } else {
+        $this->MId         = 'Id';
+        $this->Restrict    = 'Instrumente';
+        $this->instruments = Instruments::fetch($dbh);
+      }
+      array_unshift($this->instruments, '*');
+
+      /* Construct the filter */
+      if (!$filterNumbers) {
+        $filterNumbers = Util::cgiValue('InstrumentenFilter',array('0'));
+      }
+      $this->filter = array();
+      foreach ($filterNumbers as $idx) {
+        $this->filter[] = $this->instruments[$idx];
+      }
+    }  
+
+    /*
+     * Fetch the list of musicians for the given context (project/gloabl)
+     */
+    private function getMusiciansFromDB($dbh)
+    {
+      if ($this->table == 'Besetzungen') {
+        /*
+         * Then we need to remap the stuff. To keep things clean we remap now
+         */
+        $this->table = $this->project.'View';
+        $query = 'SELECT `Besetzungen`.`Id` AS \'BesetzungsId\',
   `'.$this->table.'`.`'.$this->MId.'` AS \'MusikerId\'
   FROM `'.$this->table.'` LEFT JOIN `Besetzungen`
   ON `'.$this->table.'`.`'.$this->MId.'` = `Besetzungen`.`MusikerId` WHERE 1';
 
-      // Fetch the result or die and remap the Ids
-      $result = CAFEVDB_mySQL::query($query, $dbh);
-      $map = array();
-      while ($line = mysql_fetch_assoc($result)) {
-        $map[$line['BesetzungsId']] = $line['MusikerId'];
-      }
-      $newEmailRecs = array();
-      foreach ($this->EmailRecs as $key) {
-        if (!isset($map[$key])) {
-          CAFEVDB_Util::error('Musician in Besetzungen, but has no Id as Musician');
+        // Fetch the result or die and remap the Ids
+        $result = mySQL::query($query, $dbh);
+        $map = array();
+        while ($line = mysql_fetch_assoc($result)) {
+          $map[$line['BesetzungsId']] = $line['MusikerId'];
         }
-        $newEmailRecs[] = $map[$key];
+        $newEmailRecs = array();
+        foreach ($this->EmailRecs as $key) {
+          if (!isset($map[$key])) {
+            Util::error('Musician in Besetzungen, but has no Id as Musician');
+          }
+          $newEmailRecs[] = $map[$key];
+        }
+        $this->EmailRecs = $newEmailRecs;
       }
-      $this->EmailRecs = $newEmailRecs;
-    }
     
-    /*** Now continue as if from 'ordinary' View-Table ****/
-    if ($this->projectId < 0) {
-      $this->table = 'Musiker';
-    } else {
-      $this->table = $this->project.'View';
-    }
+      /*** Now continue as if from 'ordinary' View-Table ****/
+      if ($this->projectId < 0) {
+        $this->table = 'Musiker';
+      } else {
+        $this->table = $this->project.'View';
+      }
 
-    $query = 'SELECT `'.$this->MId.'`,`Vorname`,`Name`,`Email` FROM '.$this->table.' WHERE
+      $query = 'SELECT `'.$this->MId.'`,`Vorname`,`Name`,`Email` FROM '.$this->table.' WHERE
        ( ';
-    foreach ($this->filter as $value) {
-      if ($value == '*') {
-        $query .= "1 OR\n";
-      } else {
-        $query .= "`".$this->Restrict."` LIKE '%".$value."%' OR\n";
-      }
-    }
-    /* Don't bother any conductor with mass-email. */
-    $query .= "0 ) AND NOT `".$this->Restrict."` LIKE '%Taktstock%'\n";
-
-    // Fetch the result or die
-    $result = CAFEVDB_mySQL::query($query, $dbh);
-
-    /* Stuff all emails into one array for later usage, remember the Id in
-     * order to combine any selection from the new "multi-select"
-     * check-boxes.
-     */
-    $this->NoMail = array();
-    $this->EMails = array();
-    $this->EMailsDpy = array();
-    while ($line = mysql_fetch_assoc($result)) {
-      $name = $line['Vorname'].' '.$line['Name'];
-      if ($line['Email'] != '') {
-        // We allow comma separated multiple addresses
-        $musmail = explode(',',$line['Email']);
-        foreach ($musmail as $emailval) {
-          $this->EMails[$line[$this->MId]] =
-            array('email' => $emailval, 'name' => $name);
-          $this->EMailsDpy[$line[$this->MId]] =
-            htmlspecialchars($name.' <'.$emailval.'>');
+      foreach ($this->filter as $value) {
+        if ($value == '*') {
+          $query .= "1 OR\n";
+        } else {
+          $query .= "`".$this->Restrict."` LIKE '%".$value."%' OR\n";
         }
-      } else {
-        $this->NoMail[$line[$this->MId]] = array('name' => $name);
       }
+      /* Don't bother any conductor with mass-email. */
+      $query .= "0 ) AND NOT `".$this->Restrict."` LIKE '%Taktstock%'\n";
+
+      // Fetch the result or die
+      $result = mySQL::query($query, $dbh);
+
+      /* Stuff all emails into one array for later usage, remember the Id in
+       * order to combine any selection from the new "multi-select"
+       * check-boxes.
+       */
+      $this->NoMail = array();
+      $this->EMails = array();
+      $this->EMailsDpy = array();
+      while ($line = mysql_fetch_assoc($result)) {
+        $name = $line['Vorname'].' '.$line['Name'];
+        if ($line['Email'] != '') {
+          // We allow comma separated multiple addresses
+          $musmail = explode(',',$line['Email']);
+          foreach ($musmail as $emailval) {
+            $this->EMails[$line[$this->MId]] =
+              array('email' => $emailval, 'name' => $name);
+            $this->EMailsDpy[$line[$this->MId]] =
+              htmlspecialchars($name.' <'.$emailval.'>');
+          }
+        } else {
+          $this->NoMail[$line[$this->MId]] = array('name' => $name);
+        }
+      }
+      /* Sort EMailsDpy according to its values */
+      asort($this->EMailsDpy);
     }
-    /* Sort EMailsDpy according to its values */
-    asort($this->EMailsDpy);
-  }
   
-  /*
-   * Generate a QF2 form
-   */
-  private function createForm()
-  {
-    $this->form = new HTML_QuickForm2('dualselect');
-
-    /* Add any variables we want to keep
+    /*
+     * Generate a QF2 form
      */
-    /* Selected recipient */
-    $this->form->addDataSource(
-      (new HTML_QuickForm2_DataSource_Array(
-        array('SelectedMusicians' => $this->EmailRecs))));
+    private function createForm()
+    {
+      $this->form = new \HTML_QuickForm2('dualselect');
 
-    $this->form->setAttribute('class', 'cafev-mail-filter');
+      /* Add any variables we want to keep
+       */
+      /* Selected recipient */
+      $this->form->addDataSource(
+                                 (new \HTML_QuickForm2_DataSource_Array(
+                                                                       array('SelectedMusicians' => $this->EmailRecs))));
 
-    /* Groups can only render field-sets well, so make thing more
-     * complicated than necessary
-     */
-    $fsdummystyle = 'border:none;margin:0px;padding:0px;clear:both';
+      $this->form->setAttribute('class', 'cafevdb-email-filter');
 
-    // Outer field-set with border
-    $outerFS = $this->form->addElement('fieldset')->setLabel('Em@il Auswahl');
+      /* Groups can only render field-sets well, so make thing more
+       * complicated than necessary
+       */
+      $fsdummystyle = 'border:none;margin:0px;padding:0px;clear:both';
 
-    $this->selectFieldSet = $outerFS->addElement('fieldset', NULL, array('style' => $fsdummystyle));
-    $this->selectFieldSet->setAttribute('class','filter');
+      // Outer field-set with border
+      $outerFS = $this->form->addElement('fieldset')->setLabel('Em@il Auswahl');
 
-    $this->filterSelect = $this->selectFieldSet->addElement(
-      'select', 'InstrumentenFilter',
-      array('multiple' => 'multiple', 'size' => 15, 'class' => 'filter'),
-      array('options' => $this->instruments, 'label' => 'Instrumenten-Filter'));
+      $this->selectFieldSet = $outerFS->addElement('fieldset', NULL, array('style' => $fsdummystyle));
+      $this->selectFieldSet->setAttribute('class','filter');
 
-    if (!CAFEVDB_Util::cgiValue('InstrumentenFilter',false)) {
-      $this->filterSelect->setValue(array(0));
-    }
+      $this->filterSelect = $this->selectFieldSet->addElement(
+                                                              'select', 'InstrumentenFilter',
+                                                              array('multiple' => 'multiple', 'size' => 15, 'class' => 'filter'),
+                                                              array('options' => $this->instruments, 'label' => 'Instrumenten-Filter'));
 
-    $this->dualSelect = $this->selectFieldSet->addElement(
-      'dualselect', 'SelectedMusicians',
-      array('size' => 15, 'class' => 'dualselect'),
-      array('options'    => $this->EMailsDpy,
-            'keepSorted' => true,
-            'from_to'    => array(
-              'content' => ' &gt;&gt; ',
-              'attributes' => array('class' => 'transfer')),
-            'to_from'    => array(
-              'content' => ' &lt&lt; ',
-              'attributes' => array('class' => 'transfer'))
-        )
-      )->setLabel(array(
-                    'Email Adressaten',
-                    'übrige',
-                    'ausgewählte'
-                    ));
+      if (!Util::cgiValue('InstrumentenFilter',false)) {
+        $this->filterSelect->setValue(array(0));
+      }
 
-    if (false) {
-      $this->dualSelect->addRule(
-        'required', 'Bitte wenigstens einen Adressaten wählen', 1,
-        HTML_QuickForm2_Rule::ONBLUR_CLIENT_SERVER);
-    }
+      $this->dualSelect = $this->selectFieldSet->addElement(
+                                                            'dualselect', 'SelectedMusicians',
+                                                            array('size' => 15, 'class' => 'dualselect'),
+                                                            array('options'    => $this->EMailsDpy,
+                                                                  'keepSorted' => true,
+                                                                  'from_to'    => array(
+                                                                                        'content' => ' &gt;&gt; ',
+                                                                                        'attributes' => array('class' => 'transfer')),
+                                                                  'to_from'    => array(
+                                                                                        'content' => ' &lt&lt; ',
+                                                                                        'attributes' => array('class' => 'transfer'))
+                                                                  )
+                                                            )->setLabel(array(
+                                                                              'Email Adressaten',
+                                                                              'übrige',
+                                                                              'ausgewählte'
+                                                                              ));
 
-    /******** Submit buttons follow *******/
+      if (false) {
+        $this->dualSelect->addRule(
+                                   'required', 'Bitte wenigstens einen Adressaten wählen', 1,
+                                   \HTML_QuickForm2_Rule::ONBLUR_CLIENT_SERVER);
+      }
 
-    $this->submitFieldSet = $outerFS->addElement('fieldset', NULL, array('style' => $fsdummystyle));
-    $this->submitFieldSet->setAttribute('class','submit');
+      /******** Submit buttons follow *******/
 
-    $this->freezeButton = $this->submitFieldSet->addElement(
-      'submit', 'writeMail',
-      array('value' => 'Email Verfassen',
-            'title' => 'Beendet die Musiker-Auswahl
+      $this->submitFieldSet = $outerFS->addElement('fieldset', NULL, array('style' => $fsdummystyle));
+      $this->submitFieldSet->setAttribute('class','submit');
+
+      $this->freezeButton = $this->submitFieldSet->addElement(
+                                                              'submit', 'writeMail',
+                                                              array('value' => 'Email Verfassen',
+                                                                    'title' => 'Beendet die Musiker-Auswahl
 und aktiviert den Editor'));
 
-    $this->submitButton = $this->submitFieldSet->addElement(
-      'submit', 'filterSubmit',
-      array('value' => 'Filter Anwenden',
-      'title' => 'Instrumenten-Filter anwenden.'));
+      $this->submitButton = $this->submitFieldSet->addElement(
+                                                              'submit', 'filterSubmit',
+                                                              array('value' => 'Filter Anwenden',
+                                                                    'title' => 'Instrumenten-Filter anwenden.'));
 
-    $this->resetButton = $this->submitFieldSet->addElement(
-      'submit', 'filterReset',
-      array('value' => 'Filter Zurücksetzen',
-            'title' => 'Von vorne mit den
+      $this->resetButton = $this->submitFieldSet->addElement(
+                                                             'submit', 'filterReset',
+                                                             array('value' => 'Filter Zurücksetzen',
+                                                                   'title' => 'Von vorne mit den
 Anfangswerten.'));
 
-    /********** Add a pseudo-form for people without email *************/
+      /********** Add a pseudo-form for people without email *************/
 
-    $this->nopeFieldSet =
-      $this->form->addElement('fieldset', 'NoEm@il')->setLabel('Musiker ohne Em@il');
-    $this->nopeStatic = $this->nopeFieldSet->addElement('static', 'NoEm@il', NULL,
-                                                        array('tagName' => 'div'));
+      $this->nopeFieldSet =
+        $this->form->addElement('fieldset', 'NoEm@il')->setLabel('Musiker ohne Em@il');
+      $this->nopeStatic = $this->nopeFieldSet->addElement('static', 'NoEm@il', NULL,
+                                                          array('tagName' => 'div'));
 
-    $this->updateNoEmailForm();
-  }
-
-  /* Add a static "dummy"-form or people without email */
-  private function updateNoEmailForm() 
-  {    
-
-    if (count($this->NoMail) > 0) {
-      $data = '<PRE>';
-      $data .= "Count: ".count($this->NoMail)."\n";
-      foreach($this->NoMail as $value) {
-        $data .= htmlspecialchars($value['name'])."\n";
-      }
-      $data.= '</PRE>';
-    
-      if (!$this->form->getElementById($this->nopeFieldSet->getId())) {
-        $this->form->appendChild($this->nopeFieldSet);
-      }
-      $this->nopeStatic->setContent($data);
-    } elseif ($this->form->getElementById($this->nopeFieldSet->getId())) {
-      $this->form->removeChild($this->nopeFieldSet);
+      $this->updateNoEmailForm();
     }
-  }
-  
-  /*
-   * Are we frozen, i.e. ready to send?
-   */
-  public function isFrozen() 
-  {
-    return $this->frozen;
-  }
 
-  /*
-   * Return an array with the filtered Email addresses
-   *
-   * value['SelectedMusicians'] contains the form-data, this->EMails
-   * the stuff from the data-base
-   */
-  public function getEmails()
-  {
-    $values = $this->form->getValue();
-    $EMails = array();
-    foreach ($values['SelectedMusicians'] as $key) {
-      $EMails[] = $this->EMails[$key];
-    }
-    return $EMails;
-  }
+    /* Add a static "dummy"-form or people without email */
+    private function updateNoEmailForm() 
+    {    
 
-  /*
-   * Let it run; 
-   */
-  public function execute()
-  {
-    // outputting form values
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-      $value = $this->form->getValue();
-      /* echo "<pre>\n"; */
-      /* var_dump($value); */
-      /* print_r($this->EMails); */
-      /* echo "</pre>\n<hr />"; */
-      /*
-       * We implement two further POST action for communication with
-       * other forms:
-       *
-       * eraseAll -> if set, restart with default
-       *
-       * modifyAdresses -> set, then read the list of musicians by
-       * hand and initialize the quick-form class accordingly
-       * 
-       */
-      if (CAFEVDB_Util::cgiValue('eraseAll','') != '') {
-        /* actually, this simply means nothing to do */
-      } elseif (CAFEVDB_Util::cgiValue('modifyAddresses','') != '') {
-        /* we are already in our default state because the script was
-         * called from another form. So install the previous
-         * selection.
-         */ 
-        $this->dualSelect->toggleFrozen(false);
-        $this->frozen = false;
-
-        $this->dualSelect->setValue(CAFEVDB_Util::cgiValue('SelectedMusicians'), array());
-        
-      } elseif (!empty($value['filterReset'])) {
-        $this->dualSelect->toggleFrozen(false);
-        $this->frozen = false;
-
-        /* Ok, this means we must re-fetch some stuff from the DB */
-        $this->filterSelect->setValue(array(0));
-
-        $dbh = CAFEVDB_mySQL::connect($this->opts);
-        $this->getInstrumentsFromDB($dbh, array(0));
-        $this->getMusiciansFromDB($dbh);
-        CAFEVDB_mySQL::close($dbh);
-        
-        /* Now we need to reinstall the musicians into dualSelect */
-        $this->dualSelect->loadOptions($this->EMailsDpy);
-        $this->dualSelect->setValue($this->EmailRecs);
-
-        /* Also update the "no email" notice. */
-        $this->updateNoEmailForm();
-      } elseif (!empty($value['writeMail']) || CAFEVDB_Util::cgiValue('sendEmail')) {
-        if (CAFEVDB_Util::cgiValue('sendEmail')) {
-          // Re-install the filter from the form
-          $this->dualSelect->toggleFrozen(false);
-          $this->dualSelect->setValue(CAFEVDB_Util::cgiValue('SelectedMusicians'), array());
+      if (count($this->NoMail) > 0) {
+        $data = '<PRE>';
+        $data .= "Count: ".count($this->NoMail)."\n";
+        foreach($this->NoMail as $value) {
+          $data .= htmlspecialchars($value['name'])."\n";
         }
-        $this->frozen = true;
-        $this->dualSelect->toggleFrozen(true);
-        $this->submitFieldSet->removeChild($this->submitButton);
-        $this->submitFieldSet->removeChild($this->freezeButton);
-        $this->submitFieldSet->removeChild($this->resetButton);
-        $this->selectFieldSet->removeChild($this->filterSelect);
-        if ($this->form->getElementById($this->nopeFieldSet->getId())) {
-          $this->form->removeChild($this->nopeFieldSet);
+        $data.= '</PRE>';
+    
+        if (!$this->form->getElementById($this->nopeFieldSet->getId())) {
+          $this->form->appendChild($this->nopeFieldSet);
         }
+        $this->nopeStatic->setContent($data);
+      } elseif ($this->form->getElementById($this->nopeFieldSet->getId())) {
+        $this->form->removeChild($this->nopeFieldSet);
       }
     }
-  }
   
-
-  public function render() 
-  {
-    $renderer = HTML_QuickForm2_Renderer::factory('default');
-    
-    $this->form->render($renderer);
-    echo $renderer->getJavascriptBuilder()->getLibraries(true, true);
-    echo $renderer;
-  }
-
-};
-
-/**One further class which actually only acts as kind of a namespace
- * and contains one monolythic static function display().
- */
-class CAFEVDB_Eail
-{
-  public static function display()
-  {
-    CAFEVDB_Config::init();
-
-    disableEnterSubmit(); // ? needed ???
-
-    include('config.php.inc');
-
-    $cafevclass = 'cafevdb-email';
-    echo '<div class="'.$cafevclass.'">'."\n";
-
-    //$debug_query = true;
-    $constructionMode = true;
-
-    // Display a filter dialog
-    $filter = new CAFEVDB_EmailFilter($opts, 'EMail.php');
-
-    $filter->execute();
-
-    /********************************************************************************************
-     *
-     * Initialize some global stuff for the email form. Need to do this
-     * before rendering the address selection stuff.
-     *
+    /*
+     * Are we frozen, i.e. ready to send?
      */
-
-    $projectId = CAFEVcgiValue('ProjektId',-1);
-    $project   = CAFEVcgiValue('Projekt','');
-
-    if ($constructionMode) {
-      $CAFEVCatchAllEmail = 'DEVELOPER@his.server.eu';
-      $CAFEVVorstandGroup = 'DEVELOPER@his.server.eu';
-    } else {
-      $CAFEVCatchAllEmail = 'orchestra@example.eu';
-      $CAFEVVorstandGroup = 'MailingList@groupserver.eu';
-    }
-    if ($projectId < 0 || $project == '') {
-      $MailTag = '[CAF-Musiker]';
-    } else {
-      $MailTag = '[CAF-'.$project.']';
+    public function isFrozen() 
+    {
+      return $this->frozen;
     }
 
-    $emailPosts = array(
-                        'txtSubject' => '',
-                        'txtCC' => '',
-                        'txtBCC' => '',
-                        'txtFromName' => 'Our Ensemble e.V..',
-                        'txtDescription' =>
-                        'Liebe Musiker,
+    /*
+     * Return an array with the filtered Email addresses
+     *
+     * value['SelectedMusicians'] contains the form-data, this->EMails
+     * the stuff from the data-base
+     */
+    public function getEmails()
+    {
+      $values = $this->form->getValue();
+      $EMails = array();
+      foreach ($values['SelectedMusicians'] as $key) {
+        $EMails[] = $this->EMails[$key];
+      }
+      return $EMails;
+    }
+
+    /*
+     * Let it run; 
+     */
+    public function execute()
+    {
+      // outputting form values
+      if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $value = $this->form->getValue();
+        /* echo "<pre>\n"; */
+        /* var_dump($value); */
+        /* print_r($this->EMails); */
+        /* echo "</pre>\n<hr />"; */
+        /*
+         * We implement two further POST action for communication with
+         * other forms:
+         *
+         * eraseAll -> if set, restart with default
+         *
+         * modifyAdresses -> set, then read the list of musicians by
+         * hand and initialize the quick-form class accordingly
+         * 
+         */
+        if (Util::cgiValue('eraseAll','') != '') {
+          /* actually, this simply means nothing to do */
+        } elseif (Util::cgiValue('modifyAddresses','') != '') {
+          /* we are already in our default state because the script was
+           * called from another form. So install the previous
+           * selection.
+           */ 
+          $this->dualSelect->toggleFrozen(false);
+          $this->frozen = false;
+
+          $this->dualSelect->setValue(Util::cgiValue('SelectedMusicians'), array());
+        
+        } elseif (!empty($value['filterReset'])) {
+          $this->dualSelect->toggleFrozen(false);
+          $this->frozen = false;
+
+          /* Ok, this means we must re-fetch some stuff from the DB */
+          $this->filterSelect->setValue(array(0));
+
+          $dbh = mySQL::connect($this->opts);
+          $this->getInstrumentsFromDB($dbh, array(0));
+          $this->getMusiciansFromDB($dbh);
+          mySQL::close($dbh);
+        
+          /* Now we need to reinstall the musicians into dualSelect */
+          $this->dualSelect->loadOptions($this->EMailsDpy);
+          $this->dualSelect->setValue($this->EmailRecs);
+
+          /* Also update the "no email" notice. */
+          $this->updateNoEmailForm();
+        } elseif (!empty($value['writeMail']) || Util::cgiValue('sendEmail')) {
+          if (Util::cgiValue('sendEmail')) {
+            // Re-install the filter from the form
+            $this->dualSelect->toggleFrozen(false);
+            $this->dualSelect->setValue(Util::cgiValue('SelectedMusicians'), array());
+          }
+          $this->frozen = true;
+          $this->dualSelect->toggleFrozen(true);
+          $this->submitFieldSet->removeChild($this->submitButton);
+          $this->submitFieldSet->removeChild($this->freezeButton);
+          $this->submitFieldSet->removeChild($this->resetButton);
+          $this->selectFieldSet->removeChild($this->filterSelect);
+          if ($this->form->getElementById($this->nopeFieldSet->getId())) {
+            $this->form->removeChild($this->nopeFieldSet);
+          }
+        }
+      }
+    }
+  
+
+    public function render() 
+    {
+      $renderer = \HTML_QuickForm2_Renderer::factory('default');
+    
+      $this->form->render($renderer);
+      echo $renderer->getJavascriptBuilder()->getLibraries(true, true);
+      echo $renderer;
+    }
+
+  };
+
+  /**One further class which actually only acts as kind of a namespace
+   * and contains one monolythic static function display().
+   */
+  class Email
+  {
+    public static function display()
+    {
+      Config::init();
+
+      $opts = Config::$pmeopts;
+      global $HTTP_SERVER_VARS;
+      $opts['page_name'] = $HTTP_SERVER_VARS['PHP_SELF'].'?app=cafevdb'.'&Template=email';
+
+      Util::disableEnterSubmit(); // ? needed ???
+
+      //$debug_query = true;
+      $constructionMode = true;
+
+      // Display a filter dialog
+      $filter = new EmailFilter($opts, $opts['page_name']);
+
+      $filter->execute();
+
+      /********************************************************************************************
+       *
+       * Initialize some global stuff for the email form. Need to do this
+       * before rendering the address selection stuff.
+       *
+       */
+
+      $projectId = Util::cgiValue('ProjectId',-1);
+      $project   = Util::cgiValue('Project','');
+
+      if ($constructionMode) {
+        $CAFEVCatchAllEmail = 'DEVELOPER@his.server.eu';
+        $CAFEVVorstandGroup = 'DEVELOPER@his.server.eu';
+      } else {
+        $CAFEVCatchAllEmail = 'orchestra@example.eu';
+        $CAFEVVorstandGroup = 'MailingList@groupserver.eu';
+      }
+      if ($projectId < 0 || $project == '') {
+        $MailTag = '[CAF-Musiker]';
+      } else {
+        $MailTag = '[CAF-'.$project.']';
+      }
+
+      $emailPosts = array(
+                          'txtSubject' => '',
+                          'txtCC' => '',
+                          'txtBCC' => '',
+                          'txtFromName' => 'Our Ensemble e.V..',
+                          'txtDescription' =>
+                          'Liebe Musiker,
 <p>
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 <p>
@@ -540,114 +548,127 @@ löschen sollen, teilen Sie uns das bitte kurz mit, indem Sie entsprechend
 auf diese Email antworten. Wir entschuldigen uns in diesem Fall für die
 Störung.');  
 
-    if (CAFEVcgiValue('eraseAll',false) !== false) {
-      /* Take everything to its defaults */
-      foreach ($emailPosts as $key => $value) {
-        $_POST[$key] = $value; // cheat
+      if (Util::cgiValue('eraseAll',false) !== false) {
+        /* Take everything to its defaults */
+        foreach ($emailPosts as $key => $value) {
+          $_POST[$key] = $value; // cheat
+        }
       }
-    }
 
-    $strSubject = CAFEVcgiValue('txtSubject', $emailPosts['txtSubject']);
-    $strMsg     = CAFEVcgiValue('txtDescription', $emailPosts['txtDescription']);
-    $strSender  = CAFEVcgiValue('txtFromName', $emailPosts['txtFromName']);
-    $strCC      = CAFEVcgiValue('txtCC', $emailPosts['txtCC']);
-    $strBCC     = CAFEVcgiValue('txtBCC', $emailPosts['txtBCC']);
-    $strSenderEmail = $CAFEVCatchAllEmail; // always
-    $strFile1 = isset($_FILES['fileAttach1']['name']) ? $_FILES['fileAttach1']['name'] : '';
-    $strFile2 = isset($_FILES['fileAttach2']['name']) ? $_FILES['fileAttach2']['name'] : '';
-    $strFile3 = isset($_FILES['fileAttach3']['name']) ? $_FILES['fileAttach3']['name'] : '';
-    $strFile4 = isset($_FILES['fileAttach4']['name']) ? $_FILES['fileAttach4']['name'] : '';
+      $strSubject = Util::cgiValue('txtSubject', $emailPosts['txtSubject']);
+      $strMsg     = Util::cgiValue('txtDescription', $emailPosts['txtDescription']);
+      $strSender  = Util::cgiValue('txtFromName', $emailPosts['txtFromName']);
+      $strCC      = Util::cgiValue('txtCC', $emailPosts['txtCC']);
+      $strBCC     = Util::cgiValue('txtBCC', $emailPosts['txtBCC']);
+      $strSenderEmail = $CAFEVCatchAllEmail; // always
+      $strFile1 = isset($_FILES['fileAttach1']['name']) ? $_FILES['fileAttach1']['name'] : '';
+      $strFile2 = isset($_FILES['fileAttach2']['name']) ? $_FILES['fileAttach2']['name'] : '';
+      $strFile3 = isset($_FILES['fileAttach3']['name']) ? $_FILES['fileAttach3']['name'] : '';
+      $strFile4 = isset($_FILES['fileAttach4']['name']) ? $_FILES['fileAttach4']['name'] : '';
 
-    /*
-     *
-     *
-     *******************************************************************************************/
+      /*
+       *
+       *
+       *******************************************************************************************/
 
-    /******************************************************************************************
-     *
-     * Some blah-blah
-     *
-     */
+      /******************************************************************************************
+       *
+       * Some blah-blah
+       *
+       */
 
-    if ($constructionMode) {
-      echo '<H1>Testbetrieb. Email geht nur an mich.</H1>';
-      echo '<H4>Ausgenommen Cc:. Bitte um Testmail von eurer Seite.</H4>';
-    }
-    echo '<H2>Email export and simple mass-mail web-form ';
-    if ($project != '') {
-      echo 'for project '.$project.'</H2>';
-    } else {
-      echo 'for all musicians</H2>';
-    }
+      $cafevclass = 'cafevdb-email-header-box';
+      echo '<div class="'.$cafevclass.'">'."\n";
+      $cafevclass = 'cafevdb-email-header';
+      echo '<div class="'.$cafevclass.'">'."\n";
 
-    $string =<<< __EOT__
-      <H4>
-      Der Editor und die Adress-Auswahl sind wechselseitig ausgeschaltet.
-      Um Adressen oder Text- nachzubearbeiten, auf den entsprechenden
-      Button klicken; man kann mehrfach hin- und herwechseln, ohne dass
-                        die jeweiligen Eingaben verloren gehen. Der Instrumentenfilter ist
-                        "destruktiv": das Abwählen des Filters restauriert nicht die
-                        vorherige Adressenauswahl. Der "Abbrechen"-Button unter dem Editor
-                        setzt alles wieder auf die Default-Einstellungen.
-                        </H4>
-                        <P>
-                        ReturnTo: und Sender: sind
-                        <TT>@OUREMAIL@</TT>. Die Adressen
-                        <TT>@OUREMAIL@</TT>  und
-                        <TT>@OURGROUP@</TT> erhalten je eine Kopie um Missbrauch durch "Einbrecher" 
-                        abzufangen. Außerdem werden die Emails in der Datenbank gespeichert.
-                        __EOT__;
+      if ($constructionMode) {
+        echo '<H1>Testbetrieb. Email geht nur an mich.</H1>';
+        echo '<H4>Ausgenommen Cc:. Bitte um Testmail von eurer Seite.</H4>';
+      }
+      echo '<H2>Email export and simple mass-mail web-form ';
+      if ($project != '') {
+        echo 'for project '.$project.'</H2>';
+      } else {
+        echo 'for all musicians</H2>';
+      }
 
-    // replace some tokens.
-    $string = str_replace('@OUREMAIL@', $CAFEVCatchAllEmail, $string);
-    $string = str_replace('@OURGROUP@', $CAFEVVorstandGroup, $string);
+      $string =<<< __EOT__
+        <H4>
+        Der Editor und die Adress-Auswahl sind wechselseitig ausgeschaltet.
+        Um Adressen oder Text- nachzubearbeiten, auf den entsprechenden
+        Button klicken; man kann mehrfach hin- und herwechseln, ohne dass
+                          die jeweiligen Eingaben verloren gehen. Der Instrumentenfilter ist
+                          "destruktiv": das Abwählen des Filters restauriert nicht die
+                          vorherige Adressenauswahl. Der "Abbrechen"-Button unter dem Editor
+                          setzt alles wieder auf die Default-Einstellungen.
+                          </H4>
+                          <P>
+                          ReturnTo: und Sender: sind
+                          <TT>@OUREMAIL@</TT>. Die Adressen
+                          <TT>@OUREMAIL@</TT>  und
+                          <TT>@OURGROUP@</TT> erhalten je eine Kopie um Missbrauch durch "Einbrecher" 
+                          abzufangen. Außerdem werden die Emails in der Datenbank gespeichert.
+__EOT__;
 
-    echo $string;
+      // replace some tokens.
+      $string = str_replace('@OUREMAIL@', $CAFEVCatchAllEmail, $string);
+      $string = str_replace('@OURGROUP@', $CAFEVVorstandGroup, $string);
 
-    /*
-     *
-     *
-     *******************************************************************************************/
+      echo $string;
 
-    /******************************************************************************************
-     *
-     * Display the address selection from if it is not frozen, other after the email editor.
-     *
-     */
+      echo '</div>
+'; // end of header
+      echo '</div>
+'; // end of header
 
-    if (!$filter->isFrozen()) {
-      /* Add all of the above to the form, if it is active */
+      $cafevclass = 'cafevdb-email-body';
+      echo '<div class="'.$cafevclass.'">'."\n";
 
-      $filter->addPersistentCGI('txtSubject', $strSubject);
-      $filter->addPersistentCGI('txtDescription', $strMsg);
-      $filter->addPersistentCGI('txtFromName', $strSender);
-      $filter->addPersistentCGI('txtCC', $strCC);
-      $filter->addPersistentCGI('txtBCC', $strBCC);
-      $filter->addPersistentCGI('fileAttach1', $strFile1);
-      $filter->addPersistentCGI('fileAttach2', $strFile2);
-      $filter->addPersistentCGI('fileAttach3', $strFile3);
-      $filter->addPersistentCGI('fileAttach4', $strFile4);
+      /*
+       *
+       *
+       *******************************************************************************************/
 
-      $filter->render(); // else render below the Email editor
-    }
+      /******************************************************************************************
+       *
+       * Display the address selection from if it is not frozen, other after the email editor.
+       *
+       */
 
-    /*
-     *
-     *
-     *******************************************************************************************/
+      if (!$filter->isFrozen()) {
+        /* Add all of the above to the form, if it is active */
 
-    /******************************************************************************************
-     *
-     * If sending requested and basic stuff is missing, display the
-     * corresponding error messages here; because at the bottom of the
-     * page they may be outside of the viewable region.
-     *
-     */
+        $filter->addPersistentCGI('txtSubject', $strSubject);
+        $filter->addPersistentCGI('txtDescription', $strMsg);
+        $filter->addPersistentCGI('txtFromName', $strSender);
+        $filter->addPersistentCGI('txtCC', $strCC);
+        $filter->addPersistentCGI('txtBCC', $strBCC);
+        $filter->addPersistentCGI('fileAttach1', $strFile1);
+        $filter->addPersistentCGI('fileAttach2', $strFile2);
+        $filter->addPersistentCGI('fileAttach3', $strFile3);
+        $filter->addPersistentCGI('fileAttach4', $strFile4);
 
-    else if (CAFEVcgiValue('sendEmail',false) !== false) {
+        $filter->render(); // else render below the Email editor
+      }
 
-      if ($strSubject == '') {
-        echo '<div class="cafev-error">
+      /*
+       *
+       *
+       *******************************************************************************************/
+
+      /******************************************************************************************
+       *
+       * If sending requested and basic stuff is missing, display the
+       * corresponding error messages here; because at the bottom of the
+       * page they may be outside of the viewable region.
+       *
+       */
+
+      else if (Util::cgiValue('sendEmail',false) !== false) {
+
+        if ($strSubject == '') {
+          echo '<div class="cafevdb-error">
 <HR/><H4>Fehler: Die Betreffzeile sollte nicht nur aus "'.$MailTag.'" bestehen.
 <p>
 Bitte korrigieren und dann den "Send"-Button noch einmal anklicken
@@ -655,9 +676,9 @@ Bitte korrigieren und dann den "Send"-Button noch einmal anklicken
 Leider m&uuml;ssen etwaige Attachments jetzt noch einmal angegeben werden.
 </H4><HR/>
 </div>';
-      }
-      if ($strSender == '') {
-        echo '<div class="cafev-error">
+        }
+        if ($strSender == '') {
+          echo '<div class="cafevdb-error">
 <HR/><H4>Fehler: Der Absender-Name sollte nicht leer sein.
 <p>
 Bitte korrigieren und dann den "Send"-Button noch einmal anklicken
@@ -665,9 +686,9 @@ Bitte korrigieren und dann den "Send"-Button noch einmal anklicken
 Leider m&uuml;ssen etwaige Attachments jetzt noch einmal angegeben werden.
 </H4><HR/>
 </div>';
-      }
-      if ($strSenderEmail == '') {
-        echo '<div class="cafev-error">
+        }
+        if ($strSenderEmail == '') {
+          echo '<div class="cafevdb-error">
 <HR/><H4>Fehler: Die Email-Adresse des Absenders sollte nicht leer sein.
 <p>
 Bitte korrigieren und dann den "Send"-Button noch einmal anklicken
@@ -675,38 +696,38 @@ Bitte korrigieren und dann den "Send"-Button noch einmal anklicken
 Leider m&uuml;ssen etwaige Attachments jetzt noch einmal angegeben werden.
 </H4><HR/>
 </div>';
+        }
       }
-    }
 
-    /*
-     *
-     *
-     *******************************************************************************************/
+      /*
+       *
+       *
+       *******************************************************************************************/
 
-    /******************************************************************************************
-     *
-     * Now define one huge form. This is really somewhat ugly.
-     * Also: we cheat: pretend we are quick-form to simplify the look
-     *
-     */
+      /******************************************************************************************
+       *
+       * Now define one huge form. This is really somewhat ugly.
+       * Also: we cheat: pretend we are quick-form to simplify the look
+       *
+       */
 
-    /**** start quick-form cheat ****/
-    echo '<div class="quickform">';
-    /*******************************/
-    echo '
-<FORM METHOD="post" ACTION="EMail.php" NAME="Email" enctype="multipart/form-data" class="cafev-mail-form">';
-    /**** start quick-form cheat ****/
+      /**** start quick-form cheat ****/
+      echo '<div class="quickform">';
+      /*******************************/
+      echo '
+<FORM METHOD="post" ACTION="'.$opts['page_name'].'" NAME="Email" enctype="multipart/form-data" class="cafevdb-mail-form">';
+      /**** start quick-form cheat ****/
 
-    /* Remember address filter for later */
-    if ($filter->isFrozen()) {
-      echo $filter->getPersistent();
-    }
+      /* Remember address filter for later */
+      if ($filter->isFrozen()) {
+        echo $filter->getPersistent();
+      }
 
-    echo sprintf('
-  <fieldset %s id="cafev-mail-form-0"><legend id="cafev-mail-form-0-legend">Em@il Verfassen</legend>',$filter->isFrozen() ? '' : 'disabled');
-    /*******************************/
-    echo '
-  <TABLE class="cafev-email-form">
+      echo sprintf('
+  <fieldset %s id="cafevdb-mail-form-0"><legend id="cafevdb-mail-form-0-legend">Em@il Verfassen</legend>',$filter->isFrozen() ? '' : 'disabled');
+      /*******************************/
+      echo '
+  <TABLE class="cafevdb-email-form">
   <tr>
      <td>Adressat</td>
      <td colspan="2">Determined automatically from data-base, see below the email form.</td>
@@ -753,7 +774,7 @@ Leider m&uuml;ssen etwaige Attachments jetzt noch einmal angegeben werden.
     <td>Attachment 4</td>
     <td colspan="2"><input name="fileAttach4" type="file"></td>
   </tr>';
-    $submitString = '
+      $submitString = '
   <tr class="submit">
     <td class="send">
       <input %1$s title="Vorsicht!"
@@ -769,305 +790,297 @@ veränderter Text geht
 verloren." type="submit" name="eraseAll" value="Abbrechen" />
      </td>
   </tr>';
-    echo sprintf($submitString, $filter->isFrozen() ? '' : 'disabled');
-    echo '
+      echo sprintf($submitString, $filter->isFrozen() ? '' : 'disabled');
+      echo '
   </table>';
-    echo '</fieldset></FORM></div>
+      echo '</fieldset></FORM></div>
 ';
 
-    /*
-     *
-     *
-     *******************************************************************************************/
+      /*
+       *
+       *
+       *******************************************************************************************/
 
-    /******************************************************************************************
-     *
-     * If the filter is frozen, display it now, otherwise the editor
-     * window would be at the bottom of some large address list.
-     *
-     */
+      /******************************************************************************************
+       *
+       * If the filter is frozen, display it now, otherwise the editor
+       * window would be at the bottom of some large address list.
+       *
+       */
 
-    if ($filter->isFrozen()) {
-      $filter->render(); // else render below the Email editor
-    }
-
-    /*
-     *
-     *
-     *******************************************************************************************/
-
-    /******************************************************************************************
-     *
-     * Now maybe send an email, if requested ...
-     *
-     */
-
-    echo '</div>
-';
-    $cafevclass = 'cafev-nav-bottom';
-    include('NavigationButtonsEMail.php');
-
-    // Now: do we want to send an Email?
-    if (CAFEVcgiValue('sendEmail',false) === false) {
-      // not yet.
-
-      echo $footer;
-      return true;
-    }
-
-    // So place the spam ...
-
-    date_default_timezone_set(@date_default_timezone_get());
-
-    // See what we finally have ...
-    $EMails = $filter->getEmails();
-
-    // For archieving
-    $MailAddrStr = '';
-    foreach ($EMails as $value) {
-      $MailAddrStr .=
-        htmlspecialchars($value['name'])
-        .'&lt;'
-        .htmlspecialchars($value['email'])
-        .'&gt;'
-        .'<BR/>';
-    }
-
-
-
-    // Perform sanity checks before spamming ...
-    $DataValid = true;
-
-    if ($strSubject == '') {
-      echo '<HR/><H4>Die Betreffzeile sollte nicht nur aus "'.$MailTag.'" bestehen.
-<p>
-Bitte korrigieren und dann den "Send"-Button noch einmal anklicken
-<P>
-Leider m&uuml;ssen etwaige Attachments jetzt noch einmal angegeben werden.
-</H4>';
-      $DataValid = false;
-    }
-    if ($strSender == '') {
-      echo '<HR/><H4>Der Absender-Name sollte nicht leer sein.
-<p>
-Bitte korrigieren und dann den "Send"-Button noch einmal anklicken
-<P>
-Leider m&uuml;ssen etwaige Attachments jetzt noch einmal angegeben werden.
-</H4>';
-      $DataValid = false;
-    }
-    if ($strSenderEmail == '') {
-      echo '<HR/><H4>Die Email-Adresse des Absenders sollte nicht leer sein.
-<p>
-Bitte korrigieren und dann den "Send"-Button noch einmal anklicken
-<P>
-Leider m&uuml;ssen etwaige Attachments jetzt noch einmal angegeben werden.
-</H4>';
-      $DataValid = false;
-    }
-
-    $strMessage = nl2br($strMsg);
-    $h2t = new html2text($strMessage);
-    $h2t->set_encoding('utf-8');
-    $strTextMessage = $h2t->get_text();
-
-    $mail = new PHPMailer();
-    $mail->CharSet = 'utf-8';
-    $mail->SingleTo = false;
-
-    // Setup the mail server for testing
-    // $mail->IsSMTP();
-    //$mail->IsMail();
-    $mail->IsSMTP();
-    if (true) {
-      $mail->Host = 'server.example.eu';
-      $mail->Port = 587;
-      $mail->SMTPSecure = 'tls';
-      $mail->SMTPAuth = true;
-      $mail->Username = 'wp1173590-cafev';
-      $mail->Password = 'XXXXXXXX';
-    }
-
-    $mail->IsHTML();
-
-    $DataValid = EmailSetFrom($mail,$strSenderEmail,$strSender)
-      && $DataValid;
-    $DataValid = EmailAddReplyTo($mail,$strSenderEmail,$strSender)
-      && $DataValid;
-    $mail->Subject = $MailTag . ' ' . $strSubject;
-    $mail->Body = $strMessage;
-    $mail->AltBody = $strTextMessage;
-
-    if (!$constructionMode) {
-      // Loop over all data-base records and add each recipient in turn
-      foreach ($EMails as $pairs) {
-        // Better not use AddAddress: we should not expose the email
-        // addresses to everybody. TODO: instead place the entire
-        // message, including the Bcc's, either in the "sent" folder,
-        // or save it somewhere else.
-        if ($projectId < 0) {
-          $DataValid = EmailAddBCC($mail, $pairs['email'], $pairs['name'])
-            && $DataValid;
-        } else {
-          // Well, people subscribing to one of our projects simply must not complain.
-          $DataValid = EmailAddAddress($mail, $pairs['email'], $pairs['name'])
-            && $DataValid;
-        }
+      if ($filter->isFrozen()) {
+        $filter->render(); // else render below the Email editor
       }
-    } else {
-      $DataValid = EmailAddAddress($mail, 'DEVELOPER@his.server.eu', 'Claus-Justus Heine')
+
+      /*
+       *
+       *
+       *******************************************************************************************/
+
+      /******************************************************************************************
+       *
+       * Now maybe send an email, if requested ...
+       *
+       */
+
+      // Now: do we want to send an Email?
+      if (Util::cgiValue('sendEmail',false) === false) {
+        // not yet.
+        return true;
+      }
+
+      // So place the spam ...
+
+      date_default_timezone_set(@date_default_timezone_get());
+
+      // See what we finally have ...
+      $EMails = $filter->getEmails();
+
+      // For archieving
+      $MailAddrStr = '';
+      foreach ($EMails as $value) {
+        $MailAddrStr .=
+          ''
+          .htmlspecialchars($value['name'])
+          .'&lt;'
+          .htmlspecialchars($value['email'])
+          .'&gt;'
+          .'<BR/>';
+      }
+
+      // Perform sanity checks before spamming ...
+      $DataValid = true;
+
+      if ($strSubject == '') {
+        echo '<HR/><H4>Die Betreffzeile sollte nicht nur aus "'.$MailTag.'" bestehen.
+<p>
+Bitte korrigieren und dann den "Send"-Button noch einmal anklicken
+<P>
+Leider m&uuml;ssen etwaige Attachments jetzt noch einmal angegeben werden.
+</H4>';
+        $DataValid = false;
+      }
+      if ($strSender == '') {
+        echo '<HR/><H4>Der Absender-Name sollte nicht leer sein.
+<p>
+Bitte korrigieren und dann den "Send"-Button noch einmal anklicken
+<P>
+Leider m&uuml;ssen etwaige Attachments jetzt noch einmal angegeben werden.
+</H4>';
+        $DataValid = false;
+      }
+      if ($strSenderEmail == '') {
+        echo '<HR/><H4>Die Email-Adresse des Absenders sollte nicht leer sein.
+<p>
+Bitte korrigieren und dann den "Send"-Button noch einmal anklicken
+<P>
+Leider m&uuml;ssen etwaige Attachments jetzt noch einmal angegeben werden.
+</H4>';
+        $DataValid = false;
+      }
+
+      $strMessage = nl2br($strMsg);
+      $h2t = new html2text($strMessage);
+      $h2t->set_encoding('utf-8');
+      $strTextMessage = $h2t->get_text();
+
+      $mail = new PHPMailer();
+      $mail->CharSet = 'utf-8';
+      $mail->SingleTo = false;
+
+      // Setup the mail server for testing
+      // $mail->IsSMTP();
+      //$mail->IsMail();
+      $mail->IsSMTP();
+      if (true) {
+        $mail->Host = 'server.example.eu';
+        $mail->Port = 587;
+        $mail->SMTPSecure = 'tls';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'wp1173590-cafev';
+        $mail->Password = 'XXXXXXXX';
+      }
+
+      $mail->IsHTML();
+
+      $DataValid = EmailSetFrom($mail,$strSenderEmail,$strSender)
         && $DataValid;
-    }
+      $DataValid = self::addReplyTo($mail,$strSenderEmail,$strSender)
+        && $DataValid;
+      $mail->Subject = $MailTag . ' ' . $strSubject;
+      $mail->Body = $strMessage;
+      $mail->AltBody = $strTextMessage;
 
-    // Always drop a copy locally and to the mailing list, for
-    // archiving purposes and to catch illegal usage.
-    $DataValid = EmailAddCC($mail, $CAFEVCatchAllEmail, $strSender)
-      && $DataValid;
-    $DataValid =
-      EmailAddCC($mail, $CAFEVVorstandGroup, 'CAFEV Mail Form')
-      && $DataValid;
-
-    // If we have further Cc's, then add them also
-    if ($strCC != '') {
-      // Now comes some dirty work: we need to split the string in
-      // names and email addresses.
-  
-      $arrayCC = parseEmailListToArray($strCC);
-      if (CAFEVdebugMode()) {
-        echo "<PRE>\n";
-        print_r($arrayCC);
-        echo "</PRE>\n";
-      }
-  
-      foreach ($arrayCC as $value) {
-        $strCC .= $value['name'].' <'.$value['email'].'>,';
-        // PHP-Mailer adds " for itself as needed
-        $value['name'] = trim($value['name'], '"');
-        $DataValid = EmailAddCC($mail, $value['email'], $value['name'])
+      if (!$constructionMode) {
+        // Loop over all data-base records and add each recipient in turn
+        foreach ($EMails as $pairs) {
+          // Better not use AddAddress: we should not expose the email
+          // addresses to everybody. TODO: instead place the entire
+          // message, including the Bcc's, either in the "sent" folder,
+          // or save it somewhere else.
+          if ($projectId < 0) {
+            $DataValid = self::addBCC($mail, $pairs['email'], $pairs['name'])
+              && $DataValid;
+          } else {
+            // Well, people subscribing to one of our projects simply must not complain.
+            $DataValid = self::addAddress($mail, $pairs['email'], $pairs['name'])
+              && $DataValid;
+          }
+        }
+      } else {
+        $DataValid = self::addAddress($mail, 'DEVELOPER@his.server.eu', 'Claus-Justus Heine')
           && $DataValid;
       }
-      $strCC = trim($strCC, ',');
-    }
 
-    // Do the same for Bcc
-    if ($strBCC != '') {
-      // Now comes some dirty work: we need to split the string in
-      // names and email addresses.
-  
-      $arrayBCC = parseEmailListToArray($strBCC);
-      if (CAFEVdebugMode()) {
-        echo "<PRE>\n";
-        print_r($arrayBCC);
-        echo "</PRE>\n";
-      }
-  
-      $strBCC = '';
-      foreach ($arrayBCC as $value) {
-        $strBCC .= $value['name'].' <'.$value['email'].'>,';
-        // PHP-Mailer adds " for itself as needed
-        $value['name'] = trim($value['name'], '"');
-        $DataValid = EmailAddBCC($mail, $value['email'], $value['name'])
-          && $DataValid;
-      }
-      $strBCC = trim($strBCC, ',');
-    }
+      // Always drop a copy locally and to the mailing list, for
+      // archiving purposes and to catch illegal usage.
+      $DataValid = self::addCC($mail, $CAFEVCatchAllEmail, $strSender)
+        && $DataValid;
+      $DataValid =
+        self::addCC($mail, $CAFEVVorstandGroup, 'CAFEV Mail Form')
+        && $DataValid;
 
-    if ($DataValid) {
+      // If we have further Cc's, then add them also
+      if ($strCC != '') {
+        // Now comes some dirty work: we need to split the string in
+        // names and email addresses.
   
-      foreach ($_FILES as $key => $value) {
+        $arrayCC = parseEmailListToArray($strCC);
         if (CAFEVdebugMode()) {
           echo "<PRE>\n";
-          print_r($value);
+          print_r($arrayCC);
           echo "</PRE>\n";
         }
-        if($value['name'] != "") {
-          if ($value['type'] == 'application/x-download' &&
-              strrchr($value['name'], '.') == '.pdf') {
-            $value['type'] = 'application/pdf';
+  
+        foreach ($arrayCC as $value) {
+          $strCC .= $value['name'].' <'.$value['email'].'>,';
+          // PHP-Mailer adds " for itself as needed
+          $value['name'] = trim($value['name'], '"');
+          $DataValid = self::addCC($mail, $value['email'], $value['name'])
+            && $DataValid;
+        }
+        $strCC = trim($strCC, ',');
+      }
+
+      // Do the same for Bcc
+      if ($strBCC != '') {
+        // Now comes some dirty work: we need to split the string in
+        // names and email addresses.
+  
+        $arrayBCC = parseEmailListToArray($strBCC);
+        if (CAFEVdebugMode()) {
+          echo "<PRE>\n";
+          print_r($arrayBCC);
+          echo "</PRE>\n";
+        }
+  
+        $strBCC = '';
+        foreach ($arrayBCC as $value) {
+          $strBCC .= $value['name'].' <'.$value['email'].'>,';
+          // PHP-Mailer adds " for itself as needed
+          $value['name'] = trim($value['name'], '"');
+          $DataValid = self::addBCC($mail, $value['email'], $value['name'])
+            && $DataValid;
+        }
+        $strBCC = trim($strBCC, ',');
+      }
+
+      if ($DataValid) {
+  
+        foreach ($_FILES as $key => $value) {
+          if (CAFEVdebugMode()) {
+            echo "<PRE>\n";
+            print_r($value);
+            echo "</PRE>\n";
           }
-          if (!$mail->AddAttachment($value['tmp_name'],$value['name'],
-                                    'base64',$value['type'])) {
-            $DataValid = false;
-            echo '<HR/><H4>The attachment '.$value['name'].' seems to be invalid.
+          if($value['name'] != "") {
+            if ($value['type'] == 'application/x-download' &&
+                strrchr($value['name'], '.') == '.pdf') {
+              $value['type'] = 'application/pdf';
+            }
+            if (!$mail->AddAttachment($value['tmp_name'],$value['name'],
+                                      'base64',$value['type'])) {
+              $DataValid = false;
+              echo '<HR/><H4>The attachment '.$value['name'].' seems to be invalid.
 <p>
 Please correct that first and then click on the "Send"-button again.
 <P>
 Unfortunately, attachments (if any) have to be specified again.
 </H4>';
+            }
           }
         }
-      }
 
-      // Construct one MD5 for recipients subject and html-text
-      $bulkRecipients = '';
-      foreach ($EMails as $pairs) {
-        $bulkRecipients .= $pairs['name'].' <'.$pairs['email'].'>,';
-      }
-      // add CC and BCC
-      if ($strCC != '') {
-        $bulkRecipients .= $strCC.',';
-      }
-      if ($strBCC != '') {
-        $bulkRecipients .= $strBCC.',';
-      }
-      $bulkRecipients = trim($bulkRecipients,',');
-      $bulkMD5 = md5($bulkRecipients);
-  
-      $textforMD5 = $strSubject . $strMessage;
-      $textMD5 = md5($textforMD5);
-  
-      // compute the MD5 stuff for the attachments
-      $attachLog = array();
-      foreach ($_FILES as $key => $value) {
-        if($value['name'] != "") {
-          $md5val = md5_file($value['tmp_name']);
-          $attachLog[] = array('name' => $value['name'],
-                               'md5' => $md5val);
+        // Construct one MD5 for recipients subject and html-text
+        $bulkRecipients = '';
+        foreach ($EMails as $pairs) {
+          $bulkRecipients .= $pairs['name'].' <'.$pairs['email'].'>,';
         }
-      }
+        // add CC and BCC
+        if ($strCC != '') {
+          $bulkRecipients .= $strCC.',';
+        }
+        if ($strBCC != '') {
+          $bulkRecipients .= $strBCC.',';
+        }
+        $bulkRecipients = trim($bulkRecipients,',');
+        $bulkMD5 = md5($bulkRecipients);
   
-      // Now insert the stuff into the SentEmail table  
-      $handle = CAFEVDB_mySQL::connect($opts);
+        $textforMD5 = $strSubject . $strMessage;
+        $textMD5 = md5($textforMD5);
+  
+        // compute the MD5 stuff for the attachments
+        $attachLog = array();
+        foreach ($_FILES as $key => $value) {
+          if($value['name'] != "") {
+            $md5val = md5_file($value['tmp_name']);
+            $attachLog[] = array('name' => $value['name'],
+                                 'md5' => $md5val);
+          }
+        }
+  
+        // Now insert the stuff into the SentEmail table  
+        $handle = mySQL::connect($opts);
 
-      $logquery = "INSERT INTO `SentEmail`
+        $logquery = "INSERT INTO `SentEmail`
 (`user`,`host`,`BulkRecipients`,`MD5BulkRecipients`,`Cc`,`Bcc`,`Subject`,`HtmlBody`,`MD5Text`";
-      $idx = 1;
-      foreach ($attachLog as $pairs) {
-        $logquery .= ",`Attachment".$idx."`,`MD5Attachment".$idx."`";
-      }
-      $logquery .= ') VALUES (';
-      $logquery .= "'".$_SERVER['REMOTE_USER']."','".$_SERVER['REMOTE_ADDR']."'";
-      $logquery .= sprintf(",'%s','%s'",
-                           mysql_real_escape_string($bulkRecipients, $handle),
-                           mysql_real_escape_string($bulkMD5, $handle),
-                           mysql_real_escape_string($strCC, $handle),
-                           mysql_real_escape_string($strBCC, $handle),
-                           mysql_real_escape_string($strSubject, $handle),
-                           mysql_real_escape_string($strMessage, $handle),
-                           mysql_real_escape_string($textMD5, $handle));
-      foreach ($attachLog as $pairs) {
-        $logquery .=
-          ",'".mysql_real_escape_string($pairs['name'], $handle)."'".
-          ",'".mysql_real_escape_string($pairs['md5'], $handle)."'";
-      }
-      $logquery .= ")";
+        $idx = 1;
+        foreach ($attachLog as $pairs) {
+          $logquery .= ",`Attachment".$idx."`,`MD5Attachment".$idx."`";
+        }
+        $logquery .= ') VALUES (';
+        $logquery .= "'".$_SERVER['REMOTE_USER']."','".$_SERVER['REMOTE_ADDR']."'";
+        $logquery .= sprintf(",'%s','%s'",
+                             mysql_real_escape_string($bulkRecipients, $handle),
+                             mysql_real_escape_string($bulkMD5, $handle),
+                             mysql_real_escape_string($strCC, $handle),
+                             mysql_real_escape_string($strBCC, $handle),
+                             mysql_real_escape_string($strSubject, $handle),
+                             mysql_real_escape_string($strMessage, $handle),
+                             mysql_real_escape_string($textMD5, $handle));
+        foreach ($attachLog as $pairs) {
+          $logquery .=
+            ",'".mysql_real_escape_string($pairs['name'], $handle)."'".
+            ",'".mysql_real_escape_string($pairs['md5'], $handle)."'";
+        }
+        $logquery .= ")";
   
-      // Check for duplicates
-      $loggedquery = "SELECT * FROM `SentEmail` WHERE";
-      $loggedquery .= " `MD5Text` LIKE '$textMD5'";
-      $loggedquery .= " AND `MD5BulkRecipients` LIKE '$bulkMD5'";
-      $result = CAFEVDB_mySQL::query($loggedquery, $handle);
+        // Check for duplicates
+        $loggedquery = "SELECT * FROM `SentEmail` WHERE";
+        $loggedquery .= " `MD5Text` LIKE '$textMD5'";
+        $loggedquery .= " AND `MD5BulkRecipients` LIKE '$bulkMD5'";
+        $result = mySQL::query($loggedquery, $handle);
   
-      $cnt = 0;
-      $loggedDates = '';
-      if ($line = CAFEVDB_mySQL::fetch($result)) {
-        $loggedDates .= ','.$line['Date'];
-        ++$cnt;
-      }
-      $loggedDates = trim($loggedDates,',');
+        $cnt = 0;
+        $loggedDates = '';
+        if ($line = mySQL::fetch($result)) {
+          $loggedDates .= ','.$line['Date'];
+          ++$cnt;
+        }
+        $loggedDates = trim($loggedDates,',');
   
-      if ($loggedDates != '') {
-        echo '<HR/><H3>A message with exactly the same text to exactly the same
+        if ($loggedDates != '') {
+          echo '<HR/><H3>A message with exactly the same text to exactly the same
 recipients has already been sent on the following date'.($cnt > 1 ? 's' : '').':
 <p>
 '.$loggedDates.'
@@ -1075,86 +1088,366 @@ recipients has already been sent on the following date'.($cnt > 1 ? 's' : '').':
 Refusing to send duplicate bulk emails.
 </H3><HR/>
 ';
-        die();
-      }
-
-      try {
-        if (!$mail->Send()) {
-          echo <<<__EOT__
-            <p>Mail failed<p>
-            __EOT__;
-        } else {
-          // Log the message to our data-base
-      
-          CAFEVDB_mySQL::query($logquery, $handle);
-      
+          die();
         }
-      } catch (Exception $e) {
-        echo '<HR/><H4>Fehler:</H4>';
-        echo "<PRE>\n";
-        echo htmlspecialchars($e->getMessage())."\n";
-        echo "</PRE><HR/>\n";
-      }
 
-      CAFEVDB_mySQL::close($handle);
+        try {
+          if (!$mail->Send()) {
+            echo <<<__EOT__
+              <p>Mail failed<p>
+__EOT__;
+          } else {
+            // Log the message to our data-base
+      
+            mySQL::query($logquery, $handle);
+      
+          }
+        } catch (Exception $e) {
+          echo '<HR/><H4>Fehler:</H4>';
+          echo "<PRE>\n";
+          echo htmlspecialchars($e->getMessage())."\n";
+          echo "</PRE><HR/>\n";
+        }
 
-      if (false) {
-        // Now, this is really the fault of our provider. Sad
-        // story. How to work-around? Well, we send the message as
-        // Email-attachment to our own account. Whoops.
+        mySQL::close($handle);
+
+        if (false) {
+          // Now, this is really the fault of our provider. Sad
+          // story. How to work-around? Well, we send the message as
+          // Email-attachment to our own account. Whoops.
     
-        // connect to your Inbox through port 143.  See imap_open()
-        // function for more details
-        $mbox = imap_open('{'.$mail->Host.':143/notls}INBOX',
-                          $mail->Username,
-                          $mail->Password);
-        if ($mbox !== false) {
-          // save the sent email to your Sent folder by just passing a
-          // string composed of the entire message + headers.  See
-          // imap_append() function for more details.  Notice the 'r'
-          // format for the date function, which formats the date
-          // correctly for messaging.
+          // connect to your Inbox through port 143.  See imap_open()
+          // function for more details
+          $mbox = imap_open('{'.$mail->Host.':143/notls}INBOX',
+                            $mail->Username,
+                            $mail->Password);
+          if ($mbox !== false) {
+            // save the sent email to your Sent folder by just passing a
+            // string composed of the entire message + headers.  See
+            // imap_append() function for more details.  Notice the 'r'
+            // format for the date function, which formats the date
+            // correctly for messaging.
 
-          imap_append($mbox, '{'.$mail->Host.':993/ssl}INBOX.Sent',
-                      $mail->GetSentMIMEMessage());
-          // close mail connection.
-          imap_close($mbox);
-        }
-      } elseif (true) {
-        // PEAR IMAP works without the c-client library
+            imap_append($mbox, '{'.$mail->Host.':993/ssl}INBOX.Sent',
+                        $mail->GetSentMIMEMessage());
+            // close mail connection.
+            imap_close($mbox);
+          }
+        } elseif (true) {
+          // PEAR IMAP works without the c-client library
 
-        ini_set('error_reporting',ini_get('error_reporting') & ~E_STRICT);
+          ini_set('error_reporting',ini_get('error_reporting') & ~E_STRICT);
 
-        $imap = new Net_IMAP($mail->Host, 993, false, 'UTF-8');
-        if (($ret = $imap->login($mail->Username, $mail->Password)) !== true) {
-          CAFEVerror($ret->toString(), false);
+          $imap = new Net_IMAP($mail->Host, 993, false, 'UTF-8');
+          if (($ret = $imap->login($mail->Username, $mail->Password)) !== true) {
+            CAFEVerror($ret->toString(), false);
+            $imap->disconnect();
+            die();
+          }
+          if (($ret = $imap->appendMessage($mail->GetSentMIMEMessage(), 'Sent')) !== true) {
+            CAFEVerror($ret->toString(), false);
+            $imap->disconnect();
+            die();
+          }
           $imap->disconnect();
-          die();
         }
-        if (($ret = $imap->appendMessage($mail->GetSentMIMEMessage(), 'Sent')) !== true) {
-          CAFEVerror($ret->toString(), false);
-          $imap->disconnect();
-          die();
-        }
-        $imap->disconnect();
-      }
 
-      if (true || CAFEVdebugMode()) {
-        echo '<HR/><H4>Gesendete Email</H4>';
-        echo "<PRE>\n";
-        echo htmlspecialchars($mail->GetSentMIMEMessage())."\n";
-        echo "</PRE><HR/>\n";
+        if (true || CAFEVdebugMode()) {
+          echo '<HR/><H4>Gesendete Email</H4>';
+          echo "<PRE>\n";
+          echo htmlspecialchars($mail->GetSentMIMEMessage())."\n";
+          echo "</PRE><HR/>\n";
+        }
       }
+      echo '</div>
+';
+
     }
 
-    echo $footer;
+    /** Split a comma separated address list into an array.
+     */
+    public static function parseAddrListToArray($list)
+    {
+      $t = str_getcsv($list);
 
-    ?>
+      foreach($t as $k => $v) {
+        if (strpos($v,',') !== false) {
+          $t[$k] = '"'.str_replace(' <','" <',$v);
+        }
+      }
+
+      foreach ($t as $addr) {
+        if (strpos($addr, '<')) {
+          preg_match('!(.*?)\s?<\s*(.*?)\s*>!', $addr, $matches);
+          $emails[] = array(
+                            'email' => $matches[2],
+                            'name' => $matches[1]
+                            );
+        } else {
+          $emails[] = array(
+                            'email' => $addr,
+                            'name' => ''
+                            );
+        }
+      }
+
+      return $emails;
+    }
+
+    /** Issue an error message.
+     */
+    public static function echoInvalid($kind, $email)
+    {
+      echo '<HR/><H4>The '.$kind.' address "'.$email.'" seems to be invalid.
+<p>
+Please correct that first and then click on the "Send"-button again.
+<P>
+Unfortunately, attachments (if any) have to be specified again.
+</H4>';
+    }
+
+    public static function addAddress($phpmailer, $address, $name = '')
+    {
+      if (!$phpmailer->AddAddress($address, $name)) {
+        EmailEchoInvalid('recipient', $address);
+        return false;
+      }
+      return true;
+    }
+
+    public static function addCC($phpmailer, $address, $name = '')
+    {
+      if (!$phpmailer->AddCC($address, $name)) {
+        EmailEchoInvalid('"Cc:"', $address);
+        return false;
+      }
+      return true;
+    }
+
+    public static function addBCC($phpmailer, $address, $name = '')
+    {
+      if (!$phpmailer->AddBCC($address, $name)) {
+        EmailEchoInvalid('"Bcc:"', $address);
+        return false;
+      }
+      return true;
+    }
+
+    public static function setFrom($phpmailer, $address, $name = '')
+    {
+      if ($phpmailer->SetFrom($address, $name) != true) {
+        EmailEchoInvalid('"From:"', $address);
+        return false;
+      }
+      return true;
+    }
+
+    public static function addReplyTo($phpmailer, $address, $name = '')
+    {
+      if ($phpmailer->AddReplyTo($address, $name) != true) {
+        EmailEchoInvalid('"ReplyTo:"', $address);
+        return false;
+      }
+      return true;
+    }
+
+    // Maybe not needed.
+    public static function callback($isSent, $to, $cc, $bcc, $subject, $body)
+    {
 
 
+    }
 
+    /**Display the history records of all our junk-mail attempts.
+     */
+    public static function displayHistory()
+    {
+      Config::init();
     
-  }
-};
+      //$debug_query = true;
+
+      if (isset($debug_query) && $debug_query) {
+        echo "<PRE>\n";
+        print_r($_POST);
+        print_r($_GET);
+        echo "</PRE>\n";
+      }
+      echo <<<__EOT__
+<div class="cafevdb-pme-header-box">
+  <div class="cafevdb-pme-header">
+    <h3>Massenmail-Historie.</h3>
+    <H4>Nat&uuml;rlich kann man einmal gesendete Email nicht mehr &auml;ndern, also kann man auch die Daten unten nicht editieren.</H4>
+  </div>
+</div>
+
+__EOT__;
+  
+      /*
+       * IMPORTANT NOTE: This generated file contains only a subset of huge amount
+       * of options that can be used with phpMyEdit. To get information about all
+       * features offered by phpMyEdit, check official documentation. It is available
+       * online and also for download on phpMyEdit project management page:
+       *
+       * http://platon.sk/projects/main_page.php?project_id=5
+       *
+       * This file was generated by:
+       *
+       *                    phpMyEdit version: 5.7.1
+       *       phpMyEdit.class.php core class: 1.204
+       *            phpMyEditSetup.php script: 1.50
+       *              generating setup script: 1.50
+       */
+
+      $opts = Config::$pmeopts;
+      $opts['cgi']['persist'] = Util::cgiValue('app');
+      unset($opts['miscphp']);
+
+      global $HTTP_SERVER_VARS;
+      $opts['page_name'] = $HTTP_SERVER_VARS['PHP_SELF'].'?app=cafevdb&Template=emailhistory';
+
+      $opts['inc'] = 15;
+
+      $opts['tb'] = 'SentEmail';
+
+      // Name of field which is the unique key
+      $opts['key'] = 'Id';
+
+      // Type of key field (int/real/string/date etc.)
+      $opts['key_type'] = 'int';
+
+      // Sorting field(s)
+      $opts['sort_field'] = array('-Date');
+    
+      // Options you wish to give the users
+      // A - add,  C - change, P - copy, V - view, D - delete,
+      // F - filter, I - initial sort suppressed
+      // This is a view, undeletable.
+      //  $opts['options'] = 'CPVFM';
+      $opts['options'] = 'VFM';
+
+      // Number of lines to display on multiple selection filters
+      $opts['multiple'] = '6';
+
+      // Navigation style: B - buttons (default), T - text links, G - graphic links
+      // Buttons position: U - up, D - down (default)
+      //$opts['navigation'] = 'DB';
+
+      // Display special page elements
+      $opts['display'] = array(
+                               'form'  => true,
+                               'query' => true,
+                               'sort'  => true,
+                               'time'  => true,
+                               'tabs'  => true
+                               );
+
+      // Set default prefixes for variables
+      $opts['js']['prefix']               = 'PME_js_';
+      $opts['dhtml']['prefix']            = 'PME_dhtml_';
+      $opts['cgi']['prefix']['operation'] = 'PME_op_';
+      $opts['cgi']['prefix']['sys']       = 'PME_sys_';
+      $opts['cgi']['prefix']['data']      = 'PME_data_';
+    
+      //$opts['cgi']['append']['PME_sys_fl'] = 1;
+    
+      /* Get the user's default language and use it if possible or you can
+         specify particular one you want to use. Refer to official documentation
+         for list of available languages. */
+      //  $opts['language'] = $_SERVER['HTTP_ACCEPT_LANGUAGE'] . '-UTF8';
+
+      /* Table-level filter capability. If set, it is included in the WHERE clause
+         of any generated SELECT statement in SQL query. This gives you ability to
+         work only with subset of data from table.
+
+         $opts['filters'] = "column1 like '%11%' AND column2<17";
+         $opts['filters'] = "section_id = 9";
+         $opts['filters'] = "PMEtable0.sessions_count > 200";
+      */
+
+      /* Field definitions
+   
+         Fields will be displayed left to right on the screen in the order in which they
+         appear in generated list. Here are some most used field options documented.
+
+         ['name'] is the title used for column headings, etc.;
+         ['maxlen'] maximum length to display add/edit/search input boxes
+         ['trimlen'] maximum length of string content to display in row listing
+         ['width'] is an optional display width specification for the column
+         e.g.  ['width'] = '100px';
+         ['mask'] a string that is used by sprintf() to format field output
+         ['sort'] true or false; means the users may sort the display on this column
+         ['strip_tags'] true or false; whether to strip tags from content
+         ['nowrap'] true or false; whether this field should get a NOWRAP
+         ['select'] T - text, N - numeric, D - drop-down, M - multiple selection
+         ['options'] optional parameter to control whether a field is displayed
+         L - list, F - filter, A - add, C - change, P - copy, D - delete, V - view
+         Another flags are:
+         R - indicates that a field is read only
+         W - indicates that a field is a password field
+         H - indicates that a field is to be hidden and marked as hidden
+         ['URL'] is used to make a field 'clickable' in the display
+         e.g.: 'mailto:$value', 'http://$value' or '$page?stuff';
+         ['URLtarget']  HTML target link specification (for example: _blank)
+         ['textarea']['rows'] and/or ['textarea']['cols']
+         specifies a textarea is to be used to give multi-line input
+         e.g. ['textarea']['rows'] = 5; ['textarea']['cols'] = 10
+         ['values'] restricts user input to the specified constants,
+         e.g. ['values'] = array('A','B','C') or ['values'] = range(1,99)
+         ['values']['table'] and ['values']['column'] restricts user input
+         to the values found in the specified column of another table
+         ['values']['description'] = 'desc_column'
+         The optional ['values']['description'] field allows the value(s) displayed
+         to the user to be different to those in the ['values']['column'] field.
+         This is useful for giving more meaning to column values. Multiple
+         descriptions fields are also possible. Check documentation for this.
+      */
+
+      $opts['fdd']['Id'] = array(
+                                 'name'     => 'Id',
+                                 'select'   => 'T',
+                                 'options'  => 'LAVCPDR', // auto increment
+                                 'maxlen'   => 11,
+                                 'default'  => '0',
+                                 'sort'     => false
+                                 );
+
+      $opts['fdd']['Date'] = Config::$opts['calendar'];
+      $opts['fdd']['Date']['name'] = 'Datum';
+      $opts['fdd']['Date']['default'] = date("Y-m-d H:i:s");
+      $opts['fdd']['Date']['nowrap'] = true;
+      $opts['fdd']['Date']['options'] = 'LAVCPDR'; // Set by update trigger.
+  
+      $opts['fdd']['user'] = array('name'     => 'Absende-User',
+                                   'select'   => 'T',
+                                   'maxlen'   => 36,
+                                   'sort'     => true );
+      $opts['fdd']['Subject'] = array('name'     => 'Betreff',
+                                      'select'   => 'T',
+                                      'maxlen'   => 384,
+                                      'sort'     => true );
+      $opts['fdd']['BulkRecipients'] = array('name'     => 'Empf&auml;nger',
+                                             'select'   => 'T',
+                                             'maxlen'   => 1024,
+                                             'sort'     => true );
+      $opts['fdd']['Cc'] = array('name'     => 'CarbonCopy',
+                                 'select'   => 'T',
+                                 'maxlen'   => 1024,
+                                 'sort'     => true );
+      $opts['fdd']['Bcc'] = array('name'     => 'BlindCarbonCopy',
+                                  'select'   => 'T',
+                                  'maxlen'   => 1024,
+                                  'sort'     => true );
+      $opts['fdd']['HtmlBody'] = array('name'     => 'Inhalt',
+                                       'select'   => 'T',
+                                       'maxlen'   => 10240,
+                                       'escape' => false,
+                                       'sort'     => true );
+
+      new \phpMyEdit($opts);
+    }
+
+  };
+
+}
 
 ?>

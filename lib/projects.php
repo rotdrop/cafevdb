@@ -1,30 +1,34 @@
 <?php
 
+namespace CAFEVDB;
+
 /** Helper class for displaying projects.
  */
-class CAFEVDB_Projects
+class Projects
 {
   static public function display()
   {
-    CAFEVDB_Config::init();
+    Config::init();
 
     /* echo '<PRE>'; */
     /* print_r($_SERVER); */
     /* echo '</PRE>'; */
 
-    $handle = CAFEVDB_mySQL::connect(CAFEVDB_Config::$pmeopts);
+    $handle = mySQL::connect(Config::$pmeopts);
 
-    $Instrumente = CAFEVDB_Instruments::fetch($handle);
+    $Instrumente = Instruments::fetch($handle);
 
-    CAFEVDB_mySQL::close($handle);
+    mySQL::close($handle);
 
     echo <<<__EOT__
-<div class="cafevdb-pme-header">
-  <h2>Camerata Projekte</h2>
-  <h4>Bitte auf das Projekt-K&uuml;rzel
+<div class="cafevdb-pme-header-box">
+  <div class="cafevdb-pme-header">
+    <h2>Camerata Projekte</h2>
+    <h4>Bitte auf das Projekt-K&uuml;rzel
 klicken, um die Besetzungliste zu editieren. F&uuml;r allgemeine
 Eigenschaften bitte die "add", "change" etc. Buttons unten anklicken.
-  </h4>
+    </h4>
+  </div>
 </div>
 
 __EOT__;
@@ -45,8 +49,8 @@ __EOT__;
      *              generating setup script: 1.50
      */
 
-    $opts = CAFEVDB_Config::$pmeopts;
-    $opts['cgi']['persist'] = CAFEVDB_Util::cgiValue('app');
+    $opts = Config::$pmeopts;
+    $opts['cgi']['persist'] = Util::cgiValue('app');
 
     $opts['tb'] = 'Projekte';
 
@@ -222,7 +226,7 @@ zur Extra-Spalte in der Datenbank angeben, z.B. so:
 Dann wird die Reihenfolge bei der Anzeige der Tabelle geändert, aber die
 Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
 
-    $opts['fdd']['Konzert1'] = CAFEVDB_Config::$opts['calendar'];
+    $opts['fdd']['Konzert1'] = Config::$opts['calendar'];
     $opts['fdd']['Konzert1']['name'] = 'Konzert1';
 
     $opts['fdd']['KonzertOrt1'] = array(
@@ -236,7 +240,7 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
                                         'escape' => false
                                         );
 
-    $opts['fdd']['Konzert2'] = CAFEVDB_Config::$opts['calendar'];
+    $opts['fdd']['Konzert2'] = Config::$opts['calendar'];
     $opts['fdd']['Konzert2']['name'] = 'Konzert2';
     $opts['fdd']['KonzertOrt2'] = array(
                                         'name'     => 'KonzertOrt2',
@@ -249,7 +253,7 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
                                         'escape' => false
                                         );
 
-    $opts['fdd']['Proben1'] = CAFEVDB_Config::$opts['calendar'];
+    $opts['fdd']['Proben1'] = Config::$opts['calendar'];
     $opts['fdd']['Proben1']['name'] = 'Proben1';
     $opts['fdd']['ProbenKommentar1'] = array(
                                              'name'     => 'ProbenKommentar1',
@@ -263,7 +267,7 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
                                              'escape' => false,
                                              );
 
-    $opts['fdd']['Proben2'] = CAFEVDB_Config::$opts['calendar'];
+    $opts['fdd']['Proben2'] = Config::$opts['calendar'];
     $opts['fdd']['Proben2']['name'] = 'Proben2';
     $opts['fdd']['ProbenKommentar2'] = array(
                                              'name'     => 'ProbenKommentar2',
@@ -277,7 +281,7 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
                                              'escape' => false,
                                              );
 
-    $opts['fdd']['Proben3'] = CAFEVDB_Config::$opts['calendar'];
+    $opts['fdd']['Proben3'] = Config::$opts['calendar'];
     $opts['fdd']['Proben3']['name'] = 'Proben3';
     $opts['fdd']['ProbenKommentar3'] = array(
                                              'name'     => 'ProbenKommentar3',
@@ -291,7 +295,7 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
                                              'escape' => false,
                                              );
 
-    $opts['fdd']['Proben4'] = CAFEVDB_Config::$opts['calendar'];
+    $opts['fdd']['Proben4'] = Config::$opts['calendar'];
     $opts['fdd']['Proben4']['name'] = 'Proben4';
     $opts['fdd']['ProbenKommentar4'] = array(
                                              'name'     => 'ProbenKommentar4',
@@ -305,13 +309,13 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
                                              'escape' => false,
                                              );
 
-    $opts['triggers']['update']['after'] = CAFEVDB_Config::$triggers.'projects.TUA.inc.php';
-    $opts['triggers']['insert']['after'] = CAFEVDB_Config::$triggers.'projects.TIA.inc.php';
+    $opts['triggers']['update']['after'] = Config::$triggers.'projects.TUA.inc.php';
+    $opts['triggers']['insert']['after'] = Config::$triggers.'projects.TIA.inc.php';
 
     // Maybe we want to keep the view.
     // $opts['triggers']['delete']['after']  = 'Projekte.TDA.inc.php';
 
-    new phpMyEdit($opts);
+    new \phpMyEdit($opts);
   }
 
   /**Generate an associative array of extra-fields. The key is the
@@ -331,27 +335,27 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
    */
   public static function extraFields($projectId, $handle = false)
   {
-    CAFEVDB_Util::debugMsg(">>>>ProjektExtraFelder: Id = $projectId");
+    Util::debugMsg(">>>>ProjektExtraFelder: Id = $projectId");
 
     $query = 'SELECT `ExtraFelder` FROM `Projekte` WHERE `Id` = '.$projectId;
-    $result = CAFEVDB_mySQL::query($query, $handle);
+    $result = mySQL::query($query, $handle);
     
     // Get the single line
-    $line = CAFEVDB_mySQL::fetch($result) or CAFEVDB_Util::error("Couldn't fetch the result for '".$query."'");
+    $line = mySQL::fetch($result) or Util::error("Couldn't fetch the result for '".$query."'");
     
-    if (CAFEVDB_Util::debugMode()) {
+    if (Util::debugMode()) {
       print_r($line);
     }
     
     if ($line['ExtraFelder'] == '') {
       return array();
     } else {
-      CAFEVDB_Util::debugMsg("Extras: ".$line['ExtraFelder']);
+      Util::debugMsg("Extras: ".$line['ExtraFelder']);
     }
   
     // Build an array of name - size pairs
     $tmpfields = explode(',',$line['ExtraFelder']);
-    if (CAFEVDB_Util::debugMode()) {
+    if (Util::debugMode()) {
       print_r($tmpfields);
     }
     $fields = array();
@@ -364,7 +368,7 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
       ++$fieldno;
     }
 
-    CAFEVDB_Util::debugMsg("<<<<ProjektExtraFelder");
+    Util::debugMsg("<<<<ProjektExtraFelder");
 
     return $fields;
   }
@@ -372,10 +376,10 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
   public static function fetchName($projectId, $handle = false)
   {
     $query = 'SELECT `Name` FROM `Projekte` WHERE `Id` = '.$projectId;
-    $result = CAFEVDB_mySQL::query($query, $handle);
+    $result = mySQL::query($query, $handle);
 
     // Get the single line
-    $line = CAFEVDB_mySQL::fetch($result) or CAFEVDB_Util::error("Couldn't fetch the result for '".$query."'");
+    $line = mySQL::fetch($result) or Util::error("Couldn't fetch the result for '".$query."'");
 
     return $line['Name'];
   }
@@ -386,11 +390,11 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
    */
   public static function createExtraFields($projectId, $handle = false)
   {
-    CAFEVDB_Util::debugMsg(">>>> ProjektCreateExtraFelder");
+    Util::debugMsg(">>>> ProjektCreateExtraFelder");
 
     // Fetch the extra-fields.
     $extra = self::extraFields($projectId, $handle);
-    if (CAFEVDB_Util::debugMode()) {
+    if (Util::debugMode()) {
       print_r($extra);
     }
 
@@ -407,34 +411,34 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
    ADD `ExtraFeld%02d` TEXT
    CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL',
                        $field['pos']);
-      $result = @CAFEVDB_mySQL::query($query, $handle, false, true); // ignore the result, be silent
+      $result = @mySQL::query($query, $handle, false, true); // ignore the result, be silent
     }
 
     // Now make sure we have it ...
     $query = "SHOW COLUMNS FROM `Besetzungen` LIKE 'ExtraFeld%'";
-    $result = CAFEVDB_mySQL::query($query, $handle);
+    $result = mySQL::query($query, $handle);
 
     // See what we got ...
     $fields = array();
-    while ($row = CAFEVDB_mySQL::fetch($result)) {
-      if (CAFEVDB_Util::debugMode()) {
+    while ($row = mySQL::fetch($result)) {
+      if (Util::debugMode()) {
         print_r($row);
       }
       $fields[] = $row['Field'];
     }
-    if (CAFEVDB_Util::debugMode()) {
+    if (Util::debugMode()) {
       print_r($fields);
     }
 
     foreach ($extra as $field) {
       $name = sprintf('ExtraFeld%02d', $field['pos']);
-      CAFEVDB_Util::debugMsg("Check ".$name);
+      Util::debugMsg("Check ".$name);
       if (array_search($name, $fields) === false) {
-        CAFEVDB_Util::error('Extra-Field '.$field['pos'].' not Found in Table Besetzungen');
+        Util::error('Extra-Field '.$field['pos'].' not Found in Table Besetzungen');
       }
     }
 
-    CAFEVDB_Util::debugMsg("<<<< ProjektCreateExtraFelder");
+    Util::debugMsg("<<<< ProjektCreateExtraFelder");
 
     return true; // if someone cares
   }
@@ -443,7 +447,7 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
   // phpmyadmin. Take all extra-fields into account, add them at end.
   public static function createView($projectId, $project = false, $handle = false)
   {
-    CAFEVDB_Util::debugMsg(">>>> ProjektCreateView");
+    Util::debugMsg(">>>> ProjektCreateView");
 
     if (! $project) {
       // Get the name
@@ -460,11 +464,11 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
     // string for that. Ordering of field in the table is just the
     // ordering in the "$extra" table.
     $extraquery = '';
-    CAFEVDB_Util::debugMsg(">>>> ProjektCreateView before extra");
+    Util::debugMsg(">>>> ProjektCreateView before extra");
     foreach ($extra as $field) {
       $extraquery .= sprintf(', `Besetzungen`.`ExtraFeld%02d` AS `'.$field['name'].'`', $field['pos']);
     }
-    CAFEVDB_Util::debugMsg(">>>> ProjektCreateView after extra");
+    Util::debugMsg(">>>> ProjektCreateView after extra");
 
     // Now do all the stuff, do not forget the proper sorting to satisfy
     // all dummies on earth
@@ -500,11 +504,11 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
  `Musiker`.`Name` ASC,
  `Musiker`.`Vorname` ASC';
  
-    CAFEVDB_mySQL::query($sqlquery, $handle);
+    mySQL::query($sqlquery, $handle);
 
     return true;
   }
 
-}; // class CAFEVDB_Projects
+}; // class Projects
 
 ?>

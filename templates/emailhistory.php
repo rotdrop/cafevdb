@@ -4,5 +4,5 @@
    <input type="submit" value="<?php echo $l->t('Save Blah'); ?>" id="cafevdb_add_submit" />
 </div>
 <div class="cafevdb-general">
-  <?php CAFEVDB\Instrumentation::display(); ?>
+   <?php CAFEVDB\Email::displayHistory(); ?>
 </div>

@@ -1,10 +1,11 @@
 <?php
 
+namespace CAFEVDB;
 
 /** Tool-tips for the phpmyadmin-forms.
  *
  */
-class CAFEVDB_Tooltips
+class Tooltips
 {
   static function pmeToolTips()
   {
@@ -88,6 +89,6 @@ Think thrice about it.',
         'nothing' => 'nothing' // comma stop
             );
   }
-}; // class CAFEVDB_toolTips
+}; // class toolTips
 
 ?>

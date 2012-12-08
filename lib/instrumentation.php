@@ -1,6 +1,8 @@
 <?php
 
-class CAFEVDB_Instrumentation
+namespace CAFEVDB;
+
+class Instrumentation
 {
   public static $action;
   public static $subAction;
@@ -14,21 +16,21 @@ class CAFEVDB_Instrumentation
 
   static public function display()
   {
-    CAFEVDB_Config::init();
+    Config::init();
 
-    //CAFEVDB_Config::$debug_query = true;
-    if (CAFEVDB_Config::$debug_query) {
+    //Config::$debug_query = true;
+    if (Config::$debug_query) {
       echo "<PRE>\n";
       print_r($_POST);
       print_r($_GET);
       echo "</PRE>\n";
     }
 
-    $opts = CAFEVDB_Config::$pmeopts;
+    $opts = Config::$pmeopts;
     global $HTTP_SERVER_VARS;
     $opts['page_name'] = $HTTP_SERVER_VARS['PHP_SELF'].'?app=cafevdb'.'&Template=instrumentation';
-    foreach (CAFEVDB_Config::$cgiVars as $key => $value) {
-      $opts['cgi']['persist']["$key"] = $value = CAFEVDB_Util::cgiValue("$key");
+    foreach (Config::$cgiVars as $key => $value) {
+      $opts['cgi']['persist']["$key"] = $value = Util::cgiValue("$key");
       // echo "$key =&gt; $value <BR/>";
     }
 
@@ -41,16 +43,16 @@ class CAFEVDB_Instrumentation
 
     // Fetch some data we probably will need anyway
 
-    $handle = CAFEVDB_mySQL::connect($opts);
+    $handle = mySQL::connect($opts);
 
     // List of instruments
-    self::$instruments = CAFEVDB_Instruments::fetch($handle);
-    $instrumentFamilies = CAFEVDB_mySQL::multiKeys('Instrumente', 'Familie', $handle);
+    self::$instruments = Instruments::fetch($handle);
+    $instrumentFamilies = mySQL::multiKeys('Instrumente', 'Familie', $handle);
 
     // Fetch project specific user fields
     if (self::$projectId >= 0) {
       //  echo "Id: self::$projectId <BR/>";
-      self::$userExtraFields = CAFEVDB_Projects::extraFields(self::$projectId, $handle);
+      self::$userExtraFields = Projects::extraFields(self::$projectId, $handle);
     }
 
     /* echo "<PRE>\n"; */
@@ -61,15 +63,15 @@ class CAFEVDB_Instrumentation
     /* checkInstruments($handle); */
     /* sanitizeInstrumentsTable($handle); */
 
-    CAFEVDB_mySQL::close($handle);
+    mySQL::close($handle);
 
     switch (self::$action) {
     case "DetailedInstrumentation": {
-      CAFEVDB_DetailedInstrumentation::display($opts);
+      DetailedInstrumentation::display($opts);
       break;
     }
     case "BriefInstrumentation": {
-      CAFEVDB_BriefInstrumentation::display($opts);
+      BriefInstrumentation::display($opts);
       break;
     }
     case "TODO": {
@@ -78,20 +80,20 @@ class CAFEVDB_Instrumentation
       break;
     }
     case "AddMusicians": {
-      CAFEVDB_Musicians::display($opts, true);
+      Musicians::display($opts, true);
       break;
     }
     case "DisplayAllMusicians": {
-      CAFEVDB_Musicians::display($opts, false);
+      Musicians::display($opts, false);
       break;
     }
     case "AddOneMusician":
     case "ChangeOneMusician": {
-      CAFEVDB_Musicians::displayAddChangeOne($opts);
+      Musicians::displayAddChangeOne($opts);
       break;
     }
     case "AddInstruments": {
-      CAFEVDB_Instruments::display($opts);
+      Instruments::display($opts);
       break;
     }
     default: {
@@ -99,6 +101,6 @@ class CAFEVDB_Instrumentation
     }
     }
   }
-}; // class CAFEVDB_Instrumentation
+}; // class Instrumentation
 
 ?>

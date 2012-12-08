@@ -1,18 +1,20 @@
 <?php
 
-class CAFEVDB_Instruments
+namespace CAFEVDB;
+
+class Instruments
 {
-  // called form CAFEVDB_Instrumentation::display()
+  // called form Instrumentation::display()
   public static function display(&$opts)
   {
     global $debug_query;
-    //CAFEVDB_Config::$debug_query = true;
+    //Config::$debug_query = true;
     //$debug_query = true;
 
-    $action          = CAFEVDB_Instrumentation::$action;
-    $project         = CAFEVDB_Instrumentation::$project;
-    $projectId       = CAFEVDB_Instrumentation::$projectId;
-    $recordsPerPage  = CAFEVDB_Instrumentation::$recordsPerPage;
+    $action          = Instrumentation::$action;
+    $project         = Instrumentation::$project;
+    $projectId       = Instrumentation::$projectId;
+    $recordsPerPage  = Instrumentation::$recordsPerPage;
 
     echo '<h3>'.htmlspecialchars('Instrumente hinzufügen.').'</h3>'.
       '<h4>'.htmlspecialchars('Löschen ist nicht vorgesehen, dafür bitte phpMyAdmin verwenden.
@@ -146,7 +148,7 @@ Auch den Instrumentennamen sollte man nicht ändern.').'</H4>';
                                     'select'   => 'C',
                                     'maxlen'   => 12,
                                     'sort'     => true);
-    $opts['fdd']['Familie']['values'] = CAFEVDB_Instrumentation::$instrumentFamilies;
+    $opts['fdd']['Familie']['values'] = Instrumentation::$instrumentFamilies;
     // Provide a link to Wikipedia for fun ...
     $opts['fdd']['Sortierung'] = array(
                                        'name'     => 'Orchester Sortierung',
@@ -165,8 +167,8 @@ Auch den Instrumentennamen sollte man nicht ändern.').'</H4>';
     $opts['fdd']['Lexikon']['URL'] = "http://de.wikipedia.org/wiki/\$key";
     $opts['fdd']['Lexikon']['URLdisp'] = "\$key@Wikipedia.DE";
 
-    $opts['triggers']['update']['before']  = CAFEVDB_Config::$triggers.'instruments.TUB.inc.php';
-    $opts['triggers']['insert']['before']  = CAFEVDB_Config::$triggers.'instruments.TIB.inc.php';
+    $opts['triggers']['update']['before']  = Config::$triggers.'instruments.TUB.inc.php';
+    $opts['triggers']['insert']['before']  = Config::$triggers.'instruments.TIB.inc.php';
 
     new phpMyEdit($opts);
   }
@@ -176,10 +178,10 @@ Auch den Instrumentennamen sollte man nicht ändern.').'</H4>';
   public static function sortOrchestral($list, $handle)
   {
     $query = 'SELECT `Instrument`,`Sortierung` FROM `Instrumente` WHERE  1 ORDER BY `Sortierung` ASC';
-    $result = CAFEVDB_mySQL::query($query, $handle);
+    $result = mySQL::query($query, $handle);
   
     $final = array();
-    while ($line = CAFEVDB_mySQL::fetch($result)) {
+    while ($line = mySQL::fetch($result)) {
       $tblInst = $line['Instrument'];
       if (array_search($tblInst, $list) !== false) {
         $final[] = $tblInst;
@@ -193,16 +195,16 @@ Auch den Instrumentennamen sollte man nicht ändern.').'</H4>';
   public static function fetchProjectInstruments($projectId, $handle) {
 
     $query = 'SELECT `Besetzung` FROM `Projekte` WHERE `Id` = '.$projectId;
-    $result = CAFEVDB_mySQL::query($query);
+    $result = mySQL::query($query);
 
     // Ok there should be only one row
-    if (!($line = CAFEVDB_mySQL::fetch($result))) {
+    if (!($line = mySQL::fetch($result))) {
       CAFEVerror("Could not fetch instruments for project", true);
     }
     $ProjInsts = explode(',',$line['Besetzung']);
 
     // Now sort it in "natural" order
-    return sortInstrumentsOrchestral($ProjInsts, $handle);
+    return self::sortOrchestral($ProjInsts, $handle);
   }
 
   // Fetch the project-instruments of the project musicians, possibly to
@@ -211,15 +213,15 @@ Auch den Instrumentennamen sollte man nicht ändern.').'</H4>';
   public static function fetchProjectMusiciansInstruments($projectId, $handle)
   {
     $query = 'SELECT DISTINCT `Instrument` FROM `Besetzungen` WHERE `ProjektId` = '.$projectId;
-    $result = CAFEVDB_mySQL::query($query);
+    $result = mySQL::query($query);
   
     $instruments = array();
-    while ($line = CAFEVDB_mySQL::fetch($result)) {
+    while ($line = mySQL::fetch($result)) {
       $instruments[] = $line['Instrument'];
     }
 
     // Now sort it in "natural" order
-    return sortInstrumentsOrchestral($instruments, $handle);
+    return self::sortOrchestral($instruments, $handle);
   }
 
   // Fetch all instruments of the musicians subscribed to the project
@@ -236,10 +238,10 @@ Auch den Instrumentennamen sollte man nicht ändern.').'</H4>';
       $prjinst = fetchProjectInstruments($projectId, $handle);
     }
     $prjinst = array_unique(array_merge($musinst, $prjinst));
-    $prjinst = sortInstrumentsOrchestral($prjinst, $handle);
+    $prjinst = self::sortOrchestral($prjinst, $handle);
 
     $query = "UPDATE `Projekte` SET `Besetzung`='".implode(',',$prjinst)."' WHERE `Id` = $projectId";
-    CAFEVDB_mySQL::query($query, $handle);
+    mySQL::query($query, $handle);
     //CAFEVerror($query, false);
   
     return $prjinst;
@@ -248,13 +250,13 @@ Auch den Instrumentennamen sollte man nicht ändern.').'</H4>';
   // Fetch the instruments and sort them according to Instruments.Sortierung
   public static function fetch($handle) {
 
-    $Instruments = CAFEVDB_mySQL::multiKeys('Musiker', 'Instrumente', $handle);
+    $Instruments = mySQL::multiKeys('Musiker', 'Instrumente', $handle);
 
     $query = 'SELECT `Instrument`,`Sortierung` FROM `Instrumente` WHERE  1 ORDER BY `Sortierung` ASC';
-    $result = CAFEVDB_mySQL::query($query, $handle);
+    $result = mySQL::query($query, $handle);
   
     $final = array();
-    while ($line = CAFEVDB_mySQL::fetch($result)) {
+    while ($line = mySQL::fetch($result)) {
       //CAFEVerror("huh".$line['Instrument'],false);
       $tblInst = $line['Instrument'];
       if (array_search($tblInst, $Instruments) === false) {
@@ -269,8 +271,8 @@ Auch den Instrumentennamen sollte man nicht ändern.').'</H4>';
   // Check for consistency
   public static function check($handle) {
 
-    $InstrumentsSet  = CAFEVDB_mySQL::multiKeys('Musiker', 'Instrumente', $handle);
-    $InstrumentsEnum = CAFEVDB_mySQL::multiKeys('Besetzungen', 'Instrument', $handle);
+    $InstrumentsSet  = mySQL::multiKeys('Musiker', 'Instrumente', $handle);
+    $InstrumentsEnum = mySQL::multiKeys('Besetzungen', 'Instrument', $handle);
 
   
     sort($InstrumentsSet);
@@ -311,11 +313,11 @@ Auch den Instrumentennamen sollte man nicht ändern.').'</H4>';
   // table. Delete everything else.
   public static function sanitizeTable($handle) {
 
-    $Instrumente = CAFEVDB_mySQL::multiKeys('Musiker', 'Instrumente', $handle);
+    $Instrumente = mySQL::multiKeys('Musiker', 'Instrumente', $handle);
 
     foreach ($Instrumente as $value) {
       $query = "INSERT IGNORE INTO `Instrumente` (`Instrument`) VALUES ('$value')";
-      $result = CAFEVDB_mySQL::query($query, $handle);
+      $result = mySQL::query($query, $handle);
     }
 
     // Now the table contains at least all instruments, now remove excess elements.
@@ -325,10 +327,10 @@ Auch den Instrumentennamen sollte man nicht ändern.').'</H4>';
     $query = "SELECT `Instrument` FROM `Instrumente` WHERE 1";
 
     // Fetch the result or die
-    $result = CAFEVDB_mySQL::query($query, $query);
+    $result = mySQL::query($query, $query);
 
     $dropList = array();
-    while ($line = CAFEVDB_mySQL::fetch($result)) {
+    while ($line = mySQL::fetch($result)) {
       $tblInst = $line['Instrument'];
       if (array_search($tblInst, $Instrumente) === false) {
         $dropList[$tblInst] = true;
@@ -337,7 +339,7 @@ Auch den Instrumentennamen sollte man nicht ändern.').'</H4>';
 
     foreach ($dropList as $key => $value) {
       $query = "DELETE FROM `Instrumente` WHERE `Instrument` = '$key'";
-      $result = CAFEVDB_mySQL::query($query);
+      $result = mySQL::query($query);
     }
   }
 
