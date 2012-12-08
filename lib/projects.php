@@ -150,7 +150,7 @@ __EOT__;
     $opts['fdd']['Id'] = array(
                                'name'     => 'Id',
                                'select'   => 'T',
-                               'options'  => 'LAVCPDR', // auto increment
+                               'options'  => 'AVCPDR', // auto increment
                                'maxlen'   => 11,
                                'default'  => '0',
                                'sort'     => true

@@ -173,6 +173,23 @@ div.cafevdb-pme p,div.cafevdb-email p {
 
 /******************************************/
 
+a.pme-cell-1:link, a.pme-cell-0:link {
+  color:#0000ff;
+  text-decoration:underline;
+  font-weight:bold;
+}
+a.pme-cell-1:visited, a.pme-cell-0:visited {
+  color:#0000ff;
+  text-decoration:underline;
+  font-weight:bold;
+}
+a.pme-cell-1:hover, a.pme-cell-0:hover {
+  color:#0000ff;
+  text-decoration:underline;
+  font-style:italic;
+  font-weight:bold;
+}
+
 input[type=checkbox],input[type=submit],input[type=radio] {
   cursor:crosshair;
 } 
