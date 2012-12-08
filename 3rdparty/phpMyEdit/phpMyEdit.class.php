@@ -332,8 +332,8 @@ class phpMyEdit
 
             if ($do_button) {
               //$base="http://www.yoursite.com/pme";
-                $base="";
-                echo '<button id="',$cal_ar['button'],'" style="background: url(',"'",$base,"images/pme-calendar.png')",'" type="button">',$label,'</button>';
+                $base= $this->url['images'];
+                echo '<button id="',$cal_ar['button'],'" style="background: url(',"'",$base,"pme-calendar.png')",'" type="button">',$label,'</button>';
             } else {
                 echo '<span style="cursor: pointer" id="',$cal_ar['button'],'">',$label,'</span>';
             }

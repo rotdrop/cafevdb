@@ -1,6 +1,8 @@
 <?php
 
-class CAFEVDB_Musicians
+namespace CAFEVDB;
+
+class Musicians
 {
   /**Display the list of all musicians. Is $projectMode == true,
    * filter out all musicians present in $projectId and add a
@@ -9,34 +11,38 @@ class CAFEVDB_Musicians
   public static function display(&$opts, $projectMode = false)
   {
     global $debug_query;
-    //CAFEVDB_Config::$debug_query = true;
+    //Config::$debug_query = true;
     //$debug_query = true;
 
-    $action          = CAFEVDB_Instrumentation::$action;
-    $project         = CAFEVDB_Instrumentation::$project;
-    $projectId       = CAFEVDB_Instrumentation::$projectId;
-    $recordsPerPage  = CAFEVDB_Instrumentation::$recordsPerPage;
+    $action          = Instrumentation::$action;
+    $project         = Instrumentation::$project;
+    $projectId       = Instrumentation::$projectId;
+    $recordsPerPage  = Instrumentation::$recordsPerPage;
 
     if (!$projectMode) {
 
       echo <<<__EOT__
-<div class="cafevdb-pme-header">
-  <h2>&Uuml;berblick &uuml;ber alle Musiker</h2>
+<div class="cafevdb-pme-header-box">
+  <div class="cafevdb-pme-header">
+    <h2>&Uuml;berblick &uuml;ber alle Musiker</h2>
+  </div>
 </div>
 
 __EOT__;
 
     } else {
-      $help = CAFEVDB_Config::$prefix . 'hinzufuegen.html';
+      $help = Config::$prefix . 'hinzufuegen.html';
 
       echo <<<__EOT__
-<div class="cafevdb-pme-header">
-  <h3>Besetzung &auml;ndern f&uuml;r Projekt $project</h3>
-  <h4>F&uuml;r die aktuelle Teilnehmerliste bitte die Buttons "... Display for ... "
-    benutzen.<P> Der Weg in ein Projekt f&uuml;hrt nur &uuml;ber
-    <EM style="color:#ff0000"><B>diese</B></EM> Tabelle, die Musiker werden dann automatisch in unseren
-    Fundus mit aufgenommen (<A HREF="$help" target="_blank">Anleitung</A>)
-  </h4>
+<div class="cafevdb-pme-header-box">
+  <div class="cafevdb-pme-header">
+    <h3>Besetzung &auml;ndern f&uuml;r Projekt $project</h3>
+    <h4>F&uuml;r die aktuelle Teilnehmerliste bitte die Buttons "... Display for ... "
+      benutzen.<P> Der Weg in ein Projekt f&uuml;hrt nur &uuml;ber
+      <EM style="color:#ff0000"><B>diese</B></EM> Tabelle, die Musiker werden dann automatisch in unseren
+      Fundus mit aufgenommen (<A HREF="$help" target="_blank">Anleitung</A>)
+    </h4>
+  </div>
 </div>
 
 __EOT__;
@@ -188,7 +194,7 @@ __EOT__;
                                         'maxlen'   => 137,
                                         'sort'     => true
                                         );
-    $opts['fdd']['Instrumente']['values'] = CAFEVDB_Instrumentation::$instruments;
+    $opts['fdd']['Instrumente']['values'] = Instrumentation::$instruments;
 
     $opts['fdd']['Name'] = array(
                                  'name'     => 'Name',
@@ -230,7 +236,7 @@ __EOT__;
                                             'maxlen'   => 128,
                                             'default'  => 'Deutschland',
                                             'sort'     => true,
-                                            'values'   => CAFEVDB_Config::$opts['languages']);
+                                            'values'   => Config::$opts['languages']);
     $opts['fdd']['Telefon'] = array(
                                     'name'     => 'Telefon',
                                     'select'   => 'T',
@@ -243,8 +249,8 @@ __EOT__;
                                      'maxlen'   => 128,
                                      'sort'     => true
                                      );
-    $opts['fdd']['Geburtstag'] = CAFEVDB_Config::$opts['geburtstag'];
-    $opts['fdd']['Email'] = CAFEVDB_Config::$opts['email'];
+    $opts['fdd']['Geburtstag'] = Config::$opts['geburtstag'];
+    $opts['fdd']['Email'] = Config::$opts['email'];
     $opts['fdd']['Status'] = array(
                                    'name'     => 'Status',
                                    'css'      => array('postfix' => 'rem'),
@@ -263,34 +269,34 @@ __EOT__;
                                       'escape' => false,
                                       'sort'     => true
                                       );
-    $opts['fdd']['Aktualisiert'] = CAFEVDB_Config::$opts['calendar'];
+    $opts['fdd']['Aktualisiert'] = Config::$opts['calendar'];
     $opts['fdd']['Aktualisiert']['name'] = 'Aktualisiert';
     $opts['fdd']['Aktualisiert']['default'] = date('Y-m-d H:i:s');
     $opts['fdd']['Aktualisiert']['nowrap'] = true;
     $opts['fdd']['Aktualisiert']['options'] = 'LAVCPDR'; // Set by update trigger.
 
-    $opts['triggers']['update']['before'][0]  = CAFEVDB_Config::$triggers.'remove-unchanged.TUB.php.inc';
-    $opts['triggers']['update']['before'][1]  = CAFEVDB_Config::$triggers.'update-musician-timestamp.TUB.php.inc';
+    $opts['triggers']['update']['before'][0]  = Config::$triggers.'remove-unchanged.TUB.php.inc';
+    $opts['triggers']['update']['before'][1]  = Config::$triggers.'update-musician-timestamp.TUB.php.inc';
 
-    new phpMyEdit($opts);
+    new \phpMyEdit($opts);
   } // display()
   
   /**Helper function to add or change one specific musician to an
-   * existing project. CAFEVDB_Instrumentation::$action determines
+   * existing project. Instrumentation::$action determines
    * what to do.
    */
   public static function displayAddChangeOne(&$opts) {
 
     global $debug_query;
-    //CAFEVDB_Config::$debug_query = true;
+    //Config::$debug_query = true;
     //$debug_query = true;
 
-    $action          = CAFEVDB_Instrumentation::$action;
-    $project         = CAFEVDB_Instrumentation::$project;
-    $projectId       = CAFEVDB_Instrumentation::$projectId;
-    $musicianId      = CAFEVDB_Instrumentation::$musicianId;
-    $userExtraFields = CAFEVDB_Instrumentation::$userExtraFields;
-    $recordsPerPage  = CAFEVDB_Instrumentation::$recordsPerPage;
+    $action          = Instrumentation::$action;
+    $project         = Instrumentation::$project;
+    $projectId       = Instrumentation::$projectId;
+    $musicianId      = Instrumentation::$musicianId;
+    $userExtraFields = Instrumentation::$userExtraFields;
+    $recordsPerPage  = Instrumentation::$recordsPerPage;
 
     echo <<<__EOT__
   <div class="cafevdb-pme-header">
@@ -474,7 +480,7 @@ __EOT__;
                                        'maxlen'   => 12,
                                        'sort'     => true
                                        );
-    $opts['fdd']['Instrument']['values'] = CAFEVDB_Instrumentation::$instruments;
+    $opts['fdd']['Instrument']['values'] = Instrumentation::$instruments;
     $opts['fdd']['Reihung'] = array('name' => 'Stimme',
                                     'select' => 'T',
                                     'maxlen' => '3',
@@ -510,33 +516,33 @@ __EOT__;
     }
     // Check whether the instrument is also mentioned in the musicians
     // data-base. Otherwise add id on request.
-    $opts['triggers']['update']['before']  = CAFEVDB_Config::$triggers.'instrumentation-change-instrument.TUB.inc.php';
+    $opts['triggers']['update']['before']  = Config::$triggers.'instrumentation-change-instrument.TUB.inc.php';
 
     if ($saved_action == "AddOneMusician") {
 
       // Fetch all needed data from Musiker table
-      $handle = CAFEVDB_mySQL::connect($opts);
+      $handle = mySQL::connect($opts);
 
       $musquery = "SELECT `Instrumente` FROM Musiker WHERE `Id` = $musicianId";
-      $musres = CAFEVDB_mySQL::query($musquery, $handle);
+      $musres = mySQL::query($musquery, $handle);
       $musnumrows = mysql_num_rows($musres);
 
       if ($musnumrows != 1) {
-        CAFEVerror("Data inconsisteny, $musicianId is not a unique Id");
+        Util::error("Data inconsisteny, $musicianId is not a unique Id");
       }
 
-      $musrow = CAFEVDB_mySQL::fetch($musres);
+      $musrow = mySQL::fetch($musres);
       $instruments = explode(',',$musrow['Instrumente']);
 
       $instquery = "SELECT `Besetzung` FROM `Projekte` WHERE `Id` = $projectId";
-      $instres = CAFEVDB_mySQL::query($instquery, $handle);
+      $instres = mySQL::query($instquery, $handle);
       $instnumrows = mysql_num_rows($instres);
 
       if ($instnumrows != 1) {
-        CAFEVerror("Data inconsisteny, $projectId is not a unique Id");
+        Util::error("Data inconsisteny, $projectId is not a unique Id");
       }
 
-      $instrow = CAFEVDB_mySQL::fetch($instres);
+      $instrow = mySQL::fetch($instres);
       $instrumentation = explode(',',$instrow['Besetzung']);
 
       unset($musinst);
@@ -566,41 +572,41 @@ Choosing "'.$musinst.'" as instrument.<H4>';
       $prjquery = "INSERT INTO `Besetzungen` (`MusikerId`,`ProjektId`,`Instrument`)
  VALUES ('$musicianId','$projectId','$musinst')";
 
-      CAFEVDB_mySQL::query($prjquery, $handle);
-      CAFEVDB_mySQL::close($handle);
+      mySQL::query($prjquery, $handle);
+      mySQL::close($handle);
 
     } else if ($forcedInstrument != false) {
       // Add to musicans list in Musiker data-base and to musician Besetzungen
 
       // Fetch all needed data from Musiker table
-      $handle = CAFEVDB_mySQL::connect($opts);
+      $handle = mySQL::connect($opts);
 
       $musquery = "SELECT `Instrumente` FROM Musiker WHERE `Id` = $musicianId";
 
-      $musres = CAFEVDB_mySQL::query($musquery, $handle);
+      $musres = mySQL::query($musquery, $handle);
       $musnumrows = mysql_num_rows($musres);
 
       if ($musnumrows != 1) {
         die ("Data inconsisteny, $musicianId is not a unique Id");
       }
 
-      $musrow = CAFEVDB_mySQL::fetch($musres);
+      $musrow = mySQL::fetch($musres);
       $instruments = $musrow['Instrumente'] . "," . $forcedInstrument;
     
       $musquery = "UPDATE `Musiker` SET `Instrumente`='$instruments'
  WHERE `Id` = $musicianId";
   
-      CAFEVDB_mySQL::query($musquery, $handle);
+      mySQL::query($musquery, $handle);
 
       $prjquery = "UPDATE `Besetzungen` SET `Instrument`='$forcedInstrument'
  WHERE `MusikerId` = $musicianId AND `ProjektId` = $projectId";
 
-      CAFEVDB_mySQL::query($prjquery, $handle);
+      mySQL::query($prjquery, $handle);
 
-      CAFEVDB_mySQL::close();
+      mySQL::close();
     }
 
-    new phpMyEdit($opts);
+    new \phpMyEdit($opts);
   }
 
 }; // class definition.

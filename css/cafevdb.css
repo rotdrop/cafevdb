@@ -43,7 +43,7 @@ div[class|='cafevdb-nav']>div {
   opacity:0.98;
 }
 
-div.cafevdb-pme-header-box {
+div.cafevdb-pme-header-box,div.cafevdb-pme-header-box-16ex {
   position:fixed;
   padding-top:6ex;
   z-index:25;
@@ -51,6 +51,21 @@ div.cafevdb-pme-header-box {
   opacity:1.0;
   width:100%;
   height:16ex;
+  overflow:hidden;
+  border-bottom:1px solid #eee;
+  -moz-box-shadow:-3px 0 7px #777;
+  -webkit-box-shadow:-3px 0 7px #777;
+  box-shadow: -3px 0 7px #777;
+}
+
+div.cafevdb-pme-header-box-8ex {
+  position:fixed;
+  padding-top:6ex;
+  z-index:25;
+  background-color:inherit;
+  opacity:1.0;
+  width:100%;
+  height:8ex;
   overflow:hidden;
   border-bottom:1px solid #eee;
   -moz-box-shadow:-3px 0 7px #777;
@@ -287,7 +302,7 @@ td[class|='pme-filter'] {
 }
 
 input.pme-view-navigation {
-  background:url(%appswebroot%/cafevdb/img/alt/pme-view.png) !important;
+  background:url(%appswebroot%/cafevdb/img/pme-view.png) !important;
   no-repeat !important;
   width:16px !important;
   height:15px !important;
@@ -296,7 +311,7 @@ input.pme-view-navigation {
 }
 
 input.pme-copy-navigation {
-  background:url(%appswebroot%/cafevdb/img/alt/pme-copy.png) !important;
+  background:url(%appswebroot%/cafevdb/img/pme-copy.png) !important;
   no-repeat !important;
   width:16px !important;
   height:15px !important;
@@ -305,7 +320,7 @@ input.pme-copy-navigation {
 }
 
 input.pme-change-navigation {
-  background:url(%appswebroot%/cafevdb/img/alt/pme-change.png) !important;
+  background:url(%appswebroot%/cafevdb/img/pme-change.png) !important;
   no-repeat !important;
   width:16px !important;
   height:15px !important;
@@ -314,14 +329,14 @@ input.pme-change-navigation {
 }
 
 input.pme-delete-navigation {
-  background:url(%appswebroot%/cafevdb/img/alt/pme-delete.png) !important;
+  background:url(%appswebroot%/cafevdb/img/pme-delete.png) !important;
   no-repeat !important;
   width:16px !important;
   height:15px !important;
   border:0 !important;
   font-size:0 !important;
 }
-
+ 
 :not(.lt-ie9) input.pme-sort[type=checkbox] { 
   display:none;
 }

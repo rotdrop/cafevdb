@@ -28,7 +28,7 @@ class Config
     self::$pmeopts['un'] = 'camerata';
     self::$pmeopts['pw'] = 'foo!bar';
     self::$pmeopts['db'] = 'camerata';
-    self::$pmeopts['url']['images'] = self::$appbase . '/img/alt/';
+    self::$pmeopts['url']['images'] = self::$appbase . 'img/';
     global $HTTP_SERVER_VARS;
     self::$pmeopts['page_name'] = $HTTP_SERVER_VARS['PHP_SELF'].'?app=cafevdb';
 
