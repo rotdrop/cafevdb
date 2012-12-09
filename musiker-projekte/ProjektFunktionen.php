@@ -57,6 +57,19 @@ function ProjektExtraFelder($ProjektId, $handle = false)
   return $fields;
 }
 
+function fetchProjects($handle = false)
+{
+  $query = 'SELECT `Name` FROM `Projekte` WHERE 1';
+  $result = CAFEVmyquery($query, $handle);
+
+  $projects = array();
+  while ($line = CAFEVmyfetch($result)) {
+    $projects[] = $line['Name'];
+  }
+
+  return $projects;
+}
+
 function ProjektFetchName($ProjektId, $handle = false)
 {
   $query = 'SELECT `Name` FROM `Projekte` WHERE `Id` = '.$ProjektId;
