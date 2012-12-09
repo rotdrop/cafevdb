@@ -120,22 +120,6 @@
      descriptions fields are also possible. Check documentation for this.
   */
 
-  $opts['fdd']['Id'] = array(
-                             'name'     => 'Id',
-                             'select'   => 'T',
-                             'options'  => 'LAVCPDR', // auto increment
-                             'maxlen'   => 11,
-                             'default'  => '0',
-                             'sort'     => true
-                             );
-  $opts['fdd']['Instrumente'] = array(
-                                      'name'     => 'Instrumente',
-                                      'select'   => 'C',
-                                      'maxlen'   => 137,
-                                      'sort'     => true
-                                      );
-  $opts['fdd']['Instrumente']['values'] = $Instrumente;
-
   $opts['fdd']['Name'] = array(
                                'name'     => 'Name',
                                'select'   => 'T',
@@ -148,12 +132,16 @@
                                   'maxlen'   => 128,
                                   'sort'     => true
                                   );
-  $opts['fdd']['Stadt'] = array(
-                                'name'     => 'Stadt',
-                                'select'   => 'T',
-                                'maxlen'   => 128,
-                                'sort'     => true
-                                );
+  $opts['fdd']['Instrumente'] = array(
+                                      'name'     => 'Instrumente',
+                                      'select'   => 'C',
+                                      'maxlen'   => 137,
+                                      'sort'     => true
+                                      );
+  $opts['fdd']['Instrumente']['values'] = $Instrumente;
+
+
+
   $opts['fdd']['Strasse'] = array(
                                   'name'     => 'Strasse',
                                   'select'   => 'T',
@@ -166,12 +154,18 @@
                                        'maxlen'   => 11,
                                        'sort'     => true
                                        );
+  $opts['fdd']['Stadt'] = array(
+                                'name'     => 'Stadt',
+                                'select'   => 'T',
+                                'maxlen'   => 128,
+                                'sort'     => true
+                                );
   $opts['fdd']['Land'] = array('name'     => 'Land',
                                'select'   => 'T',
                                'maxlen'   => 128,
                                'default'  => 'Deutschland',
                                'sort'     => true);
-  $opts['fdd']['Sprachpräferenz'] = array('name'     => 'Spachpräferenz',
+  $opts['fdd']['Sprachpräferenz'] = array('name'     => 'Sprachpräferenz',
                                           'select'   => 'T',
                                           'maxlen'   => 128,
                                           'default'  => 'Deutschland',
@@ -209,11 +203,48 @@
                                     'escape' => false,
                                     'sort'     => true
                                     );
+
+  $derivedtable =<<<__EOT__
+SELECT MusikerId,GROUP_CONCAT(DISTINCT Projekte.Name ORDER BY Projekte.Name ASC SEPARATOR ',') AS Projekte FROM
+Besetzungen
+LEFT JOIN Projekte ON Projekte.Id = Besetzungen.ProjektId
+GROUP BY MusikerId
+__EOT__;
+
+  $opts['fdd']['Projekte'] =
+    array('input' => 'VR', // virtual, read perm
+          'options' => 'LFV', //just do the join, don't display anything
+          'select' => 'T',
+          'name' => 'Projekte',
+          'sort' => true,
+          'sql' => 'PMEjoin14.Projekte',
+          'sqlw' => 'PMEjoin14.Projekte',
+          'values' => array( //API for currently making a join in PME.
+                            'table' =>
+                            array('sql' => $derivedtable,
+                                  'kind' => 'derived'),
+                            'column' => 'MusikerId',
+                            'description' => 'Projekte',
+                            'join' => '$main_table.Id = $join_table.MusikerId'
+                             )
+          );
+
+  $opts['fdd']['Id'] = array(
+                             'name'     => 'Id',
+                             'select'   => 'T',
+                             'options'  => 'LAVCPDR', // auto increment
+                             'maxlen'   => 11,
+                             'default'  => '0',
+                             'sort'     => true
+                             );
+
   $opts['fdd']['Aktualisiert'] = $calopts;
   $opts['fdd']['Aktualisiert']['name'] = 'Aktualisiert';
   $opts['fdd']['Aktualisiert']['default'] = date('Y-m-d H:i:s');
   $opts['fdd']['Aktualisiert']['nowrap'] = true;
   $opts['fdd']['Aktualisiert']['options'] = 'LAVCPDR'; // Set by update trigger.
+
+
 
   $opts['triggers']['update']['before'][0]  = 'RemoveUnchanged.TUB.php.inc';
   $opts['triggers']['update']['before'][1]  = 'UpdateMusicianTimestamp.TUB.php.inc';
