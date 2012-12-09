@@ -57,7 +57,7 @@
   // Options you wish to give the users
   // A - add,  C - change, P - copy, V - view, D - delete,
   // F - filter, I - initial sort suppressed
-  $opts['options'] = 'ACPVDF';
+  $opts['options'] = 'CVDF';
 
   // Number of lines to display on multiple selection filters
   $opts['multiple'] = '4';
@@ -197,6 +197,8 @@
 							  'cols' => 50),
 				      'escape' => false,
 				      'sort'     => true);
+  $opts['fdd']['Unkostenbeitrag'] = $moneyopts;
+  $opts['fdd']['Unkostenbeitrag']['name'] = "Unkostenbeitrag\n(Gagen negativ)";
 
   // Generate input fields for the extra columns
   foreach ($UserExtraFields as $field) {
