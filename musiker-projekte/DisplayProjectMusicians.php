@@ -138,14 +138,6 @@ __EOT__;
      descriptions fields are also possible. Check documentation for this.
   */
 
-  $opts['fdd']['MusikerId'] = array(
-                             'name'     => 'MusikerId',
-                             'select'   => 'T',
-                             'options'  => 'LAVCPDR', // auto increment
-                             'maxlen'   => 11,
-                             'default'  => '0',
-                             'sort'     => true
-                             );
   $opts['fdd']['Instrument'] = array(
                                      'name'     => 'Projekt-Instrument',
                                      'select'   => 'T',
@@ -296,6 +288,16 @@ __EOT__;
                                     'escape' => false,
                                     'sort'     => true
                                     );
+
+  $opts['fdd']['MusikerId'] = array(
+                             'name'     => 'MusikerId',
+                             'select'   => 'T',
+                             'options'  => 'LAVCPDR', // auto increment
+                             'maxlen'   => 11,
+                             'default'  => '0',
+                             'sort'     => true
+                             );
+
   $opts['fdd']['Aktualisiert'] = $calopts;
   $opts['fdd']['Aktualisiert']['name'] = 'Aktualisiert';
   $opts['fdd']['Aktualisiert']['default'] = date("Y-m-d H:i:s");
