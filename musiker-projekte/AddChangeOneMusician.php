@@ -2,7 +2,7 @@
 
 
   echo "<H4>Auf dieser Seite wird <B>nur</B> der neue Musiker f&uuml;r das Projekt angezeigt,
- f&uuml; die komplette List mu&szlig; man den entsprechenden Button bet&auml;tigen.</H4>";
+ f&uuml;r die komplette Liste mu&szlig; man den entsprechenden Button bet&auml;tigen.</H4>";
 
   /*
    * IMPORTANT NOTE: This generated file contains only a subset of huge amount
