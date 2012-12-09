@@ -40,6 +40,8 @@ $handle = CAFEVmyconnect($opts);
 $Instrumente = fetchInstruments($handle);
 $InstrumentenFamilie = sql_multikeys('Instrumente', 'Familie', $handle);
 
+$Projekte = fetchProjects($handle);
+
 // Fetch project specific user fields
 if ($ProjektId >= 0) {
   //  echo "Id: $ProjektId <BR/>";
