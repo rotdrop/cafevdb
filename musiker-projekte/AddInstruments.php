@@ -150,8 +150,9 @@ Auch den Instrumentennamen sollte man nicht ändern.').'</H4>';
                                   'sql' => "\"Wikipedie.DE\"",
                                   'nowrap' => true
                                       );
-  $opts['fdd']['Lexikon']['URL'] = "http://de.wikipedia.org/wiki/\$key";
-  $opts['fdd']['Lexikon']['URLdisp'] = "\$key@Wikipedia.DE";
+  $opts['fdd']['Lexikon']['URL'] = 'http://de.wikipedia.org/wiki/$key';
+  $opts['fdd']['Lexikon']['URLdisp'] = '$key@Wikipedia.DE';
+  $opts['fdd']['Lexikon']['URLtarget'] = '_blank';
 
   $opts['triggers']['update']['before']  = 'Instrumente.TUB.inc.php';
   $opts['triggers']['insert']['before']  = 'Instrumente.TIB.inc.php';
