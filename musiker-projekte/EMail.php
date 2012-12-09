@@ -93,10 +93,8 @@ $Projekt   = CAFEVcgiValue('Projekt','');
 
 if ($ConstructionMode) {
   $CAFEVCatchAllEmail = 'DEVELOPER@his.server.eu';
-  $CAFEVVorstandGroup = 'DEVELOPER@his.server.eu';
 } else {
   $CAFEVCatchAllEmail = 'orchestra@example.eu';
-  $CAFEVVorstandGroup = 'MailingList@groupserver.eu';
 }
 if ($ProjektId < 0 || $Projekt == '') {
   $MailTag = '[CAF-Musiker]';
@@ -177,15 +175,13 @@ $string =<<< __EOT__
   </H4>
   <P>
   ReturnTo: und Sender: sind
-  <TT>@OUREMAIL@</TT>. Die Adressen
-  <TT>@OUREMAIL@</TT>  und
-  <TT>@OURGROUP@</TT> erhalten je eine Kopie um Missbrauch durch "Einbrecher" 
+  <TT>@OUREMAIL@</TT>. Die Adresse
+  <TT>@OUREMAIL@</TT> erhält eine Kopie um Missbrauch durch "Einbrecher" 
   abzufangen. Außerdem werden die Emails in der Datenbank gespeichert.
 __EOT__;
 
     // replace some tokens.
     $string = str_replace('@OUREMAIL@', $CAFEVCatchAllEmail, $string);
-    $string = str_replace('@OURGROUP@', $CAFEVVorstandGroup, $string);
 
     echo $string;
 
@@ -506,10 +502,7 @@ if (!$ConstructionMode) {
 
 // Always drop a copy locally and to the mailing list, for
 // archiving purposes and to catch illegal usage.
-$DataValid = EmailAddCC($mail, $CAFEVCatchAllEmail, $strSender)
-  && $DataValid;
-$DataValid =
-  EmailAddCC($mail, $CAFEVVorstandGroup, 'CAFEV Mail Form')
+$DataValid = EmailAddAddress($mail, $CAFEVCatchAllEmail, $strSender)
   && $DataValid;
 
 // If we have further Cc's, then add them also
@@ -611,9 +604,9 @@ Unfortunately, attachments (if any) have to be specified again.
     }
   }
   
-  // Now insert the stuff into the SentEmail table  
   $handle = CAFEVmyconnect($opts);
 
+  // Now insert the stuff into the SentEmail table
   $logquery = "INSERT INTO `SentEmail`
 (`user`,`host`,`BulkRecipients`,`MD5BulkRecipients`,`Cc`,`Bcc`,`Subject`,`HtmlBody`,`MD5Text`";
   $idx = 1;
@@ -622,20 +615,20 @@ Unfortunately, attachments (if any) have to be specified again.
   }
   $logquery .= ') VALUES (';
   $logquery .= "'".$_SERVER['REMOTE_USER']."','".$_SERVER['REMOTE_ADDR']."'";
-  $logquery .= sprintf(",'%s','%s'",
-                       mysql_real_escape_string($bulkRecipients, $handle),
-                       mysql_real_escape_string($bulkMD5, $handle),
-                       mysql_real_escape_string($strCC, $handle),
-                       mysql_real_escape_string($strBCC, $handle),
-                       mysql_real_escape_string($strSubject, $handle),
-                       mysql_real_escape_string($strMessage, $handle),
-                       mysql_real_escape_string($textMD5, $handle));
+  $logquery .= ",'".mysql_real_escape_string($bulkRecipients,$handle)."'";
+  $logquery .= ",'".mysql_real_escape_string($bulkMD5,$handle)."'";
+  $logquery .= ",'".mysql_real_escape_string($strCC,$handle)."'";
+  $logquery .= ",'".mysql_real_escape_string($strBCC,$handle)."'";
+  $logquery .= ",'".mysql_real_escape_string($strSubject,$handle)."'";
+  $logquery .= ",'".mysql_real_escape_string($strMessage,$handle)."'";
+  $logquery .= ",'".mysql_real_escape_string($textMD5,$handle)."'";
   foreach ($attachLog as $pairs) {
     $logquery .=
-      ",'".mysql_real_escape_string($pairs['name'], $handle)."'".
-      ",'".mysql_real_escape_string($pairs['md5'], $handle)."'";
+      ",'".mysql_real_escape_string($pairs['name'],$handle)."'".
+      ",'".mysql_real_escape_string($pairs['md5'],$handle)."'";
   }
   $logquery .= ")";
+  
   
   // Check for duplicates
   $loggedquery = "SELECT * FROM `SentEmail` WHERE";
