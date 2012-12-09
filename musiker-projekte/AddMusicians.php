@@ -177,12 +177,6 @@ Fundus mit aufgenommen (<A HREF="hinzufuegen.html" target="_blank">Anleitung</A>
                                    'sort'     => true
                                    );
   $opts['fdd']['Email'] = $emailopts;
-  $opts['fdd']['Stadt'] = array(
-                                'name'     => 'Stadt',
-                                'select'   => 'T',
-                                'maxlen'   => 128,
-                                'sort'     => true
-                                );
   $opts['fdd']['Strasse'] = array(
                                   'name'     => 'Strasse',
                                   'select'   => 'T',
@@ -236,13 +230,6 @@ Fundus mit aufgenommen (<A HREF="hinzufuegen.html" target="_blank">Anleitung</A>
   $opts['fdd']['Aktualisiert']['default'] = date('Y-m-d H:i:s');
   $opts['fdd']['Aktualisiert']['nowrap'] = true;
   $opts['fdd']['Aktualisiert']['options'] = 'LAVCPDR'; // Set by update trigger.
-
-  $opts['buttons']['L']['up'] = array('<<','<',
-                                      array('name' => 'add_to_project', 'value' => 'Add to project',
-                                            'css' => 'pme-addtoproject', 'disable' => false),
-                                      'add','view','change','copy','delete',
-                                      '>','>>','goto','goto_combo');
-  $opts['buttons']['L']['down'] = $opts['buttons']['L']['up'];
 
   // Now important call to phpMyEdit
   //require_once 'phpMyEdit.class.php';
