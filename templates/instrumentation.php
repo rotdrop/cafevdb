@@ -1,7 +1,9 @@
 <div id="controls">
-   <input type="hidden" id="cafevdb_test_id" value="0" />
-   <input type="text" id="cafevdb_add_blah" placeholder="<?php echo $l->t('Blah'); ?>" class="cafevdb_input" />
-   <input type="submit" value="<?php echo $l->t('Save Blah'); ?>" id="cafevdb_add_submit" />
+  <form name="cafevdb-form-projects" method="post">
+    <input type="submit" name="" value="View all Projects"/>
+    <input type="hidden" name="Action" value="-1"/>
+    <input type="hidden" name="Template" value="projects"/>
+  </form>
 </div>
 <div class="cafevdb-general">
   <?php CAFEVDB\Instrumentation::display(); ?>
