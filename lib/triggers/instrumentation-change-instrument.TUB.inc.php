@@ -1,8 +1,8 @@
 <?php
 
-$project = CAFEVDB_Instrumentation::$project;
-$projectId = CAFEVDB_Instrumentation::$projectId;
-$musicianId = CAFEVDB_Instrumentation::$musicianId;
+$project = CAFEVDB\Util::cgiValue('Project');
+$projectId =  CAFEVDB\Util::cgiValue('ProjectId');
+$musicianId = CAFEVDB\Util::cgiValue('MusicianId');
 
 // We check here whether the change of the instrument or player is in
 // some sense consistent with the Musiker table. We know that only
@@ -60,25 +60,33 @@ $instruments = $musrow['Instrumente'];
 $instrument  = $newvals['Instrument'];
 
 if (!strstr($instruments, $instrument)) {
-  echo "<HR/><H4>";
-  echo "Instrument not known by $musname, correct that first! ";
-  echo "$musname only plays " . $musrow['Instrumente'] . "!";
-  echo "</H4><HR/>\n";
-  echo "<H4>Click on the following button to enforce your decision:</H4>
-<form name=\"CAFEV_form_besetzung\" method=\"post\" action=\"?app=cafevdb&Template=instrumentation\">
-  <input type=\"submit\" name=\"\" value=\"Really Change $musname's instrument!!!\">
-  <input type=\"hidden\" name=\"Action\" value=\"ChangeOneMusician\">
-  <input type=\"hidden\" name=\"Project\" value=\"$project\" />
-  <input type=\"hidden\" name=\"ProjectId\" value=\"$projectId\" />
-  <input type=\"hidden\" name=\"MusicianId\" value=\"$musicianId\" />
-  <input type=\"hidden\" name=\"ForcedInstrument\" value=\"$instrument\" />
+    echo <<<__EOT__
+<div class="cafevdb-pme-header-box" style="height:18ex">
+  <div class="cafevdb-pme-header">
+  <HR/><H4>
+  Instrument not known by $musname, correct that first! 
+  $musname only plays $instruments!
+  </H4><HR/>
+  <H4>Click on the following button to enforce your decision:
+<form name="CAFEV_form_besetzung" method="post" action="?app=cafevdb">
+  <input type="submit" name="" value="Really Change $musname's instrument!!!">
+  <input type="hidden" name="Action" value="ChangeOneMusician">
+  <input type="hidden" name="Template" value="change-one-musician">
+  <input type="hidden" name="Project" value="$project" />
+  <input type="hidden" name="ProjectId" value="$projectId" />
+  <input type="hidden" name="MusicianId" value="$musicianId" />
+  <input type="hidden" name="ForcedInstrument" value="$instrument" />
 </form>
+</H4>
 <p>
-This will also add \"$instrument\" to $musname's list of known instruments. Unfortunately, all your
-other changes will be discarded. You may want to try the \"Back\"-Button of your browser.
+This will also add "$instrument" to $musname's list of known instruments. Unfortunately, all your
+other changes will be discarded. You may want to try the "Back"-Button of your browser.
 <HR/>
 <p>
-";
+  </div>
+</div>
+__EOT__;
+
   return false;
 }
 

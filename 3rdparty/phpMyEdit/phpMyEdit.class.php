@@ -843,7 +843,15 @@ class phpMyEdit
 			} else {
 				//$dbp = $this->dbp;
 			}
-			$table       = $this->sd.$this->fdd[$main_column]['values']['table'].$this->ed;
+                        if (is_array($this->fdd[$main_column]['values']['table'])) {
+                          if ($this->fdd[$main_column]['values']['table']['kind'] == 'derived') {
+                            $table       = '(' .$this->fdd[$main_column]['values']['table']['sql'].' )';
+                          } else {
+                            $table       = $this->sd.$this->fdd[$main_column]['values']['table']['sql'].$this->ed;
+                          }
+                        } else {
+                          $table       = $this->sd.$this->fdd[$main_column]['values']['table'].$this->ed;
+                        }
 			$join_column = $this->sd.$this->fdd[$main_column]['values']['column'].$this->ed;
 			$join_desc   = $this->sd.$this->fdd[$main_column]['values']['description'].$this->ed;
 			if ($join_desc != $this->sd.$this->ed && $join_column != $this->sd.$this->ed) {
@@ -1568,7 +1576,8 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 	function getColAlign($k) /* {{{ */
 	{
 		if (isset($this->fdd[$k]['align'])) {
-			return 'align="'.$this->fdd[$k]['align'].'"';
+                        /*return 'align="'.$this->fdd[$k]['align'].'"'; */
+			return 'style="text-align:'.$this->fdd[$k]['align'].'"';
 		} else {
 			return '';
 		}

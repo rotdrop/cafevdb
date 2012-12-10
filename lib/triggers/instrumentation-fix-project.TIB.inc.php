@@ -1,8 +1,8 @@
 <?php
 
-$project = CAFEVDB_Instrumentation::$project;
-$projectId = CAFEVDB_Instrumentation::$projectId;
-$musicianId = CAFEVDB_Instrumentation::$musicianId;
+$project = CAFEVDB\Util::cgiValue('Project');
+$projectId =  CAFEVDB\Util::cgiValue('ProjectId');
+$musicianId = CAFEVDB\Util::cgiValue('MusicianId');
 
 // We check here whether the change of the instrument or player is in
 // some sense consistent with the Musiker table. We know that only

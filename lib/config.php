@@ -72,7 +72,7 @@ class Config
                                  'phpview' => self::$prefix . 'money.inc.php',
                                  'align' => 'right',
                                  'select' => 'N',
-                                 'maxlen' => '8',
+                                 'maxlen' => '6',
                                  'escape' => false,
                                  'sort' => true);
     
@@ -91,6 +91,7 @@ class Config
 
     self::$cgiVars = array('Action' => 'BriefInstrumentation',
                            'SubAction' => '',
+                           'Template' => 'projects',
                            'MusicianId' => -1,
                            'ProjectId' => -1,
                            'Project' => '',

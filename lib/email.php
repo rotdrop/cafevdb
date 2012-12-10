@@ -123,6 +123,9 @@ namespace CAFEVDB {
     
       $this->addPersistentCGI('ProjectId', $this->projectId);
       $this->addPersistentCGI('Project', $this->project);
+      $this->addPersistentCGI('Template',
+                              $this->project >= 0
+                              ? 'project-email' : 'email');
       $this->addPersistentCGI($this->emailKey, $this->EmailRecs);
     }
 
@@ -491,8 +494,6 @@ Anfangswerten.'));
       Config::init();
 
       $opts = Config::$pmeopts;
-      global $HTTP_SERVER_VARS;
-      $opts['page_name'] = $HTTP_SERVER_VARS['PHP_SELF'].'?app=cafevdb'.'&Template=email';
 
       Util::disableEnterSubmit(); // ? needed ???
 
@@ -1299,15 +1300,21 @@ __EOT__;
        */
 
       $opts = Config::$pmeopts;
-      $opts['cgi']['persist'] = Util::cgiValue('app');
       unset($opts['miscphp']);
-
-      global $HTTP_SERVER_VARS;
-      $opts['page_name'] = $HTTP_SERVER_VARS['PHP_SELF'].'?app=cafevdb&Template=emailhistory';
 
       $opts['inc'] = 15;
 
       $opts['tb'] = 'SentEmail';
+
+      $project = Util::cgiValue('Project','');
+      $projectId = Util::cgiValue('Project',-1);
+      $recordsPerPage = Util::cgiValue('RecordsPerPage',-1);
+
+      $opts['cgi']['persist'] = array('Project' => $project,
+                                      'ProjectId' => $projectId,
+                                      'Table' => $opts['tb'],
+                                      'Template' => 'email-history',
+                                      'RecordsPerPage' => $recordsPerPage);
 
       // Name of field which is the unique key
       $opts['key'] = 'Id';
@@ -1427,20 +1434,24 @@ __EOT__;
                                       'sort'     => true );
       $opts['fdd']['BulkRecipients'] = array('name'     => 'Empf&auml;nger',
                                              'select'   => 'T',
-                                             'maxlen'   => 1024,
+                                             'maxlen'   => 40,
+                                             'css'      => array('postfix' => 'rcpt'),
                                              'sort'     => true );
       $opts['fdd']['Cc'] = array('name'     => 'CarbonCopy',
                                  'select'   => 'T',
-                                 'maxlen'   => 1024,
+                                 'maxlen'   => 40,
+                                 'css'      => array('postfix' => 'cc'),
                                  'sort'     => true );
       $opts['fdd']['Bcc'] = array('name'     => 'BlindCarbonCopy',
                                   'select'   => 'T',
-                                  'maxlen'   => 1024,
+                                  'maxlen'   => 40,
+                                  'css'      => array('postfix' => 'bcc'),
                                   'sort'     => true );
       $opts['fdd']['HtmlBody'] = array('name'     => 'Inhalt',
                                        'select'   => 'T',
-                                       'maxlen'   => 10240,
-                                       'escape' => false,
+                                       'maxlen'   => 40,
+                                       'escape'   => false,
+                                       'css'      => array('postfix' => 'msg'),
                                        'sort'     => true );
 
       new \phpMyEdit($opts);

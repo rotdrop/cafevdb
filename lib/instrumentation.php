@@ -4,17 +4,18 @@ namespace CAFEVDB;
 
 class Instrumentation
 {
-  public static $action;
-  public static $subAction;
-  public static $musicianId;
-  public static $projectId;
-  public static $project;
-  public static $recordsPerPage;
-  public static $userExtraFields;
-  public static $instruments;
-  public static $instrumentFamilies;
+  public $action;
+  public $subAction;
+  public $musicianId;
+  public $projectId;
+  public $project;
+  protected $recordsPerPage;
+  protected $userExtraFields;
+  protected $instruments;
+  protected $instrumentFamilies;
+  protected $opts;
 
-  static public function display()
+  protected function __construct()
   {
     Config::init();
 
@@ -26,81 +27,84 @@ class Instrumentation
       echo "</PRE>\n";
     }
 
-    $opts = Config::$pmeopts;
-    global $HTTP_SERVER_VARS;
-    $opts['page_name'] = $HTTP_SERVER_VARS['PHP_SELF'].'?app=cafevdb'.'&Template=instrumentation';
+    $this->opts = Config::$pmeopts;
     foreach (Config::$cgiVars as $key => $value) {
-      $opts['cgi']['persist']["$key"] = $value = Util::cgiValue("$key");
+      $this->opts['cgi']['persist']["$key"] = $value = Util::cgiValue("$key");
       // echo "$key =&gt; $value <BR/>";
     }
 
-    self::$action = $opts['cgi']['persist']['Action'];
-    self::$subAction = $opts['cgi']['persist']['SubAction'];
-    self::$musicianId = $opts['cgi']['persist']['MusicianId'];
-    self::$projectId = $opts['cgi']['persist']['ProjectId'];
-    self::$project = $opts['cgi']['persist']['Project'];;
-    self::$recordsPerPage = $opts['cgi']['persist']['RecordsPerPage'];
+    $this->action = $this->opts['cgi']['persist']['Action'];
+    $this->subAction = $this->opts['cgi']['persist']['SubAction'];
+    $this->musicianId = $this->opts['cgi']['persist']['MusicianId'];
+    $this->projectId = $this->opts['cgi']['persist']['ProjectId'];
+    $this->project = $this->opts['cgi']['persist']['Project'];;
+    $this->recordsPerPage = $this->opts['cgi']['persist']['RecordsPerPage'];
 
     // Fetch some data we probably will need anyway
 
-    $handle = mySQL::connect($opts);
+    $handle = mySQL::connect($this->opts);
 
     // List of instruments
-    self::$instruments = Instruments::fetch($handle);
+    $this->instruments = Instruments::fetch($handle);
     $instrumentFamilies = mySQL::multiKeys('Instrumente', 'Familie', $handle);
 
     // Fetch project specific user fields
-    if (self::$projectId >= 0) {
-      //  echo "Id: self::$projectId <BR/>";
-      self::$userExtraFields = Projects::extraFields(self::$projectId, $handle);
+    if ($this->projectId >= 0) {
+      //  echo "Id: $this->projectId <BR/>";
+      $this->userExtraFields = Projects::extraFields($this->projectId, $handle);
     }
 
     /* echo "<PRE>\n"; */
-    /* print_r(self::$instruments); */
-    /* /\*print_r(self::$instruments);*\/ */
+    /* print_r($this->instruments); */
+    /* /\*print_r($this->instruments);*\/ */
     /* echo "</PRE>\n"; */
 
     /* checkInstruments($handle); */
     /* sanitizeInstrumentsTable($handle); */
 
     mySQL::close($handle);
-
-    switch (self::$action) {
-    case "DetailedInstrumentation": {
-      DetailedInstrumentation::display($opts);
-      break;
-    }
-    case "BriefInstrumentation": {
-      BriefInstrumentation::display($opts);
-      break;
-    }
-    case "TODO": {
-      // ... the TODO-table actually has nothing to do with the
-      // instrumentation.
-      break;
-    }
-    case "AddMusicians": {
-      Musicians::display($opts, true);
-      break;
-    }
-    case "DisplayAllMusicians": {
-      Musicians::display($opts, false);
-      break;
-    }
-    case "AddOneMusician":
-    case "ChangeOneMusician": {
-      Musicians::displayAddChangeOne($opts);
-      break;
-    }
-    case "AddInstruments": {
-      Instruments::display($opts);
-      break;
-    }
-    default: {
-      // should emit an error here ...
-    }
-    }
   }
-}; // class Instrumentation
+};
+
+
+/*   public function display() */
+/*   { */
+/*     switch ($this->action) { */
+/*     case "DetailedInstrumentation": { */
+/*       DetailedInstrumentation::display($this->opts); */
+/*       break; */
+/*     } */
+/*     case "BriefInstrumentation": { */
+/*       BriefInstrumentation::display($this->opts); */
+/*       break; */
+/*     } */
+/*     case "TODO": { */
+/*       // ... the TODO-table actually has nothing to do with the */
+/*       // instrumentation. */
+/*       break; */
+/*     } */
+/*     case "AddMusicians": { */
+/*       Musicians::display($this->opts, true); */
+/*       break; */
+/*     } */
+/*     case "DisplayAllMusicians": { */
+/*       Musicians::display($this->opts, false); */
+/*       break; */
+/*     } */
+/*     case "AddOneMusician": */
+/*     case "ChangeOneMusician": { */
+/*       Musicians::displayAddChangeOne($this->opts); */
+/*       break; */
+/*     } */
+/*     case "AddInstruments": { */
+/*       Instruments::display($this->opts); */
+/*       break; */
+/*     } */
+/*     default: { */
+/*       // should emit an error here ... */
+/*     } */
+/*     } */
+/*   } */
+/* }; // class Instrumentation */
 
 ?>

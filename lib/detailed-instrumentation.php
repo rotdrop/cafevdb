@@ -1,23 +1,34 @@
 <?php
 
-class CAFEVDB_DetailedInstrumentation
+namespace CAFEVDB;
+
+class DetailedInstrumentation
+  extends Instrumentation
 {
-  static function display(&$opts)
+  function __construct() {
+    parent::__construct();
+  }
+
+  function display()
   {
     global $debug_query;
-    //CAFEVDB_Config::$debug_query = true;
+    //Config::$debug_query = true;
     //$debug_query = true;
 
-    $action          = CAFEVDB_Instrumentation::$action;
-    $project         = CAFEVDB_Instrumentation::$project;
-    $projectId       = CAFEVDB_Instrumentation::$projectId;
+    $action          = $this->action;
+    $project         = $this->project;
+    $projectId       = $this->projectId;
+    $opts            = $this->opts;
+    $recordsPerPage  = $this->recordsPerPage;
+    $userExtraFields = $this->userExtraFields;
 
-    $recordsPerPage  = CAFEVDB_Instrumentation::$recordsPerPage;
-    $userExtraFields = CAFEVDB_Instrumentation::$userExtraFields;
-
-    echo "<h3>Besetzung Projekt $project.</h3>";
+    global $HTTP_SERVER_VARS;
+    $this->opts['page_name'] = $HTTP_SERVER_VARS['PHP_SELF'].'?app=cafevdb'.'&Template=detailed-instrumentation';
 
     echo <<<__EOT__
+<div class="cafevdb-pme-header-box">
+  <div class="cafevdb-pme-header">
+    <h3>Besetzung Projekt $project.</h3>
       <H4><ul>
       <li><span style="color:red">Musiker entfernen:</span>
       <span style="font-style:italic">"Short Display for $project"</span>
@@ -29,6 +40,8 @@ class CAFEVDB_DetailedInstrumentation
       (Adresse, Email, Name etc.)
       </ul>
       </H4>
+  </div>
+</div>
 __EOT__;
 
     $ROopts = 'CLFPVR'; // read-only options for all project specific fields.
@@ -56,6 +69,7 @@ __EOT__;
     $opts['cgi']['persist'] = array('Project' => $project,
                                     'ProjectId' => $projectId,
                                     'Action' => $action,
+                                    'Template' => 'detailed-instrumentation',
                                     'Table' => $opts['tb']);
 
     // Name of field which is the unique key
@@ -150,21 +164,13 @@ __EOT__;
        descriptions fields are also possible. Check documentation for this.
     */
 
-    $opts['fdd']['MusikerId'] = array(
-                                      'name'     => 'MusikerId',
-                                      'select'   => 'T',
-                                      'options'  => 'LAVCPDR', // auto increment
-                                      'maxlen'   => 11,
-                                      'default'  => '0',
-                                      'sort'     => true
-                                      );
     $opts['fdd']['Instrument'] = array(
                                        'name'     => 'Projekt-Instrument',
                                        'select'   => 'T',
                                        'maxlen'   => 36,
                                        'sort'     => true
                                        );
-    $opts['fdd']['Instrument']['values'] = CAFEVDB_Instrumentation::$instruments;
+    $opts['fdd']['Instrument']['values'] = $this->instruments;
     $opts['fdd']['Instrument']['options'] = $ROopts;
     $opts['fdd']['Reihung'] = array('name' => 'Stimme',
                                     'options' => $ROopts,
@@ -177,7 +183,7 @@ __EOT__;
                                     'maxlen' => 64,
                                     'options'  => $ROopts,
                                     'sort' => 'true');
-    $opts['fdd']['Familie']['values'] = CAFEVDB_Instrumentation::$instrumentFamilies;
+    $opts['fdd']['Familie']['values'] = $this->instrumentFamilies;
     $opts['fdd']['Stimmführer'] = array('name' => ' &alpha;',
                                         'options'  => $ROopts,
                                         'select' => 'T',
@@ -198,7 +204,7 @@ __EOT__;
                                             'maxlen'   => 136,
                                             'sort'     => true
                                             );
-    $opts['fdd']['AlleInstrumente']['values'] = CAFEVDB_Instrumentation::$instruments;
+    $opts['fdd']['AlleInstrumente']['values'] = $this->instruments;
 
 
     $opts['fdd']['Name'] = array(
@@ -213,7 +219,7 @@ __EOT__;
                                     'maxlen'   => 384,
                                     'sort'     => true
                                     );
-    $opts['fdd']['Email'] = CAFEVDB_Config::$opts['email'];
+    $opts['fdd']['Email'] = Config::$opts['email'];
     $opts['fdd']['Telefon'] = array(
                                     'name'     => 'Telefon',
                                     'nowrap' => true,
@@ -263,7 +269,7 @@ __EOT__;
                                                'escape' => false,
                                                'sort'     => true
                                                );
-    $opts['fdd']['Unkostenbeitrag'] = CAFEVDB_Config::$opts['money'];
+    $opts['fdd']['Unkostenbeitrag'] = Config::$opts['money'];
     $opts['fdd']['Unkostenbeitrag']['name'] = "Unkostenbeitrag\n(Gagen negativ)";
     $opts['fdd']['Unkostenbeitrag']['options'] = $ROopts;
 
@@ -287,9 +293,9 @@ __EOT__;
                                             'maxlen'   => 128,
                                             'default'  => 'Deutsch',
                                             'sort'     => true,
-                                            'values'   => CAFEVDB_Config::$opts['languages']);
+                                            'values'   => Config::$opts['languages']);
 
-    $opts['fdd']['Geburtstag'] = CAFEVDB_Config::$opts['geburtstag'];
+    $opts['fdd']['Geburtstag'] = Config::$opts['geburtstag'];
     $opts['fdd']['Status'] = array(
                                    'name'     => 'Status',
                                    'select'   => 'T',
@@ -308,7 +314,18 @@ __EOT__;
                                       'escape' => false,
                                       'sort'     => true
                                       );
-    $opts['fdd']['Aktualisiert'] = CAFEVDB_Config::$opts['calendar'];
+
+    $opts['fdd']['MusikerId'] = array(
+                                      'name'     => 'MusikerId',
+                                      'select'   => 'T',
+                                      'options'  => 'LAVCPDR', // auto increment
+                                      'maxlen'   => 5,
+                                      'default'  => '0',
+                                      'align'    => 'right',
+                                      'sort'     => true
+                                      );
+
+    $opts['fdd']['Aktualisiert'] = Config::$opts['calendar'];
     $opts['fdd']['Aktualisiert']['name'] = 'Aktualisiert';
     $opts['fdd']['Aktualisiert']['default'] = date("Y-m-d H:i:s");
     $opts['fdd']['Aktualisiert']['nowrap'] = true;
@@ -317,18 +334,18 @@ __EOT__;
     // No need to check for the project-instrument any longer, as it can
     //no longer be changed here.
     //$opts['triggers']['update']['before'][0]  = 'BesetzungChangeInstrument.TUB.inc.php';
-    $opts['triggers']['update']['before'][1]  = CAFEVDB_Config::$triggers.'remove-unchanged.TUB.php.inc';
-    $opts['triggers']['update']['before'][2]  = CAFEVDB_Config::$triggers.'update-musician-timestamp.TUB.php.inc';
+    $opts['triggers']['update']['before'][1]  = Config::$triggers.'remove-unchanged.TUB.php.inc';
+    $opts['triggers']['update']['before'][2]  = Config::$triggers.'update-musician-timestamp.TUB.php.inc';
 
     // Now important call to phpMyEdit
     //require_once 'phpMyEdit.class.php';
     //new phpMyEdit($opts);
     //require_once 'extensions/phpMyEdit-mce-cal.class.php';
     //new phpMyEdit_mce_cal($opts);
-    new phpMyEdit($opts);
+    new \phpMyEdit($opts);
   }
 
-}; // class CAFEVDB_DetailedInstrumentation
+}; // class DetailedInstrumentation
 
 ?>
 

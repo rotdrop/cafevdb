@@ -3,19 +3,24 @@
 namespace CAFEVDB;
 
 class BriefInstrumentation
+  extends Instrumentation
 {
-  static function display(&$opts)
+  function __construct() {
+    parent::__construct();
+  }
+
+  function display()
   {
     global $debug_query;
     //Config::$debug_query = true;
     //$debug_query = true;
 
-    $action          = Instrumentation::$action;
-    $project         = Instrumentation::$project;
-    $projectId       = Instrumentation::$projectId;
-
-    $recordsPerPage  = Instrumentation::$recordsPerPage;
-    $userExtraFields = Instrumentation::$userExtraFields;
+    $action          = $this->action;
+    $project         = $this->project;
+    $projectId       = $this->projectId;
+    $opts            = $this->opts;
+    $recordsPerPage  = $this->recordsPerPage;
+    $userExtraFields = $this->userExtraFields;
 
     echo <<<__EOT__
 <div class="cafevdb-pme-header-box">
@@ -67,6 +72,7 @@ __EOT__;
     $opts['cgi']['persist'] = array('Project' => $project,
                                     'ProjectId' => $projectId,
                                     'Action' => $action,
+                                    'Template' => 'brief-instrumentation',
                                     'Table' => $opts['tb']);
 
     // Name of field which is the unique key
@@ -202,7 +208,7 @@ __EOT__;
                                                            'description' => array('columns' => array('Instrument'))),
                                        'sort'     => true
                                        );
-    //$opts['fdd']['Instrument']['values'] = Instrumentation::$instruments;
+    //$opts['fdd']['Instrument']['values'] = $this->instruments;
     $opts['fdd']['Sortierung'] = array('name' => 'Orchester-Sortierung',
                                        'select' => 'T',
                                        'options' => 'VCPR',
@@ -211,12 +217,12 @@ __EOT__;
                                        'sort' => true);
     $opts['fdd']['Reihung'] = array('name' => 'Stimme',
                                     'select' => 'N',
-                                    'maxlen' => '3',
+                                    'maxlen' => '1',
                                     'sort' => true);
     $opts['fdd']['Stimmführer'] = array('name' => ' &alpha;',
                                         'options'  => 'LAVCPD',
                                         'select' => 'T',
-                                        'maxlen' => '3',
+                                        'maxlen' => '1',
                                         'sort' => true,
                                         'escape' => false);
     $opts['fdd']['Stimmführer']['values2'] = array('0' => ' ', '1' => '&alpha;');

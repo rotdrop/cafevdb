@@ -1,5 +1,23 @@
 /* Global input (web-form) button attributes. */
 
+form.cafevdb-control {
+  float: left;
+  font-size: 12px;
+  height: 100%;
+  vertical-align:middle;
+}
+
+#emailcontrol>input[type=submit] {
+  background-image:url('%appswebroot%/cafevdb/img/e_mail.png');
+  background-repeat:no-repeat;
+  background-position:0px;
+  padding-left:24px;
+  /*padding-top:0px;*/
+  min-height:28px;
+  vertical-align:middle;
+  /* border-radius:4px; */
+}
+
 :disabled { 
   opacity:0.3;
 }
@@ -235,11 +253,32 @@ td.pme-stats   {
 }
 
 td[class|='pme-cell-0'] {
+  text-align:inherit;
   background:#B7CEEC;
 }
 td[class|='pme-cell-1'] {
   background:#C6DEFF;
 }
+
+/* Hide everything but the first line */
+td.pme-cell-0-rcpt, td.pme-cell-1-rcpt,
+td.pme-cell-0-msg, td.pme-cell-1-msg,
+td.pme-cell-0-cc, td.pme-cell-1-cc,
+td.pme-cell-0-bcc, td.pme-cell-1-bcc { 
+  font-size:25%;
+  max-width:20em;
+  max-height:1em;
+/*  white-space:normal;*/
+  overflow:hidden;
+}
+
+td.pme-value-0-msg, td.pme-value-1-msg {
+  max-width:80ex;
+  /*font-size:25%;*/
+  white-space:normal;
+  text-wrap:normal;
+}
+
 /* Hide everything but the first line */
 td.pme-cell-0-rem, td.pme-cell-1-rem { 
   font-size:25%;
@@ -248,6 +287,15 @@ td.pme-cell-0-rem, td.pme-cell-1-rem {
   white-space:nowrap;
   overflow:hidden;
 }
+
+/* Hide everything but the first line */
+td.pme-cell-0-prjs, td.pme-cell-1-prjs { 
+  max-width:20em;
+  max-height:1em;
+  white-space:nowrap;
+  overflow:hidden;
+}
+
 /* Make all remarks shorter */
 td.pme-cell-0-rem:first-line, td.pme-cell-1-rem:first-line {
   font-size:400%; /* seem to be relative to !first-line */
@@ -400,15 +448,21 @@ input.pme-misc+[type=submit] {
   font-size:0pt;
   vertical-align:middle;
 }
+
 input.pme-misc[type=submit] {
   background-image:url('%appswebroot%/cafevdb/img/e_mail.png');
   background-repeat:no-repeat;
   background-position:0px;
   padding-left:24px;
-  padding-top:0px;
+  /*padding-top:0px;*/
   min-height:28px;
   vertical-align:middle;
-  border-radius:4px;
+  /* border-radius:4px; */
+}
+
+input.pme-filter {
+  width:auto;
+  white-space:nowrap;
 }
 
 /* input.pme-misc[type=submit]:selected { */
@@ -421,6 +475,10 @@ input.pme-misc[type=submit] {
 /*   min-height:28px; */
 /*   vertical-align:middle; */
 /* } */
+
+td.pme-buttons > .pme-misc {
+  white-space:nowrap;
+}
 
 td.pme-buttons > .pme-goto {
   white-space:nowrap;

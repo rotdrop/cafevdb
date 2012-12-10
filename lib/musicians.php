@@ -3,23 +3,32 @@
 namespace CAFEVDB;
 
 class Musicians
+  extends Instrumentation
 {
+  private $projectMode;
+
+  function __construct($mode = false) {
+    parent::__construct();
+    $this->projectMode = $mode;
+  }
+
   /**Display the list of all musicians. Is $projectMode == true,
    * filter out all musicians present in $projectId and add a
    * hyperlink which will add the Musician to the respective project.
    */
-  public static function display(&$opts, $projectMode = false)
+  public function display()
   {
     global $debug_query;
     //Config::$debug_query = true;
     //$debug_query = true;
 
-    $action          = Instrumentation::$action;
-    $project         = Instrumentation::$project;
-    $projectId       = Instrumentation::$projectId;
-    $recordsPerPage  = Instrumentation::$recordsPerPage;
+    $action          = $this->action;
+    $project         = $this->project;
+    $projectId       = $this->projectId;
+    $recordsPerPage  = $this->recordsPerPage;
+    $opts            = $this->opts;
 
-    if (!$projectMode) {
+    if (!$this->projectMode) {
 
       echo <<<__EOT__
 <div class="cafevdb-pme-header-box">
@@ -73,6 +82,8 @@ __EOT__;
     $opts['cgi']['persist'] = array('Project' => $project,
                                     'ProjectId' => $projectId,
                                     'Action' => $action,
+                                    'Template' => $this->projectMode
+                                    ? 'add-musicians' : 'all-musicians',
                                     'Table' => $opts['tb']);
 
     // Name of field which is the unique key
@@ -126,7 +137,7 @@ __EOT__;
        $opts['filters'] = "PMEtable0.sessions_count > 200";
     */
 
-    if ($projectMode) {
+    if ($this->projectMode) {
        $opts['filters'] = "(SELECT COUNT(*) FROM `Besetzungen` WHERE MusikerId = PMEtable0.Id AND ProjektId = $projectId) = 0";
     }
 
@@ -168,15 +179,7 @@ __EOT__;
        descriptions fields are also possible. Check documentation for this.
     */
 
-    $opts['fdd']['Id'] = array(
-                               'name'     => 'Id',
-                               'select'   => 'T',
-                               'options'  => 'AVCPDR', // auto increment
-                               'maxlen'   => 11,
-                               'default'  => '0',
-                               'sort'     => true
-                               );
-    if ($projectMode) {
+    if ($this->projectMode) {
       $opts['fdd']['Hinzufuegen'] = array(
                                           'name' => 'Hinzuf&uuml;gen',
                                           'select' => 'T',
@@ -186,7 +189,7 @@ __EOT__;
                                           'nowrap' => true
                                           //'php' => "AddMusician.php"
                                           );
-      $opts['fdd']['Hinzufuegen']['URL'] = "?app=cafevdb&Template=instrumentation&Project=$project&ProjectId=$projectId&MusicianId=\$key&Action=AddOneMusician";
+      $opts['fdd']['Hinzufuegen']['URL'] = "?app=cafevdb&Template=add-one-musician&Project=$project&ProjectId=$projectId&MusicianId=\$key&Action=AddOneMusician";
     }
     $opts['fdd']['Instrumente'] = array(
                                         'name'     => 'Instrumente',
@@ -194,7 +197,7 @@ __EOT__;
                                         'maxlen'   => 137,
                                         'sort'     => true
                                         );
-    $opts['fdd']['Instrumente']['values'] = Instrumentation::$instruments;
+    $opts['fdd']['Instrumente']['values'] = $this->instruments;
 
     $opts['fdd']['Name'] = array(
                                  'name'     => 'Name',
@@ -208,12 +211,6 @@ __EOT__;
                                     'maxlen'   => 128,
                                     'sort'     => true
                                     );
-    $opts['fdd']['Stadt'] = array(
-                                  'name'     => 'Stadt',
-                                  'select'   => 'T',
-                                  'maxlen'   => 128,
-                                  'sort'     => true
-                                  );
     $opts['fdd']['Strasse'] = array(
                                     'name'     => 'Strasse',
                                     'select'   => 'T',
@@ -226,6 +223,12 @@ __EOT__;
                                          'maxlen'   => 11,
                                          'sort'     => true
                                          );
+    $opts['fdd']['Stadt'] = array(
+                                  'name'     => 'Stadt',
+                                  'select'   => 'T',
+                                  'maxlen'   => 128,
+                                  'sort'     => true
+                                  );
     $opts['fdd']['Land'] = array('name'     => 'Land',
                                  'select'   => 'T',
                                  'maxlen'   => 128,
@@ -269,43 +272,80 @@ __EOT__;
                                       'escape' => false,
                                       'sort'     => true
                                       );
+
+  $derivedtable =<<<__EOT__
+SELECT MusikerId,GROUP_CONCAT(DISTINCT Projekte.Name ORDER BY Projekte.Name ASC SEPARATOR ', ') AS Projekte FROM
+Besetzungen
+LEFT JOIN Projekte ON Projekte.Id = Besetzungen.ProjektId
+GROUP BY MusikerId
+__EOT__;
+
+  $opts['fdd']['Projekte'] =
+    array('input' => 'VR', // virtual, read perm
+          'options' => 'LFV', //just do the join, don't display anything
+          'select' => 'T',
+          'name' => 'Projekte',
+          'sort' => true,
+          'sql' => 'PMEjoin'.count($opts['fdd']).'.Projekte',
+          'sqlw' => 'PMEjoin'.count($opts['fdd']).'.Projekte',
+          'css'      => array('postfix' => 'prjs'),
+          'values' => array( //API for currently making a join in PME.
+                            'table' =>
+                            array('sql' => $derivedtable,
+                                  'kind' => 'derived'),
+                            'column' => 'MusikerId',
+                            'description' => 'Projekte',
+                            'join' => '$main_table.Id = $join_table.MusikerId'
+                             )
+          );
+
+    $opts['fdd']['Id'] = array(
+                               'name'     => 'Id',
+                               'select'   => 'T',
+                               'options'  => 'AVCPDR', // auto increment
+                               'maxlen'   => 5,
+                               'align'    => 'right',
+                               'default'  => '0',
+                               'sort'     => true
+                               );
+
     $opts['fdd']['Aktualisiert'] = Config::$opts['calendar'];
     $opts['fdd']['Aktualisiert']['name'] = 'Aktualisiert';
     $opts['fdd']['Aktualisiert']['default'] = date('Y-m-d H:i:s');
     $opts['fdd']['Aktualisiert']['nowrap'] = true;
     $opts['fdd']['Aktualisiert']['options'] = 'LAVCPDR'; // Set by update trigger.
 
-    $opts['triggers']['update']['before'][0]  = Config::$triggers.'remove-unchanged.TUB.php.inc';
-    $opts['triggers']['update']['before'][1]  = Config::$triggers.'update-musician-timestamp.TUB.php.inc';
+    $opts['triggers']['update']['before'][0]  = Config::$triggers.'remove-unchanged.TUB.inc.php';
+    $opts['triggers']['update']['before'][1]  = Config::$triggers.'update-musician-timestamp.TUB.inc.php';
 
     new \phpMyEdit($opts);
   } // display()
   
   /**Helper function to add or change one specific musician to an
-   * existing project. Instrumentation::$action determines
+   * existing project. $this->action determines
    * what to do.
    */
-  public static function displayAddChangeOne(&$opts) {
+  public function displayAddChangeOne() {
 
     global $debug_query;
     //Config::$debug_query = true;
     //$debug_query = true;
 
-    $action          = Instrumentation::$action;
-    $project         = Instrumentation::$project;
-    $projectId       = Instrumentation::$projectId;
-    $musicianId      = Instrumentation::$musicianId;
-    $userExtraFields = Instrumentation::$userExtraFields;
-    $recordsPerPage  = Instrumentation::$recordsPerPage;
+    $action          = $this->action;
+    $opts            = $this->opts;
+    $project         = $this->project;
+    $projectId       = $this->projectId;
+    $musicianId      = $this->musicianId;
+    $userExtraFields = $this->userExtraFields;
+    $recordsPerPage  = $this->recordsPerPage;
 
     echo <<<__EOT__
+<div class="cafevdb-pme-header-box">
   <div class="cafevdb-pme-header">
     <H4>
       Auf dieser Seite wird <B>nur</B> der neue Musiker f&uuml;r das Projekt angezeigt,
-      f&uuml; die komplette List mu&szlig; man den entsprechenden Button bet&auml;tigen.
+      f&uuml;r die komplette List mu&szlig; man den entsprechenden Button bet&auml;tigen.
     </H4>
-  </div>
-
 __EOT__;
 
     /*
@@ -341,6 +381,7 @@ __EOT__;
                                     'ProjectId' => $projectId,
                                     'Action' => $action,
                                     'Table' => $opts['tb'],
+                                    'Template' => 'change-one-musician',
                                     'MusicianId' => $musicianId,
                                     'RecordsPerPage' => $recordsPerPage);
 
@@ -480,7 +521,7 @@ __EOT__;
                                        'maxlen'   => 12,
                                        'sort'     => true
                                        );
-    $opts['fdd']['Instrument']['values'] = Instrumentation::$instruments;
+    $opts['fdd']['Instrument']['values'] = $this->instruments;
     $opts['fdd']['Reihung'] = array('name' => 'Stimme',
                                     'select' => 'T',
                                     'maxlen' => '3',
@@ -565,7 +606,7 @@ Please correct the mis-match.</H4>';
         echo
           '<H4>Choosing the first instrument known to the musician and mentioned in the instrumentation list
 of the project. Please correct that by choosing a different "Projekt-Instrument" below, if necessary.
-Choosing "'.$musinst.'" as instrument.<H4>';
+Choosing "'.$musinst.'" as instrument.</H4>';
       }
     
 
@@ -605,6 +646,11 @@ Choosing "'.$musinst.'" as instrument.<H4>';
 
       mySQL::close();
     }
+
+    echo <<<__EOT__
+   </div>
+</div>
+__EOT__;
 
     new \phpMyEdit($opts);
   }

@@ -1,4 +1,4 @@
-<div id="controls">
+<?php
 $project = CAFEVDB\Util::cgiValue('Project');
 $projectId = CAFEVDB\Util::cgiValue('ProjectId',-1);
 if ($projectId < 0) {
@@ -22,6 +22,7 @@ if ($projectId < 0) {
 </div>
 __EOT__;
 } else {
+  echo <<<__EOT__
 <div id="controls">
   <form class="cafevdb-control" id="projectscontrol" method="post" action="?app=cafevdb">
     <input type="submit" name="" value="View all Projects"/>
@@ -49,6 +50,8 @@ __EOT__;
     <input type="hidden" name="Project" value="$project"/>
     <input type="hidden" name="ProjectId" value="$projectId"/>
   </form>
+</div>
+__EOT__;
 }
 ?>
 <div class="cafevdb-general">
