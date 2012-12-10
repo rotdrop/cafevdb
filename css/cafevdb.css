@@ -7,6 +7,13 @@ form.cafevdb-control {
   vertical-align:middle;
 }
 
+#projectlabelcontrol>input[type=button] {
+  font-weight:bold;
+  font-style:italic;
+  border-style:outset;
+  background-color:#C6DEFF;
+}
+
 #emailcontrol>input[type=submit] {
   background-image:url('%appswebroot%/cafevdb/img/e_mail.png');
   background-repeat:no-repeat;
@@ -41,7 +48,7 @@ select,input,option,button {
 
 input:active,select:active,option:active,button:active {
   border-radius:4px;
-  background:SteelBlue;
+  background:SteelBlue !important;
 }
 
 input:hover,/*select:hover,*/option:hover,button:hover {  

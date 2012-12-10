@@ -124,7 +124,7 @@ namespace CAFEVDB {
       $this->addPersistentCGI('ProjectId', $this->projectId);
       $this->addPersistentCGI('Project', $this->project);
       $this->addPersistentCGI('Template',
-                              $this->project >= 0
+                              $this->projectId >= 0
                               ? 'project-email' : 'email');
       $this->addPersistentCGI($this->emailKey, $this->EmailRecs);
     }
@@ -138,6 +138,9 @@ namespace CAFEVDB {
     
       $this->addPersistentCGI('ProjectId', $this->projectId, $form);
       $this->addPersistentCGI('Project', $this->project, $form);
+      $this->addPersistentCGI('Template',
+                              $this->projectId >= 0
+                              ? 'project-email' : 'email', $form);
       $this->addPersistentCGI($this->emailKey, $this->EmailRecs, $form);
 
       $value = $this->form->getValue();
@@ -1307,7 +1310,7 @@ __EOT__;
       $opts['tb'] = 'SentEmail';
 
       $project = Util::cgiValue('Project','');
-      $projectId = Util::cgiValue('Project',-1);
+      $projectId = Util::cgiValue('ProjectId',-1);
       $recordsPerPage = Util::cgiValue('RecordsPerPage',-1);
 
       $opts['cgi']['persist'] = array('Project' => $project,

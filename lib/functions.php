@@ -101,6 +101,114 @@ document.onkeypress = stopRKey;
   }
 };
 
+class Navigation
+{
+  public static function button($id='projects', $project='', $projectId=-1)
+  {
+    $controlid = $id.'control';
+    $form = '';
+    switch ($id) {
+
+    case 'projects':
+      $form =<<<__EOT__
+<form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
+  <input type="submit" name="" value="View all Projects" title="Overview over all known projects (start-page)"/>
+  <input type="hidden" name="Action" value="-1"/>
+  <input type="hidden" name="Template" value="projects"/>
+</form>
+
+__EOT__;
+      break;
+
+    case 'all':
+      $form =<<<__EOT__
+<form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
+  <input type="submit" name="" value="Display all Musicians" title="Display all musicians stored in the data-base, with detailed facilities for filtering and sorting."/>
+  <input type="hidden" name="Action" value="DisplayAllMusicians"/>
+  <input type="hidden" name="Template" value="all-musicians"/>
+</form>
+
+__EOT__;
+      break;
+
+    case 'email':
+      $form =<<<__EOT__
+<form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
+  <input type="submit" name="" value="Em@il" title="Mass-email form, use with care. Mass-emails will be logged. Recipients will be specified by the Bcc: field in the header, so the recipients are undisclosed to each other."/>
+  <input type="hidden" name="Action" value="Email"/>
+  <input type="hidden" name="Template" value="email"/>
+</form>
+
+__EOT__;
+      break;
+
+    case 'emailhistory':
+      $form =<<<__EOT__
+<form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
+  <input type="submit" name="" value="Email History" title="Display all emails sent by our mass-email form."/>
+  <input type="hidden" name="Action" value="Email History"/>
+  <input type="hidden" name="Template" value="email-history"/>
+  <input type="hidden" name="Project" value="$project"/>
+  <input type="hidden" name="ProjectId" value="$projectId"/>
+</form>
+
+__EOT__;
+      break;
+
+    case 'projectlabel':
+      $form =<<<__EOT__
+<form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
+  <input type="button" name="" value="$project" title="The currently active project."/>
+</form>
+
+__EOT__;
+      break;
+
+    case 'detailed':
+      $form =<<<__EOT__
+<form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
+  <input type="submit" name="" value="Detailed Instrumentation" title="Detailed display of all registered musicians for the selected project. The table will allow for modification of personal data like email, phone, address etc."/>
+  <input type="hidden" name="Action" value="DetailedInstrumentation"/>
+  <input type="hidden" name="Template" value="detailed-instrumentation"/>
+  <input type="hidden" name="Project" value="$project"/>
+  <input type="hidden" name="ProjectId" value="$projectId"/>
+</form>
+
+__EOT__;
+      break;
+
+    case 'brief':
+      $form =<<<__EOT__
+<form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
+  <input type="submit" name="" value="Brief Instrumentation" title="Brief display of all registered musicians for the selected project. The table will allow for modification of project specific data, like the instrument, the project-fee etc."/>
+  <input type="hidden" name="Action" value="BriefInstrumentation"/>
+  <input type="hidden" name="Template" value="brief-instrumentation"/>
+  <input type="hidden" name="Project" value="$project"/>
+  <input type="hidden" name="ProjectId" value="$projectId"/>
+</form>
+
+__EOT__;
+      break;
+
+    case 'add':
+      $form =<<<__EOT__
+<form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
+  <input type="submit" name="" value="Add more Musicians" title="List of all musicians <b>not</b> registered for the selected project. Only through that table a new musician can enter a project. Look for a hyper-link Add_to_PROJECT"/>
+  <input type="hidden" name="Action" value="AddMusicians"/>
+  <input type="hidden" name="Template" value="add-musicians"/>
+  <input type="hidden" name="Project" value="$project"/>
+  <input type="hidden" name="ProjectId" value="$projectId"/>
+</form>
+
+__EOT__;
+      break;
+
+    }
+
+    return $form;
+  }
+};
+
 class mySQL
 {
   public static function connect($opts, $die = true)

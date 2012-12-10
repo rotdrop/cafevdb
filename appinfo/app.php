@@ -3,6 +3,7 @@
 OC::$CLASSPATH['CAFEVDB\Config'] = 'apps/cafevdb/lib/config.php';
 OC::$CLASSPATH['CAFEVDB\ToolTips'] = 'apps/cafevdb/lib/tooltips.php';
 OC::$CLASSPATH['CAFEVDB\Util'] = 'apps/cafevdb/lib/functions.php';
+OC::$CLASSPATH['CAFEVDB\Navigation'] = 'apps/cafevdb/lib/functions.php';
 OC::$CLASSPATH['CAFEVDB\mySQL'] = 'apps/cafevdb/lib/functions.php';
 OC::$CLASSPATH['CAFEVDB\Projects'] = 'apps/cafevdb/lib/projects.php';
 OC::$CLASSPATH['CAFEVDB\Instruments'] = 'apps/cafevdb/lib/instruments.php';
