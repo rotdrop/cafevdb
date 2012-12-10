@@ -2529,10 +2529,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				   $this->fdd[$fd]['select'] == 'C') {
 				// Multiple fields processing
 				// Default size is 2 and array required for values.
-				$from_table =
-                                  ! $this->col_has_values($k) ||
-                                  isset($this->fdd[$k]['values']['table']) ||
-                                  isset($this->fdd[$k]['values']['derivedtable']);
+				$from_table = ! $this->col_has_values($k) || isset($this->fdd[$k]['values']['table']);
 				$vals       = $this->set_values($k, array('*' => '*'), null, $from_table);
 				$selected   = $mi;
 				$multiple   = $this->col_has_multiple_select($k);
