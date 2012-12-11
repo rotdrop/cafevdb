@@ -160,7 +160,12 @@ __EOT__;
     case 'projectlabel':
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
-  <input type="button" name="" value="$project" title="The currently active project."/>
+  <input type="submit" name="" value="$project" title="The currently active project."/>
+  <input type="hidden" name="Action" value="-1"/>
+  <input type="hidden" name="Template" value="projects"/>
+  <input type="hidden" name="Project" value="$project"/>
+  <input type="hidden" name="ProjectId" value="$projectId"/>
+  <input type="hidden" name="PME_sys_operation" value="Anzeigen?PME_sys_rec=$projectId"/>
 </form>
 
 __EOT__;
@@ -208,7 +213,7 @@ __EOT__;
     case 'projectinstruments':
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
-  <input type="submit" name="" value="Project Instruments" title="Display the desired instrumentaion numbers, i.e. how many musicians are already registered for each instrument group and how many are finally needed."/>
+  <input type="submit" name="" value="Instrumentation Numbers" title="Display the desired instrumentaion numbers, i.e. how many musicians are already registered for each instrument group and how many are finally needed."/>
   <input type="hidden" name="Action" value="ProjectInstruments"/>
   <input type="hidden" name="Template" value="project-instruments"/>
   <input type="hidden" name="Project" value="$project"/>

@@ -14,6 +14,13 @@ form.cafevdb-control {
   background-color:#C6DEFF;
 }
 
+#projectlabelcontrol>input[type=submit] {
+  font-weight:bold;
+  font-style:italic;
+  border-style:outset;
+  background-color:#C6DEFF;
+}
+
 #emailcontrol>input[type=submit] {
   background-image:url('%appswebroot%/cafevdb/img/e_mail.png');
   background-repeat:no-repeat;
