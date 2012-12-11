@@ -1,5 +1,6 @@
 <?php
 
+OC::$CLASSPATH['CAFEVDB\Admin'] = 'apps/cafevdb/lib/admin.php';
 OC::$CLASSPATH['CAFEVDB\Config'] = 'apps/cafevdb/lib/config.php';
 OC::$CLASSPATH['CAFEVDB\ToolTips'] = 'apps/cafevdb/lib/tooltips.php';
 OC::$CLASSPATH['CAFEVDB\Util'] = 'apps/cafevdb/lib/functions.php';
