@@ -158,6 +158,10 @@ __EOT__;
       break;
 
     case 'projectlabel':
+      Config::init();
+      $syspfx = Config::$pmeopts['cgi']['prefix']['sys'];
+      $opname = $syspfx.'operation';
+      $opwhat = 'View?'.$syspfx.'rec='.$projectId;
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
   <input type="submit" name="" value="$project" title="The currently active project."/>
@@ -165,7 +169,7 @@ __EOT__;
   <input type="hidden" name="Template" value="projects"/>
   <input type="hidden" name="Project" value="$project"/>
   <input type="hidden" name="ProjectId" value="$projectId"/>
-  <input type="hidden" name="PME_sys_operation" value="Anzeigen?PME_sys_rec=$projectId"/>
+  <input type="hidden" name="$opname" value="$opwhat"/>
 </form>
 
 __EOT__;
