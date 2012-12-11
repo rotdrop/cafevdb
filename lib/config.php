@@ -16,8 +16,14 @@ class Config
   public static $opts = array();
   public static $cgiVars = array();
   public static $Languages = array();
+  private static $initialized = false;
 
   static public function init() {
+    if (self::$initialized == true) {
+      return;
+    }
+    self::$initialized = true;
+
     if (!self::$prefix) {
       self::$prefix = self::$appbase . "lib/";
     }
