@@ -7,8 +7,8 @@ if ($projectId >= 0) {
   echo CAFEVDB\Navigation::button('projectlabel', $project, $projectId);
   echo CAFEVDB\Navigation::button('projects');
   echo CAFEVDB\Navigation::button('instruments', $project, $projectId);  
+  echo CAFEVDB\Navigation::button('add', $project, $projectId);  
   echo CAFEVDB\Navigation::button('brief', $project, $projectId);
-  echo CAFEVDB\Navigation::button('detailed', $project, $projectId);  
   echo '</div>'."\n";
 } else {
   echo '<div id="controls">'."\n";
