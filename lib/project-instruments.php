@@ -29,7 +29,7 @@ class ProjectInstruments
     echo <<<__EOT__
 <div class="cafevdb-pme-header-box">
   <div class="cafevdb-pme-header">
-    <h3>Besetzungszahlen $Projekt</h3>
+    <h3>Besetzungszahlen $project</h3>
     <H4>Die "Soll"-Besetzungzahl kann hier eingetragen werden, die
 "Haben"-Besetzungszahl ist die Anzahl der bereits registrierten Musiker.</H4>
   </div>
@@ -73,13 +73,21 @@ __EOT__;
     // Type of key field (int/real/string/date etc.)
     $opts['key_type'] = 'int';
 
-    // Sorting field(s)
-    $opts['sort_field'] = array('ProjektId');
+    if ($projectId >= 0) {
+      unset($opts['sort_field']);
+      $opts['options'] = 'CPVDI';
+      $opts['navigation'] = 'GUD';
+      $sort = false;
+    } else {
+      // Sorting field(s)
+      $opts['sort_field'] = array('ProjektId');
 
-    // Options you wish to give the users
-    // A - add,  C - change, P - copy, V - view, D - delete,
-    // F - filter, I - initial sort suppressed
-    $opts['options'] = 'ACPVDF';
+      // Options you wish to give the users
+      // A - add,  C - change, P - copy, V - view, D - delete,
+      // F - filter, I - initial sort suppressed
+      $opts['options'] = 'ACPVDF';
+      $sort = true;
+    }
 
     // Number of lines to display on multiple selection filters
     $opts['multiple'] = '4';
@@ -92,7 +100,7 @@ __EOT__;
     $opts['display'] = array(
                              'form'  => true,
                              'query' => true,
-                             'sort'  => true,
+                             'sort'  => $sort,
                              'time'  => true,
                              'tabs'  => true
                              );
@@ -121,9 +129,9 @@ __EOT__;
     if ($projectId >= 0) {
       $opts['filters'] = "`ProjektId` = ".$projectId;
       // Also restrict the instruments to the instruments which are required for this project.
-      $handle = CAFEVDB_mySQL::connect($opts);
-      $projectInstruments = fetchProjectInstruments($projectId, $handle);
-      CAFEVDB_mySQL::close($handle);
+      $handle = mySQL::connect($opts);
+      $projectInstruments = Instruments::fetchProjectInstruments($projectId, $handle);
+      mySQL::close($handle);
       if (count($projectInstruments) == 0) {
         // TODO: figure out how OwnCloud likes to display error messages.
         echo '<H4><span style="color:red">Keine Besetzung f&uuml;r das Projekt gefunden,
@@ -176,7 +184,7 @@ bitte bei den <A HREF="Projekte.php?PME_sys_rec='.$projectId.'&PME_sys_operation
                                       'select'   => 'T',
                                       'options'  => 'LAVCPDR',
                                       'maxlen'   => 11,
-                                      'sort'     => true,
+                                      'sort'     => $sort,
                                       'values' => array(
                                                         'table' => 'Projekte',
                                                         'column' => 'Id',
@@ -184,13 +192,13 @@ bitte bei den <A HREF="Projekte.php?PME_sys_rec='.$projectId.'&PME_sys_operation
                                                         //'filters' => "Id = $projectId"
                                                         )
                                       );
-    $opts['fdd']['ProjektId']['URL'] = 'ProjektBesetzung.php?Projekt=$value&ProjektId=$key&Action=DisplayProjectMusicians';
+    $opts['fdd']['ProjektId']['URL'] = '?app=cafevdb&Template=brief-instrumentation&Project=$value&ProjectId=$key&Action=BriefInstrumentation';
     $cnt = 1;
     foreach ($projectInstruments as $value) {
       $opts['fdd']["$value"] = array('name' => $value.' (soll)',
                                      'select' => 'T',
                                      'maxlen' => 4,
-                                     'sort' => true);
+                                     'sort' => $sort);
       $opts['fdd']["$value"."Haben"] = array('name' => $value.' (haben)',
                                              'colattrs' => 'style="color:#990000;background-color:#F0F0F0"',
                                              'select' => 'T',

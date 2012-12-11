@@ -4,6 +4,7 @@ echo CAFEVDB\Navigation::button('projectlabel', $table->project, $table->project
 echo CAFEVDB\Navigation::button('projects');
 echo CAFEVDB\Navigation::button('brief', $table->project, $table->projectId);
 echo CAFEVDB\Navigation::button('detailed', $table->project, $table->projectId);
+echo CAFEVDB\Navigation::button('instruments', $table->project, $table->projectId);
 echo '</div>'."\n";
 ?>
 <div class="cafevdb-general">

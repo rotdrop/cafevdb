@@ -137,6 +137,8 @@ __EOT__;
   <input type="submit" name="" value="Em@il" title="Mass-email form, use with care. Mass-emails will be logged. Recipients will be specified by the Bcc: field in the header, so the recipients are undisclosed to each other."/>
   <input type="hidden" name="Action" value="Email"/>
   <input type="hidden" name="Template" value="email"/>
+  <input type="hidden" name="Project" value="$project"/>
+  <input type="hidden" name="ProjectId" value="$projectId"/>
 </form>
 
 __EOT__;
@@ -183,6 +185,19 @@ __EOT__;
   <input type="submit" name="" value="Brief Instrumentation" title="Brief display of all registered musicians for the selected project. The table will allow for modification of project specific data, like the instrument, the project-fee etc."/>
   <input type="hidden" name="Action" value="BriefInstrumentation"/>
   <input type="hidden" name="Template" value="brief-instrumentation"/>
+  <input type="hidden" name="Project" value="$project"/>
+  <input type="hidden" name="ProjectId" value="$projectId"/>
+</form>
+
+__EOT__;
+      break;
+
+    case 'instruments':
+      $form =<<<__EOT__
+<form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
+  <input type="submit" name="" value="Project Instruments" title="Display the desired instrumentaion numbers, i.e. how many musicians are already registered for each instrument group and how many are finally needed."/>
+  <input type="hidden" name="Action" value="ProjectInstruments"/>
+  <input type="hidden" name="Template" value="project-instruments"/>
   <input type="hidden" name="Project" value="$project"/>
   <input type="hidden" name="ProjectId" value="$projectId"/>
 </form>

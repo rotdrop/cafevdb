@@ -1,5 +1,6 @@
 <?php
 echo '<div id="controls">'."\n";
+echo CAFEVDB\Navigation::button('instruments');
 echo CAFEVDB\Navigation::button('all');
 echo CAFEVDB\Navigation::button('email');
 echo '</div>'."\n";

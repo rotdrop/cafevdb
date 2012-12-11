@@ -21,11 +21,7 @@ OCP\Util::addScript('cafevdb', 'jscal/src/js/lang/en');
 /* Special hack to determine if the email-form was requested through the pme-miscinfo button. */
 $op = CAFEVDB\Util::cgiValue('PME_sys_operation');
 if ($op == "Em@il") {
-  if (CAFEVDB\Util::cgiValue('ProjectId',-1) >= 0) {
-    $tmplname = 'project-email';
-  } else {
-    $tmplname = 'email';
-  }
+  $tmplname = 'email';
 } else {
   $tmplname = CAFEVDB\Util::cgiValue('Template','projects');
 }

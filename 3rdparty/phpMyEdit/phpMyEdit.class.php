@@ -3915,14 +3915,16 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		!isset($this->dhtml['prefix']) && $this->dhtml['prefix'] = 'PME_dhtml';
 		// Navigation
 		$this->navigation = @$opts['navigation'];
-		if (! $this->nav_buttons() && ! $this->nav_text_links() && ! $this->nav_graphic_links()) {
-			$this->navigation .= 'B'; // buttons are default
-		}
-		if (! $this->nav_up() && ! $this->nav_down()) {
-			$this->navigation .= 'D'; // down position is default
-		}
-		$this->buttons = @$opts['buttons'];
-		// Language labels (must go after navigation)
+                if (!stristr($this->navigation, 'N')) {
+                        if (! $this->nav_buttons() && ! $this->nav_text_links() && ! $this->nav_graphic_links()) {
+                                $this->navigation .= 'B'; // buttons are default
+                        }
+                        if (! $this->nav_up() && ! $this->nav_down()) {
+                                $this->navigation .= 'D'; // down position is default
+                        }
+                }
+                $this->buttons = @$opts['buttons'];
+                // Language labels (must go after navigation)
 		$this->labels = $this->make_language_labels(isset($opts['language'])
 				? $opts['language'] : $this->get_server_var('HTTP_ACCEPT_LANGUAGE'));
                 if (isset($opts['labels']) && is_array($opts['labels'])) {

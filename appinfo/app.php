@@ -11,6 +11,7 @@ OC::$CLASSPATH['CAFEVDB\Musicians'] = 'apps/cafevdb/lib/musicians.php';
 OC::$CLASSPATH['CAFEVDB\Instrumentation'] = 'apps/cafevdb/lib/instrumentation.php';
 OC::$CLASSPATH['CAFEVDB\BriefInstrumentation'] = 'apps/cafevdb/lib/brief-instrumentation.php';
 OC::$CLASSPATH['CAFEVDB\DetailedInstrumentation'] = 'apps/cafevdb/lib/detailed-instrumentation.php';
+OC::$CLASSPATH['CAFEVDB\ProjectInstruments'] = 'apps/cafevdb/lib/project-instruments.php';
 OC::$CLASSPATH['CAFEVDB\EmailFilter'] = 'apps/cafevdb/lib/email.php';
 OC::$CLASSPATH['CAFEVDB\Email'] = 'apps/cafevdb/lib/email.php';
 
