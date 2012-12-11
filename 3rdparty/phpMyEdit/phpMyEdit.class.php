@@ -4002,7 +4002,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
                  * multi-byte etc. characters.
                  */
 
-                /* First get any hard-coded recod, then possibly
+                /* First get any hard-coded record, then possibly
                  * override by operation query string.
                  */
 		$this->rec   = $this->get_sys_cgi_var('rec', '');
