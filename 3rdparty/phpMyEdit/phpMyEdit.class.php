@@ -268,6 +268,7 @@ class phpMyEdit
 	/*
 	 * functions for indicating whether operations are enabled
 	 */
+        function label_cmp($a, $b) { return $a == $b || $a == $this->labels[$b] || $this->labels[$a] == $b; }
 
 	function listall()        { return $this->inc < 0; }
 	function add_enabled()    { return stristr($this->options, 'A'); }
@@ -283,27 +284,27 @@ class phpMyEdit
 	function readonly($k)     { return stristr(@$this->fdd[$k]['input'],'R') || $this->virtual($k);     }
 	function virtual($k)      { return stristr(@$this->fdd[$k]['input'],'V') && $this->col_has_sql($k); }
 
-	function add_operation()    { return $this->operation == $this->labels['Add']    && $this->add_enabled();    }
-	function change_operation() { return $this->operation == $this->labels['Change'] && $this->change_enabled(); }
-	function copy_operation()   { return $this->operation == $this->labels['Copy']   && $this->copy_enabled();   }
-	function delete_operation() { return $this->operation == $this->labels['Delete'] && $this->delete_enabled(); }
-        function misc_operation()   { return $this->operation == $this->labels['Misc']   && $this->misc_enabled();  }
-	function view_operation()   { return $this->operation == $this->labels['View']   && $this->view_enabled();   }
+	function add_operation()    { return $this->label_cmp($this->operation, 'Add')    && $this->add_enabled();    }
+	function change_operation() { return $this->label_cmp($this->operation, 'Change') && $this->change_enabled(); }
+	function copy_operation()   { return $this->label_cmp($this->operation, 'Copy')   && $this->copy_enabled();   }
+	function delete_operation() { return $this->label_cmp($this->operation, 'Delete') && $this->delete_enabled(); }
+        function misc_operation()   { return $this->label_cmp($this->operation, 'Misc')   && $this->misc_enabled();  }
+	function view_operation()   { return $this->label_cmp($this->operation, 'View')   && $this->view_enabled();   }
 	function filter_operation() { return $this->fl && $this->filter_enabled() && $this->list_operation(); }
 	function list_operation()   { /* covers also filtering page */ return ! $this->change_operation()
 										&& ! $this->add_operation()    && ! $this->copy_operation()
 										&& ! $this->delete_operation() && ! $this->view_operation(); }
-	function next_operation()	{ return ($this->navop == $this->labels['Next']) || ($this->navop == '>'); }
-	function prev_operation()	{ return ($this->navop == $this->labels['Prev']) || ($this->navop == '<'); }
-	function first_operation()	{ return ($this->navop == $this->labels['First']) || ($this->navop == '<<'); }
-	function last_operation()	{ return ($this->navop == $this->labels['Last']) || ($this->navop == '>>'); }
-	function clear_operation()	{ return $this->sw == $this->labels['Clear'];  }
+	function next_operation()	{ return ($this->label_cmp($this->navop, 'Next')) || ($this->navop == '>'); }
+	function prev_operation()	{ return ($this->label_cmp($this->navop, 'Prev')) || ($this->navop == '<'); }
+	function first_operation()	{ return ($this->label_cmp($this->navop, 'First')) || ($this->navop == '<<'); }
+	function last_operation()	{ return ($this->label_cmp($this->navop, 'Last')) || ($this->navop == '>>'); }
+	function clear_operation()	{ return $this->label_cmp($this->sw, 'Clear');  }
 
-	function add_canceled()    { return $this->canceladd    == $this->labels['Cancel']; }
-	function view_canceled()   { return $this->cancelview   == $this->labels['Cancel']; }
-	function change_canceled() { return $this->cancelchange == $this->labels['Cancel']; }
-	function copy_canceled()   { return $this->cancelcopy   == $this->labels['Cancel']; }
-	function delete_canceled() { return $this->canceldelete == $this->labels['Cancel']; }
+	function add_canceled()    { return $this->label_cmp($this->canceladd   , 'Cancel'); }
+	function view_canceled()   { return $this->label_cmp($this->cancelview  , 'Cancel'); }
+	function change_canceled() { return $this->label_cmp($this->cancelchange, 'Cancel'); }
+	function copy_canceled()   { return $this->label_cmp($this->cancelcopy  , 'Cancel'); }
+	function delete_canceled() { return $this->label_cmp($this->canceldelete, 'Cancel'); }
 
 //calendar mod start - dilip
     function calPopup_helper($k, $curval) /* {{{ */
@@ -357,12 +358,12 @@ class phpMyEdit
 			return true;
 		}
 		return
-			($this->saveadd    == $this->labels['Save']  && stristr($options, 'A')) ||
-			($this->moreadd    == $this->labels['More']  && stristr($options, 'A')) ||
-			($this->savechange == $this->labels['Save']  && stristr($options, 'C')) ||
-			($this->morechange == $this->labels['Apply'] && stristr($options, 'C')) ||
-			($this->savecopy   == $this->labels['Save']  && stristr($options, 'P')) ||
-			($this->savedelete == $this->labels['Save']  && stristr($options, 'D'));
+			($this->label_cmp($this->saveadd   , 'Save')  && stristr($options, 'A')) ||
+			($this->label_cmp($this->moreadd   , 'More')  && stristr($options, 'A')) ||
+			($this->label_cmp($this->savechange, 'Save')  && stristr($options, 'C')) ||
+			($this->label_cmp($this->morechange, 'Apply') && stristr($options, 'C')) ||
+			($this->label_cmp($this->savecopy  , 'Save')  && stristr($options, 'P')) ||
+			($this->label_cmp($this->savedelete, 'Save')  && stristr($options, 'D'));
 	} /* }}} */
 
 	function displayed($k) /* {{{ */
@@ -3490,19 +3491,21 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		$this->filter_operation() && $this->page_type = 'F';
 		$this->view_operation()   && $this->page_type = 'V';
 		if ($this->add_operation()
-				|| $this->saveadd == $this->labels['Save']
-				|| $this->moreadd == $this->labels['More']) {
+                    || $this->label_cmp($this->saveadd, 'Save')
+                    || $this->label_cmp($this->moreadd, 'More')) {
 			$this->page_type = 'A';
 		}
 		if ($this->change_operation()
-				|| $this->savechange == $this->labels['Save']
-				|| $this->morechange == $this->labels['Apply']) {
+                    || $this->label_cmp($this->savechange, 'Save')
+                    || $this->label_cmp($this->morechange, 'Apply')) {
 			$this->page_type = 'C';
 		}
-		if ($this->copy_operation() || $this->savecopy == $this->labels['Save']) {
-			$this->page_type = 'P';
+		if ($this->copy_operation()
+                    || $this->label_cmp($this->savecopy, 'Save')) {
+                  $this->page_type = 'P';
 		}
-		if ($this->delete_operation() || $this->savedelete == $this->labels['Delete']) {
+		if ($this->delete_operation()
+                    || $this->label_cmp($this->savedelete, 'Delete')) {
 			$this->page_type = 'D';
 		}
 		// Restore backups (if exists)
@@ -3766,32 +3769,33 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			$this->exec_triggers_simple('delete', 'cancel');
 		}
 		// Save/More Button - database operations
-		if ($this->saveadd == $this->labels['Save'] || $this->savecopy == $this->labels['Save']) {
+		if ($this->label_cmp($this->saveadd, 'Save')
+                    || $this->label_cmp($this->savecopy, 'Save')) {
 			$this->add_enabled() && $this->do_add_record();
 			$this->saveadd  = null; // unset($this->saveadd)
 			$this->savecopy = null; // unset($this->savecopy)
 			$this->recreate_fdd();
 		}
-		elseif ($this->moreadd == $this->labels['More']) {
+		elseif ($this->label_cmp($this->moreadd, 'More')) {
 			$this->add_enabled() && $this->do_add_record();
 			$this->operation = $this->labels['Add']; // to force add operation
 			$this->recreate_fdd();
 			$this->recreate_displayed();
 			$this->backward_compatibility();
 		}
-		elseif ($this->savechange == $this->labels['Save']) {
+		elseif ($this->label_cmp($this->savechange, 'Save')) {
 			$this->change_enabled() && $this->do_change_record();
 			$this->savechange = null; // unset($this->savechange)
 			$this->recreate_fdd();
 		}
-		elseif ($this->morechange == $this->labels['Apply']) {
+		elseif ($this->label_cmp($this->morechange, 'Apply')) {
 			$this->change_enabled() && $this->do_change_record();
 			$this->operation = $this->labels['Change']; // to force change operation
 			$this->recreate_fdd();
 			$this->recreate_displayed();
 			$this->backward_compatibility();
 		}
-		elseif ($this->savedelete == $this->labels['Delete']) {
+		elseif ($this->label_cmp($this->savedelete, 'Delete')) {
 			$this->delete_enabled() && $this->do_delete_record();
 			$this->savedelete = null; // unset($this->savedelete)
 			$this->recreate_fdd();
@@ -4114,9 +4118,9 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		$this->cancelview   = $this->get_sys_cgi_var('cancelview');
 		// Filter setting
 		if (isset($this->sw)) {
-			$this->sw == $this->labels['Search'] && $this->fl = 1;
-			$this->sw == $this->labels['Hide']   && $this->fl = 0;
-			//$this->sw == $this->labels['Clear']  && $this->fl = 0;
+                  $this->label_cmp($this->sw, 'Search') && $this->fl = 1;
+                  $this->label_cmp($this->sw, 'Hide')   && $this->fl = 0;
+                  //$this->label_cmp($this->sw, 'Clear')  && $this->fl = 0;
 		}
 		// TAB names
 		$this->tabs = array();
