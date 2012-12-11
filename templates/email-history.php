@@ -8,13 +8,14 @@ if ($projectId >= 0) {
   echo CAFEVDB\Navigation::button('email', $project, $projectId);
   echo CAFEVDB\Navigation::button('brief', $project, $projectId);
   echo CAFEVDB\Navigation::button('detailed', $project, $projectId);
-  echo CAFEVDB\Navigation::button('instruments', $project, $projectId);  
+  echo CAFEVDB\Navigation::button('projectinstruments', $project, $projectId);   echo CAFEVDB\Navigation::button('instruments', $project, $projectId); 
   echo '</div>'."\n";
 } else {
   echo '<div id="controls">'."\n";
   echo CAFEVDB\Navigation::button('projects');
   echo CAFEVDB\Navigation::button('email');
   echo CAFEVDB\Navigation::button('all');
+  echo CAFEVDB\Navigation::button('projectinstruments');
   echo CAFEVDB\Navigation::button('instruments');
   echo '</div>'."\n";
 }

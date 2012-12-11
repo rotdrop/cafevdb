@@ -195,6 +195,19 @@ __EOT__;
     case 'instruments':
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
+  <input type="submit" name="" value="Add Instruments" title="Display the list of instruments known by the data-base, possibly add new ones as needed"/>
+  <input type="hidden" name="Action" value="Instruments"/>
+  <input type="hidden" name="Template" value="instruments"/>
+  <input type="hidden" name="Project" value="$project"/>
+  <input type="hidden" name="ProjectId" value="$projectId"/>
+</form>
+
+__EOT__;
+      break;
+
+    case 'projectinstruments':
+      $form =<<<__EOT__
+<form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
   <input type="submit" name="" value="Project Instruments" title="Display the desired instrumentaion numbers, i.e. how many musicians are already registered for each instrument group and how many are finally needed."/>
   <input type="hidden" name="Action" value="ProjectInstruments"/>
   <input type="hidden" name="Template" value="project-instruments"/>

@@ -3,22 +3,39 @@
 namespace CAFEVDB;
 
 class Instruments
+  extends Instrumentation
 {
+  public function __construct()
+  {
+    parent::__construct();
+  }
+
   // called form Instrumentation::display()
-  public static function display(&$opts)
+  public function display()
   {
     global $debug_query;
     //Config::$debug_query = true;
     //$debug_query = true;
 
-    $action          = Instrumentation::$action;
-    $project         = Instrumentation::$project;
-    $projectId       = Instrumentation::$projectId;
-    $recordsPerPage  = Instrumentation::$recordsPerPage;
 
-    echo '<h3>'.htmlspecialchars('Instrumente hinzufügen.').'</h3>'.
-      '<h4>'.htmlspecialchars('Löschen ist nicht vorgesehen, dafür bitte phpMyAdmin verwenden.
-Auch den Instrumentennamen sollte man nicht ändern.').'</H4>';
+    $action          = $this->action;
+    $project         = $this->project;
+    $projectId       = $this->projectId;
+    $opts            = $this->opts;
+    $instruments     = $this->instruments;
+    $recordsPerPage  = $this->recordsPerPage;
+    $userExtraFields = $this->userExtraFields;
+
+    echo <<<__EOT__
+<div class="cafevdb-pme-header-box">
+  <div class="cafevdb-pme-header">
+    <h3>Instrumente hinzufügen</h3>
+    <h4>Löschen ist nicht vorgesehen, dafür bitte phpMyAdmin verwenden.
+Auch den Instrumentennamen sollte man nicht ändern</H4>
+  </div>
+</div>
+
+__EOT__;
 
     /*
      * IMPORTANT NOTE: This generated file contains only a subset of huge amount
@@ -148,7 +165,7 @@ Auch den Instrumentennamen sollte man nicht ändern.').'</H4>';
                                     'select'   => 'C',
                                     'maxlen'   => 12,
                                     'sort'     => true);
-    $opts['fdd']['Familie']['values'] = Instrumentation::$instrumentFamilies;
+    $opts['fdd']['Familie']['values'] = $this->instrumentFamilies;
     // Provide a link to Wikipedia for fun ...
     $opts['fdd']['Sortierung'] = array(
                                        'name'     => 'Orchester Sortierung',
@@ -170,7 +187,7 @@ Auch den Instrumentennamen sollte man nicht ändern.').'</H4>';
     $opts['triggers']['update']['before']  = Config::$triggers.'instruments.TUB.inc.php';
     $opts['triggers']['insert']['before']  = Config::$triggers.'instruments.TIB.inc.php';
 
-    new phpMyEdit($opts);
+    new \phpMyEdit($opts);
   }
 
   // Sort the given list of instruments according to orchestral ordering
