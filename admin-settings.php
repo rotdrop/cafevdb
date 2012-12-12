@@ -2,10 +2,10 @@
 
 OCP\User::checkAdminUser();
 
-OCP\Util::addScript( "cafevdb", "admin" );
+OCP\Util::addScript( "cafevdb", "admin-settings" );
 
 $tmpl = new OCP\Template( 'cafevdb', 'admin-settings');
 
-$tmpl->assign('url', OCP\Config::getSystemValue( "mysqlserver", '' ));
+$tmpl->assign('dbserver', OCP\Config::getSystemValue( "dbserver", '' ));
 
 return $tmpl->fetchPage();

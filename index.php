@@ -13,6 +13,7 @@ OCP\Util::addStyle('cafevdb', 'jscal/jscal2');
 OCP\Util::addStyle('cafevdb', 'jscal/border-radius');
 OCP\Util::addStyle('cafevdb', 'jscal/gold/gold');
 
+OCP\Util::addScript('cafevdb', 'cafevdb');
 OCP\Util::addScript('cafevdb', 'tinymce/jscripts/tiny_mce/tiny_mce');
 OCP\Util::addScript('cafevdb', 'tinymceinit');
 OCP\Util::addScript('cafevdb', 'jscal/src/js/jscal2');
