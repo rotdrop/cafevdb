@@ -277,7 +277,7 @@ __EOT__;
       //CAFEVerror("huh".$line['Instrument'],false);
       $tblInst = $line['Instrument'];
       if (array_search($tblInst, $Instruments) === false) {
-        CAFEVerror('"'.$tblInst.'" not found in '.implode(',',$Instruments), true);
+        Util::error('"'.$tblInst.'" not found in '.implode(',',$Instruments), true);
       }
       array_push($final, $tblInst);
     }
@@ -286,27 +286,59 @@ __EOT__;
   }
 
   // Check for consistency
-  public static function check($handle) {
+  public static function check($handle, $silent = false) {
 
-    $InstrumentsSet  = mySQL::multiKeys('Musiker', 'Instrumente', $handle);
-    $InstrumentsEnum = mySQL::multiKeys('Besetzungen', 'Instrument', $handle);
+    $checkers = array('Musicians','Projects','Instrumentation Numbers','Instruments');
 
-    $MusDiff = array_diff($InstrumentsEnum, $InstrumentsSet);
-    $BesDiff = array_diff($InstrumentsSet, $InstrumentsEnum);
+    $instruments = array();
+    $instruments[$checkers[0]] = mySQL::multiKeys('Musiker', 'Instrumente', $handle);
+    $instruments[$checkers[1]]  =  mySQL::multiKeys('Besetzungen', 'Instrument', $handle);
 
-    if (count($MusDiff) != 0) {
-      echo "<P><HR/>
-<H4>\"Besetzungs\"-Instrumente, die von keinem Musiker gespielt werden:</H4>
-";
+    $query = "SHOW COLUMNS FROM BesetzungsZahlen WHERE FIELD NOT LIKE 'ProjektId'";
+    $result = mySQL::query($query, $handle) or die("Couldn't execute query");
+
+    $instruments[$checkers[2]] = array();
+    while ($line = mySQL::fetch($result)) {
+      $instruments[$checkers[2]][] = $line['Field'];
     }
 
-    if (count($BesDiff) != 0) {
-      echo "<P><HR/>
-<H4>\"Musiker\"-Instrumente, die noch nie verwendet wurden:</H4>
-";
+    $query = "SELECT Instrument FROM Instrumente WHERE 1";
+    $result = mySQL::query($query, $handle) or die("Couldn't execute query");
+    $instruments[$checkers[3]] = array();
+    while ($line = mySQL::fetch($result)) {
+      $instruments[$checkers[3]][] = $line['Instrument'];
     }
 
-    echo "<HR/><P>\n";
+    // Diff everything with every other
+    $diff = array();
+    foreach($checkers as $key1) {
+      $diff[$key1] = array();
+      foreach($checkers as $key2) {
+        $diff[$key1][$key2] = array_diff($instruments[$key1], $instruments[$key2]);
+      }
+    }
+
+    $result = true;
+    foreach ($checkers as $key1) {
+      foreach($checkers as $key2) {
+        if (count($diff[$key1][$key2]) > 0) {
+          $result = false;
+          if (!$silent) {
+            echo "<P><HR/>
+<H4>Instruments in ``$key1''-table which are not in ``$key2''-table:</H4>
+<UL>\n";
+            foreach ($diff[$key1][$key2] as $instrument) {
+              echo "<LI>".$instrument."\n";
+            }
+            echo "</UL>\n";
+          }
+        }
+      }
+    }
+    if (!$silent && !$result) {
+      echo "<HR/><P>\n";
+    } 
+    return $result;
   }
 
   // Make sure the Instrumente table has all instruments used in the Musiker

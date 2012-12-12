@@ -1,5 +1,7 @@
 <?php
 
+CAFEVDB\Config::init();
+
 $buttons = array();
 $buttons['pre'] = '<div>';
 $buttons['post'] = '</div>';
@@ -30,6 +32,7 @@ $buttons['example'] =
 <div id="expertmode">
   <fieldset id="expertmode" class="operations expert">
   <strong>Advanced operations, use with care</strong><br />
+  <input type="button" value="<?php echo $l->t('Go to phpmyadmin'); ?>" onclick="return window.open('<?php echo CAFEVDB\Config::$opts['phpmyadmin']; ?>','cafevdb@phpmyadmin')"/>
   <?php echo CAFEVDB\Navigation::button($buttons); ?>
   </fieldset>
   <br/>

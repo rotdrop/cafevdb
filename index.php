@@ -38,11 +38,13 @@ $buttons['expert'] =
   array('name' => $l->t('Expert Operations'),
         'image' => OCP\Util::imagePath('core', 'actions/rename.svg'),
         'class' => 'settings expert',
-        'style' => $expertmode == 'on' ? '' : 'display:none;width:0%;');
+        'id' => 'expertbutton',
+        'style' => $expertmode == 'on' ? '' : 'display:none;');
 $buttons['settings'] =
   array('name' => $l->t('Settings'),
         'image' => OCP\Util::imagePath('core', 'actions/settings.svg'),
-        'class' => 'settings generalsettings');
+        'class' => 'settings generalsettings',
+        'id' => 'settingsbutton');
 
 $tmpl->assign('settingscontrols', $buttons);
 

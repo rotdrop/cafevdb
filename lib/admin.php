@@ -29,10 +29,14 @@ class Admin
     Config::init();
 
     $handle = mySQL::connect(Config::$pmeopts);
-
-    Instruments::check($handle);
-
+    if (Instruments::check($handle)) {
+      print '<H4>Instruments are consistent.</H4>';
+    } else {
+      print '<H4>Instruments are inconsistent.</H4>';
+    }
     mySQL::close($handle);
+
+
   }
 
   public static function sanitizeInstrumentsTable()
@@ -40,9 +44,12 @@ class Admin
     Config::init();
 
     $handle = mySQL::connect(Config::$pmeopts);
-
-    Instruments::sanitizeTable($handle, false);
-
+    if (!Instruments::check($handle)) {
+      Instruments::sanitizeTable($handle, false);
+      Instruments::check($handle);
+    } else {
+      print '<H4>Not needed, instruments are consistent.</H4>';
+    }
     mySQL::close($handle);
   }
 

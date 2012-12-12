@@ -360,7 +360,6 @@ class mySQL
 
     // Fetch the result or die
     $result = mySQL::query($query, $handle) or die("Couldn't execute query");
-
     $line = mySQL::fetch($result);
 
     $set = $line['Type'];

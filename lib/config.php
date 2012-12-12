@@ -40,7 +40,6 @@ class Config
 
     self::$pmeopts['logtable'] = 'changelog';
     //self::$pmeopts['language'] = 'DE-UTF8';
-    self::$pmeopts['phpmyadmin'] = 'https://ch.homelinux.net:8888/phpmyadmin/index.php?user=camerata&db=camerata" target="_blank';
     self::$pmeopts['cgi']['append']['PME_sys_fl'] = 1;
 
     // Set default prefixes for variables for PME
@@ -57,6 +56,7 @@ class Config
     self::$pmeopts['labels']['Misc'] = 'Em@il';
     //self::$pmeopts['labels']['Sort Field'] = 'Sortierfeld';
 
+    self::$opts['phpmyadmin'] = 'https://ch.homelinux.net:8888/phpmyadmin/index.php?user=camerata&db=camerata';
     self::$opts['geburtstag'] = array('name'     => 'Geburtstag',
                                       'select'   => 'T',
                                       'maxlen'   => 10,
