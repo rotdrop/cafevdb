@@ -3,7 +3,7 @@
 // Check if we are a user
 OCP\User::checkLoggedIn();
 
-$somesetting = OCP\Config::getSystemValue( "somesetting", '' );
+$expertmode = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb','expertmode','');
 
 OCP\App::setActiveNavigationEntry( 'cafevdb' );
 
@@ -29,7 +29,7 @@ if ($op == "Em@il") {
 
 $tmpl = new OCP\Template( 'cafevdb', $tmplname, 'user' );
 
-$tmpl->assign( 'somesetting', $somesetting );
+$tmpl->assign( 'expertmode', $expertmode );
 
 $tmpl->printPage();
 

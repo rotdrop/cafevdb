@@ -1,11 +1,9 @@
 <div id="controls">
 <?php
+echo CAFEVDB\Navigation::button('projects');
 echo CAFEVDB\Navigation::button('projectinstruments');
 echo CAFEVDB\Navigation::button('instruments');
 echo CAFEVDB\Navigation::button('all');
-if (isset($_['expertmode']) && $_['expertmode'] == 'on') {
-  echo CAFEVDB\Navigation::button('expert');
-}
 ?>
 <form id="personalsettings">
   <button class="settings generalsettings" title="<?php echo $l->t('Settings'); ?>"><img class="svg" src="<?php echo OCP\Util::imagePath('core', 'actions/settings.svg'); ?>" alt="<?php echo $l->t('Settings'); ?>" /></button>
@@ -13,6 +11,10 @@ if (isset($_['expertmode']) && $_['expertmode'] == 'on') {
 </div>
 <div id="appsettings" class="popup topright hidden"></div>
 <div class="cafevdb-general">
-   <?php CAFEVDB\Projects::display(); ?>
+  <div class="cafevdb-pme-header-box">
+    <div class="cafevdb-pme-header">
+      <H1>Hello World!</H1>
+    </div>
+  </div>
 </div>
 

@@ -7,6 +7,16 @@ form.cafevdb-control {
   vertical-align:middle;
 }
 
+#personalsettings {
+  margin-right: 170px;
+  float: right;
+  font-size: 12px;
+}
+
+.actions {height: 33px;	min-width: 800px;}
+.controls {min-width: 800px;}
+#controls button, #controls input { max-height: 26px; padding: 5px; }
+
 #projectlabelcontrol>input[type=button] {
   font-weight:bold;
   font-style:italic;

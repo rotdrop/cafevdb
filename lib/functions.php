@@ -109,6 +109,16 @@ class Navigation
     $form = '';
     switch ($id) {
 
+    case 'expert':
+      $form =<<<__EOT__
+<form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
+  <input type="submit" name="" value="Advanced Features" title="For people who know what they are doing."/>
+  <input type="hidden" name="Action" value="-1"/>
+  <input type="hidden" name="Template" value="expertmode"/>
+</form>
+
+__EOT__;
+      break;
     case 'projects':
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">

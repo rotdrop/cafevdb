@@ -10,13 +10,13 @@ OCP\JSON::checkAppEnabled('cafevdb');
 OCP\JSON::callCheck();
 
 // Get data
-if( isset( $_POST['expertmode2'] ) ) {
-  $expertmode2=$_POST['expertmode2'];
+if( isset( $_POST['expertmode'] ) ) {
+  $expertmode=$_POST['expertmode'];
 } else {
-  $expertmode2='off';
+  $expertmode='off';
 }
-OCP\Config::setUserValue( OCP\USER::getUser(), 'cafevdb', 'expertmode2', $expertmode2 );
-OCP\JSON::success(array('data' => array( 'message' => $l->t('Expertmode2 changed') )));
+OCP\Config::setUserValue( OCP\USER::getUser(), 'cafevdb', 'expertmode', $expertmode );
+OCP\JSON::success(array('data' => array( 'message' => $l->t('Expertmode changed') )));
 return true;
 
 ?>

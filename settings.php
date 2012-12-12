@@ -1,12 +1,11 @@
 <?php
 
-// Check if we are a user
-OCP\User::checkLoggedIn();
-
-OCP\Util::addScript( "cafevdb", "settings" );
-
 $tmpl = new OCP\Template( 'cafevdb', 'settings');
 
-$tmpl->assign('expertmode', OCP\Config::getUserValue( "expertmode", '' ));
+$expertmode = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb','expertmode','');
+
+$tmpl->assign('expertmode', $expertmode);
+
+OCP\Util::addScript( "cafevdb", "settings" );
 
 return $tmpl->printPage();
