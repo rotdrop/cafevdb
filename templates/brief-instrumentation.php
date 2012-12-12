@@ -1,5 +1,6 @@
 <div id="controls">
 <?php
+CAFEVDB\Navigation::setTranslation($l);
 $table = new CAFEVDB\BriefInstrumentation();
 echo CAFEVDB\Navigation::button('projectlabel', $table->project, $table->projectId);
 echo CAFEVDB\Navigation::button('projects');

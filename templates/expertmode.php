@@ -39,7 +39,7 @@ $buttons['example'] =
   <label for="" class="bold"><?php echo $l->t('Operation generated Response');?></label>
 <?php
   echo CAFEVDB\Navigation::button(array('only' =>
-                                        array('name' => $l->t('Clear'),
+                                        array('name' => $l->t('Clear Output'),
                                               'id' => 'clearoutput',
                                               'title' => $l->t('Remove output, if any is present.'),
                                               'class' => 'operations expert button')));

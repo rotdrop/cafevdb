@@ -101,10 +101,26 @@ document.onkeypress = stopRKey;
   }
 };
 
+class DummyTranslation
+{
+  public function t($msg) {
+    return $msg;
+  }
+};
+
 class Navigation
 {
+  private static $l = false;
+  public static function setTranslation(&$l) {
+    self::$l = $l;
+  }
   public static function button($id='projects', $project='', $projectId=-1)
   {
+    if (!self::$l) {
+      self::$l = new DummyTranslation();
+    }
+    $l = self::$l;
+
     if (is_array($id)) {
       $buttons = $id;
       $pre = $post = $between = '';
@@ -122,7 +138,7 @@ class Navigation
       }
       $html = $pre;
       foreach ($buttons as $key => $btn) {
-        $title = isset($btn['title']) ? $btn['title'] : $btn['name'];
+        $title = isset($btn['title']) ? $l->t($btn['title']) : $btn['name'];
         $html .= ''
           .'<button class="'.$btn['class'].'" title="'.$title.'"'
           .(isset($btn['id']) ? ' id="'.$btn['id'].'"' : '')
@@ -146,9 +162,11 @@ class Navigation
     switch ($id) {
 
     case 'projects':
+      $value = $l->t("View all Projects");
+      $title = $l->t("Overview over all known projects (start-page).");
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
-  <input type="submit" name="" value="View all Projects" title="Overview over all known projects (start-page)"/>
+  <input type="submit" value="$value" title="$title"/>
   <input type="hidden" name="Action" value="-1"/>
   <input type="hidden" name="Template" value="projects"/>
 </form>
@@ -157,9 +175,11 @@ __EOT__;
       break;
 
     case 'all':
+      $value = $l->t("Display all Musicians");
+      $title = $l->t("Display all musicians stored in the data-base, with detailed facilities for filtering and sorting.");
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
-  <input type="submit" name="" value="Display all Musicians" title="Display all musicians stored in the data-base, with detailed facilities for filtering and sorting."/>
+  <input type="submit" value="$value" title="$title"/>
   <input type="hidden" name="Action" value="DisplayAllMusicians"/>
   <input type="hidden" name="Template" value="all-musicians"/>
 </form>
@@ -212,9 +232,11 @@ __EOT__;
       break;
 
     case 'detailed':
+      $value = $l->t("Detailed Instrumentation");
+      $title = $l->t("Detailed display of all registered musicians for the selected project. The table will allow for modification of personal data like email, phone, address etc.");
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
-  <input type="submit" name="" value="Detailed Instrumentation" title="Detailed display of all registered musicians for the selected project. The table will allow for modification of personal data like email, phone, address etc."/>
+  <input type="submit" value="$value" title="$title"/>
   <input type="hidden" name="Action" value="DetailedInstrumentation"/>
   <input type="hidden" name="Template" value="detailed-instrumentation"/>
   <input type="hidden" name="Project" value="$project"/>
@@ -238,9 +260,11 @@ __EOT__;
       break;
 
     case 'instruments':
+      $value = $l->t("Add Instruments");
+      $title = $l->t("Display the list of instruments known by the data-base, possibly add new ones as needed.");
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
-  <input type="submit" name="" value="Add Instruments" title="Display the list of instruments known by the data-base, possibly add new ones as needed"/>
+  <input type="submit" value="$value" title="$title"/>
   <input type="hidden" name="Action" value="Instruments"/>
   <input type="hidden" name="Template" value="instruments"/>
   <input type="hidden" name="Project" value="$project"/>
@@ -251,9 +275,11 @@ __EOT__;
       break;
 
     case 'projectinstruments':
+      $value = $l->t("Instrumentation Numbers");
+      $title = $l->t("Display the desired instrumentaion numbers, i.e. how many musicians are already registered for each instrument group and how many are finally needed.");
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
-  <input type="submit" name="" value="Instrumentation Numbers" title="Display the desired instrumentaion numbers, i.e. how many musicians are already registered for each instrument group and how many are finally needed."/>
+  <input type="submit" name="" value="$value" title="$title"/>
   <input type="hidden" name="Action" value="ProjectInstruments"/>
   <input type="hidden" name="Template" value="project-instruments"/>
   <input type="hidden" name="Project" value="$project"/>
