@@ -1,20 +1,46 @@
-<div id="controls">
 <?php
-echo CAFEVDB\Navigation::button('projects');
-echo CAFEVDB\Navigation::button('projectinstruments');
-echo CAFEVDB\Navigation::button('instruments');
-echo CAFEVDB\Navigation::button('all');
+
+$buttons = array();
+$buttons['pre'] = '<div>';
+$buttons['post'] = '</div>';
+$buttons['between'] = '</div><div>';
+$buttons['makeviews'] =
+  array('name' => $l->t('Recreate All Views'),
+        'title' => $l->t('Recreate the ``Detailed Instrumentation\'\' hybrid-table for each project'),
+        'id' => 'makeviews',
+        'class' => 'operations expert button');
+$buttons['check'] =
+  array('name' => $l->t('Check Instruments'),
+        'title' => $l->t('Check whether the instrumentation numbers table and the musicians table mention the same instruments'),
+        'id' => 'checkinstruments',
+        'class' => 'operations expert button');
+$buttons['sanitize'] =
+  array('name' => $l->t('Adjust Instruments'),
+        'title' => $l->t('Make sure the instruments table contains at least any instrument played by any musician.'),
+        'id' => 'adjustinstruments',
+        'class' => 'operations expert button');
+$buttons['example'] =
+  array('name' => $l->t('Example'),
+        'title' => $l->t('Example Do-Nothing Button'),
+        'id' => 'example',
+        'class' => 'operations example button');
+//$btnstr = htmlspecialchars(CAFEVDB\Navigation::button($buttons));
+//echo $btnstr;
 ?>
-<form id="personalsettings">
-  <button class="settings generalsettings" title="<?php echo $l->t('Settings'); ?>"><img class="svg" src="<?php echo OCP\Util::imagePath('core', 'actions/settings.svg'); ?>" alt="<?php echo $l->t('Settings'); ?>" /></button>
-</form>
-</div>
-<div id="appsettings" class="popup topright hidden"></div>
-<div class="cafevdb-general">
-  <div class="cafevdb-pme-header-box">
-    <div class="cafevdb-pme-header">
-      <H1>Hello World!</H1>
-    </div>
-  </div>
+<div id="expertmode">
+  <fieldset id="expertmode" class="operations expert">
+  <strong>Advanced operations, use with care</strong><br />
+  <?php echo CAFEVDB\Navigation::button($buttons); ?>
+  </fieldset>
+  <br/>
+  <label for="" class="bold"><?php echo $l->t('Operation generated Response');?></label>
+<?php
+  echo CAFEVDB\Navigation::button(array('only' =>
+                                        array('name' => $l->t('Clear'),
+                                              'id' => 'clearoutput',
+                                              'title' => $l->t('Remove output, if any is present.'),
+                                              'class' => 'operations expert button')));
+?>
+<div class="msg"><span style="opacity:0.5"><?php echo $l->t('empty') ?></span></div>
 </div>
 

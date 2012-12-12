@@ -4,7 +4,8 @@ namespace CAFEVDB;
 
 class Admin
 {
-  public static fillInstrumentationNumbers()
+  // 
+  public static function fillInstrumentationNumbers()
   {
     Config::init();
 
@@ -23,22 +24,33 @@ class Admin
     mySQL::close($handle);
   }
 
-  public static sanitizeInstrumentsTable()
+  public static function checkInstrumentsTable()
   {
     Config::init();
 
     $handle = mySQL::connect(Config::$pmeopts);
 
-    sanitizeInstrumentsTable($handle);
+    Instruments::check($handle);
 
     mySQL::close($handle);
   }
 
-  public static recreateAllViews()
+  public static function sanitizeInstrumentsTable()
   {
     Config::init();
 
-    $handle = CAFEVDB_mySQL::connect(Config::$pmeopts);
+    $handle = mySQL::connect(Config::$pmeopts);
+
+    Instruments::sanitizeTable($handle, false);
+
+    mySQL::close($handle);
+  }
+
+  public static function recreateAllViews()
+  {
+    Config::init();
+
+    $handle = mySQL::connect(Config::$pmeopts);
 
     // Fetch the list of projects
     $query = 'SELECT `Id` FROM `Projekte` WHERE 1';
@@ -50,15 +62,17 @@ class Admin
       print '<H4>Recreating view for project '.$projectId.'</H4><BR/>';
 
       // Just diagnostic
-      Util::error("Before Create ".$projectId, false);
+      //Util::error("Before Create ".$projectId, false);
 
       Projects::createView($projectId, false, $handle);
 
       // Just diagnostic
-      Util::error("After Create ".$projectId, false);
+      //Util::error("After Create ".$projectId, false);
     }
 
     mySQL::close($handle);
+
+    print '<H4>Success</H4><BR/>';    
 
   }
 

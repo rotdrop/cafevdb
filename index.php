@@ -3,6 +3,8 @@
 // Check if we are a user
 OCP\User::checkLoggedIn();
 
+$l=OC_L10N::get('cafevdb');
+
 $expertmode = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb','expertmode','');
 
 OCP\App::setActiveNavigationEntry( 'cafevdb' );
@@ -30,6 +32,19 @@ if ($op == "Em@il") {
 $tmpl = new OCP\Template( 'cafevdb', $tmplname, 'user' );
 
 $tmpl->assign( 'expertmode', $expertmode );
+
+$buttons = array();
+$buttons['expert'] =
+  array('name' => $l->t('Expert Operations'),
+        'image' => OCP\Util::imagePath('core', 'actions/rename.svg'),
+        'class' => 'settings expert',
+        'style' => $expertmode == 'on' ? '' : 'display:none;width:0%;');
+$buttons['settings'] =
+  array('name' => $l->t('Settings'),
+        'image' => OCP\Util::imagePath('core', 'actions/settings.svg'),
+        'class' => 'settings generalsettings');
+
+$tmpl->assign('settingscontrols', $buttons);
 
 $tmpl->printPage();
 

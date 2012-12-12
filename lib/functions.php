@@ -105,20 +105,46 @@ class Navigation
 {
   public static function button($id='projects', $project='', $projectId=-1)
   {
+    if (is_array($id)) {
+      $buttons = $id;
+      $pre = $post = $between = '';
+      if (isset($buttons['pre'])) {
+        $pre = $buttons['pre'];
+        unset($buttons['pre']);
+      }
+      if (isset($buttons['post'])) {
+        $post = $buttons['post'];
+        unset($buttons['post']);
+      }
+      if (isset($buttons['between'])) {
+        $between = $buttons['between'];
+        unset($buttons['between']);
+      }
+      $html = $pre;
+      foreach ($buttons as $key => $btn) {
+        $title = isset($btn['title']) ? $btn['title'] : $btn['name'];
+        $html .= ''
+          .'<button class="'.$btn['class'].'" title="'.$title.'"'
+          .(isset($btn['id']) ? ' id="'.$btn['id'].'"' : '')
+          .(isset($btn['style']) ? ' style="'.$btn['style'].'"' : '')
+          .'>';
+        if (isset($btn['image'])) {
+          $html .= '<img class="svg" src="'.$btn['image'].'" alt="'.$btn['name'].'" />';
+        } else {
+          $html .= $btn['name'];
+        }
+        $html .= '</button>
+';
+        $html .= $between;
+      }
+      $html .= $post;
+      return $html;
+    }
+
     $controlid = $id.'control';
     $form = '';
     switch ($id) {
 
-    case 'expert':
-      $form =<<<__EOT__
-<form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
-  <input type="submit" name="" value="Advanced Features" title="For people who know what they are doing."/>
-  <input type="hidden" name="Action" value="-1"/>
-  <input type="hidden" name="Template" value="expertmode"/>
-</form>
-
-__EOT__;
-      break;
     case 'projects':
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">

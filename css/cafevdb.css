@@ -13,6 +13,15 @@ form.cafevdb-control {
   font-size: 12px;
 }
 
+#expertcontrol { 
+  margin-right: 170px;
+  float: right;
+  font-size: 12px;
+}
+
+#expertmode>input[type=button] {
+}
+
 .actions {height: 33px;	min-width: 800px;}
 .controls {min-width: 800px;}
 #controls button, #controls input { max-height: 26px; padding: 5px; }

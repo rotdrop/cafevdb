@@ -291,44 +291,27 @@ __EOT__;
     $InstrumentsSet  = mySQL::multiKeys('Musiker', 'Instrumente', $handle);
     $InstrumentsEnum = mySQL::multiKeys('Besetzungen', 'Instrument', $handle);
 
-  
-    sort($InstrumentsSet);
-    sort($InstrumentsEnum);
+    $MusDiff = array_diff($InstrumentsEnum, $InstrumentsSet);
+    $BesDiff = array_diff($InstrumentsSet, $InstrumentsEnum);
 
-    $cnt1 = count($InstrumentsSet);
-    $cnt2 = count($InstrumentsEnum);
-
-    if ($cnt1 != $cnt2) {
+    if (count($MusDiff) != 0) {
       echo "<P><HR/>
-<H4>Anzahl der Instrumente in \"Musiker\" und \"Besetzungen\" stimmen nicht &uuml;berein!</H4>
-<HR/><P>
+<H4>\"Besetzungs\"-Instrumente, die von keinem Musiker gespielt werden:</H4>
 ";
     }
 
-    $cntmax = max($cnt1,$cnt2);
-    $cntmin = min($cnt1,$cnt2);
-
-    for ($i = 0; $i < $cntmin; $i++) {
-      if ($InstrumentsSet[$i] != $InstrumentsEnum[$i]) {
-        echo "<P><HR/>
-<H4>Instrumente in \"Musiker\" und \"Besetzungen\" stimmen nicht &uuml;berein: \""
-          . $InstrumentsSet[$i] . "\" != \"" . $InstrumentsEnum[$i] . "\"!</H4>
-<HR/><P>
+    if (count($BesDiff) != 0) {
+      echo "<P><HR/>
+<H4>\"Musiker\"-Instrumente, die noch nie verwendet wurden:</H4>
 ";
-      }
     }
-    $excess = $cnt1 < $cnt2 ? $InstrumentsEnum : $InstrumentsSet;
-    echo "<P><HR/>
-<H4>&Uuml;bersch&uuml;ssige Instrumente: ";
-    for (; $i < $cntmax; $i++) {
-      echo $excess[$i] . " ";
-    }
+
     echo "<HR/><P>\n";
   }
 
-  // Make sure the Instrumente table as all instruments used in the Musiker
+  // Make sure the Instrumente table has all instruments used in the Musiker
   // table. Delete everything else.
-  public static function sanitizeTable($handle) {
+  public static function sanitizeTable($handle, $deleteexcess = false) {
 
     $Instrumente = mySQL::multiKeys('Musiker', 'Instrumente', $handle);
 
@@ -339,24 +322,25 @@ __EOT__;
 
     // Now the table contains at least all instruments, now remove excess elements.
 
+    if ($deleteexcess) {
+      // Build SQL Query  
+      $query = "SELECT `Instrument` FROM `Instrumente` WHERE 1";
+      
+      // Fetch the result or die
+      $result = mySQL::query($query, $query);
 
-    // Build SQL Query  
-    $query = "SELECT `Instrument` FROM `Instrumente` WHERE 1";
-
-    // Fetch the result or die
-    $result = mySQL::query($query, $query);
-
-    $dropList = array();
-    while ($line = mySQL::fetch($result)) {
-      $tblInst = $line['Instrument'];
-      if (array_search($tblInst, $Instrumente) === false) {
-        $dropList[$tblInst] = true;
+      $dropList = array();
+      while ($line = mySQL::fetch($result)) {
+        $tblInst = $line['Instrument'];
+        if (array_search($tblInst, $Instrumente) === false) {
+          $dropList[$tblInst] = true;
+        }
       }
-    }
 
-    foreach ($dropList as $key => $value) {
-      $query = "DELETE FROM `Instrumente` WHERE `Instrument` = '$key'";
-      $result = mySQL::query($query);
+      foreach ($dropList as $key => $value) {
+        $query = "DELETE FROM `Instrumente` WHERE `Instrument` = '$key'";
+        $result = mySQL::query($query);
+      }
     }
   }
 

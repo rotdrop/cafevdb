@@ -13,7 +13,7 @@ OCP\JSON::callCheck();
 if( isset( $_POST['expertmode'] ) ) {
   $expertmode=$_POST['expertmode'];
   OCP\Config::setUserValue( OCP\USER::getUser(), 'cafevdb', 'expertmode', $expertmode );
-  OCP\JSON::success(array('data' => array( 'message' => $l->t('Expertmode changed') )));
+  OCP\JSON::success(array('data' => array( 'message' => $l->t('Expert-Mode changed') )));
   return true;
 } else {
   OCP\JSON::error(array('data' => array( 'message' => $l->t('Invalid request') )));

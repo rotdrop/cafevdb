@@ -1,23 +1,26 @@
+<div id="controls">
 <?php
 $table = new CAFEVDB\Instruments();
 $project = $table->project;
 $projectId = $table->projectId;
 if ($projectId >= 0) {
-  echo '<div id="controls">'."\n";
   echo CAFEVDB\Navigation::button('projectlabel', $project, $projectId);
   echo CAFEVDB\Navigation::button('projects');
   echo CAFEVDB\Navigation::button('projectinstruments', $project, $projectId);
   echo CAFEVDB\Navigation::button('brief', $project, $projectId);
   echo CAFEVDB\Navigation::button('detailed', $project, $projectId);
-  echo '</div>'."\n";
 } else {
-  echo '<div id="controls">'."\n";
   echo CAFEVDB\Navigation::button('projects');
   echo CAFEVDB\Navigation::button('projectinstruments');
   echo CAFEVDB\Navigation::button('all');
-  echo '</div>'."\n";
 }
 ?>
+<form id="personalsettings">
+  <?php echo CAFEVDB\Navigation::button($_['settingscontrols']); ?>
+</form>
+</div>
 <div class="cafevdb-general">
    <?php $table->display(); ?>
 </div>
+<div id="dialog_holder"></div>
+<div id="appsettings" class="popup topright hidden"></div>
