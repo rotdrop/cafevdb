@@ -10,12 +10,14 @@ OCP\JSON::checkAppEnabled('cafevdb');
 OCP\JSON::callCheck();
 
 // Get data
-if( isset( $_POST['expoertmode'] ) ) {
-	$expertmode=$_POST['expertmode'];
-	OCP\Config::setUserValue( OCP\USER::getUser(), 'cafevdb', 'expertmode', $expertmode );
-	OCP\JSON::success(array('data' => array( 'message' => $l->t('Expertmode changed') )));
+if( isset( $_POST['expertmode'] ) ) {
+  $expertmode=$_POST['expertmode'];
+  OCP\Config::setUserValue( OCP\USER::getUser(), 'cafevdb', 'expertmode', $expertmode );
+  OCP\JSON::success(array('data' => array( 'message' => $l->t('Expertmode changed') )));
+  return true;
 } else {
-	OCP\JSON::error(array('data' => array( 'message' => $l->t('Invalid request') )));
+  OCP\JSON::error(array('data' => array( 'message' => $l->t('Invalid request') )));
+  return false;
 }
 
 ?>
