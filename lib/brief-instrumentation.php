@@ -29,7 +29,7 @@ class BriefInstrumentation
     <H4>
       <ul>
         <li><span style="color:red">Musiker hinzufügen</span>
-          <span style="font-style:italic">"Add more Musicians to $project"</span>
+          <span style="font-style:italic">"siehe oben"</span>
         <li><span style="color:red">Musiker entfernen</span>
             <span style="font-style:italic">diese Tabelle</span>
             ("x"-Button)
@@ -37,7 +37,7 @@ class BriefInstrumentation
           <span style="font-style:italic">diese Tabelle</span>
           (Projekt-Instrument, Stimmführer, Projekt-Bemerkungen etc.)
         <li><span style="color:red">Personen-Daten</span>
-          <span style="font-style:italic">"Detailed Display for $project"</span>
+          <span style="font-style:italic">"Detaillierte Besetzung (s.o.)"</span>
           (Adresse, Email, Name etc.)
       </ul>
     </H4>
