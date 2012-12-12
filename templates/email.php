@@ -23,7 +23,7 @@ if ($projectId >= 0) {
 </form>
 </div>
 <div class="cafevdb-general">
-   <?php CAFEVDB\Email::display(); ?>
+   <?php CAFEVDB\Email::display(OCP\USER::getUser()); ?>
 </div>
 <div id="dialog_holder"></div>
 <div id="appsettings" class="popup topright hidden"></div>

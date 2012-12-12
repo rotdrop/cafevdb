@@ -123,9 +123,7 @@ namespace CAFEVDB {
     
       $this->addPersistentCGI('ProjectId', $this->projectId);
       $this->addPersistentCGI('Project', $this->project);
-      $this->addPersistentCGI('Template',
-                              $this->projectId >= 0
-                              ? 'project-email' : 'email');
+      $this->addPersistentCGI('Template', 'email');
       $this->addPersistentCGI($this->emailKey, $this->EmailRecs);
     }
 
@@ -138,9 +136,7 @@ namespace CAFEVDB {
     
       $this->addPersistentCGI('ProjectId', $this->projectId, $form);
       $this->addPersistentCGI('Project', $this->project, $form);
-      $this->addPersistentCGI('Template',
-                              $this->projectId >= 0
-                              ? 'project-email' : 'email', $form);
+      $this->addPersistentCGI('Template', 'email', $form);
       $this->addPersistentCGI($this->emailKey, $this->EmailRecs, $form);
 
       $value = $this->form->getValue();
@@ -278,8 +274,8 @@ namespace CAFEVDB {
        */
       /* Selected recipient */
       $this->form->addDataSource(
-                                 (new \HTML_QuickForm2_DataSource_Array(
-                                                                       array('SelectedMusicians' => $this->EmailRecs))));
+        (new \HTML_QuickForm2_DataSource_Array(
+          array('SelectedMusicians' => $this->EmailRecs))));
 
       $this->form->setAttribute('class', 'cafevdb-email-filter');
 
@@ -295,36 +291,36 @@ namespace CAFEVDB {
       $this->selectFieldSet->setAttribute('class','filter');
 
       $this->filterSelect = $this->selectFieldSet->addElement(
-                                                              'select', 'InstrumentenFilter',
-                                                              array('multiple' => 'multiple', 'size' => 15, 'class' => 'filter'),
-                                                              array('options' => $this->instruments, 'label' => 'Instrumenten-Filter'));
+        'select', 'InstrumentenFilter',
+        array('multiple' => 'multiple', 'size' => 15, 'class' => 'filter'),
+        array('options' => $this->instruments, 'label' => 'Instrumenten-Filter'));
 
       if (!Util::cgiValue('InstrumentenFilter',false)) {
         $this->filterSelect->setValue(array(0));
       }
 
       $this->dualSelect = $this->selectFieldSet->addElement(
-                                                            'dualselect', 'SelectedMusicians',
-                                                            array('size' => 15, 'class' => 'dualselect'),
-                                                            array('options'    => $this->EMailsDpy,
-                                                                  'keepSorted' => true,
-                                                                  'from_to'    => array(
-                                                                                        'content' => ' &gt;&gt; ',
-                                                                                        'attributes' => array('class' => 'transfer')),
-                                                                  'to_from'    => array(
-                                                                                        'content' => ' &lt&lt; ',
-                                                                                        'attributes' => array('class' => 'transfer'))
-                                                                  )
-                                                            )->setLabel(array(
-                                                                              'Email Adressaten',
-                                                                              'übrige',
-                                                                              'ausgewählte'
-                                                                              ));
+        'dualselect', 'SelectedMusicians',
+        array('size' => 15, 'class' => 'dualselect'),
+        array('options'    => $this->EMailsDpy,
+              'keepSorted' => true,
+              'from_to'    => array(
+                'content' => ' &gt;&gt; ',
+                'attributes' => array('class' => 'transfer')),
+              'to_from'    => array(
+                'content' => ' &lt&lt; ',
+                'attributes' => array('class' => 'transfer'))
+          )
+        )->setLabel(array(
+                      'Email Adressaten',
+                      'übrige',
+                      'ausgewählte'
+                      ));
 
       if (false) {
         $this->dualSelect->addRule(
-                                   'required', 'Bitte wenigstens einen Adressaten wählen', 1,
-                                   \HTML_QuickForm2_Rule::ONBLUR_CLIENT_SERVER);
+          'required', 'Bitte wenigstens einen Adressaten wählen', 1,
+          \HTML_QuickForm2_Rule::ONBLUR_CLIENT_SERVER);
       }
 
       /******** Submit buttons follow *******/
@@ -333,20 +329,20 @@ namespace CAFEVDB {
       $this->submitFieldSet->setAttribute('class','submit');
 
       $this->freezeButton = $this->submitFieldSet->addElement(
-                                                              'submit', 'writeMail',
-                                                              array('value' => 'Email Verfassen',
-                                                                    'title' => 'Beendet die Musiker-Auswahl
+        'submit', 'writeMail',
+        array('value' => 'Email Verfassen',
+              'title' => 'Beendet die Musiker-Auswahl
 und aktiviert den Editor'));
 
       $this->submitButton = $this->submitFieldSet->addElement(
-                                                              'submit', 'filterSubmit',
-                                                              array('value' => 'Filter Anwenden',
-                                                                    'title' => 'Instrumenten-Filter anwenden.'));
+        'submit', 'filterSubmit',
+        array('value' => 'Filter Anwenden',
+              'title' => 'Instrumenten-Filter anwenden.'));
 
       $this->resetButton = $this->submitFieldSet->addElement(
-                                                             'submit', 'filterReset',
-                                                             array('value' => 'Filter Zurücksetzen',
-                                                                   'title' => 'Von vorne mit den
+        'submit', 'filterReset',
+        array('value' => 'Filter Zurücksetzen',
+              'title' => 'Von vorne mit den
 Anfangswerten.'));
 
       /********** Add a pseudo-form for people without email *************/
@@ -492,7 +488,7 @@ Anfangswerten.'));
    */
   class Email
   {
-    public static function display()
+    public static function display($user)
     {
       Config::init();
 
@@ -520,10 +516,8 @@ Anfangswerten.'));
 
       if ($constructionMode) {
         $CAFEVCatchAllEmail = 'DEVELOPER@his.server.eu';
-        $CAFEVVorstandGroup = 'DEVELOPER@his.server.eu';
       } else {
         $CAFEVCatchAllEmail = 'orchestra@example.eu';
-        $CAFEVVorstandGroup = 'MailingList@groupserver.eu';
       }
       if ($projectId < 0 || $project == '') {
         $MailTag = '[CAF-Musiker]';
@@ -532,12 +526,12 @@ Anfangswerten.'));
       }
 
       $emailPosts = array(
-                          'txtSubject' => '',
-                          'txtCC' => '',
-                          'txtBCC' => '',
-                          'txtFromName' => 'Our Ensemble e.V..',
-                          'txtDescription' =>
-                          'Liebe Musiker,
+        'txtSubject' => '',
+        'txtCC' => '',
+        'txtBCC' => '',
+        'txtFromName' => 'Our Ensemble e.V..',
+        'txtDescription' =>
+        'Liebe Musiker,
 <p>
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 <p>
@@ -599,25 +593,23 @@ Störung.');
 
       $string =<<< __EOT__
         <H4>
-        Der Editor und die Adress-Auswahl sind wechselseitig ausgeschaltet.
-        Um Adressen oder Text- nachzubearbeiten, auf den entsprechenden
-        Button klicken; man kann mehrfach hin- und herwechseln, ohne dass
-                          die jeweiligen Eingaben verloren gehen. Der Instrumentenfilter ist
-                          "destruktiv": das Abwählen des Filters restauriert nicht die
-                          vorherige Adressenauswahl. Der "Abbrechen"-Button unter dem Editor
-                          setzt alles wieder auf die Default-Einstellungen.
-                          </H4>
-                          <P>
-                          ReturnTo: und Sender: sind
-                          <TT>@OUREMAIL@</TT>. Die Adressen
-                          <TT>@OUREMAIL@</TT>  und
-                          <TT>@OURGROUP@</TT> erhalten je eine Kopie um Missbrauch durch "Einbrecher" 
-                          abzufangen. Außerdem werden die Emails in der Datenbank gespeichert.
+Der Editor und die Adress-Auswahl sind wechselseitig ausgeschaltet.
+Um Adressen oder Text- nachzubearbeiten, auf den entsprechenden
+Button klicken; man kann mehrfach hin- und herwechseln, ohne dass
+die jeweiligen Eingaben verloren gehen. Der Instrumentenfilter ist
+"destruktiv": das Abwählen des Filters restauriert nicht die
+vorherige Adressenauswahl. Der "Abbrechen"-Button unter dem Editor
+setzt alles wieder auf die Default-Einstellungen.
+</H4>
+<P>
+ReturnTo: und Sender: sind
+<TT>@OUREMAIL@</TT>. Die Adresse
+<TT>@OUREMAIL@</TT> erhälte eine Kopie um Missbrauch durch "Einbrecher" 
+abzufangen. Außerdem werden die Emails in der Datenbank gespeichert.
 __EOT__;
 
       // replace some tokens.
       $string = str_replace('@OUREMAIL@', $CAFEVCatchAllEmail, $string);
-      $string = str_replace('@OURGROUP@', $CAFEVVorstandGroup, $string);
 
       echo $string;
 
@@ -884,11 +876,11 @@ Leider m&uuml;ssen etwaige Attachments jetzt noch einmal angegeben werden.
       }
 
       $strMessage = nl2br($strMsg);
-      $h2t = new html2text($strMessage);
+      $h2t = new \html2text($strMessage);
       $h2t->set_encoding('utf-8');
       $strTextMessage = $h2t->get_text();
 
-      $mail = new PHPMailer();
+      $mail = new \PHPMailer();
       $mail->CharSet = 'utf-8';
       $mail->SingleTo = false;
 
@@ -907,7 +899,7 @@ Leider m&uuml;ssen etwaige Attachments jetzt noch einmal angegeben werden.
 
       $mail->IsHTML();
 
-      $DataValid = EmailSetFrom($mail,$strSenderEmail,$strSender)
+      $DataValid = self::setFrom($mail,$strSenderEmail,$strSender)
         && $DataValid;
       $DataValid = self::addReplyTo($mail,$strSenderEmail,$strSender)
         && $DataValid;
@@ -938,10 +930,7 @@ Leider m&uuml;ssen etwaige Attachments jetzt noch einmal angegeben werden.
 
       // Always drop a copy locally and to the mailing list, for
       // archiving purposes and to catch illegal usage.
-      $DataValid = self::addCC($mail, $CAFEVCatchAllEmail, $strSender)
-        && $DataValid;
-      $DataValid =
-        self::addCC($mail, $CAFEVVorstandGroup, 'CAFEV Mail Form')
+      $DataValid = self::addAddress($mail, $CAFEVCatchAllEmail, $strSender)
         && $DataValid;
 
       // If we have further Cc's, then add them also
@@ -950,7 +939,7 @@ Leider m&uuml;ssen etwaige Attachments jetzt noch einmal angegeben werden.
         // names and email addresses.
   
         $arrayCC = parseEmailListToArray($strCC);
-        if (CAFEVdebugMode()) {
+        if (Util::debugMode()) {
           echo "<PRE>\n";
           print_r($arrayCC);
           echo "</PRE>\n";
@@ -972,7 +961,7 @@ Leider m&uuml;ssen etwaige Attachments jetzt noch einmal angegeben werden.
         // names and email addresses.
   
         $arrayBCC = parseEmailListToArray($strBCC);
-        if (CAFEVdebugMode()) {
+        if (Util::debugMode()) {
           echo "<PRE>\n";
           print_r($arrayBCC);
           echo "</PRE>\n";
@@ -992,7 +981,7 @@ Leider m&uuml;ssen etwaige Attachments jetzt noch einmal angegeben werden.
       if ($DataValid) {
   
         foreach ($_FILES as $key => $value) {
-          if (CAFEVdebugMode()) {
+          if (Util::debugMode()) {
             echo "<PRE>\n";
             print_r($value);
             echo "</PRE>\n";
@@ -1049,23 +1038,23 @@ Unfortunately, attachments (if any) have to be specified again.
         $logquery = "INSERT INTO `SentEmail`
 (`user`,`host`,`BulkRecipients`,`MD5BulkRecipients`,`Cc`,`Bcc`,`Subject`,`HtmlBody`,`MD5Text`";
         $idx = 1;
+
         foreach ($attachLog as $pairs) {
           $logquery .= ",`Attachment".$idx."`,`MD5Attachment".$idx."`";
         }
         $logquery .= ') VALUES (';
-        $logquery .= "'".$_SERVER['REMOTE_USER']."','".$_SERVER['REMOTE_ADDR']."'";
-        $logquery .= sprintf(",'%s','%s'",
-                             mysql_real_escape_string($bulkRecipients, $handle),
-                             mysql_real_escape_string($bulkMD5, $handle),
-                             mysql_real_escape_string($strCC, $handle),
-                             mysql_real_escape_string($strBCC, $handle),
-                             mysql_real_escape_string($strSubject, $handle),
-                             mysql_real_escape_string($strMessage, $handle),
-                             mysql_real_escape_string($textMD5, $handle));
+        $logquery .= "'".$user."','".$_SERVER['REMOTE_ADDR']."'";
+        $logquery .= ",'".mysql_real_escape_string($bulkRecipients,$handle)."'";
+        $logquery .= ",'".mysql_real_escape_string($bulkMD5,$handle)."'";
+        $logquery .= ",'".mysql_real_escape_string($strCC,$handle)."'";
+        $logquery .= ",'".mysql_real_escape_string($strBCC,$handle)."'";
+        $logquery .= ",'".mysql_real_escape_string($strSubject,$handle)."'";
+        $logquery .= ",'".mysql_real_escape_string($strMessage,$handle)."'";
+        $logquery .= ",'".mysql_real_escape_string($textMD5,$handle)."'";
         foreach ($attachLog as $pairs) {
           $logquery .=
-            ",'".mysql_real_escape_string($pairs['name'], $handle)."'".
-            ",'".mysql_real_escape_string($pairs['md5'], $handle)."'";
+            ",'".mysql_real_escape_string($pairs['name'],$handle)."'".
+            ",'".mysql_real_escape_string($pairs['md5'],$handle)."'";
         }
         $logquery .= ")";
   
@@ -1092,7 +1081,7 @@ recipients has already been sent on the following date'.($cnt > 1 ? 's' : '').':
 Refusing to send duplicate bulk emails.
 </H3><HR/>
 ';
-          die();
+          return false;
         }
 
         try {
@@ -1142,7 +1131,7 @@ __EOT__;
 
           ini_set('error_reporting',ini_get('error_reporting') & ~E_STRICT);
 
-          $imap = new Net_IMAP($mail->Host, 993, false, 'UTF-8');
+          $imap = new \Net_IMAP($mail->Host, 993, false, 'UTF-8');
           if (($ret = $imap->login($mail->Username, $mail->Password)) !== true) {
             CAFEVerror($ret->toString(), false);
             $imap->disconnect();
@@ -1156,7 +1145,7 @@ __EOT__;
           $imap->disconnect();
         }
 
-        if (true || CAFEVdebugMode()) {
+        if (true || Util::debugMode()) {
           echo '<HR/><H4>Gesendete Email</H4>';
           echo "<PRE>\n";
           echo htmlspecialchars($mail->GetSentMIMEMessage())."\n";
@@ -1184,14 +1173,14 @@ __EOT__;
         if (strpos($addr, '<')) {
           preg_match('!(.*?)\s?<\s*(.*?)\s*>!', $addr, $matches);
           $emails[] = array(
-                            'email' => $matches[2],
-                            'name' => $matches[1]
-                            );
+            'email' => $matches[2],
+            'name' => $matches[1]
+            );
         } else {
           $emails[] = array(
-                            'email' => $addr,
-                            'name' => ''
-                            );
+            'email' => $addr,
+            'name' => ''
+            );
         }
       }
 
@@ -1344,12 +1333,12 @@ __EOT__;
 
       // Display special page elements
       $opts['display'] = array(
-                               'form'  => true,
-                               'query' => true,
-                               'sort'  => true,
-                               'time'  => true,
-                               'tabs'  => true
-                               );
+        'form'  => true,
+        'query' => true,
+        'sort'  => true,
+        'time'  => true,
+        'tabs'  => true
+        );
 
       // Set default prefixes for variables
       $opts['js']['prefix']               = 'PME_js_';
@@ -1413,13 +1402,13 @@ __EOT__;
       */
 
       $opts['fdd']['Id'] = array(
-                                 'name'     => 'Id',
-                                 'select'   => 'T',
-                                 'options'  => 'LAVCPDR', // auto increment
-                                 'maxlen'   => 11,
-                                 'default'  => '0',
-                                 'sort'     => false
-                                 );
+        'name'     => 'Id',
+        'select'   => 'T',
+        'options'  => 'LAVCPDR', // auto increment
+        'maxlen'   => 11,
+        'default'  => '0',
+        'sort'     => false
+        );
 
       $opts['fdd']['Date'] = Config::$opts['calendar'];
       $opts['fdd']['Date']['name'] = 'Datum';

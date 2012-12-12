@@ -7,7 +7,7 @@ $buttons['pre'] = '<div>';
 $buttons['post'] = '</div>';
 $buttons['between'] = '</div><div>';
 $buttons['makeviews'] =
-  array('name' => $l->t('Recreate All Views'),
+  array('name' => $l->t('Recreate all Views'),
         'title' => $l->t('Recreate the ``Detailed Instrumentation\'\' hybrid-table for each project'),
         'id' => 'makeviews',
         'class' => 'operations expert button');
@@ -31,8 +31,8 @@ $buttons['example'] =
 ?>
 <div id="expertmode">
   <fieldset id="expertmode" class="operations expert">
-  <strong>Advanced operations, use with care</strong><br />
-  <input type="button" value="<?php echo $l->t('Go to phpmyadmin'); ?>" onclick="return window.open('<?php echo CAFEVDB\Config::$opts['phpmyadmin']; ?>','cafevdb@phpmyadmin')"/>
+  <strong><?php echo $l->t('Advanced operations, use with care') ?></strong><br />
+  <input type="button" value="<?php echo $l->t('Open phpmyadmin'); ?>" onclick="return window.open('<?php echo CAFEVDB\Config::$opts['phpmyadmin']; ?>','cafevdb@phpmyadmin');" title="<?php echo $l->t('Open the login-window to the data-base back-bone. Although this is ``expert mode\'\' you will fall in love with the ``export\'\' facilities of the data-base back-bone. TRY IT OUT! DO IT!'); ?>"/>
   <?php echo CAFEVDB\Navigation::button($buttons); ?>
   </fieldset>
   <br/>
