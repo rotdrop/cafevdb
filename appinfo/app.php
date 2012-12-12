@@ -21,7 +21,7 @@ OC::$CLASSPATH['phpMyEdit'] = 'apps/cafevdb/3rdparty/phpMyEdit/phpMyEdit.class.p
 OC::$CLASSPATH['html2text'] = 'apps/cafevdb/3rdparty/phpMyEdit/html2text.inc';
 
 OCP\App::registerAdmin( 'cafevdb', 'admin-settings' );
-OCP\App::registerPersonal( 'cafevdb', 'personal-settings' );
+//OCP\App::registerPersonal( 'cafevdb', 'settings' );
 
 OCP\App::addNavigationEntry( array( 
 	'id' => 'cafevdb',
