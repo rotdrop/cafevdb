@@ -188,9 +188,10 @@ __EOT__;
       break;
 
     case 'email':
+      $title = $l->t("Mass-email form, use with care. Mass-emails will be logged. Recipients will be specified by the Bcc: field in the header, so the recipients are undisclosed to each other.");
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
-  <input type="submit" name="" value="Em@il" title="Mass-email form, use with care. Mass-emails will be logged. Recipients will be specified by the Bcc: field in the header, so the recipients are undisclosed to each other."/>
+  <input type="submit" name="" value="Em@il" title="$title"/>
   <input type="hidden" name="Action" value="Email"/>
   <input type="hidden" name="Template" value="email"/>
   <input type="hidden" name="Project" value="$project"/>
@@ -201,9 +202,11 @@ __EOT__;
       break;
 
     case 'emailhistory':
+      $value = $l->t("Email History");
+      $title = $l->t("Display all emails sent by our mass-email form.");
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
-  <input type="submit" name="" value="Email History" title="Display all emails sent by our mass-email form."/>
+  <input type="submit" value="$value" title="$title"/>
   <input type="hidden" name="Action" value="Email History"/>
   <input type="hidden" name="Template" value="email-history"/>
   <input type="hidden" name="Project" value="$project"/>
@@ -218,9 +221,10 @@ __EOT__;
       $syspfx = Config::$pmeopts['cgi']['prefix']['sys'];
       $opname = $syspfx.'operation';
       $opwhat = 'View?'.$syspfx.'rec='.$projectId;
+      $title = $l->t("The currently active project.");
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
-  <input type="submit" name="" value="$project" title="The currently active project."/>
+  <input type="submit" value="$project" title="$title"/>
   <input type="hidden" name="Action" value="-1"/>
   <input type="hidden" name="Template" value="projects"/>
   <input type="hidden" name="Project" value="$project"/>
@@ -247,9 +251,11 @@ __EOT__;
       break;
 
     case 'brief':
+      $value = $l->t("Brief Instrumentation");
+      $title = $l->t("Brief display of all registered musicians for the selected project. The table will allow for modification of project specific data, like the instrument, the project-fee etc.");
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
-  <input type="submit" name="" value="Brief Instrumentation" title="Brief display of all registered musicians for the selected project. The table will allow for modification of project specific data, like the instrument, the project-fee etc."/>
+  <input type="submit" value="$value" title="$title"/>
   <input type="hidden" name="Action" value="BriefInstrumentation"/>
   <input type="hidden" name="Template" value="brief-instrumentation"/>
   <input type="hidden" name="Project" value="$project"/>
@@ -290,9 +296,11 @@ __EOT__;
       break;
 
     case 'add':
+      $value = $l->t("Add more Musicians");
+      $title = $l->t("List of all musicians NOT registered for the selected project. Only through that table a new musician can enter a project. Look for a hyper-link Add_to_PROJECT");
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
-  <input type="submit" name="" value="Add more Musicians" title="List of all musicians <b>not</b> registered for the selected project. Only through that table a new musician can enter a project. Look for a hyper-link Add_to_PROJECT"/>
+  <input type="submit" value="$value" title="$title"/>
   <input type="hidden" name="Action" value="AddMusicians"/>
   <input type="hidden" name="Template" value="add-musicians"/>
   <input type="hidden" name="Project" value="$project"/>
