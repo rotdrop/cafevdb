@@ -9,6 +9,29 @@
 OCP\User::checkAdminUser();
 OCP\JSON::callCheck();
 
-OCP\Config::setSystemValue( 'dbserver', $_POST['dbserver'] );
+if (isset($_POST['CAFEVdbserver'])) {
+  $value = $_POST['CAFEVdbserver'];
+  OCP\Config::setSystemValue( 'CAFEVdbserver', $value);
+  echo "dbserver: $value";
+  return;
+}
+if (isset($_POST['CAFEVdbname'])) {
+  $value = $_POST['CAFEVdbname'];
+  OCP\Config::setSystemValue( 'CAFEVdbname', $value);
+  echo "dbname: $value";
+  return;
+}
+if (isset($_POST['CAFEVdbuser'])) {
+  $value = $_POST['CAFEVdbuser'];
+  OCP\Config::setSystemValue( 'CAFEVdbuser', $value);
+  echo "dbuser: $value";
+  return;
+}
+if (isset($_POST['CAFEVdbpasswd'])) {
+  $value = $_POST['CAFEVdbpasswd'];
+  OCP\Config::setSystemValue( 'CAFEVdbpasswd', $value);
+  echo "dbpasswd";
+  return;
+}
 
-echo 'true';
+echo 'false';
