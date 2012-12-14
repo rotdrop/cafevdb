@@ -23,6 +23,7 @@ $tmpl->assign('encryptionkey', $encrkey);
 $tmpl->assign('exampletext', $exampletext);
 $tmpl->assign( 'jsscript', $jsscript );
 
+OCP\Util::addStyle('cafevdb', 'cafevdb');
 OCP\Util::addScript( "cafevdb", "settings" );
 
 return $tmpl->printPage();

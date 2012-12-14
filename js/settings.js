@@ -35,6 +35,36 @@ $(document).ready(function(){
         return false;
     });
 
+    // 'show password' checkbox
+    $('#encryptionkey').showPassword();
+    $("#cafevdbkey>#button").click( function(){
+        // We allow empty keys, meaning no encryption
+        if (true || $('#dbkey1').val() != '' && $('#encryptionkey').val() != '') {
+            // Serialize the data
+            var post = $( "#encryptionkey" ).serialize();
+            $('#cafevdbkey>#changed').hide();
+            $('#cafevdbkey>#error').hide();
+            // Ajax foo
+            $.post( OC.filePath('cafevdb', 'ajax/settings', 'encryptionkey.php'), post, function(data){
+                if( data.status == "success" ){
+                    $('#dbkey1').val('');
+                    $('#encryptionkey').val('');
+                    $('#cafevdbkey>#changed').show();
+                }
+                else{
+                    $('#cafevdbkey>#error').html( data.data.message );
+                    $('#cafevdbkey>#error').show();
+                }
+            });
+            return false;
+        } else {
+            $('#cafevdbkey>#changed').hide();
+            $('#cafevdbkey>#error').show();
+            return false;
+        }
+
+    });
+
     $('#exampletext').change(function(event){
 	event.preventDefault();
 	var post = $( "#exampletext" ).serialize();

@@ -3,7 +3,8 @@ $(document).ready(function(){
     // 'show password' checkbox
     $('#CAFEVDBkey').showPassword();
     $("#cafevdbkey>#button").click( function(){
-        if ($('#dbkey1').val() != '' && $('#CAFEVDBkey').val() != '') {
+        // We allow empty keys, meaning no encryption
+        if (true || $('#dbkey1').val() != '' && $('#CAFEVDBkey').val() != '') {
             // Serialize the data
             var post = $( "#CAFEVDBkey" ).serialize();
             $('#cafevdbkey>#changed').hide();
