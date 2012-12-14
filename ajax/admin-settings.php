@@ -9,6 +9,12 @@
 OCP\User::checkAdminUser();
 OCP\JSON::callCheck();
 
+if (isset($_POST['CAFEVgroup'])) {
+  $value = $_POST['CAFEVgroup'];
+  OCP\Config::setSystemValue( 'CAFEVgroup', $value);
+  echo "group: $value";
+  return;
+}
 if (isset($_POST['CAFEVdbserver'])) {
   $value = $_POST['CAFEVdbserver'];
   OCP\Config::setSystemValue( 'CAFEVdbserver', $value);

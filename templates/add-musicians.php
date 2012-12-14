@@ -1,3 +1,6 @@
+<script type="text/javascript">
+  <?php echo $_['jsscript']; ?>
+</script>
 <div id="controls">
 <?php $table = new CAFEVDB\Musicians(true);
 CAFEVDB\Navigation::setTranslation($l);

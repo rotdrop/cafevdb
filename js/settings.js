@@ -1,4 +1,14 @@
 $(document).ready(function(){
+
+    $('button').tipsy({gravity:'ne', fade:true});
+    $('input').tipsy({gravity:'ne', fade:true});
+    $('label').tipsy({gravity:'ne', fade:true});
+
+    if (toolTips) {
+        $.fn.tipsy.enable();
+    } else {
+        $.fn.tipsy.disable();
+    }
     
     $('#expertmode').change(function(event){
 	event.preventDefault();
@@ -7,17 +17,20 @@ $(document).ready(function(){
         if ($('#expertmode').attr('checked')) {
 	    $('#expertbutton').show();
 	    $('#expertbutton').css('float','left');
-	    // $('#settingsbutton').hide();
-	    // $('#expertbutton').css('display','inherit');
-	    // $('#expertbutton').css('width','auto');
-	    // $('#expertbutton').css('font-size','12px');
-	    // $('#expertbutton').css('float','right');
-	    // $('#settingsbutton').css('display','inherit');
-	    // $('#settingsbutton').css('width','auto');
-	    // $('#settingsbutton').css('font-size','12px');
-	    // $('#settingsbutton').css('float','right');
         } else {
 	    $('#expertbutton').css('display','none');
+        }
+        return false;
+    });
+
+    $('#tooltips').change(function(event){
+	event.preventDefault();
+	var post = $( "#tooltips" ).serialize();
+	$.post( OC.filePath('cafevdb', 'ajax/settings', 'tooltips.php') , post, function(data){return;});
+        if ($('#tooltips').attr('checked')) {
+            $.fn.tipsy.enable();
+        } else {
+            $.fn.tipsy.disable();
         }
         return false;
     });

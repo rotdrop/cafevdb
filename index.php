@@ -3,9 +3,28 @@
 // Check if we are a user
 OCP\User::checkLoggedIn();
 
+$group = OCP\Config::getSystemValue( "CAFEVgroup", '' );
+$user  = OCP\USER::getUser();
+
+if (!OC_Group::inGroup($user, $group)) {
+  header( 'Location: '.OC_Helper::linkToAbsolute( '', 'index.php', array('redirect_url' => $_SERVER["REQUEST_URI"])));
+  exit();
+}
+
 $l=OC_L10N::get('cafevdb');
 
 $expertmode = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb','expertmode','');
+$tooltips = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb','tooltips','');
+
+$jsscript = 'var toolTips = '.($tooltips == 'on' ? 'true' : 'false').';
+';
+$jsscript .=<<<__EOT__
+if (toolTips) {
+  \$.fn.tipsy.disable();
+} else {
+  \$.fn.tipsy.disable();
+}
+__EOT__;
 
 OCP\App::setActiveNavigationEntry( 'cafevdb' );
 
@@ -32,16 +51,22 @@ if ($op == "Em@il") {
 $tmpl = new OCP\Template( 'cafevdb', $tmplname, 'user' );
 
 $tmpl->assign( 'expertmode', $expertmode );
+$tmpl->assign( 'tooltips', $tooltips );
+$tmpl->assign( 'jsscript', $jsscript );
 
 $buttons = array();
 $buttons['expert'] =
-  array('name' => $l->t('Expert Operations'),
+  array('name' => 'Expert Operations',
+        'title' => 'Expert Operations like recreating views etc.',
         'image' => OCP\Util::imagePath('core', 'actions/rename.svg'),
         'class' => 'settings expert',
-        'id' => 'expertbutton',
-        'style' => $expertmode == 'on' ? '' : 'display:none;');
+        'id' => 'expertbutton');
+if ($expertmode != 'on') {
+  $buttons['expert']['style'] = 'display:none;';
+}
 $buttons['settings'] =
-  array('name' => $l->t('Settings'),
+  array('name' => 'Settings',
+        'title' => 'Personal Settings.',
         'image' => OCP\Util::imagePath('core', 'actions/settings.svg'),
         'class' => 'settings generalsettings',
         'id' => 'settingsbutton');

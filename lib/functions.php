@@ -138,16 +138,17 @@ class Navigation
       }
       $html = $pre;
       foreach ($buttons as $key => $btn) {
-        $title = isset($btn['title']) ? $l->t($btn['title']) : $btn['name'];
+        $name  = $l->t($btn['name']);
+        $title = isset($btn['title']) ? $l->t($btn['title']) : $name;
         $html .= ''
           .'<button class="'.$btn['class'].'" title="'.$title.'"'
           .(isset($btn['id']) ? ' id="'.$btn['id'].'"' : '')
           .(isset($btn['style']) ? ' style="'.$btn['style'].'"' : '')
           .'>';
         if (isset($btn['image'])) {
-          $html .= '<img class="svg" src="'.$btn['image'].'" alt="'.$btn['name'].'" />';
+          $html .= '<img class="svg" src="'.$btn['image'].'" alt="'.$name.'" />';
         } else {
-          $html .= $btn['name'];
+          $html .= $name;
         }
         $html .= '</button>
 ';

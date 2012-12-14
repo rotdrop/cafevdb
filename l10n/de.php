@@ -18,10 +18,14 @@ $TRANSLATIONS = array(
   "Check Instruments" => "Instrumenten-Konsistenztest",
   "Check whether the instrumentation numbers table and the musicians table mention the same instruments" => "Testen, ob die in den verschiedenen Tabellen der Datenbank verwendeten Instrumente auch tatsächlich in allen Tabellen angelegt sind.",
   "Example Text" => "Nur ein Beispiel ...",
-  "Expert Mode" => "Experten Modus",
+  "Expert-Mode" => "Experten Modus",
   "Show a second button which leads to a dialog with ``advanced'' settings" => "Blendet einen weiteren ``Button'' ein, der zu einem Experten-Dialog hinleitet",
+  "Personal Settings." => "Persönliche Einstellungen.",
+  "Tool-Tips" => "Ballon Hilfe",
+  "Control the display of tooltips. Warning: this works globally for all OwnCloud applications." => "Steuert die Anzeige von Tool-Tips. Achtung: die Einstellung gilt dann für all OwnCloud-Apps.",
   "Settings" => "Einstellungen",
-  "Expert Operations" => "A C H T U N G !
+  "Expert Operations" => "Experten-Menü",
+  "Expert Operations like recreating views etc." => "A C H T U N G !
 	K O M B J U D E R - R A U M
 
 Dieser Raum is voll bis unner de Deck

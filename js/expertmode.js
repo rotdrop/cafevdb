@@ -1,5 +1,15 @@
 $(document).ready(function(){
-    
+
+    $('button').tipsy({gravity:'ne', fade:true});
+    $('input').tipsy({gravity:'ne', fade:true});
+    $('label').tipsy({gravity:'ne', fade:true});
+
+    if (toolTips) {
+        $.fn.tipsy.enable();
+    } else {
+        $.fn.tipsy.disable();
+    }
+
     $('#makeviews').click(function(){
         var post  = $( '#makeviews' ).serialize();
         $.post( OC.filePath('cafevdb', 'ajax/expertmode', 'makeviews.php'), post, function(data){

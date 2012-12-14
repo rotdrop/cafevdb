@@ -1,3 +1,6 @@
+<script type="text/javascript">
+  <?php echo $_['jsscript']; ?>
+</script>
 <?php
 
 CAFEVDB\Config::init();
@@ -7,23 +10,23 @@ $buttons['pre'] = '<div>';
 $buttons['post'] = '</div>';
 $buttons['between'] = '</div><div>';
 $buttons['makeviews'] =
-  array('name' => $l->t('Recreate all Views'),
-        'title' => $l->t('Recreate the ``Detailed Instrumentation\'\' hybrid-table for each project'),
+  array('name' => 'Recreate all Views',
+        'title' => 'Recreate the ``Detailed Instrumentation\'\' hybrid-table for each project',
         'id' => 'makeviews',
         'class' => 'operations expert button');
 $buttons['check'] =
-  array('name' => $l->t('Check Instruments'),
-        'title' => $l->t('Check whether the instrumentation numbers table and the musicians table mention the same instruments'),
+  array('name' => 'Check Instruments',
+        'title' => 'Check whether the instrumentation numbers table and the musicians table mention the same instruments',
         'id' => 'checkinstruments',
         'class' => 'operations expert button');
 $buttons['sanitize'] =
-  array('name' => $l->t('Adjust Instruments'),
-        'title' => $l->t('Make sure the instruments table contains at least any instrument played by any musician.'),
+  array('name' => 'Adjust Instruments',
+        'title' => 'Make sure the instruments table contains at least any instrument played by any musician.',
         'id' => 'adjustinstruments',
         'class' => 'operations expert button');
 $buttons['example'] =
-  array('name' => $l->t('Example'),
-        'title' => $l->t('Example Do-Nothing Button'),
+  array('name' => 'Example',
+        'title' => 'Example Do-Nothing Button',
         'id' => 'example',
         'class' => 'operations example button');
 //$btnstr = htmlspecialchars(CAFEVDB\Navigation::button($buttons));
@@ -46,4 +49,3 @@ $buttons['example'] =
 ?>
 <div class="msg"><span style="opacity:0.5"><?php echo $l->t('empty') ?></span></div>
 </div>
-
