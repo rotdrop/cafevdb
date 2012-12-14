@@ -1,6 +1,14 @@
 <?php
 $TRANSLATIONS = array(
+  'User Group' => "Benutzer-Gruppe",
+  'Database Server' => 'Datenbank-Server',
+  'Database Name' => 'Datenbank-Name',
+  'Database User' => 'Datenbank-Benutzer',
+  'Database Password' => 'Datenbank-Paßwort',
   "Example" => "Beispiel",
+  'Encryption' => 'Verschlüsselung',
+  'DB Encryption Key' => 'Datenbank Schlüssel',
+  'De-/Encryption key for the data-base, leave empty if the data-base is not encrypted.' => 'Schlüssel für die Projekt- und Musiker-Datenbank. Leer lassen, falls die gar nicht verschlüsselt ist!.',
   "Advanced operations, use with care" => "Experten-Operationen",
   "Open phpmyadmin" => "phpMyAdmin (neues Fenster)",
   "Open the login-window to the data-base back-bone. Although this is ``expert mode'' you will fall in love with the ``export'' facilities of the data-base back-bone. TRY IT OUT! DO IT!" => "Login-Fenster zum Datenbank-Backend öffnen. Dieser Dialog ist zwar mit ``Experten-Operationen'' betietelt, aber Sie werden dennoch die ``Export''-Funktionen des Datenbank-Backends schätzen. Versuchen Sie es doch einmal!",
@@ -58,5 +66,13 @@ Aber bitte einfach nicht abschrecken lassen ...",
   "Display all emails sent by our mass-email form." => "Zeigt alle über unser unsägliches Massen-Mail gespamten Emails an. Insebesondere werden hier auch die Bcc: Empfänger gespeichert.",
   "" => "",
 );
+
+/* 
+ * Local Variables: ***
+ * c-file-style: "k&r" ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */
+
 ?>
 

@@ -4,6 +4,7 @@ $tmpl = new OCP\Template( 'cafevdb', 'settings');
 
 $expertmode  = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb','expertmode','');
 $tooltips    = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb','tooltips','');
+$encrkey     = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb','encryptionkey','');
 $exampletext = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb','exampletext','');
 
 $jsscript = 'var toolTips = '.($tooltips == 'on' ? 'true' : 'false').';
@@ -18,6 +19,7 @@ __EOT__;
 
 $tmpl->assign('expertmode', $expertmode);
 $tmpl->assign('tooltips', $tooltips);
+$tmpl->assign('encryptionkey', $encrkey);
 $tmpl->assign('exampletext', $exampletext);
 $tmpl->assign( 'jsscript', $jsscript );
 

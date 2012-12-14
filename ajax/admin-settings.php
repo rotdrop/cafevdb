@@ -9,6 +9,12 @@
 OCP\User::checkAdminUser();
 OCP\JSON::callCheck();
 
+if (isset($_POST['CAFEVkey'])) {
+  $value = $_POST['CAFEVkey'];
+  OCP\Config::setSystemValue( 'CAFEVkey', $value);
+  echo "database key: ``$value''";
+  return;
+}
 if (isset($_POST['CAFEVgroup'])) {
   $value = $_POST['CAFEVgroup'];
   OCP\Config::setSystemValue( 'CAFEVgroup', $value);
@@ -33,10 +39,10 @@ if (isset($_POST['CAFEVdbuser'])) {
   echo "dbuser: $value";
   return;
 }
-if (isset($_POST['CAFEVdbpasswd'])) {
-  $value = $_POST['CAFEVdbpasswd'];
-  OCP\Config::setSystemValue( 'CAFEVdbpasswd', $value);
-  echo "dbpasswd";
+if (isset($_POST['CAFEVdbpass'])) {
+  $value = $_POST['CAFEVdbpass'];
+  OCP\Config::setSystemValue( 'CAFEVdbpass', $value);
+  echo "database pass: ``$value''";
   return;
 }
 

@@ -14,7 +14,8 @@ if (!OC_Group::inGroup($user, $group)) {
 $l=OC_L10N::get('cafevdb');
 
 $expertmode = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb','expertmode','');
-$tooltips = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb','tooltips','');
+$tooltips    = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb','tooltips','');
+$encrkey     = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb','encryptionkey','');
 
 $jsscript = 'var toolTips = '.($tooltips == 'on' ? 'true' : 'false').';
 ';
@@ -50,9 +51,10 @@ if ($op == "Em@il") {
 
 $tmpl = new OCP\Template( 'cafevdb', $tmplname, 'user' );
 
-$tmpl->assign( 'expertmode', $expertmode );
-$tmpl->assign( 'tooltips', $tooltips );
-$tmpl->assign( 'jsscript', $jsscript );
+$tmpl->assign('expertmode', $expertmode);
+$tmpl->assign('tooltips', $tooltips);
+$tmpl->assign('encryptionkey', $encrkey);
+$tmpl->assign('jsscript', $jsscript);
 
 $buttons = array();
 $buttons['expert'] =
