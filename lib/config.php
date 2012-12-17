@@ -186,7 +186,7 @@ class Config
   }
 
   static public function decryptConfigValues() {
-    $keys = array('dbserver', 'dbuser', 'dbpassword', 'dbname', 'usergroup');
+    $keys = array('dbserver', 'dbuser', 'dbpassword', 'dbname');
 
     foreach ($keys as $key) {
         if (self::getValue($key) === false) {
@@ -197,7 +197,7 @@ class Config
   }
 
   static public function encryptConfigValues() {
-    $keys = array('dbserver', 'dbuser', 'dbpassword', 'dbname', 'usergroup');
+    $keys = array('dbserver', 'dbuser', 'dbpassword', 'dbname');
 
     foreach ($keys as $key) {
       self::setValue($key, self::$opts[$key]);

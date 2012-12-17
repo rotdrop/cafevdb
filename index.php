@@ -5,15 +5,15 @@ OCP\User::checkLoggedIn();
 
 CAFEVDB\Config::init();
 
-$group = CAFEVDB\Config::getValue('usergroup');
+$group = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
 $user  = OCP\USER::getUser();
 
-if (!OC_Group::inGroup($user, $group)) {
-  header( 'Location: '.OC_Helper::linkToAbsolute( '', 'index.php', array('redirect_url' => $_SERVER["REQUEST_URI"])));
-  exit();
-}
-
 $l = OC_L10N::get('cafevdb');
+
+if (!OC_Group::inGroup($user, $group)) {
+  $tmpl = new OCP\Template( 'cafevdb', 'not-a-member', 'user' );
+  return $tmpl->printPage();
+}
 
 $expertmode = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb','expertmode','');
 $tooltips   = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb','tooltips','');
@@ -21,13 +21,6 @@ $encrkey    = CAFEVDB\Config::getEncryptionKey();
 
 $jsscript = 'var toolTips = '.($tooltips == 'on' ? 'true' : 'false').';
 ';
-$jsscript .=<<<__EOT__
-if (toolTips) {
-  \$.fn.tipsy.disable();
-} else {
-  \$.fn.tipsy.disable();
-}
-__EOT__;
 
 OCP\App::setActiveNavigationEntry( 'cafevdb' );
 

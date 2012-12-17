@@ -7,7 +7,7 @@ $tooltipstitle = "Control the display of tooltips. Warning: this works globally 
 ?>
 <div class="personalblock">
   <form id="cafevdb">
-    <strong>Camerata DB</strong><br />
+    <strong>Personal Settings for Camerata DB</strong><br />
     <input id="expertmode" type="checkbox" name="expertmode" <?php echo $_['expertmode'] == 'on' ? 'checked="checked"' : ''; ?> id="expertmode" title="<?php echo $l->t($experttitle) ?>"/>
     <label for="expertmode" title="<?php echo $l->t($experttitle) ?>"><?php echo $l->t('Expert-Mode') ?></label>
     <br />
@@ -29,6 +29,6 @@ $tooltipstitle = "Control the display of tooltips. Warning: this works globally 
     <input type="password" id="password" name="password" placeholder="<?php echo $l->t('Own Password');?>" />
     <input type="password" id="encryptionkey" name="encryptionkey" value="<?php echo (true ? '' : $_['encryptionkey']); ?>" placeholder="<?php echo $l->t('Encryption Key');?>" data-typetoggle="#cafevdbkey #show" />
     <input type="checkbox" id="show" name="show" /><label for="show"><?php echo $l->t('show');?></label>
-    <input id="button" type="button" value="<?php echo $l->t('Change Encryption Key');?>" />
+    <input id="button" type="button" value="<?php echo $l->t('Set Encryption Key');?>" />
   </form>
 </div>
