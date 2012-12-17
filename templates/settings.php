@@ -27,7 +27,7 @@ $tooltipstitle = "Control the display of tooltips. Warning: this works globally 
     <div id="changed"><?php echo $l->t('The encryption key has been set successfully.');?></div>
     <div id="error"><?php echo $l->t('Unable to set the encryption key.');?></div>
     <input type="password" id="password" name="password" placeholder="<?php echo $l->t('Own Password');?>" />
-    <input type="password" id="encryptionkey" name="encryptionkey" value="<?php echo $_['encryptionkey'] ?>" placeholder="<?php echo $l->t('Encryption Key');?>" data-typetoggle="#cafevdbkey #show" />
+    <input type="password" id="encryptionkey" name="encryptionkey" value="<?php echo (true ? '' : $_['encryptionkey']); ?>" placeholder="<?php echo $l->t('Encryption Key');?>" data-typetoggle="#cafevdbkey #show" />
     <input type="checkbox" id="show" name="show" /><label for="show"><?php echo $l->t('show');?></label>
     <input id="button" type="button" value="<?php echo $l->t('Change Encryption Key');?>" />
   </form>
