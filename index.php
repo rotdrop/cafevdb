@@ -3,7 +3,9 @@
 // Check if we are a user
 OCP\User::checkLoggedIn();
 
-$group = OCP\Config::getSystemValue( "CAFEVgroup", '' );
+CAFEVDB\Config::init();
+
+$group = CAFEVDB\Config::getValue('usergroup');
 $user  = OCP\USER::getUser();
 
 if (!OC_Group::inGroup($user, $group)) {
@@ -11,7 +13,7 @@ if (!OC_Group::inGroup($user, $group)) {
   exit();
 }
 
-$l=OC_L10N::get('cafevdb');
+$l = OC_L10N::get('cafevdb');
 
 $expertmode = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb','expertmode','');
 $tooltips    = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb','tooltips','');

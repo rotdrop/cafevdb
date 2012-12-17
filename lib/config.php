@@ -18,11 +18,254 @@ class Config
   public static $Languages = array();
   private static $initialized = false;
 
+  public static function loginListener($params)
+  {
+    self::initPrivateKey($params['uid'], $params['password']);
+    self::initEncryptionKey($params['uid']);
+  }
+
+  public static function changePasswordListener($params) {
+    self::recryptEncryptionKey($params['uid'], $params['password']);
+  }
+
+  static public function initPrivateKey($login, $password)
+  {
+    $privKey = \OCP\Config::getUserValue($login, 'cafevdb', 'privateSSLKey', '');
+    if ($privKey == '') {
+      // Ok, generate one. But this also means that we have not yet
+      // access to the data-base encryption key.
+      self::generateKeyPair($login, $password);
+      $privKey = \OCP\Config::getUserValue($login, 'cafevdb', 'privateSSLKey', '');
+    }
+
+    $privKey = openssl_pkey_get_private ($privKey, $password);
+    if ($privKey === false) {
+      return;
+    }
+
+    // Success. Store the decrypted private key in the session data.
+    self::setPrivateKey($privKey);
+  }
+
+  static public function initEncryptionKey($login)
+  {
+    // Fetch the encrypted "user" key from the preferences table
+    $usrdbkey = \OCP\Config::getUserValue($login,'cafevdb','encryptionkey','');
+
+    if ($usrdbkey == '') {
+      // No key -> unencrypted, maybe
+      return;
+    }
+
+    $usrdbkey = base64_decode($usrdbkey);
+
+    $privKey = self::getPrivateKey();
+
+    // Try to decrypt the $usrdbkey
+    if (openssl_private_decrypt($usrdbkey, $usrdbkey, $privKey) === false) {
+      return;
+    }
+
+    // Now try to decrypt the data-base encryption key
+    self::setEncryptionKey($usrdbkey);
+    $sysdbkey = self::getValue('encryptionkey');
+    
+    if ($sysdbkey != $usrdbkey) {
+      // Failed
+      self::setEncryptionKey('');
+      return;
+    }
+
+    // Otherwise store the key in the session data
+    self::setEncryptionKey($sysdbkey);    
+  }
+
+  static public function recryptEncryptionKey($login, $password)
+  {
+    // ok, new password, generate a new key-pair. Then re-encrypt the
+    // global encryption key with the new key.
+
+    // new key pair
+    self::generateKeyPair($login, $password);
+
+    // store the re-encrypted key in the configuration space
+    self::setUserKey($login);
+  }
+
+  // To distribute the encryption key for the data base and
+  // application configuration values we use a public/private key pair
+  // for each user. Then the admin-user can distribute the global
+  // encryption pair to each authorized user (in the orchestra-group)
+  // using the pulic key. Then the user logs into owncloud, the key is
+  // decrypted with the users private key (which again is secured by
+  // the user's password.
+  static public function generateKeyPair($login, $password)
+  {
+    /* Create the private and public key */
+    $res = openssl_pkey_new();
+
+    /* Extract the private key from $res to $privKey */
+    if (!openssl_pkey_export($res, $privKey, $password)) {
+      return false;
+    }
+
+    /* Extract the public key from $res to $pubKey */
+    $pubKey = openssl_pkey_get_details($res);
+
+    if ($pubKey === false) {
+      return false;
+    }
+    $pubKey = $pubKey['key'];
+
+    // We now store the public key unencrypted in the user preferences.
+    // The private key already is encrypted with the user's password,
+    // so there is no need to encrypt it again.
+
+    \OCP\Config::setUserValue($login, 'cafevdb', 'publicSSLKey', $pubKey);
+    \OCP\Config::setUserValue($login, 'cafevdb', 'privateSSLKey', $privKey); 
+  }
+
+  static public function setUserKey($user)
+  {
+    $enckey = self::getEncryptionKey();
+
+    if ($enckey != '') {
+      $pubKey = \OCP\Config::getUserValue($user, 'cafevdb', 'publicSSLKey', '');
+      $usrdbkey = '';
+      if ($pubKey == '' ||
+          openssl_public_encrypt($enckey, $usrdbkey, $pubKey) === false) {
+        return false;
+      }
+      $usrdbkey = base64_encode($usrdbkey);
+    } else {
+      $usrdbkey = '';
+    }
+
+    $pubKey = \OCP\Config::setUserValue($user, 'cafevdb', 'encryptionkey', $usrdbkey);
+
+    return true;
+  }
+
+  static public function setPrivateKey($key) {
+    $_SESSION['CAFEVDB\\privatekey'] = $key;
+  }
+
+  static public function getPrivateKey() {
+    return isset($_SESSION['CAFEVDB\\privatekey']) ? $_SESSION['CAFEVDB\\privatekey'] : '';
+  }
+
+  static public function setEncryptionKey($key) {
+    $_SESSION['CAFEVDB\\encryptionkey'] = $key;
+  }
+
+  static public function getEncryptionKey() {
+    return isset($_SESSION['CAFEVDB\\encryptionkey']) ? $_SESSION['CAFEVDB\\encryptionkey'] : '';
+  }
+
+  static public function encryptionKeyValid()
+  {
+    // Get the supposed-to-be key from the session data
+    $sesdbkey = self::getEncryptionKey();
+
+    // Fetch the encrypted "system" key from the app-config table
+    $sysdbkey = \OC_AppConfig::getValue('cafevdb', 'encryptionkey');
+    $md5sysdbkey = \OC_AppConfig::getValue('cafevdb', 'encryptionkey::MD5');
+
+    // Now try to decrypt the data-base encryption key
+    $sysdbkey = self::decrypt($sysdbkey, $sesdbkey);
+
+    if ($md5sysdbkey != '' && $md5sysdbkey != md5($sysdbkey)) {
+        return false;
+    }
+
+    return $sysdbkey == $sesdbkey;
+  }
+
+  static public function decryptConfigValues() {
+    $keys = array('dbserver', 'dbuser', 'dbpassword', 'dbname', 'usergroup');
+
+    foreach ($keys as $key) {
+        if (self::getValue($key) === false) {
+            return false;
+        }
+    }
+    return true;
+  }
+
+  static public function encryptConfigValues() {
+    $keys = array('dbserver', 'dbuser', 'dbpassword', 'dbname', 'usergroup');
+
+    foreach ($keys as $key) {
+      self::setValue($key, self::$opts[$key]);
+    }
+  }
+
+  // Decrypt and remove the padding. If $value is the empty string
+  // then do nothing. If the encryption key is not set, then do not try to
+  // decrypt.
+  static public function decrypt($value, $enckey)
+  {
+    if ($enckey != '' && $value != '') {
+      $value = mcrypt_decrypt(MCRYPT_RIJNDAEL_128,
+                              $enckey,
+                              base64_decode($value),
+                              MCRYPT_MODE_ECB); 
+      $value = trim($value, "\0\4");
+    }
+    return $value;
+  }
+
+  static public function encrypt($value, $enckey)
+  {
+    if ($enckey != '') {
+      $value = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_128,
+                                            $enckey,
+                                            $value,
+                                            MCRYPT_MODE_ECB)); 
+    }
+    return $value;
+  }
+
+  static public function setValue($key, $value)
+  {
+    $enckey = self::getEncryptionKey();
+
+    self::$opts[$key] = $value;
+    $md5value = $enckey != '' ? md5($value) : '';
+    $value = self::encrypt($value, $enckey);
+    \OC_AppConfig::setValue('cafevdb', $key, $value);
+    \OC_AppConfig::setValue('cafevdb', $key.'::MD5', $md5value);
+  }
+
+  static public function getValue($key, $strict = false)
+  {
+    if ($strict && !self::encryptionKeyValid()) {
+      return false;
+    }
+
+    $enckey = self::getEncryptionKey();
+
+    $value    = \OC_AppConfig::getValue('cafevdb', $key, '');
+    $md5value = \OC_AppConfig::getValue('cafevdb', $key.'::MD5', '');
+
+    $value = self::decrypt($value, $enckey);
+    if ($md5value != '' && $md5value != md5($value)) {
+        return false;
+    }
+
+    self::$opts[$key] = $value;
+
+    return $value;
+  }
+
   static public function init() {
     if (self::$initialized == true) {
       return;
     }
     self::$initialized = true;
+
+    // Fetch possibly encrypted config values from the OC data-base
+    self::decryptConfigValues();
 
     if (!self::$prefix) {
       self::$prefix = self::$appbase . "lib/";
@@ -30,10 +273,11 @@ class Config
     if (!self::$triggers) {
       self::$triggers = self::$prefix . "triggers/";
     }
-    self::$pmeopts['hn'] = 'localhost';
-    self::$pmeopts['un'] = 'camerata';
-    self::$pmeopts['pw'] = 'foo!bar';
-    self::$pmeopts['db'] = 'camerata';
+    self::$pmeopts['hn'] = self::$opts['dbserver'];
+    self::$pmeopts['un'] = self::$opts['dbuser'];
+    self::$pmeopts['pw'] = self::$opts['dbpassword'];
+    self::$pmeopts['db'] = self::$opts['dbname'];
+
     self::$pmeopts['url']['images'] = self::$appbase . 'img/';
     global $HTTP_SERVER_VARS;
     self::$pmeopts['page_name'] = $HTTP_SERVER_VARS['PHP_SELF'].'?app=cafevdb';

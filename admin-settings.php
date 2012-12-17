@@ -7,11 +7,13 @@ OCP\Util::addScript( "cafevdb", "admin-settings" );
 
 $tmpl = new OCP\Template( 'cafevdb', 'admin-settings');
 
-$tmpl->assign('CAFEVkey', OCP\Config::getSystemValue("CAFEVkey", ''));
-$tmpl->assign('CAFEVgroup', OCP\Config::getSystemValue("CAFEVgroup", ''));
-$tmpl->assign('CAFEVdbserver', OCP\Config::getSystemValue("CAFEVdbserver", ''));
-$tmpl->assign('CAFEVdbname', OCP\Config::getSystemValue("CAFEVdbname", ''));
-$tmpl->assign('CAFEVdbuser', OCP\Config::getSystemValue("CAFEVdbuser", ''));
-$tmpl->assign('CAFEVdbpass', OCP\Config::getSystemValue("CAFEVdbpass", ''));
+$strict = !CAFEVDB\Config::encryptionKeyValid();
+
+$tmpl->assign('usergroup', CAFEVDB\Config::getValue('usergroup', $strict));
+$tmpl->assign('dbserver', CAFEVDB\Config::getValue('dbserver', $strict));
+$tmpl->assign('dbname', CAFEVDB\Config::getValue('dbname', $strict));
+$tmpl->assign('dbuser', CAFEVDB\Config::getValue('dbuser', $strict));
+$tmpl->assign('dbpassword', CAFEVDB\Config::getValue('dbpassword', $strict));
+$tmpl->assign('encryptionkey', CAFEVDB\Config::getValue('encryptionkey', $strict));
 
 return $tmpl->fetchPage();

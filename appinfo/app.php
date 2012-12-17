@@ -23,6 +23,9 @@ OC::$CLASSPATH['html2text'] = 'apps/cafevdb/3rdparty/class.html2text.inc';
 OCP\App::registerAdmin( 'cafevdb', 'admin-settings' );
 //OCP\App::registerPersonal( 'cafevdb', 'settings' );
 
+OCP\Util::connectHook('OC_User','post_login','CAFEVDB\Config','loginListener');
+OCP\Util::connectHook('OC_User','post_setPassword','CAFEVDB\Config','changePasswordListener');
+
 OCP\App::addNavigationEntry( array( 
 	'id' => 'cafevdb',
 	'order' => 74,

@@ -7,10 +7,12 @@ form.cafevdb-control {
   vertical-align:middle;
 }
 
-#cafevdbpass>#error { display:none; }
-#cafevdbpass>#changed { display:none; }
-#cafevdbkey>#error { display:none; }
-#cafevdbkey>#changed { display:none; }
+#cafevdbpass #error { display:none; }
+#cafevdbpass #changed { display:none; }
+#cafevdbkey #error { display:none; }
+#cafevdbkey #changed { display:none; }
+#cafevdbkey #insecure { display:none; }
+#cafevdbkeydistribute #msg { display:none; }
 
 #personalsettings {
   margin-right: 170px;
