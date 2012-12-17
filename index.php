@@ -16,8 +16,8 @@ if (!OC_Group::inGroup($user, $group)) {
 $l = OC_L10N::get('cafevdb');
 
 $expertmode = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb','expertmode','');
-$tooltips    = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb','tooltips','');
-$encrkey     = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb','encryptionkey','');
+$tooltips   = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb','tooltips','');
+$encrkey    = CAFEVDB\Config::getEncryptionKey();
 
 $jsscript = 'var toolTips = '.($tooltips == 'on' ? 'true' : 'false').';
 ';

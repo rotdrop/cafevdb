@@ -80,7 +80,7 @@ class Config
     self::setEncryptionKey($sysdbkey);    
   }
 
-  static public function recryptEncryptionKey($login, $password)
+  static public function recryptEncryptionKey($login, $password, $enckey = false)
   {
     // ok, new password, generate a new key-pair. Then re-encrypt the
     // global encryption key with the new key.
@@ -89,7 +89,7 @@ class Config
     self::generateKeyPair($login, $password);
 
     // store the re-encrypted key in the configuration space
-    self::setUserKey($login);
+    self::setUserKey($login, $enckey);
   }
 
   // To distribute the encryption key for the data base and
@@ -125,9 +125,11 @@ class Config
     \OCP\Config::setUserValue($login, 'cafevdb', 'privateSSLKey', $privKey); 
   }
 
-  static public function setUserKey($user)
+  static public function setUserKey($user, $enckey = false)
   {
-    $enckey = self::getEncryptionKey();
+    if ($enckey === false) {
+      $enckey = self::getEncryptionKey();
+    }
 
     if ($enckey != '') {
       $pubKey = \OCP\Config::getUserValue($user, 'cafevdb', 'publicSSLKey', '');
@@ -162,10 +164,12 @@ class Config
     return isset($_SESSION['CAFEVDB\\encryptionkey']) ? $_SESSION['CAFEVDB\\encryptionkey'] : '';
   }
 
-  static public function encryptionKeyValid()
+  static public function encryptionKeyValid($sesdbkey = false)
   {
-    // Get the supposed-to-be key from the session data
-    $sesdbkey = self::getEncryptionKey();
+    if ($sesdbkey === false) {
+      // Get the supposed-to-be key from the session data
+      $sesdbkey = self::getEncryptionKey();
+    }
 
     // Fetch the encrypted "system" key from the app-config table
     $sysdbkey = \OC_AppConfig::getValue('cafevdb', 'encryptionkey');
