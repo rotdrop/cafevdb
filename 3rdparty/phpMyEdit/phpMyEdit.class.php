@@ -677,8 +677,8 @@ class phpMyEdit
 			return $this->fdd[$field]['sql'];
 		// on copy/change always use simple key retrieving
 		if ($this->add_operation()
-				|| $this->copy_operation()
-				|| $this->change_operation()) {
+             || $this->copy_operation()
+             || $this->change_operation()) {
 				$ret = $this->sd.'PMEtable0'.$this->ed.'.'.$this->sd.$this->fds[$field].$this->ed;
 		} else {
 			if (isset($this->fdd[$this->fds[$field]]['values']['description']) && ! $dont_desc) {
@@ -1313,7 +1313,23 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
                                                          $css_class_name,
                                                          $k, $this->fdd[$k]['default'], $escape, $helptip);
 			} elseif ($this->col_has_php($k)) {
-				echo include($this->fdd[$k]['php']);
+                $php = $this->fdd[$k]['php'];
+                if (is_array($php)) {
+                    switch ($php['type']) {
+                    case 'function':
+                        $opts = isset($php['parameters']);
+                        echo call_user_func($php['function'], $parameters,
+                                            $k, $this->fds[$k], $this->fdd[$k]);
+                        break;
+                    case 'file':
+                        echo include($php);
+                        break;
+                    default:
+                        break;
+                    }
+                } else {
+                    echo include($php);
+                }
 			} else {
 				// Simple edit box required
 				$len_props = '';
@@ -1461,7 +1477,23 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
                                                  $css_class_name,
                                                  $k, $row["qf$k"], $escape, $help);
 		} elseif ($this->col_has_php($k)) {
-			echo include($this->fdd[$k]['php']);
+            $php = $this->fdd[$k]['php'];
+            if (is_array($php)) {
+                switch ($php['type']) {
+                case 'function':
+                    $opts = isset($php['parameters']);
+                    echo call_user_func($php['function'], $parameters,
+                                        $k, $this->fds[$k], $this->fdd[$k]);
+                    break;
+                case 'file':
+                    echo include($php);
+                    break;
+                default:
+                    break;
+                }
+            } else {
+                echo include($php);
+            }
 		} else {
 			$len_props = '';
 			$maxlen = intval($this->fdd[$k]['maxlen']);
@@ -1730,7 +1762,23 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		  $value = include($this->fdd[$k]['phpview']);
 		}		
 		if ($this->col_has_php($k)) {
-			return include($this->fdd[$k]['php']);
+            $php = $this->fdd[$k]['php'];
+            if (is_array($php)) {
+                switch ($php['type']) {
+                case 'function':
+                    $opts = isset($php['parameters']) ? isset($php['parameters']) : '';
+                    return call_user_func($php['function'], $value, $opts,
+                                          $k, $this->fds[$k], $this->fdd[$k]);
+                    break;
+                case 'file':
+                    return include($php);
+                    break;
+                default:
+                    break;
+                }
+            } else {
+                return include($php);
+            }
 		}
 		if ($this->col_has_URL($k)) {
 			return $this->urlDisplay($k, $original_value, $value, $css, $key_rec);
