@@ -1318,7 +1318,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
                     switch ($php['type']) {
                     case 'function':
                         $opts = isset($php['parameters']);
-                        echo call_user_func($php['function'], $parameters,
+                        echo call_user_func($php['function'], false, $opts,
                                             $k, $this->fds[$k], $this->fdd[$k]);
                         break;
                     case 'file':
@@ -1482,7 +1482,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
                 switch ($php['type']) {
                 case 'function':
                     $opts = isset($php['parameters']);
-                    echo call_user_func($php['function'], $parameters,
+                    echo call_user_func($php['function'], $row["qf$k"], $opts,
                                         $k, $this->fds[$k], $this->fdd[$k]);
                     break;
                 case 'file':
