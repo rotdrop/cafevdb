@@ -15,6 +15,7 @@ echo CAFEVDB\Navigation::button('all');
 <div class="cafevdb-general">
    <?php CAFEVDB\Projects::display(); ?>
 </div>
+<div id="fullcalendar"></div>
 <div id="dialog_holder"></div>
 <div id="appsettings" class="popup topright hidden"></div>
 

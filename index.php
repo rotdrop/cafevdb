@@ -51,6 +51,19 @@ $tmpl->assign('tooltips', $tooltips);
 $tmpl->assign('encryptionkey', $encrkey);
 $tmpl->assign('jsscript', $jsscript);
 
+// Calendar event hacks
+
+OCP\Util::addScript('calendar', 'calendar');
+OCP\Util::addscript('3rdparty/fullcalendar', 'fullcalendar');
+OCP\Util::addStyle('3rdparty/fullcalendar', 'fullcalendar');
+OCP\Util::addscript('3rdparty/timepicker', 'jquery.ui.timepicker');
+OCP\Util::addscript('', 'jquery.multiselect');
+OCP\Util::addscript('contacts','jquery.multi-autocomplete');
+$categories = OC_Calendar_App::getCategoryOptions();
+$tmpl->assign('categories', $categories, false);
+
+// end event hacks
+
 $buttons = array();
 $buttons['expert'] =
   array('name' => 'Expert Operations',

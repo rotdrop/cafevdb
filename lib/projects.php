@@ -10,6 +10,9 @@ class Projects
   {
     Config::init();
 
+    global $debug_query;
+    //    $debug_query = true;
+
     /* echo '<PRE>'; */
     /* print_r($_SERVER); */
     /* echo '</PRE>'; */
@@ -173,6 +176,18 @@ __EOT__;
                                      'sort'     => true,
                                      'escape' => false
                                      );
+
+    $opts['fdd']['Events'] = array(
+                               'name'     => 'Events',
+                               'sql'      => 'Id',
+                               'php'      => array('type' => 'function',
+                                                   'function' => 'CAFEVDB\Projects::eventButton'),
+                               'select'   => 'T',
+                               'options'  => 'LAVCPDR', // auto increment
+                               'maxlen'   => 11,
+                               'default'  => '0',
+                               'sort'     => false
+                               );
 
     $opts['fdd']['Besetzung'] = array('name'     => 'Besetzung',
                                       'options'  => 'AVCPD',
@@ -373,6 +388,51 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
     return $fields;
   }
 
+  public static function eventButton($value, $opts, $k, $fds, $fdd)
+  {
+    $bvalue = 'Events';
+    return <<<__EOT__
+<div class="events">
+<input type="button" class="events" name="Event[$value]" value="$bvalue"/>
+</div>
+__EOT__;
+    //"eventButton: $k $fds $fdd";
+  }
+
+  /** Fetch the list of events associated with $projectId.
+   */
+  public static function events($projectId, $handle = false)
+  {    
+    $events = array();
+
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+      
+    $query =<<<__EOT__
+SELECT `Id`,`EventId`
+  FROM `ProjectEvents` WHERE `ProjectId` = $projectId
+  ORDER BY `Id` ASC
+__EOT__;
+
+    $result = mySQL::query($query, $handle);
+    while ($line = mySQL::fetch($result)) {
+      $event = array('prjEventId' => $line['Id'],
+                     'calEventId' => $line['EventId'],
+                     'object'     => OC_Calendar_App::getEventObject($id, false, false));
+      $events[] = $event;
+    }
+    
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $events;
+  }
+
+  /** Fetch the project-name name corresponding to $projectId.
+   */
   public static function fetchName($projectId, $handle = false)
   {
     $query = 'SELECT `Name` FROM `Projekte` WHERE `Id` = '.$projectId;
@@ -510,5 +570,11 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
   }
 
 }; // class Projects
+
+/*
+ * LocalVariables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */
 
 ?>

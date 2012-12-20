@@ -29,4 +29,9 @@ $(document).ready(function(){
 	event.preventDefault();
 	OC.appSettings({appid:'cafevdb', loadJS:'expertmode.js', cache:false, scriptName:'expert.php'});
     });
+
+    $(':button.events').on('click keydown', function(event) {
+	OC.appSettings({appid:'cafevdb', loadJS:'expertmode.js', cache:false, scriptName:'expert.php'});
+    });
+
 });
