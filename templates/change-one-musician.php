@@ -14,7 +14,7 @@ echo CAFEVDB\Navigation::button('projectinstruments', $table->project, $table->p
   <?php echo CAFEVDB\Navigation::button($_['settingscontrols']); ?>
 </form>
 </div>
-<div class="cafevdb-general">
+<div class="cafevdb-general" id="cafevdb-general">
   <?php $table->displayAddChangeOne(); ?>
 </div>
 <div id="dialog_holder"></div>

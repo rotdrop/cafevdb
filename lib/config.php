@@ -241,6 +241,15 @@ class Config
     \OC_AppConfig::setValue('cafevdb', $key.'::MD5', $md5value);
   }
 
+  static public function getSetting($key, $default = '', $strict = false)
+  {
+      $value = self::getValue($key, $strict);
+      if (!$value || $value == '') {
+          $value = $default;
+      }
+      return $value;
+  }
+
   static public function getValue($key, $strict = false)
   {
     if ($strict && !self::encryptionKeyValid()) {

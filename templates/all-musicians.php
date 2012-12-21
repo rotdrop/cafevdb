@@ -12,7 +12,7 @@
   <?php echo CAFEVDB\Navigation::button($_['settingscontrols']); ?>
 </form>
 </div>
-<div class="cafevdb-general">
+<div class="cafevdb-general" id="cafevdb-general">
    <?php $table = new CAFEVDB\Musicians(); $table->display(); ?>
 </div>
 <div id="dialog_holder"></div>

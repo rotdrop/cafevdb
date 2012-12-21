@@ -393,7 +393,7 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
     $bvalue = 'Events';
     return <<<__EOT__
 <div class="events">
-<input type="button" class="events" name="Event[$value]" value="$bvalue"/>
+<input type="button" class="events" name="Project[$value]" value="$bvalue"/>
 </div>
 __EOT__;
     //"eventButton: $k $fds $fdd";
@@ -407,6 +407,7 @@ __EOT__;
 
     $ownConnection = $handle === false;
     if ($ownConnection) {
+      Config::init();
       $handle = mySQL::connect(Config::$pmeopts);
     }
       
@@ -417,10 +418,10 @@ SELECT `Id`,`EventId`
 __EOT__;
 
     $result = mySQL::query($query, $handle);
-    while ($line = mySQL::fetch($result)) {
+    while (false && $line = mySQL::fetch($result)) {
       $event = array('prjEventId' => $line['Id'],
                      'calEventId' => $line['EventId'],
-                     'object'     => OC_Calendar_App::getEventObject($id, false, false));
+                     'object'     => \OC_Calendar_App::getEventObject($line['EventId'], false, false));
       $events[] = $event;
     }
     
@@ -435,11 +436,21 @@ __EOT__;
    */
   public static function fetchName($projectId, $handle = false)
   {
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
     $query = 'SELECT `Name` FROM `Projekte` WHERE `Id` = '.$projectId;
     $result = mySQL::query($query, $handle);
 
     // Get the single line
     $line = mySQL::fetch($result) or Util::error("Couldn't fetch the result for '".$query."'");
+
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
 
     return $line['Name'];
   }

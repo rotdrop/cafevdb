@@ -9,6 +9,7 @@ $group = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
 $user  = OCP\USER::getUser();
 
 $l = OC_L10N::get('cafevdb');
+trim($l->t('blah')); /* necessary, but why? */
 
 if (!OC_Group::inGroup($user, $group)) {
   $tmpl = new OCP\Template( 'cafevdb', 'not-a-member', 'user' );
@@ -21,6 +22,14 @@ $encrkey    = CAFEVDB\Config::getEncryptionKey();
 
 $jsscript = 'var toolTips = '.($tooltips == 'on' ? 'true' : 'false').';
 ';
+$jsscript .=<<<__EOT__
+  if (toolTips) {
+    $.fn.tipsy.enable();
+  } else {
+    $.fn.tipsy.disable();
+  }
+
+__EOT__;
 
 OCP\App::setActiveNavigationEntry( 'cafevdb' );
 
@@ -46,23 +55,38 @@ if ($op == "Em@il") {
 
 $tmpl = new OCP\Template( 'cafevdb', $tmplname, 'user' );
 
-$tmpl->assign('expertmode', $expertmode);
-$tmpl->assign('tooltips', $tooltips);
-$tmpl->assign('encryptionkey', $encrkey);
-$tmpl->assign('jsscript', $jsscript);
-
 // Calendar event hacks
 
-OCP\Util::addScript('calendar', 'calendar');
+$jsscript .= "
+var missing_field = '".addslashes($l->t('Missing or invalid fields'))."';
+var missing_field_title = '".addslashes($l->t('Title'))."';
+var missing_field_calendar = '".addslashes($l->t('Calendar'))."';
+var missing_field_fromdate = '".addslashes($l->t('From Date'))."';
+var missing_field_fromtime = '".addslashes($l->t('From Time'))."';
+var missing_field_todate = '".addslashes($l->t('To Date'))."';
+var missing_field_totime = '".addslashes($l->t('To Time'))."';
+var missing_field_startsbeforeends = '".addslashes($l->t('The event ends before it starts'))."';
+var missing_field_dberror = '".addslashes($l->t('There was a database fail'))."';
+";
+
+OC_Util::addScript('','oc-vcategories');
 OCP\Util::addscript('3rdparty/fullcalendar', 'fullcalendar');
 OCP\Util::addStyle('3rdparty/fullcalendar', 'fullcalendar');
 OCP\Util::addscript('3rdparty/timepicker', 'jquery.ui.timepicker');
 OCP\Util::addscript('', 'jquery.multiselect');
 OCP\Util::addscript('contacts','jquery.multi-autocomplete');
-$categories = OC_Calendar_App::getCategoryOptions();
-$tmpl->assign('categories', $categories, false);
+OCP\Util::addScript('cafevdb', 'calendar');
+$categories = json_encode(OC_Calendar_App::getCategoryOptions());
+
+$tmpl->assign('categories', $categories);
+$tmpl->assign('eventSources', '');
 
 // end event hacks
+
+$tmpl->assign('expertmode', $expertmode);
+$tmpl->assign('tooltips', $tooltips);
+$tmpl->assign('encryptionkey', $encrkey);
+$tmpl->assign('jsscript', $jsscript, false);
 
 $buttons = array();
 $buttons['expert'] =

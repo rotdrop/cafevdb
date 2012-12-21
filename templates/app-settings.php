@@ -1,5 +1,5 @@
 <div class="personalblock">
- <br /><strong>Admin settings for Camerata DB</strong><br />
+ <hr /><strong>Admin settings for Camerata DB</strong><br />
   <form id="cafevdbkey">
     <div id="changed"><?php echo $l->t('The encryption key was changed');?></div>
     <div id="error"><?php echo $l->t('Unable to change the encryption key');?></div>
@@ -35,5 +35,25 @@
     <input type="password" id="CAFEVDBpass" name="CAFEVDBpass" placeholder="<?php echo $l->t('New Password');?>" data-typetoggle="#cafevdbpassshow" />
     <input type="checkbox" id="cafevdbpassshow" name="show" /><label for="cafevdbpassshow"><?php echo $l->t('show');?></label>
     <input id="button" type="button" value="<?php echo $l->t('Change Database Password');?>" />
+  </form>
+  <hr/?>
+  <form id="cafevdbevents">
+    <fieldset id="calendars">
+    <input type="text" id="user" name="calendaruser" placeholder="<?php echo $l->t('username');?>" value="<?php echo $_['calendaruser']; ?>" />
+    <label for="user"><?php echo $l->t('Account for Calendars');?></label>
+    <br/>
+    <input type="text" id="concerts" name="concertscalendar" placeholder="<?php echo $l->t('calendarname');?>" value="<?php echo $_['concertscalendar']; ?>" />
+    <label for="concerts"><?php echo $l->t('Calendar for Concerts');?></label>
+    <br/>
+    <input type="text" id="rehearsals" name="rehearsalscalendar" placeholder="<?php echo $l->t('calendarname');?>" value="<?php echo $_['rehearsalscalendar']; ?>" />
+    <label for="rehearsals"><?php echo $l->t('Calendar for Rehearsals');?></label>
+    <br/>
+    <input type="text" id="other" name="othercalendar" placeholder="<?php echo $l->t('calendarname');?>" value="<?php echo $_['othercalendar']; ?>" />
+    <label for="other"><?php echo $l->t('Calendar for other Events');?></label>
+    </fieldset>
+    <input type="text" id="duration" name="eventduration" placeholder="<?php echo $l->t('#Minutes');?>" value="<?php echo $_['eventduration']; ?>" />
+    <label for="duration"><?php echo $l->t('Default Duration for Events');?></label>
+    <br/>
+    <span class="msg"></span>
   </form>
 </div>

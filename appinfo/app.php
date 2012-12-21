@@ -2,6 +2,7 @@
 
 OC::$CLASSPATH['CAFEVDB\Admin'] = 'apps/cafevdb/lib/admin.php';
 OC::$CLASSPATH['CAFEVDB\Config'] = 'apps/cafevdb/lib/config.php';
+OC::$CLASSPATH['CAFEVDB\Events'] = 'apps/cafevdb/lib/events.php';
 OC::$CLASSPATH['CAFEVDB\ToolTips'] = 'apps/cafevdb/lib/tooltips.php';
 OC::$CLASSPATH['CAFEVDB\Util'] = 'apps/cafevdb/lib/functions.php';
 OC::$CLASSPATH['CAFEVDB\Navigation'] = 'apps/cafevdb/lib/functions.php';
@@ -25,6 +26,10 @@ OCP\App::registerAdmin( 'cafevdb', 'admin-settings' );
 
 OCP\Util::connectHook('OC_User','post_login','CAFEVDB\Config','loginListener');
 OCP\Util::connectHook('OC_User','post_setPassword','CAFEVDB\Config','changePasswordListener');
+OCP\Util::connectHook('OC_Calendar','addEvent','CAFEVDB\Events','newEventListener');
+OCP\Util::connectHook('OC_Calendar','editEvent','CAFEVDB\Events','changeEventListener');
+OCP\Util::connectHook('OC_Calendar','deleteEvent','CAFEVDB\Events','killEventListener');
+OCP\Util::connectHook('OC_Calendar','moveEvent','CAFEVDB\Events','moveEventListener');
 
 OCP\App::addNavigationEntry( array( 
 	'id' => 'cafevdb',

@@ -1,5 +1,14 @@
 <?php
 $TRANSLATIONS = array(
+  'Add Rehearsal' => 'Neue Probe',
+  'Add Concert' => 'Neues Konzert',
+  'Add Other Event' => 'Anderer Termin',
+  'rehearsals' => 'Proben',
+  'concerts' => 'Konzerte',
+  'rehearsal' => 'Probe',
+  'concert' => 'Konzert',
+  'other' => 'Sonstiges',
+  'miscellanous' => 'Verschiedenes',
   'User Group' => "Benutzer-Gruppe",
   'Database Server' => 'Datenbank-Server',
   'Database Name' => 'Datenbank-Name',

@@ -1,5 +1,5 @@
 <script type="text/javascript">
-  <?php echo $_['jsscript']; ?>
+  <?php print $_['jsscript']; ?>
 </script>
 <div id="controls">
 <?php
@@ -12,7 +12,7 @@ echo CAFEVDB\Navigation::button('all');
   <?php echo CAFEVDB\Navigation::button($_['settingscontrols']); ?>
 </form>
 </div>
-<div class="cafevdb-general">
+<div class="cafevdb-general" id="cafevdb-general">
    <?php CAFEVDB\Projects::display(); ?>
 </div>
 <div id="fullcalendar"></div>

@@ -12,6 +12,9 @@ form.cafevdb-control {
 #cafevdbkey #error { display:none; }
 #cafevdbkey #changed { display:none; }
 #cafevdbkey #insecure { display:none; }
+#cafevdbuserkey #error { display:none; }
+#cafevdbuserkey #changed { display:none; }
+#cafevdbuserkey #insecure { display:none; }
 #cafevdbkeydistribute #msg { display:none; }
 
 #personalsettings {
@@ -525,6 +528,7 @@ td.pme-buttons > .pme-pagerows {
 }
 
 /*Easy <a class="tooltip" href="#">Tooltip<span>This is the crazy little Easy Tooltip Text.</span></a>.</p>*/
+
 /*
  * LocalVariables: ***
  * cssm-indent-function: cssm-c-style-indenter ***

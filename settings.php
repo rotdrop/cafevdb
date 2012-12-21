@@ -48,6 +48,24 @@ if (CAFEVDB\Config::encryptionKeyValid() &&
     $tmpl->assign('dbpassword', CAFEVDB\Config::getValue('dbpassword'));
     $tmpl->assign('encryptionkey', CAFEVDB\Config::getValue('encryptionkey'));
 
+    $tmpl->assign('calendaruser', CAFEVDB\Config::getSetting('calendaruser', CAFEVDB\Config::getValue('dbuser')));
+    $tmpl->assign('concertscalendar', CAFEVDB\Config::getSetting('concertscalendar', $l->t('concerts')));
+    $tmpl->assign('rehearsalscalendar', CAFEVDB\Config::getSetting('rehearsalscalendar', $l->t('rehearsals')));
+    $tmpl->assign('othercalendar', CAFEVDB\Config::getSetting('othercalendar', $l->t('other')));
+    $tmpl->assign('eventduration', CAFEVDB\Config::getSetting('eventduration', '180'));
+
+    $result = $result && $tmpl->printPage();
+}
+
+return $result;
+
+?>
+));
+    $tmpl->assign('concertcalendar',  \OC_AppConfig::getValue('cafevdb', 'concertcalendar', $l->t('concerts')));
+    $tmpl->assign('rehearsalcalendar',  \OC_AppConfig::getValue('cafevdb', 'rehearsalcalendar', $l->t('rehearsals')));
+    $tmpl->assign('othercalendar',  \OC_AppConfig::getValue('cafevdb', 'othercalendar', $l->t('other')));
+    $tmpl->assign('eventduration', \OC_AppConfig::getValue('cafevdb', 'eventduration', 180));
+
     $result = $result && $tmpl->printPage();
 }
 

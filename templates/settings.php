@@ -23,7 +23,7 @@ $tooltipstitle = "Control the display of tooltips. Warning: this works globally 
     <input type="text" style="display:none;width:0%;float: left;" name="dummy" id="dummy" value="dummy" placeholder="dummy" title="<?php echo $l->t('Dummy') ?>/>
     <span class="msg"></span>
   </form>
-  <form id="cafevdbkey">
+  <form id="cafevdbuserkey">
     <div id="changed"><?php echo $l->t('The encryption key has been set successfully.');?></div>
     <div id="error"><?php echo $l->t('Unable to set the encryption key.');?></div>
     <input type="password" id="password" name="password" placeholder="<?php echo $l->t('Own Password');?>" />

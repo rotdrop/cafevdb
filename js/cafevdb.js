@@ -1,57 +1,64 @@
 $(document).ready(function(){
-    
-    fillWindow($('#content'));
+  
+  //    $('button.settings').tipsy({gravity:'ne', fade:true});
+  $('button').tipsy({gravity:'w', fade:true});
+  $('input.cafevdb-control').tipsy({gravity:'nw', fade:true});
+  $('#controls button').tipsy({gravity:'nw', fade:true});
+  $('.pme-sort').tipsy({gravity: 'n', fade:true});
+  $('.pme-misc-check').tipsy({gravity: 'nw', fade:true});
 
-//    $('button.settings').tipsy({gravity:'ne', fade:true});
-    $('button').tipsy({gravity:'w', fade:true});
-    $('input.cafevdb-control').tipsy({gravity:'nw', fade:true});
-    $('#controls button').tipsy({gravity:'nw', fade:true});
-    $('.pme-sort').tipsy({gravity: 'n', fade:true});
-    $('.pme-misc-check').tipsy({gravity: 'nw', fade:true});
+  $('#personalsettings .generalsettings').on(
+    'click keydown', function(event) {
+      event.preventDefault();
+      OC.appSettings({appid:'cafevdb', loadJS:true,
+                      cache:false, scriptName:'settings.php'});
+    });
 
-    if (toolTips) {
-        $.fn.tipsy.enable();
+  $('#personalsettings .expert').on('click keydown', function(event) {
+    event.preventDefault();
+    OC.appSettings({appid:'cafevdb', loadJS:'expertmode.js',
+                    cache:false, scriptName:'expert.php'});
+  });
+  
+  OCCategories.app = 'calendar';
+  OCCategories.changed = function(categories) {
+    Calendar.UI.categoriesChanged(categories);
+  }
+
+  $(':button.events').click(function(event) {
+    event.preventDefault();
+    if ($('#events').dialog('isOpen') == true) {
+      $('#events').dialog('close').remove();
+      $('#events').dialog('destroy').remove();
     } else {
-        $.fn.tipsy.disable();
+      $('#dialog_holder').load(
+        OC.filePath('cafevdb', 'ajax/events', 'events.php'),
+        $(this),
+        function() {
+          $('.tipsy').remove();
+          var popup = $('#events').dialog({
+            position: { my: "left top",
+                        at: "left bottom",
+                        of: "#controls",
+                        offset: "10 10" },
+            width : 500,
+            height: 700,
+            open  : function(){
+              // quasi like document.ready(), it seems
+              $.getScript(OC.filePath('cafevdb', 'js', 'events.js'));
+            },
+            close : function(event, ui) {
+                $('#event').dialog('close');
+              $(this).dialog('destroy').remove();
+            }
+          });
+        });
     }
-
-    // $(window).click(function() {
-    //     //hide the settings menu when clicking outside it
-    //     if($('body').attr("id")==="body-user"){
-    //         $('#appsettings_popup').hide();
-    //     }
-    // });
-
-    $('#personalsettings .generalsettings').on('click keydown', function(event) {
-	event.preventDefault();
-	OC.appSettings({appid:'cafevdb', loadJS:true, cache:false, scriptName:'settings.php'});
-    });
-
-    $('#personalsettings .expert').on('click keydown', function(event) {
-	event.preventDefault();
-	OC.appSettings({appid:'cafevdb', loadJS:'expertmode.js', cache:false, scriptName:'expert.php'});
-    });
-
-    $(':button.events').on('click keydown', function(event) {
-	if ($('#events').dialog('isOpen') == true) {
-	    $('#events').dialog('destroy').remove();
-	} else {
-            var post = $(':button.events').serialize();
-            $('#dialog_holder').load( OC.filePath('cafevdb', 'ajax/events', 'events.php'), post, function() {
-		$('.tipsy').remove();
-		//$('#fullcalendar').fullCalendar('unselect');
-	        $('#events').tabs({ selected: 0});
-                $('#events').dialog({
-                    width : 500,
-                    height: 700,
-                    close : function(event, ui) {
-                        $(this).dialog('destroy').remove();
-                    }
-                });
-            });
-        }
-        return false;
-	//OC.appSettings({appid:'cafevdb', loadJS:'expertmode.js', cache:false, scriptName:'expert.php'});
-    });
-
+    return false;
+  });
 });
+
+// LocalVariables: ***
+// js-indent-level: 2 ***
+// End: ***
+

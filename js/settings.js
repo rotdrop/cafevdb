@@ -36,32 +36,32 @@ $(document).ready(function(){
     });
 
     // 'show password' checkbox
-    var tmp = $('#cafevdbkey #encryptionkey').val();
-    $('#cafevdbkey #encryptionkey').showPassword();
-    $('#cafevdbkey #encryptionkey').val(tmp);
-    $("#cafevdbkey #button").click( function(){
+    var tmp = $('#cafevdbuserkey #encryptionkey').val();
+    $('#cafevdbuserkey #encryptionkey').showPassword();
+    $('#cafevdbuserkey #encryptionkey').val(tmp);
+    $("#cafevdbuserkey #button").click( function(){
         // We allow empty keys, meaning no encryption
-        if ($('#cafevdbkey #password').val() != '' && (true || $('#cafevdbkey #encryptionkey').val() != '')) {
+        if ($('#cafevdbuserkey #password').val() != '' && (true || $('#cafevdbuserkey #encryptionkey').val() != '')) {
             // Serialize the data
-            var post = $( "#cafevdbkey" ).serialize();
-            $('#cafevdbkey #changed').hide();
-            $('#cafevdbkey #error').hide();
+            var post = $( "#cafevdbuserkey" ).serialize();
+            $('#cafevdbuserkey #changed').hide();
+            $('#cafevdbuserkey #error').hide();
             // Ajax foo
             $.post( OC.filePath('cafevdb', 'ajax/settings', 'encryptionkey.php'), post, function(data){
                 if( data.status == "success" ){
-                    $('#cafevdbkey #dbkey1').val('');
-                    $('#cafevdbkey #encryptionkey').val('');
-                    $('#cafevdbkey #changed').show();
+                    $('#cafevdbuserkey #dbkey1').val('');
+                    $('#cafevdbuserkey #encryptionkey').val('');
+                    $('#cafevdbuserkey #changed').show();
                 }
                 else{
-                    $('#cafevdbkey #error').html( data.data.message );
-                    $('#cafevdbkey #error').show();
+                    $('#cafevdbuserkey #error').html( data.data.message );
+                    $('#cafevdbuserkey #error').show();
                 }
             });
             return false;
         } else {
-            $('#cafevdbkey #changed').hide();
-            $('#cafevdbkey #error').show();
+            $('#cafevdbuserkey #changed').hide();
+            $('#cafevdbuserkey #error').show();
             return false;
         }
 
@@ -179,5 +179,16 @@ $(document).ready(function(){
 	    $('#cafevdbsettings .msg').text('Finished saving: ' + data);
 	});
     });
+
+    $('#cafevdbevents :input').blur(function(event) {
+        event.preventDefault();
+	$('#cafevdbevents .msg').hide();
+        //var post = $('#cafevdbevents').serialize();
+	$.post( OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php') , $(this), function(data){
+	    $('#cafevdbevents .msg').html(data.data.message);
+	    $('#cafevdbevents .msg').show();
+	});
+    });
+        
 
 });

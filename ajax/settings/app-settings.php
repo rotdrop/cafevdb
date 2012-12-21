@@ -10,6 +10,8 @@ OCP\JSON::checkLoggedIn();
 OCP\JSON::checkAppEnabled('cafevdb');
 OCP\JSON::callCheck();
 
+$l = OC_L10N::get('cafevdb');
+
 $user  = OCP\USER::getUser();
 $group = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
 if (!OC_SubAdmin::isGroupAccessible($user, $group)) {
@@ -127,4 +129,24 @@ if (isset($_POST['CAFEVDBpass'])) {
     return;
 }
 
-echo 'false';
+$calendarkeys = array('calendaruser', 'concertscalendar', 'rehearsalscalendar', 'othercalendar');
+foreach ($calendarkeys as $key) {
+    if (isset($_POST[$key])) {
+        $value = $_POST[$key];
+        CAFEVDB\Config::setValue($key, $value);
+        OC_JSON::success(array("data" => array( "message" => "$key: $value")));
+        return;
+    }
+}
+
+if (isset($_POST['eventduration'])) {
+    $value = $_POST['eventduration'];
+    CAFEVDB\Config::setValue('eventduration', $value);
+    // Should we now check whether we really can log in to the db-server?
+    OC_JSON::success(array("data" => array( "message" => '('.$value.' '.$l->t('minutes').')' )));
+    return;
+}
+
+OC_JSON::error(array("data" => array("message" => "Unhandled request: ".print_r($_POST,true))));
+return;
+
