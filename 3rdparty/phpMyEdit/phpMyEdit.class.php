@@ -151,7 +151,7 @@ class phpMyEdit
 	var $message;		// informational message to print
 	var $notify;		// change notification e-mail adresses
 	var $logtable;		// name of optional logtable
-        var $miscphp;           // callback function for multi-purpose custom misc button 
+    var $miscphp;           // callback function for multi-purpose custom misc button 
 	var $navigation;	// navigation style
 	var $buttons;
 	var $tabs;			// TAB names
@@ -274,7 +274,9 @@ class phpMyEdit
 	function add_enabled()    { return stristr($this->options, 'A'); }
 	function change_enabled() { return stristr($this->options, 'C'); }
 	function delete_enabled() { return stristr($this->options, 'D'); }
-	function misc_enabled()   { return stristr($this->options, 'M') && isset($this->miscphp) && $this->miscphp != '' ; }
+	function misc_enabled()   { return (stristr($this->options, 'M') &&
+                                        isset($this->miscphp) &&
+                                        $this->miscphp != '') ; }
 	function filter_enabled() { return stristr($this->options, 'F'); }
 	function view_enabled()   { return stristr($this->options, 'V'); }
 	function copy_enabled()   { return stristr($this->options, 'P') && $this->add_enabled(); }
