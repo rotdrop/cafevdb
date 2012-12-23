@@ -25,7 +25,6 @@ if ($projectId < 0 ||
 $eventId = CAFEVDB\Util::cgiValue('EventId', -1);
 $action  = CAFEVDB\Util::cgiValue('Action', '');
 
-$events = CAFEVDB\Projects::events($projectId);
 $emailEvents = CAFEVDB\Util::cgiValue('email-check', array());
 $selected = array(); // array marking selected events
 
@@ -38,6 +37,8 @@ case 'delete':
       $selected[$event] = true;
     }
   }
+  // Re-fetch the events
+  $events = CAFEVDB\Projects::events($projectId);
   break;
 case 'detach':
   // Keep the event in the calendar, but detach it
@@ -47,20 +48,28 @@ case 'detach':
       $selected[$event] = true;
     }
   }
+  // Re-fetch the events
+  $events = CAFEVDB\Projects::events($projectId);
   break;
-case 'relist':
+case 'redisplay':
+  // Re-fetch the events
+  $events = CAFEVDB\Projects::events($projectId);
   // Just remember the events selected for email transmission
   foreach ($emailEvents as $event) {
     $selected[$event] = true;
   }
   break;
 case 'select':
+  // Re-fetch the events
+  $events = CAFEVDB\Projects::events($projectId);
   // Mark all events as selected.
   foreach ($events as $event) {
     $selected[$event['calEventId']] = true;
   }
   break;
 case 'deselect':
+  // Re-fetch the events
+  $events = CAFEVDB\Projects::events($projectId);
   // Just do nothing, leave all events unmarked.
   break;
 default:
