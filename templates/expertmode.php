@@ -3,12 +3,18 @@
 </script>
 <?php
 
+use CAFEVDB\L;
 CAFEVDB\Config::init();
 
 $buttons = array();
 $buttons['pre'] = '<div>';
 $buttons['post'] = '</div>';
 $buttons['between'] = '</div><div>';
+$buttons['syncevents'] =
+  array('name' => 'Synchronize Events',
+        'title' => CAFEVDB\Config::toolTips('syncevents'),
+        'id' => 'syncevents',
+        'class' => 'operations expert button');
 $buttons['makeviews'] =
   array('name' => 'Recreate all Views',
         'title' => 'Recreate the ``Detailed Instrumentation\'\' hybrid-table for each project',
@@ -34,18 +40,18 @@ $buttons['example'] =
 ?>
 <div id="expertmode">
   <fieldset id="expertmode" class="operations expert">
-  <strong><?php echo $l->t('Advanced operations, use with care') ?></strong><br />
-  <input type="button" value="<?php echo $l->t('Open phpmyadmin'); ?>" onclick="return window.open('<?php echo CAFEVDB\Config::$opts['phpmyadmin']; ?>','cafevdb@phpmyadmin');" title="<?php echo $l->t('Open the login-window to the data-base back-bone. Although this is ``expert mode\'\' you will fall in love with the ``export\'\' facilities of the data-base back-bone. TRY IT OUT! DO IT!'); ?>"/>
+  <strong><?php echo L::t('Advanced operations, use with care') ?></strong><br />
+  <input type="button" value="<?php echo L::t('Open phpmyadmin'); ?>" onclick="return window.open('<?php echo CAFEVDB\Config::$opts['phpmyadmin']; ?>','cafevdb@phpmyadmin');" title="<?php echo L::t('Open the login-window to the data-base back-bone. Although this is ``expert mode\'\' you will fall in love with the ``export\'\' facilities of the data-base back-bone. TRY IT OUT! DO IT!'); ?>"/>
   <?php echo CAFEVDB\Navigation::button($buttons); ?>
   </fieldset>
   <br/>
-  <label for="" class="bold"><?php echo $l->t('Operation generated Response');?></label>
+  <label for="" class="bold"><?php echo L::t('Operation generated Response');?></label>
 <?php
   echo CAFEVDB\Navigation::button(array('only' =>
-                                        array('name' => $l->t('Clear Output'),
+                                        array('name' => 'Clear Output',
                                               'id' => 'clearoutput',
-                                              'title' => $l->t('Remove output, if any is present.'),
+                                              'title' => 'Remove output, if any is present.',
                                               'class' => 'operations expert button')));
 ?>
-<div class="msg"><span style="opacity:0.5"><?php echo $l->t('empty') ?></span></div>
+<div class="msg"><span style="opacity:0.5"><?php echo L::t('empty') ?></span></div>
 </div>

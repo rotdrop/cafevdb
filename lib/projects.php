@@ -10,6 +10,7 @@ class Projects
   {
     Config::init();
 
+    global $l;
     global $debug_query;
     //    $debug_query = true;
 
@@ -178,16 +179,16 @@ __EOT__;
                                      );
 
     $opts['fdd']['Events'] = array(
-                               'name'     => 'Events',
-                               'sql'      => 'Id',
-                               'php'      => array('type' => 'function',
-                                                   'function' => 'CAFEVDB\Projects::eventButton'),
-                               'select'   => 'T',
-                               'options'  => 'LAVCPDR', // auto increment
-                               'maxlen'   => 11,
-                               'default'  => '0',
-                               'sort'     => false
-                               );
+        'name'     => L::t('Events'),
+        'sql'      => 'Id',
+        'php'      => array('type' => 'function',
+                            'function' => 'CAFEVDB\Projects::eventButton'),
+        'select'   => 'T',
+        'options'  => 'LAVCPDR', // auto increment
+        'maxlen'   => 11,
+        'default'  => '0',
+        'sort'     => false
+    );
 
     $opts['fdd']['Besetzung'] = array('name'     => 'Besetzung',
                                       'options'  => 'AVCPD',
@@ -241,6 +242,7 @@ zur Extra-Spalte in der Datenbank angeben, z.B. so:
 Dann wird die Reihenfolge bei der Anzeige der Tabelle geändert, aber die
 Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
 
+    if (false) {
     $opts['fdd']['Konzert1'] = Config::$opts['calendar'];
     $opts['fdd']['Konzert1']['name'] = 'Konzert1';
 
@@ -323,6 +325,7 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
                                              'sort'     => true,
                                              'escape' => false,
                                              );
+    }
 
     $opts['triggers']['update']['after'] = Config::$triggers.'projects.TUA.inc.php';
     $opts['triggers']['insert']['after'] = Config::$triggers.'projects.TIA.inc.php';
@@ -390,7 +393,8 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
 
   public static function eventButton($value, $opts, $k, $fds, $fdd)
   {
-    $bvalue = 'Events';
+    global $l;
+    $bvalue = L::t('Events');
     return <<<__EOT__
 <div class="events">
 <input type="button" class="events" name="Project[$value]" value="$bvalue"/>
@@ -615,7 +619,7 @@ __EOT__;
 }; // class Projects
 
 /*
- * LocalVariables: ***
+ * Local Variables: ***
  * c-basic-offset: 2 ***
  * End: ***
  */

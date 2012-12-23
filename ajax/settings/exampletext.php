@@ -2,7 +2,7 @@
 
 // Init owncloud
 
-$l=OC_L10N::get('cafevdb');
+use CAFEVDB\L;
 
 // Check if we are a user
 OCP\JSON::checkLoggedIn();
@@ -13,10 +13,10 @@ OCP\JSON::callCheck();
 if( isset( $_POST['exampletext'] ) ) {
   $exampletext=$_POST['exampletext'];
   OCP\Config::setUserValue( OCP\USER::getUser(), 'cafevdb', 'exampletext', $exampletext );
-  OCP\JSON::success(array('data' => array( 'message' => $l->t('Example-Text changed') )));
+  OCP\JSON::success(array('data' => array( 'message' => L::t('Example-Text changed') )));
   return true;
 } else {
-  OCP\JSON::error(array('data' => array( 'message' => $l->t('Invalid request') )));
+  OCP\JSON::error(array('data' => array( 'message' => L::t('Invalid request') )));
   return false;
 }
 

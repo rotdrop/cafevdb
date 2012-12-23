@@ -2,12 +2,12 @@
 
 // Init owncloud
 
-$l=OC_L10N::get('cafevdb');
+use CAFEVDB\L;
 
 // Check if we are a user
 OCP\JSON::checkLoggedIn();
 OCP\JSON::checkAppEnabled('cafevdb');
 
-echo '<span style="opacity:0.5">'.$l->t('empty').'</span>';
+echo '<span style="opacity:0.5">'.L::t('empty').'</span>';
 
 ?>

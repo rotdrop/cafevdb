@@ -1,4 +1,4 @@
-<div id="event" title="<?php echo $l->t("Edit an event");?>">
+<div id="event" title="<?php echo L::t("Edit an event");?>">
 <PRE>
 <?php
 if (isset($text)) {

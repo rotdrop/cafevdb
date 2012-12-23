@@ -6,10 +6,9 @@ if(!OCP\User::isLoggedIn()) {
 OCP\JSON::checkAppEnabled('cafevdb');
 OCP\JSON::checkAppEnabled('calendar');
 
-$debugtext = '<PRE>'.print_r($_POST, true).'</PRE>';
+use CAFEVDB\L;
 
-$l = OC_L10N::get('cafevdb');
-trim($l->t('blah')); /* necessary, but why? */
+$debugtext = '<PRE>'.print_r($_POST, true).'</PRE>';
 
 $lang = OC_L10N::findLanguage('cafevdb');
 $locale = $lang.'_'.strtoupper($lang).'.UTF-8';

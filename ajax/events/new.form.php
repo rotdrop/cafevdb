@@ -17,8 +17,7 @@ if(!OCP\User::isLoggedIn()) {
 OCP\JSON::checkAppEnabled('calendar');
 OCP\JSON::checkAppEnabled('cafevdb');
 
-// cafevdb values
-$l = OC_L10N::get('cafevdb');
+use CAFEVDB\Ļ;
 
 $projectId   = CAFEVDB\Util::cgiValue('ProjectId', -1);
 $projectName = CAFEVDB\Util::cgiValue('ProjectName', -1);
@@ -30,9 +29,9 @@ $end    = CAFEVDB\Util::cgiValue('end', false);
 $allday = CAFEVDB\Util::cgiValue('allday', false);
 
 // choose defaults which make sense
-$categories   = $projectName.','.$l->t($eventKind);
-$calendarname = CAFEVDB\Config::getSetting($eventKind.'calendar', $l->t($eventKind));
-$title        = $l->t($eventKind).', '.$projectName;
+$categories   = $projectName.','.L::t($eventKind);
+$calendarname = CAFEVDB\Config::getSetting($eventKind.'calendar', L::t($eventKind));
+$title        = L::t($eventKind).', '.$projectName;
 
 // make sure that the calendar exists and is writable
 $calendaruser  = CAFEVDB\Config::getSetting('calendaruser', CAFEVDB\Config::getValue('dbuser'));

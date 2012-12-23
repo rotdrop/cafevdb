@@ -1,3 +1,4 @@
+<?php use CAFEVDB\L; ?>
 <table id="table" class="nostyle listing">
 <?php
 $prjId   = $_['ProjectId'];
@@ -33,13 +34,13 @@ foreach ($_['Events'] as $event) {
 __EOT__;
   foreach ($evtButtons as $btn => $values) {
     $tag   = $values['tag'];
-    $title = $l->t($values['title']);
+    $title = L::t($values['title']);
     $name  = $tag."[$evtId]";
     echo <<<__EOT__
         <input class="$tag" id="$tag-$evtId" type="button" name="$tag" title="$title" value="$evtId" />
 __EOT__;
   }
-  $title = $l->t(CAFEVDB\Config::toolTips('projectevents-selectevent'));
+  $title = L::t(CAFEVDB\Config::toolTips('projectevents-selectevent'));
   $checked = isset($_['Selected'][$evtId]) ? 'checked' : '';
   echo <<<__EOT__
       </td>

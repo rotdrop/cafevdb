@@ -1,5 +1,8 @@
 <?php
 $TRANSLATIONS = array(
+  'Events' => 'Termine',
+  'Synchronize Events' => 'Termine zuordnen',
+  'Recompute the link between projects and events, using the event-categories as primary key.' => 'Zuordnung der Termine zu den Projekten neu berechnen. Dabei dienen die Projekt-Kategorien als Kriterium.',
   'Mark the respective event for being
 sent by email as ICS-attachment per email.
 Hitting the email button above the form

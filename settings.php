@@ -5,7 +5,7 @@ OCP\User::checkLoggedIn();
 
 CAFEVDB\Config::init();
 
-$l = OC_L10N::get('cafevdb');
+use CAFEVDB\L;
 
 $group = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
 $user  = OCP\USER::getUser();
@@ -40,7 +40,7 @@ if (CAFEVDB\Config::encryptionKeyValid() &&
     ($cafevgroup = \OC_AppConfig::getValue('cafevdb', 'usergroup', '')) != '' &&
     OC_SubAdmin::isGroupAccessible($user, $cafevgroup)) {
     
-    $tmpl = new OCP\Template( 'cafevdb', 'app-settings');
+    $tmpl = new OCP\Template('cafevdb', 'app-settings');
 
     $tmpl->assign('dbserver', CAFEVDB\Config::getValue('dbserver'));
     $tmpl->assign('dbname', CAFEVDB\Config::getValue('dbname'));
@@ -49,22 +49,10 @@ if (CAFEVDB\Config::encryptionKeyValid() &&
     $tmpl->assign('encryptionkey', CAFEVDB\Config::getValue('encryptionkey'));
 
     $tmpl->assign('calendaruser', CAFEVDB\Config::getSetting('calendaruser', CAFEVDB\Config::getValue('dbuser')));
-    $tmpl->assign('concertscalendar', CAFEVDB\Config::getSetting('concertscalendar', $l->t('concerts')));
-    $tmpl->assign('rehearsalscalendar', CAFEVDB\Config::getSetting('rehearsalscalendar', $l->t('rehearsals')));
-    $tmpl->assign('othercalendar', CAFEVDB\Config::getSetting('othercalendar', $l->t('other')));
+    $tmpl->assign('concertscalendar', CAFEVDB\Config::getSetting('concertscalendar', L::t('concerts')));
+    $tmpl->assign('rehearsalscalendar', CAFEVDB\Config::getSetting('rehearsalscalendar', L::t('rehearsals')));
+    $tmpl->assign('othercalendar', CAFEVDB\Config::getSetting('othercalendar', L::t('other')));
     $tmpl->assign('eventduration', CAFEVDB\Config::getSetting('eventduration', '180'));
-
-    $result = $result && $tmpl->printPage();
-}
-
-return $result;
-
-?>
-));
-    $tmpl->assign('concertcalendar',  \OC_AppConfig::getValue('cafevdb', 'concertcalendar', $l->t('concerts')));
-    $tmpl->assign('rehearsalcalendar',  \OC_AppConfig::getValue('cafevdb', 'rehearsalcalendar', $l->t('rehearsals')));
-    $tmpl->assign('othercalendar',  \OC_AppConfig::getValue('cafevdb', 'othercalendar', $l->t('other')));
-    $tmpl->assign('eventduration', \OC_AppConfig::getValue('cafevdb', 'eventduration', 180));
 
     $result = $result && $tmpl->printPage();
 }

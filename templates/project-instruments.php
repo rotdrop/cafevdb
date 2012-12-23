@@ -3,7 +3,6 @@
 </script>
 <div id="controls">
 <?php
-CAFEVDB\Navigation::setTranslation($l);
 $table = new CAFEVDB\ProjectInstruments();
 $project = $table->project;
 $projectId = $table->projectId;

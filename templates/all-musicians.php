@@ -3,7 +3,6 @@
 </script>
 <div id="controls">
 <?php
-  CAFEVDB\Navigation::setTranslation($l);
   echo CAFEVDB\Navigation::button('projects');
   echo CAFEVDB\Navigation::button('projectinstruments');
   echo CAFEVDB\Navigation::button('instruments');

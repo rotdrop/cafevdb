@@ -48,7 +48,7 @@ $(document).ready(function(){
                           function() { Events.UI.init(); });
             },
             close : function(event, ui) {
-                $('#event').dialog('close');
+              $('#event').dialog('close');
               $(this).dialog('destroy').remove();
             }
           });

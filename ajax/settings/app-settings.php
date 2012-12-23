@@ -10,7 +10,7 @@ OCP\JSON::checkLoggedIn();
 OCP\JSON::checkAppEnabled('cafevdb');
 OCP\JSON::callCheck();
 
-$l = OC_L10N::get('cafevdb');
+use CAFEVDB\L;
 
 $user  = OCP\USER::getUser();
 $group = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
@@ -143,7 +143,7 @@ if (isset($_POST['eventduration'])) {
     $value = $_POST['eventduration'];
     CAFEVDB\Config::setValue('eventduration', $value);
     // Should we now check whether we really can log in to the db-server?
-    OC_JSON::success(array("data" => array( "message" => '('.$value.' '.$l->t('minutes').')' )));
+    OC_JSON::success(array("data" => array( "message" => '('.$value.' '.L::t('minutes').')' )));
     return;
 }
 

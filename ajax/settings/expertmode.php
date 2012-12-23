@@ -2,7 +2,7 @@
 
 // Init owncloud
 
-$l = OC_L10N::get('cafevdb');
+use CAFEVDB\L;
 
 // Check if we are a user
 OCP\JSON::checkLoggedIn();
@@ -16,7 +16,7 @@ if( isset( $_POST['expertmode'] ) ) {
   $expertmode='off';
 }
 OCP\Config::setUserValue( OCP\USER::getUser(), 'cafevdb', 'expertmode', $expertmode );
-OCP\JSON::success(array('data' => array( 'message' => $l->t('Expertmode changed') )));
+OCP\JSON::success(array('data' => array( 'message' => L::t('Expertmode changed') )));
 return true;
 
 ?>

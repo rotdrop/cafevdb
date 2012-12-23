@@ -3,7 +3,6 @@
 </script>
 <div id="controls">
 <?php
-CAFEVDB\Navigation::setTranslation($l);
 $project = CAFEVDB\Util::cgiValue('Project');
 $projectId = CAFEVDB\Util::cgiValue('ProjectId',-1);
 if ($projectId >= 0) {

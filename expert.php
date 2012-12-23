@@ -1,6 +1,6 @@
 <?php
 
-$l=OC_L10N::get('cafevdb');
+use CAFEVDB\L;
 
 $tmpl = new OCP\Template( 'cafevdb', 'expertmode');
 

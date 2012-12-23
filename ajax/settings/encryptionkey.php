@@ -2,7 +2,7 @@
 
 // Init owncloud
 
-$l=OC_L10N::get('cafevdb');
+use CAFEVDB\L;
 
 // Check if we are a user
 OCP\JSON::checkLoggedIn();
@@ -17,13 +17,13 @@ if (isset($_POST['encryptionkey']) && isset($_POST['password'])) {
 
   // Re-validate the user
   if (\OC_User::checkPassword($user, $password) !== $user) {
-    OCP\JSON::error(array('data' => array('message' => $l->t('Invalid password for ')."$user")));
+    OCP\JSON::error(array('data' => array('message' => L::t('Invalid password for ')."$user")));
     return false;
   }
 
   // Then check whether the key is correct
   if (!CAFEVDB\Config::encryptionKeyValid($encryptionkey)) {
-    OCP\JSON::error(array('data' => array('message' => $l->t('Invalid encryption key.'))));
+    OCP\JSON::error(array('data' => array('message' => L::t('Invalid encryption key.'))));
     return false;
   }
 
@@ -33,7 +33,7 @@ if (isset($_POST['encryptionkey']) && isset($_POST['password'])) {
   // Then store the key in the session as it is the valid key
   CAFEVDB\Config::setEncryptionKey($encryptionkey);
 
-  OCP\JSON::success(array('data' => array('message' => $l->t('Encryption key stored.'))));
+  OCP\JSON::success(array('data' => array('message' => L::t('Encryption key stored.'))));
 
   return true;
 }

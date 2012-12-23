@@ -2,9 +2,25 @@
 
 namespace CAFEVDB;
 
+class L
+{
+  private static $l = false;
+
+  public static function t($text)
+  {
+    if (self::$l === false) {
+      self::$l = \OC_L10N::get('cafevdb');
+ 
+      // If I omit the next line then the first call to $l->t()
+      // generates a spurious new-line. Why?
+      trim(self::$l->t('blah'));
+    }
+    return self::$l->t(strval($text));
+  }
+};
+
 class Util
 {
-
   public static function debugMode()
   {
     if (Config::$debug_query) {
@@ -101,26 +117,10 @@ document.onkeypress = stopRKey;
   }
 };
 
-class DummyTranslation
-{
-  public function t($msg) {
-    return $msg;
-  }
-};
-
 class Navigation
 {
-  private static $l = false;
-  public static function setTranslation(&$l) {
-    self::$l = $l;
-  }
   public static function button($id='projects', $project='', $projectId=-1)
   {
-    if (!self::$l) {
-      self::$l = new DummyTranslation();
-    }
-    $l = self::$l;
-
     if (is_array($id)) {
       $buttons = $id;
       $pre = $post = $between = '';
@@ -138,8 +138,8 @@ class Navigation
       }
       $html = $pre;
       foreach ($buttons as $key => $btn) {
-        $name  = $l->t($btn['name']);
-        $title = isset($btn['title']) ? $l->t($btn['title']) : $name;
+        $name  = L::t($btn['name']);
+        $title = isset($btn['title']) ? L::t($btn['title']) : $name;
         $html .= ''
           .'<button class="'.$btn['class'].'" title="'.$title.'"'
           .(isset($btn['id']) ? ' id="'.$btn['id'].'"' : '')
@@ -163,8 +163,8 @@ class Navigation
     switch ($id) {
 
     case 'projects':
-      $value = $l->t("View all Projects");
-      $title = $l->t("Overview over all known projects (start-page).");
+      $value = L::t("View all Projects");
+      $title = L::t("Overview over all known projects (start-page).");
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
   <input type="submit" value="$value" title="$title"/>
@@ -176,8 +176,8 @@ __EOT__;
       break;
 
     case 'all':
-      $value = $l->t("Display all Musicians");
-      $title = $l->t("Display all musicians stored in the data-base, with detailed facilities for filtering and sorting.");
+      $value = L::t("Display all Musicians");
+      $title = L::t("Display all musicians stored in the data-base, with detailed facilities for filtering and sorting.");
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
   <input type="submit" value="$value" title="$title"/>
@@ -189,7 +189,7 @@ __EOT__;
       break;
 
     case 'email':
-      $title = $l->t("Mass-email form, use with care. Mass-emails will be logged. Recipients will be specified by the Bcc: field in the header, so the recipients are undisclosed to each other.");
+      $title = L::t("Mass-email form, use with care. Mass-emails will be logged. Recipients will be specified by the Bcc: field in the header, so the recipients are undisclosed to each other.");
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
   <input type="submit" name="" value="Em@il" title="$title"/>
@@ -203,8 +203,8 @@ __EOT__;
       break;
 
     case 'emailhistory':
-      $value = $l->t("Email History");
-      $title = $l->t("Display all emails sent by our mass-email form.");
+      $value = L::t("Email History");
+      $title = L::t("Display all emails sent by our mass-email form.");
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
   <input type="submit" value="$value" title="$title"/>
@@ -222,7 +222,7 @@ __EOT__;
       $syspfx = Config::$pmeopts['cgi']['prefix']['sys'];
       $opname = $syspfx.'operation';
       $opwhat = 'View?'.$syspfx.'rec='.$projectId;
-      $title = $l->t("The currently active project.");
+      $title = L::t("The currently active project.");
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
   <input type="submit" value="$project" title="$title"/>
@@ -237,8 +237,8 @@ __EOT__;
       break;
 
     case 'detailed':
-      $value = $l->t("Detailed Instrumentation");
-      $title = $l->t("Detailed display of all registered musicians for the selected project. The table will allow for modification of personal data like email, phone, address etc.");
+      $value = L::t("Detailed Instrumentation");
+      $title = L::t("Detailed display of all registered musicians for the selected project. The table will allow for modification of personal data like email, phone, address etc.");
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
   <input type="submit" value="$value" title="$title"/>
@@ -252,8 +252,8 @@ __EOT__;
       break;
 
     case 'brief':
-      $value = $l->t("Brief Instrumentation");
-      $title = $l->t("Brief display of all registered musicians for the selected project. The table will allow for modification of project specific data, like the instrument, the project-fee etc.");
+      $value = L::t("Brief Instrumentation");
+      $title = L::t("Brief display of all registered musicians for the selected project. The table will allow for modification of project specific data, like the instrument, the project-fee etc.");
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
   <input type="submit" value="$value" title="$title"/>
@@ -267,8 +267,8 @@ __EOT__;
       break;
 
     case 'instruments':
-      $value = $l->t("Add Instruments");
-      $title = $l->t("Display the list of instruments known by the data-base, possibly add new ones as needed.");
+      $value = L::t("Add Instruments");
+      $title = L::t("Display the list of instruments known by the data-base, possibly add new ones as needed.");
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
   <input type="submit" value="$value" title="$title"/>
@@ -282,8 +282,8 @@ __EOT__;
       break;
 
     case 'projectinstruments':
-      $value = $l->t("Instrumentation Numbers");
-      $title = $l->t("Display the desired instrumentaion numbers, i.e. how many musicians are already registered for each instrument group and how many are finally needed.");
+      $value = L::t("Instrumentation Numbers");
+      $title = L::t("Display the desired instrumentaion numbers, i.e. how many musicians are already registered for each instrument group and how many are finally needed.");
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
   <input type="submit" name="" value="$value" title="$title"/>
@@ -297,8 +297,8 @@ __EOT__;
       break;
 
     case 'add':
-      $value = $l->t("Add more Musicians");
-      $title = $l->t("List of all musicians NOT registered for the selected project. Only through that table a new musician can enter a project. Look for a hyper-link Add_to_PROJECT");
+      $value = L::t("Add more Musicians");
+      $title = L::t("List of all musicians NOT registered for the selected project. Only through that table a new musician can enter a project. Look for a hyper-link Add_to_PROJECT");
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
   <input type="submit" value="$value" title="$title"/>
@@ -372,8 +372,8 @@ class mySQL
   public static function queryNumRows($querypart, $handle = false, $die = true, $silent = false)
   {
       $query = 'SELECT COUNT(*) '.$querypart;
-      $result = query($query, $handle, $die, $silent);
-      return fetch($result, MYSQL_NUM)[0];
+      $result = self::query($query, $handle, $die, $silent);
+      return self::fetch($result, MYSQL_NUM)[0];
   }
 
   public static function fetch(&$res, $type = MYSQL_ASSOC)
@@ -418,8 +418,12 @@ class mySQL
 
     return preg_split("/','/",$set); // Split into an array
   }
-
 };
 
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */
 
 ?>

@@ -8,8 +8,7 @@ CAFEVDB\Config::init();
 $group = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
 $user  = OCP\USER::getUser();
 
-$l = OC_L10N::get('cafevdb');
-trim($l->t('blah')); /* necessary, but why? */
+use CAFEVDB\L;
 
 if (!OC_Group::inGroup($user, $group)) {
   $tmpl = new OCP\Template( 'cafevdb', 'not-a-member', 'user' );
@@ -72,15 +71,15 @@ $categories = json_encode(OC_Calendar_App::getCategoryOptions());
 $jsscript .= "
 var eventSources = '';
 var categories = '$categories';
-var missing_field = '".addslashes($l->t('Missing or invalid fields'))."';
-var missing_field_title = '".addslashes($l->t('Title'))."';
-var missing_field_calendar = '".addslashes($l->t('Calendar'))."';
-var missing_field_fromdate = '".addslashes($l->t('From Date'))."';
-var missing_field_fromtime = '".addslashes($l->t('From Time'))."';
-var missing_field_todate = '".addslashes($l->t('To Date'))."';
-var missing_field_totime = '".addslashes($l->t('To Time'))."';
-var missing_field_startsbeforeends = '".addslashes($l->t('The event ends before it starts'))."';
-var missing_field_dberror = '".addslashes($l->t('There was a database fail'))."';
+var missing_field = '".addslashes(L::t('Missing or invalid fields'))."';
+var missing_field_title = '".addslashes(L::t('Title'))."';
+var missing_field_calendar = '".addslashes(L::t('Calendar'))."';
+var missing_field_fromdate = '".addslashes(L::t('From Date'))."';
+var missing_field_fromtime = '".addslashes(L::t('From Time'))."';
+var missing_field_todate = '".addslashes(L::t('To Date'))."';
+var missing_field_totime = '".addslashes(L::t('To Time'))."';
+var missing_field_startsbeforeends = '".addslashes(L::t('The event ends before it starts'))."';
+var missing_field_dberror = '".addslashes(L::t('There was a database fail'))."';
 ";
 
 // end event hacks

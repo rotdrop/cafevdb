@@ -67,7 +67,7 @@ class Events
    *
    * @return Undefined.
    */
-  protected static function syncEvent($eventId, $handle = false)
+  public static function syncEvent($eventId, $handle = false)
   {
     $ownConnection = $handle === false;
     if ($ownConnection) {
@@ -242,6 +242,61 @@ __EOT__;
     if ($ownConnection) {
       mySQL::close($handle);
     }
+  }
+
+  /**Unconditionally unregister the given event with the given
+   * project, and remove the project-name from the event's categories
+   * list.
+   *
+   * @param[in] $projectId The project key.
+   * @param[in] $eventId The event key (external key).
+   * @param[in] $handle mySQL handle or false.
+   *
+   * @return Undefined.
+   */
+  public static function unchain($projectId, $eventId,
+                                 $handle = false)
+  {
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
+    self::unregister($projectId, $eventId, $handle);
+
+    $projectName = Projects::fetchName($projectId, $handle);
+
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    // fetch the respective event
+    $vcalendar = \OC_Calendar_App::getVCalendar($eventId, false, false);
+    if (!$vcalendar) {
+      return;
+    }
+        
+    // Convert to an array
+    if ($vcalendar->__isset('VEVENT')) {
+      $vobject = &$vcalendar->VEVENT;
+    } else if ($calendar->__isset('VTODO')) {
+      $vobject = &$vcalendar->VTODO;
+    } else if ($vcalendar->__isset('VJOURNAL')) {
+      $vobject = &$vcalendar->VJOURNAL;
+    } else if ($vcalendar->__isset('VCARD')) {
+      $vobject = &$vcalendar->VCARD;
+    }
+
+    $categories = $vobject->getAsArray('CATEGORIES');
+
+    $key = array_search($projectName, $categories);
+    unset($categories[$key]);
+    $categories = implode(',', $categories);
+
+    $vobject->setString('CATEGORIES', $categories);
+    
+    \OC_Calendar_Object::edit($eventId, $vcalendar->serialize());    
   }
 
   /**Test if the given event is linked to the given project.

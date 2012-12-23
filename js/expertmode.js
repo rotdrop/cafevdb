@@ -1,14 +1,21 @@
 $(document).ready(function(){
 
-    $('button').tipsy({gravity:'nw', fade:true});
-    $('input').tipsy({gravity:'nw', fade:true});
-    $('label').tipsy({gravity:'nw', fade:true});
+    $('button').tipsy({gravity:'ne', fade:true});
+    $('input').tipsy({gravity:'ne', fade:true});
+    $('label').tipsy({gravity:'ne', fade:true});
 
     if (toolTips) {
         $.fn.tipsy.enable();
     } else {
         $.fn.tipsy.disable();
     }
+
+    $('#syncevents').click(function(){
+        var post  = $( '#syncevents' ).serialize();
+        $.post( OC.filePath('cafevdb', 'ajax/expertmode', 'syncevents.php'), post, function(data){
+	    $('#expertmode .msg').html(data);
+        });
+    });
 
     $('#makeviews').click(function(){
         var post  = $( '#makeviews' ).serialize();

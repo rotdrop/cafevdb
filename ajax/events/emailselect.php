@@ -8,8 +8,7 @@ OCP\JSON::checkAppEnabled('calendar');
 
 $debugtext = '<PRE>'.print_r($_POST, true).'</PRE>';
 
-$l = OC_L10N::get('cafevdb');
-trim($l->t('blah')); /* necessary, but why? */
+use CAFEVDB\L;
 
 $lang = OC_L10N::findLanguage('cafevdb');
 $locale = $lang.'_'.strtoupper($lang).'.UTF-8';

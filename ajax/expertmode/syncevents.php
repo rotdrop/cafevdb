@@ -2,7 +2,7 @@
 
 // Init owncloud
 
-$l = OC_L10N::get('cafevdb');
+use CAFEVDB\L;
 
 // Check if we are a user
 OCP\JSON::checkLoggedIn();
@@ -18,7 +18,7 @@ $calendars     = OC_Calendar_Calendar::allCalendars($calendaruser);
 $dfltnames = array('concerts', 'rehearsals', 'other');
 $dfltcals = array();
 foreach ($dfltnames as $name) {
-  $dfltcals[] = CAFEVDB\Config::getSetting($name.'calendar', $l->t($name));
+  $dfltcals[] = CAFEVDB\Config::getSetting($name.'calendar', L::t($name));
 }
 
 CAFEVDB\Config::init();
@@ -59,6 +59,6 @@ foreach ($calendars as $calendar) {
 
 CAFEVDB\mySQL::close($handle);
 
-echo '<span class="bold">'.$l->t('Done.').'</span>';
+echo '<span class="bold">'.L::t('Done.').'</span>';
 
 ?>

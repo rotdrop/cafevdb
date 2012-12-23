@@ -8,10 +8,9 @@ OCP\JSON::checkAppEnabled('calendar');
 
 $debugtext = '<PRE>'.print_r($_POST, true).'</PRE>';
 
-$l = OC_L10N::get('cafevdb');
-trim($l->t('blah')); /* necessary, but why? */
+use CAFEVDB\L;
 
-$lang = OC_L10N::findLanguage('cafevdb');
+$lang = \OC_L10N::findLanguage('cafevdb');
 $locale = $lang.'_'.strtoupper($lang).'.UTF-8';
 
 $projectId   = $_POST['ProjectId'];
@@ -30,7 +29,7 @@ switch ($action) {
    CAFEVDB\Events::unchain($projectId, $eventId);
    break;
  default:
-   OCP\JSON::error(array('data' => array('message' => $l->t('Invalid operation: ').$action)));
+   OCP\JSON::error(array('data' => array('message' => L::t('Invalid operation: ').$action)));
    return false;
 }
 

@@ -12,12 +12,10 @@ if (count($projects) != 1 || !($projects[0] >= 0)) {
 }
 
 CAFEVDB\Config::init();
+use CAFEVDB\L;
 
 $projectId = $projects[0];
 $events = CAFEVDB\Projects::events($projectId);
-
-$l = OC_L10N::get('cafevdb');
-trim($l->t('blah')); /* necessary, but why? */
 
 $lang = OC_L10N::findLanguage('cafevdb');
 $locale = $lang.'_'.strtoupper($lang).'.UTF-8';

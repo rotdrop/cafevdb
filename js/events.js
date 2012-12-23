@@ -1,4 +1,6 @@
 Events={
+  projectId: -1,
+  projectName: '',
   Events:{
     // nothing
   },

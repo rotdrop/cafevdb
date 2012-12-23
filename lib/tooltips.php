@@ -11,6 +11,7 @@ class Tooltips
   {
     return 
     array(
+      'syncevents' => 'Recompute the link between projects and events, using the event-categories as primary key.',
       'projectevents-selectevent' => 'Mark the respective event for being
 sent by email as ICS-attachment per email.
 Hitting the email button above the form
@@ -118,5 +119,11 @@ Think thrice about it.',
     );
   }
 }; // class toolTips
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */
 
 ?>

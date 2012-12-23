@@ -2,7 +2,7 @@
 
 // Init owncloud
 
-$l=OC_L10N::get('cafevdb');
+use CAFEVDB\L;
 
 // Check if we are a user
 OCP\JSON::checkLoggedIn();
