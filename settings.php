@@ -17,14 +17,16 @@ if (!OC_Group::inGroup($user, $group)) {
 
 $tmpl = new OCP\Template( 'cafevdb', 'settings');
 
-$expertmode  = OCP\Config::getUserValue($user, 'cafevdb','expertmode','');
-$tooltips    = OCP\Config::getUserValue($user, 'cafevdb','tooltips','');
-$exampletext = OCP\Config::getUserValue($user, 'cafevdb','exampletext','');
+$tooltips    = OCP\Config::getUserValue($user, 'cafevdb', 'tooltips','');
+$expertmode  = OCP\Config::getUserValue($user, 'cafevdb', 'expertmode','');
+$debugmode   = OCP\Config::getUserValue($user, 'cafevdb', 'debugmode','');
+$exampletext = OCP\Config::getUserValue($user, 'cafevdb', 'exampletext','');
 $encrkey     = CAFEVDB\Config::getEncryptionKey();
 
 $jsscript = 'var toolTips = '.($tooltips == 'on' ? 'true' : 'false').';
 ';
 
+$tmpl->assign('debugmode', $debugmode);
 $tmpl->assign('expertmode', $expertmode);
 $tmpl->assign('tooltips', $tooltips);
 $tmpl->assign('encryptionkey', $encrkey);

@@ -3,18 +3,21 @@
   <?php echo $_['jsscript']; ?>
 </script>
 <?php
-
-$experttitle   = "Show a second button which leads to a dialog with ``advanced'' settings";
 $tooltipstitle = "Control the display of tooltips. Warning: this works globally for all OwnCloud applications.";
+$experttitle   = "Show a second button which leads to a dialog with ``advanced'' settings";
+$debugtitle    = "Show a certain amount of debug information, normally not needed.";
 ?>
 <div class="personalblock">
   <form id="cafevdb">
     <strong>Personal Settings for Camerata DB</strong><br />
+    <input id="tooltips" type="checkbox" name="tooltips" <?php echo $_['tooltips'] == 'on' ? 'checked="checked"' : ''; ?> id="tooltips" title="<?php echo L::t($tooltipstitle) ?>"/>
+    <label for="tooltips" title="<?php echo L::t($tooltipstitle) ?>"><?php echo L::t('Tool-Tips') ?></label>
+    <br />
     <input id="expertmode" type="checkbox" name="expertmode" <?php echo $_['expertmode'] == 'on' ? 'checked="checked"' : ''; ?> id="expertmode" title="<?php echo L::t($experttitle) ?>"/>
     <label for="expertmode" title="<?php echo L::t($experttitle) ?>"><?php echo L::t('Expert-Mode') ?></label>
     <br />
-    <input id="tooltips" type="checkbox" name="tooltips" <?php echo $_['tooltips'] == 'on' ? 'checked="checked"' : ''; ?> id="tooltips" title="<?php echo L::t($tooltipstitle) ?>"/>
-    <label for="tooltips" title="<?php echo L::t($tooltipstitle) ?>"><?php echo L::t('Tool-Tips') ?></label>
+    <input id="debugmode" type="checkbox" name="debugmode" <?php echo $_['debugmode'] == 'on' ? 'checked="checked"' : ''; ?> id="debugmode" title="<?php echo L::t($debugtitle) ?>"/>
+    <label for="debugmode" title="<?php echo L::t($experttitle) ?>"><?php echo L::t('Debug-Mode') ?></label>
     <br />
     <label for="exampletext" title="<?php echo L::t('Example Text') ?>"><?php echo L::t('Example') ?></label>
     <input type="text" name="exampletext" id="exampletext"
