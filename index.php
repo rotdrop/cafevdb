@@ -17,8 +17,9 @@ if (!OC_Group::inGroup($user, $group)) {
 
 CAFEVDB\Events::unregister(9, 106);
 
-$expertmode = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb','expertmode','');
-$tooltips   = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb','tooltips','');
+$expertmode = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb', 'expertmode','');
+$debugmode  = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb', 'debugmode','');
+$tooltips   = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb', 'tooltips','');
 $encrkey    = CAFEVDB\Config::getEncryptionKey();
 
 $jsscript = 'var toolTips = '.($tooltips == 'on' ? 'true' : 'false').';
@@ -85,6 +86,7 @@ var missing_field_dberror = '".addslashes(L::t('There was a database fail'))."';
 
 $tmpl = new OCP\Template( 'cafevdb', $tmplname, 'user' );
 
+$tmpl->assign('debugmode', $debugmode);
 $tmpl->assign('expertmode', $expertmode);
 $tmpl->assign('tooltips', $tooltips);
 $tmpl->assign('encryptionkey', $encrkey);
