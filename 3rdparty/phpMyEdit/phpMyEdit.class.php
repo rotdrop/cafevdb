@@ -1319,9 +1319,9 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
                 if (is_array($php)) {
                     switch ($php['type']) {
                     case 'function':
-                        $opts = isset($php['parameters']);
+                        $opts = isset($php['parameters']) ? $php['parameters'] : '';
                         echo call_user_func($php['function'], false, $opts,
-                                            $k, $this->fds[$k], $this->fdd[$k]);
+                                            $k, $this->fds, $this->fdd, false);
                         break;
                     case 'file':
                         echo include($php);
@@ -1483,9 +1483,9 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
             if (is_array($php)) {
                 switch ($php['type']) {
                 case 'function':
-                    $opts = isset($php['parameters']);
+                    $opts = isset($php['parameters']) ? $php['parameters'] : '';
                     echo call_user_func($php['function'], $row["qf$k"], $opts,
-                                        $k, $this->fds[$k], $this->fdd[$k]);
+                                        $k, $this->fds, $this->fdd, $row);
                     break;
                 case 'file':
                     echo include($php);
@@ -1768,9 +1768,9 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
             if (is_array($php)) {
                 switch ($php['type']) {
                 case 'function':
-                    $opts = isset($php['parameters']) ? isset($php['parameters']) : '';
+                    $opts = isset($php['parameters']) ? $php['parameters'] : '';
                     return call_user_func($php['function'], $value, $opts,
-                                          $k, $this->fds[$k], $this->fdd[$k]);
+                                          $k, $this->fds, $this->fdd, $row);
                     break;
                 case 'file':
                     return include($php);
