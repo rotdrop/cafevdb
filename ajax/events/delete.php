@@ -27,7 +27,7 @@ switch ($action) {
    break;
  case 'detach':
    // Keep the event in the calendar, but detach it
-   CAFEVDB\Events::unregister($projectId, $eventId);
+   CAFEVDB\Events::unchain($projectId, $eventId);
    break;
  default:
    OCP\JSON::error(array('data' => array('message' => $l->t('Invalid operation: ').$action)));
