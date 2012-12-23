@@ -11,6 +11,10 @@ class Tooltips
   {
     return 
     array(
+      'projectevents-button' => 'Open a dialog with all known
+events associated to the project.
+Events can be added and modified
+as needed.',
       'syncevents' => 'Recompute the link between projects and events, using the event-categories as primary key.',
       'projectevents-selectevent' => 'Mark the respective event for being
 sent by email as ICS-attachment per email.
