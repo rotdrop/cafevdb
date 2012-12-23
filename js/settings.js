@@ -23,6 +23,19 @@ $(document).ready(function(){
         return false;
     });
 
+    $('#debugmode').change(function(event){
+	event.preventDefault();
+	var post = $( "#debugmode" ).serialize();
+	$.post( OC.filePath('cafevdb', 'ajax/settings', 'debugmode.php') , post, function(data){return;});
+        if ($('#debugmode').attr('checked')) {
+	    $('#debugbutton').show();
+	    $('#debugbutton').css('float','left');
+        } else {
+	    $('#debugbutton').css('display','none');
+        }
+        return false;
+    });
+
     $('#tooltips').change(function(event){
 	event.preventDefault();
 	var post = $( "#tooltips" ).serialize();
