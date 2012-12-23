@@ -159,6 +159,7 @@ __EOT__;
                                'default'  => '0',
                                'sort'     => true
                                );
+    $nameIdx = count($opts['fdd']);
     $opts['fdd']['Name'] = array(
                                  'name'     => 'Projekt-Name',
                                  'select'   => 'T',
@@ -182,9 +183,10 @@ __EOT__;
         'name'     => L::t('Events'),
         'sql'      => 'Id',
         'php'      => array('type' => 'function',
-                            'function' => 'CAFEVDB\Projects::eventButton'),
+                            'function' => 'CAFEVDB\Projects::eventButton',
+                            'parameters' => $nameIdx),
         'select'   => 'T',
-        'options'  => 'LAVCPDR', // auto increment
+        'options'  => 'LAVCPDR',
         'maxlen'   => 11,
         'default'  => '0',
         'sort'     => false
@@ -391,13 +393,16 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
     return $fields;
   }
 
-  public static function eventButton($value, $opts, $k, $fds, $fdd)
+  public static function eventButton($value, $opts, $k, $fds, $fdd, $row)
   {
-    global $l;
-    $bvalue = L::t('Events');
+    $bvalue      = L::t('Events');
+    $projectName = $row["qf$opts"];
+    $bname       = "ProjectId=$value&ProjectName=".$row['qf'.$opts];
+    $bname       = htmlspecialchars($bname);
+    $title       = Config::toolTips('projectevents-button');
     return <<<__EOT__
 <div class="events">
-<input type="button" class="events" name="Project[$value]" value="$bvalue"/>
+<input type="button" class="events" title="$title" name="$bname" value="$bvalue"/>
 </div>
 __EOT__;
     //"eventButton: $k $fds $fdd";
