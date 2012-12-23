@@ -369,6 +369,13 @@ class mySQL
     return $result;
   }
 
+  public static function queryNumRows($querypart, $handle = false, $die = true, $silent = false)
+  {
+      $query = 'SELECT COUNT(*) '.$querypart;
+      $result = query($query, $handle, $die, $silent);
+      return fetch($result, MYSQL_NUM)[0];
+  }
+
   public static function fetch(&$res, $type = MYSQL_ASSOC)
   {
     $result = mysql_fetch_array($res, $type);

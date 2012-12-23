@@ -55,8 +55,6 @@ form.cafevdb-control {
   /* border-radius:4px; */
 }
 
-#events {padding: 0;margin: 0;margin-top:-5px}
-
 :disabled { 
   opacity:0.3;
 }
@@ -75,18 +73,18 @@ div.cafevdb-general {
 
 select,input,option,button {
   border-radius:4px;
-  background:#F4F4F4;
+  background-color:#F4F4F4;
 }
 
-input:active,select:active,option:active,button:active {
+#content input:active,#content select:active,#content option:active,#content button:active {
   border-radius:4px;
-  background:SteelBlue !important;
+  background-color:SteelBlue;
 }
 
-input:hover,/*select:hover,*/option:hover,button:hover {  
-  border-radius:4px;
-  background:LightSteelBlue;
-}
+/* input:hover,/\*select:hover,*\/option:hover,button:hover {   */
+/*   border-radius:4px; */
+/*   background-color:LightSteelBlue; */
+/* } */
 
 div[class|='cafevdb-nav'] {
   background-image:url('%appswebroot%/cafevdb/img/logo-greyf128x128');
@@ -142,6 +140,10 @@ form.pme-form {
   padding-top:24ex;
   padding-left:1ex;
   background-color:#e6f1ff;
+}
+
+.pme-form tr,.pme-form tr:hover,.pme-form tr:active { 
+  background-color:inherit;
 }
 
 div.cafevdb-email-header-box {
@@ -247,8 +249,8 @@ a.pme-cell-1:hover, a.pme-cell-0:hover {
   font-weight:bold;
 }
 
-input[type=checkbox],input[type=submit],input[type=radio] {
-  cursor:crosshair;
+input[type=checkbox],input[type=submit],input[type=radio],input[type=button] {
+  cursor:pointer;
 } 
 hr.pme-hr {
   border:0px solid;
@@ -397,12 +399,14 @@ td[class|='pme-filter'] {
   width:24px;
   height:24px;
   background:url(%appswebroot%/cafevdb/img/e_mail.png);
-  cursor:crosshair;
+  cursor:pointer;
+  vertical-align:middle;
 }
 :not(.lt-ie9) input.pme-misc-check[type=checkbox]:checked ~ div.pme-misc-check {
   width:24px;
   height:24px;
   background:url(%appswebroot%/cafevdb/img/e_mail_checked.png);
+  vertical-align:middle;
 }
 
 input.pme-view-navigation {
@@ -412,6 +416,7 @@ input.pme-view-navigation {
   height:15px !important;
   border:0 !important;
   font-size:0 !important;
+  vertical-align:middle;
 }
 
 input.pme-copy-navigation {
@@ -421,6 +426,7 @@ input.pme-copy-navigation {
   height:15px !important;
   border:0 !important;
   font-size:0 !important;
+  vertical-align:middle;
 }
 
 input.pme-change-navigation {
@@ -430,6 +436,7 @@ input.pme-change-navigation {
   height:15px !important;
   border:0 !important;
   font-size:0 !important;
+  vertical-align:middle;
 }
 
 input.pme-delete-navigation {
@@ -439,6 +446,7 @@ input.pme-delete-navigation {
   height:15px !important;
   border:0 !important;
   font-size:0 !important;
+  vertical-align:middle;
 }
  
 :not(.lt-ie9) input.pme-sort[type=checkbox] { 

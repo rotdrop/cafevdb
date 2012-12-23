@@ -6,15 +6,7 @@ if(!OCP\User::isLoggedIn()) {
 OCP\JSON::checkAppEnabled('cafevdb');
 OCP\JSON::checkAppEnabled('calendar');
 
-$projects = array_keys(CAFEVDB\Util::cgiValue('Project', array()));
-if (count($projects) != 1 || !($projects[0] >= 0)) {
-    die('<script type="text/javascript">document.location = oc_webroot;</script>');
-}
-
-CAFEVDB\Config::init();
-
-$projectId = $projects[0];
-$events = CAFEVDB\Projects::events($projectId);
+$debugtext = '<PRE>'.print_r($_POST, true).'</PRE>';
 
 $l = OC_L10N::get('cafevdb');
 trim($l->t('blah')); /* necessary, but why? */
@@ -22,15 +14,28 @@ trim($l->t('blah')); /* necessary, but why? */
 $lang = OC_L10N::findLanguage('cafevdb');
 $locale = $lang.'_'.strtoupper($lang).'.UTF-8';
 
-$tmpl = new OCP\Template('cafevdb', 'events');
+$projectId   = $_POST['ProjectId'];
+$projectName = $_POST['ProjectName'];
 
-$tmpl->assign('ProjectName', CAFEVDB\Projects::fetchName($projectId));
+$events = CAFEVDB\Projects::events($projectId);
+
+// Now generate the html-fragment
+
+$tmpl = new OCP\Template('cafevdb', 'eventslisting');
+
+$tmpl->assign('ProjectName', $projectName);
 $tmpl->assign('ProjectId', $projectId);
 $tmpl->assign('Events', $events);
 $tmpl->assign('Locale', $locale);
 $tmpl->assign('CSSClass', 'projectevents');
 $tmpl->assign('Selected', array());
 
-return $tmpl->printPage();
+$html = $tmpl->fetchPage();
+
+OCP\JSON::success(array('data' => array('message' => $html,
+                                        'debug' => $debugtext)));
+
+return true;
 
 ?>
+

@@ -1,8 +1,8 @@
 $(document).ready(function(){
 
-    $('button').tipsy({gravity:'ne', fade:true});
-    $('input').tipsy({gravity:'ne', fade:true});
-    $('label').tipsy({gravity:'ne', fade:true});
+    $('button').tipsy({gravity:'nw', fade:true});
+    $('input').tipsy({gravity:'nw', fade:true});
+    $('label').tipsy({gravity:'nw', fade:true});
 
     if (toolTips) {
         $.fn.tipsy.enable();

@@ -1,0 +1,96 @@
+<div id="events" title="<?php echo $l->t('Events for ').$_['ProjectName'];?>">
+Hello World!
+<br/>
+Project-Id <?php echo $_['ProjectId'] ?>
+<?php
+$prjId  = $_['ProjectId'];
+$prjName = $_['ProjectName'];
+$class  = "projectevents";
+?>
+<form id="eventlistform" class="<?php echo $class; ?>">
+  <input type="hidden" name="ProjectId"   value="<?php echo $prjId; ?>" />
+  <input type="hidden" name="ProjectName" value="<?php echo $prjName; ?>" />
+  <span class="eventemail">
+    <input type="button" class="<?php echo $class; ?>-sendmail" name="sendmail" value="Em@il" title="<?php echo $l->t(CAFEVDB\Config::toolTips('projectevents-sendmail'));" ?> />
+    <input type="button" class="<?php echo $class; ?>-sendmail+" name="selectevents" value="+" title="<?php echo $l->t(CAFEVDB\Config::toolTips('projectevents-selectevents')); ?>" />
+    <input type="button" class="<?php echo $class; ?>-sendmail+" name="deselectevents" value="-" title="<?php echo $l->t(CAFEVDB\Config::toolTips('projectevents-selectevents'));"  />
+  </span>
+  <input id="projectId" type="hidden"  name="ProjectName"  value="<?php echo $_['ProjectName']; ?>" />
+  <input id="projectId" type="hidden"  name="ProjectId"    value="<?php echo $_['ProjectId']; ?>" />
+  <input id="concert"   class="submit" name="concerts"     type="button" value="<?php echo $l->t('Add Concert'); ?>" />
+  <input id="rehearsal" class="submit" name="rehearsals"   type="button" value="<?php echo $l->t('Add Rehearsal') ?>" />
+  <input id="other"     class="submit" name="other"        type="button" value="<?php echo $l->t('Add Other Event') ?>" /> 
+  <div id="debug"></div>
+  <table id="evetlisttable" class="<?php echo $class; ?>">
+<?php
+$evtButtons = array('Edit' => array('tag' => 'edit',
+                                    'title' => CAFEVDB\Config::toolTips('projectevents-edit')),
+                    'Delete' => array('tag' => 'delete',
+                                      'title' =>CAFEVDB\Config::toolTips('projectevents-delete'))
+                    'Detach' => array('tag' => 'detach',
+                                      'title' =>CAFEVDB\Config::toolTips('projectevents-detach'))
+);
+
+$locale = $_['Locale'];
+$n = 0;
+foreach ($_['Events'] as $event) {
+  $evtId  = $event['calEventId'];
+  $object = $event['object'];
+  $calId = $object['calendarid'];
+  $brief = $object['summary'];
+
+  $start = $object['startdate'];
+  $startdate = CAFEVDB\Events::strftime("%x", $start->getTimestamp(), $locale);
+  $starttime = CAFEVDB\Events::strftime("%X", $start->getTimestamp(), $locale);
+  $end   = $object['enddate'];
+  $enddate = CAFEVDB\Events::strftime("%x", $end->getTimestamp(), $locale);
+  $endtime = CAFEVDB\Events::strftime("%X", $end->getTimestamp(), $locale);
+
+  echo <<<__EOT__
+    <tr class="$class">
+      <td class="eventbuttons-$n">
+      <input type="hidden" id="calendarid-$evtId" name="CalendarId[$evtId]" value="$calId"/>
+__EOT__;
+  foreach ($evtButtons as $btn => $values) {
+    $tag   = $values['tag'];
+    $title = $l->t($values['title']);
+    $name  = $tag."[$evtId]";
+    echo <<<__EOT__
+        <input class="$tag" id="$tag-$evtId" type="button" name="$name" title="$title" value="$btn?EventId=$evtId" />
+__EOT__;
+  }
+  $title =
+'Mark the respective event for being
+sent by email as iCalendar attachment.
+Hitting the email button above the form
+will open an Email form suitable for
+sending the marked events to selected
+recipient.';
+  echo <<<__EOT__
+      </td>
+      <td class="eventemail-$n">
+        <label class="email-check" for="email-check-$evtId"  title="$title" >
+        <input class="email-check" title="" id="email-check-$evtId" type="checkbox" name="email-check[]" value="$evtId" />
+        <div class="email-check" /></label>
+      </td>
+      <td class="eventdata-$n-brief" id="brief-$evtId">$brief</td>
+      <td class="eventdata-$n-date" id="data-$evtId">$startdate - $enddate</td>
+    </tr>
+__EOT__;
+  $n = ($n + 1) & 1;
+}
+?>
+  </table>
+</form>
+</div>
+
+<?php
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */
+
+?>
+

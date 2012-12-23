@@ -411,6 +411,8 @@ __EOT__;
       $handle = mySQL::connect(Config::$pmeopts);
     }
       
+    $utc = new \DateTimeZone("UTC");
+
     $query =<<<__EOT__
 SELECT `Id`,`EventId`
   FROM `ProjectEvents` WHERE `ProjectId` = $projectId
@@ -418,10 +420,13 @@ SELECT `Id`,`EventId`
 __EOT__;
 
     $result = mySQL::query($query, $handle);
-    while (false && $line = mySQL::fetch($result)) {
+    while ($line = mySQL::fetch($result)) {
       $event = array('prjEventId' => $line['Id'],
                      'calEventId' => $line['EventId'],
                      'object'     => \OC_Calendar_App::getEventObject($line['EventId'], false, false));
+
+      $event['object']['startdate'] = new \DateTime($event['object']['startdate'], $utc);
+      $event['object']['enddate'] = new \DateTime($event['object']['enddate'], $utc);
       $events[] = $event;
     }
     
@@ -430,6 +435,33 @@ __EOT__;
     }
 
     return $events;
+  }
+
+  /**Fetch the list of projects from the data base as a short id=>name
+   * field.
+   */
+  public static function fetchProjects($handle = false)
+  {
+    $projects = array();
+
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+      
+    $query = "SELECT `Id`,`Name` FROM `Projekte` WHERE 1";
+
+    $result = mySQL::query($query, $handle);
+    while ($line = mySQL::fetch($result)) {
+      $projects[$line['Id']] = $line['Name'];
+    }
+    
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $projects;
   }
 
   /** Fetch the project-name name corresponding to $projectId.

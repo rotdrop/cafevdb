@@ -1,8 +1,35 @@
 <?php
 $TRANSLATIONS = array(
+  'Mark the respective event for being
+sent by email as ICS-attachment per email.
+Hitting the email button above the form
+will open an Email form suitable for
+sending the marked events to selected
+recipients.' => 'Termin zum Versand als ICS-Attachment per Email auswählen. Der Email-Knopf über der Tabelle führt zu einem Email-Formular, über das der eigentliche Versand an ausgewählte Empfänger vorgenommen werden kann.',
+
+  'Add a new concert-event to the project.' => 'Neuen Konzert-Termin für das Projekt in den Konzerte-Kalender eintragen.',
+  'Add a new rehearsal-event to the project.' => 'Neuen Proben-Termin für das Projekt in den Proben-Kalender eintragen.',
+  'Add some other event to the project.' => 'Sonstigen Termin für das Projekt eintragen.',
+  'Click to open an email-form
+and send the selected events to
+selected recipients.' => 'Ausgewählte Termine als ICS-Attachment per Email veschicken; öffnet ein Email-Formular.',
+  'Select all events for
+email-submission' => 'Alle Termin als Email-Attachments auswählen.',
+  'Exclude all events from
+email-submission' => 'Auswahl zum Email-Versand bei aller Terminen entfernen.',
+  'Modify the event.' => 'Termin ändern.',
+  'Delete the event from the system
+(no undo possible).' => 'Termin komplett aus dem Kalender löschen, kann nicht rückgängig gemacht werden.',
+  'Detach the respective event
+from the project, but do not
+delete it from the calender.
+The event can be reattached by
+adding the project-name to its
+categories.' => 'Termin vom Projekt ``lösen\'\'. Der Termin bleibt aber im Kalender eingetragen. Es ist möglich, den Termin wieder zum Projekt hinzuzufügen, indem man den Projekt-Namen zu der Katergorien-Liste des Termins hinzufügt.',
+  'Events for' => 'Termine für',
   'Add Rehearsal' => 'Neue Probe',
   'Add Concert' => 'Neues Konzert',
-  'Add Other Event' => 'Anderer Termin',
+  'Add Other Event' => 'Neuer Termin',
   'rehearsals' => 'Proben',
   'concerts' => 'Konzerte',
   'rehearsal' => 'Probe',

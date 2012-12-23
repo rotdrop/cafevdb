@@ -35,7 +35,6 @@ $(document).ready(function(){
         OC.filePath('cafevdb', 'ajax/events', 'events.php'),
         $(this),
         function() {
-          $('.tipsy').remove();
           var popup = $('#events').dialog({
             position: { my: "left top",
                         at: "left bottom",
@@ -45,7 +44,8 @@ $(document).ready(function(){
             height: 700,
             open  : function(){
               // quasi like document.ready(), it seems
-              $.getScript(OC.filePath('cafevdb', 'js', 'events.js'));
+              $.getScript(OC.filePath('cafevdb', 'js', 'events.js'),
+                          function() { Events.UI.init(); });
             },
             close : function(event, ui) {
                 $('#event').dialog('close');
@@ -58,7 +58,7 @@ $(document).ready(function(){
   });
 });
 
-// LocalVariables: ***
+// Local Variables: ***
 // js-indent-level: 2 ***
 // End: ***
 

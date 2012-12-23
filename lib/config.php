@@ -361,6 +361,15 @@ class Config
                            'RecordsPerPage' => -1);
     self::$pmeopts['tooltips'] = ToolTips::pmeToolTips();
   }
+
+  public static function toolTips($key)
+  {
+      $tip = '';
+      if (isset(self::$pmeopts['tooltips'][$key])) {
+          $tip = self::$pmeopts['tooltips'][$key];
+      }
+      return $tip;
+  }
 };
 
 ?>

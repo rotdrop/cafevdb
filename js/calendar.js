@@ -139,7 +139,6 @@ Calendar={
 					} else
 					if(data.status == 'success'){
 						$('#event').dialog('close');
-                                                $('#events').html('blah');
 						$('#fullcalendar').fullCalendar('refetchEvents');
 					}
 				},"json");

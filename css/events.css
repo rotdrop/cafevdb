@@ -1,0 +1,192 @@
+#events {padding: 0;margin: 0;margin-top:0px}
+
+#events {
+  background-color:#d0dcec;
+}
+
+form.projectevents {
+  position:relative;
+  padding-top:1ex;
+  padding-left:0ex;
+  /*background-color:#e6f1ff;*/
+}
+
+#events select,#events input,#events option,#events button {
+  border-radius:4px;
+  background-color:#F4F4F4;
+}
+
+/* #events input:checked,#events select:checked,#events option:checked,#events button:checked { */
+/*   border-radius:4px; */
+/*   background-color:SteelBlue; */
+/* } */
+
+#events input:active,/*select:active,*/#events option:active,#events button:active {  
+  border-radius:4px;
+  background-color:SteelBlue;
+}
+
+.projectevents tr,.projectevents tr:hover,.projectevents tr:active { 
+  background-color:inherit;
+}
+
+.projectevents table.topbuttons {
+  border:#004d9c 0px solid;
+  border-collapse:collapse;
+  border-spacing:0px;
+}
+.projectevents td.topbuttons { 
+  text-align:left;
+  vertical-align:middle;
+}
+
+.projectevents input[class|='projectevents-sendmail'],input.submit {
+  height:28px;
+  vertical-align:middle;
+}
+
+.projectevents input.projectevents-sendmail-deselect[type=button] {
+  background-image:url('%appswebroot%/cafevdb/img/e_mail_X.png');
+  background-repeat:no-repeat;
+  width:28px;
+  height:28px;
+  vertical-align:middle;
+  font-size:0pt;
+}
+.projectevents input.projectevents-sendmail-select[type=button] {
+  background-image:url('%appswebroot%/cafevdb/img/e_mail_checked.png');
+  background-repeat:no-repeat;
+  width:28px;
+  height:28px;
+  vertical-align:middle;
+  font-size:0pt;
+}
+
+.projectevents input.projectevents-sendmail[type=button] {
+  background-image:url('%appswebroot%/cafevdb/img/e_mail.png');
+  background-repeat:no-repeat;
+  background-position:0px;
+  padding-left:24px;
+  min-height:28px;
+  vertical-align:middle;
+}
+
+.projectevents input.detach {
+  background:url(%appswebroot%/cafevdb/img/link_break16x16.png);
+  background-repeat:no-repeat;
+  width:16px;
+  height:15px;
+  border:0;
+  font-size:0;
+  vertical-align:middle;
+}
+
+.projectevents input.edit {
+  background:url(%appswebroot%/cafevdb/img/pme-change.png);
+  background-repeat:no-repeat;
+  width:16px;
+  height:15px;
+  border:0;
+  font-size:0;
+  vertical-align:middle;
+}
+
+.projectevents input.delete {
+  background:url(%appswebroot%/cafevdb/img/pme-delete.png);
+  background-repeat:no-repeat;
+  width:16px;
+  height:15px;
+  border:0;
+  font-size:0;
+  vertical-align:middle;
+}
+
+:not(.lt-ie9) .projectevents input.email-check[type=checkbox] {
+  display:none;
+  /* visibility:hidden; */
+  /* position:fixed; */
+  /* left:0px; */
+  /* top:0px; */
+}
+:not(.lt-ie9) .projectevents div.email-check {
+  width:24px;
+  height:24px;
+  /*padding:0px;*/
+  background:url(%appswebroot%/cafevdb/img/e_mail.png);
+  cursor:pointer;
+  /*font-size:0;*/
+  /*vertical-align:middle;*/
+}
+:not(.lt-ie9) .projectevents input.email-check[type=checkbox]:checked ~ div.email-check {
+  width:24px;
+  height:24px;
+  /*padding:0px;*/
+  background:url(%appswebroot%/cafevdb/img/e_mail_checked.png);
+  /*cursor:crosshair;*/
+  /*font-size:0;*/
+  /*vertical-align:middle;*/
+}
+
+label.email-check {
+  /*vertical-align:middle;*/
+}
+
+.projectevents div.listing {
+  padding:1em 0 0 0.3em;
+}
+
+.projectevents table.listing {
+  border:#004d9c 0px solid;
+  border-collapse:collapse;
+  border-spacing:0px;
+}
+
+/* th[class|='pme-header']	{ */
+/*   border:#004d9c 1px solid; */
+/*   padding:4px; */
+/*   background:#add8e6; */
+/* } */
+
+td[class|='eventdata'], td[class|='eventbuttons'], td[class|='eventemail'] {
+  /*vertical-align:middle;*/
+  border:#004d9c 1px solid;
+  padding:3px;
+}
+
+td[class|='eventdata-0'] {
+  /*text-align:inherit;*/
+  background:#B7CEEC;
+  /* vertical-align:middle; */
+}
+
+td[class|='eventdata-1'] {
+  /*text-align:inherit;*/
+  background:#C6DEFF;
+  /* vertical-align:middle; */
+}
+
+td[class|='eventbuttons'], td[class|='eventemail'] {
+  /*text-align:left;*/
+  background:#C6DEFF;
+  /*vertical-align:middle;*/
+}
+
+td.eventdata-0-date, td.eventdata-1-date {
+  max-height:1em;
+}
+
+/* Hide everything but the first line*/
+td.eventdata-0-brief, td.eventdata-1-brief {
+  max-width:19.2em;
+  min-width:19.2em;
+  max-height:1em;
+  /* white-space:normal; */
+  overflow:hidden;
+  vertical-align:middle;
+}
+
+/*
+ * LocalVariables: ***
+ * cssm-indent-function: cssm-c-style-indenter ***
+ * End: ***
+ */
