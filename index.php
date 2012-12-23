@@ -42,10 +42,11 @@ OCP\Util::addStyle('cafevdb', 'jscal/border-radius');
 OCP\Util::addStyle('cafevdb', 'jscal/gold/gold');
 
 OCP\Util::addScript('cafevdb', 'cafevdb');
-OCP\Util::addScript('cafevdb', 'tinymce/jscripts/tiny_mce/tiny_mce');
-OCP\Util::addScript('cafevdb', 'tinymceinit');
-OCP\Util::addScript('cafevdb', 'jscal/src/js/jscal2');
-OCP\Util::addScript('cafevdb', 'jscal/src/js/lang/en');
+OCP\Util::addScript('cafevdb', 'events');
+/* OCP\Util::addScript('cafevdb', 'tinymce/jscripts/tiny_mce/tiny_mce'); */
+/* OCP\Util::addScript('cafevdb', 'tinymceinit'); */
+/* OCP\Util::addScript('cafevdb', 'jscal/src/js/jscal2'); */
+/* OCP\Util::addScript('cafevdb', 'jscal/src/js/lang/en'); */
 
 /* Special hack to determine if the email-form was requested through the pme-miscinfo button. */
 $op = CAFEVDB\Util::cgiValue('PME_sys_operation');
@@ -55,16 +56,13 @@ if ($op == "Em@il") {
   $tmplname = CAFEVDB\Util::cgiValue('Template','projects');
 }
 
-$tmpl = new OCP\Template( 'cafevdb', $tmplname, 'user' );
-
 // Calendar event hacks
 
-OC_Util::addScript('','oc-vcategories');
 OCP\Util::addscript('3rdparty/fullcalendar', 'fullcalendar');
-OCP\Util::addStyle('3rdparty/fullcalendar', 'fullcalendar');
 OCP\Util::addscript('3rdparty/timepicker', 'jquery.ui.timepicker');
 OCP\Util::addscript('', 'jquery.multiselect');
 OCP\Util::addscript('contacts','jquery.multi-autocomplete');
+OC_Util::addScript('','oc-vcategories');
 OCP\Util::addScript('cafevdb', 'calendar');
 $categories = json_encode(OC_Calendar_App::getCategoryOptions());
 
@@ -83,6 +81,9 @@ var missing_field_dberror = '".addslashes(L::t('There was a database fail'))."';
 ";
 
 // end event hacks
+
+
+$tmpl = new OCP\Template( 'cafevdb', $tmplname, 'user' );
 
 $tmpl->assign('expertmode', $expertmode);
 $tmpl->assign('tooltips', $tooltips);

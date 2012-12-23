@@ -31,7 +31,7 @@ $tmpl->assign('Selected', array());
 
 $html = $tmpl->fetchPage();
 
-OCP\JSON::success(array('data' => array('message' => $html,
+OCP\JSON::success(array('data' => array('contents' => $html,
                                         'debug' => $debugtext)));
 
 return true;

@@ -1,35 +1,63 @@
-Events={
+window.Events={
   projectId: -1,
   projectName: '',
   Events:{
     // nothing
   },
   UI:{
-    init: function() {
-      //$('.tipsy').remove();
-
-      $('button').tipsy({gravity:'ne', fade:true});
-      $('input').tipsy({gravity:'ne', fade:true});
-      $('label').tipsy({gravity:'ne', fade:true});
-
-      if (toolTips) {
-        $.fn.tipsy.enable();
+    /**Initialize the mess with contents
+     *
+     * @param[in] data JSON response with the fields data.status,
+     *                 data.data.contents,
+     *                 data.data.debug. data.data.debug is placed
+     *                 inside the '#debug' div.
+     */
+    init: function(data) {
+      if (data.status == "success") {
+        $('#dialog_holder').html(data.data.contents);
+        projectId = data.data.projectId;
+        projectName = data.data.projectName;
       } else {
-        $.fn.tipsy.disable();
+        $('#dialog_holder').html('<div id="events"><div id="debug"></div</div>');
       }
+      $('#events #debug').html(data.data.debug);
+      $('#events #debug').show();
 
-      $('#events #eventlistform :button').click(Events.UI.buttonClick);
+      var popup = $('#events').dialog({
+        position: { my: "left top",
+                    at: "left bottom",
+                    of: "#controls",
+                    offset: "10 10" },
+        width : 500,
+        height: 700,
+        open  : function(){
+          //$('.tipsy').remove();
+
+          $('button').tipsy({gravity:'ne', fade:true});
+          $('input').tipsy({gravity:'ne', fade:true});
+          $('label').tipsy({gravity:'ne', fade:true});
+
+          if (toolTips) {
+            $.fn.tipsy.enable();
+          } else {
+            $.fn.tipsy.disable();
+          }
+
+          $('#events #eventlistform :button').click(Events.UI.buttonClick);
+        },
+        close : function(event, ui) {
+          $('#event').dialog('close');
+          $(this).dialog('destroy').remove();
+        }
+      });
     },
 
     relist: function(data) {
       if (data.status == "success") {
-        $('#events div.listing').html(data.data.message);
-        $('#events #debug').html(data.data.debug);
-        $('#events #debug').show();
-      } else {
-        $('#events #debug').html(data.data.message);
-        $('#events #debug').show();
+        $('#events div.listing').html(data.data.contents);
       }
+      $('#events #debug').html(data.data.debug);
+      $('#events #debug').show();
 
       $('.tipsy').remove();
 
@@ -46,6 +74,19 @@ Events={
       $('#events #eventlistform div.listing :button').click(Events.UI.buttonClick);
 
       return false;
+    },
+    redisplay: function() {
+      var post = $('#eventlistform').serializeArray();
+
+      var type = new Object();
+      type['name']  = 'Action';
+      type['value'] = 'redisplay';
+      post.push(type);
+
+      $.post(OC.filePath('cafevdb', 'ajax/events', 'execute.php'),
+             post, Events.UI.relist);
+        
+      return true;
     },
     buttonClick: function(event) {
       //event.preventDefault();
@@ -77,10 +118,15 @@ Events={
         type['value'] = $(this).attr('name');
         post.push(type);
 
-        $('#dialog_holder').load(OC.filePath('cafevdb',
-                                             'ajax/events',
-                                             'new.form.php'),
-                                 post, Calendar.UI.startEventDialog);
+        if (false) {
+          $.post(OC.filePath('cafevdb', 'ajax/events', 'new.form.php'),
+                 post, Events.UI.relist, 'json');
+        } else {
+          $('#dialog_holder').load(OC.filePath('cafevdb',
+                                               'ajax/events',
+                                               'new.form.php'),
+                                   post, Calendar.UI.startEventDialog);
+        }
         
         return false;
       } else if (name == 'edit') {
@@ -97,8 +143,9 @@ Events={
                                  post, Calendar.UI.startEventDialog);
         
         return false;
-      } else if (name == 'delete' || name == 'detach') {
-        // Delete existing event
+      } else if (name == 'delete' || name == 'detach' ||
+                 name == 'select' || name == 'deselect') {
+        // Execute the task and redisplay the event list.
 
         var type = new Object();
         type['name']  = 'EventId';
@@ -110,18 +157,7 @@ Events={
         type['value'] = $(this).attr('name');
         post.push(type);
 
-        $.post(OC.filePath('cafevdb', 'ajax/events', 'delete.php'),
-               post, Events.UI.relist);
-        
-        return false;
-      } else if (name == 'select' || name == 'deselect') {
-
-        var type = new Object();
-        type['name']  = 'Action';
-        type['value'] = $(this).attr('name');
-        post.push(type);
-
-        $.post(OC.filePath('cafevdb', 'ajax/events','emailselect.php'),
+        $.post(OC.filePath('cafevdb', 'ajax/events', 'execute.php'),
                post, Events.UI.relist);
         
         return false;
@@ -136,7 +172,7 @@ Events={
       return false;
     }
   }
-}
+};
 
 // Local Variables: ***
 // js-indent-level: 2 ***

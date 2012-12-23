@@ -17,7 +17,9 @@ if(!OCP\User::isLoggedIn()) {
 OCP\JSON::checkAppEnabled('calendar');
 OCP\JSON::checkAppEnabled('cafevdb');
 
-use CAFEVDB\Ļ;
+$debugtext = '<PRE>'.print_r($_POST, true).'</PRE>';
+
+use CAFEVDB\L;
 
 $projectId   = CAFEVDB\Util::cgiValue('ProjectId', -1);
 $projectName = CAFEVDB\Util::cgiValue('ProjectName', -1);
@@ -154,6 +156,13 @@ $tmpl->assign('repeat_year', 'bydate');
 // cafevdb defaults
 $tmpl->assign('categories', $categories);
 $tmpl->assign('title', $title);
+
+if (false) {
+  OCP\JSON::error(array('data' => array('contents' => '',
+                                        'debug' => $debugtext)));
+
+  return true;
+}
 
 $tmpl->printpage();
 

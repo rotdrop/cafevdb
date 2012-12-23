@@ -31,28 +31,11 @@ $(document).ready(function(){
       $('#events').dialog('close').remove();
       $('#events').dialog('destroy').remove();
     } else {
-      $('#dialog_holder').load(
-        OC.filePath('cafevdb', 'ajax/events', 'events.php'),
-        $(this),
-        function() {
-          var popup = $('#events').dialog({
-            position: { my: "left top",
-                        at: "left bottom",
-                        of: "#controls",
-                        offset: "10 10" },
-            width : 500,
-            height: 700,
-            open  : function(){
-              // quasi like document.ready(), it seems
-              $.getScript(OC.filePath('cafevdb', 'js', 'events.js'),
-                          function() { Events.UI.init(); });
-            },
-            close : function(event, ui) {
-              $('#event').dialog('close');
-              $(this).dialog('destroy').remove();
-            }
-          });
-        });
+      // We store the values in the name attribute as serialized
+      // string.
+      var values = $(this).attr('name');
+      $.post(OC.filePath('cafevdb', 'ajax/events', 'events.php'),
+             values, Events.UI.init, 'json');
     }
     return false;
   });

@@ -6,7 +6,7 @@
  * See the COPYING-README file.
  */
 
-Calendar={
+window.Calendar={
 	UI:{
 		scrollcount: 0,
 		loading: function(isLoading){
@@ -139,6 +139,7 @@ Calendar={
 					} else
 					if(data.status == 'success'){
 						$('#event').dialog('close');
+                                                Events.UI.redisplay();
 						$('#fullcalendar').fullCalendar('refetchEvents');
 					}
 				},"json");
@@ -447,7 +448,9 @@ Calendar={
 							});
 							$('#fullcalendar').fullCalendar('refetchEvents');
 						}
+                                                return false;
 					  });
+                                    return true;
 				}
 			},
 			submit:function(button, calendarid){
@@ -635,4 +638,4 @@ Calendar={
 		//
 	},
 
-}
+};
