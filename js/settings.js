@@ -200,7 +200,7 @@ $(document).ready(function() {
     //
     ///////////////////////////////////////////////////////////////////////////
 
-    $('#eventsettings #calendars :input, #eventsettings #sharinguser :input').blur(function(event) {
+    $('#eventsettings #calendars :input').blur(function(event) {
         event.preventDefault();
         $('div.statusmessage').hide();
         $('span.statusmessage').hide();
@@ -211,6 +211,46 @@ $(document).ready(function() {
 	           $('#eventsettings #msg').show();
 	       });
     });
+
+    $('#shareowner #shareowner-force').click(function(event) {
+        $('div.statusmessage').hide();
+        $('span.statusmessage').hide();
+	$('#eventsettings #msg').empty();
+        
+        if (!$(this).is(':checked') &&
+            $('#shareowner #user-saved').val() != '') {
+            $('#shareowner #user').val($('#shareowner #user-saved').val());
+            $('#shareowner #user').attr('disabled','disabled');
+        } else {
+            $('#shareowner #user').removeAttr('disabled');
+        }
+    })
+
+    $('#shareowner #check').click(function(event) {
+        event.preventDefault();
+
+        var post = $('#shareowner').serializeArray();
+
+        if ($('#shareowner #user').is(':disabled')) {
+            var type = new Object();
+            type['name']  = 'shareowner';
+            type['value'] = $('#shareowner #user-saved').val();
+            post.push(type);
+        }
+
+        $('div.statusmessage').hide();
+        $('span.statusmessage').hide();
+	$.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
+               post,
+               function(data) {
+                   if (data.status == 'success') {
+                       $('#shareowner #user').attr('disabled','disabled');
+                       $('#shareowner #user-saved').val($('#shareowner #user').val());
+                   }
+	           $('#eventsettings #msg').html(data.data.message);
+	           $('#eventsettings #msg').show();
+	       });
+    })
 
     // Share-owner's password
     // 'show password' checkbox
@@ -257,6 +297,9 @@ $(document).ready(function() {
                    if (data.status == "success") {
                        input1.val('');
                        input2.val('');
+                       $('#sharingpassword-show').removeAttr('checked');
+                       $('#sharingpassword-show').click();
+                       $('#sharingpassword-show').removeAttr('checked');
                    }
                    $('#eventsettings #msg').html(data.data.message);
                    $('#eventsettings #msg').show();
