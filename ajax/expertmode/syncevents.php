@@ -15,7 +15,7 @@ $sharinguser  = CAFEVDB\Config::getSetting('sharinguser', CAFEVDB\Config::getVal
 $calendargroup = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
 $calendars     = OC_Calendar_Calendar::allCalendars($sharinguser);
 
-$dfltnames = array('concerts', 'rehearsals', 'other');
+$dfltnames = array('concerts', 'rehearsals', 'other', 'management');
 $dfltcals = array();
 foreach ($dfltnames as $name) {
   $dfltcals[] = CAFEVDB\Config::getSetting($name.'calendar', L::t($name));
