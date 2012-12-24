@@ -37,3 +37,6 @@ $debugtitle    = "Show a certain amount of debug information, normally not neede
     <div class="statusmessage" id="error"><?php echo L::t('Unable to set the encryption key.');?></div>
   </form>
 </div>
+<?php if ($_['adminsettings']) { echo $this->inc("app-settings"); } ?>
+<?php if ($_['adminsettings']) { echo $this->inc("share-settings"); } ?>
+

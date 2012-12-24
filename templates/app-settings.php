@@ -41,39 +41,4 @@
       <div class="statusmessage" id="error"><?php echo L::t('Unable to change the database password');?></div>
     </fieldset>
   </form>
-  <hr/>
-<!-- SHARED CALENDARS and stuff -->
-  <div id="eventsettings">
-<!-- VIRTUAL USER -->
-    <form id="sharinguser">
-      <input type="text" id="user" name="sharinguser" placeholder="<?php echo L::t('username');?>" value="<?php echo $_['sharinguser']; ?>" />
-      <label for="user"><?php echo L::t('Account for Shared Resources');?></label>
-    </form>
-<!-- CHANGE ITS PASSWORD -->
-    <form id="sharingpassword">
-      <input type="password" id="password" name="sharingpassword" placeholder="<?php echo L::t('Password');?>" data-typetoggle="#sharingpassword-show" />
-      <input type="checkbox" id="sharingpassword-show" name="sharingpassword-show" /><label for="sharingpassword-show"><?php echo L::t('show');?></label>
-      <input name="passwordgenerate" id="generate" type="button" value="<?php echo L::t('Generate');?>" />
-      <input name="passwordchange" id="change" type="button" value="<?php echo L::t('Change');?>" />
-    </form>
-<!-- CALENDARS -->
-    <form id="calendars">
-      <input type="text" id="concerts" name="concertscalendar" placeholder="<?php echo L::t('calendarname');?>" value="<?php echo $_['concertscalendar']; ?>" />
-      <label for="concerts"><?php echo L::t('Calendar for Concerts');?></label>
-      <br/>
-      <input type="text" id="rehearsals" name="rehearsalscalendar" placeholder="<?php echo L::t('calendarname');?>" value="<?php echo $_['rehearsalscalendar']; ?>" />
-      <label for="rehearsals"><?php echo L::t('Calendar for Rehearsals');?></label>
-      <br/>
-      <input type="text" id="other" name="othercalendar" placeholder="<?php echo L::t('calendarname');?>" value="<?php echo $_['othercalendar']; ?>" />
-      <label for="other"><?php echo L::t('Calendar for other Events');?></label>
-      <br/>
-      <input type="text" id="management" name="managementcalendar" placeholder="<?php echo L::t('calendarname');?>" value="<?php echo $_['managementcalendar']; ?>" />
-      <label for="management"><?php echo L::t('Management-Calendar');?></label>
-      <br/>
-<!-- DEFAULT DURATION FOR EVENTS -->
-      <input type="text" id="duration" name="eventduration" placeholder="<?php echo L::t('#Minutes');?>" value="<?php echo $_['eventduration']; ?>" />
-      <label for="duration"><?php echo L::t('Default Duration for Events');?></label>
-    </form>
-    <div class="statusmessage" id="msg"></div>
-  </div>
 </div>
