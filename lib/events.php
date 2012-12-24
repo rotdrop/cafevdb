@@ -47,6 +47,26 @@ class Events
     // still access the event. But do nothing for now.
   }
 
+  /* public static function killCalendarListener($calendarId) */
+  /* { */
+  /*   Config::init(); */
+  /*   $handle = mySQL::connect(Config::$pmeopts); */
+
+  /*   // Execute the show-stopper */
+
+  /*   $query = "DELETE FROM `ProjectEvents` WHERE `CalendarId` = $calendarId"; */
+
+  /*   mySQL::query($query, $handle); */
+
+  /*   mySQL::close($handle); */
+  /* } */
+
+  /* public static function editCalendarListener($calendarId) */
+  /* { */
+  /*   // We simply should update our idea of the name of the calender if */
+  /*   // it is one of our four calendars */
+  /* } */
+
   public static function strftime($format, $timestamp = NULL, $locale = NULL)
   {
     $oldlocale = setlocale(LC_TIME, 0);
@@ -76,12 +96,17 @@ class Events
     }
     
     // fetch the respective event
-    $vobject = \OC_Calendar_App::getVCalendar($eventId, false, false);
+    $event = \OC_Calendar_Object::find($eventId);
+    if($event === false) {
+      return false;
+    }
+
+    $vobject = \OC_VObject::parse($event['calendardata']);
     if (!$vobject) {
       return;
     }
         
-    // Convert to an array
+    // Extract the categories
     if ($vobject->__isset('VEVENT')) {
       $vobject = $vobject->VEVENT;
     } else if ($vobject->__isset('VTODO')) {
@@ -103,7 +128,7 @@ class Events
       if (in_array($prName, $categories)) {
         if (!self::isRegistered($prKey, $eventId, $handle)) {
           // register the event
-          self::register($prKey, $eventId, $handle);
+          self::register($prKey, $eventId, $event['calendarid'], $handle);
         }
       } else {
         if (self::isRegistered($prKey, $eventId, $handle)) {
@@ -139,13 +164,17 @@ class Events
 
   protected static function maybeAddEvent($eventId, $handle = false)
   {
-    // fetch the respective event
-    $vobject = \OC_Calendar_App::getVCalendar($eventId, false, false);
+    $event = \OC_Calendar_Object::find($eventId);
+    if($event === false) {
+      return false;
+    }
+
+    $vobject = \OC_VObject::parse($event['calendardata']);
     if (!$vobject) {
       return;
     }
         
-    // Convert to an array
+    // Extract the categories as array
     if ($vobject->__isset('VEVENT')) {
       $vobject = $vobject->VEVENT;
     } else if ($vobject->__isset('VTODO')) {
@@ -173,7 +202,7 @@ class Events
     foreach ($projects as $prKey => $prName) {
       if (in_array($prName, $categories)) {
         // Ok. Link it in.
-        self::register($prKey,$eventId,$handle);
+        self::register($prKey,$eventId,$event['calendarid'],$handle);
       }
     }
 
@@ -190,7 +219,7 @@ class Events
    *
    * @return Undefined.
    */
-  protected static function register($projectId, $eventId,
+  protected static function register($projectId, $eventId, $calendarId,
                                      $handle = false)
   {
     $ownConnection = $handle === false;
@@ -202,8 +231,8 @@ class Events
     // Link it in.
     $query = ''
     ."INSERT INTO `ProjectEvents`"
-    ."  (`ProjectId`,`EventId`)"
-    ."  VALUES ('$projectId','$eventId')";
+    ."  (`ProjectId`,`EventId`,`CalendarID`)"
+    ."  VALUES ('$projectId','$eventId','$calendarId')";
     mySQL::query($query, $handle);
 
 
@@ -331,6 +360,29 @@ __EOT__;
     return $result;
   }
 
+  
+  /**Make sure the "sharing" user exists, create it when necessary.
+   * May throw an exception.
+   */
+  public static function checkShareOwner($shareowner)
+  {
+    if (!$sharegroup = Config::getAppValue('usergroup', false)) {
+      return false; // need at least this group!
+    }
+
+    if (!\OC_User::userExists($shareowner) &&
+        !\OC_User::createUser($shareowner,
+                              \OC_User::generatePassword())) {
+      return false;
+    }
+    if (!\OC_Group::inGroup($shareowner, $sharegroup) &&
+        !\OC_Group::addToGroup($shareowner, $sharegroup)) {
+      return false;
+    }
+    return true;
+  }
+  
+
   /**Return the IDs of the default calendars.
    */
   public static function defaultCalendars()
@@ -420,15 +472,16 @@ __EOT__;
     $utc = new \DateTimeZone("UTC");
 
     $query =<<<__EOT__
-SELECT `Id`,`EventId`
+SELECT `Id`,`EventId`,`CalendarId`
   FROM `ProjectEvents` WHERE `ProjectId` = $projectId
   ORDER BY `Id` ASC
 __EOT__;
 
     $result = mySQL::query($query, $handle);
     while ($line = mySQL::fetch($result)) {
-      $event = array('prjEventId' => $line['Id'],
-                     'calEventId' => $line['EventId'],
+      $event = array('Id' => $line['Id'],
+                     'EventId' => $line['EventId'],
+                     'CalendarId' => $line['CalendarId'],
                      'object'     => \OC_Calendar_App::getEventObject($line['EventId'], false, false));
 
       $event['object']['startdate'] = new \DateTime($event['object']['startdate'], $utc);
@@ -459,7 +512,7 @@ __EOT__;
     }
       
     $query =<<<__EOT__
-SELECT `EventId`
+SELECT `CalendarId`,`EventId`
   FROM `ProjectEvents` WHERE `ProjectId` = $projectId
   ORDER BY `Id` ASC
 __EOT__;
