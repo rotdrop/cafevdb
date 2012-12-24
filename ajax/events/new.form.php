@@ -36,9 +36,10 @@ $calendarname = CAFEVDB\Config::getSetting($eventKind.'calendar', L::t($eventKin
 $title        = L::t($eventKind).', '.$projectName;
 
 // make sure that the calendar exists and is writable
-$sharinguser  = CAFEVDB\Config::getSetting('sharinguser', CAFEVDB\Config::getValue('dbuser'));
+$shareowner    = CAFEVDB\Config::getSetting('shareowner',
+                                            CAFEVDB\Config::getValue('dbuser').'shareowner');
 $calendargroup = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
-$calendars     = OC_Calendar_Calendar::allCalendars($sharinguser);
+$calendars     = OC_Calendar_Calendar::allCalendars($shareowner);
 $defaultcal    = false;
 foreach ($calendars as $calendar) {
     if ($calendar['displayname'] == $calendarname) {
@@ -50,7 +51,7 @@ foreach ($calendars as $calendar) {
 
 // Create the calendar if necessary
 if (!$defaultcal) {
-    $calid = OC_Calendar_Calendar::addCalendar($sharinguser, $calendarname);
+    $calid = OC_Calendar_Calendar::addCalendar($shareowner, $calendarname);
     $defaultcal = OC_Calendar_Calendar::find($calid);
     $defaultid  = $calid;
 }
@@ -59,9 +60,9 @@ if (!$defaultcal) {
 //
 // Total cheating ...
 if ($defaultcal &&
-    !OCP\Share::getItemSharedWithBySource('calendar', $defaultid)) {
+    !OCP\Share::getItemSharedWit9hBySource('calendar', $defaultid)) {
     $olduser = $_SESSION['user_id'];
-    $_SESSION['user_id'] = $sharinguser;
+    $_SESSION['user_id'] = $shareowner;
     try {
         $token = OCP\Share::shareItem('calendar', $defaultid,
                                       OCP\Share::SHARE_TYPE_GROUP,
