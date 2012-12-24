@@ -47,25 +47,25 @@ class Events
     // still access the event. But do nothing for now.
   }
 
-  /* public static function killCalendarListener($calendarId) */
-  /* { */
-  /*   Config::init(); */
-  /*   $handle = mySQL::connect(Config::$pmeopts); */
+  public static function killCalendarListener($calendarId)
+  {
+    Config::init();
+    $handle = mySQL::connect(Config::$pmeopts);
 
-  /*   // Execute the show-stopper */
+    // Execute the show-stopper
 
-  /*   $query = "DELETE FROM `ProjectEvents` WHERE `CalendarId` = $calendarId"; */
+    $query = "DELETE FROM `ProjectEvents` WHERE `CalendarId` = $calendarId";
 
-  /*   mySQL::query($query, $handle); */
+    mySQL::query($query, $handle);
 
-  /*   mySQL::close($handle); */
-  /* } */
+    mySQL::close($handle);
+  }
 
-  /* public static function editCalendarListener($calendarId) */
-  /* { */
-  /*   // We simply should update our idea of the name of the calender if */
-  /*   // it is one of our four calendars */
-  /* } */
+  public static function editCalendarListener($calendarId)
+  {
+    // We simply should update our idea of the name of the calender if
+    // it is one of our four calendars
+  }
 
   public static function strftime($format, $timestamp = NULL, $locale = NULL)
   {
