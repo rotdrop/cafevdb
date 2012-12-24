@@ -272,8 +272,10 @@ eventduration';
       $value = mcrypt_decrypt(MCRYPT_RIJNDAEL_128,
                               $enckey,
                               base64_decode($value),
-                              MCRYPT_MODE_ECB); 
-      $value = trim($value, "\0\4");
+                              MCRYPT_MODE_ECB);
+      $cnt   = unpack('V',substr($value, 0, 4))[1];
+      $value = substr($value, 4, $cnt);
+      //$value = trim($value, "\0\4");
     }
     return $value;
   }
@@ -281,9 +283,12 @@ eventduration';
   static public function encrypt($value, $enckey)
   {
     if ($enckey != '') {
+      // Store the size in the first 4 bytes in order not to have to
+      // rely on padding.
+      $cnt = pack('V', strlen($value));
       $value = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_128,
                                             $enckey,
-                                            $value,
+                                            $cnt.$value,
                                             MCRYPT_MODE_ECB)); 
     }
     return $value;
