@@ -12,6 +12,7 @@
 
 use \CAFEVDB\L;
 use \CAFEVDB\Config;
+use \CAFEVDB\Events;
 
 // Check if we are a group-admin, otherwise bail out.
 $user  = OCP\USER::getUser();
@@ -120,8 +121,51 @@ if (isset($_POST['dbpassword'])) {
     return;
 }
 
-$calendarkeys = array('sharinguser',
-                      'concertscalendar',
+if (isset($_POST['shareowner-saved']))
+{
+  $user    = @$_POST['shareowner'];
+  $force   = @$_POST['shareowner-force'] == 'on';
+  $olduser = @$_POST['shareowner-saved'];
+
+  // If there is no old dummy, then just create one. 
+  $actuser = Config::getSetting('shareowner', '');
+  if ($olduser != $actuser) {
+    OC_JSON::error(
+      array("data" => array(
+              "message" => L::t('Submitted').': "'.$olduser.'" != "'.$actuser.'" ('.L::t('stored').').' )));
+    return false;
+  }
+  
+  if ($olduser == '' || $force) {
+    if (Events::checkShareOwner($user)) {
+      Config::setValue('shareowner', $user);
+      OC_JSON::success(
+        array("data" => array( "message" => L::t('New share-owner').' '.$user.'.' )));
+      return true;
+    } else {
+      OC_JSON::error(
+        array("data" => array( "message" => L::t('Failure creating account').' '.$user.'.' )));
+      return false;
+    }
+  } else if ($user != $olduser) {
+    OC_JSON::error(
+      array("data" => array( "message" => $olduser.' != '.$user )));
+    return false;
+  }
+
+  if (Events::checkShareOwner($user)) {
+    Config::setValue('shareowner', $user);
+    OC_JSON::success(
+      array("data" => array( "message" => L::t('Keeping old share-owner').' '.$user )));
+    return true;
+  } else {
+    OC_JSON::error(
+      array("data" => array( "message" => L::t('Failure checking account').' '.$user )));
+    return false;
+  }
+}
+
+$calendarkeys = array('concertscalendar',
                       'rehearsalscalendar',
                       'othercalendar',
                       'managementcalendar');
@@ -153,19 +197,19 @@ if (isset($_POST['sharingpassword'])) {
 
   // Change the password of the "share"-holder.
   //
-  $sharinguser = Config::getValue('sharinguser');
+  $shareowner = Config::getValue('shareowner');
 
-  if (\OC_User::setPassword($sharinguser, $value)) {
+  if (\OC_User::setPassword($shareowner, $value)) {
     OC_JSON::success(
       array(
         "data" => array(
-          "message" => L::t('Changed password for').' '.$sharinguser )));
+          "message" => L::t('Changed password for').' '.$shareowner )));
     return true;
   } else {
     OC_JSON::error(
       array(
         "data" => array(
-          "message" => L::t('Failed changing password for').' '.$sharinguser )));
+          "message" => L::t('Failed changing password for').' '.$shareowner )));
     return false;
   }
 }  
