@@ -1,5 +1,7 @@
 <?php
 $TRANSLATIONS = array(
+  'Check' => 'Überprüfen',
+  'shareowner' => 'Share-Strohpuppe',
   'Account for Shared Resources' => 'Account für gemeinsame Daten',
   'Personal Settings for Camerata DB' => 'Persönliche Einstellungen für die Camerata DB',
   'Admin settings for Camerata DB' => 'Anwendungs-Einstellungen für die Camerata DB',
@@ -49,7 +51,9 @@ categories.' => 'Termin vom Projekt ``lösen\'\'. Der Termin bleibt aber im Kale
   'Change' => 'Ändern',
   'Generate' => 'Erzeugen',
   'show' => 'zeigen',
+  'force' => 'zwingen',
   'Password' => 'Passwort',
+  'Share-Password' => 'Share-Passwort',
   'Own Password' => 'Eigenes Passwort',
   'DB Encryption Key' => 'DB Schlüssel',
   'username' => 'Login-Name',
