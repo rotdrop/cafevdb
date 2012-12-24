@@ -13,11 +13,15 @@ dbserver,
 dbuser,
 dbpassword,
 dbname,
-sharinguser,
+shareowner,
 concertscalendar,
+concertscalendarid,
 rehearsalscalendar,
+rehearsalscalendarid,
 othercalendar,
+othercalendarid,
 managementcalendar,
+managementcalendarid,
 eventduration';
   const MD5_SUF  = '::MD5';
   const MD5_LEN  = 5;
