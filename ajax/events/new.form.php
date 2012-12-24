@@ -60,7 +60,7 @@ if (!$defaultcal) {
 //
 // Total cheating ...
 if ($defaultcal &&
-    !OCP\Share::getItemSharedWit9hBySource('calendar', $defaultid)) {
+    !OCP\Share::getItemSharedWithBySource('calendar', $defaultid)) {
     $olduser = $_SESSION['user_id'];
     $_SESSION['user_id'] = $shareowner;
     try {
