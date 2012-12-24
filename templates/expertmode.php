@@ -42,6 +42,8 @@ $buttons['example'] =
   <fieldset id="expertmode" class="operations expert">
   <strong><?php echo L::t('Advanced operations, use with care') ?></strong><br />
   <input type="button" value="<?php echo L::t('Open phpmyadmin'); ?>" onclick="return window.open('<?php echo CAFEVDB\Config::$opts['phpmyadmin']; ?>','cafevdb@phpmyadmin');" title="<?php echo L::t('Open the login-window to the data-base back-bone. Although this is ``expert mode\'\' you will fall in love with the ``export\'\' facilities of the data-base back-bone. TRY IT OUT! DO IT!'); ?>"/>
+  <br/>
+  <input type="button" value="<?php echo L::t('Source-Code Documentation'); ?>" onclick="return window.open('apps/cafevdb/doc/db-app/html/','Doxygen4CAFEVDB');" title="<?php echo L::t('Internal documentation of the ``CAFEV-App\'\', mostly useful for web-developers.'); ?>"/>
   <?php echo CAFEVDB\Navigation::button($buttons); ?>
   </fieldset>
   <br/>
