@@ -7,6 +7,20 @@ date_default_timezone_set('Europe/Berlin');
 
 class Config
 {
+  const APP_NAME  = 'cafevdb';
+  const CFG_KEYS = '
+dbserver,
+dbuser,
+dbpassword,
+dbname,
+sharinguser,
+concertscalendar,
+rehearsalscalendar,
+othercalendar,
+managementcalendar,
+eventduration';
+  const MD5_SUF  = '::MD5';
+  const MD5_LEN  = 5;
   public static $appbase = "apps/cafevdb/";
   public static $prefix = false;
   public static $triggers = false;
@@ -28,14 +42,46 @@ class Config
     self::recryptEncryptionKey($params['uid'], $params['password']);
   }
 
+  /**A short-cut, redirecting to the stock functions for the
+   * logged-in user.
+   */
+  static public function getUserValue($key, $default = false, $user = false)
+  {
+    ($user === false) && ($user = \OCP\USER::getUser());
+    return \OCP\Config::getUserValue($user, self::APP_NAME, $key, $default);
+  }
+
+  /**A short-cut, redirecting to the stock functions for the
+   * logged-in user.
+   */
+  static public function setUserValue($key, $value, $user = false)
+  {
+    ($user === false) && ($user = \OCP\USER::getUser());
+    return \OCP\Config::setUserValue($user, self::APP_NAME, $key, $value);
+  }
+
+  /**A short-cut, redirecting to the stock functions for the app.
+   */
+  static public function getAppValue($key, $default = false)
+  {
+    return \OC_AppConfig::getValue(self::APP_NAME, $key, $default);
+  }
+
+  /**A short-cut, redirecting to the stock functions for the app.
+   */
+  static public function setAppValue($key, $value)
+  {
+    return \OC_AppConfig::setValue(self::APP_NAME, $key, $value);
+  }
+
   static public function initPrivateKey($login, $password)
   {
-    $privKey = \OCP\Config::getUserValue($login, 'cafevdb', 'privateSSLKey', '');
+    $privKey = self::getUserValue('privateSSLKey', '', $login);
     if ($privKey == '') {
       // Ok, generate one. But this also means that we have not yet
       // access to the data-base encryption key.
       self::generateKeyPair($login, $password);
-      $privKey = \OCP\Config::getUserValue($login, 'cafevdb', 'privateSSLKey', '');
+      $privKey = self::getUserValue('privateSSLKey', '', $login);
     }
 
     $privKey = openssl_pkey_get_private ($privKey, $password);
@@ -50,7 +96,7 @@ class Config
   static public function initEncryptionKey($login)
   {
     // Fetch the encrypted "user" key from the preferences table
-    $usrdbkey = \OCP\Config::getUserValue($login,'cafevdb','encryptionkey','');
+    $usrdbkey = self::getUserValue('encryptionkey', '', $login);
 
     if ($usrdbkey == '') {
       // No key -> unencrypted, maybe
@@ -121,8 +167,8 @@ class Config
     // The private key already is encrypted with the user's password,
     // so there is no need to encrypt it again.
 
-    \OCP\Config::setUserValue($login, 'cafevdb', 'publicSSLKey', $pubKey);
-    \OCP\Config::setUserValue($login, 'cafevdb', 'privateSSLKey', $privKey); 
+    self::setUserValue('publicSSLKey', $pubKey, $login);
+    self::setUserValue('privateSSLKey', $privKey, $login); 
   }
 
   static public function setUserKey($user, $enckey = false)
@@ -132,7 +178,7 @@ class Config
     }
 
     if ($enckey != '') {
-      $pubKey = \OCP\Config::getUserValue($user, 'cafevdb', 'publicSSLKey', '');
+      $pubKey = self::getUserValue('publicSSLKey', '', $user);
       $usrdbkey = '';
       if ($pubKey == '' ||
           openssl_public_encrypt($enckey, $usrdbkey, $pubKey) === false) {
@@ -143,7 +189,7 @@ class Config
       $usrdbkey = '';
     }
 
-    $pubKey = \OCP\Config::setUserValue($user, 'cafevdb', 'encryptionkey', $usrdbkey);
+    $pubKey = self::setUserValue('encryptionkey', $usrdbkey, $user);
 
     return true;
   }
@@ -172,8 +218,8 @@ class Config
     }
 
     // Fetch the encrypted "system" key from the app-config table
-    $sysdbkey = \OC_AppConfig::getValue('cafevdb', 'encryptionkey');
-    $md5sysdbkey = \OC_AppConfig::getValue('cafevdb', 'encryptionkey::MD5');
+    $sysdbkey = self::getAppValue('encryptionkey');
+    $md5sysdbkey = self::getAppValue('encryptionkey'.self::MD5_SUF);
 
     // Now try to decrypt the data-base encryption key
     $sysdbkey = self::decrypt($sysdbkey, $sesdbkey);
@@ -185,8 +231,11 @@ class Config
     return $sysdbkey == $sesdbkey;
   }
 
-  static public function decryptConfigValues() {
-    $keys = array('dbserver', 'dbuser', 'dbpassword', 'dbname');
+  /**Decrypt all configuration values stored in the data base.
+   */
+  static public function decryptConfigValues()
+  {
+    $keys = array_map('trim',explode(',', self::CFG_KEYS));
 
     foreach ($keys as $key) {
         if (self::getValue($key) === false) {
@@ -196,10 +245,16 @@ class Config
     return true;
   }
 
-  static public function encryptConfigValues() {
-    $keys = array('dbserver', 'dbuser', 'dbpassword', 'dbname');
+  /**Encrypt all configuration values stored in self::opts[}.
+   */
+  static public function encryptConfigValues()
+  {
+    $keys = array_map('trim',explode(',', self::CFG_KEYS));
 
     foreach ($keys as $key) {
+      if (!isset(self::$opts[$key])) {
+        self::$opts[$key] = '';
+      }
       self::setValue($key, self::$opts[$key]);
     }
   }
@@ -237,8 +292,8 @@ class Config
     self::$opts[$key] = $value;
     $md5value = $enckey != '' ? md5($value) : '';
     $value = self::encrypt($value, $enckey);
-    \OC_AppConfig::setValue('cafevdb', $key, $value);
-    \OC_AppConfig::setValue('cafevdb', $key.'::MD5', $md5value);
+    self::setAppValue($key, $value);
+    self::setAppValue($key.self::MD5_SUF, $md5value);
   }
 
   static public function getSetting($key, $default = '', $strict = false)
@@ -258,8 +313,8 @@ class Config
 
     $enckey = self::getEncryptionKey();
 
-    $value    = \OC_AppConfig::getValue('cafevdb', $key, '');
-    $md5value = \OC_AppConfig::getValue('cafevdb', $key.'::MD5', '');
+    $value    = self::getAppValue($key, '');
+    $md5value = self::getAppValue($key.self::MD5_SUF, '');
 
     $value = self::decrypt($value, $enckey);
     if ($md5value != '' && $md5value != md5($value)) {

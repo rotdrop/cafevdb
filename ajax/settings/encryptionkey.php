@@ -10,10 +10,10 @@ OCP\JSON::checkAppEnabled('cafevdb');
 OCP\JSON::callCheck();
 
 // Get data
-if (isset($_POST['encryptionkey']) && isset($_POST['password'])) {
+if (isset($_POST['userkey']) && isset($_POST['password'])) {
   $user          = OCP\USER::getUser();
   $password      = $_POST['password'];
-  $encryptionkey = $_POST['encryptionkey'];
+  $encryptionkey = $_POST['userkey'];
 
   // Re-validate the user
   if (\OC_User::checkPassword($user, $password) !== $user) {

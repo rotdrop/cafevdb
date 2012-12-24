@@ -106,7 +106,8 @@ window.Events={
       var name = $(this).attr('name');
       if (name == 'concerts' ||
           name == 'rehearsals' ||
-          name == 'other') {
+          name == 'other' ||
+          name == 'management') {
         // These are the new-event buttons.
 
         if(evntdlgopen == true){

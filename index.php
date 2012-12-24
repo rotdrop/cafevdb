@@ -15,8 +15,6 @@ if (!OC_Group::inGroup($user, $group)) {
   return $tmpl->printPage();
 }
 
-CAFEVDB\Events::unregister(9, 106);
-
 $expertmode = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb', 'expertmode','');
 $debugmode  = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb', 'debugmode','');
 $tooltips   = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb', 'tooltips','');
@@ -36,6 +34,7 @@ __EOT__;
 OCP\App::setActiveNavigationEntry( 'cafevdb' );
 
 OCP\Util::addStyle('cafevdb', 'cafevdb');
+OCP\Util::addStyle('cafevdb', 'settings');
 OCP\Util::addStyle('cafevdb', 'events');
 OCP\Util::addStyle('cafevdb', 'email');
 OCP\Util::addStyle('cafevdb', 'jscal/jscal2');

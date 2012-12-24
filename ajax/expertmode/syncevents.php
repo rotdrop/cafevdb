@@ -11,9 +11,9 @@ OCP\JSON::checkAppEnabled('calendar');
 
 // Loop over all calendars the calendar user shares with the orchestra
 // group.
-$calendaruser  = CAFEVDB\Config::getSetting('calendaruser', CAFEVDB\Config::getValue('dbuser'));
+$sharinguser  = CAFEVDB\Config::getSetting('sharinguser', CAFEVDB\Config::getValue('dbuser'));
 $calendargroup = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
-$calendars     = OC_Calendar_Calendar::allCalendars($calendaruser);
+$calendars     = OC_Calendar_Calendar::allCalendars($sharinguser);
 
 $dfltnames = array('concerts', 'rehearsals', 'other');
 $dfltcals = array();
@@ -30,7 +30,7 @@ foreach ($calendars as $calendar) {
     if (in_array($calendar['displayname'], $dfltcals)) {
       // force sharing
       $olduser = $_SESSION['user_id'];
-      $_SESSION['user_id'] = $calendaruser;
+      $_SESSION['user_id'] = $sharinguser;
       try {
         $token = OCP\Share::shareItem('calendar', $calId,
                                       OCP\Share::SHARE_TYPE_GROUP,

@@ -26,6 +26,8 @@ recipients.',
       'projectevents-newrehearsal' => 'Add a new rehearsal-event to the project.',
       'projectevents-newother' => 'Add some other event to the project.',
 
+      'projectevents-newmanagement' => 'Add a private management event which is not exposed to the rest of the world.',
+
       'projectevents-sendmail' => 'Click to open an email-form
 and send the selected events to
 selected recipients.',

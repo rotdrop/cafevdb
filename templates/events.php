@@ -10,12 +10,15 @@ $class   = $_['CSSClass'];
   <input type="hidden" name="ProjectName" value="<?php echo $prjName; ?>" />
   <div class="topbuttons"><table class="nostyle topbuttons">
     <tr><td class="topbuttons">
-      <span class="<?php echo $class; ?>-email">
-        <input type="button" class="<?php echo $class; ?>-sendmail" name="sendmail" value="Em@il" title="<?php echo L::t(CAFEVDB\Config::toolTips('projectevents-sendmail')); ?>" /><input type="button" class="<?php echo $class; ?>-sendmail-select" name="select" value="+" title="<?php echo L::t(CAFEVDB\Config::toolTips('projectevents-select')); ?>" /><input type="button" class="<?php echo $class; ?>-sendmail-deselect" name="deselect" value="-" title="<?php echo L::t(CAFEVDB\Config::toolTips('projectevents-deselect')); ?>" />
-      </span>
       <input id="concert"   class="submit" name="concerts"   type="button" value="<?php echo L::t('Add Concert'); ?>"    title="<?php echo L::t(CAFEVDB\Config::toolTips('projectevents-newconcert')); ?>" />
       <input id="rehearsal" class="submit" name="rehearsals" type="button" value="<?php echo L::t('Add Rehearsal') ?>"   title="<?php echo L::t(CAFEVDB\Config::toolTips('projectevents-newrehearsal')); ?>"/>
       <input id="other"     class="submit" name="other"      type="button" value="<?php echo L::t('Add Other Event') ?>" title="<?php echo L::t(CAFEVDB\Config::toolTips('projectevents-newother')); ?>" />
+      <input id="management"     class="submit" name="management"      type="button" value="<?php echo L::t('Management Event') ?>" title="<?php echo L::t(CAFEVDB\Config::toolTips('projectevents-newmanagement')); ?>" />
+    </td></tr>
+    <tr><td>
+      <span class="<?php echo $class; ?>-email">
+        <input type="button" class="<?php echo $class; ?>-sendmail" name="sendmail" value="Em@il" title="<?php echo L::t(CAFEVDB\Config::toolTips('projectevents-sendmail')); ?>" /><input type="button" class="<?php echo $class; ?>-sendmail-select" name="select" value="+" title="<?php echo L::t(CAFEVDB\Config::toolTips('projectevents-select')); ?>" /><input type="button" class="<?php echo $class; ?>-sendmail-deselect" name="deselect" value="-" title="<?php echo L::t(CAFEVDB\Config::toolTips('projectevents-deselect')); ?>" />
+      </span>
     </td></tr>
   </table>
   </div>

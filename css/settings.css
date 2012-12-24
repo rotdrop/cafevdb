@@ -1,0 +1,9 @@
+div.statusmessage, span.statusmessage {
+  font-style:italic;
+  color:red;
+  display:none;
+}
+
+#error.statusmessage, #equal.statusmessage, #insecure.statusmessage {
+  font-weight:bold;
+}

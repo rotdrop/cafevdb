@@ -7,6 +7,7 @@ OCP\JSON::checkAppEnabled('cafevdb');
 OCP\JSON::checkAppEnabled('calendar');
 
 use CAFEVDB\L;
+use CAFEVDB\Events;
 
 $debugtext = '<PRE>'.print_r($_POST, true).'</PRE>';
 
@@ -16,7 +17,7 @@ $locale = $lang.'_'.strtoupper($lang).'.UTF-8';
 $projectId   = $_POST['ProjectId'];
 $projectName = $_POST['ProjectName'];
 
-$events = CAFEVDB\Projects::events($projectId);
+$events = Events::events($projectId);
 
 // Now generate the html-fragment
 

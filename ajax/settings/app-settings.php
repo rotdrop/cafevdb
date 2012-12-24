@@ -6,12 +6,14 @@
  * See the COPYING-README file.
  */
 
-OCP\JSON::checkLoggedIn();
-OCP\JSON::checkAppEnabled('cafevdb');
-OCP\JSON::callCheck();
+\OCP\JSON::checkLoggedIn();
+\OCP\JSON::checkAppEnabled('cafevdb');
+\OCP\JSON::callCheck();
 
-use CAFEVDB\L;
+use \CAFEVDB\L;
+use \CAFEVDB\Config;
 
+// Check if we are a group-admin, otherwise bail out.
 $user  = OCP\USER::getUser();
 $group = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
 if (!OC_SubAdmin::isGroupAccessible($user, $group)) {
@@ -19,47 +21,50 @@ if (!OC_SubAdmin::isGroupAccessible($user, $group)) {
     return;
 }
 
-if (isset($_POST['CAFEVDBkey']) && isset($_POST['dbkey1'])) {
+if (isset($_POST['systemkey']) && isset($_POST['oldkey'])) {
 
-  $oldkey   = $_POST['dbkey1'];
-  $newkey   = $_POST['CAFEVDBkey'];
+  $oldkey   = $_POST['oldkey'];
+  $newkey   = $_POST['systemkey'];
 
   // Remember the old session-key, needs to be restored in case of error
-  $actkey = CAFEVDB\Config::getEncryptionKey();
+  $actkey = Config::getEncryptionKey();
 
   // Make sure the old key ist installed properly
-  CAFEVDB\Config::setEncryptionKey($oldkey);
+  Config::setEncryptionKey($oldkey);
 
   // Now fetch the key itself
-  $storedkey = CAFEVDB\Config::getValue('encryptionKey');
+  $storedkey = Config::getValue('encryptionKey');
   if ($storedkey !== $oldkey) {
-      CAFEVDB\Config::setEncryptionKey($actkey);      
+      Config::setEncryptionKey($actkey);      
       OC_JSON::error(array("data" => array("message" => "Wrong old key.")));
       return;
   }
 
   // (re-)load the old config values and decrypt with the old key
-  if (!CAFEVDB\Config::decryptConfigValues() && $oldkey == '') {
+  if (!Config::decryptConfigValues() && $oldkey == '') {
       // retry with new key
-      CAFEVDB\Config::setEncryptionKey($newkey);
-      if (!CAFEVDB\Config::decryptConfigValues()) {
-          CAFEVDB\Config::setEncryptionKey($actkey);      
-          OC_JSON::error(array("data" => array("message" => "Unable to decrypt old config-values.")));
+      Config::setEncryptionKey($newkey);
+      if (!Config::decryptConfigValues()) {
+          Config::setEncryptionKey($actkey);      
+          OC_JSON::error(
+            array(
+              "data" => array(
+                    "message" => "Unable to decrypt old config-values.")));
           return;
       }
   }
 
   // Store the new key in the session data
-  CAFEVDB\Config::setEncryptionKey($newkey);
+  Config::setEncryptionKey($newkey);
 
   // Re-encode the data-base account information with the new key.
-  CAFEVDB\Config::encryptConfigValues();
+  Config::encryptConfigValues();
 
   // Compute md5 if key is non-empty
   $md5encdbkey = $newkey != '' ? md5($newkey) : '';
 
   // Encode the new key with itself ;)
-  $encdbkey = CAFEVDB\Config::encrypt($newkey, $newkey);
+  $encdbkey = Config::encrypt($newkey, $newkey);
 
   OC_AppConfig::setValue('cafevdb', 'encryptionkey', $encdbkey);
   OC_AppConfig::setValue('cafevdb', 'encryptionkey::MD5', $md5encdbkey);
@@ -68,12 +73,12 @@ if (isset($_POST['CAFEVDBkey']) && isset($_POST['dbkey1'])) {
   return;
 }
 
-if (isset($_POST['CAFEVDBkeydistribute'])) {
+if (isset($_POST['keydistribute'])) {
   $group = OC_AppConfig::getValue('cafevdb', 'usergroup', '');
   $users = OC_Group::usersInGroup($group);
   $error = '';
   foreach ($users as $user) {
-    if (!CAFEVDB\Config::setUserKey($user)) {
+    if (!Config::setUserKey($user)) {
       $error .= $user.' ';
     }
   }
@@ -86,54 +91,45 @@ if (isset($_POST['CAFEVDBkeydistribute'])) {
   return;
 }
 
-if (isset($_POST['CAFEVdbserver'])) {
-  $value = $_POST['CAFEVdbserver'];
-  CAFEVDB\Config::setValue('dbserver', $value);
+if (isset($_POST['dbserver'])) {
+  $value = $_POST['dbserver'];
+  Config::setValue('dbserver', $value);
   echo "dbserver: $value";
   return;
 }
 
-if (isset($_POST['CAFEVdbname'])) {
-  $value = $_POST['CAFEVdbname'];
-  CAFEVDB\Config::setValue('dbname', $value);
+if (isset($_POST['dbname'])) {
+  $value = $_POST['dbname'];
+  Config::setValue('dbname', $value);
   echo "dbname: $value";
   return;
 }
 
-if (isset($_POST['CAFEVdbuser'])) {
-  $value = $_POST['CAFEVdbuser'];
-  CAFEVDB\Config::setValue('dbuser', $value);
+if (isset($_POST['dbuser'])) {
+  $value = $_POST['dbuser'];
+  Config::setValue('dbuser', $value);
   echo "dbuser: $value";
   return;
 }
 
-/* if (isset($_POST['CAFEVDBpass']) && isset($_POST['dbpass1'])) { */
-/*     $oldpass = $_POST['dbpass1']; */
-/*     $storedpass = CAFEVDB\Config::getValue('dbpassword'); */
-/*     if ($oldpass != $storedpass) { */
-/*         OC_JSON::error(array("data" => array("message" => "Old password is wrong $oldpass $storedpass."))); */
-/*         return; */
-/*     } */
-/*     $value = $_POST['CAFEVDBpass']; */
-/*     CAFEVDB\Config::setValue('dbpassword', $value); */
-/*     // Should we now check whether we really can log in to the db-server? */
-/*     OC_JSON::success(array("data" => array( "dbpassword" => $value ))); */
-/*     return; */
-/* } */
-
-if (isset($_POST['CAFEVDBpass'])) {
-    $value = $_POST['CAFEVDBpass'];
-    CAFEVDB\Config::setValue('dbpassword', $value);
+if (isset($_POST['dbpassword'])) {
+    $value = $_POST['dbpassword'];
+    Config::setValue('dbpassword', $value);
     // Should we now check whether we really can log in to the db-server?
     OC_JSON::success(array("data" => array( "dbpassword" => $value )));
     return;
 }
 
-$calendarkeys = array('calendaruser', 'concertscalendar', 'rehearsalscalendar', 'othercalendar');
+$calendarkeys = array('sharinguser',
+                      'concertscalendar',
+                      'rehearsalscalendar',
+                      'othercalendar',
+                      'managementcalendar');
+
 foreach ($calendarkeys as $key) {
     if (isset($_POST[$key])) {
         $value = $_POST[$key];
-        CAFEVDB\Config::setValue($key, $value);
+        Config::setValue($key, $value);
         OC_JSON::success(array("data" => array( "message" => "$key: $value")));
         return;
     }
@@ -141,12 +137,52 @@ foreach ($calendarkeys as $key) {
 
 if (isset($_POST['eventduration'])) {
     $value = $_POST['eventduration'];
-    CAFEVDB\Config::setValue('eventduration', $value);
+    Config::setValue('eventduration', $value);
     // Should we now check whether we really can log in to the db-server?
     OC_JSON::success(array("data" => array( "message" => '('.$value.' '.L::t('minutes').')' )));
     return;
 }
 
-OC_JSON::error(array("data" => array("message" => "Unhandled request: ".print_r($_POST,true))));
-return;
+if (isset($_POST['passwordgenerate'])) {
+  OC_JSON::success(array("data" => array( "message" => \OC_User::generatePassword() )));
+  return;
+}    
+
+if (isset($_POST['sharingpassword'])) {
+  $value = $_POST['sharingpassword'];
+
+  // Change the password of the "share"-holder.
+  //
+  $sharinguser = Config::getValue('sharinguser');
+
+  if (\OC_User::setPassword($sharinguser, $value)) {
+    OC_JSON::success(
+      array(
+        "data" => array(
+          "message" => L::t('Changed password for').' '.$sharinguser )));
+    return true;
+  } else {
+    OC_JSON::error(
+      array(
+        "data" => array(
+          "message" => L::t('Failed changing password for').' '.$sharinguser )));
+    return false;
+  }
+}  
+
+if (isset($_POST['error'])) {
+  $value = $_POST['error'];
+
+  OC_JSON::error(
+    array(
+      "data" => array(
+        "message" => L::t($value) )));
+  return false;
+}  
+
+OC_JSON::error(array("data" => array("message" => L::t("Unhandled request:")." ".print_r($_POST,true))));
+
+return false;
+
+?>
 

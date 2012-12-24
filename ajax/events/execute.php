@@ -6,9 +6,12 @@ if(!OCP\User::isLoggedIn()) {
 OCP\JSON::checkAppEnabled('cafevdb');
 OCP\JSON::checkAppEnabled('calendar');
 
-$debugtext = '<PRE>'.print_r($_POST, true).'</PRE>';
-
 use CAFEVDB\L;
+use CAFEVDB\Config;
+use CAFEVDB\Events;
+
+$debugmode = Config::getUserValue('debugmode','') == 'on';
+$debugtext = $debugmode ? '<PRE>'.print_r($_POST, true).'</PRE>' : '';
 
 $lang = \OC_L10N::findLanguage('cafevdb');
 $locale = $lang.'_'.strtoupper($lang).'.UTF-8';
@@ -38,22 +41,22 @@ case 'delete':
     }
   }
   // Re-fetch the events
-  $events = CAFEVDB\Projects::events($projectId);
+  $events = Events::events($projectId);
   break;
 case 'detach':
   // Keep the event in the calendar, but detach it
-  CAFEVDB\Events::unchain($projectId, $eventId);
+  Events::unchain($projectId, $eventId);
   foreach ($emailEvents as $event) {
     if ($event != $eventId) {
       $selected[$event] = true;
     }
   }
   // Re-fetch the events
-  $events = CAFEVDB\Projects::events($projectId);
+  $events = Events::events($projectId);
   break;
 case 'redisplay':
   // Re-fetch the events
-  $events = CAFEVDB\Projects::events($projectId);
+  $events = Events::events($projectId);
   // Just remember the events selected for email transmission
   foreach ($emailEvents as $event) {
     $selected[$event] = true;
@@ -61,7 +64,7 @@ case 'redisplay':
   break;
 case 'select':
   // Re-fetch the events
-  $events = CAFEVDB\Projects::events($projectId);
+  $events = Events::events($projectId);
   // Mark all events as selected.
   foreach ($events as $event) {
     $selected[$event['calEventId']] = true;
@@ -69,7 +72,7 @@ case 'select':
   break;
 case 'deselect':
   // Re-fetch the events
-  $events = CAFEVDB\Projects::events($projectId);
+  $events = Events::events($projectId);
   // Just do nothing, leave all events unmarked.
   break;
 default:

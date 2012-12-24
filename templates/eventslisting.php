@@ -27,6 +27,12 @@ foreach ($_['Events'] as $event) {
   $enddate = CAFEVDB\Events::strftime("%x", $end->getTimestamp(), $locale);
   $endtime = CAFEVDB\Events::strftime("%X", $end->getTimestamp(), $locale);
 
+  // This is just a brief listing.
+  if ($startdate == $enddate) {
+    $datestring = $startdate.', '.$starttime;
+  } else {
+    $datestring = $startdate.' - '.$enddate;
+  }
   echo <<<__EOT__
     <tr class="$class">
       <td class="eventbuttons-$n">
@@ -50,7 +56,7 @@ __EOT__;
         <div class="email-check" /></label>
       </td>
       <td class="eventdata-$n-brief" id="brief-$evtId">$brief</td>
-      <td class="eventdata-$n-date" id="data-$evtId">$startdate - $enddate</td>
+      <td class="eventdata-$n-date" id="data-$evtId">$datestring</td>
     </tr>
 __EOT__;
   $n = ($n + 1) & 1;

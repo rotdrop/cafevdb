@@ -331,6 +331,123 @@ __EOT__;
     return $result;
   }
 
+  /**Return the IDs of the default calendars.
+   */
+  public static function defaultCalendars()
+  {
+    
+
+  }
+  
+
+  /**Convert the given flat event-list (as returned by self::events())
+   * into a matrix grouped as specified by the array $calendarIds in
+   * the given order. The result is an associative array where the
+   * keys are the displaynames of the calenders; the last row will
+   * contain events which do not belong to any id mentioned in
+   * $calendarIds and be tagged by the key '__other__'.
+   *
+   * @param[in] $projectEvents List returned by self::events().
+   *
+   * @param[in] $calendarIds Array with calendar sorting order, giving
+   * the ids of the wanted calendars in the wanted order.
+   *
+   * @return Associative array with calendarnames as keys.
+   */
+  public static function eventMatrix($projectEvents, $calendarIds)
+  {
+    $calendarNames = array();
+    
+    $result = array();
+
+    foreach ($calendarIds as $id) {
+      $cal = \OC_Calendar_Calendar::find($id);
+      $name = isset($cal['displayname'])
+        ? $cal['displayname'] : L::K('Unknown Calendar').' '.$id;
+      $calendarNames[$id] = $name;
+      $result[$name] = array();
+    }
+    $calendarNames['unknown'] = L::K('Unknown Calendars');
+    $result[$calendarNames['unknown']] = array();
+
+    foreach ($projectEvents as $event) {
+      $object = $event['object'];
+      $calId = array_search($objects['calendarid'], $calendarIds);
+      if ($calId === false) {
+        $result[$calendarNames['unknown']][] = $event;
+      } else {
+        $result[$calendarNames[$calId]][] = $event;
+      }
+    }
+
+    return $result;
+  }
+
+  public static function eventCompare($a, $b)
+  {
+    if ($a['object']['startdate'] == $b['object']['startdate']) {
+      return 0;  
+    }
+    if ($a['object']['startdate'] < $b['object']['startdate']) {
+      return -1;      
+    } else {
+      return 1;
+    }
+  }
+  
+
+  /**Fetch the list of events associated with $projectId. This
+   * functions fetches all the data, not only the pivot-table. Time
+   * stamps from the data-base are converted to PHP DateTime()-objects
+   * with UTC time-zone.
+   * 
+   * @param[in] $projectId The numeric id of the project.
+   *
+   * @param[in] $handle Data-base handle or false.
+   *
+   * @return Full event data for this project.
+   */
+  public static function events($projectId, $handle = false)
+  {    
+    $events = array();
+
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+      
+    $utc = new \DateTimeZone("UTC");
+
+    $query =<<<__EOT__
+SELECT `Id`,`EventId`
+  FROM `ProjectEvents` WHERE `ProjectId` = $projectId
+  ORDER BY `Id` ASC
+__EOT__;
+
+    $result = mySQL::query($query, $handle);
+    while ($line = mySQL::fetch($result)) {
+      $event = array('prjEventId' => $line['Id'],
+                     'calEventId' => $line['EventId'],
+                     'object'     => \OC_Calendar_App::getEventObject($line['EventId'], false, false));
+
+      $event['object']['startdate'] = new \DateTime($event['object']['startdate'], $utc);
+      $event['object']['enddate'] = new \DateTime($event['object']['enddate'], $utc);
+      $events[] = $event;
+    }
+    
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    usort($events, "\CAFEVDB\Events::eventCompare");
+
+    return $events;
+  }
+
+  /**Fetch the related rows from the pivot-table (without calendar
+   * data).
+   */
   protected static function projectEvents($projectId, $handle = false)
   {    
     $events = array();

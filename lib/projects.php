@@ -408,44 +408,6 @@ __EOT__;
     //"eventButton: $k $fds $fdd";
   }
 
-  /** Fetch the list of events associated with $projectId.
-   */
-  public static function events($projectId, $handle = false)
-  {    
-    $events = array();
-
-    $ownConnection = $handle === false;
-    if ($ownConnection) {
-      Config::init();
-      $handle = mySQL::connect(Config::$pmeopts);
-    }
-      
-    $utc = new \DateTimeZone("UTC");
-
-    $query =<<<__EOT__
-SELECT `Id`,`EventId`
-  FROM `ProjectEvents` WHERE `ProjectId` = $projectId
-  ORDER BY `Id` ASC
-__EOT__;
-
-    $result = mySQL::query($query, $handle);
-    while ($line = mySQL::fetch($result)) {
-      $event = array('prjEventId' => $line['Id'],
-                     'calEventId' => $line['EventId'],
-                     'object'     => \OC_Calendar_App::getEventObject($line['EventId'], false, false));
-
-      $event['object']['startdate'] = new \DateTime($event['object']['startdate'], $utc);
-      $event['object']['enddate'] = new \DateTime($event['object']['enddate'], $utc);
-      $events[] = $event;
-    }
-    
-    if ($ownConnection) {
-      mySQL::close($handle);
-    }
-
-    return $events;
-  }
-
   /**Fetch the list of projects from the data base as a short id=>name
    * field.
    */

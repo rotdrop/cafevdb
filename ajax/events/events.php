@@ -8,11 +8,15 @@ OCP\JSON::checkAppEnabled('calendar');
 
 CAFEVDB\Config::init();
 use CAFEVDB\L;
+use CAFEVDB\Config;
+use CAFEVDB\Events;
+use CAFEVDB\Util;
 
-$debugtext = '<PRE>'.print_r($_POST, true).'</PRE>';
+$debugmode = Config::getUserValue('debugmode', '') == 'on';
+$debugtext = $debugmode ? '<PRE>'.print_r($_POST, true).'</PRE>' : '';
 
-$projectId   = CAFEVDB\Util::cgiValue('ProjectId', -1);
-$projectName = CAFEVDB\Util::cgiValue('ProjectName', '');
+$projectId   = Util::cgiValue('ProjectId', -1);
+$projectName = Util::cgiValue('ProjectName', '');
 
 if ($projectId < 0 ||
     ($projectName == '' &&
@@ -26,11 +30,11 @@ if (false) {
       'data' => array('contents' => '',
                       'projectId' => $projectId,
                       'projectName' => $projectName,
-                      'debug' => $debugtext)));
+                      'debug' => $debugtext.$msg)));
   return true;
 }
 
-$events = CAFEVDB\Projects::events($projectId);
+$events = Events::events($projectId);
 
 $lang = OC_L10N::findLanguage('cafevdb');
 $locale = $lang.'_'.strtoupper($lang).'.UTF-8';

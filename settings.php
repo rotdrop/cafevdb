@@ -34,6 +34,7 @@ $tmpl->assign('exampletext', $exampletext);
 $tmpl->assign('jsscript', $jsscript);
 
 OCP\Util::addStyle('cafevdb', 'cafevdb');
+OCP\Util::addStyle('cafevdb', 'settings');
 OCP\Util::addScript("cafevdb", "settings");
 
 $result = $tmpl->printPage();
@@ -50,10 +51,11 @@ if (CAFEVDB\Config::encryptionKeyValid() &&
     $tmpl->assign('dbpassword', CAFEVDB\Config::getValue('dbpassword'));
     $tmpl->assign('encryptionkey', CAFEVDB\Config::getValue('encryptionkey'));
 
-    $tmpl->assign('calendaruser', CAFEVDB\Config::getSetting('calendaruser', CAFEVDB\Config::getValue('dbuser')));
+    $tmpl->assign('sharinguser', CAFEVDB\Config::getSetting('sharinguser', CAFEVDB\Config::getValue('dbuser')));
     $tmpl->assign('concertscalendar', CAFEVDB\Config::getSetting('concertscalendar', L::t('concerts')));
     $tmpl->assign('rehearsalscalendar', CAFEVDB\Config::getSetting('rehearsalscalendar', L::t('rehearsals')));
     $tmpl->assign('othercalendar', CAFEVDB\Config::getSetting('othercalendar', L::t('other')));
+    $tmpl->assign('managementcalendar', CAFEVDB\Config::getSetting('managementcalendar', L::t('management')));
     $tmpl->assign('eventduration', CAFEVDB\Config::getSetting('eventduration', '180'));
 
     $result = $result && $tmpl->printPage();

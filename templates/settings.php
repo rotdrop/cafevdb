@@ -9,7 +9,7 @@ $debugtitle    = "Show a certain amount of debug information, normally not neede
 ?>
 <div class="personalblock">
   <form id="cafevdb">
-    <strong>Personal Settings for Camerata DB</strong><br />
+  <strong><?php echo L::t('Personal Settings for Camerata DB'); ?></strong><br />
     <input id="tooltips" type="checkbox" name="tooltips" <?php echo $_['tooltips'] == 'on' ? 'checked="checked"' : ''; ?> id="tooltips" title="<?php echo L::t($tooltipstitle) ?>"/>
     <label for="tooltips" title="<?php echo L::t($tooltipstitle) ?>"><?php echo L::t('Tool-Tips') ?></label>
     <br />
@@ -26,14 +26,14 @@ $debugtitle    = "Show a certain amount of debug information, normally not neede
       title="<?php echo L::t('Example Text') ?>" />
     <br />
     <input type="text" style="display:none;width:0%;float: left;" name="dummy" id="dummy" value="dummy" placeholder="dummy" title="<?php echo L::t('Dummy') ?>/>
-    <span class="msg"></span>
+    <span class="statusmessage" id="msg"></span>
   </form>
-  <form id="cafevdbuserkey">
-    <div id="changed"><?php echo L::t('The encryption key has been set successfully.');?></div>
-    <div id="error"><?php echo L::t('Unable to set the encryption key.');?></div>
+  <form id="userkey">
     <input type="password" id="password" name="password" placeholder="<?php echo L::t('Own Password');?>" />
-    <input type="password" id="encryptionkey" name="encryptionkey" value="<?php echo (true ? '' : $_['encryptionkey']); ?>" placeholder="<?php echo L::t('Encryption Key');?>" data-typetoggle="#cafevdbkey #show" />
-    <input type="checkbox" id="show" name="show" /><label for="show"><?php echo L::t('show');?></label>
+    <input type="password" id="encryptionkey" name="encryptionkey" value="<?php echo (true ? '' : $_['encryptionkey']); ?>" placeholder="<?php echo L::t('DB Encryption Key');?>" data-typetoggle="#userkey-show" />
+    <input type="checkbox" id="userkey-show" name="userkey-show" /><label for="userkey-show"><?php echo L::t('show');?></label>
     <input id="button" type="button" value="<?php echo L::t('Set Encryption Key');?>" />
+    <div class="statusmessage" id="changed"><?php echo L::t('The encryption key has been set successfully.');?></div>
+    <div class="statusmessage" id="error"><?php echo L::t('Unable to set the encryption key.');?></div>
   </form>
 </div>
