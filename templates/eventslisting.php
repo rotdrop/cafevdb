@@ -15,10 +15,10 @@ $evtButtons = array('Edit' => array('tag' => 'edit',
 $locale = $_['Locale'];
 $n = 0;
 foreach ($_['Events'] as $event) {
-  $evtId  = $event['calEventId'];
+  $evtId  = $event['EventId'];
+  $calId  = $event['CalendarId'];
   $object = $event['object'];
-  $calId = $object['calendarid'];
-  $brief = $object['summary'];
+  $brief  = $object['summary'];
 
   $start = $object['startdate'];
   $startdate = CAFEVDB\Events::strftime("%x", $start->getTimestamp(), $locale);
