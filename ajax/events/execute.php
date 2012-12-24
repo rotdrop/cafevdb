@@ -67,7 +67,7 @@ case 'select':
   $events = Events::events($projectId);
   // Mark all events as selected.
   foreach ($events as $event) {
-    $selected[$event['calEventId']] = true;
+    $selected[$event['EventId']] = true;
   }
   break;
 case 'deselect':
