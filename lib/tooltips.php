@@ -1,6 +1,7 @@
 <?php
 
-namespace CAFEVDB;
+namespace CAFEVDB
+{
 
 /** Tool-tips for the phpmyadmin-forms.
  *
@@ -125,6 +126,8 @@ Think thrice about it.',
     );
   }
 }; // class toolTips
+
+}
 
 /*
  * Local Variables: ***

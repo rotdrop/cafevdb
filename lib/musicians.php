@@ -1,6 +1,7 @@
 <?php
 
-namespace CAFEVDB;
+namespace CAFEVDB
+{
 
 class Musicians
   extends Instrumentation
@@ -656,5 +657,7 @@ __EOT__;
   }
 
 }; // class definition.
+
+}
 
 ?>

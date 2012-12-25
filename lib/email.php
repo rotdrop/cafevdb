@@ -1,6 +1,7 @@
 <?php
 
-namespace {
+namespace
+{
 
   $incPath = __DIR__.'/../3rdparty';
   set_include_path($incPath . PATH_SEPARATOR . get_include_path());
@@ -15,7 +16,8 @@ namespace {
 
 }
 
-namespace CAFEVDB {
+namespace CAFEVDB
+{
 
   /**Wrap the email filter form into a class to make things a little
    * less crowded. This is actually not to filter emails, but rather to

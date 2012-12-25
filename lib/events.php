@@ -1,6 +1,7 @@
 <?php
 
-namespace CAFEVDB;
+namespace CAFEVDB
+{
 
 /** Helper class for event management
  */
@@ -558,6 +559,8 @@ __EOT__;
   }
 
 }; // class Events
+
+}
 
 /*
  * Local Variables: ***

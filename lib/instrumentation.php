@@ -1,6 +1,7 @@
 <?php
 
-namespace CAFEVDB;
+namespace CAFEVDB
+{
 
 class Instrumentation
 {
@@ -66,45 +67,6 @@ class Instrumentation
   }
 };
 
-
-/*   public function display() */
-/*   { */
-/*     switch ($this->action) { */
-/*     case "DetailedInstrumentation": { */
-/*       DetailedInstrumentation::display($this->opts); */
-/*       break; */
-/*     } */
-/*     case "BriefInstrumentation": { */
-/*       BriefInstrumentation::display($this->opts); */
-/*       break; */
-/*     } */
-/*     case "TODO": { */
-/*       // ... the TODO-table actually has nothing to do with the */
-/*       // instrumentation. */
-/*       break; */
-/*     } */
-/*     case "AddMusicians": { */
-/*       Musicians::display($this->opts, true); */
-/*       break; */
-/*     } */
-/*     case "DisplayAllMusicians": { */
-/*       Musicians::display($this->opts, false); */
-/*       break; */
-/*     } */
-/*     case "AddOneMusician": */
-/*     case "ChangeOneMusician": { */
-/*       Musicians::displayAddChangeOne($this->opts); */
-/*       break; */
-/*     } */
-/*     case "AddInstruments": { */
-/*       Instruments::display($this->opts); */
-/*       break; */
-/*     } */
-/*     default: { */
-/*       // should emit an error here ... */
-/*     } */
-/*     } */
-/*   } */
-/* }; // class Instrumentation */
+}
 
 ?>

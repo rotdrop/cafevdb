@@ -1,6 +1,7 @@
 <?php
 
-namespace CAFEVDB;
+namespace CAFEVDB 
+{
 
 // PHP shit
 date_default_timezone_set('Europe/Berlin');
@@ -435,5 +436,7 @@ eventduration';
       return $tip;
   }
 };
+
+}
 
 ?>

@@ -1,6 +1,7 @@
 <?php
 
-namespace CAFEVDB;
+namespace CAFEVDB
+{
 
 class Instruments
   extends Instrumentation
@@ -376,6 +377,8 @@ __EOT__;
     }
   }
 
-};
+}; // class 
+
+}
 
 ?>

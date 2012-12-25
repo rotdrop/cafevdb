@@ -1,6 +1,7 @@
 <?php
 
-namespace CAFEVDB;
+namespace CAFEVDB
+{
 
 class ProjectInstruments
   extends Instrumentation
@@ -260,4 +261,7 @@ bitte bei den <A HREF="Projekte.php?PME_sys_rec='.$projectId.'&PME_sys_operation
 /*   }   */
 
 }; // class InstrumentationInstruments
+
+}
+
 ?>

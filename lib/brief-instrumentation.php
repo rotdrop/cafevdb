@@ -1,6 +1,7 @@
-<?php  
+f<?php  
 
-namespace CAFEVDB;
+namespace CAFEVDB
+{
 
 class BriefInstrumentation
   extends Instrumentation
@@ -264,5 +265,9 @@ __EOT__;
     //new phpMyEdit_mce_cal($opts);
     new \phpMyEdit($opts);
   }
+};
+
 }
+
 ?>
+

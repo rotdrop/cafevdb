@@ -1,6 +1,7 @@
 <?php
 
-namespace CAFEVDB;
+namespace CAFEVDB
+{
 
 class L
 {
@@ -419,6 +420,8 @@ class mySQL
     return preg_split("/','/",$set); // Split into an array
   }
 };
+
+}
 
 /*
  * Local Variables: ***

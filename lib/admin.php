@@ -1,6 +1,7 @@
 <?php
 
-namespace CAFEVDB;
+namespace CAFEVDB 
+{
 
 class Admin
 {
@@ -84,5 +85,7 @@ class Admin
   }
 
 };
+
+}
 
 ?>

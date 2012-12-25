@@ -1,6 +1,7 @@
 <?php
 
-namespace CAFEVDB;
+namespace CAFEVDB
+{
 
 /** Helper class for displaying projects.
  */
@@ -584,6 +585,8 @@ __EOT__;
   }
 
 }; // class Projects
+
+}
 
 /*
  * Local Variables: ***
