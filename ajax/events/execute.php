@@ -81,6 +81,9 @@ default:
   return false;
 }
 
+$dfltIds     = Events::defaultCalendars();
+$eventMatrix = Events::eventMatrix($events, $dfltIds);
+
 // Now generate the html-fragment
 
 $tmpl = new OCP\Template('cafevdb', 'eventslisting');
@@ -88,6 +91,7 @@ $tmpl = new OCP\Template('cafevdb', 'eventslisting');
 $tmpl->assign('ProjectName', $projectName);
 $tmpl->assign('ProjectId', $projectId);
 $tmpl->assign('Events', $events);
+$tmpl->assign('EventMatrix', $eventMatrix);
 $tmpl->assign('Locale', $locale);
 $tmpl->assign('CSSClass', 'projectevents');
 $tmpl->assign('Selected', $selected);

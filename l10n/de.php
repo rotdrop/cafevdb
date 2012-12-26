@@ -1,5 +1,7 @@
 <?php
 $TRANSLATIONS = array(
+  'no events' => 'keine Termine',
+  'Miscellaneous Calendars' => 'Weitere Kalender',
   'Check' => 'Überprüfen',
   'shareowner' => 'Share-Strohpuppe',
   'Account for Shared Resources' => 'Account für gemeinsame Daten',

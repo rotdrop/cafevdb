@@ -60,12 +60,36 @@ class Events
     mySQL::query($query, $handle);
 
     mySQL::close($handle);
+
+    // And remove the calendar from our config space.
+    foreach (explode(',',Config::DFLT_CALS) as $key) {
+      $id = Config::getValue($key.'calendars'.'id');
+      if ($id === $calendarId) {
+        $id = Config::setValue($key.'calendars'.'id','');
+        // ... but we keep the name nevertheless.-
+      }
+    }
   }
 
   public static function editCalendarListener($calendarId)
   {
     // We simply should update our idea of the name of the calender if
-    // it is one of our four calendars
+    // it is one of our four calendars, rename the calendar back to
+    // what we want it to be
+    foreach (explode(',',Config::DFLT_CALS) as $key) {
+      $id = Config::getValue($key.'calendar'.'id');
+      if ($id === $calendarId) {
+        $name    = Config::getValue($key.'calendar');
+        $cal     = \OC_Calendar_Calendar::find($calendarId);
+        $dpyName = $cal['displayname'];
+        if (!$name || $name == '') {
+          Config::setValue($key.'calendar', $dpyName);
+        } else if ($cal['displayname'] != $name) {
+          // revert it
+          \OC_Calendar_Calendar::editCalendar($calendarId, $name);
+        }
+      }
+    }
   }
 
   public static function strftime($format, $timestamp = NULL, $locale = NULL)
@@ -612,10 +636,13 @@ __EOT__;
    */
   public static function defaultCalendars()
   {
-    
-
+    $cals = explode(',',Config::DFLT_CALS);
+    $result = array();
+    foreach ($cals as $cal) {
+      $result[] = Config::getValue($cal.'calendar'.'id');
+    }
+    return $result;
   }
-  
 
   /**Convert the given flat event-list (as returned by self::events())
    * into a matrix grouped as specified by the array $calendarIds in
@@ -638,22 +665,25 @@ __EOT__;
     $result = array();
 
     foreach ($calendarIds as $id) {
+      $result[$id] = array(
+        'name' => strval(L::t('Unknown Calendar').' '.$id),
+        'events' => array());
       $cal = \OC_Calendar_Calendar::find($id);
-      $name = isset($cal['displayname'])
-        ? $cal['displayname'] : L::K('Unknown Calendar').' '.$id;
-      $calendarNames[$id] = $name;
-      $result[$name] = array();
+      if ($cal != false && $cal['displayname']) {
+        $result[$id]['name'] = $cal['displayname'];
+      }
     }
-    $calendarNames['unknown'] = L::K('Unknown Calendars');
-    $result[$calendarNames['unknown']] = array();
+    $result[-1] = array('name' => strval(L::t('Miscellaneous Calendars')),
+                        'events' => array());
 
     foreach ($projectEvents as $event) {
       $object = $event['object'];
-      $calId = array_search($objects['calendarid'], $calendarIds);
+      $calId = array_search($object['calendarid'], $calendarIds);
       if ($calId === false) {
-        $result[$calendarNames['unknown']][] = $event;
+        $result[-1]['events'][] = $event;
       } else {
-        $result[$calendarNames[$calId]][] = $event;
+        $calId = $calendarIds[$calId];
+        $result[$calId]['events'][] = $event;
       }
     }
 

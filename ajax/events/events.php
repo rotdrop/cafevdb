@@ -34,7 +34,9 @@ if (false) {
   return true;
 }
 
-$events = Events::events($projectId);
+$events      = Events::events($projectId);
+$dfltIds     = Events::defaultCalendars();
+$eventMatrix = Events::eventMatrix($events, $dfltIds);
 
 $lang = OC_L10N::findLanguage('cafevdb');
 $locale = $lang.'_'.strtoupper($lang).'.UTF-8';
@@ -44,6 +46,7 @@ $tmpl = new OCP\Template('cafevdb', 'events');
 $tmpl->assign('ProjectName', $projectName);
 $tmpl->assign('ProjectId', $projectId);
 $tmpl->assign('Events', $events);
+$tmpl->assign('EventMatrix', $eventMatrix);
 $tmpl->assign('Locale', $locale);
 $tmpl->assign('CSSClass', 'projectevents');
 $tmpl->assign('Selected', array());

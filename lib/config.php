@@ -28,7 +28,8 @@ managementcalendarid,
 eventduration';
   const MD5_SUF  = '::MD5';
   const MD5_LEN  = 5;
-  public static $appbase = "apps/cafevdb/";
+  const DFLT_CALS = 'concerts,rehearsals,other,management';
+  const APP_BASE  = 'apps/cafevdb/';
   public static $prefix = false;
   public static $triggers = false;
   public static $debug_query = false;
@@ -348,7 +349,7 @@ eventduration';
     self::decryptConfigValues();
 
     if (!self::$prefix) {
-      self::$prefix = self::$appbase . "lib/";
+      self::$prefix = self::APP_BASE . "lib/";
     }
     if (!self::$triggers) {
       self::$triggers = self::$prefix . "triggers/";
@@ -358,7 +359,7 @@ eventduration';
     self::$pmeopts['pw'] = self::$opts['dbpassword'];
     self::$pmeopts['db'] = self::$opts['dbname'];
 
-    self::$pmeopts['url']['images'] = self::$appbase . 'img/';
+    self::$pmeopts['url']['images'] = self::APP_BASE . 'img/';
     global $HTTP_SERVER_VARS;
     self::$pmeopts['page_name'] = $HTTP_SERVER_VARS['PHP_SELF'].'?app=cafevdb';
 
