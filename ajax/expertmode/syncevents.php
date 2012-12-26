@@ -4,6 +4,8 @@
 
 use CAFEVDB\L;
 use CAFEVDB\Events;
+use CAFEVDB\Config;
+use CAFEVDB\mySQL;
 
 // Check if we are a user
 OCP\JSON::checkLoggedIn();
@@ -12,51 +14,53 @@ OCP\JSON::checkAppEnabled('calendar');
 
 // Loop over all calendars the calendar user shares with the orchestra
 // group.
-$shareowner    = CAFEVDB\Config::getSetting('shareowner',
-                                            CAFEVDB\Config::getValue('dbuser').'shareowner');
-$calendargroup = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
-$calendars     = \OC_Calendar_Calendar::allCalendars($shareowner);
+$shareowner = Config::getSetting(
+  'shareowner', Config::getValue('dbuser').'shareowner');
+$sharegroup = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
 
-$dfltnames = array('concerts', 'rehearsals', 'other', 'management');
-$dfltcals = array();
-foreach ($dfltnames as $name) {
-  $dfltcals[] = CAFEVDB\Config::getSetting($name.'calendar', L::t($name));
+// Possibly fix sharing issues with the default calendars.
+foreach (explode(',',Config::DFLT_CALS) as $key) {
+  $calKey = $key.'calendar';
+  $id     = Config::getValue($calKey.'id');
+  $name   = Config::getSetting($calKey, L::t($key));
+  $newId = Events::checkSharedCalendar($name, $id);
+  if ($newId !== false && $newId != $id) {
+    Config::setValue($calKey.'id', $newId);
+  }
 }
 
-CAFEVDB\Config::init();
-$handle = CAFEVDB\mySQL::connect(CAFEVDB\Config::$pmeopts);
 
-foreach ($calendars as $calendar) {
-  $calId = $calendar['id'];
-  if (!OCP\Share::getItemSharedWithBySource('calendar', $calId)) {
-    $calDpyName = $calendar['displayname'];
-    if (in_array($calDpyName, $dfltcals)) {
-      // Force permission on default calendars
-      $newId = $calId;
-      try {
-        $newId = Events::checkSharedCalendar($calDpyName, $calId);
-      } catch (\Exception $exception) {
-        OC_JSON::error(
-          array(
-            "data" => array(
-              "message" => L::t("Exception:").$exception->getMessage())));
-        return false;
-      }
-    } else {
-      continue;
-    }
+// Determine all calendars shared with the group
+$sharedCals = Events::sudo($shareowner, function() use ($shareowner) {
+    $result1 = \OCP\Share::getItemsShared('calendar');
+    $result2 = \OCP\Share::getItemsSharedWith('calendar');
+    $result = array_merge($result1, $result2);
+    return $result;
+  });
+
+Config::init();
+$handle = mySQL::connect(Config::$pmeopts);
+
+$txt = '';
+foreach ($sharedCals as $share) {
+  if ($share['share_with'] != $sharegroup) {
+    continue;
   }
-
-  // Ok, now we should have access. Do the sync.
+  $calId = $share['item_source'];
+  
+  $txt .= $calId.' ';
+  // Do the sync
   $events = \OC_Calendar_Object::all($calId);
   foreach ($events as $event) {
     Events::syncEvent($event['id'], $handle);
   }
 }
 
-CAFEVDB\mySQL::close($handle);
+mySQL::close($handle);
 
-OC_JSON::success(array("data" => array("message" => L::t("Done."))));
+OC_JSON::success(array("data" => array("message" => L::t("Done.").'<PRE>'.$txt.'</PRE>')));
+return;
+
 return;
 
 ?>
