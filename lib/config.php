@@ -1,5 +1,7 @@
 <?php
 
+/**Basic namespace for the cafevdb application.
+ */
 namespace CAFEVDB 
 {
 
