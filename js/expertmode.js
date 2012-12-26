@@ -13,7 +13,7 @@ $(document).ready(function(){
     $('#syncevents').click(function(){
         var post  = $( '#syncevents' ).serialize();
         $.post( OC.filePath('cafevdb', 'ajax/expertmode', 'syncevents.php'), post, function(data){
-	    $('#expertmode .msg').html(data);
+	    $('#expertmode .msg').html(data.data.message);
         });
     });
 

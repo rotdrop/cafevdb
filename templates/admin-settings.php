@@ -1,3 +1,4 @@
+<?php use CAFEVDB\L; ?>
 <div class="personalblock">
   <strong>Camerata DB</strong><br />
   <form id="cafevdbadmin">

@@ -20,63 +20,46 @@ OCP\JSON::checkAppEnabled('cafevdb');
 $debugtext = '<PRE>'.print_r($_POST, true).'</PRE>';
 
 use CAFEVDB\L;
+use CAFEVDB\Util;
+use CAFEVDB\Config;
+use CAFEVDB\Events;
 
-$projectId   = CAFEVDB\Util::cgiValue('ProjectId', -1);
-$projectName = CAFEVDB\Util::cgiValue('ProjectName', -1);
-$eventKind   = CAFEVDB\Util::cgiValue('EventKind', -1);
+$projectId   = Util::cgiValue('ProjectId', -1);
+$projectName = Util::cgiValue('ProjectName', -1);
+$eventKind   = Util::cgiValue('EventKind', -1);
 
 // standard calendar values
-$start  = CAFEVDB\Util::cgiValue('start', false);
-$end    = CAFEVDB\Util::cgiValue('end', false);
-$allday = CAFEVDB\Util::cgiValue('allday', false);
+$start  = Util::cgiValue('start', false);
+$end    = Util::cgiValue('end', false);
+$allday = Util::cgiValue('allday', false);
 
-// choose defaults which make sense
+// Choose the right calendar
 $categories   = $projectName.','.L::t($eventKind);
-$calendarname = CAFEVDB\Config::getSetting($eventKind.'calendar', L::t($eventKind));
+$calKey       = $eventKind.'calendar';
+$calendarName = Config::getSetting($calKey, L::t($eventKind));
+$calendarId   = Config::getSetting($calKey.'id', false);
+$shareOwner   = Config::getSetting(
+  'shareowner', Config::getValue('dbuser').'shareowner');
+
+// Default title for the event
 $title        = L::t($eventKind).', '.$projectName;
 
 // make sure that the calendar exists and is writable
-$shareowner    = CAFEVDB\Config::getSetting('shareowner',
-                                            CAFEVDB\Config::getValue('dbuser').'shareowner');
-$calendargroup = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
-$calendars     = OC_Calendar_Calendar::allCalendars($shareowner);
-$defaultcal    = false;
-foreach ($calendars as $calendar) {
-    if ($calendar['displayname'] == $calendarname) {
-        $defaultcal = $calendar;
-        $defaultid  = $defaultcal['id'];
-        break;
-    }
+$newId = Events::checkSharedCalendar($calendarName, $calendarId);
+
+if ($newId === false) {
+  OCP\JSON::error(
+    array(
+      'data' => array(
+        'contents' => '',
+        'debug' => L::t('Cannot access calendar:').' '.$calKey)));
+  
+  return false;
 }
 
-// Create the calendar if necessary
-if (!$defaultcal) {
-    $calid = OC_Calendar_Calendar::addCalendar($shareowner, $calendarname);
-    $defaultcal = OC_Calendar_Calendar::find($calid);
-    $defaultid  = $calid;
-}
-
-// Check that we can edit, simply set the item as shared
-//
-// Total cheating ...
-if ($defaultcal &&
-    !OCP\Share::getItemSharedWithBySource('calendar', $defaultid)) {
-    $olduser = $_SESSION['user_id'];
-    $_SESSION['user_id'] = $shareowner;
-    try {
-        $token = OCP\Share::shareItem('calendar', $defaultid,
-                                      OCP\Share::SHARE_TYPE_GROUP,
-                                      $calendargroup,
-                                      OCP\Share::PERMISSION_CREATE|
-                                      OCP\Share::PERMISSION_READ|
-                                      OCP\Share::PERMISSION_UPDATE|
-                                      OCP\Share::PERMISSION_DELETE);
-    } catch (Exception $exception) {
-        $_SESSION['user_id'] = $olduser;
-        OC_JSON::error(array('data' => array('message' => $exception->getMessage())));
-        return;
-    }
-    $_SESSION['user_id'] = $olduser;
+if ($newId !== $calendarId) {
+  Config::setValue($calKey.'id', $calendarId);
+  $calendarId = $newId;
 }
 
 if (!$start) {
@@ -95,17 +78,22 @@ $timezone = OC_Calendar_App::getTimezone();
 $start->setTimezone(new DateTimeZone($timezone));
 $end->setTimezone(new DateTimeZone($timezone));
 
+$calendarGroup = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
+$calendars     = \OC_Calendar_Calendar::allCalendars($shareOwner);
+$defaultCal    = \OC_Calendar_App::getCalendar($calendarId);
+
+
 // make sure the default calendar is the first in the list
-$calendar_options = array($defaultcal);
+$calendar_options = array($defaultCal);
 
 $calendars = OC_Calendar_Calendar::allCalendars(OCP\USER::getUser());
 foreach($calendars as $calendar) {
-    if ($calendar['id'] == $defaultid) {
+    if ($calendar['id'] == $calendarId) {
         continue; // skip, already in list.
     }
 	if ($calendar['userid'] != OCP\User::getUser()) {
 		$sharedCalendar = OCP\Share::getItemSharedWithBySource('calendar', $calendar['id']);
-		if ($sharedCalendar && ($sharedCalendar['permissions'] & OCP\Share::PERMISSION_UPDATE)) {
+		if ($sharedCalendar && ($sharedCalendar['permissions'] & OCP\Share::PERMISSION_CREATE)) {
 			array_push($calendar_options, $calendar);
 		}
 	} else {

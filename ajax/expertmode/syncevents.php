@@ -3,6 +3,7 @@
 // Init owncloud
 
 use CAFEVDB\L;
+use CAFEVDB\Events;
 
 // Check if we are a user
 OCP\JSON::checkLoggedIn();
@@ -14,7 +15,7 @@ OCP\JSON::checkAppEnabled('calendar');
 $shareowner    = CAFEVDB\Config::getSetting('shareowner',
                                             CAFEVDB\Config::getValue('dbuser').'shareowner');
 $calendargroup = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
-$calendars     = OC_Calendar_Calendar::allCalendars($shareowner);
+$calendars     = \OC_Calendar_Calendar::allCalendars($shareowner);
 
 $dfltnames = array('concerts', 'rehearsals', 'other', 'management');
 $dfltcals = array();
@@ -28,24 +29,19 @@ $handle = CAFEVDB\mySQL::connect(CAFEVDB\Config::$pmeopts);
 foreach ($calendars as $calendar) {
   $calId = $calendar['id'];
   if (!OCP\Share::getItemSharedWithBySource('calendar', $calId)) {
-    if (in_array($calendar['displayname'], $dfltcals)) {
-      // force sharing
-      $olduser = $_SESSION['user_id'];
-      $_SESSION['user_id'] = $shareowner;
+    $calDpyName = $calendar['displayname'];
+    if (in_array($calDpyName, $dfltcals)) {
+      // Force permission on default calendars
+      $newId = $calId;
       try {
-        $token = OCP\Share::shareItem('calendar', $calId,
-                                      OCP\Share::SHARE_TYPE_GROUP,
-                                      $calendargroup,
-                                      OCP\Share::PERMISSION_CREATE|
-                                      OCP\Share::PERMISSION_READ|
-                                      OCP\Share::PERMISSION_UPDATE|
-                                      OCP\Share::PERMISSION_DELETE);
-      } catch (Exception $exception) {
-        $_SESSION['user_id'] = $olduser;
-        OC_JSON::error(array('data' => array('message' => $exception->getMessage())));
-        return;
+        $newId = Events::checkSharedCalendar($calDpyName, $calId);
+      } catch (\Exception $exception) {
+        OC_JSON::error(
+          array(
+            "data" => array(
+              "message" => L::t("Exception:").$exception->getMessage())));
+        return false;
       }
-      $_SESSION['user_id'] = $olduser;
     } else {
       continue;
     }
@@ -54,12 +50,13 @@ foreach ($calendars as $calendar) {
   // Ok, now we should have access. Do the sync.
   $events = \OC_Calendar_Object::all($calId);
   foreach ($events as $event) {
-    CAFEVDB\Events::syncEvent($event['id'], $handle);
+    Events::syncEvent($event['id'], $handle);
   }
 }
 
 CAFEVDB\mySQL::close($handle);
 
-echo '<span class="bold">'.L::t('Done.').'</span>';
+OC_JSON::success(array("data" => array("message" => L::t("Done."))));
+return;
 
 ?>

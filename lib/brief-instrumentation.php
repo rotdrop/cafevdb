@@ -1,4 +1,4 @@
-f<?php  
+<?php  
 
 namespace CAFEVDB
 {
@@ -270,4 +270,3 @@ __EOT__;
 }
 
 ?>
-

@@ -173,9 +173,32 @@ $calendarkeys = array('concertscalendar',
 foreach ($calendarkeys as $key) {
     if (isset($_POST[$key])) {
         $value = $_POST[$key];
-        Config::setValue($key, $value);
-        OC_JSON::success(array("data" => array( "message" => "$key: $value")));
-        return;
+        $id = Config::getSetting($key.'id', false);
+
+        try {
+          $newId = Events::checkSharedCalendar($value, $id);
+        } catch (Exception $exception) {
+          OC_JSON::error(
+            array(
+              "data" => array(
+                "message" => L::t("Exception:").$exception->getMessage())));
+          return false;
+        }
+
+        if ($newId !== false) {
+          Config::setValue($key, $value);
+          if ($id != $newId) {
+            Config::setValue($key.'id', $newId);    
+          }
+          OC_JSON::success(array("data" => array( "message" => "$key: $value")));
+        } else {
+          OC_JSON::error(
+            array(
+              "data" => array(
+                "message" => L::t("Unable to set:").' '.$key.' -> '.$value)));
+          return false;
+        }
+        return true;
     }
 }
 

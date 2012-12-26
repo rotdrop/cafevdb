@@ -35,6 +35,7 @@ $tmpl->assign('tooltips', $tooltips);
 $tmpl->assign('encryptionkey', $encrkey);
 $tmpl->assign('exampletext', $exampletext);
 $tmpl->assign('jsscript', $jsscript);
+$tmpl->assign('adminsettings', false);
 
 OCP\Util::addStyle('cafevdb', 'cafevdb');
 OCP\Util::addStyle('cafevdb', 'settings');

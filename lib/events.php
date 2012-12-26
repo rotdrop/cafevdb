@@ -86,6 +86,8 @@ class Events
    *
    * @param[in] $eventId The OwnCloud-Id of the event.
    *
+   * @param[in] $handle Optional. MySQL handle.
+   *
    * @return Undefined.
    */
   public static function syncEvent($eventId, $handle = false)
@@ -191,7 +193,7 @@ class Events
    * object. This is a reference to allow for modification of the
    * $vCalendar object.
    *
-   * @param[in] $vCalendar Sabre VCALENDAR object.
+   * @param[in] $vcalendar Sabre VCALENDAR object.
    *
    * @return A reference to the inner object.
    */
@@ -282,7 +284,7 @@ class Events
    *
    * @return true on success or false on error.
    *
-   * @bugs Error checking is not implemented.
+   * @bug Error checking is not implemented.
    */
   protected static function maybeAddEvent($eventId, $handle = false)
   {
@@ -320,6 +322,7 @@ class Events
    *
    * @param[in] $projectId The project key.
    * @param[in] $eventId The event key (external key).
+   * @param[in] $calendarId The id of the calender the vent belongs to.
    * @param[in] $handle mySQL handle or false.
    *
    * @return Undefined.
@@ -449,8 +452,16 @@ __EOT__;
   }
 
   /**Find a matching calendar by its displayname.
+   *
+   * @param[in] $dpyName The display name.
+   *
+   * @param[in] $owner The owner of the calendar object.
+   *
+   * @param[in] $includeShared Include also shared calendars.
+   *
+   * @return The OC-calendar object (row of the database, i.e. an array).
    */
-  public static function calendarByName($dpyName, $owner = false)
+  public static function calendarByName($dpyName, $owner = false, $includeShared = false)
   {
     if ($owner === false) {
       $owner = \OC_User::getUser();
@@ -459,6 +470,11 @@ __EOT__;
     $result = false;
     $calendars = \OC_Calendar_Calendar::allCalendars($owner);
     foreach ($calendars as $calendar) {
+      if (!$includeShared &&
+          \OCP\Share::getItemSharedWithBySource('calendar', $calendar['id']) != false) {
+        // Exclude shared items.
+        continue;
+      }      
       if ($calendar['displayname'] == $dpyName) {
         $result = $calendar;
         break;
@@ -468,16 +484,26 @@ __EOT__;
   }
   
   /**Share an object between the members of the specified group.
+   *
+   * 
    */
   public static function groupShareObject($id, $group, $type = 'calendar')
   {
-    return \OCP\Share::shareItem($type, $id,
-                                 \OCP\Share::SHARE_TYPE_GROUP,
-                                 $group,
-                                 \OCP\Share::PERMISSION_CREATE|
-                                 \OCP\Share::PERMISSION_READ|
-                                 \OCP\Share::PERMISSION_UPDATE|
-                                 \OCP\Share::PERMISSION_DELETE);
+    // First check whether the object is already shared.
+    $shareType   = \OCP\Share::SHARE_TYPE_GROUP;
+    $permissions = (\OCP\Share::PERMISSION_CREATE|
+                    \OCP\Share::PERMISSION_READ|
+                    \OCP\Share::PERMISSION_UPDATE|
+                    \OCP\Share::PERMISSION_DELETE);
+
+	$token =\OCP\Share::getItemShared($type, $id);    
+    if ($token !== false) {
+      return \OCP\Share::setPermissions($type, $id, $shareType, $group, $permissions);
+    }
+    // Otherwise it should be legal to attempt a new share ...
+
+    // try it ...
+    return \OCP\Share::shareItem($type, $id, $shareType, $group, $permissions);
   }
 
   /**Fake execution with other user-id.
@@ -487,15 +513,15 @@ __EOT__;
     $olduser = \OC_User::getUser();
     \OC_User::setUserId($uid);
     try {
-      $result = call_user_funct($callback);
-    } catch (Exception $exception) {
+      $result = call_user_func($callback);
+    } catch (\Exception $exception) {
       \OC_User::setUserId($olduser);
-      throw new Exception($exception->getMessage);
+      throw new \Exception($exception->getMessage());
       return false;
     }
     \OC_User::setUserId($olduser);
 
-    return $result;    
+    return $result;
   }
 
   /**Make sure there is a suitable shared calendar with the given
@@ -506,6 +532,8 @@ __EOT__;
    * @param[in] $calId The calendar id. If set, the corresponding
    * calender will be renamed to $dpyName. If unset, search for a
    * calendar with $dpyName as display name or create one.
+   *
+   * @return The (real) calendar id or false in case of error.
    */
   public static function checkSharedCalendar($dpyName, $calId = false)
   {
@@ -519,17 +547,16 @@ __EOT__;
 
     if ($calId === false) {
       // try to find one ...
-      $shareCal = self::findCalendarByName($calName, $shareowner);
-      
+      $shareCal = self::calendarByName($dpyName, $shareowner);
     } else {
       // otherwise there should be one, in principle ...
-      $shareCal = \OC_Calendar_Calendar::find($shareid);
+      $shareCal = \OC_Calendar_Calendar::find($calId);
     }
     
     if (!$shareCal) {
       // Well, then we create one ...
-      $calId = \OC_Calendar_Calendar::addCalendar($shareowner, $calName);
-      $shareCal = \OC_Calendar_Calendar::find($calid);
+      $calId = \OC_Calendar_Calendar::addCalendar($shareowner, $dpyName);
+      $shareCal = \OC_Calendar_Calendar::find($calId);
     } else {
       $calId = $shareCal['id'];
     }
@@ -540,16 +567,16 @@ __EOT__;
     }
 
     // Check that we can edit, simply set the item as shared    
-    sudo($shareowner, function() use ($calId, $sharegroup) {
-        $result = groupShareObject($calId, $sharegroup);
+    self::sudo($shareowner, function() use ($calId, $sharegroup) {
+        $result = self::groupShareObject($calId, $sharegroup);
         return $result;
       });
 
     // Finally check, that the display-name matches. Otherwise rename
     // the calendar.
-    if ($shareCal['displayname'] != $calName) {
-      sudo($shareowner, function() use ($calId, $calName) {
-          $result = \OC_Calendar_Calendar::editCalendar($calId, $calName);
+    if ($shareCal['displayname'] != $dpyName) {
+      self::sudo($shareowner, function() use ($calId, $dpyName) {
+          $result = \OC_Calendar_Calendar::editCalendar($calId, $dpyName);
           return $result;
         });
     }
