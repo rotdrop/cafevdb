@@ -96,29 +96,9 @@ class Events
       $handle = mySQL::connect(Config::$pmeopts);
     }
     
-    // fetch the respective event
-    $event = \OC_Calendar_Object::find($eventId);
-    if($event === false) {
-      return false;
-    }
-
-    $vobject = \OC_VObject::parse($event['calendardata']);
-    if (!$vobject) {
-      return;
-    }
-        
-    // Extract the categories
-    if ($vobject->__isset('VEVENT')) {
-      $vobject = $vobject->VEVENT;
-    } else if ($vobject->__isset('VTODO')) {
-      $vobject = $vobject->VTODO;
-    } else if ($vobject->__isset('VJOURNAL')) {
-      $vobject = $vobject->VJOURNAL;
-    } else if ($vobject->__isset('VCARD')) {
-      $vobject = $vobject->VCARD;
-    }
-
-    $categories = $vobject->getAsArray('CATEGORIES');
+    $event      = self::getEvent($eventId);
+    $calId      = self::getCalendarId($event);
+    $categories = self::getCategories($event);
 
     // Now fetch all projects and their names ...
     $projects = Projects::fetchProjects($handle);
@@ -129,7 +109,7 @@ class Events
       if (in_array($prName, $categories)) {
         if (!self::isRegistered($prKey, $eventId, $handle)) {
           // register the event
-          self::register($prKey, $eventId, $event['calendarid'], $handle);
+          self::register($prKey, $eventId, $calId, $handle);
         }
       } else {
         if (self::isRegistered($prKey, $eventId, $handle)) {
@@ -163,53 +143,177 @@ class Events
     }
   }
 
-  protected static function maybeAddEvent($eventId, $handle = false)
+  /**Return the OC-event corresponding to the given event-id.
+   *
+   * @param[in] $eventId OC event-ID.
+   *
+   * @return An array, the row from the OC-database.
+   */
+  protected static function getEvent($eventId)
   {
-    $event = \OC_Calendar_Object::find($eventId);
-    if($event === false) {
-      return false;
+    return \OC_Calendar_App::getEventObject($eventId, false, false);
+  }
+
+  /**Return the OC calendar-id
+   *
+   * @param[in] $event Either an id or the event data from the
+   * data-base. The event-data will be fetched if $event is an id.
+   *
+   * @return The OC calendar id the event belongs to.
+   */
+  protected static function getCalendarId($event)
+  {
+    if (!is_array($event)) {
+      $event = self::getEvent($event);
+    }
+    return $event['calendarid'];
+  }
+
+  /**Return the VCALENDAR object corresponding to $event.
+   *
+   * @param[in] $event Mixed, either an ID are the corresponding row
+   * from the OC database.
+   *
+   * @return The VCALENDAR object or @c false if an error occurs.
+   */
+  protected static function getVCalendar($event)
+  {
+    if (is_array($event)) {
+      $vcalendar = \OC_VObject::parse($event['calendardata']);
+    } else {
+      $vcalendar = \OC_Calendar_App::getVCalendar($event, false, false);
     }
 
-    $vobject = \OC_VObject::parse($event['calendardata']);
-    if (!$vobject) {
-      return;
-    }
-        
+    return $vcalendar;
+  }
+
+  /**Return a reference to the object contained in a Sabre VCALENDAR
+   * object. This is a reference to allow for modification of the
+   * $vCalendar object.
+   *
+   * @param[in] $vCalendar Sabre VCALENDAR object.
+   *
+   * @return A reference to the inner object.
+   */
+  protected static function &getVObject($vcalendar)
+  {
     // Extract the categories as array
-    if ($vobject->__isset('VEVENT')) {
-      $vobject = $vobject->VEVENT;
-    } else if ($vobject->__isset('VTODO')) {
-      $vobject = $vobject->VTODO;
-    } else if ($vobject->__isset('VJOURNAL')) {
-      $vobject = $vobject->VJOURNAL;
-    } else if ($vobject->__isset('VCARD')) {
-      $vobject = $vobject->VCARD;
+    if ($vcalendar->__isset('VEVENT')) {
+      $vobject = &$vcalendar->VEVENT;
+    } else if ($vcalendar->__isset('VTODO')) {
+      $vobject = &$vcalendar->VTODO;
+    } else if ($vcalendar->__isset('VJOURNAL')) {
+      $vobject = &$vcalendar->VJOURNAL;
+    } else if ($vcalendar->__isset('VCARD')) {
+      $vobject = &$vcalendar->VCARD;
+    }
+
+    return $vobject;
+  }
+  
+  /**Return the category list for the given event.
+   *
+   * @param[in] $stuff Either a VCALENDAR object, or the inner VEVENT,
+   * VTODO etc. or an OC-event (array, row from the data-base) or just
+   * an event Id (in which case the row from the data-base will be
+   * fetched).
+   *
+   * @return An array with the categories for the event.
+   */
+  protected static function getCategories($stuff)
+  {
+    if (is_object($stuff)) {
+      // VCALENDAR or contained V-object
+      if ($stuff->__isset('VCALENDAR')) {
+        $vobject = self::getVObject($stuff);
+      } else {
+        $vobject = $stuff;
+      }
+    } else {
+      // Event or ID
+      $vcalendar = self::getVCalendar($stuff);
+      $vobject = self::getVObject($vcalendar);
     }
 
     $categories = $vobject->getAsArray('CATEGORIES');
 
+    return $categories;
+  }
+
+  /**Set the category list for the given event.
+   *
+   * @param[in] $stuff Either a VCALENDAR object or an OC-event
+   * (array, row from the data-base) or just an event Id (in which
+   * case the row from the data-base will be fetched).
+   *
+   * @param[in] $categories A string-array with the new categories.
+   *
+   * @return The VCALENDAR object with the new categories installed.
+   */
+  protected static function setCategories($stuff, $categories)
+  {
+    if (is_object($stuff)) {
+      // VCALENDAR or contained V-object
+      if ($stuff instanceof \OC_VObject) {
+        $vcalendar = $stuff;
+      } else {
+        return false;
+      }
+    } else {
+      // Event or ID
+      $vcalendar = self::getVCalendar($stuff);
+    }
+
+    $vobject = self::getVObject($vcalendar);
+
+    $categories = implode(',', $categories);
+
+    $vobject->setString('CATEGORIES', $categories);
+
+    return $vcalendar;
+  }
+
+  /**Add the given event to any of the known projects if its category
+   * list contains the project-tag.
+   *
+   * @param[in] $eventId OC event-id.
+   *
+   * @param[in] $handle Optional, mySQL data-base handle.
+   *
+   * @return true on success or false on error.
+   *
+   * @bugs Error checking is not implemented.
+   */
+  protected static function maybeAddEvent($eventId, $handle = false)
+  {
     $ownConnection = $handle === false;
     if ($ownConnection) {
       Config::init();
       $handle = mySQL::connect(Config::$pmeopts);
     }
         
+    $event      = self::getEvent($eventId);
+    $categories = self::getCategories($event);
+    $calId      = self::getCalendarId($event);    
+
     // Now fetch all projects and their names ...
     $projects = Projects::fetchProjects($handle);
         
     // Search for matching project-tags. We assume that this is
     // not really timing critical, i.e. that there are only few
-    // projects.
+    // projects. Events may belong to more than one projet.
     foreach ($projects as $prKey => $prName) {
       if (in_array($prName, $categories)) {
         // Ok. Link it in.
-        self::register($prKey,$eventId,$event['calendarid'],$handle);
+        self::register($prKey, $eventId, $calId, $handle);
       }
     }
 
     if ($ownConnection) {
       mySQL::close($handle);
     }
+
+    return true;
   }
 
   /**Unconditionally register the given event with the given project.
@@ -301,30 +405,13 @@ __EOT__;
       mySQL::close($handle);
     }
 
-    // fetch the respective event
-    $vcalendar = \OC_Calendar_App::getVCalendar($eventId, false, false);
-    if (!$vcalendar) {
-      return;
-    }
-        
-    // Convert to an array
-    if ($vcalendar->__isset('VEVENT')) {
-      $vobject = &$vcalendar->VEVENT;
-    } else if ($calendar->__isset('VTODO')) {
-      $vobject = &$vcalendar->VTODO;
-    } else if ($vcalendar->__isset('VJOURNAL')) {
-      $vobject = &$vcalendar->VJOURNAL;
-    } else if ($vcalendar->__isset('VCARD')) {
-      $vobject = &$vcalendar->VCARD;
-    }
-
-    $categories = $vobject->getAsArray('CATEGORIES');
+    $vcalendar  = self::getVCalendar($eventId);
+    $categories = self::getCategories($vcalendar);
 
     $key = array_search($projectName, $categories);
     unset($categories[$key]);
-    $categories = implode(',', $categories);
 
-    $vobject->setString('CATEGORIES', $categories);
+    $vcalendar = self::setCategories($vcalendar, $categories);
     
     \OC_Calendar_Object::edit($eventId, $vcalendar->serialize());    
   }
@@ -361,9 +448,119 @@ __EOT__;
     return $result;
   }
 
+  /**Find a matching calendar by its displayname.
+   */
+  public static function calendarByName($dpyName, $owner = false)
+  {
+    if ($owner === false) {
+      $owner = \OC_User::getUser();
+    }
+
+    $result = false;
+    $calendars = \OC_Calendar_Calendar::allCalendars($owner);
+    foreach ($calendars as $calendar) {
+      if ($calendar['displayname'] == $dpyName) {
+        $result = $calendar;
+        break;
+      }
+    }
+    return $result;
+  }
   
+  /**Share an object between the members of the specified group.
+   */
+  public static function groupShareObject($id, $group, $type = 'calendar')
+  {
+    return \OCP\Share::shareItem($type, $id,
+                                 \OCP\Share::SHARE_TYPE_GROUP,
+                                 $group,
+                                 \OCP\Share::PERMISSION_CREATE|
+                                 \OCP\Share::PERMISSION_READ|
+                                 \OCP\Share::PERMISSION_UPDATE|
+                                 \OCP\Share::PERMISSION_DELETE);
+  }
+
+  /**Fake execution with other user-id.
+   */
+  public static function sudo($uid, $callback)
+  {
+    $olduser = \OC_User::getUser();
+    \OC_User::setUserId($uid);
+    try {
+      $result = call_user_funct($callback);
+    } catch (Exception $exception) {
+      \OC_User::setUserId($olduser);
+      throw new Exception($exception->getMessage);
+      return false;
+    }
+    \OC_User::setUserId($olduser);
+
+    return $result;    
+  }
+
+  /**Make sure there is a suitable shared calendar with the given
+   * name and/or id. Create one if necesary.
+   *
+   * @param[in] $dpyName The display name. Mandatory.
+   *
+   * @param[in] $calId The calendar id. If set, the corresponding
+   * calender will be renamed to $dpyName. If unset, search for a
+   * calendar with $dpyName as display name or create one.
+   */
+  public static function checkSharedCalendar($dpyName, $calId = false)
+  {
+    $sharegroup = Config::getAppValue('usergroup');
+    $shareowner = Config::getValue('shareowner');
+
+    // Make sure the dummy user owning all shared stuff is "alive"
+    if (!self::checkShareOwner($shareowner)) {
+      return false;
+    }
+
+    if ($calId === false) {
+      // try to find one ...
+      $shareCal = self::findCalendarByName($calName, $shareowner);
+      
+    } else {
+      // otherwise there should be one, in principle ...
+      $shareCal = \OC_Calendar_Calendar::find($shareid);
+    }
+    
+    if (!$shareCal) {
+      // Well, then we create one ...
+      $calId = \OC_Calendar_Calendar::addCalendar($shareowner, $calName);
+      $shareCal = \OC_Calendar_Calendar::find($calid);
+    } else {
+      $calId = $shareCal['id'];
+    }
+
+    // Now there should be a calendar, if not, bail out.
+    if (!$shareCal) {
+      return false;
+    }
+
+    // Check that we can edit, simply set the item as shared    
+    sudo($shareowner, function() use ($calId, $sharegroup) {
+        $result = groupShareObject($calId, $sharegroup);
+        return $result;
+      });
+
+    // Finally check, that the display-name matches. Otherwise rename
+    // the calendar.
+    if ($shareCal['displayname'] != $calName) {
+      sudo($shareowner, function() use ($calId, $calName) {
+          $result = \OC_Calendar_Calendar::editCalendar($calId, $calName);
+          return $result;
+        });
+    }
+
+    return $calId;
+  }
+
   /**Make sure the "sharing" user exists, create it when necessary.
    * May throw an exception.
+   *
+   * @param[in] $shareowner The account holding the shared resources.
    */
   public static function checkShareOwner($shareowner)
   {
