@@ -1,3 +1,4 @@
+<?php use CAFEVDB\L; ?>
 <div id="event" title="<?php echo L::t("Edit an event");?>">
 <PRE>
 <?php

@@ -39,6 +39,20 @@ $(document).ready(function(){
     }
     return false;
   });
+
+  $(':button.instrumentation').click(function(event) {
+    // This seems to work like an artificial form-submit, but there
+    // may be better ways ...
+    event.preventDefault();
+    var values = $(this).attr('name');
+    $.post('', values, function (data) {
+      var newDoc = document.open("text/html", "replace");
+      newDoc.write(data);
+      newDoc.close();
+    }, 'html');
+    return false;
+  });
+
 });
 
 // Local Variables: ***

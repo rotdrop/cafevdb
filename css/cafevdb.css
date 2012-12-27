@@ -34,6 +34,15 @@ form.cafevdb-control {
   background-color:#C6DEFF;
 }
 
+div.instrumentation-button>input[type=button] {
+  text-align:center;
+  width:95%;
+  font-weight:bold;
+  font-style:italic;
+  border-style:outset;
+  /*background-color:#d0dcec;*/
+}
+
 #emailcontrol>input[type=submit] {
   background-image:url('%appswebroot%/cafevdb/img/e_mail.png');
   background-repeat:no-repeat;
@@ -330,6 +339,7 @@ td.pme-cell-0-prjs, td.pme-cell-1-prjs {
 /* Make all remarks shorter */
 td.pme-cell-0-rem:first-line, td.pme-cell-1-rem:first-line {
   font-size:400%; /* seem to be relative to !first-line */
+  line-height:100%;
   max-width:20em;
   max-height:1em;
   white-space:nowrap;
@@ -338,6 +348,7 @@ td.pme-cell-0-rem:first-line, td.pme-cell-1-rem:first-line {
 /* Hide everything but the first line */
 td.pme-cell-0-prjrem, td.pme-cell-1-prjrem { 
   font-size:25%;
+  line-height:100%;
   max-width:20em;
   max-height:1em;
   white-space:nowrap;
@@ -346,6 +357,7 @@ td.pme-cell-0-prjrem, td.pme-cell-1-prjrem {
 /* Make all remarks shorter */
 td.pme-cell-0-prjrem:first-line, td.pme-cell-1-prjrem:first-line {
   font-size:400%; /* seem to be relative to !first-line */
+  line-height:100%;
   max-width:20em;
   max-height:1em;
   white-space:nowrap;
@@ -354,6 +366,7 @@ td.pme-cell-0-prjrem:first-line, td.pme-cell-1-prjrem:first-line {
 /* Hide everything but the first line */
 td.pme-cell-0-rhrslrem, td.pme-cell-1-rhrslrem { 
   font-size:25%;
+  line-height:100%;
   max-width:20em;
   max-height:1em;
   white-space:nowrap;

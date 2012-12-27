@@ -11,13 +11,13 @@ class Projects
   {
     Config::init();
 
-    global $l;
     global $debug_query;
     //    $debug_query = true;
 
-    /* echo '<PRE>'; */
+    //echo '<PRE>';
     /* print_r($_SERVER); */
-    /* echo '</PRE>'; */
+    //print_r($_POST);
+    //echo '</PRE>';
 
     $handle = mySQL::connect(Config::$pmeopts);
 
@@ -152,6 +152,7 @@ __EOT__;
        descriptions fields are also possible. Check documentation for this.
     */
 
+    $idIdx = 0;
     $opts['fdd']['Id'] = array(
                                'name'     => 'Id',
                                'select'   => 'T',
@@ -162,12 +163,15 @@ __EOT__;
                                );
     $nameIdx = count($opts['fdd']);
     $opts['fdd']['Name'] = array(
-                                 'name'     => 'Projekt-Name',
-                                 'select'   => 'T',
-                                 'maxlen'   => 64,
-                                 'sort'     => true,
-                                 );
-    $opts['fdd']['Name']['URL'] = '?app=cafevdb&Template=brief-instrumentation&Project=$value&ProjectId=$key&Action=BriefInstrumentation';
+        'name'     => 'Projekt-Name',
+        'php'      => array('type' => 'function',
+                            'function' => 'CAFEVDB\Projects::projectButton',
+                            'parameters' => $idIdx),
+        'select'   => 'T',
+        'maxlen'   => 64,
+        'sort'     => true,
+        );
+    //$opts['fdd']['Name']['URL'] = '?app=cafevdb&Template=brief-instrumentation&Project=$value&ProjectId=$key&Action=BriefInstrumentation';
 
     $opts['fdd']['Programm'] = array(
                                      'name'     => 'Programm',
@@ -191,7 +195,7 @@ __EOT__;
         'maxlen'   => 11,
         'default'  => '0',
         'sort'     => false
-    );
+      );
 
     $opts['fdd']['Besetzung'] = array('name'     => 'Besetzung',
                                       'options'  => 'AVCPD',
@@ -294,7 +298,7 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
                                              'select'   => 'T',
                                              'maxlen'   => 65535,
                                              'css'      => array('postfix' => 'rhrslrem'),
-                                             'textarea' => array('html' => 'Editor',
+'textarea' => array('html' => 'Editor',
                                                                  'rows' => 5,
                                                                  'cols' => 50),
                                              'sort'     => true,
@@ -394,13 +398,31 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
     return $fields;
   }
 
-  public static function eventButton($value, $opts, $k, $fds, $fdd, $row)
+  public static function projectButton($projectName, $opts, $k, $fds, $fdd, $row)
   {
-    $bvalue      = L::t('Events');
+    $projectId = $row["qf$opts"];
+    $bvalue    = $projectName;
+    // Code the value in the name attribute (for java-script)
+    $bname     = ""
+."ProjectId=$projectId&"
+."Project=$projectName&"
+."Template=brief-instrumentation";
+    $title     = L::t(Config::toolTips('projectinstrumentation-button'));
+    return <<<__EOT__
+<div class="instrumentation-button">
+<input type="button" class="instrumentation" title="$title" name="$bname" value="$bvalue"/>
+</div>
+__EOT__;
+  }
+
+  public static function eventButton($projectId, $opts, $k, $fds, $fdd, $row)
+  {
     $projectName = $row["qf$opts"];
-    $bname       = "ProjectId=$value&ProjectName=".$row['qf'.$opts];
+    $bvalue      = L::t('Events');
+    // Code the value in the name attribute (for java-script)
+    $bname       = "ProjectId=$projectId&ProjectName=".$projectName;
     $bname       = htmlspecialchars($bname);
-    $title       = Config::toolTips('projectevents-button');
+    $title       = L::t(Config::toolTips('projectevents-button'));
     return <<<__EOT__
 <div class="events">
 <input type="button" class="events" title="$title" name="$bname" value="$bvalue"/>

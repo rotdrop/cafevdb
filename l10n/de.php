@@ -1,5 +1,11 @@
 <?php
 $TRANSLATIONS = array(
+  'Open a dialog with all known
+events associated to the project.
+Events can be added and modified
+as needed.' => 'Tabelle mit allen Terminen zum jeweiligen Projekt.
+Termine können dort hinzugefügt, geändert oder auch gelöscht werden.',
+
   'Do you really want to delete this event?' => 'Möchten Sie den Termin wirklich löschen?',
   'Do you really want to detach this event from the current project?' => 'Möchten Sie den Termin wirklich vom Projekt lösen?',
   'no events' => 'keine Termine',
