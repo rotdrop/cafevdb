@@ -261,14 +261,18 @@ class phpMyEdit
 	function nav_buttons()       { return stristr($this->navigation, 'B'); }
 	function nav_text_links()    { return stristr($this->navigation, 'T'); }
 	function nav_graphic_links() { return stristr($this->navigation, 'G'); }
-        function nav_custom_multi()  { return stristr($this->navigation, 'M') && $this->misc_enabled(); }
+    function nav_custom_multi()  { return stristr($this->navigation, 'M') && $this->misc_enabled(); }
 	function nav_up()            { return (stristr($this->navigation, 'U') && !($this->buttons[$this->page_type]['up'] === false)); }
 	function nav_down()          { return (stristr($this->navigation, 'D') && !($this->buttons[$this->page_type]['down'] === false)); }
 
 	/*
 	 * functions for indicating whether operations are enabled
 	 */
-        function label_cmp($a, $b) { return $a == $b || $a == $this->labels[$b] || $this->labels[$a] == $b; }
+    function label_cmp($a, $b) {
+      return ($a == $b ||
+              (isset($this->labels[$b]) && $a == $this->labels[$b]) ||
+              (isset($this->labels[$a]) && $this->labels[$a] == $b));
+    }
 
 	function listall()        { return $this->inc < 0; }
 	function add_enabled()    { return stristr($this->options, 'A'); }
@@ -2734,7 +2738,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
                 echo $this->htmlHiddenSys('np', $this->inc);
                 echo $this->htmlHiddenSys('translations', $this->translations);
 		echo '<table class="',$this->getCSSclass('main'),'" summary="',$this->tb,'">',"\n";
-		echo '<tr class="',$this->getCSSclass('header'),'">',"\n";
+		echo '<thead><tr class="',$this->getCSSclass('header'),'">',"\n";
 		/*
 		 * System (navigation, selection) columns counting
 		 */
@@ -2828,7 +2832,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
                                 echo '</th>'."\n";
 			}
 		}
-		echo '</tr>',"\n";
+		echo '</tr></thead><tbody>',"\n";
 
 		/*
 		 * Main list_table() query
@@ -2892,6 +2896,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				} else {
 					$key_rec = $row['qf'.$this->key_num];
 				}
+
 				//$key_rec     = $row['qf'.$this->key_num];
 				$css_class_name = $this->getCSSclass('navigation', null, true);
 				if ($select_recs) {
@@ -3088,7 +3093,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			}
 			echo '</tr>',"\n";
 		}
-		echo '</table>',"\n"; // end of table rows listing
+		echo '</tbody></table>',"\n"; // end of table rows listing
 		$this->display_list_table_buttons('down');
                 // Finally add some more hidden stuff ...
                 if ($this->misc_enabled()) {
@@ -3177,13 +3182,13 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		if ($this->tabs_enabled()) {
 			echo '<div id="'.$this->dhtml['prefix'].'tab0">',"\n";
 		}
-		echo '<table class="',$this->getCSSclass('main'),'" summary="',$this->tb,'">',"\n";
+		echo '<table class="',$this->getCSSclass('main'),'" summary="',$this->tb,'"><tbody>',"\n";
 		if ($this->add_operation()) {
 			$this->display_add_record();
 		} else {
 			$this->display_copy_change_delete_record();
 		}
-		echo '</table>',"\n";
+		echo '</tbody></table>',"\n";
  		if ($this->tabs_enabled()) {
 		echo '</div>',"\n";
 		}		
