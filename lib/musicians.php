@@ -23,7 +23,7 @@ class Musicians
     //Config::$debug_query = true;
     //$debug_query = true;
 
-    $action          = $this->action;
+    $template        = $this->template;
     $project         = $this->project;
     $projectId       = $this->projectId;
     $recordsPerPage  = $this->recordsPerPage;
@@ -82,7 +82,6 @@ __EOT__;
 
     $opts['cgi']['persist'] = array('Project' => $project,
                                     'ProjectId' => $projectId,
-                                    'Action' => $action,
                                     'Template' => $this->projectMode
                                     ? 'add-musicians' : 'all-musicians',
                                     'Table' => $opts['tb']);
@@ -180,17 +179,32 @@ __EOT__;
        descriptions fields are also possible. Check documentation for this.
     */
 
+    $bval = strval(L::t('Add to'));
+    $tip  = strval(L::t(Config::toolTips('register-musician')));
     if ($this->projectMode) {
       $opts['fdd']['Hinzufuegen'] = array(
-                                          'name' => 'Hinzuf&uuml;gen',
-                                          'select' => 'T',
-                                          'options' => 'VLR',
-                                          'input' => 'V',
-                                          'sql' => "\"Add to $project\"",
-                                          'nowrap' => true
-                                          //'php' => "AddMusician.php"
-                                          );
-      $opts['fdd']['Hinzufuegen']['URL'] = "?app=cafevdb&Template=add-one-musician&Project=$project&ProjectId=$projectId&MusicianId=\$key&Action=AddOneMusician";
+        'name' => 'Hinzuf&uuml;gen',
+        'select' => 'T',
+        'options' => 'VLR',
+        'input' => 'V',
+        'sql' => "REPLACE('"
+."<div class=\"register-musician\">"
+."<input type=\"button\" "
+."value=\"$bval $project\" "
+."title=\"$tip\" "
+."name=\""
+."Template=add-one-musician&amp;"
+."Project=$project&amp;"
+."ProjectId=$projectId&amp;"
+."MusicianId=@@key@@\""
+."class=\"register-musician\" />"
+."</div>'"
+.",'@@key@@',`PMEtable0`.`Id`)",
+        'escape' => false,
+        'nowrap' => true,
+        'sort' =>false
+        //'php' => "AddMusician.php"
+        );
     }
     $opts['fdd']['Instrumente'] = array(
                                         'name'     => 'Instrumente',
@@ -314,7 +328,7 @@ __EOT__;
     $opts['fdd']['Aktualisiert']['name'] = 'Aktualisiert';
     $opts['fdd']['Aktualisiert']['default'] = date('Y-m-d H:i:s');
     $opts['fdd']['Aktualisiert']['nowrap'] = true;
-    $opts['fdd']['Aktualisiert']['options'] = 'LAVCPDR'; // Set by update trigger.
+    $opts['fdd']['Aktualisiert']['options'] = 'LFAVCPDR'; // Set by update trigger.
 
     $opts['triggers']['update']['before'][0]  = Config::$triggers.'remove-unchanged.TUB.inc.php';
     $opts['triggers']['update']['before'][1]  = Config::$triggers.'update-musician-timestamp.TUB.inc.php';
@@ -323,8 +337,7 @@ __EOT__;
   } // display()
   
   /**Helper function to add or change one specific musician to an
-   * existing project. $this->action determines
-   * what to do.
+   * existing project. $this->template determines what to do.
    */
   public function displayAddChangeOne() {
 
@@ -332,11 +345,11 @@ __EOT__;
     //Config::$debug_query = true;
     //$debug_query = true;
 
-    $action          = $this->action;
     $opts            = $this->opts;
     $project         = $this->project;
     $projectId       = $this->projectId;
     $musicianId      = $this->musicianId;
+    $template        = $this->template;
     $userExtraFields = $this->userExtraFields;
     $recordsPerPage  = $this->recordsPerPage;
 
@@ -375,14 +388,13 @@ __EOT__;
       $forcedInstrument = false;
     }
 
-    $saved_action = $action;
-    $action = "ChangeOneMusician"; // Add only once!
+    $saved_template = $template;
+    $template = 'change-one-musician'; // Add only once!
 
     $opts['cgi']['persist'] = array('Project' => $project,
                                     'ProjectId' => $projectId,
-                                    'Action' => $action,
                                     'Table' => $opts['tb'],
-                                    'Template' => 'change-one-musician',
+                                    'Template' => $template,
                                     'MusicianId' => $musicianId,
                                     'RecordsPerPage' => $recordsPerPage);
 
@@ -507,14 +519,14 @@ __EOT__;
                                       'maxlen'   => 11,
                                       'sort'     => true,
                                       'values' => array(
-                                                        'table' => 'Musiker',
-                                                        'column' => 'Id',
-                                                        'description' => array(
-                                                                               'columns' => array('Vorname', 'Name'),
-                                                                               'divs' => array(' ')
-                                                                               ),
-                                                        'filters' => "Id = $musicianId"
-                                                        )
+                                        'table' => 'Musiker',
+                                        'column' => 'Id',
+                                        'description' => array(
+                                          'columns' => array('Vorname', 'Name'),
+                                          'divs' => array(' ')
+                                          ),
+                                        'filters' => "Id = $musicianId"
+                                        )
                                       );
     $opts['fdd']['Instrument'] = array(
                                        'name'     => 'Projekt-Instrument',
@@ -560,7 +572,7 @@ __EOT__;
     // data-base. Otherwise add id on request.
     $opts['triggers']['update']['before']  = Config::$triggers.'instrumentation-change-instrument.TUB.inc.php';
 
-    if ($saved_action == "AddOneMusician") {
+    if ($saved_template == "add-one-musician") {
 
       // Fetch all needed data from Musiker table
       $handle = mySQL::connect($opts);
