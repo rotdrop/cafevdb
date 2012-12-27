@@ -16,13 +16,33 @@ class ProjectInstruments
     //Config::$debug_query = true;
     //$debug_query = true;
 
-    $action          = $this->action;
+    $template        = $this->template;
     $project         = $this->project;
     $projectId       = $this->projectId;
     $instruments     = $this->instruments;
     $opts            = $this->opts;
     $recordsPerPage  = $this->recordsPerPage;
     $userExtraFields = $this->userExtraFields;
+
+    // Slight abuse, but much of the old phpMyEdit stuff relies on
+    // simple submit behaviour. So do the check here.
+    $xferStatus = '';
+    if (Util::cgiValue('Action','') == 'transfer-instruments') {
+      // Transfer them ...
+      $replace = false;
+      $handle = mySQL::connect(Config::$pmeopts);
+      Instruments::updateProjectInstrumentationFromMusicians($projectId, $handle, $replace);
+      mySQL::close($handle);
+      $xferStatus = L::t('Success!');
+    }
+
+    $btnStr = Navigation::button(
+      array('only' =>
+            array('name' => L::t('Transfer Instruments from Musicians'),
+                  'id' => 'transfer-button',
+                  'title' => strval(L::t(Config::toolTips('transfer-instruments'))),
+                  'class' => 'header-button',
+                  'js' => 'type="submit"'))); // Not really js, but so what
     
     // The following should probably emmitted in the template, not
     // here. We should rather have a method $this->heading() and
@@ -33,11 +53,30 @@ class ProjectInstruments
     <h3>Besetzungszahlen $project</h3>
     <H4>Die "Soll"-Besetzungzahl kann hier eingetragen werden, die
 "Haben"-Besetzungszahl ist die Anzahl der bereits registrierten Musiker.</H4>
+<div>
+    <br/>
+    <table id="transfer-instruments">
+    <TR><TD>
+    <form name="transfer-instruments" id="transfer-form" method="post">
+      <input type="hidden" name="ProjectId" value="$projectId" />
+      <input type="hidden" name="Project"   value="$project" />
+      <input type="hidden" name="Template"  value="project-instruments" />
+      <input type="hidden" name="Action"    value="transfer-instruments" /> 
+      $btnStr
+    </form>
+    </TD><TD><span>$xferStatus</span></TD
+  </TR>
+  </TABLE>
+</div>
   </div>
 </div>
-
 __EOT__;
 
+if (false) {
+echo '<pre>';
+print_r($_POST);
+echo '</pre>';
+}
 
     /*
      * IMPORTANT NOTE: This generated file contains only a subset of huge amount
@@ -61,11 +100,26 @@ __EOT__;
 
     $opts['tb'] = 'BesetzungsZahlen';
 
+    // Set default prefixes for variables
+    $opts['js']['prefix']               = 'PME_js_';
+    $opts['dhtml']['prefix']            = 'PME_dhtml_';
+    $opts['cgi']['prefix']['operation'] = 'PME_op_';
+    $opts['cgi']['prefix']['sys']       = 'PME_sys_';
+    $opts['cgi']['prefix']['data']      = 'PME_data_';
+
+    // Note that the value of $transposed is "dual" to the actual
+    // button state, so the default valu is "Normal" in order to start
+    // in transposed mode.
+    $transposed = Util::cgiValue('Transpose','Transposed');
+    if (Util::cgiValue('PME_sys_transpose',false) !== false) {
+      $transposed = $transposed == 'Normal' ? 'Transposed' : 'Normal';
+    }
+
     // Don't want everything persistent.
     $opts['cgi']['persist'] = array('Project' => $project,
                                     'ProjectId' => $projectId,
-                                    'Action' => $action,
                                     'Template' => 'project-instruments',
+                                    'Transpose' => $transposed,
                                     'Table' => $opts['tb']);
 
     // Name of field which is the unique key
@@ -86,8 +140,32 @@ __EOT__;
       // Options you wish to give the users
       // A - add,  C - change, P - copy, V - view, D - delete,
       // F - filter, I - initial sort suppressed
-      $opts['options'] = 'ACPVDF';
+      $opts['options'] = 'ACVDF';
       $sort = true;
+    }
+
+    $transpose = array('name' => 'transpose',
+                       'value' => strval(L::t('Transpose')),
+                       'css' => 'pme-transpose',
+                       'js_validation' =>  false,
+                       'disabled' => false,
+                       'js' => false);
+    $default_buttons_no_B = array(
+      'L' => array($transpose,
+        '<<','<','add','>','>>',
+        'goto','rows_per_page'),
+      'F' => array($transpose,
+        '<<','<','add','>','>>',
+        'goto','rows_per_page'),
+      'A' => array('save','more','cancel'),
+      'C' => array('save','more','cancel'),
+      'P' => array('save', 'cancel'),
+      'D' => array('save','cancel'),
+      'V' => array('change','cancel')
+      );
+    foreach ($default_buttons_no_B as $key => $value) {
+      $opts['buttons'][$key]['up'] = $value;
+      $opts['buttons'][$key]['down'] = $value;
     }
 
     // Number of lines to display on multiple selection filters
@@ -105,13 +183,6 @@ __EOT__;
                              'time'  => true,
                              'tabs'  => true
                              );
-
-    // Set default prefixes for variables
-    $opts['js']['prefix']               = 'PME_js_';
-    $opts['dhtml']['prefix']            = 'PME_dhtml_';
-    $opts['cgi']['prefix']['operation'] = 'PME_op_';
-    $opts['cgi']['prefix']['sys']       = 'PME_sys_';
-    $opts['cgi']['prefix']['data']      = 'PME_data_';
 
     /* Get the user's default language and use it if possible or you can
        specify particular one you want to use. Refer to official documentation
@@ -180,20 +251,51 @@ bitte bei den <A HREF="Projekte.php?PME_sys_rec='.$projectId.'&PME_sys_operation
        descriptions fields are also possible. Check documentation for this.
     */
 
+    $idIdx = 0;
     $opts['fdd']['ProjektId'] = array(
-                                      'name'     => 'ProjektId',
-                                      'select'   => 'T',
-                                      'options'  => 'LAVCPDR',
-                                      'maxlen'   => 11,
-                                      'sort'     => $sort,
-                                      'values' => array(
-                                                        'table' => 'Projekte',
-                                                        'column' => 'Id',
-                                                        'description' => 'Name'
-                                                        //'filters' => "Id = $projectId"
-                                                        )
-                                      );
-    $opts['fdd']['ProjektId']['URL'] = '?app=cafevdb&Template=brief-instrumentation&Project=$value&ProjectId=$key&Action=BriefInstrumentation';
+      'name'     => 'ProjektId',
+      'select'   => 'T',
+      'options'  => 'AVCPDR', // auto increment
+      'maxlen'   => 11,
+      'default'  => '0',
+      'sort'     => true,
+      'values' => array(
+        'table' => 'Projekte',
+        'column' => 'Id',
+        'description' => 'Name'
+        //'filters' => "Id = $projectId"
+        )
+      );
+    
+    $opts['fdd']['ProjektName'] = array(
+      'name'     => 'Projekt-Name',
+      'select'   => 'T',
+      'sql|VLF' =>  ("REPLACE(REPLACE('"
+                     ."<div class=\"instrumentation-button\">"
+                     ."<input type=\"button\" "
+                     ."class=\"instrumentation\" "
+                     ."title=\"$tip\" "
+                     ."name=\""
+                     ."ProjectId=@@prId@@&amp;"
+                     ."Project=@@prName@@&amp;"
+                     ."Template=brief-instrumentation\" "
+                     ."value=\"@@prName@@\" />"
+                     ."</div>',"
+                     ."'@@prId@@',`PMEjoin0`.`Id`),"
+                     ."'@@prName@@',`PMEjoin0`.`Name`)"),
+      'escape'   => false,
+      'options'  => 'LAVR',
+      'maxlen'   => 11,
+      'sort'     => $sort,
+      'values' => array(
+        'table' => 'Projekte',
+        'column' => 'Id',
+        'description' => 'Name',
+        'join' => '$main_table.ProjektId = $join_table.Id'
+        //'filters' => "Id = $projectId"
+        )
+      );
+
     $cnt = 1;
     foreach ($projectInstruments as $value) {
       $opts['fdd']["$value"] = array('name' => $value.' (soll)',
@@ -222,43 +324,38 @@ bitte bei den <A HREF="Projekte.php?PME_sys_rec='.$projectId.'&PME_sys_operation
       }
     }
 
-    new \phpMyEdit($opts);
+    $pme = new \phpMyEdit($opts);
+
+    if ($transposed == 'Transposed' && $pme->list_operation()) {
+      $doTranspose = 'true';
+    } else {
+      $doTranspose = 'false';
+    }
+    echo <<<__EOT__
+<script type="text/javascript">
+$(function() {
+    if ($doTranspose) {
+      $('.tipsy').remove();
+      transposePmeMain('table.pme-main');
+    }
+
+    $('input').tipsy({gravity:'w', fade:true});
+    $('button').tipsy({gravity:'w', fade:true});
+    $('input.cafevdb-control').tipsy({gravity:'nw', fade:true});
+    $('#controls button').tipsy({gravity:'nw', fade:true});
+    $('.pme-sort').tipsy({gravity: 'n', fade:true});
+    $('.pme-misc-check').tipsy({gravity: 'nw', fade:true});
+
+    if (toolTips) {
+      $.fn.tipsy.enable();
+    } else {
+      $.fn.tipsy.disable();
+    }
+});
+</script>
+__EOT__;
+
   }
-  
-
-/*   if ($projectId >= 0) { */
-/*     echo '<TABLE> */
-/*   <TR> */
-/*     <TD> */
-/* <B style="color:red">Teilnehmer-Instrumente zur */
-/* <A HREF="Projekte.php?PME_sys_rec='.$projectId.'&PME_sys_operation=PME_op_Change"> */
-/* Projektbesetzung</A> hinzuf&uuml;gen:</B> */
-/*    </TD> */
-/*    <TD> */
-/*       <form name="CAFEV_instrumentation_update" method="post" action="ProjektBesetzung.php"> */
-/*         <input type="submit" name="" value="Instrumentierung abgleichen"> */
-/*         <input type="hidden" name="Action" value="'.$CAFEV_action.'"> */
-/*         <input type="hidden" name="SubAction" value="SyncInstrumentation" /> */
-/*         <input type="hidden" name="Projekt" value="'.$project.'" /> */
-/*         <input type="hidden" name="ProjektId" value="'.$projectId.'" /> */
-/*       </form> */
-/*     </TD> */
-/*     <TD>'; */
-
-/*     if ($CAFEV_subaction == 'SyncInstrumentation') { */
-/*       // Ok, let's do it. */
-/*       $handle = CAFEVDB_mySQL::connect($opts); */
-/*       updateProjectInstrumentationFromMusicians($projectId, $handle, false /\* don't replace *\/); */
-/*       echo '(wurde eingetragen)'; */
-/*     } else { */
-/*       if (CAFEVdebugMode()) { */
-/* 	echo '(wurde nicht eingetragen)'; */
-/*       } */
-/*     } */
-/*   echo'  </TD> */
-/*   </TR> */
-/* </TABLE><P><P>'; */
-/*   }   */
 
 }; // class InstrumentationInstruments
 
