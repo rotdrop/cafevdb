@@ -391,6 +391,18 @@ class phpMyEdit
 			($this->filter_operation() && stristr($options, 'F')) ||
 			($this->list_operation()   && stristr($options, 'L'));
 	} /* }}} */
+
+	function filtered($k) /* {{{ */
+	{
+		if (is_numeric($k)) {
+			$k = $this->fds[$k];
+		}
+		$options = @$this->fdd[$k]['options'];
+		if (! isset($options)) {
+			return true;
+		}
+		return ($this->filter_operation() && stristr($options, 'F'));
+	} /* }}} */
 	
 	function debug_var($name, $val) /* {{{ */
 	{
@@ -2598,7 +2610,10 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				$escape     = true;
 				echo $this->htmlSelect($this->cgi['prefix']['sys'].$l.'_id', $css_class_name,
 						$vals, $selected, $multiple, $readonly, $strip_tags, $escape);
-			} elseif ($this->fdd[$fd]['select'] == 'N' || $this->fdd[$fd]['select'] == 'T') {
+			} elseif (($this->fdd[$fd]['select'] == 'N' ||
+                       $this->fdd[$fd]['select'] == 'T')
+                      &&              
+                      $this->filtered($k)) {
 				$len_props = '';
 				$maxlen = intval($this->fdd[$k]['maxlen']);
 				//$maxlen > 0 || $maxlen = intval($this->sql_field_len($res, $fields["qf$k"]));
