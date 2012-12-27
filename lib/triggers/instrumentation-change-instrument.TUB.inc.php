@@ -1,5 +1,7 @@
 <?php
 
+use CAFEVDB\L;
+
 $project = CAFEVDB\Util::cgiValue('Project');
 $projectId =  CAFEVDB\Util::cgiValue('ProjectId');
 $musicianId = CAFEVDB\Util::cgiValue('MusicianId');
@@ -60,17 +62,18 @@ $instruments = $musrow['Instrumente'];
 $instrument  = $newvals['Instrument'];
 
 if (!strstr($instruments, $instrument)) {
-    echo <<<__EOT__
+  $text = strval(L::t('Instrument not known by')." $musname, ".
+                 L::t('correct that first!').
+                 " $musname ".L::t('only plays')." $instruments!");
+  echo <<<__EOT__
 <div class="cafevdb-pme-header-box" style="height:18ex">
   <div class="cafevdb-pme-header">
   <HR/><H4>
-  Instrument not known by $musname, correct that first! 
-  $musname only plays $instruments!
+  $text;
   </H4><HR/>
   <H4>Click on the following button to enforce your decision:
 <form name="CAFEV_form_besetzung" method="post" action="?app=cafevdb">
   <input type="submit" name="" value="Really Change $musname's instrument!!!">
-  <input type="hidden" name="Action" value="ChangeOneMusician">
   <input type="hidden" name="Template" value="change-one-musician">
   <input type="hidden" name="Project" value="$project" />
   <input type="hidden" name="ProjectId" value="$projectId" />
