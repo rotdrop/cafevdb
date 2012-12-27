@@ -16,7 +16,6 @@ class DetailedInstrumentation
     //Config::$debug_query = true;
     //$debug_query = true;
 
-    $action          = $this->action;
     $project         = $this->project;
     $projectId       = $this->projectId;
     $opts            = $this->opts;
@@ -69,7 +68,6 @@ __EOT__;
 
     $opts['cgi']['persist'] = array('Project' => $project,
                                     'ProjectId' => $projectId,
-                                    'Action' => $action,
                                     'Template' => 'detailed-instrumentation',
                                     'Table' => $opts['tb']);
 
@@ -319,7 +317,7 @@ __EOT__;
     $opts['fdd']['MusikerId'] = array(
                                       'name'     => 'MusikerId',
                                       'select'   => 'T',
-                                      'options'  => 'LAVCPDR', // auto increment
+                                      'options'  => 'FLAVCPDR', // auto increment
                                       'maxlen'   => 5,
                                       'default'  => '0',
                                       'align'    => 'right',
@@ -330,7 +328,7 @@ __EOT__;
     $opts['fdd']['Aktualisiert']['name'] = 'Aktualisiert';
     $opts['fdd']['Aktualisiert']['default'] = date("Y-m-d H:i:s");
     $opts['fdd']['Aktualisiert']['nowrap'] = true;
-    $opts['fdd']['Aktualisiert']['options'] = 'LAVCPDR'; // Set by update trigger.
+    $opts['fdd']['Aktualisiert']['options'] = 'LAVCPDRF'; // Set by update trigger.
 
     // No need to check for the project-instrument any longer, as it can
     //no longer be changed here.
