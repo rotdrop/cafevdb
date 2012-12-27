@@ -18,8 +18,7 @@ class Instruments
     //Config::$debug_query = true;
     //$debug_query = true;
 
-
-    $action          = $this->action;
+    $template        = $this->template;
     $project         = $this->project;
     $projectId       = $this->projectId;
     $opts            = $this->opts;
@@ -58,7 +57,7 @@ __EOT__;
 
     $opts['cgi']['persist'] = array('Projekt' => $project,
                                     'ProjektId' => $projectId,
-                                    'Action' => $action,
+                                    'Template' => 'instruments',
                                     'RecordsPerPage' => $recordsPerPage);
 
     // Name of field which is the unique key
@@ -175,15 +174,23 @@ __EOT__;
                                        'sort'     => true
                                        );
     $opts['fdd']['Lexikon'] = array(
-                                    'name' => 'Wikipedia',
-                                    'select' => 'T',
-                                    'options' => 'VLR',
-                                    'input' => 'V',
-                                    'sql' => "\"Wikipedie.DE\"",
-                                    'nowrap' => true
-                                    );
-    $opts['fdd']['Lexikon']['URL'] = "http://de.wikipedia.org/wiki/\$key";
-    $opts['fdd']['Lexikon']['URLdisp'] = "\$key@Wikipedia.DE";
+      'name' => 'Wikipedia',
+      'select' => 'T',
+      'options' => 'VLRF',
+      'input' => 'V',
+      'sql' => "REPLACE('"
+."<a "
+."href=\"http://de.wikipedia.org/wiki/@@key@@\" "
+."target=\"Wikipedia\" "
+."onclick=\"return window.open(\'http://de.wikipedia.org/wiki/@@key@@\',\'Wikipedia\');\""
+.">"
+."@@key@@@Wikipedie.DE</a>',"
+."'@@key@@',`PMEtable0`.`Instrument`)",
+      'escape' => false,
+      'nowrap' => true
+      );
+//$opts['fdd']['Lexikon']['URL'] = "http://de.wikipedia.org/wiki/\$key\" target=\"_blank";
+//$opts['fdd']['Lexikon']['URLdisp'] = "\$key@Wikipedia.DE";
 
     $opts['triggers']['update']['before']  = Config::$triggers.'instruments.TUB.inc.php';
     $opts['triggers']['insert']['before']  = Config::$triggers.'instruments.TIB.inc.php';
@@ -232,6 +239,7 @@ __EOT__;
   {
     $query = 'SELECT DISTINCT `Instrument` FROM `Besetzungen` WHERE `ProjektId` = '.$projectId;
     $result = mySQL::query($query);
+
   
     $instruments = array();
     while ($line = mySQL::fetch($result)) {
@@ -249,14 +257,17 @@ __EOT__;
   // actually subscribed to the project.
   public static function updateProjectInstrumentationFromMusicians($projectId, $handle, $replace = false)
   {
-    $musinst = fetchProjectMusiciansInstruments($projectId, $handle);
+    $musinst = self::fetchProjectMusiciansInstruments($projectId, $handle);
+
     if ($replace) {
       $prjinst = $musinst;
     } else {
-      $prjinst = fetchProjectInstruments($projectId, $handle);
+      $prjinst = self::fetchProjectInstruments($projectId, $handle);
     }
+
     $prjinst = array_unique(array_merge($musinst, $prjinst));
     $prjinst = self::sortOrchestral($prjinst, $handle);
+
 
     $query = "UPDATE `Projekte` SET `Besetzung`='".implode(',',$prjinst)."' WHERE `Id` = $projectId";
     mySQL::query($query, $handle);
