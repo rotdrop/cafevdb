@@ -37,6 +37,7 @@ form.cafevdb-control {
 div.instrumentation-button>input[type=button] {
   text-align:center;
   width:95%;
+  min-width:14em;
   font-weight:bold;
   font-style:italic;
   border-style:outset;
@@ -248,6 +249,23 @@ a.pme-cell-1:hover, a.pme-cell-0:hover {
   font-weight:bold;
 }
 
+.pme-cell-1>a:link, .pme-cell-0>a:link {
+  color:#0000ff;
+  text-decoration:underline;
+  font-weight:bold;
+}
+.pme-cell-1>a:visited, .pme-cell-0>a:visited {
+  color:#0000ff;
+  text-decoration:underline;
+  font-weight:bold;
+}
+.pme-cell-1>a:hover, .pme-cell-0>a:hover {
+  color:#0000ff;
+  text-decoration:underline;
+  font-style:italic;
+  font-weight:bold;
+}
+
 input[type=checkbox],input[type=submit],input[type=radio],input[type=button] {
   cursor:pointer;
 } 
@@ -306,6 +324,7 @@ td.pme-cell-0-msg, td.pme-cell-1-msg,
 td.pme-cell-0-cc, td.pme-cell-1-cc,
 td.pme-cell-0-bcc, td.pme-cell-1-bcc { 
   font-size:25%;
+  line-height:100%;
   max-width:20em;
   max-height:1em;
 /*  white-space:normal;*/
