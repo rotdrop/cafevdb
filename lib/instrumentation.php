@@ -5,11 +5,10 @@ namespace CAFEVDB
 
 class Instrumentation
 {
-  public $action;
-  public $subAction;
   public $musicianId;
   public $projectId;
   public $project;
+  public $template;
   protected $recordsPerPage;
   protected $userExtraFields;
   protected $instruments;
@@ -34,11 +33,10 @@ class Instrumentation
       // echo "$key =&gt; $value <BR/>";
     }
 
-    $this->action = $this->opts['cgi']['persist']['Action'];
-    $this->subAction = $this->opts['cgi']['persist']['SubAction'];
     $this->musicianId = $this->opts['cgi']['persist']['MusicianId'];
     $this->projectId = $this->opts['cgi']['persist']['ProjectId'];
     $this->project = $this->opts['cgi']['persist']['Project'];;
+    $this->template = $this->opts['cgi']['persist']['Template'];;
     $this->recordsPerPage = $this->opts['cgi']['persist']['RecordsPerPage'];
 
     // Fetch some data we probably will need anyway
