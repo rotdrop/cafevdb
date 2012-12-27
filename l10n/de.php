@@ -1,5 +1,20 @@
 <?php
 $TRANSLATIONS = array(
+  'Add the instruments of the actually registered musicians to the instrument-table for the project.'
+  =>
+  'Die Instrumente der bereits registrierten Musiker in die Besetzungstabelle eintragen; die Soll-Besetzungszahlen werden allerdings nicht angepasst.',
+  'Transfer Instruments from Musicians' => 'Instrumente mit Besetzung abgleichen',
+  'Add to' => 'Neu für ',
+  'Add the musician to the project. A new form will open were details like the instrument etc. can be adjustetd.'
+  =>
+  'Fügt den Musiker zum Projekt hinzu. Auf der Folgeseite können dann Details eingetragen werden.',
+  'Add'    => 'Hinzufügen',
+  'Copy'   => 'Kopieren',
+  'Change' => 'Ändern',
+  'Delete' => 'Löschen',
+  'View'   => 'Anzeigen',
+  'Transpose' => 'Transponieren',
+  'Transpose the displayed table; may be beneficial for tables with only a few rows but many columns!' => 'Aktuelle Tabelle transponieren, mag für Tabellen mit vielen Spalten und wenigen Zeilen übersichtlicher sein.',
   'Open a dialog with all known
 events associated to the project.
 Events can be added and modified
