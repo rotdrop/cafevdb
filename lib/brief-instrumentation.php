@@ -16,7 +16,6 @@ class BriefInstrumentation
     //Config::$debug_query = true;
     //$debug_query = true;
 
-    $action          = $this->action;
     $project         = $this->project;
     $projectId       = $this->projectId;
     $opts            = $this->opts;
@@ -72,7 +71,6 @@ __EOT__;
     // Don't want everything persistent.
     $opts['cgi']['persist'] = array('Project' => $project,
                                     'ProjectId' => $projectId,
-                                    'Action' => $action,
                                     'Template' => 'brief-instrumentation',
                                     'Table' => $opts['tb']);
 
@@ -221,7 +219,7 @@ __EOT__;
                                     'maxlen' => '1',
                                     'sort' => true);
     $opts['fdd']['Stimmführer'] = array('name' => ' &alpha;',
-                                        'options'  => 'LAVCPD',
+                                        'options'  => 'LAVCPDF',
                                         'select' => 'T',
                                         'maxlen' => '1',
                                         'sort' => true,
