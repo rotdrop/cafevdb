@@ -1,5 +1,5 @@
 $(document).ready(function(){
-  
+
   //    $('button.settings').tipsy({gravity:'ne', fade:true});
   $('button').tipsy({gravity:'w', fade:true});
   $('input.cafevdb-control').tipsy({gravity:'nw', fade:true});
@@ -41,6 +41,19 @@ $(document).ready(function(){
   });
 
   $(':button.instrumentation').click(function(event) {
+    // This seems to work like an artificial form-submit, but there
+    // may be better ways ...
+    event.preventDefault();
+    var values = $(this).attr('name');
+    $.post('', values, function (data) {
+      var newDoc = document.open("text/html", "replace");
+      newDoc.write(data);
+      newDoc.close();
+    }, 'html');
+    return false;
+  });
+
+  $(':button.register-musician').click(function(event) {
     // This seems to work like an artificial form-submit, but there
     // may be better ways ...
     event.preventDefault();
