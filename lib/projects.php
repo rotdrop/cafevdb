@@ -167,7 +167,8 @@ __EOT__;
         'name'     => 'Projekt-Name',
         'php|VLF'      => array('type' => 'function',
                             'function' => 'CAFEVDB\Projects::projectButton',
-                            'parameters' => $idIdx),
+                                'parameters' => array('keyIdx' => $idIdx,
+                                                      'template' => 'brief-instrumentation')),
         'select'   => 'T',
         'maxlen'   => 64,
         'sort'     => true,
@@ -219,7 +220,7 @@ __EOT__;
                                         );
 
     $opts['fdd']['ExtraFelder'] = array('name'     => 'Extra Felder für Teilnehmer',
-                                        'options'  => 'LAVCPD',
+                                        'options'  => 'FLAVCPD',
                                         'select'   => 'T',
                                         'maxlen'   => 1024,
                                         'css'      => array('postfix' => 'prjxtra'),
@@ -400,13 +401,14 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
 
   public static function projectButton($projectName, $opts, $k, $fds, $fdd, $row)
   {
-    $projectId = $row["qf$opts"];
+    $projectId = $row["qf".$opts['keyIdx']];
+    $template  = $opts['template'];
     $bvalue    = $projectName;
     // Code the value in the name attribute (for java-script)
     $bname     = ""
 ."ProjectId=$projectId&"
 ."Project=$projectName&"
-."Template=brief-instrumentation";
+."Template=$template";
     $title     = L::t(Config::toolTips('projectinstrumentation-button'));
     return <<<__EOT__
 <div class="instrumentation-button">
