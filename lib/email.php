@@ -1416,7 +1416,7 @@ __EOT__;
       $opts['fdd']['Date']['name'] = 'Datum';
       $opts['fdd']['Date']['default'] = date("Y-m-d H:i:s");
       $opts['fdd']['Date']['nowrap'] = true;
-      $opts['fdd']['Date']['options'] = 'LAVCPDR'; // Set by update trigger.
+      $opts['fdd']['Date']['options'] = 'LAVCPDRF'; // Set by update trigger.
   
       $opts['fdd']['user'] = array('name'     => 'Absende-User',
                                    'select'   => 'T',
