@@ -164,7 +164,7 @@ __EOT__;
     $nameIdx = count($opts['fdd']);
     $opts['fdd']['Name'] = array(
         'name'     => 'Projekt-Name',
-        'php'      => array('type' => 'function',
+        'php|VLF'      => array('type' => 'function',
                             'function' => 'CAFEVDB\Projects::projectButton',
                             'parameters' => $idIdx),
         'select'   => 'T',
