@@ -12,6 +12,10 @@ class Tooltips
   {
     return 
     array(
+      'transfer-instruments' => 'Add the instruments of the actually registered musicians to the instrument-table for the project.',
+      'register-musician' => 'Add the musician to the project. A new form will open were details like the instrument etc. can be adjustetd.',
+      'pme-transpose' => 'Transpose the displayed table; may be beneficial for tables with only a few rows but many columns!',
+      'projectinstrumentation-button' => 'Open a page with the musicians registered for the respective project.',
       'projectevents-button' => 'Open a dialog with all known
 events associated to the project.
 Events can be added and modified
@@ -86,7 +90,7 @@ Suchkriterien zu verstecken.'),
       'pme-search' => array('sw' => '  Klick mich, um die
 Suchkriterien anzuzeigen.'),
 
-      'pme-query' => '  Klick mich, um den
+      'pme-query' => '  Klick mich, um die
 aktuellen Suchkriterien anzuwenden. Suchkriterien
 können in den Feldern eingegeben werden.
 Als Platzhalter verwendet man "%".',
