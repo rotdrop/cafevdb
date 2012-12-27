@@ -78,6 +78,11 @@ var missing_field_todate = '".addslashes(L::t('To Date'))."';
 var missing_field_totime = '".addslashes(L::t('To Time'))."';
 var missing_field_startsbeforeends = '".addslashes(L::t('The event ends before it starts'))."';
 var missing_field_dberror = '".addslashes(L::t('There was a database fail'))."';
+var confirm_text = new Object();
+confirm_text['delete'] = '".addslashes(L::t('Do you really want to delete this event?'))."';
+confirm_text['detach'] = '".addslashes(L::t('Do you really want to detach this event from the current project?'))."';
+confirm_text['select'] = '';
+confirm_text['deselect'] = '';
 ";
 
 // end event hacks

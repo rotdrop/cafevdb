@@ -195,6 +195,24 @@ class Events
     return $event['calendarid'];
   }
 
+  /**Return the OC-id corresponding to $event, which may be an
+   * OC-event, an event-id, or our representation of events.
+   */
+  protected static function eventId($event)
+  {
+    $result = false;
+    if (is_array($event)) {
+      if (isset($event['EventId'])) {
+        $result = $event['EventId'];
+      } else if (isset($event['id'])) {
+        $result = $event['id'];
+      }
+    } else {
+      $result = $event;
+    }
+    return $result;
+  }
+
   /**Return the VCALENDAR object corresponding to $event.
    *
    * @param[in] $event Mixed, either an ID are the corresponding row
@@ -205,7 +223,11 @@ class Events
   protected static function getVCalendar($event)
   {
     if (is_array($event)) {
-      $vcalendar = \OC_VObject::parse($event['calendardata']);
+      if (isset($event['calendardata'])) {
+        $vcalendar = \OC_VObject::parse($event['calendardata']);
+      } else if (isset($event['object'])) {
+        $vcalendar = self::getVCalendar($event['object']);
+      }
     } else {
       $vcalendar = \OC_Calendar_App::getVCalendar($event, false, false);
     }
@@ -217,12 +239,15 @@ class Events
    * object. This is a reference to allow for modification of the
    * $vCalendar object.
    *
-   * @param[in] $vcalendar Sabre VCALENDAR object.
+   * @param[in] $vcalendar \OC_VObject
    *
    * @return A reference to the inner object.
    */
-  protected static function &getVObject($vcalendar)
+  protected static function &getVObject(&$vcalendar)
   {
+    if (!$vcalendar instanceof \OC_VObject) {
+      throw new \Exception('Called with non-VObject');
+    }
     // Extract the categories as array
     if ($vcalendar->__isset('VEVENT')) {
       $vobject = &$vcalendar->VEVENT;
@@ -232,6 +257,8 @@ class Events
       $vobject = &$vcalendar->VJOURNAL;
     } else if ($vcalendar->__isset('VCARD')) {
       $vobject = &$vcalendar->VCARD;
+    } else {
+      // Pray that this was already the desired object.
     }
 
     return $vobject;
@@ -248,18 +275,12 @@ class Events
    */
   protected static function getCategories($stuff)
   {
-    if (is_object($stuff)) {
-      // VCALENDAR or contained V-object
-      if ($stuff->__isset('VCALENDAR')) {
-        $vobject = self::getVObject($stuff);
-      } else {
-        $vobject = $stuff;
-      }
+    if ($stuff instanceof \OC_VObject) {
+      $vcalendar = $stuff;
     } else {
-      // Event or ID
       $vcalendar = self::getVCalendar($stuff);
-      $vobject = self::getVObject($vcalendar);
-    }
+    }    
+    $vobject = self::getVObject($vcalendar);
 
     $categories = $vobject->getAsArray('CATEGORIES');
 
@@ -278,23 +299,62 @@ class Events
    */
   protected static function setCategories($stuff, $categories)
   {
-    if (is_object($stuff)) {
-      // VCALENDAR or contained V-object
-      if ($stuff instanceof \OC_VObject) {
-        $vcalendar = $stuff;
-      } else {
-        return false;
-      }
+    if ($stuff instanceof \OC_VObject) {
+      $vcalendar = $stuff;
     } else {
-      // Event or ID
       $vcalendar = self::getVCalendar($stuff);
     }
-
-    $vobject = self::getVObject($vcalendar);
+    $vobject = self::getVObject($stuff);
 
     $categories = implode(',', $categories);
-
     $vobject->setString('CATEGORIES', $categories);
+
+    return $vcalendar;
+  }
+
+  /**Return the summary for the given event.
+   *
+   * @param[in] $stuff Either a VCALENDAR object, or the inner VEVENT,
+   * VTODO etc. or an OC-event (array, row from the data-base) or just
+   * an event Id (in which case the row from the data-base will be
+   * fetched).
+   *
+   * @return A string with the event's brief title
+   */
+  protected static function getSummary($stuff)
+  {
+    if ($stuff instanceof \OC_VObject) {
+      $vcalendar = $stuff;
+    } else {
+      $vcalendar = self::getVCalendar($stuff);
+    }    
+    $vobject = self::getVObject($vcalendar);
+
+    $summary = $vobject->getAsString('SUMMARY');
+
+    return $summary;
+  }
+
+  /**Set the summary (brief title) for the given event.
+   *
+   * @param[in] $stuff Either a VCALENDAR object or an OC-event
+   * (array, row from the data-base) or just an event Id (in which
+   * case the row from the data-base will be fetched).
+   *
+   * @param[in] $summary A string with the new summary.
+   *
+   * @return The VCALENDAR object with the new summary installed.
+   */
+  protected static function setSummary($stuff, $summary)
+  {
+    if ($stuff instanceof \OC_VObject) {
+      $vcalendar = $stuff;
+    } else {
+      $vcalendar = self::getVCalendar($stuff);
+    }
+    $vobject = self::getVObject($stuff);
+
+    $vobject->setString('SUMMARY', $summary);
 
     return $vcalendar;
   }
@@ -441,6 +501,47 @@ __EOT__;
     $vcalendar = self::setCategories($vcalendar, $categories);
     
     \OC_Calendar_Object::edit($eventId, $vcalendar->serialize());    
+  }
+
+  /**Replace an old category with a new one. As the code is taylored
+   * such that the category is part of the short-description of the
+   * event, we also do a string replace in the title field to keep
+   * things more or less consistent.
+   *
+   * @param[in] $event Event ID, or OC-Event, or CAFEVDB-Event.
+   *
+   * @param[in] $old Old category.
+   *
+   * @param[in] $new New category.
+   *
+   * @param[in] $tweakSummary Also do a string-replace on the summary
+   * field, defaults to @c false.
+   *
+   * @return Undefined.
+   */
+  public static function replaceCategory($event, $old, $new, $tweakSummary = false)
+  {
+    $vcalendar  = self::getVCalendar($event);
+    $categories = self::getCategories($vcalendar);
+
+    $key = array_search($old, $categories);
+    if ($new === false) {
+      unset($categories[$key]);
+    } else {
+      $categories[$key] = $new;
+    }
+
+    $vcalendar = self::setCategories($vcalendar, $categories);
+
+    // optionally also tweak the summary field.
+    if ($tweakSummary) {
+      $summary = self::getSummary($vcalendar);
+      if ($summary && $summary != '') {
+        $summary = str_replace($old, $new, $summary);
+        $vcalendar = self::setSummary($vcalendar, $summary);
+      }
+    }
+    \OC_Calendar_Object::edit(self::eventId($event), $vcalendar->serialize());    
   }
 
   /**Test if the given event is linked to the given project.
@@ -718,7 +819,7 @@ __EOT__;
   {    
     $events = array();
 
-    $ownConnection = $handle === false;
+    $ownConnection = ($handle === false);
     if ($ownConnection) {
       Config::init();
       $handle = mySQL::connect(Config::$pmeopts);

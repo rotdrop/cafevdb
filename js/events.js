@@ -15,8 +15,8 @@ window.Events={
     init: function(data) {
       if (data.status == "success") {
         $('#dialog_holder').html(data.data.contents);
-        projectId = data.data.projectId;
-        projectName = data.data.projectName;
+        window.Events.projectId = data.data.projectId;
+        window.Events.projectName = data.data.projectName;
       } else {
         $('#dialog_holder').html('<div id="events"><div id="debug"></div</div>');
       }
@@ -147,6 +147,14 @@ window.Events={
       } else if (name == 'delete' || name == 'detach' ||
                  name == 'select' || name == 'deselect') {
         // Execute the task and redisplay the event list.
+
+        var really = confirm_text[name];
+        if (really != '') {
+          var check = confirm(really);
+          if (check == false) {
+            return false;
+          }
+        }
 
         var type = new Object();
         type['name']  = 'EventId';

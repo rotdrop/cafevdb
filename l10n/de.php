@@ -1,5 +1,7 @@
 <?php
 $TRANSLATIONS = array(
+  'Do you really want to delete this event?' => 'Möchten Sie den Termin wirklich löschen?',
+  'Do you really want to detach this event from the current project?' => 'Möchten Sie den Termin wirklich vom Projekt lösen?',
   'no events' => 'keine Termine',
   'Miscellaneous Calendars' => 'Weitere Kalender',
   'Check' => 'Überprüfen',
