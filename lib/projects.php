@@ -161,6 +161,7 @@ __EOT__;
                                'default'  => '0',
                                'sort'     => true
                                );
+
     $nameIdx = count($opts['fdd']);
     $opts['fdd']['Name'] = array(
         'name'     => 'Projekt-Name',
@@ -171,7 +172,6 @@ __EOT__;
         'maxlen'   => 64,
         'sort'     => true,
         );
-    //$opts['fdd']['Name']['URL'] = '?app=cafevdb&Template=brief-instrumentation&Project=$value&ProjectId=$key&Action=BriefInstrumentation';
 
     $opts['fdd']['Programm'] = array(
                                      'name'     => 'Programm',
