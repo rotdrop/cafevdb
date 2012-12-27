@@ -145,6 +145,7 @@ class Navigation
           .'<button class="'.$btn['class'].'" title="'.$title.'"'
           .(isset($btn['id']) ? ' id="'.$btn['id'].'"' : '')
           .(isset($btn['style']) ? ' style="'.$btn['style'].'"' : '')
+          .(isset($btn['js']) ? ' '.$btn['js'].' ' : '')
           .'>';
         if (isset($btn['image'])) {
           $html .= '<img class="svg" src="'.$btn['image'].'" alt="'.$name.'" />';
@@ -169,7 +170,6 @@ class Navigation
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
   <input type="submit" value="$value" title="$title"/>
-  <input type="hidden" name="Action" value="-1"/>
   <input type="hidden" name="Template" value="projects"/>
 </form>
 
@@ -182,7 +182,6 @@ __EOT__;
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
   <input type="submit" value="$value" title="$title"/>
-  <input type="hidden" name="Action" value="DisplayAllMusicians"/>
   <input type="hidden" name="Template" value="all-musicians"/>
 </form>
 
@@ -194,7 +193,6 @@ __EOT__;
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
   <input type="submit" name="" value="Em@il" title="$title"/>
-  <input type="hidden" name="Action" value="Email"/>
   <input type="hidden" name="Template" value="email"/>
   <input type="hidden" name="Project" value="$project"/>
   <input type="hidden" name="ProjectId" value="$projectId"/>
@@ -209,7 +207,6 @@ __EOT__;
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
   <input type="submit" value="$value" title="$title"/>
-  <input type="hidden" name="Action" value="Email History"/>
   <input type="hidden" name="Template" value="email-history"/>
   <input type="hidden" name="Project" value="$project"/>
   <input type="hidden" name="ProjectId" value="$projectId"/>
@@ -227,7 +224,6 @@ __EOT__;
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
   <input type="submit" value="$project" title="$title"/>
-  <input type="hidden" name="Action" value="-1"/>
   <input type="hidden" name="Template" value="projects"/>
   <input type="hidden" name="Project" value="$project"/>
   <input type="hidden" name="ProjectId" value="$projectId"/>
@@ -243,7 +239,6 @@ __EOT__;
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
   <input type="submit" value="$value" title="$title"/>
-  <input type="hidden" name="Action" value="DetailedInstrumentation"/>
   <input type="hidden" name="Template" value="detailed-instrumentation"/>
   <input type="hidden" name="Project" value="$project"/>
   <input type="hidden" name="ProjectId" value="$projectId"/>
@@ -258,7 +253,6 @@ __EOT__;
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
   <input type="submit" value="$value" title="$title"/>
-  <input type="hidden" name="Action" value="BriefInstrumentation"/>
   <input type="hidden" name="Template" value="brief-instrumentation"/>
   <input type="hidden" name="Project" value="$project"/>
   <input type="hidden" name="ProjectId" value="$projectId"/>
@@ -273,7 +267,6 @@ __EOT__;
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
   <input type="submit" value="$value" title="$title"/>
-  <input type="hidden" name="Action" value="Instruments"/>
   <input type="hidden" name="Template" value="instruments"/>
   <input type="hidden" name="Project" value="$project"/>
   <input type="hidden" name="ProjectId" value="$projectId"/>
@@ -288,7 +281,6 @@ __EOT__;
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
   <input type="submit" name="" value="$value" title="$title"/>
-  <input type="hidden" name="Action" value="ProjectInstruments"/>
   <input type="hidden" name="Template" value="project-instruments"/>
   <input type="hidden" name="Project" value="$project"/>
   <input type="hidden" name="ProjectId" value="$projectId"/>
@@ -303,7 +295,6 @@ __EOT__;
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
   <input type="submit" value="$value" title="$title"/>
-  <input type="hidden" name="Action" value="AddMusicians"/>
   <input type="hidden" name="Template" value="add-musicians"/>
   <input type="hidden" name="Project" value="$project"/>
   <input type="hidden" name="ProjectId" value="$projectId"/>
