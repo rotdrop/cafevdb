@@ -420,9 +420,7 @@ eventduration';
     self::$opts['languages'] = explode(',','Deutsch,Englisch,Französich,Spanisch,Polnisch,Russisch,Japanisch,Koreanisch');
     sort(self::$opts['languages']);
 
-    self::$cgiVars = array('Action' => 'BriefInstrumentation',
-                           'SubAction' => '',
-                           'Template' => 'projects',
+    self::$cgiVars = array('Template' => 'projects',
                            'MusicianId' => -1,
                            'ProjectId' => -1,
                            'Project' => '',
