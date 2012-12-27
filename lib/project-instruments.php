@@ -267,22 +267,14 @@ bitte bei den <A HREF="Projekte.php?PME_sys_rec='.$projectId.'&PME_sys_operation
         )
       );
     
+    
     $opts['fdd']['ProjektName'] = array(
       'name'     => 'Projekt-Name',
       'select'   => 'T',
-      'sql|VLF' =>  ("REPLACE(REPLACE('"
-                     ."<div class=\"instrumentation-button\">"
-                     ."<input type=\"button\" "
-                     ."class=\"instrumentation\" "
-                     ."title=\"$tip\" "
-                     ."name=\""
-                     ."ProjectId=@@prId@@&amp;"
-                     ."Project=@@prName@@&amp;"
-                     ."Template=brief-instrumentation\" "
-                     ."value=\"@@prName@@\" />"
-                     ."</div>',"
-                     ."'@@prId@@',`PMEjoin0`.`Id`),"
-                     ."'@@prName@@',`PMEjoin0`.`Name`)"),
+      'sql'      => 'ProjektId',
+      'php|VLF'  => array('type' => 'function',
+                          'function' => 'CAFEVDB\Projects::projectButton',
+                          'parameters' => $idIdx),
       'escape'   => false,
       'options'  => 'LAVR',
       'maxlen'   => 11,
