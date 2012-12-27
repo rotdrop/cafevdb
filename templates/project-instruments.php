@@ -1,3 +1,4 @@
+<?php use CAFEVDB\L; ?>
 <script type="text/javascript">
   <?php echo $_['jsscript']; ?>
 </script>
