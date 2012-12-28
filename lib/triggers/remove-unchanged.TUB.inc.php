@@ -1,5 +1,7 @@
 <?php
 
+\CAFEVDB\Util::authorized();
+
 // $this      -- pme object
 // $newvals   -- contains the new values
 // $this->rec -- primary key

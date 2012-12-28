@@ -1,5 +1,7 @@
 <?php
 
+\CAFEVDB\Util::authorized();
+
 // $newvals contains the new values
 
 // Create the view and make sure we have enough extra fields in the

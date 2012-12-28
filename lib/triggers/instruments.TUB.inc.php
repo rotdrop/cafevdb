@@ -1,5 +1,7 @@
 <?php
 
+\CAFEVDB\Util::authorized();
+
 // $newvals contains the new values
 
 //print_r($changed);

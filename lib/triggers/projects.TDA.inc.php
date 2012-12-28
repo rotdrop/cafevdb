@@ -1,5 +1,7 @@
 <?php
 
+\CAFEVDB\Util::authorized();
+
 // $newvals contains the new values
 
 $sqlquery = "DROP VIEW IF EXISTS Lago2012View";

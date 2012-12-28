@@ -2,6 +2,8 @@
 
 use CAFEVDB\L;
 
+\CAFEVDB\Util::authorized();
+
 $project = CAFEVDB\Util::cgiValue('Project');
 $projectId =  CAFEVDB\Util::cgiValue('ProjectId');
 $musicianId = CAFEVDB\Util::cgiValue('MusicianId');

@@ -1,5 +1,7 @@
 <?php
 
+\CAFEVDB\Util::authorized();
+
 // $newvals contains the new values
 
 // Fetch the current list of instruments

@@ -1,5 +1,7 @@
 <?php
 
+\CAFEVDB\Util::authorized();
+
 /* This should be preceeded by RemoveUnchanged.TUB.php.inc */
 
 // $this      -- pme object
