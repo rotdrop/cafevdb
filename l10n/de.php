@@ -1,5 +1,6 @@
 <?php
 $TRANSLATIONS = array(
+  'birthday' => 'Geburtstag',
   'Add the instruments of the actually registered musicians to the instrument-table for the project.'
   =>
   'Die Instrumente der bereits registrierten Musiker in die Besetzungstabelle eintragen; die Soll-Besetzungszahlen werden allerdings nicht angepasst.',
