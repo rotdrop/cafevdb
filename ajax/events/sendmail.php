@@ -9,7 +9,8 @@ OCP\JSON::checkAppEnabled('calendar');
 use CAFEVDB\L;
 use CAFEVDB\Events;
 
-$debugtext = '<PRE>'.print_r($_POST, true).'</PRE>';
+$debugmode = Config::getUserValue('debugmode','') == 'on';
+$debugtext = $debugmode ? '<PRE>'.print_r($_POST, true).'</PRE>' : '';
 
 $lang = OC_L10N::findLanguage('cafevdb');
 $locale = $lang.'_'.strtoupper($lang).'.UTF-8';
