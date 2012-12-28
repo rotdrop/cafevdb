@@ -382,15 +382,6 @@ eventduration';
     //self::$pmeopts['labels']['Sort Field'] = 'Sortierfeld';
 
     self::$opts['phpmyadmin'] = 'https://ch.homelinux.net:8888/phpmyadmin/index.php?user=camerata&db=camerata';
-    self::$opts['geburtstag'] = array('name'     => 'Geburtstag',
-                                      'select'   => 'T',
-                                      'maxlen'   => 10,
-                                      'sort'     => true,
-                                      /*'datemask' => 'Y-m-d',*/
-                                      'calendar' => array('showTime' => '24',
-                                                          'dateFormat' =>'%Y-%m-%d'),
-                                      'default' => '1970-01-01'
-                                      );
     self::$opts['email'] = array('name'     => 'Em@il',
                                 'mask'     => '<A HReF="mailto:%1$s">&lt;%1$s&gt;</A>',
                                 'select'   => 'T',
@@ -400,22 +391,28 @@ eventduration';
                                 'escape'   => false);
     
     self::$opts['money'] = array('name' => 'Unkostenbeitrag<BR/>(Gagen negativ)',
-                                 'phpview' => self::$prefix . 'money.inc.php',
-                                 'align' => 'right',
+                                 //'phpview' => self::$prefix . 'money.inc.php',
+                                 'mask'  => '%02.02f'.'&euro;',
+                                 'css'   => array('postfix' => 'money'),
+                                 //'align' => 'right',
                                  'select' => 'N',
                                  'maxlen' => '6',
                                  'escape' => false,
                                  'sort' => true);
     
-    self::$opts['calendar'] = array('select'   => 'T',
+    self::$opts['datetime'] = array('select'   => 'T',
                                     'maxlen'   => 19,
                                     'sort'     => true,
-                                    'datemask' => 'Y-m-d H:i:s',
-                                    'calendar' => array(
-                                                        'showTime' => '24',
-                                                        'dateFormat' =>'%Y-%m-%d %H:%M:%S'
-                                                        )
+                                    'datemask' => 'd.m.Y H:i:s',
+                                    'css'      => array('postfix' => 'datetime'),
                                     );
+    self::$opts['birthday'] = array('name'     => strval(L::t('birthday')),
+                                    'select'   => 'T',
+                                    'maxlen'   => 10,
+                                    'sort'     => true,
+                                    'css'      => array('postfix' => 'birthday'),
+                                    'datemask' => 'd.m.Y',
+                                    'default' => '01.01.1900');
     //  add as needed
     self::$opts['languages'] = explode(',','Deutsch,Englisch,Französich,Spanisch,Polnisch,Russisch,Japanisch,Koreanisch');
     sort(self::$opts['languages']);
@@ -428,6 +425,8 @@ eventduration';
     self::$pmeopts['tooltips'] = ToolTips::pmeToolTips();
   }
 
+  /**Return an (English!) tool-tip for the given key.
+   */
   public static function toolTips($key)
   {
       $tip = '';
