@@ -36,12 +36,19 @@ form.cafevdb-control {
 
 div.instrumentation-button>input[type=button] {
   text-align:center;
-  width:95%;
-  min-width:14em;
   font-weight:bold;
   font-style:italic;
   border-style:outset;
   /*background-color:#d0dcec;*/
+}
+
+td[class|='pme-cell']>div.instrumentation-button>input[type=button] {
+  width:95%;
+  min-width:14em;
+}
+
+td[class|='pme-value']>div.instrumentation-button>input[type=button] {
+  width:auto;
 }
 
 #emailcontrol>input[type=submit] {
@@ -293,8 +300,19 @@ th[class|='pme-header']	{
   padding:4px;
   background:#add8e6;
 }
-td[class|='pme-key'], td[class|='pme-value'], td[class|='pme-help'], td[class|='pme-navigation'], td[class|='pme-cell'],
-td[class|='pme-sortinfo'], td[class|='pme-filter'], td[class|='pme-queryinfo'] {
+
+td.negative { 
+  color:#FF0000;
+}
+
+td.pme-cell-0-money, td.pme-cell-1-money {
+  text-align:right;
+}
+
+td[class|='pme-key'], td[class|='pme-value'],
+td[class|='pme-help'], td[class|='pme-navigation'],
+td[class|='pme-cell'], td[class|='pme-sortinfo'],
+td[class|='pme-filter'], td[class|='pme-queryinfo'] {
   border:#004d9c 1px solid;
   padding:3px;
 }
@@ -311,7 +329,6 @@ td.pme-stats   {
 }
 
 td[class|='pme-cell-0'] {
-  text-align:inherit;
   background:#B7CEEC;
 }
 td[class|='pme-cell-1'] {
