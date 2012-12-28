@@ -220,17 +220,6 @@ class phpMyEdit
 			'V' => array('change','cancel')
 			);
 
-
-
- 	// calendar mod start  - dilip
-    var $calendars; // Array for collecting list of fields with calendar popups
-    /* Array of valid options for passing to Calendar.setup 
-    var $valid_cal_opts = array(
-            'date','min','max','trigger',
-            'dateFormat','showTime','time','label'
-            );
-    */
-    // calendar mod end - dilip
 	// }}}
 
 	/*
@@ -312,42 +301,6 @@ class phpMyEdit
 	function copy_canceled()   { return $this->label_cmp($this->cancelcopy  , 'Cancel'); }
 	function delete_canceled() { return $this->label_cmp($this->canceldelete, 'Cancel'); }
 
-//calendar mod start - dilip
-    function calPopup_helper($k, $curval) /* {{{ */
-    {
-        if (@$this->fdd[$k]['calendar']) {
-            $cal_ar['dateFormat']    = '%Y/%m/%d %H:%M:%S';
-            $cal_ar['showTime']   = '12';
-            if (isset($curval) && $curval != '' && substr($curval, 0, 4) != '0000') {
-                $cal_ar['date'] = $curval;
-            }
-            if (is_array($this->fdd[$k]['calendar'])) {
-                foreach($this->fdd[$k]['calendar'] as $ck => $cv) {
-                    $cal_ar[$ck] = $cv;
-                }
-            }
-            $cal_ar['button'] = $this->dhtml['prefix'].'calbutton_'.$this->fds[$k];
-            $this->calendars[$this->fds[$k]] = $cal_ar;
-
-            $label = @$this->fdd[$k]['calendar']['label'];
-            strlen($label) || $label = '...';
-
-            $do_button = true;
-            if (isset($this->fdd[$k]['calendar']['button'])) {
-                $do_button = $this->fdd[$k]['calendar']['button'];
-            };
-
-            if ($do_button) {
-              //$base="http://www.yoursite.com/pme";
-                $base= $this->url['images'];
-                echo '<button id="',$cal_ar['button'],'" style="background: url(',"'",$base,"pme-calendar.png')",'" type="button">',$label,'</button>';
-            } else {
-                echo '<span style="cursor: pointer" id="',$cal_ar['button'],'">',$label,'</span>';
-            }
-        }
-    } /* }}} */
-//calendar mod end - dilip
-                               
 	function is_values2($k, $val = 'X') /* {{{ */
 	{
 		return $val === null ||
@@ -845,7 +798,10 @@ class phpMyEdit
 				else $fields[] = $this->fqn($k, true, true).' AS '.$this->sd.'qf'.$k.'_idx'.$this->ed;
 			}
 			if ($this->col_has_datemask($k)) {
-				$fields[] = 'UNIX_TIMESTAMP('.$this->fqn($k).') AS '.$this->sd.'qf'.$k.'_timestamp'.$this->ed;
+				$fields[] = ("(TO_SECONDS(".$this->fqn($k).")"
+                             ."-TO_SECONDS('1970-01-01 00:00:00')"
+                             ."-".date_offset_get(new DateTime).") "
+                             ."AS ".$this->sd."qf".$k."_timestamp".$this->ed);
 			}
 		}
 		return join(',', $fields);
@@ -1223,40 +1179,12 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		return true;
 	} /* }}} */
 
-// calendar mod start - changed function - dilip
     function form_end() /* {{{ */
     {
         if ($this->display['form']) {
             echo '</form>',"\n";
-
-            /* calendar mod start */
-
-            /* Add script calls to the end of the form for all fields
-               with calendar popups. */
-            if (isset($this->calendars)) {
-                echo '<script type="text/javascript">',"\n";
-                foreach($this->calendars as $ck => $cv) {
-                    echo 'Calendar.setup({',"\n";
-                    foreach ($cv as $ck1 => $cv1) {
-                        //if (in_array($ck1, $this->valid_cal_opts)) {
-                            //echo "\t",str_pad($ck1, 15),' : "',$cv1,'",',"\n";
-                            echo "\t",str_pad($ck1, 15),' : ';
-                            if(is_numeric($cv1)) echo "$cv1,\n";
-                            else echo ' "',$cv1,'",',"\n";
-                        //}
-                    }
-                    echo "\t",str_pad('inputField', 15),' : "',$this->dhtml['prefix'].'fld_'.$ck,'",',"\n";
-                    echo "\t",str_pad('trigger', 15),' : "',$this->dhtml['prefix'].'calbutton_'.$ck,'",',"\n";
-                    echo "\t",str_pad('onselect', 15),' : function(){this.hide()}',"\n";
-                    echo '});',"\n";
-                };
-                echo '',"\n";
-                echo '</script>',"\n";
-            };
-            /* calendar mod end */
         };
     } /* }}} */
-// calendar mod end - changed function - dilip
 
 	function display_tab_labels($position) /* {{{ */
 	{
@@ -1365,18 +1293,11 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
                                 }
 				echo ($this->password($k) ? 'type="password"' : 'type="text"');
 				echo ($this->readonly($k) ? ' disabled' : '');
-				/* calendar mod start */
-				echo ' id="',$this->dhtml['prefix'].'fld_'.$this->fds[$k],'"';
-				/* calendar mod end */
 				echo ' name="',$this->cgi['prefix']['data'].$this->fds[$k],'"';
 				echo $len_props,' value="';
 				if($escape) echo htmlspecialchars($this->fdd[$k]['default']);
 			    else echo $this->fdd[$k]['default'];
 				echo '" />';
-                /* calendar mod start */
-				/* Call htmlcal helper function */
-				$this->calPopup_helper($k, null);
-				/* calendar mod end */
 			}
 			echo '</td>',"\n";
 			if ($this->guidance) {
@@ -1527,17 +1448,15 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
                                 echo 'title="'.htmlspecialchars($help).'" ';
                         }
 			echo ($this->readonly($k) ? ' disabled' : '');
-			/* calendar mod start */
-                        echo ' id="',$this->dhtml['prefix'].'fld_'.$this->fds[$k],'"';
-			/* calendar mod end */
 			echo ' name="',$this->cgi['prefix']['data'].$this->fds[$k],'" value="';
-			if ($escape) echo htmlspecialchars($row["qf$k"]);
-			else echo $row["qf$k"];
+            if ($this->col_has_datemask($k)) {
+                echo $this->makeTimeString($k, $row);
+            } else if ($escape) {
+                echo htmlspecialchars($row["qf$k"]);
+            } else {
+                echo $row["qf$k"];
+            }
 			echo '"',$len_props,' />',"\n";
-			/* calendar mod start */
-			/* Call calPopup helper function */
-			$this->calPopup_helper($k, htmlspecialchars($row["qf$k"]));
-			/* calendar mod end */
 		}
 		echo '</td>',"\n";
 	} /* }}} */
@@ -1716,6 +1635,21 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		return $ret;
 	} /* }}} */
 
+	function makeTimeString($k, $row)
+    {
+        $value = '';
+        if ($row["qf$k"] != '') {
+            if (@$this->fdd[$k]['datemask']) {
+                $value = intval($row["qf$k".'_timestamp']);
+                $value = @date($this->fdd[$k]['datemask'], $value);
+            } else if (@$this->fdd[$k]['strftimemask']) {
+                $value = intval($row["qf$k".'_timestamp']);
+                $value = @strftime($this->fdd[$k]['strftimemask'], $value);
+            }
+        }
+        return $value;
+    }
+
 	function cellDisplay($k, $row, $css) /* {{{ */
 	{
 		$escape  = isset($this->fdd[$k]['escape']) ? $this->fdd[$k]['escape'] : true;
@@ -1724,12 +1658,8 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		} else {
 		  $key_rec = $row['qf'.$this->key_num];
 		}
-		if (@$this->fdd[$k]['datemask']) {
-			$value = intval($row["qf$k".'_timestamp']);
-			$value = $value ? @date($this->fdd[$k]['datemask'], $value) : '';
-		} else if (@$this->fdd[$k]['strftimemask']) {
-			$value = intval($row["qf$k".'_timestamp']);
-			$value = $value ? @strftime($this->fdd[$k]['strftimemask'], $value) : '';
+        if ($this->col_has_datemask($k)) {
+            $value = $this->makeTimeString($k, $row);
 		} else if ($this->is_values2($k, $row["qf$k"])) {
 			$value = $row['qf'.$k.'_idx'];
 			if ($this->fdd[$k]['select'] == 'M') {
@@ -1810,27 +1740,27 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		return $escape ? nl2br($value) : $value;
 	} /* }}} */
 
-        function fetchToolTip($css_class_name, $name, $label = false)
-        {
-          // If we have an array for the class, use it.
-          if (isset($this->tooltips[$css_class_name])
-              && is_array($this->tooltips[$css_class_name])) {
+    function fetchToolTip($css_class_name, $name, $label = false)
+    {
+        // If we have an array for the class, use it.
+        if (isset($this->tooltips[$css_class_name])
+            && is_array($this->tooltips[$css_class_name])) {
             $tips = $this->tooltips[$css_class_name];
             if (isset($tips[$name])) {
-              return ' title="'.htmlspecialchars($tips[$name]).'" ';
+                return ' title="'.htmlspecialchars($tips[$name]).'" ';
             }
-          }
-          
-          // otherwise use name, label, css in that order
-          if(isset($this->tooltips[$name])) {
-            return ' title="'.htmlspecialchars($this->tooltips[$name]).'" ';
-          } elseif($label && isset($this->tooltips[$label])) {
-            return ' title="'.htmlspecialchars($this->tooltips[$label]).'" ';
-          } elseif (isset($this->tooltips[$css_class_name])) {
-            return ' title="'.htmlspecialchars($this->tooltips[$css_class_name]).'" ';
-          }
-          return '';
         }
+          
+        // otherwise use name, label, css in that order
+        if(isset($this->tooltips[$name])) {
+            return ' title="'.htmlspecialchars($this->tooltips[$name]).'" ';
+        } elseif($label && isset($this->tooltips[$label])) {
+            return ' title="'.htmlspecialchars($this->tooltips[$label]).'" ';
+        } elseif (isset($this->tooltips[$css_class_name])) {
+            return ' title="'.htmlspecialchars($this->tooltips[$css_class_name]).'" ';
+        }
+        return '';
+    }
 
 	/**
 	 * Creates HTML submit input element
@@ -3301,11 +3231,18 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		$newvals      = array();
 		$oldvals      = array();
 		$changed      = array();
+        $stamps       = array();
 		// Prepare query to retrieve oldvals
 		for ($k = 0; $k < $this->num_fds; $k++) {
 			if ($this->processed($k) && !$this->readonly($k)) {
 				$fd = $this->fds[$k];
 				$fn = $this->get_data_cgi_var($fd);
+                if ($this->col_has_datemask($k)) {
+                  // Convert back to a date/time object understood by mySQL
+                  $stamps[$fd] = strtotime($fn);
+                  $fn = date('Y-m-d H:i:s', $stamps[$fd]);
+                  echo "<!-- ".$fn." -->\n";
+                }
 				$newvals[$fd] = is_array($fn) ? join(',',$fn) : $fn;
 				if ($query_oldrec == '') {
 					$query_oldrec = 'SELECT '.$this->sd.$fd.$this->ed;
@@ -3326,7 +3263,14 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		$this->sql_free_result($res);
 		// Creating array of changed keys ($changed)
 		foreach ($newvals as $fd => $value) {
-			if ($value != $oldvals[$fd]) {
+echo "<!-- ".$value." ".$oldvals[$fd]." -->\n";
+            if (isset($stamps[$fd])) {
+                $oldstamp = strtotime($oldvals[$fd]);
+echo "<!-- ".$stamps[$fd]." ".$oldstamp." -->\n";
+                if ($oldstamp != $stamps[$fd]) {
+                    $changed[] = $fd;
+                }
+            } else if ($value != $oldvals[$fd]) {
 				if ($multiple[$fd]) {
 					$tmpval1 = explode(',',$value);
 					sort($tmpval1);
@@ -4227,5 +4171,10 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
  * vim:set ts=4:
  * vim600:fdm=marker fdl=0 fdc=0:
  * }}} */
+
+// Local Variables: ***
+// mode: php ***
+// c-basic-offset: 4 ***
+// End: ***
 
 ?>
