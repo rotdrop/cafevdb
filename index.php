@@ -37,18 +37,13 @@ OCP\Util::addStyle('cafevdb', 'cafevdb');
 OCP\Util::addStyle('cafevdb', 'settings');
 OCP\Util::addStyle('cafevdb', 'events');
 OCP\Util::addStyle('cafevdb', 'email');
-OCP\Util::addStyle('cafevdb', 'jscal/jscal2');
-OCP\Util::addStyle('cafevdb', 'jscal/border-radius');
-OCP\Util::addStyle('cafevdb', 'jscal/gold/gold');
 
 OCP\Util::addScript('cafevdb', 'cafevdb');
 OCP\Util::addScript('cafevdb', 'transpose');
 OCP\Util::addScript('cafevdb', 'pme-helper');
 OCP\Util::addScript('cafevdb', 'events');
-//OCP\Util::addScript('cafevdb', 'tinymce/jscripts/tiny_mce/tiny_mce');
-//OCP\Util::addScript('cafevdb', 'tinymceinit');
-/* OCP\Util::addScript('cafevdb', 'jscal/src/js/jscal2'); */
-/* OCP\Util::addScript('cafevdb', 'jscal/src/js/lang/en'); */
+OCP\Util::addScript('cafevdb', 'tinymce/jscripts/tiny_mce/tiny_mce');
+OCP\Util::addScript('cafevdb', 'tinymceinit');
 
 /* Special hack to determine if the email-form was requested through the pme-miscinfo button. */
 $op = CAFEVDB\Util::cgiValue('PME_sys_operation');
