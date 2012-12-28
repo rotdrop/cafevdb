@@ -1412,9 +1412,9 @@ __EOT__;
         'sort'     => false
         );
 
-      $opts['fdd']['Date'] = Config::$opts['calendar'];
+      $opts['fdd']['Date'] = Config::$opts['datetime'];
       $opts['fdd']['Date']['name'] = 'Datum';
-      $opts['fdd']['Date']['default'] = date("Y-m-d H:i:s");
+      $opts['fdd']['Date']['default'] = date(Config::$opts['datetime']['datemask']);
       $opts['fdd']['Date']['nowrap'] = true;
       $opts['fdd']['Date']['options'] = 'LAVCPDRF'; // Set by update trigger.
   

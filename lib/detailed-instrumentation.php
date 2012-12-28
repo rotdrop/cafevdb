@@ -324,9 +324,9 @@ __EOT__;
                                       'sort'     => true
                                       );
 
-    $opts['fdd']['Aktualisiert'] = Config::$opts['calendar'];
+    $opts['fdd']['Aktualisiert'] = Config::$opts['datetime'];
     $opts['fdd']['Aktualisiert']['name'] = 'Aktualisiert';
-    $opts['fdd']['Aktualisiert']['default'] = date("Y-m-d H:i:s");
+    $opts['fdd']['Aktualisiert']['default'] = date(Config::$opts['datetime']['datemask']);
     $opts['fdd']['Aktualisiert']['nowrap'] = true;
     $opts['fdd']['Aktualisiert']['options'] = 'LAVCPDRF'; // Set by update trigger.
 

@@ -251,7 +251,7 @@ Dann wird die Reihenfolge bei der Anzeige der Tabelle geändert, aber die
 Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
 
     if (false) {
-    $opts['fdd']['Konzert1'] = Config::$opts['calendar'];
+    $opts['fdd']['Konzert1'] = Config::$opts['datetime'];
     $opts['fdd']['Konzert1']['name'] = 'Konzert1';
 
     $opts['fdd']['KonzertOrt1'] = array(
@@ -265,7 +265,7 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
                                         'escape' => false
                                         );
 
-    $opts['fdd']['Konzert2'] = Config::$opts['calendar'];
+    $opts['fdd']['Konzert2'] = Config::$opts['datetime'];
     $opts['fdd']['Konzert2']['name'] = 'Konzert2';
     $opts['fdd']['KonzertOrt2'] = array(
                                         'name'     => 'KonzertOrt2',
@@ -278,7 +278,7 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
                                         'escape' => false
                                         );
 
-    $opts['fdd']['Proben1'] = Config::$opts['calendar'];
+    $opts['fdd']['Proben1'] = Config::$opts['datetime'];
     $opts['fdd']['Proben1']['name'] = 'Proben1';
     $opts['fdd']['ProbenKommentar1'] = array(
                                              'name'     => 'ProbenKommentar1',
@@ -292,7 +292,7 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
                                              'escape' => false,
                                              );
 
-    $opts['fdd']['Proben2'] = Config::$opts['calendar'];
+    $opts['fdd']['Proben2'] = Config::$opts['datetime'];
     $opts['fdd']['Proben2']['name'] = 'Proben2';
     $opts['fdd']['ProbenKommentar2'] = array(
                                              'name'     => 'ProbenKommentar2',
@@ -306,7 +306,7 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
                                              'escape' => false,
                                              );
 
-    $opts['fdd']['Proben3'] = Config::$opts['calendar'];
+    $opts['fdd']['Proben3'] = Config::$opts['datetime'];
     $opts['fdd']['Proben3']['name'] = 'Proben3';
     $opts['fdd']['ProbenKommentar3'] = array(
                                              'name'     => 'ProbenKommentar3',
@@ -320,7 +320,7 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
                                              'escape' => false,
                                              );
 
-    $opts['fdd']['Proben4'] = Config::$opts['calendar'];
+    $opts['fdd']['Proben4'] = Config::$opts['datetime'];
     $opts['fdd']['Proben4']['name'] = 'Proben4';
     $opts['fdd']['ProbenKommentar4'] = array(
                                              'name'     => 'ProbenKommentar4',

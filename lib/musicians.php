@@ -267,7 +267,7 @@ __EOT__;
                                      'maxlen'   => 128,
                                      'sort'     => true
                                      );
-    $opts['fdd']['Geburtstag'] = Config::$opts['geburtstag'];
+    $opts['fdd']['Geburtstag'] = Config::$opts['birthday'];
     $opts['fdd']['Email'] = Config::$opts['email'];
     $opts['fdd']['Status'] = array(
                                    'name'     => 'Status',
@@ -324,9 +324,9 @@ __EOT__;
                                'sort'     => true
                                );
 
-    $opts['fdd']['Aktualisiert'] = Config::$opts['calendar'];
+    $opts['fdd']['Aktualisiert'] = Config::$opts['datetime'];
     $opts['fdd']['Aktualisiert']['name'] = 'Aktualisiert';
-    $opts['fdd']['Aktualisiert']['default'] = date('Y-m-d H:i:s');
+    $opts['fdd']['Aktualisiert']['default'] = date(Config::$opts['datetime']['datemask']);
     $opts['fdd']['Aktualisiert']['nowrap'] = true;
     $opts['fdd']['Aktualisiert']['options'] = 'LFAVCPDR'; // Set by update trigger.
 
@@ -666,6 +666,7 @@ Choosing "'.$musinst.'" as instrument.</H4>';
 __EOT__;
 
     new \phpMyEdit($opts);
+
   }
 
 }; // class definition.
