@@ -22,6 +22,14 @@ class L
 
 class Util
 {
+  /**Check whether we are logged in.
+   */
+  public static function authorized() 
+  {
+    \OC_Util::checkLoggedIn();
+    \OC_Util::checkAppEnabled(Config::APP_NAME);
+  }
+
   public static function debugMode()
   {
     if (Config::$debug_query) {
