@@ -221,7 +221,7 @@ abstract class HTML_Common2 implements ArrayAccess
         $str     = '';
         $charset = self::getOption('charset');
         foreach ($attributes as $key => $value) {
-            $str .= ' ' . $key . '="' . htmlspecialchars($value, ENT_QUOTES, $charset) . '"';
+            $str .= ' ' . $key . '="' . htmlspecialchars($value, ENT_QUOTES, $charset, false) . '"';
         }
         return $str;
     }
