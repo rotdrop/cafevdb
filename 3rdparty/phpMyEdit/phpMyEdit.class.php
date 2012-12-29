@@ -2404,28 +2404,28 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
                         $ret .= '</span>';
                         return $ret;
 		}
-                if ($name == 'rows_per_page_combo') {
+        if ($name == 'rows_per_page_combo') {
 			$kv_array = array();
-                        $nummax = min($this->total_recs, 100);
-                        $kv_array[-1] = '*';
+            $nummax = min($this->total_recs, 100);
+            $kv_array[-1] = '*';
 			for ($i = 1; $i < min(5,$nummax); ++$i) {                            
 				$kv_array[$i] = $i;
-                                if ($this->inc == $i) {
-                                  $selected = (string)$i;
-                                }            
+                if ($this->inc == $i) {
+                    $selected = (string)$i;
+                }            
 			}
 			for ($i = 5; $i < $nummax; $i += 5) {
 				$kv_array[$i] = $i;
-                                if ($this->inc == $i) {
-                                  $selected = (string)$i;
-                                }            
+                if ($this->inc == $i) {
+                    $selected = (string)$i;
+                }            
 			}
-                        if (!isset($selected) && $this->inc >= 0) {
-                          $kv_array[$this->inc] = $this->inc;
-                          $selected = (string)$this->inc;
-                        } else if ($this->inc < 0) {
-                          $selected = '-1';
-                        }
+            if (!isset($selected) && $this->inc >= 0) {
+                $kv_array[$this->inc] = $this->inc;
+                $selected = (string)$this->inc;
+            } else if ($this->inc < 0) {
+                $selected = '-1';
+            }
 			// TODO: add onchange="return this.form.submit();" DONE ???
 			return $this->htmlSelect($this->cgi['prefix']['sys'].'navnp'.$position,
 					$this->getCSSclass('pagerows', $position), $kv_array, $selected, false, '',
@@ -4098,27 +4098,27 @@ echo "<!-- ".$stamps[$fd]." ".$oldstamp." -->\n";
 		$navfmdown   = $this->get_sys_cgi_var('navfmdown');
 		$navpnup     = $this->get_sys_cgi_var('navpnup');
 		$navpndown   = $this->get_sys_cgi_var('navpndown');
-                $navnpup     = $this->get_sys_cgi_var('navnpup');
-                $navnpdown   = $this->get_sys_cgi_var('navnpdown');
-                $prevnp      = $this->get_sys_cgi_var('np');
-                if ($this->misc_enabled() && ($this->operation == '-' || $this->operation == '+')) {
-                        // force the user to view all the mess.
-                        $this->inc = -1;
-                } elseif ($prevnp != '') {
-                        $this->inc = $prevnp;
-                        if($navnpdown != NULL && $navnpdown != $this->inc) $this->inc = $navnpdown;
-                        elseif($navnpup != NULL && $navnpup != $this->inc)     $this->inc = $navnpup;
-                }
-                if ($prevnp != NULL && $prevnp != $this->inc && $this->inc > 0 && $prevnp > 0) {
-                  // Set current form such that it is at least close to the old position.
-                  $this->navfm = intval($this->fm / $this->inc) * $this->inc;
-                } else {
-                  if($navfmdown!=NULL && $navfmdown != $this->fm) $this->navfm = $navfmdown;
-                  elseif($navfmup!=NULL && $navfmup != $this->fm) $this->navfm = $navfmup;
-                  elseif($navpndown!=NULL && ($navpndown-1)*$this->inc != $this->fm) $this->navfm = ($navpndown-1)*$this->inc;
-                  elseif($navpnup!=NULL && ($navpnup-1)*$this->inc != $this->fm) $this->navfm = ($navpnup-1)*$this->inc;
-                  else $this->navfm = $this->fm; 
-                }
+        $navnpup     = $this->get_sys_cgi_var('navnpup');
+        $navnpdown   = $this->get_sys_cgi_var('navnpdown');
+        $prevnp      = $this->get_sys_cgi_var('np');
+        if ($this->misc_enabled() && ($this->operation == '-' || $this->operation == '+')) {
+            // force the user to view all the mess.
+            $this->inc = -1;
+        } elseif ($prevnp != '') {
+            $this->inc = $prevnp;
+            if($navnpdown != NULL && $navnpdown != $this->inc) $this->inc = $navnpdown;
+            elseif($navnpup != NULL && $navnpup != $this->inc) $this->inc = $navnpup;
+        }
+        if ($prevnp != NULL && $prevnp != $this->inc && $this->inc > 0 && $prevnp > 0) {
+            // Set current form such that it is at least close to the old position.
+            $this->navfm = intval($this->fm / $this->inc) * $this->inc;
+        } else {
+            if($navfmdown!=NULL && $navfmdown != $this->fm) $this->navfm = $navfmdown;
+            elseif($navfmup!=NULL && $navfmup != $this->fm) $this->navfm = $navfmup;
+            elseif($navpndown!=NULL && ($navpndown-1)*$this->inc != $this->fm) $this->navfm = ($navpndown-1)*$this->inc;
+            elseif($navpnup!=NULL && ($navpnup-1)*$this->inc != $this->fm) $this->navfm = ($navpnup-1)*$this->inc;
+            else $this->navfm = $this->fm; 
+        }
 		$this->saveadd      = $this->get_sys_cgi_var('saveadd');
 		$this->moreadd      = $this->get_sys_cgi_var('moreadd');
 		$this->canceladd    = $this->get_sys_cgi_var('canceladd');
@@ -4132,9 +4132,9 @@ echo "<!-- ".$stamps[$fd]." ".$oldstamp." -->\n";
 		$this->cancelview   = $this->get_sys_cgi_var('cancelview');
 		// Filter setting
 		if (isset($this->sw)) {
-                  $this->label_cmp($this->sw, 'Search') && $this->fl = 1;
-                  $this->label_cmp($this->sw, 'Hide')   && $this->fl = 0;
-                  //$this->label_cmp($this->sw, 'Clear')  && $this->fl = 0;
+            $this->label_cmp($this->sw, 'Search') && $this->fl = 1;
+            $this->label_cmp($this->sw, 'Hide')   && $this->fl = 0;
+            //$this->label_cmp($this->sw, 'Clear')  && $this->fl = 0;
 		}
 		// TAB names
 		$this->tabs = array();
