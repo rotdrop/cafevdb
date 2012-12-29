@@ -1,39 +1,66 @@
-.cafevdb-email-filter fieldset.filter {
+.cafevdb-email-filter fieldset {
     white-space:nowrap;
 }
-.cafevdb-email-filter fieldset.filter div.row
+.cafevdb-email-filter fieldset div.row
 {
-    vertical-align:top;
-    width:10em;
-    display:inline-block;
-    float:none;
+  vertical-align:top;
+  /*width:10em;*/
+  width:auto;
+  display:inline-block;
+  float:none;
 }
-.cafevdb-email-filter fieldset.filter div.element
+.cafevdb-email-filter fieldset div.element
 {
-    display:inline-block;
-    float:left;
+  display:inline-block;
+  /*float:left;*/
+}
+.cafevdb-email-filter fieldset.select {
+  vertical-align:top;
+  display:inline-block;
+}
+.cafevdb-email-filter fieldset.select select {
+  font-size:90%;
+}
+.cafevdb-email-filter fieldset.select p.label {
+  /*float:left;*/
+  width:auto;
+  text-align:left;
+  padding: 0;
+  margin: 0.7em 0 0 0;
+}
+.cafevdb-email-filter fieldset.select select.dualselect {
+  width:25em;
+}
+
+.cafevdb-email-filter fieldset.filter p.label {
+  /*float:left;*/
+  width:auto;
+  text-align:left;
+  padding: 0;
+  margin: 0.7em 0 0 0;
 }
 .cafevdb-email-filter fieldset.filter select {
-     font-size:90%;
+  font-size:90%;
 }
-.cafevdb-email-filter fieldset.filter label.element {
-    float:left;
-    width:100%;
-    text-align:left;
-    margin: 0.7em 0 0 0;
+.cafevdb-email-filter fieldset.filter {
+  vertical-align:top;
+  display:inline-block;
 }
 .cafevdb-email-filter fieldset.filter select.filter {
-    width:auto;
+  width:auto;
 }
-.cafevdb-email-filter fieldset.filter select.dualselect {
-    width:350px;
+.cafevdb-email-filter fieldset.filter div.row {
+  display:block;
+  text-align:right;
 }
-.cafevdb-email-filter fieldset.filter p.label {
-    float:left;
-    width:100%;
-    text-align:left;
-    padding: 0;
-    margin: 0.7em 0 0 0;
+.cafevdb-email-filter fieldset.filter input[type=submit].apply {
+  background-image:url('%appswebroot%/cafevdb/img/e_mail_checked.png');
+  background-repeat:no-repeat;
+  width:28px;
+  height:28px;
+  font-size:0pt;
+  vertical-align:middle;
+  text-align:right;
 }
 
 .cafevdb-email-filter fieldset.submit {
@@ -41,8 +68,19 @@
 }
 .cafevdb-email-filter fieldset.submit div.row
 {
-    display:inline-block;
+  display:inline-block;
+  vertical-align:middle;
 }
+.cafevdb-email-filter fieldset.submit input[type=submit].reset {
+  background-image:url('%appswebroot%/cafevdb/img/e_mail_X.png');
+  background-repeat:no-repeat;
+  width:28px;
+  height:28px;
+  font-size:0pt;
+  vertical-align:middle;
+}
+
+/*********************************************/
 
 .cafevdb-email-form {
    font-size:100%;

@@ -45,13 +45,15 @@ namespace CAFEVDB
 
     // Form elements
     private $form;           // QuickForm2 form
-    private $selectFieldSet; // Field-set for the filter
+    private $filterFieldSet; // Field-set for the filter
+    private $selectFieldSet; // Field-set for adressee selection
     private $dualSelect;     // QF2 dual-select
     private $filterSelect;   // Filter by instrument.
-    private $submitFieldSet; // Field-set for the select buttons
-    private $resetButton;    // Reset to default state
-    private $submitButton;   // Guess what.
+    private $filterApplyButton;   // Guess what.
+
+    private $submitFieldSet; // Field-set for freeze and reset buttons
     private $freezeButton;   // Display emails as list.
+    private $resetButton;    // Reset to default state
     private $nopeFieldSet;   // No email.
     private $nopeStatic;     // Actual static form
 
@@ -284,22 +286,14 @@ namespace CAFEVDB
       /* Groups can only render field-sets well, so make thing more
        * complicated than necessary
        */
-      $fsdummystyle = 'border:none;margin:0px;padding:0px;clear:both';
+      $fsStyleBlock = 'border:none;margin:0px;padding:0px;clear:both;display:block;width:auto';
+      $fsStyleInline = 'border:none;margin:0px;padding:0px;clear:both;display:inline-block;width:auto;';
 
       // Outer field-set with border
       $outerFS = $this->form->addElement('fieldset')->setLabel('Em@il Auswahl');
 
-      $this->selectFieldSet = $outerFS->addElement('fieldset', NULL, array('style' => $fsdummystyle));
-      $this->selectFieldSet->setAttribute('class','filter');
-
-      $this->filterSelect = $this->selectFieldSet->addElement(
-        'select', 'InstrumentenFilter',
-        array('multiple' => 'multiple', 'size' => 15, 'class' => 'filter'),
-        array('options' => $this->instruments, 'label' => 'Instrumenten-Filter'));
-
-      if (!Util::cgiValue('InstrumentenFilter',false)) {
-        $this->filterSelect->setValue(array(0));
-      }
+      $this->selectFieldSet = $outerFS->addElement('fieldset', NULL, array());
+      $this->selectFieldSet->setAttribute('class', 'select');
 
       $this->dualSelect = $this->selectFieldSet->addElement(
         'dualselect', 'SelectedMusicians',
@@ -325,9 +319,27 @@ namespace CAFEVDB
           \HTML_QuickForm2_Rule::ONBLUR_CLIENT_SERVER);
       }
 
+      $this->filterFieldSet = $outerFS->addElement('fieldset', NULL, array());
+      $this->filterFieldSet->setAttribute('class', 'filter');
+
+      $this->filterSelect = $this->filterFieldSet->addElement(
+        'select', 'InstrumentenFilter',
+        array('multiple' => 'multiple', 'size' => 15, 'class' => 'filter'),
+        array('options' => $this->instruments, 'label' => 'Instrumenten-Filter'));
+
+      if (!Util::cgiValue('InstrumentenFilter',false)) {
+        $this->filterSelect->setValue(array(0));
+      }
+
+      $this->filterApplyButton = $this->filterFieldSet->addElement(
+        'submit', 'filterSubmit',
+        array('value' => 'Filter Anwenden',
+              'class' => 'apply',
+              'title' => 'Instrumenten-Filter anwenden.'));
+
       /******** Submit buttons follow *******/
 
-      $this->submitFieldSet = $outerFS->addElement('fieldset', NULL, array('style' => $fsdummystyle));
+      $this->submitFieldSet = $outerFS->addElement('fieldset', NULL, array('style' => $fsStyleBlock));
       $this->submitFieldSet->setAttribute('class','submit');
 
       $this->freezeButton = $this->submitFieldSet->addElement(
@@ -336,16 +348,13 @@ namespace CAFEVDB
               'title' => 'Beendet die Musiker-Auswahl
 und aktiviert den Editor'));
 
-      $this->submitButton = $this->submitFieldSet->addElement(
-        'submit', 'filterSubmit',
-        array('value' => 'Filter Anwenden',
-              'title' => 'Instrumenten-Filter anwenden.'));
-
       $this->resetButton = $this->submitFieldSet->addElement(
         'submit', 'filterReset',
-        array('value' => 'Filter Zurücksetzen',
-              'title' => 'Von vorne mit den
-Anfangswerten.'));
+        array('value' => 'Zurücksetzen',
+              'class' => 'reset',
+              'title' => 'Von vorne mit den Anfangswerten.'));
+
+
 
       /********** Add a pseudo-form for people without email *************/
 
@@ -462,10 +471,10 @@ Anfangswerten.'));
           }
           $this->frozen = true;
           $this->dualSelect->toggleFrozen(true);
-          $this->submitFieldSet->removeChild($this->submitButton);
           $this->submitFieldSet->removeChild($this->freezeButton);
           $this->submitFieldSet->removeChild($this->resetButton);
-          $this->selectFieldSet->removeChild($this->filterSelect);
+          $this->filterFieldSet->removeChild($this->filterSelect);
+          $this->filterFieldSet->removeChild($this->filterApplyButton);
           if ($this->form->getElementById($this->nopeFieldSet->getId())) {
             $this->form->removeChild($this->nopeFieldSet);
           }
