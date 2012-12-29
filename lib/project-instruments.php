@@ -321,8 +321,10 @@ bitte bei den <A HREF="Projekte.php?PME_sys_rec='.$projectId.'&PME_sys_operation
 
     if ($transposed == 'Transposed' && $pme->list_operation()) {
       $doTranspose = 'true';
+      $pageitems = strval(L::t('#Spalten'));
     } else {
       $doTranspose = 'false';
+      $pageitems = strval(L::t('#Zeilen'));
     }
     echo <<<__EOT__
 <script type="text/javascript">
@@ -331,6 +333,7 @@ $(function() {
       $('.tipsy').remove();
       transposePmeMain('table.pme-main');
     }
+    $('input.pme-pagerows').val('$pageitems');
 
     $('input').tipsy({gravity:'w', fade:true});
     $('button').tipsy({gravity:'w', fade:true});
