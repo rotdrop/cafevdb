@@ -294,7 +294,7 @@ __EOT__;
                                             'sort'     => true,
                                             'values'   => Config::$opts['languages']);
 
-    $opts['fdd']['Geburtstag'] = Config::$opts['geburtstag'];
+    $opts['fdd']['Geburtstag'] = Config::$opts['birthday'];
     $opts['fdd']['Status'] = array(
                                    'name'     => 'Status',
                                    'select'   => 'T',
