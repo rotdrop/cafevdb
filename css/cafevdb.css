@@ -79,12 +79,14 @@ div.cafevdb-general {
 }
 
 select,input,option,button {
-  border-radius:4px;
+  /*border-radius:4px;*/
+  border-radius:.5em;
   background-color:#F4F4F4;
 }
 
 #content input:active,#content select:active,#content option:active,#content button:active {
-  border-radius:4px;
+  border-radius:.5em;
+  /*border-radius:4px;*/
   background-color:SteelBlue;
 }
 

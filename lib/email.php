@@ -45,15 +45,18 @@ namespace CAFEVDB
 
     // Form elements
     private $form;           // QuickForm2 form
+    private $baseGroupFieldSet;
     private $filterFieldSet; // Field-set for the filter
     private $selectFieldSet; // Field-set for adressee selection
     private $dualSelect;     // QF2 dual-select
     private $filterSelect;   // Filter by instrument.
-    private $filterApplyButton;   // Guess what.
 
     private $submitFieldSet; // Field-set for freeze and reset buttons
+    private $submitFilterFieldSet; // Field-set for freeze and reset buttons
+    private $freezeFieldSet;   // Display emails as list.
     private $freezeButton;   // Display emails as list.
-    private $resetButton;    // Reset to default state
+    private $filterResetButton;    // Reset to default state
+    private $filterApplyButton;   // Guess what.
     private $nopeFieldSet;   // No email.
     private $nopeStatic;     // Actual static form
 
@@ -286,18 +289,35 @@ namespace CAFEVDB
       /* Groups can only render field-sets well, so make thing more
        * complicated than necessary
        */
-      $fsStyleBlock = 'border:none;margin:0px;padding:0px;clear:both;display:block;width:auto';
-      $fsStyleInline = 'border:none;margin:0px;padding:0px;clear:both;display:inline-block;width:auto;';
 
       // Outer field-set with border
-      $outerFS = $this->form->addElement('fieldset')->setLabel('Em@il Auswahl');
+      $outerFS = $this->form->addElement('fieldset');      
+      $outerFS->setLabel(L::t('Select Em@il Recipients'));
+
+      if ($this->projectId >= 0) {
+        $this->baseGroupFieldSet = $outerFS->addElement('fieldset', NULL,
+                                                        array('class' => 'basegroup'));
+        $group = $this->baseGroupFieldSet->addElement('group', 'boxes');
+        $group->setLabel(L::t('Principal Address Collection'));
+        $check = $group->addElement('checkbox', 'selectfromproject',
+                                    array('value' => 'fromProject',
+                                          'class' => 'selectfromproject',
+                                          'title' => 'Auswahl aus den registrierten Musikern für das Projekt.'));
+        $check->setContent('<span class="selectfromproject">&isin; '.$this->project.'</span>');
+
+        $check = $group->addElement('checkbox', 'selectexceptproject',
+                                    array('value' => 'exceptProject',
+                                          'class' => 'selectexceptproject',
+                                          'title' => 'Auswahl aus allen Musikern, die nicht für das Projekt registriert sind.'));
+        $check->setContent('<span class="selectexceptproject">&notin; '.$this->project.'</span>');
+      }
 
       $this->selectFieldSet = $outerFS->addElement('fieldset', NULL, array());
       $this->selectFieldSet->setAttribute('class', 'select');
 
       $this->dualSelect = $this->selectFieldSet->addElement(
         'dualselect', 'SelectedMusicians',
-        array('size' => 15, 'class' => 'dualselect'),
+        array('size' => 18, 'class' => 'dualselect'),
         array('options'    => $this->EMailsDpy,
               'keepSorted' => true,
               'from_to'    => array(
@@ -307,11 +327,12 @@ namespace CAFEVDB
                 'content' => ' &lt&lt; ',
                 'attributes' => array('class' => 'transfer'))
           )
-        )->setLabel(array(
-                      'Email Adressaten',
-                      'übrige',
-                      'ausgewählte'
-                      ));
+        );
+      $this->dualSelect->setLabel(
+        array(
+          L::t('Email Recipients'),
+          L::t('Remaining Recipients'),
+          L::t('Selected Recipients')));
 
       if (false) {
         $this->dualSelect->addRule(
@@ -324,42 +345,48 @@ namespace CAFEVDB
 
       $this->filterSelect = $this->filterFieldSet->addElement(
         'select', 'InstrumentenFilter',
-        array('multiple' => 'multiple', 'size' => 15, 'class' => 'filter'),
-        array('options' => $this->instruments, 'label' => 'Instrumenten-Filter'));
+        array('multiple' => 'multiple', 'size' => 18, 'class' => 'filter'),
+        array('options' => $this->instruments,
+              'label' => L::t('Instrument-Filter')));
 
       if (!Util::cgiValue('InstrumentenFilter',false)) {
         $this->filterSelect->setValue(array(0));
       }
 
-      $this->filterApplyButton = $this->filterFieldSet->addElement(
-        'submit', 'filterSubmit',
-        array('value' => 'Filter Anwenden',
-              'class' => 'apply',
-              'title' => 'Instrumenten-Filter anwenden.'));
-
       /******** Submit buttons follow *******/
 
-      $this->submitFieldSet = $outerFS->addElement('fieldset', NULL, array('style' => $fsStyleBlock));
-      $this->submitFieldSet->setAttribute('class','submit');
+      $this->submitFieldSet = $outerFS->addElement(
+        'fieldset', NULL, array('class' => 'submit'));
 
-      $this->freezeButton = $this->submitFieldSet->addElement(
+      $this->freezeFieldSet = $this->submitFieldSet->addElement(
+        'fieldset', NULL, array('class' => 'freeze'));
+
+      $this->freezeButton = $this->freezeFieldSet->addElement(
         'submit', 'writeMail',
-        array('value' => 'Email Verfassen',
+        array('value' => L::t('Compose Em@il'),
               'title' => 'Beendet die Musiker-Auswahl
 und aktiviert den Editor'));
 
-      $this->resetButton = $this->submitFieldSet->addElement(
+      $this->submitFilterFieldSet = $this->submitFieldSet->addElement(
+        'fieldset', NULL, array('class' => 'filtersubmit'));
+
+      $this->filterApplyButton = $this->submitFilterFieldSet->addElement(
+        'submit', 'filterSubmit',
+        array('value' => L::t('Apply Filter'),
+              'class' => 'apply',
+              'title' => 'Instrumenten-Filter anwenden.'));
+
+      $this->filterResetButton = $this->submitFilterFieldSet->addElement(
         'submit', 'filterReset',
-        array('value' => 'Zurücksetzen',
+        array('value' => L::t('Reset Filter'),
               'class' => 'reset',
               'title' => 'Von vorne mit den Anfangswerten.'));
-
-
 
       /********** Add a pseudo-form for people without email *************/
 
       $this->nopeFieldSet =
-        $this->form->addElement('fieldset', 'NoEm@il')->setLabel('Musiker ohne Em@il');
+        $this->form->addElement('fieldset', 'NoEm@il');
+      $this->nopeFieldSet->setLabel(L::t('Musicians without Em@il'));
       $this->nopeStatic = $this->nopeFieldSet->addElement('static', 'NoEm@il', NULL,
                                                           array('tagName' => 'div'));
 
@@ -472,9 +499,9 @@ und aktiviert den Editor'));
           $this->frozen = true;
           $this->dualSelect->toggleFrozen(true);
           $this->submitFieldSet->removeChild($this->freezeButton);
-          $this->submitFieldSet->removeChild($this->resetButton);
+          $this->submitFilterFieldSet->removeChild($this->filterResetButton);
+          $this->submitFilterFieldSet->removeChild($this->filterApplyButton);
           $this->filterFieldSet->removeChild($this->filterSelect);
-          $this->filterFieldSet->removeChild($this->filterApplyButton);
           if ($this->form->getElementById($this->nopeFieldSet->getId())) {
             $this->form->removeChild($this->nopeFieldSet);
           }

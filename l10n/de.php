@@ -1,5 +1,15 @@
 <?php
 $TRANSLATIONS = array(
+  'Select Em@il Recipients' => 'Em@il Adressaten',
+  'Principal Address Collection' => 'Grundmenge',
+  'Email Recipients' => 'Em@il Empfänger',
+  'Remaining Recipients' => 'Verbleibende Empfänger',
+  'Selected Recipients' => 'Ausgewählte Empfänger',
+  'Instrument-Filter' => 'Instrumenten-Filter',
+  'Compose Em@il' => 'Email verfassen',
+  'Apply Filter' => 'Filter anwender',
+  'Reset Filter' => 'Filter zurücksetzen',
+  'Musicians without Em@il' => 'Musiker ohne Em@il',
   'download' => 'herunterladen',
   'Download' => 'Herunterladen',
   'birthday' => 'Geburtstag',

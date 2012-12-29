@@ -6,6 +6,7 @@ $(document).ready(function(){
   $('#controls button').tipsy({gravity:'nw', fade:true});
   $('.pme-sort').tipsy({gravity: 'n', fade:true});
   $('.pme-misc-check').tipsy({gravity: 'nw', fade:true});
+  $('label').tipsy({gravity:'ne', fade:true});
 
   $('#personalsettings .generalsettings').on(
     'click keydown', function(event) {

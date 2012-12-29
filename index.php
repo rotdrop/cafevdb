@@ -23,12 +23,13 @@ $encrkey    = CAFEVDB\Config::getEncryptionKey();
 $jsscript = 'var toolTips = '.($tooltips == 'on' ? 'true' : 'false').';
 ';
 $jsscript .=<<<__EOT__
+$(document).ready(function(){
   if (toolTips) {
     $.fn.tipsy.enable();
   } else {
     $.fn.tipsy.disable();
   }
-
+})
 __EOT__;
 
 OCP\App::setActiveNavigationEntry( 'cafevdb' );
