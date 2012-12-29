@@ -1,5 +1,7 @@
 <?php
 $TRANSLATIONS = array(
+  'download' => 'herunterladen',
+  'Download' => 'Herunterladen',
   'birthday' => 'Geburtstag',
   'Add the instruments of the actually registered musicians to the instrument-table for the project.'
   =>
@@ -165,7 +167,6 @@ Aber bitte einfach nicht abschrecken lassen ...",
   "Mass-email form, use with care. Mass-emails will be logged. Recipients will be specified by the Bcc: field in the header, so the recipients are undisclosed to each other." => "Massen-Email-Formular. Mit Vorsicht zu genießen! Massen-Mails werden allerdings zweifach mitgeschnitten: eine Kopie geht an unser Vereinsadresse, außerdem wird die ganze Pracht in der Daten bank gespeichter (siehe ``Email Historie'')",
   "Email History" => "Em@il Historie",
   "Display all emails sent by our mass-email form." => "Zeigt alle über unser unsägliches Massen-Mail gespamten Emails an. Insebesondere werden hier auch die Bcc: Empfänger gespeichert.",
-  "" => "",
 );
 
 /* 
@@ -176,4 +177,3 @@ Aber bitte einfach nicht abschrecken lassen ...",
  */
 
 ?>
-

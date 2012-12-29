@@ -14,7 +14,9 @@ class L
  
       // If I omit the next line then the first call to $l->t()
       // generates a spurious new-line. Why?
-      trim(self::$l->t('blah'));
+      //
+      // Mea Culpa: don't include a new-line after end tag
+      //strval(self::$l->t('blah'));
     }
     return self::$l->t(strval($text));
   }
@@ -420,12 +422,12 @@ class mySQL
   }
 };
 
-}
-
 /*
  * Local Variables: ***
  * c-basic-offset: 2 ***
  * End: ***
  */
+
+} // namespace
 
 ?>

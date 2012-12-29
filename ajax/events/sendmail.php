@@ -8,6 +8,7 @@ OCP\JSON::checkAppEnabled('calendar');
 
 use CAFEVDB\L;
 use CAFEVDB\Events;
+use CAFEVDB\Config;
 
 $debugmode = Config::getUserValue('debugmode','') == 'on';
 $debugtext = $debugmode ? '<PRE>'.print_r($_POST, true).'</PRE>' : '';

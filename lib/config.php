@@ -11,6 +11,7 @@ date_default_timezone_set('Europe/Berlin');
 class Config
 {
   const APP_NAME  = 'cafevdb';
+  const ORCHESTRA = 'Our Ensemble e.V..';
   const CFG_KEYS = '
 dbserver,
 dbuser,
@@ -406,6 +407,7 @@ eventduration';
                                     'datemask' => 'd.m.Y H:i:s',
                                     'css'      => array('postfix' => 'datetime'),
                                     );
+
     self::$opts['birthday'] = array('name'     => strval(L::t('birthday')),
                                     'select'   => 'T',
                                     'maxlen'   => 10,

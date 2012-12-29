@@ -172,9 +172,23 @@ window.Events={
         return false;
       } else if (name == 'sendmail') {
 
-        $.post(OC.filePath('cafevdb', 'ajax/events','sendmail.php'),
+        // No need to relist, in principle ...
+        $.post(OC.filePath('cafevdb', 'ajax/events', 'sendmail.php'),
                post, Events.UI.relist);
         
+        return false;
+      } else if (name == 'download') {
+
+        // As always, there may be a more elegant solution, but this
+        // opens the "download" diaglog of my web-browser. Need to set
+        // the form-method to "post" to do this.
+        
+        var exportscript = OC.filePath('cafevdb', 'ajax/events', 'download.php');
+        $('#eventlistform').attr("method", "post");        
+        $('#eventlistform').attr("action", exportscript);
+
+        $('#eventlistform').submit();
+
         return false;
       }
 

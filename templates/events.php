@@ -1,11 +1,16 @@
 <?php use CAFEVDB\L; ?>
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.projectevents-sendmail').attr("disabled", true);
+})
+</script>
 <div id="events" title="<?php echo L::t('Events for').' '.$_['ProjectName'];?>">
 <?php
 $prjId   = $_['ProjectId'];
 $prjName = $_['ProjectName'];
 $class   = $_['CSSClass'];
 ?>
-<form id="eventlistform" class="<?php echo $class; ?>">
+<form id="eventlistform" class="<?php echo $class; ?>" >
   <input type="hidden" name="ProjectId"   value="<?php echo $prjId; ?>" />
   <input type="hidden" name="ProjectName" value="<?php echo $prjName; ?>" />
   <div class="topbuttons"><table class="nostyle topbuttons">
@@ -19,7 +24,11 @@ $class   = $_['CSSClass'];
       <span class="<?php echo $class; ?>-email">
         <input type="button" class="<?php echo $class; ?>-sendmail" name="sendmail" value="Em@il" title="<?php echo L::t(CAFEVDB\Config::toolTips('projectevents-sendmail')); ?>" /><input type="button" class="<?php echo $class; ?>-sendmail-select" name="select" value="+" title="<?php echo L::t(CAFEVDB\Config::toolTips('projectevents-select')); ?>" /><input type="button" class="<?php echo $class; ?>-sendmail-deselect" name="deselect" value="-" title="<?php echo L::t(CAFEVDB\Config::toolTips('projectevents-deselect')); ?>" />
       </span>
-    </td></tr>
+      <span class="<?php echo $class; ?>-download">
+        <input type="button" class="<?php echo $class; ?>-download" name="download" value="<?php echo L::t('Download'); ?>" title="<?php echo L::t(CAFEVDB\Config::toolTips('projectevents-download')); ?>" />
+      </span>
+    </td>
+</tr>
   </table>
   </div>
   <div class="listing">
