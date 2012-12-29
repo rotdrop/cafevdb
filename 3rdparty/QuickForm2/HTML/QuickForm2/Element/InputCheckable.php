@@ -158,7 +158,7 @@ class HTML_QuickForm2_Element_InputCheckable extends HTML_QuickForm2_Element_Inp
         } else {
             $label = '<label for="' . htmlspecialchars(
                 $this->getId(), ENT_QUOTES, self::getOption('charset')
-            ) . '">' . $this->data['content'] . '</label>';
+              ) . '" title="'.$this->getAttribute('title').'" >' . $this->data['content'] . '</label>';
         }
         return parent::__toString() . $label;
     }
