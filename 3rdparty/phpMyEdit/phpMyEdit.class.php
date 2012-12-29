@@ -1638,7 +1638,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 	function makeTimeString($k, $row)
     {
         $value = '';
-        if ($row["qf$k"] != '') {
+        if ($row["qf$k"."_timestamp"] != '') {
             if (@$this->fdd[$k]['datemask']) {
                 $value = intval($row["qf$k".'_timestamp']);
                 $value = @date($this->fdd[$k]['datemask'], $value);
