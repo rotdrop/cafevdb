@@ -42,7 +42,7 @@ sent by email as ICS-attachment per email.
 Hitting the email button above the form
 will open an Email form suitable for
 sending the marked events to selected
-recipients.' => 'Termin zum Versand als ICS-Attachment per Email auswählen. Der Email-Knopf über der Tabelle führt zu einem Email-Formular, über das der eigentliche Versand an ausgewählte Empfänger vorgenommen werden kann.',
+recipients.' => 'Termin zum Versand als ICS-Attachment per Email auswählen. Der Email-Knopf über der Tabelle führt zu einem Email-Formular, über das der eigentliche Versand an ausgewählte Empfänger vorgenommen werden kann. Alternativ können die ausgwählten Termine auch einfach herunter-geladen werden.',
 
   'Add a new concert-event to the project.' => 'Neuen Konzert-Termin für das Projekt in den Konzerte-Kalender eintragen.',
   'Add a new rehearsal-event to the project.' => 'Neuen Proben-Termin für das Projekt in den Proben-Kalender eintragen.',
@@ -53,9 +53,9 @@ recipients.' => 'Termin zum Versand als ICS-Attachment per Email auswählen. Der
 and send the selected events to
 selected recipients.' => 'Ausgewählte Termine als ICS-Attachment per Email veschicken; öffnet ein Email-Formular.',
   'Select all events for
-email-submission' => 'Alle Termin als Email-Attachments auswählen.',
+email-submission' => 'Alle Termin für Download bzw. Email-Attachment auswählen.',
   'Exclude all events from
-email-submission' => 'Auswahl zum Email-Versand bei aller Terminen entfernen.',
+email-submission' => 'Auswahl zum Download bzw. Email-Versand bei allen Terminen entfernen.',
   'Modify the event.' => 'Termin ändern.',
   'Delete the event from the system
 (no undo possible).' => 'Termin komplett aus dem Kalender löschen, kann nicht rückgängig gemacht werden.',
