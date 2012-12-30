@@ -29,6 +29,8 @@ namespace CAFEVDB
     private $projectId;   // Project id or NULL or -1 or ''
     private $project;     // Project name of NULL or ''
     private $filter;      // Current instrument filter
+    private $userBase;    // Select from either project members and/or
+                          // all musicians w/o project-members
     private $EmailsRecs;  // Copy of email records from CGI env
     private $emailKey;    // Key for EmailsRecs into _POST or _GET
 
@@ -46,6 +48,7 @@ namespace CAFEVDB
     // Form elements
     private $form;           // QuickForm2 form
     private $baseGroupFieldSet;
+    private $userGroupSelect;
     private $filterFieldSet; // Field-set for the filter
     private $selectFieldSet; // Field-set for adressee selection
     private $dualSelect;     // QF2 dual-select
@@ -67,9 +70,11 @@ namespace CAFEVDB
      */
     public function __construct(&$_opts, $action = NULL)
     {
-      echo '<PRE>';
-      print_r($_POST);
-      echo '</PRE>';
+      if (false) {
+        echo '<PRE>';
+        print_r($_POST);
+        echo '</PRE>';
+      }
 
       $this->frozen = false;
 
@@ -84,15 +89,10 @@ namespace CAFEVDB
       $this->mtabKey   = $pmepfx.'mtable';
       $this->EmailRecs = Util::cgiValue($this->emailKey,array());
       $this->table     = Util::cgiValue($this->mtabKey,'');
+      $this->userBase  = array('fromProject' => $this->projectId >= 0,
+                               'exceptProject' => false);
 
-      // Now connect to the data-base
-      $dbh = mySQL::connect($this->opts);
-
-      $this->getInstrumentsFromDB($dbh);
-      $this->getMusiciansFromDB($dbh);
-
-      // Not needed anymore
-      mySQL::close($dbh);
+      $this->remapEmailRecords();
 
       /* At this point we have the Email-List, either in global or project
        * context, and possibly a selection of Musicians by Id from the
@@ -100,12 +100,10 @@ namespace CAFEVDB
        * in the MiscRecs field are remembered.
        */
       $this->createForm();
-    
+
       if ($action) {
         $this->form->setAttribute('action', $action);
       }
-
-      $this->emitPersistent();   
     }
 
     /* 
@@ -119,7 +117,7 @@ namespace CAFEVDB
       if (is_array($value)) {
         // One could recurse ...
         foreach($value as $idx => $val) {
-          $form->addElement('hidden', $key.'['.$idx.']')->setValue($val);
+          $this->addPersistentCGI($key.'['.$idx.']', $val, $form);
         }
       } else {
         $form->addElement('hidden', $key)->setValue($value);
@@ -132,10 +130,12 @@ namespace CAFEVDB
      */
     public function emitPersistent(&$form = NULL) {
     
-      $this->addPersistentCGI('ProjectId', $this->projectId);
-      $this->addPersistentCGI('Project', $this->project);
-      $this->addPersistentCGI('Template', 'email');
-      $this->addPersistentCGI($this->emailKey, $this->EmailRecs);
+      $this->addPersistentCGI('ProjectId', $this->projectId, $form);
+      $this->addPersistentCGI('Project', $this->project, $form);
+      $this->addPersistentCGI('Template', 'email', $form);
+      $this->addPersistentCGI($this->emailKey, $this->EmailRecs, $form);
+      $this->addPersistentCGI('headervisibility',
+                              Util::cgiValue('headervisibility', 'expanded'));
     }
 
     /*
@@ -143,19 +143,32 @@ namespace CAFEVDB
      */
     public function getPersistent()
     {
-      $form = new \HTML_QuickForm2('dummy');
+      $form = new \HTML_QuickForm2('emailrecipients');
     
       $this->addPersistentCGI('ProjectId', $this->projectId, $form);
       $this->addPersistentCGI('Project', $this->project, $form);
       $this->addPersistentCGI('Template', 'email', $form);
       $this->addPersistentCGI($this->emailKey, $this->EmailRecs, $form);
+      $this->addPersistentCGI('headervisibility',
+                              Util::cgiValue('headervisibility', 'expanded'));
 
       $value = $this->form->getValue();
+
+
+      if (false) {
+        echo '<PRE>getPersistent:';
+        print_r($value);
+        echo '</PRE>';
+      }
+
       if (isset($value['SelectedMusicians'])) {
         $this->addPersistentCGI('SelectedMusicians', $value['SelectedMusicians'], $form);
       }
       if (isset($value['InstrumentenFilter'])) {
         $this->addPersistentCGI('InstrumentenFilter', $value['InstrumentenFilter'], $form);
+      }
+      if (isset($value['baseGroup'])) {
+        $this->addPersistentCGI('baseGroup', $value['baseGroup'], $form);
       }
     
       $out = '';
@@ -171,44 +184,64 @@ namespace CAFEVDB
      *
      * Also: construct the filter by instrument.
      */
-    private function getInstrumentsFromDb($dbh, $filterNumbers = NULL)
+    private function getInstrumentsFromDb($dbh)
     {
       // Get the current list of instruments for the filter
-      if ($this->projectId >= 0) {
-        $this->MId         = 'MusikerId';
-        $this->Restrict    = 'Instrument';
+      if ($this->projectId >= 0 && !$this->userBase['exceptProject']) {
         $this->instruments = Instruments::fetchProjectMusiciansInstruments($this->projectId, $dbh);
       } else {
-        $this->MId         = 'Id';
-        $this->Restrict    = 'Instrumente';
         $this->instruments = Instruments::fetch($dbh);
       }
       array_unshift($this->instruments, '*');
 
-      /* Construct the filter */
-      if (!$filterNumbers) {
-        $filterNumbers = Util::cgiValue('InstrumentenFilter',array('0'));
-      }
+      /* Install the stuff into the form */
+      $this->filterSelect->loadOptions(array_combine($this->instruments,
+                                                     $this->instruments));        
+      $value = $this->form->getValue();
+      $filterInstruments = $value['InstrumentenFilter'];
+      $this->filterSelect->setValue(
+        array_intersect($filterInstruments, $this->instruments));
+    }
+    
+    private function fetchInstrumentsFilter()
+    {
+      /* Remove instruments from the filter which are not known by the
+       * current list of musicians.
+       */
+      $value = $this->form->getValue();
+      $filterInstruments = $value['InstrumentenFilter'];
+
       $this->filter = array();
-      foreach ($filterNumbers as $idx) {
-        $this->filter[] = $this->instruments[$idx];
+      foreach ($filterInstruments as $value) {
+        $this->filter[] = $value;
       }
     }  
 
-    /*
-     * Fetch the list of musicians for the given context (project/gloabl)
-     */
-    private function getMusiciansFromDB($dbh)
+    private function remapEmailRecords($dbh = false)
     {
-      if ($this->table == 'Besetzungen') {
+      if ($this->projectId >= 0 &&
+          $this->table == 'Besetzungen') {
+
+        $ownConnection = false;
+        if ($dbh === false) {
+          $dbh = mySQL::connect($this->opts);
+          $ownConnection = true;  
+        }
+
         /*
-         * Then we need to remap the stuff. To keep things clean we remap now
+         * This means we have been called from the "brief"
+         * instrumentation view. The other possibility is to be called
+         * from the detailed view, or the total view of all musicians.
+         *
+         * If called from the "Besetzungen" table, we remap the Id's
+         * to the project view table and continue with that.
          */
         $this->table = $this->project.'View';
         $query = 'SELECT `Besetzungen`.`Id` AS \'BesetzungsId\',
-  `'.$this->table.'`.`'.$this->MId.'` AS \'MusikerId\'
+  `'.$this->table.'`.`MusikerId` AS \'MusikerId\'
   FROM `'.$this->table.'` LEFT JOIN `Besetzungen`
-  ON `'.$this->table.'`.`'.$this->MId.'` = `Besetzungen`.`MusikerId` WHERE 1';
+  ON `'.$this->table.'`.`MusikerId` = `Besetzungen`.`MusikerId`
+  WHERE `Besetzungen`.`ProjektId` = '.$this->projectId;
 
         // Fetch the result or die and remap the Ids
         $result = mySQL::query($query, $dbh);
@@ -224,13 +257,49 @@ namespace CAFEVDB
           $newEmailRecs[] = $map[$key];
         }
         $this->EmailRecs = $newEmailRecs;
+
+        if ($ownConnection) {
+          mySQL::close($dbh);
+        }
       }
-    
+    }
+
+    /*
+     * Fetch the list of musicians for the given context (project/global)
+     */
+    private function getMusiciansFromDB($dbh)
+    {
       /*** Now continue as if from 'ordinary' View-Table ****/
-      if ($this->projectId < 0) {
-        $this->table = 'Musiker';
+
+      if ($this->projectId >= 0) {
+        if ($this->userBase['fromProject'] &&
+            $this->userBase['exceptProject']) {
+          $this->table    = 'Musiker';
+          $this->MId      = 'Id';
+          $this->Restrict = 'Instrumente';
+        } else if ($this->userBase['fromProject']) {
+          $this->table = $this->project.'View';
+          $this->MId      = 'MusikerId';
+          $this->Restrict = 'Instrument';
+        } else if ($this->userBase['exceptProject']) {
+          $this->table =
+'(SELECT a.* FROM Musiker as a
+    LEFT JOIN '.$this->project.'View'.' as b
+      ON a.Id = b.MusikerId 
+      WHERE b.MusikerId IS NULL) as c';
+          $this->MId      = 'Id';
+          $this->Restrict = 'Instrumente';
+        } else {
+          $this->table = '';
+          $this->NoMail = array();
+          $this->EMails = array();
+          $this->EMailsDpy = array();
+          return;
+        }
       } else {
-        $this->table = $this->project.'View';
+        $this->table    = 'Musiker';
+        $this->MId      = 'Id';
+        $this->Restrict = 'Instrumente';
       }
 
       $query = 'SELECT `'.$this->MId.'`,`Vorname`,`Name`,`Email` FROM '.$this->table.' WHERE
@@ -279,14 +348,17 @@ namespace CAFEVDB
      */
     private function createForm()
     {
-      $this->form = new \HTML_QuickForm2('dualselect');
+      $this->form = new \HTML_QuickForm2('emailrecipients');
 
       /* Add any variables we want to keep
        */
       /* Selected recipient */
       $this->form->addDataSource(
-        (new \HTML_QuickForm2_DataSource_Array(
-          array('SelectedMusicians' => $this->EmailRecs))));
+        new \HTML_QuickForm2_DataSource_Array(
+          array('SelectedMusicians' => $this->EmailRecs,
+                'InstrumentenFilter' => array('*'),
+                'baseGroup' => array(
+                  'selectedUserGroup' => $this->userBase))));
 
       $this->form->setAttribute('class', 'cafevdb-email-filter');
 
@@ -301,20 +373,22 @@ namespace CAFEVDB
       if ($this->projectId >= 0) {
         $this->baseGroupFieldSet = $outerFS->addElement('fieldset', NULL,
                                                         array('class' => 'basegroup'));
-        $group = $this->baseGroupFieldSet->addElement('group', 'BaseGroup');
+        $group = $this->userGroupSelect =
+          $this->baseGroupFieldSet->addElement('group', 'baseGroup');
         $group->setLabel(L::t('Principal Address Collection'));
-        $check = $group->addElement('checkbox', 'selectbasegroup[]',
-                                    array('value' => 'fromProject',
-                                          'checked' => 'checked',
-                                          'class' => 'selectfromproject',
-                                          'title' => 'Auswahl aus den registrierten Musikern für das Projekt.'));
+        $check = $group->addElement(
+          'checkbox', 'selectedUserGroup[fromProject]',
+          array('value' => true,
+                'class' => 'selectfromproject',
+                'title' => 'Auswahl aus den registrierten Musikern für das Projekt.'));
         $check->setContent('<span class="selectfromproject">&isin; '.$this->project.'</span>');
         //$check->setAttribute('checked');
         
-        $check = $group->addElement('checkbox', 'selectbasegroup[]',
-                                    array('value' => 'exceptProject',
-                                          'class' => 'selectexceptproject',
-                                          'title' => 'Auswahl aus allen Musikern, die nicht für das Projekt registriert sind.'));
+        $check = $group->addElement(
+          'checkbox', 'selectedUserGroup[exceptProject]',
+          array('value' => true,
+                'class' => 'selectexceptproject',
+                'title' => 'Auswahl aus allen Musikern, die nicht für das Projekt registriert sind.'));
         $check->setContent('<span class="selectexceptproject">&notin; '.$this->project.'</span>');
       }
 
@@ -352,12 +426,8 @@ namespace CAFEVDB
       $this->filterSelect = $this->filterFieldSet->addElement(
         'select', 'InstrumentenFilter',
         array('multiple' => 'multiple', 'size' => 18, 'class' => 'filter'),
-        array('options' => $this->instruments,
-              'label' => L::t('Instrument-Filter')));
-
-      if (!Util::cgiValue('InstrumentenFilter',false)) {
-        $this->filterSelect->setValue(array(0));
-      }
+        array('label' => L::t('Instrument-Filter'),
+              'options' => array('*' => '*')));
 
       /******** Submit buttons follow *******/
 
@@ -377,10 +447,10 @@ und aktiviert den Editor'));
         'fieldset', NULL, array('class' => 'filtersubmit'));
 
       $this->filterApplyButton = $this->submitFilterFieldSet->addElement(
-        'submit', 'filterSubmit',
+        'submit', 'filterApply',
         array('value' => L::t('Apply Filter'),
               'class' => 'apply',
-              'title' => 'Instrumenten-Filter anwenden.'));
+              'title' => 'Instrumenten- und Musiker-Fundus-Filter anwenden.'));
 
       $this->filterResetButton = $this->submitFilterFieldSet->addElement(
         'submit', 'filterReset',
@@ -395,8 +465,6 @@ und aktiviert den Editor'));
       $this->nopeFieldSet->setLabel(L::t('Musicians without Em@il'));
       $this->nopeStatic = $this->nopeFieldSet->addElement('static', 'NoEm@il', NULL,
                                                           array('tagName' => 'div'));
-
-      $this->updateNoEmailForm();
     }
 
     /* Add a static "dummy"-form or people without email */
@@ -444,18 +512,59 @@ und aktiviert den Editor'));
       return $EMails;
     }
 
+    /**Decode the check-boxes which select the set of users we
+     * consider basically.
+     */
+    private function getUserBase()
+    {
+      $this->userBase['fromProject']   = false;
+      $this->userBase['exceptProject'] = false;
+      $values = $this->form->getValue();
+      if (isset($values['baseGroup'])) {
+        if (isset($values['baseGroup']['selectedUserGroup']['fromProject'])) {
+          $this->userBase['fromProject'] = true;
+        }
+        if (isset($values['baseGroup']['selectedUserGroup']['exceptProject'])) {
+          $this->userBase['exceptProject'] = true;
+        }
+      }
+    }
+
     /*
      * Let it run; 
      */
     public function execute()
     {
+      if (true) {
+
+        $this->getUserBase();
+        
+        $dbh = mySQL::connect($this->opts);
+
+        $this->getInstrumentsFromDB($dbh);
+        $this->fetchInstrumentsFilter();
+        $this->getMusiciansFromDB($dbh);
+
+        mySQL::close($dbh);
+
+        /* Now we need to reinstall the musicians into dualSelect */
+        $this->dualSelect->loadOptions($this->EMailsDpy);
+        
+        /* Also update the "no email" notice. */
+        $this->updateNoEmailForm();
+      }
+
+      $value = $this->form->getValue();
+
+      if (false) {
+        echo '<PRE>';
+        print_r($value);
+        echo '</PRE>';
+      }
+
       // outputting form values
-      if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $value = $this->form->getValue();
-        /* echo "<pre>\n"; */
-        /* var_dump($value); */
-        /* print_r($this->EMails); */
-        /* echo "</pre>\n<hr />"; */
+      if ($this->form->validate()) {
+
         /*
          * We implement two further POST action for communication with
          * other forms:
@@ -466,30 +575,31 @@ und aktiviert den Editor'));
          * hand and initialize the quick-form class accordingly
          * 
          */
-        if (Util::cgiValue('eraseAll','') != '') {
-          /* actually, this simply means nothing to do */
-        } elseif (Util::cgiValue('modifyAddresses','') != '') {
-          /* we are already in our default state because the script was
-           * called from another form. So install the previous
-           * selection.
-           */ 
+        if (Util::cgiValue('modifyAddresses','') != '') {
+
+          /* Nothing to do. */
+          
+        } elseif (Util::cgiValue('eraseAll','') != '' || !empty($value['filterReset'])) {
           $this->dualSelect->toggleFrozen(false);
           $this->frozen = false;
 
-          $this->dualSelect->setValue(Util::cgiValue('SelectedMusicians'), array());
-        
-        } elseif (!empty($value['filterReset'])) {
-          $this->dualSelect->toggleFrozen(false);
-          $this->frozen = false;
+          /* Reset the musician filter */
+          $this->userBase['fromProject']   = $this->projectId >= 0;
+          $this->userBase['exceptProject'] = false;
+          $this->userGroupSelect->setValue(
+            array('selectedBaseGroup' => $this->userBase));
 
           /* Ok, this means we must re-fetch some stuff from the DB */
-          $this->filterSelect->setValue(array(0));
-
           $dbh = mySQL::connect($this->opts);
-          $this->getInstrumentsFromDB($dbh, array(0));
+
+          $this->getInstrumentsFromDB($dbh);
+          $this->filterSelect->setValue(array('*'));
+          $this->fetchInstrumentsFilter();
           $this->getMusiciansFromDB($dbh);
+
           mySQL::close($dbh);
-        
+
+
           /* Now we need to reinstall the musicians into dualSelect */
           $this->dualSelect->loadOptions($this->EMailsDpy);
           $this->dualSelect->setValue($this->EmailRecs);
@@ -499,20 +609,26 @@ und aktiviert den Editor'));
         } elseif (!empty($value['writeMail']) || Util::cgiValue('sendEmail')) {
           if (Util::cgiValue('sendEmail')) {
             // Re-install the filter from the form
-            $this->dualSelect->toggleFrozen(false);
-            $this->dualSelect->setValue(Util::cgiValue('SelectedMusicians'), array());
+            //$this->dualSelect->toggleFrozen(false);
+            //$this->dualSelect->setValue(Util::cgiValue('SelectedMusicians'), array());
           }
           $this->frozen = true;
           $this->dualSelect->toggleFrozen(true);
-          $this->submitFieldSet->removeChild($this->freezeButton);
+          $this->filterFieldSet->toggleFrozen(true);
+          $this->baseGroupFieldSet->toggleFrozen(true);
+            
+          $this->freezeFieldSet->removeChild($this->freezeButton);
           $this->submitFilterFieldSet->removeChild($this->filterResetButton);
           $this->submitFilterFieldSet->removeChild($this->filterApplyButton);
-          $this->filterFieldSet->removeChild($this->filterSelect);
-          if ($this->form->getElementById($this->nopeFieldSet->getId())) {
+          if (false && $this->form->getElementById($this->nopeFieldSet->getId())) {
             $this->form->removeChild($this->nopeFieldSet);
           }
+          
         }
       }
+
+      // Emit persistent values possibly only after updating the form
+      $this->emitPersistent();   
     }
   
 
@@ -532,6 +648,57 @@ und aktiviert den Editor'));
    */
   class Email
   {
+    const CSS_PREFIX         = 'cafevdb-email';
+    const CONSTRUCTION_MODE  = true;
+    const CONSTRUCTION_EMAIL = 'DEVELOPER@his.server.eu';
+    const PRODUCTION_EMAIL   = 'orchestra@example.eu';
+
+    public static function headerText()
+    {
+      $projectId = Util::cgiValue('ProjectId',-1);
+      $project   = Util::cgiValue('Project','');
+
+      $CAFEVCatchAllEmail =
+        self::CONSTRUCTION_MODE
+        ? self::CONSTRUCTION_EMAIL
+        : self::PRODUCTION_EMAIL;
+
+      $string = '';
+      if (self::CONSTRUCTION_MODE) {
+        $string .=<<<__EOT__
+<H1>Testbetrieb. Email geht nur an mich.</H1>
+<H4>Ausgenommen Cc:. Bitte um Testmail von eurer Seite.</H4>
+__EOT__;
+      }
+      $string .= '<H2>Email export and simple mass-mail web-form ';
+      if ($project != '') {
+        $string .= 'for project '.$project.'</H2>';
+      } else {
+        $string .= 'for all musicians</H2>';
+      }
+      $string .=<<< __EOT__
+        <H4>
+Der Editor und die Adress-Auswahl sind wechselseitig ausgeschaltet.
+Um Adressen oder Text- nachzubearbeiten, auf den entsprechenden
+Button klicken; man kann mehrfach hin- und herwechseln, ohne dass
+die jeweiligen Eingaben verloren gehen. Der Instrumentenfilter ist
+"destruktiv": das Abwählen des Filters restauriert nicht die
+vorherige Adressenauswahl. Der "Abbrechen"-Button unter dem Editor
+setzt alles wieder auf die Default-Einstellungen.
+</H4>
+<P>
+ReturnTo: und Sender: sind
+<TT>@OUREMAIL@</TT>. Die Adresse
+<TT>@OUREMAIL@</TT> erhälte eine Kopie um Missbrauch durch "Einbrecher" 
+abzufangen. Außerdem werden die Emails in der Datenbank gespeichert.
+__EOT__;
+
+      // replace some tokens.
+      $string = str_replace('@OUREMAIL@', $CAFEVCatchAllEmail, $string);
+
+      return $string;
+    }
+
     public static function display($user)
     {
       Config::init();
@@ -540,8 +707,10 @@ und aktiviert den Editor'));
 
       Util::disableEnterSubmit(); // ? needed ???
 
-      //$debug_query = true;
-      $constructionMode = true;
+      $CAFEVCatchAllEmail =
+        self::CONSTRUCTION_MODE
+        ? self::CONSTRUCTION_EMAIL
+        : self::PRODUCTION_EMAIL;
 
       // Display a filter dialog
       $filter = new EmailFilter($opts, $opts['page_name']);
@@ -558,11 +727,6 @@ und aktiviert den Editor'));
       $projectId = Util::cgiValue('ProjectId',-1);
       $project   = Util::cgiValue('Project','');
 
-      if ($constructionMode) {
-        $CAFEVCatchAllEmail = 'DEVELOPER@his.server.eu';
-      } else {
-        $CAFEVCatchAllEmail = 'orchestra@example.eu';
-      }
       if ($projectId < 0 || $project == '') {
         $MailTag = '[CAF-Musiker]';
       } else {
@@ -615,63 +779,6 @@ Störung.');
 
       /******************************************************************************************
        *
-       * Some blah-blah
-       *
-       */
-
-      $cafevclass = 'cafevdb-email-header-box';
-      echo '<div class="'.$cafevclass.'">'."\n";
-      $cafevclass = 'cafevdb-email-header';
-      echo '<div class="'.$cafevclass.'">'."\n";
-
-      if ($constructionMode) {
-        echo '<H1>Testbetrieb. Email geht nur an mich.</H1>';
-        echo '<H4>Ausgenommen Cc:. Bitte um Testmail von eurer Seite.</H4>';
-      }
-      echo '<H2>Email export and simple mass-mail web-form ';
-      if ($project != '') {
-        echo 'for project '.$project.'</H2>';
-      } else {
-        echo 'for all musicians</H2>';
-      }
-
-      $string =<<< __EOT__
-        <H4>
-Der Editor und die Adress-Auswahl sind wechselseitig ausgeschaltet.
-Um Adressen oder Text- nachzubearbeiten, auf den entsprechenden
-Button klicken; man kann mehrfach hin- und herwechseln, ohne dass
-die jeweiligen Eingaben verloren gehen. Der Instrumentenfilter ist
-"destruktiv": das Abwählen des Filters restauriert nicht die
-vorherige Adressenauswahl. Der "Abbrechen"-Button unter dem Editor
-setzt alles wieder auf die Default-Einstellungen.
-</H4>
-<P>
-ReturnTo: und Sender: sind
-<TT>@OUREMAIL@</TT>. Die Adresse
-<TT>@OUREMAIL@</TT> erhälte eine Kopie um Missbrauch durch "Einbrecher" 
-abzufangen. Außerdem werden die Emails in der Datenbank gespeichert.
-__EOT__;
-
-      // replace some tokens.
-      $string = str_replace('@OUREMAIL@', $CAFEVCatchAllEmail, $string);
-
-      echo $string;
-
-      echo '</div>
-'; // end of header
-      echo '</div>
-'; // end of header
-
-      $cafevclass = 'cafevdb-email-body';
-      echo '<div class="'.$cafevclass.'">'."\n";
-
-      /*
-       *
-       *
-       *******************************************************************************************/
-
-      /******************************************************************************************
-       *
        * Display the address selection from if it is not frozen, other after the email editor.
        *
        */
@@ -705,7 +812,7 @@ __EOT__;
        *
        */
 
-      else if (Util::cgiValue('sendEmail',false) !== false) {
+      else if (Util::cgiValue('sendEmail', false) !== false) {
 
         if ($strSubject == '') {
           echo '<div class="cafevdb-error">
@@ -759,7 +866,7 @@ Leider m&uuml;ssen etwaige Attachments jetzt noch einmal angegeben werden.
       /**** start quick-form cheat ****/
 
       /* Remember address filter for later */
-      if ($filter->isFrozen()) {
+      if (true || $filter->isFrozen()) {
         echo $filter->getPersistent();
       }
 
@@ -951,7 +1058,7 @@ Leider m&uuml;ssen etwaige Attachments jetzt noch einmal angegeben werden.
       $mail->Body = $strMessage;
       $mail->AltBody = $strTextMessage;
 
-      if (!$constructionMode) {
+      if (!self::CONSTRUCTION_MODE) {
         // Loop over all data-base records and add each recipient in turn
         foreach ($EMails as $pairs) {
           // Better not use AddAddress: we should not expose the email
@@ -1196,9 +1303,6 @@ __EOT__;
           echo "</PRE><HR/>\n";
         }
       }
-      echo '</div>
-';
-
     }
 
     /** Split a comma separated address list into an array.

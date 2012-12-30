@@ -18,7 +18,10 @@ form.cafevdb-control {
 
 .actions {height: 33px;	min-width: 800px;}
 .controls {min-width: 800px;}
-#controls button, #controls input { max-height: 26px; padding: 5px; }
+#controls button, #controls input {
+  max-height: 26px;
+  padding: 5px;
+}
 
 #projectlabelcontrol>input[type=button] {
   font-weight:bold;
@@ -153,46 +156,6 @@ form.pme-form {
 
 .pme-form tr,.pme-form tr:hover,.pme-form tr:active { 
   background-color:inherit;
-}
-
-div.cafevdb-email-header-box {
-  position:fixed;
-  padding-top:6ex;
-  z-index:25;
-  background-color:inherit;
-  opacity:1.0;
-  width:100%;
-  height:27ex;
-  overflow:hidden;
-  border-bottom:1px solid #eee;
-  -moz-box-shadow:-3px 0 7px #777;
-  -webkit-box-shadow:-3px 0 7px #777;
-  box-shadow: -3px 0 7px #777;
-}
-
-div.cafevdb-email-header {
-  position:fixed;
-  padding-top:0ex;
-  padding-left:1ex;
-  width:80%;
-  height:27ex;
-  overflow:hidden;
-}
-
-div.cafevdb-email-body { 
-  position:relative;
-  padding-top:34ex;
-  padding-left:1ex;
-}
-
-div.cafevdb-email {
-  border:1px solid;
-  border-top-width:0;
-  border-bottom-width:0;
-  margin-top:0em;
-  padding-top:1em; /* why? */
-  padding-left:1em;
-  padding-right:1em;
 }
 
 div[class|='cafevdb-nav-top']>div {

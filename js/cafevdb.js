@@ -1,6 +1,7 @@
 $(document).ready(function(){
 
   //    $('button.settings').tipsy({gravity:'ne', fade:true});
+  $('button.viewtoggle').tipsy({gravity:'ne', fade:true});
   $('button').tipsy({gravity:'w', fade:true});
   $('input.cafevdb-control').tipsy({gravity:'nw', fade:true});
   $('#controls button').tipsy({gravity:'nw', fade:true});

@@ -20,6 +20,8 @@ $debugmode  = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb', 'debugmode
 $tooltips   = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb', 'tooltips','');
 $encrkey    = CAFEVDB\Config::getEncryptionKey();
 
+$headervisibility = CAFEVDB\Util::cgiValue('headervisibility', 'expanded');
+
 $jsscript = 'var toolTips = '.($tooltips == 'on' ? 'true' : 'false').';
 ';
 $jsscript .=<<<__EOT__
@@ -30,6 +32,8 @@ $(document).ready(function(){
     $.fn.tipsy.disable();
   }
 })
+
+var headervisibility = '$headervisibility';
 __EOT__;
 
 OCP\App::setActiveNavigationEntry( 'cafevdb' );
@@ -42,9 +46,10 @@ OCP\Util::addStyle('cafevdb', 'email');
 OCP\Util::addScript('cafevdb', 'cafevdb');
 OCP\Util::addScript('cafevdb', 'transpose');
 OCP\Util::addScript('cafevdb', 'pme-helper');
+OCP\Util::addScript('cafevdb', 'email');
 OCP\Util::addScript('cafevdb', 'events');
-OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/jscripts/tiny_mce/tiny_mce');
-OCP\Util::addScript('cafevdb/3rdparty', 'tinymceinit');
+//OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/jscripts/tiny_mce/tiny_mce');
+//OCP\Util::addScript('cafevdb/3rdparty', 'tinymceinit');
 
 /* Special hack to determine if the email-form was requested through the pme-miscinfo button. */
 $op = CAFEVDB\Util::cgiValue('PME_sys_operation');
@@ -113,6 +118,16 @@ $buttons['settings'] =
         'id' => 'settingsbutton');
 
 $tmpl->assign('settingscontrols', $buttons);
+
+$buttons = array();
+$buttons['viewtoggle'] =
+  array('name' => 'Toggle Visibility',
+        'title' => 'Minimize or maximize the containing block.',
+        'image' => OCP\Util::imagePath('core', 'actions/delete.svg'),
+        'class' => 'viewtoggle',
+        'id' => 'viewtoggle');
+
+$tmpl->assign('viewtoggle', $buttons);
 
 $tmpl->printPage();
 
