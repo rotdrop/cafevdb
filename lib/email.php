@@ -67,6 +67,10 @@ namespace CAFEVDB
      */
     public function __construct(&$_opts, $action = NULL)
     {
+      echo '<PRE>';
+      print_r($_POST);
+      echo '</PRE>';
+
       $this->frozen = false;
 
       $this->opts = $_opts;
@@ -297,15 +301,17 @@ namespace CAFEVDB
       if ($this->projectId >= 0) {
         $this->baseGroupFieldSet = $outerFS->addElement('fieldset', NULL,
                                                         array('class' => 'basegroup'));
-        $group = $this->baseGroupFieldSet->addElement('group', 'boxes');
+        $group = $this->baseGroupFieldSet->addElement('group', 'BaseGroup');
         $group->setLabel(L::t('Principal Address Collection'));
-        $check = $group->addElement('checkbox', 'selectfromproject',
+        $check = $group->addElement('checkbox', 'selectbasegroup[]',
                                     array('value' => 'fromProject',
+                                          'checked' => 'checked',
                                           'class' => 'selectfromproject',
                                           'title' => 'Auswahl aus den registrierten Musikern für das Projekt.'));
         $check->setContent('<span class="selectfromproject">&isin; '.$this->project.'</span>');
-
-        $check = $group->addElement('checkbox', 'selectexceptproject',
+        //$check->setAttribute('checked');
+        
+        $check = $group->addElement('checkbox', 'selectbasegroup[]',
                                     array('value' => 'exceptProject',
                                           'class' => 'selectexceptproject',
                                           'title' => 'Auswahl aus allen Musikern, die nicht für das Projekt registriert sind.'));
