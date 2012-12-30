@@ -150,7 +150,7 @@ namespace CAFEVDB
       $this->addPersistentCGI('Template', 'email', $form);
       $this->addPersistentCGI($this->emailKey, $this->EmailRecs, $form);
       $this->addPersistentCGI('headervisibility',
-                              Util::cgiValue('headervisibility', 'expanded'));
+                              Util::cgiValue('headervisibility', 'expanded'), $form);
 
       $value = $this->form->getValue();
 

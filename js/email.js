@@ -15,7 +15,9 @@ collapseEmailPageHeader = function()
   header.css('height','3ex');
   body.css('padding-top', '12ex');
   box.data('CAFEVDBheadermodheight', box.css('height'));
-  $('input[name="headervisibility"]').val('collapsed');
+  $('input[name="headervisibility"]').each(function (idx) {
+    $(this).val('collapsed');
+  });
 }
 
 /**Expand the somewhat lengthy text at the head of the email page.
@@ -32,7 +34,9 @@ expandEmailPageHeader = function()
   box.css('height', boxheight);
   header.css('height', height);
   body.css('padding-top', padding);
-  $('input[name="headervisibility"]').val('expanded');
+  $('input[name="headervisibility"]').each(function (idx) {
+    $(this).val('expanded');
+  });
 }
 
 $(document).ready(function(){
