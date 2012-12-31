@@ -1154,6 +1154,26 @@ Leider m&uuml;ssen etwaige Attachments jetzt noch einmal angegeben werden.
         $strBCC = trim($strBCC, ',');
       }
 
+      $EventSelect = Util::cgiValue('EventSelect', array());
+      if ($DataValid && $projectId >= 0 && !empty($EventSelect)) {
+        // Construct the calendar
+        $calendar = Events::exportEvents($EventSelect, $project);
+
+        // Encode it as attachment
+        if (false) {
+          AddStringAttachment($calendar,
+                              $project.'.ics',
+                              'quoted-printable',
+                              'text/calendar');
+        } else {
+          AddStringEmbeddedImage($calendar,
+                                 md5($project.'.ics'),
+                                 $project.'.ics',
+                                 'quoted-printable',
+                                 'text/calendar');
+        }
+      }
+
       if ($DataValid) {
   
         foreach ($_FILES as $key => $value) {
@@ -1302,7 +1322,7 @@ __EOT__;
             // close mail connection.
             imap_close($mbox);
           }
-        } elseif (true) {
+        } elseif (true && false) {
           // PEAR IMAP works without the c-client library
 
           ini_set('error_reporting',ini_get('error_reporting') & ~E_STRICT);

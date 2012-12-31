@@ -423,7 +423,7 @@ __EOT__;
   public static function eventButtonPME($projectId, $opts, $k, $fds, $fdd, $row)
   {
     $projectName = $row["qf$opts"];
-    return eventButton($projectId, $projectName);
+    return self::eventButton($projectId, $projectName);
   }
 
   public static function eventButton($projectId, $projectName, $value = 'Events', $eventSelect = array())

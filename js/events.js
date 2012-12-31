@@ -88,6 +88,37 @@ window.Events={
         
       return true;
     },
+    addEventSelection: function (post, emailForm, eventData) {
+      var projectName ='';
+      var projectId = '';
+      var ids = '';
+      emailForm.find('input[name^="EventSelect"]').each(function () { $(this).remove(); });
+      jQuery.each(post, function (i, param) {
+        if (param.name == 'EventSelect[]') {
+          $('<input />').attr('type', 'hidden')
+            .attr('name', 'EventSelect[]')
+            .attr('value', param.value)
+            .appendTo(emailForm);
+          ids += param.value + ', ';
+        }
+      });
+      if (emailForm.find('input[name="ProejctId"]').length == 0) {
+        $('<input />').attr('type', 'hidden')
+          .attr('name', 'ProjectId')
+          .attr('value', Events.projectId)
+          .appendTo(emailForm);
+      }
+      if (emailForm.find('input[name="Project"]').length == 0) {
+        $('<input />').attr('type', 'hidden')
+          .attr('name', 'Project')
+          .attr('value', Events.projectName)
+          .appendTo(emailForm);
+      }
+      ids = ids.substr(0, ids.length - 2);
+      if (eventData != '') {
+        eventData.html(ids);
+      }
+    },
     buttonClick: function(event) {
       //event.preventDefault();
 
@@ -176,33 +207,51 @@ window.Events={
         $.post(OC.filePath('cafevdb', 'ajax/events', 'sendmail.php'),
                post, Events.UI.relist);
 
-        var eventData = $('#eventattachments');
+
+        // Ok, maybe not too elegant. We check whether we have been
+        // opened by the email-form by searching for the respective
+        // form-id. eventData is supposed to be able to contan
+        // html-data. We use it to give some feedback.
         var emailForm = $('form.cafevdb-mail-form');
+        var eventData = $('#eventattachments');
 
-        var ids = '';
         if (emailForm != '') {
-          emailForm.find('input[name^="EventSelect"]').each(function () { $(this).remove(); });
-          jQuery.each(post, function (i, param) {
-            if (param.name == 'EventSelect[]') {
-              $('<input />').attr('type', 'hidden')
-                .attr('name', 'EventSelect[]')
-                .attr('value', param.value)
-                .appendTo(emailForm);
-              ids += param.value + ', ';
-            }
-          });
-          ids = ids.substr(0, ids.length - 2);
-          eventData.html(ids);
+          Events.UI.addEventSelection(post, emailForm, eventData);
 
+          // Add another datum forcing the email form to stay in compose mode.
           $('<input />').attr('type', 'hidden')
             .attr('name', 'writeMail')
             .attr('value', 'reload')
             .appendTo(emailForm);
 
+          emailForm.submit(); // This closes also the event-dialog.
+        }
+
+        // If we have not been called by the email-form then we try to
+        // open it in project mode. To do so we search for an
+        // "ordinaray" PME-form and submit it, with the proper
+        // email-form request.
+        //
+        //<form class="pme-form" method="post" action="?app=cafevdb" name="PME_sys_form">
+        //
+        // We then add the selected events using hidden input elements.
+        var emailForm = $('form.pme-form');
+        if (emailForm != '') {
+          Events.UI.addEventSelection(post, emailForm, '');
+
+          // the submit button is
+          //
+          // <input class="pme-misc" name="PME_sys_operation" value="Em@il" type="submit">
+          //
+          $('<input />').attr('type', 'hidden')
+            .attr('name', 'PME_sys_operation')
+            .attr('value', 'Em@il')
+            .appendTo(emailForm);
+
           emailForm.submit();
         }
 
-        return true;
+        return false;
 
       } else if (name == 'download') {
 
