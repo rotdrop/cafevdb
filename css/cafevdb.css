@@ -472,7 +472,7 @@ input.pme-sort[type=checkbox]:checked ~ div.pme-sort {
   display:inline-block;
 }
 input.pme-sort-rvrt[type=submit] {
-  background-image:url(%appswebroot%/cafevdb/img/ok_process-16x16.png);
+  background-image:url('%appswebroot%/cafevdb/img/ok_process-16x16.png');
   background-repeat:no-repeat;
   background-position:0px;
   background-origin:padding-box;

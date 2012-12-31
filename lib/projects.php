@@ -425,7 +425,7 @@ __EOT__;
     $projectName = $row["qf$opts"];
     $bvalue      = L::t('Events');
     // Code the value in the name attribute (for java-script)
-    $bname       = "ProjectId=$amp;projectId&amp;ProjectName=".$projectName;
+    $bname       = "ProjectId=$projectId&amp;ProjectName=".$projectName;
     $bname       = htmlspecialchars($bname);
     $title       = L::t(Config::toolTips('projectevents-button'));
     return <<<__EOT__

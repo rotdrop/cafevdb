@@ -18,6 +18,8 @@ collapseEmailPageHeader = function()
   $('input[name="headervisibility"]').each(function (idx) {
     $(this).val('collapsed');
   });
+  $('#viewtoggle-img').attr(
+    'src', OC.filePath('', 'core/img/actions', 'download.svg'));
 }
 
 /**Expand the somewhat lengthy text at the head of the email page.
@@ -37,6 +39,8 @@ expandEmailPageHeader = function()
   $('input[name="headervisibility"]').each(function (idx) {
     $(this).val('expanded');
   });
+  $('#viewtoggle-img').attr(
+    'src', OC.filePath('', 'core/img/actions', 'delete.svg'));
 }
 
 $(document).ready(function(){

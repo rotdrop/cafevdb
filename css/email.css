@@ -152,6 +152,16 @@
   vertical-align:middle;
 }
 
+#SelectedMusicians-0-tofrom { 
+  height:26px;
+  padding:5px;
+}
+
+#SelectedMusicians-0-fromto { 
+  height:26px;
+  padding:5px;
+}
+
 /*****************************************************************************
  *
  * Editor stuff

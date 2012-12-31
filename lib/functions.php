@@ -158,7 +158,10 @@ class Navigation
           .(isset($btn['js']) ? ' '.$btn['js'].' ' : '')
           .'>';
         if (isset($btn['image'])) {
-          $html .= '<img class="svg" src="'.$btn['image'].'" alt="'.$name.'" />';
+          $html .= ''
+            .'<img class="svg" '
+            .(isset($btn['id']) ? ' id="'.$btn['id'].'-img" ' : ' ')
+            .'src="'.$btn['image'].'" alt="'.$name.'" />';
         } else {
           $html .= $name;
         }

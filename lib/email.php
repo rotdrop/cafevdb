@@ -395,19 +395,25 @@ namespace CAFEVDB
       $this->selectFieldSet = $outerFS->addElement('fieldset', NULL, array());
       $this->selectFieldSet->setAttribute('class', 'select');
 
+      $fromToImg = \OCP\Util::imagePath('core', 'actions/play-next.svg');
+      $toFromImg = \OCP\Util::imagePath('core', 'actions/play-previous.svg');
+      
       $this->dualSelect = $this->selectFieldSet->addElement(
         'dualselect', 'SelectedMusicians',
         array('size' => 18, 'class' => 'dualselect'),
         array('options'    => $this->EMailsDpy,
               'keepSorted' => true,
               'from_to'    => array(
-                'content' => ' &gt;&gt; ',
+                //'content' => ' &gt;&gt; ',
+                'content' => '<img class="svg" src="'.$fromToImg.'" alt=" &lt&lt; " />', 
                 'attributes' => array('class' => 'transfer')),
               'to_from'    => array(
-                'content' => ' &lt&lt; ',
+                //'content' => ' &lt&lt; ',
+                'content' => '<img class="svg" src="'.$toFromImg.'" alt=" &lt&lt; " />', 
                 'attributes' => array('class' => 'transfer'))
           )
         );
+
       $this->dualSelect->setLabel(
         array(
           L::t('Email Recipients'),
