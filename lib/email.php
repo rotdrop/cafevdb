@@ -134,8 +134,10 @@ namespace CAFEVDB
       $this->addPersistentCGI('Project', $this->project, $form);
       $this->addPersistentCGI('Template', 'email', $form);
       $this->addPersistentCGI($this->emailKey, $this->EmailRecs, $form);
+      $this->addPersistentCGI('EventSelect',
+                              Util::cgiValue('EventSelect', array()), $form);
       $this->addPersistentCGI('headervisibility',
-                              Util::cgiValue('headervisibility', 'expanded'));
+                              Util::cgiValue('headervisibility', 'expanded'), $form);
     }
 
     /*
@@ -149,6 +151,8 @@ namespace CAFEVDB
       $this->addPersistentCGI('Project', $this->project, $form);
       $this->addPersistentCGI('Template', 'email', $form);
       $this->addPersistentCGI($this->emailKey, $this->EmailRecs, $form);
+      $this->addPersistentCGI('EventSelect',
+                              Util::cgiValue('EventSelect', array()), $form);
       $this->addPersistentCGI('headervisibility',
                               Util::cgiValue('headervisibility', 'expanded'), $form);
 
@@ -876,6 +880,20 @@ Leider m&uuml;ssen etwaige Attachments jetzt noch einmal angegeben werden.
         echo $filter->getPersistent();
       }
 
+      if ($projectId >= 0) {
+        $EventSelect = Util::cgiValue('EventSelect', array());
+        $eventAttach = ''
+.'  <tr>
+      <td>'
+.Projects::eventButton($projectId, $project, 'Attach Events', $EventSelect)
+.'</td>
+      <td colspan="2">'
+.'<span id="eventattachments">'.implode(', ', $EventSelect).'</span></td>
+   </tr>';
+      } else {
+        $eventAttach = '';
+      }
+
       echo sprintf('
   <fieldset %s id="cafevdb-mail-form-0"><legend id="cafevdb-mail-form-0-legend">Em@il Verfassen</legend>',$filter->isFrozen() ? '' : 'disabled');
       /*******************************/
@@ -911,6 +929,7 @@ Leider m&uuml;ssen etwaige Attachments jetzt noch einmal angegeben werden.
     <td>Absende-Email</td>
     <td colspan="2">Tied to "'.$CAFEVCatchAllEmail.'"</td>
   </tr>
+  '.$eventAttach.'
   <tr>
     <td>Attachment 1</td>
     <td colspan="2"><input name="fileAttach1" type="file"></td>

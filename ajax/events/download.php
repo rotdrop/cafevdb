@@ -22,7 +22,7 @@ use CAFEVDB\Util;
 $debugmode = Config::getUserValue('debugmode','') == 'on';
 $debugtext = $debugmode ? '<PRE>'.print_r($_POST, true).'</PRE>' : '';
 
-$emailEvents = Util::cgiValue('email-check', array());
+$emailEvents = Util::cgiValue('EventSelect', array());
 
 $events = array();
 if (count($emailEvents) > 0) {
@@ -36,33 +36,6 @@ if (count($emailEvents) > 0) {
   }
 }
 
-$eol = "\r\n";
-
-echo ""
-."BEGIN:VCALENDAR".$eol
-."VERSION:2.0".$eol
-."PRODID:ownCloud Calendar " . OCP\App::getAppVersion('calendar') .$eol
-."X-WR-CALNAME:" . $projectName . ' (' . Config::ORCHESTRA . ')' . $eol;
-
-foreach ($events as $id) {
-  $text = OC_Calendar_Export::export($id, OC_Calendar_Export::EVENT);
-  // Well, not elegant, but for me the easiest way to strip the
-  // BEGIN/END VCALENDAR tags
-  $data = explode($eol, $text);
-  $silent = true;
-  foreach ($data as $line) {
-    if (strncmp($line, "BEGIN:VEVENT", strlen("BEGIN:VEVENT")) == 0) {
-      $silent = false;
-    }
-    if (!$silent) {
-      echo $line.$eol;
-    }
-    if (strncmp($line, "END:VEVENT", strlen("END:VEVENT")) == 0) {
-      $silent = true;
-    }
-  }
-}
-
-echo "END:VCALENDAR".$eol;
+echo Events::exportEvents($events, $projectName);
 
 ?>

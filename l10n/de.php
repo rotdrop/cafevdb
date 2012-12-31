@@ -1,5 +1,6 @@
 <?php
 $TRANSLATIONS = array(
+  'Attach Events' => 'Termine anhängen',
   'Instrument not known by %s, correct that first! %s only plays %s!!!'
   =>
   '%s spielt das Instrument eventuell nicht, %s spielt nur %s, soweit wir wissen!!!',

@@ -61,7 +61,7 @@ __EOT__;
       </td>
       <td class="eventemail-$n">
         <label class="email-check" for="email-check-$evtId"  title="$title" >
-        <input class="email-check" title="" id="email-check-$evtId" type="checkbox" name="email-check[]" value="$evtId" $checked />
+        <input class="email-check" title="" id="email-check-$evtId" type="checkbox" name="EventSelect[]" value="$evtId" $checked />
         <div class="email-check" /></label>
       </td>
       <td class="eventdata-$n-brief" id="brief-$evtId">$brief</td>

@@ -913,6 +913,51 @@ __EOT__;
     return $projects;
   }
 
+  /**Export the given events in ICAL format. The events need not
+   * belong to the same calendar.
+   *
+   * @param[in] $events An array with event Ids.
+   *
+   * @param[in] $projectName Short project tag, will form part of the
+   * name of the calendar.
+   *
+   * @return A string with the ICAL data.
+   */
+  static public function exportEvents($events, $projectName)
+  {
+    $result = '';
+    
+    $eol = "\r\n";
+
+    $result .= ""
+      ."BEGIN:VCALENDAR".$eol
+      ."VERSION:2.0".$eol
+      ."PRODID:ownCloud Calendar " . \OCP\App::getAppVersion('calendar') .$eol
+      ."X-WR-CALNAME:" . $projectName . ' (' . Config::ORCHESTRA . ')' . $eol;
+
+    foreach ($events as $id) {
+      $text = \OC_Calendar_Export::export($id, \OC_Calendar_Export::EVENT);
+      // Well, not elegant, but for me the easiest way to strip the
+      // BEGIN/END VCALENDAR tags
+      $data = explode($eol, $text);
+      $silent = true;
+      foreach ($data as $line) {
+        if (strncmp($line, "BEGIN:VEVENT", strlen("BEGIN:VEVENT")) == 0) {
+          $silent = false;
+        }
+        if (!$silent) {
+          $result .= $line.$eol;
+        }
+        if (strncmp($line, "END:VEVENT", strlen("END:VEVENT")) == 0) {
+          $silent = true;
+        }
+      }
+    }
+    $result .= "END:VCALENDAR".$eol;
+
+    return $result;
+  }
+
 }; // class Events
 
 }

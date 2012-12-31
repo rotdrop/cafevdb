@@ -9,6 +9,7 @@ OCP\JSON::checkAppEnabled('calendar');
 use CAFEVDB\L;
 use CAFEVDB\Events;
 use CAFEVDB\Config;
+use CAFEVDB\Util;
 
 $debugmode = Config::getUserValue('debugmode','') == 'on';
 $debugtext = $debugmode ? '<PRE>'.print_r($_POST, true).'</PRE>' : '';
@@ -24,6 +25,12 @@ $events = Events::events($projectId);
 $dfltIds     = Events::defaultCalendars();
 $eventMatrix = Events::eventMatrix($events, $dfltIds);
 
+$emailEvents = CAFEVDB\Util::cgiValue('EventSelect', array());
+$selected = array(); // array marking selected events
+foreach ($emailEvents as $event) {
+  $selected[$event] = true;
+}
+
 // Now generate the html-fragment
 
 $tmpl = new OCP\Template('cafevdb', 'eventslisting');
@@ -34,7 +41,7 @@ $tmpl->assign('Events', $events);
 $tmpl->assign('EventMatrix', $eventMatrix);
 $tmpl->assign('Locale', $locale);
 $tmpl->assign('CSSClass', 'projectevents');
-$tmpl->assign('Selected', array());
+$tmpl->assign('Selected', $selected);
 
 $html = $tmpl->fetchPage();
 

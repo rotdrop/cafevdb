@@ -192,7 +192,7 @@ __EOT__;
         'name'     => L::t('Events'),
         'sql'      => 'Id',
         'php'      => array('type' => 'function',
-                            'function' => 'CAFEVDB\Projects::eventButton',
+                            'function' => 'CAFEVDB\Projects::eventButtonPME',
                             'parameters' => $nameIdx),
         'select'   => 'T',
         'options'  => 'LAVCPDR',
@@ -409,8 +409,8 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
     $bvalue    = $projectName;
     // Code the value in the name attribute (for java-script)
     $bname     = ""
-."ProjectId=$projectId&amp;"
-."Project=$projectName&amp;"
+."ProjectId=$projectId&"
+."Project=$projectName&"
 ."Template=$template";
     $title     = L::t(Config::toolTips('projectinstrumentation-button'));
     return <<<__EOT__
@@ -420,12 +420,20 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
 __EOT__;
   }
 
-  public static function eventButton($projectId, $opts, $k, $fds, $fdd, $row)
+  public static function eventButtonPME($projectId, $opts, $k, $fds, $fdd, $row)
   {
     $projectName = $row["qf$opts"];
-    $bvalue      = L::t('Events');
+    return eventButton($projectId, $projectName);
+  }
+
+  public static function eventButton($projectId, $projectName, $value = 'Events', $eventSelect = array())
+  {
+    $bvalue      = L::t($value);
     // Code the value in the name attribute (for java-script)
-    $bname       = "ProjectId=$projectId&amp;ProjectName=".$projectName;
+    $bname       = "ProjectId=$projectId&ProjectName=".$projectName;
+    foreach ($eventSelect as $event) {
+      $bname .= '&EventSelect[]='.$event;
+    }
     $bname       = htmlspecialchars($bname);
     $title       = L::t(Config::toolTips('projectevents-button'));
     return <<<__EOT__
@@ -433,7 +441,6 @@ __EOT__;
 <input type="button" class="events" title="$title" name="$bname" value="$bvalue"/>
 </div>
 __EOT__;
-    //"eventButton: $k $fds $fdd";
   }
 
   /**Fetch the list of projects from the data base as a short id=>name

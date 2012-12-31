@@ -1,7 +1,7 @@
 <?php use CAFEVDB\L; ?>
 <script type="text/javascript">
 $(document).ready(function(){
-  $('.projectevents-sendmail').attr("disabled", true);
+    // $('.projectevents-sendmail').attr("disabled", true);
 })
 </script>
 <div id="events" title="<?php echo L::t('Events for').' '.$_['ProjectName'];?>">

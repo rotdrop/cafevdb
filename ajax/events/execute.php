@@ -28,7 +28,7 @@ if ($projectId < 0 ||
 $eventId = CAFEVDB\Util::cgiValue('EventId', -1);
 $action  = CAFEVDB\Util::cgiValue('Action', '');
 
-$emailEvents = CAFEVDB\Util::cgiValue('email-check', array());
+$emailEvents = CAFEVDB\Util::cgiValue('EventSelect', array());
 $selected = array(); // array marking selected events
 
 switch ($action) {

@@ -38,6 +38,13 @@ $events      = Events::events($projectId);
 $dfltIds     = Events::defaultCalendars();
 $eventMatrix = Events::eventMatrix($events, $dfltIds);
 
+$emailEvents = Util::cgiValue('EventSelect', array());
+$selected = array(); // array marking selected events
+
+foreach ($emailEvents as $event) {
+  $selected[$event] = true;
+}
+
 $lang = OC_L10N::findLanguage('cafevdb');
 $locale = $lang.'_'.strtoupper($lang).'.UTF-8';
 
@@ -49,7 +56,7 @@ $tmpl->assign('Events', $events);
 $tmpl->assign('EventMatrix', $eventMatrix);
 $tmpl->assign('Locale', $locale);
 $tmpl->assign('CSSClass', 'projectevents');
-$tmpl->assign('Selected', array());
+$tmpl->assign('Selected', $selected);
 
 $html = $tmpl->fetchPage();
 

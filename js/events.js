@@ -175,8 +175,35 @@ window.Events={
         // No need to relist, in principle ...
         $.post(OC.filePath('cafevdb', 'ajax/events', 'sendmail.php'),
                post, Events.UI.relist);
-        
-        return false;
+
+        var eventData = $('#eventattachments');
+        var emailForm = $('form.cafevdb-mail-form');
+
+        var ids = '';
+        if (emailForm != '') {
+          emailForm.find('input[name^="EventSelect"]').each(function () { $(this).remove(); });
+          jQuery.each(post, function (i, param) {
+            if (param.name == 'EventSelect[]') {
+              $('<input />').attr('type', 'hidden')
+                .attr('name', 'EventSelect[]')
+                .attr('value', param.value)
+                .appendTo(emailForm);
+              ids += param.value + ', ';
+            }
+          });
+          ids = ids.substr(0, ids.length - 2);
+          eventData.html(ids);
+
+          $('<input />').attr('type', 'hidden')
+            .attr('name', 'writeMail')
+            .attr('value', 'reload')
+            .appendTo(emailForm);
+
+          emailForm.submit();
+        }
+
+        return true;
+
       } else if (name == 'download') {
 
         // As always, there may be a more elegant solution, but this
