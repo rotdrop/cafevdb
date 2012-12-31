@@ -6,26 +6,16 @@ namespace CAFEVDB
 class BriefInstrumentation
   extends Instrumentation
 {
+  const CSS_PREFIX = 'cafevdb-pme';
+
   function __construct() {
     parent::__construct();
   }
 
-  function display()
+  public function headerText()
   {
-    global $debug_query;
-    //Config::$debug_query = true;
-    //$debug_query = true;
-
-    $project         = $this->project;
-    $projectId       = $this->projectId;
-    $opts            = $this->opts;
-    $recordsPerPage  = $this->recordsPerPage;
-    $userExtraFields = $this->userExtraFields;
-
-    echo <<<__EOT__
-<div class="cafevdb-pme-header-box">
-  <div class="cafevdb-pme-header">
-    <h3>Besetzung Projekt $project</h3>
+    $header =<<<__EOT__
+    <h3>Besetzung Projekt $this->project</h3>
     <H4>
       <ul>
         <li><span style="color:red">Musiker hinzufügen</span>
@@ -41,10 +31,29 @@ class BriefInstrumentation
           (Adresse, Email, Name etc.)
       </ul>
     </H4>
-  </div>
-</div>
 
 __EOT__;
+
+    return $header;
+  }
+
+  function display()
+  {
+    global $debug_query;
+    //Config::$debug_query = true;
+    //$debug_query = true;
+
+    $project         = $this->project;
+    $projectId       = $this->projectId;
+    $opts            = $this->opts;
+    $recordsPerPage  = $this->recordsPerPage;
+    $userExtraFields = $this->userExtraFields;
+
+    if (false) {
+      echo '<PRE>';
+      print_r($_POST);
+      echo '</PRE>';
+    }
 
     /*
      * IMPORTANT NOTE: This generated file contains only a subset of huge amount
@@ -69,10 +78,12 @@ __EOT__;
     $opts['inc'] = $recordsPerPage;
 
     // Don't want everything persistent.
-    $opts['cgi']['persist'] = array('Project' => $project,
-                                    'ProjectId' => $projectId,
-                                    'Template' => 'brief-instrumentation',
-                                    'Table' => $opts['tb']);
+    $opts['cgi']['persist'] = array(
+      'Project' => $project,
+      'ProjectId' => $projectId,
+      'Template' => 'brief-instrumentation',
+      'Table' => $opts['tb'],
+      'headervisibility' => Util::cgiValue('headervisibility','expanded'));
 
     // Name of field which is the unique key
     $opts['key'] = 'Id';

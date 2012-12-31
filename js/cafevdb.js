@@ -47,6 +47,11 @@ $(document).ready(function(){
     // may be better ways ...
     event.preventDefault();
     var values = $(this).attr('name');
+
+    $visibility = $('input[name="headervisibility"]').val();
+    if ($visibility == 'collapsed') {
+      values += '&headervisibility=collapsed';
+    }
     $.post('', values, function (data) {
       var newDoc = document.open("text/html", "replace");
       newDoc.write(data);

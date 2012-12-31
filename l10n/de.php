@@ -1,5 +1,22 @@
 <?php
 $TRANSLATIONS = array(
+  'Instrument not known by %s, correct that first! %s only plays %s!!!'
+  =>
+  '%s spielt das Instrument eventuell nicht, %s spielt nur %s, soweit wir wissen!!!',
+  'Click on the following button to enforce your decision'
+  =>
+  'Änderung erzwingen',
+  'Really Change %s\'s instrument!!!'
+  =>
+  'Das Instrument von %s wirklich ändern!!!',
+  'This will also add "%s" to $s\'s list of known instruments. '
+  .'Unfortunately, all your other changes will be discarded. '
+  .'You may want to try the "Back"-Button of your browser.'
+  =>
+  'Dadurch wird auch "%s" zur Instrumentenliste für %s hinzugefügt. '
+  .'Leider gehen alle anderen Änderungen verloren. Möglicherweise ist '
+  .'der "Zurück"-Knopf des Web-Browsers eine praktischere Option.',
+  'Success!' => 'Erfolg!',
   'Select Em@il Recipients' => 'Em@il Adressaten',
   'Principal Address Collection' => 'Grundmenge',
   'Email Recipients' => 'Em@il Empfänger',

@@ -112,7 +112,7 @@ div[class|='cafevdb-nav']>div {
 
 div.cafevdb-pme-header-box,div.cafevdb-pme-header-box-16ex {
   position:fixed;
-  padding-top:6ex;
+  padding-top:5ex;
   z-index:25;
   background-color:inherit;
   opacity:1.0;
@@ -125,26 +125,25 @@ div.cafevdb-pme-header-box,div.cafevdb-pme-header-box-16ex {
   box-shadow: -3px 0 7px #777;
 }
 
-div.cafevdb-pme-header-box-8ex {
-  position:fixed;
-  padding-top:6ex;
-  z-index:25;
-  background-color:inherit;
-  opacity:1.0;
-  width:100%;
-  height:8ex;
-  overflow:hidden;
-  border-bottom:1px solid #eee;
-  -moz-box-shadow:-3px 0 7px #777;
-  -webkit-box-shadow:-3px 0 7px #777;
-  box-shadow: -3px 0 7px #777;
-}
-
 div.cafevdb-pme-header {
   position:fixed;
-  padding-top:0ex;
+  padding-top:1ex;
   padding-left:1ex;
-  width:80%;
+  height:15ex;
+  margin-right:40px;
+  overflow:hidden;
+  /*width:80%;*/
+}
+
+div.cafevdb-pme-header-box button.viewtoggle {
+  float:right;
+  margin-right:167px;
+  max-height: 26px;
+  padding: 5px;
+}
+
+div.cafevdb-pme-header-box button.viewtoggle:active {
+  background-color:SteelBlue;
 }
 
 form.pme-form {

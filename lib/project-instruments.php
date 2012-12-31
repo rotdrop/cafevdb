@@ -6,8 +6,39 @@ namespace CAFEVDB
 class ProjectInstruments
   extends Instrumentation
 {
+  const CSS_PREFIX = 'cafevdb-pme';
+
   function __construct() {
     parent::__construct();
+  }
+
+  public function headerText()
+  {
+    $header =<<<__EOT__
+    <h3>Besetzungszahlen $this->project</h3>
+    <H4>Die "Soll"-Besetzungzahl kann hier eingetragen werden, die
+"Haben"-Besetzungszahl ist die Anzahl der bereits registrierten Musiker.</H4>
+
+__EOT__;
+
+    return $header;
+  }
+
+  public function transferInstruments()
+  {
+    // Slight abuse, but much of the old phpMyEdit stuff relies on
+    // simple submit behaviour. So do the check here.
+    $xferStatus = false;
+    if (Util::cgiValue('Action','') == 'transfer-instruments') {
+      // Transfer them ...
+      $replace = false;
+      $handle = mySQL::connect(Config::$pmeopts);
+      Instruments::updateProjectInstrumentationFromMusicians(
+        $this->projectId, $handle, $replace);
+      mySQL::close($handle);
+      $xferStatus = true;
+    }
+    return $xferStatus;
   }
 
   function display()
@@ -23,60 +54,6 @@ class ProjectInstruments
     $opts            = $this->opts;
     $recordsPerPage  = $this->recordsPerPage;
     $userExtraFields = $this->userExtraFields;
-
-    // Slight abuse, but much of the old phpMyEdit stuff relies on
-    // simple submit behaviour. So do the check here.
-    $xferStatus = '';
-    if (Util::cgiValue('Action','') == 'transfer-instruments') {
-      // Transfer them ...
-      $replace = false;
-      $handle = mySQL::connect(Config::$pmeopts);
-      Instruments::updateProjectInstrumentationFromMusicians($projectId, $handle, $replace);
-      mySQL::close($handle);
-      $xferStatus = L::t('Success!');
-    }
-
-    $btnStr = Navigation::button(
-      array('only' =>
-            array('name' => L::t('Transfer Instruments from Musicians'),
-                  'id' => 'transfer-button',
-                  'title' => strval(L::t(Config::toolTips('transfer-instruments'))),
-                  'class' => 'header-button',
-                  'js' => 'type="submit"'))); // Not really js, but so what
-    
-    // The following should probably emmitted in the template, not
-    // here. We should rather have a method $this->heading() and
-    // $this->subHeading() or something like that.
-    echo <<<__EOT__
-<div class="cafevdb-pme-header-box">
-  <div class="cafevdb-pme-header">
-    <h3>Besetzungszahlen $project</h3>
-    <H4>Die "Soll"-Besetzungzahl kann hier eingetragen werden, die
-"Haben"-Besetzungszahl ist die Anzahl der bereits registrierten Musiker.</H4>
-<div>
-    <br/>
-    <table id="transfer-instruments">
-    <TR><TD>
-    <form name="transfer-instruments" id="transfer-form" method="post">
-      <input type="hidden" name="ProjectId" value="$projectId" />
-      <input type="hidden" name="Project"   value="$project" />
-      <input type="hidden" name="Template"  value="project-instruments" />
-      <input type="hidden" name="Action"    value="transfer-instruments" /> 
-      $btnStr
-    </form>
-    </TD><TD><span>$xferStatus</span></TD
-  </TR>
-  </TABLE>
-</div>
-  </div>
-</div>
-__EOT__;
-
-if (false) {
-echo '<pre>';
-print_r($_POST);
-echo '</pre>';
-}
 
     /*
      * IMPORTANT NOTE: This generated file contains only a subset of huge amount
@@ -116,11 +93,13 @@ echo '</pre>';
     }
 
     // Don't want everything persistent.
-    $opts['cgi']['persist'] = array('Project' => $project,
-                                    'ProjectId' => $projectId,
-                                    'Template' => 'project-instruments',
-                                    'Transpose' => $transposed,
-                                    'Table' => $opts['tb']);
+    $opts['cgi']['persist'] = array(
+      'Project' => $project,
+      'ProjectId' => $projectId,
+      'Template' => 'project-instruments',
+      'Transpose' => $transposed,
+      'Table' => $opts['tb'],
+      'headervisibility' => Util::cgiValue('headervisibility', 'expanded'));
 
     // Name of field which is the unique key
     $opts['key'] = 'ProjektId';

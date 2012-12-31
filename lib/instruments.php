@@ -6,9 +6,22 @@ namespace CAFEVDB
 class Instruments
   extends Instrumentation
 {
+  const CSS_PREFIX = 'cafevdb-pme';
+
   public function __construct()
   {
     parent::__construct();
+  }
+
+  public function headerText()
+  {
+    $header =<<<__EOT__
+    <h3>Instrumente hinzufügen</h3>
+    <h4>Löschen ist nicht vorgesehen, dafür bitte phpMyAdmin verwenden.
+Auch den Instrumentennamen sollte man nicht ändern</H4>
+
+__EOT__;
+    return $header;
   }
 
   // called form Instrumentation::display()
@@ -25,17 +38,6 @@ class Instruments
     $instruments     = $this->instruments;
     $recordsPerPage  = $this->recordsPerPage;
     $userExtraFields = $this->userExtraFields;
-
-    echo <<<__EOT__
-<div class="cafevdb-pme-header-box">
-  <div class="cafevdb-pme-header">
-    <h3>Instrumente hinzufügen</h3>
-    <h4>Löschen ist nicht vorgesehen, dafür bitte phpMyAdmin verwenden.
-Auch den Instrumentennamen sollte man nicht ändern</H4>
-  </div>
-</div>
-
-__EOT__;
 
     /*
      * IMPORTANT NOTE: This generated file contains only a subset of huge amount
@@ -55,10 +57,12 @@ __EOT__;
 
     $opts['tb'] = 'Instrumente';
 
-    $opts['cgi']['persist'] = array('Projekt' => $project,
-                                    'ProjektId' => $projectId,
-                                    'Template' => 'instruments',
-                                    'RecordsPerPage' => $recordsPerPage);
+    $opts['cgi']['persist'] = array(
+      'Projekt' => $project,
+      'ProjektId' => $projectId,
+      'Template' => 'instruments',
+      'RecordsPerPage' => $recordsPerPage,
+      'headervisibility' => Util::cgiValue('headervisibility', 'expanded'));
 
     // Name of field which is the unique key
     $opts['key'] = 'Instrument';

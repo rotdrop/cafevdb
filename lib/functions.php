@@ -7,7 +7,7 @@ class L
 {
   private static $l = false;
 
-  public static function t($text)
+  public static function t($text, $parameters = array())
   {
     if (self::$l === false) {
       self::$l = \OC_L10N::get('cafevdb');
@@ -18,7 +18,7 @@ class L
       // Mea Culpa: don't include a new-line after end tag
       //strval(self::$l->t('blah'));
     }
-    return self::$l->t(strval($text));
+    return self::$l->t(strval($text), $parameters);
   }
 };
 
@@ -170,6 +170,9 @@ class Navigation
       return $html;
     }
 
+    $headervisibility = '<input type="hidden" name="headervisibility" '
+      .'value="'.Util::cgiValue('headervisibility', 'expanded').'" />';
+
     $controlid = $id.'control';
     $form = '';
     switch ($id) {
@@ -181,6 +184,7 @@ class Navigation
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
   <input type="submit" value="$value" title="$title"/>
   <input type="hidden" name="Template" value="projects"/>
+  $headervisibility
 </form>
 
 __EOT__;
@@ -193,6 +197,7 @@ __EOT__;
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
   <input type="submit" value="$value" title="$title"/>
   <input type="hidden" name="Template" value="all-musicians"/>
+  $headervisibility
 </form>
 
 __EOT__;
@@ -206,6 +211,7 @@ __EOT__;
   <input type="hidden" name="Template" value="email"/>
   <input type="hidden" name="Project" value="$project"/>
   <input type="hidden" name="ProjectId" value="$projectId"/>
+  $headervisibility
 </form>
 
 __EOT__;
@@ -220,6 +226,7 @@ __EOT__;
   <input type="hidden" name="Template" value="email-history"/>
   <input type="hidden" name="Project" value="$project"/>
   <input type="hidden" name="ProjectId" value="$projectId"/>
+  $headervisibility
 </form>
 
 __EOT__;
@@ -238,6 +245,7 @@ __EOT__;
   <input type="hidden" name="Project" value="$project"/>
   <input type="hidden" name="ProjectId" value="$projectId"/>
   <input type="hidden" name="$opname" value="$opwhat"/>
+  $headervisibility
 </form>
 
 __EOT__;
@@ -252,6 +260,7 @@ __EOT__;
   <input type="hidden" name="Template" value="detailed-instrumentation"/>
   <input type="hidden" name="Project" value="$project"/>
   <input type="hidden" name="ProjectId" value="$projectId"/>
+  $headervisibility
 </form>
 
 __EOT__;
@@ -266,6 +275,7 @@ __EOT__;
   <input type="hidden" name="Template" value="brief-instrumentation"/>
   <input type="hidden" name="Project" value="$project"/>
   <input type="hidden" name="ProjectId" value="$projectId"/>
+  $headervisibility
 </form>
 
 __EOT__;
@@ -280,6 +290,7 @@ __EOT__;
   <input type="hidden" name="Template" value="instruments"/>
   <input type="hidden" name="Project" value="$project"/>
   <input type="hidden" name="ProjectId" value="$projectId"/>
+  $headervisibility
 </form>
 
 __EOT__;
@@ -294,6 +305,7 @@ __EOT__;
   <input type="hidden" name="Template" value="project-instruments"/>
   <input type="hidden" name="Project" value="$project"/>
   <input type="hidden" name="ProjectId" value="$projectId"/>
+  $headervisibility
 </form>
 
 __EOT__;
@@ -308,6 +320,23 @@ __EOT__;
   <input type="hidden" name="Template" value="add-musicians"/>
   <input type="hidden" name="Project" value="$project"/>
   <input type="hidden" name="ProjectId" value="$projectId"/>
+  $headervisibility
+</form>
+
+__EOT__;
+      break;
+
+    case 'transfer-instruments':
+      $value = strval(L::t('Transfer Instruments from Musicians'));
+      $title = strval(L::t(Config::toolTips('transfer-instruments')));
+      $form =<<<__EOT__
+<form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
+  <input type="submit" value="$value" title="$title" />
+  <input type="hidden" name="ProjectId" value="$projectId" />
+  <input type="hidden" name="Project"   value="$project" />
+  <input type="hidden" name="Template"  value="project-instruments" />
+  <input type="hidden" name="Action"    value="transfer-instruments" />
+  $headervisibility
 </form>
 
 __EOT__;

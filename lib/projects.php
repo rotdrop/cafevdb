@@ -7,6 +7,20 @@ namespace CAFEVDB
  */
 class Projects
 {
+  const CSS_PREFIX = 'cafevdb-pme';
+
+  static public function headerText()
+  {
+    $header =<<<__EOT__
+    <h2>Camerata Projekte</h2>
+    <h4>Bitte auf das Projekt-K&uuml;rzel
+klicken, um die Besetzungliste zu editieren. F&uuml;r allgemeine
+Eigenschaften bitte die "add", "change" etc. Buttons unten anklicken.
+    </h4>
+__EOT__;
+    return $header;
+  }
+
   static public function display()
   {
     Config::init();
@@ -25,19 +39,6 @@ class Projects
 
     mySQL::close($handle);
 
-    echo <<<__EOT__
-<div class="cafevdb-pme-header-box">
-  <div class="cafevdb-pme-header">
-    <h2>Camerata Projekte</h2>
-    <h4>Bitte auf das Projekt-K&uuml;rzel
-klicken, um die Besetzungliste zu editieren. F&uuml;r allgemeine
-Eigenschaften bitte die "add", "change" etc. Buttons unten anklicken.
-    </h4>
-  </div>
-</div>
-
-__EOT__;
-
     /*
      * IMPORTANT NOTE: This generated file contains only a subset of huge amount
      * of options that can be used with phpMyEdit. To get information about all
@@ -55,7 +56,9 @@ __EOT__;
      */
 
     $opts = Config::$pmeopts;
-    $opts['cgi']['persist'] = Util::cgiValue('app');
+    $opts['cgi']['persist'] = array(
+      'app' => Util::cgiValue('app'),
+      'headervisibility' => Util::cgiValue('headervisibility','expanded'));
 
     $opts['tb'] = 'Projekte';
 
@@ -406,8 +409,8 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
     $bvalue    = $projectName;
     // Code the value in the name attribute (for java-script)
     $bname     = ""
-."ProjectId=$projectId&"
-."Project=$projectName&"
+."ProjectId=$projectId&amp;"
+."Project=$projectName&amp;"
 ."Template=$template";
     $title     = L::t(Config::toolTips('projectinstrumentation-button'));
     return <<<__EOT__
@@ -422,7 +425,7 @@ __EOT__;
     $projectName = $row["qf$opts"];
     $bvalue      = L::t('Events');
     // Code the value in the name attribute (for java-script)
-    $bname       = "ProjectId=$projectId&ProjectName=".$projectName;
+    $bname       = "ProjectId=$amp;projectId&amp;ProjectName=".$projectName;
     $bname       = htmlspecialchars($bname);
     $title       = L::t(Config::toolTips('projectevents-button'));
     return <<<__EOT__

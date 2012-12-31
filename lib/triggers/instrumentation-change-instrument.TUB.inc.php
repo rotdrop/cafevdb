@@ -1,12 +1,13 @@
 <?php
 
 use CAFEVDB\L;
+use CAFEVDB\Util;
 
-\CAFEVDB\Util::authorized();
+Util::authorized();
 
-$project = CAFEVDB\Util::cgiValue('Project');
-$projectId =  CAFEVDB\Util::cgiValue('ProjectId');
-$musicianId = CAFEVDB\Util::cgiValue('MusicianId');
+$project    = Util::cgiValue('Project');
+$projectId  = Util::cgiValue('ProjectId');
+$musicianId = Util::cgiValue('MusicianId');
 
 // We check here whether the change of the instrument or player is in
 // some sense consistent with the Musiker table. We know that only
@@ -64,30 +65,30 @@ $instruments = $musrow['Instrumente'];
 $instrument  = $newvals['Instrument'];
 
 if (!strstr($instruments, $instrument)) {
-  $text = strval(L::t('Instrument not known by')." $musname, ".
-                 L::t('correct that first!').
-                 " $musname ".L::t('only plays')." $instruments!");
-  echo <<<__EOT__
-<div class="cafevdb-pme-header-box" style="height:18ex">
-  <div class="cafevdb-pme-header">
-  <HR/><H4>
-  $text;
-  </H4><HR/>
-  <H4>Click on the following button to enforce your decision:
-<form name="CAFEV_form_besetzung" method="post" action="?app=cafevdb">
-  <input type="submit" name="" value="Really Change $musname's instrument!!!">
+  $text1 = L::t('Instrument not known by %s, correct that first! %s only plays %s!!!',
+                array($musname, $musname, $instruments));
+  $text2 = L::t('Click on the following button to enforce your decision');
+  $text3 = L::t('This will also add "%s" to $s\'s list of known instruments. '
+                .'Unfortunately, all your other changes will be discarded. '.
+                'You may want to try the "Back"-Button of your browser.',
+                array($instrument, $musname));
+  $btnValue = L::t('Really Change %s\'s instrument!!!', array($musname));
+  $btn =<<<__EOT__
+<form style="display:inline;" name="CAFEV_form_besetzung" method="post" action="?app=cafevdb">
+  <input type="submit" name="" value="$btnValue">
   <input type="hidden" name="Template" value="change-one-musician">
   <input type="hidden" name="Project" value="$project" />
   <input type="hidden" name="ProjectId" value="$projectId" />
   <input type="hidden" name="MusicianId" value="$musicianId" />
   <input type="hidden" name="ForcedInstrument" value="$instrument" />
 </form>
-</H4>
-<p>
-This will also add "$instrument" to $musname's list of known instruments. Unfortunately, all your
-other changes will be discarded. You may want to try the "Back"-Button of your browser.
-<HR/>
-<p>
+__EOT__;
+  echo <<<__EOT__
+<div class="cafevdb-pme-header-box" style="height:18ex">
+  <div class="cafevdb-pme-header change-instrument">
+  <div>$text1</div>
+  <div>$text2: $btn</div>
+  <div>$text3</div>
   </div>
 </div>
 __EOT__;

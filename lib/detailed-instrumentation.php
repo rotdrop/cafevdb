@@ -6,8 +6,31 @@ namespace CAFEVDB
 class DetailedInstrumentation
   extends Instrumentation
 {
+  const CSS_PREFIX = 'cafevdb-pme';
+
   function __construct() {
     parent::__construct();
+  }
+
+  public function headerText()
+  {
+    $header =<<<__EOT__
+    <h3>Besetzung Projekt $this->project.</h3>
+      <H4><ul>
+      <li><span style="color:red">Musiker entfernen:</span>
+      <span style="font-style:italic">"Short Display for $this->project"</span>
+      <li><span style="color:red">Projekt-Daten</span>
+      <span style="font-style:italic">"Short Display for $this->project"</span>
+      (Projekt-Instrument, Stimmführer, Projekt-Bemerkungen etc.)
+      <li><span style="color:red">Personen-Daten</span>
+      <span style="font-style:italic">diese Tabelle</span>
+      (Adresse, Email, Name etc.)
+      </ul>
+      </H4>
+
+__EOT__;
+
+    return $header;
   }
 
   function display()
@@ -24,25 +47,6 @@ class DetailedInstrumentation
 
     global $HTTP_SERVER_VARS;
     $this->opts['page_name'] = $HTTP_SERVER_VARS['PHP_SELF'].'?app=cafevdb'.'&Template=detailed-instrumentation';
-
-    echo <<<__EOT__
-<div class="cafevdb-pme-header-box">
-  <div class="cafevdb-pme-header">
-    <h3>Besetzung Projekt $project.</h3>
-      <H4><ul>
-      <li><span style="color:red">Musiker entfernen:</span>
-      <span style="font-style:italic">"Short Display for $project"</span>
-      <li><span style="color:red">Projekt-Daten</span>
-      <span style="font-style:italic">"Short Display for $project"</span>
-      (Projekt-Instrument, Stimmführer, Projekt-Bemerkungen etc.)
-      <li><span style="color:red">Personen-Daten</span>
-      <span style="font-style:italic">diese Tabelle</span>
-      (Adresse, Email, Name etc.)
-      </ul>
-      </H4>
-  </div>
-</div>
-__EOT__;
 
     $ROopts = 'CLFPVR'; // read-only options for all project specific fields.
 
@@ -66,10 +70,12 @@ __EOT__;
 
     $opts['tb'] = $project . 'View';
 
-    $opts['cgi']['persist'] = array('Project' => $project,
-                                    'ProjectId' => $projectId,
-                                    'Template' => 'detailed-instrumentation',
-                                    'Table' => $opts['tb']);
+    $opts['cgi']['persist'] = array(
+      'Project' => $project,
+      'ProjectId' => $projectId,
+      'Template' => 'detailed-instrumentation',
+      'Table' => $opts['tb'],
+      'headervisibility' => Util::cgiValue('headervisibility','expanded'));
 
     // Name of field which is the unique key
     $opts['key'] = 'MusikerId';
