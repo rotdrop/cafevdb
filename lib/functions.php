@@ -61,6 +61,19 @@ class Util
     }
   }
 
+  public static function alert($text, $title, $cssid = false)
+  {
+    echo "<script>\n";
+    echo "$.alert('$text', '$title');\n";
+    if ($cssid !== false) {
+      echo <<<__EOT__
+$('#$cssid').append('<u>$title</u>'+'<br/>'+'$text'+'<br/>');
+__EOT__;
+    }
+    echo "</script>\n";
+    echo '<u>'.$title.'</u><br/>'.$text.'<br/>';
+  }
+
   public static function redirect($page, $proto = NULL, $host = NULL, $port = NULL, $uri = NULL) {
   
     /* Redirect auf eine andere Seite im aktuell angeforderten Verzeichnis */
