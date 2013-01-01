@@ -34,9 +34,6 @@ namespace CAFEVDB
     private $EmailsRecs;  // Copy of email records from CGI env
     private $emailKey;    // Key for EmailsRecs into _POST or _GET
 
-    private $table;       // Table-name, either Musiker of some project view
-    private $MId;         // Key for the musicians id, Id, or MusikerId
-    private $restrict;    // Instrument filter keyword, Instrument or ...s
     private $instruments; // List of instruments for filtering
   
     private $opts;        // Copy of global options
@@ -88,11 +85,11 @@ namespace CAFEVDB
       $this->emailKey  = $pmepfx.'mrecs';
       $this->mtabKey   = $pmepfx.'mtable';
       $this->EmailRecs = Util::cgiValue($this->emailKey,array());
-      $this->table     = Util::cgiValue($this->mtabKey,'');
       $this->userBase  = array('fromProject' => $this->projectId >= 0,
                                'exceptProject' => false);
 
-      $this->remapEmailRecords();
+      $table = Util::cgiValue($this->mtabKey,'');
+      $this->remapEmailRecords($table);
 
       /* At this point we have the Email-List, either in global or project
        * context, and possibly a selection of Musicians by Id from the
@@ -143,7 +140,7 @@ namespace CAFEVDB
     /*
      * Return a string with our needed data.
      */
-    public function getPersistent()
+    public function getPersistent($moreStuff = array())
     {
       $form = new \HTML_QuickForm2('emailrecipients');
     
@@ -175,6 +172,10 @@ namespace CAFEVDB
         $this->addPersistentCGI('baseGroup', $value['baseGroup'], $form);
       }
     
+      foreach ($moreStuff as $key => $value) {
+        $this->addPersistentCGI($key, $value, $form);
+      }
+
       $out = '';
       foreach ($form as $element) {
         $out .= $element."\n";
@@ -221,16 +222,11 @@ namespace CAFEVDB
       }
     }  
 
-    private function remapEmailRecords($dbh = false)
+    private function remapEmailRecords($table)
     {
-      if ($this->projectId >= 0 &&
-          $this->table == 'Besetzungen') {
+      if ($this->projectId >= 0 && $table == 'Besetzungen') {
 
-        $ownConnection = false;
-        if ($dbh === false) {
-          $dbh = mySQL::connect($this->opts);
-          $ownConnection = true;  
-        }
+        $dbh = mySQL::connect($this->opts);
 
         /*
          * This means we have been called from the "brief"
@@ -240,11 +236,11 @@ namespace CAFEVDB
          * If called from the "Besetzungen" table, we remap the Id's
          * to the project view table and continue with that.
          */
-        $this->table = $this->project.'View';
+        $table = $this->project.'View';
         $query = 'SELECT `Besetzungen`.`Id` AS \'BesetzungsId\',
-  `'.$this->table.'`.`MusikerId` AS \'MusikerId\'
-  FROM `'.$this->table.'` LEFT JOIN `Besetzungen`
-  ON `'.$this->table.'`.`MusikerId` = `Besetzungen`.`MusikerId`
+  `'.$table.'`.`MusikerId` AS \'MusikerId\'
+  FROM `'.$table.'` LEFT JOIN `Besetzungen`
+  ON `'.$table.'`.`MusikerId` = `Besetzungen`.`MusikerId`
   WHERE `Besetzungen`.`ProjektId` = '.$this->projectId;
 
         // Fetch the result or die and remap the Ids
@@ -262,8 +258,49 @@ namespace CAFEVDB
         }
         $this->EmailRecs = $newEmailRecs;
 
-        if ($ownConnection) {
-          mySQL::close($dbh);
+        mySQL::close($dbh);
+      }
+    }
+
+    private function fetchMusicians($dbh, $table, $id, $restrict, $projectId)
+    {
+      $query = 'SELECT `'.$id.'`,`Vorname`,`Name`,`Email` FROM '.$table.' WHERE
+       ( ';
+      foreach ($this->filter as $value) {
+        if ($value == '*') {
+          $query .= "1 OR\n";
+        } else {
+          $query .= "`".$restrict."` LIKE '%".$value."%' OR\n";
+        }
+      }
+      /* Don't bother any conductor with mass-email.
+       *
+       * TODO: introduce a useful status-set (member, nomail etc..)
+       */
+      $query .= "0 ) AND NOT `".$restrict."` LIKE '%Taktstock%'\n";
+
+      // Fetch the result or die
+      $result = mySQL::query($query, $dbh);
+
+      /* Stuff all emails into one array for later usage, remember the Id in
+       * order to combine any selection from the new "multi-select"
+       * check-boxes.
+       */
+      while ($line = mysql_fetch_assoc($result)) {
+        $name = $line['Vorname'].' '.$line['Name'];
+        if ($line['Email'] != '') {
+          // We allow comma separated multiple addresses
+          $musmail = explode(',',$line['Email']);
+          foreach ($musmail as $emailval) {
+            $this->EMails[$line[$id]] =
+              array('email' => $emailval,
+                    'name' => $name,
+                    'project' => $projectId);
+            $this->EMailsDpy[$line[$id]] =
+              htmlspecialchars($name.' <'.$emailval.'>');
+          }
+        } else {
+          $this->NoMail[$line[$id]] = array('name' => $name);
         }
       }
     }
@@ -273,80 +310,37 @@ namespace CAFEVDB
      */
     private function getMusiciansFromDB($dbh)
     {
-      /*** Now continue as if from 'ordinary' View-Table ****/
+      $this->NoMail = array();
+      $this->EMails = array();
+      $this->EMailsDpy = array();
 
-      if ($this->projectId >= 0) {
-        if ($this->userBase['fromProject'] &&
-            $this->userBase['exceptProject']) {
-          $this->table    = 'Musiker';
-          $this->MId      = 'Id';
-          $this->Restrict = 'Instrumente';
-        } else if ($this->userBase['fromProject']) {
-          $this->table = $this->project.'View';
-          $this->MId      = 'MusikerId';
-          $this->Restrict = 'Instrument';
-        } else if ($this->userBase['exceptProject']) {
-          $this->table =
+      if ($this->projectId < 0) {        
+        self::fetchMusicians($dbh, 'Musiker', 'Id', 'Instrumente', -1);
+      } else {
+        // Possibly add musicians from the project
+        if ($this->userBase['fromProject']) {
+          self::fetchMusicians($dbh,
+                         $this->project.'View', 'MusikerId', 'Instrument',
+                         $this->projectId);
+        }
+
+        // and/or not from the project
+        if ($this->userBase['exceptProject']) {
+          $table =
 '(SELECT a.* FROM Musiker as a
     LEFT JOIN '.$this->project.'View'.' as b
       ON a.Id = b.MusikerId 
       WHERE b.MusikerId IS NULL) as c';
-          $this->MId      = 'Id';
-          $this->Restrict = 'Instrumente';
-        } else {
-          $this->table = '';
-          $this->NoMail = array();
-          $this->EMails = array();
-          $this->EMailsDpy = array();
-          return;
+          self::fetchMusicians($dbh, $table, 'Id', 'Instrumente', -1);
         }
-      } else {
-        $this->table    = 'Musiker';
-        $this->MId      = 'Id';
-        $this->Restrict = 'Instrumente';
+
+        // And otherwise leave it empty ;)
       }
 
-      $query = 'SELECT `'.$this->MId.'`,`Vorname`,`Name`,`Email` FROM '.$this->table.' WHERE
-       ( ';
-      foreach ($this->filter as $value) {
-        if ($value == '*') {
-          $query .= "1 OR\n";
-        } else {
-          $query .= "`".$this->Restrict."` LIKE '%".$value."%' OR\n";
-        }
-      }
-      /* Don't bother any conductor with mass-email. */
-      $query .= "0 ) AND NOT `".$this->Restrict."` LIKE '%Taktstock%'\n";
-
-      // Fetch the result or die
-      $result = mySQL::query($query, $dbh);
-
-      /* Stuff all emails into one array for later usage, remember the Id in
-       * order to combine any selection from the new "multi-select"
-       * check-boxes.
-       */
-      $this->NoMail = array();
-      $this->EMails = array();
-      $this->EMailsDpy = array();
-      while ($line = mysql_fetch_assoc($result)) {
-        $name = $line['Vorname'].' '.$line['Name'];
-        if ($line['Email'] != '') {
-          // We allow comma separated multiple addresses
-          $musmail = explode(',',$line['Email']);
-          foreach ($musmail as $emailval) {
-            $this->EMails[$line[$this->MId]] =
-              array('email' => $emailval, 'name' => $name);
-            $this->EMailsDpy[$line[$this->MId]] =
-              htmlspecialchars($name.' <'.$emailval.'>');
-          }
-        } else {
-          $this->NoMail[$line[$this->MId]] = array('name' => $name);
-        }
-      }
-      /* Sort EMailsDpy according to its values */
+      // Finally sort the display array
       asort($this->EMailsDpy);
     }
-  
+
     /*
      * Generate a QF2 form
      */
@@ -514,10 +508,12 @@ und aktiviert den Editor'));
      */
     public function getEmails()
     {
-      $values = $this->form->getValue();
       $EMails = array();
-      foreach ($values['SelectedMusicians'] as $key) {
-        $EMails[] = $this->EMails[$key];
+      $values = $this->form->getValue();
+      if (isset($values['SelectedMusicians'])) {
+        foreach ($values['SelectedMusicians'] as $key) {
+          $EMails[] = $this->EMails[$key];
+        }
       }
       return $EMails;
     }
@@ -661,7 +657,9 @@ und aktiviert den Editor'));
     const CSS_PREFIX         = 'cafevdb-email';
     const CONSTRUCTION_MODE  = true;
     const CONSTRUCTION_EMAIL = 'DEVELOPER@his.server.eu';
+    const CONSTRUCTION_NAME  = 'Claus-Justus Heine';
     const PRODUCTION_EMAIL   = 'orchestra@example.eu';
+    const PRODUCTION_NAME    = 'Our Ensemble e.V.';
 
     public static function headerText()
     {
@@ -672,6 +670,11 @@ und aktiviert den Editor'));
         self::CONSTRUCTION_MODE
         ? self::CONSTRUCTION_EMAIL
         : self::PRODUCTION_EMAIL;
+
+      $CAFEVCatchAllName =
+        self::CONSTRUCTION_MODE
+        ? self::CONSTRUCTION_NAME
+        : self::PRODUCTION_NAME;
 
       $string = '';
       if (self::CONSTRUCTION_MODE) {
@@ -708,6 +711,67 @@ __EOT__;
 
       return $string;
     }
+
+    
+    /******************************************************************************************
+     *
+     * Handle file uploads.
+     *
+     */
+    private static function saveAttachments(&$fileAttach)
+    {
+      if (isset($_FILES['fileAttach'])) {
+        $value = $_FILES['fileAttach'];
+        
+        if ($value['name'] != '') {
+          $tmpdir = ini_get('upload_tmp_dir');
+          if ($tmpdir == '') {
+            $tmpdir = sys_get_temp_dir();
+          }
+          $tmpFile = tempnam($tmpdir, 'cafevdb');
+          if ($tmpFile === false) {
+            return false;
+          }
+
+          // Remember the file in the data-base for cleaning up later
+          $tmpFiles = explode(',',Config::getUserValue('attachments',''));
+          $tmpFiles[] = $tmpFile;
+          Config::setUserValue('attachments',implode(',',$tmpFiles));
+
+          // Move the uploaded file
+          if (move_uploaded_file($value['tmp_name'], $tmpFile)) {
+            // Sanitize permissions
+            chmod($tmpFile, 0600);
+
+            // Remember the uploaded file.
+            $value['tmp_name'] = $tmpFile;
+
+            if ($value['type'] == 'application/x-download' &&
+                strrchr($value['name'], '.') == '.pdf') {
+              $value['type'] = 'application/pdf';
+            }
+            $fileAttach[] = $value;
+
+
+            return true;
+          }
+
+          // Clean up.
+          unlink($tmpFile);
+          $tmpFiles = explode(',',Config::getUserValue('attachments',''));
+          if (($key = array_search($tmpFile, $tmpFiles)) !== false) {
+            unset($tmpFiles[$key]);
+            Config::setUserValue('attachments',implode(',',$tmpFiles));
+          }
+          return false;
+        }
+      }
+      return true; // No error or no file.
+    }
+    /*
+     *
+     *
+     *******************************************************************************************/
 
     public static function display($user)
     {
@@ -764,10 +828,19 @@ löschen sollen, teilen Sie uns das bitte kurz mit, indem Sie entsprechend
 auf diese Email antworten. Wir entschuldigen uns in diesem Fall für die
 Störung.');  
 
-      if (Util::cgiValue('eraseAll',false) !== false) {
+      $doResetAll = Util::cgiValue('eraseAll', false);
+      
+      if ($doResetAll !== false) {
         /* Take everything to its defaults */
         foreach ($emailPosts as $key => $value) {
           $_POST[$key] = $value; // cheat
+        }
+        if (isset($_FILES['fileAttach'])) {
+          unset($_FILES['fileAttach']);
+        }
+        if (isset($_POST['fileAttach'])) {
+          // TODO: remove  temporary files.
+          unset($_POST['fileAttach']);
         }
       }
 
@@ -777,10 +850,16 @@ Störung.');
       $strCC      = Util::cgiValue('txtCC', $emailPosts['txtCC']);
       $strBCC     = Util::cgiValue('txtBCC', $emailPosts['txtBCC']);
       $strSenderEmail = $CAFEVCatchAllEmail; // always
-      $strFile1 = isset($_FILES['fileAttach1']['name']) ? $_FILES['fileAttach1']['name'] : '';
-      $strFile2 = isset($_FILES['fileAttach2']['name']) ? $_FILES['fileAttach2']['name'] : '';
-      $strFile3 = isset($_FILES['fileAttach3']['name']) ? $_FILES['fileAttach3']['name'] : '';
-      $strFile4 = isset($_FILES['fileAttach4']['name']) ? $_FILES['fileAttach4']['name'] : '';
+      $fileAttach = Util::cgiValue('fileAttach', array());
+
+      self::saveAttachments($fileAttach);
+
+      if (true) {
+        echo '<pre>';
+        print_r($fileAttach);
+        print_r($_FILES);        
+        echo '</pre>';
+      }
 
       /*
        *
@@ -801,10 +880,7 @@ Störung.');
         $filter->addPersistentCGI('txtFromName', $strSender);
         $filter->addPersistentCGI('txtCC', $strCC);
         $filter->addPersistentCGI('txtBCC', $strBCC);
-        $filter->addPersistentCGI('fileAttach1', $strFile1);
-        $filter->addPersistentCGI('fileAttach2', $strFile2);
-        $filter->addPersistentCGI('fileAttach3', $strFile3);
-        $filter->addPersistentCGI('fileAttach4', $strFile4);
+        $filter->addPersistentCGI('fileAttach', $fileAttach);
 
         $filter->render(); // else render below the Email editor
       }
@@ -823,46 +899,15 @@ Störung.');
        */
 
       else if (Util::cgiValue('sendEmail', false) !== false) {
-
-        if ($strSubject == '') {
-          echo '<div class="cafevdb-error">
-<HR/><H4>Fehler: Die Betreffzeile sollte nicht nur aus "'.$MailTag.'" bestehen.
-<p>
-Bitte korrigieren und dann den "Send"-Button noch einmal anklicken
-<P>
-Leider m&uuml;ssen etwaige Attachments jetzt noch einmal angegeben werden.
-</H4><HR/>
-</div>';
-        }
-        if ($strSender == '') {
-          echo '<div class="cafevdb-error">
-<HR/><H4>Fehler: Der Absender-Name sollte nicht leer sein.
-<p>
-Bitte korrigieren und dann den "Send"-Button noch einmal anklicken
-<P>
-Leider m&uuml;ssen etwaige Attachments jetzt noch einmal angegeben werden.
-</H4><HR/>
-</div>';
-        }
-        if ($strSenderEmail == '') {
-          echo '<div class="cafevdb-error">
-<HR/><H4>Fehler: Die Email-Adresse des Absenders sollte nicht leer sein.
-<p>
-Bitte korrigieren und dann den "Send"-Button noch einmal anklicken
-<P>
-Leider m&uuml;ssen etwaige Attachments jetzt noch einmal angegeben werden.
-</H4><HR/>
-</div>';
-        }
+        echo '<div class="cafevdb-error" id="cafevdb-email-error"></div>';
       }
 
       /*
        *
        *
-       *******************************************************************************************/
+       ************************************************************************/
 
-      /******************************************************************************************
-       *
+      /*************************************************************************
        * Now define one huge form. This is really somewhat ugly.
        * Also: we cheat: pretend we are quick-form to simplify the look
        *
@@ -877,7 +922,7 @@ Leider m&uuml;ssen etwaige Attachments jetzt noch einmal angegeben werden.
 
       /* Remember address filter for later */
       if (true || $filter->isFrozen()) {
-        echo $filter->getPersistent();
+        echo $filter->getPersistent(array('fileAttach' => $fileAttach));
       }
 
       if ($projectId >= 0) {
@@ -931,21 +976,21 @@ Leider m&uuml;ssen etwaige Attachments jetzt noch einmal angegeben werden.
   </tr>
   '.$eventAttach.'
   <tr>
-    <td>Attachment 1</td>
-    <td colspan="2"><input name="fileAttach1" type="file"></td>
-  </tr>
-  <tr>
-    <td>Attachment 2</td>
-    <td colspan="2"><input name="fileAttach2" type="file"></td>
-  </tr>
-  <tr>
-    <td>Attachment 3</td>
-    <td colspan="2"><input name="fileAttach3" type="file"></td>
-  </tr>
-  <tr>
-    <td>Attachment 4</td>
-    <td colspan="2"><input name="fileAttach4" type="file"></td>
+    <td>Attach a File</td>
+    <td colspan="2"><input name="fileAttach" type="file"></td>
   </tr>';
+      foreach ($fileAttach as $attachment) {
+        $tmpName = $attachment['tmp_name'];
+        $name    = $attachment['name'];
+        $size    = $attachment['size'];
+        $size    = round($size / 1024);
+        echo <<<__EOT__
+  <tr>
+    <td><button type="submit" name="deleteAttachment[]" value="$tmpName" >Remove</button></td>
+    <td colspan="2"><span class="attachmentName">$name ($size kiB)</span></td>
+  </tr>
+__EOT__;
+      }
       $submitString = '
   <tr class="submit">
     <td class="send">
@@ -971,9 +1016,9 @@ verloren." type="submit" name="eraseAll" value="Abbrechen" />
       /*
        *
        *
-       *******************************************************************************************/
+       ***********************************************************************/
 
-      /******************************************************************************************
+      /************************************************************************
        *
        * If the filter is frozen, display it now, otherwise the editor
        * window would be at the bottom of some large address list.
@@ -984,12 +1029,7 @@ verloren." type="submit" name="eraseAll" value="Abbrechen" />
         $filter->render(); // else render below the Email editor
       }
 
-      /*
-       *
-       *
-       *******************************************************************************************/
-
-      /******************************************************************************************
+      /************************************************************************
        *
        * Now maybe send an email, if requested ...
        *
@@ -1024,30 +1064,18 @@ verloren." type="submit" name="eraseAll" value="Abbrechen" />
       $DataValid = true;
 
       if ($strSubject == '') {
-        echo '<HR/><H4>Die Betreffzeile sollte nicht nur aus "'.$MailTag.'" bestehen.
-<p>
-Bitte korrigieren und dann den "Send"-Button noch einmal anklicken
-<P>
-Leider m&uuml;ssen etwaige Attachments jetzt noch einmal angegeben werden.
-</H4>';
+        Util::alert(L::t('The subject must not consist of "%s" as only part.<br/>'.
+                         'Please correct that and then hit the "Send"-button again.',
+                         array($MailTag)),
+                    L::t('Incomplete Subject'),
+                    'cafevdb-email-error');
         $DataValid = false;
       }
       if ($strSender == '') {
-        echo '<HR/><H4>Der Absender-Name sollte nicht leer sein.
-<p>
-Bitte korrigieren und dann den "Send"-Button noch einmal anklicken
-<P>
-Leider m&uuml;ssen etwaige Attachments jetzt noch einmal angegeben werden.
-</H4>';
-        $DataValid = false;
-      }
-      if ($strSenderEmail == '') {
-        echo '<HR/><H4>Die Email-Adresse des Absenders sollte nicht leer sein.
-<p>
-Bitte korrigieren und dann den "Send"-Button noch einmal anklicken
-<P>
-Leider m&uuml;ssen etwaige Attachments jetzt noch einmal angegeben werden.
-</H4>';
+        Util::alert(L::t('The sender-name should not be empty.<br/>'.
+                         'Please correct that and then hit the "Send"-button again.'),
+                    L::t('Descriptive Sender Name'),
+                    'cafevdb-email-error');
         $DataValid = false;
       }
 
@@ -1056,297 +1084,321 @@ Leider m&uuml;ssen etwaige Attachments jetzt noch einmal angegeben werden.
       $h2t->set_encoding('utf-8');
       $strTextMessage = $h2t->get_text();
 
-      $mail = new \PHPMailer();
-      $mail->CharSet = 'utf-8';
-      $mail->SingleTo = false;
+      // One big try-catch block. Using exceptions we do not need to
+      // keep track of all return values, which is quite beneficial
+      // here. Some of the stuff below clearly cannot throw, but then
+      // it doesn't hurt to keep it in the try-block. All data is
+      // added int eh try block. There is another trz-catch-construct
+      // surrounding the actual sending of the message.
+      try {
 
-      // Setup the mail server for testing
-      // $mail->IsSMTP();
-      //$mail->IsMail();
-      $mail->IsSMTP();
-      if (true) {
-        $mail->Host = 'server.example.eu';
-        $mail->Port = 587;
-        $mail->SMTPSecure = 'tls';
-        $mail->SMTPAuth = true;
-        $mail->Username = 'wp1173590-cafev';
-        $mail->Password = 'XXXXXXXX';
-      }
+        $mail = new \PHPMailer(true);
+        $mail->CharSet = 'utf-8';
+        $mail->SingleTo = false;
 
-      $mail->IsHTML();
+        // Setup the mail server for testing
+        // $mail->IsSMTP();
+        //$mail->IsMail();
+        $mail->IsSMTP();
+        if (true) {
+          $mail->Host = 'server.example.eu';
+          $mail->Port = 587;
+          $mail->SMTPSecure = 'tls';
+          $mail->SMTPAuth = true;
+          $mail->Username = 'wp1173590-cafev';
+          $mail->Password = 'XXXXXXXX';
+        }
+        
+        $mail->IsHTML();
 
-      $DataValid = self::setFrom($mail,$strSenderEmail,$strSender)
-        && $DataValid;
-      $DataValid = self::addReplyTo($mail,$strSenderEmail,$strSender)
-        && $DataValid;
-      $mail->Subject = $MailTag . ' ' . $strSubject;
-      $mail->Body = $strMessage;
-      $mail->AltBody = $strTextMessage;
+        $mail->Subject = $MailTag . ' ' . $strSubject;
+        $mail->Body = $strMessage;
+        $mail->AltBody = $strTextMessage;
 
-      if (!self::CONSTRUCTION_MODE) {
-        // Loop over all data-base records and add each recipient in turn
-        foreach ($EMails as $pairs) {
-          // Better not use AddAddress: we should not expose the email
-          // addresses to everybody. TODO: instead place the entire
-          // message, including the Bcc's, either in the "sent" folder,
-          // or save it somewhere else.
-          if ($projectId < 0) {
-            $DataValid = self::addBCC($mail, $pairs['email'], $pairs['name'])
-              && $DataValid;
-          } else {
-            // Well, people subscribing to one of our projects simply must not complain.
-            $DataValid = self::addAddress($mail, $pairs['email'], $pairs['name'])
-              && $DataValid;
+        $mail->AddReplyTo($strSenderEmail, $strSender);
+        $mail->SetFrom($strSenderEmail, $strSender);
+
+        if (!self::CONSTRUCTION_MODE) {
+          // Loop over all data-base records and add each recipient in turn
+          foreach ($EMails as $recipient) {
+            // Better not use AddAddress: we should not expose the
+            // email addresses to everybody. TODO: instead place the
+            // entire message, including the Bcc's, either in the
+            // "sent" folder, or save it somewhere else.
+            if ($recipient->project < 0) {
+              // blind copy, don't expose the victim to the others.
+              $mail->AddBCC($recipient['email'], $recipient['name']);
+            } else {
+              // Well, people subscribing to one of our projects
+              // simply must not complain.
+              $mail->AddAddress($recipient['email'], $recipient['name']);
+            }
           }
-        }
-      } else {
-        $DataValid = self::addAddress($mail, 'DEVELOPER@his.server.eu', 'Claus-Justus Heine')
-          && $DataValid;
-      }
-
-      // Always drop a copy locally and to the mailing list, for
-      // archiving purposes and to catch illegal usage.
-      $DataValid = self::addAddress($mail, $CAFEVCatchAllEmail, $strSender)
-        && $DataValid;
-
-      // If we have further Cc's, then add them also
-      if ($strCC != '') {
-        // Now comes some dirty work: we need to split the string in
-        // names and email addresses.
-  
-        $arrayCC = parseEmailListToArray($strCC);
-        if (Util::debugMode()) {
-          echo "<PRE>\n";
-          print_r($arrayCC);
-          echo "</PRE>\n";
-        }
-  
-        foreach ($arrayCC as $value) {
-          $strCC .= $value['name'].' <'.$value['email'].'>,';
-          // PHP-Mailer adds " for itself as needed
-          $value['name'] = trim($value['name'], '"');
-          $DataValid = self::addCC($mail, $value['email'], $value['name'])
-            && $DataValid;
-        }
-        $strCC = trim($strCC, ',');
-      }
-
-      // Do the same for Bcc
-      if ($strBCC != '') {
-        // Now comes some dirty work: we need to split the string in
-        // names and email addresses.
-  
-        $arrayBCC = parseEmailListToArray($strBCC);
-        if (Util::debugMode()) {
-          echo "<PRE>\n";
-          print_r($arrayBCC);
-          echo "</PRE>\n";
-        }
-  
-        $strBCC = '';
-        foreach ($arrayBCC as $value) {
-          $strBCC .= $value['name'].' <'.$value['email'].'>,';
-          // PHP-Mailer adds " for itself as needed
-          $value['name'] = trim($value['name'], '"');
-          $DataValid = self::addBCC($mail, $value['email'], $value['name'])
-            && $DataValid;
-        }
-        $strBCC = trim($strBCC, ',');
-      }
-
-      $EventSelect = Util::cgiValue('EventSelect', array());
-      if ($DataValid && $projectId >= 0 && !empty($EventSelect)) {
-        // Construct the calendar
-        $calendar = Events::exportEvents($EventSelect, $project);
-
-        // Encode it as attachment
-        if (false) {
-          AddStringAttachment($calendar,
-                              $project.'.ics',
-                              'quoted-printable',
-                              'text/calendar');
         } else {
-          AddStringEmbeddedImage($calendar,
-                                 md5($project.'.ics'),
-                                 $project.'.ics',
-                                 'quoted-printable',
-                                 'text/calendar');
+          // Construction mode: per force only send to the developer
+          $mail->AddAddress(self::CONSTRUCTION_EMAIL,
+                            self::CONSTRUCTION_NAME);
         }
-      }
 
-      if ($DataValid) {
+        // Always drop a copy to the orchestra's email account for
+        // archiving purposes and to catch illegal usage. It is legel
+        // to modify $strSender through the email-form.
+        $mail->AddAddress($CAFEVCatchAllEmail, $strSender);
+        
+        // If we have further Cc's, then add them also
+        if ($strCC != '') {
+          // Now comes some dirty work: we need to split the string in
+          // names and email addresses. We re-construct $strCC in this
+          // context, to normalize it for storage in the email-log.
   
-        foreach ($_FILES as $key => $value) {
+          $arrayCC = self::parseAddrListToArray($strCC);
           if (Util::debugMode()) {
             echo "<PRE>\n";
-            print_r($value);
+            print_r($arrayCC);
             echo "</PRE>\n";
           }
-          if($value['name'] != "") {
-            if ($value['type'] == 'application/x-download' &&
-                strrchr($value['name'], '.') == '.pdf') {
-              $value['type'] = 'application/pdf';
-            }
-            if (!$mail->AddAttachment($value['tmp_name'],$value['name'],
-                                      'base64',$value['type'])) {
-              $DataValid = false;
-              echo '<HR/><H4>The attachment '.$value['name'].' seems to be invalid.
-<p>
-Please correct that first and then click on the "Send"-button again.
-<P>
-Unfortunately, attachments (if any) have to be specified again.
-</H4>';
-            }
+  
+          foreach ($arrayCC as $value) {
+            $strCC .= $value['name'].' <'.$value['email'].'>,';
+            // PHP-Mailer adds " for itself as needed
+            $value['name'] = trim($value['name'], '"');
+            $mail->AddCC($value['email'], $value['name']);
           }
+          $strCC = trim($strCC, ',');
         }
 
-        // Construct one MD5 for recipients subject and html-text
-        $bulkRecipients = '';
-        foreach ($EMails as $pairs) {
-          $bulkRecipients .= $pairs['name'].' <'.$pairs['email'].'>,';
-        }
-        // add CC and BCC
-        if ($strCC != '') {
-          $bulkRecipients .= $strCC.',';
-        }
+        // Do the same for Bcc
         if ($strBCC != '') {
-          $bulkRecipients .= $strBCC.',';
-        }
-        $bulkRecipients = trim($bulkRecipients,',');
-        $bulkMD5 = md5($bulkRecipients);
+          // Now comes some dirty work: we need to split the string in
+          // names and email addresses.
   
-        $textforMD5 = $strSubject . $strMessage;
-        $textMD5 = md5($textforMD5);
-  
-        // compute the MD5 stuff for the attachments
-        $attachLog = array();
-        foreach ($_FILES as $key => $value) {
-          if($value['name'] != "") {
-            $md5val = md5_file($value['tmp_name']);
-            $attachLog[] = array('name' => $value['name'],
-                                 'md5' => $md5val);
+          $arrayBCC = self::parseAddrListToArray($strBCC);
+          if (Util::debugMode()) {
+            echo "<PRE>\n";
+            print_r($arrayBCC);
+            echo "</PRE>\n";
           }
-        }
   
-        // Now insert the stuff into the SentEmail table  
-        $handle = mySQL::connect($opts);
-
-        $logquery = "INSERT INTO `SentEmail`
-(`user`,`host`,`BulkRecipients`,`MD5BulkRecipients`,`Cc`,`Bcc`,`Subject`,`HtmlBody`,`MD5Text`";
-        $idx = 1;
-
-        foreach ($attachLog as $pairs) {
-          $logquery .= ",`Attachment".$idx."`,`MD5Attachment".$idx."`";
+          $strBCC = '';
+          foreach ($arrayBCC as $value) {
+            $strBCC .= $value['name'].' <'.$value['email'].'>,';
+            // PHP-Mailer adds " for itself as needed
+            $value['name'] = trim($value['name'], '"');
+            $mail->AddBCC($value['email'], $value['name']);
+          }
+          $strBCC = trim($strBCC, ',');
         }
-        $logquery .= ') VALUES (';
-        $logquery .= "'".$user."','".$_SERVER['REMOTE_ADDR']."'";
-        $logquery .= ",'".mysql_real_escape_string($bulkRecipients,$handle)."'";
-        $logquery .= ",'".mysql_real_escape_string($bulkMD5,$handle)."'";
-        $logquery .= ",'".mysql_real_escape_string($strCC,$handle)."'";
-        $logquery .= ",'".mysql_real_escape_string($strBCC,$handle)."'";
-        $logquery .= ",'".mysql_real_escape_string($strSubject,$handle)."'";
-        $logquery .= ",'".mysql_real_escape_string($strMessage,$handle)."'";
-        $logquery .= ",'".mysql_real_escape_string($textMD5,$handle)."'";
-        foreach ($attachLog as $pairs) {
-          $logquery .=
-            ",'".mysql_real_escape_string($pairs['name'],$handle)."'".
-            ",'".mysql_real_escape_string($pairs['md5'],$handle)."'";
+
+        // Add all registered attachments.
+        foreach ($fileAttach as $attachment) {
+          $mail->AddAttachment($attachment['tmp_name'],
+                               $attachment['name'],
+                               'base64',
+                               $attachment['type']);
+          
         }
-        $logquery .= ")";
+
+        // Finally possibly to-be-attached events. This cannot throw,
+        // but it does not hurt to keep it here. This way we are just
+        // ready with adding data to the message inside the try-block.
+        $EventSelect = Util::cgiValue('EventSelect', array());
+        if ($projectId >= 0 && !empty($EventSelect)) {
+          // Construct the calendar
+          $calendar = Events::exportEvents($EventSelect, $project);
+          
+          // Encode it as attachment
+          $mail->AddStringEmbeddedImage($calendar,
+                                        md5($project.'.ics'),
+                                        $project.'.ics',
+                                        'quoted-printable',
+                                        'text/calendar');
+        }
+      } catch (\Exception $exception) {
+        // popup an alert and abort the form-processing
+        
+        $msg = $exception->getMessage();
+
+        Util::alert(L::t('The email-backend throwed an exception stating:<br/>').
+                    '"'.$msg.'"<br/>'.
+                    L::t('Please correct the problem and then click on the "Send"-button again.'),
+                    L::t('Caught an exception'),
+                    'cafevdb-email-error');
+
+        return false;
+      }
+
+      // Construct the query to store the email in the data-base
+      // log-table.
+
+      // Construct one MD5 for recipients subject and html-text
+      $bulkRecipients = '';
+      foreach ($EMails as $pairs) {
+        $bulkRecipients .= $pairs['name'].' <'.$pairs['email'].'>,';
+      }
+      // add CC and BCC
+      if ($strCC != '') {
+        $bulkRecipients .= $strCC.',';
+      }
+      if ($strBCC != '') {
+        $bulkRecipients .= $strBCC.',';
+      }
+      $bulkRecipients = trim($bulkRecipients,',');
+      $bulkMD5 = md5($bulkRecipients);
   
-        // Check for duplicates
-        $loggedquery = "SELECT * FROM `SentEmail` WHERE";
-        $loggedquery .= " `MD5Text` LIKE '$textMD5'";
-        $loggedquery .= " AND `MD5BulkRecipients` LIKE '$bulkMD5'";
+      $textforMD5 = $strSubject . $strMessage;
+      $textMD5 = md5($textforMD5);
+      
+      // compute the MD5 stuff for the attachments
+      $attachLog = array();
+      foreach ($fileAttach as $attachment) {
+        if($attachment['name'] != "") {
+          $md5val = md5_file($attachment['tmp_name']);
+          $attachLog[] = array('name' => $attachment['name'],
+                               'md5' => $md5val);
+        }
+      }
+      
+      // Now insert the stuff into the SentEmail table  
+      $handle = mySQL::connect($opts);
+
+      // First make sure that we have enough columns to store the
+      // attachments (better: only their checksums)
+
+      foreach ($attachLog as $key => $value) {
+        $logquery = sprintf(
+          'ALTER TABLE `SentEmail`
+  ADD `Attachment%02d TEXT
+  CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  ADD `MD5Attachment%02d TEXT
+  CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL',
+          $key);
+
+        // And execute. Just to make that all needed columns exist.
+        
         $result = mySQL::query($loggedquery, $handle);
+      }
+      
+      // Now construct the real query, but do not execute it until the
+      // message has succesfully been sent.
+
+      $logquery = "INSERT INTO `SentEmail`
+(`user`,`host`,`BulkRecipients`,`MD5BulkRecipients`,`Cc`,`Bcc`,`Subject`,`HtmlBody`,`MD5Text`";
+      $idx = 0;
+      foreach ($attachLog as $pairs) {
+        $logquery .=
+          sprintf(",`Attachment%02d`,`MD5Attachment%02d`". $idx, $idx);
+      }
+
+      $logquery .= ') VALUES (';
+      $logquery .= "'".$user."','".$_SERVER['REMOTE_ADDR']."'";
+      $logquery .= ",'".mysql_real_escape_string($bulkRecipients,$handle)."'";
+      $logquery .= ",'".mysql_real_escape_string($bulkMD5,$handle)."'";
+      $logquery .= ",'".mysql_real_escape_string($strCC,$handle)."'";
+      $logquery .= ",'".mysql_real_escape_string($strBCC,$handle)."'";
+      $logquery .= ",'".mysql_real_escape_string($strSubject,$handle)."'";
+      $logquery .= ",'".mysql_real_escape_string($strMessage,$handle)."'";
+      $logquery .= ",'".mysql_real_escape_string($textMD5,$handle)."'";
+      foreach ($attachLog as $pairs) {
+        $logquery .=
+          ",'".mysql_real_escape_string($pairs['name'],$handle)."'".
+          ",'".mysql_real_escape_string($pairs['md5'],$handle)."'";
+      }
+      $logquery .= ")";
   
-        $cnt = 0;
-        $loggedDates = '';
-        if ($line = mySQL::fetch($result)) {
-          $loggedDates .= ','.$line['Date'];
-          ++$cnt;
-        }
-        $loggedDates = trim($loggedDates,',');
+      // Now logging is ready to execute. But first check for
+      // duplicate sending attempts. This takes only the recipients,
+      // the subject and the message body into account. Rationale: if
+      // you want to send an updated attachment, then you really
+      // should write a comment on that. Still the test is flaky
+      // enough.
+
+      // Check for duplicates
+      $loggedquery = "SELECT * FROM `SentEmail` WHERE";
+      $loggedquery .= " `MD5Text` LIKE '$textMD5'";
+      $loggedquery .= " AND `MD5BulkRecipients` LIKE '$bulkMD5'";
+      $result = mySQL::query($loggedquery, $handle);
   
-        if ($loggedDates != '') {
-          echo '<HR/><H3>A message with exactly the same text to exactly the same
-recipients has already been sent on the following date'.($cnt > 1 ? 's' : '').':
-<p>
-'.$loggedDates.'
-<p>
-Refusing to send duplicate bulk emails.
-</H3><HR/>
-';
+      $cnt = 0;
+      $loggedDates = '';
+      if ($line = mySQL::fetch($result)) {
+        $loggedDates .= ','.$line['Date'];
+        ++$cnt;
+      }
+      $loggedDates = trim($loggedDates,',');  
+
+      if ($loggedDates != '') {
+        // Ok, we are really pissed of at this point. What the heck
+        // does the user think it is :) Grin.
+
+        Util::alert(L::t('A message with exactly the same text '.
+                         'to exactly the same recipients has already '.
+                         'been sent on the following date(s):<br/>'.
+                         '%s<br/>'.
+                         'Refusing to send duplicate bulk emails.',
+                         $loggedDates),
+                    L::t('Duplicate Email'), 'cafevdb-email-error');
+        return false;
+      }
+
+      // Finally the point of no return. Send it out!!!
+      
+      try {
+        if (!$mail->Send()) {
+          Util::alert(L::t('Sending failed for an unknown reason. Sorry.'),
+                      L::t('General Failure reading your hard-disk ... just kidding.'),
+                      'cafevdb-email-error');
           return false;
+        } else {
+          Util::alert(L::t('Message has been sent, at least: no error from our side!'),
+                      L::t('Message has been sent.'),
+                      'cafevdb-email-error');
+          // Log the message to our data-base
+          mySQL::query($logquery, $handle);  
         }
+      } catch (Exception $exception) {
+        Util::alert(
+          L::t('The email-backend throwed an exception stating:<br/>').
+          '"'.L::t($msg).'"'.
+          L::t('Please correct the problem and then click on the "Send"-button again.'),
+          L::t('Caught an exception'),
+          'cafevdb-email-error');
+        return false;
+      }
 
-        try {
-          if (!$mail->Send()) {
-            echo <<<__EOT__
-              <p>Mail failed<p>
-__EOT__;
-          } else {
-            // Log the message to our data-base
-      
-            mySQL::query($logquery, $handle);
-      
-          }
-        } catch (Exception $e) {
-          echo '<HR/><H4>Fehler:</H4>';
-          echo "<PRE>\n";
-          echo htmlspecialchars($e->getMessage())."\n";
-          echo "</PRE><HR/>\n";
-        }
+      mySQL::close($handle);
 
-        mySQL::close($handle);
+      // PEAR IMAP works without the c-client library
+      ini_set('error_reporting',ini_get('error_reporting') & ~E_STRICT);
 
-        if (false) {
-          // Now, this is really the fault of our provider. Sad
-          // story. How to work-around? Well, we send the message as
-          // Email-attachment to our own account. Whoops.
+      $imap = new \Net_IMAP($mail->Host, 993, false, 'UTF-8');
+      if (($ret = $imap->login($mail->Username, $mail->Password)) !== true) {
+        Util::alert(
+          L::t('The IMAP backend returned the error "%s". Unfortunate Snafu.<br/>'.
+               'I was trying to copy the message to our send-folder, but that failed.',
+               array($ret->toString())),
+          L::t('IMAP connection failed'),
+          'cafevdb-email-error');
+        $imap->disconnect();
+        return false;
+      }
+      if (($ret = $imap->appendMessage($mail->GetSentMIMEMessage(), 'Sent')) !== true) {
+        Util::alert(L::t('Could not copy the message to the send-folder.</br>'.
+                         'Server returned the error: "%s"',
+                         array($ret->toString())),
+                    L::t('Copying to "Sent"-folder failed.'),
+                    'cafevdb-email-error');
+        $imap->disconnect();
+        return false;
+      }
+      $imap->disconnect();
     
-          // connect to your Inbox through port 143.  See imap_open()
-          // function for more details
-          $mbox = imap_open('{'.$mail->Host.':143/notls}INBOX',
-                            $mail->Username,
-                            $mail->Password);
-          if ($mbox !== false) {
-            // save the sent email to your Sent folder by just passing a
-            // string composed of the entire message + headers.  See
-            // imap_append() function for more details.  Notice the 'r'
-            // format for the date function, which formats the date
-            // correctly for messaging.
-
-            imap_append($mbox, '{'.$mail->Host.':993/ssl}INBOX.Sent',
-                        $mail->GetSentMIMEMessage());
-            // close mail connection.
-            imap_close($mbox);
-          }
-        } elseif (true && false) {
-          // PEAR IMAP works without the c-client library
-
-          ini_set('error_reporting',ini_get('error_reporting') & ~E_STRICT);
-
-          $imap = new \Net_IMAP($mail->Host, 993, false, 'UTF-8');
-          if (($ret = $imap->login($mail->Username, $mail->Password)) !== true) {
-            CAFEVerror($ret->toString(), false);
-            $imap->disconnect();
-            die();
-          }
-          if (($ret = $imap->appendMessage($mail->GetSentMIMEMessage(), 'Sent')) !== true) {
-            CAFEVerror($ret->toString(), false);
-            $imap->disconnect();
-            die();
-          }
-          $imap->disconnect();
-        }
-
-        if (true || Util::debugMode()) {
-          echo '<HR/><H4>Gesendete Email</H4>';
-          echo "<PRE>\n";
-          echo htmlspecialchars($mail->GetSentMIMEMessage())."\n";
-          echo "</PRE><HR/>\n";
-        }
+      if (true || Util::debugMode()) {
+        // TODO: no need to copy the entire base64-encoded attachment
+        // soup to the screen ...
+        echo '<HR/><H4>Gesendete Email</H4>';
+        echo "<PRE>\n";
+        echo htmlspecialchars($mail->GetSentMIMEMessage())."\n";
+        echo "</PRE><HR/>\n";
       }
     }
 
@@ -1384,18 +1436,19 @@ __EOT__;
      */
     public static function echoInvalid($kind, $email)
     {
-      echo '<HR/><H4>The '.$kind.' address "'.$email.'" seems to be invalid.
-<p>
-Please correct that first and then click on the "Send"-button again.
-<P>
-Unfortunately, attachments (if any) have to be specified again.
-</H4>';
+      Util::alert(L::t('The %s address "%s" seems to be invalid.<br/>'.
+                       'Please correct that first and then click on the "Send"-button again.<br/>'.
+                       'Unfortunately, attachments (if any) have to be specified again.',
+                       array($kind, $email)),
+                  L::t('Invalid Email Address'),
+                  'cafevdb-email-error');
+      return false;
     }
 
     public static function addAddress($phpmailer, $address, $name = '')
     {
       if (!$phpmailer->AddAddress($address, $name)) {
-        EmailEchoInvalid('recipient', $address);
+        self::echoInvalid(L::t('recipient'), $address);
         return false;
       }
       return true;
@@ -1404,7 +1457,7 @@ Unfortunately, attachments (if any) have to be specified again.
     public static function addCC($phpmailer, $address, $name = '')
     {
       if (!$phpmailer->AddCC($address, $name)) {
-        EmailEchoInvalid('"Cc:"', $address);
+        self::echoInvalid('"Cc:"', $address);
         return false;
       }
       return true;
@@ -1413,7 +1466,7 @@ Unfortunately, attachments (if any) have to be specified again.
     public static function addBCC($phpmailer, $address, $name = '')
     {
       if (!$phpmailer->AddBCC($address, $name)) {
-        EmailEchoInvalid('"Bcc:"', $address);
+        self::echoInvalid('"Bcc:"', $address);
         return false;
       }
       return true;
@@ -1422,7 +1475,7 @@ Unfortunately, attachments (if any) have to be specified again.
     public static function setFrom($phpmailer, $address, $name = '')
     {
       if ($phpmailer->SetFrom($address, $name) != true) {
-        EmailEchoInvalid('"From:"', $address);
+        self::echoInvalid('"From:"', $address);
         return false;
       }
       return true;
@@ -1431,7 +1484,7 @@ Unfortunately, attachments (if any) have to be specified again.
     public static function addReplyTo($phpmailer, $address, $name = '')
     {
       if ($phpmailer->AddReplyTo($address, $name) != true) {
-        EmailEchoInvalid('"ReplyTo:"', $address);
+        self::echoInvalid('"ReplyTo:"', $address);
         return false;
       }
       return true;
