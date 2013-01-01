@@ -1,3 +1,19 @@
+$.extend({ alert: function (message, title) {
+  $("<div></div>").dialog( {
+    buttons: { "Ok": function () { $(this).dialog("close"); } },
+    open: function(event, ui) {
+      $(this).css({'max-height': 800, 'overflow-y': 'auto', 'height': 'auto'});
+      $(this).dialog( "option", "resizable", false );
+    },
+    close: function (event, ui) { $(this).remove(); },
+    resizable: false,
+    title: title,
+    modal: true,
+    height: "auto"
+  }).html(message);
+}
+});
+
 $(document).ready(function(){
 
   //    $('button.settings').tipsy({gravity:'ne', fade:true});
