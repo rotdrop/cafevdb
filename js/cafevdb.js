@@ -1,3 +1,7 @@
+CAFEVDB = {
+  name:'cafevdb'
+};
+
 $.extend({ alert: function (message, title) {
   $("<div></div>").dialog( {
     buttons: { "Ok": function () { $(this).dialog("close"); } },

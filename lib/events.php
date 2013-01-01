@@ -922,6 +922,8 @@ __EOT__;
    * name of the calendar.
    *
    * @return A string with the ICAL data.
+   *
+   * @todo Include local timezone.
    */
   static public function exportEvents($events, $projectName)
   {

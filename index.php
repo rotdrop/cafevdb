@@ -1,14 +1,17 @@
 <?php
 
+use CAFEVDB\L;
+use CAFEVDB\Config;
+use CAFEVDB\Util;
+
 // Check if we are a user
 OCP\User::checkLoggedIn();
 
-CAFEVDB\Config::init();
+Config::init();
 
 $group = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
 $user  = OCP\USER::getUser();
 
-use CAFEVDB\L;
 
 if (!OC_Group::inGroup($user, $group)) {
   $tmpl = new OCP\Template( 'cafevdb', 'not-a-member', 'user' );
@@ -18,9 +21,9 @@ if (!OC_Group::inGroup($user, $group)) {
 $expertmode = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb', 'expertmode','');
 $debugmode  = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb', 'debugmode','');
 $tooltips   = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb', 'tooltips','');
-$encrkey    = CAFEVDB\Config::getEncryptionKey();
+$encrkey    = Config::getEncryptionKey();
 
-$headervisibility = CAFEVDB\Util::cgiValue('headervisibility', 'expanded');
+$headervisibility = Util::cgiValue('headervisibility', 'expanded');
 
 $jsscript = 'var toolTips = '.($tooltips == 'on' ? 'true' : 'false').';
 ';
@@ -52,11 +55,11 @@ OCP\Util::addScript('cafevdb', 'events');
 //OCP\Util::addScript('cafevdb/3rdparty', 'tinymceinit');
 
 /* Special hack to determine if the email-form was requested through the pme-miscinfo button. */
-$op = CAFEVDB\Util::cgiValue('PME_sys_operation');
+$op = Util::cgiValue('PME_sys_operation');
 if ($op == "Em@il") {
   $tmplname = 'email';
 } else {
-  $tmplname = CAFEVDB\Util::cgiValue('Template','projects');
+  $tmplname = Util::cgiValue('Template','projects');
 }
 
 // Calendar event hacks
@@ -92,14 +95,6 @@ confirm_text['deselect'] = '';
 // end event hacks
 
 
-$tmpl = new OCP\Template( 'cafevdb', $tmplname, 'user' );
-
-$tmpl->assign('debugmode', $debugmode);
-$tmpl->assign('expertmode', $expertmode);
-$tmpl->assign('tooltips', $tooltips);
-$tmpl->assign('encryptionkey', $encrkey);
-$tmpl->assign('jsscript', $jsscript, false);
-
 $buttons = array();
 $buttons['expert'] =
   array('name' => 'Expert Operations',
@@ -117,17 +112,25 @@ $buttons['settings'] =
         'class' => 'settings generalsettings',
         'id' => 'settingsbutton');
 
+$viewbutton = array(
+  'viewtoggle' => array('name' => 'Toggle Visibility',
+                        'title' => 'Minimize or maximize the containing block.',
+                        'image' => OCP\Util::imagePath('core', 'actions/delete.svg'),
+                        'class' => 'viewtoggle',
+                        'id' => 'viewtoggle'));
+
+$tmpl = new OCP\Template( 'cafevdb', $tmplname, 'user' );
+
+$tmpl->assign('debugmode', $debugmode);
+$tmpl->assign('expertmode', $expertmode);
+$tmpl->assign('tooltips', $tooltips);
+$tmpl->assign('encryptionkey', $encrkey);
+$tmpl->assign('jsscript', $jsscript, false);
 $tmpl->assign('settingscontrols', $buttons);
-
-$buttons = array();
-$buttons['viewtoggle'] =
-  array('name' => 'Toggle Visibility',
-        'title' => 'Minimize or maximize the containing block.',
-        'image' => OCP\Util::imagePath('core', 'actions/delete.svg'),
-        'class' => 'viewtoggle',
-        'id' => 'viewtoggle');
-
-$tmpl->assign('viewtoggle', $buttons);
+$tmpl->assign('viewtoggle', $viewbutton);
+$tmpl->assign('uploadMaxFilesize', Util::maxUploadSize(), false);
+$tmpl->assign('uploadMaxHumanFilesize',
+              OCP\Util::humanFileSize(Util::maxUploadSize()), false);
 
 $tmpl->printPage();
 

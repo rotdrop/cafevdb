@@ -22,8 +22,50 @@ class L
   }
 };
 
+class Ajax
+{
+  public static function bailOut($msg, $tracelevel = 1, $debuglevel = \OCP\Util::ERROR)
+  {
+    \OCP\JSON::error(array('data' => array('message' => $msg)));
+    self::debug($msg, $tracelevel, $debuglevel);
+    exit();
+  }
+  
+  public static function debug($msg, $tracelevel = 0, $debuglevel = \OCP\Util::DEBUG)
+  {
+    if (PHP_VERSION >= "5.4") {
+      $call = debug_backtrace(false, $tracelevel+1);
+    } else {
+      $call = debug_backtrace(false);
+    }
+    
+    $call = $call[$tracelevel];
+    if ($debuglevel !== false) {
+      \OCP\Util::writeLog('contacts',
+                          $call['file'].'. Line: '.$call['line'].': '.$msg,
+                          $debuglevel);
+    }
+  }
+};
+
+
 class Util
 {
+  /**Return the maximum upload file size. */
+  public static function maxUploadSize($target = 'temporary')
+  {
+    $upload_max_filesize = \OCP\Util::computerFileSize(ini_get('upload_max_filesize'));
+    $post_max_size = \OCP\Util::computerFileSize(ini_get('post_max_size'));
+    $maxUploadFilesize = min($upload_max_filesize, $post_max_size);
+
+    if ($target == 'owncloud') {
+      $freeSpace = \OC_Filesystem::free_space('/');
+      $freeSpace = max($freeSpace, 0);
+      $maxUploadFilesize = min($maxUploadFilesize, $freeSpace);
+    }
+    return $maxUploadFilesize;
+  }
+
   /**Check whether we are logged in.
    */
   public static function authorized() 

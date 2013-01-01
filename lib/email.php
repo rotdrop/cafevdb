@@ -612,12 +612,9 @@ und aktiviert den Editor'));
 
           /* Also update the "no email" notice. */
           $this->updateNoEmailForm();
-        } elseif (!empty($value['writeMail']) || Util::cgiValue('sendEmail')) {
-          if (Util::cgiValue('sendEmail')) {
-            // Re-install the filter from the form
-            //$this->dualSelect->toggleFrozen(false);
-            //$this->dualSelect->setValue(Util::cgiValue('SelectedMusicians'), array());
-          }
+        } elseif (!empty($value['writeMail']) ||
+                  Util::cgiValue('sendEmail') ||
+                  Util::cgiValue('deleteAttachment')) {
           $this->frozen = true;
           $this->dualSelect->toggleFrozen(true);
           $this->filterFieldSet->toggleFrozen(true);
@@ -712,67 +709,130 @@ __EOT__;
       return $string;
     }
 
-    
-    /******************************************************************************************
+    /**Delete all temorary files not found in $fileAttach. If the file
+     * is successfully removed, then it is also remove from the
+     * config-space.
      *
-     * Handle file uploads.
+     * @param[in] $fileAttach List of files @b not to be removed.
      *
+     * @return Undefined.
      */
-    private static function saveAttachments(&$fileAttach)
+    private static function cleanTemporaries($fileAttach = array())
     {
-      if (isset($_FILES['fileAttach'])) {
-        $value = $_FILES['fileAttach'];
-        
-        if ($value['name'] != '') {
-          $tmpdir = ini_get('upload_tmp_dir');
-          if ($tmpdir == '') {
-            $tmpdir = sys_get_temp_dir();
-          }
-          $tmpFile = tempnam($tmpdir, 'cafevdb');
-          if ($tmpFile === false) {
-            return false;
-          }
+      // Fetch the files from the config-space
+      $tmpFiles = self::fetchTemporaries();
 
-          // Remember the file in the data-base for cleaning up later
-          $tmpFiles = explode(',',Config::getUserValue('attachments',''));
-          $tmpFiles[] = $tmpFile;
-          Config::setUserValue('attachments',implode(',',$tmpFiles));
-
-          // Move the uploaded file
-          if (move_uploaded_file($value['tmp_name'], $tmpFile)) {
-            // Sanitize permissions
-            chmod($tmpFile, 0600);
-
-            // Remember the uploaded file.
-            $value['tmp_name'] = $tmpFile;
-
-            if ($value['type'] == 'application/x-download' &&
-                strrchr($value['name'], '.') == '.pdf') {
-              $value['type'] = 'application/pdf';
-            }
-            $fileAttach[] = $value;
-
-
-            return true;
-          }
-
-          // Clean up.
-          unlink($tmpFile);
-          $tmpFiles = explode(',',Config::getUserValue('attachments',''));
-          if (($key = array_search($tmpFile, $tmpFiles)) !== false) {
-            unset($tmpFiles[$key]);
-            Config::setUserValue('attachments',implode(',',$tmpFiles));
-          }
-          return false;
+      $toKeep = array();
+      foreach ($fileAttach as $files) {
+        $tmp = $files['tmp_name'];
+        if (is_file($tmp)) {
+          $toKeep[] = $tmp;
         }
       }
-      return true; // No error or no file.
+      
+      foreach ($tmpFiles as $key => $tmpFile) {
+        if (array_search($tmpFile, $toKeep) !== false) {
+          continue;
+        }
+        @unlink($tmpFile);
+        if (!@is_file($tmpFile)) {
+          unset($tmpFiles[$key]);
+        }
+      }
+      self::storeTemporaries($tmpFiles);
     }
+    
+    /**Fetch the list of temporaries from the config-space.
+     */
+    private static function fetchTemporaries()
+    {
+      // Remember the file in the data-base for cleaning up later
+      $tmpFiles = Config::getUserValue('attachments','');
+      $tmpFiles = preg_split('@,@', $tmpFiles, NULL, PREG_SPLIT_NO_EMPTY);
+      
+      return $tmpFiles;
+    }
+
+    /**Store a list of temporaries in the config-space.*/
+    private static function storeTemporaries($tmpFiles)
+    {
+      // Remember the file in the data-base for cleaning up later
+      Config::setUserValue('attachments',implode(',',$tmpFiles));
+    }
+    
+    /**Handle file uploads. In order for upload to survive we have to
+     * move them to an alternate location. And clean up afterwards, of
+     * course. We store the generated temporaries in the user
+     * config-space in order to (latest) remove them on logout/login.
+     *
+     * @param[in,out] $file Typically $_FILES['fileAttach'], but maybe
+     * any file record.
+     *
+     * @return Copy of $file with changed temporary file which
+     * survives script-reload, or @c false on error.
+     */
+    public static function saveAttachment($fileRecord, $local = false)
+    {
+      if ($fileRecord['name'] != '') {
+        $tmpdir = ini_get('upload_tmp_dir');
+        if ($tmpdir == '') {
+          $tmpdir = sys_get_temp_dir();
+        }
+        $tmpFile = tempnam($tmpdir, Config::APP_NAME);
+        if ($tmpFile === false) {
+          return false;
+        }
+
+        // Remember the file in the data-base for cleaning up later
+        $tmpFiles = self::fetchTemporaries();
+        $tmpFiles[] = $tmpFile;
+        self::storeTemporaries($tmpFiles);
+        
+        if ($local) {
+          // Move the uploaded file
+          if (move_uploaded_file($fileRecord['tmp_name'], $tmpFile)) {
+            // Sanitize permissions
+            chmod($tmpFile, 0600);
+          
+            // Remember the uploaded file.
+            $fileRecord['tmp_name'] = $tmpFile;
+          
+            return $fileRecord;
+          }
+        } else {
+          // Make a copy
+          if (copy($fileRecord['tmp_name'], $tmpFile)) {
+            // Sanitize permissions
+            chmod($tmpFile, 0600);
+          
+            // Remember the uploaded file.
+            $fileRecord['tmp_name'] = $tmpFile;
+          
+            return $fileRecord;
+          }
+        }
+
+        // Clean up.
+        unlink($tmpFile);
+        $tmpFiles = self::fetchTemporaries();
+        if (($key = array_search($tmpFile, $tmpFiles)) !== false) {
+          unset($tmpFiles[$key]);
+          self::storeTemporaries($tmpFiles);
+        }
+        return false;
+      }
+      return false;
+    }
+
     /*
      *
      *
-     *******************************************************************************************/
+     *******************************************************************************/
 
+    /**Display the email-form
+     *
+     * @bug Most of this stuff should be moved to the templates folder.
+     */
     public static function display($user)
     {
       Config::init();
@@ -839,22 +899,37 @@ Störung.');
           unset($_FILES['fileAttach']);
         }
         if (isset($_POST['fileAttach'])) {
-          // TODO: remove  temporary files.
           unset($_POST['fileAttach']);
+        }
+        self::cleanTemporaries();
+      }
+
+      $strSubject       = Util::cgiValue('txtSubject', $emailPosts['txtSubject']);
+      $strMsg           = Util::cgiValue('txtDescription', $emailPosts['txtDescription']);
+      $strSender        = Util::cgiValue('txtFromName', $emailPosts['txtFromName']);
+      $strCC            = Util::cgiValue('txtCC', $emailPosts['txtCC']);
+      $strBCC           = Util::cgiValue('txtBCC', $emailPosts['txtBCC']);
+      $strSenderEmail   = $CAFEVCatchAllEmail; // always
+      $fileAttach       = Util::cgiValue('fileAttach', array());
+      $deleteAttachment = Util::cgiValue('deleteAttachment', array());
+
+      if (isset($fileAttach[-1])) {
+        $newRecord = $fileAttach[-1];
+        unset($fileAttach[-1]);
+        $fileAttach[] = $newRecord;
+      }
+
+      foreach ($deleteAttachment as $tmpName) {
+        foreach ($fileAttach as $key => $fileRecord) {
+          if ($fileRecord['tmp_name'] == $tmpName) {
+            unset($fileAttach[$key]);
+          } 
         }
       }
 
-      $strSubject = Util::cgiValue('txtSubject', $emailPosts['txtSubject']);
-      $strMsg     = Util::cgiValue('txtDescription', $emailPosts['txtDescription']);
-      $strSender  = Util::cgiValue('txtFromName', $emailPosts['txtFromName']);
-      $strCC      = Util::cgiValue('txtCC', $emailPosts['txtCC']);
-      $strBCC     = Util::cgiValue('txtBCC', $emailPosts['txtBCC']);
-      $strSenderEmail = $CAFEVCatchAllEmail; // always
-      $fileAttach = Util::cgiValue('fileAttach', array());
+      self::cleanTemporaries($fileAttach);
 
-      self::saveAttachments($fileAttach);
-
-      if (true) {
+      if (false) {
         echo '<pre>';
         print_r($fileAttach);
         print_r($_FILES);        
@@ -864,9 +939,9 @@ Störung.');
       /*
        *
        *
-       *******************************************************************************************/
+       ************************************************************************/
 
-      /******************************************************************************************
+      /*************************************************************************
        *
        * Display the address selection from if it is not frozen, other after the email editor.
        *
@@ -921,22 +996,19 @@ Störung.');
       /**** start quick-form cheat ****/
 
       /* Remember address filter for later */
-      if (true || $filter->isFrozen()) {
-        echo $filter->getPersistent(array('fileAttach' => $fileAttach));
-      }
+      echo $filter->getPersistent(array('fileAttach' => $fileAttach));
 
+      $eventAttachButton = '';
+      $attachedEvents = '';
       if ($projectId >= 0) {
         $EventSelect = Util::cgiValue('EventSelect', array());
-        $eventAttach = ''
-.'  <tr>
-      <td>'
-.Projects::eventButton($projectId, $project, 'Attach Events', $EventSelect)
-.'</td>
-      <td colspan="2">'
-.'<span id="eventattachments">'.implode(', ', $EventSelect).'</span></td>
-   </tr>';
-      } else {
-        $eventAttach = '';
+        $eventAttachButton = Projects::eventButton(
+          $projectId, $project, 'Events', $EventSelect);
+        $eventIds = implode(', ', $EventSelect);
+        if ($eventIds != '') {
+          $attachedEvents =
+            '<tr><td colspan="3">Event-Ids: <span id="eventattachments">'.$eventIds.'</span></td></tr>';
+        }
       }
 
       echo sprintf('
@@ -974,22 +1046,25 @@ Störung.');
     <td>Absende-Email</td>
     <td colspan="2">Tied to "'.$CAFEVCatchAllEmail.'"</td>
   </tr>
-  '.$eventAttach.'
   <tr>
-    <td>Attach a File</td>
-    <td colspan="2"><input name="fileAttach" type="file"></td>
-  </tr>';
+    <td>Add Attachments</td>
+    <td colspan="2">
+      '.$eventAttachButton.'
+      <input type="button" class="upload" value="Upload new File" />
+      <input type="button" class="owncloud" value="Select from Owncloud" />
+    </td>
+  </tr>'
+.$attachedEvents;
       foreach ($fileAttach as $attachment) {
         $tmpName = $attachment['tmp_name'];
         $name    = $attachment['name'];
         $size    = $attachment['size'];
         $size    = round($size / 1024);
-        echo <<<__EOT__
-  <tr>
-    <td><button type="submit" name="deleteAttachment[]" value="$tmpName" >Remove</button></td>
-    <td colspan="2"><span class="attachmentName">$name ($size kiB)</span></td>
-  </tr>
-__EOT__;
+        echo ''
+.'  <tr>'
+.'    <td><button type="submit" name="deleteAttachment[]" value="'.$tmpName.'" >'.L::t('Remove').'</button></td>'
+.'    <td colspan="2"><span class="attachmentName">'.$name.' ('.$size.' kiB)</span></td>'
+.'  </tr>';
       }
       $submitString = '
   <tr class="submit">
@@ -1101,6 +1176,7 @@ verloren." type="submit" name="eraseAll" value="Abbrechen" />
         //$mail->IsMail();
         $mail->IsSMTP();
         if (true) {
+          // TODO: move to encrypted config-space.
           $mail->Host = 'server.example.eu';
           $mail->Port = 587;
           $mail->SMTPSecure = 'tls';
@@ -1227,6 +1303,10 @@ verloren." type="submit" name="eraseAll" value="Abbrechen" />
         return false;
       }
 
+      if (!$DataValid) {
+        return false;
+      }
+
       // Construct the query to store the email in the data-base
       // log-table.
 
@@ -1267,15 +1347,15 @@ verloren." type="submit" name="eraseAll" value="Abbrechen" />
       foreach ($attachLog as $key => $value) {
         $logquery = sprintf(
           'ALTER TABLE `SentEmail`
-  ADD `Attachment%02d TEXT
+  ADD `Attachment%02d` TEXT
   CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  ADD `MD5Attachment%02d TEXT
+  ADD `MD5Attachment%02d` TEXT
   CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL',
-          $key);
+          $key, $key);
 
         // And execute. Just to make that all needed columns exist.
         
-        $result = mySQL::query($loggedquery, $handle);
+        $result = mySQL::query($logquery, $handle, false, true);
       }
       
       // Now construct the real query, but do not execute it until the
@@ -1286,7 +1366,8 @@ verloren." type="submit" name="eraseAll" value="Abbrechen" />
       $idx = 0;
       foreach ($attachLog as $pairs) {
         $logquery .=
-          sprintf(",`Attachment%02d`,`MD5Attachment%02d`". $idx, $idx);
+          sprintf(",`Attachment%02d`,`MD5Attachment%02d`", $idx, $idx);
+        $idx++;
       }
 
       $logquery .= ') VALUES (';
@@ -1397,7 +1478,11 @@ verloren." type="submit" name="eraseAll" value="Abbrechen" />
         // soup to the screen ...
         echo '<HR/><H4>Gesendete Email</H4>';
         echo "<PRE>\n";
-        echo htmlspecialchars($mail->GetSentMIMEMessage())."\n";
+        $msg = $mail->GetSentMIMEMessage();
+        $msgArray = explode("\n", $msg);
+        for ($i = 0; $i < 256; $i++) {
+          echo htmlspecialchars($msgArray[$i])."\n";
+        }
         echo "</PRE><HR/>\n";
       }
     }

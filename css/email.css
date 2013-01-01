@@ -271,3 +271,23 @@ div.cafevdb-email-header-box button.viewtoggle {
 div.cafevdb-email-header-box button.viewtoggle:active {
   background-color:SteelBlue;
 }
+
+div.events {
+  display:inline;
+}
+/* File upload support */
+#file_upload_form {
+  width:0;
+  height:0;
+}
+#file_upload_target {
+ display:none;
+}
+#file_upload_start {
+  ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter:alpha(opacity=0);
+  opacity:0;
+  z-index:1001;
+  width:0;
+  height:0;
+}
