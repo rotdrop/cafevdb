@@ -201,8 +201,9 @@ table.cafevdb-email-form {
    padding:0;
    margin:0;
 }
-.cafevdb-error h4 {
-   color:red;
+div.cafevdb-error {
+  font-weight:bold;
+  color:red;
 }
 
 .cafevdb-email-form input[type=file] {
