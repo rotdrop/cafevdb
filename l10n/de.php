@@ -1,5 +1,56 @@
 <?php
 $TRANSLATIONS = array(
+  'Caught an exception' => 'Fehler',
+
+  'The email-backend throwed an exception stating:<br/>'
+  =>
+  'Fehler beim Generieren der Nachricht:<br/>',
+
+  'Please correct the problem and then click on the "Send"-button again.'
+  =>
+  'Bitte korrigieren und dann den "Send"-Button noch einmal anklicken.',
+
+  'Duplicate Email' => 'Email Duplikat',
+
+  'A message with exactly the same text '.
+  'to exactly the same recipients has already '.
+  'been sent on the following date(s):<br/>'.
+  '%s<br/>'.
+  'Refusing to send duplicate bulk emails.'
+  =>
+  'Eine Nachricht mit <b>genau</b> dem gleichen Inhalt '.
+  'zu genau den selben Empfängern wurde bereits zu folgenden '.
+  'Zeitpunkten gesendet:</br>'.
+  '%s<br/>'.
+  'Duplikate von Massen-Mails werden nicht versendet!!!',
+  'Invalid Email Address' => 'Ungültige Em@il Adresse',
+  'The %s address "%s" seems to be invalid.<br/>'.
+  'Please correct that first and then click on the "Send"-button again.'
+  =>
+  'Die %s-Adresse "%s" scheint ein ungültiges Format zu haben.</br>'.
+  'Bitte korrigieren und dann den "Send"-Button noch einmal anklicken.',
+  'Invalid Attachment'
+  =>
+  'Fehler beim Codieren des Anhangs',
+  'The attachment "%s" seems to be invalid.<br/>'.
+  'Please correct that first and then click on the "Send"-button again.'
+  =>
+  'Das Anhang "%s" scheint unbrauchbar zu sein.<br/>'.
+  'Bitte korrigieren und dann den "Send"-Button noch einmal anklicken.',
+  'Descriptive Sender Name'
+  =>
+  'Name des Absenders',
+  'The sender-name should not be empty.<br/>'.
+  'Please correct that and then hit the "Send"-button again.'
+  =>
+  'Der Absender-Name sollte nicht leer sein.<br/>'.
+  'Bitte korrigieren und dann den "Send"-Button noch einmal anklicken.',
+  'Incomplete Subject' => 'Unvollständiger Betreff',
+  'The subject must not consist of "%s" as only part.<br/>'.
+  'Please correct that and then hit the "Send"-button again.'
+  =>
+  'Die Betreffzeile sollte nicht nur aus "%s" bestehen.<br/>'.
+  'Bitte korrigieren und dann den "Send"-Button noch einmal anklicken.',
   'Attach Events' => 'Termine anhängen',
   'Instrument not known by %s, correct that first! %s only plays %s!!!'
   =>
