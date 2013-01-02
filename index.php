@@ -133,6 +133,7 @@ $tmpl->assign('uploadMaxFilesize', Util::maxUploadSize(), false);
 $tmpl->assign('uploadMaxHumanFilesize',
               OCP\Util::humanFileSize(Util::maxUploadSize()), false);
 $tmpl->assign('Locale', Util::getLocale());
+$tmpl->assign('headervisibility', $headervisibility);
 
 $tmpl->printPage();
 
