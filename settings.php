@@ -61,11 +61,11 @@ if (Config::encryptionKeyValid() &&
   $tmpl->assign('eventduration', Config::getSetting('eventduration', '180'));
 
   foreach (array('smtp', 'imap') as $proto) {
-    foreach (array('server', 'port', 'secure', 'noauth') as $key) {
+    foreach (array('server', 'port', 'secure') as $key) {
       $tmpl->assign($proto.$key, Config::getValue($proto.$key));
     }
   }
-  foreach (array('user','password') as $key) {
+  foreach (array('user', 'password', 'fromname', 'fromaddress') as $key) {
     $tmpl->assign('email'.$key, Config::getValue('email'.$key));
   }
 }

@@ -18,7 +18,6 @@ namespace
 
 namespace CAFEVDB
 {
-
   /**Wrap the email filter form into a class to make things a little
    * less crowded. This is actually not to filter emails, but rather to
    * select specific groups of musicians (depending on instrument and
@@ -657,8 +656,6 @@ und aktiviert den Editor'));
     const CONSTRUCTION_MODE  = true;
     const CONSTRUCTION_EMAIL = 'DEVELOPER@his.server.eu';
     const CONSTRUCTION_NAME  = 'Claus-Justus Heine';
-    const PRODUCTION_EMAIL   = 'orchestra@example.eu';
-    const PRODUCTION_NAME    = 'Our Ensemble e.V.';
 
     public static function headerText()
     {
@@ -668,12 +665,12 @@ und aktiviert den Editor'));
       $CAFEVCatchAllEmail =
         self::CONSTRUCTION_MODE
         ? self::CONSTRUCTION_EMAIL
-        : self::PRODUCTION_EMAIL;
+        : Config::getValue('emailfromaddress');
 
       $CAFEVCatchAllName =
         self::CONSTRUCTION_MODE
         ? self::CONSTRUCTION_NAME
-        : self::PRODUCTION_NAME;
+        : Config::getValue('emailfromname');
 
       $string = '';
       if (self::CONSTRUCTION_MODE) {
@@ -873,7 +870,7 @@ __EOT__;
         'txtSubject' => '',
         'txtCC' => '',
         'txtBCC' => '',
-        'txtFromName' => 'Our Ensemble e.V..',
+        'txtFromName' => $CAFEVCatchAllName,
         'txtDescription' =>
         'Liebe Musiker,
 <p>
@@ -1214,12 +1211,17 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
         $mail->IsSMTP();
         if (true) {
           // TODO: move to encrypted config-space.
-          $mail->Host = 'server.example.eu';
-          $mail->Port = 587;
-          $mail->SMTPSecure = 'tls';
+          $mail->Host = Config::getValue('smtpserver');
+          $mail->Port = Config::getValue('smtpport');
+          switch (Config::getValue('smtpsecure')) {
+          case 'insecure': $mail->SMTPSecure = ''; break;
+          case 'starttls': $mail->SMTPSecure = 'tls'; break;
+          case 'ssl':      $mail->SMTPSecure = 'ssl'; break;
+          default:         $mail->SMTPSecure = ''; break;
+          }
           $mail->SMTPAuth = true;
-          $mail->Username = 'wp1173590-cafev';
-          $mail->Password = 'XXXXXXXX';
+          $mail->Username = Config::getValue('emailuser');
+          $mail->Password = Config::getValue('emailpassword');
         }
         
         $mail->IsHTML();
@@ -1473,10 +1475,11 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
           // Log the message to our data-base
           mySQL::query($logquery, $handle);  
         }
-      } catch (Exception $exception) {
+      } catch (\Exception $exception) {
+        $msg = $exception->getMessage();
         Util::alert(
-          L::t('The email-backend throwed an exception stating:<br/>').
-          '"'.L::t($msg).'"'.
+          L::t('During send, the email-backend throwed an exception stating:<br/>').
+          '"'.L::t($msg).'"<br/>'.
           L::t('Please correct the problem and then click on the "Send"-button again.'),
           L::t('Caught an exception'),
           'cafevdb-email-error');
@@ -1488,7 +1491,13 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
       // PEAR IMAP works without the c-client library
       ini_set('error_reporting',ini_get('error_reporting') & ~E_STRICT);
 
-      $imap = new \Net_IMAP($mail->Host, 993, false, 'UTF-8');
+      $imaphost   = Config::getValue('imapserver');
+      $imapport   = Config::getValue('imapport');
+      $imapsecure = Config::getValue('imapsecure');
+
+      $imap = new \Net_IMAP($imaphost,
+                            $imapport,
+                            $imapsecure == 'starttls' ? true : false, 'UTF-8');
       if (($ret = $imap->login($mail->Username, $mail->Password)) !== true) {
         Util::alert(
           L::t('The IMAP backend returned the error "%s". Unfortunate Snafu.<br/>'.
@@ -1611,6 +1620,52 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
       }
       return true;
     }
+
+    public static function checkImapServer($host, $port, $secure, $user, $password)
+    {
+      $oldReporting = ini_get('error_reporting');
+      ini_set('error_reporting', $oldReporting & ~E_STRICT);
+
+      $imap = new \Net_IMAP($host, $port, $secure == 'starttls' ? true : false, 'UTF-8');
+      $result = $imap->login($user, $password) === true;
+      $imap->disconnect();
+
+      ini_set('error_reporting', $oldReporting);
+      
+      return $result;
+    }
+
+    public static function checkSmtpServer($host, $port, $secure, $user, $password)
+    {
+      $result = true;
+
+      $mail = new \PHPMailer(true);
+      $mail->CharSet = 'utf-8';
+      $mail->SingleTo = false;
+      $mail->IsSMTP();
+
+      $mail->Host = $host;
+      $mail->Port = $port;
+      switch ($secure) {
+      case 'insecure': $mail->SMTPSecure = ''; break;
+      case 'starttls': $mail->SMTPSecure = 'tls'; break;
+      case 'ssl':      $mail->SMTPSecure = 'ssl'; break;
+      default:         $mail->SMTPSecure = ''; break;
+      }
+      $mail->SMTPAuth = true;
+      $mail->Username = $user;
+      $mail->Password = $password;
+        
+      try {
+        $mail->SmtpConnect();
+        $mail->SmtpClose();
+      } catch (\Exception $exception) {
+        $result = false;
+      }    
+
+      return $result;
+    }
+    
 
     // Maybe not needed.
     public static function callback($isSent, $to, $cc, $bcc, $subject, $body)
