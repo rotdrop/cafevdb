@@ -266,18 +266,6 @@ foreach (array('smtp', 'imap') as $proto) {
     return true;
   }
 
-  if (isset($_POST[$proto.'noauth'])) {
-    $value = $_POST[$proto.'noauth'];
-    Config::setValue($proto.'noauth', $value);
-    if ($value) {
-      $msg = L::t('Trying access without login/password.');
-    } else {
-      $msg = L::t('Using login/password authentication.');
-    }
-    OC_JSON::success(array("data" => array('message' => $msg)));
-    return true;
-  }
-
   if (isset($_POST[$proto.'port'])) {
     $value = $_POST[$proto.'port'];
 
@@ -341,8 +329,6 @@ foreach (array('smtp', 'imap') as $proto) {
 if (isset($_POST['emailuser'])) {
   $value = $_POST['emailuser'];
   Config::setValue('emailuser', $value);
-  Config::setValue('smtpnoauth', false);
-  Config::setValue('imapnoauth', false);
   // Should we now check whether we really can log in to the db-server?
   OC_JSON::success(
     array("data" => array(
@@ -353,8 +339,6 @@ if (isset($_POST['emailuser'])) {
 if (isset($_POST['emailpassword'])) {
   $value = $_POST['emailpassword'];
   Config::setValue('emailpassword', $value);
-  Config::setValue('smtpnoauth', false);
-  Config::setValue('imapnoauth', false);
   // Should we now check whether we really can log in to the db-server?
   OC_JSON::success(
     array("data" => array(
@@ -401,6 +385,35 @@ if (isset($_POST['emailtest'])) {
     OC_JSON::error($result);
     return false;
   }
+}
+
+if (isset($_POST['emailfromname'])) {
+  $value = $_POST['emailfromname'];
+  Config::setValue('emailfromname', $value);
+  OC_JSON::success(
+    array("data" => array(
+            'message' => L::t('Using "%s" as name of the sender identity.',
+                              array($value)))));
+  return true;
+}
+
+if (isset($_POST['emailfromaddress'])) {
+  $value = $_POST['emailfromaddress'];
+
+  if (filter_var($value, FILTER_VALIDATE_EMAIL) === false) {
+    OC_JSON::error(
+      array("data" => array(
+              'message' => L::t('"%s" doesn\'t seem to be a valid email-address.',
+                                array($value)))));
+    return false;
+  }
+
+  Config::setValue('emailfromaddress', $value);
+  OC_JSON::success(
+    array("data" => array(
+            'message' => L::t('Using "%s" as sender email-address.',
+                              array($value)))));
+  return true;
 }
 
 if (isset($_POST['error'])) {

@@ -507,6 +507,47 @@ $(document).ready(function() {
     return false;
   })
 
+  $('#emailfromname').blur(function(event) {
+    event.preventDefault();
+    $('div.statusmessage').hide();
+    $('span.statusmessage').hide();
+    $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
+           $(this),
+           function(data) {
+             if (data.status == "success") {
+	       $('#emailsettings #msg').html(data.data.message);
+	       $('#emailsettings #msg').show();
+               return true;
+             } else {
+	       $('#emailsettings #msg').html(data.data.message);
+	       $('#emailsettings #msg').show();
+               return false;
+             }
+	   }, 'json');
+    return false;
+  });
+
+  $('#emailfromaddress').blur(function(event) {
+    event.preventDefault();
+    $('div.statusmessage').hide();
+    $('span.statusmessage').hide();
+    $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
+           $(this),
+           function(data) {
+             if (data.status == "success") {
+	       $('#emailsettings #msg').html(data.data.message);
+	       $('#emailsettings #msg').show();
+               return true;
+             } else {
+	       $('#emailsettings #msg').html(data.data.message);
+	       $('#emailsettings #msg').show();
+               return false;
+             }
+	   }, 'json');
+    return false;
+  });
+
+
 });
 
 // Local Variables: ***

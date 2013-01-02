@@ -845,12 +845,14 @@ __EOT__;
         ? self::CONSTRUCTION_EMAIL
         : self::PRODUCTION_EMAIL;
 
+      $CAFEVCatchAllName = Config::getValue('emailfromname');
+
       // Display a filter dialog
       $filter = new EmailFilter($opts, $opts['page_name']);
 
       $filter->execute();
 
-      /********************************************************************************************
+      /************************************************************************
        *
        * Initialize some global stuff for the email form. Need to do this
        * before rendering the address selection stuff.

@@ -288,7 +288,8 @@ imapsecure';
                               $enckey,
                               base64_decode($value),
                               MCRYPT_MODE_ECB);
-      $cnt   = unpack('V',substr($value, 0, 4))[1];
+      $cnt   = intval(substr($value, 0, 4), 16);
+      
       $value = substr($value, 4, $cnt);
       //$value = trim($value, "\0\4");
     }
@@ -299,8 +300,9 @@ imapsecure';
   {
     if ($enckey != '') {
       // Store the size in the first 4 bytes in order not to have to
-      // rely on padding.
-      $cnt = pack('V', strlen($value));
+      // rely on padding. We store the value in hexadecimal notation
+      // in order to keep text-fields as text fields.
+      $cnt = sprintf('%04x', strlen($value));
       $value = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_128,
                                             $enckey,
                                             $cnt.$value,

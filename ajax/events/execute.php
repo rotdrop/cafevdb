@@ -9,15 +9,15 @@ OCP\JSON::checkAppEnabled('calendar');
 use CAFEVDB\L;
 use CAFEVDB\Config;
 use CAFEVDB\Events;
+use CAFEVDB\Util;
 
 $debugmode = Config::getUserValue('debugmode','') == 'on';
 $debugtext = $debugmode ? '<PRE>'.print_r($_POST, true).'</PRE>' : '';
 
-$lang = \OC_L10N::findLanguage('cafevdb');
-$locale = $lang.'_'.strtoupper($lang).'.UTF-8';
+$locale = Util::getLocale();
 
-$projectId   = CAFEVDB\Util::cgiValue('ProjectId', -1);
-$projectName = CAFEVDB\Util::cgiValue('ProjectName', '');
+$projectId   = Util::cgiValue('ProjectId', -1);
+$projectName = Util::cgiValue('ProjectName', '');
 
 if ($projectId < 0 ||
     ($projectName == '' &&
@@ -25,10 +25,10 @@ if ($projectId < 0 ||
   die('<script type="text/javascript">document.location = oc_webroot;</script>');
 }
 
-$eventId = CAFEVDB\Util::cgiValue('EventId', -1);
-$action  = CAFEVDB\Util::cgiValue('Action', '');
+$eventId = Util::cgiValue('EventId', -1);
+$action  = Util::cgiValue('Action', '');
 
-$emailEvents = CAFEVDB\Util::cgiValue('EventSelect', array());
+$emailEvents = Util::cgiValue('EventSelect', array());
 $selected = array(); // array marking selected events
 
 switch ($action) {

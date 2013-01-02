@@ -14,8 +14,7 @@ use CAFEVDB\Util;
 $debugmode = Config::getUserValue('debugmode','') == 'on';
 $debugtext = $debugmode ? '<PRE>'.print_r($_POST, true).'</PRE>' : '';
 
-$lang = OC_L10N::findLanguage('cafevdb');
-$locale = $lang.'_'.strtoupper($lang).'.UTF-8';
+$locale = Util::getLocale();
 
 $projectId   = $_POST['ProjectId'];
 $projectName = $_POST['ProjectName'];

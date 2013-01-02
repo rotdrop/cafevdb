@@ -91,7 +91,8 @@ window.Calendar={
 					Calendar.UI.loading(false);
 					if(data.status == 'success'){
 						$('#fullcalendar').fullCalendar('removeEvents', $('#event_form input[name=id]').val());
-						$('#event').dialog('destroy').remove();
+					    $('#event').dialog('close');
+                                            Events.UI.redisplay();
 					} else {
 						$('#errorbox').html(t('calendar', 'Deletion failed'));
 					}
