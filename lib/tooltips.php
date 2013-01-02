@@ -12,6 +12,8 @@ class Tooltips
   {
     return 
     array(
+      'owncloud-attachment' => 'Choose a file to attach from the files stored remotely on in the OwnCloud storage area.',
+      'upload-attachment' => 'Upload a file from your local computer as attachment. The file will be removed from the remote-system after the message has been sent.',
       'transfer-instruments' => 'Add the instruments of the actually registered musicians to the instrument-table for the project.',
       'register-musician' => 'Add the musician to the project. A new form will open were details like the instrument etc. can be adjustetd.',
       'pme-transpose' => 'Transpose the displayed table; may be beneficial for tables with only a few rows but many columns!',

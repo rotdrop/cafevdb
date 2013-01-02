@@ -51,6 +51,14 @@ class Ajax
 
 class Util
 {
+  /**Return the locale. */
+  public static function getLocale()
+  {
+    $lang = \OC_L10N::findLanguage(Config::APP_NAME);
+    $locale = $lang.'_'.strtoupper($lang).'.UTF-8';
+    return $locale;
+  }
+
   /**Return the maximum upload file size. */
   public static function maxUploadSize($target = 'temporary')
   {

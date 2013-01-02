@@ -131,6 +131,7 @@ $tmpl->assign('viewtoggle', $viewbutton);
 $tmpl->assign('uploadMaxFilesize', Util::maxUploadSize(), false);
 $tmpl->assign('uploadMaxHumanFilesize',
               OCP\Util::humanFileSize(Util::maxUploadSize()), false);
+$tmpl->assign('Locale', Util::getLocale());
 
 $tmpl->printPage();
 

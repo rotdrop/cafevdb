@@ -206,6 +206,29 @@ table.cafevdb-email-form {
   webkit-border-radius:.5em;
   border-radius:.5em;
 }
+.cafevdb-email-form tr.attachments td {
+  vertical-align:middle;
+}
+.cafevdb-email-form tr.attachments button {
+  background-color:#C6DEFF;
+  vertical-align:middle;
+  height:26px;
+  padding:5px;  
+  border-style:outset;
+}
+.cafevdb-email-form tr.eventattachments img { 
+  height:10px;
+  vertical-align:top;
+}
+.cafevdb-email-form tr.eventattachments button {
+  background-color:#C6DEFF;
+  vertical-align:middle;
+  height:20px;
+  padding:5px;  
+  border-style:outset;
+  vertical-align:middle;
+}
+
 .cafevdb-email-form tr.submit td {
   border-top:1px solid #808080;
 }
@@ -224,6 +247,9 @@ table.cafevdb-email-form {
   font-weight:bold;
   /*+font-style:italic;*/
  }
+.cafevdb-email-form td.body {
+  vertical-align:top;
+}
 .cafevdb-email-form tr.submit td.addresses input {
    width:auto;
  }
@@ -242,23 +268,6 @@ table.cafevdb-email-form {
 div.cafevdb-error {
   font-weight:bold;
   color:red;
-}
-
-.cafevdb-email-form input[type=file] {
-  width:auto;
-  padding:0.2em;
-  /*max-height: 26px; padding: 5px;*/
-  border:1px solid #ddd;
-  font-weight:bold;
-  cursor:pointer;
-  background:#f8f8f8;
-  color:#555;
-  text-shadow:#fff 0 1px 0;
-  moz-box-shadow:0 1px 1px #fff, 0 1px 1px #fff inset;
-  webkit-box-shadow:0 1px 1px #fff, 0 1px 1px #fff inset;
-  moz-border-radius:.5em;
-  webkit-border-radius:.5em;
-  border-radius:.5em;
 }
 
 /*****************************************************************************
@@ -311,7 +320,8 @@ div.cafevdb-email-header-box button.viewtoggle:active {
 }
 
 div.events {
-  display:inline;
+  vertical-align:middle;
+  display:inline-block;
 }
 /* File upload support */
 #file_upload_form {
@@ -329,3 +339,4 @@ div.events {
   width:0;
   height:0;
 }
+

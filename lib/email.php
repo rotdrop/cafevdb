@@ -1006,10 +1006,34 @@ Störung.');
         $EventSelect = Util::cgiValue('EventSelect', array());
         $eventAttachButton = Projects::eventButton(
           $projectId, $project, 'Events', $EventSelect);
-        $eventIds = implode(', ', $EventSelect);
-        if ($eventIds != '') {
-          $attachedEvents =
-            '<tr><td colspan="3">Event-Ids: <span id="eventattachments">'.$eventIds.'</span></td></tr>';
+        if (!empty($EventSelect)) {
+          $attachedEvents = ''
+            .'<tr class="eventattachments"><td>'.L::t('Attached Events').'</td>'
+            .'<td colspan="2"><span id="eventattachments">';
+          $locale = Util::getLocale();
+          foreach ($EventSelect as $id) {
+            $event = Events::fetchEvent($id);
+            $brief =
+              $event['summary'].', '.
+              Events::briefEventDate($event, $locale);
+
+            $attachedEvents .= ''
+              .'<button '
+              .'type="button" '
+              .'title="'.L::t('Edit Event %s',array($brief)).'" '
+              .'class="eventattachments edit" '
+              .'id="eventattachment-'.$id.'" '
+              .'name="eventattachment[]" '
+              .'value="'.$id.'" '
+              .'>'
+              .'<img '
+              .'alt="'.$id.'" '
+              .'src="'.\OCP\Util::imagePath('calendar', 'icon.svg').'" '
+              .'class="svg events small" '
+              .'/>'
+              .'</button>';
+          }
+          $attachedEvents .= '</span></td></tr>';
         }
       }
 
@@ -1037,7 +1061,7 @@ Störung.');
       '<input value="'.$strSubject.'" size="40" name="txtSubject" type="text" id="txtSubject"></td>
   </tr>
   <tr>
-    <td>'.L::t('Message-Body').'</td>
+    <td class="body">'.L::t('Message-Body').'</td>
     <td colspan="2"><textarea name="txtDescription" cols="20" rows="4" id="txtDescription">'.$strMsg.'</textarea></td>
   </tr>
   <tr>
@@ -1049,12 +1073,22 @@ Störung.');
     <td>'.L::t('Sender-Email').'</td>
     <td colspan="2">'.L::t('Tied to').' "'.$CAFEVCatchAllEmail.'"</td>
   </tr>
-  <tr>
-    <td>'.L::t('Add Attachment').'</td>
-    <td colspan="2">
+  <tr class="attachments">
+    <td class="attachments">'.L::t('Add Attachment').'</td>
+    <td class="attachments" colspan="2">
       '.$eventAttachButton.'
-      <input type="button" class="upload" value="'.L::t('Upload new File').'" />
-      <input type="button" class="owncloud" value="'.L::t('Select from Owncloud').'" />
+      <button type="button" '
+.'class="attachment upload" '
+.'title="'.L::t(Config::toolTips('upload-attachment')).'" '
+.'value="'.L::t('Upload new File').'">
+        <img src="'.\OCP\Util::imagePath('core', 'actions/upload.svg').'" alt="'.L::t('Upload new File').'"/>
+      </button>
+      <button type="button" '
+.'class="attachment owncloud" '
+   .'title="'.L::t(Config::toolTips('owncloud-attachment')).'" '
+.'value="'.L::t('Select from Owncloud').'">
+        <img src="'.\OCP\Util::imagePath('core', 'places/file.svg').'" alt="'.L::t('Select from Owncloud').'"/>
+      </button>
     </td>
   </tr>'
 .$attachedEvents;
@@ -1434,7 +1468,7 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
           return false;
         } else {
           Util::alert(L::t('Message has been sent, at least: no error from our side!'),
-                      L::t('Message has been sent.'),
+                      L::t('Message has been sent'),
                       'cafevdb-email-error');
           // Log the message to our data-base
           mySQL::query($logquery, $handle);  
@@ -1483,7 +1517,7 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
         echo "<PRE>\n";
         $msg = $mail->GetSentMIMEMessage();
         $msgArray = explode("\n", $msg);
-        for ($i = 0; $i < 256; $i++) {
+        for ($i = 0; $i < 128; $i++) {
           echo htmlspecialchars($msgArray[$i])."\n";
         }
         echo "</PRE><HR/>\n";

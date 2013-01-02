@@ -415,7 +415,7 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
     $title     = L::t(Config::toolTips('projectinstrumentation-button'));
     return <<<__EOT__
 <div class="instrumentation-button">
-<input type="button" class="instrumentation" title="$title" name="$bname" value="$bvalue"/>
+<input type="button" class="instrumentation" title="$title" name="$bname" value="$bvalue" />
 </div>
 __EOT__;
   }
@@ -436,11 +436,22 @@ __EOT__;
     }
     $bname       = htmlspecialchars($bname);
     $title       = L::t(Config::toolTips('projectevents-button'));
-    return <<<__EOT__
+    if (false) {
+      return <<<__EOT__
 <div class="events">
 <input type="button" class="events" title="$title" name="$bname" value="$bvalue"/>
 </div>
 __EOT__;
+    } else {
+      $image = \OCP\Util::imagePath('calendar', 'icon.svg');
+      return <<<__EOT__
+<div class="events">
+  <button type="button" class="events" title="$title" name="$bname" value="$bvalue">
+    <img class="svg events" src="$image" alt="$bvalue" />
+  </button>
+</div>
+__EOT__;
+    }
   }
 
   /**Fetch the list of projects from the data base as a short id=>name

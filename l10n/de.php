@@ -1,10 +1,21 @@
 <?php
 $TRANSLATIONS = array(
+  'Attached Events' => "Angehängte Termine",
+  'Choose a file to attach from the files stored remotely on in the OwnCloud storage area.'
+  =>
+  'Ein Attachment aus dem Owncloud-Datei-System auswählen.',
+  'Upload a file from your local computer as attachment. The file will be removed from the remote-system after the message has been sent.'
+  =>
+  'Eine Datei als Attachment hochladen. Die Datei wird vom Server gelöscht, sobald die Nachricht versendet wurde.',
+  'Message has been sent, at least: no error from our side!'
+  =>
+  'Nachricht wurde versendet; bzw.: das Web-Skript hat keinen Fehler bemerkt',
+  'Message has been sent' => 'Nachricht wurde versendet',
   'Tied to' => 'Vorgegeben:',
   'Subject' => 'Betreff',
   'Recipients' => 'Adressaten',
   'Message-Body' => 'Nachricht',
-  'Sender-Name' => 'Absender-Namer',
+  'Sender-Name' => 'Absender-Name',
   'Sender-Email' => 'Absender-Email',
   'Cancel' => 'Abbrechen',
   'Send Em@il' => 'Em@il verschicken',

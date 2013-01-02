@@ -45,8 +45,7 @@ foreach ($emailEvents as $event) {
   $selected[$event] = true;
 }
 
-$lang = OC_L10N::findLanguage('cafevdb');
-$locale = $lang.'_'.strtoupper($lang).'.UTF-8';
+$locale = Util::getLocale();
 
 $tmpl = new OCP\Template('cafevdb', 'events');
 

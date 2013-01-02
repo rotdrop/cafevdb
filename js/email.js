@@ -145,17 +145,37 @@ $(document).ready(function(){
     return false;
   });
 
-  $('input[type=button].upload').click(function() {
+  $('input[type=button].upload,button.attachment.upload').click(function() {
     $('#file_upload_start').trigger('click');
   });
 
-  $('input[type=button].owncloud').click(function() {
+  $('input[type=button].owncloud,button.attachment.owncloud').click(function() {
     OC.dialogs.filepicker(t('cafevdb', 'Select Attachment'),
                           CAFEVDB.Email.owncloudAttachment, false, '', true)
   });
   
   $('#file_upload_start').change(function(){
     CAFEVDB.Email.uploadAttachments(this.files);
+  });
+
+  $('button.eventattachments.edit').click(function(event) {
+    event.preventDefault();
+
+    // Edit existing event
+    post = Array();
+    var type = new Object();
+    type['name']  = 'id';
+    type['value'] = $(this).val();
+    post.push(type);
+    $('#dialog_holder').load(OC.filePath('calendar',
+                                         'ajax/event',
+                                         'edit.form.php'),
+                             post, function () {
+                               $('input[name="delete"]').attr('disabled','disabled');
+                               Calendar.UI.startEventDialog();
+                             });
+
+    return false;
   });
 
 });

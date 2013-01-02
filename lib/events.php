@@ -803,6 +803,40 @@ __EOT__;
     }
   }
   
+  /**Fetch the event and convert the time-stamps to a PHP
+   * DateTime-object with time-zone UTC.
+   */
+  public static function fetchEvent($id)
+  {
+    $event = \OC_Calendar_App::getEventObject($id, false, false);
+    if ($event === false) {
+      return false;
+    }
+    
+    $utc = new \DateTimeZone("UTC");
+    $event['startdate'] = new \DateTime($event['startdate'], $utc);
+    $event['enddate']   = new \DateTime($event['enddate'], $utc);
+
+    return $event;
+  }
+
+  /**Form a brief event date in the given locale. */
+  public static function briefEventDate($event, $locale = NULL)
+  {
+    $start = $event['startdate'];
+    $startdate = self::strftime("%x", $start->getTimestamp(), $locale);
+    $starttime = self::strftime("%X", $start->getTimestamp(), $locale);
+    $end   = $event['enddate'];
+    $enddate = self::strftime("%x", $end->getTimestamp(), $locale);
+    $endtime = self::strftime("%X", $end->getTimestamp(), $locale);
+
+    if ($startdate == $enddate) {
+      $datestring = $startdate.', '.$starttime;
+    } else {
+      $datestring = $startdate.' - '.$enddate;
+    }
+    return $datestring;
+  }
 
   /**Fetch the list of events associated with $projectId. This
    * functions fetches all the data, not only the pivot-table. Time

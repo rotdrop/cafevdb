@@ -29,19 +29,8 @@ foreach ($_['EventMatrix'] as $key => $eventGroup) {
     $object = $event['object'];
     $brief  = $object['summary'];
 
-    $start = $object['startdate'];
-    $startdate = CAFEVDB\Events::strftime("%x", $start->getTimestamp(), $locale);
-    $starttime = CAFEVDB\Events::strftime("%X", $start->getTimestamp(), $locale);
-    $end   = $object['enddate'];
-    $enddate = CAFEVDB\Events::strftime("%x", $end->getTimestamp(), $locale);
-    $endtime = CAFEVDB\Events::strftime("%X", $end->getTimestamp(), $locale);
+    $datestring = CAFEVDB\Events::briefEventDate($object, $locale);
 
-    // This is just a brief listing.
-    if ($startdate == $enddate) {
-      $datestring = $startdate.', '.$starttime;
-    } else {
-      $datestring = $startdate.' - '.$enddate;
-    }
     echo <<<__EOT__
     <tr class="$class">
       <td class="eventbuttons-$n">

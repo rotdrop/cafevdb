@@ -16,8 +16,13 @@ form.cafevdb-control {
 #expertmode>input[type=button] {
 }
 
-.actions {height: 33px;	min-width: 800px;}
-.controls {min-width: 800px;}
+.actions {
+  height: 33px;
+  min-width: 800px;
+}
+.controls {
+  min-width: 800px;
+}
 #controls button, #controls input {
   max-height: 26px;
   padding: 5px;
@@ -28,6 +33,11 @@ form.cafevdb-control {
   font-style:italic;
   border-style:outset;
   background-color:#C6DEFF;
+}
+
+button.events {
+  max-height: 26px;
+  padding: 5px;
 }
 
 #projectlabelcontrol>input[type=submit] {
