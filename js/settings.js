@@ -386,10 +386,11 @@ $(document).ready(function() {
                  //$('#emailpassword input[name="emailpass1"]').val('');
                  $('#emailpassword input[name="password"]').val('');
                  $('#emailpassword input[name="password-clone"]').val('');
-                 $('#emailpassword #changed').show();
+	         $('#emailsettings #msg').html(data.data.message);
+	         $('#emailsettings #msg').show();
                } else {
-                 $('#emailpassword #error').html(data.data.message);
-                 $('#emailpassword #error').show();
+	         $('#emailsettings #msg').html(data.data.message);
+	         $('#emailsettings #msg').show();
                }
              });
       return false;
