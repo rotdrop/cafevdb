@@ -18,6 +18,34 @@ $.extend({ alert: function (message, title) {
 }
 });
 
+// $.extend({
+//   confirm: function(message, title, action) {
+//     $("<div></div>").dialog({
+//       // Remove the closing 'X' from the dialog
+//       open: function(event, ui) {
+//         $(".ui-dialog-titlebar-close").hide();
+//         $(this).css({'max-height': 800, 'overflow-y': 'auto', 'height': 'auto'});
+//         $(this).dialog( "option", "resizable", false );
+//       }, 
+//       buttons: {
+//         Yes': function() {
+//           $(this).dialog("close");
+//           action(true);
+//         },
+//         'No': function() {
+//           $(this).dialog("close");
+//           action(false);
+//         }
+//       },
+//       close: function(event, ui) { $(this).remove(); },
+//       resizable: false,
+//       title: title,
+//       modal: true,
+//       height: "auto"
+//     }).text(message);
+//   }
+// });
+
 $(document).ready(function(){
 
   //    $('button.settings').tipsy({gravity:'ne', fade:true});

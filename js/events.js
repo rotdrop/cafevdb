@@ -179,14 +179,6 @@ window.Events={
                  name == 'select' || name == 'deselect') {
         // Execute the task and redisplay the event list.
 
-        var really = confirm_text[name];
-        if (really != '') {
-          var check = confirm(really);
-          if (check == false) {
-            return false;
-          }
-        }
-
         var type = new Object();
         type['name']  = 'EventId';
         type['value'] = $(this).val();
@@ -197,9 +189,24 @@ window.Events={
         type['value'] = $(this).attr('name');
         post.push(type);
 
-        $.post(OC.filePath('cafevdb', 'ajax/events', 'execute.php'),
-               post, Events.UI.relist);
-        
+        var really = confirm_text[name];
+        if (really != '') {
+          
+          // Attention: dialogs don't block, so the action needs to be
+          // wrapped into the callback.
+	  OC.dialogs.confirm(t('cafevdb', really),
+                             t('cafevdb', 'Really delete?'),
+                             function (decision) {
+                               if (decision) {
+                                 $.post(OC.filePath('cafevdb', 'ajax/events', 'execute.php'),
+                                        post, Events.UI.relist);
+                               }
+                             },
+                             true);
+        } else {
+          $.post(OC.filePath('cafevdb', 'ajax/events', 'execute.php'),
+                 post, Events.UI.relist);
+        }
         return false;
       } else if (name == 'sendmail') {
 
