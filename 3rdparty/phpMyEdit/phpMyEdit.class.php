@@ -2600,6 +2600,76 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		}
 	} /* }}} */
 
+        /* static function sputcsv($row, $delimiter = ',', $enclosure = '"', $eol = "\n") */
+        /* { */
+        /*     static $fp = false; */
+        /*     if ($fp === false) { */
+        /*         $fp = fopen('php://temp', 'r+'); // see http://php.net/manual/en/wrappers.php.php - yes there are 2 '.php's on the end. */
+        /*         // NB: anything you read/write to/from 'php://temp' is specific to this filehandle */
+        /*     } else { */
+        /*         rewind($fp); */
+        /*     } */
+   
+        /*     if (fputcsv($fp, $row, $delimiter, $enclosure) === false) { */
+        /*         return false; */
+        /*     } */
+   
+        /*     rewind($fp); */
+        /*     $csv = fgets($fp); */
+   
+        /*     if ($eol != PHP_EOL) { */
+        /*         $csv = substr($csv, 0, (0 - strlen(PHP_EOL))) . $eol; */
+        /*     } */
+            
+        /*     return $csv; */
+        /* } */
+
+        /* Quick and dirty CSV-export. Blobs will probably fail. But so
+         * what.
+         *
+         * This is just like list_table(), i.e. only the chosen range of
+         * data is displayed and in html-display order.
+         */
+        function csv_export(&$handle = STDOUT, $delim = ',', $enclosure = '"')
+        {
+            // Header line
+            $line = array();
+            for ($k = 0; $k < $this->num_fds; $k++) {
+                $fd = $this->fds[$k];
+                $fdn = $this->fdd[$fd]['name'];
+
+                $line[] = $fdn;
+            }
+            fputcsv($handle, $line, $delim, $enclosure);
+
+            /*
+             * Main list_table() query
+             *
+             * Each row of the HTML table is one record from the SQL query. We must
+             * perform this query before filter printing, because we want to use
+             * $this->sql_field_len() function. We will also fetch the first row to get
+             * the field names.
+             */
+            $qparts = $this->get_SQL_main_list_query_parts();
+            $query = $this->get_SQL_main_list_query($qparts);
+            $res   = $this->myquery($query, __LINE__);
+            if ($res == false) {
+                $this->error('invalid SQL query', $query);
+                return false;
+            }
+            while ($row = $this->sql_fetch($res)) {
+                $line = array();
+                for ($k = 0; $k < $this->num_fds; $k++) {
+                    $fd = $this->fds[$k];
+                    if (!$this->displayed[$k]) {
+                        continue;
+                    }
+                    $line[] = $this->cellDisplay($k, $row, '');
+                }
+                fputcsv($handle, $line, $delim, $enclosure);
+            }
+        }    
+
 	/*
 	 * Table Page Listing @@@@
 	 */
@@ -2640,23 +2710,6 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		 */
 		$select_recs = $this->key != '' &&
 			($this->change_enabled() || $this->delete_enabled() || $this->view_enabled());
-
-		/*
-		 * Main list_table() query
-		 *
-		 * Each row of the HTML table is one record from the SQL query. We must
-		 * perform this query before filter printing, because we want to use
-		 * $this->sql_field_len() function. We will also fetch the first row to get
-		 * the field names.
-		 */
-		$qparts = $this->get_SQL_main_list_query_parts();
-		$query = $this->get_SQL_main_list_query($qparts);
-		$res   = $this->myquery($query, __LINE__);
-		if ($res == false) {
-			$this->error('invalid SQL query', $query);
-			return false;
-		}
-		$row = $this->sql_fetch($res);
 
 		/*
 		 * Display the SQL table in an HTML table
@@ -4166,11 +4219,6 @@ echo "<!-- ".$stamps[$fd]." ".$oldstamp." -->\n";
 	} /* }}} */
 
 }
-
-/* Modeline for ViM {{{
- * vim:set ts=4:
- * vim600:fdm=marker fdl=0 fdc=0:
- * }}} */
 
 // Local Variables: ***
 // mode: php ***
