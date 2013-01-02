@@ -1,16 +1,44 @@
 /* Quickform2 stuff */
 
-.cafevdb-email-filter fieldset legend {
+.quickform fieldset {
+  /*clear: both;*/
+  /*border: 1px solid #808080;*/
+  /* margin: 0.2em 0 0 0;*/
+  /*padding: 0.5em;*/
+}
+
+form[class|="cafevdb-email"] fieldset.border {
+  border:1px solid #808080;
+  padding:0.5em;
+  moz-border-radius:.5em;
+  webkit-border-radius:.5em;
+  border-radius:.5em;
+}
+
+form[class|="cafevdb-email"] fieldset legend {
   white-space:nowrap;
   font-weight:bold;
   font-size:120%;
-  padding-bottom:0.5em;
-  padding-top:0.5em;
+  padding:0.1em 0.5em;
+  margin:0.5em 0.5em;
+  background-color:#CCCCCC;
+  /* font-weight:bold; */
+  /* font-style:italic; */
+  background-color:#C6DEFF;
+  moz-border-radius:.5em;
+  webkit-border-radius:.5em;
+  border-radius:.5em;
+}
+
+form[class|="cafevdb-email"] tr,
+form[class|="cafevdb-email"] tr:hover,
+form[class|="cafevdb-email"] tr:active { 
+  background-color:inherit;
 }
 
 .cafevdb-email-filter fieldset {
   white-space:nowrap;
-  /* border:1px solid #808080; */
+  /*border:1px solid #808080;*/
 }
 
 .cafevdb-email-filter fieldset div.row
@@ -169,13 +197,17 @@
  *****************************************************************************/
 
 .cafevdb-email-form {
-   font-size:100%;
+  font-size:100%;
 }
 table.cafevdb-email-form {
-    border:1px solid #808080;
+  border:1px solid #808080;
+  padding:0.5em;
+  moz-border-radius:.5em;
+  webkit-border-radius:.5em;
+  border-radius:.5em;
 }
 .cafevdb-email-form tr.submit td {
-    border: 1px solid #808080;
+  border-top:1px solid #808080;
 }
 .cafevdb-email-form tr.submit td.send {
    width:auto;
@@ -184,7 +216,13 @@ table.cafevdb-email-form {
    margin:0;
 }
 .cafevdb-email-form td.subject {
-   width:80px;
+  /*min-width:20em;*/
+  font-family:monospace;
+  font-size:120%;
+  width:auto;
+  text-align:left;
+  font-weight:bold;
+  /*+font-style:italic;*/
  }
 .cafevdb-email-form tr.submit td.addresses input {
    width:auto;

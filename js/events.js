@@ -212,7 +212,7 @@ window.Events={
         // opened by the email-form by searching for the respective
         // form-id. eventData is supposed to be able to contan
         // html-data. We use it to give some feedback.
-        var emailForm = $('form.cafevdb-mail-form');
+        var emailForm = $('form.cafevdb-email-form');
         var eventData = $('#eventattachments');
 
         if (emailForm != '') {

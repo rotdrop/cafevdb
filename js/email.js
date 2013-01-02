@@ -1,7 +1,7 @@
 CAFEVDB.Email = {
   enabled:true,
   attachmentFromJSON:function (response) {
-    var emailForm = $('form.cafevdb-mail-form');
+    var emailForm = $('form.cafevdb-email-form');
     if (emailForm == '') {
       OC.dialogs.alert(t('cafevdb', 'Not called from main email-form.'),
                        t('cafevdb', 'Error'));

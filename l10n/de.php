@@ -1,5 +1,21 @@
 <?php
 $TRANSLATIONS = array(
+  'Tied to' => 'Vorgegeben:',
+  'Subject' => 'Betreff',
+  'Recipients' => 'Adressaten',
+  'Message-Body' => 'Nachricht',
+  'Sender-Name' => 'Absender-Namer',
+  'Sender-Email' => 'Absender-Email',
+  'Cancel' => 'Abbrechen',
+  'Send Em@il' => 'Em@il verschicken',
+  'Edit recipients' => 'Adressen bearbeiten',
+  'Determined automatically from data-base, see below the email form.'
+  =>
+  'Siehe unterhalb des Formulars. Auswahl über ``Adressen bearbeiten\'\'-Knopf abändern.',
+  'Upload new File' => 'Datei hochladen',
+  'Select from Owncloud' => 'Datei aus der ``Cloud\'\'',
+  'Add Attachment' => 'Anhang hinzufügen',
+  'Remove' => 'Entfernen',
   'Caught an exception' => 'Fehler',
 
   'The email-backend throwed an exception stating:<br/>'

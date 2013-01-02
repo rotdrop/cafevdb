@@ -365,7 +365,8 @@ namespace CAFEVDB
        */
 
       // Outer field-set with border
-      $outerFS = $this->form->addElement('fieldset');      
+      $outerFS = $this->form->addElement(
+        'fieldset', NULL, array('class' => 'border'));
       $outerFS->setLabel(L::t('Select Em@il Recipients'));
 
       if ($this->projectId >= 0) {
@@ -465,7 +466,8 @@ und aktiviert den Editor'));
       /********** Add a pseudo-form for people without email *************/
 
       $this->nopeFieldSet =
-        $this->form->addElement('fieldset', 'NoEm@il');
+        $this->form->addElement(
+          'fieldset', 'NoEm@il', array('class' => 'border'));
       $this->nopeFieldSet->setLabel(L::t('Musicians without Em@il'));
       $this->nopeStatic = $this->nopeFieldSet->addElement('static', 'NoEm@il', NULL,
                                                           array('tagName' => 'div'));
@@ -992,7 +994,7 @@ Störung.');
       echo '<div class="quickform">';
       /*******************************/
       echo '
-<FORM METHOD="post" ACTION="'.$opts['page_name'].'" NAME="Email" enctype="multipart/form-data" class="cafevdb-mail-form">';
+<FORM METHOD="post" ACTION="'.$opts['page_name'].'" NAME="Email" enctype="multipart/form-data" class="cafevdb-email-form">';
       /**** start quick-form cheat ****/
 
       /* Remember address filter for later */
@@ -1012,13 +1014,13 @@ Störung.');
       }
 
       echo sprintf('
-  <fieldset %s id="cafevdb-mail-form-0"><legend id="cafevdb-mail-form-0-legend">Em@il Verfassen</legend>',$filter->isFrozen() ? '' : 'disabled');
+  <fieldset %s id="cafevdb-email-form" class="border"><legend id="cafevdb-email-form-legend">Em@il Verfassen</legend>',$filter->isFrozen() ? '' : 'disabled');
       /*******************************/
       echo '
   <TABLE class="cafevdb-email-form">
   <tr>
-     <td>Adressat</td>
-     <td colspan="2">Determined automatically from data-base, see below the email form.</td>
+     <td>'.L::t('Recipients').'</td>
+     <td colspan="2">'.L::t('Determined automatically from data-base, see below the email form.').'</td>
   </tr>
   <tr>
      <td>Carbon Copy</td>
@@ -1029,29 +1031,30 @@ Störung.');
      <td colspan="2"><input size="40" value="'.htmlspecialchars($strBCC).'" name="txtBCC" type="text" id="txtBCC"></td>
   </tr>
   <tr>
-     <td>Betreff</td>
-     <td class="subject">'.htmlspecialchars($MailTag).'&nbsp;</td>
-     <td><input value="'.$strSubject.'" size="40" name="txtSubject" type="text" id="txtSubject"></td>
+     <td>'.L::t('Subject').'</td>
+     <td colspan="2" class="subject">'.
+      htmlspecialchars($MailTag).
+      '<input value="'.$strSubject.'" size="40" name="txtSubject" type="text" id="txtSubject"></td>
   </tr>
   <tr>
-    <td>Nachricht</td>
+    <td>'.L::t('Message-Body').'</td>
     <td colspan="2"><textarea name="txtDescription" cols="20" rows="4" id="txtDescription">'.$strMsg.'</textarea></td>
   </tr>
   <tr>
-    <td>Absende-Name</td>
+    <td>'.L::t('Sender-Name').'</td>
     <td colspan="2"><input value="'.$strSender.'" size="40" value="CAFEV" name="txtFromName" type="text"></td>
   </tr>
   <tr>
   <tr>
-    <td>Absende-Email</td>
-    <td colspan="2">Tied to "'.$CAFEVCatchAllEmail.'"</td>
+    <td>'.L::t('Sender-Email').'</td>
+    <td colspan="2">'.L::t('Tied to').' "'.$CAFEVCatchAllEmail.'"</td>
   </tr>
   <tr>
-    <td>Add Attachments</td>
+    <td>'.L::t('Add Attachment').'</td>
     <td colspan="2">
       '.$eventAttachButton.'
-      <input type="button" class="upload" value="Upload new File" />
-      <input type="button" class="owncloud" value="Select from Owncloud" />
+      <input type="button" class="upload" value="'.L::t('Upload new File').'" />
+      <input type="button" class="owncloud" value="'.L::t('Select from Owncloud').'" />
     </td>
   </tr>'
 .$attachedEvents;
@@ -1070,16 +1073,16 @@ Störung.');
   <tr class="submit">
     <td class="send">
       <input %1$s title="Vorsicht!"
-      type="submit" name="sendEmail" value="Em@il Verschicken"/></td>
+      type="submit" name="sendEmail" value="'.L::t('Send Em@il').'"/></td>
     <td class="addresses">
       <input %1$s title="Der Nachrichten-Inhalt
-bleibt erhalten." type="submit" name="modifyAddresses" value="Adressen Bearbeiten"/>
+bleibt erhalten." type="submit" name="modifyAddresses" value="'.L::t('Edit recipients').'"/>
    </td>
    <td class="reset">
        <input %1$s title="Abbrechen und von
 vorne Anfangen, bereits
 veränderter Text geht
-verloren." type="submit" name="eraseAll" value="Abbrechen" />
+verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
      </td>
   </tr>';
       echo sprintf($submitString, $filter->isFrozen() ? '' : 'disabled');
