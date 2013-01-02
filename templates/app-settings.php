@@ -1,6 +1,5 @@
 <?php use CAFEVDB\L; ?>
-<div class="personalblock">
-  <hr /><strong><?php echo L::t('Admin settings for Camerata DB'); ?></strong><br />
+<div id="tabs-2" class="personalblock admin">
 <!-- ENCRYPTION-KEY -->
   <form id="systemkey">
     <input type="password" id="oldkey" name="oldkey" placeholder="<?php echo L::t('Current Key');?>" />

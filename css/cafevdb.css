@@ -55,6 +55,11 @@ div.instrumentation-button>input[type=button] {
   /*background-color:#d0dcec;*/
 }
 
+div.events>button {
+  border-style:outset;
+/*  background-color:#C6DEFF;*/
+}
+
 td[class|='pme-cell']>div.instrumentation-button>input[type=button] {
   width:95%;
   min-width:14em;

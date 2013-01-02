@@ -1,5 +1,7 @@
 $(document).ready(function(){
 
+    $('#appsettings_popup h2').html(t('cafevdb', 'Advanced operations, use with care'));
+
     $('button').tipsy({gravity:'ne', fade:true});
     $('input').tipsy({gravity:'ne', fade:true});
     $('label').tipsy({gravity:'ne', fade:true});

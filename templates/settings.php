@@ -7,9 +7,18 @@ $tooltipstitle = "Control the display of tooltips. Warning: this works globally 
 $experttitle   = "Show a second button which leads to a dialog with ``advanced'' settings";
 $debugtitle    = "Show a certain amount of debug information, normally not needed.";
 ?>
-<div class="personalblock">
+
+<ul>
+  <li><a href="#tabs-1"><?php echo L::t('Personal Settings'); ?></a></li>
+<?php if ($_['adminsettings']) { ?>
+  <li><a href="#tabs-2"><?php echo L::t('Admin Settings'); ?></a></li>
+  <li><a href="#tabs-3"><?php echo L::t('Share Settings'); ?></a></li>
+  <li><a href="#tabs-4"><?php echo L::t('Email Settings'); ?></a></li>
+<?php } ?>
+</ul>
+
+<div id="tabs-1" class="personalblock <?php if ($_['adminsettings']) echo 'admin'; ?>">
   <form id="cafevdb">
-  <strong><?php echo L::t('Personal Settings for Camerata DB'); ?></strong><br />
     <input id="tooltips" type="checkbox" name="tooltips" <?php echo $_['tooltips'] == 'on' ? 'checked="checked"' : ''; ?> id="tooltips" title="<?php echo L::t($tooltipstitle) ?>"/>
     <label for="tooltips" title="<?php echo L::t($tooltipstitle) ?>"><?php echo L::t('Tool-Tips') ?></label>
     <br />
@@ -39,4 +48,5 @@ $debugtitle    = "Show a certain amount of debug information, normally not neede
 </div>
 <?php if ($_['adminsettings']) { echo $this->inc("app-settings"); } ?>
 <?php if ($_['adminsettings']) { echo $this->inc("share-settings"); } ?>
+<?php if ($_['adminsettings']) { echo $this->inc("email-settings"); } ?>
 

@@ -7,3 +7,16 @@ div.statusmessage, span.statusmessage {
 #error.statusmessage, #equal.statusmessage, #insecure.statusmessage {
   font-weight:bold;
 }
+
+#appsettings_popup div.personalblock.admin {
+  min-width:46em;
+  min-height:22em;
+}
+
+#emailimapfields {
+  display:inline;
+}
+
+#emailsmtpfields {
+  display:inline;  
+}

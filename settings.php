@@ -58,7 +58,16 @@ if (Config::encryptionKeyValid() &&
   $tmpl->assign('rehearsalscalendar', Config::getSetting('rehearsalscalendar', L::t('rehearsals')));
   $tmpl->assign('othercalendar', Config::getSetting('othercalendar', L::t('other')));
   $tmpl->assign('managementcalendar', Config::getSetting('managementcalendar', L::t('management')));
-  $tmpl->assign('eventduration', Config::getSetting('eventduration', '180'));  
+  $tmpl->assign('eventduration', Config::getSetting('eventduration', '180'));
+
+  foreach (array('smtp', 'imap') as $proto) {
+    foreach (array('server', 'port', 'secure', 'noauth') as $key) {
+      $tmpl->assign($proto.$key, Config::getValue($proto.$key));
+    }
+  }
+  foreach (array('user','password') as $key) {
+    $tmpl->assign('email'.$key, Config::getValue('email'.$key));
+  }
 }
 
 $result = $tmpl->printPage();

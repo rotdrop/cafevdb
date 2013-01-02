@@ -825,10 +825,10 @@ __EOT__;
   {
     $start = $event['startdate'];
     $startdate = self::strftime("%x", $start->getTimestamp(), $locale);
-    $starttime = self::strftime("%X", $start->getTimestamp(), $locale);
+    $starttime = self::strftime("%H:%M", $start->getTimestamp(), $locale);
     $end   = $event['enddate'];
     $enddate = self::strftime("%x", $end->getTimestamp(), $locale);
-    $endtime = self::strftime("%X", $end->getTimestamp(), $locale);
+    $endtime = self::strftime("%H:%M", $end->getTimestamp(), $locale);
 
     if ($startdate == $enddate) {
       $datestring = $startdate.', '.$starttime;

@@ -238,10 +238,10 @@ table.cafevdb-email-form {
    padding:0;
    margin:0;
 }
-.cafevdb-email-form td.subject {
+.cafevdb-email-form span.subject.tag {
   /*min-width:20em;*/
   font-family:monospace;
-  font-size:120%;
+  font-size:160%;
   width:auto;
   text-align:left;
   font-weight:bold;

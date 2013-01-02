@@ -36,7 +36,7 @@ if (isset($_POST['systemkey']) && isset($_POST['oldkey'])) {
   // Now fetch the key itself
   $storedkey = Config::getValue('encryptionKey');
   if ($storedkey !== $oldkey) {
-      Config::setEncryptionKey($actkey);      
+      Config::setEncryptionKey($actkey);
       OC_JSON::error(array("data" => array("message" => "Wrong old key.")));
       return;
   }
@@ -46,7 +46,7 @@ if (isset($_POST['systemkey']) && isset($_POST['oldkey'])) {
       // retry with new key
       Config::setEncryptionKey($newkey);
       if (!Config::decryptConfigValues()) {
-          Config::setEncryptionKey($actkey);      
+          Config::setEncryptionKey($actkey);
           OC_JSON::error(
             array(
               "data" => array(
@@ -127,7 +127,7 @@ if (isset($_POST['shareowner-saved']))
   $force   = @$_POST['shareowner-force'] == 'on';
   $olduser = @$_POST['shareowner-saved'];
 
-  // If there is no old dummy, then just create one. 
+  // If there is no old dummy, then just create one.
   $actuser = Config::getSetting('shareowner', '');
   if ($olduser != $actuser) {
     OC_JSON::error(
@@ -188,7 +188,7 @@ foreach ($calendarkeys as $key) {
         if ($newId !== false) {
           Config::setValue($key, $value);
           if ($id != $newId) {
-            Config::setValue($key.'id', $newId);    
+            Config::setValue($key.'id', $newId);
           }
           OC_JSON::success(array("data" => array( "message" => "$key: $value")));
         } else {
@@ -213,7 +213,7 @@ if (isset($_POST['eventduration'])) {
 if (isset($_POST['passwordgenerate'])) {
   OC_JSON::success(array("data" => array( "message" => \OC_User::generatePassword() )));
   return;
-}    
+}
 
 if (isset($_POST['sharingpassword'])) {
   $value = $_POST['sharingpassword'];
@@ -235,7 +235,117 @@ if (isset($_POST['sharingpassword'])) {
           "message" => L::t('Failed changing password for').' '.$shareowner )));
     return false;
   }
-}  
+}
+
+/********************************************************************************
+ *
+ * Mail-server settings.
+ *
+ *******************************************************************************/
+
+foreach (array('smtp', 'imap') as $proto) {
+  if (isset($_POST[$proto.'server'])) {
+    $value = $_POST[$proto.'server'];
+    Config::setValue($proto.'server', $value);
+    OC_JSON::success(
+      array("data" => array(
+              'message' => L::t('Using "%s" as %s-server.',
+                                array($value, strtoupper($proto))))));
+    return true;
+  }
+
+  if (isset($_POST[$proto.'noauth'])) {
+    $value = $_POST[$proto.'noauth'];
+    Config::setValue($proto.'noauth', $value);
+    if ($value) {
+      $msg = L::t('Trying access without login/password.');
+    } else {
+      $msg = L::t('Using login/password authentication.');
+    }
+    OC_JSON::success(array("data" => array('message' => $msg)));
+    return true;
+  }
+
+  if (isset($_POST[$proto.'port'])) {
+    $value = $_POST[$proto.'port'];
+    Config::setValue($proto.'port', $value);
+    OC_JSON::success(
+      array(
+        "data" => array(
+          'message' => L::t('Using '.strtoupper($proto).' on port %d',
+                            array($value)))));
+
+    return true;
+  }
+
+  if (isset($_POST[$proto.'secure'])) {
+    $value = $_POST[$proto.'secure'];
+    $stdports = array('smtp' => array('insecure' => 587,
+                                      'starttls' => 587,
+                                      'ssl' => 465),
+                      'imap' => array('insecure' => 143,
+                                      'starttls' => 143,
+                                      'ssl' => 993));
+
+    switch ($value) {
+    case 'insecure':
+    case 'starttls':
+    case 'ssl':
+      break;
+    default:
+      OC_JSON::error(
+        array(
+          "data" => array(
+            "message" => L::t('Unknown transport security method:').' '.$value)));
+      return false;
+    }
+
+    $port = $stdports[$proto][$value];
+    Config::setValue($proto.'secure', $value);
+    Config::setValue($proto.'port', $port);
+
+    OC_JSON::success(
+      array(
+        "data" => array(
+          "message" => L::t('Using "%s" for message transport.', array($value)),
+          "proto" => $proto,
+          "port" => $port)));
+
+    return true;
+  }
+}
+
+if (isset($_POST['emailuser'])) {
+  $value = $_POST['emailuser'];
+  Config::setValue('emailuser', $value);
+  Config::setValue('smtpnoauth', false);
+  Config::setValue('imapnoauth', false);
+  // Should we now check whether we really can log in to the db-server?
+  OC_JSON::success(
+    array("data" => array(
+            'message' => L::t('Using "%s" as login.', array($value)))));
+  return true;
+}
+
+if (isset($_POST['emailpassword'])) {
+  $value = $_POST['emailpassword'];
+  Config::setValue('emailpassword', $value);
+  Config::setValue('smtpnoauth', false);
+  Config::setValue('imapnoauth', false);
+  // Should we now check whether we really can log in to the db-server?
+  OC_JSON::success(
+    array("data" => array(
+            'message' => L::t('Password has been changed.'))));
+  return true;
+}
+
+if (isset($_POST['emailtest'])) {
+  $value = $_POST['emailtest'];
+  OC_JSON::error(
+    array("data" => array(
+            'message' => L::t('Not yet implemented.'))));
+  return true;
+}
 
 if (isset($_POST['error'])) {
   $value = $_POST['error'];
@@ -245,9 +355,11 @@ if (isset($_POST['error'])) {
       "data" => array(
         "message" => L::t($value) )));
   return false;
-}  
+}
 
-OC_JSON::error(array("data" => array("message" => L::t("Unhandled request:")." ".print_r($_POST,true))));
+OC_JSON::error(
+  array("data" => array(
+          "message" => L::t("Unhandled request:")." ".print_r($_POST, true))));
 
 return false;
 

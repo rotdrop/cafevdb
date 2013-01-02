@@ -51,8 +51,8 @@ OCP\Util::addScript('cafevdb', 'transpose');
 OCP\Util::addScript('cafevdb', 'pme-helper');
 OCP\Util::addScript('cafevdb', 'email');
 OCP\Util::addScript('cafevdb', 'events');
-//OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/jscripts/tiny_mce/tiny_mce');
-//OCP\Util::addScript('cafevdb/3rdparty', 'tinymceinit');
+OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/jscripts/tiny_mce/tiny_mce');
+OCP\Util::addScript('cafevdb/3rdparty', 'tinymceinit');
 
 /* Special hack to determine if the email-form was requested through the pme-miscinfo button. */
 $op = Util::cgiValue('PME_sys_operation');
@@ -68,6 +68,7 @@ OCP\Util::addscript('3rdparty/fullcalendar', 'fullcalendar');
 OCP\Util::addscript('3rdparty/timepicker', 'jquery.ui.timepicker');
 OCP\Util::addStyle('3rdparty/timepicker', 'jquery.ui.timepicker');
 OCP\Util::addscript('', 'jquery.multiselect');
+OCP\Util::addStyle('', 'jquery.multiselect');
 OCP\Util::addscript('contacts','jquery.multi-autocomplete');
 OC_Util::addScript('','oc-vcategories');
 OCP\Util::addScript('cafevdb', 'calendar');

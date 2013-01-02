@@ -1,8 +1,7 @@
 <?php use CAFEVDB\L; ?>
 <?php use CAFEVDB\Config; ?>
-<div class="personalblock">
+<div id="tabs-3" class="personalblock admin">
 <!-- SHARED CALENDARS and stuff -->
-  <hr/>
   <div id="eventsettings">
 <!-- VIRTUAL USER -->
     <form id="shareowner">

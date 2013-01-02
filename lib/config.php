@@ -2,7 +2,7 @@
 
 /**Basic namespace for the cafevdb application.
  */
-namespace CAFEVDB 
+namespace CAFEVDB
 {
 
 // PHP shit
@@ -26,7 +26,17 @@ othercalendar,
 othercalendarid,
 managementcalendar,
 managementcalendarid,
-eventduration';
+eventduration,
+emailuser,
+emailpassword,
+smtpserver,
+smtpport,
+smtpsecure,
+smtpnoauth,
+imapserver,
+imapport,
+imapsecure,
+imapnoauth';
   const MD5_SUF  = '::MD5';
   const MD5_LEN  = 5;
   const DFLT_CALS = 'concerts,rehearsals,other,management';

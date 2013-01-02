@@ -1057,7 +1057,7 @@ Störung.');
   <tr>
      <td>'.L::t('Subject').'</td>
      <td colspan="2" class="subject">'.
-      htmlspecialchars($MailTag).
+      '<span class="subject tag">'.htmlspecialchars($MailTag).'</span>'.
       '<input value="'.$strSubject.'" size="40" name="txtSubject" type="text" id="txtSubject"></td>
   </tr>
   <tr>
@@ -1096,11 +1096,11 @@ Störung.');
         $tmpName = $attachment['tmp_name'];
         $name    = $attachment['name'];
         $size    = $attachment['size'];
-        $size    = round($size / 1024);
+        $size    = \OC_Helper::humanFileSize($size);
         echo ''
 .'  <tr>'
 .'    <td><button type="submit" name="deleteAttachment[]" value="'.$tmpName.'" >'.L::t('Remove').'</button></td>'
-.'    <td colspan="2"><span class="attachmentName">'.$name.' ('.$size.' kiB)</span></td>'
+          .'    <td colspan="2"><span class="attachmentName">'.$name.' ('.$size.')</span></td>'
 .'  </tr>';
       }
       $submitString = '
