@@ -246,11 +246,23 @@ if (isset($_POST['sharingpassword'])) {
 foreach (array('smtp', 'imap') as $proto) {
   if (isset($_POST[$proto.'server'])) {
     $value = $_POST[$proto.'server'];
-    Config::setValue($proto.'server', $value);
-    OC_JSON::success(
-      array("data" => array(
-              'message' => L::t('Using "%s" as %s-server.',
-                                array($value, strtoupper($proto))))));
+
+    // Check whether the host at least exists
+    $ip = gethostbyname($value);
+    if (filter_var($ip, FILTER_VALIDATE_IP) !== false) {
+      Config::setValue($proto.'server', $value);
+      OC_JSON::success(
+        array("data" => array(
+                'message' => L::t('Using "%s" at %s as %s-server.',
+                                  array($value, $ip, strtoupper($proto))))));
+    } else {
+      OC_JSON::error(
+        array(
+          "data" => array(
+            "message" => L::t('Unable to determine the IP-address for %s.',
+                              array($value)))));
+    }
+    
     return true;
   }
 
@@ -268,14 +280,25 @@ foreach (array('smtp', 'imap') as $proto) {
 
   if (isset($_POST[$proto.'port'])) {
     $value = $_POST[$proto.'port'];
-    Config::setValue($proto.'port', $value);
-    OC_JSON::success(
-      array(
-        "data" => array(
-          'message' => L::t('Using '.strtoupper($proto).' on port %d',
-                            array($value)))));
 
-    return true;
+    // Check that the value is numeric and not too large
+    if (filter_var($value, FILTER_VALIDATE_INT) !== false &&
+        $value > 0 && $value < (1 << 16)) {
+      Config::setValue($proto.'port', $value);
+      OC_JSON::success(
+        array(
+          "data" => array(
+            'message' => L::t('Using '.strtoupper($proto).' on port %d',
+                              array($value)))));
+      return true;
+    } else {
+      OC_JSON::error(
+        array(
+          "data" => array(
+            'message' => L::t('"%s" doesn\'t seem to be a candidate for an IP-port.',
+                              array($value)))));
+      return false;
+    }
   }
 
   if (isset($_POST[$proto.'secure'])) {
@@ -341,10 +364,43 @@ if (isset($_POST['emailpassword'])) {
 
 if (isset($_POST['emailtest'])) {
   $value = $_POST['emailtest'];
-  OC_JSON::error(
-    array("data" => array(
-            'message' => L::t('Not yet implemented.'))));
-  return true;
+
+  $user     = Config::getValue('emailuser');
+  $password = Config::getValue('emailpassword');
+
+  $host     = Config::getValue('imapserver');
+  $port     = Config::getValue('imapport');
+  $secure   = Config::getValue('imapsecure');
+
+  $imapok = false;
+  if (CAFEVDB\Email::checkImapServer($host, $port, $secure, $user, $password)) {
+    $imapmsg = L::t('IMAP connection seems functional.');
+    $imapok = true;
+  } else {
+    $imapmsg = L::t('Unable to establish IMAP connection.');
+  }
+
+  $host     = Config::getValue('smtpserver');
+  $port     = Config::getValue('smtpport');
+  $secure   = Config::getValue('smtpsecure');
+  
+  $smtpok = false;
+  if (CAFEVDB\Email::checkSmtpServer($host, $port, $secure, $user, $password)) {
+    $smtpmsg = L::t('SMTP connection seems functional.');
+    $smtpok = true;
+  } else {
+    $smtpmsg = L::t('Unable to establish SMTP connection.');
+  }
+  
+  $result = array("data" => array('message' => $imapmsg.' '.$smtpmsg));
+
+  if ($smtpok && $imapok) {
+    OC_JSON::success($result);
+    return true;
+  } else {
+    OC_JSON::error($result);
+    return false;
+  }
 }
 
 if (isset($_POST['error'])) {
