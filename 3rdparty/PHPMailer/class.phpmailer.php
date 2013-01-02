@@ -867,6 +867,8 @@ class PHPMailer {
    * @return bool
    */
   public function SmtpConnect() {
+    require_once $this->PluginDir . 'class.smtp.php';
+
     if(is_null($this->smtp)) {
       $this->smtp = new SMTP();
     }
