@@ -593,8 +593,10 @@ und aktiviert den Editor'));
           /* Reset the musician filter */
           $this->userBase['fromProject']   = $this->projectId >= 0;
           $this->userBase['exceptProject'] = false;
-          $this->userGroupSelect->setValue(
-            array('selectedBaseGroup' => $this->userBase));
+          if ($this->projectId >= 0) {
+            $this->userGroupSelect->setValue(
+              array('selectedBaseGroup' => $this->userBase));
+          }
 
           /* Ok, this means we must re-fetch some stuff from the DB */
           $dbh = mySQL::connect($this->opts);
@@ -619,7 +621,9 @@ und aktiviert den Editor'));
           $this->frozen = true;
           $this->dualSelect->toggleFrozen(true);
           $this->filterFieldSet->toggleFrozen(true);
-          $this->baseGroupFieldSet->toggleFrozen(true);
+          if ($this->projectId >= 0) {
+            $this->baseGroupFieldSet->toggleFrozen(true);
+          }
             
           $this->freezeFieldSet->removeChild($this->freezeButton);
           $this->submitFilterFieldSet->removeChild($this->filterResetButton);
