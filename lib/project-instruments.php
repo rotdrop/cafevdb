@@ -129,23 +129,7 @@ __EOT__;
                        'js_validation' =>  false,
                        'disabled' => false,
                        'js' => false);
-    $default_buttons_no_B = array(
-      'L' => array($transpose,
-        '<<','<','add','>','>>',
-        'goto','rows_per_page'),
-      'F' => array($transpose,
-        '<<','<','add','>','>>',
-        'goto','rows_per_page'),
-      'A' => array('save','more','cancel'),
-      'C' => array('save','more','cancel'),
-      'P' => array('save', 'cancel'),
-      'D' => array('save','cancel'),
-      'V' => array('change','cancel')
-      );
-    foreach ($default_buttons_no_B as $key => $value) {
-      $opts['buttons'][$key]['up'] = $value;
-      $opts['buttons'][$key]['down'] = $value;
-    }
+    $opts['buttons'] = Navigation::prependTableButton($transpose);
 
     // Number of lines to display on multiple selection filters
     $opts['multiple'] = '4';

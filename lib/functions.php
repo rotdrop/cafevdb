@@ -193,6 +193,61 @@ document.onkeypress = stopRKey;
 
 class Navigation
 {
+  /**Add a new button to the left of already registered phpMyEdit
+   * buttons. This is a dirty hack. But so what. Only the L and F
+   * (list and filter) views are augmented.
+   *
+   * @param[in] $button The new button.
+   *
+   * @param[in] $misc Whether or not to include the extra misc-button.
+   *
+   * @return Array suitable to be plugged in $opts['buttons'].
+   */
+  public static function prependTableButton($button, $misc = false)
+  {
+    // Cloned from phpMyEdit class:
+    $default_buttons_no_B = array(
+      'L' => array($button,
+                   '<<','<','add','>','>>',
+                   'goto','rows_per_page'),
+      'F' => array($button,
+                   '<<','<','add','>','>>',
+                   'goto','rows_per_page'),
+      'A' => array('save','more','cancel'),
+      'C' => array('save','more','cancel'),
+      'P' => array('save', 'cancel'),
+      'D' => array('save','cancel'),
+      'V' => array('change','cancel')
+      );
+	$default_multi_buttons_no_B = array(
+      'L' => array($button,
+                   '<<','<','misc','add','>','>>',
+                   'goto','rows_per_page'),
+      'F' => array($button,
+                   '<<','<','misc','add','>','>>',
+                   'goto','rows_per_page'),
+      'A' => array('save','more','cancel'),
+      'C' => array('save','more','cancel'),
+      'P' => array('save', 'cancel'),
+      'D' => array('save','cancel'),
+      'V' => array('change','cancel')
+      );
+    
+    $result = array();
+    if (!$misc) {
+      foreach ($default_buttons_no_B as $key => $value) {
+        $result[$key] = array('up' => $value, 'down' => $value);
+      }
+    } else {
+      foreach ($default_multi_buttons_no_B as $key => $value) {
+        $result[$key] = array('up' => $value, 'down' => $value);
+      }
+    }    
+
+    return $result;
+  }
+  
+
   public static function button($id='projects', $project='', $projectId=-1)
   {
     if (is_array($id)) {

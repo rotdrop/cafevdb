@@ -124,6 +124,23 @@ $(document).ready(function(){
     return false;
   });
 
+  $('input.pme-csvexport').click(function(event) {
+    event.preventDefault();
+
+    var form = $('form.pme-form');
+    var exportscript = OC.filePath('cafevdb', 'ajax/export', 'csv.php');
+
+    // This just cannot be it. This is really exceedingly ugly.
+    var tmp = form.attr('action');
+    form.attr('method', 'post');
+    form.attr('action', exportscript);
+    form.submit();
+    form.attr('action', tmp);
+
+    return false;
+  })
+
+
 });
 
 // Local Variables: ***

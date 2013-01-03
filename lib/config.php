@@ -396,12 +396,13 @@ imapsecure';
 
     self::$opts['phpmyadmin'] = 'https://ch.homelinux.net:8888/phpmyadmin/index.php?user=camerata&db=camerata';
     self::$opts['email'] = array('name'     => 'Em@il',
-                                'mask'     => '<A HReF="mailto:%1$s">&lt;%1$s&gt;</A>',
-                                'select'   => 'T',
-                                'maxlen'   => 768,
-                                'sort'     => true,
-                                'nowrap'   => true,
-                                'escape'   => false);
+                                 'URL'      => 'mailto:$link',
+                                 'URLdisp'  => '$value',
+                                 'select'   => 'T',
+                                 'maxlen'   => 768,
+                                 'sort'     => true,
+                                 'nowrap'   => true,
+                                 'escape'   => true);
     
     self::$opts['money'] = array('name' => 'Unkostenbeitrag<BR/>(Gagen negativ)',
                                  //'phpview' => self::$prefix . 'money.inc.php',

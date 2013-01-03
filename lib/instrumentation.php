@@ -14,9 +14,43 @@ class Instrumentation
   protected $instruments;
   protected $instrumentFamilies;
   protected $opts;
+  protected $pme;
+  protected $execute;
 
-  protected function __construct()
+  public function deactivate() 
   {
+    $this->execute = false;
+  }
+
+  public function activate() 
+  {
+    $this->execute = true;
+  }
+
+  public function execute()
+  {
+    if ($this->pme) {
+      $this->pme->execute();
+    }
+  }
+
+  function csvExport(&$handle, $delim = ',', $enclosure = '"', $filter = false)
+  {
+    if (!$this->pme) {
+      return;
+    }
+    if ($this->pme->connect() == false) {
+      return false;
+    }
+    $this->pme->csvExport($handle, $delim, $enclosure, $filter);
+    $this->pme->sql_disconnect();
+  }
+
+  protected function __construct($_execute = true)
+  {
+    $this->execute = $_execute;
+    $this->pme = false;
+
     Config::init();
 
     //Config::$debug_query = true;

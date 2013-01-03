@@ -8,8 +8,8 @@ class DetailedInstrumentation
 {
   const CSS_PREFIX = 'cafevdb-pme';
 
-  function __construct() {
-    parent::__construct();
+  function __construct($execute = true) {
+    parent::__construct($execute);
   }
 
   public function headerText()
@@ -98,6 +98,14 @@ __EOT__;
     // Navigation style: B - buttons (default), T - text links, G - graphic links
     // Buttons position: U - up, D - down (default)
     //$opts['navigation'] = 'DB';
+
+    $export = array('name' => 'csvexport',
+                    'value' => strval(L::t('Export CSV')),
+                    'css' => 'pme-csvexport',
+                    'js_validation' =>  false,
+                    'disabled' => false,
+                    'js' => false);
+    $opts['buttons'] = Navigation::prependTableButton($export, true);
 
     // Display special page elements
     $opts['display'] = array(
@@ -342,12 +350,9 @@ __EOT__;
     $opts['triggers']['update']['before'][1]  = Config::$triggers.'remove-unchanged.TUB.php.inc';
     $opts['triggers']['update']['before'][2]  = Config::$triggers.'update-musician-timestamp.TUB.php.inc';
 
-    // Now important call to phpMyEdit
-    //require_once 'phpMyEdit.class.php';
-    //new phpMyEdit($opts);
-    //require_once 'extensions/phpMyEdit-mce-cal.class.php';
-    //new phpMyEdit_mce_cal($opts);
-    new \phpMyEdit($opts);
+    $opts['execute'] = $this->execute;
+
+    $this->pme = new \phpMyEdit($opts); // Generate and possibly display the table
   }
 
 }; // class DetailedInstrumentation

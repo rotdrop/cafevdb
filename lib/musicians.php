@@ -7,11 +7,10 @@ class Musicians
   extends Instrumentation
 {
   const CSS_PREFIX = 'cafevdb-pme';
-
   private $projectMode;
 
-  function __construct($mode = false) {
-    parent::__construct();
+  function __construct($mode = false, $execute = true) {
+    parent::__construct($execute);
     $this->projectMode = $mode;
   }
 
@@ -42,7 +41,7 @@ __EOT__;
     return $header;
   }
 
-  /**Display the list of all musicians. Is $projectMode == true,
+  /**Display the list of all musicians. If $projectMode == true,
    * filter out all musicians present in $projectId and add a
    * hyperlink which will add the Musician to the respective project.
    */
@@ -108,6 +107,16 @@ __EOT__;
     // Navigation style: B - buttons (default), T - text links, G - graphic links
     // Buttons position: U - up, D - down (default)
     //$opts['navigation'] = 'DB';
+
+    if (!$this->projectMode) {
+      $export = array('name' => 'csvexport',
+                      'value' => strval(L::t('Export CSV')),
+                      'css' => 'pme-csvexport',
+                      'js_validation' => false,
+                      'disabled' => false,
+                      'js' => false);
+      $opts['buttons'] = Navigation::prependTableButton($export, true);
+    }
 
     // Display special page elements
     $opts['display'] = array(
@@ -335,7 +344,9 @@ __EOT__;
     $opts['triggers']['update']['before'][0]  = Config::$triggers.'remove-unchanged.TUB.inc.php';
     $opts['triggers']['update']['before'][1]  = Config::$triggers.'update-musician-timestamp.TUB.inc.php';
 
-    new \phpMyEdit($opts);
+    $opts['execute'] = $this->execute;
+
+    $this->pme = new \phpMyEdit($opts);
   } // display()
 };
 
