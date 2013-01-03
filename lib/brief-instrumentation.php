@@ -275,6 +275,24 @@ __EOT__;
     $opts['triggers']['insert']['before']  = Config::$triggers.'instrumentation-fix-project.TIB.inc.php';
     $opts['triggers']['update']['before']  = Config::$triggers.'instrumentation-change-instrument.TUB.inc.php';
 
+    if ($this->pme_bare) {
+      // disable all navigation buttons, probably for html export
+      $opts['navigation'] = 'N'; // no navigation
+      $opts['options'] = '';
+      // Don't display special page elements
+      $opts['display'] = array(
+        'form'  => false,
+        'query' => false,
+        'sort'  => false,
+        'time'  => false,
+        'tabs'  => false
+      );
+      // Disable sorting buttons
+      foreach ($opts['fdd'] as $key => $value) {
+        $opts['fdd'][$key]['sort'] = false;
+      }
+    }
+
     $opts['execute'] = $this->execute;
 
     // Generate and possibly display the table

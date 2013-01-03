@@ -344,6 +344,24 @@ __EOT__;
     $opts['triggers']['update']['before'][0]  = Config::$triggers.'remove-unchanged.TUB.inc.php';
     $opts['triggers']['update']['before'][1]  = Config::$triggers.'update-musician-timestamp.TUB.inc.php';
 
+    if ($this->pme_bare) {
+      // disable all navigation buttons, probably for html export
+      $opts['navigation'] = 'N'; // no navigation
+      $opts['options'] = '';
+      // Don't display special page elements
+      $opts['display'] = array(
+        'form'  => false,
+        'query' => false,
+        'sort'  => false,
+        'time'  => false,
+        'tabs'  => false
+      );
+      // Disable sorting buttons
+      foreach ($opts['fdd'] as $key => $value) {
+        $opts['fdd'][$key]['sort'] = false;
+      }
+    }
+
     $opts['execute'] = $this->execute;
 
     $this->pme = new \phpMyEdit($opts);

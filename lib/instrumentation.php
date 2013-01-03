@@ -16,6 +16,7 @@ class Instrumentation
   protected $opts;
   protected $pme;
   protected $execute;
+  protected $pme_bare;
 
   public function deactivate() 
   {
@@ -34,6 +35,11 @@ class Instrumentation
     }
   }
 
+  public function navigation($enable)
+  {
+    $this->pme_bare = !$enable;
+  }
+
   function csvExport(&$handle, $delim = ',', $enclosure = '"', $filter = false)
   {
     if (!$this->pme) {
@@ -50,6 +56,7 @@ class Instrumentation
   {
     $this->execute = $_execute;
     $this->pme = false;
+    $this->pme_bare = false;
 
     Config::init();
 
