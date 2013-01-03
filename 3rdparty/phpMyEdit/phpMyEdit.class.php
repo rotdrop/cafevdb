@@ -21,7 +21,7 @@
 
 /* $Platon: phpMyEdit/phpMyEdit.class.php,v 1.215 2011-01-09 18:42:41 nepto Exp $ */
 
-/*  This is a generic table editing program. The table and fields to be
+/*	This is a generic table editing program. The table and fields to be
 	edited are defined in the calling program.
 
 	This program works in three passes.
@@ -50,9 +50,9 @@ class phpMyEdit_timer /* {{{ */
 
 	function start()
 	{
-		$startMtime      = explode(' ', microtime());
+		$startMtime		 = explode(' ', microtime());
 		$this->startTime = (double) $startMtime[0] + (double) $startMtime[1];
-		$this->started   = true;
+		$this->started	 = true;
 	}
 
 	function end($iterations = 1)
@@ -109,7 +109,7 @@ class phpMyEdit
 	var $key_type;	// type of key field (int/real/string/date etc.)
 	var $key_delim;	// character used for key value quoting
 	var $rec;		// number of record selected for editing
-        var $mrecs;             // array of custom-multi records selected
+		var $mrecs;				// array of custom-multi records selected
 	var $inc;		// number of records to display
 	var $fm;		// first record to display
 	var $fl;		// is the filter row displayed (boolean)
@@ -120,7 +120,7 @@ class phpMyEdit
 	var $fdd;		// field definitions
 	var $qfn;		// value of all filters used during the last pass
 	var $sfn;		// sort field number (- = descending sort order)
-        var $dfltsfn;           // default sort field number
+		var $dfltsfn;			// default sort field number
 	var $cur_tab;	// current selected tab
 	var $page_type;	// current page type
 
@@ -142,8 +142,8 @@ class phpMyEdit
 
 	// Additional features
 	var $labels;		// multilingual labels
-        var $tooltips;          // tooltips
-        var $translations;      // file with button translations
+		var $tooltips;			// tooltips
+		var $translations;		// file with button translations
 	var $cgi;		// CGI variable features array
 	var $js;		// JS configuration array
 	var $dhtml;		// DHTML configuration array
@@ -151,7 +151,7 @@ class phpMyEdit
 	var $message;		// informational message to print
 	var $notify;		// change notification e-mail adresses
 	var $logtable;		// name of optional logtable
-    var $miscphp;           // callback function for multi-purpose custom misc button 
+		var $miscphp;			// callback function for multi-purpose custom misc button 
 	var $navigation;	// navigation style
 	var $buttons;
 	var $tabs;			// TAB names
@@ -161,10 +161,10 @@ class phpMyEdit
 	// Predefined variables
 	var $comp_ops  = array('<'=>'<','<='=>'<=','='=>'=','>='=>'>=','>'=>'>');
 	var $sql_aggrs = array(
-			'sum'   => 'Total',
-			'avg'   => 'Average',
-			'min'   => 'Minimum',
-			'max'   => 'Maximum',
+			'sum'	=> 'Total',
+			'avg'	=> 'Average',
+			'min'	=> 'Minimum',
+			'max'	=> 'Maximum',
 			'count' => 'Count');
 	var $page_types = array(
 			'L' => 'list',
@@ -176,10 +176,10 @@ class phpMyEdit
 			'D' => 'delete'
 			);
 	var $default_buttons = array(
-                        'L' => array('<<','<','add','view','change','copy','delete','>','>>',
-                                     'goto','rows_per_page'),
-                        'F' => array('<<','<','add','view','change','copy','delete','>','>>',
-                                     'goto','rows_per_page'),
+						'L' => array('<<','<','add','view','change','copy','delete','>','>>',
+									 'goto','rows_per_page'),
+						'F' => array('<<','<','add','view','change','copy','delete','>','>>',
+									 'goto','rows_per_page'),
 			'A' => array('save','more','cancel'),
 			'C' => array('save','more','cancel'),
 			'P' => array('save', 'cancel'),
@@ -187,10 +187,10 @@ class phpMyEdit
 			'V' => array('change','cancel')
 			);
 	var $default_multi_buttons = array(
-                        'L' => array('<<','<','misc','add','view','change','copy','delete','>','>>',
-                                     'goto','rows_per_page'),
-                        'F' => array('<<','<','misc','add','view','change','copy','delete','>','>>',
-                                     'goto','rows_per_page'),
+						'L' => array('<<','<','misc','add','view','change','copy','delete','>','>>',
+									 'goto','rows_per_page'),
+						'F' => array('<<','<','misc','add','view','change','copy','delete','>','>>',
+									 'goto','rows_per_page'),
 			'A' => array('save','more','cancel'),
 			'C' => array('save','more','cancel'),
 			'P' => array('save', 'cancel'),
@@ -198,10 +198,10 @@ class phpMyEdit
 			'V' => array('change','cancel')
 			);
 	var $default_buttons_no_B = array(
-                        'L' => array('<<','<','add','>','>>',
-                                     'goto','rows_per_page'),
-                        'F' => array('<<','<','add','>','>>',
-                                     'goto','rows_per_page'),
+						'L' => array('<<','<','add','>','>>',
+									 'goto','rows_per_page'),
+						'F' => array('<<','<','add','>','>>',
+									 'goto','rows_per_page'),
 			'A' => array('save','more','cancel'),
 			'C' => array('save','more','cancel'),
 			'P' => array('save', 'cancel'),
@@ -209,10 +209,10 @@ class phpMyEdit
 			'V' => array('change','cancel')
 			);
 	var $default_multi_buttons_no_B = array(
-                        'L' => array('<<','<','misc','add','>','>>',
-                                     'goto','rows_per_page'),
-                        'F' => array('<<','<','misc','add','>','>>',
-                                     'goto','rows_per_page'),
+						'L' => array('<<','<','misc','add','>','>>',
+									 'goto','rows_per_page'),
+						'F' => array('<<','<','misc','add','>','>>',
+									 'goto','rows_per_page'),
 			'A' => array('save','more','cancel'),
 			'C' => array('save','more','cancel'),
 			'P' => array('save', 'cancel'),
@@ -226,11 +226,11 @@ class phpMyEdit
 	 * column specific functions
 	 */
 
-	function col_has_sql($k)    { return isset($this->fdd[$k]['sql']); }
-	function col_has_sqlw($k)   { return isset($this->fdd[$k]['sqlw']) && !$this->virtual($k); }
+	function col_has_sql($k)	{ return isset($this->fdd[$k]['sql']); }
+	function col_has_sqlw($k)	{ return isset($this->fdd[$k]['sqlw']) && !$this->virtual($k); }
 	function col_has_values($k) { return isset($this->fdd[$k]['values']) || isset($this->fdd[$k]['values2']); }
-	function col_has_php($k)    { return isset($this->fdd[$k]['php']); }
-	function col_has_URL($k)    { return isset($this->fdd[$k]['URL'])
+	function col_has_php($k)	{ return isset($this->fdd[$k]['php']); }
+	function col_has_URL($k)	{ return isset($this->fdd[$k]['URL'])
 		|| isset($this->fdd[$k]['URLprefix']) || isset($this->fdd[$k]['URLpostfix']); }
 	function col_has_multiple($k)
 	{ return $this->col_has_multiple_select($k) || $this->col_has_checkboxes($k); }
@@ -245,60 +245,60 @@ class phpMyEdit
 
 	/*
 	 * functions for indicating whether navigation style is enabled
-     */
+	 */
 
-	function nav_buttons()       { return stristr($this->navigation, 'B'); }
-	function nav_text_links()    { return stristr($this->navigation, 'T'); }
+	function nav_buttons()		 { return stristr($this->navigation, 'B'); }
+	function nav_text_links()	 { return stristr($this->navigation, 'T'); }
 	function nav_graphic_links() { return stristr($this->navigation, 'G'); }
-    function nav_custom_multi()  { return stristr($this->navigation, 'M') && $this->misc_enabled(); }
-	function nav_up()            { return (stristr($this->navigation, 'U') && !($this->buttons[$this->page_type]['up'] === false)); }
-	function nav_down()          { return (stristr($this->navigation, 'D') && !($this->buttons[$this->page_type]['down'] === false)); }
+	function nav_custom_multi()	 { return stristr($this->navigation, 'M') && $this->misc_enabled(); }
+	function nav_up()			 { return (stristr($this->navigation, 'U') && !($this->buttons[$this->page_type]['up'] === false)); }
+	function nav_down()			 { return (stristr($this->navigation, 'D') && !($this->buttons[$this->page_type]['down'] === false)); }
 
 	/*
 	 * functions for indicating whether operations are enabled
 	 */
-    function label_cmp($a, $b) {
-      return ($a == $b ||
-              (isset($this->labels[$b]) && $a == $this->labels[$b]) ||
-              (isset($this->labels[$a]) && $this->labels[$a] == $b));
-    }
+	function label_cmp($a, $b) {
+	  return ($a == $b ||
+			  (isset($this->labels[$b]) && $a == $this->labels[$b]) ||
+			  (isset($this->labels[$a]) && $this->labels[$a] == $b));
+	}
 
-	function listall()        { return $this->inc < 0; }
-	function add_enabled()    { return stristr($this->options, 'A'); }
+	function listall()		  { return $this->inc < 0; }
+	function add_enabled()	  { return stristr($this->options, 'A'); }
 	function change_enabled() { return stristr($this->options, 'C'); }
 	function delete_enabled() { return stristr($this->options, 'D'); }
-	function misc_enabled()   { return (stristr($this->options, 'M') &&
-                                        isset($this->miscphp) &&
-                                        $this->miscphp != '') ; }
+	function misc_enabled()	  { return (stristr($this->options, 'M') &&
+										isset($this->miscphp) &&
+										$this->miscphp != '') ; }
 	function filter_enabled() { return stristr($this->options, 'F'); }
-	function view_enabled()   { return stristr($this->options, 'V'); }
-	function copy_enabled()   { return stristr($this->options, 'P') && $this->add_enabled(); }
-	function tabs_enabled()   { return $this->display['tabs'] && count($this->tabs) > 0; }
-	function hidden($k)       { return stristr(@$this->fdd[$k]['input'],'H'); }
-	function password($k)     { return stristr(@$this->fdd[$k]['input'],'W'); }
-	function readonly($k)     { return stristr(@$this->fdd[$k]['input'],'R') || $this->virtual($k);     }
-	function virtual($k)      { return stristr(@$this->fdd[$k]['input'],'V') && $this->col_has_sql($k); }
+	function view_enabled()	  { return stristr($this->options, 'V'); }
+	function copy_enabled()	  { return stristr($this->options, 'P') && $this->add_enabled(); }
+	function tabs_enabled()	  { return $this->display['tabs'] && count($this->tabs) > 0; }
+	function hidden($k)		  { return stristr(@$this->fdd[$k]['input'],'H'); }
+	function password($k)	  { return stristr(@$this->fdd[$k]['input'],'W'); }
+	function readonly($k)	  { return stristr(@$this->fdd[$k]['input'],'R') || $this->virtual($k);		}
+	function virtual($k)	  { return stristr(@$this->fdd[$k]['input'],'V') && $this->col_has_sql($k); }
 
-	function add_operation()    { return $this->label_cmp($this->operation, 'Add')    && $this->add_enabled();    }
+	function add_operation()	{ return $this->label_cmp($this->operation, 'Add')	  && $this->add_enabled();	  }
 	function change_operation() { return $this->label_cmp($this->operation, 'Change') && $this->change_enabled(); }
-	function copy_operation()   { return $this->label_cmp($this->operation, 'Copy')   && $this->copy_enabled();   }
+	function copy_operation()	{ return $this->label_cmp($this->operation, 'Copy')	  && $this->copy_enabled();	  }
 	function delete_operation() { return $this->label_cmp($this->operation, 'Delete') && $this->delete_enabled(); }
-        function misc_operation()   { return $this->label_cmp($this->operation, 'Misc')   && $this->misc_enabled();  }
-	function view_operation()   { return $this->label_cmp($this->operation, 'View')   && $this->view_enabled();   }
+		function misc_operation()	{ return $this->label_cmp($this->operation, 'Misc')	  && $this->misc_enabled();	 }
+	function view_operation()	{ return $this->label_cmp($this->operation, 'View')	  && $this->view_enabled();	  }
 	function filter_operation() { return $this->fl && $this->filter_enabled() && $this->list_operation(); }
-	function list_operation()   { /* covers also filtering page */ return ! $this->change_operation()
-										&& ! $this->add_operation()    && ! $this->copy_operation()
+	function list_operation()	{ /* covers also filtering page */ return ! $this->change_operation()
+										&& ! $this->add_operation()	   && ! $this->copy_operation()
 										&& ! $this->delete_operation() && ! $this->view_operation(); }
 	function next_operation()	{ return ($this->label_cmp($this->navop, 'Next')) || ($this->navop == '>'); }
 	function prev_operation()	{ return ($this->label_cmp($this->navop, 'Prev')) || ($this->navop == '<'); }
 	function first_operation()	{ return ($this->label_cmp($this->navop, 'First')) || ($this->navop == '<<'); }
 	function last_operation()	{ return ($this->label_cmp($this->navop, 'Last')) || ($this->navop == '>>'); }
-	function clear_operation()	{ return $this->label_cmp($this->sw, 'Clear');  }
+	function clear_operation()	{ return $this->label_cmp($this->sw, 'Clear');	}
 
-	function add_canceled()    { return $this->label_cmp($this->canceladd   , 'Cancel'); }
-	function view_canceled()   { return $this->label_cmp($this->cancelview  , 'Cancel'); }
+	function add_canceled()	   { return $this->label_cmp($this->canceladd	, 'Cancel'); }
+	function view_canceled()   { return $this->label_cmp($this->cancelview	, 'Cancel'); }
 	function change_canceled() { return $this->label_cmp($this->cancelchange, 'Cancel'); }
-	function copy_canceled()   { return $this->label_cmp($this->cancelcopy  , 'Cancel'); }
+	function copy_canceled()   { return $this->label_cmp($this->cancelcopy	, 'Cancel'); }
 	function delete_canceled() { return $this->label_cmp($this->canceldelete, 'Cancel'); }
 
 	function is_values2($k, $val = 'X') /* {{{ */
@@ -335,7 +335,7 @@ class phpMyEdit
 			return true;
 		}
 		return
-			($this->add_operation()    && stristr($options, 'A')) ||
+			($this->add_operation()	   && stristr($options, 'A')) ||
 			($this->view_operation()   && stristr($options, 'V')) ||
 			($this->change_operation() && stristr($options, 'C')) ||
 			($this->copy_operation()   && stristr($options, 'P')) ||
@@ -376,15 +376,15 @@ class phpMyEdit
 
 	/*
 	 * sql functions
-     */
+	 */
 	function sql_connect() /* {{{ */
 	{
-          //echo htmlspecialchars($this->uh.$this->un.$this->pw);
+		  //echo htmlspecialchars($this->uh.$this->un.$this->pw);
 		$this->dbh = @ini_get('allow_persistent')
 			? @mysql_pconnect($this->hn, $this->un, $this->pw)
 			: @mysql_connect($this->hn, $this->un, $this->pw);
-                // Gnah.
-                $this->myquery("SET NAMES 'utf8'", $this->dbh);
+				// Gnah.
+				$this->myquery("SET NAMES 'utf8'", $this->dbh);
 	} /* }}} */
 		
 
@@ -468,44 +468,44 @@ class phpMyEdit
 		// Language might look like this: 
 		// de-de,en-us;q=0.8,de;q=0.5,en;q=0.3
 
-                /* echo '<PRE>'; */
-                /* print_r($language); */
-                /* echo '</PRE>'; */
+				/* echo '<PRE>'; */
+				/* print_r($language); */
+				/* echo '</PRE>'; */
 		$langtmpar = explode(',',$language);
 		$langar = array();
-                $haveprio = false;
+				$haveprio = false;
 		foreach ($langtmpar as $lang) {
-                        $lang = strtoupper(trim($lang));
+						$lang = strtoupper(trim($lang));
 			$lang = explode(';',$lang);
-                        // Convert de-de etc. into a single de.
-                        $langvariants = explode('-',$lang[0]);
-                        if (isset($langvariants[1]) &&
-                            $langvariants[0] == $langvariants[1]) {
-                          unset($langvariants[0]);
-                          $lang[0] = implode('-',$langvariants);
-                        }
-                        /* echo '<PRE>'; */
-                        /* print_r($lang); */
-                        /* echo '</PRE>'; */
-                        if (!isset($langar["$lang[0]"])) {
-                          if (isset($lang[1])) {
-                            $haveprio = true;
-                            $tmp = explode('=',$lang[1]);
-                            $langar["$lang[0]"] = $tmp[1];
-                          } else {
-                            $langar["$lang[0]"] = 1.0;
-                          }
-                        }
-                        /* echo '<PRE>'; */
-                        /* print_r($langar); */
-                        /* echo '</PRE>'; */
+						// Convert de-de etc. into a single de.
+						$langvariants = explode('-',$lang[0]);
+						if (isset($langvariants[1]) &&
+							$langvariants[0] == $langvariants[1]) {
+						  unset($langvariants[0]);
+						  $lang[0] = implode('-',$langvariants);
+						}
+						/* echo '<PRE>'; */
+						/* print_r($lang); */
+						/* echo '</PRE>'; */
+						if (!isset($langar["$lang[0]"])) {
+						  if (isset($lang[1])) {
+							$haveprio = true;
+							$tmp = explode('=',$lang[1]);
+							$langar["$lang[0]"] = $tmp[1];
+						  } else {
+							$langar["$lang[0]"] = 1.0;
+						  }
+						}
+						/* echo '<PRE>'; */
+						/* print_r($langar); */
+						/* echo '</PRE>'; */
 		}
-                if ($haveprio) {
-                        arsort($langar, SORT_NUMERIC);
-                }
-                /* echo '<PRE>'; */
-                /* print_r($langar); */
-                /* echo '</PRE>'; */
+				if ($haveprio) {
+						arsort($langar, SORT_NUMERIC);
+				}
+				/* echo '<PRE>'; */
+				/* print_r($langar); */
+				/* echo '</PRE>'; */
 		
 		foreach ($langar as $lang => $qual) {
 			// try the full language w/ variant, but prefer UTF8
@@ -517,7 +517,7 @@ class phpMyEdit
 				break;
 			}
 
-                        // Ok, then retry without UTF8 added
+						// Ok, then retry without UTF8 added
 			$language = strtoupper($lang);
 
 			$file = $this->dir['lang'].'PME.lang.'.$language.'.inc';
@@ -555,15 +555,15 @@ class phpMyEdit
 		if (! is_array($ret)) {
 			return $ret;
 		}
-                $this->translations = $file;
+				$this->translations = $file;
 		$small = array(
 				'Search' => 'v',
-				'Hide'   => '^',
-				'Clear'  => 'X',
-				'Query'  => htmlspecialchars('>'));
+				'Hide'	 => '^',
+				'Clear'	 => 'X',
+				'Query'	 => htmlspecialchars('>'));
 		if ((!$this->nav_text_links() && !$this->nav_graphic_links())
 				|| !isset($ret['Search']) || !isset($ret['Query'])
-				|| !isset($ret['Hide'])   || !isset($ret['Clear'])) {
+				|| !isset($ret['Hide'])	  || !isset($ret['Clear'])) {
 			foreach ($small as $key => $val) {
 				$ret[$key] = $val;
 			}
@@ -582,7 +582,7 @@ class phpMyEdit
 
 	function set_values_from_table($field_num, $strict = false) /* {{{ */
 	{
-		$db    = &$this->fdd[$field_num]['values']['db'];
+		$db	   = &$this->fdd[$field_num]['values']['db'];
 		$table = $this->sd.$this->fdd[$field_num]['values']['table'].$this->ed;
 		$key   = &$this->fdd[$field_num]['values']['column'];
 		$desc  = &$this->fdd[$field_num]['values']['description'];
@@ -618,8 +618,8 @@ class phpMyEdit
 			}
 			$qparts['from'] = $dbp.$table;
 			$ar = array(
-					'table'       => $table,
-					'column'      => $column,
+					'table'		  => $table,
+					'column'	  => $column,
 					'description' => $desc);
 			$qparts['where'] = $this->substituteVars($this->fdd[$field_num]['values']['filters'], $ar);
 			if ($this->fdd[$field_num]['values']['orderby']) {
@@ -630,10 +630,10 @@ class phpMyEdit
 			$this->virtual($field_num) && $key = $this->fqn($field_num);
 			$qparts['select']  = 'DISTINCT '.$this->sd.$key.$this->ed.' AS PMEkey';
 			$qparts['orderby'] = 'PMEkey';
-			$qparts['from']    = $this->dbp.$this->sd.$this->tb.$this->ed;
+			$qparts['from']	   = $this->dbp.$this->sd.$this->tb.$this->ed;
 		}
 		$values = array();
-		$res    = $this->myquery($this->get_SQL_query($qparts), __LINE__);
+		$res	= $this->myquery($this->get_SQL_query($qparts), __LINE__);
 		while ($row = $this->sql_fetch($res, 'n')) {
 			$values[$row[0]] = $desc ? $row[1] : $row[0];
 		}
@@ -648,14 +648,14 @@ class phpMyEdit
 			return $this->fdd[$field]['sql'];
 		// on copy/change always use simple key retrieving
 		if ($this->add_operation()
-             || $this->copy_operation()
-             || $this->change_operation()) {
+			 || $this->copy_operation()
+			 || $this->change_operation()) {
 				$ret = $this->sd.'PMEtable0'.$this->ed.'.'.$this->sd.$this->fds[$field].$this->ed;
 		} else {
 			if (isset($this->fdd[$this->fds[$field]]['values']['description']) && ! $dont_desc) {
 				$desc = &$this->fdd[$this->fds[$field]]['values']['description'];
 				if (is_array($desc) && is_array($desc['columns'])) {
-					$ret      = 'CONCAT('; // )
+					$ret	  = 'CONCAT('; // )
 					$num_cols = sizeof($desc['columns']);
 					if (isset($desc['divs'][-1])) {
 						$ret .= '"'.addslashes($desc['divs'][-1]).'",';
@@ -687,17 +687,17 @@ class phpMyEdit
 		/*
 		 * Prepare the SQL Query from the data definition file
 		 */
-		$qparts['type']   = 'select';
+		$qparts['type']	  = 'select';
 		$qparts['select'] = $this->get_SQL_column_list();
 		// Even if the key field isn't displayed, we still need its value
 		if (!in_array ($this->key, $this->fds)) {
 			$qparts['select'] .= ','.$this->fqn($this->key);
 		}
-		$qparts['from']  = @$this->get_SQL_join_clause();
+		$qparts['from']	 = @$this->get_SQL_join_clause();
 		$qparts['where'] = $this->get_SQL_where_from_query_opts();
 		// build up the ORDER BY clause
 		if (isset($this->sfn) || isset($this->dfltsfn)) {
-                        $sfn = array_merge($this->sfn, $this->dfltsfn);
+						$sfn = array_merge($this->sfn, $this->dfltsfn);
 			$sort_fields   = array();
 			$sort_fields_w = array();
 			foreach ($sfn as $field) {
@@ -708,16 +708,16 @@ class phpMyEdit
 					$field = $field;
 					$desc  = false;
 				}
-				$sort_field   = $this->fqn($field);
+				$sort_field	  = $this->fqn($field);
 				$sort_field_w = $this->fdd[$field]['name'];
 				$this->col_has_sql($field) && $sort_field_w .= ' (sql)';
 				if ($desc) {
-					$sort_field   .= ' DESC';
+					$sort_field	  .= ' DESC';
 					$sort_field_w .= ' '.$this->labels['descending'];
 				} else {
 					$sort_field_w .= ' '.$this->labels['ascending'];
 				}
-				$sort_fields[]   = $sort_field;
+				$sort_fields[]	 = $sort_field;
 				$sort_fields_w[] = $sort_field_w;
 			}
 			if (count($sort_fields) > 0) {
@@ -727,12 +727,12 @@ class phpMyEdit
 		$qparts['limit'] = $this->listall() ? '' : $this->sql_limit($this->fm,$this->inc);
 		$this->sort_fields_w = $sort_fields_w; // due to display sorting sequence
 		return $qparts;
- 	} /* }}} */
+	} /* }}} */
 
 	function get_SQL_main_list_query($qparts) /* {{{ */
 	{
- 		return $this->get_SQL_query($qparts);
- 	} /* }}} */
+		return $this->get_SQL_query($qparts);
+	} /* }}} */
 
 	function get_SQL_query($parts) /* {{{ */
 	{
@@ -799,9 +799,9 @@ class phpMyEdit
 			}
 			if ($this->col_has_datemask($k)) {
 				$fields[] = ("(TO_SECONDS(".$this->fqn($k).")"
-                             ."-TO_SECONDS('1970-01-01 00:00:00')"
-                             ."-".date_offset_get(new DateTime).") "
-                             ."AS ".$this->sd."qf".$k."_timestamp".$this->ed);
+							 ."-TO_SECONDS('1970-01-01 00:00:00')"
+							 ."-".date_offset_get(new DateTime).") "
+							 ."AS ".$this->sd."qf".$k."_timestamp".$this->ed);
 			}
 		}
 		return join(',', $fields);
@@ -809,7 +809,7 @@ class phpMyEdit
 
 	function get_SQL_join_clause() /* {{{ */
 	{
-		$main_table  = $this->sd.'PMEtable0'.$this->ed;
+		$main_table	 = $this->sd.'PMEtable0'.$this->ed;
 		$join_clause = $this->sd.$this->tb.$this->ed." AS $main_table";
 		for ($k = 0, $numfds = sizeof($this->fds); $k < $numfds; $k++) {
 			$main_column = $this->fds[$k];
@@ -818,24 +818,24 @@ class phpMyEdit
 			} else {
 				//$dbp = $this->dbp;
 			}
-                        if (is_array($this->fdd[$main_column]['values']['table'])) {
-                          if ($this->fdd[$main_column]['values']['table']['kind'] == 'derived') {
-                            $table       = '(' .$this->fdd[$main_column]['values']['table']['sql'].' )';
-                          } else {
-                            $table       = $this->sd.$this->fdd[$main_column]['values']['table']['sql'].$this->ed;
-                          }
-                        } else {
-                          $table       = $this->sd.$this->fdd[$main_column]['values']['table'].$this->ed;
-                        }
+						if (is_array($this->fdd[$main_column]['values']['table'])) {
+						  if ($this->fdd[$main_column]['values']['table']['kind'] == 'derived') {
+							$table		 = '(' .$this->fdd[$main_column]['values']['table']['sql'].' )';
+						  } else {
+							$table		 = $this->sd.$this->fdd[$main_column]['values']['table']['sql'].$this->ed;
+						  }
+						} else {
+						  $table	   = $this->sd.$this->fdd[$main_column]['values']['table'].$this->ed;
+						}
 			$join_column = $this->sd.$this->fdd[$main_column]['values']['column'].$this->ed;
-			$join_desc   = $this->sd.$this->fdd[$main_column]['values']['description'].$this->ed;
+			$join_desc	 = $this->sd.$this->fdd[$main_column]['values']['description'].$this->ed;
 			if ($join_desc != $this->sd.$this->ed && $join_column != $this->sd.$this->ed) {
 				$join_table = $this->sd.'PMEjoin'.$k.$this->ed;
 				$ar = array(
-						'main_table'       => $main_table,
-						'main_column'      => $this->sd.$main_column.$this->ed,
-						'join_table'       => $join_table,
-						'join_column'      => $join_column,
+						'main_table'	   => $main_table,
+						'main_column'	   => $this->sd.$main_column.$this->ed,
+						'join_table'	   => $join_table,
+						'join_column'	   => $join_column,
 						'join_description' => $join_desc);
 				$join_clause .= " LEFT OUTER JOIN $dbp".$table." AS $join_table ON (";
 				$join_clause .= isset($this->fdd[$main_column]['values']['join'])
@@ -890,20 +890,20 @@ class phpMyEdit
 	function gather_query_opts() /* {{{ */
 	{
 		$this->query_opts = array();
-		$this->prev_qfn   = $this->qfn;
-		$this->qfn        = '';
+		$this->prev_qfn	  = $this->qfn;
+		$this->qfn		  = '';
 		if ($this->clear_operation()) {
 			return;
 		}
 		// gathers query options into an array, $this->query_opts
 		$qo = array();
 		for ($k = 0; $k < $this->num_fds; $k++) {
-			$l    = 'qf'.$k;
-			$lc   = 'qf'.$k.'_comp';
-			$li   = 'qf'.$k.'_id';
-			$m    = $this->get_sys_cgi_var($l);
-			$mc   = $this->get_sys_cgi_var($lc);
-			$mi   = $this->get_sys_cgi_var($li);
+			$l	  = 'qf'.$k;
+			$lc	  = 'qf'.$k.'_comp';
+			$li	  = 'qf'.$k.'_id';
+			$m	  = $this->get_sys_cgi_var($l);
+			$mc	  = $this->get_sys_cgi_var($lc);
+			$mi	  = $this->get_sys_cgi_var($li);
 			if (! isset($m) && ! isset($mi)) {
 				continue;
 			}
@@ -924,8 +924,8 @@ class phpMyEdit
 					$qf_op = '';
 					foreach (array_keys($m) as $key) {
 						if ($qf_op == '') {
-							$qf_op   = 'IN';
-							$qf_val  = '"'.addslashes($m[$key]).'"';
+							$qf_op	 = 'IN';
+							$qf_val	 = '"'.addslashes($m[$key]).'"';
 							$afilter = ' IN ("'.addslashes($m[$key]).'"'; // )
 						} else {
 							$afilter = $afilter.',"'.addslashes($m[$key]).'"';
@@ -945,20 +945,20 @@ class phpMyEdit
 					continue;
 				}
 				if ($this->fdd[$k]['select'] != 'C' &&
-				    $this->fdd[$k]['select'] != 'M' &&
-				    $this->fdd[$k]['select'] != 'D' && $mi == '') {
+					$this->fdd[$k]['select'] != 'M' &&
+					$this->fdd[$k]['select'] != 'D' && $mi == '') {
 					continue;
 				}
 				$afilter = addslashes($mi);
-				$qo[$this->fqn($k, true, true)] = array('oper'  => '=', 'value' => "'$afilter'");
+				$qo[$this->fqn($k, true, true)] = array('oper'	=> '=', 'value' => "'$afilter'");
 				$this->qfn .= '&'.$this->cgi['prefix']['sys'].$li.'='.rawurlencode($mi);
 			} else if (isset($m)) {
 				if ($m == '*') {
 					continue;
 				}
 				if ($this->fdd[$k]['select'] != 'C' &&
-				    $this->fdd[$k]['select'] != 'M' &&
-				    $this->fdd[$k]['select'] != 'D' && $m == '') {
+					$this->fdd[$k]['select'] != 'M' &&
+					$this->fdd[$k]['select'] != 'D' && $m == '') {
 					continue;
 				}
 				$afilter = addslashes($m);
@@ -970,7 +970,7 @@ class phpMyEdit
 				} else {
 					$afilter = '%'.str_replace('*', '%', $afilter).'%';
 					$ids  = array();
-					$ar   = array();
+					$ar	  = array();
 					$ar[$this->fqn($k)] = array('oper' => 'LIKE', 'value' => "'$afilter'");
 					if (is_array($this->fdd[$k]['values2'])) {
 						foreach ($this->fdd[$k]['values2'] as $key => $val) {
@@ -980,7 +980,7 @@ class phpMyEdit
 						}
 						if (count($ids) > 0) {
 							$ar[$this->fqn($k, true, true)]
-								= array('oper'  => 'IN', 'value' => '('.join(',', $ids).')');
+								= array('oper'	=> 'IN', 'value' => '('.join(',', $ids).')');
 						}
 					}
 					$qo[] = $ar;
@@ -1067,7 +1067,7 @@ function '.$this->js['prefix'].'show_tab(tab_name)
 				if ($this->displayed[$k] && ! $this->readonly($k) && ! $this->hidden($k)
 						&& (@$this->fdd[$k]['js']['required'] || isset($this->fdd[$k]['js']['regexp']))) {
 					if ($first_required) {
-				 		$first_required = false;
+						$first_required = false;
 						echo '<script type="text/javascript"><!--',"\n";
 						echo '
 function '.$this->js['prefix'].'trim(str)
@@ -1179,12 +1179,12 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		return true;
 	} /* }}} */
 
-    function form_end() /* {{{ */
-    {
-        if ($this->display['form']) {
-            echo '</form>',"\n";
-        };
-    } /* }}} */
+	function form_end() /* {{{ */
+	{
+		if ($this->display['form']) {
+			echo '</form>',"\n";
+		};
+	} /* }}} */
 
 	function display_tab_labels($position) /* {{{ */
 	{
@@ -1222,15 +1222,15 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			if (! $this->displayed[$k]) {
 				continue;
 			}
-                        $helptip = NULL;
-                        if (isset($this->fdd[$k]['tooltip']) && $this->fdd[$k]['tooltip'] != '') {
-                                $helptip = $this->fdd[$k]['tooltip'];
-                        }
+						$helptip = NULL;
+						if (isset($this->fdd[$k]['tooltip']) && $this->fdd[$k]['tooltip'] != '') {
+								$helptip = $this->fdd[$k]['tooltip'];
+						}
 			if ($this->hidden($k)) {
 				echo $this->htmlHiddenData($this->fds[$k], $this->fdd[$k]['default']);
 				continue;
 			}
-			$css_postfix    = @$this->fdd[$k]['css']['postfix'];
+			$css_postfix	= @$this->fdd[$k]['css']['postfix'];
 			$css_class_name = $this->getCSSclass('input', null, 'next', $css_postfix);
 			$escape			= isset($this->fdd[$k]['escape']) ? $this->fdd[$k]['escape'] : true;
 			echo '<tr class="',$this->getCSSclass('row', null, true, $css_postfix),'">',"\n";
@@ -1239,48 +1239,48 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			echo '<td class="',$this->getCSSclass('value', null, true, $css_postfix),'"';
 			echo $this->getColAttributes($k),">\n";
 			if ($this->col_has_values($k)) {
-				$vals       = $this->set_values($k);
-				$selected   = @$this->fdd[$k]['default'];
-				$multiple   = $this->col_has_multiple($k);
-				$readonly   = $this->readonly($k);
+				$vals		= $this->set_values($k);
+				$selected	= @$this->fdd[$k]['default'];
+				$multiple	= $this->col_has_multiple($k);
+				$readonly	= $this->readonly($k);
 				$strip_tags = true;
-				//$escape     = true;
+				//$escape	  = true;
 				if ($this->col_has_checkboxes($k) || $this->col_has_radio_buttons($k)) {
 					echo $this->htmlRadioCheck($this->cgi['prefix']['data'].$this->fds[$k],
-                                                                   $css_class_name, $vals, $selected, $multiple, $readonly,
-                                                                   $strip_tags, $escape, NULL, $helptip);
+																   $css_class_name, $vals, $selected, $multiple, $readonly,
+																   $strip_tags, $escape, NULL, $helptip);
 				} else {
 					echo $this->htmlSelect($this->cgi['prefix']['data'].$this->fds[$k],
-                                                               $css_class_name, $vals, $selected, $multiple, $readonly,
-                                                               $strip_tags, $escape, NULL, $helptip);
+															   $css_class_name, $vals, $selected, $multiple, $readonly,
+															   $strip_tags, $escape, NULL, $helptip);
 				}
 			} elseif (isset ($this->fdd[$k]['textarea'])) {
 				echo $this->htmlTextarea($this->cgi['prefix']['data'].$this->fds[$k],
-                                                         $css_class_name,
-                                                         $k, $this->fdd[$k]['default'], $escape, $helptip);
+														 $css_class_name,
+														 $k, $this->fdd[$k]['default'], $escape, $helptip);
 			} elseif ($this->col_has_php($k)) {
-                $php = $this->fdd[$k]['php'];
-                if (is_array($php)) {
-                    switch ($php['type']) {
-                    case 'function':
-                        $opts = isset($php['parameters']) ? $php['parameters'] : '';
-                        echo call_user_func($php['function'], false, $opts,
-                                            $k, $this->fds, $this->fdd, false);
-                        break;
-                    case 'file':
-                        echo include($php);
-                        break;
-                    default:
-                        break;
-                    }
-                } else {
-                    echo include($php);
-                }
+				$php = $this->fdd[$k]['php'];
+				if (is_array($php)) {
+					switch ($php['type']) {
+					case 'function':
+						$opts = isset($php['parameters']) ? $php['parameters'] : '';
+						echo call_user_func($php['function'], false, $opts,
+											$k, $this->fds, $this->fdd, false);
+						break;
+					case 'file':
+						echo include($php);
+						break;
+					default:
+						break;
+					}
+				} else {
+					echo include($php);
+				}
 			} else {
 				// Simple edit box required
 				$len_props = '';
 				$maxlen = intval($this->fdd[$k]['maxlen']);
-				$size   = isset($this->fdd[$k]['size']) ? $this->fdd[$k]['size'] : min($maxlen, 60); 
+				$size	= isset($this->fdd[$k]['size']) ? $this->fdd[$k]['size'] : min($maxlen, 60); 
 				if ($size > 0) {
 					$len_props .= ' size="'.$size.'"';
 				}
@@ -1288,21 +1288,21 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 					$len_props .= ' maxlength="'.$maxlen.'"';
 				}
 				echo '<input class="',$css_class_name,'" ';
-                                if ($helptip) {
-                                        echo 'title="'.htmlspecialchars($helptip).'" ';
-                                }
+								if ($helptip) {
+										echo 'title="'.htmlspecialchars($helptip).'" ';
+								}
 				echo ($this->password($k) ? 'type="password"' : 'type="text"');
 				echo ($this->readonly($k) ? ' disabled' : '');
 				echo ' name="',$this->cgi['prefix']['data'].$this->fds[$k],'"';
 				echo $len_props,' value="';
 				if($escape) echo htmlspecialchars($this->fdd[$k]['default']);
-			    else echo $this->fdd[$k]['default'];
+				else echo $this->fdd[$k]['default'];
 				echo '" />';
 			}
 			echo '</td>',"\n";
 			if ($this->guidance) {
 				$css_class_name = $this->getCSSclass('help', null, true, $css_postfix);
-				$cell_value     = $this->fdd[$k]['help'] ? $this->fdd[$k]['help'] : '&nbsp;';
+				$cell_value		= $this->fdd[$k]['help'] ? $this->fdd[$k]['help'] : '&nbsp;';
 				echo '<td class="',$css_class_name,'">',$cell_value,'</td>',"\n";
 			}
 			echo '</tr>',"\n";
@@ -1315,9 +1315,9 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		 * For delete or change: SQL SELECT to retrieve the selected record
 		 */
 
-		$qparts['type']   = 'select';
+		$qparts['type']	  = 'select';
 		$qparts['select'] = @$this->get_SQL_column_list();
-		$qparts['from']   = @$this->get_SQL_join_clause();
+		$qparts['from']	  = @$this->get_SQL_join_clause();
 		$qparts['where']  = '('.$this->fqn($this->key, true).'='
 			.$this->key_delim.$this->rec.$this->key_delim.')';
 		//echo htmlspecialchars($this->rec.' '.$this->key);
@@ -1336,10 +1336,10 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			if (! $this->displayed[$k]) {
 				continue;
 			}
-                        $helptip = NULL;
-                        if (isset($this->fdd[$k]['tooltip']) && $this->fdd[$k]['tooltip'] != '') {
-                                $helptip = $this->fdd[$k]['tooltip'];
-                        }
+						$helptip = NULL;
+						if (isset($this->fdd[$k]['tooltip']) && $this->fdd[$k]['tooltip'] != '') {
+								$helptip = $this->fdd[$k]['tooltip'];
+						}
 			if ($this->copy_operation() || $this->change_operation()) {
 				if ($this->hidden($k)) {
 					if ($k != $this->key_num) {
@@ -1364,7 +1364,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				}
 				if ($this->guidance) {
 					$css_class_name = $this->getCSSclass('help', null, true, $css_postfix);
-					$cell_value     = $this->fdd[$k]['help'] ? $this->fdd[$k]['help'] : '&nbsp;';
+					$cell_value		= $this->fdd[$k]['help'] ? $this->fdd[$k]['help'] : '&nbsp;';
 					echo '<td class="',$css_class_name,'">',$cell_value,'</td>',"\n";
 				}
 				echo '</tr>',"\n";
@@ -1381,7 +1381,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				}
 				if ($this->guidance) {
 					$css_class_name = $this->getCSSclass('help', null, true, $css_postfix);
-					$cell_value     = $this->fdd[$k]['help'] ? $this->fdd[$k]['help'] : '&nbsp;';
+					$cell_value		= $this->fdd[$k]['help'] ? $this->fdd[$k]['help'] : '&nbsp;';
 					echo '<td class="',$css_class_name,'">',$cell_value,'</td>',"\n";
 				}
 				echo '</tr>',"\n";
@@ -1391,52 +1391,52 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 
 	function display_change_field($row, $k, $help = NULL) /* {{{ */ 
 	{
-		$css_postfix    = @$this->fdd[$k]['css']['postfix'];
+		$css_postfix	= @$this->fdd[$k]['css']['postfix'];
 		$css_class_name = $this->getCSSclass('input', null, true, $css_postfix);
-		$escape         = isset($this->fdd[$k]['escape']) ? $this->fdd[$k]['escape'] : true;
+		$escape			= isset($this->fdd[$k]['escape']) ? $this->fdd[$k]['escape'] : true;
 		echo '<td class="',$this->getCSSclass('value', null, true, $css_postfix),'"';
 		echo $this->getColAttributes($k),">\n";
 		if ($this->col_has_values($k)) {
-			$vals       = $this->set_values($k);
-			$multiple   = $this->col_has_multiple($k);
-			$readonly   = $this->readonly($k);
+			$vals		= $this->set_values($k);
+			$multiple	= $this->col_has_multiple($k);
+			$readonly	= $this->readonly($k);
 			$strip_tags = true;
-			//$escape     = true;
+			//$escape	  = true;
 			if ($this->col_has_checkboxes($k) || $this->col_has_radio_buttons($k)) {
 				echo $this->htmlRadioCheck($this->cgi['prefix']['data'].$this->fds[$k],
-                                                           $css_class_name, $vals, $row["qf$k"], $multiple, $readonly,
-                                                           $strip_tags, $escape, NULL, $help);
+														   $css_class_name, $vals, $row["qf$k"], $multiple, $readonly,
+														   $strip_tags, $escape, NULL, $help);
 			} else {
 				echo $this->htmlSelect($this->cgi['prefix']['data'].$this->fds[$k],
-                                                       $css_class_name, $vals, $row["qf$k"], $multiple, $readonly,
-                                                       $strip_tags, $escape, NULL, $help);
+													   $css_class_name, $vals, $row["qf$k"], $multiple, $readonly,
+													   $strip_tags, $escape, NULL, $help);
 			}
 		} elseif (isset($this->fdd[$k]['textarea'])) {
 			echo $this->htmlTextarea($this->cgi['prefix']['data'].$this->fds[$k],
-                                                 $css_class_name,
-                                                 $k, $row["qf$k"], $escape, $help);
+												 $css_class_name,
+												 $k, $row["qf$k"], $escape, $help);
 		} elseif ($this->col_has_php($k)) {
-            $php = $this->fdd[$k]['php'];
-            if (is_array($php)) {
-                switch ($php['type']) {
-                case 'function':
-                    $opts = isset($php['parameters']) ? $php['parameters'] : '';
-                    echo call_user_func($php['function'], $row["qf$k"], $opts,
-                                        $k, $this->fds, $this->fdd, $row);
-                    break;
-                case 'file':
-                    echo include($php);
-                    break;
-                default:
-                    break;
-                }
-            } else {
-                echo include($php);
-            }
+			$php = $this->fdd[$k]['php'];
+			if (is_array($php)) {
+				switch ($php['type']) {
+				case 'function':
+					$opts = isset($php['parameters']) ? $php['parameters'] : '';
+					echo call_user_func($php['function'], $row["qf$k"], $opts,
+										$k, $this->fds, $this->fdd, $row);
+					break;
+				case 'file':
+					echo include($php);
+					break;
+				default:
+					break;
+				}
+			} else {
+				echo include($php);
+			}
 		} else {
 			$len_props = '';
 			$maxlen = intval($this->fdd[$k]['maxlen']);
-			$size   = isset($this->fdd[$k]['size']) ? $this->fdd[$k]['size'] : min($maxlen, 60); 
+			$size	= isset($this->fdd[$k]['size']) ? $this->fdd[$k]['size'] : min($maxlen, 60); 
 			if ($size > 0) {
 				$len_props .= ' size="'.$size.'"';
 			}
@@ -1444,18 +1444,18 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				$len_props .= ' maxlength="'.$maxlen.'"';
 			}
 			echo '<input class="',$css_class_name,'" type="text"';
-                        if ($help) {
-                                echo 'title="'.htmlspecialchars($help).'" ';
-                        }
+						if ($help) {
+								echo 'title="'.htmlspecialchars($help).'" ';
+						}
 			echo ($this->readonly($k) ? ' disabled' : '');
 			echo ' name="',$this->cgi['prefix']['data'].$this->fds[$k],'" value="';
-            if ($this->col_has_datemask($k)) {
-                echo $this->makeTimeString($k, $row);
-            } else if ($escape) {
-                echo htmlspecialchars($row["qf$k"]);
-            } else {
-                echo $row["qf$k"];
-            }
+			if ($this->col_has_datemask($k)) {
+				echo $this->makeTimeString($k, $row);
+			} else if ($escape) {
+				echo htmlspecialchars($row["qf$k"]);
+			} else {
+				echo $row["qf$k"];
+			}
 			echo '"',$len_props,' />',"\n";
 		}
 		echo '</td>',"\n";
@@ -1468,7 +1468,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		echo $this->getColAttributes($k),">\n";
 		$len_props = '';
 		$maxlen = intval($this->fdd[$k]['maxlen']);
-		$size   = isset($this->fdd[$k]['size']) ? $this->fdd[$k]['size'] : min($maxlen, 60); 
+		$size	= isset($this->fdd[$k]['size']) ? $this->fdd[$k]['size'] : min($maxlen, 60); 
 		if ($size > 0) {
 			$len_props .= ' size="'.$size.'"';
 		}
@@ -1476,9 +1476,9 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			$len_props .= ' maxlength="'.$maxlen.'"';
 		}
 		echo '<input class="',$this->getCSSclass('value', null, true, $css_postfix),'" type="password"';
-                if ($help) {
-                        echo ' title="'.htmlspecialchars($help).'"';
-                }
+				if ($help) {
+						echo ' title="'.htmlspecialchars($help).'"';
+				}
 		echo ($this->readonly($k) ? ' disabled' : '');
 		echo ' name="',$this->cgi['prefix']['data'].$this->fds[$k],'" value="';
 		echo htmlspecialchars($row["qf$k"]),'"',$len_props,' />',"\n";
@@ -1487,7 +1487,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 
 	function display_delete_field($row, $k) /* {{{ */
 	{
-		$css_postfix    = @$this->fdd[$k]['css']['postfix'];
+		$css_postfix	= @$this->fdd[$k]['css']['postfix'];
 		$css_class_name = $this->getCSSclass('value', null, true, $css_postfix);
 		echo '<td class="',$css_class_name,'"',$this->getColAttributes($k),">\n";
 		echo $this->cellDisplay($k, $row, $css_class_name);
@@ -1546,7 +1546,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 	function getColAlign($k) /* {{{ */
 	{
 		if (isset($this->fdd[$k]['align'])) {
-                        /*return 'align="'.$this->fdd[$k]['align'].'"'; */
+						/*return 'align="'.$this->fdd[$k]['align'].'"'; */
 			return 'style="text-align:'.$this->fdd[$k]['align'].'"';
 		} else {
 			return '';
@@ -1576,23 +1576,26 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 	function urlDisplay($k, $link_val, $disp_val, $css, $key) /* {{{ */
 	{
 		$escape = isset($this->fdd[$k]['escape']) ? $this->fdd[$k]['escape'] : true;
+		if ($css == 'noescape') {
+			$escape = false;
+		}
 		$ret  = '';
 		$name = $this->fds[$k];
 		$page = $this->page_name;
 		$url  = $this->cgi['prefix']['sys'].'rec'.'='.$key.'&'.
-		        $this->cgi['prefix']['sys'].'fm'.'='.$this->fm.'&'.
-		        $this->cgi['prefix']['sys'].'np'.'='.$this->inc.'&'.
-		        $this->cgi['prefix']['sys'].'fl'.'='.$this->fl;
+				$this->cgi['prefix']['sys'].'fm'.'='.$this->fm.'&'.
+				$this->cgi['prefix']['sys'].'np'.'='.$this->inc.'&'.
+				$this->cgi['prefix']['sys'].'fl'.'='.$this->fl;
 		$url .= '&'.$this->cgi['prefix']['sys'].'qfn'.'='.rawurlencode($this->qfn).$this->qfn;
 		$url .= '&'.$this->get_sfn_cgi_vars().$this->cgi['persist'];
-		$ar   = array(
-				'key'   => $key,
-				'name'  => $name,
-				'link'  => $link_val,
+		$ar	  = array(
+				'key'	=> $key,
+				'name'	=> $name,
+				'link'	=> $link_val,
 				'value' => $disp_val,
-				'css'   => $css,
-				'page'  => $page,
-				'url'   => $url
+				'css'	=> $css,
+				'page'	=> $page,
+				'url'	=> $url
 				);
 		$urllink = isset($this->fdd[$k]['URL'])
 			?  $this->substituteVars($this->fdd[$k]['URL'], $ar)
@@ -1605,9 +1608,9 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			: '';
 		$prefix_found  = false;
 		$postfix_found = false;
-		$prefix_ar     = @$this->fdd[$k]['URLprefix'];
-		$postfix_ar    = @$this->fdd[$k]['URLpostfix'];
-		is_array($prefix_ar)  || $prefix_ar  = array($prefix_ar);
+		$prefix_ar	   = @$this->fdd[$k]['URLprefix'];
+		$postfix_ar	   = @$this->fdd[$k]['URLpostfix'];
+		is_array($prefix_ar)  || $prefix_ar	 = array($prefix_ar);
 		is_array($postfix_ar) || $postfix_ar = array($postfix_ar);
 		foreach ($prefix_ar as $prefix) {
 			if (! strncmp($prefix, $urllink, strlen($prefix))) {
@@ -1624,7 +1627,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		$prefix_found  || $urllink = array_shift($prefix_ar).$urllink;
 		$postfix_found || $urllink = $urllink.array_shift($postfix_ar);
 		if (strlen($urllink) <= 0 || strlen($urldisp) <= 0) {
-			$ret = '&nbsp;';
+			$ret = $escape ? '&nbsp;' : '';
 		} else {
 			if ($escape) {
 				$urldisp = htmlspecialchars($urldisp);
@@ -1636,30 +1639,33 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 	} /* }}} */
 
 	function makeTimeString($k, $row)
-    {
-        $value = '';
-        if ($row["qf$k"."_timestamp"] != '') {
-            if (@$this->fdd[$k]['datemask']) {
-                $value = intval($row["qf$k".'_timestamp']);
-                $value = @date($this->fdd[$k]['datemask'], $value);
-            } else if (@$this->fdd[$k]['strftimemask']) {
-                $value = intval($row["qf$k".'_timestamp']);
-                $value = @strftime($this->fdd[$k]['strftimemask'], $value);
-            }
-        }
-        return $value;
-    }
+	{
+		$value = '';
+		if ($row["qf$k"."_timestamp"] != '') {
+			if (@$this->fdd[$k]['datemask']) {
+				$value = intval($row["qf$k".'_timestamp']);
+				$value = @date($this->fdd[$k]['datemask'], $value);
+			} else if (@$this->fdd[$k]['strftimemask']) {
+				$value = intval($row["qf$k".'_timestamp']);
+				$value = @strftime($this->fdd[$k]['strftimemask'], $value);
+			}
+		}
+		return $value;
+	}
 
 	function cellDisplay($k, $row, $css) /* {{{ */
 	{
-		$escape  = isset($this->fdd[$k]['escape']) ? $this->fdd[$k]['escape'] : true;
-		if ($this->col_has_values($this->key_num)) {
-		  $key_rec = $row['qf'.$this->key_num.'_idx'];
-		} else {
-		  $key_rec = $row['qf'.$this->key_num];
+		$escape	 = isset($this->fdd[$k]['escape']) ? $this->fdd[$k]['escape'] : true;
+		if ($css == 'noescape') {
+			$escape = false;
 		}
-        if ($this->col_has_datemask($k)) {
-            $value = $this->makeTimeString($k, $row);
+		if ($this->col_has_values($this->key_num)) {
+			$key_rec = $row['qf'.$this->key_num.'_idx'];
+		} else {
+			$key_rec = $row['qf'.$this->key_num];
+		}
+		if ($this->col_has_datemask($k)) {
+			$value = $this->makeTimeString($k, $row);
 		} else if ($this->is_values2($k, $row["qf$k"])) {
 			$value = $row['qf'.$k.'_idx'];
 			if ($this->fdd[$k]['select'] == 'M') {
@@ -1674,7 +1680,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				$value = join(', ', $value_ar2);
 			} else {
 				if (isset($this->fdd[$k]['values2'][$value])) {
-					$value  = $this->fdd[$k]['values2'][$value];
+					$value	= $this->fdd[$k]['values2'][$value];
 					$escape = false;
 				}
 			}
@@ -1710,29 +1716,29 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		  $value = include($this->fdd[$k]['phpview']);
 		}		
 		if ($this->col_has_php($k)) {
-            $php = $this->fdd[$k]['php'];
-            if (is_array($php)) {
-                switch ($php['type']) {
-                case 'function':
-                    $opts = isset($php['parameters']) ? $php['parameters'] : '';
-                    return call_user_func($php['function'], $value, $opts,
-                                          $k, $this->fds, $this->fdd, $row);
-                    break;
-                case 'file':
-                    return include($php);
-                    break;
-                default:
-                    break;
-                }
-            } else {
-                return include($php);
-            }
+			$php = $this->fdd[$k]['php'];
+			if (is_array($php)) {
+				switch ($php['type']) {
+				case 'function':
+					$opts = isset($php['parameters']) ? $php['parameters'] : '';
+					return call_user_func($php['function'], $value, $opts,
+										  $k, $this->fds, $this->fdd, $row);
+					break;
+				case 'file':
+					return include($php);
+					break;
+				default:
+					break;
+				}
+			} else {
+				return include($php);
+			}
 		}
 		if ($this->col_has_URL($k)) {
 			return $this->urlDisplay($k, $original_value, $value, $css, $key_rec);
 		}
 		if (strlen($value) <= 0) {
-			return '&nbsp;';
+			return $escape ? '&nbsp;' : '';
 		}
 		if ($escape) {
 			$value = htmlspecialchars($value);
@@ -1740,27 +1746,27 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		return $escape ? nl2br($value) : $value;
 	} /* }}} */
 
-    function fetchToolTip($css_class_name, $name, $label = false)
-    {
-        // If we have an array for the class, use it.
-        if (isset($this->tooltips[$css_class_name])
-            && is_array($this->tooltips[$css_class_name])) {
-            $tips = $this->tooltips[$css_class_name];
-            if (isset($tips[$name])) {
-                return ' title="'.htmlspecialchars($tips[$name]).'" ';
-            }
-        }
-          
-        // otherwise use name, label, css in that order
-        if(isset($this->tooltips[$name])) {
-            return ' title="'.htmlspecialchars($this->tooltips[$name]).'" ';
-        } elseif($label && isset($this->tooltips[$label])) {
-            return ' title="'.htmlspecialchars($this->tooltips[$label]).'" ';
-        } elseif (isset($this->tooltips[$css_class_name])) {
-            return ' title="'.htmlspecialchars($this->tooltips[$css_class_name]).'" ';
-        }
-        return '';
-    }
+	function fetchToolTip($css_class_name, $name, $label = false)
+	{
+		// If we have an array for the class, use it.
+		if (isset($this->tooltips[$css_class_name])
+			&& is_array($this->tooltips[$css_class_name])) {
+			$tips = $this->tooltips[$css_class_name];
+			if (isset($tips[$name])) {
+				return ' title="'.htmlspecialchars($tips[$name]).'" ';
+			}
+		}
+		  
+		// otherwise use name, label, css in that order
+		if(isset($this->tooltips[$name])) {
+			return ' title="'.htmlspecialchars($this->tooltips[$name]).'" ';
+		} elseif($label && isset($this->tooltips[$label])) {
+			return ' title="'.htmlspecialchars($this->tooltips[$label]).'" ';
+		} elseif (isset($this->tooltips[$css_class_name])) {
+			return ' title="'.htmlspecialchars($this->tooltips[$css_class_name]).'" ';
+		}
+		return '';
+	}
 
 	/**
 	 * Creates HTML submit input element
@@ -1785,8 +1791,8 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		}
 		$ret .='"';
 		if(isset($js)) $ret .= ' '.$js;
-                if(isset($style)) $ret .= ' style="'.$style.'"';
-                $ret .= $this->fetchToolTip($css_class_name, $name, $label);
+				if(isset($style)) $ret .= ' style="'.$style.'"';
+				$ret .= $this->fetchToolTip($css_class_name, $name, $label);
 		$ret .= ' />';
 		return $ret;
 	} /* }}} */
@@ -1829,7 +1835,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 	 * @param	js		string to be in the <select >, ususally onchange='..';
 	 */
 	function htmlSelect($name, $css, $kv_array, $selected = null, /* ...) {{{ */
-                            /* booleans: */ $multiple = false, $readonly = false, $strip_tags = false, $escape = true, $js = NULL, $help = NULL)
+							/* booleans: */ $multiple = false, $readonly = false, $strip_tags = false, $escape = true, $js = NULL, $help = NULL)
 	{
 		$ret = '<select class="'.htmlspecialchars($css).'" name="'.htmlspecialchars($name);
 		if ($multiple) {
@@ -1838,11 +1844,11 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				$selected = explode(',', $selected);
 			}
 		}
-                if ($help) {
-                        $ret .= '"'.' title="'.htmlspecialchars($help).'" ';
-                } else {
-                        $ret .= '"'.$this->fetchToolTip($css, $name, $css.'select');
-                }
+				if ($help) {
+						$ret .= '"'.' title="'.htmlspecialchars($help).'" ';
+				} else {
+						$ret .= '"'.$this->fetchToolTip($css, $name, $css.'select');
+				}
 		$ret .= ($readonly ? ' disabled ' : ' ').$js.">\n";
 		if (! is_array($selected)) {
 			$selected = $selected === null ? array() : array((string)$selected);
@@ -1859,7 +1865,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				$found = true;
 			}
 			$strip_tags && $value = strip_tags($value);
-			$escape     && $value = htmlspecialchars($value);
+			$escape		&& $value = htmlspecialchars($value);
 			$ret .= '>'.$value.'</option>'."\n";
 		}
 		$ret .= '</select>';
@@ -1881,7 +1887,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 	 * @param	js		string to be in the <select >, ususally onchange='..';
 	 */
 	function htmlRadioCheck($name, $css, $kv_array, $selected = null, /* ...) {{{ */
-                                /* booleans: */ $multiple = false, $readonly = false, $strip_tags = false, $escape = true, $js = NULL, $help = NULL)
+								/* booleans: */ $multiple = false, $readonly = false, $strip_tags = false, $escape = true, $js = NULL, $help = NULL)
 	{
 		$ret = '';
 		if ($multiple) {
@@ -1896,12 +1902,12 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		foreach ($kv_array as $key => $value) {
 			$ret .= '<input type="'.($multiple ? 'checkbox' : 'radio').'" name="';
 			$ret .= htmlspecialchars($name).'[]" value="'.htmlspecialchars($key).'"';
-                        $ret .= ' class="'.htmlspecialchars($css).'"';
-                        if ($help) {
-                                $ret .= ' title="'.htmlspecialchars($help).'" ';
-                        } else {
-                                $ret .= $this->fetchToolTip($css, $name, $css.'radio');
-                        }
+						$ret .= ' class="'.htmlspecialchars($css).'"';
+						if ($help) {
+								$ret .= ' title="'.htmlspecialchars($help).'" ';
+						} else {
+								$ret .= $this->fetchToolTip($css, $name, $css.'radio');
+						}
 			if ((! $found || $multiple) && in_array((string) $key, $selected, 1)
 					|| (count($selected) == 0 && ! $found && ! $multiple)) {
 				$ret  .= ' checked';
@@ -1911,7 +1917,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				$ret .= ' disabled';
 			}
 			$strip_tags && $value = strip_tags($value);
-			$escape     && $value = htmlspecialchars($value);
+			$escape		&& $value = htmlspecialchars($value);
 			$ret .= '>'.$value.'<br>'."\n";
 		}
 		return $ret;
@@ -1941,9 +1947,9 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		} else {
 			$ret .= ' wrap="virtual"';
 		}
-                if ($help) {
-                        $ret .= ' title="'.htmlspecialchars($help).'"';
-                }
+				if ($help) {
+						$ret .= ' title="'.htmlspecialchars($help).'"';
+				}
 		$ret .= '>';
 		if ($escape) {
 			$ret .= htmlspecialchars($value);
@@ -1954,89 +1960,89 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		return $ret;
 	} /* }}} */
 
-    /**
-     * Returns original variables HTML code for use in forms or links.
-     *
-     * @param   mixed   $origvars       string or array of original varaibles
-     * @param   string  $method         type of method ("POST" or "GET")
-     * @param   mixed   $default_value  default value of variables
-     *                                  if null, empty values will be skipped
-     * @return                          get HTML code of original varaibles
-     */
-    function get_origvars_html($origvars, $method = 'post', $default_value = '') /* {{{ */
-    {
-        $ret    = '';
-        $method = strtoupper($method);
-        if ($method == 'POST') {
-            if (! is_array($origvars)) {
-                $new_origvars = array();
-                foreach (explode('&', $origvars) as $param) {
-                    $parts = explode('=', $param, 2);
-                    if (! isset($parts[1])) {
-                        $parts[1] = $default_value;
-                    }
-                    if (strlen($parts[0]) <= 0) {
-                        continue;
-                    }
-                    $new_origvars[$parts[0]] = $parts[1];
-                }
-                $origvars =& $new_origvars;
-            }
-            foreach ($origvars as $key => $val) {
-                if (strlen($val) <= 0 && $default_value === null) {
-                    continue;
-                }
-                $key = rawurldecode($key);
-                $val = rawurldecode($val);
-                $ret .= $this->htmlHidden($key, $val);
-            }
-        } else if (! strncmp('GET', $method, 3)) {
-            if (! is_array($origvars)) {
-                $ret .= $origvars;
-            } else {
-                foreach ($origvars as $key => $val) {
-                    if (strlen($val) <= 0 && $default_value === null) {
-                        continue;
-                    }
-                    $ret == '' || $ret .= '&amp;';
-                    $ret .= htmlspecialchars(rawurlencode($key));
-                    $ret .= '=';
-                    $ret .= htmlspecialchars(rawurlencode($val));
-                }
-            }
-            if ($method[strlen($method) - 1] == '+') {
-                $ret = "?$ret";
-            }
-        } else {
-            trigger_error('Unsupported Platon::get_origvars_html() method: '
-                    .$method, E_USER_ERROR);
-        }
-        return $ret;
-    } /* }}} */
+	/**
+	 * Returns original variables HTML code for use in forms or links.
+	 *
+	 * @param	mixed	$origvars		string or array of original varaibles
+	 * @param	string	$method			type of method ("POST" or "GET")
+	 * @param	mixed	$default_value	default value of variables
+	 *									if null, empty values will be skipped
+	 * @return							get HTML code of original varaibles
+	 */
+	function get_origvars_html($origvars, $method = 'post', $default_value = '') /* {{{ */
+	{
+		$ret	= '';
+		$method = strtoupper($method);
+		if ($method == 'POST') {
+			if (! is_array($origvars)) {
+				$new_origvars = array();
+				foreach (explode('&', $origvars) as $param) {
+					$parts = explode('=', $param, 2);
+					if (! isset($parts[1])) {
+						$parts[1] = $default_value;
+					}
+					if (strlen($parts[0]) <= 0) {
+						continue;
+					}
+					$new_origvars[$parts[0]] = $parts[1];
+				}
+				$origvars =& $new_origvars;
+			}
+			foreach ($origvars as $key => $val) {
+				if (strlen($val) <= 0 && $default_value === null) {
+					continue;
+				}
+				$key = rawurldecode($key);
+				$val = rawurldecode($val);
+				$ret .= $this->htmlHidden($key, $val);
+			}
+		} else if (! strncmp('GET', $method, 3)) {
+			if (! is_array($origvars)) {
+				$ret .= $origvars;
+			} else {
+				foreach ($origvars as $key => $val) {
+					if (strlen($val) <= 0 && $default_value === null) {
+						continue;
+					}
+					$ret == '' || $ret .= '&amp;';
+					$ret .= htmlspecialchars(rawurlencode($key));
+					$ret .= '=';
+					$ret .= htmlspecialchars(rawurlencode($val));
+				}
+			}
+			if ($method[strlen($method) - 1] == '+') {
+				$ret = "?$ret";
+			}
+		} else {
+			trigger_error('Unsupported Platon::get_origvars_html() method: '
+					.$method, E_USER_ERROR);
+		}
+		return $ret;
+	} /* }}} */
 
 	function get_sfn_cgi_vars($alternative_sfn = null) /* {{{ */
 	{
-                /* echo '<PRE>'; */
-                /* echo "arg: "."\n"; */
-                /* print_r($alternative_sfn); */
-                /* echo "this. "."\n"; */
-                /* print_r($this->sfn); */
-                /* echo '</PRE>'; */
+				/* echo '<PRE>'; */
+				/* echo "arg: "."\n"; */
+				/* print_r($alternative_sfn); */
+				/* echo "this. "."\n"; */
+				/* print_r($this->sfn); */
+				/* echo '</PRE>'; */
 
 		if ($alternative_sfn === null) { // FAST! (cached return value)
 			static $ret = null;
 			$ret == null && $ret = $this->get_sfn_cgi_vars($this->sfn);
-                /* echo '<PRE>'; */
-                /* echo "arg: "."\n"; */
-                /* print_r($alternative_sfn); */
-                /* echo "ret: "; */
-                /* print_r($ret); */
-                /* echo "\n"; */
-                /* echo '</PRE>'; */
+				/* echo '<PRE>'; */
+				/* echo "arg: "."\n"; */
+				/* print_r($alternative_sfn); */
+				/* echo "ret: "; */
+				/* print_r($ret); */
+				/* echo "\n"; */
+				/* echo '</PRE>'; */
 			return $ret;
 		}
 		$ret = '';
-		$i   = 0;
+		$i	 = 0;
 		foreach ($alternative_sfn as $val) {
 			$ret != '' && $ret .= '&';
 			$ret .= rawurlencode($this->cgi['prefix']['sys'].'sfn')."[$i]=".rawurlencode($val);
@@ -2071,38 +2077,38 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		return phpMyEdit::get_cgi_var(phpMyEdit::get_default_cgi_prefix('data').$name, $default_value);
 	} /* }}} */
 
-    function get_cgi_var($name, $default_value = null) /* {{{ */
-    {
+	function get_cgi_var($name, $default_value = null) /* {{{ */
+	{
 		if (isset($this) && isset($this->cgi['overwrite'][$name])) {
 			return $this->cgi['overwrite'][$name];
 		}
 
-        static $magic_quotes_gpc = null;
-        if ($magic_quotes_gpc === null) {
-            $magic_quotes_gpc = get_magic_quotes_gpc();
-        }
-        $var = @$_GET[$name];
-        if (! isset($var)) {
-            $var = @$_POST[$name];
-        }
-        if (isset($var)) {
-            if ($magic_quotes_gpc) {
-                if (is_array($var)) {
-                    foreach (array_keys($var) as $key) {
-                        $var[$key] = stripslashes($var[$key]);
-                    }
-                } else {
-                    $var = stripslashes($var);
-                }
-            }
-        } else {
-            $var = @$default_value;
-        }
+		static $magic_quotes_gpc = null;
+		if ($magic_quotes_gpc === null) {
+			$magic_quotes_gpc = get_magic_quotes_gpc();
+		}
+		$var = @$_GET[$name];
+		if (! isset($var)) {
+			$var = @$_POST[$name];
+		}
+		if (isset($var)) {
+			if ($magic_quotes_gpc) {
+				if (is_array($var)) {
+					foreach (array_keys($var) as $key) {
+						$var[$key] = stripslashes($var[$key]);
+					}
+				} else {
+					$var = stripslashes($var);
+				}
+			}
+		} else {
+			$var = @$default_value;
+		}
 		if (isset($this) && $var === null && isset($this->cgi['append'][$name])) {
 			return $this->cgi['append'][$name];
 		}
-        return $var;
-    } /* }}} */
+		return $var;
+	} /* }}} */
 
 	function get_server_var($name) /* {{{ */
 	{
@@ -2134,12 +2140,12 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 					foreach ($v as $akey => $aval) {
 						// $_GET[$k][$akey] = strip_tags($aval);
 						// $$k[$akey] = strip_tags($aval);
-						echo "$k\[$akey\]=$aval   ";
+						echo "$k\[$akey\]=$aval	  ";
 					}
 				} else {
 					// $_GET[$k] = strip_tags($val);
 					// $$k = strip_tags($val);
-					echo "$k=$v   ";
+					echo "$k=$v	  ";
 				}
 			}
 			echo '</p>';
@@ -2150,7 +2156,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		}
 	} /* }}} */
 
-	function print_post_vars($miss = 'No POST variables found')  // debug only /* {{{ */
+	function print_post_vars($miss = 'No POST variables found')	 // debug only /* {{{ */
 	{
 		global $_POST;
 		// we parse form POST variables
@@ -2161,12 +2167,12 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 					foreach ($v as $akey => $aval) {
 						// $_POST[$k][$akey] = strip_tags($aval);
 						// $$k[$akey] = strip_tags($aval);
-						echo "$k\[$akey\]=$aval   ";
+						echo "$k\[$akey\]=$aval	  ";
 					}
 				} else {
 					// $_POST[$k] = strip_tags($val);
 					// $$k = strip_tags($val);
-					echo "$k=$v   ";
+					echo "$k=$v	  ";
 				}
 			}
 			echo '</p>';
@@ -2177,40 +2183,40 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		}
 	} /* }}} */
 
-	function print_vars ($miss = 'Current instance variables')  // debug only /* {{{ */
+	function print_vars ($miss = 'Current instance variables')	// debug only /* {{{ */
 	{
-		echo "$miss   ";
+		echo "$miss	  ";
 		echo 'page_name=',$this->page_name,'   ';
-		echo 'hn=',$this->hn,'   ';
-		echo 'un=',$this->un,'   ';
-		echo 'pw=',$this->pw,'   ';
-		echo 'db=',$this->db,'   ';
+		echo 'hn=',$this->hn,'	 ';
+		echo 'un=',$this->un,'	 ';
+		echo 'pw=',$this->pw,'	 ';
+		echo 'db=',$this->db,'	 ';
 		echo 'dbp=',$this->dbp,'   ';
 		echo 'dbh=',$this->dbh,'   ';
-		echo 'tb=',$this->tb,'   ';
+		echo 'tb=',$this->tb,'	 ';
 		echo 'key=',$this->key,'   ';
-		echo 'key_type=',$this->key_type,'   ';
+		echo 'key_type=',$this->key_type,'	 ';
 		echo 'inc=',$this->inc,'   ';
 		echo 'options=',$this->options,'   ';
 		echo 'fdd=',$this->fdd,'   ';
-		echo 'fl=',$this->fl,'   ';
-		echo 'fm=',$this->fm,'   ';
-		echo 'sfn=',htmlspecialchars($this->get_sfn_cgi_vars()),'   ';
+		echo 'fl=',$this->fl,'	 ';
+		echo 'fm=',$this->fm,'	 ';
+		echo 'sfn=',htmlspecialchars($this->get_sfn_cgi_vars()),'	';
 		echo 'qfn=',$this->qfn,'   ';
-		echo 'sw=',$this->sw,'   ';
+		echo 'sw=',$this->sw,'	 ';
 		echo 'rec=',$this->rec,'   ';
 		echo 'navop=',$this->navop,'   ';
 		echo 'saveadd=',$this->saveadd,'   ';
 		echo 'moreadd=',$this->moreadd,'   ';
 		echo 'canceladd=',$this->canceladd,'   ';
-		echo 'savechange=',$this->savechange,'   ';
-		echo 'morechange=',$this->morechange,'   ';
-		echo 'cancelchange=',$this->cancelchange,'   ';
-		echo 'savecopy=',$this->savecopy,'   ';
-		echo 'cancelcopy=',$this->cancelcopy,'   ';
-		echo 'savedelete=',$this->savedelete,'   ';
-		echo 'canceldelete=',$this->canceldelete,'   ';
-		echo 'cancelview=',$this->cancelview,'   ';
+		echo 'savechange=',$this->savechange,'	 ';
+		echo 'morechange=',$this->morechange,'	 ';
+		echo 'cancelchange=',$this->cancelchange,'	 ';
+		echo 'savecopy=',$this->savecopy,'	 ';
+		echo 'cancelcopy=',$this->cancelcopy,'	 ';
+		echo 'savedelete=',$this->savedelete,'	 ';
+		echo 'canceldelete=',$this->canceldelete,'	 ';
+		echo 'cancelview=',$this->cancelview,'	 ';
 		echo 'operation=',$this->operation,'   ';
 		echo "\n";
 	} /* }}} */
@@ -2283,22 +2289,22 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		$nav_fnc = 'nav_'.$position;
 		if(! $this->$nav_fnc())
 			return;
-                if ($this->nav_buttons()) {
-                  $buttons = (is_array($this->buttons[$this->page_type][$position]))
-                    ? $this->buttons[$this->page_type][$position]
-                    : ($this->nav_custom_multi()
-                       ? $this->default_multi_buttons[$this->page_type]
-                       : $this->default_buttons[$this->page_type]);
-                } else {
-                  $buttons = (is_array($this->buttons[$this->page_type][$position]))
-                    ? $this->buttons[$this->page_type][$position]
-                    : ($this->nav_custom_multi()
-                       ? $this->default_multi_buttons_no_B[$this->page_type]
-                       : $this->default_buttons_no_B[$this->page_type]);
-                }
-                foreach ($buttons as $name) {
-                  $ret .= $this->display_button($name, $position)."\n";
-                }
+				if ($this->nav_buttons()) {
+				  $buttons = (is_array($this->buttons[$this->page_type][$position]))
+					? $this->buttons[$this->page_type][$position]
+					: ($this->nav_custom_multi()
+					   ? $this->default_multi_buttons[$this->page_type]
+					   : $this->default_buttons[$this->page_type]);
+				} else {
+				  $buttons = (is_array($this->buttons[$this->page_type][$position]))
+					? $this->buttons[$this->page_type][$position]
+					: ($this->nav_custom_multi()
+					   ? $this->default_multi_buttons_no_B[$this->page_type]
+					   : $this->default_buttons_no_B[$this->page_type]);
+				}
+				foreach ($buttons as $name) {
+				  $ret .= $this->display_button($name, $position)."\n";
+				}
 		return $ret;
 	} /* }}} */
 
@@ -2317,38 +2323,38 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		}
 		if (in_array($name, array('add','view','change','copy','delete'))) {
 			$enabled_fnc = $name.'_enabled';
-			$enabled     = $this->$enabled_fnc();
+			$enabled	 = $this->$enabled_fnc();
 			if ($name != 'add' && ! $this->total_recs && strstr('LF', $this->page_type))
 				$enabled = false;
 			return $this->htmlSubmit('operation', ucfirst($name),
 					$this->getCSSclass($name, $position), false, $enabled ? 0 : $disabled);
 		}
-                if ($name == 'misc') {
-			$enabled     = $this->misc_enabled();
-                        $nav = '<span class="'.$this->getCSSclass($name, $position).'">';
+				if ($name == 'misc') {
+			$enabled	 = $this->misc_enabled();
+						$nav = '<span class="'.$this->getCSSclass($name, $position).'">';
 			$nav .= $this->htmlSubmit(
-                                'operation', ucfirst($name),
-                                $this->getCSSclass($name, $position), false, $enabled ? 0 : $disabled);
-                        // One button to select the result of the current query
+								'operation', ucfirst($name),
+								$this->getCSSclass($name, $position), false, $enabled ? 0 : $disabled);
+						// One button to select the result of the current query
 			$nav .= $this->htmlSubmit(
-                                'operation', '+',
-                                $this->getCSSclass($name.'+', $position), false, $enabled ? 0 : $disabled);
-                        // One button to deselect the result of the current query
+								'operation', '+',
+								$this->getCSSclass($name.'+', $position), false, $enabled ? 0 : $disabled);
+						// One button to deselect the result of the current query
 			$nav .= $this->htmlSubmit(
-                                'operation', '-',
-                                $this->getCSSclass($name.'-', $position), false, $enabled ? 0 : $disabled);
-                        $nav .= '</span>';
-                        return $nav;
-                }
+								'operation', '-',
+								$this->getCSSclass($name.'-', $position), false, $enabled ? 0 : $disabled);
+						$nav .= '</span>';
+						return $nav;
+				}
 		if ($name == 'savedelete') {
-			$enabled     = $this->delete_enabled();
+			$enabled	 = $this->delete_enabled();
 			$js = 'onclick="return confirm(\''.$this->labels['Delete'].' ?\');"';
 			return $this->htmlSubmit('savedelete', 'Delete',
 					$this->getCSSclass('save', $position), false, $enabled ? 0 : $disabled, $js);
 		}
 		if (in_array($name, array('save','more'))) {
 			$validation = true; // if js validation
-			if     ($this->page_type == 'D' && $name == 'save' ) { $value = 'Delete'; $validation = false; }
+			if	   ($this->page_type == 'D' && $name == 'save' ) { $value = 'Delete'; $validation = false; }
 			elseif ($this->page_type == 'C' && $name == 'more' ) { $value = 'Apply'; }
 			else $value = ucfirst($name);
 			return $this->htmlSubmit($name.$this->page_types[$this->page_type], $value,
@@ -2361,7 +2367,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			$current_page = 1;
 		} else {
 			$disabledprev = $this->fm <= 0;
-			$disablednext =  $this->fm + $this->inc >= $this->total_recs;
+			$disablednext =	 $this->fm + $this->inc >= $this->total_recs;
 			$total_pages  = max(1, ceil($this->total_recs / abs($this->inc)));
 			$current_page = ceil($this->fm / abs($this->inc)); // must + 1
 		}
@@ -2373,15 +2379,15 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		if ($name == 'total_recs') return ($this->total_recs);
 		// now some goto buttons/dropdowns/inputs...
 		if ($name == 'goto_text') {
-                        $ret = '<span class="'.$this->getCSSclass('goto', $position).'">';
+						$ret = '<span class="'.$this->getCSSclass('goto', $position).'">';
 			$ret .= '<input type="text" class="'.$this->getCSSclass('gotopn', $position).'"';
 			$ret .= ' name="'.$this->cgi['prefix']['sys'].'navpn'.$position.'" value="'.($current_page+1).'"';
 			$ret .= ' size="'.(strlen($total_pages)+1).'" maxlength="'.(strlen($total_pages)+1).'"';
 			// TODO some js here.... on enter submit, on click erase ?...
 			$ret .=' onkeypress="return '.$this->js['prefix'].'filter_handler(this.form, event);" />';
-                        $ret .= $this->display_button('goto_combo',$position);
-                        $ret .= '</span>';
-                        return $ret;
+						$ret .= $this->display_button('goto_combo',$position);
+						$ret .= '</span>';
+						return $ret;
 		}
 		if ($name == 'goto_combo') {
 			$disabledgoto = !($this->listall() || ($disablednext && $disabledprev)) ? '' : ' disabled';
@@ -2396,49 +2402,49 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 					false, true, 'onchange="return this.form.submit();"');
 		}
 		if ($name == 'goto') {
-                        $ret = '<span class="'.$this->getCSSclass('goto', $position).'">';
+						$ret = '<span class="'.$this->getCSSclass('goto', $position).'">';
 			$ret .= $this->htmlSubmit('navop', 'Go to',
-                                                  $this->getCSSclass('goto', $position),
-                                                  false, ($this->listall() || ($disablednext && $disabledprev)) ? $disabled : 0);
-                        $ret .= $this->display_button('goto_combo',$position);
-                        $ret .= '</span>';
-                        return $ret;
+												  $this->getCSSclass('goto', $position),
+												  false, ($this->listall() || ($disablednext && $disabledprev)) ? $disabled : 0);
+						$ret .= $this->display_button('goto_combo',$position);
+						$ret .= '</span>';
+						return $ret;
 		}
-        if ($name == 'rows_per_page_combo') {
+		if ($name == 'rows_per_page_combo') {
 			$kv_array = array();
-            $nummax = min($this->total_recs, 100);
-            $kv_array[-1] = '*';
-			for ($i = 1; $i < min(5,$nummax); ++$i) {                            
+			$nummax = min($this->total_recs, 100);
+			$kv_array[-1] = '*';
+			for ($i = 1; $i < min(5,$nummax); ++$i) {							 
 				$kv_array[$i] = $i;
-                if ($this->inc == $i) {
-                    $selected = (string)$i;
-                }            
+				if ($this->inc == $i) {
+					$selected = (string)$i;
+				}			 
 			}
 			for ($i = 5; $i < $nummax; $i += 5) {
 				$kv_array[$i] = $i;
-                if ($this->inc == $i) {
-                    $selected = (string)$i;
-                }            
+				if ($this->inc == $i) {
+					$selected = (string)$i;
+				}			 
 			}
-            if (!isset($selected) && $this->inc >= 0) {
-                $kv_array[$this->inc] = $this->inc;
-                $selected = (string)$this->inc;
-            } else if ($this->inc < 0) {
-                $selected = '-1';
-            }
+			if (!isset($selected) && $this->inc >= 0) {
+				$kv_array[$this->inc] = $this->inc;
+				$selected = (string)$this->inc;
+			} else if ($this->inc < 0) {
+				$selected = '-1';
+			}
 			// TODO: add onchange="return this.form.submit();" DONE ???
 			return $this->htmlSelect($this->cgi['prefix']['sys'].'navnp'.$position,
 					$this->getCSSclass('pagerows', $position), $kv_array, $selected, false, '',
 					false, true, 'onchange="return this.form.submit();"');
-                }
+				}
 		if ($name == 'rows_per_page') {
-                        $ret = '<span class="'.$this->getCSSclass('pagerows', $position).'">';
+						$ret = '<span class="'.$this->getCSSclass('pagerows', $position).'">';
 			$ret .= $this->htmlSubmit('navop', 'Rows/Page',
-                                                  $this->getCSSclass('pagerows', $position),
-                                                  false, 0);
-                        $ret .= $this->display_button('rows_per_page_combo',$position);
-                        $ret .= '</span>';
-                        return $ret;
+												  $this->getCSSclass('pagerows', $position),
+												  false, 0);
+						$ret .= $this->display_button('rows_per_page_combo',$position);
+						$ret .= '</span>';
+						return $ret;
 		}
 		if (in_array($name, array('first','prev','next','last','<<','<','>','>>'))) {
 			$disabled_var = 'disabled'.$name;
@@ -2458,10 +2464,10 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 	function number_of_recs() /* {{{ */
 	{
 		$count_parts = array(
-				'type'   => 'SELECT',
+				'type'	 => 'SELECT',
 				'select' => 'COUNT(*)',
-				'from'   => @$this->get_SQL_join_clause(),
-				'where'  => @$this->get_SQL_where_from_query_opts());
+				'from'	 => @$this->get_SQL_join_clause(),
+				'where'	 => @$this->get_SQL_where_from_query_opts());
 		$res = $this->myquery($this->get_SQL_main_list_query($count_parts), __LINE__);
 		$row = $this->sql_fetch($res, 'n');
 		$this->total_recs = $row[0];
@@ -2476,7 +2482,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 	 */
 	
 	// Filter row retrieval
-	/*$fields     = false;
+	/*$fields	  = false;
 	$filter_row = array();//$row;
 	if (! is_array($filter_row)) { echo 'tttt';
 		unset($qparts['where']);
@@ -2505,20 +2511,20 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			if (! $this->displayed[$k]) {
 				continue;
 			}
-			$css_postfix      = @$this->fdd[$k]['css']['postfix'];
-			$css_class_name   = $this->getCSSclass('filter', null, null, $css_postfix);
+			$css_postfix	  = @$this->fdd[$k]['css']['postfix'];
+			$css_class_name	  = $this->getCSSclass('filter', null, null, $css_postfix);
 			$this->field_name = $this->fds[$k];
-			$fd               = $this->field_name;
-			$this->field      = $this->fdd[$fd];
-			$l  = 'qf'.$k;
+			$fd				  = $this->field_name;
+			$this->field	  = $this->fdd[$fd];
+			$l	= 'qf'.$k;
 			$lc = 'qf'.$k.'_comp';
 			$li = 'qf'.$k.'_id';
 			if ($this->clear_operation()) {
-				$m  = null;
+				$m	= null;
 				$mc = null;
 				$mi = null;
 			} else {
-				$m  = $this->get_sys_cgi_var($l);
+				$m	= $this->get_sys_cgi_var($l);
 				$mc = $this->get_sys_cgi_var($lc);
 				$mi = $this->get_sys_cgi_var($li);
 			}
@@ -2531,19 +2537,19 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				// Multiple fields processing
 				// Default size is 2 and array required for values.
 				$from_table = ! $this->col_has_values($k) || isset($this->fdd[$k]['values']['table']);
-				$vals       = $this->set_values($k, array('*' => '*'), null, $from_table);
-				$selected   = $mi;
-				$multiple   = $this->col_has_multiple_select($k);
+				$vals		= $this->set_values($k, array('*' => '*'), null, $from_table);
+				$selected	= $mi;
+				$multiple	= $this->col_has_multiple_select($k);
 				$multiple  |= $this->fdd[$fd]['select'] == 'M' || $this->fdd[$fd]['select'] == 'C';
-				$readonly   = false;
+				$readonly	= false;
 				$strip_tags = true;
-				$escape     = true;
+				$escape		= true;
 				echo $this->htmlSelect($this->cgi['prefix']['sys'].$l.'_id', $css_class_name,
 						$vals, $selected, $multiple, $readonly, $strip_tags, $escape);
 			} elseif (($this->fdd[$fd]['select'] == 'N' ||
-                       $this->fdd[$fd]['select'] == 'T')
-                      &&              
-                      $this->filtered($k)) {
+					   $this->fdd[$fd]['select'] == 'T')
+					  &&			  
+					  $this->filtered($k)) {
 				$len_props = '';
 				$maxlen = intval($this->fdd[$k]['maxlen']);
 				//$maxlen > 0 || $maxlen = intval($this->sql_field_len($res, $fields["qf$k"]));
@@ -2559,7 +2565,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				}
 				echo '<input class="',$css_class_name,'" value="',htmlspecialchars(@$m);
 				echo '" type="text" name="'.$this->cgi['prefix']['sys'].'qf'.$k.'"',$len_props;
-                                echo ' '.$this->fetchToolTip($css_class_name, $name, $css_class_name.'text');
+								echo ' '.$this->fetchToolTip($css_class_name, $name, $css_class_name.'text');
 				echo ' onkeypress="return '.$this->js['prefix'].'filter_handler(this.form, event);" />';
 			} else {
 				echo '&nbsp;';
@@ -2577,8 +2583,8 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		$css_class_name = $this->getCSSclass('sortinfo');
 		echo '<tr class="',$css_class_name,'">',"\n";
 		echo '<td class="',$css_class_name,'" colspan="',$this->sys_cols,'">';
-                echo $this->htmlSubmit('sfn', 'Clear', $this->getCSSclass('clear'), false);
-                echo "</td>\n";
+				echo $this->htmlSubmit('sfn', 'Clear', $this->getCSSclass('clear'), false);
+				echo "</td>\n";
 		echo '<td class="',$css_class_name,'" colspan="',$this->num_fields_displayed,'">';
 		echo $this->labels['Sorted By'],': ',join(', ', $this->sort_fields_w),'</td></tr>',"\n";	
 	} /* }}} */
@@ -2593,82 +2599,96 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			$css_class_name = $this->getCSSclass('queryinfo');
 			echo '<tr class="',$css_class_name,'">',"\n";
 			echo '<td class="',$css_class_name,'" colspan="',$this->sys_cols,'">';
-                        echo $this->htmlSubmit('sw', 'Clear', $this->getCSSclass('clear'), false);
+						echo $this->htmlSubmit('sw', 'Clear', $this->getCSSclass('clear'), false);
 			echo "</td>\n";
 			echo '<td class="',$css_class_name,'" colspan="',$this->num_fields_displayed,'">';
 			echo $this->labels['Current Query'],': ',htmlspecialchars($text_query),'</td></tr>',"\n";
 		}
 	} /* }}} */
 
-        /* static function sputcsv($row, $delimiter = ',', $enclosure = '"', $eol = "\n") */
-        /* { */
-        /*     static $fp = false; */
-        /*     if ($fp === false) { */
-        /*         $fp = fopen('php://temp', 'r+'); // see http://php.net/manual/en/wrappers.php.php - yes there are 2 '.php's on the end. */
-        /*         // NB: anything you read/write to/from 'php://temp' is specific to this filehandle */
-        /*     } else { */
-        /*         rewind($fp); */
-        /*     } */
+		/* static function sputcsv($row, $delimiter = ',', $enclosure = '"', $eol = "\n") */
+		/* { */
+		/*	   static $fp = false; */
+		/*	   if ($fp === false) { */
+		/*		   $fp = fopen('php://temp', 'r+'); // see http://php.net/manual/en/wrappers.php.php - yes there are 2 '.php's on the end. */
+		/*		   // NB: anything you read/write to/from 'php://temp' is specific to this filehandle */
+		/*	   } else { */
+		/*		   rewind($fp); */
+		/*	   } */
    
-        /*     if (fputcsv($fp, $row, $delimiter, $enclosure) === false) { */
-        /*         return false; */
-        /*     } */
+		/*	   if (fputcsv($fp, $row, $delimiter, $enclosure) === false) { */
+		/*		   return false; */
+		/*	   } */
    
-        /*     rewind($fp); */
-        /*     $csv = fgets($fp); */
+		/*	   rewind($fp); */
+		/*	   $csv = fgets($fp); */
    
-        /*     if ($eol != PHP_EOL) { */
-        /*         $csv = substr($csv, 0, (0 - strlen(PHP_EOL))) . $eol; */
-        /*     } */
-            
-        /*     return $csv; */
-        /* } */
+		/*	   if ($eol != PHP_EOL) { */
+		/*		   $csv = substr($csv, 0, (0 - strlen(PHP_EOL))) . $eol; */
+		/*	   } */
+			
+		/*	   return $csv; */
+		/* } */
 
-        /* Quick and dirty CSV-export. Blobs will probably fail. But so
-         * what.
-         *
-         * This is just like list_table(), i.e. only the chosen range of
-         * data is displayed and in html-display order.
-         */
-        function csv_export(&$handle = STDOUT, $delim = ',', $enclosure = '"')
-        {
-            // Header line
-            $line = array();
-            for ($k = 0; $k < $this->num_fds; $k++) {
-                $fd = $this->fds[$k];
-                $fdn = $this->fdd[$fd]['name'];
+		/* Quick and dirty CSV-export. Blobs will probably fail. But so
+		 * what.
+		 *
+		 * This is just like list_table(), i.e. only the chosen range of
+		 * data is displayed and in html-display order.
+		 */
+	function csvExport(&$handle, $delim = ',', $enclosure = '"', $filter = false)
+	{
+		$error_reporting = error_reporting(E_ALL & ~E_NOTICE);
 
-                $line[] = $fdn;
-            }
-            fputcsv($handle, $line, $delim, $enclosure);
+		// Header line
+		$line = array();
+		for ($k = 0; $k < $this->num_fds; $k++) {
+			if (!$this->displayed[$k]) {
+				continue;
+			}
+			$fd = $this->fds[$k];
+			$fdn = $this->fdd[$fd]['name'];
 
-            /*
-             * Main list_table() query
-             *
-             * Each row of the HTML table is one record from the SQL query. We must
-             * perform this query before filter printing, because we want to use
-             * $this->sql_field_len() function. We will also fetch the first row to get
-             * the field names.
-             */
-            $qparts = $this->get_SQL_main_list_query_parts();
-            $query = $this->get_SQL_main_list_query($qparts);
-            $res   = $this->myquery($query, __LINE__);
-            if ($res == false) {
-                $this->error('invalid SQL query', $query);
-                return false;
-            }
-            while ($row = $this->sql_fetch($res)) {
-                $line = array();
-                for ($k = 0; $k < $this->num_fds; $k++) {
-                    $fd = $this->fds[$k];
-                    if (!$this->displayed[$k]) {
-                        continue;
-                    }
-                    $line[] = $this->cellDisplay($k, $row, '');
-                }
-                fputcsv($handle, $line, $delim, $enclosure);
-            }
-        }    
+			if ($filter) {
+				$fdn = call_user_func($filter, $fdn);
+			}
+			$line[] = $fdn;
+		}
+		fputcsv($handle, $line, $delim, $enclosure);
+
+		/*
+		 * Main list_table() query
+		 *
+		 * Each row of the HTML table is one record from the SQL query. We must
+		 * perform this query before filter printing, because we want to use
+		 * $this->sql_field_len() function. We will also fetch the first row to get
+		 * the field names.
+		 */
+		$qparts = $this->get_SQL_main_list_query_parts();
+		$query = $this->get_SQL_main_list_query($qparts);
+		$res   = $this->myquery($query, __LINE__);
+		if ($res == false) {
+			$this->error('invalid SQL query', $query);
+			return false;
+		}
+		while ($row = $this->sql_fetch($res)) {
+			$line = array();
+			for ($k = 0; $k < $this->num_fds; $k++) {
+				$fd = $this->fds[$k];
+				if (!$this->displayed[$k]) {
+					continue;
+				}
+				$cell = $this->cellDisplay($k, $row, 'noescape');
+				if ($filter !== false) {
+					$cell = call_user_func($filter, $cell);
+				}
+				$line[] = $cell;
+			}
+			fputcsv($handle, $line, $delim, $enclosure);
+		}
+
+		error_reporting($error_reporting);
+	}	 
 
 	/*
 	 * Table Page Listing @@@@
@@ -2725,27 +2745,27 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		if (! $this->filter_operation()) {
 			echo $this->get_origvars_html($this->qfn);
 		}
-                if (false) {
-                  // Nope, transferred via check-box values
-                  foreach ($this->sfn as $key => $val) {
-                    echo $this->htmlHiddenSys('sfn['.$key.']', $val);
-                  }
-                }
+				if (false) {
+				  // Nope, transferred via check-box values
+				  foreach ($this->sfn as $key => $val) {
+					echo $this->htmlHiddenSys('sfn['.$key.']', $val);
+				  }
+				}
 		echo $this->htmlHiddenSys('qfn', $this->qfn);
 		echo $this->htmlHiddenSys('fm', $this->fm);
-                echo $this->htmlHiddenSys('np', $this->inc);
-                echo $this->htmlHiddenSys('translations', $this->translations);
+				echo $this->htmlHiddenSys('np', $this->inc);
+				echo $this->htmlHiddenSys('translations', $this->translations);
 		echo '<table class="',$this->getCSSclass('main'),'" summary="',$this->tb,'">',"\n";
 		echo '<thead><tr class="',$this->getCSSclass('header'),'">',"\n";
 		/*
 		 * System (navigation, selection) columns counting
 		 */
-		$this->sys_cols  = 0;
+		$this->sys_cols	 = 0;
 		$this->sys_cols += intval($this->filter_enabled() || $select_recs);
 		if ($this->sys_cols > 0) {
 			$this->sys_cols += intval($this->nav_buttons()
 					&& ($this->nav_text_links() || $this->nav_graphic_links()));
-                        $this->sys_cols += intval($this->nav_custom_multi() !== false);
+						$this->sys_cols += intval($this->nav_custom_multi() !== false);
 		}
 		/*
 		 * We need an initial column(s) (sys columns)
@@ -2756,7 +2776,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			if ($this->filter_enabled()) {
 				if ($this->filter_operation()) {
 					echo $this->htmlSubmit('sw', 'Hide', $this->getCSSclass('hide'), false);
-                                        echo '<br/>'."\n";
+										echo '<br/>'."\n";
 					echo $this->htmlSubmit('sw', 'Clear', $this->getCSSclass('clear'), false);
 				} else {
 					echo $this->htmlSubmit('sw', 'Search', $this->getCSSclass('search'), false);
@@ -2768,66 +2788,66 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		}
 		for ($k = 0; $k < $this->num_fds; $k++) {
 			$fd = $this->fds[$k];
-                        $sfnidx = 0;
-                        $forward  = in_array("$k", $this->sfn, true);
-                        $backward = in_array("-$k", $this->sfn, true);
-                        $sorted   = $forward || $backward;
-                        if ($sorted) {
-                                // Then we need also our index in the sorting hirarchy
-                                $search_key = $forward ? "$k" : "-$k";
-                                $sfnidx = array_search($search_key, $this->sfn, true);
-                                if ($sfnidx === false) {
-                                        die("Everything is a foo-bar. Contact your Guru.");
-                                }
-                        } else {
-                                /* Even worse: we just cannot give
-                                 * some of the check-boxes explicit
-                                 * indices and the others
-                                 * not. Non-checked boxes need just
-                                 * one free index. As we have "oncheck
-                                 * -> submit" we can choose just one
-                                 * more than the number of current
-                                 * search fields.
-                                 */
-                                $sfnidx = count($this->sfn);
-                        }
+						$sfnidx = 0;
+						$forward  = in_array("$k", $this->sfn, true);
+						$backward = in_array("-$k", $this->sfn, true);
+						$sorted	  = $forward || $backward;
+						if ($sorted) {
+								// Then we need also our index in the sorting hirarchy
+								$search_key = $forward ? "$k" : "-$k";
+								$sfnidx = array_search($search_key, $this->sfn, true);
+								if ($sfnidx === false) {
+										die("Everything is a foo-bar. Contact your Guru.");
+								}
+						} else {
+								/* Even worse: we just cannot give
+								 * some of the check-boxes explicit
+								 * indices and the others
+								 * not. Non-checked boxes need just
+								 * one free index. As we have "oncheck
+								 * -> submit" we can choose just one
+								 * more than the number of current
+								 * search fields.
+								 */
+								$sfnidx = count($this->sfn);
+						}
 			if (! $this->displayed[$k]) {
 				continue;
 			}
-			$css_postfix    = @$this->fdd[$k]['css']['postfix'];
+			$css_postfix	= @$this->fdd[$k]['css']['postfix'];
 			$css_class_name = $this->getCSSclass('header', null, null, $css_postfix);
 			$fdn = $this->fdd[$fd]['name'];
 			if (! $this->fdd[$fd]['sort'] || $this->password($fd)) {
 				echo '<th class="',$css_class_name,'">',$fdn,'</th>',"\n";
 			} else {
 				// Clicking on the current sort field reverses the sort order
-                                // Generate a button and a check
-                                // box. The check box is activated if the field is selected for sorting
+								// Generate a button and a check
+								// box. The check box is activated if the field is selected for sorting
 
 				echo '<th class="',$css_class_name,'">';
-                                if (!$sorted) {
-                                        echo "\n  ".$this->htmlSubmit("sort[$k]", $fdn, $this->getCSSclass('sort'), false);
-                                } else {
-                                        echo "\n  ".$this->htmlSubmit("rvrt[$k]", $fdn, $this->getCSSclass('sort-rvrt'), false);
-                                }
-                                echo '<BR/>'."\n";
-                                echo '  <label class="'.$this->getCSSclass('sort')
-                                  .'" for="'.$this->cgi['prefix']['sys'].'srt-'.$k.'"'
-                                  .$this->fetchToolTip($this->getCSSclass('sort'), $this->labels['Sort Field'])
-                                  .'>'."\n    ".'<input class="'.$this->getCSSclass('sort')
-                                  .'" id="'.$this->cgi['prefix']['sys'].'srt-'.$k
-                                  .'" type="checkbox"  name="'.$this->cgi['prefix']['sys'].'sfn['.$sfnidx.']"'
-                                  .$this->fetchToolTip($this->getCSSclass('sort'), $this->cgi['prefix']['sys'].'sfn[]')
-                                  .' value="'.($backward ? "-$k" : $k)
-                                  .'" onchange="return this.form.submit();"';
-                                if ($forward || $backward) {
-                                        echo ' checked';
-                                }
-                                echo ' />'."\n    ".'<div class="'.$this->getCSSclass('sort').'"'
-                                  .$this->fetchToolTip($this->getCSSclass('sort'), $this->labels['Sort Field'])
-                                  .'>'
-                                  .$this->labels['Sort Field'].'</div>'."\n  ".'</label>';
-                                echo '</th>'."\n";
+								if (!$sorted) {
+										echo "\n  ".$this->htmlSubmit("sort[$k]", $fdn, $this->getCSSclass('sort'), false);
+								} else {
+										echo "\n  ".$this->htmlSubmit("rvrt[$k]", $fdn, $this->getCSSclass('sort-rvrt'), false);
+								}
+								echo '<BR/>'."\n";
+								echo '	<label class="'.$this->getCSSclass('sort')
+								  .'" for="'.$this->cgi['prefix']['sys'].'srt-'.$k.'"'
+								  .$this->fetchToolTip($this->getCSSclass('sort'), $this->labels['Sort Field'])
+								  .'>'."\n	  ".'<input class="'.$this->getCSSclass('sort')
+								  .'" id="'.$this->cgi['prefix']['sys'].'srt-'.$k
+								  .'" type="checkbox"  name="'.$this->cgi['prefix']['sys'].'sfn['.$sfnidx.']"'
+								  .$this->fetchToolTip($this->getCSSclass('sort'), $this->cgi['prefix']['sys'].'sfn[]')
+								  .' value="'.($backward ? "-$k" : $k)
+								  .'" onchange="return this.form.submit();"';
+								if ($forward || $backward) {
+										echo ' checked';
+								}
+								echo ' />'."\n	  ".'<div class="'.$this->getCSSclass('sort').'"'
+								  .$this->fetchToolTip($this->getCSSclass('sort'), $this->labels['Sort Field'])
+								  .'>'
+								  .$this->labels['Sort Field'].'</div>'."\n	 ".'</label>';
+								echo '</th>'."\n";
 			}
 		}
 		echo '</tr></thead><tbody>',"\n";
@@ -2858,31 +2878,31 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		
 		if ($this->nav_text_links() || $this->nav_graphic_links()) {
 			$qstrparts = array();
-			strlen($this->fl)             > 0 && $qstrparts[] = $this->cgi['prefix']['sys'].'fl'.'='.$this->fl;
-			strlen($this->fm)             > 0 && $qstrparts[] = $this->cgi['prefix']['sys'].'fm'.'='.$this->fm;
+			strlen($this->fl)			  > 0 && $qstrparts[] = $this->cgi['prefix']['sys'].'fl'.'='.$this->fl;
+			strlen($this->fm)			  > 0 && $qstrparts[] = $this->cgi['prefix']['sys'].'fm'.'='.$this->fm;
 			$qstrparts[] = $this->cgi['prefix']['sys'].'np'.'='.$this->inc;
-			count($this->sfn)             > 0 && $qstrparts[] = $this->get_sfn_cgi_vars();
+			count($this->sfn)			  > 0 && $qstrparts[] = $this->get_sfn_cgi_vars();
 			strlen($this->cgi['persist']) > 0 && $qstrparts[] = $this->cgi['persist'];
-                        foreach ($this->mrecs as $key => $value) {
-                                $qstrparts[] = $this->cgi['prefix']['sys'].'mrecs['.$key.']='.$value;
-                        }                
-			$qpview      = $qstrparts;
-			$qpcopy      = $qstrparts;
-			$qpchange    = $qstrparts;
-			$qpdelete    = $qstrparts;
-			$qp_prefix   = $this->cgi['prefix']['sys'].'operation'.'='.$this->cgi['prefix']['operation'];
-			$qpview[]    = $qp_prefix.'View';
-			$qpcopy[]    = $qp_prefix.'Copy';
-			$qpchange[]  = $qp_prefix.'Change';
-			$qpdelete[]  = $qp_prefix.'Delete';
-			$qpviewStr   = htmlspecialchars($this->page_name.'?'.join('&',$qpview).$this->qfn);
-			$qpcopyStr   = htmlspecialchars($this->page_name.'?'.join('&',$qpcopy).$this->qfn);
+						foreach ($this->mrecs as $key => $value) {
+								$qstrparts[] = $this->cgi['prefix']['sys'].'mrecs['.$key.']='.$value;
+						}				 
+			$qpview		 = $qstrparts;
+			$qpcopy		 = $qstrparts;
+			$qpchange	 = $qstrparts;
+			$qpdelete	 = $qstrparts;
+			$qp_prefix	 = $this->cgi['prefix']['sys'].'operation'.'='.$this->cgi['prefix']['operation'];
+			$qpview[]	 = $qp_prefix.'View';
+			$qpcopy[]	 = $qp_prefix.'Copy';
+			$qpchange[]	 = $qp_prefix.'Change';
+			$qpdelete[]	 = $qp_prefix.'Delete';
+			$qpviewStr	 = htmlspecialchars($this->page_name.'?'.join('&',$qpview).$this->qfn);
+			$qpcopyStr	 = htmlspecialchars($this->page_name.'?'.join('&',$qpcopy).$this->qfn);
 			$qpchangeStr = htmlspecialchars($this->page_name.'?'.join('&',$qpchange).$this->qfn);
 			$qpdeleteStr = htmlspecialchars($this->page_name.'?'.join('&',$qpdelete).$this->qfn);
 		}
 
 		$fetched  = true;
-		$first    = true;
+		$first	  = true;
 		$rowCount = 0;
 		while ((!$fetched && ($row = $this->sql_fetch($res)) != false)
 				|| ($fetched && $row != false)) {
@@ -2895,7 +2915,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 					$key_rec = $row['qf'.$this->key_num];
 				}
 
-				//$key_rec     = $row['qf'.$this->key_num];
+				//$key_rec	   = $row['qf'.$this->key_num];
 				$css_class_name = $this->getCSSclass('navigation', null, true);
 				if ($select_recs) {
 					if (! $this->nav_buttons() || $this->sys_cols > 1) {
@@ -2903,60 +2923,60 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 					}
 					if ($this->nav_text_links() || $this->nav_graphic_links()) {
 						$queryAppend = htmlspecialchars('&'.$this->cgi['prefix']['sys'].'rec'.'='.$key_rec);
-						$viewQuery   = $qpviewStr   . $queryAppend;
-						$copyQuery   = $qpcopyStr   . $queryAppend;
+						$viewQuery	 = $qpviewStr	. $queryAppend;
+						$copyQuery	 = $qpcopyStr	. $queryAppend;
 						$changeQuery = $qpchangeStr . $queryAppend;
 						$deleteQuery = $qpdeleteStr . $queryAppend;
-                                                $viewTitle   = htmlspecialchars($this->labels['View']);
-                                                $changeTitle = htmlspecialchars($this->labels['Change']);
-                                                $copyTitle   = htmlspecialchars($this->labels['Copy']);
-                                                $deleteTitle = htmlspecialchars($this->labels['Delete']);
+												$viewTitle	 = htmlspecialchars($this->labels['View']);
+												$changeTitle = htmlspecialchars($this->labels['Change']);
+												$copyTitle	 = htmlspecialchars($this->labels['Copy']);
+												$deleteTitle = htmlspecialchars($this->labels['Delete']);
 					}
 					if ($this->nav_graphic_links()) {
-                                                $imgstyle =
-                                                        'background:url('.$this->url['images'].'%s) no-repeat;'.
-                                                        'width:16px;height:15px;border:0;font-size:0';
+												$imgstyle =
+														'background:url('.$this->url['images'].'%s) no-repeat;'.
+														'width:16px;height:15px;border:0;font-size:0';
 /* We need the information about the current record, we append it to
  * the translated operation. Ugly, but still much cleaner than
  * textlinks.
  */
-                                                $record = $this->cgi['prefix']['sys'].'rec'.'='.$key_rec;
-                                                echo $this->htmlSubmit(
-                                                        'operation',
-                                                        $viewTitle.'?'.$record,
-                                                        $this->getCSSclass('view-navigation'),
-                                                        false,
-                                                        $this->view_enabled() == false,
-                                                        NULL,
-                                                        sprintf($imgstyle, 'pme-view.png'));
-                                                print('&nbsp;');
-                                                echo $this->htmlSubmit(
-                                                        'operation',
-                                                        $changeTitle.'?'.$record,
-                                                        $this->getCSSclass('change-navigation'),
-                                                        false,
-                                                        $this->change_enabled() == false,
-                                                        NULL,
-                                                        sprintf($imgstyle, 'pme-change.png'));
-                                                print('&nbsp;');
-                                                echo $this->htmlSubmit(
-                                                        'operation',
-                                                        $copyTitle.'?'.$record,
-                                                        $this->getCSSclass('copy-navigation'),
-                                                        false,
-                                                        $this->copy_enabled() == false,
-                                                        NULL,
-                                                        sprintf($imgstyle, 'pme-copy.png'));
-                                                print('&nbsp;');
-                                                $printed = true;
-                                                echo $this->htmlSubmit(
-                                                        'operation',
-                                                        $deleteTitle.'?'.$record,
-                                                        $this->getCSSclass('delete-navigation'),
-                                                        false,
-                                                        $this->delete_enabled() == false,
-                                                        NULL,
-                                                        sprintf($imgstyle, 'pme-delete.png'));
+												$record = $this->cgi['prefix']['sys'].'rec'.'='.$key_rec;
+												echo $this->htmlSubmit(
+														'operation',
+														$viewTitle.'?'.$record,
+														$this->getCSSclass('view-navigation'),
+														false,
+														$this->view_enabled() == false,
+														NULL,
+														sprintf($imgstyle, 'pme-view.png'));
+												print('&nbsp;');
+												echo $this->htmlSubmit(
+														'operation',
+														$changeTitle.'?'.$record,
+														$this->getCSSclass('change-navigation'),
+														false,
+														$this->change_enabled() == false,
+														NULL,
+														sprintf($imgstyle, 'pme-change.png'));
+												print('&nbsp;');
+												echo $this->htmlSubmit(
+														'operation',
+														$copyTitle.'?'.$record,
+														$this->getCSSclass('copy-navigation'),
+														false,
+														$this->copy_enabled() == false,
+														NULL,
+														sprintf($imgstyle, 'pme-copy.png'));
+												print('&nbsp;');
+												$printed = true;
+												echo $this->htmlSubmit(
+														'operation',
+														$deleteTitle.'?'.$record,
+														$this->getCSSclass('delete-navigation'),
+														false,
+														$this->delete_enabled() == false,
+														NULL,
+														sprintf($imgstyle, 'pme-delete.png'));
 					}
 					if ($this->nav_text_links()) {
 						if ($this->nav_graphic_links()) {
@@ -2996,35 +3016,35 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 						}
 						echo ' /></td>',"\n";
 					}
-                                        if ($this->nav_custom_multi()) {
-                                                $css      = $this->getCSSclass('misc-check');
-                                                $namebase = $this->cgi['prefix']['sys'].'mrecs';
-                                                $name     = $namebase.'[]';
-                                                $ttip     = $this->fetchToolTip($css, $name);
-                                                        
+										if ($this->nav_custom_multi()) {
+												$css	  = $this->getCSSclass('misc-check');
+												$namebase = $this->cgi['prefix']['sys'].'mrecs';
+												$name	  = $namebase.'[]';
+												$ttip	  = $this->fetchToolTip($css, $name);
+														
 						echo '<td class="',$css_class_name,'">'
-                                                        .'<label class="'.$css
-                                                        .'" for="'.$namebase.'-'.htmlspecialchars($key_rec)
-                                                        .'" '.$ttip.'>'
-                                                        .'<input class="'.$css
-                                                        .'" '.$ttip
-                                                        .'id="'.$namebase.'-'.htmlspecialchars($key_rec)
-                                                        .'" type="checkbox" name="'.$namebase.'[]'
-                                                        .'" value="',htmlspecialchars($key_rec),'"';
-                                                // Set all members of $this->mrecs as checked, or add the current file
-                                                // result
-                                                $mrecs_key = array_search($key_rec, $this->mrecs, true);
-                                                if (($this->operation != '-' && $mrecs_key !== false)
-                                                    ||
-                                                    ($this->operation == '+')) {
-                                                        echo ' checked';
+														.'<label class="'.$css
+														.'" for="'.$namebase.'-'.htmlspecialchars($key_rec)
+														.'" '.$ttip.'>'
+														.'<input class="'.$css
+														.'" '.$ttip
+														.'id="'.$namebase.'-'.htmlspecialchars($key_rec)
+														.'" type="checkbox" name="'.$namebase.'[]'
+														.'" value="',htmlspecialchars($key_rec),'"';
+												// Set all members of $this->mrecs as checked, or add the current file
+												// result
+												$mrecs_key = array_search($key_rec, $this->mrecs, true);
+												if (($this->operation != '-' && $mrecs_key !== false)
+													||
+													($this->operation == '+')) {
+														echo ' checked';
 						}
-                                                if ($this->operation == '-') {
-                                                        // Remove, remember all others
-                                                        unset($this->mrecs[$mrecs_key]);
-                                                }
+												if ($this->operation == '-') {
+														// Remove, remember all others
+														unset($this->mrecs[$mrecs_key]);
+												}
 						echo ' /><div class="'.$this->getCSSclass('misc-check').'" /></label></td>'."\n";
-                                        }
+										}
 				} elseif ($this->filter_enabled()) {
 					echo '<td class="',$css_class_name,'" colspan="',$this->sys_cols,'">&nbsp;</td>',"\n";
 				}
@@ -3034,7 +3054,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				if (! $this->displayed[$k]) {
 					continue;
 				}
-				$css_postfix    = @$this->fdd[$k]['css']['postfix'];
+				$css_postfix	= @$this->fdd[$k]['css']['postfix'];
 				$css_class_name = $this->getCSSclass('cell', null, true, $css_postfix);
 				if ($this->password($k)) {
 					echo '<td class="',$css_class_name,'">',$this->labels['hidden'],'</td>',"\n";
@@ -3059,11 +3079,11 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				$qp = array();
 				$qp['type'] = 'select';
 				$qp['select'] = $aggr_from_clause;
-				$qp['from']   = @$this->get_SQL_join_clause();
+				$qp['from']	  = @$this->get_SQL_join_clause();
 				$qp['where']  = @$this->get_SQL_where_from_query_opts();
-				$tot_query    = @$this->get_SQL_query($qp);
+				$tot_query	  = @$this->get_SQL_query($qp);
 				$totals_result = $this->myquery($tot_query,__LINE__);
-				$tot_row       = $this->sql_fetch($totals_result);
+				$tot_row	   = $this->sql_fetch($totals_result);
 			//}
 			$qp_aggr = $qp;
 			echo "\n",'<tr class="TODO-class">',"\n",'<td class="TODO-class">&nbsp;</td>',"\n";
@@ -3093,15 +3113,15 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		}
 		echo '</tbody></table>',"\n"; // end of table rows listing
 		$this->display_list_table_buttons('down');
-                // Finally add some more hidden stuff ...
-                if ($this->misc_enabled()) {
-                        echo $this->htmlHiddenSys('mtable', $this->tb);
-                        echo $this->htmlHiddenSys('mkey', $this->key);
-                        echo $this->htmlHiddenSys('mkeytype', $this->key_type);
-                        foreach ($this->mrecs as $key => $val) {
-                                echo $this->htmlHiddenSys('mrecs['.$key.']', $val);
-                        }
-                }
+				// Finally add some more hidden stuff ...
+				if ($this->misc_enabled()) {
+						echo $this->htmlHiddenSys('mtable', $this->tb);
+						echo $this->htmlHiddenSys('mkey', $this->key);
+						echo $this->htmlHiddenSys('mkeytype', $this->key_type);
+						foreach ($this->mrecs as $key => $val) {
+								echo $this->htmlHiddenSys('mrecs['.$key.']', $val);
+						}
+				}
 		$this->form_end();
 	} /* }}} */
 
@@ -3139,42 +3159,42 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		if ($this->cgi['persist'] != '') {
 			echo $this->get_origvars_html($this->cgi['persist']);
 		}
-                // Finally add some more hidden stuff ...
-                if ($this->misc_enabled()) {
-                        /* First dump the table and the key-name,
-                         * doesn't work for the most general case, but
-                         * will do for us.
-                         */
-                        echo $this->htmlHiddenSys('mtable', $this->tb);
-                        echo $this->htmlHiddenSys('mkey', $this->key);
-                        echo $this->htmlHiddenSys('mkeytype', $this->key_type);
-                        foreach ($this->mrecs as $key => $val) {
-                                echo $this->htmlHiddenSys('mrecs['.$key.']', $val);
-                        }
-                }
-                // Also transport the query options ...
+				// Finally add some more hidden stuff ...
+				if ($this->misc_enabled()) {
+						/* First dump the table and the key-name,
+						 * doesn't work for the most general case, but
+						 * will do for us.
+						 */
+						echo $this->htmlHiddenSys('mtable', $this->tb);
+						echo $this->htmlHiddenSys('mkey', $this->key);
+						echo $this->htmlHiddenSys('mkeytype', $this->key_type);
+						foreach ($this->mrecs as $key => $val) {
+								echo $this->htmlHiddenSys('mrecs['.$key.']', $val);
+						}
+				}
+				// Also transport the query options ...
 		for ($k = 0; $k < $this->num_fds; $k++) {
-                        foreach (array('','_id','_comp') as $suf) {
-                                $qf = $this->get_sys_cgi_var('qf'.$k.$suf);
-                                if (isset($qf) && $qf != '') {
-                                        if (is_array($qf) ) {
-                                                foreach($qf as $key => $value) {
-                                                        echo $this->htmlHiddenSys('qf'.$k.$suf.'['.$key.']', $value);
-                                                }
-                                        } else {
-                                                echo $this->htmlHiddenSys('qf'.$k.$suf, $qf);
-                                        }
-                                }
-                        }
-                }
+						foreach (array('','_id','_comp') as $suf) {
+								$qf = $this->get_sys_cgi_var('qf'.$k.$suf);
+								if (isset($qf) && $qf != '') {
+										if (is_array($qf) ) {
+												foreach($qf as $key => $value) {
+														echo $this->htmlHiddenSys('qf'.$k.$suf.'['.$key.']', $value);
+												}
+										} else {
+												echo $this->htmlHiddenSys('qf'.$k.$suf, $qf);
+										}
+								}
+						}
+				}
 		echo $this->get_origvars_html($this->get_sfn_cgi_vars());
 		echo $this->get_origvars_html($this->qfn);
 		echo $this->htmlHiddenSys('cur_tab', $this->dhtml['prefix'].'tab'.$this->cur_tab);
 		echo $this->htmlHiddenSys('qfn', $this->qfn);
 		echo $this->htmlHiddenSys('rec', $this->copy_operation() ? '' : $this->rec);
 		echo $this->htmlHiddenSys('fm', $this->fm);
-                echo $this->htmlHiddenSys('np', $this->inc);
-                echo $this->htmlHiddenSys('translations', $this->translations);
+				echo $this->htmlHiddenSys('np', $this->inc);
+				echo $this->htmlHiddenSys('translations', $this->translations);
 		echo $this->htmlHiddenSys('fl', $this->fl);
 		$this->display_record_buttons('up');
 		if ($this->tabs_enabled()) {
@@ -3187,7 +3207,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			$this->display_copy_change_delete_record();
 		}
 		echo '</tbody></table>',"\n";
- 		if ($this->tabs_enabled()) {
+		if ($this->tabs_enabled()) {
 		echo '</div>',"\n";
 		}		
 		$this->display_record_buttons('down');
@@ -3202,9 +3222,9 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 	function do_add_record() /* {{{ */
 	{
 		// Preparing query
-		$query       = '';
+		$query		 = '';
 		$key_col_val = '';
-		$newvals     = array();
+		$newvals	 = array();
 		for ($k = 0; $k < $this->num_fds; $k++) {
 			if ($this->processed($k)) {
 				$fd = $this->fds[$k];
@@ -3229,13 +3249,13 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		foreach ($newvals as $fd => $val) {
 			if ($fd == '') continue;
 			if ($this->col_has_sqlw($this->fdn[$fd])) {
-				$val_as  = addslashes($val);
+				$val_as	 = addslashes($val);
 				$val_qas = '"'.addslashes($val).'"';
 				$value = $this->substituteVars(
 						$this->fdd[$this->fdn[$fd]]['sqlw'], array(
 							'val_qas' => $val_qas,
 							'val_as'  => $val_as,
-							'val'     => $val
+							'val'	  => $val
 							));
 			} else {
 				$value = "'".addslashes($val)."'";
@@ -3244,12 +3264,12 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				$query = 'INSERT INTO '.$this->sd.$this->tb.$this->ed.' ('.$this->sd.$fd.$this->ed.''; // )
 				$query2 = ') VALUES ('.$value.'';
 			} else {
-				$query  .= ', '.$this->sd.$fd.$this->ed.'';
+				$query	.= ', '.$this->sd.$fd.$this->ed.'';
 				$query2 .= ', '.$value.'';
 			}
 		}
 		$query .= $query2.')';
-		$res    = $this->myquery($query, __LINE__);
+		$res	= $this->myquery($query, __LINE__);
 		$this->message = $this->sql_affected_rows($this->dbh).' '.$this->labels['record added'];
 		if (! $res) {
 			return false;
@@ -3279,23 +3299,23 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 	function do_change_record() /* {{{ */
 	{
 		// Preparing queries
-		$query_real   = '';
+		$query_real	  = '';
 		$query_oldrec = '';
-		$newvals      = array();
-		$oldvals      = array();
-		$changed      = array();
-        $stamps       = array();
+		$newvals	  = array();
+		$oldvals	  = array();
+		$changed	  = array();
+		$stamps		  = array();
 		// Prepare query to retrieve oldvals
 		for ($k = 0; $k < $this->num_fds; $k++) {
 			if ($this->processed($k) && !$this->readonly($k)) {
 				$fd = $this->fds[$k];
 				$fn = $this->get_data_cgi_var($fd);
-                if ($this->col_has_datemask($k)) {
-                  // Convert back to a date/time object understood by mySQL
-                  $stamps[$fd] = strtotime($fn);
-                  $fn = date('Y-m-d H:i:s', $stamps[$fd]);
-                  echo "<!-- ".$fn." -->\n";
-                }
+				if ($this->col_has_datemask($k)) {
+				  // Convert back to a date/time object understood by mySQL
+				  $stamps[$fd] = strtotime($fn);
+				  $fn = date('Y-m-d H:i:s', $stamps[$fd]);
+				  echo "<!-- ".$fn." -->\n";
+				}
 				$newvals[$fd] = is_array($fn) ? join(',',$fn) : $fn;
 				if ($query_oldrec == '') {
 					$query_oldrec = 'SELECT '.$this->sd.$fd.$this->ed;
@@ -3311,19 +3331,19 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		$query_newrec  = $query_oldrec.' FROM ' . $this->tb;
 		$query_oldrec .= ' FROM ' . $this->sd.$this->tb.$this->ed . $where_part;
 		// Additional query (must go before real query)
-		$res     = $this->myquery($query_oldrec, __LINE__);
+		$res	 = $this->myquery($query_oldrec, __LINE__);
 		$oldvals = $this->sql_fetch($res);
 		$this->sql_free_result($res);
 		// Creating array of changed keys ($changed)
 		foreach ($newvals as $fd => $value) {
 echo "<!-- ".$value." ".$oldvals[$fd]." -->\n";
-            if (isset($stamps[$fd])) {
-                $oldstamp = strtotime($oldvals[$fd]);
+			if (isset($stamps[$fd])) {
+				$oldstamp = strtotime($oldvals[$fd]);
 echo "<!-- ".$stamps[$fd]." ".$oldstamp." -->\n";
-                if ($oldstamp != $stamps[$fd]) {
-                    $changed[] = $fd;
-                }
-            } else if ($value != $oldvals[$fd]) {
+				if ($oldstamp != $stamps[$fd]) {
+					$changed[] = $fd;
+				}
+			} else if ($value != $oldvals[$fd]) {
 				if ($multiple[$fd]) {
 					$tmpval1 = explode(',',$value);
 					sort($tmpval1);
@@ -3345,21 +3365,21 @@ echo "<!-- ".$stamps[$fd]." ".$oldstamp." -->\n";
 		foreach ($newvals as $fd => $val) {
 			if ($fd == '') continue;
 			if ($this->col_has_sqlw($this->fdn[$fd])) {
-				$val_as  = addslashes($val);
+				$val_as	 = addslashes($val);
 				$val_qas = '"'.addslashes($val).'"';
 				$value = $this->substituteVars(
 						$this->fdd[$this->fdn[$fd]]['sqlw'], array(
 							'val_qas' => $val_qas,
 							'val_as'  => $val_as,
-							'val'     => $val
+							'val'	  => $val
 							));
 			} else {
 				$value = "'".addslashes($val)."'";
 			}
 			if ($query_real == '') {
-				$query_real   = 'UPDATE '.$this->sd.$this->tb.$this->ed.' SET '.$this->sd.$fd.$this->ed.'='.$value;
+				$query_real	  = 'UPDATE '.$this->sd.$this->tb.$this->ed.' SET '.$this->sd.$fd.$this->ed.'='.$value;
 			} else {
-				$query_real   .= ','.$this->sd.$fd.$this->ed.'='.$value;
+				$query_real	  .= ','.$this->sd.$fd.$this->ed.'='.$value;
 			}
 		}
 		$query_real .= $where_part;
@@ -3374,7 +3394,7 @@ echo "<!-- ".$stamps[$fd]." ".$oldstamp." -->\n";
 			$this->rec = $newvals[$this->key]; // key has changed
 		}
 		$query_newrec .= ' WHERE ('.$this->key.'='.$this->key_delim.$this->rec.$this->key_delim.')';
-		$res     = $this->myquery($query_newrec, __LINE__);
+		$res	 = $this->myquery($query_newrec, __LINE__);
 		$newvals = $this->sql_fetch($res);
 		$this->sql_free_result($res);
 		// Creating array of changed keys ($changed)
@@ -3412,9 +3432,9 @@ echo "<!-- ".$stamps[$fd]." ".$oldstamp." -->\n";
 	function do_delete_record() /* {{{ */
 	{
 		// Additional query
-		$query   = 'SELECT * FROM '.$this->sd.$this->tb.$this->ed.' WHERE ('.$this->sd.$this->key.$this->ed.' = '
+		$query	 = 'SELECT * FROM '.$this->sd.$this->tb.$this->ed.' WHERE ('.$this->sd.$this->key.$this->ed.' = '
 				.$this->key_delim.$this->rec.$this->key_delim.')'; // )
-		$res     = $this->myquery($query, __LINE__);
+		$res	 = $this->myquery($query, __LINE__);
 		$oldvals = $this->sql_fetch($res);
 		$this->sql_free_result($res);
 		// Creating array of changed keys ($changed)
@@ -3459,21 +3479,21 @@ echo "<!-- ".$stamps[$fd]." ".$oldstamp." -->\n";
 			return false;
 		}
 		if ($old_vals != false && $new_vals != false) {
-			$action  = 'update';
+			$action	 = 'update';
 			$subject = 'Record updated in';
-			$body    = 'An item with '.$this->fdd[$this->key]['name'].' = '
+			$body	 = 'An item with '.$this->fdd[$this->key]['name'].' = '
 				.$this->key_delim.$this->rec.$this->key_delim .' was updated in';
-			$vals    = $new_vals;
+			$vals	 = $new_vals;
 		} elseif ($new_vals != false) {
-			$action  = 'insert';
+			$action	 = 'insert';
 			$subject = 'Record added to';
-			$body    = 'A new item was added into';
-			$vals    = $new_vals;
+			$body	 = 'A new item was added into';
+			$vals	 = $new_vals;
 		} elseif ($old_vals != false) {
-			$action  = 'delete';
+			$action	 = 'delete';
 			$subject = 'Record deleted from';
-			$body    = 'An item was deleted from';
-			$vals    = $old_vals;
+			$body	 = 'An item was deleted from';
+			$vals	 = $old_vals;
 		} else {
 			return false;
 		}
@@ -3491,25 +3511,25 @@ echo "<!-- ".$stamps[$fd]." ".$oldstamp." -->\n";
 				if ($old_vals[$k] == $new_vals[$k]) {
 					continue;
 				}
-				$body .= sprintf("[%02s] %s (%s)\n      WAS: %s\n      IS:  %s\n",
+				$body .= sprintf("[%02s] %s (%s)\n		WAS: %s\n	   IS:	%s\n",
 						$i, $name, $k, $old_vals[$k], $new_vals[$k]);
 			} else {
 				$body .= sprintf('[%02s] %s (%s): %s'."\n", $i, $name, $k, $text);
 			}
 			$i++;
 		}
-		$body    .= "\n--\r\n"; // \r is needed for signature separating
-		$body    .= "phpMyEdit\ninstant SQL table editor and code generator\n";
-		$body    .= "http://platon.sk/projects/phpMyEdit/\n\n";
+		$body	 .= "\n--\r\n"; // \r is needed for signature separating
+		$body	 .= "phpMyEdit\ninstant SQL table editor and code generator\n";
+		$body	 .= "http://platon.sk/projects/phpMyEdit/\n\n";
 		$subject  = @$this->notify['prefix'].$subject.' '.$this->dbp.$this->tb;
 		$subject  = trim($subject); // just for sure
-		$wrap_w   = intval(@$this->notify['wrap']);
-	   	$wrap_w > 0 || $wrap_w = 72;
-		$from     = (string) @$this->notify['from'];
+		$wrap_w	  = intval(@$this->notify['wrap']);
+		$wrap_w > 0 || $wrap_w = 72;
+		$from	  = (string) @$this->notify['from'];
 		$from != '' || $from = 'webmaster@'.strtolower($this->get_server_var('SERVER_NAME'));
 		$headers  = 'From: '.$from."\n".'X-Mailer: PHP/'.phpversion().' (phpMyEdit)';
-		$body     = wordwrap($body, $wrap_w, "\n", 1);
-		$emails   = (array) $this->notify[$action] + (array) $this->notify['all'];
+		$body	  = wordwrap($body, $wrap_w, "\n", 1);
+		$emails	  = (array) $this->notify[$action] + (array) $this->notify['all'];
 		foreach ($emails as $email) {
 			if (! empty($email)) {
 				mail(trim($email), $subject, $body, $headers);
@@ -3556,23 +3576,23 @@ echo "<!-- ".$stamps[$fd]." ".$oldstamp." -->\n";
 		// TODO: one level deeper browsing
 		$this->page_type = $default_page_type;
 		$this->filter_operation() && $this->page_type = 'F';
-		$this->view_operation()   && $this->page_type = 'V';
+		$this->view_operation()	  && $this->page_type = 'V';
 		if ($this->add_operation()
-                    || $this->label_cmp($this->saveadd, 'Save')
-                    || $this->label_cmp($this->moreadd, 'More')) {
+					|| $this->label_cmp($this->saveadd, 'Save')
+					|| $this->label_cmp($this->moreadd, 'More')) {
 			$this->page_type = 'A';
 		}
 		if ($this->change_operation()
-                    || $this->label_cmp($this->savechange, 'Save')
-                    || $this->label_cmp($this->morechange, 'Apply')) {
+					|| $this->label_cmp($this->savechange, 'Save')
+					|| $this->label_cmp($this->morechange, 'Apply')) {
 			$this->page_type = 'C';
 		}
 		if ($this->copy_operation()
-                    || $this->label_cmp($this->savecopy, 'Save')) {
-                  $this->page_type = 'P';
+					|| $this->label_cmp($this->savecopy, 'Save')) {
+				  $this->page_type = 'P';
 		}
 		if ($this->delete_operation()
-                    || $this->label_cmp($this->savedelete, 'Delete')) {
+					|| $this->label_cmp($this->savedelete, 'Delete')) {
 			$this->page_type = 'D';
 		}
 		// Restore backups (if exists)
@@ -3607,12 +3627,12 @@ echo "<!-- ".$stamps[$fd]." ".$oldstamp." -->\n";
 
 	function recreate_displayed() /* {{{ */
 	{
-		$field_num            = 0;
+		$field_num			  = 0;
 		$num_fields_displayed = 0;
-		$this->fds            = array();
-		$this->fdn            = array();
-		$this->displayed      = array();
-		$this->guidance       = false;
+		$this->fds			  = array();
+		$this->fdn			  = array();
+		$this->displayed	  = array();
+		$this->guidance		  = false;
 		foreach (array_keys($this->fdd) as $key) {
 			if (preg_match('/^\d+$/', $key)) { // skipping numeric keys
 				continue;
@@ -3635,9 +3655,9 @@ echo "<!-- ".$stamps[$fd]." ".$oldstamp." -->\n";
 			$this->fdd[$field_num] = $this->fdd[$key];
 			$field_num++;
 		}
-		$this->num_fds              = $field_num;
+		$this->num_fds				= $field_num;
 		$this->num_fields_displayed = $num_fields_displayed;
-		$this->key_num              = array_search($this->key, $this->fds);
+		$this->key_num				= array_search($this->key, $this->fds);
 		/* Adds first displayed column into sorting fields by replacing last
 		   array entry. Also remove duplicite values and change column names to
 		   their particular field numbers.
@@ -3646,12 +3666,12 @@ echo "<!-- ".$stamps[$fd]." ".$oldstamp." -->\n";
 		   have desirable sorting behaviour. So there is no need to remove them.
 		 */
 		$this->sfn = array_unique($this->sfn);
-                /*
-                 * Well: unfortunately portions of this code treat
-                 * this as an associative array. Actually, a problem
-                 * which is built into PHP. Gnah.
-                 */
-                ksort($this->sfn, SORT_NUMERIC);
+				/*
+				 * Well: unfortunately portions of this code treat
+				 * this as an associative array. Actually, a problem
+				 * which is built into PHP. Gnah.
+				 */
+				ksort($this->sfn, SORT_NUMERIC);
 		$check_ar = array();
 		foreach ($this->sfn as $key => $val) {
 			if (preg_match('/^[-]?\d+$/', $val)) { // skipping numeric keys
@@ -3684,12 +3704,12 @@ echo "<!-- ".$stamps[$fd]." ".$oldstamp." -->\n";
 		$this->sfn = array_unique($this->sfn);
 
 		$this->dfltsfn = array_unique($this->dfltsfn);
-                /*
-                 * Well: unfortunately portions of this code treat
-                 * this as an associative array. Actually, a problem
-                 * which is built into PHP. Gnah.
-                 */
-                ksort($this->dfltsfn, SORT_NUMERIC);
+				/*
+				 * Well: unfortunately portions of this code treat
+				 * this as an associative array. Actually, a problem
+				 * which is built into PHP. Gnah.
+				 */
+				ksort($this->dfltsfn, SORT_NUMERIC);
 		$check_ar = array();
 		foreach ($this->dfltsfn as $key => $val) {
 			if (preg_match('/^[-]?\d+$/', $val)) { // skipping numeric keys
@@ -3781,10 +3801,10 @@ echo "<!-- ".$stamps[$fd]." ".$oldstamp." -->\n";
 	 */
 	function execute() /* {{{ */
 	{
-                /* echo '<PRE>'; */
-                /* echo "op: ".$this->operation." view ena: ".$this->view_enabled; */
-                /* echo '</PRE>'; */
-		//  DEBUG -  uncomment to enable
+				/* echo '<PRE>'; */
+				/* echo "op: ".$this->operation." view ena: ".$this->view_enabled; */
+				/* echo '</PRE>'; */
+		//	DEBUG -	 uncomment to enable
 		/*
 		//phpinfo();
 		$this->print_get_vars();
@@ -3837,9 +3857,9 @@ echo "<!-- ".$stamps[$fd]." ".$oldstamp." -->\n";
 		}
 		// Save/More Button - database operations
 		if ($this->label_cmp($this->saveadd, 'Save')
-                    || $this->label_cmp($this->savecopy, 'Save')) {
+					|| $this->label_cmp($this->savecopy, 'Save')) {
 			$this->add_enabled() && $this->do_add_record();
-			$this->saveadd  = null; // unset($this->saveadd)
+			$this->saveadd	= null; // unset($this->saveadd)
 			$this->savecopy = null; // unset($this->savecopy)
 			$this->recreate_fdd();
 		}
@@ -3876,22 +3896,22 @@ echo "<!-- ".$stamps[$fd]." ".$oldstamp." -->\n";
 		 */
 		if ($this->add_operation()
 				|| $this->change_operation() || $this->delete_operation()
-				|| $this->view_operation()   || $this->copy_operation()) {
+				|| $this->view_operation()	 || $this->copy_operation()) {
 			$this->display_record();
 		}
 
-                /*
+				/*
 		 * ======================================================================
-                 *
-                 * If the "misc"-callback is there and the misc-button has been pressed
-                 * then forward to that script.
-                 *
+				 *
+				 * If the "misc"-callback is there and the misc-button has been pressed
+				 * then forward to that script.
+				 *
 		 * ======================================================================
-                 */
-                elseif ($this->misc_operation()) {
-                        $this->sql_disconnect();
-                        return call_user_func($this->miscphp);
-                }
+				 */
+				elseif ($this->misc_operation()) {
+						$this->sql_disconnect();
+						return call_user_func($this->miscphp);
+				}
 
 		/*
 		 * ======================================================================
@@ -3912,7 +3932,7 @@ echo "<!-- ".$stamps[$fd]." ".$oldstamp." -->\n";
 	/*
 	 * Class constructor
 	 */
-        function __construct($opts) /* {{{ */
+		function __construct($opts) /* {{{ */
 	{
 		$error_reporting = error_reporting(E_ALL & ~E_NOTICE);
 		// Database handle variables
@@ -3932,26 +3952,26 @@ echo "<!-- ".$stamps[$fd]." ".$oldstamp." -->\n";
 		}
 		$this->tb  = $opts['tb'];
 		// Other variables§
-		$this->key       = $opts['key'];
-		$this->key_type  = $opts['key_type'];
-		$this->inc       = $opts['inc'];
-		$this->options   = $opts['options'];
-		$this->fdd       = $opts['fdd'];
-		$this->multiple  = intval($opts['multiple']);
+		$this->key		 = $opts['key'];
+		$this->key_type	 = $opts['key_type'];
+		$this->inc		 = $opts['inc'];
+		$this->options	 = $opts['options'];
+		$this->fdd		 = $opts['fdd'];
+		$this->multiple	 = intval($opts['multiple']);
 		$this->multiple <= 0 && $this->multiple = 2;
-		$this->filters   = is_array(@$opts['filters']) ? join(' AND ', $opts['filters']) : @$opts['filters'];
-		$this->triggers  = @$opts['triggers'];
-		$this->notify    = @$opts['notify'];
-		$this->logtable  = @$opts['logtable'];
-                $this->miscphp   = @$opts['miscphp'];
+		$this->filters	 = is_array(@$opts['filters']) ? join(' AND ', $opts['filters']) : @$opts['filters'];
+		$this->triggers	 = @$opts['triggers'];
+		$this->notify	 = @$opts['notify'];
+		$this->logtable	 = @$opts['logtable'];
+				$this->miscphp	 = @$opts['miscphp'];
 		$this->page_name = @$opts['page_name'];
 		if (! isset($this->page_name)) {
 			$this->page_name = basename($this->get_server_var('PHP_SELF'));
 			isset($this->page_name) || $this->page_name = $this->tb;
 		} 
 		$this->display['query'] = @$opts['display']['query'];
-		$this->display['sort']  = @$opts['display']['sort'];
-		$this->display['time']  = @$opts['display']['time'];
+		$this->display['sort']	= @$opts['display']['sort'];
+		$this->display['time']	= @$opts['display']['time'];
 		if ($this->display['time']) {
 			$this->timer = new phpMyEdit_timer();
 		}
@@ -3973,10 +3993,10 @@ echo "<!-- ".$stamps[$fd]." ".$oldstamp." -->\n";
 		// CSS classes policy
 		$this->css = @$opts['css'];
 		!isset($this->css['separator']) && $this->css['separator'] = '-';
-		!isset($this->css['prefix'])    && $this->css['prefix']    = 'pme';
+		!isset($this->css['prefix'])	&& $this->css['prefix']	   = 'pme';
 		!isset($this->css['page_type']) && $this->css['page_type'] = false;
-		!isset($this->css['position'])  && $this->css['position']  = false;
-		!isset($this->css['divider'])   && $this->css['divider']   = 2;
+		!isset($this->css['position'])	&& $this->css['position']  = false;
+		!isset($this->css['divider'])	&& $this->css['divider']   = 2;
 		$this->css['divider'] = intval(@$this->css['divider']);
 		// JS overall configuration
 		$this->js = @$opts['js'];
@@ -3986,33 +4006,33 @@ echo "<!-- ".$stamps[$fd]." ".$oldstamp." -->\n";
 		!isset($this->dhtml['prefix']) && $this->dhtml['prefix'] = 'PME_dhtml';
 		// Navigation
 		$this->navigation = @$opts['navigation'];
-                if (!stristr($this->navigation, 'N')) {
-                        if (! $this->nav_buttons() && ! $this->nav_text_links() && ! $this->nav_graphic_links()) {
-                                $this->navigation .= 'B'; // buttons are default
-                        }
-                        if (! $this->nav_up() && ! $this->nav_down()) {
-                                $this->navigation .= 'D'; // down position is default
-                        }
-                }
-                $this->buttons = @$opts['buttons'];
-                // Language labels (must go after navigation)
+				if (!stristr($this->navigation, 'N')) {
+						if (! $this->nav_buttons() && ! $this->nav_text_links() && ! $this->nav_graphic_links()) {
+								$this->navigation .= 'B'; // buttons are default
+						}
+						if (! $this->nav_up() && ! $this->nav_down()) {
+								$this->navigation .= 'D'; // down position is default
+						}
+				}
+				$this->buttons = @$opts['buttons'];
+				// Language labels (must go after navigation)
 		$this->labels = $this->make_language_labels(isset($opts['language'])
 				? $opts['language'] : $this->get_server_var('HTTP_ACCEPT_LANGUAGE'));
-                if (isset($opts['labels']) && is_array($opts['labels'])) {
-                        if (isset($opts['labels']['Misc'])) {
-                                $this->labels['Misc'] = $opts['labels']['Misc'];
-                        }
-                        if (isset($opts['labels']['Sort Field'])) {
-                                $this->labels['Sort Field'] = $opts['labels']['Sort Field'];;
-                        }
-                }
-                $this->tooltips = array();
-                if (isset($opts['tooltips']) && is_array($opts['tooltips'])) {
-                  $this->tooltips = $opts['tooltips'];
-                  /* echo '<PRE>'; */
-                  /* print_r($this->tooltips); */
-                  /* echo '</PRE>'; */
-                }
+				if (isset($opts['labels']) && is_array($opts['labels'])) {
+						if (isset($opts['labels']['Misc'])) {
+								$this->labels['Misc'] = $opts['labels']['Misc'];
+						}
+						if (isset($opts['labels']['Sort Field'])) {
+								$this->labels['Sort Field'] = $opts['labels']['Sort Field'];;
+						}
+				}
+				$this->tooltips = array();
+				if (isset($opts['tooltips']) && is_array($opts['tooltips'])) {
+				  $this->tooltips = $opts['tooltips'];
+				  /* echo '<PRE>'; */
+				  /* print_r($this->tooltips); */
+				  /* echo '</PRE>'; */
+				}
 
 		// CGI variables
 		$this->cgi = @$opts['cgi'];
@@ -4022,172 +4042,172 @@ echo "<!-- ".$stamps[$fd]." ".$oldstamp." -->\n";
 			}
 		}
 		// Sorting variables
-		$this->sfn   = $this->get_sys_cgi_var('sfn');
-		isset($this->sfn)             || $this->sfn          = array();
-		is_array($this->sfn)          || $this->sfn          = array($this->sfn);
+		$this->sfn	 = $this->get_sys_cgi_var('sfn');
+		isset($this->sfn)			  || $this->sfn			 = array();
+		is_array($this->sfn)		  || $this->sfn			 = array($this->sfn);
 
-                // Make sure also the key are sorted numerically. Bloody PHP.
-                ksort($this->sfn, SORT_NUMERIC);
+				// Make sure also the key are sorted numerically. Bloody PHP.
+				ksort($this->sfn, SORT_NUMERIC);
 
-                // Check whether we have new sort-fields
-                $sort = $this->get_sys_cgi_var('sort');
-                isset($sort) || $sort = array();
-                foreach ($sort as $k => $fqn) {
-                        $this->sfn[] = "$k";
-                }
-                // Check whether we have to revert sort-fields
-                $rvrt = $this->get_sys_cgi_var('rvrt');
-                isset($rvrt) || $rvrt = array();
-                foreach ($rvrt as $k => $fqn) {
-                        if (($i = array_search("$k", $this->sfn, true)) !== false) {
-                                $this->sfn[$i] = "-$k";
-                        } elseif (($i = array_search("-$k", $this->sfn, true)) !== false) {
-                                $this->sfn[$i] = "$k";
-                        }
-                }                                
+				// Check whether we have new sort-fields
+				$sort = $this->get_sys_cgi_var('sort');
+				isset($sort) || $sort = array();
+				foreach ($sort as $k => $fqn) {
+						$this->sfn[] = "$k";
+				}
+				// Check whether we have to revert sort-fields
+				$rvrt = $this->get_sys_cgi_var('rvrt');
+				isset($rvrt) || $rvrt = array();
+				foreach ($rvrt as $k => $fqn) {
+						if (($i = array_search("$k", $this->sfn, true)) !== false) {
+								$this->sfn[$i] = "-$k";
+						} elseif (($i = array_search("-$k", $this->sfn, true)) !== false) {
+								$this->sfn[$i] = "$k";
+						}
+				}								 
 
-		isset($opts['sort_field'])    || $opts['sort_field'] = array();
+		isset($opts['sort_field'])	  || $opts['sort_field'] = array();
 		is_array($opts['sort_field']) || $opts['sort_field'] = array($opts['sort_field']);
 		$this->dfltsfn = $opts['sort_field'];
-                if (false) {
-                        echo '<PRE>';
-                        print_r($this->sfn);
-                        print_r($sort);
-                        echo '</PRE>';
-                }
+				if (false) {
+						echo '<PRE>';
+						print_r($this->sfn);
+						print_r($sort);
+						echo '</PRE>';
+				}
 		// Get operation.
 		$this->operation = $this->get_sys_cgi_var('operation');
-                if (false) {
-                        echo '<PRE>';
-                        print_r($this->operation);
-                        echo '</PRE>';
-                }
-                /* Getting rid of text-links makes it necessary to
-                 * attach further information to the operation
-                 * field. This is done in the style of a _GET()
-                 * value. So first strip the trailing string after the
-                 * first '?' sign and between '&' signs. Perfectly
-                 * un-fool-proof, of course.
-                 *
-                 * Behold: parse_url() needs alpha-numeric chars, not
-                 * multi-byte etc. characters.
-                 */
+				if (false) {
+						echo '<PRE>';
+						print_r($this->operation);
+						echo '</PRE>';
+				}
+				/* Getting rid of text-links makes it necessary to
+				 * attach further information to the operation
+				 * field. This is done in the style of a _GET()
+				 * value. So first strip the trailing string after the
+				 * first '?' sign and between '&' signs. Perfectly
+				 * un-fool-proof, of course.
+				 *
+				 * Behold: parse_url() needs alpha-numeric chars, not
+				 * multi-byte etc. characters.
+				 */
 
-                /* First get any hard-coded record, then possibly
-                 * override by operation query string.
-                 */
-		$this->rec   = $this->get_sys_cgi_var('rec', '');
-                $qpos = strpos($this->operation, '?');
-                if ($qpos !== false) {
-                  $querypart = substr($this->operation, $qpos);
-                  $this->operation = substr($this->operation, 0, $qpos);
-                }
-                if (false) {
-                        echo '<PRE>';
-                        echo "$this->operation\n";
-                        echo "q: $querypart\n";
-                        echo "pos: $qpos\n";
-                        echo '</PRE>';
-                }
-                    
-                $opreq = parse_url('fake://pme/operation'.$querypart);
-                if (false) {
-                        echo '<PRE>';
-                        print_r($opreq);
-                        echo "$this->operation\n";
-                        echo '</PRE>';
-                }
-                $opquery = array();
-                parse_str($opreq['query'], $opquery);
-                /* May be more complicated in the future, but for now
-                 * we only expect the record here, so only check for
-                 * that.
-                 */
-                if (count($opquery) > 1) {
-                        die("Too many faked _GET parameters.");        
-                }
-                $key = $this->cgi['prefix']['sys'].'rec';
-                if (isset($opquery[$key])) {
-                        $this->rec = $opquery[$key];
-                }
-                /* echo '<PRE>'; */
-                /* print_r($opquery); */
-                /* echo "\nkey: ".$key."\n"; */
-                /* echo "op: ".$this->operation; */
-                /* echo "\nreq: ".$this->rec."\n"; */
-                /* echo '</PRE>'; */
+				/* First get any hard-coded record, then possibly
+				 * override by operation query string.
+				 */
+		$this->rec	 = $this->get_sys_cgi_var('rec', '');
+				$qpos = strpos($this->operation, '?');
+				if ($qpos !== false) {
+				  $querypart = substr($this->operation, $qpos);
+				  $this->operation = substr($this->operation, 0, $qpos);
+				}
+				if (false) {
+						echo '<PRE>';
+						echo "$this->operation\n";
+						echo "q: $querypart\n";
+						echo "pos: $qpos\n";
+						echo '</PRE>';
+				}
+					
+				$opreq = parse_url('fake://pme/operation'.$querypart);
+				if (false) {
+						echo '<PRE>';
+						print_r($opreq);
+						echo "$this->operation\n";
+						echo '</PRE>';
+				}
+				$opquery = array();
+				parse_str($opreq['query'], $opquery);
+				/* May be more complicated in the future, but for now
+				 * we only expect the record here, so only check for
+				 * that.
+				 */
+				if (count($opquery) > 1) {
+						die("Too many faked _GET parameters.");		   
+				}
+				$key = $this->cgi['prefix']['sys'].'rec';
+				if (isset($opquery[$key])) {
+						$this->rec = $opquery[$key];
+				}
+				/* echo '<PRE>'; */
+				/* print_r($opquery); */
+				/* echo "\nkey: ".$key."\n"; */
+				/* echo "op: ".$this->operation; */
+				/* echo "\nreq: ".$this->rec."\n"; */
+				/* echo '</PRE>'; */
 
-                /****************************************************************/
+				/****************************************************************/
 
 		$oper_prefix_len = strlen($this->cgi['prefix']['operation']);
 		if (! strncmp($this->cgi['prefix']['operation'], $this->operation, $oper_prefix_len)) {
 			$this->operation = $this->labels[substr($this->operation, $oper_prefix_len)];
 		}
-                // Persistent values.
+				// Persistent values.
 		$this->cgi['persist'] = '';
-                if (!@is_array($opts['cgi']['persist'])) {
-                        $opts['cgi']['persist'] = array();
-                }
-                $this->mrecs = $this->get_sys_cgi_var('mrecs', array());
-                $this->mrecs = array_unique($this->mrecs);
-                foreach ($opts['cgi']['persist'] as $key => $val) {
-                        if (is_array($val)) {
-                                foreach($val as $key2 => $val2) {
-                                        $this->cgi['persist'] .= '&'.rawurlencode($key)
-                                                .'['.rawurlencode($key2).']='.rawurlencode($val2);
+				if (!@is_array($opts['cgi']['persist'])) {
+						$opts['cgi']['persist'] = array();
+				}
+				$this->mrecs = $this->get_sys_cgi_var('mrecs', array());
+				$this->mrecs = array_unique($this->mrecs);
+				foreach ($opts['cgi']['persist'] as $key => $val) {
+						if (is_array($val)) {
+								foreach($val as $key2 => $val2) {
+										$this->cgi['persist'] .= '&'.rawurlencode($key)
+												.'['.rawurlencode($key2).']='.rawurlencode($val2);
 					}
-                        } else {
-                                $this->cgi['persist'] .= '&'.rawurlencode($key).'='.rawurlencode($val);
-                        }
-                }
+						} else {
+								$this->cgi['persist'] .= '&'.rawurlencode($key).'='.rawurlencode($val);
+						}
+				}
 		// Form variables all around
-		$this->fl    = intval($this->get_sys_cgi_var('fl'));
-		$this->fm    = intval($this->get_sys_cgi_var('fm'));
+		$this->fl	 = intval($this->get_sys_cgi_var('fl'));
+		$this->fm	 = intval($this->get_sys_cgi_var('fm'));
 //		$old_page = ceil($this->fm / abs($this->inc)) + 1;
-		$this->qfn   = $this->get_sys_cgi_var('qfn');
-		$this->sw    = $this->get_sys_cgi_var('sw');
- 		$this->navop = $this->get_sys_cgi_var('navop');
-		$navfmup     = $this->get_sys_cgi_var('navfmup');
-		$navfmdown   = $this->get_sys_cgi_var('navfmdown');
-		$navpnup     = $this->get_sys_cgi_var('navpnup');
-		$navpndown   = $this->get_sys_cgi_var('navpndown');
-        $navnpup     = $this->get_sys_cgi_var('navnpup');
-        $navnpdown   = $this->get_sys_cgi_var('navnpdown');
-        $prevnp      = $this->get_sys_cgi_var('np');
-        if ($this->misc_enabled() && ($this->operation == '-' || $this->operation == '+')) {
-            // force the user to view all the mess.
-            $this->inc = -1;
-        } elseif ($prevnp != '') {
-            $this->inc = $prevnp;
-            if($navnpdown != NULL && $navnpdown != $this->inc) $this->inc = $navnpdown;
-            elseif($navnpup != NULL && $navnpup != $this->inc) $this->inc = $navnpup;
-        }
-        if ($prevnp != NULL && $prevnp != $this->inc && $this->inc > 0 && $prevnp > 0) {
-            // Set current form such that it is at least close to the old position.
-            $this->navfm = intval($this->fm / $this->inc) * $this->inc;
-        } else {
-            if($navfmdown!=NULL && $navfmdown != $this->fm) $this->navfm = $navfmdown;
-            elseif($navfmup!=NULL && $navfmup != $this->fm) $this->navfm = $navfmup;
-            elseif($navpndown!=NULL && ($navpndown-1)*$this->inc != $this->fm) $this->navfm = ($navpndown-1)*$this->inc;
-            elseif($navpnup!=NULL && ($navpnup-1)*$this->inc != $this->fm) $this->navfm = ($navpnup-1)*$this->inc;
-            else $this->navfm = $this->fm; 
-        }
-		$this->saveadd      = $this->get_sys_cgi_var('saveadd');
-		$this->moreadd      = $this->get_sys_cgi_var('moreadd');
-		$this->canceladd    = $this->get_sys_cgi_var('canceladd');
-		$this->savechange   = $this->get_sys_cgi_var('savechange');
-		$this->morechange   = $this->get_sys_cgi_var('morechange');
+		$this->qfn	 = $this->get_sys_cgi_var('qfn');
+		$this->sw	 = $this->get_sys_cgi_var('sw');
+		$this->navop = $this->get_sys_cgi_var('navop');
+		$navfmup	 = $this->get_sys_cgi_var('navfmup');
+		$navfmdown	 = $this->get_sys_cgi_var('navfmdown');
+		$navpnup	 = $this->get_sys_cgi_var('navpnup');
+		$navpndown	 = $this->get_sys_cgi_var('navpndown');
+		$navnpup	 = $this->get_sys_cgi_var('navnpup');
+		$navnpdown	 = $this->get_sys_cgi_var('navnpdown');
+		$prevnp		 = $this->get_sys_cgi_var('np');
+		if ($this->misc_enabled() && ($this->operation == '-' || $this->operation == '+')) {
+			// force the user to view all the mess.
+			$this->inc = -1;
+		} elseif ($prevnp != '') {
+			$this->inc = $prevnp;
+			if($navnpdown != NULL && $navnpdown != $this->inc) $this->inc = $navnpdown;
+			elseif($navnpup != NULL && $navnpup != $this->inc) $this->inc = $navnpup;
+		}
+		if ($prevnp != NULL && $prevnp != $this->inc && $this->inc > 0 && $prevnp > 0) {
+			// Set current form such that it is at least close to the old position.
+			$this->navfm = intval($this->fm / $this->inc) * $this->inc;
+		} else {
+			if($navfmdown!=NULL && $navfmdown != $this->fm) $this->navfm = $navfmdown;
+			elseif($navfmup!=NULL && $navfmup != $this->fm) $this->navfm = $navfmup;
+			elseif($navpndown!=NULL && ($navpndown-1)*$this->inc != $this->fm) $this->navfm = ($navpndown-1)*$this->inc;
+			elseif($navpnup!=NULL && ($navpnup-1)*$this->inc != $this->fm) $this->navfm = ($navpnup-1)*$this->inc;
+			else $this->navfm = $this->fm; 
+		}
+		$this->saveadd		= $this->get_sys_cgi_var('saveadd');
+		$this->moreadd		= $this->get_sys_cgi_var('moreadd');
+		$this->canceladd	= $this->get_sys_cgi_var('canceladd');
+		$this->savechange	= $this->get_sys_cgi_var('savechange');
+		$this->morechange	= $this->get_sys_cgi_var('morechange');
 		$this->cancelchange = $this->get_sys_cgi_var('cancelchange');
-		$this->savecopy     = $this->get_sys_cgi_var('savecopy');
-		$this->cancelcopy   = $this->get_sys_cgi_var('cancelcopy');
-		$this->savedelete   = $this->get_sys_cgi_var('savedelete');
+		$this->savecopy		= $this->get_sys_cgi_var('savecopy');
+		$this->cancelcopy	= $this->get_sys_cgi_var('cancelcopy');
+		$this->savedelete	= $this->get_sys_cgi_var('savedelete');
 		$this->canceldelete = $this->get_sys_cgi_var('canceldelete');
-		$this->cancelview   = $this->get_sys_cgi_var('cancelview');
+		$this->cancelview	= $this->get_sys_cgi_var('cancelview');
 		// Filter setting
 		if (isset($this->sw)) {
-            $this->label_cmp($this->sw, 'Search') && $this->fl = 1;
-            $this->label_cmp($this->sw, 'Hide')   && $this->fl = 0;
-            //$this->label_cmp($this->sw, 'Clear')  && $this->fl = 0;
+			$this->label_cmp($this->sw, 'Search') && $this->fl = 1;
+			$this->label_cmp($this->sw, 'Hide')	  && $this->fl = 0;
+			//$this->label_cmp($this->sw, 'Clear')	&& $this->fl = 0;
 		}
 		// TAB names
 		$this->tabs = array();
@@ -4223,6 +4243,8 @@ echo "<!-- ".$stamps[$fd]." ".$oldstamp." -->\n";
 // Local Variables: ***
 // mode: php ***
 // c-basic-offset: 4 ***
+// tab-width: 4 ***
+// indent-tabs-mode: t ***
 // End: ***
 
 ?>
