@@ -997,6 +997,10 @@ class phpMyEdit
 
 	function form_begin() /* {{{ */
 	{
+		if (!$this->display['form']) {
+			return;
+		}
+
 		$page_name = htmlspecialchars($this->page_name);
 		if ($this->add_operation() || $this->change_operation() || $this->copy_operation()
 				|| $this->view_operation() || $this->delete_operation()) {
@@ -2735,26 +2739,29 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		 * Display the SQL table in an HTML table
 		 */
 		$this->form_begin();
-		//echo $this->get_origvars_html($this->get_sfn_cgi_vars());
-		echo $this->htmlHiddenSys('fl', $this->fl);
-		// Display buttons at top and/or bottom of page.
-		$this->display_list_table_buttons('up');
-		if ($this->cgi['persist'] != '') {
-			echo $this->get_origvars_html($this->cgi['persist']);
-		}
-		if (! $this->filter_operation()) {
-			echo $this->get_origvars_html($this->qfn);
-		}
-				if (false) {
-				  // Nope, transferred via check-box values
-				  foreach ($this->sfn as $key => $val) {
+		if ($this->display['form']) {
+			//echo $this->get_origvars_html($this->get_sfn_cgi_vars());
+			echo $this->htmlHiddenSys('fl', $this->fl);
+			// Display buttons at top and/or bottom of page.
+			$this->display_list_table_buttons('up');
+			if ($this->cgi['persist'] != '') {
+				echo $this->get_origvars_html($this->cgi['persist']);
+			}
+			if (! $this->filter_operation()) {
+				echo $this->get_origvars_html($this->qfn);
+			}
+			if (false) {
+				// Nope, transferred via check-box values
+				foreach ($this->sfn as $key => $val) {
 					echo $this->htmlHiddenSys('sfn['.$key.']', $val);
-				  }
 				}
-		echo $this->htmlHiddenSys('qfn', $this->qfn);
-		echo $this->htmlHiddenSys('fm', $this->fm);
-				echo $this->htmlHiddenSys('np', $this->inc);
-				echo $this->htmlHiddenSys('translations', $this->translations);
+			}
+			echo $this->htmlHiddenSys('qfn', $this->qfn);
+			echo $this->htmlHiddenSys('fm', $this->fm);
+			echo $this->htmlHiddenSys('np', $this->inc);
+			echo $this->htmlHiddenSys('translations', $this->translations);	
+		}
+	
 		echo '<table class="',$this->getCSSclass('main'),'" summary="',$this->tb,'">',"\n";
 		echo '<thead><tr class="',$this->getCSSclass('header'),'">',"\n";
 		/*
@@ -2788,29 +2795,29 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		}
 		for ($k = 0; $k < $this->num_fds; $k++) {
 			$fd = $this->fds[$k];
-						$sfnidx = 0;
-						$forward  = in_array("$k", $this->sfn, true);
-						$backward = in_array("-$k", $this->sfn, true);
-						$sorted	  = $forward || $backward;
-						if ($sorted) {
-								// Then we need also our index in the sorting hirarchy
-								$search_key = $forward ? "$k" : "-$k";
-								$sfnidx = array_search($search_key, $this->sfn, true);
-								if ($sfnidx === false) {
-										die("Everything is a foo-bar. Contact your Guru.");
-								}
-						} else {
-								/* Even worse: we just cannot give
-								 * some of the check-boxes explicit
-								 * indices and the others
-								 * not. Non-checked boxes need just
-								 * one free index. As we have "oncheck
-								 * -> submit" we can choose just one
-								 * more than the number of current
-								 * search fields.
-								 */
-								$sfnidx = count($this->sfn);
-						}
+			$sfnidx = 0;
+			$forward  = in_array("$k", $this->sfn, true);
+			$backward = in_array("-$k", $this->sfn, true);
+			$sorted	  = $forward || $backward;
+			if ($sorted) {
+				// Then we need also our index in the sorting hirarchy
+				$search_key = $forward ? "$k" : "-$k";
+				$sfnidx = array_search($search_key, $this->sfn, true);
+				if ($sfnidx === false) {
+					die("Everything is a foo-bar. Contact your Guru.");
+				}
+			} else {
+				/* Even worse: we just cannot give
+				 * some of the check-boxes explicit
+				 * indices and the others
+				 * not. Non-checked boxes need just
+				 * one free index. As we have "oncheck
+				 * -> submit" we can choose just one
+				 * more than the number of current
+				 * search fields.
+				 */
+				$sfnidx = count($this->sfn);
+			}
 			if (! $this->displayed[$k]) {
 				continue;
 			}
@@ -2874,7 +2881,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		// Display sorting sequence
 		if ($qparts['orderby'] && $this->display['sort']) $this->display_sorting_sequence();
 		// Display the current query
-		if($this->display['query']) $this->display_current_query();
+		if ($this->display['query']) $this->display_current_query();
 		
 		if ($this->nav_text_links() || $this->nav_graphic_links()) {
 			$qstrparts = array();
