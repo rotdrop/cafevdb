@@ -256,6 +256,14 @@ class html2text
     var $url;
 
     /**
+     *  Omit hyper-links listing, just print the contents of the anchor.
+     *
+     *  @var string $omit_links
+     *  @access public
+     */
+    var $omit_links = false;
+
+    /**
      *  Indicates whether content in the $html variable has been converted yet.
      *
      *  @var boolean $_converted
@@ -455,7 +463,7 @@ class html2text
         $text = preg_replace("/[\n]{3,}/", "\n\n", $text);
                 
         // Add link list
-        if ( !empty($this->_link_list) ) {
+        if ( !$this->omit_links && !empty($this->_link_list) ) {
             $text .= "\n\nLinks:\n------\n" . $this->_link_list;
         }
 
@@ -486,6 +494,10 @@ class html2text
      */
     function _build_link_list( $link, $display )
     {
+      if ($this->omit_links) {
+        return $display;
+      }
+      
 		if ( substr($link, 0, 7) == 'http://' || substr($link, 0, 8) == 'https://' ||
              substr($link, 0, 7) == 'mailto:' ) {
             $this->_link_count++;
