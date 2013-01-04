@@ -48,7 +48,6 @@ class Ajax
   }
 };
 
-
 class Util
 {
   /**Return the locale. */
@@ -193,6 +192,30 @@ document.onkeypress = stopRKey;
 
 class Navigation
 {
+  /**Acutally rather a multi-select than a button, meant as drop-down
+   * menu. Generates data which can be passed to prependTableButton()
+   * below.
+   */
+  public static function tableExportButton()
+  {
+    $data = ''
+      .'<span id="pme-export-block">'
+      .'<select '
+      .'data-placeholder="'.L::t('Export Table').'" '
+      .'class="pme-export" '
+      .'id="pme-export-choice"'
+      .'name="export" >
+  <option value=""></option>
+  <option value="CSV">'.L::t('CSV Export').'</option>
+  <option value="HTML">'.L::t('HTML Export').'</option>
+  <option value="EXCEL">'.L::t('Excel Export').'</option>
+</select></span>';
+
+    $button = array('code' => $data);
+
+    return $button;
+  }
+
   /**Add a new button to the left of already registered phpMyEdit
    * buttons. This is a dirty hack. But so what. Only the L and F
    * (list and filter) views are augmented.
