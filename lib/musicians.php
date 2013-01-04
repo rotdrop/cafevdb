@@ -109,12 +109,13 @@ __EOT__;
     //$opts['navigation'] = 'DB';
 
     if (!$this->projectMode) {
-      $export = array('name' => 'csvexport',
-                      'value' => strval(L::t('Export CSV')),
-                      'css' => 'pme-csvexport',
-                      'js_validation' => false,
-                      'disabled' => false,
-                      'js' => false);
+      /* $export = array('name' => 'csvexport', */
+      /*                 'value' => strval(L::t('Export CSV')), */
+      /*                 'css' => 'pme-csvexport', */
+      /*                 'js_validation' => false, */
+      /*                 'disabled' => false, */
+      /*                 'js' => false); */
+      $export = Navigation::tableExportButton();
       $opts['buttons'] = Navigation::prependTableButton($export, true);
     }
 
@@ -365,6 +366,13 @@ __EOT__;
     $opts['execute'] = $this->execute;
 
     $this->pme = new \phpMyEdit($opts);
+
+    if (Util::debugMode()) {
+      echo '<PRE>';
+      print_r($_POST);
+      echo '</PRE>';
+    }
+
   } // display()
 };
 
