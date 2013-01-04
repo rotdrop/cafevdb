@@ -48,6 +48,48 @@ $.extend({ alert: function (message, title) {
 
 $(document).ready(function(){
 
+  $('#pme-export-choice').chosen({ disable_search_threshold: 10 });
+  $('#pme-export-choice').change(function (event) {
+    event.preventDefault();
+
+    // determine the export format
+    var selected = $("#pme-export-choice option:selected").val();
+
+    var exportscript;
+    switch (selected) {
+    case 'HTML': exportscript = 'html.php'; break;
+    case 'CSV': exportscript = 'csv.php'; break;
+    case 'EXCEL': exportscript = 'debug.php'; break;
+    default: exportscript = 'debug.php'; break;
+    }
+
+    // this will be the alternate form-action
+    var exportscript = OC.filePath('cafevdb', 'ajax/export', exportscript);
+
+    // this is the form; we need its values
+    var form = $('form.pme-form');
+
+    // Our export-script have the task to convert the display
+    // PME-table into another format, so submitting the current
+    // pme-form to another backend-script just makes sure sure that we
+    // really get all selected parameters and can regenerate the
+    // current view. Of course, this is then not really jQuery, and
+    // the ajax/export/-scripts are not ajax scripts. But so what.
+    var old_action= form.attr('action');
+    form.attr('action', exportscript);
+    form.submit();
+    form.attr('action', old_action);
+
+    // Cheating. In principle we mus-use this as a simple pull-down
+    // menu, so let the text remain at its default value.
+    $("#pme-export-choice").children('option').each(function(i, elm) {
+      $(elm).removeAttr('selected');
+    });
+    $("#pme-export-choice").trigger("liszt:updated");
+
+    return true;
+  });
+
   //    $('button.settings').tipsy({gravity:'ne', fade:true});
   $('button.viewtoggle').tipsy({gravity:'ne', fade:true});
   $('button').tipsy({gravity:'w', fade:true});
@@ -104,7 +146,7 @@ $(document).ready(function(){
       values += '&headervisibility=collapsed';
     }
     $.post('', values, function (data) {
-      var newDoc = document.open("text/html", "replace");
+      var newDoc = document.open("text/html"/*, "replace"*/);
       newDoc.write(data);
       newDoc.close();
     }, 'html');
@@ -117,31 +159,16 @@ $(document).ready(function(){
     event.preventDefault();
     var values = $(this).attr('name');
     $.post('', values, function (data) {
-      var newDoc = document.open("text/html", "replace");
+      var newDoc = document.open("text/html"/*, "replace"*/);
       newDoc.write(data);
       newDoc.close();
     }, 'html');
     return false;
   });
 
-  $('input.pme-csvexport').click(function(event) {
-    event.preventDefault();
-
-    var form = $('form.pme-form');
-    var exportscript = OC.filePath('cafevdb', 'ajax/export', 'csv.php');
-
-    // This just cannot be it. This is really exceedingly ugly.
-    var tmp = form.attr('action');
-    form.attr('method', 'post');
-    form.attr('action', exportscript);
-    form.submit();
-    form.attr('action', tmp);
-
-    return false;
-  })
-
-
 });
+
+
 
 // Local Variables: ***
 // js-indent-level: 2 ***
