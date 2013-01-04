@@ -1,0 +1,139 @@
+table.pme-main {
+  border:#004d9c 1px solid;
+  border-collapse:collapse;
+  border-spacing:0px;
+  width:auto;
+}
+table.pme-navigation {
+  border:#004d9c 0px solid;
+  border-collapse:collapse;
+  border-spacing:0px;
+}
+
+th[class|='pme-header']	{
+  border:#004d9c 1px solid;
+  padding:4px;
+  background:#add8e6;
+}
+
+td.negative { 
+  color:#FF0000;
+}
+
+td.pme-cell-0-money, td.pme-cell-1-money {
+  text-align:right;
+}
+
+td[class|='pme-key'], td[class|='pme-value'],
+td[class|='pme-help'], td[class|='pme-navigation'],
+td[class|='pme-cell'], td[class|='pme-sortinfo'],
+td[class|='pme-filter'], td[class|='pme-queryinfo'] {
+  border:#004d9c 1px solid;
+  padding:3px;
+}
+td.pme-buttons {
+  text-align:left;
+  vertical-align:middle;
+}
+td.pme-message {
+  text-align:center;
+}
+td.pme-stats   {
+  text-align:right;
+  padding-left:10ex;
+}
+
+td[class|='pme-cell-0'] {
+  background:#B7CEEC;
+}
+td[class|='pme-cell-1'] {
+  background:#C6DEFF;
+}
+
+/* Hide everything but the first line */
+td.pme-cell-0-rcpt, td.pme-cell-1-rcpt,
+td.pme-cell-0-msg, td.pme-cell-1-msg,
+td.pme-cell-0-cc, td.pme-cell-1-cc,
+td.pme-cell-0-bcc, td.pme-cell-1-bcc { 
+  font-size:25%;
+  line-height:100%;
+  max-width:20em;
+  max-height:1em;
+/*  white-space:normal;*/
+  overflow:hidden;
+}
+
+td.pme-value-0-msg, td.pme-value-1-msg {
+  max-width:80ex;
+  /*font-size:25%;*/
+  white-space:normal;
+  text-wrap:normal;
+}
+
+/* Hide everything but the first line */
+td.pme-cell-0-rem, td.pme-cell-1-rem { 
+  font-size:25%;
+  max-width:20em;
+  max-height:1em;
+  white-space:nowrap;
+  overflow:hidden;
+}
+
+/* Hide everything but the first line */
+td.pme-cell-0-prjs, td.pme-cell-1-prjs { 
+  max-width:20em;
+  max-height:1em;
+  white-space:nowrap;
+  overflow:hidden;
+}
+
+/* Make all remarks shorter */
+td.pme-cell-0-rem:first-line, td.pme-cell-1-rem:first-line {
+  font-size:400%; /* seem to be relative to !first-line */
+  line-height:100%;
+  max-width:20em;
+  max-height:1em;
+  white-space:nowrap;
+  overflow:hidden;
+}
+/* Hide everything but the first line */
+td.pme-cell-0-prjrem, td.pme-cell-1-prjrem { 
+  font-size:25%;
+  line-height:100%;
+  max-width:20em;
+  max-height:1em;
+  white-space:nowrap;
+  overflow:hidden;
+}
+/* Make all remarks shorter */
+td.pme-cell-0-prjrem:first-line, td.pme-cell-1-prjrem:first-line {
+  font-size:400%; /* seem to be relative to !first-line */
+  line-height:100%;
+  max-width:20em;
+  max-height:1em;
+  white-space:nowrap;
+  overflow:hidden;
+}
+/* Hide everything but the first line */
+td.pme-cell-0-rhrslrem, td.pme-cell-1-rhrslrem { 
+  font-size:25%;
+  line-height:100%;
+  max-width:20em;
+  max-height:1em;
+  white-space:nowrap;
+  overflow:hidden;
+}
+/* Make all remarks shorter */
+td.pme-cell-0-rhrslrem:first-line, td.pme-cell-1-rhrslrem:first-line {
+  font-size:400%; /* seem to be relative to !first-line */
+  max-width:20em;
+  max-height:1em;
+  white-space:nowrap;
+  overflow:hidden;
+}
+
+/*
+ * Local Variables: ***
+ * cssm-indent-function: cssm-c-style-indenter ***
+ * End: ***
+ */
