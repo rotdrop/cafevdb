@@ -59,26 +59,32 @@ $(document).ready(function(){
     switch (selected) {
     case 'HTML': exportscript = 'html.php'; break;
     case 'CSV': exportscript = 'csv.php'; break;
-    case 'EXCEL': exportscript = 'debug.php'; break;
-    default: exportscript = 'debug.php'; break;
+    case 'EXCEL': exportscript = ''; break;
+    default: exportscript = ''; break;
     }
 
-    // this will be the alternate form-action
-    var exportscript = OC.filePath('cafevdb', 'ajax/export', exportscript);
+    if (exportscript == '') {
+      OC.dialogs.alert(t('cafevdb', 'Export to "'+selected+'" is not yet supported.'),
+                       t('cafevdb', 'Unimplemented'));
+    } else {
 
-    // this is the form; we need its values
-    var form = $('form.pme-form');
+      // this will be the alternate form-action
+      var exportscript = OC.filePath('cafevdb', 'ajax/export', exportscript);
 
-    // Our export-script have the task to convert the display
-    // PME-table into another format, so submitting the current
-    // pme-form to another backend-script just makes sure sure that we
-    // really get all selected parameters and can regenerate the
-    // current view. Of course, this is then not really jQuery, and
-    // the ajax/export/-scripts are not ajax scripts. But so what.
-    var old_action= form.attr('action');
-    form.attr('action', exportscript);
-    form.submit();
-    form.attr('action', old_action);
+      // this is the form; we need its values
+      var form = $('form.pme-form');
+
+      // Our export-script have the task to convert the display
+      // PME-table into another format, so submitting the current
+      // pme-form to another backend-script just makes sure sure that we
+      // really get all selected parameters and can regenerate the
+      // current view. Of course, this is then not really jQuery, and
+      // the ajax/export/-scripts are not ajax scripts. But so what.
+      var old_action= form.attr('action');
+      form.attr('action', exportscript);
+      form.submit();
+      form.attr('action', old_action);
+    }
 
     // Cheating. In principle we mus-use this as a simple pull-down
     // menu, so let the text remain at its default value.
@@ -87,7 +93,7 @@ $(document).ready(function(){
     });
     $("#pme-export-choice").trigger("liszt:updated");
 
-    return true;
+    return false;
   });
 
   //    $('button.settings').tipsy({gravity:'ne', fade:true});

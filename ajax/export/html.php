@@ -38,7 +38,7 @@ if ($table) {
   header('Content-type: text/html; carset=utf-8;');
   header('Content-disposition: attachment;filename='.htmlspecialchars($filename).';');
   echo <<<__EOT__
-<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<!DOCTYPE html>
 <html>
   <head>
     <title>$title</title>
