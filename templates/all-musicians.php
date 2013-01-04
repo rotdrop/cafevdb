@@ -23,6 +23,7 @@ echo Navigation::button('instruments');
     <?php echo Navigation::button($_['viewtoggle']); ?>
   </div>
   <?php $table->display(); ?>
+  <div id="cafevdb-debug"></div>
 </div>
 <div id="dialog_holder"></div>
 <div id="appsettings" class="popup topright hidden"></div>
