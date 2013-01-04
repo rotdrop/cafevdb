@@ -40,7 +40,7 @@ if ($table) {
   $table->display(); // strange, but need be here
   $h2t = new \html2text();
   $h2t->set_encoding('utf-8');
-  $table->csvExport($outstream, ',', '"', function ($cell) use ($h2t) {
+  $table->csvExport($outstream, ';', '"', function ($cell) use ($h2t) {
       $h2t->set_html($cell);
       $text = $h2t->get_text();
       // If a hyper-link is just an email, then simply return the email
