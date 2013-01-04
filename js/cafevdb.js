@@ -48,16 +48,36 @@ $.extend({ alert: function (message, title) {
 
 $(document).ready(function(){
 
-  $('#pme-export-choice').chosen({ disable_search_threshold: 10 });
+  $('#pme-export-choice').chosen({ disable_search_threshold: 10 });  
   $('#pme-export-choice').change(function (event) {
     event.preventDefault();
 
     // determine the export format
     var selected = $("#pme-export-choice option:selected").val();
 
+    // this is the form; we need its values
+    var form = $('form.pme-form');
+
+    form.find('#exportmimetype').remove();
+
     var exportscript;
     switch (selected) {
-    case 'HTML': exportscript = 'html.php'; break;
+    case 'HTML':
+      exportscript = 'html.php';
+      $('<input />').attr('type', 'hidden')
+        .attr('name', 'mimetype')
+        .attr('value', 'text/html')
+        .attr('id', 'exportmimetype')
+        .appendTo(form);
+      break;
+    case 'SSML':
+      exportscript = 'html.php';
+      $('<input />').attr('type', 'hidden')
+        .attr('name', 'mimetype')
+        .attr('value', 'application/spreadsheet')
+        .attr('id', 'exportmimetype')
+        .appendTo(form);
+      break;
     case 'CSV': exportscript = 'csv.php'; break;
     case 'EXCEL': exportscript = 'excel.php'; break;
     default: exportscript = ''; break;
@@ -70,9 +90,6 @@ $(document).ready(function(){
 
       // this will be the alternate form-action
       var exportscript = OC.filePath('cafevdb', 'ajax/export', exportscript);
-
-      // this is the form; we need its values
-      var form = $('form.pme-form');
 
       // Our export-script have the task to convert the display
       // PME-table into another format, so submitting the current
@@ -87,11 +104,21 @@ $(document).ready(function(){
     }
 
     // Cheating. In principle we mus-use this as a simple pull-down
-    // menu, so let the text remain at its default value.
+    // menu, so let the text remain at its default value. Make sure to
+    // also remove and re-attach the tool-tips, otherwise some of the
+    // tips remain, because chosen() removes the element underneath.
+    
     $("#pme-export-choice").children('option').each(function(i, elm) {
       $(elm).removeAttr('selected');
+      $(elm).tipsy.remove();
     });
+    $('div.chzn-container').tipsy.remove();
+    $('li.active-result').tipsy.remove();
+
     $("#pme-export-choice").trigger("liszt:updated");
+
+    $('div.chzn-container').tipsy({gravity:'sw', fade:true});
+    $('li.active-result').tipsy({gravity:'w', fade:true});
 
     return false;
   });
@@ -99,6 +126,9 @@ $(document).ready(function(){
   //    $('button.settings').tipsy({gravity:'ne', fade:true});
   $('button.viewtoggle').tipsy({gravity:'ne', fade:true});
   $('button').tipsy({gravity:'w', fade:true});
+  $('select').tipsy({gravity:'w', fade:true});
+  $('div.chzn-container').tipsy({gravity:'sw', fade:true});
+  $('li.active-result').tipsy({gravity:'w', fade:true});
   $('input.cafevdb-control').tipsy({gravity:'nw', fade:true});
   $('#controls button').tipsy({gravity:'nw', fade:true});
   $('.pme-sort').tipsy({gravity: 'n', fade:true});

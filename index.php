@@ -46,6 +46,8 @@ OCP\Util::addStyle('cafevdb', 'pme-table');
 OCP\Util::addStyle('cafevdb', 'settings');
 OCP\Util::addStyle('cafevdb', 'events');
 OCP\Util::addStyle('cafevdb', 'email');
+OCP\Util::addStyle("cafevdb/3rdparty", "chosen/chosen");
+//OCP\Util::addStyle("3rdparty", "chosen/chosen");
 
 OCP\Util::addScript('cafevdb', 'cafevdb');
 OCP\Util::addScript('cafevdb', 'transpose');
@@ -54,6 +56,9 @@ OCP\Util::addScript('cafevdb', 'email');
 OCP\Util::addScript('cafevdb', 'events');
 /* OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/jscripts/tiny_mce/tiny_mce'); */
 /* OCP\Util::addScript('cafevdb/3rdparty', 'tinymceinit'); */
+OCP\Util::addscript("cafevdb/3rdparty", "chosen/chosen.jquery.min");
+//OCP\Util::addscript("3rdparty", "chosen/chosen.jquery.min");
+
 
 /* Special hack to determine if the email-form was requested through the pme-miscinfo button. */
 $op = Util::cgiValue('PME_sys_operation');

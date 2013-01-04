@@ -200,17 +200,27 @@ class Navigation
   {
     $data = ''
       .'<span id="pme-export-block">'
+      .'<label>'
       .'<select '
       .'data-placeholder="'.L::t('Export Table').'" '
       .'class="pme-export" '
       .'id="pme-export-choice"'
+      .'title="'.L::t(Config::toolTips('pme-export-choice')).'" '
       .'name="export" >
   <option value=""></option>
-  <option value="CSV">'.L::t('CSV Export').'</option>
-  <option value="HTML">'.L::t('HTML Export').'</option>
-  <option value="EXCEL">'.L::t('Excel Export').'</option>
-  <option value="TEST">'.L::t('Test').'</option>
-</select></span>';
+  <option '
+    .'title="'.L::t(Config::toolTips('pme-export-csv')).'" '
+    .'value="CSV">'.L::t('CSV Export').'</option>
+  <option '
+    .'title="'.L::t(Config::toolTips('pme-export-html')).'" '
+    .'value="HTML">'.L::t('HTML Export').'</option>
+  <option '
+    .'title="'.L::t(Config::toolTips('pme-export-excel')).'" '
+    .'value="EXCEL">'.L::t('Excel Export').'</option>
+  <option '
+    .'title="'.L::t(Config::toolTips('pme-export-htmlexcel')).'" '
+    .'value="SSML">'.L::t('HTML/Spreadsheet').'</option>
+</select></label></span>';
 
     $button = array('code' => $data);
 
@@ -231,11 +241,13 @@ class Navigation
   {
     // Cloned from phpMyEdit class:
     $default_buttons_no_B = array(
-      'L' => array($button,
-                   '<<','<','add','>','>>',
+      'L' => array('<<','<',
+                   $button, 'add',
+                   '>','>>',
                    'goto','rows_per_page'),
-      'F' => array($button,
-                   '<<','<','add','>','>>',
+      'F' => array('<<','<',
+                   $button, 'add',
+                   '>','>>',
                    'goto','rows_per_page'),
       'A' => array('save','more','cancel'),
       'C' => array('save','more','cancel'),
@@ -243,12 +255,14 @@ class Navigation
       'D' => array('save','cancel'),
       'V' => array('change','cancel')
       );
-	$default_multi_buttons_no_B = array(
-      'L' => array($button,
-                   '<<','<','misc','add','>','>>',
+    $default_multi_buttons_no_B = array(
+      'L' => array('<<','<',
+                   'misc', $button, 'add',
+                   '>','>>',
                    'goto','rows_per_page'),
-      'F' => array($button,
-                   '<<','<','misc','add','>','>>',
+      'F' => array('<<','<',
+                   'misc', $button, 'add',
+                   '>','>>',
                    'goto','rows_per_page'),
       'A' => array('save','more','cancel'),
       'C' => array('save','more','cancel'),

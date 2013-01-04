@@ -23,14 +23,8 @@ OC::$CLASSPATH['CAFEVDB\Email'] = 'apps/cafevdb/lib/email.php';
 /* 3rd party classes */
 OC::$CLASSPATH['phpMyEdit'] = 'apps/cafevdb/3rdparty/phpMyEdit/phpMyEdit.class.php';
 OC::$CLASSPATH['html2text'] = 'apps/cafevdb/3rdparty/class.html2text.inc';
-//OC::$CLASSPATH['PHPExcel'] = 'apps/cafevdb/3rdparty/PHPExcel.php';
-//OC::$CLASSPATH['PHPExcel_Cell'] = 'apps/cafevdb/3rdparty/PHPExcel/Cell.php';
-//OC::$CLASSPATH['PHPExcel_Cell_AdvancedValueBinder'] = 'apps/cafevdb/3rdparty/PHPExcel/Cell/AdvancedValueBinder.php';
 
 /* Script etc. used by everyone */
-OCP\Util::addStyle("3rdparty", "chosen/chosen");
-OCP\Util::addscript("3rdparty", "chosen/chosen.jquery.min");
-
 OCP\App::registerAdmin( 'cafevdb', 'admin-settings' );
 //OCP\App::registerPersonal( 'cafevdb', 'settings' );
 

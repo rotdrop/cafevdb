@@ -35,8 +35,26 @@ if ($table) {
 
   $css = file_get_contents(__DIR__.'/../../css/pme-table.css');
 
-  header('Content-type: text/html; carset=utf-8;');
-  header('Content-disposition: attachment;filename='.htmlspecialchars($filename).';');
+/* Funny thing: the various spread-sheet applications might be able to
+ * even import an HTML-table in a sensible way if we fake on the
+ * file-type. Libre-/Openoffice for example opens HTML-files with the
+ * "writer"-application but very happily converts the stuff to a
+ * spread-sheet if we set the mime-type acordingly.
+ */
+
+  $mimetype = Util::cgiValue('mimetype','text/html');
+  
+  switch ($mimetype) {
+  case 'text/html':
+  default:
+    header('Content-type: text/html; carset=utf-8;');
+    header('Content-disposition: attachment;filename='.htmlspecialchars($filename).';');
+    break;
+  case 'application/spreadsheet':
+    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    header('Content-Disposition: attachment;filename="'.$filename.'"');
+    break;
+  }
   header('Cache-Control: max-age=0');
 
   echo <<<__EOT__

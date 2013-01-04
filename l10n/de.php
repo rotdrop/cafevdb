@@ -1,5 +1,10 @@
 <?php
 $TRANSLATIONS = array(
+  'yes' => 'ja',
+  'true' => 'wahr',
+  'no' => 'nein',
+  'false' => 'falsch',
+  'Export Table' => 'Tabelle Exportieren',
   'Attached Events' => "Angehängte Termine",
   'Choose a file to attach from the files stored remotely on in the OwnCloud storage area.'
   =>

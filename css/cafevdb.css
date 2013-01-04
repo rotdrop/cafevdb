@@ -9,6 +9,19 @@ form.cafevdb-control {
 
 #pme-export-block div {
   vertical-align:middle;
+  /*font-weight:bold;*/
+}
+
+#pme-export-block a.chzn-default span {
+  /*font-weight:bold;*/
+  color:#555;
+}
+
+#pme-export-block a.chzn-default span:hover,
+#pme-export-block a.chzn-default span:focus,
+#pme-export-block a.chzn-default span:active {
+  /*font-weight:bold;*/
+  color:#333;
 }
 
 #personalsettings {

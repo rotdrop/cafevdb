@@ -12,6 +12,11 @@ class Tooltips
   {
     return 
     array(
+      'pme-export-csv' => 'Export in CSV-format using a semicolon as delimiter (Excel convention)',
+      'pme-export-html' => 'Export as HTML page without navigation elements; can also be loaded into your office-programs.',
+      'pme-export-excel' => 'Export as ``full-featured\'\' Excel-2007 table, ``.xslx\'\'.',
+      'pme-export-htmlexcel' => 'Export as HTML page, but set the file type to ``spread-sheed\'\'. Should also be readable by standard office-programs as ``Excel\'\'-table.',
+      'pme-export-choice' => 'Export the visible part of the data-base to an office-format. The ``Excel\'\'-export should produce useful input for either Libre- or OpenOffice or for the product of some well-known software-corporation with seat in Redmond, USA.',
       'owncloud-attachment' => 'Choose a file to attach from the files stored remotely on in the OwnCloud storage area.',
       'upload-attachment' => 'Upload a file from your local computer as attachment. The file will be removed from the remote-system after the message has been sent.',
       'transfer-instruments' => 'Add the instruments of the actually registered musicians to the instrument-table for the project.',

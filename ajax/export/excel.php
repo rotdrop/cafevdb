@@ -80,6 +80,18 @@ class MyValueBinder extends PHPExcel_Cell_DefaultValueBinder implements PHPExcel
       $h2t->set_html($value);
       $value = trim($h2t->get_text());
 
+      // Well, 'ja' or 'nein' ... should also count for truth values, maybe
+      switch(strtoupper($value)) {
+      case strtoupper(L::t('yes')):
+      case strtoupper(L::t('true')):
+        $value = PHPExcel_Calculation::getTRUE();
+        break;
+      case strtoupper(L::t('no')):
+      case strtoupper(L::t('false')):
+        $value = PHPExcel_Calculation::getFALSE();
+        break;
+      }
+
       //	Test for booleans using locale-setting
       if ($value == PHPExcel_Calculation::getTRUE()) {
         $cell->setValueExplicit( TRUE, PHPExcel_Cell_DataType::TYPE_BOOL);
@@ -214,8 +226,8 @@ if ($table) {
   $email    = Config::getValue('emailfromaddress', 'bilbo@nowhere.com');
   $filename = strftime('%Y%m%d-%H%M%S').'-CAFEV-'.$name.'.xlsx';
 
-  /* $lang = \OC_L10N::findLanguage(Config::APP_NAME); */
-  /* $locale = $lang.'_'.strtoupper($lang).'.UTF-8'; */
+  $lang = \OC_L10N::findLanguage(Config::APP_NAME);
+  $locale = $lang.'_'.strtoupper($lang).'.UTF-8';
 
   /* $oldlocale = setlocale(LC_ALL, 0); */
   /* setlocale(LC_ALL, $locale); */
@@ -223,8 +235,9 @@ if ($table) {
   // Create new PHPExcel object
   $objPHPExcel = new PHPExcel();
   $objPHPExcel->getDefaultStyle()->getFont()->setName('Arial');
-  $objPHPExcel->getDefaultStyle()->getFont()->setSize(10);
+  $objPHPExcel->getDefaultStyle()->getFont()->setSize(12);
 
+  PHPExcel_Settings::setLocale($locale);
   PHPExcel_Cell::setValueBinder( new MyValueBinder() );
   PHPExcel_Shared_Font::setAutoSizeMethod(PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);
 
