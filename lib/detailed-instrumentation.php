@@ -185,7 +185,7 @@ __EOT__;
                                     'select' => 'N',
                                     'maxlen' => '3',
                                     'sort' => true);
-    $opts['fdd']['Familie'] = array('name' => 'Intrumenten Familie',
+    $opts['fdd']['Familie'] = array('name' => 'Instrumenten Familie',
                                     'nowrap' => true,
                                     'select' => 'M',
                                     'maxlen' => 64,

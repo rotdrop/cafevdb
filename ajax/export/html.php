@@ -37,6 +37,8 @@ if ($table) {
 
   header('Content-type: text/html; carset=utf-8;');
   header('Content-disposition: attachment;filename='.htmlspecialchars($filename).';');
+  header('Cache-Control: max-age=0');
+
   echo <<<__EOT__
 <!DOCTYPE html>
 <html>

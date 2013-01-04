@@ -59,7 +59,7 @@ $(document).ready(function(){
     switch (selected) {
     case 'HTML': exportscript = 'html.php'; break;
     case 'CSV': exportscript = 'csv.php'; break;
-    case 'EXCEL': exportscript = ''; break;
+    case 'EXCEL': exportscript = 'excel.php'; break;
     default: exportscript = ''; break;
     }
 

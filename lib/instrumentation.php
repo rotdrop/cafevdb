@@ -52,6 +52,30 @@ class Instrumentation
     $this->pme->sql_disconnect();
   }
 
+  /* Quick and dirty general export. On each cell a call-back
+   * function is invoked with the html-output of that cell.
+   *
+   * This is just like list_table(), i.e. only the chosen range of
+   * data is displayed and in html-display order.
+   *
+   * @param[in] $cellFilter $line[] = Callback($i, $j, $celldata)
+   *
+   * @param[in] $lineCallback($i, $line)
+   *
+   * @param[in] $css CSS-class to pass to cellDisplay().
+   */
+  function export($cellFilter = false, $lineCallback = false, $css = 'noescape')
+  {
+    if (!$this->pme) {
+      return;
+    }
+    if ($this->pme->connect() == false) {
+      return false;
+    }
+    $this->pme->export($cellFilter, $lineCallback, $css);
+    $this->pme->sql_disconnect();
+  }        
+
   protected function __construct($_execute = true)
   {
     $this->execute = $_execute;

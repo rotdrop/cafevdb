@@ -209,6 +209,7 @@ class Navigation
   <option value="CSV">'.L::t('CSV Export').'</option>
   <option value="HTML">'.L::t('HTML Export').'</option>
   <option value="EXCEL">'.L::t('Excel Export').'</option>
+  <option value="TEST">'.L::t('Test').'</option>
 </select></span>';
 
     $button = array('code' => $data);

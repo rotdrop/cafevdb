@@ -33,6 +33,7 @@ if ($table) {
   $name = strftime('%Y%m%d-%H%M%S').'-CAFEV-'.$name.'.csv';
   header('Content-type: text/csv');
   header('Content-disposition: attachment;filename='.htmlspecialchars($name));
+  header('Cache-Control: max-age=0');
 
   $outstream = fopen("php://output",'w');
 
