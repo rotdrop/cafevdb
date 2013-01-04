@@ -32,6 +32,9 @@ case 'detailed-instrumentation':
 if ($table) {
   $filename = strftime('%Y%m%d-%H%M%S').'-CAFEV-'.$name.'.html';
   $title    = 'CAFEV-'.$name.' from '.strftime('%x at time %X.');
+
+  $css = file_get_contents(__DIR__.'/../../css/pme-table.css');
+
   header('Content-type: text/html; carset=utf-8;');
   header('Content-disposition: attachment;filename='.htmlspecialchars($filename).';');
   echo <<<__EOT__
@@ -40,6 +43,9 @@ if ($table) {
   <head>
     <title>$title</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style type="text/css">
+$css
+    </style>
   </head>
   <body>
     <h4>$title</h4>
