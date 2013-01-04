@@ -106,12 +106,7 @@ __EOT__;
     // Buttons position: U - up, D - down (default)
     //$opts['navigation'] = 'DB';
 
-    $export = array('name' => 'csvexport',
-                    'value' => strval(L::t('Export CSV')),
-                    'css' => 'pme-csvexport',
-                    'js_validation' =>  false,
-                    'disabled' => false,
-                    'js' => false);
+    $export = Navigation::tableExportButton();
     $opts['buttons'] = Navigation::prependTableButton($export, true);
 
     // Display special page elements

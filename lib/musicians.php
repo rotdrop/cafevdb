@@ -109,12 +109,6 @@ __EOT__;
     //$opts['navigation'] = 'DB';
 
     if (!$this->projectMode) {
-      /* $export = array('name' => 'csvexport', */
-      /*                 'value' => strval(L::t('Export CSV')), */
-      /*                 'css' => 'pme-csvexport', */
-      /*                 'js_validation' => false, */
-      /*                 'disabled' => false, */
-      /*                 'js' => false); */
       $export = Navigation::tableExportButton();
       $opts['buttons'] = Navigation::prependTableButton($export, true);
     }
