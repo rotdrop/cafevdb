@@ -42,6 +42,7 @@ __EOT__;
 OCP\App::setActiveNavigationEntry( 'cafevdb' );
 
 OCP\Util::addStyle('cafevdb', 'cafevdb');
+OCP\Util::addStyle('cafevdb', 'pme-table');
 OCP\Util::addStyle('cafevdb', 'settings');
 OCP\Util::addStyle('cafevdb', 'events');
 OCP\Util::addStyle('cafevdb', 'email');
@@ -51,8 +52,8 @@ OCP\Util::addScript('cafevdb', 'transpose');
 OCP\Util::addScript('cafevdb', 'pme-helper');
 OCP\Util::addScript('cafevdb', 'email');
 OCP\Util::addScript('cafevdb', 'events');
-OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/jscripts/tiny_mce/tiny_mce');
-OCP\Util::addScript('cafevdb/3rdparty', 'tinymceinit');
+/* OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/jscripts/tiny_mce/tiny_mce'); */
+/* OCP\Util::addScript('cafevdb/3rdparty', 'tinymceinit'); */
 
 /* Special hack to determine if the email-form was requested through the pme-miscinfo button. */
 $op = Util::cgiValue('PME_sys_operation');
