@@ -2610,41 +2610,25 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		}
 	} /* }}} */
 
-		/* static function sputcsv($row, $delimiter = ',', $enclosure = '"', $eol = "\n") */
-		/* { */
-		/*	   static $fp = false; */
-		/*	   if ($fp === false) { */
-		/*		   $fp = fopen('php://temp', 'r+'); // see http://php.net/manual/en/wrappers.php.php - yes there are 2 '.php's on the end. */
-		/*		   // NB: anything you read/write to/from 'php://temp' is specific to this filehandle */
-		/*	   } else { */
-		/*		   rewind($fp); */
-		/*	   } */
-   
-		/*	   if (fputcsv($fp, $row, $delimiter, $enclosure) === false) { */
-		/*		   return false; */
-		/*	   } */
-   
-		/*	   rewind($fp); */
-		/*	   $csv = fgets($fp); */
-   
-		/*	   if ($eol != PHP_EOL) { */
-		/*		   $csv = substr($csv, 0, (0 - strlen(PHP_EOL))) . $eol; */
-		/*	   } */
-			
-		/*	   return $csv; */
-		/* } */
-
-		/* Quick and dirty CSV-export. Blobs will probably fail. But so
-		 * what.
-		 *
-		 * This is just like list_table(), i.e. only the chosen range of
-		 * data is displayed and in html-display order.
-		 */
-	function csvExport(&$handle, $delim = ',', $enclosure = '"', $filter = false)
+	/* Quick and dirty general export. On each cell a call-back
+	 * function is invoked with the html-output of that cell.
+	 *
+	 * This is just like list_table(), i.e. only the chosen range of
+	 * data is displayed and in html-display order.
+	 *
+	 * @param[in] $cellFilter $line[] = Callback($i, $j, $celldata)
+	 *
+	 * @param[in] $lineCallback($i, $line)
+	 *
+	 * @param[in] $css CSS-class to pass to cellDisplay().
+	 */
+	function export($cellFilter = false, $lineCallback = false, $css = 'noescape')
 	{
 		$error_reporting = error_reporting(E_ALL & ~E_NOTICE);
 
 		// Header line
+		$i = 1;
+		$j = 1;
 		$line = array();
 		for ($k = 0; $k < $this->num_fds; $k++) {
 			if (!$this->displayed[$k]) {
@@ -2653,12 +2637,16 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			$fd = $this->fds[$k];
 			$fdn = $this->fdd[$fd]['name'];
 
-			if ($filter) {
-				$fdn = call_user_func($filter, $fdn);
+			if ($cellFilter !== false) {
+				$fdn = call_user_func($cellFilter, $i, $j++, $fdn);
 			}
-			$line[] = $fdn;
+			if ($lineCallback !== false) {
+				$line[] = $fdn;
+			}			
 		}
-		fputcsv($handle, $line, $delim, $enclosure);
+		if ($lineCallback) {
+			call_user_func($lineCallback, $i, $line);
+		}
 
 		/*
 		 * Main list_table() query
@@ -2676,22 +2664,45 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			return false;
 		}
 		while ($row = $this->sql_fetch($res)) {
+			++$i;
+			$j = 1;
 			$line = array();
 			for ($k = 0; $k < $this->num_fds; $k++) {
 				$fd = $this->fds[$k];
 				if (!$this->displayed[$k]) {
 					continue;
 				}
-				$cell = $this->cellDisplay($k, $row, 'noescape');
-				if ($filter !== false) {
-					$cell = call_user_func($filter, $cell);
+				$cell = $this->cellDisplay($k, $row, $css);
+				if ($cellFilter !== false) {
+					$cell = call_user_func($cellFilter, $i, $j, $cell);
 				}
-				$line[] = $cell;
+				if ($lineCallback !== false) {
+					$line[] = $cell;
+				}
 			}
-			fputcsv($handle, $line, $delim, $enclosure);
+			if ($lineCallback !== false) {
+				call_user_func($lineCallback, $i, $line);
+			}
 		}
 
 		error_reporting($error_reporting);
+	}	 
+
+	/* Quick and dirty CSV-export. Blobs will probably fail. But so
+	 * what.
+	 *
+	 * This is just like list_table(), i.e. only the chosen range of
+	 * data is displayed and in html-display order.
+	 */
+	function csvExport(&$handle, $delim = ',', $enclosure = '"', $filter = false)
+	{
+		$this->export(
+			function ($i, $j, $cellData) use ($filter) {
+				return call_user_func($filter, $cellData);
+			},
+			function ($i, $lineData) use ($handle, $delim, $enclosure) {
+				fputcsv($handle, $lineData, $delim, $enclosure);
+			});
 	}	 
 
 	/*
