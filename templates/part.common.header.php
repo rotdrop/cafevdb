@@ -55,6 +55,7 @@ if (!isset($_['headerblock']) && isset($_['header'])) {
       <?php echo $header; ?>
     </div>
     <?php echo $viewtoggle; ?>
+    <div id="viewtogglebar" class="viewtoggle <?php echo $hdr_vis; ?>"></div>
   </div>
   <?php echo isset($_['headerblock']) ? ' -->' : ''; ?>
   <?php echo isset($_['headerblock']) ? $_['headerblock'] : ''; ?>

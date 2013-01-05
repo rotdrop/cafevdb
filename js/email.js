@@ -117,7 +117,7 @@ CAFEVDB.Email = {
 
 $(document).ready(function(){
 
-  $('#cafevdb-email-header-box #viewtoggle').click(function(event) {
+  $('#cafevdb-email-header-box .viewtoggle').click(function(event) {
     event.preventDefault();
 
     var pfx    = 'div.'+CAFEVDB.name+'-email-';

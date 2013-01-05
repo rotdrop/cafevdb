@@ -276,8 +276,25 @@ div.cafevdb-error {
  *
  */
 
-div.cafevdb-email-header-box,
-div.cafevdb-email-header-box.expanded {
+#cafevdb-email-header-box #viewtogglebar {
+  position:absolute;
+  bottom:0;
+  overflow:visible;
+  background-color:#BBB;
+  right:0;
+  width:100%;
+  height:1ex;
+  cursor:pointer;
+  border:0px;
+  opacity:0.5;
+  /*border-bottom:1ex solid #eee;*/
+  /* -moz-box-shadow:-3px 0 7px #777; */
+  /* -webkit-box-shadow:-3px 0 7px #777; */
+  /*box-shadow: 0 0.5ex 1ex #777;*/
+}
+
+#cafevdb-email-header-box,
+#cafevdb-email-header-box.expanded {
   position:fixed;
   padding-top:5ex;
   z-index:25;
@@ -286,14 +303,14 @@ div.cafevdb-email-header-box.expanded {
   width:100%;
   height:28ex;
   overflow:hidden;
-  border-bottom:1px solid #eee;
+  border-bottom:1px solid #777;
   -moz-box-shadow:-3px 0 7px #777;
   -webkit-box-shadow:-3px 0 7px #777;
   box-shadow: -3px 0 7px #777;
 }
 
-div.cafevdb-email-header,
-div.cafevdb-email-header.expanded {
+#cafevdb-email-header,
+#cafevdb-email-header.expanded {
   position:fixed;
   padding-top:1ex;
   padding-left:1ex;
@@ -302,17 +319,17 @@ div.cafevdb-email-header.expanded {
   overflow:hidden;
 }
 
-div.cafevdb-email-body,
-div.cafevdb-email-body.expanded { 
+#cafevdb-email-body,
+#cafevdb-email-body.expanded { 
   position:relative;
   padding-top:34ex;
   padding-left:1ex;
 }
 
 /* Collapsed version of the page header. */
-div.cafevdb-email-header-box.collapsed { height:4ex; }
-div.cafevdb-email-header.collapsed { height:3ex; }
-div.cafevdb-email-body.collapsed { padding-top:12ex; }
+#cafevdb-email-header-box.collapsed { height:4ex; }
+#cafevdb-email-header.collapsed { height:3ex; }
+#cafevdb-email-body.collapsed { padding-top:10ex; }
 
 #cafevdb-email-header-box #viewtoggle,
 #cafevdb-email-header-box #viewtoggle.expanded {

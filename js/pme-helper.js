@@ -43,7 +43,7 @@ $(document).ready(function(){
     return $.trim($(this).text()).indexOf("-") == 0;
   }).addClass("negative");
   
-  $('div.cafevdb-pme-header-box :button.viewtoggle').click(function(event) {
+  $('#cafevdb-pme-header-box .viewtoggle').click(function(event) {
     event.preventDefault();
 
     var pfx    = 'div.'+CAFEVDB.name+'-pme-';
