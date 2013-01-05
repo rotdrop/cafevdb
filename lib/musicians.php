@@ -375,8 +375,8 @@ class AddOneMusician
 {
   const CSS_PREFIX = 'cafevdb-pme';
 
-  function __construct($mode = false) {
-    parent::__construct();
+  function __construct($execute = false) {
+    parent::__construct($execute);
   }
 
   /**Helper function to add or change one specific musician to an
@@ -692,7 +692,9 @@ Choosing "'.$musinst.'" as instrument.</H4>';
 </div>
 __EOT__;
 
-    new \phpMyEdit($opts);
+    $opts['execute'] = $this->execute;
+
+    $this->pme = new \phpMyEdit($opts);
 
     if (Util::debugMode()) {
       echo '<PRE>';
