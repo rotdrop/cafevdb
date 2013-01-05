@@ -12,11 +12,10 @@ class Projects
   static public function headerText()
   {
     $header =<<<__EOT__
-    <h2>Camerata Projekte</h2>
-    <h4>Bitte auf das Projekt-K&uuml;rzel
+Camerata Projekte<br/>
+Bitte auf das Projekt-K&uuml;rzel
 klicken, um die Besetzungliste zu editieren. F&uuml;r allgemeine
 Eigenschaften bitte die "add", "change" etc. Buttons unten anklicken.
-    </h4>
 __EOT__;
     return $header;
   }
@@ -414,9 +413,9 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
 ."Template=$template";
     $title     = L::t(Config::toolTips('projectinstrumentation-button'));
     return <<<__EOT__
-<div class="instrumentation-button">
+<span class="instrumentation-button">
 <input type="button" class="instrumentation" title="$title" name="$bname" value="$bvalue" />
-</div>
+</span>
 __EOT__;
   }
 
@@ -436,22 +435,14 @@ __EOT__;
     }
     $bname       = htmlspecialchars($bname);
     $title       = L::t(Config::toolTips('projectevents-button'));
-    if (false) {
-      return <<<__EOT__
-<div class="events">
-<input type="button" class="events" title="$title" name="$bname" value="$bvalue"/>
-</div>
-__EOT__;
-    } else {
-      $image = \OCP\Util::imagePath('calendar', 'icon.svg');
-      return <<<__EOT__
-<div class="events">
+    $image = \OCP\Util::imagePath('calendar', 'icon.svg');
+    return <<<__EOT__
+<span class="events">
   <button type="button" class="events" title="$title" name="$bname" value="$bvalue">
     <img class="svg events" src="$image" alt="$bvalue" />
   </button>
-</div>
+</span>
 __EOT__;
-    }
   }
 
   /**Fetch the list of projects from the data base as a short id=>name
