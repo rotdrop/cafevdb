@@ -41,6 +41,9 @@ OCP\Util::addStyle('cafevdb', 'cafevdb');
 OCP\Util::addStyle('cafevdb', 'settings');
 OCP\Util::addScript("cafevdb", "settings");
 
+OCP\Util::addStyle("cafevdb/3rdparty", "chosen/chosen");
+OCP\Util::addscript("cafevdb/3rdparty", "chosen/chosen.jquery.min");
+
 if (Config::encryptionKeyValid() &&
     ($cafevgroup = \OC_AppConfig::getValue('cafevdb', 'usergroup', '')) != '' &&
     OC_SubAdmin::isGroupAccessible($user, $cafevgroup)) {
