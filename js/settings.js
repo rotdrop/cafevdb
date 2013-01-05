@@ -1,8 +1,22 @@
 $(document).ready(function() {
 
   $("#appsettings_popup").tabs({ selected: 0});
+  $("#appsettings_popup").on("tabsselect", function (event, ui) {
+    $('div.statusmessage').hide();
+    $('span.statusmessage').hide();
+    $('div.statusmessage').empty();
+    $('span.statusmessage').empty();
+  });
 
-  //$("#settingstabholder").tabs({ selected: 0});
+  $("#appsettings_popup").on("tabsshow", function (event, ui) {
+    if (ui.index == 3) {
+      $('#smtpsecure').chosen({ disable_search_threshold: 10 });
+      $('#imapsecure').chosen({ disable_search_threshold: 10 });
+    } else {
+      $('#smtpsecure').chosen().remove();
+      $('#imapsecure').chosen().remove();
+    }
+  });
 
   $('button').tipsy({gravity:'ne', fade:true});
   $('input').tipsy({gravity:'ne', fade:true});
