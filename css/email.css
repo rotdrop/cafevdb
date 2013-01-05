@@ -274,9 +274,10 @@ div.cafevdb-error {
  *
  * Header stuff
  *
- *****************************************************************************/
+ */
 
-div.cafevdb-email-header-box {
+div.cafevdb-email-header-box,
+div.cafevdb-email-header-box.expanded {
   position:fixed;
   padding-top:5ex;
   z-index:25;
@@ -291,39 +292,67 @@ div.cafevdb-email-header-box {
   box-shadow: -3px 0 7px #777;
 }
 
-div.cafevdb-email-header {
+div.cafevdb-email-header,
+div.cafevdb-email-header.expanded {
   position:fixed;
   padding-top:1ex;
   padding-left:1ex;
-  /*margin-right:170px;*/
   margin-right:40px;
-  /* width:80%; */
   height:27ex;
   overflow:hidden;
 }
 
-div.cafevdb-email-body { 
+div.cafevdb-email-body,
+div.cafevdb-email-body.expanded { 
   position:relative;
   padding-top:34ex;
   padding-left:1ex;
 }
 
-div.cafevdb-email-header-box button.viewtoggle {
+/* Collapsed version of the page header. */
+div.cafevdb-email-header-box.collapsed { height:4ex; }
+div.cafevdb-email-header.collapsed { height:3ex; }
+div.cafevdb-email-body.collapsed { padding-top:12ex; }
+
+#cafevdb-email-header-box #viewtoggle,
+#cafevdb-email-header-box #viewtoggle.expanded {
+  position:relative;
+  z-index:26;
   float:right;
+  margin-top:24ex;
   margin-right:167px;
   max-height: 26px;
-  padding: 5px;
+  padding:5px;
+  vertical-align:middle;
+  /*width:28px;*/
 }
 
-div.cafevdb-email-header-box button.viewtoggle:active {
+#viewtoggle #viewtoggle-img, #viewtoggle.expanded #viewtoggle-img {
+  background:url('%webroot%/core/img/actions/upload.png') no-repeat center;
+}
+
+#viewtoggle.collapsed #viewtoggle-img {
+  background:url('%webroot%/core/img/actions/download.png') no-repeat center;
+}
+
+#cafevdb-email-header-box #viewtoggle.collapsed {
+  margin-top:0.3em; /* from default oc styling */
+  /* float:right; */
+  /* margin-right:167px; */
+  /* height: 26px; */
+  /* padding: 5px; */
+}
+
+#cafevdb-email-header-box #viewtoggle:active {
   background-color:SteelBlue;
 }
 
-div.events {
-  vertical-align:middle;
-  display:inline-block;
-}
-/* File upload support */
+/******************************************************************************
+ *
+ * File upload support
+ *
+ */
+
 #file_upload_form {
   width:0;
   height:0;
@@ -340,3 +369,8 @@ div.events {
   height:0;
 }
 
+/*
+ * Local Variables: ***
+ * cssm-indent-function: cssm-c-style-indenter ***
+ * End: ***
+ */
