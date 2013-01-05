@@ -1,6 +1,21 @@
-CAFEVDB = {
-  name:'cafevdb'
-};
+var CAFEVDB = {
+  name: 'cafevdb',
+  headervisibility: 'expanded',
+  broadcastHeaderVisibility: function (visibility) {
+    // Sanity check
+    if (visibility != 'expanded' && visibility != 'collapsed') {
+      return;
+    }
+
+    // Keep in sync
+    CAFEVDB.headervisibility = visibility;
+
+    // Insert the new state into all hidden inputs for formsubmit
+    $('input[name="headervisibility"]').each(function (idx) {
+      $(this).val(visibility);
+    });
+  }
+}
 
 $.extend({ alert: function (message, title) {
   $("<div></div>").dialog( {
@@ -48,6 +63,8 @@ $.extend({ alert: function (message, title) {
 
 $(document).ready(function(){
 
+  // Emulate a pull-down menu with export options via the chosen
+  // plugin.
   $('#pme-export-choice').chosen({ disable_search_threshold: 10 });  
   $('#pme-export-choice').change(function (event) {
     event.preventDefault();
@@ -176,11 +193,8 @@ $(document).ready(function(){
     // may be better ways ...
     event.preventDefault();
     var values = $(this).attr('name');
+    values += '&headervisibility='+CAFEVDB.headervisibility;
 
-    $visibility = $('input[name="headervisibility"]').val();
-    if ($visibility == 'collapsed') {
-      values += '&headervisibility=collapsed';
-    }
     $.post('', values, function (data) {
       var newDoc = document.open("text/html"/*, "replace"*/);
       newDoc.write(data);
@@ -203,8 +217,6 @@ $(document).ready(function(){
   });
 
 });
-
-
 
 // Local Variables: ***
 // js-indent-level: 2 ***
