@@ -4,13 +4,29 @@ div.statusmessage, span.statusmessage {
   display:none;
 }
 
+input[type=button]:active, input[type=submit]:active {
+  background-color:SteelBlue;
+}
+
+#emailsmtpfields div.chzn-container,
+#emailimapfields div.chzn-container {
+  vertical-align:middle;
+  margin-right:1ex;
+  margin-left:0.7ex;
+  /*font-weight:bold;*/
+}
+
+#emailsmtpfields, #emailimapfields, #emailaccount {
+  margin-bottom:1ex;
+}
+
 #error.statusmessage, #equal.statusmessage, #insecure.statusmessage {
   font-weight:bold;
 }
 
 #appsettings_popup div.personalblock.admin {
   min-width:46em;
-  min-height:28em;
+  min-height:28.5em;
 }
 
 #emailimapfields {
