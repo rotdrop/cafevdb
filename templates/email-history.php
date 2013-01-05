@@ -1,31 +1,38 @@
-<script type="text/javascript">
-  <?php echo $_['jsscript']; ?>
-</script>
-<div id="controls">
 <?php
-$project = CAFEVDB\Util::cgiValue('Project');
-$projectId = CAFEVDB\Util::cgiValue('ProjectId',-1);
+use CAFEVDB\L;
+use CAFEVDB\Util;
+use CAFEVDB\Navigation;
+use CAFEVDB\EmailHistory;
+
+$project = Util::cgiValue('Project');
+$projectId = Util::cgiValue('ProjectId',-1);
+$css_pfx = EmailHistory::CSS_PREFIX;
+
+$nav = '';
 if ($projectId >= 0) {
-  echo CAFEVDB\Navigation::button('projectlabel', $project, $projectId);
-  echo CAFEVDB\Navigation::button('projects');
-  echo CAFEVDB\Navigation::button('email', $project, $projectId);
-  echo CAFEVDB\Navigation::button('brief', $project, $projectId);
-  echo CAFEVDB\Navigation::button('projectinstruments', $project, $projectId);
-  echo CAFEVDB\Navigation::button('instruments', $project, $projectId); 
+  $nav .= Navigation::button('projectlabel', $project, $projectId);
+  $nav .= Navigation::button('projects');
+  $nav .= Navigation::button('email', $project, $projectId);
+  $nav .= Navigation::button('brief', $project, $projectId);
+  $nav .= Navigation::button('projectinstruments', $project, $projectId);
+  $nav .= Navigation::button('instruments', $project, $projectId); 
 } else {
-  echo CAFEVDB\Navigation::button('projects');
-  echo CAFEVDB\Navigation::button('email');
-  echo CAFEVDB\Navigation::button('all');
-  echo CAFEVDB\Navigation::button('projectinstruments');
-  echo CAFEVDB\Navigation::button('instruments');
+  $nav .= Navigation::button('projects');
+  $nav .= Navigation::button('email');
+  $nav .= Navigation::button('all');
+  $nav .= Navigation::button('projectinstruments');
+  $nav .= Navigation::button('instruments');
 }
+
+echo $this->inc('part.common.header',
+                array('css-prefix' => $css_pfx,
+                      'navigationcontrols' => $nav,
+                      'header' => EmailHistory::headerText()));
+
+// Issue the main part. The method will echo itself
+EmailHistory::display();
+
+// Close some still opened divs
+echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
+
 ?>
-<form id="personalsettings">
-  <?php echo CAFEVDB\Navigation::button($_['settingscontrols']); ?>
-</form>
-</div>
-<div class="cafevdb-general" id="cafevdb-general">
-   <?php CAFEVDB\Email::displayHistory(); ?>
-</div>
-<div id="dialog_holder"></div>
-<div id="appsettings" class="popup topright hidden"></div>

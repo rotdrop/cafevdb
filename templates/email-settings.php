@@ -20,7 +20,9 @@ foreach (array('smtp', 'imap') as $proto) {
   <label for="'.$proto.'port">'.$upproto.' Port</label>
   <br/>
   <label for="'.$proto.'secure" id="'.$proto.'securelabel">
-  <select name="'.$proto.'secure" id="'.$proto.'secure">';
+  <select name="'.$proto.'secure" id="'.$proto.'secure" '
+  .'data-placeholder="'.$upproto.' '.L::t('security').'" >
+    <option value=""></option>';
   foreach (array('insecure', 'starttls', 'ssl') as $value) {
     $upvalue = strtoupper($value);
     $sel = ($_[$proto.'secure'] == $value) ? 'selected="selected"' : '';

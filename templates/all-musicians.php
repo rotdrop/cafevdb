@@ -1,30 +1,27 @@
-<script type="text/javascript">
-  <?php echo $_['jsscript']; ?>
-</script>
-<div id="controls">
 <?php
-use CAFEVDB\Musicians;
+use CAFEVDB\L;
 use CAFEVDB\Navigation;
+use CAFEVDB\Musicians;
+
 $table = new Musicians();
-$csspfx = Musicians::CSS_PREFIX;
-echo Navigation::button('projects');
-echo Navigation::button('projectinstruments');
-echo Navigation::button('instruments');
+$css_pfx = Musicians::CSS_PREFIX;
+
+$nav = '';
+$nav .= Navigation::button('projects');
+$nav .= Navigation::button('projectinstruments');
+$nav .= Navigation::button('instruments');
+
+echo $this->inc('part.common.header',
+                array('css-prefix' => $css_pfx,
+                      'navigationcontrols' => $nav,
+                      'header' => $table->headerText()));
+
+// Issue the main part. The method will echo itself
+$table->display();
+
+// Close some still opened divs
+echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
+
 ?>
-<form id="personalsettings">
-  <?php echo Navigation::button($_['settingscontrols']); ?>
-</form>
-</div>
-<div class="cafevdb-general" id="cafevdb-general">
-  <div class="<?php echo $csspfx; ?>-header-box">
-    <div class="<?php echo $csspfx; ?>-header">
-      <?php echo $table->headerText(); ?>
-    </div>
-    <?php echo Navigation::button($_['viewtoggle']); ?>
-  </div>
-  <?php $table->display(); ?>
-  <div id="cafevdb-debug"></div>
-</div>
-<div id="dialog_holder"></div>
-<div id="appsettings" class="popup topright hidden"></div>
+
 

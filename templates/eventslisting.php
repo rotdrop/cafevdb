@@ -1,15 +1,19 @@
-<?php use CAFEVDB\L; ?>
+<?php
+use CAFEVDB\L;
+use CAFEVDB\Config;
+use CAFEVDB\Events;
+?>
 <table id="table" class="nostyle listing">
 <?php
 $prjId   = $_['ProjectId'];
 $prjName = $_['ProjectName'];
 $class   = $_['CSSClass'];
 $evtButtons = array('Edit' => array('tag' => 'edit',
-                                    'title' => CAFEVDB\Config::toolTips('projectevents-edit')),
+                                    'title' => Config::toolTips('projectevents-edit')),
                     'Delete' => array('tag' => 'delete',
-                                      'title' =>CAFEVDB\Config::toolTips('projectevents-delete')),
+                                      'title' =>Config::toolTips('projectevents-delete')),
                     'Detach' => array('tag' => 'detach',
-                                      'title' =>CAFEVDB\Config::toolTips('projectevents-detach'))
+                                      'title' =>Config::toolTips('projectevents-detach'))
 );
 
 $locale = $_['Locale'];
@@ -29,7 +33,7 @@ foreach ($_['EventMatrix'] as $key => $eventGroup) {
     $object = $event['object'];
     $brief  = $object['summary'];
 
-    $datestring = CAFEVDB\Events::briefEventDate($object, $locale);
+    $datestring = Events::briefEventDate($object, $locale);
 
     echo <<<__EOT__
     <tr class="$class">
@@ -44,7 +48,7 @@ __EOT__;
         <input class="$tag" id="$tag-$evtId" type="button" name="$tag" title="$title" value="$evtId" />
 __EOT__;
     }
-    $title = L::t(CAFEVDB\Config::toolTips('projectevents-selectevent'));
+    $title = L::t(Config::toolTips('projectevents-selectevent'));
     $checked = isset($_['Selected'][$evtId]) ? 'checked' : '';
     echo <<<__EOT__
       </td>

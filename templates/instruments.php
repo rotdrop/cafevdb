@@ -1,38 +1,36 @@
-<script type="text/javascript">
-  <?php echo $_['jsscript']; ?>
-</script>
-<div id="controls">
 <?php
-use CAFEVDB\Instruments;
+use CAFEVDB\L;
 use CAFEVDB\Navigation;
-$csspfx = Instruments::CSS_PREFIX;
+use CAFEVDB\Instruments;
+
 $table = new Instruments();
+$css_pfx = Instruments::CSS_PREFIX;
 $project = $table->project;
 $projectId = $table->projectId;
+
+$nav = '';
 if ($projectId >= 0) {
-  echo Navigation::button('projectlabel', $project, $projectId);
-  echo Navigation::button('projects');
-  echo Navigation::button('projectinstruments', $project, $projectId);
-  echo Navigation::button('brief', $project, $projectId);
-  echo Navigation::button('detailed', $project, $projectId);
+  $nav .= Navigation::button('projectlabel', $project, $projectId);
+  $nav .= Navigation::button('projects');
+  $nav .= Navigation::button('projectinstruments', $project, $projectId);
+  $nav .= Navigation::button('brief', $project, $projectId);
+  $nav .= Navigation::button('detailed', $project, $projectId);
 } else {
-  echo Navigation::button('projects');
-  echo Navigation::button('projectinstruments');
-  echo Navigation::button('all');
+  $nav .= Navigation::button('projects');
+  $nav .= Navigation::button('projectinstruments');
+  $nav .= Navigation::button('all');
 }
+
+echo $this->inc('part.common.header',
+                array('css-prefix' => $css_pfx,
+                      'navigationcontrols' => $nav,
+                      'header' => $table->headerText()));
+
+// Issue the main part. The method will echo itself
+$table->display();
+
+// Close some still opened divs
+echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
+
 ?>
-<form id="personalsettings">
-  <?php echo Navigation::button($_['settingscontrols']); ?>
-</form>
-</div>
-<div class="cafevdb-general" id="cafevdb-general">
-  <div class="<?php echo $csspfx; ?>-header-box">
-    <div class="<?php echo $csspfx; ?>-header">
-      <?php echo $table->headerText(); ?>
-    </div>
-    <?php echo Navigation::button($_['viewtoggle']); ?>
-  </div>
-  <?php $table->display(); ?>
-</div>
-<div id="dialog_holder"></div>
-<div id="appsettings" class="popup topright hidden"></div>
+

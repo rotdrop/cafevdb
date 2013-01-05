@@ -1,25 +1,2 @@
-<script type="text/javascript">
-  <?php echo $_['jsscript']; ?>
-</script>
-<div id="controls">
-<?php
-use CAFEVDB\AddOneMusician;
-use CAFEVDB\Navigation;
-$table = new AddOneMusician();
-$csspfx = AddOneMusician::CSS_PREFIX;
-echo Navigation::button('projectlabel', $table->project, $table->projectId);
-echo Navigation::button('projects');
-echo Navigation::button('add', $table->project, $table->projectId);
-echo Navigation::button('brief', $table->project, $table->projectId);
-echo Navigation::button('projectinstruments', $table->project, $table->projectId);
-?>
-<form id="personalsettings">
-  <?php echo Navigation::button($_['settingscontrols']); ?>
-</form>
-</div>
-<div class="cafevdb-general" id="cafevdb-general">
-  <?php $table->display(); ?>
-</div>
-<div id="dialog_holder"></div>
-<div id="appsettings" class="popup topright hidden"></div>
+<?php echo $this->inc('change-one-musician'); ?>
 

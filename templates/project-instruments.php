@@ -1,32 +1,27 @@
-<?php use CAFEVDB\L; ?>
-<script type="text/javascript">
-  <?php echo $_['jsscript']; ?>
-</script>
-<div id="controls">
 <?php
-use CAFEVDB\ProjectInstruments;
+use CAFEVDB\L;
+use CAFEVDB\Util;
 use CAFEVDB\Navigation;
-$csspfx = ProjectInstruments::CSS_PREFIX;
+use CAFEVDB\ProjectInstruments;
+
 $table = new ProjectInstruments();
+$css_pfx = ProjectInstruments::CSS_PREFIX;
 $project = $table->project;
 $projectId = $table->projectId;
+
+$nav = '';
 if ($projectId >= 0) {
-  echo Navigation::button('projectlabel', $project, $projectId);
-  echo Navigation::button('projects');
-  echo Navigation::button('instruments', $project, $projectId);  
-  echo Navigation::button('add', $project, $projectId);  
-  echo Navigation::button('brief', $project, $projectId);
+  $nav .= Navigation::button('projectlabel', $project, $projectId);
+  $nav .= Navigation::button('projects');
+  $nav .= Navigation::button('instruments', $project, $projectId);  
+  $nav .= Navigation::button('add', $project, $projectId);  
+  $nav .= Navigation::button('brief', $project, $projectId);
 } else {
-  echo Navigation::button('projects');
-  echo Navigation::button('instruments');
-  echo Navigation::button('all');
+  $nav .= Navigation::button('projects');
+  $nav .= Navigation::button('instruments');
+  $nav .= Navigation::button('all');
 }
-?>
-<form id="personalsettings">
-  <?php echo Navigation::button($_['settingscontrols']); ?>
-</form>
-</div>
-<?php
+
 if ($projectId >= 0) {
   $xferStatus = $table->transferInstruments();
   $xferStatus = $xferStatus ? L::t('Success!') : '';
@@ -45,16 +40,18 @@ if ($projectId >= 0) {
 } else {
   $xferButton = '';
 }
+
+
+echo $this->inc('part.common.header',
+                array('css-prefix' => $css_pfx,
+                      'navigationcontrols' => $nav,
+                      'header' => $table->headerText()."\n".$xferButton));
+
+// Issue the main part. The method will echo itself
+$table->display();
+
+// Close some still opened divs
+echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
+
 ?>
-<div class="cafevdb-general" id="cafevdb-general">
-  <div class="<?php echo $csspfx; ?>-header-box">
-    <div class="<?php echo $csspfx; ?>-header">
-      <?php echo $table->headerText(); ?>
-      <?php echo $xferButton; ?>
-    </div>
-    <?php echo Navigation::button($_['viewtoggle']); ?>
-  </div>
-  <?php $table->display(); ?>
-</div>
-<div id="dialog_holder"></div>
-<div id="appsettings" class="popup topright hidden"></div>
+

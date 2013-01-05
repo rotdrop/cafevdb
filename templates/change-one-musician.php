@@ -1,25 +1,34 @@
-<script type="text/javascript">
-  <?php echo $_['jsscript']; ?>
-</script>
-<div id="controls">
 <?php
-use CAFEVDB\AddOneMusician;
+use CAFEVDB\L;
 use CAFEVDB\Navigation;
+use CAFEVDB\AddOneMusician;
+
 $table = new AddOneMusician();
-$csspfx = AddOneMusician::CSS_PREFIX;
-echo Navigation::button('projectlabel', $table->project, $table->projectId);
-echo Navigation::button('projects');
-echo Navigation::button('add', $table->project, $table->projectId);
-echo Navigation::button('brief', $table->project, $table->projectId);
-echo Navigation::button('projectinstruments', $table->project, $table->projectId);
+$css_pfx = AddOneMusician::CSS_PREFIX;
+
+$nav = '';
+$nav .= Navigation::button('projectlabel', $table->project, $table->projectId);
+$nav .= Navigation::button('projects');
+$nav .= Navigation::button('add', $table->project, $table->projectId);
+$nav .= Navigation::button('brief', $table->project, $table->projectId);
+$nav .= Navigation::button('projectinstruments', $table->project, $table->projectId);
+
+// Generate our own header block
+ob_start();
+$table->display();
+$header = ob_get_contents();
+@ob_end_clean();
+
+echo $this->inc('part.common.header',
+                array('css-prefix' => $css_pfx,
+                      'navigationcontrols' => $nav,
+                      'headerblock' => $header));
+
+// Issue the main part. The method will echo itself
+$table->execute();
+
+// Close some still opened divs
+echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
+
 ?>
-<form id="personalsettings">
-  <?php echo Navigation::button($_['settingscontrols']); ?>
-</form>
-</div>
-<div class="cafevdb-general" id="cafevdb-general">
-  <?php $table->display(); ?>
-</div>
-<div id="dialog_holder"></div>
-<div id="appsettings" class="popup topright hidden"></div>
 

@@ -3,6 +3,7 @@
 use CAFEVDB\L;
 use CAFEVDB\Config;
 use CAFEVDB\Util;
+use CAFEVDB\Navigation;
 
 // Check if we are a user
 OCP\User::checkLoggedIn();
@@ -25,19 +26,18 @@ $encrkey    = Config::getEncryptionKey();
 
 $headervisibility = Util::cgiValue('headervisibility', 'expanded');
 
-$jsscript = 'var toolTips = '.($tooltips == 'on' ? 'true' : 'false').';
-';
-$jsscript .=<<<__EOT__
+Util::addInlineScript('var toolTips = '.($tooltips == 'on' ? 'true' : 'false'));
+Util::addInlineScript("CAFEVDB.headervisibility = '$headervisibility';");
+Util::addInlineScript(<<<__EOT__
 $(document).ready(function(){
   if (toolTips) {
     $.fn.tipsy.enable();
   } else {
     $.fn.tipsy.disable();
   }
-})
-
-var headervisibility = '$headervisibility';
-__EOT__;
+});
+__EOT__
+);
 
 OCP\App::setActiveNavigationEntry( 'cafevdb' );
 
@@ -69,7 +69,6 @@ if ($op == "Em@il") {
 }
 
 // Calendar event hacks
-
 OCP\Util::addscript('3rdparty/fullcalendar', 'fullcalendar');
 OCP\Util::addscript('3rdparty/timepicker', 'jquery.ui.timepicker');
 OCP\Util::addStyle('3rdparty/timepicker', 'jquery.ui.timepicker');
@@ -79,8 +78,9 @@ OCP\Util::addscript('contacts','jquery.multi-autocomplete');
 OC_Util::addScript('','oc-vcategories');
 OCP\Util::addScript('cafevdb', 'calendar');
 $categories = json_encode(OC_Calendar_App::getCategoryOptions());
+//OCP\Util::addScript('cafevdb', 'debug');
 
-$jsscript .= "
+Util::addInlineScript("
 var eventSources = '';
 var categories = '$categories';
 var missing_field = '".addslashes(L::t('Missing or invalid fields'))."';
@@ -92,39 +92,17 @@ var missing_field_todate = '".addslashes(L::t('To Date'))."';
 var missing_field_totime = '".addslashes(L::t('To Time'))."';
 var missing_field_startsbeforeends = '".addslashes(L::t('The event ends before it starts'))."';
 var missing_field_dberror = '".addslashes(L::t('There was a database fail'))."';
+");
+
+Util::addInlineScript("
 var confirm_text = new Object();
 confirm_text['delete'] = '".addslashes(L::t('Do you really want to delete this event?'))."';
 confirm_text['detach'] = '".addslashes(L::t('Do you really want to detach this event from the current project?'))."';
 confirm_text['select'] = '';
 confirm_text['deselect'] = '';
-";
+");
 
 // end event hacks
-
-
-$buttons = array();
-$buttons['expert'] =
-  array('name' => 'Expert Operations',
-        'title' => 'Expert Operations like recreating views etc.',
-        'image' => OCP\Util::imagePath('core', 'actions/rename.svg'),
-        'class' => 'settings expert',
-        'id' => 'expertbutton');
-if ($expertmode != 'on') {
-  $buttons['expert']['style'] = 'display:none;';
-}
-$buttons['settings'] =
-  array('name' => 'Settings',
-        'title' => 'Personal Settings.',
-        'image' => OCP\Util::imagePath('core', 'actions/settings.svg'),
-        'class' => 'settings generalsettings',
-        'id' => 'settingsbutton');
-
-$viewbutton = array(
-  'viewtoggle' => array('name' => 'Toggle Visibility',
-                        'title' => 'Minimize or maximize the containing block.',
-                        'image' => OCP\Util::imagePath('core', 'actions/delete.svg'),
-                        'class' => 'viewtoggle',
-                        'id' => 'viewtoggle'));
 
 $tmpl = new OCP\Template( 'cafevdb', $tmplname, 'user' );
 
@@ -132,9 +110,6 @@ $tmpl->assign('debugmode', $debugmode);
 $tmpl->assign('expertmode', $expertmode);
 $tmpl->assign('tooltips', $tooltips);
 $tmpl->assign('encryptionkey', $encrkey);
-$tmpl->assign('jsscript', $jsscript, false);
-$tmpl->assign('settingscontrols', $buttons);
-$tmpl->assign('viewtoggle', $viewbutton);
 $tmpl->assign('uploadMaxFilesize', Util::maxUploadSize(), false);
 $tmpl->assign('uploadMaxHumanFilesize',
               OCP\Util::humanFileSize(Util::maxUploadSize()), false);
