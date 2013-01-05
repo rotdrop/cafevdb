@@ -50,6 +50,36 @@ class Ajax
 
 class Util
 {
+  private static $inlineScripts = array();
+  
+  /**Add some java-script inline-code. Emit it with emitInlineScripts().
+   */
+  public static function addInlineScript($script = '') 
+  {
+    self::$inlineScripts[] = $script;
+  }
+
+  /**Dump all inline java-script scripts previously add with
+   * addInlineScript(). Each inline-script is wrapped into a separate
+   * <script></script> element to make debugging easier.
+   */
+  public static function emitInlineScripts()
+  {
+    $scripts = '';
+    foreach(self::$inlineScripts as $script) {
+      $scripts .=<<<__EOT__
+
+<script type="text/javascript">
+$script
+</script>
+
+__EOT__;
+    }
+    self::$inlineScripts = array(); // don't dump twice.
+
+    return $scripts;
+  }
+
   /**Return the locale. */
   public static function getLocale()
   {
@@ -179,14 +209,15 @@ __EOT__;
   public static function disableEnterSubmit()
   {
     echo '<script type="text/javascript">
-public static function stopRKey(evt) {
+function stopRKey(evt) {
   var evt = (evt) ? evt : ((event) ? event : null);
   var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
   if ((evt.keyCode == 13) && (node.type=="text"))  {return false;}
 }
 
 document.onkeypress = stopRKey;
-</script>';
+</script>
+';
   }
 };
 
@@ -285,32 +316,34 @@ class Navigation
     return $result;
   }
   
-
-  public static function button($id='projects', $project='', $projectId=-1)
+  public static function buttonsFromArray($buttons)
   {
-    if (is_array($id)) {
-      $buttons = $id;
-      $pre = $post = $between = '';
-      if (isset($buttons['pre'])) {
-        $pre = $buttons['pre'];
-        unset($buttons['pre']);
-      }
-      if (isset($buttons['post'])) {
-        $post = $buttons['post'];
-        unset($buttons['post']);
-      }
-      if (isset($buttons['between'])) {
-        $between = $buttons['between'];
-        unset($buttons['between']);
-      }
-      $html = $pre;
-      foreach ($buttons as $key => $btn) {
-        $name  = L::t($btn['name']);
-        $title = isset($btn['title']) ? L::t($btn['title']) : $name;
+    $pre = $post = $between = '';
+    if (isset($buttons['pre'])) {
+      $pre = $buttons['pre'];
+      unset($buttons['pre']);
+    }
+    if (isset($buttons['post'])) {
+      $post = $buttons['post'];
+      unset($buttons['post']);
+    }
+    if (isset($buttons['between'])) {
+      $between = $buttons['between'];
+      unset($buttons['between']);
+    }
+    $html = $pre;
+    foreach ($buttons as $key => $btn) {
+      $type  = isset($btn['type']) ? $btn['type'] : 'button';
+      $name  = L::t($btn['name']);
+      $title = isset($btn['title']) ? L::t($btn['title']) : $name;
+      $style = isset($btn['style']) ? $btn['style'] : '';
+      
+      switch ($type) {
+      case 'button':
         $html .= ''
           .'<button class="'.$btn['class'].'" title="'.$title.'"'
           .(isset($btn['id']) ? ' id="'.$btn['id'].'"' : '')
-          .(isset($btn['style']) ? ' style="'.$btn['style'].'"' : '')
+          .($style != '' ? ' style="'.$btn['style'].'"' : '')
           .(isset($btn['js']) ? ' '.$btn['js'].' ' : '')
           .'>';
         if (isset($btn['image'])) {
@@ -323,10 +356,35 @@ class Navigation
         }
         $html .= '</button>
 ';
-        $html .= $between;
+        break;
+      case 'input':
+        if (isset($btn['image'])) {
+          $style = 'background:url(\''.$btn['image'].'\') no-repeat center;'.$style;
+          $name  = '';
+        }                 
+        $html .= ''
+          .'<input type="button" class="'.$btn['class'].'" title="'.$title.'"'
+          .(isset($btn['id']) ? ' id="'.$btn['id'].'"' : '')
+          .($style != '' ? 'style="'.$style.'" ' : '')
+          .(isset($btn['js']) ? ' '.$btn['js'].' ' : '')
+          .'value="'.$name.'" '
+          .'/>
+';
+        break;
+      default:
+        $html .= '<span>'.L::t('Error: Unknonwn Button Type').'</span>'."\n";
+        break;
       }
-      $html .= $post;
-      return $html;
+      $html .= $between;
+    }
+    $html .= $post;
+    return $html;
+  }
+
+  public static function button($id='projects', $project='', $projectId=-1)
+  {
+    if (is_array($id)) {
+      return self::buttonsFromArray($id);
     }
 
     $headervisibility = '<input type="hidden" name="headervisibility" '
