@@ -83,65 +83,54 @@ CAFEVDB.Email = {
   /**Collapse the somewhat lengthy text at the head of the email page.
    */
   collapsePageHeader:function () {
-    var box    = $('div[class$="-email-header-box"]');
-    var header = $('div[class$="-email-header"]');
-    var body   = $('div[class$="-email-body"]');    
-    
-    if (box.data('CAFEVDBheaderboxheight') === undefined) {
-      box.data('CAFEVDBheaderboxheight', box.css('height'));
-      box.data('CAFEVDBheaderheight', header.css('height'));
-      box.data('CAFEVDBbodypadding', body.css('padding-top'));
-    }
-    box.css('height','4ex');
-    header.css('height','3ex');
-    body.css('padding-top', '12ex');
-    box.data('CAFEVDBheadermodheight', box.css('height'));
-    $('input[name="headervisibility"]').each(function (idx) {
-      $(this).val('collapsed');
-    });
-    $('#viewtoggle-img').attr(
-      'src', OC.filePath('', 'core/img/actions', 'download.svg'));
+    var pfx    = '#'+CAFEVDB.name+'-email-';
+    var box    = $(pfx+'header-box');
+    var header = $(pfx+'header');
+    var body   = $(pfx+'body');
+    var button = $(pfx+'header-box #viewtoggle');
+
+    box.removeClass('expanded').addClass('collapsed');
+    header.removeClass('expanded').addClass('collapsed');
+    body.removeClass('expanded').addClass('collapsed');
+    button.removeClass('expanded').addClass('collapsed');
+
+    CAFEVDB.broadcastHeaderVisibility('collapsed');
   },
   /**Expand the somewhat lengthy text at the head of the email page.
    */
   expandPageHeader:function() {
-    var box    = $('div[class$="-email-header-box"]');
-    var header = $('div[class$="-email-header"]');
-    var body   = $('div[class$="-email-body"]');    
+    var pfx    = '#'+CAFEVDB.name+'-email-';
+    var box    = $(pfx+'header-box');
+    var header = $(pfx+'header');
+    var body   = $(pfx+'body');    
+    var button = $(pfx+'header-box #viewtoggle');
     
-    var boxheight = box.data('CAFEVDBheaderboxheight');
-    var height    = box.data('CAFEVDBheaderheight');
-    var padding   = box.data('CAFEVDBbodypadding');
-    box.css('height', boxheight);
-    header.css('height', height);
-    body.css('padding-top', padding);
-    $('input[name="headervisibility"]').each(function (idx) {
-      $(this).val('expanded');
-    });
-    $('#viewtoggle-img').attr(
-      'src', OC.filePath('', 'core/img/actions', 'delete.svg'));
+    box.addClass('expanded').removeClass('collapsed');
+    header.addClass('expanded').removeClass('collapsed');
+    body.addClass('expanded').removeClass('collapsed');
+    button.addClass('expanded').removeClass('collapsed');
+
+    CAFEVDB.broadcastHeaderVisibility('expanded');
   }
+
 };
 
 $(document).ready(function(){
 
-  if (headervisibility == 'collapsed') {
-    CAFEVDB.Email.collapsePageHeader();
-  }
-
-  $('div[class$="-email-header-box"] :button.viewtoggle').click(function(event) {
+  $('#cafevdb-email-header-box #viewtoggle').click(function(event) {
     event.preventDefault();
-    var box    = $('div[class$="-email-header-box"]');
-    var header = $('div[class$="-email-header"]');
-    var body   = $('div[class$="-email-body"]');    
 
-    if (box.data('CAFEVDBheaderboxheight') === undefined) {
-      CAFEVDB.Email.collapsePageHeader();
-    } else if (box.css('height') == box.data('CAFEVDBheadermodheight')) {
+    var pfx    = 'div.'+CAFEVDB.name+'-email-';
+    var box    = $(pfx+'header-box');
+    var header = $(pfx+'header');
+    var body   = $(pfx+'body');    
+
+    if (CAFEVDB.headervisibility == 'collapsed') {
       CAFEVDB.Email.expandPageHeader();
     } else {
       CAFEVDB.Email.collapsePageHeader();
     }
+
     return false;
   });
 
@@ -167,14 +156,15 @@ $(document).ready(function(){
     type['name']  = 'id';
     type['value'] = $(this).val();
     post.push(type);
-    $('#dialog_holder').load(OC.filePath('calendar',
-                                         'ajax/event',
-                                         'edit.form.php'),
-                             post, function () {
-                               $('input[name="delete"]').attr('disabled','disabled');
-                               Calendar.UI.startEventDialog();
-                             });
-
+    $('#dialog_holder').load(
+      OC.filePath('calendar',
+                  'ajax/event',
+                  'edit.form.php'),
+      post, function () {
+        $('input[name="delete"]').attr('disabled','disabled');
+        Calendar.UI.startEventDialog();
+      });
+    
     return false;
   });
 
