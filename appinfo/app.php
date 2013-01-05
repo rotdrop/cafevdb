@@ -19,6 +19,7 @@ OC::$CLASSPATH['CAFEVDB\DetailedInstrumentation'] = 'apps/cafevdb/lib/detailed-i
 OC::$CLASSPATH['CAFEVDB\ProjectInstruments'] = 'apps/cafevdb/lib/project-instruments.php';
 OC::$CLASSPATH['CAFEVDB\EmailFilter'] = 'apps/cafevdb/lib/email.php';
 OC::$CLASSPATH['CAFEVDB\Email'] = 'apps/cafevdb/lib/email.php';
+OC::$CLASSPATH['CAFEVDB\EmailHistory'] = 'apps/cafevdb/lib/email.php';
 
 /* 3rd party classes */
 OC::$CLASSPATH['phpMyEdit'] = 'apps/cafevdb/3rdparty/phpMyEdit/phpMyEdit.class.php';
