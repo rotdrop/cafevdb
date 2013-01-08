@@ -11,7 +11,6 @@ date_default_timezone_set('Europe/Berlin');
 class Config
 {
   const APP_NAME  = 'cafevdb';
-  const ORCHESTRA = 'Our Ensemble e.V..';
   // Separate by whitespace
   const CFG_KEYS ='
 orchestra
