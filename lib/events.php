@@ -969,7 +969,7 @@ __EOT__;
       ."BEGIN:VCALENDAR".$eol
       ."VERSION:2.0".$eol
       ."PRODID:ownCloud Calendar " . \OCP\App::getAppVersion('calendar') .$eol
-      ."X-WR-CALNAME:" . $projectName . ' (' . Config::ORCHESTRA . ')' . $eol;
+      ."X-WR-CALNAME:" . $projectName . ' (' . Config::opts['orchestra'] . ')' . $eol;
 
     foreach ($events as $id) {
       $text = \OC_Calendar_Export::export($id, \OC_Calendar_Export::EVENT);

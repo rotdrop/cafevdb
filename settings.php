@@ -50,6 +50,8 @@ if (Config::encryptionKeyValid() &&
 
   $tmpl->assign('adminsettings', true);
 
+  $tmpl->assign('orchestra', Config::getValue('orchestra'));
+
   $tmpl->assign('dbserver', Config::getValue('dbserver'));
   $tmpl->assign('dbname', Config::getValue('dbname'));
   $tmpl->assign('dbuser', Config::getValue('dbuser'));
@@ -68,7 +70,7 @@ if (Config::encryptionKeyValid() &&
       $tmpl->assign($proto.$key, Config::getValue($proto.$key));
     }
   }
-  foreach (array('user', 'password', 'fromname', 'fromaddress') as $key) {
+  foreach (array('user', 'password', 'fromname', 'fromaddress', 'testaddress', 'testmode') as $key) {
     $tmpl->assign('email'.$key, Config::getValue('email'.$key));
   }
 }

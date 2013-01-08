@@ -62,12 +62,16 @@ foreach (array('smtp', 'imap') as $proto) {
     </fieldset>
     <fieldset id="emailidentity"><legend><?php echo L::t('Bulk Sender Identity'); ?></legend>
     <input type="text" name="emailfromname" id="emailfromname" value="<?php echo $_['emailfromname']; ?>" placeholder="<?php echo L::t('Real Sender Name');?>" />
+    <label for="emailfromname"><?php echo L::t('From: name');?></label>
     <input type="text" name="emailfromaddress" id="emailfromaddress" value="<?php echo $_['emailfromaddress']; ?>" placeholder="<?php echo L::t('Email From Adress');?>" />
-    <label for="emailidentity"><?php echo L::t('Identity for the From: record.');?></label>
+    <label for="emailfromaddress"><?php echo L::t('From: address');?></label>
     </fieldset>
-    <br/>
-    <fieldset id="emailtest">
-    <input type="button" name="emailtest" id="emailtestbutton" value="<?php echo L::t('Test Email Setup'); ?>" title="<?php echo L::t(Config::toolTips('emailtest')); ?>" />
+    <fieldset id="emailtest"><legend><?php echo L::t('Test Settings'); ?></legend>
+      <input type="button" name="emailtest" id="emailtestbutton" value="<?php echo L::t('Test Email Setup'); ?>" title="<?php echo L::t(Config::toolTips('emailtest')); ?>" />
+      <input id="emailtestmode" type="checkbox" name="emailtestmode" <?php echo $_['emailtestmode'] == 'on' ? 'checked="checked"' : ''; ?> id="emailtestmode" title="<?php echo L::t('Email test-mode; send emails only to the email test-address.') ?>"/>
+      <label for="emailtestmode" title="<?php echo L::t('Email test-mode; send emails only to the email test-address.') ?>"><?php echo L::t('Test-Mode') ?></label>
+      <input <?php echo $_['emailtestmode'] == 'on' ? '' : 'disabled' ?> type="text" name="emailtestaddress" id="emailtestaddress" value="<?php echo $_['emailtestaddress']; ?>" placeholder="<?php echo L::t('Test Email Adress');?>" />
+      <label for="emailtestaddress"><?php echo L::t('Test address');?></label>
     </fieldset>
     <span class="statusmessage" id="msg"></span>  
   </form>

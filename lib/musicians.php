@@ -24,16 +24,15 @@ class Musicians
 __EOT__;
 
     } else {
-      $help = Config::$prefix . 'hinzufuegen.html';
-
       $header =<<<__EOT__
-    <h3>Besetzung &auml;ndern f&uuml;r Projekt $this->project</h3>
-    <h4>F&uuml;r die aktuelle Teilnehmerliste bitte die Buttons "... Display for ... "
-      benutzen.<P> Der Weg in ein Projekt f&uuml;hrt nur &uuml;ber
-      <EM style="color:#ff0000"><B>diese</B></EM> Tabelle,
-      die Musiker werden dann automatisch in unseren
-      Fundus mit aufgenommen (<A HREF="$help" target="_blank">Anleitung</A>)
-    </h4>
+<h3>Besetzung &auml;ndern f&uuml;r Projekt $this->project</h3>
+<h4>F&uuml;r die aktuelle Teilnehmerliste bitte die Buttons oben benutzen.
+<P>
+Der Weg in ein Projekt f&uuml;hrt nur &uuml;ber
+<EM style="color:#ff0000"><B>diese</B></EM> Tabelle,
+die Musiker werden dann automatisch in unseren
+Fundus mit aufgenommen.
+</h4>
 
 __EOT__;
     }

@@ -3,9 +3,9 @@
   <?php echo $_['jsscript']; ?>
 </script>
 <?php
-$tooltipstitle = "Control the display of tooltips. Warning: this works globally for all OwnCloud applications.";
-$experttitle   = "Show a second button which leads to a dialog with ``advanced'' settings";
-$debugtitle    = "Show a certain amount of debug information, normally not needed.";
+$tooltipstitle = L::t("Control the display of tooltips. Warning: this works globally for all OwnCloud applications.");
+$experttitle   = L::t("Show a second button which leads to a dialog with ``advanced'' settings");
+$debugtitle    = L::t("Show a certain amount of debug information, normally not needed.");
 ?>
 
 <ul>
@@ -19,13 +19,13 @@ $debugtitle    = "Show a certain amount of debug information, normally not neede
 
 <div id="tabs-1" class="personalblock <?php if ($_['adminsettings']) echo 'admin'; ?>">
   <form id="cafevdb">
-    <input id="tooltips" type="checkbox" name="tooltips" <?php echo $_['tooltips'] == 'on' ? 'checked="checked"' : ''; ?> id="tooltips" title="<?php echo L::t($tooltipstitle) ?>"/>
+    <input id="tooltips" type="checkbox" name="tooltips" <?php echo $_['tooltips'] == 'on' ? 'checked="checked"' : ''; ?> id="tooltips" title="<?php echo $tooltipstitle ?>"/>
     <label for="tooltips" title="<?php echo L::t($tooltipstitle) ?>"><?php echo L::t('Tool-Tips') ?></label>
     <br />
-    <input id="expertmode" type="checkbox" name="expertmode" <?php echo $_['expertmode'] == 'on' ? 'checked="checked"' : ''; ?> id="expertmode" title="<?php echo L::t($experttitle) ?>"/>
+    <input id="expertmode" type="checkbox" name="expertmode" <?php echo $_['expertmode'] == 'on' ? 'checked="checked"' : ''; ?> id="expertmode" title="<?php echo $experttitle ?>"/>
     <label for="expertmode" title="<?php echo L::t($experttitle) ?>"><?php echo L::t('Expert-Mode') ?></label>
     <br />
-    <input id="debugmode" type="checkbox" name="debugmode" <?php echo $_['debugmode'] == 'on' ? 'checked="checked"' : ''; ?> id="debugmode" title="<?php echo L::t($debugtitle) ?>"/>
+    <input id="debugmode" type="checkbox" name="debugmode" <?php echo $_['debugmode'] == 'on' ? 'checked="checked"' : ''; ?> id="debugmode" title="<?php echo $debugtitle ?>"/>
     <label for="debugmode" title="<?php echo L::t($experttitle) ?>"><?php echo L::t('Debug-Mode') ?></label>
     <br />
     <label for="exampletext" title="<?php echo L::t('Example Text') ?>"><?php echo L::t('Example') ?></label>

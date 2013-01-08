@@ -8,6 +8,10 @@ input[type=button]:active, input[type=submit]:active {
   background-color:SteelBlue;
 }
 
+#emailtestmode {
+  margin-left:4ex;
+}
+
 #emailsmtpfields div.chzn-container,
 #emailimapfields div.chzn-container {
   vertical-align:middle;
@@ -16,7 +20,7 @@ input[type=button]:active, input[type=submit]:active {
   /*font-weight:bold;*/
 }
 
-#emailsmtpfields, #emailimapfields, #emailaccount {
+#emailsmtpfields, #emailimapfields, #emailaccount, #emailidentity {
   margin-bottom:1ex;
 }
 

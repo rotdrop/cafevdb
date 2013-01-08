@@ -165,6 +165,27 @@ $(document).ready(function() {
 
   ///////////////////////////////////////////////////////////////////////////
   //
+  // name of orchestra
+  //
+  ///////////////////////////////////////////////////////////////////////////
+
+  $('#admingeneral :input').blur(function(event) {
+    event.preventDefault();
+    $('div.statusmessage').hide();
+    $('span.statusmessage').hide();
+    $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
+           $(this),
+           function(data) {
+             if (data.status == "success") {
+	       $('#admingeneral #msg').html(data.data.message);
+	       $('#admingeneral #msg').show();
+             }
+             return false;
+	   }, 'json');
+  });
+
+  ///////////////////////////////////////////////////////////////////////////
+  //
   // data-base
   //
   ///////////////////////////////////////////////////////////////////////////
@@ -263,7 +284,7 @@ $(document).ready(function() {
            post,
            function(data) {
              if (data.status == 'success') {
-               $('#shareowner #user').attr('disabled','disabled');
+               $('#shareowner #user').attr('disabled',true);
                $('#shareowner #user-saved').val($('#shareowner #user').val());
              }
 	     $('#eventsettings #msg').html(data.data.message);
@@ -500,27 +521,6 @@ $(document).ready(function() {
     return false;
   });
 
-
-  $('#emailtestbutton').click(function(event) {
-    event.preventDefault();
-    $('div.statusmessage').hide();
-    $('span.statusmessage').hide();
-    $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
-           $(this),
-           function(data) {
-             if (data.status == "success") {
-	       $('#emailsettings #msg').html(data.data.message);
-	       $('#emailsettings #msg').show();
-               return true;
-             } else {
-	       $('#emailsettings #msg').html(data.data.message);
-	       $('#emailsettings #msg').show();
-               return false;
-             }
-	   }, 'json');
-    return false;
-  })
-
   $('#emailfromname').blur(function(event) {
     event.preventDefault();
     $('div.statusmessage').hide();
@@ -561,6 +561,75 @@ $(document).ready(function() {
     return false;
   });
 
+  $('#emailtestbutton').click(function(event) {
+    event.preventDefault();
+    $('div.statusmessage').hide();
+    $('span.statusmessage').hide();
+    $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
+           $(this),
+           function(data) {
+             if (data.status == "success") {
+	       $('#emailsettings #msg').html(data.data.message);
+	       $('#emailsettings #msg').show();
+               return true;
+             } else {
+	       $('#emailsettings #msg').html(data.data.message);
+	       $('#emailsettings #msg').show();
+               return false;
+             }
+	   }, 'json');
+    return false;
+  })
+
+  $('#emailtestmode').change(function(event) {
+    event.preventDefault();
+    var post = $(this);
+    if (!$(this).is(':checked')) {
+      post = new Array();
+      var tmp = new Object();
+      tmp['name']  = $(this).attr('name');
+      tmp['value'] = 'off';
+      post.push(tmp);
+    }
+    $('#emailsettings #msg').empty();
+    $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
+           post, function(data) {
+      if (data.status == "success") {
+	$('#emailsettings #msg').html(data.data.message);
+	$('#emailsettings #msg').show();
+        if ($('#emailtestmode').is(':checked')) {
+          $('#emailtestaddress').attr('disabled',false);
+        } else {
+          $('#emailtestaddress').attr('disabled',true);
+        }
+        return true;
+      } else {
+	$('#emailsettings #msg').html(data.data.message);
+      }
+      return false;
+    });
+    return false;
+  });
+
+  $('#emailtestaddress').blur(function(event) {
+    event.preventDefault();
+    $('div.statusmessage').hide();
+    $('span.statusmessage').hide();
+    $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
+           $(this),
+           function(data) {
+             if (data.status == "success") {
+	       $('#emailsettings #msg').html(data.data.message);
+	       $('#emailsettings #msg').show();
+               return true;
+             } else {
+	       $('#emailsettings #msg').html(data.data.message);
+	       $('#emailsettings #msg').show();
+               return false;
+             }
+	   }, 'json');
+    return false;
+  });
 
 });
 

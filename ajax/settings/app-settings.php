@@ -92,6 +92,15 @@ if (isset($_POST['keydistribute'])) {
   return;
 }
 
+if (isset($_POST['orchestra'])) {
+  $value = $_POST['orchestra'];
+  Config::setValue('orchestra', $value);
+  OC_JSON::success(
+    array("data" => array(
+            "message" => L::t('Name of orchestra set to "%s"', $value))));  
+  return true;
+}
+
 if (isset($_POST['dbserver'])) {
   $value = $_POST['dbserver'];
   Config::setValue('dbserver', $value);
@@ -385,6 +394,41 @@ if (isset($_POST['emailtest'])) {
     OC_JSON::error($result);
     return false;
   }
+}
+
+if (isset($_POST['emailtestmode'])) {
+  $value = $_POST['emailtestmode'];
+  Config::setValue('emailtestmode', $value);
+  $addr = Config::getSetting('emailtestaddress', L::t('UNSPECIFIED'));
+  if ($value != 'off') {
+    OC_JSON::success(
+      array("data" => array(
+              'message' => L::t('Email test-mode enabled, sending only to %s', array($addr)))));
+  } else {
+    OC_JSON::success(
+      array("data" => array(
+              'message' => L::t('Email test-mode disable, will send to all!!!'))));
+  }
+  return true;
+}
+
+if (isset($_POST['emailtestaddress'])) {
+  $value = $_POST['emailtestaddress'];
+
+  if (filter_var($value, FILTER_VALIDATE_EMAIL) === false) {
+    OC_JSON::error(
+      array("data" => array(
+              'message' => L::t('"%s" doesn\'t seem to be a valid email-address.',
+                                array($value)))));
+    return false;
+  }
+
+  Config::setValue('emailtestaddress', $value);
+  OC_JSON::success(
+    array("data" => array(
+            'message' => L::t('Using "%s" as email-address for test-mode.',
+                              array($value)))));
+  return true;
 }
 
 if (isset($_POST['emailfromname'])) {

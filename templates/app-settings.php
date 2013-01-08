@@ -1,5 +1,10 @@
 <?php use CAFEVDB\L; ?>
 <div id="tabs-2" class="personalblock admin">
+<!-- GENERAL CONFIGURATION STUFF -->
+   <form id="admingeneral">
+     <input type="text" id="orchestra" name=" orchestra" value="<?php echo $_['orchestra']; ?>" placeholder="<?php echo L::t('name of orchestra'); ?>" />
+     <span class="statusmessage" id="msg"></span>
+   </form>
 <!-- ENCRYPTION-KEY -->
   <form id="systemkey">
     <input type="password" id="oldkey" name="oldkey" placeholder="<?php echo L::t('Current Key');?>" />

@@ -657,27 +657,27 @@ und aktiviert den Editor'));
 class Email
 {
   const CSS_PREFIX         = 'cafevdb-email';
-  const CONSTRUCTION_MODE  = true;
-  const CONSTRUCTION_EMAIL = 'DEVELOPER@his.server.eu';
-  const CONSTRUCTION_NAME  = 'Claus-Justus Heine';
+  private static $constructionMode = true;
 
   public static function headerText()
   {
+    Config::init();
+
+    self::$constructionMode = Config::$opts['emailtestmode'] != 'off';
+
     $projectId = Util::cgiValue('ProjectId',-1);
     $project   = Util::cgiValue('Project','');
 
-    $CAFEVCatchAllEmail =
-      self::CONSTRUCTION_MODE
-      ? self::CONSTRUCTION_EMAIL
-      : Config::getValue('emailfromaddress');
-
-    $CAFEVCatchAllName =
-      self::CONSTRUCTION_MODE
-      ? self::CONSTRUCTION_NAME
-      : Config::getValue('emailfromname');
-
+    if (self::$constructionMode) {      
+      $CAFEVCatchAllEmail = Config::getValue('emailtestaddress');
+      $CAFEVCatchAllName  = 'Bilbo Baggins';
+    } else {
+      $CAFEVCatchAllEmail = Config::getValue('emailfromaddress');
+      $CAFEVCatchAllName  = Config::getValue('emailfromname');
+    }
+    
     $string = '';
-    if (self::CONSTRUCTION_MODE) {
+    if (self::$constructionMode) {
       $string .=<<<__EOT__
         <H1>Testbetrieb. Email geht nur an mich.</H1>
         <H4>Ausgenommen Cc:. Bitte um Testmail von eurer Seite.</H4>
@@ -840,16 +840,19 @@ __EOT__;
   {
     Config::init();
 
+    self::$constructionMode = Config::$opts['emailtestmode'] != 'off';
+
     $opts = Config::$pmeopts;
 
     Util::disableEnterSubmit(); // ? needed ???
 
-    $CAFEVCatchAllEmail =
-      self::CONSTRUCTION_MODE
-      ? self::CONSTRUCTION_EMAIL
-      : self::PRODUCTION_EMAIL;
-
-    $CAFEVCatchAllName = Config::getValue('emailfromname');
+    if (self::$constructionMode) {      
+      $CAFEVCatchAllEmail = Config::getValue('emailtestaddress');
+      $CAFEVCatchAllName  = 'Bilbo Baggins';
+    } else {
+      $CAFEVCatchAllEmail = Config::getValue('emailfromaddress');
+      $CAFEVCatchAllName  = Config::getValue('emailfromname');
+    }
 
     // Display a filter dialog
     $filter = new EmailFilter($opts, $opts['page_name']);
@@ -1239,7 +1242,7 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
         $mail->AddReplyTo($strSenderEmail, $strSender);
         $mail->SetFrom($strSenderEmail, $strSender);
 
-        if (!self::CONSTRUCTION_MODE) {
+        if (!self::constructionMode) {
           // Loop over all data-base records and add each recipient in turn
           foreach ($EMails as $recipient) {
             // Better not use AddAddress: we should not expose the
@@ -1257,8 +1260,7 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
           }
         } else {
           // Construction mode: per force only send to the developer
-          $mail->AddAddress(self::CONSTRUCTION_EMAIL,
-                            self::CONSTRUCTION_NAME);
+          $mail->AddAddress($CAFEVCatchAllEmail, $CAFEVCatchAllName);
         }
 
         // Always drop a copy to the orchestra's email account for

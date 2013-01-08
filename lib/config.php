@@ -12,31 +12,35 @@ class Config
 {
   const APP_NAME  = 'cafevdb';
   const ORCHESTRA = 'Our Ensemble e.V..';
-  const CFG_KEYS = '
-dbserver,
-dbuser,
-dbpassword,
-dbname,
-shareowner,
-concertscalendar,
-concertscalendarid,
-rehearsalscalendar,
-rehearsalscalendarid,
-othercalendar,
-othercalendarid,
-managementcalendar,
-managementcalendarid,
-eventduration,
-emailuser,
-emailpassword,
-emailfromname,
-emailfromaddress,
-smtpserver,
-smtpport,
-smtpsecure,
-imapserver,
-imapport,
-imapsecure';
+  // Separate by whitespace
+  const CFG_KEYS ='
+orchestra
+dbserver
+dbuser
+dbpassword
+dbname
+shareowner
+concertscalendar
+concertscalendarid
+rehearsalscalendar
+rehearsalscalendarid
+othercalendar
+othercalendarid
+managementcalendar
+managementcalendarid
+eventduration
+emailuser
+emailpassword
+emailfromname
+emailfromaddress
+smtpserver
+smtpport
+smtpsecure
+imapserver
+imapport
+imapsecure
+emailtestaddress
+emailtestmode';
   const MD5_SUF  = '::MD5';
   const MD5_LEN  = 5;
   const DFLT_CALS = 'concerts,rehearsals,other,management';
@@ -50,6 +54,11 @@ imapsecure';
   public static $cgiVars = array();
   public static $Languages = array();
   private static $initialized = false;
+
+  private static function configKeys()
+  {
+    return preg_split('/\s+/', trim(self::CFG_KEYS));
+  }
 
   public static function loginListener($params)
   {
@@ -254,7 +263,7 @@ imapsecure';
    */
   static public function decryptConfigValues()
   {
-    $keys = array_map('trim',explode(',', self::CFG_KEYS));
+    $keys = self::configKeys();
 
     foreach ($keys as $key) {
         if (self::getValue($key) === false) {
@@ -268,7 +277,7 @@ imapsecure';
    */
   static public function encryptConfigValues()
   {
-    $keys = array_map('trim',explode(',', self::CFG_KEYS));
+    $keys = self::configKeys();
 
     foreach ($keys as $key) {
       if (!isset(self::$opts[$key])) {
