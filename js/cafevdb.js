@@ -127,10 +127,8 @@ $(document).ready(function(){
     
     $("#pme-export-choice").children('option').each(function(i, elm) {
       $(elm).removeAttr('selected');
-      $(elm).tipsy.remove();
     });
-    $('div.chzn-container').tipsy.remove();
-    $('li.active-result').tipsy.remove();
+    $('.tipsy').remove();
 
     $("#pme-export-choice").trigger("liszt:updated");
 
