@@ -4,8 +4,6 @@ $(document).ready(function() {
   $("#appsettings_popup").on("tabsselect", function (event, ui) {
     $('div.statusmessage').hide();
     $('span.statusmessage').hide();
-    $('div.statusmessage').empty();
-    $('span.statusmessage').empty();
   });
 
   $("#appsettings_popup").on("tabsshow", function (event, ui) {
@@ -13,8 +11,8 @@ $(document).ready(function() {
       $('#smtpsecure').chosen({ disable_search_threshold: 10 });
       $('#imapsecure').chosen({ disable_search_threshold: 10 });
     } else {
-      $('#smtpsecure').chosen().remove();
-      $('#imapsecure').chosen().remove();
+      //$('#smtpsecure').chosen().remove();
+      //$('#imapsecure').chosen().remove();
     }
   });
 
