@@ -39,7 +39,10 @@ imapserver
 imapport
 imapsecure
 emailtestaddress
-emailtestmode';
+emailtestmode
+phpmyadmin
+sourcecode
+sourcedocs';
   const MD5_SUF  = '::MD5';
   const MD5_LEN  = 5;
   const DFLT_CALS = 'concerts,rehearsals,other,management';

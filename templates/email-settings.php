@@ -35,14 +35,6 @@ foreach (array('smtp', 'imap') as $proto) {
   if ($proto == 'smtp') {
     echo '&nbsp;&nbsp;&nbsp;&nbsp;'."\n";
   }
-
-/* $checked = $_[$proto.'noauth'] ? 'checked="checked"' : ''; */
-/*   <br/> */
-/*   <label for="'.$proto.'noauth">' */
-/* .'<input type="checkbox" ' */
-/* .'id="'.$proto.'noauth" ' */
-/* .'name="'.$proto.'noauth" '.$checked.'/>' */
-/* .L::t('unauthorized').'</label> */
 }
 ?>
 <!-- GENERAL EMAIL STUFF -->
@@ -58,7 +50,6 @@ foreach (array('smtp', 'imap') as $proto) {
       <input id="button" type="button" value="<?php echo L::t('Change email password');?>" />
       <div class="statusmessage" id="changed"><?php echo L::t('The email password was changed');?></div>
       <div class="statusmessage" id="error"><?php echo L::t('Unable to change the email password');?></div>
-    </fieldset>
     </fieldset>
     <fieldset id="emailidentity"><legend><?php echo L::t('Bulk Sender Identity'); ?></legend>
     <input type="text" name="emailfromname" id="emailfromname" value="<?php echo $_['emailfromname']; ?>" placeholder="<?php echo L::t('Real Sender Name');?>" />

@@ -73,6 +73,10 @@ if (Config::encryptionKeyValid() &&
   foreach (array('user', 'password', 'fromname', 'fromaddress', 'testaddress', 'testmode') as $key) {
     $tmpl->assign('email'.$key, Config::getValue('email'.$key));
   }
+
+  $tmpl->assign('phpmyadmin', Config::getValue('phpmyadmin'));
+  $tmpl->assign('sourcecode', Config::getValue('sourcecode'));
+  $tmpl->assign('sourcedocs', Config::getValue('sourcedocs'));
 }
 
 $result = $tmpl->printPage();

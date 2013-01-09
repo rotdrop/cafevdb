@@ -460,13 +460,54 @@ if (isset($_POST['emailfromaddress'])) {
   return true;
 }
 
+$devlinks = array('phpmyadmin', 'sourcecode', 'sourcedocs');
+
+foreach ($devlinks as $link) {
+
+  if (isset($_POST[$link])) {
+    $value = $_POST[$link];
+
+    $value = $value;
+    Config::setValue($link, $value);    
+    OC_JSON::success(
+      array("data" => array(
+              'message' => L::t('Link for "%s" set to "%s".',
+                                array($link, $value)))));
+    return true;
+  }
+
+  if (isset($_POST['test'.$link])) {
+    $value = $_POST['test'.$link];
+
+    $target = Config::getSetting($link, false);
+    if ($target === false) {
+      OC_JSON::error(
+        array(
+          "data" => array(
+            "message" => L::t('Unable to test link for "%s" without a link target.',
+                              array($link)))));
+      return false;
+    } else {
+      OC_JSON::success(
+        array("data" => array(
+                'message' => L::t('New window or tab with "%s"?',
+                                  array($target)),
+                'link' => $link.'@'.Config::APP_NAME,
+                'target' => $target)));
+      return true;
+    }
+    return true;
+  }
+  
+}
+
 if (isset($_POST['error'])) {
   $value = $_POST['error'];
 
   OC_JSON::error(
     array(
       "data" => array(
-        "message" => L::t($value) )));
+        "message" => $value )));
   return false;
 }
 

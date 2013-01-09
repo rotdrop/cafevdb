@@ -629,6 +629,53 @@ $(document).ready(function() {
     return false;
   });
 
+  ///////////////////////////////////////////////////////////////////////////
+  //
+  // development settings, mostly link stuff
+  //
+  ///////////////////////////////////////////////////////////////////////////
+
+  $('input.devlink').blur(function(event) {
+    event.preventDefault();
+    $('div.statusmessage').hide();
+    $('span.statusmessage').hide();
+    $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
+           $(this),
+           function(data) {
+             if (data.status == "success") {
+	       $('#develsettings #msg').html(data.data.message);
+	       $('#develsettings #msg').show();
+               return true;
+             } else {
+	       $('#develsettings #msg').html(data.data.message);
+	       $('#develsettings #msg').show();
+               return false;
+             }
+	   }, 'json');
+    return false;
+  });
+
+  $('input.devlinktest').click(function (event) {
+    event.preventDefault();
+    $('div.statusmessage').hide();
+    $('span.statusmessage').hide();
+    $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
+           $(this),
+           function(data) {
+             if (data.status == "success") {
+	       $('#develsettings #msg').html(data.data.message);
+	       $('#develsettings #msg').show();
+               window.open(data.data.target, data.data.link);
+               return true;
+             } else {
+	       $('#develsettings #msg').html(data.data.message);
+	       $('#develsettings #msg').show();
+               return false;
+             }
+	   }, 'json');
+    return false;
+  });
+
 });
 
 // Local Variables: ***

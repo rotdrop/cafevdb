@@ -11,9 +11,10 @@ $debugtitle    = L::t("Show a certain amount of debug information, normally not 
 <ul>
   <li><a href="#tabs-1"><?php echo L::t('Personal Settings'); ?></a></li>
 <?php if ($_['adminsettings']) { ?>
-  <li><a href="#tabs-2"><?php echo L::t('Admin Settings'); ?></a></li>
-  <li><a href="#tabs-3"><?php echo L::t('Share Settings'); ?></a></li>
-  <li><a href="#tabs-4"><?php echo L::t('Email Settings'); ?></a></li>
+  <li><a href="#tabs-2"><?php echo L::t('Administration'); ?></a></li>
+  <li><a href="#tabs-3"><?php echo L::t('Sharing'); ?></a></li>
+  <li><a href="#tabs-4"><?php echo L::t('Email'); ?></a></li>
+  <li><a href="#tabs-5"><?php echo L::t('Development'); ?></a></li>
 <?php } ?>
 </ul>
 
@@ -49,4 +50,5 @@ $debugtitle    = L::t("Show a certain amount of debug information, normally not 
 <?php if ($_['adminsettings']) { echo $this->inc("app-settings"); } ?>
 <?php if ($_['adminsettings']) { echo $this->inc("share-settings"); } ?>
 <?php if ($_['adminsettings']) { echo $this->inc("email-settings"); } ?>
+<?php if ($_['adminsettings']) { echo $this->inc("devel-settings"); } ?>
 
