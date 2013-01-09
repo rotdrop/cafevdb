@@ -425,8 +425,11 @@ __EOT__;
     return self::eventButton($projectId, $projectName);
   }
 
-  public static function eventButton($projectId, $projectName, $value = L::t('Events'), $eventSelect = array())
+  public static function eventButton($projectId, $projectName, $value = false, $eventSelect = array())
   {
+    if ($value === false) {
+      $value = L::t('Events');
+    }
     $bvalue      = $value;
     // Code the value in the name attribute (for java-script)
     $bname       = "ProjectId=$projectId&ProjectName=".$projectName;
