@@ -58,7 +58,7 @@ foreach (array('smtp', 'imap') as $proto) {
     <label for="emailfromaddress"><?php echo L::t('From: address');?></label>
     </fieldset>
     <fieldset id="emailtest"><legend><?php echo L::t('Test Settings'); ?></legend>
-      <input type="button" name="emailtest" id="emailtestbutton" value="<?php echo L::t('Test Email Setup'); ?>" title="<?php echo L::t(Config::toolTips('emailtest')); ?>" />
+      <input type="button" name="emailtest" id="emailtestbutton" value="<?php echo L::t('Test Email Setup'); ?>" title="<?php echo Config::toolTips('emailtest'); ?>" />
       <input id="emailtestmode" type="checkbox" name="emailtestmode" <?php echo $_['emailtestmode'] == 'on' ? 'checked="checked"' : ''; ?> id="emailtestmode" title="<?php echo L::t('Email test-mode; send emails only to the email test-address.') ?>"/>
       <label for="emailtestmode" title="<?php echo L::t('Email test-mode; send emails only to the email test-address.') ?>"><?php echo L::t('Test-Mode') ?></label>
       <input <?php echo $_['emailtestmode'] == 'on' ? '' : 'disabled' ?> type="text" name="emailtestaddress" id="emailtestaddress" value="<?php echo $_['emailtestaddress']; ?>" placeholder="<?php echo L::t('Test Email Adress');?>" />

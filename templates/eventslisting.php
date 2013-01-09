@@ -48,7 +48,7 @@ __EOT__;
         <input class="$tag" id="$tag-$evtId" type="button" name="$tag" title="$title" value="$evtId" />
 __EOT__;
     }
-    $title = L::t(Config::toolTips('projectevents-selectevent'));
+    $title = Config::toolTips('projectevents-selectevent');
     $checked = isset($_['Selected'][$evtId]) ? 'checked' : '';
     echo <<<__EOT__
       </td>

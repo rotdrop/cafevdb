@@ -20,13 +20,13 @@ $debugtitle    = L::t("Show a certain amount of debug information, normally not 
 <div id="tabs-1" class="personalblock <?php if ($_['adminsettings']) echo 'admin'; ?>">
   <form id="cafevdb">
     <input id="tooltips" type="checkbox" name="tooltips" <?php echo $_['tooltips'] == 'on' ? 'checked="checked"' : ''; ?> id="tooltips" title="<?php echo $tooltipstitle ?>"/>
-    <label for="tooltips" title="<?php echo L::t($tooltipstitle) ?>"><?php echo L::t('Tool-Tips') ?></label>
+    <label for="tooltips" title="<?php echo $tooltipstitle; ?>"><?php echo L::t('Tool-Tips') ?></label>
     <br />
     <input id="expertmode" type="checkbox" name="expertmode" <?php echo $_['expertmode'] == 'on' ? 'checked="checked"' : ''; ?> id="expertmode" title="<?php echo $experttitle ?>"/>
-    <label for="expertmode" title="<?php echo L::t($experttitle) ?>"><?php echo L::t('Expert-Mode') ?></label>
+    <label for="expertmode" title="<?php echo $experttitle; ?>"><?php echo L::t('Expert-Mode') ?></label>
     <br />
     <input id="debugmode" type="checkbox" name="debugmode" <?php echo $_['debugmode'] == 'on' ? 'checked="checked"' : ''; ?> id="debugmode" title="<?php echo $debugtitle ?>"/>
-    <label for="debugmode" title="<?php echo L::t($experttitle) ?>"><?php echo L::t('Debug-Mode') ?></label>
+    <label for="debugmode" title="<?php echo $experttitle; ?>"><?php echo L::t('Debug-Mode') ?></label>
     <br />
     <label for="exampletext" title="<?php echo L::t('Example Text') ?>"><?php echo L::t('Example') ?></label>
     <input type="text" name="exampletext" id="exampletext"

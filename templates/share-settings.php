@@ -7,7 +7,7 @@
     <form id="shareowner">
       <input type="hidden" id="user-saved" name="shareowner-saved" value="<?php echo $_['shareowner']; ?>" />
       <input <?php echo $_['shareowner'] != '' ? 'disabled="disabled"' : ''; ?> type="text" id="user" name="shareowner" placeholder="<?php echo L::t('shareowner');?>" value="<?php echo $_['shareowner']; ?>" />
-      <label for="shareowner-force" title="<?php echo L::t(Config::toolTips('shareowner-force')); ?>" ><input type="checkbox" id="shareowner-force" name="shareowner-force" /><?php echo L::t('force');?></label>
+      <label for="shareowner-force" title="<?php echo Config::toolTips('shareowner-force'); ?>" ><input type="checkbox" id="shareowner-force" name="shareowner-force" /><?php echo L::t('force');?></label>
       <input name="shareownercheck" id="check" type="button" value="<?php echo L::t('Check');?>" />
     </form>
 <!-- CHANGE ITS PASSWORD -->
