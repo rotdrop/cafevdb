@@ -14,6 +14,14 @@
       <input type="button" class="devlinktest" id="testsourcedocs" name="testsourcedocs" value="<?php echo L::t('Test Link'); ?>" title="<?php Config::toolTips('test-linktarget'); ?>"  />
       <input type="text" class="devlink" id="sourcedocs" name="sourcedocs" placeholder="<?php echo L::t('Link to the source-code documentation'); ?>" value="<?php echo $_['sourcedocs']; ?>" title="<?php Config::toolTips('sourcedocs-link'); ?>"/>
       <label for="phpmyadmin"><?php echo L::t('Link to the source-code documentation'); ?></label>
+      <br/>
+      <input type="button" class="devlinktest" id="testownclouddev" name="testownclouddev" value="<?php echo L::t('Test Link'); ?>" title="<?php Config::toolTips('test-linktarget'); ?>"  />
+      <input type="text" class="devlink" id="ownclouddev"
+         name="ownclouddev"
+         placeholder="<?php echo L::t('Link to Owncloud Developer Information'); ?>"
+         value="<?php echo $_['ownclouddev']; ?>"
+         title="<?php Config::toolTips('ownclouddev-link'); ?>"/>
+      <label for="phpmyadmin"><?php echo L::t('Owncloud developer documentation'); ?></label>
     </fieldset>
     <div class="statusmessage" id="msg"></span>  
   </form>

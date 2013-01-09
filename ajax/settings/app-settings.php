@@ -460,7 +460,7 @@ if (isset($_POST['emailfromaddress'])) {
   return true;
 }
 
-$devlinks = array('phpmyadmin', 'sourcecode', 'sourcedocs');
+$devlinks = array('phpmyadmin', 'sourcecode', 'sourcedocs', 'ownclouddev');
 
 foreach ($devlinks as $link) {
 

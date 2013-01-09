@@ -1,6 +1,7 @@
 <?php
 
 use CAFEVDB\L;
+use CAFEVDB\Util;
 use CAFEVDB\Config;
 
 // Check if we are a user and the needed apps are enabled.
@@ -26,15 +27,23 @@ $debugmode   = OCP\Config::getUserValue($user, 'cafevdb', 'debugmode','');
 $exampletext = OCP\Config::getUserValue($user, 'cafevdb', 'exampletext','');
 $encrkey     = Config::getEncryptionKey();
 
-$jsscript = 'var toolTips = '.($tooltips == 'on' ? 'true' : 'false').';
-';
+Util::addInlineScript('var toolTips = '.($tooltips == 'on' ? 'true' : 'false'));
+Util::addInlineScript(<<<__EOT__
+$(document).ready(function(){
+  if (toolTips) {
+    $.fn.tipsy.enable();
+  } else {
+    $.fn.tipsy.disable();
+  }
+});
+__EOT__
+);
 
 $tmpl->assign('debugmode', $debugmode);
 $tmpl->assign('expertmode', $expertmode);
 $tmpl->assign('tooltips', $tooltips);
 $tmpl->assign('encryptionkey', $encrkey);
 $tmpl->assign('exampletext', $exampletext);
-$tmpl->assign('jsscript', $jsscript);
 $tmpl->assign('adminsettings', false);
 
 OCP\Util::addStyle('cafevdb', 'cafevdb');
@@ -74,9 +83,13 @@ if (Config::encryptionKeyValid() &&
     $tmpl->assign('email'.$key, Config::getValue('email'.$key));
   }
 
-  $tmpl->assign('phpmyadmin', Config::getValue('phpmyadmin'));
-  $tmpl->assign('sourcecode', Config::getValue('sourcecode'));
-  $tmpl->assign('sourcedocs', Config::getValue('sourcedocs'));
+  $links = array('phpmyadmin',
+                 'sourcecode',
+                 'sourcedocs',
+                 'ownclouddev');
+  foreach ($links as $link) {
+    $tmpl->assign($link, Config::getValue($link));
+  }
 }
 
 $result = $tmpl->printPage();

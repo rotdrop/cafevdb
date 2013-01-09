@@ -26,8 +26,8 @@ $encrkey    = Config::getEncryptionKey();
 
 $headervisibility = Util::cgiValue('headervisibility', 'expanded');
 
-Util::addInlineScript('var toolTips = '.($tooltips == 'on' ? 'true' : 'false'));
 Util::addInlineScript("CAFEVDB.headervisibility = '$headervisibility';");
+Util::addInlineScript('var toolTips = '.($tooltips == 'on' ? 'true' : 'false'));
 Util::addInlineScript(<<<__EOT__
 $(document).ready(function(){
   if (toolTips) {
@@ -54,11 +54,10 @@ OCP\Util::addScript('cafevdb', 'transpose');
 OCP\Util::addScript('cafevdb', 'pme-helper');
 OCP\Util::addScript('cafevdb', 'email');
 OCP\Util::addScript('cafevdb', 'events');
-/* OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/jscripts/tiny_mce/tiny_mce'); */
-/* OCP\Util::addScript('cafevdb/3rdparty', 'tinymceinit'); */
+OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/jscripts/tiny_mce/tiny_mce');
+OCP\Util::addScript('cafevdb/3rdparty', 'tinymceinit');
 OCP\Util::addscript("cafevdb/3rdparty", "chosen/chosen.jquery.min");
 //OCP\Util::addscript("3rdparty", "chosen/chosen.jquery.min");
-
 
 /* Special hack to determine if the email-form was requested through the pme-miscinfo button. */
 $op = Util::cgiValue('PME_sys_operation');

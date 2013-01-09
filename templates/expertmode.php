@@ -1,12 +1,9 @@
-<script type="text/javascript">
-  <?php echo $_['jsscript']; ?>
-</script>
 <?php
 
 use CAFEVDB\L;
 use CAFEVDB\Config;
+use CAFEVDB\Util;
 use CAFEVDB\Navigation;
-Config::init();
 
 $buttons = array();
 $buttons['pre'] = '<div>';
@@ -38,6 +35,7 @@ $buttons['example'] =
         'id' => 'example',
         'class' => 'operations example button');
 ?>
+<?php echo Util::emitInlineScripts(); ?>
 <div id="expertmode">
   <fieldset id="expertmode" class="operations expert"><legend><?php echo L::t('Predefined data-base operations'); ?></legend>
   <?php echo Navigation::button($buttons); ?>
@@ -52,16 +50,24 @@ $buttons['example'] =
 <div class="msg"><span style="opacity:0.5"><?php echo L::t('empty') ?></span></div>
   </fieldset>
   <fieldset id="expertlinks" class="operations expert links"><legend><?php echo L::t('Links'); ?></legend>
-  <input type="button" value="<?php echo L::t('Open phpmyadmin'); ?>" onclick="return window.open('<?php echo Config::$opts['phpmyadmin']; ?>','<?php echo Config::APP_NAME.'@phpmyadmin'; ?>');" title="<?php echo L::t('Open the login-window to the data-base back-bone. Although this is ``expert mode\'\' you will fall in love with the ``export\'\' facilities of the data-base back-bone. TRY IT OUT! DO IT!'); ?>"/>
-  <br/>
   <input type="button"
-    value="<?php echo L::t('Source-Code Documentation'); ?>"
-    onclick="return window.open('<?php echo Config::$opts['sourcedocs']; ?>','Doxygen@<?php echo Config::APP_NAME; ?>');" 
-    title="<?php echo L::t('Internal documentation of the ``CAFEV-App\'\', mostly useful for web-developers.'); ?>"/>
+    value="<?php echo L::t('Open phpmyadmin'); ?>"
+    onclick="return window.open('<?php echo $_['phpmyadmin']; ?>','<?php echo Config::APP_NAME.'@phpmyadmin'; ?>');"
+    title="<?php echo L::t('Open the login-window to the data-base back-bone. Although this is ``expert mode\'\' you will fall in love with the ``export\'\' facilities of the data-base back-bone. TRY IT OUT! DO IT!'); ?>"/>
   <br/>
   <input type="button"
     value="<?php echo L::t('Source-Code Archive'); ?>"
-    onclick="return window.open('<?php echo Config::$opts['sourcecode']; ?>','GIT@<?php echo Config::APP_NAME; ?>');"
+    onclick="return window.open('<?php echo $_['sourcecode']; ?>','GIT@<?php echo Config::APP_NAME; ?>');"
     title="<?php echo L::t('View the git-repository holding all revision of this entire mess. Mostly useful for web-developers.'); ?>" />
+  <br/>
+  <input type="button"
+    value="<?php echo L::t('Source-Code Documentation'); ?>"
+    onclick="return window.open('<?php echo $_['sourcedocs']; ?>','Doxygen@<?php echo Config::APP_NAME; ?>');" 
+    title="<?php echo L::t('Internal documentation of the ``CAFEV-App\'\', mostly useful for web-developers.'); ?>"/>
+  <br/>
+  <input type="button"
+    value="<?php echo L::t('Owncloud Developer Documentation'); ?>"
+    onclick="return window.open('<?php echo $_['ownclouddev']; ?>','Doxygen@<?php echo Config::APP_NAME; ?>');" 
+    title="<?php echo L::t('Owncloud Developer Manual, mostly useful for web-developers.'); ?>"/>
   </fieldset>
 </div>

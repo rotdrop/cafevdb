@@ -1,13 +1,12 @@
-<?php use CAFEVDB\L; ?>
-<script type="text/javascript">
-  <?php echo $_['jsscript']; ?>
-</script>
 <?php
+use CAFEVDB\L;
+use CAFEVDB\Util;
+
 $tooltipstitle = L::t("Control the display of tooltips. Warning: this works globally for all OwnCloud applications.");
 $experttitle   = L::t("Show a second button which leads to a dialog with ``advanced'' settings");
 $debugtitle    = L::t("Show a certain amount of debug information, normally not needed.");
 ?>
-
+<?php echo Util::emitInlineScripts(); ?>
 <ul>
   <li><a href="#tabs-1"><?php echo L::t('Personal Settings'); ?></a></li>
 <?php if ($_['adminsettings']) { ?>
