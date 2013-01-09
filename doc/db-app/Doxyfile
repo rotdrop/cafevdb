@@ -45,14 +45,14 @@ PROJECT_BRIEF          = "Database application to ease the management of a proje
 # exceed 55 pixels and the maximum width should not exceed 200 pixels. 
 # Doxygen will copy the logo to the output directory.
 
-PROJECT_LOGO           = /var/www/localhost/htdocs/owncloud/apps/cafevdb/img/logo128x128.png
+PROJECT_LOGO           = /var/www/localhost/htdocs/owncloud-git/apps/cafevdb/img/logo128x128.png
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) 
 # base path where the generated documentation will be put. 
 # If a relative path is entered, it will be relative to the location 
 # where doxygen was started. If left blank the current directory will be used.
 
-OUTPUT_DIRECTORY       = /var/www/localhost/htdocs/owncloud/apps/cafevdb/doc/db-app
+OUTPUT_DIRECTORY       = /var/www/localhost/htdocs/owncloud-git/apps/cafevdb/doc/db-app
 
 # If the CREATE_SUBDIRS tag is set to YES, then doxygen will create 
 # 4096 sub-directories (in 2 levels) under the output directory of each output 
@@ -796,7 +796,7 @@ EXAMPLE_RECURSIVE      = NO
 # directories that contain image that are included in the documentation (see 
 # the \image command).
 
-IMAGE_PATH             = /var/www/localhost/htdocs/owncloud/apps/cafevdb/img
+IMAGE_PATH             = /var/www/localhost/htdocs/owncloud-git/apps/cafevdb/img
 
 # The INPUT_FILTER tag can be used to specify a program that doxygen should 
 # invoke to filter for each input file. Doxygen will invoke the filter program 
@@ -941,13 +941,13 @@ HTML_FILE_EXTENSION    = .html
 # have to redo this when upgrading to a newer version of doxygen or when 
 # changing the value of configuration settings such as GENERATE_TREEVIEW!
 
-HTML_HEADER            = /var/www/localhost/htdocs/owncloud/apps/cafevdb/doc/db-app/header.html
+HTML_HEADER            = /var/www/localhost/htdocs/owncloud-git/apps/cafevdb/doc/db-app/header.html
 
 # The HTML_FOOTER tag can be used to specify a personal HTML footer for 
 # each generated HTML page. If it is left blank doxygen will generate a 
 # standard footer.
 
-HTML_FOOTER            = /var/www/localhost/htdocs/owncloud/apps/cafevdb/doc/db-app/footer.html
+HTML_FOOTER            = /var/www/localhost/htdocs/owncloud-git/apps/cafevdb/doc/db-app/footer.html
 
 # The HTML_STYLESHEET tag can be used to specify a user-defined cascading 
 # style sheet that is used by each HTML page. It can be used to 
@@ -956,7 +956,7 @@ HTML_FOOTER            = /var/www/localhost/htdocs/owncloud/apps/cafevdb/doc/db-
 # HTML_EXTRA_STYLESHEET instead of this one, as it is more robust and this 
 # tag will in the future become obsolete.
 
-HTML_STYLESHEET        = /var/www/localhost/htdocs/owncloud/apps/cafevdb/doc/db-app/stylesheet.css
+HTML_STYLESHEET        = /var/www/localhost/htdocs/owncloud-git/apps/cafevdb/doc/db-app/stylesheet.css
 
 # The HTML_EXTRA_STYLESHEET tag can be used to specify an additional 
 # user-defined cascading style sheet that is included after the standard 
