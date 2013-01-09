@@ -11,7 +11,7 @@ OCP\JSON::checkAppEnabled(Config::APP_NAME);
 OCP\JSON::callCheck();
 
 if (!isset($_GET['path'])) {
-  Ajax::bailOut(OC_Contacts_App::$l10n->t('No attachment path was submitted.'));
+  Ajax::bailOut(L::t('No attachment path was submitted.'));
 }
 
 $localpath = $_GET['path'];
