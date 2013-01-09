@@ -101,7 +101,8 @@ $(document).ready(function(){
     }
 
     if (exportscript == '') {
-      OC.dialogs.alert(t('cafevdb', 'Export to "'+selected+'" is not yet supported.'),
+      OC.dialogs.alert(t('cafevdb', 'Export to the following format is not yet supported:')
+                       +' "'+selected+'"',
                        t('cafevdb', 'Unimplemented'));
     } else {
 
@@ -140,6 +141,7 @@ $(document).ready(function(){
 
   //    $('button.settings').tipsy({gravity:'ne', fade:true});
   $('button.viewtoggle').tipsy({gravity:'ne', fade:true});
+  $('div.viewtoggle').tipsy({gravity:'se', fade:true});
   $('button').tipsy({gravity:'w', fade:true});
   $('select').tipsy({gravity:'w', fade:true});
   $('div.chzn-container').tipsy({gravity:'sw', fade:true});
