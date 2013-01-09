@@ -6,14 +6,16 @@ if(!OCP\User::isLoggedIn()) {
 OCP\JSON::checkAppEnabled('cafevdb');
 OCP\JSON::checkAppEnabled('calendar');
 
-CAFEVDB\Config::init();
 use CAFEVDB\L;
 use CAFEVDB\Config;
 use CAFEVDB\Events;
 use CAFEVDB\Util;
 
+Config::init();
+
 $debugmode = Config::getUserValue('debugmode', '') == 'on';
 $debugtext = $debugmode ? '<PRE>'.print_r($_POST, true).'</PRE>' : '';
+$msg = '';
 
 $projectId   = Util::cgiValue('ProjectId', -1);
 $projectName = Util::cgiValue('ProjectName', '');
