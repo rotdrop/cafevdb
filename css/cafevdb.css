@@ -133,6 +133,10 @@ select,input,option,button {
   background-color:SteelBlue;
 }
 
+input[type=button]:active, input[type=submit]:active {
+  background-color:SteelBlue;
+}
+
 /* input:hover,/\*select:hover,*\/option:hover,button:hover {   */
 /*   border-radius:4px; */
 /*   background-color:LightSteelBlue; */
