@@ -231,11 +231,11 @@ div.cafevdb-pme-body.collapsed { padding-top:10ex; }
 }
 
 #viewtoggle #viewtoggle-img, #viewtoggle.expanded #viewtoggle-img {
-  background:url('%webroot%/core/img/actions/upload.png') no-repeat center;
+  background:url('%webroot%/core/img/actions/upload.svg') no-repeat center;
 }
 
 #viewtoggle.collapsed #viewtoggle-img {
-  background:url('%webroot%/core/img/actions/download.png') no-repeat center;
+  background:url('%webroot%/core/img/actions/download.svg') no-repeat center;
 }
 
 div.cafevdb-pme-header-box button.viewtoggle:active {
