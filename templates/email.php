@@ -29,7 +29,7 @@ echo $this->inc('part.common.header',
 Email::display(OCP\USER::getUser());
 
 // Close some still opened divs
-echo $this->inc('part.common.footer', $css_pfx);
+echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
 
 ?>
 
