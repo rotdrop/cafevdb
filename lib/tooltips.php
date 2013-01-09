@@ -12,6 +12,8 @@ class Tooltips
   {
     return 
       array(
+        'emailtest' => L::t('Test the email-settings; try to connect to the SMTP-server and the IMAP-server in turn.'),
+        'test-linktarget' => L::t('Try to connect to the specified web-address, will open the web-address in another window or tab, depending your local browser preferences.'),
         'pme-export-csv' => L::t('Export in CSV-format using a semicolon as delimiter (Excel convention)'),
         'pme-export-html' => L::t('Export as HTML page without navigation elements; can also be loaded into your office-programs.'),
         'pme-export-excel' => L::t('Export as ``full-featured\'\' Excel-2007 table, ``.xslx\'\'.'),
