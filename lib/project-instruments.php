@@ -284,10 +284,10 @@ bitte bei den <A HREF="Projekte.php?PME_sys_rec='.$projectId.'&PME_sys_operation
 
     if ($transposed == 'Transposed' && $pme->list_operation()) {
       $doTranspose = 'true';
-      $pageitems = strval(L::t('#Spalten'));
+      $pageitems = strval(L::t('#columns'));
     } else {
       $doTranspose = 'false';
-      $pageitems = strval(L::t('#Zeilen'));
+      $pageitems = strval(L::t('#rows'));
     }
     echo <<<__EOT__
 <script type="text/javascript">
