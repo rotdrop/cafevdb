@@ -52,9 +52,7 @@ CAFEVDB.Email = {
     var totalSize=0;
     if (file.size > $('#max_upload').val()) {
       OC.dialogs.alert(t('cafevdb',
-                         'The file you are trying to upload exceed '
-                         +
-                         'the maximum size for file uploads on this server.'),
+                         'The file you are trying to upload exceeds the maximum size for file uploads on this server.'),
                        t('cafevdb', 'Error'));
       return;
     } else {
