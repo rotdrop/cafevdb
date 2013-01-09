@@ -1242,7 +1242,7 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
         $mail->AddReplyTo($strSenderEmail, $strSender);
         $mail->SetFrom($strSenderEmail, $strSender);
 
-        if (!self::constructionMode) {
+        if (!self::$constructionMode) {
           // Loop over all data-base records and add each recipient in turn
           foreach ($EMails as $recipient) {
             // Better not use AddAddress: we should not expose the
@@ -1534,7 +1534,7 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
         echo "<PRE>\n";
         $msg = $mail->GetSentMIMEMessage();
         $msgArray = explode("\n", $msg);
-        for ($i = 0; $i < 128; $i++) {
+        for ($i = 0; $i < 64; $i++) {
           echo htmlspecialchars($msgArray[$i])."\n";
         }
         echo "</PRE><HR/>\n";
