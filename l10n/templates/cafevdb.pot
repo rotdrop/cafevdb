@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-09 14:32+0100\n"
+"POT-Creation-Date: 2013-01-09 16:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -330,10 +330,10 @@ msgid "Do you really want to detach this event from the current project?"
 msgstr ""
 
 #: js/cafevdb.js:104
-msgid "Export to \""
+msgid "Export to the following format is not yet supported:"
 msgstr ""
 
-#: js/cafevdb.js:105
+#: js/cafevdb.js:106
 msgid "Unimplemented"
 msgstr ""
 
@@ -373,7 +373,7 @@ msgstr ""
 msgid "Not called from main email-form."
 msgstr ""
 
-#: js/email.js:7 js/email.js:45 js/email.js:58 js/email.js:66 js/email.js:79
+#: js/email.js:7 js/email.js:45 js/email.js:56 js/email.js:64 js/email.js:77
 msgid "Error"
 msgstr ""
 
@@ -382,10 +382,12 @@ msgid "No files selected for upload."
 msgstr ""
 
 #: js/email.js:55
-msgid "The file you are trying to upload exceed "
+msgid ""
+"The file you are trying to upload exceeds the maximum size for file uploads "
+"on this server."
 msgstr ""
 
-#: js/email.js:142
+#: js/email.js:140
 msgid "Select Attachment"
 msgstr ""
 
@@ -441,7 +443,7 @@ msgstr ""
 msgid "Musicians without Em@il"
 msgstr ""
 
-#: lib/email.php:1014 lib/projects.php:191 lib/projects.php:428
+#: lib/email.php:1014 lib/projects.php:191 lib/projects.php:431
 msgid "Events"
 msgstr ""
 
@@ -751,34 +753,46 @@ msgid "Transpose"
 msgstr ""
 
 #: lib/project-instruments.php:287
-msgid "#Spalten"
+msgid "#columns"
 msgstr ""
 
 #: lib/project-instruments.php:290
-msgid "#Zeilen"
+msgid "#rows"
 msgstr ""
 
 #: lib/tooltips.php:15
-msgid "Export in CSV-format using a semicolon as delimiter (Excel convention)"
+msgid ""
+"Test the email-settings; try to connect to the SMTP-server and the IMAP-"
+"server in turn."
 msgstr ""
 
 #: lib/tooltips.php:16
+msgid ""
+"Try to connect to the specified web-address, will open the web-address in "
+"another window or tab, depending your local browser preferences."
+msgstr ""
+
+#: lib/tooltips.php:17
+msgid "Export in CSV-format using a semicolon as delimiter (Excel convention)"
+msgstr ""
+
+#: lib/tooltips.php:18
 msgid ""
 "Export as HTML page without navigation elements; can also be loaded into "
 "your office-programs."
 msgstr ""
 
-#: lib/tooltips.php:17
+#: lib/tooltips.php:19
 msgid "Export as ``full-featured'' Excel-2007 table, ``.xslx''."
 msgstr ""
 
-#: lib/tooltips.php:18
+#: lib/tooltips.php:20
 msgid ""
 "Export as HTML page, but set the file type to ``spread-sheed''. Should also "
 "be readable by standard office-programs as ``Excel''-table."
 msgstr ""
 
-#: lib/tooltips.php:19
+#: lib/tooltips.php:21
 msgid ""
 "Export the visible part of the data-base to an office-format. The ``Excel''-"
 "export should produce useful input for either Libre- or OpenOffice or for "
@@ -786,41 +800,41 @@ msgid ""
 "USA."
 msgstr ""
 
-#: lib/tooltips.php:20
+#: lib/tooltips.php:22
 msgid ""
 "Choose a file to attach from the files stored remotely on in the OwnCloud "
 "storage area."
 msgstr ""
 
-#: lib/tooltips.php:21
+#: lib/tooltips.php:23
 msgid ""
 "Upload a file from your local computer as attachment. The file will be "
 "removed from the remote-system after the message has been sent."
 msgstr ""
 
-#: lib/tooltips.php:22
+#: lib/tooltips.php:24
 msgid ""
 "Add the instruments of the actually registered musicians to the instrument-"
 "table for the project."
 msgstr ""
 
-#: lib/tooltips.php:23
+#: lib/tooltips.php:25
 msgid ""
 "Add the musician to the project. A new form will open were details like the "
 "instrument etc. can be adjustetd."
 msgstr ""
 
-#: lib/tooltips.php:24
+#: lib/tooltips.php:26
 msgid ""
 "Transpose the displayed table; may be beneficial for tables with only a few "
 "rows but many columns!"
 msgstr ""
 
-#: lib/tooltips.php:25
+#: lib/tooltips.php:27
 msgid "Open a page with the musicians registered for the respective project."
 msgstr ""
 
-#: lib/tooltips.php:26
+#: lib/tooltips.php:28
 msgid ""
 "Open a dialog with all known\n"
 "events associated to the project.\n"
@@ -828,13 +842,13 @@ msgid ""
 "as needed."
 msgstr ""
 
-#: lib/tooltips.php:30
+#: lib/tooltips.php:32
 msgid ""
 "Recompute the link between projects and events, using the event-categories "
 "as primary key."
 msgstr ""
 
-#: lib/tooltips.php:31
+#: lib/tooltips.php:33
 msgid ""
 "Mark the respective event for being\n"
 "sent by email as ICS-attachment per email.\n"
@@ -844,53 +858,53 @@ msgid ""
 "recipients."
 msgstr ""
 
-#: lib/tooltips.php:37
+#: lib/tooltips.php:39
 msgid "Add a new concert-event to the project."
 msgstr ""
 
-#: lib/tooltips.php:38
+#: lib/tooltips.php:40
 msgid "Add a new rehearsal-event to the project."
 msgstr ""
 
-#: lib/tooltips.php:39
+#: lib/tooltips.php:41
 msgid "Add some other event to the project."
 msgstr ""
 
-#: lib/tooltips.php:41
+#: lib/tooltips.php:43
 msgid ""
 "Add a private management event which is not exposed to the rest of the world."
 msgstr ""
 
-#: lib/tooltips.php:43
+#: lib/tooltips.php:45
 msgid ""
 "Click to open an email-form\n"
 "and send the selected events to\n"
 "selected recipients."
 msgstr ""
 
-#: lib/tooltips.php:46
+#: lib/tooltips.php:48
 msgid ""
 "Select all events for\n"
 "email-submission"
 msgstr ""
 
-#: lib/tooltips.php:48
+#: lib/tooltips.php:50
 msgid ""
 "Exclude all events from\n"
 "email-submission"
 msgstr ""
 
-#: lib/tooltips.php:50
+#: lib/tooltips.php:52
 msgid "Modify the event."
 msgstr ""
 
-#: lib/tooltips.php:51
+#: lib/tooltips.php:53
 msgid ""
 "Delete the event from the system\n"
 "(no undo possible)."
 msgstr ""
 
-#: lib/tooltips.php:53
+#: lib/tooltips.php:55
 msgid ""
 "Detach the respective event\n"
 "from the project, but do not\n"
@@ -900,18 +914,18 @@ msgid ""
 "categories."
 msgstr ""
 
-#: lib/tooltips.php:60
+#: lib/tooltips.php:62
 msgid ""
 "  Klick mich, um das Sortieren\n"
 "nach diesem Feld ein-\n"
 "oder auszuschalten!"
 msgstr ""
 
-#: lib/tooltips.php:64
+#: lib/tooltips.php:66
 msgid "  Klick mich, um die Sortierreihenfolge umzukehren!"
 msgstr ""
 
-#: lib/tooltips.php:66
+#: lib/tooltips.php:68
 msgid ""
 "  Klick mich, um eine Em@il an die ausgewählten\n"
 "Musiker zu versenden. Auf der folgenden Seite kann\n"
@@ -923,7 +937,7 @@ msgid ""
 "entsprechen."
 msgstr ""
 
-#: lib/tooltips.php:75
+#: lib/tooltips.php:77
 msgid ""
 "  Klick mich, um alle gerade\n"
 "angezeigten Musiker zu der\n"
@@ -935,39 +949,39 @@ msgid ""
 "entsprechen."
 msgstr ""
 
-#: lib/tooltips.php:84
+#: lib/tooltips.php:86
 msgid ""
 "  Klick mich, um alle gerade\n"
 "angezeigten Musiker von der\n"
 "Em@il-Auswahl zu entfernen"
 msgstr ""
 
-#: lib/tooltips.php:88
+#: lib/tooltips.php:90
 msgid ""
 "  Klick mich, um die\n"
 "Sortierreihenfolge auf die\n"
 "Voreinstellung zurückzusetzen."
 msgstr ""
 
-#: lib/tooltips.php:91
+#: lib/tooltips.php:93
 msgid ""
 "  Klick mich, um den\n"
 "aktuellen Filter zu löschen."
 msgstr ""
 
-#: lib/tooltips.php:94
+#: lib/tooltips.php:96
 msgid ""
 "  Klick mich, um die\n"
 "Suchkriterien zu verstecken."
 msgstr ""
 
-#: lib/tooltips.php:97
+#: lib/tooltips.php:99
 msgid ""
 "  Klick mich, um die\n"
 "Suchkriterien anzuzeigen."
 msgstr ""
 
-#: lib/tooltips.php:100
+#: lib/tooltips.php:102
 #, php-format
 msgid ""
 "  Klick mich, um die\n"
@@ -976,7 +990,7 @@ msgid ""
 "Als Platzhalter verwendet man \"%%\"."
 msgstr ""
 
-#: lib/tooltips.php:105
+#: lib/tooltips.php:107
 #, php-format
 msgid ""
 "  Feld für Suchkriterien.\n"
@@ -985,18 +999,18 @@ msgid ""
 "eine Auswahlbox mit Vergleichsoperationen."
 msgstr ""
 
-#: lib/tooltips.php:110
+#: lib/tooltips.php:112
 msgid ""
 "  Click mich, um mich\n"
 "Deinem Massenmail-Vorhaben\n"
 "hinzuzufügen. Schäme Dich!"
 msgstr ""
 
-#: lib/tooltips.php:114
+#: lib/tooltips.php:116
 msgid "Einzelnen Datensatz anzeigen"
 msgstr ""
 
-#: lib/tooltips.php:115
+#: lib/tooltips.php:117
 msgid ""
 "Einzelnen Datensatz anzeigen,\n"
 "zeigt ein neues Formular mit\n"
@@ -1004,7 +1018,7 @@ msgid ""
 "und Abbruchmöglichkeit."
 msgstr ""
 
-#: lib/tooltips.php:119
+#: lib/tooltips.php:121
 msgid ""
 "Einzelnen Datensatz kopieren,\n"
 "zeigt ein neues Formular mit\n"
@@ -1012,7 +1026,7 @@ msgid ""
 "und Abbruchmöglichkeit."
 msgstr ""
 
-#: lib/tooltips.php:123
+#: lib/tooltips.php:125
 msgid ""
 "Einzelnen Datensatz löschen,\n"
 "zeigt den aktuellen Datensatz zunächst an.\n"
@@ -1021,7 +1035,7 @@ msgid ""
 "VORSICHT!."
 msgstr ""
 
-#: lib/tooltips.php:128
+#: lib/tooltips.php:130
 msgid ""
 "  Adressaten in potentielle\n"
 "Massenmail Adressliste aufnehmen.\n"
@@ -1031,7 +1045,7 @@ msgid ""
 "Think thrice about it."
 msgstr ""
 
-#: lib/tooltips.php:136
+#: lib/tooltips.php:138
 msgid "nothing"
 msgstr ""
 
@@ -1047,7 +1061,7 @@ msgstr ""
 #: lib/triggers/instrumentation-change-instrument.TUB.inc.php:71
 #, php-format
 msgid ""
-"This will also add \"%s\" to $s's list of known instruments. Unfortunately, "
+"This will also add \"%s\" to %s's list of known instruments. Unfortunately, "
 "all your other changes will be discarded. You may want to try the \"Back\"-"
 "Button of your browser."
 msgstr ""
@@ -1178,33 +1192,33 @@ msgstr ""
 msgid "Edit an event"
 msgstr ""
 
-#: templates/devel-settings.php:5 templates/expertmode.php:53
+#: templates/devel-settings.php:8 templates/expertmode.php:53
 msgid "Links"
 msgstr ""
 
-#: templates/devel-settings.php:6 templates/devel-settings.php:10
-#: templates/devel-settings.php:14 templates/devel-settings.php:18
+#: templates/devel-settings.php:9 templates/devel-settings.php:13
+#: templates/devel-settings.php:17 templates/devel-settings.php:21
 msgid "Test Link"
 msgstr ""
 
-#: templates/devel-settings.php:7 templates/devel-settings.php:8
+#: templates/devel-settings.php:10 templates/devel-settings.php:11
 #, php-format
 msgid "Link to %s"
 msgstr ""
 
-#: templates/devel-settings.php:11 templates/devel-settings.php:12
+#: templates/devel-settings.php:14 templates/devel-settings.php:15
 msgid "Link to the source-code"
 msgstr ""
 
-#: templates/devel-settings.php:15 templates/devel-settings.php:16
+#: templates/devel-settings.php:18 templates/devel-settings.php:19
 msgid "Link to the source-code documentation"
 msgstr ""
 
-#: templates/devel-settings.php:21
+#: templates/devel-settings.php:24
 msgid "Link to Owncloud Developer Information"
 msgstr ""
 
-#: templates/devel-settings.php:24
+#: templates/devel-settings.php:27
 msgid "Owncloud developer documentation"
 msgstr ""
 

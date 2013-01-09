@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#! /usr/bin/perl
 use strict;
 use Locale::PO;
 use Cwd;
@@ -159,7 +159,7 @@ elsif( $task eq 'write' ){
 			next if $#strings == -1; # Skip empty files
 
 			# Write PHP file
-			open( OUT, ">$language.php.new" );
+			open( OUT, ">$language.php" );
 			print OUT "<?php \$TRANSLATIONS = array(\n";
 			print OUT join( ",\n", @strings );
 			print OUT "\n);\n";
