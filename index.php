@@ -13,10 +13,18 @@ Config::init();
 $group = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
 $user  = OCP\USER::getUser();
 
-
 if (!OC_Group::inGroup($user, $group)) {
   $tmpl = new OCP\Template( 'cafevdb', 'not-a-member', 'user' );
   return $tmpl->printPage();
+}
+
+if (false) {
+echo '<PRE>';
+foreach(OC_Files::getdirectorycontent( '/Shared' ) as $i ){
+  print_r($i);
+}
+echo '</PRE>';
+exit;
 }
 
 $expertmode = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb', 'expertmode','');
@@ -54,8 +62,8 @@ OCP\Util::addScript('cafevdb', 'transpose');
 OCP\Util::addScript('cafevdb', 'pme-helper');
 OCP\Util::addScript('cafevdb', 'email');
 OCP\Util::addScript('cafevdb', 'events');
-OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/jscripts/tiny_mce/tiny_mce');
-OCP\Util::addScript('cafevdb/3rdparty', 'tinymceinit');
+//OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/jscripts/tiny_mce/tiny_mce');
+//OCP\Util::addScript('cafevdb/3rdparty', 'tinymceinit');
 OCP\Util::addscript("cafevdb/3rdparty", "chosen/chosen.jquery.min");
 //OCP\Util::addscript("3rdparty", "chosen/chosen.jquery.min");
 
