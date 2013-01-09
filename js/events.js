@@ -17,11 +17,9 @@ window.Events={
         $('#dialog_holder').html(data.data.contents);
         window.Events.projectId = data.data.projectId;
         window.Events.projectName = data.data.projectName;
-      } else {
-        $('#dialog_holder').html('<div id="events"><div id="debug"></div</div>');
       }
-      $('#events #debug').html(data.data.debug);
-      $('#events #debug').show();
+      $('div.debug').html(data.data.debug);
+      $('div.debug').show();
 
       var popup = $('#events').dialog({
         position: { my: "left top",
