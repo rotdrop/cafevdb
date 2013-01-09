@@ -290,7 +290,7 @@ $(document).ready(function() {
 	   });
   })
 
-  // Share-owner's password
+  // Share-owner´s password
   // 'show password' checkbox
   $('#sharingpassword #password').showPassword();
   $('#sharingpassword #change').click(function(event) {

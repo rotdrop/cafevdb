@@ -42,7 +42,7 @@ foreach ($_['EventMatrix'] as $key => $eventGroup) {
 __EOT__;
     foreach ($evtButtons as $btn => $values) {
       $tag   = $values['tag'];
-      $title = L::t($values['title']);
+      $title = $values['title'];
       $name  = $tag."[$evtId]";
       echo <<<__EOT__
         <input class="$tag" id="$tag-$evtId" type="button" name="$tag" title="$title" value="$evtId" />

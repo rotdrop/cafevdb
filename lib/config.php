@@ -47,6 +47,7 @@ ownclouddev';
   const MD5_SUF  = '::MD5';
   const MD5_LEN  = 5;
   const DFLT_CALS = 'concerts,rehearsals,other,management';
+// L::t('concerts') L::t('rehearsals') L::t('other') L::t('management')
   const APP_BASE  = 'apps/cafevdb/';
   public static $prefix = false;
   public static $triggers = false;

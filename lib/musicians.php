@@ -185,7 +185,7 @@ __EOT__;
     */
 
     $bval = strval(L::t('Add to'));
-    $tip  = strval(L::t(Config::toolTips('register-musician')));
+    $tip  = strval(Config::toolTips('register-musician'));
     if ($this->projectMode) {
       $opts['fdd']['Hinzufuegen'] = array(
         'name' => 'Hinzuf&uuml;gen',

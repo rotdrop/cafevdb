@@ -10,28 +10,28 @@ $buttons['pre'] = '<div>';
 $buttons['post'] = '</div>';
 $buttons['between'] = '</div><div>';
 $buttons['syncevents'] =
-  array('name' => 'Synchronize Events',
+  array('name' => L::t('Synchronize Events'),
         'title' => Config::toolTips('syncevents'),
         'id' => 'syncevents',
         'class' => 'operations expert button');
 $buttons['makeviews'] =
-  array('name' => 'Recreate all Views',
-        'title' => 'Recreate the ``Detailed Instrumentation\'\' hybrid-table for each project',
+  array('name' => L::t('Recreate all Views'),
+        'title' => L::t('Recreate the ``Detailed Instrumentation\'\' hybrid-table for each project'),
         'id' => 'makeviews',
         'class' => 'operations expert button');
 $buttons['check'] =
-  array('name' => 'Check Instruments',
-        'title' => 'Check whether the instrumentation numbers table and the musicians table mention the same instruments',
+  array('name' => L::t('Check Instruments'),
+        'title' => L::t('Check whether the instrumentation numbers table and the musicians table mention the same instruments'),
         'id' => 'checkinstruments',
         'class' => 'operations expert button');
 $buttons['sanitize'] =
-  array('name' => 'Adjust Instruments',
-        'title' => 'Make sure the instruments table contains at least any instrument played by any musician.',
+  array('name' => L::t('Adjust Instruments'),
+        'title' => L::t('Make sure the instruments table contains at least any instrument played by any musician.'),
         'id' => 'adjustinstruments',
         'class' => 'operations expert button');
 $buttons['example'] =
-  array('name' => 'Example',
-        'title' => 'Example Do-Nothing Button',
+  array('name' => L::t('Example'),
+        'title' => L::t('Example Do-Nothing Button'),
         'id' => 'example',
         'class' => 'operations example button');
 ?>
@@ -41,11 +41,12 @@ $buttons['example'] =
   <?php echo Navigation::button($buttons); ?>
   <label for="" class="bold"><?php echo L::t('Operation generated Response');?></label>
 <?php
-  echo Navigation::button(array('only' =>
-                                        array('name' => 'Clear Output',
-                                              'id' => 'clearoutput',
-                                              'title' => 'Remove output, if any is present.',
-                                              'class' => 'operations expert button')));
+  echo Navigation::button(
+    array('only' =>
+          array('name' => L::t('Clear Output'),
+                'id' => 'clearoutput',
+                'title' => L::t('Remove output, if any is present.'),
+                'class' => 'operations expert button')));
 ?>
 <div class="msg"><span style="opacity:0.5"><?php echo L::t('empty') ?></span></div>
   </fieldset>

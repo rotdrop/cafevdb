@@ -1,0 +1,679 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: cafevdb\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-01-09 12:36+0100\n"
+"PO-Revision-Date: 2013-01-09 12:44+0100\n"
+"Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
+"Language-Team: German\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+
+#:
+msgid "yes"
+msgstr "ja"
+
+#:
+msgid "true"
+msgstr "wahr"
+
+#:
+msgid "no"
+msgstr "nein"
+
+#:
+msgid "false"
+msgstr "falsch"
+
+#:
+msgid "Export Table"
+msgstr "Tabelle Exportieren"
+
+#:
+msgid "Attached Events"
+msgstr "Angehängte Termine"
+
+#:
+msgid "Choose a file to attach from the files stored remotely on in the OwnCloud storage area."
+msgstr "Ein Attachment aus dem Owncloud-Datei-System auswählen."
+
+#:
+msgid "Upload a file from your local computer as attachment. The file will be removed from the remote-system after the message has been sent."
+msgstr "Eine Datei als Attachment hochladen. Die Datei wird vom Server gelöscht, sobald die Nachricht versendet wurde."
+
+#:
+msgid "Message has been sent, at least: no error from our side!"
+msgstr "Nachricht wurde versendet; bzw.: das Web-Skript hat keinen Fehler bemerkt"
+
+#:
+msgid "Message has been sent"
+msgstr "Nachricht wurde versendet"
+
+#:
+msgid "Tied to"
+msgstr "Vorgegeben:"
+
+#:
+msgid "Subject"
+msgstr "Betreff"
+
+#:
+msgid "Recipients"
+msgstr "Adressaten"
+
+#:
+msgid "Message-Body"
+msgstr "Nachricht"
+
+#:
+msgid "Sender-Name"
+msgstr "Absender-Name"
+
+#:
+msgid "Sender-Email"
+msgstr "Absender-Email"
+
+#:
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#:
+msgid "Send Em@il"
+msgstr "Em@il verschicken"
+
+#:
+msgid "Edit recipients"
+msgstr "Adressen bearbeiten"
+
+#:
+msgid "Determined automatically from data-base, see below the email form."
+msgstr "Siehe unterhalb des Formulars. Auswahl über \"Adressen bearbeiten\"-Knopf abändern."
+
+#:
+msgid "Upload new File"
+msgstr "Datei hochladen"
+
+#:
+msgid "Select from Owncloud"
+msgstr "Datei aus der \"Cloud\""
+
+#:
+msgid "Add Attachment"
+msgstr "Anhang hinzufügen"
+
+#:
+msgid "Remove"
+msgstr "Entfernen"
+
+#:
+msgid "Caught an exception"
+msgstr "Fehler"
+
+#:
+msgid "The email-backend throwed an exception stating:<br/>"
+msgstr "Fehler beim Generieren der Nachricht:<br/>"
+
+#:
+msgid "Please correct the problem and then click on the \"Send\"-button again."
+msgstr "Bitte korrigieren und dann den \"Send\"-Button noch einmal anklicken."
+
+#:
+msgid "Duplicate Email"
+msgstr "Email Duplikat"
+
+#:
+msgid "A message with exactly the same text to exactly the same recipients has already been sent on the following date(s):<br/>%s<br/>Refusing to send duplicate bulk emails."
+msgstr "Eine Nachricht mit <b>genau</b> dem gleichen Inhalt zu genau den selben Empfängern wurde bereits zu folgenden Zeitpunkten gesendet:</br>%s<br/>Duplikate von Massen-Mails werden nicht versendet!!!"
+
+#:
+msgid "Invalid Email Address"
+msgstr "Ungültige Em@il Adresse"
+
+#:
+msgid "The %s address \"%s\" seems to be invalid.<br/>Please correct that first and then click on the \"Send\"-button again."
+msgstr "Die %s-Adresse \"%s\" scheint ein ungültiges Format zu haben.</br>Bitte korrigieren und dann den \"Send\"-Button noch einmal anklicken."
+
+#:
+msgid "The attachment \"%s\" seems to be invalid.<br/>Please correct that first and then click on the \"Send\"-button again."
+msgstr "Das Anhang \"%s\" scheint unbrauchbar zu sein.<br/>Bitte korrigieren und dann den \"Send\"-Button noch einmal anklicken."
+
+#:
+msgid "Descriptive Sender Name"
+msgstr "Name des Absenders"
+
+#:
+msgid "The sender-name should not be empty.<br/>Please correct that and then hit the \"Send\"-button again."
+msgstr "Der Absender-Name sollte nicht leer sein.<br/>Bitte korrigieren und dann den \"Send\"-Button noch einmal anklicken."
+
+#:
+msgid "Incomplete Subject"
+msgstr "Unvollständiger Betreff"
+
+#:
+msgid "The subject must not consist of \"%s\" as only part.<br/>Please correct that and then hit the \"Send\"-button again."
+msgstr "Die Betreffzeile sollte nicht nur aus \"%s\" bestehen.<br/>Bitte korrigieren und dann den \"Send\"-Button noch einmal anklicken."
+
+#:
+msgid "Instrument not known by %s, correct that first! %s only plays %s!!!"
+msgstr "%s spielt das Instrument eventuell nicht, %s spielt nur %s, soweit wir wissen!!!"
+
+#:
+msgid "Click on the following button to enforce your decision"
+msgstr "Änderung erzwingen"
+
+#:
+msgid "Really Change %s's instrument!!!"
+msgstr "Das Instrument von %s wirklich ändern!!!"
+
+#:
+msgid "This will also add \"%s\" to $s's list of known instruments. Unfortunately, all your other changes will be discarded. You may want to try the \"Back\"-Button of your browser."
+msgstr "Dadurch wird auch \"%s\" zur Instrumentenliste für %s hinzugefügt. Leider gehen alle anderen Änderungen verloren. Möglicherweise ist der \"Zurück\"-Knopf des Web-Browsers eine praktischere Option."
+
+#:
+msgid "Success!"
+msgstr "Erfolg!"
+
+#:
+msgid "Select Em@il Recipients"
+msgstr "Em@il Adressaten"
+
+#:
+msgid "Principal Address Collection"
+msgstr "Grundmenge"
+
+#:
+msgid "Email Recipients"
+msgstr "Em@il Empfänger"
+
+#:
+msgid "Remaining Recipients"
+msgstr "Verbleibende Empfänger"
+
+#:
+msgid "Selected Recipients"
+msgstr "Ausgewählte Empfänger"
+
+#:
+msgid "Instrument-Filter"
+msgstr "Instrumenten-Filter"
+
+#:
+msgid "Compose Em@il"
+msgstr "Email verfassen"
+
+#:
+msgid "Apply Filter"
+msgstr "Filter anwenden"
+
+#:
+msgid "Reset Filter"
+msgstr "Filter zurücksetzen"
+
+#:
+msgid "Musicians without Em@il"
+msgstr "Musiker ohne Em@il"
+
+#:
+msgid "Download"
+msgstr "Herunterladen"
+
+#:
+msgid "birthday"
+msgstr "Geburtstag"
+
+#:
+msgid "Add the instruments of the actually registered musicians to the instrument-table for the project."
+msgstr "Die Instrumente der bereits registrierten Musiker in die Besetzungstabelle eintragen; die Soll-Besetzungszahlen werden allerdings nicht angepasst."
+
+#:
+msgid "Transfer Instruments from Musicians"
+msgstr "Instrumente mit Besetzung abgleichen"
+
+#:
+msgid "Add to"
+msgstr "Neu für "
+
+#:
+msgid "Add the musician to the project. A new form will open were details like the instrument etc. can be adjustetd."
+msgstr "Fügt den Musiker zum Projekt hinzu. Auf der Folgeseite können dann Details eingetragen werden."
+
+#:
+msgid "Transpose"
+msgstr "Transponieren"
+
+#:
+msgid "Transpose the displayed table; may be beneficial for tables with only a few rows but many columns!"
+msgstr "Aktuelle Tabelle transponieren, mag für Tabellen mit vielen Spalten und wenigen Zeilen übersichtlicher sein."
+
+#:
+msgid "Open a dialog with all known\n"
+"events associated to the project.\n"
+"Events can be added and modified\n"
+"as needed."
+msgstr "Tabelle mit allen Terminen zum jeweiligen Projekt.\n"
+"Termine können dort hinzugefügt, geändert oder auch gelöscht werden."
+
+#:
+msgid "Do you really want to delete this event?"
+msgstr "Möchten Sie den Termin wirklich löschen?"
+
+#:
+msgid "Do you really want to detach this event from the current project?"
+msgstr "Möchten Sie den Termin wirklich vom Projekt lösen?"
+
+#:
+msgid "no events"
+msgstr "keine Termine"
+
+#:
+msgid "Miscellaneous Calendars"
+msgstr "Weitere Kalender"
+
+#:
+msgid "Check"
+msgstr "Überprüfen"
+
+#:
+msgid "shareowner"
+msgstr "Share-Strohpuppe"
+
+#:
+msgid "New Password"
+msgstr "Neues Passwort"
+
+#:
+msgid "Events"
+msgstr "Termine"
+
+#:
+msgid "Synchronize Events"
+msgstr "Termine zuordnen"
+
+#:
+msgid "Recompute the link between projects and events, using the event-categories as primary key."
+msgstr "Zuordnung der Termine zu den Projekten neu berechnen. Dabei dienen die Projekt-Kategorien als Kriterium."
+
+#:
+msgid "Mark the respective event for being\n"
+"sent by email as ICS-attachment per email.\n"
+"Hitting the email button above the form\n"
+"will open an Email form suitable for\n"
+"sending the marked events to selected\n"
+"recipients."
+msgstr "Termin zum Versand als ICS-Attachment per Email auswählen. Der Email-Knopf über der Tabelle führt zu einem Email-Formular, über das der eigentliche Versand an ausgewählte Empfänger vorgenommen werden kann. Alternativ können die ausgwählten Termine auch einfach herunter-geladen werden."
+
+#:
+msgid "Add a new concert-event to the project."
+msgstr "Neuen Konzert-Termin für das Projekt in den Konzerte-Kalender eintragen."
+
+#:
+msgid "Add a new rehearsal-event to the project."
+msgstr "Neuen Proben-Termin für das Projekt in den Proben-Kalender eintragen."
+
+#:
+msgid "Add some other event to the project."
+msgstr "Sonstigen Termin für das Projekt eintragen."
+
+#:
+msgid "Add a private management event which is not exposed to the rest of the world."
+msgstr "Vorstands-Termin hinzufügen. Die Vorstandstermine sind nicht öffentlich sichtbar."
+
+#:
+msgid "Click to open an email-form\n"
+"and send the selected events to\n"
+"selected recipients."
+msgstr "Ausgewählte Termine als ICS-Attachment per Email veschicken; öffnet ein Email-Formular."
+
+#:
+msgid "Select all events for\n"
+"email-submission"
+msgstr "Alle Termin für Download bzw. Email-Attachment auswählen."
+
+#:
+msgid "Exclude all events from\n"
+"email-submission"
+msgstr "Auswahl zum Download bzw. Email-Versand bei allen Terminen entfernen."
+
+#:
+msgid "Modify the event."
+msgstr "Termin ändern."
+
+#:
+msgid "Delete the event from the system\n"
+"(no undo possible)."
+msgstr "Termin komplett aus dem Kalender löschen, kann nicht rückgängig gemacht werden."
+
+#:
+msgid "Detach the respective event\n"
+"from the project, but do not\n"
+"delete it from the calender.\n"
+"The event can be reattached by\n"
+"adding the project-name to its\n"
+"categories."
+msgstr "Termin vom Projekt \"lösen\". Der Termin bleibt aber im Kalender eingetragen. Es ist möglich, den Termin wieder zum Projekt hinzuzufügen, indem man den Projekt-Namen zu der Katergorien-Liste des Termins hinzufügt."
+
+#:
+msgid "Events for"
+msgstr "Termine für"
+
+#:
+msgid "Add Rehearsal"
+msgstr "Neue Probe"
+
+#:
+msgid "Add Concert"
+msgstr "Neues Konzert"
+
+#:
+msgid "Add Other Event"
+msgstr "Sonst. Termin"
+
+#:
+msgid "Management Event"
+msgstr "Vorstands-Termin"
+
+#:
+msgid "Calendar for Concerts"
+msgstr "Konzert-Kalender"
+
+#:
+msgid "Calendar for Rehearsals"
+msgstr "Proben-Kalender"
+
+#:
+msgid "Calendar for other Events"
+msgstr "Andere öffentliche Termine"
+
+#:
+msgid "Management-Calendar"
+msgstr "Interner Vorstands-Kalender"
+
+#:
+msgid "Default Duration for Events"
+msgstr "Voreinstellung Termin-Dauer"
+
+#:
+msgid "calendarname"
+msgstr "Kalender-Name"
+
+#:
+msgid "Generate"
+msgstr "Erzeugen"
+
+#:
+msgid "show"
+msgstr "zeigen"
+
+#:
+msgid "force"
+msgstr "zwingen"
+
+#:
+msgid "Share-Password"
+msgstr "Share-Passwort"
+
+#:
+msgid "Own Password"
+msgstr "Eigenes Passwort"
+
+#:
+msgid "DB Encryption Key"
+msgstr "DB Schlüssel"
+
+#:
+msgid "username"
+msgstr "Login-Name"
+
+#:
+msgid "minutes"
+msgstr "Minuten"
+
+#:
+msgid "rehearsals"
+msgstr "Proben"
+
+#:
+msgid "concerts"
+msgstr "Konzerte"
+
+#:
+msgid "management"
+msgstr "Vorstand"
+
+#:
+msgid "other"
+msgstr "Sonstiges"
+
+#:
+msgid "User Group"
+msgstr "Benutzer-Gruppe"
+
+#:
+msgid "Database Server"
+msgstr "Datenbank-Server"
+
+#:
+msgid "Database Name"
+msgstr "Datenbank-Name"
+
+#:
+msgid "Database User"
+msgstr "Datenbank-Benutzer"
+
+#:
+msgid "Example"
+msgstr "Beispiel"
+
+#:
+msgid "Encryption"
+msgstr "Verschlüsselung"
+
+#:
+msgid "Change Encryption Key"
+msgstr "Schlüssel ändern"
+
+#:
+msgid "Current Key"
+msgstr "Aktueller Schlüssel"
+
+#:
+msgid "New Key"
+msgstr "Neuer Schlüssel"
+
+#:
+msgid "Distribute Encryption Key"
+msgstr "Schlüssel publizieren"
+
+#:
+msgid "Insert the data-base encryption key into the user preferences of all users belonging to the user group. The data-base key will be encrypted by the respective user's public key."
+msgstr "Füge den Datenbank-Schlüssel in die persönlichen Einstellungen aller Mitglieder der Orchester-Gruppe ein. Der Schlüssel wird dabei wiederum mit den perönlichen öffentlichen SSL-Schlüsseln der Benutzer verschlüsselt."
+
+#:
+msgid "Change Database Password"
+msgstr "Datenbank-Passwort ändern"
+
+#:
+msgid "Advanced operations, use with care"
+msgstr "Experten-Operationen"
+
+#:
+msgid "Open phpmyadmin"
+msgstr "phpMyAdmin (neues Fenster)"
+
+#:
+msgid "Open the login-window to the data-base back-bone. Although this is \"expert mode\" you will fall in love with the \"export\" facilities of the data-base back-bone. TRY IT OUT! DO IT!"
+msgstr "Login-Fenster zum Datenbank-Backend öffnen. Dieser Dialog ist zwar mit \"Experten-Operationen\" betietelt, aber Sie werden dennoch die \"Export\"-Funktionen des Datenbank-Backends schätzen. Versuchen Sie es doch einmal!"
+
+#:
+msgid "Recreate all Views"
+msgstr "\"Views\" regenerieren"
+
+#:
+msgid "Recreate the \"Detailed Instrumentation\" hybrid-table for each project"
+msgstr "Die \"Detaillierte Besetzung\" (inklusive persönlicher Daten) besteht eigentlich aus einer Ansicht auf zwei Tabellen. Anklicken, um alle diese virtuellen Tabellen neu zu erzeugen."
+
+#:
+msgid "empty"
+msgstr "leer"
+
+#:
+msgid "Hello World!"
+msgstr "Also, \"Hello World!\" muss man nun wirklich nicht übersetzen ..."
+
+#:
+msgid "Clear Output"
+msgstr "Ausgabe Löschen"
+
+#:
+msgid "Remove output, if any is present."
+msgstr "Eventuell vorhande Nachrichten vorangegangener Operationen entfernen."
+
+#:
+msgid "Operation generated Response"
+msgstr "Rückmeldungen der Operationen"
+
+#:
+msgid "Adjust Instruments"
+msgstr "Instrumente abgleichen"
+
+#:
+msgid "Make sure the instruments table contains at least any instrument played by any musician."
+msgstr "Sicherstellen, dass die in den verschiedenen Tabellen der Datenbank verwendeten Instrumente auch tatsächlich in allen Tabellen angelegt sind (Vorsicht: klappt derzeit nicht)."
+
+#:
+msgid "Check Instruments"
+msgstr "Instrumenten-Konsistenztest"
+
+#:
+msgid "Check whether the instrumentation numbers table and the musicians table mention the same instruments"
+msgstr "Testen, ob die in den verschiedenen Tabellen der Datenbank verwendeten Instrumente auch tatsächlich in allen Tabellen angelegt sind."
+
+#:
+msgid "Example Text"
+msgstr "Nur ein Beispiel ..."
+
+#:
+msgid "Expert-Mode"
+msgstr "Experten-Modus"
+
+#:
+msgid "Show a second button which leads to a dialog with \"advanced\" settings"
+msgstr "Blendet einen weiteren \"Button\" ein, der zu einem Experten-Dialog hinleitet"
+
+#:
+msgid "Debug-Mode"
+msgstr "Debug-Modus"
+
+#:
+msgid "Personal Settings."
+msgstr "Persönliche Einstellungen."
+
+#:
+msgid "Tool-Tips"
+msgstr "Ballon-Hilfe"
+
+#:
+msgid "Control the display of tooltips. Warning: this works globally for all OwnCloud applications."
+msgstr "Steuert die Anzeige von Tool-Tips. Achtung: die Einstellung gilt dann für all OwnCloud-Apps."
+
+#:
+msgid "Settings"
+msgstr "Einstellungen"
+
+#:
+msgid "Expert Operations"
+msgstr "Experten-Menü"
+
+#:
+msgid "Expert Operations like recreating views etc."
+msgstr "A C H T U N G !\n"
+"	K O M B J U D E R - R A U M\n"
+"Dieser Raum is voll bis unner de Deck\n"
+"mit de dollste elekdrische\n"
+"un vollelekdronische Anlaache.\n"
+"Staune und gugge derf jeder, awwer\n"
+"rummworschdele un Gnöbbsche drücke\n"
+"uff de Kombjuder dörffe nur mir,\n"
+"die Exberde.\n"
+"Aber bitte einfach nicht abschrecken lassen ..."
+
+#:
+msgid "Display all Musicians"
+msgstr "Alle Musiker"
+
+#:
+msgid "Display all musicians stored in the data-base, with detailed facilities for filtering and sorting."
+msgstr "Alle Musiker anzeigen, die in der Datenbank gespeichert sind. Es gibt dabei ausführliche Such- und Auswahlfunktionalität."
+
+#:
+msgid "Add Instruments"
+msgstr "Neue Instrumente"
+
+#:
+msgid "Display the list of instruments known by the data-base, possibly add new ones as needed."
+msgstr "Tabelle mit allen derzeit gespeicherten Instrumenten; weitere Instrumente können hier einfach hinzugefügt werden."
+
+#:
+msgid "Instrumentation Numbers"
+msgstr "Besetzungszahlen"
+
+#:
+msgid "Display the desired instrumentaion numbers, i.e. how many musicians are already registered for each instrument group and how many are finally needed."
+msgstr "Anzeige der angestrebten Besetzungszahlen. Natürlich kann man die dann auch anpassen ..."
+
+#:
+msgid "View all Projects"
+msgstr "Alle Projekte"
+
+#:
+msgid "Overview over all known projects (start-page)."
+msgstr "Alle gespeicherten Projekte anzeigen; Startseite der \"Camerata App\"."
+
+#:
+msgid "Detailed Instrumentation"
+msgstr "Detaillierte Besetzung"
+
+#:
+msgid "Detailed display of all registered musicians for the selected project. The table will allow for modification of personal data like email, phone, address etc."
+msgstr "Detaillierte Ansicht der Besetzung für das aktuelle Projekt. Persönliche Daten wie Email, Adresse usw. können hier geändert werden. Projektbezogene Daten können allerdings nur in der Ansicht \"Kurz-Besetzung\" geändert werden."
+
+#:
+msgid "Brief Instrumentation"
+msgstr "Kurz-Besetzung"
+
+#:
+msgid "Brief display of all registered musicians for the selected project. The table will allow for modification of project specific data, like the instrument, the project-fee etc."
+msgstr "Kurz-Anzeige aller Musiker für das aktuelle Projekt. Hier können projekt-bezogene Daten (Besetzung, Stimme, Honorar, Unkostenbeitrag) geändert und Musiker auch wieder entfernt werden. Persönliche Daten können allerdings nur in der detaillierten Ansicht geändert werden."
+
+#:
+msgid "Add more Musicians"
+msgstr "Musiker Hinzufügen"
+
+#:
+msgid "List of all musicians NOT registered for the selected project. Only through that table a new musician can enter a project. Look for a hyper-link Add_to_PROJECT"
+msgstr "Zeigt alle Musiker an, die (noch) NICHT an diesem Projekt teilnehmen. Musiker können ausschließlich über DIESE Tabelle den Weg in ein Projekt finden. Neue Musiker können selbstverständlich hinzugefügt werden."
+
+#:
+msgid "The currently active project."
+msgstr "Das gerade ausgewählte Projekt."
+
+#:
+msgid "Mass-email form, use with care. Mass-emails will be logged. Recipients will be specified by the Bcc: field in the header, so the recipients are undisclosed to each other."
+msgstr "Massen-Email-Formular. Mit Vorsicht zu genießen! Massen-Mails werden allerdings zweifach mitgeschnitten: eine Kopie geht an unser Vereinsadresse, außerdem wird die ganze Pracht in der Daten bank gespeichter (siehe \"Email Historie\")"
+
+#:
+msgid "Email History"
+msgstr "Em@il Historie"
+
+#:
+msgid "Display all emails sent by our mass-email form."
+msgstr "Zeigt alle über unser unsägliches Massen-Mail gespamten Emails an. Insebesondere werden hier auch die Bcc: Empfänger gespeichert."

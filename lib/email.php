@@ -1011,7 +1011,7 @@ Störung.');
     if ($projectId >= 0) {
       $EventSelect = Util::cgiValue('EventSelect', array());
       $eventAttachButton = Projects::eventButton(
-        $projectId, $project, 'Events', $EventSelect);
+        $projectId, $project, L::t('Events'), $EventSelect);
       if (!empty($EventSelect)) {
         $attachedEvents = ''
           .'<tr class="eventattachments"><td>'.L::t('Attached Events').'</td>'
@@ -1085,13 +1085,13 @@ Störung.');
       '.$eventAttachButton.'
       <button type="button" '
       .'class="attachment upload" '
-         .'title="'.L::t(Config::toolTips('upload-attachment')).'" '
+         .'title="'.Config::toolTips('upload-attachment').'" '
          .'value="'.L::t('Upload new File').'">
         <img src="'.\OCP\Util::imagePath('core', 'actions/upload.svg').'" alt="'.L::t('Upload new File').'"/>
       </button>
       <button type="button" '
       .'class="attachment owncloud" '
-         .'title="'.L::t(Config::toolTips('owncloud-attachment')).'" '
+         .'title="'.Config::toolTips('owncloud-attachment').'" '
          .'value="'.L::t('Select from Owncloud').'">
         <img src="'.\OCP\Util::imagePath('core', 'places/file.svg').'" alt="'.L::t('Select from Owncloud').'"/>
       </button>
@@ -1486,9 +1486,9 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
       } catch (\Exception $exception) {
         $msg = $exception->getMessage();
         Util::alert(
-          L::t('During send, the email-backend throwed an exception stating:<br/>').
-          '"'.L::t($msg).'"<br/>'.
-          L::t('Please correct the problem and then click on the "Send"-button again.'),
+          L::t('During send, the email-backend throwed an exception stating:<br/>'
+               .'"%s"</br>'
+               .'Please correct the problem and then click on the "Send"-button again.',array($msg)),
           L::t('Caught an exception'),
           'cafevdb-email-error');
         return false;

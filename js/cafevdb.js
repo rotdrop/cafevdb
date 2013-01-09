@@ -43,7 +43,7 @@ $.extend({ alert: function (message, title) {
 //         $(this).dialog( "option", "resizable", false );
 //       }, 
 //       buttons: {
-//         Yes': function() {
+//         'Yes': function() {
 //           $(this).dialog("close");
 //           action(true);
 //         },

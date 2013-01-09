@@ -236,20 +236,20 @@ class Navigation
       .'data-placeholder="'.L::t('Export Table').'" '
       .'class="pme-export" '
       .'id="pme-export-choice"'
-      .'title="'.L::t(Config::toolTips('pme-export-choice')).'" '
+      .'title="'.Config::toolTips('pme-export-choice').'" '
       .'name="export" >
   <option value=""></option>
   <option '
-    .'title="'.L::t(Config::toolTips('pme-export-csv')).'" '
+    .'title="'.Config::toolTips('pme-export-csv').'" '
     .'value="CSV">'.L::t('CSV Export').'</option>
   <option '
-    .'title="'.L::t(Config::toolTips('pme-export-html')).'" '
+    .'title="'.Config::toolTips('pme-export-html').'" '
     .'value="HTML">'.L::t('HTML Export').'</option>
   <option '
-    .'title="'.L::t(Config::toolTips('pme-export-excel')).'" '
+    .'title="'.Config::toolTips('pme-export-excel').'" '
     .'value="EXCEL">'.L::t('Excel Export').'</option>
   <option '
-    .'title="'.L::t(Config::toolTips('pme-export-htmlexcel')).'" '
+    .'title="'.Config::toolTips('pme-export-htmlexcel').'" '
     .'value="SSML">'.L::t('HTML/Spreadsheet').'</option>
 </select></label></span>';
 
@@ -334,8 +334,8 @@ class Navigation
     $html = $pre;
     foreach ($buttons as $key => $btn) {
       $type  = isset($btn['type']) ? $btn['type'] : 'button';
-      $name  = L::t($btn['name']);
-      $title = isset($btn['title']) ? L::t($btn['title']) : $name;
+      $name  = $btn['name'];
+      $title = isset($btn['title']) ? $btn['title'] : $name;
       $style = isset($btn['style']) ? $btn['style'] : '';
       
       switch ($type) {
@@ -545,7 +545,7 @@ __EOT__;
 
     case 'transfer-instruments':
       $value = strval(L::t('Transfer Instruments from Musicians'));
-      $title = strval(L::t(Config::toolTips('transfer-instruments')));
+      $title = strval(Config::toolTips('transfer-instruments'));
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
   <input type="submit" value="$value" title="$title" />

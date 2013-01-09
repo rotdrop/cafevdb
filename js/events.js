@@ -190,7 +190,7 @@ window.Events={
         var really = confirm_text[name];
         if (really != '') {
           
-          // Attention: dialogs don't block, so the action needs to be
+          // Attention: dialogs do not block, so the action needs to be
           // wrapped into the callback.
 	  OC.dialogs.confirm(t('cafevdb', really),
                              t('cafevdb', 'Really delete?'),

@@ -4,6 +4,7 @@ use Locale::PO;
 use Cwd;
 use Data::Dumper;
 use File::Path;
+use File::Basename;
 
 sub crawlPrograms{
 	my( $dir, $ignore ) = @_;
@@ -17,6 +18,7 @@ sub crawlPrograms{
 	foreach my $i ( @files ){
 		next if substr( $i, 0, 1 ) eq '.';
 		if( $i eq 'l10n' && !$ignore ){
+            print $dir;
 			push( @found, $dir );
 		}
 		elsif( -d $dir.'/'.$i ){
@@ -51,6 +53,19 @@ sub crawlFiles{
 	return @found;
 }
 
+sub readIgnorePattern{
+	return () unless -e 'l10n/ignorepattern';
+	my @ignore = ();
+	open(IN,'l10n/ignorepattern');
+	while(<IN>){
+		my $line = $_;
+		chomp($line);
+                push(@ignore,$line);
+	}
+	close(IN);
+	return @ignore;
+}
+
 sub readIgnorelist{
 	return () unless -e 'l10n/ignorelist';
 	my %ignore = ();
@@ -65,7 +80,7 @@ sub readIgnorelist{
 }
 
 my $task = shift( @ARGV );
-my $place = '..';
+my $place = '../../cafevdb';
 
 die( "Usage: l10n.pl task\ntask: read, write\n" ) unless $task && $place;
 
@@ -74,7 +89,7 @@ my $whereami = cwd();
 die( "Program must be executed in a l10n-folder called 'l10n'" ) unless $whereami =~ m/\/l10n$/;
 
 # Where are i18n-files?
-my @dirs = crawlPrograms( $place, 1 );
+my @dirs = crawlPrograms( $place, 0 );
 
 # Languages
 my @languages = ();
@@ -95,16 +110,26 @@ if( $task eq 'read' ){
 		chdir( $dir );
 		my @totranslate = crawlFiles('.');
 		my %ignore = readIgnorelist();
+                my @ignorepat = readIgnorePattern();
+                print @ignorepat;
 		my $output = "${whereami}/templates/$app.pot";
 		print "  Processing $app\n";
 
 		foreach my $file ( @totranslate ){
+                        my $stop = 0;
+                        foreach my $ignpat ( @ignorepat ) {
+                                if ($file =~ m|$ignpat|) {
+                                        $stop = 1;
+                                        last;
+                                }
+                        }
+                        next if $stop;
 			next if $ignore{$file};
 			my $keyword = ( $file =~ /\.js$/ ? 't:2' : 't');
 			my $language = ( $file =~ /\.js$/ ? 'Python' : 'PHP');
 			my $joinexisting = ( -e $output ? '--join-existing' : '');
 			print "    Reading $file\n";
-			`xgettext --output="$output" $joinexisting --keyword=$keyword --language=$language "$file"`;
+			`xgettext --output="$output" $joinexisting --keyword=$keyword --language=$language --from-code=UTF-8 "$file"`;
 		}
 		chdir( $whereami );
 	}
@@ -134,7 +159,7 @@ elsif( $task eq 'write' ){
 			next if $#strings == -1; # Skip empty files
 
 			# Write PHP file
-			open( OUT, ">$language.php" );
+			open( OUT, ">$language.php.new" );
 			print OUT "<?php \$TRANSLATIONS = array(\n";
 			print OUT join( ",\n", @strings );
 			print OUT "\n);\n";

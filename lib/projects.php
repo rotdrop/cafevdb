@@ -411,7 +411,7 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
 ."ProjectId=$projectId&"
 ."Project=$projectName&"
 ."Template=$template";
-    $title     = L::t(Config::toolTips('projectinstrumentation-button'));
+    $title     = Config::toolTips('projectinstrumentation-button');
     return <<<__EOT__
 <span class="instrumentation-button">
 <input type="button" class="instrumentation" title="$title" name="$bname" value="$bvalue" />
@@ -425,16 +425,16 @@ __EOT__;
     return self::eventButton($projectId, $projectName);
   }
 
-  public static function eventButton($projectId, $projectName, $value = 'Events', $eventSelect = array())
+  public static function eventButton($projectId, $projectName, $value = L::t('Events'), $eventSelect = array())
   {
-    $bvalue      = L::t($value);
+    $bvalue      = $value;
     // Code the value in the name attribute (for java-script)
     $bname       = "ProjectId=$projectId&ProjectName=".$projectName;
     foreach ($eventSelect as $event) {
       $bname .= '&EventSelect[]='.$event;
     }
     $bname       = htmlspecialchars($bname);
-    $title       = L::t(Config::toolTips('projectevents-button'));
+    $title       = Config::toolTips('projectevents-button');
     $image = \OCP\Util::imagePath('calendar', 'icon.svg');
     return <<<__EOT__
 <span class="events">

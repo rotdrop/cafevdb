@@ -9,15 +9,15 @@ $hdr_vis = ' '.$_['headervisibility'];
 $settingscontrols = Navigation::buttonsFromArray(
   array(
     'export' => array(
-      'name' => 'Expert Operations',
-      'title' => 'Expert Operations like recreating views etc.',
+      'name' => L::t('Expert Operations'),
+      'title' => L::t('Expert Operations like recreating views etc.'),
       'image' => OCP\Util::imagePath('core', 'actions/rename.svg'),
       'class' => 'settings expert',
       'style' => ($_['expertmode'] != 'on' ? 'display:none' : ''),
       'id' => 'expertbutton'),
     'settings' => array(
-      'name' => 'Settings',
-      'title' => 'Personal Settings.',
+      'name' => L::t('Settings'),
+      'title' => L::t('Personal Settings.'),
       'image' => OCP\Util::imagePath('core', 'actions/settings.svg'),
       'class' => 'settings generalsettings',
       'id' => 'settingsbutton')
@@ -25,9 +25,9 @@ $settingscontrols = Navigation::buttonsFromArray(
 $viewtoggle = Navigation::buttonsFromArray(
   array(
     'viewtoggle' => array(
-      'name' => 'Toggle Visibility',
+      'name' => L::t('Toggle Visibility'),
       'type' => 'button',
-      'title' => 'Minimize or maximize the containing block.',
+      'title' => L::t('Minimize or maximize the containing block.'),
       'image' => OCP\Util::imagePath('cafevdb', 'transparent.svg'),
       'class' => 'viewtoggle '.$hdr_vis,
       'id' => 'viewtoggle')

@@ -1,0 +1,1696 @@
+# German translations for cafevdb.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# Claus-Justus Heine <himself@claus-justus-heine.de>, 2013.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: cafevdb\n"
+"Report-Msgid-Bugs-To: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
+"POT-Creation-Date: 2013-01-09 14:32+0100\n"
+"PO-Revision-Date: 2013-01-09 14:38+0100\n"
+"Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
+"Language-Team: German\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+#: ajax/email/owncloudattachment.php:14
+msgid "No attachment path was submitted."
+msgstr ""
+
+#: ajax/email/owncloudattachment.php:21
+msgid "File doesn't exist: "
+msgstr ""
+
+#: ajax/email/owncloudattachment.php:25
+msgid "File doesn't exist:"
+msgstr ""
+
+#: ajax/email/owncloudattachment.php:35
+msgid "Inconsistency:"
+msgstr ""
+
+#: ajax/email/uploadattachment.php:21
+msgid "No file was uploaded. Unknown error"
+msgstr ""
+
+#: ajax/email/uploadattachment.php:27
+msgid "There is no error, the file uploaded with success"
+msgstr ""
+
+#: ajax/email/uploadattachment.php:28
+msgid "The uploaded file exceeds the upload_max_filesize directive in php.ini"
+msgstr ""
+
+#: ajax/email/uploadattachment.php:29
+msgid ""
+"The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in "
+"the HTML form"
+msgstr ""
+
+#: ajax/email/uploadattachment.php:30
+msgid "The uploaded file was only partially uploaded"
+msgstr ""
+
+#: ajax/email/uploadattachment.php:31
+msgid "No file was uploaded"
+msgstr ""
+
+#: ajax/email/uploadattachment.php:32
+msgid "Missing a temporary folder"
+msgstr ""
+
+#: ajax/events/execute.php:80
+msgid "Invalid operation: "
+msgstr ""
+
+#: ajax/events/new.form.php:55
+msgid "Cannot access calendar:"
+msgstr ""
+
+#: ajax/expertmode/clearoutput.php:11 templates/expertmode.php:51
+msgid "empty"
+msgstr "leer"
+
+#: ajax/expertmode/example.php:11
+msgid "Hello World!"
+msgstr "Also, \"Hello World!\" muss man nun wirklich nicht übersetzen ..."
+
+#: ajax/expertmode/syncevents.php:61
+msgid "Done."
+msgstr ""
+
+#: ajax/export/excel.php:85
+msgid "yes"
+msgstr "ja"
+
+#: ajax/export/excel.php:86
+msgid "true"
+msgstr "wahr"
+
+#: ajax/export/excel.php:89
+msgid "no"
+msgstr "nein"
+
+#: ajax/export/excel.php:90
+msgid "false"
+msgstr "falsch"
+
+#: ajax/settings/app-settings.php:100
+#, php-format
+msgid "Name of orchestra set to \"%s\""
+msgstr ""
+
+#: ajax/settings/app-settings.php:144
+msgid "Submitted"
+msgstr ""
+
+#: ajax/settings/app-settings.php:144
+msgid "stored"
+msgstr ""
+
+#: ajax/settings/app-settings.php:152
+#, fuzzy
+msgid "New share-owner"
+msgstr "Share-Strohpuppe"
+
+#: ajax/settings/app-settings.php:156
+msgid "Failure creating account"
+msgstr ""
+
+#: ajax/settings/app-settings.php:168
+#, fuzzy
+msgid "Keeping old share-owner"
+msgstr "Share-Strohpuppe"
+
+#: ajax/settings/app-settings.php:172
+msgid "Failure checking account"
+msgstr ""
+
+#: ajax/settings/app-settings.php:193
+#, fuzzy
+msgid "Exception:"
+msgstr "Verschlüsselung"
+
+#: ajax/settings/app-settings.php:207
+msgid "Unable to set:"
+msgstr ""
+
+#: ajax/settings/app-settings.php:218
+msgid "minutes"
+msgstr "Minuten"
+
+#: ajax/settings/app-settings.php:238
+#, fuzzy
+msgid "Changed password for"
+msgstr "Datenbank-Passwort ändern"
+
+#: ajax/settings/app-settings.php:244
+msgid "Failed changing password for"
+msgstr ""
+
+#: ajax/settings/app-settings.php:265
+#, php-format
+msgid "Using \"%s\" at %s as %s-server."
+msgstr ""
+
+#: ajax/settings/app-settings.php:271
+#, php-format
+msgid "Unable to determine the IP-address for %s."
+msgstr ""
+
+#: ajax/settings/app-settings.php:288
+msgid "Using "
+msgstr ""
+
+#: ajax/settings/app-settings.php:295
+#, php-format
+msgid "\"%s\" doesn't seem to be a candidate for an IP-port."
+msgstr ""
+
+#: ajax/settings/app-settings.php:319
+msgid "Unknown transport security method:"
+msgstr ""
+
+#: ajax/settings/app-settings.php:330
+#, php-format
+msgid "Using \"%s\" for message transport."
+msgstr ""
+
+#: ajax/settings/app-settings.php:344
+#, php-format
+msgid "Using \"%s\" as login."
+msgstr ""
+
+#: ajax/settings/app-settings.php:354
+msgid "Password has been changed."
+msgstr ""
+
+#: ajax/settings/app-settings.php:370
+msgid "IMAP connection seems functional."
+msgstr ""
+
+#: ajax/settings/app-settings.php:373
+msgid "Unable to establish IMAP connection."
+msgstr ""
+
+#: ajax/settings/app-settings.php:382
+msgid "SMTP connection seems functional."
+msgstr ""
+
+#: ajax/settings/app-settings.php:385
+msgid "Unable to establish SMTP connection."
+msgstr ""
+
+#: ajax/settings/app-settings.php:402
+msgid "UNSPECIFIED"
+msgstr ""
+
+#: ajax/settings/app-settings.php:406
+#, php-format
+msgid "Email test-mode enabled, sending only to %s"
+msgstr ""
+
+#: ajax/settings/app-settings.php:410
+msgid "Email test-mode disable, will send to all!!!"
+msgstr ""
+
+#: ajax/settings/app-settings.php:421 ajax/settings/app-settings.php:450
+#, php-format
+msgid "\"%s\" doesn't seem to be a valid email-address."
+msgstr ""
+
+#: ajax/settings/app-settings.php:429
+#, php-format
+msgid "Using \"%s\" as email-address for test-mode."
+msgstr ""
+
+#: ajax/settings/app-settings.php:439
+#, php-format
+msgid "Using \"%s\" as name of the sender identity."
+msgstr ""
+
+#: ajax/settings/app-settings.php:458
+#, php-format
+msgid "Using \"%s\" as sender email-address."
+msgstr ""
+
+#: ajax/settings/app-settings.php:474
+#, php-format
+msgid "Link for \"%s\" set to \"%s\"."
+msgstr ""
+
+#: ajax/settings/app-settings.php:487
+#, php-format
+msgid "Unable to test link for \"%s\" without a link target."
+msgstr ""
+
+#: ajax/settings/app-settings.php:493
+#, php-format
+msgid "New window or tab with \"%s\"?"
+msgstr ""
+
+#: ajax/settings/app-settings.php:516
+msgid "Unhandled request:"
+msgstr ""
+
+#: ajax/settings/debugmode.php:19
+msgid "Debugmode changed"
+msgstr ""
+
+#: ajax/settings/encryptionkey.php:20
+msgid "Invalid password for "
+msgstr ""
+
+#: ajax/settings/encryptionkey.php:26
+#, fuzzy
+msgid "Invalid encryption key."
+msgstr "DB Schlüssel"
+
+#: ajax/settings/encryptionkey.php:36
+#, fuzzy
+msgid "Encryption key stored."
+msgstr "DB Schlüssel"
+
+#: ajax/settings/exampletext.php:16
+#, fuzzy
+msgid "Example-Text changed"
+msgstr "Nur ein Beispiel ..."
+
+#: ajax/settings/exampletext.php:19
+#, fuzzy
+msgid "Invalid request"
+msgstr "Ungültige Em@il Adresse"
+
+#: ajax/settings/expertmode.php:19
+#, fuzzy
+msgid "Expertmode changed"
+msgstr "Experten-Modus"
+
+#: ajax/settings/tooltips.php:19
+msgid "Tooltips changed"
+msgstr ""
+
+#: index.php:85
+msgid "Missing or invalid fields"
+msgstr ""
+
+#: index.php:86
+msgid "Title"
+msgstr ""
+
+#: index.php:87
+#, fuzzy
+msgid "Calendar"
+msgstr "Kalender-Name"
+
+#: index.php:88
+msgid "From Date"
+msgstr ""
+
+#: index.php:89
+msgid "From Time"
+msgstr ""
+
+#: index.php:90
+msgid "To Date"
+msgstr ""
+
+#: index.php:91
+msgid "To Time"
+msgstr ""
+
+#: index.php:92
+msgid "The event ends before it starts"
+msgstr ""
+
+#: index.php:93
+msgid "There was a database fail"
+msgstr ""
+
+#: index.php:98
+msgid "Do you really want to delete this event?"
+msgstr "Möchten Sie den Termin wirklich löschen?"
+
+#: index.php:99
+msgid "Do you really want to detach this event from the current project?"
+msgstr "Möchten Sie den Termin wirklich vom Projekt lösen?"
+
+#: js/cafevdb.js:104
+#, fuzzy
+msgid "Export to \""
+msgstr "Tabelle Exportieren"
+
+#: js/cafevdb.js:105
+msgid "Unimplemented"
+msgstr ""
+
+#: js/calendar.js:97
+msgid "Deletion failed"
+msgstr ""
+
+#: js/calendar.js:191
+msgid "ddd d MMMM[ yyyy]{ -[ddd d] MMMM yyyy}"
+msgstr ""
+
+#: js/calendar.js:193
+msgid "ddd d MMMM[ yyyy] HH:mm{ -[ ddd d MMMM yyyy] HH:mm}"
+msgstr ""
+
+#: js/calendar.js:547
+#, fuzzy
+msgid "user"
+msgstr "Login-Name"
+
+#: js/calendar.js:547
+msgid "group"
+msgstr ""
+
+#: js/calendar.js:548
+#, fuzzy
+msgid "Editable"
+msgstr "Tabelle Exportieren"
+
+#: js/calendar.js:549
+msgid "Shareable"
+msgstr ""
+
+#: js/calendar.js:550
+msgid "Deletable"
+msgstr ""
+
+#: js/email.js:6
+msgid "Not called from main email-form."
+msgstr ""
+
+#: js/email.js:7 js/email.js:45 js/email.js:58 js/email.js:66 js/email.js:79
+msgid "Error"
+msgstr ""
+
+#: js/email.js:44
+msgid "No files selected for upload."
+msgstr ""
+
+#: js/email.js:55
+msgid "The file you are trying to upload exceed "
+msgstr ""
+
+#: js/email.js:142
+#, fuzzy
+msgid "Select Attachment"
+msgstr "Anhang hinzufügen"
+
+#: js/events.js:196
+msgid "Really delete?"
+msgstr ""
+
+#: js/expertmode.js:3
+msgid "Advanced operations, use with care"
+msgstr "Experten-Operationen"
+
+#: lib/config.php:437
+msgid "birthday"
+msgstr "Geburtstag"
+
+#: lib/email.php:369
+msgid "Select Em@il Recipients"
+msgstr "Em@il Adressaten"
+
+#: lib/email.php:376
+msgid "Principal Address Collection"
+msgstr "Grundmenge"
+
+#: lib/email.php:417
+msgid "Email Recipients"
+msgstr "Em@il Empfänger"
+
+#: lib/email.php:418
+msgid "Remaining Recipients"
+msgstr "Verbleibende Empfänger"
+
+#: lib/email.php:419
+msgid "Selected Recipients"
+msgstr "Ausgewählte Empfänger"
+
+#: lib/email.php:433
+msgid "Instrument-Filter"
+msgstr "Instrumenten-Filter"
+
+#: lib/email.php:446
+msgid "Compose Em@il"
+msgstr "Email verfassen"
+
+#: lib/email.php:455
+msgid "Apply Filter"
+msgstr "Filter anwenden"
+
+#: lib/email.php:461
+msgid "Reset Filter"
+msgstr "Filter zurücksetzen"
+
+#: lib/email.php:470
+msgid "Musicians without Em@il"
+msgstr "Musiker ohne Em@il"
+
+#: lib/email.php:1014 lib/projects.php:191 lib/projects.php:428
+msgid "Events"
+msgstr "Termine"
+
+#: lib/email.php:1017
+msgid "Attached Events"
+msgstr "Angehängte Termine"
+
+#: lib/email.php:1029
+#, fuzzy, php-format
+msgid "Edit Event %s"
+msgstr "Adressen bearbeiten"
+
+#: lib/email.php:1052
+msgid "Recipients"
+msgstr "Adressaten"
+
+#: lib/email.php:1053
+msgid "Determined automatically from data-base, see below the email form."
+msgstr ""
+"Siehe unterhalb des Formulars. Auswahl über \"Adressen bearbeiten\"-Knopf "
+"abändern."
+
+#: lib/email.php:1064
+msgid "Subject"
+msgstr "Betreff"
+
+#: lib/email.php:1070
+msgid "Message-Body"
+msgstr "Nachricht"
+
+#: lib/email.php:1074
+msgid "Sender-Name"
+msgstr "Absender-Name"
+
+#: lib/email.php:1079
+msgid "Sender-Email"
+msgstr "Absender-Email"
+
+#: lib/email.php:1080
+msgid "Tied to"
+msgstr "Vorgegeben:"
+
+#: lib/email.php:1083
+msgid "Add Attachment"
+msgstr "Anhang hinzufügen"
+
+#: lib/email.php:1089 lib/email.php:1090
+msgid "Upload new File"
+msgstr "Datei hochladen"
+
+#: lib/email.php:1095 lib/email.php:1096
+msgid "Select from Owncloud"
+msgstr "Datei aus der \"Cloud\""
+
+#: lib/email.php:1108
+msgid "Remove"
+msgstr "Entfernen"
+
+#: lib/email.php:1116
+msgid "Send Em@il"
+msgstr "Em@il verschicken"
+
+#: lib/email.php:1119
+msgid "Edit recipients"
+msgstr "Adressen bearbeiten"
+
+#: lib/email.php:1125
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: lib/email.php:1185
+#, php-format
+msgid ""
+"The subject must not consist of \"%s\" as only part.<br/>Please correct that "
+"and then hit the \"Send\"-button again."
+msgstr ""
+"Die Betreffzeile sollte nicht nur aus \"%s\" bestehen.<br/>Bitte korrigieren "
+"und dann den \"Send\"-Button noch einmal anklicken."
+
+#: lib/email.php:1188
+msgid "Incomplete Subject"
+msgstr "Unvollständiger Betreff"
+
+#: lib/email.php:1193
+msgid ""
+"The sender-name should not be empty.<br/>Please correct that and then hit "
+"the \"Send\"-button again."
+msgstr ""
+"Der Absender-Name sollte nicht leer sein.<br/>Bitte korrigieren und dann den "
+"\"Send\"-Button noch einmal anklicken."
+
+#: lib/email.php:1195
+msgid "Descriptive Sender Name"
+msgstr "Name des Absenders"
+
+#: lib/email.php:1344
+msgid "The email-backend throwed an exception stating:<br/>"
+msgstr "Fehler beim Generieren der Nachricht:<br/>"
+
+#: lib/email.php:1346
+msgid "Please correct the problem and then click on the \"Send\"-button again."
+msgstr "Bitte korrigieren und dann den \"Send\"-Button noch einmal anklicken."
+
+#: lib/email.php:1347 lib/email.php:1492
+msgid "Caught an exception"
+msgstr "Fehler"
+
+#: lib/email.php:1461
+#, php-format
+msgid ""
+"A message with exactly the same text to exactly the same recipients has "
+"already been sent on the following date(s):<br/>%s<br/>Refusing to send "
+"duplicate bulk emails."
+msgstr ""
+"Eine Nachricht mit <b>genau</b> dem gleichen Inhalt zu genau den selben "
+"Empfängern wurde bereits zu folgenden Zeitpunkten gesendet:</br>%s<br/"
+">Duplikate von Massen-Mails werden nicht versendet!!!"
+
+#: lib/email.php:1467
+msgid "Duplicate Email"
+msgstr "Email Duplikat"
+
+#: lib/email.php:1475
+msgid "Sending failed for an unknown reason. Sorry."
+msgstr ""
+
+#: lib/email.php:1476
+msgid "General Failure reading your hard-disk ... just kidding."
+msgstr ""
+
+#: lib/email.php:1480
+msgid "Message has been sent, at least: no error from our side!"
+msgstr ""
+"Nachricht wurde versendet; bzw.: das Web-Skript hat keinen Fehler bemerkt"
+
+#: lib/email.php:1481
+msgid "Message has been sent"
+msgstr "Nachricht wurde versendet"
+
+#: lib/email.php:1489
+#, fuzzy, php-format
+msgid ""
+"During send, the email-backend throwed an exception stating:<br/>\"%s\"</"
+"br>Please correct the problem and then click on the \"Send\"-button again."
+msgstr ""
+"Das Anhang \"%s\" scheint unbrauchbar zu sein.<br/>Bitte korrigieren und "
+"dann den \"Send\"-Button noch einmal anklicken."
+
+#: lib/email.php:1511
+#, php-format
+msgid ""
+"The IMAP backend returned the error \"%s\". Unfortunate Snafu.<br/>I was "
+"trying to copy the message to our send-folder, but that failed."
+msgstr ""
+
+#: lib/email.php:1514
+msgid "IMAP connection failed"
+msgstr ""
+
+#: lib/email.php:1520
+#, php-format
+msgid ""
+"Could not copy the message to the send-folder.</br>Server returned the "
+"error: \"%s\""
+msgstr ""
+
+#: lib/email.php:1523
+msgid "Copying to \"Sent\"-folder failed."
+msgstr ""
+
+#: lib/email.php:1578
+#, fuzzy, php-format
+msgid ""
+"The %s address \"%s\" seems to be invalid.<br/>Please correct that first and "
+"then click on the \"Send\"-button again.<br/>Unfortunately, attachments (if "
+"any) have to be specified again."
+msgstr ""
+"Die %s-Adresse \"%s\" scheint ein ungültiges Format zu haben.</br>Bitte "
+"korrigieren und dann den \"Send\"-Button noch einmal anklicken."
+
+#: lib/email.php:1582
+msgid "Invalid Email Address"
+msgstr "Ungültige Em@il Adresse"
+
+#: lib/email.php:1590
+#, fuzzy
+msgid "recipient"
+msgstr "Adressaten"
+
+#: lib/events.php:770
+msgid "Unknown Calendar"
+msgstr ""
+
+#: lib/events.php:777
+msgid "Miscellaneous Calendars"
+msgstr "Weitere Kalender"
+
+#: lib/functions.php:236
+msgid "Export Table"
+msgstr "Tabelle Exportieren"
+
+#: lib/functions.php:244
+msgid "CSV Export"
+msgstr ""
+
+#: lib/functions.php:247
+msgid "HTML Export"
+msgstr ""
+
+#: lib/functions.php:250
+msgid "Excel Export"
+msgstr ""
+
+#: lib/functions.php:253
+msgid "HTML/Spreadsheet"
+msgstr ""
+
+#: lib/functions.php:375
+msgid "Error: Unknonwn Button Type"
+msgstr ""
+
+#: lib/functions.php:398
+msgid "View all Projects"
+msgstr "Alle Projekte"
+
+#: lib/functions.php:399
+msgid "Overview over all known projects (start-page)."
+msgstr "Alle gespeicherten Projekte anzeigen; Startseite der \"Camerata App\"."
+
+#: lib/functions.php:411
+msgid "Display all Musicians"
+msgstr "Alle Musiker"
+
+#: lib/functions.php:412
+msgid ""
+"Display all musicians stored in the data-base, with detailed facilities for "
+"filtering and sorting."
+msgstr ""
+"Alle Musiker anzeigen, die in der Datenbank gespeichert sind. Es gibt dabei "
+"ausführliche Such- und Auswahlfunktionalität."
+
+#: lib/functions.php:424
+msgid ""
+"Mass-email form, use with care. Mass-emails will be logged. Recipients will "
+"be specified by the Bcc: field in the header, so the recipients are "
+"undisclosed to each other."
+msgstr ""
+"Massen-Email-Formular. Mit Vorsicht zu genießen! Massen-Mails werden "
+"allerdings zweifach mitgeschnitten: eine Kopie geht an unser Vereinsadresse, "
+"außerdem wird die ganze Pracht in der Daten bank gespeichter (siehe \"Email "
+"Historie\")"
+
+#: lib/functions.php:438
+msgid "Email History"
+msgstr "Em@il Historie"
+
+#: lib/functions.php:439
+msgid "Display all emails sent by our mass-email form."
+msgstr ""
+"Zeigt alle über unser unsägliches Massen-Mail gespamten Emails an. "
+"Insebesondere werden hier auch die Bcc: Empfänger gespeichert."
+
+#: lib/functions.php:457
+msgid "The currently active project."
+msgstr "Das gerade ausgewählte Projekt."
+
+#: lib/functions.php:472
+msgid "Detailed Instrumentation"
+msgstr "Detaillierte Besetzung"
+
+#: lib/functions.php:473
+msgid ""
+"Detailed display of all registered musicians for the selected project. The "
+"table will allow for modification of personal data like email, phone, "
+"address etc."
+msgstr ""
+"Detaillierte Ansicht der Besetzung für das aktuelle Projekt. Persönliche "
+"Daten wie Email, Adresse usw. können hier geändert werden. Projektbezogene "
+"Daten können allerdings nur in der Ansicht \"Kurz-Besetzung\" geändert "
+"werden."
+
+#: lib/functions.php:487
+msgid "Brief Instrumentation"
+msgstr "Kurz-Besetzung"
+
+#: lib/functions.php:488
+msgid ""
+"Brief display of all registered musicians for the selected project. The "
+"table will allow for modification of project specific data, like the "
+"instrument, the project-fee etc."
+msgstr ""
+"Kurz-Anzeige aller Musiker für das aktuelle Projekt. Hier können projekt-"
+"bezogene Daten (Besetzung, Stimme, Honorar, Unkostenbeitrag) geändert und "
+"Musiker auch wieder entfernt werden. Persönliche Daten können allerdings nur "
+"in der detaillierten Ansicht geändert werden."
+
+#: lib/functions.php:502
+msgid "Add Instruments"
+msgstr "Neue Instrumente"
+
+#: lib/functions.php:503
+msgid ""
+"Display the list of instruments known by the data-base, possibly add new "
+"ones as needed."
+msgstr ""
+"Tabelle mit allen derzeit gespeicherten Instrumenten; weitere Instrumente "
+"können hier einfach hinzugefügt werden."
+
+#: lib/functions.php:517
+msgid "Instrumentation Numbers"
+msgstr "Besetzungszahlen"
+
+#: lib/functions.php:518
+msgid ""
+"Display the desired instrumentaion numbers, i.e. how many musicians are "
+"already registered for each instrument group and how many are finally needed."
+msgstr ""
+"Anzeige der angestrebten Besetzungszahlen. Natürlich kann man die dann auch "
+"anpassen ..."
+
+#: lib/functions.php:532
+msgid "Add more Musicians"
+msgstr "Musiker Hinzufügen"
+
+#: lib/functions.php:533
+msgid ""
+"List of all musicians NOT registered for the selected project. Only through "
+"that table a new musician can enter a project. Look for a hyper-link "
+"Add_to_PROJECT"
+msgstr ""
+"Zeigt alle Musiker an, die (noch) NICHT an diesem Projekt teilnehmen. "
+"Musiker können ausschließlich über DIESE Tabelle den Weg in ein Projekt "
+"finden. Neue Musiker können selbstverständlich hinzugefügt werden."
+
+#: lib/functions.php:547
+msgid "Transfer Instruments from Musicians"
+msgstr "Instrumente mit Besetzung abgleichen"
+
+#: lib/musicians.php:187
+msgid "Add to"
+msgstr "Neu für "
+
+#: lib/project-instruments.php:127
+msgid "Transpose"
+msgstr "Transponieren"
+
+#: lib/project-instruments.php:287
+msgid "#Spalten"
+msgstr ""
+
+#: lib/project-instruments.php:290
+msgid "#Zeilen"
+msgstr ""
+
+#: lib/tooltips.php:15
+msgid "Export in CSV-format using a semicolon as delimiter (Excel convention)"
+msgstr ""
+
+#: lib/tooltips.php:16
+msgid ""
+"Export as HTML page without navigation elements; can also be loaded into "
+"your office-programs."
+msgstr ""
+
+#: lib/tooltips.php:17
+msgid "Export as ``full-featured'' Excel-2007 table, ``.xslx''."
+msgstr ""
+
+#: lib/tooltips.php:18
+msgid ""
+"Export as HTML page, but set the file type to ``spread-sheed''. Should also "
+"be readable by standard office-programs as ``Excel''-table."
+msgstr ""
+
+#: lib/tooltips.php:19
+msgid ""
+"Export the visible part of the data-base to an office-format. The ``Excel''-"
+"export should produce useful input for either Libre- or OpenOffice or for "
+"the product of some well-known software-corporation with seat in Redmond, "
+"USA."
+msgstr ""
+
+#: lib/tooltips.php:20
+msgid ""
+"Choose a file to attach from the files stored remotely on in the OwnCloud "
+"storage area."
+msgstr "Ein Attachment aus dem Owncloud-Datei-System auswählen."
+
+#: lib/tooltips.php:21
+msgid ""
+"Upload a file from your local computer as attachment. The file will be "
+"removed from the remote-system after the message has been sent."
+msgstr ""
+"Eine Datei als Attachment hochladen. Die Datei wird vom Server gelöscht, "
+"sobald die Nachricht versendet wurde."
+
+#: lib/tooltips.php:22
+msgid ""
+"Add the instruments of the actually registered musicians to the instrument-"
+"table for the project."
+msgstr ""
+"Die Instrumente der bereits registrierten Musiker in die Besetzungstabelle "
+"eintragen; die Soll-Besetzungszahlen werden allerdings nicht angepasst."
+
+#: lib/tooltips.php:23
+msgid ""
+"Add the musician to the project. A new form will open were details like the "
+"instrument etc. can be adjustetd."
+msgstr ""
+"Fügt den Musiker zum Projekt hinzu. Auf der Folgeseite können dann Details "
+"eingetragen werden."
+
+#: lib/tooltips.php:24
+msgid ""
+"Transpose the displayed table; may be beneficial for tables with only a few "
+"rows but many columns!"
+msgstr ""
+"Aktuelle Tabelle transponieren, mag für Tabellen mit vielen Spalten und "
+"wenigen Zeilen übersichtlicher sein."
+
+#: lib/tooltips.php:25
+msgid "Open a page with the musicians registered for the respective project."
+msgstr ""
+
+#: lib/tooltips.php:26
+msgid ""
+"Open a dialog with all known\n"
+"events associated to the project.\n"
+"Events can be added and modified\n"
+"as needed."
+msgstr ""
+"Tabelle mit allen Terminen zum jeweiligen Projekt.\n"
+"Termine können dort hinzugefügt, geändert oder auch gelöscht werden."
+
+#: lib/tooltips.php:30
+msgid ""
+"Recompute the link between projects and events, using the event-categories "
+"as primary key."
+msgstr ""
+"Zuordnung der Termine zu den Projekten neu berechnen. Dabei dienen die "
+"Projekt-Kategorien als Kriterium."
+
+#: lib/tooltips.php:31
+msgid ""
+"Mark the respective event for being\n"
+"sent by email as ICS-attachment per email.\n"
+"Hitting the email button above the form\n"
+"will open an Email form suitable for\n"
+"sending the marked events to selected\n"
+"recipients."
+msgstr ""
+"Termin zum Versand als ICS-Attachment per Email auswählen. Der Email-Knopf "
+"über der Tabelle führt zu einem Email-Formular, über das der eigentliche "
+"Versand an ausgewählte Empfänger vorgenommen werden kann. Alternativ können "
+"die ausgwählten Termine auch einfach herunter-geladen werden."
+
+#: lib/tooltips.php:37
+msgid "Add a new concert-event to the project."
+msgstr ""
+"Neuen Konzert-Termin für das Projekt in den Konzerte-Kalender eintragen."
+
+#: lib/tooltips.php:38
+msgid "Add a new rehearsal-event to the project."
+msgstr "Neuen Proben-Termin für das Projekt in den Proben-Kalender eintragen."
+
+#: lib/tooltips.php:39
+msgid "Add some other event to the project."
+msgstr "Sonstigen Termin für das Projekt eintragen."
+
+#: lib/tooltips.php:41
+msgid ""
+"Add a private management event which is not exposed to the rest of the world."
+msgstr ""
+"Vorstands-Termin hinzufügen. Die Vorstandstermine sind nicht öffentlich "
+"sichtbar."
+
+#: lib/tooltips.php:43
+msgid ""
+"Click to open an email-form\n"
+"and send the selected events to\n"
+"selected recipients."
+msgstr ""
+"Ausgewählte Termine als ICS-Attachment per Email veschicken; öffnet ein "
+"Email-Formular."
+
+#: lib/tooltips.php:46
+msgid ""
+"Select all events for\n"
+"email-submission"
+msgstr "Alle Termin für Download bzw. Email-Attachment auswählen."
+
+#: lib/tooltips.php:48
+msgid ""
+"Exclude all events from\n"
+"email-submission"
+msgstr "Auswahl zum Download bzw. Email-Versand bei allen Terminen entfernen."
+
+#: lib/tooltips.php:50
+msgid "Modify the event."
+msgstr "Termin ändern."
+
+#: lib/tooltips.php:51
+msgid ""
+"Delete the event from the system\n"
+"(no undo possible)."
+msgstr ""
+"Termin komplett aus dem Kalender löschen, kann nicht rückgängig gemacht "
+"werden."
+
+#: lib/tooltips.php:53
+msgid ""
+"Detach the respective event\n"
+"from the project, but do not\n"
+"delete it from the calender.\n"
+"The event can be reattached by\n"
+"adding the project-name to its\n"
+"categories."
+msgstr ""
+"Termin vom Projekt \"lösen\". Der Termin bleibt aber im Kalender "
+"eingetragen. Es ist möglich, den Termin wieder zum Projekt hinzuzufügen, "
+"indem man den Projekt-Namen zu der Katergorien-Liste des Termins hinzufügt."
+
+#: lib/tooltips.php:60
+msgid ""
+"  Klick mich, um das Sortieren\n"
+"nach diesem Feld ein-\n"
+"oder auszuschalten!"
+msgstr ""
+
+#: lib/tooltips.php:64
+msgid "  Klick mich, um die Sortierreihenfolge umzukehren!"
+msgstr ""
+
+#: lib/tooltips.php:66
+msgid ""
+"  Klick mich, um eine Em@il an die ausgewählten\n"
+"Musiker zu versenden. Auf der folgenden Seite kann\n"
+"die Auswahl dann noch modifiziert werden.\n"
+"\"angezeigt\" bedeutet: nicht\n"
+"nur die auf der aktuellen\n"
+"Anzeige-Seite, sondern\n"
+"alle, die den Such-Kriterien\n"
+"entsprechen."
+msgstr ""
+
+#: lib/tooltips.php:75
+msgid ""
+"  Klick mich, um alle gerade\n"
+"angezeigten Musiker zu der\n"
+"Em@il-Auswahl hinzuzufügen.\n"
+"\"angezeigt\" bedeutet: nicht\n"
+"nur die auf der aktuellen\n"
+"Anzeige-Seite, sondern\n"
+"alle, die den Such-Kriterien\n"
+"entsprechen."
+msgstr ""
+
+#: lib/tooltips.php:84
+msgid ""
+"  Klick mich, um alle gerade\n"
+"angezeigten Musiker von der\n"
+"Em@il-Auswahl zu entfernen"
+msgstr ""
+
+#: lib/tooltips.php:88
+msgid ""
+"  Klick mich, um die\n"
+"Sortierreihenfolge auf die\n"
+"Voreinstellung zurückzusetzen."
+msgstr ""
+
+#: lib/tooltips.php:91
+msgid ""
+"  Klick mich, um den\n"
+"aktuellen Filter zu löschen."
+msgstr ""
+
+#: lib/tooltips.php:94
+msgid ""
+"  Klick mich, um die\n"
+"Suchkriterien zu verstecken."
+msgstr ""
+
+#: lib/tooltips.php:97
+msgid ""
+"  Klick mich, um die\n"
+"Suchkriterien anzuzeigen."
+msgstr ""
+
+#: lib/tooltips.php:100
+#, php-format
+msgid ""
+"  Klick mich, um die\n"
+"aktuellen Suchkriterien anzuwenden. Suchkriterien\n"
+"können in den Feldern eingegeben werden.\n"
+"Als Platzhalter verwendet man \"%%\"."
+msgstr ""
+
+#: lib/tooltips.php:105
+#, php-format
+msgid ""
+"  Feld für Suchkriterien.\n"
+"Als Platzhalter verwendet man \"%%\", z.B. \"%%Ste%%an\"\n"
+"beim Vornamen. Bei numerischen Feldern ist links\n"
+"eine Auswahlbox mit Vergleichsoperationen."
+msgstr ""
+
+#: lib/tooltips.php:110
+msgid ""
+"  Click mich, um mich\n"
+"Deinem Massenmail-Vorhaben\n"
+"hinzuzufügen. Schäme Dich!"
+msgstr ""
+
+#: lib/tooltips.php:114
+msgid "Einzelnen Datensatz anzeigen"
+msgstr ""
+
+#: lib/tooltips.php:115
+msgid ""
+"Einzelnen Datensatz anzeigen,\n"
+"zeigt ein neues Formular mit\n"
+"detaillierten Eingabefeldern\n"
+"und Abbruchmöglichkeit."
+msgstr ""
+
+#: lib/tooltips.php:119
+msgid ""
+"Einzelnen Datensatz kopieren,\n"
+"zeigt ein neues Formular mit\n"
+"detaillierten Eingabefeldern\n"
+"und Abbruchmöglichkeit."
+msgstr ""
+
+#: lib/tooltips.php:123
+msgid ""
+"Einzelnen Datensatz löschen,\n"
+"zeigt den aktuellen Datensatz zunächst an.\n"
+"Gelöscht wird der erst nach einer\n"
+"weiteren Bestätigung. Trotzdem:\n"
+"VORSICHT!."
+msgstr ""
+
+#: lib/tooltips.php:128
+msgid ""
+"  Adressaten in potentielle\n"
+"Massenmail Adressliste aufnehmen.\n"
+"Kann man (glücjlicherweise) \n"
+"vor dem Senden der Em@il noch\n"
+"korrigieren. Trotzdem:\n"
+"Think thrice about it."
+msgstr ""
+
+#: lib/tooltips.php:136
+msgid "nothing"
+msgstr ""
+
+#: lib/triggers/instrumentation-change-instrument.TUB.inc.php:68
+#, php-format
+msgid "Instrument not known by %s, correct that first! %s only plays %s!!!"
+msgstr ""
+"%s spielt das Instrument eventuell nicht, %s spielt nur %s, soweit wir "
+"wissen!!!"
+
+#: lib/triggers/instrumentation-change-instrument.TUB.inc.php:70
+msgid "Click on the following button to enforce your decision"
+msgstr "Änderung erzwingen"
+
+#: lib/triggers/instrumentation-change-instrument.TUB.inc.php:71
+#, fuzzy, php-format
+msgid ""
+"This will also add \"%s\" to $s's list of known instruments. Unfortunately, "
+"all your other changes will be discarded. You may want to try the \"Back\"-"
+"Button of your browser."
+msgstr ""
+"Dadurch wird auch \"%s\" zur Instrumentenliste für %s hinzugefügt. Leider "
+"gehen alle anderen Änderungen verloren. Möglicherweise ist der \"Zurück\"-"
+"Knopf des Web-Browsers eine praktischere Option."
+
+#: lib/triggers/instrumentation-change-instrument.TUB.inc.php:75
+#, php-format
+msgid "Really Change %s's instrument!!!"
+msgstr "Das Instrument von %s wirklich ändern!!!"
+
+#: settings.php:71
+msgid "concerts"
+msgstr "Konzerte"
+
+#: settings.php:72
+msgid "rehearsals"
+msgstr "Proben"
+
+#: settings.php:73
+msgid "other"
+msgstr "Sonstiges"
+
+#: settings.php:74
+msgid "management"
+msgstr "Vorstand"
+
+#: templates/admin-settings.php:5
+#, fuzzy
+msgid "Group"
+msgstr "Benutzer-Gruppe"
+
+#: templates/admin-settings.php:6
+msgid "User Group"
+msgstr "Benutzer-Gruppe"
+
+#: templates/app-settings.php:5
+msgid "name of orchestra"
+msgstr ""
+
+#: templates/app-settings.php:10
+msgid "Current Key"
+msgstr "Aktueller Schlüssel"
+
+#: templates/app-settings.php:11
+msgid "New Key"
+msgstr "Neuer Schlüssel"
+
+#: templates/app-settings.php:12 templates/app-settings.php:42
+#: templates/email-settings.php:49 templates/settings.php:43
+#: templates/share-settings.php:16
+msgid "show"
+msgstr "zeigen"
+
+#: templates/app-settings.php:13
+msgid "Change Encryption Key"
+msgstr "Schlüssel ändern"
+
+#: templates/app-settings.php:14
+msgid "The encryption key was changed"
+msgstr ""
+
+#: templates/app-settings.php:15
+#, fuzzy
+msgid "Unable to change the encryption key"
+msgstr "Schlüssel ändern"
+
+#: templates/app-settings.php:16
+msgid "Data will be stored unencrypted"
+msgstr ""
+
+#: templates/app-settings.php:17
+msgid "The keys are the same and remain unchanged."
+msgstr ""
+
+#: templates/app-settings.php:21
+msgid "Distribute Encryption Key"
+msgstr "Schlüssel publizieren"
+
+#: templates/app-settings.php:21
+msgid ""
+"Insert the data-base encryption key into the user preferences of all users "
+"belonging to the user group. The data-base key will be encrypted by the "
+"respective user's public key."
+msgstr ""
+"Füge den Datenbank-Schlüssel in die persönlichen Einstellungen aller "
+"Mitglieder der Orchester-Gruppe ein. Der Schlüssel wird dabei wiederum mit "
+"den perönlichen öffentlichen SSL-Schlüsseln der Benutzer verschlüsselt."
+
+#: templates/app-settings.php:27
+msgid "Server"
+msgstr ""
+
+#: templates/app-settings.php:28
+msgid "Database Server"
+msgstr "Datenbank-Server"
+
+#: templates/app-settings.php:30
+#, fuzzy
+msgid "Database"
+msgstr "Datenbank-Name"
+
+#: templates/app-settings.php:31
+msgid "Database Name"
+msgstr "Datenbank-Name"
+
+#: templates/app-settings.php:33
+msgid "User"
+msgstr ""
+
+#: templates/app-settings.php:34
+msgid "Database User"
+msgstr "Datenbank-Benutzer"
+
+#: templates/app-settings.php:40
+#, fuzzy
+msgid "Current Password"
+msgstr "Neues Passwort"
+
+#: templates/app-settings.php:41 templates/email-settings.php:48
+msgid "New Password"
+msgstr "Neues Passwort"
+
+#: templates/app-settings.php:43
+msgid "Change Database Password"
+msgstr "Datenbank-Passwort ändern"
+
+#: templates/app-settings.php:44
+#, fuzzy
+msgid "The database password was changed"
+msgstr "Datenbank-Passwort ändern"
+
+#: templates/app-settings.php:45
+#, fuzzy
+msgid "Unable to change the database password"
+msgstr "Datenbank-Passwort ändern"
+
+#: templates/debug.php:2
+#, fuzzy
+msgid "Edit an event"
+msgstr "Adressen bearbeiten"
+
+#: templates/devel-settings.php:5 templates/expertmode.php:53
+msgid "Links"
+msgstr ""
+
+#: templates/devel-settings.php:6 templates/devel-settings.php:10
+#: templates/devel-settings.php:14 templates/devel-settings.php:18
+msgid "Test Link"
+msgstr ""
+
+#: templates/devel-settings.php:7 templates/devel-settings.php:8
+#, php-format
+msgid "Link to %s"
+msgstr ""
+
+#: templates/devel-settings.php:11 templates/devel-settings.php:12
+msgid "Link to the source-code"
+msgstr ""
+
+#: templates/devel-settings.php:15 templates/devel-settings.php:16
+msgid "Link to the source-code documentation"
+msgstr ""
+
+#: templates/devel-settings.php:21
+msgid "Link to Owncloud Developer Information"
+msgstr ""
+
+#: templates/devel-settings.php:24
+msgid "Owncloud developer documentation"
+msgstr ""
+
+#: templates/email-settings.php:11 templates/part.common.header.php:19
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: templates/email-settings.php:24 templates/email-settings.php:32
+msgid "security"
+msgstr ""
+
+#: templates/email-settings.php:42
+#, fuzzy
+msgid "Email Account"
+msgstr "Em@il Empfänger"
+
+#: templates/email-settings.php:43
+#, fuzzy
+msgid "Email-User"
+msgstr "Em@il Historie"
+
+#: templates/email-settings.php:44
+msgid "Login for email account."
+msgstr ""
+
+#: templates/email-settings.php:50
+#, fuzzy
+msgid "Change email password"
+msgstr "Datenbank-Passwort ändern"
+
+#: templates/email-settings.php:51
+msgid "The email password was changed"
+msgstr ""
+
+#: templates/email-settings.php:52
+msgid "Unable to change the email password"
+msgstr ""
+
+#: templates/email-settings.php:54
+msgid "Bulk Sender Identity"
+msgstr ""
+
+#: templates/email-settings.php:55
+#, fuzzy
+msgid "Real Sender Name"
+msgstr "Absender-Name"
+
+#: templates/email-settings.php:56
+msgid "From: name"
+msgstr ""
+
+#: templates/email-settings.php:57
+#, fuzzy
+msgid "Email From Adress"
+msgstr "Ungültige Em@il Adresse"
+
+#: templates/email-settings.php:58
+msgid "From: address"
+msgstr ""
+
+#: templates/email-settings.php:60
+#, fuzzy
+msgid "Test Settings"
+msgstr "Einstellungen"
+
+#: templates/email-settings.php:61
+msgid "Test Email Setup"
+msgstr ""
+
+#: templates/email-settings.php:62 templates/email-settings.php:63
+msgid "Email test-mode; send emails only to the email test-address."
+msgstr ""
+
+#: templates/email-settings.php:63
+#, fuzzy
+msgid "Test-Mode"
+msgstr "Experten-Modus"
+
+#: templates/email-settings.php:64
+#, fuzzy
+msgid "Test Email Adress"
+msgstr "Ungültige Em@il Adresse"
+
+#: templates/email-settings.php:65
+msgid "Test address"
+msgstr ""
+
+#: templates/events.php:10
+msgid "Events for"
+msgstr "Termine für"
+
+#: templates/events.php:21
+msgid "Add Concert"
+msgstr "Neues Konzert"
+
+#: templates/events.php:22
+msgid "Add Rehearsal"
+msgstr "Neue Probe"
+
+#: templates/events.php:23
+msgid "Add Other Event"
+msgstr "Sonst. Termin"
+
+#: templates/events.php:24
+msgid "Management Event"
+msgstr "Vorstands-Termin"
+
+#: templates/events.php:31
+msgid "Download"
+msgstr "Herunterladen"
+
+#: templates/eventslisting.php:27
+msgid "no events"
+msgstr "keine Termine"
+
+#: templates/expertmode.php:13
+msgid "Synchronize Events"
+msgstr "Termine zuordnen"
+
+#: templates/expertmode.php:18
+msgid "Recreate all Views"
+msgstr "\"Views\" regenerieren"
+
+#: templates/expertmode.php:19
+#, fuzzy
+msgid "Recreate the ``Detailed Instrumentation'' hybrid-table for each project"
+msgstr ""
+"Die \"Detaillierte Besetzung\" (inklusive persönlicher Daten) besteht "
+"eigentlich aus einer Ansicht auf zwei Tabellen. Anklicken, um alle diese "
+"virtuellen Tabellen neu zu erzeugen."
+
+#: templates/expertmode.php:23
+msgid "Check Instruments"
+msgstr "Instrumenten-Konsistenztest"
+
+#: templates/expertmode.php:24
+msgid ""
+"Check whether the instrumentation numbers table and the musicians table "
+"mention the same instruments"
+msgstr ""
+"Testen, ob die in den verschiedenen Tabellen der Datenbank verwendeten "
+"Instrumente auch tatsächlich in allen Tabellen angelegt sind."
+
+#: templates/expertmode.php:28
+msgid "Adjust Instruments"
+msgstr "Instrumente abgleichen"
+
+#: templates/expertmode.php:29
+msgid ""
+"Make sure the instruments table contains at least any instrument played by "
+"any musician."
+msgstr ""
+"Sicherstellen, dass die in den verschiedenen Tabellen der Datenbank "
+"verwendeten Instrumente auch tatsächlich in allen Tabellen angelegt sind "
+"(Vorsicht: klappt derzeit nicht)."
+
+#: templates/expertmode.php:33 templates/settings.php:31
+msgid "Example"
+msgstr "Beispiel"
+
+#: templates/expertmode.php:34
+msgid "Example Do-Nothing Button"
+msgstr ""
+
+#: templates/expertmode.php:40
+msgid "Predefined data-base operations"
+msgstr ""
+
+#: templates/expertmode.php:42
+msgid "Operation generated Response"
+msgstr "Rückmeldungen der Operationen"
+
+#: templates/expertmode.php:46
+msgid "Clear Output"
+msgstr "Ausgabe Löschen"
+
+#: templates/expertmode.php:48
+msgid "Remove output, if any is present."
+msgstr "Eventuell vorhande Nachrichten vorangegangener Operationen entfernen."
+
+#: templates/expertmode.php:55
+msgid "Open phpmyadmin"
+msgstr "phpMyAdmin (neues Fenster)"
+
+#: templates/expertmode.php:57
+#, fuzzy
+msgid ""
+"Open the login-window to the data-base back-bone. Although this is ``expert "
+"mode'' you will fall in love with the ``export'' facilities of the data-base "
+"back-bone. TRY IT OUT! DO IT!"
+msgstr ""
+"Login-Fenster zum Datenbank-Backend öffnen. Dieser Dialog ist zwar mit "
+"\"Experten-Operationen\" betietelt, aber Sie werden dennoch die \"Export\"-"
+"Funktionen des Datenbank-Backends schätzen. Versuchen Sie es doch einmal!"
+
+#: templates/expertmode.php:60
+msgid "Source-Code Archive"
+msgstr ""
+
+#: templates/expertmode.php:62
+msgid ""
+"View the git-repository holding all revision of this entire mess. Mostly "
+"useful for web-developers."
+msgstr ""
+
+#: templates/expertmode.php:65
+msgid "Source-Code Documentation"
+msgstr ""
+
+#: templates/expertmode.php:67
+msgid ""
+"Internal documentation of the ``CAFEV-App'', mostly useful for web-"
+"developers."
+msgstr ""
+
+#: templates/expertmode.php:70
+msgid "Owncloud Developer Documentation"
+msgstr ""
+
+#: templates/expertmode.php:72
+msgid "Owncloud Developer Manual, mostly useful for web-developers."
+msgstr ""
+
+#: templates/not-a-member.php:2
+msgid ""
+"Camerata DB: Error: Not a member of the dedicated orchestra group, you are "
+msgstr ""
+
+#: templates/part.common.header.php:12
+msgid "Expert Operations"
+msgstr "Experten-Menü"
+
+#: templates/part.common.header.php:13
+msgid "Expert Operations like recreating views etc."
+msgstr ""
+"A C H T U N G !\n"
+"\tK O M B J U D E R - R A U M\n"
+"Dieser Raum is voll bis unner de Deck\n"
+"mit de dollste elekdrische\n"
+"un vollelekdronische Anlaache.\n"
+"Staune und gugge derf jeder, awwer\n"
+"rummworschdele un Gnöbbsche drücke\n"
+"uff de Kombjuder dörffe nur mir,\n"
+"die Exberde.\n"
+"Aber bitte einfach nicht abschrecken lassen ..."
+
+#: templates/part.common.header.php:20
+msgid "Personal Settings."
+msgstr "Persönliche Einstellungen."
+
+#: templates/part.common.header.php:28
+msgid "Toggle Visibility"
+msgstr ""
+
+#: templates/part.common.header.php:30
+msgid "Minimize or maximize the containing block."
+msgstr ""
+
+#: templates/project-instruments.php:27
+msgid "Success!"
+msgstr "Erfolg!"
+
+#: templates/settings.php:5
+msgid ""
+"Control the display of tooltips. Warning: this works globally for all "
+"OwnCloud applications."
+msgstr ""
+"Steuert die Anzeige von Tool-Tips. Achtung: die Einstellung gilt dann für "
+"all OwnCloud-Apps."
+
+#: templates/settings.php:6
+#, fuzzy
+msgid "Show a second button which leads to a dialog with ``advanced'' settings"
+msgstr ""
+"Blendet einen weiteren \"Button\" ein, der zu einem Experten-Dialog hinleitet"
+
+#: templates/settings.php:7
+msgid "Show a certain amount of debug information, normally not needed."
+msgstr ""
+
+#: templates/settings.php:11
+#, fuzzy
+msgid "Personal Settings"
+msgstr "Persönliche Einstellungen."
+
+#: templates/settings.php:13
+msgid "Administration"
+msgstr ""
+
+#: templates/settings.php:14
+msgid "Sharing"
+msgstr ""
+
+#: templates/settings.php:15
+msgid "Email"
+msgstr ""
+
+#: templates/settings.php:16
+msgid "Development"
+msgstr ""
+
+#: templates/settings.php:23
+msgid "Tool-Tips"
+msgstr "Ballon-Hilfe"
+
+#: templates/settings.php:26
+msgid "Expert-Mode"
+msgstr "Experten-Modus"
+
+#: templates/settings.php:29
+msgid "Debug-Mode"
+msgstr "Debug-Modus"
+
+#: templates/settings.php:31 templates/settings.php:34
+#: templates/settings.php:35
+msgid "Example Text"
+msgstr "Nur ein Beispiel ..."
+
+#: templates/settings.php:37
+msgid "Dummy"
+msgstr ""
+
+#: templates/settings.php:41
+msgid "Own Password"
+msgstr "Eigenes Passwort"
+
+#: templates/settings.php:42
+msgid "DB Encryption Key"
+msgstr "DB Schlüssel"
+
+#: templates/settings.php:44
+#, fuzzy
+msgid "Set Encryption Key"
+msgstr "DB Schlüssel"
+
+#: templates/settings.php:45
+msgid "The encryption key has been set successfully."
+msgstr ""
+
+#: templates/settings.php:46
+msgid "Unable to set the encryption key."
+msgstr ""
+
+#: templates/share-settings.php:9
+msgid "shareowner"
+msgstr "Share-Strohpuppe"
+
+#: templates/share-settings.php:10
+msgid "force"
+msgstr "zwingen"
+
+#: templates/share-settings.php:11
+msgid "Check"
+msgstr "Überprüfen"
+
+#: templates/share-settings.php:15
+msgid "Share-Password"
+msgstr "Share-Passwort"
+
+#: templates/share-settings.php:17
+msgid "Generate"
+msgstr "Erzeugen"
+
+#: templates/share-settings.php:18
+msgid "Change"
+msgstr ""
+
+#: templates/share-settings.php:22 templates/share-settings.php:25
+#: templates/share-settings.php:28 templates/share-settings.php:31
+msgid "calendarname"
+msgstr "Kalender-Name"
+
+#: templates/share-settings.php:23
+msgid "Calendar for Concerts"
+msgstr "Konzert-Kalender"
+
+#: templates/share-settings.php:26
+msgid "Calendar for Rehearsals"
+msgstr "Proben-Kalender"
+
+#: templates/share-settings.php:29
+msgid "Calendar for other Events"
+msgstr "Andere öffentliche Termine"
+
+#: templates/share-settings.php:32
+msgid "Management-Calendar"
+msgstr "Interner Vorstands-Kalender"
+
+#: templates/share-settings.php:35
+#, fuzzy
+msgid "#Minutes"
+msgstr "Minuten"
+
+#: templates/share-settings.php:36
+msgid "Default Duration for Events"
+msgstr "Voreinstellung Termin-Dauer"
