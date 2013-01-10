@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-09 16:33+0100\n"
+"POT-Creation-Date: 2013-01-10 13:07+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -101,7 +101,7 @@ msgstr ""
 
 #: ajax/settings/app-settings.php:100
 #, php-format
-msgid "Name of orchestra set to \"%s\""
+msgid "Name of orchestra set to `%s'"
 msgstr ""
 
 #: ajax/settings/app-settings.php:144
@@ -150,7 +150,7 @@ msgstr ""
 
 #: ajax/settings/app-settings.php:265
 #, php-format
-msgid "Using \"%s\" at %s as %s-server."
+msgid "Using `%s' at %s as %s-server."
 msgstr ""
 
 #: ajax/settings/app-settings.php:271
@@ -164,7 +164,7 @@ msgstr ""
 
 #: ajax/settings/app-settings.php:295
 #, php-format
-msgid "\"%s\" doesn't seem to be a candidate for an IP-port."
+msgid "`%s' doesn't seem to be a candidate for an IP-port."
 msgstr ""
 
 #: ajax/settings/app-settings.php:319
@@ -173,12 +173,12 @@ msgstr ""
 
 #: ajax/settings/app-settings.php:330
 #, php-format
-msgid "Using \"%s\" for message transport."
+msgid "Using `%s' for message transport."
 msgstr ""
 
 #: ajax/settings/app-settings.php:344
 #, php-format
-msgid "Using \"%s\" as login."
+msgid "Using `%s' as login."
 msgstr ""
 
 #: ajax/settings/app-settings.php:354
@@ -216,37 +216,37 @@ msgstr ""
 
 #: ajax/settings/app-settings.php:421 ajax/settings/app-settings.php:450
 #, php-format
-msgid "\"%s\" doesn't seem to be a valid email-address."
+msgid "`%s' doesn't seem to be a valid email-address."
 msgstr ""
 
 #: ajax/settings/app-settings.php:429
 #, php-format
-msgid "Using \"%s\" as email-address for test-mode."
+msgid "Using `%s' as email-address for test-mode."
 msgstr ""
 
 #: ajax/settings/app-settings.php:439
 #, php-format
-msgid "Using \"%s\" as name of the sender identity."
+msgid "Using `%s' as name of the sender identity."
 msgstr ""
 
 #: ajax/settings/app-settings.php:458
 #, php-format
-msgid "Using \"%s\" as sender email-address."
+msgid "Using `%s' as sender email-address."
 msgstr ""
 
 #: ajax/settings/app-settings.php:474
 #, php-format
-msgid "Link for \"%s\" set to \"%s\"."
+msgid "Link for `%s' set to `%s'."
 msgstr ""
 
 #: ajax/settings/app-settings.php:487
 #, php-format
-msgid "Unable to test link for \"%s\" without a link target."
+msgid "Unable to test link for `%s' without a link target."
 msgstr ""
 
 #: ajax/settings/app-settings.php:493
 #, php-format
-msgid "New window or tab with \"%s\"?"
+msgid "New window or tab with `%s'?"
 msgstr ""
 
 #: ajax/settings/app-settings.php:516
@@ -285,47 +285,47 @@ msgstr ""
 msgid "Tooltips changed"
 msgstr ""
 
-#: index.php:85
+#: index.php:93
 msgid "Missing or invalid fields"
 msgstr ""
 
-#: index.php:86
+#: index.php:94
 msgid "Title"
 msgstr ""
 
-#: index.php:87
+#: index.php:95
 msgid "Calendar"
 msgstr ""
 
-#: index.php:88
+#: index.php:96
 msgid "From Date"
 msgstr ""
 
-#: index.php:89
+#: index.php:97
 msgid "From Time"
 msgstr ""
 
-#: index.php:90
+#: index.php:98
 msgid "To Date"
 msgstr ""
 
-#: index.php:91
+#: index.php:99
 msgid "To Time"
 msgstr ""
 
-#: index.php:92
+#: index.php:100
 msgid "The event ends before it starts"
 msgstr ""
 
-#: index.php:93
+#: index.php:101
 msgid "There was a database fail"
 msgstr ""
 
-#: index.php:98
+#: index.php:106
 msgid "Do you really want to delete this event?"
 msgstr ""
 
-#: index.php:99
+#: index.php:107
 msgid "Do you really want to detach this event from the current project?"
 msgstr ""
 
@@ -515,8 +515,8 @@ msgstr ""
 #: lib/email.php:1185
 #, php-format
 msgid ""
-"The subject must not consist of \"%s\" as only part.<br/>Please correct that "
-"and then hit the \"Send\"-button again."
+"The subject must not consist of `%s' as only part.<br/>Please correct that "
+"and then hit the `Send'-button again."
 msgstr ""
 
 #: lib/email.php:1188
@@ -526,7 +526,7 @@ msgstr ""
 #: lib/email.php:1193
 msgid ""
 "The sender-name should not be empty.<br/>Please correct that and then hit "
-"the \"Send\"-button again."
+"the `Send'-button again."
 msgstr ""
 
 #: lib/email.php:1195
@@ -538,7 +538,7 @@ msgid "The email-backend throwed an exception stating:<br/>"
 msgstr ""
 
 #: lib/email.php:1346
-msgid "Please correct the problem and then click on the \"Send\"-button again."
+msgid "Please correct the problem and then click on the `Send'-button again."
 msgstr ""
 
 #: lib/email.php:1347 lib/email.php:1492
@@ -576,14 +576,14 @@ msgstr ""
 #: lib/email.php:1489
 #, php-format
 msgid ""
-"During send, the email-backend throwed an exception stating:<br/>\"%s\"</"
-"br>Please correct the problem and then click on the \"Send\"-button again."
+"During send, the email-backend throwed an exception stating:<br/>`%s'</"
+"br>Please correct the problem and then click on the `Send'-button again."
 msgstr ""
 
 #: lib/email.php:1511
 #, php-format
 msgid ""
-"The IMAP backend returned the error \"%s\". Unfortunate Snafu.<br/>I was "
+"The IMAP backend returned the error `%s'. Unfortunate Snafu.<br/>I was "
 "trying to copy the message to our send-folder, but that failed."
 msgstr ""
 
@@ -595,18 +595,18 @@ msgstr ""
 #, php-format
 msgid ""
 "Could not copy the message to the send-folder.</br>Server returned the "
-"error: \"%s\""
+"error: `%s'"
 msgstr ""
 
 #: lib/email.php:1523
-msgid "Copying to \"Sent\"-folder failed."
+msgid "Copying to `Sent'-folder failed."
 msgstr ""
 
 #: lib/email.php:1578
 #, php-format
 msgid ""
-"The %s address \"%s\" seems to be invalid.<br/>Please correct that first and "
-"then click on the \"Send\"-button again.<br/>Unfortunately, attachments (if "
+"The %s address `%s' seems to be invalid.<br/>Please correct that first and "
+"then click on the `Send'-button again.<br/>Unfortunately, attachments (if "
 "any) have to be specified again."
 msgstr ""
 
@@ -783,18 +783,18 @@ msgid ""
 msgstr ""
 
 #: lib/tooltips.php:19
-msgid "Export as ``full-featured'' Excel-2007 table, ``.xslx''."
+msgid "Export as `full-featured' Excel-2007 table, `.xslx'."
 msgstr ""
 
 #: lib/tooltips.php:20
 msgid ""
-"Export as HTML page, but set the file type to ``spread-sheed''. Should also "
-"be readable by standard office-programs as ``Excel''-table."
+"Export as HTML page, but set the file type to `spread-sheed'. Should also be "
+"readable by standard office-programs as `Excel'-table."
 msgstr ""
 
 #: lib/tooltips.php:21
 msgid ""
-"Export the visible part of the data-base to an office-format. The ``Excel''-"
+"Export the visible part of the data-base to an office-format. The `Excel'-"
 "export should produce useful input for either Libre- or OpenOffice or for "
 "the product of some well-known software-corporation with seat in Redmond, "
 "USA."
@@ -930,7 +930,7 @@ msgid ""
 "  Klick mich, um eine Em@il an die ausgewählten\n"
 "Musiker zu versenden. Auf der folgenden Seite kann\n"
 "die Auswahl dann noch modifiziert werden.\n"
-"\"angezeigt\" bedeutet: nicht\n"
+"`angezeigt' bedeutet: nicht\n"
 "nur die auf der aktuellen\n"
 "Anzeige-Seite, sondern\n"
 "alle, die den Such-Kriterien\n"
@@ -942,7 +942,7 @@ msgid ""
 "  Klick mich, um alle gerade\n"
 "angezeigten Musiker zu der\n"
 "Em@il-Auswahl hinzuzufügen.\n"
-"\"angezeigt\" bedeutet: nicht\n"
+"`angezeigt' bedeutet: nicht\n"
 "nur die auf der aktuellen\n"
 "Anzeige-Seite, sondern\n"
 "alle, die den Such-Kriterien\n"
@@ -987,14 +987,14 @@ msgid ""
 "  Klick mich, um die\n"
 "aktuellen Suchkriterien anzuwenden. Suchkriterien\n"
 "können in den Feldern eingegeben werden.\n"
-"Als Platzhalter verwendet man \"%%\"."
+"Als Platzhalter verwendet man `%%'."
 msgstr ""
 
 #: lib/tooltips.php:107
 #, php-format
 msgid ""
 "  Feld für Suchkriterien.\n"
-"Als Platzhalter verwendet man \"%%\", z.B. \"%%Ste%%an\"\n"
+"Als Platzhalter verwendet man `%%', z.B. `%%Ste%%an'\n"
 "beim Vornamen. Bei numerischen Feldern ist links\n"
 "eine Auswahlbox mit Vergleichsoperationen."
 msgstr ""
@@ -1061,8 +1061,8 @@ msgstr ""
 #: lib/triggers/instrumentation-change-instrument.TUB.inc.php:71
 #, php-format
 msgid ""
-"This will also add \"%s\" to %s's list of known instruments. Unfortunately, "
-"all your other changes will be discarded. You may want to try the \"Back\"-"
+"This will also add `%s' to %s's list of known instruments. Unfortunately, "
+"all your other changes will be discarded. You may want to try the `Back'-"
 "Button of your browser."
 msgstr ""
 
@@ -1335,7 +1335,7 @@ msgid "Recreate all Views"
 msgstr ""
 
 #: templates/expertmode.php:19
-msgid "Recreate the ``Detailed Instrumentation'' hybrid-table for each project"
+msgid "Recreate the `Detailed Instrumentation' hybrid-table for each project"
 msgstr ""
 
 #: templates/expertmode.php:23
@@ -1388,8 +1388,8 @@ msgstr ""
 
 #: templates/expertmode.php:57
 msgid ""
-"Open the login-window to the data-base back-bone. Although this is ``expert "
-"mode'' you will fall in love with the ``export'' facilities of the data-base "
+"Open the login-window to the data-base back-bone. Although this is `expert "
+"mode' you will fall in love with the `export' facilities of the data-base "
 "back-bone. TRY IT OUT! DO IT!"
 msgstr ""
 
@@ -1409,8 +1409,7 @@ msgstr ""
 
 #: templates/expertmode.php:67
 msgid ""
-"Internal documentation of the ``CAFEV-App'', mostly useful for web-"
-"developers."
+"Internal documentation of the `CAFEV-App', mostly useful for web-developers."
 msgstr ""
 
 #: templates/expertmode.php:70
@@ -1442,7 +1441,7 @@ msgstr ""
 msgid "Toggle Visibility"
 msgstr ""
 
-#: templates/part.common.header.php:30
+#: templates/part.common.header.php:30 templates/part.common.header.php:58
 msgid "Minimize or maximize the containing block."
 msgstr ""
 
@@ -1457,7 +1456,7 @@ msgid ""
 msgstr ""
 
 #: templates/settings.php:6
-msgid "Show a second button which leads to a dialog with ``advanced'' settings"
+msgid "Show a second button which leads to a dialog with `advanced' settings"
 msgstr ""
 
 #: templates/settings.php:7

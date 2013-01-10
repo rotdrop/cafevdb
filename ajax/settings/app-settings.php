@@ -97,7 +97,7 @@ if (isset($_POST['orchestra'])) {
   Config::setValue('orchestra', $value);
   OC_JSON::success(
     array("data" => array(
-            "message" => L::t('Name of orchestra set to "%s"', $value))));  
+            "message" => L::t('Name of orchestra set to `%s\'', $value))));  
   return true;
 }
 
@@ -262,7 +262,7 @@ foreach (array('smtp', 'imap') as $proto) {
       Config::setValue($proto.'server', $value);
       OC_JSON::success(
         array("data" => array(
-                'message' => L::t('Using "%s" at %s as %s-server.',
+                'message' => L::t('Using `%s\' at %s as %s-server.',
                                   array($value, $ip, strtoupper($proto))))));
     } else {
       OC_JSON::error(
@@ -292,7 +292,7 @@ foreach (array('smtp', 'imap') as $proto) {
       OC_JSON::error(
         array(
           "data" => array(
-            'message' => L::t('"%s" doesn\'t seem to be a candidate for an IP-port.',
+            'message' => L::t('`%s\' doesn\'t seem to be a candidate for an IP-port.',
                               array($value)))));
       return false;
     }
@@ -327,7 +327,7 @@ foreach (array('smtp', 'imap') as $proto) {
     OC_JSON::success(
       array(
         "data" => array(
-          "message" => L::t('Using "%s" for message transport.', array($value)),
+          "message" => L::t('Using `%s\' for message transport.', array($value)),
           "proto" => $proto,
           "port" => $port)));
 
@@ -341,7 +341,7 @@ if (isset($_POST['emailuser'])) {
   // Should we now check whether we really can log in to the db-server?
   OC_JSON::success(
     array("data" => array(
-            'message' => L::t('Using "%s" as login.', array($value)))));
+            'message' => L::t('Using `%s\' as login.', array($value)))));
   return true;
 }
 
@@ -418,7 +418,7 @@ if (isset($_POST['emailtestaddress'])) {
   if (filter_var($value, FILTER_VALIDATE_EMAIL) === false) {
     OC_JSON::error(
       array("data" => array(
-              'message' => L::t('"%s" doesn\'t seem to be a valid email-address.',
+              'message' => L::t('`%s\' doesn\'t seem to be a valid email-address.',
                                 array($value)))));
     return false;
   }
@@ -426,7 +426,7 @@ if (isset($_POST['emailtestaddress'])) {
   Config::setValue('emailtestaddress', $value);
   OC_JSON::success(
     array("data" => array(
-            'message' => L::t('Using "%s" as email-address for test-mode.',
+            'message' => L::t('Using `%s\' as email-address for test-mode.',
                               array($value)))));
   return true;
 }
@@ -436,7 +436,7 @@ if (isset($_POST['emailfromname'])) {
   Config::setValue('emailfromname', $value);
   OC_JSON::success(
     array("data" => array(
-            'message' => L::t('Using "%s" as name of the sender identity.',
+            'message' => L::t('Using `%s\' as name of the sender identity.',
                               array($value)))));
   return true;
 }
@@ -447,7 +447,7 @@ if (isset($_POST['emailfromaddress'])) {
   if (filter_var($value, FILTER_VALIDATE_EMAIL) === false) {
     OC_JSON::error(
       array("data" => array(
-              'message' => L::t('"%s" doesn\'t seem to be a valid email-address.',
+              'message' => L::t('`%s\' doesn\'t seem to be a valid email-address.',
                                 array($value)))));
     return false;
   }
@@ -455,7 +455,7 @@ if (isset($_POST['emailfromaddress'])) {
   Config::setValue('emailfromaddress', $value);
   OC_JSON::success(
     array("data" => array(
-            'message' => L::t('Using "%s" as sender email-address.',
+            'message' => L::t('Using `%s\' as sender email-address.',
                               array($value)))));
   return true;
 }
@@ -471,7 +471,7 @@ foreach ($devlinks as $link) {
     Config::setValue($link, $value);    
     OC_JSON::success(
       array("data" => array(
-              'message' => L::t('Link for "%s" set to "%s".',
+              'message' => L::t('Link for `%s\' set to `%s\'.',
                                 array($link, $value)))));
     return true;
   }
@@ -484,13 +484,13 @@ foreach ($devlinks as $link) {
       OC_JSON::error(
         array(
           "data" => array(
-            "message" => L::t('Unable to test link for "%s" without a link target.',
+            "message" => L::t('Unable to test link for `%s\' without a link target.',
                               array($link)))));
       return false;
     } else {
       OC_JSON::success(
         array("data" => array(
-                'message' => L::t('New window or tab with "%s"?',
+                'message' => L::t('New window or tab with `%s\'?',
                                   array($target)),
                 'link' => $link.'@'.Config::APP_NAME,
                 'target' => $target)));

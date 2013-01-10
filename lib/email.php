@@ -1182,8 +1182,8 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
       $DataValid = true;
 
       if ($strSubject == '') {
-        Util::alert(L::t('The subject must not consist of "%s" as only part.<br/>'.
-                         'Please correct that and then hit the "Send"-button again.',
+        Util::alert(L::t('The subject must not consist of `%s\' as only part.<br/>'.
+                         'Please correct that and then hit the `Send\'-button again.',
                          array($MailTag)),
                     L::t('Incomplete Subject'),
                     'cafevdb-email-error');
@@ -1191,7 +1191,7 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
       }
       if ($strSender == '') {
         Util::alert(L::t('The sender-name should not be empty.<br/>'.
-                         'Please correct that and then hit the "Send"-button again.'),
+                         'Please correct that and then hit the `Send\'-button again.'),
                     L::t('Descriptive Sender Name'),
                     'cafevdb-email-error');
         $DataValid = false;
@@ -1343,7 +1343,7 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
 
         Util::alert(L::t('The email-backend throwed an exception stating:<br/>').
                     '"'.$msg.'"<br/>'.
-                    L::t('Please correct the problem and then click on the "Send"-button again.'),
+                    L::t('Please correct the problem and then click on the `Send\'-button again.'),
                     L::t('Caught an exception'),
                     'cafevdb-email-error');
 
@@ -1487,8 +1487,8 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
         $msg = $exception->getMessage();
         Util::alert(
           L::t('During send, the email-backend throwed an exception stating:<br/>'
-               .'"%s"</br>'
-               .'Please correct the problem and then click on the "Send"-button again.',array($msg)),
+               .'`%s\'</br>'
+               .'Please correct the problem and then click on the `Send\'-button again.',array($msg)),
           L::t('Caught an exception'),
           'cafevdb-email-error');
         return false;
@@ -1508,7 +1508,7 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
                             $imapsecure == 'starttls' ? true : false, 'UTF-8');
       if (($ret = $imap->login($mail->Username, $mail->Password)) !== true) {
         Util::alert(
-          L::t('The IMAP backend returned the error "%s". Unfortunate Snafu.<br/>'.
+          L::t('The IMAP backend returned the error `%s\'. Unfortunate Snafu.<br/>'.
                'I was trying to copy the message to our send-folder, but that failed.',
                array($ret->toString())),
           L::t('IMAP connection failed'),
@@ -1518,9 +1518,9 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
       }
       if (($ret = $imap->appendMessage($mail->GetSentMIMEMessage(), 'Sent')) !== true) {
         Util::alert(L::t('Could not copy the message to the send-folder.</br>'.
-                         'Server returned the error: "%s"',
+                         'Server returned the error: `%s\'',
                          array($ret->toString())),
-                    L::t('Copying to "Sent"-folder failed.'),
+                    L::t('Copying to `Sent\'-folder failed.'),
                     'cafevdb-email-error');
         $imap->disconnect();
         return false;
@@ -1575,8 +1575,8 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
    */
   public static function echoInvalid($kind, $email)
   {
-    Util::alert(L::t('The %s address "%s" seems to be invalid.<br/>'.
-                     'Please correct that first and then click on the "Send"-button again.<br/>'.
+    Util::alert(L::t('The %s address `%s\' seems to be invalid.<br/>'.
+                     'Please correct that first and then click on the `Send\'-button again.<br/>'.
                      'Unfortunately, attachments (if any) have to be specified again.',
                      array($kind, $email)),
                 L::t('Invalid Email Address'),

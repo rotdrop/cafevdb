@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-09 16:32+0100\n"
+"POT-Creation-Date: 2013-01-10 13:07+0100\n"
 "PO-Revision-Date: 2013-01-09 16:33+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
@@ -289,47 +289,47 @@ msgstr "Experten-Modus geändert"
 msgid "Tooltips changed"
 msgstr "Tool-Tip Einstellung geändert"
 
-#: index.php:85
+#: index.php:93
 msgid "Missing or invalid fields"
 msgstr "Fehlende oder ungültige Formularfelder"
 
-#: index.php:86
+#: index.php:94
 msgid "Title"
 msgstr "Titel"
 
-#: index.php:87
+#: index.php:95
 msgid "Calendar"
 msgstr "Kalender-Name"
 
-#: index.php:88
+#: index.php:96
 msgid "From Date"
 msgstr "Start-Datum"
 
-#: index.php:89
+#: index.php:97
 msgid "From Time"
 msgstr "Start-Zeit"
 
-#: index.php:90
+#: index.php:98
 msgid "To Date"
 msgstr "End-Datum"
 
-#: index.php:91
+#: index.php:99
 msgid "To Time"
 msgstr "End-Zeit"
 
-#: index.php:92
+#: index.php:100
 msgid "The event ends before it starts"
 msgstr "Das Ereignes endet bevor es beginnt?!"
 
-#: index.php:93
+#: index.php:101
 msgid "There was a database fail"
 msgstr "Es gab einen Datenbank-Fehler"
 
-#: index.php:98
+#: index.php:106
 msgid "Do you really want to delete this event?"
 msgstr "Möchten Sie den Termin wirklich löschen?"
 
-#: index.php:99
+#: index.php:107
 msgid "Do you really want to detach this event from the current project?"
 msgstr "Möchten Sie den Termin wirklich vom Projekt lösen?"
 
@@ -579,8 +579,7 @@ msgstr "Der Emailversand ist leider aus unbekannten Gründen fehlgeschlagen."
 #: lib/email.php:1476
 msgid "General Failure reading your hard-disk ... just kidding."
 msgstr ""
-"General Failure is reading your hard-disk ... who is that `General Failure"
-"`?"
+"General Failure is reading your hard-disk ... who is that `General Failure`?"
 
 #: lib/email.php:1480
 msgid "Message has been sent, at least: no error from our side!"
@@ -735,8 +734,7 @@ msgid ""
 msgstr ""
 "Detaillierte Ansicht der Besetzung für das aktuelle Projekt. Persönliche "
 "Daten wie Email, Adresse usw. können hier geändert werden. Projektbezogene "
-"Daten können allerdings nur in der Ansicht `Kurz-Besetzung' geändert "
-"werden."
+"Daten können allerdings nur in der Ansicht `Kurz-Besetzung' geändert werden."
 
 #: lib/functions.php:487
 msgid "Brief Instrumentation"
@@ -844,8 +842,8 @@ msgstr "Export als Excel-2007-Tabelle im `.xslx'-Format."
 
 #: lib/tooltips.php:20
 msgid ""
-"Export as HTML page, but set the file type to `spread-sheed'. Should also "
-"be readable by standard office-programs as `Excel'-table."
+"Export as HTML page, but set the file type to `spread-sheed'. Should also be "
+"readable by standard office-programs as `Excel'-table."
 msgstr ""
 "Export als HTML-Seite, aber der Datei-Typ wird auf `Tabellendokument' "
 "gesetzt. Sollte von üblichen Tabellen-Kalkulations-Programmen geöffnet "
@@ -1000,9 +998,9 @@ msgid ""
 "adding the project-name to its\n"
 "categories."
 msgstr ""
-"Termin vom Projekt `lösen'. Der Termin bleibt aber im Kalender "
-"eingetragen. Es ist möglich, den Termin wieder zum Projekt hinzuzufügen, "
-"indem man den Projekt-Namen zu der Katergorien-Liste des Termins hinzufügt."
+"Termin vom Projekt `lösen'. Der Termin bleibt aber im Kalender eingetragen. "
+"Es ist möglich, den Termin wieder zum Projekt hinzuzufügen, indem man den "
+"Projekt-Namen zu der Katergorien-Liste des Termins hinzufügt."
 
 #: lib/tooltips.php:62
 msgid ""
@@ -1567,8 +1565,7 @@ msgstr "Quell-Code Dokumentation"
 
 #: templates/expertmode.php:67
 msgid ""
-"Internal documentation of the `CAFEV-App', mostly useful for web-"
-"developers."
+"Internal documentation of the `CAFEV-App', mostly useful for web-developers."
 msgstr ""
 "Interne Dokumentation des Quell-Codes der Web-Applikation, eigentlich nur "
 "für Entwickler nützlich."
@@ -1613,7 +1610,7 @@ msgstr "Persönlich"
 msgid "Toggle Visibility"
 msgstr "Sichtbarkeit der Kopfzeile ändern"
 
-#: templates/part.common.header.php:30
+#: templates/part.common.header.php:30 templates/part.common.header.php:58
 msgid "Minimize or maximize the containing block."
 msgstr "Den umgebenden Textblock minimieren oder maximieren."
 
@@ -1752,4 +1749,3 @@ msgstr "#Minuten"
 #: templates/share-settings.php:36
 msgid "Default Duration for Events"
 msgstr "Voreinstellung Termin-Dauer"
-

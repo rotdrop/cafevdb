@@ -16,7 +16,7 @@ $buttons['syncevents'] =
         'class' => 'operations expert button');
 $buttons['makeviews'] =
   array('name' => L::t('Recreate all Views'),
-        'title' => L::t('Recreate the ``Detailed Instrumentation\'\' hybrid-table for each project'),
+        'title' => L::t('Recreate the `Detailed Instrumentation\' hybrid-table for each project'),
         'id' => 'makeviews',
         'class' => 'operations expert button');
 $buttons['check'] =
@@ -54,7 +54,7 @@ $buttons['example'] =
   <input type="button"
     value="<?php echo L::t('Open phpmyadmin'); ?>"
     onclick="return window.open('<?php echo $_['phpmyadmin']; ?>','<?php echo Config::APP_NAME.'@phpmyadmin'; ?>');"
-    title="<?php echo L::t('Open the login-window to the data-base back-bone. Although this is ``expert mode\'\' you will fall in love with the ``export\'\' facilities of the data-base back-bone. TRY IT OUT! DO IT!'); ?>"/>
+    title="<?php echo L::t('Open the login-window to the data-base back-bone. Although this is `expert mode\' you will fall in love with the `export\' facilities of the data-base back-bone. TRY IT OUT! DO IT!'); ?>"/>
   <br/>
   <input type="button"
     value="<?php echo L::t('Source-Code Archive'); ?>"
@@ -64,7 +64,7 @@ $buttons['example'] =
   <input type="button"
     value="<?php echo L::t('Source-Code Documentation'); ?>"
     onclick="return window.open('<?php echo $_['sourcedocs']; ?>','Doxygen@<?php echo Config::APP_NAME; ?>');" 
-    title="<?php echo L::t('Internal documentation of the ``CAFEV-App\'\', mostly useful for web-developers.'); ?>"/>
+    title="<?php echo L::t('Internal documentation of the `CAFEV-App\', mostly useful for web-developers.'); ?>"/>
   <br/>
   <input type="button"
     value="<?php echo L::t('Owncloud Developer Documentation'); ?>"

@@ -68,9 +68,9 @@ if (!strstr($instruments, $instrument)) {
   $text1 = L::t('Instrument not known by %s, correct that first! %s only plays %s!!!',
                 array($musname, $musname, $instruments));
   $text2 = L::t('Click on the following button to enforce your decision');
-  $text3 = L::t('This will also add "%s" to %s\'s list of known instruments. '
+  $text3 = L::t('This will also add `%s\' to %s\'s list of known instruments. '
                 .'Unfortunately, all your other changes will be discarded. '.
-                'You may want to try the "Back"-Button of your browser.',
+                'You may want to try the `Back\'-Button of your browser.',
                 array($instrument, $musname));
   $btnValue = L::t('Really Change %s\'s instrument!!!', array($musname));
   $btn =<<<__EOT__
