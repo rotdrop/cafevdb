@@ -16,9 +16,9 @@ class Tooltips
         'test-linktarget' => L::t('Try to connect to the specified web-address, will open the web-address in another window or tab, depending your local browser preferences.'),
         'pme-export-csv' => L::t('Export in CSV-format using a semicolon as delimiter (Excel convention)'),
         'pme-export-html' => L::t('Export as HTML page without navigation elements; can also be loaded into your office-programs.'),
-        'pme-export-excel' => L::t('Export as ``full-featured\'\' Excel-2007 table, ``.xslx\'\'.'),
-        'pme-export-htmlexcel' => L::t('Export as HTML page, but set the file type to ``spread-sheed\'\'. Should also be readable by standard office-programs as ``Excel\'\'-table.'),
-        'pme-export-choice' => L::t('Export the visible part of the data-base to an office-format. The ``Excel\'\'-export should produce useful input for either Libre- or OpenOffice or for the product of some well-known software-corporation with seat in Redmond, USA.'),
+        'pme-export-excel' => L::t('Export as `full-featured\' Excel-2007 table, `.xslx\'.'),
+        'pme-export-htmlexcel' => L::t('Export as HTML page, but set the file type to `spread-sheed\'. Should also be readable by standard office-programs as `Excel\'-table.'),
+        'pme-export-choice' => L::t('Export the visible part of the data-base to an office-format. The `Excel\'-export should produce useful input for either Libre- or OpenOffice or for the product of some well-known software-corporation with seat in Redmond, USA.'),
         'owncloud-attachment' => L::t('Choose a file to attach from the files stored remotely on in the OwnCloud storage area.'),
         'upload-attachment' => L::t('Upload a file from your local computer as attachment. The file will be removed from the remote-system after the message has been sent.'),
         'transfer-instruments' => L::t('Add the instruments of the actually registered musicians to the instrument-table for the project.'),
@@ -68,7 +68,7 @@ oder auszuschalten!'),
         'pme-misc' => L::t('  Klick mich, um eine Em@il an die ausgewählten
 Musiker zu versenden. Auf der folgenden Seite kann
 die Auswahl dann noch modifiziert werden.
-"angezeigt" bedeutet: nicht
+`angezeigt\' bedeutet: nicht
 nur die auf der aktuellen
 Anzeige-Seite, sondern
 alle, die den Such-Kriterien
@@ -77,7 +77,7 @@ entsprechen.'),
         'pme-misc+' => L::t('  Klick mich, um alle gerade
 angezeigten Musiker zu der
 Em@il-Auswahl hinzuzufügen.
-"angezeigt" bedeutet: nicht
+`angezeigt\' bedeutet: nicht
 nur die auf der aktuellen
 Anzeige-Seite, sondern
 alle, die den Such-Kriterien
@@ -102,10 +102,10 @@ Suchkriterien anzuzeigen.')),
         'pme-query' => L::t('  Klick mich, um die
 aktuellen Suchkriterien anzuwenden. Suchkriterien
 können in den Feldern eingegeben werden.
-Als Platzhalter verwendet man "%%".'),
+Als Platzhalter verwendet man `%%\'.'),
 
         'pme-filtertext' => L::t('  Feld für Suchkriterien.
-Als Platzhalter verwendet man "%%", z.B. "%%Ste%%an"
+Als Platzhalter verwendet man `%%\', z.B. `%%Ste%%an\'
 beim Vornamen. Bei numerischen Feldern ist links
 eine Auswahlbox mit Vergleichsoperationen.'),
         
