@@ -1,8 +1,8 @@
-CAFEVDB.PME = {
-  /**Collapse the somewhat lengthy text at the head of the PME-tables
+CAFEVDB.PAGE = {
+  /**Optionally collapse the somewhat lengthy text at the head of the pages
    */
-  collapsePageHeader: function() {
-    var pfx    = 'div.'+CAFEVDB.name+'-pme-';
+  collapseHeader: function() {
+    var pfx    = 'div.'+CAFEVDB.name+'-page-';
     var box    = $(pfx+'header-box');
     var header = $(pfx+'header');
     var body   = $(pfx+'body');
@@ -17,8 +17,8 @@ CAFEVDB.PME = {
   },
   /**Expand the somewhat lengthy text at the head of the email page.
    */
-  expandPageHeader: function() {
-    var pfx    = 'div.'+CAFEVDB.name+'-pme-';
+  expandHeader: function() {
+    var pfx    = 'div.'+CAFEVDB.name+'-page-';
     var box    = $(pfx+'header-box');
     var header = $(pfx+'header');
     var body   = $(pfx+'body');
@@ -35,7 +35,7 @@ CAFEVDB.PME = {
 
 $(document).ready(function(){
 
-  $('input[class^="pme-input-"][class$="-birthday"]').datepicker({
+  $('input[class^="page-input-"][class$="-birthday"]').datepicker({
     dateFormat : 'dd.mm.yy'
   });
 
@@ -43,18 +43,18 @@ $(document).ready(function(){
     return $.trim($(this).text()).indexOf("-") == 0;
   }).addClass("negative");
   
-  $('#cafevdb-pme-header-box .viewtoggle').click(function(event) {
+  $('#cafevdb-page-header-box .viewtoggle').click(function(event) {
     event.preventDefault();
 
-    var pfx    = 'div.'+CAFEVDB.name+'-pme-';
+    var pfx    = 'div.'+CAFEVDB.name+'-page-';
     var box    = $(pfx+'header-box');
-    var header = $(pfx+'pme-header');
+    var header = $(pfx+'page-header');
     var body   = $(pfx+'body');
 
     if (CAFEVDB.headervisibility == 'collapsed') {
-      CAFEVDB.PME.expandPageHeader();
+      CAFEVDB.PAGE.expandHeader();
     } else {
-      CAFEVDB.PME.collapsePageHeader();
+      CAFEVDB.PAGE.collapseHeader();
     }
 
     return false;

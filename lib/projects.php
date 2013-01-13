@@ -7,7 +7,7 @@ namespace CAFEVDB
  */
 class Projects
 {
-  const CSS_PREFIX = 'cafevdb-pme';
+  const CSS_PREFIX = 'cafevdb-page';
 
   static public function headerText()
   {
@@ -56,6 +56,7 @@ __EOT__;
 
     $opts = Config::$pmeopts;
     $opts['cgi']['persist'] = array(
+      'Template' => 'projects',
       'app' => Util::cgiValue('app'),
       'headervisibility' => Util::cgiValue('headervisibility','expanded'));
 

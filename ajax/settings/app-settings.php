@@ -12,6 +12,7 @@
 
 use \CAFEVDB\L;
 use \CAFEVDB\Config;
+use \CAFEVDB\ConfigCheck;
 use \CAFEVDB\Events;
 
 // Check if we are a group-admin, otherwise bail out.
@@ -84,10 +85,11 @@ if (isset($_POST['keydistribute'])) {
     }
   }
   if ($error != '') {
-    $error = "Failed for: " . $error;
+    $error = L::t("Failed for: %s", array($error));;
     OC_JSON::error(array("data" => array( "message" => "$error" )));
   } else {
-    OC_JSON::success(array("data" => array( "message" => "Key installed successfully!" )));
+    OC_JSON::success(
+      array("data" => array( "message" => L::t("Key installed successfully!"))));
   }
   return;
 }
@@ -97,6 +99,7 @@ if (isset($_POST['orchestra'])) {
   Config::setValue('orchestra', $value);
   OC_JSON::success(
     array("data" => array(
+            "value" => $value,
             "message" => L::t('Name of orchestra set to `%s\'', $value))));  
   return true;
 }
@@ -104,30 +107,69 @@ if (isset($_POST['orchestra'])) {
 if (isset($_POST['dbserver'])) {
   $value = $_POST['dbserver'];
   Config::setValue('dbserver', $value);
-  echo "dbserver: $value";
-  return;
+  OC_JSON::success(
+    array("data" => array(
+            "value" => $value,
+            "message" => L::t('DB-server set to `%s\'', $value))));  
+  return true;
 }
 
 if (isset($_POST['dbname'])) {
   $value = $_POST['dbname'];
   Config::setValue('dbname', $value);
-  echo "dbname: $value";
-  return;
+  OC_JSON::success(
+    array("data" => array(
+            "value" => $value,
+            "message" => L::t('DB-name set to `%s\'', $value))));  
+  return true;
 }
 
 if (isset($_POST['dbuser'])) {
   $value = $_POST['dbuser'];
   Config::setValue('dbuser', $value);
-  echo "dbuser: $value";
-  return;
+  OC_JSON::success(
+    array("data" => array(
+            "value" => $value,
+            "message" => L::t('DB-login set to `%s\'', $value))));  
+  return true;
 }
 
 if (isset($_POST['dbpassword'])) {
-    $value = $_POST['dbpassword'];
-    Config::setValue('dbpassword', $value);
-    // Should we now check whether we really can log in to the db-server?
-    OC_JSON::success(array("data" => array( "dbpassword" => $value )));
-    return;
+  $value = $_POST['dbpassword'];
+
+  Config::init();
+    
+  $opts = Config::$dbopts;
+    
+  if ($value != '') {
+    $opts['pw'] = $value;
+    if (ConfigCheck::databaseAccessible($opts)) {
+      Config::setValue('dbpassword', $value);
+      OC_JSON::success(
+        array("data" => array(
+                "message" => L::t('DB-test passed and DB-password set.'))));
+      return true;
+    } else {
+      OC_JSON::error(
+        array("data" => array(
+                "message" => L::t('DB-test failed. Check the account settings. Check was performed with the new password.'))));
+      return false;
+    }
+  } else {
+    // Check with the stored password
+    if (ConfigCheck::databaseAccessible($opts)) {
+      OC_JSON::success(
+        array("data" => array(
+                "message" => L::t('DB-test passed with stored password (empty input ignored).'))));
+      return true;
+    } else {
+      OC_JSON::error(
+        array("data" => array(
+                "message" => L::t('DB-test failed with stored password (empty input ignored).'))));
+      return false;
+    }
+    
+  } 
 }
 
 if (isset($_POST['shareowner-saved']))
@@ -141,19 +183,22 @@ if (isset($_POST['shareowner-saved']))
   if ($olduser != $actuser) {
     OC_JSON::error(
       array("data" => array(
-              "message" => L::t('Submitted').': "'.$olduser.'" != "'.$actuser.'" ('.L::t('stored').').' )));
+              "message" => L::t('Submitted `%s\' != `%s\' (stored)',
+                                array($olduser, $actuser)))));
     return false;
   }
   
   if ($olduser == '' || $force) {
-    if (Events::checkShareOwner($user)) {
+    if (ConfigCheck::checkShareOwner($user)) {
       Config::setValue('shareowner', $user);
       OC_JSON::success(
-        array("data" => array( "message" => L::t('New share-owner').' '.$user.'.' )));
+        array("data" => array( "message" => L::t('New share-owner `%s\'',
+                                                 array($user)))));      
       return true;
     } else {
       OC_JSON::error(
-        array("data" => array( "message" => L::t('Failure creating account').' '.$user.'.' )));
+        array("data" => array( "message" => L::t('Failure creating account `%s\'',
+                                                 array($user)))));
       return false;
     }
   } else if ($user != $olduser) {
@@ -162,16 +207,86 @@ if (isset($_POST['shareowner-saved']))
     return false;
   }
 
-  if (Events::checkShareOwner($user)) {
+  if (ConfigCheck::checkShareOwner($user)) {
     Config::setValue('shareowner', $user);
     OC_JSON::success(
-      array("data" => array( "message" => L::t('Keeping old share-owner').' '.$user )));
+      array("data" => array( "message" => L::t('Keeping old share-owner `%s\'',
+                                               array($user)))));
     return true;
   } else {
     OC_JSON::error(
-      array("data" => array( "message" => L::t('Failure checking account').' '.$user )));
+      array("data" => array( "message" => L::t('Failure checking account `s\'',
+                                               array($user)))));
     return false;
   }
+}
+
+if (isset($_POST['sharedfolder-saved']))
+{
+  $folder    = @$_POST['sharedfolder'];
+  $force     = @$_POST['sharedfolder-force'] == 'on';
+  $oldfolder = @$_POST['sharedfolder-saved'];
+
+  $shareowner = Config::getSetting('shareowner', '');
+  if ($shareowner == '' || $group == '') {
+    OC_JSON::error(
+      array("data" => array(
+              "message" => L::t('Unable to share without share-holder `dummy-user\''))));
+    return false;
+  }
+  
+  // If there is no old dummy, then just create one.
+  $actfolder = Config::getSetting('sharedfolder', '');
+  if ($oldfolder != $actfolder) {
+    OC_JSON::error(
+      array("data" => array(
+              "message" => L::t('Inconsistency, submitted `%s\' != `%s\' (stored)',
+                                array($oldfolder, $actfolder)))));
+    return false;
+  }
+  
+  // some of the functions below may throw an exception, catch it
+
+  try {
+    if ($oldfolder == '' || $force) {
+      if (ConfigCheck::checkSharedFolder($folder)) {
+        Config::setValue('sharedfolder', $folder);
+        OC_JSON::success(
+          array("data" => array( "message" => L::t('New shared folder `%s\'',
+                                                   array($folder)))));
+        return true;
+      } else {
+        OC_JSON::error(
+          array("data" => array( "message" => L::t('Failure creating folder `%s\'',
+                                                   array($folder)))));
+        return false;
+      }
+    } else if ($folder != $oldfolder) {
+      OC_JSON::error(
+        array("data" => array( "message" => $oldfolder.' != '.$folder )));
+      return false;
+    }
+    
+    if (ConfigCheck::checkSharedFolder($folder)) {
+      Config::setValue('sharedfolder', $folder);
+      OC_JSON::success(
+        array("data" => array( "message" => L::t('Keeping old shared folder `%s\'',
+                                                 array($folder)))));
+      return true;
+    } else {
+      OC_JSON::error(
+        array("data" => array( "message" => L::t('Failure checking folder `%s\'',
+                                                 array($folder)))));
+      return false;
+    }
+  } catch (\Exception $e) {
+      OC_JSON::error(
+        array("data" => array( "message" => L::t('Failure checking folder `%s\', caught an exception `%s\'',
+                                                 array($folder, $e->getMessage())))));
+      return false;
+  }  
+
+  return false;
 }
 
 $calendarkeys = array('concertscalendar',

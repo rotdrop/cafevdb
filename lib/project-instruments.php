@@ -6,7 +6,7 @@ namespace CAFEVDB
 class ProjectInstruments
   extends Instrumentation
 {
-  const CSS_PREFIX = 'cafevdb-pme';
+  const CSS_PREFIX = 'cafevdb-page';
 
   function __construct() {
     parent::__construct();

@@ -27,18 +27,6 @@ $debugmode   = OCP\Config::getUserValue($user, 'cafevdb', 'debugmode','');
 $exampletext = OCP\Config::getUserValue($user, 'cafevdb', 'exampletext','');
 $encrkey     = Config::getEncryptionKey();
 
-Util::addInlineScript('var toolTips = '.($tooltips == 'on' ? 'true' : 'false'));
-Util::addInlineScript(<<<__EOT__
-$(document).ready(function(){
-  if (toolTips) {
-    $.fn.tipsy.enable();
-  } else {
-    $.fn.tipsy.disable();
-  }
-});
-__EOT__
-);
-
 $tmpl->assign('debugmode', $debugmode);
 $tmpl->assign('expertmode', $expertmode);
 $tmpl->assign('tooltips', $tooltips);
@@ -57,7 +45,8 @@ if (Config::encryptionKeyValid() &&
     ($cafevgroup = \OC_AppConfig::getValue('cafevdb', 'usergroup', '')) != '' &&
     OC_SubAdmin::isGroupAccessible($user, $cafevgroup)) {
 
-  $tmpl->assign('adminsettings', true);
+  $admin = true;
+  $tmpl->assign('adminsettings', $admin);
 
   $tmpl->assign('orchestra', Config::getValue('orchestra'));
 
@@ -73,6 +62,8 @@ if (Config::encryptionKeyValid() &&
   $tmpl->assign('othercalendar', Config::getSetting('othercalendar', L::t('other')));
   $tmpl->assign('managementcalendar', Config::getSetting('managementcalendar', L::t('management')));
   $tmpl->assign('eventduration', Config::getSetting('eventduration', '180'));
+
+  $tmpl->assign('sharedfolder', Config::getSetting('sharedfolder',''));
 
   foreach (array('smtp', 'imap') as $proto) {
     foreach (array('server', 'port', 'secure') as $key) {

@@ -1,21 +1,26 @@
 $(document).ready(function() {
 
-  $("#appsettings_popup").tabs({ selected: 0});
-  $("#appsettings_popup").on("tabsselect", function (event, ui) {
-    $('div.statusmessage').hide();
-    $('span.statusmessage').hide();
-  });
+  var adminSettings = $('#adminsettingstabs').length > 0;
 
-  $("#appsettings_popup").on("tabsshow", function (event, ui) {
-    if (ui.index == 3) {
-      $('#smtpsecure').chosen({ disable_search_threshold: 10 });
-      $('#imapsecure').chosen({ disable_search_threshold: 10 });
-    } else {
-      //$('#smtpsecure').chosen().remove();
-      //$('#imapsecure').chosen().remove();
-    }
-  });
+  if (adminSettings) {
 
+    $("#appsettings_popup").tabs({ selected: 0});
+    $("#appsettings_popup").on("tabsselect", function (event, ui) {
+      $('div.statusmessage').hide();
+      $('span.statusmessage').hide();
+    });
+
+    $("#appsettings_popup").on("tabsshow", function (event, ui) {
+      if (ui.index == 3) {
+        $('#smtpsecure').chosen({ disable_search_threshold: 10 });
+        $('#imapsecure').chosen({ disable_search_threshold: 10 });
+      } else {
+        //$('#smtpsecure').chosen().remove();
+        //$('#imapsecure').chosen().remove();
+      }
+    });
+  }
+    
   $('button').tipsy({gravity:'ne', fade:true});
   $('input').tipsy({gravity:'ne', fade:true});
   $('label').tipsy({gravity:'ne', fade:true});
@@ -97,10 +102,21 @@ $(document).ready(function() {
 
   });
 
-  $('#exampletext').change(function(event) {
+  $('#exampletext').blur(function(event) {
     event.preventDefault();
     var post = $("#exampletext").serialize();
-    $.post(OC.filePath('cafevdb', 'ajax/settings', 'exampletext.php') , post, function(data) {return;});
+    $('#cafevdb #msg').hide();
+    $.post(OC.filePath('cafevdb', 'ajax/settings', 'exampletext.php'),
+           post,
+           function(data) {
+             if (data.status == 'success') {
+               $('#cafevdb #msg').html(data.data.message);
+             } else {
+               $('#cafevdb #msg').html(t('cafevdb','Error:')+' '+data.data.message);
+             }
+             $('#cafevdb #msg').show();
+             return;
+           });
     return false;
   });
 
@@ -113,7 +129,7 @@ $(document).ready(function() {
   // Encryption-key
   // 'show password' checkbox
   $('#systemkey #key').showPassword();
-  $("#systemkey #button").click(function() {
+  $("#keychangebutton").click(function() {
     // We allow empty keys, meaning no encryption
     $('div.statusmessage').hide();
     $('span.statusmessage').hide();
@@ -150,7 +166,7 @@ $(document).ready(function() {
     }
   });
 
-  $('#keydistribute #button').click(function() {
+  $('#keydistributebutton').click(function() {
     $('div.statusmessage').hide();
     $('span.statusmessage').hide();
     $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
@@ -177,6 +193,25 @@ $(document).ready(function() {
              if (data.status == "success") {
 	       $('#admingeneral #msg').html(data.data.message);
 	       $('#admingeneral #msg').show();
+
+               if (data.data.value == '') {
+                 $('div.personalblock.admin,div.personalblock.sharing').find('fieldset').each(function(i, elm) {
+                   $(elm).attr('disabled','disabled');
+                 });
+               } else {
+                 $('div.personalblock.admin').find('fieldset').each(function(i, elm) {
+                   $(elm).removeAttr('disabled');
+                 });
+                 if ($('#shareowner #user-saved').val() != '') {
+                   $('div.personalblock.sharing').find('fieldset').each(function(i, elm) {
+                     $(elm).removeAttr('disabled');
+                   });
+                 } else {
+                   $('#shareownerform').find('fieldset').each(function(i, elm) {
+                     $(elm).removeAttr('disabled');
+                   });
+                 }
+               }
              }
              return false;
 	   }, 'json');
@@ -219,11 +254,9 @@ $(document).ready(function() {
                  //$('#dbpassword input[name="dbpass1"]').val('');
                  $('#dbpassword input[name="password"]').val('');
                  $('#dbpassword input[name="password-clone"]').val('');
-                 $('#dbpassword #changed').show();
-               } else{
-                 $('#dbpassword #error').html(data.data.message);
-                 $('#dbpassword #error').show();
                }
+               $('#dbpassword #dbteststatus').html(data.data.message);
+               $('#dbpassword #dbteststatus').show();
              });
       return false;
     } else {
@@ -234,21 +267,9 @@ $(document).ready(function() {
 
   ///////////////////////////////////////////////////////////////////////////
   //
-  // Events, calendars
+  // Sharing, share-owner
   //
   ///////////////////////////////////////////////////////////////////////////
-
-  $('#eventsettings #calendars :input').blur(function(event) {
-    event.preventDefault();
-    $('div.statusmessage').hide();
-    $('span.statusmessage').hide();
-    $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
-           $(this),
-           function(data) {
-	     $('#eventsettings #msg').html(data.data.message);
-	     $('#eventsettings #msg').show();
-	   });
-  });
 
   $('#shareowner #shareowner-force').click(function(event) {
     $('div.statusmessage').hide();
@@ -284,6 +305,15 @@ $(document).ready(function() {
              if (data.status == 'success') {
                $('#shareowner #user').attr('disabled',true);
                $('#shareowner #user-saved').val($('#shareowner #user').val());
+               if ($('#shareowner #user').val() != '') {
+                 $('div.personalblock.sharing').find('fieldset').each(function(i, elm) {
+                   $(elm).removeAttr('disabled');
+                 });
+               } else {
+                 $('#calendars,#sharedfolderform').find('fieldset').each(function(i, elm) {
+                   $(elm).attr('disabled','disabled');
+                 });
+               }
              }
 	     $('#eventsettings #msg').html(data.data.message);
 	     $('#eventsettings #msg').show();
@@ -375,6 +405,76 @@ $(document).ready(function() {
     return false;
   });
   
+  ///////////////////////////////////////////////////////////////////////////
+  //
+  // Events, calendars
+  //
+  ///////////////////////////////////////////////////////////////////////////
+
+  $('#eventsettings #calendars :input').blur(function(event) {
+    event.preventDefault();
+    $('div.statusmessage').hide();
+    $('span.statusmessage').hide();
+    $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
+           $(this),
+           function(data) {
+	     $('#eventsettings #msg').html(data.data.message);
+	     $('#eventsettings #msg').show();
+	   });
+  });
+
+  ///////////////////////////////////////////////////////////////////////////
+  //
+  // Sharing, share-owner
+  //
+  ///////////////////////////////////////////////////////////////////////////
+
+  $('#sharedfolder-force').blur(function(event) {
+    event.preventDefault();
+    return false;
+  });
+
+  $('#sharedfolder-force').click(function(event) {
+    $('div.statusmessage').hide();
+    $('span.statusmessage').hide();
+    $('#eventsettings #msg').empty();
+    
+    if (!$(this).is(':checked') &&
+        $('#sharedfolder-saved').val() != '') {
+      $('#sharedfolder').val($('#sharedfolder-saved').val());
+      $('#sharedfolder').attr('disabled','disabled');
+    } else {
+      $('#sharedfolder').removeAttr('disabled');
+    }
+  });
+
+  $('#sharedfoldercheck').click(function(event) {
+    event.preventDefault();
+
+    var post = $('#sharedfolderform').serializeArray();
+
+    if ($('#sharedfolder').is(':disabled')) {
+      // Fake.
+      var type = new Object();
+      type['name']  = 'sharedfolder';
+      type['value'] = $('#sharedfolder-saved').val();
+      post.push(type);
+    }
+
+    $('div.statusmessage').hide();
+    $('span.statusmessage').hide();
+    $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
+           post,
+           function(data) {
+             if (data.status == 'success') {
+               $('#sharedfolder').attr('disabled',true);
+               $('#sharedfolder-saved').val($('#sharedfolder').val());
+             }
+	     $('#eventsettings #msg').html(data.data.message);
+	     $('#eventsettings #msg').show();
+	   });
+  });
+
   ///////////////////////////////////////////////////////////////////////////
   //
   // email

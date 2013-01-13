@@ -1,4 +1,4 @@
-SSLRequireSSL
+#SSLRequireSSL
 Options -Indexes
 <Files "*.png">
   Order deny,allow

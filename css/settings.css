@@ -8,6 +8,10 @@ input[type=button]:active, input[type=submit]:active {
   background-color:SteelBlue;
 }
 
+#dbgeneral #msgplaceholder {
+  min-height:3ex;
+}
+
 #emailtestmode {
   margin-left:4ex;
 }
@@ -30,7 +34,7 @@ input[type=button]:active, input[type=submit]:active {
 
 #appsettings_popup div.personalblock.admin {
   min-width:46em;
-  min-height:28.5em;
+  min-height:30em;
 }
 
 #emailimapfields {

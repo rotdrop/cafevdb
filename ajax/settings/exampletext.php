@@ -3,6 +3,9 @@
 // Init owncloud
 
 use CAFEVDB\L;
+OCP\JSON::success(array('data' => array( 'message' => L::t('Example-Text changed') )));
+exit;
+
 
 // Check if we are a user
 OCP\JSON::checkLoggedIn();

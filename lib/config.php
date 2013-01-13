@@ -19,6 +19,7 @@ dbuser
 dbpassword
 dbname
 shareowner
+sharedfolder
 concertscalendar
 concertscalendarid
 rehearsalscalendar
@@ -54,6 +55,7 @@ ownclouddev';
   public static $debug_query = false;
   public static $Wartung = true;
   public static $pmeopts = array();
+  public static $dbopts = array();
   public static $opts = array();
   public static $cgiVars = array();
   public static $Languages = array();
@@ -66,12 +68,20 @@ ownclouddev';
 
   public static function loginListener($params)
   {
-    self::initPrivateKey($params['uid'], $params['password']);
-    self::initEncryptionKey($params['uid']);
+    $group = self::getAppValue('usergroup', '');
+    $user = $params['uid'];
+    if ($group != '' && \OC_Group::inGroup($user, $group)) {
+      self::initPrivateKey($user, $params['password']);
+      self::initEncryptionKey($user);
+    }
   }
 
   public static function changePasswordListener($params) {
-    self::recryptEncryptionKey($params['uid'], $params['password']);
+    $group = self::getAppValue('usergroup', '');
+    $user = $params['uid'];
+    if ($group != '' && \OC_Group::inGroup($user, $group)) {
+      self::recryptEncryptionKey($params['uid'], $params['password']);
+    }
   }
 
   /**A short-cut, redirecting to the stock functions for the
@@ -380,10 +390,15 @@ ownclouddev';
     if (!self::$triggers) {
       self::$triggers = self::$prefix . "triggers/";
     }
-    self::$pmeopts['hn'] = self::$opts['dbserver'];
-    self::$pmeopts['un'] = self::$opts['dbuser'];
-    self::$pmeopts['pw'] = self::$opts['dbpassword'];
-    self::$pmeopts['db'] = self::$opts['dbname'];
+
+    self::$dbopts['hn'] = @self::$opts['dbserver'];
+    self::$dbopts['un'] = @self::$opts['dbuser'];
+    self::$dbopts['pw'] = @self::$opts['dbpassword'];
+    self::$dbopts['db'] = @self::$opts['dbname'];
+
+    foreach (array_keys(self::$dbopts) as $key) {
+      self::$pmeopts[$key] = self::$dbopts[$key];
+    }
 
     self::$pmeopts['url']['images'] = self::APP_BASE . 'img/';
     global $HTTP_SERVER_VARS;
@@ -445,7 +460,7 @@ ownclouddev';
     self::$opts['languages'] = explode(',','Deutsch,Englisch,Französich,Spanisch,Polnisch,Russisch,Japanisch,Koreanisch');
     sort(self::$opts['languages']);
 
-    self::$cgiVars = array('Template' => 'projects',
+    self::$cgiVars = array('Template' => 'home',
                            'MusicianId' => -1,
                            'ProjectId' => -1,
                            'Project' => '',
@@ -464,6 +479,349 @@ ownclouddev';
       return $tip;
   }
 };
+
+class ConfigCheck
+{
+  /**Check whether the shared object exists. Note: this function has
+   *to be executed under the uid of the user the object belongs
+   *to. See ConfigCheck::sudo().
+   *
+   * @param[in] $id The @b numeric id of the object (not the name).
+   *
+   * @param[in] $group The group to share the item with.
+   *
+   * @param[in] $type The type of the item, for exmaple calendar,
+   * event, folder, file etc.
+   *
+   * @return @c true for success, @c false on error.
+   */
+  public static function groupSharedExists($id, $group, $type)
+  {
+    // First check whether the object is already shared.
+    $shareType  = \OCP\Share::SHARE_TYPE_GROUP;
+    $groupPerms = (\OCP\Share::PERMISSION_CREATE|
+                   \OCP\Share::PERMISSION_READ|
+                   \OCP\Share::PERMISSION_UPDATE|
+                   \OCP\Share::PERMISSION_DELETE);
+
+    $token =\OCP\Share::getItemShared($type, $id, \OCP\Share::FORMAT_NONE);    
+    
+    // Note: getItemShared() returns an array with one element, strip
+    // the outer array!
+    if (is_array($token) && count($token) == 1) {
+      $token = array_shift($token);
+      return isset($token['permissions']) &&
+        ($token['permissions'] & $groupPerms) == $groupPerms;
+    } else {
+      return false;
+    }
+  }
+
+  /**Share an object between the members of the specified group. Note:
+   * this function has to be executed under the uid of the user the
+   * object belongs to. See ConfigCheck::sudo().
+   *
+   * @param[in] $id The @b numeric id of the object (not the name).
+   *
+   * @param[in] $group The group to share the item with.
+   *
+   * @param[in] $type The type of the item, for exmaple calendar,
+   * event, folder, file etc.
+   *
+   * @return @c true for success, @c false on error.
+   */
+  public static function groupShareObject($id, $group, $type = 'calendar')
+  {
+    $groupPerms = (\OCP\Share::PERMISSION_CREATE|
+                   \OCP\Share::PERMISSION_READ|
+                   \OCP\Share::PERMISSION_UPDATE|
+                   \OCP\Share::PERMISSION_DELETE);
+
+    // First check whether the object is already shared.
+    $shareType   = \OCP\Share::SHARE_TYPE_GROUP;
+    $token =\OCP\Share::getItemShared($type, $id);
+    if ($token !== false) {
+      return \OCP\Share::setPermissions($type, $id, $shareType, $group, $groupPerms);
+    }
+    // Otherwise it should be legal to attempt a new share ...
+
+    // try it ...
+    return \OCP\Share::shareItem($type, $id, $shareType, $group, $groupPerms);
+  }
+
+  /**Fake execution with other user-id. Note that this function will
+   * catch any exception thrown while executing the callback-function
+   * and in case an exeption has been called will re-throw the
+   * exception.
+   *
+   * @param[in] $uid The "fake" uid.
+   *
+   * @param[in] $callback function.
+   *
+   * @return Whatever the callback-functoni returns.
+   *
+   */
+  public static function sudo($uid, $callback)
+  {
+    $olduser = \OC_User::getUser();
+    \OC_User::setUserId($uid);
+    try {
+      $result = call_user_func($callback);
+    } catch (\Exception $exception) {
+      \OC_User::setUserId($olduser);
+      throw new \Exception($exception->getMessage());
+      return false;
+    }
+    \OC_User::setUserId($olduser);
+
+    return $result;
+  }
+
+  /**Return an array with necessary configuration items, being either
+   * true or false, depending the checks performed. The summary
+   * component is just the logic and of all other items.
+   *
+   * @return bool
+   * array('summary','orchestra','usergroup','shareowner','sharedfolder','database','encryptionkey')
+   */
+  public static function configured()
+  {
+    $resuilt = array();
+
+    $result['orchestra'] =  Config::encryptionKeyValid() && Config::getValue('orchestra');
+    $result['encryptionkey'] = $result['orchestra'] && Config::encryptionKeyValid();
+    $result['database'] = $result['orchestra'] && self::databaseAccessible();
+    $result['usergroup'] = self::ShareGroupExists();
+    $result['shareowner'] = $result['usergroup'] && self::shareOwnerExists();
+    $result['sharedfolder'] = $result['shareowner'] && self::sharedFolderExists();
+
+    $summary = true;
+    foreach ($result as $key => $value) {
+      $summary = $summary && $value;  
+    }
+    $result['summary'] = $summary;
+    
+    return $result;
+  }
+
+  /**Return @c true if the share-group is set as application
+   * configuration option and exists.
+   */
+  public static function shareGroupExists()
+  {
+    $group = Config::getAppValue('usergroup');
+    
+    if (!\OC_Group::groupExists($group)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  /**Return @c true if the share-owner exists and belongs to the
+   * orchestra user group (and only to this group).
+   *
+   * @param[in] $shareowner Optional. If unset, then the uid is
+   * fetched from the application configuration options.
+   *
+   * @return bool, @c true on success.
+   */
+  public static function shareOwnerExists($shareowner = '') 
+  {
+    $sharegroup = Config::getAppValue('usergroup');
+    $shareowner === '' && $shareowner = Config::getValue('shareowner');
+
+    if ($shareowner === false) {
+      return false;
+    }
+    
+    if (!\OC_user::isEnabled($shareowner)) {
+      return false;
+    }
+
+    /* Ok, the user exists and is configured as "share-owner" in our
+     * poor orchestra app, now perform additional consistency checks.
+     *
+     * How paranoid should we be?
+     */
+    $groups = \OC_Group::getUserGroups($shareowner);
+    
+    // well, the share-owner should in turn only be owned by the
+    // group.
+    if (count($groups) != 1) {
+      return false;
+    }
+
+    // The one and only group should be our's.
+    if ($groups[0] != $sharegroup) {
+      return false;
+    }
+
+    // Add more checks as needed ... ;)
+    return true;
+  }
+
+  /**Make sure the "sharing" user exists, create it when necessary.
+   * May throw an exception.
+   *
+   * @param[in] $shareowner The account holding the shared resources.
+   *
+   * @return bool, @c true on success.
+   */
+  public static function checkShareOwner($shareowner)
+  {
+    if (!$sharegroup = Config::getAppValue('usergroup', false)) {
+      return false; // need at least this group!
+    }
+
+    // Create the user if necessary
+    if (!\OC_User::userExists($shareowner) &&
+        !\OC_User::createUser($shareowner,
+                              \OC_User::generatePassword())) {
+      return false;
+    }
+
+    // Sutff the user in its appropriate group
+    if (!\OC_Group::inGroup($shareowner, $sharegroup) &&
+        !\OC_Group::addToGroup($shareowner, $sharegroup)) {
+      return false;
+    }
+
+    return self::shareOwnerExists($shareowner);
+  }
+
+  /**We require that the share-owner ownes a directory shared with the
+   * orchestra group. Check whether this folder exists.
+   *
+   * @param[in] $sharedfolder Optional. If unset, the name is fetched
+   * from the application configuration options.
+   *
+   * @return bool, @c true on success.
+   */
+  public static function sharedFolderExists($sharedfolder = '')
+  {
+    if (!self::shareOwnerExists()) {
+      return false;
+    }
+
+    $sharegroup   = Config::getAppValue('usergroup');
+    $shareowner   = Config::getValue('shareowner');
+    $sharedfolder == '' && $sharedfolder = Config::getSetting('sharedfolder', '');
+
+    if ($sharedfolder == '') {
+      // not configured
+      return false;
+    }
+
+    if ($sharedfolder[0] != '/') {
+      $sharedfolder = '/'.$sharedfolder;
+    }
+    $vfsroot = '/'.$shareowner.'/files';
+
+    $id = \OC_FileCache::getId($sharedfolder, $vfsroot);
+    $result = self::sudo($shareowner, function() use ($id, $sharegroup) {
+        return self::groupSharedExists($id, $sharegroup, 'folder');
+      });
+
+    return $result;
+  }
+
+  /**Check for existence of the shared folder and create it when not
+   * found.
+   *
+   * @param[in] $sharedfolder The name of the folder.
+   *
+   * @return bool, @c true on success.
+   */
+  public static function checkSharedFolder($sharedfolder)
+  {
+    if (!self::shareOwnerExists()) {
+      return false;
+    }
+
+    if ($sharedfolder[0] != '/') {
+      $sharedfolder = '/'.$sharedfolder;
+    }
+
+    if (self::sharedFolderExists($sharedfolder)) {
+      // no need to create
+      return true;
+    }
+
+    $sharegroup   = Config::getAppValue('usergroup');
+    $shareowner   = Config::getValue('shareowner');
+
+    // try to create the folder and share it with the group
+    $result = self::sudo($shareowner, function() use ($sharedfolder, $sharegroup) {
+        $user    = \OCP\USER::getUser();
+        $vfsroot = '/'.$user.'/files';
+
+        // Create the user data-directory, if necessary
+        $user_root = \OC_User::getHome($user);
+        $userdirectory = $user_root . '/files';
+        if( !is_dir( $userdirectory )) {
+          mkdir( $userdirectory, 0770, true );
+        }
+        if( !is_dir( $userdirectory )) {
+          return false;
+        }
+
+        $rootView = new \OC_FilesystemView($vfsroot);
+
+        if ($rootView->file_exists($sharedfolder) &&
+            (!$rootView->is_dir($sharedfolder) ||
+             !$rootView->isSharable($sharedfolder)) &&
+            !$rootView->unlink($sharedfolder)) {
+          return false;
+        }
+
+        if (!$rootView->file_exists($sharedfolder) &&
+            !$rootView->mkdir($sharedfolder)) {
+          return false;
+        }
+        
+        if (!$rootView->file_exists($sharedfolder) ||
+            !$rootView->is_dir($sharedfolder)) {
+          throw new \Exception('Still does not exist.');
+        }
+
+        // Now it should exist as directory. Share it
+        // Nice ass-hole stuff. We need the id.
+ 
+        \OC_FileCache::scanFile($sharedfolder, $vfsroot);
+        $id = \OC_FileCache::getId($sharedfolder, $vfsroot);
+        if (!self::groupShareObject($id, $sharegroup, 'folder') ||
+            !self::groupSharedExists($id, $sharegroup, 'folder')) {
+          return false;
+        }
+              
+        return true; // seems to be ok ...
+      });
+
+    return self::sharedFolderExists($sharedfolder);
+  }
+  
+  /**Check whether we have data-base access by connecting to the
+   * data-base server and selecting the configured data-base.
+   *
+   * @return bool, @c true on success.
+   */
+  public static function databaseAccessible($opts = array())
+  {
+    Config::init();
+    if (empty($opts)) {
+      $opts = Config::$dbopts;
+    }
+
+    $handle = mySQL::connect($opts, false /* don't die */, true);
+    if ($handle !== false) {
+      mySQL::close($handle);
+      return true;
+    }
+    return false;
+  } 
+
+}
 
 }
 

@@ -1677,7 +1677,7 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
 
 class EmailHistory
 {
-  const CSS_PREFIX = 'cafevdb-pme';
+  const CSS_PREFIX = 'cafevdb-page';
 
   public static function headerText()
   {

@@ -2,6 +2,7 @@
 
 OC::$CLASSPATH['CAFEVDB\Admin'] = 'apps/cafevdb/lib/admin.php';
 OC::$CLASSPATH['CAFEVDB\Config'] = 'apps/cafevdb/lib/config.php';
+OC::$CLASSPATH['CAFEVDB\ConfigCheck'] = 'apps/cafevdb/lib/config.php';
 OC::$CLASSPATH['CAFEVDB\Events'] = 'apps/cafevdb/lib/events.php';
 OC::$CLASSPATH['CAFEVDB\ToolTips'] = 'apps/cafevdb/lib/tooltips.php';
 OC::$CLASSPATH['CAFEVDB\L'] = 'apps/cafevdb/lib/functions.php';
@@ -26,7 +27,7 @@ OC::$CLASSPATH['phpMyEdit'] = 'apps/cafevdb/3rdparty/phpMyEdit/phpMyEdit.class.p
 OC::$CLASSPATH['html2text'] = 'apps/cafevdb/3rdparty/class.html2text.inc';
 
 /* Script etc. used by everyone */
-OCP\App::registerAdmin( 'cafevdb', 'admin-settings' );
+OC_App::registerAdmin( 'cafevdb', 'admin-settings' );
 //OCP\App::registerPersonal( 'cafevdb', 'settings' );
 
 OCP\Util::connectHook('OC_User','post_login','CAFEVDB\Config','loginListener');

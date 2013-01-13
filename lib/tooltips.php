@@ -12,6 +12,10 @@ class Tooltips
   {
     return 
       array(
+        'configrecheck' => L::t('Perform the configuration checks again. If all checks have been passed then you are led on to the ordinary entry page of the application.'),
+        'test-dbpassword' => L::t('Check whether the data-base can be accessed with the given account
+information and password. The password will only be stored in the
+configuration storage if the test can be performed successfully.'),
         'emailtest' => L::t('Test the email-settings; try to connect to the SMTP-server and the IMAP-server in turn.'),
         'test-linktarget' => L::t('Try to connect to the specified web-address, will open the web-address in another window or tab, depending your local browser preferences.'),
         'pme-export-csv' => L::t('Export in CSV-format using a semicolon as delimiter (Excel convention)'),

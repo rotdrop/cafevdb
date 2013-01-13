@@ -7,6 +7,103 @@ form.cafevdb-control {
   vertical-align:middle;
 }
 
+
+/*******************************************************************************
+ *
+ * Be noisy on configuration errors.
+ *
+ */
+
+div.cfgerror {
+  padding-left:2ex;
+  padding-top:2ex;
+  min-width:60ex;
+  width:80%;
+  color:red;
+  font-weight:bold;
+}
+
+/*******************************************************************************
+ *
+ * Configuration page
+ *
+ */
+
+#cafevdb-page-config-check-header {
+  background-image:url('%appswebroot%/cafevdb/img/logo-greyf.svg');
+  background-repeat:no-repeat;
+  background-origin:padding-box;
+  background-position:left middle;
+  background-size:contain;
+  max-width:50em;
+  height:13ex;
+  padding-left:15ex;
+  margin-top:2ex;
+  color:red;
+  font-weight:bold;
+}
+
+div.cafevdb-page-header.collapsed #cafevdb-page-config-check-header {
+  height:3ex;
+  padding-left:4ex;
+  margin-top:0ex;
+  width:100%;
+  max-width:100%;
+}
+
+#cafevdb-page-body-config-check { 
+  padding-left:1ex;
+}
+
+#cafevdb-page-body-config-check li {
+  padding: 0.5ex 0.5ex 0.5ex 3ex ;
+  max-width:56em;
+  margin:0.5ex;
+  moz-border-radius:.5em;
+  webkit-border-radius:.5em;
+  border-radius:.5em;
+  background-color:#add8e6;
+}
+
+#cafevdb-page-body-config-check li.set {
+  background-image:url('%webroot%/core/img/actions/info.svg');
+  background-repeat:no-repeat;
+  background-position:0ex 1ex;
+}
+
+#cafevdb-page-body-config-check li.missing {
+  background-image:url('%webroot%/core/img/actions/delete.svg');
+  background-repeat:no-repeat;
+  background-position:0ex 1ex;
+}
+
+#cafevdb-page-body-config-check .comment {
+  background-image:url('%webroot%/core/img/actions/rename.svg');
+  background-repeat:no-repeat;
+  background-position:0ex 0.5ex;
+  padding-left:3ex;
+}
+
+li.cafevdb-page-config-check.missing span.value { 
+  font-weight:bold;
+  font-style:italic;
+}
+
+li.cafevdb-page-config-check span.missing {
+  font-weight:bold;
+  font-style:italic;
+  color:Red;
+}
+
+li.cafevdb-page-config-check.set span.value { 
+  font-style:italic;
+}
+
+li.cafevdb-page-config-check span.set { 
+  font-style:italic;
+  color:DarkGreen;
+}
+
 /*******************************************************************************
  *
  * Export select via chosen
@@ -160,7 +257,7 @@ div[class|='cafevdb-nav']>div {
  *
  */
 
-#cafevdb-pme-header-box #viewtogglebar {
+#cafevdb-page-header-box #viewtogglebar {
   position:absolute;
   bottom:0;
   overflow:visible;
@@ -177,8 +274,8 @@ div[class|='cafevdb-nav']>div {
   /*box-shadow: 0 0.5ex 1ex #777;*/
 }
 
-div.cafevdb-pme-header-box,
-div.cafevdb-pme-header-box.expanded {
+div.cafevdb-page-header-box,
+div.cafevdb-page-header-box.expanded {
   position:fixed;
   padding-top:5ex;
   z-index:25;
@@ -193,8 +290,8 @@ div.cafevdb-pme-header-box.expanded {
   box-shadow: -3px 0 7px #777;
 }
 
-div.cafevdb-pme-header,
-div.cafevdb-pme-header.expanded {
+div.cafevdb-page-header,
+div.cafevdb-page-header.expanded {
   position:fixed;
   padding-top:1ex;
   padding-left:1ex;
@@ -204,18 +301,18 @@ div.cafevdb-pme-header.expanded {
   /*width:80%;*/
 }
 
-div.cafevdb-pme-body,
-div.cafevdb-pme-body.expanded {
+div.cafevdb-page-body,
+div.cafevdb-page-body.expanded {
   position:relative;
   padding-top:23ex;
 }
 
-div.cafevdb-pme-header-box.collapsed { height:4ex; }
-div.cafevdb-pme-header.collapsed { height:3ex; }
-div.cafevdb-pme-body.collapsed { padding-top:10ex; }
+div.cafevdb-page-header-box.collapsed { height:4ex; }
+div.cafevdb-page-header.collapsed { height:3ex; }
+div.cafevdb-page-body.collapsed { padding-top:10ex; }
 
-#cafevdb-pme-header-box #viewtoggle,
-#cafevdb-pme-header-box #viewtoggle.expanded {
+#cafevdb-page-header-box #viewtoggle,
+#cafevdb-page-header-box #viewtoggle.expanded {
   position:relative;
   z-index:26;
   float:right;
@@ -226,7 +323,7 @@ div.cafevdb-pme-body.collapsed { padding-top:10ex; }
   vertical-align:middle;
 }
 
-#cafevdb-pme-header-box #viewtoggle.collapsed {
+#cafevdb-page-header-box #viewtoggle.collapsed {
   margin-top:0.3em;
 }
 
@@ -238,7 +335,7 @@ div.cafevdb-pme-body.collapsed { padding-top:10ex; }
   background:url('%webroot%/core/img/actions/download.svg') no-repeat center;
 }
 
-div.cafevdb-pme-header-box button.viewtoggle:active {
+div.cafevdb-page-header-box button.viewtoggle:active {
   background-color:SteelBlue;
 }
 
@@ -271,30 +368,30 @@ div[class|='cafevdb-nav-bottom']>div {
   border:0;
 }
 
-div.cafevdb-pme h2,div.cafevdb-email h2 {
+div.cafevdb-page h2,div.cafevdb-email h2 {
   text-align:left;
   padding-left:12pt;
 }
-div.cafevdb-pme h2:before,div.cafevdb-email h2:before {
+div.cafevdb-page h2:before,div.cafevdb-email h2:before {
   content: url(%appswebroot%/cafevdb/img/logo-greyf32x32) " ";
 }
 
-div.cafevdb-pme h3, div.cafevdb-email h3 {
+div.cafevdb-page h3, div.cafevdb-email h3 {
   text-align:left;
   padding-left:12pt;
 }
-div.cafevdb-pme h3:before, div.cafevdb-email h3:before {
+div.cafevdb-page h3:before, div.cafevdb-email h3:before {
   content: url(%appswebroot%/cafevdb/img/logo-greyf32x32) " ";
 }
 
-div.cafevdb-pme h4,div.cafevdb-email h4 {
+div.cafevdb-page h4,div.cafevdb-email h4 {
   text-align:left;
 /*  width:72ex;*/
   padding-left:12pt;
   padding-right:12pt;
 }
 
-div.cafevdb-pme p,div.cafevdb-email p {
+div.cafevdb-page p,div.cafevdb-email p {
   text-align:left;
 /*  width:72ex;*/
   padding-left:12pt;

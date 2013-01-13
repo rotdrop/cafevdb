@@ -2,6 +2,7 @@
 
 use CAFEVDB\L;
 use CAFEVDB\Config;
+use CAFEVDB\ConfigCheck;
 use CAFEVDB\Util;
 use CAFEVDB\Navigation;
 
@@ -13,19 +14,16 @@ Config::init();
 $group = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
 $user  = OCP\USER::getUser();
 
+OCP\Util::addStyle('cafevdb', 'cafevdb');
+
 if (!OC_Group::inGroup($user, $group)) {
   $tmpl = new OCP\Template( 'cafevdb', 'not-a-member', 'user' );
+  $tmpl->assign('error', 'notamember');
   return $tmpl->printPage();
 }
 
-if (false) {
-echo '<PRE>';
-foreach(OC_Files::getdirectorycontent( '/Shared' ) as $i ){
-  print_r($i);
-}
-echo '</PRE>';
-exit;
-}
+// Are we a group-admin?
+$admin = OC_SubAdmin::isGroupAccessible($user, $group);
 
 $expertmode = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb', 'expertmode','');
 $debugmode  = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb', 'debugmode','');
@@ -59,21 +57,13 @@ OCP\Util::addStyle("cafevdb/3rdparty", "chosen/chosen");
 
 OCP\Util::addScript('cafevdb', 'cafevdb');
 OCP\Util::addScript('cafevdb', 'transpose');
-OCP\Util::addScript('cafevdb', 'pme-helper');
+OCP\Util::addScript('cafevdb', 'page');
 OCP\Util::addScript('cafevdb', 'email');
 OCP\Util::addScript('cafevdb', 'events');
 //OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/jscripts/tiny_mce/tiny_mce');
 //OCP\Util::addScript('cafevdb/3rdparty', 'tinymceinit');
 OCP\Util::addscript("cafevdb/3rdparty", "chosen/chosen.jquery.min");
 //OCP\Util::addscript("3rdparty", "chosen/chosen.jquery.min");
-
-/* Special hack to determine if the email-form was requested through the pme-miscinfo button. */
-$op = Util::cgiValue('PME_sys_operation');
-if ($op == "Em@il") {
-  $tmplname = 'email';
-} else {
-  $tmplname = Util::cgiValue('Template','projects');
-}
 
 // Calendar event hacks
 OCP\Util::addscript('3rdparty/fullcalendar', 'fullcalendar');
@@ -98,7 +88,7 @@ var missing_field_fromtime = '".addslashes(L::t('From Time'))."';
 var missing_field_todate = '".addslashes(L::t('To Date'))."';
 var missing_field_totime = '".addslashes(L::t('To Time'))."';
 var missing_field_startsbeforeends = '".addslashes(L::t('The event ends before it starts'))."';
-var missing_field_dberror = '".addslashes(L::t('There was a database fail'))."';
+var missing_field_dberror = '".addslashes(L::t('There was a database failure'))."';
 ");
 
 Util::addInlineScript("
@@ -111,8 +101,30 @@ confirm_text['deselect'] = '';
 
 // end event hacks
 
+// Determine which template has to be used
+
+$config = ConfigCheck::configured();
+
+if (!$config['summary']) {
+  $tmplname = 'configcheck';
+} else {
+  /* Special hack to determine if the email-form was requested through
+   * the pme-miscinfo button.
+   */
+  $op = Util::cgiValue('PME_sys_operation');
+  if ($op == "Em@il") {
+    $tmplname = 'email';
+  } else {
+    $tmplname = Util::cgiValue('Template', 'home');
+  }
+}
+
 $tmpl = new OCP\Template( 'cafevdb', $tmplname, 'user' );
 
+$tmpl->assign('configcheck', $config);
+$tmpl->assign('orchestra', Config::getValue('orchestra'));
+$tmpl->assign('groupadmin', $admin);
+$tmpl->assign('usergroup', $group);
 $tmpl->assign('debugmode', $debugmode);
 $tmpl->assign('expertmode', $expertmode);
 $tmpl->assign('tooltips', $tooltips);
@@ -125,3 +137,4 @@ $tmpl->assign('headervisibility', $headervisibility);
 
 $tmpl->printPage();
 
+?>

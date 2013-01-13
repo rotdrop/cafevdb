@@ -6,7 +6,7 @@ namespace CAFEVDB
 class Musicians
   extends Instrumentation
 {
-  const CSS_PREFIX = 'cafevdb-pme';
+  const CSS_PREFIX = 'cafevdb-page';
   private $projectMode;
 
   function __construct($mode = false, $execute = true) {
@@ -372,7 +372,7 @@ __EOT__;
 class AddOneMusician
   extends Instrumentation
 {
-  const CSS_PREFIX = 'cafevdb-pme';
+  const CSS_PREFIX = 'cafevdb-page';
 
   function __construct($execute = false) {
     parent::__construct($execute);

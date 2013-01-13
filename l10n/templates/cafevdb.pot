@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-10 13:07+0100\n"
+"POT-Creation-Date: 2013-01-13 17:00+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,17 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: ajax/admin-settings.php:19
+#, php-format
+msgid ""
+"Setting orchestra group to `%s'. Please login as group administrator and "
+"configure the Camerata DB application."
+msgstr ""
+
+#: ajax/admin-settings.php:25
+msgid "Unknown request."
+msgstr ""
 
 #: ajax/email/owncloudattachment.php:14
 msgid "No attachment path was submitted."
@@ -99,157 +110,233 @@ msgstr ""
 msgid "false"
 msgstr ""
 
-#: ajax/settings/app-settings.php:100
+#: ajax/settings/app-settings.php:88
+#, php-format
+msgid "Failed for: %s"
+msgstr ""
+
+#: ajax/settings/app-settings.php:92
+msgid "Key installed successfully!"
+msgstr ""
+
+#: ajax/settings/app-settings.php:103
 #, php-format
 msgid "Name of orchestra set to `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:144
-msgid "Submitted"
+#: ajax/settings/app-settings.php:113
+#, php-format
+msgid "DB-server set to `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:144
-msgid "stored"
+#: ajax/settings/app-settings.php:123
+#, php-format
+msgid "DB-name set to `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:152
-msgid "New share-owner"
+#: ajax/settings/app-settings.php:133
+#, php-format
+msgid "DB-login set to `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:156
-msgid "Failure creating account"
+#: ajax/settings/app-settings.php:150
+msgid "DB-test passed and DB-password set."
+msgstr ""
+
+#: ajax/settings/app-settings.php:155
+msgid ""
+"DB-test failed. Check the account settings. Check was performed with the new "
+"password."
+msgstr ""
+
+#: ajax/settings/app-settings.php:163
+msgid "DB-test passed with stored password (empty input ignored)."
 msgstr ""
 
 #: ajax/settings/app-settings.php:168
-msgid "Keeping old share-owner"
+msgid "DB-test failed with stored password (empty input ignored)."
 msgstr ""
 
-#: ajax/settings/app-settings.php:172
-msgid "Failure checking account"
+#: ajax/settings/app-settings.php:186
+#, php-format
+msgid "Submitted `%s' != `%s' (stored)"
 msgstr ""
 
-#: ajax/settings/app-settings.php:193
-msgid "Exception:"
+#: ajax/settings/app-settings.php:195
+#, php-format
+msgid "New share-owner `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:207
-msgid "Unable to set:"
+#: ajax/settings/app-settings.php:200
+#, php-format
+msgid "Failure creating account `%s'"
+msgstr ""
+
+#: ajax/settings/app-settings.php:213
+#, php-format
+msgid "Keeping old share-owner `%s'"
 msgstr ""
 
 #: ajax/settings/app-settings.php:218
+msgid "Failure checking account `s'"
+msgstr ""
+
+#: ajax/settings/app-settings.php:234
+msgid "Unable to share without share-holder `dummy-user'"
+msgstr ""
+
+#: ajax/settings/app-settings.php:243
+#, php-format
+msgid "Inconsistency, submitted `%s' != `%s' (stored)"
+msgstr ""
+
+#: ajax/settings/app-settings.php:255
+#, php-format
+msgid "New shared folder `%s'"
+msgstr ""
+
+#: ajax/settings/app-settings.php:260
+#, php-format
+msgid "Failure creating folder `%s'"
+msgstr ""
+
+#: ajax/settings/app-settings.php:273
+#, php-format
+msgid "Keeping old shared folder `%s'"
+msgstr ""
+
+#: ajax/settings/app-settings.php:278
+#, php-format
+msgid "Failure checking folder `%s'"
+msgstr ""
+
+#: ajax/settings/app-settings.php:284
+#, php-format
+msgid "Failure checking folder `%s', caught an exception `%s'"
+msgstr ""
+
+#: ajax/settings/app-settings.php:308
+msgid "Exception:"
+msgstr ""
+
+#: ajax/settings/app-settings.php:322
+msgid "Unable to set:"
+msgstr ""
+
+#: ajax/settings/app-settings.php:333
 msgid "minutes"
 msgstr ""
 
-#: ajax/settings/app-settings.php:238
+#: ajax/settings/app-settings.php:353
 msgid "Changed password for"
 msgstr ""
 
-#: ajax/settings/app-settings.php:244
+#: ajax/settings/app-settings.php:359
 msgid "Failed changing password for"
 msgstr ""
 
-#: ajax/settings/app-settings.php:265
+#: ajax/settings/app-settings.php:380
 #, php-format
 msgid "Using `%s' at %s as %s-server."
 msgstr ""
 
-#: ajax/settings/app-settings.php:271
+#: ajax/settings/app-settings.php:386
 #, php-format
 msgid "Unable to determine the IP-address for %s."
 msgstr ""
 
-#: ajax/settings/app-settings.php:288
+#: ajax/settings/app-settings.php:403
 msgid "Using "
 msgstr ""
 
-#: ajax/settings/app-settings.php:295
+#: ajax/settings/app-settings.php:410
 #, php-format
 msgid "`%s' doesn't seem to be a candidate for an IP-port."
 msgstr ""
 
-#: ajax/settings/app-settings.php:319
+#: ajax/settings/app-settings.php:434
 msgid "Unknown transport security method:"
 msgstr ""
 
-#: ajax/settings/app-settings.php:330
+#: ajax/settings/app-settings.php:445
 #, php-format
 msgid "Using `%s' for message transport."
 msgstr ""
 
-#: ajax/settings/app-settings.php:344
+#: ajax/settings/app-settings.php:459
 #, php-format
 msgid "Using `%s' as login."
 msgstr ""
 
-#: ajax/settings/app-settings.php:354
+#: ajax/settings/app-settings.php:469
 msgid "Password has been changed."
 msgstr ""
 
-#: ajax/settings/app-settings.php:370
+#: ajax/settings/app-settings.php:485
 msgid "IMAP connection seems functional."
 msgstr ""
 
-#: ajax/settings/app-settings.php:373
+#: ajax/settings/app-settings.php:488
 msgid "Unable to establish IMAP connection."
 msgstr ""
 
-#: ajax/settings/app-settings.php:382
+#: ajax/settings/app-settings.php:497
 msgid "SMTP connection seems functional."
 msgstr ""
 
-#: ajax/settings/app-settings.php:385
+#: ajax/settings/app-settings.php:500
 msgid "Unable to establish SMTP connection."
 msgstr ""
 
-#: ajax/settings/app-settings.php:402
+#: ajax/settings/app-settings.php:517
 msgid "UNSPECIFIED"
 msgstr ""
 
-#: ajax/settings/app-settings.php:406
+#: ajax/settings/app-settings.php:521
 #, php-format
 msgid "Email test-mode enabled, sending only to %s"
 msgstr ""
 
-#: ajax/settings/app-settings.php:410
+#: ajax/settings/app-settings.php:525
 msgid "Email test-mode disable, will send to all!!!"
 msgstr ""
 
-#: ajax/settings/app-settings.php:421 ajax/settings/app-settings.php:450
+#: ajax/settings/app-settings.php:536 ajax/settings/app-settings.php:565
 #, php-format
 msgid "`%s' doesn't seem to be a valid email-address."
 msgstr ""
 
-#: ajax/settings/app-settings.php:429
+#: ajax/settings/app-settings.php:544
 #, php-format
 msgid "Using `%s' as email-address for test-mode."
 msgstr ""
 
-#: ajax/settings/app-settings.php:439
+#: ajax/settings/app-settings.php:554
 #, php-format
 msgid "Using `%s' as name of the sender identity."
 msgstr ""
 
-#: ajax/settings/app-settings.php:458
+#: ajax/settings/app-settings.php:573
 #, php-format
 msgid "Using `%s' as sender email-address."
 msgstr ""
 
-#: ajax/settings/app-settings.php:474
+#: ajax/settings/app-settings.php:589
 #, php-format
 msgid "Link for `%s' set to `%s'."
 msgstr ""
 
-#: ajax/settings/app-settings.php:487
+#: ajax/settings/app-settings.php:602
 #, php-format
 msgid "Unable to test link for `%s' without a link target."
 msgstr ""
 
-#: ajax/settings/app-settings.php:493
+#: ajax/settings/app-settings.php:608
 #, php-format
 msgid "New window or tab with `%s'?"
 msgstr ""
 
-#: ajax/settings/app-settings.php:516
+#: ajax/settings/app-settings.php:631
 msgid "Unhandled request:"
 msgstr ""
 
@@ -269,11 +356,11 @@ msgstr ""
 msgid "Encryption key stored."
 msgstr ""
 
-#: ajax/settings/exampletext.php:16
+#: ajax/settings/exampletext.php:6 ajax/settings/exampletext.php:19
 msgid "Example-Text changed"
 msgstr ""
 
-#: ajax/settings/exampletext.php:19
+#: ajax/settings/exampletext.php:22
 msgid "Invalid request"
 msgstr ""
 
@@ -285,47 +372,47 @@ msgstr ""
 msgid "Tooltips changed"
 msgstr ""
 
-#: index.php:93
+#: index.php:83
 msgid "Missing or invalid fields"
 msgstr ""
 
-#: index.php:94
+#: index.php:84
 msgid "Title"
 msgstr ""
 
-#: index.php:95
+#: index.php:85
 msgid "Calendar"
 msgstr ""
 
-#: index.php:96
+#: index.php:86
 msgid "From Date"
 msgstr ""
 
-#: index.php:97
+#: index.php:87
 msgid "From Time"
 msgstr ""
 
-#: index.php:98
+#: index.php:88
 msgid "To Date"
 msgstr ""
 
-#: index.php:99
+#: index.php:89
 msgid "To Time"
 msgstr ""
 
-#: index.php:100
+#: index.php:90
 msgid "The event ends before it starts"
 msgstr ""
 
-#: index.php:101
-msgid "There was a database fail"
+#: index.php:91
+msgid "There was a database failure"
 msgstr ""
 
-#: index.php:106
+#: index.php:96
 msgid "Do you really want to delete this event?"
 msgstr ""
 
-#: index.php:107
+#: index.php:97
 msgid "Do you really want to detach this event from the current project?"
 msgstr ""
 
@@ -399,7 +486,11 @@ msgstr ""
 msgid "Advanced operations, use with care"
 msgstr ""
 
-#: lib/config.php:437
+#: js/settings.js:115
+msgid "Error:"
+msgstr ""
+
+#: lib/config.php:452
 msgid "birthday"
 msgstr ""
 
@@ -618,129 +709,129 @@ msgstr ""
 msgid "recipient"
 msgstr ""
 
-#: lib/events.php:770
+#: lib/events.php:705
 msgid "Unknown Calendar"
 msgstr ""
 
-#: lib/events.php:777
+#: lib/events.php:712
 msgid "Miscellaneous Calendars"
 msgstr ""
 
-#: lib/functions.php:236
+#: lib/functions.php:244
 msgid "Export Table"
 msgstr ""
 
-#: lib/functions.php:244
+#: lib/functions.php:252
 msgid "CSV Export"
 msgstr ""
 
-#: lib/functions.php:247
+#: lib/functions.php:255
 msgid "HTML Export"
 msgstr ""
 
-#: lib/functions.php:250
+#: lib/functions.php:258
 msgid "Excel Export"
 msgstr ""
 
-#: lib/functions.php:253
+#: lib/functions.php:261
 msgid "HTML/Spreadsheet"
 msgstr ""
 
-#: lib/functions.php:375
+#: lib/functions.php:383
 msgid "Error: Unknonwn Button Type"
 msgstr ""
 
-#: lib/functions.php:398
+#: lib/functions.php:406
 msgid "View all Projects"
 msgstr ""
 
-#: lib/functions.php:399
+#: lib/functions.php:407
 msgid "Overview over all known projects (start-page)."
 msgstr ""
 
-#: lib/functions.php:411
+#: lib/functions.php:419
 msgid "Display all Musicians"
 msgstr ""
 
-#: lib/functions.php:412
+#: lib/functions.php:420
 msgid ""
 "Display all musicians stored in the data-base, with detailed facilities for "
 "filtering and sorting."
 msgstr ""
 
-#: lib/functions.php:424
+#: lib/functions.php:432
 msgid ""
 "Mass-email form, use with care. Mass-emails will be logged. Recipients will "
 "be specified by the Bcc: field in the header, so the recipients are "
 "undisclosed to each other."
 msgstr ""
 
-#: lib/functions.php:438
+#: lib/functions.php:446
 msgid "Email History"
 msgstr ""
 
-#: lib/functions.php:439
+#: lib/functions.php:447
 msgid "Display all emails sent by our mass-email form."
 msgstr ""
 
-#: lib/functions.php:457
+#: lib/functions.php:465
 msgid "The currently active project."
 msgstr ""
 
-#: lib/functions.php:472
+#: lib/functions.php:480
 msgid "Detailed Instrumentation"
 msgstr ""
 
-#: lib/functions.php:473
+#: lib/functions.php:481
 msgid ""
 "Detailed display of all registered musicians for the selected project. The "
 "table will allow for modification of personal data like email, phone, "
 "address etc."
 msgstr ""
 
-#: lib/functions.php:487
+#: lib/functions.php:495
 msgid "Brief Instrumentation"
 msgstr ""
 
-#: lib/functions.php:488
+#: lib/functions.php:496
 msgid ""
 "Brief display of all registered musicians for the selected project. The "
 "table will allow for modification of project specific data, like the "
 "instrument, the project-fee etc."
 msgstr ""
 
-#: lib/functions.php:502
+#: lib/functions.php:510
 msgid "Add Instruments"
 msgstr ""
 
-#: lib/functions.php:503
+#: lib/functions.php:511
 msgid ""
 "Display the list of instruments known by the data-base, possibly add new "
 "ones as needed."
 msgstr ""
 
-#: lib/functions.php:517
+#: lib/functions.php:525
 msgid "Instrumentation Numbers"
 msgstr ""
 
-#: lib/functions.php:518
+#: lib/functions.php:526
 msgid ""
 "Display the desired instrumentaion numbers, i.e. how many musicians are "
 "already registered for each instrument group and how many are finally needed."
 msgstr ""
 
-#: lib/functions.php:532
+#: lib/functions.php:540
 msgid "Add more Musicians"
 msgstr ""
 
-#: lib/functions.php:533
+#: lib/functions.php:541
 msgid ""
 "List of all musicians NOT registered for the selected project. Only through "
 "that table a new musician can enter a project. Look for a hyper-link "
 "Add_to_PROJECT"
 msgstr ""
 
-#: lib/functions.php:547
+#: lib/functions.php:555
 msgid "Transfer Instruments from Musicians"
 msgstr ""
 
@@ -762,37 +853,50 @@ msgstr ""
 
 #: lib/tooltips.php:15
 msgid ""
+"Perform the configuration checks again. If all checks have been passed then "
+"you are led on to the ordinary entry page of the application."
+msgstr ""
+
+#: lib/tooltips.php:16
+msgid ""
+"Check whether the data-base can be accessed with the given account\n"
+"information and password. The password will only be stored in the\n"
+"configuration storage if the test can be performed successfully."
+msgstr ""
+
+#: lib/tooltips.php:19
+msgid ""
 "Test the email-settings; try to connect to the SMTP-server and the IMAP-"
 "server in turn."
 msgstr ""
 
-#: lib/tooltips.php:16
+#: lib/tooltips.php:20
 msgid ""
 "Try to connect to the specified web-address, will open the web-address in "
 "another window or tab, depending your local browser preferences."
 msgstr ""
 
-#: lib/tooltips.php:17
+#: lib/tooltips.php:21
 msgid "Export in CSV-format using a semicolon as delimiter (Excel convention)"
 msgstr ""
 
-#: lib/tooltips.php:18
+#: lib/tooltips.php:22
 msgid ""
 "Export as HTML page without navigation elements; can also be loaded into "
 "your office-programs."
 msgstr ""
 
-#: lib/tooltips.php:19
+#: lib/tooltips.php:23
 msgid "Export as `full-featured' Excel-2007 table, `.xslx'."
 msgstr ""
 
-#: lib/tooltips.php:20
+#: lib/tooltips.php:24
 msgid ""
 "Export as HTML page, but set the file type to `spread-sheed'. Should also be "
 "readable by standard office-programs as `Excel'-table."
 msgstr ""
 
-#: lib/tooltips.php:21
+#: lib/tooltips.php:25
 msgid ""
 "Export the visible part of the data-base to an office-format. The `Excel'-"
 "export should produce useful input for either Libre- or OpenOffice or for "
@@ -800,41 +904,41 @@ msgid ""
 "USA."
 msgstr ""
 
-#: lib/tooltips.php:22
+#: lib/tooltips.php:26
 msgid ""
 "Choose a file to attach from the files stored remotely on in the OwnCloud "
 "storage area."
 msgstr ""
 
-#: lib/tooltips.php:23
+#: lib/tooltips.php:27
 msgid ""
 "Upload a file from your local computer as attachment. The file will be "
 "removed from the remote-system after the message has been sent."
 msgstr ""
 
-#: lib/tooltips.php:24
+#: lib/tooltips.php:28
 msgid ""
 "Add the instruments of the actually registered musicians to the instrument-"
 "table for the project."
 msgstr ""
 
-#: lib/tooltips.php:25
+#: lib/tooltips.php:29
 msgid ""
 "Add the musician to the project. A new form will open were details like the "
 "instrument etc. can be adjustetd."
 msgstr ""
 
-#: lib/tooltips.php:26
+#: lib/tooltips.php:30
 msgid ""
 "Transpose the displayed table; may be beneficial for tables with only a few "
 "rows but many columns!"
 msgstr ""
 
-#: lib/tooltips.php:27
+#: lib/tooltips.php:31
 msgid "Open a page with the musicians registered for the respective project."
 msgstr ""
 
-#: lib/tooltips.php:28
+#: lib/tooltips.php:32
 msgid ""
 "Open a dialog with all known\n"
 "events associated to the project.\n"
@@ -842,13 +946,13 @@ msgid ""
 "as needed."
 msgstr ""
 
-#: lib/tooltips.php:32
+#: lib/tooltips.php:36
 msgid ""
 "Recompute the link between projects and events, using the event-categories "
 "as primary key."
 msgstr ""
 
-#: lib/tooltips.php:33
+#: lib/tooltips.php:37
 msgid ""
 "Mark the respective event for being\n"
 "sent by email as ICS-attachment per email.\n"
@@ -858,53 +962,53 @@ msgid ""
 "recipients."
 msgstr ""
 
-#: lib/tooltips.php:39
+#: lib/tooltips.php:43
 msgid "Add a new concert-event to the project."
 msgstr ""
 
-#: lib/tooltips.php:40
+#: lib/tooltips.php:44
 msgid "Add a new rehearsal-event to the project."
 msgstr ""
 
-#: lib/tooltips.php:41
+#: lib/tooltips.php:45
 msgid "Add some other event to the project."
 msgstr ""
 
-#: lib/tooltips.php:43
+#: lib/tooltips.php:47
 msgid ""
 "Add a private management event which is not exposed to the rest of the world."
 msgstr ""
 
-#: lib/tooltips.php:45
+#: lib/tooltips.php:49
 msgid ""
 "Click to open an email-form\n"
 "and send the selected events to\n"
 "selected recipients."
 msgstr ""
 
-#: lib/tooltips.php:48
+#: lib/tooltips.php:52
 msgid ""
 "Select all events for\n"
 "email-submission"
 msgstr ""
 
-#: lib/tooltips.php:50
+#: lib/tooltips.php:54
 msgid ""
 "Exclude all events from\n"
 "email-submission"
 msgstr ""
 
-#: lib/tooltips.php:52
+#: lib/tooltips.php:56
 msgid "Modify the event."
 msgstr ""
 
-#: lib/tooltips.php:53
+#: lib/tooltips.php:57
 msgid ""
 "Delete the event from the system\n"
 "(no undo possible)."
 msgstr ""
 
-#: lib/tooltips.php:55
+#: lib/tooltips.php:59
 msgid ""
 "Detach the respective event\n"
 "from the project, but do not\n"
@@ -914,18 +1018,18 @@ msgid ""
 "categories."
 msgstr ""
 
-#: lib/tooltips.php:62
+#: lib/tooltips.php:66
 msgid ""
 "  Klick mich, um das Sortieren\n"
 "nach diesem Feld ein-\n"
 "oder auszuschalten!"
 msgstr ""
 
-#: lib/tooltips.php:66
+#: lib/tooltips.php:70
 msgid "  Klick mich, um die Sortierreihenfolge umzukehren!"
 msgstr ""
 
-#: lib/tooltips.php:68
+#: lib/tooltips.php:72
 msgid ""
 "  Klick mich, um eine Em@il an die ausgewählten\n"
 "Musiker zu versenden. Auf der folgenden Seite kann\n"
@@ -937,7 +1041,7 @@ msgid ""
 "entsprechen."
 msgstr ""
 
-#: lib/tooltips.php:77
+#: lib/tooltips.php:81
 msgid ""
 "  Klick mich, um alle gerade\n"
 "angezeigten Musiker zu der\n"
@@ -949,39 +1053,39 @@ msgid ""
 "entsprechen."
 msgstr ""
 
-#: lib/tooltips.php:86
+#: lib/tooltips.php:90
 msgid ""
 "  Klick mich, um alle gerade\n"
 "angezeigten Musiker von der\n"
 "Em@il-Auswahl zu entfernen"
 msgstr ""
 
-#: lib/tooltips.php:90
+#: lib/tooltips.php:94
 msgid ""
 "  Klick mich, um die\n"
 "Sortierreihenfolge auf die\n"
 "Voreinstellung zurückzusetzen."
 msgstr ""
 
-#: lib/tooltips.php:93
+#: lib/tooltips.php:97
 msgid ""
 "  Klick mich, um den\n"
 "aktuellen Filter zu löschen."
 msgstr ""
 
-#: lib/tooltips.php:96
+#: lib/tooltips.php:100
 msgid ""
 "  Klick mich, um die\n"
 "Suchkriterien zu verstecken."
 msgstr ""
 
-#: lib/tooltips.php:99
+#: lib/tooltips.php:103
 msgid ""
 "  Klick mich, um die\n"
 "Suchkriterien anzuzeigen."
 msgstr ""
 
-#: lib/tooltips.php:102
+#: lib/tooltips.php:106
 #, php-format
 msgid ""
 "  Klick mich, um die\n"
@@ -990,7 +1094,7 @@ msgid ""
 "Als Platzhalter verwendet man `%%'."
 msgstr ""
 
-#: lib/tooltips.php:107
+#: lib/tooltips.php:111
 #, php-format
 msgid ""
 "  Feld für Suchkriterien.\n"
@@ -999,18 +1103,18 @@ msgid ""
 "eine Auswahlbox mit Vergleichsoperationen."
 msgstr ""
 
-#: lib/tooltips.php:112
+#: lib/tooltips.php:116
 msgid ""
 "  Click mich, um mich\n"
 "Deinem Massenmail-Vorhaben\n"
 "hinzuzufügen. Schäme Dich!"
 msgstr ""
 
-#: lib/tooltips.php:116
+#: lib/tooltips.php:120
 msgid "Einzelnen Datensatz anzeigen"
 msgstr ""
 
-#: lib/tooltips.php:117
+#: lib/tooltips.php:121
 msgid ""
 "Einzelnen Datensatz anzeigen,\n"
 "zeigt ein neues Formular mit\n"
@@ -1018,7 +1122,7 @@ msgid ""
 "und Abbruchmöglichkeit."
 msgstr ""
 
-#: lib/tooltips.php:121
+#: lib/tooltips.php:125
 msgid ""
 "Einzelnen Datensatz kopieren,\n"
 "zeigt ein neues Formular mit\n"
@@ -1026,7 +1130,7 @@ msgid ""
 "und Abbruchmöglichkeit."
 msgstr ""
 
-#: lib/tooltips.php:125
+#: lib/tooltips.php:129
 msgid ""
 "Einzelnen Datensatz löschen,\n"
 "zeigt den aktuellen Datensatz zunächst an.\n"
@@ -1035,7 +1139,7 @@ msgid ""
 "VORSICHT!."
 msgstr ""
 
-#: lib/tooltips.php:130
+#: lib/tooltips.php:134
 msgid ""
 "  Adressaten in potentielle\n"
 "Massenmail Adressliste aufnehmen.\n"
@@ -1045,7 +1149,7 @@ msgid ""
 "Think thrice about it."
 msgstr ""
 
-#: lib/tooltips.php:138
+#: lib/tooltips.php:142
 msgid "nothing"
 msgstr ""
 
@@ -1071,19 +1175,19 @@ msgstr ""
 msgid "Really Change %s's instrument!!!"
 msgstr ""
 
-#: settings.php:71
+#: settings.php:60
 msgid "concerts"
 msgstr ""
 
-#: settings.php:72
+#: settings.php:61
 msgid "rehearsals"
 msgstr ""
 
-#: settings.php:73
+#: settings.php:62
 msgid "other"
 msgstr ""
 
-#: settings.php:74
+#: settings.php:63
 msgid "management"
 msgstr ""
 
@@ -1095,97 +1199,202 @@ msgstr ""
 msgid "User Group"
 msgstr ""
 
-#: templates/app-settings.php:5
+#: templates/app-settings.php:11
+msgid "General settings"
+msgstr ""
+
+#: templates/app-settings.php:12
 msgid "name of orchestra"
 msgstr ""
 
-#: templates/app-settings.php:10
+#: templates/app-settings.php:17
+msgid "Encryption settings"
+msgstr ""
+
+#: templates/app-settings.php:18
 msgid "Current Key"
 msgstr ""
 
-#: templates/app-settings.php:11
+#: templates/app-settings.php:19
 msgid "New Key"
 msgstr ""
 
-#: templates/app-settings.php:12 templates/app-settings.php:42
-#: templates/email-settings.php:49 templates/settings.php:43
-#: templates/share-settings.php:16
+#: templates/app-settings.php:20 templates/app-settings.php:49
+#: templates/email-settings.php:49 templates/settings.php:42
+#: templates/share-settings.php:23
 msgid "show"
 msgstr ""
 
-#: templates/app-settings.php:13
+#: templates/app-settings.php:21
 msgid "Change Encryption Key"
 msgstr ""
 
-#: templates/app-settings.php:14
+#: templates/app-settings.php:22
 msgid "The encryption key was changed"
 msgstr ""
 
-#: templates/app-settings.php:15
+#: templates/app-settings.php:23
 msgid "Unable to change the encryption key"
 msgstr ""
 
-#: templates/app-settings.php:16
+#: templates/app-settings.php:24
 msgid "Data will be stored unencrypted"
 msgstr ""
 
-#: templates/app-settings.php:17
+#: templates/app-settings.php:25
 msgid "The keys are the same and remain unchanged."
 msgstr ""
 
-#: templates/app-settings.php:21
+#: templates/app-settings.php:29
 msgid "Distribute Encryption Key"
 msgstr ""
 
-#: templates/app-settings.php:21
+#: templates/app-settings.php:29
 msgid ""
 "Insert the data-base encryption key into the user preferences of all users "
 "belonging to the user group. The data-base key will be encrypted by the "
 "respective user's public key."
 msgstr ""
 
-#: templates/app-settings.php:27
+#: templates/app-settings.php:35
+msgid "Database settings"
+msgstr ""
+
+#: templates/app-settings.php:36
 msgid "Server"
 msgstr ""
 
-#: templates/app-settings.php:28
+#: templates/app-settings.php:37
 msgid "Database Server"
 msgstr ""
 
-#: templates/app-settings.php:30
+#: templates/app-settings.php:39
 msgid "Database"
 msgstr ""
 
-#: templates/app-settings.php:31
+#: templates/app-settings.php:40
 msgid "Database Name"
 msgstr ""
 
-#: templates/app-settings.php:33
+#: templates/app-settings.php:42
 msgid "User"
 msgstr ""
 
-#: templates/app-settings.php:34
+#: templates/app-settings.php:43
 msgid "Database User"
 msgstr ""
 
-#: templates/app-settings.php:40
-msgid "Current Password"
-msgstr ""
-
-#: templates/app-settings.php:41 templates/email-settings.php:48
+#: templates/app-settings.php:48 templates/email-settings.php:48
 msgid "New Password"
 msgstr ""
 
-#: templates/app-settings.php:43
-msgid "Change Database Password"
+#: templates/app-settings.php:50
+msgid "Test Database Password"
 msgstr ""
 
-#: templates/app-settings.php:44
-msgid "The database password was changed"
+#: templates/configcheck.php:12
+msgid ""
+"Several basic configuraton options are missing. Please follow they\n"
+"instructions below.  If this is a new installation then you will\n"
+"probably also have to adjust several other settings in the\n"
+"configuration menu (click on the gear-symbol in the top-right\n"
+"corner). You need to have the role of a group-administrator to do\n"
+"so. You may want to configure your language preferences."
 msgstr ""
 
-#: templates/app-settings.php:45
-msgid "Unable to change the database password"
+#: templates/configcheck.php:33
+msgid ""
+"You need to specify a name for the orchestra.  Please click as\n"
+"group-administrator on the gear-symbol in the top-right corner and\n"
+"specify a short-hand name for the orchestra in the\n"
+"`Administration'-tab. This is just a tag to provide defaults for\n"
+"user-ids and folders; it should be a short one-word identifier."
+msgstr ""
+
+#: templates/configcheck.php:39
+msgid ""
+"You need to create a dedicatd user group.\n"
+"You have to log-in as administrator to do so."
+msgstr ""
+
+#: templates/configcheck.php:42
+#, php-format
+msgid ""
+"You need to create a dummy-user which owns all shared resources\n"
+"(calendars, files etc.). You need to be a group-admin for the\n"
+"orchestra user group `%s' to do so. You can create the share-owner\n"
+"uid by setting the respective field in the application settings menu\n"
+"(click as group-admin on the gear-symbol in the top-right corner and\n"
+"choose the `Sharing'-tab)."
+msgstr ""
+
+#: templates/configcheck.php:50
+#, php-format
+msgid ""
+"You need to create a dedicated shared folder shared among the\n"
+"user-group `%s'. You can do so through the respective web-form in the\n"
+"application settings windows accessible through the gear-symbol in the\n"
+"top-right corner. Click on the symbol and choose the `Sharing'-tab in\n"
+"the settings-window. You need to be a group-admin, otherwise the\n"
+"application settings are not visible for you."
+msgstr ""
+
+#: templates/configcheck.php:58
+msgid ""
+"You need to configure the database access. You can do so through the\n"
+"respective web-form in the application settings windows accessible\n"
+"through the gear-symbol in the upper left corner. Click on the\n"
+"gear-symbol and choose the `Administration'-tab.You need to be a\n"
+"group-admin, otherwise the application settings are not visible for\n"
+"you."
+msgstr ""
+
+#: templates/configcheck.php:66
+msgid ""
+"You may want to set an encryption key for encrypting configuration\n"
+"values and (in the future) sensitive data in the members- and project\n"
+"database.  You can do so through the respective web-form in the\n"
+"application settings windows accessible through the gear-symbol in the\n"
+"upper left corner. You need to be a group-admin, otherwise the\n"
+"application settings are not visible for you. Note also that after\n"
+"installing a non-empty encryption key each user has to log-out and\n"
+"log-in again in order to be able to access the encrypted values."
+msgstr ""
+
+#: templates/configcheck.php:84
+msgid "Test again"
+msgstr ""
+
+#: templates/configcheck.php:94
+msgid "You are a group administrator."
+msgstr ""
+
+#: templates/configcheck.php:95
+msgid "You are not a group administrator."
+msgstr ""
+
+#: templates/configcheck.php:97
+#, php-format
+msgid ""
+"Ask a user with group-administrator rights to perform the required\n"
+"settings or ask the Owncloud-administror to assign to you the rol of a\n"
+"group-administrator for the group `%s'."
+msgstr ""
+
+#: templates/configcheck.php:115 templates/configcheck.php:132
+msgid "is set"
+msgstr ""
+
+#: templates/configcheck.php:115
+msgid "is missing"
+msgstr ""
+
+#: templates/configcheck.php:137
+msgid "is set, but inaccessible"
+msgstr ""
+
+#: templates/configcheck.php:142
+msgid "is not set"
 msgstr ""
 
 #: templates/debug.php:2
@@ -1358,7 +1567,7 @@ msgid ""
 "any musician."
 msgstr ""
 
-#: templates/expertmode.php:33 templates/settings.php:31
+#: templates/expertmode.php:33 templates/settings.php:30
 msgid "Example"
 msgstr ""
 
@@ -1420,9 +1629,23 @@ msgstr ""
 msgid "Owncloud Developer Manual, mostly useful for web-developers."
 msgstr ""
 
-#: templates/not-a-member.php:2
+#: templates/not-a-member.php:8
+#, php-format
 msgid ""
-"Camerata DB: Error: Not a member of the dedicated orchestra group, you are "
+"CamerataDB Error: You are not a member of the dedicated orchestra\n"
+"group , you are `%s'.  If this is a first-time setup, then please\n"
+"define a dedicated user-group and specify that group in the\n"
+"appropriate field in the `Admin'-section of the admin-settings. You\n"
+"should also assign at least one user and one or more dedicated\n"
+"group-administrators to the user-group.  Afterwards one of the\n"
+"group-administrators should log-in and perform the necessary\n"
+"configuration steps to finish the setup. You need administrative\n"
+"privileges to create an initial orchestra group and group\n"
+"administrator."
+msgstr ""
+
+#: templates/not-a-member.php:21
+msgid "Something is wrong, but what?"
 msgstr ""
 
 #: templates/part.common.header.php:12
@@ -1467,112 +1690,128 @@ msgstr ""
 msgid "Personal Settings"
 msgstr ""
 
-#: templates/settings.php:13
+#: templates/settings.php:12
 msgid "Administration"
 msgstr ""
 
-#: templates/settings.php:14
+#: templates/settings.php:13
 msgid "Sharing"
 msgstr ""
 
-#: templates/settings.php:15
+#: templates/settings.php:14
 msgid "Email"
 msgstr ""
 
-#: templates/settings.php:16
+#: templates/settings.php:15
 msgid "Development"
 msgstr ""
 
-#: templates/settings.php:23
+#: templates/settings.php:22
 msgid "Tool-Tips"
 msgstr ""
 
-#: templates/settings.php:26
+#: templates/settings.php:25
 msgid "Expert-Mode"
 msgstr ""
 
-#: templates/settings.php:29
+#: templates/settings.php:28
 msgid "Debug-Mode"
 msgstr ""
 
-#: templates/settings.php:31 templates/settings.php:34
-#: templates/settings.php:35
+#: templates/settings.php:30 templates/settings.php:33
+#: templates/settings.php:34
 msgid "Example Text"
 msgstr ""
 
-#: templates/settings.php:37
+#: templates/settings.php:36
 msgid "Dummy"
 msgstr ""
 
-#: templates/settings.php:41
+#: templates/settings.php:40
 msgid "Own Password"
 msgstr ""
 
-#: templates/settings.php:42
+#: templates/settings.php:41
 msgid "DB Encryption Key"
 msgstr ""
 
-#: templates/settings.php:44
+#: templates/settings.php:43
 msgid "Set Encryption Key"
 msgstr ""
 
-#: templates/settings.php:45
+#: templates/settings.php:44
 msgid "The encryption key has been set successfully."
 msgstr ""
 
-#: templates/settings.php:46
+#: templates/settings.php:45
 msgid "Unable to set the encryption key."
 msgstr ""
 
-#: templates/share-settings.php:9
+#: templates/share-settings.php:13
+msgid "Share owner"
+msgstr ""
+
+#: templates/share-settings.php:16
 msgid "shareowner"
 msgstr ""
 
-#: templates/share-settings.php:10
+#: templates/share-settings.php:17 templates/share-settings.php:59
 msgid "force"
 msgstr ""
 
-#: templates/share-settings.php:11
+#: templates/share-settings.php:18 templates/share-settings.php:61
 msgid "Check"
 msgstr ""
 
-#: templates/share-settings.php:15
+#: templates/share-settings.php:22
 msgid "Share-Password"
 msgstr ""
 
-#: templates/share-settings.php:17
+#: templates/share-settings.php:24
 msgid "Generate"
 msgstr ""
 
-#: templates/share-settings.php:18
+#: templates/share-settings.php:25
 msgid "Change"
 msgstr ""
 
-#: templates/share-settings.php:22 templates/share-settings.php:25
-#: templates/share-settings.php:28 templates/share-settings.php:31
+#: templates/share-settings.php:30
+msgid "Calendars"
+msgstr ""
+
+#: templates/share-settings.php:31 templates/share-settings.php:34
+#: templates/share-settings.php:37 templates/share-settings.php:40
 msgid "calendarname"
 msgstr ""
 
-#: templates/share-settings.php:23
+#: templates/share-settings.php:32
 msgid "Calendar for Concerts"
 msgstr ""
 
-#: templates/share-settings.php:26
+#: templates/share-settings.php:35
 msgid "Calendar for Rehearsals"
 msgstr ""
 
-#: templates/share-settings.php:29
+#: templates/share-settings.php:38
 msgid "Calendar for other Events"
 msgstr ""
 
-#: templates/share-settings.php:32
+#: templates/share-settings.php:41
 msgid "Management-Calendar"
 msgstr ""
 
-#: templates/share-settings.php:35
+#: templates/share-settings.php:44
 msgid "#Minutes"
 msgstr ""
 
-#: templates/share-settings.php:36
+#: templates/share-settings.php:45
 msgid "Default Duration for Events"
+msgstr ""
+
+#: templates/share-settings.php:49
+msgid "Shared folder"
+msgstr ""
+
+#: templates/share-settings.php:55
+msgid "shared folder"
 msgstr ""

@@ -6,14 +6,23 @@
  * See the COPYING-README file.
  */
 
+use CAFEVDB\L;
+
 OCP\User::checkAdminUser();
 OCP\JSON::callCheck();
 
 if (isset($_POST['CAFEVgroup'])) {
   $value = $_POST['CAFEVgroup'];
   \OC_AppConfig::setValue('cafevdb', 'usergroup', $value);
-  echo "group: $value";
-  return;
+  
+  OC_JSON::success(
+    array("data" => array( "message" => L::t('Setting orchestra group to `%s\'. Please login as group administrator and configure the Camerata DB application.',
+                                             array($value)))));
+  return true;
 }
 
-echo 'false';
+OC_JSON::error(
+  array("data" => array( "message" => L::t('Unknown request.'))));
+
+return false;
+

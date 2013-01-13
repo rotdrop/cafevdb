@@ -18,7 +18,7 @@ class L
       // Mea Culpa: don't include a new-line after end tag
       //strval(self::$l->t('blah'));
     }
-    return self::$l->t(strval($text), $parameters);
+    return self::$l->t($text, $parameters);
   }
 };
 
@@ -120,16 +120,24 @@ __EOT__;
     }
   }
 
-  public static function error($msg, $die = true)
+  public static function error($msg, $die = true, $silent = false)
   {
     $msg = '<HR/><PRE>
 '.htmlspecialchars($msg).
       '</PRE><HR/>
 ';
     if ($die) {
-      die($msg);
+      if ($silent) {
+        die;
+      } else {
+        die($msg);
+      }
     } else {
+      if ($silent) {
+        return $msg;
+      }
       echo $msg;
+      return false;
     }
   }
 
@@ -514,8 +522,8 @@ __EOT__;
       break;
 
     case 'projectinstruments':
-      $value = L::t("Instrumentation Numbers");
-      $title = L::t("Display the desired instrumentaion numbers, i.e. how many musicians are already registered for each instrument group and how many are finally needed.");
+      $value = L::t('Instrumentation Numbers');
+      $title = L::t('Display the desired instrumentaion numbers, i.e. how many musicians are already registered for each instrument group and how many are finally needed.');
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
   <input type="submit" name="" value="$value" title="$title"/>
@@ -567,23 +575,25 @@ __EOT__;
 
 class mySQL
 {
-  public static function connect($opts, $die = true)
+  public static function connect($opts, $die = true, $silent = false)
   {
     // Fetch the actual list of instruments, we will need it anyway
-    $handle = mysql_connect($opts['hn'], $opts['un'], $opts['pw']);
+    $handle = @mysql_connect($opts['hn'], $opts['un'], $opts['pw']);
     if ($handle === false) {
-      Util::error('Could not connect to data-base server: "'.@mysql_error().'"');
+      Util::error('Could not connect to data-base server: "'.@mysql_error().'"', $die, $silent);
+      return false;
     }
 
     // Fucking shit
     $query = "SET NAMES 'utf8'";
-    mySQL::query($query, $handle);
+    mySQL::query($query, $handle, $die, $silent);
 
     //specify database
-    $dbres = mysql_select_db($opts['db'], $handle);
+    $dbres = @mysql_select_db($opts['db'], $handle);
   
     if (!$dbres) {
-      Util::error('Unable to select '.$opts['db']);
+      Util::error('Unable to select '.$opts['db'], $die, $silent);
+      return false;
     }
     return $handle;
   }
@@ -591,7 +601,7 @@ class mySQL
   public static function close($handle = false)
   {
     if ($handle) {
-      mysql_close($handle);
+      @mysql_close($handle);
     }
     // give a damn on errors
     return true;
@@ -607,12 +617,12 @@ class mySQL
         $err = @mysql_error($handle);
       }
     } else {
-      if (!($result = mysql_query($query))) {
+      if (!($result = @mysql_query($query))) {
         $err = @mysql_error();
       }
     }
-    if (!$result && (!$silent || $die)) {
-      Util::error('mysql_query() failed: "'.$err.'"', $die);
+    if (!$result) {
+      Util::error('mysql_query() failed: "'.$err.'"', $die, $silent);
     }
     return $result;
   }

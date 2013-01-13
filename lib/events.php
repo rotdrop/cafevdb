@@ -608,47 +608,6 @@ __EOT__;
     return $result;
   }
   
-  /**Share an object between the members of the specified group.
-   *
-   * 
-   */
-  public static function groupShareObject($id, $group, $type = 'calendar')
-  {
-    // First check whether the object is already shared.
-    $shareType   = \OCP\Share::SHARE_TYPE_GROUP;
-    $permissions = (\OCP\Share::PERMISSION_CREATE|
-                    \OCP\Share::PERMISSION_READ|
-                    \OCP\Share::PERMISSION_UPDATE|
-                    \OCP\Share::PERMISSION_DELETE);
-
-	$token =\OCP\Share::getItemShared($type, $id);    
-    if ($token !== false) {
-      return \OCP\Share::setPermissions($type, $id, $shareType, $group, $permissions);
-    }
-    // Otherwise it should be legal to attempt a new share ...
-
-    // try it ...
-    return \OCP\Share::shareItem($type, $id, $shareType, $group, $permissions);
-  }
-
-  /**Fake execution with other user-id.
-   */
-  public static function sudo($uid, $callback)
-  {
-    $olduser = \OC_User::getUser();
-    \OC_User::setUserId($uid);
-    try {
-      $result = call_user_func($callback);
-    } catch (\Exception $exception) {
-      \OC_User::setUserId($olduser);
-      throw new \Exception($exception->getMessage());
-      return false;
-    }
-    \OC_User::setUserId($olduser);
-
-    return $result;
-  }
-
   /**Make sure there is a suitable shared calendar with the given
    * name and/or id. Create one if necesary.
    *
@@ -666,7 +625,7 @@ __EOT__;
     $shareowner = Config::getValue('shareowner');
 
     // Make sure the dummy user owning all shared stuff is "alive"
-    if (!self::checkShareOwner($shareowner)) {
+    if (!ConfigCheck::checkShareOwner($shareowner)) {
       return false;
     }
 
@@ -692,15 +651,15 @@ __EOT__;
     }
 
     // Check that we can edit, simply set the item as shared    
-    self::sudo($shareowner, function() use ($calId, $sharegroup) {
-        $result = self::groupShareObject($calId, $sharegroup);
+    ConfigCheck::sudo($shareowner, function() use ($calId, $sharegroup) {
+        $result = ConfigCheck::groupShareObject($calId, $sharegroup);
         return $result;
       });
 
     // Finally check, that the display-name matches. Otherwise rename
     // the calendar.
     if ($shareCal['displayname'] != $dpyName) {
-      self::sudo($shareowner, function() use ($calId, $dpyName) {
+      ConfigCheck::sudo($shareowner, function() use ($calId, $dpyName) {
           $result = \OC_Calendar_Calendar::editCalendar($calId, $dpyName);
           return $result;
         });
@@ -708,30 +667,6 @@ __EOT__;
 
     return $calId;
   }
-
-  /**Make sure the "sharing" user exists, create it when necessary.
-   * May throw an exception.
-   *
-   * @param[in] $shareowner The account holding the shared resources.
-   */
-  public static function checkShareOwner($shareowner)
-  {
-    if (!$sharegroup = Config::getAppValue('usergroup', false)) {
-      return false; // need at least this group!
-    }
-
-    if (!\OC_User::userExists($shareowner) &&
-        !\OC_User::createUser($shareowner,
-                              \OC_User::generatePassword())) {
-      return false;
-    }
-    if (!\OC_Group::inGroup($shareowner, $sharegroup) &&
-        !\OC_Group::addToGroup($shareowner, $sharegroup)) {
-      return false;
-    }
-    return true;
-  }
-  
 
   /**Return the IDs of the default calendars.
    */

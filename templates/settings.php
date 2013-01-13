@@ -6,16 +6,15 @@ $tooltipstitle = L::t("Control the display of tooltips. Warning: this works glob
 $experttitle   = L::t("Show a second button which leads to a dialog with `advanced' settings");
 $debugtitle    = L::t("Show a certain amount of debug information, normally not needed.");
 ?>
-<?php echo Util::emitInlineScripts(); ?>
-<ul>
-  <li><a href="#tabs-1"><?php echo L::t('Personal Settings'); ?></a></li>
 <?php if ($_['adminsettings']) { ?>
+<ul id="adminsettingstabs">
+  <li><a href="#tabs-1"><?php echo L::t('Personal Settings'); ?></a></li>
   <li><a href="#tabs-2"><?php echo L::t('Administration'); ?></a></li>
   <li><a href="#tabs-3"><?php echo L::t('Sharing'); ?></a></li>
   <li><a href="#tabs-4"><?php echo L::t('Email'); ?></a></li>
   <li><a href="#tabs-5"><?php echo L::t('Development'); ?></a></li>
-<?php } ?>
 </ul>
+<?php } ?>
 
 <div id="tabs-1" class="personalblock <?php if ($_['adminsettings']) echo 'admin'; ?>">
   <form id="cafevdb">
@@ -34,7 +33,7 @@ $debugtitle    = L::t("Show a certain amount of debug information, normally not 
       placeholder="<?php echo L::t('Example Text') ?>"
       title="<?php echo L::t('Example Text') ?>" />
     <br />
-    <input type="text" style="display:none;width:0%;float: left;" name="dummy" id="dummy" value="dummy" placeholder="dummy" title="<?php echo L::t('Dummy') ?>/>
+    <input type="text" style="display:none;width:0%;float: left;" name="dummy" id="dummy" value="dummy" placeholder="dummy" title="<?php echo L::t('Dummy'); ?>" />
     <span class="statusmessage" id="msg"></span>
   </form>
   <form id="userkey">
