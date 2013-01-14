@@ -645,7 +645,12 @@ class mySQL
   {
       $query = 'SELECT COUNT(*) '.$querypart;
       $result = self::query($query, $handle, $die, $silent);
-      return self::fetch($result, MYSQL_NUM)[0];
+      $result = self::fetch($result, MYSQL_NUM);
+      if (isset($result[0])) {
+        return $result[0];
+      } else {
+        return 0;
+      }
   }
 
   public static function fetch(&$res, $type = MYSQL_ASSOC)
