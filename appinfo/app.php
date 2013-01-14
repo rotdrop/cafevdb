@@ -4,6 +4,7 @@ OC::$CLASSPATH['CAFEVDB\Admin'] = 'apps/cafevdb/lib/admin.php';
 OC::$CLASSPATH['CAFEVDB\Config'] = 'apps/cafevdb/lib/config.php';
 OC::$CLASSPATH['CAFEVDB\ConfigCheck'] = 'apps/cafevdb/lib/config.php';
 OC::$CLASSPATH['CAFEVDB\Events'] = 'apps/cafevdb/lib/events.php';
+OC::$CLASSPATH['CAFEVDB\Blog'] = 'apps/cafevdb/lib/blog.php';
 OC::$CLASSPATH['CAFEVDB\ToolTips'] = 'apps/cafevdb/lib/tooltips.php';
 OC::$CLASSPATH['CAFEVDB\L'] = 'apps/cafevdb/lib/functions.php';
 OC::$CLASSPATH['CAFEVDB\Util'] = 'apps/cafevdb/lib/functions.php';

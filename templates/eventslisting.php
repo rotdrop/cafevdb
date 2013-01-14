@@ -16,7 +16,7 @@ $evtButtons = array('Edit' => array('tag' => 'edit',
                                       'title' =>Config::toolTips('projectevents-detach'))
 );
 
-$locale = $_['Locale'];
+$locale = $_['locale'];
 $n = 0;
 foreach ($_['EventMatrix'] as $key => $eventGroup) {
   $dpyName = $eventGroup['name'];

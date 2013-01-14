@@ -192,7 +192,7 @@ window.Events={
           
           // Attention: dialogs do not block, so the action needs to be
           // wrapped into the callback.
-	  OC.dialogs.confirm(t('cafevdb', really),
+	  OC.dialogs.confirm(really,
                              t('cafevdb', 'Really delete?'),
                              function (decision) {
                                if (decision) {

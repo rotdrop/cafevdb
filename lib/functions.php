@@ -80,6 +80,20 @@ __EOT__;
     return $scripts;
   }
 
+  /**Format the right way (tm). */
+  public static function strftime($format, $timestamp = NULL, $locale = NULL)
+  {
+    $oldlocale = setlocale(LC_TIME, 0);
+    if ($locale) {
+      setlocale(LC_TIME, $locale);
+    }
+    $result = strftime($format, $timestamp);
+
+    setlocale(LC_TIME, $oldlocale);
+
+    return $result;
+  }
+    
   /**Return the locale. */
   public static function getLocale()
   {

@@ -5,6 +5,7 @@
 use CAFEVDB\L;
 use CAFEVDB\Events;
 use CAFEVDB\Config;
+use CAFEVDB\ConfigCheck;
 use CAFEVDB\mySQL;
 
 // Check if we are a user
@@ -31,7 +32,7 @@ foreach (explode(',',Config::DFLT_CALS) as $key) {
 
 
 // Determine all calendars shared with the group
-$sharedCals = Events::sudo($shareowner, function() use ($shareowner) {
+$sharedCals = ConfigCheck::sudo($shareowner, function() use ($shareowner) {
     $result1 = \OCP\Share::getItemsShared('calendar');
     $result2 = \OCP\Share::getItemsSharedWith('calendar');
     $result = array_merge($result1, $result2);
@@ -41,26 +42,34 @@ $sharedCals = Events::sudo($shareowner, function() use ($shareowner) {
 Config::init();
 $handle = mySQL::connect(Config::$pmeopts);
 
-$txt = '';
+$calIds = '';
+$evtCnt = 0;
+$newCnt = 0;
 foreach ($sharedCals as $share) {
   if ($share['share_with'] != $sharegroup) {
     continue;
   }
   $calId = $share['item_source'];
   
-  $txt .= $calId.' ';
+  $calIds .= $calId.' ';
   // Do the sync
   $events = \OC_Calendar_Object::all($calId);
   foreach ($events as $event) {
-    Events::syncEvent($event['id'], $handle);
+    if (Events::syncEvent($event['id'], $handle)) {
+      $newCnt++;
+    }
+    $evtCnt++;
   }
 }
 
 mySQL::close($handle);
 
-OC_JSON::success(array("data" => array("message" => L::t("Done.").'<PRE>'.$txt.'</PRE>')));
-return;
+OC_JSON::success(
+  array(
+    "data" => array(
+      "message" => L::t("Done. %d events synchronized, %d new.",
+                        array($evtCnt, $newCnt)))));
 
-return;
+return true;
 
 ?>

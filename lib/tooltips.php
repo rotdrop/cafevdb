@@ -12,6 +12,11 @@ class Tooltips
   {
     return 
       array(
+        'blog-newentry' => L::t('Write a new bulletin entry.'),
+        'blogentry-delete' => L::t('Delete the message and the message-thread depending on this message.'),
+        'blogentry-reply' => L::t('Write a follow-up to the bulletin entry.'),
+        'blogentry-edit' => L::t('Edit the bulletin entry; everyone is allowed to do so.'),
+        'blogentry-sticky' => L::t('Toggle the sticky marker; sticky notes are listed at the top of the list.'),
         'configrecheck' => L::t('Perform the configuration checks again. If all checks have been passed then you are led on to the ordinary entry page of the application.'),
         'test-dbpassword' => L::t('Check whether the data-base can be accessed with the given account
 information and password. The password will only be stored in the

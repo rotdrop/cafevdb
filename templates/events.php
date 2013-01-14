@@ -2,11 +2,6 @@
 use CAFEVDB\L;
 use CAFEVDB\Config;
 ?>
-<script type="text/javascript">
-$(document).ready(function(){
-    // $('.projectevents-sendmail').attr("disabled", true);
-})
-</script>
 <div id="events" title="<?php echo L::t('Events for').' '.$_['ProjectName'];?>">
 <?php
 $prjId   = $_['ProjectId'];

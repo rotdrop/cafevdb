@@ -460,7 +460,7 @@ ownclouddev';
     self::$opts['languages'] = explode(',','Deutsch,Englisch,Französich,Spanisch,Polnisch,Russisch,Japanisch,Koreanisch');
     sort(self::$opts['languages']);
 
-    self::$cgiVars = array('Template' => 'home',
+    self::$cgiVars = array('Template' => 'blog',
                            'MusicianId' => -1,
                            'ProjectId' => -1,
                            'Project' => '',

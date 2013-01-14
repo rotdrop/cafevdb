@@ -25,6 +25,16 @@ echo $this->inc('part.common.header',
 ?>
 
 <div id="<?php echo $css_pfx; ?>-body-config-check">
+  <form id="configrecheckform" action="?app=cafevdb" method="get">
+    <input type="hidden" name="app" value="<?php echo Config::APP_NAME; ?>" />
+    <input
+      type="submit"
+      title="<?php echo Config::toolTips('configrecheck');?>"
+      value="<?php echo L::t('Test again'); ?>"
+      id="configrecheck"
+    />
+  </form>
+
   <ul>
 <?php
 
@@ -73,20 +83,6 @@ installing a non-empty encryption key each user has to log-out and
 log-in again in order to be able to access the encrypted values.',
                           array($_['usergroup'])),
   );
-
-?>
-
-<form id="configrecheckform" action="?app=cafevdb" method="get">
-  <input type="hidden" name="app" value="<?php echo Config::APP_NAME; ?>" />
-  <input
-    type="submit"
-    title="<?php echo Config::toolTips('configrecheck');?>"
-    value="<?php echo L::t('Test again'); ?>"
-    id="configrecheck"
-  />
-</form>
-
-<?php
 
 $ok    = $_['groupadmin'] ? 'set' : 'missing';
 $key   = 'groupadmin';

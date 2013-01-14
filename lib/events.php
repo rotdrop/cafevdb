@@ -92,19 +92,6 @@ class Events
     }
   }
 
-  public static function strftime($format, $timestamp = NULL, $locale = NULL)
-  {
-    $oldlocale = setlocale(LC_TIME, 0);
-    if ($locale) {
-      setlocale(LC_TIME, $locale);
-    }
-    $result = strftime($format, $timestamp);
-
-    setlocale(LC_TIME, $oldlocale);
-
-    return $result;
-  }
-    
   /**Parse the respective event and make sure the ProjectEvents
    * table is uptodate.
    *
@@ -112,7 +99,7 @@ class Events
    *
    * @param[in] $handle Optional. MySQL handle.
    *
-   * @return Undefined.
+   * @return bool, @c true if the event has been added.
    */
   public static function syncEvent($eventId, $handle = false)
   {
@@ -129,6 +116,7 @@ class Events
     // Now fetch all projects and their names ...
     $projects = Projects::fetchProjects($handle);
 
+    $result = false;
     // Do the sync. The categories stored in the event are 
     // the criterion for this.
     foreach ($projects as $prKey => $prName) {
@@ -136,18 +124,19 @@ class Events
         if (!self::isRegistered($prKey, $eventId, $handle)) {
           // register the event
           self::register($prKey, $eventId, $calId, $handle);
+          $result = true;
         }
-      } else {
-        if (self::isRegistered($prKey, $eventId, $handle)) {
-          // unregister the event
-          self::unregister($prKey, $eventId, $handle);
-        }        
+      } else if (self::isRegistered($prKey, $eventId, $handle)) {
+        // unregister the event
+        self::unregister($prKey, $eventId, $handle);
       }
     }
 
     if ($ownConnection) {
       mySQL::close($handle);
-    }    
+    }
+
+    return $result;
   }
 
   protected static function maybeKillEvent($eventId, $handle = false)
@@ -759,11 +748,11 @@ __EOT__;
   public static function briefEventDate($event, $locale = NULL)
   {
     $start = $event['startdate'];
-    $startdate = self::strftime("%x", $start->getTimestamp(), $locale);
-    $starttime = self::strftime("%H:%M", $start->getTimestamp(), $locale);
+    $startdate = Util::strftime("%x", $start->getTimestamp(), $locale);
+    $starttime = Util::strftime("%H:%M", $start->getTimestamp(), $locale);
     $end   = $event['enddate'];
-    $enddate = self::strftime("%x", $end->getTimestamp(), $locale);
-    $endtime = self::strftime("%H:%M", $end->getTimestamp(), $locale);
+    $enddate = Util::strftime("%x", $end->getTimestamp(), $locale);
+    $endtime = Util::strftime("%H:%M", $end->getTimestamp(), $locale);
 
     if ($startdate == $enddate) {
       $datestring = $startdate.', '.$starttime;
@@ -809,9 +798,11 @@ __EOT__;
                      'CalendarId' => $line['CalendarId'],
                      'object'     => \OC_Calendar_App::getEventObject($line['EventId'], false, false));
 
-      $event['object']['startdate'] = new \DateTime($event['object']['startdate'], $utc);
-      $event['object']['enddate'] = new \DateTime($event['object']['enddate'], $utc);
-      $events[] = $event;
+      if ($event['object'] !== false) {
+        $event['object']['startdate'] = new \DateTime($event['object']['startdate'], $utc);
+        $event['object']['enddate'] = new \DateTime($event['object']['enddate'], $utc);
+        $events[] = $event;
+      }
     }
     
     if ($ownConnection) {

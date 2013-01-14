@@ -177,7 +177,6 @@ $(document).ready(function(){
     event.preventDefault();
     if ($('#events').dialog('isOpen') == true) {
       $('#events').dialog('close').remove();
-      $('#events').dialog('destroy').remove();
     } else {
       // We store the values in the name attribute as serialized
       // string.

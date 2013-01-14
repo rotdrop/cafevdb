@@ -52,6 +52,7 @@ OCP\Util::addStyle('cafevdb', 'pme-table');
 OCP\Util::addStyle('cafevdb', 'settings');
 OCP\Util::addStyle('cafevdb', 'events');
 OCP\Util::addStyle('cafevdb', 'email');
+OCP\Util::addStyle('cafevdb', 'blog');
 OCP\Util::addStyle("cafevdb/3rdparty", "chosen/chosen");
 //OCP\Util::addStyle("3rdparty", "chosen/chosen");
 
@@ -60,8 +61,10 @@ OCP\Util::addScript('cafevdb', 'transpose');
 OCP\Util::addScript('cafevdb', 'page');
 OCP\Util::addScript('cafevdb', 'email');
 OCP\Util::addScript('cafevdb', 'events');
-//OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/jscripts/tiny_mce/tiny_mce');
-//OCP\Util::addScript('cafevdb/3rdparty', 'tinymceinit');
+OCP\Util::addScript('cafevdb', 'blog');
+OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/jscripts/tiny_mce/tiny_mce');
+OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/jscripts/tiny_mce/jquery.tinymce');
+OCP\Util::addScript('cafevdb/3rdparty', 'tinymceinit');
 OCP\Util::addscript("cafevdb/3rdparty", "chosen/chosen.jquery.min");
 //OCP\Util::addscript("3rdparty", "chosen/chosen.jquery.min");
 
@@ -115,7 +118,7 @@ if (!$config['summary']) {
   if ($op == "Em@il") {
     $tmplname = 'email';
   } else {
-    $tmplname = Util::cgiValue('Template', 'home');
+    $tmplname = Util::cgiValue('Template', 'blog');
   }
 }
 
@@ -132,7 +135,7 @@ $tmpl->assign('encryptionkey', $encrkey);
 $tmpl->assign('uploadMaxFilesize', Util::maxUploadSize(), false);
 $tmpl->assign('uploadMaxHumanFilesize',
               OCP\Util::humanFileSize(Util::maxUploadSize()), false);
-$tmpl->assign('Locale', Util::getLocale());
+$tmpl->assign('locale', Util::getLocale());
 $tmpl->assign('headervisibility', $headervisibility);
 
 $tmpl->printPage();
