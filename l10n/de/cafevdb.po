@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-13 16:18+0100\n"
-"PO-Revision-Date: 2013-01-13 17:00+0100\n"
+"POT-Creation-Date: 2013-01-14 08:59+0100\n"
+"PO-Revision-Date: 2013-01-14 09:00+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -22,11 +22,39 @@ msgstr ""
 msgid ""
 "Setting orchestra group to `%s'. Please login as group administrator and "
 "configure the Camerata DB application."
-msgstr "Orchester-Gruppe als `%s' eingestellt. Bitte mit einem Gruppenadministrator-Account einloggen und die `Camerata DB'-Anwendung konfigurieren."
+msgstr ""
+"Orchester-Gruppe als `%s' eingestellt. Bitte mit einem Gruppenadministrator-"
+"Account einloggen und die `Camerata DB'-Anwendung konfigurieren."
 
 #: ajax/admin-settings.php:25
 msgid "Unknown request."
 msgstr "Unbekannte Anfrage."
+
+#: ajax/blog/editentry.php:24
+msgid "Refusing to create blog entry without author identity"
+msgstr "Pinnwand-Einträge ohne Autor können leider nicht erstellt werden."
+
+#: ajax/blog/editentry.php:36 ajax/blog/modifyentry.php:52
+#, php-format
+msgid "Error, caught an exception `%s'."
+msgstr "Interner Fehler: `%s'."
+
+#: ajax/blog/editentry.php:44
+#, php-format
+msgid "Blog entry with id `%s' cound not be retrieved."
+msgstr "Der Notiz mit id `%s' konnte nicht geladen werden."
+
+#: ajax/blog/modifyentry.php:25
+msgid "Refusing to create blog entry without author identity."
+msgstr "Pinnwand-Einträge ohne Autor können leider nicht erstellt werden."
+
+#: ajax/blog/modifyentry.php:33
+msgid "Refusing to create empty blog entry."
+msgstr "Leere Notize werden nicht abgespeichert."
+
+#: ajax/blog/modifyentry.php:64
+msgid "There was an error inserting the blog-entry."
+msgstr "Es gab einen Fehler beim Speichern der Notiz."
 
 #: ajax/email/owncloudattachment.php:14
 msgid "No attachment path was submitted."
@@ -94,9 +122,10 @@ msgstr "leer"
 msgid "Hello World!"
 msgstr "Also, `Hello World!' muss man nun wirklich nicht übersetzen ..."
 
-#: ajax/expertmode/syncevents.php:61
-msgid "Done."
-msgstr "Fertig."
+#: ajax/expertmode/syncevents.php:70
+#, php-format
+msgid "Done. %d events synchronized, %d new."
+msgstr "Fertig. %d Ereignisse synchronisiert, %d neue."
 
 #: ajax/export/excel.php:85
 msgid "yes"
@@ -151,15 +180,21 @@ msgstr "Datenbank-Test erfolgreich; Datenbank-Passwort gespeichert."
 msgid ""
 "DB-test failed. Check the account settings. Check was performed with the new "
 "password."
-msgstr "Datenbank-TEst fehlgeschlagen. Bitte Einstellungen überprüfen. Der Test wurde mit dem neuen Passwort durchgeführt."
+msgstr ""
+"Datenbank-TEst fehlgeschlagen. Bitte Einstellungen überprüfen. Der Test "
+"wurde mit dem neuen Passwort durchgeführt."
 
 #: ajax/settings/app-settings.php:163
 msgid "DB-test passed with stored password (empty input ignored)."
-msgstr "Datenbank-Test mit gespeichertem Passwort erfolgreich (leeres neues Passwort ignoriert)."
+msgstr ""
+"Datenbank-Test mit gespeichertem Passwort erfolgreich (leeres neues Passwort "
+"ignoriert)."
 
 #: ajax/settings/app-settings.php:168
 msgid "DB-test failed with stored password (empty input ignored)."
-msgstr "Datenbank-Test mit gespeichertem Passwort fehlgeschlagen (leeres neues Passwort ignoriert)."
+msgstr ""
+"Datenbank-Test mit gespeichertem Passwort fehlgeschlagen (leeres neues "
+"Passwort ignoriert)."
 
 #: ajax/settings/app-settings.php:186
 #, php-format
@@ -376,49 +411,79 @@ msgstr "Experten-Modus geändert"
 msgid "Tooltips changed"
 msgstr "Tool-Tip Einstellung geändert"
 
-#: index.php:83
+#: index.php:86
 msgid "Missing or invalid fields"
 msgstr "Fehlende oder ungültige Formularfelder"
 
-#: index.php:84
+#: index.php:87
 msgid "Title"
 msgstr "Titel"
 
-#: index.php:85
+#: index.php:88
 msgid "Calendar"
 msgstr "Kalender-Name"
 
-#: index.php:86
+#: index.php:89
 msgid "From Date"
 msgstr "Start-Datum"
 
-#: index.php:87
+#: index.php:90
 msgid "From Time"
 msgstr "Start-Zeit"
 
-#: index.php:88
+#: index.php:91
 msgid "To Date"
 msgstr "End-Datum"
 
-#: index.php:89
+#: index.php:92
 msgid "To Time"
 msgstr "End-Zeit"
 
-#: index.php:90
+#: index.php:93
 msgid "The event ends before it starts"
 msgstr "Das Ereignes endet bevor es beginnt?!"
 
-#: index.php:91
+#: index.php:94
 msgid "There was a database failure"
 msgstr "Es gab einen Datenbank-Fehler"
 
-#: index.php:96
+#: index.php:99
 msgid "Do you really want to delete this event?"
 msgstr "Möchten Sie den Termin wirklich löschen?"
 
-#: index.php:97
+#: index.php:100
 msgid "Do you really want to detach this event from the current project?"
 msgstr "Möchten Sie den Termin wirklich vom Projekt lösen?"
+
+#: js/blog.js:15 js/blog.js:93 js/blog.js:149 js/blog.js:174 js/email.js:7
+#: js/email.js:45 js/email.js:56 js/email.js:64 js/email.js:77
+msgid "Error"
+msgstr "Fehler"
+
+#: js/blog.js:25
+msgid "Edit Blog Entry"
+msgstr "Pinnwand-Eintrag bearbeiten."
+
+#: js/blog.js:67
+msgid ""
+"The message content has been changed and will be lost if you press `Yes'"
+msgstr ""
+"Der Text der Notiz wurde verändert. Die Änderungen gehen verloren, wenn Sie "
+"`Ja' anklicken."
+
+#: js/blog.js:68
+msgid "Really cancel current entry?"
+msgstr "Wirklich abbrechen?"
+
+#: js/blog.js:134
+msgid "The entire message thread will be deleted if you press `Yes'"
+msgstr ""
+"Die Nachricht und alle `Follow-Ups' werden gelöscht, wenn Sie auf `Ja' "
+"klicken."
+
+#: js/blog.js:135
+msgid "Really delete the entry?"
+msgstr "Den Beitrag wirklich löschen?"
 
 #: js/cafevdb.js:104
 msgid "Export to the following format is not yet supported:"
@@ -463,10 +528,6 @@ msgstr "Löschbar"
 #: js/email.js:6
 msgid "Not called from main email-form."
 msgstr "Nicht vom Haupt-Formular aufgerufen (Fehler)."
-
-#: js/email.js:7 js/email.js:45 js/email.js:56 js/email.js:64 js/email.js:77
-msgid "Error"
-msgstr "Fehler"
 
 #: js/email.js:44
 msgid "No files selected for upload."
@@ -540,7 +601,7 @@ msgstr "Filter zurücksetzen"
 msgid "Musicians without Em@il"
 msgstr "Musiker ohne Em@il"
 
-#: lib/email.php:1014 lib/projects.php:191 lib/projects.php:431
+#: lib/email.php:1014 lib/projects.php:192 lib/projects.php:432
 msgid "Events"
 msgstr "Termine"
 
@@ -607,7 +668,7 @@ msgstr "Em@il verschicken"
 msgid "Edit recipients"
 msgstr "Adressen bearbeiten"
 
-#: lib/email.php:1125
+#: lib/email.php:1125 templates/blogedit.php:18
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -736,51 +797,51 @@ msgstr "Ungültige Em@il Adresse"
 msgid "recipient"
 msgstr "Adressat"
 
-#: lib/events.php:705
+#: lib/events.php:694
 msgid "Unknown Calendar"
 msgstr "Unbekannter Kalender."
 
-#: lib/events.php:712
+#: lib/events.php:701
 msgid "Miscellaneous Calendars"
 msgstr "Weitere Kalender"
 
-#: lib/functions.php:244
+#: lib/functions.php:258
 msgid "Export Table"
 msgstr "Tabelle Exportieren"
 
-#: lib/functions.php:252
+#: lib/functions.php:266
 msgid "CSV Export"
 msgstr "CSV Export"
 
-#: lib/functions.php:255
+#: lib/functions.php:269
 msgid "HTML Export"
 msgstr "HTML Export"
 
-#: lib/functions.php:258
+#: lib/functions.php:272
 msgid "Excel Export"
 msgstr "`Excel' Export"
 
-#: lib/functions.php:261
+#: lib/functions.php:275
 msgid "HTML/Spreadsheet"
 msgstr "HTML/Tabellenformat"
 
-#: lib/functions.php:383
+#: lib/functions.php:397
 msgid "Error: Unknonwn Button Type"
 msgstr "Fehler: Unbekannter Knopf-Typ"
 
-#: lib/functions.php:406
+#: lib/functions.php:420
 msgid "View all Projects"
 msgstr "Alle Projekte"
 
-#: lib/functions.php:407
+#: lib/functions.php:421
 msgid "Overview over all known projects (start-page)."
 msgstr "Alle gespeicherten Projekte anzeigen; Startseite der `Camerata App'."
 
-#: lib/functions.php:419
+#: lib/functions.php:433
 msgid "Display all Musicians"
 msgstr "Alle Musiker"
 
-#: lib/functions.php:420
+#: lib/functions.php:434
 msgid ""
 "Display all musicians stored in the data-base, with detailed facilities for "
 "filtering and sorting."
@@ -788,7 +849,7 @@ msgstr ""
 "Alle Musiker anzeigen, die in der Datenbank gespeichert sind. Es gibt dabei "
 "ausführliche Such- und Auswahlfunktionalität."
 
-#: lib/functions.php:432
+#: lib/functions.php:446
 msgid ""
 "Mass-email form, use with care. Mass-emails will be logged. Recipients will "
 "be specified by the Bcc: field in the header, so the recipients are "
@@ -799,25 +860,25 @@ msgstr ""
 "außerdem wird die ganze Pracht in der Daten bank gespeichter (siehe `Email "
 "Historie')"
 
-#: lib/functions.php:446
+#: lib/functions.php:460
 msgid "Email History"
 msgstr "Em@il Historie"
 
-#: lib/functions.php:447
+#: lib/functions.php:461
 msgid "Display all emails sent by our mass-email form."
 msgstr ""
 "Zeigt alle über unser unsägliches Massen-Mail gespamten Emails an. "
 "Insebesondere werden hier auch die Bcc: Empfänger gespeichert."
 
-#: lib/functions.php:465
+#: lib/functions.php:479
 msgid "The currently active project."
 msgstr "Das gerade ausgewählte Projekt."
 
-#: lib/functions.php:480
+#: lib/functions.php:494
 msgid "Detailed Instrumentation"
 msgstr "Detaillierte Besetzung"
 
-#: lib/functions.php:481
+#: lib/functions.php:495
 msgid ""
 "Detailed display of all registered musicians for the selected project. The "
 "table will allow for modification of personal data like email, phone, "
@@ -827,11 +888,11 @@ msgstr ""
 "Daten wie Email, Adresse usw. können hier geändert werden. Projektbezogene "
 "Daten können allerdings nur in der Ansicht `Kurz-Besetzung' geändert werden."
 
-#: lib/functions.php:495
+#: lib/functions.php:509
 msgid "Brief Instrumentation"
 msgstr "Kurz-Besetzung"
 
-#: lib/functions.php:496
+#: lib/functions.php:510
 msgid ""
 "Brief display of all registered musicians for the selected project. The "
 "table will allow for modification of project specific data, like the "
@@ -842,11 +903,11 @@ msgstr ""
 "Musiker auch wieder entfernt werden. Persönliche Daten können allerdings nur "
 "in der detaillierten Ansicht geändert werden."
 
-#: lib/functions.php:510
+#: lib/functions.php:524
 msgid "Add Instruments"
 msgstr "Neue Instrumente"
 
-#: lib/functions.php:511
+#: lib/functions.php:525
 msgid ""
 "Display the list of instruments known by the data-base, possibly add new "
 "ones as needed."
@@ -854,11 +915,11 @@ msgstr ""
 "Tabelle mit allen derzeit gespeicherten Instrumenten; weitere Instrumente "
 "können hier einfach hinzugefügt werden."
 
-#: lib/functions.php:525
+#: lib/functions.php:539
 msgid "Instrumentation Numbers"
 msgstr "Besetzungszahlen"
 
-#: lib/functions.php:526
+#: lib/functions.php:540
 msgid ""
 "Display the desired instrumentaion numbers, i.e. how many musicians are "
 "already registered for each instrument group and how many are finally needed."
@@ -866,11 +927,11 @@ msgstr ""
 "Anzeige der angestrebten Besetzungszahlen. Natürlich kann man die dann auch "
 "anpassen ..."
 
-#: lib/functions.php:540
+#: lib/functions.php:554
 msgid "Add more Musicians"
 msgstr "Musiker Hinzufügen"
 
-#: lib/functions.php:541
+#: lib/functions.php:555
 msgid ""
 "List of all musicians NOT registered for the selected project. Only through "
 "that table a new musician can enter a project. Look for a hyper-link "
@@ -880,7 +941,7 @@ msgstr ""
 "Musiker können ausschließlich über DIESE Tabelle den Weg in ein Projekt "
 "finden. Neue Musiker können selbstverständlich hinzugefügt werden."
 
-#: lib/functions.php:555
+#: lib/functions.php:569
 msgid "Transfer Instruments from Musicians"
 msgstr "Instrumente mit Besetzung abgleichen"
 
@@ -902,25 +963,57 @@ msgid "#rows"
 msgstr "#Zeilen"
 
 #: lib/tooltips.php:15
+msgid "Write a new bulletin entry."
+msgstr "Einen neuen Pinnwand-Eintrag verfassen."
+
+#: lib/tooltips.php:16
+msgid "Delete the message and the message-thread depending on this message."
+msgstr ""
+"Löschte die Nachrichten und den Nachrichten-Strang, der von ihr abgeleitet "
+"ist."
+
+#: lib/tooltips.php:17
+msgid "Write a follow-up to the bulletin entry."
+msgstr "Einen Kommentar zur Notiz verfassen."
+
+#: lib/tooltips.php:18
+msgid "Edit the bulletin entry; everyone is allowed to do so."
+msgstr "Pinnwand-Eintrag bearbeiten (jeder darf das)."
+
+#: lib/tooltips.php:19
+msgid ""
+"Toggle the sticky marker; sticky notes are listed at the top of the list."
+msgstr ""
+"Die `Haft'-Markierung umschalten. `Haftende'-Notizen werden am Anfang der "
+"Liste angezeigt."
+
+#: lib/tooltips.php:20
 msgid ""
 "Perform the configuration checks again. If all checks have been passed then "
 "you are led on to the ordinary entry page of the application."
-msgstr "Konfiguration erneut testen. Wenn alle Tests erfolgreich absolviert werden, dann werden Sie auf die normale Einstiegsseite der Anwendung geführt."
+msgstr ""
+"Konfiguration erneut testen. Wenn alle Tests erfolgreich absolviert werden, "
+"dann werden Sie auf die normale Einstiegsseite der Anwendung geführt."
 
-#: lib/tooltips.php:16
+#: lib/tooltips.php:21
 msgid ""
 "Check whether the data-base can be accessed with the given account\n"
 "information and password. The password will only be stored in the\n"
 "configuration storage if the test can be performed successfully."
-msgstr "Testen, ob die Datenbank angesprochen werden kann mit den angegebenen Zugriffsinformationen. Das neue Passwort wird nur dann gespeichert, wenn der Test erfolgreich absolviert wurde."
+msgstr ""
+"Testen, ob die Datenbank angesprochen werden kann mit den angegebenen "
+"Zugriffsinformationen. Das neue Passwort wird nur dann gespeichert, wenn der "
+"Test erfolgreich absolviert wurde."
 
-#: lib/tooltips.php:19
+#: lib/tooltips.php:24
 msgid ""
 "Test the email-settings; try to connect to the SMTP-server and the IMAP-"
 "server in turn."
-msgstr "Email-Einstellungen testen; es wird versucht, nacheinander eine Verbindung zum SMTP-Server und zum IMAP-Server aufzubauen."
+msgstr ""
+"Email-Einstellungen testen; es wird versucht, nacheinander eine Verbindung "
+"zum SMTP-Server und zum IMAP-Server aufzubauen."
 
-#: lib/tooltips.php:20
+#: lib/tooltips.php:25
 msgid ""
 "Try to connect to the specified web-address, will open the web-address in "
 "another window or tab, depending your local browser preferences."
@@ -928,11 +1021,11 @@ msgstr ""
 "Versuche, die eingestellte Web-Adresse in einen anderen Fenster oder Tab zu "
 "öffnen (abhängig von den Einstellungen des Web-Browsers)."
 
-#: lib/tooltips.php:21
+#: lib/tooltips.php:26
 msgid "Export in CSV-format using a semicolon as delimiter (Excel convention)"
 msgstr "Export im CSV-Format mit Semikolon als Trennzeichen (Excel kompatibel)"
 
-#: lib/tooltips.php:22
+#: lib/tooltips.php:27
 msgid ""
 "Export as HTML page without navigation elements; can also be loaded into "
 "your office-programs."
@@ -940,11 +1033,11 @@ msgstr ""
 "Export als HTML-Seite ohne Navigations-ELement; kann mit üblichen "
 "Textverarbeitungsprogrammen geöffnet werden."
 
-#: lib/tooltips.php:23
+#: lib/tooltips.php:28
 msgid "Export as `full-featured' Excel-2007 table, `.xslx'."
 msgstr "Export als Excel-2007-Tabelle im `.xslx'-Format."
 
-#: lib/tooltips.php:24
+#: lib/tooltips.php:29
 msgid ""
 "Export as HTML page, but set the file type to `spread-sheed'. Should also be "
 "readable by standard office-programs as `Excel'-table."
@@ -953,7 +1046,7 @@ msgstr ""
 "gesetzt. Sollte von üblichen Tabellen-Kalkulations-Programmen geöffnet "
 "werden können."
 
-#: lib/tooltips.php:25
+#: lib/tooltips.php:30
 msgid ""
 "Export the visible part of the data-base to an office-format. The `Excel'-"
 "export should produce useful input for either Libre- or OpenOffice or for "
@@ -964,13 +1057,13 @@ msgstr ""
 "Tabellen-Format, das von üblichen Büro-Anwendungen gelesen werden\n"
 "kann (z.B. Libre-, Open-Office, Excel)"
 
-#: lib/tooltips.php:26
+#: lib/tooltips.php:31
 msgid ""
 "Choose a file to attach from the files stored remotely on in the OwnCloud "
 "storage area."
 msgstr "Ein Attachment aus dem Owncloud-Datei-System auswählen."
 
-#: lib/tooltips.php:27
+#: lib/tooltips.php:32
 msgid ""
 "Upload a file from your local computer as attachment. The file will be "
 "removed from the remote-system after the message has been sent."
@@ -978,7 +1071,7 @@ msgstr ""
 "Eine Datei als Attachment hochladen. Die Datei wird vom Server gelöscht, "
 "sobald die Nachricht versendet wurde."
 
-#: lib/tooltips.php:28
+#: lib/tooltips.php:33
 msgid ""
 "Add the instruments of the actually registered musicians to the instrument-"
 "table for the project."
@@ -986,7 +1079,7 @@ msgstr ""
 "Die Instrumente der bereits registrierten Musiker in die Besetzungstabelle "
 "eintragen; die Soll-Besetzungszahlen werden allerdings nicht angepasst."
 
-#: lib/tooltips.php:29
+#: lib/tooltips.php:34
 msgid ""
 "Add the musician to the project. A new form will open were details like the "
 "instrument etc. can be adjustetd."
@@ -994,7 +1087,7 @@ msgstr ""
 "Fügt den Musiker zum Projekt hinzu. Auf der Folgeseite können dann Details "
 "eingetragen werden."
 
-#: lib/tooltips.php:30
+#: lib/tooltips.php:35
 msgid ""
 "Transpose the displayed table; may be beneficial for tables with only a few "
 "rows but many columns!"
@@ -1002,13 +1095,13 @@ msgstr ""
 "Aktuelle Tabelle transponieren, mag für Tabellen mit vielen Spalten und "
 "wenigen Zeilen übersichtlicher sein."
 
-#: lib/tooltips.php:31
+#: lib/tooltips.php:36
 msgid "Open a page with the musicians registered for the respective project."
 msgstr ""
 "Öffnet eine Seite mit allen Musikern, die für dieses Projekt registriert "
 "sind."
 
-#: lib/tooltips.php:32
+#: lib/tooltips.php:37
 msgid ""
 "Open a dialog with all known\n"
 "events associated to the project.\n"
@@ -1018,7 +1111,7 @@ msgstr ""
 "Tabelle mit allen Terminen zum jeweiligen Projekt.\n"
 "Termine können dort hinzugefügt, geändert oder auch gelöscht werden."
 
-#: lib/tooltips.php:36
+#: lib/tooltips.php:41
 msgid ""
 "Recompute the link between projects and events, using the event-categories "
 "as primary key."
@@ -1026,7 +1119,7 @@ msgstr ""
 "Zuordnung der Termine zu den Projekten neu berechnen. Dabei dienen die "
 "Projekt-Kategorien als Kriterium."
 
-#: lib/tooltips.php:37
+#: lib/tooltips.php:42
 msgid ""
 "Mark the respective event for being\n"
 "sent by email as ICS-attachment per email.\n"
@@ -1040,27 +1133,27 @@ msgstr ""
 "Versand an ausgewählte Empfänger vorgenommen werden kann. Alternativ können "
 "die ausgwählten Termine auch einfach herunter-geladen werden."
 
-#: lib/tooltips.php:43
+#: lib/tooltips.php:48
 msgid "Add a new concert-event to the project."
 msgstr ""
 "Neuen Konzert-Termin für das Projekt in den Konzerte-Kalender eintragen."
 
-#: lib/tooltips.php:44
+#: lib/tooltips.php:49
 msgid "Add a new rehearsal-event to the project."
 msgstr "Neuen Proben-Termin für das Projekt in den Proben-Kalender eintragen."
 
-#: lib/tooltips.php:45
+#: lib/tooltips.php:50
 msgid "Add some other event to the project."
 msgstr "Sonstigen Termin für das Projekt eintragen."
 
-#: lib/tooltips.php:47
+#: lib/tooltips.php:52
 msgid ""
 "Add a private management event which is not exposed to the rest of the world."
 msgstr ""
 "Vorstands-Termin hinzufügen. Die Vorstandstermine sind nicht öffentlich "
 "sichtbar."
 
-#: lib/tooltips.php:49
+#: lib/tooltips.php:54
 msgid ""
 "Click to open an email-form\n"
 "and send the selected events to\n"
@@ -1069,23 +1162,23 @@ msgstr ""
 "Ausgewählte Termine als ICS-Attachment per Email veschicken; öffnet ein "
 "Email-Formular."
 
-#: lib/tooltips.php:52
+#: lib/tooltips.php:57
 msgid ""
 "Select all events for\n"
 "email-submission"
 msgstr "Alle Termin für Download bzw. Email-Attachment auswählen."
 
-#: lib/tooltips.php:54
+#: lib/tooltips.php:59
 msgid ""
 "Exclude all events from\n"
 "email-submission"
 msgstr "Auswahl zum Download bzw. Email-Versand bei allen Terminen entfernen."
 
-#: lib/tooltips.php:56
+#: lib/tooltips.php:61
 msgid "Modify the event."
 msgstr "Termin ändern."
 
-#: lib/tooltips.php:57
+#: lib/tooltips.php:62
 msgid ""
 "Delete the event from the system\n"
 "(no undo possible)."
@@ -1093,7 +1186,7 @@ msgstr ""
 "Termin komplett aus dem Kalender löschen, kann nicht rückgängig gemacht "
 "werden."
 
-#: lib/tooltips.php:59
+#: lib/tooltips.php:64
 msgid ""
 "Detach the respective event\n"
 "from the project, but do not\n"
@@ -1106,18 +1199,18 @@ msgstr ""
 "Es ist möglich, den Termin wieder zum Projekt hinzuzufügen, indem man den "
 "Projekt-Namen zu der Katergorien-Liste des Termins hinzufügt."
 
-#: lib/tooltips.php:66
+#: lib/tooltips.php:71
 msgid ""
 "  Klick mich, um das Sortieren\n"
 "nach diesem Feld ein-\n"
 "oder auszuschalten!"
 msgstr "Anklicken, um das Sortiern nach diesem Feld ein- oder auszuschalten."
 
-#: lib/tooltips.php:70
+#: lib/tooltips.php:75
 msgid "  Klick mich, um die Sortierreihenfolge umzukehren!"
 msgstr "Anklicken, um die Sortierreihenfolge umzukehren."
 
-#: lib/tooltips.php:72
+#: lib/tooltips.php:77
 msgid ""
 "  Klick mich, um eine Em@il an die ausgewählten\n"
 "Musiker zu versenden. Auf der folgenden Seite kann\n"
@@ -1133,7 +1226,7 @@ msgstr ""
 "`angezeigt' bedeutet: nicht nur die auf der aktuellen Anzeige-Seite,\n"
 "sondern alle, die den Such-Kriterien entsprechen.\n"
 
-#: lib/tooltips.php:81
+#: lib/tooltips.php:86
 msgid ""
 "  Klick mich, um alle gerade\n"
 "angezeigten Musiker zu der\n"
@@ -1148,7 +1241,7 @@ msgstr ""
 "hinzuzufügen. `angezeigt' bedeutet: nicht nur die auf der aktuellen\n"
 "Anzeige-Seite, sondern alle, die den Such-Kriterien entsprechen."
 
-#: lib/tooltips.php:90
+#: lib/tooltips.php:95
 msgid ""
 "  Klick mich, um alle gerade\n"
 "angezeigten Musiker von der\n"
@@ -1158,7 +1251,7 @@ msgstr ""
 "angezeigten Musiker von der\n"
 "Em@il-Auswahl zu entfernen"
 
-#: lib/tooltips.php:94
+#: lib/tooltips.php:99
 msgid ""
 "  Klick mich, um die\n"
 "Sortierreihenfolge auf die\n"
@@ -1168,7 +1261,7 @@ msgstr ""
 "Sortierreihenfolge auf die\n"
 "Voreinstellung zurückzusetzen."
 
-#: lib/tooltips.php:97
+#: lib/tooltips.php:102
 msgid ""
 "  Klick mich, um den\n"
 "aktuellen Filter zu löschen."
@@ -1176,7 +1269,7 @@ msgstr ""
 "Klick mich, um den\n"
 "aktuellen Filter zu löschen."
 
-#: lib/tooltips.php:100
+#: lib/tooltips.php:105
 msgid ""
 "  Klick mich, um die\n"
 "Suchkriterien zu verstecken."
@@ -1184,13 +1277,13 @@ msgstr ""
 "Klick mich, um die\n"
 "Suchkriterien zu verstecken."
 
-#: lib/tooltips.php:103
+#: lib/tooltips.php:108
 msgid ""
 "  Klick mich, um die\n"
 "Suchkriterien anzuzeigen."
 msgstr "Klick mich, um die Suchkriterien anzuzeigen."
 
-#: lib/tooltips.php:106
+#: lib/tooltips.php:111
 #, php-format
 msgid ""
 "  Klick mich, um die\n"
@@ -1203,7 +1296,7 @@ msgstr ""
 "können in den Feldern eingegeben werden.\n"
 "Als Platzhalter verwendet man `%%'.\n"
 
-#: lib/tooltips.php:111
+#: lib/tooltips.php:116
 #, php-format
 msgid ""
 "  Feld für Suchkriterien.\n"
@@ -1216,7 +1309,7 @@ msgstr ""
 "können in den Feldern eingegeben werden.\n"
 "Als Platzhalter verwendet man `%%'."
 
-#: lib/tooltips.php:116
+#: lib/tooltips.php:121
 msgid ""
 "  Click mich, um mich\n"
 "Deinem Massenmail-Vorhaben\n"
@@ -1226,11 +1319,11 @@ msgstr ""
 "Deinem Massenmail-Vorhaben\n"
 "hinzuzufügen. Schäme Dich!"
 
-#: lib/tooltips.php:120
+#: lib/tooltips.php:125
 msgid "Einzelnen Datensatz anzeigen"
 msgstr "Einzelnen Datensatz anzeigen"
 
-#: lib/tooltips.php:121
+#: lib/tooltips.php:126
 msgid ""
 "Einzelnen Datensatz anzeigen,\n"
 "zeigt ein neues Formular mit\n"
@@ -1242,7 +1335,7 @@ msgstr ""
 "detaillierten Eingabefeldern\n"
 "und Abbruchmöglichkeit."
 
-#: lib/tooltips.php:125
+#: lib/tooltips.php:130
 msgid ""
 "Einzelnen Datensatz kopieren,\n"
 "zeigt ein neues Formular mit\n"
@@ -1253,22 +1346,22 @@ msgstr ""
 "zeigt ein neues Formular mit\n"
 "detaillierten Eingabefeldern\n"
 "und Abbruchmöglichkeit."
-
-#: lib/tooltips.php:129
-msgid ""
-"Einzelnen Datensatz löschen,\n"
-"zeigt den aktuellen Datensatz zunächst an.\n"
-"Gelöscht wird der erst nach einer\n"
-"weiteren Bestätigung. Trotzdem:\n"
-"VORSICHT!."
-msgstr ""
-"Einzelnen Datensatz löschen,\n"
-"zeigt den aktuellen Datensatz zunächst an.\n"
-"Gelöscht wird der erst nach einer\n"
-"weiteren Bestätigung. Trotzdem:\n"
-"VORSICHT!."
 
 #: lib/tooltips.php:134
+msgid ""
+"Einzelnen Datensatz löschen,\n"
+"zeigt den aktuellen Datensatz zunächst an.\n"
+"Gelöscht wird der erst nach einer\n"
+"weiteren Bestätigung. Trotzdem:\n"
+"VORSICHT!."
+msgstr ""
+"Einzelnen Datensatz löschen,\n"
+"zeigt den aktuellen Datensatz zunächst an.\n"
+"Gelöscht wird der erst nach einer\n"
+"weiteren Bestätigung. Trotzdem:\n"
+"VORSICHT!."
+
+#: lib/tooltips.php:139
 msgid ""
 "  Adressaten in potentielle\n"
 "Massenmail Adressliste aufnehmen.\n"
@@ -1284,7 +1377,7 @@ msgstr ""
 "korrigieren. Trotzdem:\n"
 "Think thrice about it."
 
-#: lib/tooltips.php:142
+#: lib/tooltips.php:147
 msgid "nothing"
 msgstr "Nichts"
 
@@ -1331,17 +1424,17 @@ msgstr "Sonstiges"
 msgid "management"
 msgstr "Vorstand"
 
-#: templates/admin-settings.php:5
+#: templates/admin-settings.php:11
 msgid "Group"
 msgstr "Benutzer-Gruppe"
 
-#: templates/admin-settings.php:6
+#: templates/admin-settings.php:12
 msgid "User Group"
 msgstr "Benutzer-Gruppe"
 
 #: templates/app-settings.php:11
 msgid "General settings"
-msgstr "Persönliches"
+msgstr "Allgemeine Einstellungen"
 
 #: templates/app-settings.php:12
 msgid "name of orchestra"
@@ -1435,6 +1528,52 @@ msgstr "Neues Passwort"
 msgid "Test Database Password"
 msgstr "Datenbank-Passwort testen"
 
+#: templates/blog.php:19
+msgid ""
+"Camerata DB meets web 2.0 - the data-base operations can be accessed\n"
+"through the respective navigation buttons at the top of the page. The\n"
+"page below may be used as a bulletin-board. Configuration options are\n"
+"accessible through the gear- and pencil-shaped buttons in the\n"
+"bottom-left and top-right edge of the screen"
+msgstr ""
+"Camerata DB @ web 2.0 - die eigentlichen Datenbanken-Operationen erreicht "
+"man über die Navigatíonsleiste oben. Die aktuelle Seite kann man als eine "
+"Art Pinnwand benutzen. Einstellungen lassen sich über die Zahnrad- und "
+"Stiftförmigen Knöpfe links-unte und rechts-oben vornehmen."
+
+#: templates/blog.php:43
+msgid "New note"
+msgstr "Neue Notiz"
+
+#: templates/blog.php:76
+#, php-format
+msgid "(latest change by `%s', %s)"
+msgstr "(geändert von `%s', %s)"
+
+#: templates/blog.php:81
+msgid "sticky"
+msgstr "haftend"
+
+#: templates/blog.php:89
+msgid "Reply"
+msgstr "Anworten"
+
+#: templates/blog.php:92
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#: templates/blog.php:95
+msgid "Sticky"
+msgstr "Haftend"
+
+#: templates/blog.php:98
+msgid "Delete"
+msgstr "Löschen"
+
+#: templates/blogedit.php:12
+msgid "Submit"
+msgstr "Abschicken"
+
 #: templates/configcheck.php:12
 msgid ""
 "Several basic configuraton options are missing. Please follow they\n"
@@ -1443,24 +1582,40 @@ msgid ""
 "configuration menu (click on the gear-symbol in the top-right\n"
 "corner). You need to have the role of a group-administrator to do\n"
 "so. You may want to configure your language preferences."
-msgstr "Etliche grundlegende Einstellungen fehlen. Bitte folgen Sie den Anweisungen unten. Falls es sich um eine Neuinstallation handelt, werden Sie vermutlich auch noch Etliches im Konfigurationsmenü einstellen wollen (dazu auf das Zahnrad oben rechts klicken). Dazu müssen Sie als Gruppenadministrator registriert sein. Vermutlich möchten Sie auch vorher Ihre bevorzugte Sprache konfigurieren."
+msgstr ""
+"Etliche grundlegende Einstellungen fehlen. Bitte folgen Sie den Anweisungen "
+"unten. Falls es sich um eine Neuinstallation handelt, werden Sie vermutlich "
+"auch noch Etliches im Konfigurationsmenü einstellen wollen (dazu auf das "
+"Zahnrad oben rechts klicken). Dazu müssen Sie als Gruppenadministrator "
+"registriert sein. Vermutlich möchten Sie auch vorher Ihre bevorzugte Sprache "
+"konfigurieren."
 
 #: templates/configcheck.php:33
+msgid "Test again"
+msgstr "Erneut testen"
+
+#: templates/configcheck.php:43
 msgid ""
 "You need to specify a name for the orchestra.  Please click as\n"
 "group-administrator on the gear-symbol in the top-right corner and\n"
 "specify a short-hand name for the orchestra in the\n"
 "`Administration'-tab. This is just a tag to provide defaults for\n"
 "user-ids and folders; it should be a short one-word identifier."
-msgstr "Sie müssen eine Kurzbezeichnung für das Orchester angeben. Als Gruppen-Administrator können Sie dazu auf das Zahnrad-Symbol oben rechts klicken und im `Verwaltung'-Reiter diese Einstellung vornehmen. Der Name ist nur eine Kurzbezeichnung, typischerweise ein einzelnes, kurzes Wort. "
+msgstr ""
+"Sie müssen eine Kurzbezeichnung für das Orchester angeben. Als Gruppen-"
+"Administrator können Sie dazu auf das Zahnrad-Symbol oben rechts klicken und "
+"im `Verwaltung'-Reiter diese Einstellung vornehmen. Der Name ist nur eine "
+"Kurzbezeichnung, typischerweise ein einzelnes, kurzes Wort. "
 
-#: templates/configcheck.php:39
+#: templates/configcheck.php:49
 msgid ""
 "You need to create a dedicatd user group.\n"
 "You have to log-in as administrator to do so."
-msgstr "Sie müssen die Orchester-Gruppe erstelllen. Loggen Sie sich dazu bitte mit einem Administrator-Account ein."
+msgstr ""
+"Sie müssen die Orchester-Gruppe erstelllen. Loggen Sie sich dazu bitte mit "
+"einem Administrator-Account ein."
 
-#: templates/configcheck.php:42
+#: templates/configcheck.php:52
 #, php-format
 msgid ""
 "You need to create a dummy-user which owns all shared resources\n"
@@ -1469,9 +1624,13 @@ msgid ""
 "uid by setting the respective field in the application settings menu\n"
 "(click as group-admin on the gear-symbol in the top-right corner and\n"
 "choose the `Sharing'-tab)."
-msgstr "Sie müssen eine Benutzer-`Strohpuppe' anlegen, der alle gemeinsamen Resourcen gehören. Als Gruppen-Administrator für die Orchestergruppe `%s' können Sie dazu auf das Zahnrad-Symbol oben rechts klicken und im `Sharing'-Reiter diese Einstellung vornehmen."
+msgstr ""
+"Sie müssen eine Benutzer-`Strohpuppe' anlegen, der alle gemeinsamen "
+"Resourcen gehören. Als Gruppen-Administrator für die Orchestergruppe `%s' "
+"können Sie dazu auf das Zahnrad-Symbol oben rechts klicken und im `Sharing'-"
+"Reiter diese Einstellung vornehmen."
 
-#: templates/configcheck.php:50
+#: templates/configcheck.php:60
 #, php-format
 msgid ""
 "You need to create a dedicated shared folder shared among the\n"
@@ -1487,7 +1646,7 @@ msgstr ""
 "klicken und die entsprechenden Einstellungen im `Sharing'-Reiter\n"
 "vornehmen."
 
-#: templates/configcheck.php:58
+#: templates/configcheck.php:68
 msgid ""
 "You need to configure the database access. You can do so through the\n"
 "respective web-form in the application settings windows accessible\n"
@@ -1501,7 +1660,7 @@ msgstr ""
 "rechts klicken und die erforderlichen Einstellungen im\n"
 "`Verwaltung'-Reiter vornehmen."
 
-#: templates/configcheck.php:66
+#: templates/configcheck.php:76
 msgid ""
 "You may want to set an encryption key for encrypting configuration\n"
 "values and (in the future) sensitive data in the members- and project\n"
@@ -1511,41 +1670,47 @@ msgid ""
 "application settings are not visible for you. Note also that after\n"
 "installing a non-empty encryption key each user has to log-out and\n"
 "log-in again in order to be able to access the encrypted values."
-msgstr "Es ist sicher eine gute Idee, Verschlüsselung für die Konfigurations-Daten und (in späteren Programmversionen) für sensible Musiker-Daten einzuschalten. Dazu können Sie als Gruppenadministrator auf das Zahnrad-Symbol oben rechts klicken und im `Verwaltung'-Reiter einen Codier-Schlüssel angeben. Mitglieder erhalten danach erst wieder Zugriff auf die Daten, nachdem ebenfalls im `Verwaltung'-Reiter der Knopf `Schlüssel publiczieren' aktiviert wurde."
+msgstr ""
+"Es ist sicher eine gute Idee, Verschlüsselung für die Konfigurations-Daten "
+"und (in späteren Programmversionen) für sensible Musiker-Daten "
+"einzuschalten. Dazu können Sie als Gruppenadministrator auf das Zahnrad-"
+"Symbol oben rechts klicken und im `Verwaltung'-Reiter einen Codier-Schlüssel "
+"angeben. Mitglieder erhalten danach erst wieder Zugriff auf die Daten, "
+"nachdem ebenfalls im `Verwaltung'-Reiter der Knopf `Schlüssel publiczieren' "
+"aktiviert wurde."
 
-#: templates/configcheck.php:84
-msgid "Test again"
-msgstr "Erneut testen"
-
-#: templates/configcheck.php:94
+#: templates/configcheck.php:90
 msgid "You are a group administrator."
 msgstr "Sie sind Gruppen-Administrator."
 
-#: templates/configcheck.php:95
+#: templates/configcheck.php:91
 msgid "You are not a group administrator."
 msgstr "Sie sind kein Gruppenadministrator."
 
-#: templates/configcheck.php:97
+#: templates/configcheck.php:93
 #, php-format
 msgid ""
 "Ask a user with group-administrator rights to perform the required\n"
 "settings or ask the Owncloud-administror to assign to you the rol of a\n"
 "group-administrator for the group `%s'."
-msgstr "Fragen Sie einen Benutzer mit Gruppenadministrator-Rechten, die erforderlichen Einstellungen vorzunehmen, oder fragen Sie einen Owncloud-Administrator, Ihnen diese Rolle für die Orchester-Gruppe `%s' gewähren."
+msgstr ""
+"Fragen Sie einen Benutzer mit Gruppenadministrator-Rechten, die "
+"erforderlichen Einstellungen vorzunehmen, oder fragen Sie einen Owncloud-"
+"Administrator, Ihnen diese Rolle für die Orchester-Gruppe `%s' gewähren."
 
-#: templates/configcheck.php:115 templates/configcheck.php:132
+#: templates/configcheck.php:111 templates/configcheck.php:128
 msgid "is set"
 msgstr "ist eingestellt"
 
-#: templates/configcheck.php:115
+#: templates/configcheck.php:111
 msgid "is missing"
 msgstr "fehlt"
 
-#: templates/configcheck.php:137
+#: templates/configcheck.php:133
 msgid "is set, but inaccessible"
 msgstr "ist eingestellt, kann aber nicht darauf zugreifen"
 
-#: templates/configcheck.php:142
+#: templates/configcheck.php:138
 msgid "is not set"
 msgstr "ist nicht eingestellt"
 
@@ -1583,7 +1748,7 @@ msgstr "Web-Verweis auf die Owncloud Dokumentation"
 msgid "Owncloud developer documentation"
 msgstr "Owncoud Entwickler Dokumentation"
 
-#: templates/email-settings.php:11 templates/part.common.header.php:19
+#: templates/email-settings.php:11 templates/part.common.header.php:27
 msgid "Settings"
 msgstr "Einstellungen"
 
@@ -1659,27 +1824,27 @@ msgstr "Em@il-Test-Adresse"
 msgid "Test address"
 msgstr "Test-Adresse"
 
-#: templates/events.php:10
+#: templates/events.php:5
 msgid "Events for"
 msgstr "Termine für"
 
-#: templates/events.php:21
+#: templates/events.php:16
 msgid "Add Concert"
 msgstr "Neues Konzert"
 
-#: templates/events.php:22
+#: templates/events.php:17
 msgid "Add Rehearsal"
 msgstr "Neue Probe"
 
-#: templates/events.php:23
+#: templates/events.php:18
 msgid "Add Other Event"
 msgstr "Sonst. Termin"
 
-#: templates/events.php:24
+#: templates/events.php:19
 msgid "Management Event"
 msgstr "Vorstands-Termin"
 
-#: templates/events.php:31
+#: templates/events.php:26
 msgid "Download"
 msgstr "Herunterladen"
 
@@ -1826,11 +1991,19 @@ msgstr ""
 msgid "Something is wrong, but what?"
 msgstr "Etwas ist schiefgelaufen, aber was?!"
 
-#: templates/part.common.header.php:12
+#: templates/part.common.header.php:14
+msgid "Startpage"
+msgstr "Startseite"
+
+#: templates/part.common.header.php:15
+msgid "Navigate back to the start-page."
+msgstr "Führt zurück zur Start-Seite der Applikation."
+
+#: templates/part.common.header.php:20
 msgid "Expert Operations"
 msgstr "Experten-Menü"
 
-#: templates/part.common.header.php:13
+#: templates/part.common.header.php:21
 msgid "Expert Operations like recreating views etc."
 msgstr ""
 "A C H T U N G !\n"
@@ -1844,15 +2017,15 @@ msgstr ""
 "die Exberde.\n"
 "Aber bitte einfach nicht abschrecken lassen ..."
 
-#: templates/part.common.header.php:20
+#: templates/part.common.header.php:28
 msgid "Personal Settings."
 msgstr "Persönlich"
 
-#: templates/part.common.header.php:28
+#: templates/part.common.header.php:36
 msgid "Toggle Visibility"
 msgstr "Sichtbarkeit der Kopfzeile ändern"
 
-#: templates/part.common.header.php:30 templates/part.common.header.php:58
+#: templates/part.common.header.php:38 templates/part.common.header.php:67
 msgid "Minimize or maximize the containing block."
 msgstr "Den umgebenden Textblock minimieren oder maximieren."
 
@@ -1880,7 +2053,7 @@ msgstr ""
 
 #: templates/settings.php:11
 msgid "Personal Settings"
-msgstr "Persönliche"
+msgstr "Persönliches"
 
 #: templates/settings.php:12
 msgid "Administration"
@@ -2008,8 +2181,8 @@ msgstr "Gemeinsamer Ordner"
 msgid "shared folder"
 msgstr "Gemeinsamer Ordner"
 
-#~ msgid "Submitted"
-#~ msgstr "Verschickt."
+#~ msgid "Done."
+#~ msgstr "Fertig."
 
 #~ msgid "stored"
 #~ msgstr "gespeichert"

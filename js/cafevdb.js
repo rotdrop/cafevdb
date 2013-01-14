@@ -167,7 +167,7 @@ $(document).ready(function(){
     OC.appSettings({appid:'cafevdb', loadJS:'expertmode.js',
                     cache:false, scriptName:'expert.php'});
   });
-  
+
   OCCategories.app = 'calendar';
   OCCategories.changed = function(categories) {
     Calendar.UI.categoriesChanged(categories);

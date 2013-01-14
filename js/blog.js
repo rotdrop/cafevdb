@@ -24,6 +24,7 @@ var Blog = {
     var popup = $('#blogedit').dialog({
       title: t('cafevdb', 'Edit Blog Entry'),
       modal: true,
+      closeOnEscape: false,
       position: { my: "center center",
                   at: "center center",
                   of: window,
@@ -31,6 +32,7 @@ var Blog = {
       width: 'auto',
       height: 'auto',
       open : function () { 
+        $(".ui-dialog-titlebar-close").hide();
         
         $('button').tipsy({gravity:'ne', fade:true});
         $('input').tipsy({gravity:'ne', fade:true});
@@ -62,7 +64,7 @@ var Blog = {
     if ($('#blogtextarea').val() == Blog.text) {
       $('#blogedit').dialog('close').remove();
     } else {
-      OC.dialogs.confirm(t('cefevdb', 'The message content has been changed and will be lost if you press `Yes\''),
+      OC.dialogs.confirm(t('cafevdb', 'The message content has been changed and will be lost if you press `Yes\''),
                          t('cafevdb', 'Really cancel current entry?'),
                          function (decision) {
                            if (decision) {

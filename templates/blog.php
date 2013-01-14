@@ -78,7 +78,7 @@ if (!is_array($blog[0])) {
 
     $stickytext = '';
     if ($sticky == 1) {
-      $stickytext = '<span class="blogentrysticky">sticky</span>';
+      $stickytext = '<span class="blogentrysticky">'.L::t('sticky').'</span>';
     }
 
     $text  = $msg['message'];
