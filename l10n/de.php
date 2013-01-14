@@ -282,7 +282,7 @@
 "Database User" => "Datenbank-Benutzer",
 "New Password" => "Neues Passwort",
 "Test Database Password" => "Datenbank-Passwort testen",
-"Camerata DB meets web 2.0 - the data-base operations can be accessed\nthrough the respective navigation buttons at the top of the page. The\npage below may be used as a bulletin-board. Configuration options are\naccessible through the gear- and pencil-shaped buttons in the\nbottom-left and top-right edge of the screen" => "Camerata DB @ web 2.0 - die eigentlichen Datenbanken-Operationen erreicht man über die Navigatíonsleiste oben. Die aktuelle Seite kann man als eine Art Pinnwand benutzen. Einstellungen lassen sich über die Zahnrad- und Stiftförmigen Knöpfe links-unte und rechts-oben vornehmen.",
+"Camerata DB meets web 2.0 - the data-base operations can be accessed\nthrough the respective navigation buttons at the top of the page. The\npage below may be used as a bulletin-board. Configuration options are\naccessible through the gear- and pencil-shaped buttons in the\nbottom-left and top-right edge of the screen" => "Camerata DB @ web 2.0 - die eigentlichen Datenbanken-Operationen erreicht man über die Navigatíonsleiste oben. Die aktuelle Seite kann man als eine Art Pinnwand benutzen. Einstellungen lassen sich über die zahnrad- und stiftförmigen Knöpfe links-unte und rechts-oben vornehmen.",
 "New note" => "Neue Notiz",
 "(latest change by `%s', %s)" => "(geändert von `%s', %s)",
 "sticky" => "haftend",
