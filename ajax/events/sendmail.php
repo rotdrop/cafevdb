@@ -38,7 +38,7 @@ $tmpl->assign('ProjectName', $projectName);
 $tmpl->assign('ProjectId', $projectId);
 $tmpl->assign('Events', $events);
 $tmpl->assign('EventMatrix', $eventMatrix);
-$tmpl->assign('Locale', $locale);
+$tmpl->assign('locale', $locale);
 $tmpl->assign('CSSClass', 'projectevents');
 $tmpl->assign('Selected', $selected);
 
