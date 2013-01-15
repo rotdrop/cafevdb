@@ -93,7 +93,7 @@ $(document).ready(function() {
                  $('#userkey #error').html(data.data.message);
                  $('#userkey #error').show();
                }
-             });
+             },'json');
       return false;
     } else {
       $('#userkey #error').show();
