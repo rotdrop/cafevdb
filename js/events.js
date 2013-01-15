@@ -17,6 +17,8 @@ window.Events={
         $('#dialog_holder').html(data.data.contents);
         window.Events.projectId = data.data.projectId;
         window.Events.projectName = data.data.projectName;
+      } else {
+        OC.dialogs.alert(data.data.debug, t('cafevdb', 'Error'));
       }
       $('div.debug').html(data.data.debug);
       $('div.debug').show();
