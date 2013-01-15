@@ -720,7 +720,7 @@ class ConfigCheck
 
     $id = \OC_FileCache::getId($sharedfolder, $vfsroot);
     $result = self::sudo($shareowner, function() use ($id, $sharegroup) {
-        return self::groupSharedExists($id, $sharegroup, 'folder');
+        return ConfigCheck::groupSharedExists($id, $sharegroup, 'folder');
       });
 
     return $result;
@@ -790,8 +790,8 @@ class ConfigCheck
  
         \OC_FileCache::scanFile($sharedfolder, $vfsroot);
         $id = \OC_FileCache::getId($sharedfolder, $vfsroot);
-        if (!self::groupShareObject($id, $sharegroup, 'folder') ||
-            !self::groupSharedExists($id, $sharegroup, 'folder')) {
+        if (!ConfigCheck::groupShareObject($id, $sharegroup, 'folder') ||
+            !ConfigCheck::groupSharedExists($id, $sharegroup, 'folder')) {
           return false;
         }
               
