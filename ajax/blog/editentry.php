@@ -12,10 +12,12 @@ OCP\JSON::callCheck();
 
 Config::init();
 
-$author  = Util::cgiValue('author', OCP\User::getUser());
-$blogId  = Util::cgiValue('blogId', -1);
-$inReply = Util::cgiValue('inReply', -1);
-$text    = Util::cgiValue('text', '');
+$author   = Util::cgiValue('author', OCP\User::getUser());
+
+$blogId   = Util::cgiValue('blogId', -1);
+$inReply  = Util::cgiValue('inReply', -1);
+$text     = Util::cgiValue('text', '');
+$priority = Util::cgiValue('priority', false);
 
 if ($author === false || $author == '') {
   OCP\JSON::error(
@@ -28,7 +30,7 @@ if ($author === false || $author == '') {
 if ($blogId >= 0 && $inReply == -1 && $text == '') {
   // This is an edit attempt.
   try {
-    $entry = Blog::fetchEntry($blogId);
+    $entry = Blog::fetchNote($blogId);
   } catch (\Exception $e) {
     OCP\JSON::error(
       array(
@@ -45,10 +47,15 @@ if ($blogId >= 0 && $inReply == -1 && $text == '') {
                             array($blogId)))));
     return false;
   }
-  $text = $entry['message'];
+  $text     = $entry['message'];
+  $priority = $entry['priority'];
+} else if ($inReply >= 0) {  
+  $priority = false;
 }
 
 $tmpl = new OCP\Template(Config::APP_NAME, 'blogedit');
+
+$tmpl->assign('priority', $priority, false);
 
 $html = $tmpl->fetchPage();
 
@@ -58,6 +65,7 @@ OCP\JSON::success(
                         'blogId' => $blogId,
                         'inReply' => $inReply,
                         'text' => $text,
+                        'priority' => $priority,
                         'message' => $text.' '.$blogId.' '.$inReply)));
 
 return true;

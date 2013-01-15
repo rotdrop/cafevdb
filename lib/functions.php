@@ -80,6 +80,20 @@ __EOT__;
     return $scripts;
   }
 
+  /**Try to fetch the appropriate photo if the user_photo-app is
+   * installed. Otherwise return a dummy. Maybe we should also search
+   * the personal address book for an entry where the nickname equals
+   * the user-name.
+   */
+  public static function fetchPhoto($user)
+  {
+    if (\OCP\App::isEnabled('user_photo')) {
+      return \OC::$WEBROOT.'/?app=user_photo&getfile=ajax%2Fshowphoto.php&user='.$user;
+    } else {
+      return \OCP\Util::imagePath('cafevdb', 'photo.png');
+    }
+  }
+
   /**Format the right way (tm). */
   public static function strftime($format, $timestamp = NULL, $locale = NULL)
   {
@@ -621,7 +635,7 @@ class mySQL
     return true;
   }
 
-  public static function query($query, $handle = false, $die = true, $silent = false)
+  public static function query($query, $handle = false, $die = false, $silent = false)
   {
     if (Util::debugMode()) {
       echo '<HR/><PRE>'.htmlspecialchars($query).'</PRE><HR/><BR>';
@@ -655,7 +669,7 @@ class mySQL
 
   public static function fetch(&$res, $type = MYSQL_ASSOC)
   {
-    $result = mysql_fetch_array($res, $type);
+    $result = @mysql_fetch_array($res, $type);
     if (Util::debugMode()) {
       print_r($result);
     }
@@ -665,9 +679,9 @@ class mySQL
   public static function escape($string, $handle = false)
   {
     if ($handle) {
-      return mysql_real_escape_string($string, $handle);
+      return @mysql_real_escape_string($string, $handle);
     } else {
-      return mysql_real_escape_string($string);
+      return @mysql_real_escape_string($string);
     }    
   }
 

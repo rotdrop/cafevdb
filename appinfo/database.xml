@@ -70,9 +70,10 @@
       </field>
 
       <field>
-        <name>sticky</name>
+        <name>stickiness</name>
         <type>integer</type>
         <default>0</default>
+        <unsigned>true</unsigned>
         <length>1</length>
       </field>
 

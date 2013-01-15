@@ -63,7 +63,7 @@ if ($blog['status'] == 'error') {
     $created  = Util::strftime('%x, %H:%M', $created, $_['locale']);
     $editor   = $msg['editor'];
     $modified = $msg['modified'];
-    $sticky   = $msg['sticky'];
+    $priority = $msg['priority'];
     $deleted  = $msg['deleted'];
     $reply    = $msg['inreplyto'];
     $imgtitle = L::t('Avatar pictures can be uploaded through the personal settings
@@ -74,20 +74,20 @@ menus. Click the gear-symbol at the bottom-left corner.');
       continue;
     }
 
+    $prioritytext = '';
+    if ($priority != 0) {
+      $prioritytext = '<span class="blogentrypriority">'.L::t(', priority %d', array($priority)).'</span>';
+    }
+
     $edittxt = '';
     if ($modified > 0) {
       $modified = Util::strftime('%x, %H:%M', $modified, $_['locale']);
-      $edittxt = L::t('(latest change by `%s\', %s)', array($editor,$modified));  
-    }
-
-    $stickytext = '';
-    if ($sticky == 1) {
-      $stickytext = '<span class="blogentrysticky">'.L::t('sticky').'</span>';
+      $edittxt = L::t(', latest change by `%s\', %s', array($editor,$modified));  
     }
 
     $text  = $msg['message'];
     echo '  <li class="blogentry level'.$level.'"><div class="blogentry level'.$level.'">
-    <span class="photo"><img class="photo" src="'.Blog::fetchPhoto($author).'" '.$imgtitle.'/></span>
+    <span class="photo"><img class="photo" src="'.Util::fetchPhoto($author).'" '.$imgtitle.'/></span>
     <span id="blogentryactions">
       <button class="blogbutton reply" id="blogreply'.$id.'" name="blogreply'.$id.'" value="'.$id.'" title="'.Config::toolTips('blogentry-reply').'">
         <img class="png blogbutton reply" src="'.\OCP\Util::imagePath('cafevdb', 'reply.png').'" alt="'.L::t('Reply').'"/>
@@ -95,17 +95,21 @@ menus. Click the gear-symbol at the bottom-left corner.');
       <button class="blogbutton edit" id="blogedit'.$id.'" name="blogedit'.$id.'" value="'.$id.'" title="'.Config::toolTips('blogentry-edit').'">
         <img class="png blogbutton edit" src="'.\OCP\Util::imagePath('cafevdb', 'edit.png').'" alt="'.L::t('Edit').'"/>
       </button>
-      '.($reply >= 0 ? '<!-- ' : '').'
-      <button class="blogbutton sticky" id="blogsticky'.$id.'" name="blogsticky'.($sticky == 1 ? 'off' : 'on').'" value="'.$id.'" title="'.Config::toolTips('blogentry-sticky').'">
-        <img class="png blogbutton sticky" src="'.\OCP\Util::imagePath('cafevdb', 'sticky.png').'" alt="'.L::t('Sticky').'"/>
+      '.($reply >= 0 || $priority == 0 ? '<!-- ' : '').'
+      <input type="hidden" id="blogpriority'.$id.'" name="blogpriority'.$id.'" value="'.$priority.'" />
+      <button class="blogbutton raise" id="blograise'.$id.'" name="blograise'.$id.'" value="'.$id.'" title="'.Config::toolTips('blogentry-raise').'">
+        <img class="svg blogbutton raise" src="'.\OCP\Util::imagePath('cafevdb', 'up.svg').'" alt="'.L::t('Raise priority').'"/>
       </button>
-      '.($reply >= 0 ? ' -->' : '').'
+      <button class="blogbutton lower" id="bloglower'.$id.'" name="bloglower'.$id.'" value="'.$id.'" title="'.Config::toolTips('blogentry-lower').'">
+        <img class="svg blogbutton lower" src="'.\OCP\Util::imagePath('cafevdb', 'down.svg').'" alt="'.L::t('Lower priority').'"/>
+      </button>
+      '.($reply >= 0 || $priority == 0 ? ' -->' : '').'
       <button class="blogbutton delete" id="blogdelete'.$id.'" name="blogdelete'.$id.'" value="'.$id.'" title="'.Config::toolTips('blogentry-delete').'">
         <img class="png blogbutton delete" src="'.\OCP\Util::imagePath('cafevdb', 'delete.png').'" alt="'.L::t('Delete').'"/>
       </button>
     </span> 
     <span class="blogentrycenter">
-      <span class="blogentrytitle">'.$author.' -- '.$created.' '.$stickytext.' '.$edittxt.'</span><br/>
+      <span class="blogentrytitle">'.$author.' -- '.$created.$prioritytext.$edittxt.'</span><br/>
       <span class="blogentrytext">'.$text.'</span>
     </span>
   </div></li>

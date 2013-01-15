@@ -19,10 +19,16 @@ div.cafevdb-page-header.collapsed #cafevdb-page-blog-header {
   max-width:100%;
 }
 
-#bloglist span.photo {
+#blogframe span.photo {
   position:absolute;
   left:0;
   top:0;
+}
+
+#bloglist ul {
+  list-style-type:circle;
+  list-style-image:url('%webroot%/core/img/actions/info.svg');
+  list-style-position:inside;
 }
 
 #bloglist img.photo {
@@ -127,7 +133,7 @@ div.cafevdb-page-header.collapsed #cafevdb-page-blog-header {
   margin-bottom:0.3ex;
 }
 
-#bloglist span.blogentrysticky {
+#bloglist span.blogentrypriority {
   font-weight:bold;
   color:red;
 }

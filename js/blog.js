@@ -3,13 +3,15 @@ var Blog = {
   blogId: -1,
   inReply: -1,
   text: '',
+  priority: false,
   editWindow: function(data) {
     if (data.status == "success") {
       $('#dialog_holder').html(data.data.content);
-      Blog.author  = data.data.author;
-      Blog.blogId  = data.data.blogId;
-      Blog.inReply = data.data.inReply;
-      Blog.text    = data.data.text;
+      Blog.author   = data.data.author;
+      Blog.blogId   = data.data.blogId;
+      Blog.inReply  = data.data.inReply;
+      Blog.text     = data.data.text;
+      Blog.priority = data.data.priority;
     } else {
       OC.dialogs.alert(data.data.message,
                        t('cafevdb', 'Error'));
@@ -80,9 +82,11 @@ var Blog = {
     $('#blogtextarea').tinymce().save();
     $.post(OC.filePath('cafevdb','ajax/blog','modifyentry.php'),
            {
+             action: Blog.blogId >= 0 ? 'modify' : 'create',
              blogId: Blog.blogId,
              inReply: Blog.inReply,
-             text: $('#blogtextarea').val()
+             text: $('#blogtextarea').val(),
+             priority: $('#blogpriority').val(),
            }, function (data) {
              if (data.status == 'success') {
                $('#blogedit').dialog('close').remove();
@@ -136,10 +140,8 @@ $(document).ready(function() {
                        function (decision) {
                          if (decision) {
                            $.post(OC.filePath('cafevdb','ajax/blog','modifyentry.php'),
-                                  { blogId: blogId,
-                                    inReply: -1,
-                                    text: ''
-                                  },
+                                  { action: 'delete',
+                                    blogId: blogId },
                                   function (data) {
                                     if (data.status == 'success') {
                                       $('#blogform').submit();
@@ -156,14 +158,40 @@ $(document).ready(function() {
     return false;
   });
 
-  $('#blogentryactions button.sticky').click(function(event) {
+  $('#blogentryactions button.raise').click(function(event) {
     event.preventDefault();
-    var name = $(this).attr('name');
+    var id = $(this).val();
+    var prio = $('#blogpriority'+id).val();
     $.post(OC.filePath('cafevdb','ajax/blog','modifyentry.php'),
-           { blogId: $(this).val(),
-             sticky: name == 'blogstickyon' ? 1 : 0,
-             inReply: -1,
+           { action: 'modify',
              text: '',
+             blogId: id,
+             priority: +prio+1,
+             inReply: -1
+           },
+           function (data) {
+             if (data.status == 'success') {
+               $('#blogform').submit();
+               return true;
+             } else {
+               OC.dialogs.alert(data.data.message,
+                                t('cafevdb', 'Error'));
+               return true;
+             }
+           }, 'json');
+    return false;
+  });
+
+  $('#blogentryactions button.lower').click(function(event) {
+    event.preventDefault();
+    var id = $(this).val();
+    var prio = $('#blogpriority'+id).val();
+    $.post(OC.filePath('cafevdb','ajax/blog','modifyentry.php'),
+           { action: 'modify',
+             text: '',
+             blogId: id,
+             priority: +prio-1,
+             inReply: -1
            },
            function (data) {
              if (data.status == 'success') {

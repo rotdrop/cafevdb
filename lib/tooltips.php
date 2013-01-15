@@ -12,6 +12,8 @@ class Tooltips
   {
     return 
       array(
+        'blogentry-raise' => L::t('Increase the display priority; move the note closer to the top of the page.'),
+        'blogentry-lower' => L::t('Decrease the display priority; move the note closer to the bottom of the page.'),
         'blog-newentry' => L::t('Write a new bulletin entry.'),
         'blogentry-delete' => L::t('Delete the message and the message-thread depending on this message.'),
         'blogentry-reply' => L::t('Write a follow-up to the bulletin entry.'),
