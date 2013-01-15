@@ -47,9 +47,10 @@ echo $this->inc('part.common.header',
 
 <?php
 
-if (!is_array($blog[0])) {
-  echo '<div class="statusmessage">'.$blog[0].'</div>';
+if ($blog['status'] == 'error') {
+  echo '<div class="statusmessage">'.$blog['data'].'</div>';
 } else {
+  $blog = $blog['data'];
   echo '<ul id="bloglist">'."\n";
   $level = 0;
   $savedblog = array();
@@ -64,7 +65,10 @@ if (!is_array($blog[0])) {
     $modified = $msg['modified'];
     $sticky   = $msg['sticky'];
     $deleted  = $msg['deleted'];
-
+    $reply    = $msg['inreplyto'];
+    $imgtitle = L::t('Avatar pictures can be uploaded through the personal settings
+menus. Click the gear-symbol at the bottom-left corner.');
+    $imgtitle = 'title="'.$imgtitle.'" ';
     if ($deleted > 0) {
       $deleted = Util::strftime('%x, %H:%M', $deleted, $_['locale']);
       continue;
@@ -83,7 +87,7 @@ if (!is_array($blog[0])) {
 
     $text  = $msg['message'];
     echo '  <li class="blogentry level'.$level.'"><div class="blogentry level'.$level.'">
-    <span class="photo"><img class="photo" src="'.Blog::fetchPhoto($author).'" /></span>
+    <span class="photo"><img class="photo" src="'.Blog::fetchPhoto($author).'" '.$imgtitle.'/></span>
     <span id="blogentryactions">
       <button class="blogbutton reply" id="blogreply'.$id.'" name="blogreply'.$id.'" value="'.$id.'" title="'.Config::toolTips('blogentry-reply').'">
         <img class="png blogbutton reply" src="'.\OCP\Util::imagePath('cafevdb', 'reply.png').'" alt="'.L::t('Reply').'"/>
@@ -91,9 +95,11 @@ if (!is_array($blog[0])) {
       <button class="blogbutton edit" id="blogedit'.$id.'" name="blogedit'.$id.'" value="'.$id.'" title="'.Config::toolTips('blogentry-edit').'">
         <img class="png blogbutton edit" src="'.\OCP\Util::imagePath('cafevdb', 'edit.png').'" alt="'.L::t('Edit').'"/>
       </button>
+      '.($reply >= 0 ? '<!-- ' : '').'
       <button class="blogbutton sticky" id="blogsticky'.$id.'" name="blogsticky'.($sticky == 1 ? 'off' : 'on').'" value="'.$id.'" title="'.Config::toolTips('blogentry-sticky').'">
         <img class="png blogbutton sticky" src="'.\OCP\Util::imagePath('cafevdb', 'sticky.png').'" alt="'.L::t('Sticky').'"/>
       </button>
+      '.($reply >= 0 ? ' -->' : '').'
       <button class="blogbutton delete" id="blogdelete'.$id.'" name="blogdelete'.$id.'" value="'.$id.'" title="'.Config::toolTips('blogentry-delete').'">
         <img class="png blogbutton delete" src="'.\OCP\Util::imagePath('cafevdb', 'delete.png').'" alt="'.L::t('Delete').'"/>
       </button>
