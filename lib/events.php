@@ -7,6 +7,45 @@ namespace CAFEVDB
  */
 class Events
 {
+  /**Make sure the data-base provides the necessary table(s).
+   * This function may through an exception.
+   */
+  public static function configureDatabase($_handle = false) 
+  {
+    try {
+      if ($_handle === false) {
+        Config::init();
+        $handle = mySQL::connect(Config::$dbopts);
+      } else {
+        $handle = $_handle;
+      }
+
+      $query = 'CREATE TABLE IF NOT EXISTS `ProjectEvents` (
+ `Id` int(11) NOT NULL AUTO_INCREMENT,
+ `ProjectId` int(11) DEFAULT NULL,
+ `CalendarId` int(11) NOT NULL,
+ `EventId` int(11) NOT NULL,
+ PRIMARY KEY (`Id`),
+ UNIQUE KEY `ProjectId` (`ProjectId`,`EventId`)
+) DEFAULT CHARSET=utf8';
+
+      $result = mySQL::query($query, $handle);
+
+      if ($_handle === false) {
+        mySQL::close($handle);
+      }
+    } catch (\Exception $e) {
+
+      if ($_handle === false) {
+        mySQL::close($handle);
+      }
+
+      throw $e;
+    }
+
+    return $result;
+  }
+
   /**Link the event (or whatever) into the ProjectEvents table. This
    * function is invoked on every event-creation. The link between
    * projects and events is triggered by the Projekte::Name field
@@ -51,7 +90,7 @@ class Events
   public static function killCalendarListener($calendarId)
   {
     Config::init();
-    $handle = mySQL::connect(Config::$pmeopts);
+    $handle = mySQL::connect(Config::$dbopts);
 
     // Execute the show-stopper
 

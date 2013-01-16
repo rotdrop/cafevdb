@@ -42,6 +42,7 @@ imapsecure
 emailtestaddress
 emailtestmode
 phpmyadmin
+phpmyadminoc
 sourcecode
 sourcedocs
 ownclouddev';
@@ -569,8 +570,8 @@ class ConfigCheck
       $result = call_user_func($callback);
     } catch (\Exception $exception) {
       \OC_User::setUserId($olduser);
-      throw new \Exception($exception->getMessage());
-      return false;
+
+      throw $exception;
     }
     \OC_User::setUserId($olduser);
 
@@ -583,21 +584,64 @@ class ConfigCheck
    *
    * @return bool
    * array('summary','orchestra','usergroup','shareowner','sharedfolder','database','encryptionkey')
+   *
+   * where summary is a bool and everything else is
+   * array('status','message') where 'message' should be empty if
+   * status is true.
    */
   public static function configured()
   {
-    $resuilt = array();
+    $result = array();
 
-    $result['orchestra'] =  Config::encryptionKeyValid() && Config::getValue('orchestra');
-    $result['encryptionkey'] = $result['orchestra'] && Config::encryptionKeyValid();
-    $result['database'] = $result['orchestra'] && self::databaseAccessible();
-    $result['usergroup'] = self::ShareGroupExists();
-    $result['shareowner'] = $result['usergroup'] && self::shareOwnerExists();
-    $result['sharedfolder'] = $result['shareowner'] && self::sharedFolderExists();
+    foreach (array('orchestra','usergroup','shareowner','sharedfolder','database','encryptionkey') as $key) {
+      $result[$key] = array('status' => false, 'message' => '');
+    }
+
+    $key ='orchestra';
+    try {
+      $result[$key]['status'] = Config::encryptionKeyValid() && Config::getValue('orchestra');
+    } catch (\Exception $e) {
+      $result[$key]['message'] = $e->getMessage();
+    }
+
+    $key = 'encryptionkey';
+    try {
+      $result[$key]['status'] = $result['orchestra']['status'] && Config::encryptionKeyValid();
+    } catch (\Exception $e) {
+      $result[$key]['message'] = $e->getMessage();
+    }
+
+    $key = 'database';
+    try {
+      $result[$key]['status'] = $result['orchestra']['status'] && self::databaseAccessible();
+    } catch (\Exception $e) {
+      $result[$key]['message'] = $e->getMessage();
+    }
+
+    $key = 'usergroup';
+    try {
+      $result[$key]['status'] = self::ShareGroupExists();
+    } catch (\Exception $e) {
+      $result[$key]['message'] = $e->getMessage();
+    }
+
+    $key = 'shareowner';
+    try {
+      $result[$key]['status'] = $result['usergroup']['status'] && self::shareOwnerExists();
+    } catch (\Exception $e) {
+      $result[$key]['message'] = $e->getMessage();
+    }
+
+    $key = 'sharedfolder';
+    try {      
+      $result[$key]['status'] = $result['shareowner']['status'] && self::sharedFolderExists();
+    } catch (\Exception $e) {
+      $result[$key]['message'] = $e->getMessage();
+    }
 
     $summary = true;
     foreach ($result as $key => $value) {
-      $summary = $summary && $value;  
+      $summary = $summary && $value['status'];  
     }
     $result['summary'] = $summary;
     
@@ -808,18 +852,32 @@ class ConfigCheck
    */
   public static function databaseAccessible($opts = array())
   {
-    Config::init();
-    if (empty($opts)) {
-      $opts = Config::$dbopts;
-    }
+    try {
+      Config::init();
+      if (empty($opts)) {
+        $opts = Config::$dbopts;
+      }
 
-    $handle = mySQL::connect($opts, false /* don't die */, true);
-    if ($handle !== false) {
+      $handle = mySQL::connect($opts, false /* don't die */, true);
+      if ($handle === false) {
+        return false;
+      }
+      
+      if (Events::configureDatabase($handle) === false) {
+        mySQL::close($handle);
+        return false;
+      }
+      
       mySQL::close($handle);
       return true;
+
+    } catch(\Exception $e) {
+      mySQL::close($handle);
+      throw $e;
     }
+
     return false;
-  } 
+  }
 
 }
 

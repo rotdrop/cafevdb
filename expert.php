@@ -34,6 +34,7 @@ $tmpl->assign('expertmode', $expertmode);
 $tmpl->assign( 'tooltips', $tooltips );
 
 $links = array('phpmyadmin',
+               'phpmyadminoc',
                'sourcecode',
                'sourcedocs',
                'ownclouddev');

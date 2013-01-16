@@ -52,9 +52,14 @@ $buttons['example'] =
   </fieldset>
   <fieldset id="expertlinks" class="operations expert links"><legend><?php echo L::t('Links'); ?></legend>
   <input type="button"
-    value="<?php echo L::t('Open phpmyadmin'); ?>"
+    value="<?php echo L::t('Database musicians/projects'); ?>"
     onclick="return window.open('<?php echo $_['phpmyadmin']; ?>','<?php echo Config::APP_NAME.'@phpmyadmin'; ?>');"
     title="<?php echo L::t('Open the login-window to the data-base back-bone. Although this is `expert mode\' you will fall in love with the `export\' facilities of the data-base back-bone. TRY IT OUT! DO IT!'); ?>"/>
+  <br/>
+  <input type="button"
+    value="<?php echo L::t('Database Owncloud'); ?>"
+    onclick="return window.open('<?php echo $_['phpmyadminoc']; ?>','Owncloud@phpmyadmin');"
+    title="<?php echo L::t('Open the login-window to the data-base back-bone for the Owncloud WebUI.'); ?>"/>
   <br/>
   <input type="button"
     value="<?php echo L::t('Source-Code Archive'); ?>"

@@ -1,11 +1,15 @@
 <?php
-/**
+/**Based on the download-script from the calendar app, which is
+ *
  * Copyright (c) 2012 Georg Ehrke <ownclouddev at georgswebsite dot de>
  * This file is licensed under the Affero General Public License version 3 or
  * later.
  * See the COPYING-README file.
  */
-OCP\User::checkLoggedIn();
+
+if(!OCP\User::isLoggedIn()) {
+	die('<script type="text/javascript">document.location = oc_webroot;</script>');
+}
 OCP\App::checkAppEnabled(CAFEVDB\Config::APP_NAME);
 
 $projectId   = $_POST['ProjectId'];

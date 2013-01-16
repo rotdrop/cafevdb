@@ -9,19 +9,32 @@ window.Events={
      *
      * @param[in] data JSON response with the fields data.status,
      *                 data.data.contents,
+     *                 data.data.message is place in an error-popup if status != 'success'
      *                 data.data.debug. data.data.debug is placed
      *                 inside the '#debug' div.
      */
     init: function(data) {
-      if (data.status == "success") {
+      if (data.status == 'success') {
         $('#dialog_holder').html(data.data.contents);
         window.Events.projectId = data.data.projectId;
         window.Events.projectName = data.data.projectName;
       } else {
-        OC.dialogs.alert(data.data.debug, t('cafevdb', 'Error'));
+	var info = '';
+	if (typeof data.data.message != 'undefined') {
+	  info = data.data.message;
+	} else {
+	  info = t('cafevdb', 'Unknown error :(');
+	}
+	if (typeof data.data.error != 'undefined' && data.data.error == 'exception') {
+	  info += '<p><pre>'+data.data.exception+'</pre>';
+	  info += '<p><pre>'+data.data.trace+'</pre>';
+	}
+        OC.dialogs.alert(info, t('cafevdb', 'Error'));
       }
-      $('div.debug').html(data.data.debug);
-      $('div.debug').show();
+      if (typeof data.data.debug != 'undefined') {
+	$('div.debug').html(data.data.debug);
+	$('div.debug').show();
+      }
 
       var popup = $('#events').dialog({
         position: { my: "left top",
@@ -53,11 +66,25 @@ window.Events={
     },
 
     relist: function(data) {
-      if (data.status == "success") {
+      if (data.status == 'success') {
         $('#events div.listing').html(data.data.contents);
+      } else {
+	var info = '';
+	if (typeof data.data.message != 'undefined') {
+	  info = data.data.message;
+	} else {
+	  info = t('cafevdb', 'Unknown error :(');
+	}
+	if (typeof data.data.error != 'undefined' && data.data.error == 'exception') {
+	  info += '<p><pre>'+data.data.exception+'</pre>';
+	  info += '<p><pre>'+data.data.trace+'</pre>';
+	}
+        OC.dialogs.alert(info, t('cafevdb', 'Error'));
       }
-      $('#events #debug').html(data.data.debug);
-      $('#events #debug').show();
+      if (typeof data.data.debug != 'undefined') {
+	$('#events #debug').html(data.data.debug);
+	$('#events #debug').show();
+      }
 
       $('.tipsy').remove();
 

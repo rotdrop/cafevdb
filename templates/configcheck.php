@@ -107,9 +107,14 @@ foreach (array('orchestra',
                'shareowner',
                'sharedfolder',
                'database') as $key) {
-  $ok   = $cfgchk[$key] ? 'set' : 'missing';
-  $tok  = $cfgchk[$key] ? L::t('is set') : L::t('is missing');
-  $text = $cfgchk[$key] ? '' : $missingtext[$key];
+  $status = $cfgchk[$key]['status'];
+  $ok     = $status ? 'set' : 'missing';
+  $tok    = $status ? L::t('is set') : L::t('is missing');
+  $text   = $status ? '' : $missingtext[$key];
+  $error  = $cfgchk[$key]['message'];
+  if ($error != '') {
+    $text .= '<p>'.L::t('Additional diagnostic message:').'<br/>'.'<div class="errormessage">'.nl2br($error).'</div>';
+  }
 
   echo '    <li class="'.$css_pfx.'-config-check '.$ok.'">
       <span class="'.$css_pfx.'-config-check key"> '.$key.'</span>
@@ -122,6 +127,10 @@ foreach (array('orchestra',
 $key = 'encryptionkey';
 $encrkey = Config::getEncryptionKey();
 $cfgkey  = Config::getAppValue('encryptionkey');
+$error   = $cfgchk[$key]['message'];
+if ($error != '') {
+  $text .= '<p>'.L::t('Additional diagnostic message:').'<br/>'.'<div class="errormessage">'.nl2br($error).'</div>';
+}
 
 if ($encrkey != '') {
   $ok    = 'set';

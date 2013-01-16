@@ -7,8 +7,12 @@ Config::init();
   <form id="develsettings">
     <fieldset id="devlinks"><legend><?php echo L::t('Links');?></legend>
       <input type="button" class="devlinktest" id="testphpmyadmin" name="testphpmyadmin" value="<?php echo L::t('Test Link'); ?>" title="<?php echo Config::toolTips('test-linktarget'); ?>"  />
-      <input type="text" class="devlink" id="phpmyadmin" name="phpmyadmin" placeholder="<?php echo L::t('Link to %s', array('phpMyAdmin')); ?>" value="<?php echo $_['phpmyadmin']; ?>" title="<?php echo Config::toolTips('phpmyadmin-link'); ?>" />
+      <input type="text" class="devlink" id="phpmyadmin" name="phpmyadmin" placeholder="<?php echo Config::APP_NAME.'@phpmyadmin'; ?>" value="<?php echo $_['phpmyadmin']; ?>" title="<?php echo Config::toolTips('phpmyadmin-link'); ?>" />
       <label for="phpmyadmin"><?php echo L::t('Link to %s', array('phpMyAdmin')); ?></label>
+      <br/>
+      <input type="button" class="devlinktest" id="testphpmyadminoc" name="testphpmyadminoc" value="<?php echo L::t('Test Link'); ?>" title="<?php echo Config::toolTips('test-linktarget'); ?>"  />
+      <input type="text" class="devlink" id="phpmyadminoc" name="phpmyadminoc" placeholder="Owncloud@phpMyAdmin" value="<?php echo $_['phpmyadminoc']; ?>" title="<?php echo Config::toolTips('phpmyadminoc-link'); ?>" />
+      <label for="phpmyadminoc"><?php echo L::t('Link to Owncloud@%s', array('phpMyAdmin')); ?></label>
       <br/>
       <input type="button" class="devlinktest" id="testsourcecode" name="testsourcecode" value="<?php echo L::t('Test Link'); ?>" title="<?php echo Config::toolTips('test-linktarget'); ?>"  />
   <input type="text" class="devlink" id="sourcecode" name="sourcecode" placeholder="<?php echo L::t('Link to the source-code'); ?>" value="<?php echo $_['sourcecode']; ?>" title="<?php echo Config::toolTips('sourcecode-link'); ?>" />

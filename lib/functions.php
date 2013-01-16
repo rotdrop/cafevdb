@@ -52,21 +52,21 @@ class Error
 {
   private static $exceptionsActive = false;
 
-  static public function active() {
-    return self::$exceptionsActive;
-  }
-  
-  static public function exceptions($on = true) {
+  static public function exceptions($on = null) {
     if ($on === true) {
       if (!self::$exceptionsActive) {
         \set_error_handler('CAFEVDB\Error::exceptions_error_handler');
         self::$exceptionsActive = true;
       }
+      return true;
     } else if ($on === false) {
       if (self::$exceptionsActive) {
         \restore_error_handler();
         self::$exceptionsActive = false;
       }
+      return false;
+    } else if ($on === null) {
+      return self::$exceptionsActive;
     } else {
       throw new \InvalidArgumentException(L::t('Invalid argument value: `%s\'', array($on)));
     }
@@ -78,6 +78,10 @@ class Error
     if (!(\error_reporting() & $severity)) {
       // This error code is not included in error_reporting
       return;
+    }
+
+    if (ini_get('log_errors')) {
+      error_log($message, 0);
     }
 
     throw new \ErrorException($message, 0, $severity, $filename, $lineno);
@@ -123,7 +127,9 @@ __EOT__;
    */
   public static function fetchPhoto($user)
   {
-    if (\OCP\App::isEnabled('user_photo')) {
+    if (\OCP\App::isEnabled('contacts')) {
+      
+    } else if (\OCP\App::isEnabled('user_photo')) {
       return \OC::$WEBROOT.'/?app=user_photo&getfile=ajax%2Fshowphoto.php&user='.$user;
     } else {
       return \OCP\Util::imagePath('cafevdb', 'photo.png');
@@ -186,8 +192,9 @@ __EOT__;
 
   public static function error($msg, $die = true, $silent = false)
   {
-    if (Error::active()) {
+    if (Error::exceptions()) {
       throw new \Exception($msg);
+      return false;
     }
     $msg = '<HR/><PRE>
 '.htmlspecialchars($msg).
@@ -744,7 +751,7 @@ class mySQL
       return null;
     }
 
-    $set = substr($set,strlen($settype)+2,strlen($set)-strlen($settype)-strlen("();")-1); // Remove "set(" at start and ");" at end
+b    $set = substr($set,strlen($settype)+2,strlen($set)-strlen($settype)-strlen("();")-1); // Remove "set(" at start and ");" at end
 
     return preg_split("/','/",$set); // Split into an array
   }
