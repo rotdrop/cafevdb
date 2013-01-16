@@ -18,7 +18,7 @@ $user  = OCP\USER::getUser();
 OCP\Util::addStyle('cafevdb', 'cafevdb');
 
 if (!OC_Group::inGroup($user, $group)) {
-  $tmpl = new OCP\Template( 'cafevdb', 'not-a-member', 'user' );
+  $tmpl = new OCP\Template( 'cafevdb', 'errorpage', 'user' );
   $tmpl->assign('error', 'notamember');
   return $tmpl->printPage();
 }
@@ -146,7 +146,7 @@ confirm_text['deselect'] = '';
   $tmpl->printPage();
 
 } catch (Exception $e) {
-  $tmpl = new OCP\Template( 'cafevdb', 'not-a-member', 'user' );
+  $tmpl = new OCP\Template( 'cafevdb', 'errorpage', 'user' );
   $tmpl->assign('error', 'exception');
   $tmpl->assign('exception', $e->getMessage());
   $tmpl->assign('trace', $e->getTraceAsString());

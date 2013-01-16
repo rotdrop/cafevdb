@@ -75,6 +75,7 @@ if (Config::encryptionKeyValid() &&
   }
 
   $links = array('phpmyadmin',
+                 'phpmyadminoc',
                  'sourcecode',
                  'sourcedocs',
                  'ownclouddev');
