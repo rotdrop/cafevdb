@@ -25,7 +25,7 @@ if (!OC_Group::inGroup($user, $group)) {
 
 try {
   
-  Error::exceptions(false);
+  Error::exceptions(true);
   
 // Are we a group-admin?
   $admin = OC_SubAdmin::isGroupAccessible($user, $group);

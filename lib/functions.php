@@ -51,17 +51,21 @@ class Ajax
 class Error
 {
   private static $exceptionsActive = false;
+
+  static public function active() {
+    return self::$exceptionsActive;
+  }
   
   static public function exceptions($on = true) {
     if ($on === true) {
-      if (!$exceptionsActive) {
+      if (!self::$exceptionsActive) {
         \set_error_handler('CAFEVDB\Error::exceptions_error_handler');
-        $exceptionsActive = true;
+        self::$exceptionsActive = true;
       }
     } else if ($on === false) {
-      if ($exceptionsActive) {
+      if (self::$exceptionsActive) {
         \restore_error_handler();
-        $exceptionsActive = false;
+        self::$exceptionsActive = false;
       }
     } else {
       throw new \InvalidArgumentException(L::t('Invalid argument value: `%s\'', array($on)));
@@ -69,6 +73,13 @@ class Error
   }
   
   static public function exceptions_error_handler($severity, $message, $filename, $lineno) {
+
+    // Support in particular @ constructs.
+    if (!(\error_reporting() & $severity)) {
+      // This error code is not included in error_reporting
+      return;
+    }
+
     throw new \ErrorException($message, 0, $severity, $filename, $lineno);
   }
 }
@@ -175,6 +186,9 @@ __EOT__;
 
   public static function error($msg, $die = true, $silent = false)
   {
+    if (Error::active()) {
+      throw new \Exception($msg);
+    }
     $msg = '<HR/><PRE>
 '.htmlspecialchars($msg).
       '</PRE><HR/>
