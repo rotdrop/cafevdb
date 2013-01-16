@@ -48,6 +48,31 @@ class Ajax
   }
 };
 
+class Error
+{
+  private static $exceptionsActive = false;
+  
+  static public function exceptions($on = true) {
+    if ($on === true) {
+      if (!$exceptionsActive) {
+        \set_error_handler('CAFEVDB\Error::exceptions_error_handler');
+        $exceptionsActive = true;
+      }
+    } else if ($on === false) {
+      if ($exceptionsActive) {
+        \restore_error_handler();
+        $exceptionsActive = false;
+      }
+    } else {
+      throw new \InvalidArgumentException(L::t('Invalid argument value: `%s\'', array($on)));
+    }
+  }
+  
+  static public function exceptions_error_handler($severity, $message, $filename, $lineno) {
+    throw new \ErrorException($message, 0, $severity, $filename, $lineno);
+  }
+}
+
 class Util
 {
   private static $inlineScripts = array();

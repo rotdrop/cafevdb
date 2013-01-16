@@ -2,7 +2,7 @@
 
 use CAFEVDB\L;
 
-echo '<div class="cafevdb cfgerror">';
+echo '<div class="cafevdb cfgerror error">';
 switch ($_['error']) {
 case 'notamember':
   echo L::t('CamerataDB Error: You are not a member of the dedicated orchestra
@@ -16,6 +16,18 @@ configuration steps to finish the setup. You need administrative
 privileges to create an initial orchestra group and group
 administrator.',
             array(\OCP\User::getUser()));
+  break;
+case 'exception':
+  $message = $_['exception'];
+  $trace   = $_['trace'];
+  $debug   = $_['debug'];
+  echo L::T('CamerataDB Error: got the error message `%s\'',
+            array($message));
+  if ($debug) {
+    echo '<div class="error stacktrace">
+  '.$trace.'
+</div>';
+  }
   break;
 default:
   echo L::t('Something is wrong, but what?');
