@@ -27,7 +27,7 @@ try {
   
   Error::exceptions(true);
   
-// Are we a group-admin?
+  // Are we a group-admin?
   $admin = OC_SubAdmin::isGroupAccessible($user, $group);
 
   $expertmode = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb', 'expertmode','');

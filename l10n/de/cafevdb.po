@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-01-14 08:59+0100\n"
-"PO-Revision-Date: 2013-01-15 00:20+0100\n"
+"PO-Revision-Date: 2013-01-16 22:35+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -1742,7 +1742,7 @@ msgstr "Web-Verweis auf die Owncloud Dokumentation"
 
 #: templates/devel-settings.php:27
 msgid "Owncloud developer documentation"
-msgstr "Owncoud Entwickler Dokumentation"
+msgstr "Owncloud Entwickler Dokumentation"
 
 #: templates/email-settings.php:11 templates/part.common.header.php:27
 msgid "Settings"
@@ -2015,7 +2015,7 @@ msgstr ""
 
 #: templates/part.common.header.php:28
 msgid "Personal Settings."
-msgstr "Persönlich"
+msgstr "Individuelle Einstellungen."
 
 #: templates/part.common.header.php:36
 msgid "Toggle Visibility"

@@ -1,16 +1,17 @@
 <?php
 
-if(!OCP\User::isLoggedIn()) {
-	die('<script type="text/javascript">document.location = oc_webroot;</script>');
-}
-OCP\JSON::checkAppEnabled('cafevdb');
-OCP\JSON::checkAppEnabled('calendar');
-
 use CAFEVDB\L;
 use CAFEVDB\Config;
 use CAFEVDB\Events;
 use CAFEVDB\Util;
 use CAFEVDB\Error;
+
+if(!OCP\User::isLoggedIn()) {
+	die('<script type="text/javascript">document.location = oc_webroot;</script>');
+}
+
+OCP\JSON::checkAppEnabled(Config::APP_NAME);
+OCP\JSON::checkAppEnabled('calendar');
 
 try {
 
@@ -77,6 +78,7 @@ try {
                           'debug' => $debugtext)));
 
   return true;
+
 } catch (\Exception $e) {
   OCP\JSON::error(
     array(
@@ -87,6 +89,5 @@ try {
         'message' => L::t('Error, caught an exception'))));
   return false;
 }
-
 
 ?>

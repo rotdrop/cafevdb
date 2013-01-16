@@ -3,6 +3,7 @@
 use CAFEVDB\L;
 use CAFEVDB\Util;
 use CAFEVDB\Config;
+use CAFEVDB\Error;
 
 // Check if we are a user and the needed apps are enabled.
 OCP\User::checkLoggedIn();
@@ -11,13 +12,28 @@ OCP\JSON::checkAppEnabled('calendar');
 
 Config::init();
 
-$tmpl = new OCP\Template( 'cafevdb', 'expertmode');
+$group = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
+$user  = OCP\USER::getUser();
 
-$expertmode = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb','expertmode','');
-$tooltips = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb','tooltips','');
+OCP\Util::addStyle('cafevdb', 'cafevdb');
 
-Util::addInlineScript('var toolTips = '.($tooltips == 'on' ? 'true' : 'false'));
-Util::addInlineScript(<<<__EOT__
+if (!OC_Group::inGroup($user, $group)) {
+  $tmpl = new OCP\Template( 'cafevdb', 'errorpage', 'user' );
+  $tmpl->assign('error', 'notamember');
+  return $tmpl->printPage();
+}
+
+try {
+
+  Error::exceptions(true);
+
+  $tmpl = new OCP\Template( 'cafevdb', 'expertmode');
+
+  $expertmode = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb','expertmode','');
+  $tooltips = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb','tooltips','');
+
+  Util::addInlineScript('var toolTips = '.($tooltips == 'on' ? 'true' : 'false'));
+  Util::addInlineScript(<<<__EOT__
 $(document).ready(function(){
   if (toolTips) {
     $.fn.tipsy.enable();
@@ -26,22 +42,30 @@ $(document).ready(function(){
   }
 });
 __EOT__
-);
+    );
 
-OCP\Util::addScript( "cafevdb", "expertmode" );
+  $tmpl->assign('expertmode', $expertmode);
+  $tmpl->assign( 'tooltips', $tooltips );
 
-$tmpl->assign('expertmode', $expertmode);
-$tmpl->assign( 'tooltips', $tooltips );
+  $links = array('phpmyadmin',
+                 'phpmyadminoc',
+                 'sourcecode',
+                 'sourcedocs',
+                 'ownclouddev');
+  foreach ($links as $link) {
+    $tmpl->assign($link, Config::getValue($link));
+  }
+  
+  return $tmpl->printPage();
 
-$links = array('phpmyadmin',
-               'phpmyadminoc',
-               'sourcecode',
-               'sourcedocs',
-               'ownclouddev');
-foreach ($links as $link) {
-  $tmpl->assign($link, Config::getValue($link));
+} catch (Exception $e) {
+  $tmpl = new OCP\Template( 'cafevdb', 'errorpage', 'user' );
+  $tmpl->assign('error', 'exception');
+  $tmpl->assign('exception', $e->getMessage());
+  $tmpl->assign('trace', $e->getTraceAsString());
+  $tmpl->assign('debug', true);
+  return $tmpl->printPage();
 }
 
-return $tmpl->printPage();
-
+?>
 

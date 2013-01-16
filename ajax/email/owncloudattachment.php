@@ -30,7 +30,7 @@ if (false) {
                 .print_r($fileInfo, true));
 }
 
-// Should coincie with $localpath
+// Should coincide with $localpath
 if ($localpath != OC_Filesystem::getLocalPath($localpath)) {
   Ajax::bailOut(L::t('Inconsistency:').' '.
                 $localpath.
