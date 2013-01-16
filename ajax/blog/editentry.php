@@ -48,7 +48,11 @@ if ($blogId >= 0 && $inReply == -1 && $text == '') {
     return false;
   }
   $text     = $entry['message'];
-  $priority = $entry['priority'];
+  if ($entry['inreplyto'] < 0) {
+    $priority = $entry['priority'];
+  } else {
+    $priority = false;
+  }
 } else if ($inReply >= 0) {  
   $priority = false;
 }
