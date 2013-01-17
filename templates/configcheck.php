@@ -9,8 +9,10 @@ $nav = '';
 
 $header = ''
   .'<div class="'.$css_pfx.'-config-check" id="'.$css_pfx.'-config-check-header">
-'.L::t('Several basic configuraton options are missing. Please follow they
-instructions below.  If this is a new installation then you will
+'.L::t('It may be that you simply have to log-off and log-in again because your login-session has timed out. Otherwise the following instructions apply:
+<p>
+Several basic configuraton options are missing. Please follow they
+instructions below. If this is a new installation then you will
 probably also have to adjust several other settings in the
 configuration menu (click on the gear-symbol in the top-right
 corner). You need to have the role of a group-administrator to do

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-17 12:22+0100\n"
+"POT-Creation-Date: 2013-01-17 22:43+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1477,19 +1477,22 @@ msgstr ""
 
 #: templates/configcheck.php:12
 msgid ""
+"It may be that you simply have to log-off and log-in again because your "
+"login-session has timed out. Otherwise the following instructions apply:\n"
+"<p>\n"
 "Several basic configuraton options are missing. Please follow they\n"
-"instructions below.  If this is a new installation then you will\n"
+"instructions below. If this is a new installation then you will\n"
 "probably also have to adjust several other settings in the\n"
 "configuration menu (click on the gear-symbol in the top-right\n"
 "corner). You need to have the role of a group-administrator to do\n"
 "so. You may want to configure your language preferences."
 msgstr ""
 
-#: templates/configcheck.php:33
+#: templates/configcheck.php:35
 msgid "Test again"
 msgstr ""
 
-#: templates/configcheck.php:43
+#: templates/configcheck.php:45
 msgid ""
 "You need to specify a name for the orchestra.  Please click as\n"
 "group-administrator on the gear-symbol in the top-right corner and\n"
@@ -1498,13 +1501,13 @@ msgid ""
 "user-ids and folders; it should be a short one-word identifier."
 msgstr ""
 
-#: templates/configcheck.php:49
+#: templates/configcheck.php:51
 msgid ""
 "You need to create a dedicatd user group.\n"
 "You have to log-in as administrator to do so."
 msgstr ""
 
-#: templates/configcheck.php:52
+#: templates/configcheck.php:54
 #, php-format
 msgid ""
 "You need to create a dummy-user which owns all shared resources\n"
@@ -1515,7 +1518,7 @@ msgid ""
 "choose the `Sharing'-tab)."
 msgstr ""
 
-#: templates/configcheck.php:60
+#: templates/configcheck.php:62
 #, php-format
 msgid ""
 "You need to create a dedicated shared folder shared among the\n"
@@ -1526,7 +1529,7 @@ msgid ""
 "application settings are not visible for you."
 msgstr ""
 
-#: templates/configcheck.php:68
+#: templates/configcheck.php:70
 msgid ""
 "You need to configure the database access. You can do so through the\n"
 "respective web-form in the application settings windows accessible\n"
@@ -1536,7 +1539,7 @@ msgid ""
 "you."
 msgstr ""
 
-#: templates/configcheck.php:76
+#: templates/configcheck.php:78
 msgid ""
 "You may want to set an encryption key for encrypting configuration\n"
 "values and (in the future) sensitive data in the members- and project\n"
@@ -1548,15 +1551,15 @@ msgid ""
 "log-in again in order to be able to access the encrypted values."
 msgstr ""
 
-#: templates/configcheck.php:90
+#: templates/configcheck.php:92
 msgid "You are a group administrator."
 msgstr ""
 
-#: templates/configcheck.php:91
+#: templates/configcheck.php:93
 msgid "You are not a group administrator."
 msgstr ""
 
-#: templates/configcheck.php:93
+#: templates/configcheck.php:95
 #, php-format
 msgid ""
 "Ask a user with group-administrator rights to perform the required\n"
@@ -1564,23 +1567,23 @@ msgid ""
 "group-administrator for the group `%s'."
 msgstr ""
 
-#: templates/configcheck.php:112 templates/configcheck.php:137
+#: templates/configcheck.php:114 templates/configcheck.php:139
 msgid "is set"
 msgstr ""
 
-#: templates/configcheck.php:112
+#: templates/configcheck.php:114
 msgid "is missing"
 msgstr ""
 
-#: templates/configcheck.php:116 templates/configcheck.php:132
+#: templates/configcheck.php:118 templates/configcheck.php:134
 msgid "Additional diagnostic message:"
 msgstr ""
 
-#: templates/configcheck.php:142
+#: templates/configcheck.php:144
 msgid "is set, but inaccessible"
 msgstr ""
 
-#: templates/configcheck.php:147
+#: templates/configcheck.php:149
 msgid "is not set"
 msgstr ""
 
