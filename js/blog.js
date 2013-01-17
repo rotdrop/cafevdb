@@ -135,7 +135,7 @@ $(document).ready(function() {
   $('#blogentryactions button.delete').click(function(event) {
     event.preventDefault();
     var blogId = $(this).val();
-    OC.dialogs.confirm(t('cefevdb', 'The entire message thread will be deleted if you press `Yes\''),
+    OC.dialogs.confirm(t('cafevdb', 'The entire ymessage thread will be deleted if you press `Yes\''),
                        t('cafevdb', 'Really delete the entry?'),
                        function (decision) {
                          if (decision) {

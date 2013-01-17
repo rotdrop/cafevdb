@@ -107,7 +107,7 @@
 "Edit Blog Entry" => "Pinnwand-Eintrag bearbeiten.",
 "The message content has been changed and will be lost if you press `Yes'" => "Der Text der Notiz wurde verändert. Die Änderungen gehen verloren, wenn Sie `Ja' anklicken.",
 "Really cancel current entry?" => "Wirklich abbrechen?",
-"The entire message thread will be deleted if you press `Yes'" => "Die Nachricht und alle `Follow-Ups' werden gelöscht, wenn Sie auf `Ja' klicken.",
+"The entire ymessage thread will be deleted if you press `Yes'" => "Die Nachricht und alle `Follow-Ups' werden gelöscht, wenn Sie auf `Ja' klicken.",
 "Really delete the entry?" => "Den Beitrag wirklich löschen?",
 "Export to the following format is not yet supported:" => "Export in das folgende Dateiformat wird nicht unterstützt:",
 "Unimplemented" => "Nicht implementiert",
