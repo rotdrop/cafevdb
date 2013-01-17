@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-01-17 12:13+0100\n"
-"PO-Revision-Date: 2013-01-17 00:19+0100\n"
+"PO-Revision-Date: 2013-01-17 12:20+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -1616,6 +1616,9 @@ msgid ""
 "adding a photo to a contact-card which has the users login-name as\n"
 "nick-name."
 msgstr ""
+"Avatar-Bilder können in der Adressbuch-Applikation hinzugefügt werden,\n"
+"in dem ein Adressbuch-Eintrag mit dem Login-Namen als Spitznamen\n"
+"angelegt wird. Dort kann dann ein Bild zugewiesen werden."
 
 #: templates/blog.php:80
 #, php-format
