@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-17 00:20+0100\n"
+"POT-Creation-Date: 2013-01-17 12:13+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -814,121 +814,121 @@ msgstr ""
 msgid "Invalid argument value: `%s'"
 msgstr ""
 
-#: lib/functions.php:318
+#: lib/functions.php:302
 msgid "Export Table"
 msgstr ""
 
-#: lib/functions.php:326
+#: lib/functions.php:310
 msgid "CSV Export"
 msgstr ""
 
-#: lib/functions.php:329
+#: lib/functions.php:313
 msgid "HTML Export"
 msgstr ""
 
-#: lib/functions.php:332
+#: lib/functions.php:316
 msgid "Excel Export"
 msgstr ""
 
-#: lib/functions.php:335
+#: lib/functions.php:319
 msgid "HTML/Spreadsheet"
 msgstr ""
 
-#: lib/functions.php:457
+#: lib/functions.php:441
 msgid "Error: Unknonwn Button Type"
 msgstr ""
 
-#: lib/functions.php:480
+#: lib/functions.php:464
 msgid "View all Projects"
 msgstr ""
 
-#: lib/functions.php:481
+#: lib/functions.php:465
 msgid "Overview over all known projects (start-page)."
 msgstr ""
 
-#: lib/functions.php:493
+#: lib/functions.php:477
 msgid "Display all Musicians"
 msgstr ""
 
-#: lib/functions.php:494
+#: lib/functions.php:478
 msgid ""
 "Display all musicians stored in the data-base, with detailed facilities for "
 "filtering and sorting."
 msgstr ""
 
-#: lib/functions.php:506
+#: lib/functions.php:490
 msgid ""
 "Mass-email form, use with care. Mass-emails will be logged. Recipients will "
 "be specified by the Bcc: field in the header, so the recipients are "
 "undisclosed to each other."
 msgstr ""
 
-#: lib/functions.php:520
+#: lib/functions.php:504
 msgid "Email History"
 msgstr ""
 
-#: lib/functions.php:521
+#: lib/functions.php:505
 msgid "Display all emails sent by our mass-email form."
 msgstr ""
 
-#: lib/functions.php:539
+#: lib/functions.php:523
 msgid "The currently active project."
 msgstr ""
 
-#: lib/functions.php:554
+#: lib/functions.php:538
 msgid "Detailed Instrumentation"
 msgstr ""
 
-#: lib/functions.php:555
+#: lib/functions.php:539
 msgid ""
 "Detailed display of all registered musicians for the selected project. The "
 "table will allow for modification of personal data like email, phone, "
 "address etc."
 msgstr ""
 
-#: lib/functions.php:569
+#: lib/functions.php:553
 msgid "Brief Instrumentation"
 msgstr ""
 
-#: lib/functions.php:570
+#: lib/functions.php:554
 msgid ""
 "Brief display of all registered musicians for the selected project. The "
 "table will allow for modification of project specific data, like the "
 "instrument, the project-fee etc."
 msgstr ""
 
-#: lib/functions.php:584
+#: lib/functions.php:568
 msgid "Add Instruments"
 msgstr ""
 
-#: lib/functions.php:585
+#: lib/functions.php:569
 msgid ""
 "Display the list of instruments known by the data-base, possibly add new "
 "ones as needed."
 msgstr ""
 
-#: lib/functions.php:599
+#: lib/functions.php:583
 msgid "Instrumentation Numbers"
 msgstr ""
 
-#: lib/functions.php:600
+#: lib/functions.php:584
 msgid ""
 "Display the desired instrumentaion numbers, i.e. how many musicians are "
 "already registered for each instrument group and how many are finally needed."
 msgstr ""
 
-#: lib/functions.php:614
+#: lib/functions.php:598
 msgid "Add more Musicians"
 msgstr ""
 
-#: lib/functions.php:615
+#: lib/functions.php:599
 msgid ""
 "List of all musicians NOT registered for the selected project. Only through "
 "that table a new musician can enter a project. Look for a hyper-link "
 "Add_to_PROJECT"
 msgstr ""
 
-#: lib/functions.php:629
+#: lib/functions.php:613
 msgid "Transfer Instruments from Musicians"
 msgstr ""
 
@@ -1436,37 +1436,38 @@ msgstr ""
 
 #: templates/blog.php:69
 msgid ""
-"Avatar pictures can be uploaded through the personal settings\n"
-"menus. Click the gear-symbol at the bottom-left corner."
+"Avatar pictures can be uploaded through the contacts-application by\n"
+"adding a photo to a contact-card which has the users login-name as\n"
+"nick-name."
 msgstr ""
 
-#: templates/blog.php:79
+#: templates/blog.php:80
 #, php-format
 msgid ", priority %d"
 msgstr ""
 
-#: templates/blog.php:85
+#: templates/blog.php:86
 #, php-format
 msgid ", latest change by `%s', %s"
 msgstr ""
 
-#: templates/blog.php:93
+#: templates/blog.php:94
 msgid "Reply"
 msgstr ""
 
-#: templates/blog.php:96
+#: templates/blog.php:97
 msgid "Edit"
 msgstr ""
 
-#: templates/blog.php:101
+#: templates/blog.php:102
 msgid "Raise priority"
 msgstr ""
 
-#: templates/blog.php:104
+#: templates/blog.php:105
 msgid "Lower priority"
 msgstr ""
 
-#: templates/blog.php:108
+#: templates/blog.php:109
 msgid "Delete"
 msgstr ""
 
