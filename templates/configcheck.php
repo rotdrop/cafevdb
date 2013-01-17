@@ -135,7 +135,7 @@ if ($error != '') {
 if ($encrkey != '') {
   $ok    = 'set';
   $tok   = L::t('is set');
-  $value = $encrkey;
+  $value = 'XXXXXXXX'; // $encrkey;
   $text  = '';
 } else if ($cfgkey != '') {
   $ok    = 'missing';
@@ -151,7 +151,7 @@ if ($encrkey != '') {
 
 echo '    <li class="'.$css_pfx.'-config-check '.$ok.'">
       <span class="'.$css_pfx.'-config-check key"> '.$key.'</span>
-      <span class="'.$css_pfx.'-config-check value"> '.Config::getValue($key).'</span>
+      <span class="'.$css_pfx.'-config-check value"> '.$value.'</span>
       <span class="'.$css_pfx.'-config-check '.$ok.'"> '.$tok.'</span>
       <div class="'.$css_pfx.'-config-check comment"> '.$text.'</div>
     </li>';
