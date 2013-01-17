@@ -66,8 +66,9 @@ if ($blog['status'] == 'error') {
     $priority = $msg['priority'];
     $deleted  = $msg['deleted'];
     $reply    = $msg['inreplyto'];
-    $imgtitle = L::t('Avatar pictures can be uploaded through the personal settings
-menus. Click the gear-symbol at the bottom-left corner.');
+    $imgtitle = L::t('Avatar pictures can be uploaded through the contacts-application by
+adding a photo to a contact-card which has the users login-name as
+nick-name.');
     $imgtitle = 'title="'.$imgtitle.'" ';
     if ($deleted > 0) {
       $deleted = Util::strftime('%x, %H:%M', $deleted, $_['locale']);
