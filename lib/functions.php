@@ -120,22 +120,6 @@ __EOT__;
     return $scripts;
   }
 
-  /**Try to fetch the appropriate photo if the user_photo-app is
-   * installed. Otherwise return a dummy. Maybe we should also search
-   * the personal address book for an entry where the nickname equals
-   * the user-name.
-   */
-  public static function fetchPhoto($user)
-  {
-    if (\OCP\App::isEnabled('contacts')) {
-      
-    } else if (\OCP\App::isEnabled('user_photo')) {
-      return \OC::$WEBROOT.'/?app=user_photo&getfile=ajax%2Fshowphoto.php&user='.$user;
-    } else {
-      return \OCP\Util::imagePath('cafevdb', 'photo.png');
-    }
-  }
-
   /**Format the right way (tm). */
   public static function strftime($format, $timestamp = NULL, $locale = NULL)
   {
@@ -750,8 +734,7 @@ class mySQL
     } else {
       return null;
     }
-
-b    $set = substr($set,strlen($settype)+2,strlen($set)-strlen($settype)-strlen("();")-1); // Remove "set(" at start and ");" at end
+    $set = substr($set,strlen($settype)+2,strlen($set)-strlen($settype)-strlen("();")-1); // Remove "set(" at start and ");" at end
 
     return preg_split("/','/",$set); // Split into an array
   }

@@ -87,7 +87,7 @@ menus. Click the gear-symbol at the bottom-left corner.');
 
     $text  = $msg['message'];
     echo '  <li class="blogentry level'.$level.'"><div class="blogentry level'.$level.'">
-    <span class="photo"><img class="photo" src="'.Util::fetchPhoto($author).'" '.$imgtitle.'/></span>
+    <span class="photo"><img class="photo" src="'.MYSELF\Export::photo($author).'" '.$imgtitle.'/></span>
     <span id="blogentryactions">
       <button class="blogbutton reply" id="blogreply'.$id.'" name="blogreply'.$id.'" value="'.$id.'" title="'.Config::toolTips('blogentry-reply').'">
         <img class="png blogbutton reply" src="'.\OCP\Util::imagePath('cafevdb', 'reply.png').'" alt="'.L::t('Reply').'"/>
