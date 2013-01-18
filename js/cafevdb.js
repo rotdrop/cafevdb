@@ -151,7 +151,8 @@ $(document).ready(function(){
   $('.pme-sort').tipsy({gravity: 'n', fade:true});
   $('.pme-misc-check').tipsy({gravity: 'nw', fade:true});
   $('label').tipsy({gravity:'ne', fade:true});
-  $('img').tipsy({gravity:'ne', fade:true});
+  $('.header-right img').tipsy({gravity:'ne', fade:true});
+  $('img').tipsy({gravity:'nw', fade:true});
 
   $('#personalsettings .generalsettings').on(
     'click keydown', function(event) {
