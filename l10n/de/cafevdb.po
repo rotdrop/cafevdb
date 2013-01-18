@@ -377,7 +377,7 @@ msgstr "Email-Test-Modus ausgeschaltet, Massen-Mails werden verschickt!!!"
 #: ajax/settings/app-settings.php:536 ajax/settings/app-settings.php:565
 #, php-format
 msgid "`%s' doesn't seem to be a valid email-address."
-msgstr "`%' scheint keine gültige Email-Adresse zu sein."
+msgstr "`%s' scheint keine gültige Email-Adresse zu sein."
 
 #: ajax/settings/app-settings.php:544
 #, php-format
@@ -387,7 +387,7 @@ msgstr "Verwende `%s' als Email-Adresse für den Test-Modus."
 #: ajax/settings/app-settings.php:554
 #, php-format
 msgid "Using `%s' as name of the sender identity."
-msgstr "Verwende `%' als Klartext-Namen des Absenders."
+msgstr "Verwende `%s' als Klartext-Namen des Absenders."
 
 #: ajax/settings/app-settings.php:573
 #, php-format
