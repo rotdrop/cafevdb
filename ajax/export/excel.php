@@ -336,19 +336,41 @@ if ($table) {
   
   //setlocale(LC_ALL, $oldlocale);
 
-// Redirect output to a client’s web browser (Excel2007)
-  header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-  header('Content-Disposition: attachment;filename="'.$filename.'"');
-  header('Cache-Control: max-age=0');
+  $tmpdir = ini_get('upload_tmp_dir');
+  if ($tmpdir == '') {
+    $tmpdir = sys_get_temp_dir();
+  }
+  $tmpFile = tempnam($tmpdir, Config::APP_NAME);
+  if ($tmpFile === false) {
+    return false;
+  }
+  
+  register_shutdown_function(function($file) {
+      if (is_file($file)) {
+        unlink($file);
+      }
+    }, $tmpFile);
 
   $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-  $objWriter->save('php://output');
+  $objWriter->save($tmpFile);
 
-} else {
-  header('Content-type: text/plain');
-  header('Content-disposition: attachment;filename=debug.txt');
+  $table = file_get_contents($tmpFile);
 
-  print_r($_POST);
+  if ($table !== false) {
+    // Redirect output to a client’s web browser (Excel2007)
+    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    header('Content-Disposition: attachment;filename="'.$filename.'"');
+    header('Cache-Control: max-age=0');
+
+    echo $table;
+  }
+
+  return;
 }
+
+header('Content-type: text/plain');
+header('Content-disposition: attachment;filename=debug.txt');
+
+print_r($_POST);
 
 ?>
