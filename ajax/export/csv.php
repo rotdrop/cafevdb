@@ -45,7 +45,8 @@ if ($table) {
       $h2t->set_html($cell);
       $text = $h2t->get_text();
       // If a hyper-link is just an email, then simply return the email
-      $email = preg_split('/[ ,]/',$text)[0];
+      $email = preg_split('/[ ,]/',$text);
+      $email = $email[0];
       if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $h2t->omit_links = true;
         $h2t->set_html($cell);
