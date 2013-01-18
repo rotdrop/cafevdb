@@ -355,6 +355,7 @@ if ($table) {
   $objWriter->save($tmpFile);
 
   $table = file_get_contents($tmpFile);
+  unlink($tmpFile);
 
   if ($table !== false) {
     // Redirect output to a client’s web browser (Excel2007)
