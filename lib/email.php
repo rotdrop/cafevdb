@@ -1534,7 +1534,7 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
         echo "<PRE>\n";
         $msg = $mail->GetSentMIMEMessage();
         $msgArray = explode("\n", $msg);
-        for ($i = 0; $i < 64; $i++) {
+        for ($i = 0; $i < min(64, count($msgArray)); $i++) {
           echo htmlspecialchars($msgArray[$i])."\n";
         }
         echo "</PRE><HR/>\n";

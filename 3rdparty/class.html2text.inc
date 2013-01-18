@@ -448,7 +448,7 @@ class html2text
         $this->_link_count = 0;
         $this->_link_list = '';
 
-        $text = html_entity_decode($this->html,ENT_COMPAT|ENT_XHTML,$this->_encoding);
+        $text = html_entity_decode($this->html,ENT_COMPAT|(defined('ENT_XHTML') ? constant('ENT_XHTML') : 0),$this->_encoding);
 
         $text = trim(stripslashes($text));
 

@@ -177,7 +177,10 @@ __EOT__;
   public static function error($msg, $die = true, $silent = false)
   {
     if (Error::exceptions()) {
-      throw new \Exception($msg);
+      // $silent is not needed.
+      if ($die) {
+        throw new \Exception($msg);
+      }
       return false;
     }
     $msg = '<HR/><PRE>
@@ -208,11 +211,16 @@ __EOT__;
 
   public static function alert($text, $title, $cssid = false)
   {
+    //$text = htmlspecialchars($text, ENT_QUOTES, 'UTF-8', false);
+    //$title = htmlspecialchars($title, ENT_QUOTES, 'UTF-8', false);    
+    $text  = addslashes($text);
+    $title = addslashes($title);
     echo "<script>\n";
-    echo "$.alert('$text', '$title');\n";
+    echo "OC.dialogs.alert('$text', '$title');\n";
     if ($cssid !== false) {
       echo <<<__EOT__
 $('#$cssid').append('<u>$title</u>'+'<br/>'+'$text'+'<br/>');
+
 __EOT__;
     }
     echo "</script>\n";
