@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-19 08:40+0100\n"
+"POT-Creation-Date: 2013-01-19 18:17+0100\n"
 "PO-Revision-Date: 2013-01-17 23:32+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
@@ -451,47 +451,47 @@ msgstr "Experten-Modus geändert"
 msgid "Tooltips changed"
 msgstr "Tool-Tip Einstellung geändert"
 
-#: index.php:91
+#: index.php:90
 msgid "Missing or invalid fields"
 msgstr "Fehlende oder ungültige Formularfelder"
 
-#: index.php:92
+#: index.php:91
 msgid "Title"
 msgstr "Titel"
 
-#: index.php:93
+#: index.php:92
 msgid "Calendar"
 msgstr "Kalender-Name"
 
-#: index.php:94
+#: index.php:93
 msgid "From Date"
 msgstr "Start-Datum"
 
-#: index.php:95
+#: index.php:94
 msgid "From Time"
 msgstr "Start-Zeit"
 
-#: index.php:96
+#: index.php:95
 msgid "To Date"
 msgstr "End-Datum"
 
-#: index.php:97
+#: index.php:96
 msgid "To Time"
 msgstr "End-Zeit"
 
-#: index.php:98
+#: index.php:97
 msgid "The event ends before it starts"
 msgstr "Das Ereignes endet bevor es beginnt?!"
 
-#: index.php:99
+#: index.php:98
 msgid "There was a database failure"
 msgstr "Es gab einen Datenbank-Fehler"
 
-#: index.php:104
+#: index.php:103
 msgid "Do you really want to delete this event?"
 msgstr "Möchten Sie den Termin wirklich löschen?"
 
-#: index.php:105
+#: index.php:104
 msgid "Do you really want to detach this event from the current project?"
 msgstr "Möchten Sie den Termin wirklich vom Projekt lösen?"
 

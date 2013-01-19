@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-19 08:40+0100\n"
+"POT-Creation-Date: 2013-01-19 18:17+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -437,47 +437,47 @@ msgstr ""
 msgid "Tooltips changed"
 msgstr ""
 
-#: index.php:91
+#: index.php:90
 msgid "Missing or invalid fields"
 msgstr ""
 
-#: index.php:92
+#: index.php:91
 msgid "Title"
 msgstr ""
 
-#: index.php:93
+#: index.php:92
 msgid "Calendar"
 msgstr ""
 
-#: index.php:94
+#: index.php:93
 msgid "From Date"
 msgstr ""
 
-#: index.php:95
+#: index.php:94
 msgid "From Time"
 msgstr ""
 
-#: index.php:96
+#: index.php:95
 msgid "To Date"
 msgstr ""
 
-#: index.php:97
+#: index.php:96
 msgid "To Time"
 msgstr ""
 
-#: index.php:98
+#: index.php:97
 msgid "The event ends before it starts"
 msgstr ""
 
-#: index.php:99
+#: index.php:98
 msgid "There was a database failure"
 msgstr ""
 
-#: index.php:104
+#: index.php:103
 msgid "Do you really want to delete this event?"
 msgstr ""
 
-#: index.php:105
+#: index.php:104
 msgid "Do you really want to detach this event from the current project?"
 msgstr ""
 
