@@ -185,17 +185,30 @@ td.eventdata-0-brief, td.eventdata-1-brief {
   vertical-align:middle;
 }
 
+/* Add some setting s.t. the event forms are displayed corrctly */
+
 /* Hide the advanced options in the event form */
-#advanced_options_bar {
+#event #advanced_options_bar {
   cursor:pointer;
   margin-top:0.5ex;
-  height:0.3ex;
+  height:0.5ex;
   vertical-align:middle;
   border-top:1px solid #000;
   -moz-box-shadow:-3px 0 7px #777;
   -webkit-box-shadow:-3px 0 7px #777;
   box-shadow: 0 0.5ex 1ex #777;
 }
+
+#event {padding: 0;margin: 0;margin-top:-5px}
+
+#event #fromtime, #event #totime {
+  color:#333;
+}
+#event #fromtime.disabled, #event #totime.disabled {
+  color:#A9A9A9;
+}
+#event select#category{width:140px;}
+#event button.category{margin:0 3px;}
 
 /*
  * LocalVariables: ***
