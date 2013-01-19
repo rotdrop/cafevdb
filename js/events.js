@@ -147,7 +147,7 @@ window.Events={
       }
     },
     buttonClick: function(event) {
-      //event.preventDefault();
+      event.preventDefault();
 
       var evntdlgopen = $('#event').dialog('isOpen');
 
@@ -156,6 +156,7 @@ window.Events={
       if(evntdlgopen == true){
         // TODO: save event
         $('#event').dialog('close');
+        return false;
       }
 
       $('#events #debug').hide();
@@ -169,7 +170,7 @@ window.Events={
         // These are the new-event buttons.
 
         if(evntdlgopen == true){
-          return true;
+          return false;
         }
 
         var type = new Object();
@@ -189,6 +190,11 @@ window.Events={
         
         return false;
       } else if (name == 'edit') {
+
+        if(evntdlgopen == true){
+          return false;
+        }
+
         // Edit existing event
 
         var type = new Object();
