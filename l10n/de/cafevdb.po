@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-17 23:32+0100\n"
+"POT-Creation-Date: 2013-01-19 08:40+0100\n"
 "PO-Revision-Date: 2013-01-17 23:32+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
@@ -538,31 +538,31 @@ msgstr "Nicht implementiert"
 msgid "Deletion failed"
 msgstr "Löschen ist fehlgeschlagen"
 
-#: js/calendar.js:191
+#: js/calendar.js:263
 msgid "ddd d MMMM[ yyyy]{ -[ddd d] MMMM yyyy}"
 msgstr "ddd d MMMM[ yyyy]{ -[ddd d] MMMM yyyy}"
 
-#: js/calendar.js:193
+#: js/calendar.js:265
 msgid "ddd d MMMM[ yyyy] HH:mm{ -[ ddd d MMMM yyyy] HH:mm}"
 msgstr "ddd d MMMM[ yyyy] HH:mm{ -[ ddd d MMMM yyyy] HH:mm}"
 
-#: js/calendar.js:547
+#: js/calendar.js:620
 msgid "user"
 msgstr "Login-Name"
 
-#: js/calendar.js:547
+#: js/calendar.js:620
 msgid "group"
 msgstr "Gruppe"
 
-#: js/calendar.js:548
+#: js/calendar.js:621
 msgid "Editable"
 msgstr "Veränderbar"
 
-#: js/calendar.js:549
+#: js/calendar.js:622
 msgid "Shareable"
 msgstr "Gemeinsam verwendbar"
 
-#: js/calendar.js:550
+#: js/calendar.js:623
 msgid "Deletable"
 msgstr "Löschbar"
 
@@ -855,43 +855,43 @@ msgstr "Weitere Kalender"
 msgid "Invalid argument value: `%s'"
 msgstr "Unsinniger Paramter-Wert: `%s'"
 
-#: lib/functions.php:302
+#: lib/functions.php:338
 msgid "Export Table"
 msgstr "Tabelle Exportieren"
 
-#: lib/functions.php:310
+#: lib/functions.php:346
 msgid "CSV Export"
 msgstr "CSV Export"
 
-#: lib/functions.php:313
+#: lib/functions.php:349
 msgid "HTML Export"
 msgstr "HTML Export"
 
-#: lib/functions.php:316
+#: lib/functions.php:352
 msgid "Excel Export"
 msgstr "`Excel' Export"
 
-#: lib/functions.php:319
+#: lib/functions.php:355
 msgid "HTML/Spreadsheet"
 msgstr "HTML/Tabellenformat"
 
-#: lib/functions.php:441
+#: lib/functions.php:477
 msgid "Error: Unknonwn Button Type"
 msgstr "Fehler: Unbekannter Knopf-Typ"
 
-#: lib/functions.php:464
+#: lib/functions.php:500
 msgid "View all Projects"
 msgstr "Alle Projekte"
 
-#: lib/functions.php:465
+#: lib/functions.php:501
 msgid "Overview over all known projects (start-page)."
 msgstr "Alle gespeicherten Projekte anzeigen; Startseite der `Camerata App'."
 
-#: lib/functions.php:477
+#: lib/functions.php:513
 msgid "Display all Musicians"
 msgstr "Alle Musiker"
 
-#: lib/functions.php:478
+#: lib/functions.php:514
 msgid ""
 "Display all musicians stored in the data-base, with detailed facilities for "
 "filtering and sorting."
@@ -899,7 +899,7 @@ msgstr ""
 "Alle Musiker anzeigen, die in der Datenbank gespeichert sind. Es gibt dabei "
 "ausführliche Such- und Auswahlfunktionalität."
 
-#: lib/functions.php:490
+#: lib/functions.php:526
 msgid ""
 "Mass-email form, use with care. Mass-emails will be logged. Recipients will "
 "be specified by the Bcc: field in the header, so the recipients are "
@@ -910,25 +910,25 @@ msgstr ""
 "außerdem wird die ganze Pracht in der Daten bank gespeichter (siehe `Email "
 "Historie')"
 
-#: lib/functions.php:504
+#: lib/functions.php:540
 msgid "Email History"
 msgstr "Em@il Historie"
 
-#: lib/functions.php:505
+#: lib/functions.php:541
 msgid "Display all emails sent by our mass-email form."
 msgstr ""
 "Zeigt alle über unser unsägliches Massen-Mail gespamten Emails an. "
 "Insebesondere werden hier auch die Bcc: Empfänger gespeichert."
 
-#: lib/functions.php:523
+#: lib/functions.php:559
 msgid "The currently active project."
 msgstr "Das gerade ausgewählte Projekt."
 
-#: lib/functions.php:538
+#: lib/functions.php:574
 msgid "Detailed Instrumentation"
 msgstr "Detaillierte Besetzung"
 
-#: lib/functions.php:539
+#: lib/functions.php:575
 msgid ""
 "Detailed display of all registered musicians for the selected project. The "
 "table will allow for modification of personal data like email, phone, "
@@ -938,11 +938,11 @@ msgstr ""
 "Daten wie Email, Adresse usw. können hier geändert werden. Projektbezogene "
 "Daten können allerdings nur in der Ansicht `Kurz-Besetzung' geändert werden."
 
-#: lib/functions.php:553
+#: lib/functions.php:589
 msgid "Brief Instrumentation"
 msgstr "Kurz-Besetzung"
 
-#: lib/functions.php:554
+#: lib/functions.php:590
 msgid ""
 "Brief display of all registered musicians for the selected project. The "
 "table will allow for modification of project specific data, like the "
@@ -953,11 +953,11 @@ msgstr ""
 "Musiker auch wieder entfernt werden. Persönliche Daten können allerdings nur "
 "in der detaillierten Ansicht geändert werden."
 
-#: lib/functions.php:568
+#: lib/functions.php:604
 msgid "Add Instruments"
 msgstr "Neue Instrumente"
 
-#: lib/functions.php:569
+#: lib/functions.php:605
 msgid ""
 "Display the list of instruments known by the data-base, possibly add new "
 "ones as needed."
@@ -965,11 +965,11 @@ msgstr ""
 "Tabelle mit allen derzeit gespeicherten Instrumenten; weitere Instrumente "
 "können hier einfach hinzugefügt werden."
 
-#: lib/functions.php:583
+#: lib/functions.php:619
 msgid "Instrumentation Numbers"
 msgstr "Besetzungszahlen"
 
-#: lib/functions.php:584
+#: lib/functions.php:620
 msgid ""
 "Display the desired instrumentaion numbers, i.e. how many musicians are "
 "already registered for each instrument group and how many are finally needed."
@@ -977,11 +977,11 @@ msgstr ""
 "Anzeige der angestrebten Besetzungszahlen. Natürlich kann man die dann auch "
 "anpassen ..."
 
-#: lib/functions.php:598
+#: lib/functions.php:634
 msgid "Add more Musicians"
 msgstr "Musiker Hinzufügen"
 
-#: lib/functions.php:599
+#: lib/functions.php:635
 msgid ""
 "List of all musicians NOT registered for the selected project. Only through "
 "that table a new musician can enter a project. Look for a hyper-link "
@@ -991,7 +991,7 @@ msgstr ""
 "Musiker können ausschließlich über DIESE Tabelle den Weg in ein Projekt "
 "finden. Neue Musiker können selbstverständlich hinzugefügt werden."
 
-#: lib/functions.php:613
+#: lib/functions.php:649
 msgid "Transfer Instruments from Musicians"
 msgstr "Instrumente mit Besetzung abgleichen"
 
@@ -2131,7 +2131,7 @@ msgstr "Individuelle Einstellungen."
 msgid "Toggle Visibility"
 msgstr "Sichtbarkeit der Kopfzeile ändern"
 
-#: templates/part.common.header.php:38 templates/part.common.header.php:67
+#: templates/part.common.header.php:38 templates/part.common.header.php:68
 msgid "Minimize or maximize the containing block."
 msgstr "Den umgebenden Textblock minimieren oder maximieren."
 
