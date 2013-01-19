@@ -60,7 +60,6 @@ __EOT__
   OCP\Util::addStyle('cafevdb', 'email');
   OCP\Util::addStyle('cafevdb', 'blog');
   OCP\Util::addStyle("cafevdb/3rdparty", "chosen/chosen");
-//OCP\Util::addStyle("3rdparty", "chosen/chosen");
 
   OCP\Util::addScript('cafevdb', 'cafevdb');
   OCP\Util::addScript('cafevdb', 'transpose');
