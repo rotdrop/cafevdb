@@ -48,6 +48,7 @@ if (!isset($_['headerblock']) && isset($_['header'])) {
 }
 
 ?>
+<?php echo Util::emitExternalScripts(); ?>
 <?php echo Util::emitInlineScripts(); ?>
 <div id="controls">
 <?php echo $_['navigationcontrols']; ?>

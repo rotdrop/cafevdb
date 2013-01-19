@@ -175,6 +175,78 @@ window.Calendar={
 				}
 			});
 		},
+                googlelocation:function() {
+			if ($('#event_googlemap').dialog('isOpen') == true){
+				$('#event_googlemap').dialog('destroy').remove();
+			}
+                        $('#event_map').html('<div id="event_googlemap"></div>');
+                        var latlng = new google.maps.LatLng(47.999765,7.840563);
+                        var myOptions = {
+                                zoom: 15,
+                                center: latlng,
+                                mapTypeId: google.maps.MapTypeId.ROADMAP
+                        };
+                        var map = new google.maps.Map(document.getElementById("event_googlemap"),
+                                                      myOptions);
+			$('#event_googlemap').dialog({
+                                title : 'Google Maps',
+                                position : { my: "left top",
+                                             at: "center center",
+                                             of: "#event",
+                                             offset: "0 0" },
+				width : 500,
+				height: 600,
+				close : function(event, ui) {
+					$(this).dialog('destroy').remove();
+				},
+                                open  : function () {
+                                        var marker = new google.maps.Marker({
+                                                map: map,
+                                                position: latlng
+                                        });
+                                        var infowindow = new google.maps.InfoWindow();
+                                        google.maps.event.addListener(marker, 'click', function () {
+                                                var location = 'Freiburg im Breisgau';
+                                                infowindow.setContent(
+                                                        location+'</br>'+
+                                                                '<a href="https://maps.google.com/maps?q='+location+'" style="color:#00f;text-decoration:underline;" target="_blank">Google</a>');
+                                                infowindow.open(map, marker);
+                                        });
+
+                                        var location = $('input[name=location]').val();
+                                        //OC.dialogs.alert('location: ' + location, 'hello world');
+                                        geocoder = new google.maps.Geocoder();
+                                        geocoder.geocode( { 'address': location}, function(results, status) {
+                                                if (status == google.maps.GeocoderStatus.OK) {
+                                                        map.setCenter(results[0].geometry.location);
+                                                        var marker = new google.maps.Marker({
+                                                                map: map,
+                                                                position: results[0].geometry.location
+                                                        });
+                                                        google.maps.event.addListener(
+                                                                marker, 'click', function () {
+                                                                        infowindow.setContent(
+                                                                                location+'</br>'+
+                                                                                '<a href="https://maps.google.com/maps?q='+location+'" style="color:#00f;text-decoration:underline;" target="_blank">Google</a>');
+                                                                        infowindow.open(map, marker);
+                                                                })
+                                                }
+                                        })
+                                        var center = map.getCenter();
+                                        google.maps.event.trigger(map, "resize");
+                                        map.setCenter(center);
+                                },
+                                resizeStop: function (event, ui) {
+                                        var center = map.getCenter();
+                                        google.maps.event.trigger(map, "resize");
+                                        map.setCenter(center);
+                                }
+			});
+                },
+		hideadvancedoptions:function(){
+			$("#advanced_options").slideUp('slow');
+			$("#advanced_options_button").css("display", "inline-block");
+		},
 		showadvancedoptions:function(){
 			$("#advanced_options").slideDown('slow');
 			$("#advanced_options_button").css("display", "none");

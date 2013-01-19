@@ -185,6 +185,18 @@ td.eventdata-0-brief, td.eventdata-1-brief {
   vertical-align:middle;
 }
 
+/* Hide the advanced options in the event form */
+#advanced_options_bar {
+  cursor:pointer;
+  margin-top:0.5ex;
+  height:0.3ex;
+  vertical-align:middle;
+  border-top:1px solid #000;
+  -moz-box-shadow:-3px 0 7px #777;
+  -webkit-box-shadow:-3px 0 7px #777;
+  box-shadow: 0 0.5ex 1ex #777;
+}
+
 /*
  * LocalVariables: ***
  * cssm-indent-function: cssm-c-style-indenter ***

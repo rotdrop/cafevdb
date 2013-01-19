@@ -49,6 +49,7 @@ $(document).ready(function() {
 });
 __EOT__
     );
+  Util::addExternalScript("https://maps.google.com/maps/api/js?sensor=false");
 
   OCP\App::setActiveNavigationEntry( 'cafevdb' );
 
@@ -71,7 +72,6 @@ __EOT__
   OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/jscripts/tiny_mce/jquery.tinymce');
   OCP\Util::addScript('cafevdb/3rdparty', 'tinymceinit');
   OCP\Util::addscript("cafevdb/3rdparty", "chosen/chosen.jquery.min");
-//OCP\Util::addscript("3rdparty", "chosen/chosen.jquery.min");
 
 // Calendar event hacks
   OCP\Util::addscript('3rdparty/fullcalendar', 'fullcalendar');
