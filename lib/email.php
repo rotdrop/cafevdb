@@ -1184,7 +1184,7 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
       $DataValid = true;
 
       if (empty($EMails)) {
-        Util::alert(L::t('No recipients specified, you possibly forgot to shift items from the left select box (potential recipients) to the right select box (actual recipients)'),
+        Util::alert(L::t('No recipients specified, you possibly forgot to shift items from the left select box (potential recipients) to the right select box (actual recipients). Pleas click on the `modify recipients\' button and specify some recipients.'),
                     L::t('No recipients'),
                     'cafevdb-email-error');
         $DataValid = false;
