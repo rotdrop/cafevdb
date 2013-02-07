@@ -1183,6 +1183,13 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
       // Perform sanity checks before spamming ...
       $DataValid = true;
 
+      if (empty($EMails)) {
+        Util::alert(L::t('No recipients specified, you possibly forgot to shift items from the left select box (potential recipients) to the right select box (actual recipients)'),
+                    L::t('No recipients'),
+                    'cafevdb-email-error');
+        $DataValid = false;
+      }
+
       if ($strSubject == '') {
         Util::alert(L::t('The subject must not consist of `%s\' as only part.<br/>'.
                          'Please correct that and then hit the `Send\'-button again.',
@@ -1208,7 +1215,7 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
       // keep track of all return values, which is quite beneficial
       // here. Some of the stuff below clearly cannot throw, but then
       // it doesn't hurt to keep it in the try-block. All data is
-      // added int eh try block. There is another trz-catch-construct
+      // added int the try block. There is another try-catch-construct
       // surrounding the actual sending of the message.
       try {
 
@@ -1221,7 +1228,6 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
         //$mail->IsMail();
         $mail->IsSMTP();
         if (true) {
-          // TODO: move to encrypted config-space.
           $mail->Host = Config::getValue('smtpserver');
           $mail->Port = Config::getValue('smtpport');
           switch (Config::getValue('smtpsecure')) {
