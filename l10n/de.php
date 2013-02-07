@@ -160,7 +160,7 @@
 "Send Em@il" => "Em@il verschicken",
 "Edit recipients" => "Adressen bearbeiten",
 "Cancel" => "Abbrechen",
-"No recipients specified, you possibly forgot to shift items from the left select box (potential recipients) to the right select box (actual recipients). Pleas click on the `modify recipients' button and specify some recipients." => "Keine Adressaten angegeben. Sie haben vermutlich vergessen,\n<b>mögliche</b> Adressaten aus der linken Auswohlbox in die rechte Box\nfür die <b>tatsächlichen</b> Adressaten zu verschieben. Bitte den `Adressen bearbeiten'-Knopf aktivieren und Empfänger für diese Email angeben.",
+"No recipients specified, you possibly forgot to shift items from the left select box (potential recipients) to the right select box (actual recipients). Pleas click on the `modify recipients' button and specify some recipients." => "Keine Adressaten angegeben. Sie haben vermutlich vergessen, mögliche Adressaten aus der linken Auswohlbox in die rechte Box für die tatsächlichen Adressaten zu verschieben. Bitte den `Adressen bearbeiten'-Knopf aktivieren und Empfänger für diese Email angeben.",
 "No recipients" => "Keine Adressaten",
 "The subject must not consist of `%s' as only part.<br/>Please correct that and then hit the `Send'-button again." => "Die Betreffzeile sollte nicht nur aus `%s' bestehen.<br/>Bitte korrigieren und dann den `Send'-Button noch einmal anklicken.",
 "Incomplete Subject" => "Unvollständiger Betreff",
