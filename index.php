@@ -1,4 +1,7 @@
 <?php
+/**@file
+ * Main entry point.
+ */
 
 use CAFEVDB\L;
 use CAFEVDB\Config;

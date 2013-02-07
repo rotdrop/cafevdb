@@ -1,8 +1,12 @@
 <?php
 
+/**CamerataDB namespace to prevent name-collisions.
+ */
 namespace CAFEVDB
 {
 
+/**Base class to support instrumentation specific PME-tables.
+ */
 class Instrumentation
 {
   public $musicianId;

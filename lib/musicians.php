@@ -1,8 +1,12 @@
 <?php
 
+/**CamerataDB namespace to prevent name-collisions.
+ */
 namespace CAFEVDB
 {
 
+/**Display all or selected musicians.
+ */
 class Musicians
   extends Instrumentation
 {
@@ -369,6 +373,8 @@ __EOT__;
   } // display()
 };
 
+/**Class responsible for adding one musician to a project.
+ */
 class AddOneMusician
   extends Instrumentation
 {

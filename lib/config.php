@@ -1,6 +1,6 @@
 <?php
 
-/**Basic namespace for the cafevdb application.
+/**CamerataDB namespace to prevent name-collisions.
  */
 namespace CAFEVDB
 {
@@ -8,6 +8,8 @@ namespace CAFEVDB
 // PHP shit
 date_default_timezone_set('Europe/Berlin');
 
+/**Class for handling configuration values.
+ */
 class Config
 {
   const APP_NAME  = 'cafevdb';
@@ -481,6 +483,8 @@ ownclouddev';
   }
 };
 
+/**Check for a usable configuration.
+ */
 class ConfigCheck
 {
   /**Check whether the shared object exists. Note: this function has

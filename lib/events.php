@@ -1,5 +1,7 @@
 <?php
 
+/**CamerataDB namespace to prevent name-collisions.
+ */
 namespace CAFEVDB
 {
 

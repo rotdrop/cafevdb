@@ -1,12 +1,41 @@
 <?php
+/**@author Claus-Justus Heine
+ * @copyright 2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
+/**CamerataDB namespace to prevent name-collisions.
+ */
 namespace CAFEVDB
 {
 
+/**Support for internationalization.
+ */
 class L
 {
   private static $l = false;
 
+  /**Print the translated text.
+   *
+   * @param[in] $text Text to print, is finally passed to vsprintf().
+   *
+   * @param[in] $parameters Defaults to an empty array. @a $parameters
+   * are passed on to vsprintf().
+   *
+   * @return The possibly translated message.
+   */
   public static function t($text, $parameters = array())
   {
     if (self::$l === false) {
@@ -22,6 +51,7 @@ class L
   }
 };
 
+/**Ajax specific support class. */
 class Ajax
 {
   public static function bailOut($msg, $tracelevel = 1, $debuglevel = \OCP\Util::ERROR)
@@ -48,10 +78,23 @@ class Ajax
   }
 };
 
+/**Supportclass for error handling.
+ */
 class Error
 {
   private static $exceptionsActive = false;
 
+  /**Switch error-handling via exceptions on and off by installing an
+   * error-handler via set_error_handler().
+   *
+   * @param[in] $on Mixed. If @c true then errors will trigger
+   * exceptions, if @c false then erros will not trigger exceptions,
+   * if unspecified then report whether or not errors trigger
+   * exceptions.
+   *
+   * @return @c true if errors are handled via exceptions, false
+   * otherwise.
+   */
   static public function exceptions($on = null) {
     if ($on === true) {
       if (!self::$exceptionsActive) {
@@ -71,7 +114,12 @@ class Error
       throw new \InvalidArgumentException(L::t('Invalid argument value: `%s\'', array($on)));
     }
   }
-  
+
+  /**Error handler which redirects some errors into the exception
+   * queue. Errors not inclued in error_reporting() do not result in
+   * exceptions to be thrown.
+   *
+   */
   static public function exceptions_error_handler($severity, $message, $filename, $lineno) {
 
     // Support in particular @ constructs.
@@ -81,13 +129,17 @@ class Error
     }
 
     if (ini_get('log_errors')) {
-      error_log($message, 0);
+      $errmsg = sprintf("%s (level %d, file %s, line %d)",
+                        $message, $severity, $filename, $lineno);
+      error_log($errmsg, 0);
     }
 
     throw new \ErrorException($message, 0, $severity, $filename, $lineno);
   }
 }
 
+/**Utility class.
+ */
 class Util
 {
   private static $inlineScripts = array();
@@ -202,6 +254,21 @@ __EOT__;
     }
   }
 
+  /**Emit an error message or exception. If CAFEVDB\Error::exceptions()
+   * returns @c true, then an exception is thrown, otherwise execution
+   * is terminated by die(). Execution continues if $die = false. No
+   * messages are printed, if @c $silent = @c true.
+   *
+   * @param[in] $msg String to print or to pass as exception message.
+   *
+   * @param[in] $die Terminate execution, either calling die() or by
+   * throwing an exception.
+   *
+   * @param[in] $silent Do not print an error message. No effect if
+   * exceptions are used for error handling.
+   *
+   * @return @c false (if the functin returns).
+   */
   public static function error($msg, $die = true, $silent = false)
   {
     if (Error::exceptions()) {
@@ -323,6 +390,8 @@ document.onkeypress = stopRKey;
   }
 };
 
+/**Support class to generate navigation buttons and the like.
+ */
 class Navigation
 {
   /**Acutally rather a multi-select than a button, meant as drop-down
@@ -667,8 +736,28 @@ __EOT__;
   }
 };
 
+/**Support class for connecting to a mySQL database.
+ */
 class mySQL
 {
+  /**Connect to the server specified by @a $opts.
+   *
+   * @param[in] $opts Associative array with keys 'hn', 'un', 'pw' and
+   * 'db' for "hostname", "username", "password" and
+   * "database",repectively.
+   *
+   * @param[in] $die Bail out on error. Default is @c true. If @c
+   * false then go on and return @c false in case of an error.
+   *
+   * @param[in] $silent If exception-based error handling is not in
+   * effect, then control whehter something is printed to the standard
+   * output channel.
+   *
+   * @return Mixed, @c false in case of error. Otherwise the data-base
+   * handle.
+   * @callgraph
+   * @callergraph
+   */
   public static function connect($opts, $die = true, $silent = false)
   {
     // Fetch the actual list of instruments, we will need it anyway
@@ -692,6 +781,13 @@ class mySQL
     return $handle;
   }
 
+  /**Close the mySQL data-base connection previously opened by
+   * self::connect().
+   *
+   * @param[in] $handle Database handle.
+   *
+   * @return @c true, always.
+   */
   public static function close($handle = false)
   {
     if ($handle) {

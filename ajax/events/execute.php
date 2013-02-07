@@ -1,5 +1,11 @@
 <?php
+/**@file
+ */
 
+/**@addtogroup AJAX
+ * AJAX related scripts.
+ * @{
+ */
 if(!OCP\User::isLoggedIn()) {
 	die('<script type="text/javascript">document.location = oc_webroot;</script>');
 }
@@ -123,6 +129,8 @@ try {
         'message' => L::t('Error, caught an exception'))));
   return false;
 }
+
+/**@} AJAX group */
 
 /*
  * Local Variables: ***

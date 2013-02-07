@@ -1,8 +1,12 @@
 <?php
 
+/**CamerataDB namespace to prevent name-collisions.
+ */
 namespace CAFEVDB
 {
 
+/**Manage respectively edit and register instruments with the database.
+ */
 class Instruments
   extends Instrumentation
 {

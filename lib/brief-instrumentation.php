@@ -1,8 +1,12 @@
 <?php  
 
+/**CamerataDB namespace to prevent name-collisions.
+ */
 namespace CAFEVDB
 {
 
+/**Display a brief list of registered musicians for each project.
+ */
 class BriefInstrumentation
   extends Instrumentation
 {

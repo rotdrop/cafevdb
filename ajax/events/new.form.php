@@ -1,17 +1,24 @@
 <?php
-/**
- * Copyright (c) 2011 Georg Ehrke <ownclouddev at georgswebsite dot de>
+/**@file new.form.php
+ *
+ * @copyright 2011 Georg Ehrke <ownclouddev@georgswebsite.de>
+ *
  * This file is licensed under the Affero General Public License version 3 or
  * later.
  * See the COPYING-README file.
  *
  *
- * Modified 2012 to allow for custom new-event pop-ups for the Camerata DB app by
- * Claus-Justus Heine <himself at claus-justus-heine.de>
+ * Modified 2012 to allow for custom new-event pop-ups for the
+ * Camerata DB app by Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  */
 
-if(!OCP\User::isLoggedIn()) {
+/**@addtogroup AJAX
+ * AJAX related scripts.
+ * @{
+ */
+
+if (!OCP\User::isLoggedIn()) {
   die('<script type="text/javascript">document.location = oc_webroot;</script>');
 }
 OCP\JSON::checkAppEnabled('calendar');
@@ -22,6 +29,7 @@ use CAFEVDB\Util;
 use CAFEVDB\Config;
 use CAFEVDB\Events;
 use CAFEVDB\Error;
+
 
 try {
 
@@ -35,6 +43,7 @@ try {
   $eventKind   = Util::cgiValue('EventKind', -1);
   $debugtext = '<PRE>'.print_r($_POST, true).'</PRE>';
 
+  //!@cond
   if ($projectId < 0 ||
       ($projectName == '' &&
        ($projectName = CAFEVDB\Projects::fetchName($projectId)) == '')) {
@@ -45,13 +54,14 @@ try {
                         'debug' => $debugtext)));
     return false;
   }
+  //!@endcond
 
-// standard calendar values
+  // standard calendar values
   $start  = Util::cgiValue('start', false);
   $end    = Util::cgiValue('end', false);
   $allday = Util::cgiValue('allday', false);
 
-// Choose the right calendar
+  // Choose the right calendar
   $categories   = $projectName.','.L::t($eventKind);
   $calKey       = $eventKind.'calendar';
   $calendarName = Config::getSetting($calKey, L::t($eventKind));
@@ -59,10 +69,10 @@ try {
   $shareOwner   = Config::getSetting(
     'shareowner', Config::getValue('dbuser').'shareowner');
 
-// Default title for the event
+  // Default title for the event
   $title        = L::t($eventKind).', '.$projectName;
 
-// make sure that the calendar exists and is writable
+  // make sure that the calendar exists and is writable
   $newId = Events::checkSharedCalendar($calendarName, $calendarId);
 
   if ($newId === false) {
@@ -101,9 +111,10 @@ try {
   $defaultCal    = \OC_Calendar_App::getCalendar($calendarId);
 
 
-// make sure the default calendar is the first in the list
+  // make sure the default calendar is the first in the list
   $calendar_options = array($defaultCal);
 
+  //!@cond
   $calendars = OC_Calendar_Calendar::allCalendars(OCP\USER::getUser());
   foreach($calendars as $calendar) {
     if ($calendar['id'] == $calendarId) {
@@ -118,6 +129,7 @@ try {
       array_push($calendar_options, $calendar);
     }
   }
+  //!@endcond
 
   $repeat_options = OC_Calendar_App::getRepeatOptions();
   $repeat_end_options = OC_Calendar_App::getEndOptions();
@@ -160,7 +172,7 @@ try {
   $tmpl->assign('repeat_date', '');
   $tmpl->assign('repeat_year', 'bydate');
 
-// cafevdb defaults
+  // cafevdb defaults
   $tmpl->assign('categories', $categories);
   $tmpl->assign('title', $title);
 
@@ -183,5 +195,7 @@ try {
         'message' => L::t('Error, caught an exception'))));
   return false;
 }
+
+/**@} AJAX group */
 
 ?>

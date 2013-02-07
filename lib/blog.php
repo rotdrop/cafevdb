@@ -1,7 +1,11 @@
 <?php
 
+/**CamerataDB namespace to prevent name-collisions.
+ */
 namespace CAFEVDB;
 
+/**Front-page blog.
+ */
 class Blog 
 {
   /**Delete the given Note and the entire thread referring to

@@ -1,11 +1,19 @@
 <?php
+/**@file
+ * Administrative utilities.
+ *
+ */
 
+/**CamerataDB namespace to prevent name-collisions.
+ */
 namespace CAFEVDB 
 {
 
+/**Administrative support functions.
+ */
 class Admin
 {
-  // 
+  /**TBD*/
   public static function fillInstrumentationNumbers()
   {
     Config::init();
@@ -25,6 +33,7 @@ class Admin
     mySQL::close($handle);
   }
 
+  /**TBD*/
   public static function checkInstrumentsTable()
   {
     Config::init();
@@ -40,6 +49,7 @@ class Admin
 
   }
 
+  /**TBD*/
   public static function sanitizeInstrumentsTable()
   {
     Config::init();
@@ -54,6 +64,7 @@ class Admin
     mySQL::close($handle);
   }
 
+  /**TBD*/
   public static function recreateAllViews()
   {
     Config::init();

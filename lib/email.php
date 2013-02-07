@@ -16,6 +16,8 @@ require_once("Net/IMAP.php");
 
 }
 
+/**CamerataDB namespace to prevent name-collisions.
+ */
 namespace CAFEVDB
 {
 /**Wrap the email filter form into a class to make things a little
@@ -1249,7 +1251,7 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
             // email addresses to everybody. TODO: instead place the
             // entire message, including the Bcc's, either in the
             // "sent" folder, or save it somewhere else.
-            if ($recipient->project < 0) {
+            if ($recipient['project'] < 0) {
               // blind copy, don't expose the victim to the others.
               $mail->AddBCC($recipient['email'], $recipient['name']);
             } else {
@@ -1675,6 +1677,8 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
   }
 };
 
+/**Display the email-history stored in the database.
+ */
 class EmailHistory
 {
   const CSS_PREFIX = 'cafevdb-page';

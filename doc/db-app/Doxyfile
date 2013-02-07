@@ -163,7 +163,7 @@ SHORT_NAMES            = NO
 # comments will behave just like regular Qt-style comments 
 # (thus requiring an explicit @brief command for a brief description.)
 
-JAVADOC_AUTOBRIEF      = NO
+JAVADOC_AUTOBRIEF      = YES
 
 # If the QT_AUTOBRIEF tag is set to YES then Doxygen will 
 # interpret the first line (until the first dot) of a Qt-style 
@@ -675,10 +675,10 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories 
 # with spaces.
 
-INPUT                  = ../../../../lib \
-                         ../../../../core \
-                         ../../../calendar \
-                         ../../
+INPUT  = ../../
+#INPUT += ../../../../lib
+#INPUT += ../../../../core
+#INPUT += ../../../calendar
 
 # This tag can be used to specify the character encoding of the source files 
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding, which is 
@@ -742,16 +742,13 @@ RECURSIVE              = YES
 # subdirectory from a directory tree whose root is specified with the INPUT tag. 
 # Note that relative paths are relative to the directory from which doxygen is 
 # run.
+#
+# EXCLUDE DOES NOT WORK AS DOCUMENTED (i.e. with relative paths)
 
-EXCLUDE                = ../../3rdparty/pear \
-                         ../../3rdparty/PHPMailer \
-                         ../../3rdparty/QuickForm2 \
-                         ../../3rdparty/QuickForm2 \
-                         ../../js/jscal \
-                         ../../js/tinymce
+EXCLUDE                = 
 
 # The EXCLUDE_SYMLINKS tag can be used to select whether or not files or 
-# directories that are symbolic links (a Unix file system feature) are excluded 
+# directories that are symbolic links (a Unix file system feature) areß excluded 
 # from the input.
 
 EXCLUDE_SYMLINKS       = NO
@@ -762,7 +759,15 @@ EXCLUDE_SYMLINKS       = NO
 # against the file with absolute path, so to exclude all test directories 
 # for example use the pattern */test/*
 
-EXCLUDE_PATTERNS       = 
+EXCLUDE_PATTERNS  = */cafevdb/3rdparty/pear*
+EXCLUDE_PATTERNS += */cafevdb/3rdparty/PHPMailer*
+EXCLUDE_PATTERNS += */cafevdb/3rdparty/QuickForm2*
+EXCLUDE_PATTERNS += */cafevdb/3rdparty/PHPExcel*
+EXCLUDE_PATTERNS += */cafevdb/3rdparty/js*
+EXCLUDE_PATTERNS += */cafevdb/3rdparty/css*
+EXCLUDE_PATTERNS += */cafevdb/3rdparty/phpMyEdit*
+EXCLUDE_PATTERNS += */cafevdb/doc*
+EXCLUDE_PATTERNS += */cafevdb/ajax*
 
 # The EXCLUDE_SYMBOLS tag can be used to specify one or more symbol names 
 # (namespaces, classes, functions, etc.) that should be excluded from the 
@@ -770,7 +775,7 @@ EXCLUDE_PATTERNS       =
 # wildcard * is used, a substring. Examples: ANamespace, AClass, 
 # AClass::ANamespace, ANamespace::*Test
 
-EXCLUDE_SYMBOLS        = 
+EXCLUDE_SYMBOLS        = try
 
 # The EXAMPLE_PATH tag can be used to specify one or more files or 
 # directories that contain example code fragments that are included (see 
@@ -1639,7 +1644,7 @@ PERL_PATH              = /usr/bin/perl
 # this option also works with HAVE_DOT disabled, but it is recommended to 
 # install and use dot, since it yields more powerful graphs.
 
-CLASS_DIAGRAMS         = NO
+CLASS_DIAGRAMS         = YES
 
 # You can define message sequence charts within doxygen comments using the \msc 
 # command. Doxygen will then run the mscgen tool (see 
