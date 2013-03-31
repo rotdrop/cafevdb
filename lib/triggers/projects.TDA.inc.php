@@ -9,7 +9,7 @@ Util::authorized();
 
 $projectName = Projects::fetchName($this->rec, $this->dbh);
 
-$sqlquery = 'DROP VIEW IF EXISTS '.$projectName.'View';
+$sqlquery = 'DROP VIEW IF EXISTS `'.$projectName.'View`';
 $this->myquery($sqlquery) or die ("Could not execute the query. " . mysql_error());
 
 // This was the view. We should also remove all stuff from the Besetzungen list.

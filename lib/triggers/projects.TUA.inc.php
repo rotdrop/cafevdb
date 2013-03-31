@@ -10,12 +10,17 @@
 
 // $newvals contains the new values
 
+// Simply recreate the view, update the extra tables etc.
+CAFEVDB\Projects::createView($this->rec, $newvals['Name'], $this->dbh);
+
 if (array_search('Name', $changed) === false) {
   return;
 }
 
-// Simply recreate the view, update the extra tables etc.
-CAFEVDB\Projects::createView($this->rec, $newvals['Name'], $this->dbh);
+// Drop the old view, which still exists with the old name
+
+$sqlquery = 'DROP VIEW IF EXISTS `'.$oldvals['Name'].'View`';
+$this->myquery($sqlquery) or die ("Could not execute the query. " . mysql_error());
 
 // Now that we link events to projects using their short name as
 // category, we also need to update all linke events in case the
