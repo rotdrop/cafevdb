@@ -260,7 +260,7 @@ if ($table) {
       if ($cellData == '01.01.1970') {
         $cellData = '';
       }
-      $cellData = html_entity_decode($cellData);
+      $cellData = html_entity_decode($cellData, ENT_COMPAT|ENT_HTML401, 'UTF-8');
       return $cellData;
     },
     function ($i, $lineData) use ($sheet) {
