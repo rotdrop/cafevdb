@@ -197,7 +197,7 @@ __EOT__;
                             'function' => 'CAFEVDB\Projects::eventButtonPME',
                             'parameters' => $nameIdx),
         'select'   => 'T',
-        'options'  => 'LAVCPDR',
+        'options'  => 'LVCPDR',
         'maxlen'   => 11,
         'default'  => '0',
         'sort'     => false
