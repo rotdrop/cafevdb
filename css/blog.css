@@ -138,3 +138,20 @@ div.cafevdb-page-header.collapsed #cafevdb-page-blog-header {
   color:red;
 }
 
+span.blogentrytext a:link {
+  color:CornFlowerBlue;
+  text-decoration:underline;
+  font-weight:bold;
+}
+span.blogentrytext a:visited {
+  color:CornFlowerBlue;
+  text-decoration:underline;
+  font-weight:bold;
+}
+span.blogentrytext a:hover {
+  color:CornFlowerBlue;
+  text-decoration:underline;
+  font-style:italic;
+  font-weight:bold;
+}
+
