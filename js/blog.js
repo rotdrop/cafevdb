@@ -40,7 +40,7 @@ var Blog = {
         $('input').tipsy({gravity:'ne', fade:true});
         $('label').tipsy({gravity:'ne', fade:true});
 
-        if (toolTips) {
+        if (CAFEVDB.toolTips) {
           $.fn.tipsy.enable();
         } else {
           $.fn.tipsy.disable();

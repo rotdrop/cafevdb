@@ -5,6 +5,9 @@ use CAFEVDB\Config;
 use CAFEVDB\Util;
 use CAFEVDB\Navigation;
 
+echo Util::emitExternalScripts();
+echo Util::emitInlineScripts();
+
 $buttons = array();
 $buttons['pre'] = '<div>';
 $buttons['post'] = '</div>';
@@ -35,7 +38,6 @@ $buttons['example'] =
         'id' => 'example',
         'class' => 'operations example button');
 ?>
-<?php echo Util::emitInlineScripts(); ?>
 <div id="expertmode">
   <fieldset id="expertmode" class="operations expert"><legend><?php echo L::t('Predefined data-base operations'); ?></legend>
   <?php echo Navigation::button($buttons); ?>

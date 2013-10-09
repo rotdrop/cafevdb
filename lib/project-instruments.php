@@ -309,7 +309,7 @@ $(function() {
     $('.pme-sort').tipsy({gravity: 'n', fade:true});
     $('.pme-misc-check').tipsy({gravity: 'nw', fade:true});
 
-    if (toolTips) {
+    if (CAFEVDB.toolTips) {
       $.fn.tipsy.enable();
     } else {
       $.fn.tipsy.disable();

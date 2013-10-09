@@ -40,19 +40,9 @@ try {
 
   $headervisibility = Util::cgiValue('headervisibility', 'expanded');
 
-  Util::addInlineScript("CAFEVDB.headervisibility = '$headervisibility';");
-  Util::addInlineScript('var toolTips = '.($tooltips == 'on' ? 'true' : 'false'));
-  Util::addInlineScript(<<<__EOT__
-$(document).ready(function() {
-    if (toolTips) {
-      $.fn.tipsy.enable();
-    } else {
-      $.fn.tipsy.disable();
-    }
-});
-__EOT__
-    );
   Util::addExternalScript("https://maps.google.com/maps/api/js?sensor=false");
+  Util::addExternalScript(OC_Helper::linkTo('calendar/js', 'l10n.php'));
+  Util::addExternalScript(OC_Helper::linkTo('cafevdb/js', 'config.php'));
 
   OCP\App::setActiveNavigationEntry( 'cafevdb' );
 
@@ -84,30 +74,9 @@ __EOT__
   OCP\Util::addscript('contacts','jquery.multi-autocomplete');
   OC_Util::addScript('','oc-vcategories');
   OCP\Util::addScript('cafevdb', 'calendar');
+  OCP\Util::addScript('calendar', 'on-event');
   $categories = json_encode(OC_Calendar_App::getCategoryOptions());
 //OCP\Util::addScript('cafevdb', 'debug');
-
-  Util::addInlineScript("
-var eventSources = '';
-var categories = '$categories';
-var missing_field = '".addslashes(L::t('Missing or invalid fields'))."';
-var missing_field_title = '".addslashes(L::t('Title'))."';
-var missing_field_calendar = '".addslashes(L::t('Calendar'))."';
-var missing_field_fromdate = '".addslashes(L::t('From Date'))."';
-var missing_field_fromtime = '".addslashes(L::t('From Time'))."';
-var missing_field_todate = '".addslashes(L::t('To Date'))."';
-var missing_field_totime = '".addslashes(L::t('To Time'))."';
-var missing_field_startsbeforeends = '".addslashes(L::t('The event ends before it starts'))."';
-var missing_field_dberror = '".addslashes(L::t('There was a database failure'))."';
-");
-
-  Util::addInlineScript("
-var confirm_text = new Object();
-confirm_text['delete'] = '".addslashes(L::t('Do you really want to delete this event?'))."';
-confirm_text['detach'] = '".addslashes(L::t('Do you really want to detach this event from the current project?'))."';
-confirm_text['select'] = '';
-confirm_text['deselect'] = '';
-");
 
 // end event hacks
 

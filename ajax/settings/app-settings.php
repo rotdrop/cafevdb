@@ -250,6 +250,7 @@ if (isset($_POST['sharedfolder-saved']))
   try {
     if ($oldfolder == '' || $force) {
       if (ConfigCheck::checkSharedFolder($folder)) {
+
         Config::setValue('sharedfolder', $folder);
         OC_JSON::success(
           array("data" => array( "message" => L::t('New shared folder `%s\'',
@@ -279,7 +280,7 @@ if (isset($_POST['sharedfolder-saved']))
                                                  array($folder)))));
       return false;
     }
-  } catch (\Exception $e) {
+  } catch (Exception $e) {
       OC_JSON::error(
         array("data" => array( "message" => L::t('Failure checking folder `%s\', caught an exception `%s\'',
                                                  array($folder, $e->getMessage())))));

@@ -31,7 +31,7 @@ foreach ($_['EventMatrix'] as $key => $eventGroup) {
     $evtId  = $event['EventId'];
     $calId  = $event['CalendarId'];
     $object = $event['object'];
-    $brief  = $object['summary'];
+    $brief  = htmlspecialchars(stripslashes($object['summary']));
 
     $datestring = Events::briefEventDate($object, $locale);
 

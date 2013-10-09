@@ -1,10 +1,15 @@
-window.Events={
+Events={
   projectId: -1,
   projectName: '',
   Events:{
     // nothing
   },
   UI:{
+    confirmText: { delete: '',
+                   detach: '',
+                   select: '',
+                   deselect: ''
+                 },
     /**Initialize the mess with contents
      *
      * @param[in] data JSON response with the fields data.status,
@@ -14,10 +19,14 @@ window.Events={
      *                 inside the '#debug' div.
      */
     init: function(data) {
+      Events.UI.confirmText['delete'] =
+        t('cafevdb', 'Do you really want to delete this event?');
+      Events.UI.confirmText['detach'] =
+        t('cafevdb', 'Do you really want to detach this event from the current project?');
       if (data.status == 'success') {
         $('#dialog_holder').html(data.data.contents);
-        window.Events.projectId = data.data.projectId;
-        window.Events.projectName = data.data.projectName;
+        Events.projectId = data.data.projectId;
+        Events.projectName = data.data.projectName;
       } else {
 	var info = '';
 	if (typeof data.data.message != 'undefined') {
@@ -50,7 +59,7 @@ window.Events={
           $('input').tipsy({gravity:'ne', fade:true});
           $('label').tipsy({gravity:'ne', fade:true});
 
-          if (toolTips) {
+          if (CAFEVDB.toolTips) {
             $.fn.tipsy.enable();
           } else {
             $.fn.tipsy.disable();
@@ -59,6 +68,7 @@ window.Events={
           $('#events #eventlistform :button').click(Events.UI.buttonClick);
         },
         close : function(event, ui) {
+          $('.tipsy').remove();
           $('#event').dialog('close');
           $(this).dialog('destroy').remove();
         }
@@ -92,7 +102,7 @@ window.Events={
       $('input').tipsy({gravity:'ne', fade:true});
       $('label').tipsy({gravity:'ne', fade:true});
 
-      if (toolTips) {
+      if (CAFEVDB.toolTips) {
         $.fn.tipsy.enable();
       } else {
         $.fn.tipsy.disable();
@@ -222,7 +232,7 @@ window.Events={
         type['value'] = $(this).attr('name');
         post.push(type);
 
-        var really = confirm_text[name];
+        var really = Events.UI.confirmText[name];
         if (really != '') {
           
           // Attention: dialogs do not block, so the action needs to be

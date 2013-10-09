@@ -106,10 +106,7 @@ try {
   $start->setTimezone(new DateTimeZone($timezone));
   $end->setTimezone(new DateTimeZone($timezone));
 
-  $calendarGroup = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
-  $calendars     = \OC_Calendar_Calendar::allCalendars($shareOwner);
-  $defaultCal    = \OC_Calendar_App::getCalendar($calendarId);
-
+  $defaultCal    = \OC_Calendar_App::getCalendar($calendarId, true, true);
 
   // make sure the default calendar is the first in the list
   $calendar_options = array($defaultCal);
@@ -120,17 +117,18 @@ try {
     if ($calendar['id'] == $calendarId) {
       continue; // skip, already in list.
     }
-    if ($calendar['userid'] != OCP\User::getUser()) {
+    if($calendar['userid'] != OCP\User::getUser()) {
       $sharedCalendar = OCP\Share::getItemSharedWithBySource('calendar', $calendar['id']);
-      if ($sharedCalendar && ($sharedCalendar['permissions'] & OCP\Share::PERMISSION_CREATE)) {
+      if ($sharedCalendar && ($sharedCalendar['permissions'] & OCP\PERMISSION_UPDATE)) {
         array_push($calendar_options, $calendar);
-      }
+		}
     } else {
       array_push($calendar_options, $calendar);
     }
   }
   //!@endcond
 
+  $access_class_options = OC_Calendar_App::getAccessClassOptions();
   $repeat_options = OC_Calendar_App::getRepeatOptions();
   $repeat_end_options = OC_Calendar_App::getEndOptions();
   $repeat_month_options = OC_Calendar_App::getMonthOptions();
@@ -144,7 +142,9 @@ try {
 
   $tmpl = new OCP\Template('calendar', 'part.newevent');
   $tmpl->assign('access', 'owner');
+  $tmpl->assign('accessclass', 'PUBLIC');
   $tmpl->assign('calendar_options', $calendar_options);
+  $tmpl->assign('access_class_options', $access_class_options);
   $tmpl->assign('repeat_options', $repeat_options);
   $tmpl->assign('repeat_month_options', $repeat_month_options);
   $tmpl->assign('repeat_weekly_options', $repeat_weekly_options);

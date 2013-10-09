@@ -6,7 +6,63 @@
  * See the COPYING-README file.
  */
 
-window.Calendar={
+var Calendar={
+	Util:{
+		dateTimeToTimestamp:function(dateString, timeString){
+			dateTuple = dateString.split('-');
+			timeTuple = timeString.split(':');
+			
+			var day, month, year, minute, hour;
+			day = parseInt(dateTuple[0], 10);
+			month = parseInt(dateTuple[1], 10);
+			year = parseInt(dateTuple[2], 10);
+			hour = parseInt(timeTuple[0], 10);
+			minute = parseInt(timeTuple[1], 10);
+			
+			var date = new Date(year, month-1, day, hour, minute);
+			
+			return parseInt(date.getTime(), 10);
+		},
+		formatDate:function(year, month, day){
+			if(day < 10){
+				day = '0' + day;
+			}
+			if(month < 10){
+				month = '0' + month;
+			}
+			return day + '-' + month + '-' + year;
+		},
+		formatTime:function(hour, minute){
+			if(hour < 10){
+				hour = '0' + hour;
+			}
+			if(minute < 10){
+				minute = '0' + minute;
+			}
+			return hour + ':' + minute;
+		}, 
+		adjustDate:function(){
+			var fromTime = $('#fromtime').val();
+			var fromDate = $('#from').val();
+			var fromTimestamp = Calendar.Util.dateTimeToTimestamp(fromDate, fromTime);
+
+			var toTime = $('#totime').val();
+			var toDate = $('#to').val();
+			var toTimestamp = Calendar.Util.dateTimeToTimestamp(toDate, toTime);
+
+			if(fromTimestamp >= toTimestamp){
+				fromTimestamp += 30*60*1000;
+				
+				var date = new Date(fromTimestamp);
+				movedTime = Calendar.Util.formatTime(date.getHours(), date.getMinutes());
+				movedDate = Calendar.Util.formatDate(date.getFullYear(),
+						date.getMonth()+1, date.getDate());
+
+				$('#to').val(movedDate);
+				$('#totime').val(movedTime);
+			}
+		}
+	},
 	UI:{
 		scrollcount: 0,
 		loading: function(isLoading){
@@ -22,16 +78,18 @@ window.Calendar={
 			$('#fullcalendar').fullCalendar('unselect');
 			Calendar.UI.lockTime();
 			$( "#from" ).datepicker({
-				dateFormat : 'dd-mm-yy'
+				dateFormat : 'dd-mm-yy',
+				onSelect: function(){ Calendar.Util.adjustDate(); }
 			});
 			$( "#to" ).datepicker({
 				dateFormat : 'dd-mm-yy'
 			});
 			$('#fromtime').timepicker({
-			    showPeriodLabels: false
+				showPeriodLabels: false,
+				onSelect: function(){ Calendar.Util.adjustDate(); }
 			});
 			$('#totime').timepicker({
-			    showPeriodLabels: false
+				showPeriodLabels: false
 			});
 			$('#category').multiple_autocomplete({source: categories});
 			Calendar.UI.repeat('init');
@@ -49,7 +107,7 @@ window.Calendar={
 			});
 			$( "#event" ).tabs({ selected: 0});
 			$('#event').dialog({
-				width : 500,
+				width : 520,
 				height: 600,
 				close : function(event, ui) {
 					$(this).dialog('destroy').remove();
@@ -77,22 +135,22 @@ window.Calendar={
 			var id = calEvent.id;
 			if($('#event').dialog('isOpen') == true){
 				// TODO: save event
-				$('#event').dialog('close');
+				$('#event').dialog('destroy').remove();
 			}else{
 				Calendar.UI.loading(true);
 				$('#dialog_holder').load(OC.filePath('calendar', 'ajax/event', 'edit.form.php'), {id: id}, Calendar.UI.startEventDialog);
 			}
 		},
 		submitDeleteEventForm:function(url){
-			var post = $( '#event_form' ).serialize();
+			var id = $('input[name="id"]').val();
 			$('#errorbox').empty();
 			Calendar.UI.loading(true);
-			$.post(url, post, function(data){
+			$.post(url, {id:id}, function(data){
 					Calendar.UI.loading(false);
 					if(data.status == 'success'){
 						$('#fullcalendar').fullCalendar('removeEvents', $('#event_form input[name=id]').val());
-					    $('#event').dialog('close');
-                                            Events.UI.redisplay();
+						$('#event').dialog('destroy').remove();
+                                        	Events.UI.redisplay();
 					} else {
 						$('#errorbox').html(t('calendar', 'Deletion failed'));
 					}
@@ -107,41 +165,36 @@ window.Calendar={
 				function(data){
 					Calendar.UI.loading(false);
 					if(data.status == "error"){
-						if(data.message) {
-							$('#errorbox').html(data.message);
-						} else {
-							var output = missing_field + ": <br />";
-							if(data.title == "true"){
-								output = output + missing_field_title + "<br />";
-							}
-							if(data.cal == "true"){
-								output = output + missing_field_calendar + "<br />";
-							}
-							if(data.from == "true"){
-								output = output + missing_field_fromdate + "<br />";
-							}
-							if(data.fromtime == "true"){
-								output = output + missing_field_fromtime + "<br />";
-							}
-							if(data.to == "true"){
-								output = output + missing_field_todate + "<br />";
-							}
-							if(data.totime == "true"){
-								output = output + missing_field_totime + "<br />";
-							}
-							if(data.endbeforestart == "true"){
-								output = output + missing_field_startsbeforeends + "!<br/>";
-							}
-							if(data.dberror == "true"){
-								output = "There was a database fail!";
-							}
-							$('#errorbox').html(output);
+						var output = missing_field + ": <br />";
+						if(data.title == "true"){
+							output = output + missing_field_title + "<br />";
 						}
+						if(data.cal == "true"){
+							output = output + missing_field_calendar + "<br />";
+						}
+						if(data.from == "true"){
+							output = output + missing_field_fromdate + "<br />";
+						}
+						if(data.fromtime == "true"){
+							output = output + missing_field_fromtime + "<br />";
+						}
+						if(data.to == "true"){
+							output = output + missing_field_todate + "<br />";
+						}
+						if(data.totime == "true"){
+							output = output + missing_field_totime + "<br />";
+						}
+						if(data.endbeforestart == "true"){
+							output = output + missing_field_startsbeforeends + "!<br/>";
+						}
+						if(data.dberror == "true"){
+							output = "There was a database fail!";
+						}
+						$("#errorbox").html(output);
 					} else
 					if(data.status == 'success'){
-						$('#event').dialog('close');
-                                                Events.UI.redisplay();
-						$('#fullcalendar').fullCalendar('refetchEvents');
+						$('#event').dialog('destroy').remove();
+                                        	Events.UI.redisplay();
 					}
 				},"json");
 		},
@@ -156,7 +209,7 @@ window.Calendar={
 					console.log("Event moved successfully");
 				}else{
 					revertFunc();
-					$('#fullcalendar').fullCalendar('refetchEvents');
+                                	Events.UI.redisplay();
 				}
 			});
 		},
@@ -171,7 +224,7 @@ window.Calendar={
 					console.log("Event resized successfully");
 				}else{
 					revertFunc();
-					$('#fullcalendar').fullCalendar('refetchEvents');
+                                	Events.UI.redisplay();
 				}
 			});
 		},
@@ -238,7 +291,7 @@ window.Calendar={
 			geocoder.geocode( { 'address': location}, function(results, status) {
 				if (status == google.maps.GeocoderStatus.OK) {
 					var latlng = results[0].geometry.location;
-					Calendar.UI.googlepopup(latlng, location);
+				    	Calendar.UI.googlepopup(latlng, location);
 				} else {
 					var alerttext;
 					if (location) {
@@ -251,7 +304,7 @@ window.Calendar={
 						navigator.geolocation.getCurrentPosition(function(position) {
 							var latlng = new google.maps.LatLng(position.coords.latitude,
 											    position.coords.longitude);
-							Calendar.UI.googlepopup(latlng, '');
+						    	Calendar.UI.googlepopup(latlng, '');
 						});
 					}
 				}
@@ -274,9 +327,9 @@ window.Calendar={
 		},
 		getEventPopupText:function(event){
 			if (event.allDay){
-				var timespan = $.fullCalendar.formatDates(event.start, event.end, 'ddd d MMMM[ yyyy]{ -[ddd d] MMMM yyyy}', {monthNamesShort: monthNamesShort, monthNames: monthNames, dayNames: dayNames, dayNamesShort: dayNamesShort}); //t('calendar', "ddd d MMMM[ yyyy]{ -[ddd d] MMMM yyyy}")
+				var timespan = $.fullCalendar.formatDates(event.start, event.end, 'ddd d MMMM[ yyyy]{ - [ddd d] MMMM yyyy}', {monthNamesShort: monthNamesShort, monthNames: monthNames, dayNames: dayNames, dayNamesShort: dayNamesShort}); //t('calendar', "ddd d MMMM[ yyyy]{ - [ddd d] MMMM yyyy}")
 			}else{
-				var timespan = $.fullCalendar.formatDates(event.start, event.end, 'ddd d MMMM[ yyyy] ' + defaulttime + '{ -[ ddd d MMMM yyyy]' + defaulttime + '}', {monthNamesShort: monthNamesShort, monthNames: monthNames, dayNames: dayNames, dayNamesShort: dayNamesShort}); //t('calendar', "ddd d MMMM[ yyyy] HH:mm{ -[ ddd d MMMM yyyy] HH:mm}")
+				var timespan = $.fullCalendar.formatDates(event.start, event.end, 'ddd d MMMM[ yyyy] ' + defaulttime + '{ - [ ddd d MMMM yyyy]' + defaulttime + '}', {monthNamesShort: monthNamesShort, monthNames: monthNames, dayNames: dayNames, dayNamesShort: dayNamesShort}); //t('calendar', "ddd d MMMM[ yyyy] HH:mm{ - [ ddd d MMMM yyyy] HH:mm}")
 				// Tue 18 October 2011 08:00 - 16:00
 			}
 			var html =
@@ -313,6 +366,10 @@ window.Calendar={
 			//}
 		},
 		scrollCalendar:function(event){
+			var currentView = $('#fullcalendar').fullCalendar('getView');
+			if(currentView.name == 'agendaWeek') {
+				return;
+			}
 			$('#fullcalendar').fullCalendar('option', 'height', $(window).height() - $('#controls').height() - $('#header').height() - 15);
 			$('.tipsy').remove();
 			var direction;
@@ -331,7 +388,7 @@ window.Calendar={
 				}
 			}
 			Calendar.UI.scrollcount++;
-			if(Calendar.UI.scrollcount < 5){
+			if(Calendar.UI.scrollcount < 20){
 				return;
 			}
 
@@ -533,11 +590,9 @@ window.Calendar={
 							$('#calendar tr[data-id="'+calid+'"]').fadeOut(400,function(){
 								$('#calendar tr[data-id="'+calid+'"]').remove();
 							});
-							$('#fullcalendar').fullCalendar('refetchEvents');
+                                	                Events.UI.redisplay();
 						}
-                                                return false;
 					  });
-                                    return true;
 				}
 			},
 			submit:function(button, calendarid){
@@ -565,7 +620,7 @@ window.Calendar={
 							$('#fullcalendar').fullCalendar('removeEventSource', data.eventSource.url);
 							$('#fullcalendar').fullCalendar('addEventSource', data.eventSource);
 							if (calendarid == 'new'){
-								$('#choosecalendar_dialog > table:first').append('<tr><td colspan="6"><a href="#" onclick="Calendar.UI.Calendar.newCalendar(this);"><input type="button" value="' + newcalendar + '"></a></td></tr>');
+								$('#choosecalendar_dialog > table:first').append('<tr><td colspan="6"><a href="#" id="chooseCalendar"><input type="button" value="' + newcalendar + '"></a></td></tr>');
 							}
 						}else{
 							$("#displayname_"+calendarid).css('background-color', '#FF2626');
@@ -607,7 +662,7 @@ window.Calendar={
 		},
 		Share:{
 			init:function(){
-				if(OC.Share) {
+				if(typeof OC.Share !== typeof undefined){
 					var itemShares = [OC.Share.SHARE_TYPE_USER, OC.Share.SHARE_TYPE_GROUP];
 					$('#sharewith').autocomplete({minLength: 2, source: function(search, response) {
 						$.get(OC.filePath('core', 'ajax', 'share.php'), { fetch: 'getShareWith', search: search.term, itemShares: itemShares }, function(result) {
@@ -643,7 +698,7 @@ window.Calendar={
 						return false;
 					}
 					});
-
+	
 					$('.shareactions > input:checkbox').change(function() {
 						var container = $(this).parents('li').first();
 						var permissions = parseInt(container.data('permissions'));
@@ -667,7 +722,7 @@ window.Calendar={
 						}
 						OC.Share.setPermissions(itemType, itemSource, shareType, shareWith, permissions);
 					});
-
+	
 					$('.shareactions > .delete').click(function() {
 						var container = $(this).parents('li').first();
 						var itemType = container.data('item-type');
@@ -698,15 +753,15 @@ window.Calendar={
 				var files = e.dataTransfer.files;
 				for(var i = 0;i < files.length;i++){
 					var file = files[i];
-					reader = new FileReader();
+					var reader = new FileReader();
 					reader.onload = function(event){
-						Calendar.UI.Drop.import(event.target.result);
-						$('#fullcalendar').fullCalendar('refetchEvents');
+						Calendar.UI.Drop.doImport(event.target.result);
+                                	        Events.UI.redisplay();
 					}
 					reader.readAsDataURL(file);
 				}
 			},
-			import:function(data){
+			doImport:function(data){
 				$.post(OC.filePath('calendar', 'ajax/import', 'dropimport.php'), {'data':data},function(result) {
 					if(result.status == 'success'){
 						$('#fullcalendar').fullCalendar('addEventSource', result.eventSource);
@@ -728,3 +783,4 @@ window.Calendar={
 	},
 
 };
+

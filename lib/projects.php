@@ -441,7 +441,7 @@ __EOT__;
     }
     $bname       = htmlspecialchars($bname);
     $title       = Config::toolTips('projectevents-button');
-    $image = \OCP\Util::imagePath('calendar', 'icon.svg');
+    $image = \OCP\Util::imagePath('calendar', 'calendar.svg');
     return <<<__EOT__
 <span class="events">
   <button type="button" class="events" title="$title" name="$bname" value="$bvalue">

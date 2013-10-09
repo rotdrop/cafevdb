@@ -504,10 +504,10 @@ class ConfigCheck
   {
     // First check whether the object is already shared.
     $shareType  = \OCP\Share::SHARE_TYPE_GROUP;
-    $groupPerms = (\OCP\Share::PERMISSION_CREATE|
-                   \OCP\Share::PERMISSION_READ|
-                   \OCP\Share::PERMISSION_UPDATE|
-                   \OCP\Share::PERMISSION_DELETE);
+    $groupPerms = (\OCP\PERMISSION_CREATE|
+                   \OCP\PERMISSION_READ|
+                   \OCP\PERMISSION_UPDATE|
+                   \OCP\PERMISSION_DELETE);
 
     $token =\OCP\Share::getItemShared($type, $id, \OCP\Share::FORMAT_NONE);    
     
@@ -537,10 +537,10 @@ class ConfigCheck
    */
   public static function groupShareObject($id, $group, $type = 'calendar')
   {
-    $groupPerms = (\OCP\Share::PERMISSION_CREATE|
-                   \OCP\Share::PERMISSION_READ|
-                   \OCP\Share::PERMISSION_UPDATE|
-                   \OCP\Share::PERMISSION_DELETE);
+    $groupPerms = (\OCP\PERMISSION_CREATE|
+                   \OCP\PERMISSION_READ|
+                   \OCP\PERMISSION_UPDATE|
+                   \OCP\PERMISSION_DELETE);
 
     // First check whether the object is already shared.
     $shareType   = \OCP\Share::SHARE_TYPE_GROUP;
@@ -761,14 +761,25 @@ class ConfigCheck
       return false;
     }
 
-    if ($sharedfolder[0] != '/') {
-      $sharedfolder = '/'.$sharedfolder;
-    }
-    $vfsroot = '/'.$shareowner.'/files';
+    //$id = \OC\Files\Cache\Cache::getId($sharedfolder, $vfsroot);
+    $result = self::sudo($shareowner, function() use ($sharedfolder, $sharegroup) {
+        $user    = \OCP\USER::getUser();
+        $vfsroot = '/'.$user.'/files';
 
-    $id = \OC_FileCache::getId($sharedfolder, $vfsroot);
-    $result = self::sudo($shareowner, function() use ($id, $sharegroup) {
-        return ConfigCheck::groupSharedExists($id, $sharegroup, 'folder');
+        if ($sharedfolder[0] != '/') {
+          $sharedfolder = '/'.$sharedfolder;
+        }
+
+        $rootView = new \OC\Files\View($vfsroot);
+        $info = $rootView->getFileInfo($sharedfolder);
+        
+        if ($info) {
+          $id = $info['fileid'];
+          return ConfigCheck::groupSharedExists($id, $sharegroup, 'folder');
+        } else {
+          \OC_Log::write('CAFEVDB', 'No file info for  ' . $sharedfolder, \OC_Log::ERROR);
+          return false;
+        }
       });
 
     return $result;
@@ -814,7 +825,7 @@ class ConfigCheck
           return false;
         }
 
-        $rootView = new \OC_FilesystemView($vfsroot);
+        $rootView = new \OC\Files\View($vfsroot);
 
         if ($rootView->file_exists($sharedfolder) &&
             (!$rootView->is_dir($sharedfolder) ||
@@ -836,10 +847,17 @@ class ConfigCheck
         // Now it should exist as directory. Share it
         // Nice ass-hole stuff. We need the id.
  
-        \OC_FileCache::scanFile($sharedfolder, $vfsroot);
-        $id = \OC_FileCache::getId($sharedfolder, $vfsroot);
-        if (!ConfigCheck::groupShareObject($id, $sharegroup, 'folder') ||
-            !ConfigCheck::groupSharedExists($id, $sharegroup, 'folder')) {
+        //\OC\Files\Cache\Cache::scanFile($sharedfolder, $vfsroot);
+        //$id = \OC\Files\Cache\Cache::getId($sharedfolder, $vfsroot);
+        $info = $rootView->getFileInfo($sharedfolder);
+        if ($info) {
+          $id = $info['fileid'];
+          if (!ConfigCheck::groupShareObject($id, $sharegroup, 'folder') ||
+              !ConfigCheck::groupSharedExists($id, $sharegroup, 'folder')) {
+            return false;
+          }
+        } else {
+          \OC_Log::write('CAFEVDB', 'No file info for ' . $sharedfolder, \OC_Log::ERROR);
           return false;
         }
               

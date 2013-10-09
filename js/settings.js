@@ -25,12 +25,12 @@ $(document).ready(function() {
   $('input').tipsy({gravity:'ne', fade:true});
   $('label').tipsy({gravity:'ne', fade:true});
 
-  if (toolTips) {
+  if (CAFEVDB.toolTips) {
     $.fn.tipsy.enable();
   } else {
     $.fn.tipsy.disable();
   }
-  
+ 
   $('#expertmode').change(function(event) {
     event.preventDefault();
     var post = $("#expertmode").serialize();
@@ -425,7 +425,7 @@ $(document).ready(function() {
 
   ///////////////////////////////////////////////////////////////////////////
   //
-  // Sharing, share-owner
+  // Sharing, share-folder
   //
   ///////////////////////////////////////////////////////////////////////////
 

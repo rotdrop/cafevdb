@@ -1157,7 +1157,7 @@ function '.$this->js['prefix'].'form_control(theForm)
 		}
 
 		if ($this->filter_operation()) {
-				echo '<script type="text/javascript"><!--',"\n";
+				echo '<!-- <script type="text/javascript">',"\n";
 				echo '
 function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 {
@@ -1173,7 +1173,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 	}
 	return true;
 }',"\n\n";
-				echo '// --></script>', "\n";
+				echo '//</script> -->', "\n";
 		}
 
 		if ($this->display['form']) {

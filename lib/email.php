@@ -1036,7 +1036,7 @@ Störung.');
             .'>'
             .'<img '
             .'alt="'.$id.'" '
-            .'src="'.\OCP\Util::imagePath('calendar', 'icon.svg').'" '
+            .'src="'.\OCP\Util::imagePath('calendar', 'calendar.svg').'" '
             .'class="svg events small" '
             .'/>'
             .'</button>';

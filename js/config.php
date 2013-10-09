@@ -1,0 +1,39 @@
+<?php
+// Trick the CSP in order to configure js variables and stuff from PHP code
+
+use CAFEVDB\L;
+use CAFEVDB\Config;
+use CAFEVDB\Util;
+use CAFEVDB\Error;
+
+// Set the content type to Javascript
+header("Content-type: text/javascript");
+
+// Disallow caching
+header("Cache-Control: no-cache, must-revalidate"); 
+header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); 
+
+$headervisibility = Util::cgiValue('headervisibility', 'expanded');
+$tooltips   = OCP\Config::getUserValue(OCP\USER::getUser(), 'cafevdb', 'tooltips','');
+
+$array = array(
+  "CAFEVDB.headvisibility" => "'".$headervisibility."'",
+  "CAFEVDB.toolTips" => ($tooltips == "off" ? 'false' : 'true')
+  );
+
+// Echo it
+foreach ($array as  $setting => $value) {
+	echo($setting ."=".$value.";\n");
+}
+
+print <<< __EOT__
+$(document).ready(function() {
+    if (CAFEVDB.toolTips) {
+      $.fn.tipsy.enable();
+    } else {
+      $.fn.tipsy.disable();
+    }
+});
+__EOT__
+
+?>

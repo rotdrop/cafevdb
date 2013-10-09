@@ -4,6 +4,9 @@ use CAFEVDB\Util;
 use CAFEVDB\Config;
 use CAFEVDB\Navigation;
 
+echo Util::emitExternalScripts();
+echo Util::emitInlineScripts();
+
 $css_pfx  = $_['css-prefix'];
 $hdr_vis  = ' '.$_['headervisibility'];
 $_hdr_vis = ' '.$_['headervisibility'];
@@ -16,7 +19,7 @@ $settingscontrols = Navigation::buttonsFromArray(
       'image' => OCP\Util::imagePath('core', 'places/home.svg'),
       'class' => 'settings navigation home',
       'id' => 'homebutton'),
-    'export' => array(
+    'expert' => array(
       'name' => L::t('Expert Operations'),
       'title' => L::t('Expert Operations like recreating views etc.'),
       'image' => OCP\Util::imagePath('core', 'actions/rename.svg'),
@@ -48,8 +51,6 @@ if (!isset($_['headerblock']) && isset($_['header'])) {
 }
 
 ?>
-<?php echo Util::emitExternalScripts(); ?>
-<?php echo Util::emitInlineScripts(); ?>
 <div id="controls">
 <?php echo $_['navigationcontrols']; ?>
 <form id="personalsettings" method="post" action="?app=<?php echo Config::APP_NAME; ?>">

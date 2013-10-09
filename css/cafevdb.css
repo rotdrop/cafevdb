@@ -130,7 +130,7 @@ li.cafevdb-page-config-check span.set {
 /******************************************************************************/
 
 #personalsettings {
-  margin-right: 170px;
+  /*margin-right: 10px;*/
   float: right;
   font-size: 12px;
 }
@@ -296,7 +296,7 @@ div.cafevdb-page-header.expanded {
   padding-top:1ex;
   padding-left:1ex;
   height:16ex;
-  margin-right:40px;
+  /*margin-right:40px;*/
   overflow:hidden;
   /*width:80%;*/
 }
@@ -317,7 +317,7 @@ div.cafevdb-page-body.collapsed { padding-top:10ex; }
   z-index:26;
   float:right;
   margin-top:13ex;
-  margin-right:167px;
+  margin-right:70px;
   max-height: 26px;
   padding: 5px;
   vertical-align:middle;

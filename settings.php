@@ -28,6 +28,7 @@ try {
   $tmpl = new OCP\Template( 'cafevdb', 'settings');
 
   $tooltips    = OCP\Config::getUserValue($user, 'cafevdb', 'tooltips','');
+
   $expertmode  = OCP\Config::getUserValue($user, 'cafevdb', 'expertmode','');
   $debugmode   = OCP\Config::getUserValue($user, 'cafevdb', 'debugmode','');
   $exampletext = OCP\Config::getUserValue($user, 'cafevdb', 'exampletext','');
