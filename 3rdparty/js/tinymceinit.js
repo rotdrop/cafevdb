@@ -4,6 +4,7 @@ var myTinyMCE = {
     forced_root_block : false,
     // General options
     theme : "advanced",
+    language : 'de',
     plugins : "legacyoutput,autolink,lists,spellchecker,pagebreak,style,layer,table,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template",
 
     // Theme options
