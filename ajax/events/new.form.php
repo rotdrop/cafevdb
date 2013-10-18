@@ -106,10 +106,7 @@ try {
   $start->setTimezone(new DateTimeZone($timezone));
   $end->setTimezone(new DateTimeZone($timezone));
 
-  $calendarGroup = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
-  $calendars     = \OC_Calendar_Calendar::allCalendars($shareOwner);
-  $defaultCal    = \OC_Calendar_App::getCalendar($calendarId);
-
+  $defaultCal    = \OC_Calendar_App::getCalendar($calendarId, true, true);
 
   // make sure the default calendar is the first in the list
   $calendar_options = array($defaultCal);
