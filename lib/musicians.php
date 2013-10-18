@@ -148,6 +148,8 @@ __EOT__;
 
     if ($this->projectMode) {
        $opts['filters'] = "(SELECT COUNT(*) FROM `Besetzungen` WHERE MusikerId = PMEtable0.Id AND ProjektId = $projectId) = 0";
+       $opts['misccssclass']   = 'bulkcommit';
+       $opts['labels']['Misc'] = strval(L::t('Add all to')).' '.$project;
     }
 
     /* Field definitions
@@ -235,6 +237,34 @@ __EOT__;
                                     'maxlen'   => 128,
                                     'sort'     => true
                                     );
+
+
+    $derivedtable =<<<__EOT__
+SELECT MusikerId,GROUP_CONCAT(DISTINCT Projekte.Name ORDER BY Projekte.Name ASC SEPARATOR ', ') AS Projekte FROM
+Besetzungen
+LEFT JOIN Projekte ON Projekte.Id = Besetzungen.ProjektId
+GROUP BY MusikerId
+__EOT__;
+
+    $opts['fdd']['Projekte'] =
+      array('input' => 'VR', // virtual, read perm
+            'options' => 'LFV', //just do the join, don't display anything
+            'select' => 'T',
+            'name' => 'Projekte',
+            'sort' => true,
+            'sql' => 'PMEjoin'.count($opts['fdd']).'.Projekte',
+            'sqlw' => 'PMEjoin'.count($opts['fdd']).'.Projekte',
+            'css'      => array('postfix' => 'prjs'),
+            'values' => array( //API for currently making a join in PME.
+              'table' =>
+              array('sql' => $derivedtable,
+                    'kind' => 'derived'),
+              'column' => 'MusikerId',
+              'description' => 'Projekte',
+              'join' => '$main_table.Id = $join_table.MusikerId'
+              )
+        );
+
     $opts['fdd']['Strasse'] = array(
                                     'name'     => 'Strasse',
                                     'select'   => 'T',
@@ -297,41 +327,15 @@ __EOT__;
                                       'sort'     => true
                                       );
 
-  $derivedtable =<<<__EOT__
-SELECT MusikerId,GROUP_CONCAT(DISTINCT Projekte.Name ORDER BY Projekte.Name ASC SEPARATOR ', ') AS Projekte FROM
-Besetzungen
-LEFT JOIN Projekte ON Projekte.Id = Besetzungen.ProjektId
-GROUP BY MusikerId
-__EOT__;
-
-  $opts['fdd']['Projekte'] =
-    array('input' => 'VR', // virtual, read perm
-          'options' => 'LFV', //just do the join, don't display anything
-          'select' => 'T',
-          'name' => 'Projekte',
-          'sort' => true,
-          'sql' => 'PMEjoin'.count($opts['fdd']).'.Projekte',
-          'sqlw' => 'PMEjoin'.count($opts['fdd']).'.Projekte',
-          'css'      => array('postfix' => 'prjs'),
-          'values' => array( //API for currently making a join in PME.
-                            'table' =>
-                            array('sql' => $derivedtable,
-                                  'kind' => 'derived'),
-                            'column' => 'MusikerId',
-                            'description' => 'Projekte',
-                            'join' => '$main_table.Id = $join_table.MusikerId'
-                             )
-          );
-
     $opts['fdd']['Id'] = array(
-                               'name'     => 'Id',
-                               'select'   => 'T',
-                               'options'  => 'AVCPDR', // auto increment
-                               'maxlen'   => 5,
-                               'align'    => 'right',
-                               'default'  => '0',
-                               'sort'     => true
-                               );
+      'name'     => 'Id',
+      'select'   => 'T',
+      'options'  => 'AVCPDR', // auto increment
+      'maxlen'   => 5,
+      'align'    => 'right',
+      'default'  => '0',
+      'sort'     => true
+      );
 
     $opts['fdd']['Aktualisiert'] = Config::$opts['datetime'];
     $opts['fdd']['Aktualisiert']['name'] = 'Aktualisiert';
@@ -402,8 +406,8 @@ class AddOneMusician
     $recordsPerPage  = $this->recordsPerPage;
 
     echo <<<__EOT__
-<div class="cafevdb-pme-header-box">
-  <div class="cafevdb-pme-header">
+<div id="cafevdb-page-header-box" class="cafevdb-page-header-box">
+  <div id="cafevdb-page-header" class="cafevdb-page-header">
     <H4>
       Auf dieser Seite wird <B>nur</B> der neue Musiker f&uuml;r das Projekt angezeigt,
       f&uuml;r die komplette List mu&szlig; man den entsprechenden Button bet&auml;tigen.
@@ -642,7 +646,7 @@ __EOT__;
       if (!isset($musinst)) {
         // Warn.
         echo
-          '<H4>None of the instruments known by the musicions are mentioned in the
+          '<H4>None of the instruments known by the musician are mentioned in the
 <A HREF="Projekte.php?PME_sys_rec='.$projectId.'&PME_sys_operation=PME_op_Change">instrumentation-list</A>
 for the project. The musician is added nevertheless to the project with the instrument '.$instruments[0].'.
 Please correct the mis-match.</H4>';

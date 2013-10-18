@@ -403,6 +403,8 @@ ownclouddev';
       self::$pmeopts[$key] = self::$dbopts[$key];
     }
 
+    self::$debug_query = self::getUserValue('debugmode') === 'on' ? true : false;
+
     self::$pmeopts['url']['images'] = self::APP_BASE . 'img/';
     global $HTTP_SERVER_VARS;
     self::$pmeopts['page_name'] = $HTTP_SERVER_VARS['PHP_SELF'].'?app=cafevdb';
@@ -422,6 +424,7 @@ ownclouddev';
     // Buttons position: U - up, D - down (default)
     self::$pmeopts['navigation'] = 'GUDM';
     self::$pmeopts['miscphp'] = 'Email::display';
+    self::$pmeopts['misccssclass'] = 'email';
     self::$pmeopts['labels']['Misc'] = 'Em@il';
     //self::$pmeopts['labels']['Sort Field'] = 'Sortierfeld';
 

@@ -124,6 +124,8 @@ confirm_text['deselect'] = '';
     $op = Util::cgiValue('PME_sys_operation');
     if ($op == "Em@il") {
       $tmplname = 'email';
+    } else if (strpos($op, strval(L::t('Add all to'))) === 0) {
+      $tmplname = 'email';
     } else {
       $tmplname = Util::cgiValue('Template', 'blog');
     }

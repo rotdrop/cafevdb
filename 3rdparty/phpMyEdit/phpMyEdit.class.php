@@ -151,7 +151,8 @@ class phpMyEdit
 	var $message;		// informational message to print
 	var $notify;		// change notification e-mail adresses
 	var $logtable;		// name of optional logtable
-		var $miscphp;			// callback function for multi-purpose custom misc button 
+	var $miscphp;		// callback function for multi-purpose custom misc button 
+	var $misccss;       // css class name for misc buttons
 	var $navigation;	// navigation style
 	var $buttons;
 	var $tabs;			// TAB names
@@ -283,7 +284,7 @@ class phpMyEdit
 	function change_operation() { return $this->label_cmp($this->operation, 'Change') && $this->change_enabled(); }
 	function copy_operation()	{ return $this->label_cmp($this->operation, 'Copy')	  && $this->copy_enabled();	  }
 	function delete_operation() { return $this->label_cmp($this->operation, 'Delete') && $this->delete_enabled(); }
-		function misc_operation()	{ return $this->label_cmp($this->operation, 'Misc')	  && $this->misc_enabled();	 }
+	function misc_operation()	{ return $this->label_cmp($this->operation, 'Misc')	  && $this->misc_enabled();	 }
 	function view_operation()	{ return $this->label_cmp($this->operation, 'View')	  && $this->view_enabled();	  }
 	function filter_operation() { return $this->fl && $this->filter_enabled() && $this->list_operation(); }
 	function list_operation()	{ /* covers also filtering page */ return ! $this->change_operation()
@@ -798,10 +799,9 @@ class phpMyEdit
 				else $fields[] = $this->fqn($k, true, true).' AS '.$this->sd.'qf'.$k.'_idx'.$this->ed;
 			}
 			if ($this->col_has_datemask($k)) {
-				$fields[] = ("(TO_SECONDS(".$this->fqn($k).")"
-							 ."-TO_SECONDS('1970-01-01 00:00:00')"
-							 ."-".date_offset_get(new DateTime).") "
-							 ."AS ".$this->sd."qf".$k."_timestamp".$this->ed);
+				// Date functions of mysql are a nightmare. Leave the
+				// conversion to PHP further below.
+				$fields[] = ($this->fqn($k)." AS ".$this->sd."qf".$k."_timestamp".$this->ed);
 			}
 		}
 		return join(',', $fields);
@@ -1646,11 +1646,17 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 	{
 		$value = '';
 		if ($row["qf$k"."_timestamp"] != '') {
+			$data = $row["qf$k".'_timestamp'];
+			if (!is_numeric($data)) {
+				// Convert whatever is contained in the timestamp field to
+				// seconds since the epoch.
+				$data = strtotime($data);
+			}
 			if (@$this->fdd[$k]['datemask']) {
-				$value = intval($row["qf$k".'_timestamp']);
+				$value = intval($data);
 				$value = @date($this->fdd[$k]['datemask'], $value);
 			} else if (@$this->fdd[$k]['strftimemask']) {
-				$value = intval($row["qf$k".'_timestamp']);
+				$value = intval($data);
 				$value = @strftime($this->fdd[$k]['strftimemask'], $value);
 			}
 		}
@@ -2333,23 +2339,24 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			return $this->htmlSubmit('operation', ucfirst($name),
 					$this->getCSSclass($name, $position), false, $enabled ? 0 : $disabled);
 		}
-				if ($name == 'misc') {
+		if ($name == 'misc') {
 			$enabled	 = $this->misc_enabled();
-						$nav = '<span class="'.$this->getCSSclass($name, $position).'">';
+			$cssname     = $this->misccss;
+			$nav = '<span class="'.$this->getCSSclass($cssname, $position).'">';
 			$nav .= $this->htmlSubmit(
 								'operation', ucfirst($name),
-								$this->getCSSclass($name, $position), false, $enabled ? 0 : $disabled);
+								$this->getCSSclass($cssname, $position), false, $enabled ? 0 : $disabled);
 						// One button to select the result of the current query
 			$nav .= $this->htmlSubmit(
 								'operation', '+',
-								$this->getCSSclass($name.'+', $position), false, $enabled ? 0 : $disabled);
+								$this->getCSSclass($cssname.'+', $position), false, $enabled ? 0 : $disabled);
 						// One button to deselect the result of the current query
 			$nav .= $this->htmlSubmit(
 								'operation', '-',
-								$this->getCSSclass($name.'-', $position), false, $enabled ? 0 : $disabled);
+								$this->getCSSclass($cssname.'-', $position), false, $enabled ? 0 : $disabled);
 						$nav .= '</span>';
 						return $nav;
-				}
+		}
 		if ($name == 'savedelete') {
 			$enabled	 = $this->delete_enabled();
 			$js = 'onclick="return confirm(\''.$this->labels['Delete'].' ?\');"';
@@ -3035,7 +3042,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 						echo ' /></td>',"\n";
 					}
 										if ($this->nav_custom_multi()) {
-												$css	  = $this->getCSSclass('misc-check');
+												$css	  = $this->getCSSclass($this->misccss.'-check');
 												$namebase = $this->cgi['prefix']['sys'].'mrecs';
 												$name	  = $namebase.'[]';
 												$ttip	  = $this->fetchToolTip($css, $name);
@@ -3061,7 +3068,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 														// Remove, remember all others
 														unset($this->mrecs[$mrecs_key]);
 												}
-						echo ' /><div class="'.$this->getCSSclass('misc-check').'" /></label></td>'."\n";
+						echo ' /><div class="'.$this->getCSSclass($this->misccss.'-check').'" /></label></td>'."\n";
 										}
 				} elseif ($this->filter_enabled()) {
 					echo '<td class="',$css_class_name,'" colspan="',$this->sys_cols,'">&nbsp;</td>',"\n";
@@ -3981,7 +3988,11 @@ echo "<!-- ".$stamps[$fd]." ".$oldstamp." -->\n";
 		$this->triggers	 = @$opts['triggers'];
 		$this->notify	 = @$opts['notify'];
 		$this->logtable	 = @$opts['logtable'];
-				$this->miscphp	 = @$opts['miscphp'];
+		$this->miscphp	 = @$opts['miscphp'];
+		$this->misccss   = @$opts['misccssclass'];
+		if (!$this->misccss) {
+			$this->misccss = 'misc';
+		}
 		$this->page_name = @$opts['page_name'];
 		if (! isset($this->page_name)) {
 			$this->page_name = basename($this->get_server_var('PHP_SELF'));

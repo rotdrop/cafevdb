@@ -78,7 +78,7 @@ oder auszuschalten!'),
 
         'pme-sort-rvrt' => L::t('  Klick mich, um die Sortierreihenfolge umzukehren!'),
 
-        'pme-misc' => L::t('  Klick mich, um eine Em@il an die ausgewählten
+        'pme-email' => L::t('  Klick mich, um eine Em@il an die ausgewählten
 Musiker zu versenden. Auf der folgenden Seite kann
 die Auswahl dann noch modifiziert werden.
 `angezeigt\' bedeutet: nicht
@@ -87,7 +87,7 @@ Anzeige-Seite, sondern
 alle, die den Such-Kriterien
 entsprechen.'),
 
-        'pme-misc+' => L::t('  Klick mich, um alle gerade
+        'pme-email+' => L::t('  Klick mich, um alle gerade
 angezeigten Musiker zu der
 Em@il-Auswahl hinzuzufügen.
 `angezeigt\' bedeutet: nicht
@@ -96,7 +96,7 @@ Anzeige-Seite, sondern
 alle, die den Such-Kriterien
 entsprechen.'),
 
-        'pme-misc-' => L::t('  Klick mich, um alle gerade
+        'pme-email-' => L::t('  Klick mich, um alle gerade
 angezeigten Musiker von der
 Em@il-Auswahl zu entfernen'),
 
@@ -122,7 +122,7 @@ Als Platzhalter verwendet man `%%\', z.B. `%%Ste%%an\'
 beim Vornamen. Bei numerischen Feldern ist links
 eine Auswahlbox mit Vergleichsoperationen.'),
         
-        'pme-misc-check' => L::t('  Click mich, um mich
+        'pme-email-check' => L::t('  Click mich, um mich
 Deinem Massenmail-Vorhaben
 hinzuzufügen. Schäme Dich!'),
 
@@ -140,7 +140,7 @@ zeigt den aktuellen Datensatz zunächst an.
 Gelöscht wird der erst nach einer
 weiteren Bestätigung. Trotzdem:
 VORSICHT!.')),
-        'pme-misc-check' => L::t('  Adressaten in potentielle
+        'pme-email-check' => L::t('  Adressaten in potentielle
 Massenmail Adressliste aufnehmen.
 Kann man (glücjlicherweise) 
 vor dem Senden der Em@il noch
