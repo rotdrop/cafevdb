@@ -749,6 +749,8 @@ class BulkAddMusicians
       Auf dieser Seite werden <B>nur</B> die neuen Musiker f&uuml;r das Projekt angezeigt,
       f&uuml;r die komplette List mu&szlig; man den entsprechenden Button bet&auml;tigen.
     </H4>
+  </div>
+</div>
 __EOT__;
 
     if (true || Util::debugMode()) {
