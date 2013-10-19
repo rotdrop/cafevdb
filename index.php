@@ -125,7 +125,7 @@ confirm_text['deselect'] = '';
     if ($op == "Em@il") {
       $tmplname = 'email';
     } else if (strpos($op, strval(L::t('Add all to'))) === 0) {
-      $tmplname = 'email';
+      $tmplname = 'bulk-add-musicians';
     } else {
       $tmplname = Util::cgiValue('Template', 'blog');
     }

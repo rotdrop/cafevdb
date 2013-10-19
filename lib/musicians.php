@@ -388,7 +388,7 @@ class AddOneMusician
     parent::__construct($execute);
   }
 
-  /**Helper function to add or change one specific musician to an
+  /**Helper method to add or change one specific musician to an
    * existing project. $this->template determines what to do.
    */
   public function display() {
@@ -706,6 +706,52 @@ __EOT__;
     $this->pme = new \phpMyEdit($opts);
 
     if (Util::debugMode()) {
+      echo '<PRE>';
+      print_r($_POST);
+      echo '</PRE>';
+    }
+
+  }
+
+}; // class definition.
+
+/**Class responsible for adding one musician to a project.
+ */
+class BulkAddMusicians
+  extends Instrumentation
+{
+  const CSS_PREFIX = 'cafevdb-page';
+
+  function __construct($execute = false) {
+    parent::__construct($execute);
+  }
+
+  /**Helper method to add or change multiple musicians to an
+   * existing project.
+   */
+  public function display() {
+
+    global $debug_query;
+    //Config::$debug_query = true;
+    //$debug_query = true;
+
+    $opts            = $this->opts;
+    $project         = $this->project;
+    $projectId       = $this->projectId;
+    $template        = $this->template;
+    $userExtraFields = $this->userExtraFields;
+    $recordsPerPage  = $this->recordsPerPage;
+
+    echo <<<__EOT__
+<div id="cafevdb-page-header-box" class="cafevdb-page-header-box">
+  <div id="cafevdb-page-header" class="cafevdb-page-header">
+    <H4>
+      Auf dieser Seite werden <B>nur</B> die neuen Musiker f&uuml;r das Projekt angezeigt,
+      f&uuml;r die komplette List mu&szlig; man den entsprechenden Button bet&auml;tigen.
+    </H4>
+__EOT__;
+
+    if (true || Util::debugMode()) {
       echo '<PRE>';
       print_r($_POST);
       echo '</PRE>';
