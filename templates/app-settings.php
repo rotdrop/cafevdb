@@ -14,7 +14,7 @@ $off = $_['orchestra'] == '' ? 'disabled="disabled"' : '';
   </form>
 <!-- ENCRYPTION-KEY -->
   <form id="systemkey">
-    <fieldset <?php echo $off; ?> ><legend ><?php echo L::t('Encryption settings'); ?></legend>
+    <fieldset <?php echo $off; ?> ><legend><?php echo L::t('Encryption settings'); ?></legend>
       <input type="password" id="oldkey" name="oldkey" placeholder="<?php echo L::t('Current Key');?>" />
       <input type="password" id="key" name="systemkey" placeholder="<?php echo L::t('New Key');?>" data-typetoggle="#systemkey-show" />
       <input type="checkbox" id="systemkey-show" name="show" /><label for="systemkey-show"><?php echo L::t('show');?></label>
