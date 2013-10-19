@@ -7,6 +7,13 @@ use CAFEVDB\BulkAddMusicians;
 $table = new BulkAddMusicians();
 $css_pfx = BulkAddMusicians::CSS_PREFIX;
 
+$nav = '';
+$nav .= Navigation::button('projectlabel', $table->project, $table->projectId);
+$nav .= Navigation::button('projects');
+$nav .= Navigation::button('add', $table->project, $table->projectId);
+$nav .= Navigation::button('brief', $table->project, $table->projectId);
+$nav .= Navigation::button('projectinstruments', $table->project, $table->projectId);
+
 // Generate our own header block
 ob_start();
 $table->display();
