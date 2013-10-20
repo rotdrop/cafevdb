@@ -726,6 +726,20 @@ class BulkAddMusicians
     parent::__construct($execute);
   }
 
+  public function headerText()
+  {
+
+    $header = <<<__EOT__
+<H2>
+  Auf dieser Seite werden <B>nur</B> die neuen Musiker f&uuml;r das Projekt angezeigt,
+  f&uuml;r die komplette List mu&szlig; man den entsprechenden Button bet&auml;tigen.
+</H2>
+
+__EOT__;
+
+    return $header;
+  }
+
   /**Helper method to add or change multiple musicians to an
    * existing project.
    */
@@ -741,17 +755,6 @@ class BulkAddMusicians
     $template        = $this->template;
     $userExtraFields = $this->userExtraFields;
     $recordsPerPage  = $this->recordsPerPage;
-
-    echo <<<__EOT__
-<div id="cafevdb-page-header-box" class="cafevdb-page-header-box">
-  <div id="cafevdb-page-header" class="cafevdb-page-header">
-    <H4>
-      Auf dieser Seite werden <B>nur</B> die neuen Musiker f&uuml;r das Projekt angezeigt,
-      f&uuml;r die komplette List mu&szlig; man den entsprechenden Button bet&auml;tigen.
-    </H4>
-  </div>
-</div>
-__EOT__;
 
     if (true || Util::debugMode()) {
       echo '<PRE>';
