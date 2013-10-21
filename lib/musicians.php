@@ -721,9 +721,17 @@ class BulkAddMusicians
   extends Instrumentation
 {
   const CSS_PREFIX = 'cafevdb-page';
+  const INITIAL_TEMPLATE = 'bulk-add-musicians';
+  const CHANGE_TEMPLATE = 'bulk-change-musicians';
+
+  private $musiciansIds;
+  private $musicansKey;
 
   function __construct($execute = true) {
     parent::__construct($execute);
+    $this->musicinsIds  = array();
+    $pmepfx             = $this->opts['cgi']['prefix']['sys'];
+    $this->musiciansKey = $pmepfx.'mrecs';
   }
 
   public function headerText()
@@ -740,20 +748,31 @@ __EOT__;
     return $header;
   }
 
+  private function sqlFilter($table = 'PMEtable0') {
+    $filter = "`".$table."`.ProjektId = ".$this->projectId." AND ( `".$table."`.MusikerId = -1";
+    foreach ($this->musiciansIds as $musId) {
+      $filter .= " OR `".$table.".`.MusikerId = ".$musId;
+    }
+    return $filter;
+  }
+
   /**Helper method to add or change multiple musicians to an
    * existing project.
    */
-  function display()
+  public function display()
   {
     global $debug_query;
     //Config::$debug_query = true;
     //$debug_query = true;
 
-    $project         = $this->project;
-    $projectId       = $this->projectId;
     $opts            = $this->opts;
     $recordsPerPage  = $this->recordsPerPage;
     $userExtraFields = $this->userExtraFields;
+
+    $saved_template = $this->template;
+    $this->template = self::CHANGE_TEMPLATE;
+
+    $this->musicianIds  = Util::cgiValue($musiciansKey,array());
 
     if (false) {
       echo '<PRE>';
@@ -785,10 +804,12 @@ __EOT__;
 
     // Don't want everything persistent.
     $opts['cgi']['persist'] = array(
-      'Project' => $project,
-      'ProjectId' => $projectId,
-      'Template' => 'brief-instrumentation',
+      'Project' => $this->project,
+      'ProjectId' => $this->projectId,
       'Table' => $opts['tb'],
+      'Template' => $this->template,
+      'RecordsPerPage' => $recordsPerPage,
+      $this->musicansKey => $this->musiciansIds,
       'headervisibility' => Util::cgiValue('headervisibility','expanded'));
 
     // Name of field which is the unique key
@@ -803,7 +824,7 @@ __EOT__;
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
     // F - filter, I - initial sort suppressed
-    $opts['options'] = 'CPVDFM';
+    $opts['options'] = 'CVDF';
 
     // Number of lines to display on multiple selection filters
     $opts['multiple'] = '4';
@@ -812,17 +833,14 @@ __EOT__;
     // Buttons position: U - up, D - down (default)
     //$opts['navigation'] = 'DB';
 
-    $export = Navigation::tableExportButton();
-    $opts['buttons'] = Navigation::prependTableButton($export, true);
-
     // Display special page elements
     $opts['display'] = array(
-                             'form'  => true,
-                             'query' => true,
-                             'sort'  => true,
-                             'time'  => true,
-                             'tabs'  => true
-                             );
+      'form'  => true,
+      'query' => false,
+      'sort'  => true,
+      'time'  => true,
+      'tabs'  => false
+      );
 
     // Set default prefixes for variables
     $opts['js']['prefix']               = 'PME_js_';
@@ -845,7 +863,8 @@ __EOT__;
        $opts['filters'] = "PMEtable0.sessions_count > 200";
     */
 
-    $opts['filters'] = "ProjektId = $projectId";
+    $opts['filters'] = $this->sqlFilter('PMEtable0');
+
 
     /* Field definitions
    
@@ -903,7 +922,7 @@ __EOT__;
                                                         'table' => 'Projekte',
                                                         'column' => 'Id',
                                                         'description' => 'Name',
-                                                        'filters' => "Id = $projectId"
+                                                        'filters' => "Id = $this->projectId"
                                                         )
                                       );
     $opts['fdd']['MusikerId'] = array(
@@ -992,6 +1011,100 @@ __EOT__;
       foreach ($opts['fdd'] as $key => $value) {
         $opts['fdd'][$key]['sort'] = false;
       }
+    }
+
+    if ($saved_template == SELF::INITIAL_TEMPLATE) {
+
+      // Fetch all needed data from Musiker table
+      $handle = mySQL::connect($opts);
+
+      $musquery = "SELECT `Instrumente` FROM Musiker WHERE `Id` = $musicianId";
+      $musres = mySQL::query($musquery, $handle);
+      $musnumrows = mysql_num_rows($musres);
+
+      if ($musnumrows != 1) {
+        Util::error("Data inconsisteny, $musicianId is not a unique Id");
+      }
+
+      $musrow = mySQL::fetch($musres);
+      $instruments = explode(',',$musrow['Instrumente']);
+
+      $instquery = "SELECT `Besetzung` FROM `Projekte` WHERE `Id` = $projectId";
+      $instres = mySQL::query($instquery, $handle);
+      $instnumrows = mysql_num_rows($instres);
+
+      if ($instnumrows != 1) {
+        Util::error("Data inconsisteny, $projectId is not a unique Id");
+      }
+
+      $instrow = mySQL::fetch($instres);
+      $instrumentation = explode(',',$instrow['Besetzung']);
+
+      unset($musinst);
+      foreach ($instruments as $value) {
+        if (array_search($value, $instrumentation) !== false) {
+          // Choose $musinst as instrument
+          $musinst = $value;
+          break;
+        }
+      }
+      if (!isset($musinst)) {
+        // Warn.
+        echo
+          '<H4>None of the instruments known by the musician are mentioned in the
+<A HREF="Projekte.php?PME_sys_rec='.$projectId.'&PME_sys_operation=PME_op_Change">instrumentation-list</A>
+for the project. The musician is added nevertheless to the project with the instrument '.$instruments[0].'.
+Please correct the mis-match.</H4>';
+        $musinst = $instruments[0];
+      } else {
+        echo
+          '<H4>Choosing the first instrument known to the musician and mentioned in the instrumentation list
+of the project. Please correct that by choosing a different "Projekt-Instrument" below, if necessary.
+Choosing "'.$musinst.'" as instrument.</H4>';
+      }
+    
+
+      $prjquery = "INSERT INTO `Besetzungen` (`MusikerId`,`ProjektId`,`Instrument`)
+ VALUES ('$musicianId','$projectId','$musinst')";
+
+      mySQL::query($prjquery, $handle);
+      mySQL::close($handle);
+
+    } else if ($forcedInstrument != false) {
+      // "call-back" mode for change trigger. The Change trigger
+      // should remove any changed instrument from the table data and
+      // instead pass the new intstrumentation via Javascript a an
+      // AJAX call-back which handles the user's decision by a
+      // separate data-query.
+
+      // Add to musicans list in Musiker data-base and to musician Besetzungen
+
+      // Fetch all needed data from Musiker table
+      $handle = mySQL::connect($opts);
+
+      $musquery = "SELECT `Instrumente` FROM Musiker WHERE `Id` = $musicianId";
+
+      $musres = mySQL::query($musquery, $handle);
+      $musnumrows = mysql_num_rows($musres);
+
+      if ($musnumrows != 1) {
+        die ("Data inconsisteny, $musicianId is not a unique Id");
+      }
+
+      $musrow = mySQL::fetch($musres);
+      $instruments = $musrow['Instrumente'] . "," . $forcedInstrument;
+    
+      $musquery = "UPDATE `Musiker` SET `Instrumente`='$instruments'
+ WHERE `Id` = $musicianId";
+  
+      mySQL::query($musquery, $handle);
+
+      $prjquery = "UPDATE `Besetzungen` SET `Instrument`='$forcedInstrument'
+ WHERE `MusikerId` = $musicianId AND `ProjektId` = $projectId";
+
+      mySQL::query($prjquery, $handle);
+
+      mySQL::close();
     }
 
     $opts['execute'] = $this->execute;
