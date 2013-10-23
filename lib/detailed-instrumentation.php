@@ -346,8 +346,8 @@ __EOT__;
     // No need to check for the project-instrument any longer, as it can
     //no longer be changed here.
     //$opts['triggers']['update']['before'][0]  = 'BesetzungChangeInstrument.TUB.inc.php';
-    $opts['triggers']['update']['before'][1]  = Config::$triggers.'remove-unchanged.TUB.php.inc';
-    $opts['triggers']['update']['before'][2]  = Config::$triggers.'update-musician-timestamp.TUB.php.inc';
+    $opts['triggers']['update']['before'][1]  = Config::$triggers.'remove-unchanged.TUB.inc.php';
+    $opts['triggers']['update']['before'][2]  = Config::$triggers.'update-musician-timestamp.TUB.inc.php';
 
     if ($this->pme_bare) {
       // disable all navigation buttons, probably for html export
