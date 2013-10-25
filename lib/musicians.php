@@ -772,7 +772,7 @@ __EOT__;
     $saved_template = $this->template;
     $this->template = self::CHANGE_TEMPLATE;
 
-    $this->musicianIds  = Util::cgiValue($musiciansKey,array());
+    $this->musicianIds  = Util::cgiValue($this->musiciansKey,array());
 
     if (false) {
       echo '<PRE>';
