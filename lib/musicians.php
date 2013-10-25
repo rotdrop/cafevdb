@@ -750,9 +750,10 @@ __EOT__;
 
   private function sqlFilter($table = 'PMEtable0') {
     $filter = "`".$table."`.ProjektId = ".$this->projectId." AND ( `".$table."`.MusikerId = -1";
-    foreach ($this->musiciansIds as $musId) {
-      $filter .= " OR `".$table.".`.MusikerId = ".$musId;
+    foreach ($this->musicianIds as $musId) {
+      $filter .= " OR `".$table."`.MusikerId = ".$musId;
     }
+    $filter .= ")"; // don't forget the closing parenthesis.
     return $filter;
   }
 
@@ -772,7 +773,14 @@ __EOT__;
     $saved_template = $this->template;
     $this->template = self::CHANGE_TEMPLATE;
 
-    $this->musicianIds  = Util::cgiValue($musiciansKey,array());
+    $this->musicianIds  = Util::cgiValue($this->musiciansKey,array());
+
+    // Probably needs several changes ...
+    if (isset($_POST['ForcedInstrument'])) {
+      $forcedInstrument = $_POST['ForcedInstrument'];
+    } else {
+      $forcedInstrument = false;
+    }
 
     if (false) {
       echo '<PRE>';
