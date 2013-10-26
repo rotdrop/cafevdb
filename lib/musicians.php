@@ -60,6 +60,8 @@ __EOT__;
     $recordsPerPage  = $this->recordsPerPage;
     $opts            = $this->opts;
 
+    $headervisibility = Util::cgiValue('headervisibility','expanded');
+
     /*
      * IMPORTANT NOTE: This generated file contains only a subset of huge amount
      * of options that can be used with phpMyEdit. To get information about all
@@ -88,7 +90,7 @@ __EOT__;
       'Template' => $this->projectMode
       ? 'add-musicians' : 'all-musicians',
       'Table' => $opts['tb'],
-      'headervisibility' => Util::cgiValue('headervisibility','expanded'));
+      'headervisibility' => $headervisibility);
 
     // Name of field which is the unique key
     $opts['key'] = 'Id';
@@ -149,7 +151,7 @@ __EOT__;
     if ($this->projectMode) {
        $opts['filters'] = "(SELECT COUNT(*) FROM `Besetzungen` WHERE MusikerId = PMEtable0.Id AND ProjektId = $projectId) = 0";
        $opts['misccssclass']   = 'bulkcommit';
-       $opts['labels']['Misc'] = strval(L::t('Add all to')).' '.$project;
+       $opts['labels']['Misc'] = strval(L::t('Add all to %s', array($project)));
     }
 
     /* Field definitions
@@ -190,7 +192,7 @@ __EOT__;
        descriptions fields are also possible. Check documentation for this.
     */
 
-    $bval = strval(L::t('Add to'));
+    $bval = strval(L::t('Add to %s', array($project)));
     $tip  = strval(Config::toolTips('register-musician'));
     if ($this->projectMode) {
       $opts['fdd']['Hinzufuegen'] = array(
@@ -201,13 +203,14 @@ __EOT__;
         'sql' => "REPLACE('"
 ."<div class=\"register-musician\">"
 ."<input type=\"button\" "
-."value=\"$bval $project\" "
+."value=\"$bval\" "
 ."title=\"$tip\" "
 ."name=\""
 ."Template=add-one-musician&amp;"
+."headervisibility=$headervisibility&amp;"
 ."Project=$project&amp;"
 ."ProjectId=$projectId&amp;"
-."MusicianId=@@key@@\""
+."MusicianId=@@key@@\" "
 ."class=\"register-musician\" />"
 ."</div>'"
 .",'@@key@@',`PMEtable0`.`Id`)",
@@ -384,8 +387,22 @@ class AddOneMusician
 {
   const CSS_PREFIX = 'cafevdb-page';
 
-  function __construct($execute = false) {
+  function __construct($execute = true) {
     parent::__construct($execute);
+  }
+
+  public function headerText()
+  {
+
+    $header = <<<__EOT__
+<H2>
+  Auf dieser Seite wird <B>nur</B> der neue Musiker f&uuml;r das Projekt angezeigt,
+  f&uuml;r die komplette List mu&szlig; man den entsprechenden Button bet&auml;tigen.
+</H2>
+
+__EOT__;
+
+    return $header;
   }
 
   /**Helper method to add or change one specific musician to an
@@ -405,14 +422,7 @@ class AddOneMusician
     $userExtraFields = $this->userExtraFields;
     $recordsPerPage  = $this->recordsPerPage;
 
-    echo <<<__EOT__
-<div id="cafevdb-page-header-box" class="cafevdb-page-header-box">
-  <div id="cafevdb-page-header" class="cafevdb-page-header">
-    <H4>
-      Auf dieser Seite wird <B>nur</B> der neue Musiker f&uuml;r das Projekt angezeigt,
-      f&uuml;r die komplette List mu&szlig; man den entsprechenden Button bet&auml;tigen.
-    </H4>
-__EOT__;
+    $headervisibility = Util::cgiValue('headervisibility','expanded');
 
     $opts['tb'] = 'Besetzungen';
 
@@ -434,7 +444,7 @@ __EOT__;
       'Template' => $template,
       'MusicianId' => $musicianId,
       'RecordsPerPage' => $recordsPerPage,
-      'headervisibility' => Util::cgiValue('headervisibility','expanded'));
+      'headervisibility' => $headervisibility);
 
     // Name of field which is the unique key
     $opts['key'] = 'Id';
@@ -608,12 +618,14 @@ __EOT__;
     // data-base. Otherwise add id on request.
     $opts['triggers']['update']['before']  = Config::$triggers.'instrumentation-change-instrument.TUB.inc.php';
 
+    echo "<div class=\"cafevdb-table-notes\">\n"; // notes
+
     if ($saved_template == "add-one-musician") {
 
       // Fetch all needed data from Musiker table
       $handle = mySQL::connect($opts);
 
-      $musquery = "SELECT `Instrumente` FROM Musiker WHERE `Id` = $musicianId";
+      $musquery = "SELECT `Instrumente`,`Vorname`,`Name` FROM Musiker WHERE `Id` = $musicianId";
       $musres = mySQL::query($musquery, $handle);
       $musnumrows = mysql_num_rows($musres);
 
@@ -645,17 +657,27 @@ __EOT__;
       }
       if (!isset($musinst)) {
         // Warn.
-        echo
-          '<H4>None of the instruments known by the musician are mentioned in the
-<A HREF="Projekte.php?PME_sys_rec='.$projectId.'&PME_sys_operation=PME_op_Change">instrumentation-list</A>
-for the project. The musician is added nevertheless to the project with the instrument '.$instruments[0].'.
-Please correct the mis-match.</H4>';
+        $warning = L::t("None of the instruments known by %s are mentioned in the "
+                        ."%sinstrumentation-list%s for the project.\n"
+                        ."The musician is added nevertheless to the project with the instrument ``%s''\n"
+                        ."Please correct the mis-match.",
+                        array($musrow['Vorname']." ".$musrow['Name'],
+                              '<A class="cafevdb-hyperlink" HREF="?app=cafevdb&Template=projects&PME_sys_rec='.$this->projectId.'&PME_sys_operation=PME_op_Change&headervisibility='.$headervisibility.'">',
+                              '</A>',
+                              $instruments[0]));
+        echo "<div class=\"cafevdb-note\">\n  <H4>$warning</H4>\n</div>\n";
         $musinst = $instruments[0];
       } else {
-        echo
-          '<H4>Choosing the first instrument known to the musician and mentioned in the instrumentation list
-of the project. Please correct that by choosing a different "Projekt-Instrument" below, if necessary.
-Choosing "'.$musinst.'" as instrument.</H4>';
+        $note = L::t("Choosing the first instrument known by %s\n"
+                     ."and mentioned in the %sinstrumentation list%s of the project ``%s''.\n"
+                     ."Please correct that by choosing a different ``project-instrument''\n"
+                     ."below, if necessary. Choosing ``%s'' as instrument.",
+                     array($musrow['Vorname']." ".$musrow['Name'],
+                           '<A class="cafevdb-hyperlink" HREF="?app=cafevdb&Template=projects&PME_sys_rec='.$this->projectId.'&PME_sys_operation=PME_op_Change&headervisibility='.$headervisibility.'">',
+                           '</A>',
+                           $this->project,
+                           $musinst));
+        echo "<div class=\"cafevdb-note\">\n  <H4>$note</H4>\n</div>\n";
       }
     
 
@@ -696,10 +718,7 @@ Choosing "'.$musinst.'" as instrument.</H4>';
       mySQL::close();
     }
 
-    echo <<<__EOT__
-   </div>
-</div>
-__EOT__;
+    echo "</div>\n"; // notes
 
     $opts['execute'] = $this->execute;
 
@@ -729,7 +748,7 @@ class BulkAddMusicians
 
   function __construct($execute = true) {
     parent::__construct($execute);
-    $this->musicinsIds  = array();
+    $this->musiciansIds = array();
     $pmepfx             = $this->opts['cgi']['prefix']['sys'];
     $this->musiciansKey = $pmepfx.'mrecs';
   }
@@ -750,7 +769,7 @@ __EOT__;
 
   private function sqlFilter($table = 'PMEtable0') {
     $filter = "`".$table."`.ProjektId = ".$this->projectId." AND ( `".$table."`.MusikerId = -1";
-    foreach ($this->musicianIds as $musId) {
+    foreach ($this->musiciansIds as $musId) {
       $filter .= " OR `".$table."`.MusikerId = ".$musId;
     }
     $filter .= ")"; // don't forget the closing parenthesis.
@@ -770,10 +789,12 @@ __EOT__;
     $recordsPerPage  = $this->recordsPerPage;
     $userExtraFields = $this->userExtraFields;
 
+    $headervisibility = Util::cgiValue('headervisibility','expanded');
+
     $saved_template = $this->template;
     $this->template = self::CHANGE_TEMPLATE;
 
-    $this->musicianIds  = Util::cgiValue($this->musiciansKey,array());
+    $this->musiciansIds  = Util::cgiValue($this->musiciansKey,array());
 
     // Probably needs several changes ...
     if (isset($_POST['ForcedInstrument'])) {
@@ -817,8 +838,8 @@ __EOT__;
       'Table' => $opts['tb'],
       'Template' => $this->template,
       'RecordsPerPage' => $recordsPerPage,
-      $this->musicansKey => $this->musiciansIds,
-      'headervisibility' => Util::cgiValue('headervisibility','expanded'));
+      $this->musiciansKey => $this->musiciansIds,
+      'headervisibility' => $headervisibility);
 
     // Name of field which is the unique key
     $opts['key'] = 'Id';
@@ -1021,62 +1042,84 @@ __EOT__;
       }
     }
 
+    echo "<div class=\"cafevdb-table-notes\">\n"; // notes
+
     if ($saved_template == SELF::INITIAL_TEMPLATE) {
 
       // Fetch all needed data from Musiker table
       $handle = mySQL::connect($opts);
 
-      $musquery = "SELECT `Instrumente` FROM Musiker WHERE `Id` = $musicianId";
-      $musres = mySQL::query($musquery, $handle);
-      $musnumrows = mysql_num_rows($musres);
+      $instrumentationNoBugCount = 0;
 
-      if ($musnumrows != 1) {
-        Util::error("Data inconsisteny, $musicianId is not a unique Id");
-      }
+      foreach ($this->musiciansIds as $musicianId) {
 
-      $musrow = mySQL::fetch($musres);
-      $instruments = explode(',',$musrow['Instrumente']);
+        $musquery = "SELECT `Instrumente`,`Vorname`,`Name` FROM Musiker WHERE `Id` = $musicianId";
+        $musres = mySQL::query($musquery, $handle);
+        $musnumrows = mysql_num_rows($musres);
 
-      $instquery = "SELECT `Besetzung` FROM `Projekte` WHERE `Id` = $projectId";
-      $instres = mySQL::query($instquery, $handle);
-      $instnumrows = mysql_num_rows($instres);
-
-      if ($instnumrows != 1) {
-        Util::error("Data inconsisteny, $projectId is not a unique Id");
-      }
-
-      $instrow = mySQL::fetch($instres);
-      $instrumentation = explode(',',$instrow['Besetzung']);
-
-      unset($musinst);
-      foreach ($instruments as $value) {
-        if (array_search($value, $instrumentation) !== false) {
-          // Choose $musinst as instrument
-          $musinst = $value;
-          break;
+        if ($musnumrows != 1) {
+          Util::error("Data inconsisteny, $musicianId is not a unique Id");
         }
-      }
-      if (!isset($musinst)) {
-        // Warn.
-        echo
-          '<H4>None of the instruments known by the musician are mentioned in the
-<A HREF="Projekte.php?PME_sys_rec='.$projectId.'&PME_sys_operation=PME_op_Change">instrumentation-list</A>
-for the project. The musician is added nevertheless to the project with the instrument '.$instruments[0].'.
-Please correct the mis-match.</H4>';
-        $musinst = $instruments[0];
-      } else {
-        echo
-          '<H4>Choosing the first instrument known to the musician and mentioned in the instrumentation list
-of the project. Please correct that by choosing a different "Projekt-Instrument" below, if necessary.
-Choosing "'.$musinst.'" as instrument.</H4>';
-      }
-    
 
-      $prjquery = "INSERT INTO `Besetzungen` (`MusikerId`,`ProjektId`,`Instrument`)
- VALUES ('$musicianId','$projectId','$musinst')";
+        $musrow = mySQL::fetch($musres);
+        $instruments = explode(',',$musrow['Instrumente']);
 
-      mySQL::query($prjquery, $handle);
+        $instquery = "SELECT `Besetzung` FROM `Projekte` WHERE `Id` = $this->projectId";
+        $instres = mySQL::query($instquery, $handle);
+        $instnumrows = mysql_num_rows($instres);
+
+        if ($instnumrows != 1) {
+          Util::error("Data inconsisteny, $this->projectId is not a unique Id");
+        }
+
+        $instrow = mySQL::fetch($instres);
+        $instrumentation = explode(',',$instrow['Besetzung']);
+
+        unset($musinst);
+        foreach ($instruments as $value) {
+          if (array_search($value, $instrumentation) !== false) {
+            // Choose $musinst as instrument
+            $musinst = $value;
+            break;
+          }
+        }
+        if (!isset($musinst)) {
+          // Warn.
+          $warning = L::t("None of the instruments known by %s are mentioned in the "
+                          ."%sinstrumentation-list%s for the project.\n"
+                          ."The musician is added nevertheless to the project with the instrument ``%s''\n"
+                          ."Please correct the mis-match.",
+                          array($musrow['Vorname']." ".$musrow['Name'],
+                                '<A class="cafevdb-hyperlink" HREF="?app=cafevdb&Template=projects&PME_sys_rec='.$this->projectId.'&PME_sys_operation=PME_op_Change&headervisibility='.$headervisibility.'">',
+                                '</A>',
+                                $instruments[0]));
+          echo "<div class=\"cafevdb-note\">\n  <H4>$warning</H4>\n</div>\n";
+          $musinst = $instruments[0];
+        } else {
+          $instrumentationNoBugCount++;
+        }
+
+        $prjquery = "INSERT INTO `Besetzungen` (`MusikerId`,`ProjektId`,`Instrument`)
+ VALUES ('$musicianId','$this->projectId','$musinst')";
+
+        // fire it up
+        mySQL::query($prjquery, $handle);
+
+      } // foreach over all Ids to be added
+
       mySQL::close($handle);
+
+      if ($instrumentationNoBugCount > 0) {
+        $note = L::t("Generally, the first instrument known by the respective musician\n"
+                     ."and mentioned in the %sinstrumentation list%s of the project ``%s''\n"
+                     ."was chosen as ``project-instrument''.\n"
+                     ."Please correct that by choosing a different ``project-instrument''\n"
+                     ."below, if necessary.",
+                     array('<A class="cafevdb-hyperlink" HREF="?app=cafevdb&Template=projects&PME_sys_rec='.$this->projectId.'&PME_sys_operation=PME_op_Change&headervisibility='.$headervisibility.'">',
+                           '</A>',
+                           $this->project));
+        echo "<div class=\"cafevdb-note\">\n  <H4>$note</H4>\n</div>\n";
+      }
 
     } else if ($forcedInstrument != false) {
       // "call-back" mode for change trigger. The Change trigger
@@ -1108,21 +1151,25 @@ Choosing "'.$musinst.'" as instrument.</H4>';
       mySQL::query($musquery, $handle);
 
       $prjquery = "UPDATE `Besetzungen` SET `Instrument`='$forcedInstrument'
- WHERE `MusikerId` = $musicianId AND `ProjektId` = $projectId";
+ WHERE `MusikerId` = $musicianId AND `ProjektId` = $this->projectId";
 
       mySQL::query($prjquery, $handle);
 
       mySQL::close();
     }
 
+    echo "</div>\n"; // notes
+
     $opts['execute'] = $this->execute;
 
     // Generate and possibly display the table
     $this->pme = new \phpMyEdit($opts);
 
-    if (true || Util::debugMode()) {
+    if (Util::debugMode()) {
       echo '<PRE>';
       print_r($_POST);
+      print_r($opts['cgi']['persist']);
+      echo $saved_template."\n";
       echo '</PRE>';
     }
 
