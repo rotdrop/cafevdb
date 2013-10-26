@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-08 00:28+0100\n"
+"POT-Creation-Date: 2013-10-26 15:36+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -43,7 +43,7 @@ msgid "Blog entry with id `%s' cound not be retrieved."
 msgstr ""
 
 #: ajax/blog/editentry.php:92 ajax/blog/modifyentry.php:124
-#: ajax/events/events.php:89 ajax/events/execute.php:129
+#: ajax/events/events.php:92 ajax/events/execute.php:129
 #: ajax/events/new.form.php:195 ajax/events/sendmail.php:75
 msgid "Error, caught an exception"
 msgstr ""
@@ -140,7 +140,7 @@ msgstr ""
 msgid "Cannot access calendar: `%s'"
 msgstr ""
 
-#: ajax/expertmode/clearoutput.php:11 templates/expertmode.php:51
+#: ajax/expertmode/clearoutput.php:11 templates/expertmode.php:53
 msgid "empty"
 msgstr ""
 
@@ -249,153 +249,153 @@ msgstr ""
 msgid "Inconsistency, submitted `%s' != `%s' (stored)"
 msgstr ""
 
-#: ajax/settings/app-settings.php:255
+#: ajax/settings/app-settings.php:256
 #, php-format
 msgid "New shared folder `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:260
+#: ajax/settings/app-settings.php:261
 #, php-format
 msgid "Failure creating folder `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:273
+#: ajax/settings/app-settings.php:274
 #, php-format
 msgid "Keeping old shared folder `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:278
+#: ajax/settings/app-settings.php:279
 #, php-format
 msgid "Failure checking folder `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:284
+#: ajax/settings/app-settings.php:285
 #, php-format
 msgid "Failure checking folder `%s', caught an exception `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:308 ajax/settings/encryptionkey.php:42
+#: ajax/settings/app-settings.php:309 ajax/settings/encryptionkey.php:42
 msgid "Exception:"
 msgstr ""
 
-#: ajax/settings/app-settings.php:322
+#: ajax/settings/app-settings.php:323
 msgid "Unable to set:"
 msgstr ""
 
-#: ajax/settings/app-settings.php:333
+#: ajax/settings/app-settings.php:334
 msgid "minutes"
 msgstr ""
 
-#: ajax/settings/app-settings.php:353
+#: ajax/settings/app-settings.php:354
 msgid "Changed password for"
 msgstr ""
 
-#: ajax/settings/app-settings.php:359
+#: ajax/settings/app-settings.php:360
 msgid "Failed changing password for"
 msgstr ""
 
-#: ajax/settings/app-settings.php:380
+#: ajax/settings/app-settings.php:381
 #, php-format
 msgid "Using `%s' at %s as %s-server."
 msgstr ""
 
-#: ajax/settings/app-settings.php:386
+#: ajax/settings/app-settings.php:387
 #, php-format
 msgid "Unable to determine the IP-address for %s."
 msgstr ""
 
-#: ajax/settings/app-settings.php:403
+#: ajax/settings/app-settings.php:404
 msgid "Using "
 msgstr ""
 
-#: ajax/settings/app-settings.php:410
+#: ajax/settings/app-settings.php:411
 #, php-format
 msgid "`%s' doesn't seem to be a candidate for an IP-port."
 msgstr ""
 
-#: ajax/settings/app-settings.php:434
+#: ajax/settings/app-settings.php:435
 msgid "Unknown transport security method:"
 msgstr ""
 
-#: ajax/settings/app-settings.php:445
+#: ajax/settings/app-settings.php:446
 #, php-format
 msgid "Using `%s' for message transport."
 msgstr ""
 
-#: ajax/settings/app-settings.php:459
+#: ajax/settings/app-settings.php:460
 #, php-format
 msgid "Using `%s' as login."
 msgstr ""
 
-#: ajax/settings/app-settings.php:469
+#: ajax/settings/app-settings.php:470
 msgid "Password has been changed."
 msgstr ""
 
-#: ajax/settings/app-settings.php:485
+#: ajax/settings/app-settings.php:486
 msgid "IMAP connection seems functional."
 msgstr ""
 
-#: ajax/settings/app-settings.php:488
+#: ajax/settings/app-settings.php:489
 msgid "Unable to establish IMAP connection."
 msgstr ""
 
-#: ajax/settings/app-settings.php:497
+#: ajax/settings/app-settings.php:498
 msgid "SMTP connection seems functional."
 msgstr ""
 
-#: ajax/settings/app-settings.php:500
+#: ajax/settings/app-settings.php:501
 msgid "Unable to establish SMTP connection."
 msgstr ""
 
-#: ajax/settings/app-settings.php:517
+#: ajax/settings/app-settings.php:518
 msgid "UNSPECIFIED"
 msgstr ""
 
-#: ajax/settings/app-settings.php:521
+#: ajax/settings/app-settings.php:522
 #, php-format
 msgid "Email test-mode enabled, sending only to %s"
 msgstr ""
 
-#: ajax/settings/app-settings.php:525
+#: ajax/settings/app-settings.php:526
 msgid "Email test-mode disable, will send to all!!!"
 msgstr ""
 
-#: ajax/settings/app-settings.php:536 ajax/settings/app-settings.php:565
+#: ajax/settings/app-settings.php:537 ajax/settings/app-settings.php:566
 #, php-format
 msgid "`%s' doesn't seem to be a valid email-address."
 msgstr ""
 
-#: ajax/settings/app-settings.php:544
+#: ajax/settings/app-settings.php:545
 #, php-format
 msgid "Using `%s' as email-address for test-mode."
 msgstr ""
 
-#: ajax/settings/app-settings.php:554
+#: ajax/settings/app-settings.php:555
 #, php-format
 msgid "Using `%s' as name of the sender identity."
 msgstr ""
 
-#: ajax/settings/app-settings.php:573
+#: ajax/settings/app-settings.php:574
 #, php-format
 msgid "Using `%s' as sender email-address."
 msgstr ""
 
-#: ajax/settings/app-settings.php:589
+#: ajax/settings/app-settings.php:590
 #, php-format
 msgid "Link for `%s' set to `%s'."
 msgstr ""
 
-#: ajax/settings/app-settings.php:602
+#: ajax/settings/app-settings.php:603
 #, php-format
 msgid "Unable to test link for `%s' without a link target."
 msgstr ""
 
-#: ajax/settings/app-settings.php:608
+#: ajax/settings/app-settings.php:609
 #, php-format
 msgid "New window or tab with `%s'?"
 msgstr ""
 
-#: ajax/settings/app-settings.php:631
+#: ajax/settings/app-settings.php:632
 msgid "Unhandled request:"
 msgstr ""
 
@@ -437,53 +437,9 @@ msgstr ""
 msgid "Tooltips changed"
 msgstr ""
 
-#: index.php:93
-msgid "Missing or invalid fields"
-msgstr ""
-
-#: index.php:94
-msgid "Title"
-msgstr ""
-
-#: index.php:95
-msgid "Calendar"
-msgstr ""
-
-#: index.php:96
-msgid "From Date"
-msgstr ""
-
-#: index.php:97
-msgid "From Time"
-msgstr ""
-
-#: index.php:98
-msgid "To Date"
-msgstr ""
-
-#: index.php:99
-msgid "To Time"
-msgstr ""
-
-#: index.php:100
-msgid "The event ends before it starts"
-msgstr ""
-
-#: index.php:101
-msgid "There was a database failure"
-msgstr ""
-
-#: index.php:106
-msgid "Do you really want to delete this event?"
-msgstr ""
-
-#: index.php:107
-msgid "Do you really want to detach this event from the current project?"
-msgstr ""
-
 #: js/blog.js:17 js/blog.js:97 js/blog.js:151 js/blog.js:178 js/blog.js:202
 #: js/email.js:7 js/email.js:45 js/email.js:56 js/email.js:64 js/email.js:77
-#: js/events.js:32 js/events.js:82
+#: js/events.js:41 js/events.js:92
 msgid "Error"
 msgstr ""
 
@@ -508,63 +464,63 @@ msgstr ""
 msgid "Really delete the entry?"
 msgstr ""
 
-#: js/cafevdb.js:104
+#: js/cafevdb.js:105
 msgid "Export to the following format is not yet supported:"
 msgstr ""
 
-#: js/cafevdb.js:106
+#: js/cafevdb.js:107
 msgid "Unimplemented"
 msgstr ""
 
-#: js/calendar.js:97
+#: js/calendar.js:155
 msgid "Deletion failed"
 msgstr ""
 
-#: js/calendar.js:204
+#: js/calendar.js:257
 msgid "Browser determined position"
 msgstr ""
 
-#: js/calendar.js:217
+#: js/calendar.js:270
 msgid "Detailed search at Google-Maps"
 msgstr ""
 
-#: js/calendar.js:245
+#: js/calendar.js:298
 msgid "Location not found:"
 msgstr ""
 
-#: js/calendar.js:247
+#: js/calendar.js:300
 msgid "No location specified."
 msgstr ""
 
-#: js/calendar.js:249
+#: js/calendar.js:302
 msgid "Unknown location"
 msgstr ""
 
-#: js/calendar.js:277
-msgid "ddd d MMMM[ yyyy]{ -[ddd d] MMMM yyyy}"
+#: js/calendar.js:330
+msgid "ddd d MMMM[ yyyy]{ - [ddd d] MMMM yyyy}"
 msgstr ""
 
-#: js/calendar.js:279
-msgid "ddd d MMMM[ yyyy] HH:mm{ -[ ddd d MMMM yyyy] HH:mm}"
+#: js/calendar.js:332
+msgid "ddd d MMMM[ yyyy] HH:mm{ - [ ddd d MMMM yyyy] HH:mm}"
 msgstr ""
 
-#: js/calendar.js:634
+#: js/calendar.js:689
 msgid "user"
 msgstr ""
 
-#: js/calendar.js:634
+#: js/calendar.js:689
 msgid "group"
 msgstr ""
 
-#: js/calendar.js:635
+#: js/calendar.js:690
 msgid "Editable"
 msgstr ""
 
-#: js/calendar.js:636
+#: js/calendar.js:691
 msgid "Shareable"
 msgstr ""
 
-#: js/calendar.js:637
+#: js/calendar.js:692
 msgid "Deletable"
 msgstr ""
 
@@ -586,11 +542,19 @@ msgstr ""
 msgid "Select Attachment"
 msgstr ""
 
-#: js/events.js:26 js/events.js:76
+#: js/events.js:23
+msgid "Do you really want to delete this event?"
+msgstr ""
+
+#: js/events.js:25
+msgid "Do you really want to detach this event from the current project?"
+msgstr ""
+
+#: js/events.js:35 js/events.js:86
 msgid "Unknown error :("
 msgstr ""
 
-#: js/events.js:231
+#: js/events.js:241
 msgid "Really delete?"
 msgstr ""
 
@@ -1336,19 +1300,19 @@ msgstr ""
 msgid "Really Change %s's instrument!!!"
 msgstr ""
 
-#: settings.php:64
+#: settings.php:65
 msgid "concerts"
 msgstr ""
 
-#: settings.php:65
+#: settings.php:66
 msgid "rehearsals"
 msgstr ""
 
-#: settings.php:66
+#: settings.php:67
 msgid "other"
 msgstr ""
 
-#: settings.php:67
+#: settings.php:68
 msgid "management"
 msgstr ""
 
@@ -1381,7 +1345,7 @@ msgid "New Key"
 msgstr ""
 
 #: templates/app-settings.php:20 templates/app-settings.php:49
-#: templates/email-settings.php:49 templates/settings.php:42
+#: templates/email-settings.php:49 templates/settings.php:45
 #: templates/share-settings.php:23
 msgid "show"
 msgstr ""
@@ -1623,7 +1587,7 @@ msgstr ""
 msgid "Edit an event"
 msgstr ""
 
-#: templates/devel-settings.php:8 templates/expertmode.php:53
+#: templates/devel-settings.php:8 templates/expertmode.php:55
 msgid "Links"
 msgstr ""
 
@@ -1659,7 +1623,7 @@ msgstr ""
 msgid "Owncloud developer documentation"
 msgstr ""
 
-#: templates/email-settings.php:11 templates/part.common.header.php:27
+#: templates/email-settings.php:11 templates/part.common.header.php:30
 msgid "Settings"
 msgstr ""
 
@@ -1754,27 +1718,27 @@ msgstr ""
 msgid "Something is wrong, but what?"
 msgstr ""
 
-#: templates/events.php:5
+#: templates/events.php:10
 msgid "Events for"
 msgstr ""
 
-#: templates/events.php:16
+#: templates/events.php:21
 msgid "Add Concert"
 msgstr ""
 
-#: templates/events.php:17
+#: templates/events.php:22
 msgid "Add Rehearsal"
 msgstr ""
 
-#: templates/events.php:18
+#: templates/events.php:23
 msgid "Add Other Event"
 msgstr ""
 
-#: templates/events.php:19
+#: templates/events.php:24
 msgid "Management Event"
 msgstr ""
 
-#: templates/events.php:26
+#: templates/events.php:31
 msgid "Download"
 msgstr ""
 
@@ -1782,134 +1746,134 @@ msgstr ""
 msgid "no events"
 msgstr ""
 
-#: templates/expertmode.php:13
+#: templates/expertmode.php:16
 msgid "Synchronize Events"
 msgstr ""
 
-#: templates/expertmode.php:18
+#: templates/expertmode.php:21
 msgid "Recreate all Views"
 msgstr ""
 
-#: templates/expertmode.php:19
+#: templates/expertmode.php:22
 msgid "Recreate the `Detailed Instrumentation' hybrid-table for each project"
 msgstr ""
 
-#: templates/expertmode.php:23
+#: templates/expertmode.php:26
 msgid "Check Instruments"
 msgstr ""
 
-#: templates/expertmode.php:24
+#: templates/expertmode.php:27
 msgid ""
 "Check whether the instrumentation numbers table and the musicians table "
 "mention the same instruments"
 msgstr ""
 
-#: templates/expertmode.php:28
+#: templates/expertmode.php:31
 msgid "Adjust Instruments"
 msgstr ""
 
-#: templates/expertmode.php:29
+#: templates/expertmode.php:32
 msgid ""
 "Make sure the instruments table contains at least any instrument played by "
 "any musician."
 msgstr ""
 
-#: templates/expertmode.php:33 templates/settings.php:30
+#: templates/expertmode.php:36 templates/settings.php:33
 msgid "Example"
 msgstr ""
 
-#: templates/expertmode.php:34
+#: templates/expertmode.php:37
 msgid "Example Do-Nothing Button"
 msgstr ""
 
-#: templates/expertmode.php:40
+#: templates/expertmode.php:42
 msgid "Predefined data-base operations"
 msgstr ""
 
-#: templates/expertmode.php:42
+#: templates/expertmode.php:44
 msgid "Operation generated Response"
 msgstr ""
 
-#: templates/expertmode.php:46
+#: templates/expertmode.php:48
 msgid "Clear Output"
 msgstr ""
 
-#: templates/expertmode.php:48
+#: templates/expertmode.php:50
 msgid "Remove output, if any is present."
 msgstr ""
 
-#: templates/expertmode.php:55
+#: templates/expertmode.php:57
 msgid "Database musicians/projects"
 msgstr ""
 
-#: templates/expertmode.php:57
+#: templates/expertmode.php:59
 msgid ""
 "Open the login-window to the data-base back-bone. Although this is `expert "
 "mode' you will fall in love with the `export' facilities of the data-base "
 "back-bone. TRY IT OUT! DO IT!"
 msgstr ""
 
-#: templates/expertmode.php:60
+#: templates/expertmode.php:62
 msgid "Database Owncloud"
 msgstr ""
 
-#: templates/expertmode.php:62
+#: templates/expertmode.php:64
 msgid ""
 "Open the login-window to the data-base back-bone for the Owncloud WebUI."
 msgstr ""
 
-#: templates/expertmode.php:65
+#: templates/expertmode.php:67
 msgid "Source-Code Archive"
 msgstr ""
 
-#: templates/expertmode.php:67
+#: templates/expertmode.php:69
 msgid ""
 "View the git-repository holding all revision of this entire mess. Mostly "
 "useful for web-developers."
 msgstr ""
 
-#: templates/expertmode.php:70
+#: templates/expertmode.php:72
 msgid "Source-Code Documentation"
 msgstr ""
 
-#: templates/expertmode.php:72
+#: templates/expertmode.php:74
 msgid ""
 "Internal documentation of the `CAFEV-App', mostly useful for web-developers."
 msgstr ""
 
-#: templates/expertmode.php:75
+#: templates/expertmode.php:77
 msgid "Owncloud Developer Documentation"
 msgstr ""
 
-#: templates/expertmode.php:77
+#: templates/expertmode.php:79
 msgid "Owncloud Developer Manual, mostly useful for web-developers."
 msgstr ""
 
-#: templates/part.common.header.php:14
+#: templates/part.common.header.php:17
 msgid "Startpage"
 msgstr ""
 
-#: templates/part.common.header.php:15
+#: templates/part.common.header.php:18
 msgid "Navigate back to the start-page."
 msgstr ""
 
-#: templates/part.common.header.php:20
+#: templates/part.common.header.php:23
 msgid "Expert Operations"
 msgstr ""
 
-#: templates/part.common.header.php:21
+#: templates/part.common.header.php:24
 msgid "Expert Operations like recreating views etc."
 msgstr ""
 
-#: templates/part.common.header.php:28
+#: templates/part.common.header.php:31
 msgid "Personal Settings."
 msgstr ""
 
-#: templates/part.common.header.php:36
+#: templates/part.common.header.php:39
 msgid "Toggle Visibility"
 msgstr ""
 
-#: templates/part.common.header.php:38 templates/part.common.header.php:68
+#: templates/part.common.header.php:41 templates/part.common.header.php:69
 msgid "Minimize or maximize the containing block."
 msgstr ""
 
@@ -1917,78 +1881,78 @@ msgstr ""
 msgid "Success!"
 msgstr ""
 
-#: templates/settings.php:5
+#: templates/settings.php:8
 msgid ""
 "Control the display of tooltips. Warning: this works globally for all "
 "OwnCloud applications."
 msgstr ""
 
-#: templates/settings.php:6
+#: templates/settings.php:9
 msgid "Show a second button which leads to a dialog with `advanced' settings"
 msgstr ""
 
-#: templates/settings.php:7
+#: templates/settings.php:10
 msgid "Show a certain amount of debug information, normally not needed."
 msgstr ""
 
-#: templates/settings.php:11
+#: templates/settings.php:14
 msgid "Personal Settings"
 msgstr ""
 
-#: templates/settings.php:12
+#: templates/settings.php:15
 msgid "Administration"
 msgstr ""
 
-#: templates/settings.php:13
+#: templates/settings.php:16
 msgid "Sharing"
 msgstr ""
 
-#: templates/settings.php:14
+#: templates/settings.php:17
 msgid "Email"
 msgstr ""
 
-#: templates/settings.php:15
+#: templates/settings.php:18
 msgid "Development"
 msgstr ""
 
-#: templates/settings.php:22
+#: templates/settings.php:25
 msgid "Tool-Tips"
 msgstr ""
 
-#: templates/settings.php:25
+#: templates/settings.php:28
 msgid "Expert-Mode"
 msgstr ""
 
-#: templates/settings.php:28
+#: templates/settings.php:31
 msgid "Debug-Mode"
 msgstr ""
 
-#: templates/settings.php:30 templates/settings.php:33
-#: templates/settings.php:34
+#: templates/settings.php:33 templates/settings.php:36
+#: templates/settings.php:37
 msgid "Example Text"
 msgstr ""
 
-#: templates/settings.php:36
+#: templates/settings.php:39
 msgid "Dummy"
 msgstr ""
 
-#: templates/settings.php:40
+#: templates/settings.php:43
 msgid "Own Password"
 msgstr ""
 
-#: templates/settings.php:41
+#: templates/settings.php:44
 msgid "DB Encryption Key"
 msgstr ""
 
-#: templates/settings.php:43
+#: templates/settings.php:46
 msgid "Set Encryption Key"
 msgstr ""
 
-#: templates/settings.php:44
+#: templates/settings.php:47
 msgid "The encryption key has been set successfully."
 msgstr ""
 
-#: templates/settings.php:45
+#: templates/settings.php:48
 msgid "Unable to set the encryption key."
 msgstr ""
 
