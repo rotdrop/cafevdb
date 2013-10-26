@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-26 16:02+0200\n"
-"PO-Revision-Date: 2013-10-26 16:05+0200\n"
+"POT-Creation-Date: 2013-10-26 18:31+0200\n"
+"PO-Revision-Date: 2013-10-26 18:34+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -246,7 +246,8 @@ msgid "Keeping old share-owner `%s'"
 msgstr "Verwende alte Share-Strohpuppe `%s' weiter"
 
 #: ajax/settings/app-settings.php:218
-msgid "Failure checking account `s'"
+#, php-format
+msgid "Failure checking account `%s'"
 msgstr "Fehler beim Testen des Accounts `%s'"
 
 #: ajax/settings/app-settings.php:234
@@ -490,7 +491,7 @@ msgstr "Möchten Sie den Termin wirklich löschen?"
 msgid "Do you really want to detach this event from the current project?"
 msgstr "Möchten Sie den Termin wirklich vom Projekt lösen?"
 
-#: index.php:131 lib/musicians.php:152
+#: index.php:131 lib/musicians.php:154
 #, php-format
 msgid "Add all to %s"
 msgstr "Alle zu %s"
@@ -1031,25 +1032,52 @@ msgstr ""
 msgid "Transfer Instruments from Musicians"
 msgstr "Instrumente mit Besetzung abgleichen"
 
-#: lib/musicians.php:193
+#: lib/musicians.php:195
 #, php-format
 msgid "Add to %s"
-msgstr "Neu für %s"
+msgstr "Zu %s"
 
-#: lib/musicians.php:1063
+#: lib/musicians.php:660 lib/musicians.php:1088
 #, php-format
 msgid ""
-"None of the instruments known by %s are mentioned in the <A HREF=\"%s"
-"\">instrumentation-list</A> for the project.\n"
+"None of the instruments known by %s are mentioned in the %sinstrumentation-"
+"list%s for the project.\n"
 "The musician is added nevertheless to the project with the instrument ``"
 "%s''\n"
 "Please correct the mis-match."
 msgstr ""
-"Keines der Instrumente, die %s spielen kann, ist in der <A HREF=\"%s"
-"\">Instrumentierung</A>für das Projekt aufgeführt\n"
-"Der Musiker wird dennoch zum Projekt mit dem Instrument`%s'' hinzugefügt\n"
+"Keines der Instrumente, die %s spielen kann, ist in der %sInstrumentierung%s "
+"für das Projekt aufgeführt.\n"
+"Der Musiker wird dennoch zum Projekt mit dem Instrument ``%s'' hinzugefügt.\n"
 "Der Fehler sollte durch Ändern der Instrumentierung oder der Musikerdaten "
 "behoben werden."
+
+#: lib/musicians.php:671
+#, php-format
+msgid ""
+"Choosing the first instrument known by %s\n"
+"and mentioned in the %sinstrumentation list%s of the project ``%s''.\n"
+"Please correct that by choosing a different ``project-instrument''\n"
+"below, if necessary. Choosing ``%s'' as instrument."
+msgstr ""
+"Wähle zufällig ein Instrument, das sowohl von %s gespielt wird\n"
+"als auch in der %sInstrumentierung%s für das Projekt %s aufgeführt ist.\n"
+"Bitte nötigenfalls korrigieren, in dem ein anderes ``Projekt-Instrument''\n"
+"in der Tabelle unten ausgewählt wird. Wähle ``%s'' als Projekt-instrument."
+
+#: lib/musicians.php:1113
+#, php-format
+msgid ""
+"Generally, the first instrument known by the respective musician\n"
+"and mentioned in the %sinstrumentation list%s of the project ``%s''\n"
+"was chosen as ``project-instrument''.\n"
+"Please correct that by choosing a different ``project-instrument''\n"
+"below, if necessary."
+msgstr ""
+"Im Allgemeinen wird zufällig ein Instrument, das sowohl vom jeweiligen Musker\n"
+"gespielt wird als auch in der %sInstrumentierung%s für das Projekt %s aufgeführt ist,\n"
+"ausgewählt. Bitte nötigenfalls korrigieren, in dem ein anderes ``Projekt-Instrument''\n"
+"in der Tabelle unten ausgewählt wird."
 
 #: lib/project-instruments.php:131
 msgid "Transpose"
@@ -1332,7 +1360,7 @@ msgid ""
 "  Klick mich, um eine Em@il an die ausgewählten\n"
 "Musiker zu versenden. Auf der folgenden Seite kann\n"
 "die Auswahl dann noch modifiziert werden.\n"
-"`angezeigt' bedeutet: nicht\n"
+"`ausgewält' bedeutet: nicht\n"
 "nur die auf der aktuellen\n"
 "Anzeige-Seite, sondern\n"
 "alle, die den Such-Kriterien\n"
@@ -1341,7 +1369,7 @@ msgstr ""
 "Anklicken, um eine Em@il an die ausgewählten Musiker zu versenden. Auf\n"
 "der folgenden Seite kann die Auswahl dann noch modifiziert werden.\n"
 "`angezeigt' bedeutet: nicht nur die auf der aktuellen Anzeige-Seite,\n"
-"sondern alle, die den Such-Kriterien entsprechen.\n"
+"sondern alle, die den Such-Kriterien entsprechen."
 
 #: lib/tooltips.php:90
 msgid ""
@@ -1370,6 +1398,80 @@ msgstr ""
 
 #: lib/tooltips.php:103
 msgid ""
+"  Adressaten in potentielle\n"
+"Massenmail Adressliste aufnehmen.\n"
+"Die Adressaten kann man\n"
+"vor dem Senden der Em@il noch\n"
+"korrigieren."
+msgstr ""
+"  Adressaten in potentielle\n"
+"Massenmail Adressliste aufnehmen.\n"
+"Die Adressaten kann man\n"
+"vor dem Senden der Em@il noch\n"
+"korrigieren."
+
+#: lib/tooltips.php:109
+msgid ""
+"  Click me to add all selected musicians\n"
+"to the selected project. All selected\n"
+"musicians on all pages will be added."
+msgstr ""
+"  Klick mich an, um alle ausgewählten\n"
+"Musiker auf alle Seitenzum aktuellen\n"
+"Projekt hinzuzufügen."
+
+#: lib/tooltips.php:113
+msgid ""
+"  Click me to pre-select\n"
+"all musicians on all pages\n"
+"for the current project.\n"
+"Please click the ``Add all''-button to\n"
+"actually add them."
+msgstr ""
+"  Klick mich an, um alle Musiker der\n"
+"aktuellen Ansicht (betrifft aber alle Seiten)\n"
+"für das aktuelle Projekte auszuwählen. Bitte\n"
+"den ``Alle zu ...''-Knopf links anklicken, um\n"
+"die Musiker tatsächlich zum Projekt hinzufügen."
+
+#: lib/tooltips.php:119
+msgid ""
+"  Click me to remove\n"
+"all musicians on all pages\n"
+"from the pre-selection for\n"
+"the current project."
+msgstr ""
+"  Klick mich an, um alle Musiker\n"
+"der aktuellen Ansicht von der\n"
+"Vorauswahl für das aktuelle\n"
+"Projekt zu entfernen."
+
+#: lib/tooltips.php:124
+msgid ""
+"  Check me to pre-select\n"
+"this musician for the current\n"
+"project. Please click the\n"
+" ``Add all''-button to\n"
+"actually add all selected\n"
+"musicians."
+msgstr ""
+"  Klick mich an, um diesen Musiker für das\n"
+"aktuelle Projekte vor-auszuwählen. Bitte\n"
+"den ``Alle zu ...''-Knopf ober- bzw.\n"
+"unterhalb der Tabelle anklicken, um alle\n"
+"ausgewählten Musiker tatsächlich zum\n"
+"Projekt hinzufügen."
+
+#: lib/tooltips.php:131
+msgid ""
+"  Click me to add a new\n"
+"row to the current table."
+msgstr ""
+"  Klich mich an, um einen neuen Datensatz\n"
+"zur aktuellen Tabelle hinzuzufügen."
+
+#: lib/tooltips.php:134
+msgid ""
 "  Klick mich, um die\n"
 "Sortierreihenfolge auf die\n"
 "Voreinstellung zurückzusetzen."
@@ -1378,7 +1480,7 @@ msgstr ""
 "Sortierreihenfolge auf die\n"
 "Voreinstellung zurückzusetzen."
 
-#: lib/tooltips.php:106
+#: lib/tooltips.php:137
 msgid ""
 "  Klick mich, um den\n"
 "aktuellen Filter zu löschen."
@@ -1386,7 +1488,7 @@ msgstr ""
 "Klick mich, um den\n"
 "aktuellen Filter zu löschen."
 
-#: lib/tooltips.php:109
+#: lib/tooltips.php:140
 msgid ""
 "  Klick mich, um die\n"
 "Suchkriterien zu verstecken."
@@ -1394,13 +1496,13 @@ msgstr ""
 "Klick mich, um die\n"
 "Suchkriterien zu verstecken."
 
-#: lib/tooltips.php:112
+#: lib/tooltips.php:143
 msgid ""
 "  Klick mich, um die\n"
 "Suchkriterien anzuzeigen."
 msgstr "Klick mich, um die Suchkriterien anzuzeigen."
 
-#: lib/tooltips.php:115
+#: lib/tooltips.php:146
 #, php-format
 msgid ""
 "  Klick mich, um die\n"
@@ -1408,12 +1510,12 @@ msgid ""
 "können in den Feldern eingegeben werden.\n"
 "Als Platzhalter verwendet man `%%'."
 msgstr ""
-"Klick mich, um die\n"
+"  Klick mich, um die\n"
 "aktuellen Suchkriterien anzuwenden. Suchkriterien\n"
 "können in den Feldern eingegeben werden.\n"
-"Als Platzhalter verwendet man `%%'.\n"
+"Als Platzhalter verwendet man `%%'."
 
-#: lib/tooltips.php:120
+#: lib/tooltips.php:151
 #, php-format
 msgid ""
 "  Feld für Suchkriterien.\n"
@@ -1426,21 +1528,11 @@ msgstr ""
 "können in den Feldern eingegeben werden.\n"
 "Als Platzhalter verwendet man `%%'."
 
-#: lib/tooltips.php:125
-msgid ""
-"  Click mich, um mich\n"
-"Deinem Massenmail-Vorhaben\n"
-"hinzuzufügen. Schäme Dich!"
-msgstr ""
-"Click mich, um mich\n"
-"Deinem Massenmail-Vorhaben\n"
-"hinzuzufügen. Schäme Dich!"
-
-#: lib/tooltips.php:129
+#: lib/tooltips.php:156
 msgid "Einzelnen Datensatz anzeigen"
 msgstr "Einzelnen Datensatz anzeigen"
 
-#: lib/tooltips.php:130
+#: lib/tooltips.php:157
 msgid ""
 "Einzelnen Datensatz anzeigen,\n"
 "zeigt ein neues Formular mit\n"
@@ -1452,7 +1544,7 @@ msgstr ""
 "detaillierten Eingabefeldern\n"
 "und Abbruchmöglichkeit."
 
-#: lib/tooltips.php:134
+#: lib/tooltips.php:161
 msgid ""
 "Einzelnen Datensatz kopieren,\n"
 "zeigt ein neues Formular mit\n"
@@ -1464,7 +1556,7 @@ msgstr ""
 "detaillierten Eingabefeldern\n"
 "und Abbruchmöglichkeit."
 
-#: lib/tooltips.php:138
+#: lib/tooltips.php:165
 msgid ""
 "Einzelnen Datensatz löschen,\n"
 "zeigt den aktuellen Datensatz zunächst an.\n"
@@ -1478,23 +1570,7 @@ msgstr ""
 "weiteren Bestätigung. Trotzdem:\n"
 "VORSICHT!."
 
-#: lib/tooltips.php:143
-msgid ""
-"  Adressaten in potentielle\n"
-"Massenmail Adressliste aufnehmen.\n"
-"Kann man (glücjlicherweise) \n"
-"vor dem Senden der Em@il noch\n"
-"korrigieren. Trotzdem:\n"
-"Think thrice about it."
-msgstr ""
-"Adressaten in potentielle\n"
-"Massenmail Adressliste aufnehmen.\n"
-"Kann man (glücjlicherweise)\n"
-"vor dem Senden der Em@il noch\n"
-"korrigieren. Trotzdem:\n"
-"Think thrice about it."
-
-#: lib/tooltips.php:151
+#: lib/tooltips.php:171
 msgid "nothing"
 msgstr "Nichts"
 
@@ -2337,4 +2413,3 @@ msgstr "Gemeinsamer Ordner"
 #: templates/share-settings.php:55
 msgid "shared folder"
 msgstr "Gemeinsamer Ordner"
-
