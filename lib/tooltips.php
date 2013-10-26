@@ -81,7 +81,7 @@ oder auszuschalten!'),
         'pme-email' => L::t('  Klick mich, um eine Em@il an die ausgewählten
 Musiker zu versenden. Auf der folgenden Seite kann
 die Auswahl dann noch modifiziert werden.
-`angezeigt\' bedeutet: nicht
+`ausgewält\' bedeutet: nicht
 nur die auf der aktuellen
 Anzeige-Seite, sondern
 alle, die den Such-Kriterien
@@ -99,6 +99,37 @@ entsprechen.'),
         'pme-email-' => L::t('  Klick mich, um alle gerade
 angezeigten Musiker von der
 Em@il-Auswahl zu entfernen'),
+
+        'pme-email-check' => L::t('  Adressaten in potentielle
+Massenmail Adressliste aufnehmen.
+Die Adressaten kann man
+vor dem Senden der Em@il noch
+korrigieren.'),
+
+        'pme-bulkcommit' => L::t('  Click me to add all selected musicians
+to the selected project. All selected
+musicians on all pages will be added.'),
+
+        'pme-bulkcommit+' => L::t('  Click me to pre-select
+all musicians on all pages
+for the current project.
+Please click the ``Add all\'\'-button to
+actually add them.'),
+
+        'pme-bulkcommit-' => L::t('  Click me to remove
+all musicians on all pages
+from the pre-selection for
+the current project.'),
+
+        'pme-bulkcommit-check' => L::t('  Check me to pre-select
+this musician for the current
+project. Please click the
+ ``Add all\'\'-button to
+actually add all selected
+musicians.'),
+
+        'pme-add' => L::t('  Click me to add a new
+row to the current table.'),
 
         'pme-clear' => array('sfn' => L::t('  Klick mich, um die
 Sortierreihenfolge auf die
@@ -122,10 +153,6 @@ Als Platzhalter verwendet man `%%\', z.B. `%%Ste%%an\'
 beim Vornamen. Bei numerischen Feldern ist links
 eine Auswahlbox mit Vergleichsoperationen.'),
         
-        'pme-email-check' => L::t('  Click mich, um mich
-Deinem Massenmail-Vorhaben
-hinzuzufügen. Schäme Dich!'),
-
         'pme-view-navigation' => array('operation' => L::t('Einzelnen Datensatz anzeigen')),
         'pme-change-navigation' => array('operation' => L::t('Einzelnen Datensatz anzeigen,
 zeigt ein neues Formular mit
@@ -140,14 +167,7 @@ zeigt den aktuellen Datensatz zunächst an.
 Gelöscht wird der erst nach einer
 weiteren Bestätigung. Trotzdem:
 VORSICHT!.')),
-        'pme-email-check' => L::t('  Adressaten in potentielle
-Massenmail Adressliste aufnehmen.
-Kann man (glücjlicherweise) 
-vor dem Senden der Em@il noch
-korrigieren. Trotzdem:
-Think thrice about it.'),
-        
-        
+
         'nothing' => L::t('nothing') // comma stop
                                                                                                                                                                         );
   }
