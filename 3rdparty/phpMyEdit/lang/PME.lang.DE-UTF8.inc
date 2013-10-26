@@ -21,7 +21,7 @@ return Array(
                 '+'             =>'+',
                 '-'             =>'-',
                 'Help'          =>'Hilfe',
-		'Add'           =>'Hinzufügen',
+		'Add'           =>'Neuer Datensatz',
 		'Copy'         	=>'Kopieren',
 		'Change'        =>'Ändern',
 		'Delete'        =>'Löschen',
