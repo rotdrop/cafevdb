@@ -2,13 +2,12 @@
 # Copyright (C) YEAR Free Software Foundation, Inc.
 # Claus-Justus Heine <himself@claus-justus-heine.de>, 2013.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-07 23:44+0100\n"
-"PO-Revision-Date: 2013-02-08 00:28+0100\n"
+"POT-Creation-Date: 2013-10-26 16:02+0200\n"
+"PO-Revision-Date: 2013-10-26 16:05+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -30,8 +29,8 @@ msgstr ""
 msgid "Unknown request."
 msgstr "Unbekannte Anfrage."
 
-#: ajax/blog/editentry.php:34
-msgid "Refusing to create blog entry without author identity"
+#: ajax/blog/editentry.php:34 ajax/blog/modifyentry.php:35
+msgid "Refusing to create blog entry without author identity."
 msgstr "Pinnwand-Einträge ohne Autor können leider nicht erstellt werden."
 
 #: ajax/blog/editentry.php:46 ajax/blog/modifyentry.php:100
@@ -41,18 +40,14 @@ msgstr "Interner Fehler: `%s'."
 
 #: ajax/blog/editentry.php:54
 #, php-format
-msgid "Blog entry with id `%s' cound not be retrieved."
-msgstr "Der Notiz mit id `%s' konnte nicht geladen werden."
+msgid "Blog entry with id `%s' could not be retrieved."
+msgstr "Die Notiz mit Id `%s' konnte nicht geladen werden."
 
 #: ajax/blog/editentry.php:92 ajax/blog/modifyentry.php:124
 #: ajax/events/events.php:89 ajax/events/execute.php:129
-#: ajax/events/new.form.php:195 ajax/events/sendmail.php:75
+#: ajax/events/new.form.php:192 ajax/events/sendmail.php:75
 msgid "Error, caught an exception"
-msgstr "Interner Fehler"
-
-#: ajax/blog/modifyentry.php:35
-msgid "Refusing to create blog entry without author identity."
-msgstr "Pinnwand-Einträge ohne Autor können leider nicht erstellt werden."
+msgstr "Interner Fehler, Ausnahme ``aufgefangen''"
 
 #: ajax/blog/modifyentry.php:43
 #, php-format
@@ -495,6 +490,11 @@ msgstr "Möchten Sie den Termin wirklich löschen?"
 msgid "Do you really want to detach this event from the current project?"
 msgstr "Möchten Sie den Termin wirklich vom Projekt lösen?"
 
+#: index.php:131 lib/musicians.php:152
+#, php-format
+msgid "Add all to %s"
+msgstr "Alle zu %s"
+
 #: js/blog.js:17 js/blog.js:97 js/blog.js:151 js/blog.js:178 js/blog.js:202
 #: js/email.js:7 js/email.js:45 js/email.js:56 js/email.js:64 js/email.js:77
 #: js/events.js:32 js/events.js:82
@@ -622,7 +622,7 @@ msgstr "Experten-Operationen"
 msgid "Error:"
 msgstr "Fehler:"
 
-#: lib/config.php:455
+#: lib/config.php:458
 msgid "birthday"
 msgstr "Geburtstag"
 
@@ -743,7 +743,11 @@ msgid ""
 "select box (potential recipients) to the right select box (actual "
 "recipients). Pleas click on the `modify recipients' button and specify some "
 "recipients."
-msgstr "Keine Adressaten angegeben. Sie haben vermutlich vergessen, mögliche Adressaten aus der linken Auswohlbox in die rechte Box für die tatsächlichen Adressaten zu verschieben. Bitte den `Adressen bearbeiten'-Knopf aktivieren und Empfänger für diese Email angeben."
+msgstr ""
+"Keine Adressaten angegeben. Sie haben vermutlich vergessen, mögliche "
+"Adressaten aus der linken Auswohlbox in die rechte Box für die tatsächlichen "
+"Adressaten zu verschieben. Bitte den `Adressen bearbeiten'-Knopf aktivieren "
+"und Empfänger für diese Email angeben."
 
 #: lib/email.php:1188
 msgid "No recipients"
@@ -1027,9 +1031,25 @@ msgstr ""
 msgid "Transfer Instruments from Musicians"
 msgstr "Instrumente mit Besetzung abgleichen"
 
-#: lib/musicians.php:191
-msgid "Add to"
-msgstr "Neu für "
+#: lib/musicians.php:193
+#, php-format
+msgid "Add to %s"
+msgstr "Neu für %s"
+
+#: lib/musicians.php:1063
+#, php-format
+msgid ""
+"None of the instruments known by %s are mentioned in the <A HREF=\"%s"
+"\">instrumentation-list</A> for the project.\n"
+"The musician is added nevertheless to the project with the instrument ``"
+"%s''\n"
+"Please correct the mis-match."
+msgstr ""
+"Keines der Instrumente, die %s spielen kann, ist in der <A HREF=\"%s"
+"\">Instrumentierung</A>für das Projekt aufgeführt\n"
+"Der Musiker wird dennoch zum Projekt mit dem Instrument`%s'' hinzugefügt\n"
+"Der Fehler sollte durch Ändern der Instrumentierung oder der Musikerdaten "
+"behoben werden."
 
 #: lib/project-instruments.php:131
 msgid "Transpose"
@@ -1478,29 +1498,29 @@ msgstr ""
 msgid "nothing"
 msgstr "Nichts"
 
-#: lib/triggers/instrumentation-change-instrument.TUB.inc.php:68
+#: lib/triggers/instrumentation-change-instrument.TUB.inc.php:70
 #, php-format
 msgid "Instrument not known by %s, correct that first! %s only plays %s!!!"
 msgstr ""
 "%s spielt das Instrument eventuell nicht, %s spielt nur %s, soweit wir "
 "wissen!!!"
 
-#: lib/triggers/instrumentation-change-instrument.TUB.inc.php:70
+#: lib/triggers/instrumentation-change-instrument.TUB.inc.php:72
 msgid "Click on the following button to enforce your decision"
 msgstr "Änderung erzwingen"
 
-#: lib/triggers/instrumentation-change-instrument.TUB.inc.php:71
+#: lib/triggers/instrumentation-change-instrument.TUB.inc.php:73
 #, php-format
 msgid ""
 "This will also add `%s' to %s's list of known instruments. Unfortunately, "
-"all your other changes will be discarded. You may want to try the `Back'-"
+"all your other changes might be discarded. You may want to try the `Back'-"
 "Button of your browser."
 msgstr ""
 "Dadurch wird auch `%s' zur Instrumentenliste für %s hinzugefügt. Leider "
 "gehen alle anderen Änderungen verloren. Möglicherweise ist der `Zurück'-"
 "Knopf des Web-Browsers eine praktischere Option."
 
-#: lib/triggers/instrumentation-change-instrument.TUB.inc.php:75
+#: lib/triggers/instrumentation-change-instrument.TUB.inc.php:77
 #, php-format
 msgid "Really Change %s's instrument!!!"
 msgstr "Das Instrument von %s wirklich ändern!!!"
@@ -2318,31 +2338,3 @@ msgstr "Gemeinsamer Ordner"
 msgid "shared folder"
 msgstr "Gemeinsamer Ordner"
 
-#~ msgid "sticky"
-#~ msgstr "haftend"
-
-#~ msgid "Sticky"
-#~ msgstr "Haftend"
-
-#~ msgid "Open phpmyadmin"
-#~ msgstr "phpMyAdmin (neues Fenster)"
-
-#~ msgid "Done."
-#~ msgstr "Fertig."
-
-#~ msgid "stored"
-#~ msgstr "gespeichert"
-
-#~ msgid "Current Password"
-#~ msgstr "Aktuelles Passwort"
-
-#~ msgid "The database password was changed"
-#~ msgstr "Das Datenbank-Passwort wurde geändert"
-
-#~ msgid "Unable to change the database password"
-#~ msgstr "Kann das Datenbank-Passwort nicht ändern"
-
-#~ msgid ""
-#~ "Camerata DB: Error: Not a member of the dedicated orchestra group, you "
-#~ "are "
-#~ msgstr "Fehler: Sie sind kein Mitglied der Orchester-Gruppe. "

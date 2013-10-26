@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-08 00:28+0100\n"
+"POT-Creation-Date: 2013-10-26 16:06+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,8 +28,8 @@ msgstr ""
 msgid "Unknown request."
 msgstr ""
 
-#: ajax/blog/editentry.php:34
-msgid "Refusing to create blog entry without author identity"
+#: ajax/blog/editentry.php:34 ajax/blog/modifyentry.php:35
+msgid "Refusing to create blog entry without author identity."
 msgstr ""
 
 #: ajax/blog/editentry.php:46 ajax/blog/modifyentry.php:100
@@ -39,17 +39,13 @@ msgstr ""
 
 #: ajax/blog/editentry.php:54
 #, php-format
-msgid "Blog entry with id `%s' cound not be retrieved."
+msgid "Blog entry with id `%s' could not be retrieved."
 msgstr ""
 
 #: ajax/blog/editentry.php:92 ajax/blog/modifyentry.php:124
 #: ajax/events/events.php:89 ajax/events/execute.php:129
-#: ajax/events/new.form.php:195 ajax/events/sendmail.php:75
+#: ajax/events/new.form.php:192 ajax/events/sendmail.php:75
 msgid "Error, caught an exception"
-msgstr ""
-
-#: ajax/blog/modifyentry.php:35
-msgid "Refusing to create blog entry without author identity."
 msgstr ""
 
 #: ajax/blog/modifyentry.php:43
@@ -481,6 +477,11 @@ msgstr ""
 msgid "Do you really want to detach this event from the current project?"
 msgstr ""
 
+#: index.php:131 lib/musicians.php:152
+#, php-format
+msgid "Add all to %s"
+msgstr ""
+
 #: js/blog.js:17 js/blog.js:97 js/blog.js:151 js/blog.js:178 js/blog.js:202
 #: js/email.js:7 js/email.js:45 js/email.js:56 js/email.js:64 js/email.js:77
 #: js/events.js:32 js/events.js:82
@@ -602,7 +603,7 @@ msgstr ""
 msgid "Error:"
 msgstr ""
 
-#: lib/config.php:455
+#: lib/config.php:458
 msgid "birthday"
 msgstr ""
 
@@ -964,8 +965,19 @@ msgstr ""
 msgid "Transfer Instruments from Musicians"
 msgstr ""
 
-#: lib/musicians.php:191
-msgid "Add to"
+#: lib/musicians.php:193
+#, php-format
+msgid "Add to %s"
+msgstr ""
+
+#: lib/musicians.php:1063
+#, php-format
+msgid ""
+"None of the instruments known by %s are mentioned in the <A HREF=\"%s"
+"\">instrumentation-list</A> for the project.\n"
+"The musician is added nevertheless to the project with the instrument ``"
+"%s''\n"
+"Please correct the mis-match."
 msgstr ""
 
 #: lib/project-instruments.php:131
@@ -1314,24 +1326,24 @@ msgstr ""
 msgid "nothing"
 msgstr ""
 
-#: lib/triggers/instrumentation-change-instrument.TUB.inc.php:68
+#: lib/triggers/instrumentation-change-instrument.TUB.inc.php:70
 #, php-format
 msgid "Instrument not known by %s, correct that first! %s only plays %s!!!"
 msgstr ""
 
-#: lib/triggers/instrumentation-change-instrument.TUB.inc.php:70
+#: lib/triggers/instrumentation-change-instrument.TUB.inc.php:72
 msgid "Click on the following button to enforce your decision"
 msgstr ""
 
-#: lib/triggers/instrumentation-change-instrument.TUB.inc.php:71
+#: lib/triggers/instrumentation-change-instrument.TUB.inc.php:73
 #, php-format
 msgid ""
 "This will also add `%s' to %s's list of known instruments. Unfortunately, "
-"all your other changes will be discarded. You may want to try the `Back'-"
+"all your other changes might be discarded. You may want to try the `Back'-"
 "Button of your browser."
 msgstr ""
 
-#: lib/triggers/instrumentation-change-instrument.TUB.inc.php:75
+#: lib/triggers/instrumentation-change-instrument.TUB.inc.php:77
 #, php-format
 msgid "Really Change %s's instrument!!!"
 msgstr ""
