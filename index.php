@@ -115,6 +115,9 @@ confirm_text['deselect'] = '';
 
   $config = ConfigCheck::configured();
 
+  $project = Util::cgiValue('Project');
+  $projectId = Util::cgiValue('ProjectId',-1);
+
   if (!$config['summary']) {
     $tmplname = 'configcheck';
   } else {
@@ -124,8 +127,10 @@ confirm_text['deselect'] = '';
     $op = Util::cgiValue('PME_sys_operation');
     if ($op == "Em@il") {
       $tmplname = 'email';
-    } else if (strpos($op, strval(L::t('Add all to'))) === 0) {
+      $_POST['Template'] = 'email';
+    } else if (strpos($op, strval(L::t('Add all to %s', $project))) === 0) {
       $tmplname = 'bulk-add-musicians';
+      $_POST['Template'] = 'bulk-add-musicians';
     } else {
       $tmplname = Util::cgiValue('Template', 'blog');
     }
