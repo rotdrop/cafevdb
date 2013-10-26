@@ -3068,7 +3068,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 							// Remove, remember all others
 							unset($this->mrecs[$mrecs_key]);
 						}
-						echo ' /><div class="'.$this->getCSSclass($this->misccss.'-check').'" /></label></td>'."\n";
+						echo ' /><div class="'.$this->getCSSclass($this->misccss.'-check').'"></div></label></td>'."\n";
 					}
 				} elseif ($this->filter_enabled()) {
 					echo '<td class="',$css_class_name,'" colspan="',$this->sys_cols,'">&nbsp;</td>',"\n";
