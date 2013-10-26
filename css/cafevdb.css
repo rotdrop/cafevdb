@@ -16,7 +16,7 @@ form.cafevdb-control {
 
 div.cfgerror {
   padding-left:2ex;
-  padding-top:2ex;
+  padding-top:8ex;
   min-width:60ex;
   width:80%;
   color:red;
@@ -341,6 +341,41 @@ div.cafevdb-page-header-box button.viewtoggle:active {
 
 /*
  * End header-toggle
+ *
+ *****************************************************************************/
+
+/*****************************************************************************
+ *
+ * Style for notes. Especially, we want visible links. It is just crap when the user
+ * has to search the location he/she can click on.
+ *
+ */
+
+div.cafevdb-table-notes {
+  padding-left:1ex;
+  padding-bottom:1ex;
+  width:60%;
+}
+
+div.cafevdb-note a:link {
+  color:CornFlowerBlue;
+  text-decoration:underline;
+  font-weight:bold;
+}
+div.cafevdb-note a:visited {
+  color:CornFlowerBlue;
+  text-decoration:underline;
+  font-weight:bold;
+}
+div.cafevdb-note a:hover {
+  color:CornFlowerBlue;
+  text-decoration:underline;
+  font-style:italic;
+  font-weight:bold;
+}
+
+/*
+ * End cafevdb-note stuff
  *
  *****************************************************************************/
 
