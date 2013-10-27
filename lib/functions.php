@@ -71,7 +71,7 @@ class Ajax
     
     $call = $call[$tracelevel];
     if ($debuglevel !== false) {
-      \OCP\Util::writeLog('contacts',
+      \OCP\Util::writeLog(Config::APP_NAME,
                           $call['file'].'. Line: '.$call['line'].': '.$msg,
                           $debuglevel);
     }
