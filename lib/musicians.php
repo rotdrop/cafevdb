@@ -559,6 +559,8 @@ class AddOneMusician
   extends Instrumentation
 {
   const CSS_PREFIX = 'cafevdb-page';
+  const INITIAL_TEMPLATE = 'add-one-musician';
+  const CHANGE_TEMPLATE = 'change-one-musician';
 
   function __construct($execute = true) {
     parent::__construct($execute);
@@ -595,28 +597,24 @@ __EOT__;
     $userExtraFields = $this->userExtraFields;
     $recordsPerPage  = $this->recordsPerPage;
 
-    $headervisibility = Util::cgiValue('headervisibility','expanded');
+    $headervisibility = Util::cgiValue('headervisibility', 'expanded');
 
     $opts['tb'] = 'Besetzungen';
 
     //$opts['execute'] = false; // started by us explicitly after adding the musician
-
-    if (isset($_POST['ForcedInstrument'])) {
-      $forcedInstrument = $_POST['ForcedInstrument'];
-    } else {
-      $forcedInstrument = false;
-    }
+    
+    $forcedInstrument = Util::cgiValue('ForcedInstrument', false);
 
     $saved_template = $template;
-    $template = 'change-one-musician'; // Add only once!
+    $template = self::CHANGE_TEMPLATE; // Add only once!
 
     $opts['cgi']['persist'] = array(
-      'Project' => $project,
-      'ProjectId' => $projectId,
+      'Project' => $this->project,
+      'ProjectId' => $this->projectId,
       'Table' => $opts['tb'],
       'Template' => $template,
-      'MusicianId' => $musicianId,
-      'RecordsPerPage' => $recordsPerPage,
+      'MusicianId' => $this->musicianId,
+      'RecordsPerPage' => $this->recordsPerPage,
       'headervisibility' => $headervisibility);
 
     // Name of field which is the unique key
@@ -866,25 +864,25 @@ __EOT__;
       // Fetch all needed data from Musiker table
       $handle = mySQL::connect($opts);
 
-      $musquery = "SELECT `Instrumente` FROM Musiker WHERE `Id` = $musicianId";
+      $musquery = "SELECT `Instrumente` FROM Musiker WHERE `Id` = ".$this->musicianId;
 
       $musres = mySQL::query($musquery, $handle);
-      $musnumrows = mysql_num_rows($musres);
+      $musnumrows = $musres !== false ? mysql_num_rows($musres) : -1;
 
       if ($musnumrows != 1) {
-        die ("Data inconsisteny, $musicianId is not a unique Id");
+        die ("Data inconsisteny, $this->musicianId is not a unique Id");
       }
 
       $musrow = mySQL::fetch($musres);
       $instruments = $musrow['Instrumente'] . "," . $forcedInstrument;
     
       $musquery = "UPDATE `Musiker` SET `Instrumente`='$instruments'
- WHERE `Id` = $musicianId";
+ WHERE `Id` = ".$this->musicianId;
   
       mySQL::query($musquery, $handle);
 
       $prjquery = "UPDATE `Besetzungen` SET `Instrument`='$forcedInstrument'
- WHERE `MusikerId` = $musicianId AND `ProjektId` = $projectId";
+ WHERE `MusikerId` = ".$this->musicianId." AND `ProjektId` = ".$this->projectId;
 
       mySQL::query($prjquery, $handle);
 

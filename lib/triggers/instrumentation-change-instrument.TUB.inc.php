@@ -78,12 +78,9 @@ if (!strstr($instruments, $instrument)) {
   $btn =<<<__EOT__
 <form style="display:inline;" name="CAFEV_form_besetzung" method="post" action="?app=cafevdb">
   <input type="submit" name="" value="$btnValue">
-  <input type="hidden" name="Template" value="change-one-musician">
-  <input type="hidden" name="Project" value="$project" />
-  <input type="hidden" name="ProjectId" value="$projectId" />
-  <input type="hidden" name="MusicianId" value="$musicianId" />
-  <input type="hidden" name="ForcedInstrument" value="$instrument" />
+
 __EOT__;
+
   if ($this->cgi['persist'] != '') {
     $btn .= $this->get_origvars_html($this->cgi['persist']);
   }
@@ -93,18 +90,27 @@ __EOT__;
   foreach ($this->mrecs as $key => $val) {
     $btn .= $this->htmlHiddenSys('mrecs['.$key.']', $val);
   }
+  $btn .=<<<__EOT__
+  <input type="hidden" name="Template" value="change-one-musician">
+  <input type="hidden" name="Project" value="$project" />
+  <input type="hidden" name="ProjectId" value="$projectId" />
+  <input type="hidden" name="MusicianId" value="$musicianId" />
+  <input type="hidden" name="ForcedInstrument" value="$instrument" />
+
+__EOT__;
 $btn .=<<<__EOT__
 </form>
 __EOT__;
 // TODO: will probably not work with bulk-stuff
   echo <<<__EOT__
-<div class="cafevdb-pme-header-box" style="height:18ex">
-  <div class="cafevdb-pme-header change-instrument">
+<div class="cafevdb-table-notes" style="height:18ex">
+  <div class="cafevdb-note change-instrument">
   <div>$text1</div>
   <div>$text2: $btn</div>
   <div>$text3</div>
   </div>
 </div>
+
 __EOT__;
 
   return false;
