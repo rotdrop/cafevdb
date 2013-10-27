@@ -33,7 +33,7 @@ div.cafevdb-page-header.collapsed #cafevdb-page-blog-header {
 
 #bloglist img.photo {
   width:auto;
-  height:9ex;
+  max-height:9ex;
   max-width:9ex;
   border: 1px solid #D8D8D8;
   padding: 0.6ex;
