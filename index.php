@@ -62,6 +62,8 @@ __EOT__
   OCP\Util::addStyle('cafevdb', 'events');
   OCP\Util::addStyle('cafevdb', 'email');
   OCP\Util::addStyle('cafevdb', 'blog');
+  OCP\Util::addStyle('cafevdb', 'photo');  
+  OCP\Util::addStyle('cafevdb', 'jquery.Jcrop');  
   OCP\Util::addStyle("cafevdb/3rdparty", "chosen/chosen");
 
   OCP\Util::addScript('cafevdb', 'cafevdb');
@@ -70,6 +72,8 @@ __EOT__
   OCP\Util::addScript('cafevdb', 'email');
   OCP\Util::addScript('cafevdb', 'events');
   OCP\Util::addScript('cafevdb', 'blog');
+  OCP\Util::addScript('cafevdb', 'photo');
+  OCP\Util::addScript('cafevdb', 'jquery.Jcrop');
   OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/jscripts/tiny_mce/tiny_mce');
   OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/jscripts/tiny_mce/jquery.tinymce');
   OCP\Util::addScript('cafevdb/3rdparty', 'tinymceinit');
@@ -115,8 +119,12 @@ confirm_text['deselect'] = '';
 
   $config = ConfigCheck::configured();
 
-  $project = Util::cgiValue('Project');
-  $projectId = Util::cgiValue('ProjectId',-1);
+  // following three may or may not be set
+  $project    = Util::cgiValue('Project', '');
+  $projectId  = Util::cgiValue('ProjectId', -1);
+  $musicianId = Util::cgiValue('MusicianId',-1);
+  $recordKey  = Config::$pmeopts['cgi']['prefix']['sys'].'rec';
+  $recordId   = Util::cgiValue($recordKey, -1);
 
   if (!$config['summary']) {
     $tmplname = 'configcheck';
@@ -124,7 +132,23 @@ confirm_text['deselect'] = '';
     /* Special hack to determine if the email-form was requested through
      * the pme-miscinfo button.
      */
-    $op = Util::cgiValue('PME_sys_operation');
+    $opreq = Util::cgiValue(Config::$pmeopts['cgi']['prefix']['sys'].'operation');
+
+    $op     = parse_url($opreq, PHP_URL_PATH);
+    $opargs = array();
+    parse_str(parse_url($opreq, PHP_URL_QUERY), $opargs);
+
+    if ($recordId < 0 && isset($opargs[$recordKey])) {
+      $recordId = $opargs[$recordKey];
+    }
+
+    if (false) {
+      echo "<PRE>\n";
+      print_r($opargs);
+      echo $recordId;
+      echo "</PRE>\n";
+    }
+
     if ($op == "Em@il") {
       $tmplname = 'email';
       $_POST['Template'] = 'email';
@@ -149,6 +173,10 @@ confirm_text['deselect'] = '';
   $tmpl->assign('uploadMaxFilesize', Util::maxUploadSize(), false);
   $tmpl->assign('uploadMaxHumanFilesize',
                 OCP\Util::humanFileSize(Util::maxUploadSize()), false);
+  $tmpl->assign('projectName', $project);
+  $tmpl->assign('projectId', $projectId);
+  $tmpl->assign('musicianId', $musicianId);
+  $tmpl->assign('recordId', $recordId);
   $tmpl->assign('locale', Util::getLocale());
   $tmpl->assign('headervisibility', $headervisibility);
 

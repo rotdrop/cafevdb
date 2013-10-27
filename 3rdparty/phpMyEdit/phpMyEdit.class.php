@@ -1269,6 +1269,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 					case 'function':
 						$opts = isset($php['parameters']) ? $php['parameters'] : '';
 						echo call_user_func($php['function'], false, $opts,
+											true, // do modify
 											$k, $this->fds, $this->fdd, false);
 						break;
 					case 'file':
@@ -1426,6 +1427,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				case 'function':
 					$opts = isset($php['parameters']) ? $php['parameters'] : '';
 					echo call_user_func($php['function'], $row["qf$k"], $opts,
+										true, // do modify
 										$k, $this->fds, $this->fdd, $row);
 					break;
 				case 'file':
@@ -1732,6 +1734,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				case 'function':
 					$opts = isset($php['parameters']) ? $php['parameters'] : '';
 					return call_user_func($php['function'], $value, $opts,
+										  false, // do not modify
 										  $k, $this->fds, $this->fdd, $row);
 					break;
 				case 'file':

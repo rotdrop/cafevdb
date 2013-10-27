@@ -176,6 +176,16 @@ __EOT__;
        descriptions fields are also possible. Check documentation for this.
     */
 
+    $opts['fdd']['MusikerId'] = array(
+                                      'name'     => 'MusikerId',
+                                      'select'   => 'T',
+                                      'options'  => 'AVCPDR', // auto increment
+                                      'maxlen'   => 5,
+                                      'default'  => '0',
+                                      'align'    => 'right',
+                                      'sort'     => true
+                                      );
+
     $opts['fdd']['Instrument'] = array(
                                        'name'     => 'Projekt-Instrument',
                                        'select'   => 'T',
@@ -327,15 +337,19 @@ __EOT__;
                                       'sort'     => true
                                       );
 
-    $opts['fdd']['MusikerId'] = array(
-                                      'name'     => 'MusikerId',
-                                      'select'   => 'T',
-                                      'options'  => 'FLAVCPDR', // auto increment
-                                      'maxlen'   => 5,
-                                      'default'  => '0',
-                                      'align'    => 'right',
-                                      'sort'     => true
-                                      );
+    $opts['fdd']['Portrait'] = array(
+      'input' => 'V',
+      'name' => L::t('Photo'),
+      'select' => 'T',
+      'options' => 'ACPDV',
+      'sql' => 'MusikerId',
+      'php' => array(
+        'type' => 'function',
+        'function' => 'CAFEVDB\Musicians::portraitImageLinkPME',
+        'parameters' => array()
+        ),
+      'default' => '',
+      'sort' => false);
 
     $opts['fdd']['Aktualisiert'] = Config::$opts['datetime'];
     $opts['fdd']['Aktualisiert']['name'] = 'Aktualisiert';

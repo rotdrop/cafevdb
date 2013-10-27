@@ -80,6 +80,15 @@ class Instrumentation
     $this->pme->sql_disconnect();
   }        
 
+  public function changeOperation()
+  {
+    if (!isset($this->pme)) {
+      return false;
+    } else {
+      return $this->pme->change_operation() || $this->pme->add_operation();
+    }
+  }
+
   protected function __construct($_execute = true)
   {
     $this->execute = $_execute;

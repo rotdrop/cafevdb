@@ -192,6 +192,16 @@ __EOT__;
        descriptions fields are also possible. Check documentation for this.
     */
 
+    $opts['fdd']['Id'] = array(
+      'name'     => 'Id',
+      'select'   => 'T',
+      'options'  => 'AVCPDR', // auto increment
+      'maxlen'   => 5,
+      'align'    => 'right',
+      'default'  => '0',
+      'sort'     => true
+      );
+
     $bval = strval(L::t('Add to %s', array($project)));
     $tip  = strval(Config::toolTips('register-musician'));
     if ($this->projectMode) {
@@ -292,7 +302,7 @@ __EOT__;
                                  'default'  => 'Deutschland',
                                  'sort'     => true);
     $opts['fdd']['Sprachpräferenz'] = array('name'     => 'Spachpräferenz',
-                                            'select'   => 'T',
+                                            'select'   => 'D',
                                             'maxlen'   => 128,
                                             'default'  => 'Deutschland',
                                             'sort'     => true,
@@ -330,15 +340,19 @@ __EOT__;
                                       'sort'     => true
                                       );
 
-    $opts['fdd']['Id'] = array(
-      'name'     => 'Id',
-      'select'   => 'T',
-      'options'  => 'AVCPDR', // auto increment
-      'maxlen'   => 5,
-      'align'    => 'right',
-      'default'  => '0',
-      'sort'     => true
-      );
+    $opts['fdd']['Portrait'] = array(
+      'input' => 'V',
+      'name' => L::t('Photo'),
+      'select' => 'T',
+      'options' => 'ACPDV',
+      'sql' => 'Id',
+      'php' => array(
+        'type' => 'function',
+        'function' => 'CAFEVDB\Musicians::portraitImageLinkPME',
+        'parameters' => array()
+        ),
+      'default' => '',
+      'sort' => false);
 
     $opts['fdd']['Aktualisiert'] = Config::$opts['datetime'];
     $opts['fdd']['Aktualisiert']['name'] = 'Aktualisiert';
@@ -378,6 +392,165 @@ __EOT__;
     }
 
   } // display()
+
+  public static function portraitImageLinkPME($musicianId, $opts, $modify, $k, $fds, $fdd, $row)
+  {
+    return self::portraitImageLink($musicianId, $modify);
+  }
+
+  public static function portraitImageLink($musicianId, $modify = false)
+  {
+    if ($modify === false) {
+      $span = ''
+        .'<span class="photo"><img class="photo" src="/owncloud-git/?app=cafevdb&getfile=memberphoto.php&MemberId='.$musicianId.'"'
+        .' title="Photo, if available" /></span>';
+      return $span;
+    } else {
+      $photoarea = ''
+        .'<div id="contact_photo">
+        
+  <iframe name="file_upload_target" id=\'file_upload_target\' src=""></iframe>
+  <div class="tip propertycontainer" id="cafevdb_musician_photo_wrapper" title="'
+      .L::t("Drop photo to upload (max %s)", array(\OCP\Util::humanFileSize(Util::maxUploadSize()))).'"'
+        .' data-element="PHOTO">
+    <ul id="phototools" class="transparent hidden contacts_property">
+      <li><a class="svg delete" title="'.L::t("Delete current photo").'"></a></li>
+      <li><a class="svg edit" title="'.L::t("Edit current photo").'"></a></li>
+      <li><a class="svg upload" title="'.L::t("Upload new photo").'"></a></li>
+      <li><a class="svg cloud" title="'.L::t("Select photo from ownCloud").'"></a></li>
+    </ul>
+  </div>
+</div> <!-- contact_photo -->
+';
+
+      return $photoarea;
+    }
+  }
+
+  public static function fetchPortrait($musicianId, $handle = false)
+  {
+    $photo = '';
+
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+      
+    $query = "SELECT `PhotoData` FROM `MemberPortraits` WHERE `MemberId` = ".$musicianId;
+
+    $result = mySQL::query($query, $handle);
+
+    if ($result !== false && mysql_num_rows($result) == 1) {
+      $row = mySQL::fetch($result);
+      if (isset($row['PhotoData'])) {
+        $photo = $row['PhotoData'];
+      }
+    }
+    
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $photo;    
+  }
+
+  /**Take a BASE64 encoded photo and store it in the DB.
+   */
+  public static function storePortrait($musicianId, $photo, $handle = false)
+  { 
+    if (!isset($photo) || $photo == '') {
+      return;
+    }
+
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
+    $query = "INSERT INTO `MemberPortraits`
+  (`MemberId`,`PhotoData`) VALUES (".$musicianId.",'".$photo."')
+  ON DUPLICATE KEY UPDATE `PhotoData` = '".$photo."';";
+
+    $result = mySQL::query($query, $handle) && self::storeModified($musicianId, $handle);
+    
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $result;
+  }
+
+  public static function deletePortrait($musicianId, $handle = false)
+  {
+    $photo = '';
+
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+      
+    $query = "DELETE IGNORE FROM `MemberPortraits` WHERE `MemberId` = ".$musicianId;
+
+    $result = mySQL::query($query, $handle) && self::storeModified($musicianId, $handle);
+
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $result;
+  }
+
+  public static function storeModified($musicianId, $handle = false)
+  {
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+      
+    $query = "UPDATE IGNORE `Musiker`
+    SET `Aktualisiert` = '".date('Y-m-d H:i:s')."'
+    WHERE `Id` = ".$musicianId;
+
+    $result = mySQL::query($query, $handle);
+    
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $result;
+  }
+
+  public static function fetchModified($musicianId, $handle = false)
+  {
+    $modified = 0;
+
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+      
+    $query = "SELECT `Aktualisiert` FROM `Musiker` WHERE `Id` = ".$musicianId.";";
+
+    $result = mySQL::query($query, $handle);
+    if ($result !== false && mysql_num_rows($result) == 1) {
+      $row = mySQL::fetch($result);
+      if (isset($row['Aktualisiert'])) {
+        $modified = strtotime($row['Aktualisiert']);
+      }
+    }
+    
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $modified;
+  }
+  
 };
 
 /**Class responsible for adding one musician to a project.

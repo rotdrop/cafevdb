@@ -362,17 +362,20 @@ __EOT__;
     exit;
   }
 
-  public static function cgiValue($key, $default=NULL)
+  public static function cgiValue($key, $default=NULL, $allowEmpty = true)
   {
+    $value = $default;
     if (isset($_POST["$key"])) {
-      return $_POST["$key"];
+      $value = $_POST["$key"];
     } elseif (isset($_GET["$key"])) {
-      return $_GET["$key"];
+      $value = $_GET["$key"];
     } elseif (isset(Config::$cgiVars["$key"])) {
-      return Config::$cgiVars["$key"];
-    } else {
-      return $default;
+      $value = Config::$cgiVars["$key"];
     }
+    if (!$allowEmpty && !is_null($default) && $value == '') {
+      $value = $default;
+    }
+    return $value;
   }
 
   public static function disableEnterSubmit()

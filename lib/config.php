@@ -423,7 +423,7 @@ ownclouddev';
     // Navigation style: B - buttons (default), T - text links, G - graphic links
     // Buttons position: U - up, D - down (default)
     self::$pmeopts['navigation'] = 'GUDM';
-    self::$pmeopts['miscphp'] = 'Email::display';
+    self::$pmeopts['miscphp'] = 'dummy';
     self::$pmeopts['misccssclass'] = 'email';
     self::$pmeopts['labels']['Misc'] = 'Em@il';
     //self::$pmeopts['labels']['Sort Field'] = 'Sortierfeld';
