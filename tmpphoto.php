@@ -33,6 +33,15 @@ header("Cache-Control: no-cache, no-store, must-revalidate");
 OCP\User::checkLoggedIn();
 OCP\App::checkAppEnabled('cafevdb');
 
+$group = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
+$user  = OCP\USER::getUser();
+
+if (!OC_Group::inGroup($user, $group)) {
+  $tmpl = new OCP\Template( 'cafevdb', 'errorpage', 'user' );
+  $tmpl->assign('error', 'notamember');
+  return $tmpl->printPage();
+}
+
 $tmpkey = Util::cgiValue('tmpkey');
 $maxsize = Util::cgiValue('maxsize', -1);
 
