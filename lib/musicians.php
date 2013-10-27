@@ -402,7 +402,7 @@ __EOT__;
   {
     if ($modify === false) {
       $span = ''
-        .'<span class="photo"><img class="photo" src="/owncloud-git/?app=cafevdb&getfile=memberphoto.php&MemberId='.$musicianId.'"'
+        .'<span class="photo"><img class="photo" src="'.\OC::$WEBROOT.'/?app=cafevdb&getfile=memberphoto.php&MemberId='.$musicianId.'"'
         .' title="Photo, if available" /></span>';
       return $span;
     } else {
