@@ -265,7 +265,7 @@ class EmailFilter {
 
   private function fetchMusicians($dbh, $table, $id, $restrict, $projectId)
   {
-    $query = 'SELECT `'.$id.'`,`Vorname`,`Name`,`Email` FROM '.$table.' WHERE
+    $query = 'SELECT `'.$id.'`,`Vorname`,`Name`,`Email` FROM ('.$table.') WHERE
        ( ';
     foreach ($this->filter as $value) {
       if ($value == '*') {
@@ -281,7 +281,7 @@ class EmailFilter {
     $query .= "0 ) AND NOT `".$restrict."` LIKE '%Taktstock%'\n";
 
     // Fetch the result or die
-    $result = mySQL::query($query, $dbh);
+    $result = mySQL::query($query, $dbh, true); // here we want to bail out on error
 
     /* Stuff all emails into one array for later usage, remember the Id in
      * order to combine any selection from the new "multi-select"
@@ -321,7 +321,7 @@ class EmailFilter {
       // Possibly add musicians from the project
       if ($this->userBase['fromProject']) {
         self::fetchMusicians($dbh,
-                             $this->project.'View', 'MusikerId', 'Instrument',
+                             '`'.$this->project.'View'.'`', 'MusikerId', 'Instrument',
                              $this->projectId);
       }
 
@@ -329,7 +329,7 @@ class EmailFilter {
       if ($this->userBase['exceptProject']) {
         $table =
           '(SELECT a.* FROM Musiker as a
-    LEFT JOIN '.$this->project.'View'.' as b
+    LEFT JOIN `'.$this->project.'View'.'` as b
       ON a.Id = b.MusikerId 
       WHERE b.MusikerId IS NULL) as c';
         self::fetchMusicians($dbh, $table, 'Id', 'Instrumente', -1);
