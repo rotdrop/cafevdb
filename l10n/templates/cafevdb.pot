@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-27 06:15+0100\n"
+"POT-Creation-Date: 2013-10-27 14:24+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -573,7 +573,7 @@ msgid "Really cancel current entry?"
 msgstr ""
 
 #: js/blog.js:138
-msgid "The entire ymessage thread will be deleted if you press `Yes'"
+msgid "The entire message thread will be deleted if you press `Yes'"
 msgstr ""
 
 #: js/blog.js:139
@@ -690,6 +690,10 @@ msgstr ""
 
 #: lib/config.php:458
 msgid "birthday"
+msgstr ""
+
+#: lib/detailed-instrumentation.php:342 lib/musicians.php:345
+msgid "Photo"
 msgstr ""
 
 #: lib/email.php:371
@@ -1055,32 +1059,28 @@ msgstr ""
 msgid "Add to %s"
 msgstr ""
 
-#: lib/musicians.php:345
-msgid "Photo"
-msgstr ""
-
-#: lib/musicians.php:424
+#: lib/musicians.php:414
 #, php-format
 msgid "Drop photo to upload (max %s)"
 msgstr ""
 
-#: lib/musicians.php:427
+#: lib/musicians.php:417
 msgid "Delete current photo"
 msgstr ""
 
-#: lib/musicians.php:428
+#: lib/musicians.php:418
 msgid "Edit current photo"
 msgstr ""
 
-#: lib/musicians.php:429
+#: lib/musicians.php:419
 msgid "Upload new photo"
 msgstr ""
 
-#: lib/musicians.php:430
+#: lib/musicians.php:420
 msgid "Select photo from ownCloud"
 msgstr ""
 
-#: lib/musicians.php:843 lib/musicians.php:1271
+#: lib/musicians.php:831 lib/musicians.php:1259
 #, php-format
 msgid ""
 "None of the instruments known by %s are mentioned in the %sinstrumentation-"
@@ -1090,7 +1090,7 @@ msgid ""
 "Please correct the mis-match."
 msgstr ""
 
-#: lib/musicians.php:854
+#: lib/musicians.php:842
 #, php-format
 msgid ""
 "Choosing the first instrument known by %s\n"
@@ -1099,7 +1099,7 @@ msgid ""
 "below, if necessary. Choosing ``%s'' as instrument."
 msgstr ""
 
-#: lib/musicians.php:1296
+#: lib/musicians.php:1284
 #, php-format
 msgid ""
 "Generally, the first instrument known by the respective musician\n"

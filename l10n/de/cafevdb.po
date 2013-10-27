@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-27 06:12+0100\n"
-"PO-Revision-Date: 2013-10-27 06:15+0100\n"
+"POT-Creation-Date: 2013-10-27 14:24+0100\n"
+"PO-Revision-Date: 2013-10-27 14:25+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -588,10 +588,8 @@ msgid "Really cancel current entry?"
 msgstr "Wirklich abbrechen?"
 
 #: js/blog.js:138
-msgid "The entire ymessage thread will be deleted if you press `Yes'"
-msgstr ""
-"Die Nachricht und alle `Follow-Ups' werden gelöscht, wenn Sie auf `Ja' "
-"klicken."
+msgid "The entire message thread will be deleted if you press `Yes'"
+msgstr "Die Nachricht und alle `Follow-Ups' werden gelöscht, wenn Sie auf `Ja' klicken."
 
 #: js/blog.js:139
 msgid "Really delete the entry?"
@@ -712,6 +710,10 @@ msgstr "Fehler:"
 #: lib/config.php:458
 msgid "birthday"
 msgstr "Geburtstag"
+
+#: lib/detailed-instrumentation.php:342 lib/musicians.php:345
+msgid "Photo"
+msgstr "Foto"
 
 #: lib/email.php:371
 msgid "Select Em@il Recipients"
@@ -1123,32 +1125,28 @@ msgstr "Instrumente mit Besetzung abgleichen"
 msgid "Add to %s"
 msgstr "Zu %s"
 
-#: lib/musicians.php:345
-msgid "Photo"
-msgstr "Foto"
-
-#: lib/musicians.php:424
+#: lib/musicians.php:414
 #, php-format
 msgid "Drop photo to upload (max %s)"
 msgstr "Foto ablegen zum Hochladen (max %s)"
 
-#: lib/musicians.php:427
+#: lib/musicians.php:417
 msgid "Delete current photo"
 msgstr "Aktuelles Foto löschen"
 
-#: lib/musicians.php:428
+#: lib/musicians.php:418
 msgid "Edit current photo"
 msgstr "Aktuelles Foto editieren"
 
-#: lib/musicians.php:429
+#: lib/musicians.php:419
 msgid "Upload new photo"
 msgstr "Neues Foto hochladen"
 
-#: lib/musicians.php:430
+#: lib/musicians.php:420
 msgid "Select photo from ownCloud"
 msgstr "Foto aus der `Cloud' auswählen"
 
-#: lib/musicians.php:843 lib/musicians.php:1271
+#: lib/musicians.php:831 lib/musicians.php:1259
 #, php-format
 msgid ""
 "None of the instruments known by %s are mentioned in the %sinstrumentation-"
@@ -1163,7 +1161,7 @@ msgstr ""
 "Der Fehler sollte durch Ändern der Instrumentierung oder der Musikerdaten "
 "behoben werden."
 
-#: lib/musicians.php:854
+#: lib/musicians.php:842
 #, php-format
 msgid ""
 "Choosing the first instrument known by %s\n"
@@ -1176,7 +1174,7 @@ msgstr ""
 "Bitte nötigenfalls korrigieren, in dem ein anderes ``Projekt-Instrument''\n"
 "in der Tabelle unten ausgewählt wird. Wähle ``%s'' als Projekt-instrument."
 
-#: lib/musicians.php:1296
+#: lib/musicians.php:1284
 #, php-format
 msgid ""
 "Generally, the first instrument known by the respective musician\n"
