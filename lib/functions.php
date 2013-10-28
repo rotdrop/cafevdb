@@ -802,7 +802,8 @@ class mySQL
 
   public static function query($query, $handle = false, $die = false, $silent = false)
   {
-    if (Util::debugMode()) {
+    if (false && Util::debugMode()) {
+      // NOPE, emit stuff before headers are sent.
       echo '<HR/><PRE>'.htmlspecialchars($query).'</PRE><HR/><BR>';
     }
     if ($handle) {
