@@ -1,4 +1,4 @@
-var CAFEVDB.PME = CAFEVDB.PME || {};
+CAFEVDB.PME = CAFEVDB.PME || {};
 
 (function(window, $, CAFEVDB, undefined) {
     'use strict';
