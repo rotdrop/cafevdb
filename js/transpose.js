@@ -88,8 +88,8 @@ $(document).ready(function() {
     
     // Lookup how to do this properly
     if(typeof $('#pme-transpose.pme-transposed') !== typeof undefined) {
-	CAFEVDB.PME.doTranspose(true);
+	CAFEVDB.PME.maybeTranspose(true);
     } else {
-	CAFEVDB.PME.doTranspose(false); // needed?
+	CAFEVDB.PME.maybeTranspose(false); // needed?
     }
 });
