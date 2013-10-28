@@ -91,8 +91,8 @@ __EOT__;
     // Note that the value of $transposed is "dual" to the actual
     // button state, so the default valu is "Normal" in order to start
     // in transposed mode.
-    $transposed = Util::cgiValue('Transpose','Transposed');
-    if (Util::cgiValue('PME_sys_transpose',false) !== false) {
+    $transposed = Util::cgiValue('Transpose', 'Transposed');
+    if (Util::cgiValue('PME_sys_transpose', false) !== false) {
       $transposed = $transposed == 'Normal' ? 'Transposed' : 'Normal';
     }
 
@@ -129,10 +129,10 @@ __EOT__;
 
     $transpose = array('name' => 'transpose',
                        'value' => strval(L::t('Transpose')),
-                       'css' => 'pme-transpose',
+                       'css' => 'pme-transpose '.($transposed ? 'pme-transposed' : 'pme-untransposed'),
                        'js_validation' =>  false,
                        'disabled' => false,
-                       'js' => false);
+                       'js' => 'id="pme-transpose"');
     $opts['buttons'] = Navigation::prependTableButton($transpose);
 
     // Number of lines to display on multiple selection filters
@@ -285,40 +285,6 @@ bitte bei den <A HREF="Projekte.php?PME_sys_rec='.$projectId.'&PME_sys_operation
     }
 
     $pme = new \phpMyEdit($opts);
-
-    if ($transposed == 'Transposed' && $pme->list_operation()) {
-      $doTranspose = 'true';
-      $pageitems = strval(L::t('#columns'));
-    } else {
-      $doTranspose = 'false';
-      $pageitems = strval(L::t('#rows'));
-    }
-    echo <<<__EOT__
-<script type="text/javascript">
-$(function() {
-    if ($doTranspose) {
-      $('.tipsy').remove();
-      transposePmeMain('table.pme-main');
-    }
-    $('input.pme-pagerows').val('$pageitems');
-
-    $('input').tipsy({gravity:'w', fade:true});
-    $('button').tipsy({gravity:'w', fade:true});
-    $('input.cafevdb-control').tipsy({gravity:'nw', fade:true});
-    $('#controls button').tipsy({gravity:'nw', fade:true});
-    $('.pme-sort').tipsy({gravity: 'n', fade:true});
-    $('.pme-email-check').tipsy({gravity: 'nw', fade:true});
-    $('.pme-bulkcommit-check').tipsy({gravity: 'nw', fade:true});
-
-    if (CAFEVDB.toolTips) {
-      $.fn.tipsy.enable();
-    } else {
-      $.fn.tipsy.disable();
-    }
-});
-</script>
-__EOT__;
-
   }
 
 }; // class InstrumentationInstruments

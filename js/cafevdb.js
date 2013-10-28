@@ -1,3 +1,4 @@
+// TODO: wrap into a proper constructor
 CAFEVDB = {
   name: 'cafevdb',
   headervisibility: 'expanded',
@@ -15,8 +16,9 @@ CAFEVDB = {
     $('input[name="headervisibility"]').each(function (idx) {
       $(this).val(visibility);
     });
-  }
-}
+  },
+  dummy:{}
+};
 
 $.extend({ alert: function (message, title) {
   $("<div></div>").dialog( {
