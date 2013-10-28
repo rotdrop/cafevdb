@@ -16,7 +16,7 @@ form.cafevdb-control {
 
 div.cfgerror {
   padding-left:2ex;
-  padding-top:2ex;
+  padding-top:8ex;
   min-width:60ex;
   width:80%;
   color:red;
@@ -344,6 +344,41 @@ div.cafevdb-page-header-box button.viewtoggle:active {
  *
  *****************************************************************************/
 
+/*****************************************************************************
+ *
+ * Style for notes. Especially, we want visible links. It is just crap when the user
+ * has to search the location he/she can click on.
+ *
+ */
+
+div.cafevdb-table-notes {
+  padding-left:1ex;
+  padding-bottom:1ex;
+  width:60%;
+}
+
+div.cafevdb-note a:link {
+  color:CornFlowerBlue;
+  text-decoration:underline;
+  font-weight:bold;
+}
+div.cafevdb-note a:visited {
+  color:CornFlowerBlue;
+  text-decoration:underline;
+  font-weight:bold;
+}
+div.cafevdb-note a:hover {
+  color:CornFlowerBlue;
+  text-decoration:underline;
+  font-style:italic;
+  font-weight:bold;
+}
+
+/*
+ * End cafevdb-note stuff
+ *
+ *****************************************************************************/
+
 form.pme-form {
   padding-left:1ex;
   background-color:#f2f8ff;
@@ -455,24 +490,45 @@ td[class|='pme-filter'] {
   background:#C6DEFF;
 }
 
-:not(.lt-ie9) input.pme-misc-check[type=checkbox] {
+:not(.lt-ie9) input.pme-email-check[type=checkbox] {
   display:none;
   /* visibility:hidden; */
   /* position:fixed; */
   /* left:0px; */
   /* top:0px; */
 }
-:not(.lt-ie9) div.pme-misc-check {
+:not(.lt-ie9) div.pme-email-check {
   width:24px;
   height:24px;
   background:url(%appswebroot%/cafevdb/img/e_mail.png);
   cursor:pointer;
   vertical-align:middle;
 }
-:not(.lt-ie9) input.pme-misc-check[type=checkbox]:checked ~ div.pme-misc-check {
+:not(.lt-ie9) input.pme-email-check[type=checkbox]:checked ~ div.pme-email-check {
   width:24px;
   height:24px;
   background:url(%appswebroot%/cafevdb/img/e_mail_checked.png);
+  vertical-align:middle;
+}
+
+:not(.lt-ie9) input.pme-bulkcommit-check[type=checkbox] {
+  display:none;
+  /* visibility:hidden; */
+  /* position:fixed; */
+  /* left:0px; */
+  /* top:0px; */
+}
+:not(.lt-ie9) div.pme-bulkcommit-check {
+  width:24px;
+  height:24px;
+  background:url(%appswebroot%/cafevdb/img/eighthrest24.png);
+  cursor:pointer;
+  vertical-align:middle;
+}
+:not(.lt-ie9) input.pme-bulkcommit-check[type=checkbox]:checked ~ div.pme-bulkcommit-check {
+  width:24px;
+  height:24px;
+  background:url(%appswebroot%/cafevdb/img/eighthnote24.png);
   vertical-align:middle;
 }
 
@@ -542,7 +598,7 @@ input.pme-sort-rvrt[type=submit] {
   overflow:visible;
 }
 
-input.pme-misc-[type=submit] {
+input.pme-email-[type=submit] {
   background-image:url('%appswebroot%/cafevdb/img/e_mail_X.png');
   background-repeat:no-repeat;
   width:28px;
@@ -550,7 +606,7 @@ input.pme-misc-[type=submit] {
   font-size:0pt;
   vertical-align:middle;
 }
-input.pme-misc+[type=submit] {
+input.pme-email+[type=submit] {
   background-image:url('%appswebroot%/cafevdb/img/e_mail_checked.png');
   background-repeat:no-repeat;
   width:28px;
@@ -558,8 +614,7 @@ input.pme-misc+[type=submit] {
   font-size:0pt;
   vertical-align:middle;
 }
-
-input.pme-misc[type=submit] {
+input.pme-email[type=submit] {
   background-image:url('%appswebroot%/cafevdb/img/e_mail.png');
   background-repeat:no-repeat;
   background-position:0px;
@@ -570,12 +625,39 @@ input.pme-misc[type=submit] {
   /* border-radius:4px; */
 }
 
+input.pme-bulkcommit-[type=submit] {
+  background-image:url('%appswebroot%/cafevdb/img/eighthrest24.png');
+  background-repeat:no-repeat;
+  width:28px;
+  height:28px;
+  font-size:0pt;
+  vertical-align:middle;
+}
+input.pme-bulkcommit+[type=submit] {
+  background-image:url('%appswebroot%/cafevdb/img/eighthnote24.png');
+  background-repeat:no-repeat;
+  width:28px;
+  height:28px;
+  font-size:0pt;
+  vertical-align:middle;
+}
+/* input.pme-bulkcommit[type=submit] { */
+/*   background-image:url('%appswebroot%/cafevdb/img/eighthnote24.png'); */
+/*   background-repeat:no-repeat; */
+/*   background-position:0px; */
+/*   padding-left:24px; */
+/*   /\*padding-top:0px;*\/ */
+/*   min-height:28px; */
+/*   vertical-align:middle; */
+/*   /\* border-radius:4px; *\/ */
+/* } */
+
 input.pme-filter {
   width:auto;
   white-space:nowrap;
 }
 
-/* input.pme-misc[type=submit]:selected { */
+/* input.pme-email[type=submit]:selected { */
 /*   background-image:url(%appswebroot%/cafevdb/img/e_mail.png); */
 /*   background-repeat:no-repeat; */
 /*   background-position:0px; */
@@ -586,7 +668,10 @@ input.pme-filter {
 /*   vertical-align:middle; */
 /* } */
 
-td.pme-buttons > .pme-misc {
+td.pme-buttons > .pme-email {
+  white-space:nowrap;
+}
+td.pme-buttons > .pme-bulkcommit {
   white-space:nowrap;
 }
 

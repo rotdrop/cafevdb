@@ -222,7 +222,7 @@ bitte bei den <A HREF="Projekte.php?PME_sys_rec='.$projectId.'&PME_sys_operation
     $opts['fdd']['ProjektId'] = array(
       'name'     => 'ProjektId',
       'select'   => 'T',
-      'options'  => 'AVCPDR', // auto increment
+      'options'  => 'AVCPD', // auto increment
       'maxlen'   => 11,
       'default'  => '0',
       'sort'     => true,
@@ -237,6 +237,7 @@ bitte bei den <A HREF="Projekte.php?PME_sys_rec='.$projectId.'&PME_sys_operation
     
     $opts['fdd']['ProjektName'] = array(
       'name'     => 'Projekt-Name',
+      'options'  => 'LVR',
       'select'   => 'T',
       'sql'      => 'ProjektId',
       'php|VLF'  => array('type' => 'function',
@@ -244,7 +245,6 @@ bitte bei den <A HREF="Projekte.php?PME_sys_rec='.$projectId.'&PME_sys_operation
                           'parameters' => array('keyIdx' => $idIdx.'_idx',
                                                 'template' => 'brief-instrumentation')),
       'escape'   => false,
-      'options'  => 'LAVR',
       'maxlen'   => 11,
       'sort'     => $sort,
       'values' => array(
@@ -307,7 +307,8 @@ $(function() {
     $('input.cafevdb-control').tipsy({gravity:'nw', fade:true});
     $('#controls button').tipsy({gravity:'nw', fade:true});
     $('.pme-sort').tipsy({gravity: 'n', fade:true});
-    $('.pme-misc-check').tipsy({gravity: 'nw', fade:true});
+    $('.pme-email-check').tipsy({gravity: 'nw', fade:true});
+    $('.pme-bulkcommit-check').tipsy({gravity: 'nw', fade:true});
 
     if (CAFEVDB.toolTips) {
       $.fn.tipsy.enable();

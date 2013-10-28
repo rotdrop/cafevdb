@@ -87,6 +87,7 @@ __EOT__;
       'ProjectId' => $projectId,
       'Template' => 'brief-instrumentation',
       'Table' => $opts['tb'],
+      'RecordsPerPage' => $recordsPerPage,
       'headervisibility' => Util::cgiValue('headervisibility','expanded'));
 
     // Name of field which is the unique key

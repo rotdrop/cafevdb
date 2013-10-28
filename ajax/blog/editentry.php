@@ -31,7 +31,7 @@ try {
     OCP\JSON::error(
       array(
         'data' => array(
-          'message' => L::t('Refusing to create blog entry without author identity'))));
+          'message' => L::t('Refusing to create blog entry without author identity.'))));
     return false;
   }
 
@@ -51,7 +51,7 @@ try {
       OCP\JSON::error(
         array(
           'data' => array(
-            'message' => L::t('Blog entry with id `%s\' cound not be retrieved.',
+            'message' => L::t('Blog entry with id `%s\' could not be retrieved.',
                               array($blogId)))));
       return false;
     }

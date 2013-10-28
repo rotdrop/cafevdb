@@ -33,8 +33,8 @@ div.cafevdb-page-header.collapsed #cafevdb-page-blog-header {
 
 #bloglist img.photo {
   width:auto;
-  height:9ex;
-  max-width:9ex;
+  max-width:18ex;
+  max-height:11ex;
   border: 1px solid #D8D8D8;
   padding: 0.6ex;
   moz-border-radius:.5em;
@@ -50,13 +50,13 @@ div.cafevdb-page-header.collapsed #cafevdb-page-blog-header {
 
 #bloglist div.blogentry {
   position:relative;
-  min-height:11ex;
+  min-height:12ex;
 }
 
 #bloglist li.blogentry {
   vertical-align:top;
   padding:0.5ex 0.5ex 0.5ex 0.5ex;
-  margin:0.5ex 20% 0.5ex 0.5ex;
+  margin:0.5ex 15% 0.5ex 0.5ex;
   height:auto;
   moz-border-radius:.5em;
   webkit-border-radius:.5em;
@@ -125,7 +125,7 @@ div.cafevdb-page-header.collapsed #cafevdb-page-blog-header {
 }
 
 #bloglist span.blogentrycenter {
-  margin-left:12ex;
+  margin-left:21ex;
 }
 
 #bloglist span.blogentrytitle {
@@ -136,5 +136,22 @@ div.cafevdb-page-header.collapsed #cafevdb-page-blog-header {
 #bloglist span.blogentrypriority {
   font-weight:bold;
   color:red;
+}
+
+span.blogentrytext a:link {
+  color:CornFlowerBlue;
+  text-decoration:underline;
+  font-weight:bold;
+}
+span.blogentrytext a:visited {
+  color:CornFlowerBlue;
+  text-decoration:underline;
+  font-weight:bold;
+}
+span.blogentrytext a:hover {
+  color:CornFlowerBlue;
+  text-decoration:underline;
+  font-style:italic;
+  font-weight:bold;
 }
 

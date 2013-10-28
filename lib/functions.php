@@ -71,7 +71,7 @@ class Ajax
     
     $call = $call[$tracelevel];
     if ($debuglevel !== false) {
-      \OCP\Util::writeLog('contacts',
+      \OCP\Util::writeLog(Config::APP_NAME,
                           $call['file'].'. Line: '.$call['line'].': '.$msg,
                           $debuglevel);
     }
@@ -362,17 +362,20 @@ __EOT__;
     exit;
   }
 
-  public static function cgiValue($key, $default=NULL)
+  public static function cgiValue($key, $default=NULL, $allowEmpty = true)
   {
+    $value = $default;
     if (isset($_POST["$key"])) {
-      return $_POST["$key"];
+      $value = $_POST["$key"];
     } elseif (isset($_GET["$key"])) {
-      return $_GET["$key"];
+      $value = $_GET["$key"];
     } elseif (isset(Config::$cgiVars["$key"])) {
-      return Config::$cgiVars["$key"];
-    } else {
-      return $default;
+      $value = Config::$cgiVars["$key"];
     }
+    if (!$allowEmpty && !is_null($default) && $value == '') {
+      $value = $default;
+    }
+    return $value;
   }
 
   public static function disableEnterSubmit()
@@ -799,7 +802,8 @@ class mySQL
 
   public static function query($query, $handle = false, $die = false, $silent = false)
   {
-    if (Util::debugMode()) {
+    if (false && Util::debugMode()) {
+      // NOPE, emit stuff before headers are sent.
       echo '<HR/><PRE>'.htmlspecialchars($query).'</PRE><HR/><BR>';
     }
     if ($handle) {
@@ -812,7 +816,7 @@ class mySQL
       }
     }
     if (!$result) {
-      Util::error('mysql_query() failed: "'.$err.'"', $die, $silent);
+      Util::error('mysql_query() "'.$query.'" failed: "'.$err.'"', $die, $silent);
     }
     return $result;
   }

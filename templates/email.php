@@ -4,8 +4,8 @@ use CAFEVDB\Util;
 use CAFEVDB\Navigation;
 use CAFEVDB\Email;
 
-$project = Util::cgiValue('Project');
-$projectId = Util::cgiValue('ProjectId');
+$project = $_['projectName'];
+$projectId = $_['projectId'];
 $css_pfx = Email::CSS_PREFIX;
 
 $nav = '';

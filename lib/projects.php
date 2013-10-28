@@ -404,7 +404,7 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
     return $fields;
   }
 
-  public static function projectButton($projectName, $opts, $k, $fds, $fdd, $row)
+  public static function projectButton($projectName, $opts, $modify, $k, $fds, $fdd, $row)
   {
     $projectId = $row["qf".$opts['keyIdx']];
     $template  = $opts['template'];
@@ -422,7 +422,7 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
 __EOT__;
   }
 
-  public static function eventButtonPME($projectId, $opts, $k, $fds, $fdd, $row)
+  public static function eventButtonPME($projectId, $opts, $modify, $k, $fds, $fdd, $row)
   {
     $projectName = $row["qf$opts"];
     return self::eventButton($projectId, $projectName);
@@ -601,14 +601,16 @@ __EOT__;
    `Besetzungen`.`Bemerkungen` AS `ProjektBemerkungen`'.
       ($extraquery != '' ? $extraquery : '').','
       .' `Instrumente` AS `AlleInstrumente`,`Sprachpräferenz`,`Geburtstag`,
-   `Status`,`Musiker`.`Bemerkung`,`Aktualisiert`';
+   `Status`,`Musiker`.`Bemerkung`,`MemberPortraits`.`PhotoData`,`Aktualisiert`';
 
     // Now do the join
     $sqlquery .= ' FROM `Musiker`
    JOIN `Besetzungen`
      ON `Musiker`.`Id` = MusikerId AND '.$projectId.'= `ProjektId`
    LEFT JOIN `Instrumente`
-     ON `Besetzungen`.`Instrument` = `Instrumente`.`Instrument`';
+     ON `Besetzungen`.`Instrument` = `Instrumente`.`Instrument`
+   LEFT JOIN `MemberPortraits`
+     ON `MemberPortraits`.`MemberId` = `Musiker`.`Id`';
 
     // And finally force a sensible default sorting:
     // 1: sort on the natural orchestral ordering defined in Instrumente

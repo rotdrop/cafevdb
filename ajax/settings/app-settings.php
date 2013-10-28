@@ -215,7 +215,7 @@ if (isset($_POST['shareowner-saved']))
     return true;
   } else {
     OC_JSON::error(
-      array("data" => array( "message" => L::t('Failure checking account `s\'',
+      array("data" => array( "message" => L::t('Failure checking account `%s\'',
                                                array($user)))));
     return false;
   }

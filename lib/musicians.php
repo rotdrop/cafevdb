@@ -60,6 +60,8 @@ __EOT__;
     $recordsPerPage  = $this->recordsPerPage;
     $opts            = $this->opts;
 
+    $headervisibility = Util::cgiValue('headervisibility','expanded');
+
     /*
      * IMPORTANT NOTE: This generated file contains only a subset of huge amount
      * of options that can be used with phpMyEdit. To get information about all
@@ -88,7 +90,7 @@ __EOT__;
       'Template' => $this->projectMode
       ? 'add-musicians' : 'all-musicians',
       'Table' => $opts['tb'],
-      'headervisibility' => Util::cgiValue('headervisibility','expanded'));
+      'headervisibility' => $headervisibility);
 
     // Name of field which is the unique key
     $opts['key'] = 'Id';
@@ -148,6 +150,8 @@ __EOT__;
 
     if ($this->projectMode) {
        $opts['filters'] = "(SELECT COUNT(*) FROM `Besetzungen` WHERE MusikerId = PMEtable0.Id AND ProjektId = $projectId) = 0";
+       $opts['misccssclass']   = 'bulkcommit';
+       $opts['labels']['Misc'] = strval(L::t('Add all to %s', array($project)));
     }
 
     /* Field definitions
@@ -188,7 +192,17 @@ __EOT__;
        descriptions fields are also possible. Check documentation for this.
     */
 
-    $bval = strval(L::t('Add to'));
+    $opts['fdd']['Id'] = array(
+      'name'     => 'Id',
+      'select'   => 'T',
+      'options'  => 'AVCPDR', // auto increment
+      'maxlen'   => 5,
+      'align'    => 'right',
+      'default'  => '0',
+      'sort'     => true
+      );
+
+    $bval = strval(L::t('Add to %s', array($project)));
     $tip  = strval(Config::toolTips('register-musician'));
     if ($this->projectMode) {
       $opts['fdd']['Hinzufuegen'] = array(
@@ -199,13 +213,14 @@ __EOT__;
         'sql' => "REPLACE('"
 ."<div class=\"register-musician\">"
 ."<input type=\"button\" "
-."value=\"$bval $project\" "
+."value=\"$bval\" "
 ."title=\"$tip\" "
 ."name=\""
 ."Template=add-one-musician&amp;"
+."headervisibility=$headervisibility&amp;"
 ."Project=$project&amp;"
 ."ProjectId=$projectId&amp;"
-."MusicianId=@@key@@\""
+."MusicianId=@@key@@\" "
 ."class=\"register-musician\" />"
 ."</div>'"
 .",'@@key@@',`PMEtable0`.`Id`)",
@@ -235,6 +250,34 @@ __EOT__;
                                     'maxlen'   => 128,
                                     'sort'     => true
                                     );
+
+
+    $derivedtable =<<<__EOT__
+SELECT MusikerId,GROUP_CONCAT(DISTINCT Projekte.Name ORDER BY Projekte.Name ASC SEPARATOR ', ') AS Projekte FROM
+Besetzungen
+LEFT JOIN Projekte ON Projekte.Id = Besetzungen.ProjektId
+GROUP BY MusikerId
+__EOT__;
+
+    $opts['fdd']['Projekte'] =
+      array('input' => 'VR', // virtual, read perm
+            'options' => 'LFV', //just do the join, don't display anything
+            'select' => 'T',
+            'name' => 'Projekte',
+            'sort' => true,
+            'sql' => 'PMEjoin'.count($opts['fdd']).'.Projekte',
+            'sqlw' => 'PMEjoin'.count($opts['fdd']).'.Projekte',
+            'css'      => array('postfix' => 'prjs'),
+            'values' => array( //API for currently making a join in PME.
+              'table' =>
+              array('sql' => $derivedtable,
+                    'kind' => 'derived'),
+              'column' => 'MusikerId',
+              'description' => 'Projekte',
+              'join' => '$main_table.Id = $join_table.MusikerId'
+              )
+        );
+
     $opts['fdd']['Strasse'] = array(
                                     'name'     => 'Strasse',
                                     'select'   => 'T',
@@ -259,7 +302,7 @@ __EOT__;
                                  'default'  => 'Deutschland',
                                  'sort'     => true);
     $opts['fdd']['Sprachpräferenz'] = array('name'     => 'Spachpräferenz',
-                                            'select'   => 'T',
+                                            'select'   => 'D',
                                             'maxlen'   => 128,
                                             'default'  => 'Deutschland',
                                             'sort'     => true,
@@ -297,41 +340,19 @@ __EOT__;
                                       'sort'     => true
                                       );
 
-  $derivedtable =<<<__EOT__
-SELECT MusikerId,GROUP_CONCAT(DISTINCT Projekte.Name ORDER BY Projekte.Name ASC SEPARATOR ', ') AS Projekte FROM
-Besetzungen
-LEFT JOIN Projekte ON Projekte.Id = Besetzungen.ProjektId
-GROUP BY MusikerId
-__EOT__;
-
-  $opts['fdd']['Projekte'] =
-    array('input' => 'VR', // virtual, read perm
-          'options' => 'LFV', //just do the join, don't display anything
-          'select' => 'T',
-          'name' => 'Projekte',
-          'sort' => true,
-          'sql' => 'PMEjoin'.count($opts['fdd']).'.Projekte',
-          'sqlw' => 'PMEjoin'.count($opts['fdd']).'.Projekte',
-          'css'      => array('postfix' => 'prjs'),
-          'values' => array( //API for currently making a join in PME.
-                            'table' =>
-                            array('sql' => $derivedtable,
-                                  'kind' => 'derived'),
-                            'column' => 'MusikerId',
-                            'description' => 'Projekte',
-                            'join' => '$main_table.Id = $join_table.MusikerId'
-                             )
-          );
-
-    $opts['fdd']['Id'] = array(
-                               'name'     => 'Id',
-                               'select'   => 'T',
-                               'options'  => 'AVCPDR', // auto increment
-                               'maxlen'   => 5,
-                               'align'    => 'right',
-                               'default'  => '0',
-                               'sort'     => true
-                               );
+    $opts['fdd']['Portrait'] = array(
+      'input' => 'V',
+      'name' => L::t('Photo'),
+      'select' => 'T',
+      'options' => 'ACPDV',
+      'sql' => 'Id',
+      'php' => array(
+        'type' => 'function',
+        'function' => 'CAFEVDB\Musicians::portraitImageLinkPME',
+        'parameters' => array()
+        ),
+      'default' => '',
+      'sort' => false);
 
     $opts['fdd']['Aktualisiert'] = Config::$opts['datetime'];
     $opts['fdd']['Aktualisiert']['name'] = 'Aktualisiert';
@@ -371,6 +392,165 @@ __EOT__;
     }
 
   } // display()
+
+  public static function portraitImageLinkPME($musicianId, $opts, $modify, $k, $fds, $fdd, $row)
+  {
+    return self::portraitImageLink($musicianId, $modify);
+  }
+
+  public static function portraitImageLink($musicianId, $modify = false)
+  {
+    if ($modify === false) {
+      $span = ''
+        .'<span class="photo"><img class="photo" src="'.\OC::$WEBROOT.'/?app=cafevdb&getfile=memberphoto.php&MemberId='.$musicianId.'"'
+        .' title="Photo, if available" /></span>';
+      return $span;
+    } else {
+      $photoarea = ''
+        .'<div id="contact_photo">
+        
+  <iframe name="file_upload_target" id=\'file_upload_target\' src=""></iframe>
+  <div class="tip propertycontainer" id="cafevdb_musician_photo_wrapper" title="'
+      .L::t("Drop photo to upload (max %s)", array(\OCP\Util::humanFileSize(Util::maxUploadSize()))).'"'
+        .' data-element="PHOTO">
+    <ul id="phototools" class="transparent hidden contacts_property">
+      <li><a class="svg delete" title="'.L::t("Delete current photo").'"></a></li>
+      <li><a class="svg edit" title="'.L::t("Edit current photo").'"></a></li>
+      <li><a class="svg upload" title="'.L::t("Upload new photo").'"></a></li>
+      <li><a class="svg cloud" title="'.L::t("Select photo from ownCloud").'"></a></li>
+    </ul>
+  </div>
+</div> <!-- contact_photo -->
+';
+
+      return $photoarea;
+    }
+  }
+
+  public static function fetchPortrait($musicianId, $handle = false)
+  {
+    $photo = '';
+
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+      
+    $query = "SELECT `PhotoData` FROM `MemberPortraits` WHERE `MemberId` = ".$musicianId;
+
+    $result = mySQL::query($query, $handle);
+
+    if ($result !== false && mysql_num_rows($result) == 1) {
+      $row = mySQL::fetch($result);
+      if (isset($row['PhotoData'])) {
+        $photo = $row['PhotoData'];
+      }
+    }
+    
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $photo;    
+  }
+
+  /**Take a BASE64 encoded photo and store it in the DB.
+   */
+  public static function storePortrait($musicianId, $photo, $handle = false)
+  { 
+    if (!isset($photo) || $photo == '') {
+      return;
+    }
+
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
+    $query = "INSERT INTO `MemberPortraits`
+  (`MemberId`,`PhotoData`) VALUES (".$musicianId.",'".$photo."')
+  ON DUPLICATE KEY UPDATE `PhotoData` = '".$photo."';";
+
+    $result = mySQL::query($query, $handle) && self::storeModified($musicianId, $handle);
+    
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $result;
+  }
+
+  public static function deletePortrait($musicianId, $handle = false)
+  {
+    $photo = '';
+
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+      
+    $query = "DELETE IGNORE FROM `MemberPortraits` WHERE `MemberId` = ".$musicianId;
+
+    $result = mySQL::query($query, $handle) && self::storeModified($musicianId, $handle);
+
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $result;
+  }
+
+  public static function storeModified($musicianId, $handle = false)
+  {
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+      
+    $query = "UPDATE IGNORE `Musiker`
+    SET `Aktualisiert` = '".date('Y-m-d H:i:s')."'
+    WHERE `Id` = ".$musicianId;
+
+    $result = mySQL::query($query, $handle);
+    
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $result;
+  }
+
+  public static function fetchModified($musicianId, $handle = false)
+  {
+    $modified = 0;
+
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+      
+    $query = "SELECT `Aktualisiert` FROM `Musiker` WHERE `Id` = ".$musicianId.";";
+
+    $result = mySQL::query($query, $handle);
+    if ($result !== false && mysql_num_rows($result) == 1) {
+      $row = mySQL::fetch($result);
+      if (isset($row['Aktualisiert'])) {
+        $modified = strtotime($row['Aktualisiert']);
+      }
+    }
+    
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $modified;
+  }
+  
 };
 
 /**Class responsible for adding one musician to a project.
@@ -379,12 +559,28 @@ class AddOneMusician
   extends Instrumentation
 {
   const CSS_PREFIX = 'cafevdb-page';
+  const INITIAL_TEMPLATE = 'add-one-musician';
+  const CHANGE_TEMPLATE = 'change-one-musician';
 
-  function __construct($execute = false) {
+  function __construct($execute = true) {
     parent::__construct($execute);
   }
 
-  /**Helper function to add or change one specific musician to an
+  public function headerText()
+  {
+
+    $header = <<<__EOT__
+<H2>
+  Auf dieser Seite wird <B>nur</B> der neue Musiker f&uuml;r das Projekt angezeigt,
+  f&uuml;r die komplette List mu&szlig; man den entsprechenden Button bet&auml;tigen.
+</H2>
+
+__EOT__;
+
+    return $header;
+  }
+
+  /**Helper method to add or change one specific musician to an
    * existing project. $this->template determines what to do.
    */
   public function display() {
@@ -401,36 +597,25 @@ class AddOneMusician
     $userExtraFields = $this->userExtraFields;
     $recordsPerPage  = $this->recordsPerPage;
 
-    echo <<<__EOT__
-<div class="cafevdb-pme-header-box">
-  <div class="cafevdb-pme-header">
-    <H4>
-      Auf dieser Seite wird <B>nur</B> der neue Musiker f&uuml;r das Projekt angezeigt,
-      f&uuml;r die komplette List mu&szlig; man den entsprechenden Button bet&auml;tigen.
-    </H4>
-__EOT__;
+    $headervisibility = Util::cgiValue('headervisibility', 'expanded');
 
     $opts['tb'] = 'Besetzungen';
 
     //$opts['execute'] = false; // started by us explicitly after adding the musician
-
-    if (isset($_POST['ForcedInstrument'])) {
-      $forcedInstrument = $_POST['ForcedInstrument'];
-    } else {
-      $forcedInstrument = false;
-    }
+    
+    $forcedInstrument = Util::cgiValue('ForcedInstrument', false);
 
     $saved_template = $template;
-    $template = 'change-one-musician'; // Add only once!
+    $template = self::CHANGE_TEMPLATE; // Add only once!
 
     $opts['cgi']['persist'] = array(
-      'Project' => $project,
-      'ProjectId' => $projectId,
+      'Project' => $this->project,
+      'ProjectId' => $this->projectId,
       'Table' => $opts['tb'],
       'Template' => $template,
-      'MusicianId' => $musicianId,
-      'RecordsPerPage' => $recordsPerPage,
-      'headervisibility' => Util::cgiValue('headervisibility','expanded'));
+      'MusicianId' => $this->musicianId,
+      'RecordsPerPage' => $this->recordsPerPage,
+      'headervisibility' => $headervisibility);
 
     // Name of field which is the unique key
     $opts['key'] = 'Id';
@@ -604,12 +789,14 @@ __EOT__;
     // data-base. Otherwise add id on request.
     $opts['triggers']['update']['before']  = Config::$triggers.'instrumentation-change-instrument.TUB.inc.php';
 
+    echo "<div class=\"cafevdb-table-notes\">\n"; // notes
+
     if ($saved_template == "add-one-musician") {
 
       // Fetch all needed data from Musiker table
       $handle = mySQL::connect($opts);
 
-      $musquery = "SELECT `Instrumente` FROM Musiker WHERE `Id` = $musicianId";
+      $musquery = "SELECT `Instrumente`,`Vorname`,`Name` FROM Musiker WHERE `Id` = $musicianId";
       $musres = mySQL::query($musquery, $handle);
       $musnumrows = mysql_num_rows($musres);
 
@@ -641,17 +828,27 @@ __EOT__;
       }
       if (!isset($musinst)) {
         // Warn.
-        echo
-          '<H4>None of the instruments known by the musicions are mentioned in the
-<A HREF="Projekte.php?PME_sys_rec='.$projectId.'&PME_sys_operation=PME_op_Change">instrumentation-list</A>
-for the project. The musician is added nevertheless to the project with the instrument '.$instruments[0].'.
-Please correct the mis-match.</H4>';
+        $warning = L::t("None of the instruments known by %s are mentioned in the "
+                        ."%sinstrumentation-list%s for the project.\n"
+                        ."The musician is added nevertheless to the project with the instrument ``%s''\n"
+                        ."Please correct the mis-match.",
+                        array($musrow['Vorname']." ".$musrow['Name'],
+                              '<A class="cafevdb-hyperlink" HREF="?app=cafevdb&Template=projects&PME_sys_rec='.$this->projectId.'&PME_sys_operation=PME_op_Change&headervisibility='.$headervisibility.'">',
+                              '</A>',
+                              $instruments[0]));
+        echo "<div class=\"cafevdb-note\">\n  <H4>$warning</H4>\n</div>\n";
         $musinst = $instruments[0];
       } else {
-        echo
-          '<H4>Choosing the first instrument known to the musician and mentioned in the instrumentation list
-of the project. Please correct that by choosing a different "Projekt-Instrument" below, if necessary.
-Choosing "'.$musinst.'" as instrument.</H4>';
+        $note = L::t("Choosing the first instrument known by %s\n"
+                     ."and mentioned in the %sinstrumentation list%s of the project ``%s''.\n"
+                     ."Please correct that by choosing a different ``project-instrument''\n"
+                     ."below, if necessary. Choosing ``%s'' as instrument.",
+                     array($musrow['Vorname']." ".$musrow['Name'],
+                           '<A class="cafevdb-hyperlink" HREF="?app=cafevdb&Template=projects&PME_sys_rec='.$this->projectId.'&PME_sys_operation=PME_op_Change&headervisibility='.$headervisibility.'">',
+                           '</A>',
+                           $this->project,
+                           $musinst));
+        echo "<div class=\"cafevdb-note\">\n  <H4>$note</H4>\n</div>\n";
       }
     
 
@@ -662,6 +859,446 @@ Choosing "'.$musinst.'" as instrument.</H4>';
       mySQL::close($handle);
 
     } else if ($forcedInstrument != false) {
+      // Add to musicans list in Musiker data-base and to musician Besetzungen
+
+      // Fetch all needed data from Musiker table
+      $handle = mySQL::connect($opts);
+
+      $musquery = "SELECT `Instrumente` FROM Musiker WHERE `Id` = ".$this->musicianId;
+
+      $musres = mySQL::query($musquery, $handle);
+      $musnumrows = $musres !== false ? mysql_num_rows($musres) : -1;
+
+      if ($musnumrows != 1) {
+        die ("Data inconsisteny, $this->musicianId is not a unique Id");
+      }
+
+      $musrow = mySQL::fetch($musres);
+      $instruments = $musrow['Instrumente'] . "," . $forcedInstrument;
+    
+      $musquery = "UPDATE `Musiker` SET `Instrumente`='$instruments'
+ WHERE `Id` = ".$this->musicianId;
+  
+      mySQL::query($musquery, $handle);
+
+      $prjquery = "UPDATE `Besetzungen` SET `Instrument`='$forcedInstrument'
+ WHERE `MusikerId` = ".$this->musicianId." AND `ProjektId` = ".$this->projectId;
+
+      mySQL::query($prjquery, $handle);
+
+      mySQL::close();
+    }
+
+    echo "</div>\n"; // notes
+
+    $opts['execute'] = $this->execute;
+
+    $this->pme = new \phpMyEdit($opts);
+
+    if (Util::debugMode()) {
+      echo '<PRE>';
+      print_r($_POST);
+      echo '</PRE>';
+    }
+
+  }
+
+}; // class definition.
+
+/**Class responsible for adding one musician to a project.
+ */
+class BulkAddMusicians
+  extends Instrumentation
+{
+  const CSS_PREFIX = 'cafevdb-page';
+  const INITIAL_TEMPLATE = 'bulk-add-musicians';
+  const CHANGE_TEMPLATE = 'bulk-change-musicians';
+
+  private $musiciansIds;
+  private $musicansKey;
+
+  function __construct($execute = true) {
+    parent::__construct($execute);
+    $this->musiciansIds = array();
+    $pmepfx             = $this->opts['cgi']['prefix']['sys'];
+    $this->musiciansKey = $pmepfx.'mrecs';
+  }
+
+  public function headerText()
+  {
+
+    $header = <<<__EOT__
+<H2>
+  Auf dieser Seite werden <B>nur</B> die neuen Musiker f&uuml;r das Projekt angezeigt,
+  f&uuml;r die komplette List mu&szlig; man den entsprechenden Button bet&auml;tigen.
+</H2>
+
+__EOT__;
+
+    return $header;
+  }
+
+  private function sqlFilter($table = 'PMEtable0') {
+    $filter = "`".$table."`.ProjektId = ".$this->projectId." AND ( `".$table."`.MusikerId = -1";
+    foreach ($this->musiciansIds as $musId) {
+      $filter .= " OR `".$table."`.MusikerId = ".$musId;
+    }
+    $filter .= ")"; // don't forget the closing parenthesis.
+    return $filter;
+  }
+
+  /**Helper method to add or change multiple musicians to an
+   * existing project.
+   */
+  public function display()
+  {
+    global $debug_query;
+    //Config::$debug_query = true;
+    //$debug_query = true;
+
+    $opts            = $this->opts;
+    $recordsPerPage  = $this->recordsPerPage;
+    $userExtraFields = $this->userExtraFields;
+
+    $headervisibility = Util::cgiValue('headervisibility','expanded');
+
+    $saved_template = $this->template;
+    $this->template = self::CHANGE_TEMPLATE;
+
+    $this->musiciansIds  = Util::cgiValue($this->musiciansKey,array());
+
+    // Probably needs several changes ...
+    if (isset($_POST['ForcedInstrument'])) {
+      $forcedInstrument = $_POST['ForcedInstrument'];
+    } else {
+      $forcedInstrument = false;
+    }
+
+    if (false) {
+      echo '<PRE>';
+      print_r($_POST);
+      echo '</PRE>';
+    }
+
+    /*
+     * IMPORTANT NOTE: This generated file contains only a subset of huge amount
+     * of options that can be used with phpMyEdit. To get information about all
+     * features offered by phpMyEdit, check official documentation. It is available
+     * online and also for download on phpMyEdit project management page:
+     *
+     * http://platon.sk/projects/main_page.php?project_id=5
+     *
+     * This file was generated by:
+     *
+     *                    phpMyEdit version: 5.7.1
+     *       phpMyEdit.class.php core class: 1.204
+     *            phpMyEditSetup.php script: 1.50
+     *              generating setup script: 1.50
+     */
+
+    $opts['tb'] = 'Besetzungen';
+
+    // Number of records to display on the screen
+    // Value of -1 lists all records in a table
+    $opts['inc'] = $recordsPerPage;
+
+    // Don't want everything persistent.
+    $opts['cgi']['persist'] = array(
+      'Project' => $this->project,
+      'ProjectId' => $this->projectId,
+      'Table' => $opts['tb'],
+      'Template' => $this->template,
+      'RecordsPerPage' => $recordsPerPage,
+      $this->musiciansKey => $this->musiciansIds,
+      'headervisibility' => $headervisibility);
+
+    // Name of field which is the unique key
+    $opts['key'] = 'Id';
+
+    // Type of key field (int/real/string/date etc.)
+    $opts['key_type'] = 'int';
+
+    // Sorting field(s)
+    $opts['sort_field'] = array('Sortierung','Reihung','-Stimmführer','MusikerId');
+
+    // Options you wish to give the users
+    // A - add,  C - change, P - copy, V - view, D - delete,
+    // F - filter, I - initial sort suppressed
+    $opts['options'] = 'CVDF';
+
+    // Number of lines to display on multiple selection filters
+    $opts['multiple'] = '4';
+
+    // Navigation style: B - buttons (default), T - text links, G - graphic links
+    // Buttons position: U - up, D - down (default)
+    //$opts['navigation'] = 'DB';
+
+    // Display special page elements
+    $opts['display'] = array(
+      'form'  => true,
+      'query' => false,
+      'sort'  => true,
+      'time'  => true,
+      'tabs'  => false
+      );
+
+    // Set default prefixes for variables
+    $opts['js']['prefix']               = 'PME_js_';
+    $opts['dhtml']['prefix']            = 'PME_dhtml_';
+    $opts['cgi']['prefix']['operation'] = 'PME_op_';
+    $opts['cgi']['prefix']['sys']       = 'PME_sys_';
+    $opts['cgi']['prefix']['data']      = 'PME_data_';
+
+    /* Get the user's default language and use it if possible or you can
+       specify particular one you want to use. Refer to official documentation
+       for list of available languages. */
+    //  $opts['language'] = $_SERVER['HTTP_ACCEPT_LANGUAGE'] . '-UTF8';
+
+    /* Table-level filter capability. If set, it is included in the WHERE clause
+       of any generated SELECT statement in SQL query. This gives you ability to
+       work only with subset of data from table.
+
+       $opts['filters'] = "column1 like '%11%' AND column2<17";
+       $opts['filters'] = "section_id = 9";
+       $opts['filters'] = "PMEtable0.sessions_count > 200";
+    */
+
+    $opts['filters'] = $this->sqlFilter('PMEtable0');
+
+
+    /* Field definitions
+   
+       Fields will be displayed left to right on the screen in the order in which they
+       appear in generated list. Here are some most used field options documented.
+
+       ['name'] is the title used for column headings, etc.;
+       ['maxlen'] maximum length to display add/edit/search input boxes
+       ['trimlen'] maximum length of string content to display in row listing
+       ['width'] is an optional display width specification for the column
+       e.g.  ['width'] = '100px';
+       ['mask'] a string that is used by sprintf() to format field output
+       ['sort'] true or false; means the users may sort the display on this column
+       ['strip_tags'] true or false; whether to strip tags from content
+       ['nowrap'] true or false; whether this field should get a NOWRAP
+       ['select'] T - text, N - numeric, D - drop-down, M - multiple selection
+       ['options'] optional parameter to control whether a field is displayed
+       L - list, F - filter, A - add, C - change, P - copy, D - delete, V - view
+       Another flags are:
+       R - indicates that a field is read only
+       W - indicates that a field is a password field
+       H - indicates that a field is to be hidden and marked as hidden
+       ['URL'] is used to make a field 'clickable' in the display
+       e.g.: 'mailto:$value', 'http://$value' or '$page?stuff';
+       ['URLtarget']  HTML target link specification (for example: _blank)
+       ['textarea']['rows'] and/or ['textarea']['cols']
+       specifies a textarea is to be used to give multi-line input
+       e.g. ['textarea']['rows'] = 5; ['textarea']['cols'] = 10
+       ['values'] restricts user input to the specified constants,
+       e.g. ['values'] = array('A','B','C') or ['values'] = range(1,99)
+       ['values']['table'] and ['values']['column'] restricts user input
+       to the values found in the specified column of another table
+       ['values']['description'] = 'desc_column'
+       The optional ['values']['description'] field allows the value(s) displayed
+       to the user to be different to those in the ['values']['column'] field.
+       This is useful for giving more meaning to column values. Multiple
+       descriptions fields are also possible. Check documentation for this.
+    */
+
+    $opts['fdd']['Id'] = array(
+                               'name'     => 'Id',
+                               'select'   => 'T',
+                               'options'  => 'AVCPDR', // auto increment
+                               'maxlen'   => 11,
+                               'default'  => '0',
+                               'sort'     => true
+                               );
+    $opts['fdd']['ProjektId'] = array(
+                                      'name'     => 'ProjektId',
+                                      'select'   => 'T',
+                                      'options'  => 'AVCPDR', // auto increment
+                                      'maxlen'   => 11,
+                                      'sort'     => true,
+                                      'values' => array(
+                                                        'table' => 'Projekte',
+                                                        'column' => 'Id',
+                                                        'description' => 'Name',
+                                                        'filters' => "Id = $this->projectId"
+                                                        )
+                                      );
+    $opts['fdd']['MusikerId'] = array(
+                                      'name'     => 'MusikerId',
+                                      'select'   => 'T',
+                                      'maxlen'   => 11,
+                                      'sort'     => true,
+                                      //'options'  => 'LFADV', // no change allowed
+                                      'values' => array('table' => 'Musiker',
+                                                        'column' => 'Id',
+                                                        'description' => array('columns' => array('Name', 'Vorname'),
+                                                                               'divs' => array(', ')
+                                                                               ))
+                                      );
+    $opts['fdd']['Instrument'] = array('name'     => 'Instrument',
+                                       'select'   => 'T',
+                                       'maxlen'   => 12,
+                                       'values'   => array('table'   => 'Instrumente',
+                                                           'column'  => 'Instrument',
+                                                           'orderby' => '$table.Sortierung',
+                                                           'description' => array('columns' => array('Instrument'))),
+                                       'sort'     => true
+                                       );
+    //$opts['fdd']['Instrument']['values'] = $this->instruments;
+    $opts['fdd']['Sortierung'] = array('name' => 'Orchester-Sortierung',
+                                       'select' => 'T',
+                                       'options' => 'VCPR',
+                                       'input' => 'V',
+                                       'sql' => '`PMEjoin3`.`Sortierung`',
+                                       'sort' => true);
+    $opts['fdd']['Reihung'] = array('name' => 'Stimme',
+                                    'select' => 'N',
+                                    'maxlen' => '1',
+                                    'sort' => true);
+    $opts['fdd']['Stimmführer'] = array('name' => ' &alpha;',
+                                        'options'  => 'LAVCPDF',
+                                        'select' => 'T',
+                                        'maxlen' => '1',
+                                        'sort' => true,
+                                        'escape' => false);
+    $opts['fdd']['Stimmführer']['values2'] = array('0' => ' ', '1' => '&alpha;');
+    $opts['fdd']['Bemerkungen'] = array('name'     => 'Bemerkungen',
+                                        'select'   => 'T',
+                                        'maxlen'   => 65535,
+                                        'css'      => array('postfix' => 'rem'),
+                                        'textarea' => array('html' => 'Editor',
+                                                            'rows' => 5,
+                                                            'cols' => 50),
+                                        'escape' => false,
+                                        'sort'     => true);
+    $opts['fdd']['Unkostenbeitrag'] = Config::$opts['money'];
+    $opts['fdd']['Unkostenbeitrag']['name'] = "Unkostenbeitrag\n(Gagen negativ)";
+
+    // Generate input fields for the extra columns
+    foreach ($userExtraFields as $field) {
+      $name = sprintf('ExtraFeld%02d', $field['pos']);
+    
+      $opts['fdd']["$name"] = array('name' => $field['name'],
+                                    'select'   => 'T',
+                                    'maxlen'   => 65535,
+                                    'textarea' => array('html' => 'NoEditor',
+                                                        'rows' => 2,
+                                                        'cols' => 32),
+                                    'escape' => false,
+                                    'sort'     => true);
+    }
+
+    // Check whether the instrument is also mentioned in the musicians
+    // data-base. Otherwise add id on request.
+    $opts['triggers']['insert']['before']  = Config::$triggers.'instrumentation-fix-project.TIB.inc.php';
+    $opts['triggers']['update']['before']  = Config::$triggers.'instrumentation-change-instrument.TUB.inc.php';
+
+    if ($this->pme_bare) {
+      // disable all navigation buttons, probably for html export
+      $opts['navigation'] = 'N'; // no navigation
+      $opts['options'] = '';
+      // Don't display special page elements
+      $opts['display'] = array(
+        'form'  => false,
+        'query' => false,
+        'sort'  => false,
+        'time'  => false,
+        'tabs'  => false
+      );
+      // Disable sorting buttons
+      foreach ($opts['fdd'] as $key => $value) {
+        $opts['fdd'][$key]['sort'] = false;
+      }
+    }
+
+    echo "<div class=\"cafevdb-table-notes\">\n"; // notes
+
+    if ($saved_template == SELF::INITIAL_TEMPLATE) {
+
+      // Fetch all needed data from Musiker table
+      $handle = mySQL::connect($opts);
+
+      $instrumentationNoBugCount = 0;
+
+      foreach ($this->musiciansIds as $musicianId) {
+
+        $musquery = "SELECT `Instrumente`,`Vorname`,`Name` FROM Musiker WHERE `Id` = $musicianId";
+        $musres = mySQL::query($musquery, $handle);
+        $musnumrows = mysql_num_rows($musres);
+
+        if ($musnumrows != 1) {
+          Util::error("Data inconsisteny, $musicianId is not a unique Id");
+        }
+
+        $musrow = mySQL::fetch($musres);
+        $instruments = explode(',',$musrow['Instrumente']);
+
+        $instquery = "SELECT `Besetzung` FROM `Projekte` WHERE `Id` = $this->projectId";
+        $instres = mySQL::query($instquery, $handle);
+        $instnumrows = mysql_num_rows($instres);
+
+        if ($instnumrows != 1) {
+          Util::error("Data inconsisteny, $this->projectId is not a unique Id");
+        }
+
+        $instrow = mySQL::fetch($instres);
+        $instrumentation = explode(',',$instrow['Besetzung']);
+
+        unset($musinst);
+        foreach ($instruments as $value) {
+          if (array_search($value, $instrumentation) !== false) {
+            // Choose $musinst as instrument
+            $musinst = $value;
+            break;
+          }
+        }
+        if (!isset($musinst)) {
+          // Warn.
+          $warning = L::t("None of the instruments known by %s are mentioned in the "
+                          ."%sinstrumentation-list%s for the project.\n"
+                          ."The musician is added nevertheless to the project with the instrument ``%s''\n"
+                          ."Please correct the mis-match.",
+                          array($musrow['Vorname']." ".$musrow['Name'],
+                                '<A class="cafevdb-hyperlink" HREF="?app=cafevdb&Template=projects&PME_sys_rec='.$this->projectId.'&PME_sys_operation=PME_op_Change&headervisibility='.$headervisibility.'">',
+                                '</A>',
+                                $instruments[0]));
+          echo "<div class=\"cafevdb-note\">\n  <H4>$warning</H4>\n</div>\n";
+          $musinst = $instruments[0];
+        } else {
+          $instrumentationNoBugCount++;
+        }
+
+        $prjquery = "INSERT INTO `Besetzungen` (`MusikerId`,`ProjektId`,`Instrument`)
+ VALUES ('$musicianId','$this->projectId','$musinst')";
+
+        // fire it up
+        mySQL::query($prjquery, $handle);
+
+      } // foreach over all Ids to be added
+
+      mySQL::close($handle);
+
+      if ($instrumentationNoBugCount > 0) {
+        $note = L::t("Generally, the first instrument known by the respective musician\n"
+                     ."and mentioned in the %sinstrumentation list%s of the project ``%s''\n"
+                     ."was chosen as ``project-instrument''.\n"
+                     ."Please correct that by choosing a different ``project-instrument''\n"
+                     ."below, if necessary.",
+                     array('<A class="cafevdb-hyperlink" HREF="?app=cafevdb&Template=projects&PME_sys_rec='.$this->projectId.'&PME_sys_operation=PME_op_Change&headervisibility='.$headervisibility.'">',
+                           '</A>',
+                           $this->project));
+        echo "<div class=\"cafevdb-note\">\n  <H4>$note</H4>\n</div>\n";
+      }
+
+    } else if ($forcedInstrument != false) {
+      // "call-back" mode for change trigger. The Change trigger
+      // should remove any changed instrument from the table data and
+      // instead pass the new intstrumentation via Javascript a an
+      // AJAX call-back which handles the user's decision by a
+      // separate data-query.
+
       // Add to musicans list in Musiker data-base and to musician Besetzungen
 
       // Fetch all needed data from Musiker table
@@ -685,25 +1322,25 @@ Choosing "'.$musinst.'" as instrument.</H4>';
       mySQL::query($musquery, $handle);
 
       $prjquery = "UPDATE `Besetzungen` SET `Instrument`='$forcedInstrument'
- WHERE `MusikerId` = $musicianId AND `ProjektId` = $projectId";
+ WHERE `MusikerId` = $musicianId AND `ProjektId` = $this->projectId";
 
       mySQL::query($prjquery, $handle);
 
       mySQL::close();
     }
 
-    echo <<<__EOT__
-   </div>
-</div>
-__EOT__;
+    echo "</div>\n"; // notes
 
     $opts['execute'] = $this->execute;
 
+    // Generate and possibly display the table
     $this->pme = new \phpMyEdit($opts);
 
     if (Util::debugMode()) {
       echo '<PRE>';
       print_r($_POST);
+      print_r($opts['cgi']['persist']);
+      echo $saved_template."\n";
       echo '</PRE>';
     }
 

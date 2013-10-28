@@ -8,7 +8,7 @@ echo Util::emitExternalScripts();
 echo Util::emitInlineScripts();
 
 $css_pfx  = $_['css-prefix'];
-$hdr_vis  = ' '.$_['headervisibility'];
+$hdr_vis  = $_['headervisibility'];
 $_hdr_vis = ' '.$_['headervisibility'];
 
 $settingscontrols = Navigation::buttonsFromArray(

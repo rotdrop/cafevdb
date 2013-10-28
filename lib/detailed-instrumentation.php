@@ -176,6 +176,16 @@ __EOT__;
        descriptions fields are also possible. Check documentation for this.
     */
 
+    $opts['fdd']['MusikerId'] = array(
+                                      'name'     => 'MusikerId',
+                                      'select'   => 'T',
+                                      'options'  => 'AVCPDR', // auto increment
+                                      'maxlen'   => 5,
+                                      'default'  => '0',
+                                      'align'    => 'right',
+                                      'sort'     => true
+                                      );
+
     $opts['fdd']['Instrument'] = array(
                                        'name'     => 'Projekt-Instrument',
                                        'select'   => 'T',
@@ -327,15 +337,19 @@ __EOT__;
                                       'sort'     => true
                                       );
 
-    $opts['fdd']['MusikerId'] = array(
-                                      'name'     => 'MusikerId',
-                                      'select'   => 'T',
-                                      'options'  => 'FLAVCPDR', // auto increment
-                                      'maxlen'   => 5,
-                                      'default'  => '0',
-                                      'align'    => 'right',
-                                      'sort'     => true
-                                      );
+    $opts['fdd']['Portrait'] = array(
+      'input' => 'V',
+      'name' => L::t('Photo'),
+      'select' => 'T',
+      'options' => 'ACPDV',
+      'sql' => 'MusikerId',
+      'php' => array(
+        'type' => 'function',
+        'function' => 'CAFEVDB\Musicians::portraitImageLinkPME',
+        'parameters' => array()
+        ),
+      'default' => '',
+      'sort' => false);
 
     $opts['fdd']['Aktualisiert'] = Config::$opts['datetime'];
     $opts['fdd']['Aktualisiert']['name'] = 'Aktualisiert';
@@ -346,8 +360,8 @@ __EOT__;
     // No need to check for the project-instrument any longer, as it can
     //no longer be changed here.
     //$opts['triggers']['update']['before'][0]  = 'BesetzungChangeInstrument.TUB.inc.php';
-    $opts['triggers']['update']['before'][1]  = Config::$triggers.'remove-unchanged.TUB.php.inc';
-    $opts['triggers']['update']['before'][2]  = Config::$triggers.'update-musician-timestamp.TUB.php.inc';
+    $opts['triggers']['update']['before'][1]  = Config::$triggers.'remove-unchanged.TUB.inc.php';
+    $opts['triggers']['update']['before'][2]  = Config::$triggers.'update-musician-timestamp.TUB.inc.php';
 
     if ($this->pme_bare) {
       // disable all navigation buttons, probably for html export
