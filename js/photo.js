@@ -1,4 +1,3 @@
-// JS "this" is really really just bullshit.
 CAFEVDB.Photo = {
     memberId:-1,
     data:{PHOTO:false},
@@ -78,9 +77,10 @@ CAFEVDB.Photo = {
 	    $(this).insertAfter($('#phototools')).fadeIn();
 	}).error(function () {
 	    // notify the user that the image could not be loaded
-	    self.notify({message:t('cafevdb', 'Error loading member picture.')});
-	}).attr('src', OC.linkTo('cafevdb', 'memberphoto.php')+'&MemberId='+self.memberId+refreshstr);
-	this.loadPhotoHandlers()
+	    OC.dialogs.alert(t('cafevdb', 'Could not open member picture.'), t('cafevdb', 'Error'));
+	    //self.notify({message:t('cafevdb', 'Error loading member picture.')});
+	}).attr('src', OC.linkTo('cafevdb', 'memberphoto.php')+'?MemberId='+self.memberId+refreshstr);
+	this.loadPhotoHandlers();
     },
     editCurrentPhoto:function() {
         var self = CAFEVDB.Photo;

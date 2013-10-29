@@ -417,7 +417,7 @@ __EOT__;
       <li><a class="svg delete" title="'.L::t("Delete current photo").'"></a></li>
       <li><a class="svg edit" title="'.L::t("Edit current photo").'"></a></li>
       <li><a class="svg upload" title="'.L::t("Upload new photo").'"></a></li>
-      <li><a class="svg cloud" title="'.L::t("Select photo from ownCloud").'"></a></li>
+      <li><a class="svg cloud icon-cloud" title="'.L::t("Select photo from ownCloud").'"></a></li>
     </ul>
   </div>
 </div> <!-- contact_photo -->

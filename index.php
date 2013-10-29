@@ -55,6 +55,8 @@ try {
   OCP\Util::addStyle('cafevdb', 'photo');  
   OCP\Util::addStyle('cafevdb', 'jquery.Jcrop');  
   OCP\Util::addStyle("cafevdb/3rdparty", "chosen/chosen");
+  OCP\Util::addStyle('3rdparty/fontawesome', 'font-awesome');
+  OCP\Util::addStyle('cafevdb', 'font-awesome');
 
   OCP\Util::addScript('cafevdb', 'cafevdb');
   OCP\Util::addScript('cafevdb', 'transpose');
