@@ -3,7 +3,7 @@ CAFEVDB.PME = CAFEVDB.PME || {};
 (function(window, $, CAFEVDB, undefined) {
     'use strict';
     var PME = function() {};
-    PME.prototype.transposeMainTable = function(selector) {
+    PME.transposeMainTable = function(selector) {
 	var table = $(selector);
 	var headerRow = table.find('thead tr');
 	headerRow.detach();
@@ -56,7 +56,7 @@ CAFEVDB.PME = CAFEVDB.PME || {};
             });
 	table.show();
     };
-    PME.prototype.maybeTranspose = function(transpose) {
+    PME.maybeTranspose = function(transpose) {
 	var pageitems = t('cafevdb', '#rows');
 	if (transpose) {
 	    $('.tipsy').remove();
@@ -87,9 +87,9 @@ $(document).ready(function() {
     // #pme-transpose.pme-transposed, then we transpose the table, otherwise not.
     
     // Lookup how to do this properly
-    if(typeof $('#pme-transpose.pme-transposed') !== typeof undefined) {
-	CAFEVDB.PME.prototype.maybeTranspose(true);
+    if($('#pme-transpose').hasClass('pme-transposed')) {
+	CAFEVDB.PME.maybeTranspose(true);
     } else {
-	CAFEVDB.PME.prototype.maybeTranspose(false); // needed?
+	CAFEVDB.PME.maybeTranspose(false); // needed?
     }
 });

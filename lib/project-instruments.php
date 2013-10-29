@@ -129,7 +129,7 @@ __EOT__;
 
     $transpose = array('name' => 'transpose',
                        'value' => strval(L::t('Transpose')),
-                       'css' => 'pme-transpose '.($transposed ? 'pme-transposed' : 'pme-untransposed'),
+                       'css' => 'pme-transpose '.($transposed == 'Transposed' ? 'pme-transposed' : 'pme-untransposed'),
                        'js_validation' =>  false,
                        'disabled' => false,
                        'js' => 'id="pme-transpose"');
