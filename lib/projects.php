@@ -71,7 +71,7 @@ __EOT__;
     $opts['key_type'] = 'int';
 
     // Sorting field(s)
-    $opts['sort_field'] = array('Id');
+    $opts['sort_field'] = array('Jahr', 'Id');
 
     // Number of records to display on the screen
     // Value of -1 lists all records in a table
@@ -162,6 +162,15 @@ __EOT__;
                                'name'     => 'Id',
                                'select'   => 'T',
                                'options'  => 'AVCPDR', // auto increment
+                               'maxlen'   => 11,
+                               'default'  => '0',
+                               'sort'     => true
+                               );
+
+    $opts['fdd']['Jahr'] = array(
+                               'name'     => 'Jahr',
+                               'select'   => 'T',
+                               //'options'  => 'LAVCPDR', // auto increment
                                'maxlen'   => 11,
                                'default'  => '0',
                                'sort'     => true
@@ -454,7 +463,7 @@ __EOT__;
   /**Fetch the list of projects from the data base as a short id=>name
    * field.
    */
-  public static function fetchProjects($handle = false)
+  public static function fetchProjects($handle = false, $year = false)
   {
     $projects = array();
 
@@ -464,13 +473,24 @@ __EOT__;
       $handle = mySQL::connect(Config::$pmeopts);
     }
       
-    $query = "SELECT `Id`,`Name` FROM `Projekte` WHERE 1";
-
-    $result = mySQL::query($query, $handle);
-    while ($line = mySQL::fetch($result)) {
-      $projects[$line['Id']] = $line['Name'];
+    $query = "SELECT `Id`,`Name`".($year === true ? ",`Jahr`" : "");
+    $query .= " FROM `Projekte` WHERE 1 ORDER BY ";
+    if ($year === true) {
+      $query .= "`Jahr` ASC, `Name` ASC";
+    } else {
+      $query .= "`Name` ASC";
     }
-    
+    $result = mySQL::query($query, $handle);
+    if ($year === false) {
+      while ($line = mySQL::fetch($result)) {
+        $projects[$line['Id']] = $line['Name'];
+      }
+    } else {
+      while ($line = mySQL::fetch($result)) {
+        $projects[$line['Id']] = array('Name' => $line['Name'], 'Jahr' => $line['Jahr']);
+      }      
+    }
+
     if ($ownConnection) {
       mySQL::close($handle);
     }

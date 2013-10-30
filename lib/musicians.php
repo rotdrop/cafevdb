@@ -251,9 +251,16 @@ __EOT__;
                                     'sort'     => true
                                     );
 
+    // fetch the list of all project in order to provide a somewhat
+    // cooked filter list
+    $allProjects = Projects::fetchProjects(false /* no db handle */, true /* include years */);
+    $projectQueryValues = array('*' => '*'); // catch-all filter
+    foreach ($allProjects as $proj) {
+      $projectQueryValues[$proj['Name']] = $proj['Jahr'].': '.$proj['Name'];      
+    }
 
     $derivedtable =<<<__EOT__
-SELECT MusikerId,GROUP_CONCAT(DISTINCT Projekte.Name ORDER BY Projekte.Name ASC SEPARATOR ', ') AS Projekte FROM
+SELECT MusikerId,GROUP_CONCAT(DISTINCT Projekte.Name ORDER BY Projekte.Name ASC SEPARATOR ',') AS Projekte FROM
 Besetzungen
 LEFT JOIN Projekte ON Projekte.Id = Besetzungen.ProjektId
 GROUP BY MusikerId
@@ -262,7 +269,7 @@ __EOT__;
     $opts['fdd']['Projekte'] =
       array('input' => 'VR', // virtual, read perm
             'options' => 'LFV', //just do the join, don't display anything
-            'select' => 'T',
+            'select' => 'M',
             'name' => 'Projekte',
             'sort' => true,
             'sql' => 'PMEjoin'.count($opts['fdd']).'.Projekte',
@@ -273,9 +280,10 @@ __EOT__;
               array('sql' => $derivedtable,
                     'kind' => 'derived'),
               'column' => 'MusikerId',
+              'join' => '$main_table.Id = $join_table.MusikerId',
               'description' => 'Projekte',
-              'join' => '$main_table.Id = $join_table.MusikerId'
-              )
+              'queryvalues' => $projectQueryValues
+              ),
         );
 
     $opts['fdd']['Strasse'] = array(
