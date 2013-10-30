@@ -473,12 +473,13 @@ __EOT__;
       $handle = mySQL::connect(Config::$pmeopts);
     }
       
-    $query = "SELECT `Id`,`Name`";
+    $query = "SELECT `Id`,`Name`".($year === true ? ",`Jahr`" : "");
+    $query .= " FROM `Projekte` WHERE 1 ORDER BY ";
     if ($year === true) {
-      $query .= ",`Jahr`";
+      $query .= "`Jahr` ASC, `Name` ASC";
+    } else {
+      $query .= "`Name` ASC";
     }
-    $query .= " FROM `Projekte` WHERE 1";
-
     $result = mySQL::query($query, $handle);
     if ($year === false) {
       while ($line = mySQL::fetch($result)) {

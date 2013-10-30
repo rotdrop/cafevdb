@@ -256,7 +256,7 @@ __EOT__;
     $allProjects = Projects::fetchProjects(false /* no db handle */, true /* include years */);
     $projectQueryValues = array('*' => '*'); // catch-all filter
     foreach ($allProjects as $proj) {
-      $projectQueryValues[$proj['Name']] = $proj['Name'].' ('.$proj['Jahr'].')';
+      $projectQueryValues[$proj['Name']] = $proj['Jahr'].': '.$proj['Name'];      
     }
 
     $derivedtable =<<<__EOT__
