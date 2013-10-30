@@ -236,11 +236,11 @@ class phpMyEdit
 	function col_has_multiple($k)
 	{ return $this->col_has_multiple_select($k) || $this->col_has_checkboxes($k); }
 	function col_has_multiple_select($k)
-	{ return $this->fdd[$k]['select'] == 'M' && ! @$this->fdd[$k]['values']['table']; }
+	{ return $this->fdd[$k]['select'] == 'M' && (! @$this->fdd[$k]['values']['table'] || @$this->fdd[$k]['values']['queryvalues']); }
 	function col_has_checkboxes($k)
-	{ return $this->fdd[$k]['select'] == 'C' && ! @$this->fdd[$k]['values']['table']; }
+	{ return $this->fdd[$k]['select'] == 'C' && (! @$this->fdd[$k]['values']['table'] || @$this->fdd[$k]['values']['queryvalues']); }
 	function col_has_radio_buttons($k)
-	{ return $this->fdd[$k]['select'] == 'O' && ! @$this->fdd[$k]['values']['table']; }
+	{ return $this->fdd[$k]['select'] == 'O' && (! @$this->fdd[$k]['values']['table'] || @$this->fdd[$k]['values']['queryvalues']); }
 	function col_has_datemask($k)
 	{ return isset($this->fdd[$k]['datemask']) || isset($this->fdd[$k]['strftimemask']); }
 
@@ -574,22 +574,48 @@ class phpMyEdit
 
 	function set_values($field_num, $prepend = null, $append = null, $strict = false) /* {{{ */
 	{
-		return (array) $prepend + (array) $this->fdd[$field_num]['values2']
-			+ (isset($this->fdd[$field_num]['values']['table']) || $strict
-			   ? $this->set_values_from_table($field_num, $strict)
-			   : array())
-			+ (array) $append;
+		// allow for unconditinional override
+		if (isset($this->fdd[$field_num]['values']['queryvalues'])) {
+			return (array) $prepnd + (array) $this->fdd[$field_num]['values']['queryvalues'] + (array) $append;
+		} else {
+			return (array) $prepend + (array) $this->fdd[$field_num]['values2']
+				+ (isset($this->fdd[$field_num]['values']['table']) || $strict
+				   ? $this->set_values_from_table($field_num, $strict)
+				   : array())
+				+ (array) $append;
+		}
 	} /* }}} */
 
 	function set_values_from_table($field_num, $strict = false) /* {{{ */
 	{
 		$db	   = &$this->fdd[$field_num]['values']['db'];
-		$table = $this->sd.$this->fdd[$field_num]['values']['table'].$this->ed;
+		$derived = false;
+		if (is_array($this->fdd[$field_num]['values']['table'])) {
+			if ($this->fdd[$field_num]['values']['table']['kind'] == 'derived') {
+				$derived = true && true;
+			}
+		}
 		$key   = &$this->fdd[$field_num]['values']['column'];
 		$desc  = &$this->fdd[$field_num]['values']['description'];
 		$dbp   = isset($db) ? $this->sd.$db.$this->ed.'.' : $this->dbp;
 		$qparts['type'] = 'select';
-		if ($table != $this->sd.$this->ed) {
+		if ($derived && false) {
+			// Howto handle that ... work around for me has been hacked.
+			$table = '(' .$this->fdd[$field_num]['values']['table']['sql'].' )';
+			$alias = $this->sd.'derived'.$field_num.$this->ed;
+			$qparts['select'] = 'DISTINCT '.$alias.'.'.$this->sd.$key.$this->ed;
+			if ($desc && is_array($desc) && is_array($desc['columns'])) {
+				// ????
+			} else if ($desc && is_array($desc)) {
+				// ????
+			} else if ($desc) {
+				$qparts['select'] .= ','.$alias.'.'.$this->sd.$desc.$this->ed;
+				$qparts['orderby'] = $this->sd.$desc.$this->ed;
+			} else if ($key) {
+				$qparts['orderby'] = $this->sd.$key.$this->ed;
+			}
+			$qparts['from'] = $table.' AS '.$alias;
+		} else if ($table != $this->sd.$this->ed) {
 			$qparts['select'] = 'DISTINCT '.$table.'.'.$this->sd.$key.$this->ed;
 			if ($desc && is_array($desc) && is_array($desc['columns'])) {
 				$qparts['select'] .= ',CONCAT('; // )
@@ -936,6 +962,10 @@ class phpMyEdit
 					$afilter = $afilter.')';
 					// XXX: $dont_desc and $dont_cols hack
 					$dont_desc = isset($this->fdd[$k]['values']['description']);
+					if (isset($this->fdd[$k]['values']['queryvalues'])) {
+						// override dont_desc hack
+						$dont_desc = false;
+					}
 					$dont_cols = isset($this->fdd[$k]['values']['column']);
 					$qo[$this->fqn($k, $dont_desc, $dont_cols)] =
 						array('oper'  => $qf_op, 'value' => "($qf_val)"); // )
