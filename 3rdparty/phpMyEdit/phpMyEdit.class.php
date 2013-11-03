@@ -589,16 +589,19 @@ class phpMyEdit
 	function set_values_from_table($field_num, $strict = false) /* {{{ */
 	{
 		$db	   = &$this->fdd[$field_num]['values']['db'];
-		$derived = false;
-		if (is_array($this->fdd[$field_num]['values']['table'])) {
-			if ($this->fdd[$field_num]['values']['table']['kind'] == 'derived') {
-				$derived = true && true;
-			}
-		}
+		$table = $this->sd.$this->fdd[$field_num]['values']['table'].$this->ed;
 		$key   = &$this->fdd[$field_num]['values']['column'];
 		$desc  = &$this->fdd[$field_num]['values']['description'];
 		$dbp   = isset($db) ? $this->sd.$db.$this->ed.'.' : $this->dbp;
 		$qparts['type'] = 'select';
+
+		$derived = false;
+		if (is_array($this->fdd[$field_num]['values']['table'])) {
+			if ($this->fdd[$field_num]['values']['table']['kind'] == 'derived') {
+				$derived = true;
+			}
+		}
+
 		if ($derived && false) {
 			// Howto handle that ... work around for me has been hacked.
 			$table = '(' .$this->fdd[$field_num]['values']['table']['sql'].' )';
