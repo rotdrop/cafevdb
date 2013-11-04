@@ -335,7 +335,7 @@ __EOT__;
      */
     $opts['fdd']['MemberStatus'] = array('name'     => 'Status',
                                          'css'      => array('postfix' => 'rem'),
-                                         'select'   => 'T',
+                                         'select'   => 'C',
                                          'maxlen'   => 128,
                                          'sort'     => true,
                                          'values'   => $this->memberStatus);
