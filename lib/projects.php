@@ -621,7 +621,7 @@ __EOT__;
    `Besetzungen`.`Bemerkungen` AS `ProjektBemerkungen`'.
       ($extraquery != '' ? $extraquery : '').','
       .' `Instrumente` AS `AlleInstrumente`,`Sprachpräferenz`,`Geburtstag`,
-   `Status`,`Musiker`.`Bemerkung`,`MemberPortraits`.`PhotoData`,`Aktualisiert`';
+   `Musiker`.`MemberStatus`,`Musiker`.`Remarks`,`MemberPortraits`.`PhotoData`,`Aktualisiert`';
 
     // Now do the join
     $sqlquery .= ' FROM `Musiker`
