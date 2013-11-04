@@ -319,7 +319,7 @@ __EOT__;
 
     $opts['fdd']['Geburtstag'] = Config::$opts['birthday'];
     $opts['fdd']['MemberStatus'] = array('name'     => 'Status',
-                                         'select'   => 'C',
+                                         'select'   => 'O',
                                          'css'      => array('postfix' => 'rem'),
                                          'maxlen'   => 384,
                                          'sort'     => true,
