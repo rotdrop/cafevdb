@@ -333,14 +333,15 @@ __EOT__;
     /* Make "Status" a set, 'soloist','conductor','noemail', where in
      * general the first two imply the last.
      */
-    $opts['fdd']['MemberStatus'] = array('name'     => 'Status',
+    $opts['fdd']['MemberStatus'] = array('name'     => L::t('Status'),
                                          'css'      => array('postfix' => 'rem'),
                                          'select'   => 'O',
                                          'maxlen'   => 128,
                                          'sort'     => true,
-                                         'values'   => $this->memberStatus);
+                                         'values'   => $this->memberStatus,
+                                         'values2'  => $this->memberStatusNames);
 
-    $opts['fdd']['Remarks'] = array('name'     => 'Bemerkung',
+    $opts['fdd']['Remarks'] = array('name'     => L::T('Remarks'),
                                     'select'   => 'T',
                                     'maxlen'   => 65535,
                                     'css'      => array('postfix' => 'rem'),

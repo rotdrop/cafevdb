@@ -18,6 +18,7 @@ class Instrumentation
   protected $instruments;
   protected $instrumentFamilies;
   protected $memberStatus;
+  protected $memberStatusNames;
   protected $opts;
   protected $pme;
   protected $execute;
@@ -126,6 +127,10 @@ class Instrumentation
     $this->instruments = Instruments::fetch($handle);
     $this->instrumentFamilies = mySQL::multiKeys('Instrumente', 'Familie', $handle);
     $this->memberStatus = mySQL::multiKeys('Musiker', 'MemberStatus', $handle);
+    $this->memberStatusNames = array();
+    foreach ($this->memberStatus as $tag) {
+      $this->memberStatusNames = L::t($tag);
+    }
 
     // Fetch project specific user fields
     if ($this->projectId >= 0) {
