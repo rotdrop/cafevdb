@@ -299,14 +299,14 @@ __EOT__;
     // Generate input fields for the extra columns
     foreach ($userExtraFields as $field) {
       $name = $field['name'];    
-      $opts['fdd']["$name"] = array('name' => $name.' ('.$project.')',
+      $opts['fdd']["$name"] = array('name'     => $name.' ('.$project.')',
                                     'select'   => 'T',
-                                    'options' => $ROopts,
+                                    'options'  => $ROopts,
                                     'maxlen'   => 65535,
                                     'textarea' => array('html' => 'NoEditor',
                                                         'rows' => 2,
                                                         'cols' => 32),
-                                    'escape' => false,
+                                    'escape'   => false,
                                     'sort'     => true);
     }
 
@@ -318,14 +318,13 @@ __EOT__;
                                             'values'   => Config::$opts['languages']);
 
     $opts['fdd']['Geburtstag'] = Config::$opts['birthday'];
-    $opts['fdd']['Status'] = array(
-                                   'name'     => 'Status',
-                                   'select'   => 'T',
-                                   'css'      => array('postfix' => 'rem'),
-                                   'maxlen'   => 384,
-                                   'sort'     => true
-                                   );
-    $opts['fdd']['Bemerkung'] = array(
+    $opts['fdd']['MemberStatus'] = array('name'     => 'Status',
+                                         'select'   => 'C',
+                                         'css'      => array('postfix' => 'rem'),
+                                         'maxlen'   => 384,
+                                         'sort'     => true,
+                                         'values'   => $this->memberStatus);
+    $opts['fdd']['Remarks'] = array(
                                       'name'     => 'Allgemeine Bemerkungen',
                                       'select'   => 'T',
                                       'maxlen'   => 65535,

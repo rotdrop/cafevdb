@@ -329,24 +329,26 @@ __EOT__;
                                      );
     $opts['fdd']['Geburtstag'] = Config::$opts['birthday'];
     $opts['fdd']['Email'] = Config::$opts['email'];
-    $opts['fdd']['Status'] = array(
-                                   'name'     => 'Status',
-                                   'css'      => array('postfix' => 'rem'),
-                                   'select'   => 'T',
-                                   'maxlen'   => 128,
-                                   'sort'     => true
-                                   );
-    $opts['fdd']['Bemerkung'] = array(
-                                      'name'     => 'Bemerkung',
-                                      'select'   => 'T',
-                                      'maxlen'   => 65535,
-                                      'css'      => array('postfix' => 'rem'),
-                                      'textarea' => array('html' => 'Editor',
-                                                          'rows' => 5,
-                                                          'cols' => 50),
-                                      'escape' => false,
-                                      'sort'     => true
-                                      );
+
+    /* Make "Status" a set, 'soloist','conductor','noemail', where in
+     * general the first two imply the last.
+     */
+    $opts['fdd']['MemberStatus'] = array('name'     => 'Status',
+                                         'css'      => array('postfix' => 'rem'),
+                                         'select'   => 'T',
+                                         'maxlen'   => 128,
+                                         'sort'     => true,
+                                         'values'   => $this->memberStatus);
+
+    $opts['fdd']['Remarks'] = array('name'     => 'Bemerkung',
+                                    'select'   => 'T',
+                                    'maxlen'   => 65535,
+                                    'css'      => array('postfix' => 'rem'),
+                                    'textarea' => array('html' => 'Editor',
+                                                        'rows' => 5,
+                                                        'cols' => 50),
+                                    'escape' => false,
+                                    'sort'     => true);
 
     $opts['fdd']['Portrait'] = array(
       'input' => 'V',
