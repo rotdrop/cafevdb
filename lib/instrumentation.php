@@ -129,7 +129,7 @@ class Instrumentation
     $this->memberStatus = mySQL::multiKeys('Musiker', 'MemberStatus', $handle);
     $this->memberStatusNames = array();
     foreach ($this->memberStatus as $tag) {
-      $this->memberStatusNames[$tag] = L::t($tag);
+      $this->memberStatusNames[$tag] = strval(L::t($tag));
     }
 
     // Fetch project specific user fields
