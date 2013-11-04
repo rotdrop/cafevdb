@@ -1190,7 +1190,7 @@ function '.$this->js['prefix'].'form_control(theForm)
 		}
 
 		if ($this->filter_operation()) {
-			echo '<script type="text/javascript"><!--',"\n";
+			echo '<!-- <script type="text/javascript">',"\n";
 			echo '
 function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 {
@@ -1206,7 +1206,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 	}
 	return true;
 }',"\n\n";
-			echo '// --></script>', "\n";
+			echo '//</script> -->', "\n";
 		}
 
 		if ($this->display['form']) {
@@ -2580,6 +2580,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				echo '&nbsp;';
 			} else if ($this->fdd[$fd]['select'] == 'D' ||
 					   $this->fdd[$fd]['select'] == 'M'||
+					   $this->fdd[$fd]['select'] == 'O'||
 					   $this->fdd[$fd]['select'] == 'C') {
 				// Multiple fields processing
 				// Default size is 2 and array required for values.
