@@ -338,7 +338,6 @@ __EOT__;
                                          'select'   => 'O',
                                          'maxlen'   => 128,
                                          'sort'     => true,
-                                         'values'   => $this->memberStatus,
                                          'values2'  => $this->memberStatusNames);
 
     $opts['fdd']['Remarks'] = array('name'     => L::T('Remarks'),
