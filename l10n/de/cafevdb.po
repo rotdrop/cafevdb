@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-27 14:24+0100\n"
-"PO-Revision-Date: 2013-10-27 14:25+0100\n"
+"POT-Creation-Date: 2013-11-06 22:33+0100\n"
+"PO-Revision-Date: 2013-11-04 15:56+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -589,7 +589,9 @@ msgstr "Wirklich abbrechen?"
 
 #: js/blog.js:138
 msgid "The entire message thread will be deleted if you press `Yes'"
-msgstr "Die Nachricht und alle `Follow-Ups' werden gelöscht, wenn Sie auf `Ja' klicken."
+msgstr ""
+"Die Nachricht und alle `Follow-Ups' werden gelöscht, wenn Sie auf `Ja' "
+"klicken."
 
 #: js/blog.js:139
 msgid "Really delete the entry?"
@@ -711,7 +713,15 @@ msgstr "Fehler:"
 msgid "birthday"
 msgstr "Geburtstag"
 
-#: lib/detailed-instrumentation.php:342 lib/musicians.php:345
+#: lib/detailed-instrumentation.php:321 lib/musicians.php:336
+msgid "Member Status"
+msgstr "Status"
+
+#: lib/detailed-instrumentation.php:327
+msgid "General Remarks"
+msgstr "Allgemeine Bemerkungen"
+
+#: lib/detailed-instrumentation.php:339 lib/musicians.php:354
 msgid "Photo"
 msgstr "Foto"
 
@@ -755,7 +765,7 @@ msgstr "Filter zurücksetzen"
 msgid "Musicians without Em@il"
 msgstr "Musiker ohne Em@il"
 
-#: lib/email.php:1016 lib/projects.php:194 lib/projects.php:434
+#: lib/email.php:1016 lib/projects.php:203 lib/projects.php:443
 msgid "Events"
 msgstr "Termine"
 
@@ -1120,33 +1130,57 @@ msgstr ""
 msgid "Transfer Instruments from Musicians"
 msgstr "Instrumente mit Besetzung abgleichen"
 
+#: lib/instrumentation.php:136
+msgid "regular"
+msgstr "Mitspieler"
+
+#: lib/instrumentation.php:137
+msgid "passive"
+msgstr "passiv"
+
+#: lib/instrumentation.php:138
+msgid "soloist"
+msgstr "Solist"
+
+#: lib/instrumentation.php:139
+msgid "conductor"
+msgstr "Dirigent"
+
+#: lib/instrumentation.php:140
+msgid "temporary"
+msgstr "Aushilfe"
+
 #: lib/musicians.php:205
 #, php-format
 msgid "Add to %s"
 msgstr "Zu %s"
 
-#: lib/musicians.php:414
+#: lib/musicians.php:342
+msgid "Remarks"
+msgstr "Bemerkungen"
+
+#: lib/musicians.php:423
 #, php-format
 msgid "Drop photo to upload (max %s)"
 msgstr "Foto ablegen zum Hochladen (max %s)"
 
-#: lib/musicians.php:417
+#: lib/musicians.php:426
 msgid "Delete current photo"
 msgstr "Aktuelles Foto löschen"
 
-#: lib/musicians.php:418
+#: lib/musicians.php:427
 msgid "Edit current photo"
 msgstr "Aktuelles Foto editieren"
 
-#: lib/musicians.php:419
+#: lib/musicians.php:428
 msgid "Upload new photo"
 msgstr "Neues Foto hochladen"
 
-#: lib/musicians.php:420
+#: lib/musicians.php:429
 msgid "Select photo from ownCloud"
 msgstr "Foto aus der `Cloud' auswählen"
 
-#: lib/musicians.php:831 lib/musicians.php:1259
+#: lib/musicians.php:840 lib/musicians.php:1268
 #, php-format
 msgid ""
 "None of the instruments known by %s are mentioned in the %sinstrumentation-"
@@ -1161,7 +1195,7 @@ msgstr ""
 "Der Fehler sollte durch Ändern der Instrumentierung oder der Musikerdaten "
 "behoben werden."
 
-#: lib/musicians.php:842
+#: lib/musicians.php:851
 #, php-format
 msgid ""
 "Choosing the first instrument known by %s\n"
@@ -1174,7 +1208,7 @@ msgstr ""
 "Bitte nötigenfalls korrigieren, in dem ein anderes ``Projekt-Instrument''\n"
 "in der Tabelle unten ausgewählt wird. Wähle ``%s'' als Projekt-instrument."
 
-#: lib/musicians.php:1284
+#: lib/musicians.php:1293
 #, php-format
 msgid ""
 "Generally, the first instrument known by the respective musician\n"

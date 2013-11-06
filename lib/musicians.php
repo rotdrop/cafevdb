@@ -333,17 +333,16 @@ __EOT__;
     /* Make "Status" a set, 'soloist','conductor','noemail', where in
      * general the first two imply the last.
      */
-    $opts['fdd']['MemberStatus'] = array('name'     => strval(L::t('Status')),
-                                         'css'      => array('postfix' => 'rem'),
+    $opts['fdd']['MemberStatus'] = array('name'     => strval(L::t('Member Status')),
                                          'select'   => 'O',
                                          'maxlen'   => 128,
                                          'sort'     => true,
                                          'values2'  => $this->memberStatusNames);
 
-    $opts['fdd']['Remarks'] = array('name'     => strval(L::T('Remarks')),
+    $opts['fdd']['Remarks'] = array('name'     => strval(L::t('Remarks')),
                                     'select'   => 'T',
                                     'maxlen'   => 65535,
-                                    'css'      => array('postfix' => 'rem'),
+                                    'css'      => array('postfix' => 'remarks'),
                                     'textarea' => array('html' => 'Editor',
                                                         'rows' => 5,
                                                         'cols' => 50),
@@ -1177,7 +1176,7 @@ __EOT__;
     $opts['fdd']['Bemerkungen'] = array('name'     => 'Bemerkungen',
                                         'select'   => 'T',
                                         'maxlen'   => 65535,
-                                        'css'      => array('postfix' => 'rem'),
+                                        'css'      => array('postfix' => 'remarks'),
                                         'textarea' => array('html' => 'Editor',
                                                             'rows' => 5,
                                                             'cols' => 50),
