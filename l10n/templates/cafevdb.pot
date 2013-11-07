@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-11-06 22:33+0100\n"
+"POT-Creation-Date: 2013-11-07 22:18+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -654,7 +654,7 @@ msgid ""
 "on this server."
 msgstr ""
 
-#: js/email.js:140
+#: js/email.js:143
 msgid "Select Attachment"
 msgstr ""
 
@@ -704,116 +704,132 @@ msgstr ""
 msgid "Photo"
 msgstr ""
 
-#: lib/email.php:371
+#: lib/email.php:450
 msgid "Select Em@il Recipients"
 msgstr ""
 
-#: lib/email.php:378
+#: lib/email.php:458
 msgid "Principal Address Collection"
 msgstr ""
 
-#: lib/email.php:419
+#: lib/email.php:481
+msgid "Select recipients by member status."
+msgstr ""
+
+#: lib/email.php:482
+msgid "Select Members by Status"
+msgstr ""
+
+#: lib/email.php:483
+msgid "Member-Status"
+msgstr ""
+
+#: lib/email.php:511
 msgid "Email Recipients"
 msgstr ""
 
-#: lib/email.php:420
+#: lib/email.php:512
 msgid "Remaining Recipients"
 msgstr ""
 
-#: lib/email.php:421
+#: lib/email.php:513
 msgid "Selected Recipients"
 msgstr ""
 
-#: lib/email.php:435
+#: lib/email.php:527
 msgid "Instrument-Filter"
 msgstr ""
 
-#: lib/email.php:448
+#: lib/email.php:540
 msgid "Compose Em@il"
 msgstr ""
 
-#: lib/email.php:457
+#: lib/email.php:549
 msgid "Apply Filter"
 msgstr ""
 
-#: lib/email.php:463
+#: lib/email.php:555
 msgid "Reset Filter"
 msgstr ""
 
-#: lib/email.php:472
+#: lib/email.php:564
 msgid "Musicians without Em@il"
 msgstr ""
 
-#: lib/email.php:1016 lib/projects.php:203 lib/projects.php:443
+#: lib/email.php:575
+msgid "Count: "
+msgstr ""
+
+#: lib/email.php:1142 lib/projects.php:203 lib/projects.php:443
 msgid "Events"
 msgstr ""
 
-#: lib/email.php:1019
+#: lib/email.php:1145
 msgid "Attached Events"
 msgstr ""
 
-#: lib/email.php:1031
+#: lib/email.php:1157
 #, php-format
 msgid "Edit Event %s"
 msgstr ""
 
-#: lib/email.php:1054
+#: lib/email.php:1180
 msgid "Recipients"
 msgstr ""
 
-#: lib/email.php:1055
+#: lib/email.php:1181
 msgid "Determined automatically from data-base, see below the email form."
 msgstr ""
 
-#: lib/email.php:1066
+#: lib/email.php:1192
 msgid "Subject"
 msgstr ""
 
-#: lib/email.php:1072
+#: lib/email.php:1198
 msgid "Message-Body"
 msgstr ""
 
-#: lib/email.php:1076
+#: lib/email.php:1202
 msgid "Sender-Name"
 msgstr ""
 
-#: lib/email.php:1081
+#: lib/email.php:1207
 msgid "Sender-Email"
 msgstr ""
 
-#: lib/email.php:1082
+#: lib/email.php:1208
 msgid "Tied to"
 msgstr ""
 
-#: lib/email.php:1085
+#: lib/email.php:1211
 msgid "Add Attachment"
 msgstr ""
 
-#: lib/email.php:1091 lib/email.php:1092
+#: lib/email.php:1217 lib/email.php:1218
 msgid "Upload new File"
 msgstr ""
 
-#: lib/email.php:1097 lib/email.php:1098
+#: lib/email.php:1223 lib/email.php:1224
 msgid "Select from Owncloud"
 msgstr ""
 
-#: lib/email.php:1110
+#: lib/email.php:1236
 msgid "Remove"
 msgstr ""
 
-#: lib/email.php:1118
+#: lib/email.php:1244
 msgid "Send Em@il"
 msgstr ""
 
-#: lib/email.php:1121
+#: lib/email.php:1247
 msgid "Edit recipients"
 msgstr ""
 
-#: lib/email.php:1127 templates/blogedit.php:18
+#: lib/email.php:1253 templates/blogedit.php:18
 msgid "Cancel"
 msgstr ""
 
-#: lib/email.php:1187
+#: lib/email.php:1313
 msgid ""
 "No recipients specified, you possibly forgot to shift items from the left "
 "select box (potential recipients) to the right select box (actual "
@@ -821,44 +837,44 @@ msgid ""
 "recipients."
 msgstr ""
 
-#: lib/email.php:1188
+#: lib/email.php:1314
 msgid "No recipients"
 msgstr ""
 
-#: lib/email.php:1194
+#: lib/email.php:1320
 #, php-format
 msgid ""
 "The subject must not consist of `%s' as only part.<br/>Please correct that "
 "and then hit the `Send'-button again."
 msgstr ""
 
-#: lib/email.php:1197
+#: lib/email.php:1323
 msgid "Incomplete Subject"
 msgstr ""
 
-#: lib/email.php:1202
+#: lib/email.php:1328
 msgid ""
 "The sender-name should not be empty.<br/>Please correct that and then hit "
 "the `Send'-button again."
 msgstr ""
 
-#: lib/email.php:1204
+#: lib/email.php:1330
 msgid "Descriptive Sender Name"
 msgstr ""
 
-#: lib/email.php:1352
+#: lib/email.php:1486
 msgid "The email-backend throwed an exception stating:<br/>"
 msgstr ""
 
-#: lib/email.php:1354
+#: lib/email.php:1488
 msgid "Please correct the problem and then click on the `Send'-button again."
 msgstr ""
 
-#: lib/email.php:1355 lib/email.php:1500
+#: lib/email.php:1489 lib/email.php:1634
 msgid "Caught an exception"
 msgstr ""
 
-#: lib/email.php:1469
+#: lib/email.php:1603
 #, php-format
 msgid ""
 "A message with exactly the same text to exactly the same recipients has "
@@ -866,56 +882,56 @@ msgid ""
 "duplicate bulk emails."
 msgstr ""
 
-#: lib/email.php:1475
+#: lib/email.php:1609
 msgid "Duplicate Email"
 msgstr ""
 
-#: lib/email.php:1483
+#: lib/email.php:1617
 msgid "Sending failed for an unknown reason. Sorry."
 msgstr ""
 
-#: lib/email.php:1484
+#: lib/email.php:1618
 msgid "General Failure reading your hard-disk ... just kidding."
 msgstr ""
 
-#: lib/email.php:1488
+#: lib/email.php:1622
 msgid "Message has been sent, at least: no error from our side!"
 msgstr ""
 
-#: lib/email.php:1489
+#: lib/email.php:1623
 msgid "Message has been sent"
 msgstr ""
 
-#: lib/email.php:1497
+#: lib/email.php:1631
 #, php-format
 msgid ""
 "During send, the email-backend throwed an exception stating:<br/>`%s'</"
 "br>Please correct the problem and then click on the `Send'-button again."
 msgstr ""
 
-#: lib/email.php:1519
+#: lib/email.php:1653
 #, php-format
 msgid ""
 "The IMAP backend returned the error `%s'. Unfortunate Snafu.<br/>I was "
 "trying to copy the message to our send-folder, but that failed."
 msgstr ""
 
-#: lib/email.php:1522
+#: lib/email.php:1656
 msgid "IMAP connection failed"
 msgstr ""
 
-#: lib/email.php:1528
+#: lib/email.php:1662
 #, php-format
 msgid ""
 "Could not copy the message to the send-folder.</br>Server returned the "
 "error: `%s'"
 msgstr ""
 
-#: lib/email.php:1531
+#: lib/email.php:1665
 msgid "Copying to `Sent'-folder failed."
 msgstr ""
 
-#: lib/email.php:1586
+#: lib/email.php:1720
 #, php-format
 msgid ""
 "The %s address `%s' seems to be invalid.<br/>Please correct that first and "
@@ -923,11 +939,11 @@ msgid ""
 "any) have to be specified again."
 msgstr ""
 
-#: lib/email.php:1590
+#: lib/email.php:1724
 msgid "Invalid Email Address"
 msgstr ""
 
-#: lib/email.php:1598
+#: lib/email.php:1732
 msgid "recipient"
 msgstr ""
 
