@@ -11,7 +11,8 @@ $incPath = __DIR__.'/../3rdparty/pear/php';
 set_include_path($incPath . PATH_SEPARATOR . get_include_path());
 
 require_once('QuickForm2/DualSelect.php');
-require_once("PHPMailer/class.phpmailer.php");
+//require_once("PHPMailer/class.phpmailer.php");
+require_once("PHPMailer/PHPMailerAutoload.php");
 require_once("Net/IMAP.php");
 
 }
@@ -1366,8 +1367,12 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
         $mail->IsHTML();
 
         $mail->Subject = $MailTag . ' ' . $strSubject;
-        $mail->Body = $strMessage;
-        $mail->AltBody = self::textMessage($mail->Body);
+        if (false) {
+          $mail->Body = $strMessage;
+          $mail->AltBody = self::textMessage($mail->Body);
+        } else {
+          $mail->msgHTML($strMessage, true);
+        }
 
         $mail->AddReplyTo($strSenderEmail, $strSender);
         $mail->SetFrom($strSenderEmail, $strSender);
