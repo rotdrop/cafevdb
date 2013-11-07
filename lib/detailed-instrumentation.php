@@ -284,7 +284,7 @@ __EOT__;
                                                'select'   => 'T',
                                                'options' => $ROopts,
                                                'maxlen'   => 65535,
-                                               'css'      => array('postfix' => 'rem'),
+                                               'css'      => array('postfix' => 'remarks'),
                                                'textarea' => array('html' => 'Editor',
                                                                    'rows' => 5,
                                                                    'cols' => 50),
@@ -318,23 +318,21 @@ __EOT__;
                                             'values'   => Config::$opts['languages']);
 
     $opts['fdd']['Geburtstag'] = Config::$opts['birthday'];
-    $opts['fdd']['MemberStatus'] = array('name'     => 'Status',
+    $opts['fdd']['MemberStatus'] = array('name'     => strval(L::t('Member Status')),
                                          'select'   => 'O',
-                                         'css'      => array('postfix' => 'rem'),
                                          'maxlen'   => 384,
                                          'sort'     => true,
-                                         'values'   => $this->memberStatus);
-    $opts['fdd']['Remarks'] = array(
-                                      'name'     => 'Allgemeine Bemerkungen',
-                                      'select'   => 'T',
-                                      'maxlen'   => 65535,
-                                      'css'      => array('postfix' => 'rem'),
-                                      'textarea' => array('html' => 'Editor',
-                                                          'rows' => 5,
-                                                          'cols' => 50),
-                                      'escape' => false,
-                                      'sort'     => true
-                                      );
+                                         'values2'  => $this->memberStatusNames);
+
+    $opts['fdd']['Remarks'] = array('name'     => strval(L::t('General Remarks')),
+                                    'select'   => 'T',
+                                    'maxlen'   => 65535,
+                                    'css'      => array('postfix' => 'remarks'),
+                                    'textarea' => array('html' => 'Editor',
+                                                        'rows' => 5,
+                                                        'cols' => 50),
+                                    'escape'   => false,
+                                    'sort'     => true);
 
     $opts['fdd']['Portrait'] = array(
       'input' => 'V',

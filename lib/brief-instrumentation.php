@@ -247,7 +247,7 @@ __EOT__;
     $opts['fdd']['Bemerkungen'] = array('name'     => 'Bemerkungen',
                                         'select'   => 'T',
                                         'maxlen'   => 65535,
-                                        'css'      => array('postfix' => 'rem'),
+                                        'css'      => array('postfix' => 'remarks'),
                                         'textarea' => array('html' => 'Editor',
                                                             'rows' => 5,
                                                             'cols' => 50),

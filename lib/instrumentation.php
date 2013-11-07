@@ -131,6 +131,14 @@ class Instrumentation
     foreach ($this->memberStatus as $tag) {
       $this->memberStatusNames[$tag] = strval(L::t($tag));
     }
+    if (false) {
+      // Dummies to keep the translation right.
+      L::t('regular');
+      L::t('passive');
+      L::t('soloist');
+      L::t('conductor');
+      L::t('temporary');
+    }
 
     // Fetch project specific user fields
     if ($this->projectId >= 0) {

@@ -121,7 +121,7 @@ $(document).ready(function(){
       form.attr('action', old_action);
     }
 
-    // Cheating. In principle we mus-use this as a simple pull-down
+    // Cheating. In principle we mis-use this as a simple pull-down
     // menu, so let the text remain at its default value. Make sure to
     // also remove and re-attach the tool-tips, otherwise some of the
     // tips remain, because chosen() removes the element underneath.
