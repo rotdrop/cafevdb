@@ -131,9 +131,9 @@ $(document).ready(function(){
     });
     $('.tipsy').remove();
 
-    $("#pme-export-choice").trigger("liszt:updated");
+    $("#pme-export-choice").trigger("chosen:updated");
 
-    $('div.chzn-container').tipsy({gravity:'sw', fade:true});
+    $('div.chosen-container').tipsy({gravity:'sw', fade:true});
     $('li.active-result').tipsy({gravity:'w', fade:true});
 
     return false;
@@ -144,7 +144,7 @@ $(document).ready(function(){
   $('div.viewtoggle').tipsy({gravity:'se', fade:true});
   $('button').tipsy({gravity:'w', fade:true});
   $('select').tipsy({gravity:'w', fade:true});
-  $('div.chzn-container').tipsy({gravity:'sw', fade:true});
+  $('div.chosen-container').tipsy({gravity:'sw', fade:true});
   $('li.active-result').tipsy({gravity:'w', fade:true});
   $('input.cafevdb-control').tipsy({gravity:'nw', fade:true});
   $('#controls button').tipsy({gravity:'nw', fade:true});

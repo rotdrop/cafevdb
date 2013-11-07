@@ -103,7 +103,7 @@ form[class|="cafevdb-email"] tr:active {
   float:right;
 }
 
-.cafevdb-email-filter [class^="chzn"] {
+.cafevdb-email-filter [class^="chosen"] {
   border-radius: 0.5em !important;
   background-color: rgb(244, 244, 244) !important;
 }

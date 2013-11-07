@@ -27,7 +27,7 @@ OC::$CLASSPATH['CAFEVDB\EmailHistory'] = 'apps/cafevdb/lib/email.php';
 
 /* 3rd party classes */
 OC::$CLASSPATH['phpMyEdit'] = 'apps/cafevdb/3rdparty/phpMyEdit/phpMyEdit.class.php';
-OC::$CLASSPATH['html2text'] = 'apps/cafevdb/3rdparty/class.html2text.inc';
+OC::$CLASSPATH['html2text'] = 'apps/cafevdb/3rdparty/PHPMailer/extras/class.html2text.php';
 
 /* Script etc. used by everyone */
 OC_App::registerAdmin( 'cafevdb', 'admin-settings' );

@@ -477,7 +477,7 @@ class EmailFilter {
       'select', 'memberStatusFilter',
       array('multiple' => 'multiple',
             'size' => 5,
-            'class' => 'member-status-filter chzn-rtl',
+            'class' => 'member-status-filter chosen-rtl',
             'title' => L::t('Select recipients by member status.'),
             'data-placeholder' => L::t('Select Members by Status')),
       array('label' => L::t('Member-Status'),

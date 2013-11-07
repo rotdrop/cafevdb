@@ -115,14 +115,14 @@ li.cafevdb-page-config-check span.set {
   /*font-weight:bold;*/
 }
 
-#pme-export-block a.chzn-default span {
+#pme-export-block a.chosen-default span {
   /*font-weight:bold;*/
   color:#555;
 }
 
-#pme-export-block a.chzn-default span:hover,
-#pme-export-block a.chzn-default span:focus,
-#pme-export-block a.chzn-default span:active {
+#pme-export-block a.chosen-default span:hover,
+#pme-export-block a.chosen-default span:focus,
+#pme-export-block a.chosen-default span:active {
   /*font-weight:bold;*/
   color:#333;
 }
