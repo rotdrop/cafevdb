@@ -244,7 +244,7 @@ class EmailFilter {
   ON `'.$table.'`.`MusikerId` = `Besetzungen`.`MusikerId`
   WHERE `Besetzungen`.`ProjektId` = '.$this->projectId;
 
-      // Fetch the result or die and remap the Ids
+      // Fetch the result (or die) and remap the Ids
       $result = mySQL::query($query, $dbh);
       $map = array();
       while ($line = mysql_fetch_assoc($result)) {
@@ -660,8 +660,32 @@ class Email
 {
   const CSS_PREFIX         = 'cafevdb-email';
   private static $constructionMode = true;
+  static private $defaultTemplate = 'Liebe Musiker,
+<p>
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+<p>
+Mit den besten Grüßen,
+<p>
+Euer Camerata Vorstand (Katha, Georg, Martina, Lea, Luise und Claus)
+<p>
+P.s.:
+Sie erhalten diese Email, weil Sie schon einmal mit dem Orchester
+Camerata Academica Freiburg musiziert haben. Wenn wir Sie aus unserer Datenbank
+löschen sollen, teilen Sie uns das bitte kurz mit, indem Sie entsprechend
+auf diese Email antworten. Wir entschuldigen uns in diesem Fall für die
+Störung.';
+  private $initialTemplate;
+  
 
-  public static function headerText()
+  function __construct($templateText) {
+    if (isset($templateText) && $templateText != '') {
+      $initialTemplate = $templateText;
+    } else {
+      $initialTemplate = $self::defaultTemplate;
+    }
+  }
+
+  public function headerText()
   {
     Config::init();
 
@@ -712,6 +736,13 @@ __EOT__;
     $string = str_replace('@OUREMAIL@', $CAFEVCatchAllEmail, $string);
 
     return $string;
+  }
+
+  static private function textMessage($htmlMessage)
+  {
+    $h2t = new \html2text($htmlMessage);
+    $h2t->set_encoding('utf-8');
+    return $h2t->get_text();
   }
 
   /**Delete all temorary files not found in $fileAttach. If the file
@@ -882,21 +913,7 @@ __EOT__;
       'txtCC' => '',
       'txtBCC' => '',
       'txtFromName' => $CAFEVCatchAllName,
-      'txtDescription' =>
-      'Liebe Musiker,
-<p>
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-<p>
-Mit den besten Grüßen,
-<p>
-Euer Camerata Vorstand (Katha, Georg, Martina, Lea, Luise und Claus)
-<p>
-P.s.:
-Sie erhalten diese Email, weil Sie schon einmal mit dem Orchester
-Camerata Academica Freiburg musiziert haben. Wenn wir Sie aus unserer Datenbank
-löschen sollen, teilen Sie uns das bitte kurz mit, indem Sie entsprechend
-auf diese Email antworten. Wir entschuldigen uns in diesem Fall für die
-Störung.');  
+      'txtDescription' => $this->initialTemplate);  
 
     $doResetAll = Util::cgiValue('eraseAll', false);
       
@@ -1207,9 +1224,6 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
       }
 
       $strMessage = nl2br($strMsg);
-      $h2t = new \html2text($strMessage);
-      $h2t->set_encoding('utf-8');
-      $strTextMessage = $h2t->get_text();
 
       // One big try-catch block. Using exceptions we do not need to
       // keep track of all return values, which is quite beneficial
@@ -1245,7 +1259,7 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
 
         $mail->Subject = $MailTag . ' ' . $strSubject;
         $mail->Body = $strMessage;
-        $mail->AltBody = $strTextMessage;
+        $mail->AltBody = self::textMessage($mail->Body);
 
         $mail->AddReplyTo($strSenderEmail, $strSender);
         $mail->SetFrom($strSenderEmail, $strSender);
