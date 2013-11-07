@@ -59,12 +59,13 @@ form[class|="cafevdb-email"] tr:active {
   width:auto;
 }
 .cafevdb-email-filter fieldset.basegroup p.label {
-  padding-right:2em;
-  display:inline;
+  padding-right:1em;
+  vertical-align:top;
+  display:inline-block;
 }
 
 .cafevdb-email-filter fieldset.basegroup input[class^="select"][type=checkbox] + label {
-  padding-right:2em;
+  padding-right:1em;
 }
 .cafevdb-email-filter fieldset.basegroup input[class^="select"][type=checkbox] {
   /*display:none;*/
@@ -94,6 +95,10 @@ form[class|="cafevdb-email"] tr:active {
   display:inline-block;
   background-color:LightSteelBlue !important;
   box-shadow:2px 2px 2px #080808 inset; /*, 1px 1px 1px #cfc inset;*/
+}
+
+.cafevdb-email-filter select.member-status-filter {
+  width:22em;
 }
 
 .cafevdb-email-filter fieldset.select {

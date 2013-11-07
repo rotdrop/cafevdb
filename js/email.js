@@ -115,6 +115,8 @@ CAFEVDB.Email = {
 
 $(document).ready(function(){
 
+  $('#EmailMemberStatusSelect-0').chosen({ disable_search_threshold: 10 });  
+
   $('#cafevdb-email-header-box .viewtoggle').click(function(event) {
     event.preventDefault();
 

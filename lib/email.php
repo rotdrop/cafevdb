@@ -47,6 +47,8 @@ class EmailFilter {
   private $form;           // QuickForm2 form
   private $baseGroupFieldSet;
   private $userGroupSelect;
+  private $memberStatusNames;
+  private $byStatusSelect;
   private $filterFieldSet; // Field-set for the filter
   private $selectFieldSet; // Field-set for adressee selection
   private $dualSelect;     // QF2 dual-select
@@ -91,6 +93,7 @@ class EmailFilter {
 
     $table = Util::cgiValue($this->mtabKey,'');
     $this->remapEmailRecords($table);
+    $this->getMemberStatusNames();
 
     /* At this point we have the Email-List, either in global or project
      * context, and possibly a selection of Musicians by Id from the
@@ -163,14 +166,13 @@ class EmailFilter {
       echo '</PRE>';
     }
 
-    if (isset($value['SelectedMusicians'])) {
-      $this->addPersistentCGI('SelectedMusicians', $value['SelectedMusicians'], $form);
-    }
-    if (isset($value['InstrumentenFilter'])) {
-      $this->addPersistentCGI('InstrumentenFilter', $value['InstrumentenFilter'], $form);
-    }
-    if (isset($value['baseGroup'])) {
-      $this->addPersistentCGI('baseGroup', $value['baseGroup'], $form);
+    foreach (array('SelectedMusicians',
+                   'InstrumentenFilter',
+                   'EmailMemberStatusSelect',
+                   'baseGroup') as $key) {
+      if (isset($value[$key])) {
+        $this->addPersistentCGI($key, $value[$key], $form);
+      }
     }
     
     foreach ($moreStuff as $key => $value) {
@@ -223,6 +225,19 @@ class EmailFilter {
     }
   }  
 
+  private function getMemberStatusNames()
+  {
+    $dbh = mySQL::connect($this->opts);
+
+    $memberStatus = mySQL::multiKeys('Musiker', 'MemberStatus', $dbh);
+    $this->memberStatusNames = array();
+    foreach ($memberStatus as $tag) {
+      $this->memberStatusNames[$tag] = strval(L::t($tag));
+    }
+    mySQL::close($dbh);
+  }
+  
+
   private function remapEmailRecords($table)
   {
     if ($this->projectId >= 0 && $table == 'Besetzungen') {
@@ -261,6 +276,11 @@ class EmailFilter {
 
       mySQL::close($dbh);
     }
+  }
+
+  private function memberStatusSQLFilter()
+  {
+    
   }
 
   private function fetchMusicians($dbh, $table, $id, $restrict, $projectId)
@@ -342,12 +362,24 @@ class EmailFilter {
     asort($this->EMailsDpy);
   }
 
+  private function defaultByStatus()
+  {
+    $byStatusDefault = array('regular');
+    if ($this->projectId >= 0) {
+      $byStatusDefault[] = 'passive';
+      $byStatusDefault[] = 'temporary';
+    }
+    return $byStatusDefault;
+  }  
+
   /*
    * Generate a QF2 form
    */
   private function createForm()
   {
     $this->form = new \HTML_QuickForm2('emailrecipients');
+
+    $byStatusDefault = $this->defaultByStatus();
 
     /* Add any variables we want to keep
      */
@@ -356,12 +388,13 @@ class EmailFilter {
       new \HTML_QuickForm2_DataSource_Array(
         array('SelectedMusicians' => $this->EmailRecs,
               'InstrumentenFilter' => array('*'),
+              'EmailMemberStatusSelect' => $byStatusDefault,
               'baseGroup' => array(
                 'selectedUserGroup' => $this->userBase))));
 
     $this->form->setAttribute('class', 'cafevdb-email-filter');
 
-    /* Groups can only render field-sets well, so make thing more
+    /* Groups can only render field-sets well, so make things more
      * complicated than necessary
      */
 
@@ -370,9 +403,10 @@ class EmailFilter {
       'fieldset', NULL, array('class' => 'border'));
     $outerFS->setLabel(L::t('Select Em@il Recipients'));
 
-    if ($this->projectId >= 0) {
-      $this->baseGroupFieldSet = $outerFS->addElement('fieldset', NULL,
+    $this->baseGroupFieldSet = $outerFS->addElement('fieldset', NULL,
                                                       array('class' => 'basegroup'));
+
+    if ($this->projectId >= 0) {
       $group = $this->userGroupSelect =
         $this->baseGroupFieldSet->addElement('group', 'baseGroup');
       $group->setLabel(L::t('Principal Address Collection'));
@@ -391,6 +425,18 @@ class EmailFilter {
               'title' => 'Auswahl aus allen Musikern, die nicht für das Projekt registriert sind.'));
       $check->setContent('<span class="selectexceptproject">&notin; '.$this->project.'</span>');
     }
+
+    // Optionally also include recipients which are normally disabled.
+    $this->byStatusSelect = $this->baseGroupFieldSet->addElement(
+      'select', 'EmailMemberStatusSelect',
+      array('multiple' => 'multiple',
+            'size' => 5,
+            'class' => 'member-status-filter chzn-rtl',
+            'title' => L::t('Select recipients by member status.'),
+            'data-placeholder' => L::t('Select Members by Status')),
+      array('label' => L::t('Member-Status'),
+            'options' => $this->memberStatusNames));
+    //$this->byStatusSelect->setValue($byStatusDefault);
 
     $this->selectFieldSet = $outerFS->addElement('fieldset', NULL, array());
     $this->selectFieldSet->setAttribute('class', 'select');
@@ -565,7 +611,7 @@ und aktiviert den Editor'));
 
     $value = $this->form->getValue();
 
-    if (false) {
+    if (true) {
       echo '<PRE>';
       print_r($value);
       echo '</PRE>';
@@ -610,13 +656,16 @@ und aktiviert den Editor'));
 
         mySQL::close($dbh);
 
-
         /* Now we need to reinstall the musicians into dualSelect */
         $this->dualSelect->loadOptions($this->EMailsDpy);
         $this->dualSelect->setValue($this->EmailRecs);
 
         /* Also update the "no email" notice. */
         $this->updateNoEmailForm();
+
+        /* Install default "no-email" stuff */
+        $this->byStatusSelect->setvalue($this->defaultByStatus());
+
       } elseif (!empty($value['writeMail']) ||
                 Util::cgiValue('sendEmail') ||
                 Util::cgiValue('deleteAttachment')) {
