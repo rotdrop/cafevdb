@@ -360,7 +360,8 @@ class EmailFilter {
             array('email' => $emailval,
                   'name' => $name,
                   'status' => $line['MemberStatus'],
-                  'project' => $projectId);
+                  'project' => $projectId,
+                  'data' => $everything ? $line : array() );
           $this->EMailsDpy[$line[$id]] =
             htmlspecialchars($name.' <'.$emailval.'>');
         }
