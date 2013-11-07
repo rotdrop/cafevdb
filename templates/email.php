@@ -4,6 +4,8 @@ use CAFEVDB\Util;
 use CAFEVDB\Navigation;
 use CAFEVDB\Email;
 
+$table = new Email();
+
 $project = $_['projectName'];
 $projectId = $_['projectId'];
 $css_pfx = Email::CSS_PREFIX;
@@ -23,10 +25,10 @@ if ($projectId >= 0) {
 echo $this->inc('part.common.header',
                 array('css-prefix' => $css_pfx,
                       'navigationcontrols' => $nav,
-                      'header' => Email::headerText()));
+                      'header' => $table->headerText()));
 
 // Issue the main part. The method will echo itself
-Email::display(OCP\USER::getUser());
+$table->display(OCP\USER::getUser());
 
 // Close some still opened divs
 echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));

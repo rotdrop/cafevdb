@@ -31,7 +31,8 @@ class EmailFilter {
   private $project;     // Project name of NULL or ''
   private $filter;      // Current instrument filter
   private $userBase;    // Select from either project members and/or
-  // all musicians w/o project-members
+                        // all musicians w/o project-members
+  private $memberFilter;// passive, regular, soloist, conductor, temporary
   private $EmailsRecs;  // Copy of email records from CGI env
   private $emailKey;    // Key for EmailsRecs into _POST or _GET
 
@@ -168,7 +169,7 @@ class EmailFilter {
 
     foreach (array('SelectedMusicians',
                    'InstrumentenFilter',
-                   'EmailMemberStatusSelect',
+                   'memberStatusFilter',
                    'baseGroup') as $key) {
       if (isset($value[$key])) {
         $this->addPersistentCGI($key, $value[$key], $form);
@@ -206,7 +207,10 @@ class EmailFilter {
     $this->filterSelect->loadOptions(array_combine($this->instruments,
                                                    $this->instruments));        
     $value = $this->form->getValue();
-    $filterInstruments = $value['InstrumentenFilter'];
+    $filterInstruments =
+      isset($value['InstrumentenFilter'])
+      ? $value['InstrumentenFilter']
+      : array('*');
     $this->filterSelect->setValue(
       array_intersect($filterInstruments, $this->instruments));
   }
@@ -280,12 +284,42 @@ class EmailFilter {
 
   private function memberStatusSQLFilter()
   {
-    
+    $allStatusFlags = array_keys($this->memberStatusNames);
+    $statusBlackList = array_diff($allStatusFlags, $this->memberFilter);
+
+    // Explicitly include NULL MemberStatus (which in principle should not happen
+    $filter = "AND ( `MemberStatus` IS NULL OR (1 ";
+    foreach ($statusBlackList as $badStatus) {
+      $filter .= " AND `MemberStatus` NOT LIKE '".$badStatus."'";
+    }
+    $filter .= "))";
+
+    return $filter;
   }
 
-  private function fetchMusicians($dbh, $table, $id, $restrict, $projectId)
+  /**Fetch musicians from either the "Musiker" table or a project
+   * view. Depending on the table in use, $restrict is either
+   * 'Intrumente' or 'Instrument' (normally).
+   *
+   * @param[in] $dbh Data-base handle.
+   *
+   * @param[in] $table The table to use, either 'Musiker' or a project view.
+   *
+   * @param[in] $id The name of the column holding the musicians
+   *                global id, this is either 'Id' (Musiker-table) or
+   *                'MusikerId' (project view).
+   *
+   * @param[in] $restrict The filter restriction, either 'Instrument'
+   *                (German singular) or 'Instrumente' (German
+   *                plural).
+   *
+   * @param[in] $projectId Either a valid project-id, or -1 if not in
+   *                "project-mode".
+   */
+  private function fetchMusicians($dbh, $table, $id, $restrict, $projectId, $everything = false)
   {
-    $query = 'SELECT `'.$id.'`,`Vorname`,`Name`,`Email` FROM ('.$table.') WHERE
+    $fields = $everything ? '*' : '`'.$id.'`,`Vorname`,`Name`,`Email`,`MemberStatus`';
+    $query = 'SELECT '.$fields.' FROM ('.$table.') WHERE
        ( ';
     foreach ($this->filter as $value) {
       if ($value == '*') {
@@ -294,11 +328,20 @@ class EmailFilter {
         $query .= "`".$restrict."` LIKE '%".$value."%' OR\n";
       }
     }
-    /* Don't bother any conductor with mass-email.
+
+    /* Don't bother any conductor etc. with mass-email.
      *
      * TODO: introduce a useful status-set (member, nomail etc..)
      */
-    $query .= "0 ) AND NOT `".$restrict."` LIKE '%Taktstock%'\n";
+    $query .= "0 )"; // AND NOT `".$restrict."` LIKE '%Taktstock%'\n";
+    
+    $query .= $this->memberStatusSQLFilter();
+
+    if (false) {
+      echo '<PRE>';
+      echo $query;
+      echo '</PRE>';
+    }
 
     // Fetch the result or die
     $result = mySQL::query($query, $dbh, true); // here we want to bail out on error
@@ -316,6 +359,7 @@ class EmailFilter {
           $this->EMails[$line[$id]] =
             array('email' => $emailval,
                   'name' => $name,
+                  'status' => $line['MemberStatus'],
                   'project' => $projectId);
           $this->EMailsDpy[$line[$id]] =
             htmlspecialchars($name.' <'.$emailval.'>');
@@ -388,7 +432,7 @@ class EmailFilter {
       new \HTML_QuickForm2_DataSource_Array(
         array('SelectedMusicians' => $this->EmailRecs,
               'InstrumentenFilter' => array('*'),
-              'EmailMemberStatusSelect' => $byStatusDefault,
+              'memberStatusFilter' => $byStatusDefault,
               'baseGroup' => array(
                 'selectedUserGroup' => $this->userBase))));
 
@@ -400,7 +444,7 @@ class EmailFilter {
 
     // Outer field-set with border
     $outerFS = $this->form->addElement(
-      'fieldset', NULL, array('class' => 'border'));
+      'fieldset', NULL, array('class' => 'border', 'id' => 'emailRecipientBlock'));
     $outerFS->setLabel(L::t('Select Em@il Recipients'));
 
     $this->baseGroupFieldSet = $outerFS->addElement('fieldset', NULL,
@@ -428,7 +472,7 @@ class EmailFilter {
 
     // Optionally also include recipients which are normally disabled.
     $this->byStatusSelect = $this->baseGroupFieldSet->addElement(
-      'select', 'EmailMemberStatusSelect',
+      'select', 'memberStatusFilter',
       array('multiple' => 'multiple',
             'size' => 5,
             'class' => 'member-status-filter chzn-rtl',
@@ -472,8 +516,8 @@ class EmailFilter {
         \HTML_QuickForm2_Rule::ONBLUR_CLIENT_SERVER);
     }
 
-    $this->filterFieldSet = $outerFS->addElement('fieldset', NULL, array());
-    $this->filterFieldSet->setAttribute('class', 'filter');
+    $this->filterFieldSet = $outerFS->addElement('fieldset', NULL,
+                                                 array('class' => 'filter'));
 
     $this->filterSelect = $this->filterFieldSet->addElement(
       'select', 'InstrumentenFilter',
@@ -526,7 +570,7 @@ und aktiviert den Editor'));
 
     if (count($this->NoMail) > 0) {
       $data = '<PRE>';
-      $data .= "Count: ".count($this->NoMail)."\n";
+      $data .= L::t("Count: ").count($this->NoMail)."\n";
       foreach($this->NoMail as $value) {
         $data .= htmlspecialchars($value['name'])."\n";
       }
@@ -585,6 +629,18 @@ und aktiviert den Editor'));
     }
   }
 
+  /**Decode the member-status filter
+   */
+  private function getMemberStatusFilter()
+  {
+    $values = $this->form->getValue();
+    if (isset($values['memberStatusFilter'])) {
+      $this->memberFilter = $values['memberStatusFilter'];
+    } else {
+      $this->memberFilter = array();
+    }
+  }
+
   /*
    * Let it run; 
    */
@@ -593,7 +649,8 @@ und aktiviert den Editor'));
     if (true) {
 
       $this->getUserBase();
-        
+      $this->getMemberStatusFilter();
+
       $dbh = mySQL::connect($this->opts);
 
       $this->getInstrumentsFromDB($dbh);
@@ -611,9 +668,10 @@ und aktiviert den Editor'));
 
     $value = $this->form->getValue();
 
-    if (true) {
+    if (false) {
       echo '<PRE>';
       print_r($value);
+      print_r($_POST);
       echo '</PRE>';
     }
 
@@ -709,7 +767,7 @@ class Email
 {
   const CSS_PREFIX         = 'cafevdb-email';
   private static $constructionMode = true;
-  static private $defaultTemplate = 'Liebe Musiker,
+  const DEFAULT_TEMPLATE = 'Liebe Musiker,
 <p>
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 <p>
@@ -726,11 +784,11 @@ Störung.';
   private $initialTemplate;
   
 
-  function __construct($templateText) {
-    if (isset($templateText) && $templateText != '') {
-      $initialTemplate = $templateText;
+  function __construct($templateText = NULL) {
+    if (!is_null($templateText) && $templateText != '') {
+      $this->initialTemplate = $templateText;
     } else {
-      $initialTemplate = $self::defaultTemplate;
+      $this->initialTemplate = self::DEFAULT_TEMPLATE;
     }
   }
 
@@ -918,7 +976,7 @@ __EOT__;
    *
    * @bug Most of this stuff should be moved to the templates folder.
    */
-  public static function display($user)
+  public function display($user)
   {
     Config::init();
 
@@ -962,7 +1020,7 @@ __EOT__;
       'txtCC' => '',
       'txtBCC' => '',
       'txtFromName' => $CAFEVCatchAllName,
-      'txtDescription' => $this->initialTemplate);  
+      'txtDescription' => $this->initialTemplate);
 
     $doResetAll = Util::cgiValue('eraseAll', false);
       
@@ -1325,8 +1383,15 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
               $mail->AddBCC($recipient['email'], $recipient['name']);
             } else {
               // Well, people subscribing to one of our projects
-              // simply must not complain.
-              $mail->AddAddress($recipient['email'], $recipient['name']);
+              // simply must not complain, except soloist or
+              // conductors which normally are not bothered with
+              // mass-email at all, but if so, then they are added as Bcc
+              if ($recipient['status'] == 'conductor' ||
+                  $recipient['status'] == 'solooist') {
+                $mail->AddBCC($recipient['email'], $recipient['name']);
+              } else {
+                $mail->AddAddress($recipient['email'], $recipient['name']);
+              }
             }
           }
         } else {
