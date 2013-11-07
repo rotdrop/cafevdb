@@ -409,7 +409,7 @@ class Navigation
       .'<select '
       .'data-placeholder="'.L::t('Export Table').'" '
       .'class="pme-export" '
-      .'id="pme-export-choice"'
+      .'id="pme-export-choice" '
       .'title="'.Config::toolTips('pme-export-choice').'" '
       .'name="export" >
   <option value=""></option>
