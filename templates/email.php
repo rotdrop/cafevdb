@@ -4,7 +4,7 @@ use CAFEVDB\Util;
 use CAFEVDB\Navigation;
 use CAFEVDB\Email;
 
-$table = new Email();
+$table = new Email(OCP\USER::getUser());
 
 $project = $_['projectName'];
 $projectId = $_['projectId'];
@@ -28,7 +28,7 @@ echo $this->inc('part.common.header',
                       'header' => $table->headerText()));
 
 // Issue the main part. The method will echo itself
-$table->display(OCP\USER::getUser());
+$table->display();
 
 // Close some still opened divs
 echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
