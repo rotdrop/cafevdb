@@ -868,7 +868,7 @@ Land
   /**Return an associative array with keys and column names for the
    * values (Name, Stadt etc.) for substituting per-member data.
    */
-  private static function emailMemberVariables()
+  private function emailMemberVariables()
   {
     $vars   = preg_split('/\s+/', trim(self::MEMBERVARIABLES));
     $values = preg_split('/\s+/', trim(self::MEMBERCOLUMNS));
@@ -878,7 +878,7 @@ Land
   /**Compose an associative array with keys and values for global
    * variables which do not depend on the specific recipient.
    */
-  private static function emailGlobalVariables()
+  private function emailGlobalVariables()
   {
     $globalVars = array('ORGANIZER' => $this->fetchVorstand());
 
