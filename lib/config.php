@@ -134,6 +134,10 @@ ownclouddev';
       return;
     }
 
+    if (openssl_pkey_export($privKey, $privKey) === false) {
+      return;
+    }
+
     // Success. Store the decrypted private key in the session data.
     self::setPrivateKey($privKey);
   }

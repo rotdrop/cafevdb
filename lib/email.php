@@ -801,6 +801,7 @@ LAND
   private $projectId;
   private $opts;
   private $user;
+  private $vorstand;
 
   // Message specific stuff
   private $sender;
@@ -842,6 +843,24 @@ LAND
   {
     return preg_split('/\s+/', trim(self::VARIABLES));
   }
+
+  private function fetchVorstand()
+  {
+    // Now insert the stuff into the SentEmail table  
+    $handle = mySQL::connect($this->opts);
+
+    $query = "SELECT `Vorname` FROM `VorstandView` ORDER BY `Reihung`,`Stimmführer`";
+
+    $result = mySQL::query($query, $handle);
+    
+    $vorstand = array();
+    while ($line = mysql_fetch_assoc($result)) {
+      $vorstand[] = $line['Vorname'];
+    }
+
+    mySQL::close($handle);    
+  }
+  
 
   public function headerText()
   {
