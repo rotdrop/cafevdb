@@ -882,7 +882,7 @@ Land
   {
     $globalVars = array('ORGANIZER' => $this->fetchVorstand());
 
-    return $globalVars();
+    return $globalVars;
   }
 
   /**Fetch the pre-names of the members of the organizing committee in
