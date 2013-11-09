@@ -89,7 +89,7 @@ class EmailFilter {
     $pmepfx          = $this->opts['cgi']['prefix']['sys'];
     $this->emailKey  = $pmepfx.'mrecs';
     $this->mtabKey   = $pmepfx.'mtable';
-    $this->EmailRecs = Util::cgiValue($this->emailKey,array());
+    $this->EmailRecs = Util::cgiValue($this->emailKey, array());
     $this->userBase  = array('fromProject' => $this->projectId >= 0,
                              'exceptProject' => false);
 
@@ -300,7 +300,8 @@ class EmailFilter {
 
   /**Fetch musicians from either the "Musiker" table or a project
    * view. Depending on the table in use, $restrict is either
-   * 'Intrumente' or 'Instrument' (normally).
+   * 'Intrumente' or 'Instrument' (normally). Also, fetch all data
+   * needed to do any per-recipient substitution later.
    *
    * @param[in] $dbh Data-base handle.
    *
@@ -316,10 +317,27 @@ class EmailFilter {
    *
    * @param[in] $projectId Either a valid project-id, or -1 if not in
    *                "project-mode".
+   *
+   * @return Associative array with the keys
+   * - name (full name)
+   * - email 
+   * - status (MemberStatus)
+   * - dbdata (data as returned from the DB for variable substitution)
    */
-  private function fetchMusicians($dbh, $table, $id, $restrict, $projectId, $everything = false)
+  private function fetchMusicians($dbh, $table, $id, $restrict, $projectId)
   {
-    $fields = $everything ? '*' : '`'.$id.'`,`Vorname`,`Name`,`Email`,`MemberStatus`';
+    $columnNames = array('Vorname',
+                         'Name',
+                         'Email',
+                         'Telefon',
+                         'Telefon2',
+                         'Strasse',
+                         'Postleitzahl',
+                         'Stadt',
+                         'Land',
+                         'MemberStatus');
+    $sep = '`,`';
+    $fields = '`'.$id.$sep.implode($sep, $columnNames).'`';
     $query = 'SELECT '.$fields.' FROM ('.$table.') WHERE
        ( ';
     foreach ($this->filter as $value) {
@@ -329,13 +347,9 @@ class EmailFilter {
         $query .= "`".$restrict."` LIKE '%".$value."%' OR\n";
       }
     }
+    $query .= "0 )";
 
-    /* Don't bother any conductor etc. with mass-email.
-     *
-     * TODO: introduce a useful status-set (member, nomail etc..)
-     */
-    $query .= "0 )"; // AND NOT `".$restrict."` LIKE '%Taktstock%'\n";
-    
+    /* Don't bother any conductor etc. with mass-email. */
     $query .= $this->memberStatusSQLFilter();
 
     if (false) {
@@ -358,11 +372,11 @@ class EmailFilter {
         $musmail = explode(',',$line['Email']);
         foreach ($musmail as $emailval) {
           $this->EMails[$line[$id]] =
-            array('email' => $emailval,
-                  'name' => $name,
-                  'status' => $line['MemberStatus'],
+            array('email'   => $emailval,
+                  'name'    => $name,
+                  'status'  => $line['MemberStatus'],
                   'project' => $projectId,
-                  'data' => $everything ? $line : array() );
+                  'dbdata'  => $line);
           $this->EMailsDpy[$line[$id]] =
             htmlspecialchars($name.' <'.$emailval.'>');
         }
@@ -774,7 +788,7 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 <p>
 Mit den besten Grüßen,
 <p>
-Euer Camerata Vorstand (Katha, Georg, Lea, Martina, Martina, und Claus)
+Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 <p>
 P.s.:
 Sie erhalten diese Email, weil Sie schon einmal mit dem Orchester
@@ -782,7 +796,7 @@ Camerata Academica Freiburg musiziert haben. Wenn wir Sie aus unserer Datenbank
 löschen sollen, teilen Sie uns das bitte kurz mit, indem Sie entsprechend
 auf diese Email antworten. Wir entschuldigen uns in diesem Fall für die
 Störung.';
-  const VARIABLES = '
+  const MEMBERVARIABLES = '
 VORNAME
 NAME
 EMAIL
@@ -793,6 +807,18 @@ PLZ
 STADT
 LAND
 ';
+  const MEMBERCOLUMNS = '
+Vorname
+Name
+Email
+Telefon
+Telefon2
+Strasse
+Postleitzahl
+Stadt
+Land
+';
+
   private static $constructionMode = true;
 
   private $initialTemplate;
@@ -839,17 +865,34 @@ LAND
     $this->project   = Util::cgiValue('Project','');
   }
 
-  private static function emailVariables()
+  /**Return an associative array with keys and column names for the
+   * values (Name, Stadt etc.) for substituting per-member data.
+   */
+  private static function emailMemberVariables()
   {
-    return preg_split('/\s+/', trim(self::VARIABLES));
+    $vars   = preg_split('/\s+/', trim(self::MEMBERVARIABLES));
+    $values = preg_split('/\s+/', trim(self::MEMBERCOLUMNS));
+    return array_combine($vars, $values);
   }
 
+  /**Compose an associative array with keys and values for global
+   * variables which do not depend on the specific recipient.
+   */
+  private static function emailGlobalVariables()
+  {
+    $globalVars = array('ORGANIZER' => $this->fetchVorstand());
+
+    return $globalVars();
+  }
+
+  /**Fetch the pre-names of the members of the organizing committee in
+   * order to construct an up-to-date greeting.
+   */
   private function fetchVorstand()
   {
-    // Now insert the stuff into the SentEmail table  
     $handle = mySQL::connect($this->opts);
 
-    $query = "SELECT `Vorname` FROM `VorstandView` ORDER BY `Reihung`,`Stimmführer`";
+    $query = "SELECT `Vorname` FROM `VorstandView` ORDER BY `Reihung`,`Stimmführer`,`Vorname`";
 
     $result = mySQL::query($query, $handle);
     
@@ -858,7 +901,16 @@ LAND
       $vorstand[] = $line['Vorname'];
     }
 
-    mySQL::close($handle);    
+    mySQL::close($handle);
+
+    $cnt = count($vorstand);
+    $text = $vorstand[0];
+    for ($i = 1; $i < $cnt-1; $i++) {
+      $text .= ', '.$vorstand[$i];
+    }
+    $text .= ' '.L::t('and').' '.$vorstand[$cnt-1];
+
+    return $text;
   }
   
 
@@ -1094,7 +1146,7 @@ __EOT__;
      */
     $templateMail     = false;
     $templateLeftOver = array();
-    if (preg_match('![$]{[^{]+}!', $this->message)) {
+    if (preg_match('![$]{MEMBER::[^{]+}!', $this->message)) {
       // Fine, we have substitutions. We should now verify that we
       // only have _legal_ substitutions. There are probably more
       // clever ways to do this, but at this point we simply
@@ -1102,12 +1154,12 @@ __EOT__;
       // unknown ${...} substitution tag remains. Mmmh.
 
       $dummy = $this->message;
-      $variables = $this->emailVariables();
-      foreach ($variables as $placeholder) {
-        $dummy = preg_replace('/[$]{'.$placeholder.'}/', 'DUMMY', $dummy);
+      $variables = $this->emailMemberVariables();
+      foreach ($variables as $placeholder => $column) {
+        $dummy = preg_replace('/[$]{MEMBER::'.$placeholder.'}/', $column, $dummy);
       }
 
-      if (preg_match('![$]{[^{]+}!', $dummy, $templateLeftOver)) {
+      if (preg_match('![$]{MEMBER::[^{]+}!', $dummy, $templateLeftOver)) {
         $templateMail = 'error';
       } else {
         $templateMail = true;
@@ -1409,12 +1461,90 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
       }
 
       $strMessage = nl2br($this->message);
+      
+      if (preg_match('![$]{GLOBAL::[^{]+}!', $this->message)) {
+        $vars = $this->emailGlobalVariables();
+        
+        // TODO: one call to preg_replace would be enough, but does
+        // not really matter as long as there is only one global
+        // variable.
+        foreach ($vars as $key => $value) {
+          $strMessage = preg_replace('/[$]{GLOBAL::'.$key.'}/', $value, $strMessage);
+        }
+      }
 
-      return $this->composeAndSend($strMessage, $EMails);
+      if ($templateMail === true) {
+        // Template emails are emails with per-member variable
+        // substitutions. This means that we cannot send one email to
+        // all recipients, but have to send different emails one by
+        // one. This has some implicatios:
+        //
+        // - extra recipients added through the Cc: and Bcc: fields
+        //   and the catch-all address is not added to each
+        //   email. Instead, we send out the template without
+        //   substitutions, and also only copy this template to the
+        //   "Sent"-Folder on the imap server.
+        //
+        // - still each single email is logged to the DB in order to
+        //  catch duplicates.
+        //
+        // - after variable substitution we need to reencode some
+        // - special characters.
+        $templateMessage = $strMessage;
+        $variables = $this->emailMemberVariables();
+        
+
+        foreach ($EMails as $recipient) {
+          $dbdata = $recipient['dbdata'];
+          $strMessage = $templateMessage;
+          foreach ($variables as $placeholder => $column) {
+            $strMessage = preg_replace('/[$]{MEMBER::'.$placeholder.'}/',
+                                       htmlspecialchars($dbdata[$column]),
+                                       $strMessage);
+          }
+          $this->composeAndSend($strMessage, array($recipient), false);
+        }
+        // Finally send one message without template substitution (as
+        // this makes no sense) to all Cc:, Bcc: recipients and the
+        // catch-all. This Message also gets copied to the Sent-folder
+        // on the imap server.
+        $msg = $this->composeAndSend($templateMessage, array(), true);
+        if ($msg !== false) {
+          copyToSentFolder($msg);
+        }
+      } else {
+        $msg = $this->composeAndSend($strMessage, $EMails);
+        if ($msg !== false) {
+          copyToSentFolder($msg);
+        }
+      }
   }
 
-  private function composeAndSend($strMessage, $EMails)
+  /**Compose and send one message. If $EMails only contains one
+   * address, then the emails goes out using To: and Cc: fields,
+   * otherwise Bcc: is used, unless sending to the recipients of a
+   * project. All emails are logged with an MD5-sum to the DB in order
+   * to prevent duplicate mass-emails. If a duplicate is detected the
+   * message is not sent out. A duplicate is something with the same
+   * message text and the same recipient list.
+   *
+   * @param[in] $strMessage The message to send.
+   *
+   * @param[in] $EMails The recipient list
+   *
+   * @param[in] $addCC If @c false, then additional CC and BCC recipients will
+   *                   not be added.
+   * 
+   * @return The sent Mime-message which then may be stored in the
+   * Sent-Folder on the imap server (for example).
+   */
+  private function composeAndSend($strMessage, $EMails, $addCC = true)
   {
+    // If we are sending to a single address (i.e. if $strMessage has
+    // been constructed with per-member variable substitution), then
+    // we do not need to send via BCC.
+    $singleAddress = count($EMails) == 1;
+
     // One big try-catch block. Using exceptions we do not need to
     // keep track of all return values, which is quite beneficial
     // here. Some of the stuff below clearly cannot throw, but then
@@ -1454,7 +1584,9 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
       if (!self::$constructionMode) {
         // Loop over all data-base records and add each recipient in turn
         foreach ($EMails as $recipient) {
-          if ($recipient['project'] < 0) {
+          if ($singleAddress) {
+            $mail->AddAddress($recipient['email'], $recipient['name']);
+          } else if ($recipient['project'] < 0) {
             // blind copy, don't expose the victim to the others.
             $mail->AddBCC($recipient['email'], $recipient['name']);
           } else {
@@ -1475,13 +1607,15 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
         $mail->AddAddress($this->catchAllEmail, $this->catchAllName);
       }
 
-      // Always drop a copy to the orchestra's email account for
-      // archiving purposes and to catch illegal usage. It is legel
-      // to modify $this->sender through the email-form.
-      $mail->AddAddress($this->catchAllEmail, $this->sender);
+      if ($addCC === true) {
+        // Always drop a copy to the orchestra's email account for
+        // archiving purposes and to catch illegal usage. It is legel
+        // to modify $this->sender through the email-form.
+        $mail->AddCC($this->catchAllEmail, $this->sender);
+      }
         
       // If we have further Cc's, then add them also
-      if ($this->CC != '') {
+      if ($addCC === true && $this->CC != '') {
         // Now comes some dirty work: we need to split the string in
         // names and email addresses. We re-construct $this->CC in this
         // context, to normalize it for storage in the email-log.
@@ -1503,7 +1637,7 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
       }
 
       // Do the same for Bcc
-      if ($this->BCC != '') {
+      if ($addCC === true && $this->BCC != '') {
         // Now comes some dirty work: we need to split the string in
         // names and email addresses.
   
@@ -1704,6 +1838,13 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
 
     mySQL::close($handle);
 
+    return $mail->GetSentMIMEMessage();
+  }
+
+  /**Take the supplied message and copy it to the "Sent" folder.
+   */
+  private function copyToSentFolder($mimeMessage)
+  {
     // PEAR IMAP works without the c-client library
     ini_set('error_reporting',ini_get('error_reporting') & ~E_STRICT);
 
@@ -1725,7 +1866,7 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
       return false;
     }
     if (($ret = $imap->appendMessage($mail->GetSentMIMEMessage(), 'Sent')) !== true) {
-      Util::alert(L::t('Could not copy the message to the send-folder.</br>'.
+      Util::alert(L::t('Could not copy the message to the "Sent"-folder.</br>'.
                        'Server returned the error: `%s\'',
                        array($ret->toString())),
                   L::t('Copying to `Sent\'-folder failed.'),

@@ -969,12 +969,12 @@ __EOT__;
     $recordsPerPage  = $this->recordsPerPage;
     $userExtraFields = $this->userExtraFields;
 
-    $headervisibility = Util::cgiValue('headervisibility','expanded');
+    $headervisibility = Util::cgiValue('headervisibility', 'expanded');
 
     $saved_template = $this->template;
     $this->template = self::CHANGE_TEMPLATE;
 
-    $this->musiciansIds  = Util::cgiValue($this->musiciansKey,array());
+    $this->musiciansIds  = Util::cgiValue($this->musiciansKey, array());
 
     // Probably needs several changes ...
     if (isset($_POST['ForcedInstrument'])) {
