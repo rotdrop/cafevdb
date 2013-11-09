@@ -3181,7 +3181,8 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			echo $this->htmlHiddenSys('mkey', $this->key);
 			echo $this->htmlHiddenSys('mkeytype', $this->key_type);
 			foreach ($this->mrecs as $key => $val) {
-				echo $this->htmlHiddenSys('mrecs['.$key.']', $val);
+				//echo $this->htmlHiddenSys('mrecs['.$key.']', $val);
+				echo $this->htmlHiddenSys('mrecs[]', $val);
 			}
 		}
 		$this->form_end();
@@ -4218,9 +4219,19 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		$this->mrecs = array_unique($this->mrecs);
 		foreach ($opts['cgi']['persist'] as $key => $val) {
 			if (is_array($val)) {
-				foreach($val as $key2 => $val2) {
-					$this->cgi['persist'] .= '&'.rawurlencode($key)
-						.'['.rawurlencode($key2).']='.rawurlencode($val2);
+				// We need to handle sys_recs in a special way: never
+				// use absolute indices, because this kills the
+				// information submitted by the user (checkboxes)
+				if ($key == $this->cgi['prefix']['sys'].'mrecs') {
+					foreach($val as $key2 => $val2) {
+						$this->cgi['persist'] .= '&'.rawurlencode($key)
+							.'[]='.rawurlencode($val2);
+					}
+				} else {
+					foreach($val as $key2 => $val2) {
+						$this->cgi['persist'] .= '&'.rawurlencode($key)
+							.'['.rawurlencode($key2).']='.rawurlencode($val2);
+					}
 				}
 			} else {
 				$this->cgi['persist'] .= '&'.rawurlencode($key).'='.rawurlencode($val);
