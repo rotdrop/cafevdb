@@ -1361,7 +1361,16 @@ __EOT__;
       echo '
         </select>
      </td>
-     <td><input size="20" value="'.L::t('Save new Template').'" name="newEmailTemplate" type="text" id="newEmailTemplate"></td>
+     <td>
+       <input size="20" value="'.L::t('New Template Name').'" name="newEmailTemplate" type="text" id="newEmailTemplate">
+';
+      $submitString = '<input %1$s title="'.Config::toolTips('save-email-template').'"
+                                   type="submit"
+                                   name="saveEmailTemplate"
+                                   value="'.L::t('Save as Template').'"/>';
+      echo sprintf($submitString, $filter->isFrozen() ? '' : 'disabled');
+      echo '
+     </td>
   </tr>
   <tr>
      <td>'.L::t('Recipients').'</td>
