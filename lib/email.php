@@ -1291,7 +1291,7 @@ __EOT__;
       $templateTag  = Util::cgiValue('newEmailTemplate');
       $templateText = $this->message;
 
-      $this->storeTemplate($templateTag, $tempalteText);
+      $this->storeTemplate($templateTag, $templateText);
 
       // Re-fetch the names from the DB.
       $this->templateNames = $this->fetchTemplateNames();
