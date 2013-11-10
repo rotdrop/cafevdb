@@ -1855,7 +1855,9 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
     $imap = new \Net_IMAP($imaphost,
                           $imapport,
                           $imapsecure == 'starttls' ? true : false, 'UTF-8');
-    if (($ret = $imap->login($mail->Username, $mail->Password)) !== true) {
+    $user = Config::getValue('emailuser');
+    $pass = Config::getValue('emailpassword');
+    if (($ret = $imap->login($user, $pass)) !== true) {
       Util::alert(
         L::t('The IMAP backend returned the error `%s\'. Unfortunate Snafu.<br/>'.
              'I was trying to copy the message to our send-folder, but that failed.',
