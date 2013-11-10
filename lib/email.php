@@ -1358,8 +1358,10 @@ __EOT__;
         echo '<option value="'.$template.'">'.$template.'</option>
 ';
       }
-      echo '</select></td>
-     <td>'.L::t('New Template').'</td>
+      echo '
+        </select>
+     </td>
+     <td><input size="20" value="'.L::t('Save new Template').'" name="newEmailTemplate" type="text" id="newEmailTemplate"></td>
   </tr>
   <tr>
      <td>'.L::t('Recipients').'</td>
