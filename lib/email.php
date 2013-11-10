@@ -939,7 +939,7 @@ Land
   {
     $handle = mySQL::connect($this->opts);
 
-    $query   = "SELECT * FROM `EmailTemmplates` WHERE `Tag` LIKE '".$tag."'";
+    $query   = "SELECT * FROM `EmailTemplates` WHERE `Tag` LIKE '".$tag."'";
     $result  = mySQL::query($query, $handle);
     $line    = mysql_fetch_assoc($result);
     $numrows = mysql_num_rows($result);
