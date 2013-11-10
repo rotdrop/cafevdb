@@ -840,16 +840,19 @@ Land
   private $fileAttach;
   private $deleteAttachment;
 
-  function __construct($user, $templateText = NULL) {
+  function __construct($user) {
     $this->user = $user;
 
-    if (!is_null($templateText) && $templateText != '') {
-      $this->initialTemplate = $templateText;
-    } else {
-      $this->initialTemplate = self::DEFAULT_TEMPLATE;
-    }
+    $this->initialTemplate = self::DEFAULT_TEMPLATE;
 
     Config::init();
+
+    $dbTemplate = $this->fetchTemplate(L::t('Default'));
+    if ($dbTemplate === false) {
+      $this->storeTemplate(L::t('Default'), $this->initialTemplate);
+    } else {
+      $this->initialTemplate = $dbTemplate;
+    }  
 
     self::$constructionMode = Config::$opts['emailtestmode'] != 'off';
 
@@ -913,6 +916,37 @@ Land
     return $text;
   }
   
+  /**Take the text supplied bz $contents and store it in the DB
+   * EmailTemplates table with tag $tag. An existing template with the
+   * same tag will be replaced.
+   */
+  private function storeTemplate($tag, $contents)
+  {
+    $handle = mySQL::connect($this->opts);
+
+    $query = "REPLACE INTO `EmailTemplates` (`Tag`,`Contents`) VALUES ('".$tag."','".$contents."')";
+
+    // Ignore the result at this point.
+    mySQL::query($query, $handle);
+
+    mySQL::close($handle);
+  }
+
+  /**Fetch a specific template from the DB. Return false if that template is not found
+   */
+  private function fetchTemplate($tag)
+  {
+    $handle = mySQL::connect($this->opts);
+
+    $query   = "SELECT * FROM `EmailTemmplates` WHERE `Tag` LIKE '".$tag."'";
+    $result  = mySQL::query($query, $handle);
+    $line    = mysql_fetch_assoc($result);
+    $numrows = mysql_num_rows($result);
+
+    mySQL::close($handle);
+
+    return $numrows == 1 ? $line['Contents'] : false;
+  }
 
   public function headerText()
   {
@@ -1295,7 +1329,8 @@ __EOT__;
   <TABLE class="cafevdb-email-form">
   <tr>
      <td>'.L::t('Template').'</td>
-     <td colspan="2">'.L::t('TODO').'</td>
+     <td>'.L::t('TODO').'</td>
+     <td>'.L::t('New Template').'</td>
   </tr>
   <tr>
      <td>'.L::t('Recipients').'</td>
