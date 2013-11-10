@@ -1283,6 +1283,18 @@ __EOT__;
 
     else if (Util::cgiValue('sendEmail', false) !== false) {
       echo '<div class="cafevdb-error" id="cafevdb-email-error"></div>';
+    } else if (Util::cgiValue('saveEmailTemplate', false) !== false &&
+               Util::cgiValue('newEmailTemplate', false) !== false) {
+      // Save the current message text as new template in the DB (or
+      // replace an existing template), then re-fetch the template
+      // names.
+      $templateTag  = Util::cgiValue('newEmailTemplate');
+      $templateText = $this->message;
+
+      $this->storeTemplate($templateTag, $tempalteText);
+
+      // Re-fetch the names from the DB.
+      $this->templateNames = $this->fetchTemplateNames();
     }
 
     /*
