@@ -1312,7 +1312,12 @@ __EOT__;
     echo '<div class="quickform">';
     /*******************************/
     echo '
-<FORM METHOD="post" ACTION="'.$this->opts['page_name'].'" NAME="Email" enctype="multipart/form-data" class="cafevdb-email-form">';
+<form method="post"
+      action="'.$this->opts['page_name'].'"
+      name="Email"
+      enctype="multipart/form-data"
+      id="cafevdb-email-form"
+      class="cafevdb-email-form">';
     /**** start quick-form cheat ****/
 
     /* Remember address filter for later */

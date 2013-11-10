@@ -117,6 +117,12 @@ $(document).ready(function(){
 
   $('#memberStatusFilter-0').chosen();
   $('#cafevdb-email-template-selector').chosen({ disable_search_threshold: 10});
+  
+  $('cafevdb-email-template-selector').change(function(event) {
+    event.preventDefault();
+    $('#cafevdb-email-form').submit();
+  });
+ 
   //$('#InstrumentenFilter-0').chosen();
 
   $('#cafevdb-email-header-box .viewtoggle').click(function(event) {
