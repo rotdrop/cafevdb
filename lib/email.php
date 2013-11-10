@@ -695,7 +695,7 @@ und aktiviert den Editor'));
     if ($this->form->validate()) {
 
       /*
-       * We implement two further POST action for communication with
+       * We implement two further POST actions for communication with
        * other forms:
        *
        * eraseAll -> if set, restart with default
@@ -741,6 +741,7 @@ und aktiviert den Editor'));
         $this->byStatusSelect->setvalue($this->defaultByStatus());
 
       } elseif (!empty($value['writeMail']) ||
+                Util::cgiValue('saveEmailTemplate') ||
                 Util::cgiValue('sendEmail') ||
                 Util::cgiValue('deleteAttachment')) {
         $this->frozen = true;
@@ -1362,7 +1363,10 @@ __EOT__;
         </select>
      </td>
      <td>
-       <input size="20" value="'.L::t('New Template Name').'" name="newEmailTemplate" type="text" id="newEmailTemplate">
+       <input size="20" placeholder="'.L::t('New Template Name').'"
+                        name="newEmailTemplate"
+                        type="text"
+                        id="newEmailTemplate">
 ';
       $submitString = '<input %1$s title="'.Config::toolTips('save-email-template').'"
                                    type="submit"
