@@ -822,6 +822,7 @@ Land
   private static $constructionMode = true;
 
   private $initialTemplate;
+  private $templateNames;
   private $catchAllEmail;
   private $catchAllName;
   private $projectId;
@@ -854,6 +855,8 @@ Land
     } else {
       $this->initialTemplate = $dbTemplate;
     }  
+
+    $this->templateNames = $this->fetchTemplateNames();
 
     self::$constructionMode = Config::$opts['emailtestmode'] != 'off';
 
@@ -947,6 +950,24 @@ Land
     mySQL::close($handle);
 
     return $numrows == 1 ? $line['Contents'] : false;
+  }
+  
+  /**Return a flat array with all known template names.
+   */
+  private function fetchTemplateNames()
+  {
+    $handle = mySQL::connect($this->opts);
+
+    $query  = "SELECT `Tag` FROM `EmailTemplates` WHERE 1";
+    $result = mySQL::query($query, $handle);
+    $names  = array();
+    while ($line = mysql_fetch_assoc($result)) {
+      $names[] = $line['Tag'];
+    }
+
+    mySQL::close($handle);
+
+    return $names;
   }
 
   public function headerText()
@@ -1327,8 +1348,17 @@ __EOT__;
       echo '
   <TABLE class="cafevdb-email-form">
   <tr>
-     <td>'.L::t('Template').'</td>
-     <td>'.L::t('TODO').'</td>
+     <td><label for="cafevdb-email-template-selector">'.L::t("Template").'</label></td>
+     <td><select size="'.count($this->templateNames).'" class="email-template-selector"
+                 title="'.Config::toolTips("select-email-template").'"
+                 data-placeholder="'.L::t("Select email template").'"
+                 name="emailTemplateSelector"
+                 id="cafevdb-email-template-selector">';
+      foreach ($this->templateNames as $template) {
+        echo '<option value="'.$template.'">'.$template.'</option>
+';
+      }
+      echo '</select></td>
      <td>'.L::t('New Template').'</td>
   </tr>
   <tr>
