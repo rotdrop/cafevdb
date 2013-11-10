@@ -1867,7 +1867,7 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
       $imap->disconnect();
       return false;
     }
-    if (($ret = $imap->appendMessage($mail->GetSentMIMEMessage(), 'Sent')) !== true) {
+    if (($ret = $imap->appendMessage($mimeMessage, 'Sent')) !== true) {
       Util::alert(L::t('Could not copy the message to the "Sent"-folder.</br>'.
                        'Server returned the error: `%s\'',
                        array($ret->toString())),
