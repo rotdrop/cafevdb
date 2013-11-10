@@ -843,9 +843,10 @@ Land
   function __construct($user) {
     $this->user = $user;
 
-    $this->initialTemplate = self::DEFAULT_TEMPLATE;
-
     Config::init();
+    $this->opts = Config::$pmeopts;
+
+    $this->initialTemplate = self::DEFAULT_TEMPLATE;
 
     $dbTemplate = $this->fetchTemplate(L::t('Default'));
     if ($dbTemplate === false) {
@@ -1119,8 +1120,6 @@ __EOT__;
    */
   public function display()
   {
-    $this->opts = Config::$pmeopts;
-
     Util::disableEnterSubmit(); // ? needed ???
 
     // Display a filter dialog
