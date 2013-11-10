@@ -1510,12 +1510,12 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
         // on the imap server.
         $msg = $this->composeAndSend($templateMessage, array(), true);
         if ($msg !== false) {
-          copyToSentFolder($msg);
+          $this->copyToSentFolder($msg);
         }
       } else {
         $msg = $this->composeAndSend($strMessage, $EMails);
         if ($msg !== false) {
-          copyToSentFolder($msg);
+          $this->copyToSentFolder($msg);
         }
       }
   }
