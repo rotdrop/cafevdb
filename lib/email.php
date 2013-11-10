@@ -1867,10 +1867,12 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
       $imap->disconnect();
       return false;
     }
-    if (($ret = $imap->appendMessage($mimeMessage, 'Sent')) !== true) {
-      Util::alert(L::t('Could not copy the message to the "Sent"-folder.</br>'.
-                       'Server returned the error: `%s\'',
-                       array($ret->toString())),
+    if (($ret1 = $imap->appendMessage($mimeMessage, 'Sent')) !== true &&
+        ($ret2 = $imap->appendMessage($mimeMessage, 'INBOX.Sent')) !== true) {
+      Util::alert(L::t('Could not copy the message to neither the "Sent" or the "INBOX.Sent" folder.</br>'.
+                       'Server returned the errors: `%s\' and `%s\'',
+                       array($ret1->toString(),
+                             $ret2->toString())),
                   L::t('Copying to `Sent\'-folder failed.'),
                   'cafevdb-email-error');
       $imap->disconnect();
