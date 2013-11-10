@@ -5,7 +5,7 @@
 namespace CAFEVDB
 {
 
-/** Tool-tips for the phpmyadmin-forms.
+/** Tool-tips for the phpmyedit-forms.
  *
  */
 class Tooltips
@@ -25,6 +25,12 @@ class Tooltips
         'test-dbpassword' => L::t('Check whether the data-base can be accessed with the given account
 information and password. The password will only be stored in the
 configuration storage if the test can be performed successfully.'),
+        'select-email-template' => L::t('Select one of the email templates previously stored in the data-base.'),
+        'save-email-template' => L::t('Save the curret email for later re-usal in the data-base.
+An email template can contain per-member substitutions with the syntax ${MEMBER::VARIABLE},
+where VARIABLE is one of VORNAME, NAME, EMAIL, TELEFON_1, TELEFON_2, STRASSE, PLZ, STADT and LAND.
+There is also one global (i.e. not per-member) substitution ${GLOABL::ORGANIZER} which is substituted
+by the pre-names of the organizing committe in order to compose  greetings.'),
         'emailtest' => L::t('Test the email-settings; try to connect to the SMTP-server and the IMAP-server in turn.'),
         'test-linktarget' => L::t('Try to connect to the specified web-address, will open the web-address in another window or tab, depending your local browser preferences.'),
         'pme-export-csv' => L::t('Export in CSV-format using a semicolon as delimiter (Excel convention)'),
