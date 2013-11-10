@@ -1294,6 +1294,10 @@ __EOT__;
       echo '
   <TABLE class="cafevdb-email-form">
   <tr>
+     <td>'.L::t('Template').'</td>
+     <td colspan="2">'.L::t('TODO').'</td>
+  </tr>
+  <tr>
      <td>'.L::t('Recipients').'</td>
      <td colspan="2">'.L::t('Determined automatically from data-base, see below the email form.').'</td>
   </tr>
