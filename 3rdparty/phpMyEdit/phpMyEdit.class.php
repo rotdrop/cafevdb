@@ -1974,12 +1974,14 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 	function htmlTextarea($name, $css, $k, $value = null, $escape = true, $help = NULL) /* {{{ */
 	{
 		// mce mod start
-		if (isset($this->fdd[$k]['textarea']['html'])) {
-			$mce_tag = 'Editor';
-			if (is_string($this->fdd[$k]['textarea']['html'])) {
-				$mce_tag = $this->fdd[$k]['textarea']['html'];
+		if (isset($this->fdd[$k]['textarea']['css'])) {
+			$css_tag = $this->css['textarea'];
+			if (is_string($this->fdd[$k]['textarea']['css'])) {
+				$mce_tag = $this->fdd[$k]['textarea']['css'];
 			};
-			$css .= ' mce'.$mce_tag;
+			if ($css_tag != '') {
+				$css .= ' '.$css_tag;
+			}
 		};
 		// mce mod end
 		$ret = '<textarea class="'.$css.'" name="'.$name.'"';
@@ -4061,6 +4063,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		isset($opts['url']['images']) && $this->url['images'] = $opts['url']['images'];
 		// CSS classes policy
 		$this->css = @$opts['css'];
+		!isset($this->css['textarea']   && $this->css['textarea'] = '';
 		!isset($this->css['separator']) && $this->css['separator'] = '-';
 		!isset($this->css['prefix'])	&& $this->css['prefix']	   = 'pme';
 		!isset($this->css['page_type']) && $this->css['page_type'] = false;
