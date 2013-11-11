@@ -27,7 +27,7 @@ information and password. The password will only be stored in the
 configuration storage if the test can be performed successfully.'),
         'select-email-template' => L::t('Select one of the email templates previously stored in the data-base.'),
         'new-email-template' => L::t('Enter a short, no-nonsense name for the new template. Please omit spaces.'),
-        'save-email-template' => L::t('Save the curret email for later re-usal in the data-base.
+        'save-email-template' => L::t('Save the current email for later re-usal in the data-base.
 An email template can contain per-member substitutions with the syntax ${MEMBER::VARIABLE},
 where VARIABLE is one of VORNAME, NAME, EMAIL, TELEFON_1, TELEFON_2, STRASSE, PLZ, STADT and LAND.
 There is also one global (i.e. not per-member) substitution ${GLOABL::ORGANIZER} which is substituted

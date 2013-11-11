@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-11-07 22:14+0100\n"
-"PO-Revision-Date: 2013-11-07 22:16+0100\n"
+"POT-Creation-Date: 2013-11-11 09:44+0100\n"
+"PO-Revision-Date: 2013-11-11 09:44+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -156,19 +156,19 @@ msgstr "Also, `Hello World!' muss man nun wirklich nicht übersetzen ..."
 msgid "Done. %d events synchronized, %d new."
 msgstr "Fertig. %d Ereignisse synchronisiert, %d neue."
 
-#: ajax/export/excel.php:85
+#: ajax/export/excel.php:84
 msgid "yes"
 msgstr "ja"
 
-#: ajax/export/excel.php:86
+#: ajax/export/excel.php:85
 msgid "true"
 msgstr "wahr"
 
-#: ajax/export/excel.php:89
+#: ajax/export/excel.php:88
 msgid "no"
 msgstr "nein"
 
-#: ajax/export/excel.php:90
+#: ajax/export/excel.php:89
 msgid "false"
 msgstr "falsch"
 
@@ -673,7 +673,7 @@ msgstr ""
 "Die Größe der Datei, die Sie hochladen wollen, übersteigt die Maximalgröße, "
 "die von diesem Server unterstützt wird."
 
-#: js/email.js:143
+#: js/email.js:154
 msgid "Select Attachment"
 msgstr "Anhang auswählen"
 
@@ -709,7 +709,7 @@ msgstr "Foto auswählen."
 msgid "Error:"
 msgstr "Fehler:"
 
-#: lib/config.php:458
+#: lib/config.php:462
 msgid "birthday"
 msgstr "Geburtstag"
 
@@ -725,134 +725,163 @@ msgstr "Allgemeine Bemerkungen"
 msgid "Photo"
 msgstr "Foto"
 
-#: lib/email.php:450
+#: lib/email.php:465
 msgid "Select Em@il Recipients"
 msgstr "Em@il Adressaten"
 
-#: lib/email.php:458
+#: lib/email.php:473
 msgid "Principal Address Collection"
 msgstr "Grundmenge"
 
-#: lib/email.php:481
+#: lib/email.php:496
 msgid "Select recipients by member status."
 msgstr "Empfänger gemäß Mitgliedsstatus."
 
-#: lib/email.php:482
+#: lib/email.php:497
 msgid "Select Members by Status"
 msgstr "Empfänger gemäß Status"
 
-#: lib/email.php:483
+#: lib/email.php:498
 msgid "Member-Status"
 msgstr "Mitgliedsstatus"
 
-#: lib/email.php:511
+#: lib/email.php:526
 msgid "Email Recipients"
 msgstr "Em@il Empfänger"
 
-#: lib/email.php:512
+#: lib/email.php:527
 msgid "Remaining Recipients"
 msgstr "Verbleibende Empfänger"
 
-#: lib/email.php:513
+#: lib/email.php:528
 msgid "Selected Recipients"
 msgstr "Ausgewählte Empfänger"
 
-#: lib/email.php:527
+#: lib/email.php:542
 msgid "Instrument-Filter"
 msgstr "Instrumenten-Filter"
 
-#: lib/email.php:540
+#: lib/email.php:555
 msgid "Compose Em@il"
 msgstr "Email verfassen"
 
-#: lib/email.php:549
+#: lib/email.php:564
 msgid "Apply Filter"
 msgstr "Filter anwenden"
 
-#: lib/email.php:555
+#: lib/email.php:570
 msgid "Reset Filter"
 msgstr "Filter zurücksetzen"
 
-#: lib/email.php:564
+#: lib/email.php:579
 msgid "Musicians without Em@il"
 msgstr "Musiker ohne Em@il"
 
-#: lib/email.php:575
+#: lib/email.php:590
 msgid "Count: "
 msgstr "Anzahl: "
 
-#: lib/email.php:1142 lib/projects.php:203 lib/projects.php:443
+#: lib/email.php:963
+msgid "and"
+msgstr "und"
+
+#: lib/email.php:1366 lib/projects.php:203 lib/projects.php:443
 msgid "Events"
 msgstr "Termine"
 
-#: lib/email.php:1145
+#: lib/email.php:1369
 msgid "Attached Events"
 msgstr "Angehängte Termine"
 
-#: lib/email.php:1157
+#: lib/email.php:1381
 #, php-format
 msgid "Edit Event %s"
 msgstr "Ereignis %s bearbeiten"
 
-#: lib/email.php:1180
+#: lib/email.php:1404
+msgid "Template"
+msgstr "Vorlage"
+
+#: lib/email.php:1408
+msgid "Select email template"
+msgstr "Vorlage auswählen"
+
+#: lib/email.php:1420
+msgid "New Template Name"
+msgstr "Neue Vorlage"
+
+#: lib/email.php:1430
+msgid "Save as Template"
+msgstr "Vorlage speichern"
+
+#: lib/email.php:1436
 msgid "Recipients"
 msgstr "Adressaten"
 
-#: lib/email.php:1181
+#: lib/email.php:1437
 msgid "Determined automatically from data-base, see below the email form."
 msgstr ""
 "Siehe unterhalb des Formulars. Auswahl über `Adressen bearbeiten'-Knopf "
 "abändern."
 
-#: lib/email.php:1192
+#: lib/email.php:1448
 msgid "Subject"
 msgstr "Betreff"
 
-#: lib/email.php:1198
+#: lib/email.php:1454
 msgid "Message-Body"
 msgstr "Nachricht"
 
-#: lib/email.php:1202
+#: lib/email.php:1458
 msgid "Sender-Name"
 msgstr "Absender-Name"
 
-#: lib/email.php:1207
+#: lib/email.php:1463
 msgid "Sender-Email"
 msgstr "Absender-Email"
 
-#: lib/email.php:1208
+#: lib/email.php:1464
 msgid "Tied to"
 msgstr "Vorgegeben:"
 
-#: lib/email.php:1211
+#: lib/email.php:1467
 msgid "Add Attachment"
 msgstr "Anhang hinzufügen"
 
-#: lib/email.php:1217 lib/email.php:1218
+#: lib/email.php:1473 lib/email.php:1474
 msgid "Upload new File"
 msgstr "Datei hochladen"
 
-#: lib/email.php:1223 lib/email.php:1224
+#: lib/email.php:1479 lib/email.php:1480
 msgid "Select from Owncloud"
 msgstr "Datei aus der `Cloud'"
 
-#: lib/email.php:1236
+#: lib/email.php:1492
 msgid "Remove"
 msgstr "Entfernen"
 
-#: lib/email.php:1244
+#: lib/email.php:1500
 msgid "Send Em@il"
 msgstr "Em@il verschicken"
 
-#: lib/email.php:1247
+#: lib/email.php:1503
 msgid "Edit recipients"
 msgstr "Adressen bearbeiten"
 
-#: lib/email.php:1253 templates/blogedit.php:18
+#: lib/email.php:1509 templates/blogedit.php:18
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: lib/email.php:1313
+#: lib/email.php:1568
+#, php-format
+msgid "Invalid template mail, first unknown left-over parameter is %s"
+msgstr "Ungültige Vorlage, erster unbekannter Parameter ist %s"
+
+#: lib/email.php:1570
+msgid "Unknown Variable"
+msgstr "Unbekannter Platzhalter."
+
+#: lib/email.php:1576
 msgid ""
 "No recipients specified, you possibly forgot to shift items from the left "
 "select box (potential recipients) to the right select box (actual "
@@ -864,11 +893,11 @@ msgstr ""
 "Adressaten zu verschieben. Bitte den `Adressen bearbeiten'-Knopf aktivieren "
 "und Empfänger für diese Email angeben."
 
-#: lib/email.php:1314
+#: lib/email.php:1577
 msgid "No recipients"
 msgstr "Keine Adressaten"
 
-#: lib/email.php:1320
+#: lib/email.php:1583
 #, php-format
 msgid ""
 "The subject must not consist of `%s' as only part.<br/>Please correct that "
@@ -877,11 +906,11 @@ msgstr ""
 "Die Betreffzeile sollte nicht nur aus `%s' bestehen.<br/>Bitte korrigieren "
 "und dann den `Send'-Button noch einmal anklicken."
 
-#: lib/email.php:1323
+#: lib/email.php:1586
 msgid "Incomplete Subject"
 msgstr "Unvollständiger Betreff"
 
-#: lib/email.php:1328
+#: lib/email.php:1591
 msgid ""
 "The sender-name should not be empty.<br/>Please correct that and then hit "
 "the `Send'-button again."
@@ -889,23 +918,23 @@ msgstr ""
 "Der Absender-Name sollte nicht leer sein.<br/>Bitte korrigieren und dann den "
 "`Send'-Button noch einmal anklicken."
 
-#: lib/email.php:1330
+#: lib/email.php:1593
 msgid "Descriptive Sender Name"
 msgstr "Name des Absenders"
 
-#: lib/email.php:1486
+#: lib/email.php:1832
 msgid "The email-backend throwed an exception stating:<br/>"
 msgstr "Fehler beim Generieren der Nachricht:<br/>"
 
-#: lib/email.php:1488
+#: lib/email.php:1834
 msgid "Please correct the problem and then click on the `Send'-button again."
 msgstr "Bitte korrigieren und dann den `Send'-Button noch einmal anklicken."
 
-#: lib/email.php:1489 lib/email.php:1634
+#: lib/email.php:1835 lib/email.php:1976
 msgid "Caught an exception"
 msgstr "Fehler"
 
-#: lib/email.php:1603
+#: lib/email.php:1945
 #, php-format
 msgid ""
 "A message with exactly the same text to exactly the same recipients has "
@@ -916,29 +945,29 @@ msgstr ""
 "Empfängern wurde bereits zu folgenden Zeitpunkten gesendet:</br>%s<br/"
 ">Duplikate von Massen-Mails werden nicht versendet!!!"
 
-#: lib/email.php:1609
+#: lib/email.php:1951
 msgid "Duplicate Email"
 msgstr "Email Duplikat"
 
-#: lib/email.php:1617
+#: lib/email.php:1959
 msgid "Sending failed for an unknown reason. Sorry."
 msgstr "Der Emailversand ist leider aus unbekannten Gründen fehlgeschlagen."
 
-#: lib/email.php:1618
+#: lib/email.php:1960
 msgid "General Failure reading your hard-disk ... just kidding."
 msgstr ""
 "General Failure is reading your hard-disk ... who is that `General Failure`?"
 
-#: lib/email.php:1622
+#: lib/email.php:1964
 msgid "Message has been sent, at least: no error from our side!"
 msgstr ""
 "Nachricht wurde versendet; bzw.: das Web-Skript hat keinen Fehler bemerkt"
 
-#: lib/email.php:1623
+#: lib/email.php:1965
 msgid "Message has been sent"
 msgstr "Nachricht wurde versendet"
 
-#: lib/email.php:1631
+#: lib/email.php:1973
 #, php-format
 msgid ""
 "During send, the email-backend throwed an exception stating:<br/>`%s'</"
@@ -948,7 +977,7 @@ msgstr ""
 ">geantwortet.<br/>Bitte korrigieren und dann den `Send'-Button noch einmal "
 "anklicken."
 
-#: lib/email.php:1653
+#: lib/email.php:2004
 #, php-format
 msgid ""
 "The IMAP backend returned the error `%s'. Unfortunate Snafu.<br/>I was "
@@ -957,25 +986,25 @@ msgstr ""
 "Das IMAP-Backend hat das Kopieren der Nachricht in den\n"
 "Ordner für gesendete Nachrichten mit dem Fehler `%s' abgebrochen."
 
-#: lib/email.php:1656
+#: lib/email.php:2007
 msgid "IMAP connection failed"
 msgstr "Die IMAP-Verbindung ist fehlgeschlagen."
 
-#: lib/email.php:1662
+#: lib/email.php:2014
 #, php-format
 msgid ""
-"Could not copy the message to the send-folder.</br>Server returned the "
-"error: `%s'"
+"Could not copy the message to neither the \"Sent\" or the \"INBOX.Sent\" "
+"folder.</br>Server returned the errors: `%s' and `%s'"
 msgstr ""
 "Konnte die Nachricht nicht den Ordner für gesendete Nachrichten kopieren;\n"
-"der Server hat mit dem Fehler `%s' geantwortet."
+"der Server hat mit dem Fehler `%s' bzw. `%s' geantwortet."
 
-#: lib/email.php:1665
+#: lib/email.php:2018
 msgid "Copying to `Sent'-folder failed."
 msgstr ""
 "Das Kopieren in den Orden für gesendete Nachrichten ist fehlgeschlagen."
 
-#: lib/email.php:1720
+#: lib/email.php:2075
 #, php-format
 msgid ""
 "The %s address `%s' seems to be invalid.<br/>Please correct that first and "
@@ -985,11 +1014,11 @@ msgstr ""
 "Die %s-Adresse `%s' scheint ein ungültiges Format zu haben.</br>Bitte "
 "korrigieren und dann den `Send'-Button noch einmal anklicken."
 
-#: lib/email.php:1724
+#: lib/email.php:2079
 msgid "Invalid Email Address"
 msgstr "Ungültige Em@il Adresse"
 
-#: lib/email.php:1732
+#: lib/email.php:2087
 msgid "recipient"
 msgstr "Adressat"
 
@@ -1313,6 +1342,34 @@ msgstr ""
 "Test erfolgreich absolviert wurde."
 
 #: lib/tooltips.php:28
+msgid "Select one of the email templates previously stored in the data-base."
+msgstr ""
+"Vorlage aus dem Vorlagen-Pool auswählen; neue Vorlagen können mittels "
+"``Vorlage speichern'' erzeugt werden."
+
+#: lib/tooltips.php:29
+msgid ""
+"Enter a short, no-nonsense name for the new template. Please omit spaces."
+msgstr "Kurzbezeichnung für die Vorlage eingeben (bitte keine Leerzeichen)."
+
+#: lib/tooltips.php:30
+msgid ""
+"Save the current email for later re-usal in the data-base.\n"
+"An email template can contain per-member substitutions with the syntax "
+"${MEMBER::VARIABLE},\n"
+"where VARIABLE is one of VORNAME, NAME, EMAIL, TELEFON_1, TELEFON_2, "
+"STRASSE, PLZ, STADT and LAND.\n"
+"There is also one global (i.e. not per-member) substitution ${GLOABL::"
+"ORGANIZER} which is substituted\n"
+"by the pre-names of the organizing committe in order to compose  greetings."
+msgstr ""
+"Speichert den aktuellen Text als Vorlage in der Datenbank.\n"
+"Eine Vorlage kann Platzhalter für Mitgliedsdaten enthalten in der Form ${MEMBER::VARIABLE},\n"
+"wobei VARIABLE eines der Schlüsselwörter VORNAME, NAME, EMAIL, TELEFON_1, TELEFON_2, STRASSE, PLZ, STADT, LAND und GEBURTSTAG\n"
+"sein kann. Es gibt auch eine ``globale'' Variable ${GLOBAL::ORGANIZER},\n"
+"die mit den Vornamen der Vorstandsmitglieder ersetzt wird, um Grußformeln zu erzeugen."
+
+#: lib/tooltips.php:35
 msgid ""
 "Test the email-settings; try to connect to the SMTP-server and the IMAP-"
 "server in turn."
@@ -1320,7 +1377,7 @@ msgstr ""
 "Email-Einstellungen testen; es wird versucht, nacheinander eine Verbindung "
 "zum SMTP-Server und zum IMAP-Server aufzubauen."
 
-#: lib/tooltips.php:29
+#: lib/tooltips.php:36
 msgid ""
 "Try to connect to the specified web-address, will open the web-address in "
 "another window or tab, depending your local browser preferences."
@@ -1328,11 +1385,11 @@ msgstr ""
 "Versuche, die eingestellte Web-Adresse in einen anderen Fenster oder Tab zu "
 "öffnen (abhängig von den Einstellungen des Web-Browsers)."
 
-#: lib/tooltips.php:30
+#: lib/tooltips.php:37
 msgid "Export in CSV-format using a semicolon as delimiter (Excel convention)"
 msgstr "Export im CSV-Format mit Semikolon als Trennzeichen (Excel kompatibel)"
 
-#: lib/tooltips.php:31
+#: lib/tooltips.php:38
 msgid ""
 "Export as HTML page without navigation elements; can also be loaded into "
 "your office-programs."
@@ -1340,11 +1397,11 @@ msgstr ""
 "Export als HTML-Seite ohne Navigations-ELement; kann mit üblichen "
 "Textverarbeitungsprogrammen geöffnet werden."
 
-#: lib/tooltips.php:32
+#: lib/tooltips.php:39
 msgid "Export as `full-featured' Excel-2007 table, `.xslx'."
 msgstr "Export als Excel-2007-Tabelle im `.xslx'-Format."
 
-#: lib/tooltips.php:33
+#: lib/tooltips.php:40
 msgid ""
 "Export as HTML page, but set the file type to `spread-sheed'. Should also be "
 "readable by standard office-programs as `Excel'-table."
@@ -1353,7 +1410,7 @@ msgstr ""
 "gesetzt. Sollte von üblichen Tabellen-Kalkulations-Programmen geöffnet "
 "werden können."
 
-#: lib/tooltips.php:34
+#: lib/tooltips.php:41
 msgid ""
 "Export the visible part of the data-base to an office-format. The `Excel'-"
 "export should produce useful input for either Libre- or OpenOffice or for "
@@ -1364,13 +1421,13 @@ msgstr ""
 "Tabellen-Format, das von üblichen Büro-Anwendungen gelesen werden\n"
 "kann (z.B. Libre-, Open-Office, Excel)"
 
-#: lib/tooltips.php:35
+#: lib/tooltips.php:42
 msgid ""
 "Choose a file to attach from the files stored remotely on in the OwnCloud "
 "storage area."
 msgstr "Ein Attachment aus dem Owncloud-Datei-System auswählen."
 
-#: lib/tooltips.php:36
+#: lib/tooltips.php:43
 msgid ""
 "Upload a file from your local computer as attachment. The file will be "
 "removed from the remote-system after the message has been sent."
@@ -1378,7 +1435,7 @@ msgstr ""
 "Eine Datei als Attachment hochladen. Die Datei wird vom Server gelöscht, "
 "sobald die Nachricht versendet wurde."
 
-#: lib/tooltips.php:37
+#: lib/tooltips.php:44
 msgid ""
 "Add the instruments of the actually registered musicians to the instrument-"
 "table for the project."
@@ -1386,7 +1443,7 @@ msgstr ""
 "Die Instrumente der bereits registrierten Musiker in die Besetzungstabelle "
 "eintragen; die Soll-Besetzungszahlen werden allerdings nicht angepasst."
 
-#: lib/tooltips.php:38
+#: lib/tooltips.php:45
 msgid ""
 "Add the musician to the project. A new form will open were details like the "
 "instrument etc. can be adjustetd."
@@ -1394,7 +1451,7 @@ msgstr ""
 "Fügt den Musiker zum Projekt hinzu. Auf der Folgeseite können dann Details "
 "eingetragen werden."
 
-#: lib/tooltips.php:39
+#: lib/tooltips.php:46
 msgid ""
 "Transpose the displayed table; may be beneficial for tables with only a few "
 "rows but many columns!"
@@ -1402,13 +1459,13 @@ msgstr ""
 "Aktuelle Tabelle transponieren, mag für Tabellen mit vielen Spalten und "
 "wenigen Zeilen übersichtlicher sein."
 
-#: lib/tooltips.php:40
+#: lib/tooltips.php:47
 msgid "Open a page with the musicians registered for the respective project."
 msgstr ""
 "Öffnet eine Seite mit allen Musikern, die für dieses Projekt registriert "
 "sind."
 
-#: lib/tooltips.php:41
+#: lib/tooltips.php:48
 msgid ""
 "Open a dialog with all known\n"
 "events associated to the project.\n"
@@ -1418,7 +1475,7 @@ msgstr ""
 "Tabelle mit allen Terminen zum jeweiligen Projekt.\n"
 "Termine können dort hinzugefügt, geändert oder auch gelöscht werden."
 
-#: lib/tooltips.php:45
+#: lib/tooltips.php:52
 msgid ""
 "Recompute the link between projects and events, using the event-categories "
 "as primary key."
@@ -1426,7 +1483,7 @@ msgstr ""
 "Zuordnung der Termine zu den Projekten neu berechnen. Dabei dienen die "
 "Projekt-Kategorien als Kriterium."
 
-#: lib/tooltips.php:46
+#: lib/tooltips.php:53
 msgid ""
 "Mark the respective event for being\n"
 "sent by email as ICS-attachment per email.\n"
@@ -1440,27 +1497,27 @@ msgstr ""
 "Versand an ausgewählte Empfänger vorgenommen werden kann. Alternativ können "
 "die ausgwählten Termine auch einfach herunter-geladen werden."
 
-#: lib/tooltips.php:52
+#: lib/tooltips.php:59
 msgid "Add a new concert-event to the project."
 msgstr ""
 "Neuen Konzert-Termin für das Projekt in den Konzerte-Kalender eintragen."
 
-#: lib/tooltips.php:53
+#: lib/tooltips.php:60
 msgid "Add a new rehearsal-event to the project."
 msgstr "Neuen Proben-Termin für das Projekt in den Proben-Kalender eintragen."
 
-#: lib/tooltips.php:54
+#: lib/tooltips.php:61
 msgid "Add some other event to the project."
 msgstr "Sonstigen Termin für das Projekt eintragen."
 
-#: lib/tooltips.php:56
+#: lib/tooltips.php:63
 msgid ""
 "Add a private management event which is not exposed to the rest of the world."
 msgstr ""
 "Vorstands-Termin hinzufügen. Die Vorstandstermine sind nicht öffentlich "
 "sichtbar."
 
-#: lib/tooltips.php:58
+#: lib/tooltips.php:65
 msgid ""
 "Click to open an email-form\n"
 "and send the selected events to\n"
@@ -1469,23 +1526,23 @@ msgstr ""
 "Ausgewählte Termine als ICS-Attachment per Email veschicken; öffnet ein "
 "Email-Formular."
 
-#: lib/tooltips.php:61
+#: lib/tooltips.php:68
 msgid ""
 "Select all events for\n"
 "email-submission"
 msgstr "Alle Termin für Download bzw. Email-Attachment auswählen."
 
-#: lib/tooltips.php:63
+#: lib/tooltips.php:70
 msgid ""
 "Exclude all events from\n"
 "email-submission"
 msgstr "Auswahl zum Download bzw. Email-Versand bei allen Terminen entfernen."
 
-#: lib/tooltips.php:65
+#: lib/tooltips.php:72
 msgid "Modify the event."
 msgstr "Termin ändern."
 
-#: lib/tooltips.php:66
+#: lib/tooltips.php:73
 msgid ""
 "Delete the event from the system\n"
 "(no undo possible)."
@@ -1493,7 +1550,7 @@ msgstr ""
 "Termin komplett aus dem Kalender löschen, kann nicht rückgängig gemacht "
 "werden."
 
-#: lib/tooltips.php:68
+#: lib/tooltips.php:75
 msgid ""
 "Detach the respective event\n"
 "from the project, but do not\n"
@@ -1506,18 +1563,18 @@ msgstr ""
 "Es ist möglich, den Termin wieder zum Projekt hinzuzufügen, indem man den "
 "Projekt-Namen zu der Katergorien-Liste des Termins hinzufügt."
 
-#: lib/tooltips.php:75
+#: lib/tooltips.php:82
 msgid ""
 "  Klick mich, um das Sortieren\n"
 "nach diesem Feld ein-\n"
 "oder auszuschalten!"
 msgstr "Anklicken, um das Sortiern nach diesem Feld ein- oder auszuschalten."
 
-#: lib/tooltips.php:79
+#: lib/tooltips.php:86
 msgid "  Klick mich, um die Sortierreihenfolge umzukehren!"
 msgstr "Anklicken, um die Sortierreihenfolge umzukehren."
 
-#: lib/tooltips.php:81
+#: lib/tooltips.php:88
 msgid ""
 "  Klick mich, um eine Em@il an die ausgewählten\n"
 "Musiker zu versenden. Auf der folgenden Seite kann\n"
@@ -1533,7 +1590,7 @@ msgstr ""
 "`angezeigt' bedeutet: nicht nur die auf der aktuellen Anzeige-Seite,\n"
 "sondern alle, die den Such-Kriterien entsprechen."
 
-#: lib/tooltips.php:90
+#: lib/tooltips.php:97
 msgid ""
 "  Klick mich, um alle gerade\n"
 "angezeigten Musiker zu der\n"
@@ -1548,7 +1605,7 @@ msgstr ""
 "hinzuzufügen. `angezeigt' bedeutet: nicht nur die auf der aktuellen\n"
 "Anzeige-Seite, sondern alle, die den Such-Kriterien entsprechen."
 
-#: lib/tooltips.php:99
+#: lib/tooltips.php:106
 msgid ""
 "  Klick mich, um alle gerade\n"
 "angezeigten Musiker von der\n"
@@ -1558,7 +1615,7 @@ msgstr ""
 "angezeigten Musiker von der\n"
 "Em@il-Auswahl zu entfernen"
 
-#: lib/tooltips.php:103
+#: lib/tooltips.php:110
 msgid ""
 "  Adressaten in potentielle\n"
 "Massenmail Adressliste aufnehmen.\n"
@@ -1572,7 +1629,7 @@ msgstr ""
 "vor dem Senden der Em@il noch\n"
 "korrigieren."
 
-#: lib/tooltips.php:109
+#: lib/tooltips.php:116
 msgid ""
 "  Click me to add all selected musicians\n"
 "to the selected project. All selected\n"
@@ -1582,7 +1639,7 @@ msgstr ""
 "Musiker auf alle Seitenzum aktuellen\n"
 "Projekt hinzuzufügen."
 
-#: lib/tooltips.php:113
+#: lib/tooltips.php:120
 msgid ""
 "  Click me to pre-select\n"
 "all musicians on all pages\n"
@@ -1596,7 +1653,7 @@ msgstr ""
 "den ``Alle zu ...''-Knopf links anklicken, um\n"
 "die Musiker tatsächlich zum Projekt hinzufügen."
 
-#: lib/tooltips.php:119
+#: lib/tooltips.php:126
 msgid ""
 "  Click me to remove\n"
 "all musicians on all pages\n"
@@ -1608,7 +1665,7 @@ msgstr ""
 "Vorauswahl für das aktuelle\n"
 "Projekt zu entfernen."
 
-#: lib/tooltips.php:124
+#: lib/tooltips.php:131
 msgid ""
 "  Check me to pre-select\n"
 "this musician for the current\n"
@@ -1624,7 +1681,7 @@ msgstr ""
 "ausgewählten Musiker tatsächlich zum\n"
 "Projekt hinzufügen."
 
-#: lib/tooltips.php:131
+#: lib/tooltips.php:138
 msgid ""
 "  Click me to add a new\n"
 "row to the current table."
@@ -1632,7 +1689,7 @@ msgstr ""
 "  Klich mich an, um einen neuen Datensatz\n"
 "zur aktuellen Tabelle hinzuzufügen."
 
-#: lib/tooltips.php:134
+#: lib/tooltips.php:141
 msgid ""
 "  Klick mich, um die\n"
 "Sortierreihenfolge auf die\n"
@@ -1642,7 +1699,7 @@ msgstr ""
 "Sortierreihenfolge auf die\n"
 "Voreinstellung zurückzusetzen."
 
-#: lib/tooltips.php:137
+#: lib/tooltips.php:144
 msgid ""
 "  Klick mich, um den\n"
 "aktuellen Filter zu löschen."
@@ -1650,7 +1707,7 @@ msgstr ""
 "Klick mich, um den\n"
 "aktuellen Filter zu löschen."
 
-#: lib/tooltips.php:140
+#: lib/tooltips.php:147
 msgid ""
 "  Klick mich, um die\n"
 "Suchkriterien zu verstecken."
@@ -1658,13 +1715,13 @@ msgstr ""
 "Klick mich, um die\n"
 "Suchkriterien zu verstecken."
 
-#: lib/tooltips.php:143
+#: lib/tooltips.php:150
 msgid ""
 "  Klick mich, um die\n"
 "Suchkriterien anzuzeigen."
 msgstr "Klick mich, um die Suchkriterien anzuzeigen."
 
-#: lib/tooltips.php:146
+#: lib/tooltips.php:153
 #, php-format
 msgid ""
 "  Klick mich, um die\n"
@@ -1677,7 +1734,7 @@ msgstr ""
 "können in den Feldern eingegeben werden.\n"
 "Als Platzhalter verwendet man `%%'."
 
-#: lib/tooltips.php:151
+#: lib/tooltips.php:158
 #, php-format
 msgid ""
 "  Feld für Suchkriterien.\n"
@@ -1690,11 +1747,11 @@ msgstr ""
 "können in den Feldern eingegeben werden.\n"
 "Als Platzhalter verwendet man `%%'."
 
-#: lib/tooltips.php:156
+#: lib/tooltips.php:163
 msgid "Einzelnen Datensatz anzeigen"
 msgstr "Einzelnen Datensatz anzeigen"
 
-#: lib/tooltips.php:157
+#: lib/tooltips.php:164
 msgid ""
 "Einzelnen Datensatz anzeigen,\n"
 "zeigt ein neues Formular mit\n"
@@ -1706,7 +1763,7 @@ msgstr ""
 "detaillierten Eingabefeldern\n"
 "und Abbruchmöglichkeit."
 
-#: lib/tooltips.php:161
+#: lib/tooltips.php:168
 msgid ""
 "Einzelnen Datensatz kopieren,\n"
 "zeigt ein neues Formular mit\n"
@@ -1718,7 +1775,7 @@ msgstr ""
 "detaillierten Eingabefeldern\n"
 "und Abbruchmöglichkeit."
 
-#: lib/tooltips.php:165
+#: lib/tooltips.php:172
 msgid ""
 "Einzelnen Datensatz löschen,\n"
 "zeigt den aktuellen Datensatz zunächst an.\n"
@@ -1732,7 +1789,7 @@ msgstr ""
 "weiteren Bestätigung. Trotzdem:\n"
 "VORSICHT!."
 
-#: lib/tooltips.php:171
+#: lib/tooltips.php:178
 msgid "nothing"
 msgstr "Nichts"
 
