@@ -117,6 +117,21 @@ $(document).ready(function(){
 
   $('#memberStatusFilter-0').chosen();
   $('#cafevdb-email-template-selector').chosen({ disable_search_threshold: 10});
+
+  $('#memberStatusFilter-0').change(function(event) {
+    event.preventDefault();
+    $('#emailrecipients').submit();
+  });
+
+  $('#selectedUserGroup-fromProject-0').click(function(event) {
+    event.preventDefault();
+    $('#emailrecipients').submit();
+  });
+
+  $('#selectedUserGroup-exceptProject-0').click(function(event) {
+    event.preventDefault();
+    $('#emailrecipients').submit();
+  });
   
   $('#cafevdb-email-template-selector').change(function(event) {
     event.preventDefault();
