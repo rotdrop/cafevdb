@@ -2227,10 +2227,13 @@ __EOT__;
 
     $opts['tb'] = 'SentEmail';
 
+    $project = Util::cgiValue('Project','');
+    $projectId = Util::cgiValue('ProjectId',-1);
+    $recordsPerPage = Util::cgiValue('RecordsPerPage',-1);
     $recordsPerPage = Util::cgiValue('RecordsPerPage',-1);
 
-    $opts['cgi']['persist'] = array('Project' => $this->project,
-                                    'ProjectId' => $this->projectId,
+    $opts['cgi']['persist'] = array('Project' => $project,
+                                    'ProjectId' => $projectId,
                                     'Table' => $opts['tb'],
                                     'Template' => 'email-history',
                                     'RecordsPerPage' => $recordsPerPage);
