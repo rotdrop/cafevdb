@@ -1644,13 +1644,13 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
                                        htmlspecialchars($dbdata[$column]),
                                        $strMessage);
           }
-          $this->composeAndSend($strMessage, array($recipient), false);
+          $this->composeAndSend($strMessage, array($recipient), false, true);
         }
         // Finally send one message without template substitution (as
         // this makes no sense) to all Cc:, Bcc: recipients and the
         // catch-all. This Message also gets copied to the Sent-folder
         // on the imap server.
-        $msg = $this->composeAndSend($templateMessage, array(), true);
+        $msg = $this->composeAndSend($templateMessage, array(), true, false);
         if ($msg !== false) {
           $this->copyToSentFolder($msg);
         }
@@ -1680,7 +1680,7 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
    * @return The sent Mime-message which then may be stored in the
    * Sent-Folder on the imap server (for example).
    */
-  private function composeAndSend($strMessage, $EMails, $addCC = true)
+  private function composeAndSend($strMessage, $EMails, $addCC = true, $noSuccessAlert = false)
   {
     // If we are sending to a single address (i.e. if $strMessage has
     // been constructed with per-member variable substitution), then
@@ -1961,9 +1961,11 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
                     'cafevdb-email-error');
         return false;
       } else {
-        Util::alert(L::t('Message has been sent, at least: no error from our side!'),
-                    L::t('Message has been sent'),
-                    'cafevdb-email-error');
+        if (!$noSuccessAlert) {
+          Util::alert(L::t('Message has been sent, at least: no error from our side!'),
+                      L::t('Message has been sent'),
+                      'cafevdb-email-error');
+        }
         // Log the message to our data-base
         mySQL::query($logquery, $handle);  
       }

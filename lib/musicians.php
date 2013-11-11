@@ -333,11 +333,12 @@ __EOT__;
     /* Make "Status" a set, 'soloist','conductor','noemail', where in
      * general the first two imply the last.
      */
-    $opts['fdd']['MemberStatus'] = array('name'     => strval(L::t('Member Status')),
-                                         'select'   => 'O',
-                                         'maxlen'   => 128,
-                                         'sort'     => true,
-                                         'values2'  => $this->memberStatusNames);
+    $opts['fdd']['MemberStatus'] = array('name'    => strval(L::t('Member Status')),
+                                         'select'  => 'O',
+                                         'maxlen'  => 128,
+                                         'sort'    => true,
+                                         'values2' => $this->memberStatusNames,
+                                         'tooltip' => config::toolTips('member-status'));
 
     $opts['fdd']['Remarks'] = array('name'     => strval(L::t('Remarks')),
                                     'select'   => 'T',

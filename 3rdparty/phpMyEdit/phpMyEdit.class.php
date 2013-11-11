@@ -1946,14 +1946,16 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		}
 		$found = false;
 		foreach ($kv_array as $key => $value) {
-			$ret .= '<input type="'.($multiple ? 'checkbox' : 'radio').'" name="';
+			$labelhelp = $help
+				? ' title="'.htmlspecialchars($help).'" '
+				: $this->fetchToolTip($css, $name, $css.'radiolabel');
+			$inputhelp = $help
+				? ' title="'.htmlspecialchars($help).'" '
+				: $this->fetchToolTip($css, $name, $css.'radio');
+			$ret .= '<label'.$labelhelp.'><input type="'.($multiple ? 'checkbox' : 'radio').'" name="';
 			$ret .= htmlspecialchars($name).'[]" value="'.htmlspecialchars($key).'"';
 			$ret .= ' class="'.htmlspecialchars($css).'"';
-			if ($help) {
-				$ret .= ' title="'.htmlspecialchars($help).'" ';
-			} else {
-				$ret .= $this->fetchToolTip($css, $name, $css.'radio');
-			}
+			//$ret .= $inputhelp; // not need if labelhelp
 			if ((! $found || $multiple) && in_array((string) $key, $selected, 1)
 				|| (count($selected) == 0 && ! $found && ! $multiple)) {
 				$ret  .= ' checked';
@@ -1964,7 +1966,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			}
 			$strip_tags && $value = strip_tags($value);
 			$escape		&& $value = htmlspecialchars($value);
-			$ret .= '>'.$value.'<br>'."\n";
+			$ret .= '>'.$value.'</label><br>'."\n";
 		}
 		return $ret;
 	} /* }}} */
