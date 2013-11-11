@@ -238,7 +238,7 @@ __EOT__;
                                         'select'   => 'T',
                                         'maxlen'   => 1024,
                                         'css'      => array('postfix' => 'projectextra'),
-                                        'textarea' => array('css' => Config::$opts['editor']['off'],,
+                                        'textarea' => array('css' => Config::$opts['editor']['off'],
                                                             'rows' => 1,
                                                             'cols' => 128),
                                         'sort'     => false,

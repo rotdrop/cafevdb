@@ -248,7 +248,7 @@ __EOT__;
                                         'select'   => 'T',
                                         'maxlen'   => 65535,
                                         'css'      => array('postfix' => 'remarks'),
-                                        'textarea' => array('css' => Config:$opts['editor']['on'],
+                                        'textarea' => array('css' => Config::$opts['editor']['on'],
                                                             'rows' => 5,
                                                             'cols' => 50),
                                         'escape' => false,

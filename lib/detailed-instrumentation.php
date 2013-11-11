@@ -303,7 +303,7 @@ __EOT__;
                                     'select'   => 'T',
                                     'options'  => $ROopts,
                                     'maxlen'   => 65535,
-                                    'textarea' => array('css' => Config::$opts['editor']['off'],,
+                                    'textarea' => array('css' => Config::$opts['editor']['off'],
                                                         'rows' => 2,
                                                         'cols' => 32),
                                     'escape'   => false,
