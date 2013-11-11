@@ -150,7 +150,7 @@ $(document).ready(function(){
   $('#controls button').tipsy({gravity:'nw', fade:true});
   $('.pme-sort').tipsy({gravity: 'n', fade:true});
   $('.pme-misc-check').tipsy({gravity: 'nw', fade:true});
-  $('label').tipsy({gravity:'ne', fade:true});
+  $('label').tipsy({gravity:'se', fade:true});
   $('.header-right img').tipsy({gravity:'ne', fade:true});
   $('img').tipsy({gravity:'nw', fade:true});
 

@@ -118,10 +118,14 @@ $(document).ready(function(){
   $('#memberStatusFilter-0').chosen();
   $('#cafevdb-email-template-selector').chosen({ disable_search_threshold: 10});
   
-  $('cafevdb-email-template-selector').change(function(event) {
+  $('#cafevdb-email-template-selector').change(function(event) {
     event.preventDefault();
     $('#cafevdb-email-form').submit();
   });
+
+  $('div.chosen-container').tipsy({gravity:'se', fade:true});
+  $('li.active-result').tipsy({gravity:'w', fade:true});
+  $('label').tipsy({gravity:'ne', fade:true});
  
   //$('#InstrumentenFilter-0').chosen();
 

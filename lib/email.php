@@ -335,6 +335,7 @@ class EmailFilter {
                          'Postleitzahl',
                          'Stadt',
                          'Land',
+                         'Geburtstag',
                          'MemberStatus');
     $sep = '`,`';
     $fields = '`'.$id.$sep.implode($sep, $columnNames).'`';
@@ -720,6 +721,10 @@ und aktiviert den Editor'));
             array('selectedBaseGroup' => $this->userBase));
         }
 
+        $this->memberFilter = $this->defaultByStatus();
+        /* Install default "no-email" stuff */
+        $this->byStatusSelect->setvalue($this->defaultByStatus());
+
         /* Ok, this means we must re-fetch some stuff from the DB */
         $dbh = mySQL::connect($this->opts);
 
@@ -737,11 +742,9 @@ und aktiviert den Editor'));
         /* Also update the "no email" notice. */
         $this->updateNoEmailForm();
 
-        /* Install default "no-email" stuff */
-        $this->byStatusSelect->setvalue($this->defaultByStatus());
-
       } elseif (!empty($value['writeMail']) ||
                 Util::cgiValue('saveEmailTemplate') ||
+                Util::cgiValue('emailTemplateSelector') ||
                 Util::cgiValue('sendEmail') ||
                 Util::cgiValue('deleteAttachment')) {
         $this->frozen = true;
@@ -782,7 +785,7 @@ und aktiviert den Editor'));
  */
 class Email
 {
-  const CSS_PREFIX         = 'cafevdb-email';
+  const CSS_PREFIX       = 'cafevdb-email';
   const DEFAULT_TEMPLATE = 'Liebe Musiker,
 <p>
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -807,6 +810,7 @@ STRASSE
 PLZ
 STADT
 LAND
+GEBURTSTAG
 ';
   const MEMBERCOLUMNS = '
 Vorname
@@ -818,12 +822,14 @@ Strasse
 Postleitzahl
 Stadt
 Land
+Geburtstag
 ';
 
   private static $constructionMode = true;
 
   private $initialTemplate;
   private $templateNames;
+  private $templateName;
   private $catchAllEmail;
   private $catchAllName;
   private $projectId;
@@ -848,16 +854,54 @@ Land
     Config::init();
     $this->opts = Config::$pmeopts;
 
+    // Make sure that at least the default template exists and install
+    // that as default text
     $this->initialTemplate = self::DEFAULT_TEMPLATE;
 
-    $dbTemplate = $this->fetchTemplate(L::t('Default'));
+    $dbTemplate = $this->fetchTemplate('Default');
     if ($dbTemplate === false) {
-      $this->storeTemplate(L::t('Default'), $this->initialTemplate);
+      $this->storeTemplate('Default', $this->initialTemplate);
     } else {
       $this->initialTemplate = $dbTemplate;
     }  
 
+    if (Util::cgiValue('txtDescription', '') == '') {
+      $this->templateName = 'Default';
+    }
+
     $this->templateNames = $this->fetchTemplateNames();
+
+    // If the user has requested as "save-template" action, then save
+    // the current template with the given name, if the current
+    // messasge text and the template name is non-empty.
+    if (Util::cgiValue('saveEmailTemplate', false) !== false &&
+        Util::cgiValue('newEmailTemplate', '') != '' &&
+        Util::cgiValue('txtDescription', '') != '') {
+      // Save the current message text as new template in the DB (or
+      // replace an existing template), then re-fetch the template
+      // names.
+      $templateTag  = Util::cgiValue('newEmailTemplate');
+      $templateText = Util::cgiValue('txtDescription');
+
+      $this->storeTemplate($templateTag, $templateText);
+
+      // Re-fetch the names from the DB.
+      $this->templateNames = $this->fetchTemplateNames();
+      $this->templateName  = $templateTag;
+    } else {
+      // If the user has selected a specific template, then erase the
+      // already composed message and set the requested one as
+      // template.
+      $this->templateName = Util::cgiValue('emailTemplateSelector', false);
+      if ($this->templateName !== false) {
+        $requestedTemplate = $this->fetchTemplate($this->templateName);
+        if ($requestedTemplate !== false) {
+          $this->initialTemplate = $requestedTemplate;
+          unset($_POST['txtDescription']); // replace current text by template
+          $_POST['newEmailTemplate'] = $this->templateName; // use this one
+        }
+      }
+    }
 
     self::$constructionMode = Config::$opts['emailtestmode'] != 'off';
 
@@ -1167,7 +1211,8 @@ __EOT__;
       'txtCC' => '',
       'txtBCC' => '',
       'txtFromName' => $this->catchAllName,
-      'txtDescription' => $this->initialTemplate);
+      'txtDescription' => $this->initialTemplate,
+      'newEmailTemplate' => 'Default');
 
     $doResetAll = Util::cgiValue('eraseAll', false);
       
@@ -1194,6 +1239,7 @@ __EOT__;
     $this->senderEmail      = $this->catchAllEmail; // always
     $this->fileAttach       = Util::cgiValue('fileAttach', array());
     $this->deleteAttachment = Util::cgiValue('deleteAttachment', array());
+    $this->templateName     = Util::cgiValue('newEmailTemplate', $this->templateName);
 
     /* Determine whether we have to deal with template email, i.e.:
      * variable substitutions. Substitutions are something like
@@ -1264,6 +1310,7 @@ __EOT__;
       $filter->addPersistentCGI('txtCC', $this->CC);
       $filter->addPersistentCGI('txtBCC', $this->BCC);
       $filter->addPersistentCGI('fileAttach', $this->fileAttach);
+      $filter->addPersistentCGI('newEmailTemplate', $this->templateName);
 
       $filter->render(); // else render below the Email editor
     }
@@ -1283,18 +1330,6 @@ __EOT__;
 
     else if (Util::cgiValue('sendEmail', false) !== false) {
       echo '<div class="cafevdb-error" id="cafevdb-email-error"></div>';
-    } else if (Util::cgiValue('saveEmailTemplate', false) !== false &&
-               Util::cgiValue('newEmailTemplate', false) !== false) {
-      // Save the current message text as new template in the DB (or
-      // replace an existing template), then re-fetch the template
-      // names.
-      $templateTag  = Util::cgiValue('newEmailTemplate');
-      $templateText = $this->message;
-
-      $this->storeTemplate($templateTag, $templateText);
-
-      // Re-fetch the names from the DB.
-      $this->templateNames = $this->fetchTemplateNames();
     }
 
     /*
@@ -1366,21 +1401,25 @@ __EOT__;
       echo '
   <TABLE class="cafevdb-email-form">
   <tr>
-     <td><label for="cafevdb-email-template-selector">'.L::t("Template").'</label></td>
-     <td><select size="'.count($this->templateNames).'" class="email-template-selector"
-                 title="'.Config::toolTips("select-email-template").'"
-                 data-placeholder="'.L::t("Select email template").'"
-                 name="emailTemplateSelector"
-                 id="cafevdb-email-template-selector">';
+     <td>'.L::t("Template").'</td>
+     <td><label title="'.Config::toolTips('select-email-template').'">
+           <select size="'.count($this->templateNames).'" class="email-template-selector"
+                   title="'.Config::toolTips('select-email-template').'"
+                   data-placeholder="'.L::t("Select email template").'"
+                   name="emailTemplateSelector"
+                   id="cafevdb-email-template-selector">';
       foreach ($this->templateNames as $template) {
         echo '<option value="'.$template.'">'.$template.'</option>
 ';
       }
       echo '
-        </select>
+          </select>
+        </label>
      </td>
      <td>
-       <input size="20" placeholder="'.L::t('New Template Name').'"
+       <input size="20" placeholder="'.L::t('New Template Name').'"'.
+      ($this->templateName != '' ? ' value='.$this->templateName : ' ').'
+                        title="'.Config::toolTips('new-email-template').'"
                         name="newEmailTemplate"
                         type="text"
                         id="newEmailTemplate">
@@ -1598,6 +1637,9 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
           $dbdata = $recipient['dbdata'];
           $strMessage = $templateMessage;
           foreach ($variables as $placeholder => $column) {
+            if ($column == 'Geburtstag') {
+              $dbdata[$column] = date('d.m.Y', strtotime($dbdata[$column]));
+            }
             $strMessage = preg_replace('/[$]{MEMBER::'.$placeholder.'}/',
                                        htmlspecialchars($dbdata[$column]),
                                        $strMessage);
