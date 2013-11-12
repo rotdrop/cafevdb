@@ -432,9 +432,14 @@ ownclouddev';
     self::$pmeopts['labels']['Misc'] = 'Em@il';
     //self::$pmeopts['labels']['Sort Field'] = 'Sortierfeld';
 
-    self::$pmeopts['css']['textarea'] = 'mceEditor';
-    
-    self::$opts['editor'] = array('on' => 'mceEditor', 'off' => 'mceNoEditor');
+    if (false) {
+      self::$pmeopts['css']['textarea'] = 'mceEditor';
+      self::$opts['editor'] = array('on' => 'mceEditor', 'off' => 'mceNoEditor');
+    } else {
+      self::$pmeopts['css']['textarea'] = '';
+      self::$opts['editor'] = array('on' => 'ckeditor', 'off' => '');
+    }    
+
     self::$opts['phpmyadmin'] = 'https://ch.homelinux.net:8888/phpmyadmin/index.php?user=camerata&db=camerata';
     self::$opts['email'] = array('name'     => 'Em@il',
                                  'URL'      => 'mailto:$link',

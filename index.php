@@ -74,9 +74,15 @@ __EOT__
   OCP\Util::addScript('cafevdb', 'blog');
   OCP\Util::addScript('cafevdb', 'photo');
   OCP\Util::addScript('cafevdb', 'jquery.Jcrop');
-  OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/jscripts/tiny_mce/tiny_mce');
-  OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/jscripts/tiny_mce/jquery.tinymce');
-  OCP\Util::addScript('cafevdb/3rdparty', 'tinymceinit');
+  if (false) {
+    OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/jscripts/tiny_mce/tiny_mce');
+    OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/jscripts/tiny_mce/jquery.tinymce');
+    OCP\Util::addScript('cafevdb/3rdparty', 'tinymceinit');
+  } else {
+    OCP\Util::addScript('cafevdb/3rdparty', 'ckeditor/ckeditor');
+    OCP\Util::addScript('cafevdb/3rdparty', 'ckeditor/adapters/jquery');
+  }
+  
   OCP\Util::addscript("cafevdb/3rdparty", "chosen/chosen.jquery.min");
 
 // Calendar event hacks

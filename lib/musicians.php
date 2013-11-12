@@ -1193,7 +1193,7 @@ __EOT__;
       $opts['fdd']["$name"] = array('name' => $field['name'],
                                     'select'   => 'T',
                                     'maxlen'   => 65535,
-                                    'textarea' => array('css' => Config::4opts['editor']['off'],,
+                                    'textarea' => array('css' => Config::$opts['editor']['off'],
                                                         'rows' => 2,
                                                         'cols' => 32),
                                     'escape' => false,
