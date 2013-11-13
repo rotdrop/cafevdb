@@ -750,9 +750,7 @@ und aktiviert den Editor'));
         $this->frozen = true;
         $this->dualSelect->toggleFrozen(true);
         $this->filterFieldSet->toggleFrozen(true);
-        if ($this->projectId >= 0) {
-          $this->baseGroupFieldSet->toggleFrozen(true);
-        }
+        $this->baseGroupFieldSet->toggleFrozen(true);
             
         $this->freezeFieldSet->removeChild($this->freezeButton);
         $this->submitFilterFieldSet->removeChild($this->filterResetButton);
