@@ -40,6 +40,7 @@ try {
 
   $headervisibility = Util::cgiValue('headervisibility', 'expanded');
 
+  Util::addInlineSCript("CAFEVDB.wysiwygEditor = '".Config::$opts['editor']."';");
   Util::addInlineScript("CAFEVDB.headervisibility = '$headervisibility';");
   Util::addInlineScript('var toolTips = '.($tooltips == 'on' ? 'true' : 'false'));
   Util::addInlineScript(<<<__EOT__
@@ -74,14 +75,13 @@ __EOT__
   OCP\Util::addScript('cafevdb', 'blog');
   OCP\Util::addScript('cafevdb', 'photo');
   OCP\Util::addScript('cafevdb', 'jquery.Jcrop');
-  if (false) {
-    OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/jscripts/tiny_mce/tiny_mce');
-    OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/jscripts/tiny_mce/jquery.tinymce');
-    OCP\Util::addScript('cafevdb/3rdparty', 'tinymceinit');
-  } else {
-    OCP\Util::addScript('cafevdb/3rdparty', 'ckeditor/ckeditor');
-    OCP\Util::addScript('cafevdb/3rdparty', 'ckeditor/adapters/jquery');
-  }
+  // TinyMCE stuff
+  OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/tinymce.min');
+  OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/jquery.tinymce.min');
+  OCP\Util::addScript('cafevdb/3rdparty', 'tinymceinit');
+  // CKEditor stuff
+  OCP\Util::addScript('cafevdb/3rdparty', 'ckeditor/ckeditor');
+  OCP\Util::addScript('cafevdb/3rdparty', 'ckeditor/adapters/jquery');
   
   OCP\Util::addscript("cafevdb/3rdparty", "chosen/chosen.jquery.min");
 

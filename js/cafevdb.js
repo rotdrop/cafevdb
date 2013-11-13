@@ -1,6 +1,33 @@
 var CAFEVDB = {
   name: 'cafevdb',
   headervisibility: 'expanded',
+  wysiwygEditor: 'ckeditor',
+  addEditor: function(selector) {
+    switch (CAFEVDB.wysiwygEditor) {
+    case 'ckeditor':
+      $(selector).ckeditor(function() {}, {enterMode:CKEDITOR.ENTER_P});
+      break;
+    case 'tinymce':
+      $(selector).tinymce(myTinyMCE.config);
+      break;
+    default:
+      $(selector).ckeditor(function() {}, {enterMode:CKEDITOR.ENTER_P});
+      break;
+    };
+  },
+  removeEditor: function(selector) {
+    switch (CAFEVDB.wysiwygEditor) {
+    case 'ckeditor':
+      $(selector).ckeditor().remove();
+      break;
+    case 'tinymce':
+      $(selector).tinymce().remove();
+      break;
+    default:
+      $(selector).ckeditor().remove();
+      break;
+    };
+  },
   broadcastHeaderVisibility: function (visibility) {
     // Sanity check
     if (visibility != 'expanded' && visibility != 'collapsed') {

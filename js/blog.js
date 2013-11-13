@@ -52,11 +52,13 @@ var Blog = {
         $('#blogtextarea').val(Blog.text);
 
         //$('#blogtextarea').tinymce(myTinyMCE.config);
-        $('#blogtextarea').ckeditor(function() {}, {enterMode:CKEDITOR.ENTER_P});        
+        //$('#blogtextarea').ckeditor(function() {}, {enterMode:CKEDITOR.ENTER_P});
+        CAFEVDB.addEditor('#blogtextarea');
       },
       close : function(event, ui) {
         //$('#blogtextarea').tinymce().remove();
-        $('#blogtextarea').ckeditor().remove();
+        //$('#blogtextarea').ckeditor().remove();
+        CAFEVDB.removeEditor('#blogtextarea');
         $(this).dialog('destroy').remove();
       }
     });
