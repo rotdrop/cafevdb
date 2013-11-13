@@ -71,50 +71,8 @@ td.pme-value-0-msg, td.pme-value-1-msg {
 }
 
 /* Hide everything but the first line */
-td.pme-cell-0-remarks, td.pme-cell-1-remarks { 
-  font-size:25%;
-  max-width:20em;
-  max-height:1em;
-  white-space:nowrap;
-  overflow:hidden;
-}
-
-/* Hide everything but the first line */
-td.pme-cell-0-prjs, td.pme-cell-1-prjs { 
-  max-width:20em;
-  max-height:1em;
-  white-space:nowrap;
-  overflow:hidden;
-}
-
-/* Make all remarks shorter */
-td.pme-cell-0-remarks:first-line, td.pme-cell-1-remarks:first-line {
-  font-size:400%; /* seem to be relative to !first-line */
-  line-height:100%;
-  max-width:20em;
-  max-height:1em;
-  white-space:nowrap;
-  overflow:hidden;
-}
-/* Hide everything but the first line */
-td.pme-cell-0-prjrem, td.pme-cell-1-prjrem { 
-  font-size:25%;
-  line-height:100%;
-  max-width:20em;
-  max-height:1em;
-  white-space:nowrap;
-  overflow:hidden;
-}
-/* Make all remarks shorter */
-td.pme-cell-0-prjrem:first-line, td.pme-cell-1-prjrem:first-line {
-  font-size:400%; /* seem to be relative to !first-line */
-  line-height:100%;
-  max-width:20em;
-  max-height:1em;
-  white-space:nowrap;
-  overflow:hidden;
-}
-/* Hide everything but the first line */
+td.pme-cell-0-remarks, td.pme-cell-1-remarks,
+td.pme-cell-0-projectremarks, td.pme-cell-1-projectremarks,
 td.pme-cell-0-rehearsalremarks, td.pme-cell-1-rehearsalremarks { 
   font-size:25%;
   line-height:100%;
@@ -123,9 +81,16 @@ td.pme-cell-0-rehearsalremarks, td.pme-cell-1-rehearsalremarks {
   white-space:nowrap;
   overflow:hidden;
 }
+
 /* Make all remarks shorter */
-td.pme-cell-0-rehearsalremarks:first-line, td.pme-cell-1-rehearsalremarks:first-line {
+td.pme-cell-0-remarks:first-line, td.pme-cell-1-remarks:first-line,
+td.pme-cell-0-remarks p:nth-child(1):first-line, td.pme-cell-1-remarks p:nth-child(1):first-line,
+td.pme-cell-0-projectremarks:first-line, td.pme-cell-1-projectremarks:first-line,
+td.pme-cell-0-projectremarks p:nth-child(1):first-line, td.pme-cell-1-projectremarks p:nth-child(1):first-line,
+td.pme-cell-0-rehearsalremarks:first-line, td.pme-cell-1-rehearsalremarks:first-line,
+td.pme-cell-0-rehearsalremarks p:nth-child(1):first-line, td.pme-cell-1-rehearsalremarks p:nth-child(1):first-line {
   font-size:400%; /* seem to be relative to !first-line */
+  line-height:100%;
   max-width:20em;
   max-height:1em;
   white-space:nowrap;

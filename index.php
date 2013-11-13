@@ -82,6 +82,7 @@ __EOT__
   // CKEditor stuff
   OCP\Util::addScript('cafevdb/3rdparty', 'ckeditor/ckeditor');
   OCP\Util::addScript('cafevdb/3rdparty', 'ckeditor/adapters/jquery');
+//  OCP\Util::addScript('cafevdb/3rdparty', 'ckeditorinit');
   
   OCP\Util::addscript("cafevdb/3rdparty", "chosen/chosen.jquery.min");
 

@@ -2,6 +2,28 @@
  * @license Copyright (c) 2003-2013, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.html or http://ckeditor.com/license
  */
+// var removeEmptyPFilter = {
+//   elements : {
+//     p : function( element ) {
+//       var child = element.children[0];
+//         if (!(element.previous && element.next) && child && !child.children
+//             && (!child.value || CKEDITOR.tools.trim( child.value ).match( /^(?:&nbsp;|\xa0|<br \/>)$/ ))) {
+//           return false;
+//         }
+//       return element;
+//     }
+//   }
+// };
+
+// CKEDITOR.plugins.add( 'removeEmptyP',
+// {
+//   init: function( editor )
+//   {
+//      // Give the filters lower priority makes it get applied after the default ones.
+//      editor.dataProcessor.htmlFilter.addRules( removeEmptyPFilter, 100 );
+//      editor.dataProcessor.dataFilter.addRules( removeEmptyPFilter, 100 );
+//   }
+// });
 
 CKEDITOR.editorConfig = function( config ) {
 	// Define changes to default configuration here.
@@ -35,4 +57,10 @@ CKEDITOR.editorConfig = function( config ) {
 
 	// Make dialogs simpler.
 	config.removeDialogTabs = 'image:advanced;link:advanced';
+
+
+//	config.enterMode = CKEDITOR.ENTER_BR;
+//	config.extraPlugins = 'removeEmptyP';
+
+//	config.autoParagraph = false;
 };

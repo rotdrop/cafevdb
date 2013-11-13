@@ -5,13 +5,13 @@ var CAFEVDB = {
   addEditor: function(selector) {
     switch (CAFEVDB.wysiwygEditor) {
     case 'ckeditor':
-      $(selector).ckeditor(function() {}, {enterMode:CKEDITOR.ENTER_P});
+      $(selector).ckeditor(function() {}, {/*enterMode:CKEDITOR.ENTER_P*/});
       break;
     case 'tinymce':
       $(selector).tinymce(myTinyMCE.config);
       break;
     default:
-      $(selector).ckeditor(function() {}, {enterMode:CKEDITOR.ENTER_P});
+      $(selector).ckeditor(function() {}, {/*enterMode:CKEDITOR.ENTER_P*/});
       break;
     };
   },
