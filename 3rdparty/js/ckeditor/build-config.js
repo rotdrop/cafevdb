@@ -69,7 +69,6 @@ var CKBUILDER_CONFIG = {
 		'fakeobjects' : 1,
 		'indentlist' : 1,
 		'autogrow' : 1,
-		'autosave' : 1,
 		'eqneditor' : 1,
 		'find' : 1,
 		'smiley' : 1,
