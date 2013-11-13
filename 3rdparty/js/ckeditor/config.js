@@ -7,9 +7,13 @@
  */
 var removeEmptyPFilter = {
     isEmpty : function (element) {
+        if (element.name != 'p') {
+            return false;
+        }
         var child = element.children[0];
-        if (element.name == 'p' && child && !child.children
-            && (!child.value || CKEDITOR.tools.trim( child.value ).match( /^(?:&nbsp;|\xa0|<br \/>)*$/ ))) {
+        if (element.children.length == 1 &&
+            (!child.children || child.children.length == 0) &&
+            (!child.value || CKEDITOR.tools.trim( child.value ).match( /^(?:&nbsp;|\xa0|<br \/>)*$/ ))) {
             return true;
         } else {
             return false;
@@ -17,13 +21,27 @@ var removeEmptyPFilter = {
     },
     elements : {
         p : function( element ) {
-            // var tailEmpty = removeEmptyPFilter.isEmpty(element);
-            // for (var el = element.next; el; el = el.next) {
-            //     tailEmpty = tailEmpty && removeEmptyPFilter.isEmpty(el);
-            // }
-            if ((!element.previous || !element.next) && removeEmptyPFilter.isEmpty(element)) {
+            var selfEmpty = removeEmptyPFilter.isEmpty(element);
+            var headEmpty = !element.previous;
+
+            var tailEmpty = true;
+            for (var el = element.next; el; el = el.next) {
+                if (!removeEmptyPFilter.isEmpty(el)) {
+                    tailEmpty = false;
+                    break;
+                }
+            }
+
+            if ((headEmpty || tailEmpty) && selfEmpty) {
                 return false;
             }
+
+            if (headEmpty && tailEmpty) {
+                // Otherwise remove lonely <p>...</p> tag
+                return element.replaceWithChildren();
+            }
+
+            // Otherwise keep it.
             return element;
         }
     }
@@ -33,30 +51,8 @@ CKEDITOR.plugins.add( 'trimEmptyP', {
     init: function( editor )
     {
         // Give the filters lower priority makes it get applied after the default ones.
-        editor.dataProcessor.htmlFilter.addRules( removeEmptyPFilter, { priority:120, applyToAll:true } );
-        editor.dataProcessor.dataFilter.addRules( removeEmptyPFilter, { priority:120, applyToAll:true } );
-    }
-});
-
-/**Remove <p>-tags which surround the entire mess, we don't need that, really.
- */
-var removeOuterPFilter = {
-    elements : {
-        p : function( element ) {
-            if (!element.previous && !element.next) {
-                return element.replaceWithChildren();
-            }
-            return element;
-        }
-    }
-};
-
-CKEDITOR.plugins.add('removeOuterP', {
-    init: function( editor )
-    {
-        // Give the filters lower priority makes it get applied after the default ones.
-        editor.dataProcessor.htmlFilter.addRules( removeOuterPFilter, { priority:110, applyToAll:true } );
-        editor.dataProcessor.dataFilter.addRules( removeOuterPFilter, { priority:110, applyToAll:true } );
+        editor.dataProcessor.htmlFilter.addRules( removeEmptyPFilter, { priority:10000, applyToAll:false } );
+        editor.dataProcessor.dataFilter.addRules( removeEmptyPFilter, { priority:10000, applyToAll:false } );
     }
 });
 
@@ -97,7 +93,7 @@ CKEDITOR.editorConfig = function( config ) {
     //config.enterMode = CKEDITOR.ENTER_BR;
 
     // Remove <p> tags surrounding the entire mess.
-    config.extraPlugins = 'removeOuterP,trimEmptyP';
+    config.extraPlugins = 'trimEmptyP';
 
     //	config.autoParagraph = false;
 };
