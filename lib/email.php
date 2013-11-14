@@ -772,7 +772,9 @@ und aktiviert den Editor'));
     $renderer = \HTML_QuickForm2_Renderer::factory('default');
     
     $this->form->render($renderer);
-    echo $renderer->getJavascriptBuilder()->getLibraries(true, true);
+    // Nope: DO NOT EMIT INLINE SCRIPTS, instead, include the two needed
+    // libraries directly from the top-level index.php
+    //$renderer->getJavascriptBuilder()->getLibraries(true, true);
     echo $renderer;
   }
 
@@ -1184,8 +1186,6 @@ __EOT__;
    */
   public function display()
   {
-    Util::disableEnterSubmit(); // ? needed ???
-
     // Display a filter dialog
     $filter = new EmailFilter($this->opts, $this->opts['page_name']);
 

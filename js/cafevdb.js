@@ -41,6 +41,11 @@ var CAFEVDB = {
     $('input[name="headervisibility"]').each(function (idx) {
       $(this).val(visibility);
     });
+  },
+  stopRKey : function(evt) {
+    var evt = (evt) ? evt : ((event) ? event : null);
+    var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+    if ((evt.keyCode == 13) && (node.type=="text"))  {return false;}
   }
 }
 
@@ -89,6 +94,8 @@ $.extend({ alert: function (message, title) {
 // });
 
 $(document).ready(function(){
+
+  document.onkeypress = CAFEVDB.stopRKey;
 
   // Emulate a pull-down menu with export options via the chosen
   // plugin.

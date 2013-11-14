@@ -85,6 +85,9 @@ __EOT__
   
   OCP\Util::addscript("cafevdb/3rdparty", "chosen/chosen.jquery.min");
 
+  OCP\Util::addscript("cafevdb/3rdparty/QuickForm2", "quickform");
+  OCP\Util::addscript("cafevdb/3rdparty/QuickForm2", "dualselect");
+
 // Calendar event hacks
   OCP\Util::addscript('3rdparty/fullcalendar', 'fullcalendar');
   OCP\Util::addscript('3rdparty/timepicker', 'jquery.ui.timepicker');
