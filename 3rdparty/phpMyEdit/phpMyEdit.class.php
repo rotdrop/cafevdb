@@ -1067,7 +1067,7 @@ class phpMyEdit
 				}
 				echo '</style>',"\n";
 				// TAB javascripts
-				echo '<script type="text/javascript"><!--',"\n\n";
+				echo '<!--<script type="text/javascript">',"\n\n";
 				$css_class_name1 = $this->getCSSclass('tab', $position);
 				$css_class_name2 = $this->getCSSclass('tab-selected', $position);
 				echo 'var '.$this->js['prefix'].'cur_tab  = "'.$this->dhtml['prefix'].'tab',$this->cur_tab,'";
@@ -1094,7 +1094,7 @@ function '.$this->js['prefix'].'show_tab(tab_name)
 	'.$this->js['prefix'].'cur_tab = tab_name;
 	document.'.$this->cgi['prefix']['sys'].'form.'.$this->cgi['prefix']['sys'].'cur_tab.value = tab_name;
 }',"\n\n";
-				echo '// --></script>', "\n";
+				echo '// </script> -->', "\n";
 			}
 		}
 
@@ -1105,7 +1105,7 @@ function '.$this->js['prefix'].'show_tab(tab_name)
 					&& (@$this->fdd[$k]['js']['required'] || isset($this->fdd[$k]['js']['regexp']))) {
 					if ($first_required) {
 						$first_required = false;
-						echo '<script type="text/javascript"><!--',"\n";
+						echo '<!-- <script type="text/javascript">',"\n";
 						echo '
 function '.$this->js['prefix'].'trim(str)
 {
@@ -1185,7 +1185,7 @@ function '.$this->js['prefix'].'form_control(theForm)
 				echo '
 	return true;
 }',"\n\n";
-				echo '// --></script>', "\n";
+				echo '// </script>  -->', "\n";
 			}
 		}
 
@@ -2435,7 +2435,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			$ret .= ' name="'.$this->cgi['prefix']['sys'].'navpn'.$position.'" value="'.($current_page+1).'"';
 			$ret .= ' size="'.(strlen($total_pages)+1).'" maxlength="'.(strlen($total_pages)+1).'"';
 			// TODO some js here.... on enter submit, on click erase ?...
-			$ret .=' onkeypress="return '.$this->js['prefix'].'filter_handler(this.form, event);" />';
+			$ret .=' disabledonkeypress="return '.$this->js['prefix'].'filter_handler(this.form, event);" />';
 			$ret .= $this->display_button('goto_combo',$position);
 			$ret .= '</span>';
 			return $ret;
@@ -2450,7 +2450,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			// TODO: add onchange="return this.form.submit();" DONE ???
 			return $this->htmlSelect($this->cgi['prefix']['sys'].ltrim($disabledgoto).'navfm'.$position,
 									 $this->getCSSclass('goto', $position), $kv_array, (string)$this->fm, false, $disabledgoto,
-									 false, true, 'onchange="return this.form.submit();"');
+									 false, true, 'disabledonchange="return this.form.submit();"');
 		}
 		if ($name == 'goto') {
 			$ret = '<span class="'.$this->getCSSclass('goto', $position).'">';
@@ -2486,7 +2486,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			// TODO: add onchange="return this.form.submit();" DONE ???
 			return $this->htmlSelect($this->cgi['prefix']['sys'].'navnp'.$position,
 									 $this->getCSSclass('pagerows', $position), $kv_array, $selected, false, '',
-									 false, true, 'onchange="return this.form.submit();"');
+									 false, true, 'disabledonchange="return this.form.submit();"');
 		}
 		if ($name == 'rows_per_page') {
 			$ret = '<span class="'.$this->getCSSclass('pagerows', $position).'">';
@@ -2618,7 +2618,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				echo '<input class="',$css_class_name,'" value="',htmlspecialchars(@$m);
 				echo '" type="text" name="'.$this->cgi['prefix']['sys'].'qf'.$k.'"',$len_props;
 				echo ' '.$this->fetchToolTip($css_class_name, $name, $css_class_name.'text');
-				echo ' onkeypress="return '.$this->js['prefix'].'filter_handler(this.form, event);" />';
+				echo ' disabledonkeypress="return '.$this->js['prefix'].'filter_handler(this.form, event);" />';
 			} else {
 				echo '&nbsp;';
 			}
@@ -2905,7 +2905,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 					.'" type="checkbox"  name="'.$this->cgi['prefix']['sys'].'sfn['.$sfnidx.']"'
 					.$this->fetchToolTip($this->getCSSclass('sort'), $this->cgi['prefix']['sys'].'sfn[]')
 					.' value="'.($backward ? "-$k" : $k)
-					.'" onchange="return this.form.submit();"';
+					.'" disabledonchange="return this.form.submit();"';
 				if ($forward || $backward) {
 					echo ' checked';
 				}
