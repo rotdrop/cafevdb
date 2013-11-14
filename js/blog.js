@@ -51,10 +51,14 @@ var Blog = {
 
         $('#blogtextarea').val(Blog.text);
 
-        $('#blogtextarea').tinymce(myTinyMCE.config);
+        //$('#blogtextarea').tinymce(myTinyMCE.config);
+        //$('#blogtextarea').ckeditor(function() {}, {enterMode:CKEDITOR.ENTER_P});
+        CAFEVDB.addEditor('#blogtextarea');
       },
       close : function(event, ui) {
-        $('#blogtextarea').tinymce().remove();
+        //$('#blogtextarea').tinymce().remove();
+        //$('#blogtextarea').ckeditor().remove();
+        CAFEVDB.removeEditor('#blogtextarea');
         $(this).dialog('destroy').remove();
       }
     });
@@ -62,7 +66,7 @@ var Blog = {
   },
   cancel: function(event) {
     event.preventDefault();
-    $('#blogtextarea').tinymce().save();
+    //$('#blogtextarea').tinymce().save();
     if ($('#blogtextarea').val() == Blog.text) {
       $('#blogedit').dialog('close').remove();
     } else {
@@ -79,7 +83,7 @@ var Blog = {
   },
   submit: function(event) {   
     event.preventDefault();
-    $('#blogtextarea').tinymce().save();
+    //$('#blogtextarea').tinymce().save();
     $.post(OC.filePath('cafevdb','ajax/blog','modifyentry.php'),
            {
              action: Blog.blogId >= 0 ? 'modify' : 'create',

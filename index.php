@@ -66,10 +66,18 @@ try {
   OCP\Util::addScript('cafevdb', 'blog');
   OCP\Util::addScript('cafevdb', 'photo');
   OCP\Util::addScript('cafevdb', 'jquery.Jcrop');
-  OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/jscripts/tiny_mce/tiny_mce');
-  OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/jscripts/tiny_mce/jquery.tinymce');
+  // TinyMCE stuff
+  OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/tinymce.min');
+  OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/jquery.tinymce.min');
   OCP\Util::addScript('cafevdb/3rdparty', 'tinymceinit');
+  // CKEditor stuff
+  OCP\Util::addScript('cafevdb/3rdparty', 'ckeditor/ckeditor');
+  OCP\Util::addScript('cafevdb/3rdparty', 'ckeditor/adapters/jquery');
+  
   OCP\Util::addscript("cafevdb/3rdparty", "chosen/chosen.jquery.min");
+
+  OCP\Util::addscript("cafevdb/3rdparty/QuickForm2", "quickform");
+  OCP\Util::addscript("cafevdb/3rdparty/QuickForm2", "dualselect");
 
 // Calendar event hacks
   OCP\Util::addscript('3rdparty/fullcalendar', 'fullcalendar');

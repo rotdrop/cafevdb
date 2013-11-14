@@ -284,8 +284,8 @@ __EOT__;
                                                'select'   => 'T',
                                                'options' => $ROopts,
                                                'maxlen'   => 65535,
-                                               'css'      => array('postfix' => 'rem'),
-                                               'textarea' => array('html' => 'Editor',
+                                               'css'      => array('postfix' => 'remarks'),
+                                               'textarea' => array('css' => Config::$opts['editor'],
                                                                    'rows' => 5,
                                                                    'cols' => 50),
                                                'escape' => false,
@@ -299,14 +299,14 @@ __EOT__;
     // Generate input fields for the extra columns
     foreach ($userExtraFields as $field) {
       $name = $field['name'];    
-      $opts['fdd']["$name"] = array('name' => $name.' ('.$project.')',
+      $opts['fdd']["$name"] = array('name'     => $name.' ('.$project.')',
                                     'select'   => 'T',
-                                    'options' => $ROopts,
+                                    'options'  => $ROopts,
                                     'maxlen'   => 65535,
-                                    'textarea' => array('html' => 'NoEditor',
+                                    'textarea' => array('css' => '',
                                                         'rows' => 2,
                                                         'cols' => 32),
-                                    'escape' => false,
+                                    'escape'   => false,
                                     'sort'     => true);
     }
 
@@ -318,24 +318,21 @@ __EOT__;
                                             'values'   => Config::$opts['languages']);
 
     $opts['fdd']['Geburtstag'] = Config::$opts['birthday'];
-    $opts['fdd']['Status'] = array(
-                                   'name'     => 'Status',
-                                   'select'   => 'T',
-                                   'css'      => array('postfix' => 'rem'),
-                                   'maxlen'   => 384,
-                                   'sort'     => true
-                                   );
-    $opts['fdd']['Bemerkung'] = array(
-                                      'name'     => 'Allgemeine Bemerkungen',
-                                      'select'   => 'T',
-                                      'maxlen'   => 65535,
-                                      'css'      => array('postfix' => 'rem'),
-                                      'textarea' => array('html' => 'Editor',
-                                                          'rows' => 5,
-                                                          'cols' => 50),
-                                      'escape' => false,
-                                      'sort'     => true
-                                      );
+    $opts['fdd']['MemberStatus'] = array('name'     => strval(L::t('Member Status')),
+                                         'select'   => 'O',
+                                         'maxlen'   => 384,
+                                         'sort'     => true,
+                                         'values2'  => $this->memberStatusNames);
+
+    $opts['fdd']['Remarks'] = array('name'     => strval(L::t('General Remarks')),
+                                    'select'   => 'T',
+                                    'maxlen'   => 65535,
+                                    'css'      => array('postfix' => 'remarks'),
+                                    'textarea' => array('css' => Config::$opts['editor'],
+                                                        'rows' => 5,
+                                                        'cols' => 50),
+                                    'escape'   => false,
+                                    'sort'     => true);
 
     $opts['fdd']['Portrait'] = array(
       'input' => 'V',

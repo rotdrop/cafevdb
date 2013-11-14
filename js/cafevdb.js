@@ -3,6 +3,33 @@ CAFEVDB = {
   name: 'cafevdb',
   headervisibility: 'expanded',
   toolTips: true,
+  wysiwygEditor: 'ckeditor',
+  addEditor: function(selector) {
+    switch (CAFEVDB.wysiwygEditor) {
+    case 'ckeditor':
+      $(selector).ckeditor(function() {}, {/*enterMode:CKEDITOR.ENTER_P*/});
+      break;
+    case 'tinymce':
+      $(selector).tinymce(myTinyMCE.config);
+      break;
+    default:
+      $(selector).ckeditor(function() {}, {/*enterMode:CKEDITOR.ENTER_P*/});
+      break;
+    };
+  },
+  removeEditor: function(selector) {
+    switch (CAFEVDB.wysiwygEditor) {
+    case 'ckeditor':
+      $(selector).ckeditor().remove();
+      break;
+    case 'tinymce':
+      $(selector).tinymce().remove();
+      break;
+    default:
+      $(selector).ckeditor().remove();
+      break;
+    };
+  },
   broadcastHeaderVisibility: function (visibility) {
     // Sanity check
     if (visibility != 'expanded' && visibility != 'collapsed') {
@@ -16,6 +43,11 @@ CAFEVDB = {
     $('input[name="headervisibility"]').each(function (idx) {
       $(this).val(visibility);
     });
+  },
+  stopRKey : function(evt) {
+    var evt = (evt) ? evt : ((event) ? event : null);
+    var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+    if ((evt.keyCode == 13) && (node.type=="text"))  {return false;}
   },
   dummy:{}
 };
@@ -65,6 +97,8 @@ $.extend({ alert: function (message, title) {
 // });
 
 $(document).ready(function(){
+
+  document.onkeypress = CAFEVDB.stopRKey;
 
   // Emulate a pull-down menu with export options via the chosen
   // plugin.
@@ -124,7 +158,7 @@ $(document).ready(function(){
       form.attr('action', old_action);
     }
 
-    // Cheating. In principle we mus-use this as a simple pull-down
+    // Cheating. In principle we mis-use this as a simple pull-down
     // menu, so let the text remain at its default value. Make sure to
     // also remove and re-attach the tool-tips, otherwise some of the
     // tips remain, because chosen() removes the element underneath.
@@ -134,9 +168,9 @@ $(document).ready(function(){
     });
     $('.tipsy').remove();
 
-    $("#pme-export-choice").trigger("liszt:updated");
+    $("#pme-export-choice").trigger("chosen:updated");
 
-    $('div.chzn-container').tipsy({gravity:'sw', fade:true});
+    $('div.chosen-container').tipsy({gravity:'sw', fade:true});
     $('li.active-result').tipsy({gravity:'w', fade:true});
 
     return false;
@@ -146,13 +180,13 @@ $(document).ready(function(){
   $('button.viewtoggle').tipsy({gravity:'ne', fade:true});
   $('div.viewtoggle').tipsy({gravity:'se', fade:true});
   $('select').tipsy({gravity:'w', fade:true});
-  $('div.chzn-container').tipsy({gravity:'sw', fade:true});
+  $('div.chosen-container').tipsy({gravity:'sw', fade:true});
   $('li.active-result').tipsy({gravity:'w', fade:true});
   $('form.cafevdb-control input').tipsy({gravity:'nw', fade:true});
   $('button.settings').tipsy({gravity:'ne', fade:true});
   $('.pme-sort').tipsy({gravity: 'n', fade:true});
   $('.pme-misc-check').tipsy({gravity: 'nw', fade:true});
-  $('label').tipsy({gravity:'ne', fade:true});
+  $('label').tipsy({gravity:'se', fade:true});
   $('.header-right img').tipsy({gravity:'ne', fade:true});
   $('img').tipsy({gravity:'nw', fade:true});
   $('button').tipsy({gravity:'w', fade:true});

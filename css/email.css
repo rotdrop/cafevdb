@@ -13,6 +13,7 @@ form[class|="cafevdb-email"] fieldset.border {
   moz-border-radius:.5em;
   webkit-border-radius:.5em;
   border-radius:.5em;
+  max-width:65em;
 }
 
 form[class|="cafevdb-email"] fieldset legend {
@@ -59,12 +60,13 @@ form[class|="cafevdb-email"] tr:active {
   width:auto;
 }
 .cafevdb-email-filter fieldset.basegroup p.label {
-  padding-right:2em;
-  display:inline;
+  padding-right:1em;
+  vertical-align:top;
+  display:inline-block;
 }
 
 .cafevdb-email-filter fieldset.basegroup input[class^="select"][type=checkbox] + label {
-  padding-right:2em;
+  padding-right:1em;
 }
 .cafevdb-email-filter fieldset.basegroup input[class^="select"][type=checkbox] {
   /*display:none;*/
@@ -96,6 +98,16 @@ form[class|="cafevdb-email"] tr:active {
   box-shadow:2px 2px 2px #080808 inset; /*, 1px 1px 1px #cfc inset;*/
 }
 
+.cafevdb-email-filter select.member-status-filter {
+  width:23em;
+  float:right;
+}
+
+.cafevdb-email-filter [class^="chosen"] {
+  border-radius: 0.5em !important;
+  background-color: rgb(244, 244, 244) !important;
+}
+
 .cafevdb-email-filter fieldset.select {
   vertical-align:top;
   display:inline-block;
@@ -117,7 +129,6 @@ form[class|="cafevdb-email"] tr:active {
 .cafevdb-email-filter fieldset.filter p.label {
   /*float:left;*/
   width:auto;
-  text-align:left;
   padding: 0;
   margin: 0.7em 0 0 0;
 }
@@ -125,17 +136,22 @@ form[class|="cafevdb-email"] tr:active {
   font-size:90%;
 }
 .cafevdb-email-filter fieldset.filter {
+  /*float:right;*/
+  padding-left:4em;
+  text-align:right;
   vertical-align:top;
   display:inline-block;
 }
 .cafevdb-email-filter fieldset.filter select.filter {
-  width:auto;
+  /*margin-left:8em;*/
+  /*width:auto;*/
+  width:10em;
 }
 
 .cafevdb-email-filter fieldset.submit {
   white-space:nowrap;
-  max-width:60em;
 }
+
 .cafevdb-email-filter fieldset.submit p.label {
   display:inline;
 }
@@ -199,6 +215,7 @@ form[class|="cafevdb-email"] tr:active {
 .cafevdb-email-form {
   font-size:100%;
 }
+
 table.cafevdb-email-form {
   border:1px solid #808080;
   padding:0.5em;

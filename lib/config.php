@@ -134,6 +134,13 @@ ownclouddev';
       return;
     }
 
+    if (false) {
+      // Probably not necessary and not a good idea.
+      if (openssl_pkey_export($privKey, $privKey) === false) {
+        return;
+      }
+    }
+
     // Success. Store the decrypted private key in the session data.
     self::setPrivateKey($privKey);
   }
@@ -427,6 +434,13 @@ ownclouddev';
     self::$pmeopts['misccssclass'] = 'email';
     self::$pmeopts['labels']['Misc'] = 'Em@il';
     //self::$pmeopts['labels']['Sort Field'] = 'Sortierfeld';
+
+    self::$pmeopts['css']['textarea'] = '';
+    if (false) {
+      self::$opts['editor'] = 'tinymce';
+    } else {
+      self::$opts['editor'] = 'ckeditor';
+    }    
 
     self::$opts['phpmyadmin'] = 'https://ch.homelinux.net:8888/phpmyadmin/index.php?user=camerata&db=camerata';
     self::$opts['email'] = array('name'     => 'Em@il',

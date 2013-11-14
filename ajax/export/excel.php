@@ -76,7 +76,6 @@ class MyValueBinder extends PHPExcel_Cell_DefaultValueBinder implements PHPExcel
 
       // Handle remaining stuff by html2text
       $h2t = new \html2text();
-      $h2t->set_encoding('utf-8');
       $h2t->set_html($value);
       $value = trim($h2t->get_text());
 

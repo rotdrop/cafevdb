@@ -589,16 +589,19 @@ class phpMyEdit
 	function set_values_from_table($field_num, $strict = false) /* {{{ */
 	{
 		$db	   = &$this->fdd[$field_num]['values']['db'];
-		$derived = false;
-		if (is_array($this->fdd[$field_num]['values']['table'])) {
-			if ($this->fdd[$field_num]['values']['table']['kind'] == 'derived') {
-				$derived = true && true;
-			}
-		}
+		$table = $this->sd.$this->fdd[$field_num]['values']['table'].$this->ed;
 		$key   = &$this->fdd[$field_num]['values']['column'];
 		$desc  = &$this->fdd[$field_num]['values']['description'];
 		$dbp   = isset($db) ? $this->sd.$db.$this->ed.'.' : $this->dbp;
 		$qparts['type'] = 'select';
+
+		$derived = false;
+		if (is_array($this->fdd[$field_num]['values']['table'])) {
+			if ($this->fdd[$field_num]['values']['table']['kind'] == 'derived') {
+				$derived = true;
+			}
+		}
+
 		if ($derived && false) {
 			// Howto handle that ... work around for me has been hacked.
 			$table = '(' .$this->fdd[$field_num]['values']['table']['sql'].' )';
@@ -1187,8 +1190,8 @@ function '.$this->js['prefix'].'form_control(theForm)
 		}
 
 		if ($this->filter_operation()) {
-				echo '<!-- <script type="text/javascript">',"\n";
-				echo '
+			echo '<!-- <script type="text/javascript">',"\n";
+			echo '
 function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 {
 	var pressed_key = null;
@@ -1203,7 +1206,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 	}
 	return true;
 }',"\n\n";
-				echo '//</script> -->', "\n";
+			echo '//</script> -->', "\n";
 		}
 
 		if ($this->display['form']) {
@@ -1943,14 +1946,16 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		}
 		$found = false;
 		foreach ($kv_array as $key => $value) {
-			$ret .= '<input type="'.($multiple ? 'checkbox' : 'radio').'" name="';
+			$labelhelp = $help
+				? ' title="'.htmlspecialchars($help).'" '
+				: $this->fetchToolTip($css, $name, $css.'radiolabel');
+			$inputhelp = $help
+				? ' title="'.htmlspecialchars($help).'" '
+				: $this->fetchToolTip($css, $name, $css.'radio');
+			$ret .= '<label'.$labelhelp.'><input type="'.($multiple ? 'checkbox' : 'radio').'" name="';
 			$ret .= htmlspecialchars($name).'[]" value="'.htmlspecialchars($key).'"';
 			$ret .= ' class="'.htmlspecialchars($css).'"';
-			if ($help) {
-				$ret .= ' title="'.htmlspecialchars($help).'" ';
-			} else {
-				$ret .= $this->fetchToolTip($css, $name, $css.'radio');
-			}
+			//$ret .= $inputhelp; // not need if labelhelp
 			if ((! $found || $multiple) && in_array((string) $key, $selected, 1)
 				|| (count($selected) == 0 && ! $found && ! $multiple)) {
 				$ret  .= ' checked';
@@ -1961,7 +1966,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			}
 			$strip_tags && $value = strip_tags($value);
 			$escape		&& $value = htmlspecialchars($value);
-			$ret .= '>'.$value.'<br>'."\n";
+			$ret .= '>'.$value.'</label><br>'."\n";
 		}
 		return $ret;
 	} /* }}} */
@@ -1969,12 +1974,14 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 	function htmlTextarea($name, $css, $k, $value = null, $escape = true, $help = NULL) /* {{{ */
 	{
 		// mce mod start
-		if (isset($this->fdd[$k]['textarea']['html'])) {
-			$mce_tag = 'Editor';
-			if (is_string($this->fdd[$k]['textarea']['html'])) {
-				$mce_tag = $this->fdd[$k]['textarea']['html'];
+		if (isset($this->fdd[$k]['textarea']['css'])) {
+			$css_tag = $this->css['textarea'];
+			if (is_string($this->fdd[$k]['textarea']['css'])) {
+				$css_tag = $this->fdd[$k]['textarea']['css'];
 			};
-			$css .= ' mce'.$mce_tag;
+			if ($css_tag != '') {
+				$css .= ' '.$css_tag;
+			}
 		};
 		// mce mod end
 		$ret = '<textarea class="'.$css.'" name="'.$name.'"';
@@ -2577,6 +2584,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				echo '&nbsp;';
 			} else if ($this->fdd[$fd]['select'] == 'D' ||
 					   $this->fdd[$fd]['select'] == 'M'||
+					   $this->fdd[$fd]['select'] == 'O'||
 					   $this->fdd[$fd]['select'] == 'C') {
 				// Multiple fields processing
 				// Default size is 2 and array required for values.
@@ -3177,7 +3185,8 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			echo $this->htmlHiddenSys('mkey', $this->key);
 			echo $this->htmlHiddenSys('mkeytype', $this->key_type);
 			foreach ($this->mrecs as $key => $val) {
-				echo $this->htmlHiddenSys('mrecs['.$key.']', $val);
+				//echo $this->htmlHiddenSys('mrecs['.$key.']', $val);
+				echo $this->htmlHiddenSys('mrecs[]', $val);
 			}
 		}
 		$this->form_end();
@@ -4054,6 +4063,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		isset($opts['url']['images']) && $this->url['images'] = $opts['url']['images'];
 		// CSS classes policy
 		$this->css = @$opts['css'];
+		!isset($this->css['textarea'])  && $this->css['textarea'] = '';
 		!isset($this->css['separator']) && $this->css['separator'] = '-';
 		!isset($this->css['prefix'])	&& $this->css['prefix']	   = 'pme';
 		!isset($this->css['page_type']) && $this->css['page_type'] = false;
@@ -4214,9 +4224,19 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		$this->mrecs = array_unique($this->mrecs);
 		foreach ($opts['cgi']['persist'] as $key => $val) {
 			if (is_array($val)) {
-				foreach($val as $key2 => $val2) {
-					$this->cgi['persist'] .= '&'.rawurlencode($key)
-						.'['.rawurlencode($key2).']='.rawurlencode($val2);
+				// We need to handle sys_recs in a special way: never
+				// use absolute indices, because this kills the
+				// information submitted by the user (checkboxes)
+				if ($key == $this->cgi['prefix']['sys'].'mrecs') {
+					foreach($val as $key2 => $val2) {
+						$this->cgi['persist'] .= '&'.rawurlencode($key)
+							.'[]='.rawurlencode($val2);
+					}
+				} else {
+					foreach($val as $key2 => $val2) {
+						$this->cgi['persist'] .= '&'.rawurlencode($key)
+							.'['.rawurlencode($key2).']='.rawurlencode($val2);
+					}
 				}
 			} else {
 				$this->cgi['persist'] .= '&'.rawurlencode($key).'='.rawurlencode($val);

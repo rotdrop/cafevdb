@@ -154,7 +154,12 @@ elsif( $task eq 'write' ){
 			foreach my $string ( @{$array} ){
 				next if $string->msgid() eq '""';
 				next if $string->msgstr() eq '""';
-				push( @strings, $string->msgid()." => ".$string->msgstr());
+                                # escape dollar signs
+                                my $msgid  = $string->msgid();
+                                my $msgstr = $string->msgstr();
+                                $msgid =~ s/\$/\\\$/g;
+                                $msgstr =~ s/\$/\\\$/g;
+				push( @strings, $msgid." => ".$msgstr);
 			}
 			next if $#strings == -1; # Skip empty files
 

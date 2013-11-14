@@ -115,6 +115,41 @@ CAFEVDB.Email = {
 
 $(document).ready(function(){
 
+  if ($('#DualSelectMusicians').length) {
+    qf.elements.dualselect.init('DualSelectMusicians', true);
+
+    $('#memberStatusFilter').chosen();
+
+    $('#memberStatusFilter').change(function(event) {
+      event.preventDefault();
+      $('#emailrecipients').submit();
+    });
+
+    $('#selectedUserGroup-fromProject').click(function(event) {
+      event.preventDefault();
+      $('#emailrecipients').submit();
+    });
+    
+    $('#selectedUserGroup-exceptProject').click(function(event) {
+      event.preventDefault();
+      $('#emailrecipients').submit();
+    });
+  } else {
+    $('#cafevdb-email-template-selector').chosen({ disable_search_threshold: 10});
+
+  
+    $('#cafevdb-email-template-selector').change(function(event) {
+      event.preventDefault();
+      $('#cafevdb-email-form').submit();
+    });
+  }
+
+  $('div.chosen-container').tipsy({gravity:'se', fade:true});
+  $('li.active-result').tipsy({gravity:'w', fade:true});
+  $('label').tipsy({gravity:'ne', fade:true});
+ 
+  //$('#InstrumentenFilter-0').chosen();
+
   $('#cafevdb-email-header-box .viewtoggle').click(function(event) {
     event.preventDefault();
 

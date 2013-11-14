@@ -16,8 +16,8 @@ input[type=button]:active, input[type=submit]:active {
   margin-left:4ex;
 }
 
-#emailsmtpfields div.chzn-container,
-#emailimapfields div.chzn-container {
+#emailsmtpfields div.chosen-container,
+#emailimapfields div.chosen-container {
   vertical-align:middle;
   margin-right:1ex;
   margin-left:0.7ex;

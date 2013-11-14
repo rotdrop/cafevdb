@@ -329,24 +329,26 @@ __EOT__;
                                      );
     $opts['fdd']['Geburtstag'] = Config::$opts['birthday'];
     $opts['fdd']['Email'] = Config::$opts['email'];
-    $opts['fdd']['Status'] = array(
-                                   'name'     => 'Status',
-                                   'css'      => array('postfix' => 'rem'),
-                                   'select'   => 'T',
-                                   'maxlen'   => 128,
-                                   'sort'     => true
-                                   );
-    $opts['fdd']['Bemerkung'] = array(
-                                      'name'     => 'Bemerkung',
-                                      'select'   => 'T',
-                                      'maxlen'   => 65535,
-                                      'css'      => array('postfix' => 'rem'),
-                                      'textarea' => array('html' => 'Editor',
-                                                          'rows' => 5,
-                                                          'cols' => 50),
-                                      'escape' => false,
-                                      'sort'     => true
-                                      );
+
+    /* Make "Status" a set, 'soloist','conductor','noemail', where in
+     * general the first two imply the last.
+     */
+    $opts['fdd']['MemberStatus'] = array('name'    => strval(L::t('Member Status')),
+                                         'select'  => 'O',
+                                         'maxlen'  => 128,
+                                         'sort'    => true,
+                                         'values2' => $this->memberStatusNames,
+                                         'tooltip' => config::toolTips('member-status'));
+
+    $opts['fdd']['Remarks'] = array('name'     => strval(L::t('Remarks')),
+                                    'select'   => 'T',
+                                    'maxlen'   => 65535,
+                                    'css'      => array('postfix' => 'remarks'),
+                                    'textarea' => array('css' => Config::$opts['editor'],
+                                                        'rows' => 5,
+                                                        'cols' => 50),
+                                    'escape' => false,
+                                    'sort'     => true);
 
     $opts['fdd']['Portrait'] = array(
       'input' => 'V',
@@ -774,7 +776,7 @@ __EOT__;
     $opts['fdd']['Bemerkungen'] = array('name'     => 'Bemerkungen',
                                         'select'   => 'T',
                                         'maxlen'   => 65535,
-                                        'textarea' => array('html' => 'Editor',
+                                        'textarea' => array('css' => Config::$opts['editor'],
                                                             'rows' => 5,
                                                             'cols' => 50),
                                         'escape' => false,
@@ -787,7 +789,7 @@ __EOT__;
       $opts['fdd']["$name"] = array('name' => $field['name'],
                                     'select'   => 'T',
                                     'maxlen'   => 65535,
-                                    'textarea' => array('html' => 'NoEditor',
+                                    'textarea' => array('css' => '',
                                                         'rows' => 2,
                                                         'cols' => 32),
                                     'escape' => false,
@@ -968,12 +970,12 @@ __EOT__;
     $recordsPerPage  = $this->recordsPerPage;
     $userExtraFields = $this->userExtraFields;
 
-    $headervisibility = Util::cgiValue('headervisibility','expanded');
+    $headervisibility = Util::cgiValue('headervisibility', 'expanded');
 
     $saved_template = $this->template;
     $this->template = self::CHANGE_TEMPLATE;
 
-    $this->musiciansIds  = Util::cgiValue($this->musiciansKey,array());
+    $this->musiciansIds  = Util::cgiValue($this->musiciansKey, array());
 
     // Probably needs several changes ...
     if (isset($_POST['ForcedInstrument'])) {
@@ -1175,8 +1177,8 @@ __EOT__;
     $opts['fdd']['Bemerkungen'] = array('name'     => 'Bemerkungen',
                                         'select'   => 'T',
                                         'maxlen'   => 65535,
-                                        'css'      => array('postfix' => 'rem'),
-                                        'textarea' => array('html' => 'Editor',
+                                        'css'      => array('postfix' => 'remarks'),
+                                        'textarea' => array('css' => Config::$opts['editor'],
                                                             'rows' => 5,
                                                             'cols' => 50),
                                         'escape' => false,
@@ -1191,7 +1193,7 @@ __EOT__;
       $opts['fdd']["$name"] = array('name' => $field['name'],
                                     'select'   => 'T',
                                     'maxlen'   => 65535,
-                                    'textarea' => array('html' => 'NoEditor',
+                                    'textarea' => array('css' => '',
                                                         'rows' => 2,
                                                         'cols' => 32),
                                     'escape' => false,
