@@ -1833,7 +1833,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			.'" name="'.$this->cgi['prefix']['sys'].ltrim($markdisabled).$name
 			.'" value="'.(isset($this->labels[$label]) ? $this->labels[$label] : $label);
 		if ($js_validation) {
-			$ret .= '" onclick="return '.$this->js['prefix'].'form_control(this.form);';
+			$ret .= '" disabledonclick="return '.$this->js['prefix'].'form_control(this.form);';
 		}
 		$ret .='"';
 		if(isset($js)) $ret .= ' '.$js;
@@ -2399,7 +2399,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		}
 		if ($name == 'savedelete') {
 			$enabled	 = $this->delete_enabled();
-			$js = 'onclick="return confirm(\''.$this->labels['Delete'].' ?\');"';
+			$js = 'disabledonclick="return confirm(\''.$this->labels['Delete'].' ?\');"';
 			return $this->htmlSubmit('savedelete', 'Delete',
 									 $this->getCSSclass('save', $position), false, $enabled ? 0 : $disabled, $js);
 		}

@@ -32,6 +32,14 @@ PHPMYEDIT = {
     $("input[type='text']."+pmepfx+"-filter").keypress(function(event) {
       return PHPMYEDIT.filterHandler(this.form, event);
     });
+
+    $("input[type='submit'].pme-save").click(function(event) {
+      return PHPMYEDIT.filterHandler(this.form, event);
+    });
+
+    $("input[type='submit'].pme-more").click(function(event) {
+      return PHPMYEDIT.filterHandler(this.form, event);
+    });
   }
 };
 
