@@ -14,11 +14,12 @@ header("Cache-Control: no-cache, must-revalidate");
 header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); 
 
 $headervisibility = Util::cgiValue('headervisibility', 'expanded');
-$tooltips   = OCP\Config::getUserValue(OCP\USER::getUser(), 'cafevdb', 'tooltips','');
+$tooltips         = OCP\Config::getUserValue(OCP\USER::getUser(), 'cafevdb', 'tooltips','');
 
 $array = array(
-  "CAFEVDB.headvisibility" => "'".$headervisibility."'",
-  "CAFEVDB.toolTips" => ($tooltips == "off" ? 'false' : 'true')
+  "CAFEVDB.headervisibility" => "'".$headervisibility."'",
+  "CAFEVDB.toolTips" => ($tooltips == "off" ? 'false' : 'true'),
+  "CAFEVDB.wysiwygEditor" => "'".Config::opts['editor']."'"
   );
 
 // Echo it

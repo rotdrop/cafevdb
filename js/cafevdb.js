@@ -1,9 +1,9 @@
 // TODO: wrap into a proper constructor
-CAFEVDB = {
+var CAFEVDB = CAFEVDB || {
   name: 'cafevdb',
   headervisibility: 'expanded',
   toolTips: true,
-  wysiwygEditor: 'ckeditor',
+  wysiwygEditor: 'tinymce',
   addEditor: function(selector) {
     switch (CAFEVDB.wysiwygEditor) {
     case 'ckeditor':

@@ -42,7 +42,11 @@ try {
 
   Util::addExternalScript("https://maps.google.com/maps/api/js?sensor=false");
   Util::addExternalScript(OC_Helper::linkTo('calendar/js', 'l10n.php'));
-  Util::addExternalScript(OC_Helper::linkTo('cafevdb/js', 'config.php'));
+
+  // js/config.php generated dynamic JavaScript and thus "cheats" the
+  // CSP rules. We have here the possibility to pass some selected
+  // CGI-parameters or other PHP-variables on to the JavaScript code.
+  Util::addExternalScript(OC_Helper::linkTo('cafevdb/js', 'config.php').'?headervisibility='.$headervisibility);
 
   OCP\App::setActiveNavigationEntry( 'cafevdb' );
 
@@ -59,6 +63,7 @@ try {
   OCP\Util::addStyle('cafevdb', 'font-awesome');
 
   OCP\Util::addScript('cafevdb', 'cafevdb');
+  OCP\Util::addScript('cafevdb', 'pme');
   OCP\Util::addScript('cafevdb', 'transpose');
   OCP\Util::addScript('cafevdb', 'page');
   OCP\Util::addScript('cafevdb', 'email');
