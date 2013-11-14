@@ -1,6 +1,33 @@
 var CAFEVDB = {
   name: 'cafevdb',
   headervisibility: 'expanded',
+  wysiwygEditor: 'ckeditor',
+  addEditor: function(selector) {
+    switch (CAFEVDB.wysiwygEditor) {
+    case 'ckeditor':
+      $(selector).ckeditor(function() {}, {/*enterMode:CKEDITOR.ENTER_P*/});
+      break;
+    case 'tinymce':
+      $(selector).tinymce(myTinyMCE.config);
+      break;
+    default:
+      $(selector).ckeditor(function() {}, {/*enterMode:CKEDITOR.ENTER_P*/});
+      break;
+    };
+  },
+  removeEditor: function(selector) {
+    switch (CAFEVDB.wysiwygEditor) {
+    case 'ckeditor':
+      $(selector).ckeditor().remove();
+      break;
+    case 'tinymce':
+      $(selector).tinymce().remove();
+      break;
+    default:
+      $(selector).ckeditor().remove();
+      break;
+    };
+  },
   broadcastHeaderVisibility: function (visibility) {
     // Sanity check
     if (visibility != 'expanded' && visibility != 'collapsed') {
@@ -14,6 +41,11 @@ var CAFEVDB = {
     $('input[name="headervisibility"]').each(function (idx) {
       $(this).val(visibility);
     });
+  },
+  stopRKey : function(evt) {
+    var evt = (evt) ? evt : ((event) ? event : null);
+    var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+    if ((evt.keyCode == 13) && (node.type=="text"))  {return false;}
   }
 }
 
@@ -62,6 +94,8 @@ $.extend({ alert: function (message, title) {
 // });
 
 $(document).ready(function(){
+
+  document.onkeypress = CAFEVDB.stopRKey;
 
   // Emulate a pull-down menu with export options via the chosen
   // plugin.

@@ -435,12 +435,11 @@ ownclouddev';
     self::$pmeopts['labels']['Misc'] = 'Em@il';
     //self::$pmeopts['labels']['Sort Field'] = 'Sortierfeld';
 
+    self::$pmeopts['css']['textarea'] = '';
     if (false) {
-      self::$pmeopts['css']['textarea'] = 'mceEditor';
-      self::$opts['editor'] = array('on' => 'mceEditor', 'off' => 'mceNoEditor');
+      self::$opts['editor'] = 'tinymce';
     } else {
-      self::$pmeopts['css']['textarea'] = '';
-      self::$opts['editor'] = array('on' => 'ckeditor', 'off' => '');
+      self::$opts['editor'] = 'ckeditor';
     }    
 
     self::$opts['phpmyadmin'] = 'https://ch.homelinux.net:8888/phpmyadmin/index.php?user=camerata&db=camerata';

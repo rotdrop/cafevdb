@@ -750,9 +750,7 @@ und aktiviert den Editor'));
         $this->frozen = true;
         $this->dualSelect->toggleFrozen(true);
         $this->filterFieldSet->toggleFrozen(true);
-        if ($this->projectId >= 0) {
-          $this->baseGroupFieldSet->toggleFrozen(true);
-        }
+        $this->baseGroupFieldSet->toggleFrozen(true);
             
         $this->freezeFieldSet->removeChild($this->freezeButton);
         $this->submitFilterFieldSet->removeChild($this->filterResetButton);
@@ -774,7 +772,9 @@ und aktiviert den Editor'));
     $renderer = \HTML_QuickForm2_Renderer::factory('default');
     
     $this->form->render($renderer);
-    echo $renderer->getJavascriptBuilder()->getLibraries(true, true);
+    // Nope: DO NOT EMIT INLINE SCRIPTS, instead, include the two needed
+    // libraries directly from the top-level index.php
+    //$renderer->getJavascriptBuilder()->getLibraries(true, true);
     echo $renderer;
   }
 
@@ -1186,8 +1186,6 @@ __EOT__;
    */
   public function display()
   {
-    Util::disableEnterSubmit(); // ? needed ???
-
     // Display a filter dialog
     $filter = new EmailFilter($this->opts, $this->opts['page_name']);
 
@@ -1452,7 +1450,7 @@ __EOT__;
   </tr>
   <tr>
     <td class="body">'.L::t('Message-Body').'</td>
-    <td colspan="2"><textarea name="txtDescription" class="'.Config::$opts['editor']['on'].'" cols="20" rows="4" id="txtDescription">'.$this->message.'</textarea></td>
+    <td colspan="2"><textarea name="txtDescription" class="'.Config::$opts['editor'].'" cols="20" rows="4" id="txtDescription">'.$this->message.'</textarea></td>
   </tr>
   <tr>
     <td>'.L::t('Sender-Name').'</td>
