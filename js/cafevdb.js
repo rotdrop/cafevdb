@@ -4,6 +4,7 @@ var CAFEVDB = CAFEVDB || {
   headervisibility: 'expanded',
   toolTips: true,
   wysiwygEditor: 'tinymce',
+  language: 'en',
   addEditor: function(selector) {
     switch (CAFEVDB.wysiwygEditor) {
     case 'ckeditor':

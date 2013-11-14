@@ -1,12 +1,13 @@
-var myTinyMCE = {
+var myTinyMCE = myTinyMCE || {
   config: {
     theme: "modern",
+    language: 'en',
 //    width: 300,
 //    height: 300,
 //    forced_root_block : "",
 //    force_br_newlines : false,
 //    force_p_newlines : true,
-//    browser_spellcheck: true,
+    browser_spellcheck: true,
     setup: function(editor) {
       editor.on('PostProcess', function(e) {
         e.content = e.content.replace(/((&nbsp;|[\n\r\s])*<p>(&nbsp;|[\n\r\s])*<\/p>(&nbsp;|[\n\r\s])*)+$/g, '');
@@ -14,8 +15,9 @@ var myTinyMCE = {
         e.content = e.content.replace(/^<p>(((?!<p>)[\s\S])*)<\/p>$/g, '$1');
       });
     },
+    spellchecker_rpc_url: OC.filePath('cafevdb', '3rdparty/js/tinymce/plugins/spellchecker', 'rpc.php'),
     plugins: [
-         "advlist autolink link image lists charmap print preview hr anchor pagebreak",
+         "advlist autolink link image lists charmap print preview hr anchor pagebreak",  // spellchecker
          "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
          "save table contextmenu directionality emoticons template paste textcolor"
    ],
@@ -31,7 +33,8 @@ var myTinyMCE = {
         {title: 'Table row 1', selector: 'tr', classes: 'tablerow1'}
     ]
   },
-  init: function() {
+  init: function(lang) {
+    myTinyMCE.config.language = lang;
     var allconfig = myTinyMCE.config;
     allconfig.selector = "textarea.tinymce";
     tinyMCE.init(allconfig);
@@ -39,7 +42,7 @@ var myTinyMCE = {
 };
 
 $(document).ready(function() {
-  myTinyMCE.init();
+  myTinyMCE.init(CAFEVDB.language);
 });
 
 
