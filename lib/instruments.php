@@ -190,7 +190,6 @@ __EOT__;
 ."<a "
 ."href=\"http://de.wikipedia.org/wiki/@@key@@\" "
 ."target=\"Wikipedia\" "
-."onclick=\"return window.open(\'http://de.wikipedia.org/wiki/@@key@@\',\'Wikipedia\');\""
 .">"
 ."@@key@@@Wikipedie.DE</a>',"
 ."'@@key@@',`PMEtable0`.`Instrument`)",
