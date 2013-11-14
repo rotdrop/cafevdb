@@ -703,6 +703,8 @@ FILE_PATTERNS          = *.c \
                          *.c++ \
                          *.d \
                          *.java \
+			 *.js \
+			 *.css \
                          *.ii \
                          *.ixx \
                          *.ipp \
