@@ -558,7 +558,8 @@ class EmailFilter {
 
     $this->freezeButton = $this->freezeFieldSet->addElement(
       'submit', 'writeMail',
-      array('value' => L::t('Compose Em@il'),
+      array('id' => 'writeMail',
+            'value' => L::t('Compose Em@il'),
             'title' => 'Beendet die Musiker-Auswahl
 und aktiviert den Editor'));
 
@@ -567,13 +568,15 @@ und aktiviert den Editor'));
 
     $this->filterApplyButton = $this->submitFilterFieldSet->addElement(
       'submit', 'filterApply',
-      array('value' => L::t('Apply Filter'),
+      array('id' => 'filterApply',
+            'value' => L::t('Apply Filter'),
             'class' => 'apply',
             'title' => 'Instrumenten- und Musiker-Fundus-Filter anwenden.'));
 
     $this->filterResetButton = $this->submitFilterFieldSet->addElement(
       'submit', 'filterReset',
-      array('value' => L::t('Reset Filter'),
+      array('id' => 'filterReset',
+            'value' => L::t('Reset Filter'),
             'class' => 'reset',
             'title' => 'Von vorne mit den Anfangswerten.'));
 

@@ -115,7 +115,8 @@ CAFEVDB.Email = {
 
 $(document).ready(function(){
 
-  if ($('#DualSelectMusicians').length) {
+  if ($('#emailrecipients #writeMail').length) {
+
     qf.elements.dualselect.init('DualSelectMusicians', true);
 
     $('#memberStatusFilter').chosen();

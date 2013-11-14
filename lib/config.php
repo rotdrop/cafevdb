@@ -436,7 +436,7 @@ ownclouddev';
     //self::$pmeopts['labels']['Sort Field'] = 'Sortierfeld';
 
     self::$pmeopts['css']['textarea'] = '';
-    if (false) {
+    if (true) {
       self::$opts['editor'] = 'tinymce';
     } else {
       self::$opts['editor'] = 'ckeditor';
