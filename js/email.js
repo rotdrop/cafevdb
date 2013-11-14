@@ -115,28 +115,34 @@ CAFEVDB.Email = {
 
 $(document).ready(function(){
 
-  $('#memberStatusFilter-0').chosen();
-  $('#cafevdb-email-template-selector').chosen({ disable_search_threshold: 10});
+  if ($('#DualSelectMusicians').length) {
+    qf.elements.dualselect.init('DualSelectMusicians', true);
 
-  $('#memberStatusFilter-0').change(function(event) {
-    event.preventDefault();
-    $('#emailrecipients').submit();
-  });
+    $('#memberStatusFilter').chosen();
 
-  $('#selectedUserGroup-fromProject-0').click(function(event) {
-    event.preventDefault();
-    $('#emailrecipients').submit();
-  });
+    $('#memberStatusFilter').change(function(event) {
+      event.preventDefault();
+      $('#emailrecipients').submit();
+    });
 
-  $('#selectedUserGroup-exceptProject-0').click(function(event) {
-    event.preventDefault();
-    $('#emailrecipients').submit();
-  });
+    $('#selectedUserGroup-fromProject').click(function(event) {
+      event.preventDefault();
+      $('#emailrecipients').submit();
+    });
+    
+    $('#selectedUserGroup-exceptProject').click(function(event) {
+      event.preventDefault();
+      $('#emailrecipients').submit();
+    });
+  } else {
+    $('#cafevdb-email-template-selector').chosen({ disable_search_threshold: 10});
+
   
-  $('#cafevdb-email-template-selector').change(function(event) {
-    event.preventDefault();
-    $('#cafevdb-email-form').submit();
-  });
+    $('#cafevdb-email-template-selector').change(function(event) {
+      event.preventDefault();
+      $('#cafevdb-email-form').submit();
+    });
+  }
 
   $('div.chosen-container').tipsy({gravity:'se', fade:true});
   $('li.active-result').tipsy({gravity:'w', fade:true});

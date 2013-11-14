@@ -473,7 +473,8 @@ class EmailFilter {
       $group->setLabel(L::t('Principal Address Collection'));
       $check = $group->addElement(
         'checkbox', 'selectedUserGroup[fromProject]',
-        array('value' => true,
+        array('id' => 'selectedUserGroup-fromProject',
+              'value' => true,
               'class' => 'selectfromproject',
               'title' => 'Auswahl aus den registrierten Musikern für das Projekt.'));
       $check->setContent('<span class="selectfromproject">&isin; '.$this->project.'</span>');
@@ -481,7 +482,8 @@ class EmailFilter {
         
       $check = $group->addElement(
         'checkbox', 'selectedUserGroup[exceptProject]',
-        array('value' => true,
+        array('id' => 'selectedUserGroup-exceptProject',
+              'value' => true,
               'class' => 'selectexceptproject',
               'title' => 'Auswahl aus allen Musikern, die nicht für das Projekt registriert sind.'));
       $check->setContent('<span class="selectexceptproject">&notin; '.$this->project.'</span>');
@@ -490,7 +492,8 @@ class EmailFilter {
     // Optionally also include recipients which are normally disabled.
     $this->byStatusSelect = $this->baseGroupFieldSet->addElement(
       'select', 'memberStatusFilter',
-      array('multiple' => 'multiple',
+      array('id' => 'memberStatusFilter',
+            'multiple' => 'multiple',
             'size' => 5,
             'class' => 'member-status-filter chosen-rtl',
             'title' => L::t('Select recipients by member status.'),
@@ -507,7 +510,7 @@ class EmailFilter {
       
     $this->dualSelect = $this->selectFieldSet->addElement(
       'dualselect', 'SelectedMusicians',
-      array('size' => 18, 'class' => 'dualselect'),
+      array('size' => 18, 'class' => 'dualselect', 'id' => 'DualSelectMusicians'),
       array('options'    => $this->EMailsDpy,
             'keepSorted' => true,
             'from_to'    => array(
@@ -538,7 +541,10 @@ class EmailFilter {
 
     $this->filterSelect = $this->filterFieldSet->addElement(
       'select', 'InstrumentenFilter',
-      array('multiple' => 'multiple', 'size' => 18, 'class' => 'filter'),
+      array('id' => 'InstrumentenFilter',
+            'multiple' => 'multiple',
+            'size' => 18,
+            'class' => 'filter'),
       array('label' => L::t('Instrument-Filter'),
             'options' => array('*' => '*')));
 
