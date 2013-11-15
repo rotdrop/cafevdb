@@ -51,8 +51,8 @@ var PHPMYEDIT = PHPMYEDIT || {
         //$(this).unbind('change');
       });
       $("select[class^='"+pmepfx+"-filter'] option[value='*']").remove();
-      $("select[class^='"+pmepfx+"-filter-comp']").chosen({width:"auto"});
-      $("select[class^='"+pmepfx+"-filter']").chosen({width:"17ex"});
+      $("select[class^='"+pmepfx+"-filter-comp']").chosen({width:"auto",  disable_search_threshold: 10});
+      $("select[class^='"+pmepfx+"-filter']").chosen({width:"18ex"});
     }
   }
 };
