@@ -24,6 +24,7 @@ $array = array(
   "CAFEVDB.toolTips" => ($tooltips == "off" ? 'false' : 'true'),
   "CAFEVDB.wysiwygEditor" => "'".Config::$opts['editor']."'",
   "CAFEVDB.language" => "'".$language."'",
+  "PHPMYEDIT.filterSelectPlaceholder" => "'".L::t("Select a filter Option")."'",
   );
 
 // Echo it
