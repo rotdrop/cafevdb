@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-11-14 16:37+0100\n"
+"POT-Creation-Date: 2013-11-15 06:06+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -502,6 +502,11 @@ msgstr ""
 msgid "Tooltips changed"
 msgstr ""
 
+#: index.php:139 lib/musicians.php:154
+#, php-format
+msgid "Add all to %s"
+msgstr ""
+
 #: js/blog.js:17 js/blog.js:101 js/blog.js:155 js/blog.js:182 js/blog.js:206
 #: js/email.js:7 js/email.js:45 js/email.js:56 js/email.js:64 js/email.js:77
 #: js/events.js:41 js/events.js:92 js/photo.js:7 js/photo.js:15 js/photo.js:24
@@ -531,11 +536,11 @@ msgstr ""
 msgid "Really delete the entry?"
 msgstr ""
 
-#: js/cafevdb.js:148
+#: js/cafevdb.js:142
 msgid "Export to the following format is not yet supported:"
 msgstr ""
 
-#: js/cafevdb.js:150
+#: js/cafevdb.js:144
 msgid "Unimplemented"
 msgstr ""
 
@@ -591,6 +596,10 @@ msgstr ""
 msgid "Deletable"
 msgstr ""
 
+#: js/config.php:27
+msgid "Select a filter Option"
+msgstr ""
+
 #: js/email.js:6
 msgid "Not called from main email-form."
 msgstr ""
@@ -605,7 +614,7 @@ msgid ""
 "on this server."
 msgstr ""
 
-#: js/email.js:175
+#: js/email.js:176
 msgid "Select Attachment"
 msgstr ""
 
@@ -663,15 +672,15 @@ msgstr ""
 msgid "birthday"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:321 lib/musicians.php:336
+#: lib/detailed-instrumentation.php:314 lib/musicians.php:330
 msgid "Member Status"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:327
+#: lib/detailed-instrumentation.php:320
 msgid "General Remarks"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:339 lib/musicians.php:355
+#: lib/detailed-instrumentation.php:339 lib/musicians.php:356
 msgid "Photo"
 msgstr ""
 
@@ -711,125 +720,125 @@ msgstr ""
 msgid "Instrument-Filter"
 msgstr ""
 
-#: lib/email.php:561
+#: lib/email.php:562
 msgid "Compose Em@il"
 msgstr ""
 
-#: lib/email.php:570
+#: lib/email.php:572
 msgid "Apply Filter"
 msgstr ""
 
-#: lib/email.php:576
+#: lib/email.php:579
 msgid "Reset Filter"
 msgstr ""
 
-#: lib/email.php:585
+#: lib/email.php:588
 msgid "Musicians without Em@il"
 msgstr ""
 
-#: lib/email.php:596
+#: lib/email.php:599
 msgid "Count: "
 msgstr ""
 
-#: lib/email.php:969
+#: lib/email.php:972
 msgid "and"
 msgstr ""
 
-#: lib/email.php:1370 lib/projects.php:203 lib/projects.php:443
+#: lib/email.php:1373 lib/projects.php:203 lib/projects.php:443
 msgid "Events"
 msgstr ""
 
-#: lib/email.php:1373
+#: lib/email.php:1376
 msgid "Attached Events"
 msgstr ""
 
-#: lib/email.php:1385
+#: lib/email.php:1388
 #, php-format
 msgid "Edit Event %s"
 msgstr ""
 
-#: lib/email.php:1408
+#: lib/email.php:1411
 msgid "Template"
 msgstr ""
 
-#: lib/email.php:1412
+#: lib/email.php:1415
 msgid "Select email template"
 msgstr ""
 
-#: lib/email.php:1424
+#: lib/email.php:1427
 msgid "New Template Name"
 msgstr ""
 
-#: lib/email.php:1434
+#: lib/email.php:1437
 msgid "Save as Template"
 msgstr ""
 
-#: lib/email.php:1440
+#: lib/email.php:1443
 msgid "Recipients"
 msgstr ""
 
-#: lib/email.php:1441
+#: lib/email.php:1444
 msgid "Determined automatically from data-base, see below the email form."
 msgstr ""
 
-#: lib/email.php:1452
+#: lib/email.php:1455
 msgid "Subject"
 msgstr ""
 
-#: lib/email.php:1458
+#: lib/email.php:1461
 msgid "Message-Body"
 msgstr ""
 
-#: lib/email.php:1462
+#: lib/email.php:1465
 msgid "Sender-Name"
 msgstr ""
 
-#: lib/email.php:1467
+#: lib/email.php:1470
 msgid "Sender-Email"
 msgstr ""
 
-#: lib/email.php:1468
+#: lib/email.php:1471
 msgid "Tied to"
 msgstr ""
 
-#: lib/email.php:1471
+#: lib/email.php:1474
 msgid "Add Attachment"
 msgstr ""
 
-#: lib/email.php:1477 lib/email.php:1478
+#: lib/email.php:1480 lib/email.php:1481
 msgid "Upload new File"
 msgstr ""
 
-#: lib/email.php:1483 lib/email.php:1484
+#: lib/email.php:1486 lib/email.php:1487
 msgid "Select from Owncloud"
 msgstr ""
 
-#: lib/email.php:1496
+#: lib/email.php:1499
 msgid "Remove"
 msgstr ""
 
-#: lib/email.php:1504
+#: lib/email.php:1507
 msgid "Send Em@il"
 msgstr ""
 
-#: lib/email.php:1507
+#: lib/email.php:1510
 msgid "Edit recipients"
 msgstr ""
 
-#: lib/email.php:1513 templates/blogedit.php:18
+#: lib/email.php:1516 templates/blogedit.php:18
 msgid "Cancel"
 msgstr ""
 
-#: lib/email.php:1572
+#: lib/email.php:1575
 #, php-format
 msgid "Invalid template mail, first unknown left-over parameter is %s"
 msgstr ""
 
-#: lib/email.php:1574
+#: lib/email.php:1577
 msgid "Unknown Variable"
 msgstr ""
 
-#: lib/email.php:1580
+#: lib/email.php:1583
 msgid ""
 "No recipients specified, you possibly forgot to shift items from the left "
 "select box (potential recipients) to the right select box (actual "
@@ -837,44 +846,44 @@ msgid ""
 "recipients."
 msgstr ""
 
-#: lib/email.php:1581
+#: lib/email.php:1584
 msgid "No recipients"
 msgstr ""
 
-#: lib/email.php:1587
+#: lib/email.php:1590
 #, php-format
 msgid ""
 "The subject must not consist of `%s' as only part.<br/>Please correct that "
 "and then hit the `Send'-button again."
 msgstr ""
 
-#: lib/email.php:1590
+#: lib/email.php:1593
 msgid "Incomplete Subject"
 msgstr ""
 
-#: lib/email.php:1595
+#: lib/email.php:1598
 msgid ""
 "The sender-name should not be empty.<br/>Please correct that and then hit "
 "the `Send'-button again."
 msgstr ""
 
-#: lib/email.php:1597
+#: lib/email.php:1600
 msgid "Descriptive Sender Name"
 msgstr ""
 
-#: lib/email.php:1836
+#: lib/email.php:1839
 msgid "The email-backend throwed an exception stating:<br/>"
 msgstr ""
 
-#: lib/email.php:1838
+#: lib/email.php:1841
 msgid "Please correct the problem and then click on the `Send'-button again."
 msgstr ""
 
-#: lib/email.php:1839 lib/email.php:1982
+#: lib/email.php:1842 lib/email.php:1985
 msgid "Caught an exception"
 msgstr ""
 
-#: lib/email.php:1949
+#: lib/email.php:1952
 #, php-format
 msgid ""
 "A message with exactly the same text to exactly the same recipients has "
@@ -882,56 +891,56 @@ msgid ""
 "duplicate bulk emails."
 msgstr ""
 
-#: lib/email.php:1955
+#: lib/email.php:1958
 msgid "Duplicate Email"
 msgstr ""
 
-#: lib/email.php:1963
+#: lib/email.php:1966
 msgid "Sending failed for an unknown reason. Sorry."
 msgstr ""
 
-#: lib/email.php:1964
+#: lib/email.php:1967
 msgid "General Failure reading your hard-disk ... just kidding."
 msgstr ""
 
-#: lib/email.php:1969
+#: lib/email.php:1972
 msgid "Message has been sent, at least: no error from our side!"
 msgstr ""
 
-#: lib/email.php:1970
+#: lib/email.php:1973
 msgid "Message has been sent"
 msgstr ""
 
-#: lib/email.php:1979
+#: lib/email.php:1982
 #, php-format
 msgid ""
 "During send, the email-backend throwed an exception stating:<br/>`%s'</"
 "br>Please correct the problem and then click on the `Send'-button again."
 msgstr ""
 
-#: lib/email.php:2010
+#: lib/email.php:2013
 #, php-format
 msgid ""
 "The IMAP backend returned the error `%s'. Unfortunate Snafu.<br/>I was "
 "trying to copy the message to our send-folder, but that failed."
 msgstr ""
 
-#: lib/email.php:2013
+#: lib/email.php:2016
 msgid "IMAP connection failed"
 msgstr ""
 
-#: lib/email.php:2020
+#: lib/email.php:2023
 #, php-format
 msgid ""
 "Could not copy the message to neither the \"Sent\" or the \"INBOX.Sent\" "
 "folder.</br>Server returned the errors: `%s' and `%s'"
 msgstr ""
 
-#: lib/email.php:2024
+#: lib/email.php:2027
 msgid "Copying to `Sent'-folder failed."
 msgstr ""
 
-#: lib/email.php:2081
+#: lib/email.php:2084
 #, php-format
 msgid ""
 "The %s address `%s' seems to be invalid.<br/>Please correct that first and "
@@ -939,11 +948,11 @@ msgid ""
 "any) have to be specified again."
 msgstr ""
 
-#: lib/email.php:2085
+#: lib/email.php:2088
 msgid "Invalid Email Address"
 msgstr ""
 
-#: lib/email.php:2093
+#: lib/email.php:2096
 msgid "recipient"
 msgstr ""
 
@@ -1098,42 +1107,37 @@ msgstr ""
 msgid "temporary"
 msgstr ""
 
-#: lib/musicians.php:154
-#, php-format
-msgid "Add all to %s"
-msgstr ""
-
 #: lib/musicians.php:205
 #, php-format
 msgid "Add to %s"
 msgstr ""
 
-#: lib/musicians.php:343
+#: lib/musicians.php:337
 msgid "Remarks"
 msgstr ""
 
-#: lib/musicians.php:424
+#: lib/musicians.php:425
 #, php-format
 msgid "Drop photo to upload (max %s)"
 msgstr ""
 
-#: lib/musicians.php:427
+#: lib/musicians.php:428
 msgid "Delete current photo"
 msgstr ""
 
-#: lib/musicians.php:428
+#: lib/musicians.php:429
 msgid "Edit current photo"
 msgstr ""
 
-#: lib/musicians.php:429
+#: lib/musicians.php:430
 msgid "Upload new photo"
 msgstr ""
 
-#: lib/musicians.php:430
+#: lib/musicians.php:431
 msgid "Select photo from ownCloud"
 msgstr ""
 
-#: lib/musicians.php:841 lib/musicians.php:1269
+#: lib/musicians.php:842 lib/musicians.php:1270
 #, php-format
 msgid ""
 "None of the instruments known by %s are mentioned in the %sinstrumentation-"
@@ -1143,7 +1147,7 @@ msgid ""
 "Please correct the mis-match."
 msgstr ""
 
-#: lib/musicians.php:852
+#: lib/musicians.php:853
 #, php-format
 msgid ""
 "Choosing the first instrument known by %s\n"
@@ -1152,7 +1156,7 @@ msgid ""
 "below, if necessary. Choosing ``%s'' as instrument."
 msgstr ""
 
-#: lib/musicians.php:1294
+#: lib/musicians.php:1295
 #, php-format
 msgid ""
 "Generally, the first instrument known by the respective musician\n"
