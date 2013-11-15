@@ -310,13 +310,6 @@ __EOT__;
                                     'sort'     => true);
     }
 
-    $opts['fdd']['Sprachpräferenz'] = array('name'     => 'Spachpräferenz',
-                                            'select'   => 'T',
-                                            'maxlen'   => 128,
-                                            'default'  => 'Deutsch',
-                                            'sort'     => true,
-                                            'values'   => Config::$opts['languages']);
-
     $opts['fdd']['Geburtstag'] = Config::$opts['birthday'];
     $opts['fdd']['MemberStatus'] = array('name'     => strval(L::t('Member Status')),
                                          'select'   => 'O',
@@ -333,6 +326,13 @@ __EOT__;
                                                         'cols' => 50),
                                     'escape'   => false,
                                     'sort'     => true);
+
+    $opts['fdd']['Sprachpräferenz'] = array('name'     => 'Spachpräferenz',
+                                            'select'   => 'T',
+                                            'maxlen'   => 128,
+                                            'default'  => 'Deutsch',
+                                            'sort'     => true,
+                                            'values'   => Config::$opts['languages']);
 
     $opts['fdd']['Portrait'] = array(
       'input' => 'V',

@@ -309,12 +309,6 @@ __EOT__;
                                  'maxlen'   => 128,
                                  'default'  => 'Deutschland',
                                  'sort'     => true);
-    $opts['fdd']['Sprachpräferenz'] = array('name'     => 'Spachpräferenz',
-                                            'select'   => 'D',
-                                            'maxlen'   => 128,
-                                            'default'  => 'Deutschland',
-                                            'sort'     => true,
-                                            'values'   => Config::$opts['languages']);
     $opts['fdd']['Telefon'] = array(
                                     'name'     => 'Telefon',
                                     'select'   => 'T',
@@ -349,6 +343,13 @@ __EOT__;
                                                         'cols' => 50),
                                     'escape' => false,
                                     'sort'     => true);
+
+    $opts['fdd']['Sprachpräferenz'] = array('name'     => 'Spachpräferenz',
+                                            'select'   => 'D',
+                                            'maxlen'   => 128,
+                                            'default'  => 'Deutschland',
+                                            'sort'     => true,
+                                            'values'   => Config::$opts['languages']);
 
     $opts['fdd']['Portrait'] = array(
       'input' => 'V',
