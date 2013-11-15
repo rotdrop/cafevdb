@@ -218,7 +218,7 @@ __EOT__;
                                                                                ))
                                       );
     $opts['fdd']['Instrument'] = array('name'     => 'Instrument',
-                                       'select'   => 'T',
+                                       'select'   => 'D',
                                        'maxlen'   => 12,
                                        'values'   => array('table'   => 'Instrumente',
                                                            'column'  => 'Instrument',

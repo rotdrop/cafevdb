@@ -188,7 +188,7 @@ __EOT__;
 
     $opts['fdd']['Instrument'] = array(
                                        'name'     => 'Projekt-Instrument',
-                                       'select'   => 'T',
+                                       'select'   => 'D',
                                        'maxlen'   => 36,
                                        'sort'     => true
                                        );
@@ -328,7 +328,7 @@ __EOT__;
                                     'sort'     => true);
 
     $opts['fdd']['Sprachpräferenz'] = array('name'     => 'Spachpräferenz',
-                                            'select'   => 'T',
+                                            'select'   => 'D',
                                             'maxlen'   => 128,
                                             'default'  => 'Deutsch',
                                             'sort'     => true,

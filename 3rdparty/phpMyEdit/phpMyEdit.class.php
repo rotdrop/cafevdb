@@ -2611,9 +2611,11 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				$len_props .= ' size="'.$size.'"';
 				$len_props .= ' maxlength="'.$maxlen.'"';
 				if ($this->fdd[$fd]['select'] == 'N') {
+					$css_comp_class_name = $this->getCSSclass('filter-comp', null, null, $css_postfix);
+
 					$mc = in_array($mc, $this->comp_ops) ? $mc : '=';
 					echo $this->htmlSelect($this->cgi['prefix']['sys'].$l.'_comp',
-										   $css_class_name, $this->comp_ops, $mc);
+										   $css_comp_class_name, $this->comp_ops, $mc);
 				}
 				echo '<input class="',$css_class_name,'" value="',htmlspecialchars(@$m);
 				echo '" type="text" name="'.$this->cgi['prefix']['sys'].'qf'.$k.'"',$len_props;

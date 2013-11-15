@@ -48,10 +48,11 @@ var PHPMYEDIT = PHPMYEDIT || {
       // filter, which is not needed when using chosen.
       $("select[class^='"+pmepfx+"-filter']").each(function(idx) {
         $(this).attr("data-placeholder", PHPMYEDIT.filterSelectPlaceholder);
-        $(this).unbind('change');
+        //$(this).unbind('change');
       });
       $("select[class^='"+pmepfx+"-filter'] option[value='*']").remove();
-      $("select[class^='"+pmepfx+"-filter']").chosen();
+      $("select[class^='"+pmepfx+"-filter-comp']").chosen({width:"auto"});
+      $("select[class^='"+pmepfx+"-filter']").chosen({width:"17ex"});
     }
   }
 };
