@@ -6,7 +6,7 @@ namespace CAFEVDB
 {
 
 // PHP shit
-date_default_timezone_set('Europe/Berlin');
+//date_default_timezone_set('Europe/Berlin');
 
 /**Class for handling configuration values.
  */

@@ -1552,7 +1552,7 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
 
       // So place the spam ...
 
-      date_default_timezone_set(@date_default_timezone_get());
+      // date_default_timezone_set(@date_default_timezone_get());
 
       // See what we finally have ...
       $EMails = $filter->getEmails();
