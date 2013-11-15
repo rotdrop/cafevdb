@@ -13,6 +13,8 @@ header("Content-type: text/javascript");
 header("Cache-Control: no-cache, must-revalidate"); 
 header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); 
 
+$Config::init();
+
 $headervisibility = Util::cgiValue('headervisibility', 'expanded');
 $tooltips         = OCP\Config::getUserValue(OCP\USER::getUser(), 'cafevdb', 'tooltips', '');
 $language         = OCP\Config::getUserValue(OCP\User::getUser(), 'core', 'lang', 'en');
