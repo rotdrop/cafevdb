@@ -97,6 +97,12 @@ td.pme-cell-0-rehearsalremarks p:nth-child(1):first-line, td.pme-cell-1-rehearsa
   overflow:hidden;
 }
 
+table.pme-main [class^="chosen"] {
+  border-radius: 0.5em !important;
+  background-color: rgb(244, 244, 244) !important;
+}
+
+
 /*
  * Local Variables: ***
  * cssm-indent-function: cssm-c-style-indenter ***

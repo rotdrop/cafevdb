@@ -1,4 +1,6 @@
-PHPMYEDIT = {
+var PHPMYEDIT = PHPMYEDIT || {
+  filterSelectPlaceholder: 'Select a filter Option',
+  filterSelectChosen: true,
   filterHandler:function(theForm, theEvent) {
     var pressed_key = null;
     if (theEvent.which) {
@@ -40,6 +42,17 @@ PHPMYEDIT = {
     $("input[type='submit'].pme-more").click(function(event) {
       return PHPMYEDIT.filterHandler(this.form, event);
     });
+
+    if (PHPMYEDIT.filterSelectChosen) {
+      // Provide a data-placeholder and also remove the match-all
+      // filter, which is not needed when using chosen.
+      $("select[class^='"+pmepfx+"-filter']").each(function(idx) {
+        $(this).attr("data-placeholder", PHPMYEDIT.filterSelectPlaceholder);
+        $(this).unbind('change');
+      });
+      $("select[class^='"+pmepfx+"-filter'] option[value='*']").remove();
+      $("select[class^='"+pmepfx+"-filter']").chosen();
+    }
   }
 };
 
