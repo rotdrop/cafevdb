@@ -574,7 +574,7 @@ class phpMyEdit
 
 	function set_values($field_num, $prepend = null, $append = null, $strict = false) /* {{{ */
 	{
-		// allow for unconditinional override
+		// allow for unconditional override
 		if (isset($this->fdd[$field_num]['values']['queryvalues'])) {
 			return (array) $prepnd + (array) $this->fdd[$field_num]['values']['queryvalues'] + (array) $append;
 		} else {
