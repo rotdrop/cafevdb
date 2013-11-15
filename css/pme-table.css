@@ -70,6 +70,15 @@ td.pme-value-0-msg, td.pme-value-1-msg {
   text-wrap:normal;
 }
 
+td.pme-cell-0-instruments, td.pme-cell-1-instruments,
+td.pme-cell-0-projects, td.pme-cell-1-projects { 
+  width:20em;
+  max-width:20em;
+  max-height:1em;
+  white-space:nowrap;
+  overflow:hidden;
+}
+
 /* Hide everything but the first line */
 td.pme-cell-0-remarks, td.pme-cell-1-remarks,
 td.pme-cell-0-projectremarks, td.pme-cell-1-projectremarks,

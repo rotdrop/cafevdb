@@ -220,6 +220,7 @@ __EOT__;
     $opts['fdd']['Instrument'] = array('name'     => 'Instrument',
                                        'select'   => 'D',
                                        'maxlen'   => 12,
+                                       'css'      => array('postfix' => 'instruments'),
                                        'values'   => array('table'   => 'Instrumente',
                                                            'column'  => 'Instrument',
                                                            'orderby' => '$table.Sortierung',

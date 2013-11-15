@@ -188,6 +188,7 @@ __EOT__;
 
     $opts['fdd']['Instrument'] = array(
                                        'name'     => 'Projekt-Instrument',
+                                       'css'      => array('postfix' => 'instruments'),
                                        'select'   => 'D',
                                        'maxlen'   => 36,
                                        'sort'     => true
@@ -221,6 +222,7 @@ __EOT__;
                                        'sort'     => true);
     $opts['fdd']['AlleInstrumente'] = array(
                                             'name'     => 'Alle Instrumente',
+                                            'css'      => array('postfix' => 'instruments'),
                                             'options'  => 'AVCPD',
                                             'select'   => 'C',
                                             'maxlen'   => 136,

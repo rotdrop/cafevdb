@@ -232,6 +232,7 @@ __EOT__;
     }
     $opts['fdd']['Instrumente'] = array(
                                         'name'     => 'Instrumente',
+                                        'css'      => array('postfix' => 'instruments'),
                                         'select'   => 'C',
                                         'maxlen'   => 137,
                                         'sort'     => true
@@ -274,7 +275,7 @@ __EOT__;
             'sort' => true,
             'sql' => 'PMEjoin'.count($opts['fdd']).'.Projekte',
             'sqlw' => 'PMEjoin'.count($opts['fdd']).'.Projekte',
-            'css'      => array('postfix' => 'prjs'),
+            'css'      => array('postfix' => 'projects'),
             'values' => array( //API for currently making a join in PME.
               'table' =>
               array('sql' => $derivedtable,
@@ -1151,6 +1152,7 @@ __EOT__;
     $opts['fdd']['Instrument'] = array('name'     => 'Instrument',
                                        'select'   => 'T',
                                        'maxlen'   => 12,
+                                       'css'      => array('postfix' => 'instruments'),
                                        'values'   => array('table'   => 'Instrumente',
                                                            'column'  => 'Instrument',
                                                            'orderby' => '$table.Sortierung',
