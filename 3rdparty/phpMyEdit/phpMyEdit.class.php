@@ -2583,8 +2583,8 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			if ($this->password($k)) {
 				echo '&nbsp;';
 			} else if ($this->fdd[$fd]['select'] == 'D' ||
-					   $this->fdd[$fd]['select'] == 'M'||
-					   $this->fdd[$fd]['select'] == 'O'||
+					   $this->fdd[$fd]['select'] == 'M' ||
+					   $this->fdd[$fd]['select'] == 'O' ||
 					   $this->fdd[$fd]['select'] == 'C') {
 				// Multiple fields processing
 				// Default size is 2 and array required for values.
@@ -2597,7 +2597,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				$strip_tags = true;
 				$escape		= true;
 				echo $this->htmlSelect($this->cgi['prefix']['sys'].$l.'_id', $css_class_name,
-									   $vals, $selected, $multiple, $readonly, $strip_tags, $escape);
+									   $vals, $selected, $multiple || true, $readonly, $strip_tags, $escape);
 			} elseif (($this->fdd[$fd]['select'] == 'N' ||
 					   $this->fdd[$fd]['select'] == 'T')
 					  &&			  
