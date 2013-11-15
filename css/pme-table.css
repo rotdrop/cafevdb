@@ -70,7 +70,14 @@ td.pme-value-0-msg, td.pme-value-1-msg {
   text-wrap:normal;
 }
 
-td.pme-cell-0-instruments, td.pme-cell-1-instruments,
+td.pme-cell-0-instruments, td.pme-cell-1-instruments { 
+  width:12em;
+  max-width:12em;
+  max-height:1em;
+  white-space:nowrap;
+  overflow:hidden;
+}
+
 td.pme-cell-0-projects, td.pme-cell-1-projects { 
   width:20em;
   max-width:20em;
