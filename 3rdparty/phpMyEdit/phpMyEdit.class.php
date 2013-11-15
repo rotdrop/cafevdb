@@ -2611,7 +2611,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				$len_props .= ' size="'.$size.'"';
 				$len_props .= ' maxlength="'.$maxlen.'"';
 				if ($this->fdd[$fd]['select'] == 'N') {
-					$css_comp_class_name = $this->getCSSclass('filter-comp', null, null, $css_postfix);
+					$css_comp_class_name = $this->getCSSclass('comp-filter', null, null, $css_postfix);
 
 					$mc = in_array($mc, $this->comp_ops) ? $mc : '=';
 					echo $this->htmlSelect($this->cgi['prefix']['sys'].$l.'_comp',

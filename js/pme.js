@@ -31,7 +31,7 @@ var PHPMYEDIT = PHPMYEDIT || {
       return this.form.submit();
     });
 
-    $("input[type='text']."+pmepfx+"-filter").keypress(function(event) {
+    $("input[class^='"+pmepfx+"-filter']").keypress(function(event) {
       return PHPMYEDIT.filterHandler(this.form, event);
     });
 
@@ -44,15 +44,14 @@ var PHPMYEDIT = PHPMYEDIT || {
     });
 
     if (PHPMYEDIT.filterSelectChosen) {
+      $("select[class^='"+pmepfx+"-comp-filter']").chosen({width:"auto",  disable_search_threshold: 10});
+
       // Provide a data-placeholder and also remove the match-all
       // filter, which is not needed when using chosen.
-      $("select[class^='"+pmepfx+"-filter']").each(function(idx) {
-        $(this).attr("data-placeholder", PHPMYEDIT.filterSelectPlaceholder);
-        //$(this).unbind('change');
-      });
+      $("select[class^='"+pmepfx+"-filter']").attr("data-placeholder", PHPMYEDIT.filterSelectPlaceholder);
+      $("select[class^='"+pmepfx+"-filter']").unbind('change');
       $("select[class^='"+pmepfx+"-filter'] option[value='*']").remove();
-      $("select[class^='"+pmepfx+"-filter-comp']").chosen({width:"auto",  disable_search_threshold: 10});
-      $("select[class^='"+pmepfx+"-filter']").chosen({width:"18ex"});
+      $("select[class^='"+pmepfx+"-filter']").chosen({width:"100%"});
     }
   }
 };
