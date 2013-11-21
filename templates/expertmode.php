@@ -52,30 +52,36 @@ $buttons['example'] =
 ?>
 <div class="msg"><span style="opacity:0.5"><?php echo L::t('empty') ?></span></div>
   </fieldset>
-  <fieldset id="expertlinks" class="operations expert links"><legend><?php echo L::t('Links'); ?></legend>
-  <input type="button"
-    value="<?php echo L::t('Database musicians/projects'); ?>"
-    onclick="return window.open('<?php echo $_['phpmyadmin']; ?>','<?php echo Config::APP_NAME.'@phpmyadmin'; ?>');"
-    title="<?php echo L::t('Open the login-window to the data-base back-bone. Although this is `expert mode\' you will fall in love with the `export\' facilities of the data-base back-bone. TRY IT OUT! DO IT!'); ?>"/>
-  <br/>
-  <input type="button"
-    value="<?php echo L::t('Database Owncloud'); ?>"
-    onclick="return window.open('<?php echo $_['phpmyadminoc']; ?>','Owncloud@phpmyadmin');"
-    title="<?php echo L::t('Open the login-window to the data-base back-bone for the Owncloud WebUI.'); ?>"/>
-  <br/>
-  <input type="button"
-    value="<?php echo L::t('Source-Code Archive'); ?>"
-    onclick="return window.open('<?php echo $_['sourcecode']; ?>','GIT@<?php echo Config::APP_NAME; ?>');"
-    title="<?php echo L::t('View the git-repository holding all revision of this entire mess. Mostly useful for web-developers.'); ?>" />
-  <br/>
-  <input type="button"
-    value="<?php echo L::t('Source-Code Documentation'); ?>"
-    onclick="return window.open('<?php echo $_['sourcedocs']; ?>','Doxygen@<?php echo Config::APP_NAME; ?>');" 
-    title="<?php echo L::t('Internal documentation of the `CAFEV-App\', mostly useful for web-developers.'); ?>"/>
-  <br/>
-  <input type="button"
-    value="<?php echo L::t('Owncloud Developer Documentation'); ?>"
-    onclick="return window.open('<?php echo $_['ownclouddev']; ?>','Doxygen@<?php echo Config::APP_NAME; ?>');" 
-    title="<?php echo L::t('Owncloud Developer Manual, mostly useful for web-developers.'); ?>"/>
+  <form>
+    <fieldset id="expertlinks" class="operations expert links"><legend><?php echo L::t('Links'); ?></legend>
+      <input type="submit"
+             value="<?php echo L::t('Database musicians/projects'); ?>"
+             formaction="<?php echo $_['phpmyadmin']; ?>"
+             formtarget="<?php echo Config::APP_NAME.'@phpmyadmin'; ?>"
+             title="<?php echo L::t('Open the login-window to the data-base back-bone. Although this is `expert mode\' you will fall in love with the `export\' facilities of the data-base back-bone. TRY IT OUT! DO IT!'); ?>"/>
+      <br/>
+      <input type="submit"
+             value="<?php echo L::t('Database Owncloud'); ?>"
+             formaction="<?php echo $_['phpmyadminoc']; ?>"
+             formtarget="Owncloud@phpmyadmin"
+             title="<?php echo L::t('Open the login-window to the data-base back-bone for the Owncloud WebUI.'); ?>"/>
+      <br/>
+      <input type="submit"
+             value="<?php echo L::t('Source-Code Archive'); ?>"
+             formaction="<?php echo $_['sourcecode']; ?>"
+             formtarget="GIT@<?php echo Config::APP_NAME; ?>"
+             title="<?php echo L::t('View the git-repository holding all revision of this entire mess. Mostly useful for web-developers.'); ?>" />
+      <br/>
+      <input type="submit"
+             value="<?php echo L::t('Source-Code Documentation'); ?>"
+             formaction="<?php echo $_['sourcedocs']; ?>"
+             formtarget="Doxygen@<?php echo Config::APP_NAME; ?>"
+             title="<?php echo L::t('Internal documentation of the `CAFEV-App\', mostly useful for web-developers.'); ?>"/>
+      <br/>
+      <input type="submit"
+             value="<?php echo L::t('Owncloud Developer Documentation'); ?>"
+             formaction="<?php echo $_['ownclouddev']; ?>"
+             formtarget="Doxygen@<?php echo Config::APP_NAME; ?>"
+             title="<?php echo L::t('Owncloud Developer Manual, mostly useful for web-developers.'); ?>"/>
   </fieldset>
 </div>
