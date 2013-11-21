@@ -52,7 +52,7 @@ $buttons['example'] =
 ?>
 <div class="msg"><span style="opacity:0.5"><?php echo L::t('empty') ?></span></div>
   </fieldset>
-  <form>
+  <form method="post">
     <fieldset id="expertlinks" class="operations expert links"><legend><?php echo L::t('Links'); ?></legend>
       <input type="submit"
              value="<?php echo L::t('Database musicians/projects'); ?>"
