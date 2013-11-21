@@ -1,33 +1,33 @@
 <?php
 
-OC::$CLASSPATH['CAFEVDB\Admin'] = 'apps/cafevdb/lib/admin.php';
-OC::$CLASSPATH['CAFEVDB\Config'] = 'apps/cafevdb/lib/config.php';
-OC::$CLASSPATH['CAFEVDB\ConfigCheck'] = 'apps/cafevdb/lib/config.php';
-OC::$CLASSPATH['CAFEVDB\Events'] = 'apps/cafevdb/lib/events.php';
-OC::$CLASSPATH['CAFEVDB\Blog'] = 'apps/cafevdb/lib/blog.php';
-OC::$CLASSPATH['CAFEVDB\ToolTips'] = 'apps/cafevdb/lib/tooltips.php';
-OC::$CLASSPATH['CAFEVDB\L'] = 'apps/cafevdb/lib/functions.php';
-OC::$CLASSPATH['CAFEVDB\Util'] = 'apps/cafevdb/lib/functions.php';
-OC::$CLASSPATH['CAFEVDB\Error'] = 'apps/cafevdb/lib/functions.php';
-OC::$CLASSPATH['CAFEVDB\Ajax'] = 'apps/cafevdb/lib/functions.php';
-OC::$CLASSPATH['CAFEVDB\Navigation'] = 'apps/cafevdb/lib/functions.php';
-OC::$CLASSPATH['CAFEVDB\mySQL'] = 'apps/cafevdb/lib/functions.php';
-OC::$CLASSPATH['CAFEVDB\Projects'] = 'apps/cafevdb/lib/projects.php';
-OC::$CLASSPATH['CAFEVDB\Instruments'] = 'apps/cafevdb/lib/instruments.php';
-OC::$CLASSPATH['CAFEVDB\Musicians'] = 'apps/cafevdb/lib/musicians.php';
-OC::$CLASSPATH['CAFEVDB\AddOneMusician'] = 'apps/cafevdb/lib/musicians.php';
-OC::$CLASSPATH['CAFEVDB\BulkAddMusicians'] = 'apps/cafevdb/lib/musicians.php';
-OC::$CLASSPATH['CAFEVDB\Instrumentation'] = 'apps/cafevdb/lib/instrumentation.php';
-OC::$CLASSPATH['CAFEVDB\BriefInstrumentation'] = 'apps/cafevdb/lib/brief-instrumentation.php';
-OC::$CLASSPATH['CAFEVDB\DetailedInstrumentation'] = 'apps/cafevdb/lib/detailed-instrumentation.php';
-OC::$CLASSPATH['CAFEVDB\ProjectInstruments'] = 'apps/cafevdb/lib/project-instruments.php';
-OC::$CLASSPATH['CAFEVDB\EmailFilter'] = 'apps/cafevdb/lib/email.php';
-OC::$CLASSPATH['CAFEVDB\Email'] = 'apps/cafevdb/lib/email.php';
-OC::$CLASSPATH['CAFEVDB\EmailHistory'] = 'apps/cafevdb/lib/email.php';
+OC::$CLASSPATH['CAFEVDB\Admin'] = 'cafevdb/lib/admin.php';
+OC::$CLASSPATH['CAFEVDB\Config'] = 'cafevdb/lib/config.php';
+OC::$CLASSPATH['CAFEVDB\ConfigCheck'] = 'cafevdb/lib/config.php';
+OC::$CLASSPATH['CAFEVDB\Events'] = 'cafevdb/lib/events.php';
+OC::$CLASSPATH['CAFEVDB\Blog'] = 'cafevdb/lib/blog.php';
+OC::$CLASSPATH['CAFEVDB\ToolTips'] = 'cafevdb/lib/tooltips.php';
+OC::$CLASSPATH['CAFEVDB\L'] = 'cafevdb/lib/functions.php';
+OC::$CLASSPATH['CAFEVDB\Util'] = 'cafevdb/lib/functions.php';
+OC::$CLASSPATH['CAFEVDB\Error'] = 'cafevdb/lib/functions.php';
+OC::$CLASSPATH['CAFEVDB\Ajax'] = 'cafevdb/lib/functions.php';
+OC::$CLASSPATH['CAFEVDB\Navigation'] = 'cafevdb/lib/functions.php';
+OC::$CLASSPATH['CAFEVDB\mySQL'] = 'cafevdb/lib/functions.php';
+OC::$CLASSPATH['CAFEVDB\Projects'] = 'cafevdb/lib/projects.php';
+OC::$CLASSPATH['CAFEVDB\Instruments'] = 'cafevdb/lib/instruments.php';
+OC::$CLASSPATH['CAFEVDB\Musicians'] = 'cafevdb/lib/musicians.php';
+OC::$CLASSPATH['CAFEVDB\AddOneMusician'] = 'cafevdb/lib/musicians.php';
+OC::$CLASSPATH['CAFEVDB\BulkAddMusicians'] = 'cafevdb/lib/musicians.php';
+OC::$CLASSPATH['CAFEVDB\Instrumentation'] = 'cafevdb/lib/instrumentation.php';
+OC::$CLASSPATH['CAFEVDB\BriefInstrumentation'] = 'cafevdb/lib/brief-instrumentation.php';
+OC::$CLASSPATH['CAFEVDB\DetailedInstrumentation'] = 'cafevdb/lib/detailed-instrumentation.php';
+OC::$CLASSPATH['CAFEVDB\ProjectInstruments'] = 'cafevdb/lib/project-instruments.php';
+OC::$CLASSPATH['CAFEVDB\EmailFilter'] = 'cafevdb/lib/email.php';
+OC::$CLASSPATH['CAFEVDB\Email'] = 'cafevdb/lib/email.php';
+OC::$CLASSPATH['CAFEVDB\EmailHistory'] = 'cafevdb/lib/email.php';
 
 /* 3rd party classes */
-OC::$CLASSPATH['phpMyEdit'] = 'apps/cafevdb/3rdparty/phpMyEdit/phpMyEdit.class.php';
-OC::$CLASSPATH['html2text'] = 'apps/cafevdb/3rdparty/PHPMailer/extras/class.html2text.php';
+OC::$CLASSPATH['phpMyEdit'] = 'cafevdb/3rdparty/phpMyEdit/phpMyEdit.class.php';
+OC::$CLASSPATH['html2text'] = 'cafevdb/3rdparty/PHPMailer/extras/class.html2text.php';
 
 /* Script etc. used by everyone */
 OC_App::registerAdmin( 'cafevdb', 'admin-settings' );
