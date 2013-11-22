@@ -994,26 +994,148 @@ class phpMyEdit
 					$this->fdd[$k]['select'] != 'D' && $m == '') {
 					continue;
 				}
-				$afilter = addslashes($m);
 				if ($this->fdd[$k]['select'] == 'N') {
+					$afilter = addslashes($m);
 					$mc = in_array($mc, $this->comp_ops) ? $mc : '=';
 					$qo[$this->fqn($k)] = array('oper' => $mc, 'value' => "'$afilter'");
 					$this->qfn .= '&'.$this->cgi['prefix']['sys'].$l .'='.rawurlencode($m);
 					$this->qfn .= '&'.$this->cgi['prefix']['sys'].$lc.'='.rawurlencode($mc);
 				} else {
-					$afilter = '%'.str_replace('*', '%', $afilter).'%';
+					/**The old behaviour was simply too unflexible:
+					 * just adding wildcars around the search
+					 * string. The following hack introduces the
+					 * rules:
+					 *
+					 * '' or "" match itself or NULL
+					 *
+					 * 'something' or "something" match something, no
+					 * wildcard encapsulation, i.e. LIKE 'something',
+					 * where something of course may contain "user
+					 * contributed" wildcards.
+					 *
+					 * !=something is a negation, i.e. NOT LIKE 'something'. We treat
+					 * !='something' (or with double quotes) like !=something
+					 *
+					 * Otherwise the filter value is augmented with
+					 * surrounding wildcards as before.
+					 */
+					
 					$ids  = array();
 					$ar	  = array();
-					$ar[$this->fqn($k)] = array('oper' => 'LIKE', 'value' => "'$afilter'");
-					if (is_array($this->fdd[$k]['values2'])) {
-						foreach ($this->fdd[$k]['values2'] as $key => $val) {
-							if (strlen($m) > 0 && stristr($val, $m)) {
-								$ids[] = '"'.addslashes($key).'"';
-							}
+					$matches = array();
+					$compare = 'contains';
+					if (preg_match("/^'(.*)'$/", $m, $matches) ||
+						preg_match('/^"(.*)"$/', $m, $matches) ||
+						preg_match("/^==?'(.*)'$/", $m, $matches) ||
+						preg_match('/^==?"(.*)"$/', $m, $matches) ||
+						preg_match("/^==?(.*)$/", $m, $matches)) {
+						// A quoted string, if empty, matches the
+						// empty string or NULL, if not empty, matches
+						// itself
+						$afilter = trim($matches[1]);
+						$compare = 'equal';
+					} else if (preg_match("/^!=?'(.*)'$/", $m, $matches) ||
+							   preg_match('/^!=?"(.*)"$/', $m, $matches) ||
+							   preg_match("/^!=?(.*)$/", $m, $matches)) {
+						// negated match
+						$afilter = trim($matches[1]);
+						$compare = 'notequal';
+					}
+
+					$sqlKey = $this->fqn($k);
+
+					switch ($compare) {
+					case 'equal':
+						if ($afilter == '') {
+							$ar["IFNULL(".$sqlKey.",'')"] = array('oper' => 'LIKE', 'value' => "''");
+						} else {
+							// Some match, but exclude also the empty string
+							$afilter = addslashes($matches[1]);
+							$afilter = str_replace('*', '%', $afilter);
+							$ar["IF(".$sqlKey." LIKE '',NULL,".$sqlKey.")"] =
+								array('oper' => 'LIKE', 'value' => "'$afilter'");
 						}
-						if (count($ids) > 0) {
-							$ar[$this->fqn($k, true, true)]
-								= array('oper'	=> 'IN', 'value' => '('.join(',', $ids).')');
+						break;
+					case 'notequal':
+						if ($afilter == '') {
+							// not NULL and not '    '
+							$ar[$sqlKey] = array('oper' => '>', 'value' => "''");
+						} else if ($afilter == '%' || $afilter == '*') {
+							// !='%' means: not something, so include
+							// !NULL and '' into the results. So this
+							// !is equivalent to =''
+							$ar["IFNULL(".$sqlKey.",'')"] = array('oper' => 'LIKE', 'value' => "''");
+						} else {
+							$afilter = addslashes($matches[1]);
+							$afilter = str_replace('*', '%', $afilter);
+							$ar["IF(".$sqlKey." LIKE '',NULL,".$sqlKey.")"] =
+								array('oper' => 'NOT LIKE', 'value' => "'$afilter'");
+						}
+						break;
+					case 'contains':
+					default:
+						$afilter = addslashes($m);
+						$afilter = '%'.str_replace('*', '%', $afilter).'%';
+						$ar[$sqlKey] = array('oper' => 'LIKE', 'value' => "'$afilter'");
+						break;
+
+					}
+					
+					if (is_array($this->fdd[$k]['values2'])) {
+						$sqlKey = $this->fqn($k, true, true);
+						switch ($compare) {
+						case 'equal':
+							if ($afilter == '') {
+								$ar["IFNULL(".$sqlKey.",'')"] = array('oper' => 'LIKE',
+																	  'value' => "''");
+							} else {
+								$afilter = addslashes($matches[1]);
+								$afilter = str_replace('*', '.*', $afilter);
+								$afilter = str_replace('%', '.*', $afilter);
+								foreach ($this->fdd[$k]['values2'] as $key => $val) {
+									if (strlen($val) > 0 && preg_match('/'.$afilter.'/', $val)) {
+										$ids[] = '"'.addslashes($key).'"';
+									}
+								}
+								if (count($ids) > 0) {
+									$ar[$sqlKey] = array('oper'	=> 'IN', 'value' => '('.join(',', $ids).')');	
+								}
+							}
+							break;
+						case 'notequal':
+							if ($afilter == '') {
+								// not NULL and not '    '
+								$ar[$sqlKey] = array('oper' => '>', 'value' => "''");
+							} else if ($afilter == '%' || $afilter == '*') {
+								$ar["IFNULL(".$sqlKey.",'')"] = array('oper' => 'LIKE',
+																	  'value' => "''");
+							} else {
+								$afilter = addslashes($matches[1]);
+								$afilter = str_replace('*', '.*', $afilter);
+								$afilter = str_replace('%', '.*', $afilter);
+								foreach ($this->fdd[$k]['values2'] as $key => $val) {
+									if (preg_match('/'.$afilter.'/', $val) === false) {
+										$ids[] = '"'.addslashes($key).'"';
+									}
+								}
+								if (count($ids) > 0) {
+									$ar[$sqlKey] = array('oper'	=> 'IN', 'value' => '('.join(',', $ids).')');	
+								}
+							}
+							break;
+						case 'contains':
+						default:
+							foreach ($this->fdd[$k]['values2'] as $key => $val) {
+								// stristr() performs like %M%, so we
+								// implement the same augmented logic here, as described above.
+								if (strlen($m) > 0 && stristr($val, $m)) {
+									$ids[] = '"'.addslashes($key).'"';
+								}
+							}
+							if (count($ids) > 0) {
+								$ar[$sqlKey] = array('oper'	=> 'IN', 'value' => '('.join(',', $ids).')');	
+							}
+							break;
 						}
 					}
 					$qo[] = $ar;
