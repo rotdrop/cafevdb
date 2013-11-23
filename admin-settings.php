@@ -3,6 +3,7 @@
 OCP\User::checkAdminUser();
 
 //OCP\Util::addStyle('cafevdb', 'cafevdb');
+//OCP\Util::addStyle('cafevdb', 'tipsy');
 OCP\Util::addScript( "cafevdb", "admin-settings" );
 
 $tmpl = new OCP\Template( 'cafevdb', 'admin-settings');

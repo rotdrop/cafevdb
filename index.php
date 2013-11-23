@@ -19,6 +19,7 @@ $group = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
 $user  = OCP\USER::getUser();
 
 OCP\Util::addStyle('cafevdb', 'cafevdb');
+OCP\Util::addStyle('cafevdb', 'tipsy');
 
 if (!OC_Group::inGroup($user, $group)) {
   $tmpl = new OCP\Template( 'cafevdb', 'errorpage', 'user' );
@@ -51,6 +52,7 @@ try {
   OCP\App::setActiveNavigationEntry( 'cafevdb' );
 
   OCP\Util::addStyle('cafevdb', 'cafevdb');
+  OCP\Util::addStyle('cafevdb', 'tipsy');
   OCP\Util::addStyle('cafevdb', 'pme-table');
   OCP\Util::addStyle('cafevdb', 'settings');
   OCP\Util::addStyle('cafevdb', 'events');

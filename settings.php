@@ -42,6 +42,7 @@ try {
   $tmpl->assign('adminsettings', false);
 
   OCP\Util::addStyle('cafevdb', 'cafevdb');
+  OCP\Util::addStyle('cafevdb', 'tipsy');
   OCP\Util::addStyle('cafevdb', 'settings');
 
   OCP\Util::addStyle("cafevdb/3rdparty", "chosen/chosen");
