@@ -1,12 +1,34 @@
-// TODO: wrap into a proper constructor
-var CAFEVDB = CAFEVDB || {
-  name: 'cafevdb',
-  headervisibility: 'expanded',
-  toolTips: true,
-  wysiwygEditor: 'tinymce',
-  language: 'en',
-  addEditor: function(selector) {
-    switch (CAFEVDB.wysiwygEditor) {
+/**Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2011-2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+var CAFEVDB = CAFEVDB || {};
+
+(function(window, $, CAFEVDB, undefined) {
+  CAFEVDB.name             = 'cafevdb';
+  CAFEVDB.headervisibility = 'expanded';
+  CAFEVDB.toolTips         = true;
+  CAFEVDB.wysiwygEditor    = 'tinymce';
+  CAFEVDB.language         = 'en';
+  CAFEVDB.addEditor = function(selector) {
+    switch (this.wysiwygEditor) {
     case 'ckeditor':
       $(selector).ckeditor(function() {}, {/*enterMode:CKEDITOR.ENTER_P*/});
       break;
@@ -17,9 +39,9 @@ var CAFEVDB = CAFEVDB || {
       $(selector).ckeditor(function() {}, {/*enterMode:CKEDITOR.ENTER_P*/});
       break;
     };
-  },
-  removeEditor: function(selector) {
-    switch (CAFEVDB.wysiwygEditor) {
+  };
+  CAFEVDB.removeEditor = function(selector) {
+    switch (this.wysiwygEditor) {
     case 'ckeditor':
       $(selector).ckeditor().remove();
       break;
@@ -30,28 +52,40 @@ var CAFEVDB = CAFEVDB || {
       $(selector).ckeditor().remove();
       break;
     };
-  },
-  broadcastHeaderVisibility: function (visibility) {
+  };
+  CAFEVDB.broadcastHeaderVisibility = function (visibility) {
     // Sanity check
     if (visibility != 'expanded' && visibility != 'collapsed') {
       return;
     }
 
     // Keep in sync
-    CAFEVDB.headervisibility = visibility;
+    this.headervisibility = visibility;
 
     // Insert the new state into all hidden inputs for formsubmit
     $('input[name="headervisibility"]').each(function (idx) {
       $(this).val(visibility);
     });
-  },
-  stopRKey : function(evt) {
+  };
+  CAFEVDB.stopRKey = function(evt) {
     var evt = (evt) ? evt : ((event) ? event : null);
     var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
     if ((evt.keyCode == 13) && (node.type=="text"))  {return false;}
-  },
-  dummy:{}
-};
+  };
+  /**Exchange "tipsy" tooltips already attached to an element by
+   * something different. This has to be done the "hard" way: first
+   * unset data('tipsy') by setting it to null, then call the
+   * tipsy-constructor with the new values.
+   *
+   * @param[in] selector jQuery element selector
+   *
+   * @param[in] options Tipsy options
+   */
+  CAFEVDB.applyTipsy = function(selector, options) {
+    $(selector).data('tipsy', null); // remove any already installed stuff
+    $(selector).tipsy(options);      // make it new
+  };
+})(window, jQuery, CAFEVDB);
 
 $.extend({ alert: function (message, title) {
   $("<div></div>").dialog( {
@@ -191,6 +225,12 @@ $(document).ready(function(){
   $('.header-right img').tipsy({gravity:'ne', fade:true});
   $('img').tipsy({gravity:'nw', fade:true});
   $('button').tipsy({gravity:'w', fade:true});
+
+  CAFEVDB.applyTipsy('input[class|="pme-filter"]',
+                     {gravity:'n', fade:true, html:true, className:'tipsy-wide'});
+
+  CAFEVDB.applyTipsy('label[class$="memberstatus-label"]',
+                     {gravity:'n', fade:true, html:true, className:'tipsy-wide'});
 
   $('#personalsettings .generalsettings').on(
     'click keydown', function(event) {

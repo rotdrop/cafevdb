@@ -1916,23 +1916,44 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 
 	function fetchToolTip($css_class_name, $name, $label = false)
 	{
-		// If we have an array for the class, use it.
-		if (isset($this->tooltips[$css_class_name])
-			&& is_array($this->tooltips[$css_class_name])) {
-			$tips = $this->tooltips[$css_class_name];
-			if (isset($tips[$name])) {
-				return ' title="'.htmlspecialchars($tips[$name]).'" ';
+		// First clean the CSS-class, it may consist of more than one
+		// class.
+		$css_classes = preg_split('/\s+/', $css_class_name);
+		foreach ($css_classes as $css_class_name) {
+			// If we have an array for the class, use it.
+			if (isset($this->tooltips[$css_class_name])
+				&& is_array($this->tooltips[$css_class_name])) {
+				$tips = $this->tooltips[$css_class_name];
+				if (isset($tips[$name])) {
+					return ' title="'.htmlspecialchars($tips[$name]).'" ';
+				}
 			}
 		}
-		  
+		
 		// otherwise use name, label, css in that order
 		if(isset($this->tooltips[$name])) {
 			return ' title="'.htmlspecialchars($this->tooltips[$name]).'" ';
 		} elseif($label && isset($this->tooltips[$label])) {
-			return ' title="'.htmlspecialchars($this->tooltips[$label]).'" ';
-		} elseif (isset($this->tooltips[$css_class_name])) {
-			return ' title="'.htmlspecialchars($this->tooltips[$css_class_name]).'" ';
+			return ' title="'.htmlspecialchars($this->tooltips[$label]).'" ';	
 		}
+		foreach ($css_classes as $css_class_name) {
+			if (isset($this->tooltips[$css_class_name])) {
+				return ' title="'.htmlspecialchars($this->tooltips[$css_class_name]).'" ';
+			}
+			// Then start stripping "components" from the end of the
+			// class, i.e. if we have pme-filter-blah, then also try pme-filter
+			$sfxpos = strrpos($css_class_name, '-');
+			if ($sfxpos !== false) {
+				$css_class_name = substr($css_class_name, 0, $sfxpos);
+				if (isset($this->tooltips[$css_class_name])) {
+					return ' title="'.htmlspecialchars($this->tooltips[$css_class_name]).'" ';
+				} else {
+					return ' title="'.htmlspecialchars($css_class_name).'" ';
+				}
+			}
+		}
+		
+		// We got really nothing. So what.
 		return '';
 	}
 
@@ -2074,7 +2095,8 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			$inputhelp = $help
 				? ' title="'.htmlspecialchars($help).'" '
 				: $this->fetchToolTip($css, $name, $css.'radio');
-			$ret .= '<label'.$labelhelp.'><input type="'.($multiple ? 'checkbox' : 'radio').'" name="';
+			$ret .= '<label'.$labelhelp.' class="'.htmlspecialchars($css).'-label">';
+			$ret .= '<input type="'.($multiple ? 'checkbox' : 'radio').'" name="';
 			$ret .= htmlspecialchars($name).'[]" value="'.htmlspecialchars($key).'"';
 			$ret .= ' class="'.htmlspecialchars($css).'"';
 			//$ret .= $inputhelp; // not need if labelhelp
