@@ -332,6 +332,7 @@ __EOT__;
                                          'select'  => 'O',
                                          'maxlen'  => 128,
                                          'sort'    => true,
+                                         'css'     => array('postfix' => 'memberstatus'),
                                          'values2' => $this->memberStatusNames,
                                          'tooltip' => config::toolTips('member-status'));
 
