@@ -27,14 +27,21 @@ information and password. The password will only be stored in the
 configuration storage if the test can be performed successfully.'),
         'member-status' => L::t('A flag which indicates not so much social or functional status, but
 default behaviour for mass-emails as follows
-
->>> REGULAR:   ordinary member, receives mass-emails.
->>> PASSIVE:   passive member, does not receive mass-emails unless participating in a project.
->>> TEMPORARY: like passive.
->>> CONDUCTOR: does not even receive mass-emails when participating in a project.
->>> SOLOIST:   like conductor.
-
-All classes of member can be explicitly added to a specific mass-emails through the controls
+<br/>
+<dl>
+<dt>regular</dt>
+<dd>ordinary member, receives mass-emails</dd>
+<dt>passive</dt>
+<dd>passive member, does not receive mass-emails unless participating in a project.</dd>
+<dt>temporary</dt>
+<dd>like passive, but defines another class of musicians during email-address selection</dd>
+<dt>conductor</dt>
+<dd>does not even receive mass-emails when participating in a project</dd>
+<dt>soloist</dt>
+<dd>like conductor, but defines yet another class for email-recipient selection</dd>
+</dl>
+<br/>
+All classes of members can be explicitly added to a specific mass-emails through the controls
 in the email form.'),
         'select-email-template' => L::t('Select one of the email templates previously stored in the data-base.'),
         'new-email-template' => L::t('Enter a short, no-nonsense name for the new template. Please omit spaces.'),
@@ -166,11 +173,37 @@ aktuellen Suchkriterien anzuwenden. Suchkriterien
 können in den Feldern eingegeben werden.
 Als Platzhalter verwendet man `%%\'.'),
 
-        'pme-filtertext' => L::t('  Feld für Suchkriterien.
-Als Platzhalter verwendet man `%%\', z.B. `%%Ste%%an\'
-beim Vornamen. Bei numerischen Feldern ist links
-eine Auswahlbox mit Vergleichsoperationen.'),
-        
+        'pme-filter' => L::t('  Field for filter/search criteria.
+Short explanation: simply type somthing and press <code>ENTER</code>.
+<br/>
+In more detail: For numerical fields there is a select-box with comparison
+operators on the left. For text-fields there are `catch-all\' wild-cards
+`%%\' and `*\'. Text-fields allow (in particular) for the following
+filter possibilities (meaning that <code>SOMETHING</code> is your example
+search-string):
+<br/><br/>
+<dl>
+<dt>SOMETHING</dt>
+<dd>search for the wild-card expression %%SOMETHING%%</dd>
+<dt>"SOMETHING"</dt>
+<dd>search for exactly the expression SOMETHING</dd>
+<dt>!SOMETHING</dt>
+<dd>match everything not being matched by SOMETHING</dd>
+</dl>
+<br/>
+Single quotes are equivalent to double-quotes; instead of `!\' one may
+use as well use `!=\', instead of using quotes it is also possible to
+prefix the search expression by either `=\' or `==\'.
+It is also possible to match empty fields, in particular:
+<br/>
+<dl>
+<dt>"%%"</dt>
+<dt>!""</dt>
+<dd>match any row with something non-empty in the search-field</dd>
+<dt>""</dt>
+<dt>!"%%"</dt>
+<dd>match any row with empty search-field</dd>
+</dl>'),
         'pme-view-navigation' => array('operation' => L::t('Einzelnen Datensatz anzeigen')),
         'pme-change-navigation' => array('operation' => L::t('Einzelnen Datensatz anzeigen,
 zeigt ein neues Formular mit
