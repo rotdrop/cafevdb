@@ -56,7 +56,9 @@ __EOT__;
      *              generating setup script: 1.50
      */
 
+    // Inherit a bunch of default options
     $opts = Config::$pmeopts;
+
     $opts['cgi']['persist'] = array(
       'Template' => 'projects',
       'app' => Util::cgiValue('app'),
@@ -97,13 +99,6 @@ __EOT__;
                              'time'  => true,
                              'tabs'  => true
                              );
-
-    // Set default prefixes for variables
-    $opts['js']['prefix']               = 'PME_js_';
-    $opts['dhtml']['prefix']            = 'PME_dhtml_';
-    $opts['cgi']['prefix']['operation'] = 'PME_op_';
-    $opts['cgi']['prefix']['sys']       = 'PME_sys_';
-    $opts['cgi']['prefix']['data']      = 'PME_data_';
 
     /* Get the user's default language and use it if possible or you can
        specify particular one you want to use. Refer to official documentation

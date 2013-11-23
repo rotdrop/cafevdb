@@ -427,6 +427,9 @@ ownclouddev';
     self::$pmeopts['cgi']['prefix']['sys']       = 'PME_sys_';
     self::$pmeopts['cgi']['prefix']['data']      = 'PME_data_';
 
+    // Initially hide the filter fields
+    self::$pmeopts['cgi']['append'][self::$pmeopts['cgi']['prefix']['sys'].'fl'] = 0;
+
     // Navigation style: B - buttons (default), T - text links, G - graphic links
     // Buttons position: U - up, D - down (default)
     self::$pmeopts['navigation'] = 'GUDM';
