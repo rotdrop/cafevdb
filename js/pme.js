@@ -1,7 +1,32 @@
-var PHPMYEDIT = PHPMYEDIT || {
-  filterSelectPlaceholder: 'Select a filter Option',
-  filterSelectChosen: true,
-  filterHandler:function(theForm, theEvent) {
+/**Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2011-2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+var PHPMYEDIT = PHPMYEDIT || {};
+
+(function(window, $, PHPMYEDIT, undefined) {
+  'use strict';
+
+  PHPMYEDIT.filterSelectPlaceholder = 'Select a filter Option';
+  PHPMYEDIT.filterSelectChosen      =  true;
+  PHPMYEDIT.filterHandler = function(theForm, theEvent) {
     var pressed_key = null;
     if (theEvent.which) {
       pressed_key = theEvent.which;
@@ -13,8 +38,8 @@ var PHPMYEDIT = PHPMYEDIT || {
       return false;
     }
     return true;
-  },
-  init:function(pmepfx) {
+  };
+  PHPMYEDIT.init = function(pmepfx) {
     $("input[type='checkbox']."+pmepfx+"-sort").change(function(event) {
       return this.form.submit();
     });
@@ -32,29 +57,29 @@ var PHPMYEDIT = PHPMYEDIT || {
     });
 
     $("input[class^='"+pmepfx+"-filter']").keypress(function(event) {
-      return PHPMYEDIT.filterHandler(this.form, event);
+      return this.filterHandler(this.form, event);
     });
 
     $("input[type='submit'].pme-save").click(function(event) {
-      return PHPMYEDIT.filterHandler(this.form, event);
+      return this.filterHandler(this.form, event);
     });
 
     $("input[type='submit'].pme-more").click(function(event) {
-      return PHPMYEDIT.filterHandler(this.form, event);
+      return this.filterHandler(this.form, event);
     });
 
-    if (PHPMYEDIT.filterSelectChosen) {
+    if (this.filterSelectChosen) {
       $("select[class^='"+pmepfx+"-comp-filter']").chosen({width:"auto",  disable_search_threshold: 10});
 
       // Provide a data-placeholder and also remove the match-all
       // filter, which is not needed when using chosen.
-      $("select[class^='"+pmepfx+"-filter']").attr("data-placeholder", PHPMYEDIT.filterSelectPlaceholder);
+      $("select[class^='"+pmepfx+"-filter']").attr("data-placeholder", this.filterSelectPlaceholder);
       $("select[class^='"+pmepfx+"-filter']").unbind('change');
       $("select[class^='"+pmepfx+"-filter'] option[value='*']").remove();
       $("select[class^='"+pmepfx+"-filter']").chosen({width:"100%"});
     }
-  }
-};
+  };
+})(window, jQuery, PHPMYEDIT);
 
 $(document).ready(function(){
 
