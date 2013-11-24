@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-11-24 00:33+0100\n"
-"PO-Revision-Date: 2013-11-24 00:52+0100\n"
+"POT-Creation-Date: 2013-11-24 15:54+0100\n"
+"PO-Revision-Date: 2013-11-24 15:55+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -44,8 +44,8 @@ msgid "Blog entry with id `%s' could not be retrieved."
 msgstr "Die Notiz mit Id `%s' konnte nicht geladen werden."
 
 #: ajax/blog/editentry.php:92 ajax/blog/modifyentry.php:124
-#: ajax/events/events.php:92 ajax/events/execute.php:129
-#: ajax/events/new.form.php:195 ajax/events/sendmail.php:75
+#: ajax/events/events.php:93 ajax/events/execute.php:130
+#: ajax/events/new.form.php:195 ajax/events/sendmail.php:76
 msgid "Error, caught an exception"
 msgstr "Interner Fehler, Ausnahme ``aufgefangen''"
 
@@ -471,7 +471,7 @@ msgstr "Kann den Web-Link für `%s' nicht ohne Ziel-Adresse testen."
 #: ajax/settings/app-settings.php:609
 #, php-format
 msgid "New window or tab with `%s'?"
-msgstr "Neues Fenster oder Tab mit `%s'?"
+msgstr "Neues Fenster oder Tab erschienen für `%s'?"
 
 #: ajax/settings/app-settings.php:632
 msgid "Unhandled request:"
@@ -515,7 +515,7 @@ msgstr "Experten-Modus geändert"
 msgid "Tooltips changed"
 msgstr "Tool-Tip Einstellung geändert"
 
-#: index.php:141 lib/musicians.php:154
+#: index.php:172 lib/musicians.php:154
 #, php-format
 msgid "Add all to %s"
 msgstr "Alle zu %s"
@@ -774,95 +774,95 @@ msgstr "Termine"
 msgid "Attached Events"
 msgstr "Angehängte Termine"
 
-#: lib/email.php:1388
+#: lib/email.php:1387
 #, php-format
 msgid "Edit Event %s"
 msgstr "Ereignis %s bearbeiten"
 
-#: lib/email.php:1411
+#: lib/email.php:1410
 msgid "Template"
 msgstr "Vorlage"
 
-#: lib/email.php:1415
+#: lib/email.php:1414
 msgid "Select email template"
 msgstr "Vorlage auswählen"
 
-#: lib/email.php:1427
+#: lib/email.php:1426
 msgid "New Template Name"
 msgstr "Neue Vorlage"
 
-#: lib/email.php:1437
+#: lib/email.php:1436
 msgid "Save as Template"
 msgstr "Vorlage speichern"
 
-#: lib/email.php:1443
+#: lib/email.php:1442
 msgid "Recipients"
 msgstr "Adressaten"
 
-#: lib/email.php:1444
+#: lib/email.php:1443
 msgid "Determined automatically from data-base, see below the email form."
 msgstr ""
 "Siehe unterhalb des Formulars. Auswahl über `Adressen bearbeiten'-Knopf "
 "abändern."
 
-#: lib/email.php:1455
+#: lib/email.php:1454
 msgid "Subject"
 msgstr "Betreff"
 
-#: lib/email.php:1461
+#: lib/email.php:1460
 msgid "Message-Body"
 msgstr "Nachricht"
 
-#: lib/email.php:1465
+#: lib/email.php:1464
 msgid "Sender-Name"
 msgstr "Absender-Name"
 
-#: lib/email.php:1470
+#: lib/email.php:1469
 msgid "Sender-Email"
 msgstr "Absender-Email"
 
-#: lib/email.php:1471
+#: lib/email.php:1470
 msgid "Tied to"
 msgstr "Vorgegeben:"
 
-#: lib/email.php:1474
+#: lib/email.php:1473
 msgid "Add Attachment"
 msgstr "Anhang hinzufügen"
 
-#: lib/email.php:1480 lib/email.php:1481
+#: lib/email.php:1479 lib/email.php:1480
 msgid "Upload new File"
 msgstr "Datei hochladen"
 
-#: lib/email.php:1486 lib/email.php:1487
+#: lib/email.php:1485 lib/email.php:1486
 msgid "Select from Owncloud"
 msgstr "Datei aus der `Cloud'"
 
-#: lib/email.php:1499
+#: lib/email.php:1498
 msgid "Remove"
 msgstr "Entfernen"
 
-#: lib/email.php:1507
+#: lib/email.php:1506
 msgid "Send Em@il"
 msgstr "Em@il verschicken"
 
-#: lib/email.php:1510
+#: lib/email.php:1509
 msgid "Edit recipients"
 msgstr "Adressen bearbeiten"
 
-#: lib/email.php:1516 templates/blogedit.php:18
+#: lib/email.php:1515 templates/blogedit.php:18
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: lib/email.php:1575
+#: lib/email.php:1574
 #, php-format
 msgid "Invalid template mail, first unknown left-over parameter is %s"
 msgstr "Ungültige Vorlage, erster unbekannter Parameter ist %s"
 
-#: lib/email.php:1577
+#: lib/email.php:1576
 msgid "Unknown Variable"
 msgstr "Unbekannter Platzhalter."
 
-#: lib/email.php:1583
+#: lib/email.php:1582
 msgid ""
 "No recipients specified, you possibly forgot to shift items from the left "
 "select box (potential recipients) to the right select box (actual "
@@ -874,11 +874,11 @@ msgstr ""
 "Adressaten zu verschieben. Bitte den `Adressen bearbeiten'-Knopf aktivieren "
 "und Empfänger für diese Email angeben."
 
-#: lib/email.php:1584
+#: lib/email.php:1583
 msgid "No recipients"
 msgstr "Keine Adressaten"
 
-#: lib/email.php:1590
+#: lib/email.php:1589
 #, php-format
 msgid ""
 "The subject must not consist of `%s' as only part.<br/>Please correct that "
@@ -887,11 +887,11 @@ msgstr ""
 "Die Betreffzeile sollte nicht nur aus `%s' bestehen.<br/>Bitte korrigieren "
 "und dann den `Send'-Button noch einmal anklicken."
 
-#: lib/email.php:1593
+#: lib/email.php:1592
 msgid "Incomplete Subject"
 msgstr "Unvollständiger Betreff"
 
-#: lib/email.php:1598
+#: lib/email.php:1597
 msgid ""
 "The sender-name should not be empty.<br/>Please correct that and then hit "
 "the `Send'-button again."
@@ -899,23 +899,23 @@ msgstr ""
 "Der Absender-Name sollte nicht leer sein.<br/>Bitte korrigieren und dann den "
 "`Send'-Button noch einmal anklicken."
 
-#: lib/email.php:1600
+#: lib/email.php:1599
 msgid "Descriptive Sender Name"
 msgstr "Name des Absenders"
 
-#: lib/email.php:1839
+#: lib/email.php:1838
 msgid "The email-backend throwed an exception stating:<br/>"
 msgstr "Fehler beim Generieren der Nachricht:<br/>"
 
-#: lib/email.php:1841
+#: lib/email.php:1840
 msgid "Please correct the problem and then click on the `Send'-button again."
 msgstr "Bitte korrigieren und dann den `Send'-Button noch einmal anklicken."
 
-#: lib/email.php:1842 lib/email.php:1985
+#: lib/email.php:1841 lib/email.php:1984
 msgid "Caught an exception"
 msgstr "Fehler"
 
-#: lib/email.php:1952
+#: lib/email.php:1951
 #, php-format
 msgid ""
 "A message with exactly the same text to exactly the same recipients has "
@@ -926,29 +926,29 @@ msgstr ""
 "Empfängern wurde bereits zu folgenden Zeitpunkten gesendet:</br>%s<br/"
 ">Duplikate von Massen-Mails werden nicht versendet!!!"
 
-#: lib/email.php:1958
+#: lib/email.php:1957
 msgid "Duplicate Email"
 msgstr "Email Duplikat"
 
-#: lib/email.php:1966
+#: lib/email.php:1965
 msgid "Sending failed for an unknown reason. Sorry."
 msgstr "Der Emailversand ist leider aus unbekannten Gründen fehlgeschlagen."
 
-#: lib/email.php:1967
+#: lib/email.php:1966
 msgid "General Failure reading your hard-disk ... just kidding."
 msgstr ""
 "General Failure is reading your hard-disk ... who is that `General Failure`?"
 
-#: lib/email.php:1972
+#: lib/email.php:1971
 msgid "Message has been sent, at least: no error from our side!"
 msgstr ""
 "Nachricht wurde versendet; bzw.: das Web-Skript hat keinen Fehler bemerkt"
 
-#: lib/email.php:1973
+#: lib/email.php:1972
 msgid "Message has been sent"
 msgstr "Nachricht wurde versendet"
 
-#: lib/email.php:1982
+#: lib/email.php:1981
 #, php-format
 msgid ""
 "During send, the email-backend throwed an exception stating:<br/>`%s'</"
@@ -958,7 +958,7 @@ msgstr ""
 ">geantwortet.<br/>Bitte korrigieren und dann den `Send'-Button noch einmal "
 "anklicken."
 
-#: lib/email.php:2013
+#: lib/email.php:2012
 #, php-format
 msgid ""
 "The IMAP backend returned the error `%s'. Unfortunate Snafu.<br/>I was "
@@ -967,11 +967,11 @@ msgstr ""
 "Das IMAP-Backend hat das Kopieren der Nachricht in den\n"
 "Ordner für gesendete Nachrichten mit dem Fehler `%s' abgebrochen."
 
-#: lib/email.php:2016
+#: lib/email.php:2015
 msgid "IMAP connection failed"
 msgstr "Die IMAP-Verbindung ist fehlgeschlagen."
 
-#: lib/email.php:2023
+#: lib/email.php:2022
 #, php-format
 msgid ""
 "Could not copy the message to neither the \"Sent\" or the \"INBOX.Sent\" "
@@ -980,12 +980,12 @@ msgstr ""
 "Konnte die Nachricht nicht den Ordner für gesendete Nachrichten kopieren;\n"
 "der Server hat mit dem Fehler `%s' bzw. `%s' geantwortet."
 
-#: lib/email.php:2027
+#: lib/email.php:2026
 msgid "Copying to `Sent'-folder failed."
 msgstr ""
 "Das Kopieren in den Orden für gesendete Nachrichten ist fehlgeschlagen."
 
-#: lib/email.php:2084
+#: lib/email.php:2083
 #, php-format
 msgid ""
 "The %s address `%s' seems to be invalid.<br/>Please correct that first and "
@@ -995,11 +995,11 @@ msgstr ""
 "Die %s-Adresse `%s' scheint ein ungültiges Format zu haben.</br>Bitte "
 "korrigieren und dann den `Send'-Button noch einmal anklicken."
 
-#: lib/email.php:2088
+#: lib/email.php:2087
 msgid "Invalid Email Address"
 msgstr "Ungültige Em@il Adresse"
 
-#: lib/email.php:2096
+#: lib/email.php:2095
 msgid "recipient"
 msgstr "Adressat"
 
@@ -1016,43 +1016,43 @@ msgstr "Weitere Kalender"
 msgid "Invalid argument value: `%s'"
 msgstr "Unsinniger Paramter-Wert: `%s'"
 
-#: lib/functions.php:396
+#: lib/functions.php:408
 msgid "Export Table"
 msgstr "Tabelle Exportieren"
 
-#: lib/functions.php:404
+#: lib/functions.php:416
 msgid "CSV Export"
 msgstr "CSV Export"
 
-#: lib/functions.php:407
+#: lib/functions.php:419
 msgid "HTML Export"
 msgstr "HTML Export"
 
-#: lib/functions.php:410
+#: lib/functions.php:422
 msgid "Excel Export"
 msgstr "`Excel' Export"
 
-#: lib/functions.php:413
+#: lib/functions.php:425
 msgid "HTML/Spreadsheet"
 msgstr "HTML/Tabellenformat"
 
-#: lib/functions.php:535
+#: lib/functions.php:547
 msgid "Error: Unknonwn Button Type"
 msgstr "Fehler: Unbekannter Knopf-Typ"
 
-#: lib/functions.php:558
+#: lib/functions.php:570
 msgid "View all Projects"
 msgstr "Alle Projekte"
 
-#: lib/functions.php:559
+#: lib/functions.php:571
 msgid "Overview over all known projects (start-page)."
 msgstr "Alle gespeicherten Projekte anzeigen; Startseite der `Camerata App'."
 
-#: lib/functions.php:571
+#: lib/functions.php:583
 msgid "Display all Musicians"
 msgstr "Alle Musiker"
 
-#: lib/functions.php:572
+#: lib/functions.php:584
 msgid ""
 "Display all musicians stored in the data-base, with detailed facilities for "
 "filtering and sorting."
@@ -1060,7 +1060,7 @@ msgstr ""
 "Alle Musiker anzeigen, die in der Datenbank gespeichert sind. Es gibt dabei "
 "ausführliche Such- und Auswahlfunktionalität."
 
-#: lib/functions.php:584
+#: lib/functions.php:596
 msgid ""
 "Mass-email form, use with care. Mass-emails will be logged. Recipients will "
 "be specified by the Bcc: field in the header, so the recipients are "
@@ -1071,25 +1071,25 @@ msgstr ""
 "außerdem wird die ganze Pracht in der Daten bank gespeichter (siehe `Email "
 "Historie')"
 
-#: lib/functions.php:598
+#: lib/functions.php:610
 msgid "Email History"
 msgstr "Em@il Historie"
 
-#: lib/functions.php:599
+#: lib/functions.php:611
 msgid "Display all emails sent by our mass-email form."
 msgstr ""
 "Zeigt alle über unser unsägliches Massen-Mail gespamten Emails an. "
 "Insebesondere werden hier auch die Bcc: Empfänger gespeichert."
 
-#: lib/functions.php:617
+#: lib/functions.php:629
 msgid "The currently active project."
 msgstr "Das gerade ausgewählte Projekt."
 
-#: lib/functions.php:632
+#: lib/functions.php:644
 msgid "Detailed Instrumentation"
 msgstr "Detaillierte Besetzung"
 
-#: lib/functions.php:633
+#: lib/functions.php:645
 msgid ""
 "Detailed display of all registered musicians for the selected project. The "
 "table will allow for modification of personal data like email, phone, "
@@ -1099,11 +1099,11 @@ msgstr ""
 "Daten wie Email, Adresse usw. können hier geändert werden. Projektbezogene "
 "Daten können allerdings nur in der Ansicht `Kurz-Besetzung' geändert werden."
 
-#: lib/functions.php:647
+#: lib/functions.php:659
 msgid "Brief Instrumentation"
 msgstr "Kurz-Besetzung"
 
-#: lib/functions.php:648
+#: lib/functions.php:660
 msgid ""
 "Brief display of all registered musicians for the selected project. The "
 "table will allow for modification of project specific data, like the "
@@ -1114,11 +1114,11 @@ msgstr ""
 "Musiker auch wieder entfernt werden. Persönliche Daten können allerdings nur "
 "in der detaillierten Ansicht geändert werden."
 
-#: lib/functions.php:662
+#: lib/functions.php:674
 msgid "Add Instruments"
 msgstr "Neue Instrumente"
 
-#: lib/functions.php:663
+#: lib/functions.php:675
 msgid ""
 "Display the list of instruments known by the data-base, possibly add new "
 "ones as needed."
@@ -1126,11 +1126,11 @@ msgstr ""
 "Tabelle mit allen derzeit gespeicherten Instrumenten; weitere Instrumente "
 "können hier einfach hinzugefügt werden."
 
-#: lib/functions.php:677
+#: lib/functions.php:689
 msgid "Instrumentation Numbers"
 msgstr "Besetzungszahlen"
 
-#: lib/functions.php:678
+#: lib/functions.php:690
 msgid ""
 "Display the desired instrumentaion numbers, i.e. how many musicians are "
 "already registered for each instrument group and how many are finally needed."
@@ -1138,11 +1138,11 @@ msgstr ""
 "Anzeige der angestrebten Besetzungszahlen. Natürlich kann man die dann auch "
 "anpassen ..."
 
-#: lib/functions.php:692
+#: lib/functions.php:704
 msgid "Add more Musicians"
 msgstr "Musiker Hinzufügen"
 
-#: lib/functions.php:693
+#: lib/functions.php:705
 msgid ""
 "List of all musicians NOT registered for the selected project. Only through "
 "that table a new musician can enter a project. Look for a hyper-link "
@@ -1152,7 +1152,7 @@ msgstr ""
 "Musiker können ausschließlich über DIESE Tabelle den Weg in ein Projekt "
 "finden. Neue Musiker können selbstverständlich hinzugefügt werden."
 
-#: lib/functions.php:707
+#: lib/functions.php:719
 msgid "Transfer Instruments from Musicians"
 msgstr "Instrumente mit Besetzung abgleichen"
 
@@ -1346,7 +1346,8 @@ msgstr ""
 "<dt>Mitspieler</dt>\n"
 "<dd>normaler Mitspieler, empfängt Massen-Emails</dd>\n"
 "<dt>passiv</dt>\n"
-"<dd>Passives Mitglied, bekommt nur Emails, bei konkreter Teilnahme an einem Projekt.</dd>\n"
+"<dd>Passives Mitglied, bekommt nur Emails, bei konkreter Teilnahme an einem "
+"Projekt.</dd>\n"
 "<dt>Aushilfe</dt>\n"
 "<dd>wie ``passiv'', definiert aber eine weitere Adressatenklasse</dd>\n"
 "<dt>Dirigent</dt>\n"
@@ -1355,7 +1356,8 @@ msgstr ""
 "<dd>wie ``Dirigent'', definiert aber eine weitere Adressatenklasse</dd>\n"
 "</dl>\n"
 "<br/>\n"
-"Unabhängig von der Voreinstellung können alle Adressaten-Typen ``händisch'' im\n"
+"Unabhängig von der Voreinstellung können alle Adressaten-Typen ``händisch'' "
+"im\n"
 "Email-Formular ausgewählt werden, sollte dies einmal nötig sein."
 
 #: lib/tooltips.php:46
@@ -1790,11 +1792,13 @@ msgid ""
 "</dl>"
 msgstr ""
 "Eingabefeld für Filter-/Suchkriterien.\n"
-"In Kürze: einfach den Suchbegriff eingeben und <code>EINGABE</code> drücken.\n"
+"In Kürze: einfach den Suchbegriff eingeben und <code>EINGABE</code> "
+"drücken.\n"
 "<br/>\n"
 "Detaillierter: bei numerischen Feldern gibt es eine Auswahl-Box mit\n"
 "Vergleichsoperatoren. Bei Text-Feldern gibt es die Platzhalter ``%%''\n"
-"resp. ``*''. Text-Felder erlauben insbesondere auch die folgenden Abfragen, wobei\n"
+"resp. ``*''. Text-Felder erlauben insbesondere auch die folgenden Abfragen, "
+"wobei\n"
 "natürlich <code>BLAHBLAH</code> der Beispiel-Suchtext ist:\n"
 "<br/><br/>\n"
 "<dl>\n"
@@ -1893,19 +1897,19 @@ msgstr ""
 msgid "Really Change %s's instrument!!!"
 msgstr "Das Instrument von %s wirklich ändern!!!"
 
-#: settings.php:66
+#: settings.php:87
 msgid "concerts"
 msgstr "Konzerte"
 
-#: settings.php:67
+#: settings.php:88
 msgid "rehearsals"
 msgstr "Proben"
 
-#: settings.php:68
+#: settings.php:89
 msgid "other"
 msgstr "Sonstiges"
 
-#: settings.php:69
+#: settings.php:90
 msgid "management"
 msgstr "Vorstand"
 
@@ -2340,7 +2344,7 @@ msgstr "Em@il-Test-Adresse"
 msgid "Test address"
 msgstr "Test-Adresse"
 
-#: templates/errorpage.php:8
+#: templates/errorpage.php:29
 #, php-format
 msgid ""
 "CamerataDB Error: You are not a member of the dedicated orchestra\n"
@@ -2365,7 +2369,15 @@ msgstr ""
 "Gruppenadministratoren anmelden und die Konfiguration der `Camerata\n"
 "DB'-Anwendung abschließen."
 
-#: templates/errorpage.php:33
+#: templates/errorpage.php:54
+msgid "CamerataDB Error: We need the calendar app to be enabled."
+msgstr "CamerataDB Error: Die Kalender-App muss eingeschaltet sein. Bitte wenden Sie sich an einen Administrator."
+
+#: templates/errorpage.php:57
+msgid "CamerataDB Error: We need the contacts app to be enabled."
+msgstr "CamerataDB Error: Die Kontakte-App muss eingeschaltet sein. Bitte wenden Sie sich an einen Administrator."
+
+#: templates/errorpage.php:60
 msgid "Something is wrong, but what?"
 msgstr "Etwas ist schiefgelaufen, aber was?!"
 
@@ -2393,7 +2405,7 @@ msgstr "Vorstands-Termin"
 msgid "Download"
 msgstr "Herunterladen"
 
-#: templates/eventslisting.php:27
+#: templates/eventslisting.php:28
 msgid "no events"
 msgstr "keine Termine"
 
@@ -2709,41 +2721,3 @@ msgstr "Gemeinsamer Ordner"
 #: templates/share-settings.php:55
 msgid "shared folder"
 msgstr "Gemeinsamer Ordner"
-
-#~ msgid ""
-#~ "  Feld für Suchkriterien.\n"
-#~ "Als Platzhalter verwendet man `%%', z.B. `%%Ste%%an'\n"
-#~ "beim Vornamen. Bei numerischen Feldern ist links\n"
-#~ "eine Auswahlbox mit Vergleichsoperationen."
-#~ msgstr ""
-#~ "Klick mich, um die\n"
-#~ "aktuellen Suchkriterien anzuwenden. Suchkriterien\n"
-#~ "können in den Feldern eingegeben werden.\n"
-#~ "Als Platzhalter verwendet man `%%'."
-
-#~ msgid "Missing or invalid fields"
-#~ msgstr "Fehlende oder ungültige Formularfelder"
-
-#~ msgid "Title"
-#~ msgstr "Titel"
-
-#~ msgid "Calendar"
-#~ msgstr "Kalender-Name"
-
-#~ msgid "From Date"
-#~ msgstr "Start-Datum"
-
-#~ msgid "From Time"
-#~ msgstr "Start-Zeit"
-
-#~ msgid "To Date"
-#~ msgstr "End-Datum"
-
-#~ msgid "To Time"
-#~ msgstr "End-Zeit"
-
-#~ msgid "The event ends before it starts"
-#~ msgstr "Das Ereignes endet bevor es beginnt?!"
-
-#~ msgid "There was a database failure"
-#~ msgstr "Es gab einen Datenbank-Fehler"
