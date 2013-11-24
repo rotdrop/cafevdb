@@ -786,14 +786,21 @@ __EOT__;
   }
 
   /**Form a brief event date in the given locale. */
-  public static function briefEventDate($event, $locale = NULL)
+  public static function briefEventDate($event, $timezone = null, $locale = null)
   {
+    if ($timezone === null) {
+      $timezone = Util::getTimezone();
+    }
+    if ($locale === null) {
+      $locale = Util::getLocale();
+    }
+
     $start = $event['startdate'];
-    $startdate = Util::strftime("%x", $start->getTimestamp(), $locale);
-    $starttime = Util::strftime("%H:%M", $start->getTimestamp(), $locale);
+    $startdate = Util::strftime("%x", $start->getTimestamp(), $timezone, $locale);
+    $starttime = Util::strftime("%H:%M", $start->getTimestamp(), $timezone, $locale);
     $end   = $event['enddate'];
-    $enddate = Util::strftime("%x", $end->getTimestamp(), $locale);
-    $endtime = Util::strftime("%H:%M", $end->getTimestamp(), $locale);
+    $enddate = Util::strftime("%x", $end->getTimestamp(), $timezone, $locale);
+    $endtime = Util::strftime("%H:%M", $end->getTimestamp(), $timezone, $locale);
 
     if ($startdate == $enddate) {
       $datestring = $startdate.', '.$starttime;

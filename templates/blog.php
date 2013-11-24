@@ -60,7 +60,7 @@ if ($blog['status'] == 'error') {
     $id       = $msg['id'];
     $author   = $msg['author'];
     $created  = $msg['created'];
-    $created  = Util::strftime('%x, %H:%M', $created, $_['locale']);
+    $created  = Util::strftime('%x, %H:%M', $created, $_['timezone'], $_['locale']);
     $editor   = $msg['editor'];
     $modified = $msg['modified'];
     $priority = $msg['priority'];
@@ -71,7 +71,7 @@ adding a photo to a contact-card which has the users login-name as
 nick-name.');
     $imgtitle = 'title="'.$imgtitle.'" ';
     if ($deleted > 0) {
-      $deleted = Util::strftime('%x, %H:%M', $deleted, $_['locale']);
+      $deleted = Util::strftime('%x, %H:%M', $deleted, $_['timezone'], $_['locale']);
       continue;
     }
 
@@ -82,7 +82,7 @@ nick-name.');
 
     $edittxt = '';
     if ($modified > 0) {
-      $modified = Util::strftime('%x, %H:%M', $modified, $_['locale']);
+      $modified = Util::strftime('%x, %H:%M', $modified, $_['timezone'], $_['locale']);
       $edittxt = L::t(', latest change by `%s\', %s', array($editor,$modified));  
     }
 

@@ -69,6 +69,7 @@ try {
   $tmpl->assign('Events', $events);
   $tmpl->assign('EventMatrix', $eventMatrix);
   $tmpl->assign('locale', $locale);
+  $tmpl->assign('timezone', Util::getTimezone());
   $tmpl->assign('CSSClass', 'projectevents');
   $tmpl->assign('Selected', $selected);
 

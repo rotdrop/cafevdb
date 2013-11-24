@@ -17,6 +17,7 @@ $evtButtons = array('Edit' => array('tag' => 'edit',
 );
 
 $locale = $_['locale'];
+$zone   = $_['timezone'];
 $n = 0;
 foreach ($_['EventMatrix'] as $key => $eventGroup) {
   $dpyName = $eventGroup['name'];
@@ -33,7 +34,7 @@ foreach ($_['EventMatrix'] as $key => $eventGroup) {
     $object = $event['object'];
     $brief  = htmlspecialchars(stripslashes($object['summary']));
 
-    $datestring = Events::briefEventDate($object, $locale);
+    $datestring = Events::briefEventDate($object, $zone, $locale);
 
     echo <<<__EOT__
     <tr class="$class">

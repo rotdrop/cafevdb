@@ -1375,12 +1375,11 @@ __EOT__;
         $attachedEvents = ''
           .'<tr class="eventattachments"><td>'.L::t('Attached Events').'</td>'
           .'<td colspan="2"><span id="eventattachments">';
-        $locale = Util::getLocale();
         foreach ($EventSelect as $id) {
           $event = Events::fetchEvent($id);
           $brief =
             $event['summary'].', '.
-            Events::briefEventDate($event, $locale);
+            Events::briefEventDate($event);
 
           $attachedEvents .= ''
             .'<button '

@@ -102,7 +102,7 @@ try {
 
   $start = new DateTime('@'.$start);
   $end = new DateTime('@'.$end);
-  $timezone = OC_Calendar_App::getTimezone();
+  $timezone = Util::getTimezone();
   $start->setTimezone(new DateTimeZone($timezone));
   $end->setTimezone(new DateTimeZone($timezone));
 
