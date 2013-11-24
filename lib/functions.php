@@ -201,8 +201,13 @@ __EOT__;
   }
 
   /**Format the right way (tm). */
-  public static function strftime($format, $timestamp = NULL, $locale = NULL)
+  public static function strftime($format, $timestamp = null, $tz = null, $locale = null)
   {
+    $oldtz     = date_default_timezone_get();
+    if ($tz) {
+      date_default_timezone_set($tz);
+    }
+    
     $oldlocale = setlocale(LC_TIME, 0);
     if ($locale) {
       setlocale(LC_TIME, $locale);
@@ -210,6 +215,7 @@ __EOT__;
     $result = strftime($format, $timestamp);
 
     setlocale(LC_TIME, $oldlocale);
+    date_default_timezone_set($oldtz);
 
     return $result;
   }
@@ -221,6 +227,12 @@ __EOT__;
     $locale = $lang.'_'.strtoupper($lang).'.UTF-8';
     return $locale;
   }
+
+  /**Return the timezone, from the calendar app. */
+  public static function getTimezone()
+  {
+    return \OC_Calendar_App::getTimezone();
+  }  
 
   /**Return the maximum upload file size. */
   public static function maxUploadSize($target = 'temporary')
@@ -322,7 +334,7 @@ __EOT__;
     echo '<u>'.$title.'</u><br/>'.$text.'<br/>';
   }
 
-  public static function redirect($page, $proto = NULL, $host = NULL, $port = NULL, $uri = NULL) {
+  public static function redirect($page, $proto = null, $host = null, $port = null, $uri = null) {
   
     /* Redirect auf eine andere Seite im aktuell angeforderten Verzeichnis */
     if (!$proto) {
@@ -362,7 +374,7 @@ __EOT__;
     exit;
   }
 
-  public static function cgiValue($key, $default=NULL, $allowEmpty = true)
+  public static function cgiValue($key, $default=null, $allowEmpty = true)
   {
     $value = $default;
     if (isset($_POST["$key"])) {
