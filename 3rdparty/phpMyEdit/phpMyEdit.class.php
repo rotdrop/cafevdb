@@ -1947,8 +1947,6 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				$css_class_name = substr($css_class_name, 0, $sfxpos);
 				if (isset($this->tooltips[$css_class_name])) {
 					return ' title="'.htmlspecialchars($this->tooltips[$css_class_name]).'" ';
-				} else {
-					return ' title="'.htmlspecialchars($css_class_name).'" ';
 				}
 			}
 		}
