@@ -65,12 +65,19 @@ try {
   // Are we a group-admin?
   $admin = OC_SubAdmin::isGroupAccessible($user, $group);
 
-  $expertmode = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb', 'expertmode','');
-  $debugmode  = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb', 'debugmode','');
-  $tooltips   = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb', 'tooltips','');
+  $expertmode = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb', 'expertmode','off');
+  $debugmode  = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb', 'debugmode','off');
+  $tooltips   = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb', 'tooltips','on');
+  $usrHdrVis  = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb', 'headervisibility', 'expanded');
+  $usrFiltVis = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb', 'filtervisibility', 'off');
   $encrkey    = Config::getEncryptionKey();
 
-  $headervisibility = Util::cgiValue('headervisibility', 'expanded');
+  // Initialize with cgi or user-value
+  $headervisibility = Util::cgiValue('headervisibility', $usrHdrVis);
+
+  // Filter visibility is stored here:  
+  Config::$pmeopts['cgi']['append'][Config::$pmeopts['cgi']['prefix']['sys'].'fl'] =
+    $usrFiltVis == 'off' ? 0 : 1;
 
   Util::addExternalScript("https://maps.google.com/maps/api/js?sensor=false");
   Util::addExternalScript(OC_Helper::linkTo('calendar/js', 'l10n.php'));

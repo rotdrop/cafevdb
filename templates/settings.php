@@ -5,9 +5,14 @@ use CAFEVDB\Util;
 echo Util::emitExternalScripts();
 echo Util::emitInlineScripts();
 
-$tooltipstitle = L::t("Control the display of tooltips. Warning: this works globally for all OwnCloud applications.");
-$experttitle   = L::t("Show a second button which leads to a dialog with `advanced' settings");
-$debugtitle    = L::t("Show a certain amount of debug information, normally not needed.");
+$tooltipstitle  = L::t("Control the display of tooltips. ".
+                      "Warning: this works globally for all OwnCloud applications.");
+$headervistitle = L::t("Start with visible page header-texts. This affects only ".
+                       "the initial visibility of the page-headers.");
+$filtervistitle = L::t("Initially display the filter-controls on all atable. This affects only ".
+                       "the initial visibility of the filter-buttons and -inputs.");
+$experttitle    = L::t("Show a second button which leads to a dialog with `advanced' settings");
+$debugtitle     = L::t("Show a certain amount of debug information, normally not needed.");
 ?>
 <?php if ($_['adminsettings']) { ?>
 <ul id="adminsettingstabs">
@@ -23,6 +28,12 @@ $debugtitle    = L::t("Show a certain amount of debug information, normally not 
   <form id="cafevdb">
     <input id="tooltips" type="checkbox" name="tooltips" <?php echo $_['tooltips'] == 'on' ? 'checked="checked"' : ''; ?> id="tooltips" title="<?php echo $tooltipstitle ?>"/>
     <label for="tooltips" title="<?php echo $tooltipstitle; ?>"><?php echo L::t('Tool-Tips') ?></label>
+    <br />
+    <input id="headervisibility" type="checkbox" name="headervisibility" <?php echo $_['headervisibility'] == 'expanded' ? 'checked="checked"' : ''; ?> id="tooltips" title="<?php echo $headervistitle ?>"/>
+    <label for="headervisibility" title="<?php echo $headervistitle; ?>"><?php echo L::t('Page-Header') ?></label>
+    <br />
+    <input id="filtervisibility" type="checkbox" name="filtervisibility" <?php echo $_['filtervisibility'] == 'on' ? 'checked="checked"' : ''; ?> id="tooltips" title="<?php echo $headervistitle ?>"/>
+    <label for="filtervisibility" title="<?php echo $filtervistitle; ?>"><?php echo L::t('Filter-Controls') ?></label>
     <br />
     <input id="expertmode" type="checkbox" name="expertmode" <?php echo $_['expertmode'] == 'on' ? 'checked="checked"' : ''; ?> id="expertmode" title="<?php echo $experttitle ?>"/>
     <label for="expertmode" title="<?php echo $experttitle; ?>"><?php echo L::t('Expert-Mode') ?></label>

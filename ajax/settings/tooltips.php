@@ -16,7 +16,7 @@ if( isset( $_POST['tooltips'] ) ) {
   $tooltips='off';
 }
 OCP\Config::setUserValue( OCP\USER::getUser(), 'cafevdb', 'tooltips', $tooltips );
-OCP\JSON::success(array('data' => array( 'message' => L::t('Tooltips changed') )));
+OCP\JSON::success(array('data' => array( 'message' => L::t('tooltips changed') )));
 return true;
 
 ?>

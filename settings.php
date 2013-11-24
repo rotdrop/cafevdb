@@ -48,7 +48,9 @@ try {
 
   $tmpl = new OCP\Template( 'cafevdb', 'settings');
 
-  $tooltips    = OCP\Config::getUserValue($user, 'cafevdb', 'tooltips','');
+  $tooltips         = OCP\Config::getUserValue($user, 'cafevdb', 'tooltips','on');
+  $headervisibility = OCP\Config::getUserValue($user, 'cafevdb', 'headervisibility', 'expanded');
+  $filtervisibility = OCP\Config::getUserValue($user, 'cafevdb', 'filtervisibility', 'off');
 
   $expertmode  = OCP\Config::getUserValue($user, 'cafevdb', 'expertmode','');
   $debugmode   = OCP\Config::getUserValue($user, 'cafevdb', 'debugmode','');
@@ -58,6 +60,8 @@ try {
   $tmpl->assign('debugmode', $debugmode);
   $tmpl->assign('expertmode', $expertmode);
   $tmpl->assign('tooltips', $tooltips);
+  $tmpl->assign('headervisibility', $headervisibility);
+  $tmpl->assign('filtervisibility', $filtervisibility);
   $tmpl->assign('encryptionkey', $encrkey);
   $tmpl->assign('exampletext', $exampletext);
   $tmpl->assign('adminsettings', false);

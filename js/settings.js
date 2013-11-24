@@ -70,6 +70,32 @@ $(document).ready(function() {
     return false;
   });
 
+  $('#headervisibility').change(function(event) {
+    event.preventDefault();
+    var post = $("#headervisibility").serialize();
+    $.post(OC.filePath('cafevdb', 'ajax/settings', 'headervisibility.php') , post, function(data) {return;});
+    if ($('#headervisibility').attr('checked')) {
+      CAFEVDB.PAGE.expandHeader();
+    } else {
+      CAFEVDB.PAGE.collapseHeader();
+    }
+    return false;
+  });
+
+  $('#filtervisibility').change(function(event) {
+    event.preventDefault();
+    var post = $("#filtervisibility").serialize();
+    $.post(OC.filePath('cafevdb', 'ajax/settings', 'filtervisibility.php') , post, function(data) {return;});
+    if ($('#filtervisibility').attr('checked')) {
+      // We would have to resubmit the query. That would be too much,
+      // we only set the initial value.
+//      CAFEVDB.PAGE.expandHeader();
+    } else {
+//      CAFEVDB.PAGE.collapseHeader();
+    }
+    return false;
+  });
+
   // 'show password' checkbox
   var tmp = $('#userkey #encryptionkey').val();
   $('#userkey #encryptionkey').showPassword();
