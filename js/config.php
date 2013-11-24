@@ -24,8 +24,12 @@ $array = array(
   "CAFEVDB.toolTips" => ($tooltips == "off" ? 'false' : 'true'),
   "CAFEVDB.wysiwygEditor" => "'".Config::$opts['editor']."'",
   "CAFEVDB.language" => "'".$language."'",
-  "PHPMYEDIT.filterSelectPlaceholder" => "'".L::t("Select a filter Option")."'",
+  "PHPMYEDIT.filterSelectPlaceholder" => "'".L::t("Select a filter option.")."'",
+  "PHPMYEDIT.filterSelectNoResult" => "'".L::t("No values match.")."'",
   "PHPMYEDIT.filterSelectChosen" => "true",
+  "PHPMYEDIT.selectChosenPixelWidth" => "['projectname']",
+  "PHPMYEDIT.filterSelectChosenTitle" => "'".L::t("Select from the pull-down menu. ".
+                                                  "Double-click will submit the form.")."'",
   );
 
 // Echo it
@@ -40,6 +44,7 @@ $(document).ready(function() {
     } else {
       $.fn.tipsy.disable();
     }
+    CAFEVDB.broadcastHeaderVisibility();
 });
 __EOT__
 

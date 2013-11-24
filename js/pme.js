@@ -25,7 +25,10 @@ var PHPMYEDIT = PHPMYEDIT || {};
   'use strict';
 
   PHPMYEDIT.filterSelectPlaceholder = 'Select a filter Option';
+  PHPMYEDIT.filterSelectNoResult    = 'No values match';
   PHPMYEDIT.filterSelectChosen      =  true;
+  PHPMYEDIT.filterSelectChosenTitle = 'Select from the pull-down menu. Double-click will submit the form.';
+  PHPMYEDIT.selectChosenPixelWidth  = [];
   PHPMYEDIT.filterHandler = function(theForm, theEvent) {
     var pressed_key = null;
     if (theEvent.which) {
@@ -57,26 +60,52 @@ var PHPMYEDIT = PHPMYEDIT || {};
     });
 
     $("input[class^='"+pmepfx+"-filter']").keypress(function(event) {
-      return this.filterHandler(this.form, event);
+      return PHPMYEDIT.filterHandler(this.form, event);
     });
 
     $("input[type='submit'].pme-save").click(function(event) {
-      return this.filterHandler(this.form, event);
+      return PHPMYEDIT.filterHandler(this.form, event);
     });
 
     $("input[type='submit'].pme-more").click(function(event) {
-      return this.filterHandler(this.form, event);
+      return PHPMYEDIT.filterHandler(this.form, event);
     });
 
     if (this.filterSelectChosen) {
-      $("select[class^='"+pmepfx+"-comp-filter']").chosen({width:"auto",  disable_search_threshold: 10});
+      var noRes = this.filterSelectNoResult;
+
+      $("select[class^='"+pmepfx+"-comp-filter']").chosen({width:"auto", disable_search_threshold: 10});
 
       // Provide a data-placeholder and also remove the match-all
       // filter, which is not needed when using chosen.
       $("select[class^='"+pmepfx+"-filter']").attr("data-placeholder", this.filterSelectPlaceholder);
       $("select[class^='"+pmepfx+"-filter']").unbind('change');
       $("select[class^='"+pmepfx+"-filter'] option[value='*']").remove();
-      $("select[class^='"+pmepfx+"-filter']").chosen({width:"100%"});
+
+      // Play a dirty trick in order not to pass width:auto to chosen
+      // for some particalar thingies
+      var k;
+      for (k = 0; k < PHPMYEDIT.selectChosenPixelWidth.length; ++k) {
+        var tag = PHPMYEDIT.selectChosenPixelWidth[k];
+        var pxlWidth = Math.round($("td[class^='"+pmepfx+"-filter-"+tag+"']").width());
+        $("select[class^='"+pmepfx+"-filter-"+tag+"']").chosen({width:pxlWidth+'px',
+                                                                no_results_text:noRes});
+      }
+        
+      // Then the general stuff
+      $("select[class^='"+pmepfx+"-filter']").chosen({width:'100%',
+                                                      no_results_text:noRes});
+
+      $("td[class^='"+pmepfx+"-filter'] ul.chosen-choices li.search-field input[type='text']").dblclick(function(event) {
+        return $("form[class^='"+pmepfx+"-form']").submit();
+//        return this.form.submit();
+      });
+
+      $("td[class^='"+pmepfx+"-filter'] div.chosen-container").dblclick(function(event) {
+        return $("form[class^='"+pmepfx+"-form']").submit();
+      });
+
+      $("td[class^='"+pmepfx+"-filter'] div.chosen-container").attr("title",this.filterSelectChosenTitle);
     }
   };
 })(window, jQuery, PHPMYEDIT);

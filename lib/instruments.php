@@ -84,7 +84,7 @@ __EOT__;
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
     // F - filter, I - initial sort suppressed
-    $opts['options'] = 'APVFC';
+    $opts['options'] = 'APVC';
 
     // Number of lines to display on multiple selection filters
     $opts['multiple'] = '4';

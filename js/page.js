@@ -1,5 +1,5 @@
 CAFEVDB.PAGE = {
-  /**Optionally collapse the somewhat lengthy text at the head of the pages
+  /**Optionally collapse the somewhat lengthy text at the head of db pages.
    */
   collapseHeader: function() {
     var pfx    = 'div.'+CAFEVDB.name+'-page-';
@@ -15,7 +15,7 @@ CAFEVDB.PAGE = {
 
     CAFEVDB.broadcastHeaderVisibility('collapsed');
   },
-  /**Expand the somewhat lengthy text at the head of the email page.
+  /**Optionally expand the somewhat lengthy text at the head of db pages.
    */
   expandHeader: function() {
     var pfx    = 'div.'+CAFEVDB.name+'-page-';

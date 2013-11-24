@@ -164,8 +164,8 @@ __EOT__;
 
     $opts['fdd']['Jahr'] = array(
                                'name'     => 'Jahr',
-                               'select'   => 'T',
-                               //'options'  => 'LAVCPDR', // auto increment
+                               'select'   => 'N',
+                               //'options'  => 'LAVCPDF'
                                'maxlen'   => 11,
                                'default'  => '0',
                                'sort'     => true
@@ -178,8 +178,9 @@ __EOT__;
                             'function' => 'CAFEVDB\Projects::projectButton',
                                 'parameters' => array('keyIdx' => $idIdx,
                                                       'template' => 'brief-instrumentation')),
-        'select'   => 'T',
+        'select'   => 'D',
         'maxlen'   => 64,
+        'css'      => array('postfix' => 'projectname'),
         'sort'     => true,
         );
 

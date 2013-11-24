@@ -124,7 +124,7 @@ __EOT__;
       // A - add,  C - change, P - copy, V - view, D - delete,
       // F - filter, I - initial sort suppressed
       $opts['options'] = 'ACVDF';
-      $sort = true;
+      $sort = true; // but only for the project!!!
     }
 
     $transpose = array('name' => 'transpose',
@@ -237,7 +237,7 @@ bitte bei den <A HREF="Projekte.php?PME_sys_rec='.$projectId.'&PME_sys_operation
     
     $opts['fdd']['ProjektName'] = array(
       'name'     => 'Projekt-Name',
-      'options'  => 'LVR',
+      'options'  => 'LVRF',
       'select'   => 'T',
       'sql'      => 'ProjektId',
       'php|VLF'  => array('type' => 'function',
@@ -261,7 +261,8 @@ bitte bei den <A HREF="Projekte.php?PME_sys_rec='.$projectId.'&PME_sys_operation
       $opts['fdd']["$value"] = array('name' => $value.' (soll)',
                                      'select' => 'T',
                                      'maxlen' => 4,
-                                     'sort' => $sort);
+                                     'options' => 'LAVCPD',
+                                     'sort' => false);
       $opts['fdd']["$value"."Haben"] = array('name' => $value.' (haben)',
                                              'colattrs' => 'style="color:#990000;background-color:#F0F0F0"',
                                              'select' => 'T',

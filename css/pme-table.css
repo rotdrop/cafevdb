@@ -118,6 +118,13 @@ table.pme-main [class^="chosen"] {
   background-color: rgb(244, 244, 244) !important;
 }
 
+table.pme-main select[class^="pme-filter"] {
+  width:100%;
+}
+
+table.pme-main select.pme-filter-projects {
+  width:auto;
+}
 
 /*
  * Local Variables: ***

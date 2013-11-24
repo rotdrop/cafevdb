@@ -54,6 +54,12 @@ var CAFEVDB = CAFEVDB || {};
     };
   };
   CAFEVDB.broadcastHeaderVisibility = function (visibility) {
+
+    // default: only distribute
+    if (!visibility) {
+      visibility = this.headervisibility;
+    }
+
     // Sanity check
     if (visibility != 'expanded' && visibility != 'collapsed') {
       return;
@@ -225,6 +231,9 @@ $(document).ready(function(){
   $('.header-right img').tipsy({gravity:'ne', fade:true});
   $('img').tipsy({gravity:'nw', fade:true});
   $('button').tipsy({gravity:'w', fade:true});
+
+  CAFEVDB.applyTipsy('select[class|="pme-filter"]',
+                     {gravity:'n', fade:true, html:true, className:'tipsy-wide'});
 
   CAFEVDB.applyTipsy('input[class|="pme-filter"]',
                      {gravity:'n', fade:true, html:true, className:'tipsy-wide'});
