@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-11-24 15:55+0100\n"
+"POT-Creation-Date: 2013-11-24 19:59+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -498,11 +498,19 @@ msgstr ""
 msgid "Expertmode changed"
 msgstr ""
 
-#: ajax/settings/tooltips.php:19
-msgid "Tooltips changed"
+#: ajax/settings/filtervisibility.php:19
+msgid "filter-visibility changed"
 msgstr ""
 
-#: index.php:172 lib/musicians.php:154
+#: ajax/settings/headervisibility.php:19
+msgid "header-visibility changed"
+msgstr ""
+
+#: ajax/settings/tooltips.php:19
+msgid "tooltips changed"
+msgstr ""
+
+#: index.php:179 lib/musicians.php:154
 #, php-format
 msgid "Add all to %s"
 msgstr ""
@@ -536,11 +544,11 @@ msgstr ""
 msgid "Really delete the entry?"
 msgstr ""
 
-#: js/cafevdb.js:176
+#: js/cafevdb.js:182
 msgid "Export to the following format is not yet supported:"
 msgstr ""
 
-#: js/cafevdb.js:178
+#: js/cafevdb.js:184
 msgid "Unimplemented"
 msgstr ""
 
@@ -597,7 +605,15 @@ msgid "Deletable"
 msgstr ""
 
 #: js/config.php:27
-msgid "Select a filter Option"
+msgid "Select a filter option."
+msgstr ""
+
+#: js/config.php:28
+msgid "No values match."
+msgstr ""
+
+#: js/config.php:31
+msgid "Select from the pull-down menu. Double-click will submit the form."
 msgstr ""
 
 #: js/email.js:6
@@ -656,7 +672,7 @@ msgstr ""
 msgid "Select photo"
 msgstr ""
 
-#: js/settings.js:115
+#: js/settings.js:141
 msgid "Error:"
 msgstr ""
 
@@ -744,7 +760,7 @@ msgstr ""
 msgid "and"
 msgstr ""
 
-#: lib/email.php:1373 lib/projects.php:198 lib/projects.php:438
+#: lib/email.php:1373 lib/projects.php:199 lib/projects.php:439
 msgid "Events"
 msgstr ""
 
@@ -1632,19 +1648,19 @@ msgstr ""
 msgid "Really Change %s's instrument!!!"
 msgstr ""
 
-#: settings.php:87
+#: settings.php:91
 msgid "concerts"
 msgstr ""
 
-#: settings.php:88
+#: settings.php:92
 msgid "rehearsals"
 msgstr ""
 
-#: settings.php:89
+#: settings.php:93
 msgid "other"
 msgstr ""
 
-#: settings.php:90
+#: settings.php:94
 msgid "management"
 msgstr ""
 
@@ -1677,7 +1693,7 @@ msgid "New Key"
 msgstr ""
 
 #: templates/app-settings.php:20 templates/app-settings.php:49
-#: templates/email-settings.php:49 templates/settings.php:45
+#: templates/email-settings.php:49 templates/settings.php:56
 #: templates/share-settings.php:23
 msgid "show"
 msgstr ""
@@ -2118,7 +2134,7 @@ msgid ""
 "any musician."
 msgstr ""
 
-#: templates/expertmode.php:36 templates/settings.php:33
+#: templates/expertmode.php:36 templates/settings.php:44
 msgid "Example"
 msgstr ""
 
@@ -2231,72 +2247,92 @@ msgid ""
 "OwnCloud applications."
 msgstr ""
 
-#: templates/settings.php:9
-msgid "Show a second button which leads to a dialog with `advanced' settings"
+#: templates/settings.php:10
+msgid ""
+"Start with visible page header-texts. This affects only the initial "
+"visibility of the page-headers."
 msgstr ""
 
-#: templates/settings.php:10
-msgid "Show a certain amount of debug information, normally not needed."
+#: templates/settings.php:12
+msgid ""
+"Initially display the filter-controls on all atable. This affects only the "
+"initial visibility of the filter-buttons and -inputs."
 msgstr ""
 
 #: templates/settings.php:14
-msgid "Personal Settings"
+msgid "Show a second button which leads to a dialog with `advanced' settings"
 msgstr ""
 
 #: templates/settings.php:15
+msgid "Show a certain amount of debug information, normally not needed."
+msgstr ""
+
+#: templates/settings.php:19
+msgid "Personal Settings"
+msgstr ""
+
+#: templates/settings.php:20
 msgid "Administration"
 msgstr ""
 
-#: templates/settings.php:16
+#: templates/settings.php:21
 msgid "Sharing"
 msgstr ""
 
-#: templates/settings.php:17
+#: templates/settings.php:22
 msgid "Email"
 msgstr ""
 
-#: templates/settings.php:18
+#: templates/settings.php:23
 msgid "Development"
 msgstr ""
 
-#: templates/settings.php:25
+#: templates/settings.php:30
 msgid "Tool-Tips"
 msgstr ""
 
-#: templates/settings.php:28
-msgid "Expert-Mode"
+#: templates/settings.php:33
+msgid "Page-Header"
 msgstr ""
 
-#: templates/settings.php:31
-msgid "Debug-Mode"
-msgstr ""
-
-#: templates/settings.php:33 templates/settings.php:36
-#: templates/settings.php:37
-msgid "Example Text"
+#: templates/settings.php:36
+msgid "Filter-Controls"
 msgstr ""
 
 #: templates/settings.php:39
+msgid "Expert-Mode"
+msgstr ""
+
+#: templates/settings.php:42
+msgid "Debug-Mode"
+msgstr ""
+
+#: templates/settings.php:44 templates/settings.php:47
+#: templates/settings.php:48
+msgid "Example Text"
+msgstr ""
+
+#: templates/settings.php:50
 msgid "Dummy"
 msgstr ""
 
-#: templates/settings.php:43
+#: templates/settings.php:54
 msgid "Own Password"
 msgstr ""
 
-#: templates/settings.php:44
+#: templates/settings.php:55
 msgid "DB Encryption Key"
 msgstr ""
 
-#: templates/settings.php:46
+#: templates/settings.php:57
 msgid "Set Encryption Key"
 msgstr ""
 
-#: templates/settings.php:47
+#: templates/settings.php:58
 msgid "The encryption key has been set successfully."
 msgstr ""
 
-#: templates/settings.php:48
+#: templates/settings.php:59
 msgid "Unable to set the encryption key."
 msgstr ""
 
