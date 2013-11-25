@@ -457,7 +457,7 @@ $(document).ready(function() {
   //
   ///////////////////////////////////////////////////////////////////////////
   
-  $('$sharedfolderform').submit(function () { return false; });
+  $('#sharedfolderform').submit(function () { return false; });
 
   $('#sharedfolder-force').blur(function(event) {
     event.preventDefault();
