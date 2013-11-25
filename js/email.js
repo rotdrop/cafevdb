@@ -202,6 +202,14 @@ $(document).ready(function(){
     return false;
   });
 
+  $('input.alertdata.cafevdb-email-error').each(function(index) {
+    var title = $(this).attr('name');
+    var text  = $(this).attr('value');
+    OC.dialogs.alert(text, title);
+    $('#cafevdb-email-error').append('<u>'+title+'</u><br/>'+text+'<br/>');
+  });
+
+
 });
 
 // Local Variables: ***

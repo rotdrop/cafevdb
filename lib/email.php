@@ -2033,14 +2033,15 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
     if (true || Util::debugMode()) {
       // TODO: no need to copy the entire base64-encoded attachment
       // soup to the screen ...
-      echo '<HR/><H4>Gesendete Email</H4>';
+      echo '<div id="cafevdb-email-sentemail">'."\n";
+      echo '<HR/><H4>Gesendete Email</H4>'."\n";
       echo "<PRE>\n";
       $msg = $mimeMessage;
       $msgArray = explode("\n", $msg);
       for ($i = 0; $i < min(64, count($msgArray)); $i++) {
         echo htmlspecialchars($msgArray[$i])."\n";
       }
-      echo "</PRE><HR/>\n";
+      echo "</PRE><HR/></div>\n";
     }
 
     return true;

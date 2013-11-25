@@ -209,6 +209,8 @@ $(document).ready(function() {
   //
   ///////////////////////////////////////////////////////////////////////////
 
+  $('#admingeneral').submit(function () { return false; });
+
   $('#admingeneral :input').blur(function(event) {
     event.preventDefault();
     $('div.statusmessage').hide();
@@ -454,6 +456,8 @@ $(document).ready(function() {
   // Sharing, share-folder
   //
   ///////////////////////////////////////////////////////////////////////////
+  
+  $('$sharedfolderform').submit(function () { return false; });
 
   $('#sharedfolder-force').blur(function(event) {
     event.preventDefault();

@@ -322,15 +322,9 @@ __EOT__;
     //$title = htmlspecialchars($title, ENT_QUOTES, 'UTF-8', false);    
     $text  = addslashes($text);
     $title = addslashes($title);
-    echo "<script>\n";
-    echo "OC.dialogs.alert('$text', '$title');\n";
-    if ($cssid !== false) {
-      echo <<<__EOT__
-$('#$cssid').append('<u>$title</u>'+'<br/>'+'$text'+'<br/>');
-
-__EOT__;
-    }
-    echo "</script>\n";
+    $class = $cssid === false ? '' : ' '.$cssid;
+    echo '<input type="hidden" class="alertdata'.$class.
+      '" name="'.$title.'" value="'.$text.'">'."\n";
     echo '<u>'.$title.'</u><br/>'.$text.'<br/>';
   }
 

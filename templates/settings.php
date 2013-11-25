@@ -39,7 +39,7 @@ $debugtitle     = L::t("Show a certain amount of debug information, normally not
     <label for="expertmode" title="<?php echo $experttitle; ?>"><?php echo L::t('Expert-Mode') ?></label>
     <br />
     <input id="debugmode" type="checkbox" name="debugmode" <?php echo $_['debugmode'] == 'on' ? 'checked="checked"' : ''; ?> id="debugmode" title="<?php echo $debugtitle ?>"/>
-    <label for="debugmode" title="<?php echo $experttitle; ?>"><?php echo L::t('Debug-Mode') ?></label>
+    <label for="debugmode" title="<?php echo $debugtitle; ?>"><?php echo L::t('Debug-Mode') ?></label>
     <br />
     <label for="exampletext" title="<?php echo L::t('Example Text') ?>"><?php echo L::t('Example') ?></label>
     <input type="text" name="exampletext" id="exampletext"

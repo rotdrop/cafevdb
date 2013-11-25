@@ -45,7 +45,7 @@ $off = $_['shareowner'] == '' ? 'disabled="disabled"' : $alloff;
         <label for="duration"><?php echo L::t('Default Duration for Events');?></label>
       </fieldset>
     </form>
-    <form id="sharedfolderform" onsubmit="return false;">
+    <form id="sharedfolderform" disabledonsubmit="return false;">
       <fieldset <?php echo $off; ?> ><legend><?php echo L::t('Shared folder'); ?></legend>
         <input type="hidden" id="sharedfolder-saved" name="sharedfolder-saved" value="<?php echo $_['sharedfolder']; ?>" />
         <input <?php echo $_['sharedfolder'] != '' ? 'disabled="disabled"' : ''; ?> 
