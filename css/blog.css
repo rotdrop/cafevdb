@@ -128,8 +128,14 @@ div.cafevdb-page-header.collapsed #cafevdb-page-blog-header {
   margin-left:21ex;
 }
 
+div.blogentrypopup { 
+  width:80em;
+}
+
 .blogentrypopup span.blogentrycenter {
   margin-left:2ex;
+  /*max-width:66em;*/
+  max-width:66em;
 }
 
 .bloglist span.blogentrytitle {
