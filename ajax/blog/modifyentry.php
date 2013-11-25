@@ -27,6 +27,17 @@ try {
   $inReply  = Util::cgiValue('inReply', -1);
   $text     = Util::cgiValue('text', '');
   $priority = Util::cgiValue('priority', false);
+  $popup    = Util::cgiValue('popup', false);
+  $reader   = Util::cgiValue('reader', '');
+  $clearRdr = Util::cgiValue('clearReader', false);
+
+  if ($popup == 'false' || $popup == 0) {
+    $popup = false;
+  }
+
+  if ($clearRdr) {
+    $reader = -1;
+  }
 
   if ($author === false || $author == '') {
     OCP\JSON::error(
@@ -58,7 +69,7 @@ try {
         return false;  
       }
       $priority = intval($priority) % 256;
-      $result = Blog::createNote($author, $inReply, $text, $priority);
+      $result = Blog::createNote($author, $inReply, $text, $priority, $popup);
       break;
     case 'modify':
       // Sanity checks
@@ -70,7 +81,18 @@ try {
         return false;  
       }
       $priority = intval($priority) % 256;
-      $result = Blog::modifyNote($author, $blogId, trim($text), $priority);
+      $result = Blog::modifyNote($author, $blogId, trim($text), $priority, $popup, $reader);
+      break;
+    case 'markread':
+      // Sanity checks
+      if ($blogId < 0) {
+        OCP\JSON::error(
+          array(
+            'data' => array(
+              'message' => L::t('Cannot modify a blog-entry without id.'))));
+        return false;  
+      }
+      $result = Blog::modifyNote($author, $blogId, '', false, false, $author);
       break;
     case 'delete':
       // Sanity checks

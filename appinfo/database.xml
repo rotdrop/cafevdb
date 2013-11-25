@@ -77,6 +77,19 @@
         <length>1</length>
       </field>
 
+      <field>
+        <name>popup</name>
+        <type>boolean</type>
+        <default>false</default>
+      </field>
+
+      <field>
+        <name>reader</name>
+        <type>text</type>
+        <notnull>false</notnull>
+        <length>1024</length>
+      </field>
+
     </declaration>
 
   </table>

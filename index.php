@@ -190,6 +190,7 @@ try {
   $tmpl->assign('orchestra', Config::getValue('orchestra'));
   $tmpl->assign('groupadmin', $admin);
   $tmpl->assign('usergroup', $group);
+  $tmpl->assign('user', $user);
   $tmpl->assign('debugmode', $debugmode);
   $tmpl->assign('expertmode', $expertmode);
   $tmpl->assign('tooltips', $tooltips);

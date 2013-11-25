@@ -14,6 +14,13 @@ class Tooltips
   {
     return 
       array(
+        'blog-reader-clear' => L::t('Clear the list of readers of this note. Consequently, if this note is marked '.
+                                    'as popup, then it will pop-up again after clearing the list of readers.'),
+        'blog-popup-set' => L::t('Place this note in a pop-up window after login. The window will only '.
+                                 'pop-up once, the list of readers is remembered.'),
+        'blog-popup-clear' => L::t('Disable the pop-up function for this blog-note. The list of associated readers '.
+                                   'is maintained, so reenabling the pop-up function will still not '.
+                                   'present this note to users already on the reader-list.'),
         'blogentry-raise' => L::t('Increase the display priority; move the note closer to the top of the page.'),
         'blogentry-lower' => L::t('Decrease the display priority; move the note closer to the bottom of the page.'),
         'blog-newentry' => L::t('Write a new bulletin entry.'),

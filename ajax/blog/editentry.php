@@ -26,6 +26,8 @@ try {
   $inReply  = Util::cgiValue('inReply', -1);
   $text     = Util::cgiValue('text', '');
   $priority = Util::cgiValue('priority', false);
+  $popup    = Util::cgiValue('popup', false);
+  $reader   = Util::cgiValue('reader', '');
 
   if ($author === false || $author == '') {
     OCP\JSON::error(
@@ -61,13 +63,18 @@ try {
     } else {
       $priority = false;
     }
+    $popup   = $entry['popup'] != 0;
+    $reader  = $entry['reader'];
   } else if ($inReply >= 0) {  
     $priority = false;
+    $popup    = false;
+    $reader   = '';
   }
 
   $tmpl = new OCP\Template(Config::APP_NAME, 'blogedit');
 
   $tmpl->assign('priority', $priority, false);
+  $tmpl->assign('popup', $popup, false);
 
   $html = $tmpl->fetchPage();
 
@@ -78,6 +85,8 @@ try {
                           'inReply' => $inReply,
                           'text' => $text,
                           'priority' => $priority,
+                          'popup' => $popup,
+                          'reader' => $reader,
                           'message' => $text.' '.$blogId.' '.$inReply)));
 
   return true;

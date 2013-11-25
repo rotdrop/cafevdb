@@ -51,7 +51,7 @@ if ($blog['status'] == 'error') {
   echo '<div class="statusmessage">'.$blog['data'].'</div>';
 } else {
   $blog = $blog['data'];
-  echo '<ul id="bloglist">'."\n";
+  echo '<ul id="bloglist" class="bloglist">'."\n";
   $level = 0;
   $savedblog = array();
   while (!empty($blog)) {
@@ -64,6 +64,12 @@ if ($blog['status'] == 'error') {
     $editor   = $msg['editor'];
     $modified = $msg['modified'];
     $priority = $msg['priority'];
+    $popup    = $msg['popup'] != 0;
+    $reader   = $msg['reader'];
+    $re = '/(^|[,])+'.$_['user'].'($|[,])+/';
+    if (preg_match($re, $reader) === 1) {
+      $popup = false;
+    }
     $deleted  = $msg['deleted'];
     $reply    = $msg['inreplyto'];
     $imgtitle = L::t('Avatar pictures can be uploaded through the contacts-application by
@@ -112,7 +118,16 @@ nick-name.');
     <span class="blogentrycenter">
       <span class="blogentrytitle">'.$author.' -- '.$created.$prioritytext.$edittxt.'</span><br/>
       <span class="blogentrytext">'.$text.'</span>
-    </span>
+    </span>'.
+    ($popup === false ? '' : '
+      <div class="blogentrypopup bloglist" id="blogentrypopup'.$id.'" style="display:none;">
+	<input type="hidden" class="blogentrypopupid" value="'.$id.'"/>
+        <span class="photo"><img class="photo" src="'.MYSELF\Export::photo($author).'" '.$imgtitle.'/></span>
+        <span class="blogentrycenter">
+          <span class="blogentrytitle">'.$author.' -- '.$created.$prioritytext.$edittxt.'</span><br/>
+          <span class="blogentrytext">'.$text.'</span>
+        </span>
+      </div>').'
   </div></li>
 ';
     if (!empty($entry['children'])) {

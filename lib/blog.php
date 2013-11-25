@@ -53,15 +53,20 @@ class Blog
    * 255. Only top-level notes may carry a priority (so if $inReplay
    * >= 0, then $priority is ignored).
    *
+   * @param[in] $popup if @c true then the note will appear as one-time popup.
+   *            We remeber the user-id of the reader in the db, after the user
+   *            has clicked away the alert box.
+   *            as a one-time popup.
+   *
    * @return bool, @c true on success.
    */
-  public static function createNote($author, $inReply, $text, $priority = false)
+  public static function createNote($author, $inReply, $text, $priority = false, $popup = false)
   {
     $table = '*PREFIX*'.Config::APP_NAME.'_blog';
     $priority = $inReply < 0 ? intval($priority) % 256 : 0;
     $query = 'INSERT INTO '.$table.'
- (author,created,message,inreplyto,priority) VALUES (?,?,?,?,?)';
-    $params = array($author, time(), $text, $inReply, $priority);
+ (author,created,message,inreplyto,priority,popup,reader) VALUES (?,?,?,?,?,?,?)';
+    $params = array($author, time(), $text, $inReply, $priority, $popup, '');
     $query = \OCP\DB::prepare($query);
     return $query->execute($params);
   }
@@ -76,13 +81,42 @@ class Blog
    *
    * @param[in] $priority The priority in the range 0...255. Ignored if @c false.
    *
+   * @param[in] $popup false: do not change. +1: Mark this as a one-time popup-note.
+   *                   -1: unmark as popup note. false: ignore
+   *
+   * @param[in] $reader Comma separated list of users for which the note is marked
+   *            as read. If false, nothing changes. If < 0 remove all readers.
+   *
    * @return bool, @c true on success.
    */
-  public static function modifyNote($author, $blogId, $text = '', $priority = false)
+  public static function modifyNote($author, $blogId, $text = '', $priority = false, $popup = false, $reader = false)
   {
     $table = '*PREFIX*'.Config::APP_NAME.'_blog';
-    $modify = 'editor = ?, modified = ?';
-    $params = array($author, time());
+
+    if ($reader < 0) {
+      $reader = '';
+    } else if ($reader !== false) {
+      $note = self::fetchNote($blogId);
+      if ($note === false) {
+        return false;
+      }
+      if ($note['reader'] != '' && $reader != '') {
+        $reader .= ','.$note['reader'];
+      } else if ($note['reader'] != '') {
+        $reader = $note['reader'];
+      }
+    }
+
+    if ($text != '' || $reader === false) {
+      $modify = 'editor = ?, modified = ?';
+      $params = array($author, time());
+    } else {
+      // We do not count this as actual modification if no text is
+      // submitted
+      $modify = 'editor = editor';
+      $params = array();
+    }
+    
     $text = strval($text);
     if ($text != '') {
       $modify .= ', message = ?';
@@ -92,8 +126,15 @@ class Blog
       $modify .= ', priority = ?';
       $params[] = $priority;
     }
+    if ($popup) {
+      $modify .= ', popup = ?';
+      $params[] = $popup > 0 ? 1 : 0;
+    }
+    if ($reader !== false) {
+      $modify .= ', reader = ?';
+        $params[] = $reader;
+    }
     $params[] = $blogId;
-
     $query = 'UPDATE '.$table.' SET '.$modify.' WHERE id = ?';
     $query = \OCP\DB::prepare($query);
 

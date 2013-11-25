@@ -704,6 +704,11 @@ td.pme-buttons > .pme-pagerows {
   white-space:nowrap;
 }
 
+/* Optionally hide some close button */
+.no-close .ui-dialog-titlebar-close {
+  display: none;
+}
+
 /*Easy <a class="tooltip" href="#">Tooltip<span>This is the crazy little Easy Tooltip Text.</span></a>.</p>*/
 
 /*

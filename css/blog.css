@@ -25,13 +25,13 @@ div.cafevdb-page-header.collapsed #cafevdb-page-blog-header {
   top:0;
 }
 
-#bloglist ul {
+.bloglist ul, div.blogentrypopup ul {
   list-style-type:circle;
   list-style-image:url('%webroot%/core/img/actions/info.svg');
   list-style-position:inside;
 }
 
-#bloglist img.photo {
+.bloglist img.photo {
   width:auto;
   max-width:18ex;
   max-height:11ex;
@@ -43,17 +43,17 @@ div.cafevdb-page-header.collapsed #cafevdb-page-blog-header {
   /*background-color:#add8e6;*/
 }
 
-#bloglist span {
+.bloglist span {
   display:inline-block;
   vertical-align:top;
 }
 
-#bloglist div.blogentry {
+.bloglist div.blogentry {
   position:relative;
   min-height:12ex;
 }
 
-#bloglist li.blogentry {
+.bloglist li.blogentry {
   vertical-align:top;
   padding:0.5ex 0.5ex 0.5ex 0.5ex;
   margin:0.5ex 15% 0.5ex 0.5ex;
@@ -72,43 +72,43 @@ div.cafevdb-page-header.collapsed #cafevdb-page-blog-header {
 /*  background-color:#add8e6;*/
 }
 
-#bloglist li.blogentry:hover {
+.bloglist li.blogentry:hover {
   background-color:#add8e6;
 }
 
-#bloglist li.blogentry {
+.bloglist li.blogentry {
   margin-left:24ex;
 }
 
-#bloglist li.blogentry.level0 {
+.bloglist li.blogentry.level0 {
   margin-left:0ex;
 }
 
-#bloglist li.blogentry.level1 {
+.bloglist li.blogentry.level1 {
   margin-left:4ex;
 }
 
-#bloglist li.blogentry.level2 {
+.bloglist li.blogentry.level2 {
   margin-left:8ex;
 }
 
-#bloglist li.blogentry.level3 {
+.bloglist li.blogentry.level3 {
   margin-left:12ex;
 }
 
-#bloglist li.blogentry.level4 {
+.bloglist li.blogentry.level4 {
   margin-left:16ex;
 }
 
-#bloglist li.blogentry.level5 {
+.bloglist li.blogentry.level5 {
   margin-left:20ex;
 }
 
-#bloglist li.blogentry.level6 {
+.bloglist li.blogentry.level6 {
   margin-left:24ex;
 }
 
-#bloglist #blogentryactions {
+.bloglist #blogentryactions {
   position:absolute;
   right:0;
   top:0;
@@ -124,16 +124,20 @@ div.cafevdb-page-header.collapsed #cafevdb-page-blog-header {
   vertical-align:middle;
 }
 
-#bloglist span.blogentrycenter {
+.bloglist span.blogentrycenter {
   margin-left:21ex;
 }
 
-#bloglist span.blogentrytitle {
+.blogentrypopup span.blogentrycenter {
+  margin-left:2ex;
+}
+
+.bloglist span.blogentrytitle {
   font-style:italic;
   margin-bottom:0.3ex;
 }
 
-#bloglist span.blogentrypriority {
+.bloglist span.blogentrypriority {
   font-weight:bold;
   color:red;
 }

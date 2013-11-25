@@ -33,7 +33,14 @@ var CAFEVDB = CAFEVDB || {};
       $(selector).ckeditor(function() {}, {/*enterMode:CKEDITOR.ENTER_P*/});
       break;
     case 'tinymce':
-      $(selector).tinymce(myTinyMCE.config);
+      $(document).on('focusin', function(e) {
+        if ($(e.target).closest(".mce-window").length) {
+	  e.stopImmediatePropagation();
+	}
+      });
+      var mceConfig = myTinyMCE.config;
+      //mceConfig.inline = true;
+      $(selector).tinymce(mceConfig);
       break;
     default:
       $(selector).ckeditor(function() {}, {/*enterMode:CKEDITOR.ENTER_P*/});
