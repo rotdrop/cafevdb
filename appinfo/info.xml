@@ -3,8 +3,9 @@
 	<id>cafevdb</id>
 	<name>Cafevdb</name>
 	<description>Chamber orchestra project data-base application.</description>
-	<version>1.1</version>
+	<version>2.1</version>
 	<licence>Not for public use, contact the author.</licence>
 	<author>Claus-Justus Heine</author>
-	<require>4</require>
+	<rememberlogin>false</rememberlogin>
+	<require>5</require>
 </info>
