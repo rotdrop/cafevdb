@@ -4,7 +4,6 @@ use CAFEVDB\Util;
 use CAFEVDB\Config;
 
 echo Util::emitExternalScripts();
-echo Util::emitInlineScripts();
 
 ?>
 <div id="events" title="<?php echo L::t('Events for').' '.$_['ProjectName'];?>">
