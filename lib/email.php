@@ -1642,10 +1642,10 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
         foreach ($EMails as $recipient) {
           $dbdata = $recipient['dbdata'];
           $strMessage = $templateMessage;
+          if ($dbdata['Geburtstag'] && $dbdata['Geburtstag'] != '') {
+            $dbdata['Geburtstag'] = date('d.m.Y', strtotime($dbdata['Geburtstag']));
+          }
           foreach ($variables as $placeholder => $column) {
-            if ($column == 'Geburtstag') {
-              $dbdata[$column] = date('d.m.Y', strtotime($dbdata[$column]));
-            }
             $strMessage = preg_replace('/[$]{MEMBER::'.$placeholder.'}/',
                                        htmlspecialchars($dbdata[$column]),
                                        $strMessage);

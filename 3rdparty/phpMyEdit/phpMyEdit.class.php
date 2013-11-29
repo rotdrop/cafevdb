@@ -3522,10 +3522,14 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				$fd = $this->fds[$k];
 				$fn = $this->get_data_cgi_var($fd);
 				if ($this->col_has_datemask($k)) {
-					// Convert back to a date/time object understood by mySQL
-					$stamps[$fd] = strtotime($fn);
-					$fn = date('Y-m-d H:i:s', $stamps[$fd]);
-					echo "<!-- ".$fn." -->\n";
+					if ($fn == '') {
+						$stamps[$fd] = false;
+					} else {
+						// Convert back to a date/time object understood by mySQL
+						$stamps[$fd] = strtotime($fn);
+						$fn = date('Y-m-d H:i:s', $stamps[$fd]);
+						echo "<!-- ".$fn." -->\n";
+					}
 				}
 				$newvals[$fd] = is_array($fn) ? join(',',$fn) : $fn;
 				if ($query_oldrec == '') {
@@ -3549,8 +3553,8 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		foreach ($newvals as $fd => $value) {
 			echo "<!-- ".$value." ".$oldvals[$fd]." -->\n";
 			if (isset($stamps[$fd])) {
-				$oldstamp = strtotime($oldvals[$fd]);
-				echo "<!-- ".$stamps[$fd]." ".$oldstamp." -->\n";
+				$oldstamp = $oldvals[$fd] != "" ? strtotime($oldvals[$fd]) : false;
+				echo "<!-- Stamp: ".$stamps[$fd]." old Stamp: ".$oldstamp." oldvals: ".$oldvals[$fd]." -->\n";
 				if ($oldstamp != $stamps[$fd]) {
 					$changed[] = $fd;
 				}
@@ -3584,6 +3588,8 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 						'val_as'  => $val_as,
 						'val'	  => $val
 						));
+			} else if (isset($stamps[$fd]) && $val == '') {
+				$value = 'NULL';
 			} else {
 				$value = "'".addslashes($val)."'";
 			}
