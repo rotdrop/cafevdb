@@ -11,7 +11,7 @@ OCP\JSON::callCheck();
 
 // Get data
 if( isset( $_POST['headervisibility'] ) ) {
-  $headervisibility = $_POST['visibility'] == 'on' ? 'expanded' : 'collapsed';
+  $headervisibility = $_POST['headervisibility'] == 'on' ? 'expanded' : 'collapsed';
 } else {
   $headervisibility = 'collapsed';
 }
