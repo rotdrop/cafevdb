@@ -488,7 +488,7 @@ ownclouddev';
                            'ProjectId' => -1,
                            'Project' => '',
                            'RecordsPerPage' => -1);
-    self::$pmeopts['tooltips'] = ToolTips::pmeToolTips();
+    self::$pmeopts['tooltips'] = ToolTips::toolTips();
   }
 
   /**Return an (English!) tool-tip for the given key.
