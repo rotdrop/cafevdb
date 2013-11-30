@@ -131,19 +131,42 @@ li.cafevdb-page-config-check span.set {
  *
  */
 
-#pme-export-block div {
+.pme-export-block div {
   vertical-align:middle;
   /*font-weight:bold;*/
 }
 
-#pme-export-block a.chosen-default span {
+.pme-export-block a.chosen-default span {
   /*font-weight:bold;*/
   color:#555;
 }
 
-#pme-export-block a.chosen-default span:hover,
-#pme-export-block a.chosen-default span:focus,
-#pme-export-block a.chosen-default span:active {
+.pme-export-block a.chosen-default span:hover,
+.pme-export-block a.chosen-default span:focus,
+.pme-export-block a.chosen-default span:active {
+  /*font-weight:bold;*/
+  color:#333;
+}
+
+/*******************************************************************************
+ *
+ * Further chosen stuff
+ *
+ */
+
+.project-actions-block div {
+  vertical-align:middle;
+  font-weight:bold;
+}
+
+.project-actions-block a.chosen-default span {
+  /*font-weight:bold;*/
+  color:#555;
+}
+
+.project-actions-block a.chosen-default span:hover,
+.project-actions-block a.chosen-default span:focus,
+.project-actions-block a.chosen-default span:active {
   /*font-weight:bold;*/
   color:#333;
 }
