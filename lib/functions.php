@@ -396,11 +396,11 @@ class Navigation
   public static function tableExportButton()
   {
     $data = ''
-      .'<span id="pme-export-block">'
+      .'<span id="pme-export-block" class="pme-export-block">'
       .'<label>'
       .'<select '
       .'data-placeholder="'.L::t('Export Table').'" '
-      .'class="pme-export" '
+      .'class="pme-export-choice" '
       .'id="pme-export-choice" '
       .'title="'.Config::toolTips('pme-export-choice').'" '
       .'name="export" >
@@ -437,47 +437,55 @@ class Navigation
   public static function prependTableButton($button, $misc = false)
   {
     // Cloned from phpMyEdit class:
-    $default_buttons_no_B = array(
-      'L' => array('<<','<',
-                   $button, 'add',
-                   '>','>>',
-                   'goto','rows_per_page'),
-      'F' => array('<<','<',
-                   $button, 'add',
-                   '>','>>',
-                   'goto','rows_per_page'),
-      'A' => array('save','more','cancel'),
-      'C' => array('save','more','cancel'),
-      'P' => array('save', 'cancel'),
-      'D' => array('save','cancel'),
-      'V' => array('change','cancel')
-      );
-    $default_multi_buttons_no_B = array(
-      'L' => array('<<','<',
-                   'misc', $button, 'add',
-                   '>','>>',
-                   'goto','rows_per_page'),
-      'F' => array('<<','<',
-                   'misc', $button, 'add',
-                   '>','>>',
-                   'goto','rows_per_page'),
-      'A' => array('save','more','cancel'),
-      'C' => array('save','more','cancel'),
-      'P' => array('save', 'cancel'),
-      'D' => array('save','cancel'),
-      'V' => array('change','cancel')
-      );
-    
-    $result = array();
     if (!$misc) {
-      foreach ($default_buttons_no_B as $key => $value) {
-        $result[$key] = array('up' => $value, 'down' => $value);
-      }
+      $default_buttons_no_B = array(
+        'L' => array('<<', '<',
+                     $button, 'add',
+                     '>', '>>',
+                     'goto', 'rows_per_page'),
+        'F' => array('<<', '<',
+                     $button, 'add',
+                     '>', '>>',
+                     'goto', 'rows_per_page'),
+        'A' => array('save', 'more', 'cancel'),
+        'C' => array('save', 'more', 'cancel'),
+        'P' => array('save', 'cancel'),
+        'D' => array('save', 'cancel'),
+        'V' => array('change', 'cancel')
+        );
     } else {
-      foreach ($default_multi_buttons_no_B as $key => $value) {
-        $result[$key] = array('up' => $value, 'down' => $value);
+      $default_buttons_no_B = array(
+        'L' => array('<<','<',
+                     'misc', $button, 'add',
+                     '>','>>',
+                     'goto','rows_per_page'),
+        'F' => array('<<','<',
+                     'misc', $button, 'add',
+                     '>','>>',
+                     'goto','rows_per_page'),
+        'A' => array('save','more','cancel'),
+        'C' => array('save','more','cancel'),
+        'P' => array('save', 'cancel'),
+        'D' => array('save','cancel'),
+        'V' => array('change','cancel')
+        );
+    }
+
+    $result = array();
+    foreach ($default_buttons_no_B as $key => $value) {
+      $upValue = array();
+      $downValue = array();
+      foreach ($value as $button) {
+        if (isset($button['code'])) {
+          $upValue[] = preg_replace('/id="([^"]*)"/', 'id="$1-up"', $button);
+          $downValue[] = preg_replace('/id="([^"]*)"/', 'id="$1-down"', $button);
+        } else {
+          $upValue[]   = $button;
+          $downValue[] = $button;
+        }
       }
-    }    
+      $result[$key] = array('up' => $upValue, 'down' => $downValue);
+    }
 
     return $result;
   }
