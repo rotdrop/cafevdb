@@ -195,6 +195,19 @@ __EOT__;
                                      'escape' => false
                                      );
 
+    $opts['fdd']['Actions'] = array(
+        'name'     => L::t('Actions'),
+        'sql'      => 'Id',
+        'php'      => array('type' => 'function',
+                            'function' => 'CAFEVDB\Projects::projectActionsPME',
+                            'parameters' => $nameIdx),
+        'select'   => 'T',
+        'options'  => 'LVCPDR',
+        'maxlen'   => 11,
+        'default'  => '0',
+        'sort'     => false
+      );
+
     $opts['fdd']['Events'] = array(
         'name'     => L::t('Events'),
         'sql'      => 'Id',
@@ -259,91 +272,6 @@ zur Extra-Spalte in der Datenbank angeben, z.B. so:
 
 Dann wird die Reihenfolge bei der Anzeige der Tabelle geändert, aber die
 Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
-
-    if (false) {
-    $opts['fdd']['Konzert1'] = Config::$opts['datetime'];
-    $opts['fdd']['Konzert1']['name'] = 'Konzert1';
-
-    $opts['fdd']['KonzertOrt1'] = array(
-                                        'name'     => 'KonzertOrt1',
-                                        'select'   => 'T',
-                                        'maxlen'   => 65535,
-                                        'textarea' => array('css' => Config::$opts['editor'],
-                                                            'rows' => 5,
-                                                            'cols' => 50),
-                                        'sort'     => true,
-                                        'escape' => false
-                                        );
-
-    $opts['fdd']['Konzert2'] = Config::$opts['datetime'];
-    $opts['fdd']['Konzert2']['name'] = 'Konzert2';
-    $opts['fdd']['KonzertOrt2'] = array(
-                                        'name'     => 'KonzertOrt2',
-                                        'select'   => 'T',
-                                        'maxlen'   => 65535,
-                                        'textarea' => array('css' => Config::$opts['editor'],
-                                                            'rows' => 5,
-                                                            'cols' => 50),
-                                        'sort'     => true,
-                                        'escape' => false
-                                        );
-
-    $opts['fdd']['Proben1'] = Config::$opts['datetime'];
-    $opts['fdd']['Proben1']['name'] = 'Proben1';
-    $opts['fdd']['ProbenKommentar1'] = array(
-                                             'name'     => 'ProbenKommentar1',
-                                             'select'   => 'T',
-                                             'maxlen'   => 65535,
-                                             'css'      => array('postfix' => 'rehearsalremarks'),
-                                             'textarea' => array('css' => Config::$opts['editor'],
-                                                                 'rows' => 5,
-                                                                 'cols' => 50),
-                                             'sort'     => true,
-                                             'escape' => false,
-                                             );
-
-    $opts['fdd']['Proben2'] = Config::$opts['datetime'];
-    $opts['fdd']['Proben2']['name'] = 'Proben2';
-    $opts['fdd']['ProbenKommentar2'] = array(
-                                             'name'     => 'ProbenKommentar2',
-                                             'select'   => 'T',
-                                             'maxlen'   => 65535,
-                                             'css'      => array('postfix' => 'rehearsalremarks'),
-'textarea' => array('css' => Config::$opts['editor'],
-                                                                 'rows' => 5,
-                                                                 'cols' => 50),
-                                             'sort'     => true,
-                                             'escape' => false,
-                                             );
-
-    $opts['fdd']['Proben3'] = Config::$opts['datetime'];
-    $opts['fdd']['Proben3']['name'] = 'Proben3';
-    $opts['fdd']['ProbenKommentar3'] = array(
-                                             'name'     => 'ProbenKommentar3',
-                                             'select'   => 'T',
-                                             'maxlen'   => 65535,
-                                             'css'      => array('postfix' => 'rehearsalremarks'),
-                                             'textarea' => array('css' => Config::$opts['editor'],
-                                                                 'rows' => 5,
-                                                                 'cols' => 50),
-                                             'sort'     => true,
-                                             'escape' => false,
-                                             );
-
-    $opts['fdd']['Proben4'] = Config::$opts['datetime'];
-    $opts['fdd']['Proben4']['name'] = 'Proben4';
-    $opts['fdd']['ProbenKommentar4'] = array(
-                                             'name'     => 'ProbenKommentar4',
-                                             'select'   => 'T',
-                                             'maxlen'   => 65535,
-                                             'css'      => array('postfix' => 'rehearsalremarks'),
-                                             'textarea' => array('css' => Config::$opts['editor'],
-                                                                 'rows' => 5,
-                                                                 'cols' => 50),
-                                             'sort'     => true,
-                                             'escape' => false,
-                                             );
-    }
 
     $opts['triggers']['update']['after'] = Config::$triggers.'projects.TUA.inc.php';
     $opts['triggers']['insert']['after'] = Config::$triggers.'projects.TIA.inc.php';
@@ -427,6 +355,48 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
 __EOT__;
   }
 
+  public static function projectActionsPME($projectId, $opts, $modify, $k, $fds, $fdd, $row)
+  {
+    $projectName = $row["qf$opts"];
+    return self::projectActions($projectId, $projectName);
+  }
+
+  public static function projectActions($projectId, $projectName)
+  {
+    // Code the value in the name attribute (for java-script)
+    $bname     = ""
+      ."ProjectId=$projectId"
+      ."&Project=$projectName";
+    $control = '
+<span class="project-actions-block">
+  <select data-placeholder="'.$projectName.'"
+          class="project-actions"
+          title="'.Config::toolTips('project-actions').'"
+          name="'.$bname.'">
+    <option value=""></option>
+    <option title="'.Config::toolTips('project-action-events').'" value="events">
+      '.L::t('Events').'
+    </option>
+    <option title="'.Config::toolTips('project-action-brief-instrumentation').'" value="brief-instrumentation">
+      '.L::t('Brief Instrumentation').'
+    </option>
+    <option title="'.Config::toolTips('project-action-detailed-instrumentation').'" value="detailed-instrumentation">
+      '.L::t('Detailed Instrumentation').'
+    </option>
+    <option title="'.Config::toolTips('project-action-instrumentation-numbers').'" value="project-instruments">
+      '.L::t('Instrumentation Numbers').'
+    </option>
+    <option title="'.Config::toolTips('project-action-files').'" value="project-files">
+      '.L::t('Project Files').'
+    </option>
+    <option title="'.Config::toolTips('project-action-financial-balance').'" value="profit-and-loss">
+      '.L::t('Profit and Loss Account').'
+    </option>
+  </select>
+</span>';
+    return $control;
+  }
+
   public static function eventButtonPME($projectId, $opts, $modify, $k, $fds, $fdd, $row)
   {
     $projectName = $row["qf$opts"];
@@ -447,13 +417,14 @@ __EOT__;
     $bname       = htmlspecialchars($bname);
     $title       = Config::toolTips('projectevents-button');
     $image = \OCP\Util::imagePath('calendar', 'calendar.svg');
-    return <<<__EOT__
+    $button =<<<__EOT__
 <span class="events">
   <button type="button" class="events" title="$title" name="$bname" value="$bvalue">
     <img class="svg events" src="$image" alt="$bvalue" />
   </button>
 </span>
 __EOT__;
+    return $button;
   }
 
   /**Fetch the list of projects from the data base as a short id=>name
