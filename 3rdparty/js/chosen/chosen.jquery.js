@@ -58,6 +58,7 @@
             value: option.value,
             text: option.text,
             html: option.innerHTML,
+            title: option.title,
             selected: option.selected,
             disabled: group_disabled === true ? group_disabled : option.disabled,
             group_array_index: group_position,
@@ -68,6 +69,7 @@
           this.parsed.push({
             array_index: this.parsed.length,
             options_index: this.options_index,
+            title: option.title,
             empty: true
           });
         }
@@ -250,7 +252,7 @@
         classes.push(option.classes);
       }
       style = option.style.cssText !== "" ? " style=\"" + option.style + "\"" : "";
-      return "<li class=\"" + (classes.join(' ')) + "\"" + style + " data-option-array-index=\"" + option.array_index + "\">" + option.search_text + "</li>";
+      return "<li"+(option.title ? " title=\""+option.title+"\"" : "" )+" class=\"" + (classes.join(' ')) + "\"" + style + " data-option-array-index=\"" + option.array_index + "\">" + option.search_text + "</li>";
     };
 
     AbstractChosen.prototype.result_add_group = function(group) {
@@ -774,13 +776,14 @@
         return false;
       }
       this.container.addClass("chosen-with-drop");
-      this.form_field_jq.trigger("chosen:showing_dropdown", {
-        chosen: this
-      });
       this.results_showing = true;
       this.search_field.focus();
       this.search_field.val(this.search_field.val());
-      return this.winnow_results();
+      var result = this.winnow_results();
+      this.form_field_jq.trigger("chosen:showing_dropdown", {
+        chosen: this
+      });
+      return result;
     };
 
     Chosen.prototype.update_results_content = function(content) {
