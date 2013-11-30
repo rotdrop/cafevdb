@@ -60,7 +60,7 @@ var CAFEVDB = CAFEVDB || {};
       break;
     };
   };
-  CAFEVDB.broadcastHeaderVisibility = function (visibility) {
+  CAFEVDB.broadcastHeaderVisibility = function (visibility = false) {
 
     // default: only distribute
     if (!visibility) {
@@ -98,64 +98,11 @@ var CAFEVDB = CAFEVDB || {};
     $(selector).data('tipsy', null); // remove any already installed stuff
     $(selector).tipsy(options);      // make it new
   };
-})(window, jQuery, CAFEVDB);
 
-$.extend({ alert: function (message, title) {
-  $("<div></div>").dialog( {
-    buttons: { "Ok": function () { $(this).dialog("close"); } },
-    open: function(event, ui) {
-      $(this).css({'max-height': 800, 'overflow-y': 'auto', 'height': 'auto'});
-      $(this).dialog( "option", "resizable", false );
-    },
-    close: function (event, ui) { $(this).remove(); },
-    resizable: false,
-    title: title,
-    modal: true,
-    height: "auto"
-  }).html(message);
-}
-});
-
-// $.extend({
-//   confirm: function(message, title, action) {
-//     $("<div></div>").dialog({
-//       // Remove the closing 'X' from the dialog
-//       open: function(event, ui) {
-//         $(".ui-dialog-titlebar-close").hide();
-//         $(this).css({'max-height': 800, 'overflow-y': 'auto', 'height': 'auto'});
-//         $(this).dialog( "option", "resizable", false );
-//       }, 
-//       buttons: {
-//         'Yes': function() {
-//           $(this).dialog("close");
-//           action(true);
-//         },
-//         'No': function() {
-//           $(this).dialog("close");
-//           action(false);
-//         }
-//       },
-//       close: function(event, ui) { $(this).remove(); },
-//       resizable: false,
-//       title: title,
-//       modal: true,
-//       height: "auto"
-//     }).text(message);
-//   }
-// });
-
-$(document).ready(function(){
-
-  document.onkeypress = CAFEVDB.stopRKey;
-
-  // Emulate a pull-down menu with export options via the chosen
-  // plugin.
-  $('#pme-export-choice').chosen({ disable_search_threshold: 10 });  
-  $('#pme-export-choice').change(function (event) {
-    event.preventDefault();
-
+  CAFEVDB.tableExportMenu = function(select) {
     // determine the export format
-    var selected = $("#pme-export-choice option:selected").val();
+    var selected = select.find('option:selected').val();
+    //$("select.pme-export-choice option:selected").val();
 
     // this is the form; we need its values
     var form = $('form.pme-form');
@@ -211,17 +158,167 @@ $(document).ready(function(){
     // also remove and re-attach the tool-tips, otherwise some of the
     // tips remain, because chosen() removes the element underneath.
     
-    $("#pme-export-choice").children('option').each(function(i, elm) {
+    select.children('option').each(function(i, elm) {
       $(elm).removeAttr('selected');
     });
     $('.tipsy').remove();
 
-    $("#pme-export-choice").trigger("chosen:updated");
+    select.trigger("chosen:updated");
 
     $('div.chosen-container').tipsy({gravity:'sw', fade:true});
     $('li.active-result').tipsy({gravity:'w', fade:true});
 
     return false;
+
+  };
+
+  CAFEVDB.projectActions = function(select) {
+    
+    // determine the export format
+    var selected = select.find('option:selected').val();
+    var values = select.attr('name');
+
+    switch (selected) {
+    case 'events':
+      if ($('#events').dialog('isOpen') == true) {
+        $('#events').dialog('close').remove();
+      } else {
+        // We store the values in the name attribute as serialized
+        // string.
+        $.post(OC.filePath('cafevdb', 'ajax/events', 'events.php'),
+               values, CAFEVDB.Events.UI.init, 'json');
+      }
+      break;
+    case 'brief-instrumentation':
+    case 'detailed-instrumentation':
+    case 'project-instruments':
+      // This seems to work like an artificial form-submit, but there
+      // may be better ways ...
+      values += '&Template='+selected;
+      values += '&headervisibility='+CAFEVDB.headervisibility;
+
+      $.post('', values, function (data) {
+        var newDoc = document.open("text/html"/*, "replace"*/);
+        newDoc.write(data);
+        newDoc.close();
+      }, 'html');
+      break;
+    case 'project-files':
+      // Link to Shared/camerata/Projects/YEAR/$projectName. We post
+      // an Ajax call to make sure that the location existis.
+      $.post(OC.filePath('cafevdb', 'ajax/projects', 'files.php'),
+             post,
+             function(data) {
+               if (data.status == 'success') {
+
+               } else {
+                 OC.dialogs.alert(t('cafevdb', 'Unable to get access to the project folder:')
+                                  +' '+data.data.message,
+                                  t('cafevdb', 'Error'));
+               }
+               $('#cafevdb #msg').show();
+               return;
+             });
+      break;
+    case 'profit-and-loss':
+      // Link to Shared/camerata/Projects/YEAR/$projectName. We post
+      // an Ajax call to make sure that the location existis.
+      break;
+    default:
+      OC.dialogs.alert(t('cafevdb', 'Unknown operation:')
+                       +' "'+selected+'"',
+                       t('cafevdb', 'Unimplemented'));
+    }
+    
+    // Cheating. In principle we mis-use this as a simple pull-down
+    // menu, so let the text remain at its default value. Make sure to
+    // also remove and re-attach the tool-tips, otherwise some of the
+    // tips remain, because chosen() removes the element underneath.
+    
+    select.children('option').each(function(i, elm) {
+      $(elm).removeAttr('selected');
+    });
+    $('.tipsy').remove();
+
+    select.trigger("chosen:updated");
+
+    $('div.chosen-container').tipsy({gravity:'sw', fade:true});
+    $('li.active-result').tipsy({gravity:'w', fade:true});
+
+    return false;
+  };
+
+})(window, jQuery, CAFEVDB);
+
+$.extend({ alert: function (message, title) {
+  $("<div></div>").dialog( {
+    buttons: { "Ok": function () { $(this).dialog("close"); } },
+    open: function(event, ui) {
+      $(this).css({'max-height': 800, 'overflow-y': 'auto', 'height': 'auto'});
+      $(this).dialog( "option", "resizable", false );
+    },
+    close: function (event, ui) { $(this).remove(); },
+    resizable: false,
+    title: title,
+    modal: true,
+    height: "auto"
+  }).html(message);
+}
+});
+
+// $.extend({
+//   confirm: function(message, title, action) {
+//     $("<div></div>").dialog({
+//       // Remove the closing 'X' from the dialog
+//       open: function(event, ui) {
+//         $(".ui-dialog-titlebar-close").hide();
+//         $(this).css({'max-height': 800, 'overflow-y': 'auto', 'height': 'auto'});
+//         $(this).dialog( "option", "resizable", false );
+//       }, 
+//       buttons: {
+//         'Yes': function() {
+//           $(this).dialog("close");
+//           action(true);
+//         },
+//         'No': function() {
+//           $(this).dialog("close");
+//           action(false);
+//         }
+//       },
+//       close: function(event, ui) { $(this).remove(); },
+//       resizable: false,
+//       title: title,
+//       modal: true,
+//       height: "auto"
+//     }).text(message);
+//   }
+// });
+
+$(document).ready(function(){
+
+  document.onkeypress = CAFEVDB.stopRKey;
+
+  // Emulate a pull-down menu with export options via the chosen
+  // plugin.
+  $('select.pme-export-choice').chosen({ disable_search:true });  
+  $('select.pme-export-choice').change(function (event) {
+    event.preventDefault();
+
+    return CAFEVDB.tableExportMenu($(this));
+  });
+  $('select.pme-export-choice').on('chosen:showing_dropdown', function (chosen) {
+    $('ul.chosen-results li.active-result').tipsy({gravity:'w', fade:true});
+  });
+
+  // emulate per-project action pull down menu via chosen
+  $('select.project-actions').chosen({ disable_search:true });
+  $('select.project-actions').change(function (event) {
+    event.preventDefault();
+
+    return CAFEVDB.projectActions($(this));
+  });  
+  $('select.project-actions').on('chosen:showing_dropdown', function (chosen) {
+    $('ul.chosen-results li.active-result').tipsy({gravity:'w', fade:true});
   });
 
   //    $('button.settings').tipsy({gravity:'ne', fade:true});
