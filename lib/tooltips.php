@@ -227,7 +227,7 @@ to pages with the instrumentation, events, instrumentation numbers etc.'),
 
       'project-action-brief-instrumentation' => L::t('Open a page with the musicians registered for the respective project.'),
 
-      'project-action-detailed-instrumentation' => L::t('Display all musicians stored in the data-base, with detailed facilities for filtering and sorting.'),
+      'project-action-detailed-instrumentation' => L::t("Detailed display of all registered musicians for the selected project. The table will allow for modification of personal data like email, phone, address etc."),
 
       'project-action-events' => L::t('Open a dialog with all known
 events associated to the project.
