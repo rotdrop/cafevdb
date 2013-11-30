@@ -236,7 +236,7 @@ as needed.'),
 
       'project-action-files' => L::t('Change to the folder with project related files.'),
 
-      'project-action-financial-balance' => L::t('Change to the folger with the financial balance
+      'project-action-financial-balance' => L::t('Change to the folder with the financial balance
 sheets for the project (only available after the project
 has been ``closed\'\'.'),
 
