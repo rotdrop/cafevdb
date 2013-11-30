@@ -75,9 +75,9 @@ $(document).ready(function() {
     var post = $("#headervisibility").serialize();
     $.post(OC.filePath('cafevdb', 'ajax/settings', 'headervisibility.php') , post, function(data) {return;});
     if ($('#headervisibility').attr('checked')) {
-      CAFEVDB.PAGE.expandHeader();
+      CAFEVDB.Page.expandHeader();
     } else {
-      CAFEVDB.PAGE.collapseHeader();
+      CAFEVDB.Page.collapseHeader();
     }
     return false;
   });

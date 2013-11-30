@@ -80,9 +80,9 @@ $(document).ready(function(){
     var body   = $(pfx+'body');
 
     if (CAFEVDB.headervisibility == 'collapsed') {
-      CAFEVDB.PAGE.expandHeader();
+      CAFEVDB.Page.expandHeader();
     } else {
-      CAFEVDB.PAGE.collapseHeader();
+      CAFEVDB.Page.collapseHeader();
     }
 
     return false;
