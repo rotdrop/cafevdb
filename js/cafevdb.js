@@ -278,7 +278,7 @@ $(document).ready(function(){
       // string.
       var values = $(this).attr('name');
       $.post(OC.filePath('cafevdb', 'ajax/events', 'events.php'),
-             values, Events.UI.init, 'json');
+             values, CAFEVDB.Events.UI.init, 'json');
     }
     return false;
   });

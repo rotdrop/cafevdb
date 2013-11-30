@@ -1,21 +1,46 @@
-var Blog = {
-  author: 'unknown',
-  blogId: -1,
-  inReply: -1,
-  text: '',
-  priority: false,
-  popup: false,
-  reader: '',
-  editWindow: function(data) {
+/**Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2011-2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+CAFEVDB = CAFEVDB || {};
+
+(function(window, $, CAFEVDB, undefined) {
+  'use strict';
+  var Blog = function() {};
+  Blog.author   = 'unknown';
+  Blog.blogId   = -1;
+  Blog.inReply  = -1;
+  Blog.text     = '';
+  Blog.priority = false;
+  Blog.popup    = false;
+  Blog.reader   = '';
+  Blog.editWindow = function(data) {
     if (data.status == "success") {
       $('#dialog_holder').html(data.data.content);
-      Blog.author   = data.data.author;
-      Blog.blogId   = data.data.blogId;
-      Blog.inReply  = data.data.inReply;
-      Blog.text     = data.data.text;
-      Blog.priority = data.data.priority;
-      Blog.popup    = data.data.popup;
-      Blog.reader   = data.data.reader;
+      CAFEVDB.Blog.author   = data.data.author;
+      CAFEVDB.Blog.blogId   = data.data.blogId;
+      CAFEVDB.Blog.inReply  = data.data.inReply;
+      CAFEVDB.Blog.text     = data.data.text;
+      CAFEVDB.Blog.priority = data.data.priority;
+      CAFEVDB.Blog.popup    = data.data.popup;
+      CAFEVDB.Blog.reader   = data.data.reader;
     } else {
       OC.dialogs.alert(data.data.message,
                        t('cafevdb', 'Error'));
@@ -50,10 +75,10 @@ var Blog = {
           $.fn.tipsy.disable();
         }
         
-        $('#blogedit #blogcancel').click(Blog.cancel);
-        $('#blogedit #blogsubmit').click(Blog.submit);
+        $('#blogedit #blogcancel').click(CAFEVDB.Blog.cancel);
+        $('#blogedit #blogsubmit').click(CAFEVDB.Blog.submit);
 
-        $('#blogtextarea').val(Blog.text);
+        $('#blogtextarea').val(CAFEVDB.Blog.text);
 
         //$('#blogtextarea').tinymce(myTinyMCE.config);
         //$('#blogtextarea').ckeditor(function() {}, {enterMode:CKEDITOR.ENTER_P});
@@ -67,11 +92,11 @@ var Blog = {
       }
     });
     return true;
-  },
-  cancel: function(event) {
+  };
+  Blog.cancel = function(event) {
     event.preventDefault();
     //$('#blogtextarea').tinymce().save();
-    if ($('#blogtextarea').val() == Blog.text) {
+    if ($('#blogtextarea').val() == CAFEVDB.Blog.text) {
       $('#blogedit').dialog('close').remove();
     } else {
       OC.dialogs.confirm(t('cafevdb', 'The message content has been changed and will be lost if you press `Yes\''),
@@ -84,8 +109,8 @@ var Blog = {
                          true);
     }
     return false;
-  },
-  submit: function(event) {   
+  };
+  Blog.submit = function(event) {   
     event.preventDefault();
     //$('#blogtextarea').tinymce().save();
     var popupValue = 0;
@@ -94,6 +119,7 @@ var Blog = {
     } else if ($('#blogpopupclear').attr('checked')) {
       popupValue = -1;
     }
+    var clearReaderValue = 0;
     if ($('#blogreaderclear').attr('checked')) {
       clearReaderValue = 1;
     } else {
@@ -102,9 +128,9 @@ var Blog = {
 
     $.post(OC.filePath('cafevdb','ajax/blog','modifyentry.php'),
            {
-             action: Blog.blogId >= 0 ? 'modify' : 'create',
-             blogId: Blog.blogId,
-             inReply: Blog.inReply,
+             action: CAFEVDB.Blog.blogId >= 0 ? 'modify' : 'create',
+             blogId: CAFEVDB.Blog.blogId,
+             inReply: CAFEVDB.Blog.inReply,
              text: $('#blogtextarea').val(),
              priority: $('#blogpriority').val(),
              popup: popupValue,
@@ -121,8 +147,13 @@ var Blog = {
              }
            }, 'json');
     return false;
-  }
-};
+  };
+
+  CAFEVDB.Blog = Blog;
+
+})(window, jQuery, CAFEVDB);
+
+
 
 $(document).ready(function() {
 
@@ -133,7 +164,7 @@ $(document).ready(function() {
     var post = $('#blogform').serializeArray();
     $.post(OC.filePath('cafevdb','ajax/blog','editentry.php'),
            post,
-           Blog.editWindow, 'json');
+           CAFEVDB.Blog.editWindow, 'json');
     return false;
   });
 
@@ -142,7 +173,7 @@ $(document).ready(function() {
     $.post(OC.filePath('cafevdb','ajax/blog','editentry.php'),
            { blogId: -1,
              inReply: $(this).val() },
-           Blog.editWindow, 'json');
+           CAFEVDB.Blog.editWindow, 'json');
     return false;
   });
 
@@ -152,7 +183,7 @@ $(document).ready(function() {
            { blogId: $(this).val() ,
              inReply: -1
            },
-           Blog.editWindow, 'json');
+           CAFEVDB.Blog.editWindow, 'json');
     return false;
   });
 

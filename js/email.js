@@ -1,6 +1,31 @@
-CAFEVDB.Email = {
-  enabled:true,
-  attachmentFromJSON:function (response) {
+/**Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2011-2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+var CAFEVDB = CAFEVDB || {};
+
+(function(window, $, CAFEVDB, undefined) {
+  'use strict';
+  var Email = function() {};
+  Email.enabled = true;
+  Email.attachmentFromJSON = function (response) {
     var emailForm = $('form.cafevdb-email-form');
     if (emailForm == '') {
       OC.dialogs.alert(t('cafevdb', 'Not called from main email-form.'),
@@ -35,8 +60,8 @@ CAFEVDB.Email = {
       .appendTo(emailForm);
     
     emailForm.submit();
-  },
-  uploadAttachments:function(filelist) {
+  };
+  Email.uploadAttachments = function(filelist) {
     if(!this.enabled) {
       return;
     }
@@ -66,8 +91,8 @@ CAFEVDB.Email = {
       });
       form.submit();
     }
-  },
-  owncloudAttachment:function(path) {
+  };
+  Email.owncloudAttachment = function(path) {
     $.getJSON(OC.filePath('cafevdb', 'ajax', 'email/owncloudattachment.php'),
               {'path':path},
               function(response) {
@@ -77,10 +102,10 @@ CAFEVDB.Email = {
 	          OC.dialogs.alert(response.data.message, t('cafevdb', 'Error'));
                 }
               });
-  },
+  };
   /**Collapse the somewhat lengthy text at the head of the email page.
    */
-  collapsePageHeader:function () {
+  Email.collapsePageHeader = function () {
     var pfx    = '#'+CAFEVDB.name+'-email-';
     var box    = $(pfx+'header-box');
     var header = $(pfx+'header');
@@ -93,10 +118,10 @@ CAFEVDB.Email = {
     button.removeClass('expanded').addClass('collapsed');
 
     CAFEVDB.broadcastHeaderVisibility('collapsed');
-  },
+  };
   /**Expand the somewhat lengthy text at the head of the email page.
    */
-  expandPageHeader:function() {
+  Email.expandPageHeader = function() {
     var pfx    = '#'+CAFEVDB.name+'-email-';
     var box    = $(pfx+'header-box');
     var header = $(pfx+'header');
@@ -109,9 +134,12 @@ CAFEVDB.Email = {
     button.addClass('expanded').removeClass('collapsed');
 
     CAFEVDB.broadcastHeaderVisibility('expanded');
-  }
+  };
 
-};
+  CAFEVDB.Email = Email;
+
+})(window, jQuery, CAFEVDB);
+
 
 $(document).ready(function(){
 

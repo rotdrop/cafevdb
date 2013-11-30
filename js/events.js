@@ -1,10 +1,33 @@
-Events={
-  projectId: -1,
-  projectName: '',
-  Events:{
-    // nothing
-  },
-  UI:{
+/**Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2011-2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+var CAFEVDB = CAFEVDB || {};
+
+(function(window, $, CAFEVDB, undefined) {
+  'use strict';
+  var Events = function() {};
+  Events.projectId = -1;
+  Events.projectName = '';
+  Events.Events = { /* nothing */ };
+  Events.UI = {
     confirmText: { delete: '',
                    detach: '',
                    select: '',
@@ -19,14 +42,14 @@ Events={
      *                 inside the '#debug' div.
      */
     init: function(data) {
-      Events.UI.confirmText['delete'] =
+      CAFEVDB.Events.UI.confirmText['delete'] =
         t('cafevdb', 'Do you really want to delete this event?');
-      Events.UI.confirmText['detach'] =
+      CAFEVDB.Events.UI.confirmText['detach'] =
         t('cafevdb', 'Do you really want to detach this event from the current project?');
       if (data.status == 'success') {
         $('#dialog_holder').html(data.data.contents);
-        Events.projectId = data.data.projectId;
-        Events.projectName = data.data.projectName;
+        CAFEVDB.Events.projectId = data.data.projectId;
+        CAFEVDB.Events.projectName = data.data.projectName;
       } else {
 	var info = '';
 	if (typeof data.data.message != 'undefined') {
@@ -65,7 +88,7 @@ Events={
             $.fn.tipsy.disable();
           }
 
-          $('#events #eventlistform :button').click(Events.UI.buttonClick);
+          $('#events #eventlistform :button').click(CAFEVDB.Events.UI.buttonClick);
         },
         close : function(event, ui) {
           $('.tipsy').remove();
@@ -108,7 +131,7 @@ Events={
         $.fn.tipsy.disable();
       }
 
-      $('#events #eventlistform div.listing :button').click(Events.UI.buttonClick);
+      $('#events #eventlistform div.listing :button').click(CAFEVDB.Events.UI.buttonClick);
 
       return false;
     },
@@ -121,7 +144,7 @@ Events={
       post.push(type);
 
       $.post(OC.filePath('cafevdb', 'ajax/events', 'execute.php'),
-             post, Events.UI.relist);
+             post, CAFEVDB.Events.UI.relist);
         
       return true;
     },
@@ -142,13 +165,13 @@ Events={
       if (emailForm.find('input[name="ProejctId"]').length == 0) {
         $('<input />').attr('type', 'hidden')
           .attr('name', 'ProjectId')
-          .attr('value', Events.projectId)
+          .attr('value', CAFEVDB.Events.projectId)
           .appendTo(emailForm);
       }
       if (emailForm.find('input[name="Project"]').length == 0) {
         $('<input />').attr('type', 'hidden')
           .attr('name', 'Project')
-          .attr('value', Events.projectName)
+          .attr('value', CAFEVDB.Events.projectName)
           .appendTo(emailForm);
       }
       ids = ids.substr(0, ids.length - 2);
@@ -190,7 +213,7 @@ Events={
 
         if (false) {
           $.post(OC.filePath('cafevdb', 'ajax/events', 'new.form.php'),
-                 post, Events.UI.relist, 'json');
+                 post, CAFEVDB.Events.UI.relist, 'json');
         } else {
           $('#dialog_holder').load(OC.filePath('cafevdb',
                                                'ajax/events',
@@ -232,7 +255,7 @@ Events={
         type['value'] = $(this).attr('name');
         post.push(type);
 
-        var really = Events.UI.confirmText[name];
+        var really = CAFEVDB.Events.UI.confirmText[name];
         if (really != '') {
           
           // Attention: dialogs do not block, so the action needs to be
@@ -242,20 +265,20 @@ Events={
                              function (decision) {
                                if (decision) {
                                  $.post(OC.filePath('cafevdb', 'ajax/events', 'execute.php'),
-                                        post, Events.UI.relist);
+                                        post, CAFEVDB.Events.UI.relist);
                                }
                              },
                              true);
         } else {
           $.post(OC.filePath('cafevdb', 'ajax/events', 'execute.php'),
-                 post, Events.UI.relist);
+                 post, CAFEVDB.Events.UI.relist);
         }
         return false;
       } else if (name == 'sendmail') {
 
         // No need to relist, in principle ...
         $.post(OC.filePath('cafevdb', 'ajax/events', 'sendmail.php'),
-               post, Events.UI.relist);
+               post, CAFEVDB.Events.UI.relist);
 
 
         // Ok, maybe not too elegant. We check whether we have been
@@ -266,7 +289,7 @@ Events={
         var eventData = $('#eventattachments');
 
         if (emailForm != '') {
-          Events.UI.addEventSelection(post, emailForm, eventData);
+          CAFEVDB.Events.UI.addEventSelection(post, emailForm, eventData);
 
           // Add another datum forcing the email form to stay in compose mode.
           $('<input />').attr('type', 'hidden')
@@ -287,7 +310,7 @@ Events={
         // We then add the selected events using hidden input elements.
         var emailForm = $('form.pme-form');
         if (emailForm != '') {
-          Events.UI.addEventSelection(post, emailForm, '');
+          CAFEVDB.Events.UI.addEventSelection(post, emailForm, '');
 
           // the submit button is
           //
@@ -320,8 +343,12 @@ Events={
 
       return false;
     }
-  }
-};
+  };
+
+  CAFEVDB.Events = Events;
+
+})(window, jQuery, CAFEVDB);
+
 
 // Local Variables: ***
 // js-indent-level: 2 ***

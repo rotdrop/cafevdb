@@ -1,7 +1,32 @@
-CAFEVDB.Photo = {
-    memberId:-1,
-    data:{PHOTO:false},
-    uploadPhoto:function(filelist) {
+/**Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2011-2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+var CAFEVDB = CAFEVDB || {};
+
+(function(window, $, CAFEVDB, undefined) {
+    'use strict';
+    var Photo = function() {};
+    Photo.memberId = -1;
+    Photo.data = {PHOTO:false};
+    Photo.uploadPhoto = function(filelist) {
         var self = CAFEVDB.Photo;
 	if (!filelist) {
 	    OC.dialogs.alert(t('cafevdb', 'No files selected for upload.'), t('cafevdb', 'Error'));
@@ -26,8 +51,8 @@ CAFEVDB.Photo = {
 	    });
 	    form.submit();
 	}
-    },
-    loadPhotoHandlers:function() {
+    };
+    Photo.loadPhotoHandlers = function() {
 	var phototools = $('#phototools');
 	if (this.data.PHOTO) {
 	    phototools.find('.delete').show();
@@ -36,8 +61,8 @@ CAFEVDB.Photo = {
 	    phototools.find('.delete').hide();
 	    phototools.find('.edit').hide();
 	}
-    },
-    cloudPhotoSelected:function(path) {
+    };
+    Photo.cloudPhotoSelected = function(path) {
         var self = CAFEVDB.Photo;
 	$.getJSON(OC.filePath('cafevdb', 'ajax', 'memberphoto/oc_photo.php'),{'path':path,'MemberId':self.memberId},function(jsondata) {
 	    if (jsondata.status == 'success') {
@@ -48,8 +73,8 @@ CAFEVDB.Photo = {
 		OC.dialogs.alert(jsondata.data.message, t('cafevdb', 'Error'));
 	    }
 	});
-    },
-    loadPhoto:function(memberId) {
+    };
+    Photo.loadPhoto = function(memberId) {
 	var self = CAFEVDB.Photo;
         if (typeof memberId !== 'undefined') {
             self.memberId = memberId;
@@ -81,8 +106,8 @@ CAFEVDB.Photo = {
 	    //self.notify({message:t('cafevdb', 'Error loading member picture.')});
 	}).attr('src', OC.linkTo('cafevdb', 'memberphoto.php')+'?MemberId='+self.memberId+refreshstr);
 	this.loadPhotoHandlers();
-    },
-    editCurrentPhoto:function() {
+    };
+    Photo.editCurrentPhoto = function() {
         var self = CAFEVDB.Photo;
 	$.getJSON(OC.filePath('cafevdb', 'ajax', 'memberphoto/currentphoto.php'),{'MemberId':self.memberId},function(jsondata) {
 	    if (jsondata.status == 'success') {
@@ -94,8 +119,8 @@ CAFEVDB.Photo = {
 		OC.dialogs.alert(jsondata.data.message, t('cafevdb', 'Error'));
 	    }
 	});
-    },
-    editPhoto:function(id, tmpkey) {
+    };
+    Photo.editPhoto = function(id, tmpkey) {
 	//alert('editPhoto: ' + tmpkey);
 	$.getJSON(OC.filePath('cafevdb', 'ajax', 'memberphoto/cropphoto.php'),{'tmpkey':tmpkey,'MemberId':id, 'requesttoken':oc_requesttoken},function(jsondata) {
 	    if (jsondata.status == 'success') {
@@ -110,8 +135,8 @@ CAFEVDB.Photo = {
 	} else {
 	    $('#edit_photo_dialog').dialog('open');
 	}
-    },
-    savePhoto:function() {
+    };
+    Photo.savePhoto = function() {
         var self = CAFEVDB.Photo;
 	var target = $('#crop_target');
 	var form = $('#cropform');
@@ -129,8 +154,8 @@ CAFEVDB.Photo = {
 		wrapper.removeClass('wait');
 	    }
 	});
-    },
-    deletePhoto:function() {
+    };
+    Photo.deletePhoto = function() {
         var self = CAFEVDB.Photo;
 	var wrapper = $('#cafevdb_musician_photo_wrapper');
 	wrapper.addClass('wait');
@@ -144,8 +169,8 @@ CAFEVDB.Photo = {
 		OC.dialogs.alert(jsondata.data.message, t('cafevdb', 'Error'));
 	    }
 	});
-    },
-    loadHandlers:function() {
+    };
+    Photo.loadHandlers = function() {
         var self = CAFEVDB.Photo;
 	var phototools = $('#phototools');
 	$('#phototools li a').click(function() {
@@ -221,9 +246,11 @@ CAFEVDB.Photo = {
 	    $(event.target).removeClass('droppable');
 	    $.fileUpload(event.originalEvent.dataTransfer.files);
 	});
-    },
-    dummy:0
-};
+    };
+    
+    CAFEVDB.Photo = Photo;
+
+})(window, jQuery, CAFEVDB);
 
 $(document).ready(function() {
     var memberId = $('input[name="MemberId"]').val();
