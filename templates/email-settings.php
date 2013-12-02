@@ -40,22 +40,27 @@ foreach (array('smtp', 'imap') as $proto) {
 <!-- GENERAL EMAIL STUFF -->
   <br/>
     <fieldset id="emailaccount"><legend><?php echo L::t('Email Account'); ?></legend>
-    <input type="text" name="emailuser" id="emailuser" value="<?php echo $_['emailuser']; ?>" placeholder="<?php echo L::t('Email-User');?>" />
-    <label for="emailuser"><?php echo L::t('Login for email account.');?></label>
-    <br/>
+      <input type="text" name="emailuser" id="emailuser" value="<?php echo $_['emailuser']; ?>" placeholder="<?php echo L::t('Email-User');?>" />
+      <label for="emailuser"><?php echo L::t('Login for email account.');?></label>
+      <br/>
 <!-- EMAIL password -->
-    <fieldset id="emailpassword">
-      <input type="password" value="<?php echo $_['emailpassword']; ?>" id="emailpassword" name="emailpassword" placeholder="<?php echo L::t('New Password');?>" data-typetoggle="#emailpassword-show" />
-      <input type="checkbox" id="emailpassword-show" name="emailpassword-show" /><label for="emailpassword-show"><?php echo L::t('show');?></label>
-      <input id="button" type="button" value="<?php echo L::t('Change email password');?>" />
-      <div class="statusmessage" id="changed"><?php echo L::t('The email password was changed');?></div>
-      <div class="statusmessage" id="error"><?php echo L::t('Unable to change the email password');?></div>
+      <fieldset id="emailpassword">
+        <input type="password" value="<?php echo $_['emailpassword']; ?>" id="emailpassword" name="emailpassword" placeholder="<?php echo L::t('New Password');?>" data-typetoggle="#emailpassword-show" />
+        <input type="checkbox" id="emailpassword-show" name="emailpassword-show" /><label for="emailpassword-show"><?php echo L::t('show');?></label>
+        <input id="button" type="button" value="<?php echo L::t('Change email password');?>" />
+        <div class="statusmessage" id="changed"><?php echo L::t('The email password was changed');?></div>
+        <div class="statusmessage" id="error"><?php echo L::t('Unable to change the email password');?></div>
+      </fieldset>
+      <fieldset id="emaildistribute">
+        <input id="emaildistributebutton" type="button" name="emaildistribute" value="<?php echo L::t('Distribute Email Account');?>" title="<?php echo  Config::toolTips('email-account-distribute');?>" />
+        <span class="statusmessage" id="email-account-distribute-message"></span>
+      </fieldset>
     </fieldset>
     <fieldset id="emailidentity"><legend><?php echo L::t('Bulk Sender Identity'); ?></legend>
-    <input type="text" name="emailfromname" id="emailfromname" value="<?php echo $_['emailfromname']; ?>" placeholder="<?php echo L::t('Real Sender Name');?>" />
-    <label for="emailfromname"><?php echo L::t('From: name');?></label>
-    <input type="text" name="emailfromaddress" id="emailfromaddress" value="<?php echo $_['emailfromaddress']; ?>" placeholder="<?php echo L::t('Email From Adress');?>" />
-    <label for="emailfromaddress"><?php echo L::t('From: address');?></label>
+      <input type="text" name="emailfromname" id="emailfromname" value="<?php echo $_['emailfromname']; ?>" placeholder="<?php echo L::t('Real Sender Name');?>" />
+      <label for="emailfromname"><?php echo L::t('From: name');?></label>
+      <input type="text" name="emailfromaddress" id="emailfromaddress" value="<?php echo $_['emailfromaddress']; ?>" placeholder="<?php echo L::t('Email From Adress');?>" />
+      <label for="emailfromaddress"><?php echo L::t('From: address');?></label>
     </fieldset>
     <fieldset id="emailtest"><legend><?php echo L::t('Test Settings'); ?></legend>
       <input type="button" name="emailtest" id="emailtestbutton" value="<?php echo L::t('Test Email Setup'); ?>" title="<?php echo Config::toolTips('emailtest'); ?>" />

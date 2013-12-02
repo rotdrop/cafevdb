@@ -758,7 +758,7 @@ class ConfigCheck
     return self::shareOwnerExists($shareowner);
   }
 
-  /**We require that the share-owner ownes a directory shared with the
+  /**We require that the share-owner owns a directory shared with the
    * orchestra group. Check whether this folder exists.
    *
    * @param[in] $sharedfolder Optional. If unset, the name is fetched
@@ -774,6 +774,15 @@ class ConfigCheck
 
     $sharegroup   = Config::getAppValue('usergroup');
     $shareowner   = Config::getValue('shareowner');
+    $groupadmin   = \OCP\USER::getUser();
+
+    if (!\OC_SubAdmin::isSubAdminofGroup($groupadmin, $sharegroup)) {
+      \OC_Log::write(Config::APP_NAME,
+                     "Permission denied: ".$groupadmin." is not a group admin of ".$sharegroup.".",
+                     \OC_Log::ERROR);
+      return false;
+    }
+
     $sharedfolder == '' && $sharedfolder = Config::getSetting('sharedfolder', '');
 
     if ($sharedfolder == '') {
@@ -783,7 +792,8 @@ class ConfigCheck
 
     //$id = \OC\Files\Cache\Cache::getId($sharedfolder, $vfsroot);
     $result = self::sudo($shareowner, function() use ($sharedfolder, $sharegroup) {
-        $user    = \OCP\USER::getUser();
+        $user         = \OCP\USER::getUser();
+
         $vfsroot = '/'.$user.'/files';
 
         if ($sharedfolder[0] != '/') {
@@ -814,7 +824,7 @@ class ConfigCheck
    */
   public static function checkSharedFolder($sharedfolder)
   {
-    if (!self::shareOwnerExists()) {
+    if ($sharedfolder == '') {
       return false;
     }
 
@@ -827,11 +837,19 @@ class ConfigCheck
       return true;
     }
 
-    $sharegroup   = Config::getAppValue('usergroup');
-    $shareowner   = Config::getValue('shareowner');
+    $sharegroup = Config::getAppValue('usergroup');
+    $shareowner = Config::getValue('shareowner');
+    $groupadmin = \OCP\USER::getUser();
+
+    if (!\OC_SubAdmin::isSubAdminofGroup($groupadmin, $sharegroup)) {
+      \OC_Log::write(Config::APP_NAME,
+                     "Permission denied: ".$groupadmin." is not a group admin of ".$sharegroup.".",
+                     \OC_Log::ERROR);
+      return false;
+    }
 
     // try to create the folder and share it with the group
-    $result = self::sudo($shareowner, function() use ($sharedfolder, $sharegroup) {
+    $result = self::sudo($shareowner, function() use ($sharedfolder, $sharegroup, $user) {
         $user    = \OCP\USER::getUser();
         $vfsroot = '/'.$user.'/files';
 
@@ -887,6 +905,61 @@ class ConfigCheck
     return self::sharedFolderExists($sharedfolder);
   }
   
+  /**Check for existence of the project folder and create it when not
+   * found.
+   *
+   * @param[in] $projectsfolder The name of the folder. The name may
+   * be composed of several path components.
+   *
+   * @return bool, @c true on success.
+   */
+  public static function checkProjectsFolder($projectsFolder)
+  {
+    $sharedFolder = Config::getValue('sharedfolder');
+
+    if (!self::sharedFolderExists($sharedFolder)) {
+      return false;
+    }
+
+    $sharegroup = Config::getAppValue('usergroup');
+    $shareowner = Config::getValue('shareowner');
+    $user       = \OCP\USER::getUser();
+
+    if (!\OC_SubAdmin::isSubAdminofGroup($user, $sharegroup)) {
+      \OC_Log::write(Config::APP_NAME,
+                     "Permission denied: ".$user." is not a group admin of ".$sharegroup.".",
+                     \OC_Log::ERROR);
+      return false;
+    }
+
+    /* Ok, then there should be a folder /Shared/$sharedFolder */    
+
+    $fileView = \OC\Files\Filesystem::getView();
+
+    $projectsFolder = trim(preg_replace('|[/]+|', '/', $projectsFolder), "/");
+    $projectsFolder = explode('/', $projectsFolder);
+    
+    $path = '/Shared/'.$sharedFolder;
+
+    trigger_error("Path: ".print_r($projectsFolder, true), E_USER_NOTICE);
+      
+    foreach ($projectsFolder as $pathComponent) {
+      $path .= '/'.$pathComponent;
+      trigger_error("Path: ".$path, E_USER_NOTICE);
+      if (!$fileView->is_dir($path)) {
+        if ($fileView->file_exists($path)) {
+          $fileView->unlink($path);
+        }
+        $fileView->mkdir($path);
+        if (!$fileView->is_dir($path)) {
+          return false;
+        }      
+      }
+    }
+
+    return true;
+  }
+
   /**Check whether we have data-base access by connecting to the
    * data-base server and selecting the configured data-base.
    *

@@ -95,6 +95,8 @@ try {
     $tmpl->assign('eventduration', Config::getSetting('eventduration', '180'));
 
     $tmpl->assign('sharedfolder', Config::getSetting('sharedfolder',''));
+    $tmpl->assign('projectsfolder', Config::getSetting('projectsfolder',''));
+    $tmpl->assign('projectsbalancefolder', Config::getSetting('projectsbalancefolder',''));
 
     foreach (array('smtp', 'imap') as $proto) {
       foreach (array('server', 'port', 'secure') as $key) {

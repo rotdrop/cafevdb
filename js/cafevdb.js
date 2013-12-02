@@ -99,6 +99,31 @@ var CAFEVDB = CAFEVDB || {};
     $(selector).tipsy(options);      // make it new
   };
 
+  /**Create and submit a form with a POST request and given
+   * parameters.
+   *
+   * @param[in] url Location to post to.
+   *
+   * @param[in] values Query string in GET notation.
+   *
+   * @param[in] method Either 'get' or 'post', default is 'post'.
+   */
+  CAFEVDB.formSubmit = function(url, values, method = 'post') {
+    var form = '<form method="'+method+'" action="'+url+'"></form>';
+
+    form = $(form).appendTo($('body'));
+
+    var splitValues = values.split('&');
+    for (var i = 0; i < splitValues.length; ++i) {
+      var nameValue = splitValues[i].split('=');
+      $('<input />').attr('type', 'hidden')
+        .attr('name', nameValue[0])
+        .attr('value', nameValue[1])
+        .appendTo(form);
+    }
+    form.submit();
+  };
+
   CAFEVDB.tableExportMenu = function(select) {
     // determine the export format
     var selected = select.find('option:selected').val();
@@ -177,6 +202,9 @@ var CAFEVDB = CAFEVDB || {};
     // determine the export format
     var selected = select.find('option:selected').val();
     var values = select.attr('name');
+    var optionValues = selected.split('?');
+
+    selected = optionValues[0];
 
     switch (selected) {
     case 'events':
@@ -192,37 +220,17 @@ var CAFEVDB = CAFEVDB || {};
     case 'brief-instrumentation':
     case 'detailed-instrumentation':
     case 'project-instruments':
-      // This seems to work like an artificial form-submit, but there
-      // may be better ways ...
       values += '&Template='+selected;
       values += '&headervisibility='+CAFEVDB.headervisibility;
 
-      $.post('', values, function (data) {
-        var newDoc = document.open("text/html"/*, "replace"*/);
-        newDoc.write(data);
-        newDoc.close();
-      }, 'html');
-      break;
-    case 'project-files':
-      // Link to Shared/camerata/Projects/YEAR/$projectName. We post
-      // an Ajax call to make sure that the location existis.
-      $.post(OC.filePath('cafevdb', 'ajax/projects', 'files.php'),
-             post,
-             function(data) {
-               if (data.status == 'success') {
-
-               } else {
-                 OC.dialogs.alert(t('cafevdb', 'Unable to get access to the project folder:')
-                                  +' '+data.data.message,
-                                  t('cafevdb', 'Error'));
-               }
-               $('#cafevdb #msg').show();
-               return;
-             });
+      CAFEVDB.formSubmit(OC.linkTo('cafevdb', 'index.php'), values, 'post');
       break;
     case 'profit-and-loss':
-      // Link to Shared/camerata/Projects/YEAR/$projectName. We post
-      // an Ajax call to make sure that the location existis.
+    case 'project-files':
+      var url   = OC.linkTo('files', 'index.php');
+      var values = 'dir='+optionValues[1];
+
+      CAFEVDB.formSubmit(url, values, 'get');
       break;
     default:
       OC.dialogs.alert(t('cafevdb', 'Unknown operation:')
@@ -381,30 +389,22 @@ $(document).ready(function(){
   });
 
   $(':button.instrumentation').click(function(event) {
-    // This seems to work like an artificial form-submit, but there
-    // may be better ways ...
     event.preventDefault();
+
     var values = $(this).attr('name');
     values += '&headervisibility='+CAFEVDB.headervisibility;
 
-    $.post('', values, function (data) {
-      var newDoc = document.open("text/html"/*, "replace"*/);
-      newDoc.write(data);
-      newDoc.close();
-    }, 'html');
+    CAFEVDB.formSubmit(OC.linkTo('cafevdb', 'index.php'), values, 'post');
+
     return false;
   });
 
   $(':button.register-musician').click(function(event) {
-    // This seems to work like an artificial form-submit, but there
-    // may be better ways ...
     event.preventDefault();
     var values = $(this).attr('name');
-    $.post('', values, function (data) {
-      var newDoc = document.open("text/html"/*, "replace"*/);
-      newDoc.write(data);
-      newDoc.close();
-    }, 'html');
+
+    CAFEVDB.formSubmit(OC.linkTo('cafevdb', 'index.php'), values, 'post');
+
     return false;
   });
 

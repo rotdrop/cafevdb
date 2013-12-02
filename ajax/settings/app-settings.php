@@ -290,6 +290,173 @@ if (isset($_POST['sharedfolder-saved']))
   return false;
 }
 
+if (isset($_POST['projectsfoldersaved']))
+{
+  $folder    = @$_POST['projectsfolder'];
+  $force     = @$_POST['projectsfolder-force'] == 'on';
+  $oldfolder = @$_POST['projectsfoldersaved'];
+
+  $sharedfolder = Config::getSetting('sharedfolder', '');
+  if ($sharedfolder == '') {
+    OC_JSON::error(
+      array("data" => array(
+              "message" => L::t('Unable to define project-folder without shared parent folder.'),
+              "data" => $folder)));
+    return false;
+  }
+  
+  // If there is no old dummy, then just create one.
+  $actfolder = Config::getSetting('projectsfolder', '');
+  if ($oldfolder != $actfolder) {
+    OC_JSON::error(
+      array("data" => array(
+              "message" => L::t('Inconsistency, submitted `%s\' != `%s\' (stored)',
+                                array($oldfolder, $actfolder)).print_r($_POST, true),
+              "data" => $folder)));
+    return false;
+  }
+
+  // some of the functions below may throw an exception, catch it
+  $absFolder = "/Shared/".$sharedfolder."/".$folder;
+
+  try {
+    if ($oldfolder == '' || $force) {
+      if (ConfigCheck::checkProjectsFolder($folder)) {
+
+        Config::setValue('projectsfolder', $folder);
+        OC_JSON::success(
+          array("data" => array( "message" => L::t('New shared folder `%s\'',
+                                                   array($absFolder)),
+                                 "data" => $folder)));
+        return true;
+      } else {
+        OC_JSON::error(
+          array("data" => array( "message" => L::t('Failure creating folder `%s\'',
+                                                   array($absFolder)),
+                                 "data" => $folder)));
+        return false;
+      }
+    } else if ($folder != $oldfolder) {
+      OC_JSON::error(
+        array("data" => array( "message" => $oldfolder.' != '.$folder,
+                               "data" => $folder)));
+      return false;
+    }
+    
+    if (ConfigCheck::checkProjectsFolder($folder)) {
+      Config::setValue('projectsfolder', $folder);
+      OC_JSON::success(
+        array("data" => array( "message" => L::t('Keeping old shared folder `%s\'',
+                                                 array($absFolder)),
+                               "data" => $folder)));
+      return true;
+    } else {
+      OC_JSON::error(
+        array("data" => array( "message" => L::t('Failure checking folder `%s\'',
+                                                 array($absFolder)),
+                               "data" => $folder)));
+      return false;
+    }
+  } catch (Exception $e) {
+      OC_JSON::error(
+        array("data" => array( "message" => L::t('Failure checking folder `%s\', caught an exception `%s\'',
+                                                 array($absFolder, $e->getMessage())),
+                               "data" => $folder)));
+      return false;
+  }  
+
+  return false;
+}
+
+if (isset($_POST['projectsbalancefoldersaved']))
+{
+  $folder    = @$_POST['projectsbalancefolder'];
+  $force     = @$_POST['projectsbalancefolder-force'] == 'on';
+  $oldfolder = @$_POST['projectsbalancefoldersaved'];
+
+  $sharedfolder = Config::getSetting('sharedfolder', '');
+  if ($sharedfolder == '') {
+    OC_JSON::error(
+      array("data" => array(
+              "message" => L::t('Unable to define project-folder without shared parent folder.'),
+              "data" => $folder)));
+    return false;
+  }
+
+  $projectsFolder = Config::getSetting('projectsfolder', '');
+  if ($sharedfolder == '') {
+    OC_JSON::error(
+      array("data" => array(
+              "message" => L::t('Unable to define the financial balance folder without project folder name.'),
+              "data" => $folder)));
+    return false;
+  }
+
+  $realFolder = $folder.'/'.$projectsFolder;
+  $absFolder = "/Shared/".$sharedfolder."/".$realFolder;
+  
+  // If there is no old dummy, then just create one.
+  $actfolder = Config::getSetting('projectsbalancefolder', '');
+  if ($oldfolder != $actfolder) {
+    OC_JSON::error(
+      array("data" => array(
+              "message" => L::t('Inconsistency, submitted `%s\' != `%s\' (stored)',
+                                array($oldfolder, $actfolder)).print_r($_POST, true),
+              "data" => $folder)));
+    return false;
+  }
+
+  // some of the functions below may throw an exception, catch it
+
+  try {
+    if ($oldfolder == '' || $force) {
+      if (ConfigCheck::checkProjectsFolder($realFolder)) {
+
+        Config::setValue('projectsbalancefolder', $folder);
+        OC_JSON::success(
+          array("data" => array( "message" => L::t('New shared folder `%s\'',
+                                                   array($absFolder)),
+                                 "data" => $folder)));
+        return true;
+      } else {
+        OC_JSON::error(
+          array("data" => array( "message" => L::t('Failure creating folder `%s\'',
+                                                   array($absFolder)),
+                                 "data" => $folder)));
+        return false;
+      }
+    } else if ($folder != $oldfolder) {
+      OC_JSON::error(
+        array("data" => array( "message" => $oldfolder.' != '.$folder,
+                               "data" => $folder)));
+      return false;
+    }
+    
+    if (ConfigCheck::checkProjectsFolder($folder.'/'.$projectsFolder)) {
+      Config::setValue('projectsBalanceFolder', $folder);
+      OC_JSON::success(
+        array("data" => array( "message" => L::t('Keeping old shared folder `%s\'',
+                                                 array($absFolder)),
+                               "data" => $folder)));
+      return true;
+    } else {
+      OC_JSON::error(
+        array("data" => array( "message" => L::t('Failure checking folder `%s\'',
+                                                 array($absFolder)),
+                               "data" => $folder)));
+      return false;
+    }
+  } catch (Exception $e) {
+      OC_JSON::error(
+        array("data" => array( "message" => L::t('Failure checking folder `%s\', caught an exception `%s\'',
+                                                 array($absFolder, $e->getMessage())),
+                               "data" => $folder)));
+      return false;
+  }  
+
+  return false;
+}
+
 $calendarkeys = array('concertscalendar',
                       'rehearsalscalendar',
                       'othercalendar',
@@ -469,6 +636,32 @@ if (isset($_POST['emailpassword'])) {
     array("data" => array(
             'message' => L::t('Password has been changed.'))));
   return true;
+}
+
+/* Try to distribute the email credentials to all registered users.
+ */
+if (isset($_POST['emaildistribute'])) {
+  $group         = OC_AppConfig::getValue('cafevdb', 'usergroup', '');
+  $users         = OC_Group::usersInGroup($group);
+  $emailUser     = Config::getValue('emailuser'); // CAFEVDB encKey
+  $emailPassword = Config::getValue('emailpassword'); // CAFEVDB encKey
+
+  $error = '';
+  foreach ($users as $ocUser) {
+    if (!\OC_RoundCube_App::cryptEmailIdentity($ocUser, $emailUser, $emailPassword)) {
+      $error .= $ocUser.' ';
+    }
+  }
+
+  if ($error != '') {
+    $error = L::t("Failed for: %s", array($error));;
+    OC_JSON::error(
+      array("data" => array( "message" => "$error" )));
+  } else {
+    OC_JSON::success(
+      array("data" => array( "message" => L::t("Email credentials installed successfully!"))));
+  }
+  return;
 }
 
 if (isset($_POST['emailtest'])) {

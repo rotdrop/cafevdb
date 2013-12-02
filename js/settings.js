@@ -1,3 +1,24 @@
+/**Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2011-2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 $(document).ready(function() {
 
   var adminSettings = $('#adminsettingstabs').length > 0;
@@ -348,6 +369,7 @@ $(document).ready(function() {
 	   });
   })
 
+
   // Share-owner´s password
   // 'show password' checkbox
   $('#sharingpassword #password').showPassword();
@@ -507,6 +529,124 @@ $(document).ready(function() {
 
   ///////////////////////////////////////////////////////////////////////////
   //
+  // Sharing, project-folder
+  //
+  ///////////////////////////////////////////////////////////////////////////
+  
+  $('#projectsfolderform').submit(function () { return false; });
+
+  $('#projectsfolder-force').blur(function(event) {
+    event.preventDefault();
+    return false;
+  });
+
+  $('#projectsfolder-force').click(function(event) {
+    $('div.statusmessage').hide();
+    $('span.statusmessage').hide();
+    $('#eventsettings #msg').empty();
+    
+    if (!$(this).is(':checked') &&
+        $('#projectsfoldersaved').val() != '') {
+      $('#projectsfolder').val($('#projectsfoldersaved').val());
+      $('#projectsfolder').attr('disabled','disabled');
+    } else {
+      $('#projectsfolder').removeAttr('disabled');
+    }
+  });
+
+  $('#projectsfoldercheck').click(function(event) {
+    event.preventDefault();
+
+    var post = $('#projectsfolderform').serializeArray();
+
+    if ($('#projectsfolder').is(':disabled')) {
+      // Fake.
+      var type = new Object();
+      type['name']  = 'projectsfolder';
+      type['value'] = $('#projectsfoldersaved').val();
+      post.push(type);
+    }
+
+    $('div.statusmessage').hide();
+    $('span.statusmessage').hide();
+    $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
+           post,
+           function(data) {
+             if (data.status == 'success') {
+               $('#projectsfoldersaved').attr('value', data.data.data);
+               $('#projectsfolder').attr('value', data.data.data);
+               $('#projectsbalanceprojectsfolder').text(data.data.data);
+               if (data.data.data != '') {
+                 $('#projectsfolder').attr('disabled', true);
+                 $('#projectsfolder-force').prop('checked', false);
+                 $('#projectsbalancefolderform fieldset').removeAttr('disabled');
+               } else {
+                 $('#projectsbalancefolderform fieldset').attr('disabled',true);
+               }
+             }
+	     $('#eventsettings #msg').html(data.data.message);
+	     $('#eventsettings #msg').show();
+	   });
+  });
+
+  ///////////////////////////////////////////////////////////////////////////
+  //
+  // Sharing, project balance folder (for financial balance sheets)
+  //
+  ///////////////////////////////////////////////////////////////////////////
+  
+  $('#projectsbalancefolderform').submit(function () { return false; });
+
+  $('#projectsbalancefolder-force').blur(function(event) {
+    event.preventDefault();
+    return false;
+  });
+
+  $('#projectsbalancefolder-force').click(function(event) {
+    $('div.statusmessage').hide();
+    $('span.statusmessage').hide();
+    $('#eventsettings #msg').empty();
+    
+    if (!$(this).is(':checked') &&
+        $('#projectsbalancefoldersaved').val() != '') {
+      $('#projectsbalancefolder').val($('#projectsbalancefoldersaved').val());
+      $('#projectsbalancefolder').attr('disabled','disabled');
+    } else {
+      $('#projectsbalancefolder').removeAttr('disabled');
+    }
+  });
+
+  $('#projectsbalancefoldercheck').click(function(event) {
+    event.preventDefault();
+
+    var post = $('#projectsbalancefolderform').serializeArray();
+
+    if ($('#projectsbalancefolder').is(':disabled')) {
+      // Fake.
+      var type = new Object();
+      type['name']  = 'projectsbalancefolder';
+      type['value'] = $('#projectsbalancefoldersaved').val();
+      post.push(type);
+    }
+
+    $('div.statusmessage').hide();
+    $('span.statusmessage').hide();
+    $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
+           post,
+           function(data) {
+             if (data.status == 'success') {
+               $('#projectsbalancefoldersaved').attr('value', data.data.data);
+               $('#projectsbalancefolder').attr('value', data.data.data);
+               $('#projectsbalancefolder').attr('disabled', true);
+               $('#projectsbalancefolder-force').prop('checked', false);
+             }
+	     $('#eventsettings #msg').html(data.data.message);
+	     $('#eventsettings #msg').show();
+	   });
+  });
+
+  ///////////////////////////////////////////////////////////////////////////
+  //
   // email
   //
   ///////////////////////////////////////////////////////////////////////////
@@ -588,6 +728,17 @@ $(document).ready(function() {
              return false;
 	   }, 'json');
     return false;
+  });
+
+  $('#emaildistributebutton').click(function() {
+    $('div.statusmessage').hide();
+    $('span.statusmessage').hide();
+    $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
+           $(this),
+           function(data) {
+             $('#emaildistribute span.statusmessage').html(data.data.message);
+             $('#emaildistribute span.statusmessage').show();
+           });
   });
 
   $('[id$=secure]:input').change(function(event) {
@@ -726,7 +877,7 @@ $(document).ready(function() {
 	$('#emailsettings #msg').html(data.data.message);
 	$('#emailsettings #msg').show();
         if ($('#emailtestmode').is(':checked')) {
-          $('#emailtestaddress').attr('disabled',false);
+          $('#emailtestaddress').removeAttr('disabled');
         } else {
           $('#emailtestaddress').attr('disabled',true);
         }

@@ -25,6 +25,8 @@ OC::$CLASSPATH['CAFEVDB\EmailFilter'] = 'cafevdb/lib/email.php';
 OC::$CLASSPATH['CAFEVDB\Email'] = 'cafevdb/lib/email.php';
 OC::$CLASSPATH['CAFEVDB\EmailHistory'] = 'cafevdb/lib/email.php';
 
+OC::$CLASSPATH['OC_RoundCube_App'] = 'roundcube/lib/RoundCubeApp.php';
+
 /* 3rd party classes */
 OC::$CLASSPATH['phpMyEdit'] = 'cafevdb/3rdparty/phpMyEdit/phpMyEdit.class.php';
 OC::$CLASSPATH['html2text'] = 'cafevdb/3rdparty/PHPMailer/extras/class.html2text.php';

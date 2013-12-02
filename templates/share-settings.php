@@ -45,7 +45,7 @@ $off = $_['shareowner'] == '' ? 'disabled="disabled"' : $alloff;
         <label for="duration"><?php echo L::t('Default Duration for Events');?></label>
       </fieldset>
     </form>
-    <form id="sharedfolderform" disabledonsubmit="return false;">
+    <form id="sharedfolderform">
       <fieldset <?php echo $off; ?> ><legend><?php echo L::t('Shared folder'); ?></legend>
         <input type="hidden" id="sharedfolder-saved" name="sharedfolder-saved" value="<?php echo $_['sharedfolder']; ?>" />
         <input <?php echo $_['sharedfolder'] != '' ? 'disabled="disabled"' : ''; ?> 
@@ -59,6 +59,42 @@ $off = $_['shareowner'] == '' ? 'disabled="disabled"' : $alloff;
           <?php echo L::t('force');?>
         </label>
         <input name="sharedfoldercheck" id="sharedfoldercheck" type="button" value="<?php echo L::t('Check');?>" />
+      </fieldset>
+    </form>
+    <form id="projectsfolderform">
+      <fieldset <?php echo $off; ?> >
+        <span id="project-folder-prefix"><b>.../</b><?php echo $_['sharedfolder']; ?><b>/</b></span>
+        <input type="hidden" id="projectsfoldersaved" name="projectsfoldersaved" value="<?php echo $_['projectsfolder']; ?>" />
+        <input <?php echo $_['projectsfolder'] != '' ? 'disabled="disabled"' : ''; ?> 
+          type="text" 
+          id="projectsfolder"
+          name="projectsfolder"
+          placeholder="<?php echo L::t('Project folder'); ?>"
+          value="<?php echo $_['projectsfolder']; ?>" />
+        <span id="project-folder-suffix"><b>/</b><?php echo L::t('YEAR').'<b>/</b>'.L::t('PROJECT').'<b>/</b>'; ?></span>
+        <label for="projectsfolder-force" title="<?php echo Config::toolTips('projectsfolder-force'); ?>" >
+          <input type="checkbox" id="projectsfolder-force" name="projectsfolder-force" />
+          <?php echo L::t('force');?>
+        </label>
+        <input name="projectsfoldercheck" id="projectsfoldercheck" type="button" value="<?php echo L::t('Check');?>" />
+      </fieldset>
+    </form>
+    <form id="projectsbalancefolderform">
+        <fieldset <?php echo $_['projectsfolder'] != '' ? $off : 'disabled'; ?> >
+        <span id="project-folder-prefix"><b>.../</b><?php echo $_['sharedfolder']; ?><b>/</b></span>
+        <input type="hidden" id="projectsbalancefoldersaved" name="projectsbalancefoldersaved" value="<?php echo $_['projectsbalancefolder']; ?>" />
+        <input <?php echo $_['projectsbalancefolder'] != '' ? 'disabled="disabled"' : ''; ?> 
+          type="text" 
+          id="projectsbalancefolder"
+          name="projectsbalancefolder"
+          placeholder="<?php echo L::t('Financial balance folder'); ?>"
+          value="<?php echo $_['projectsbalancefolder']; ?>" />
+        <span id="project-folder-suffix"><b>/</b><span id="projectsbalanceprojectsfolder"><?php echo $_['projectsfolder'];?></span><b>/</b><?php echo L::t('YEAR').'<b>/</b>'.L::t('PROJECT').'<b>/</b>'; ?></span>
+        <label for="projectsbalancefolder-force" title="<?php echo Config::toolTips('projectsbalancefolder-force'); ?>" >
+          <input type="checkbox" id="projectsbalancefolder-force" name="projectsbalancefolder-force" />
+          <?php echo L::t('force');?>
+        </label>
+        <input name="projectsbalancefoldercheck" id="projectsbalancefoldercheck" type="button" value="<?php echo L::t('Check');?>" />
       </fieldset>
     </form>
     <span class="statusmessage" id="msg"></span>
