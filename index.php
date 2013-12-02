@@ -112,6 +112,7 @@ try {
   OCP\Util::addScript('cafevdb', 'blog');
   OCP\Util::addScript('cafevdb', 'inlineimage');
   OCP\Util::addScript('cafevdb', 'jquery.Jcrop');
+  OCP\Util::addScript('cafevdb', 'cropinlineimage');
   // TinyMCE stuff
   OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/tinymce.min');
   OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/jquery.tinymce.min');

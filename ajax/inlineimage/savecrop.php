@@ -46,7 +46,7 @@ $w = Util::cgiValue('w', -1, false);
 $h = Util::cgiValue('h', -1, false);
 $tmpkey = Util::cgiValue('tmpkey', '');
 $recordId = Util::cgiValue('RecordId', '');
-$imageClass = Util::cgiValue('ImagePHPClass', 'CAFEVDB\Musicians');
+$imageClass = Util::cgiValue('ImagePHPClass', '');
 
 if ($tmpkey == '') {
   Ajax::bailOut('Missing key to temporary file.');

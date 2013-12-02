@@ -34,7 +34,7 @@ OCP\JSON::checkAppEnabled('cafevdb');
 Config::init();
 
 $recordId = Util::cgiValue('RecordId', '');
-$imageClass = Util::cgiValue('ImagePHPClass', 'CAFEVDB\Musicians');
+$imageClass = Util::cgiValue('ImagePHPClass', '');
 
 if ($recordId == '') {
   Ajax::bailOut(L::t('No record ID was submitted.'));

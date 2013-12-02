@@ -67,7 +67,7 @@ try {
   Error::exceptions(true);
 
   $recordId   = Util::cgiValue('RecordId', -1);
-  $imageClass = Util::cgiValue('ImagePHPClass', 'CAFEVDB\Musicians');
+  $imageClass = Util::cgiValue('ImagePHPClass', '');
 
   $etag = null;
   $caching = null;
