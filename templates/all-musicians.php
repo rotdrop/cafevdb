@@ -23,7 +23,10 @@ $table->display();
 // Close some still opened divs
 echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
 
+// Photo upload support:
+
 if (!$table->changeOperation()) {
+  // Don't display the image dialog when not in single-record mode
   echo "<!-- \n";
 }
 
@@ -31,7 +34,6 @@ if (!$table->changeOperation()) {
 
 <form class="float" id="file_upload_form" action="<?php echo OCP\Util::linkTo('cafevdb', 'ajax/memberphoto/uploadphoto.php'); ?>" method="post" enctype="multipart/form-data" target="file_upload_target">
   <input type="hidden" name="requesttoken" value="<?php echo $_['requesttoken'] ?>">
-  <input type="hidden" name="MemberId" value="<?php echo $_['recordId'] ?>">
   <input type="hidden" name="RecordId" value="<?php echo $_['recordId'] ?>">
   <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $_['uploadMaxFilesize'] ?>" id="max_upload">
   <input type="hidden" class="max_human_file_size" value="(max <?php echo $_['uploadMaxHumanFilesize']; ?>)">

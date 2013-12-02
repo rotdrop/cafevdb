@@ -82,6 +82,8 @@ class Instrumentation
     $this->pme->sql_disconnect();
   }        
 
+  /**Disable some extra stuff (image upload etc.) when displaying the entire table.
+   */
   public function changeOperation()
   {
     if (!isset($this->pme)) {

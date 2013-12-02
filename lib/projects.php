@@ -10,8 +10,56 @@ namespace CAFEVDB
 class Projects
 {
   const CSS_PREFIX = 'cafevdb-page';
+  private $pme;
+  private $pme_bare;
+  private $execute;
 
-  static public function headerText()
+  public function __construct($execute = true)
+  {
+    $this->execute = $execute;
+    $this->pme = false;
+    $this->pme_bare = false;
+
+    Config::init();
+
+    //Config::$debug_query = true;
+    if (Config::$debug_query) {
+      echo "<PRE>\n";
+      print_r($_POST);
+      print_r($_GET);
+      echo "</PRE>\n";
+    }    
+  }
+
+  public function deactivate() 
+  {
+    $this->execute = false;
+  }
+
+  public function activate() 
+  {
+    $this->execute = true;
+  }
+
+  public function execute()
+  {
+    if ($this->pme) {
+      $this->pme->execute();
+    }
+  }
+
+  /**Disable some extra stuff (image upload etc.) when displaying the entire table.
+   */
+  public function changeOperation()
+  {
+    if (!isset($this->pme)) {
+      return false;
+    } else {
+      return $this->pme->change_operation() || $this->pme->add_operation();
+    }
+  }
+
+  public function headerText()
   {
     $header =<<<__EOT__
 Camerata Projekte<br/>
@@ -22,10 +70,8 @@ __EOT__;
     return $header;
   }
 
-  static public function display()
+  public function display()
   {
-    Config::init();
-
     global $debug_query;
     //    $debug_query = true;
 
@@ -174,15 +220,32 @@ __EOT__;
     $nameIdx = count($opts['fdd']);
     $opts['fdd']['Name'] = array(
         'name'     => 'Projekt-Name',
-        'php|VLF'      => array('type' => 'function',
-                            'function' => 'CAFEVDB\Projects::projectButton',
-                                'parameters' => array('keyIdx' => $idIdx,
-                                                      'template' => 'brief-instrumentation')),
+        /* 'php|VLF'      => array('type' => 'function', */
+        /*                     'function' => 'CAFEVDB\Projects::projectButton', */
+        /*                         'parameters' => array('keyIdx' => $idIdx, */
+        /*                                               'template' => 'brief-instrumentation')), */
+        'php|VLF'  => array('type' => 'function',
+                            'function' => 'CAFEVDB\Projects::projectActionsPME',
+                            'parameters' => array("idIndex" => $idIdx)),
         'select'   => 'D',
         'maxlen'   => 64,
         'css'      => array('postfix' => 'projectname'),
         'sort'     => true,
         );
+
+    $opts['fdd']['Actions'] = array(
+        'name'     => L::t('Actions'),
+        'sql'      => 'Name',
+        'php|C'    => array('type' => 'function',
+                            'function' => 'CAFEVDB\Projects::projectActionsPME',
+                            'parameters' => array("idIndex" => $idIdx,
+                                                  "placeHolder" => L::t("Actions"))),
+        'select'   => 'T',
+        'options'  => 'LVCPDR',
+        'maxlen'   => 11,
+        'default'  => '0',
+        'sort'     => false
+      );
 
     $opts['fdd']['Programm'] = array(
                                      'name'     => 'Programm',
@@ -195,19 +258,7 @@ __EOT__;
                                      'escape' => false
                                      );
 
-    $opts['fdd']['Actions'] = array(
-        'name'     => L::t('Actions'),
-        'sql'      => 'Id',
-        'php'      => array('type' => 'function',
-                            'function' => 'CAFEVDB\Projects::projectActionsPME',
-                            'parameters' => $nameIdx),
-        'select'   => 'T',
-        'options'  => 'LVCPDR',
-        'maxlen'   => 11,
-        'default'  => '0',
-        'sort'     => false
-      );
-
+    if (false) {
     $opts['fdd']['Events'] = array(
         'name'     => L::t('Events'),
         'sql'      => 'Id',
@@ -220,7 +271,8 @@ __EOT__;
         'default'  => '0',
         'sort'     => false
       );
-
+    }
+    
     $opts['fdd']['Besetzung'] = array('name'     => 'Besetzung',
                                       'options'  => 'AVCPD',
                                       'nowrap'   => false,
@@ -279,7 +331,8 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
     // Maybe we want to keep the view.
     // $opts['triggers']['delete']['after']  = 'Projekte.TDA.inc.php';
 
-    new \phpMyEdit($opts);
+    $opts['execute'] = $this->execute;
+    $this->pme = new \phpMyEdit($opts);
   }
 
   /**Generate an associative array of extra-fields. The key is the
@@ -355,24 +408,31 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
 __EOT__;
   }
 
-  public static function projectActionsPME($projectId, $opts, $modify, $k, $fds, $fdd, $row)
+  public static function projectActionsPME($projectName, $opts, $modify, $k, $fds, $fdd, $row)
   {
-    $projectName = $row["qf$opts"];
-    return self::projectActions($projectId, $projectName);
+    $projectId   = $row["qf".$opts["idIndex"]];
+    $placeHolder = isset($opts['placeHolder']) ? isset($opts['placeHolder']) : false;
+    return self::projectActions($projectId, $projectName, $placeHolder);
   }
 
-  public static function projectActions($projectId, $projectName)
+  public static function projectActions($projectId, $projectName, $placeHolder = false)
   {
+    $projectPaths = self::maybeCreateProjectFolder($projectId, $projectName);
+
+    if ($placeHolder === false) {
+      $placeHolder = $projectName;
+    }
+
     // Code the value in the name attribute (for java-script)
-    $bname     = ""
+    $params = ""
       ."ProjectId=$projectId"
       ."&Project=$projectName";
     $control = '
 <span class="project-actions-block">
-  <select data-placeholder="'.$projectName.'"
+  <select data-placeholder="'.$placeHolder.'"
           class="project-actions"
           title="'.Config::toolTips('project-actions').'"
-          name="'.$bname.'">
+          name="'.$params.'">
     <option value=""></option>
     <option title="'.Config::toolTips('project-action-events').'" value="events">
       '.L::t('Events').'
@@ -386,15 +446,100 @@ __EOT__;
     <option title="'.Config::toolTips('project-action-instrumentation-numbers').'" value="project-instruments">
       '.L::t('Instrumentation Numbers').'
     </option>
-    <option title="'.Config::toolTips('project-action-files').'" value="project-files">
+    <option title="'.Config::toolTips('project-action-files').'"
+            value="project-files?'.$projectPaths['project'].'">
       '.L::t('Project Files').'
     </option>
-    <option title="'.Config::toolTips('project-action-financial-balance').'" value="profit-and-loss">
+    <option title="'.Config::toolTips('project-action-financial-balance').'"
+              value="profit-and-loss?'.$projectPaths['balance'].'">
       '.L::t('Profit and Loss Account').'
     </option>
   </select>
 </span>';
     return $control;
+  }
+
+  /**Check for the existence of the project folder
+   */
+  public static function maybeCreateProjectFolder($projectId, $projectName = false, $only = false)
+  {
+    $project = self::fetchProject($projectId);
+    if (!$projectName) {
+      $projectName = $project['Name'];
+    } else if ($projectName != $project['Name']) {
+      return false;
+    }
+    
+    $sharedFolder   = Config::getSetting('sharedfolder','');
+    $projectsFolder = Config::getSetting('projectsfolder','');
+    $balanceFolder  = Config::getSetting('projectsbalancefolder','');
+
+    $fileView = \OC\Files\Filesystem::getView();
+
+    $paths = array('project' => '/Shared/'.$sharedFolder.'/'.$projectsFolder,
+                   'balance' => '/Shared/'.$sharedFolder.'/'.$balanceFolder.'/'.$projectsFolder);
+    $returnPaths = array();
+    foreach($paths as $key => $path) {
+      if ($only && $key != $only) {
+        continue;
+      }
+      if (!$fileView->is_dir($path)) {
+        $fileView->mkdir($path);
+      }
+      $path .= "/".$project['Jahr'];
+      if (!$fileView->is_dir($path)) {
+        $fileView->mkdir($path);
+      }
+      $path .= "/".$project['Name'];
+      if (!$fileView->is_dir($path)) {
+        $fileView->mkdir($path);
+      }
+      $returnPaths[$key] = $path;
+    }
+    return $returnPaths;
+  }
+
+  public static function renameProjectFolder($newProject, $oldProject)
+  {
+    $sharedFolder = Config::getSetting('sharedfolder','');
+    $projectsFolder = Config::getSetting('projectsfolder','');
+    $balanceFolder = Config::getSetting('projectsbalancefolder','');
+
+    $prefixPath = array(
+      'project' => '/Shared/'.$sharedFolder.'/'.$projectsFolder.'/',
+      'balance' => '/Shared/'.$sharedFolder.'/'.$balanceFolder.'/'.$projectsFolder."/",
+      );
+
+    $fileView = \OC\Files\Filesystem::getView();
+
+    $returnPaths = array();
+    foreach($refixPath as $key => $prefix) {
+                        
+      $oldPath = $prefix.$oldProject['Jahr']."/".$oldProject['Name'];
+      $newPrefixPath = $prefix.$newProject['Jahr'];
+      
+      $newPath = $newPrefixPath.'/'.$newProject['Name'];
+      
+      if ($fileView->is_dir($oldPath)) {
+        // If the year has changed it may be necessary to create a new
+        // directory.
+        if (!$fileView->is_dir($newPrefixPath)) {
+          if (!$fileView->mkdir($newPrefixPath)) {
+            return false;
+          }
+        }
+        if (!$fileView->rename($oldPath, $newPath)) {
+          return false;
+        }
+        $returnPaths[$key] = $newPath;
+      } else {
+        // Otherwise there is nothing to move; we simply create the new directory.
+        $returnPaths = array_merge($returnPaths,
+                                   self::maybeCreateProjectFolder($projectId, $projectName, $only = $key));
+      }
+    }
+
+    return $returnPaths;
   }
 
   public static function eventButtonPME($projectId, $opts, $modify, $k, $fds, $fdd, $row)
@@ -463,6 +608,29 @@ __EOT__;
     }
 
     return $projects;
+  }
+
+  /**Fetch the list of projects from the data base as a short id=>name
+   * field.
+   */
+  public static function fetchProject($projectId, $handle = false)
+  {
+    $projects = array();
+
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+      
+    $query = "SELECT * FROM `Projekte` WHERE `Id` = $projectId";
+    $result = mySQL::query($query, $handle);
+    if ($result !== false && mysql_num_rows($result) == 1) {
+      $row = mySQL::fetch($result);
+      return $row;
+    } else {
+      return false;
+    }
   }
 
   /** Fetch the project-name name corresponding to $projectId.
