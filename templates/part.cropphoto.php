@@ -1,5 +1,40 @@
 <?php
-$memberId = $_['memberId'];
+
+/**Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2011-2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ * Copyright (c) 2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ *
+ * Originally copied from:
+ *
+ * Copyright (c) 2012 Thomas Tanghus <thomas@tanghus.net>
+ * Copyright (c) 2011, 2012 Bart Visscher <bartv@thisnet.nl>
+ * Copyright (c) 2011 Jakob Sack mail@jakobsack.de
+ * This file is licensed under the Affero General Public License version 3 or
+ * later.
+ * See the COPYING-README file.
+ */
+
+$recordId = $_['recordId'];
 $tmpkey = $_['tmpkey'];
 $requesttoken = $_['requesttoken'];
 ?>
@@ -47,7 +82,7 @@ $requesttoken = $_['requesttoken'];
 	target="crop_target"
 	action="<?php echo OCP\Util::linkToAbsolute('cafevdb', 'ajax/memberphoto/savecrop.php'); ?>">
 
-	<input type="hidden" id="id" name="MemberId" value="<?php echo $memberId; ?>" />
+	<input type="hidden" id="id" name="RecordId" value="<?php echo $recordId; ?>" />
 	<input type="hidden" name="requesttoken" value="<?php echo $requesttoken; ?>">
 	<input type="hidden" id="tmpkey" name="tmpkey" value="<?php echo $tmpkey; ?>" />
 	<fieldset id="coords">

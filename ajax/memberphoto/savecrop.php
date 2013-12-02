@@ -25,7 +25,6 @@ use CAFEVDB\Ajax;
 use CAFEVDB\Config;
 use CAFEVDB\Util;
 use CAFEVDB\Error;
-use CAFEVDB\Musicians;
 
 // Check if we are a user
 OCP\JSON::checkLoggedIn();
@@ -46,14 +45,15 @@ $y1 = Util::cgiValue('y1', 0, false);
 $w = Util::cgiValue('w', -1, false);
 $h = Util::cgiValue('h', -1, false);
 $tmpkey = Util::cgiValue('tmpkey', '');
-$memberId = Util::cgiValue('MemberId', '');
+$recordId = Util::cgiValue('RecordId', '');
+$pictureClass = Util::cgiValue('PicturePHPClass', 'CAFEVDB\Musicians');
 
 if ($tmpkey == '') {
   Ajax::bailOut('Missing key to temporary file.');
 }
 
-if ($memberId == '') {
-  Ajax::bailOut('Missing member id.');
+if ($recordId == '') {
+  Ajax::bailOut(L::t('While trying to save cropped photo: missing record id.').print_r($_POST, true));
 }
 
 OCP\Util::writeLog('cafevdb', 'savecrop.php: key: '.$tmpkey, OCP\Util::DEBUG);
@@ -70,12 +70,12 @@ if ($data) {
     if ($image->crop($x1, $y1, $w, $h)) {
       if (($image->width() <= 200 && $image->height() <= 200)
          || $image->resize(200)) {
-        if (!Musicians::storePortrait($memberId, $image->__toString())) {
+        if (!call_user_func(array($pictureClass, 'storePicture'), $recordId, $image->__toString())) {
           Ajax::bailOut(L::t('Error saving image in DB'));
         }
         OCP\JSON::success(array(
                             'data' => array(
-                              'memberId' => $memberId,
+                              'recordId' => $recordId,
                               'width' => $image->width(),
                               'height' => $image->height()
                               )

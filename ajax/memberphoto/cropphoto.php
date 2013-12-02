@@ -36,10 +36,10 @@ OCP\JSON::checkAppEnabled('cafevdb');
 
 $tmpkey = Util::cgiValue('tmpkey');
 $requesttoken = Util::cgiValue('requesttoken');
-$memberId = Util::cgiValue('MemberId');
+$recordId = Util::cgiValue('RecordId');
 $tmpl = new OCP\Template("cafevdb", "part.cropphoto");
 $tmpl->assign('tmpkey', $tmpkey);
-$tmpl->assign('memberId', $memberId);
+$tmpl->assign('recordId', $recordId);
 $tmpl->assign('requesttoken', $requesttoken);
 $page = $tmpl->fetchPage();
 

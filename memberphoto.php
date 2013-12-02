@@ -38,7 +38,6 @@ use CAFEVDB\L;
 use CAFEVDB\Config;
 use CAFEVDB\Util;
 use CAFEVDB\Error;
-use CAFEVDB\Musicians;
 
 // Init owncloud
 
@@ -67,25 +66,27 @@ try {
   
   Error::exceptions(true);
 
-  $memberId = Util::cgiValue('MemberId', -1);
+  $recordId = Util::cgiValue('RecordId', -1);
+  $pictureClass = Util::cgiValue('PicturePHPClass', 'CAFEVDB\Musicians');
+
   $etag = null;
   $caching = null;
 
-  if($memberId < 0) {
+  if($recordId < 0) {
     getStandardImage();
   }
 
   if(!extension_loaded('gd') || !function_exists('gd_info')) {
     OCP\Util::writeLog('cafevdb',
-                       'memberportrait.php. GD module not installed', OCP\Util::DEBUG);
+                       'Inline Picture: GD module not installed', OCP\Util::DEBUG);
     getStandardImage();
   }
 
-  $photo = Musicians::fetchPortrait($memberId);
+  $photo = call_user_func(array($pictureClass, 'fetchPicture'), $recordId);
 
   if (!$photo || $photo == '') {
     OCP\Util::writeLog('cafevdb',
-                       'memberportrait.php. Empty photo string for memberId = '.$memberId, OCP\Util::DEBUG);
+                       'memberportrait.php. Empty photo string for recordId = '.$recordId, OCP\Util::DEBUG);
     getStandardImage();
   }
 
@@ -104,7 +105,7 @@ try {
   }
 
   if ($image->valid()) {
-    $modified = Musicians::fetchModified($memberId);
+    $modified = call_user_func(array($pictureClass, 'fetchModified'), $recordId);
 
     // Force refresh if modified within the last minute.
     if ($modified > 0) {

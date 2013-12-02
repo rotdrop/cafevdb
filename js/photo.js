@@ -24,7 +24,7 @@ var CAFEVDB = CAFEVDB || {};
 (function(window, $, CAFEVDB, undefined) {
     'use strict';
     var Photo = function() {};
-    Photo.memberId = -1;
+    Photo.recordId = -1;
     Photo.data = {PHOTO:false};
     Photo.uploadPhoto = function(filelist) {
         var self = CAFEVDB.Photo;
@@ -43,7 +43,7 @@ var CAFEVDB = CAFEVDB || {};
 	    target.load(function() {
 		var response= jQuery.parseJSON(target.contents().text());
 		if (response != undefined && response.status == 'success') {
-		    self.editPhoto(response.data.memberId, response.data.tmp);
+		    self.editPhoto(response.data.recordId, response.data.tmp);
 		    //alert('File: ' + file.tmp + ' ' + file.name + ' ' + file.mime);
 		} else {
 		    OC.dialogs.alert(response.data.message, t('cafevdb', 'Error'));
@@ -64,22 +64,22 @@ var CAFEVDB = CAFEVDB || {};
     };
     Photo.cloudPhotoSelected = function(path) {
         var self = CAFEVDB.Photo;
-	$.getJSON(OC.filePath('cafevdb', 'ajax', 'memberphoto/oc_photo.php'),{'path':path,'MemberId':self.memberId},function(jsondata) {
+	$.getJSON(OC.filePath('cafevdb', 'ajax', 'memberphoto/oc_photo.php'),{'path':path,'RecordId':self.recordId},function(jsondata) {
 	    if (jsondata.status == 'success') {
 		//alert(jsondata.data.page);
-		self.editPhoto(jsondata.data.memberId, jsondata.data.tmp)
+		self.editPhoto(jsondata.data.recordId, jsondata.data.tmp)
 		$('#edit_photo_dialog_img').html(jsondata.data.page);
 	    } else {
 		OC.dialogs.alert(jsondata.data.message, t('cafevdb', 'Error'));
 	    }
 	});
     };
-    Photo.loadPhoto = function(memberId) {
+    Photo.loadPhoto = function(recordId) {
 	var self = CAFEVDB.Photo;
-        if (typeof memberId !== 'undefined') {
-            self.memberId = memberId;
+        if (typeof recordId !== 'undefined') {
+            self.recordId = recordId;
         }
-	$.getJSON(OC.filePath('cafevdb', 'ajax', 'memberphoto/currentphoto.php'),{'MemberId':self.memberId}, function(jsondata) {
+	$.getJSON(OC.filePath('cafevdb', 'ajax', 'memberphoto/currentphoto.php'),{'RecordId':self.recordId}, function(jsondata) {
 	    if (jsondata.status == 'success') {
                 self.data.PHOTO = true;
 	    } else {
@@ -102,17 +102,17 @@ var CAFEVDB = CAFEVDB || {};
 	    $(this).insertAfter($('#phototools')).fadeIn();
 	}).error(function () {
 	    // notify the user that the image could not be loaded
-	    OC.dialogs.alert(t('cafevdb', 'Could not open member picture.'), t('cafevdb', 'Error'));
-	    //self.notify({message:t('cafevdb', 'Error loading member picture.')});
-	}).attr('src', OC.linkTo('cafevdb', 'memberphoto.php')+'?MemberId='+self.memberId+refreshstr);
+	    OC.dialogs.alert(t('cafevdb', 'Could not open picture.'), t('cafevdb', 'Error'));
+	    //self.notify({message:t('cafevdb', 'Error loading picture.')});
+	}).attr('src', OC.linkTo('cafevdb', 'memberphoto.php')+'?RecordId='+self.recordId+refreshstr);
 	this.loadPhotoHandlers();
     };
     Photo.editCurrentPhoto = function() {
         var self = CAFEVDB.Photo;
-	$.getJSON(OC.filePath('cafevdb', 'ajax', 'memberphoto/currentphoto.php'),{'MemberId':self.memberId},function(jsondata) {
+	$.getJSON(OC.filePath('cafevdb', 'ajax', 'memberphoto/currentphoto.php'),{'RecordId':self.recordId},function(jsondata) {
 	    if (jsondata.status == 'success') {
 		//alert(jsondata.data.page);
-		self.editPhoto(jsondata.data.memberId, jsondata.data.tmp);
+		self.editPhoto(jsondata.data.recordId, jsondata.data.tmp);
 		$('#edit_photo_dialog_img').html(jsondata.data.page);
 	    } else {
 		wrapper.removeClass('wait');
@@ -122,7 +122,7 @@ var CAFEVDB = CAFEVDB || {};
     };
     Photo.editPhoto = function(id, tmpkey) {
 	//alert('editPhoto: ' + tmpkey);
-	$.getJSON(OC.filePath('cafevdb', 'ajax', 'memberphoto/cropphoto.php'),{'tmpkey':tmpkey,'MemberId':id, 'requesttoken':oc_requesttoken},function(jsondata) {
+	$.getJSON(OC.filePath('cafevdb', 'ajax', 'memberphoto/cropphoto.php'),{'tmpkey':tmpkey,'RecordId':id, 'requesttoken':oc_requesttoken},function(jsondata) {
 	    if (jsondata.status == 'success') {
 		//alert(jsondata.data.page);
 		$('#edit_photo_dialog_img').html(jsondata.data.page);
@@ -159,7 +159,7 @@ var CAFEVDB = CAFEVDB || {};
         var self = CAFEVDB.Photo;
 	var wrapper = $('#cafevdb_musician_photo_wrapper');
 	wrapper.addClass('wait');
-	$.getJSON(OC.filePath('cafevdb', 'ajax', 'memberphoto/deletephoto.php'),{'MemberId':this.memberId},function(jsondata) {
+	$.getJSON(OC.filePath('cafevdb', 'ajax', 'memberphoto/deletephoto.php'),{'RecordId':this.recordId},function(jsondata) {
 	    if (jsondata.status == 'success') {
 		//alert(jsondata.data.page);
 		self.loadPhoto();
@@ -253,10 +253,10 @@ var CAFEVDB = CAFEVDB || {};
 })(window, jQuery, CAFEVDB);
 
 $(document).ready(function() {
-    var memberId = $('input[name="MemberId"]').val();
-    if (typeof memberId !== 'undefined') {
+    var recordId = $('input[name="RecordId"]').val();
+    if (typeof recordId !== 'undefined') {
         CAFEVDB.Photo.loadHandlers();
-        CAFEVDB.Photo.loadPhoto(memberId);
+        CAFEVDB.Photo.loadPhoto(recordId);
     }
 });
 

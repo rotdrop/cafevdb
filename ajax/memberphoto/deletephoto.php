@@ -24,25 +24,25 @@ use CAFEVDB\Ajax;
 use CAFEVDB\Config;
 use CAFEVDB\Util;
 use CAFEVDB\Error;
-use CAFEVDB\Musicians;
-
 
 // Check if we are a user
 OCP\JSON::checkLoggedIn();
 OCP\JSON::checkAppEnabled('cafevdb');
 
-$memberId = Util::cgiValue('MemberId', '');
-if ($memberId == '') {
+$recordId = Util::cgiValue('RecordId', '');
+$pictureClass = Util::cgiValue('PicturePHPClass', 'CAFEVDB\Musicians');
+
+if ($recordId == '') {
   Ajax::bailOut(L::t('No member ID was submitted.'));
 }
 
-if (!Musicians::deletePortrait($memberId)) {
+if (!call_user_func(array($pictureClass, 'deletePicture'), $recordId)) {
   Ajax::bailOut(L::t('Deleting the photo may have failed.'));
 }
 
-$tmpkey = 'cafevdb-member-photo-'.$memberId;
+$tmpkey = 'cafevdb-member-photo-'.$recordId;
 OC_Cache::remove($tmpkey);
 
-OCP\JSON::success(array('data' => array('memberId'=>$memberId)));
+OCP\JSON::success(array('data' => array('recordId'=>$recordId)));
 
 ?>

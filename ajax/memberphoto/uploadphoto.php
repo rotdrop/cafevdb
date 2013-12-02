@@ -45,10 +45,10 @@ OCP\JSON::setContentTypeHeader('text/plain; charset=utf-8');
 // If it is a Drag'n'Drop transfer it's handled here.
 $fn = (isset($_SERVER['HTTP_X_FILE_NAME']) ? $_SERVER['HTTP_X_FILE_NAME'] : false);
 if ($fn) {
-  if (!Util::cgiValue('MemberId')) {
+  if (!Util::cgiValue('RecordId')) {
     Ajax::bailOut(L::t('No member ID was submitted.'));
   }
-  $memberId = Util::cgiValue('MemberId');
+  $recordId = Util::cgiValue('RecordId');
   $tmpkey = 'cafevdb-member-photo-'.md5($fn);
   $data = file_get_contents('php://input');
   $image = new OC_Image();
@@ -65,7 +65,7 @@ if ($fn) {
                           'data' => array(
                             'mime'=>$_SERVER['CONTENT_TYPE'],
                             'name'=>$fn,
-                            'memberId'=>$memberId,
+                            'recordId'=>$recordId,
                             'tmp'=>$tmpkey)));
       exit();
     } else {
@@ -77,7 +77,7 @@ if ($fn) {
 }
 
 // Uploads from file dialog are handled here.
-if (!isset($_POST['MemberId'])) {
+if (!isset($_POST['RecordId'])) {
   Ajax::bailOut(L::t('No member ID was submitted.'));
 }
 if (!isset($_FILES['imagefile'])) {
@@ -114,7 +114,7 @@ if(file_exists($file['tmp_name'])) {
                             'mime'=>$file['type'],
                             'size'=>$file['size'],
                             'name'=>$file['name'],
-                            'memberId'=>$_POST['MemberId'],
+                            'recordId'=>$_POST['RecordId'],
                             'tmp'=>$tmpkey,
                             )));
       exit();

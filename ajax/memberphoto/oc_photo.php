@@ -37,8 +37,8 @@ use CAFEVDB\Error;
 OCP\JSON::checkLoggedIn();
 OCP\JSON::checkAppEnabled('cafevdb');
 
-$memberId = Util::cgiValue('MemberId', '');
-if ($memberId == '') {
+$recordId = Util::cgiValue('RecordId', '');
+if ($recordId == '') {
   Ajax::bailOut(L::t('No member ID was submitted.'));
 }
 
@@ -48,7 +48,7 @@ if ($path == '') {
 }
 
 $localpath = OC_Filesystem::getLocalFile($path);
-$tmpkey = 'cafevdb-member-photo-'.$memberId;
+$tmpkey = 'cafevdb-member-photo-'.$recordId;
 
 if (!file_exists($localpath)) {
   Ajax::bailOut(L::t('File doesn\'t exist:').$localpath);
@@ -70,7 +70,7 @@ if (!$image->fixOrientation()) { // No fatal error so we don't bail out.
                      OCP\Util::DEBUG);
 }
 if (OC_Cache::set($tmpkey, $image->data(), 600)) {
-  OCP\JSON::success(array('data' => array('memberId'=>$memberId, 'tmp'=>$tmpkey)));
+  OCP\JSON::success(array('data' => array('recordId'=>$recordId, 'tmp'=>$tmpkey)));
   exit();
 } else {
   Ajax::bailOut(L::t('Couldn\'t save temporary image: %s', $tmpkey));

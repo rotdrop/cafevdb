@@ -25,7 +25,6 @@ use CAFEVDB\Ajax;
 use CAFEVDB\Config;
 use CAFEVDB\Util;
 use CAFEVDB\Error;
-use CAFEVDB\Musicians;
 
 // Firefox and Konqueror tries to download application/json for me.  --Arthur
 OCP\JSON::setContentTypeHeader('text/plain');
@@ -34,21 +33,23 @@ OCP\JSON::checkAppEnabled('cafevdb');
 
 Config::init();
 
-$memberId = Util::cgiValue('MemberId', '');
-if ($memberId == '') {
+$recordId = Util::cgiValue('RecordId', '');
+$pictureClass = Util::cgiValue('PicturePHPClass', 'CAFEVDB\Musicians');
+
+if ($recordId == '') {
   Ajax::bailOut(L::t('No member ID was submitted.'));
 }
 
-$photo = Musicians::fetchPortrait($memberId);
+$photo = call_user_func(array($pictureClass, 'fetchPicture'), $recordId);
 if (!$photo || $photo ==  '') {
-  Ajax::bailOut(OC_Contacts_App::$l10n->t('Error reading member photo for ID = %s.', $memberId));
+  Ajax::bailOut(OC_Contacts_App::$l10n->t('Error reading member photo for ID = %s.', $recordId));
 } else {
   $image = new OC_Image();
   $image->loadFromBase64($photo);
   if ($image->valid()) {
-    $tmpkey = 'cafevdb-member-photo-'.$memberId;
+    $tmpkey = 'cafevdb-member-photo-'.$recordId;
     if (OC_Cache::set($tmpkey, $image->data(), 600)) {
-      OCP\JSON::success(array('data' => array('memberId'=>$memberId, 'tmp'=>$tmpkey)));
+      OCP\JSON::success(array('data' => array('recordId'=>$recordId, 'tmp'=>$tmpkey)));
       exit();
     } else {
       Ajax::bailOut(L::t('Error saving temporary file.'));
