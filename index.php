@@ -27,6 +27,7 @@
 
 use CAFEVDB\L;
 use CAFEVDB\Config;
+use CAFEVDB\Admin;
 use CAFEVDB\ConfigCheck;
 use CAFEVDB\Util;
 use CAFEVDB\Navigation;
@@ -181,6 +182,14 @@ try {
       $_POST['Template'] = 'bulk-add-musicians';
     } else {
       $tmplname = Util::cgiValue('Template', 'blog');
+      if (false) {
+        // Does not seem to work well.
+        if ($op == '' && $recordId < 0) {
+          // Enable 5 Minutes of Cache for non-critical requests.
+          \OCP\Response::enableCaching(15);
+          \OCP\Response::setLastModifiedHeader(Admin::getLastModified());
+        }
+      }
     }
   }
 

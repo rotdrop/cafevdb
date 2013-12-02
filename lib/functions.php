@@ -368,6 +368,21 @@ __EOT__;
     exit;
   }
 
+  /**Emit a page header alowing for a cache duration of $minutes many minutes
+   */
+  public static function cacheHeader($minutes)
+  {
+    return;
+    $exp_gmt = gmdate("D, d M Y H:i:s", time() + $minutes * 60) ." GMT";
+    $mod_gmt = gmdate("D, d M Y H:i:s", getlastmod()) ." GMT";
+    
+    header("Expires: " . $exp_gmt, false);
+    header("Last-Modified: " . $mod_gmt, false);
+    header("Cache-Control: private, max-age=" . $minutes * 60, false);
+    // Speziell für MSIE 5
+    header("Cache-Control: pre-check=" . $minutes * 60, false);
+  }  
+
   public static function cgiValue($key, $default=null, $allowEmpty = true)
   {
     $value = $default;

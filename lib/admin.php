@@ -13,13 +13,53 @@ namespace CAFEVDB
  */
 class Admin
 {
+  /**Get the Unix time-stamp at which the orchestra DB was modified
+   * the last time, i.e. the maximum over the modification time of all
+   * tables.
+   */
+  public static function getLastModified()
+  {
+    Config::init();
+
+    $tzquery = "SELECT @@system_time_zone";
+
+    $query = "SELECT MAX(UPDATE_TIME)
+FROM   information_schema.tables
+WHERE  TABLE_SCHEMA = '".Config::$dbopts['db']."'";
+    
+    $handle = mySQL::connect(Config::$dbopts);
+
+    $result = mySQL::query($tzquery, $handle);
+    $numrows = mysql_num_rows($result);
+    if ($numrows === 1) {
+      foreach (mySQL::fetch($result) as $key => $value) {
+        $tz = $value;    
+      }
+    }
+
+    $result = mySQL::query($query, $handle);
+    $numrows = mysql_num_rows($result);
+
+    $stamp = -1;
+    if ($numrows !== 1) {
+      $stamp = time(); // pretend just modified on error
+    } else {
+      foreach (mySQL::fetch($result) as $key => $value) {
+        $stamp = strtotime($value." ".$tz);
+      }
+    }
+    mySQL::close($handle);
+
+    return $stamp;
+  }
+
   /**TBD*/
   public static function fillInstrumentationNumbers()
   {
     Config::init();
 
     // Fetch the actual list of instruments, we will need it anyway
-    $handle = mySQL::connect(Config::$pmeopts);
+    $handle = mySQL::connect(Config::$dbopts);
 
     $instruments = mySQL::multiKeys('Musiker', 'Instrumente', $handle);
 
