@@ -30,17 +30,17 @@ OCP\JSON::checkLoggedIn();
 OCP\JSON::checkAppEnabled('cafevdb');
 
 $recordId = Util::cgiValue('RecordId', '');
-$pictureClass = Util::cgiValue('PicturePHPClass', 'CAFEVDB\Musicians');
+$imageClass = Util::cgiValue('ImagePHPClass', 'CAFEVDB\Musicians');
 
 if ($recordId == '') {
-  Ajax::bailOut(L::t('No member ID was submitted.'));
+  Ajax::bailOut(L::t('No record ID was submitted.'));
 }
 
-if (!call_user_func(array($pictureClass, 'deletePicture'), $recordId)) {
+if (!call_user_func(array($imageClass, 'deleteImage'), $recordId)) {
   Ajax::bailOut(L::t('Deleting the photo may have failed.'));
 }
 
-$tmpkey = 'cafevdb-member-photo-'.$recordId;
+$tmpkey = 'cafevdb-inline-image-'.$recordId;
 OC_Cache::remove($tmpkey);
 
 OCP\JSON::success(array('data' => array('recordId'=>$recordId)));

@@ -67,7 +67,7 @@ if (!OC_Group::inGroup($user, $group)) {
 $tmpkey = Util::cgiValue('tmpkey');
 $maxsize = Util::cgiValue('maxsize', -1);
 
-OCP\Util::writeLog('cafevdb', 'tmpphoto.php: tmpkey: '.$tmpkey, OCP\Util::DEBUG);
+OCP\Util::writeLog('cafevdb', 'tmpimage.php: tmpkey: '.$tmpkey, OCP\Util::DEBUG);
 
 $image = new OC_Image();
 $image->loadFromData(OC_Cache::get($tmpkey));

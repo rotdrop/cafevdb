@@ -34,20 +34,20 @@ OCP\JSON::checkAppEnabled('cafevdb');
 Config::init();
 
 $recordId = Util::cgiValue('RecordId', '');
-$pictureClass = Util::cgiValue('PicturePHPClass', 'CAFEVDB\Musicians');
+$imageClass = Util::cgiValue('ImagePHPClass', 'CAFEVDB\Musicians');
 
 if ($recordId == '') {
-  Ajax::bailOut(L::t('No member ID was submitted.'));
+  Ajax::bailOut(L::t('No record ID was submitted.'));
 }
 
-$photo = call_user_func(array($pictureClass, 'fetchPicture'), $recordId);
+$photo = call_user_func(array($imageClass, 'fetchImage'), $recordId);
 if (!$photo || $photo ==  '') {
-  Ajax::bailOut(OC_Contacts_App::$l10n->t('Error reading member photo for ID = %s.', $recordId));
+  Ajax::bailOut(L::t('Error reading inline image for ID = %s.', array($recordId)));
 } else {
   $image = new OC_Image();
   $image->loadFromBase64($photo);
   if ($image->valid()) {
-    $tmpkey = 'cafevdb-member-photo-'.$recordId;
+    $tmpkey = 'cafevdb-inline-image-'.$recordId;
     if (OC_Cache::set($tmpkey, $image->data(), 600)) {
       OCP\JSON::success(array('data' => array('recordId'=>$recordId, 'tmp'=>$tmpkey)));
       exit();
@@ -55,7 +55,7 @@ if (!$photo || $photo ==  '') {
       Ajax::bailOut(L::t('Error saving temporary file.'));
     }
   } else {
-    Ajax::bailOut(L::t('The loading photo is not valid.'));
+    Ajax::bailOut(L::t('The loading image is not valid.'));
   }
 }
 

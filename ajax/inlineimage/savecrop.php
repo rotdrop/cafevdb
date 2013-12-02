@@ -46,7 +46,7 @@ $w = Util::cgiValue('w', -1, false);
 $h = Util::cgiValue('h', -1, false);
 $tmpkey = Util::cgiValue('tmpkey', '');
 $recordId = Util::cgiValue('RecordId', '');
-$pictureClass = Util::cgiValue('PicturePHPClass', 'CAFEVDB\Musicians');
+$imageClass = Util::cgiValue('ImagePHPClass', 'CAFEVDB\Musicians');
 
 if ($tmpkey == '') {
   Ajax::bailOut('Missing key to temporary file.');
@@ -70,7 +70,7 @@ if ($data) {
     if ($image->crop($x1, $y1, $w, $h)) {
       if (($image->width() <= 200 && $image->height() <= 200)
          || $image->resize(200)) {
-        if (!call_user_func(array($pictureClass, 'storePicture'), $recordId, $image->__toString())) {
+        if (!call_user_func(array($imageClass, 'storeImage'), $recordId, $image->__toString())) {
           Ajax::bailOut(L::t('Error saving image in DB'));
         }
         OCP\JSON::success(array(

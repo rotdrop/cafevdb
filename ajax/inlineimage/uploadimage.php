@@ -46,10 +46,10 @@ OCP\JSON::setContentTypeHeader('text/plain; charset=utf-8');
 $fn = (isset($_SERVER['HTTP_X_FILE_NAME']) ? $_SERVER['HTTP_X_FILE_NAME'] : false);
 if ($fn) {
   if (!Util::cgiValue('RecordId')) {
-    Ajax::bailOut(L::t('No member ID was submitted.'));
+    Ajax::bailOut(L::t('No record ID was submitted.'));
   }
   $recordId = Util::cgiValue('RecordId');
-  $tmpkey = 'cafevdb-member-photo-'.md5($fn);
+  $tmpkey = 'cafevdb-inline-image-'.md5($fn);
   $data = file_get_contents('php://input');
   $image = new OC_Image();
   sleep(1); // Apparently it needs time to load the data.
@@ -78,7 +78,7 @@ if ($fn) {
 
 // Uploads from file dialog are handled here.
 if (!isset($_POST['RecordId'])) {
-  Ajax::bailOut(L::t('No member ID was submitted.'));
+  Ajax::bailOut(L::t('No record ID was submitted.'));
 }
 if (!isset($_FILES['imagefile'])) {
   Ajax::bailOut(L::t('No file was uploaded. Unknown error'));
@@ -99,7 +99,7 @@ if($error !== UPLOAD_ERR_OK) {
 $file = $_FILES['imagefile'];
 
 if(file_exists($file['tmp_name'])) {
-  $tmpkey = 'cafevdb-member-photo-'.md5(basename($file['tmp_name']));
+  $tmpkey = 'cafevdb-inline-image-'.md5(basename($file['tmp_name']));
   $image = new OC_Image();
   if($image->loadFromFile($file['tmp_name'])) {
     if($image->width() > 400 || $image->height() > 400) {

@@ -66,46 +66,48 @@ try {
   
   Error::exceptions(true);
 
-  $recordId = Util::cgiValue('RecordId', -1);
-  $pictureClass = Util::cgiValue('PicturePHPClass', 'CAFEVDB\Musicians');
+  $recordId   = Util::cgiValue('RecordId', -1);
+  $imageClass = Util::cgiValue('ImagePHPClass', 'CAFEVDB\Musicians');
 
   $etag = null;
   $caching = null;
 
   if($recordId < 0) {
+    OCP\Util::writeLog('cafevdb',
+                       'inlineimage.php: record-id invalid', OCP\Util::DEBUG);
     getStandardImage();
   }
 
   if(!extension_loaded('gd') || !function_exists('gd_info')) {
     OCP\Util::writeLog('cafevdb',
-                       'Inline Picture: GD module not installed', OCP\Util::DEBUG);
+                       'inlineimage.php: GD module not installed', OCP\Util::DEBUG);
     getStandardImage();
   }
 
-  $photo = call_user_func(array($pictureClass, 'fetchPicture'), $recordId);
+  $imageData = call_user_func(array($imageClass, 'fetchImage'), $recordId);
 
-  if (!$photo || $photo == '') {
+  if (!$imageData || $imageData == '') {
     OCP\Util::writeLog('cafevdb',
-                       'memberportrait.php. Empty photo string for recordId = '.$recordId, OCP\Util::DEBUG);
+                       'inlineimage.php: Empty image string for recordId = '.$recordId, OCP\Util::DEBUG);
     getStandardImage();
   }
 
   $image = new OC_Image();
   if (!$image) {
     OCP\Util::writeLog('cafevdb',
-                       'memberportrait.php. Image could not be created', OCP\Util::DEBUG);
+                       'inlineimage.php: Image could not be created', OCP\Util::DEBUG);
     getStandardImage();
   }
   
 
-  // Photo :-), perhaps
-  if ($image->loadFromBase64($photo)) {
+  // Image :-), perhaps
+  if ($image->loadFromBase64($imageData)) {
     // OK
-    $etag = md5($photo);
+    $etag = md5($imageData);
   }
 
   if ($image->valid()) {
-    $modified = call_user_func(array($pictureClass, 'fetchModified'), $recordId);
+    $modified = call_user_func(array($imageClass, 'fetchModified'), $recordId);
 
     // Force refresh if modified within the last minute.
     if ($modified > 0) {
@@ -128,6 +130,8 @@ try {
     }
   } else if (!$image->valid()) {
     // Not found :-(
+    OCP\Util::writeLog('cafevdb',
+                       'inlineimage.php: no valid image found', OCP\Util::DEBUG);
     getStandardImage();
   }
   header('Content-Type: '.$image->mimeType());

@@ -38,8 +38,9 @@ OCP\JSON::checkLoggedIn();
 OCP\JSON::checkAppEnabled('cafevdb');
 
 $recordId = Util::cgiValue('RecordId', '');
+
 if ($recordId == '') {
-  Ajax::bailOut(L::t('No member ID was submitted.'));
+  Ajax::bailOut(L::t('No record ID was submitted.'));
 }
 
 $path = Util::cgiValue('path', '');
@@ -48,7 +49,7 @@ if ($path == '') {
 }
 
 $localpath = OC_Filesystem::getLocalFile($path);
-$tmpkey = 'cafevdb-member-photo-'.$recordId;
+$tmpkey = 'cafevdb-inline-image-'.$recordId;
 
 if (!file_exists($localpath)) {
   Ajax::bailOut(L::t('File doesn\'t exist:').$localpath);
@@ -66,7 +67,7 @@ if ($image->width() > 400 || $image->height() > 400) {
 }
 if (!$image->fixOrientation()) { // No fatal error so we don't bail out.
   OCP\Util::writeLog('cafevdb',
-                     'ajax/memberphoto/oc_photo.php: Couldn\'t save correct image orientation: '.$localpath,
+                     'ajax/inlinepicture/oc_photo.php: Couldn\'t save correct image orientation: '.$localpath,
                      OCP\Util::DEBUG);
 }
 if (OC_Cache::set($tmpkey, $image->data(), 600)) {

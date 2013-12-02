@@ -97,7 +97,7 @@ try {
   OCP\Util::addStyle('cafevdb', 'events');
   OCP\Util::addStyle('cafevdb', 'email');
   OCP\Util::addStyle('cafevdb', 'blog');
-  OCP\Util::addStyle('cafevdb', 'photo');  
+  OCP\Util::addStyle('cafevdb', 'inlineimage');  
   OCP\Util::addStyle('cafevdb', 'jquery.Jcrop');  
   OCP\Util::addStyle("cafevdb/3rdparty", "chosen/chosen");
   OCP\Util::addStyle('3rdparty/fontawesome', 'font-awesome');
@@ -110,7 +110,7 @@ try {
   OCP\Util::addScript('cafevdb', 'email');
   OCP\Util::addScript('cafevdb', 'events');
   OCP\Util::addScript('cafevdb', 'blog');
-  OCP\Util::addScript('cafevdb', 'photo');
+  OCP\Util::addScript('cafevdb', 'inlineimage');
   OCP\Util::addScript('cafevdb', 'jquery.Jcrop');
   // TinyMCE stuff
   OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/tinymce.min');

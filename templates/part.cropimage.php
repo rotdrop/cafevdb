@@ -37,6 +37,8 @@
 $recordId = $_['recordId'];
 $tmpkey = $_['tmpkey'];
 $requesttoken = $_['requesttoken'];
+$imageClass = $_['imageClass'];
+
 ?>
 <script type="text/javascript">
 	jQuery(function($) {
@@ -74,15 +76,16 @@ $requesttoken = $_['requesttoken'];
 	});*/
 </script>
 <?php if(OC_Cache::hasKey($tmpkey)) { ?>
-<img id="cropbox" src="<?php echo OCP\Util::linkToAbsolute('cafevdb', 'tmpphoto.php'); ?>?tmpkey=<?php echo $tmpkey; ?>" />
+<img id="cropbox" src="<?php echo OCP\Util::linkToAbsolute('cafevdb', 'tmpimage.php'); ?>?tmpkey=<?php echo $tmpkey; ?>" />
 <form id="cropform"
 	class="coords"
 	method="post"
 	enctype="multipart/form-data"
 	target="crop_target"
-	action="<?php echo OCP\Util::linkToAbsolute('cafevdb', 'ajax/memberphoto/savecrop.php'); ?>">
+	action="<?php echo OCP\Util::linkToAbsolute('cafevdb', 'ajax/inlineimage/savecrop.php'); ?>">
 
 	<input type="hidden" id="id" name="RecordId" value="<?php echo $recordId; ?>" />
+	<input type="hidden" id="id" name="ImagePHPClass" value="<?php echo $imageClass; ?>" />
 	<input type="hidden" name="requesttoken" value="<?php echo $requesttoken; ?>">
 	<input type="hidden" id="tmpkey" name="tmpkey" value="<?php echo $tmpkey; ?>" />
 	<fieldset id="coords">

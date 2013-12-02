@@ -37,9 +37,12 @@ OCP\JSON::checkAppEnabled('cafevdb');
 $tmpkey = Util::cgiValue('tmpkey');
 $requesttoken = Util::cgiValue('requesttoken');
 $recordId = Util::cgiValue('RecordId');
-$tmpl = new OCP\Template("cafevdb", "part.cropphoto");
+$imageClass = Util::cgiValue('ImagePHPClass', 'CAFEVDB\Musicians');
+
+$tmpl = new OCP\Template("cafevdb", "part.cropimage");
 $tmpl->assign('tmpkey', $tmpkey);
 $tmpl->assign('recordId', $recordId);
+$tmpl->assign('imageClass', $imageClass);
 $tmpl->assign('requesttoken', $requesttoken);
 $page = $tmpl->fetchPage();
 

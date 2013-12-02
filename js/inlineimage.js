@@ -64,7 +64,7 @@ var CAFEVDB = CAFEVDB || {};
     };
     Photo.cloudPhotoSelected = function(path) {
         var self = CAFEVDB.Photo;
-	$.getJSON(OC.filePath('cafevdb', 'ajax', 'memberphoto/oc_photo.php'),{'path':path,'RecordId':self.recordId},function(jsondata) {
+	$.getJSON(OC.filePath('cafevdb', 'ajax', 'inlineimage/oc_image.php'),{'path':path,'RecordId':self.recordId},function(jsondata) {
 	    if (jsondata.status == 'success') {
 		//alert(jsondata.data.page);
 		self.editPhoto(jsondata.data.recordId, jsondata.data.tmp)
@@ -79,11 +79,11 @@ var CAFEVDB = CAFEVDB || {};
         if (typeof recordId !== 'undefined') {
             self.recordId = recordId;
         }
-	$.getJSON(OC.filePath('cafevdb', 'ajax', 'memberphoto/currentphoto.php'),{'RecordId':self.recordId}, function(jsondata) {
+	$.getJSON(OC.filePath('cafevdb', 'ajax', 'inlineimage/currentimage.php'),{'RecordId':self.recordId}, function(jsondata) {
 	    if (jsondata.status == 'success') {
                 self.data.PHOTO = true;
 	    } else {
-		//OC.dialogs.alert(jsondata.data.message, t('cafevdb', 'Error'));
+		OC.dialogs.alert(jsondata.data.message, t('cafevdb', 'Error'));
                 self.data.PHOTO = false;
 	    }
             self.loadPhotoHandlers();
@@ -102,14 +102,14 @@ var CAFEVDB = CAFEVDB || {};
 	    $(this).insertAfter($('#phototools')).fadeIn();
 	}).error(function () {
 	    // notify the user that the image could not be loaded
-	    OC.dialogs.alert(t('cafevdb', 'Could not open picture.'), t('cafevdb', 'Error'));
-	    //self.notify({message:t('cafevdb', 'Error loading picture.')});
-	}).attr('src', OC.linkTo('cafevdb', 'memberphoto.php')+'?RecordId='+self.recordId+refreshstr);
+	    OC.dialogs.alert(t('cafevdb', 'Could not open image.'), t('cafevdb', 'Error'));
+	    //self.notify({message:t('cafevdb', 'Error loading image.')});
+	}).attr('src', OC.linkTo('cafevdb', 'inlineimage.php')+'?RecordId='+self.recordId+refreshstr);
 	this.loadPhotoHandlers();
     };
     Photo.editCurrentPhoto = function() {
         var self = CAFEVDB.Photo;
-	$.getJSON(OC.filePath('cafevdb', 'ajax', 'memberphoto/currentphoto.php'),{'RecordId':self.recordId},function(jsondata) {
+	$.getJSON(OC.filePath('cafevdb', 'ajax', 'inlineimage/currentimage.php'),{'RecordId':self.recordId},function(jsondata) {
 	    if (jsondata.status == 'success') {
 		//alert(jsondata.data.page);
 		self.editPhoto(jsondata.data.recordId, jsondata.data.tmp);
@@ -122,7 +122,7 @@ var CAFEVDB = CAFEVDB || {};
     };
     Photo.editPhoto = function(id, tmpkey) {
 	//alert('editPhoto: ' + tmpkey);
-	$.getJSON(OC.filePath('cafevdb', 'ajax', 'memberphoto/cropphoto.php'),{'tmpkey':tmpkey,'RecordId':id, 'requesttoken':oc_requesttoken},function(jsondata) {
+	$.getJSON(OC.filePath('cafevdb', 'ajax', 'inlineimage/cropimage.php'),{'tmpkey':tmpkey,'RecordId':id, 'requesttoken':oc_requesttoken},function(jsondata) {
 	    if (jsondata.status == 'success') {
 		//alert(jsondata.data.page);
 		$('#edit_photo_dialog_img').html(jsondata.data.page);
@@ -159,7 +159,7 @@ var CAFEVDB = CAFEVDB || {};
         var self = CAFEVDB.Photo;
 	var wrapper = $('#cafevdb_musician_photo_wrapper');
 	wrapper.addClass('wait');
-	$.getJSON(OC.filePath('cafevdb', 'ajax', 'memberphoto/deletephoto.php'),{'RecordId':this.recordId},function(jsondata) {
+	$.getJSON(OC.filePath('cafevdb', 'ajax', 'inlineimage/deleteimage.php'),{'RecordId':this.recordId},function(jsondata) {
 	    if (jsondata.status == 'success') {
 		//alert(jsondata.data.page);
 		self.loadPhoto();
@@ -227,8 +227,8 @@ var CAFEVDB = CAFEVDB || {};
 	    }
 	] );
 
-	// Profile picture upload handling
-	// New profile picture selected
+	// Profile image upload handling
+	// New profile image selected
 	$('#file_upload_start').change(function() {
 	    self.uploadPhoto(this.files);
 	});

@@ -415,7 +415,7 @@ __EOT__;
   {
     if ($modify === false) {
       $span = ''
-        .'<span class="photo"><img class="photo" src="'.\OC::$WEBROOT.'/?app=cafevdb&getfile=memberphoto.php&RecordId='.$musicianId.'"'
+        .'<span class="photo"><img class="photo" src="'.\OC::$WEBROOT.'/?app=cafevdb&getfile=inlineimage.php&RecordId='.$musicianId.'&ImagePHPClass=CAFEVDB\Musicians"'
         .' title="Photo, if available" /></span>';
       return $span;
     } else {
@@ -440,7 +440,7 @@ __EOT__;
     }
   }
 
-  public static function fetchPicture($musicianId, $handle = false)
+  public static function fetchImage($musicianId, $handle = false)
   {
     $photo = '';
 
@@ -470,7 +470,7 @@ __EOT__;
 
   /**Take a BASE64 encoded photo and store it in the DB.
    */
-  public static function storePicture($musicianId, $photo, $handle = false)
+  public static function storeImage($musicianId, $photo, $handle = false)
   { 
     if (!isset($photo) || $photo == '') {
       return;
@@ -495,7 +495,7 @@ __EOT__;
     return $result;
   }
 
-  public static function deletePicture($musicianId, $handle = false)
+  public static function deleteImage($musicianId, $handle = false)
   {
     $photo = '';
 
