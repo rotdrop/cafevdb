@@ -60,10 +60,11 @@ var CAFEVDB = CAFEVDB || {};
       break;
     };
   };
-  CAFEVDB.broadcastHeaderVisibility = function (visibility = false) {
+  CAFEVDB.broadcastHeaderVisibility = function(visibility) {
 
     // default: only distribute
-    if (!visibility) {
+
+    if (typeof visibility === 'undefined' || !visibility) {
       visibility = this.headervisibility;
     }
 
@@ -108,7 +109,12 @@ var CAFEVDB = CAFEVDB || {};
    *
    * @param[in] method Either 'get' or 'post', default is 'post'.
    */
-  CAFEVDB.formSubmit = function(url, values, method = 'post') {
+  CAFEVDB.formSubmit = function(url, values, method) {
+
+    if (typeof method === 'undefined') {
+      method = 'post';
+    }
+
     var form = '<form method="'+method+'" action="'+url+'"></form>';
 
     form = $(form).appendTo($('body'));

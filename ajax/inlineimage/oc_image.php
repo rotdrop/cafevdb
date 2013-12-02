@@ -45,7 +45,7 @@ if ($recordId == '') {
 
 $path = Util::cgiValue('path', '');
 if ($path == '') {
-  Ajax::bailOut(L::t('No photo path was submitted.'));
+  Ajax::bailOut(L::t('No image path was submitted.'));
 }
 
 $localpath = OC_Filesystem::getLocalFile($path);

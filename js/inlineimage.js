@@ -136,43 +136,93 @@ var CAFEVDB = CAFEVDB || {};
 	});
     };
     Photo.editPhoto = function(id, tmpkey) {
+	console.log('editPhoto', id, tmpkey);
+	$('.tipsy').remove();
+	// Simple event handler, called from onChange and onSelect
+	// event handlers, as per the Jcrop invocation above
+	var showCoords = function(c) {
+	    $('#x1').val(c.x);
+	    $('#y1').val(c.y);
+	    $('#x2').val(c.x2);
+	    $('#y2').val(c.y2);
+	    $('#w').val(c.w);
+	    $('#h').val(c.h);
+	};
+
+	var clearCoords = function() {
+	    $('#coords input').val('');
+	};
+
         var self = CAFEVDB.Photo;
-	//alert('editPhoto: ' + tmpkey);
-	$.getJSON(OC.filePath('cafevdb', 'ajax', 'inlineimage/cropimage.php'),
-                  { 'tmpkey':tmpkey,
-                    'RecordId':id,
-                    'requesttoken':oc_requesttoken,
-                    'ImagePHPClass':self.imageClass,
-                  },function(jsondata) {
-	    if (jsondata.status == 'success') {
-		//alert(jsondata.data.page);
-		$('#edit_photo_dialog_img').html(jsondata.data.page);
-	    } else {
-		OC.dialogs.alert(jsondata.data.message, t('cafevdb', 'Error'));
-	    }
-	});
-	if ($('#edit_photo_dialog').dialog('isOpen') == true) {
-	    $('#edit_photo_dialog').dialog('moveToTop');
-	} else {
-	    $('#edit_photo_dialog').dialog('open');
+	if(!self.$cropBoxTmpl) {
+	    self.$cropBoxTmpl = $('#cropBoxTemplate');
 	}
-    };
-    Photo.savePhoto = function() {
+	$('body').append('<div id="edit_photo_dialog"></div>');
+	var $dlg = self.$cropBoxTmpl.octemplate({RecordId: id, ImagePHPClass: self.imageClass, tmpkey: tmpkey});
+
+	var cropphoto = new Image();
+	$(cropphoto).load(function () {
+	    var x = 5, y = 5, w = this.width-10, h = this.height-10;
+	    $(this).attr('id', 'cropbox');
+	    $(this).prependTo($dlg).fadeIn();
+	    $(this).Jcrop({
+		onChange:	showCoords,
+		onSelect:	showCoords,
+		onRelease:	clearCoords,
+		maxSize:	[399, 399],
+		bgColor:	'black',
+		bgOpacity:	.4,
+		boxWidth:	400,
+		boxHeight:	400,
+		setSelect:	[ x+w-1, y+h-1, x, y ]//,
+		//aspectRatio: 0.8
+	    });
+	    $('#edit_photo_dialog').html($dlg).dialog({
+		modal: true,
+		closeOnEscape: true,
+		title:  t('cafevdb', 'Edit inline image'),
+		height: 'auto',
+                width: 'auto',
+		buttons: [ { text: t('cafevdb', "Ok"),
+		             click: function() {
+		                 self.savePhoto($(this));
+		                 $(this).dialog('close');
+		             }
+	                   },
+	                   { text: t('cafevdb', "Cancel"),
+		             click: function() { $(this).dialog('close'); }
+	                   },
+	                 ],
+		close: function(event, ui) {
+		    $(this).dialog('destroy').remove();
+		    $('#edit_photo_dialog').remove();
+		},
+		open: function(event, ui) {
+		    showCoords({x:x,y:y,x2:x+w-1,y2:y+h-1,w:w,h:h});
+		}
+	    });
+	}).error(function () {
+	    OC.notify({message:t('cafevdb','Error loading inline image.')});
+	}).attr('src', OC.linkTo('cafevdb', 'tmpimage.php')+'?tmpkey='+tmpkey);
+    };   
+    Photo.savePhoto = function($dlg) {
         var self = CAFEVDB.Photo;
-	var target = $('#crop_target');
-	var form = $('#cropform');
-	var wrapper = $('#cafevdb_musician_photo_wrapper');
-	wrapper.addClass('wait');
-	form.submit();
-	target.load(function() {
-	    var response=jQuery.parseJSON(target.contents().text());
-	    if (response != undefined && response.status == 'success') {
+	var form = $dlg.find('#cropform');
+	var q = form.serialize();
+	console.log('savePhoto', q);
+	$.post(OC.filePath('cafevdb', 'ajax', 'inlineimage/savecrop.php'), q, function(response) {
+	    var jsondata = $.parseJSON(response);
+	    console.log('savePhoto, jsondata', typeof jsondata);
+	    if(jsondata && jsondata.status === 'success') {
 		// load cropped photo.
-		self.loadPhoto();
+                self.loadPhoto();
 		self.data.PHOTO = true;
 	    } else {
-		OC.dialogs.alert(response.data.message, t('cafevdb', 'Error'));
-		wrapper.removeClass('wait');
+		if(!jsondata) {
+		    OC.notify({message:t('cafevdb', 'Network or server error. Please inform administrator.')});
+		} else {
+		    OC.notify({message: jsondata.data.message});
+		}
 	    }
 	});
     };
@@ -222,7 +272,7 @@ var CAFEVDB = CAFEVDB || {};
 	    $('#file_upload_start').trigger('click');
 	});
 	phototools.find('.cloud').click(function() {
-	    OC.dialogs.filepicker(t('cafevdb', 'Select photo'), self.cloudPhotoSelected, false, 'image', true);
+	    OC.dialogs.filepicker(t('cafevdb', 'Select image'), self.cloudPhotoSelected, false, 'image', true);
 	});
 	phototools.find('.delete').click(function() {
 	    $(this).tipsy('hide');
@@ -234,24 +284,6 @@ var CAFEVDB = CAFEVDB || {};
 	    self.editCurrentPhoto();
 	});
 	phototools.find('li a').tipsy();
-
-	/* Initialize the photo edit dialog */
-	$('#edit_photo_dialog').dialog({
-	    autoOpen: false, modal: true, height: 'auto', width: 'auto'
-	});
-	$('#edit_photo_dialog' ).dialog( 'option', 'buttons', [
-	    {
-		text: t('cafevdb', "Ok"),
-		click: function() {
-		    self.savePhoto(this);
-		    $(this).dialog('close');
-		}
-	    },
-	    {
-		text: t('cafevdb', "Cancel"),
-		click: function() { $(this).dialog('close'); }
-	    },
-	] );
 
 	// Profile image upload handling
 	// New profile image selected
@@ -277,6 +309,66 @@ var CAFEVDB = CAFEVDB || {};
     CAFEVDB.Photo = Photo;
 
 })(window, jQuery, CAFEVDB);
+
+(function( $ ) {
+
+    function outerHTML(node){
+	return node.outerHTML || new XMLSerializer().serializeToString(node);
+    }
+
+    /**
+     * Object Template
+     * Inspired by micro templating done by e.g. underscore.js
+     */
+    var Template = {
+	init: function(vars, options, elem) {
+	    // Mix in the passed in options with the default options
+	    this.vars = vars;
+	    this.options = $.extend({},this.options,options);
+
+	    this.elem = elem;
+	    var self = this;
+
+	    if(typeof this.options.escapeFunction === 'function') {
+		for (var key = 0; key < Object.keys(this.vars).length; key++) {
+		    if(typeof this.vars[Object.keys(this.vars)[key]] === 'string') {
+			this.vars[Object.keys(this.vars)[key]] = self.options.escapeFunction(this.vars[Object.keys(this.vars)[key]]);
+		    }
+		}
+	    }
+
+	    var _html = this._build(this.vars);
+	    return $(_html);
+	},
+	// From stackoverflow.com/questions/1408289/best-way-to-do-variable-interpolation-in-javascript
+	_build: function(o){
+	    var data = this.elem.attr('type') === 'text/template' ? this.elem.html() : outerHTML(this.elem.get(0));
+	    try {
+		return data.replace(/{([^{}]*)}/g,
+				    function (a, b) {
+					var r = o[b];
+					return typeof r === 'string' || typeof r === 'number' ? r : a;
+				    }
+				   );
+	    } catch(e) {
+		console.error(e, 'data:', data)
+	    }
+	},
+	options: {
+	    escapeFunction: escapeHTML
+	}
+    };
+
+    $.fn.octemplate = function(vars, options) {
+	var vars = vars ? vars : {};
+	if(this.length) {
+	    var _template = Object.create(Template);
+	    return _template.init(vars, options, this);
+	}
+    };
+
+})( jQuery );
+
 
 $(document).ready(function() {
     var recordId   = $('input[name="RecordId"]').val();
