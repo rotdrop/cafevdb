@@ -111,6 +111,9 @@ var Calendar={
 				height: 600,
 				close : function(event, ui) {
 					$(this).dialog('destroy').remove();
+			                if ($('#event_googlemap').dialog('isOpen') == true){
+				                $('#event_googlemap').dialog('close').remove();
+			                }
 				}
 			});
 			Calendar.UI.Share.init();
