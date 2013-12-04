@@ -588,6 +588,8 @@ class ConfigCheck
    */
   public static function sudo($uid, $callback)
   {
+    \OC_Util::setupFS(); // This must come before trying to sudo
+
     $olduser = \OC_User::getUser();
     \OC_User::setUserId($uid);
     try {
