@@ -1,5 +1,26 @@
 <?php
 
+/**Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2011-2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 /**CamerataDB namespace to prevent name-collisions.
  */
 namespace CAFEVDB
@@ -207,24 +228,28 @@ __EOT__;
                                'default'  => '0',
                                'sort'     => true
                                );
+    
+    $currentYear = date('Y');
+    $yearRange = self::fetchYearRange();
+    $yearValues = array(' ');
+    for ($year = $yearRange["min"] - 1; $year < $currentYear + 5; $year++) {
+      $yearValues[] = $year;
+    }
 
     $opts['fdd']['Jahr'] = array(
                                'name'     => 'Jahr',
                                'select'   => 'N',
                                //'options'  => 'LAVCPDF'
                                'maxlen'   => 11,
-                               'default'  => '0',
-                               'sort'     => true
+                               'default'  => $currentYear,
+                               'sort'     => true,
+                               'values'   => $yearValues,
                                );
 
     $nameIdx = count($opts['fdd']);
     $opts['fdd']['Name'] = array(
         'name'     => 'Projekt-Name',
-        /* 'php|VLF'      => array('type' => 'function', */
-        /*                     'function' => 'CAFEVDB\Projects::projectButton', */
-        /*                         'parameters' => array('keyIdx' => $idIdx, */
-        /*                                               'template' => 'brief-instrumentation')), */
-        'php|VLF'  => array('type' => 'function',
+        'php|LF'  => array('type' => 'function',
                             'function' => 'CAFEVDB\Projects::projectActionsPME',
                             'parameters' => array("idIndex" => $idIdx)),
         'select'   => 'D',
@@ -236,12 +261,12 @@ __EOT__;
     $opts['fdd']['Actions'] = array(
         'name'     => L::t('Actions'),
         'sql'      => 'Name',
-        'php|C'    => array('type' => 'function',
+        'php|VCLDF'    => array('type' => 'function',
                             'function' => 'CAFEVDB\Projects::projectActionsPME',
                             'parameters' => array("idIndex" => $idIdx,
                                                   "placeHolder" => L::t("Actions"))),
         'select'   => 'T',
-        'options'  => 'LVCPDR',
+        'options'  => 'VDR',
         'maxlen'   => 11,
         'default'  => '0',
         'sort'     => false
@@ -325,8 +350,9 @@ zur Extra-Spalte in der Datenbank angeben, z.B. so:
 Dann wird die Reihenfolge bei der Anzeige der Tabelle geändert, aber die
 Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
 
-    $opts['triggers']['update']['after'] = Config::$triggers.'projects.TUA.inc.php';
-    $opts['triggers']['insert']['after'] = Config::$triggers.'projects.TIA.inc.php';
+    $opts['triggers']['update']['after']  = Config::$triggers.'projects.TUA.inc.php';
+    $opts['triggers']['insert']['before'] = Config::$triggers.'projects.TIB.inc.php';
+    $opts['triggers']['insert']['after']  = Config::$triggers.'projects.TIA.inc.php';
 
     // Maybe we want to keep the view.
     // $opts['triggers']['delete']['after']  = 'Projekte.TDA.inc.php';
@@ -411,7 +437,7 @@ __EOT__;
   public static function projectActionsPME($projectName, $opts, $modify, $k, $fds, $fdd, $row)
   {
     $projectId   = $row["qf".$opts["idIndex"]];
-    $placeHolder = isset($opts['placeHolder']) ? isset($opts['placeHolder']) : false;
+    $placeHolder = isset($opts['placeHolder']) ? $opts['placeHolder'] : false;
     return self::projectActions($projectId, $projectName, $placeHolder);
   }
 
@@ -420,7 +446,8 @@ __EOT__;
     $projectPaths = self::maybeCreateProjectFolder($projectId, $projectName);
 
     if ($placeHolder === false) {
-      $placeHolder = $projectName;
+      // Strip the 4-digit year from the end, if present
+      $placeHolder = preg_replace("/^(.*\D)(\d{4})$/", "$1", $projectName);
     }
 
     // Code the value in the name attribute (for java-script)
@@ -610,8 +637,31 @@ __EOT__;
     return $projects;
   }
 
-  /**Fetch the list of projects from the data base as a short id=>name
-   * field.
+  /**Fetch minimum and maximum project years from the Projekte table.
+   */
+  public static function fetchYearRange($handle = false)
+  {    
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
+    $yearCol = "Jahr";
+    $query = "SELECT MIN(`$yearCol`),MAX(`$yearCol`) FROM `Projekte` WHERE 1";
+    $result = mySQL::query($query, $handle);
+    if ($result !== false && mysql_num_rows($result) == 1) {
+      $row = mySQL::fetch($result);
+      $yearRange = array();
+      foreach ($row as $key => $value) {
+        $yearRange[] = $value;
+      }
+      return array_combine(array('min', 'max'), $yearRange);
+    }
+    return false;
+  }
+
+  /**Fetch the project identified by $projectId.
    */
   public static function fetchProject($projectId, $handle = false)
   {

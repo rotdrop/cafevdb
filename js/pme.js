@@ -28,7 +28,11 @@ var PHPMYEDIT = PHPMYEDIT || {};
   PHPMYEDIT.filterSelectNoResult    = 'No values match';
   PHPMYEDIT.filterSelectChosen      =  true;
   PHPMYEDIT.filterSelectChosenTitle = 'Select from the pull-down menu. Double-click will submit the form.';
-  PHPMYEDIT.selectChosenPixelWidth  = [];
+  PHPMYEDIT.inputSelectPlaceholder = 'Select an option';
+  PHPMYEDIT.inputSelectNoResult    = 'No values match';
+  PHPMYEDIT.inputSelectChosen      =  true;
+  PHPMYEDIT.inputSelectChosenTitle = 'Select from the pull-down menu.';
+  PHPMYEDIT.chosenPixelWidth        = [];
   PHPMYEDIT.filterHandler = function(theForm, theEvent) {
     var pressed_key = null;
     if (theEvent.which) {
@@ -85,8 +89,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
       // Play a dirty trick in order not to pass width:auto to chosen
       // for some particalar thingies
       var k;
-      for (k = 0; k < PHPMYEDIT.selectChosenPixelWidth.length; ++k) {
-        var tag = PHPMYEDIT.selectChosenPixelWidth[k];
+      for (k = 0; k < PHPMYEDIT.chosenPixelWidth.length; ++k) {
+        var tag = PHPMYEDIT.chosenPixelWidth[k];
         var pxlWidth = Math.round($("td[class^='"+pmepfx+"-filter-"+tag+"']").width());
         $("select[class^='"+pmepfx+"-filter-"+tag+"']").chosen({width:pxlWidth+'px',
                                                                 no_results_text:noRes});
@@ -107,6 +111,34 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
       $("td[class^='"+pmepfx+"-filter'] div.chosen-container").attr("title",this.filterSelectChosenTitle);
     }
+
+    if (this.inputSelectChosen) {
+      var noRes = this.inputSelectNoResult;
+
+      // Provide a data-placeholder and also remove the match-all
+      // filter, which is not needed when using chosen.
+      $("select[class^='"+pmepfx+"-input']").attr("data-placeholder", this.inputSelectPlaceholder);
+      $("select[class^='"+pmepfx+"-input']").unbind('change');
+      $("select[class^='"+pmepfx+"-input'] option[value='*']").remove();
+
+      // Play a dirty trick in order not to pass width:auto to chosen
+      // for some particalar thingies
+      var k;
+      for (k = 0; k < PHPMYEDIT.chosenPixelWidth.length; ++k) {
+        var tag = PHPMYEDIT.chosenPixelWidth[k];
+        var pxlWidth = Math.round($("td[class^='"+pmepfx+"-input-"+tag+"']").width());
+        $("select[class^='"+pmepfx+"-input-"+tag+"']").chosen({width:pxlWidth+'px',
+                                                                no_results_text:noRes});
+      }
+        
+      // Then the general stuff
+      $("select[class^='"+pmepfx+"-input']").chosen({width:'auto',
+                                                     no_results_text:noRes});
+
+      $("td[class^='"+pmepfx+"-input'] div.chosen-container").attr("title",this.inputSelectChosenTitle);
+    }
+
+
   };
 })(window, jQuery, PHPMYEDIT);
 

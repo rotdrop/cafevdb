@@ -383,6 +383,17 @@ __EOT__;
     header("Cache-Control: pre-check=" . $minutes * 60, false);
   }  
 
+  /**Get the post- or get-value from the request, or from the config
+   * space if a default value exists.
+   *
+   * @param[in] $key The key (i.e. name) for the value.
+   *
+   * @param[in] $default Default value
+   *
+   * @param[in] $allowEmpty If true, an empty string is not an allowed
+   *                value and null is returned, unless the default has
+   *                been explicitly set to the empty string.
+   */
   public static function cgiValue($key, $default=null, $allowEmpty = true)
   {
     $value = $default;
@@ -398,6 +409,35 @@ __EOT__;
     }
     return $value;
   }
+
+  /** Compose an error from all CGI data starting with PME_data_, or
+   * more precisely: with Config::$pmeopts['cgi']['prefix']['data'];
+   *
+   * @param[in] $prefix If set the parameter overrides the default
+   *                    prefix.
+   */
+  public static function getPrefixCGIData($prefix = null)
+  {
+    if (!isset($prefix)) {
+      Config::init();
+      $prefix = Config::$pmeopts['cgi']['prefix']['data'];
+    }
+
+    $result = array();
+    foreach (array($_POST, $_GET) as $source) {
+      if ($source) {
+        foreach ($_POST as $key => $value) {
+          if (strpos($key, $prefix) === 0) {
+            $outKey = substr($key, strlen($prefix));
+            $result[$outKey] = $source[$key];
+          }
+        }
+      }
+    }
+
+    return $result;
+  }
+  
 };
 
 /**Support class to generate navigation buttons and the like.

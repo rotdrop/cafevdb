@@ -24,7 +24,7 @@ echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
 
 // Photo upload support:
 
-if (!$table->changeOperation()) {
+if (true || !$table->changeOperation()) {
   // Don't display the image dialog when not in single-record mode
   echo "<!-- \n";
 }
