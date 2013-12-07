@@ -193,6 +193,15 @@ try {
     }
   }
 
+  switch ($tmplname) {
+  case 'projects':
+    OCP\Util::addScript('cafevdb', $tmplname);
+    break;
+  default:
+    /* nothing */
+    break;
+  }
+
   $tmpl = new OCP\Template( 'cafevdb', $tmplname, 'user' );
 
   $tmpl->assign('configcheck', $config);
