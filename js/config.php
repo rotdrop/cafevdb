@@ -24,12 +24,17 @@ $array = array(
   "CAFEVDB.toolTips" => ($tooltips == "off" ? 'false' : 'true'),
   "CAFEVDB.wysiwygEditor" => "'".Config::$opts['editor']."'",
   "CAFEVDB.language" => "'".$language."'",
+  "CAFEVDB.Projects.nameExceptions" => "[ '".L::t("ManagementBoard")."', '".L::t("Members")."' ]",
   "PHPMYEDIT.filterSelectPlaceholder" => "'".L::t("Select a filter option.")."'",
   "PHPMYEDIT.filterSelectNoResult" => "'".L::t("No values match.")."'",
   "PHPMYEDIT.filterSelectChosen" => "true",
-  "PHPMYEDIT.selectChosenPixelWidth" => "['projectname']",
   "PHPMYEDIT.filterSelectChosenTitle" => "'".L::t("Select from the pull-down menu. ".
                                                   "Double-click will submit the form.")."'",
+  "PHPMYEDIT.inputSelectPlaceholder" => "'".L::t("Select an option.")."'",
+  "PHPMYEDIT.inputSelectNoResult" => "'".L::t("No values match.")."'",
+  "PHPMYEDIT.inputSelectChosen" => "true",
+  "PHPMYEDIT.inputSelectChosenTitle" => "'".L::t("Select from the pull-down menu.")."'",
+  "PHPMYEDIT.chosenPixelWidth" => "['projectname']",
   );
 
 // Echo it
