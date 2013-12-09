@@ -56,34 +56,61 @@ var CAFEVDB = CAFEVDB || {};
 	}
 	table.find('tbody').remove();
 	$(tb).appendTo(table);
-	if (false) {
+	if (table.find('thead').length > 0) {
             $(table)
 		.find('tbody tr:eq(0)')
 		.detach()
 		.appendTo( table.find('thead') )
 		.children()
 		.each(function(){
-                    $(this).replaceWith('<th scope="col">'+$(this).html()+'</th>');
+                    var tdclass = $(this).attr('class');
+                    if (tdclass.length > 0) {
+                        tdclass = ' class="'+tdclass+'"';
+                    } else {
+                        tdclass = "";
+                    }
+                    $(this).replaceWith('<th'+tdclass+' scope="col">'+$(this).html()+'</th>');
 		});
-	} else {
-            sortinfo.appendTo(table.find('thead'));
-            queryinfo.prependTo(table.find('tbody'));
 	}
+        queryinfo.prependTo(table.find('tbody'));
+        sortinfo.prependTo(table.find('tbody'));
 
-	$(table)
-            .find('tbody tr th:first-child')
-            .each(function(){
-		$(this).replaceWith('<td scope="row">'+$(this).html()+'</td>');
-            });
+        if (true) {
+	    $(table)
+                .find('tbody tr th:first-child')
+                .each(function(){
+                    var thclass = $(this).attr('class');
+                    if (thclass.length > 0) {
+                        thclass = ' class="'+thclass+'"';
+                    } else {
+                        thclass = "";
+                    }
+		    $(this).replaceWith('<td'+thclass+' scope="row">'+$(this).html()+'</td>');
+                });
+        }
 	table.show();
     };
     PME.maybeTranspose = function(transpose) {
-	var pageitems = t('cafevdb', '#rows');
+	var pageitems;
 	if (transpose) {
 	    $('.tipsy').remove();
 	    this.transposeMainTable('table.pme-main');
 	    pageitems = t('cafevdb', '#columns');
-	}
+
+            $('input[name="Transpose"]').val('transposed');
+            $('#pme-transpose-up').removeClass('pme-untransposed').addClass('pme-transposed');
+            $('#pme-transpose-down').removeClass('pme-untransposed').addClass('pme-transposed');
+            $('#pme-transpose').removeClass('pme-untransposed').addClass('pme-transposed');
+	} else {
+	    $('.tipsy').remove();
+	    this.transposeMainTable('table.pme-main');
+	    pageitems = t('cafevdb', '#rows');
+
+            $('input[name="Transpose"]').val('untransposed');
+            $('#pme-transpose-up').removeClass('pme-transposed').addClass('pme-untransposed');
+            $('#pme-transpose-down').removeClass('pme-transposed').addClass('pme-untransposed');
+            $('#pme-transpose').removeClass('pme-transposed').addClass('pme-untransposed');
+        }
 	$('input.pme-pagerows').val(pageitems);
 
 	$('input').tipsy({gravity:'w', fade:true});
@@ -108,9 +135,14 @@ $(document).ready(function() {
     // #pme-transpose.pme-transposed, then we transpose the table, otherwise not.
     
     // Lookup how to do this properly
-    if($('#pme-transpose').hasClass('pme-transposed')) {
+    if ($('input[name="InhibitInitialTranspose"]').val() != 'true' &&
+        ($('input[name="Transpose"]').val() == 'transposed' ||
+         $('#pme-transpose-up').hasClass('pme-transposed') ||
+         $('#pme-transpose-down').hasClass('pme-transposed') ||
+         $('#pme-transpose').hasClass('pme-transposed'))) {
 	CAFEVDB.PME.maybeTranspose(true);
     } else {
-	CAFEVDB.PME.maybeTranspose(false); // needed?
+        // Initially the tabel _is_ untransposed
+	//CAFEVDB.PME.maybeTranspose(false); // needed?
     }
 });
