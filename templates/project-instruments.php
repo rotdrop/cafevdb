@@ -4,13 +4,13 @@ use CAFEVDB\Util;
 use CAFEVDB\Navigation;
 use CAFEVDB\ProjectInstruments;
 
-$table = new ProjectInstruments();
+$table = new ProjectInstruments($_['recordId']);
 $css_pfx = ProjectInstruments::CSS_PREFIX;
 $project = $table->project;
 $projectId = $table->projectId;
 
 $nav = '';
-if ($projectId >= 0) {
+if ($project != '') {
   $nav .= Navigation::button('projectlabel', $project, $projectId);
   $nav .= Navigation::button('projects');
   $nav .= Navigation::button('instruments', $project, $projectId);  

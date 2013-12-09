@@ -1,0 +1,124 @@
+/**Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2011-2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*******************************************************************************
+ *
+ * Action pull-down via chosen
+ *
+ */
+
+.pme-instrumentation-actions-block div {
+  vertical-align:middle;
+  /*font-weight:bold;*/
+}
+
+.pme-instrumentation-actions-block a.chosen-default span {
+  /*font-weight:bold;*/
+  color:#555;
+}
+
+.pme-instrumentation-actions-block a.chosen-default span:hover,
+.pme-instrumentation-actions-block a.chosen-default span:focus,
+.pme-instrumentation-actions-block a.chosen-default span:active {
+  /*font-weight:bold;*/
+  color:#333;
+}
+
+/*******************************************************************************
+ *
+ * Coloring of the table headers and stuff
+ *
+ */
+
+td[class$="-want-0"] { 
+  background-color:#FFFFFF;
+}
+td[class$="-have-0"] { 
+  color:#990000;
+  background-color:#F0F0F0;
+}
+
+td[class$="-want-1"] { 
+  background-color:#87CEFA;
+}
+td[class$="-have-1"] { 
+  color:#990000;
+  background-color:#7fC2eb;
+}
+
+th[class^='pme-header'], td[class^='pme-header'],
+td[class^="pme-key-0-want"], td[class^="pme-key-1-want"],
+td[class^="pme-key-0-have"], td[class^="pme-key-1-have"] {
+  font-weight:bold;
+}
+
+th.pme-header-want-0, td.pme-header-want-0,
+td.pme-key-0-want-0, td.pme-key-1-want-0 { 
+  background-color:#FFFFFF;
+}
+th.pme-header-have-0, td.pme-header-have-0,
+td.pme-key-0-have-0, td.pme-key-1-have-0 {
+  color:#990000;
+  background-color:#F0F0F0;
+}
+
+th.pme-header-want-1, td.pme-header-want-1,
+td.pme-key-0-want-1, td.pme-key-1-want-1 { 
+  background-color:#87CEFA;
+}
+th.pme-header-have-1, td.pme-header-have-1,
+td.pme-key-0-have-1, td.pme-key-1-have-1 {
+  color:#990000;
+  background-color:#7fC2eb;
+}
+
+.alertblock {
+  margin:2ex;
+  max-width:60em;
+}
+
+.alertblock .title {
+  font-weight:bold;
+  text-decoration:underline;
+}
+
+.alertblock .text {
+  font-weight:bold;
+}
+
+.alertblock a:link {
+  color:CornFlowerBlue;
+  text-decoration:underline;
+  font-weight:bold;
+}
+
+.alertblock a:visited {
+  color:CornFlowerBlue;
+  text-decoration:underline;
+  font-weight:bold;
+}
+
+.alertblock a:hover {
+  color:CornFlowerBlue;
+  text-decoration:underline;
+  font-style:italic;
+  font-weight:bold;
+}

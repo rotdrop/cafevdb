@@ -96,16 +96,10 @@ __EOT__;
     global $debug_query;
     //    $debug_query = true;
 
-    //echo '<PRE>';
+    // echo '<PRE>';
     /* print_r($_SERVER); */
-    //print_r($_POST);
-    //echo '</PRE>';
-
-    $handle = mySQL::connect(Config::$pmeopts);
-
-    $Instrumente = Instruments::fetch($handle);
-
-    mySQL::close($handle);
+    // print_r($_POST);
+    // echo '</PRE>';
 
     /*
      * IMPORTANT NOTE: This generated file contains only a subset of huge amount
@@ -160,12 +154,12 @@ __EOT__;
 
     // Display special page elements
     $opts['display'] = array(
-                             'form'  => true,
-                             'query' => true,
-                             'sort'  => true,
-                             'time'  => true,
-                             'tabs'  => true
-                             );
+      'form'  => true,
+      'query' => true,
+      'sort'  => true,
+      'time'  => true,
+      'tabs'  => true
+      );
 
     /* Get the user's default language and use it if possible or you can
        specify particular one you want to use. Refer to official documentation
@@ -221,13 +215,13 @@ __EOT__;
 
     $idIdx = 0;
     $opts['fdd']['Id'] = array(
-                               'name'     => 'Id',
-                               'select'   => 'T',
-                               'options'  => 'AVCPDR', // auto increment
-                               'maxlen'   => 11,
-                               'default'  => '0',
-                               'sort'     => true
-                               );
+      'name'     => 'Id',
+      'select'   => 'T',
+      'options'  => 'AVCPDR', // auto increment
+      'maxlen'   => 11,
+      'default'  => '0',
+      'sort'     => true,
+      );
     
     $currentYear = date('Y');
     $yearRange = self::fetchYearRange();
@@ -237,54 +231,54 @@ __EOT__;
     }
 
     $opts['fdd']['Jahr'] = array(
-                               'name'     => 'Jahr',
-                               'select'   => 'N',
-                               //'options'  => 'LAVCPDF'
-                               'maxlen'   => 11,
-                               'default'  => $currentYear,
-                               'sort'     => true,
-                               'values'   => $yearValues,
-                               );
+      'name'     => 'Jahr',
+      'select'   => 'N',
+      //'options'  => 'LAVCPDF'
+      'maxlen'   => 11,
+      'default'  => $currentYear,
+      'sort'     => true,
+      'values'   => $yearValues,
+      );
 
     $nameIdx = count($opts['fdd']);
     $opts['fdd']['Name'] = array(
-        'name'     => 'Projekt-Name',
-        'php|LF'  => array('type' => 'function',
-                            'function' => 'CAFEVDB\Projects::projectActionsPME',
-                            'parameters' => array("idIndex" => $idIdx)),
-        'select'   => 'D',
-        'maxlen'   => 64,
-        'css'      => array('postfix' => 'projectname'),
-        'sort'     => true,
-        );
+      'name'     => L::t('Projekt-Name'),
+      'php|LF'  => array('type' => 'function',
+                         'function' => 'CAFEVDB\Projects::projectActionsPME',
+                         'parameters' => array("idIndex" => $idIdx)),
+      'select'   => 'D',
+      'maxlen'   => 64,
+      'css'      => array('postfix' => 'projectname'),
+      'sort'     => true,
+      );
 
     $opts['fdd']['Actions'] = array(
-        'name'     => L::t('Actions'),
-        'sql'      => 'Name',
-        'php|VCLDF'    => array('type' => 'function',
-                            'function' => 'CAFEVDB\Projects::projectActionsPME',
-                            'parameters' => array("idIndex" => $idIdx,
-                                                  "placeHolder" => L::t("Actions"))),
-        'select'   => 'T',
-        'options'  => 'VDR',
-        'maxlen'   => 11,
-        'default'  => '0',
-        'sort'     => false
+      'name'     => L::t('Actions'),
+      'sql'      => 'Name',
+      'php|VCLDF'    => array('type' => 'function',
+                              'function' => 'CAFEVDB\Projects::projectActionsPME',
+                              'parameters' => array("idIndex" => $idIdx,
+                                                    "placeHolder" => L::t("Actions"))),
+      'select'   => 'T',
+      'options'  => 'VDR',
+      'maxlen'   => 11,
+      'default'  => '0',
+      'sort'     => false
       );
 
     $opts['fdd']['Programm'] = array(
-                                     'name'     => 'Programm',
-                                     'select'   => 'T',
-                                     'maxlen'   => 65535,
-                                     'textarea' => array('css' => Config::$opts['editor'],
-                                                         'rows' => 5,
-                                                         'cols' => 50),
-                                     'sort'     => true,
-                                     'escape' => false
-                                     );
+      'name'     => 'Programm',
+      'select'   => 'T',
+      'maxlen'   => 65535,
+      'textarea' => array('css' => Config::$opts['editor'],
+                          'rows' => 5,
+                          'cols' => 50),
+      'sort'     => true,
+      'escape' => false
+      );
 
     if (false) {
-    $opts['fdd']['Events'] = array(
+      $opts['fdd']['Events'] = array(
         'name'     => L::t('Events'),
         'sql'      => 'Id',
         'php'      => array('type' => 'function',
@@ -295,29 +289,36 @@ __EOT__;
         'maxlen'   => 11,
         'default'  => '0',
         'sort'     => false
-      );
+        );
     }
-    
+
+
+    $handle = mySQL::connect(Config::$pmeopts);
+    $groupedInstruments = Instruments::fetchGrouped($handle);
+    $instruments        = Instruments::fetch($handle);
+    mySQL::close($handle);
+
     $opts['fdd']['Besetzung'] = array('name'     => 'Besetzung',
-                                      'options'  => 'AVCPD',
+                                      'options'  => 'LAVCPD',
                                       'nowrap'   => false,
-                                      'select'   => 'C',
+                                      'select'   => 'M',
                                       'maxlen'   => 136,
-                                      'sort'     => true);
-    $opts['fdd']['Besetzung']['values'] = $Instrumente;
+                                      'sort'     => true,
+                                      'values'   => $instruments,
+                                      'valueGroups' => $groupedInstruments);
 
     $opts['fdd']['Bemerkungen'] = array(
-                                        'name'     => 'Bemerkungen',
-                                        'select'   => 'T',
-                                        'maxlen'   => 65535,
-                                        'css'      => array('postfix' => 'projectremarks'),
-                                        'textarea' => array('css' => Config::$opts['editor'],
-                                                            'rows' => 5,
-                                                            'cols' => 50),
-                                        'sort'     => true,
-                                        'escape'   => false,
-                                        'default'  => 'Kosten, Teilnahmebedingungen etc.'
-                                        );
+      'name'     => 'Bemerkungen',
+      'select'   => 'T',
+      'maxlen'   => 65535,
+      'css'      => array('postfix' => 'projectremarks'),
+      'textarea' => array('css' => Config::$opts['editor'],
+                          'rows' => 5,
+                          'cols' => 50),
+      'sort'     => true,
+      'escape'   => false,
+      'default'  => 'Kosten, Teilnahmebedingungen etc.'
+      );
 
     $opts['fdd']['ExtraFelder'] = array('name'     => 'Extra Felder für Teilnehmer',
                                         'options'  => 'FLAVCPD',
@@ -331,12 +332,13 @@ __EOT__;
                                         'escape' => false,
                                         'help' => false,
                                         'tooltip' => 'Komma-separierte Liste von Extra-Feldern, z.B.:
-
+<blockquote>
   DZ:1,Beitrag:2
-
+</blockquote>
 oder
-
+<blockquote>
   DZ,Beitrag
+</blockquote>
 
 Die Zahl nach dem Doppelpunkt (und der Doppelpunkt) ist optional,
 falls vorhanden, gibt das die Zuordnung zu den Spalten in der
@@ -344,22 +346,131 @@ falls vorhanden, gibt das die Zuordnung zu den Spalten in der
 "ExtraFeld01" etc. Die Reihenfolge bei Anzeige der Tabelle entspricht
 der angegebenen Reihenfolge. Falls man die ändert, sollte man die Zuordnung
 zur Extra-Spalte in der Datenbank angeben, z.B. so:
-
+<blockquote>
   Beitrag:2,DZ:1
-
+</blockquote>
 Dann wird die Reihenfolge bei der Anzeige der Tabelle geändert, aber die
 Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
 
-    $opts['triggers']['update']['after']  = Config::$triggers.'projects.TUA.inc.php';
-    $opts['triggers']['insert']['before'] = Config::$triggers.'projects.TIB.inc.php';
-    $opts['triggers']['insert']['after']  = Config::$triggers.'projects.TIA.inc.php';
+    // We could try to use 'before' triggers in order to verify the
+    // data. However, at the moment the stuff does not work without JS
+    // anyway, and we use Ajax calls to verify the form data.
 
-    // Maybe we want to keep the view.
-    // $opts['triggers']['delete']['after']  = 'Projekte.TDA.inc.php';
+    $opts['triggers']['update']['after'] = 'CAFEVDB\Projects::afterUpdateTrigger';
+    $opts['triggers']['insert']['after'] = 'CAFEVDB\Projects::afterInsertTrigger';
+    $opts['triggers']['delete']['after'] = 'CAFEVDB\Projects::afterDeleteTrigger';
 
     $opts['execute'] = $this->execute;
     $this->pme = new \phpMyEdit($opts);
   }
+
+  /** phpMyEdit calls the trigger (callback) with the following arguments:
+   *
+   * @param[in] $pme The phpMyEdit instance
+   *
+   * @param[in] $op The operation, 'insert', 'update' etc.
+   *
+   * @param[in] $step 'before' or 'after'
+   *
+   * @param[in] $oldvals Self-explanatory.
+   *
+   * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
+   *
+   * @param[in,out] &$newvals Set of new values, which may also be modified.
+   *
+   * @return boolean. If returning @c false the operation will be terminated
+   */
+  public static function afterInsertTrigger($pme, $op, $step, $oldvals, &$changed, &$newvals)
+  {
+    // $newvals contains the new values
+    $projectId   = $pme->rec;
+    $projectName = $newvals['Name'];
+
+    // Create the view and make sure we have enough extra fields in the
+    // Besetzungen table
+    self::createView($projectId, $projectName, $pme->dbh);
+
+    // Add also a new line to the BesetzungsZahlen table
+    $sqlquery = 'INSERT IGNORE INTO `BesetzungsZahlen` (`ProjektId`) VALUES ('.$projectId.')';
+    mySQL::query($sqlquery, $pme->dbh);
+    
+    // Hack: close the DB connection and re-open again. Somehow OwnCloud
+    // damages the stuff ...
+    $pme->sql_disconnect();
+
+    // Also create the project folders.
+    $projectPaths = self::maybeCreateProjectFolder($projectId, $projectName);
+
+    $pme->sql_connect();
+
+    return true;
+  }
+  
+  public static function afterUpdateTrigger($pme, $op, $step, $oldvals, &$changed, &$newvals)
+  {
+    // Simply recreate the view, update the extra tables etc.
+    self::createView($pme->rec, $newvals['Name'], $pme->dbh);
+
+    if (array_search('Name', $changed) === false) {
+      // Nothing more has to be done if the name stays the same
+      return true;
+    }
+
+    // Drop the old view, which still exists with the old name
+    $sqlquery = 'DROP VIEW IF EXISTS `'.$oldvals['Name'].'View`';
+    mySQL::query($sqlquery, $pme->dbh);
+    
+    // Now that we link events to projects using their short name as
+    // category, we also need to update all linke events in case the
+    // short-name has changed.
+    $events = Events::events($pme->rec, $pme->dbh);
+
+    // Hack: close the DB connection and re-open again. Somehow OwnCloud
+    // damages the stuff ...
+    $pme->sql_disconnect();
+
+    foreach ($events as $event) {
+      // Last parameter "true" means to also perform string substitution
+      // in the summary field of the event.
+      Events::replaceCategory($event, $oldvals['Name'], $newvals['Name'], true);
+    }
+
+    // Now, we should also rename the project folder. We simply can
+    // pass $newvals and $oldvals
+    self::renameProjectFolder($newvals, $oldvals);
+
+    $pme->sql_connect();
+
+    return true;
+  }
+
+  public static function afterDeleteTrigger($pme, $op, $step, $oldvals, &$changed, &$newvals)
+  {
+    $projectName = $oldvals['Name'];
+    if (!$projectName) {
+      $projectName = Projects::fetchName($pme->rec, $pme->dbh);
+      $oldvals['Name'] = $projectName;
+    }
+
+    $sqlquery = 'DROP VIEW IF EXISTS `'.$projectName.'View`';
+    mySQL::query($sqlquery, $pme->dbh);
+
+    // This was the view. We should also remove all stuff from the Besetzungen list.
+    $sqlquery = "DELETE FROM Besetzungen WHERE ProjektId = $pme->rec";
+    mySQL::query($sqlquery, $pme->dbh);
+
+    // And now remove the project folder ...
+
+    // Hack: close the DB connection and re-open again. Somehow OwnCloud
+    // damages the stuff ...
+    $pme->sql_disconnect();
+
+    self::removeProjectFolder($oldvals);
+
+    $pme->sql_connect();
+
+    return true;
+}
 
   /**Generate an associative array of extra-fields. The key is the
    * field-name, the value the number of the extra-field in the
@@ -423,13 +534,13 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
     $bvalue    = $projectName;
     // Code the value in the name attribute (for java-script)
     $bname     = ""
-."ProjectId=$projectId&"
-."Project=$projectName&"
-."Template=$template";
+      ."ProjectId=$projectId&"
+      ."Project=$projectName&"
+      ."Template=$template";
     $title     = Config::toolTips('projectinstrumentation-button');
     return <<<__EOT__
 <span class="instrumentation-button">
-<input type="button" class="instrumentation" title="$title" name="$bname" value="$bvalue" />
+  <input type="button" class="instrumentation" title="$title" name="$bname" value="$bvalue" />
 </span>
 __EOT__;
   }
@@ -447,7 +558,8 @@ __EOT__;
 
     if ($placeHolder === false) {
       // Strip the 4-digit year from the end, if present
-      $placeHolder = preg_replace("/^(.*\D)(\d{4})$/", "$1", $projectName);
+      // $placeHolder = preg_replace("/^(.*\D)(\d{4})$/", "$1", $projectName);
+      $placeHolder = $projectName; // or maybe don't strip.
     }
 
     // Code the value in the name attribute (for java-script)
@@ -526,6 +638,33 @@ __EOT__;
     return $returnPaths;
   }
 
+  public static function removeProjectFolder($oldProject)
+  {
+    $sharedFolder = Config::getSetting('sharedfolder','');
+    $projectsFolder = Config::getSetting('projectsfolder','');
+    $balanceFolder = Config::getSetting('projectsbalancefolder','');
+
+    $prefixPath = array(
+      'project' => '/Shared/'.$sharedFolder.'/'.$projectsFolder.'/',
+      'balance' => '/Shared/'.$sharedFolder.'/'.$balanceFolder.'/'.$projectsFolder."/",
+      );
+
+    $fileView = \OC\Files\Filesystem::getView();
+
+    foreach($prefixPath as $key => $prefix) {
+                        
+      $oldPath = $prefix.$oldProject['Jahr']."/".$oldProject['Name'];
+      
+      if ($fileView->is_dir($oldPath)) {
+        if (!$fileView->deleteAll($oldPath)) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
+
   public static function renameProjectFolder($newProject, $oldProject)
   {
     $sharedFolder = Config::getSetting('sharedfolder','');
@@ -540,7 +679,7 @@ __EOT__;
     $fileView = \OC\Files\Filesystem::getView();
 
     $returnPaths = array();
-    foreach($refixPath as $key => $prefix) {
+    foreach($prefixPath as $key => $prefix) {
                         
       $oldPath = $prefix.$oldProject['Jahr']."/".$oldProject['Name'];
       $newPrefixPath = $prefix.$newProject['Jahr'];
@@ -675,12 +814,16 @@ __EOT__;
       
     $query = "SELECT * FROM `Projekte` WHERE `Id` = $projectId";
     $result = mySQL::query($query, $handle);
+
+    $row = false;
     if ($result !== false && mysql_num_rows($result) == 1) {
       $row = mySQL::fetch($result);
-      return $row;
-    } else {
-      return false;
     }
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $row;
   }
 
   /** Fetch the project-name name corresponding to $projectId.
@@ -696,14 +839,16 @@ __EOT__;
     $query = 'SELECT `Name` FROM `Projekte` WHERE `Id` = '.$projectId;
     $result = mySQL::query($query, $handle);
 
-    // Get the single line
-    $line = mySQL::fetch($result) or Util::error("Couldn't fetch the result for '".$query."'");
-
+    $row = false;
+    if ($result !== false && mysql_num_rows($result) == 1) {
+      $row = mySQL::fetch($result);
+    }
+    
     if ($ownConnection) {
       mySQL::close($handle);
     }
 
-    return $line['Name'];
+    return $row && isset($row['Name']) ? $row['Name'] : false;
   }
 
   /**Make sure the "Besetzungen"-table has enough extra fields. All
@@ -729,10 +874,10 @@ __EOT__;
       // forget about $name, not an issue here.  
 
       $query = sprintf(
-                       'ALTER TABLE `Besetzungen`
+        'ALTER TABLE `Besetzungen`
    ADD `ExtraFeld%02d` TEXT
    CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL',
-                       $field['pos']);
+        $field['pos']);
       $result = @mySQL::query($query, $handle, false, true); // ignore the result, be silent
     }
 
