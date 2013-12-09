@@ -663,7 +663,7 @@ class phpMyEdit
 				'main_table'  => $this->tb,
 				'record_id'   => $this->rec, // may be useful for change op.
 				'table'		  => $table,
-				'column'	  => $column,
+				'column'	  => $key,
 				'description' => $desc);
 			$filters = $this->fdd[$field_num]['values']['filters'];
 			$qparts['where'] = $this->substituteVars($filters, $ar);
@@ -2089,10 +2089,8 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		} else {
 			$ret .= '"'.$this->fetchToolTip($css, $name, $css.'select');
 		}
-		if ($readonly === true) {
-			$ret .= ' disabled';
-		} else if (is_string($readonly)) {
-			$ret .= ' '.$readonly;
+		if ($readonly !== false) {
+			$ret .= ' disabled'; // readonly does not make sense
 		}
 		$ret .= ' '.$js.">\n";
 		if (! is_array($selected)) {
@@ -2174,10 +2172,8 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				$ret  .= ' checked';
 				$found = true;
 			}
-			if ($readonly === true) {
-				$ret .= ' disabled';
-			} else if (is_string($readonly)) {
-				$ret .= ' '.$readonly;
+			if ($readonly !== false) {
+				$ret .= ' disabled'; // readonly does not make sense
 			}
 			$strip_tags && $value = strip_tags($value);
 			$escape		&& $value = htmlspecialchars($value);
