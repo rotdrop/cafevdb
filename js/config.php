@@ -38,6 +38,9 @@ $array = array(
   );
 
 // Echo it
+echo "var CAFEVDB = CAFEVDB || {};\n";
+echo "CAFEVDB.Projects = CAFEVDB.Projects || {};\n";
+echo "var PHPMYEDIT = PHPMYEDIT || {} ;\n";
 foreach ($array as  $setting => $value) {
 	echo($setting ."=".$value.";\n");
 }
