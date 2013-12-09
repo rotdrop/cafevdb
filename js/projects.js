@@ -19,12 +19,11 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-CAFEVDB = CAFEVDB || {};
+var CAFEVDB = CAFEVDB || {};
+CAFEVDB.Projects = CAFEVDB.Projects || {};
 
-(function(window, $, CAFEVDB, undefined) {
+(function(window, $, Projects, undefined) {
     'use strict';
-
-    var Projects = function() {};
 
     Projects.nameExceptions = [];
 
@@ -45,13 +44,15 @@ CAFEVDB = CAFEVDB || {};
         return year !== null ? year[1] : false;
     }
     
-    CAFEVDB.Projects = Projects;
-
-})(window, jQuery, CAFEVDB);
+})(window, jQuery, CAFEVDB.Projects);
 
 $(document).ready(function(){
 
-    if ($('input.pme-save').length || $('input.pme-more').length) { 
+    if ($('input.pme-save[name$="savechange"]').length ||
+        $('input.pme-more[name$="morechange"]').length ||
+        $('input.pme-save[name$="saveadd"]').length ||
+        $('input.pme-more[name$="moreadd"]').length ||
+        $('input.pme-save[name$="savecopy"]').length) { 
 
         var nameSelector =
             'input.pme-input-0-projectname,input.pme-input-1-projectname';
@@ -60,74 +61,81 @@ $(document).ready(function(){
         var oldProjectYear = $(yearSelector+' :selected').text();
         var oldProjectName = $(nameSelector).val();
 
-        $(yearSelector).change(function(event) {
-            /* If the year is changed, then we attach the new year
-             * setting to the name. We 2
-             */
-            alert('blah', 'blah');
-        });
-        
-        $(nameSelector).blur(function(event) {
-            event.preventDefault();
-
+        var verifyYearName = function (postAddOn, button = null) {
             /* Forward the request to the server via Ajax
              * technologies.
              */
+
             var post = $('form.pme-form').serialize();
-            $.post(OC.filePath('cafevdb', 'ajax/projects', 'verifyName.php'), post,
-                   function (data) {
-                       if (data.status == 'success') {
-                           $(nameSelector).val(data.data.projectName);
-                           $(yearSelector).val(data.data.projectYear);
-                       } else {
-                           OC.Notification.show(data.data.message);
-                           if ($(nameSelector).val() == '') {
-                               $(nameSelector).val(oldProjectName);
+            post += '&control='+postAddOn;
+
+	    //$('#notification').empty();
+	    //$('#notification').css("display","none");
+            OC.Notification.hide(function () {
+                $.post(OC.filePath('cafevdb', 'ajax/projects', 'verifyName.php'), post,
+                       function (data) {
+                           if (data.status == 'success') {
+                               rqData = data.data;
+                               if (rqData.message != '') {
+                                   OC.Notification.show(rqData.message);
+                               }
+                               $(nameSelector).val(rqData.projectName);
+                               $(yearSelector).val(rqData.projectYear);
+                               $(yearSelector).trigger('chosen:updated');
+                               oldProjectYear = rqData.projectYear;
+                               oldProjectName = rqData.projectName;
+                               if (postAddOn == 'submit') {
+                                   if (button !== null) {
+                                       button.off('click');
+                                       button.trigger('click');
+                                   } else {
+                                       $('form.pme-form').submit();
+                                   }
+                               }
+                           } else if (data.status == 'error') {
+                               rqData = data.data;
+                               OC.Notification.show(rqData.message);
+                               if ($(nameSelector).val() == '') {
+                                   $(nameSelector).val(oldProjectName);
+                               }
+                               if ($(yearSelector).val() == '') {
+                                   $(yearSelector).val(oldProjectYear);
+                                   $(yearSelector).trigger('chosen:updated');
+                               }
+                               if (data.data.error == 'exception') {
+                                   OC.dialogs.alert(rqData.exception+rqData.trace,
+                                                    t('cafevdb', 'Caught a PHP Exception'),
+                                                    null, true);
+                               }
                            }
-                           if ($(yearSelector).val() == '') {
-                               $(yearSelector).val(oldProjectYear);
-                           }
-                       }
-                       $(yearSelector).trigger('chosen:updated');
-                       return false;
-                   });
-
-            return false;
-        });
-        
-        $('form.pme-form').submit(function(event) {
-            alert('blah', 'blah');
-            event.preventDefault();
-            return false;
-        });
-
-
-
-        if (false) {
-        $(nameSelector).blur(function(event) {
-            projectName = $(this).val();
-            if (!projectName || projectName == '') {
-                OC.Notification.show(t('cafevdb', 'The project-name must not be empty.'));
-                // add further checks, spaces, camelcase etc.            
-            } else {
-                OC.Notification.hide();
-            }
-        });
-        
-        $('form.pme-form').submit(function(event) {
-
-            projectName = $(nameSelector).val();
-            if (!projectName || projectName == '') {
-                OC.Notification.show(t('cafevdb', 'The project-name must not be empty.'));
-                // add further checks, spaces, camelcase etc.
-                //            event.preventDefault();
-                //            return false;
-            }
-
-            OC.Notification.hide();
-
-            return true;
-        });
+                           return false;
+                       });
+            });
         }
+        
+        $(yearSelector).change(function(event) {
+            event.preventDefault();
+
+            verifyYearName('year');
+
+            return false;
+        });
+
+        $(nameSelector).blur(function(event) {
+            event.preventDefault();
+
+            verifyYearName('name');
+
+            return false;
+        });
+        
+        $('input.pme-save,input.pme-more').click(function(event) {
+            event.preventDefault();
+
+            verifyYearName('submit', $(this));
+
+            return false;
+        });
+
     }
 });
