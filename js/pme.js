@@ -92,7 +92,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
       for (k = 0; k < PHPMYEDIT.chosenPixelWidth.length; ++k) {
         var tag = PHPMYEDIT.chosenPixelWidth[k];
         var pxlWidth = Math.round($("td[class^='"+pmepfx+"-filter-"+tag+"']").width());
-        $("select[class^='"+pmepfx+"-filter-"+tag+"']").chosen({width:pxlWidth+'px',
+        $("select[class^='"+pmepfx+"-filter-"+tag+"']").chosen({width:pxlWidth+60+'px',
                                                                 no_results_text:noRes});
       }
         
@@ -128,11 +128,13 @@ var PHPMYEDIT = PHPMYEDIT || {};
         var tag = PHPMYEDIT.chosenPixelWidth[k];
         var pxlWidth = Math.round($("td[class^='"+pmepfx+"-input-"+tag+"']").width());
         $("select[class^='"+pmepfx+"-input-"+tag+"']").chosen({width:pxlWidth+'px',
-                                                                no_results_text:noRes});
+                                                               disable_search_threshold: 10,
+                                                               no_results_text:noRes});
       }
         
       // Then the general stuff
-      $("select[class^='"+pmepfx+"-input']").chosen({width:'auto',
+      $("select[class^='"+pmepfx+"-input']").chosen({//width:'100%',
+                                                     disable_search_threshold: 10,
                                                      no_results_text:noRes});
 
       $("td[class^='"+pmepfx+"-input'] div.chosen-container").attr("title",this.inputSelectChosenTitle);
