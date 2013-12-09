@@ -731,8 +731,10 @@ input[readonly]:active {
   filter:alpha(opacity=0.5);
 }
 
-input[readonly]:hover {
-  background-image:url('%webroot%/core/img/actions/lock.svg');
+input[readonly]:hover,
+input[disabled]:hover,
+.chosen-disabled a span:hover, .chosen-disabled li span:hover {
+  background-image:url('%webroot%/core/img/actions/lock.svg') !important;
   background-repeat:no-repeat;
   background-position:center center;
 }
