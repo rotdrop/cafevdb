@@ -2271,13 +2271,14 @@ __EOT__;
     //$opts['navigation'] = 'DB';
 
     // Display special page elements
-    $opts['display'] = array(
-      'form'  => true,
-      'query' => true,
-      'sort'  => true,
-      'time'  => true,
-      'tabs'  => true
-      );
+    $opts['display'] =  array_merge($opts['display'],
+                                    array(
+                                      'form'  => true,
+                                      'query' => true,
+                                      'sort'  => true,
+                                      'time'  => true,
+                                      'tabs'  => true
+                                      ));
 
     // Set default prefixes for variables
     $opts['js']['prefix']               = 'PME_js_';

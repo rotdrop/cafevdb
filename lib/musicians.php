@@ -119,13 +119,14 @@ __EOT__;
     }
 
     // Display special page elements
-    $opts['display'] = array(
-                             'form'  => true,
-                             'query' => true,
-                             'sort'  => true,
-                             'time'  => true,
-                             'tabs'  => true
-                             );
+    $opts['display'] =  array_merge($opts['display'],
+                                    array(
+                                      'form'  => true,
+                                      'query' => true,
+                                      'sort'  => true,
+                                      'time'  => true,
+                                      'tabs'  => true
+                                      ));
 
     // Set default prefixes for variables
     $opts['js']['prefix']               = 'PME_js_';
@@ -239,7 +240,6 @@ __EOT__;
                                         'values'      => $this->instruments,
                                         'valueGroups' => $this->groupedInstruments,
       );
-
     $opts['fdd']['Name'] = array(
                                  'name'     => 'Name',
                                  'select'   => 'T',
@@ -382,13 +382,14 @@ __EOT__;
       $opts['navigation'] = 'N'; // no navigation
       $opts['options'] = '';
       // Don't display special page elements
-      $opts['display'] = array(
-        'form'  => false,
-        'query' => false,
-        'sort'  => false,
-        'time'  => false,
-        'tabs'  => false
-      );
+      $opts['display'] =  array_merge($opts['display'],
+                                      array(
+                                        'form'  => false,
+                                        'query' => false,
+                                        'sort'  => false,
+                                        'time'  => false,
+                                        'tabs'  => false
+                                        ));
       // Disable sorting buttons
       foreach ($opts['fdd'] as $key => $value) {
         $opts['fdd'][$key]['sort'] = false;
@@ -662,13 +663,14 @@ __EOT__;
     }
 
     // Display special page elements
-    $opts['display'] = array(
-      'form'  => true,
-      'query' => false,
-      'sort'  => false,
-      'time'  => true,
-      'tabs'  => false
-      );
+    $opts['display'] =  array_merge($opts['display'],
+                                    array(
+                                      'form'  => true,
+                                      'query' => false,
+                                      'sort'  => false,
+                                      'time'  => true,
+                                      'tabs'  => false
+                                      ));
 
     /* Get the user's default language and use it if possible or you can
        specify particular one you want to use. Refer to official documentation
@@ -1043,13 +1045,14 @@ __EOT__;
     //$opts['navigation'] = 'DB';
 
     // Display special page elements
-    $opts['display'] = array(
-      'form'  => true,
-      'query' => false,
-      'sort'  => true,
-      'time'  => true,
-      'tabs'  => false
-      );
+    $opts['display'] =  array_merge($opts['display'],
+                                    array(
+                                      'form'  => true,
+                                      'query' => false,
+                                      'sort'  => true,
+                                      'time'  => true,
+                                      'tabs'  => false
+                                      ));
 
     /* Get the user's default language and use it if possible or you can
        specify particular one you want to use. Refer to official documentation
@@ -1198,13 +1201,14 @@ __EOT__;
       $opts['navigation'] = 'N'; // no navigation
       $opts['options'] = '';
       // Don't display special page elements
-      $opts['display'] = array(
-        'form'  => false,
-        'query' => false,
-        'sort'  => false,
-        'time'  => false,
-        'tabs'  => false
-      );
+      $opts['display'] =  array_merge($opts['display'],
+                                      array(
+                                        'form'  => false,
+                                        'query' => false,
+                                        'sort'  => false,
+                                        'time'  => false,
+                                        'tabs'  => false
+                                        ));
       // Disable sorting buttons
       foreach ($opts['fdd'] as $key => $value) {
         $opts['fdd'][$key]['sort'] = false;

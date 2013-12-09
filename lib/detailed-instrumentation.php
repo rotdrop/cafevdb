@@ -39,9 +39,9 @@ __EOT__;
 
   function display()
   {
-    global $debug_query;
+    //global $debug_query;
     //Config::$debug_query = true;
-    //$debug_query = true;
+    $debug_query = true;
 
     $project         = $this->project;
     $projectId       = $this->projectId;
@@ -107,13 +107,14 @@ __EOT__;
     $opts['buttons'] = Navigation::prependTableButton($export, true);
 
     // Display special page elements
-    $opts['display'] = array(
-                             'form'  => true,
-                             'query' => true,
-                             'sort'  => true,
-                             'time'  => true,
-                             'tabs'  => true
-                             );
+    $opts['display'] = array_merge($opts['display'],
+                                   array(
+                                     'form'  => true,
+                                     'query' => true,
+                                     'sort'  => true,
+                                     'time'  => true,
+                                     'tabs'  => true
+                                     ));
 
     // Set default prefixes for variables
     $opts['js']['prefix']               = 'PME_js_';
@@ -195,19 +196,51 @@ __EOT__;
                                        'values'   => $this->instruments,
                                        'valueGroups' => $this->groupedInstruments,
                                        'options'  => $ROopts);
+
+    $opts['fdd']['Instrument'] = array(
+      'name'     => 'Projekt-Instrument',
+      'select'   => 'D',
+      'maxlen'   => 36,
+      'css'      => array('postfix' => 'instruments'),
+      'sort'     => true,
+      // read-only, so filter all the time
+      'values'   => array(
+        'table'   => 'Instrumente',
+        'column'  => 'Instrument',
+        'orderby' => '$table.Sortierung',
+        'description' => array('columns' => array('Instrument')),
+        'filters' => ("`Instrument` IN ".
+                      "(SELECT `Instrument` FROM \$main_table WHERE 1)"),
+        ),
+      'valueGroups' => $this->groupedInstruments,
+      'options'  => $ROopts
+      );
+
     $opts['fdd']['Reihung'] = array('name' => 'Stimme',
                                     'options' => $ROopts,
                                     'select' => 'N',
                                     'maxlen' => '3',
                                     'sort' => true);
-    $opts['fdd']['Familie'] = array('name' => 'Instrumenten Familie',
-                                    'nowrap' => true,
-                                    'select' => 'M',
-                                    'maxlen' => 64,
-                                    'options'  => $ROopts,
-                                    'sort' => 'true',
-                                    'values' => $this->instrumentFamilies);
+    $opts['fdd']['Familie'] = array(
+      'name' => 'Instrumenten Familie',
+      'nowrap' => true,
+      'select' => 'M',
+      'maxlen' => 64,
+      'sort' => 'true',
+      //$this->instrumentFamilies,
+      'values' => array(
+        'table'       => 'Instrumente',
+        'column'      => 'Familie',
+        'orderby'     => '$table.Sortierung',
+        'description' => 'Familie',
+        'join'        => '$main_table.Instrument = $join_table.Instrument',
+        'filters'     => ("\$table.\$column IN".
+                          "(SELECT DISTINCT `Familie` FROM \$main_table WHERE 1)"),
+        ),
+      'options'  => $ROopts,
+      );
     $opts['fdd']['Stimmführer'] = $this->sectionLeaderColumn;
+    $opts['fdd']['Stimmführer']['options'] = $ROopts;
     $opts['fdd']['Sortierung'] = array('name'     => 'Orchester Sortierung',
                                        'select'   => 'T',
                                        'options'  => 'VCPR',
@@ -362,13 +395,14 @@ __EOT__;
       $opts['navigation'] = 'N'; // no navigation
       $opts['options'] = '';
       // Don't display special page elements
-      $opts['display'] = array(
-        'form'  => false,
-        'query' => false,
-        'sort'  => false,
-        'time'  => false,
-        'tabs'  => false
-      );
+      $opts['display'] =  array_merge($opts['display'],
+                                      array(
+                                        'form'  => false,
+                                        'query' => false,
+                                        'sort'  => false,
+                                        'time'  => false,
+                                        'tabs'  => false
+                                        ));
       // Disable sorting buttons
       foreach ($opts['fdd'] as $key => $value) {
         $opts['fdd'][$key]['sort'] = false;

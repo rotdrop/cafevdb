@@ -115,13 +115,14 @@ __EOT__;
     $opts['buttons'] = Navigation::prependTableButton($export, true);
 
     // Display special page elements
-    $opts['display'] = array(
-                             'form'  => true,
-                             'query' => true,
-                             'sort'  => true,
-                             'time'  => true,
-                             'tabs'  => true
-                             );
+    $opts['display'] = array_merge($opts['display'],
+                                   array(
+                                     'form'  => true,
+                                     'query' => true,
+                                     'sort'  => true,
+                                     'time'  => true,
+                                     'tabs'  => true
+                                     ));
 
     /* Get the user's default language and use it if possible or you can
        specify particular one you want to use. Refer to official documentation
@@ -210,17 +211,28 @@ __EOT__;
                                                                                'divs' => array(', ')
                                                                                ))
                                       );
-    $opts['fdd']['Instrument'] = array('name'     => 'Instrument',
-                                       'select'   => 'D',
-                                       'maxlen'   => 12,
-                                       'css'      => array('postfix' => 'instruments'),
-                                       'values'   => array('table'   => 'Instrumente',
-                                                           'column'  => 'Instrument',
-                                                           'orderby' => '$table.Sortierung',
-                                                           'description' => array('columns' => array('Instrument'))),
-                                       'valueGroups' => $this->groupedInstruments,
-                                       'sort'     => true
-                                       );
+    $opts['fdd']['Instrument'] = array(
+      'name'     => 'Instrument',
+      'select'   => 'D',
+      'maxlen'   => 36,
+      'css'      => array('postfix' => 'instruments'),
+      'sort'     => true,
+      'values' => array(
+        'table'   => 'Instrumente',
+        'column'  => 'Instrument',
+        'orderby' => '$table.Sortierung',
+        'description' => array('columns' => array('Instrument')),
+        ),
+      'values|LF' => array(
+        'table'   => 'Instrumente',
+        'column'  => 'Instrument',
+        'orderby' => '$table.Sortierung',
+        'description' => array('columns' => array('Instrument')),
+        'filters' => ("`Instrument` IN ".
+                      "(SELECT `Instrument` FROM \$main_table WHERE `ProjektId` = $projectId)"),
+        ),
+      'valueGroups' => $this->groupedInstruments,
+      );
     $opts['fdd']['Sortierung'] = array('name' => 'Orchester-Sortierung',
                                        'select' => 'T',
                                        'options' => 'VCPR',
@@ -268,13 +280,14 @@ __EOT__;
       $opts['navigation'] = 'N'; // no navigation
       $opts['options'] = '';
       // Don't display special page elements
-      $opts['display'] = array(
-        'form'  => false,
-        'query' => false,
-        'sort'  => false,
-        'time'  => false,
-        'tabs'  => false
-      );
+      $opts['display'] = array_merge($opts['display'],
+                                     array(
+                                       'form'  => false,
+                                       'query' => false,
+                                       'sort'  => false,
+                                       'time'  => false,
+                                       'tabs'  => false
+                                       ));
       // Disable sorting buttons
       foreach ($opts['fdd'] as $key => $value) {
         $opts['fdd'][$key]['sort'] = false;
