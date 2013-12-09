@@ -148,29 +148,6 @@ li.cafevdb-page-config-check span.set {
   color:#333;
 }
 
-/*******************************************************************************
- *
- * Further chosen stuff
- *
- */
-
-.project-actions-block div {
-  vertical-align:middle;
-  font-weight:bold;
-}
-
-.project-actions-block a.chosen-default span {
-  /*font-weight:bold;*/
-  color:#555;
-}
-
-.project-actions-block a.chosen-default span:hover,
-.project-actions-block a.chosen-default span:focus,
-.project-actions-block a.chosen-default span:active {
-  /*font-weight:bold;*/
-  color:#333;
-}
-
 /******************************************************************************/
 
 #personalsettings {
@@ -524,17 +501,6 @@ hr.pme-hr {
   height:1px;
 }
 
-td[class|='pme-navigation'] {
-  white-space:nowrap;
-  background:#C6DEFF;
-}
-td[class|='pme-sortinfo'], td[class|='pme-queryinfo']  {
-  background:#C6DEFF;
-}
-td[class|='pme-filter'] {
-  background:#C6DEFF;
-}
-
 :not(.lt-ie9) input.pme-email-check[type=checkbox] {
   display:none;
   /* visibility:hidden; */
@@ -731,6 +697,44 @@ td.pme-buttons > .pme-pagerows {
 /* Optionally hide some close button */
 .no-close .ui-dialog-titlebar-close {
   display: none;
+}
+
+div.cafevdb-error {
+  font-weight:bold;
+  color:red;
+}
+
+.cafevdb-error a:link {
+  color:CornFlowerBlue;
+  text-decoration:underline;
+  font-weight:bold;
+}
+
+.cafevdb-error a:visited {
+  color:CornFlowerBlue;
+  text-decoration:underline;
+  font-weight:bold;
+}
+
+.cafevdb-error a:hover {
+  color:CornFlowerBlue;
+  text-decoration:underline;
+  font-style:italic;
+  font-weight:bold;
+}
+
+input[readonly],
+input[readonly]:hover,
+input[readonly]:active {
+  background-color:rgb(248,248,248) !important;
+  opacity: 0.5;
+  filter:alpha(opacity=0.5);
+}
+
+input[readonly]:hover {
+  background-image:url('%webroot%/core/img/actions/lock.svg');
+  background-repeat:no-repeat;
+  background-position:center center;
 }
 
 /*Easy <a class="tooltip" href="#">Tooltip<span>This is the crazy little Easy Tooltip Text.</span></a>.</p>*/

@@ -10,10 +10,23 @@ table.pme-navigation {
   border-spacing:0px;
 }
 
-th[class|='pme-header']	{
+td[class|='pme-header'], th[class|='pme-header'] {
   border:#004d9c 1px solid;
   padding:4px;
   background:#add8e6;
+}
+
+td[class|='pme-navigation'], th[class|='pme-navigation'] {
+  white-space:nowrap;
+  background:#C6DEFF;
+}
+
+td[class|='pme-sortinfo'], td[class|='pme-queryinfo']  {
+  background:#C6DEFF;
+}
+
+td[class|='pme-filter'], th[class|='pme-filter'] {
+  background:#C6DEFF;
 }
 
 td.negative { 
@@ -25,9 +38,9 @@ td.pme-cell-0-money, td.pme-cell-1-money {
 }
 
 td[class|='pme-key'], td[class|='pme-value'],
-td[class|='pme-help'], td[class|='pme-navigation'],
+td[class|='pme-help'], td[class|='pme-navigation'], th[class|='pme-navigation'],
 td[class|='pme-cell'], td[class|='pme-sortinfo'],
-td[class|='pme-filter'], td[class|='pme-queryinfo'] {
+td[class|='pme-filter'], th[class|='pme-filter'], td[class|='pme-queryinfo'] {
   border:#004d9c 1px solid;
   padding:3px;
 }
