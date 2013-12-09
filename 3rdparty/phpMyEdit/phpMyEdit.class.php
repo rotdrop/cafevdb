@@ -277,7 +277,8 @@ class phpMyEdit
 	function tabs_enabled()	  { return $this->display['tabs'] && count($this->tabs) > 0; }
 	function hidden($k)		  { return stristr(@$this->fdd[$k]['input'],'H'); }
 	function password($k)	  { return stristr(@$this->fdd[$k]['input'],'W'); }
-	function readonly($k)	  { return stristr(@$this->fdd[$k]['input'],'R') || $this->virtual($k);		}
+	function readonly($k)	  { return stristr(@$this->fdd[$k]['input'],'R'); }
+	function disabled($k)	  { return stristr(@$this->fdd[$k]['input'],'D') || $this->readonly($k) || $this->virtual($k);		}
 	function virtual($k)	  { return stristr(@$this->fdd[$k]['input'],'V') && $this->col_has_sql($k); }
 
 	function add_operation()	{ return $this->label_cmp($this->operation, 'Add')	  && $this->add_enabled();	  }
@@ -301,6 +302,17 @@ class phpMyEdit
 	function change_canceled() { return $this->label_cmp($this->cancelchange, 'Cancel'); }
 	function copy_canceled()   { return $this->label_cmp($this->cancelcopy	, 'Cancel'); }
 	function delete_canceled() { return $this->label_cmp($this->canceldelete, 'Cancel'); }
+
+	function disabledTag($k) 
+	{
+		if ($this->readonly($k)) {
+			return $this->display['readonly'];
+		} else if ($this->disabled($k)) {
+			return $this->display['disabled'];
+		} else {
+			return false;
+		}
+	}
 
 	function is_values2($k, $val = 'X') /* {{{ */
 	{
@@ -648,10 +660,13 @@ class phpMyEdit
 			}
 			$qparts['from'] = $dbp.$table;
 			$ar = array(
+				'main_table'  => $this->tb,
+				'record_id'   => $this->rec, // may be useful for change op.
 				'table'		  => $table,
 				'column'	  => $column,
 				'description' => $desc);
-			$qparts['where'] = $this->substituteVars($this->fdd[$field_num]['values']['filters'], $ar);
+			$filters = $this->fdd[$field_num]['values']['filters'];
+			$qparts['where'] = $this->substituteVars($filters, $ar);
 			if ($this->fdd[$field_num]['values']['orderby']) {
 				$qparts['orderby'] = $this->substituteVars($this->fdd[$field_num]['values']['orderby'], $ar);
 			}
@@ -674,13 +689,16 @@ class phpMyEdit
 	{
 		is_numeric($field) || $field = array_search($field, $this->fds);
 		// if read SQL expression exists use it
-		if ($this->col_has_sql($field) && !$this->col_has_values($field))
+		if ($this->col_has_sql($field) && !$this->col_has_values($field)) {
 			return $this->fdd[$field]['sql'];
-		// on copy/change always use simple key retrieving
+		}
+		// on copy/change always use simple key retrieving, or given sql descriptor
 		if ($this->add_operation()
 			|| $this->copy_operation()
 			|| $this->change_operation()) {
-			$ret = $this->sd.'PMEtable0'.$this->ed.'.'.$this->sd.$this->fds[$field].$this->ed;
+			return $this->col_has_sql($field)
+				? $this->fdd[$field]['sql']
+				: $this->sd.'PMEtable0'.$this->ed.'.'.$this->sd.$this->fds[$field].$this->ed;
 		} else {
 			if (isset($this->fdd[$this->fds[$field]]['values']['description']) && ! $dont_desc) {
 				$desc = &$this->fdd[$this->fds[$field]]['values']['description'];
@@ -965,8 +983,10 @@ class phpMyEdit
 					$afilter = $afilter.')';
 					// XXX: $dont_desc and $dont_cols hack
 					$dont_desc = isset($this->fdd[$k]['values']['description']);
-					if (isset($this->fdd[$k]['values']['queryvalues'])) {
-						// override dont_desc hack
+					if (isset($this->fdd[$k]['values']['queryvalues']) ||
+						(isset($this->fdd[$k]['values']['forcedesc']) &&
+						 $this->fdd[$k]['values']['forcedesc'])) {
+						// override dont_desc hack, whatever that might be.
 						$dont_desc = false;
 					}
 					$dont_cols = isset($this->fdd[$k]['values']['column']);
@@ -1223,7 +1243,7 @@ function '.$this->js['prefix'].'show_tab(tab_name)
 		if ($this->add_operation() || $this->change_operation() || $this->copy_operation()) {
 			$first_required = true;
 			for ($k = 0; $k < $this->num_fds; $k++) {
-				if ($this->displayed[$k] && ! $this->readonly($k) && ! $this->hidden($k)
+				if ($this->displayed[$k] && ! $this->disabled($k) && ! $this->hidden($k)
 					&& (@$this->fdd[$k]['js']['required'] || isset($this->fdd[$k]['js']['regexp']))) {
 					if ($first_required) {
 						$first_required = false;
@@ -1399,18 +1419,21 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			echo $this->getColAttributes($k),">\n";
 			if ($this->col_has_values($k)) {
 				$vals		= $this->set_values($k);
+				$groups     = $this->fdd[$k]['valueGroups'] ? $this->fdd[$k]['valueGroups'] : null;
 				$selected	= @$this->fdd[$k]['default'];
 				$multiple	= $this->col_has_multiple($k);
-				$readonly	= $this->readonly($k);
+				$readonly	= $this->disabledTag($k);
 				$strip_tags = true;
-				//$escape	  = true;
+				//$escape	    = true;
 				if ($this->col_has_checkboxes($k) || $this->col_has_radio_buttons($k)) {
 					echo $this->htmlRadioCheck($this->cgi['prefix']['data'].$this->fds[$k],
-											   $css_class_name, $vals, $selected, $multiple, $readonly,
+											   $css_class_name, $vals, $groups, $selected,
+											   $multiple, $readonly,
 											   $strip_tags, $escape, NULL, $helptip);
 				} else {
 					echo $this->htmlSelect($this->cgi['prefix']['data'].$this->fds[$k],
-										   $css_class_name, $vals, $selected, $multiple, $readonly,
+										   $css_class_name, $vals, $groups,
+										   $selected, $multiple, $readonly,
 										   $strip_tags, $escape, NULL, $helptip);
 				}
 			} elseif (isset ($this->fdd[$k]['textarea'])) {
@@ -1452,7 +1475,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 					echo 'title="'.htmlspecialchars($helptip).'" ';
 				}
 				echo ($this->password($k) ? 'type="password"' : 'type="text"');
-				echo ($this->readonly($k) ? ' disabled' : '');
+				echo ($this->disabled($k) ? ' disabled' : '');
 				echo ' name="',$this->cgi['prefix']['data'].$this->fds[$k],'"';
 				echo $len_props,' value="';
 				if($escape) echo htmlspecialchars($this->fdd[$k]['default']);
@@ -1515,7 +1538,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				   1. Display plain text for readonly timestamps, dates and URLs.
 				   2. Display disabled input field
 				   In all cases particular readonly field will NOT be saved. */
-				if ($this->readonly($k) && ($this->col_has_datemask($k) || $this->col_has_URL($k))) {
+				if ($this->disabled($k) && ($this->col_has_datemask($k) || $this->col_has_URL($k))) {
 					echo $this->display_delete_field($row, $k, $helptip);
 				} elseif ($this->password($k)) {
 					echo $this->display_password_field($row, $k, $helptip);
@@ -1556,32 +1579,51 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		$escape			= isset($this->fdd[$k]['escape']) ? $this->fdd[$k]['escape'] : true;
 		echo '<td class="',$this->getCSSclass('value', null, true, $css_postfix),'"';
 		echo $this->getColAttributes($k),">\n";
+
+		/* If $vals only contains one "multiple" value, then the
+		 * multi-select stuff is at least confusing. Also, if there is
+		 * only one possible value, then this value must not be changed.
+		 */
+		$multiValues = false;
+		$vals        = false;
 		if ($this->col_has_values($k)) {
-			$vals		= $this->set_values($k);
+			$vals = $this->set_values($k);
+			$multiValues = count($vals) > 1;
+		}
+		/* If multi is not requested and the value-array has only one
+		 * element, then do not emit multi-controls, because this has
+		 * not been requested.
+		 */
+		if ($vals &&
+			(stristr("MCOD", $this->fdd[$k]['selelct']) !== false || $multiValues)) {
+			$groups     = $this->fdd[$k]['valueGroups'] ? $this->fdd[$k]['valueGroups'] : null;
 			$multiple	= $this->col_has_multiple($k);
-			$readonly	= $this->readonly($k);
+			$readonly	= $this->disabledTag($k);
 			$strip_tags = true;
-			//$escape	  = true;
+			//$escape	    = true;
 			if ($this->col_has_checkboxes($k) || $this->col_has_radio_buttons($k)) {
 				echo $this->htmlRadioCheck($this->cgi['prefix']['data'].$this->fds[$k],
-										   $css_class_name, $vals, $row["qf$k"], $multiple, $readonly,
+										   $css_class_name, $vals, $groups,
+										   $row["qf$k"], $multiple, $readonly,
 										   $strip_tags, $escape, NULL, $help);
 			} else {
 				echo $this->htmlSelect($this->cgi['prefix']['data'].$this->fds[$k],
-									   $css_class_name, $vals, $row["qf$k"], $multiple, $readonly,
+									   $css_class_name, $vals, $groups,
+									   $row["qf$k"], $multiple, $readonly,
 									   $strip_tags, $escape, NULL, $help);
 			}
-		} elseif (isset($this->fdd[$k]['textarea'])) {
+		} elseif (!$vals && isset($this->fdd[$k]['textarea'])) {
 			echo $this->htmlTextarea($this->cgi['prefix']['data'].$this->fds[$k],
 									 $css_class_name,
 									 $k, $row["qf$k"], $escape, $help);
 		} elseif ($this->col_has_php($k)) {
+			$value = $vals ? $vals[$row["qf$k"]] : $row["qf$k"];
 			$php = $this->fdd[$k]['php'];
 			if (is_array($php)) {
 				switch ($php['type']) {
 				case 'function':
 					$opts = isset($php['parameters']) ? $php['parameters'] : '';
-					echo call_user_func($php['function'], $row["qf$k"], $opts,
+					echo call_user_func($php['function'], $value, $opts,
 										true, // do modify
 										$k, $this->fds, $this->fdd, $row);
 					break;
@@ -1595,6 +1637,12 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				echo include($php);
 			}
 		} else {
+			$value    = $vals ? $vals[$row["qf$k"]] : $row["qf$k"];
+			$readonly = $this->disabledTag($k);
+			if ($readonly === false && $vals) {
+				// force read-only if single value.
+				$readonly = $this->display['readonly'];
+			}
 			$len_props = '';
 			$maxlen = intval($this->fdd[$k]['maxlen']);
 			$size	= isset($this->fdd[$k]['size']) ? $this->fdd[$k]['size'] : min($maxlen, 60); 
@@ -1608,14 +1656,14 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			if ($help) {
 				echo 'title="'.htmlspecialchars($help).'" ';
 			}
-			echo ($this->readonly($k) ? ' disabled' : '');
+			echo ($readonly !== false ? ' '.$readonly : '');
 			echo ' name="',$this->cgi['prefix']['data'].$this->fds[$k],'" value="';
 			if ($this->col_has_datemask($k)) {
 				echo $this->makeTimeString($k, $row);
 			} else if ($escape) {
-				echo htmlspecialchars($row["qf$k"]);
+				echo htmlspecialchars($value);
 			} else {
-				echo $row["qf$k"];
+				echo $value;
 			}
 			echo '"',$len_props,' />',"\n";
 		}
@@ -1640,7 +1688,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		if ($help) {
 			echo ' title="'.htmlspecialchars($help).'"';
 		}
-		echo ($this->readonly($k) ? ' disabled' : '');
+		echo ($this->disabled($k) ? ' disabled' : '');
 		echo ' name="',$this->cgi['prefix']['data'].$this->fds[$k],'" value="';
 		echo htmlspecialchars($row["qf$k"]),'"',$len_props,' />',"\n";
 		echo '</td>',"\n";
@@ -1965,7 +2013,9 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 	 * @param	disabled		if mark the button as disabled
 	 * @param	js		any extra text in tags
 	 */
-	function htmlSubmit($name, $label, $css_class_name, $js_validation = true, $disabled = false, $js = NULL, $style = NULL) /* {{{ */
+	function htmlSubmit($name, $label, $css_class_name,
+						$js_validation = true, $disabled = false,
+						$js = NULL, $style = NULL) /* {{{ */
 	{
 		// Note that <input disabled> isn't valid HTML, but most browsers support it
 		if($disabled === -1) return;
@@ -2013,16 +2063,19 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 	 * @param	name		element name
 	 * @param	css			CSS class name
 	 * @param	kv_array	key => value array
+	 * @param   kg_array    value => group array
 	 * @param	selected	selected key (it can be single string, array of
 	 *						keys or multiple values separated by comma)
 	 * @param	multiple	bool for multiple selection
-	 * @param	readonly	bool for readonly/disabled selection
+	 * @param	readonly	boolean or 'readonly' or 'disabled'
 	 * @param	strip_tags	bool for stripping tags from values
 	 * @param	escape		bool for HTML escaping values
 	 * @param	js		string to be in the <select >, ususally onchange='..';
 	 */
-	function htmlSelect($name, $css, $kv_array, $selected = null, /* ...) {{{ */
-						/* booleans: */ $multiple = false, $readonly = false, $strip_tags = false, $escape = true, $js = NULL, $help = NULL)
+	function htmlSelect($name, $css, $kv_array, $kg_array = null, $selected = null, /* ...) {{{ */
+						/* booleans: */ $multiple = false,
+						$readonly = false,
+						$strip_tags = false, $escape = true, $js = NULL, $help = NULL)
 	{
 		$ret = '<select class="'.htmlspecialchars($css).'" name="'.htmlspecialchars($name);
 		if ($multiple) {
@@ -2036,7 +2089,12 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		} else {
 			$ret .= '"'.$this->fetchToolTip($css, $name, $css.'select');
 		}
-		$ret .= ($readonly ? ' disabled ' : ' ').$js.">\n";
+		if ($readonly === true) {
+			$ret .= ' disabled';
+		} else if (is_string($readonly)) {
+			$ret .= ' '.$readonly;
+		}
+		$ret .= ' '.$js.">\n";
 		if (! is_array($selected)) {
 			$selected = $selected === null ? array() : array((string)$selected);
 		} else {
@@ -2044,7 +2102,15 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			$selected = $selected2;
 		}
 		$found = false;
+		$lastGroup = null;
 		foreach ($kv_array as $key => $value) {
+			if (is_array($kg_array) && $kg_array[$key] != $lastGroup) {
+				if (isset($lastGroup)) {
+					$ret .= "</optgroup>\n";
+				}
+				$lastGroup = $kg_array[$key];
+				$ret .= '<optgroup label="'.$lastGroup.'">'."\n";
+			}
 			$ret .= '<option value="'.htmlspecialchars($key).'"';
 			if ((! $found || $multiple) && in_array((string)$key, $selected, 1)
 				|| (count($selected) == 0 && ! $found && ! $multiple)) {
@@ -2055,6 +2121,9 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			$escape		&& $value = htmlspecialchars($value);
 			$ret .= '>'.$value.'</option>'."\n";
 		}
+		if (isset($lastGroup)) {
+			$ret .= "</optgroup>\n";
+		}		
 		$ret .= '</select>';
 		return $ret;
 	} /* }}} */
@@ -2065,16 +2134,18 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 	 * @param	name		element name
 	 * @param	css			CSS class name
 	 * @param	kv_array	key => value array
+	 * @param   kg_array    key => group array
 	 * @param	selected	selected key (it can be single string, array of
 	 *						keys or multiple values separated by comma)
 	 * @param	multiple	bool for multiple selection (checkboxes)
-	 * @param	readonly	bool for readonly/disabled selection
+	 * @param	readonly	boolean or 'readonly' or 'disabled'
 	 * @param	strip_tags	bool for stripping tags from values
 	 * @param	escape		bool for HTML escaping values
 	 * @param	js		string to be in the <select >, ususally onchange='..';
 	 */
 	function htmlRadioCheck($name, $css, $kv_array, $selected = null, /* ...) {{{ */
-							/* booleans: */ $multiple = false, $readonly = false, $strip_tags = false, $escape = true, $js = NULL, $help = NULL)
+							/* booleans: */ $multiple = false, $readonly = false,
+							$strip_tags = false, $escape = true, $js = NULL, $help = NULL)
 	{
 		$ret = '';
 		if ($multiple) {
@@ -2103,8 +2174,10 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				$ret  .= ' checked';
 				$found = true;
 			}
-			if ($readonly) {
+			if ($readonly === true) {
 				$ret .= ' disabled';
+			} else if (is_string($readonly)) {
+				$ret .= ' '.$readonly;
 			}
 			$strip_tags && $value = strip_tags($value);
 			$escape		&& $value = htmlspecialchars($value);
@@ -2127,7 +2200,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		};
 		// mce mod end
 		$ret = '<textarea class="'.$css.'" name="'.$name.'"';
-		$ret .= ($this->readonly($k) ? ' disabled' : '');
+		$ret .= ($this->disabled($k) ? ' disabled' : '');
 		if (intval($this->fdd[$k]['textarea']['rows']) > 0) {
 			$ret .= ' rows="'.$this->fdd[$k]['textarea']['rows'].'"';
 		}
@@ -2591,7 +2664,8 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			}
 			// TODO: add onchange="return this.form.submit();" DONE ???
 			return $this->htmlSelect($this->cgi['prefix']['sys'].ltrim($disabledgoto).'navfm'.$position,
-									 $this->getCSSclass('goto', $position), $kv_array, (string)$this->fm, false, $disabledgoto,
+									 $this->getCSSclass('goto', $position), $kv_array, null,
+									 (string)$this->fm, false, $disabledgoto,
 									 false, true, 'disabledonchange="return this.form.submit();"');
 		}
 		if ($name == 'goto') {
@@ -2625,16 +2699,19 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			} else if ($this->inc < 0) {
 				$selected = '-1';
 			}
+			$disabled = $this->total_recs <= 1;
 			// TODO: add onchange="return this.form.submit();" DONE ???
 			return $this->htmlSelect($this->cgi['prefix']['sys'].'navnp'.$position,
-									 $this->getCSSclass('pagerows', $position), $kv_array, $selected, false, '',
+									 $this->getCSSclass('pagerows', $position), $kv_array, null,
+									 $selected, false, $disabled,
 									 false, true, 'disabledonchange="return this.form.submit();"');
 		}
 		if ($name == 'rows_per_page') {
+			$disabled = $this->total_recs <= 1;
 			$ret = '<span class="'.$this->getCSSclass('pagerows', $position).'">';
 			$ret .= $this->htmlSubmit('navop', 'Rows/Page',
 									  $this->getCSSclass('pagerows', $position),
-									  false, 0);
+									  false,  $disabled);
 			$ret .= $this->display_button('rows_per_page_combo',$position);
 			$ret .= '</span>';
 			return $ret;
@@ -2732,14 +2809,16 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				// Default size is 2 and array required for values.
 				$from_table = ! $this->col_has_values($k) || isset($this->fdd[$k]['values']['table']);
 				$vals		= $this->set_values($k, array('*' => '*'), null, $from_table);
+				$groups     = $this->fdd[$fd]['valueGroups'] ? $this->fdd[$k]['valueGroups'] : null;
 				$selected	= $mi;
 				$multiple	= $this->col_has_multiple_select($k);
 				$multiple  |= $this->fdd[$fd]['select'] == 'M' || $this->fdd[$fd]['select'] == 'C';
 				$readonly	= false;
 				$strip_tags = true;
-				$escape		= true;
+				//$escape	  = true;
 				echo $this->htmlSelect($this->cgi['prefix']['sys'].$l.'_id', $css_class_name,
-									   $vals, $selected, $multiple || true, $readonly, $strip_tags, $escape);
+									   $vals, $groups,
+									   $selected, $multiple || true, $readonly, $strip_tags, $escape);
 			} elseif (($this->fdd[$fd]['select'] == 'N' ||
 					   $this->fdd[$fd]['select'] == 'T')
 					  &&			  
@@ -2757,7 +2836,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 
 					$mc = in_array($mc, $this->comp_ops) ? $mc : '=';
 					echo $this->htmlSelect($this->cgi['prefix']['sys'].$l.'_comp',
-										   $css_comp_class_name, $this->comp_ops, $mc);
+										   $css_comp_class_name, $this->comp_ops, null, $mc);
 				}
 				echo '<input class="',$css_class_name,'" value="',htmlspecialchars(@$m);
 				echo '" type="text" name="'.$this->cgi['prefix']['sys'].'qf'.$k.'"',$len_props;
@@ -3439,7 +3518,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		for ($k = 0; $k < $this->num_fds; $k++) {
 			if ($this->processed($k)) {
 				$fd = $this->fds[$k];
-				if ($this->readonly($k)) {
+				if ($this->disabled($k)) {
 					$fn = (string) @$this->fdd[$k]['default'];
 				} else {
 					$fn = $this->get_data_cgi_var($fd);
@@ -3518,7 +3597,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		$stamps		  = array();
 		// Prepare query to retrieve oldvals
 		for ($k = 0; $k < $this->num_fds; $k++) {
-			if ($this->processed($k) && !$this->readonly($k)) {
+			if ($this->processed($k) && !$this->disabled($k)) {
 				$fd = $this->fds[$k];
 				$fn = $this->get_data_cgi_var($fd);
 				if ($this->col_has_datemask($k)) {
@@ -3771,11 +3850,22 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		if (is_array($trig)) {
 			ksort($trig);
 			for ($t = reset($trig); $t !== false && $ret != false; $t = next($trig)) {
-				$ret = include($t);
+				if (is_callable($t)) {
+					$ret = call_user_func($t, $this, $op, $step, $oldvals, $changed, $newvals);
+				} else {
+					$ret = include($t);
+				}
 			}
 		} else {
-			$ret = include($trig);
+			if (is_callable($trig)) {
+				$ret = call_user_func($trig, $this, $op, $step, $oldvals, $changed, $newvals);
+			} else {
+				$ret = include($trig);
+			}
 		}
+
+		//echo "<PRE>".$this->options."</PRE>";
+
 		return $ret;
 	} /* }}} */
 
@@ -3871,6 +3961,11 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 
 			$this->fdd[$field_num] = $this->fdd[$key];
 			$field_num++;
+		}
+		if (false) {
+			echo '<PRE>';
+			print_r($this->fdd);
+			echo '</PRE>';
 		}
 		$this->num_fds				= $field_num;
 		$this->num_fields_displayed = $num_fields_displayed;
@@ -3968,11 +4063,12 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			if (! isset($this->fdd[$column]['js']['required']) && isset($this->fdd[$column]['required'])) {
 				$this->fdd[$column]['js']['required'] = $this->fdd[$column]['required'];
 			}
-			// move 'HWR' flags from ['options'] into ['input']
+			// move 'HWR0' flags from ['options'] into ['input']
 			if (isset($this->fdd[$column]['options'])) {
-				stristr($this->fdd[$column]['options'], 'H') && $this->fdd[$column]['input'] .= 'H';
-				stristr($this->fdd[$column]['options'], 'W') && $this->fdd[$column]['input'] .= 'W';
-				stristr($this->fdd[$column]['options'], 'R') && $this->fdd[$column]['input'] .= 'R';
+				stristr($this->fdd[$column]['options'], 'H') !== false && $this->fdd[$column]['input'] .= 'H';
+				stristr($this->fdd[$column]['options'], 'W') !== false && $this->fdd[$column]['input'] .= 'W';
+				stristr($this->fdd[$column]['options'], 'R') !== false && $this->fdd[$column]['input'] .= 'R';
+				stristr($this->fdd[$column]['options'], '0') !== false && $this->fdd[$column]['input'] .= 'D';
 			}
 		}
 	} /* }}} */
@@ -4137,6 +4233,8 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		 * ======================================================================
 		 */
 		else {
+			$this->recreate_fdd();
+			$this->backward_compatibility();
 			$this->list_table();
 		}
 
@@ -4204,6 +4302,16 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			? $opts['display']['num_records'] : true;
 		$this->display['num_pages'] = isset($opts['display']['num_pages'])
 			? $opts['display']['num_pages'] : true;
+
+		$this->display['readonly'] =
+			isset($opts['display']['readonly'])
+			? $opts['display']['readonly']
+			: 'readonly';
+		$this->display['disabled'] =
+			isset($opts['display']['disabled'])
+			? $opts['display']['disabled']
+			: 'disabled';
+
 		// Creating directory variables
 		$this->dir['root'] = dirname(realpath(__FILE__))
 			. (strlen(dirname(realpath(__FILE__))) > 0 ? '/' : '');
