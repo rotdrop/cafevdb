@@ -94,7 +94,8 @@ var CAFEVDB = CAFEVDB || {};
 	    if (jsondata.status == 'success') {
                 self.data.PHOTO = true;
 	    } else {
-		OC.dialogs.alert(jsondata.data.message, t('cafevdb', 'Error'));
+                // Can happen if there is no photo yet.
+		//OC.dialogs.alert(jsondata.data.message, t('cafevdb', 'Error'));
                 self.data.PHOTO = false;
 	    }
             self.loadPhotoHandlers();
