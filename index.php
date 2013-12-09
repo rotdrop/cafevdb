@@ -195,6 +195,12 @@ try {
 
   switch ($tmplname) {
   case 'projects':
+    OCP\Util::addStyle('cafevdb', $tmplname);
+    OCP\Util::addScript('cafevdb', $tmplname);
+    break;
+  case 'project-instruments':
+    OCP\Util::addStyle('cafevdb', 'projects');
+    OCP\Util::addStyle('cafevdb', $tmplname);
     OCP\Util::addScript('cafevdb', $tmplname);
     break;
   default:
