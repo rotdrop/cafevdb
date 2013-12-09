@@ -231,7 +231,7 @@ __EOT__;
 
     // Ok there should be only one row
     if (!($line = mySQL::fetch($result))) {
-      CAFEVerror("Could not fetch instruments for project", true);
+      Util::error(L::t("Could not fetch instruments for project-id %s", array($projectId)), true);
     }
     $ProjInsts = explode(',',$line['Besetzung']);
 
@@ -264,6 +264,10 @@ __EOT__;
   // actually subscribed to the project.
   public static function updateProjectInstrumentationFromMusicians($projectId, $handle, $replace = false)
   {
+    // Make sure the instrumentation numbers exist
+    $query = 'INSERT IGNORE INTO `BesetzungsZahlen` (`ProjektId`) VALUES ('.$projectId.')';
+    mySQL::query($query, $handle);
+
     $musinst = self::fetchProjectMusiciansInstruments($projectId, $handle);
 
     if ($replace) {
@@ -278,7 +282,6 @@ __EOT__;
 
     $query = "UPDATE `Projekte` SET `Besetzung`='".implode(',',$prjinst)."' WHERE `Id` = $projectId";
     mySQL::query($query, $handle);
-    //CAFEVerror($query, false);
   
     return $prjinst;
   }
@@ -288,7 +291,7 @@ __EOT__;
 
     $Instruments = mySQL::multiKeys('Musiker', 'Instrumente', $handle);
 
-    $query = 'SELECT `Instrument`,`Sortierung` FROM `Instrumente` WHERE  1 ORDER BY `Sortierung` ASC';
+    $query = 'SELECT `Instrument` FROM `Instrumente` WHERE  1 ORDER BY `Sortierung` ASC';
     $result = mySQL::query($query, $handle);
   
     $final = array();
@@ -298,10 +301,41 @@ __EOT__;
       if (array_search($tblInst, $Instruments) === false) {
         Util::error('"'.$tblInst.'" not found in '.implode(',',$Instruments), true);
       }
-      array_push($final, $tblInst);
+      $final[] = $tblInst;
     }
 
     return $final;
+  }
+
+  // Fetch all isntruments, group by instrument family.
+  public static function fetchGrouped($handle) {
+
+    $Instruments = mySQL::multiKeys('Musiker', 'Instrumente', $handle);
+
+    $query = 'SELECT * FROM `Instrumente` WHERE  1 ORDER BY `Sortierung` ASC';
+    $result = mySQL::query($query, $handle);
+
+    $resultTable = array();
+    while ($line = mySQL::fetch($result)) {
+      //CAFEVerror("huh".$line['Instrument'],false);
+      $instrument = $line['Instrument'];
+      $family     = $line['Familie'];
+      if (array_search($instrument, $Instruments) === false) {
+        Util::error('"'.$instrument.'" not found in '.implode(',',$Instruments), true);
+      }
+      $resultTable[$instrument] = L::t($family);
+    }
+    if (false) {
+      // Dummy, in order to generate translation entries
+      L::t("Streich,Saiten");
+      L::t("Streich,Zupf");
+      L::t("Blas,Holz");
+      L::t("Blas,Blech");
+      L::t("Schlag");
+      L::t("Sonstiges");        
+    }
+
+    return $resultTable;
   }
 
   // Check for consistency

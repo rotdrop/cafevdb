@@ -191,10 +191,10 @@ __EOT__;
                                        'css'      => array('postfix' => 'instruments'),
                                        'select'   => 'D',
                                        'maxlen'   => 36,
-                                       'sort'     => true
-                                       );
-    $opts['fdd']['Instrument']['values'] = $this->instruments;
-    $opts['fdd']['Instrument']['options'] = $ROopts;
+                                       'sort'     => true,
+                                       'values'   => $this->instruments,
+                                       'valueGroups' => $this->groupedInstruments,
+                                       'options'  => $ROopts);
     $opts['fdd']['Reihung'] = array('name' => 'Stimme',
                                     'options' => $ROopts,
                                     'select' => 'N',
@@ -205,15 +205,9 @@ __EOT__;
                                     'select' => 'M',
                                     'maxlen' => 64,
                                     'options'  => $ROopts,
-                                    'sort' => 'true');
-    $opts['fdd']['Familie']['values'] = $this->instrumentFamilies;
-    $opts['fdd']['Stimmführer'] = array('name' => ' &alpha;',
-                                        'options'  => $ROopts,
-                                        'select' => 'T',
-                                        'maxlen' => '3',
-                                        'escape' => false,
-                                        'sort' => true);
-    $opts['fdd']['Stimmführer']['values2'] = array('0' => '', '1' => '&alpha;');
+                                    'sort' => 'true',
+                                    'values' => $this->instrumentFamilies);
+    $opts['fdd']['Stimmführer'] = $this->sectionLeaderColumn;
     $opts['fdd']['Sortierung'] = array('name'     => 'Orchester Sortierung',
                                        'select'   => 'T',
                                        'options'  => 'VCPR',
@@ -224,12 +218,12 @@ __EOT__;
                                             'name'     => 'Alle Instrumente',
                                             'css'      => array('postfix' => 'instruments'),
                                             'options'  => 'AVCPD',
-                                            'select'   => 'C',
+                                            'select'   => 'M',
                                             'maxlen'   => 136,
-                                            'sort'     => true
-                                            );
-    $opts['fdd']['AlleInstrumente']['values'] = $this->instruments;
-
+                                            'sort'     => true,
+                                            'values'   => $this->instruments,
+                                            'valueGroups' => $this->groupedInstruments,
+      );
 
     $opts['fdd']['Name'] = array(
                                  'name'     => 'Name',
@@ -243,6 +237,12 @@ __EOT__;
                                     'maxlen'   => 384,
                                     'sort'     => true
                                     );
+    $opts['fdd']['MemberStatus'] = array('name'     => strval(L::t('Member Status')),
+                                         'select'   => 'M',
+                                         'maxlen'   => 384,
+                                         'sort'     => true,
+                                         'values2'  => $this->memberStatusNames);
+
     $opts['fdd']['Email'] = Config::$opts['email'];
     $opts['fdd']['Telefon'] = array(
                                     'name'     => 'Telefon',
@@ -313,11 +313,6 @@ __EOT__;
     }
 
     $opts['fdd']['Geburtstag'] = Config::$opts['birthday'];
-    $opts['fdd']['MemberStatus'] = array('name'     => strval(L::t('Member Status')),
-                                         'select'   => 'O',
-                                         'maxlen'   => 384,
-                                         'sort'     => true,
-                                         'values2'  => $this->memberStatusNames);
 
     $opts['fdd']['Remarks'] = array('name'     => strval(L::t('General Remarks')),
                                     'select'   => 'T',

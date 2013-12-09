@@ -123,13 +123,6 @@ __EOT__;
                              'tabs'  => true
                              );
 
-    // Set default prefixes for variables
-    $opts['js']['prefix']               = 'PME_js_';
-    $opts['dhtml']['prefix']            = 'PME_dhtml_';
-    $opts['cgi']['prefix']['operation'] = 'PME_op_';
-    $opts['cgi']['prefix']['sys']       = 'PME_sys_';
-    $opts['cgi']['prefix']['data']      = 'PME_data_';
-
     /* Get the user's default language and use it if possible or you can
        specify particular one you want to use. Refer to official documentation
        for list of available languages. */
@@ -225,9 +218,9 @@ __EOT__;
                                                            'column'  => 'Instrument',
                                                            'orderby' => '$table.Sortierung',
                                                            'description' => array('columns' => array('Instrument'))),
+                                       'valueGroups' => $this->groupedInstruments,
                                        'sort'     => true
                                        );
-    //$opts['fdd']['Instrument']['values'] = $this->instruments;
     $opts['fdd']['Sortierung'] = array('name' => 'Orchester-Sortierung',
                                        'select' => 'T',
                                        'options' => 'VCPR',
@@ -238,13 +231,7 @@ __EOT__;
                                     'select' => 'N',
                                     'maxlen' => '1',
                                     'sort' => true);
-    $opts['fdd']['Stimmführer'] = array('name' => ' &alpha;',
-                                        'options'  => 'LAVCPDF',
-                                        'select' => 'T',
-                                        'maxlen' => '1',
-                                        'sort' => true,
-                                        'escape' => false);
-    $opts['fdd']['Stimmführer']['values2'] = array('0' => ' ', '1' => '&alpha;');
+    $opts['fdd']['Stimmführer'] = $this->sectionLeaderColumn;
     $opts['fdd']['Bemerkungen'] = array('name'     => 'Bemerkungen',
                                         'select'   => 'T',
                                         'maxlen'   => 65535,
@@ -253,7 +240,7 @@ __EOT__;
                                                             'rows' => 5,
                                                             'cols' => 50),
                                         'escape' => false,
-                                        'sort'     => true);
+                                        'sort'   => true);
     $opts['fdd']['Unkostenbeitrag'] = Config::$opts['money'];
     $opts['fdd']['Unkostenbeitrag']['name'] = "Unkostenbeitrag\n(Gagen negativ)";
 

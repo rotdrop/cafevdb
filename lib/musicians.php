@@ -231,13 +231,14 @@ __EOT__;
         );
     }
     $opts['fdd']['Instrumente'] = array(
-                                        'name'     => 'Instrumente',
-                                        'css'      => array('postfix' => 'instruments'),
-                                        'select'   => 'C',
-                                        'maxlen'   => 137,
-                                        'sort'     => true
-                                        );
-    $opts['fdd']['Instrumente']['values'] = $this->instruments;
+                                        'name'        => 'Instrumente',
+                                        'css'         => array('postfix' => 'instruments'),
+                                        'select'      => 'M',
+                                        'maxlen'      => 137,
+                                        'sort'        => true,
+                                        'values'      => $this->instruments,
+                                        'valueGroups' => $this->groupedInstruments,
+      );
 
     $opts['fdd']['Name'] = array(
                                  'name'     => 'Name',
@@ -251,6 +252,17 @@ __EOT__;
                                     'maxlen'   => 128,
                                     'sort'     => true
                                     );
+
+    /* Make "Status" a set, 'soloist','conductor','noemail', where in
+     * general the first two imply the last.
+     */
+    $opts['fdd']['MemberStatus'] = array('name'    => strval(L::t('Member Status')),
+                                         'select'  => 'D',
+                                         'maxlen'  => 128,
+                                         'sort'    => true,
+                                         'css'     => array('postfix' => 'memberstatus'),
+                                         'values2' => $this->memberStatusNames,
+                                         'tooltip' => config::toolTips('member-status'));
 
     // fetch the list of all project in order to provide a somewhat
     // cooked filter list
@@ -324,17 +336,6 @@ __EOT__;
                                      );
     $opts['fdd']['Geburtstag'] = Config::$opts['birthday'];
     $opts['fdd']['Email'] = Config::$opts['email'];
-
-    /* Make "Status" a set, 'soloist','conductor','noemail', where in
-     * general the first two imply the last.
-     */
-    $opts['fdd']['MemberStatus'] = array('name'    => strval(L::t('Member Status')),
-                                         'select'  => 'O',
-                                         'maxlen'  => 128,
-                                         'sort'    => true,
-                                         'css'     => array('postfix' => 'memberstatus'),
-                                         'values2' => $this->memberStatusNames,
-                                         'tooltip' => config::toolTips('member-status'));
 
     $opts['fdd']['Remarks'] = array('name'     => strval(L::t('Remarks')),
                                     'select'   => 'T',
@@ -762,20 +763,15 @@ __EOT__;
                                        'name'     => 'Projekt-Instrument',
                                        'select'   => 'T',
                                        'maxlen'   => 12,
-                                       'sort'     => false
+                                       'sort'     => false,
+                                       'values'      => $this->instruments,
+                                       'valueGroups' => $this->groupedInstruments,
                                        );
-    $opts['fdd']['Instrument']['values'] = $this->instruments;
     $opts['fdd']['Reihung'] = array('name' => 'Stimme',
                                     'select' => 'T',
                                     'maxlen' => '3',
                                     'sort' => false);
-    $opts['fdd']['Stimmführer'] = array('name' => ' &alpha;',
-                                        'options'  => 'LAVCPD',
-                                        'select' => 'T',
-                                        'maxlen' => '3',
-                                        'sort' => false,
-                                        'escape' => false);
-    $opts['fdd']['Stimmführer']['values2'] = array('0' => ' ', '1' => '&alpha;');
+    $opts['fdd']['Stimmführer'] = $this->sectionLeaderColumn;
     $opts['fdd']['Bemerkungen'] = array('name'     => 'Bemerkungen',
                                         'select'   => 'T',
                                         'maxlen'   => 65535,
@@ -918,7 +914,7 @@ __EOT__;
 
 }; // class definition.
 
-/**Class responsible for adding one musician to a project.
+/**Class responsible for adding multiple musicians to a project.
  */
 class BulkAddMusicians
   extends Instrumentation
@@ -1055,13 +1051,6 @@ __EOT__;
       'tabs'  => false
       );
 
-    // Set default prefixes for variables
-    $opts['js']['prefix']               = 'PME_js_';
-    $opts['dhtml']['prefix']            = 'PME_dhtml_';
-    $opts['cgi']['prefix']['operation'] = 'PME_op_';
-    $opts['cgi']['prefix']['sys']       = 'PME_sys_';
-    $opts['cgi']['prefix']['data']      = 'PME_data_';
-
     /* Get the user's default language and use it if possible or you can
        specify particular one you want to use. Refer to official documentation
        for list of available languages. */
@@ -1158,6 +1147,7 @@ __EOT__;
                                                            'column'  => 'Instrument',
                                                            'orderby' => '$table.Sortierung',
                                                            'description' => array('columns' => array('Instrument'))),
+                                       'valueGroups' => $this->groupedInstruments,
                                        'sort'     => true
                                        );
     //$opts['fdd']['Instrument']['values'] = $this->instruments;
@@ -1171,13 +1161,7 @@ __EOT__;
                                     'select' => 'N',
                                     'maxlen' => '1',
                                     'sort' => true);
-    $opts['fdd']['Stimmführer'] = array('name' => ' &alpha;',
-                                        'options'  => 'LAVCPDF',
-                                        'select' => 'T',
-                                        'maxlen' => '1',
-                                        'sort' => true,
-                                        'escape' => false);
-    $opts['fdd']['Stimmführer']['values2'] = array('0' => ' ', '1' => '&alpha;');
+    $opts['fdd']['Stimmführer'] = $this->sectionLeaderColumn;
     $opts['fdd']['Bemerkungen'] = array('name'     => 'Bemerkungen',
                                         'select'   => 'T',
                                         'maxlen'   => 65535,

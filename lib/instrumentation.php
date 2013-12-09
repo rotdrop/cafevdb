@@ -13,6 +13,7 @@ class Instrumentation
   public $projectId;
   public $project;
   public $template;
+  protected $operation;
   protected $recordsPerPage;
   protected $userExtraFields;
   protected $instruments;
@@ -23,6 +24,7 @@ class Instrumentation
   protected $pme;
   protected $execute;
   protected $pme_bare;
+  protected $secionLeaderColumn;
 
   public function deactivate() 
   {
@@ -109,6 +111,19 @@ class Instrumentation
       echo "</PRE>\n";
     }
 
+    $this->operation  = Util::cgiValue(Config::$pmeopts['cgi']['prefix']['sys']."operation", false);
+    $this->cancelSave = Util::cgiKeySearch('/'.Config::$pmeopts['cgi']['prefix']['sys'].'(save|cancel)/');
+
+    $this->sectionLeaderColumn = array(
+      'name' => $this->operation ? L::t("Section Leader") : ' &alpha;',
+      'options'  => 'LAVCPDF',
+      'select' => 'D',
+      'maxlen' => '1',
+      'sort' => true,
+      'escape' => false,
+      'values2' => array('0' => '&nbsp;', '1' => '&alpha;'),
+      );
+
     $this->opts = Config::$pmeopts;
     foreach (Config::$cgiVars as $key => $value) {
       $this->opts['cgi']['persist']["$key"] = $value = Util::cgiValue("$key");
@@ -127,6 +142,7 @@ class Instrumentation
 
     // List of instruments
     $this->instruments = Instruments::fetch($handle);
+    $this->groupedInstruments = Instruments::fetchGrouped($handle);
     $this->instrumentFamilies = mySQL::multiKeys('Instrumente', 'Familie', $handle);
     $this->memberStatus = mySQL::multiKeys('Musiker', 'MemberStatus', $handle);
     $this->memberStatusNames = array();
