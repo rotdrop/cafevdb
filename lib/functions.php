@@ -47,7 +47,7 @@ class L
       // Mea Culpa: don't include a new-line after end tag
       //strval(self::$l->t('blah'));
     }
-    return self::$l->t($text, $parameters);
+    return (string)self::$l->t($text, $parameters);
   }
 };
 
@@ -320,12 +320,12 @@ __EOT__;
   {
     //$text = htmlspecialchars($text, ENT_QUOTES, 'UTF-8', false);
     //$title = htmlspecialchars($title, ENT_QUOTES, 'UTF-8', false);    
-    $text  = addslashes($text);
-    $title = addslashes($title);
+    //$text  = addslashes($text);
+    //$title = addslashes($title);
     $class = $cssid === false ? '' : ' '.$cssid;
     echo '<input type="hidden" class="alertdata'.$class.
-      '" name="'.$title.'" value="'.$text.'">'."\n";
-    echo '<u>'.$title.'</u><br/>'.$text.'<br/>';
+      '" name="'.htmlspecialchars($title).'" value="'.htmlspecialchars($text).'">'."\n";
+    echo '<div class="alertblock'.$class.' cafevdb-error"><span class="title">'.$title.'</span><div class="text">'.$text.'</div></div>';
   }
 
   public static function redirect($page, $proto = null, $host = null, $port = null, $uri = null) {
@@ -410,6 +410,24 @@ __EOT__;
     return $value;
   }
 
+  /**Search $_POST and $_GET for $pattern; return a subset of the
+   * respective array which contains the matchign $key => $value
+   * pairs.
+   */
+  public static function cgiKeySearch($pattern)
+  {
+    $source = isset($_POST) ? $_POST : (isset($_GET) ? $_GET : Config::$cgiVars);
+
+    $keys = preg_grep($pattern, array_keys($source));
+    
+    $result = array();
+    foreach ($keys as $key) {
+      $result[$key] = $source[$key];
+    }
+    
+    return $result;
+  }
+
   /** Compose an error from all CGI data starting with PME_data_, or
    * more precisely: with Config::$pmeopts['cgi']['prefix']['data'];
    *
@@ -438,6 +456,11 @@ __EOT__;
     return $result;
   }
   
+  public static function entifyString($string)
+  {
+    return htmlentities($string, ENT_QUOTES|ENT_XHTML, 'UTF-8');
+  }
+
 };
 
 /**Support class to generate navigation buttons and the like.
@@ -489,7 +512,7 @@ class Navigation
    *
    * @return Array suitable to be plugged in $opts['buttons'].
    */
-  public static function prependTableButton($button, $misc = false)
+  public static function prependTableButton($button, $misc = false, $all = false)
   {
     // Cloned from phpMyEdit class:
     if (!$misc) {
@@ -518,8 +541,8 @@ class Navigation
                      'misc', $button, 'add',
                      '>','>>',
                      'goto','rows_per_page'),
-        'A' => array('save','more','cancel'),
-        'C' => array('save','more','cancel'),
+        'A' => array('save', 'more', 'cancel'),
+        'C' => array('save', 'more', 'cancel'),
         'P' => array('save', 'cancel'),
         'D' => array('save','cancel'),
         'V' => array('change','cancel')
@@ -528,15 +551,18 @@ class Navigation
 
     $result = array();
     foreach ($default_buttons_no_B as $key => $value) {
+      if ($all && stristr("ACPDV", $key) !== false) {
+        array_unshift($value, $button);
+      }
       $upValue = array();
       $downValue = array();
-      foreach ($value as $button) {
+      foreach ($value as $oneButton) {
         if (isset($button['code'])) {
-          $upValue[] = preg_replace('/id="([^"]*)"/', 'id="$1-up"', $button);
-          $downValue[] = preg_replace('/id="([^"]*)"/', 'id="$1-down"', $button);
+          $upValue[] = preg_replace('/id="([^"]*)"/', 'id="$1-up"', $oneButton);
+          $downValue[] = preg_replace('/id="([^"]*)"/', 'id="$1-down"', $oneButton);
         } else {
-          $upValue[]   = $button;
-          $downValue[] = $button;
+          $upValue[]   = $oneButton;
+          $downValue[] = $oneButton;
         }
       }
       $result[$key] = array('up' => $upValue, 'down' => $downValue);
