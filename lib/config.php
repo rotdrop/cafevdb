@@ -427,6 +427,9 @@ ownclouddev';
     self::$pmeopts['cgi']['prefix']['sys']       = 'PME_sys_';
     self::$pmeopts['cgi']['prefix']['data']      = 'PME_data_';
 
+    self::$pmeopts['display']['disabled'] = 'disabled'; // or 'readonly'
+    self::$pmeopts['display']['readonly'] = 'readonly'; // or 'disabled'
+
     // Initially hide the filter fields
     self::$pmeopts['cgi']['append'][self::$pmeopts['cgi']['prefix']['sys'].'fl'] = 0;
 
