@@ -68,6 +68,7 @@ try {
 
   $recordId   = Util::cgiValue('RecordId', -1);
   $imageClass = Util::cgiValue('ImagePHPClass', '');
+  $imageSize  = Util::cgiValue('ImageSize', 400);
 
   $etag = null;
   $caching = null;
@@ -124,7 +125,7 @@ try {
     if($etag) {
       OCP\Response::setETagHeader($etag);
     }
-    $max_size = 200;
+    $max_size = $imageSize;
     if ($image->width() > $max_size || $image->height() > $max_size) {
       $image->resize($max_size);
     }

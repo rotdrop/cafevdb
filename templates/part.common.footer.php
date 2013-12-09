@@ -21,6 +21,7 @@ $css_pfx = $_['css-prefix'];
 		action="<?php print_unescaped(OCP\Util::linkToAbsolute('cafevdb', 'ajax/inlineimage/savecrop.php')); ?>">
 		<input type="hidden" id="RecordId" name="RecordId" value="{RecordId}" />
 		<input type="hidden" id="ImagePHPClass" name="ImagePHPClass" value="{ImagePHPClass}" />
+		<input type="hidden" id="ImageSize" name="ImageSize" value="{ImageSize}" />
 		<input type="hidden" id="tmpkey" name="tmpkey" value="{tmpkey}" />
 		<fieldset id="coords">
 		<input type="hidden" id="x1" name="x1" value="" />

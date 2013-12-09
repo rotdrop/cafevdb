@@ -35,6 +35,7 @@ Config::init();
 
 $recordId = Util::cgiValue('RecordId', '');
 $imageClass = Util::cgiValue('ImagePHPClass', '');
+$imageSize = Util::cgiValue('ImageSize', 400);
 
 if ($recordId == '') {
   Ajax::bailOut(L::t('No record ID was submitted.'));

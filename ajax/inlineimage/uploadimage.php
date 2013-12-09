@@ -49,13 +49,14 @@ if ($fn) {
     Ajax::bailOut(L::t('No record ID was submitted.'));
   }
   $recordId = Util::cgiValue('RecordId');
+  $imageSize = Util::cgiValue('ImageSize', 400);
   $tmpkey = 'cafevdb-inline-image-'.md5($fn);
   $data = file_get_contents('php://input');
   $image = new OC_Image();
   sleep(1); // Apparently it needs time to load the data.
   if ($image->loadFromData($data)) {
-    if($image->width() > 400 || $image->height() > 400) {
-      $image->resize(400); // Prettier resizing than with browser and saves bandwidth.
+    if($image->width() > $imageSize || $image->height() > $imageSize) {
+      $image->resize($imageSize); // Prettier resizing than with browser and saves bandwidth.
     }
     if(!$image->fixOrientation()) { // No fatal error so we don't bail out.
       Ajax::debug('Couldn\'t save correct image orientation: '.$tmpkey);
@@ -77,9 +78,10 @@ if ($fn) {
 }
 
 // Uploads from file dialog are handled here.
-if (!isset($_POST['RecordId'])) {
+if (Util::cgiValue('RecordId', false) === false) {
   Ajax::bailOut(L::t('No record ID was submitted.'));
 }
+$imageSize = Util::cgiValue('ImageSize', 400);
 if (!isset($_FILES['imagefile'])) {
   Ajax::bailOut(L::t('No file was uploaded. Unknown error'));
 }
@@ -102,8 +104,8 @@ if(file_exists($file['tmp_name'])) {
   $tmpkey = 'cafevdb-inline-image-'.md5(basename($file['tmp_name']));
   $image = new OC_Image();
   if($image->loadFromFile($file['tmp_name'])) {
-    if($image->width() > 400 || $image->height() > 400) {
-      $image->resize(400); // Prettier resizing than with browser and saves bandwidth.
+    if($image->width() > $imageSize || $image->height() > $imageSize) {
+      $image->resize($imageSize); // Prettier resizing than with browser and saves bandwidth.
     }
     if(!$image->fixOrientation()) { // No fatal error so we don't bail out.
       Ajax::debug('Couldn\'t save correct image orientation: '.$tmpkey);
@@ -114,7 +116,7 @@ if(file_exists($file['tmp_name'])) {
                             'mime'=>$file['type'],
                             'size'=>$file['size'],
                             'name'=>$file['name'],
-                            'recordId'=>$_POST['RecordId'],
+                            'recordId'=>Util::cgiValue('RecordId'),
                             'tmp'=>$tmpkey,
                             )));
       exit();

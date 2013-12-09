@@ -278,21 +278,6 @@ __EOT__;
       'escape' => false
       );
 
-    if (false) {
-      $opts['fdd']['Events'] = array(
-        'name'     => L::t('Events'),
-        'sql'      => 'Id',
-        'php'      => array('type' => 'function',
-                            'function' => 'CAFEVDB\Projects::eventButtonPME',
-                            'parameters' => $nameIdx),
-        'select'   => 'T',
-        'options'  => 'LVCPDR',
-        'maxlen'   => 11,
-        'default'  => '0',
-        'sort'     => false
-        );
-    }
-
 
     $handle = mySQL::connect(Config::$pmeopts);
     $groupedInstruments = Instruments::fetchGrouped($handle);
@@ -330,9 +315,8 @@ __EOT__;
                                                             'rows' => 1,
                                                             'cols' => 128),
                                         'sort'     => false,
-                                        'escape' => false,
-                                        'help' => false,
-                                        'tooltip' => 'Komma-separierte Liste von Extra-Feldern, z.B.:
+                                        'escape'   => false,
+                                        'tooltip'  => 'Komma-separierte Liste von Extra-Feldern, z.B.:
 <blockquote>
   DZ:1,Beitrag:2
 </blockquote>
@@ -352,6 +336,20 @@ zur Extra-Spalte in der Datenbank angeben, z.B. so:
 </blockquote>
 Dann wird die Reihenfolge bei der Anzeige der Tabelle geändert, aber die
 Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
+
+    $opts['fdd']['Flyer'] = array(
+      'input' => 'V',
+      'name' => L::t('Flyer'),
+      'select' => 'T',
+      'options' => 'ACPDV',
+      'sql' => 'Id',
+      'php' => array(
+        'type' => 'function',
+        'function' => 'CAFEVDB\Projects::flyerImageLinkPME',
+        'parameters' => array()
+        ),
+      'default' => '',
+      'sort' => false);
 
     // We could try to use 'before' triggers in order to verify the
     // data. However, at the moment the stuff does not work without JS
@@ -977,6 +975,177 @@ __EOT__;
     mySQL::query($sqlquery, $handle);
 
     return true;
+  }
+
+  public static function flyerImageLinkPME($projectId, $opts, $modify, $k, $fds, $fdd, $row)
+  {
+    return self::flyerImageLink($projectId, $modify);
+  }
+
+  public static function flyerImageLink($projectId, $modify = false)
+  {
+    if ($modify === false) {
+      $span = ''
+        .'<span class="photo"><img class="photo" src="'.\OC::$WEBROOT.'/?app=cafevdb&getfile=inlineimage.php&RecordId='.$projectId.'&ImagePHPClass=CAFEVDB\Projects&ImageSize=1200"'
+        .' title="Flyer, if available" /></span>';
+      return $span;
+    } else {
+      $imagearea = ''
+        .'<div id="project_flyer">
+        
+  <iframe name="file_upload_target" id="file_upload_target" src=""></iframe>
+  <div class="tip propertycontainer" id="cafevdb_inline_image_wrapper" title="'
+      .L::t("Drop image to upload (max %s)", array(\OCP\Util::humanFileSize(Util::maxUploadSize()))).'"'
+        .' data-element="PHOTO">
+    <ul id="phototools" class="transparent hidden contacts_property">
+      <li><a class="svg delete" title="'.L::t("Delete current flyer").'"></a></li>
+      <li><a class="svg edit" title="'.L::t("Edit current flyer").'"></a></li>
+      <li><a class="svg upload" title="'.L::t("Upload new flyer").'"></a></li>
+      <li><a class="svg cloud icon-cloud" title="'.L::t("Select image from ownCloud").'"></a></li>
+    </ul>
+  </div>
+</div> <!-- project_flyer -->
+';
+
+      return $imagearea;
+    }
+  }
+
+  public static function fetchImage($projectId, $handle = false)
+  {
+    $image = '';
+
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
+    if (false) {
+      $pktSize = 32*(1 << 20);
+      $query = "SET GLOBAL max_allowed_packet=$pktSize";
+      mySQL::query($query, $handle, false, true);
+    }
+      
+    $query = "SELECT `ImageData` FROM `ProjectFlyers` WHERE `ProjectId` = ".$projectId;
+    $result = mySQL::query($query, $handle);
+
+    if ($result !== false && mysql_num_rows($result) == 1) {
+      $row = mySQL::fetch($result);
+      if (isset($row['ImageData'])) {
+        $image = $row['ImageData'];
+      }
+    }
+    
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $image;    
+  }
+
+  /**Take a BASE64 encoded image and store it in the DB.
+   */
+  public static function storeImage($projectId, $image, $handle = false)
+  { 
+    if (!isset($image) || $image == '') {
+      return true;
+    }
+
+    Error::exceptions(true);
+
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
+    if (false) {
+      $pktSize = 32*(1 << 20);
+      $query = "SET GLOBAL max_allowed_packet=$pktSize";
+      mySQL::query($query, $handle, false, true);
+    }
+
+    $query = "INSERT INTO `ProjectFlyers`
+  (`ProjectId`,`ImageData`) VALUES (".$projectId.",'".$image."')
+  ON DUPLICATE KEY UPDATE `ImageData` = '".$image."';";
+
+    $result = mySQL::query($query, $handle) && self::storeModified($projectId, $handle);
+    
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $result;
+  }
+
+  public static function deleteImage($projectId, $handle = false)
+  {
+    $image = '';
+
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+      
+    $query = "DELETE IGNORE FROM `ProjectFlyers` WHERE `ProjectId` = ".$projectId;
+
+    $result = mySQL::query($query, $handle) && self::storeModified($projectId, $handle);
+
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $result;
+  }  
+
+  public static function storeModified($projectId, $handle = false)
+  {
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+      
+    $query = "UPDATE IGNORE `Projekte`
+    SET `Aktualisiert` = '".date('Y-m-d H:i:s')."'
+    WHERE `Id` = ".$projectId;
+
+    $result = mySQL::query($query, $handle);
+    
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $result;
+  }
+
+  public static function fetchModified($projectId, $handle = false)
+  {
+    $modified = 0;
+
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+      
+    $query = "SELECT `Aktualisiert` FROM `Projekte` WHERE `Id` = ".$projectId.";";
+
+    $result = mySQL::query($query, $handle);
+    if ($result !== false && mysql_num_rows($result) == 1) {
+      $row = mySQL::fetch($result);
+      if (isset($row['Aktualisiert'])) {
+        $modified = strtotime($row['Aktualisiert']);
+      }
+    }
+    
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $modified;
   }
 
 }; // class Projects

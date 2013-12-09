@@ -897,7 +897,7 @@ class mySQL
       }
     }
     if (!$result) {
-      Util::error('mysql_query() "'.$query.'" failed: "'.$err.'"', $die, $silent);
+      Util::error('mysql_query() failed: "'.$err.'", query: "'.$query.'"', $die, $silent);
     }
     return $result;
   }

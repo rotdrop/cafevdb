@@ -37,7 +37,8 @@ use CAFEVDB\Error;
 OCP\JSON::checkLoggedIn();
 OCP\JSON::checkAppEnabled('cafevdb');
 
-$recordId = Util::cgiValue('RecordId', '');
+$recordId  = Util::cgiValue('RecordId', '');
+$imageSize = Util::cgiValue('ImageSize', 400);
 
 if ($recordId == '') {
   Ajax::bailOut(L::t('No record ID was submitted.'));
@@ -62,8 +63,8 @@ if (!$image) {
 if (!$image->loadFromFile($localpath)) {
   Ajax::bailOut(L::t('Error loading image.'));
 }
-if ($image->width() > 400 || $image->height() > 400) {
-  $image->resize(400); // Prettier resizing than with browser and saves bandwidth.
+if ($image->width() > $imageSize || $image->height() > $imageSize) {
+  $image->resize($imageSize); // Prettier resizing than with browser and saves bandwidth.
 }
 if (!$image->fixOrientation()) { // No fatal error so we don't bail out.
   OCP\Util::writeLog('cafevdb',

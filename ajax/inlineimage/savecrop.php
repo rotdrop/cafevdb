@@ -47,6 +47,7 @@ $h = Util::cgiValue('h', -1, false);
 $tmpkey = Util::cgiValue('tmpkey', '');
 $recordId = Util::cgiValue('RecordId', '');
 $imageClass = Util::cgiValue('ImagePHPClass', '');
+$imageSize = Util::cgiValue('ImageSize', 400);
 
 if ($tmpkey == '') {
   Ajax::bailOut('Missing key to temporary file.');
@@ -68,8 +69,8 @@ if ($data) {
                        'savecrop.php, x: '.$x1.' y: '.$y1.' w: '.$w.' h: '.$h,
                        OCP\Util::DEBUG);
     if ($image->crop($x1, $y1, $w, $h)) {
-      if (($image->width() <= 200 && $image->height() <= 200)
-         || $image->resize(200)) {
+      if (($image->width() <= $imageSize && $image->height() <= $imageSize)
+         || $image->resize($imageSize)) {
         if (!call_user_func(array($imageClass, 'storeImage'), $recordId, $image->__toString())) {
           Ajax::bailOut(L::t('Error saving image in DB'));
         }

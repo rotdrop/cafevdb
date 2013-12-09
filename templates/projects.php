@@ -24,7 +24,7 @@ echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
 
 // Photo upload support:
 
-if (true || !$table->changeOperation()) {
+if (!$table->changeOperation()) {
   // Don't display the image dialog when not in single-record mode
   echo "<!-- \n";
 }
@@ -35,6 +35,7 @@ if (true || !$table->changeOperation()) {
   <input type="hidden" name="requesttoken" value="<?php echo $_['requesttoken'] ?>">
   <input type="hidden" name="RecordId" value="<?php echo $_['recordId'] ?>">
   <input type="hidden" name="ImagePHPClass" value="CAFEVDB\Projects">
+  <input type="hidden" name="ImageSize" value="1200"> 
   <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $_['uploadMaxFilesize'] ?>" id="max_upload">
   <input type="hidden" class="max_human_file_size" value="(max <?php echo $_['uploadMaxHumanFilesize']; ?>)">
   <input id="file_upload_start" type="file" accept="image/*" name="imagefile" />

@@ -425,7 +425,7 @@ __EOT__;
         .'<div id="contact_photo">
         
   <iframe name="file_upload_target" id=\'file_upload_target\' src=""></iframe>
-  <div class="tip propertycontainer" id="cafevdb_musician_photo_wrapper" title="'
+  <div class="tip propertycontainer" id="cafevdb_inline_image_wrapper" title="'
       .L::t("Drop photo to upload (max %s)", array(\OCP\Util::humanFileSize(Util::maxUploadSize()))).'"'
         .' data-element="PHOTO">
     <ul id="phototools" class="transparent hidden contacts_property">
