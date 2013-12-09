@@ -320,6 +320,7 @@ $(document).ready(function(){
 
     return CAFEVDB.tableExportMenu($(this));
   });
+
   $('select.pme-export-choice').on('chosen:showing_dropdown', function (chosen) {
     $('ul.chosen-results li.active-result').tipsy({gravity:'w', fade:true});
   });
@@ -358,6 +359,9 @@ $(document).ready(function(){
 
   CAFEVDB.applyTipsy('label[class$="memberstatus-label"]',
                      {gravity:'n', fade:true, html:true, className:'tipsy-wide'});
+
+  $('textarea[class^="pme-input"]').tipsy(
+    {gravity:'sw', fade:true, html:true, className:'tipsy-wide'});
 
   $('#personalsettings .generalsettings').on(
     'click keydown', function(event) {
@@ -412,6 +416,13 @@ $(document).ready(function(){
     CAFEVDB.formSubmit(OC.linkTo('cafevdb', 'index.php'), values, 'post');
 
     return false;
+  });
+
+  $('input.alertdata.cafevdb-page').each(function(index) {
+    var title = $(this).attr('name');
+    var text  = $(this).attr('value');
+    OC.dialogs.alert('<div class="cafevdb-error">'+text+'</div>', title, null, true);
+    //$('#cafevdb-error-block').append('<u>'+title+'</u><br/>'+text+'<br/>',
   });
 
 });
