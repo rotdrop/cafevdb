@@ -442,6 +442,13 @@ __EOT__;
     }
   }
 
+  public static function imagePlaceHolder()
+  {
+    // could probably also check for browser support for svg here
+    return 'person_large.png';
+  }
+
+
   public static function fetchImage($musicianId, $handle = false)
   {
     $photo = '';

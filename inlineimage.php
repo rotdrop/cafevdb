@@ -55,10 +55,10 @@ if (!OC_Group::inGroup($user, $group)) {
   return $tmpl->printPage();
 }
 
-function getStandardImage() {
+function getStandardImage($placeHolder) {
 	//OCP\Response::setExpiresHeader('P10D');
 	OCP\Response::enableCaching();
-	OCP\Response::redirect(OCP\Util::imagePath('cafevdb', 'person_large.png'));
+	OCP\Response::redirect(OCP\Util::imagePath('cafevdb', $placeHolder));
 	exit();
 }
 
@@ -66,9 +66,15 @@ try {
   
   Error::exceptions(true);
 
-  $recordId   = Util::cgiValue('RecordId', -1);
-  $imageClass = Util::cgiValue('ImagePHPClass', '');
-  $imageSize  = Util::cgiValue('ImageSize', 400);
+  $recordId    = Util::cgiValue('RecordId', -1);
+  $imageClass  = Util::cgiValue('ImagePHPClass', '');
+  $imageSize   = Util::cgiValue('ImageSize', 400);
+
+  $defaultPlaceHolder = call_user_func(array($imageClass, 'imagePlaceHolder'));
+  if ($defaultPlaceHolder == '') {
+    $defaultPlaceHolder = 'person_large.png';
+  }
+  $placeHolder = Util::cgiValue('PlaceHolder', $defaultPlaceHolder);
 
   $etag = null;
   $caching = null;
@@ -76,13 +82,13 @@ try {
   if($recordId < 0) {
     OCP\Util::writeLog('cafevdb',
                        'inlineimage.php: record-id invalid', OCP\Util::DEBUG);
-    getStandardImage();
+    getStandardImage($placeHolder);
   }
 
   if(!extension_loaded('gd') || !function_exists('gd_info')) {
     OCP\Util::writeLog('cafevdb',
                        'inlineimage.php: GD module not installed', OCP\Util::DEBUG);
-    getStandardImage();
+    getStandardImage($placeHolder);
   }
 
   $imageData = call_user_func(array($imageClass, 'fetchImage'), $recordId);
@@ -90,14 +96,14 @@ try {
   if (!$imageData || $imageData == '') {
     OCP\Util::writeLog('cafevdb',
                        'inlineimage.php: Empty image string for recordId = '.$recordId, OCP\Util::DEBUG);
-    getStandardImage();
+    getStandardImage($placeHolder);
   }
 
   $image = new OC_Image();
   if (!$image) {
     OCP\Util::writeLog('cafevdb',
                        'inlineimage.php: Image could not be created', OCP\Util::DEBUG);
-    getStandardImage();
+    getStandardImage($placeHolder);
   }
   
 
@@ -133,7 +139,7 @@ try {
     // Not found :-(
     OCP\Util::writeLog('cafevdb',
                        'inlineimage.php: no valid image found', OCP\Util::DEBUG);
-    getStandardImage();
+    getStandardImage($placeHolder);
   }
   header('Content-Type: '.$image->mimeType());
   $image->show();

@@ -31,6 +31,7 @@ namespace CAFEVDB
 class Projects
 {
   const CSS_PREFIX = 'cafevdb-page';
+  const IMAGE_PLACEHOLDER = 'flyerdummy.png';
   private $pme;
   private $pme_bare;
   private $execute;
@@ -986,7 +987,7 @@ __EOT__;
   {
     if ($modify === false) {
       $span = ''
-        .'<span class="photo"><img class="photo" src="'.\OC::$WEBROOT.'/?app=cafevdb&getfile=inlineimage.php&RecordId='.$projectId.'&ImagePHPClass=CAFEVDB\Projects&ImageSize=1200"'
+        .'<span class="photo"><img class="photo" src="'.\OC::$WEBROOT.'/?app=cafevdb&getfile=inlineimage.php&RecordId='.$projectId.'&ImagePHPClass=CAFEVDB\Projects&ImageSize=1200&PlaceHolder='.self::IMAGE_PLACEHOLDER.'"'
         .' title="Flyer, if available" /></span>';
       return $span;
     } else {
@@ -1011,6 +1012,15 @@ __EOT__;
     }
   }
 
+  public static function imagePlaceHolder()
+  {
+    // could probably also check for browser support for svg here
+    return self::IMAGE_PLACEHOLDER;
+  }
+
+  /**Fetch a previously stored image (picture) from the DB. The image
+   * may be empty.
+   */
   public static function fetchImage($projectId, $handle = false)
   {
     $image = '';
@@ -1044,7 +1054,8 @@ __EOT__;
     return $image;    
   }
 
-  /**Take a BASE64 encoded image and store it in the DB.
+  /**Take a BASE64 encoded image and store it in the DB. Probably a
+   * flyer or something like this.
    */
   public static function storeImage($projectId, $image, $handle = false)
   { 
@@ -1079,6 +1090,10 @@ __EOT__;
     return $result;
   }
 
+  /**Delete the image (picture) associated to the project. Probably a
+   * flyer. More meta-data -- if needed -- should be added through the
+   * Wiki.
+   */
   public static function deleteImage($projectId, $handle = false)
   {
     $image = '';
@@ -1100,6 +1115,9 @@ __EOT__;
     return $result;
   }  
 
+  /**"Touch" the last-modified time-stamp, e.g. after updating data
+   * not directly stored in the projects table.
+   */
   public static function storeModified($projectId, $handle = false)
   {
     $ownConnection = $handle === false;
@@ -1121,6 +1139,7 @@ __EOT__;
     return $result;
   }
 
+  /**Retriever the last-modified time-stamp. */
   public static function fetchModified($projectId, $handle = false)
   {
     $modified = 0;
@@ -1146,6 +1165,12 @@ __EOT__;
     }
 
     return $modified;
+  }
+
+  /**
+   */
+  public static function generateWikiOverview($handle = false)
+  {
   }
 
 }; // class Projects
