@@ -43,8 +43,8 @@ foreach ($_FILES[$fileKey]['error'] as $error) {
   if ($error != 0) {
     $errors = array(
       UPLOAD_ERR_OK => L::t('There is no error, the file uploaded with success'),
-      UPLOAD_ERR_INI_SIZE => L::t('The uploaded file exceeds the upload_max_filesize directive in php.ini: ')
-      . ini_get('upload_max_filesize'),
+      UPLOAD_ERR_INI_SIZE => L::t('The uploaded file exceeds the upload_max_filesize directive in php.ini: %s', 
+                                  array(ini_get('upload_max_filesize'))),
       UPLOAD_ERR_FORM_SIZE => L::t('The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form'),
       UPLOAD_ERR_PARTIAL => L::t('The uploaded file was only partially uploaded'),
       UPLOAD_ERR_NO_FILE => L::t('No file was uploaded'),
