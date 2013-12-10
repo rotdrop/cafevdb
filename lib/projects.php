@@ -630,7 +630,7 @@ __EOT__;
       '.L::t('Instrumentation Numbers').'
     </option>
     <option title="'.Config::toolTips('project-action-wiki').'"
-            value="project-wiki?'.urlencode('/doku.php?id='.self::projectWikiLink($projectName)).'">
+            value="project-wiki?'.urlencode(self::projectWikiLink($projectName)).'">
       '.L::t('Project Wiki Page').'
     </option>
     <option title="'.Config::toolTips('project-action-files').'"
@@ -1269,15 +1269,16 @@ __EOT__;
       // create a new page as coppy from the old one and change the
       // text of the old one to contain a link to the new page.
 
-      $page .= "  * [[".self::projectWikiLink($name)."|".$bareName.")]]\n";
+      $page .= "  * [[".self::projectWikiLink($name)."|".$bareName."]]\n";
     }
 
     $pagename = $orchestra.":projekte";
 
     $wikiLocation = \OCP\Config::GetAppValue("dokuwikiembed", 'wikilocation', '');
     $dwembed = new \DWEMBED\App($wikiLocation);
-    $dwembed->putPage($pagename, $page, array("sum" => "Automatic CAFEVDB synchronization",
-                                              "minor" => true));
+    $dwembed->putPage($pagename, $page,
+                      array("sum" => "Automatic CAFEVDB synchronization",
+                            "minor" => true));
 
   }
 
