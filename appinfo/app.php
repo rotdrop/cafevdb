@@ -25,7 +25,11 @@ OC::$CLASSPATH['CAFEVDB\EmailFilter'] = 'cafevdb/lib/email.php';
 OC::$CLASSPATH['CAFEVDB\Email'] = 'cafevdb/lib/email.php';
 OC::$CLASSPATH['CAFEVDB\EmailHistory'] = 'cafevdb/lib/email.php';
 
-OC::$CLASSPATH['OC_RoundCube_App'] = 'roundcube/lib/RoundCubeApp.php';
+OC::$CLASSPATH['DWEMBED\App'] = 'dokuwikiembed/lib/dokuwikiembed.php';
+OC::$CLASSPATH['DWEMBED\L'] = 'dokuwikiembed/lib/util.php';
+OC::$CLASSPATH['DWEMBED\Util'] = 'dokuwikiembed/lib/util.php';
+
+OC::$CLASSPATH['OC_RoundCube_App'] = 'roundcube/lib/RoundCubeApp.php'; // <<<=== why
 
 /* 3rd party classes */
 OC::$CLASSPATH['phpMyEdit'] = 'cafevdb/3rdparty/phpMyEdit/phpMyEdit.class.php';

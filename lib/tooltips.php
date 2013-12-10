@@ -242,6 +242,8 @@ has been ``closed\'\'.'),
 
       'project-action-instrumentation-numbers' => L::t('Display the desired instrumentaion numbers, i.e. how many musicians are already registered for each instrument group and how many are finally needed.'),
 
+      'project-action-wiki' => L::t('Change to the DokuWiki-page for this project (if there is one)'),
+
       'projectevents-button' => L::t('Open a dialog with all known
 events associated to the project.
 Events can be added and modified

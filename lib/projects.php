@@ -401,6 +401,21 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
     // Also create the project folders.
     $projectPaths = self::maybeCreateProjectFolder($projectId, $projectName);
 
+    // Maybe create a wiki-page with just the project-title
+
+    if (false) {
+      $orchestra = Config::$opts['orchestra']; // for the name-space
+      $pagename = $orchestra.":projekte:".$projectName;
+
+      $page = "===== ".$projectName." im Jahr ".$newvals['Jahr']." =====";
+
+      $wikiLocation = \OCP\Config::GetAppValue("dokuwikiembed", 'wikilocation', '');
+      $dwembed = new \DWEMBED\App($wikiLocation);
+      $dwembed->putPage($pagename, $page, array("sum" => "Automatic CAFEVDB page creation",
+                                              "minor" => false));
+    }
+    self::generateWikiOverview();
+
     $pme->sql_connect();
 
     return true;
@@ -438,6 +453,35 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
     // Now, we should also rename the project folder. We simply can
     // pass $newvals and $oldvals
     self::renameProjectFolder($newvals, $oldvals);
+
+
+    // Fetch the old wiki-page, if any, push as new page to the wiki,
+    // push a new "old" page to the wiki with a "has been renamed"
+    // notice", then update the overview page
+
+    $orchestra = Config::$opts['orchestra']; // for the name-space
+
+    $oldname = $oldvals['Name'];
+    $newname = $newvals['Name'];
+    $oldpagename = $orchestra.":projekte:".$oldname;
+    $newpagename = $orchestra.":projekte:".$newname;
+
+    $wikiLocation = \OCP\Config::GetAppValue("dokuwikiembed", 'wikilocation', '');
+    $dwembed = new \DWEMBED\App($wikiLocation);
+
+    $oldpage =
+      " *  ".$oldvals['Name']." wurde zu [[".$orchestra.":projekte:".$newname.")]] umbenant\n";
+    $newpage = $dwembed->getPage($oldpagename);
+    if ($newpage) {
+      // Geneate stuff if there is an old page
+      $dwembed->putPage($oldpagename, $oldpage, array("sum" => "Automatic CAFEVDB page renaming",
+                                                      "minor" => false));
+      $dwembed->putPage($newpagename, $newpage, array("sum" => "Automatic CAFEVDB page renaming",
+                                                      "minor" => false));
+    }    
+
+    self::generateWikiOverview();
+
 
     $pme->sql_connect();
 
@@ -584,6 +628,10 @@ __EOT__;
     </option>
     <option title="'.Config::toolTips('project-action-instrumentation-numbers').'" value="project-instruments">
       '.L::t('Instrumentation Numbers').'
+    </option>
+    <option title="'.Config::toolTips('project-action-wiki').'"
+            value="project-wiki?'.urlencode('/doku.php?id='.self::projectWikiLink($projectName)).'">
+      '.L::t('Project Wiki Page').'
     </option>
     <option title="'.Config::toolTips('project-action-files').'"
             value="project-files?'.$projectPaths['project'].'">
@@ -1167,10 +1215,70 @@ __EOT__;
     return $modified;
   }
 
-  /**
+  public static function projectWikiLink($name)
+  {
+    Config::init();
+    $orchestra = Config::$opts['orchestra'];
+
+    return $orchestra.":projekte:".$name;
+  }
+
+  /** Generate an automated overview. Actually, the orchestra-title
+   * should be made configurable.
    */
   public static function generateWikiOverview($handle = false)
   {
+/*
+====== Projekte der Camerata Academica Freiburg e.V. ======
+
+==== 2011 ====
+  * [[Auvergne2011|Auvergne]]
+  * [[Weihnachten2011]]
+
+==== 2012 ====
+  * [[Listenpunkt]]
+  * [[Blah]]
+
+==== 2013 ====
+  * [[Listenpunkt]]
+*/
+    $orchestra = Config::$opts['orchestra']; // for the name-space
+
+    $projects = self::fetchProjects(false, true);
+    
+    $page = "====== Projekte der Camerata Academica Freiburg e.V. ======\n\n";
+
+    $year = -1;    
+    foreach($projects as $id => $row) {
+      if ($row['Jahr'] != $year) {
+        $year = $row['Jahr'];
+        $page .= "\n==== ".$year."====\n";
+      }
+      $name = $row['Name'];
+
+      $matches = false;
+      if (preg_match('/^(.*\D)?(\d{4})$/', $name, $matches) == 1) {
+        $bareName = $matches[1];
+        //$projectYear = $matches[2];
+      } else {
+        $bareName = $name;
+      }
+
+      // A page is tagged with the project name; if this ever should
+      // be changed (which is possible), the change-trigger should
+      // create a new page as coppy from the old one and change the
+      // text of the old one to contain a link to the new page.
+
+      $page .= "  * [[".self::projectWikiLink($name)."|".$bareName.")]]\n";
+    }
+
+    $pagename = $orchestra.":projekte";
+
+    $wikiLocation = \OCP\Config::GetAppValue("dokuwikiembed", 'wikilocation', '');
+    $dwembed = new \DWEMBED\App($wikiLocation);
+    $dwembed->putPage($pagename, $page, array("sum" => "Automatic CAFEVDB synchronization",
+                                              "minor" => true));
+
   }
 
 }; // class Projects

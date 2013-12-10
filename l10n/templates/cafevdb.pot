@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-10 03:58+0100\n"
+"POT-Creation-Date: 2013-12-10 06:41+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -677,11 +677,11 @@ msgstr ""
 msgid "Export to the following format is not yet supported:"
 msgstr ""
 
-#: js/cafevdb.js:169 js/cafevdb.js:244 js/project-instruments.js:91
+#: js/cafevdb.js:169 js/cafevdb.js:249 js/project-instruments.js:91
 msgid "Unimplemented"
 msgstr ""
 
-#: js/cafevdb.js:242 js/project-instruments.js:89
+#: js/cafevdb.js:247 js/project-instruments.js:89
 msgid "Unknown operation:"
 msgstr ""
 
@@ -962,7 +962,7 @@ msgstr ""
 msgid "and"
 msgstr ""
 
-#: lib/email.php:1375 lib/projects.php:577 lib/projects.php:720
+#: lib/email.php:1375 lib/projects.php:621 lib/projects.php:768
 msgid "Events"
 msgstr ""
 
@@ -1244,7 +1244,7 @@ msgstr ""
 msgid "The currently active project."
 msgstr ""
 
-#: lib/functions.php:727 lib/projects.php:583
+#: lib/functions.php:727 lib/projects.php:627
 msgid "Detailed Instrumentation"
 msgstr ""
 
@@ -1255,7 +1255,7 @@ msgid ""
 "address etc."
 msgstr ""
 
-#: lib/functions.php:742 lib/projects.php:580
+#: lib/functions.php:742 lib/projects.php:624
 msgid "Brief Instrumentation"
 msgstr ""
 
@@ -1276,7 +1276,7 @@ msgid ""
 "ones as needed."
 msgstr ""
 
-#: lib/functions.php:772 lib/projects.php:586
+#: lib/functions.php:772 lib/projects.php:630
 msgid "Instrumentation Numbers"
 msgstr ""
 
@@ -1448,32 +1448,36 @@ msgstr ""
 msgid "Flyer"
 msgstr ""
 
-#: lib/projects.php:590
+#: lib/projects.php:634
+msgid "Project Wiki Page"
+msgstr ""
+
+#: lib/projects.php:638
 msgid "Project Files"
 msgstr ""
 
-#: lib/projects.php:594
+#: lib/projects.php:642
 msgid "Profit and Loss Account"
 msgstr ""
 
-#: lib/projects.php:999
+#: lib/projects.php:1047
 #, php-format
 msgid "Drop image to upload (max %s)"
 msgstr ""
 
-#: lib/projects.php:1002
+#: lib/projects.php:1050
 msgid "Delete current flyer"
 msgstr ""
 
-#: lib/projects.php:1003
+#: lib/projects.php:1051
 msgid "Edit current flyer"
 msgstr ""
 
-#: lib/projects.php:1004
+#: lib/projects.php:1052
 msgid "Upload new flyer"
 msgstr ""
 
-#: lib/projects.php:1005
+#: lib/projects.php:1053
 msgid "Select image from ownCloud"
 msgstr ""
 
@@ -1811,11 +1815,11 @@ msgid ""
 "to pages with the instrumentation, events, instrumentation numbers etc."
 msgstr ""
 
-#: lib/tooltips.php:228 lib/tooltips.php:287
+#: lib/tooltips.php:228 lib/tooltips.php:289
 msgid "Open a page with the musicians registered for the respective project."
 msgstr ""
 
-#: lib/tooltips.php:232 lib/tooltips.php:245
+#: lib/tooltips.php:232 lib/tooltips.php:247
 msgid ""
 "Open a dialog with all known\n"
 "events associated to the project.\n"
@@ -1834,19 +1838,23 @@ msgid ""
 "has been ``closed''."
 msgstr ""
 
-#: lib/tooltips.php:250
+#: lib/tooltips.php:245
+msgid "Change to the DokuWiki-page for this project (if there is one)"
+msgstr ""
+
+#: lib/tooltips.php:252
 msgid ""
 "Delete the event from the system\n"
 "(no undo possible)."
 msgstr ""
 
-#: lib/tooltips.php:253
+#: lib/tooltips.php:255
 msgid ""
 "Exclude all events from\n"
 "email-submission"
 msgstr ""
 
-#: lib/tooltips.php:256
+#: lib/tooltips.php:258
 msgid ""
 "Detach the respective event\n"
 "from the project, but do not\n"
@@ -1856,34 +1864,34 @@ msgid ""
 "categories."
 msgstr ""
 
-#: lib/tooltips.php:263
+#: lib/tooltips.php:265
 msgid "Modify the event."
 msgstr ""
 
-#: lib/tooltips.php:265
+#: lib/tooltips.php:267
 msgid "Add a new concert-event to the project."
 msgstr ""
 
-#: lib/tooltips.php:267
+#: lib/tooltips.php:269
 msgid ""
 "Add a private management event which is not exposed to the rest of the world."
 msgstr ""
 
-#: lib/tooltips.php:269
+#: lib/tooltips.php:271
 msgid "Add some other event to the project."
 msgstr ""
 
-#: lib/tooltips.php:271
+#: lib/tooltips.php:273
 msgid "Add a new rehearsal-event to the project."
 msgstr ""
 
-#: lib/tooltips.php:273
+#: lib/tooltips.php:275
 msgid ""
 "Select all events for\n"
 "email-submission"
 msgstr ""
 
-#: lib/tooltips.php:276
+#: lib/tooltips.php:278
 msgid ""
 "Mark the respective event for being\n"
 "sent by email as ICS-attachment per email.\n"
@@ -1893,20 +1901,20 @@ msgid ""
 "recipients."
 msgstr ""
 
-#: lib/tooltips.php:283
+#: lib/tooltips.php:285
 msgid ""
 "Click to open an email-form\n"
 "and send the selected events to\n"
 "selected recipients."
 msgstr ""
 
-#: lib/tooltips.php:289
+#: lib/tooltips.php:291
 msgid ""
 "Add the musician to the project. A new form will open were details like the "
 "instrument etc. can be adjustetd."
 msgstr ""
 
-#: lib/tooltips.php:291
+#: lib/tooltips.php:293
 msgid ""
 "Save the current email for later re-usal in the data-base.\n"
 "An email template can contain per-member substitutions with the syntax "
@@ -1918,36 +1926,36 @@ msgid ""
 "by the pre-names of the organizing committe in order to compose  greetings."
 msgstr ""
 
-#: lib/tooltips.php:297
+#: lib/tooltips.php:299
 msgid "Select one of the email templates previously stored in the data-base."
 msgstr ""
 
-#: lib/tooltips.php:299
+#: lib/tooltips.php:301
 msgid ""
 "Recompute the link between projects and events, using the event-categories "
 "as primary key."
 msgstr ""
 
-#: lib/tooltips.php:301
+#: lib/tooltips.php:303
 msgid ""
 "Check whether the data-base can be accessed with the given account\n"
 "information and password. The password will only be stored in the\n"
 "configuration storage if the test can be performed successfully."
 msgstr ""
 
-#: lib/tooltips.php:305
+#: lib/tooltips.php:307
 msgid ""
 "Try to connect to the specified web-address, will open the web-address in "
 "another window or tab, depending your local browser preferences."
 msgstr ""
 
-#: lib/tooltips.php:307
+#: lib/tooltips.php:309
 msgid ""
 "Add the instruments of the actually registered musicians to the instrument-"
 "table for the project."
 msgstr ""
 
-#: lib/tooltips.php:309
+#: lib/tooltips.php:311
 msgid ""
 "Upload a file from your local computer as attachment. The file will be "
 "removed from the remote-system after the message has been sent."

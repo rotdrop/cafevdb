@@ -233,10 +233,15 @@ var CAFEVDB = CAFEVDB || {};
       break;
     case 'profit-and-loss':
     case 'project-files':
-      var url   = OC.linkTo('files', 'index.php');
+      var url    = OC.linkTo('files', 'index.php');
       var values = 'dir='+optionValues[1];
 
       CAFEVDB.formSubmit(url, values, 'get');
+      break;
+    case 'project-wiki':
+      var url    = OC.linkTo('dokuwikiembed', 'index.php');
+      var values = 'wikiPath='+optionValues[1];
+      CAFEVDB.formSubmit(url, values, 'post');
       break;
     default:
       OC.dialogs.alert(t('cafevdb', 'Unknown operation:')
