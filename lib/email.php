@@ -1274,10 +1274,12 @@ __EOT__;
       }
     }
 
-    if (isset($this->fileAttach[-1])) {
-      $newRecord = $this->fileAttach[-1];
-      unset($this->fileAttach[-1]);
+    $k = -1;
+    while (isset($this->fileAttach[$k])) {
+      $newRecord = $this->fileAttach[$k];
+      unset($this->fileAttach[$k]);
       $this->fileAttach[] = $newRecord;
+      --$k;
     }
 
     foreach ($this->deleteAttachment as $tmpName) {

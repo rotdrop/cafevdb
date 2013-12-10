@@ -377,6 +377,8 @@ var CAFEVDB = CAFEVDB || {};
 
 })(window, jQuery, CAFEVDB);
 
+
+/* Template forms, stolen from the contacts app. */
 (function( $ ) {
 
     function outerHTML(node){

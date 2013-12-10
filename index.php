@@ -107,11 +107,17 @@ try {
   OCP\Util::addScript('cafevdb', 'pme');
   OCP\Util::addScript('cafevdb', 'transpose');
   OCP\Util::addScript('cafevdb', 'page');
-  OCP\Util::addScript('cafevdb', 'email');
   OCP\Util::addScript('cafevdb', 'events');
   OCP\Util::addScript('cafevdb', 'blog');
   OCP\Util::addScript('cafevdb', 'inlineimage');
   OCP\Util::addScript('cafevdb', 'jquery.Jcrop');
+
+  OCP\Util::addscript('files',   'jquery.iframe-transport');
+  OCP\Util::addscript('files',   'jquery.fileupload');
+  OCP\Util::addscript('cafevdb', 'file-upload');
+
+  OCP\Util::addScript('cafevdb', 'email');
+
   // TinyMCE stuff
   OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/tinymce.min');
   OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/jquery.tinymce.min');

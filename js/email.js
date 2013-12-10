@@ -20,11 +20,23 @@
  */
 
 var CAFEVDB = CAFEVDB || {};
+CAFEVDB.Email = CAFEVDB.Email || {};
 
-(function(window, $, CAFEVDB, undefined) {
+(function(window, $, Email, undefined) {
   'use strict';
-  var Email = function() {};
   Email.enabled = true;
+  Email.numAttached = 0;
+
+  Email.submitReloadForm = function() {
+    // Simply submit the mess in order to let PHP do the update
+    var emailForm = $('form.cafevdb-email-form');
+    $('<input />').attr('type', 'hidden')
+      .attr('name', 'writeMail')
+      .attr('value', 'reload')
+      .appendTo(emailForm);
+    emailForm.submit();
+  };
+
   Email.attachmentFromJSON = function (response) {
     var emailForm = $('form.cafevdb-email-form');
     if (emailForm == '') {
@@ -35,62 +47,24 @@ var CAFEVDB = CAFEVDB || {};
 
     var file = response.data;
 
+    var k = ++Email.numAttached;
     // Fine. Attach some hidden inputs to the main form and submit it.
     $('<input />').attr('type', 'hidden')
-      .attr('name', 'fileAttach[-1][name]')
+      .attr('name', 'fileAttach[-'+k+'][name]')
       .attr('value', file.name)
       .appendTo(emailForm);
     $('<input />').attr('type', 'hidden')
-      .attr('name', 'fileAttach[-1][type]')
+      .attr('name', 'fileAttach[-'+k+'][type]')
       .attr('value', file.type)
       .appendTo(emailForm);
     $('<input />').attr('type', 'hidden')
-      .attr('name', 'fileAttach[-1][size]')
+      .attr('name', 'fileAttach[-'+k+'][size]')
       .attr('value', file.size)
       .appendTo(emailForm);
     $('<input />').attr('type', 'hidden')
-      .attr('name', 'fileAttach[-1][tmp_name]')
+      .attr('name', 'fileAttach[-'+k+'][tmp_name]')
       .attr('value', file.tmp_name)
       .appendTo(emailForm);
-    
-    // Simply submit the mess in order to let PHP do the update
-    $('<input />').attr('type', 'hidden')
-      .attr('name', 'writeMail')
-      .attr('value', 'reload')
-      .appendTo(emailForm);
-    
-    emailForm.submit();
-  };
-  Email.uploadAttachments = function(filelist) {
-    if(!this.enabled) {
-      return;
-    }
-    if (!filelist) {
-      OC.dialogs.alert(t('cafevdb', 'No files selected for upload.'),
-                       t('cafevdb', 'Error'));
-      return;
-    }
-
-    var file = filelist[0];
-    var target = $('#file_upload_target');
-    var form = $('#file_upload_form');
-    var totalSize=0;
-    if (file.size > $('#max_upload').val()) {
-      OC.dialogs.alert(t('cafevdb',
-                         'The file you are trying to upload exceeds the maximum size for file uploads on this server.'),
-                       t('cafevdb', 'Error'));
-      return;
-    } else {
-      target.load(function() {
-        var response = jQuery.parseJSON(target.contents().text());
-        if (response != undefined && response.status == 'success') {
-          CAFEVDB.Email.attachmentFromJSON(response);
-        } else {
-          OC.dialogs.alert(response.data.message, t('cafevdb', 'Error'));
-        }
-      });
-      form.submit();
-    }
   };
   Email.owncloudAttachment = function(path) {
     $.getJSON(OC.filePath('cafevdb', 'ajax', 'email/owncloudattachment.php'),
@@ -98,6 +72,7 @@ var CAFEVDB = CAFEVDB || {};
               function(response) {
                 if (response != undefined && response.status == 'success') {
                   CAFEVDB.Email.attachmentFromJSON(response);
+                  CAFEVDB.Email.submitReloadForm();
                 } else {
 	          OC.dialogs.alert(response.data.message, t('cafevdb', 'Error'));
                 }
@@ -136,12 +111,18 @@ var CAFEVDB = CAFEVDB || {};
     CAFEVDB.broadcastHeaderVisibility('expanded');
   };
 
-  CAFEVDB.Email = Email;
-
-})(window, jQuery, CAFEVDB);
+})(window, jQuery, CAFEVDB.Email);
 
 
 $(document).ready(function(){
+
+  CAFEVDB.FileUpload.init(
+    function (json) {
+      CAFEVDB.Email.attachmentFromJSON(json);
+    },
+    function () {
+      CAFEVDB.Email.submitReloadForm();
+    });
 
   if ($('#emailrecipients #writeMail').length) {
 
@@ -205,9 +186,11 @@ $(document).ready(function(){
                           CAFEVDB.Email.owncloudAttachment, false, '', true)
   });
   
+  if (false) {
   $('#file_upload_start').change(function(){
     CAFEVDB.Email.uploadAttachments(this.files);
   });
+  }
 
   $('button.eventattachments.edit').click(function(event) {
     event.preventDefault();
@@ -236,7 +219,6 @@ $(document).ready(function(){
     OC.dialogs.alert(text, title);
     $('#cafevdb-email-error').append('<u>'+title+'</u><br/>'+text+'<br/>');
   });
-
 
 });
 

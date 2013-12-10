@@ -35,12 +35,25 @@ echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
 
 ?>
 
-<!-- Upload support via Ajax/jsscript magic. -->
-<form class="float" id="file_upload_form" action="<?php echo OCP\Util::linkTo('cafevdb', 'ajax/email/uploadattachment.php'); ?>" method="post" enctype="multipart/form-data" target="file_upload_target">
-  <input type="hidden" name="requesttoken" value="<?php echo $_['requesttoken'] ?>">
-  <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $_['uploadMaxFilesize'] ?>" id="max_upload">
-  <input type="hidden" class="max_human_file_size" value="<?php echo $_['uploadMaxHumanFilesize']; ?>">
-  <input id="file_upload_start" type="file" name="fileAttach" />
+<form data-upload-id='1'
+      id="data-upload-form"
+      class="file_upload_form"
+      action="<?php print_unescaped(OCP\Util::linkTo('cafevdb', 'ajax/email/uploadattachment.php')); ?>"
+      method="post"
+      enctype="multipart/form-data"
+      target="file_upload_target_1">
+  <input type="hidden" name="MAX_FILE_SIZE" id="max_upload"
+						   value="<?php p($_['uploadMaxFilesize']) ?>">
+  <!-- Send the requesttoken, this is needed for older IE versions
+       because they don't send the CSRF token via HTTP header in this case -->
+  <input type="hidden" name="requesttoken" value="<?php p($_['requesttoken']) ?>" id="requesttoken">
+  <input type="hidden" class="max_human_file_size"
+	 value="(max <?php p($_['uploadMaxHumanFilesize']); ?>)">
+  <input type="file" id="file_upload_start" name="files[]" multiple>
 </form>
-<iframe name="file_upload_target" id='file_upload_target' src=""></iframe>
-
+<div id="uploadprogresswrapper">
+  <div id="uploadprogressbar"></div>
+  <input type="button" class="stop" style="display:none"
+	 value="<?php p($l->t('Cancel upload'));?>"
+	 />
+</div>

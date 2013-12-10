@@ -42,14 +42,15 @@ Config::init();
 // Firefox and Konqueror tries to download application/json for me.  --Arthur
 OCP\JSON::setContentTypeHeader('text/plain; charset=utf-8');
 
+$recordId = Util::cgiValue('RecordId', false);
+$imageSize = Util::cgiValue('ImageSize', 400);
+
 // If it is a Drag'n'Drop transfer it's handled here.
 $fn = (isset($_SERVER['HTTP_X_FILE_NAME']) ? $_SERVER['HTTP_X_FILE_NAME'] : false);
 if ($fn) {
   if (!Util::cgiValue('RecordId')) {
     Ajax::bailOut(L::t('No record ID was submitted.'));
   }
-  $recordId = Util::cgiValue('RecordId');
-  $imageSize = Util::cgiValue('ImageSize', 400);
   $tmpkey = 'cafevdb-inline-image-'.md5($fn);
   $data = file_get_contents('php://input');
   $image = new OC_Image();
@@ -78,10 +79,9 @@ if ($fn) {
 }
 
 // Uploads from file dialog are handled here.
-if (Util::cgiValue('RecordId', false) === false) {
+if ($recordId === false) {
   Ajax::bailOut(L::t('No record ID was submitted.'));
 }
-$imageSize = Util::cgiValue('ImageSize', 400);
 if (!isset($_FILES['imagefile'])) {
   Ajax::bailOut(L::t('No file was uploaded. Unknown error'));
 }
@@ -116,7 +116,7 @@ if(file_exists($file['tmp_name'])) {
                             'mime'=>$file['type'],
                             'size'=>$file['size'],
                             'name'=>$file['name'],
-                            'recordId'=>Util::cgiValue('RecordId'),
+                            'recordId'=>$recordId,
                             'tmp'=>$tmpkey,
                             )));
       exit();

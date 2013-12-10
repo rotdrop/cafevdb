@@ -1,4 +1,20 @@
 <?php
+/**@author Claus-Justus Heine
+ * @copyright 2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 use CAFEVDB\L;
 use CAFEVDB\Util;
@@ -10,48 +26,79 @@ OCP\JSON::checkLoggedIn();
 OCP\JSON::checkAppEnabled(Config::APP_NAME);
 OCP\JSON::callCheck();
 
+//trigger_error(print_r($_POST, true).print_r($_FILES, true), E_USER_NOTICE);
+
 // Firefox and Konqueror tries to download application/json for me.  --Arthur
 OCP\JSON::setContentTypeHeader('text/plain; charset=utf-8');
 
-//Ajax::bailOut(L::t('Test'));
+//Ajax::bailOut(L::t('Test'));o
 
-$fileKey = 'fileAttach';
+$fileKey = 'files';
 
 if (!isset($_FILES[$fileKey])) {
   Ajax::bailOut(L::t('No file was uploaded. Unknown error'));
 }
 
-$error = $_FILES[$fileKey]['error'];
-if($error !== UPLOAD_ERR_OK) {
-  $errors = array(
-    0=>L::t("There is no error, the file uploaded with success"),
-    1=>L::t("The uploaded file exceeds the upload_max_filesize directive in php.ini").ini_get('upload_max_filesize'),
-    2=>L::t("The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form"),
-    3=>L::t("The uploaded file was only partially uploaded"),
-    4=>L::t("No file was uploaded"),
-    6=>L::t("Missing a temporary folder")
-	);
-  Ajax::bailOut($errors[$error]);
+foreach ($_FILES[$fileKey]['error'] as $error) {
+  if ($error != 0) {
+    $errors = array(
+      UPLOAD_ERR_OK => L::t('There is no error, the file uploaded with success'),
+      UPLOAD_ERR_INI_SIZE => L::t('The uploaded file exceeds the upload_max_filesize directive in php.ini: ')
+      . ini_get('upload_max_filesize'),
+      UPLOAD_ERR_FORM_SIZE => L::t('The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form'),
+      UPLOAD_ERR_PARTIAL => L::t('The uploaded file was only partially uploaded'),
+      UPLOAD_ERR_NO_FILE => L::t('No file was uploaded'),
+      UPLOAD_ERR_NO_TMP_DIR => L::t('Missing a temporary folder'),
+      UPLOAD_ERR_CANT_WRITE => L::t('Failed to write to disk'),
+      );
+    Ajax::bailOut($errors[$error]);
+  }
+}
+$files = $_FILES[$fileKey];
+
+$upload_max_filesize = OCP\Util::computerFileSize(ini_get('upload_max_filesize'));
+$post_max_size = OCP\Util::computerFileSize(ini_get('post_max_size'));
+$maxUploadFileSize = min($upload_max_filesize, $post_max_size);
+
+$maxHumanFileSize = OCP\Util::humanFileSize($maxUploadFileSize);
+
+$totalSize = 0;
+foreach ($files['size'] as $size) {
+	$totalSize += $size;
+}
+if ($maxUploadFileSize >= 0 and $totalSize > $maxUploadFileSize) {
+  OCP\JSON::error(array('data' => array('message' => L::t('Not enough storage available'),
+                                        'uploadMaxFilesize' => $maxUploadFileSize,
+                                        'maxHumanFilesize' => $maxHumanFileSize)));
+  exit();
 }
 
-// Move the temporary file to location where we can find it later.
-$fileRecord = Email::saveAttachment($_FILES[$fileKey]);
+// First re-order the array
+$fileCount = count($files['name']);
+$fileRecord = array();
+$result = array();
+for ($i = 0; $i < $fileCount; $i++) {
+  foreach($files as $key => $values) {
+    $fileRecord[$key] = $values[$i];
+  }
+// Move the temporary files to locations where we can find them later.
+  $fileRecord = Email::saveAttachment($fileRecord);
 
-// Submit the file-record back to the java-script in order to add the
-// data to the form.
-
-if ($fileRecord === false) {
-  Ajax::bailOut('Couldn\'t save temporary file for: '.$_FILES[$filesKey]['name']);
-  return false;
-} else {
-  OCP\JSON::success(
-    array(
-      'data' => array(
-        'type'     => $fileRecord['type'],
-        'size'     => $fileRecord['size'],
-        'name'     => $fileRecord['name'],
-        'tmp_name' => $fileRecord['tmp_name'])));
-  return true;
+  // Submit the file-record back to the java-script in order to add the
+  // data to the form.
+  if ($fileRecord === false) {
+    Ajax::bailOut('Couldn\'t save temporary file for: '.$files['name'][$i]);
+    return false;
+  } else {
+    $fileRecords['originalname']      = $fileRecord['name']; // clone
+    $fileRecords['uploadMaxFilesize'] = $maxUploadFileSize;    
+    $fileRecords['maxHumanFilesize']  = $maxHumanFileSize;
+    $result[] = array('status' => 'success',
+                      'data'   => $fileRecord);
+  }
 }
+
+OCP\JSON::encodedPrint($result);
+exit();
 
 ?>
