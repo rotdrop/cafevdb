@@ -25,8 +25,6 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
 (function(window, $, Projects, undefined) {
     'use strict';
 
-    Projects.nameExceptions = [];
-
     /**Strip any digit from the end of name and attach the four digit
      * year to the end of name.
      */
@@ -57,10 +55,15 @@ $(document).ready(function(){
         var nameSelector =
             'input.pme-input-0-projectname,input.pme-input-1-projectname';
         var yearSelector = 'select.[name="PME_data_Jahr"]';
+        var attachSelector = '#project-name-yearattach';
 
         var oldProjectYear = $(yearSelector+' :selected').text();
         var oldProjectName = $(nameSelector).val();
 
+        /**Verify the user submitted name and year settings, depending
+         * on whether the user has activated the name or year control,
+         * or has clicked the submit button.
+         */
         var verifyYearName = function (postAddOn, button = null) {
             /* Forward the request to the server via Ajax
              * technologies.
@@ -113,6 +116,10 @@ $(document).ready(function(){
             });
         }
         
+        $(attachSelector).click(function(event) {
+            $(nameSelector).trigger('blur');
+        });
+
         $(yearSelector).change(function(event) {
             event.preventDefault();
 

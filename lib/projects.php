@@ -248,6 +248,16 @@ __EOT__;
       'php|LF'  => array('type' => 'function',
                          'function' => 'CAFEVDB\Projects::projectActionsPME',
                          'parameters' => array("idIndex" => $idIdx)),
+      'display|APC' => array(//"prefix" => "prefix",
+                            "postfix" => '<label>
+  <input type="checkbox"
+         name="yearattach"
+         title="'.Config::toolTips("project-name-yearattach").'"
+         id="project-name-yearattach"
+         checked
+  />
+'.L::t("Append the year to the name").'
+</label>'),
       'select'   => 'D',
       'maxlen'   => 64,
       'css'      => array('postfix' => 'projectname'),

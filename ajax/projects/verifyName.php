@@ -38,6 +38,7 @@ try {
   $projectId   = Util::cgiValue(Config::$pmeopts['cgi']['prefix']['sys']."rec");
   $projectName = isset($projectValues['Name']) ? $projectValues['Name'] : "";
   $projectYear = isset($projectValues['Jahr']) ? $projectValues['Jahr'] : "";
+  $attachYear  = Util::cgiValue("yearattach") === "on" ? true : false;
 
   $errorMessage = "";
   $infoMessage = "";
@@ -75,7 +76,9 @@ try {
     } else {
       // Strip the year from the name and replace with the given year
       $projectName = preg_replace('/\d+$/', "", $projectName);
-      $projectName .= $projectYear;
+      if ($attachYear) {
+        $projectName .= $projectYear;
+      }
     }
     // Project name may be empty at this point. Why not
     break;
