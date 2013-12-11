@@ -31,7 +31,7 @@ namespace CAFEVDB
 class Projects
 {
   const CSS_PREFIX = 'cafevdb-page';
-  const IMAGE_PLACEHOLDER = 'flyerdummy.png';
+  const IMAGE_PLACEHOLDER = 'flyerdummy.svg';
   private $pme;
   private $pme_bare;
   private $execute;
@@ -1045,7 +1045,7 @@ __EOT__;
   {
     if ($modify === false) {
       $span = ''
-        .'<span class="photo"><img class="photo" src="'.\OC::$WEBROOT.'/?app=cafevdb&getfile=inlineimage.php&RecordId='.$projectId.'&ImagePHPClass=CAFEVDB\Projects&ImageSize=1200&PlaceHolder='.self::IMAGE_PLACEHOLDER.'"'
+        .'<span class="photo"><img class="photo svg" src="'.\OC::$WEBROOT.'/?app=cafevdb&getfile=inlineimage.php&RecordId='.$projectId.'&ImagePHPClass=CAFEVDB\Projects&ImageSize=1200&PlaceHolder='.self::IMAGE_PLACEHOLDER.'"'
         .' title="Flyer, if available" /></span>';
       return $span;
     } else {
