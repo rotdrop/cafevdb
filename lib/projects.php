@@ -249,10 +249,10 @@ __EOT__;
                          'function' => 'CAFEVDB\Projects::projectActionsPME',
                          'parameters' => array("idIndex" => $idIdx)),
       'display|APC' => array(//"prefix" => "prefix",
-                            "postfix" => '<label>
+                            "postfix" => '<label
+  title="'.Config::toolTips("project-name-yearattach").'">
   <input type="checkbox"
          name="yearattach"
-         title="'.Config::toolTips("project-name-yearattach").'"
          id="project-name-yearattach"
          checked
   />

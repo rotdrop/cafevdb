@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-10 06:41+0100\n"
+"POT-Creation-Date: 2013-12-11 02:36+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -46,7 +46,7 @@ msgstr ""
 #: ajax/events/events.php:97 ajax/events/execute.php:130
 #: ajax/events/new.form.php:195 ajax/events/sendmail.php:76
 #: ajax/instruments/adjustInstrumentation.php:87
-#: ajax/projects/verifyName.php:128
+#: ajax/projects/verifyName.php:131
 msgid "Error, caught an exception"
 msgstr ""
 
@@ -255,7 +255,7 @@ msgid "Temporary file: '%s' has gone AWOL?"
 msgstr ""
 
 #: ajax/instruments/adjustInstrumentation.php:32
-#: ajax/projects/verifyName.php:89
+#: ajax/projects/verifyName.php:92
 msgid "missing arguments"
 msgstr ""
 
@@ -299,31 +299,31 @@ msgstr ""
 msgid "The %s must not be empty.\n"
 msgstr ""
 
-#: ajax/projects/verifyName.php:65
+#: ajax/projects/verifyName.php:66
 msgid "The project-name must not only consist of the year-number."
 msgstr ""
 
-#: ajax/projects/verifyName.php:68
+#: ajax/projects/verifyName.php:69
 msgid "No project-name given."
 msgstr ""
 
-#: ajax/projects/verifyName.php:72
+#: ajax/projects/verifyName.php:73
 msgid "No project-year given."
 msgstr ""
 
-#: ajax/projects/verifyName.php:74
+#: ajax/projects/verifyName.php:75
 msgid "The project-year has to consist of four digits, e.g. ``1984''."
 msgstr ""
 
-#: ajax/projects/verifyName.php:83
+#: ajax/projects/verifyName.php:86
 msgid "Internal error: unknown request"
 msgstr ""
 
-#: ajax/projects/verifyName.php:101
+#: ajax/projects/verifyName.php:104
 msgid "already existent"
 msgstr ""
 
-#: ajax/projects/verifyName.php:103
+#: ajax/projects/verifyName.php:106
 #, php-format
 msgid ""
 "A project with the name ``%s'' already exists in the year %s.\n"
@@ -673,15 +673,15 @@ msgstr ""
 msgid "Mark this popup as read; the popup will not show up again."
 msgstr ""
 
-#: js/cafevdb.js:167
+#: js/cafevdb.js:236
 msgid "Export to the following format is not yet supported:"
 msgstr ""
 
-#: js/cafevdb.js:169 js/cafevdb.js:249 js/project-instruments.js:91
+#: js/cafevdb.js:238 js/cafevdb.js:318 js/project-instruments.js:91
 msgid "Unimplemented"
 msgstr ""
 
-#: js/cafevdb.js:247 js/project-instruments.js:89
+#: js/cafevdb.js:316 js/project-instruments.js:89
 msgid "Unknown operation:"
 msgstr ""
 
@@ -738,30 +738,22 @@ msgid "Deletable"
 msgstr ""
 
 #: js/config.php:27
-msgid "ManagementBoard"
-msgstr ""
-
-#: js/config.php:27
-msgid "Members"
-msgstr ""
-
-#: js/config.php:28
 msgid "Select a filter option."
 msgstr ""
 
-#: js/config.php:29 js/config.php:34
+#: js/config.php:28 js/config.php:33
 msgid "No values match."
 msgstr ""
 
-#: js/config.php:31
+#: js/config.php:30
 msgid "Select from the pull-down menu. Double-click will submit the form."
 msgstr ""
 
-#: js/config.php:33
+#: js/config.php:32
 msgid "Select an option."
 msgstr ""
 
-#: js/config.php:36
+#: js/config.php:35
 msgid "Select from the pull-down menu."
 msgstr ""
 
@@ -870,7 +862,7 @@ msgstr ""
 msgid "Unkown Error"
 msgstr ""
 
-#: js/project-instruments.js:71 js/projects.js:107
+#: js/project-instruments.js:71 js/projects.js:110
 msgid "Caught a PHP Exception"
 msgstr ""
 
@@ -962,7 +954,7 @@ msgstr ""
 msgid "and"
 msgstr ""
 
-#: lib/email.php:1375 lib/projects.php:621 lib/projects.php:768
+#: lib/email.php:1375 lib/projects.php:631 lib/projects.php:778
 msgid "Events"
 msgstr ""
 
@@ -1244,7 +1236,7 @@ msgstr ""
 msgid "The currently active project."
 msgstr ""
 
-#: lib/functions.php:727 lib/projects.php:627
+#: lib/functions.php:727 lib/projects.php:637
 msgid "Detailed Instrumentation"
 msgstr ""
 
@@ -1255,7 +1247,7 @@ msgid ""
 "address etc."
 msgstr ""
 
-#: lib/functions.php:742 lib/projects.php:624
+#: lib/functions.php:742 lib/projects.php:634
 msgid "Brief Instrumentation"
 msgstr ""
 
@@ -1276,7 +1268,7 @@ msgid ""
 "ones as needed."
 msgstr ""
 
-#: lib/functions.php:772 lib/projects.php:630
+#: lib/functions.php:772 lib/projects.php:640
 msgid "Instrumentation Numbers"
 msgstr ""
 
@@ -1414,7 +1406,7 @@ msgid ""
 msgstr ""
 
 #: lib/project-instruments.php:211 lib/project-instruments.php:374
-#: lib/projects.php:258 lib/projects.php:263
+#: lib/projects.php:268 lib/projects.php:273
 msgid "Actions"
 msgstr ""
 
@@ -1444,40 +1436,44 @@ msgstr ""
 msgid "Transpose"
 msgstr ""
 
-#: lib/projects.php:343
+#: lib/projects.php:259
+msgid "Append the year to the name"
+msgstr ""
+
+#: lib/projects.php:353
 msgid "Flyer"
 msgstr ""
 
-#: lib/projects.php:634
+#: lib/projects.php:644
 msgid "Project Wiki Page"
 msgstr ""
 
-#: lib/projects.php:638
+#: lib/projects.php:648
 msgid "Project Files"
 msgstr ""
 
-#: lib/projects.php:642
+#: lib/projects.php:652
 msgid "Profit and Loss Account"
 msgstr ""
 
-#: lib/projects.php:1047
+#: lib/projects.php:1057
 #, php-format
 msgid "Drop image to upload (max %s)"
 msgstr ""
 
-#: lib/projects.php:1050
+#: lib/projects.php:1060
 msgid "Delete current flyer"
 msgstr ""
 
-#: lib/projects.php:1051
+#: lib/projects.php:1061
 msgid "Edit current flyer"
 msgstr ""
 
-#: lib/projects.php:1052
+#: lib/projects.php:1062
 msgid "Upload new flyer"
 msgstr ""
 
-#: lib/projects.php:1053
+#: lib/projects.php:1063
 msgid "Select image from ownCloud"
 msgstr ""
 
@@ -1815,11 +1811,11 @@ msgid ""
 "to pages with the instrumentation, events, instrumentation numbers etc."
 msgstr ""
 
-#: lib/tooltips.php:228 lib/tooltips.php:289
+#: lib/tooltips.php:228 lib/tooltips.php:293
 msgid "Open a page with the musicians registered for the respective project."
 msgstr ""
 
-#: lib/tooltips.php:232 lib/tooltips.php:247
+#: lib/tooltips.php:232 lib/tooltips.php:251
 msgid ""
 "Open a dialog with all known\n"
 "events associated to the project.\n"
@@ -1842,19 +1838,27 @@ msgstr ""
 msgid "Change to the DokuWiki-page for this project (if there is one)"
 msgstr ""
 
-#: lib/tooltips.php:252
+#: lib/tooltips.php:247
+msgid ""
+"Append the year to the name if checked.\n"
+"Regardless of this checkbox any decimal digit will first be stripped from "
+"the end\n"
+"of the project name before the year is added."
+msgstr ""
+
+#: lib/tooltips.php:256
 msgid ""
 "Delete the event from the system\n"
 "(no undo possible)."
 msgstr ""
 
-#: lib/tooltips.php:255
+#: lib/tooltips.php:259
 msgid ""
 "Exclude all events from\n"
 "email-submission"
 msgstr ""
 
-#: lib/tooltips.php:258
+#: lib/tooltips.php:262
 msgid ""
 "Detach the respective event\n"
 "from the project, but do not\n"
@@ -1864,34 +1868,34 @@ msgid ""
 "categories."
 msgstr ""
 
-#: lib/tooltips.php:265
+#: lib/tooltips.php:269
 msgid "Modify the event."
 msgstr ""
 
-#: lib/tooltips.php:267
+#: lib/tooltips.php:271
 msgid "Add a new concert-event to the project."
 msgstr ""
 
-#: lib/tooltips.php:269
+#: lib/tooltips.php:273
 msgid ""
 "Add a private management event which is not exposed to the rest of the world."
 msgstr ""
 
-#: lib/tooltips.php:271
+#: lib/tooltips.php:275
 msgid "Add some other event to the project."
 msgstr ""
 
-#: lib/tooltips.php:273
+#: lib/tooltips.php:277
 msgid "Add a new rehearsal-event to the project."
 msgstr ""
 
-#: lib/tooltips.php:275
+#: lib/tooltips.php:279
 msgid ""
 "Select all events for\n"
 "email-submission"
 msgstr ""
 
-#: lib/tooltips.php:278
+#: lib/tooltips.php:282
 msgid ""
 "Mark the respective event for being\n"
 "sent by email as ICS-attachment per email.\n"
@@ -1901,20 +1905,20 @@ msgid ""
 "recipients."
 msgstr ""
 
-#: lib/tooltips.php:285
+#: lib/tooltips.php:289
 msgid ""
 "Click to open an email-form\n"
 "and send the selected events to\n"
 "selected recipients."
 msgstr ""
 
-#: lib/tooltips.php:291
+#: lib/tooltips.php:295
 msgid ""
 "Add the musician to the project. A new form will open were details like the "
 "instrument etc. can be adjustetd."
 msgstr ""
 
-#: lib/tooltips.php:293
+#: lib/tooltips.php:297
 msgid ""
 "Save the current email for later re-usal in the data-base.\n"
 "An email template can contain per-member substitutions with the syntax "
@@ -1926,36 +1930,36 @@ msgid ""
 "by the pre-names of the organizing committe in order to compose  greetings."
 msgstr ""
 
-#: lib/tooltips.php:299
+#: lib/tooltips.php:303
 msgid "Select one of the email templates previously stored in the data-base."
 msgstr ""
 
-#: lib/tooltips.php:301
+#: lib/tooltips.php:305
 msgid ""
 "Recompute the link between projects and events, using the event-categories "
 "as primary key."
 msgstr ""
 
-#: lib/tooltips.php:303
+#: lib/tooltips.php:307
 msgid ""
 "Check whether the data-base can be accessed with the given account\n"
 "information and password. The password will only be stored in the\n"
 "configuration storage if the test can be performed successfully."
 msgstr ""
 
-#: lib/tooltips.php:307
+#: lib/tooltips.php:311
 msgid ""
 "Try to connect to the specified web-address, will open the web-address in "
 "another window or tab, depending your local browser preferences."
 msgstr ""
 
-#: lib/tooltips.php:309
+#: lib/tooltips.php:313
 msgid ""
 "Add the instruments of the actually registered musicians to the instrument-"
 "table for the project."
 msgstr ""
 
-#: lib/tooltips.php:311
+#: lib/tooltips.php:315
 msgid ""
 "Upload a file from your local computer as attachment. The file will be "
 "removed from the remote-system after the message has been sent."

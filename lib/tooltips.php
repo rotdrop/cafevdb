@@ -244,6 +244,10 @@ has been ``closed\'\'.'),
 
       'project-action-wiki' => L::t('Change to the DokuWiki-page for this project (if there is one)'),
 
+      'project-name-yearattach' => L::t('Append the year to the name if checked.
+Regardless of this checkbox any decimal digit will first be stripped from the end
+of the project name before the year is added.'),
+
       'projectevents-button' => L::t('Open a dialog with all known
 events associated to the project.
 Events can be added and modified
