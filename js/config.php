@@ -24,7 +24,6 @@ $array = array(
   "CAFEVDB.toolTips" => ($tooltips == "off" ? 'false' : 'true'),
   "CAFEVDB.wysiwygEditor" => "'".Config::$opts['editor']."'",
   "CAFEVDB.language" => "'".$language."'",
-  "CAFEVDB.Projects.nameExceptions" => "[ '".L::t("ManagementBoard")."', '".L::t("Members")."' ]",
   "PHPMYEDIT.filterSelectPlaceholder" => "'".L::t("Select a filter option.")."'",
   "PHPMYEDIT.filterSelectNoResult" => "'".L::t("No values match.")."'",
   "PHPMYEDIT.filterSelectChosen" => "true",
