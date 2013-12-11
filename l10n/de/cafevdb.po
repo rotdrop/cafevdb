@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-12-11 02:34+0100\n"
-"PO-Revision-Date: 2013-12-11 02:36+0100\n"
+"PO-Revision-Date: 2013-12-11 12:37+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -859,7 +859,7 @@ msgstr "Bild editieren"
 
 #: js/inlineimage.js:253
 msgid "Ok"
-msgstr "Fein"
+msgstr "Fertig"
 
 #: js/inlineimage.js:259 lib/email.php:1517 templates/blogedit.php:18
 msgid "Cancel"
