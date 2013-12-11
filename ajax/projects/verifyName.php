@@ -58,7 +58,7 @@ try {
     // Get the year from the name, if set
     if (preg_match('/^(.*\D)?(\d{4})$/', $projectName, $matches) == 1) {
       $projectName = $matches[1];
-      if ($control != "submit") {
+      if ($control != "submit" && $attachYear) {
         // the year-control wins when submitting the form
         $projectYear = $matches[2];
       }
