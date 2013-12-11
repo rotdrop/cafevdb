@@ -1417,6 +1417,9 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			echo $this->fdd[$k]['name'],'</td>',"\n";
 			echo '<td class="',$this->getCSSclass('value', null, true, $css_postfix),'"';
 			echo $this->getColAttributes($k),">\n";
+			if (isset($this->fdd[$k]['display']['prefix'])) {
+				echo $this->fdd[$k]['display']['prefix'];
+			}
 			if ($this->col_has_values($k)) {
 				$vals		= $this->set_values($k);
 				$groups     = $this->fdd[$k]['valueGroups'] ? $this->fdd[$k]['valueGroups'] : null;
@@ -1481,6 +1484,9 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				if($escape) echo htmlspecialchars($this->fdd[$k]['default']);
 				else echo $this->fdd[$k]['default'];
 				echo '" />';
+			}
+			if (isset($this->fdd[$k]['display']['postfix'])) {
+				echo $this->fdd[$k]['display']['postfix'];
 			}
 			echo '</td>',"\n";
 			if ($this->guidance) {
@@ -1579,7 +1585,9 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		$escape			= isset($this->fdd[$k]['escape']) ? $this->fdd[$k]['escape'] : true;
 		echo '<td class="',$this->getCSSclass('value', null, true, $css_postfix),'"';
 		echo $this->getColAttributes($k),">\n";
-
+		if (isset($this->fdd[$k]['display']['prefix'])) {
+			echo $this->fdd[$k]['display']['prefix'];
+		}
 		/* If $vals only contains one "multiple" value, then the
 		 * multi-select stuff is at least confusing. Also, if there is
 		 * only one possible value, then this value must not be changed.
@@ -1595,7 +1603,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		 * not been requested.
 		 */
 		if ($vals &&
-			(stristr("MCOD", $this->fdd[$k]['selelct']) !== false || $multiValues)) {
+			(stristr("MCOD", $this->fdd[$k]['select']) !== false || $multiValues)) {
 			$groups     = $this->fdd[$k]['valueGroups'] ? $this->fdd[$k]['valueGroups'] : null;
 			$multiple	= $this->col_has_multiple($k);
 			$readonly	= $this->disabledTag($k);
@@ -1667,6 +1675,9 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			}
 			echo '"',$len_props,' />',"\n";
 		}
+		if (isset($this->fdd[$k]['display']['postfix'])) {
+			echo $this->fdd[$k]['display']['postfix'];
+		}
 		echo '</td>',"\n";
 	} /* }}} */
 
@@ -1675,6 +1686,9 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		$css_postfix = @$this->fdd[$k]['css']['postfix'];
 		echo '<td class="',$this->getCSSclass('value', null, true, $css_postfix),'"';
 		echo $this->getColAttributes($k),">\n";
+		if (isset($this->fdd[$k]['display']['prefix'])) {
+			echo $this->fdd[$k]['display']['prefix'];
+		}
 		$len_props = '';
 		$maxlen = intval($this->fdd[$k]['maxlen']);
 		$size	= isset($this->fdd[$k]['size']) ? $this->fdd[$k]['size'] : min($maxlen, 60); 
@@ -1691,6 +1705,9 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		echo ($this->disabled($k) ? ' disabled' : '');
 		echo ' name="',$this->cgi['prefix']['data'].$this->fds[$k],'" value="';
 		echo htmlspecialchars($row["qf$k"]),'"',$len_props,' />',"\n";
+		if (isset($this->fdd[$k]['display']['postfix'])) {
+			echo $this->fdd[$k]['display']['postfix'];
+		}
 		echo '</td>',"\n";
 	} /* }}} */
 
@@ -1699,7 +1716,13 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		$css_postfix	= @$this->fdd[$k]['css']['postfix'];
 		$css_class_name = $this->getCSSclass('value', null, true, $css_postfix);
 		echo '<td class="',$css_class_name,'"',$this->getColAttributes($k),">\n";
+		if (isset($this->fdd[$k]['display']['prefix'])) {
+			echo $this->fdd[$k]['display']['prefix'];
+		}
 		echo $this->cellDisplay($k, $row, $css_class_name);
+		if (isset($this->fdd[$k]['display']['postfix'])) {
+			echo $this->fdd[$k]['display']['postfix'];
+		}
 		echo '</td>',"\n";
 	} /* }}} */
 
