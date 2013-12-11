@@ -731,12 +731,33 @@ input[readonly]:active {
   filter:alpha(opacity=0.5);
 }
 
+/*******************************************************************************
+ *
+ * Display a read-only icon on read-only entries. Rationale: could
+ * also disable those inputs, but flagging them only read-only keeps
+ * them selectable. The drawback is, however, that without further
+ * styling the user has a hard time to understand why it cannot modify
+ * the entry. The input element per default simply looks the same as
+ * an ordinary r/w element.
+ *
+ */
 input[readonly]:hover,
 input[disabled]:hover,
 .chosen-disabled a span:hover, .chosen-disabled li span:hover {
   background-image:url('%webroot%/core/img/actions/lock.svg') !important;
   background-repeat:no-repeat;
   background-position:center center;
+}
+
+/*******************************************************************************
+ */
+.chosen-container .chosen-results li.highlighted {
+  -moz-box-shadow:0 1px 1px #fff, 0 1px 0 #bbb inset;
+  -webkit-box-shadow:0 1px 1px #fff, 0 1px 0 #bbb inset;
+  box-shadow:0 1px 1px #fff, 0 1px 0 #bbb inset;
+  -moz-border-radius:.5em;
+  -webkit-border-radius:.5em;
+  border-radius:.5em;
 }
 
 /*Easy <a class="tooltip" href="#">Tooltip<span>This is the crazy little Easy Tooltip Text.</span></a>.</p>*/
