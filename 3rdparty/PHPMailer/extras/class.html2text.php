@@ -454,7 +454,7 @@ class html2text
         $text = preg_replace($this->ent_search, $this->ent_replace, $text);
 
         // Replace known html entities
-        $text = html_entity_decode($text, ENT_QUOTES|(defined('ENT_XHTML') ? constant('ENT_XHTML') : 0), $this->options['encoding']);
+        $text = html_entity_decode($text, ENT_QUOTES|(defined('ENT_XHTML') ? constant('ENT_XHTML') : 0), $this->_options['encoding']);
 
         // Remove unknown/unhandled entities (this cannot be done in search-and-replace block)
         $text = preg_replace('/&([a-zA-Z0-9]{2,6}|#[0-9]{2,4});/', '', $text);
