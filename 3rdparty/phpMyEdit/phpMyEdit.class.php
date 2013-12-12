@@ -120,7 +120,7 @@ class phpMyEdit
 	var $fdd;		// field definitions
 	var $qfn;		// value of all filters used during the last pass
 	var $sfn;		// sort field number (- = descending sort order)
-	var $dfltsfn;			// default sort field number
+	var $dfltsfn;	// default sort field number
 	var $cur_tab;	// current selected tab
 	var $page_type;	// current page type
 
