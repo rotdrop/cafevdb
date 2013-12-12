@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-11 02:34+0100\n"
-"PO-Revision-Date: 2013-12-11 12:37+0100\n"
+"POT-Creation-Date: 2013-12-12 04:20+0100\n"
+"PO-Revision-Date: 2013-12-12 04:22+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -168,21 +168,47 @@ msgstr "Also, `Hello World!' muss man nun wirklich nicht übersetzen ..."
 msgid "Done. %d events synchronized, %d new."
 msgstr "Fertig. %d Ereignisse synchronisiert, %d neue."
 
-#: ajax/export/excel.php:84
+#: ajax/export/excel.php:85
 msgid "yes"
 msgstr "ja"
 
-#: ajax/export/excel.php:85
+#: ajax/export/excel.php:86
 msgid "true"
 msgstr "wahr"
 
-#: ajax/export/excel.php:88
+#: ajax/export/excel.php:89
 msgid "no"
 msgstr "nein"
 
-#: ajax/export/excel.php:89
+#: ajax/export/excel.php:90
 msgid "false"
 msgstr "falsch"
+
+#: ajax/export/excel.php:213
+msgid "musicians"
+msgstr "Musiker"
+
+#: ajax/export/excel.php:219
+#, php-format
+msgid "%s-brief"
+msgstr "%s-uebersicht"
+
+#: ajax/export/excel.php:225
+#, php-format
+msgid "%s-detailed"
+msgstr "%s-detailliert"
+
+#: ajax/export/excel.php:363
+msgid "Missing Musicians"
+msgstr "Fehlende Musiker"
+
+#: ajax/export/excel.php:388
+msgid "Instrument"
+msgstr "Instrument"
+
+#: ajax/export/excel.php:389
+msgid "Missing"
+msgstr "Defizit"
 
 #: ajax/inlineimage/currentimage.php:41 ajax/inlineimage/deleteimage.php:36
 #: ajax/inlineimage/oc_image.php:44 ajax/inlineimage/uploadimage.php:52
@@ -996,7 +1022,7 @@ msgstr "Anzahl: "
 msgid "and"
 msgstr "und"
 
-#: lib/email.php:1375 lib/projects.php:631 lib/projects.php:778
+#: lib/email.php:1375 lib/projects.php:633 lib/projects.php:780
 msgid "Events"
 msgstr "Termine"
 
@@ -1247,20 +1273,20 @@ msgid "Export Table"
 msgstr "Tabelle Exportieren"
 
 #: lib/functions.php:488
-msgid "CSV Export"
-msgstr "CSV Export"
-
-#: lib/functions.php:491
-msgid "HTML Export"
-msgstr "HTML Export"
-
-#: lib/functions.php:494
 msgid "Excel Export"
 msgstr "`Excel' Export"
 
-#: lib/functions.php:497
+#: lib/functions.php:491
 msgid "HTML/Spreadsheet"
 msgstr "HTML/Tabellenformat"
+
+#: lib/functions.php:494
+msgid "CSV Export"
+msgstr "CSV Export"
+
+#: lib/functions.php:497
+msgid "HTML Export"
+msgstr "HTML Export"
 
 #: lib/functions.php:630
 msgid "Error: Unknonwn Button Type"
@@ -1311,7 +1337,7 @@ msgstr ""
 msgid "The currently active project."
 msgstr "Das gerade ausgewählte Projekt."
 
-#: lib/functions.php:727 lib/projects.php:637
+#: lib/functions.php:727 lib/projects.php:639
 msgid "Detailed Instrumentation"
 msgstr "Detaillierte Besetzung"
 
@@ -1325,7 +1351,7 @@ msgstr ""
 "Daten wie Email, Adresse usw. können hier geändert werden. Projektbezogene "
 "Daten können allerdings nur in der Ansicht `Kurz-Besetzung' geändert werden."
 
-#: lib/functions.php:742 lib/projects.php:634
+#: lib/functions.php:742 lib/projects.php:636
 msgid "Brief Instrumentation"
 msgstr "Kurz-Besetzung"
 
@@ -1352,7 +1378,7 @@ msgstr ""
 "Tabelle mit allen derzeit gespeicherten Instrumenten; weitere Instrumente "
 "können hier einfach hinzugefügt werden."
 
-#: lib/functions.php:772 lib/projects.php:640
+#: lib/functions.php:772 lib/projects.php:642
 msgid "Instrumentation Numbers"
 msgstr "Besetzungszahlen"
 
@@ -1511,7 +1537,7 @@ msgstr ""
 "in der Tabelle unten ausgewählt wird."
 
 #: lib/project-instruments.php:211 lib/project-instruments.php:374
-#: lib/projects.php:268 lib/projects.php:273
+#: lib/projects.php:270 lib/projects.php:275
 msgid "Actions"
 msgstr "Aktionen"
 
@@ -1537,7 +1563,7 @@ msgstr ""
 msgid "Instrumentation-Numbers not Found"
 msgstr "Besetzungszahlen nicht gefunden"
 
-#: lib/project-instruments.php:283 lib/projects.php:247
+#: lib/project-instruments.php:283 lib/projects.php:249
 msgid "Projekt-Name"
 msgstr "Projekt-Name"
 
@@ -1545,44 +1571,44 @@ msgstr "Projekt-Name"
 msgid "Transpose"
 msgstr "Transponieren"
 
-#: lib/projects.php:259
+#: lib/projects.php:261
 msgid "Append the year to the name"
 msgstr "Jahreszhahl anhängen"
 
-#: lib/projects.php:353
+#: lib/projects.php:355
 msgid "Flyer"
 msgstr "Flyer"
 
-#: lib/projects.php:644
+#: lib/projects.php:646
 msgid "Project Wiki Page"
 msgstr "Wiki Projekt-Seite"
 
-#: lib/projects.php:648
+#: lib/projects.php:650
 msgid "Project Files"
 msgstr "Projekt-Dateien"
 
-#: lib/projects.php:652
+#: lib/projects.php:654
 msgid "Profit and Loss Account"
 msgstr "Verlustrechnung"
 
-#: lib/projects.php:1057
+#: lib/projects.php:1118
 #, php-format
 msgid "Drop image to upload (max %s)"
 msgstr "Bild ablegen zum Hochladen (max %s)"
 
-#: lib/projects.php:1060
+#: lib/projects.php:1121
 msgid "Delete current flyer"
 msgstr "Aktuellen Flyer löschen"
 
-#: lib/projects.php:1061
+#: lib/projects.php:1122
 msgid "Edit current flyer"
 msgstr "Aktuellen Flyer zuschneiden"
 
-#: lib/projects.php:1062
+#: lib/projects.php:1123
 msgid "Upload new flyer"
 msgstr "Neuen Flyer hochladen"
 
-#: lib/projects.php:1063
+#: lib/projects.php:1124
 msgid "Select image from ownCloud"
 msgstr "Bild aus der `Cloud' auswählen"
 
@@ -2109,7 +2135,8 @@ msgid ""
 "of the project name before the year is added."
 msgstr ""
 "Wenn das Häkchen gesetzt ist, wird das Projekt-Jahr an den Namen angehängt.\n"
-"Unabhängig davon werden Ziffern am Ende des Namens zunächst einmal entfernt,\n"
+"Unabhängig davon werden Ziffern am Ende des Namens zunächst einmal "
+"entfernt,\n"
 "bevor möglicherweise die Jahreszahl angehängt wird."
 
 #: lib/tooltips.php:256

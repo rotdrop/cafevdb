@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-11 02:36+0100\n"
+"POT-Creation-Date: 2013-12-12 04:22+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -161,20 +161,46 @@ msgstr ""
 msgid "Done. %d events synchronized, %d new."
 msgstr ""
 
-#: ajax/export/excel.php:84
+#: ajax/export/excel.php:85
 msgid "yes"
 msgstr ""
 
-#: ajax/export/excel.php:85
+#: ajax/export/excel.php:86
 msgid "true"
 msgstr ""
 
-#: ajax/export/excel.php:88
+#: ajax/export/excel.php:89
 msgid "no"
 msgstr ""
 
-#: ajax/export/excel.php:89
+#: ajax/export/excel.php:90
 msgid "false"
+msgstr ""
+
+#: ajax/export/excel.php:213
+msgid "musicians"
+msgstr ""
+
+#: ajax/export/excel.php:219
+#, php-format
+msgid "%s-brief"
+msgstr ""
+
+#: ajax/export/excel.php:225
+#, php-format
+msgid "%s-detailed"
+msgstr ""
+
+#: ajax/export/excel.php:363
+msgid "Missing Musicians"
+msgstr ""
+
+#: ajax/export/excel.php:388
+msgid "Instrument"
+msgstr ""
+
+#: ajax/export/excel.php:389
+msgid "Missing"
 msgstr ""
 
 #: ajax/inlineimage/currentimage.php:41 ajax/inlineimage/deleteimage.php:36
@@ -954,7 +980,7 @@ msgstr ""
 msgid "and"
 msgstr ""
 
-#: lib/email.php:1375 lib/projects.php:631 lib/projects.php:778
+#: lib/email.php:1375 lib/projects.php:633 lib/projects.php:780
 msgid "Events"
 msgstr ""
 
@@ -1180,19 +1206,19 @@ msgid "Export Table"
 msgstr ""
 
 #: lib/functions.php:488
-msgid "CSV Export"
-msgstr ""
-
-#: lib/functions.php:491
-msgid "HTML Export"
-msgstr ""
-
-#: lib/functions.php:494
 msgid "Excel Export"
 msgstr ""
 
-#: lib/functions.php:497
+#: lib/functions.php:491
 msgid "HTML/Spreadsheet"
+msgstr ""
+
+#: lib/functions.php:494
+msgid "CSV Export"
+msgstr ""
+
+#: lib/functions.php:497
+msgid "HTML Export"
 msgstr ""
 
 #: lib/functions.php:630
@@ -1236,7 +1262,7 @@ msgstr ""
 msgid "The currently active project."
 msgstr ""
 
-#: lib/functions.php:727 lib/projects.php:637
+#: lib/functions.php:727 lib/projects.php:639
 msgid "Detailed Instrumentation"
 msgstr ""
 
@@ -1247,7 +1273,7 @@ msgid ""
 "address etc."
 msgstr ""
 
-#: lib/functions.php:742 lib/projects.php:634
+#: lib/functions.php:742 lib/projects.php:636
 msgid "Brief Instrumentation"
 msgstr ""
 
@@ -1268,7 +1294,7 @@ msgid ""
 "ones as needed."
 msgstr ""
 
-#: lib/functions.php:772 lib/projects.php:640
+#: lib/functions.php:772 lib/projects.php:642
 msgid "Instrumentation Numbers"
 msgstr ""
 
@@ -1406,7 +1432,7 @@ msgid ""
 msgstr ""
 
 #: lib/project-instruments.php:211 lib/project-instruments.php:374
-#: lib/projects.php:268 lib/projects.php:273
+#: lib/projects.php:270 lib/projects.php:275
 msgid "Actions"
 msgstr ""
 
@@ -1428,7 +1454,7 @@ msgstr ""
 msgid "Instrumentation-Numbers not Found"
 msgstr ""
 
-#: lib/project-instruments.php:283 lib/projects.php:247
+#: lib/project-instruments.php:283 lib/projects.php:249
 msgid "Projekt-Name"
 msgstr ""
 
@@ -1436,44 +1462,44 @@ msgstr ""
 msgid "Transpose"
 msgstr ""
 
-#: lib/projects.php:259
+#: lib/projects.php:261
 msgid "Append the year to the name"
 msgstr ""
 
-#: lib/projects.php:353
+#: lib/projects.php:355
 msgid "Flyer"
 msgstr ""
 
-#: lib/projects.php:644
+#: lib/projects.php:646
 msgid "Project Wiki Page"
 msgstr ""
 
-#: lib/projects.php:648
+#: lib/projects.php:650
 msgid "Project Files"
 msgstr ""
 
-#: lib/projects.php:652
+#: lib/projects.php:654
 msgid "Profit and Loss Account"
 msgstr ""
 
-#: lib/projects.php:1057
+#: lib/projects.php:1118
 #, php-format
 msgid "Drop image to upload (max %s)"
 msgstr ""
 
-#: lib/projects.php:1060
+#: lib/projects.php:1121
 msgid "Delete current flyer"
 msgstr ""
 
-#: lib/projects.php:1061
+#: lib/projects.php:1122
 msgid "Edit current flyer"
 msgstr ""
 
-#: lib/projects.php:1062
+#: lib/projects.php:1123
 msgid "Upload new flyer"
 msgstr ""
 
-#: lib/projects.php:1063
+#: lib/projects.php:1124
 msgid "Select image from ownCloud"
 msgstr ""
 
