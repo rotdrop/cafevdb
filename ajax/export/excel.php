@@ -210,24 +210,28 @@ $table = false;
 switch ($template) {
 case 'all-musicians':
   $table = new CAFEVDB\Musicians(false, false);
-  $name  = 'musicians';
+  $name  = L::t('musicians');
   break;
 case 'brief-instrumentation':
   $table = new CAFEVDB\BriefInstrumentation(false);  
-  $name = Util::cgiValue('Project').'-brief';
-  $projectId = $table->projectId;
+  $projectId   = $table->projectId;
+  $projectName = $table->project;
+  $name = L::t("%s-brief", array($projectName));
   break;
 case 'detailed-instrumentation':
   $table = new CAFEVDB\DetailedInstrumentation(false);
-  $name = Util::cgiValue('Project').'-detailed';
   $projectId = $table->projectId;
+  $projectName = $table->project;
+  $name = L::t("%s-detailed", array($projectName));
   break;
 }
 
 if ($table) {
-  $creator  = Config::getValue('emailfromname', 'Bilbo Baggins');
-  $email    = Config::getValue('emailfromaddress', 'bilbo@nowhere.com');
-  $filename = strftime('%Y%m%d-%H%M%S').'-CAFEV-'.$name.'.xlsx';
+  $creator   = Config::getValue('emailfromname', 'Bilbo Baggins');
+  $email     = Config::getValue('emailfromaddress', 'bilbo@nowhere.com');
+  $date      = strftime('%Y%m%d-%H%M%S');
+  $humanDate = strftime('%d.%m.%Y %H:%M:%S');
+  $filename  = $date.'-CAFEV-'.$name.'.xlsx';
 
   $lang = \OC_L10N::findLanguage(Config::APP_NAME);
   $locale = $lang.'_'.strtoupper($lang).'.UTF-8';
@@ -254,6 +258,8 @@ if ($table) {
     ->setCategory("Database Table Export");
   $sheet = $objPHPExcel->getActiveSheet();
 
+  $headerOffset = 3;
+
   $table->deactivate();
   $table->display(); // strange, but need be here
   $table->export(
@@ -266,17 +272,17 @@ if ($table) {
       $cellData = html_entity_decode($cellData, ENT_COMPAT|ENT_HTML401, 'UTF-8');
       return $cellData;
     },
-    function ($i, $lineData) use ($sheet) {
+    function ($i, $lineData) use ($sheet, $headerOffset) {
       $column = 'A';
       foreach ($lineData as $cellValue) {
-        $sheet->setCellValue($column.$i, $cellValue);
+        $sheet->setCellValue($column.($i+$headerOffset), $cellValue);
         if ($i == 1) {
           $sheet->getColumnDimension($column)->setAutoSize(true);
         }
         ++$column;
       }
       if ($i >= 2) {
-        $sheet->getStyle('A'.$i.':'.$sheet->getHighestColumn().$i)->applyFromArray(
+        $sheet->getStyle('A'.($i+$headerOffset).':'.$sheet->getHighestColumn().($i+$headerOffset))->applyFromArray(
           array(
             'fill' => array(
               'type'       => PHPExcel_Style_Fill::FILL_SOLID,
@@ -291,8 +297,8 @@ if ($table) {
 
   // Make the header a little bit prettier
   $pt_height = PHPExcel_Shared_Font::getDefaultRowHeightByFont($objPHPExcel->getDefaultStyle()->getFont());
-  $sheet->getRowDimension(1)->setRowHeight(2*$pt_height);
-  $sheet->getStyle('A1:'.$sheet->getHighestColumn().'1')->applyFromArray(
+  $sheet->getRowDimension(1+$headerOffset)->setRowHeight($pt_height+$ptHeight/4);
+  $sheet->getStyle("A".(1+$headerOffset).":".$sheet->getHighestColumn().(1+$headerOffset))->applyFromArray(
     array(
       'font'    => array(
         'bold'      => true
@@ -429,6 +435,52 @@ if ($table) {
 
     }
   }
+
+  /*
+   *
+   ***************************************************************************/
+
+  /****************************************************************************
+   *
+   * Header fields
+   *
+   */
+
+  $highCol = $sheet->getHighestColumn();
+  $sheet->mergeCells("A1:".$highCol."1");
+  $sheet->mergeCells("A2:".$highCol."2");  
+
+  $sheet->setCellValue("A1", $name.", ".$humanDate);
+  $sheet->setCellValue("A2", $creator." &lt;".$email."&gt;");
+
+  // Format the mess a little bit
+  $sheet->getStyle("A1:".$highCol."2")->applyFromArray(
+    array(
+      'font'    => array(
+        'bold'   => true,
+        ),
+      'alignment' => array(
+        'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER_CONTINUOUS,
+        'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+            ),
+      'fill' => array(
+        'type'       => PHPExcel_Style_Fill::FILL_SOLID,
+        'color' => array(
+          'argb' => 'FFF0F0F0'
+          )
+        )
+      )
+    );
+
+  $sheet->getStyle("A1:".$highCol."2")->applyFromArray(
+    array(
+      'alignment' => array(
+        'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+        'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+            ),
+      
+      )
+    );
 
   /*
    *
