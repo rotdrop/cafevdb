@@ -94,6 +94,16 @@ class Instrumentation
       return $this->pme->change_operation() || $this->pme->add_operation();
     }
   }
+  /**Disable some extra stuff (image upload etc.) when displaying the entire table.
+   */
+  public function listOperation()
+  {
+    if (!isset($this->pme)) {
+      return true;
+    } else {
+      return $this->pme->list_operation();
+    }
+  }
 
   protected function __construct($_execute = true)
   {
