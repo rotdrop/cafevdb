@@ -127,7 +127,7 @@ __EOT__;
     if ($projectId > 0) {
       unset($opts['sort_field']);
       $opts['options'] = 'CVDI';
-      $opts['navigation'] = 'GU';
+      $opts['navigation'] = 'GUD';
       $sort = false;
     } else {
       // Sorting field(s)
