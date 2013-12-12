@@ -3,6 +3,7 @@
 use CAFEVDB\L;
 use CAFEVDB\Events;
 use CAFEVDB\Config;
+use CAFEVDB\Projects;
 use CAFEVDB\Util;
 
 OCP\User::checkLoggedIn();
@@ -204,6 +205,7 @@ class MyValueBinder extends PHPExcel_Cell_DefaultValueBinder implements PHPExcel
 
 $template = Util::cgiValue('Template', '');
 
+$projectId = false;
 $table = false;
 switch ($template) {
 case 'all-musicians':
@@ -211,12 +213,14 @@ case 'all-musicians':
   $name  = 'musicians';
   break;
 case 'brief-instrumentation':
-  $table = new CAFEVDB\BriefInstrumentation(false);
+  $table = new CAFEVDB\BriefInstrumentation(false);  
   $name = Util::cgiValue('Project').'-brief';
+  $projectId = $table->projectId;
   break;
 case 'detailed-instrumentation':
   $table = new CAFEVDB\DetailedInstrumentation(false);
   $name = Util::cgiValue('Project').'-detailed';
+  $projectId = $table->projectId;
   break;
 }
 
@@ -284,7 +288,7 @@ if ($table) {
           );
       }
     });
-  
+
   // Make the header a little bit prettier
   $pt_height = PHPExcel_Shared_Font::getDefaultRowHeightByFont($objPHPExcel->getDefaultStyle()->getFont());
   $sheet->getRowDimension(1)->setRowHeight(2*$pt_height);
@@ -295,10 +299,11 @@ if ($table) {
         ),
       'alignment' => array(
         'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER_CONTINUOUS,
+        'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
         ),
       'borders' => array(
         'allborders'     => array(
-          'style' => PHPExcel_Style_Border::BORDER_HAIR
+          'style' => PHPExcel_Style_Border::BORDER_THIN
           ),
         'bottom'     => array(
           'style' => PHPExcel_Style_Border::BORDER_THIN
@@ -317,7 +322,7 @@ if ($table) {
     array(
       'borders' => array(
         'allborders'     => array(
-          'style' => PHPExcel_Style_Border::BORDER_HAIR
+          'style' => PHPExcel_Style_Border::BORDER_THIN
           ),
         )
       )
@@ -332,6 +337,102 @@ if ($table) {
         )
       )
     );
+
+  /****************************************************************************
+   *
+   * Add some extra rows with the missing instrumenation numbers.
+   *
+   */
+
+  if (isset($projectId)) {
+    $missing = Projects::fetchMissingInstrumentation($table->projectId);
+
+    OCP\Util::writeLog('cafevdb',
+                       print_r($missing, true),
+                       OCP\Util::INFO);
+
+    if (count($missing) > 0) {
+      $missingStart = $rowNumber = $sheet->getHighestRow() + 4;
+
+      $sheet->setCellValue("A$rowNumber", L::t("Missing Musicians"));
+      $sheet->mergeCells("A$rowNumber:B$rowNumber");
+      $sheet->getRowDimension($rowNumber)->setRowHeight($pt_height+$pt_height/4);
+
+      // Format the mess a little bit
+      $sheet->getStyle("A$rowNumber:B$rowNumber")->applyFromArray(
+        array(
+          'font'    => array(
+            'bold'      => true
+            ),
+          'alignment' => array(
+            'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER_CONTINUOUS,
+            'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+            ),
+          'fill' => array(
+            'type'       => PHPExcel_Style_Fill::FILL_SOLID,
+            'color' => array(
+              'argb' => 'FFFF0000'
+              )
+            )
+          )
+        );
+
+      ++$rowNumber;
+
+      $sheet->setCellValue("A$rowNumber", L::t("Instrument"));
+      $sheet->setCellValue("B$rowNumber", L::t("Missing"));
+      $sheet->getRowDimension($rowNumber)->setRowHeight($pt_height+$pt_height/4);
+
+      // Format the mess a little bit
+      $sheet->getStyle("A$rowNumber:B$rowNumber")->applyFromArray(
+        array(
+          'font'    => array(
+            'bold'      => true
+            ),
+          'alignment' => array(
+            'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER_CONTINUOUS,
+            'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+            ),
+          'fill' => array(
+            'type'       => PHPExcel_Style_Fill::FILL_SOLID,
+            'color' => array(
+              'argb' => 'FFBFDEB9'
+              )
+            )
+          )
+        );
+
+      $cnt = 0;
+      foreach ($missing as $instrument => $number) {
+        ++$rowNumber;
+        ++$cnt;
+        $sheet->setCellValue("A$rowNumber", $instrument);
+        $sheet->setCellValue("B$rowNumber", $number);        
+
+        $sheet->getStyle("A$rowNumber:B$rowNumber")->applyFromArray(
+          array(
+            'fill' => array(
+              'type'  => PHPExcel_Style_Fill::FILL_SOLID,
+              'color' => array('argb' => ($cnt % 2 == 0) ? 'FFBFDEB9' : 'FFF6FFDA')
+              )
+            )
+          );
+      }
+
+      $sheet->getStyle("A".($missingStart).":B$rowNumber")->applyFromArray(
+        array(
+          'borders' => array(
+            'allborders'     => array('style' => PHPExcel_Style_Border::BORDER_THIN),
+            )
+          )
+        );
+
+    }
+  }
+
+  /*
+   *
+   ***************************************************************************/
   
   //setlocale(LC_ALL, $oldlocale);
 

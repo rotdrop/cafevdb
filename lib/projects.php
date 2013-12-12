@@ -896,15 +896,53 @@ __EOT__;
     $query = "SELECT * FROM `BesetzungsZahlen` WHERE `ProjektId` = $projectId";
     $result = mySQL::query($query, $handle);
 
-    $row = false;
+    $row = array();
     if ($result !== false && mysql_num_rows($result) == 1) {
       $row = mySQL::fetch($result);
     }
     if ($ownConnection) {
       mySQL::close($handle);
     }
+    if (isset($row["ProjektId"])) {
+      unset($row["ProjektId"]);
+    }
 
     return $row;
+  }
+
+  /**Fetch the count of missing musicians per voice. For this to work
+   * the instrumentation number have to be present in the respective
+   * table, of course.
+   */
+  public static function fetchMissingInstrumentation($projectId, $handle = false)
+  {
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
+    /* Only when a positive count has been stored for the respective
+     * instrument we are able to determine the missing numbers. Also,
+     * excess musicians do not count as an error.
+     */
+    $missing = array();
+    $numbers = self::fetchInstrumentationNumbers($projectId, $handle);
+    foreach ($numbers as $key => $number) {
+      $have = mySQL::queryNumRows(
+        "FROM `Besetzungen` WHERE `ProjektId` = $projectId AND '$key' = `Instrument`",
+        $handle);
+      $balance = $number - $have;
+      if ($balance > 0) {
+        $missing[$key] = $balance;
+      }
+    }
+
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $missing;
   }
 
   /** Fetch the project-name name corresponding to $projectId.
