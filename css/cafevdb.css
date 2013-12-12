@@ -760,6 +760,30 @@ input[disabled]:hover,
   border-radius:.5em;
 }
 
+#missing-musicians-block {
+  padding:1em 1em 1em 1em;
+}
+#missing-musicians-block .missing-musicians-title { 
+  color:red;
+  font-weight:bold;
+  font-size:120%;
+}
+#missing-musicians-block tr td, #missing-musicians-block tr th
+ {
+  border:1px solid;
+  padding:3px;
+}
+#missing-musicians-block tr[class|='row-0'] td {
+  background:#B7CEEC;
+}
+#missing-musicians-block tr[class|='row-1'] td {
+  background:#C6DEFF;
+}
+#missing-musicians-block th {
+  background:#CCC;
+}
+
+
 /*Easy <a class="tooltip" href="#">Tooltip<span>This is the crazy little Easy Tooltip Text.</span></a>.</p>*/
 
 /*

@@ -945,6 +945,30 @@ __EOT__;
     return $missing;
   }
 
+  /**Create a HTML table with the missing musicians. */
+  public static function missingInstrumentationTable($projectId, $handle = false)
+  {
+    $missing = self::fetchMissingInstrumentation($projectId, $handle);
+    
+    if (count($missing) > 0) {
+      echo '
+<div class="missing-musicians"
+     id="missing-musicians-block"
+     title="'.L::t("Missing Musicians").'">
+  <span class="missing-musicians-title">'.L::t("Missing Musicians").'</span>
+  <table class="missing-musicians">
+    <tr><th>'.L::t("Instrument").'</th><th>'.L::t("Missing").'</th></tr>
+';
+      $cnt = 0;
+      foreach ($missing as $instrument => $number) {
+        echo '    <tr class="row-'.($cnt%2).'"><td class="instrument">'.$instrument.'</td><td class="deficit">'.$number.'</td></tr>'."\n";
+        $cnt++;
+      }
+      echo '  </table>
+  </div>';
+    }
+  }
+
   /** Fetch the project-name name corresponding to $projectId.
    */
   public static function fetchName($projectId, $handle = false)

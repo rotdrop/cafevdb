@@ -499,6 +499,16 @@ $(document).ready(function(){
     //$('#cafevdb-error-block').append('<u>'+title+'</u><br/>'+text+'<br/>',
   });
 
+  $('#missing-musicians-block').dialog({
+    dialogClass: 'no-close',
+    width:'auto',
+    height:'auto',
+    position:{my:'left top',
+              at:'left+1% bottom+10%',
+              of:'form.pme-form'
+             }
+  });
+
 });
 
 // Local Variables: ***

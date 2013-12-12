@@ -2,6 +2,7 @@
 use CAFEVDB\L;
 use CAFEVDB\Navigation;
 use CAFEVDB\DetailedInstrumentation;
+use CAFEVDB\Projects;
 
 $table = new DetailedInstrumentation();
 $css_pfx = DetailedInstrumentation::CSS_PREFIX;
@@ -20,6 +21,8 @@ echo $this->inc('part.common.header',
 
 // Issue the main part. The method will echo itself
 $table->display();
+
+Projects::missingInstrumentationTable($table->projectId);
 
 // Close some still opened divs
 echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
