@@ -35,7 +35,6 @@ class BriefInstrumentation
           (Adresse, Email, Name etc.)
       </ul>
     </H4>
-
 __EOT__;
 
     return $header;
