@@ -484,17 +484,17 @@ class Navigation
       .'name="export" >
   <option value=""></option>
   <option '
-    .'title="'.Config::toolTips('pme-export-csv').'" '
-    .'value="CSV">'.L::t('CSV Export').'</option>
-  <option '
-    .'title="'.Config::toolTips('pme-export-html').'" '
-    .'value="HTML">'.L::t('HTML Export').'</option>
-  <option '
     .'title="'.Config::toolTips('pme-export-excel').'" '
     .'value="EXCEL">'.L::t('Excel Export').'</option>
   <option '
     .'title="'.Config::toolTips('pme-export-htmlexcel').'" '
     .'value="SSML">'.L::t('HTML/Spreadsheet').'</option>
+  <option '
+    .'title="'.Config::toolTips('pme-export-csv').'" '
+    .'value="CSV">'.L::t('CSV Export').'</option>
+  <option '
+    .'title="'.Config::toolTips('pme-export-html').'" '
+    .'value="HTML">'.L::t('HTML Export').'</option>
 </select></label></span>';
 
     $button = array('code' => $data);
