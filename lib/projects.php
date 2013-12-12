@@ -899,15 +899,33 @@ __EOT__;
     $row = array();
     if ($result !== false && mysql_num_rows($result) == 1) {
       $row = mySQL::fetch($result);
+    } else {
+      return false;
     }
-    if ($ownConnection) {
-      mySQL::close($handle);
-    }
+
     if (isset($row["ProjektId"])) {
       unset($row["ProjektId"]);
     }
 
-    return $row;
+    $query = 'SELECT `Instrument` FROM `Instrumente` WHERE  1 ORDER BY `Sortierung` ASC';
+    $result = mySQL::query($query, $handle);
+    if ($result === false) {
+      return false;
+    }
+
+    $final = array();
+    while ($line = mySQL::fetch($result)) {
+      $instrument = $line['Instrument'];
+      if (isset($row[$instrument])) {
+        $final[$instrument] = $row[$instrument];
+      }
+    }
+
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $final;
   }
 
   /**Fetch the count of missing musicians per voice. For this to work
@@ -933,9 +951,7 @@ __EOT__;
         "FROM `Besetzungen` WHERE `ProjektId` = $projectId AND '$key' = `Instrument`",
         $handle);
       $balance = $number - $have;
-      if ($balance > 0) {
-        $missing[$key] = $balance;
-      }
+      $missing[$key] = $balance;
     }
 
     if ($ownConnection) {
@@ -948,8 +964,9 @@ __EOT__;
   /**Create a HTML table with the missing musicians. */
   public static function missingInstrumentationTable($projectId, $handle = false)
   {
-    $missing = self::fetchMissingInstrumentation($projectId, $handle);
+    $numbers = self::fetchMissingInstrumentation($projectId, $handle);
     
+    $missing = array_filter($numbers, function ($val) { return $val > 0; });
     if (count($missing) > 0) {
       echo '
 <div class="missing-musicians"
@@ -961,6 +978,9 @@ __EOT__;
 ';
       $cnt = 0;
       foreach ($missing as $instrument => $number) {
+        if ($number <= 0) {
+          continue;
+        }
         echo '    <tr class="row-'.($cnt%2).'"><td class="instrument">'.$instrument.'</td><td class="deficit">'.$number.'</td></tr>'."\n";
         $cnt++;
       }

@@ -217,16 +217,40 @@ case 'brief-instrumentation':
   $projectId   = $table->projectId;
   $projectName = $table->project;
   $name = L::t("%s-brief", array($projectName));
+  $instrumentCol = 1;
   break;
 case 'detailed-instrumentation':
   $table = new CAFEVDB\DetailedInstrumentation(false);
   $projectId = $table->projectId;
   $projectName = $table->project;
   $name = L::t("%s-detailed", array($projectName));
+  $instrumentCol = 0;
   break;
 }
 
 if ($table) {
+  $table->deactivate();
+  $table->display(); // strange, but need be here
+
+  $missing = array();
+  $missingInfo = array();
+  if (isset($projectId) &&
+      $projectId > 0 &&
+      $table->defaultOrdering()) {
+    $numbers = Projects::fetchMissingInstrumentation($table->projectId);
+
+    if (false) {
+      OCP\Util::writeLog('cafevdb',
+                         print_r($missing, true),
+                         OCP\Util::INFO);
+    }
+    $missingInfo["missing"]     = $numbers;
+    $missingInfo["instruments"] = array_keys($numbers);
+    $missingInfo["lastKeyword"] = false;
+    $missingInfo["column"]      = $instrumentCol;
+    $missing = array_filter($numbers, function ($val) { return $val > 0; });
+  }
+
   $creator   = Config::getValue('emailfromname', 'Bilbo Baggins');
   $email     = Config::getValue('emailfromaddress', 'bilbo@nowhere.com');
   $date      = strftime('%Y%m%d-%H%M%S');
@@ -258,11 +282,11 @@ if ($table) {
     ->setCategory("Database Table Export");
   $sheet = $objPHPExcel->getActiveSheet();
 
-  $headerOffset = 3;
+  $offset = $headerOffset = 3;
+  $rowCnt = 0;
 
-  $table->deactivate();
-  $table->display(); // strange, but need be here
   $table->export(
+    // Cell-data filter
     function ($i, $j, $cellData) {
       $cellData = trim($cellData);
       // filter out dummy dates, I really should clean up on the data-base level
@@ -272,22 +296,46 @@ if ($table) {
       $cellData = html_entity_decode($cellData, ENT_COMPAT|ENT_HTML401, 'UTF-8');
       return $cellData;
     },
-    function ($i, $lineData) use ($sheet, $headerOffset) {
+    // Dump-row callback
+    function ($i, $lineData) use ($sheet, &$offset, &$rowCnt, &$missingInfo) {
+      if ($i >= 2 && !empty($missingInfo)) {
+        $col = $missingInfo["column"];
+        while (!empty($missingInfo["instruments"]) &&
+               $missingInfo["instruments"][0] != $lineData[$col]) {
+          $instrument = array_shift($missingInfo["instruments"]);
+          for ($k = 0; $k < $missingInfo["missing"][$instrument]; ++$k) {
+            $sheet->setCellValue(chr(ord("A")+$col).($i+$k+$offset), $instrument);
+            ++$rowCnt;
+            $sheet->getStyle('A'.($i+$k+$offset).':'.$sheet->getHighestColumn().($i+$k+$offset))->applyFromArray(
+              array(
+                'fill' => array(
+                  'type'       => PHPExcel_Style_Fill::FILL_SOLID,
+                  'color' => array(
+                    'argb' => ($rowCnt % 2 == 0) ? 'FFB7CEEC' : 'FFC6DEFF'
+                    )
+                  )
+                )
+              );
+          }
+          $offset += $k;
+        }
+      }
       $column = 'A';
       foreach ($lineData as $cellValue) {
-        $sheet->setCellValue($column.($i+$headerOffset), $cellValue);
+        $sheet->setCellValue($column.($i+$offset), $cellValue);
         if ($i == 1) {
           $sheet->getColumnDimension($column)->setAutoSize(true);
         }
         ++$column;
       }
       if ($i >= 2) {
-        $sheet->getStyle('A'.($i+$headerOffset).':'.$sheet->getHighestColumn().($i+$headerOffset))->applyFromArray(
+        ++$rowCnt;
+        $sheet->getStyle('A'.($i+$offset).':'.$sheet->getHighestColumn().($i+$offset))->applyFromArray(
           array(
             'fill' => array(
               'type'       => PHPExcel_Style_Fill::FILL_SOLID,
               'color' => array(
-                'argb' => ($i % 2 == 0) ? 'FFB7CEEC' : 'FFC6DEFF'
+                'argb' => ($rowCnt % 2 == 0) ? 'FFB7CEEC' : 'FFC6DEFF'
                 )
               )
             )
@@ -295,9 +343,34 @@ if ($table) {
       }
     });
 
+  // finally, dump all remaining missing musicians ...
+  if (!empty($missingInfo)) {
+    $i      = $sheet->getHighestRow();
+    $offset = 1;
+    $col = $missingInfo["column"];
+    while (!empty($missingInfo["instruments"])) {
+      $instrument = array_shift($missingInfo["instruments"]);
+      for ($k = 0; $k < $missingInfo["missing"][$instrument]; ++$k) {
+        $sheet->setCellValue(chr(ord("A")+$col).($i+$k+$offset), $instrument);
+        ++$rowCnt;
+        $sheet->getStyle('A'.($i+$k+$offset).':'.$sheet->getHighestColumn().($i+$k+$offset))->applyFromArray(
+          array(
+            'fill' => array(
+              'type'       => PHPExcel_Style_Fill::FILL_SOLID,
+              'color' => array(
+                'argb' => ($rowCnt % 2 == 0) ? 'FFB7CEEC' : 'FFC6DEFF'
+                )
+              )
+            )
+          );
+      }
+      $offset += $k;
+    }
+  }
+
   // Make the header a little bit prettier
   $pt_height = PHPExcel_Shared_Font::getDefaultRowHeightByFont($objPHPExcel->getDefaultStyle()->getFont());
-  $sheet->getRowDimension(1+$headerOffset)->setRowHeight($pt_height+$ptHeight/4);
+  $sheet->getRowDimension(1+$headerOffset)->setRowHeight($pt_height+$pt_height/4);
   $sheet->getStyle("A".(1+$headerOffset).":".$sheet->getHighestColumn().(1+$headerOffset))->applyFromArray(
     array(
       'font'    => array(
@@ -351,12 +424,6 @@ if ($table) {
    */
 
   if (isset($projectId)) {
-    $missing = Projects::fetchMissingInstrumentation($table->projectId);
-
-    OCP\Util::writeLog('cafevdb',
-                       print_r($missing, true),
-                       OCP\Util::INFO);
-
     if (count($missing) > 0) {
       $missingStart = $rowNumber = $sheet->getHighestRow() + 4;
 
@@ -410,6 +477,9 @@ if ($table) {
 
       $cnt = 0;
       foreach ($missing as $instrument => $number) {
+        if ($number <= 0) {
+          continue;
+        }
         ++$rowNumber;
         ++$cnt;
         $sheet->setCellValue("A$rowNumber", $instrument);

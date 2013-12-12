@@ -94,6 +94,7 @@ class Instrumentation
       return $this->pme->change_operation() || $this->pme->add_operation();
     }
   }
+
   /**Disable some extra stuff (image upload etc.) when displaying the entire table.
    */
   public function listOperation()
@@ -103,6 +104,15 @@ class Instrumentation
     } else {
       return $this->pme->list_operation();
     }
+  }
+
+  /**Determine if we have the default ordering of rows. */
+  public function defaultOrdering() 
+  {
+    if (!isset($this->pme)) {
+      return false;
+    }
+    return empty($this->pme->sfn);
   }
 
   protected function __construct($_execute = true)
