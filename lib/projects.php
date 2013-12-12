@@ -97,10 +97,12 @@ __EOT__;
     global $debug_query;
     //    $debug_query = true;
 
-    // echo '<PRE>';
-    /* print_r($_SERVER); */
-    // print_r($_POST);
-    // echo '</PRE>';
+    if (false) {
+      echo '<PRE>';
+      /* print_r($_SERVER); */
+      print_r($_POST);
+      echo '</PRE>';
+    }
 
     /*
      * IMPORTANT NOTE: This generated file contains only a subset of huge amount
@@ -862,8 +864,6 @@ __EOT__;
    */
   public static function fetchProject($projectId, $handle = false)
   {
-    $projects = array();
-
     $ownConnection = $handle === false;
     if ($ownConnection) {
       Config::init();
@@ -871,6 +871,29 @@ __EOT__;
     }
       
     $query = "SELECT * FROM `Projekte` WHERE `Id` = $projectId";
+    $result = mySQL::query($query, $handle);
+
+    $row = false;
+    if ($result !== false && mysql_num_rows($result) == 1) {
+      $row = mySQL::fetch($result);
+    }
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $row;
+  }
+
+  /**Fetch the instrumentation numbers. */
+  public static function fetchInstrumentationNumbers($projectId, $handle = false)
+  {
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+      
+    $query = "SELECT * FROM `BesetzungsZahlen` WHERE `ProjektId` = $projectId";
     $result = mySQL::query($query, $handle);
 
     $row = false;
