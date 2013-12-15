@@ -465,6 +465,34 @@ __EOT__;
     }
   }
 
+  /** phpMyEdit calls the triggers (callbacks) with the following arguments:
+   *
+   * @param[in] $pme The phpMyEdit instance
+   *
+   * @param[in] $op The operation, 'insert', 'update' etc.
+   *
+   * @param[in] $step 'before' or 'after'
+   *
+   * @param[in] $oldvals Self-explanatory.
+   *
+   * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
+   *
+   * @param[in,out] &$newvals Set of new values, which may also be modified.
+   *
+   * @return boolean. If returning @c false the operation will be terminated
+   */
+  public static function beforeUpdateRemoveUnchanged($pme, $op, $step, $oldvals, &$changed, &$newvals)
+  {
+    // TODO: can be handle more efficiently with the PHP array_...() functions.
+    foreach ($newvals as $key => $value) {
+      if (array_search($key, $changed) === false) {
+        unset($newvals["$key"]);
+      }
+    }
+
+    return count($newvals) > 0;
+  }
+
 };
 
 /**Support class to generate navigation buttons and the like.
@@ -828,6 +856,8 @@ __EOT__;
  */
 class mySQL
 {
+  const DATEMASK = "Y-m-d H:i:s"; /**< Something understood by mySQL. */
+
   /**Connect to the server specified by @a $opts.
    *
    * @param[in] $opts Associative array with keys 'hn', 'un', 'pw' and

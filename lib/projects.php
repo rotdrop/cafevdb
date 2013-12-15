@@ -434,6 +434,7 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
     return true;
   }
   
+  /**@copydoc CAFEVDB\Projects::afterInsterTrigger. */
   public static function afterUpdateTrigger($pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
     // Simply recreate the view, update the extra tables etc.
@@ -501,6 +502,7 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
     return true;
   }
 
+  /**@copydoc CAFEVDB\Projects::afterInsterTrigger. */
   public static function afterDeleteTrigger($pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
     $projectName = $oldvals['Name'];
