@@ -78,7 +78,7 @@ $(document).ready(function(){
                 $.post(OC.filePath('cafevdb', 'ajax/projects', 'verifyName.php'), post,
                        function (data) {
                            if (data.status == 'success') {
-                               rqData = data.data;
+                               var rqData = data.data;
                                if (rqData.message != '') {
                                    OC.Notification.show(rqData.message);
                                }
@@ -96,7 +96,7 @@ $(document).ready(function(){
                                    }
                                }
                            } else if (data.status == 'error') {
-                               rqData = data.data;
+                               var rqData = data.data;
                                OC.Notification.show(rqData.message);
                                if ($(nameSelector).val() == '') {
                                    $(nameSelector).val(oldProjectName);
