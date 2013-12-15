@@ -236,7 +236,7 @@ var CAFEVDB = CAFEVDB || {};
 		onChange:	showCoords,
 		onSelect:	showCoords,
 		onRelease:	clearCoords,
-		maxSize:	[self.imageSize-1, self.imageSize-1],
+		maxSize:	[self.imageSize, self.imageSize],
 		bgColor:	'black',
 		bgOpacity:	.4,
 		boxWidth:	self.imageSize,
