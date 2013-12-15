@@ -458,7 +458,7 @@ __EOT__;
   
   public static function entifyString($string)
   {
-    if (defined(ENT_XHTML)) {
+    if (defined("ENT_XHTML")) {
       return htmlentities($string, ENT_QUOTES|ENT_XHTML, 'UTF-8');
     } else {
       return htmlentities($string, ENT_QUOTES, 'UTF-8');
