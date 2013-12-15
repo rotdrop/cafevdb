@@ -3674,6 +3674,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		if ($this->exec_triggers('update', 'before', $oldvals, $changed, $newvals) == false) {
 			return false;
 		}
+		echo '<!-- '.print_r($newvals, true).'-->';
 		// Build the real query respecting changes to the newvals array
 		foreach ($newvals as $fd => $val) {
 			if ($fd == '') continue;
@@ -3870,14 +3871,20 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			ksort($trig);
 			for ($t = reset($trig); $t !== false && $ret != false; $t = next($trig)) {
 				if (is_callable($t)) {
-					$ret = call_user_func($t, $this, $op, $step, $oldvals, $changed, $newvals);
+					$ret = call_user_func_array($t,
+												array(&$this,
+													  $op, $step, $oldvals,
+													  &$changed, &$newvals));
 				} else {
 					$ret = include($t);
 				}
 			}
 		} else {
 			if (is_callable($trig)) {
-				$ret = call_user_func($trig, $this, $op, $step, $oldvals, $changed, $newvals);
+				$ret = call_user_func_array($trig,
+											array(&$this,
+												  $op, $step, $oldvals,
+												  &$changed, &$newvals));
 			} else {
 				$ret = include($trig);
 			}
