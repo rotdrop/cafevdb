@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-12 04:20+0100\n"
-"PO-Revision-Date: 2013-12-15 00:13+0100\n"
+"POT-Creation-Date: 2013-12-15 03:22+0100\n"
+"PO-Revision-Date: 2013-12-15 03:25+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -193,20 +193,20 @@ msgstr "Musiker"
 msgid "%s-brief"
 msgstr "%s-uebersicht"
 
-#: ajax/export/excel.php:225
+#: ajax/export/excel.php:226
 #, php-format
 msgid "%s-detailed"
 msgstr "%s-detailliert"
 
-#: ajax/export/excel.php:363
+#: ajax/export/excel.php:430 lib/projects.php:975 lib/projects.php:976
 msgid "Missing Musicians"
 msgstr "Fehlende Musiker"
 
-#: ajax/export/excel.php:388
+#: ajax/export/excel.php:455 lib/projects.php:978
 msgid "Instrument"
 msgstr "Instrument"
 
-#: ajax/export/excel.php:389
+#: ajax/export/excel.php:456 lib/projects.php:978
 msgid "Missing"
 msgstr "Defizit"
 
@@ -686,7 +686,7 @@ msgstr "Alle zu %s"
 #: js/events.js:115 js/inlineimage.js:84 js/inlineimage.js:92
 #: js/inlineimage.js:101 js/inlineimage.js:130 js/inlineimage.js:154
 #: js/inlineimage.js:177 js/inlineimage.js:195 js/inlineimage.js:312
-#: js/inlineimage.js:469 js/inlineimage.js:479 js/inlineimage.js:482
+#: js/inlineimage.js:469 js/inlineimage.js:478 js/inlineimage.js:481
 msgid "Error"
 msgstr "Fehler"
 
@@ -1022,7 +1022,7 @@ msgstr "Anzahl: "
 msgid "and"
 msgstr "und"
 
-#: lib/email.php:1375 lib/projects.php:633 lib/projects.php:780
+#: lib/email.php:1375 lib/projects.php:634 lib/projects.php:781
 msgid "Events"
 msgstr "Termine"
 
@@ -1268,43 +1268,43 @@ msgstr "Weitere Kalender"
 msgid "Invalid argument value: `%s'"
 msgstr "Unsinniger Paramter-Wert: `%s'"
 
-#: lib/functions.php:480
+#: lib/functions.php:484
 msgid "Export Table"
 msgstr "Tabelle Exportieren"
 
-#: lib/functions.php:488
+#: lib/functions.php:492
 msgid "Excel Export"
 msgstr "`Excel' Export"
 
-#: lib/functions.php:491
+#: lib/functions.php:495
 msgid "HTML/Spreadsheet"
 msgstr "HTML/Tabellenformat"
 
-#: lib/functions.php:494
+#: lib/functions.php:498
 msgid "CSV Export"
 msgstr "CSV Export"
 
-#: lib/functions.php:497
+#: lib/functions.php:501
 msgid "HTML Export"
 msgstr "HTML Export"
 
-#: lib/functions.php:630
+#: lib/functions.php:634
 msgid "Error: Unknonwn Button Type"
 msgstr "Fehler: Unbekannter Knopf-Typ"
 
-#: lib/functions.php:653
+#: lib/functions.php:657
 msgid "View all Projects"
 msgstr "Alle Projekte"
 
-#: lib/functions.php:654
+#: lib/functions.php:658
 msgid "Overview over all known projects (start-page)."
 msgstr "Alle gespeicherten Projekte anzeigen; Startseite der `Camerata App'."
 
-#: lib/functions.php:666
+#: lib/functions.php:670
 msgid "Display all Musicians"
 msgstr "Alle Musiker"
 
-#: lib/functions.php:667
+#: lib/functions.php:671
 msgid ""
 "Display all musicians stored in the data-base, with detailed facilities for "
 "filtering and sorting."
@@ -1312,7 +1312,7 @@ msgstr ""
 "Alle Musiker anzeigen, die in der Datenbank gespeichert sind. Es gibt dabei "
 "ausführliche Such- und Auswahlfunktionalität."
 
-#: lib/functions.php:679
+#: lib/functions.php:683
 msgid ""
 "Mass-email form, use with care. Mass-emails will be logged. Recipients will "
 "be specified by the Bcc: field in the header, so the recipients are "
@@ -1323,25 +1323,25 @@ msgstr ""
 "außerdem wird die ganze Pracht in der Daten bank gespeichter (siehe `Email "
 "Historie')"
 
-#: lib/functions.php:693
+#: lib/functions.php:697
 msgid "Email History"
 msgstr "Em@il Historie"
 
-#: lib/functions.php:694
+#: lib/functions.php:698
 msgid "Display all emails sent by our mass-email form."
 msgstr ""
 "Zeigt alle über unser unsägliches Massen-Mail gespamten Emails an. "
 "Insebesondere werden hier auch die Bcc: Empfänger gespeichert."
 
-#: lib/functions.php:712
+#: lib/functions.php:716
 msgid "The currently active project."
 msgstr "Das gerade ausgewählte Projekt."
 
-#: lib/functions.php:727 lib/projects.php:639
+#: lib/functions.php:731 lib/projects.php:640
 msgid "Detailed Instrumentation"
 msgstr "Detaillierte Besetzung"
 
-#: lib/functions.php:728 lib/tooltips.php:230
+#: lib/functions.php:732 lib/tooltips.php:230
 msgid ""
 "Detailed display of all registered musicians for the selected project. The "
 "table will allow for modification of personal data like email, phone, "
@@ -1351,11 +1351,11 @@ msgstr ""
 "Daten wie Email, Adresse usw. können hier geändert werden. Projektbezogene "
 "Daten können allerdings nur in der Ansicht `Kurz-Besetzung' geändert werden."
 
-#: lib/functions.php:742 lib/projects.php:636
+#: lib/functions.php:746 lib/projects.php:637
 msgid "Brief Instrumentation"
 msgstr "Kurz-Besetzung"
 
-#: lib/functions.php:743
+#: lib/functions.php:747
 msgid ""
 "Brief display of all registered musicians for the selected project. The "
 "table will allow for modification of project specific data, like the "
@@ -1366,11 +1366,11 @@ msgstr ""
 "Musiker auch wieder entfernt werden. Persönliche Daten können allerdings nur "
 "in der detaillierten Ansicht geändert werden."
 
-#: lib/functions.php:757
+#: lib/functions.php:761
 msgid "Add Instruments"
 msgstr "Neue Instrumente"
 
-#: lib/functions.php:758
+#: lib/functions.php:762
 msgid ""
 "Display the list of instruments known by the data-base, possibly add new "
 "ones as needed."
@@ -1378,11 +1378,11 @@ msgstr ""
 "Tabelle mit allen derzeit gespeicherten Instrumenten; weitere Instrumente "
 "können hier einfach hinzugefügt werden."
 
-#: lib/functions.php:772 lib/projects.php:642
+#: lib/functions.php:776 lib/projects.php:643
 msgid "Instrumentation Numbers"
 msgstr "Besetzungszahlen"
 
-#: lib/functions.php:773 lib/tooltips.php:243
+#: lib/functions.php:777 lib/tooltips.php:243
 msgid ""
 "Display the desired instrumentaion numbers, i.e. how many musicians are "
 "already registered for each instrument group and how many are finally needed."
@@ -1390,11 +1390,11 @@ msgstr ""
 "Anzeige der angestrebten Besetzungszahlen. Natürlich kann man die dann auch "
 "anpassen ..."
 
-#: lib/functions.php:787
+#: lib/functions.php:791
 msgid "Add more Musicians"
 msgstr "Musiker Hinzufügen"
 
-#: lib/functions.php:788
+#: lib/functions.php:792
 msgid ""
 "List of all musicians NOT registered for the selected project. Only through "
 "that table a new musician can enter a project. Look for a hyper-link "
@@ -1404,31 +1404,31 @@ msgstr ""
 "Musiker können ausschließlich über DIESE Tabelle den Weg in ein Projekt "
 "finden. Neue Musiker können selbstverständlich hinzugefügt werden."
 
-#: lib/functions.php:802
+#: lib/functions.php:806
 msgid "Transfer Instruments from Musicians"
 msgstr "Instrumente mit Besetzung abgleichen"
 
-#: lib/instrumentation.php:118
+#: lib/instrumentation.php:138
 msgid "Section Leader"
 msgstr "Stimmführer"
 
-#: lib/instrumentation.php:154
+#: lib/instrumentation.php:174
 msgid "regular"
 msgstr "Mitspieler"
 
-#: lib/instrumentation.php:155
+#: lib/instrumentation.php:175
 msgid "passive"
 msgstr "passiv"
 
-#: lib/instrumentation.php:156
+#: lib/instrumentation.php:176
 msgid "soloist"
 msgstr "Solist"
 
-#: lib/instrumentation.php:157
+#: lib/instrumentation.php:177
 msgid "conductor"
 msgstr "Dirigent"
 
-#: lib/instrumentation.php:158
+#: lib/instrumentation.php:178
 msgid "temporary"
 msgstr "Aushilfe"
 
@@ -1470,28 +1470,42 @@ msgstr "Zu %s"
 msgid "Remarks"
 msgstr "Bemerkungen"
 
-#: lib/musicians.php:429
+#: lib/musicians.php:420
+msgid ""
+"Portraits or Avatars can only be added to an existing musician's profile; "
+"please add the new musician without protrait image first."
+msgstr "Portraits oder Avatar-Bilder können nur zu existierenden Musiker-Daten hinzugefügt werden; bitte zuerst den Musiker ohne Bild hinzufügen."
+
+#: lib/musicians.php:432
 #, php-format
 msgid "Drop photo to upload (max %s)"
 msgstr "Foto ablegen zum Hochladen (max %s)"
 
-#: lib/musicians.php:432
+#: lib/musicians.php:435
 msgid "Delete current photo"
 msgstr "Aktuelles Foto löschen"
 
-#: lib/musicians.php:433
+#: lib/musicians.php:436
 msgid "Edit current photo"
 msgstr "Aktuelles Foto editieren"
 
-#: lib/musicians.php:434
+#: lib/musicians.php:437
 msgid "Upload new photo"
 msgstr "Neues Foto hochladen"
 
-#: lib/musicians.php:435
+#: lib/musicians.php:438
 msgid "Select photo from ownCloud"
 msgstr "Foto aus der `Cloud' auswählen"
 
-#: lib/musicians.php:849 lib/musicians.php:1268
+#: lib/musicians.php:446
+msgid ""
+"Internal error, don't know what to do concerning portrait images in the "
+"given context."
+msgstr ""
+"Interner Fehler; keine Ahnung, wie im gegebenen Kontext mit\n"
+"Portrait-Bildern verfahren werden sollte."
+
+#: lib/musicians.php:854 lib/musicians.php:1273
 #, php-format
 msgid ""
 "None of the instruments known by %s are mentioned in the %sinstrumentation-"
@@ -1506,7 +1520,7 @@ msgstr ""
 "Der Fehler sollte durch Ändern der Instrumentierung oder der Musikerdaten "
 "behoben werden."
 
-#: lib/musicians.php:860
+#: lib/musicians.php:865
 #, php-format
 msgid ""
 "Choosing the first instrument known by %s\n"
@@ -1519,7 +1533,7 @@ msgstr ""
 "Bitte nötigenfalls korrigieren, in dem ein anderes ``Projekt-Instrument''\n"
 "in der Tabelle unten ausgewählt wird. Wähle ``%s'' als Projekt-instrument."
 
-#: lib/musicians.php:1293
+#: lib/musicians.php:1298
 #, php-format
 msgid ""
 "Generally, the first instrument known by the respective musician\n"
@@ -1551,7 +1565,7 @@ msgstr "Instrumente abgleichen"
 msgid ""
 "Keine Besetzung für das Projekt gefunden, bitte bei den <A\n"
 "HREF=%s>Projekteigenschaften</A> die Instrumente eintragen, oder im\n"
-"%s-Menü den ``%s''-Eintrag auswählen, um die Instrumente der bereits\n"
+"<u>%s-Menü den ``%s''-Eintrag</u> auswählen, um die Instrumente der bereits\n"
 "``registrierten'' Musiker automatisch eintragen lassen."
 msgstr ""
 "Keine Besetzung für das Projekt gefunden, bitte bei den <A\n"
@@ -1579,38 +1593,50 @@ msgstr "Jahreszhahl anhängen"
 msgid "Flyer"
 msgstr "Flyer"
 
-#: lib/projects.php:646
+#: lib/projects.php:647
 msgid "Project Wiki Page"
 msgstr "Wiki Projekt-Seite"
 
-#: lib/projects.php:650
+#: lib/projects.php:651
 msgid "Project Files"
 msgstr "Projekt-Dateien"
 
-#: lib/projects.php:654
+#: lib/projects.php:655
 msgid "Profit and Loss Account"
 msgstr "Verlustrechnung"
 
-#: lib/projects.php:1118
+#: lib/projects.php:1154
+msgid ""
+"Flyers can only be added to existing projects, please add the new\n"
+"project without a flyer first."
+msgstr "Flyer könner leider nur zu existierenden Projekten hinzugefügt werden; bitte zuerst das Projekt ohne Flyer anlegen."
+
+#: lib/projects.php:1167
 #, php-format
 msgid "Drop image to upload (max %s)"
 msgstr "Bild ablegen zum Hochladen (max %s)"
 
-#: lib/projects.php:1121
+#: lib/projects.php:1170
 msgid "Delete current flyer"
 msgstr "Aktuellen Flyer löschen"
 
-#: lib/projects.php:1122
+#: lib/projects.php:1171
 msgid "Edit current flyer"
 msgstr "Aktuellen Flyer zuschneiden"
 
-#: lib/projects.php:1123
+#: lib/projects.php:1172
 msgid "Upload new flyer"
 msgstr "Neuen Flyer hochladen"
 
-#: lib/projects.php:1124
+#: lib/projects.php:1173
 msgid "Select image from ownCloud"
 msgstr "Bild aus der `Cloud' auswählen"
+
+#: lib/projects.php:1181
+msgid ""
+"Internal error, don't know what to do concerning project-flyers in the given "
+"context."
+msgstr "Interner Fehler; keine Ahnung, wie in diesem Kontext mit Projekt-Flyern umgegangen werden sollte."
 
 #: lib/tooltips.php:24
 msgid "Write a new bulletin entry."
