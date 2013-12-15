@@ -361,6 +361,7 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
         'function' => 'CAFEVDB\Projects::flyerImageLinkPME',
         'parameters' => array()
         ),
+      'css'      => array('postfix' => 'projectflyer'),
       'default' => '',
       'sort' => false);
 

@@ -47,3 +47,12 @@ span.project-actions-block  ul.chosen-results li:nth-of-type(5) {
   border-top: 1px solid #ccc;
   padding-top:8px;
 }
+
+td[class$="projectextra"] textarea {
+  width:auto;
+}
+
+td[class$="projectflyer"] img {
+  height:300px;
+}
+
