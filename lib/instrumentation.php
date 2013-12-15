@@ -194,6 +194,188 @@ class Instrumentation
 
     mySQL::close($handle);
   }
+
+  /** phpMyEdit calls the trigger (callback) with the following arguments:
+   *
+   * @param[in] $pme The phpMyEdit instance
+   *
+   * @param[in] $op The operation, 'insert', 'update' etc.
+   *
+   * @param[in] $step 'before' or 'after'
+   *
+   * @param[in] $oldvals Self-explanatory.
+   *
+   * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
+   *
+   * @param[in,out] &$newvals Set of new values, which may also be modified.
+   *
+   * @return boolean. If returning @c false the operation will be terminated
+   */
+  public static function beforeInsertFixProjectTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
+  {
+    $project = CAFEVDB\Util::cgiValue('Project');
+    $projectId =  CAFEVDB\Util::cgiValue('ProjectId');
+    $musicianId = CAFEVDB\Util::cgiValue('MusicianId');
+
+    // We check here whether the change of the instrument or player is in
+    // some sense consistent with the Musiker table. We know that only
+    // MusikerId and instrument can change
+
+    // $this      -- pme object
+    // $newvals   -- contains the new values
+    // $this->rec -- primary key
+    // $oldvals   -- old values
+    // $changed 
+
+    // For an unknown reason the project Id is zero ....
+
+    $newvals['ProjektId'] = $projectId;
+
+    return true;    
+  }
+
+  /** phpMyEdit calls the trigger (callback) with the following arguments:
+   *
+   * @param[in] $pme The phpMyEdit instance
+   *
+   * @param[in] $op The operation, 'insert', 'update' etc.
+   *
+   * @param[in] $step 'before' or 'after'
+   *
+   * @param[in] $oldvals Self-explanatory.
+   *
+   * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
+   *
+   * @param[in,out] &$newvals Set of new values, which may also be modified.
+   *
+   * @return boolean. If returning @c false the operation will be terminated
+   */
+  public static function beforeUpdateInstrumentTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
+  {
+    $project    = Util::cgiValue('Project');
+    $projectId  = Util::cgiValue('ProjectId');
+    $musicianId = Util::cgiValue('MusicianId');
+
+    // We check here whether the change of the instrument or player is in
+    // some sense consistent with the Musiker table. We know that only
+    // MusikerId and instrument can change
+    //
+    // TODO: change to a pop-up window, Javascript and AJAX-calls
+
+    // $pme      -- pme object
+    // $newvals   -- contains the new values
+    // $pme->rec -- primary key
+    // $oldvals   -- old values
+    // $changed 
+
+    /* echo '<PRE> */
+    /* '; */
+    /* print_r($newvals); */
+    /* print_r($oldvals); */
+    /* print_r($changed); */
+    /* echo "Rec: ".$pme->rec."\n"; */
+    /* echo '</PRE> */
+	 /* '; */
+
+    if (!isset($newvals['Instrument'])) {
+      // No need to check.
+      return true;
+    }
+
+    if ($musicianId < 0) {
+      if (isset($newvals['MusikerId'])) {
+        $musicianId = $newvals['MusikerId'];
+      } else {
+        // otherwise it must be this->rec
+        $musicianId = $pme->rec;
+      }
+    } else if ($musicianId != $newvals['MusikerId']) {
+      echo "Data inconsistency: Ids do not match (" . $newvals['MusikerId'] . " != $musicianId)";
+      return false;
+    }
+    
+    // Fetch the list of instruments from the Musiker data-base
+    
+    $musquery = "SELECT `Instrumente`,`Vorname`,`Name` FROM Musiker WHERE `Id` = $musicianId";
+
+    $musres = $pme->myquery($musquery) or die ("Could not execute the query. " . mysql_error());
+    $musnumrows = mysql_num_rows($musres);
+
+    if ($musnumrows != 1) {
+      echo "Data inconsisteny, " . $musicianId . " is not a unique Id\n";
+      return false;
+    }
+
+    $musrow = $pme->sql_fetch($musres);
+    //$instruments = explode(',',$musrow['Instrumente']);
+
+    $musname = $musrow['Vorname'] . " " . $musrow['Name'];
+    $instruments = $musrow['Instrumente'];
+    $instrument  = $newvals['Instrument'];
+    
+    if (!strstr($instruments, $instrument)) {
+      $text1 = L::t('Instrument not known by %s, correct that first! %s only plays %s!!!',
+                    array($musname, $musname, $instruments));
+      $text2 = L::t('Click on the following button to enforce your decision');
+      $text3 = L::t('This will also add `%s\' to %s\'s list of known instruments. '
+                    .'Unfortunately, all your other changes might be discarded. '.
+                    'You may want to try the `Back\'-Button of your browser.',
+                    array($instrument, $musname));
+      $btnValue = L::t('Really Change %s\'s instrument!!!', array($musname));
+      $btn =<<<__EOT__
+<form style="display:inline;" name="CAFEV_form_besetzung" method="post" action="?app=cafevdb">
+  <input type="submit" name="" value="$btnValue">
+__EOT__;
+
+      if ($pme->cgi['persist'] != '') {
+        $btn .= $pme->get_origvars_html($pme->cgi['persist']);
+      }
+      $btn .= $pme->htmlHiddenSys('mtable', $pme->tb);
+      $btn .= $pme->htmlHiddenSys('mkey', $pme->key);
+      $btn .= $pme->htmlHiddenSys('mkeytype', $pme->key_type);
+      foreach ($pme->mrecs as $key => $val) {
+        $btn .= $pme->htmlHiddenSys('mrecs['.$key.']', $val);
+      }
+      $btn .=<<<__EOT__
+  <input type="hidden" name="Template" value="change-one-musician">
+  <input type="hidden" name="Project" value="$project" />
+  <input type="hidden" name="ProjectId" value="$projectId" />
+  <input type="hidden" name="MusicianId" value="$musicianId" />
+  <input type="hidden" name="ForcedInstrument" value="$instrument" />
+
+__EOT__;
+      $btn .=<<<__EOT__
+</form>
+__EOT__;
+// TODO: will probably not work with bulk-stuff
+  echo <<<__EOT__
+<div class="cafevdb-table-notes" style="height:18ex">
+  <div class="cafevdb-note change-instrument">
+  <div>$text1</div>
+  <div>$text2: $btn</div>
+  <div>$text3</div>
+  </div>
+</div>
+
+__EOT__;
+
+      return false;
+    }
+
+    /* $sqlquery = "CREATE OR REPLACE VIEW `" . $newvals["Name"] . "View` AS */
+    /*  SELECT */
+    /*  `Musiker`.`Id`,`Instrument`, `Name`, `Vorname`, */
+    /*  `Email`, `Telefon`, `Telefon2`, `Strasse`, `Postleitzahl`, `Stadt`, `Land`, */
+    /*  `Geburtstag`, `Status`, `Bemerkung` FROM `Musiker` JOIN `Besetzungen` */
+    /*   ON `Musiker`.`Id` = MusikerId AND " . $pme->rec . "= `ProjektId`"; */
+
+    /* //echo $sqlquery; */
+    
+    /* $pme->myquery($sqlquery) or die ("Could not execute the query. " . mysql_error()); */
+    
+    return true;
+  }  
+  
 };
 
 }

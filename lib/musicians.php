@@ -1237,8 +1237,8 @@ __EOT__;
 
     // Check whether the instrument is also mentioned in the musicians
     // data-base. Otherwise add id on request.
-    $opts['triggers']['insert']['before']  = Config::$triggers.'instrumentation-fix-project.TIB.inc.php';
-    $opts['triggers']['update']['before']  = Config::$triggers.'instrumentation-change-instrument.TUB.inc.php';
+    $opts['triggers']['insert']['before']  = 'CAFEVDB\Instrumentation::beforeInsertFixProjectTrigger';
+    $opts['triggers']['update']['before']  = 'CAFEVDB\Instrumentation::beforeUpdateInstrumentTrigger';
 
     if ($this->pme_bare) {
       // disable all navigation buttons, probably for html export

@@ -393,7 +393,7 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
    *
    * @return boolean. If returning @c false the operation will be terminated
    */
-  public static function afterInsertTrigger($pme, $op, $step, $oldvals, &$changed, &$newvals)
+  public static function afterInsertTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
     // $newvals contains the new values
     $projectId   = $pme->rec;
@@ -435,7 +435,7 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
   }
   
   /**@copydoc CAFEVDB\Projects::afterInsterTrigger. */
-  public static function afterUpdateTrigger($pme, $op, $step, $oldvals, &$changed, &$newvals)
+  public static function afterUpdateTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
     // Simply recreate the view, update the extra tables etc.
     self::createView($pme->rec, $newvals['Name'], $pme->dbh);
@@ -503,7 +503,7 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
   }
 
   /**@copydoc CAFEVDB\Projects::afterInsterTrigger. */
-  public static function afterDeleteTrigger($pme, $op, $step, $oldvals, &$changed, &$newvals)
+  public static function afterDeleteTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
     $projectName = $oldvals['Name'];
     if (!$projectName) {
