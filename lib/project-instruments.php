@@ -205,7 +205,7 @@ __EOT__;
 
         Util::alert(L::t('Keine Besetzung für das Projekt gefunden, bitte bei den <A
 HREF=%s>Projekteigenschaften</A> die Instrumente eintragen, oder im
-%s-Menü den ``%s\'\'-Eintrag auswählen, um die Instrumente der bereits
+<u>%s-Menü den ``%s\'\'-Eintrag</u> auswählen, um die Instrumente der bereits
 ``registrierten\'\' Musiker automatisch eintragen lassen.',
                          array('"?app=cafevdb&Template=projects&PME_sys_rec='.$projectId.'&PME_sys_operation=PME_op_Change"',
                                L::t('Actions'),
