@@ -1142,19 +1142,23 @@ __EOT__;
     return true;
   }
 
-  public static function flyerImageLinkPME($projectId, $opts, $modify, $k, $fds, $fdd, $row)
+  public static function flyerImageLinkPME($projectId, $opts, $action, $k, $fds, $fdd, $row)
   {
-    return self::flyerImageLink($projectId, $modify);
+    return self::flyerImageLink($projectId, $action);
   }
 
-  public static function flyerImageLink($projectId, $modify = false)
+  public static function flyerImageLink($projectId, $action = 'display')
   {
-    if ($modify === false) {
+    switch ($action) {
+    case 'add':
+      return L::t("Flyers can only be added to existing projects, please add the new
+project without a flyer first.");
+    case 'display':
       $span = ''
         .'<span class="photo"><img class="photo svg" src="'.\OC::$WEBROOT.'/?app=cafevdb&getfile=inlineimage.php&RecordId='.$projectId.'&ImagePHPClass=CAFEVDB\Projects&ImageSize=1200&PlaceHolder='.self::IMAGE_PLACEHOLDER.'"'
         .' title="Flyer, if available" /></span>';
       return $span;
-    } else {
+    case 'change':
       $imagearea = ''
         .'<div id="project_flyer">
         
@@ -1173,6 +1177,8 @@ __EOT__;
 ';
 
       return $imagearea;
+    default:
+      return L::t("Internal error, don't know what to do concerning project-flyers in the given context.");
     }
   }
 
