@@ -408,19 +408,22 @@ __EOT__;
 
   } // display()
 
-  public static function portraitImageLinkPME($musicianId, $opts, $modify, $k, $fds, $fdd, $row)
+  public static function portraitImageLinkPME($musicianId, $opts, $action, $k, $fds, $fdd, $row)
   {
-    return self::portraitImageLink($musicianId, $modify);
+    return self::portraitImageLink($musicianId, $action);
   }
 
-  public static function portraitImageLink($musicianId, $modify = false)
+  public static function portraitImageLink($musicianId, $action = 'display')
   {
-    if ($modify === false) {
+    switch ($action) {
+    case 'add':
+      return L::t("Portraits or Avatars can only be added to an existing musician's profile; please add the new musician without protrait image first.");
+    case 'display':
       $span = ''
         .'<span class="photo"><img class="photo" src="'.\OC::$WEBROOT.'/?app=cafevdb&getfile=inlineimage.php&RecordId='.$musicianId.'&ImagePHPClass=CAFEVDB\Musicians"'
         .' title="Photo, if available" /></span>';
       return $span;
-    } else {
+    case 'change':
       $photoarea = ''
         .'<div id="contact_photo">
         
@@ -439,6 +442,8 @@ __EOT__;
 ';
 
       return $photoarea;
+    default:
+      return L::t("Internal error, don't know what to do concerning portrait images in the given context.");
     }
   }
 
