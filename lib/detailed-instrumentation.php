@@ -41,7 +41,7 @@ __EOT__;
   {
     //global $debug_query;
     //Config::$debug_query = true;
-    $debug_query = true;
+    //$debug_query = true;
 
     $project         = $this->project;
     $projectId       = $this->projectId;
