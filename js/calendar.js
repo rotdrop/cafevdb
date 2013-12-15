@@ -153,7 +153,7 @@ var Calendar={
 					if(data.status == 'success'){
 						$('#fullcalendar').fullCalendar('removeEvents', $('#event_form input[name=id]').val());
 						$('#event').dialog('destroy').remove();
-                                        	Events.UI.redisplay();
+                                        	CAFEVDB.Events.UI.redisplay();
 					} else {
 						$('#errorbox').html(t('calendar', 'Deletion failed'));
 					}
@@ -197,7 +197,7 @@ var Calendar={
 					} else
 					if(data.status == 'success'){
 						$('#event').dialog('destroy').remove();
-                                        	Events.UI.redisplay();
+                                        	CAFEVDB.Events.UI.redisplay();
 					}
 				},"json");
 		},
@@ -212,7 +212,7 @@ var Calendar={
 					console.log("Event moved successfully");
 				}else{
 					revertFunc();
-                                	Events.UI.redisplay();
+                                	CAFEVDB.Events.UI.redisplay();
 				}
 			});
 		},
@@ -227,7 +227,7 @@ var Calendar={
 					console.log("Event resized successfully");
 				}else{
 					revertFunc();
-                                	Events.UI.redisplay();
+                                	CAFEVDB.Events.UI.redisplay();
 				}
 			});
 		},
@@ -593,7 +593,7 @@ var Calendar={
 							$('#calendar tr[data-id="'+calid+'"]').fadeOut(400,function(){
 								$('#calendar tr[data-id="'+calid+'"]').remove();
 							});
-                                	                Events.UI.redisplay();
+                                	                CAFEVDB.Events.UI.redisplay();
 						}
 					  });
 				}
@@ -759,7 +759,7 @@ var Calendar={
 					var reader = new FileReader();
 					reader.onload = function(event){
 						Calendar.UI.Drop.doImport(event.target.result);
-                                	        Events.UI.redisplay();
+                                	        CAFEVDB.Events.UI.redisplay();
 					}
 					reader.readAsDataURL(file);
 				}
@@ -787,3 +787,6 @@ var Calendar={
 
 };
 
+// Local Variables: ***
+// js-indent-level: 8 ***
+// End: ***
