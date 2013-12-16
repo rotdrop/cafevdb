@@ -3370,7 +3370,13 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				}
 				echo '<td class="',$css_class_name,'"',$this->getColAttributes($fd),' ';
 				echo $this->getColAlign($fd),'>';
+				if (isset($this->fdd[$k]['display']['prefix'])) {
+					echo $this->fdd[$k]['display']['prefix'];
+				}
 				echo $this->cellDisplay($k, $row, $css_class_name);
+				if (isset($this->fdd[$k]['display']['postfix'])) {
+					echo $this->fdd[$k]['display']['postfix'];
+				}
 				echo '</td>',"\n";
 			} /* }}} */
 			echo '</tr>',"\n";
