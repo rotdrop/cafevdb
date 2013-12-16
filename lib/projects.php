@@ -299,10 +299,12 @@ __EOT__;
 
     $opts['fdd']['Besetzung'] = array('name'     => 'Besetzung',
                                       'options'  => 'LAVCPD',
-                                      'nowrap'   => false,
                                       'select'   => 'M',
-                                      'maxlen'   => 136,
+                                      'maxlen'   => 11,
                                       'sort'     => true,
+                                      'display|LF' => array("prefix" => '<div class="projectinstrumentation">',
+                                                            "postfix" => '</div>'),
+                                      'css'      => array('postfix' => 'projectinstrumentation'),
                                       'values'   => $instruments,
                                       'valueGroups' => $groupedInstruments);
 
