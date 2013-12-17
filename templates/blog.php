@@ -72,9 +72,10 @@ if ($blog['status'] == 'error') {
     }
     $deleted  = $msg['deleted'];
     $reply    = $msg['inreplyto'];
-    $imgtitle = L::t('Avatar pictures can be uploaded through the contacts-application by
-adding a photo to a contact-card which has the users login-name as
-nick-name.');
+    $avatar   = \OCP\Util::linkToRoute('core_avatar_get',
+                                       array("user" => $author, "size" => 64));
+    $avatar  .= "?requesttoken=".\OCP\Util::callRegister();
+    $imgtitle = L::t("Avatar pictures can be uploaded through the personal settings page.");
     $imgtitle = 'title="'.$imgtitle.'" ';
     if ($deleted > 0) {
       $deleted = Util::strftime('%x, %H:%M', $deleted, $_['timezone'], $_['locale']);
@@ -94,7 +95,7 @@ nick-name.');
 
     $text  = $msg['message'];
     echo '  <li class="blogentry level'.$level.'"><div class="blogentry level'.$level.'">
-    <span class="photo"><img class="photo" src="'.MYSELF\Export::photo($author).'" '.$imgtitle.'/></span>
+    <span class="photo"><img class="photo" src="'.$avatar.'" '.$imgtitle.'/></span>
     <span id="blogentryactions">
       <button class="blogbutton reply" id="blogreply'.$id.'" name="blogreply'.$id.'" value="'.$id.'" title="'.Config::toolTips('blogentry-reply').'">
         <img class="png blogbutton reply" src="'.\OCP\Util::imagePath('cafevdb', 'reply.png').'" alt="'.L::t('Reply').'"/>
