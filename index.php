@@ -139,7 +139,6 @@ try {
   OCP\Util::addscript('contacts','jquery.multi-autocomplete');
   OCP\Util::addScript('cafevdb', 'calendar');
   OCP\Util::addScript('calendar', 'on-event');
-  $categories = json_encode(OC_Calendar_App::getCategoryOptions());
 //OCP\Util::addScript('cafevdb', 'debug');
 
 // end event hacks
