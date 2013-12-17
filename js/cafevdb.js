@@ -453,11 +453,6 @@ $(document).ready(function(){
                     cache:false, scriptName:'expert.php'});
   });
 
-  OCCategories.app = 'calendar';
-  OCCategories.changed = function(categories) {
-    Calendar.UI.categoriesChanged(categories);
-  }
-
   $(':button.events').click(function(event) {
     event.preventDefault();
     if ($('#events').dialog('isOpen') == true) {

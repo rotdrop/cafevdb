@@ -132,13 +132,11 @@ try {
   OCP\Util::addscript("cafevdb/3rdparty/QuickForm2", "dualselect");
 
 // Calendar event hacks
-  OCP\Util::addscript('3rdparty/fullcalendar', 'fullcalendar');
   OCP\Util::addscript('3rdparty/timepicker', 'jquery.ui.timepicker');
   OCP\Util::addStyle('3rdparty/timepicker', 'jquery.ui.timepicker');
   OCP\Util::addscript('', 'jquery.multiselect');
   OCP\Util::addStyle('', 'jquery.multiselect');
   OCP\Util::addscript('contacts','jquery.multi-autocomplete');
-  OC_Util::addScript('','oc-vcategories');
   OCP\Util::addScript('cafevdb', 'calendar');
   OCP\Util::addScript('calendar', 'on-event');
   $categories = json_encode(OC_Calendar_App::getCategoryOptions());
