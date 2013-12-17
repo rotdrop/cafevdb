@@ -247,19 +247,23 @@ ownclouddev';
   }
 
   static public function setPrivateKey($key) {
-    $_SESSION['CAFEVDB\\privatekey'] = $key;
+    \OC::$session->set('CAFEVDB\\privatekey', $key);
   }
 
   static public function getPrivateKey() {
-    return isset($_SESSION['CAFEVDB\\privatekey']) ? $_SESSION['CAFEVDB\\privatekey'] : '';
+    return \OC::$session->exists('CAFEVDB\\privatekey')
+      ? \OC::$session->get('CAFEVDB\\privatekey')
+      : '';
   }
 
   static public function setEncryptionKey($key) {
-    $_SESSION['CAFEVDB\\encryptionkey'] = $key;
+    \OC::$session->set('CAFEVDB\\encryptionkey', $key);
   }
 
   static public function getEncryptionKey() {
-    return isset($_SESSION['CAFEVDB\\encryptionkey']) ? $_SESSION['CAFEVDB\\encryptionkey'] : '';
+    return \OC::$session->exists('CAFEVDB\\encryptionkey')
+      ? \OC::$session->get('CAFEVDB\\encryptionkey')
+      : '';
   }
 
   static public function encryptionKeyValid($sesdbkey = false)
