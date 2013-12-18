@@ -290,8 +290,6 @@ recipients.'),
 and send the selected events to
 selected recipients.'),
 
-      'projectinstrumentation-button' => L::t('Open a page with the musicians registered for the respective project.'),
-
       'register-musician' => L::t('Add the musician to the project. A new form will open were details like the instrument etc. can be adjustetd.'),
 
       'save-email-template' => L::t('Save the current email for later re-usal in the data-base.
