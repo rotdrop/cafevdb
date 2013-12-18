@@ -54,7 +54,7 @@ $(document).ready(function(){
 
         var nameSelector =
             'input.pme-input-0-projectname,input.pme-input-1-projectname';
-        var yearSelector = 'select.[name="PME_data_Jahr"]';
+        var yearSelector = 'select[name="PME_data_Jahr"]';
         var attachSelector = '#project-name-yearattach';
 
         var oldProjectYear = $(yearSelector+' :selected').text();
