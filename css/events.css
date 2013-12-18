@@ -270,11 +270,12 @@ td.eventdata-0-brief, td.eventdata-1-brief {
 /* make popups scrollable in smaller viewports */
 .ui-dialog {
 	max-height: 75% !important;
-	top: 15% !important;
+	/*top: 15% !important;*/
 	overflow-y: auto;
 	overflow-x: hidden;
 	padding: 0;
 }
+
 .ui-dialog .ui-dialog-content {
 	overflow: initial;
 }

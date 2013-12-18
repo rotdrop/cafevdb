@@ -46,6 +46,16 @@ div.cfgerror {
 
 /*******************************************************************************
  *
+ * Pointer above controls
+ *
+ */
+
+input[type=checkbox],input[type=submit],input[type=radio],input[type=button] {
+  cursor:pointer;
+} 
+
+/*******************************************************************************
+ *
  * Configuration page
  *
  */
@@ -125,29 +135,6 @@ li.cafevdb-page-config-check span.set {
   color:DarkGreen;
 }
 
-/*******************************************************************************
- *
- * Export select via chosen
- *
- */
-
-.pme-export-block div {
-  vertical-align:middle;
-  /*font-weight:bold;*/
-}
-
-.pme-export-block a.chosen-default span {
-  /*font-weight:bold;*/
-  color:#555;
-}
-
-.pme-export-block a.chosen-default span:hover,
-.pme-export-block a.chosen-default span:focus,
-.pme-export-block a.chosen-default span:active {
-  /*font-weight:bold;*/
-  color:#333;
-}
-
 /******************************************************************************/
 
 #personalsettings {
@@ -166,17 +153,12 @@ li.cafevdb-page-config-check span.set {
 .controls {
   min-width: 800px;
 }
-#controls button, #controls input {
-  margin-top: 5px;
-  max-height: 26px;
+#controls form button, #controls form input {
+  margin-top: 4px;
+  margin-left: 4px;
+/*  max-height: 26px;*/
+  vertical-align:middle;
   padding: 5px;
-}
-
-#projectlabelcontrol>input[type=button] {
-  font-weight:bold;
-  font-style:italic;
-  border-style:outset;
-  background-color:#C6DEFF;
 }
 
 button.events {
@@ -184,44 +166,9 @@ button.events {
   padding: 5px;
 }
 
-#projectlabelcontrol>input[type=submit] {
-  font-weight:bold;
-  font-style:italic;
-  border-style:outset;
-  background-color:#C6DEFF;
-}
-
-span.instrumentation-button>input[type=button] {
-  text-align:center;
-  font-weight:bold;
-  font-style:italic;
-  border-style:outset;
-  /*background-color:#d0dcec;*/
-}
-
 span.events>button {
   border-style:outset;
 /*  background-color:#C6DEFF;*/
-}
-
-td[class|='pme-cell']>span.instrumentation-button>input[type=button] {
-  width:95%;
-  min-width:14em;
-}
-
-td[class|='pme-value']>span.instrumentation-button>input[type=button] {
-  width:auto;
-}
-
-#emailcontrol>input[type=submit] {
-  background-image:url('%appswebroot%/cafevdb/img/e_mail.png');
-  background-repeat:no-repeat;
-  background-position:0px;
-  padding-left:24px;
-  /*padding-top:0px;*/
-  min-height:28px;
-  vertical-align:middle;
-  /* border-radius:4px; */
 }
 
 :disabled { 
@@ -339,7 +286,7 @@ div.cafevdb-page-body.collapsed { padding-top:10ex; }
   z-index:26;
   float:right;
   margin-top:13ex;
-  margin-right:70px;
+  margin-right:84px;
   max-height: 26px;
   padding: 5px;
   vertical-align:middle;
@@ -401,299 +348,6 @@ div.cafevdb-note a:hover {
  *
  *****************************************************************************/
 
-form.pme-form {
-  padding-left:1ex;
-  background-color:#f2f8ff;
-  width:auto;
-}
-
-.pme-form tr,.pme-form tr:hover,.pme-form tr:active { 
-  background-color:inherit;
-}
-
-div[class|='cafevdb-nav-top']>div {
-  padding-bottom:0em;
-  margin-bottom:0em;
-}
-
-div[class|='cafevdb-nav-bottom']>div {
-  margin-top:0em;
-  padding-top:0em;
-}
-
-*[class|='cafevdb-nav'] hr {
-  border:0;
-}
-
-div.cafevdb-page h2,div.cafevdb-email h2 {
-  text-align:left;
-  padding-left:12pt;
-}
-div.cafevdb-page h2:before,div.cafevdb-email h2:before {
-  content: url(%appswebroot%/cafevdb/img/logo-greyf32x32) " ";
-}
-
-div.cafevdb-page h3, div.cafevdb-email h3 {
-  text-align:left;
-  padding-left:12pt;
-}
-div.cafevdb-page h3:before, div.cafevdb-email h3:before {
-  content: url(%appswebroot%/cafevdb/img/logo-greyf32x32) " ";
-}
-
-div.cafevdb-page h4,div.cafevdb-email h4 {
-  text-align:left;
-/*  width:72ex;*/
-  padding-left:12pt;
-  padding-right:12pt;
-}
-
-div.cafevdb-page p,div.cafevdb-email p {
-  text-align:left;
-/*  width:72ex;*/
-  padding-left:12pt;
-  padding-right:12pt;
-}
-
-input[type=checkbox],input[type=submit],input[type=radio],input[type=button] {
-  cursor:pointer;
-} 
-
-a.pme-cell-1:link, a.pme-cell-0:link {
-  color:#0000ff;
-  text-decoration:underline;
-  font-weight:bold;
-}
-a.pme-cell-1:visited, a.pme-cell-0:visited {
-  color:#0000ff;
-  text-decoration:underline;
-  font-weight:bold;
-}
-a.pme-cell-1:hover, a.pme-cell-0:hover {
-  color:#0000ff;
-  text-decoration:underline;
-  font-style:italic;
-  font-weight:bold;
-}
-
-.pme-cell-1>a:link, .pme-cell-0>a:link {
-  color:#0000ff;
-  text-decoration:underline;
-  font-weight:bold;
-}
-.pme-cell-1>a:visited, .pme-cell-0>a:visited {
-  color:#0000ff;
-  text-decoration:underline;
-  font-weight:bold;
-}
-.pme-cell-1>a:hover, .pme-cell-0>a:hover {
-  color:#0000ff;
-  text-decoration:underline;
-  font-style:italic;
-  font-weight:bold;
-}
-
-hr.pme-hr {
-  border:0px solid;
-  padding:0px;
-  margin:0px;
-  border-top-width:1px;
-  height:1px;
-}
-
-:not(.lt-ie9) input.pme-email-check[type=checkbox] {
-  display:none;
-  /* visibility:hidden; */
-  /* position:fixed; */
-  /* left:0px; */
-  /* top:0px; */
-}
-:not(.lt-ie9) div.pme-email-check {
-  width:24px;
-  height:24px;
-  background:url(%appswebroot%/cafevdb/img/e_mail.png);
-  cursor:pointer;
-  vertical-align:middle;
-}
-:not(.lt-ie9) input.pme-email-check[type=checkbox]:checked ~ div.pme-email-check {
-  width:24px;
-  height:24px;
-  background:url(%appswebroot%/cafevdb/img/e_mail_checked.png);
-  vertical-align:middle;
-}
-
-:not(.lt-ie9) input.pme-bulkcommit-check[type=checkbox] {
-  display:none;
-  /* visibility:hidden; */
-  /* position:fixed; */
-  /* left:0px; */
-  /* top:0px; */
-}
-:not(.lt-ie9) div.pme-bulkcommit-check {
-  width:24px;
-  height:24px;
-  background:url(%appswebroot%/cafevdb/img/eighthrest24.png);
-  cursor:pointer;
-  vertical-align:middle;
-}
-:not(.lt-ie9) input.pme-bulkcommit-check[type=checkbox]:checked ~ div.pme-bulkcommit-check {
-  width:24px;
-  height:24px;
-  background:url(%appswebroot%/cafevdb/img/eighthnote24.png);
-  vertical-align:middle;
-}
-
-input.pme-view-navigation {
-  background:url(%appswebroot%/cafevdb/img/pme-view.png) no-repeat !important;
-  width:16px !important;
-  height:15px !important;
-  border:0 !important;
-  font-size:0 !important;
-  vertical-align:middle;
-}
-
-input.pme-copy-navigation {
-  background:url(%appswebroot%/cafevdb/img/pme-copy.png) no-repeat !important;
-  width:16px !important;
-  height:15px !important;
-  border:0 !important;
-  font-size:0 !important;
-  vertical-align:middle;
-}
-
-input.pme-change-navigation {
-  background:url(%appswebroot%/cafevdb/img/pme-change.png) no-repeat !important;
-  width:16px !important;
-  height:15px !important;
-  border:0 !important;
-  font-size:0 !important;
-  vertical-align:middle;
-}
-
-input.pme-delete-navigation {
-  background:url(%appswebroot%/cafevdb/img/pme-delete.png) no-repeat !important;
-  width:16px !important;
-  height:15px !important;
-  border:0 !important;
-  font-size:0 !important;
-  vertical-align:middle;
-}
- 
-:not(.lt-ie9) input.pme-sort[type=checkbox] { 
-  display:none;
-}
-div.pme-sort {
-  /* width:93px; */
-  /* height:14px; */
-  /* text-align:center; */
-  font-style:italic;
-  opacity:0.2;
-  display:inline-block;
-}
-input.pme-sort[type=checkbox]:checked ~ div.pme-sort {
-  /* width:93px; */
-  /* height:14px; */
-  /* background:url(%appswebroot%/cafevdb/img/sortierfeld.png); */
-  /* text-align:center; */
-  opacity:1.0;
-  display:inline-block;
-}
-input.pme-sort-rvrt[type=submit] {
-  background-image:url('%appswebroot%/cafevdb/img/ok_process-16x16.png');
-  background-repeat:no-repeat;
-  background-position:0px;
-  background-origin:padding-box;
-  background-clip:padding-box;
-  min-height:16px;
-  padding-left:16px;
-  overflow:visible;
-}
-
-input.pme-email-[type=submit] {
-  background-image:url('%appswebroot%/cafevdb/img/e_mail_X.png');
-  background-repeat:no-repeat;
-  width:28px;
-  height:28px;
-  font-size:0pt;
-  vertical-align:middle;
-}
-input.pme-email+[type=submit] {
-  background-image:url('%appswebroot%/cafevdb/img/e_mail_checked.png');
-  background-repeat:no-repeat;
-  width:28px;
-  height:28px;
-  font-size:0pt;
-  vertical-align:middle;
-}
-input.pme-email[type=submit] {
-  background-image:url('%appswebroot%/cafevdb/img/e_mail.png');
-  background-repeat:no-repeat;
-  background-position:0px;
-  padding-left:24px;
-  /*padding-top:0px;*/
-  min-height:28px;
-  vertical-align:middle;
-  /* border-radius:4px; */
-}
-
-input.pme-bulkcommit-[type=submit] {
-  background-image:url('%appswebroot%/cafevdb/img/eighthrest24.png');
-  background-repeat:no-repeat;
-  width:28px;
-  height:28px;
-  font-size:0pt;
-  vertical-align:middle;
-}
-input.pme-bulkcommit+[type=submit] {
-  background-image:url('%appswebroot%/cafevdb/img/eighthnote24.png');
-  background-repeat:no-repeat;
-  width:28px;
-  height:28px;
-  font-size:0pt;
-  vertical-align:middle;
-}
-/* input.pme-bulkcommit[type=submit] { */
-/*   background-image:url('%appswebroot%/cafevdb/img/eighthnote24.png'); */
-/*   background-repeat:no-repeat; */
-/*   background-position:0px; */
-/*   padding-left:24px; */
-/*   /\*padding-top:0px;*\/ */
-/*   min-height:28px; */
-/*   vertical-align:middle; */
-/*   /\* border-radius:4px; *\/ */
-/* } */
-
-input.pme-filter {
-  width:auto;
-  white-space:nowrap;
-}
-
-/* input.pme-email[type=submit]:selected { */
-/*   background-image:url(%appswebroot%/cafevdb/img/e_mail.png); */
-/*   background-repeat:no-repeat; */
-/*   background-position:0px; */
-/*   background-origin:padding-box; */
-/*   background-clip:padding-box; */
-/*   padding-left:24px; */
-/*   min-height:28px; */
-/*   vertical-align:middle; */
-/* } */
-
-td.pme-buttons > .pme-email {
-  white-space:nowrap;
-}
-td.pme-buttons > .pme-bulkcommit {
-  white-space:nowrap;
-}
-
-td.pme-buttons > .pme-goto {
-  white-space:nowrap;
-}
-
-td.pme-buttons > .pme-pagerows {
-  white-space:nowrap;
-}
-
 /* Optionally hide some close button */
 .no-close .ui-dialog-titlebar-close {
   display: none;
@@ -749,8 +403,14 @@ input[disabled]:hover,
   background-position:center center;
 }
 
-/*******************************************************************************
+/********************************************************************************/
+
+/*****************************************************************************
+ *
+ * Style chosen pull-down menu entries
+ *
  */
+
 .chosen-container .chosen-results li.highlighted {
   -moz-box-shadow:0 1px 1px #fff, 0 1px 0 #bbb inset;
   -webkit-box-shadow:0 1px 1px #fff, 0 1px 0 #bbb inset;
@@ -759,6 +419,13 @@ input[disabled]:hover,
   -webkit-border-radius:.5em;
   border-radius:.5em;
 }
+
+/***************************************************************************** 
+ *
+ * Style the popup and error message if the actual instrumentation
+ * numbers do not match the required ones.
+ *
+ */
 
 #missing-musicians-block {
   padding:1em 1em 1em 1em;
@@ -783,11 +450,11 @@ input[disabled]:hover,
   background:#CCC;
 }
 
-
-/*Easy <a class="tooltip" href="#">Tooltip<span>This is the crazy little Easy Tooltip Text.</span></a>.</p>*/
-
 /*
  * Local Variables: ***
+ * cssm-indent-level: 2 ***
+ * cssm-indent-mirror-mode: t ***
+ * cssm-newline-before-closing-bracket: t ***
  * cssm-indent-function: cssm-c-style-indenter ***
  * End: ***
  */
