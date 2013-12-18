@@ -781,13 +781,6 @@ class ConfigCheck
     $shareowner   = Config::getValue('shareowner');
     $groupadmin   = \OCP\USER::getUser();
 
-    if (!\OC_SubAdmin::isSubAdminofGroup($groupadmin, $sharegroup)) {
-      \OC_Log::write(Config::APP_NAME,
-                     "Permission denied: ".$groupadmin." is not a group admin of ".$sharegroup.".",
-                     \OC_Log::ERROR);
-      return false;
-    }
-
     $sharedfolder == '' && $sharedfolder = Config::getSetting('sharedfolder', '');
 
     if ($sharedfolder == '') {
