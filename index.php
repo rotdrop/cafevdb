@@ -90,8 +90,6 @@ try {
 
   OCP\App::setActiveNavigationEntry( 'cafevdb' );
 
-  OCP\Util::addStyle('cafevdb', 'cafevdb');
-  OCP\Util::addStyle('cafevdb', 'tipsy');
   OCP\Util::addStyle('cafevdb', 'pme-table');
   OCP\Util::addStyle('cafevdb', 'settings');
   OCP\Util::addStyle('cafevdb', 'events');
