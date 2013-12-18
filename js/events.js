@@ -69,12 +69,12 @@ var CAFEVDB = CAFEVDB || {};
       }
 
       var popup = $('#events').dialog({
-        position: { my: "left top",
-                    at: "left bottom",
-                    of: "#controls",
-                    offset: "10 10" },
+        position: { my: "middle top+50%",
+                    at: "middle bottom",
+                    of: "#controls" },
         width : 500,
-        height: 700,
+        height: "auto",
+	resizable: false,
         open  : function(){
           //$('.tipsy').remove();
 
