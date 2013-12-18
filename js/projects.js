@@ -80,7 +80,7 @@ $(document).ready(function(){
                            if (data.status == 'success') {
                                rqData = data.data;
                                if (rqData.message != '') {
-                                   OC.Notification.show(rqData.message);
+                                   OC.Notification.showHtml(rqData.message);
                                }
                                $(nameSelector).val(rqData.projectName);
                                $(yearSelector).val(rqData.projectYear);
@@ -97,7 +97,7 @@ $(document).ready(function(){
                                }
                            } else if (data.status == 'error') {
                                rqData = data.data;
-                               OC.Notification.show(rqData.message);
+                               OC.Notification.showHtml(rqData.message);
                                if ($(nameSelector).val() == '') {
                                    $(nameSelector).val(oldProjectName);
                                }
