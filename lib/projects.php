@@ -520,6 +520,9 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
     $sqlquery = "DELETE FROM Besetzungen WHERE ProjektId = $pme->rec";
     mySQL::query($sqlquery, $pme->dbh);
 
+    $sqlquery = "DELETE FROM BesetzungsZahlen WHERE ProjektId = $pme->rec";
+    mySQL::query($sqlquery, $pme->dbh);
+
     // And now remove the project folder ...
 
     // Hack: close the DB connection and re-open again. Somehow OwnCloud
@@ -586,24 +589,6 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
     Util::debugMsg("<<<<ProjektExtraFelder");
 
     return $fields;
-  }
-
-  public static function projectButton($projectName, $opts, $modify, $k, $fds, $fdd, $row)
-  {
-    $projectId = $row["qf".$opts['keyIdx']];
-    $template  = $opts['template'];
-    $bvalue    = $projectName;
-    // Code the value in the name attribute (for java-script)
-    $bname     = ""
-      ."ProjectId=$projectId&"
-      ."Project=$projectName&"
-      ."Template=$template";
-    $title     = Config::toolTips('projectinstrumentation-button');
-    return <<<__EOT__
-<span class="instrumentation-button">
-  <input type="button" class="instrumentation" title="$title" name="$bname" value="$bvalue" />
-</span>
-__EOT__;
   }
 
   public static function projectActionsPME($projectName, $opts, $modify, $k, $fds, $fdd, $row)
