@@ -1261,7 +1261,7 @@ __EOT__;
 
     echo "<div class=\"cafevdb-table-notes\">\n"; // notes
 
-    if ($saved_template == SELF::INITIAL_TEMPLATE) {
+    if ($saved_template == self::INITIAL_TEMPLATE) {
 
       // Fetch all needed data from Musiker table
       $handle = mySQL::connect($opts);
