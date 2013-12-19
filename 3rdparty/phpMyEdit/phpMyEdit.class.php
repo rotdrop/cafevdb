@@ -2268,17 +2268,33 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 					if (strlen($parts[0]) <= 0) {
 						continue;
 					}
-					$new_origvars[$parts[0]] = $parts[1];
+					if (strrchr($parts[0], '[]') == '[]') {
+						$parts[0] = substr($parts[0], 0, -2);
+						if (!isset($new_origvars[$parts[0]]) || !is_array($new_origvars[$parts[0]])) {
+							$new_origvars[$parts[0]] = array();
+						}
+						$new_origvars[$parts[0]][] = $parts[1];
+					} else {
+						$new_origvars[$parts[0]] = $parts[1];
+					}
 				}
 				$origvars =& $new_origvars;
 			}
 			foreach ($origvars as $key => $val) {
-				if (strlen($val) <= 0 && $default_value === null) {
-					continue;
+				if (is_array($val)) {
+					$key = rawurldecode($key);
+					foreach($val as $subkey => $subval) {
+						$subval = rawurldecode($subval);
+						$ret .= $this->htmlHidden($key.'['.$subkey.']', $subval);
+					}
+				} else {
+					if (strlen($val) <= 0 && $default_value === null) {
+						continue;
+					}
+					$key = rawurldecode($key);
+					$val = rawurldecode($val);
+					$ret .= $this->htmlHidden($key, $val);
 				}
-				$key = rawurldecode($key);
-				$val = rawurldecode($val);
-				$ret .= $this->htmlHidden($key, $val);
 			}
 		} else if (! strncmp('GET', $method, 3)) {
 			if (! is_array($origvars)) {
