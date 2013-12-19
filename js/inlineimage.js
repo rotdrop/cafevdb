@@ -236,12 +236,12 @@ var CAFEVDB = CAFEVDB || {};
 		onChange:	showCoords,
 		onSelect:	showCoords,
 		onRelease:	clearCoords,
-		maxSize:	[self.imageSize-1, self.imageSize-1],
+		maxSize:	[self.imageSize, self.imageSize],
 		bgColor:	'black',
 		bgOpacity:	.4,
 		boxWidth:	self.imageSize,
 		boxHeight:	self.imageSize,
-		setSelect:	[ x+w-1, y+h-1, x, y ]//,
+		setSelect:	[ x+w, y+h, x, y ]//,
 		//aspectRatio: 0.8
 	    });
 	    $('#edit_photo_dialog').html($dlg).dialog({
@@ -468,10 +468,9 @@ $(document).ready(function() {
 	    if (!xhr.upload) {
 		OC.dialogs.alert(t('cafevdb', 'Your browser doesn\'t support AJAX upload. Please click on the profile picture to select a photo to upload.'), t('cafevdb', 'Error'))
 	    }
-	    fileUpload = xhr.upload,
 	    xhr.onreadystatechange = function() {
 		if (xhr.readyState == 4){
-		    response = $.parseJSON(xhr.responseText);
+		    var response = $.parseJSON(xhr.responseText);
 		    if(response.status == 'success') {
 			if(xhr.status == 200) {
 			    CAFEVDB.Photo.editPhoto(response.data.recordId, response.data.tmp);
@@ -484,7 +483,7 @@ $(document).ready(function() {
 		}
 	    };
 
-	    fileUpload.onprogress = function(e){
+	    xhr.upload.onprogress = function(e){
 		if (e.lengthComputable){
 		    var _progress = Math.round((e.loaded * 100) / e.total);
 		    //if (_progress != 100){

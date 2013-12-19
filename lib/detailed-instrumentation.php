@@ -41,7 +41,7 @@ __EOT__;
   {
     //global $debug_query;
     //Config::$debug_query = true;
-    $debug_query = true;
+    //$debug_query = true;
 
     $project         = $this->project;
     $projectId       = $this->projectId;
@@ -378,17 +378,16 @@ __EOT__;
       'default' => '',
       'sort' => false);
 
-    $opts['fdd']['Aktualisiert'] = Config::$opts['datetime'];
-    $opts['fdd']['Aktualisiert']['name'] = 'Aktualisiert';
-    $opts['fdd']['Aktualisiert']['default'] = date(Config::$opts['datetime']['datemask']);
-    $opts['fdd']['Aktualisiert']['nowrap'] = true;
-    $opts['fdd']['Aktualisiert']['options'] = 'LAVCPDRF'; // Set by update trigger.
+    $opts['fdd']['Aktualisiert'] = array_merge(Config::$opts['datetime'],
+                                               array("name" => L::t("Last Updated"),
+                                                     "default" => date(Config::$opts['datetime']['datemask']),
+                                                     "nowrap" => true,
+                                                     "options" => 'LFAVCPDR' // Set by update trigger.
+                                                 ));
 
-    // No need to check for the project-instrument any longer, as it can
-    //no longer be changed here.
-    //$opts['triggers']['update']['before'][0]  = 'BesetzungChangeInstrument.TUB.inc.php';
-    $opts['triggers']['update']['before'][1]  = Config::$triggers.'remove-unchanged.TUB.inc.php';
-    $opts['triggers']['update']['before'][2]  = Config::$triggers.'update-musician-timestamp.TUB.inc.php';
+    $opts['triggers']['update']['before'] = array();
+    $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeUpdateRemoveUnchanged';
+    $opts['triggers']['update']['before'][]  = 'CAFEVDB\Musicians::beforeTriggerSetTimestamp';
 
     if ($this->pme_bare) {
       // disable all navigation buttons, probably for html export

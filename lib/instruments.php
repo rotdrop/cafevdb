@@ -171,7 +171,7 @@ __EOT__;
                                        );
     $opts['fdd']['Familie'] = array('name' => 'Familie',
                                     'nowrap' => true,
-                                    'select'   => 'C',
+                                    'select'   => 'M',
                                     'maxlen'   => 12,
                                     'sort'     => true);
     $opts['fdd']['Familie']['values'] = $this->instrumentFamilies;
@@ -200,10 +200,107 @@ __EOT__;
 //$opts['fdd']['Lexikon']['URL'] = "http://de.wikipedia.org/wiki/\$key\" target=\"_blank";
 //$opts['fdd']['Lexikon']['URLdisp'] = "\$key@Wikipedia.DE";
 
-    $opts['triggers']['update']['before']  = Config::$triggers.'instruments.TUB.inc.php';
-    $opts['triggers']['insert']['before']  = Config::$triggers.'instruments.TIB.inc.php';
+    $opts['triggers']['update']['before']  = 'CAFEVDB\Instruments::beforeUpdateTrigger';
+    $opts['triggers']['insert']['before']  = 'CAFEVDB\Instruments::beforeInsertTrigger';
 
     new \phpMyEdit($opts);
+  }
+
+  /** phpMyEdit calls the trigger (callback) with the following arguments:
+   *
+   * @param[in] $pme The phpMyEdit instance
+   *
+   * @param[in] $op The operation, 'insert', 'update' etc.
+   *
+   * @param[in] $step 'before' or 'after'
+   *
+   * @param[in] $oldvals Self-explanatory.
+   *
+   * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
+   *
+   * @param[in,out] &$newvals Set of new values, which may also be modified.
+   *
+   * @return boolean. If returning @c false the operation will be terminated
+   */
+  public static function beforeInsertTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
+  {
+    // $newvals contains the new values
+
+    // Fetch the current list of instruments
+    $instruments = mySQL::multiKeys('Musiker', 'Instrumente', $pme->dbh);
+    array_push($instruments, $newvals['Instrument']);
+    sort($instruments, SORT_FLAG_CASE|SORT_STRING);
+
+    // Now inject the new chain of instruments into Musiker table
+    $sqlquery = "ALTER TABLE `Musiker` CHANGE `Instrumente`
+ `Instrumente` SET('" . implode("','", $instruments) . "')";
+    if (!$pme->myquery($sqlquery)) {
+      Util::error("Could not execute the query\n".$sqlquery."\nSQL-Error: ".mysql_error(), true);
+    }
+
+    // Now do the same with the Besetzungen-table
+    $instruments = mySQL::multiKeys('Besetzungen', 'Instrument', $pme->dbh);
+    array_push($instruments, $newvals['Instrument']);
+    sort($instruments, SORT_FLAG_CASE|SORT_STRING);
+
+    $sqlquery = "ALTER TABLE `Besetzungen` CHANGE `Instrument`
+ `Instrument` ENUM('" . implode("','", $instruments) . "')";
+    if (!$pme->myquery($sqlquery)) {
+      Util::error("Could not execute the query\n".$sqlquery."\nSQL-Error: ".mysql_error(), true);
+    }
+
+    // Now do the same with the Projekte-table
+    $instruments = mySQL::multiKeys('Projekte', 'Besetzung', $pme->dbh);
+    array_push($instruments, $newvals['Instrument']);
+    sort($instruments, SORT_FLAG_CASE|SORT_STRING);
+
+    $sqlquery = "ALTER TABLE `Projekte` CHANGE `Besetzung`
+ `Besetzung` SET('" . implode("','", $instruments) . "') COMMENT 'Benötigte Instrumente'";
+    if (!$pme->myquery($sqlquery)) {
+      Util::error("Could not execute the query\n".$sqlquery."\nSQL-Error: ".mysql_error(), true);
+    }
+
+    // Now insert also another column into BesetzungsZahlen
+    $sqlquery = "ALTER TABLE `BesetzungsZahlen` ADD COLUMN `".$newvals['Instrument']."` TINYINT NOT NULL DEFAULT '0'";
+    if (!$pme->myquery($sqlquery)) {
+      Util::error("Could not execute the query\n".$sqlquery."\nSQL-Error: ".mysql_error(), true);
+    }
+
+    return true;
+  }
+
+  /** phpMyEdit calls the trigger (callback) with the following arguments:
+   *
+   * @param[in] $pme The phpMyEdit instance
+   *
+   * @param[in] $op The operation, 'insert', 'update' etc.
+   *
+   * @param[in] $step 'before' or 'after'
+   *
+   * @param[in] $oldvals Self-explanatory.
+   *
+   * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
+   *
+   * @param[in,out] &$newvals Set of new values, which may also be modified.
+   *
+   * @return boolean. If returning @c false the operation will be terminated
+   *
+   * @bug Convert this to a function triggering a "user-friendly" error message.
+   */
+  public static function beforeUpdateTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
+  {
+    // $newvals contains the new values
+
+
+    
+    //print_r($changed);
+
+    if (array_search('Instrument',$changed) === false) {
+      return true;
+    } else {
+      trigger_error('Attempt to Change Instrument\'s Name Denied!!!! Never do that.', E_USER_ERROR);
+      return false;
+    }
   }
 
   // Sort the given list of instruments according to orchestral ordering

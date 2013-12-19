@@ -1450,7 +1450,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 					case 'function':
 						$opts = isset($php['parameters']) ? $php['parameters'] : '';
 						echo call_user_func($php['function'], false, $opts,
-											true, // do modify
+											'add', // action to be performed
 											$k, $this->fds, $this->fdd, false);
 						break;
 					case 'file':
@@ -1632,7 +1632,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				case 'function':
 					$opts = isset($php['parameters']) ? $php['parameters'] : '';
 					echo call_user_func($php['function'], $value, $opts,
-										true, // do modify
+										'change', // action to be performed
 										$k, $this->fds, $this->fdd, $row);
 					break;
 				case 'file':
@@ -1960,7 +1960,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				case 'function':
 					$opts = isset($php['parameters']) ? $php['parameters'] : '';
 					return call_user_func($php['function'], $value, $opts,
-										  false, // do not modify
+										  'display', // action to be performed
 										  $k, $this->fds, $this->fdd, $row);
 					break;
 				case 'file':
@@ -3386,7 +3386,13 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				}
 				echo '<td class="',$css_class_name,'"',$this->getColAttributes($fd),' ';
 				echo $this->getColAlign($fd),'>';
+				if (isset($this->fdd[$k]['display']['prefix'])) {
+					echo $this->fdd[$k]['display']['prefix'];
+				}
 				echo $this->cellDisplay($k, $row, $css_class_name);
+				if (isset($this->fdd[$k]['display']['postfix'])) {
+					echo $this->fdd[$k]['display']['postfix'];
+				}
 				echo '</td>',"\n";
 			} /* }}} */
 			echo '</tr>',"\n";
@@ -3690,6 +3696,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		if ($this->exec_triggers('update', 'before', $oldvals, $changed, $newvals) == false) {
 			return false;
 		}
+		echo '<!-- '.print_r($newvals, true).'-->';
 		// Build the real query respecting changes to the newvals array
 		foreach ($newvals as $fd => $val) {
 			if ($fd == '') continue;
@@ -3886,14 +3893,20 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			ksort($trig);
 			for ($t = reset($trig); $t !== false && $ret != false; $t = next($trig)) {
 				if (is_callable($t)) {
-					$ret = call_user_func($t, $this, $op, $step, $oldvals, $changed, $newvals);
+					$ret = call_user_func_array($t,
+												array(&$this,
+													  $op, $step, $oldvals,
+													  &$changed, &$newvals));
 				} else {
 					$ret = include($t);
 				}
 			}
 		} else {
 			if (is_callable($trig)) {
-				$ret = call_user_func($trig, $this, $op, $step, $oldvals, $changed, $newvals);
+				$ret = call_user_func_array($trig,
+											array(&$this,
+												  $op, $step, $oldvals,
+												  &$changed, &$newvals));
 			} else {
 				$ret = include($trig);
 			}

@@ -299,10 +299,12 @@ __EOT__;
 
     $opts['fdd']['Besetzung'] = array('name'     => 'Besetzung',
                                       'options'  => 'LAVCPD',
-                                      'nowrap'   => false,
                                       'select'   => 'M',
-                                      'maxlen'   => 136,
+                                      'maxlen'   => 11,
                                       'sort'     => true,
+                                      'display|LF' => array("prefix" => '<div class="projectinstrumentation">',
+                                                            "postfix" => '</div>'),
+                                      'css'      => array('postfix' => 'projectinstrumentation'),
                                       'values'   => $instruments,
                                       'valueGroups' => $groupedInstruments);
 
@@ -361,6 +363,7 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
         'function' => 'CAFEVDB\Projects::flyerImageLinkPME',
         'parameters' => array()
         ),
+      'css'      => array('postfix' => 'projectflyer'),
       'default' => '',
       'sort' => false);
 
@@ -392,7 +395,7 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
    *
    * @return boolean. If returning @c false the operation will be terminated
    */
-  public static function afterInsertTrigger($pme, $op, $step, $oldvals, &$changed, &$newvals)
+  public static function afterInsertTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
     // $newvals contains the new values
     $projectId   = $pme->rec;
@@ -433,7 +436,8 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
     return true;
   }
   
-  public static function afterUpdateTrigger($pme, $op, $step, $oldvals, &$changed, &$newvals)
+  /**@copydoc CAFEVDB\Projects::afterInsterTrigger. */
+  public static function afterUpdateTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
     // Simply recreate the view, update the extra tables etc.
     self::createView($pme->rec, $newvals['Name'], $pme->dbh);
@@ -500,7 +504,8 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
     return true;
   }
 
-  public static function afterDeleteTrigger($pme, $op, $step, $oldvals, &$changed, &$newvals)
+  /**@copydoc CAFEVDB\Projects::afterInsterTrigger. */
+  public static function afterDeleteTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
     $projectName = $oldvals['Name'];
     if (!$projectName) {
@@ -1126,19 +1131,23 @@ __EOT__;
     return true;
   }
 
-  public static function flyerImageLinkPME($projectId, $opts, $modify, $k, $fds, $fdd, $row)
+  public static function flyerImageLinkPME($projectId, $opts, $action, $k, $fds, $fdd, $row)
   {
-    return self::flyerImageLink($projectId, $modify);
+    return self::flyerImageLink($projectId, $action);
   }
 
-  public static function flyerImageLink($projectId, $modify = false)
+  public static function flyerImageLink($projectId, $action = 'display')
   {
-    if ($modify === false) {
+    switch ($action) {
+    case 'add':
+      return L::t("Flyers can only be added to existing projects, please add the new
+project without a flyer first.");
+    case 'display':
       $span = ''
         .'<span class="photo"><img class="photo svg" src="'.\OC::$WEBROOT.'/?app=cafevdb&getfile=inlineimage.php&RecordId='.$projectId.'&ImagePHPClass=CAFEVDB\Projects&ImageSize=1200&PlaceHolder='.self::IMAGE_PLACEHOLDER.'"'
         .' title="Flyer, if available" /></span>';
       return $span;
-    } else {
+    case 'change':
       $imagearea = ''
         .'<div id="project_flyer">
         
@@ -1157,6 +1166,8 @@ __EOT__;
 ';
 
       return $imagearea;
+    default:
+      return L::t("Internal error, don't know what to do concerning project-flyers in the given context.");
     }
   }
 

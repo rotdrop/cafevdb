@@ -300,7 +300,7 @@ class EmailFilter {
 
   /**Fetch musicians from either the "Musiker" table or a project
    * view. Depending on the table in use, $restrict is either
-   * 'Intrumente' or 'Instrument' (normally). Also, fetch all data
+   * 'Instrumente' or 'Instrument' (normally). Also, fetch all data
    * needed to do any per-recipient substitution later.
    *
    * @param[in] $dbh Data-base handle.

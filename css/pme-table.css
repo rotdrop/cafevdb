@@ -427,6 +427,21 @@ td.pme-cell-0-rehearsalremarks p:nth-child(1):first-line, td.pme-cell-1-rehearsa
   overflow:hidden;
 }
 
+/* Something special for the instrumentation. */
+td[class^="pme-cell"] div.projectinstrumentation { 
+  font-size:50%;
+  line-height:100%;
+  max-width:64ex;
+  width:auto;
+  max-height:4em;
+  white-space:normal;
+  overflow:hidden;
+}
+
+td.pme-value-1-projectinstrumentation, td.pme-value-0-projectinstrumentation {
+  white-space:normal;
+}
+
 table.pme-main [class^="chosen"] {
   border-radius: 0.5em !important;
   background-color: rgb(244, 244, 244) !important;
@@ -439,6 +454,25 @@ table.pme-main select[class^="pme-filter"] {
 table.pme-main select.pme-filter-projects {
   width:auto;
 }
+
+/*Style links in a more ordinary fashion */
+table.pme-main a:link {
+  color:CornFlowerBlue;
+  text-decoration:underline;
+  font-weight:bold;
+}
+table.pme-main a:visited {
+  color:CornFlowerBlue;
+  text-decoration:underline;
+  font-weight:bold;
+}
+table.pme-main a:hover {
+  color:CornFlowerBlue;
+  text-decoration:underline;
+  font-style:italic;
+  font-weight:bold;
+}
+
 
 /*
  * Local Variables: ***

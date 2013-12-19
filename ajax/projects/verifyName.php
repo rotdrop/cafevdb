@@ -128,7 +128,7 @@ try {
         'error' => 'exception',
         'exception' => $e->getMessage(),
         'trace' => $e->getTraceAsString(),
-        'message' => entifyString(L::t('Error, caught an exception'), ENT_QUOTES|ENT_XHTML, 'UTF-8'))));
+        'message' => Util::entifyString(L::t('Error, caught an exception')))));
   return false;
 }
 

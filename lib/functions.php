@@ -458,7 +458,39 @@ __EOT__;
   
   public static function entifyString($string)
   {
-    return htmlentities($string, ENT_QUOTES|ENT_XHTML, 'UTF-8');
+    if (defined("ENT_XHTML")) {
+      return htmlentities($string, ENT_QUOTES|ENT_XHTML, 'UTF-8');
+    } else {
+      return htmlentities($string, ENT_QUOTES, 'UTF-8');
+    }
+  }
+
+  /** phpMyEdit calls the triggers (callbacks) with the following arguments:
+   *
+   * @param[in] $pme The phpMyEdit instance
+   *
+   * @param[in] $op The operation, 'insert', 'update' etc.
+   *
+   * @param[in] $step 'before' or 'after'
+   *
+   * @param[in] $oldvals Self-explanatory.
+   *
+   * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
+   *
+   * @param[in,out] &$newvals Set of new values, which may also be modified.
+   *
+   * @return boolean. If returning @c false the operation will be terminated
+   */
+  public static function beforeUpdateRemoveUnchanged($pme, $op, $step, $oldvals, &$changed, &$newvals)
+  {
+    // TODO: can be handle more efficiently with the PHP array_...() functions.
+    foreach ($newvals as $key => $value) {
+      if (array_search($key, $changed) === false) {
+        unset($newvals["$key"]);
+      }
+    }
+
+    return count($newvals) > 0;
   }
 
 };
@@ -824,6 +856,8 @@ __EOT__;
  */
 class mySQL
 {
+  const DATEMASK = "Y-m-d H:i:s"; /**< Something understood by mySQL. */
+
   /**Connect to the server specified by @a $opts.
    *
    * @param[in] $opts Associative array with keys 'hn', 'un', 'pw' and

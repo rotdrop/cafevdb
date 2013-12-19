@@ -484,8 +484,8 @@ ownclouddev';
                                     'maxlen'   => 10,
                                     'sort'     => true,
                                     'css'      => array('postfix' => 'birthday'),
-                                    'datemask' => 'd.m.Y',
-                                    'default' => '01.01.1900');
+                                    'datemask' => 'd.m.Y');
+//                                    'default' => '01.01.1900');
     //  add as needed
     self::$opts['languages'] = explode(',','Deutsch,Englisch,Französich,Spanisch,Polnisch,Russisch,Japanisch,Koreanisch');
     sort(self::$opts['languages']);

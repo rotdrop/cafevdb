@@ -368,14 +368,19 @@ __EOT__;
       'default' => '',
       'sort' => false);
 
-    $opts['fdd']['Aktualisiert'] = Config::$opts['datetime'];
-    $opts['fdd']['Aktualisiert']['name'] = 'Aktualisiert';
-    $opts['fdd']['Aktualisiert']['default'] = date(Config::$opts['datetime']['datemask']);
-    $opts['fdd']['Aktualisiert']['nowrap'] = true;
-    $opts['fdd']['Aktualisiert']['options'] = 'LFAVCPDR'; // Set by update trigger.
+    $opts['fdd']['Aktualisiert'] = array_merge(Config::$opts['datetime'],
+                                               array("name" => L::t("Last Updated"),
+                                                     "default" => date(Config::$opts['datetime']['datemask']),
+                                                     "nowrap" => true,
+                                                     "options" => 'LFAVCPDR' // Set by update trigger.
+                                                 ));
 
-    $opts['triggers']['update']['before'][0]  = Config::$triggers.'remove-unchanged.TUB.inc.php';
-    $opts['triggers']['update']['before'][1]  = Config::$triggers.'update-musician-timestamp.TUB.inc.php';
+    $opts['triggers']['update']['before'] = array();
+    $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeUpdateRemoveUnchanged';
+    $opts['triggers']['update']['before'][]  = 'CAFEVDB\Musicians::beforeTriggerSetTimestamp';
+
+    $opts['triggers']['insert']['before'] = array();
+    $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Musicians::beforeTriggerSetTimestamp';
 
     if ($this->pme_bare) {
       // disable all navigation buttons, probably for html export
@@ -408,19 +413,49 @@ __EOT__;
 
   } // display()
 
-  public static function portraitImageLinkPME($musicianId, $opts, $modify, $k, $fds, $fdd, $row)
+  /** phpMyEdit calls the trigger (callback) with the following arguments:
+   *
+   * @param[in] $pme The phpMyEdit instance
+   *
+   * @param[in] $op The operation, 'insert', 'update' etc.
+   *
+   * @param[in] $step 'before' or 'after'
+   *
+   * @param[in] $oldvals Self-explanatory.
+   *
+   * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
+   *
+   * @param[in,out] &$newvals Set of new values, which may also be modified.
+   *
+   * @return boolean. If returning @c false the operation will be terminated
+   */
+  public static function beforeTriggerSetTimestamp($pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
-    return self::portraitImageLink($musicianId, $modify);
+    if (count($changed) > 0) {
+      $key = 'Aktualisiert';
+      $changed[] = $key;
+      $newvals[$key] = date(\CAFEVDB\mySQL::DATEMASK);
+    }
+    echo '<!-- '.print_r($newvals, true).'-->';
+    return true;
   }
 
-  public static function portraitImageLink($musicianId, $modify = false)
+  public static function portraitImageLinkPME($musicianId, $opts, $action, $k, $fds, $fdd, $row)
   {
-    if ($modify === false) {
+    return self::portraitImageLink($musicianId, $action);
+  }
+
+  public static function portraitImageLink($musicianId, $action = 'display')
+  {
+    switch ($action) {
+    case 'add':
+      return L::t("Portraits or Avatars can only be added to an existing musician's profile; please add the new musician without protrait image first.");
+    case 'display':
       $span = ''
         .'<span class="photo"><img class="photo" src="'.\OC::$WEBROOT.'/?app=cafevdb&getfile=inlineimage.php&RecordId='.$musicianId.'&ImagePHPClass=CAFEVDB\Musicians"'
         .' title="Photo, if available" /></span>';
       return $span;
-    } else {
+    case 'change':
       $photoarea = ''
         .'<div id="contact_photo">
         
@@ -439,6 +474,8 @@ __EOT__;
 ';
 
       return $photoarea;
+    default:
+      return L::t("Internal error, don't know what to do concerning portrait images in the given context.");
     }
   }
 
@@ -534,7 +571,7 @@ __EOT__;
     }
       
     $query = "UPDATE IGNORE `Musiker`
-    SET `Aktualisiert` = '".date('Y-m-d H:i:s')."'
+    SET `Aktualisiert` = '".date(mySQL::DATEMASK)."'
     WHERE `Id` = ".$musicianId;
 
     $result = mySQL::query($query, $handle);
@@ -1200,8 +1237,8 @@ __EOT__;
 
     // Check whether the instrument is also mentioned in the musicians
     // data-base. Otherwise add id on request.
-    $opts['triggers']['insert']['before']  = Config::$triggers.'instrumentation-fix-project.TIB.inc.php';
-    $opts['triggers']['update']['before']  = Config::$triggers.'instrumentation-change-instrument.TUB.inc.php';
+    $opts['triggers']['insert']['before']  = 'CAFEVDB\Instrumentation::beforeInsertFixProjectTrigger';
+    $opts['triggers']['update']['before']  = 'CAFEVDB\Instrumentation::beforeUpdateInstrumentTrigger';
 
     if ($this->pme_bare) {
       // disable all navigation buttons, probably for html export
@@ -1224,7 +1261,7 @@ __EOT__;
 
     echo "<div class=\"cafevdb-table-notes\">\n"; // notes
 
-    if ($saved_template == SELF::INITIAL_TEMPLATE) {
+    if ($saved_template == self::INITIAL_TEMPLATE) {
 
       // Fetch all needed data from Musiker table
       $handle = mySQL::connect($opts);
