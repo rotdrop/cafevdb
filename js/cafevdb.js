@@ -498,6 +498,7 @@ $(document).ready(function(){
     dialogClass: 'no-close',
     width:'auto',
     height:'auto',
+    resizable: false,
     position:{my:'left top',
               at:'left+1% bottom+10%',
               of:'form.pme-form'

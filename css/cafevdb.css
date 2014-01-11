@@ -161,14 +161,11 @@ li.cafevdb-page-config-check span.set {
   padding: 5px;
 }
 
-button.events {
-  max-height: 26px;
-  padding: 5px;
-}
-
-span.events>button {
+#projectlabelcontrol>input[type=submit] {
+  font-weight:bold;
+  font-style:italic;
   border-style:outset;
-/*  background-color:#C6DEFF;*/
+  background-color:#C6DEFF;
 }
 
 :disabled { 
@@ -436,7 +433,7 @@ input[disabled]:hover,
   font-size:120%;
 }
 #missing-musicians-block tr td, #missing-musicians-block tr th
- {
+{
   border:1px solid;
   padding:3px;
 }
@@ -448,6 +445,19 @@ input[disabled]:hover,
 }
 #missing-musicians-block th {
   background:#CCC;
+}
+
+/* make popups scrollable in smaller viewports */
+.ui-dialog {
+	max-height: 75% !important;
+	/*top: 15% !important;*/
+	overflow-y: auto;
+	overflow-x: hidden;
+	padding: 0;
+}
+
+.ui-dialog .ui-dialog-content {
+	overflow: initial;
 }
 
 /*
