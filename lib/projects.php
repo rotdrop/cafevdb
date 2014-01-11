@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -333,9 +333,9 @@ __EOT__;
                                         'escape'   => false,
                                         'tooltip'  => 'Komma-separierte Liste von Extra-Feldern, z.B.:
 <blockquote>
-  DZ:1,Beitrag:2
+  DZ:1:KommentarDZ,Beitrag:2:KommentarBeitrag
 </blockquote>
-oder
+oder einfach
 <blockquote>
   DZ,Beitrag
 </blockquote>
@@ -350,7 +350,9 @@ zur Extra-Spalte in der Datenbank angeben, z.B. so:
   Beitrag:2,DZ:1
 </blockquote>
 Dann wird die Reihenfolge bei der Anzeige der Tabelle geändert, aber die
-Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
+Zuordnung zu den Informationen in der Datenbank bleibt erhalten. Optional
+kann man nach einem 2. Doppelpunkt noch einen Kommentar für die
+"Ballon-Hilfe" angeben; der darf allerdings kein Komma enthalten.');
 
     $opts['fdd']['Flyer'] = array(
       'input' => 'V',
@@ -577,13 +579,27 @@ Zuordnung zu den Informationen in der Datenbank bleibt erhalten.');
       print_r($tmpfields);
     }
     $fields = array();
-    $fieldno = 1; // This time we start at ONE _NOT_ ZERO
+    $numbers = array();
     foreach ($tmpfields as $value) {
       $value = trim($value);
       $value = explode(':',$value);
       $fields[] = array('name' => $value[0],
-                        'pos' => isset($value[1]) ? $value[1] : $fieldno);
-      ++$fieldno;
+                        'pos' => isset($value[1]) ? $value[1] : false,
+                        'tooltip' =>  isset($value[2]) ? $value[2] : false);
+      if (isset($value[1])) {
+        $numbers[$value[1]] = true;
+      }
+    }
+
+    // Add the missing field-numbers and make sure they do not
+    // conflict with the explicitly specified ordering
+    $fieldno = 1; // This time we start at ONE _NOT_ ZERO
+    foreach ($fields as $field) {
+      if ($field['pos'] !== false) {
+        continue;
+      }
+      while(isset($number[$fieldno++]));
+      $field['pos'] = $fieldno;
     }
 
     Util::debugMsg("<<<<ProjektExtraFelder");
