@@ -839,6 +839,11 @@ __EOT__;
                                                         'cols' => 32),
                                     'escape' => false,
                                     'sort'     => false);
+
+      if ($field['tooltip'] !== false) {
+        $opts['fdd']["$name"]['tooltip'] = $field['tooltip'];
+      }
+
     }
     // Check whether the instrument is also mentioned in the musicians
     // data-base. Otherwise add id on request.
@@ -1233,6 +1238,10 @@ __EOT__;
                                                         'cols' => 32),
                                     'escape' => false,
                                     'sort'     => true);
+
+      if ($field['tooltip'] !== false) {
+        $opts['fdd']["$name"]['tooltip'] = $field['tooltip'];
+      }
     }
 
     // Check whether the instrument is also mentioned in the musicians

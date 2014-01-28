@@ -594,11 +594,11 @@ kann man nach einem 2. Doppelpunkt noch einen Kommentar für die
     // Add the missing field-numbers and make sure they do not
     // conflict with the explicitly specified ordering
     $fieldno = 1; // This time we start at ONE _NOT_ ZERO
-    foreach ($fields as $field) {
+    foreach ($fields as &$field) {
       if ($field['pos'] !== false) {
         continue;
       }
-      while(isset($number[$fieldno++]));
+      while(isset($numbers[$fieldno++]));
       $field['pos'] = $fieldno;
     }
 
