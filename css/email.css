@@ -289,9 +289,16 @@ table.cafevdb-email-form {
 .cafevdb-email-form tr.attachments button {
   background-color:#C6DEFF;
   vertical-align:middle;
-  height:26px;
+  height:28px;
   padding:5px;  
   border-style:outset;
+}
+.cafevdb-email-form tr.attachments button.events {
+  padding:0px;
+}
+.cafevdb-email-form tr.attachments button.events img  {
+  vertical-align:top;
+  height:26px;
 }
 .cafevdb-email-form tr.eventattachments img { 
   height:10px;
