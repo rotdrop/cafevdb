@@ -123,7 +123,7 @@ if ($blog['status'] == 'error') {
     ($popup === false ? '' : '
       <div class="blogentrypopup bloglist" id="blogentrypopup'.$id.'" style="display:none;">
 	<input type="hidden" class="blogentrypopupid" value="'.$id.'"/>
-        <span class="photo"><img class="photo" src="'.MYSELF\Export::photo($author).'" '.$imgtitle.'/></span>
+	<span class="avatar" data-user="' . \OC_Util::sanitizeHTML($author) . '"></span>
         <span class="blogentrycenter">
           <span class="blogentrytitle">'.$author.' -- '.$created.$prioritytext.$edittxt.'</span><br/>
           <span class="blogentrytext">'.$text.'</span>
