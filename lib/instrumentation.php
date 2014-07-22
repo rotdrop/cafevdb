@@ -361,17 +361,6 @@ __EOT__;
 
       return false;
     }
-
-    /* $sqlquery = "CREATE OR REPLACE VIEW `" . $newvals["Name"] . "View` AS */
-    /*  SELECT */
-    /*  `Musiker`.`Id`,`Instrument`, `Name`, `Vorname`, */
-    /*  `Email`, `Telefon`, `Telefon2`, `Strasse`, `Postleitzahl`, `Stadt`, `Land`, */
-    /*  `Geburtstag`, `Status`, `Bemerkung` FROM `Musiker` JOIN `Besetzungen` */
-    /*   ON `Musiker`.`Id` = MusikerId AND " . $pme->rec . "= `ProjektId`"; */
-
-    /* //echo $sqlquery; */
-    
-    /* $pme->myquery($sqlquery) or die ("Could not execute the query. " . mysql_error()); */
     
     return true;
   }  

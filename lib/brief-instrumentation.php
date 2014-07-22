@@ -1,6 +1,6 @@
 <?php
 
-/**Orchestra member, musicion and project management application.
+/**Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
