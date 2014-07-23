@@ -354,6 +354,22 @@ __EOT__;
                                             'sort'     => true,
                                             'values'   => Config::$opts['languages']);
 
+    $opts['fdd']['Insurance'] = array(
+      'input' => 'V',
+      'name' => L::t('Instrument Insurance'),
+      'select' => 'T',
+      'options' => 'ACPDV',
+      'sql' => "Id",
+      'escape' => false,
+      'nowrap' => true,
+      'sort' =>false,
+      'php' => array(
+        'type' => 'function',
+        'function' => 'CAFEVDB\Musicians::instrumentInsurancePME',
+        'parameters' => array()
+        )
+      );
+
     $opts['fdd']['Portrait'] = array(
       'input' => 'V',
       'name' => L::t('Photo'),
@@ -440,6 +456,31 @@ __EOT__;
     return true;
   }
 
+  public static function instrumentInsurancePME($musicianId, $opts, $action, $k, $fds, $fdd, $row)
+  {
+    return self::instrumentInsurance($musicianId);
+  }
+
+  public static function instrumentInsurance($musicianId)
+  {
+    $amount = InstrumentInsurance::insuranceAmount($musicianId);
+    $fee    = InstrumentInsurance::annualFee($musicianId);
+    $bval = L::t('Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;',
+                 array($amount, $fee));
+    $tip = strval(Config::toolTips('musician-instrument-insurance'));
+    $button = "<div class=\"musician-instrument-insurance\">"
+      ."<input type=\"button\" "
+      ."value=\"$bval\" "
+      ."title=\"$tip\" "
+      ."name=\""
+      ."Template=instrument-insurance&amp;"
+      ."headervisibility=$headervisibility&amp;"
+      ."MusicianId=".$musicianId."\" "
+      ."class=\"musician-instrument-insurance\" />"
+      ."</div>";
+    return $button;
+  }
+  
   public static function portraitImageLinkPME($musicianId, $opts, $action, $k, $fds, $fdd, $row)
   {
     return self::portraitImageLink($musicianId, $action);

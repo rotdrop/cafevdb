@@ -846,6 +846,19 @@ __EOT__;
 __EOT__;
       break;
 
+    case 'insurances':
+      $value = L::t("Insurances");
+      $title = L::t("Dispay a table with an overview about the current state of the member'1 instrument insurances.");
+      $form =<<<__EOT__
+<form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
+  <input type="submit" value="$value" title="$title"/>
+  <input type="hidden" name="Template" value="instrument-insurance"/>
+  $headervisibility
+</form>
+
+__EOT__;
+      break;
+
     }
 
     return $form;

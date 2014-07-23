@@ -487,6 +487,15 @@ $(document).ready(function(){
     return false;
   });
 
+  $(':button.musician-instrument-insurance').click(function(event) {
+    event.preventDefault();
+    var values = $(this).attr('name');
+
+    CAFEVDB.formSubmit(OC.linkTo('cafevdb', 'index.php'), values, 'post');
+
+    return false;
+  });
+
   $('input.alertdata.cafevdb-page').each(function(index) {
     var title = $(this).attr('name');
     var text  = $(this).attr('value');

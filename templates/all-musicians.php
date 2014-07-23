@@ -10,6 +10,7 @@ $nav = '';
 $nav .= Navigation::button('projects');
 $nav .= Navigation::button('projectinstruments');
 $nav .= Navigation::button('instruments');
+$nav .= Navigation::button('insurances');
 
 echo $this->inc('part.common.header',
                 array('css-prefix' => $css_pfx,

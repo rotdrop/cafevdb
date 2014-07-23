@@ -24,6 +24,7 @@ OC::$CLASSPATH['CAFEVDB\ProjectInstruments'] = 'cafevdb/lib/project-instruments.
 OC::$CLASSPATH['CAFEVDB\EmailFilter'] = 'cafevdb/lib/email.php';
 OC::$CLASSPATH['CAFEVDB\Email'] = 'cafevdb/lib/email.php';
 OC::$CLASSPATH['CAFEVDB\EmailHistory'] = 'cafevdb/lib/email.php';
+OC::$CLASSPATH['CAFEVDB\InstrumentInsurance'] = 'cafevdb/lib/instrument-insurance.php';
 
 OC::$CLASSPATH['DWEMBED\App'] = 'dokuwikiembed/lib/dokuwikiembed.php';
 OC::$CLASSPATH['DWEMBED\L'] = 'dokuwikiembed/lib/util.php';
