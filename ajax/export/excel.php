@@ -98,6 +98,7 @@ class MyValueBinder extends PHPExcel_Cell_DefaultValueBinder implements PHPExcel
         return true;
       } elseif($value == PHPExcel_Calculation::getFALSE()) {
         $cell->setValueExplicit( FALSE, PHPExcel_Cell_DataType::TYPE_BOOL);
+        //$cell->setValueExplicit('=FALSE()', PHPExcel_Cell_DataType::TYPE_FORMULA);
         return true;
       }
 
@@ -225,6 +226,10 @@ case 'detailed-instrumentation':
   $projectName = $table->project;
   $name = L::t("%s-detailed", array($projectName));
   $instrumentCol = 0;
+  break;
+case 'instrument-insurance':
+  $table = new CAFEVDB\InstrumentInsurance(false);
+  $name = L::t('instrument insurances');
   break;
 }
 
@@ -594,6 +599,7 @@ if ($table) {
 header('Content-type: text/plain');
 header('Content-disposition: attachment;filename=debug.txt');
 
+echo L::t('The export function for this table is not implemented, sorry.')."\n\n";
 print_r($_POST);
 
 ?>

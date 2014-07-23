@@ -27,6 +27,10 @@ case 'detailed-instrumentation':
   $table = new CAFEVDB\DetailedInstrumentation(false);
   $name = Util::cgiValue('Project').'-detailed';
   break;
+case 'instrument-insurance':
+  $table = new CAFEVDB\InstrumentInsurance(false);
+  $name = L::t('instrument insurances');
+  break;
 }
 
 if ($table) {
@@ -81,6 +85,7 @@ __EOT__;
   header('Content-type: text/plain');
   header('Content-disposition: attachment;filename=debug.txt');
 
+  echo L::t('The export function for this table is not implemented, sorry.')."\n\n";
   print_r($_POST);
 }
 
