@@ -1608,16 +1608,20 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			$multiple	= $this->col_has_multiple($k);
 			$readonly	= $this->disabledTag($k);
 			$strip_tags = true;
+			$selected = @$row["qf$k"];
+			if ($selected === null) {
+				$selected = @$this->fdd[$k]['default'];
+			}
 			//$escape	    = true;
 			if ($this->col_has_checkboxes($k) || $this->col_has_radio_buttons($k)) {
 				echo $this->htmlRadioCheck($this->cgi['prefix']['data'].$this->fds[$k],
 										   $css_class_name, $vals, $groups,
-										   $row["qf$k"], $multiple, $readonly,
+										   $selected, $multiple, $readonly,
 										   $strip_tags, $escape, NULL, $help);
 			} else {
 				echo $this->htmlSelect($this->cgi['prefix']['data'].$this->fds[$k],
 									   $css_class_name, $vals, $groups,
-									   $row["qf$k"], $multiple, $readonly,
+									   $selected, $multiple, $readonly,
 									   $strip_tags, $escape, NULL, $help);
 			}
 		} elseif (!$vals && isset($this->fdd[$k]['textarea'])) {
@@ -2124,6 +2128,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		}
 		$found = false;
 		$lastGroup = null;
+		$ret .= '<option value=""></option>'."\n";
 		foreach ($kv_array as $key => $value) {
 			if (is_array($kg_array) && $kg_array[$key] != $lastGroup) {
 				if (isset($lastGroup)) {
@@ -2144,7 +2149,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		}
 		if (isset($lastGroup)) {
 			$ret .= "</optgroup>\n";
-		}		
+		}
 		$ret .= '</select>';
 		return $ret;
 	} /* }}} */
