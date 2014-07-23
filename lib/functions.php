@@ -848,7 +848,7 @@ __EOT__;
 
     case 'insurances':
       $value = L::t("Insurances");
-      $title = L::t("Dispay a table with an overview about the current state of the member'1 instrument insurances.");
+      $title = L::t("Display a table with an overview about the current state of the member's instrument insurances.");
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
   <input type="submit" value="$value" title="$title"/>
