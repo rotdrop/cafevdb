@@ -121,7 +121,7 @@ class InstrumentInsurance
     $opts['key_type'] = 'int';
 
     // Sorting field(s)
-    $opts['sort_field'] = array('MusikerId','VersicherungsMakler');
+    $opts['sort_field'] = array('Broker','GeographicalScope','MusicianId','Accessory');
 
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
