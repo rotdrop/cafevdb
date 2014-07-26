@@ -29,14 +29,14 @@
   opacity: 0.6;
   filter:alpha(opacity=0.6);
   z-index:1000;
-  background: url('%webroot%/core/img/loading.gif') no-repeat center center;
+  background: url('../../../core/img/loading.gif') no-repeat center center;
   cursor: wait;
 }
 .cafevdb_musician_photo {
   border-radius: 0.5em;
   border: thin solid #bbb;
   margin: 0.3em;
-  background: url('%webroot%/core/img/loading.gif') no-repeat center center; -moz-box-shadow: 0 1px 3px #777;
+  background: url('../../../core/img/loading.gif') no-repeat center center; -moz-box-shadow: 0 1px 3px #777;
   webkit-box-shadow: 0 1px 3px #777;
   box-shadow: 0 1px 3px #777;
   opacity: 1;
@@ -76,19 +76,19 @@
  *
  */
 .add {
-  background:url('%webroot%/core/img/actions/add.svg') no-repeat center;
+  background:url('../../../core/img/actions/add.svg') no-repeat center;
   clear: both;
 }
 .delete {
-  background:url('%webroot%/core/img/actions/delete.svg') no-repeat center;
+  background:url('../../../core/img/actions/delete.svg') no-repeat center;
 }
 .edit {
-  background:url('%webroot%/core/img/actions/rename.svg') no-repeat center;
+  background:url('../../../core/img/actions/rename.svg') no-repeat center;
 }
 .upload {
-  background:url('%webroot%/core/img/actions/upload.svg') no-repeat center;
+  background:url('../../../core/img/actions/upload.svg') no-repeat center;
 }
 /* .cloud {
-  background:url('%webroot%/core/img/places/picture.svg') no-repeat center;
+  background:url('../../../core/img/places/picture.svg') no-repeat center;
 } */
 

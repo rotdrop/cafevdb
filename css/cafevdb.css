@@ -61,7 +61,7 @@ input[type=checkbox],input[type=submit],input[type=radio],input[type=button] {
  */
 
 #cafevdb-page-config-check-header {
-  background-image:url('%appswebroot%/cafevdb/img/logo-greyf-large.svg');
+  background-image:url('../img/logo-greyf-large.svg');
   background-repeat:no-repeat;
   background-origin:padding-box;
   background-position:left middle;
@@ -97,19 +97,19 @@ div.cafevdb-page-header.collapsed #cafevdb-page-config-check-header {
 }
 
 #cafevdb-page-body-config-check li.set {
-  background-image:url('%webroot%/core/img/actions/info.svg');
+  background-image:url('../../../core/img/actions/info.svg');
   background-repeat:no-repeat;
   background-position:0ex 1ex;
 }
 
 #cafevdb-page-body-config-check li.missing {
-  background-image:url('%webroot%/core/img/actions/delete.svg');
+  background-image:url('../../../core/img/actions/delete.svg');
   background-repeat:no-repeat;
   background-position:0ex 1ex;
 }
 
 #cafevdb-page-body-config-check .comment {
-  background-image:url('%webroot%/core/img/actions/rename.svg');
+  background-image:url('../../../core/img/actions/rename.svg');
   background-repeat:no-repeat;
   background-position:0ex 0.5ex;
   padding-left:3ex;
@@ -206,7 +206,7 @@ input[type=button]:active, input[type=submit]:active {
 /* } */
 
 div[class|='cafevdb-nav'] {
-  background-image:url('%appswebroot%/cafevdb/img/logo-greyf128x128');
+  background-image:url('..//img/logo-greyf128x128');
   background-repeat:repeat-x;
   background-position:center;
 }
@@ -294,11 +294,11 @@ div.cafevdb-page-body.collapsed { padding-top:10ex; }
 }
 
 #viewtoggle #viewtoggle-img, #viewtoggle.expanded #viewtoggle-img {
-  background:url('%webroot%/core/img/actions/upload.svg') no-repeat center;
+  background:url('../../../core/img/actions/upload.svg') no-repeat center;
 }
 
 #viewtoggle.collapsed #viewtoggle-img {
-  background:url('%webroot%/core/img/actions/download.svg') no-repeat center;
+  background:url('../../../core/img/actions/download.svg') no-repeat center;
 }
 
 div.cafevdb-page-header-box button.viewtoggle:active {
@@ -395,7 +395,7 @@ input[readonly]:active {
 input[readonly]:hover,
 input[disabled]:hover,
 .chosen-disabled a span:hover, .chosen-disabled li span:hover {
-  background-image:url('%webroot%/core/img/actions/lock.svg') !important;
+  background-image:url('../../../core/img/actions/lock.svg') !important;
   background-repeat:no-repeat;
   background-position:center center;
 }

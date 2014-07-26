@@ -1,5 +1,5 @@
 #cafevdb-page-blog-header {
-  background-image:url('%appswebroot%/cafevdb/img/logo-greyf-large.svg');
+  background-image:url('../img/logo-greyf-large.svg');
   background-repeat:no-repeat;
   background-origin:padding-box;
   background-position:left middle;
@@ -27,7 +27,7 @@ div.cafevdb-page-header.collapsed #cafevdb-page-blog-header {
 
 .bloglist ul, div.blogentrypopup ul {
   list-style-type:circle;
-  list-style-image:url('%webroot%/core/img/actions/info.svg');
+  list-style-image:url('../../../core/img/actions/info.svg');
   list-style-position:inside;
 }
 

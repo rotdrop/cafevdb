@@ -110,14 +110,14 @@ hr.pme-hr {
 :not(.lt-ie9) div.pme-email-check {
   width:24px;
   height:24px;
-  background:url(%appswebroot%/cafevdb/img/e_mail.png);
+  background:url(../img/e_mail.png);
   cursor:pointer;
   vertical-align:middle;
 }
 :not(.lt-ie9) input.pme-email-check[type=checkbox]:checked ~ div.pme-email-check {
   width:24px;
   height:24px;
-  background:url(%appswebroot%/cafevdb/img/e_mail_checked.png);
+  background:url(../img/e_mail_checked.png);
   vertical-align:middle;
 }
 
@@ -131,19 +131,19 @@ hr.pme-hr {
 :not(.lt-ie9) div.pme-bulkcommit-check {
   width:24px;
   height:24px;
-  background:url(%appswebroot%/cafevdb/img/eighthrest24.png);
+  background:url(../img/eighthrest24.png);
   cursor:pointer;
   vertical-align:middle;
 }
 :not(.lt-ie9) input.pme-bulkcommit-check[type=checkbox]:checked ~ div.pme-bulkcommit-check {
   width:24px;
   height:24px;
-  background:url(%appswebroot%/cafevdb/img/eighthnote24.png);
+  background:url(../img/eighthnote24.png);
   vertical-align:middle;
 }
 
 input.pme-view-navigation {
-  background:url(%appswebroot%/cafevdb/img/pme-view.png) no-repeat !important;
+  background:url(../img/pme-view.png) no-repeat !important;
   width:16px !important;
   height:15px !important;
   border:0 !important;
@@ -152,7 +152,7 @@ input.pme-view-navigation {
 }
 
 input.pme-copy-navigation {
-  background:url(%appswebroot%/cafevdb/img/pme-copy.png) no-repeat !important;
+  background:url(../img/pme-copy.png) no-repeat !important;
   width:16px !important;
   height:15px !important;
   border:0 !important;
@@ -161,7 +161,7 @@ input.pme-copy-navigation {
 }
 
 input.pme-change-navigation {
-  background:url(%appswebroot%/cafevdb/img/pme-change.png) no-repeat !important;
+  background:url(../img/pme-change.png) no-repeat !important;
   width:16px !important;
   height:15px !important;
   border:0 !important;
@@ -170,7 +170,7 @@ input.pme-change-navigation {
 }
 
 input.pme-delete-navigation {
-  background:url(%appswebroot%/cafevdb/img/pme-delete.png) no-repeat !important;
+  background:url(../img/pme-delete.png) no-repeat !important;
   width:16px !important;
   height:15px !important;
   border:0 !important;
@@ -192,13 +192,13 @@ div.pme-sort {
 input.pme-sort[type=checkbox]:checked ~ div.pme-sort {
   /* width:93px; */
   /* height:14px; */
-  /* background:url(%appswebroot%/cafevdb/img/sortierfeld.png); */
+  /* background:url(../img/sortierfeld.png); */
   /* text-align:center; */
   opacity:1.0;
   display:inline-block;
 }
 input.pme-sort-rvrt[type=submit] {
-  background-image:url('%appswebroot%/cafevdb/img/ok_process-16x16.png');
+  background-image:url('../img/ok_process-16x16.png');
   background-repeat:no-repeat;
   background-position:0px;
   background-origin:padding-box;
@@ -209,7 +209,7 @@ input.pme-sort-rvrt[type=submit] {
 }
 
 input.pme-email-[type=submit] {
-  background-image:url('%appswebroot%/cafevdb/img/e_mail_X.png');
+  background-image:url('../img/e_mail_X.png');
   background-repeat:no-repeat;
   width:28px;
   height:28px;
@@ -217,7 +217,7 @@ input.pme-email-[type=submit] {
   vertical-align:middle;
 }
 input.pme-email+[type=submit] {
-  background-image:url('%appswebroot%/cafevdb/img/e_mail_checked.png');
+  background-image:url('../img/e_mail_checked.png');
   background-repeat:no-repeat;
   width:28px;
   height:28px;
@@ -225,7 +225,7 @@ input.pme-email+[type=submit] {
   vertical-align:middle;
 }
 input.pme-email[type=submit] {
-  background-image:url('%appswebroot%/cafevdb/img/e_mail.png');
+  background-image:url('../img/e_mail.png');
   background-repeat:no-repeat;
   background-position:0px;
   padding-left:24px;
@@ -236,7 +236,7 @@ input.pme-email[type=submit] {
 }
 
 input.pme-bulkcommit-[type=submit] {
-  background-image:url('%appswebroot%/cafevdb/img/eighthrest24.png');
+  background-image:url('../img/eighthrest24.png');
   background-repeat:no-repeat;
   width:28px;
   height:28px;
@@ -244,7 +244,7 @@ input.pme-bulkcommit-[type=submit] {
   vertical-align:middle;
 }
 input.pme-bulkcommit+[type=submit] {
-  background-image:url('%appswebroot%/cafevdb/img/eighthnote24.png');
+  background-image:url('../img/eighthnote24.png');
   background-repeat:no-repeat;
   width:28px;
   height:28px;
@@ -252,7 +252,7 @@ input.pme-bulkcommit+[type=submit] {
   vertical-align:middle;
 }
 /* input.pme-bulkcommit[type=submit] { */
-/*   background-image:url('%appswebroot%/cafevdb/img/eighthnote24.png'); */
+/*   background-image:url('../img/eighthnote24.png'); */
 /*   background-repeat:no-repeat; */
 /*   background-position:0px; */
 /*   padding-left:24px; */
@@ -268,7 +268,7 @@ input.pme-filter {
 }
 
 /* input.pme-email[type=submit]:selected { */
-/*   background-image:url(%appswebroot%/cafevdb/img/e_mail.png); */
+/*   background-image:url(../img/e_mail.png); */
 /*   background-repeat:no-repeat; */
 /*   background-position:0px; */
 /*   background-origin:padding-box; */

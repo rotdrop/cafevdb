@@ -46,7 +46,7 @@ form.projectevents {
 }
 
 .projectevents input.projectevents-sendmail-deselect[type=button] {
-  background-image:url('%appswebroot%/cafevdb/img/e_mail_X.png');
+  background-image:url('../img/e_mail_X.png');
   background-repeat:no-repeat;
   width:28px;
   height:28px;
@@ -54,7 +54,7 @@ form.projectevents {
   font-size:0pt;
 }
 .projectevents input.projectevents-sendmail-select[type=button] {
-  background-image:url('%appswebroot%/cafevdb/img/e_mail_checked.png');
+  background-image:url('../img/e_mail_checked.png');
   background-repeat:no-repeat;
   width:28px;
   height:28px;
@@ -63,7 +63,7 @@ form.projectevents {
 }
 
 .projectevents input.projectevents-sendmail[type=button] {
-  background-image:url('%appswebroot%/cafevdb/img/e_mail.png');
+  background-image:url('../img/e_mail.png');
   background-repeat:no-repeat;
   background-position:0px;
   padding-left:24px;
@@ -72,7 +72,7 @@ form.projectevents {
 }
 
 .projectevents input.detach {
-  background:url(%appswebroot%/cafevdb/img/link_break16x16.png);
+  background:url(../img/link_break16x16.png);
   background-repeat:no-repeat;
   width:16px;
   height:15px;
@@ -82,7 +82,7 @@ form.projectevents {
 }
 
 .projectevents input.edit {
-  background:url(%appswebroot%/cafevdb/img/pme-change.png);
+  background:url(../img/pme-change.png);
   background-repeat:no-repeat;
   width:16px;
   height:15px;
@@ -92,7 +92,7 @@ form.projectevents {
 }
 
 .projectevents input.delete {
-  background:url(%appswebroot%/cafevdb/img/pme-delete.png);
+  background:url(../img/pme-delete.png);
   background-repeat:no-repeat;
   width:16px;
   height:15px;
@@ -112,7 +112,7 @@ form.projectevents {
   width:24px;
   height:24px;
   /*padding:0px;*/
-  background:url(%appswebroot%/cafevdb/img/e_mail.png);
+  background:url(../img/e_mail.png);
   cursor:pointer;
   /*font-size:0;*/
   /*vertical-align:middle;*/
@@ -121,7 +121,7 @@ form.projectevents {
   width:24px;
   height:24px;
   /*padding:0px;*/
-  background:url(%appswebroot%/cafevdb/img/e_mail_checked.png);
+  background:url(../img/e_mail_checked.png);
   /*cursor:crosshair;*/
   /*font-size:0;*/
   /*vertical-align:middle;*/
