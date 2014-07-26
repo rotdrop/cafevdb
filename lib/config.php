@@ -795,12 +795,13 @@ class ConfigCheck
     //$id = \OC\Files\Cache\Cache::getId($sharedfolder, $vfsroot);
     $result = self::sudo($shareowner, function() use ($sharedfolder, $sharegroup) {
         $user         = \OCP\USER::getUser();
-
         $vfsroot = '/'.$user.'/files';
 
         if ($sharedfolder[0] != '/') {
           $sharedfolder = '/'.$sharedfolder;
         }
+
+        \OC\Files\Filesystem::initMountPoints($user);
 
         $rootView = new \OC\Files\View($vfsroot);
         $info = $rootView->getFileInfo($sharedfolder);
@@ -864,6 +865,8 @@ class ConfigCheck
         if( !is_dir( $userdirectory )) {
           return false;
         }
+
+        \OC\Files\Filesystem::initMountPoints($user);
 
         $rootView = new \OC\Files\View($vfsroot);
 
@@ -934,14 +937,14 @@ class ConfigCheck
       return false;
     }
 
-    /* Ok, then there should be a folder /Shared/$sharedFolder */    
+    /* Ok, then there should be a folder /$sharedFolder */    
 
     $fileView = \OC\Files\Filesystem::getView();
 
     $projectsFolder = trim(preg_replace('|[/]+|', '/', $projectsFolder), "/");
     $projectsFolder = explode('/', $projectsFolder);
     
-    $path = '/Shared/'.$sharedFolder;
+    $path = '/'.$sharedFolder;
 
     trigger_error("Path: ".print_r($projectsFolder, true), E_USER_NOTICE);
       
