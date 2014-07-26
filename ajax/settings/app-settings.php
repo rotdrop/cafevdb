@@ -316,9 +316,9 @@ if (isset($_POST['projectsfoldersaved']))
     return false;
   }
 
-  // some of the functions below may throw an exception, catch it
-  $absFolder = "/Shared/".$sharedfolder."/".$folder;
+  $absFolder = "/".$sharedfolder."/".$folder;
 
+  // some of the functions below may throw an exception, catch it
   try {
     if ($oldfolder == '' || $force) {
       if (ConfigCheck::checkProjectsFolder($folder)) {
@@ -393,7 +393,7 @@ if (isset($_POST['projectsbalancefoldersaved']))
   }
 
   $realFolder = $folder.'/'.$projectsFolder;
-  $absFolder = "/Shared/".$sharedfolder."/".$realFolder;
+  $absFolder = "/".$sharedfolder."/".$realFolder;
   
   // If there is no old dummy, then just create one.
   $actfolder = Config::getSetting('projectsbalancefolder', '');

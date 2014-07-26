@@ -681,8 +681,8 @@ kann man nach einem 2. Doppelpunkt noch einen Kommentar für die
 
     $fileView = \OC\Files\Filesystem::getView();
 
-    $paths = array('project' => '/Shared/'.$sharedFolder.'/'.$projectsFolder,
-                   'balance' => '/Shared/'.$sharedFolder.'/'.$balanceFolder.'/'.$projectsFolder);
+    $paths = array('project' => '/'.$sharedFolder.'/'.$projectsFolder,
+                   'balance' => '/'.$sharedFolder.'/'.$balanceFolder.'/'.$projectsFolder);
     $returnPaths = array();
     foreach($paths as $key => $path) {
       if ($only && $key != $only) {
@@ -711,8 +711,8 @@ kann man nach einem 2. Doppelpunkt noch einen Kommentar für die
     $balanceFolder = Config::getSetting('projectsbalancefolder','');
 
     $prefixPath = array(
-      'project' => '/Shared/'.$sharedFolder.'/'.$projectsFolder.'/',
-      'balance' => '/Shared/'.$sharedFolder.'/'.$balanceFolder.'/'.$projectsFolder."/",
+      'project' => '/'.$sharedFolder.'/'.$projectsFolder.'/',
+      'balance' => '/'.$sharedFolder.'/'.$balanceFolder.'/'.$projectsFolder."/",
       );
 
     $fileView = \OC\Files\Filesystem::getView();
@@ -738,8 +738,8 @@ kann man nach einem 2. Doppelpunkt noch einen Kommentar für die
     $balanceFolder = Config::getSetting('projectsbalancefolder','');
 
     $prefixPath = array(
-      'project' => '/Shared/'.$sharedFolder.'/'.$projectsFolder.'/',
-      'balance' => '/Shared/'.$sharedFolder.'/'.$balanceFolder.'/'.$projectsFolder."/",
+      'project' => '/'.$sharedFolder.'/'.$projectsFolder.'/',
+      'balance' => '/'.$sharedFolder.'/'.$balanceFolder.'/'.$projectsFolder."/",
       );
 
     $fileView = \OC\Files\Filesystem::getView();
