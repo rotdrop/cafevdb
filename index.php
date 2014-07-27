@@ -135,6 +135,7 @@ try {
   OCP\Util::addscript('', 'jquery.multiselect');
   OCP\Util::addStyle('', 'jquery.multiselect');
   OCP\Util::addscript('contacts','jquery.multi-autocomplete');
+  OCP\Util::addscript('','tags');
   OCP\Util::addScript('cafevdb', 'calendar');
   OCP\Util::addScript('calendar', 'on-event');
 //OCP\Util::addScript('cafevdb', 'debug');

@@ -6,8 +6,27 @@
  * See the COPYING-README file.
  */
 
-var Calendar={
+Calendar={
 	Util:{
+		sendmail: function(eventId, location, description, dtstart, dtend){
+			Calendar.UI.loading(true);
+			$.post(
+			OC.filePath('calendar','ajax/event','sendmail.php'),
+			{
+				eventId:eventId,
+				location:location,
+				description:description,
+				dtstart:dtstart,
+				dtend:dtend
+			},
+			function(result){
+				if(result.status !== 'success'){
+					OC.dialogs.alert(result.data.message, 'Error sending mail');
+				}
+				Calendar.UI.loading(false);
+			}
+		);
+		},
 		dateTimeToTimestamp:function(dateString, timeString){
 			dateTuple = dateString.split('-');
 			timeTuple = timeString.split(':');
@@ -61,7 +80,45 @@ var Calendar={
 				$('#to').val(movedDate);
 				$('#totime').val(movedTime);
 			}
-		}
+		},
+		getDayOfWeek:function(iDay){
+			var weekArray=['sun','mon','tue','wed','thu','fri','sat'];
+			return weekArray[iDay];
+		},
+		setTimeline : function() {
+			var curTime = new Date();
+			if (curTime.getHours() == 0 && curTime.getMinutes() <= 5)// Because I am calling this function every 5 minutes
+			{
+				// the day has changed
+				var todayElem = $(".fc-today");
+				todayElem.removeClass("fc-today");
+				todayElem.removeClass("fc-state-highlight");
+
+				todayElem.next().addClass("fc-today");
+				todayElem.next().addClass("fc-state-highlight");
+			}
+
+			var parentDiv = $(".fc-agenda-slots:visible").parent();
+			var timeline = parentDiv.children(".timeline");
+			if (timeline.length == 0) {//if timeline isn't there, add it
+				timeline = $("<hr>").addClass("timeline");
+				parentDiv.prepend(timeline);
+			}
+
+			var curCalView = $('#fullcalendar').fullCalendar("getView");
+			if (curCalView.visStart < curTime && curCalView.visEnd > curTime) {
+				timeline.show();
+			} else {
+				timeline.hide();
+			}
+
+			var curSeconds = (curTime.getHours() * 60 * 60) + (curTime.getMinutes() * 60) + curTime.getSeconds();
+			var percentOfDay = curSeconds / 86400;
+			//24 * 60 * 60 = 86400, # of seconds in a day
+			var topLoc = Math.floor(parentDiv.height() * percentOfDay);
+			var appNavigationWidth = ($(window).width() > 768) ? $('#app-navigation').width() : 0;
+			timeline.css({'left':($('.fc-today').offset().left-appNavigationWidth),'width': $('.fc-today').width(),'top':topLoc + 'px'});
+		},
 	},
 	UI:{
                 Share: {},
@@ -105,6 +162,11 @@ var Calendar={
 			$('#advanced_month').change(function(){
 				Calendar.UI.repeat('month');
 			});
+			$('#event-title').bind('keydown', function(event){
+				if (event.which == 13){
+					$('#event_form #submitNewEvent').click();
+				}
+			});
 			$( "#event" ).tabs({ selected: 0});
 			$('#event').dialog({
                                 position: {
@@ -116,6 +178,7 @@ var Calendar={
 				width : 520,
 				height: 600,
 				resizable: false,
+//				draggable: false,
 				close : function(event, ui) {
 					$(this).dialog('destroy').remove();
 			                if ($('#event_googlemap').dialog('isOpen') == true){
@@ -123,6 +186,13 @@ var Calendar={
 			                }
 				}
 			});
+//			Calendar.UI.Share.init();
+			$('#sendemailbutton').click(function() {
+				Calendar.Util.sendmail($(this).attr('data-eventid'), $(this).attr('data-location'), $(this).attr('data-description'), $(this).attr('data-dtstart'), $(this).attr('data-dtend'));
+			});
+			// Focus the title, and reset the text value so that it isn't selected.
+			var val = $('#event-title').val();
+			$('#event-title').focus().val('').val(val);
 		},
 		newEvent:function(start, end, allday){
 			start = Math.round(start.getTime()/1000);
@@ -187,6 +257,9 @@ var Calendar={
 						if(data.fromtime == "true"){
 							output = output + missing_field_fromtime + "<br />";
 						}
+						if(data.interval == "true"){
+							output = output + missing_field_interval + "<br />";
+						}
 						if(data.to == "true"){
 							output = output + missing_field_todate + "<br />";
 						}
@@ -203,12 +276,17 @@ var Calendar={
 					} else
 					if(data.status == 'success'){
 						$('#event').dialog('destroy').remove();
+                                                //$('#fullcalendar').fullCalendar('refetchEvents');
                                         	CAFEVDB.Events.UI.redisplay();
 					}
 				},"json");
 		},
 		moveEvent:function(event, dayDelta, minuteDelta, allDay, revertFunc){
-			$('.tipsy').remove();
+                        $('.tipsy').remove();
+			if($('#event').length != 0) {
+				revertFunc();
+				return;
+			}
 			Calendar.UI.loading(true);
 			$.post(OC.filePath('calendar', 'ajax/event', 'move.php'), { id: event.id, dayDelta: dayDelta, minuteDelta: minuteDelta, allDay: allDay?1:0, lastmodified: event.lastmodified},
 			function(data) {
@@ -218,6 +296,7 @@ var Calendar={
 					console.log("Event moved successfully");
 				}else{
 					revertFunc();
+					//$('#fullcalendar').fullCalendar('refetchEvents');
                                 	CAFEVDB.Events.UI.redisplay();
 				}
 			});
@@ -233,6 +312,7 @@ var Calendar={
 					console.log("Event resized successfully");
 				}else{
 					revertFunc();
+					//$('#fullcalendar').fullCalendar('refetchEvents');
                                 	CAFEVDB.Events.UI.redisplay();
 				}
 			});
@@ -254,6 +334,8 @@ var Calendar={
 					     at: "center center",
 					     of: "#event",
 					     offset: "0 0" },
+                                resizable: true,
+                                resize: 'auto',
 				width : 500,
 				height: 600,
 				close : function(event, ui) {
@@ -348,51 +430,54 @@ var Calendar={
 			}
 		},
 		showCalDAVUrl:function(username, calname){
-			$('#caldav_url').val(totalurl + '/' + username + '/' + calname);
+			$('#caldav_url').val(totalurl + '/' + encodeURIComponent(username) + '/' + calname);
 			$('#caldav_url').show();
 			$("#caldav_url_close").show();
 		},
-		initScroll:function(){
-			if(window.addEventListener)
-				document.addEventListener('DOMMouseScroll', Calendar.UI.scrollCalendar, false);
-			//}else{
-				document.onmousewheel = Calendar.UI.scrollCalendar;
-			//}
-		},
 		repeat:function(task){
 			if(task=='init'){
+				
+				var byWeekNoTitle = $('#advanced_byweekno').attr('title');
 				$('#byweekno').multiselect({
 					header: false,
-					noneSelectedText: $('#advanced_byweekno').attr('title'),
+					noneSelectedText: byWeekNoTitle,
 					selectedList: 2,
-					minWidth:'auto'
+					minWidth : 60
 				});
+				
+				var weeklyoptionsTitle = $('#weeklyoptions').attr('title');
 				$('#weeklyoptions').multiselect({
 					header: false,
-					noneSelectedText: $('#weeklyoptions').attr('title'),
+					noneSelectedText: weeklyoptionsTitle,
 					selectedList: 2,
-					minWidth:'auto'
+					minWidth : 110
 				});
 				$('input[name="bydate"]').datepicker({
 					dateFormat : 'dd-mm-yy'
 				});
+				
+				var byyeardayTitle = $('#byyearday').attr('title');
 				$('#byyearday').multiselect({
 					header: false,
-					noneSelectedText: $('#byyearday').attr('title'),
+					noneSelectedText: byyeardayTitle,
 					selectedList: 2,
-					minWidth:'auto'
+					minWidth : 60
 				});
+				
+				var bymonthTitle = $('#bymonth').attr('title');
 				$('#bymonth').multiselect({
 					header: false,
-					noneSelectedText: $('#bymonth').attr('title'),
+					noneSelectedText: bymonthTitle,
 					selectedList: 2,
-					minWidth:'auto'
+					minWidth : 110
 				});
+				
+				var bymonthdayTitle = $('#bymonthday').attr('title');
 				$('#bymonthday').multiselect({
 					header: false,
-					noneSelectedText: $('#bymonthday').attr('title'),
+					noneSelectedText: bymonthdayTitle,
 					selectedList: 2,
-					minWidth:'auto'
+					minWidth : 60
 				});
 				Calendar.UI.repeat('end');
 				Calendar.UI.repeat('month');
@@ -471,24 +556,66 @@ var Calendar={
 				case 'month':
 					id = 'onemonthview_radio';
 					break;
-				case 'list':
-					id = 'listview_radio';
+				case 'agendaDay':
+					id = 'onedayview_radio';
 					break;
 			}
 			$('#'+id).addClass('active');
 		},
 		categoriesChanged:function(newcategories){
-			categories = $.map(newcategories, function(v) {return v;});
+			categories = $.map(newcategories, function(v) {return v.name;});
 			console.log('Calendar categories changed to: ' + categories);
 			$('#category').multiple_autocomplete('option', 'source', categories);
+		},
+		lastView:null,
+		isToday:true,
+		timerHolder:null,
+		timerInterval:300000, // 300000 = 5*60*1000ms = 5 min
+		changeView:function(view){
+			switch (view){
+				case 'today':
+				case 'prev':
+				case 'next':
+					$('#fullcalendar').fullCalendar(view);
+					if (view=='today' && Calendar.UI.isToday) {
+						Calendar.UI.changeView('refresh')
+					}
+					if (view=='today'){
+						Calendar.UI.isToday = true;
+					}else{
+						Calendar.UI.isToday = false;
+					}
+					break;
+
+				case 'agendaDay':
+				case 'agendaWeek':
+				case 'month':
+					$('#fullcalendar').fullCalendar('changeView', view);
+					if (Calendar.UI.lastView == view) {
+						Calendar.UI.changeView('refresh')
+					}
+					Calendar.UI.lastView = view;
+					break;
+
+				case 'refresh':
+					// refetch the events.
+					$('#fullcalendar').fullCalendar('refetchEvents');
+				case 'auto_refresh':
+					// reset the timer not to refetch before new 5 min.
+					if (Calendar.UI.timerHolder){
+						window.clearTimeout(Calendar.UI.timerHolder)
+					}
+					Calendar.UI.timerHolder = window.setTimeout( function(){Calendar.UI.changeView('refresh')}, Calendar.UI.timerInterval);
+					break;
+
+				default:
+					console.error('unsupported change view to:' + view);
+			}
 		},
 	},
 	Settings:{
 		//
 	},
 
-};
+}
 
-// Local Variables: ***
-// js-indent-level: 8 ***
-// End: ***

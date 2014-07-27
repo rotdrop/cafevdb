@@ -456,7 +456,7 @@
 "Test Database Password" => "Datenbank-Passwort testen",
 "Camerata DB meets web 2.0 - the data-base operations can be accessed\nthrough the respective navigation buttons at the top of the page. The\npage below may be used as a bulletin-board. Configuration options are\naccessible through the gear- and pencil-shaped buttons in the\nbottom-left and top-right edge of the screen" => "Camerata DB Startseite - die eigentlichen Datenbanken-Operationen erreicht man über die Navigatíonsleiste oben. Die aktuelle Seite kann man als eine Art Pinnwand benutzen. Einstellungen lassen sich über die zahnrad- und stiftförmigen Knöpfe links-unten und rechts-oben vornehmen.",
 "New note" => "Neue Notiz",
-"Avatar pictures can be uploaded through the personal settings page." => "Avatar-Bilder können bei den \"persönlichen Einstellungen\" angegeben werden.",
+"Avatar pictures can be uploaded through the personal settings page." => "Avatar-Bilder können bei den ``persönlichen Einstellungen'' angegeben werden.",
 ", priority %d" => ", Priorität %d",
 ", latest change by `%s', %s" => ", zuletzt geändert von `%s', %s",
 "Reply" => "Anworten",

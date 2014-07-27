@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-07-25 14:16+0200\n"
-"PO-Revision-Date: 2014-07-25 14:27+0200\n"
+"POT-Creation-Date: 2014-07-26 19:07+0200\n"
+"PO-Revision-Date: 2014-07-26 19:09+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -89,7 +89,7 @@ msgstr "Es wurde keine Datei-Pfad für das Attachment übermittelt."
 msgid "File doesn't exist: "
 msgstr "Die Datei existiert nicht: "
 
-#: ajax/email/owncloudattachment.php:25 ajax/inlineimage/oc_image.php:56
+#: ajax/email/owncloudattachment.php:25 ajax/inlineimage/oc_image.php:64
 msgid "File doesn't exist:"
 msgstr "Die Datei existiert nicht:"
 
@@ -175,7 +175,9 @@ msgstr "Instrumenten-Versicherungen"
 
 #: ajax/export/csv.php:72 ajax/export/excel.php:422 ajax/export/html.php:88
 msgid "The export function for this table is not implemented, sorry."
-msgstr "Die Exportfunktion dieser Tabelle ist leider nicht eingerichtet, tut uns leid."
+msgstr ""
+"Die Exportfunktion dieser Tabelle ist leider nicht eingerichtet, tut uns "
+"leid."
 
 #: ajax/export/excel.php:30
 msgid "musicians"
@@ -278,12 +280,12 @@ msgstr "Das Löschen des Fotos ist möglicherweise fehlgeschlagen."
 msgid "No image path was submitted."
 msgstr "Es wurde kein Datei-Pfad für das Bild übermittelt."
 
-#: ajax/inlineimage/oc_image.php:61 ajax/inlineimage/oc_image.php:64
-#: js/inlineimage.js:178
+#: ajax/inlineimage/oc_image.php:69 ajax/inlineimage/oc_image.php:72
+#: js/inlineimage.js:179
 msgid "Error loading image."
 msgstr "Fehler beim Laden des Bildes."
 
-#: ajax/inlineimage/oc_image.php:78 ajax/inlineimage/uploadimage.php:74
+#: ajax/inlineimage/oc_image.php:86 ajax/inlineimage/uploadimage.php:74
 #: ajax/inlineimage/uploadimage.php:124
 #, php-format
 msgid "Couldn't save temporary image: %s"
@@ -293,23 +295,23 @@ msgstr "Fehler beim Erzeugen einer temporären Bild-Datei: %s"
 msgid "While trying to save cropped photo: missing record id."
 msgstr "Kann bearbeitetes Bild ohne Datensatz-Id nicht speichern."
 
-#: ajax/inlineimage/savecrop.php:75
+#: ajax/inlineimage/savecrop.php:77
 msgid "Error saving image in DB"
 msgstr "Fehler beim Speichern das Bildes in der DB."
 
-#: ajax/inlineimage/savecrop.php:85
+#: ajax/inlineimage/savecrop.php:87
 msgid "Error resizing image"
 msgstr "Fehler beim Skalieren des Bildes."
 
-#: ajax/inlineimage/savecrop.php:88
+#: ajax/inlineimage/savecrop.php:90
 msgid "Error cropping image"
 msgstr "Fehler beim Zuschneiden des Bildes."
 
-#: ajax/inlineimage/savecrop.php:91
+#: ajax/inlineimage/savecrop.php:93
 msgid "Error creating temporary image"
 msgstr "Fehler beim Erzeugen einer temporären Bild-Datei."
 
-#: ajax/inlineimage/savecrop.php:94
+#: ajax/inlineimage/savecrop.php:96
 #, php-format
 msgid "Error finding image: %s"
 msgstr "Fehler beim Laden des Bildes: %s"
@@ -717,7 +719,7 @@ msgstr "Die Kopf-Zeilen-Sichtbarkeit wurde geändert."
 msgid "tooltips changed"
 msgstr "Tool-Tip Einstellung geändert"
 
-#: index.php:181 lib/musicians.php:155
+#: index.php:182 lib/musicians.php:155
 #, php-format
 msgid "Add all to %s"
 msgstr "Alle zu %s"
@@ -725,9 +727,9 @@ msgstr "Alle zu %s"
 #: js/blog.js:46 js/blog.js:145 js/blog.js:206 js/blog.js:234 js/blog.js:259
 #: js/blog.js:297 js/email.js:44 js/email.js:77 js/events.js:64
 #: js/events.js:115 js/inlineimage.js:84 js/inlineimage.js:92
-#: js/inlineimage.js:101 js/inlineimage.js:130 js/inlineimage.js:154
-#: js/inlineimage.js:177 js/inlineimage.js:195 js/inlineimage.js:312
-#: js/inlineimage.js:469 js/inlineimage.js:478 js/inlineimage.js:481
+#: js/inlineimage.js:102 js/inlineimage.js:131 js/inlineimage.js:155
+#: js/inlineimage.js:178 js/inlineimage.js:196 js/inlineimage.js:315
+#: js/inlineimage.js:472 js/inlineimage.js:481 js/inlineimage.js:484
 msgid "Error"
 msgstr "Fehler"
 
@@ -782,27 +784,27 @@ msgstr "Nicht implementiert"
 msgid "Unknown operation:"
 msgstr "Unbekannte Aktion:"
 
-#: js/calendar.js:164
+#: js/calendar.js:234
 msgid "Deletion failed"
 msgstr "Löschen ist fehlgeschlagen"
 
-#: js/calendar.js:266
+#: js/calendar.js:348
 msgid "Browser determined position"
 msgstr "Vom Web-Browser übermittelte Position."
 
-#: js/calendar.js:279
+#: js/calendar.js:361
 msgid "Detailed search at Google-Maps"
 msgstr "Detaillierte Suchfunktion bei Google-Maps"
 
-#: js/calendar.js:307
+#: js/calendar.js:389
 msgid "Location not found:"
 msgstr "Ort nicht gefunden:"
 
-#: js/calendar.js:309
+#: js/calendar.js:391
 msgid "No location specified."
 msgstr "Kein Ort angegeben."
 
-#: js/calendar.js:311
+#: js/calendar.js:393
 msgid "Unknown location"
 msgstr "Unbekannter Ort."
 
@@ -880,7 +882,7 @@ msgstr ""
 msgid "No files selected for upload."
 msgstr "Keine Dateien zum Hochladen ausgewählt."
 
-#: js/inlineimage.js:92 js/inlineimage.js:459
+#: js/inlineimage.js:92 js/inlineimage.js:462
 msgid ""
 "The file you are trying to upload exceed the maximum size for file uploads "
 "on this server."
@@ -888,49 +890,49 @@ msgstr ""
 "Die Größe der Datei, die Sie hochladen wollen, übersteigt die Maximalgröße, "
 "die von diesem Server unterstützt wird."
 
-#: js/inlineimage.js:177
+#: js/inlineimage.js:178
 msgid "Could not open image."
 msgstr "Die Bilddatei konnte nicht geöffnet werden."
 
-#: js/inlineimage.js:250
+#: js/inlineimage.js:251
 msgid "Edit inline image"
 msgstr "Bild editieren"
 
-#: js/inlineimage.js:253
+#: js/inlineimage.js:256
 msgid "Ok"
 msgstr "Fertig"
 
-#: js/inlineimage.js:259 lib/email.php:1517 templates/blogedit.php:18
+#: js/inlineimage.js:262 lib/email.php:1517 templates/blogedit.php:18
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: js/inlineimage.js:272
+#: js/inlineimage.js:275
 msgid "Error loading inline image."
 msgstr "Fehler beim Laden des Bildes."
 
-#: js/inlineimage.js:289
+#: js/inlineimage.js:292
 msgid "Network or server error. Please inform administrator."
 msgstr ""
 "Netzwerk- oder Server-Fehler. Telefonieren Sie mit den System-"
 "Administratoren."
 
-#: js/inlineimage.js:342
+#: js/inlineimage.js:345
 msgid "Select image"
 msgstr "Bild auswählen"
 
-#: js/inlineimage.js:459
+#: js/inlineimage.js:462
 msgid "Upload too large"
 msgstr "Datei zu groß zum Laden"
 
-#: js/inlineimage.js:463
+#: js/inlineimage.js:466
 msgid "Only image files can be used as profile picture."
 msgstr "Für das Avatar-Bild können nur Bild-Dateien verwendet werden."
 
-#: js/inlineimage.js:463
+#: js/inlineimage.js:466
 msgid "Wrong file type"
 msgstr "Ungültiger Dateityp."
 
-#: js/inlineimage.js:469
+#: js/inlineimage.js:472
 msgid ""
 "Your browser doesn't support AJAX upload. Please click on the profile "
 "picture to select a photo to upload."
@@ -1433,7 +1435,9 @@ msgstr "Versicherungen"
 msgid ""
 "Display a table with an overview about the current state of the member's "
 "instrument insurances."
-msgstr "Zeigt eine Tabelle mit einer Übersicht über die Instrumentensammelversicherungen an."
+msgstr ""
+"Zeigt eine Tabelle mit einer Übersicht über die "
+"Instrumentensammelversicherungen an."
 
 #: lib/instrument-insurance.php:43
 msgid "Germany"
@@ -1586,28 +1590,28 @@ msgstr ""
 "Portraits oder Avatar-Bilder können nur zu existierenden Musiker-Daten "
 "hinzugefügt werden; bitte zuerst den Musiker ohne Bild hinzufügen."
 
-#: lib/musicians.php:505
+#: lib/musicians.php:507
 #, php-format
 msgid "Drop photo to upload (max %s)"
 msgstr "Foto ablegen zum Hochladen (max %s)"
 
-#: lib/musicians.php:508
+#: lib/musicians.php:510
 msgid "Delete current photo"
 msgstr "Aktuelles Foto löschen"
 
-#: lib/musicians.php:509
+#: lib/musicians.php:511
 msgid "Edit current photo"
 msgstr "Aktuelles Foto editieren"
 
-#: lib/musicians.php:510
+#: lib/musicians.php:512
 msgid "Upload new photo"
 msgstr "Neues Foto hochladen"
 
-#: lib/musicians.php:511
+#: lib/musicians.php:513
 msgid "Select photo from ownCloud"
 msgstr "Foto aus der `Cloud' auswählen"
 
-#: lib/musicians.php:519
+#: lib/musicians.php:521
 msgid ""
 "Internal error, don't know what to do concerning portrait images in the "
 "given context."
@@ -1615,7 +1619,7 @@ msgstr ""
 "Interner Fehler; keine Ahnung, wie im gegebenen Kontext mit\n"
 "Portrait-Bildern verfahren werden sollte."
 
-#: lib/musicians.php:932 lib/musicians.php:1355
+#: lib/musicians.php:934 lib/musicians.php:1357
 #, php-format
 msgid ""
 "None of the instruments known by %s are mentioned in the %sinstrumentation-"
@@ -1630,7 +1634,7 @@ msgstr ""
 "Der Fehler sollte durch Ändern der Instrumentierung oder der Musikerdaten "
 "behoben werden."
 
-#: lib/musicians.php:943
+#: lib/musicians.php:945
 #, php-format
 msgid ""
 "Choosing the first instrument known by %s\n"
@@ -1643,7 +1647,7 @@ msgstr ""
 "Bitte nötigenfalls korrigieren, in dem ein anderes ``Projekt-Instrument''\n"
 "in der Tabelle unten ausgewählt wird. Wähle ``%s'' als Projekt-instrument."
 
-#: lib/musicians.php:1380
+#: lib/musicians.php:1382
 #, php-format
 msgid ""
 "Generally, the first instrument known by the respective musician\n"
@@ -1731,28 +1735,28 @@ msgstr ""
 "Flyer könner leider nur zu existierenden Projekten hinzugefügt werden; bitte "
 "zuerst das Projekt ohne Flyer anlegen."
 
-#: lib/projects.php:1172
+#: lib/projects.php:1174
 #, php-format
 msgid "Drop image to upload (max %s)"
 msgstr "Bild ablegen zum Hochladen (max %s)"
 
-#: lib/projects.php:1175
+#: lib/projects.php:1177
 msgid "Delete current flyer"
 msgstr "Aktuellen Flyer löschen"
 
-#: lib/projects.php:1176
+#: lib/projects.php:1178
 msgid "Edit current flyer"
 msgstr "Aktuellen Flyer zuschneiden"
 
-#: lib/projects.php:1177
+#: lib/projects.php:1179
 msgid "Upload new flyer"
 msgstr "Neuen Flyer hochladen"
 
-#: lib/projects.php:1178
+#: lib/projects.php:1180
 msgid "Select image from ownCloud"
 msgstr "Bild aus der `Cloud' auswählen"
 
-#: lib/projects.php:1186
+#: lib/projects.php:1188
 msgid ""
 "Internal error, don't know what to do concerning project-flyers in the given "
 "context."
@@ -2582,7 +2586,7 @@ msgstr "Neue Notiz"
 
 #: templates/blog.php:78
 msgid "Avatar pictures can be uploaded through the personal settings page."
-msgstr "Avatar-Bilder können bei den \"persönlichen Einstellungen\" angegeben werden."
+msgstr "Avatar-Bilder können bei den ``persönlichen Einstellungen'' angegeben werden."
 
 #: templates/blog.php:87
 #, php-format
@@ -3319,4 +3323,3 @@ msgstr "PROJEKT"
 #: templates/share-settings.php:90
 msgid "Financial balance folder"
 msgstr "Finanz-Ordner"
-

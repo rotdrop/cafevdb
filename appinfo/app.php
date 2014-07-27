@@ -56,6 +56,6 @@ OCP\App::addNavigationEntry( array(
 	'id' => 'cafevdb',
 	'order' => 74,
 	'href' => OCP\Util::linkTo( 'cafevdb', 'index.php' ),
-	'icon' => OCP\Util::imagePath( 'cafevdb', 'logo16x16.png' ),
+	'icon' => OCP\Util::imagePath( 'cafevdb', 'logo-greyf-icon.svg' ),
 	'name' => 'Camerata DB'
 ));

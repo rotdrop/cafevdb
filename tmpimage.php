@@ -70,7 +70,7 @@ $maxsize = Util::cgiValue('maxsize', -1);
 OCP\Util::writeLog('cafevdb', 'tmpimage.php: tmpkey: '.$tmpkey, OCP\Util::DEBUG);
 
 $image = new OC_Image();
-$image->loadFromData(OC_Cache::get($tmpkey));
+$image->loadFromData(\OC\Cache::get($tmpkey));
 if($maxsize != -1) {
 	$image->resize($maxsize);
 }

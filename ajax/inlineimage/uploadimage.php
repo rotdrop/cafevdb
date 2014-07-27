@@ -62,7 +62,7 @@ if ($fn) {
     if(!$image->fixOrientation()) { // No fatal error so we don't bail out.
       Ajax::debug('Couldn\'t save correct image orientation: '.$tmpkey);
     }
-    if(OC_Cache::set($tmpkey, $image->data(), 600)) {
+    if(\OC\Cache::set($tmpkey, $image->data(), 600)) {
       OCP\JSON::success(array(
                           'data' => array(
                             'mime'=>$_SERVER['CONTENT_TYPE'],
@@ -110,7 +110,7 @@ if(file_exists($file['tmp_name'])) {
     if(!$image->fixOrientation()) { // No fatal error so we don't bail out.
       Ajax::debug('Couldn\'t save correct image orientation: '.$tmpkey);
     }
-    if(OC_Cache::set($tmpkey, $image->data(), 600)) {
+    if(\OC\Cache::set($tmpkey, $image->data(), 600)) {
       OCP\JSON::success(array(
                           'data' => array(
                             'mime'=>$file['type'],

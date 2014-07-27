@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-07-25 14:28+0200\n"
+"POT-Creation-Date: 2014-07-26 19:09+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -86,7 +86,7 @@ msgstr ""
 msgid "File doesn't exist: "
 msgstr ""
 
-#: ajax/email/owncloudattachment.php:25 ajax/inlineimage/oc_image.php:56
+#: ajax/email/owncloudattachment.php:25 ajax/inlineimage/oc_image.php:64
 msgid "File doesn't exist:"
 msgstr ""
 
@@ -271,12 +271,12 @@ msgstr ""
 msgid "No image path was submitted."
 msgstr ""
 
-#: ajax/inlineimage/oc_image.php:61 ajax/inlineimage/oc_image.php:64
-#: js/inlineimage.js:178
+#: ajax/inlineimage/oc_image.php:69 ajax/inlineimage/oc_image.php:72
+#: js/inlineimage.js:179
 msgid "Error loading image."
 msgstr ""
 
-#: ajax/inlineimage/oc_image.php:78 ajax/inlineimage/uploadimage.php:74
+#: ajax/inlineimage/oc_image.php:86 ajax/inlineimage/uploadimage.php:74
 #: ajax/inlineimage/uploadimage.php:124
 #, php-format
 msgid "Couldn't save temporary image: %s"
@@ -286,23 +286,23 @@ msgstr ""
 msgid "While trying to save cropped photo: missing record id."
 msgstr ""
 
-#: ajax/inlineimage/savecrop.php:75
+#: ajax/inlineimage/savecrop.php:77
 msgid "Error saving image in DB"
 msgstr ""
 
-#: ajax/inlineimage/savecrop.php:85
+#: ajax/inlineimage/savecrop.php:87
 msgid "Error resizing image"
 msgstr ""
 
-#: ajax/inlineimage/savecrop.php:88
+#: ajax/inlineimage/savecrop.php:90
 msgid "Error cropping image"
 msgstr ""
 
-#: ajax/inlineimage/savecrop.php:91
+#: ajax/inlineimage/savecrop.php:93
 msgid "Error creating temporary image"
 msgstr ""
 
-#: ajax/inlineimage/savecrop.php:94
+#: ajax/inlineimage/savecrop.php:96
 #, php-format
 msgid "Error finding image: %s"
 msgstr ""
@@ -693,7 +693,7 @@ msgstr ""
 msgid "tooltips changed"
 msgstr ""
 
-#: index.php:181 lib/musicians.php:155
+#: index.php:182 lib/musicians.php:155
 #, php-format
 msgid "Add all to %s"
 msgstr ""
@@ -701,9 +701,9 @@ msgstr ""
 #: js/blog.js:46 js/blog.js:145 js/blog.js:206 js/blog.js:234 js/blog.js:259
 #: js/blog.js:297 js/email.js:44 js/email.js:77 js/events.js:64
 #: js/events.js:115 js/inlineimage.js:84 js/inlineimage.js:92
-#: js/inlineimage.js:101 js/inlineimage.js:130 js/inlineimage.js:154
-#: js/inlineimage.js:177 js/inlineimage.js:195 js/inlineimage.js:312
-#: js/inlineimage.js:469 js/inlineimage.js:478 js/inlineimage.js:481
+#: js/inlineimage.js:102 js/inlineimage.js:131 js/inlineimage.js:155
+#: js/inlineimage.js:178 js/inlineimage.js:196 js/inlineimage.js:315
+#: js/inlineimage.js:472 js/inlineimage.js:481 js/inlineimage.js:484
 msgid "Error"
 msgstr ""
 
@@ -752,27 +752,27 @@ msgstr ""
 msgid "Unknown operation:"
 msgstr ""
 
-#: js/calendar.js:164
+#: js/calendar.js:234
 msgid "Deletion failed"
 msgstr ""
 
-#: js/calendar.js:266
+#: js/calendar.js:348
 msgid "Browser determined position"
 msgstr ""
 
-#: js/calendar.js:279
+#: js/calendar.js:361
 msgid "Detailed search at Google-Maps"
 msgstr ""
 
-#: js/calendar.js:307
+#: js/calendar.js:389
 msgid "Location not found:"
 msgstr ""
 
-#: js/calendar.js:309
+#: js/calendar.js:391
 msgid "No location specified."
 msgstr ""
 
-#: js/calendar.js:311
+#: js/calendar.js:393
 msgid "Unknown location"
 msgstr ""
 
@@ -845,53 +845,53 @@ msgstr ""
 msgid "No files selected for upload."
 msgstr ""
 
-#: js/inlineimage.js:92 js/inlineimage.js:459
+#: js/inlineimage.js:92 js/inlineimage.js:462
 msgid ""
 "The file you are trying to upload exceed the maximum size for file uploads "
 "on this server."
 msgstr ""
 
-#: js/inlineimage.js:177
+#: js/inlineimage.js:178
 msgid "Could not open image."
 msgstr ""
 
-#: js/inlineimage.js:250
+#: js/inlineimage.js:251
 msgid "Edit inline image"
 msgstr ""
 
-#: js/inlineimage.js:253
+#: js/inlineimage.js:256
 msgid "Ok"
 msgstr ""
 
-#: js/inlineimage.js:259 lib/email.php:1517 templates/blogedit.php:18
+#: js/inlineimage.js:262 lib/email.php:1517 templates/blogedit.php:18
 msgid "Cancel"
 msgstr ""
 
-#: js/inlineimage.js:272
+#: js/inlineimage.js:275
 msgid "Error loading inline image."
 msgstr ""
 
-#: js/inlineimage.js:289
+#: js/inlineimage.js:292
 msgid "Network or server error. Please inform administrator."
 msgstr ""
 
-#: js/inlineimage.js:342
+#: js/inlineimage.js:345
 msgid "Select image"
 msgstr ""
 
-#: js/inlineimage.js:459
+#: js/inlineimage.js:462
 msgid "Upload too large"
 msgstr ""
 
-#: js/inlineimage.js:463
+#: js/inlineimage.js:466
 msgid "Only image files can be used as profile picture."
 msgstr ""
 
-#: js/inlineimage.js:463
+#: js/inlineimage.js:466
 msgid "Wrong file type"
 msgstr ""
 
-#: js/inlineimage.js:469
+#: js/inlineimage.js:472
 msgid ""
 "Your browser doesn't support AJAX upload. Please click on the profile "
 "picture to select a photo to upload."
@@ -1490,34 +1490,34 @@ msgid ""
 "please add the new musician without protrait image first."
 msgstr ""
 
-#: lib/musicians.php:505
+#: lib/musicians.php:507
 #, php-format
 msgid "Drop photo to upload (max %s)"
 msgstr ""
 
-#: lib/musicians.php:508
+#: lib/musicians.php:510
 msgid "Delete current photo"
 msgstr ""
 
-#: lib/musicians.php:509
+#: lib/musicians.php:511
 msgid "Edit current photo"
 msgstr ""
 
-#: lib/musicians.php:510
+#: lib/musicians.php:512
 msgid "Upload new photo"
 msgstr ""
 
-#: lib/musicians.php:511
+#: lib/musicians.php:513
 msgid "Select photo from ownCloud"
 msgstr ""
 
-#: lib/musicians.php:519
+#: lib/musicians.php:521
 msgid ""
 "Internal error, don't know what to do concerning portrait images in the "
 "given context."
 msgstr ""
 
-#: lib/musicians.php:932 lib/musicians.php:1355
+#: lib/musicians.php:934 lib/musicians.php:1357
 #, php-format
 msgid ""
 "None of the instruments known by %s are mentioned in the %sinstrumentation-"
@@ -1527,7 +1527,7 @@ msgid ""
 "Please correct the mis-match."
 msgstr ""
 
-#: lib/musicians.php:943
+#: lib/musicians.php:945
 #, php-format
 msgid ""
 "Choosing the first instrument known by %s\n"
@@ -1536,7 +1536,7 @@ msgid ""
 "below, if necessary. Choosing ``%s'' as instrument."
 msgstr ""
 
-#: lib/musicians.php:1380
+#: lib/musicians.php:1382
 #, php-format
 msgid ""
 "Generally, the first instrument known by the respective musician\n"
@@ -1611,28 +1611,28 @@ msgid ""
 "project without a flyer first."
 msgstr ""
 
-#: lib/projects.php:1172
+#: lib/projects.php:1174
 #, php-format
 msgid "Drop image to upload (max %s)"
 msgstr ""
 
-#: lib/projects.php:1175
+#: lib/projects.php:1177
 msgid "Delete current flyer"
 msgstr ""
 
-#: lib/projects.php:1176
+#: lib/projects.php:1178
 msgid "Edit current flyer"
 msgstr ""
 
-#: lib/projects.php:1177
+#: lib/projects.php:1179
 msgid "Upload new flyer"
 msgstr ""
 
-#: lib/projects.php:1178
+#: lib/projects.php:1180
 msgid "Select image from ownCloud"
 msgstr ""
 
-#: lib/projects.php:1186
+#: lib/projects.php:1188
 msgid ""
 "Internal error, don't know what to do concerning project-flyers in the given "
 "context."

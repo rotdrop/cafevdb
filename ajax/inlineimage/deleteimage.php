@@ -41,7 +41,7 @@ if (!call_user_func(array($imageClass, 'deleteImage'), $recordId)) {
 }
 
 $tmpkey = 'cafevdb-inline-image-'.$recordId;
-OC_Cache::remove($tmpkey);
+\OC\Cache::remove($tmpkey);
 
 OCP\JSON::success(array('data' => array('recordId'=>$recordId)));
 

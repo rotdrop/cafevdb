@@ -74,6 +74,7 @@ form.projectevents {
 .projectevents input.detach {
   background:url(../img/link_break16x16.png);
   background-repeat:no-repeat;
+  min-width:0;
   width:16px;
   height:15px;
   border:0;
@@ -84,6 +85,7 @@ form.projectevents {
 .projectevents input.edit {
   background:url(../img/pme-change.png);
   background-repeat:no-repeat;
+  min-width:0;
   width:16px;
   height:15px;
   border:0;
@@ -94,6 +96,7 @@ form.projectevents {
 .projectevents input.delete {
   background:url(../img/pme-delete.png);
   background-repeat:no-repeat;
+  min-width:0;
   width:16px;
   height:15px;
   border:0;

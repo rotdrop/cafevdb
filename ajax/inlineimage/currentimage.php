@@ -49,7 +49,7 @@ if (!$photo || $photo ==  '') {
   $image->loadFromBase64($photo);
   if ($image->valid()) {
     $tmpkey = 'cafevdb-inline-image-'.$recordId;
-    if (OC_Cache::set($tmpkey, $image->data(), 600)) {
+    if (\OC\Cache::set($tmpkey, $image->data(), 600)) {
       OCP\JSON::success(array('data' => array('recordId'=>$recordId, 'tmp'=>$tmpkey)));
       exit();
     } else {

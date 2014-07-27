@@ -59,7 +59,9 @@ if ($recordId == '') {
 
 OCP\Util::writeLog('cafevdb', 'savecrop.php: key: '.$tmpkey, OCP\Util::DEBUG);
 
-$data = OC_Cache::get($tmpkey);
+$data = \OC\Cache::get($tmpkey);
+\OC\Cache::remove($tmpkey);
+
 if ($data) {
   $image = new OC_Image();
   if ($image->loadFromdata($data)) {
@@ -94,7 +96,7 @@ if ($data) {
   Ajax::bailOut(L::t('Error finding image: %s', $tmpkey));
 }
 
-OC_Cache::remove($tmpkey);
+//\OC\Cache::remove($tmpkey);
 
 ?>
 

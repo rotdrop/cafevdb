@@ -92,6 +92,7 @@ var CAFEVDB = CAFEVDB || {};
 	    OC.dialogs.alert(t('cafevdb', 'The file you are trying to upload exceed the maximum size for file uploads on this server.'), t('cafevdb', 'Error'));
 	    return;
 	} else {
+            target.unbind('load');
 	    target.load(function() {
 		var response= jQuery.parseJSON(target.contents().text());
 		if (response != undefined && response.status == 'success') {
@@ -248,6 +249,8 @@ var CAFEVDB = CAFEVDB || {};
 		modal: true,
 		closeOnEscape: true,
 		title:  t('cafevdb', 'Edit inline image'),
+                resizable: 'true',
+                resize: 'auto',
 		height: 'auto',
                 width: 'auto',
 		buttons: [ { text: t('cafevdb', "Ok"),

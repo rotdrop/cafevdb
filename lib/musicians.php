@@ -493,8 +493,10 @@ __EOT__;
       return L::t("Portraits or Avatars can only be added to an existing musician's profile; please add the new musician without protrait image first.");
     case 'display':
       $span = ''
-        .'<span class="photo"><img class="photo" src="'.\OC::$WEBROOT.'/?app=cafevdb&getfile=inlineimage.php&RecordId='.$musicianId.'&ImagePHPClass=CAFEVDB\Musicians"'
-        .' title="Photo, if available" /></span>';
+        .'<span class="photo"><img class="photo" src="'
+        .\OCP\UTIL::linkTo('cafevdb', 'inlineimage.php').'?RecordId='.$musicianId.'&ImagePHPClass=CAFEVDB\Musicians'
+        .'" '
+        .'title="Photo, if available" /></span>';
       return $span;
     case 'change':
       $photoarea = ''

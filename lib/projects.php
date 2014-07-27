@@ -1160,8 +1160,10 @@ __EOT__;
 project without a flyer first.");
     case 'display':
       $span = ''
-        .'<span class="photo"><img class="photo svg" src="'.\OC::$WEBROOT.'/?app=cafevdb&getfile=inlineimage.php&RecordId='.$projectId.'&ImagePHPClass=CAFEVDB\Projects&ImageSize=1200&PlaceHolder='.self::IMAGE_PLACEHOLDER.'"'
-        .' title="Flyer, if available" /></span>';
+        .'<span class="photo"><img class="photo svg" src="'
+        .\OCP\Util::linkTo('cafevdb', 'inlineimage.php').'?RecordId='.$projectId.'&ImagePHPClass=CAFEVDB\Projects&ImageSize=1200&PlaceHolder='.self::IMAGE_PLACEHOLDER
+        .'" '
+        .'title="Flyer, if available" /></span>';
       return $span;
     case 'change':
       $imagearea = ''
