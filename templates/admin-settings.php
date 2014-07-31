@@ -2,7 +2,7 @@
 use CAFEVDB\L;
 use CAFEVDB\Config;
 ?>
-<div class="personalblock">
+<div class="section">
   <form id="cafevdbadmin">
     <legend>
       <img class="svg cafevdblogo" src="<?php echo OCP\Util::imagePath(Config::APP_NAME, 'logo-greyf.svg'); ?>" >
