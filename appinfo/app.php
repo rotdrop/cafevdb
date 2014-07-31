@@ -52,6 +52,13 @@ OCP\Util::connectHook('OC_Calendar','moveEvent','CAFEVDB\Events','moveEventListe
 OCP\Util::connectHook('OC_Calendar', 'deleteCalendar', 'CAFEVDB\Events', 'killCalendarListener');
 OCP\Util::connectHook('OC_Calendar', 'editCalendar', 'CAFEVDB\Events', 'editCalendarListener');
 
+/* Hurray! There is a config hook!
+ *
+ * CAVEAT: for the headervisibility we still need to do this
+ * ourselves, so the hook is not connected ATM.
+ */
+//OCP\Util::connectHook('\OCP\Config', 'js', 'CAFEVDB\Config', 'jsLoadHook');
+
 OCP\App::addNavigationEntry( array( 
 	'id' => 'cafevdb',
 	'order' => 74,

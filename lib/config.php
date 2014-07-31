@@ -87,6 +87,51 @@ ownclouddev';
     }
   }
 
+  /**Configuration hook. The array can be filled with arbitrary
+   * variable-value pairs (global scope). Additionally it is possible
+   * to emit any other java-script code here, although this is
+   * probably not the intended usage.
+   *
+   * CAVEAT: for the headervisibility we still need to do this
+   * ourselves, so the hook is not connected ATM.
+   */
+  public static function jsLoadHook($params) {
+    //$jsAssign = &$params['array'];
+    //$jsAssign['DWEmbed'] = 'DWEmbed || {}';
+
+    self::init();
+
+    $headervisibility = Util::cgiValue('headervisibility', 'expanded');
+    $user             = \OCP\USER::getUser();
+    $tooltips         = \OCP\Config::getUserValue($user, 'cafevdb', 'tooltips', '');
+    $language         = \OCP\Config::getUserValue($user, 'core', 'lang', 'en');
+
+    $array = array(
+      "CAFEVDB.headervisibility" => "'".$headervisibility."'",
+      "CAFEVDB.toolTips" => ($tooltips == "off" ? 'false' : 'true'),
+      "CAFEVDB.wysiwygEditor" => "'".self::$opts['editor']."'",
+      "CAFEVDB.language" => "'".$language."'",
+      "PHPMYEDIT.filterSelectPlaceholder" => "'".L::t("Select a filter option.")."'",
+      "PHPMYEDIT.filterSelectNoResult" => "'".L::t("No values match.")."'",
+      "PHPMYEDIT.filterSelectChosen" => "true",
+      "PHPMYEDIT.filterSelectChosenTitle" => "'".L::t("Select from the pull-down menu. ".
+                                                      "Double-click will submit the form.")."'",
+      "PHPMYEDIT.inputSelectPlaceholder" => "'".L::t("Select an option.")."'",
+      "PHPMYEDIT.inputSelectNoResult" => "'".L::t("No values match.")."'",
+      "PHPMYEDIT.inputSelectChosen" => "true",
+      "PHPMYEDIT.inputSelectChosenTitle" => "'".L::t("Select from the pull-down menu.")."'",
+      "PHPMYEDIT.chosenPixelWidth" => "['projectname']",
+      );
+
+    // Echo it
+    echo "var CAFEVDB = CAFEVDB || {};\n";
+    echo "CAFEVDB.Projects = CAFEVDB.Projects || {};\n";
+    echo "var PHPMYEDIT = PHPMYEDIT || {} ;\n";
+    foreach ($array as  $setting => $value) {
+      echo($setting ."=".$value.";\n");
+    }    
+  }
+
   /**A short-cut, redirecting to the stock functions for the
    * logged-in user.
    */
