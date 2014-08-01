@@ -44,10 +44,10 @@ $off = $_['orchestra'] == '' ? 'disabled="disabled"' : '';
       <div id="msgplaceholder"><div class="statusmessage" id="msg"></div></div>
     </fieldset>
 <!-- DATA-BASE password -->
-    <fieldset id="dbpassword">
-      <input type="password" id="dbpassword" name="dbpassword" placeholder="<?php echo L::t('New Password');?>" data-typetoggle="#dbpassword-show" />
-      <input type="checkbox" id="dbpassword-show" name="dbpassword-show" /><label for="dbpassword-show"><?php echo L::t('show');?></label>
-      <input id="button" type="button" title="<?php echo Config::toolTips('test-dbpassword'); ?>" value="<?php echo L::t('Test Database Password');?>" />
+    <fieldset id="cafevdb_dbpassword">
+      <input type="password" id="cafevdb_dbpassword" name="cafevdb_dbpassword" placeholder="<?php echo L::t('New Password');?>" data-typetoggle="#cafevdb_dbpassword-show" />
+      <input type="checkbox" id="cafevdb_dbpassword-show" name="cafevdb_dbpassword-show" /><label for="cafevdb_dbpassword-show"><?php echo L::t('show');?></label>
+      <input id="button" type="button" title="<?php echo Config::toolTips('test-cafevdb_dbpassword'); ?>" value="<?php echo L::t('Test Database Password');?>" />
       <div class="statusmessage" id="dbteststatus"></div>
     </fieldset>
     <fieldset id="dbtesting">

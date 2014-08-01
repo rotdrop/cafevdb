@@ -289,27 +289,27 @@ $(document).ready(function() {
 
   // DB-Password
   // 'show password' checkbox
-  $('#dbpassword #dbpassword').showPassword();
-  $("#dbpassword #button").click(function() {
+  $('#cafevdb_dbpassword #cafevdb_dbpassword').showPassword();
+  $("#cafevdb_dbpassword #button").click(function() {
     $('div.statusmessage').hide();
     $('span.statusmessage').hide();
-    if ($('#dbpassword #password').val() != '') {
+    if ($('#cafevdb_dbpassword #password').val() != '') {
       // Serialize the data
-      var post = $("#dbpassword").serialize();
+      var post = $("#cafevdb_dbpassword").serialize();
       // Ajax foo
       $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
              post, function(data) {
                if(data.status == "success") {
-                 //$('#dbpassword input[name="dbpass1"]').val('');
-                 $('#dbpassword input[name="password"]').val('');
-                 $('#dbpassword input[name="password-clone"]').val('');
+                 //$('#cafevdb_dbpassword input[name="dbpass1"]').val('');
+                 $('#cafevdb_dbpassword input[name="password"]').val('');
+                 $('#cafevdb_dbpassword input[name="password-clone"]').val('');
                }
-               $('#dbpassword #dbteststatus').html(data.data.message);
-               $('#dbpassword #dbteststatus').show();
+               $('#cafevdb_dbpassword #dbteststatus').html(data.data.message);
+               $('#cafevdb_dbpassword #dbteststatus').show();
              });
       return false;
     } else {
-      $('#dbpassword #error').show();
+      $('#cafevdb_dbpassword #error').show();
       return false;
     }
   });
