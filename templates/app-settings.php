@@ -8,7 +8,7 @@ $off = $_['orchestra'] == '' ? 'disabled="disabled"' : '';
 ?>
 <div id="tabs-2" class="personalblock admin">
 <!-- GENERAL CONFIGURATION STUFF -->
-  <form id="admingeneral" disabledonsubmit="return false;"><legend><?php echo L::t('General settings'); ?></legend>
+  <form id="admingeneral"><legend><?php echo L::t('General settings'); ?></legend>
     <input type="text" id="orchestra" name=" orchestra" value="<?php echo $_['orchestra']; ?>" placeholder="<?php echo L::t('name of orchestra'); ?>" />
     <span class="statusmessage" id="msg"></span>
   </form>

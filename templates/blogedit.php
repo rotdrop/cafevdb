@@ -3,7 +3,7 @@ use CAFEVDB\L;
 use CAFEVDB\Config;
 ?>
 <div id="blogedit">
-  <form id="blogeditform" disabledonsubmit="return false;">
+  <form id="blogeditform">
     <textarea class="<?php echo Config::$opts['editor'];?>" id="blogtextarea" rows="15" cols="66"></textarea>
     <br/>
     <input
