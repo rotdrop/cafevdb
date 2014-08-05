@@ -63,8 +63,9 @@ var CAFEVDB = CAFEVDB || {};
 
 $(document).ready(function(){
 
-  $('input[class^="page-input-"][class$="-birthday"]').datepicker({
-    dateFormat : 'dd.mm.yy'
+  $('input[class^="pme-input-"][class$="-birthday"]').datepicker({
+    dateFormat : 'dd.mm.yy', // this is 4-digit year
+    minDate: '01.01.1940'
   });
 
   $('td[class$="-money"]').filter(function() {
