@@ -476,6 +476,31 @@ table.cafevdb-email-form {
   height:0;
 }
 
+/******************************************************************************
+ *
+ * chosen styling
+ *
+ */
+
+#cafevdb_email_template_selector_chosen {
+  font-weight: bold;
+}
+
+#cafevdb_email_template_selector_chosen a.chosen-single {
+  height: unset;
+  background: unset;
+  box-shadow: unset;
+  border-radius: 3px;
+  outline: medium, none;
+  margin: 0px 0px 3px 0px;
+  background-color: rgba(240, 240, 240, 0.9);
+  color: #555;
+  border: 1px solid rgba(190, 190, 190, 0.9);
+  padding: 5px;
+  line-height: 16px;
+  font-size: 13px;
+}
+
 /*
  * Local Variables: ***
  * cssm-indent-function: cssm-c-style-indenter ***
