@@ -27,7 +27,7 @@
 
 .pme-export-block div {
   vertical-align:middle;
-  /*font-weight:bold;*/
+  font-weight:bold;
 }
 
 .pme-export-block a.chosen-default span {
@@ -40,6 +40,21 @@
 .pme-export-block a.chosen-default span:active {
   /*font-weight:bold;*/
   color:#333;
+}
+
+.pme-export-block a.chosen-single {
+  height: unset;
+  background: unset;
+  box-shadow: unset;
+  border-radius: 3px;
+  outline: medium, none;
+  margin: 0px 0px 3px 0px;
+  background-color: rgba(240, 240, 240, 0.9);
+  color: #555;
+  border: 1px solid rgba(190, 190, 190, 0.9);
+  padding: 5px;
+  line-height: 16px;
+  font-size: 13px;
 }
 
 /*******************************************************************************
@@ -215,6 +230,7 @@ input.pme-email-[type=submit] {
   height:28px;
   font-size:0pt;
   vertical-align:middle;
+  margin-top: 0px;
 }
 input.pme-email+[type=submit] {
   background-image:url('../img/e_mail_checked.png');
@@ -223,6 +239,7 @@ input.pme-email+[type=submit] {
   height:28px;
   font-size:0pt;
   vertical-align:middle;
+  margin-top: 0px;
 }
 input.pme-email[type=submit] {
   background-image:url('../img/e_mail.png');
@@ -233,6 +250,7 @@ input.pme-email[type=submit] {
   min-height:28px;
   vertical-align:middle;
   /* border-radius:4px; */
+  margin-top: 0px;
 }
 
 input.pme-bulkcommit-[type=submit] {
