@@ -144,7 +144,7 @@ if (isset($_POST['cafevdb_dbpassword'])) {
   if ($value != '') {
     $opts['pw'] = $value;
     if (ConfigCheck::databaseAccessible($opts)) {
-      Config::setValue('cafevdb_dbpassword', $value);
+      Config::setValue('dbpassword', $value);
       OC_JSON::success(
         array("data" => array(
                 "message" => L::t('DB-test passed and DB-password set.'))));
