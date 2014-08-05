@@ -19,6 +19,7 @@ $off = $_['orchestra'] == '' ? 'disabled="disabled"' : '';
       <input type="password" id="key" name="systemkey" placeholder="<?php echo L::t('New Key');?>" data-typetoggle="#systemkey-show" />
       <input type="checkbox" id="systemkey-show" name="show" /><label for="systemkey-show"><?php echo L::t('show');?></label>
       <input id="keychangebutton" type="button" value="<?php echo L::t('Change Encryption Key');?>" />
+      <!-- <span><?php echo $_['encryptionkey']; ?></span> -->
       <div class="statusmessage" id="changed"><?php echo L::t('The encryption key was changed');?></div>
       <div class="statusmessage" id="error"><?php echo L::t('Unable to change the encryption key');?></div>
       <div class="statusmessage" id="insecure"><?php echo L::t('Data will be stored unencrypted');?></div>
