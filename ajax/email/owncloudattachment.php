@@ -15,7 +15,7 @@ if (!isset($_GET['path'])) {
 }
 
 $localpath = $_GET['path'];
-$name      = OC_Filesystem::getLocalFile($localpath);
+$name      = \OC\Files\Filesystem::getLocalFile($localpath);
 
 if (!file_exists($name)) {
   Ajax::bailOut(L::t('File doesn\'t exist: ').$localpath);
@@ -25,20 +25,20 @@ if (false) {
   Ajax::bailOut(L::t('File doesn\'t exist:').'<br/>'
                 .$name.'<br/>'
                 .$localpath.'<br/>'
-                .OC_Filesystem::getLocalPath($name).'<br/>'
-                .OC_Filesystem::getLocalPath($localpath).'<br/>'
+                .\OC\Files\Filesystem::getLocalPath($name).'<br/>'
+                .\OC\Files\Filesystem::getLocalPath($localpath).'<br/>'
                 .print_r($fileInfo, true));
 }
 
 // Should coincide with $localpath
-if ($localpath != OC_Filesystem::getLocalPath($localpath)) {
+if ($localpath != \OC\Files\Filesystem::getLocalPath($localpath)) {
   Ajax::bailOut(L::t('Inconsistency:').' '.
                 $localpath.
                 ' <=> '.
-                OC_Filesystem::getLocalPath($localpath));
+                \OC\Files\Filesystem::getLocalPath($localpath));
 }
 
-$fileInfo = \OC_Files::getFileInfo($localpath);
+$fileInfo = \OC\Files\Filesystem::getFileInfo($localpath);
 
 // We emulate an uploaded file here:
 $fileRecord = array(
