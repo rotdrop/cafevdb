@@ -1811,7 +1811,7 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
       // Add all registered attachments.
       foreach ($this->fileAttach as $attachment) {
         $mail->AddAttachment($attachment['tmp_name'],
-                             $attachment['name'],
+                             basename($attachment['name']),
                              'base64',
                              $attachment['type']);
           
@@ -1870,7 +1870,7 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
     // compute the MD5 stuff for the attachments
     $attachLog = array();
     foreach ($this->fileAttach as $attachment) {
-      if($attachment['name'] != "") {
+      if ($attachment['name'] != "") {
         $md5val = md5_file($attachment['tmp_name']);
         $attachLog[] = array('name' => $attachment['name'],
                              'md5' => $md5val);
