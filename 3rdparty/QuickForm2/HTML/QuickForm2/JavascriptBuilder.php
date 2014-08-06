@@ -292,7 +292,7 @@ class HTML_QuickForm2_JavascriptBuilder
      */
     protected function wrapScript($js)
     {
-        if ('' != $js) {
+        if (false && '' != $js) {
             $js = "<script type=\"text/javascript\">\n//<![CDATA[\n"
                   . $js . "\n//]]>\n</script>";
         }
