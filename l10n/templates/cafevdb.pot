@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-07-26 19:09+0200\n"
+"POT-Creation-Date: 2014-08-07 09:14+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -776,23 +776,23 @@ msgstr ""
 msgid "Unknown location"
 msgstr ""
 
-#: js/config.php:27
+#: js/config.php:27 lib/config.php:114
 msgid "Select a filter option."
 msgstr ""
 
-#: js/config.php:28 js/config.php:33
+#: js/config.php:28 js/config.php:33 lib/config.php:115 lib/config.php:120
 msgid "No values match."
 msgstr ""
 
-#: js/config.php:30
+#: js/config.php:30 lib/config.php:117
 msgid "Select from the pull-down menu. Double-click will submit the form."
 msgstr ""
 
-#: js/config.php:32
+#: js/config.php:32 lib/config.php:119
 msgid "Select an option."
 msgstr ""
 
-#: js/config.php:35
+#: js/config.php:35 lib/config.php:122
 msgid "Select from the pull-down menu."
 msgstr ""
 
@@ -917,7 +917,7 @@ msgstr ""
 msgid "#rows"
 msgstr ""
 
-#: lib/config.php:482
+#: lib/config.php:527
 msgid "birthday"
 msgstr ""
 
@@ -1437,32 +1437,51 @@ msgstr ""
 msgid "Really Change %s's instrument!!!"
 msgstr ""
 
-#: lib/instruments.php:332
+#: lib/instruments.php:324
+msgid "Needed Instruments"
+msgstr ""
+
+#: lib/instruments.php:329
+#, php-format
+msgid "Instrument does not yet exist, cannot change its name: `%s'"
+msgstr ""
+
+#: lib/instruments.php:347 lib/instruments.php:377 lib/instruments.php:387
+#, php-format
+msgid "SQL-Error ``%s''. Could not execute the query ``%s''"
+msgstr ""
+
+#: lib/instruments.php:364
+#, php-format
+msgid "SQL-Error ``%s''. Could not execute the query `` %s ''"
+msgstr ""
+
+#: lib/instruments.php:425
 #, php-format
 msgid "Could not fetch instruments for project-id %s"
 msgstr ""
 
-#: lib/instruments.php:428
+#: lib/instruments.php:521
 msgid "Streich,Saiten"
 msgstr ""
 
-#: lib/instruments.php:429
+#: lib/instruments.php:522
 msgid "Streich,Zupf"
 msgstr ""
 
-#: lib/instruments.php:430
+#: lib/instruments.php:523
 msgid "Blas,Holz"
 msgstr ""
 
-#: lib/instruments.php:431
+#: lib/instruments.php:524
 msgid "Blas,Blech"
 msgstr ""
 
-#: lib/instruments.php:432
+#: lib/instruments.php:525
 msgid "Schlag"
 msgstr ""
 
-#: lib/instruments.php:433
+#: lib/instruments.php:526
 msgid "Sonstiges"
 msgstr ""
 
@@ -2170,7 +2189,7 @@ msgstr ""
 msgid "New Key"
 msgstr ""
 
-#: templates/app-settings.php:20 templates/app-settings.php:49
+#: templates/app-settings.php:20 templates/app-settings.php:50
 #: templates/email-settings.php:49 templates/settings.php:56
 #: templates/share-settings.php:23
 msgid "show"
@@ -2180,66 +2199,66 @@ msgstr ""
 msgid "Change Encryption Key"
 msgstr ""
 
-#: templates/app-settings.php:22
+#: templates/app-settings.php:23
 msgid "The encryption key was changed"
 msgstr ""
 
-#: templates/app-settings.php:23
+#: templates/app-settings.php:24
 msgid "Unable to change the encryption key"
 msgstr ""
 
-#: templates/app-settings.php:24
+#: templates/app-settings.php:25
 msgid "Data will be stored unencrypted"
 msgstr ""
 
-#: templates/app-settings.php:25
+#: templates/app-settings.php:26
 msgid "The keys are the same and remain unchanged."
 msgstr ""
 
-#: templates/app-settings.php:29
+#: templates/app-settings.php:30
 msgid "Distribute Encryption Key"
 msgstr ""
 
-#: templates/app-settings.php:29
+#: templates/app-settings.php:30
 msgid ""
 "Insert the data-base encryption key into the user preferences of all users "
 "belonging to the user group. The data-base key will be encrypted by the "
 "respective user's public key."
 msgstr ""
 
-#: templates/app-settings.php:35
+#: templates/app-settings.php:36
 msgid "Database settings"
 msgstr ""
 
-#: templates/app-settings.php:36
+#: templates/app-settings.php:37
 msgid "Server"
 msgstr ""
 
-#: templates/app-settings.php:37
+#: templates/app-settings.php:38
 msgid "Database Server"
 msgstr ""
 
-#: templates/app-settings.php:39
+#: templates/app-settings.php:40
 msgid "Database"
 msgstr ""
 
-#: templates/app-settings.php:40
+#: templates/app-settings.php:41
 msgid "Database Name"
 msgstr ""
 
-#: templates/app-settings.php:42
+#: templates/app-settings.php:43
 msgid "User"
 msgstr ""
 
-#: templates/app-settings.php:43
+#: templates/app-settings.php:44
 msgid "Database User"
 msgstr ""
 
-#: templates/app-settings.php:48 templates/email-settings.php:48
+#: templates/app-settings.php:49 templates/email-settings.php:48
 msgid "New Password"
 msgstr ""
 
-#: templates/app-settings.php:50
+#: templates/app-settings.php:51
 msgid "Test Database Password"
 msgstr ""
 
@@ -2542,7 +2561,7 @@ msgstr ""
 msgid "Cancel upload"
 msgstr ""
 
-#: templates/errorpage.php:29
+#: templates/errorpage.php:32
 #, php-format
 msgid ""
 "CamerataDB Error: You are not a member of the dedicated orchestra\n"
@@ -2557,15 +2576,27 @@ msgid ""
 "administrator."
 msgstr ""
 
-#: templates/errorpage.php:54
+#: templates/errorpage.php:48
+#, php-format
+msgid "CamerataDB Error: got the error message `%s'!"
+msgstr ""
+
+#: templates/errorpage.php:50
+#, php-format
+msgid ""
+"Please save the output and send it to the system administrator: `%s'. Many "
+"thanks for that!"
+msgstr ""
+
+#: templates/errorpage.php:61
 msgid "CamerataDB Error: We need the calendar app to be enabled."
 msgstr ""
 
-#: templates/errorpage.php:57
+#: templates/errorpage.php:64
 msgid "CamerataDB Error: We need the contacts app to be enabled."
 msgstr ""
 
-#: templates/errorpage.php:60
+#: templates/errorpage.php:67
 msgid "Something is wrong, but what?"
 msgstr ""
 

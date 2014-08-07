@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-07-26 19:07+0200\n"
-"PO-Revision-Date: 2014-07-26 19:09+0200\n"
+"POT-Creation-Date: 2014-08-07 09:13+0200\n"
+"PO-Revision-Date: 2014-08-07 09:13+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -808,24 +808,24 @@ msgstr "Kein Ort angegeben."
 msgid "Unknown location"
 msgstr "Unbekannter Ort."
 
-#: js/config.php:27
+#: js/config.php:27 lib/config.php:114
 msgid "Select a filter option."
 msgstr "Wähle einen Filter."
 
-#: js/config.php:28 js/config.php:33
+#: js/config.php:28 js/config.php:33 lib/config.php:115 lib/config.php:120
 msgid "No values match."
 msgstr "Kein Wert passt."
 
-#: js/config.php:30
+#: js/config.php:30 lib/config.php:117
 msgid "Select from the pull-down menu. Double-click will submit the form."
 msgstr ""
 "Wähle aus den vorhandenen Werten aus. Ein Doppel-Klick ativiert die Auswahl."
 
-#: js/config.php:32
+#: js/config.php:32 lib/config.php:119
 msgid "Select an option."
 msgstr "Wähle eine Option."
 
-#: js/config.php:35
+#: js/config.php:35 lib/config.php:122
 msgid "Select from the pull-down menu."
 msgstr "Wähle eine Option aus dem Pull-Down Menü."
 
@@ -961,7 +961,7 @@ msgstr "#Spalten"
 msgid "#rows"
 msgstr "#Zeilen"
 
-#: lib/config.php:482
+#: lib/config.php:527
 msgid "birthday"
 msgstr "Geburtstag"
 
@@ -1535,32 +1535,56 @@ msgstr ""
 msgid "Really Change %s's instrument!!!"
 msgstr "Das Instrument von %s wirklich ändern!!!"
 
-#: lib/instruments.php:332
+#: lib/instruments.php:324
+msgid "Needed Instruments"
+msgstr "Benötigte Instrumente"
+
+#: lib/instruments.php:329
+#, php-format
+msgid "Instrument does not yet exist, cannot change its name: `%s'"
+msgstr ""
+"Das Instrument `%s' gibt es aber leider gar, wie soll ich das dann umbenenen?"
+
+#: lib/instruments.php:347 lib/instruments.php:377 lib/instruments.php:387
+#, php-format
+msgid "SQL-Error ``%s''. Could not execute the query ``%s''"
+msgstr ""
+"SQL-Fehler ``%s''. Die folgende Abfrage konnte nicht ausgeführt werden: ``"
+"%s''"
+
+#: lib/instruments.php:364
+#, php-format
+msgid "SQL-Error ``%s''. Could not execute the query `` %s ''"
+msgstr ""
+"SQL-Fehler ``%s''. Die folgende Abfrage konnte nicht ausgeführt werden: ``"
+"%s''"
+
+#: lib/instruments.php:425
 #, php-format
 msgid "Could not fetch instruments for project-id %s"
 msgstr "Konnte die Instrumente des Musikers mit der Id %s nicht ermitteln."
 
-#: lib/instruments.php:428
+#: lib/instruments.php:521
 msgid "Streich,Saiten"
 msgstr "Streicher"
 
-#: lib/instruments.php:429
+#: lib/instruments.php:522
 msgid "Streich,Zupf"
 msgstr "Zupfinstrumente"
 
-#: lib/instruments.php:430
+#: lib/instruments.php:523
 msgid "Blas,Holz"
 msgstr "Holzbläser"
 
-#: lib/instruments.php:431
+#: lib/instruments.php:524
 msgid "Blas,Blech"
 msgstr "Bechbläser"
 
-#: lib/instruments.php:432
+#: lib/instruments.php:525
 msgid "Schlag"
 msgstr "Schlagwerk"
 
-#: lib/instruments.php:433
+#: lib/instruments.php:526
 msgid "Sonstiges"
 msgstr "Sonstiges"
 
@@ -2491,7 +2515,7 @@ msgstr "Aktueller Schlüssel"
 msgid "New Key"
 msgstr "Neuer Schlüssel"
 
-#: templates/app-settings.php:20 templates/app-settings.php:49
+#: templates/app-settings.php:20 templates/app-settings.php:50
 #: templates/email-settings.php:49 templates/settings.php:56
 #: templates/share-settings.php:23
 msgid "show"
@@ -2501,27 +2525,27 @@ msgstr "zeigen"
 msgid "Change Encryption Key"
 msgstr "Schlüssel ändern"
 
-#: templates/app-settings.php:22
+#: templates/app-settings.php:23
 msgid "The encryption key was changed"
 msgstr "Der Schlüssel wurde gespeichert."
 
-#: templates/app-settings.php:23
+#: templates/app-settings.php:24
 msgid "Unable to change the encryption key"
 msgstr "Kann den Schlüssel nicht ändern"
 
-#: templates/app-settings.php:24
+#: templates/app-settings.php:25
 msgid "Data will be stored unencrypted"
 msgstr "Die Daten werden unverschlüsselt gespeichert."
 
-#: templates/app-settings.php:25
+#: templates/app-settings.php:26
 msgid "The keys are the same and remain unchanged."
 msgstr "Die Schlüssel stimmen überein und werden daher nicht geändert."
 
-#: templates/app-settings.php:29
+#: templates/app-settings.php:30
 msgid "Distribute Encryption Key"
 msgstr "Schlüssel publizieren"
 
-#: templates/app-settings.php:29
+#: templates/app-settings.php:30
 msgid ""
 "Insert the data-base encryption key into the user preferences of all users "
 "belonging to the user group. The data-base key will be encrypted by the "
@@ -2531,39 +2555,39 @@ msgstr ""
 "Mitglieder der Orchester-Gruppe ein. Der Schlüssel wird dabei wiederum mit "
 "den perönlichen öffentlichen SSL-Schlüsseln der Benutzer verschlüsselt."
 
-#: templates/app-settings.php:35
+#: templates/app-settings.php:36
 msgid "Database settings"
 msgstr "Datenbank Einstellungen"
 
-#: templates/app-settings.php:36
+#: templates/app-settings.php:37
 msgid "Server"
 msgstr "Server"
 
-#: templates/app-settings.php:37
+#: templates/app-settings.php:38
 msgid "Database Server"
 msgstr "Datenbank-Server"
 
-#: templates/app-settings.php:39
+#: templates/app-settings.php:40
 msgid "Database"
 msgstr "Datenbank-Name"
 
-#: templates/app-settings.php:40
+#: templates/app-settings.php:41
 msgid "Database Name"
 msgstr "Datenbank-Name"
 
-#: templates/app-settings.php:42
+#: templates/app-settings.php:43
 msgid "User"
 msgstr "Benutzer"
 
-#: templates/app-settings.php:43
+#: templates/app-settings.php:44
 msgid "Database User"
 msgstr "Datenbank-Benutzer"
 
-#: templates/app-settings.php:48 templates/email-settings.php:48
+#: templates/app-settings.php:49 templates/email-settings.php:48
 msgid "New Password"
 msgstr "Neues Passwort"
 
-#: templates/app-settings.php:50
+#: templates/app-settings.php:51
 msgid "Test Database Password"
 msgstr "Datenbank-Passwort testen"
 
@@ -2586,7 +2610,8 @@ msgstr "Neue Notiz"
 
 #: templates/blog.php:78
 msgid "Avatar pictures can be uploaded through the personal settings page."
-msgstr "Avatar-Bilder können bei den ``persönlichen Einstellungen'' angegeben werden."
+msgstr ""
+"Avatar-Bilder können bei den ``persönlichen Einstellungen'' angegeben werden."
 
 #: templates/blog.php:87
 #, php-format
@@ -2908,7 +2933,7 @@ msgstr "Test-Adresse"
 msgid "Cancel upload"
 msgstr "Hochladen abbrechen"
 
-#: templates/errorpage.php:29
+#: templates/errorpage.php:32
 #, php-format
 msgid ""
 "CamerataDB Error: You are not a member of the dedicated orchestra\n"
@@ -2933,19 +2958,33 @@ msgstr ""
 "Gruppenadministratoren anmelden und die Konfiguration der `Camerata\n"
 "DB'-Anwendung abschließen."
 
-#: templates/errorpage.php:54
+#: templates/errorpage.php:48
+#, php-format
+msgid "CamerataDB Error: got the error message `%s'!"
+msgstr "CamerataDB Fehler: Fehlermeldung war `%s'!"
+
+#: templates/errorpage.php:50
+#, php-format
+msgid ""
+"Please save the output and send it to the system administrator: `%s'. Many "
+"thanks for that!"
+msgstr ""
+"Bitte kopieren Sie diese Seite und senden die an `%s'. Einen ernstgemeinten "
+"herzlichen Dank!"
+
+#: templates/errorpage.php:61
 msgid "CamerataDB Error: We need the calendar app to be enabled."
 msgstr ""
 "CamerataDB Error: Die Kalender-App muss eingeschaltet sein. Bitte wenden Sie "
 "sich an einen Administrator."
 
-#: templates/errorpage.php:57
+#: templates/errorpage.php:64
 msgid "CamerataDB Error: We need the contacts app to be enabled."
 msgstr ""
 "CamerataDB Error: Die Kontakte-App muss eingeschaltet sein. Bitte wenden Sie "
 "sich an einen Administrator."
 
-#: templates/errorpage.php:60
+#: templates/errorpage.php:67
 msgid "Something is wrong, but what?"
 msgstr "Etwas ist schiefgelaufen, aber was?!"
 
