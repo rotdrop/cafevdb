@@ -21,7 +21,10 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use CAFEVDB\Config;
 use CAFEVDB\L;
+
+Config::init();
 
 echo '<div class="cafevdb cfgerror error">';
 switch ($_['error']) {
@@ -42,8 +45,12 @@ case 'exception':
   $message = $_['exception'];
   $trace   = $_['trace'];
   $debug   = $_['debug'];
-  echo L::T('CamerataDB Error: got the error message `%s\'',
-            array($message));
+  echo L::t("CamerataDB Error: got the error message `%s'!", array($message));
+  echo '<br/>';
+  echo L::t("Please save the output and send it to the system administrator: `%s'. Many thanks for that!",
+            array($_['admin']));
+  echo '<br/>';
+  echo '<br/>';
   if ($debug) {
     echo '<div class="error stacktrace">
   '.$trace.'

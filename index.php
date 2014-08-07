@@ -236,11 +236,17 @@ try {
   $tmpl->printPage();
 
 } catch (Exception $e) {
+  ob_end_clean();
   $tmpl = new OCP\Template( 'cafevdb', 'errorpage', 'user' );
   $tmpl->assign('error', 'exception');
   $tmpl->assign('exception', $e->getMessage());
   $tmpl->assign('trace', $e->getTraceAsString());
   $tmpl->assign('debug', true);
+  $admin =
+    \OCP\User::getDisplayName('admin').
+    ' <'.\OCP\Config::getUserValue('admin', 'settings', 'email').'>';
+  $tmpl->assign('admin', htmlentities($admin));
+
   return $tmpl->printPage();
 }
 
