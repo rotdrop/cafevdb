@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-07 09:13+0200\n"
-"PO-Revision-Date: 2014-08-07 09:13+0200\n"
+"POT-Creation-Date: 2014-08-18 11:37+0200\n"
+"PO-Revision-Date: 2014-08-18 11:41+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -961,6 +961,57 @@ msgstr "#Spalten"
 msgid "#rows"
 msgstr "#Zeilen"
 
+#: lib/blah.php:138 lib/instrumentation.php:138
+msgid "Section Leader"
+msgstr "Stimmführer"
+
+#: lib/blah.php:174 lib/instrumentation.php:174
+msgid "regular"
+msgstr "Mitspieler"
+
+#: lib/blah.php:175 lib/instrumentation.php:175
+msgid "passive"
+msgstr "passiv"
+
+#: lib/blah.php:176 lib/instrumentation.php:176
+msgid "soloist"
+msgstr "Solist"
+
+#: lib/blah.php:177 lib/instrumentation.php:177
+msgid "conductor"
+msgstr "Dirigent"
+
+#: lib/blah.php:178 lib/instrumentation.php:178
+msgid "temporary"
+msgstr "Aushilfe"
+
+#: lib/blah.php:317 lib/instrumentation.php:324
+#, php-format
+msgid "Instrument not known by %s, correct that first! %s only plays %s!!!"
+msgstr ""
+"%s spielt das Instrument eventuell nicht, %s spielt nur %s, soweit wir "
+"wissen!!!"
+
+#: lib/blah.php:319 lib/instrumentation.php:326
+msgid "Click on the following button to enforce your decision"
+msgstr "Änderung erzwingen"
+
+#: lib/blah.php:320 lib/instrumentation.php:327
+#, php-format
+msgid ""
+"This will also add `%s' to %s's list of known instruments. Unfortunately, "
+"all your other changes might be discarded. You may want to try the `Back'-"
+"Button of your browser."
+msgstr ""
+"Dadurch wird auch `%s' zur Instrumentenliste für %s hinzugefügt. Leider "
+"gehen alle anderen Änderungen verloren. Möglicherweise ist der `Zurück'-"
+"Knopf des Web-Browsers eine praktischere Option."
+
+#: lib/blah.php:324 lib/instrumentation.php:331
+#, php-format
+msgid "Really Change %s's instrument!!!"
+msgstr "Das Instrument von %s wirklich ändern!!!"
+
 #: lib/config.php:527
 msgid "birthday"
 msgstr "Geburtstag"
@@ -1484,56 +1535,10 @@ msgstr "Gesamtversicherungssumme"
 msgid "Invalid broker/geographical-scope combination: %s - %s"
 msgstr "Der Makler %s bietet keine Versicherung für den Geltungsberich %s an"
 
-#: lib/instrumentation.php:138
-msgid "Section Leader"
-msgstr "Stimmführer"
-
-#: lib/instrumentation.php:174
-msgid "regular"
-msgstr "Mitspieler"
-
-#: lib/instrumentation.php:175
-msgid "passive"
-msgstr "passiv"
-
-#: lib/instrumentation.php:176
-msgid "soloist"
-msgstr "Solist"
-
-#: lib/instrumentation.php:177
-msgid "conductor"
-msgstr "Dirigent"
-
-#: lib/instrumentation.php:178
-msgid "temporary"
-msgstr "Aushilfe"
-
-#: lib/instrumentation.php:317
+#: lib/instrumentation.php:315
 #, php-format
-msgid "Instrument not known by %s, correct that first! %s only plays %s!!!"
-msgstr ""
-"%s spielt das Instrument eventuell nicht, %s spielt nur %s, soweit wir "
-"wissen!!!"
-
-#: lib/instrumentation.php:319
-msgid "Click on the following button to enforce your decision"
-msgstr "Änderung erzwingen"
-
-#: lib/instrumentation.php:320
-#, php-format
-msgid ""
-"This will also add `%s' to %s's list of known instruments. Unfortunately, "
-"all your other changes might be discarded. You may want to try the `Back'-"
-"Button of your browser."
-msgstr ""
-"Dadurch wird auch `%s' zur Instrumentenliste für %s hinzugefügt. Leider "
-"gehen alle anderen Änderungen verloren. Möglicherweise ist der `Zurück'-"
-"Knopf des Web-Browsers eine praktischere Option."
-
-#: lib/instrumentation.php:324
-#, php-format
-msgid "Really Change %s's instrument!!!"
-msgstr "Das Instrument von %s wirklich ändern!!!"
+msgid "Data inconsistency: Ids do not match (`%s' != `%s')"
+msgstr "Inkonsistente Daten: Ids passen nicht (`%s' != `%s')"
 
 #: lib/instruments.php:324
 msgid "Needed Instruments"
@@ -1643,7 +1648,7 @@ msgstr ""
 "Interner Fehler; keine Ahnung, wie im gegebenen Kontext mit\n"
 "Portrait-Bildern verfahren werden sollte."
 
-#: lib/musicians.php:934 lib/musicians.php:1357
+#: lib/musicians.php:951 lib/musicians.php:1374
 #, php-format
 msgid ""
 "None of the instruments known by %s are mentioned in the %sinstrumentation-"
@@ -1658,7 +1663,7 @@ msgstr ""
 "Der Fehler sollte durch Ändern der Instrumentierung oder der Musikerdaten "
 "behoben werden."
 
-#: lib/musicians.php:945
+#: lib/musicians.php:962
 #, php-format
 msgid ""
 "Choosing the first instrument known by %s\n"
@@ -1671,7 +1676,7 @@ msgstr ""
 "Bitte nötigenfalls korrigieren, in dem ein anderes ``Projekt-Instrument''\n"
 "in der Tabelle unten ausgewählt wird. Wähle ``%s'' als Projekt-instrument."
 
-#: lib/musicians.php:1382
+#: lib/musicians.php:1399
 #, php-format
 msgid ""
 "Generally, the first instrument known by the respective musician\n"
@@ -2593,53 +2598,56 @@ msgstr "Datenbank-Passwort testen"
 
 #: templates/blog.php:19
 msgid ""
-"Camerata DB meets web 2.0 - the data-base operations can be accessed\n"
+"Camerata DB start page - the data-base operations can be accessed\n"
 "through the respective navigation buttons at the top of the page. The\n"
-"page below may be used as a bulletin-board. Configuration options are\n"
-"accessible through the gear- and pencil-shaped buttons in the\n"
-"bottom-left and top-right edge of the screen"
+"page below may be used as a bulletin-board. Please click on the\n"
+"login-name (top right) to reach the pull-down menu for logout and\n"
+"configuration options. The applications menu is hidden under the name\n"
+"of the current application (top left besides the cloud-icon)."
 msgstr ""
-"Camerata DB Startseite - die eigentlichen Datenbanken-Operationen erreicht "
-"man über die Navigatíonsleiste oben. Die aktuelle Seite kann man als eine "
-"Art Pinnwand benutzen. Einstellungen lassen sich über die zahnrad- und "
-"stiftförmigen Knöpfe links-unten und rechts-oben vornehmen."
+"Camerata DB Startseite - die eigentlichen Datenbanken-Operationen\n"
+"erreicht man über die Navigatíonsleiste oben. Die aktuelle Seite kann\n"
+"man als eine Art Pinnwand benutzen. Klick auf den Login-Namen öffnet\n"
+"ein Menü mit Abmelde- und Konfigurations-Funktionen (rechts\n"
+"oben). Anwendungen verbergen sich unter dem Namen der aktuellen\n"
+"Anwendung neben der \"Wolke\" (links oben)."
 
-#: templates/blog.php:43
+#: templates/blog.php:44
 msgid "New note"
 msgstr "Neue Notiz"
 
-#: templates/blog.php:78
+#: templates/blog.php:79
 msgid "Avatar pictures can be uploaded through the personal settings page."
 msgstr ""
 "Avatar-Bilder können bei den ``persönlichen Einstellungen'' angegeben werden."
 
-#: templates/blog.php:87
+#: templates/blog.php:88
 #, php-format
 msgid ", priority %d"
 msgstr ", Priorität %d"
 
-#: templates/blog.php:93
+#: templates/blog.php:94
 #, php-format
 msgid ", latest change by `%s', %s"
 msgstr ", zuletzt geändert von `%s', %s"
 
-#: templates/blog.php:101
+#: templates/blog.php:102
 msgid "Reply"
 msgstr "Anworten"
 
-#: templates/blog.php:104
+#: templates/blog.php:105
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: templates/blog.php:109
+#: templates/blog.php:110
 msgid "Raise priority"
 msgstr "Darstellungspriorität erhöhen"
 
-#: templates/blog.php:112
+#: templates/blog.php:113
 msgid "Lower priority"
 msgstr "Darstellungspriorität vermindern."
 
-#: templates/blog.php:116
+#: templates/blog.php:117
 msgid "Delete"
 msgstr "Löschen"
 

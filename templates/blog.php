@@ -16,11 +16,12 @@ $nav .= Navigation::button('instruments');
 
 $header = ''
   .'<div class="'.$css_pfx.'-blog" id="'.$css_pfx.'-blog-header">
-'.L::t('Camerata DB meets web 2.0 - the data-base operations can be accessed
+'.L::t('Camerata DB start page - the data-base operations can be accessed
 through the respective navigation buttons at the top of the page. The
-page below may be used as a bulletin-board. Configuration options are
-accessible through the gear- and pencil-shaped buttons in the
-bottom-left and top-right edge of the screen')
+page below may be used as a bulletin-board. Please click on the
+login-name (top right) to reach the pull-down menu for logout and
+configuration options. The applications menu is hidden under the name
+of the current application (top left besides the cloud-icon).')
   .'</div>
 ';
 
