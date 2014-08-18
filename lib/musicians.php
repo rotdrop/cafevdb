@@ -848,6 +848,7 @@ __EOT__;
                                         'filters' => "Id = $musicianId"
                                         )
                                       );
+    if (false) {
     $opts['fdd']['Instrument'] = array(
                                        'name'     => 'Projekt-Instrument',
                                        'select'   => 'T',
@@ -856,11 +857,24 @@ __EOT__;
                                        'values'      => $this->instruments,
                                        'valueGroups' => $this->groupedInstruments,
                                        );
+    }
+    $opts['fdd']['Instrument'] = array('name'     => 'Instrument',
+                                       'select'   => 'T',
+                                       'maxlen'   => 12,
+                                       'css'      => array('postfix' => 'instruments'),
+                                       'values'   => array('table'   => 'Instrumente',
+                                                           'column'  => 'Instrument',
+                                                           'orderby' => '$table.Sortierung',
+                                                           'description' => array('columns' => array('Instrument'))),
+                                       'valueGroups' => $this->groupedInstruments,
+                                       'sort'     => false
+                                       );
     $opts['fdd']['Reihung'] = array('name' => 'Stimme',
                                     'select' => 'T',
                                     'maxlen' => '3',
                                     'sort' => false);
     $opts['fdd']['Stimmführer'] = $this->sectionLeaderColumn;
+    $opts['fdd']['Stimmführer']['sort'] = false;
     $opts['fdd']['Bemerkungen'] = array('name'     => 'Bemerkungen',
                                         'select'   => 'T',
                                         'maxlen'   => 65535,
@@ -869,6 +883,9 @@ __EOT__;
                                                             'cols' => 50),
                                         'escape' => false,
                                         'sort'     => false);
+    $opts['fdd']['Unkostenbeitrag'] = Config::$opts['money'];
+    $opts['fdd']['Unkostenbeitrag']['name'] = "Unkostenbeitrag\n(Gagen negativ)";
+    $opts['fdd']['Unkostenbeitrag']['sort'] = false;
 
     // Generate input fields for the extra columns
     foreach ($userExtraFields as $field) {
@@ -890,7 +907,7 @@ __EOT__;
     }
     // Check whether the instrument is also mentioned in the musicians
     // data-base. Otherwise add id on request.
-    $opts['triggers']['update']['before']  = Config::$triggers.'instrumentation-change-instrument.TUB.inc.php';
+    $opts['triggers']['update']['before']  = 'CAFEVDB\Instrumentation::beforeUpdateInstrumentTrigger';
 
     echo "<div class=\"cafevdb-table-notes\">\n"; // notes
 

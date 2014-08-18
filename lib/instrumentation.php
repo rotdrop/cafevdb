@@ -289,9 +289,6 @@ class Instrumentation
         // otherwise it must be this->rec
         $musicianId = $pme->rec;
       }
-    } else if ($musicianId != $newvals['MusikerId']) {
-      echo "Data inconsistency: Ids do not match (" . $newvals['MusikerId'] . " != $musicianId)";
-      return false;
     }
     
     // Fetch the list of instruments from the Musiker data-base
@@ -308,8 +305,18 @@ class Instrumentation
 
     $musrow = $pme->sql_fetch($musres);
     //$instruments = explode(',',$musrow['Instrumente']);
-
     $musname = $musrow['Vorname'] . " " . $musrow['Name'];
+
+    // Consistency check; $newvals['MusikerId'] may either be a
+    // numeric id or just the name of the musician.
+    if ((is_numeric($newvals['MusikerId']) && $musicianId != $newvals['MusikerId'])
+        ||
+        (!is_numeric($newvals['MusikerId']) && $musname !=  $newvals['MusikerId'])) {
+      echo L::t("Data inconsistency: Ids do not match (`%s' != `%s')",
+                array($newvals['MusikerId'], $musicianId));
+      return false;
+    }
+
     $instruments = $musrow['Instrumente'];
     $instrument  = $newvals['Instrument'];
     
