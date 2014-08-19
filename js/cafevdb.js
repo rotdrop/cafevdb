@@ -504,7 +504,7 @@ $(document).ready(function(){
   });
 
   $('#missing-musicians-block').dialog({
-    dialogClass: 'no-close',
+    //dialogClass: 'no-close',
     width:'auto',
     height:'auto',
     resizable: false,
