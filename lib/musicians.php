@@ -21,27 +21,17 @@ class Musicians
   public function headerText()
   {
     if (!$this->projectMode) {
-
-      $header =<<<__EOT__
-    <h2>&Uuml;berblick &uuml;ber alle Musiker</h2>
-
-__EOT__;
-
+      $header = L::t('Overview over all registered musicians');
     } else {
-      $header =<<<__EOT__
-<h3>Besetzung &auml;ndern f&uuml;r Projekt $this->project</h3>
-<h4>F&uuml;r die aktuelle Teilnehmerliste bitte die Buttons oben benutzen.
-<P>
-Der Weg in ein Projekt f&uuml;hrt nur &uuml;ber
-<EM style="color:#ff0000"><B>diese</B></EM> Tabelle,
-die Musiker werden dann automatisch in unseren
-Fundus mit aufgenommen.
-</h4>
-
-__EOT__;
+      $header = L::t("Add musicians to the project `%s'
+<p>
+This page is the only way to add musicians to projects in order to
+make sure that the musicians are also automatically added to the
+`global' musicians data-base (and not only to the project).",
+                     array($this->project));
     }
 
-    return $header;
+    return '<div class="'.self::CSS_PREFIX.'-header-text">'.$header.'</div>';
   }
 
   /**Display the list of all musicians. If $projectMode == true,

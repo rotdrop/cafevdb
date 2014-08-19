@@ -32,14 +32,15 @@ class ProjectInstruments
 
   public function headerText()
   {
-    $header =<<<__EOT__
-    <h3>Besetzungszahlen $this->project</h3>
-    <H4>Die "Soll"-Besetzungzahl kann hier eingetragen werden, die
-"Haben"-Besetzungszahl ist die Anzahl der bereits registrierten Musiker.</H4>
+    if ($this->project) {
+      $header = L::t("Instrumentation Numbers for `%s'",
+                     array($this->project));
+    } else {
+      $header = L::t("Instrumentation Numbers");
+    }
+    $header .= "<p>".L::t("The target instrumentation numbers can be filled into this table. The `have'-numbers are the numbers of the musicians already registered for the project.");
 
-__EOT__;
-
-    return $header;
+    return '<div class="'.self::CSS_PREFIX.'-header-text">'.$header.'</div>';
   }
 
   public function transferInstruments()
@@ -317,7 +318,7 @@ HREF=%s>Projekteigenschaften</A> die Instrumente eintragen, oder im
     $cnt = 0;
     foreach ($projectInstruments as $value) {
       $opts['fdd']["$value"] = array(
-        'name' => $value.' (soll)',
+        'name' => $value.' ('.L::t("target").')',
         'select' => 'T',
         'maxlen' => 4,
         'options' => 'LAVCPD',
@@ -325,7 +326,7 @@ HREF=%s>Projekteigenschaften</A> die Instrumente eintragen, oder im
         'css' => array('postfix' => 'want-'.($cnt % 2))
         );
       $opts['fdd']["$value"."Haben"] = array(
-        'name' => $value.' (haben)',
+        'name' => $value.' ('.L::t("have").')',
         'select' => 'T',
         'options' => 'LAVCPDR',
         'input' => 'V',

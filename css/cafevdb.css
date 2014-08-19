@@ -267,6 +267,11 @@ div.cafevdb-page-header.expanded {
   /*width:80%;*/
 }
 
+div.cafevdb-page-header-text {
+  max-width: 50em;
+  font-weight: bold;
+}
+
 div.cafevdb-page-body,
 div.cafevdb-page-body.expanded {
   position:relative;

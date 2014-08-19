@@ -19,13 +19,9 @@ class Instruments
 
   public function headerText()
   {
-    $header =<<<__EOT__
-    <h3>Instrumente hinzufügen</h3>
-    <h4>Löschen ist nicht vorgesehen, dafür bitte phpMyAdmin verwenden.
-Auch den Instrumentennamen sollte man nicht ändern</H4>
+    $header = L::t("Add new Instruments");
 
-__EOT__;
-    return $header;
+    return '<div class="'.self::CSS_PREFIX.'-header-text">'.$header.'</div>';
   }
 
   // called form Instrumentation::display()

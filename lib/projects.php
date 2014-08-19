@@ -83,13 +83,11 @@ class Projects
 
   public function headerText()
   {
-    $header =<<<__EOT__
-Camerata Projekte<br/>
-Bitte auf das Projekt-K&uuml;rzel
-klicken, um die Besetzungliste zu editieren. F&uuml;r allgemeine
-Eigenschaften bitte die "add", "change" etc. Buttons unten anklicken.
-__EOT__;
-    return $header;
+    $header  = L::t("%s Projects", array(ucfirst(Config::getValue('orchestra'))));
+    $header .= '<p>';
+    $header .= L::t("Please click on the project-name of the respective project in order to edit the instrumentation list or dates or to store other project related data.");
+
+    return '<div class="'.self::CSS_PREFIX.'-header-text">'.$header.'</div>';
   }
 
   public function display()

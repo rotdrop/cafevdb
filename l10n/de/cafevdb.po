@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-18 11:37+0200\n"
-"PO-Revision-Date: 2014-08-18 11:41+0200\n"
+"POT-Creation-Date: 2014-08-19 17:42+0200\n"
+"PO-Revision-Date: 2014-08-19 17:45+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -193,16 +193,16 @@ msgstr "%s-uebersicht"
 msgid "%s-detailed"
 msgstr "%s-detailliert"
 
-#: ajax/export/excel.php:255 lib/projects.php:980 lib/projects.php:981
+#: ajax/export/excel.php:255 lib/projects.php:978 lib/projects.php:979
 msgid "Missing Musicians"
 msgstr "Fehlende Musiker"
 
 #: ajax/export/excel.php:280 ajax/export/insurance-export.php:142
-#: lib/projects.php:983
+#: lib/projects.php:981
 msgid "Instrument"
 msgstr "Instrument"
 
-#: ajax/export/excel.php:281 lib/projects.php:983
+#: ajax/export/excel.php:281 lib/projects.php:981
 msgid "Missing"
 msgstr "Defizit"
 
@@ -719,7 +719,7 @@ msgstr "Die Kopf-Zeilen-Sichtbarkeit wurde geändert."
 msgid "tooltips changed"
 msgstr "Tool-Tip Einstellung geändert"
 
-#: index.php:182 lib/musicians.php:155
+#: index.php:182 lib/musicians.php:145
 #, php-format
 msgid "Add all to %s"
 msgstr "Alle zu %s"
@@ -1016,7 +1016,7 @@ msgstr "Das Instrument von %s wirklich ändern!!!"
 msgid "birthday"
 msgstr "Geburtstag"
 
-#: lib/detailed-instrumentation.php:294 lib/musicians.php:259
+#: lib/detailed-instrumentation.php:294 lib/musicians.php:249
 msgid "Member Status"
 msgstr "Status"
 
@@ -1024,11 +1024,11 @@ msgstr "Status"
 msgid "General Remarks"
 msgstr "Allgemeine Bemerkungen"
 
-#: lib/detailed-instrumentation.php:393 lib/musicians.php:375
+#: lib/detailed-instrumentation.php:393 lib/musicians.php:365
 msgid "Photo"
 msgstr "Foto"
 
-#: lib/detailed-instrumentation.php:406 lib/musicians.php:388
+#: lib/detailed-instrumentation.php:406 lib/musicians.php:378
 msgid "Last Updated"
 msgstr "Letzte Aktualisierung"
 
@@ -1092,7 +1092,7 @@ msgstr "Anzahl: "
 msgid "and"
 msgstr "und"
 
-#: lib/email.php:1375 lib/projects.php:639 lib/projects.php:786
+#: lib/email.php:1375 lib/projects.php:637 lib/projects.php:784
 msgid "Events"
 msgstr "Termine"
 
@@ -1407,7 +1407,7 @@ msgstr ""
 msgid "The currently active project."
 msgstr "Das gerade ausgewählte Projekt."
 
-#: lib/functions.php:759 lib/projects.php:645
+#: lib/functions.php:759 lib/projects.php:643
 msgid "Detailed Instrumentation"
 msgstr "Detaillierte Besetzung"
 
@@ -1421,7 +1421,7 @@ msgstr ""
 "Daten wie Email, Adresse usw. können hier geändert werden. Projektbezogene "
 "Daten können allerdings nur in der Ansicht `Kurz-Besetzung' geändert werden."
 
-#: lib/functions.php:774 lib/projects.php:642
+#: lib/functions.php:774 lib/projects.php:640
 msgid "Brief Instrumentation"
 msgstr "Kurz-Besetzung"
 
@@ -1448,7 +1448,7 @@ msgstr ""
 "Tabelle mit allen derzeit gespeicherten Instrumenten; weitere Instrumente "
 "können hier einfach hinzugefügt werden."
 
-#: lib/functions.php:804 lib/projects.php:648
+#: lib/functions.php:804 lib/project-instruments.php:39 lib/projects.php:646
 msgid "Instrumentation Numbers"
 msgstr "Besetzungszahlen"
 
@@ -1540,78 +1540,101 @@ msgstr "Der Makler %s bietet keine Versicherung für den Geltungsberich %s an"
 msgid "Data inconsistency: Ids do not match (`%s' != `%s')"
 msgstr "Inkonsistente Daten: Ids passen nicht (`%s' != `%s')"
 
-#: lib/instruments.php:324
+#: lib/instruments.php:22
+msgid "Add new Instruments"
+msgstr "Neue Instrumente"
+
+#: lib/instruments.php:320
 msgid "Needed Instruments"
 msgstr "Benötigte Instrumente"
 
-#: lib/instruments.php:329
+#: lib/instruments.php:325
 #, php-format
 msgid "Instrument does not yet exist, cannot change its name: `%s'"
 msgstr ""
 "Das Instrument `%s' gibt es aber leider gar, wie soll ich das dann umbenenen?"
 
-#: lib/instruments.php:347 lib/instruments.php:377 lib/instruments.php:387
+#: lib/instruments.php:343 lib/instruments.php:373 lib/instruments.php:383
 #, php-format
 msgid "SQL-Error ``%s''. Could not execute the query ``%s''"
 msgstr ""
 "SQL-Fehler ``%s''. Die folgende Abfrage konnte nicht ausgeführt werden: ``"
 "%s''"
 
-#: lib/instruments.php:364
+#: lib/instruments.php:360
 #, php-format
 msgid "SQL-Error ``%s''. Could not execute the query `` %s ''"
 msgstr ""
 "SQL-Fehler ``%s''. Die folgende Abfrage konnte nicht ausgeführt werden: ``"
 "%s''"
 
-#: lib/instruments.php:425
+#: lib/instruments.php:421
 #, php-format
 msgid "Could not fetch instruments for project-id %s"
 msgstr "Konnte die Instrumente des Musikers mit der Id %s nicht ermitteln."
 
-#: lib/instruments.php:521
+#: lib/instruments.php:517
 msgid "Streich,Saiten"
 msgstr "Streicher"
 
-#: lib/instruments.php:522
+#: lib/instruments.php:518
 msgid "Streich,Zupf"
 msgstr "Zupfinstrumente"
 
-#: lib/instruments.php:523
+#: lib/instruments.php:519
 msgid "Blas,Holz"
 msgstr "Holzbläser"
 
-#: lib/instruments.php:524
+#: lib/instruments.php:520
 msgid "Blas,Blech"
 msgstr "Bechbläser"
 
-#: lib/instruments.php:525
+#: lib/instruments.php:521
 msgid "Schlag"
 msgstr "Schlagwerk"
 
-#: lib/instruments.php:526
+#: lib/instruments.php:522
 msgid "Sonstiges"
 msgstr "Sonstiges"
 
-#: lib/musicians.php:206
+#: lib/musicians.php:24
+msgid "Overview over all registered musicians"
+msgstr "Übersicht über all Musiker"
+
+#: lib/musicians.php:26
+#, php-format
+msgid ""
+"Add musicians to the project `%s'\n"
+"<p>\n"
+"This page is the only way to add musicians to projects in order to\n"
+"make sure that the musicians are also automatically added to the\n"
+"`global' musicians data-base (and not only to the project)."
+msgstr ""
+"Musiker zum Projekt `%s' hinzufügen\n"
+"<p>\n"
+"Der Weg in ein Projekt führt nur über diese Seite, damit die Musiker\n"
+"nicht nur zum Projekt hinzugefügt werden, sondern auch in unseren\n"
+"Gesamt-Fundus aufgenommen werden."
+
+#: lib/musicians.php:196
 #, php-format
 msgid "Add to %s"
 msgstr "Zu %s"
 
-#: lib/musicians.php:340
+#: lib/musicians.php:330
 msgid "Remarks"
 msgstr "Bemerkungen"
 
-#: lib/musicians.php:359
+#: lib/musicians.php:349
 msgid "Instrument Insurance"
 msgstr "Instrumentenversicherung"
 
-#: lib/musicians.php:468
+#: lib/musicians.php:458
 #, php-format
 msgid "Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;"
 msgstr "Gesamtsumme %02.02f &euro;, Jahresbeitrag %02.02f &euro;"
 
-#: lib/musicians.php:493
+#: lib/musicians.php:483
 msgid ""
 "Portraits or Avatars can only be added to an existing musician's profile; "
 "please add the new musician without protrait image first."
@@ -1619,28 +1642,28 @@ msgstr ""
 "Portraits oder Avatar-Bilder können nur zu existierenden Musiker-Daten "
 "hinzugefügt werden; bitte zuerst den Musiker ohne Bild hinzufügen."
 
-#: lib/musicians.php:507
+#: lib/musicians.php:497
 #, php-format
 msgid "Drop photo to upload (max %s)"
 msgstr "Foto ablegen zum Hochladen (max %s)"
 
-#: lib/musicians.php:510
+#: lib/musicians.php:500
 msgid "Delete current photo"
 msgstr "Aktuelles Foto löschen"
 
-#: lib/musicians.php:511
+#: lib/musicians.php:501
 msgid "Edit current photo"
 msgstr "Aktuelles Foto editieren"
 
-#: lib/musicians.php:512
+#: lib/musicians.php:502
 msgid "Upload new photo"
 msgstr "Neues Foto hochladen"
 
-#: lib/musicians.php:513
+#: lib/musicians.php:503
 msgid "Select photo from ownCloud"
 msgstr "Foto aus der `Cloud' auswählen"
 
-#: lib/musicians.php:521
+#: lib/musicians.php:511
 msgid ""
 "Internal error, don't know what to do concerning portrait images in the "
 "given context."
@@ -1648,7 +1671,7 @@ msgstr ""
 "Interner Fehler; keine Ahnung, wie im gegebenen Kontext mit\n"
 "Portrait-Bildern verfahren werden sollte."
 
-#: lib/musicians.php:951 lib/musicians.php:1374
+#: lib/musicians.php:941 lib/musicians.php:1364
 #, php-format
 msgid ""
 "None of the instruments known by %s are mentioned in the %sinstrumentation-"
@@ -1663,7 +1686,7 @@ msgstr ""
 "Der Fehler sollte durch Ändern der Instrumentierung oder der Musikerdaten "
 "behoben werden."
 
-#: lib/musicians.php:962
+#: lib/musicians.php:952
 #, php-format
 msgid ""
 "Choosing the first instrument known by %s\n"
@@ -1676,7 +1699,7 @@ msgstr ""
 "Bitte nötigenfalls korrigieren, in dem ein anderes ``Projekt-Instrument''\n"
 "in der Tabelle unten ausgewählt wird. Wähle ``%s'' als Projekt-instrument."
 
-#: lib/musicians.php:1399
+#: lib/musicians.php:1389
 #, php-format
 msgid ""
 "Generally, the first instrument known by the respective musician\n"
@@ -1701,17 +1724,31 @@ msgstr "ja"
 msgid "no"
 msgstr "nein"
 
-#: lib/project-instruments.php:211 lib/project-instruments.php:374
-#: lib/projects.php:270 lib/projects.php:275
+#: lib/project-instruments.php:36
+#, php-format
+msgid "Instrumentation Numbers for `%s'"
+msgstr "Besetzungszahlen für `%s'"
+
+#: lib/project-instruments.php:41
+msgid ""
+"The target instrumentation numbers can be filled into this table. The `have'-"
+"numbers are the numbers of the musicians already registered for the project."
+msgstr ""
+"Die \"Soll\"-Besetzungzahl kann hier eingetragen werden, die\n"
+"\"Haben\"-Besetzungszahl ist die Anzahl der bereits registrierten\n"
+"Musiker."
+
+#: lib/project-instruments.php:212 lib/project-instruments.php:375
+#: lib/projects.php:268 lib/projects.php:273
 msgid "Actions"
 msgstr "Aktionen"
 
-#: lib/project-instruments.php:212 lib/project-instruments.php:392
+#: lib/project-instruments.php:213 lib/project-instruments.php:393
 #: templates/expertmode.php:31
 msgid "Adjust Instruments"
 msgstr "Instrumente abgleichen"
 
-#: lib/project-instruments.php:206
+#: lib/project-instruments.php:207
 #, php-format
 msgid ""
 "Keine Besetzung für das Projekt gefunden, bitte bei den <A\n"
@@ -1724,39 +1761,58 @@ msgstr ""
 "<u>%s-Menü den ``%s''-Eintrag auswählen</u>, um die Instrumente der bereits\n"
 "``registrierten'' Musiker automatisch eintragen lassen."
 
-#: lib/project-instruments.php:214
+#: lib/project-instruments.php:215
 msgid "Instrumentation-Numbers not Found"
 msgstr "Besetzungszahlen nicht gefunden"
 
-#: lib/project-instruments.php:283 lib/projects.php:249
+#: lib/project-instruments.php:284 lib/projects.php:247
 msgid "Projekt-Name"
 msgstr "Projekt-Name"
 
-#: lib/project-instruments.php:385
+#: lib/project-instruments.php:321
+msgid "target"
+msgstr "soll"
+
+#: lib/project-instruments.php:329
+msgid "have"
+msgstr "haben"
+
+#: lib/project-instruments.php:386
 msgid "Transpose"
 msgstr "Transponieren"
 
-#: lib/projects.php:261
+#: lib/projects.php:86
+#, php-format
+msgid "%s Projects"
+msgstr "%s Projekte"
+
+#: lib/projects.php:88
+msgid ""
+"Please click on the project-name of the respective project in order to edit "
+"the instrumentation list or dates or to store other project related data."
+msgstr "Bitte auf den Projekt-Namen klicken um die Besetzung zu ändern, Termine einzutragen oder andere projekt-bezogene Daten zu speichern."
+
+#: lib/projects.php:259
 msgid "Append the year to the name"
 msgstr "Jahreszhahl anhängen"
 
-#: lib/projects.php:359
+#: lib/projects.php:357
 msgid "Flyer"
 msgstr "Flyer"
 
-#: lib/projects.php:652
+#: lib/projects.php:650
 msgid "Project Wiki Page"
 msgstr "Wiki Projekt-Seite"
 
-#: lib/projects.php:656
+#: lib/projects.php:654
 msgid "Project Files"
 msgstr "Projekt-Dateien"
 
-#: lib/projects.php:660
+#: lib/projects.php:658
 msgid "Profit and Loss Account"
 msgstr "Verlustrechnung"
 
-#: lib/projects.php:1159
+#: lib/projects.php:1157
 msgid ""
 "Flyers can only be added to existing projects, please add the new\n"
 "project without a flyer first."
@@ -1764,28 +1820,28 @@ msgstr ""
 "Flyer könner leider nur zu existierenden Projekten hinzugefügt werden; bitte "
 "zuerst das Projekt ohne Flyer anlegen."
 
-#: lib/projects.php:1174
+#: lib/projects.php:1172
 #, php-format
 msgid "Drop image to upload (max %s)"
 msgstr "Bild ablegen zum Hochladen (max %s)"
 
-#: lib/projects.php:1177
+#: lib/projects.php:1175
 msgid "Delete current flyer"
 msgstr "Aktuellen Flyer löschen"
 
-#: lib/projects.php:1178
+#: lib/projects.php:1176
 msgid "Edit current flyer"
 msgstr "Aktuellen Flyer zuschneiden"
 
-#: lib/projects.php:1179
+#: lib/projects.php:1177
 msgid "Upload new flyer"
 msgstr "Neuen Flyer hochladen"
 
-#: lib/projects.php:1180
+#: lib/projects.php:1178
 msgid "Select image from ownCloud"
 msgstr "Bild aus der `Cloud' auswählen"
 
-#: lib/projects.php:1188
+#: lib/projects.php:1186
 msgid ""
 "Internal error, don't know what to do concerning project-flyers in the given "
 "context."
@@ -3145,7 +3201,7 @@ msgstr "Startseite"
 
 #: templates/part.common.header.php:18
 msgid "Navigate back to the start-page."
-msgstr "Führt zurück zur Start-Seite der Applikation."
+msgstr "Führt zurück zur Start-Seite der `App'."
 
 #: templates/part.common.header.php:23
 msgid "Expert Operations"
