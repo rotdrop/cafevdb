@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-19 17:42+0200\n"
-"PO-Revision-Date: 2014-08-19 17:45+0200\n"
+"POT-Creation-Date: 2014-08-19 20:57+0200\n"
+"PO-Revision-Date: 2014-08-19 21:00+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -719,7 +719,7 @@ msgstr "Die Kopf-Zeilen-Sichtbarkeit wurde geändert."
 msgid "tooltips changed"
 msgstr "Tool-Tip Einstellung geändert"
 
-#: index.php:182 lib/musicians.php:145
+#: index.php:182 lib/musicians.php:149
 #, php-format
 msgid "Add all to %s"
 msgstr "Alle zu %s"
@@ -1012,11 +1012,52 @@ msgstr ""
 msgid "Really Change %s's instrument!!!"
 msgstr "Das Instrument von %s wirklich ändern!!!"
 
+#: lib/brief-instrumentation.php:42
+#, fuzzy, php-format
+msgid "Instrumentation for Project `%s'"
+msgstr "Besetzung für das Projekt `%s'"
+
+#: lib/brief-instrumentation.php:45
+msgid "Add Musicians"
+msgstr "Musiker hinzufügen"
+
+#: lib/brief-instrumentation.php:46
+msgid "see above"
+msgstr "siehe oben"
+
+#: lib/brief-instrumentation.php:47
+msgid "Remove Musicians"
+msgstr "Musiker entfernen"
+
+#: lib/brief-instrumentation.php:48 lib/brief-instrumentation.php:51
+msgid "this table"
+msgstr "diese Tabelle"
+
+#: lib/brief-instrumentation.php:50
+msgid "Per-Musician Project Data"
+msgstr "Personenbezogene Projektdaten"
+
+#: lib/brief-instrumentation.php:52
+msgid "(project instrument, section leader, remarks etc.)"
+msgstr "(Instrument, Bemerkungen etc.)"
+
+#: lib/brief-instrumentation.php:53
+msgid "General Personal Data"
+msgstr "Allgemeine Personendaten"
+
+#: lib/brief-instrumentation.php:54 lib/functions.php:759 lib/projects.php:643
+msgid "Detailed Instrumentation"
+msgstr "Detaillierte Besetzung"
+
+#: lib/brief-instrumentation.php:55
+msgid "(see above; address, email, name, picture etc.)"
+msgstr "(s.o.; Adresse, Email, Name, Protrait etc.)"
+
 #: lib/config.php:527
 msgid "birthday"
 msgstr "Geburtstag"
 
-#: lib/detailed-instrumentation.php:294 lib/musicians.php:249
+#: lib/detailed-instrumentation.php:294 lib/musicians.php:253
 msgid "Member Status"
 msgstr "Status"
 
@@ -1024,11 +1065,11 @@ msgstr "Status"
 msgid "General Remarks"
 msgstr "Allgemeine Bemerkungen"
 
-#: lib/detailed-instrumentation.php:393 lib/musicians.php:365
+#: lib/detailed-instrumentation.php:393 lib/musicians.php:369
 msgid "Photo"
 msgstr "Foto"
 
-#: lib/detailed-instrumentation.php:406 lib/musicians.php:378
+#: lib/detailed-instrumentation.php:406 lib/musicians.php:382
 msgid "Last Updated"
 msgstr "Letzte Aktualisierung"
 
@@ -1407,10 +1448,6 @@ msgstr ""
 msgid "The currently active project."
 msgstr "Das gerade ausgewählte Projekt."
 
-#: lib/functions.php:759 lib/projects.php:643
-msgid "Detailed Instrumentation"
-msgstr "Detaillierte Besetzung"
-
 #: lib/functions.php:760 lib/tooltips.php:230
 msgid ""
 "Detailed display of all registered musicians for the selected project. The "
@@ -1616,25 +1653,25 @@ msgstr ""
 "nicht nur zum Projekt hinzugefügt werden, sondern auch in unseren\n"
 "Gesamt-Fundus aufgenommen werden."
 
-#: lib/musicians.php:196
+#: lib/musicians.php:200
 #, php-format
 msgid "Add to %s"
 msgstr "Zu %s"
 
-#: lib/musicians.php:330
+#: lib/musicians.php:334
 msgid "Remarks"
 msgstr "Bemerkungen"
 
-#: lib/musicians.php:349
+#: lib/musicians.php:353
 msgid "Instrument Insurance"
 msgstr "Instrumentenversicherung"
 
-#: lib/musicians.php:458
+#: lib/musicians.php:462
 #, php-format
 msgid "Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;"
 msgstr "Gesamtsumme %02.02f &euro;, Jahresbeitrag %02.02f &euro;"
 
-#: lib/musicians.php:483
+#: lib/musicians.php:487
 msgid ""
 "Portraits or Avatars can only be added to an existing musician's profile; "
 "please add the new musician without protrait image first."
@@ -1642,28 +1679,28 @@ msgstr ""
 "Portraits oder Avatar-Bilder können nur zu existierenden Musiker-Daten "
 "hinzugefügt werden; bitte zuerst den Musiker ohne Bild hinzufügen."
 
-#: lib/musicians.php:497
+#: lib/musicians.php:501
 #, php-format
 msgid "Drop photo to upload (max %s)"
 msgstr "Foto ablegen zum Hochladen (max %s)"
 
-#: lib/musicians.php:500
+#: lib/musicians.php:504
 msgid "Delete current photo"
 msgstr "Aktuelles Foto löschen"
 
-#: lib/musicians.php:501
+#: lib/musicians.php:505
 msgid "Edit current photo"
 msgstr "Aktuelles Foto editieren"
 
-#: lib/musicians.php:502
+#: lib/musicians.php:506
 msgid "Upload new photo"
 msgstr "Neues Foto hochladen"
 
-#: lib/musicians.php:503
+#: lib/musicians.php:507
 msgid "Select photo from ownCloud"
 msgstr "Foto aus der `Cloud' auswählen"
 
-#: lib/musicians.php:511
+#: lib/musicians.php:515
 msgid ""
 "Internal error, don't know what to do concerning portrait images in the "
 "given context."
@@ -1671,7 +1708,7 @@ msgstr ""
 "Interner Fehler; keine Ahnung, wie im gegebenen Kontext mit\n"
 "Portrait-Bildern verfahren werden sollte."
 
-#: lib/musicians.php:941 lib/musicians.php:1364
+#: lib/musicians.php:945 lib/musicians.php:1368
 #, php-format
 msgid ""
 "None of the instruments known by %s are mentioned in the %sinstrumentation-"
@@ -1686,7 +1723,7 @@ msgstr ""
 "Der Fehler sollte durch Ändern der Instrumentierung oder der Musikerdaten "
 "behoben werden."
 
-#: lib/musicians.php:952
+#: lib/musicians.php:956
 #, php-format
 msgid ""
 "Choosing the first instrument known by %s\n"
@@ -1699,7 +1736,7 @@ msgstr ""
 "Bitte nötigenfalls korrigieren, in dem ein anderes ``Projekt-Instrument''\n"
 "in der Tabelle unten ausgewählt wird. Wähle ``%s'' als Projekt-instrument."
 
-#: lib/musicians.php:1389
+#: lib/musicians.php:1393
 #, php-format
 msgid ""
 "Generally, the first instrument known by the respective musician\n"
@@ -1790,7 +1827,9 @@ msgstr "%s Projekte"
 msgid ""
 "Please click on the project-name of the respective project in order to edit "
 "the instrumentation list or dates or to store other project related data."
-msgstr "Bitte auf den Projekt-Namen klicken um die Besetzung zu ändern, Termine einzutragen oder andere projekt-bezogene Daten zu speichern."
+msgstr ""
+"Bitte auf den Projekt-Namen klicken um die Besetzung zu ändern, Termine "
+"einzutragen oder andere projekt-bezogene Daten zu speichern."
 
 #: lib/projects.php:259
 msgid "Append the year to the name"

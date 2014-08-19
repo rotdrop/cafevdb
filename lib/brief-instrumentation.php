@@ -39,26 +39,23 @@ class BriefInstrumentation
 
   public function headerText()
   {
-    $header =<<<__EOT__
-    <h3>Besetzung Projekt $this->project</h3>
-    <H4>
+    $header = L::t("Instrumentation for Project `%s'", array($this->project)).'
+    <p>
       <ul>
-        <li><span style="color:red">Musiker hinzufügen</span>
-          <span style="font-style:italic">"siehe oben"</span>
-        <li><span style="color:red">Musiker entfernen</span>
-            <span style="font-style:italic">diese Tabelle</span>
+        <li><span style="color:red">'.L::t("Add Musicians").'</span>
+          <span style="font-style:italic">'.L::t("see above").'</span>
+        <li><span style="color:red">'.L::t("Remove Musicians").'</span>
+            <span style="font-style:italic">'.L::t("this table").'</span>
             ("x"-Button)
-        <li><span style="color:red">Projekt-Daten</span>
-          <span style="font-style:italic">diese Tabelle</span>
-          (Projekt-Instrument, Stimmführer, Projekt-Bemerkungen etc.)
-        <li><span style="color:red">Personen-Daten</span>
-          <span style="font-style:italic">"Detaillierte Besetzung (s.o.)"</span>
-          (Adresse, Email, Name etc.)
-      </ul>
-    </H4>
-__EOT__;
+        <li><span style="color:red">'.L::t("Per-Musician Project Data").'</span>
+          <span style="font-style:italic">'.L::t("this table").'</span>
+          '.L::t("(project instrument, section leader, remarks etc.)").'
+        <li><span style="color:red">'.L::t("General Personal Data").'</span>
+          <span style="font-style:italic">'.L::t("Detailed Instrumentation").'</span>
+          '.L::t("(see above; address, email, name, picture etc.)").'
+      </ul>';
 
-    return $header;
+    return '<div class="'.self::CSS_PREFIX.'-header-text">'.$header.'</div>';
   }
 
   function display()
