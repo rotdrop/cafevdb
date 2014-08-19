@@ -82,6 +82,10 @@ make sure that the musicians are also automatically added to the
       'Table' => $opts['tb'],
       'headervisibility' => $headervisibility);
 
+    if ($this->projectMode) {
+      $opts['cgi']['append'][Config::$pmeopts['cgi']['prefix']['sys'].'fl'] = 1;
+    }
+
     // Name of field which is the unique key
     $opts['key'] = 'Id';
 
