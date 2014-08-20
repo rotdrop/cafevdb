@@ -842,16 +842,9 @@ __EOT__;
                                         'filters' => "Id = $musicianId"
                                         )
                                       );
-    if (false) {
-    $opts['fdd']['Instrument'] = array(
-                                       'name'     => 'Projekt-Instrument',
-                                       'select'   => 'T',
-                                       'maxlen'   => 12,
-                                       'sort'     => false,
-                                       'values'      => $this->instruments,
-                                       'valueGroups' => $this->groupedInstruments,
-                                       );
-    }
+    $opts['fdd']['Anmeldung'] = $this->registrationColumn;
+    $opts['fdd']['Anmeldung']['sort'] = false;
+
     $opts['fdd']['Instrument'] = array('name'     => 'Instrument',
                                        'select'   => 'T',
                                        'maxlen'   => 12,
@@ -1245,6 +1238,8 @@ __EOT__;
                                                                                'divs' => array(', ')
                                                                                ))
                                       );
+    $opts['fdd']['Anmeldung'] = $this->registrationColumn;
+
     $opts['fdd']['Instrument'] = array('name'     => 'Instrument',
                                        'select'   => 'T',
                                        'maxlen'   => 12,
@@ -1261,7 +1256,7 @@ __EOT__;
                                        'select' => 'T',
                                        'options' => 'VCPR',
                                        'input' => 'V',
-                                       'sql' => '`PMEjoin3`.`Sortierung`',
+                                       'sql' => '`PMEjoin4`.`Sortierung`', // this is `Instrumente`
                                        'sort' => true);
     $opts['fdd']['Reihung'] = array('name' => 'Stimme',
                                     'select' => 'N',

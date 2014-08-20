@@ -228,6 +228,8 @@ class BriefInstrumentation
                                                                                'divs' => array(', ')
                                                                                ))
                                       );
+    $opts['fdd']['Anmeldung'] = $this->registrationColumn;
+
     $opts['fdd']['Instrument'] = array(
       'name'     => 'Instrument',
       'select'   => 'D',
@@ -254,7 +256,7 @@ class BriefInstrumentation
                                        'select' => 'T',
                                        'options' => 'VCPR',
                                        'input' => 'V',
-                                       'sql' => '`PMEjoin3`.`Sortierung`',
+                                       'sql' => '`PMEjoin4`.`Sortierung`', // this is `Instrumente`
                                        'sort' => true);
     $opts['fdd']['Reihung'] = array('name' => 'Stimme',
                                     'select' => 'N',

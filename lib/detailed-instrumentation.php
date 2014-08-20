@@ -262,6 +262,8 @@ __EOT__;
       );
     $opts['fdd']['Stimmführer'] = $this->sectionLeaderColumn;
     $opts['fdd']['Stimmführer']['options'] = $ROopts;
+    $opts['fdd']['Anmeldung'] = $this->registrationColumn;
+    $opts['fdd']['Anmeldung']['options'] = $ROopts;
     $opts['fdd']['Sortierung'] = array('name'     => 'Orchester Sortierung',
                                        'select'   => 'T',
                                        'options'  => 'VCPR',

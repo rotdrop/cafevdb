@@ -329,28 +329,29 @@ class Projects
                                                             'cols' => 128),
                                         'sort'     => false,
                                         'escape'   => false,
-                                        'tooltip'  => 'Komma-separierte Liste von Extra-Feldern, z.B.:
+                                        'tooltip'  => L::t('Comma separates list of extra-fields, e.g.
 <blockquote>
-  DZ:1:KommentarDZ,Beitrag:2:KommentarBeitrag
+  SingleRoom:1:TooltipSingleRoom,Fee:2:TooltipForFee
 </blockquote>
-oder einfach
+or simply  
 <blockquote>
-  DZ,Beitrag
+  SingleRoom,Fee
 </blockquote>
 
-Die Zahl nach dem Doppelpunkt (und der Doppelpunkt) ist optional,
-falls vorhanden, gibt das die Zuordnung zu den Spalten in der
-"Besetzungen"-Tabelle in der Datenbank. Dort heißen die Felder einfach
-"ExtraFeld01" etc. Die Reihenfolge bei Anzeige der Tabelle entspricht
-der angegebenen Reihenfolge. Falls man die ändert, sollte man die Zuordnung
-zur Extra-Spalte in der Datenbank angeben, z.B. so:
+The number after the colon (and the colon) are optional, if present, the
+number determines the mapping of the extra columns to columns of the
+underlying data-base table. Internally the extra columns are simply named
+"ExtraField01" etc. The display ordering of the extra columns corresponds
+to the order of the fields given here (i.e. "SingleRoom" would be the displayed
+left of "Fee"). If this ordering is changed, one should specify the mapping
+of the fields to the data-base columns, e.g. like so:
 <blockquote>
-  Beitrag:2,DZ:1
+  Fee:2,SingleRoom:1
 </blockquote>
-Dann wird die Reihenfolge bei der Anzeige der Tabelle geändert, aber die
-Zuordnung zu den Informationen in der Datenbank bleibt erhalten. Optional
-kann man nach einem 2. Doppelpunkt noch einen Kommentar für die
-"Ballon-Hilfe" angeben; der darf allerdings kein Komma enthalten.');
+This changes the displayed ordering of the columns but the mapping
+to the data-base table remains consistetnt. Optionally, the string after an
+optional second colon is displayed as a "tool-tip". The tool-tip must not contain
+a comma.'));
 
     $opts['fdd']['Flyer'] = array(
       'input' => 'V',
@@ -1109,6 +1110,7 @@ __EOT__;
     $sqlquery = 'CREATE OR REPLACE VIEW `'.$project.'View` AS
  SELECT
    `Musiker`.`Id` AS `MusikerId`,
+   `Besetzungen`.`Anmeldung`,
    `Besetzungen`.`Instrument`,`Besetzungen`.`Reihung`,
    `Besetzungen`.`Stimmführer`,`Instrumente`.`Familie`,`Instrumente`.`Sortierung`,
     `Name`,`Vorname`,
