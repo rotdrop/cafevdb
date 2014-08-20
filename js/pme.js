@@ -109,7 +109,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
         return $("form[class^='"+pmepfx+"-form']").submit();
       });
 
-      $("td[class^='"+pmepfx+"-filter'] div.chosen-container").attr("title",this.filterSelectChosenTitle);
+      $("td[class^='"+pmepfx+"-filter'] div.chosen-container").attr("title", this.filterSelectChosenTitle);
     }
 
     if (this.inputSelectChosen) {
@@ -137,7 +137,25 @@ var PHPMYEDIT = PHPMYEDIT || {};
                                                      disable_search_threshold: 10,
                                                      no_results_text:noRes});
 
-      $("td[class^='"+pmepfx+"-input'] div.chosen-container").attr("title",this.inputSelectChosenTitle);
+      // Set title explicitly
+      $("td[class^='"+pmepfx+"-input'] div.chosen-container").attr("title", this.inputSelectChosenTitle);
+      $("td[class^='"+pmepfx+"-value'] div.chosen-container").attr("title", this.inputSelectChosenTitle);
+
+      // Copy over titles
+      $("td[class^='"+pmepfx+"-value']").each(function(index) {
+        var selectBox;
+        var selectTitle = "";
+        selectBox = $(this).children("select[class^='"+pmepfx+"-input']").first();
+        if (typeof $(selectBox).attr("title") !== 'undefined') {
+          selectTitle = selectBox.attr("title");
+        } else if (typeof $(selectBox).attr("original-title") !== 'undefined') {
+          selectTitle = selectBox.attr("original-title");
+        }
+        if (selectTitle.length != 0) {
+          $(this).children("div.chosen-container").first().attr("title", selectTitle);
+        }
+      });
+
     }
 
 

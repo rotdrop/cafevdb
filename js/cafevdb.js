@@ -386,6 +386,8 @@ $(document).ready(function(){
 
   document.onkeypress = CAFEVDB.stopRKey;
 
+  $.fn.tipsy.defaults.html = true;
+
   // Emulate a pull-down menu with export options via the chosen
   // plugin.
   $('select.pme-export-choice').chosen({ disable_search:true });  
