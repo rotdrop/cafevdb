@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-19 21:00+0200\n"
+"POT-Creation-Date: 2014-08-20 10:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -184,16 +184,16 @@ msgstr ""
 msgid "%s-detailed"
 msgstr ""
 
-#: ajax/export/excel.php:255 lib/projects.php:978 lib/projects.php:979
+#: ajax/export/excel.php:255 lib/projects.php:979 lib/projects.php:980
 msgid "Missing Musicians"
 msgstr ""
 
 #: ajax/export/excel.php:280 ajax/export/insurance-export.php:142
-#: lib/projects.php:981
+#: lib/projects.php:982
 msgid "Instrument"
 msgstr ""
 
-#: ajax/export/excel.php:281 lib/projects.php:981
+#: ajax/export/excel.php:281 lib/projects.php:982
 msgid "Missing"
 msgstr ""
 
@@ -917,40 +917,40 @@ msgstr ""
 msgid "#rows"
 msgstr ""
 
-#: lib/blah.php:138 lib/instrumentation.php:138
+#: lib/blah.php:138 lib/instrumentation.php:139
 msgid "Section Leader"
 msgstr ""
 
-#: lib/blah.php:174 lib/instrumentation.php:174
+#: lib/blah.php:174 lib/instrumentation.php:189
 msgid "regular"
 msgstr ""
 
-#: lib/blah.php:175 lib/instrumentation.php:175
+#: lib/blah.php:175 lib/instrumentation.php:190
 msgid "passive"
 msgstr ""
 
-#: lib/blah.php:176 lib/instrumentation.php:176
+#: lib/blah.php:176 lib/instrumentation.php:191
 msgid "soloist"
 msgstr ""
 
-#: lib/blah.php:177 lib/instrumentation.php:177
+#: lib/blah.php:177 lib/instrumentation.php:192
 msgid "conductor"
 msgstr ""
 
-#: lib/blah.php:178 lib/instrumentation.php:178
+#: lib/blah.php:178 lib/instrumentation.php:193
 msgid "temporary"
 msgstr ""
 
-#: lib/blah.php:317 lib/instrumentation.php:324
+#: lib/blah.php:317 lib/instrumentation.php:339
 #, php-format
 msgid "Instrument not known by %s, correct that first! %s only plays %s!!!"
 msgstr ""
 
-#: lib/blah.php:319 lib/instrumentation.php:326
+#: lib/blah.php:319 lib/instrumentation.php:341
 msgid "Click on the following button to enforce your decision"
 msgstr ""
 
-#: lib/blah.php:320 lib/instrumentation.php:327
+#: lib/blah.php:320 lib/instrumentation.php:342
 #, php-format
 msgid ""
 "This will also add `%s' to %s's list of known instruments. Unfortunately, "
@@ -958,7 +958,7 @@ msgid ""
 "Button of your browser."
 msgstr ""
 
-#: lib/blah.php:324 lib/instrumentation.php:331
+#: lib/blah.php:324 lib/instrumentation.php:346
 #, php-format
 msgid "Really Change %s's instrument!!!"
 msgstr ""
@@ -996,7 +996,7 @@ msgstr ""
 msgid "General Personal Data"
 msgstr ""
 
-#: lib/brief-instrumentation.php:54 lib/functions.php:759 lib/projects.php:643
+#: lib/brief-instrumentation.php:54 lib/functions.php:759 lib/projects.php:644
 msgid "Detailed Instrumentation"
 msgstr ""
 
@@ -1008,19 +1008,19 @@ msgstr ""
 msgid "birthday"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:294 lib/musicians.php:253
+#: lib/detailed-instrumentation.php:296 lib/musicians.php:253
 msgid "Member Status"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:374
+#: lib/detailed-instrumentation.php:376
 msgid "General Remarks"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:393 lib/musicians.php:369
+#: lib/detailed-instrumentation.php:395 lib/musicians.php:369
 msgid "Photo"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:406 lib/musicians.php:382
+#: lib/detailed-instrumentation.php:408 lib/musicians.php:382
 msgid "Last Updated"
 msgstr ""
 
@@ -1084,7 +1084,7 @@ msgstr ""
 msgid "and"
 msgstr ""
 
-#: lib/email.php:1375 lib/projects.php:637 lib/projects.php:784
+#: lib/email.php:1375 lib/projects.php:638 lib/projects.php:785
 msgid "Events"
 msgstr ""
 
@@ -1373,7 +1373,7 @@ msgid ""
 "address etc."
 msgstr ""
 
-#: lib/functions.php:774 lib/projects.php:640
+#: lib/functions.php:774 lib/projects.php:641
 msgid "Brief Instrumentation"
 msgstr ""
 
@@ -1394,7 +1394,7 @@ msgid ""
 "ones as needed."
 msgstr ""
 
-#: lib/functions.php:804 lib/project-instruments.php:39 lib/projects.php:646
+#: lib/functions.php:804 lib/project-instruments.php:39 lib/projects.php:647
 msgid "Instrumentation Numbers"
 msgstr ""
 
@@ -1474,7 +1474,23 @@ msgstr ""
 msgid "Invalid broker/geographical-scope combination: %s - %s"
 msgstr ""
 
-#: lib/instrumentation.php:315
+#: lib/instrumentation.php:146
+#, php-format
+msgid "Set to `%s' in order to mark the section leader"
+msgstr ""
+
+#: lib/instrumentation.php:151
+msgid "Registration"
+msgstr ""
+
+#: lib/instrumentation.php:158
+#, php-format
+msgid ""
+"Set to `%s' in order to mark participants who passed a personally signed "
+"registration form to us."
+msgstr ""
+
+#: lib/instrumentation.php:330
 #, php-format
 msgid "Data inconsistency: Ids do not match (`%s' != `%s')"
 msgstr ""
@@ -1596,7 +1612,7 @@ msgid ""
 "given context."
 msgstr ""
 
-#: lib/musicians.php:945 lib/musicians.php:1368
+#: lib/musicians.php:938 lib/musicians.php:1363
 #, php-format
 msgid ""
 "None of the instruments known by %s are mentioned in the %sinstrumentation-"
@@ -1606,7 +1622,7 @@ msgid ""
 "Please correct the mis-match."
 msgstr ""
 
-#: lib/musicians.php:956
+#: lib/musicians.php:949
 #, php-format
 msgid ""
 "Choosing the first instrument known by %s\n"
@@ -1615,7 +1631,7 @@ msgid ""
 "below, if necessary. Choosing ``%s'' as instrument."
 msgstr ""
 
-#: lib/musicians.php:1393
+#: lib/musicians.php:1388
 #, php-format
 msgid ""
 "Generally, the first instrument known by the respective musician\n"
@@ -1698,50 +1714,80 @@ msgstr ""
 msgid "Append the year to the name"
 msgstr ""
 
-#: lib/projects.php:357
+#: lib/projects.php:332
+msgid ""
+"Comma separates list of extra-fields, e.g.\n"
+"<blockquote>\n"
+"  SingleRoom:1:TooltipSingleRoom,Fee:2:TooltipForFee\n"
+"</blockquote>\n"
+"or simply  \n"
+"<blockquote>\n"
+"  SingleRoom,Fee\n"
+"</blockquote>\n"
+"\n"
+"The number after the colon (and the colon) are optional, if present, the\n"
+"number determines the mapping of the extra columns to columns of the\n"
+"underlying data-base table. Internally the extra columns are simply named\n"
+"\"ExtraField01\" etc. The display ordering of the extra columns corresponds\n"
+"to the order of the fields given here (i.e. \"SingleRoom\" would be the "
+"displayed\n"
+"left of \"Fee\"). If this ordering is changed, one should specify the "
+"mapping\n"
+"of the fields to the data-base columns, e.g. like so:\n"
+"<blockquote>\n"
+"  Fee:2,SingleRoom:1\n"
+"</blockquote>\n"
+"This changes the displayed ordering of the columns but the mapping\n"
+"to the data-base table remains consistetnt. Optionally, the string after an\n"
+"optional second colon is displayed as a \"tool-tip\". The tool-tip must not "
+"contain\n"
+"a comma."
+msgstr ""
+
+#: lib/projects.php:358
 msgid "Flyer"
 msgstr ""
 
-#: lib/projects.php:650
+#: lib/projects.php:651
 msgid "Project Wiki Page"
 msgstr ""
 
-#: lib/projects.php:654
+#: lib/projects.php:655
 msgid "Project Files"
 msgstr ""
 
-#: lib/projects.php:658
+#: lib/projects.php:659
 msgid "Profit and Loss Account"
 msgstr ""
 
-#: lib/projects.php:1157
+#: lib/projects.php:1159
 msgid ""
 "Flyers can only be added to existing projects, please add the new\n"
 "project without a flyer first."
 msgstr ""
 
-#: lib/projects.php:1172
+#: lib/projects.php:1174
 #, php-format
 msgid "Drop image to upload (max %s)"
 msgstr ""
 
-#: lib/projects.php:1175
+#: lib/projects.php:1177
 msgid "Delete current flyer"
 msgstr ""
 
-#: lib/projects.php:1176
+#: lib/projects.php:1178
 msgid "Edit current flyer"
 msgstr ""
 
-#: lib/projects.php:1177
+#: lib/projects.php:1179
 msgid "Upload new flyer"
 msgstr ""
 
-#: lib/projects.php:1178
+#: lib/projects.php:1180
 msgid "Select image from ownCloud"
 msgstr ""
 
-#: lib/projects.php:1186
+#: lib/projects.php:1188
 msgid ""
 "Internal error, don't know what to do concerning project-flyers in the given "
 "context."
