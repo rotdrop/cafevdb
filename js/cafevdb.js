@@ -501,8 +501,7 @@ $(document).ready(function(){
   $('input.alertdata.cafevdb-page').each(function(index) {
     var title = $(this).attr('name');
     var text  = $(this).attr('value');
-    OC.dialogs.alert('<div class="cafevdb-error">'+text+'</div>', title, null, true);
-    //$('#cafevdb-error-block').append('<u>'+title+'</u><br/>'+text+'<br/>',
+    OC.dialogs.alert(text, title, function () {} , true, true);
   });
 
   $('#missing-musicians-block').dialog({
