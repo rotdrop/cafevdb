@@ -59,9 +59,8 @@ try {
     OCP\JSON::error(
       array(
         'data' => array('error' => L::t("operation failed"),
-                        'message' => Util::entifyString(
-                          L::t("Adjusting the instrumentation for project ``%s'' probably failed.",
-                               array($projectName))),
+                        'message' => L::t("Adjusting the instrumentation for project ``%s'' probably failed.",
+                                          array($projectName)),
                         'debug' => $debugText)));
     return false;
   }
@@ -69,9 +68,8 @@ try {
   mySQL::close($handle);
 
   OCP\JSON::success(
-    array('data' => array('message' => Util::entifyString(
-                            L::t("Adjusting the instrumentation for project ``%s'' probably successful.",
-                                 array($projectName))),
+    array('data' => array('message' => L::t("Adjusting the instrumentation for project ``%s'' probably successful.",
+                                 array($projectName)),
                           'debug' => $debugText)));
 
   return true;
@@ -84,7 +82,7 @@ try {
         'error' => 'exception',
         'exception' => $e->getMessage(),
         'trace' => $e->getTraceAsString(),
-        'message' => Util::entifyString(L::t('Error, caught an exception')))));
+        'message' => L::t('Error, caught an exception'))));
   return false;
 }
 
