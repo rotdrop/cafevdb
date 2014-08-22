@@ -1,6 +1,7 @@
 <?php use CAFEVDB\L; ?>
 <?php use CAFEVDB\Config; ?>
-<div id="tabs-4" class="personalblock admin email">
+
+<div id="tabs-<?php echo $_['tabNr']; ?>" class="personalblock admin email">
   <form id="emailsettings">
 <!-- SMTP and IMAP settings -->  
 <?php

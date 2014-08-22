@@ -6,7 +6,7 @@ $alloff = $_['orchestra'] == '' ? $alloff = 'disabled="disabled"' : '';
 $off = $_['shareowner'] == '' ? 'disabled="disabled"' : $alloff;
 
 ?>
-<div id="tabs-3" class="personalblock sharing admin">
+<div id="tabs-<?php echo $_['tabNr']; ?>" class="personalblock admin sharing">
 <!-- SHARED CALENDARS and stuff -->
   <div id="eventsettings">
 <!-- VIRTUAL USER -->

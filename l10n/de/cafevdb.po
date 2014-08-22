@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-20 10:51+0200\n"
-"PO-Revision-Date: 2014-08-20 10:52+0200\n"
+"PO-Revision-Date: 2014-08-22 16:14+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -615,7 +615,7 @@ msgstr "Kann die IMAP-Verbindung nicht aufbauen."
 
 #: ajax/settings/app-settings.php:691
 msgid "SMTP connection seems functional."
-msgstr "Die SMPT-Verbindung scheint zu funkionieren."
+msgstr "Die SMTP-Verbindung scheint zu funkionieren."
 
 #: ajax/settings/app-settings.php:694
 msgid "Unable to establish SMTP connection."

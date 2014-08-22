@@ -26,6 +26,7 @@ OC::$CLASSPATH['CAFEVDB\Email'] = 'cafevdb/lib/email.php';
 OC::$CLASSPATH['CAFEVDB\EmailHistory'] = 'cafevdb/lib/email.php';
 OC::$CLASSPATH['CAFEVDB\InstrumentInsurance'] = 'cafevdb/lib/instrument-insurance.php';
 OC::$CLASSPATH['CAFEVDB\PHPExcel\ValueBinder'] = 'cafevdb/lib/php-excel-functions.php';
+OC::$CLASSPATH['CAFEVDB\Finance'] = 'cafevdb/lib/functions.php';
 
 OC::$CLASSPATH['DWEMBED\App'] = 'dokuwikiembed/lib/dokuwikiembed.php';
 OC::$CLASSPATH['DWEMBED\L'] = 'dokuwikiembed/lib/util.php';
@@ -36,6 +37,8 @@ OC::$CLASSPATH['OC_RoundCube_App'] = 'roundcube/lib/RoundCubeApp.php'; // <<<===
 /* 3rd party classes */
 OC::$CLASSPATH['phpMyEdit'] = 'cafevdb/3rdparty/phpMyEdit/phpMyEdit.class.php';
 OC::$CLASSPATH['html2text'] = 'cafevdb/3rdparty/PHPMailer/extras/class.html2text.php';
+OC::$CLASSPATH['IBAN'] = 'cafevdb/3rdparty/php-iban/oophp-iban.php';
+OC::$CLASSPATH['malkusch\bav\BAV'] = 'cafevdb/3rdparty/bav/autoloader/autoloader.php';
 
 /* Script etc. used by everyone */
 OC_App::registerAdmin( 'cafevdb', 'admin-settings' );

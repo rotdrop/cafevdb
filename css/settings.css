@@ -42,5 +42,49 @@ input[type=button]:active, input[type=submit]:active {
 }
 
 #emailsmtpfields {
-  display:inline;  
+  display:inline;
+}
+
+input.streetAddressName {
+  width: 40em;
+}
+
+input.streetAddressStreet {
+  width: 34em;
+}
+
+input.streetAddressHouseNumber {
+  max-width: 4em;
+}
+
+input.streetAddressZIP {
+  max-width: 8em;
+}
+
+input.streetAddressCity {
+  width: 30em;
+}
+
+input.streetAddressCountry {
+  width: 40em;
+}
+
+input.bankAccountOwner { 
+  width: 40em;
+}
+
+input.bankAccountIBAN { 
+  width: 22em;
+}
+
+input.bankAccountBIC { 
+  width: 8em;
+}
+
+input.bankAccountBLZ { 
+  width: 6em;
+}
+
+input.bankAccountCreditorIdentifier { 
+  width: 40em;
 }

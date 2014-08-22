@@ -6,10 +6,15 @@ use CAFEVDB\Config;
 $off = $_['orchestra'] == '' ? 'disabled="disabled"' : '';
 
 ?>
-<div id="tabs-2" class="personalblock admin">
+<div id="tabs-<?php echo $_['tabNr']; ?>" class="personalblock admin">
 <!-- GENERAL CONFIGURATION STUFF -->
   <form id="admingeneral"><legend><?php echo L::t('General settings'); ?></legend>
-    <input type="text" id="orchestra" name=" orchestra" value="<?php echo $_['orchestra']; ?>" placeholder="<?php echo L::t('name of orchestra'); ?>" />
+    <input type="text"
+           id="orchestra"
+           name="orchestra"
+           value="<?php echo $_['orchestra']; ?>"
+           title="<?php echo L::t('name of orchestra'); ?>"
+           placeholder="<?php echo L::t('name of orchestra'); ?>" />
     <span class="statusmessage" id="msg"></span>
   </form>
 <!-- ENCRYPTION-KEY -->

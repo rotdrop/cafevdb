@@ -79,6 +79,20 @@ try {
     $admin = true;
     $tmpl->assign('adminsettings', $admin);
 
+    $tmpl->assign('streetAddressName01', Config::getValue('streetAddressName01'));
+    $tmpl->assign('streetAddressName02', Config::getValue('streetAddressName02'));
+    $tmpl->assign('streetAddressStreet', Config::getValue('streetAddressStreet'));
+    $tmpl->assign('streetAddressHouseNumber', Config::getValue('streetAddressHouseNumber'));
+    $tmpl->assign('streetAddressCity', Config::getValue('streetAddressCity'));
+    $tmpl->assign('streetAddressZIP', Config::getValue('streetAddressZIP'));
+    $tmpl->assign('streetAddressCountry', Config::getValue('streetAddressCountry'));
+
+    $tmpl->assign('bankAccountOwner', Config::getValue('bankAccountOwner'));
+    $tmpl->assign('bankAccountIBAN', Config::getValue('bankAccountIBAN'));
+    $tmpl->assign('bankAccountBLZ', Config::getValue('bankAccountBLZ'));
+    $tmpl->assign('bankAccountBIC', Config::getValue('bankAccountBIC'));
+    $tmpl->assign('bankAccountCreditorIdentifier', Config::getValue('bankAccountCreditorIdentifier'));    
+
     $tmpl->assign('orchestra', Config::getValue('orchestra'));
 
     $tmpl->assign('dbserver', Config::getValue('dbserver'));
@@ -127,6 +141,10 @@ try {
   $tmpl->assign('exception', $e->getMessage());
   $tmpl->assign('trace', $e->getTraceAsString());
   $tmpl->assign('debug', true);
+  $admin =
+    \OCP\User::getDisplayName('admin').
+    ' <'.\OCP\Config::getUserValue('admin', 'settings', 'email').'>';
+  $tmpl->assign('admin', htmlentities($admin));
   return $tmpl->printPage();
 }
 

@@ -912,6 +912,80 @@ $(document).ready(function() {
 
   ///////////////////////////////////////////////////////////////////////////
   //
+  // street address settings
+  //
+  ///////////////////////////////////////////////////////////////////////////
+
+  $('input[class^="streetAddress"]').blur(function(event) {
+    event.preventDefault();
+    $('div.statusmessage').hide();
+    $('span.statusmessage').hide();
+    $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
+           $(this),
+           function(data) {
+             if (data.status == "success") {
+	       $('#orchestra #msg').html(data.data.message);
+	       $('#orchestra #msg').show();
+               return true;
+             } else {
+	       $('#orchestra #msg').html(data.data.message);
+	       $('#orchestra #msg').show();
+               return false;
+             }
+	   }, 'json');
+    return false;
+  })
+
+  ///////////////////////////////////////////////////////////////////////////
+  //
+  // bank account settings
+  //
+  ///////////////////////////////////////////////////////////////////////////
+
+  $('input[class^="bankAccount"]').blur(function(event) {
+    event.preventDefault();
+    var element = this;
+    $('div.statusmessage').hide();
+    $('span.statusmessage').hide();
+    $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
+           $(this),
+           function(data) {
+             if (data.status == "success") {
+               if (data.data.value) {
+                 $(element).val(data.data.value);
+               }
+               if (data.data.iban) {
+                 $('input.bankAccountIBAN').val(data.data.iban);
+               }
+               if (data.data.blz) {
+                 $('input.bankAccountBLZ').val(data.data.blz);
+               }
+               if (data.data.bic) {
+                 $('input.bankAccountBIC').val(data.data.bic);
+               }
+	       $('#orchestra #msg').html(data.data.message);
+	       $('#orchestra #msg').show();
+               if ($('#orchestra #suggestion').html() !== '') {
+	         $('#orchestra #suggestion').show();
+               }
+               return true;
+             } else {
+               if (data.data.suggestion !== '') {
+	         $('#orchestra #suggestion').html(data.data.suggestion);
+               }
+	       $('#orchestra #msg').html(data.data.message);
+	       $('#orchestra #msg').show();
+               if ($('#orchestra #suggestion').html() !== '') {
+	         $('#orchestra #suggestion').show();
+               }
+               return false;
+             }
+	   }, 'json');
+    return false;
+  })
+
+  ///////////////////////////////////////////////////////////////////////////
+  //
   // development settings, mostly link stuff
   //
   ///////////////////////////////////////////////////////////////////////////

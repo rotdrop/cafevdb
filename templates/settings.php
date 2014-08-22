@@ -16,11 +16,12 @@ $debugtitle     = L::t("Show a certain amount of debug information, normally not
 ?>
 <?php if ($_['adminsettings']) { ?>
 <ul id="adminsettingstabs">
-  <li><a href="#tabs-1"><?php echo L::t('Personal Settings'); ?></a></li>
-  <li><a href="#tabs-2"><?php echo L::t('Administration'); ?></a></li>
-  <li><a href="#tabs-3"><?php echo L::t('Sharing'); ?></a></li>
-  <li><a href="#tabs-4"><?php echo L::t('Email'); ?></a></li>
-  <li><a href="#tabs-5"><?php echo L::t('Development'); ?></a></li>
+  <li><a href="#tabs-1"><?php echo L::t('Personal'); ?></a></li>
+  <li><a href="#tabs-2"><?php echo L::t('Orchestra'); ?></a></li>
+  <li><a href="#tabs-3"><?php echo L::t('Data-Base'); ?></a></li>
+  <li><a href="#tabs-4"><?php echo L::t('Sharing'); ?></a></li>
+  <li><a href="#tabs-5"><?php echo L::t('Email'); ?></a></li>
+  <li><a href="#tabs-6"><?php echo L::t('Development'); ?></a></li>
 </ul>
 <?php } ?>
 
@@ -59,8 +60,13 @@ $debugtitle     = L::t("Show a certain amount of debug information, normally not
     <div class="statusmessage" id="error"><?php echo L::t('Unable to set the encryption key.');?></div>
   </form>
 </div>
-<?php if ($_['adminsettings']) { echo $this->inc("app-settings"); } ?>
-<?php if ($_['adminsettings']) { echo $this->inc("share-settings"); } ?>
-<?php if ($_['adminsettings']) { echo $this->inc("email-settings"); } ?>
-<?php if ($_['adminsettings']) { echo $this->inc("devel-settings"); } ?>
-
+<?php
+  $tabNo = 2;
+  if ($_['adminsettings']) {
+    echo $this->inc("orchestra-settings", array('tabNr' => $tabNo++));
+    echo $this->inc("app-settings", array('tabNr' => $tabNo++));
+    echo $this->inc("share-settings", array('tabNr' => $tabNo++));
+    echo $this->inc("email-settings", array('tabNr' => $tabNo++));
+    echo $this->inc("devel-settings", array('tabNr' => $tabNo++));
+  }
+?>

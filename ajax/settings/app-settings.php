@@ -1,9 +1,11 @@
 <?php
 /**
- * Copyright (c) 2011, Frank Karlitschek <karlitschek@kde.org>
- * Copyright (c) 2012, Florian Hülsmann <fh@cbix.de>
+ * Copyright (c) 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ *
  * This file is licensed under the Affero General Public License version 3 or later.
  * See the COPYING-README file.
+ *
+ * BUG: this file is just too long.
  */
 
 \OCP\JSON::checkLoggedIn();
@@ -14,6 +16,7 @@ use \CAFEVDB\L;
 use \CAFEVDB\Config;
 use \CAFEVDB\ConfigCheck;
 use \CAFEVDB\Events;
+use \CAFEVDB\Finance;
 
 // Check if we are a group-admin, otherwise bail out.
 $user  = OCP\USER::getUser();
@@ -767,6 +770,185 @@ if (isset($_POST['emailfromaddress'])) {
             'message' => L::t('Using `%s\' as sender email-address.',
                               array($value)))));
   return true;
+}
+
+$streetAddressSettings = array('streetAddressName01',
+                               'streetAddressName02',
+                               'streetAddressStreet',
+                               'streetAddressHouseNumber',
+                               'streetAddressCity',
+                               'streetAddressZIP',
+                               'streetAddressCountry');
+
+foreach ($streetAddressSettings as $item) {
+  if (isset($_POST[$item])) {
+    $value = $_POST[$item];
+    
+    Config::setValue($item, $value);
+    OC_JSON::success(
+      array("data" => array(
+              'message' => L::t('Value for `%s\' set to `%s\'.',
+                                array($item, $value)))));
+    return true;
+  }
+}
+
+$bankAccountSettings = array('bankAccountOwner',
+                             'bankAccountIBAN',
+                             'bankAccountBLZ',
+                             'bankAccountBIC',
+                             'bankAccountCreditorIdentifier');
+
+foreach ($bankAccountSettings as $item) {
+  if (isset($_POST[$item])) {
+    $value = $_POST[$item];
+    
+    // Allow erasing
+    if ($value == '') {
+      Config::setValue($item, $value);
+      OC_JSON::success(
+        array("data" => array(
+                'message' => L::t('Value for `%s\' set to `%s\'.', array($item, $value)),
+                'value' => $value,
+                'iban' => Config::getValue('bankAccountIBAN'),
+                'blz' => Config::getValue('bankAccountBLZ'),
+                'bic' => Config::getValue('bankAccountBIC'))));
+      return true;
+    }
+
+    switch ($item) {
+    case 'bankAccountCreditorIdentifier':
+      $value = preg_replace('/\s+/', '', $value); // eliminate space
+      if (Finance::testCI($value)) {
+        Config::setValue($item, $value);
+        OC_JSON::success(
+          array("data" => array(
+                  'message' => L::t('Value for `%s\' set to `%s\'.', array($item, $value)),
+                  'value' => $value,
+                  'iban' => Config::getValue('bankAccountIBAN'),
+                  'blz' => Config::getValue('bankAccountBLZ'),
+                  'bic' => Config::getValue('bankAccountBIC'))));
+        return true;
+      }
+      break;
+    case 'bankAccountIBAN':
+      $value = preg_replace('/\s+/', '', $value); // eliminate space
+      $iban = new \IBAN($value);
+      if (!$iban->Verify() && is_numeric($value)) {
+        // maybe simlpy the bank account number, if we have a BLZ,
+        // then compute the IBAN
+        $blz = Config::getValue('bankAccountBLZ');
+        $bav = new \malkusch\bav\BAV;
+        if ($bav->isValidBank($blz)) {
+          $value = Finance::makeIBAN($blz, $value);
+        }
+      }
+      $iban = new \IBAN($value);
+      if ($iban->Verify()) {
+        $value = $iban->MachineFormat();
+        Config::setValue($item, $value);
+
+        // Compute as well the BLZ and the BIC
+        $blz = $iban->Bank();
+        $bav = new \malkusch\bav\BAV;
+        if ($bav->isValidBank($blz)) {
+          Config::setValue('bankAccountBLZ', $blz);
+          Config::setValue('bankAccountBIC', $bav->getMainAgency($blz)->getBIC());
+        }
+        
+        OC_JSON::success(
+          array("data" => array(
+                  'message' => L::t('Value for `%s\' set to `%s\'.', array($item, $value)),
+                  'value' => $value,
+                  'iban' => Config::getValue('bankAccountIBAN'),
+                  'blz' => Config::getValue('bankAccountBLZ'),
+                  'bic' => Config::getValue('bankAccountBIC'))));
+
+        return true;
+      } else {
+        $message = L::t("Invalid IBAN: `%s'.", array($value));
+        $suggestion = '';
+        $suggestions = $iban->MistranscriptionSuggestions();
+        $intro = L::t("Perhaps you meant");
+        while (count($suggestions) > 0) {
+          $alternative = array_shift($suggestions);
+          if ($iban->Verify($alternative)) {
+            $alternative = $iban->MachineFormat($alternative);
+            $alternative = $iban->HumanFormat($alternative);
+            $suggestion .= $intro . " `".$alternative."'";
+            $into = L::t("or");
+          }
+        }
+        OC_JSON::error(
+          array("data" => array('message' => $message,
+                                'suggestion' => $suggestion)));
+        return false;
+      }
+    case 'bankAccountBLZ':
+      $value = preg_replace('/\s+/', '', $value);
+      $bav = new \malkusch\bav\BAV;
+      if ($bav->isValidBank($value)) {
+        // set also the BIC
+        Config::setValue('bankAccountBLZ', $value);
+        $agency = $bav->getMainAgency($value);
+        $bic = $agency->getBIC();
+        if (Finance::validateSWIFT($bic)) {
+          Config::setValue('bankAccountBIC', $bic);
+        }
+        OC_JSON::success(
+          array("data" => array(
+                  'message' => L::t('Value for `%s\' set to `%s\'.', array($item, $value)),
+                  'value' => $value,
+                  'iban' => Config::getValue('bankAccountIBAN'),
+                  'blz' => Config::getValue('bankAccountBLZ'),
+                  'bic' => Config::getValue('bankAccountBIC'))));
+        return true;
+      }
+      break;
+    case 'bankAccountBIC':
+      $value = preg_replace('/\s+/', '', $value);
+      if (!Finance::validateSWIFT($value)) {
+        // maybe a BLZ
+        $bav = new \malkusch\bav\BAV;
+        if ($bav->isValidBank($value)) {
+          Config::setValue('bankAccountBLZ', $value);
+          $agency = $bav->getMainAgency($value);
+          $value = $agency->getBIC();
+          // Set also the BLZ
+        }
+      }
+      if (Finance::validateSWIFT($value)) {
+        Config::setValue($item, $value);
+        OC_JSON::success(
+          array("data" => array(
+                  'message' => L::t('Value for `%s\' set to `%s\'.', array($item, $value)),
+                  'value' => $value,
+                  'iban' => Config::getValue('bankAccountIBAN'),
+                  'blz' => Config::getValue('bankAccountBLZ'),
+                  'bic' => Config::getValue('bankAccountBIC'))));
+        return true;
+      }
+      break; // error
+    default:
+      Config::setValue($item, $value);
+      OC_JSON::success(
+        array("data" => array(
+                'message' => L::t('Value for `%s\' set to `%s\'.', array($item, $value)),
+                'value' => $value,
+                'iban' => Config::getValue('bankAccountIBAN'),
+                'blz' => Config::getValue('bankAccountBLZ'),
+                'bic' => Config::getValue('bankAccountBIC'))));
+      return true;
+    }
+
+    // Default is error
+    OC_JSON::error(
+      array("data" => array(
+              'message' => L::t('Value for `%s\' invalid: `%s\'.',
+                                array($item, $value)),
+              'suggestion' => '')));
+    return false;
+  }
 }
 
 $devlinks = array('phpmyadmin', 'phpmyadminoc', 'sourcecode', 'sourcedocs', 'ownclouddev');

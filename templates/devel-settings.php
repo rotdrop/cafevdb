@@ -3,7 +3,7 @@ use CAFEVDB\L;
 use CAFEVDB\Config;
 Config::init();
 ?>
-<div id="tabs-5" class="personalblock admin devel">
+<div id="tabs-<?php echo $_['tabNr']; ?>" class="personalblock admin devel">
   <form id="develsettings">
     <fieldset id="devlinks"><legend><?php echo L::t('Links');?></legend>
       <input type="button" class="devlinktest" id="testphpmyadmin" name="testphpmyadmin" value="<?php echo L::t('Test Link'); ?>" title="<?php echo Config::toolTips('test-linktarget'); ?>"  />

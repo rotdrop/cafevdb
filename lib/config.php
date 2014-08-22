@@ -47,7 +47,20 @@ phpmyadmin
 phpmyadminoc
 sourcecode
 sourcedocs
-ownclouddev';
+ownclouddev
+streetAddressName01
+streetAddressName02
+streetAddressStreet
+streetAddressHouseNumber
+streetAddressCity
+streetAddressZIP
+streetAddressCountry
+bankAccountOwner
+bankAccountIBAN
+bankAccountBLZ
+bankAccountBIC
+bankAccountCreditorIdentifier
+';
   const MD5_SUF  = '::MD5';
   const MD5_LEN  = 5;
   const DFLT_CALS = 'concerts,rehearsals,other,management';
