@@ -1,0 +1,24 @@
+language: php
+
+php:
+    - 5.5
+    - 5.4
+    - 5.3
+
+env: PDO_DSN="mysql:host=localhost;dbname=bav" PDO_USER=travis
+
+install:
+    - pyrus install pear/PHP_CodeSniffer
+    - phpenv rehash
+
+before_script:
+    - composer --prefer-source --dev install
+    - mysql -e 'SET @@GLOBAL.wait_timeout=1200'
+    - mysql -e 'create database bav;'
+    - php tests/bin/test-install.php
+
+script:
+    - phpunit tests/unit/
+    - phpunit --exclude-group large tests/unit-large/
+    - phpcs --standard=PSR2 classes/ bin/ docs/example.php tests/classes/ tests/bin/ tests/bootstrap.php
+
