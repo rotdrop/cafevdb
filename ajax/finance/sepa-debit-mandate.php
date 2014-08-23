@@ -61,7 +61,8 @@ try {
     $ref = Finance::generateSepaMandateReference($projectId, $musicianId);
     $members = Config::getSetting('memberTable', L::t('ClubMembers'));
     $nonrecurring = $projectName !== $members;
-    $mandate = array('mandateReference' => $ref,
+    $mandate = array('id' => -1,
+                     'mandateReference' => $ref,
                      'mandateDate' => '',
                      'lastUsedDate' =>'',
                      'musicianId' => $musicianId,
@@ -80,6 +81,7 @@ try {
   $tmpl->assign('MusicianId', $musicianId);
   $tmpl->assign('CSSClass', 'sepadebitmandate');
 
+  $tmpl->assign('mandateId', $mandate['id']);
   $tmpl->assign('mandateReference', $mandate['mandateReference']);
   $tmpl->assign('mandateDate', $mandate['mandateDate']);
   $tmpl->assign('lastUsedDate', $mandate['lastUsedDate']);
@@ -112,7 +114,7 @@ try {
                           'projectName' => $projectName,
                           'musicianId' => $musicianId,
                           'musicianName' => $musicianName,
-                          'mandate' => $mandate,
+                          'mandateId' => $mandate['id'],
                           'debug' => $debugtext)));
 
   return true;

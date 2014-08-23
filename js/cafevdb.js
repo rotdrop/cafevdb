@@ -489,7 +489,7 @@ $(document).ready(function(){
       // string.
       var values = $(this).attr('name');
       $.post(OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-mandate.php'),
-             values, CAFEVDB.SepaDebitMandate.UI.init, 'json');
+             values, CAFEVDB.SepaDebitMandate.init, 'json');
     }
     return false;
   });

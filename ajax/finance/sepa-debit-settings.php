@@ -46,6 +46,32 @@ $changed = Util::cgiValue('changed');
 $value = Util::cgiValue($changed);
 
 switch ($changed) {
+case 'lastUsedDate':
+  // Store the lastUsedDate immediately, if other fields are disabled
+  if (Util::cgiValue('mandateDate', false) === false) {
+    $mandate = array('mandateReference' => $reference,
+                     'musicianId' => $musicianId,
+                     'projectId' => $projectId,
+                     'lastUsedDate' => $value);
+    if (!Finance::storeSepaMandate($mandate)) {
+      OC_JSON::error(
+        array("data" => array(
+                'message' => L::t('Failed setting `%s\' to `%s\'.',
+                                  array($changed, $value)),
+                'suggestion' => '')));
+      return false;
+    }
+  }
+case 'bankAccountOwner':
+case 'mandateDate':
+  // Whatever the user like ;)
+  // The date-picker does some validation on its own, so just live with it.
+  OC_JSON::success(
+    array("data" => array(
+            'message' => L::t('Value for `%s\' set to `%s\'.',
+                              array($changed, $value)),
+            'value' => $value)));
+  return true;
 case 'bankAccountIBAN':
   if ($value == '') {
     $IBAN = '';
@@ -72,7 +98,7 @@ case 'bankAccountIBAN':
     $bav = new \malkusch\bav\BAV;
     if ($bav->isValidBank($blz)) {
       $BLZ = $blz;
-      $BIX = $bav->getMainAgency($blz)->getBIC();
+      $BIC = $bav->getMainAgency($blz)->getBIC();
     }
   } else {
     $message = L::t("Invalid IBAN: `%s'.", array($value));
@@ -145,49 +171,23 @@ case 'bankAccountBIC':
     return false;
   }
   break;
-}
-
-// If we reach here then the bank-account stuff survived the
-// consistency checks.
-
-$mandate = array('mandateReference' => $reference,
-                 'musicianId' => $musicianId,
-                 'projectId' => $projectId,
-                 'nonrecurring' => $nonrecurring ? 1 : 0,
-                 'IBAN' => $IBAN,
-                 'BIC' => $BIC);
-
-switch ($changed) {
-case 'bankAccountOwner':
-case 'mandateDate':
-case 'lastUsedDate':
-  $value = Util::cgiValue($changed);
-  $mandate[$changed] = $value;
-  break;
-}
-
-if (Finance::storeSepaMandate($mandate)) {
-  OC_JSON::success(
-    array("data" => array(
-            'message' => L::t('Value for `%s\' set to `%s\'.', array($changed, $value)).print_r($_POST, true),
-            'value' => $value,
-            'iban' => $IBAN,
-            'blz' => $BLZ,
-            'bic' => $BIC)));
-  return true;  
-} else {
+default:
   OC_JSON::error(
     array("data" => array(
-            'message' => L::t('Failed setting `%s\' to `%s\'.',
-                              array($changed, $value)),
-            'suggestion' => '')));
+            "message" => L::t("Unhandled request:")." ".print_r($_POST, true))));
   return false;
 }
 
-OC_JSON::error(
-  array("data" => array(
-          "message" => L::t("Unhandled request:")." ".print_r($_POST, true))));
+// return with all the sanitized and canonicalized values for the
+// bank-account
 
-return false;
+OC_JSON::success(
+  array("data" => array(
+          'message' => L::t('Value for `%s\' set to `%s\'.', array($changed, $value)),
+          'value' => $value,
+          'iban' => $IBAN,
+          'blz' => $BLZ,
+          'bic' => $BIC)));
+return true;  
 
 ?>
