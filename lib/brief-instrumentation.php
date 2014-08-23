@@ -275,6 +275,23 @@ class BriefInstrumentation
     $opts['fdd']['Unkostenbeitrag'] = Config::$opts['money'];
     $opts['fdd']['Unkostenbeitrag']['name'] = "Unkostenbeitrag\n(Gagen negativ)";
 
+    // One virtual field in order to be able to manage SEPA debit mandas
+    $opts['fdd']['SepaDebitMandate'] = array(
+      'input' => 'V',
+      'name' => L::t('SEPA Debit Mandate'),
+      'select' => 'T',
+      'options' => 'ACPDV',
+      'sql' => '`PMEtable0`.`MusikerId`', // dummy, make the SQL data base happy
+      'nowrap' => true,
+      'sort' => false,
+      'php' => array(
+        'type' => 'function',
+        'function' => 'CAFEVDB\BriefInstrumentation::sepaDebitMandatePME',
+        'parameters' => array('project' => $project,
+                              'projectId' => $projectId)
+        )
+      );
+
     // Generate input fields for the extra columns
     foreach ($userExtraFields as $field) {
       $name = sprintf('ExtraFeld%02d', $field['pos']);
@@ -320,6 +337,39 @@ class BriefInstrumentation
 
     // Generate and possibly display the table
     $this->pme = new \phpMyEdit($opts);
+  }
+
+  public static function sepaDebitMandatePME($musicianId, $opts, $action, $k, $fds, $fdd, $row)
+  {
+    // Fetch the data from the array $row.
+    $projectId = $opts['projectId'];
+    $project   = $opts['project'];
+
+    // Careful: this changes when rearranging the ordering of the display
+    $musican    = $row['qf2'];
+    $musicianId = $row['qf2_idx'];
+
+    return self::sepaDebitMandateButton($musicianId, $musician, $projectId, $project);
+  }
+
+  /**Generate a clickable form element which finally will display the
+   * debit-mandate dialog, i.e. load some template stuff by means of
+   * some java-script and ajax blah.
+   */
+  public static function sepaDebitMandateButton($musicianId, $musician, $projectId, $project)
+  {
+    $button = '<div class="sepa-debit-mandate">'
+      .'<input type="button" '
+      .'       value="'.L::t("SEPA Debit Mandate").'" '
+      .'       title="'.L::t("Click to enter details of a potential SEPA debit mandate").' " '
+      .'       name="'
+      .'MusicianId='.$musicianId.'&amp;'
+      .'MusicianName='.$musician.'&amp;'
+      .'ProjectId='.$projectId.'&amp;'
+      .'ProjectName='.$project.'" '
+      .'       class="sepa-debit-mandate" />'
+      .'</div>';
+    return $button;
   }
 };
 
