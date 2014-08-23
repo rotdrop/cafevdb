@@ -26,7 +26,7 @@ OC::$CLASSPATH['CAFEVDB\Email'] = 'cafevdb/lib/email.php';
 OC::$CLASSPATH['CAFEVDB\EmailHistory'] = 'cafevdb/lib/email.php';
 OC::$CLASSPATH['CAFEVDB\InstrumentInsurance'] = 'cafevdb/lib/instrument-insurance.php';
 OC::$CLASSPATH['CAFEVDB\PHPExcel\ValueBinder'] = 'cafevdb/lib/php-excel-functions.php';
-OC::$CLASSPATH['CAFEVDB\Finance'] = 'cafevdb/lib/functions.php';
+OC::$CLASSPATH['CAFEVDB\Finance'] = 'cafevdb/lib/finance.php';
 
 OC::$CLASSPATH['DWEMBED\App'] = 'dokuwikiembed/lib/dokuwikiembed.php';
 OC::$CLASSPATH['DWEMBED\L'] = 'dokuwikiembed/lib/util.php';
