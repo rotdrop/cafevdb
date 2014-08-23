@@ -646,6 +646,32 @@ __EOT__;
 
     return $modified;
   }
+
+  /** Fetch the musician-name name corresponding to $musicianId.
+   */
+  public static function fetchName($musicianId, $handle = false)
+  {
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
+    $query = 'SELECT `Name`,`Vorname` FROM `Musiker` WHERE `Id` = '.$musicianId;
+    $result = mySQL::query($query, $handle);
+
+    $row = false;
+    if ($result !== false && mysql_num_rows($result) == 1) {
+      $row = mySQL::fetch($result);
+    }
+    
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return array('firstName' => isset($row['Vorname']) ? $row['Vorname'] : 'X',
+                 'lastName' => isset($row['Name']) ? $row['Name'] : 'X');
+  }
   
 };
 
