@@ -34,7 +34,7 @@ case 'brief-instrumentation':
   $projectId   = $table->projectId;
   $projectName = $table->project;
   $name = L::t("%s-brief", array($projectName));
-  $instrumentCol = 1;
+  $instrumentCol = 2;
   break;
 case 'detailed-instrumentation':
   $table = new CAFEVDB\DetailedInstrumentation(false);
