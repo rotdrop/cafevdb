@@ -91,7 +91,12 @@ try {
     $tmpl->assign('bankAccountIBAN', Config::getValue('bankAccountIBAN'));
     $tmpl->assign('bankAccountBLZ', Config::getValue('bankAccountBLZ'));
     $tmpl->assign('bankAccountBIC', Config::getValue('bankAccountBIC'));
-    $tmpl->assign('bankAccountCreditorIdentifier', Config::getValue('bankAccountCreditorIdentifier'));    
+    $tmpl->assign('bankAccountCreditorIdentifier', Config::getValue('bankAccountCreditorIdentifier'));
+
+    $tmpl->assign('memberTable',
+                  Config::getSetting('memberTable', L::t('ClubMembers')));
+    $tmpl->assign('executiveBoardTable',
+                  Config::getSetting('executiveBoardTable', L::t('ExecutiveBoardMembers')));
 
     $tmpl->assign('orchestra', Config::getValue('orchestra'));
 
