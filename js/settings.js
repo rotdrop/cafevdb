@@ -938,6 +938,32 @@ $(document).ready(function() {
 
   ///////////////////////////////////////////////////////////////////////////
   //
+  // special members 
+  //
+  ///////////////////////////////////////////////////////////////////////////
+
+  $('input.specialMemberTables').blur(function(event) {
+    event.preventDefault();
+    $('div.statusmessage').hide();
+    $('span.statusmessage').hide();
+    $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
+           $(this),
+           function(data) {
+             if (data.status == "success") {
+	       $('#orchestra #msg').html(data.data.message);
+	       $('#orchestra #msg').show();
+               return true;
+             } else {
+	       $('#orchestra #msg').html(data.data.message);
+	       $('#orchestra #msg').show();
+               return false;
+             }
+	   }, 'json');
+    return false;
+  })
+
+  ///////////////////////////////////////////////////////////////////////////
+  //
   // bank account settings
   //
   ///////////////////////////////////////////////////////////////////////////
