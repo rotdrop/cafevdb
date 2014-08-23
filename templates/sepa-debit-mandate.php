@@ -23,6 +23,7 @@ $recurring = L::t('Type: ').($_['nonrecurring'] ? L::t('nonrecurring') : L::t('p
     <input type="hidden" name="MusicianId"   value="<?php echo $musId; ?>" />
     <input type="hidden" name="MusicianName" value="<?php echo $musName; ?>" />
     <input type="hidden" name="mandateReference" value="<?php echo $_['mandateReference']; ?>" />
+    <input type="hidden" name="nonrecurring" value="<?php echo $_['nonrecurring']; ?>" />
     <input class="bankAccountOwner" type="text"
            id="bankAccountOwner"
            name="bankAccountOwner"
@@ -54,14 +55,17 @@ $recurring = L::t('Type: ').($_['nonrecurring'] ? L::t('nonrecurring') : L::t('p
            value="<?php echo $_['mandateDate']; ?>"
            title="<?php echo L::t('Date of mandate grant'); ?>"
            placeholder="<?php echo L::t('mandate date'); ?>"/>
-    <label for="lastUsedDate"><?php echo L::t("Date of last usage:"); ?></label>
-    <input class="lastUsedDate" type="text"
-           id="lastUsedDate"
-           <?php echo $_['nonrecurring'] ? 'disabled' : '' ?>
-           name="lastUsedDate"
-           value="<?php echo $_['lastUsedDate']; ?>"
-           title="<?php echo L::t('Date of last usage of debit-mandate'); ?>"
-           placeholder="<?php echo L::t('last used date'); ?>"/><br/>
+<?php if ($_['nonrecurring']) echo '<!-- '; ?>
+    <label for="lastUsedDate"><?php echo L::t("Date of last usage:"); ?>
+      <input class="lastUsedDate" type="text"
+             id="lastUsedDate"
+             <?php echo $_['nonrecurring'] ? 'disabled' : '' ?>
+             name="lastUsedDate"
+             value="<?php echo $_['lastUsedDate']; ?>"
+             title="<?php echo L::t('Date of last usage of debit-mandate'); ?>"
+             placeholder="<?php echo L::t('last used date'); ?>"/>
+    </label><br/>
+<?php if ($_['nonrecurring']) echo ' -->'; ?>
     <span id="debitRecurringInfo"><?php echo $recurring; ?></span>
   </form>
   <div class="sepastatusblock">

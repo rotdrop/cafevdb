@@ -84,6 +84,7 @@ var CAFEVDB = CAFEVDB || {};
             // enable the form, disable the change button
             $(this).dialog("widget").find('button.save').attr("disabled", false);
             $(this).dialog("widget").find('button.apply').attr("disabled", false);
+            $(this).dialog("widget").find('button.delete').attr("disabled", false);
             $(this).dialog("widget").find('input[class^="bankAccount"]').attr("disabled", false);
             $(this).dialog("widget").find('input.mandateDate').attr("disabled", false);
             $(this).dialog("widget").find('button.change').attr("disabled", true);
@@ -97,7 +98,10 @@ var CAFEVDB = CAFEVDB || {};
           title: t('cafevdb', 'Close the form and save the data in the underlying data-base storage.'),
           click: function() {
             var dlg = this;
-            self.store(function () { $(dlg).dialog('close'); });
+            self.store(function () {
+              //$(dlg).dialog('close');
+              $('form.pme-form').submit();
+            });
           }
         },
         {
@@ -109,10 +113,11 @@ var CAFEVDB = CAFEVDB || {};
             self.store(function () {
               // Disable everything and enable the change button
               // If we are about to display an existing mandate, first
-              // disable all inputs and leave only the "cancel" and
+              // disable all inputs and leave only the "close" and
               // "change" buttons enabled, and the lastUsed date.
               $(dlg).dialog("widget").find('button.save').attr("disabled", true);
               $(dlg).dialog("widget").find('button.apply').attr("disabled", true);
+              $(dlg).dialog("widget").find('button.delete').attr("disabled", true);
               $(dlg).dialog("widget").find('input[class^="bankAccount"]').attr("disabled", true);
               $(dlg).dialog("widget").find('input.mandateDate').attr("disabled", true);
               $(dlg).dialog("widget").find('button.change').attr("disabled", false);
@@ -121,11 +126,24 @@ var CAFEVDB = CAFEVDB || {};
           }
         },
         {
-          class: 'cancel',
-          text: t('cafevdb', 'Cancel'),
+          class: 'delete',
+          text: t('cafevdb', 'Delete'),
+          title: t('cafevdb', 'Delete this mandate from the data-base. Normally, this should only be done in case of desinformation or misunderstanding. Use with care.'),
+          click: function() {
+            var dlg = this;
+            self.delete(function () {
+              //$(dlg).dialog('close');
+              $('form.pme-form').submit();
+            });
+          }
+        },
+        {
+          class: 'close',
+          text: t('cafevdb', 'Close'),
           title: t('cafevdb', 'Discard all filled-in data and close the form. Note that this will not undo any changes previously stored in the data-base by pressing the `Apply\' button.'),
           click: function() {
-            $(this).dialog('close');
+            //$(this).dialog('close');
+            $('form.pme-form').submit();
           }
         },
       ],
@@ -134,12 +152,15 @@ var CAFEVDB = CAFEVDB || {};
         
         if (self.mandateId > 0) {
           // If we are about to display an existing mandate, first
-          // disable all inputs and leave only the "cancel" and
+          // disable all inputs and leave only the "close" and
           // "change" buttons enabled, and the lastUsed date.
           $(this).dialog("widget").find('button.save').attr("disabled", true);
           $(this).dialog("widget").find('button.apply').attr("disabled", true);
+          $(this).dialog("widget").find('button.delete').attr("disabled", true);
           $(this).dialog("widget").find('input[class^="bankAccount"]').attr("disabled", true);
           $(this).dialog("widget").find('input.mandateDate').attr("disabled", true);
+        } else {
+          $(this).dialog("widget").find('button.change').attr("disabled", true);
         }
 
         $('button').tipsy({gravity:'ne', fade:true});
@@ -188,6 +209,29 @@ var CAFEVDB = CAFEVDB || {};
     var post = $('#sepa-debit-mandate-form').serialize();
 
     $.post(OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-store.php'),
+           post,
+           function (data) {
+	     $(dialogId+' #msg').html(data.data.message);
+	     $(dialogId+' #msg').show();
+             if (data.status == "success") {
+               callbackOk();
+               return true;
+             } else {
+               return false;
+             }
+           });
+  };
+  // Delete a mandate
+  SepaDebitMandate.delete = function(callbackOk) {
+    var dialogId = '#sepa-debit-mandate-dialog';
+
+    $('div.statusmessage').hide();
+    $('span.statusmessage').hide();    
+
+    // "submit" the entire form
+    var post = $('#sepa-debit-mandate-form').serialize();
+
+    $.post(OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-delete.php'),
            post,
            function (data) {
 	     $(dialogId+' #msg').html(data.data.message);

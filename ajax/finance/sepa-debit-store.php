@@ -32,6 +32,7 @@ foreach ($requiredKeys as $required) {
 
 // Compose the mandate
 $mandate = array('mandateReference' => Util::cgiValue('mandateReference'),
+                 'nonrecurring' => Util::cgiValue('nonrecurring'),
                  'musicianId' => Util::cgiValue('MusicianId'),
                  'projectId' => Util::cgiValue('ProjectId'),
                  'mandateDate' => Util::cgiValue('mandateDate'),

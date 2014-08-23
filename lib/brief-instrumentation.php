@@ -280,10 +280,17 @@ class BriefInstrumentation
       'input' => 'V',
       'name' => L::t('SEPA Debit Mandate'),
       'select' => 'T',
-      'options' => 'ACPDV',
-      'sql' => '`PMEtable0`.`MusikerId`', // dummy, make the SQL data base happy
+      'options' => 'LACPDV',
+      'sql' => '`PMEjoin'.count($opts['fdd']).'`.`mandateReference`', // dummy, make the SQL data base happy
+      'sqlw' => '`PMEjoin'.count($opts['fdd']).'`.`mandateReference`', // dummy, make the SQL data base happy
+      'values' => array(
+        'table' => 'SepaDebitMandates',
+        'column' => 'id',
+        'join' => '$join_table.projectId = $main_table.ProjektId AND $join_table.musicianId = $main_table.MusikerId',
+        'description' => 'mandateReference'
+        ),
       'nowrap' => true,
-      'sort' => false,
+      'sort' => true,
       'php' => array(
         'type' => 'function',
         'function' => 'CAFEVDB\BriefInstrumentation::sepaDebitMandatePME',
@@ -339,7 +346,7 @@ class BriefInstrumentation
     $this->pme = new \phpMyEdit($opts);
   }
 
-  public static function sepaDebitMandatePME($musicianId, $opts, $action, $k, $fds, $fdd, $row)
+  public static function sepaDebitMandatePME($referenceId, $opts, $action, $k, $fds, $fdd, $row)
   {
     // Fetch the data from the array $row.
     $projectId = $opts['projectId'];
@@ -349,18 +356,24 @@ class BriefInstrumentation
     $musican    = $row['qf2'];
     $musicianId = $row['qf2_idx'];
 
-    return self::sepaDebitMandateButton($musicianId, $musician, $projectId, $project);
+    if ($row['qf'.$k] != '') {
+      $value = $row['qf'.$k];
+    } else {
+      $value = L::t("SEPA Debit Mandate");
+    }
+
+    return self::sepaDebitMandateButton($value, $musicianId, $musician, $projectId, $project);
   }
 
   /**Generate a clickable form element which finally will display the
    * debit-mandate dialog, i.e. load some template stuff by means of
    * some java-script and ajax blah.
    */
-  public static function sepaDebitMandateButton($musicianId, $musician, $projectId, $project)
+  public static function sepaDebitMandateButton($value, $musicianId, $musician, $projectId, $project)
   {
     $button = '<div class="sepa-debit-mandate">'
       .'<input type="button" '
-      .'       value="'.L::t("SEPA Debit Mandate").'" '
+      .'       value="'.$value.'" '
       .'       title="'.L::t("Click to enter details of a potential SEPA debit mandate").' " '
       .'       name="'
       .'MusicianId='.$musicianId.'&amp;'

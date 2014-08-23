@@ -24,6 +24,8 @@ class Finance
     $musicianName = Musicians::fetchName($musicianId, $handle);
     $projectName = Projects::fetchName($projectId, $handle);    
 
+    $musicianName['firstName'] .= 'X';
+    $musicianName['lastName'] .= 'X';
     $initials = $musicianName['firstName'][0].$musicianName['lastName'][0];
     $prjId = substr("0000".$projectId, -4);
     $musId = substr("0000".$musicianId, -4);
@@ -32,7 +34,7 @@ class Finance
 
     $year = substr($projectName, -4);
     if (is_numeric($year)) {
-      $projectname = substr($projectName, 0, -4);
+      $projectName = substr($projectName, 0, -4);
       $ref = substr($ref.$projectName, 0, 30).$year;
     } else {
       $ref = substr($ref.$projectName, 0, 34);
@@ -72,6 +74,25 @@ class Finance
     return $mandate;
   }
   
+  /**Erase a SEPA-mandate. */
+  public static function deleteSepaMandate($projectId, $musicianId, $handle = false)
+  {
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
+    $query = "DELETE FROM `SepaDebitMandates` WHERE `projectId` = $projectId AND `musicianId` = $musicianId";
+    mySQL::query($query, $handle);
+
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return true; // hopefully
+  }
+
   /**Store a SEPA-mandate, possibly with only partial
    * information. mandateReference, musicianId and projectId are
    * required.
@@ -90,6 +111,19 @@ class Finance
     $ref = $mandate['mandateReference'];
     $mus = $mandate['musicianId'];
     $prj = $mandate['projectId'];
+
+    // Convert to a date format understood by mySQL.
+    $dateFields = array('lastUsedDate', 'mandateDate');
+    foreach ($dateFields as $date) {
+      if (isset($mandate[$date])) {
+        $stamp = strtotime($mandate[$date]);
+        $value = date('Y-m-d', $stamp);
+        if ($stamp != strtotime($value)) {
+          return false;
+        }
+        $mandate[$date] = $value;
+      }
+    }
 
     $ownConnection = $handle === false;
     if ($ownConnection) {

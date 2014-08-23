@@ -258,7 +258,7 @@ make sure that the musicians are also automatically added to the
                                          'values2' => $this->memberStatusNames,
                                          'tooltip' => config::toolTips('member-status'));
 
-    // fetch the list of all project in order to provide a somewhat
+    // fetch the list of all projects in order to provide a somewhat
     // cooked filter list
     $allProjects = Projects::fetchProjects(false /* no db handle */, true /* include years */);
     $projectQueryValues = array('*' => '*'); // catch-all filter
@@ -277,7 +277,7 @@ __EOT__;
       array('input' => 'VR', // virtual, read perm
             'options' => 'LFV', //just do the join, don't display anything
             'select' => 'M',
-            'name' => 'Projekte',
+            'name' => L::t('Projekte'),
             'sort' => true,
             'sql' => 'PMEjoin'.count($opts['fdd']).'.Projekte',
             'sqlw' => 'PMEjoin'.count($opts['fdd']).'.Projekte',
