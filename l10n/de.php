@@ -55,7 +55,7 @@
 "Musician-id and/or name not set" => "Musiker-Name und/oder Id unbekannt.",
 "ClubMembers" => "Vereinsmitglieder",
 "Failed setting `%s' to `%s'." => "Konnte den Wert für `%s' nicht als `%s' speichern.",
-"Value for `%s' set to `%s'." => "Wert für `%s' als `%s' gespeichert.",
+"Value for `%s' set to `%s'." => "Wert für `%s' auf `%s' gesetzt.",
 "Invalid IBAN: `%s'." => "Ungültige IBAN: `%s'.",
 "Perhaps you meant" => "Vielleicht meinten Sie",
 "or" => "oder",

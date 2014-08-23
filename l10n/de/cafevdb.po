@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-23 17:37+0200\n"
-"PO-Revision-Date: 2014-08-23 17:38+0200\n"
+"POT-Creation-Date: 2014-08-23 17:46+0200\n"
+"PO-Revision-Date: 2014-08-23 17:46+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -291,7 +291,7 @@ msgstr "Konnte den Wert für `%s' nicht als `%s' speichern."
 #: ajax/settings/app-settings.php:927 ajax/settings/app-settings.php:939
 #, php-format
 msgid "Value for `%s' set to `%s'."
-msgstr "Wert für `%s' als `%s' gespeichert."
+msgstr "Wert für `%s' auf `%s' gesetzt."
 
 #: ajax/finance/sepa-debit-settings.php:104 ajax/settings/app-settings.php:872
 #, php-format
@@ -1039,19 +1039,19 @@ msgstr "Speichern"
 msgid "Close the form and save the data in the underlying data-base storage."
 msgstr "Schließt das Formular und speichert die Daten in der Datenbank."
 
-#: js/sepa-debit-mandate.js:106
+#: js/sepa-debit-mandate.js:109
 msgid "Apply"
 msgstr "Anwenden"
 
-#: js/sepa-debit-mandate.js:107
+#: js/sepa-debit-mandate.js:110
 msgid "Save the data in the underlying data-base storage. Keep the form open."
 msgstr "Speichert die Daten in der Datenbank. Das Formular bleibt offen."
 
-#: js/sepa-debit-mandate.js:127 templates/blog.php:117
+#: js/sepa-debit-mandate.js:130 templates/blog.php:117
 msgid "Delete"
 msgstr "Löschen"
 
-#: js/sepa-debit-mandate.js:128
+#: js/sepa-debit-mandate.js:131
 msgid ""
 "Delete this mandate from the data-base. Normally, this should only be done "
 "in case of desinformation or misunderstanding. Use with care."
@@ -1060,11 +1060,11 @@ msgstr ""
 "sollte das aufgrund falscher Eintragungen oder Mißverständnissen mit\n"
 "den Musikern nötig sein."
 
-#: js/sepa-debit-mandate.js:139
+#: js/sepa-debit-mandate.js:142
 msgid "Close"
 msgstr "Schließen"
 
-#: js/sepa-debit-mandate.js:140
+#: js/sepa-debit-mandate.js:143
 msgid ""
 "Discard all filled-in data and close the form. Note that this will not undo "
 "any changes previously stored in the data-base by pressing the `Apply' "

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-23 17:38+0200\n"
+"POT-Creation-Date: 2014-08-23 17:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -994,29 +994,29 @@ msgstr ""
 msgid "Close the form and save the data in the underlying data-base storage."
 msgstr ""
 
-#: js/sepa-debit-mandate.js:106
+#: js/sepa-debit-mandate.js:109
 msgid "Apply"
 msgstr ""
 
-#: js/sepa-debit-mandate.js:107
+#: js/sepa-debit-mandate.js:110
 msgid "Save the data in the underlying data-base storage. Keep the form open."
 msgstr ""
 
-#: js/sepa-debit-mandate.js:127 templates/blog.php:117
+#: js/sepa-debit-mandate.js:130 templates/blog.php:117
 msgid "Delete"
 msgstr ""
 
-#: js/sepa-debit-mandate.js:128
+#: js/sepa-debit-mandate.js:131
 msgid ""
 "Delete this mandate from the data-base. Normally, this should only be done "
 "in case of desinformation or misunderstanding. Use with care."
 msgstr ""
 
-#: js/sepa-debit-mandate.js:139
+#: js/sepa-debit-mandate.js:142
 msgid "Close"
 msgstr ""
 
-#: js/sepa-debit-mandate.js:140
+#: js/sepa-debit-mandate.js:143
 msgid ""
 "Discard all filled-in data and close the form. Note that this will not undo "
 "any changes previously stored in the data-base by pressing the `Apply' "
