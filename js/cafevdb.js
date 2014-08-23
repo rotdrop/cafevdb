@@ -480,6 +480,20 @@ $(document).ready(function(){
     return false;
   });
 
+  $(':button.sepa-debit-mandate').click(function(event) {
+    event.preventDefault();
+    if ($('#sepa-debit-mandate-dialog').dialog('isOpen') == true) {
+      $('#sepa-debit-mandate-dialog').dialog('close').remove();
+    } else {
+      // We store the values in the name attribute as serialized
+      // string.
+      var values = $(this).attr('name');
+      $.post(OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-mandate.php'),
+             values, CAFEVDB.SepaDebitMandate.UI.init, 'json');
+    }
+    return false;
+  });
+
   $(':button.register-musician').click(function(event) {
     event.preventDefault();
     var values = $(this).attr('name');
