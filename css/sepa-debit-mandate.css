@@ -1,0 +1,8 @@
+div.sepastatusblock {
+  min-height: 4ex;
+}
+
+#sepa-debit-mandate-dialog input.mandateDate,
+#sepa-debit-mandate-dialog input.lastUsedDate { 
+  width: 6em;
+}

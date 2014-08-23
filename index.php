@@ -93,6 +93,7 @@ try {
   OCP\Util::addStyle('cafevdb', 'pme-table');
   OCP\Util::addStyle('cafevdb', 'settings');
   OCP\Util::addStyle('cafevdb', 'events');
+  OCP\Util::addStyle('cafevdb', 'sepa-debit-mandate');
   OCP\Util::addStyle('cafevdb', 'email');
   OCP\Util::addStyle('cafevdb', 'blog');
   OCP\Util::addStyle('cafevdb', 'inlineimage');  
@@ -108,6 +109,7 @@ try {
   OCP\Util::addScript('cafevdb', 'events');
   OCP\Util::addScript('cafevdb', 'blog');
   OCP\Util::addScript('cafevdb', 'inlineimage');
+  OCP\Util::addScript('cafevdb', 'sepa-debit-mandate');
   OCP\Util::addScript('cafevdb', 'jquery.Jcrop');
 
   OCP\Util::addscript('files',   'jquery.iframe-transport');
