@@ -859,6 +859,18 @@ __EOT__;
 __EOT__;
       break;
 
+    case 'debitmandates':
+      $value = L::t("Debit Mandates");
+      $title = L::t("Display a table with an overview over all SEPA debit mandates.");
+      $form =<<<__EOT__
+<form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
+  <input type="submit" value="$value" title="$title"/>
+  <input type="hidden" name="Template" value="sepa-debit-mandates"/>
+  $headervisibility
+</form>
+
+__EOT__;
+      break;
     }
 
     return $form;

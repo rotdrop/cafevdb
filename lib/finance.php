@@ -42,7 +42,7 @@ class Finance
 
     $ref = preg_replace('/\s+/', 'X', $ref); // replace space by X
 
-    return $ref;
+    return strtoupper($ref);
   }
 
   /**Fetch an exisiting reference given project and musician. This

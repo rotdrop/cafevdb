@@ -868,6 +868,7 @@ __EOT__;
                                         'filters' => "Id = $musicianId"
                                         )
                                       );
+
     $opts['fdd']['Anmeldung'] = $this->registrationColumn;
     $opts['fdd']['Anmeldung']['sort'] = false;
 
@@ -888,6 +889,7 @@ __EOT__;
                                     'sort' => false);
     $opts['fdd']['Stimmführer'] = $this->sectionLeaderColumn;
     $opts['fdd']['Stimmführer']['sort'] = false;
+
     $opts['fdd']['Bemerkungen'] = array('name'     => 'Bemerkungen',
                                         'select'   => 'T',
                                         'maxlen'   => 65535,
@@ -899,6 +901,30 @@ __EOT__;
     $opts['fdd']['Unkostenbeitrag'] = Config::$opts['money'];
     $opts['fdd']['Unkostenbeitrag']['name'] = "Unkostenbeitrag\n(Gagen negativ)";
     $opts['fdd']['Unkostenbeitrag']['sort'] = false;
+
+    // One virtual field in order to be able to manage SEPA debit mandas
+    $opts['fdd']['SepaDebitMandate'] = array(
+      'input' => 'V',
+      'name' => L::t('SEPA Debit Mandate'),
+      'select' => 'T',
+      'options' => 'LACPDV',
+      'sql' => '`PMEjoin'.count($opts['fdd']).'`.`mandateReference`', // dummy, make the SQL data base happy
+      'sqlw' => '`PMEjoin'.count($opts['fdd']).'`.`mandateReference`', // dummy, make the SQL data base happy
+      'values' => array(
+        'table' => 'SepaDebitMandates',
+        'column' => 'id',
+        'join' => '$join_table.projectId = $main_table.ProjektId AND $join_table.musicianId = $main_table.MusikerId',
+        'description' => 'mandateReference'
+        ),
+      'nowrap' => true,
+      'sort' => false,
+      'php' => array(
+        'type' => 'function',
+        'function' => 'CAFEVDB\BriefInstrumentation::sepaDebitMandatePME',
+        'parameters' => array('project' => $project,
+                              'projectId' => $projectId)
+        )
+      );
 
     // Generate input fields for the extra columns
     foreach ($userExtraFields as $field) {
@@ -1089,6 +1115,8 @@ __EOT__;
     //Config::$debug_query = true;
     //$debug_query = true;
 
+    $project         = $this->project;
+    $projectId       = $this->projectId;
     $opts            = $this->opts;
     $recordsPerPage  = $this->recordsPerPage;
     $userExtraFields = $this->userExtraFields;
@@ -1264,6 +1292,7 @@ __EOT__;
                                                                                'divs' => array(', ')
                                                                                ))
                                       );
+
     $opts['fdd']['Anmeldung'] = $this->registrationColumn;
 
     $opts['fdd']['Instrument'] = array('name'     => 'Instrument',
@@ -1289,6 +1318,7 @@ __EOT__;
                                     'maxlen' => '1',
                                     'sort' => true);
     $opts['fdd']['Stimmführer'] = $this->sectionLeaderColumn;
+
     $opts['fdd']['Bemerkungen'] = array('name'     => 'Bemerkungen',
                                         'select'   => 'T',
                                         'maxlen'   => 65535,
@@ -1300,6 +1330,30 @@ __EOT__;
                                         'sort'     => true);
     $opts['fdd']['Unkostenbeitrag'] = Config::$opts['money'];
     $opts['fdd']['Unkostenbeitrag']['name'] = "Unkostenbeitrag\n(Gagen negativ)";
+
+    // One virtual field in order to be able to manage SEPA debit mandas
+    $opts['fdd']['SepaDebitMandate'] = array(
+      'input' => 'V',
+      'name' => L::t('SEPA Debit Mandate'),
+      'select' => 'T',
+      'options' => 'LACPDV',
+      'sql' => '`PMEjoin'.count($opts['fdd']).'`.`mandateReference`', // dummy, make the SQL data base happy
+      'sqlw' => '`PMEjoin'.count($opts['fdd']).'`.`mandateReference`', // dummy, make the SQL data base happy
+      'values' => array(
+        'table' => 'SepaDebitMandates',
+        'column' => 'id',
+        'join' => '$join_table.projectId = $main_table.ProjektId AND $join_table.musicianId = $main_table.MusikerId',
+        'description' => 'mandateReference'
+        ),
+      'nowrap' => true,
+      'sort' => false,
+      'php' => array(
+        'type' => 'function',
+        'function' => 'CAFEVDB\BriefInstrumentation::sepaDebitMandatePME',
+        'parameters' => array('project' => $project,
+                              'projectId' => $projectId)
+        )
+      );
 
     // Generate input fields for the extra columns
     foreach ($userExtraFields as $field) {

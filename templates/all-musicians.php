@@ -8,9 +8,10 @@ $css_pfx = Musicians::CSS_PREFIX;
 
 $nav = '';
 $nav .= Navigation::button('projects');
-$nav .= Navigation::button('projectinstruments');
+//$nav .= Navigation::button('projectinstruments');
 $nav .= Navigation::button('instruments');
 $nav .= Navigation::button('insurances');
+$nav .= Navigation::button('debitmandates');
 
 echo $this->inc('part.common.header',
                 array('css-prefix' => $css_pfx,

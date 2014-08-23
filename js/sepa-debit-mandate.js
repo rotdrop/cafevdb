@@ -244,6 +244,7 @@ var CAFEVDB = CAFEVDB || {};
              }
            });
   };
+  /**Validate version for the our popup-dialog. */
   SepaDebitMandate.validate = function(event) {
     var element = this;
     var dialogId = '#sepa-debit-mandate-dialog';
@@ -293,7 +294,85 @@ var CAFEVDB = CAFEVDB || {};
              }
            }, 'json');
   };
+  /**Validate version for the PME dialog. */
+  SepaDebitMandate.validatePME = function(event) {
+    var element = this;
+    event.preventDefault();
+
+    // we use the same Ajax validation script; we remap the form
+    // elements. We need
+    //
+    // MusicianId
+    // ProjectId
+    // mandateReference
+    // nonrecurring
+    // bankAccountOwner
+    // bankAccountIBAN
+    // bankAccountBLZ
+    // bankAccountBIC
+    // mandateDate
+    // lastUsedDate
+    var inputMapping = {
+      PME_data_lastUsedDate: 'lastUsedDate',
+      PME_data_mandateDate: 'mandateDate',
+      PME_data_bankAccountOwner: 'bankAccountOwner',
+      PME_data_IBAN: 'bankAccountIBAN',
+      PME_data_BIC: 'bankAccountBIC'
+    };
+    var changed = $(this).attr('name');
+    changed = inputMapping[changed];
+
+    var mandateData = {
+      mandateReference: $('input[name="PME_data_mandateReference"]').val(),
+      mandateDate: $('input[name="PME_data_mandateDate"]').val(),
+      bankAccountOwner: $('input[name="PME_data_bankAccountOwner"]').val(),
+      lastUsedDate: $('input[name="PME_data_lastUsedDate"]').val(),
+      MusicianId:  $('select[name="PME_data_musicianId"] option[selected="selected"]').val(),
+      ProjectId:  $('select[name="PME_data_projectId"] option[selected="selected"]').val(),
+      bankAccountIBAN: $('input[name="PME_data_IBAN"]').val(),
+      bankAccountBIC: $('input[name="PME_data_BIC"]').val(),
+      changed: changed
+    };
+
+    var post = $.param(mandateData);
+    $.post(OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-settings.php'),
+           post,
+           function (data) {
+             if (data.status == "success") {
+               if (data.data.value) {
+                 $(element).val(data.data.value);
+               }
+               if (data.data.iban) {
+                 $('input.PME_data_IBAN').val(data.data.iban);
+               }
+               if (data.data.bic) {
+                 $('input.PME_data_BIC').val(data.data.bic);
+               }
+               return true;
+             } else {
+               return false;
+             }
+           }, 'json');
+  };
 
   CAFEVDB.SepaDebitMandate = SepaDebitMandate;
 })(window, jQuery, CAFEVDB);
 
+$(document).ready(function(){
+
+  $('table[summary="SepaDebitMandates"] input').blur(CAFEVDB.SepaDebitMandate.validatePME);
+
+  $('table[summary="SepaDebitMandates"] input[class$="-sepadate"]').datepicker({
+    dateFormat : 'dd.mm.yy', // this is 4-digit year
+    minDate: '01.01.1990',
+    beforeShow: function(input) {
+      $(input).unbind('blur');
+    },
+    onSelect: function(dateText, inst) {
+      $(this).blur(CAFEVDB.SepaDebitMandate.validatePME);
+      $(this).focus();
+      $(this).blur();
+    }
+  });
+  
+});

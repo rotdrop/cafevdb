@@ -68,6 +68,11 @@ $(document).ready(function(){
     minDate: '01.01.1940'
   });
 
+  $('input[class^="pme-input-"][class$="-date"]').datepicker({
+    dateFormat : 'dd.mm.yy', // this is 4-digit year
+    minDate: '01.01.1990'
+  });
+
   $('td[class$="-money"]').filter(function() {
     return $.trim($(this).text()).indexOf("-") == 0;
   }).addClass("negative");

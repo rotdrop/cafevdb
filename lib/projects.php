@@ -1110,9 +1110,10 @@ __EOT__;
     $sqlquery = 'CREATE OR REPLACE VIEW `'.$project.'View` AS
  SELECT
    `Musiker`.`Id` AS `MusikerId`,
-   `Besetzungen`.`Anmeldung`,
-   `Besetzungen`.`Instrument`,`Besetzungen`.`Reihung`,
+   `Besetzungen`.`Instrument`,
+   `Besetzungen`.`Reihung`,
    `Besetzungen`.`Stimmführer`,`Instrumente`.`Familie`,`Instrumente`.`Sortierung`,
+   `Besetzungen`.`Anmeldung`,
     `Name`,`Vorname`,
    `Email`,`Telefon`,`Telefon2`,
    `Strasse`,`Postleitzahl`,`Stadt`,`Land`,
