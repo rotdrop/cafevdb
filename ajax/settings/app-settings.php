@@ -772,13 +772,16 @@ if (isset($_POST['emailfromaddress'])) {
   return true;
 }
 
+// Something about the orchestra ...
 $streetAddressSettings = array('streetAddressName01',
                                'streetAddressName02',
                                'streetAddressStreet',
                                'streetAddressHouseNumber',
                                'streetAddressCity',
                                'streetAddressZIP',
-                               'streetAddressCountry');
+                               'streetAddressCountry',
+                               'memberTable',
+                               'executiveBoardTable');
 
 foreach ($streetAddressSettings as $item) {
   if (isset($_POST[$item])) {

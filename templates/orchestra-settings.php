@@ -14,14 +14,14 @@ $off = $_['orchestra'] == '' ? 'disabled="disabled"' : '';
            id="streetAddressName01"
            name="streetAddressName01"
            value="<?php echo $_['streetAddressName01']; ?>"
-           title="<?php echo L::t('street address of orchestra'); ?>"
-           placeholder="<?php echo L::t('street address of orchestra'); ?>"/><br/>
+           title="<?php echo L::t('The name of the orchestra'); ?>"
+           placeholder="<?php echo L::t('name of orchestra'); ?>"/><br/>
       <input class="streetAddressName" type="text"
            id="streetAddressName02"
            name="streetAddressName02"
            value="<?php echo $_['streetAddressName02']; ?>"
-           title="<?php echo L::t('street address of orchestra'); ?>"
-           placeholder="<?php echo L::t('street address of orchestra'); ?>"><br/>
+           title="<?php echo L::t('The name of the orchestra (line 2)'); ?>"
+           placeholder="<?php echo L::t('name of orchestra'); ?>"><br/>
       <input class="streetAddressStreet" type="text"
            id="streetAddressStreet"
            name="streetAddressStreet"
@@ -85,6 +85,21 @@ $off = $_['orchestra'] == '' ? 'disabled="disabled"' : '';
            value="<?php echo $_['bankAccountCreditorIdentifier']; ?>"
            title="<?php echo L::t('Creditor identifier of the orchestra'); ?>"
            placeholder="<?php echo L::t('orchestra\'s CI'); ?>"/><br/>
+    </fieldset>
+    <fieldset <?php echo $off; ?> >
+      <legend><?php echo L::t('Executive board and club members'); ?></legend>
+      <input class="specialMemberTables" type="text"
+           id="memberTable"
+           name="memberTable"
+           value="<?php echo $_['memberTable']; ?>"
+           title="<?php echo L::t('Name of the table listing the permanent members of the orchestra'); ?>"
+           placeholder="<?php echo L::t('member-table'); ?>"/><br/>
+      <input class="specialMemberTables" type="text"
+           id="executiveBoardTable"
+           name="executiveBoardTable"
+           value="<?php echo $_['executiveBoardTable']; ?>"
+           title="<?php echo L::t('Name of the table listing the members of the executive board'); ?>"
+           placeholder="<?php echo L::t('executive board table'); ?>"/><br/>
     </fieldset>
     <span class="statusmessage" id="msg"></span>
     <span class="statusmessage" id="suggestion"></span>

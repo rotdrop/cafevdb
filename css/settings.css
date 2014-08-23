@@ -88,3 +88,7 @@ input.bankAccountBLZ {
 input.bankAccountCreditorIdentifier { 
   width: 40em;
 }
+
+input.memberTable, input.executiveBoardTable {
+  width: 20em;
+}
