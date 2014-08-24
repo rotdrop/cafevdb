@@ -75,14 +75,6 @@ $(document).ready(function(){
                  setTimeout(function() {
                    OC.Notification.hide(function() {
                      // Anyhow, reload and see what happens.
-                     if (false) {
-                       // Regular form transmit should suffice?
-                       var post = $('form.pme-form').serialize();
-                       post += '&'+optionValues[1];
-                       $.post("", post, function(data) {
-                         $(document.body).html(data);
-                       });
-                     }
                      $('form.pme-form').submit();
                    });
                  }, 1000);
