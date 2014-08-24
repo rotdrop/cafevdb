@@ -202,17 +202,20 @@ $(document).ready(function() {
       $('#systemkey #standby').show();
 
       // Ajax foo
+      OC.Notification.show(t('cafevdb', 'Please standby, the operation will take some time!'));
       $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'), post, function(data) {
         // re-enable all forms
         $('#appsettings_popup fieldset').removeAttr('disabled');
         $("#appsettings_popup").tabs("enable");
         $('#systemkey #standby').hide();
-
+        
+        OC.Notification.hide();
+        
         if (data.status == "success") {
           $('#systemkey #changed').show();
-          if ($('#systemkey #key').val() == '') {
-            $('#systemkey #insecure').show();
-          }
+            if ($('#systemkey #key').val() == '') {
+              $('#systemkey #insecure').show();
+            }
           $('#systemkey input[name="oldkey"]').val('');
           $('#systemkey input[name="systemkey"]').val('');
           $('#systemkey input[name="systemkey-clone"]').val('');
