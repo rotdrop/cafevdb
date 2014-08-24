@@ -183,6 +183,13 @@ memberTable
     return \OC_AppConfig::setValue(self::APP_NAME, $key, $value);
   }
 
+  /**A short-cut, redirecting to the stock functions for the app.
+   */
+  static public function deleteAppKey($key)
+  {
+    return \OC_AppConfig::deleteKey(self::APP_NAME, $key);
+  }
+
   static public function initPrivateKey($login, $password)
   {
     $privKey = self::getUserValue('privateSSLKey', '', $login);
