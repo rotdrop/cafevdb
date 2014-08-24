@@ -67,8 +67,6 @@ projectsfolder
 executiveBoardTable
 memberTable
 ';
-  const MD5_SUF  = '::MD5';
-  const MD5_LEN  = 5;
   const DFLT_CALS = 'concerts,rehearsals,other,management';
 // L::t('concerts') L::t('rehearsals') L::t('other') L::t('management')
   const APP_BASE  = 'apps/cafevdb/';
@@ -346,17 +344,11 @@ memberTable
 
     // Fetch the encrypted "system" key from the app-config table
     $sysdbkey = self::getAppValue('encryptionkey');
-    $md5sysdbkey = self::getAppValue('encryptionkey'.self::MD5_SUF);
 
     // Now try to decrypt the data-base encryption key
     $sysdbkey = self::decrypt($sysdbkey, $sesdbkey);
-    $md5sysdbkey = self::decrypt($md5sysdbkey, $sesdbkey);
 
-    if ($md5sysdbkey != '' && $md5sysdbkey != md5($sysdbkey)) {
-        return false;
-    }
-
-    return $sysdbkey == $sesdbkey;
+    return $sysdbkey !== false && $sysdbkey == $sesdbkey;
   }
 
   /**Decrypt all configuration values stored in the data base.
@@ -387,9 +379,49 @@ memberTable
     }
   }
 
-  // Decrypt and remove the padding. If $value is the empty string
-  // then do nothing. If the encryption key is not set, then do not try to
-  // decrypt.
+  /**Encrypt the given value with the given encryption
+   * key. Internally, the first 4 bytes contain the length of $value
+   * as string in hexadecimal notation, the following 32 bytes contain
+   * the MD5 checksum of $value, starting at byte 36 follows the
+   * data. Everyting is encrypted, and a BASE64 encoded representation
+   * of the encoded data is stored int the data-base.
+   *
+   * @param[in] $value The data to encrypt
+   *
+   * @param[in] $enckey The encrypt key. If empty or unset, no
+   * encryption is performed.
+   *
+   * @return The encrypted and encoded data.
+   */
+  static public function encrypt($value, $enckey)
+  {
+    if ($enckey != '') {
+      // Store the size in the first 4 bytes in order not to have to
+      // rely on padding. We store the value in hexadecimal notation
+      // in order to keep text-fields as text fields.
+      $value = strval($value);
+      $md5   = md5($value);
+      $cnt   = sprintf('%04x', strlen($value));
+      $src   = $cnt.$md5.$value; // 4 Bytes + 32 Bytes + X bytes of data
+      $value = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_128,
+                                            $enckey,
+                                            $src,
+                                            MCRYPT_MODE_ECB)); 
+    }
+    return $value;
+  }
+
+  /**Decrypt $value using the specified encryption key $enckey. If
+   * $enckey is empty or unset, no decryption is attempted. This
+   * function also checks against the internally stored MD5 sum.
+   *
+   * @param[in] $value The encrypted and BASE64 encoded data.
+   *
+   * @param[in] $enckey The encryption key or an empty string or
+   * nothing.
+   *
+   * @return The decrypted data in case of success, or false otherwise.
+   */
   static public function decrypt($value, $enckey)
   {
     if ($enckey != '' && $value != '') {
@@ -397,25 +429,13 @@ memberTable
                               $enckey,
                               base64_decode($value),
                               MCRYPT_MODE_ECB);
-      $cnt   = intval(substr($value, 0, 4), 16);
-      
-      $value = substr($value, 4, $cnt);
-      //$value = trim($value, "\0\4");
-    }
-    return $value;
-  }
+      $cnt = intval(substr($value, 0, 4), 16);
+      $md5 = substr($value, 4, 32);      
+      $value = substr($value, 36, $cnt);
 
-  static public function encrypt($value, $enckey)
-  {
-    if ($enckey != '') {
-      // Store the size in the first 4 bytes in order not to have to
-      // rely on padding. We store the value in hexadecimal notation
-      // in order to keep text-fields as text fields.
-      $cnt = sprintf('%04x', strlen($value));
-      $value = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_128,
-                                            $enckey,
-                                            $cnt.$value,
-                                            MCRYPT_MODE_ECB)); 
+      if (strlen($md5) != 32 || strlen($value) != $cnt || $md5 != md5($value)) {
+        return false;
+      }
     }
     return $value;
   }
@@ -425,20 +445,14 @@ memberTable
    *
    * @param[in] $key Configuration key.
    * @param[in] $value Configuration value.
-   *
-   * @bug This function stores and unencrypted MD5. This is a bad
-   * idea.
    */
   static public function setValue($key, $value)
   {
     $enckey = self::getEncryptionKey();
 
     self::$opts[$key] = $value;
-    $md5value = $enckey != '' ? md5($value) : '';
     $value = self::encrypt($value, $enckey);
     self::setAppValue($key, $value);
-    $md5value = self::encrypt($md5value, $enckey); // also encrypt to prevent "lookup" decryption
-    self::setAppValue($key.self::MD5_SUF, $md5value);
   }
 
   static public function getSetting($key, $default = '', $strict = false)
@@ -457,17 +471,11 @@ memberTable
     }
 
     $enckey = self::getEncryptionKey();
-
-    $value    = self::getAppValue($key, '');
-    $md5value = self::getAppValue($key.self::MD5_SUF, '');
-
-    $value = self::decrypt($value, $enckey);
-    $md5value = self::decrypt($md5value, $enckey);
-    if ($md5value != '' && $md5value != md5($value)) {
-        return false;
+    $value  = self::getAppValue($key, '');
+    $value  = self::decrypt($value, $enckey);
+    if ($value !== false) {
+      self::$opts[$key] = $value;
     }
-
-    self::$opts[$key] = $value;
 
     return $value;
   }

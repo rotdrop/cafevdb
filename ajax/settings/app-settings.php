@@ -94,15 +94,10 @@ if (isset($_POST['systemkey']) && isset($_POST['oldkey'])) {
   // Re-encode the data-base account information with the new key.
   Config::encryptConfigValues();
 
-  // Compute md5 if key is non-empty
-  $md5encdbkey = $newkey != '' ? md5($newkey) : '';
-
   // Encode the new key with itself ;)
   $encdbkey = Config::encrypt($newkey, $newkey);
-  $md5encdbkey = Config::encrypt($md5encdbkey, $newkey);
 
   OC_AppConfig::setValue('cafevdb', 'encryptionkey', $encdbkey);
-  OC_AppConfig::setValue('cafevdb', 'encryptionkey::MD5', $md5encdbkey);
 
   OC_JSON::success(array("data" => array( "encryptionkey" => $encdbkey)));
 
