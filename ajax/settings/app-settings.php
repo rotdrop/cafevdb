@@ -45,6 +45,9 @@ if (isset($_POST['systemkey']) && isset($_POST['oldkey'])) {
       return;
   }
 
+  // Bug: the remainder of this block should be a utility function
+  // inside the Config class
+
   // (re-)load the old config values and decrypt with the old key
   if (!Config::decryptConfigValues() && $oldkey == '') {
       // retry with new key
@@ -58,6 +61,32 @@ if (isset($_POST['systemkey']) && isset($_POST['oldkey'])) {
           return;
       }
   }
+
+  // The actions below are dangerous and prone to race-conditions. The
+  // problem is that we do not modify the DB table in one
+  // transactions, but instead rely on OC::get/setConfig(). If there
+  // are two concurrent attempts to change the encryption key then
+  // this will (not: "can", it will!) damage most of the configuration
+  // settings
+  //
+  // We inject one -- weak -- protection here by injection a special
+  // configuration setting into the table, with a random key. After
+  // successful update this setting is removed.
+  $configLock = Config::getAppValue('configlock', false);
+  if ($configLock !== false) {
+    Config::setEncryptionKey($actkey);
+    OC_JSON::error(array("data" => array("message" => L::t("Configuration locked, refusing to change encryption key."))));
+    return false;
+  }
+  $lockPhrase = \OCP\Util::generateRandomBytes();
+  Config::setAppValue('configlock', $lockPhrase);
+  $configLock = Config::getAppValue('configlock', false);
+  if ($configLock !== $lockPhrase) {
+    Config::setEncryptionKey($actkey);
+    OC_JSON::error(array("data" => array("message" => L::t("Configuration locked by somebody else, refusing to change encryption key."))));
+    return false;
+  }  
+  // Still: this does ___NOT___ hack the worst-case scenario, but should suffice for our purposes.
 
   // Store the new key in the session data
   Config::setEncryptionKey($newkey);
@@ -76,7 +105,11 @@ if (isset($_POST['systemkey']) && isset($_POST['oldkey'])) {
   OC_AppConfig::setValue('cafevdb', 'encryptionkey::MD5', $md5encdbkey);
 
   OC_JSON::success(array("data" => array( "encryptionkey" => $encdbkey)));
-  return;
+
+  // Delete the config-lock settting
+  Config::deleteAppKey('configlock');
+
+  return true;
 }
 
 if (isset($_POST['keydistribute'])) {
