@@ -121,6 +121,11 @@ $(document).ready(function() {
   var tmp = $('#userkey #encryptionkey').val();
   $('#userkey #encryptionkey').showPassword();
   $('#userkey #encryptionkey').val(tmp);
+
+  tmp = $('#userkey #password').val();
+  $('#userkey #password').showPassword();
+  $('#userkey #password').val(tmp);
+
   $("#userkey #button").click(function() {
     // We allow empty keys, meaning no encryption
     $('div.statusmessage').hide();
@@ -175,7 +180,14 @@ $(document).ready(function() {
 
   // Encryption-key
   // 'show password' checkbox
+  var tmp =   $('#systemkey #key').val();
   $('#systemkey #key').showPassword();
+  $('#systemkey #key').val(tmp);
+  
+  tmp = $('#systemkey #oldkey').val();
+  $('#systemkey #oldkey').showPassword();
+  $('#systemkey #oldkey').val(tmp);
+
   $("#keychangebutton").click(function() {
     // We allow empty keys, meaning no encryption
     $('div.statusmessage').hide();
@@ -183,8 +195,19 @@ $(document).ready(function() {
     if ($('#systemkey #oldkey').val() != $('#systemkey #key').val()) {
       // Serialize the data
       var post = $("#systemkey").serialize();
+
+      // disable form elements until we got an answer
+      $('#appsettings_popup fieldset').attr('disabled', 'disabled');
+      $("#appsettings_popup").tabs("disable");
+      $('#systemkey #standby').show();
+
       // Ajax foo
       $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'), post, function(data) {
+        // re-enable all forms
+        $('#appsettings_popup fieldset').removeAttr('disabled');
+        $("#appsettings_popup").tabs("enable");
+        $('#systemkey #standby').hide();
+
         if (data.status == "success") {
           $('#systemkey #changed').show();
           if ($('#systemkey #key').val() == '') {
@@ -289,27 +312,29 @@ $(document).ready(function() {
 
   // DB-Password
   // 'show password' checkbox
-  $('#cafevdb_dbpassword #cafevdb_dbpassword').showPassword();
-  $("#cafevdb_dbpassword #button").click(function() {
+  var tmp = $('fieldset.cafevdb_dbpassword #cafevdb_dbpassword').val();
+  $('fieldset.cafevdb_dbpassword #cafevdb_dbpassword').showPassword();
+  $('fieldset.cafevdb_dbpassword #cafevdb_dbpassword').val(tmp);
+  $("fieldset.cafevdb_dbpassword #button").click(function() {
     $('div.statusmessage').hide();
     $('span.statusmessage').hide();
-    if ($('#cafevdb_dbpassword #password').val() != '') {
+    if ($('fieldset.cafevdb_dbpassword #password').val() != '') {
       // Serialize the data
-      var post = $("#cafevdb_dbpassword").serialize();
+      var post = $("fieldset.cafevdb_dbpassword").serialize();
       // Ajax foo
       $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
              post, function(data) {
                if(data.status == "success") {
                  //$('#cafevdb_dbpassword input[name="dbpass1"]').val('');
-                 $('#cafevdb_dbpassword input[name="password"]').val('');
-                 $('#cafevdb_dbpassword input[name="password-clone"]').val('');
+                 $('fieldset.cafevdb_dbpassword input[name="password"]').val('');
+                 $('fieldset.cafevdb_dbpassword input[name="password-clone"]').val('');
                }
-               $('#cafevdb_dbpassword #dbteststatus').html(data.data.message);
-               $('#cafevdb_dbpassword #dbteststatus').show();
+               $('fieldset.cafevdb_dbpassword #dbteststatus').html(data.data.message);
+               $('fieldset.cafevdb_dbpassword #dbteststatus').show();
              });
       return false;
     } else {
-      $('#cafevdb_dbpassword #error').show();
+      $('fieldset.cafevdb_dbpassword #error').show();
       return false;
     }
   });
@@ -372,8 +397,8 @@ $(document).ready(function() {
 
   // Share-owner´s password
   // 'show password' checkbox
-  $('#sharingpassword #password').showPassword();
-  $('#sharingpassword #change').click(function(event) {
+  $('fieldset.sharingpassword #sharingpassword').showPassword();
+  $('fieldset.sharingpassword #change').click(function(event) {
     event.preventDefault();
 
     // We allow empty keys, meaning no encryption
@@ -384,8 +409,8 @@ $(document).ready(function() {
     // Generate the request by hand
     var post = Array();
 
-    var input1 = $('#sharingpassword input[name="sharingpassword-clone"]');
-    var input2 = $('#sharingpassword input[name="sharingpassword"]');
+    var input1 = $('fieldset.sharingpassword input[name="sharingpassword-clone"]');
+    var input2 = $('fieldset.sharingpassword input[name="sharingpassword"]');
 
     // Check both inputs fors consistency, because we are fiddling
     // with an auto-generated password below
@@ -426,13 +451,13 @@ $(document).ready(function() {
     return false;
   });
 
-  $('#sharingpassword #generate').click(function(event) {
+  $('fieldset.sharingpassword #generate').click(function(event) {
     event.preventDefault();
 
     $('div.statusmessage').hide();
     $('span.statusmessage').hide();
     $('#eventsettings #msg').empty();
-    if ($('#sharingpassword #password').is(':visible')) {
+    if ($('fieldset.sharingpassword #sharingpassword').is(':visible')) {
       $('#sharingpassword-show').attr('checked','checked');
       $('#sharingpassword-show').click();
       $('#sharingpassword-show').attr('checked','checked');
@@ -443,8 +468,8 @@ $(document).ready(function() {
            function(data) {
              if (data.status == "success") {
                // Make sure both inputs have the same value
-               $('#sharingpassword input[name="sharingpassword-clone"]').val(data.data.message);
-               $('#sharingpassword input[name="sharingpassword"]').val(data.data.message);
+               $('fieldset.sharingpassword input[name="sharingpassword-clone"]').val(data.data.message);
+               $('fieldset.sharingpassword input[name="sharingpassword"]').val(data.data.message);
              } else {
                $('#eventsettings #msg').html(data.data.message);
                $('#eventsettings #msg').show();
@@ -673,22 +698,22 @@ $(document).ready(function() {
 
   // Email-Password
   // 'show password' checkbox
-  var tmp = $('#emailpassword #emailpassword').val();
-  $('#emailpassword #emailpassword').showPassword();
-  $('#emailpassword #emailpassword').val(tmp);
-  $("#emailpassword #button").click(function() {
+  var tmp = $('fieldset.emailpassword #emailpassword').val();
+  $('fieldset.emailpassword #emailpassword').showPassword();
+  $('fieldset.emailpassword #emailpassword').val(tmp);
+  $("fieldset.emailpassword #button").click(function() {
     $('div.statusmessage').hide();
     $('span.statusmessage').hide();
-    if ($('#emailpassword #password').val() != '') {
+    if ($('fieldset.emailpassword #emailpassword').val() != '') {
       // Serialize the data
-      var post = $("#emailpassword").serialize();
+      var post = $("fieldset.emailpassword").serialize();
       // Ajax foo
       $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
              post, function(data) {
                if(data.status == "success") {
-                 //$('#emailpassword input[name="emailpass1"]').val('');
-                 $('#emailpassword input[name="password"]').val('');
-                 $('#emailpassword input[name="password-clone"]').val('');
+                 //$('fieldset.emailpassword input[name="emailpass1"]').val('');
+                 $('fieldset.emailpassword input[name="password"]').val('');
+                 $('fieldset.emailpassword input[name="password-clone"]').val('');
 	         $('#emailsettings #msg').html(data.data.message);
 	         $('#emailsettings #msg').show();
                } else {
@@ -698,7 +723,7 @@ $(document).ready(function() {
              });
       return false;
     } else {
-      $('#emailpassword #error').show();
+      $('fieldset.emailpassword #error').show();
       return false;
     }
   });

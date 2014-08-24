@@ -38,10 +38,10 @@ if (isset($_POST['systemkey']) && isset($_POST['oldkey'])) {
   Config::setEncryptionKey($oldkey);
 
   // Now fetch the key itself
-  $storedkey = Config::getValue('encryptionKey');
+  $storedkey = Config::getValue('encryptionkey');
   if ($storedkey !== $oldkey) {
       Config::setEncryptionKey($actkey);
-      OC_JSON::error(array("data" => array("message" => "Wrong old key.")));
+      OC_JSON::error(array("data" => array("message" => L::t("Wrong old key."))));
       return;
   }
 
@@ -70,6 +70,7 @@ if (isset($_POST['systemkey']) && isset($_POST['oldkey'])) {
 
   // Encode the new key with itself ;)
   $encdbkey = Config::encrypt($newkey, $newkey);
+  $md5encdbkey = Config::encrypt($md5encdbkey, $newkey);
 
   OC_AppConfig::setValue('cafevdb', 'encryptionkey', $encdbkey);
   OC_AppConfig::setValue('cafevdb', 'encryptionkey::MD5', $md5encdbkey);

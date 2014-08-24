@@ -52,9 +52,12 @@ $debugtitle     = L::t("Show a certain amount of debug information, normally not
     <span class="statusmessage" id="msg"></span>
   </form>
   <form id="userkey">
-    <input type="password" id="password" name="password" placeholder="<?php echo L::t('Own Password');?>" />
-    <input type="password" id="encryptionkey" name="encryptionkey" value="<?php echo (true ? '' : $_['encryptionkey']); ?>" placeholder="<?php echo L::t('DB Encryption Key');?>" data-typetoggle="#userkey-show" />
-    <input type="checkbox" id="userkey-show" name="userkey-show" /><label for="userkey-show"><?php echo L::t('show');?></label>
+    <input class="cafevdb-password" type="password" id="password" name="password" placeholder="<?php echo L::t('Own Password');?>" data-typetoggle="#password-show" />
+    <input class="cafevdb-password-show" type="checkbox" id="password-show" name="password-show" />
+    <label class="cafevdb-password-show" for="password-show"><?php echo L::t('show');?></label>
+    <input class="cafevdb-password" type="password" id="encryptionkey" name="encryptionkey" value="<?php echo (true ? '' : $_['encryptionkey']); ?>" placeholder="<?php echo L::t('DB Encryption Key');?>" data-typetoggle="#userkey-show" />
+    <input class="cafevdb-password-show" type="checkbox" id="userkey-show" name="userkey-show" />
+    <label class="cafevdb-password-show" for="userkey-show"><?php echo L::t('show');?></label>
     <input id="button" type="button" value="<?php echo L::t('Set Encryption Key');?>" />
     <div class="statusmessage" id="changed"><?php echo L::t('The encryption key has been set successfully.');?></div>
     <div class="statusmessage" id="error"><?php echo L::t('Unable to set the encryption key.');?></div>

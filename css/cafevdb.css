@@ -465,6 +465,36 @@ input[disabled]:hover,
 	overflow: initial;
 }
 
+/***************************************************************************** 
+ *
+ * Password toggles and such.
+ *
+ */
+input[type=checkbox].cafevdb-password-show {
+  display: none;
+}
+
+input[type=checkbox].cafevdb-password-show:checked + label.cafevdb-password-show {
+  ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+  filter: alpha(opacity=80);
+  opacity: .8;
+}
+
+input[type=checkbox].cafevdb-password-show + label.cafevdb-password-show {
+  position: absolute !important;
+  margin-top: 11px;
+  margin-left: -36px;
+  height: 14px;
+  width: 24px;
+  background-image: url("../../../core/img/actions/toggle.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
+  filter: alpha(opacity=30);
+  opacity: .3;
+  text-indent: -10000em;
+}
+
 /*
  * Local Variables: ***
  * cssm-indent-level: 2 ***

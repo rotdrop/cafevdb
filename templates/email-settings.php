@@ -45,9 +45,10 @@ foreach (array('smtp', 'imap') as $proto) {
       <label for="emailuser"><?php echo L::t('Login for email account.');?></label>
       <br/>
 <!-- EMAIL password -->
-      <fieldset id="emailpassword">
-        <input type="password" value="<?php echo $_['emailpassword']; ?>" id="emailpassword" name="emailpassword" placeholder="<?php echo L::t('New Password');?>" data-typetoggle="#emailpassword-show" />
-        <input type="checkbox" id="emailpassword-show" name="emailpassword-show" /><label for="emailpassword-show"><?php echo L::t('show');?></label>
+      <fieldset class="emailpassword">
+        <input class="cafevdb-password" type="password" value="<?php echo $_['emailpassword']; ?>" id="emailpassword" name="emailpassword" placeholder="<?php echo L::t('New Password');?>" data-typetoggle="#emailpassword-show" />
+        <input class="cafevdb-password-show" type="checkbox" id="emailpassword-show" name="emailpassword-show" />
+        <label class="cafevdb-password-show" for="emailpassword-show"><?php echo L::t('show');?></label>
         <input id="button" type="button" value="<?php echo L::t('Change email password');?>" />
         <div class="statusmessage" id="changed"><?php echo L::t('The email password was changed');?></div>
         <div class="statusmessage" id="error"><?php echo L::t('Unable to change the email password');?></div>

@@ -14,13 +14,15 @@ $off = $_['shareowner'] == '' ? 'disabled="disabled"' : $alloff;
       <fieldset id="shareowner" <?php echo $alloff; ?> >
         <input type="hidden" id="user-saved" name="shareowner-saved" value="<?php echo $_['shareowner']; ?>" />
         <input <?php echo $_['shareowner'] != '' ? 'disabled="disabled"' : ''; ?> type="text" id="user" name="shareowner" placeholder="<?php echo L::t('shareowner');?>" value="<?php echo $_['shareowner']; ?>" />
-        <label for="shareowner-force" title="<?php echo Config::toolTips('shareowner-force'); ?>" ><input type="checkbox" id="shareowner-force" name="shareowner-force" /><?php echo L::t('force');?></label>
+        <label for="shareowner-force" title="<?php echo Config::toolTips('shareowner-force'); ?>" >
+        <input type="checkbox" id="shareowner-force" name="shareowner-force" /><?php echo L::t('force');?></label>
         <input name="shareownercheck" id="check" type="button" value="<?php echo L::t('Check');?>" />
       </fieldset>
 <!-- CHANGE ITS PASSWORD -->
-      <fieldset id="sharingpassword" <?php echo $alloff; ?> >
-        <input type="password" id="password" name="sharingpassword" placeholder="<?php echo L::t('Share-Password');?>" data-typetoggle="#sharingpassword-show" />
-        <input type="checkbox" id="sharingpassword-show" name="sharingpassword-show" /><label for="sharingpassword-show"><?php echo L::t('show');?></label>
+      <fieldset class="sharingpassword" <?php echo $alloff; ?> >
+        <input type="password" id="sharingpassword" name="sharingpassword" placeholder="<?php echo L::t('Share-Password');?>" data-typetoggle="#sharingpassword-show" />
+        <input class="cafevdb-password-show" type="checkbox" id="sharingpassword-show" name="sharingpassword-show" />
+        <label class="cafevdb-password-show" for="sharingpassword-show"><?php echo L::t('show');?></label>
         <input name="passwordgenerate" id="generate" type="button" value="<?php echo L::t('Generate');?>" />
         <input name="passwordchange" id="change" type="button" value="<?php echo L::t('Change');?>" />
       </fieldset>
