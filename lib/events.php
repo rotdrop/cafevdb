@@ -624,9 +624,11 @@ __EOT__;
 
     $result = false;
     $calendars = \OC_Calendar_Calendar::allCalendars($owner);
+
     foreach ($calendars as $calendar) {
       if (!$includeShared &&
-          \OCP\Share::getItemSharedWithBySource('calendar', $calendar['id']) != false) {
+          ($share = \OCP\Share::getItemSharedWithBySource('calendar', $calendar['id'])) != false &&
+          ($share['uid_owner'] != $owner)) {
         // Exclude shared items.
         continue;
       }      
@@ -665,6 +667,11 @@ __EOT__;
     } else {
       // otherwise there should be one, in principle ...
       $shareCal = \OC_Calendar_Calendar::find($calId);
+      // the user interface primarily exhibits the name, so maybe we
+      // have an orphan id, recheck with the display name
+      if (!$shareCal) {
+        $shareCal = self::calendarByName($dpyName, $shareowner);
+      }
     }
     
     if (!$shareCal) {
