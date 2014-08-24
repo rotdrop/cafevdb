@@ -13,7 +13,9 @@ namespace CAFEVDB
 class Config
 {
   const APP_NAME  = 'cafevdb';
-  // Separate by whitespace
+  /**Configuration keys. In order for encryption/decryption to work
+   * properly, every config setting has to be listed here.
+   */
   const CFG_KEYS ='
 orchestra
 dbserver
@@ -60,6 +62,10 @@ bankAccountIBAN
 bankAccountBLZ
 bankAccountBIC
 bankAccountCreditorIdentifier
+projectsbalancefolder
+projectsfolder
+executiveBoardTable
+memberTable
 ';
   const MD5_SUF  = '::MD5';
   const MD5_LEN  = 5;
@@ -337,6 +343,7 @@ bankAccountCreditorIdentifier
 
     // Now try to decrypt the data-base encryption key
     $sysdbkey = self::decrypt($sysdbkey, $sesdbkey);
+    $md5sysdbkey = self::decrypt($md5sysdbkey, $sesdbkey);
 
     if ($md5sysdbkey != '' && $md5sysdbkey != md5($sysdbkey)) {
         return false;
@@ -406,6 +413,15 @@ bankAccountCreditorIdentifier
     return $value;
   }
 
+  /**Encrypt the given value and store it in the application settings
+   * table of OwnCloud.
+   *
+   * @param[in] $key Configuration key.
+   * @param[in] $value Configuration value.
+   *
+   * @bug This function stores and unencrypted MD5. This is a bad
+   * idea.
+   */
   static public function setValue($key, $value)
   {
     $enckey = self::getEncryptionKey();
@@ -414,6 +430,7 @@ bankAccountCreditorIdentifier
     $md5value = $enckey != '' ? md5($value) : '';
     $value = self::encrypt($value, $enckey);
     self::setAppValue($key, $value);
+    $md5value = self::encrypt($md5value, $enckey); // also encrypt to prevent "lookup" decryption
     self::setAppValue($key.self::MD5_SUF, $md5value);
   }
 
@@ -438,6 +455,7 @@ bankAccountCreditorIdentifier
     $md5value = self::getAppValue($key.self::MD5_SUF, '');
 
     $value = self::decrypt($value, $enckey);
+    $md5value = self::decrypt($md5value, $enckey);
     if ($md5value != '' && $md5value != md5($value)) {
         return false;
     }
@@ -629,8 +647,8 @@ class ConfigCheck
 
     // First check whether the object is already shared.
     $shareType   = \OCP\Share::SHARE_TYPE_GROUP;
-    $token =\OCP\Share::getItemShared($type, $id);
-    if ($token !== false) {
+    $token = \OCP\Share::getItemShared($type, $id);
+    if ($token !== false && (!is_array($token) || count($token) > 0)) {
       return \OCP\Share::setPermissions($type, $id, $shareType, $group, $groupPerms);
     }
     // Otherwise it should be legal to attempt a new share ...
