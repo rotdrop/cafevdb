@@ -1652,11 +1652,12 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
         // - extra recipients added through the Cc: and Bcc: fields
         //   and the catch-all address is not added to each
         //   email. Instead, we send out the template without
-        //   substitutions, and also only copy this template to the
-        //   "Sent"-Folder on the imap server.
+        //   substitutions.
         //
         // - still each single email is logged to the DB in order to
-        //  catch duplicates.
+        //   catch duplicates.
+	//
+	// - each single email is copied to the Sent-folder; this is how it should be.
         //
         // - after variable substitution we need to reencode some
         // - special characters.
@@ -1675,8 +1676,12 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
                                        htmlspecialchars($dbdata[$column]),
                                        $strMessage);
           }
-          $this->composeAndSend($strMessage, array($recipient), false, true);
+          $msg = $this->composeAndSend($strMessage, array($recipient), false, true);
+	  if ($msg !== false) {
+            $this->copyToSentFolder($msg);
+	  }
         }
+
         // Finally send one message without template substitution (as
         // this makes no sense) to all Cc:, Bcc: recipients and the
         // catch-all. This Message also gets copied to the Sent-folder
@@ -2419,3 +2424,4 @@ __EOT__;
 } // namespace
 
 ?>
+
