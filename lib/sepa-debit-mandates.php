@@ -27,7 +27,12 @@ class SepaDebitMandates
 
   public function headerText()
   {
-    return L::t('Overview over all SEPA Debit Mandates');
+    if ($this->projectId > 0 && $this->project != '') {
+      return L::t('Overview over all SEPA Debit Mandates for %s',
+                  array($this->project));
+    } else {
+      return L::t('Overview over all SEPA Debit Mandates');
+    }
   }
 
   /**Display the list of all musicians. If $projectMode == true,
@@ -118,8 +123,14 @@ class SepaDebitMandates
        $opts['filters'] = "PMEtable0.sessions_count > 200";
     */
 
+    $junctor = '';
     if ($musicianId > 0) {
-      $opts['filters'] = "`PMEtable0`.`musicianId` = ".$musicianId;
+      $opts['filters'] = $junctor."`PMEtable0`.`musicianId` = ".$musicianId;
+      $junctor = " AND ";
+    }
+    if ($musicianId > 0) {
+      $opts['filters'] = $junctor."`PMEtable0`.`projectId` = ".$projectId;
+      $junctor = " AND ";
     }
 
     /* Field definitions
@@ -218,19 +229,37 @@ class SepaDebitMandates
       );
 
     $opts['fdd']['IBAN'] = array('name'   => 'IBAN',
+                                 'options' => 'LACPDV',
                                  'select' => 'T',
                                  'maxlen' => 35,
-                                 'sort'   => true);
+                                 'encryption' => array(
+                                   'encrypt' => '\CAFEVDB\Config::encrypt',
+                                   'decrypt' => '\CAFEVDB\Config::decrypt',
+                                   ));
 
     $opts['fdd']['BIC'] = array('name'   => 'BIC',
                                 'select' => 'T',
                                 'maxlen' => 35,
-                                'sort'   => true);
+                                'encryption' => array(
+                                  'encrypt' => '\CAFEVDB\Config::encrypt',
+                                  'decrypt' => '\CAFEVDB\Config::decrypt',
+                                  ));
+
+    $opts['fdd']['BLZ'] = array('name'   => L::t('Bank Code'),
+                                'select' => 'T',
+                                'maxlen' => 35,
+                                'encryption' => array(
+                                  'encrypt' => '\CAFEVDB\Config::encrypt',
+                                  'decrypt' => '\CAFEVDB\Config::decrypt',
+                                  ));
 
     $opts['fdd']['bankAccountOwner'] = array('name'   => L::t('Bank Account Owner'),
                                              'select' => 'T',
                                              'maxlen' => 35,
-                                             'sort'   => true);
+                                             'encryption' => array(
+                                               'encrypt' => '\CAFEVDB\Config::encrypt',
+                                               'decrypt' => '\CAFEVDB\Config::decrypt',
+                                               ));
 
     $opts['fdd']['lastUsedDate'] = array('name'     => L::t('Last-Used Date'),
                                          'select'   => 'T',

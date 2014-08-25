@@ -339,6 +339,14 @@ class EmailFilter {
                          'MemberStatus');
     $sep = '`,`';
     $fields = '`'.$id.$sep.implode($sep, $columnNames).'`';
+
+    if ($projectId > 0) { // Add the project fee
+      $fields .= ',`Unkostenbeitrag`,`mandateReference`';
+      // join table with the SEPA mandate reference table
+      $table .= "LEFT JOIN `SepaDebitMandates` ON "
+        ."( `MusikerId` = `musicianId` AND `projectId` = ".$projectId." ) ";
+    }
+
     $query = 'SELECT '.$fields.' FROM ('.$table.') WHERE
        ( ';
     foreach ($this->filter as $value) {
@@ -371,6 +379,10 @@ class EmailFilter {
       if ($line['Email'] != '') {
         // We allow comma separated multiple addresses
         $musmail = explode(',',$line['Email']);
+        if ($projectId < 0) {
+          $line['Unkostenbeitrag'] = '';
+          $line['mandateReference'] = '';
+        }
         foreach ($musmail as $emailval) {
           $this->EMails[$line[$id]] =
             array('email'   => $emailval,
@@ -820,6 +832,8 @@ PLZ
 STADT
 LAND
 GEBURTSTAG
+UNKOSTENBEITRAG
+SEPAMANDATSREFERENZ
 ';
   const MEMBERCOLUMNS = '
 Vorname
@@ -832,6 +846,8 @@ Postleitzahl
 Stadt
 Land
 Geburtstag
+Unkostenbeitrag
+mandateReference
 ';
 
   private static $constructionMode = true;
@@ -941,7 +957,10 @@ Geburtstag
    */
   private function emailGlobalVariables()
   {
-    $globalVars = array('ORGANIZER' => $this->fetchVorstand());
+    $globalVars = array(
+      'ORGANIZER' => $this->fetchVorstand(),
+      'CREDITORIDENTIFIER' => Config::getValue('bankAccountCreditorIdentifier')
+      );
 
     return $globalVars;
   }
@@ -951,9 +970,11 @@ Geburtstag
    */
   private function fetchVorstand()
   {
+    $executiveBoard = Config::getValue('executiveBoardTable');
+
     $handle = mySQL::connect($this->opts);
 
-    $query = "SELECT `Vorname` FROM `VorstandView` ORDER BY `Reihung`,`Stimmführer`,`Vorname`";
+    $query = "SELECT `Vorname` FROM `".$executiveBoard."View` ORDER BY `Reihung`,`Stimmführer`,`Vorname`";
 
     $result = mySQL::query($query, $handle);
     
