@@ -363,6 +363,9 @@ class phpMyEdit
 		if (is_numeric($k)) {
 			$k = $this->fds[$k];
 		}
+		if (isset($this->fdd[$k]['encryption'])) {
+			return false;
+		}
 		$options = @$this->fdd[$k]['options'];
 		if (! isset($options)) {
 			return true;
@@ -1529,6 +1532,12 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			if (isset($this->fdd[$k]['tooltip']) && $this->fdd[$k]['tooltip'] != '') {
 				$helptip = $this->fdd[$k]['tooltip'];
 			}
+			if (isset($this->fdd[$k]['encryption'])) {
+				if (!isset($row["qf$k"."encrypted"])) {
+					$row["qf$k"."encrypted"] = $row["qf$k"];
+				}
+				$row["qf$k"] = call_user_func($this->fdd[$k]['encryption']['decrypt'], $row["qf$k"."encrypted"]);
+			}
 			if ($this->copy_operation() || $this->change_operation()) {
 				if ($this->hidden($k)) {
 					if ($k != $this->key_num) {
@@ -1900,6 +1909,12 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		$escape	 = isset($this->fdd[$k]['escape']) ? $this->fdd[$k]['escape'] : true;
 		if ($css == 'noescape') {
 			$escape = false;
+		}
+		if (isset($this->fdd[$k]['encryption'])) {
+			if (!isset($row["qf$k"."encrypted"])) {
+				$row["qf$k"."encrypted"] = $row["qf$k"];
+			}
+			$row["qf$k"] = call_user_func($this->fdd[$k]['encryption']['decrypt'], $row["qf$k"."encrypted"]);
 		}
 		if ($this->col_has_values($this->key_num)) {
 			$key_rec = $row['qf'.$this->key_num.'_idx'];
@@ -3146,7 +3161,9 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			$css_postfix	= @$this->fdd[$k]['css']['postfix'];
 			$css_class_name = $this->getCSSclass('header', null, null, $css_postfix);
 			$fdn = $this->fdd[$fd]['name'];
-			if (! $this->fdd[$fd]['sort'] || $this->password($fd)) {
+			if ($this->fdd[$fd]['encryption'] ||
+				! $this->fdd[$fd]['sort'] ||
+				$this->password($fd)) {
 				echo '<th class="',$css_class_name,'">',$fdn,'</th>',"\n";
 			} else {
 				// Clicking on the current sort field reverses the sort order
@@ -3584,6 +3601,10 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		// Real query (no additional query in this method)
 		foreach ($newvals as $fd => $val) {
 			if ($fd == '') continue;
+			if (isset($this->fdd[$this->fdn[$fd]]['encryption'])) {
+				// encrypt the value
+				$val = call_user_func($this->fdd[$this->fdn[$fd]]['encryption']['encrypt'], $val);
+			}
 			if ($this->col_has_sqlw($this->fdn[$fd])) {
 				$val_as	 = addslashes($val);
 				$val_qas = '"'.addslashes($val).'"';
@@ -3705,6 +3726,10 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		// Build the real query respecting changes to the newvals array
 		foreach ($newvals as $fd => $val) {
 			if ($fd == '') continue;
+			if (isset($this->fdd[$this->fdn[$fd]]['encryption'])) {
+				// encrypt the value
+				$val = call_user_func($this->fdd[$this->fdn[$fd]]['encryption']['encrypt'], $val);
+			}
 			if ($this->col_has_sqlw($this->fdn[$fd])) {
 				$val_as	 = addslashes($val);
 				$val_qas = '"'.addslashes($val).'"';
