@@ -43,10 +43,12 @@
 }
 
 /* inter-item lines to group things together */
-span.project-actions-block  ul.chosen-results li:nth-of-type(2),
-span.project-actions-block  ul.chosen-results li:nth-of-type(5) {
+span.project-actions-block  ul.chosen-results li.group-result {
+  display: block;
+  height: 1px;
+  padding: 0px;
+  margin: 0px;
   border-top: 1px solid #ccc;
-  padding-top:8px;
 }
 
 td[class$="projectextra"] textarea {
