@@ -31,6 +31,10 @@ case 'instrument-insurance':
   $table = new CAFEVDB\InstrumentInsurance(false);
   $name = L::t('instrument insurances');
   break;
+case 'sepa-debit-mandates':
+  $table = new CAFEVDB\SepaDebitMandates(false);
+  $name = L::t('SEPA debit mandates');
+  break;
 }
 
 if ($table) {

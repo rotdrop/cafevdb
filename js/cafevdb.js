@@ -295,6 +295,7 @@ var CAFEVDB = CAFEVDB || {};
     case 'brief-instrumentation':
     case 'detailed-instrumentation':
     case 'project-instruments':
+    case 'sepa-debit-mandates':
       values += '&Template='+selected;
       values += '&headervisibility='+CAFEVDB.headervisibility;
 

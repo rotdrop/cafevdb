@@ -51,6 +51,10 @@ case 'instrument-insurance':
   } else {
     return include('insurance-export.php');
   }
+case 'sepa-debit-mandates':
+  $table = new CAFEVDB\SepaDebitMandates(false);
+  $name = L::t('SEPA debit mandates');
+  break;
 }
 
 if ($table) {
