@@ -8,6 +8,12 @@ namespace CAFEVDB
 /**Finance and bank related stuff. */
 class Finance
 {
+  private static $useEncryption = true;
+  public static $dataBaseInfo =
+    array('table' => 'SepaDebitMandates',
+          'key' => 'id',
+          'encryptedColumns' => array('IBAN', 'BIC', 'BLZ', 'bankAccountOwner'));
+
   /**The "SEPA mandat reference" must be unique per mandat, consist
    * more or less of alpha-numeric characters and has a maximum length
    * of 35 characters. We choose the format
@@ -58,7 +64,8 @@ class Finance
       $handle = mySQL::connect(Config::$pmeopts);
     }
 
-    $query = "SELECT * FROM `SepaDebitMandates` WHERE `projectId` = $projectId AND `musicianId` = $musicianId";
+    $query = "SELECT * FROM `".self::$dataBaseInfo['table']."` WHERE ".
+      "`projectId` = $projectId AND `musicianId` = $musicianId";
     $result = mySQL::query($query, $handle);
     if ($result !== false && mysql_num_rows($result) == 1) {
       $row = mySQL::fetch($result);
@@ -66,7 +73,19 @@ class Finance
         $mandate = $row;
       }      
     }
-      
+
+    if ($mandate !== false && self::$useEncryption) {
+      $enckey = Config::getEncryptionKey();
+      foreach (self::$dataBaseInfo['encryptedColumns'] as $column) {
+        $value = Config::decrypt($mandate[$column], $enckey);
+        if ($value === false) {
+          $mandate = false;
+          break;
+        }
+        $mandate[$column] = $value;
+      }
+    }
+
     if ($ownConnection) {
       mySQL::close($handle);
     }
@@ -74,25 +93,6 @@ class Finance
     return $mandate;
   }
   
-  /**Erase a SEPA-mandate. */
-  public static function deleteSepaMandate($projectId, $musicianId, $handle = false)
-  {
-    $ownConnection = $handle === false;
-    if ($ownConnection) {
-      Config::init();
-      $handle = mySQL::connect(Config::$pmeopts);
-    }
-
-    $query = "DELETE FROM `SepaDebitMandates` WHERE `projectId` = $projectId AND `musicianId` = $musicianId";
-    mySQL::query($query, $handle);
-
-    if ($ownConnection) {
-      mySQL::close($handle);
-    }
-
-    return true; // hopefully
-  }
-
   /**Store a SEPA-mandate, possibly with only partial
    * information. mandateReference, musicianId and projectId are
    * required.
@@ -125,11 +125,26 @@ class Finance
       }
     }
 
+    if (self::$useEncryption) {
+      $enckey = Config::getEncryptionKey();
+      foreach (self::$dataBaseInfo['encryptedColumns'] as $column) {
+        if (isset($mandate[$column])) {
+          $value = Config::encrypt($mandate[$column], $enckey);
+          if ($value === false) {
+            return false;
+          }
+          $mandate[$column] = $value;
+        }
+      }
+    }
+
     $ownConnection = $handle === false;
     if ($ownConnection) {
       Config::init();
       $handle = mySQL::connect(Config::$pmeopts);
     }
+
+    $table = self::$dataBaseInfo['table'];
 
     $oldMandate = self::fetchSepaMandate($prj, $mus, $handle);
     if ($oldMandate) {
@@ -144,7 +159,7 @@ class Finance
         return false;
       }
       // passed: issue an update query
-      $query = "UPDATE `SepaDebitMandates` SET ";
+      $query = "UPDATE `".$table."` SET ";
       $setter = array();
       foreach ($mandate as $key => $value) {
         $setter[] = "`".$key."`='".$value."'";
@@ -153,7 +168,7 @@ class Finance
       $query .= " WHERE `mandateReference` = '".$ref."'";
     } else {
       // insert query
-      $query = "INSERT INTO `SepaDebitMandates` ";
+      $query = "INSERT INTO `".$table."` ";
       $query .= "(`".implode("`,`",array_keys($mandate))."`) ";
       $query .= " VALUES ";
       $query .= "('".implode("','",array_values($mandate))."') ";
@@ -166,6 +181,25 @@ class Finance
     }
 
     return $result;
+  }
+
+  /**Erase a SEPA-mandate. */
+  public static function deleteSepaMandate($projectId, $musicianId, $handle = false)
+  {
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
+    $query = "DELETE FROM `SepaDebitMandates` WHERE `projectId` = $projectId AND `musicianId` = $musicianId";
+    mySQL::query($query, $handle);
+
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return true; // hopefully
   }
 
   ########################################################

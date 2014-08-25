@@ -81,6 +81,15 @@ memberTable
   public static $Languages = array();
   private static $initialized = false;
 
+  /**List of data-base entries that need to be encrypted. We should
+   * invent some "registration" infrastructre for this AND first do a
+   * survey about existing solutions.
+   */
+  private static function encryptedDataBaseTables()
+  {
+    return array(Finance::$dataBaseInfo);
+  }
+
   private static function configKeys()
   {
     return preg_split('/\s+/', trim(self::CFG_KEYS));
@@ -393,8 +402,12 @@ memberTable
    *
    * @return The encrypted and encoded data.
    */
-  static public function encrypt($value, $enckey)
+  static public function encrypt($value, $enckey = false)
   {
+    if ($enckey === false) {
+      $enckey = self::getEncryptionKey();
+    }
+
     if ($enckey != '') {
       // Store the size in the first 4 bytes in order not to have to
       // rely on padding. We store the value in hexadecimal notation
@@ -422,8 +435,12 @@ memberTable
    *
    * @return The decrypted data in case of success, or false otherwise.
    */
-  static public function decrypt($value, $enckey)
+  static public function decrypt($value, $enckey = false)
   {
+    if ($enckey === false) {
+      $enckey = self::getEncryptionKey();
+    }
+
     if ($enckey != '' && $value != '') {
       $value = mcrypt_decrypt(MCRYPT_RIJNDAEL_128,
                               $enckey,
@@ -438,6 +455,74 @@ memberTable
       }
     }
     return $value;
+  }
+
+  /**Re-encrypt all encrypted data in case of a key change.
+   */
+  static public function recryptDataBaseColumns($newKey, $oldKey, $handle = false)
+  {
+    $ownConnection = $handle === false;
+
+    if ($ownConnection) {
+      self::init();
+      $handle = mySQL::connect(self::$pmeopts);
+    }
+    
+    $allTables = array();
+    foreach (self::encryptedDataBaseTables() as $table) {
+      $allTables[] = $table['table'];
+    }
+
+    // Lock tables until done
+    mySQL::query("LOCK TABLES `".implode('` WRITE, `', $allTables)."` WRITE", $handle);
+    //throw new \Exception("LOCK TABLES `".implode('` WRITE, `', $allTables)."` WRITE");
+
+    try {
+      foreach (self::encryptedDataBaseTables() as $table) {
+        $tableName     = $table['table'];
+        $primaryKey    = $table['key'];
+        $columns       = $table['encryptedColumns'];
+        $queryColumns  = '`'.$primaryKey.'`,`'.implode('`,`', $columns).'`';
+        
+        $query = "SELECT ".$queryColumns." FROM `".$tableName."` WHERE 1";
+        //throw new \Exception($query);
+        $result = mySQL::query($query, $handle);
+        while ($row = mysql::fetch($result)) {
+          $query = array();
+          foreach ($columns as $valueKey) {
+            $value = self::decrypt($row[$valueKey], $oldKey);
+            if ($value === false) {
+              throw new \Exception(L::t("Decryption of `%s`@`%s` failed", array($valueKey, $tableName)));
+            }
+            $value = self::encrypt($value, $newKey);
+            if ($value === false) {
+              throw new Exception(L::t("Encryption of `%s`@`%s` failed", array($valueKey, $tableName)));
+            }
+            $query[] = "`".$valueKey."` = '".$value."'";
+          }
+          $query = "UPDATE `".$tableName."` SET ".implode(', ', $query)." WHERE `".$primaryKey."` = ".$row[$primaryKey];
+          if (mySQL::query($query, $handle) === false) {
+            throw new \Exception(L::t("Unable to update table data at index %s", arry($primaryKey)));
+          }
+        }
+      }
+    } catch (\Exception $exception) {
+      // Unlock again
+      mySQL::query("UNLOCK TABLES");
+      if ($ownConnection) {
+        mySQL::close($handle);
+      }
+      
+      throw $exception;
+    }
+        
+    // Unlock again
+    mySQL::query("UNLOCK TABLES");
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+    
+    return true;
   }
 
   /**Encrypt the given value and store it in the application settings
