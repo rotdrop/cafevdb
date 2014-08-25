@@ -46,6 +46,7 @@ if ($table) {
   $outstream = fopen("php://output",'w');
 
   $table->deactivate();
+  $table->navigation(false);
   $table->display(); // strange, but need be here
   $h2t = new \html2text();
   $table->csvExport($outstream, ';', '"', function ($cell) use ($h2t) {

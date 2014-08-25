@@ -29,6 +29,7 @@ var CAFEVDB = CAFEVDB || {};
   SepaDebitMandate.musicianId = -1;
   SepaDebitMandate.musicianName = '';
   SepaDebitMandate.mandateId = -1;
+  SepaDebitMandate.mandateReference = '';
     /**Initialize the mess with contents
      *
      * @param[in] data JSON response with the fields data.status,
@@ -46,6 +47,7 @@ var CAFEVDB = CAFEVDB || {};
       self.musicianId = data.data.musicianId;
       self.musicianName = data.data.musicianName;
       self.mandateId = data.data.mandateId;
+      self.mandateReference = data.data.mandateReference;
     } else {
       var info = '';
       if (typeof data.data.message != 'undefined') {
@@ -99,8 +101,9 @@ var CAFEVDB = CAFEVDB || {};
           click: function() {
             var dlg = this;
             self.store(function () {
-              //$(dlg).dialog('close');
-              $('form.pme-form').submit();
+              $('#sepa-debit-mandate-'+self.musicianId+'-'+self.projectId).val(self.mandateReference);
+              $(dlg).dialog('close');
+              //$('form.pme-form').submit();
             });
           }
         },
@@ -111,6 +114,7 @@ var CAFEVDB = CAFEVDB || {};
           click: function(event) {
             var dlg = this;
             self.store(function () {
+              $('#sepa-debit-mandate-'+self.musicianId+'-'+self.projectId).val(self.mandateReference);
               // Disable everything and enable the change button
               // If we are about to display an existing mandate, first
               // disable all inputs and leave only the "close" and
@@ -132,8 +136,9 @@ var CAFEVDB = CAFEVDB || {};
           click: function() {
             var dlg = this;
             self.delete(function () {
-              //$(dlg).dialog('close');
-              $('form.pme-form').submit();
+              $('#sepa-debit-mandate-'+self.musicianId+'-'+self.projectId).val(t('cafevdb', 'SEPA Debit Mandate'));
+              $(dlg).dialog('close');
+              //$('form.pme-form').submit();
             });
           }
         },
@@ -142,8 +147,8 @@ var CAFEVDB = CAFEVDB || {};
           text: t('cafevdb', 'Close'),
           title: t('cafevdb', 'Discard all filled-in data and close the form. Note that this will not undo any changes previously stored in the data-base by pressing the `Apply\' button.'),
           click: function() {
-            //$(this).dialog('close');
-            $('form.pme-form').submit();
+            $(this).dialog('close');
+            //$('form.pme-form').submit();
           }
         },
       ],

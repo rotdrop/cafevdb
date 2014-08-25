@@ -59,6 +59,7 @@ case 'sepa-debit-mandates':
 
 if ($table) {
   $table->deactivate();
+  $table->navigation(false);
   $table->display(); // strange, but need be here
 
   $missing = array();

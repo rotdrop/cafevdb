@@ -115,6 +115,7 @@ try {
                           'projectName' => $projectName,
                           'musicianId' => $musicianId,
                           'musicianName' => $musicianName,
+                          'mandateReference' => $mandate['mandateReference'],
                           'mandateId' => $mandate['id'],
                           'debug' => $debugtext)));
 

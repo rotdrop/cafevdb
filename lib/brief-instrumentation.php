@@ -295,7 +295,8 @@ class BriefInstrumentation
         'type' => 'function',
         'function' => 'CAFEVDB\BriefInstrumentation::sepaDebitMandatePME',
         'parameters' => array('project' => $project,
-                              'projectId' => $projectId)
+                              'projectId' => $projectId,
+                              'naked' => $this->pme_bare)
         )
       );
 
@@ -348,6 +349,10 @@ class BriefInstrumentation
 
   public static function sepaDebitMandatePME($referenceId, $opts, $action, $k, $fds, $fdd, $row)
   {
+    if ($opts['naked']) {
+      return $row['qf'.$k];
+    }
+
     // Fetch the data from the array $row.
     $projectId = $opts['projectId'];
     $project   = $opts['project'];
@@ -361,7 +366,6 @@ class BriefInstrumentation
     } else {
       $value = L::t("SEPA Debit Mandate");
     }
-
     return self::sepaDebitMandateButton($value, $musicianId, $musician, $projectId, $project);
   }
 
@@ -373,6 +377,7 @@ class BriefInstrumentation
   {
     $button = '<div class="sepa-debit-mandate">'
       .'<input type="button" '
+      .'       id="sepa-debit-mandate-'.$musicianId.'-'.$projectId.'"'
       .'       value="'.$value.'" '
       .'       title="'.L::t("Click to enter details of a potential SEPA debit mandate").' " '
       .'       name="'

@@ -1423,7 +1423,26 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			if (isset($this->fdd[$k]['display']['prefix'])) {
 				echo $this->fdd[$k]['display']['prefix'];
 			}
-			if ($this->col_has_values($k)) {
+			if ($this->col_has_php($k)) {
+				$php = $this->fdd[$k]['php'];
+				if (is_array($php)) {
+					switch ($php['type']) {
+					case 'function':
+						$opts = isset($php['parameters']) ? $php['parameters'] : '';
+						echo call_user_func($php['function'], false, $opts,
+											'add', // action to be performed
+											$k, $this->fds, $this->fdd, false);
+						break;
+					case 'file':
+						echo include($php);
+						break;
+					default:
+						break;
+					}
+				} else {
+					echo include($php);
+				}
+			} elseif ($this->col_has_values($k)) {
 				$vals		= $this->set_values($k);
 				$groups     = $this->fdd[$k]['valueGroups'] ? $this->fdd[$k]['valueGroups'] : null;
 				$selected	= @$this->fdd[$k]['default'];
@@ -1446,25 +1465,6 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				echo $this->htmlTextarea($this->cgi['prefix']['data'].$this->fds[$k],
 										 $css_class_name,
 										 $k, $this->fdd[$k]['default'], $escape, $helptip);
-			} elseif ($this->col_has_php($k)) {
-				$php = $this->fdd[$k]['php'];
-				if (is_array($php)) {
-					switch ($php['type']) {
-					case 'function':
-						$opts = isset($php['parameters']) ? $php['parameters'] : '';
-						echo call_user_func($php['function'], false, $opts,
-											'add', // action to be performed
-											$k, $this->fds, $this->fdd, false);
-						break;
-					case 'file':
-						echo include($php);
-						break;
-					default:
-						break;
-					}
-				} else {
-					echo include($php);
-				}
 			} else {
 				// Simple edit box required
 				$len_props = '';
@@ -1611,7 +1611,28 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		 * element, then do not emit multi-controls, because this has
 		 * not been requested.
 		 */
-		if ($vals &&
+
+		if ($this->col_has_php($k)) {
+			$value = $vals ? $vals[$row["qf$k"]] : $row["qf$k"];
+			$php = $this->fdd[$k]['php'];
+			if (is_array($php)) {
+				switch ($php['type']) {
+				case 'function':
+					$opts = isset($php['parameters']) ? $php['parameters'] : '';
+					echo call_user_func($php['function'], $value, $opts,
+										'change', // action to be performed
+										$k, $this->fds, $this->fdd, $row);
+					break;
+				case 'file':
+					echo include($php);
+					break;
+				default:
+					break;
+				}
+			} else {
+				echo include($php);
+			}
+		} elseif ($vals &&
 			(stristr("MCOD", $this->fdd[$k]['select']) !== false || $multiValues)) {
 			$groups     = $this->fdd[$k]['valueGroups'] ? $this->fdd[$k]['valueGroups'] : null;
 			$multiple	= $this->col_has_multiple($k);
@@ -1637,26 +1658,6 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			echo $this->htmlTextarea($this->cgi['prefix']['data'].$this->fds[$k],
 									 $css_class_name,
 									 $k, $row["qf$k"], $escape, $help);
-		} elseif ($this->col_has_php($k)) {
-			$value = $vals ? $vals[$row["qf$k"]] : $row["qf$k"];
-			$php = $this->fdd[$k]['php'];
-			if (is_array($php)) {
-				switch ($php['type']) {
-				case 'function':
-					$opts = isset($php['parameters']) ? $php['parameters'] : '';
-					echo call_user_func($php['function'], $value, $opts,
-										'change', // action to be performed
-										$k, $this->fds, $this->fdd, $row);
-					break;
-				case 'file':
-					echo include($php);
-					break;
-				default:
-					break;
-				}
-			} else {
-				echo include($php);
-			}
 		} else {
 			$value    = $vals ? $vals[$row["qf$k"]] : $row["qf$k"];
 			$readonly = $this->disabledTag($k);
