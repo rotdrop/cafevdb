@@ -245,7 +245,8 @@ class EmailFilter {
 
   private function remapEmailRecords($table)
   {
-    if ($this->projectId >= 0 && $table == 'Besetzungen') {
+    if ($this->projectId >= 0 &&
+        ($table == 'Besetzungen' || $table == 'SepaDebitMandates')) {
 
       $dbh = mySQL::connect($this->opts);
 
@@ -257,23 +258,35 @@ class EmailFilter {
        * If called from the "Besetzungen" table, we remap the Id's
        * to the project view table and continue with that.
        */
+      $oldTable = $table;
       $table = $this->project.'View';
-      $query = 'SELECT `Besetzungen`.`Id` AS \'BesetzungsId\',
+      switch ($oldTable) {
+      case 'Besetzungen':
+        $query = 'SELECT `'.$oldTable.'`.`Id` AS \'OrigId\',
   `'.$table.'`.`MusikerId` AS \'MusikerId\'
-  FROM `'.$table.'` LEFT JOIN `Besetzungen`
-  ON `'.$table.'`.`MusikerId` = `Besetzungen`.`MusikerId`
-  WHERE `Besetzungen`.`ProjektId` = '.$this->projectId;
+  FROM `'.$table.'` LEFT JOIN `'.$oldTable.'`
+  ON `'.$table.'`.`MusikerId` = `'.$oldTable.'`.`MusikerId`
+  WHERE `'.$oldTable.'`.`ProjektId` = '.$this->projectId;
+        break;
+      case 'SepaDebitMandates':
+        $query = 'SELECT `'.$oldTable.'`.`id` AS \'OrigId\',
+  `'.$table.'`.`MusikerId` AS \'MusikerId\'
+  FROM `'.$table.'` LEFT JOIN `'.$oldTable.'`
+  ON `'.$table.'`.`MusikerId` = `'.$oldTable.'`.`musicianId`
+  WHERE `'.$oldTable.'`.`projectId` = '.$this->projectId;
+        break;
+      }
 
       // Fetch the result (or die) and remap the Ids
       $result = mySQL::query($query, $dbh);
       $map = array();
       while ($line = mysql_fetch_assoc($result)) {
-        $map[$line['BesetzungsId']] = $line['MusikerId'];
+        $map[$line['OrigId']] = $line['MusikerId'];
       }
       $newEmailRecs = array();
       foreach ($this->EmailRecs as $key) {
         if (!isset($map[$key])) {
-          Util::error('Musician in Besetzungen, but has no Id as Musician');
+          Util::error('Musician in Table, but has no Id as Musician');
         }
         $newEmailRecs[] = $map[$key];
       }
@@ -2424,4 +2437,3 @@ __EOT__;
 } // namespace
 
 ?>
-
