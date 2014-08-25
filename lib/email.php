@@ -1003,6 +1003,8 @@ mandateReference
   {
     $handle = mySQL::connect($this->opts);
 
+    $contents = mysql_real_escape_string($contents, $handle);
+
     $query = "REPLACE INTO `EmailTemplates` (`Tag`,`Contents`) VALUES ('".$tag."','".$contents."')";
 
     // Ignore the result at this point.
