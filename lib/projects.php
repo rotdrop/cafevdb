@@ -634,18 +634,26 @@ a comma.'));
           title="'.Config::toolTips('project-actions').'"
           name="'.$params.'">
     <option value=""></option>
+    <optgroup>
     <option title="'.Config::toolTips('project-action-events').'" value="events">
       '.L::t('Events').'
     </option>
-    <option title="'.Config::toolTips('project-action-brief-instrumentation').'" value="brief-instrumentation">
+    </optgroup>
+    <optgroup>
+    <option title="'.Config::toolTips('project-action-brief-instrumentation').'"
+            value="brief-instrumentation">
       '.L::t('Brief Instrumentation').'
     </option>
-    <option title="'.Config::toolTips('project-action-detailed-instrumentation').'" value="detailed-instrumentation">
+    <option title="'.Config::toolTips('project-action-detailed-instrumentation').'"
+            value="detailed-instrumentation">
       '.L::t('Detailed Instrumentation').'
     </option>
-    <option title="'.Config::toolTips('project-action-instrumentation-numbers').'" value="project-instruments">
+    <option title="'.Config::toolTips('project-action-instrumentation-numbers').'"
+            value="project-instruments">
       '.L::t('Instrumentation Numbers').'
     </option>
+    </optgroup>
+    <optgroup>
     <option title="'.Config::toolTips('project-action-wiki').'"
             value="project-wiki?'.urlencode(self::projectWikiLink($projectName)).'">
       '.L::t('Project Wiki Page').'
@@ -654,10 +662,17 @@ a comma.'));
             value="project-files?'.$projectPaths['project'].'">
       '.L::t('Project Files').'
     </option>
+    </optgroup>
+    <optgroup>
+    <option title="'.Config::toolTips('project-action-debit-mandates').'"
+              value="sepa-debit-mandates">
+      '.L::t('SEPA Debit Mandates').'
+    </option>
     <option title="'.Config::toolTips('project-action-financial-balance').'"
               value="profit-and-loss?'.$projectPaths['balance'].'">
       '.L::t('Profit and Loss Account').'
     </option>
+    </optgroup>
   </select>
 </span>';
     return $control;
