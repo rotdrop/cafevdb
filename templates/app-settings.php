@@ -29,7 +29,7 @@ $off = $_['orchestra'] == '' ? 'disabled="disabled"' : '';
       <input class="cafevdb-password-show" type="checkbox" id="systemkey-show" name="show" />
       <label class="cafevdb-password-show" for="systemkey-show"><?php echo L::t('show');?></label>
       <input id="keychangebutton" type="button" value="<?php echo L::t('Change Encryption Key');?>" />
-      <span><?php echo $_['encryptionkey']; ?></span>
+      <!-- <span><?php echo $_['encryptionkey']; ?></span> -->
       <div class="statusmessage" id="changed"><?php echo L::t('The encryption key was changed');?></div>
       <div class="statusmessage" id="error"><?php echo L::t('Unable to change the encryption key');?></div>
       <div class="statusmessage" id="insecure"><?php echo L::t('Data will be stored unencrypted');?></div>
