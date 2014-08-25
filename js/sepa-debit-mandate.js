@@ -313,11 +313,12 @@ var CAFEVDB = CAFEVDB || {};
     // mandateDate
     // lastUsedDate
     var inputMapping = {
-      PME_data_lastUsedDate: 'lastUsedDate',
-      PME_data_mandateDate: 'mandateDate',
-      PME_data_bankAccountOwner: 'bankAccountOwner',
-      PME_data_IBAN: 'bankAccountIBAN',
-      PME_data_BIC: 'bankAccountBIC'
+        PME_data_lastUsedDate: 'lastUsedDate',
+        PME_data_mandateDate: 'mandateDate',
+        PME_data_bankAccountOwner: 'bankAccountOwner',
+        PME_data_IBAN: 'bankAccountIBAN',
+        PME_data_BIC: 'bankAccountBIC',
+        PME_data_BLZ: 'bankAccountBLZ',
     };
     var changed = $(this).attr('name');
     changed = inputMapping[changed];
@@ -331,6 +332,7 @@ var CAFEVDB = CAFEVDB || {};
       ProjectId:  $('select[name="PME_data_projectId"] option[selected="selected"]').val(),
       bankAccountIBAN: $('input[name="PME_data_IBAN"]').val(),
       bankAccountBIC: $('input[name="PME_data_BIC"]').val(),
+      bankAccountBLZ: $('input[name="PME_data_BLZ"]').val(),
       changed: changed
     };
 
@@ -339,14 +341,19 @@ var CAFEVDB = CAFEVDB || {};
            post,
            function (data) {
              if (data.status == "success") {
+                 $('#cafevdb-page-debug').html(data.data.message);
+                 $('#cafevdb-page-debug').show();
                if (data.data.value) {
                  $(element).val(data.data.value);
                }
                if (data.data.iban) {
-                 $('input.PME_data_IBAN').val(data.data.iban);
+                 $('input[name="PME_data_IBAN"]').val(data.data.iban);
                }
                if (data.data.bic) {
-                 $('input.PME_data_BIC').val(data.data.bic);
+                 $('input[name="PME_data_BIC"]').val(data.data.bic);
+               }
+               if (data.data.blz) {
+                 $('input[name="PME_data_BLZ"]').val(data.data.blz);
                }
                return true;
              } else {

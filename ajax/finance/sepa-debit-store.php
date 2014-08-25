@@ -39,6 +39,7 @@ $mandate = array('mandateReference' => Util::cgiValue('mandateReference'),
                  'lastUsedDate' => Util::cgiValue('lastUsedDate'),
                  'IBAN' => Util::cgiValue('bankAccountIBAN'),
                  'BIC' => Util::cgiValue('bankAccountBIC'),
+                 'BLZ' => Util::cgiValue('bankAccountBLZ'),
                  'bankAccountOwner' => Util::cgiValue('bankAccountOwner'));
 
 // Verify IBAN and BIC if non-empty

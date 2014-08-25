@@ -78,6 +78,7 @@ if (isset($_POST['systemkey']) && isset($_POST['oldkey'])) {
     OC_JSON::error(array("data" => array("message" => L::t("Configuration locked, refusing to change encryption key."))));
     return false;
   }
+
   $lockPhrase = \OCP\Util::generateRandomBytes();
   Config::setAppValue('configlock', $lockPhrase);
   $configLock = Config::getAppValue('configlock', false);
@@ -87,6 +88,18 @@ if (isset($_POST['systemkey']) && isset($_POST['oldkey'])) {
     return false;
   }  
   // Still: this does ___NOT___ hack the worst-case scenario, but should suffice for our purposes.
+
+  try {
+    // Re-encrypt all other data
+    Config::recryptDataBaseColumns($newkey, $actkey);
+  } catch (\Exception $exception) {
+    // Delete the config-lock settting
+    Config::deleteAppKey('configlock');
+
+    Config::setEncryptionKey($actkey);
+    OC_JSON::error(array("data" => array("message" => $exception->getMessage())));    
+    return false;    
+  }
 
   // Store the new key in the session data
   Config::setEncryptionKey($newkey);

@@ -70,6 +70,7 @@ try {
                      'nonrecurring' => $nonrecurring,
                      'IBAN' => '',
                      'BIC' => '',
+                     'BLZ' => '',
                      'bankAccountOwner' => $musicianName);
   }
 
