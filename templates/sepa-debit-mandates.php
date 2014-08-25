@@ -4,13 +4,23 @@ use CAFEVDB\Navigation;
 use CAFEVDB\SepaDebitMandates;
 
 $table = new SepaDebitMandates();
+
+$project = $_['projectName'];
+$projectId = $_['projectId'];
 $css_pfx = SepaDebitMandates::CSS_PREFIX;
 
 $nav = '';
-$nav .= Navigation::button('projects');
-$nav .= Navigation::button('all');
-$nav .= Navigation::button('projectinstruments');
-$nav .= Navigation::button('instruments');
+if ($projectId >= 0) {
+  $nav .= Navigation::button('projectlabel', $project, $projectId);
+  $nav .= Navigation::button('brief', $project, $projectId);  
+  $nav .= Navigation::button('detailed', $project, $projectId);  
+  $nav .= Navigation::button('projects');
+} else {
+  $nav .= Navigation::button('projects');
+  $nav .= Navigation::button('all');
+  $nav .= Navigation::button('projectinstruments');
+  $nav .= Navigation::button('instruments');
+}
 
 echo $this->inc('part.common.header',
                 array('css-prefix' => $css_pfx,

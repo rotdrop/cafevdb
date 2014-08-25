@@ -218,6 +218,7 @@ class BriefInstrumentation
                                       );
     $opts['fdd']['MusikerId'] = array(
                                       'name'     => 'MusikerId',
+                                      'input'    => 'R', // read-only
                                       'select'   => 'T',
                                       'maxlen'   => 11,
                                       'sort'     => true,
@@ -375,17 +376,18 @@ class BriefInstrumentation
    */
   public static function sepaDebitMandateButton($value, $musicianId, $musician, $projectId, $project)
   {
+    $css= ($value == L::t("SEPA Debit Mandate")) ? "no-sepa-debit-mandate" : "sepa-debit-mandate";
     $button = '<div class="sepa-debit-mandate">'
       .'<input type="button" '
       .'       id="sepa-debit-mandate-'.$musicianId.'-'.$projectId.'"'
+      .'       class="'.$css.'" '
       .'       value="'.$value.'" '
       .'       title="'.L::t("Click to enter details of a potential SEPA debit mandate").' " '
       .'       name="'
       .'MusicianId='.$musicianId.'&amp;'
       .'MusicianName='.$musician.'&amp;'
       .'ProjectId='.$projectId.'&amp;'
-      .'ProjectName='.$project.'" '
-      .'       class="sepa-debit-mandate" />'
+      .'ProjectName='.$project.'" />'
       .'</div>';
     return $button;
   }

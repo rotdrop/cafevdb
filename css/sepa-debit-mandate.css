@@ -6,3 +6,9 @@ div.sepastatusblock {
 #sepa-debit-mandate-dialog input.lastUsedDate { 
   width: 6em;
 }
+
+input.no-sepa-debit-mandate {
+  ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
+  filter: alpha(opacity=30);
+  opacity: .3;  
+}

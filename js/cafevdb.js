@@ -324,9 +324,7 @@ var CAFEVDB = CAFEVDB || {};
     // also remove and re-attach the tool-tips, otherwise some of the
     // tips remain, because chosen() removes the element underneath.
     
-    select.children('option').each(function(i, elm) {
-      $(elm).removeAttr('selected');
-    });
+    select.find('option').removeAttr('selected');
     $('.tipsy').remove();
 
     select.trigger("chosen:updated");
@@ -481,7 +479,7 @@ $(document).ready(function(){
     return false;
   });
 
-  $(':button.sepa-debit-mandate').click(function(event) {
+  $(':button[class$="sepa-debit-mandate"]').click(function(event) {
     event.preventDefault();
     if ($('#sepa-debit-mandate-dialog').dialog('isOpen') == true) {
       $('#sepa-debit-mandate-dialog').dialog('close').remove();
