@@ -269,7 +269,8 @@ class Instrumentation
   {
     $project    = Util::cgiValue('Project');
     $projectId  = Util::cgiValue('ProjectId');
-    $musicianId = Util::cgiValue('MusicianId');
+    $musicianId = Util::cgiValue('MusicianId', -1);
+    $table      = Util::cgiValue('Table', false);
 
     // We check here whether the change of the instrument or player is in
     // some sense consistent with the Musiker table. We know that only
@@ -297,13 +298,30 @@ class Instrumentation
       return true;
     }
 
+    if (false) {
+      echo '<PRE>';
+      echo "musid: ".$musicianId."\n";
+      print_r($_POST);
+      print_r($newvals);
+      print_r($oldvals);
+      print_r($changed);
+      echo '</PRE>';
+    }
+
+    $dontCheckMusicianId = $musicianId < 0;
     if ($musicianId < 0) {
       if (isset($newvals['MusikerId'])) {
+        // Should normally not happen ...
         $musicianId = $newvals['MusikerId'];
+      } else if (isset($oldvals['MusikerId'])) {
+        $musicianId = $oldvals['MusikerId'];
       } else {
         // otherwise it must be this->rec
+        //
+        // TODO: check for consistency with Table cgi var.
         $musicianId = $pme->rec;
       }
+
     }
     
     // Fetch the list of instruments from the Musiker data-base
@@ -314,7 +332,8 @@ class Instrumentation
     $musnumrows = mysql_num_rows($musres);
 
     if ($musnumrows != 1) {
-      echo "Data inconsisteny, " . $musicianId . " is not a unique Id\n";
+      echo L::t("Data inconsisteny, %d is not a unique Id, got %d data sets.",
+                array($musicianId, $musnumrows));
       return false;
     }
 
@@ -324,9 +343,11 @@ class Instrumentation
 
     // Consistency check; $newvals['MusikerId'] may either be a
     // numeric id or just the name of the musician.
-    if ((is_numeric($newvals['MusikerId']) && $musicianId != $newvals['MusikerId'])
-        ||
-        (!is_numeric($newvals['MusikerId']) && $musname !=  $newvals['MusikerId'])) {
+    if (!$dontCheckMusicianId
+        &&
+        ((is_numeric($newvals['MusikerId']) && $musicianId != $newvals['MusikerId'])
+         ||
+         (!is_numeric($newvals['MusikerId']) && $musname !=  $newvals['MusikerId']))) {
       echo L::t("Data inconsistency: Ids do not match (`%s' != `%s')",
                 array($newvals['MusikerId'], $musicianId));
       return false;
