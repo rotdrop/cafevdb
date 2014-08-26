@@ -1,3 +1,5 @@
+var tinyMCEUrl = OC.filePath('cafevdb', '3rdparty/js/tinymce', '');
+var tinyMCESmileyUrl = tinyMCEUrl + '/plugins/emoticons/img/';
 var myTinyMCE = myTinyMCE || {
   config: {
     theme: "modern",
@@ -19,10 +21,10 @@ var myTinyMCE = myTinyMCE || {
     plugins: [
          "advlist autolink link image lists charmap print preview hr anchor pagebreak",  // spellchecker
          "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
-         "save table contextmenu directionality emoticons template paste textcolor"
+      "save table contextmenu directionality template paste textcolor smileys" // emoticons smileys
    ],
    //content_css: "css/content.css",
-   toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons | code", 
+   toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor smileys | code", // emoticons
    style_formats: [
         {title: 'Bold text', inline: 'b'},
         {title: 'Red text', inline: 'span', styles: {color: '#ff0000'}},
@@ -31,6 +33,32 @@ var myTinyMCE = myTinyMCE || {
         {title: 'Example 2', inline: 'span', classes: 'example2'},
         {title: 'Table styles'},
         {title: 'Table row 1', selector: 'tr', classes: 'tablerow1'}
+    ],
+    smileys: [
+        [
+            { shortcut: 'B-)', url: tinyMCESmileyUrl + 'smiley-cool.gif', title: 'cool' },
+            { shortcut: ':,(', url: tinyMCESmileyUrl + 'smiley-cry.gif', title: 'cry' },
+            { shortcut: ':-[', url: tinyMCESmileyUrl + 'smiley-embarassed.gif', title: 'embarassed' },
+            { shortcut: ':-!', url: tinyMCESmileyUrl + 'smiley-foot-in-mouth.gif', title: 'foot-in-mouth' },
+        ],
+        [
+            { shortcut: ':-(', url: tinyMCESmileyUrl + 'smiley-frown.gif', title: 'frown' },
+            { shortcut: '0:)', url: tinyMCESmileyUrl + 'smiley-innocent.gif', title: 'innocent' },
+            { shortcut: ':-*', url: tinyMCESmileyUrl + 'smiley-kiss.gif', title: 'kiss' },
+            { shortcut: ':-D', url: tinyMCESmileyUrl + 'smiley-laughing.gif', title: 'laughing' },
+        ],
+        [
+            { shortcut: ':-$', url: tinyMCESmileyUrl + 'smiley-money-mouth.gif', title: 'money' },
+            { shortcut: ':-#', url: tinyMCESmileyUrl + 'smiley-sealed.gif', title: 'sealed' },
+            { shortcut: ':-)', url: tinyMCESmileyUrl + 'smiley-smile.gif', title: 'smile' },
+            { shortcut: ':-O', url: tinyMCESmileyUrl + 'smiley-surprised.gif', title: 'surprised' },
+        ],
+        [
+            { shortcut: ':-P', url: tinyMCESmileyUrl + 'smiley-tongue-out.gif', title: 'tongue' },
+            { shortcut: ':-\\', url: tinyMCESmileyUrl + 'smiley-undecided.gif', title: 'undecided' },
+            { shortcut: ';-)', url: tinyMCESmileyUrl + 'smiley-wink.gif', title: 'wink' },
+            { shortcut: '>:O', url: tinyMCESmileyUrl + 'smiley-yell.gif', title: 'yell' },
+        ]
     ]
   },
   init: function(lang) {
