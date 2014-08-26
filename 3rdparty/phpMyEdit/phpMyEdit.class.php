@@ -3665,7 +3665,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		$stamps		  = array();
 		// Prepare query to retrieve oldvals
 		for ($k = 0; $k < $this->num_fds; $k++) {
-			if ($this->processed($k) && !$this->disabled($k)) {
+			if ($this->processed($k)) {
 				$fd = $this->fds[$k];
 				$fn = $this->get_data_cgi_var($fd);
 				if ($this->col_has_datemask($k)) {
@@ -3678,7 +3678,11 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 						echo "<!-- ".$fn." -->\n";
 					}
 				}
-				$newvals[$fd] = is_array($fn) ? join(',',$fn) : $fn;
+				if (!$this->disabled($k)) {
+					// Don't include disabled fields into newvals, but
+					// keep for reference in oldvals
+					$newvals[$fd] = is_array($fn) ? join(',',$fn) : $fn;
+				}
 				if ($query_oldrec == '') {
 					$query_oldrec = 'SELECT '.$this->sd.$fd.$this->ed;
 				} else {
