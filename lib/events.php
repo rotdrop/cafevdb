@@ -803,14 +803,44 @@ __EOT__;
     }
 
     $start = $event['startdate'];
-    $startdate = Util::strftime("%x", $start->getTimestamp(), $timezone, $locale);
-    $starttime = Util::strftime("%H:%M", $start->getTimestamp(), $timezone, $locale);
     $end   = $event['enddate'];
-    $enddate = Util::strftime("%x", $end->getTimestamp(), $timezone, $locale);
-    $endtime = Util::strftime("%H:%M", $end->getTimestamp(), $timezone, $locale);
+
+    $startStamp = $start->getTimestamp();
+    $endStamp = $end->getTimestamp();
+
+    // Attention: a full-time event is flagged by start- and end-time
+    // being 0:00 in __UTC__, in principle this is a bug, isn't it???
+    // There is just one solution: check the raw calendar data for
+    //
+    // DTSTART;VALUE=DATE:
+    // DTEND;VALUE=DATE:
+    //
+    // If so, the event is meant for the whole day. In this case we
+    // just fetch the date in UTC and forget about the time.
+    $startEntireDay = strstr($event['calendardata'], 'DTSTART;VALUE=DATE:') !== false;
+    $endEntireDay = strstr($event['calendardata'], 'DTEND;VALUE=DATE:') !== false;
+
+    if ($startEntireDay) {
+      $startdate = Util::strftime("%x", $startStamp, 'UTC', $locale);
+      $tz = new \DateTimeZone($timezone);
+      $start = new \DateTime($startdate.' 00:00:00', $tz);
+      $startStamp = $start->getTimestamp();
+    }
+    if ($endEntireDay) {
+      $enddate = Util::strftime("%x", $endStamp, 'UTC', $locale);
+      $tz = new \DateTimeZone($timezone);
+      $end = new \DateTime($enddate.' 00:00:00', $tz);
+      $endStamp = $end->getTimestamp();
+      $endStamp -= 1;
+    }
+
+    $startdate = Util::strftime("%x", $startStamp, $timezone, $locale);
+    $starttime = Util::strftime("%H:%M", $startStamp, $timezone, $locale);
+    $enddate = Util::strftime("%x", $endStamp, $timezone, $locale);
+    $endtime = Util::strftime("%H:%M", $endStamp, $timezone, $locale);
 
     if ($startdate == $enddate) {
-      $datestring = $startdate.', '.$starttime;
+      $datestring = $startdate.($startEntireDay ? '' : ', '.$starttime);
     } else {
       $datestring = $startdate.' - '.$enddate;
     }

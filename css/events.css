@@ -30,6 +30,10 @@ form.projectevents {
   background-color:inherit;
 }
 
+.projectevents div.topbuttons {
+  padding:1em 0.3em 0 0.3em;
+}
+
 .projectevents table.topbuttons {
   border:#004d9c 0px solid;
   border-collapse:collapse;
@@ -135,7 +139,7 @@ label.email-check {
 }
 
 .projectevents div.listing {
-  padding:1em 0 0 0.3em;
+  padding:1em 0.3em 0 0.3em;
 }
 
 .projectevents table.listing {

@@ -72,7 +72,7 @@ var CAFEVDB = CAFEVDB || {};
         position: { my: "middle top+50%",
                     at: "middle bottom",
                     of: "#controls" },
-        width : 500,
+        width : "auto", //510,
         height: "auto",
 	resizable: false,
         open  : function(){
