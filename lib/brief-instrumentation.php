@@ -281,7 +281,7 @@ class BriefInstrumentation
       'input' => 'V',
       'name' => L::t('SEPA Debit Mandate'),
       'select' => 'T',
-      'options' => 'LACPDV',
+      'options' => 'LFACPDV',
       'sql' => '`PMEjoin'.count($opts['fdd']).'`.`mandateReference`', // dummy, make the SQL data base happy
       'sqlw' => '`PMEjoin'.count($opts['fdd']).'`.`mandateReference`', // dummy, make the SQL data base happy
       'values' => array(
