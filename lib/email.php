@@ -1100,8 +1100,7 @@ __EOT__;
 
   static private function textMessage($htmlMessage)
   {
-    $h2t = new \html2text($htmlMessage);
-    $h2t->set_encoding('utf-8');
+    $h2t = new \Html2Text($htmlMessage);
     return $h2t->get_text();
   }
 
@@ -1643,7 +1642,8 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
         return false;
       }
 
-      $strMessage = nl2br($this->message);
+      //$strMessage = nl2br($this->message); ? we _ARE_ html ...
+      $strMessage = $this->message;
       
       if (preg_match('![$]{GLOBAL::[^{]+}!', $this->message)) {
         $vars = $this->emailGlobalVariables();
@@ -1767,7 +1767,8 @@ verloren." type="submit" name="eraseAll" value="'.L::t('Cancel').'" />
       }
         
       $mail->Subject = $this->mailTag . ' ' . $this->subject;
-      $mail->msgHTML($strMessage, true);
+      // pass the correct path in order for automatic image conversion
+      $mail->msgHTML($strMessage, __DIR__.'/../', true);
 
       $mail->AddReplyTo($this->senderEmail, $this->sender);
       $mail->SetFrom($this->senderEmail, $this->sender);
