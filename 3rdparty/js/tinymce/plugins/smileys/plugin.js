@@ -250,7 +250,7 @@ tinymce.PluginManager.add('smileys', function (editor, url) {
     function replaceAllMatches(smiley) {
         var node = editor.selection.getNode(), marker, text = smiley.shortcut.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
 
-        marker = editor.dom.create('img', { "src": smiley.url, "title": smiley.title+"bar", "alt": smiley.shortcut });
+        marker = editor.dom.create('img', { "src": smiley.url, "title": smiley.title, "alt": smiley.shortcut });
 
         return findAndReplaceDOMText(new RegExp('\\W('+text+')\\W', 'gi'), node, marker, 1, editor.schema);
     }

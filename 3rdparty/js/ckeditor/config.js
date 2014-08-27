@@ -64,7 +64,7 @@ CKEDITOR.editorConfig = function( config ) {
     // The toolbar groups arrangement, optimized for two toolbar rows.
     config.toolbarGroups = [
 	{ name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
-	{ name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
+	{ name: 'editing',     groups: [ 'find', 'selection' ] },
 	{ name: 'links' },
 	{ name: 'insert' },
 	{ name: 'forms' },
@@ -96,4 +96,16 @@ CKEDITOR.editorConfig = function( config ) {
     config.extraPlugins = 'trimEmptyP';
 
     //	config.autoParagraph = false;
+
+    // smileys
+    // Use textual emoticons as description.
+    config.smiley_descriptions = [
+        ':)', ':(', ';)', ':D', ':/', ':P', ':*)', ':-o',
+        ':|', '>:(', 'o:)', '8-)', '>:-)', ';(', '', '', '',
+        '', '', ':-*', ''
+    ];
+
+    config.smiley_path = '../../apps/cafevdb/3rdparty/js/ckeditor/plugins/smiley/images/';
+
+    config.disableNativeSpellChecker = false;
 };
