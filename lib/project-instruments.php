@@ -106,11 +106,15 @@ class ProjectInstruments
 
     // Get the desired transposed state.
     $transposed = Util::cgiValue('Transpose', 'transposed');
+    $operation  = Util::cgiValue(Config::$pmeopts['cgi']['prefix']['sys'].'operation');
+    $morechange = Util::cgiValue(Config::$pmeopts['cgi']['prefix']['sys'].'morechange');
+    $inhibitTranspose = ($operation != '' || $morechange != '');
+
     // Don't want everything persistent.
     $opts['cgi']['persist'] = array(
       'Template' => 'project-instruments',
       'Transpose' => $transposed,
-      'InhibitInitialTranspose' => $this->projectId >= 0 ? 'true' : 'false',
+      'InhibitTranspose' => $inhibitTranspose ? 'true' : 'false',
       'Table' => $opts['tb'],
       'headervisibility' => Util::cgiValue('headervisibility', 'expanded'));
 
@@ -162,7 +166,7 @@ class ProjectInstruments
       }
     }
 
-    $actions = self::projectInstrumentsActions('pme-'.$transposed, $adjustOperation);
+    $actions = self::projectInstrumentsActions('pme-'.$transposed, $inhibitTranspose, $adjustOperation);
     $opts['buttons'] = Navigation::prependTableButton($actions, false, true);
 
     // Number of lines to display on multiple selection filters
@@ -366,7 +370,7 @@ HREF=%s>Projekteigenschaften</A> die Instrumente eintragen, oder im
   /**Another multi-select which adds a pull-down menu to the
    * project-instrumentation table.
    */
-  public static function projectInstrumentsActions($transposed, $adjustOperation = false)
+  public static function projectInstrumentsActions($transposed, $disableTranspose, $adjustOperation = false)
   {
     $data = ''
       .'<span id="pme-instrumentation-actions-block" class="pme-instrumentation-actions-block">
@@ -379,6 +383,7 @@ HREF=%s>Projekteigenschaften</A> die Instrumente eintragen, oder im
       name="actions" >
       <option value=""></option>
       <option
+        '.($disableTranspose ? 'disabled="disabled"' : '').'
         title="'.Config::toolTips('pme-transpose').'"
         id="pme-transpose"
         class="pme-transpose '.$transposed.'"

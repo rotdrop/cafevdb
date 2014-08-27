@@ -38,14 +38,14 @@ $(document).ready(function(){
 
     switch (selected) {
     case 'transpose':
-      var isTransposed = false;
-      if ($('input[name="Transpose"]').val() == 'transposed' ||
-          $('#pme-transpose-up').hasClass('pme-transposed') ||
-          $('#pme-transpose-down').hasClass('pme-transposed') ||
-          $('#pme-transpose').hasClass('pme-transposed')) {
-        isTransposed = true;
+      var isTransposed = ($('input[name="Transpose"]').val() == 'transposed' ||
+                          $('#pme-transpose-up').hasClass('pme-transposed') ||
+                          $('#pme-transpose-down').hasClass('pme-transposed') ||
+                          $('#pme-transpose').hasClass('pme-transposed'));
+      var inhibitTranspose = $('input[name="InhibitTranspose"]').val() == 'true';
+      if (!inhibitTranspose) {
+        CAFEVDB.PME.maybeTranspose(!isTransposed);
       }
-      CAFEVDB.PME.maybeTranspose(!isTransposed);
       break;
     case 'transfer-instruments':
       post = optionValues[1];

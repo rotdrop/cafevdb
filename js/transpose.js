@@ -132,14 +132,12 @@ var CAFEVDB = CAFEVDB || {};
 
 $(document).ready(function() {
     // Transpose or not: if there is a transpose button
-    // #pme-transpose.pme-transposed, then we transpose the table, otherwise not.
-    
-    // Lookup how to do this properly
-    if ($('input[name="InhibitInitialTranspose"]').val() != 'true' &&
-        ($('input[name="Transpose"]').val() == 'transposed' ||
-         $('#pme-transpose-up').hasClass('pme-transposed') ||
-         $('#pme-transpose-down').hasClass('pme-transposed') ||
-         $('#pme-transpose').hasClass('pme-transposed'))) {
+    var inhibitTranspose = $('input[name="InhibitTranspose"]').val() == 'true';
+    var controlTranspose = ($('input[name="Transpose"]').val() == 'transposed' ||
+                            $('#pme-transpose-up').hasClass('pme-transposed') ||
+                            $('#pme-transpose-down').hasClass('pme-transposed') ||
+                            $('#pme-transpose').hasClass('pme-transposed'));
+    if (!inhibitTranspose && controlTranspose) {
 	CAFEVDB.PME.maybeTranspose(true);
     } else {
         // Initially the tabel _is_ untransposed
