@@ -972,10 +972,32 @@ mandateReference
   {
     $globalVars = array(
       'ORGANIZER' => $this->fetchVorstand(),
-      'CREDITORIDENTIFIER' => Config::getValue('bankAccountCreditorIdentifier')
+      'CREDITORIDENTIFIER' => Config::getValue('bankAccountCreditorIdentifier'),
+      'ADDRESS' => $this->streetAddress(),
+      'BANKACCOUNT' => $this->bankAccount(),
       );
 
     return $globalVars;
+  }
+
+  private function streetAddress()
+  {
+    return
+      Config::getValue('streeAddressName01')."<br/>\n".
+      Config::getValue('streeAddressName02')."<br/>\n".
+      Config::getValue('streeAddressStreet')."&nbsp;".
+      Config::getValue('streeAddressHouseNumber')."<br/>\n".
+      Config::getValue('streeAddressZIP')."&nbsp;".
+      Config::getValue('streeAddressCity');
+  }
+
+  private function bankAccount()
+  {
+    $iban = new \IBAN(Config::getValue('bankAccountIBAN'));
+    return
+      Config::getValue('bankAccountOwner')."<br/>\n".
+      "IBAN ".$iban->HumanFormat()."<br/>\n".
+      "BIC ".Config::getValue('bankAccountBIC');
   }
 
   /**Fetch the pre-names of the members of the organizing committee in
