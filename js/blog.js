@@ -62,6 +62,7 @@ CAFEVDB = CAFEVDB || {};
                   offset: "0 0" },
       width: 'auto',
       height: 'auto',
+      resizable: false,
       open : function () { 
         $(".ui-dialog-titlebar-close").hide();
         
