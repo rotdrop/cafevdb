@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-25 05:53+0200\n"
+"POT-Creation-Date: 2014-08-27 04:56+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -45,7 +45,7 @@ msgstr ""
 #: ajax/blog/editentry.php:101 ajax/blog/modifyentry.php:146
 #: ajax/events/events.php:97 ajax/events/execute.php:130
 #: ajax/events/new.form.php:195 ajax/events/sendmail.php:76
-#: ajax/finance/sepa-debit-mandate.php:130
+#: ajax/finance/sepa-debit-mandate.php:131
 #: ajax/instruments/adjustInstrumentation.php:85
 #: ajax/projects/verifyName.php:131
 msgid "Error, caught an exception"
@@ -172,7 +172,7 @@ msgstr ""
 msgid "SEPA debit mandates"
 msgstr ""
 
-#: ajax/export/csv.php:76 ajax/export/excel.php:426 ajax/export/html.php:92
+#: ajax/export/csv.php:77 ajax/export/excel.php:427 ajax/export/html.php:92
 msgid "The export function for this table is not implemented, sorry."
 msgstr ""
 
@@ -190,16 +190,16 @@ msgstr ""
 msgid "%s-detailed"
 msgstr ""
 
-#: ajax/export/excel.php:259 lib/projects.php:994 lib/projects.php:995
+#: ajax/export/excel.php:260 lib/projects.php:994 lib/projects.php:995
 msgid "Missing Musicians"
 msgstr ""
 
-#: ajax/export/excel.php:284 ajax/export/insurance-export.php:142
+#: ajax/export/excel.php:285 ajax/export/insurance-export.php:142
 #: lib/projects.php:997
 msgid "Instrument"
 msgstr ""
 
-#: ajax/export/excel.php:285 lib/projects.php:997
+#: ajax/export/excel.php:286 lib/projects.php:997
 msgid "Missing"
 msgstr ""
 
@@ -271,7 +271,7 @@ msgid "Musician-id and/or name not set"
 msgstr ""
 
 #: ajax/finance/sepa-debit-mandate.php:62
-#: ajax/finance/sepa-debit-settings.php:38 settings.php:97
+#: ajax/finance/sepa-debit-settings.php:38 settings.php:99
 msgid "ClubMembers"
 msgstr ""
 
@@ -781,18 +781,28 @@ msgstr ""
 msgid "tooltips changed"
 msgstr ""
 
+#: ajax/settings/wysiwyg-editor.php:20
+#, php-format
+msgid "Setting `%s' to `%s'"
+msgstr ""
+
+#: ajax/settings/wysiwyg-editor.php:25
+#, php-format
+msgid "Unknown WYSIWYG-Editor: `%s'"
+msgstr ""
+
 #: index.php:184 lib/musicians.php:149
 #, php-format
 msgid "Add all to %s"
 msgstr ""
 
-#: js/blog.js:46 js/blog.js:145 js/blog.js:206 js/blog.js:234 js/blog.js:259
-#: js/blog.js:297 js/email.js:44 js/email.js:77 js/events.js:64
+#: js/blog.js:46 js/blog.js:146 js/blog.js:207 js/blog.js:235 js/blog.js:260
+#: js/blog.js:298 js/email.js:44 js/email.js:77 js/events.js:64
 #: js/events.js:115 js/inlineimage.js:84 js/inlineimage.js:92
 #: js/inlineimage.js:102 js/inlineimage.js:131 js/inlineimage.js:155
 #: js/inlineimage.js:178 js/inlineimage.js:196 js/inlineimage.js:315
 #: js/inlineimage.js:410 js/inlineimage.js:419 js/inlineimage.js:422
-#: js/sepa-debit-mandate.js:60
+#: js/sepa-debit-mandate.js:62
 msgid "Error"
 msgstr ""
 
@@ -800,32 +810,32 @@ msgstr ""
 msgid "Edit Blog Entry"
 msgstr ""
 
-#: js/blog.js:102
+#: js/blog.js:103
 msgid ""
 "The message content has been changed and will be lost if you press `Yes'"
 msgstr ""
 
-#: js/blog.js:103
+#: js/blog.js:104
 msgid "Really cancel current entry?"
 msgstr ""
 
-#: js/blog.js:193
+#: js/blog.js:194
 msgid "The entire message thread will be deleted if you press `Yes'"
 msgstr ""
 
-#: js/blog.js:194
+#: js/blog.js:195
 msgid "Really delete the entry?"
 msgstr ""
 
-#: js/blog.js:273
+#: js/blog.js:274
 msgid "One-time Blog Popup"
 msgstr ""
 
-#: js/blog.js:282
+#: js/blog.js:283
 msgid "I have read this popup, please bother me no more!"
 msgstr ""
 
-#: js/blog.js:283
+#: js/blog.js:284
 msgid "Mark this popup as read; the popup will not show up again."
 msgstr ""
 
@@ -845,43 +855,43 @@ msgstr ""
 msgid "Deletion failed"
 msgstr ""
 
-#: js/calendar.js:348
+#: js/calendar.js:350
 msgid "Browser determined position"
 msgstr ""
 
-#: js/calendar.js:361
+#: js/calendar.js:363
 msgid "Detailed search at Google-Maps"
 msgstr ""
 
-#: js/calendar.js:389
+#: js/calendar.js:391
 msgid "Location not found:"
 msgstr ""
 
-#: js/calendar.js:391
+#: js/calendar.js:393
 msgid "No location specified."
 msgstr ""
 
-#: js/calendar.js:393
+#: js/calendar.js:395
 msgid "Unknown location"
 msgstr ""
 
-#: js/config.php:27 lib/config.php:140
+#: js/config.php:28 lib/config.php:141
 msgid "Select a filter option."
 msgstr ""
 
-#: js/config.php:28 js/config.php:33 lib/config.php:141 lib/config.php:146
+#: js/config.php:29 js/config.php:34 lib/config.php:142 lib/config.php:147
 msgid "No values match."
 msgstr ""
 
-#: js/config.php:30 lib/config.php:143
+#: js/config.php:31 lib/config.php:144
 msgid "Select from the pull-down menu. Double-click will submit the form."
 msgstr ""
 
-#: js/config.php:32 lib/config.php:145
+#: js/config.php:33 lib/config.php:146
 msgid "Select an option."
 msgstr ""
 
-#: js/config.php:35 lib/config.php:148
+#: js/config.php:36 lib/config.php:149
 msgid "Select from the pull-down menu."
 msgstr ""
 
@@ -901,7 +911,7 @@ msgstr ""
 msgid "Do you really want to detach this event from the current project?"
 msgstr ""
 
-#: js/events.js:58 js/events.js:109 js/sepa-debit-mandate.js:54
+#: js/events.js:58 js/events.js:109 js/sepa-debit-mandate.js:56
 msgid "Unknown error :("
 msgstr ""
 
@@ -952,7 +962,7 @@ msgstr ""
 msgid "Ok"
 msgstr ""
 
-#: js/inlineimage.js:262 lib/email.php:1538 templates/blogedit.php:18
+#: js/inlineimage.js:262 lib/email.php:1552 templates/blogedit.php:18
 msgid "Cancel"
 msgstr ""
 
@@ -994,58 +1004,64 @@ msgstr ""
 msgid "Caught a PHP Exception"
 msgstr ""
 
-#: js/sepa-debit-mandate.js:81 templates/share-settings.php:27
+#: js/sepa-debit-mandate.js:83 templates/share-settings.php:27
 msgid "Change"
 msgstr ""
 
-#: js/sepa-debit-mandate.js:82
+#: js/sepa-debit-mandate.js:84
 msgid ""
 "Change the SEPA mandate. Note that the SEPA mandate-reference is "
 "automatically computed and cannot be changed."
 msgstr ""
 
-#: js/sepa-debit-mandate.js:97
+#: js/sepa-debit-mandate.js:99
 msgid "Save"
 msgstr ""
 
-#: js/sepa-debit-mandate.js:98
+#: js/sepa-debit-mandate.js:100
 msgid "Close the form and save the data in the underlying data-base storage."
 msgstr ""
 
-#: js/sepa-debit-mandate.js:109
+#: js/sepa-debit-mandate.js:112
 msgid "Apply"
 msgstr ""
 
-#: js/sepa-debit-mandate.js:110
+#: js/sepa-debit-mandate.js:113
 msgid "Save the data in the underlying data-base storage. Keep the form open."
 msgstr ""
 
-#: js/sepa-debit-mandate.js:130 templates/blog.php:117
+#: js/sepa-debit-mandate.js:134 templates/blog.php:117
 msgid "Delete"
 msgstr ""
 
-#: js/sepa-debit-mandate.js:131
+#: js/sepa-debit-mandate.js:135
 msgid ""
 "Delete this mandate from the data-base. Normally, this should only be done "
 "in case of desinformation or misunderstanding. Use with care."
 msgstr ""
 
-#: js/sepa-debit-mandate.js:142
+#: js/sepa-debit-mandate.js:139 lib/brief-instrumentation.php:282
+#: lib/brief-instrumentation.php:368 lib/brief-instrumentation.php:379
+#: lib/musicians.php:908 lib/musicians.php:1337
+msgid "SEPA Debit Mandate"
+msgstr ""
+
+#: js/sepa-debit-mandate.js:147
 msgid "Close"
 msgstr ""
 
-#: js/sepa-debit-mandate.js:143
+#: js/sepa-debit-mandate.js:148
 msgid ""
 "Discard all filled-in data and close the form. Note that this will not undo "
 "any changes previously stored in the data-base by pressing the `Apply' "
 "button."
 msgstr ""
 
-#: js/settings.js:167
+#: js/settings.js:133 js/settings.js:189
 msgid "Error:"
 msgstr ""
 
-#: js/settings.js:205
+#: js/settings.js:227
 msgid "Please standby, the operation will take some time!"
 msgstr ""
 
@@ -1081,16 +1097,16 @@ msgstr ""
 msgid "temporary"
 msgstr ""
 
-#: lib/blah.php:317 lib/instrumentation.php:339
+#: lib/blah.php:317 lib/instrumentation.php:360
 #, php-format
 msgid "Instrument not known by %s, correct that first! %s only plays %s!!!"
 msgstr ""
 
-#: lib/blah.php:319 lib/instrumentation.php:341
+#: lib/blah.php:319 lib/instrumentation.php:362
 msgid "Click on the following button to enforce your decision"
 msgstr ""
 
-#: lib/blah.php:320 lib/instrumentation.php:342
+#: lib/blah.php:320 lib/instrumentation.php:363
 #, php-format
 msgid ""
 "This will also add `%s' to %s's list of known instruments. Unfortunately, "
@@ -1098,7 +1114,7 @@ msgid ""
 "Button of your browser."
 msgstr ""
 
-#: lib/blah.php:324 lib/instrumentation.php:346
+#: lib/blah.php:324 lib/instrumentation.php:367
 #, php-format
 msgid "Really Change %s's instrument!!!"
 msgstr ""
@@ -1144,31 +1160,26 @@ msgstr ""
 msgid "(see above; address, email, name, picture etc.)"
 msgstr ""
 
-#: lib/brief-instrumentation.php:281 lib/brief-instrumentation.php:362
-#: lib/musicians.php:908 lib/musicians.php:1337
-msgid "SEPA Debit Mandate"
-msgstr ""
-
-#: lib/brief-instrumentation.php:377
+#: lib/brief-instrumentation.php:385
 msgid "Click to enter details of a potential SEPA debit mandate"
 msgstr ""
 
-#: lib/config.php:495
+#: lib/config.php:496
 #, php-format
 msgid "Decryption of `%s`@`%s` failed"
 msgstr ""
 
-#: lib/config.php:499
+#: lib/config.php:500
 #, php-format
 msgid "Encryption of `%s`@`%s` failed"
 msgstr ""
 
-#: lib/config.php:505
+#: lib/config.php:506
 #, php-format
 msgid "Unable to update table data at index %s"
 msgstr ""
 
-#: lib/config.php:658
+#: lib/config.php:655
 msgid "birthday"
 msgstr ""
 
@@ -1188,157 +1199,157 @@ msgstr ""
 msgid "Last Updated"
 msgstr ""
 
-#: lib/email.php:477
+#: lib/email.php:490
 msgid "Select Em@il Recipients"
 msgstr ""
 
-#: lib/email.php:485
+#: lib/email.php:498
 msgid "Principal Address Collection"
 msgstr ""
 
-#: lib/email.php:511
+#: lib/email.php:524
 msgid "Select recipients by member status."
 msgstr ""
 
-#: lib/email.php:512
+#: lib/email.php:525
 msgid "Select Members by Status"
 msgstr ""
 
-#: lib/email.php:513
+#: lib/email.php:526
 msgid "Member-Status"
 msgstr ""
 
-#: lib/email.php:541
+#: lib/email.php:554
 msgid "Email Recipients"
 msgstr ""
 
-#: lib/email.php:542
+#: lib/email.php:555
 msgid "Remaining Recipients"
 msgstr ""
 
-#: lib/email.php:543
+#: lib/email.php:556
 msgid "Selected Recipients"
 msgstr ""
 
-#: lib/email.php:560
+#: lib/email.php:573
 msgid "Instrument-Filter"
 msgstr ""
 
-#: lib/email.php:574
+#: lib/email.php:587
 msgid "Compose Em@il"
 msgstr ""
 
-#: lib/email.php:584
+#: lib/email.php:597
 msgid "Apply Filter"
 msgstr ""
 
-#: lib/email.php:591
+#: lib/email.php:604
 msgid "Reset Filter"
 msgstr ""
 
-#: lib/email.php:600
+#: lib/email.php:613
 msgid "Musicians without Em@il"
 msgstr ""
 
-#: lib/email.php:611
+#: lib/email.php:624
 msgid "Count: "
 msgstr ""
 
-#: lib/email.php:993
+#: lib/email.php:1006
 msgid "and"
 msgstr ""
 
-#: lib/email.php:1396 lib/projects.php:639 lib/projects.php:800
+#: lib/email.php:1410 lib/projects.php:639 lib/projects.php:800
 msgid "Events"
 msgstr ""
 
-#: lib/email.php:1399
+#: lib/email.php:1413
 msgid "Attached Events"
 msgstr ""
 
-#: lib/email.php:1410
+#: lib/email.php:1424
 #, php-format
 msgid "Edit Event %s"
 msgstr ""
 
-#: lib/email.php:1433
+#: lib/email.php:1447
 msgid "Template"
 msgstr ""
 
-#: lib/email.php:1437
+#: lib/email.php:1451
 msgid "Select email template"
 msgstr ""
 
-#: lib/email.php:1449
+#: lib/email.php:1463
 msgid "New Template Name"
 msgstr ""
 
-#: lib/email.php:1459
+#: lib/email.php:1473
 msgid "Save as Template"
 msgstr ""
 
-#: lib/email.php:1465
+#: lib/email.php:1479
 msgid "Recipients"
 msgstr ""
 
-#: lib/email.php:1466
+#: lib/email.php:1480
 msgid "Determined automatically from data-base, see below the email form."
 msgstr ""
 
-#: lib/email.php:1477
+#: lib/email.php:1491
 msgid "Subject"
 msgstr ""
 
-#: lib/email.php:1483
+#: lib/email.php:1497
 msgid "Message-Body"
 msgstr ""
 
-#: lib/email.php:1487
+#: lib/email.php:1501
 msgid "Sender-Name"
 msgstr ""
 
-#: lib/email.php:1492
+#: lib/email.php:1506
 msgid "Sender-Email"
 msgstr ""
 
-#: lib/email.php:1493
+#: lib/email.php:1507
 msgid "Tied to"
 msgstr ""
 
-#: lib/email.php:1496
+#: lib/email.php:1510
 msgid "Add Attachment"
 msgstr ""
 
-#: lib/email.php:1502 lib/email.php:1503
+#: lib/email.php:1516 lib/email.php:1517
 msgid "Upload new File"
 msgstr ""
 
-#: lib/email.php:1508 lib/email.php:1509
+#: lib/email.php:1522 lib/email.php:1523
 msgid "Select from Owncloud"
 msgstr ""
 
-#: lib/email.php:1521
+#: lib/email.php:1535
 msgid "Remove"
 msgstr ""
 
-#: lib/email.php:1529
+#: lib/email.php:1543
 msgid "Send Em@il"
 msgstr ""
 
-#: lib/email.php:1532
+#: lib/email.php:1546
 msgid "Edit recipients"
 msgstr ""
 
-#: lib/email.php:1597
+#: lib/email.php:1611
 #, php-format
 msgid "Invalid template mail, first unknown left-over parameter is %s"
 msgstr ""
 
-#: lib/email.php:1599
+#: lib/email.php:1613
 msgid "Unknown Variable"
 msgstr ""
 
-#: lib/email.php:1605
+#: lib/email.php:1619
 msgid ""
 "No recipients specified, you possibly forgot to shift items from the left "
 "select box (potential recipients) to the right select box (actual "
@@ -1346,44 +1357,44 @@ msgid ""
 "recipients."
 msgstr ""
 
-#: lib/email.php:1606
+#: lib/email.php:1620
 msgid "No recipients"
 msgstr ""
 
-#: lib/email.php:1612
+#: lib/email.php:1626
 #, php-format
 msgid ""
 "The subject must not consist of `%s' as only part.<br/>Please correct that "
 "and then hit the `Send'-button again."
 msgstr ""
 
-#: lib/email.php:1615
+#: lib/email.php:1629
 msgid "Incomplete Subject"
 msgstr ""
 
-#: lib/email.php:1620
+#: lib/email.php:1634
 msgid ""
 "The sender-name should not be empty.<br/>Please correct that and then hit "
 "the `Send'-button again."
 msgstr ""
 
-#: lib/email.php:1622
+#: lib/email.php:1636
 msgid "Descriptive Sender Name"
 msgstr ""
 
-#: lib/email.php:1861
+#: lib/email.php:1882
 msgid "The email-backend throwed an exception stating:<br/>"
 msgstr ""
 
-#: lib/email.php:1863
+#: lib/email.php:1884
 msgid "Please correct the problem and then click on the `Send'-button again."
 msgstr ""
 
-#: lib/email.php:1864 lib/email.php:2007
+#: lib/email.php:1885 lib/email.php:2028
 msgid "Caught an exception"
 msgstr ""
 
-#: lib/email.php:1974
+#: lib/email.php:1995
 #, php-format
 msgid ""
 "A message with exactly the same text to exactly the same recipients has "
@@ -1391,56 +1402,56 @@ msgid ""
 "duplicate bulk emails."
 msgstr ""
 
-#: lib/email.php:1980
+#: lib/email.php:2001
 msgid "Duplicate Email"
 msgstr ""
 
-#: lib/email.php:1988
+#: lib/email.php:2009
 msgid "Sending failed for an unknown reason. Sorry."
 msgstr ""
 
-#: lib/email.php:1989
+#: lib/email.php:2010
 msgid "General Failure reading your hard-disk ... just kidding."
 msgstr ""
 
-#: lib/email.php:1994
+#: lib/email.php:2015
 msgid "Message has been sent, at least: no error from our side!"
 msgstr ""
 
-#: lib/email.php:1995
+#: lib/email.php:2016
 msgid "Message has been sent"
 msgstr ""
 
-#: lib/email.php:2004
+#: lib/email.php:2025
 #, php-format
 msgid ""
 "During send, the email-backend throwed an exception stating:<br/>`%s'</"
 "br>Please correct the problem and then click on the `Send'-button again."
 msgstr ""
 
-#: lib/email.php:2035
+#: lib/email.php:2056
 #, php-format
 msgid ""
 "The IMAP backend returned the error `%s'. Unfortunate Snafu.<br/>I was "
 "trying to copy the message to our send-folder, but that failed."
 msgstr ""
 
-#: lib/email.php:2038
+#: lib/email.php:2059
 msgid "IMAP connection failed"
 msgstr ""
 
-#: lib/email.php:2045
+#: lib/email.php:2066
 #, php-format
 msgid ""
 "Could not copy the message to neither the \"Sent\" or the \"INBOX.Sent\" "
 "folder.</br>Server returned the errors: `%s' and `%s'"
 msgstr ""
 
-#: lib/email.php:2049
+#: lib/email.php:2070
 msgid "Copying to `Sent'-folder failed."
 msgstr ""
 
-#: lib/email.php:2107
+#: lib/email.php:2128
 #, php-format
 msgid ""
 "The %s address `%s' seems to be invalid.<br/>Please correct that first and "
@@ -1448,11 +1459,11 @@ msgid ""
 "any) have to be specified again."
 msgstr ""
 
-#: lib/email.php:2111
+#: lib/email.php:2132
 msgid "Invalid Email Address"
 msgstr ""
 
-#: lib/email.php:2119
+#: lib/email.php:2140
 msgid "recipient"
 msgstr ""
 
@@ -1662,7 +1673,12 @@ msgid ""
 "registration form to us."
 msgstr ""
 
-#: lib/instrumentation.php:330
+#: lib/instrumentation.php:335
+#, php-format
+msgid "Data inconsisteny, %d is not a unique Id, got %d data sets."
+msgstr ""
+
+#: lib/instrumentation.php:351
 #, php-format
 msgid "Data inconsistency: Ids do not match (`%s' != `%s')"
 msgstr ""
@@ -2498,23 +2514,23 @@ msgid ""
 "removed from the remote-system after the message has been sent."
 msgstr ""
 
-#: settings.php:99
+#: settings.php:101
 msgid "ExecutiveBoardMembers"
 msgstr ""
 
-#: settings.php:110
+#: settings.php:112
 msgid "concerts"
 msgstr ""
 
-#: settings.php:111
+#: settings.php:113
 msgid "rehearsals"
 msgstr ""
 
-#: settings.php:112
+#: settings.php:114
 msgid "other"
 msgstr ""
 
-#: settings.php:113
+#: settings.php:115
 msgid "management"
 msgstr ""
 
@@ -2545,7 +2561,7 @@ msgstr ""
 
 #: templates/app-settings.php:27 templates/app-settings.php:30
 #: templates/app-settings.php:62 templates/email-settings.php:51
-#: templates/settings.php:57 templates/settings.php:60
+#: templates/settings.php:64 templates/settings.php:67
 #: templates/share-settings.php:25
 msgid "show"
 msgstr ""
@@ -3016,7 +3032,7 @@ msgid ""
 "any musician."
 msgstr ""
 
-#: templates/expertmode.php:36 templates/settings.php:45
+#: templates/expertmode.php:36
 msgid "Example"
 msgstr ""
 
@@ -3297,102 +3313,101 @@ msgstr ""
 msgid "last used date"
 msgstr ""
 
-#: templates/settings.php:8
+#: templates/settings.php:9
 msgid ""
 "Control the display of tooltips. Warning: this works globally for all "
 "OwnCloud applications."
 msgstr ""
 
-#: templates/settings.php:10
+#: templates/settings.php:11
 msgid ""
 "Start with visible page header-texts. This affects only the initial "
 "visibility of the page-headers."
 msgstr ""
 
-#: templates/settings.php:12
+#: templates/settings.php:13
 msgid ""
 "Initially display the filter-controls on all atable. This affects only the "
 "initial visibility of the filter-buttons and -inputs."
 msgstr ""
 
-#: templates/settings.php:14
+#: templates/settings.php:15
 msgid "Show a second button which leads to a dialog with `advanced' settings"
 msgstr ""
 
-#: templates/settings.php:15
+#: templates/settings.php:16
 msgid "Show a certain amount of debug information, normally not needed."
 msgstr ""
 
-#: templates/settings.php:19
+#: templates/settings.php:21
 msgid "Personal"
 msgstr ""
 
-#: templates/settings.php:20
+#: templates/settings.php:22
 msgid "Orchestra"
 msgstr ""
 
-#: templates/settings.php:21
+#: templates/settings.php:23
 msgid "Data-Base"
 msgstr ""
 
-#: templates/settings.php:22
+#: templates/settings.php:24
 msgid "Sharing"
 msgstr ""
 
-#: templates/settings.php:23
+#: templates/settings.php:25
 msgid "Email"
 msgstr ""
 
-#: templates/settings.php:24
+#: templates/settings.php:26
 msgid "Development"
 msgstr ""
 
-#: templates/settings.php:31
+#: templates/settings.php:33
 msgid "Tool-Tips"
 msgstr ""
 
-#: templates/settings.php:34
+#: templates/settings.php:36
 msgid "Page-Header"
 msgstr ""
 
-#: templates/settings.php:37
+#: templates/settings.php:39
 msgid "Filter-Controls"
 msgstr ""
 
-#: templates/settings.php:40
+#: templates/settings.php:42
 msgid "Expert-Mode"
 msgstr ""
 
-#: templates/settings.php:43
+#: templates/settings.php:45
 msgid "Debug-Mode"
 msgstr ""
 
-#: templates/settings.php:45 templates/settings.php:48
-#: templates/settings.php:49
-msgid "Example Text"
-msgstr ""
-
-#: templates/settings.php:51
-msgid "Dummy"
-msgstr ""
-
-#: templates/settings.php:55
-msgid "Own Password"
+#: templates/settings.php:48
+msgid "WYSIWYG Editor"
 msgstr ""
 
 #: templates/settings.php:58
-msgid "DB Encryption Key"
-msgstr ""
-
-#: templates/settings.php:61
-msgid "Set Encryption Key"
+msgid "Dummy"
 msgstr ""
 
 #: templates/settings.php:62
+msgid "Own Password"
+msgstr ""
+
+#: templates/settings.php:65
+msgid "DB Encryption Key"
+msgstr ""
+
+#: templates/settings.php:68
+msgid "Set Encryption Key"
+msgstr ""
+
+#: templates/settings.php:69
 msgid "The encryption key has been set successfully."
 msgstr ""
 
-#: templates/settings.php:63
+#: templates/settings.php:70
 msgid "Unable to set the encryption key."
 msgstr ""
 
