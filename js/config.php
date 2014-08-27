@@ -18,11 +18,12 @@ Config::init();
 $headervisibility = Util::cgiValue('headervisibility', 'expanded');
 $tooltips         = OCP\Config::getUserValue(OCP\USER::getUser(), 'cafevdb', 'tooltips', '');
 $language         = OCP\Config::getUserValue(OCP\User::getUser(), 'core', 'lang', 'en');
+$editor           = OCP\Config::getUserValue(OCP\User::getUser(), 'cafevdb', 'wysiwygEditor', 'tinymce');
 
 $array = array(
   "CAFEVDB.headervisibility" => "'".$headervisibility."'",
   "CAFEVDB.toolTips" => ($tooltips == "off" ? 'false' : 'true'),
-  "CAFEVDB.wysiwygEditor" => "'".Config::$opts['editor']."'",
+  "CAFEVDB.wysiwygEditor" => "'".$editor."'",
   "CAFEVDB.language" => "'".$language."'",
   "PHPMYEDIT.filterSelectPlaceholder" => "'".L::t("Select a filter option.")."'",
   "PHPMYEDIT.filterSelectNoResult" => "'".L::t("No values match.")."'",

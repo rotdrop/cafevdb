@@ -55,11 +55,13 @@ try {
   $expertmode  = OCP\Config::getUserValue($user, 'cafevdb', 'expertmode','');
   $debugmode   = OCP\Config::getUserValue($user, 'cafevdb', 'debugmode','');
   $exampletext = OCP\Config::getUserValue($user, 'cafevdb', 'exampletext','');
+  $editor      = OCP\Config::getUserValue($user, 'cafevdb', 'wysiwygEditor', 'tinymce');
   $encrkey     = Config::getEncryptionKey();
 
   $tmpl->assign('debugmode', $debugmode);
   $tmpl->assign('expertmode', $expertmode);
   $tmpl->assign('tooltips', $tooltips);
+  $tmpl->assign('editor', $editor);
   $tmpl->assign('headervisibility', $headervisibility);
   $tmpl->assign('filtervisibility', $filtervisibility);
   $tmpl->assign('encryptionkey', $encrkey);

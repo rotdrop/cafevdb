@@ -1,6 +1,7 @@
 <?php
 use CAFEVDB\L;
 use CAFEVDB\Util;
+use CAFEVDB\Config;
 
 echo Util::emitExternalScripts();
 echo Util::emitInlineScripts();
@@ -13,6 +14,7 @@ $filtervistitle = L::t("Initially display the filter-controls on all atable. Thi
                        "the initial visibility of the filter-buttons and -inputs.");
 $experttitle    = L::t("Show a second button which leads to a dialog with `advanced' settings");
 $debugtitle     = L::t("Show a certain amount of debug information, normally not needed.");
+
 ?>
 <?php if ($_['adminsettings']) { ?>
 <ul id="adminsettingstabs">
@@ -42,11 +44,16 @@ $debugtitle     = L::t("Show a certain amount of debug information, normally not
     <input id="debugmode" type="checkbox" name="debugmode" <?php echo $_['debugmode'] == 'on' ? 'checked="checked"' : ''; ?> id="debugmode" title="<?php echo $debugtitle ?>"/>
     <label for="debugmode" title="<?php echo $debugtitle; ?>"><?php echo L::t('Debug-Mode') ?></label>
     <br />
-    <label for="exampletext" title="<?php echo L::t('Example Text') ?>"><?php echo L::t('Example') ?></label>
-    <input type="text" name="exampletext" id="exampletext"
-      value="<?php echo $_['exampletext'] ?>"
-      placeholder="<?php echo L::t('Example Text') ?>"
-      title="<?php echo L::t('Example Text') ?>" />
+    <select name="wysiwygEditor"
+            data-placeholder="<?php echo L::t('WYSIWYG Editor'); ?>"
+            class="wysiwyg-editor"
+            title="<?php echo Config::toolTips('wysiwyg-edtior'); ?>">
+<?php
+foreach (Config::$wysiwygEditors as $key => $value) {
+  echo '<option value="'.$key.'" '.($_['editor'] == $key ? 'selected="selected"' : '').'>'.$value.'</option>'."\n";
+}
+?>
+    </select>
     <br />
     <input type="text" style="display:none;width:0%;float: left;" name="dummy" id="dummy" value="dummy" placeholder="dummy" title="<?php echo L::t('Dummy'); ?>" />
     <span class="statusmessage" id="msg"></span>

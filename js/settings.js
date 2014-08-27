@@ -117,6 +117,28 @@ $(document).ready(function() {
     return false;
   });
 
+  $('select.wysiwyg-editor').chosen({ disable_search:true });
+  $('select.wysiwyg-editor').change(function (event) {
+    event.preventDefault();
+    var select = $(this);
+    $('#cafevdb #msg').hide();
+
+    $.post(OC.filePath('cafevdb', 'ajax/settings', 'wysiwyg-editor.php'),
+           select.serialize(),
+           function (data) {
+             if (data.status == 'success') {
+               $('#cafevdb #msg').html(data.data.message);
+               CAFEVDB.wysiwygEditor = data.data.value;
+             } else {
+               $('#cafevdb #msg').html(t('cafevdb','Error:')+' '+data.data.message);
+             }
+             $('#cafevdb #msg').show();
+             return false;
+           }, 'json');
+
+    return false;
+  });
+
   // 'show password' checkbox
   var tmp = $('#userkey #encryptionkey').val();
   $('#userkey #encryptionkey').showPassword();

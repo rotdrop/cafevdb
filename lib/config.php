@@ -73,12 +73,13 @@ memberTable
   public static $prefix = false;
   public static $triggers = false;
   public static $debug_query = false;
-  public static $Wartung = true;
   public static $pmeopts = array();
   public static $dbopts = array();
   public static $opts = array();
   public static $cgiVars = array();
   public static $Languages = array();
+  public static $wysiwygEditors = array('tinymce' => 'TinyMCE',
+                                        'ckeditor' => 'CKEditor');
   private static $initialized = false;
 
   /**List of data-base entries that need to be encrypted. We should
@@ -622,11 +623,7 @@ memberTable
     //self::$pmeopts['labels']['Sort Field'] = 'Sortierfeld';
 
     self::$pmeopts['css']['textarea'] = '';
-    if (true) {
-      self::$opts['editor'] = 'tinymce';
-    } else {
-      self::$opts['editor'] = 'ckeditor';
-    }    
+    self::$opts['editor'] = self::getUserValue('wysiwygEditor', 'tinymce');
 
     self::$opts['phpmyadmin'] = 'https://ch.homelinux.net:8888/phpmyadmin/index.php?user=camerata&db=camerata';
     self::$opts['email'] = array('name'     => 'Em@il',
