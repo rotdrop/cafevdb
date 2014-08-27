@@ -330,6 +330,7 @@ Calendar={
 			var map = new google.maps.Map(document.getElementById("event_googlemap"), mapOptions);
 			$('#event_googlemap').dialog({
 				title : 'Google Maps',
+                                dialogClass: 'google-popup',
 				position : { my: "left top",
 					     at: "center center",
 					     of: "#event",
@@ -342,6 +343,7 @@ Calendar={
 					$(this).dialog('destroy').remove();
 				},
 				open  : function () {
+                                        $(this).css('overflow', 'hidden');
 					var googlesearch = '';
 					if (location == '') {
 						googlesearch = latlng.lat()+','+latlng.lng();

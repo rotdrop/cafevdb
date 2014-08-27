@@ -287,16 +287,23 @@ td.eventdata-0-brief, td.eventdata-1-brief {
 	overflow: initial;
 }
 
+div.google-popup { 
+  overflow: hidden;
+  max-height: unset !important;
+}
+
 /* Hide the advanced options in the event form */
 #advanced_options_bar {
-	cursor:pointer;
-	margin-top:0.5ex;
-	height:0.5ex;
-	vertical-align:middle;
-	border-top:1px solid #000;
-	-moz-box-shadow:-3px 0 7px #777;
-	-webkit-box-shadow:-3px 0 7px #777;
-l	box-shadow: 0 0.5ex 1ex #777;
+  cursor:pointer;
+  background-color:#BBB;
+  margin-top:0.5ex;
+  margin-bottom:0.5ex;
+  height:1ex;
+  vertical-align:middle;
+  border-top:2px solid #000;
+  moz-box-shadow:-3px 0 7px #777;
+  webkit-box-shadow:-3px 0 7px #777;
+  box-shadow: 0 0.5ex 1ex #777;
 }
 
 /*
