@@ -63,10 +63,9 @@ class ProjectInstruments
   function display()
   {
     global $debug_query;
-    //Config::$debug_query = true;
-    //$debug_query = true;
+    $debug_query = Util::debugMode('query');
 
-    if (false) {
+    if (Util::debugMode('request')) {
       echo '<PRE>';
       /* print_r($_SERVER); */
       print_r($_POST);
@@ -319,6 +318,21 @@ HREF=%s>Projekteigenschaften</A> die Instrumente eintragen, oder im
         ),
       );    
 
+    $handle = mySQL::connect(Config::$pmeopts);
+    $groupedInstruments = Instruments::fetchGrouped($handle);
+    $instruments        = Instruments::fetch($handle);
+    mySQL::close($handle);
+    
+    $opts['fdd']['instrumentation'] = array(
+      'name' => L::t('Edit Instrumentation'),
+      'options' => 'C',
+      'select' => 'M',
+      'sql' => '`PMEjoin0`.`Besetzung`',
+      'sqlw' => '`PMEjoin0`.`Besetzung`',
+      'values'   => $instruments,
+      'valueGroups' => $groupedInstruments
+      );
+
     $cnt = 0;
     foreach ($projectInstruments as $value) {
       $opts['fdd']["$value"] = array(
@@ -350,6 +364,14 @@ HREF=%s>Projekteigenschaften</A> die Instrumente eintragen, oder im
     $opts['triggers']['insert']['after'] = 'CAFEVDB\ProjectInstruments::insertDeleteCallback';
 
     $pme = new \phpMyEdit($opts);
+  }
+
+  /**Generate controls in order to update the list of needed
+   * instruments for the project (_this_ table only holds the number,
+   * but not the information, which instruments are needed.
+   */
+  public static function instrumentChoicePME($referenceId, $opts, $action, $k, $fds, $fdd, $row)
+  {
   }
 
   /**Can be used as a trigger callback (instead of loading one from disk).

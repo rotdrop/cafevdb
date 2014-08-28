@@ -61,8 +61,7 @@ class BriefInstrumentation
   function display()
   {
     global $debug_query;
-    //Config::$debug_query = true;
-    //$debug_query = true;
+    $debug_query = Util::debugMode('query');
 
     $project         = $this->project;
     $projectId       = $this->projectId;
@@ -70,7 +69,7 @@ class BriefInstrumentation
     $recordsPerPage  = $this->recordsPerPage;
     $userExtraFields = $this->userExtraFields;
 
-    if (false) {
+    if (Util::debugMode('request')) {
       echo '<PRE>';
       print_r($_POST);
       echo '</PRE>';

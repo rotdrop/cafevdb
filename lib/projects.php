@@ -43,14 +43,6 @@ class Projects
     $this->pme_bare = false;
 
     Config::init();
-
-    //Config::$debug_query = true;
-    if (Config::$debug_query) {
-      echo "<PRE>\n";
-      print_r($_POST);
-      print_r($_GET);
-      echo "</PRE>\n";
-    }    
   }
 
   public function deactivate() 
@@ -93,9 +85,9 @@ class Projects
   public function display()
   {
     global $debug_query;
-    //    $debug_query = true;
+    $debug_query = Util::debugMode('query');
 
-    if (false) {
+    if (Util::debugMode('request')) {
       echo '<PRE>';
       /* print_r($_SERVER); */
       print_r($_POST);
@@ -897,6 +889,7 @@ __EOT__;
     if ($result !== false && mysql_num_rows($result) == 1) {
       $row = mySQL::fetch($result);
     }
+
     if ($ownConnection) {
       mySQL::close($handle);
     }

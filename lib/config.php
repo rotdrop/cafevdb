@@ -72,14 +72,21 @@ memberTable
   const APP_BASE  = 'apps/cafevdb/';
   public static $prefix = false;
   public static $triggers = false;
-  public static $debug_query = false;
   public static $pmeopts = array();
   public static $dbopts = array();
   public static $opts = array();
   public static $cgiVars = array();
   public static $Languages = array();
-  public static $wysiwygEditors = array('tinymce' => 'TinyMCE',
-                                        'ckeditor' => 'CKEditor');
+  public static $wysiwygEditors = array('tinymce' => array('name' => 'TinyMCE',
+                                                           'enabled' => true),
+                                        // ckeditor still uses excessive inline js-code. NOGO.
+                                        'ckeditor' => array('name' => 'CKEditor',
+                                                            'enabled' => false)
+    );
+  public static $expertmode = false;
+  public static $debug = array('general' => false,
+                               'query' => false,
+                               'request' => false);
   private static $initialized = false;
 
   /**List of data-base entries that need to be encrypted. We should
@@ -591,7 +598,11 @@ memberTable
       self::$pmeopts[$key] = self::$dbopts[$key];
     }
 
-    self::$debug_query = self::getUserValue('debugmode') === 'on' ? true : false;
+    self::$expertmode = self::getUserValue('expertmode', 'off') === 'on';
+    $debug = explode(',', self::getUserValue('debug', ''));
+    foreach ($debug as $key) {
+      self::$debug[$key] = true;
+    }
 
     self::$pmeopts['url']['images'] = self::APP_BASE . 'img/';
     global $HTTP_SERVER_VARS;

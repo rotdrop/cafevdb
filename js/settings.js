@@ -59,23 +59,12 @@ $(document).ready(function() {
     if ($('#expertmode').attr('checked')) {
       $('#expertbutton').show();
       $('#expertbutton').css('float','left');
+      $('select.debug-mode').removeAttr('disabled');
     } else {
       $('#expertbutton').css('display','none');
+      $('select.debug-mode').attr('disabled', 'disabled');
     }
-    return false;
-  });
-
-  $('#debugmode').change(function(event) {
-    event.preventDefault();
-    var post = $("#debugmode").serialize();
-    $.post(OC.filePath('cafevdb', 'ajax/settings', 'debugmode.php'),
-           post, function(data) {return;});
-    if ($('#debugmode').attr('checked')) {
-      $('#debugbutton').show();
-      $('#debugbutton').css('float','left');
-    } else {
-      $('#debugbutton').css('display','none');
-    }
+    $('select.debug-mode').trigger('chosen:updated');
     return false;
   });
 
@@ -114,6 +103,28 @@ $(document).ready(function() {
     } else {
 //      CAFEVDB.PAGE.collapseHeader();
     }
+    return false;
+  });
+
+  $('select.debug-mode').chosen({ disable_search:true });
+  $('select.debug-mode').change(function(event) {
+    event.preventDefault();
+    var select = $(this);
+    $('#cafevdb #msg').hide();
+
+    $.post(OC.filePath('cafevdb', 'ajax/settings', 'debugmode.php'),
+           { debugModes: $('select.debug-mode').val() },
+           function(data) {
+             if (data.status == 'success') {
+               $('#cafevdb #msg').html(data.data.message);
+               CAFEVDB.debugModes = data.data.value;
+             } else {
+               $('#cafevdb #msg').html(t('cafevdb','Error:')+' '+data.data.message);
+             }
+             $('#cafevdb #msg').show();
+             return false;
+           }, 'json');
+
     return false;
   });
 

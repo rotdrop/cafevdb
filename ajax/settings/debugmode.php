@@ -3,20 +3,29 @@
 // Init owncloud
 
 use CAFEVDB\L;
+use CAFEVDB\Util;
+use CAFEVDB\Config;
 
 // Check if we are a user
 OCP\JSON::checkLoggedIn();
 OCP\JSON::checkAppEnabled('cafevdb');
 OCP\JSON::callCheck();
 
-// Get data
-if( isset( $_POST['debugmode'] ) ) {
-  $debugmode=$_POST['debugmode'];
-} else {
-  $debugmode='off';
+unset($_GET);
+
+$debugModes = Util::cgiValue('debugModes', array());
+
+foreach ($debugModes as $value) {
+  Config::$debug['value'] = true;
 }
-OCP\Config::setUserValue( OCP\USER::getUser(), 'cafevdb', 'debugmode', $debugmode );
-OCP\JSON::success(array('data' => array( 'message' => L::t('Debugmode changed') )));
+
+$debug = implode(',', $debugModes);
+
+Config::setUserValue('debug', $debug);
+
+OCP\JSON::success(
+  array(
+    'data' => array( 'message' => L::t("Debug-modes changed to `%s'", array($debug)))));
 return true;
 
 ?>

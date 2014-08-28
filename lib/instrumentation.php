@@ -124,8 +124,10 @@ class Instrumentation
 
     Config::init();
 
-    //Config::$debug_query = true;
-    if (Config::$debug_query) {
+    global $debug_query;
+    $debug_query = Util::debugMode('query');
+
+    if (Util::debugMode('request')) {        
       echo "<PRE>\n";
       print_r($_POST);
       print_r($_GET);

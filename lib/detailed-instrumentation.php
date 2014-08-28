@@ -60,9 +60,8 @@ __EOT__;
 
   function display()
   {
-    //global $debug_query;
-    //Config::$debug_query = true;
-    //$debug_query = true;
+    global $debug_query;
+    $debug_query = Util::debugMode('query');
 
     $project         = $this->project;
     $projectId       = $this->projectId;

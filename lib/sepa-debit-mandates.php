@@ -42,8 +42,7 @@ class SepaDebitMandates
   public function display()
   {
     global $debug_query;
-    //Config::$debug_query = true;
-    //$debug_query = true;
+    $debug_query = Util::debugMode('query');
 
     $template        = $this->template;
     $project         = $this->project;
@@ -293,7 +292,7 @@ class SepaDebitMandates
 
     $this->pme = new \phpMyEdit($opts);
 
-    if (Util::debugMode()) {
+    if (Util::debugMode('request)) {
       echo '<PRE>';
       print_r($_POST);
       echo '</PRE>';

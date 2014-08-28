@@ -257,13 +257,13 @@ __EOT__;
     \OC_Util::checkAppEnabled(Config::APP_NAME);
   }
 
-  public static function debugMode()
+  /**Return @c true if the respective debug output setting is enabled.
+   */
+  public static function debugMode($key = 'general')
   {
-    if (Config::$debug_query) {
-      return true;
-    } else {
-      return false;
-    }
+    Config::init();
+
+    return Config::$expertmode && Config::$debug[$key];    
   }
 
   /**Emit an error message or exception. If CAFEVDB\Error::exceptions()
@@ -900,11 +900,13 @@ class mySQL
    * handle.
    * @callgraph
    * @callergraph
+   *
+   * @bug The entire MySQL misery needs to be converted to the new PDO stuff.
    */
   public static function connect($opts, $die = true, $silent = false)
   {
-    // Fetch the actual list of instruments, we will need it anyway
-    $handle = @mysql_connect($opts['hn'], $opts['un'], $opts['pw']);
+    // Open a new connection to the given data-base.
+    $handle = @mysql_connect($opts['hn'], $opts['un'], $opts['pw'], true);
     if ($handle === false) {
       Util::error('Could not connect to data-base server: "'.@mysql_error().'"', $die, $silent);
       return false;
@@ -976,7 +978,7 @@ class mySQL
   public static function fetch(&$res, $type = MYSQL_ASSOC)
   {
     $result = @mysql_fetch_array($res, $type);
-    if (Util::debugMode()) {
+    if (Util::debugMode('query')) {
       print_r($result);
     }
     return $result;

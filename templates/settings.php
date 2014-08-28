@@ -15,6 +15,10 @@ $filtervistitle = L::t("Initially display the filter-controls on all atable. Thi
 $experttitle    = L::t("Show a second button which leads to a dialog with `advanced' settings");
 $debugtitle     = L::t("Show a certain amount of debug information, normally not needed.");
 
+$debugModes = array('general' => L::t('General Information'),
+                    'query' => L::t('SQL Queries'),
+                    'request' => L::t('HTTP Request'));
+
 ?>
 <?php if ($_['adminsettings']) { ?>
 <ul id="adminsettingstabs">
@@ -38,19 +42,29 @@ $debugtitle     = L::t("Show a certain amount of debug information, normally not
     <input id="filtervisibility" type="checkbox" name="filtervisibility" <?php echo $_['filtervisibility'] == 'on' ? 'checked="checked"' : ''; ?> id="tooltips" title="<?php echo $headervistitle ?>"/>
     <label for="filtervisibility" title="<?php echo $filtervistitle; ?>"><?php echo L::t('Filter-Controls') ?></label>
     <br />
-    <input id="expertmode" type="checkbox" name="expertmode" <?php echo $_['expertmode'] == 'on' ? 'checked="checked"' : ''; ?> id="expertmode" title="<?php echo $experttitle ?>"/>
-    <label for="expertmode" title="<?php echo $experttitle; ?>"><?php echo L::t('Expert-Mode') ?></label>
-    <br />
-    <input id="debugmode" type="checkbox" name="debugmode" <?php echo $_['debugmode'] == 'on' ? 'checked="checked"' : ''; ?> id="debugmode" title="<?php echo $debugtitle ?>"/>
-    <label for="debugmode" title="<?php echo $debugtitle; ?>"><?php echo L::t('Debug-Mode') ?></label>
-    <br />
     <select name="wysiwygEditor"
             data-placeholder="<?php echo L::t('WYSIWYG Editor'); ?>"
             class="wysiwyg-editor"
             title="<?php echo Config::toolTips('wysiwyg-edtior'); ?>">
 <?php
 foreach (Config::$wysiwygEditors as $key => $value) {
-  echo '<option value="'.$key.'" '.($_['editor'] == $key ? 'selected="selected"' : '').'>'.$value.'</option>'."\n";
+  $disabled = $value['enabled'] ? '' : ' disabled="disabled" ';
+  echo '<option value="'.$key.'" '.$disabled.($_['editor'] == $key ? 'selected="selected"' : '').'>'.$value['name'].'</option>'."\n";
+}
+?>
+    </select></br>
+    <input id="expertmode" type="checkbox" name="expertmode" <?php echo $_['expertmode'] == 'on' ? 'checked="checked"' : ''; ?> id="expertmode" title="<?php echo $experttitle ?>"/>
+    <label for="expertmode" title="<?php echo $experttitle; ?>"><?php echo L::t('Expert-Mode') ?></label>
+    <br />
+    <select <?php echo ($_['expertmode'] != 'on' ? 'disabled="disabled"' : '') ?>
+            multiple
+            name="debugmode"
+            data-placeholder="<?php echo L::t('Enable Debug Mode'); ?>"
+            class="debug-mode"
+            title="title=<?php echo $debugtitle; ?>">
+<?php
+foreach ($debugModes as $key => $value) {
+  echo '<option value="'.$key.'" '.(Config::$debug[$key] ? 'selected="selected"' : '').'>'.$value.'</option>'."\n";
 }
 ?>
     </select>

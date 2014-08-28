@@ -27,9 +27,10 @@ class Instruments
   // called form Instrumentation::display()
   public function display()
   {
+    Config::init();
+
     global $debug_query;
-    //Config::$debug_query = true;
-    //$debug_query = true;
+    $debug_query = Util::debugMode('query');
 
     $template        = $this->template;
     $project         = $this->project;

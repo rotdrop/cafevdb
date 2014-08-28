@@ -66,8 +66,6 @@ try {
   // Are we a group-admin?
   $admin = OC_SubAdmin::isGroupAccessible($user, $group);
 
-  $expertmode = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb', 'expertmode','off');
-  $debugmode  = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb', 'debugmode','off');
   $tooltips   = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb', 'tooltips','on');
   $usrHdrVis  = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb', 'headervisibility', 'expanded');
   $usrFiltVis = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb', 'filtervisibility', 'off');
@@ -140,7 +138,6 @@ try {
   OCP\Util::addscript('','tags');
   OCP\Util::addScript('cafevdb', 'calendar');
   OCP\Util::addScript('calendar', 'on-event');
-//OCP\Util::addScript('cafevdb', 'debug');
 
 // end event hacks
 
@@ -219,8 +216,7 @@ try {
   $tmpl->assign('groupadmin', $admin);
   $tmpl->assign('usergroup', $group);
   $tmpl->assign('user', $user);
-  $tmpl->assign('debugmode', $debugmode);
-  $tmpl->assign('expertmode', $expertmode);
+  $tmpl->assign('expertmode', Config::$expertmode);
   $tmpl->assign('tooltips', $tooltips);
   $tmpl->assign('encryptionkey', $encrkey);
   $tmpl->assign('uploadMaxFilesize', Util::maxUploadSize(), false);

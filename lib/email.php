@@ -72,7 +72,7 @@ class EmailFilter {
    */
   public function __construct(&$_opts, $action = NULL)
   {
-    if (false) {
+    if (Util::debugMode('request')) {
       echo '<PRE>';
       print_r($_POST);
       echo '</PRE>';
@@ -2269,8 +2269,9 @@ __EOT__;
   public static function display()
   {
     Config::init();
-    
-    //$debug_query = true;
+
+    global $debug_query;
+    $debug_query = Util::debugMode('query');
 
     if (isset($debug_query) && $debug_query) {
       echo "<PRE>\n";

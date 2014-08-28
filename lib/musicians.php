@@ -41,8 +41,7 @@ make sure that the musicians are also automatically added to the
   public function display()
   {
     global $debug_query;
-    //Config::$debug_query = true;
-    //$debug_query = true;
+    $debug_query = Util::debugMode('query');
 
     $template        = $this->template;
     $project         = $this->project;
@@ -415,7 +414,7 @@ __EOT__;
 
     $this->pme = new \phpMyEdit($opts);
 
-    if (Util::debugMode()) {
+    if (Util::debugMode('request')) {
       echo '<PRE>';
       print_r($_POST);
       echo '</PRE>';
@@ -705,11 +704,10 @@ __EOT__;
   /**Helper method to add or change one specific musician to an
    * existing project. $this->template determines what to do.
    */
-  public function display() {
-
+  public function display()
+  {
     global $debug_query;
-    //Config::$debug_query = true;
-    //$debug_query = true;
+    $debug_query = Util::debugMode('query');
 
     $opts            = $this->opts;
     $project         = $this->project;
@@ -1054,7 +1052,7 @@ __EOT__;
 
     $this->pme = new \phpMyEdit($opts);
 
-    if (Util::debugMode()) {
+    if (Util::debugMode('request')) {
       echo '<PRE>';
       print_r($_POST);
       echo '</PRE>';
@@ -1112,8 +1110,7 @@ __EOT__;
   public function display()
   {
     global $debug_query;
-    //Config::$debug_query = true;
-    //$debug_query = true;
+    $debug_query = Util::debugMode('query');
 
     $project         = $this->project;
     $projectId       = $this->projectId;
@@ -1135,7 +1132,7 @@ __EOT__;
       $forcedInstrument = false;
     }
 
-    if (false) {
+    if (Util::debugMode('request')) {
       echo '<PRE>';
       print_r($_POST);
       echo '</PRE>';
@@ -1520,7 +1517,7 @@ __EOT__;
     // Generate and possibly display the table
     $this->pme = new \phpMyEdit($opts);
 
-    if (Util::debugMode()) {
+    if (Util::debugMode('request')) {
       echo '<PRE>';
       print_r($_POST);
       print_r($opts['cgi']['persist']);
