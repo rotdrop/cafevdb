@@ -69,6 +69,7 @@ var CAFEVDB = CAFEVDB || {};
       }
 
       var popup = $('#events').dialog({
+        dialogClass: 'cafevdb-project-events',
         position: { my: "middle top+50%",
                     at: "middle bottom",
                     of: "#controls" },

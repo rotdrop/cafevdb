@@ -275,7 +275,7 @@ td.eventdata-0-brief, td.eventdata-1-brief {
 }
 
 /* make popups scrollable in smaller viewports */
-.ui-dialog {
+.ui-dialog.cafevdb-project-events {
 	max-height: 75% !important;
 	/*top: 15% !important;*/
 	overflow-y: auto;
@@ -283,7 +283,7 @@ td.eventdata-0-brief, td.eventdata-1-brief {
 	padding: 0;
 }
 
-.ui-dialog .ui-dialog-content {
+.ui-dialog.cafevdb-project-events .ui-dialog-content {
 	overflow: initial;
 }
 

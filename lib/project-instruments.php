@@ -327,15 +327,13 @@ HREF=%s>Projekteigenschaften</A> die Instrumente eintragen, oder im
       'input' => 'V',
       'name' => L::t('Add Instruments'),
       'display' => array(
-        'prefix' => ('<div id="add-instruments-block">'.
-                     '<span class="message" style="display:none;"></span>'.
-                     '<span class="debug" style="display:none;"></span>'.
-                     '<span class="error" style="display:none;"></span>'.
-                     '<input type="button"'.
+        'prefix' => ('<input type="button"'.
                      '       id="add-instruments-button"'.
                      '       value="'.L::t('Change Instrumentation').'"'.
                      '       title="'.L::t('Click to add instruments to the project').'"'.
-                     '       name="add-instruments" />'),
+                     '       name="add-instruments" />'.
+                     '<div id="add-instruments-block">'.
+                     '  <input type="hidden" autofocus="autofocus" />'), // prevent auto-focus on chosen.
         'postfix' => '</div>'),
       'css' => array('postfix' => 'add-instruments chosen-hidden select-hidden'),
       'options' => 'C',

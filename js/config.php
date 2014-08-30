@@ -29,12 +29,16 @@ $array = array(
   "PHPMYEDIT.filterSelectNoResult" => "'".L::t("No values match.")."'",
   "PHPMYEDIT.filterSelectChosen" => "true",
   "PHPMYEDIT.filterSelectChosenTitle" => "'".L::t("Select from the pull-down menu. ".
-                                                  "Double-click will submit the form.")."'",
+                                                  "Double-click will submit the form. ".
+                                                  "The pull-down can be closed by clicking ".
+                                                  "anywhere outside the menu.")."'",
   "PHPMYEDIT.inputSelectPlaceholder" => "'".L::t("Select an option.")."'",
   "PHPMYEDIT.inputSelectNoResult" => "'".L::t("No values match.")."'",
   "PHPMYEDIT.inputSelectChosen" => "true",
-  "PHPMYEDIT.inputSelectChosenTitle" => "'".L::t("Select from the pull-down menu.")."'",
-  "PHPMYEDIT.chosenPixelWidth" => "['projectname']",
+  "PHPMYEDIT.inputSelectChosenTitle" => "'".L::t("Select from the pull-down menu. ".
+                                                 "The pull-down can be closed by clicking ".
+                                                 "anywhere outside the menu.")."'",
+  "PHPMYEDIT.chosenPixelWidth" => "['projectname', 'add-instruments']",
   );
 
 // Echo it

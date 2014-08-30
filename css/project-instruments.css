@@ -44,10 +44,58 @@
 
 /*******************************************************************************
  *
- * Undisplay instrumentation controls by default, pulled in on request by js
+ * project instruments dialog
  *
  */
 
+/* make popups scrollable in smaller viewports */
+.ui-dialog.cafevdb-project-instruments {
+  max-height: 75% !important;
+  /*top: 15% !important;*/
+  /* At least firefox has problems with overflow-x and
+     * overflow-y. Also konqueror (webkit) */
+  /* overflow-x: hidden; */
+  /* overflow-y: visible; */
+  overflow: visible;
+  padding: 0;
+}
+
+.ui-dialog.cafevdb-project-instruments .ui-dialog-content {
+  overflow: visible;
+}
+
+#add-instruments-block {
+  padding: 0;
+}
+
+#add-instruments-block select[class*="add-instruments"] {
+  width: 20em;
+}
+
+.ui-dialog.cafevdb-project-instruments .ui-dialog-buttonpane {
+  margin-top: 0;
+}
+
+.ui-dialog.cafevdb-project-instruments .ui-dialog-buttonpane { 
+  padding: 0;
+}
+
+.ui-dialog.cafevdb-project-instruments .ui-dialog-buttonpane .ui-dialog-buttonset { 
+  width: 100%;
+}
+
+.ui-dialog.cafevdb-project-instruments button {
+  margin-left: 0.4em;
+  margin-right: 0.4em;
+}
+
+.ui-dialog.cafevdb-project-instruments button.save {
+  float: left;
+}
+
+.ui-dialog.cafevdb-project-instruments button.cancel {
+  float: right;
+}
 
 /*******************************************************************************
  *
