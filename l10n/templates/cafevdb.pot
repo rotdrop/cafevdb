@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-30 15:22+0200\n"
+"POT-Creation-Date: 2014-08-30 15:25+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -913,20 +913,24 @@ msgstr ""
 msgid "Select a filter option."
 msgstr ""
 
-#: js/config.php:29 js/config.php:34 lib/config.php:149 lib/config.php:154
+#: js/config.php:29 js/config.php:36 lib/config.php:149 lib/config.php:154
 msgid "No values match."
 msgstr ""
 
-#: js/config.php:31
-msgid "Select from the pull-down menu. Double-click will submit the form."
+#: js/config.php:31 lib/config.php:151
+msgid ""
+"Select from the pull-down menu. Double-click will submit the form. The pull-"
+"down can be closed by clicking anywhere outside the menu."
 msgstr ""
 
-#: js/config.php:33 lib/config.php:153
+#: js/config.php:35 lib/config.php:153
 msgid "Select an option."
 msgstr ""
 
-#: js/config.php:36
-msgid "Select from the pull-down menu."
+#: js/config.php:38 lib/config.php:156
+msgid ""
+"Select from the pull-down menu. The pull-down can be closed by clicking "
+"anywhere outside the menu."
 msgstr ""
 
 #: js/email.js:43
@@ -1169,18 +1173,6 @@ msgstr ""
 
 #: lib/brief-instrumentation.php:384
 msgid "Click to enter details of a potential SEPA debit mandate"
-msgstr ""
-
-#: lib/config.php:151
-msgid ""
-"Select from the pull-down menu. Double-click will submit the form. The pull-"
-"down can be closed by clicking anywhere outside the menu."
-msgstr ""
-
-#: lib/config.php:156
-msgid ""
-"Select from the pull-down menu. The pull-down can be closed by clicking "
-"anywhere outside the menu."
 msgstr ""
 
 #: lib/config.php:503

@@ -193,9 +193,9 @@
 "Unknown location" => "Unbekannter Ort.",
 "Select a filter option." => "Wähle einen Filter.",
 "No values match." => "Kein Wert passt.",
-"Select from the pull-down menu. Double-click will submit the form." => "Wähle aus den vorhandenen Werten aus. Ein Doppel-Klick ativiert die Auswahl.",
+"Select from the pull-down menu. Double-click will submit the form. The pull-down can be closed by clicking anywhere outside the menu." => "Wähle aus den vorhandenen Werten aus. Ein Doppel-Klick ativiert die\nAuswahl. Das Pull-Down-Menü kann schließt sich, wenn man irgendwohin\naußerhalb des Menüs klickt.",
 "Select an option." => "Wähle eine Option.",
-"Select from the pull-down menu." => "Wähle eine Option aus dem Pull-Down Menü.",
+"Select from the pull-down menu. The pull-down can be closed by clicking anywhere outside the menu." => "Wähle aus den vorhandenen Werten aus. Das Pull-Down-Menü kann schließt sich, wenn man irgendwohin\\n\"\n\"außerhalb des Menüs klickt.",
 "Not called from main email-form." => "Nicht vom Haupt-Formular aufgerufen (Fehler).",
 "Select Attachment" => "Anhang auswählen",
 "Do you really want to delete this event?" => "Möchten Sie den Termin wirklich löschen?",
@@ -251,8 +251,6 @@
 "Detailed Instrumentation" => "Detaillierte Besetzung",
 "(see above; address, email, name, picture etc.)" => "(s.o.; Adresse, Email, Name, Protrait etc.)",
 "Click to enter details of a potential SEPA debit mandate" => "Anklicken um ggf. Informationen über ein SEPA-Lastschriftmandat einzutragen",
-"Select from the pull-down menu. Double-click will submit the form. The pull-down can be closed by clicking anywhere outside the menu." => "Wähle aus den vorhandenen Werten aus. Ein Doppel-Klick ativiert die\nAuswahl. Das Pull-Down-Menü kann schließt sich, wenn man irgendwohin\naußerhalb des Menüs klickt.",
-"Select from the pull-down menu. The pull-down can be closed by clicking anywhere outside the menu." => "Wähle aus den vorhandenen Werten aus. Das Pull-Down-Menü kann schließt sich, wenn man irgendwohin\\n\"\n\"außerhalb des Menüs klickt.",
 "Decryption of `%s`@`%s` failed" => "Entschlüsselung von `%s' @ `%s' fehlgeschlagen",
 "Encryption of `%s`@`%s` failed" => "Verschlüsselung von `%s' @ `%s' fehlgeschlagen",
 "Unable to update table data at index %s" => "Kann die Tabellenzeile mit Index %s nicht ändern",
@@ -736,5 +734,7 @@
 "YEAR" => "JAHR",
 "PROJECT" => "PROJEKT",
 "Financial balance folder" => "Finanz-Ordner",
+"Select from the pull-down menu. Double-click will submit the form." => "Wähle aus den vorhandenen Werten aus. Ein Doppel-Klick ativiert die Auswahl.",
+"Select from the pull-down menu." => "Wähle eine Option aus dem Pull-Down Menü.",
 "Example Text" => "Nur ein Beispiel ..."
 );

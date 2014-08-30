@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-30 15:14+0200\n"
+"POT-Creation-Date: 2014-08-30 15:25+0200\n"
 "PO-Revision-Date: 2014-08-30 15:22+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
@@ -448,7 +448,9 @@ msgstr ""
 #: ajax/instruments/adjustInstrumentation.php:73
 #, php-format
 msgid "Adjusting the instrumentation for project `%s' was probably successful."
-msgstr "Abgleichen der Instrumentierung für das Projekt `%s' war vermutlich erfolgreich."
+msgstr ""
+"Abgleichen der Instrumentierung für das Projekt `%s' war vermutlich "
+"erfolgreich."
 
 #: ajax/instruments/changeInstrumentation.php:63
 #: ajax/instruments/changeInstrumentation.php:76
@@ -475,7 +477,9 @@ msgstr "Fehler beim Ändern der Instrumentierung"
 #: ajax/instruments/changeInstrumentation.php:96
 #, php-format
 msgid "Changing the instrumentation for project `%s' was probably successful."
-msgstr "Das Ändern der Instrumentierung für das Projekt `%s' war vermutlich erfolgreich."
+msgstr ""
+"Das Ändern der Instrumentierung für das Projekt `%s' war vermutlich "
+"erfolgreich."
 
 #: ajax/projects/verifyName.php:26
 msgid "project-year"
@@ -945,22 +949,31 @@ msgstr "Unbekannter Ort."
 msgid "Select a filter option."
 msgstr "Wähle einen Filter."
 
-#: js/config.php:29 js/config.php:34 lib/config.php:149 lib/config.php:154
+#: js/config.php:29 js/config.php:36 lib/config.php:149 lib/config.php:154
 msgid "No values match."
 msgstr "Kein Wert passt."
 
-#: js/config.php:31
-msgid "Select from the pull-down menu. Double-click will submit the form."
+#: js/config.php:31 lib/config.php:151
+msgid ""
+"Select from the pull-down menu. Double-click will submit the form. The pull-"
+"down can be closed by clicking anywhere outside the menu."
 msgstr ""
-"Wähle aus den vorhandenen Werten aus. Ein Doppel-Klick ativiert die Auswahl."
+"Wähle aus den vorhandenen Werten aus. Ein Doppel-Klick ativiert die\n"
+"Auswahl. Das Pull-Down-Menü kann schließt sich, wenn man irgendwohin\n"
+"außerhalb des Menüs klickt."
 
-#: js/config.php:33 lib/config.php:153
+#: js/config.php:35 lib/config.php:153
 msgid "Select an option."
 msgstr "Wähle eine Option."
 
-#: js/config.php:36
-msgid "Select from the pull-down menu."
-msgstr "Wähle eine Option aus dem Pull-Down Menü."
+#: js/config.php:38 lib/config.php:156
+msgid ""
+"Select from the pull-down menu. The pull-down can be closed by clicking "
+"anywhere outside the menu."
+msgstr ""
+"Wähle aus den vorhandenen Werten aus. Das Pull-Down-Menü kann schließt sich, "
+"wenn man irgendwohin\\n\"\n"
+"\"außerhalb des Menüs klickt."
 
 #: js/email.js:43
 msgid "Not called from main email-form."
@@ -1226,23 +1239,6 @@ msgstr "(s.o.; Adresse, Email, Name, Protrait etc.)"
 msgid "Click to enter details of a potential SEPA debit mandate"
 msgstr ""
 "Anklicken um ggf. Informationen über ein SEPA-Lastschriftmandat einzutragen"
-
-#: lib/config.php:151
-msgid ""
-"Select from the pull-down menu. Double-click will submit the form. The pull-"
-"down can be closed by clicking anywhere outside the menu."
-msgstr ""
-"Wähle aus den vorhandenen Werten aus. Ein Doppel-Klick ativiert die\n"
-"Auswahl. Das Pull-Down-Menü kann schließt sich, wenn man irgendwohin\n"
-"außerhalb des Menüs klickt."
-
-#: lib/config.php:156
-msgid ""
-"Select from the pull-down menu. The pull-down can be closed by clicking "
-"anywhere outside the menu."
-msgstr ""
-"Wähle aus den vorhandenen Werten aus. Das Pull-Down-Menü kann schließt sich, wenn man irgendwohin\\n\"\n"
-"\"außerhalb des Menüs klickt."
 
 #: lib/config.php:503
 #, php-format
@@ -4059,6 +4055,14 @@ msgstr "PROJEKT"
 #: templates/share-settings.php:92
 msgid "Financial balance folder"
 msgstr "Finanz-Ordner"
+
+#~ msgid "Select from the pull-down menu. Double-click will submit the form."
+#~ msgstr ""
+#~ "Wähle aus den vorhandenen Werten aus. Ein Doppel-Klick ativiert die "
+#~ "Auswahl."
+
+#~ msgid "Select from the pull-down menu."
+#~ msgstr "Wähle eine Option aus dem Pull-Down Menü."
 
 #~ msgid "Example Text"
 #~ msgstr "Nur ein Beispiel ..."
