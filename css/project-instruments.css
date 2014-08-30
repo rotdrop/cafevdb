@@ -44,6 +44,13 @@
 
 /*******************************************************************************
  *
+ * Undisplay instrumentation controls by default, pulled in on request by js
+ *
+ */
+
+
+/*******************************************************************************
+ *
  * Coloring of the table headers and stuff
  *
  */

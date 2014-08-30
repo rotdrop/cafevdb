@@ -495,7 +495,7 @@ class Instruments
     return $final;
   }
 
-  // Fetch all isntruments, group by instrument family.
+  // Fetch all instruments, group by instrument family.
   public static function fetchGrouped($handle) {
 
     $Instruments = mySQL::multiKeys('Musiker', 'Instrumente', $handle);

@@ -47,7 +47,7 @@ echo $this->inc('part.common.header',
                       'navigationcontrols' => $nav,
                       'header' => $table->headerText()."\n".$xferButton));
 
-// Issue the main part. The method will echo itself
+// Issue the main part. The method will "echo itself"
 $table->display();
 
 // Close some still opened divs

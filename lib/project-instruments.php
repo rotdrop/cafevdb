@@ -324,12 +324,25 @@ HREF=%s>Projekteigenschaften</A> die Instrumente eintragen, oder im
     mySQL::close($handle);
     
     $opts['fdd']['instrumentation'] = array(
-      'name' => L::t('Edit Instrumentation'),
+      'input' => 'V',
+      'name' => L::t('Add Instruments'),
+      'display' => array(
+        'prefix' => ('<div id="add-instruments-block">'.
+                     '<span class="message" style="display:none;"></span>'.
+                     '<span class="debug" style="display:none;"></span>'.
+                     '<span class="error" style="display:none;"></span>'.
+                     '<input type="button"'.
+                     '       id="add-instruments-button"'.
+                     '       value="'.L::t('Change Instrumentation').'"'.
+                     '       title="'.L::t('Click to add instruments to the project').'"'.
+                     '       name="add-instruments" />'),
+        'postfix' => '</div>'),
+      'css' => array('postfix' => 'add-instruments chosen-hidden select-hidden'),
       'options' => 'C',
       'select' => 'M',
       'sql' => '`PMEjoin0`.`Besetzung`',
       'sqlw' => '`PMEjoin0`.`Besetzung`',
-      'values'   => $instruments,
+      'values' => $instruments,
       'valueGroups' => $groupedInstruments
       );
 
@@ -364,14 +377,6 @@ HREF=%s>Projekteigenschaften</A> die Instrumente eintragen, oder im
     $opts['triggers']['insert']['after'] = 'CAFEVDB\ProjectInstruments::insertDeleteCallback';
 
     $pme = new \phpMyEdit($opts);
-  }
-
-  /**Generate controls in order to update the list of needed
-   * instruments for the project (_this_ table only holds the number,
-   * but not the information, which instruments are needed.
-   */
-  public static function instrumentChoicePME($referenceId, $opts, $action, $k, $fds, $fdd, $row)
-  {
   }
 
   /**Can be used as a trigger callback (instead of loading one from disk).

@@ -68,10 +68,11 @@ try {
   mySQL::close($handle);
 
   OCP\JSON::success(
-    array('data' => array('message' => L::t("Adjusting the instrumentation for project ``%s'' probably successful.",
-                                 array($projectName)),
-                          'debug' => $debugText)));
-
+    array(
+      'data' => array(
+        'message' => L::t("Adjusting the instrumentation for project `%s' was probably successful.",
+                          array($projectName)),
+        'debug' => $debugText)));
   return true;
 
 } catch (\Exception $e) {

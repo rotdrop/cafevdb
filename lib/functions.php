@@ -949,15 +949,15 @@ class mySQL
       echo '<HR/><PRE>'.htmlspecialchars($query).'</PRE><HR/><BR>';
     }
     if ($handle) {
-      if (!($result = @mysql_query($query, $handle))) {
+      if (($result = @mysql_query($query, $handle)) === false) {
         $err = @mysql_error($handle);
       }
     } else {
-      if (!($result = @mysql_query($query))) {
+      if (($result = @mysql_query($query)) === false) {
         $err = @mysql_error();
       }
     }
-    if (!$result) {
+    if ($result === false) {
       Util::error('mysql_query() failed: "'.$err.'", query: "'.$query.'"', $die, $silent);
     }
     return $result;

@@ -21,8 +21,67 @@
 
 $(document).ready(function(){
 
-  // Emulate a pull-down menu via chosen jQuery plugin
+  // Enable the controls, in order not to bloat SQL queries these PME
+  // fields are flagged virtual which disables all controls initially.
+  $('#add-instruments-block select').removeAttr('disabled');
+  $('#add-instruments-block select').trigger('chosen:updated');
 
+  $('#add-instruments-button').click(function (event) {
+    event.preventDefault();
+    $('#add-instruments-button').hide();
+    $('#add-instruments-block div.chosen-container').show();
+  });
+
+  $('#add-instruments-block select').change(function (event) {
+    event.preventDefault();
+
+    $('span.message').hide();
+    $('span.debug').hide();
+    $('span.error').hide();
+
+    var self = this;
+    OC.Notification.hide(function () {
+      $.post(OC.filePath('cafevdb', 'ajax/instruments', 'changeInstrumentation.php'),
+             {
+               projectId: $('input[name="ProjectId"]').val(),
+               projectInstruments: $(self).val()
+             },
+             function (data) {
+               var rqData;
+               if (data.status == 'success') {
+                 rqData = data.data;
+                 if (rqData.message != '') {
+                   OC.Notification.show(rqData.message);
+                 }
+                 //$('#add-instruments-block div.chosen-container').hide();
+                 //$('#add-instruments-button').show();
+               } else if (data.status == 'error') {
+                 rqData = data.data;
+                 if (rqData.error != 'exception') {
+                   if (rqData.message == '') {
+                     rqData.message = t('cafevdb', 'Unkown Error');
+                   }
+                   OC.Notification.show(rqData.message);
+                 } else {
+                   OC.dialogs.alert(rqData.exception+rqData.trace,
+                                    t('cafevdb', 'Caught a PHP Exception'),
+                                    null, true);
+                 }
+               }
+               setTimeout(function() {
+                 OC.Notification.hide(function() {
+                   // Anyhow, reload and see what happens.
+                   var button = $('input[name="PME_sys_morechange"]');
+                   button.off('click');
+                   button.trigger('click');
+                   //$('form.pme-form').submit();
+                 });
+               }, 800);
+             }, 'json');
+    });
+  });
+
+  // Emulate a pull-down menu via chosen jQuery plugin
   $('select.pme-instrumentation-actions-choice').chosen({ disable_search:true });  
   $('select.pme-instrumentation-actions-choice').change(function (event) {
     event.preventDefault();

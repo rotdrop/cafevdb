@@ -59,6 +59,16 @@
 
 /*******************************************************************************
  *
+ * Hide some virtual extra controls by default
+ *
+ */
+
+td.chosen-hidden div.chosen-container {
+  display: none;
+}
+
+/*******************************************************************************
+ *
  * PME general stuff
  *
  */
