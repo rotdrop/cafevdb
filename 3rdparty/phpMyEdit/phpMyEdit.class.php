@@ -129,12 +129,14 @@ class phpMyEdit
 	var $sw;		// filter display/hide/clear button
 	var $operation;	// operation to do: Add, Change, Delete
 	var $saveadd;
+	var $applyadd;
 	var $moreadd;
 	var $canceladd;
 	var $savechange;
 	var $morechange;
 	var $cancelchange;
 	var $savecopy;
+	var $applycopy;
 	var $cancelcopy;
 	var $savedelete;
 	var $canceldelete;
@@ -181,9 +183,9 @@ class phpMyEdit
 					 'goto','rows_per_page'),
 		'F' => array('<<','<','add','view','change','copy','delete','>','>>',
 					 'goto','rows_per_page'),
-		'A' => array('save','more','cancel'),
+		'A' => array('save','apply','more','cancel'),
 		'C' => array('save','more','cancel'),
-		'P' => array('save', 'cancel'),
+		'P' => array('save','apply','cancel'),
 		'D' => array('save','cancel'),
 		'V' => array('change','cancel')
 		);
@@ -192,9 +194,9 @@ class phpMyEdit
 					 'goto','rows_per_page'),
 		'F' => array('<<','<','misc','add','view','change','copy','delete','>','>>',
 					 'goto','rows_per_page'),
-		'A' => array('save','more','cancel'),
+		'A' => array('save','apply','more','cancel'),
 		'C' => array('save','more','cancel'),
-		'P' => array('save', 'cancel'),
+		'P' => array('save','apply','cancel'),
 		'D' => array('save','cancel'),
 		'V' => array('change','cancel')
 		);
@@ -203,9 +205,9 @@ class phpMyEdit
 					 'goto','rows_per_page'),
 		'F' => array('<<','<','add','>','>>',
 					 'goto','rows_per_page'),
-		'A' => array('save','more','cancel'),
+		'A' => array('save','apply','more','cancel'),
 		'C' => array('save','more','cancel'),
-		'P' => array('save', 'cancel'),
+		'P' => array('save','apply','cancel'),
 		'D' => array('save','cancel'),
 		'V' => array('change','cancel')
 		);
@@ -214,9 +216,9 @@ class phpMyEdit
 					 'goto','rows_per_page'),
 		'F' => array('<<','<','misc','add','>','>>',
 					 'goto','rows_per_page'),
-		'A' => array('save','more','cancel'),
+		'A' => array('save','apply','more','cancel'),
 		'C' => array('save','more','cancel'),
-		'P' => array('save', 'cancel'),
+		'P' => array('save','apply','cancel'),
 		'D' => array('save','cancel'),
 		'V' => array('change','cancel')
 		);
@@ -332,9 +334,11 @@ class phpMyEdit
 		return
 			($this->label_cmp($this->saveadd   , 'Save')  && stristr($options, 'A')) ||
 			($this->label_cmp($this->moreadd   , 'More')  && stristr($options, 'A')) ||
+			($this->label_cmp($this->applyadd  , 'Apply') && stristr($options, 'A')) ||
 			($this->label_cmp($this->savechange, 'Save')  && stristr($options, 'C')) ||
 			($this->label_cmp($this->morechange, 'Apply') && stristr($options, 'C')) ||
 			($this->label_cmp($this->savecopy  , 'Save')  && stristr($options, 'P')) ||
+			($this->label_cmp($this->applycioy , 'Apply') && stristr($options, 'P')) ||
 			($this->label_cmp($this->savedelete, 'Save')  && stristr($options, 'D'));
 	} /* }}} */
 
@@ -2529,11 +2533,13 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		echo 'navop=',$this->navop,'   ';
 		echo 'saveadd=',$this->saveadd,'   ';
 		echo 'moreadd=',$this->moreadd,'   ';
+		echo 'applyadd=',$this->applyadd,'   ';
 		echo 'canceladd=',$this->canceladd,'   ';
 		echo 'savechange=',$this->savechange,'	 ';
 		echo 'morechange=',$this->morechange,'	 ';
 		echo 'cancelchange=',$this->cancelchange,'	 ';
 		echo 'savecopy=',$this->savecopy,'	 ';
+		echo 'applycopy=',$this->applycopy,'	 ';
 		echo 'cancelcopy=',$this->cancelcopy,'	 ';
 		echo 'savedelete=',$this->savedelete,'	 ';
 		echo 'canceldelete=',$this->canceldelete,'	 ';
@@ -2674,7 +2680,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			return $this->htmlSubmit('savedelete', 'Delete',
 									 $this->getCSSclass('save', $position), false, $enabled ? 0 : $disabled, $js);
 		}
-		if (in_array($name, array('save','more'))) {
+		if (in_array($name, array('save','apply','more'))) {
 			$validation = true; // if js validation
 			if	   ($this->page_type == 'D' && $name == 'save' ) { $value = 'Delete'; $validation = false; }
 			elseif ($this->page_type == 'C' && $name == 'more' ) { $value = 'Apply'; }
@@ -2712,17 +2718,16 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			return $ret;
 		}
 		if ($name == 'goto_combo') {
-			$disabledgoto = !($this->listall() || ($disablednext && $disabledprev)) ? '' : ' disabled';
-			if ($disabledgoto != '' && $disabled < 0) return;
+			$disabledgoto = ($this->listall() || ($disablednext && $disabledprev));
+			if ($disabledgoto && $disabled < 0) return;
 			$kv_array = array();
 			for ($i = 0; $i < $total_pages; $i++) {
 				$kv_array[$this->inc * $i] = $i + 1;
 			}
-			// TODO: add onchange="return this.form.submit();" DONE ???
 			return $this->htmlSelect($this->cgi['prefix']['sys'].ltrim($disabledgoto).'navfm'.$position,
 									 $this->getCSSclass('goto', $position), $kv_array, null,
 									 (string)$this->fm, false, $disabledgoto,
-									 false, true, 'disabledonchange="return this.form.submit();"');
+									 false, true);
 		}
 		if ($name == 'goto') {
 			$ret = '<span class="'.$this->getCSSclass('goto', $position).'">';
@@ -3974,11 +3979,13 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		}
 		if ($this->change_operation()
 			|| $this->label_cmp($this->savechange, 'Save')
+			|| $this->label_cmp($this->applyadd, 'Apply')
 			|| $this->label_cmp($this->morechange, 'Apply')) {
 			$this->page_type = 'C';
 		}
 		if ($this->copy_operation()
-			|| $this->label_cmp($this->savecopy, 'Save')) {
+			|| $this->label_cmp($this->savecopy, 'Save')
+			|| $this->label_cmp($this->applycopy, 'Apply')) {
 			$this->page_type = 'P';
 		}
 		if ($this->delete_operation()
@@ -4258,6 +4265,17 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			$this->saveadd	= null; // unset($this->saveadd)
 			$this->savecopy = null; // unset($this->savecopy)
 			$this->recreate_fdd();
+		}
+		elseif ($this->label_cmp($this->applyadd, 'Apply')
+				|| $this->label_cmp($this->applycopy, 'Apply')) {
+			$this->add_enabled() && $this->do_add_record();
+			$this->saveadd	= null; // unset($this->saveadd)
+			$this->savecopy = null; // unset($this->savecopy)
+			$this->applyadd = null; // unset($this->applyadd)
+			$this->operation = $this->labels['Change']; // to force change operation
+			$this->recreate_fdd();
+			$this->recreate_displayed();
+			$this->backward_compatibility();
 		}
 		elseif ($this->label_cmp($this->moreadd, 'More')) {
 			$this->add_enabled() && $this->do_add_record();
@@ -4617,11 +4635,13 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		}
 		$this->saveadd		= $this->get_sys_cgi_var('saveadd');
 		$this->moreadd		= $this->get_sys_cgi_var('moreadd');
+		$this->applyadd		= $this->get_sys_cgi_var('applyadd');
 		$this->canceladd	= $this->get_sys_cgi_var('canceladd');
 		$this->savechange	= $this->get_sys_cgi_var('savechange');
 		$this->morechange	= $this->get_sys_cgi_var('morechange');
 		$this->cancelchange = $this->get_sys_cgi_var('cancelchange');
 		$this->savecopy		= $this->get_sys_cgi_var('savecopy');
+		$this->applycopy	= $this->get_sys_cgi_var('applycopy');
 		$this->cancelcopy	= $this->get_sys_cgi_var('cancelcopy');
 		$this->savedelete	= $this->get_sys_cgi_var('savedelete');
 		$this->canceldelete = $this->get_sys_cgi_var('canceldelete');

@@ -561,9 +561,9 @@ class Navigation
                      $button, 'add',
                      '>', '>>',
                      'goto', 'rows_per_page'),
-        'A' => array('save', 'more', 'cancel'),
+        'A' => array('save', 'apply', 'more', 'cancel'),
         'C' => array('save', 'more', 'cancel'),
-        'P' => array('save', 'cancel'),
+        'P' => array('save', 'apply', 'cancel'),
         'D' => array('save', 'cancel'),
         'V' => array('change', 'cancel')
         );
@@ -577,9 +577,9 @@ class Navigation
                      'misc', $button, 'add',
                      '>','>>',
                      'goto','rows_per_page'),
-        'A' => array('save', 'more', 'cancel'),
+        'A' => array('save', 'apply', 'more', 'cancel'),
         'C' => array('save', 'more', 'cancel'),
-        'P' => array('save', 'cancel'),
+        'P' => array('save', 'apply', 'cancel'),
         'D' => array('save','cancel'),
         'V' => array('change','cancel')
         );
@@ -690,7 +690,7 @@ class Navigation
       $title = L::t("Overview over all known projects (start-page).");
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
-  <input type="submit" value="$value" title="$title"/>
+  <input type="submit" name="Projects" value="$value" title="$title"/>
   <input type="hidden" name="Template" value="projects"/>
   $headervisibility
 </form>
@@ -748,7 +748,7 @@ __EOT__;
       $title = L::t("The currently active project.");
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
-  <input type="submit" value="$project" title="$title"/>
+  <input type="submit" name="Project" value="$project" title="$title"/>
   <input type="hidden" name="Template" value="projects"/>
   <input type="hidden" name="Project" value="$project"/>
   <input type="hidden" name="ProjectId" value="$projectId"/>
