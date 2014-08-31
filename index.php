@@ -65,7 +65,7 @@ try {
   // Are we a group-admin?
   $admin = OC_SubAdmin::isGroupAccessible($user, $group);
 
-  $tooltips   = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb', 'tooltips','on');
+  $tooltips   = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb', 'tooltips', 'on');
   $usrHdrVis  = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb', 'headervisibility', 'expanded');
   $usrFiltVis = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb', 'filtervisibility', 'off');
   $encrkey    = Config::getEncryptionKey();
@@ -83,7 +83,8 @@ try {
   // js/config.php generated dynamic JavaScript and thus "cheats" the
   // CSP rules. We have here the possibility to pass some selected
   // CGI-parameters or other PHP-variables on to the JavaScript code.
-  Util::addExternalScript(OC_Helper::linkTo('cafevdb/js', 'config.php').'?headervisibility='.$headervisibility);
+  Util::addExternalScript(OC_Helper::linkToRoute('cafevdb_config',
+                                                 array('headervisibility' => $headervisibility))); 
 
   OCP\App::setActiveNavigationEntry( 'cafevdb' );
 
@@ -93,6 +94,7 @@ try {
   OCP\Util::addStyle('cafevdb', 'sepa-debit-mandate');
   OCP\Util::addStyle('cafevdb', 'email');
   OCP\Util::addStyle('cafevdb', 'blog');
+  OCP\Util::addStyle('cafevdb', 'projects');
   OCP\Util::addStyle('cafevdb', 'inlineimage');  
   OCP\Util::addStyle('cafevdb', 'jquery.Jcrop');  
   OCP\Util::addStyle("cafevdb/3rdparty", "chosen/chosen");
@@ -105,6 +107,7 @@ try {
   OCP\Util::addScript('cafevdb', 'page');
   OCP\Util::addScript('cafevdb', 'events');
   OCP\Util::addScript('cafevdb', 'blog');
+  OCP\Util::addScript('cafevdb', 'projects');
   OCP\Util::addScript('cafevdb', 'inlineimage');
   OCP\Util::addScript('cafevdb', 'sepa-debit-mandate');
   OCP\Util::addScript('cafevdb', 'jquery.Jcrop');
@@ -128,7 +131,7 @@ try {
   OCP\Util::addscript("cafevdb/3rdparty/QuickForm2", "quickform");
   OCP\Util::addscript("cafevdb/3rdparty/QuickForm2", "dualselect");
 
-// Calendar event hacks
+  // Calendar event hacks
   OCP\Util::addscript('3rdparty/timepicker', 'jquery.ui.timepicker');
   OCP\Util::addStyle('3rdparty/timepicker', 'jquery.ui.timepicker');
   OCP\Util::addscript('', 'jquery.multiselect');
@@ -138,9 +141,9 @@ try {
   OCP\Util::addScript('cafevdb', 'calendar');
   OCP\Util::addScript('calendar', 'on-event');
 
-// end event hacks
+  // end event hacks
 
-// Determine which template has to be used
+  // Determine which template has to be used
 
   $config = ConfigCheck::configured();
 
@@ -199,7 +202,6 @@ try {
     OCP\Util::addScript('cafevdb', $tmplname);
     break;
   case 'project-instruments':
-    OCP\Util::addStyle('cafevdb', 'projects');
     OCP\Util::addStyle('cafevdb', $tmplname);
     OCP\Util::addScript('cafevdb', $tmplname);
     break;
@@ -208,8 +210,12 @@ try {
     break;
   }
 
-  $tmpl = new OCP\Template( 'cafevdb', $tmplname, 'user' );
+  // One last script to load after the other, e.g. to get the tipsy
+  // stuff and so on right
+  OCP\Util::addScript('cafevdb', 'document-ready');
 
+  $tmpl = new OCP\Template('cafevdb', $tmplname, 'user');
+  
   $tmpl->assign('configcheck', $config);
   $tmpl->assign('orchestra', Config::getValue('orchestra'));
   $tmpl->assign('groupadmin', $admin);

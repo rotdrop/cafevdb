@@ -49,15 +49,4 @@ foreach ($array as  $setting => $value) {
 	echo($setting ."=".$value.";\n");
 }
 
-print <<< __EOT__
-$(document).ready(function() {
-    if (CAFEVDB.toolTips) {
-      $.fn.tipsy.enable();
-    } else {
-      $.fn.tipsy.disable();
-    }
-    CAFEVDB.broadcastHeaderVisibility();
-});
-__EOT__
-
 ?>
