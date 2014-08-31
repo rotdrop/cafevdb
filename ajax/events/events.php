@@ -1,4 +1,24 @@
 <?php
+/**Orchestra member, musician and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 use CAFEVDB\L;
 use CAFEVDB\Config;
@@ -19,8 +39,11 @@ try {
   
   Config::init();
 
-  $debugmode = Config::getUserValue('debugmode', '') == 'on';
-  $debugtext = $debugmode ? '<PRE>'.print_r($_POST, true).'</PRE>' : '';
+  $debugText = '';
+  if (Util::debugMode('request')) {
+    $debugText .= '$_POST[] = '.print_r($_POST, true);
+  }
+
   $msg = '';
 
   $projectId   = Util::cgiValue('ProjectId', -1);
@@ -37,7 +60,7 @@ try {
       array(
         'data' => array('error' => 'arguments',
                         'message' => L::t('Project-id and/or name not set'),
-                        'debug' => $debugtext)));
+                        'debug' => $debugText)));
     return false;
   }
   if (false) {
@@ -46,7 +69,7 @@ try {
         'data' => array('contents' => '',
                         'projectId' => $projectId,
                         'projectName' => $projectName,
-                        'message' => $debugtext.$msg)));
+                        'message' => $debugText.$msg)));
     return true;
   }
 
@@ -83,7 +106,7 @@ try {
     array('data' => array('contents' => $html,
                           'projectId' => $projectId,
                           'projectName' => $projectName,
-                          'debug' => $debugtext)));
+                          'debug' => $debugText)));
 
   return true;
 
