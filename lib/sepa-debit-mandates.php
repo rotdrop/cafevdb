@@ -312,7 +312,7 @@ class SepaDebitMandates
 
     $this->pme = new \phpMyEdit($opts);
 
-    if (Util::debugMode('request)) {
+    if (Util::debugMode('request')) {
       echo '<PRE>';
       print_r($_POST);
       echo '</PRE>';
