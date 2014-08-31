@@ -52,7 +52,8 @@ span.project-actions-block  ul.chosen-results li.group-result {
 }
 
 td[class$="projectextra"] textarea {
-  width:auto;
+  resize: vertical;
+  width: 95%;
 }
 
 td[class$="projectflyer"] img {

@@ -28,6 +28,25 @@ form.cafevdb-control {
   vertical-align:middle;
 }
 
+/*******************************************************************************
+ *
+ * PME table popups
+ *
+ */
+/* make popups scrollable in smaller viewports */
+.ui-dialog.pme-table-dialog {
+  max-height: 80% !important;
+  max-width: 100% !important;
+  overflow: hidden;
+  padding: 0;
+}
+
+.ui-dialog.pme-table-dialog .ui-dialog-content {
+  /* height has to be compute in order to attach the vertical
+   * scrollbar to the inner div.
+   */
+  overflow: auto;
+}
 
 /*******************************************************************************
  *

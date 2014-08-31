@@ -309,9 +309,9 @@ HREF=%s>Projekteigenschaften</A> die Instrumente eintragen, oder im
       'select|FLVA' => 'D',
       'select|CD'   => 'T',
       'options|CD'  => 'FLVCDAR',
-      'php|LVFCD'   => array('type' => 'function',
-                             'function' => 'CAFEVDB\Projects::projectActionsPME',
-                             'parameters' => array("idIndex" => $idIdx.'_idx')),
+      /* 'php|LVFCD'   => array('type' => 'function', */
+      /*                        'function' => 'CAFEVDB\Projects::projectActionsPME', */
+      /*                        'parameters' => array("idIndex" => $idIdx.'_idx')), */
       'maxlen'   => 11,
       'default'  => '-1',
       'sort'     => $sort,

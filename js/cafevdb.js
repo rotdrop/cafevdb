@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -27,6 +27,7 @@ var CAFEVDB = CAFEVDB || {};
   CAFEVDB.toolTips         = true;
   CAFEVDB.wysiwygEditor    = 'tinymce';
   CAFEVDB.language         = 'en';
+
   CAFEVDB.addEditor = function(selector) {
     switch (this.wysiwygEditor) {
     case 'ckeditor':
@@ -47,6 +48,7 @@ var CAFEVDB = CAFEVDB || {};
       break;
     };
   };
+
   CAFEVDB.removeEditor = function(selector) {
     switch (this.wysiwygEditor) {
     case 'ckeditor':
@@ -60,6 +62,7 @@ var CAFEVDB = CAFEVDB || {};
       break;
     };
   };
+
   CAFEVDB.broadcastHeaderVisibility = function(visibility) {
 
     // default: only distribute
@@ -81,25 +84,13 @@ var CAFEVDB = CAFEVDB || {};
       $(this).val(visibility);
     });
   };
+
   CAFEVDB.stopRKey = function(evt) {
     var evt = (evt) ? evt : ((event) ? event : null);
     var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
     if ((evt.keyCode == 13) && (node.type=="text"))  {return false;}
   };
-  /**Exchange "tipsy" tooltips already attached to an element by
-   * something different. This has to be done the "hard" way: first
-   * unset data('tipsy') by setting it to null, then call the
-   * tipsy-constructor with the new values.
-   *
-   * @param[in] selector jQuery element selector
-   *
-   * @param[in] options Tipsy options
-   */
-  CAFEVDB.applyTipsy = function(selector, options) {
-    $(selector).data('tipsy', null); // remove any already installed stuff
-    $(selector).tipsy(options);      // make it new
-  };
-  
+
   CAFEVDB.urldecode = function(str) {
     // http://kevin.vanzonneveld.net
     // +   original by: Philip Peterson
@@ -272,68 +263,244 @@ var CAFEVDB = CAFEVDB || {};
 
   };
 
-  CAFEVDB.projectActions = function(select) {
+  CAFEVDB.exportMenu = function(containerSel = '#cafevdb-page-body') {
+    var container = $(containerSel);
+
+    // Emulate a pull-down menu with export options via the chosen
+    // plugin.
+    container.find('select.pme-export-choice').chosen({ disable_search:true });  
+    container.find('select.pme-export-choice').change(function (event) {
+      event.preventDefault();
+      
+      return CAFEVDB.tableExportMenu($(this));
+    });
     
-    // determine the export format
-    var selected = select.find('option:selected').val();
-    var values = select.attr('name');
-    var optionValues = selected.split('?');
+    container.find('select.pme-export-choice').on('chosen:showing_dropdown', function (chosen) {
+      container.find('ul.chosen-results li.active-result').tipsy({gravity:'w', fade:true});
+    });
+  }
 
-    selected = optionValues[0];
+  CAFEVDB.submitOuterPMEForm = function() {
+    // try a reload while saving data. This is in order to resolve
+    // inter-table dependencies like changed instrument lists and so
+    // on.
+    var outerForm = $('#cafevdb-page-body form.pme-form');
 
-    switch (selected) {
-    case 'events':
-      if ($('#events').dialog('isOpen') == true) {
-        $('#events').dialog('close').remove();
-      } else {
-        // We store the values in the name attribute as serialized
-        // string.
-        $.post(OC.filePath('cafevdb', 'ajax/events', 'events.php'),
-               values, CAFEVDB.Events.UI.init, 'json');
-      }
-      break;
-    case 'brief-instrumentation':
-    case 'detailed-instrumentation':
-    case 'project-instruments':
-    case 'sepa-debit-mandates':
-      values += '&Template='+selected;
-      values += '&headervisibility='+CAFEVDB.headervisibility;
-
-      CAFEVDB.formSubmit(OC.linkTo('cafevdb', 'index.php'), values, 'post');
-      break;
-    case 'profit-and-loss':
-    case 'project-files':
-      var url    = OC.linkTo('files', 'index.php');
-      var values = 'dir='+optionValues[1];
-
-      CAFEVDB.formSubmit(url, values, 'get');
-      break;
-    case 'project-wiki':
-      var url    = OC.linkTo('dokuwikiembed', 'index.php');
-      var values = 'wikiPath='+CAFEVDB.urlencode('/doku.php?id=')+optionValues[1];
-      CAFEVDB.formSubmit(url, values, 'post');
-      break;
-    default:
-      OC.dialogs.alert(t('cafevdb', 'Unknown operation:')
-                       +' "'+selected+'"',
-                       t('cafevdb', 'Unimplemented'));
+    var button = button = $(outerForm).find('input[name$="morechange"],'+
+                                            'input[name$="applyadd"],'+
+                                            'input[name$="applycopy"]');
+    if (button.length > 0) {
+      button.trigger('click');
+    } else {
+      // submit the outer form
+      outerForm.submit();
     }
+  }
+
+  /**Overload the phpMyEdit submit buttons in order to be able to
+   * display the single data-set display, edit, add and copy form in a
+   * popup.
+   *
+   * @param[in] options Object with additional params to the
+   * pme-table.php AJAX callback. Must at least contain the
+   * DisplayClass component.
+   *
+   * @param[in] callback Additional form validation callback. If
+   * callback also attaches handlers to the save, change etc. buttons
+   * then these should be attached as delegate event handlers to the
+   * pme-form. The event handlers installed by this functions are
+   * installed as delegate handlers at the #pme-table-dialog div.
+   */
+  CAFEVDB.pmeDialogHandlers = function(options, callback = function() { return false; }) {
     
-    // Cheating. In principle we mis-use this as a simple pull-down
-    // menu, so let the text remain at its default value. Make sure to
-    // also remove and re-attach the tool-tips, otherwise some of the
-    // tips remain, because chosen() removes the element underneath.
+    var containerSel = '#pme-table-dialog';
+    var container = $(containerSel);
+    var contentsChanged = false;
+
+    //////////////////////////
+    var cancelButton = $(container).find('input.pme-cancel');
+    cancelButton.off('click');
+    cancelButton.click(function(event) {
+      event.preventDefault();
+      container.dialog('close');
+
+      if (typeof options.modified !== 'undefined' && options.modified === true) {
+        CAFEVDB.submitOuterPMEForm();
+      }
+
+      return false;
+    });
     
-    select.find('option').removeAttr('selected');
-    $('.tipsy').remove();
+    //////////////////////////
+    var CAMButtonSel = 'input.pme-change,pme-apply,input.pme-more';
+    var changeMoreApplyButton = $(container).find(CAMButtonSel);
+    
+    // remove non-delegate handlers and stop default actions in any case.
+    changeMoreApplyButton.off('click');
+    changeMoreApplyButton.click(function(event) {
+      event.preventDefault();
+      return true; // allow bubble up
+    });
 
-    select.trigger("chosen:updated");
+    // install a delegate handler on the outer-most container which
+    // finally will run after possible inner data-validation handlers
+    // have been executed.
+    container.off('click', CAMButtonSel);
+    container.on(
+      'click',
+      CAMButtonSel,
+      function(event) {
+        if (!event.isDefaultPrevented()) {
+          event.preventDefault(); // neurotic me
+        }
 
-    $('div.chosen-container').tipsy({gravity:'sw', fade:true});
-    $('li.active-result').tipsy({gravity:'w', fade:true});
+        var post = $(container).find('form.pme-form').serialize();
+        post += '&' + $.param(options);
+        if (changeMoreApplyButton.length > 0) {
+          post += '&'+changeMoreApplyButton.attr('name')+'='+changeMoreApplyButton.attr('value');
+        }
+        $.post(OC.filePath('cafevdb', 'ajax/pme', 'pme-table.php'),
+               post,
+               function (data) {
+                 // error handling?
+                 if (data.status == 'success') {
+                   // remove the WYSIWYG editor, if any is attached
+                   CAFEVDB.removeEditor('textarea.tinymce');
 
-    return false;
+                   container.html(data.data.contents);
+
+                   // styling
+                   PHPMYEDIT.init('pme');
+
+                   // attach the WYSIWYG editor, if any
+                   CAFEVDB.addEditor('textarea.tinymce');
+
+                   // editors may cause additional resizing
+                   container.dialog('option', 'position', 
+                                    { my: "middle top+5%",
+                                      at: "middle bottom",
+                                      of: "#controls" });
+                                    
+                   // re-attach events
+                   options.modified = !changeMoreApplyButton.hasClass('pme-change');
+                   CAFEVDB.pmeDialogHandlers(options, callback);
+                 }
+               });
+        return false;
+      });
+
+    /**************************************************************************
+     *
+     * In "edit" mode submit the "more" action and reload the
+     * surrounding form. When not in edit mode the base form must be the same
+     * as the overlay form and a simple form submit should suffice, in principle.
+     * For "more add" we will have to adjust the logic
+     *
+     */
+    var saveButtonSel = 'input.pme-save';
+    var saveButton = $(container).find(saveButtonSel);
+    saveButton.off('click');
+    saveButton.click(function(event) {
+      event.preventDefault();
+      return true; // allow bubble up
+    });
+
+    container.off('click', saveButtonSel);
+    container.on(
+      'click',
+      saveButtonSel,
+      function(event) {
+                   
+        if (!event.isDefaultPrevented()) {
+          event.preventDefault(); // neurotic me
+        }
+
+        var applySelector =
+          'input[name$="morechange"],'+
+          'input[name$="applyadd"],'+
+          'input[name$="applycopy"]';
+        
+        var post = $(container).find('form.pme-form').serialize();
+        post += '&' + $.param(options);
+        var applyButton = container.find(applySelector);
+        if (applyButton.length > 0) {
+          post += '&'+applyButton.attr('name')+'='+applyButton.attr('value');
+        }
+        $.post(OC.filePath('cafevdb', 'ajax/pme', 'pme-table.php'),
+             post,
+             function (data) {
+               // error handling?
+               if (data.status == 'success') {
+                 container.dialog('close');
+                 
+                 CAFEVDB.submitOuterPMEForm();
+                 
+                 return false;
+               }
+             });
+      return false;
+    });
+
+    callback();
+
   };
+
+  /**Exchange "tipsy" tooltips already attached to an element by
+   * something different. This has to be done the "hard" way: first
+   * unset data('tipsy') by setting it to null, then call the
+   * tipsy-constructor with the new values.
+   *
+   * @param[in] selector jQuery element selector
+   *
+   * @param[in] options Tipsy options
+   */
+  CAFEVDB.applyTipsy = function(selector, options, container) {
+    if (typeof container !== undefined) {
+      container.find(selector).data('tipsy', null); // remove any already installed stuff
+      container.find(selector).tipsy(options);      // make it new
+    } else {
+      $(selector).data('tipsy', null); // remove any already installed stuff
+      $(selector).tipsy(options);      // make it new
+    }
+  };
+  
+  /**Initialize our tipsy stuff. Only exchange for our own thingies, of course.
+   */
+  CAFEVDB.tipsy = function(containerSel = '#cafevdb-page-body') {
+    var container = $(containerSel);
+
+    $.fn.tipsy.defaults.html = true;
+
+    // container.find('button.settings').tipsy({gravity:'ne', fade:true});
+    container.find('button.viewtoggle').tipsy({gravity:'ne', fade:true});
+    container.find('div.viewtoggle').tipsy({gravity:'se', fade:true});
+    container.find('select').tipsy({gravity:'w', fade:true});
+    container.find('div.chosen-container').tipsy({gravity:'sw', fade:true});
+    container.find('li.active-result').tipsy({gravity:'w', fade:true});
+    container.find('form.cafevdb-control input').tipsy({gravity:'nw', fade:true});
+    container.find('button.settings').tipsy({gravity:'ne', fade:true});
+    container.find('.pme-sort').tipsy({gravity: 'n', fade:true});
+    container.find('.pme-misc-check').tipsy({gravity: 'nw', fade:true});
+    container.find('label').tipsy({gravity:'se', fade:true});
+    container.find('.header-right img').tipsy({gravity:'ne', fade:true});
+    container.find('img').tipsy({gravity:'nw', fade:true});
+    container.find('button').tipsy({gravity:'w', fade:true});
+
+    CAFEVDB.applyTipsy('select[class|="pme-filter"]',
+                       {gravity:'n', fade:true, html:true, className:'tipsy-wide'},
+                       container);
+
+    CAFEVDB.applyTipsy('input[class|="pme-filter"]',
+                       {gravity:'n', fade:true, html:true, className:'tipsy-wide'},
+                       container);
+
+    CAFEVDB.applyTipsy('label[class$="memberstatus-label"]',
+                       {gravity:'n', fade:true, html:true, className:'tipsy-wide'},
+                       container);
+
+    container.find('textarea[class^="pme-input"]').tipsy(
+      {gravity:'sw', fade:true, html:true, className:'tipsy-wide'});
+  }
 
 })(window, jQuery, CAFEVDB);
 
@@ -353,90 +520,11 @@ $.extend({ alert: function (message, title) {
 }
 });
 
-// $.extend({
-//   confirm: function(message, title, action) {
-//     $("<div></div>").dialog({
-//       // Remove the closing 'X' from the dialog
-//       open: function(event, ui) {
-//         $(".ui-dialog-titlebar-close").hide();
-//         $(this).css({'max-height': 800, 'overflow-y': 'auto', 'height': 'auto'});
-//         $(this).dialog( "option", "resizable", false );
-//       }, 
-//       buttons: {
-//         'Yes': function() {
-//           $(this).dialog("close");
-//           action(true);
-//         },
-//         'No': function() {
-//           $(this).dialog("close");
-//           action(false);
-//         }
-//       },
-//       close: function(event, ui) { $(this).remove(); },
-//       resizable: false,
-//       title: title,
-//       modal: true,
-//       height: "auto"
-//     }).text(message);
-//   }
-// });
-
 $(document).ready(function(){
 
   document.onkeypress = CAFEVDB.stopRKey;
 
-  $.fn.tipsy.defaults.html = true;
-
-  // Emulate a pull-down menu with export options via the chosen
-  // plugin.
-  $('select.pme-export-choice').chosen({ disable_search:true });  
-  $('select.pme-export-choice').change(function (event) {
-    event.preventDefault();
-
-    return CAFEVDB.tableExportMenu($(this));
-  });
-
-  $('select.pme-export-choice').on('chosen:showing_dropdown', function (chosen) {
-    $('ul.chosen-results li.active-result').tipsy({gravity:'w', fade:true});
-  });
-
-  // emulate per-project action pull down menu via chosen
-  $('select.project-actions').chosen({ disable_search:true });
-  $('select.project-actions').change(function (event) {
-    event.preventDefault();
-
-    return CAFEVDB.projectActions($(this));
-  });  
-  $('select.project-actions').on('chosen:showing_dropdown', function (chosen) {
-    $('ul.chosen-results li.active-result').tipsy({gravity:'w', fade:true});
-  });
-
-  //    $('button.settings').tipsy({gravity:'ne', fade:true});
-  $('button.viewtoggle').tipsy({gravity:'ne', fade:true});
-  $('div.viewtoggle').tipsy({gravity:'se', fade:true});
-  $('select').tipsy({gravity:'w', fade:true});
-  $('div.chosen-container').tipsy({gravity:'sw', fade:true});
-  $('li.active-result').tipsy({gravity:'w', fade:true});
-  $('form.cafevdb-control input').tipsy({gravity:'nw', fade:true});
-  $('button.settings').tipsy({gravity:'ne', fade:true});
-  $('.pme-sort').tipsy({gravity: 'n', fade:true});
-  $('.pme-misc-check').tipsy({gravity: 'nw', fade:true});
-  $('label').tipsy({gravity:'se', fade:true});
-  $('.header-right img').tipsy({gravity:'ne', fade:true});
-  $('img').tipsy({gravity:'nw', fade:true});
-  $('button').tipsy({gravity:'w', fade:true});
-
-  CAFEVDB.applyTipsy('select[class|="pme-filter"]',
-                     {gravity:'n', fade:true, html:true, className:'tipsy-wide'});
-
-  CAFEVDB.applyTipsy('input[class|="pme-filter"]',
-                     {gravity:'n', fade:true, html:true, className:'tipsy-wide'});
-
-  CAFEVDB.applyTipsy('label[class$="memberstatus-label"]',
-                     {gravity:'n', fade:true, html:true, className:'tipsy-wide'});
-
-  $('textarea[class^="pme-input"]').tipsy(
-    {gravity:'sw', fade:true, html:true, className:'tipsy-wide'});
+  CAFEVDB.exportMenu();
 
   $('#personalsettings .generalsettings').on(
     'click keydown', function(event) {
@@ -522,11 +610,90 @@ $(document).ready(function(){
     width:'auto',
     height:'auto',
     resizable: false,
+    autoResize: true,
     position:{my:'left top',
               at:'left+1% bottom+10%',
               of:'form.pme-form'
              }
   });
+
+  // Open the PME display view in dialog mode
+  $('form#projectlabelcontrol').submit(function(event) {
+    event.preventDefault();
+    var self = $(this);
+    
+    var post = self.serialize();
+    post += '&DisplayClass=CAFEVDB\\Projects';
+
+    $.post(OC.filePath('cafevdb', 'ajax/pme', 'pme-table.php'),
+           post,
+           function (data) {
+             if (data.status == 'success') {
+               $('#dialog_holder').html('<div id="pme-table-dialog">'+data.data.contents+'</div>');
+             } else {
+               var info = '';
+               if (typeof data.data.message != 'undefined') {
+	         info = data.data.message;
+               } else {
+	         info = t('cafevdb', 'Unknown error :(');
+               }
+               if (typeof data.data.error != 'undefined' && data.data.error == 'exception') {
+	         info += '<p><pre>'+data.data.exception+'</pre>';
+	         info += '<p><pre>'+data.data.trace+'</pre>';
+               }
+               OC.dialogs.alert(info, t('cafevdb', 'Error'));
+             }
+             if (typeof data.data.debug != 'undefined') {
+               $('div.debug').html(data.data.debug);
+               $('div.debug').show();
+             }
+             var popup = $('#pme-table-dialog').dialog({
+               position: { my: "middle top+5%",
+                           at: "middle bottom",
+                           of: "#controls" },
+               width: 'auto',
+               height: 'auto',
+               modal: true,
+               closeOnEscape: false,
+               dialogClass: 'pme-table-dialog',
+               resizable: false,
+               open: function() {
+
+                 var dialog = this;
+
+                 CAFEVDB.pmeDialogHandlers(
+                   {
+                     DisplayClass: 'CAFEVDB\\Projects',
+                     ClassOptions: [],
+                     modified: false
+                   },
+                   function() {
+                     
+                     if (CAFEVDB.toolTips) {
+                       $.fn.tipsy.enable();
+                     } else {
+                       $.fn.tipsy.disable();
+                     }
+                     
+                     CAFEVDB.Projects.actionMenu('#pme-table-dialog');
+                     CAFEVDB.Projects.pmeFormInit('#pme-table-dialog');
+                     CAFEVDB.tipsy('#pme-table-dialog');                     
+
+                     $('#pme-table-dialog').height(
+                       $(dialog).height() - $(dialog).find('.ui-dialog-titlebar').outerHeight());
+                   });
+               },
+               close: function() {
+                 $('.tipsy').remove();
+                 var dialogHolder = $(this);
+                 dialogHolder.find('input.pme-cancel').trigger('click');
+                 dialogHolder.dialog('close');
+                 dialogHolder.dialog('destroy').remove();
+               },
+             });
+           });
+  });
+
 
 });
 

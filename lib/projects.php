@@ -317,7 +317,7 @@ class Projects
                                         'css'      => array('postfix' => 'projectextra'),
                                         'textarea' => array('css' => '',
                                                             'rows' => 1,
-                                                            'cols' => 128),
+                                                            'cols' => 80),
                                         'sort'     => false,
                                         'escape'   => false,
                                         'tooltip'  => L::t('Comma separates list of extra-fields, e.g.
