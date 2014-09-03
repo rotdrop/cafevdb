@@ -32,14 +32,19 @@ class Instruments
 {
   const CSS_PREFIX = 'cafevdb-page';
 
-  public function __construct()
+  public function __construct($execute = true)
   {
-    parent::__construct();
+    parent::__construct($execute);
+  }
+
+  public function shortTitle()
+  {
+    return L::t("Add new Instruments");
   }
 
   public function headerText()
   {
-    $header = L::t("Add new Instruments");
+    $header = $this->shortTitle();
 
     return '<div class="'.self::CSS_PREFIX.'-header-text">'.$header.'</div>';
   }
@@ -48,7 +53,6 @@ class Instruments
   public function display()
   {
     Config::init();
-
     global $debug_query;
     $debug_query = Util::debugMode('query');
 
@@ -82,14 +86,15 @@ class Instruments
       'Projekt' => $project,
       'ProjektId' => $projectId,
       'Template' => 'instruments',
+      'DisplayClass' => 'Instruments',
       'RecordsPerPage' => $recordsPerPage,
       'headervisibility' => Util::cgiValue('headervisibility', 'expanded'));
 
     // Name of field which is the unique key
-    $opts['key'] = 'Instrument';
+    $opts['key'] = 'Id';
 
     // Type of key field (int/real/string/date etc.)
-    $opts['key_type'] = 'string';
+    $opts['key_type'] = 'int';
 
     // Sorting field(s)
     $opts['sort_field'] = array('Sortierung');
@@ -179,6 +184,15 @@ class Instruments
        descriptions fields are also possible. Check documentation for this.
     */
 
+    $opts['fdd']['Id'] = array(
+      'name'     => 'Id',
+      'select'   => 'T',
+      'options'  => '', // auto increment
+      'maxlen'   => 11,
+      'default'  => '0',
+      'sort'     => true,
+      );
+
     $opts['fdd']['Instrument'] = array(
                                        'name'     => 'Instrument',
                                        'select'   => 'T',
@@ -220,7 +234,9 @@ class Instruments
     $opts['triggers']['update']['before']  = 'CAFEVDB\Instruments::beforeUpdateTrigger';
     $opts['triggers']['insert']['before']  = 'CAFEVDB\Instruments::beforeInsertTrigger';
 
-    new \phpMyEdit($opts);
+    $opts['execute'] = $this->execute;
+
+    $this->pme = new \phpMyEdit($opts);
   }
 
   /** phpMyEdit calls the trigger (callback) with the following arguments:
@@ -555,7 +571,7 @@ class Instruments
     $instruments[$checkers[0]] = mySQL::multiKeys('Musiker', 'Instrumente', $handle);
     $instruments[$checkers[1]]  =  mySQL::multiKeys('Besetzungen', 'Instrument', $handle);
 
-    $query = "SHOW COLUMNS FROM BesetzungsZahlen WHERE FIELD NOT LIKE 'ProjektId'";
+    $query = "SHOW COLUMNS FROM BesetzungsZahlen WHERE NOT FIELD IN ('Id','ProjektId')";
     $result = mySQL::query($query, $handle) or die("Couldn't execute query");
 
     $instruments[$checkers[2]] = array();

@@ -19,119 +19,14 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-$(document).ready(function(){
+var CAFEVDB = CAFEVDB || {};
 
-  // Enable the controls, in order not to bloat SQL queries these PME
-  // fields are flagged virtual which disables all controls initially.
-  $('#add-instruments-block select').removeAttr('disabled');
-  $('#add-instruments-block select').trigger('chosen:updated');
-
-  $('#add-instruments-button').click(function (event) {
-    event.preventDefault();
-    //$('#add-instruments-button').hide();
-    //$('#add-instruments-block div.chosen-container').show();
-    $('#add-instruments-block').dialog({
-      title: t('cafevdb', 'Change Project Instrumentation'),
-      dialogClass: 'cafevdb-project-instruments no-close',
-      modal: true,
-      closeOnEscape: false,
-      width: 'auto',
-      height: 'auto',
-      resizable: false,
-      buttons: [
-        { text: t('cafevdb', 'Save'),
-          class: 'save',
-          title: t('cafevdb', 'Save the new instrumentation and '+
-                   'continue adjusting the instrumentation numbers. '+
-                   'The input-form will reload and display the updated list of instruments.'),
-          click: function() {
-
-            var select = $('#add-instruments-block select');
-
-            OC.Notification.hide(function () {
-              $.post(OC.filePath('cafevdb', 'ajax/instruments', 'changeInstrumentation.php'),
-                     {
-                       projectId: $('input[name="ProjectId"]').val(),
-                       projectInstruments: select.val()
-                     },
-                     function (data) {
-                       var rqData;
-                       if (data.status == 'success') {
-                         rqData = data.data;
-                         if (rqData.message != '') {
-                           OC.Notification.show(rqData.message);
-                         }
-                       } else if (data.status == 'error') {
-                         rqData = data.data;
-                         if (rqData.error != 'exception') {
-                           if (rqData.message == '') {
-                             rqData.message = t('cafevdb', 'Unkown Error');
-                           }
-                           OC.Notification.show(rqData.message);
-                         } else {
-                           OC.dialogs.alert(rqData.exception+rqData.trace,
-                                            t('cafevdb', 'Caught a PHP Exception'),
-                                            null, true);
-                         }
-                       }
-                       // Oops. Perhaps only submit on success.
-                       setTimeout(function() {
-                         OC.Notification.hide(function() {
-                           // submit the form with the "right" button,
-                           // i.e. save any possible changes already
-                           // entered by the user. The form-submit
-                           // will then also reload with an up to date
-                           // list of instruments
-                           var button = $('input[name="PME_sys_morechange"]');
-                           button.off('click');
-                           button.trigger('click');
-                           // no need to close the dialog as the page
-                           // will be reloaded.
-                         });
-                       }, 800);
-                     }, 'json');
-            });
-          }
-        },
-        { text: t('cafevdb', 'Cancel'),
-          class: 'cancel',
-          title: t('cafevdb',
-                   'Discard the current choice of instruments and close the dialog. '+
-                   'The instrumentation of the project will remain unchanged.'),
-          click: function() {
-            $(this).dialog("close");          }
-        }
-      ],
-      open: function () {
-
-        $('button').tipsy({gravity:'ne', fade:true});
-        $('input').tipsy({gravity:'ne', fade:true});
-        $('label').tipsy({gravity:'ne', fade:true});
-        
-        if (CAFEVDB.toolTips) {
-          $.fn.tipsy.enable();
-        } else {
-          $.fn.tipsy.disable();
-        }
-
-        $('#add-instruments-block div.chosen-container').show();
-        $('#add-instruments-block div.chosen-container').trigger('blur');
-      },
-      close: function () {
-        $('.tipsy').remove(); // avoid orphan tooltips
-        $(this).dialog('destroy'); //.remove();
-      }
-    });
-  });
-
-  // Emulate a pull-down menu via chosen jQuery plugin
-  $('select.pme-instrumentation-actions-choice').chosen({ disable_search:true });  
-  $('select.pme-instrumentation-actions-choice').change(function (event) {
-    event.preventDefault();
-
-    //return CAFEVDB.tableExportMenu($(this));
-    var select = $(this);
-
+(function(window, $, CAFEVDB, undefined) {
+  'use strict';
+  var projectInstruments = function() {};
+  
+  projectInstruments.actions = function(select, container) {
+  
     var selected = select.find('option:selected').val();
     var values = select.attr('name');
     var optionValues = selected.split('?');
@@ -140,17 +35,17 @@ $(document).ready(function(){
 
     switch (selected) {
     case 'transpose':
-      var isTransposed = ($('input[name="Transpose"]').val() == 'transposed' ||
-                          $('#pme-transpose-up').hasClass('pme-transposed') ||
-                          $('#pme-transpose-down').hasClass('pme-transposed') ||
-                          $('#pme-transpose').hasClass('pme-transposed'));
-      var inhibitTranspose = $('input[name="InhibitTranspose"]').val() == 'true';
+      var isTransposed = (container.find('input[name="Transpose"]').val() == 'transposed' ||
+                          container.find('#pme-transpose-up').hasClass('pme-transposed') ||
+                          container.find('#pme-transpose-down').hasClass('pme-transposed') ||
+                          container.find('#pme-transpose').hasClass('pme-transposed'));
+      var inhibitTranspose = container.find('input[name="InhibitTranspose"]').val() == 'true';
       if (!inhibitTranspose) {
-        CAFEVDB.PME.maybeTranspose(!isTransposed);
+        PHPMYEDIT.maybeTranspose(!isTransposed, container);
       }
       break;
     case 'transfer-instruments':
-      post = optionValues[1];
+      var post = optionValues[1];
       OC.Notification.hide(function() {
         $.post(OC.filePath('cafevdb', 'ajax/instruments', 'adjustInstrumentation.php'),
                post,
@@ -177,7 +72,10 @@ $(document).ready(function(){
                  setTimeout(function() {
                    OC.Notification.hide(function() {
                      // Anyhow, reload and see what happens.
-                     $('form.pme-form').submit();
+                     if (!PHPMYEDIT.triggerSubmit('morechange')) {
+                       PHPMYEDIT.pseudoSubmit(container.find('form.pme-form'), $(),
+                                              PHPMYEDIT.container(container));
+                     }
                    });
                  }, 1000);
                });
@@ -212,13 +110,175 @@ $(document).ready(function(){
     } else {
       $.fn.tipsy.disable();
     }
-    
-    return false;
-  });
 
-  $('select.pme-instrumentation-actions-choice').on('chosen:showing_dropdown', function (chosen) {
-    $('ul.chosen-results li.active-result').tipsy({gravity:'w', fade:true});
-  });
+    return false;
+  };
+
+  // Emulate a pull-down menu via chosen jQuery plugin
+  projectInstruments.actionMenu = function(containerSel) {
+    var container = PHPMYEDIT.container(containerSel);
+    var actions = container.find('select.pme-instrumentation-actions-choice');
+
+    actions.chosen({ disable_search:true });  
+    actions.off('change'); // safeguard
+    actions.change(function (event) {
+      event.preventDefault();
+
+      return projectInstruments.actions($(this), container);
+    });
+
+    actions.off('chosen:showing_dropdown');
+    actions.on('chosen:showing_dropdown', function (chosen) {
+      container.find('ul.chosen-results li.active-result').tipsy({gravity:'w', fade:true});
+    });
+  };
+
+  projectInstruments.openAddInstrumentsDialog = function(selector) {
+    var container = PHPMYEDIT.container(selector);
+
+    //$('#add-instruments-button').hide();
+    //$('#add-instruments-block div.chosen-container').show();
+    container.find('#add-instruments-block').dialog({
+      title: t('cafevdb', 'Change Project Instrumentation'),
+      dialogClass: 'cafevdb-project-instruments no-close',
+      modal: true,
+      closeOnEscape: false,
+      width: 'auto',
+      height: 'auto',
+      resizable: false,
+      buttons: [
+        { text: t('cafevdb', 'Save'),
+          class: 'save',
+          title: t('cafevdb', 'Save the new instrumentation and '+
+                   'continue adjusting the instrumentation numbers. '+
+                   'The input-form will reload and display the updated list of instruments.'),
+          click: function() {
+            var self = this;
+
+            var projectId = container.find('input[name="ProjectId"]').val();
+            var recordId = -1;
+            if (!projectId) {
+              recordId = container.find('input[name="PME_sys_rec"]').val();
+              projectId = -1;
+            }
+            OC.Notification.hide(function () {
+              $.post(OC.filePath('cafevdb', 'ajax/instruments', 'changeInstrumentation.php'),
+                     {
+                       projectId: projectId,
+                       recordId: recordId,
+                       projectInstruments: $(self).find('select').val()
+                     },
+                     function (data) {
+                       var rqData;
+                       if (data.status == 'success') {
+                         rqData = data.data;
+                         if (rqData.message != '') {
+                           OC.Notification.show(rqData.message);
+                         }
+                         // Oops. Perhaps only submit on success.
+                         setTimeout(function() {
+                           OC.Notification.hide(function() {
+                             // Close the dialog
+                             $(self).dialog("close");
+
+                             // submit the form with the "right" button,
+                             // i.e. save any possible changes already
+                             // entered by the user. The form-submit
+                             // will then also reload with an up to date
+                             // list of instruments
+                             PHPMYEDIT.triggerSubmit('morechange', container);
+                           });
+                         }, 800);
+
+                       } else if (data.status == 'error') {
+                         rqData = data.data;
+                         if (rqData.error != 'exception') {
+                           if (rqData.message == '') {
+                             rqData.message = t('cafevdb', 'Unkown Error');
+                           }
+                           OC.Notification.show(rqData.message);
+                         } else {
+                           OC.dialogs.alert(rqData.exception+rqData.trace,
+                                            t('cafevdb', 'Caught a PHP Exception'),
+                                            null, true);
+                         }
+                         if (rqData.debug != '') {
+                           OC.dialogs.alert(rqData.debug, t('cafevdb', 'Debug Information'), null, true);
+                         }
+                       }
+                     }, 'json');
+            });
+
+            return false;
+          }
+        },
+        { text: t('cafevdb', 'Cancel'),
+          class: 'cancel',
+          title: t('cafevdb',
+                   'Discard the current choice of instruments and close the dialog. '+
+                   'The instrumentation of the project will remain unchanged.'),
+          click: function() {
+            $(this).dialog("close");
+          }
+        }
+      ],
+      open: function () {
+
+        $('button').tipsy({gravity:'ne', fade:true});
+        $('input').tipsy({gravity:'ne', fade:true});
+        $('label').tipsy({gravity:'ne', fade:true});
+        
+        if (CAFEVDB.toolTips) {
+          $.fn.tipsy.enable();
+        } else {
+          $.fn.tipsy.disable();
+        }
+
+        container.find('#add-instruments-block div.chosen-container').show();
+        container.find('#add-instruments-block div.chosen-container').trigger('blur');
+      },
+      close: function () {
+        $('.tipsy').remove(); // avoid orphan tooltips
+        $(this).dialog('destroy'); //.remove();
+      }
+    });
+  };
+
+  projectInstruments.ready = function(selector) {
+    var container = PHPMYEDIT.container(selector);
+
+    var self = this;
+
+    // Enable the controls, in order not to bloat SQL queries these PME
+    // fields are flagged virtual which disables all controls initially.
+    container.find('#add-instruments-block select').removeAttr('disabled');
+    container.find('#add-instruments-block select').trigger('chosen:updated');
+
+    container.find('#add-instruments-button').off('click');
+    container.find('#add-instruments-button').click(function(event) {
+      event.preventDefault();
+
+      self.openAddInstrumentsDialog(container);
+
+      return false;
+    });
+    this.actionMenu(container);
+  }
+
+  CAFEVDB.projectInstruments = projectInstruments;
+  
+})(window, jQuery, CAFEVDB);
+
+$(document).ready(function(){
+
+  PHPMYEDIT.addTableLoadCallback('ProjectInstruments',
+                                 {
+                                   callback: CAFEVDB.projectInstruments.ready,
+                                   context: CAFEVDB.projectInstruments,
+                                   parameters: []
+                                 });
+
+  CAFEVDB.projectInstruments.ready();
 
 });
 

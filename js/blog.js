@@ -115,13 +115,13 @@ CAFEVDB = CAFEVDB || {};
     event.preventDefault();
     //$('#blogtextarea').tinymce().save();
     var popupValue = 0;
-    if ($('#blogpopupset').attr('checked')) {
+    if ($('#blogpopupset').attr('checked') !== undefined) {
       popupValue = 1;
-    } else if ($('#blogpopupclear').attr('checked')) {
+    } else if ($('#blogpopupclear').attr('checked') !== undefined) {
       popupValue = -1;
     }
     var clearReaderValue = 0;
-    if ($('#blogreaderclear').attr('checked')) {
+    if ($('#blogreaderclear').attr('checked') !== undefined) {
       clearReaderValue = 1;
     } else {
       clearReaderValue = 0;

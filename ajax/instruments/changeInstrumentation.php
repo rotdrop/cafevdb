@@ -6,32 +6,47 @@ use CAFEVDB\Util;
 use CAFEVDB\Error;
 use CAFEVDB\Projects;
 use CAFEVDB\Instruments;
+use CAFEVDB\ProjectInstruments;
 use CAFEVDB\mySQL;
 
 
 \OCP\JSON::checkLoggedIn();
 \OCP\JSON::checkAppEnabled('cafevdb');
 \OCP\JSON::callCheck();
+  
+$handle = false;
 
 try {
 
+  ob_start();
+  
   Error::exceptions(true);
   
   Config::init();
-
-  unset($_GET);
+  $handle = mySQL::connect(Config::$pmeopts);
+  
+  $_GET = array();
 
   $debugText = '';
   $messageText = '';
 
+  $recordId = Util::cgiValue('recordId', -1);
   $projectId = Util::cgiValue('projectId', -1);
   $projectInstruments = Util::cgiValue('projectInstruments', false);
 
   if (Util::debugMode('request')) {
     $debugText .= '$_POST[] = '.print_r($_POST, true);
   }
-  
-  if ($projectId < 0) {
+
+  $idPair = ProjectInstruments::fetchIdPair($recordId, $projectId);
+  $recordId = $idPair['recordId'];
+  $projectId = $idPair['projectId'];
+
+  if ($projectId <= 0) {
+    mySQL::close($handle);
+    $debugText .= ob_get_contents();
+    @ob_end_clean();
+
     OCP\JSON::error(
       array(
         'data' => array('error' => L::t("missing arguments"),
@@ -40,12 +55,13 @@ try {
     return false;
   }
 
-  $handle = mySQL::connect(Config::$pmeopts);
-
   // Is it valid?
   $projectName = Projects::fetchName($projectId, $handle);
   if (!is_string($projectName)) {
     mySQL::close($handle);
+    $debugText .= ob_get_contents();
+    @ob_end_clean();
+
     OCP\JSON::error(
       array(
         'data' => array('error' => L::t("invalid project"),
@@ -58,6 +74,10 @@ try {
   
   // instrument list should be an array
   if ($projectInstruments === false || !is_array($projectInstruments)) {
+    mySQL::close($handle);
+    $debugText .= ob_get_contents();
+    @ob_end_clean();
+
     OCP\JSON::error(
       array(
         'data' => array('error' => L::t('invalid arguments'),
@@ -71,6 +91,10 @@ try {
   $allInstruments = Instruments::fetch($handle);
   $instrumentDiff = array_diff($projectInstruments, $allInstruments);
   if (count($instrumentDiff) != 0) {
+    mySQL::close($handle);
+    $debugText .= ob_get_contents();
+    @ob_end_clean();
+
     OCP\JSON::error(
       array(
         'data' => array('error' => L::t('invalid arguments'),
@@ -83,13 +107,21 @@ try {
   // ok, we have a valid project, a valid intrument list, let it go    
   $query = "UPDATE `Projekte` SET `Besetzung`='".implode(',',$projectInstruments)."' WHERE `Id` = $projectId";
   if (mySQL::query($query, $handle) === false) {
+    mySQL::close($handle);
+    $debugText .= ob_get_contents();
+    @ob_end_clean();
+
     OCP\JSON::error(
       array(
         'data' => array('error' => L::t('data base error'),
                         'message' => L::t('Failed to update in project instrumentation'),
-                        'debug' => $debugText)));
+                        'debug' => $debugText.$query)));
     return false;
   } else {
+    mySQL::close($handle);
+    $debugText .= ob_get_contents();
+    @ob_end_clean();
+
     OCP\JSON::success(
       array(
         'data' => array(
@@ -102,6 +134,12 @@ try {
 
 } catch (\Exception $e) {
 
+  if ($handle !== false) {
+    mySQL::close($handle);
+  }
+  $debugText .= ob_get_contents();
+  @ob_end_clean();
+
   // For whatever reason we need to entify quotes, otherwise jquery throws an error.
   OCP\JSON::error(
     array(
@@ -110,7 +148,9 @@ try {
         'message' => L::t('Error, caught an exception'),
         'debug' => $debugText,
         'exception' => $e->getMessage(),
-        'trace' => $e->getTraceAsString())));
+        'trace' => $e->getTraceAsString(),
+        'debug' => $debugText)));
+
   return false;
 
 }

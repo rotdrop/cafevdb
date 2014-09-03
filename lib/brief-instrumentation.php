@@ -36,9 +36,14 @@ class BriefInstrumentation
     parent::__construct($execute);
   }
 
+  public function shortTitle()
+  {
+    return L::t("Instrumentation for Project `%s'", array($this->project));
+  }
+
   public function headerText()
   {
-    $header = L::t("Instrumentation for Project `%s'", array($this->project)).'
+    $header = $this->shortTitle().'
     <p>
       <ul>
         <li><span style="color:red">'.L::t("Add Musicians").'</span>
@@ -102,6 +107,7 @@ class BriefInstrumentation
       'ProjectId' => $projectId,
       'Template' => 'brief-instrumentation',
       'Table' => $opts['tb'],
+      'DisplayClass' => 'BriefInstrumentation',
       'RecordsPerPage' => $recordsPerPage,
       'headervisibility' => Util::cgiValue('headervisibility','expanded'));
 
@@ -266,7 +272,7 @@ class BriefInstrumentation
                                         'select'   => 'T',
                                         'maxlen'   => 65535,
                                         'css'      => array('postfix' => 'remarks'),
-                                        'textarea' => array('css' => Config::$opts['editor'],
+                                        'textarea' => array('css' => 'wysiwygeditor',
                                                             'rows' => 5,
                                                             'cols' => 50),
                                         'escape' => false,

@@ -1537,7 +1537,7 @@ __EOT__;
   </tr>
   <tr>
     <td class="body">'.L::t('Message-Body').'</td>
-    <td colspan="2"><textarea name="txtDescription" class="'.Config::$opts['editor'].'" cols="20" rows="4" id="txtDescription">'.$this->message.'</textarea></td>
+    <td colspan="2"><textarea name="txtDescription" class="wysiwygeditor" cols="20" rows="4" id="txtDescription">'.$this->message.'</textarea></td>
   </tr>
   <tr>
     <td>'.L::t('Sender-Name').'</td>

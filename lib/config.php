@@ -101,7 +101,7 @@ memberTable
                                                            'enabled' => true),
                                         // ckeditor still uses excessive inline js-code. NOGO.
                                         'ckeditor' => array('name' => 'CKEditor',
-                                                            'enabled' => false)
+                                                            'enabled' => true)
     );
   public static $expertmode = false;
   public static $debug = array('general' => false,
@@ -658,6 +658,7 @@ memberTable
     //self::$pmeopts['labels']['Sort Field'] = 'Sortierfeld';
 
     self::$pmeopts['css']['textarea'] = '';
+    //self::$pmeopts['css']['position'] = true;
     self::$opts['editor'] = self::getUserValue('wysiwygEditor', 'tinymce');
 
     self::$opts['phpmyadmin'] = 'https://ch.homelinux.net:8888/phpmyadmin/index.php?user=camerata&db=camerata';

@@ -25,7 +25,7 @@ use CAFEVDB\Config;
 ?>
 <div id="blogedit">
   <form id="blogeditform">
-    <textarea class="<?php echo Config::$opts['editor'];?>" id="blogtextarea" rows="15" cols="66"></textarea>
+    <textarea class="wysiwygeditor" id="blogtextarea" rows="15" cols="66"></textarea>
     <br/>
     <input
       type="button"

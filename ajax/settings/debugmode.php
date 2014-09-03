@@ -11,7 +11,7 @@ OCP\JSON::checkLoggedIn();
 OCP\JSON::checkAppEnabled('cafevdb');
 OCP\JSON::callCheck();
 
-unset($_GET);
+$_GET = array();
 
 $debugModes = Util::cgiValue('debugModes', array());
 

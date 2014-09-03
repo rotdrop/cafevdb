@@ -43,30 +43,10 @@ if ($project != '') {
   $nav .= Navigation::button('all');
 }
 
-if ($projectId >= 0) {
-  $xferStatus = $table->transferInstruments();
-  $xferStatus = $xferStatus ? L::t('Success!') : '';
-  $xferButton = '
-<div>
-  <br/>
-  <table id="transfer-instruments">
-    <TR>
-      <TD>'
-.Navigation::button('transfer-instruments', $project, $projectId).
-     '</TD>
-      <TD><span>'.$xferStatus.'</span></TD
-    </TR>
-  </TABLE>
-</div>';
-} else {
-  $xferButton = '';
-}
-
-
 echo $this->inc('part.common.header',
                 array('css-prefix' => $css_pfx,
                       'navigationcontrols' => $nav,
-                      'header' => $table->headerText()."\n".$xferButton));
+                      'header' => $table->headerText()));
 
 // Issue the main part. The method will "echo itself"
 $table->display();

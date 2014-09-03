@@ -11,7 +11,8 @@ OCP\JSON::checkLoggedIn();
 OCP\JSON::checkAppEnabled('cafevdb');
 OCP\JSON::callCheck();
 
-unset($_GET);
+$_GET = array();
+
 $expertmode = Util::cgiValue('expertmode', 'off');
 Config::setUserValue('expertmode', $expertmode);
 OCP\JSON::success(array('data' => array('message' => L::t("Expertmode changed to `%s'",

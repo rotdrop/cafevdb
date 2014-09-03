@@ -132,7 +132,7 @@ var CAFEVDB = CAFEVDB || {};
 	    }
 	});
     };
-    Photo.loadPhoto = function(recordId, imageClass, imageSize) {
+    Photo.loadPhoto = function(recordId, imageClass, imageSize, callback) {
 	var self = CAFEVDB.Photo;
         if (typeof recordId !== 'undefined') {
             self.recordId = recordId;
@@ -173,6 +173,9 @@ var CAFEVDB = CAFEVDB || {};
 	    wrapper.css('width', $(this).get(0).width + 10);
 	    wrapper.removeClass('loading').removeClass('wait');
 	    $(this).insertAfter($('#phototools')).fadeIn();
+            if (typeof callback == 'function') {
+                callback();                
+            }
 	}).error(function () {
 	    // notify the user that the image could not be loaded
 	    OC.dialogs.alert(t('cafevdb', 'Could not open image.'), t('cafevdb', 'Error'));
@@ -375,24 +378,7 @@ var CAFEVDB = CAFEVDB || {};
 	    $.fileUpload(event.originalEvent.dataTransfer.files);
 	});
     };
-    
-    CAFEVDB.Photo = Photo;
-
-})(window, jQuery, CAFEVDB);
-
-$(document).ready(function() {
-    var recordId   = $('input[name="RecordId"]').val();
-    var imageClass = $('input[name="ImagePHPClass"]').val();
-    if (typeof recordId !== 'undefined' && typeof imageClass != 'undefined') {
-        var imageSize = $('input[name="ImageSize"]').val();
-        if (typeof imageSize == 'undefined') {
-             imageSize = 400;
-        }
-        CAFEVDB.Photo.loadHandlers();
-        CAFEVDB.Photo.loadPhoto(recordId, imageClass, imageSize);
-    }
-
-    $(function() {
+    Photo.uploadDragDrop = function() {
 	// Upload function for dropped contact photos files. Should go in the Contacts class/object.
 	$.fileUpload = function(files){
 	    var file = files[0];
@@ -439,8 +425,65 @@ $(document).ready(function() {
 	    xhr.setRequestHeader('Content-Type', file.type);
 	    xhr.send(file);
 	}
-    });
+    };
 
+    /**The document-ready handler, should also be called after
+     * dynamically injecting html that needs the image upload
+     * functionality.
+     */
+    Photo.ready = function(recordId, callback) {
+        var idField = $('#file_upload_form input[name="RecordId"]');
+        if (typeof recordId == 'undefined') {
+            recordId = idField.val();
+        } else {
+            idField.val(recordId);
+        }
+        var imageClass = $('#file_upload_form input[name="ImagePHPClass"]').val();
+        if (typeof recordId !== 'undefined' && typeof imageClass != 'undefined' && recordId >= 0) {
+            var imageSize = $('input[name="ImageSize"]').val();
+            if (typeof imageSize == 'undefined') {
+                imageSize = 400;
+            }
+            this.loadHandlers();
+            this.loadPhoto(recordId, imageClass, imageSize, callback);
+        }
+        $(this.uploadDragDrop);
+    };
+
+    Photo.popup = function(containerSel) {
+        var container = $(containerSel);
+        var overlay = $('<div id="photooverlay" style="width:auto;height:auto;"><div/>');
+        var img = container.find('img');
+        overlay.html(img);        
+        var popup = overlay.dialog({
+            title: t('cafevdb', 'Photo Zoom'),
+            position: { my: "middle top+5%",
+                        at: "middle bottom",
+                        of: "#controls" },
+            width: 'auto',
+            height: 'auto',
+            modal: true,
+            closeOnEscape: false,
+            dialogClass: 'photo-zoom',
+            resizable: false,
+            open: function() {
+            },
+            close: function() {
+                var dialogHolder = $(this);
+                container.html(img);
+                dialogHolder.dialog('close');
+                dialogHolder.dialog('destroy').remove();
+            },
+        });
+    };
+    
+    CAFEVDB.Photo = Photo;
+
+})(window, jQuery, CAFEVDB);
+
+$(document).ready(function() {
+
+    CAFEVDB.Photo.ready();
 
 });
 

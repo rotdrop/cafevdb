@@ -28,10 +28,23 @@ var CAFEVDB = CAFEVDB || {};
   CAFEVDB.wysiwygEditor    = 'tinymce';
   CAFEVDB.language         = 'en';
 
-  CAFEVDB.addEditor = function(selector) {
+  CAFEVDB.addEditor = function(selector, initCallback) {
+    if (typeof initCallback === 'undefined') {
+      initCallback = function() {};
+    }
+    var editorElement;
+    if (selector instanceof jQuery) {
+      editorElement = selector;
+    } else {
+      editorElement = $(selector);
+    }
+    if (!editorElement.length) {
+      initCallback();
+      return;
+    }
     switch (this.wysiwygEditor) {
     case 'ckeditor':
-      $(selector).ckeditor(function() {}, {/*enterMode:CKEDITOR.ENTER_P*/});
+      editorElement.ckeditor(initCallback, {/*enterMode:CKEDITOR.ENTER_P*/});
       break;
     case 'tinymce':
       $(document).on('focusin', function(e) {
@@ -39,26 +52,46 @@ var CAFEVDB = CAFEVDB || {};
 	  e.stopImmediatePropagation();
 	}
       });
-      var mceConfig = myTinyMCE.config;
-      //mceConfig.inline = true;
-      $(selector).tinymce(mceConfig);
+      var mceConfig = myTinyMCE.getConfig(
+        {
+          setup: function(editor) {
+            myTinyMCE.config.setup(editor);
+          },
+        });
+      editorElement.tinymce(mceConfig);
+      // post-render callback? This is really quere. There is
+      // something really broken with the tinzMCE setup.
+      setTimeout(initCallback, 500);
       break;
     default:
-      $(selector).ckeditor(function() {}, {/*enterMode:CKEDITOR.ENTER_P*/});
+      editorElement.ckeditor(initCallback, {/*enterMode:CKEDITOR.ENTER_P*/});
       break;
     };
   };
 
   CAFEVDB.removeEditor = function(selector) {
+    var editorElement;
+    if (selector instanceof jQuery) {
+      editorElement = selector;
+    } else {
+      editorElement = $(selector);
+    }
+    if (!editorElement.length) {
+      return;
+    }
     switch (this.wysiwygEditor) {
     case 'ckeditor':
-      $(selector).ckeditor().remove();
+      if (editorElement.ckeditor) {
+        editorElement.ckeditor().remove()
+      }
       break;
     case 'tinymce':
-      $(selector).tinymce().remove();
+      editorElement.tinymce().remove();
       break;
     default:
-      $(selector).ckeditor().remove();
+      if (editorElement.ckeditor) {
+        editorElement.ckeditor().remove()
+      }
       break;
     };
   };
@@ -263,7 +296,10 @@ var CAFEVDB = CAFEVDB || {};
 
   };
 
-  CAFEVDB.exportMenu = function(containerSel = '#cafevdb-page-body') {
+  CAFEVDB.exportMenu = function(containerSel) {
+    if (typeof containerSel === 'undefined') {
+      containerSel = '#cafevdb-page-body';
+    }
     var container = $(containerSel);
 
     // Emulate a pull-down menu with export options via the chosen
@@ -279,171 +315,6 @@ var CAFEVDB = CAFEVDB || {};
       container.find('ul.chosen-results li.active-result').tipsy({gravity:'w', fade:true});
     });
   }
-
-  CAFEVDB.submitOuterPMEForm = function() {
-    // try a reload while saving data. This is in order to resolve
-    // inter-table dependencies like changed instrument lists and so
-    // on.
-    var outerForm = $('#cafevdb-page-body form.pme-form');
-
-    var button = button = $(outerForm).find('input[name$="morechange"],'+
-                                            'input[name$="applyadd"],'+
-                                            'input[name$="applycopy"]');
-    if (button.length > 0) {
-      button.trigger('click');
-    } else {
-      // submit the outer form
-      outerForm.submit();
-    }
-  }
-
-  /**Overload the phpMyEdit submit buttons in order to be able to
-   * display the single data-set display, edit, add and copy form in a
-   * popup.
-   *
-   * @param[in] options Object with additional params to the
-   * pme-table.php AJAX callback. Must at least contain the
-   * DisplayClass component.
-   *
-   * @param[in] callback Additional form validation callback. If
-   * callback also attaches handlers to the save, change etc. buttons
-   * then these should be attached as delegate event handlers to the
-   * pme-form. The event handlers installed by this functions are
-   * installed as delegate handlers at the #pme-table-dialog div.
-   */
-  CAFEVDB.pmeDialogHandlers = function(options, callback = function() { return false; }) {
-    
-    var containerSel = '#pme-table-dialog';
-    var container = $(containerSel);
-    var contentsChanged = false;
-
-    //////////////////////////
-    var cancelButton = $(container).find('input.pme-cancel');
-    cancelButton.off('click');
-    cancelButton.click(function(event) {
-      event.preventDefault();
-      container.dialog('close');
-
-      if (typeof options.modified !== 'undefined' && options.modified === true) {
-        CAFEVDB.submitOuterPMEForm();
-      }
-
-      return false;
-    });
-    
-    //////////////////////////
-    var CAMButtonSel = 'input.pme-change,pme-apply,input.pme-more';
-    var changeMoreApplyButton = $(container).find(CAMButtonSel);
-    
-    // remove non-delegate handlers and stop default actions in any case.
-    changeMoreApplyButton.off('click');
-    changeMoreApplyButton.click(function(event) {
-      event.preventDefault();
-      return true; // allow bubble up
-    });
-
-    // install a delegate handler on the outer-most container which
-    // finally will run after possible inner data-validation handlers
-    // have been executed.
-    container.off('click', CAMButtonSel);
-    container.on(
-      'click',
-      CAMButtonSel,
-      function(event) {
-        if (!event.isDefaultPrevented()) {
-          event.preventDefault(); // neurotic me
-        }
-
-        var post = $(container).find('form.pme-form').serialize();
-        post += '&' + $.param(options);
-        if (changeMoreApplyButton.length > 0) {
-          post += '&'+changeMoreApplyButton.attr('name')+'='+changeMoreApplyButton.attr('value');
-        }
-        $.post(OC.filePath('cafevdb', 'ajax/pme', 'pme-table.php'),
-               post,
-               function (data) {
-                 // error handling?
-                 if (data.status == 'success') {
-                   // remove the WYSIWYG editor, if any is attached
-                   CAFEVDB.removeEditor('textarea.tinymce');
-
-                   container.html(data.data.contents);
-
-                   // styling
-                   PHPMYEDIT.init('pme');
-
-                   // attach the WYSIWYG editor, if any
-                   CAFEVDB.addEditor('textarea.tinymce');
-
-                   // editors may cause additional resizing
-                   container.dialog('option', 'position', 
-                                    { my: "middle top+5%",
-                                      at: "middle bottom",
-                                      of: "#controls" });
-                                    
-                   // re-attach events
-                   options.modified = !changeMoreApplyButton.hasClass('pme-change');
-                   CAFEVDB.pmeDialogHandlers(options, callback);
-                 }
-               });
-        return false;
-      });
-
-    /**************************************************************************
-     *
-     * In "edit" mode submit the "more" action and reload the
-     * surrounding form. When not in edit mode the base form must be the same
-     * as the overlay form and a simple form submit should suffice, in principle.
-     * For "more add" we will have to adjust the logic
-     *
-     */
-    var saveButtonSel = 'input.pme-save';
-    var saveButton = $(container).find(saveButtonSel);
-    saveButton.off('click');
-    saveButton.click(function(event) {
-      event.preventDefault();
-      return true; // allow bubble up
-    });
-
-    container.off('click', saveButtonSel);
-    container.on(
-      'click',
-      saveButtonSel,
-      function(event) {
-                   
-        if (!event.isDefaultPrevented()) {
-          event.preventDefault(); // neurotic me
-        }
-
-        var applySelector =
-          'input[name$="morechange"],'+
-          'input[name$="applyadd"],'+
-          'input[name$="applycopy"]';
-        
-        var post = $(container).find('form.pme-form').serialize();
-        post += '&' + $.param(options);
-        var applyButton = container.find(applySelector);
-        if (applyButton.length > 0) {
-          post += '&'+applyButton.attr('name')+'='+applyButton.attr('value');
-        }
-        $.post(OC.filePath('cafevdb', 'ajax/pme', 'pme-table.php'),
-             post,
-             function (data) {
-               // error handling?
-               if (data.status == 'success') {
-                 container.dialog('close');
-                 
-                 CAFEVDB.submitOuterPMEForm();
-                 
-                 return false;
-               }
-             });
-      return false;
-    });
-
-    callback();
-
-  };
 
   /**Exchange "tipsy" tooltips already attached to an element by
    * something different. This has to be done the "hard" way: first
@@ -466,7 +337,10 @@ var CAFEVDB = CAFEVDB || {};
   
   /**Initialize our tipsy stuff. Only exchange for our own thingies, of course.
    */
-  CAFEVDB.tipsy = function(containerSel = '#cafevdb-page-body') {
+  CAFEVDB.tipsy = function(containerSel) {
+    if (typeof containerSel === 'undefined') {
+      containerSel = '#cafevdb-page-body';
+    }
     var container = $(containerSel);
 
     $.fn.tipsy.defaults.html = true;
@@ -485,6 +359,20 @@ var CAFEVDB = CAFEVDB || {};
     container.find('.header-right img').tipsy({gravity:'ne', fade:true});
     container.find('img').tipsy({gravity:'nw', fade:true});
     container.find('button').tipsy({gravity:'w', fade:true});
+
+    // original tipsy stuff
+    container.find('.displayName .action').tipsy({gravity:'se', fade:true, live:true});
+    container.find('.password .action').tipsy({gravity:'se', fade:true, live:true});
+    container.find('#upload').tipsy({gravity:'w', fade:true});
+    container.find('.selectedActions a').tipsy({gravity:'s', fade:true, live:true});
+    container.find('a.action.delete').tipsy({gravity:'e', fade:true, live:true});
+    container.find('a.action').tipsy({gravity:'s', fade:true, live:true});
+    container.find('td .modified').tipsy({gravity:'s', fade:true, live:true});
+    container.find('td.lastLogin').tipsy({gravity:'s', fade:true, html:true});
+    container.find('input').tipsy({gravity:'w', fade:true});
+
+    // everything else.
+    container.find('.tip').tipsy({gravity:'w', fade:true});
 
     CAFEVDB.applyTipsy('select[class|="pme-filter"]',
                        {gravity:'n', fade:true, html:true, className:'tipsy-wide'},
@@ -567,20 +455,6 @@ $(document).ready(function(){
     return false;
   });
 
-  $(':button[class$="sepa-debit-mandate"]').click(function(event) {
-    event.preventDefault();
-    if ($('#sepa-debit-mandate-dialog').dialog('isOpen') == true) {
-      $('#sepa-debit-mandate-dialog').dialog('close').remove();
-    } else {
-      // We store the values in the name attribute as serialized
-      // string.
-      var values = $(this).attr('name');
-      $.post(OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-mandate.php'),
-             values, CAFEVDB.SepaDebitMandate.init, 'json');
-    }
-    return false;
-  });
-
   $(':button.register-musician').click(function(event) {
     event.preventDefault();
     var values = $(this).attr('name');
@@ -617,83 +491,13 @@ $(document).ready(function(){
              }
   });
 
-  // Open the PME display view in dialog mode
-  $('form#projectlabelcontrol').submit(function(event) {
+  $('form#projectlabelcontrol :submit').click(function(event) {
     event.preventDefault();
-    var self = $(this);
-    
-    var post = self.serialize();
-    post += '&DisplayClass=CAFEVDB\\Projects';
 
-    $.post(OC.filePath('cafevdb', 'ajax/pme', 'pme-table.php'),
-           post,
-           function (data) {
-             if (data.status == 'success') {
-               $('#dialog_holder').html('<div id="pme-table-dialog">'+data.data.contents+'</div>');
-             } else {
-               var info = '';
-               if (typeof data.data.message != 'undefined') {
-	         info = data.data.message;
-               } else {
-	         info = t('cafevdb', 'Unknown error :(');
-               }
-               if (typeof data.data.error != 'undefined' && data.data.error == 'exception') {
-	         info += '<p><pre>'+data.data.exception+'</pre>';
-	         info += '<p><pre>'+data.data.trace+'</pre>';
-               }
-               OC.dialogs.alert(info, t('cafevdb', 'Error'));
-             }
-             if (typeof data.data.debug != 'undefined') {
-               $('div.debug').html(data.data.debug);
-               $('div.debug').show();
-             }
-             var popup = $('#pme-table-dialog').dialog({
-               position: { my: "middle top+5%",
-                           at: "middle bottom",
-                           of: "#controls" },
-               width: 'auto',
-               height: 'auto',
-               modal: true,
-               closeOnEscape: false,
-               dialogClass: 'pme-table-dialog',
-               resizable: false,
-               open: function() {
+    PHPMYEDIT.tableDialog($(this.form), $(this));
 
-                 var dialog = this;
-
-                 CAFEVDB.pmeDialogHandlers(
-                   {
-                     DisplayClass: 'CAFEVDB\\Projects',
-                     ClassOptions: [],
-                     modified: false
-                   },
-                   function() {
-                     
-                     if (CAFEVDB.toolTips) {
-                       $.fn.tipsy.enable();
-                     } else {
-                       $.fn.tipsy.disable();
-                     }
-                     
-                     CAFEVDB.Projects.actionMenu('#pme-table-dialog');
-                     CAFEVDB.Projects.pmeFormInit('#pme-table-dialog');
-                     CAFEVDB.tipsy('#pme-table-dialog');                     
-
-                     $('#pme-table-dialog').height(
-                       $(dialog).height() - $(dialog).find('.ui-dialog-titlebar').outerHeight());
-                   });
-               },
-               close: function() {
-                 $('.tipsy').remove();
-                 var dialogHolder = $(this);
-                 dialogHolder.find('input.pme-cancel').trigger('click');
-                 dialogHolder.dialog('close');
-                 dialogHolder.dialog('destroy').remove();
-               },
-             });
-           });
+    return false;
   });
-
 
 });
 

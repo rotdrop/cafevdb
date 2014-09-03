@@ -22,6 +22,55 @@
 
 $(document).ready(function(){
 
+    PHPMYEDIT.addTableLoadCallback('BriefInstrumentation',
+                                   {
+                                       callback: function(selector) {
+                                           CAFEVDB.exportMenu(selector);
+                                           $(selector).find('input.pme-email').addClass('formsubmit');
+                                           CAFEVDB.SepaDebitMandate.popupInit(selector);
+                                       },
+                                       context: CAFEVDB,
+                                       parameters: []
+                                   });
+
+    PHPMYEDIT.addTableLoadCallback('DetailedInstrumentation',
+                                   {
+                                       callback: function(selector) {
+                                           CAFEVDB.exportMenu(selector);
+                                           $(selector).find('input.pme-email').addClass('formsubmit');
+                                       },
+                                       context: CAFEVDB,
+                                       parameters: []
+                                   });
+
+    PHPMYEDIT.addTableLoadCallback('Musicians',
+                                   {
+                                       callback: function(selector, resizeCB) {
+                                           var container = $(selector);
+                                           CAFEVDB.exportMenu(selector);
+                                           container.find('input.pme-email').addClass('formsubmit');
+                                           container.find('input.pme-bulkcommit').addClass('formsubmit');
+                                           if (container.find('#file_upload_target').length > 0) {
+                                               var idField = $(selector).find('input[name="PME_data_Id"]');
+                                               var recordId = -1;
+                                               if (idField.length > 0) {
+                                                   recordId = idField.val();
+                                               }
+                                               CAFEVDB.Photo.ready(recordId, resizeCB);
+                                           }
+                                           container.find('span.photo').click(function(event) {
+                                               event.preventDefault();
+                                               CAFEVDB.Photo.popup(this);
+                                               return false;
+                                           });
+                                       },
+                                       context: CAFEVDB,
+                                       parameters: []
+                                   });
+
+    $(PHPMYEDIT.defaultSelector+' input.pme-email').addClass('formsubmit');
+    $(PHPMYEDIT.defaultSelector+' input.pme-bulkcommit').addClass('formsubmit');
+
     CAFEVDB.tipsy();
     
     if (CAFEVDB.toolTips) {

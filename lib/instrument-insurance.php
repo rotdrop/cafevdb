@@ -79,9 +79,14 @@ class InstrumentInsurance
     mySQL::close($handle);
   }
 
-  public function headerText()
+  public function shortTitle()
   {
     return L::t('Overview over the Bulk Instrument Insurances');
+  }
+  
+  public function headerText()
+  {
+    return $this->shortTitle();
   }
 
   /**Display the list of all musicians. If $projectMode == true,
@@ -132,6 +137,7 @@ class InstrumentInsurance
       'ProjectId' => $projectId,
       'MusicianId' => $musicianId,
       'Template' => 'instrument-insurance',
+      'DisplayClass' => 'InstrumentInsurance',
       'Table' => $opts['tb'],
       'headervisibility' => $headervisibility);
 

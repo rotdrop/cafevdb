@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-30 16:08+0200\n"
+"POT-Creation-Date: 2014-09-02 15:15+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -43,11 +43,11 @@ msgid "Blog entry with id `%s' could not be retrieved."
 msgstr ""
 
 #: ajax/blog/editentry.php:101 ajax/blog/modifyentry.php:146
-#: ajax/events/events.php:97 ajax/events/execute.php:130
+#: ajax/events/events.php:120 ajax/events/execute.php:130
 #: ajax/events/new.form.php:195 ajax/events/sendmail.php:76
-#: ajax/finance/sepa-debit-mandate.php:131
+#: ajax/finance/sepa-debit-mandate.php:151
 #: ajax/instruments/adjustInstrumentation.php:86
-#: ajax/instruments/changeInstrumentation.php:110
+#: ajax/instruments/changeInstrumentation.php:110 ajax/pme/pme-table.php:92
 #: ajax/projects/verifyName.php:131
 msgid "Error, caught an exception"
 msgstr ""
@@ -136,9 +136,9 @@ msgstr ""
 msgid "Not enough storage available"
 msgstr ""
 
-#: ajax/events/events.php:39 ajax/events/execute.php:39
+#: ajax/events/events.php:62 ajax/events/execute.php:39
 #: ajax/events/new.form.php:53 ajax/events/sendmail.php:33
-#: ajax/finance/sepa-debit-mandate.php:39
+#: ajax/finance/sepa-debit-mandate.php:59
 msgid "Project-id and/or name not set"
 msgstr ""
 
@@ -191,16 +191,16 @@ msgstr ""
 msgid "%s-detailed"
 msgstr ""
 
-#: ajax/export/excel.php:260 lib/projects.php:986 lib/projects.php:987
+#: ajax/export/excel.php:260 lib/projects.php:994 lib/projects.php:995
 msgid "Missing Musicians"
 msgstr ""
 
 #: ajax/export/excel.php:285 ajax/export/insurance-export.php:142
-#: lib/projects.php:989
+#: lib/projects.php:997
 msgid "Instrument"
 msgstr ""
 
-#: ajax/export/excel.php:286 lib/projects.php:989
+#: ajax/export/excel.php:286 lib/projects.php:997
 msgid "Missing"
 msgstr ""
 
@@ -252,37 +252,37 @@ msgstr ""
 msgid "false"
 msgstr ""
 
-#: ajax/finance/sepa-debit-delete.php:28
-#: ajax/finance/sepa-debit-settings.php:28
-#: ajax/finance/sepa-debit-store.php:28
+#: ajax/finance/sepa-debit-delete.php:40
+#: ajax/finance/sepa-debit-settings.php:40
+#: ajax/finance/sepa-debit-store.php:40
 #, php-format
 msgid "Required information `%s' not provided."
 msgstr ""
 
-#: ajax/finance/sepa-debit-delete.php:39
+#: ajax/finance/sepa-debit-delete.php:51
 msgid "SEPA debit mandate deleted from data-base."
 msgstr ""
 
-#: ajax/finance/sepa-debit-delete.php:44
+#: ajax/finance/sepa-debit-delete.php:56
 msgid "Unable to delete SEPA debit mandate from data-base."
 msgstr ""
 
-#: ajax/finance/sepa-debit-mandate.php:50
+#: ajax/finance/sepa-debit-mandate.php:70
 msgid "Musician-id and/or name not set"
 msgstr ""
 
-#: ajax/finance/sepa-debit-mandate.php:62
-#: ajax/finance/sepa-debit-settings.php:38 settings.php:94
+#: ajax/finance/sepa-debit-mandate.php:82
+#: ajax/finance/sepa-debit-settings.php:50 settings.php:94
 msgid "ClubMembers"
 msgstr ""
 
-#: ajax/finance/sepa-debit-settings.php:59
+#: ajax/finance/sepa-debit-settings.php:71
 #, php-format
 msgid "Failed setting `%s' to `%s'."
 msgstr ""
 
-#: ajax/finance/sepa-debit-settings.php:71
-#: ajax/finance/sepa-debit-settings.php:186 ajax/settings/app-settings.php:835
+#: ajax/finance/sepa-debit-settings.php:83
+#: ajax/finance/sepa-debit-settings.php:198 ajax/settings/app-settings.php:835
 #: ajax/settings/app-settings.php:856 ajax/settings/app-settings.php:871
 #: ajax/settings/app-settings.php:906 ajax/settings/app-settings.php:945
 #: ajax/settings/app-settings.php:969 ajax/settings/app-settings.php:981
@@ -290,37 +290,37 @@ msgstr ""
 msgid "Value for `%s' set to `%s'."
 msgstr ""
 
-#: ajax/finance/sepa-debit-settings.php:104 ajax/settings/app-settings.php:914
+#: ajax/finance/sepa-debit-settings.php:116 ajax/settings/app-settings.php:914
 #, php-format
 msgid "Invalid IBAN: `%s'."
 msgstr ""
 
-#: ajax/finance/sepa-debit-settings.php:107 ajax/settings/app-settings.php:917
+#: ajax/finance/sepa-debit-settings.php:119 ajax/settings/app-settings.php:917
 msgid "Perhaps you meant"
 msgstr ""
 
-#: ajax/finance/sepa-debit-settings.php:114 ajax/settings/app-settings.php:924
+#: ajax/finance/sepa-debit-settings.php:126 ajax/settings/app-settings.php:924
 msgid "or"
 msgstr ""
 
-#: ajax/finance/sepa-debit-settings.php:141
-#: ajax/finance/sepa-debit-settings.php:168
-#: ajax/finance/sepa-debit-store.php:52 ajax/finance/sepa-debit-store.php:63
+#: ajax/finance/sepa-debit-settings.php:153
+#: ajax/finance/sepa-debit-settings.php:180
+#: ajax/finance/sepa-debit-store.php:64 ajax/finance/sepa-debit-store.php:75
 #: ajax/settings/app-settings.php:992
 #, php-format
 msgid "Value for `%s' invalid: `%s'."
 msgstr ""
 
-#: ajax/finance/sepa-debit-settings.php:177
+#: ajax/finance/sepa-debit-settings.php:189
 #: ajax/settings/app-settings.php:1052
 msgid "Unhandled request:"
 msgstr ""
 
-#: ajax/finance/sepa-debit-store.php:72
+#: ajax/finance/sepa-debit-store.php:84
 msgid "SEPA debit mandate stored in data-base."
 msgstr ""
 
-#: ajax/finance/sepa-debit-store.php:77
+#: ajax/finance/sepa-debit-store.php:89
 msgid "Unable to store SEPA debit mandate in data-base."
 msgstr ""
 
@@ -402,7 +402,7 @@ msgid "Temporary file: '%s' has gone AWOL?"
 msgstr ""
 
 #: ajax/instruments/adjustInstrumentation.php:32
-#: ajax/instruments/changeInstrumentation.php:37
+#: ajax/instruments/changeInstrumentation.php:37 ajax/pme/pme-table.php:58
 #: ajax/projects/verifyName.php:92
 msgid "missing arguments"
 msgstr ""
@@ -438,7 +438,7 @@ msgid "Adjusting the instrumentation for project `%s' was probably successful."
 msgstr ""
 
 #: ajax/instruments/changeInstrumentation.php:63
-#: ajax/instruments/changeInstrumentation.php:76
+#: ajax/instruments/changeInstrumentation.php:76 ajax/pme/pme-table.php:67
 msgid "invalid arguments"
 msgstr ""
 
@@ -462,6 +462,14 @@ msgstr ""
 #: ajax/instruments/changeInstrumentation.php:96
 #, php-format
 msgid "Changing the instrumentation for project `%s' was probably successful."
+msgstr ""
+
+#: ajax/pme/pme-table.php:59
+msgid "No class name submitted."
+msgstr ""
+
+#: ajax/pme/pme-table.php:68
+msgid "Class arguments are not an array"
 msgstr ""
 
 #: ajax/projects/verifyName.php:26
@@ -798,7 +806,7 @@ msgstr ""
 msgid "Invalid request"
 msgstr ""
 
-#: ajax/settings/expertmode.php:17
+#: ajax/settings/expertmode.php:18
 #, php-format
 msgid "Expertmode changed to `%s'"
 msgstr ""
@@ -825,18 +833,18 @@ msgstr ""
 msgid "Unknown WYSIWYG-Editor: `%s'"
 msgstr ""
 
-#: index.php:180 lib/musicians.php:168
+#: index.php:183 lib/musicians.php:168
 #, php-format
 msgid "Add all to %s"
 msgstr ""
 
 #: js/blog.js:46 js/blog.js:146 js/blog.js:207 js/blog.js:235 js/blog.js:260
-#: js/blog.js:298 js/email.js:44 js/email.js:77 js/events.js:64
-#: js/events.js:116 js/inlineimage.js:84 js/inlineimage.js:92
+#: js/blog.js:298 js/cafevdb.js:699 js/email.js:44 js/email.js:77
+#: js/events.js:64 js/events.js:116 js/inlineimage.js:84 js/inlineimage.js:92
 #: js/inlineimage.js:102 js/inlineimage.js:131 js/inlineimage.js:155
 #: js/inlineimage.js:178 js/inlineimage.js:196 js/inlineimage.js:315
-#: js/inlineimage.js:410 js/inlineimage.js:419 js/inlineimage.js:422
-#: js/sepa-debit-mandate.js:62
+#: js/inlineimage.js:393 js/inlineimage.js:402 js/inlineimage.js:405
+#: js/pme.js:152 js/sepa-debit-mandate.js:62
 msgid "Error"
 msgstr ""
 
@@ -873,16 +881,17 @@ msgstr ""
 msgid "Mark this popup as read; the popup will not show up again."
 msgstr ""
 
-#: js/cafevdb.js:236
+#: js/cafevdb.js:256
 msgid "Export to the following format is not yet supported:"
 msgstr ""
 
-#: js/cafevdb.js:238 js/cafevdb.js:319 js/project-instruments.js:189
+#: js/cafevdb.js:258 js/project-instruments.js:87 js/projects.js:89
 msgid "Unimplemented"
 msgstr ""
 
-#: js/cafevdb.js:317 js/project-instruments.js:187
-msgid "Unknown operation:"
+#: js/cafevdb.js:693 js/events.js:58 js/events.js:110 js/pme.js:146
+#: js/sepa-debit-mandate.js:56
+msgid "Unknown error :("
 msgstr ""
 
 #: js/calendar.js:234
@@ -909,11 +918,11 @@ msgstr ""
 msgid "Unknown location"
 msgstr ""
 
-#: js/config.php:28 lib/config.php:168
+#: js/config.php:29 lib/config.php:168
 msgid "Select a filter option."
 msgstr ""
 
-#: js/config.php:29 js/config.php:36 lib/config.php:169 lib/config.php:176
+#: js/config.php:30 js/config.php:36 lib/config.php:169 lib/config.php:176
 msgid "No values match."
 msgstr ""
 
@@ -927,7 +936,7 @@ msgstr ""
 msgid "Select an option."
 msgstr ""
 
-#: js/config.php:38 lib/config.php:178
+#: js/config.php:37 lib/config.php:178
 msgid ""
 "Select from the pull-down menu. The pull-down can be closed by clicking "
 "anywhere outside the menu."
@@ -947,10 +956,6 @@ msgstr ""
 
 #: js/events.js:48
 msgid "Do you really want to detach this event from the current project?"
-msgstr ""
-
-#: js/events.js:58 js/events.js:110 js/sepa-debit-mandate.js:56
-msgid "Unknown error :("
 msgstr ""
 
 #: js/events.js:265
@@ -982,7 +987,7 @@ msgstr ""
 msgid "No files selected for upload."
 msgstr ""
 
-#: js/inlineimage.js:92 js/inlineimage.js:400
+#: js/inlineimage.js:92 js/inlineimage.js:383
 msgid ""
 "The file you are trying to upload exceed the maximum size for file uploads "
 "on this server."
@@ -1000,7 +1005,7 @@ msgstr ""
 msgid "Ok"
 msgstr ""
 
-#: js/inlineimage.js:262 js/project-instruments.js:96 lib/email.php:1594
+#: js/inlineimage.js:262 js/project-instruments.js:208 lib/email.php:1594
 #: templates/blogedit.php:39
 msgid "Cancel"
 msgstr ""
@@ -1017,49 +1022,57 @@ msgstr ""
 msgid "Select image"
 msgstr ""
 
-#: js/inlineimage.js:400
+#: js/inlineimage.js:383
 msgid "Upload too large"
 msgstr ""
 
-#: js/inlineimage.js:404
+#: js/inlineimage.js:387
 msgid "Only image files can be used as profile picture."
 msgstr ""
 
-#: js/inlineimage.js:404
+#: js/inlineimage.js:387
 msgid "Wrong file type"
 msgstr ""
 
-#: js/inlineimage.js:410
+#: js/inlineimage.js:393
 msgid ""
 "Your browser doesn't support AJAX upload. Please click on the profile "
 "picture to select a photo to upload."
 msgstr ""
 
-#: js/project-instruments.js:34
+#: js/project-instruments.js:63 js/project-instruments.js:190
+msgid "Unkown Error"
+msgstr ""
+
+#: js/project-instruments.js:68 js/project-instruments.js:195
+#: js/projects.js:197
+msgid "Caught a PHP Exception"
+msgstr ""
+
+#: js/project-instruments.js:85 js/projects.js:87
+msgid "Unknown operation:"
+msgstr ""
+
+#: js/project-instruments.js:142
 msgid "Change Project Instrumentation"
 msgstr ""
 
-#: js/project-instruments.js:42 js/sepa-debit-mandate.js:99
+#: js/project-instruments.js:150 js/sepa-debit-mandate.js:99
 msgid "Save"
 msgstr ""
 
-#: js/project-instruments.js:44
+#: js/project-instruments.js:152
 msgid ""
 "Save the new instrumentation and continue adjusting the instrumentation "
 "numbers. The input-form will reload and display the updated list of "
 "instruments."
 msgstr ""
 
-#: js/project-instruments.js:68 js/project-instruments.js:168
-msgid "Unkown Error"
+#: js/project-instruments.js:199
+msgid "Debug Information"
 msgstr ""
 
-#: js/project-instruments.js:73 js/project-instruments.js:173
-#: js/projects.js:110
-msgid "Caught a PHP Exception"
-msgstr ""
-
-#: js/project-instruments.js:99
+#: js/project-instruments.js:211
 msgid ""
 "Discard the current choice of instruments and close the dialog. The "
 "instrumentation of the project will remain unchanged."
@@ -1163,7 +1176,7 @@ msgstr ""
 msgid "General Personal Data"
 msgstr ""
 
-#: lib/brief-instrumentation.php:53 lib/functions.php:763 lib/projects.php:640
+#: lib/brief-instrumentation.php:53 lib/functions.php:773 lib/projects.php:648
 msgid "Detailed Instrumentation"
 msgstr ""
 
@@ -1270,7 +1283,7 @@ msgstr ""
 msgid "and"
 msgstr ""
 
-#: lib/email.php:1452 lib/projects.php:630 lib/projects.php:791
+#: lib/email.php:1452 lib/projects.php:638 lib/projects.php:799
 msgid "Events"
 msgstr ""
 
@@ -1486,140 +1499,140 @@ msgstr ""
 msgid "Miscellaneous Calendars"
 msgstr ""
 
-#: lib/functions.php:118
+#: lib/functions.php:119
 #, php-format
 msgid "Invalid argument value: `%s'"
 msgstr ""
 
-#: lib/functions.php:516
+#: lib/functions.php:526
 msgid "Export Table"
 msgstr ""
 
-#: lib/functions.php:524
+#: lib/functions.php:534
 msgid "Excel Export"
 msgstr ""
 
-#: lib/functions.php:527
+#: lib/functions.php:537
 msgid "HTML/Spreadsheet"
 msgstr ""
 
-#: lib/functions.php:530
+#: lib/functions.php:540
 msgid "CSV Export"
 msgstr ""
 
-#: lib/functions.php:533
+#: lib/functions.php:543
 msgid "HTML Export"
 msgstr ""
 
-#: lib/functions.php:666
+#: lib/functions.php:676
 msgid "Error: Unknonwn Button Type"
 msgstr ""
 
-#: lib/functions.php:689
+#: lib/functions.php:699
 msgid "View all Projects"
 msgstr ""
 
-#: lib/functions.php:690
+#: lib/functions.php:700
 msgid "Overview over all known projects (start-page)."
 msgstr ""
 
-#: lib/functions.php:702
+#: lib/functions.php:712
 msgid "Display all Musicians"
 msgstr ""
 
-#: lib/functions.php:703
+#: lib/functions.php:713
 msgid ""
 "Display all musicians stored in the data-base, with detailed facilities for "
 "filtering and sorting."
 msgstr ""
 
-#: lib/functions.php:715
+#: lib/functions.php:725
 msgid ""
 "Mass-email form, use with care. Mass-emails will be logged. Recipients will "
 "be specified by the Bcc: field in the header, so the recipients are "
 "undisclosed to each other."
 msgstr ""
 
-#: lib/functions.php:729
+#: lib/functions.php:739
 msgid "Email History"
 msgstr ""
 
-#: lib/functions.php:730
+#: lib/functions.php:740
 msgid "Display all emails sent by our mass-email form."
 msgstr ""
 
-#: lib/functions.php:748
+#: lib/functions.php:758
 msgid "The currently active project."
 msgstr ""
 
-#: lib/functions.php:764 lib/tooltips.php:250
+#: lib/functions.php:774 lib/tooltips.php:250
 msgid ""
 "Detailed display of all registered musicians for the selected project. The "
 "table will allow for modification of personal data like email, phone, "
 "address etc."
 msgstr ""
 
-#: lib/functions.php:778 lib/projects.php:636
+#: lib/functions.php:788 lib/projects.php:644
 msgid "Brief Instrumentation"
 msgstr ""
 
-#: lib/functions.php:779
+#: lib/functions.php:789
 msgid ""
 "Brief display of all registered musicians for the selected project. The "
 "table will allow for modification of project specific data, like the "
 "instrument, the project-fee etc."
 msgstr ""
 
-#: lib/functions.php:793 lib/project-instruments.php:348
+#: lib/functions.php:803 lib/project-instruments.php:359
 msgid "Add Instruments"
 msgstr ""
 
-#: lib/functions.php:794
+#: lib/functions.php:804
 msgid ""
 "Display the list of instruments known by the data-base, possibly add new "
 "ones as needed."
 msgstr ""
 
-#: lib/functions.php:808 lib/project-instruments.php:59 lib/projects.php:644
+#: lib/functions.php:818 lib/project-instruments.php:58 lib/projects.php:652
 msgid "Instrumentation Numbers"
 msgstr ""
 
-#: lib/functions.php:809 lib/tooltips.php:263
+#: lib/functions.php:819 lib/tooltips.php:263
 msgid ""
 "Display the desired instrumentaion numbers, i.e. how many musicians are "
 "already registered for each instrument group and how many are finally needed."
 msgstr ""
 
-#: lib/functions.php:823
+#: lib/functions.php:833
 msgid "Add more Musicians"
 msgstr ""
 
-#: lib/functions.php:824
+#: lib/functions.php:834
 msgid ""
 "List of all musicians NOT registered for the selected project. Only through "
 "that table a new musician can enter a project. Look for a hyper-link "
 "Add_to_PROJECT"
 msgstr ""
 
-#: lib/functions.php:838
+#: lib/functions.php:848
 msgid "Transfer Instruments from Musicians"
 msgstr ""
 
-#: lib/functions.php:854
+#: lib/functions.php:864
 msgid "Insurances"
 msgstr ""
 
-#: lib/functions.php:855
+#: lib/functions.php:865
 msgid ""
 "Display a table with an overview about the current state of the member's "
 "instrument insurances."
 msgstr ""
 
-#: lib/functions.php:867
+#: lib/functions.php:877
 msgid "Debit Mandates"
 msgstr ""
 
-#: lib/functions.php:868
+#: lib/functions.php:878
 msgid "Display a table with an overview over all SEPA debit mandates."
 msgstr ""
 
@@ -1903,23 +1916,25 @@ msgstr ""
 msgid "Instrumentation Numbers for `%s'"
 msgstr ""
 
-#: lib/project-instruments.php:61
+#: lib/project-instruments.php:66
 msgid ""
 "The target instrumentation numbers can be filled into this table. The `have'-"
 "numbers are the numbers of the musicians already registered for the project."
+"In order to transfer the instruments of the already registerd musicions into "
+"this table click the `Adjust Instrument' option from the `Actions' menu."
 msgstr ""
 
-#: lib/project-instruments.php:235 lib/project-instruments.php:424
-#: lib/projects.php:259 lib/projects.php:264
+#: lib/project-instruments.php:246 lib/project-instruments.php:435
+#: lib/projects.php:266 lib/projects.php:271
 msgid "Actions"
 msgstr ""
 
-#: lib/project-instruments.php:236 lib/project-instruments.php:443
+#: lib/project-instruments.php:247 lib/project-instruments.php:454
 #: templates/expertmode.php:51
 msgid "Adjust Instruments"
 msgstr ""
 
-#: lib/project-instruments.php:230
+#: lib/project-instruments.php:241
 #, php-format
 msgid ""
 "Keine Besetzung für das Projekt gefunden, bitte bei den <A\n"
@@ -1928,31 +1943,31 @@ msgid ""
 "``registrierten'' Musiker automatisch eintragen lassen."
 msgstr ""
 
-#: lib/project-instruments.php:238
+#: lib/project-instruments.php:249
 msgid "Instrumentation-Numbers not Found"
 msgstr ""
 
-#: lib/project-instruments.php:307 lib/projects.php:238
+#: lib/project-instruments.php:318 lib/projects.php:245
 msgid "Projekt-Name"
 msgstr ""
 
-#: lib/project-instruments.php:352
+#: lib/project-instruments.php:363
 msgid "Change Instrumentation"
 msgstr ""
 
-#: lib/project-instruments.php:353
+#: lib/project-instruments.php:364
 msgid "Click to add instruments to the project"
 msgstr ""
 
-#: lib/project-instruments.php:370
+#: lib/project-instruments.php:381
 msgid "target"
 msgstr ""
 
-#: lib/project-instruments.php:378
+#: lib/project-instruments.php:389
 msgid "have"
 msgstr ""
 
-#: lib/project-instruments.php:436
+#: lib/project-instruments.php:447
 msgid "Transpose"
 msgstr ""
 
@@ -1961,17 +1976,17 @@ msgstr ""
 msgid "%s Projects"
 msgstr ""
 
-#: lib/projects.php:79
+#: lib/projects.php:84
 msgid ""
 "Please click on the project-name of the respective project in order to edit "
 "the instrumentation list or dates or to store other project related data."
 msgstr ""
 
-#: lib/projects.php:250
+#: lib/projects.php:257
 msgid "Append the year to the name"
 msgstr ""
 
-#: lib/projects.php:323
+#: lib/projects.php:331
 msgid ""
 "Comma separates list of extra-fields, e.g.\n"
 "<blockquote>\n"
@@ -2001,54 +2016,54 @@ msgid ""
 "a comma."
 msgstr ""
 
-#: lib/projects.php:349
+#: lib/projects.php:357
 msgid "Flyer"
 msgstr ""
 
-#: lib/projects.php:650
+#: lib/projects.php:658
 msgid "Project Wiki Page"
 msgstr ""
 
-#: lib/projects.php:654
+#: lib/projects.php:662
 msgid "Project Files"
 msgstr ""
 
-#: lib/projects.php:660
+#: lib/projects.php:668
 msgid "SEPA Debit Mandates"
 msgstr ""
 
-#: lib/projects.php:664
+#: lib/projects.php:672
 msgid "Profit and Loss Account"
 msgstr ""
 
-#: lib/projects.php:1167
+#: lib/projects.php:1175
 msgid ""
 "Flyers can only be added to existing projects, please add the new\n"
 "project without a flyer first."
 msgstr ""
 
-#: lib/projects.php:1182
+#: lib/projects.php:1190
 #, php-format
 msgid "Drop image to upload (max %s)"
 msgstr ""
 
-#: lib/projects.php:1185
+#: lib/projects.php:1193
 msgid "Delete current flyer"
 msgstr ""
 
-#: lib/projects.php:1186
+#: lib/projects.php:1194
 msgid "Edit current flyer"
 msgstr ""
 
-#: lib/projects.php:1187
+#: lib/projects.php:1195
 msgid "Upload new flyer"
 msgstr ""
 
-#: lib/projects.php:1188
+#: lib/projects.php:1196
 msgid "Select image from ownCloud"
 msgstr ""
 
-#: lib/projects.php:1196
+#: lib/projects.php:1204
 msgid ""
 "Internal error, don't know what to do concerning project-flyers in the given "
 "context."
@@ -3224,7 +3239,7 @@ msgstr ""
 msgid "owner of the orchestra's bank account"
 msgstr ""
 
-#: templates/orchestra-settings.php:83 templates/sepa-debit-mandate.php:32
+#: templates/orchestra-settings.php:83 templates/sepa-debit-mandate.php:52
 msgid "owner of bank account"
 msgstr ""
 
@@ -3232,7 +3247,7 @@ msgstr ""
 msgid "Optional BLZ of the orchestra's bank account"
 msgstr ""
 
-#: templates/orchestra-settings.php:89 templates/sepa-debit-mandate.php:38
+#: templates/orchestra-settings.php:89 templates/sepa-debit-mandate.php:58
 msgid "BLZ of bank account"
 msgstr ""
 
@@ -3242,7 +3257,7 @@ msgid ""
 "then please first enter the BLZ"
 msgstr ""
 
-#: templates/orchestra-settings.php:95 templates/sepa-debit-mandate.php:44
+#: templates/orchestra-settings.php:95 templates/sepa-debit-mandate.php:64
 msgid "IBAN or no. of bank account"
 msgstr ""
 
@@ -3250,7 +3265,7 @@ msgstr ""
 msgid "Optional BIC of the orchestra's bank account"
 msgstr ""
 
-#: templates/orchestra-settings.php:101 templates/sepa-debit-mandate.php:50
+#: templates/orchestra-settings.php:101 templates/sepa-debit-mandate.php:70
 msgid "BIC of bank account"
 msgstr ""
 
@@ -3310,71 +3325,67 @@ msgstr ""
 msgid "Minimize or maximize the containing block."
 msgstr ""
 
-#: templates/project-instruments.php:48
-msgid "Success!"
-msgstr ""
-
-#: templates/sepa-debit-mandate.php:6
+#: templates/sepa-debit-mandate.php:26
 #, php-format
 msgid "SEPA Debit Mandate of %s"
 msgstr ""
 
-#: templates/sepa-debit-mandate.php:14
+#: templates/sepa-debit-mandate.php:34
 msgid "Type: "
 msgstr ""
 
-#: templates/sepa-debit-mandate.php:14
+#: templates/sepa-debit-mandate.php:34
 msgid "nonrecurring"
 msgstr ""
 
-#: templates/sepa-debit-mandate.php:14
+#: templates/sepa-debit-mandate.php:34
 msgid "permanent"
 msgstr ""
 
-#: templates/sepa-debit-mandate.php:19
+#: templates/sepa-debit-mandate.php:39
 #, php-format
 msgid "Mandate-Reference: %s"
 msgstr ""
 
-#: templates/sepa-debit-mandate.php:31
+#: templates/sepa-debit-mandate.php:51
 msgid "owner of the bank account, probably same as musician"
 msgstr ""
 
-#: templates/sepa-debit-mandate.php:37
+#: templates/sepa-debit-mandate.php:57
 msgid "Optional BLZ of the musician's bank account"
 msgstr ""
 
-#: templates/sepa-debit-mandate.php:43
+#: templates/sepa-debit-mandate.php:63
 msgid ""
 "IBAN or number of the bank account. If this is a account number, then please "
 "first enter the BLZ"
 msgstr ""
 
-#: templates/sepa-debit-mandate.php:49
+#: templates/sepa-debit-mandate.php:69
 msgid "Optional BIC of the account"
 msgstr ""
 
-#: templates/sepa-debit-mandate.php:51
+#: templates/sepa-debit-mandate.php:71
 msgid "Date issued:"
 msgstr ""
 
-#: templates/sepa-debit-mandate.php:56
+#: templates/sepa-debit-mandate.php:76
 msgid "Date of mandate grant"
 msgstr ""
 
-#: templates/sepa-debit-mandate.php:57
+#: templates/sepa-debit-mandate.php:77
 msgid "mandate date"
 msgstr ""
 
-#: templates/sepa-debit-mandate.php:59
+#: templates/sepa-debit-mandate.php:79
 msgid "Date of last usage:"
 msgstr ""
 
-#: templates/sepa-debit-mandate.php:65
+#: templates/sepa-debit-mandate.php:85
 msgid "Date of last usage of debit-mandate"
 msgstr ""
 
-#: templates/sepa-debit-mandate.php:66
+#: templates/sepa-debit-mandate.php:86
 msgid "last used date"
 msgstr ""
 

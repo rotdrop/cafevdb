@@ -103,6 +103,7 @@ class Error
     if ($on === true) {
       if (!self::$exceptionsActive) {
         \set_error_handler('CAFEVDB\Error::exceptions_error_handler');
+        // \register_shutdown_function('CAFEVDB\Error::fatal_error_handler');
         self::$exceptionsActive = true;
       }
       return true;
@@ -119,10 +120,19 @@ class Error
     }
   }
 
+  /**Try to catch fatal errors as well. */
+  static public function fatal_error_handler()
+  {
+    $error = error_get_last();
+    if ($error["type"] == E_ERROR) {
+      // Nope, that does not work. Maybe write an email to somewhere ...
+      self::exceptions_error_handler($error["type"], $error["message"], $error["file"], $error["line"]);
+    }
+  }
+  
   /**Error handler which redirects some errors into the exception
    * queue. Errors not inclued in error_reporting() do not result in
    * exceptions to be thrown.
-   *
    */
   static public function exceptions_error_handler($severity, $message, $filename, $lineno) {
 
@@ -290,6 +300,7 @@ __EOT__;
     if (Error::exceptions()) {
       // $silent is not needed.
       if ($die) {
+        @ob_end_clean();
         throw new \Exception($msg);
       }
       return false;
@@ -432,7 +443,7 @@ __EOT__;
     return $result;
   }
 
-  /** Compose an error from all CGI data starting with PME_data_, or
+  /** Compose an arry from all CGI data starting with PME_data_, or
    * more precisely: with Config::$pmeopts['cgi']['prefix']['data'];
    *
    * @param[in] $prefix If set the parameter overrides the default
@@ -459,6 +470,28 @@ __EOT__;
 
     return $result;
   }
+
+  /**Decode the record idea from the CGI data, return -1 if none
+   * found.
+   */
+  public static function getCGIRecordId($prefix = null)
+  {
+    if (!isset($prefix)) {
+      Config::init();
+      $prefix = Config::$pmeopts['cgi']['prefix']['sys'];
+    }
+    $recordKey = $prefix.'rec';
+    $recordId  = self::cgiValue($recordKey, -1);
+    $opreq     = self::cgiValue($prefix.'operation');
+    $op        = parse_url($opreq, PHP_URL_PATH);
+    $opargs    = array();
+    parse_str(parse_url($opreq, PHP_URL_QUERY), $opargs);
+    if ($recordId < 0 && isset($opargs[$recordKey]) && $opargs[$recordKey] > 0) {
+      $recordId = $opargs[$recordKey];
+    }
+
+    return $recordId > 0 ? $recordId : -1;
+  }  
   
   public static function entifyString($string)
   {
@@ -749,6 +782,7 @@ __EOT__;
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
   <input type="submit" name="Project" value="$project" title="$title"/>
+  <input type="hidden" name="DisplayClass" value="Projects"/>
   <input type="hidden" name="Template" value="projects"/>
   <input type="hidden" name="Project" value="$project"/>
   <input type="hidden" name="ProjectId" value="$projectId"/>
@@ -977,6 +1011,11 @@ class mySQL
       } else {
         return 0;
       }
+  }
+
+  public static function newestIndex($handle = false, $die = true, $silent = false)
+  {
+    return mysql_insert_id($handle);
   }
 
   public static function fetch(&$res, $type = MYSQL_ASSOC)

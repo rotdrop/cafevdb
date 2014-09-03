@@ -105,7 +105,10 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
         return false;
     };
 
-    Projects.actionMenu = function(containerSel = '#cafevdb-page-body') {
+    Projects.actionMenu = function(containerSel) {
+        if (typeof containerSel === 'undefined') {
+            containerSel = PHPMYEDIT.defaultSelector;
+        }
         var container = $(containerSel);
         var projectActions = container.find('select.project-actions');
 
@@ -123,9 +126,10 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
         });
     };
 
-    Projects.pmeFormInit = function(containerSel = '#cafevdb-page-body') {
-        var container = $(containerSel);
-        var form = $(containerSel).find('form[class^="pme-form"]');
+    Projects.pmeFormInit = function(containerSel) {
+        var containerSel = PHPMYEDIT.selector(containerSel);
+        var container = PHPMYEDIT.container(containerSel);
+        var form = container.find('form[class^="pme-form"]');
         var submitSel = 'input.pme-save,input.pme-apply,input.pme-more';
 
         if (form.find(submitSel).length > 0) {
@@ -137,9 +141,9 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
             var yearSelector = 'select[name="PME_data_Jahr"]';
             var attachSelector = '#project-name-yearattach';
 
-            var name = $(nameSelector);
-            var year = $(yearSelector);
-            var attach = $(attachSelector);
+            var name = container.find(nameSelector);
+            var year = container.find(yearSelector);
+            var attach = container.find(attachSelector);
 
             var oldProjectYear = $(form).find(yearSelector + ' :selected').text();
             var oldProjectName = name.val();
@@ -148,16 +152,16 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
              * depending on whether the user has activated the name or
              * year control, or has clicked the submit button.
              */
-            var verifyYearName = function (postAddOn, button = null) {
+            var verifyYearName = function (postAddOn, button) {
                 /* Forward the request to the server via Ajax
                  * technologies.
                  */
-
                 var post = form.serialize();
                 post += '&control='+postAddOn;
 
                 OC.Notification.hide(function () {
-                    $.post(OC.filePath('cafevdb', 'ajax/projects', 'verifyName.php'), post,
+                    $.post(OC.filePath('cafevdb', 'ajax/projects', 'verifyName.php'),
+                           post,
                            function (data) {
                                if (data.status == 'success') {
                                    var rqData = data.data;
@@ -170,7 +174,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
                                    oldProjectYear = rqData.projectYear;
                                    oldProjectName = rqData.projectName;
                                    if (postAddOn == 'submit') {
-                                       if (button !== null) {
+                                       if (typeof button !== 'undefined') {
                                            $(form).off('click', submitSel);
                                            button.trigger('click');
                                        } else {
@@ -227,11 +231,13 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
             form.on('click',
                     submitSel,
                     function(event) {
-                        event.preventDefault();
-                        
-                        verifyYearName('submit', $(this));
-                        
-                        return false;
+                        if ($(this).attr('name').indexOf('savedelete') < 0) {
+                            event.preventDefault();
+                            verifyYearName('submit', $(this));
+                            return false;
+                        } else {
+                            return true;
+                        }
                     });
             
         }
@@ -241,6 +247,35 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
 })(window, jQuery, CAFEVDB.Projects);
 
 $(document).ready(function(){
+
+    PHPMYEDIT.addTableLoadCallback('Projects',
+                                   {
+                                     callback: function(selector, resizeCB) {
+                                         var container = PHPMYEDIT.container(selector);
+                                         this.actionMenu(selector);
+                                         this.pmeFormInit(selector);
+                                         if (container.find('#file_upload_target').length > 0) {
+                                             var idField = container.find('input[name="PME_data_Id"]');
+                                             var recordId = -1;
+                                             if (idField.length > 0) {
+                                                 recordId = idField.val();
+                                             }
+                                             CAFEVDB.Photo.ready(recordId, resizeCB);
+                                         } else {
+                                             resizeCB();
+                                         }
+                                         container.find('span.photo').click(function(event) {
+                                             event.preventDefault();
+                                             CAFEVDB.Photo.popup(this);
+                                             return false;
+                                         });
+                                     },
+                                     context: CAFEVDB.Projects,
+                                     parameters: []
+                                   });
     CAFEVDB.Projects.actionMenu();
-    CAFEVDB.Projects.pmeFormInit();
+    var dpyClass = $(PHPMYEDIT.defaultSelector).find('form.pme input[name="DisplayClass"]');
+    if (dpyClass.length > 0 && dpyClass.val() === 'Projects') {
+        CAFEVDB.Projects.pmeFormInit(PHPMYEDIT.defaultSelector);
+    }
 });

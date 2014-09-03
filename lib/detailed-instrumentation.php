@@ -36,6 +36,11 @@ class DetailedInstrumentation
     parent::__construct($execute);
   }
 
+  public function shortTitle()
+  {
+    return L::t("Instrumentation for Project `%s'", array($this->project));
+  }
+
   public function headerText()
   {
     $header =<<<__EOT__
@@ -98,6 +103,7 @@ __EOT__;
       'ProjectId' => $projectId,
       'Template' => 'detailed-instrumentation',
       'Table' => $opts['tb'],
+      'DisplayClass' => 'DetailedInstrumentation',
       'headervisibility' => Util::cgiValue('headervisibility','expanded'));
 
     // Name of field which is the unique key
@@ -341,7 +347,7 @@ __EOT__;
                                                'options' => $ROopts,
                                                'maxlen'   => 65535,
                                                'css'      => array('postfix' => 'remarks'),
-                                               'textarea' => array('css' => Config::$opts['editor'],
+                                               'textarea' => array('css' => 'wysiwygeditor',
                                                                    'rows' => 5,
                                                                    'cols' => 50),
                                                'escape' => false,
@@ -375,7 +381,7 @@ __EOT__;
                                     'select'   => 'T',
                                     'maxlen'   => 65535,
                                     'css'      => array('postfix' => 'remarks'),
-                                    'textarea' => array('css' => Config::$opts['editor'],
+                                    'textarea' => array('css' => 'wysiwygeditor',
                                                         'rows' => 5,
                                                         'cols' => 50),
                                     'escape'   => false,

@@ -61,6 +61,11 @@ class Projects
     }
   }
 
+  public function navigation($enable)
+  {
+    $this->pme_bare = !$enable;
+  }
+
   /**Disable some extra stuff (image upload etc.) when displaying the entire table.
    */
   public function changeOperation()
@@ -72,9 +77,14 @@ class Projects
     }
   }
 
+  public function shortTitle()
+  {
+    return L::t("%s Projects", array(ucfirst(Config::getValue('orchestra'))));
+  }
+
   public function headerText()
   {
-    $header  = L::t("%s Projects", array(ucfirst(Config::getValue('orchestra'))));
+    $header  = $this->shortTitle();
     $header .= '<p>';
     $header .= L::t("Please click on the project-name of the respective project in order to edit the instrumentation list or dates or to store other project related data.");
 
@@ -114,7 +124,9 @@ class Projects
 
     $opts['cgi']['persist'] = array(
       'Template' => 'projects',
-      'app' => Util::cgiValue('app'),
+      'DisplayClass' => 'Projects',
+      'ClassArguments' => array(),
+      'app' => Util::cgiValue('app'), // ???
       'headervisibility' => Util::cgiValue('headervisibility','expanded'));
 
     $opts['tb'] = 'Projekte';
@@ -273,7 +285,8 @@ class Projects
       'name'     => 'Programm',
       'select'   => 'T',
       'maxlen'   => 65535,
-      'textarea' => array('css' => Config::$opts['editor'],
+      'css'      => array('postfix' => 'projectremarks'),
+      'textarea' => array('css' => 'wysiwygeditor',
                           'rows' => 5,
                           'cols' => 50),
       'sort'     => true,
@@ -302,7 +315,7 @@ class Projects
       'select'   => 'T',
       'maxlen'   => 65535,
       'css'      => array('postfix' => 'projectremarks'),
-      'textarea' => array('css' => Config::$opts['editor'],
+      'textarea' => array('css' => 'wysiwygeditor',
                           'rows' => 5,
                           'cols' => 50),
       'sort'     => true,
@@ -355,7 +368,7 @@ a comma.'));
         'function' => 'CAFEVDB\Projects::flyerImageLinkPME',
         'parameters' => array()
         ),
-      'css'      => array('postfix' => 'projectflyer'),
+      'css' => array('postfix' => 'projectflyer'),
       'default' => '',
       'sort' => false);
 
@@ -369,6 +382,30 @@ a comma.'));
 
     $opts['execute'] = $this->execute;
     $this->pme = new \phpMyEdit($opts);
+
+    if ($this->execute) {
+      // Photo upload support:
+      echo '
+<form class="float"
+      id="file_upload_form"
+      action="'.\OCP\Util::linkTo('cafevdb', 'ajax/inlineimage/uploadimage.php').'" 
+      method="post"
+      enctype="multipart/form-data"
+      target="file_upload_target">
+  <input type="hidden" name="requesttoken" value="'.\OCP\Util::callRegister().'">
+  <input type="hidden" name="RecordId" value="'.Util::getCGIRecordId().'">
+  <input type="hidden" name="ImagePHPClass" value="CAFEVDB\Projects">
+  <input type="hidden" name="ImageSize" value="1200"> 
+  <input type="hidden" name="MAX_FILE_SIZE" value="'.Util::maxUploadSize().'" id="max_upload">
+  <input type="hidden" class="max_human_file_size" value="max '.\OCP\Util::humanFileSize(Util::maxUploadSize()).'">
+  <input id="file_upload_start" type="file" accept="image/*" name="imagefile" />
+</form>
+
+<div id="edit_photo_dialog" title="Edit photo">
+		<div id="edit_photo_dialog_img"></div>
+</div>
+';
+    }
   }
 
   /** phpMyEdit calls the trigger (callback) with the following arguments:
@@ -829,7 +866,7 @@ __EOT__;
     } else {
       $query .= "`Name` ASC";
     }
-    $result = mySQL::query($query, $handle);
+    $result = mySQL::query($query, $handle, true);
     if ($year === false) {
       while ($line = mySQL::fetch($result)) {
         $projects[$line['Id']] = $line['Name'];
@@ -907,8 +944,9 @@ __EOT__;
       
     $query = "SELECT * FROM `BesetzungsZahlen` WHERE `ProjektId` = $projectId";
     $result = mySQL::query($query, $handle);
-
-    $row = array();
+    if ($result !== false && mysql_num_rows($result) == 0) {
+      return array(); // can possibly happen
+    }
     if ($result !== false && mysql_num_rows($result) == 1) {
       $row = mySQL::fetch($result);
     } else {
@@ -917,6 +955,9 @@ __EOT__;
 
     if (isset($row["ProjektId"])) {
       unset($row["ProjektId"]);
+    }
+    if (isset($row["Id"])) {
+      unset($row["Id"]);
     }
 
     $query = 'SELECT `Instrument` FROM `Instrumente` WHERE  1 ORDER BY `Sortierung` ASC';

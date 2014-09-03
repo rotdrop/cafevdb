@@ -320,7 +320,7 @@ class Instrumentation
       return true;
     }
 
-    if (false) {
+    if (Util::debugMode('request')) {
       echo '<PRE>';
       echo "musid: ".$musicianId."\n";
       print_r($_POST);
@@ -365,19 +365,24 @@ class Instrumentation
 
     // Consistency check; $newvals['MusikerId'] may either be a
     // numeric id or just the name of the musician.
-    if (!$dontCheckMusicianId
-        &&
-        ((is_numeric($newvals['MusikerId']) && $musicianId != $newvals['MusikerId'])
-         ||
-         (!is_numeric($newvals['MusikerId']) && $musname !=  $newvals['MusikerId']))) {
-      echo L::t("Data inconsistency: Ids do not match (`%s' != `%s')",
-                array($newvals['MusikerId'], $musicianId));
-      return false;
+    if (!$dontCheckMusicianId && (isset($newvals['MusikerId']) || isset($oldvals['MusikerId']))) {
+      $pmeMusId = isset($newvals['MusikerId']) ? $newvals['MusikerId'] : $oldvals['MusikerId'];
+
+      if ((is_numeric($pmeMusId) && $musicianId != $pmeMusId)
+          ||
+          (!is_numeric($pmeMusId) && $musname !=  $pmeMusId)) {
+        echo L::t("Data inconsistency: Ids do not match (`%s' != `%s')",
+                  array($pmeMusId, $musicianId));
+        return false;
+      }
     }
 
     $instruments = $musrow['Instrumente'];
     $instrument  = $newvals['Instrument'];
     
+
+    // TODO: replace by AJAX validation and provide a nice popup for
+    // in order to change the instrument of the person.
     if (!strstr($instruments, $instrument)) {
       $text1 = L::t('Instrument not known by %s, correct that first! %s only plays %s!!!',
                     array($musname, $musname, $instruments));
@@ -388,7 +393,7 @@ class Instrumentation
                     array($instrument, $musname));
       $btnValue = L::t('Really Change %s\'s instrument!!!', array($musname));
       $btn =<<<__EOT__
-<form style="display:inline;" name="CAFEV_form_besetzung" method="post" action="?app=cafevdb">
+<form style="display:inline;" id="cafev-force-instrument" name="CAFEV_form_besetzung" method="post" action="?app=cafevdb">
   <input type="submit" name="" value="$btnValue">
 __EOT__;
 

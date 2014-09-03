@@ -38,17 +38,24 @@ class Musicians
     $this->projectMode = $mode;
   }
 
-  public function headerText()
+  public function shortTitle()
   {
     if (!$this->projectMode) {
-      $header = L::t('Overview over all registered musicians');
+      return L::t('Overview over all registered musicians');
     } else {
-      $header = L::t("Add musicians to the project `%s'
+      return L::t("Add musicians to the project `%s'", array($this->project)); 
+    }
+  }
+
+  public function headerText()
+  {
+    $header = $this->shortTitle();
+    if ($this->projectMode) {
+      $header .= "
 <p>
 This page is the only way to add musicians to projects in order to
 make sure that the musicians are also automatically added to the
-`global' musicians data-base (and not only to the project).",
-                     array($this->project));
+`global' musicians data-base (and not only to the project).";
     }
 
     return '<div class="'.self::CSS_PREFIX.'-header-text">'.$header.'</div>';
@@ -99,6 +106,8 @@ make sure that the musicians are also automatically added to the
       'Template' => $this->projectMode
       ? 'add-musicians' : 'all-musicians',
       'Table' => $opts['tb'],
+      'DisplayClass' => 'Musicians',
+      'ClassArguments' => array($this->projectMode),
       'headervisibility' => $headervisibility);
 
     if ($this->projectMode) {
@@ -354,7 +363,7 @@ __EOT__;
                                     'select'   => 'T',
                                     'maxlen'   => 65535,
                                     'css'      => array('postfix' => 'remarks'),
-                                    'textarea' => array('css' => Config::$opts['editor'],
+                                    'textarea' => array('css' => 'wysiwygeditor',
                                                         'rows' => 5,
                                                         'cols' => 50),
                                     'escape' => false,
@@ -394,6 +403,7 @@ __EOT__;
         'function' => 'CAFEVDB\Musicians::portraitImageLinkPME',
         'parameters' => array()
         ),
+      'css' => array('postfix' => 'photo'),
       'default' => '',
       'sort' => false);
 
@@ -434,12 +444,36 @@ __EOT__;
 
     $this->pme = new \phpMyEdit($opts);
 
+    if ($this->execute) {
+      // Photo upload support:
+      echo '
+<form class="float"
+      id="file_upload_form"
+      action="'.\OCP\Util::linkTo('cafevdb', 'ajax/inlineimage/uploadimage.php').'" 
+      method="post"
+      enctype="multipart/form-data"
+      target="file_upload_target">
+  <input type="hidden" name="requesttoken" value="'.\OCP\Util::callRegister().'">
+  <input type="hidden" name="RecordId" value="'.Util::getCGIRecordId().'">
+  <input type="hidden" name="ImagePHPClass" value="CAFEVDB\Musicians">
+  <input type="hidden" name="ImageSize" value="1200"> 
+  <input type="hidden" name="MAX_FILE_SIZE" value="'.Util::maxUploadSize().'" id="max_upload">
+  <input type="hidden" class="max_human_file_size" value="max '.\OCP\Util::humanFileSize(Util::maxUploadSize()).'">
+  <input id="file_upload_start" type="file" accept="image/*" name="imagefile" />
+</form>
+
+<div id="edit_photo_dialog" title="Edit photo">
+		<div id="edit_photo_dialog_img"></div>
+</div>
+';
+    }
+
     if (Util::debugMode('request')) {
       echo '<PRE>';
       print_r($_POST);
       echo '</PRE>';
     }
-
+    
   } // display()
 
   /** phpMyEdit calls the trigger (callback) with the following arguments:
@@ -707,6 +741,11 @@ class AddOneMusician
     parent::__construct($execute);
   }
 
+  public function shortTitle()
+  {
+    return L::t("New Musician for Project `%s'.", array($this->project));
+  }
+
   public function headerText()
   {
 
@@ -755,6 +794,7 @@ __EOT__;
       'Template' => $template,
       'MusicianId' => $this->musicianId,
       'RecordsPerPage' => $this->recordsPerPage,
+      'DisplayClass' => 'AddOneMusician',
       'headervisibility' => $headervisibility);
 
     // Name of field which is the unique key
@@ -781,7 +821,8 @@ __EOT__;
     // Navigation style: B - buttons (default), T - text links, G - graphic links
     // Buttons position: U - up, D - down (default)
     $opts['navigation'] = 'G';
-    if (Util::cgiValue($opts['cgi']['prefix']['sys'].'operation')) {
+    if (Util::cgiValue($opts['cgi']['prefix']['sys'].'operation') ||
+        Util::cgiValue($opts['cgi']['prefix']['sys'].'morechange')) {
       $opts['navigation'] .= 'UD';
     } else {
       $opts['navigation'] .= 'N';
@@ -861,6 +902,7 @@ __EOT__;
                                );
     $opts['fdd']['ProjektId'] = array(
                                       'name'     => 'ProjektId',
+                                      'input'    => 'R',
                                       'select'   => 'T',
                                       'maxlen'   => 11,
                                       'sort'     => false,
@@ -873,6 +915,7 @@ __EOT__;
                                       );
     $opts['fdd']['MusikerId'] = array(
                                       'name'     => 'MusikerId',
+                                      'input'    => 'R',
                                       'select'   => 'T',
                                       'maxlen'   => 11,
                                       'sort'     => false,
@@ -911,7 +954,7 @@ __EOT__;
     $opts['fdd']['Bemerkungen'] = array('name'     => 'Bemerkungen',
                                         'select'   => 'T',
                                         'maxlen'   => 65535,
-                                        'textarea' => array('css' => Config::$opts['editor'],
+                                        'textarea' => array('css' => 'wysiwygeditor',
                                                             'rows' => 5,
                                                             'cols' => 50),
                                         'escape' => false,
@@ -1101,6 +1144,11 @@ class BulkAddMusicians
     $this->musiciansKey = $pmepfx.'mrecs';
   }
 
+  public function shortTitle()
+  {
+    return L::t("New Musicians for Project `%s'.", array($this->project));
+  }
+
   public function headerText()
   {
 
@@ -1187,6 +1235,7 @@ __EOT__;
       'Table' => $opts['tb'],
       'Template' => $this->template,
       'RecordsPerPage' => $recordsPerPage,
+      'DisplayClass' => 'BulkAddMusicians',
       $this->musiciansKey => $this->musiciansIds,
       'headervisibility' => $headervisibility);
 
@@ -1340,7 +1389,7 @@ __EOT__;
                                         'select'   => 'T',
                                         'maxlen'   => 65535,
                                         'css'      => array('postfix' => 'remarks'),
-                                        'textarea' => array('css' => Config::$opts['editor'],
+                                        'textarea' => array('css' => 'wysiwygeditor',
                                                             'rows' => 5,
                                                             'cols' => 50),
                                         'escape' => false,

@@ -103,12 +103,11 @@ try {
 
   OCP\Util::addScript('cafevdb', 'cafevdb');
   OCP\Util::addScript('cafevdb', 'pme');
-  OCP\Util::addScript('cafevdb', 'transpose');
   OCP\Util::addScript('cafevdb', 'page');
+  OCP\Util::addScript('cafevdb', 'inlineimage');
   OCP\Util::addScript('cafevdb', 'events');
   OCP\Util::addScript('cafevdb', 'blog');
   OCP\Util::addScript('cafevdb', 'projects');
-  OCP\Util::addScript('cafevdb', 'inlineimage');
   OCP\Util::addScript('cafevdb', 'sepa-debit-mandate');
   OCP\Util::addScript('cafevdb', 'jquery.Jcrop');
 
@@ -152,23 +151,17 @@ try {
   $projectId  = Util::cgiValue('ProjectId', -1);
   $musicianId = Util::cgiValue('MusicianId',-1);
   $recordKey  = Config::$pmeopts['cgi']['prefix']['sys'].'rec';
-  $recordId   = Util::cgiValue($recordKey, -1);
+  $recordId   = Util::getCGIRecordId();
 
   if (!$config['summary']) {
     $tmplname = 'configcheck';
   } else {
-    /* Special hack to determine if the email-form was requested through
-     * the pme-miscinfo button.
+    /* Special hack to determine if the email-form was requested
+     * through the pme-miscinfo button and in order to determine the
+     * record key
      */
-    $opreq = Util::cgiValue(Config::$pmeopts['cgi']['prefix']['sys'].'operation');
-
+    $opreq  = Util::cgiValue(Config::$pmeopts['cgi']['prefix']['sys'].'operation');
     $op     = parse_url($opreq, PHP_URL_PATH);
-    $opargs = array();
-    parse_str(parse_url($opreq, PHP_URL_QUERY), $opargs);
-
-    if ($recordId < 0 && isset($opargs[$recordKey])) {
-      $recordId = $opargs[$recordKey];
-    }
 
     if (false) {
       echo "<PRE>\n";

@@ -174,7 +174,7 @@ CAFEVDB.FileUpload = CAFEVDB.FileUpload || {};
         }
 
         //IE < 10 does not fire the necessary events for the progress bar.
-        if($('html.lte9').length > 0) {
+        if ($('html.lte9').length > 0) {
 	  return;
         }
 

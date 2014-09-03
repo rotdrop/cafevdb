@@ -31,34 +31,51 @@ class ProjectInstruments
   extends Instrumentation
 {
   const CSS_PREFIX = 'cafevdb-page';
+  const TABLE_NAME = 'BesetzungsZahlen';
   private $postProjectId;
+  private $recordId;
 
-  function __construct($recordId = -1) {
-    parent::__construct();
-    // if set, the recordId is the projectId
-    
-    if (false) {
-      echo "<PRE>\n";
-      echo $recordId;
-      echo "</PRE>\n";
-    }
+  function __construct($recordId = -1, $execute = true) {
+    parent::__construct($execute);
 
-    if ($recordId > 0 && empty($this->cancelSave)) {
-      $this->projectId = $recordId;
-    }
-
+    // if set, fetch the corresponding project id
+    $this->recordId = $recordId;
     $this->postProjectId = Util::cgiValue('ProjectId', -1) > 0;
+    $idPair = $this->fetchIdPair($this->recordId, $this->projectId);
+
+    if ($idPair !== false) {
+      if ($this->postProjectId) {
+        $this->recordId = $idPair['recordId'];
+      } else if ($this->recordId > 0) {
+        $this->projectId = $idPair['projectId'];
+        $this->project = Projects::fetchName($this->projectId);
+      }
+    }
+
+    if (!$this->postProjectId && $this->cancelSave) {
+      $this->projectId = -1;
+      $this->recordId = -1;
+    }
   }
+
+  public function shortTitle()
+  {
+    if ($this->project) {
+      return L::t("Instrumentation Numbers for `%s'", array($this->project));
+    } else {
+      return L::t("Instrumentation Numbers");
+    }
+  }
+  
 
   public function headerText()
   {
-    if ($this->project) {
-      $header = L::t("Instrumentation Numbers for `%s'",
-                     array($this->project));
-    } else {
-      $header = L::t("Instrumentation Numbers");
-    }
-    $header .= "<p>".L::t("The target instrumentation numbers can be filled into this table. The `have'-numbers are the numbers of the musicians already registered for the project.");
+    $header = $this->shortTitle();
+    $header .= "<p>".L::t("The target instrumentation numbers can be filled into this table. ".
+                          "The `have'-numbers are the numbers of the musicians ".
+                          "already registered for the project.".
+                          "In order to transfer the instruments of the already registerd musicions ".
+                          "into this table click the `Adjust Instrument' option from the `Actions' menu.");
 
     return '<div class="'.self::CSS_PREFIX.'-header-text">'.$header.'</div>';
   }
@@ -96,10 +113,12 @@ class ProjectInstruments
     $template        = $this->template;
     $project         = $this->project;
     $projectId       = $this->projectId;
+    $recordId        = $this->recordId;
     $instruments     = $this->instruments;
     $opts            = $this->opts;
     $recordsPerPage  = $this->recordsPerPage;
     $userExtraFields = $this->userExtraFields;
+    $projectMode     = $this->postProjectId;
 
     /*
      * IMPORTANT NOTE: This generated file contains only a subset of huge amount
@@ -121,13 +140,26 @@ class ProjectInstruments
     // Value of -1 lists all records in a table
     $opts['inc'] = $recordsPerPage;
 
-    $opts['tb'] = 'BesetzungsZahlen';
+    $opts['tb'] = self::TABLE_NAME;
 
     // Get the desired transposed state.
     $transposed = Util::cgiValue('Transpose', 'transposed');
-    $operation  = Util::cgiValue(Config::$pmeopts['cgi']['prefix']['sys'].'operation');
-    $morechange = Util::cgiValue(Config::$pmeopts['cgi']['prefix']['sys'].'morechange');
-    $inhibitTranspose = ($operation != '' || $morechange != '');
+
+    // If any of these is set then we are in single-project mode and
+    // do not want to transpose (i.e. PME already natively displays in
+    // quasi-transposed mode)
+    $inhibitTranspose = false;
+    $inhibitTransposeTriggers = array('operation',
+                                      'morechange',
+                                      'morecopy',
+                                      'applyadd',
+                                      'applycopy');
+    foreach ($inhibitTransposeTriggers as $key) {
+      if (Util::cgiValue(Config::$pmeopts['cgi']['prefix']['sys'].$key, false) !== false) {
+        $inhibitTranspose = true;
+        break;
+      }
+    }
 
     // Don't want everything persistent.
     $opts['cgi']['persist'] = array(
@@ -135,22 +167,27 @@ class ProjectInstruments
       'Transpose' => $transposed,
       'InhibitTranspose' => $inhibitTranspose ? 'true' : 'false',
       'Table' => $opts['tb'],
+      'DisplayClass' => 'ProjectInstruments',
+      'ClassArguments' => array('_' => array('recordId')),
       'headervisibility' => Util::cgiValue('headervisibility', 'expanded'));
 
-    if ($this->postProjectId) {
+    if ($projectMode) {
       $opts['cgi']['persist']['Project'] = $project;
       $opts['cgi']['persist']['ProjectId'] = $projectId;
     }
 
     // Name of field which is the unique key
-    $opts['key'] = 'ProjektId';
+    $opts['key'] = 'Id';
 
     // Type of key field (int/real/string/date etc.)
     $opts['key_type'] = 'int';
 
-    if ($projectId > 0) {
+    if ($recordId > 0) {
       unset($opts['sort_field']);
-      $opts['options'] = 'CVDI';
+      $opts['options'] = 'CDI'; // V does not make sense, its already displayed
+      if ($inhibitTranspose) {
+        $opts['options'] .= 'V';
+      }
       $opts['navigation'] = 'GUD';
       $sort = false;
     } else {
@@ -171,18 +208,9 @@ class ProjectInstruments
      * instrumenation from the actual registered musicians.
      */
     $adjustOperation = false;
-    if ($projectId > 0) {
-      $operations = Util::cgiKeySearch('/'.Config::$pmeopts['cgi']['prefix']['sys'].'(more|operation)/');
-      if (count($operations) == 1) {
-        foreach ($operations as $key => $value) {
-          $adjustOperation = $key."=".str_replace("?", "&", $value);
-        }
-        $adjustOperation .= "&".Config::$pmeopts['cgi']['prefix']['sys']."rec=".$projectId;
-      } else if ($this->postProjectId) {
-        // Explicitly called for given project
-        $adjustOperation =
-          Config::$pmeopts['cgi']['prefix']['sys']."rec=".$projectId;
-      }
+    if ($recordId > 0 && $projectId > 0) {
+      $adjustOperation = "ProjektId=$projectId";
+      $adjustOperation .= "&".Config::$pmeopts['cgi']['prefix']['sys']."rec=".$recordId;
     }
 
     $actions = self::projectInstrumentsActions('pme-'.$transposed, $inhibitTranspose, $adjustOperation);
@@ -220,33 +248,32 @@ class ProjectInstruments
     */
 
     $handle = mySQL::connect($opts);
-    if ($projectId > 0) {
-      $opts['filters'] = "`ProjektId` = ".$projectId;
-
+    if ($recordId > 0 || ($projectId > 0 && $projectMode)) {
       // Also restrict the instruments to the instruments which are required for this project.
       $projectInstruments = Instruments::fetchProjectInstruments($projectId, $handle);
-      if (count($projectInstruments) == 0) {
 
-        Util::alert(L::t('Keine Besetzung für das Projekt gefunden, bitte bei den <A
-HREF=%s>Projekteigenschaften</A> die Instrumente eintragen, oder im
+      if ($projectMode) {
+        $opts['filters'] = "`PMEtable0`.`Id` = ".$recordId;
+      }
+        
+      if (count($projectInstruments) == 0) {
+        Util::alert(L::t('Keine Besetzung für das Projekt gefunden, bitte bei den Projekteigenschaften die Instrumente eintragen ("Ändern"-Knopf betätigen, dann "Instrumentierung ändern"), oder im
 <u>%s-Menü den ``%s\'\'-Eintrag</u> auswählen, um die Instrumente der bereits
 ``registrierten\'\' Musiker automatisch eintragen lassen.',
-                         array('"?app=cafevdb&Template=projects&PME_sys_rec='.$projectId.'&PME_sys_operation=PME_op_Change"',
-                               L::t('Actions'),
-                               L::t('Adjust Instruments'))
+                         array(L::t('Actions'), L::t('Adjust Instruments'))
                       ),
                     L::t("Instrumentation-Numbers not Found"), self::CSS_PREFIX);
-
+        
       }
-      
+        
       // Check whether there are instrumentation numbers, simply create it if non-existant
-      if ($this->postProjectId &&
-          mySQL::queryNumRows("FROM ".$opts['tb']." WHERE `ProjektId` = $projectId", $handle) == 0) {
+      if (mySQL::queryNumRows("FROM ".$opts['tb']." WHERE `ProjektId` = $projectId", $handle) == 0) {
         // Make sure the instrumentation numbers exist
-        $query = 'INSERT IGNORE INTO `BesetzungsZahlen` (`ProjektId`) VALUES ('.$projectId.')';
-        mySQL::query($query, $handle);
+        $query = 'INSERT IGNORE INTO `'.self::TABLE_NAME.'` (`ProjektId`) VALUES ('.$projectId.')';
+        if (mySQL::query($query, $handle) !== false) {
+          $this->recordId = $recordId = mySQL::newestIndex($handle);
+        }
       }
-
     } else {
       $projectInstruments = $instruments;
 
@@ -302,16 +329,23 @@ HREF=%s>Projekteigenschaften</A> die Instrumente eintragen, oder im
        descriptions fields are also possible. Check documentation for this.
     */
 
-    $idIdx = 0;
+    $opts['fdd']['Id'] = array(
+      'name'     => 'Id',
+      'select'   => 'T',
+      'options'  => '', // auto increment
+      'maxlen'   => 11,
+      'default'  => '0',
+      'sort'     => true,
+      );    
+
+    $idIdx = 1;
     $opts['fdd']['ProjektId'] = array(
       'name'      => L::t('Projekt-Name'),
-      'options'   => 'FLVDA', // auto increment
+      'options'   => 'FLVCDA',
       'select|FLVA' => 'D',
       'select|CD'   => 'T',
-      'options|CD'  => 'FLVCDAR',
-      /* 'php|LVFCD'   => array('type' => 'function', */
-      /*                        'function' => 'CAFEVDB\Projects::projectActionsPME', */
-      /*                        'parameters' => array("idIndex" => $idIdx.'_idx')), */
+      'options|CD'  => 'FLVCDA',
+      'input|CD' => 'R',
       'maxlen'   => 11,
       'default'  => '-1',
       'sort'     => $sort,
@@ -320,21 +354,21 @@ HREF=%s>Projekteigenschaften</A> die Instrumente eintragen, oder im
         'column' => 'Id',
         'description' => 'Name',
         'join' => '$main_table.ProjektId = $join_table.Id',
-        'filters' => "`Id` IN (SELECT `ProjektId` FROM \$main_table)",
+        'filters' => "`Projekte`.`Id` IN (SELECT `ProjektId` FROM \$main_table)",
         ),
       'values|A' => array(
         'table' => 'Projekte',
         'column' => 'Id',
         'description' => 'Name',
         'join' => '$main_table.ProjektId = $join_table.Id',
-        'filters' => "NOT `Id` IN (SELECT `ProjektId` FROM \$main_table)",
+        'filters' => "NOT `Projekte`.`Id` IN (SELECT `ProjektId` FROM \$main_table)",
         ),
       'values|CD' => array(
         'table' => 'Projekte',
         'column' => 'Id',
         'description' => 'Name',
         'join' => '$main_table.ProjektId = $join_table.Id',
-        'filters' => "`Id` IN (SELECT `ProjektId` FROM \$main_table WHERE `Id` = \$record_id)",
+        'filters' => "`Projekte`.`Id` IN (SELECT `ProjektId` FROM \$main_table WHERE \$main_table.`Id` = \$record_id)",
         ),
       );    
 
@@ -358,8 +392,8 @@ HREF=%s>Projekteigenschaften</A> die Instrumente eintragen, oder im
       'css' => array('postfix' => 'add-instruments chosen-hidden select-hidden'),
       'options' => 'C',
       'select' => 'M',
-      'sql' => '`PMEjoin0`.`Besetzung`',
-      'sqlw' => '`PMEjoin0`.`Besetzung`',
+      'sql' => '`PMEjoin'.$idIdx.'`.`Besetzung`',
+      'sqlw' => '`PMEjoin'.$idIdx.'`.`Besetzung`',
       'values' => $instruments,
       'valueGroups' => $groupedInstruments
       );
@@ -394,12 +428,14 @@ HREF=%s>Projekteigenschaften</A> die Instrumente eintragen, oder im
     $opts['triggers']['delete']['after'] = 'CAFEVDB\ProjectInstruments::insertDeleteCallback';
     $opts['triggers']['insert']['after'] = 'CAFEVDB\ProjectInstruments::insertDeleteCallback';
 
+    $opts['execute'] = $this->execute;
+
     $pme = new \phpMyEdit($opts);
   }
 
   /**Can be used as a trigger callback (instead of loading one from disk).
    */
-  public static function insertDeleteCallback($pme, $op, $step, $oldvals, &$changed, &$newvals)
+  public static function insertDeleteCallback(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
     $missingQuery = ''.
       'FROM `Projekte` '.
@@ -410,6 +446,42 @@ HREF=%s>Projekteigenschaften</A> die Instrumente eintragen, oder im
     }
     
     return true;        
+  }
+
+  /**Try to update either project-id or record-id from the data-base
+   * given any of it.
+   */
+  public static function fetchIdPair($recId, $prjId, $handle = false)
+  {
+    $result = false;
+
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
+    if ($recId > 0) {
+      $query = "SELECT `Id`,`ProjektId` FROM `".self::TABLE_NAME."` WHERE `Id` = ".$recId;
+    } else if ($prjId > 0) {
+      $query = "SELECT `Id`,`ProjektId` FROM `".self::TABLE_NAME."` WHERE `ProjektId` = ".$prjId;
+    } else {
+      return false;
+    }
+    $result = mySQL::query($query, $handle);
+    if ($result !== false && mysql_num_rows($result) == 1) {
+      $row = mySQL::fetch($result);
+      if (isset($row['Id']) && isset($row['ProjektId'])) {
+        $result = array('projectId' => $row['ProjektId'],
+                        'recordId' => $row['Id']);
+      }
+    }
+
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $result;
   }
 
   /**Another multi-select which adds a pull-down menu to the

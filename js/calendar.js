@@ -283,7 +283,7 @@ Calendar={
 		},
 		moveEvent:function(event, dayDelta, minuteDelta, allDay, revertFunc){
                         $('.tipsy').remove();
-			if($('#event').length != 0) {
+			if ($('#event').length != 0) {
 				revertFunc();
 				return;
 			}

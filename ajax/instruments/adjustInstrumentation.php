@@ -6,6 +6,7 @@ use CAFEVDB\Util;
 use CAFEVDB\Error;
 use CAFEVDB\Projects;
 use CAFEVDB\Instruments;
+use CAFEVDB\ProjectInstruments;
 use CAFEVDB\mySQL;
 
 if(!OCP\User::isLoggedIn()) {
@@ -23,7 +24,11 @@ try {
   $debugText = '$_POST[] = '.print_r($_POST, true);
 
   // We only need the project-id
-  $projectId = Util::cgiValue(Config::$pmeopts['cgi']['prefix']['sys']."rec", -1);
+  $recordId  = Util::cgiValue(Config::$pmeopts['cgi']['prefix']['sys']."rec", -1);
+  $projectId = Util::cgiValue('ProjektId', -1);
+  $idPair = ProjectInstruments::fetchIdPair($recordId, $projectId);
+  $recordId = $idPair['recordId'];
+  $projectId = $idPair['projectId'];  
   
   // Is it there?
   if ($projectId < 0) {

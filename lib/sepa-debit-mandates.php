@@ -45,14 +45,19 @@ class SepaDebitMandates
     parent::__construct($execute);
   }
 
-  public function headerText()
+  public function shortTitle()
   {
     if ($this->projectId > 0 && $this->project != '') {
       return L::t('Overview over all SEPA Debit Mandates for %s',
                   array($this->project));
     } else {
       return L::t('Overview over all SEPA Debit Mandates');
-    }
+    }    
+  }
+
+  public function headerText()
+  {
+    return $this->shortTitle();
   }
 
   /**Display the list of all musicians. If $projectMode == true,
@@ -85,6 +90,7 @@ class SepaDebitMandates
       'MusicianId' => $musicianId,
       'Template' => 'sepa-debit-mandates',
       'Table' => $opts['tb'],
+      'DisplayClass' => 'SepaDebitMandates',
       'headervisibility' => $headervisibility);
 
     // Name of field which is the unique key

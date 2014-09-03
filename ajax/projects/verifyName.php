@@ -14,6 +14,8 @@ OCP\JSON::checkAppEnabled(Config::APP_NAME);
 
 try {
 
+  ob_start();
+
   Error::exceptions(true);
   
   Config::init();
@@ -86,11 +88,14 @@ try {
     $errorMessage = L::t("Internal error: unknown request");
     break;
   }
+
   if ($errorMessage != '') {
+    $debugText .= ob_get_contents();
+    @ob_end_clean();
     OCP\JSON::error(
       array(
         'data' => array('error' => L::t("missing arguments"),
-                        'message' => Util::entifyString($errorMessage),
+                        'message' => $errorMessage,
                         'debug' => $debugText)));
     return false;
   }
@@ -99,18 +104,22 @@ try {
   $yearProjects = Projects::fetchProjects(false, true);
   foreach ($yearProjects as $id => $nameYear) {
     if ($id != $projectId && $nameYear['Name'] == $projectName && $nameYear['Jahr'] == $projectYear) {
+      $debugText .= ob_get_contents();
+      @ob_end_clean();
       OCP\JSON::error(
         array(
           'data' => array('error' => L::t("already existent"),
-                          'message' => Util::entifyString(
-                            L::t("A project with the name ``%s'' already exists in the year %s.\n".
-                                 "Please choose a different name or year.",
-                                 array($projectName,
-                                       $projectYear))),
+                          'message' => L::t("A project with the name ``%s'' already exists in the year %s.\n".
+                                            "Please choose a different name or year.",
+                                            array($projectName,
+                                                  $projectYear)),
                           'debug' => $debugText)));
       return false;
     }
   }
+
+  $debugText .= ob_get_contents();
+  @ob_end_clean();
 
   OCP\JSON::success(
     array('data' => array('projectYear' => $projectYear,
@@ -121,14 +130,20 @@ try {
   return true;
 
 } catch (\Exception $e) {
+
+  $debugText .= ob_get_contents();
+  @ob_end_clean();
+
   // For whatever reason we need to entify quotes, otherwise jquery throws an error.
   OCP\JSON::error(
     array(
       'data' => array(
         'error' => 'exception',
-        'exception' => $e->getMessage(),
+        'exception' =>  $e->getMessage(),
         'trace' => $e->getTraceAsString(),
-        'message' => Util::entifyString(L::t('Error, caught an exception')))));
+        'message' => Util::entifyString(L::t('Error, caught an exception')),
+        'debug' => $debugText)));
+
   return false;
 }
 

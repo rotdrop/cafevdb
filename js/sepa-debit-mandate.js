@@ -367,24 +367,69 @@ var CAFEVDB = CAFEVDB || {};
            }, 'json');
   };
 
+  SepaDebitMandate.popupInit = function(selector) {
+    var self = this;
+
+    var containerSel = PHPMYEDIT.selector(selector);
+    var container = PHPMYEDIT.container(containerSel);
+
+    container.find(':button[class$="sepa-debit-mandate"]').click(function(event) {
+      event.preventDefault();
+      if (container.find('#sepa-debit-mandate-dialog').dialog('isOpen') == true) {
+        container.find('#sepa-debit-mandate-dialog').dialog('close').remove();
+      } else {
+        // We store the values in the name attribute as serialized
+        // string.
+        var values = $(this).attr('name');
+        $.post(OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-mandate.php'),
+               values, self.init, 'json');
+      }
+      return false;
+    });
+  };
+
+  SepaDebitMandate.ready = function(selector) {
+    var self = this;
+
+    var containerSel = PHPMYEDIT.selector(selector);
+    var container = PHPMYEDIT.container(containerSel);
+
+    var form = container.find('form[class^="pme-form"]');
+    form.find('input').off('blur');
+    form.find('input').on('blur', this.validatePME);
+
+    CAFEVDB.exportMenu(containerSel);
+    container.find('input.pme-email').addClass('formsubmit');
+
+    form.find('input[class$="-sepadate"]').datepicker({
+      dateFormat : 'dd.mm.yy', // this is 4-digit year
+      minDate: '01.01.1990',
+      beforeShow: function(input) {
+        $(input).unbind('blur');
+      },
+      onSelect: function(dateText, inst) {
+        $(this).blur(CAFEVDB.SepaDebitMandate.validatePME);
+        $(this).focus();
+        $(this).blur();
+      }
+    });
+  };
+
   CAFEVDB.SepaDebitMandate = SepaDebitMandate;
 })(window, jQuery, CAFEVDB);
 
 $(document).ready(function(){
 
-  $('table[summary="SepaDebitMandates"] input').blur(CAFEVDB.SepaDebitMandate.validatePME);
+  PHPMYEDIT.addTableLoadCallback('SepaDebitMandates',
+                                 {
+                                   callback: function(selector) {
+                                     this.ready(selector);
+                                     alert("Here I am: "+selector);
+                                   },
+                                   context: CAFEVDB.SepaDebitMandate,
+                                   parameters: []
+                                 });
 
-  $('table[summary="SepaDebitMandates"] input[class$="-sepadate"]').datepicker({
-    dateFormat : 'dd.mm.yy', // this is 4-digit year
-    minDate: '01.01.1990',
-    beforeShow: function(input) {
-      $(input).unbind('blur');
-    },
-    onSelect: function(dateText, inst) {
-      $(this).blur(CAFEVDB.SepaDebitMandate.validatePME);
-      $(this).focus();
-      $(this).blur();
-    }
-  });
-  
+  CAFEVDB.SepaDebitMandate.ready(PHPMYEDIT.defaultSelector);
+  CAFEVDB.SepaDebitMandate.popupInit(PHPMYEDIT.defaultSelector);
 });
