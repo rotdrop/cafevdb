@@ -26,12 +26,30 @@
  * display() which actually echos the HTML code to show.
  */
 
-$class = $_['DisplayClass'];
-$args = $_['ClassArguments'];
+CAFEVDB\Error::exceptions(true);
 
-$reflect = new ReflectionClass($class);
-$instance = $reflect->newInstanceArgs($args);
+try {
+  $class = $_['DisplayClass'];
+  $args = $_['ClassArguments'];
 
-$instance->display();
+  if (isset($args['_'])) {
+    foreach($args['_'] as $key) {
+      $args[$key] = $_[$key];
+    }
+    unset($args['_']);
+  }
+
+  $reflect = new ReflectionClass('\\CAFEVDB\\'.$class);
+  $instance = $reflect->newInstanceArgs($args);
+
+  echo '<div id="pme-table-container" style="height:auto;"></div>';
+  $instance->display();
+  echo '</div>';
+
+  // add a hidden "short title" span
+  echo '<span id="pme-short-title" class="pme-short-title" style="display:none;">'.$instance->shortTitle().'</span>';
+} catch (\Exception $e) {
+  throw $e;
+}
 
 ?>
