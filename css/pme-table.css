@@ -405,6 +405,24 @@ td.pme-cell-0-bcc, td.pme-cell-1-bcc {
   overflow:hidden;
 }
 
+td[class$="projectflyer"] {
+  max-width:90%;
+  white-space:normal;
+}
+
+td[class$="projectflyer"] img {
+  height:300px;
+}
+
+td[class$="photo"] {
+  max-width:90%;
+  white-space:normal;
+}
+
+td[class$="photo"] img {
+  max-height:300px;
+}
+
 td.pme-value-0-msg, td.pme-value-1-msg {
   max-width:80ex;
   /*font-size:25%;*/

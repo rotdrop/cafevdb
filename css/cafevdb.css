@@ -35,8 +35,8 @@ form.cafevdb-control {
  */
 /* make popups scrollable in smaller viewports */
 .ui-dialog.pme-table-dialog {
-  max-height: 80% !important;
-  max-width: 100% !important;
+  max-height: 100% !important;
+  max-width: 80% !important;
   overflow: hidden;
   padding: 0;
 }

@@ -27,7 +27,7 @@
 
 .pme-instrumentation-actions-block div {
   vertical-align:middle;
-  /*font-weight:bold;*/
+  font-weight:bold;
 }
 
 .pme-instrumentation-actions-block a.chosen-default span {
@@ -41,6 +41,22 @@
   /*font-weight:bold;*/
   color:#333;
 }
+
+.pme-instrumentation-actions-block a.chosen-single {
+  height: unset;
+  background: unset;
+  box-shadow: unset;
+  border-radius: 3px;
+  outline: medium, none;
+  margin: 0px 0px 3px 0px;
+  background-color: rgba(240, 240, 240, 0.9);
+  color: #555;
+  border: 1px solid rgba(190, 190, 190, 0.9);
+  padding: 5px;
+  line-height: 16px;
+  font-size: 13px;  
+}
+
 
 /*******************************************************************************
  *
