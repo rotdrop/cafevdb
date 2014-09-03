@@ -1,11 +1,20 @@
 var tinyMCEUrl = OC.filePath('cafevdb', '3rdparty/js/tinymce', '');
 var tinyMCESmileyUrl = tinyMCEUrl + '/plugins/emoticons/img/';
-var myTinyMCE = myTinyMCE || {
-  config: {
+var myTinyMCE = myTinyMCE || {};
+
+(function(window, $, myTinyMCE, undefined) {
+  myTinyMCE.postProcessCallback = function(e) {
+    e.content = e.content.replace(/((&nbsp;|[\n\r\s])*<p>(&nbsp;|[\n\r\s])*<\/p>(&nbsp;|[\n\r\s])*)+$/g, '');
+    e.content = e.content.replace(/^((&nbsp;|[\n\r\s])*<p>(&nbsp;|[\n\r\s])*<\/p>(&nbsp;|[\n\r\s])*)+/g, '');
+    e.content = e.content.replace(/^<p>(((?!<p>)[\s\S])*)<\/p>$/g, '$1');
+  };
+  myTinyMCE.config = {
+    //theme_advanced_resizing: true,
+    //theme_advanced_resizing_use_cookie : false,
     theme: "modern",
     language: 'en',
     //    width: 300,
-    //    height: 300,
+    //    height: 100,
     //    forced_root_block : "",
     //    force_br_newlines : false,
     //    force_p_newlines : true,
@@ -13,11 +22,7 @@ var myTinyMCE = myTinyMCE || {
     gecko_spellcheck: true,
     file_picker_types: 'file image media',
     setup: function(editor) {
-      editor.on('PostProcess', function(e) {
-        e.content = e.content.replace(/((&nbsp;|[\n\r\s])*<p>(&nbsp;|[\n\r\s])*<\/p>(&nbsp;|[\n\r\s])*)+$/g, '');
-        e.content = e.content.replace(/^((&nbsp;|[\n\r\s])*<p>(&nbsp;|[\n\r\s])*<\/p>(&nbsp;|[\n\r\s])*)+/g, '');
-        e.content = e.content.replace(/^<p>(((?!<p>)[\s\S])*)<\/p>$/g, '$1');
-      });
+      editor.on('PostProcess', myTinyMCE.postProcessCallback);
     },
 //    spellchecker_rpc_url: OC.filePath('cafevdb', '3rdparty/js/tinymce/plugins/spellchecker', 'rpc.php'),
     plugins: [
@@ -81,14 +86,19 @@ var myTinyMCE = myTinyMCE || {
         { shortcut: '>:O', url: tinyMCESmileyUrl + 'smiley-yell.gif', title: 'yell' },
       ]
     ]
-  },
-  init: function(lang) {
+  };
+  myTinyMCE.getConfig = function(plusConfig) {
+    if (typeof plusConfig === 'undefined') {
+      plusConfig = {};
+    }
+    return $.extend({}, myTinyMCE.config, plusConfig);
+  };
+  myTinyMCE.init = function(lang) {
     myTinyMCE.config.language = lang;
-    var allconfig = myTinyMCE.config;
-    allconfig.selector = "textarea.tinymce";
+    var allconfig = myTinyMCE.getConfig({ selector: "textarea.wysiwygeditor" });
     tinyMCE.init(allconfig);
   }
-};
+})(window, jQuery, myTinyMCE);
 
 $(document).ready(function() {
   myTinyMCE.init(CAFEVDB.language);
