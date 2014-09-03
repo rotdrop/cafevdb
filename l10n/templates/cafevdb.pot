@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-02 15:15+0200\n"
+"POT-Creation-Date: 2014-09-03 13:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -46,9 +46,9 @@ msgstr ""
 #: ajax/events/events.php:120 ajax/events/execute.php:130
 #: ajax/events/new.form.php:195 ajax/events/sendmail.php:76
 #: ajax/finance/sepa-debit-mandate.php:151
-#: ajax/instruments/adjustInstrumentation.php:86
-#: ajax/instruments/changeInstrumentation.php:110 ajax/pme/pme-table.php:92
-#: ajax/projects/verifyName.php:131
+#: ajax/instruments/adjustInstrumentation.php:91
+#: ajax/instruments/changeInstrumentation.php:148 ajax/pme/pme-table.php:118
+#: ajax/projects/verifyName.php:144
 msgid "Error, caught an exception"
 msgstr ""
 
@@ -191,16 +191,16 @@ msgstr ""
 msgid "%s-detailed"
 msgstr ""
 
-#: ajax/export/excel.php:260 lib/projects.php:994 lib/projects.php:995
+#: ajax/export/excel.php:260 lib/projects.php:1027 lib/projects.php:1028
 msgid "Missing Musicians"
 msgstr ""
 
 #: ajax/export/excel.php:285 ajax/export/insurance-export.php:142
-#: lib/projects.php:997
+#: lib/projects.php:1030
 msgid "Instrument"
 msgstr ""
 
-#: ajax/export/excel.php:286 lib/projects.php:997
+#: ajax/export/excel.php:286 lib/projects.php:1030
 msgid "Missing"
 msgstr ""
 
@@ -208,16 +208,16 @@ msgstr ""
 msgid "Total Insurance Amount: "
 msgstr ""
 
-#: ajax/export/insurance-export.php:141 lib/instrument-insurance.php:245
-#: lib/sepa-debit-mandates.php:224
+#: ajax/export/insurance-export.php:141 lib/instrument-insurance.php:251
+#: lib/sepa-debit-mandates.php:230
 msgid "Musician"
 msgstr ""
 
-#: ajax/export/insurance-export.php:143 lib/instrument-insurance.php:296
+#: ajax/export/insurance-export.php:143 lib/instrument-insurance.php:302
 msgid "Manufacturer"
 msgstr ""
 
-#: ajax/export/insurance-export.php:144 lib/instrument-insurance.php:301
+#: ajax/export/insurance-export.php:144 lib/instrument-insurance.php:307
 msgid "Year of Construction"
 msgstr ""
 
@@ -225,7 +225,7 @@ msgstr ""
 msgid "Instrument Insurance Amount"
 msgstr ""
 
-#: ajax/export/insurance-export.php:146 lib/instrument-insurance.php:289
+#: ajax/export/insurance-export.php:146 lib/instrument-insurance.php:295
 msgid "Accessory"
 msgstr ""
 
@@ -238,7 +238,7 @@ msgid "Musician Insurance Total"
 msgstr ""
 
 #: ajax/export/insurance-export.php:190 ajax/export/insurance-export.php:217
-#: lib/instrument-insurance.php:277
+#: lib/instrument-insurance.php:283
 msgid "Geographical Scope"
 msgstr ""
 
@@ -352,7 +352,7 @@ msgid "No image path was submitted."
 msgstr ""
 
 #: ajax/inlineimage/oc_image.php:69 ajax/inlineimage/oc_image.php:72
-#: js/inlineimage.js:179
+#: js/inlineimage.js:182
 msgid "Error loading image."
 msgstr ""
 
@@ -401,115 +401,116 @@ msgstr ""
 msgid "Temporary file: '%s' has gone AWOL?"
 msgstr ""
 
-#: ajax/instruments/adjustInstrumentation.php:32
-#: ajax/instruments/changeInstrumentation.php:37 ajax/pme/pme-table.php:58
-#: ajax/projects/verifyName.php:92
+#: ajax/instruments/adjustInstrumentation.php:37
+#: ajax/instruments/changeInstrumentation.php:52 ajax/pme/pme-table.php:63
+#: ajax/projects/verifyName.php:97
 msgid "missing arguments"
 msgstr ""
 
-#: ajax/instruments/adjustInstrumentation.php:33
-#: ajax/instruments/changeInstrumentation.php:38
+#: ajax/instruments/adjustInstrumentation.php:38
+#: ajax/instruments/changeInstrumentation.php:53
 msgid "No project id submitted."
 msgstr ""
 
-#: ajax/instruments/adjustInstrumentation.php:46
-#: ajax/instruments/changeInstrumentation.php:51
+#: ajax/instruments/adjustInstrumentation.php:51
+#: ajax/instruments/changeInstrumentation.php:67
 msgid "invalid project"
 msgstr ""
 
-#: ajax/instruments/adjustInstrumentation.php:48
-#: ajax/instruments/changeInstrumentation.php:53
+#: ajax/instruments/adjustInstrumentation.php:53
+#: ajax/instruments/changeInstrumentation.php:69
 #, php-format
 msgid "There doesn't seem to be a project associated with id %s."
 msgstr ""
 
-#: ajax/instruments/adjustInstrumentation.php:61
+#: ajax/instruments/adjustInstrumentation.php:66
 msgid "operation failed"
 msgstr ""
 
-#: ajax/instruments/adjustInstrumentation.php:62
+#: ajax/instruments/adjustInstrumentation.php:67
 #, php-format
 msgid "Adjusting the instrumentation for project ``%s'' probably failed."
 msgstr ""
 
-#: ajax/instruments/adjustInstrumentation.php:73
+#: ajax/instruments/adjustInstrumentation.php:78
 #, php-format
 msgid "Adjusting the instrumentation for project `%s' was probably successful."
 msgstr ""
 
-#: ajax/instruments/changeInstrumentation.php:63
-#: ajax/instruments/changeInstrumentation.php:76 ajax/pme/pme-table.php:67
+#: ajax/instruments/changeInstrumentation.php:83
+#: ajax/instruments/changeInstrumentation.php:100 ajax/pme/pme-table.php:75
+#: ajax/pme/pme-table.php:92
 msgid "invalid arguments"
 msgstr ""
 
-#: ajax/instruments/changeInstrumentation.php:64
+#: ajax/instruments/changeInstrumentation.php:84
 msgid "No instrument list submitted"
 msgstr ""
 
-#: ajax/instruments/changeInstrumentation.php:77
+#: ajax/instruments/changeInstrumentation.php:101
 #, php-format
 msgid "Unknown instruments in list: %s"
 msgstr ""
 
-#: ajax/instruments/changeInstrumentation.php:88
+#: ajax/instruments/changeInstrumentation.php:116
 msgid "data base error"
 msgstr ""
 
-#: ajax/instruments/changeInstrumentation.php:89
+#: ajax/instruments/changeInstrumentation.php:117
 msgid "Failed to update in project instrumentation"
 msgstr ""
 
-#: ajax/instruments/changeInstrumentation.php:96
+#: ajax/instruments/changeInstrumentation.php:128
 #, php-format
 msgid "Changing the instrumentation for project `%s' was probably successful."
 msgstr ""
 
-#: ajax/pme/pme-table.php:59
+#: ajax/pme/pme-table.php:64
 msgid "No class name submitted."
 msgstr ""
 
-#: ajax/pme/pme-table.php:68
+#: ajax/pme/pme-table.php:76
 msgid "Class arguments are not an array"
 msgstr ""
 
-#: ajax/projects/verifyName.php:26
+#: ajax/projects/verifyName.php:28
 msgid "project-year"
 msgstr ""
 
-#: ajax/projects/verifyName.php:26
+#: ajax/projects/verifyName.php:28
 msgid "project-name"
 msgstr ""
 
-#: ajax/projects/verifyName.php:31
+#: ajax/projects/verifyName.php:33
 #, php-format
 msgid "The %s must not be empty.\n"
 msgstr ""
 
-#: ajax/projects/verifyName.php:66
+#: ajax/projects/verifyName.php:68
 msgid "The project-name must not only consist of the year-number."
 msgstr ""
 
-#: ajax/projects/verifyName.php:69
+#: ajax/projects/verifyName.php:71
 msgid "No project-name given."
 msgstr ""
 
-#: ajax/projects/verifyName.php:73
+#: ajax/projects/verifyName.php:75
 msgid "No project-year given."
 msgstr ""
 
-#: ajax/projects/verifyName.php:75
+#: ajax/projects/verifyName.php:77
 msgid "The project-year has to consist of four digits, e.g. ``1984''."
 msgstr ""
 
-#: ajax/projects/verifyName.php:86
+#: ajax/projects/verifyName.php:88
 msgid "Internal error: unknown request"
 msgstr ""
 
-#: ajax/projects/verifyName.php:104
+#: ajax/projects/verifyName.php:111
 msgid "already existent"
 msgstr ""
 
-#: ajax/projects/verifyName.php:106
+#: ajax/projects/verifyName.php:112
 #, php-format
 msgid ""
 "A project with the name ``%s'' already exists in the year %s.\n"
@@ -833,18 +834,18 @@ msgstr ""
 msgid "Unknown WYSIWYG-Editor: `%s'"
 msgstr ""
 
-#: index.php:183 lib/musicians.php:168
+#: index.php:176 lib/musicians.php:177
 #, php-format
 msgid "Add all to %s"
 msgstr ""
 
 #: js/blog.js:46 js/blog.js:146 js/blog.js:207 js/blog.js:235 js/blog.js:260
-#: js/blog.js:298 js/cafevdb.js:699 js/email.js:44 js/email.js:77
-#: js/events.js:64 js/events.js:116 js/inlineimage.js:84 js/inlineimage.js:92
+#: js/blog.js:298 js/email.js:44 js/email.js:77 js/events.js:64
+#: js/events.js:116 js/inlineimage.js:84 js/inlineimage.js:92
 #: js/inlineimage.js:102 js/inlineimage.js:131 js/inlineimage.js:155
-#: js/inlineimage.js:178 js/inlineimage.js:196 js/inlineimage.js:315
-#: js/inlineimage.js:393 js/inlineimage.js:402 js/inlineimage.js:405
-#: js/pme.js:152 js/sepa-debit-mandate.js:62
+#: js/inlineimage.js:181 js/inlineimage.js:199 js/inlineimage.js:318
+#: js/inlineimage.js:396 js/inlineimage.js:405 js/inlineimage.js:408
+#: js/pme.js:347 js/pme.js:476 js/sepa-debit-mandate.js:62
 msgid "Error"
 msgstr ""
 
@@ -881,17 +882,12 @@ msgstr ""
 msgid "Mark this popup as read; the popup will not show up again."
 msgstr ""
 
-#: js/cafevdb.js:256
+#: js/cafevdb.js:260
 msgid "Export to the following format is not yet supported:"
 msgstr ""
 
-#: js/cafevdb.js:258 js/project-instruments.js:87 js/projects.js:89
+#: js/cafevdb.js:262 js/project-instruments.js:87 js/projects.js:89
 msgid "Unimplemented"
-msgstr ""
-
-#: js/cafevdb.js:693 js/events.js:58 js/events.js:110 js/pme.js:146
-#: js/sepa-debit-mandate.js:56
-msgid "Unknown error :("
 msgstr ""
 
 #: js/calendar.js:234
@@ -958,6 +954,11 @@ msgstr ""
 msgid "Do you really want to detach this event from the current project?"
 msgstr ""
 
+#: js/events.js:58 js/events.js:110 js/pme.js:341 js/pme.js:470
+#: js/sepa-debit-mandate.js:56
+msgid "Unknown error :("
+msgstr ""
+
 #: js/events.js:265
 msgid "Really delete?"
 msgstr ""
@@ -987,65 +988,81 @@ msgstr ""
 msgid "No files selected for upload."
 msgstr ""
 
-#: js/inlineimage.js:92 js/inlineimage.js:383
+#: js/inlineimage.js:92 js/inlineimage.js:386
 msgid ""
 "The file you are trying to upload exceed the maximum size for file uploads "
 "on this server."
 msgstr ""
 
-#: js/inlineimage.js:178
+#: js/inlineimage.js:181
 msgid "Could not open image."
 msgstr ""
 
-#: js/inlineimage.js:251
+#: js/inlineimage.js:254
 msgid "Edit inline image"
 msgstr ""
 
-#: js/inlineimage.js:256
+#: js/inlineimage.js:259
 msgid "Ok"
 msgstr ""
 
-#: js/inlineimage.js:262 js/project-instruments.js:208 lib/email.php:1594
+#: js/inlineimage.js:265 js/project-instruments.js:215 lib/email.php:1594
 #: templates/blogedit.php:39
 msgid "Cancel"
 msgstr ""
 
-#: js/inlineimage.js:275
+#: js/inlineimage.js:278
 msgid "Error loading inline image."
 msgstr ""
 
-#: js/inlineimage.js:292
+#: js/inlineimage.js:295
 msgid "Network or server error. Please inform administrator."
 msgstr ""
 
-#: js/inlineimage.js:345
+#: js/inlineimage.js:348
 msgid "Select image"
 msgstr ""
 
-#: js/inlineimage.js:383
+#: js/inlineimage.js:386
 msgid "Upload too large"
 msgstr ""
 
-#: js/inlineimage.js:387
+#: js/inlineimage.js:390
 msgid "Only image files can be used as profile picture."
 msgstr ""
 
-#: js/inlineimage.js:387
+#: js/inlineimage.js:390
 msgid "Wrong file type"
 msgstr ""
 
-#: js/inlineimage.js:393
+#: js/inlineimage.js:396
 msgid ""
 "Your browser doesn't support AJAX upload. Please click on the profile "
 "picture to select a photo to upload."
 msgstr ""
 
-#: js/project-instruments.js:63 js/project-instruments.js:190
+#: js/inlineimage.js:459
+msgid "Photo Zoom"
+msgstr ""
+
+#: js/pme.js:349 js/pme.js:478 js/project-instruments.js:206
+msgid "Debug Information"
+msgstr ""
+
+#: js/pme.js:582
+msgid "#columns"
+msgstr ""
+
+#: js/pme.js:591
+msgid "#rows"
+msgstr ""
+
+#: js/project-instruments.js:63 js/project-instruments.js:197
 msgid "Unkown Error"
 msgstr ""
 
-#: js/project-instruments.js:68 js/project-instruments.js:195
-#: js/projects.js:197
+#: js/project-instruments.js:68 js/project-instruments.js:202
+#: js/projects.js:196
 msgid "Caught a PHP Exception"
 msgstr ""
 
@@ -1068,11 +1085,7 @@ msgid ""
 "instruments."
 msgstr ""
 
-#: js/project-instruments.js:199
-msgid "Debug Information"
-msgstr ""
-
-#: js/project-instruments.js:211
+#: js/project-instruments.js:218
 msgid ""
 "Discard the current choice of instruments and close the dialog. The "
 "instrumentation of the project will remain unchanged."
@@ -1110,9 +1123,9 @@ msgid ""
 "in case of desinformation or misunderstanding. Use with care."
 msgstr ""
 
-#: js/sepa-debit-mandate.js:139 lib/brief-instrumentation.php:280
-#: lib/brief-instrumentation.php:366 lib/brief-instrumentation.php:377
-#: lib/musicians.php:926 lib/musicians.php:1354
+#: js/sepa-debit-mandate.js:139 lib/brief-instrumentation.php:286
+#: lib/brief-instrumentation.php:372 lib/brief-instrumentation.php:383
+#: lib/musicians.php:969 lib/musicians.php:1403
 msgid "SEPA Debit Mandate"
 msgstr ""
 
@@ -1135,56 +1148,48 @@ msgstr ""
 msgid "Please standby, the operation will take some time!"
 msgstr ""
 
-#: js/transpose.js:98
-msgid "#columns"
-msgstr ""
-
-#: js/transpose.js:107
-msgid "#rows"
-msgstr ""
-
-#: lib/brief-instrumentation.php:41
+#: lib/brief-instrumentation.php:41 lib/detailed-instrumentation.php:41
 #, php-format
 msgid "Instrumentation for Project `%s'"
 msgstr ""
 
-#: lib/brief-instrumentation.php:44
+#: lib/brief-instrumentation.php:49
 msgid "Add Musicians"
 msgstr ""
 
-#: lib/brief-instrumentation.php:45
+#: lib/brief-instrumentation.php:50
 msgid "see above"
 msgstr ""
 
-#: lib/brief-instrumentation.php:46
+#: lib/brief-instrumentation.php:51
 msgid "Remove Musicians"
 msgstr ""
 
-#: lib/brief-instrumentation.php:47 lib/brief-instrumentation.php:50
+#: lib/brief-instrumentation.php:52 lib/brief-instrumentation.php:55
 msgid "this table"
 msgstr ""
 
-#: lib/brief-instrumentation.php:49
+#: lib/brief-instrumentation.php:54
 msgid "Per-Musician Project Data"
 msgstr ""
 
-#: lib/brief-instrumentation.php:51
+#: lib/brief-instrumentation.php:56
 msgid "(project instrument, section leader, remarks etc.)"
 msgstr ""
 
-#: lib/brief-instrumentation.php:52
+#: lib/brief-instrumentation.php:57
 msgid "General Personal Data"
 msgstr ""
 
-#: lib/brief-instrumentation.php:53 lib/functions.php:773 lib/projects.php:648
+#: lib/brief-instrumentation.php:58 lib/functions.php:797 lib/projects.php:677
 msgid "Detailed Instrumentation"
 msgstr ""
 
-#: lib/brief-instrumentation.php:54
+#: lib/brief-instrumentation.php:59
 msgid "(see above; address, email, name, picture etc.)"
 msgstr ""
 
-#: lib/brief-instrumentation.php:383
+#: lib/brief-instrumentation.php:389
 msgid "Click to enter details of a potential SEPA debit mandate"
 msgstr ""
 
@@ -1203,23 +1208,23 @@ msgstr ""
 msgid "Unable to update table data at index %s"
 msgstr ""
 
-#: lib/config.php:690
+#: lib/config.php:691
 msgid "birthday"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:294 lib/musicians.php:272
+#: lib/detailed-instrumentation.php:300 lib/musicians.php:281
 msgid "Member Status"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:374
+#: lib/detailed-instrumentation.php:380
 msgid "General Remarks"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:393 lib/musicians.php:388
+#: lib/detailed-instrumentation.php:399 lib/musicians.php:397
 msgid "Photo"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:406 lib/musicians.php:401
+#: lib/detailed-instrumentation.php:412 lib/musicians.php:411
 msgid "Last Updated"
 msgstr ""
 
@@ -1283,7 +1288,7 @@ msgstr ""
 msgid "and"
 msgstr ""
 
-#: lib/email.php:1452 lib/projects.php:638 lib/projects.php:799
+#: lib/email.php:1452 lib/projects.php:667 lib/projects.php:828
 msgid "Events"
 msgstr ""
 
@@ -1504,135 +1509,135 @@ msgstr ""
 msgid "Invalid argument value: `%s'"
 msgstr ""
 
-#: lib/functions.php:526
+#: lib/functions.php:549
 msgid "Export Table"
 msgstr ""
 
-#: lib/functions.php:534
+#: lib/functions.php:557
 msgid "Excel Export"
 msgstr ""
 
-#: lib/functions.php:537
+#: lib/functions.php:560
 msgid "HTML/Spreadsheet"
 msgstr ""
 
-#: lib/functions.php:540
+#: lib/functions.php:563
 msgid "CSV Export"
 msgstr ""
 
-#: lib/functions.php:543
+#: lib/functions.php:566
 msgid "HTML Export"
 msgstr ""
 
-#: lib/functions.php:676
+#: lib/functions.php:699
 msgid "Error: Unknonwn Button Type"
 msgstr ""
 
-#: lib/functions.php:699
+#: lib/functions.php:722
 msgid "View all Projects"
 msgstr ""
 
-#: lib/functions.php:700
+#: lib/functions.php:723
 msgid "Overview over all known projects (start-page)."
 msgstr ""
 
-#: lib/functions.php:712
+#: lib/functions.php:735
 msgid "Display all Musicians"
 msgstr ""
 
-#: lib/functions.php:713
+#: lib/functions.php:736
 msgid ""
 "Display all musicians stored in the data-base, with detailed facilities for "
 "filtering and sorting."
 msgstr ""
 
-#: lib/functions.php:725
+#: lib/functions.php:748
 msgid ""
 "Mass-email form, use with care. Mass-emails will be logged. Recipients will "
 "be specified by the Bcc: field in the header, so the recipients are "
 "undisclosed to each other."
 msgstr ""
 
-#: lib/functions.php:739
+#: lib/functions.php:762
 msgid "Email History"
 msgstr ""
 
-#: lib/functions.php:740
+#: lib/functions.php:763
 msgid "Display all emails sent by our mass-email form."
 msgstr ""
 
-#: lib/functions.php:758
+#: lib/functions.php:781
 msgid "The currently active project."
 msgstr ""
 
-#: lib/functions.php:774 lib/tooltips.php:250
+#: lib/functions.php:798 lib/tooltips.php:250
 msgid ""
 "Detailed display of all registered musicians for the selected project. The "
 "table will allow for modification of personal data like email, phone, "
 "address etc."
 msgstr ""
 
-#: lib/functions.php:788 lib/projects.php:644
+#: lib/functions.php:812 lib/projects.php:673
 msgid "Brief Instrumentation"
 msgstr ""
 
-#: lib/functions.php:789
+#: lib/functions.php:813
 msgid ""
 "Brief display of all registered musicians for the selected project. The "
 "table will allow for modification of project specific data, like the "
 "instrument, the project-fee etc."
 msgstr ""
 
-#: lib/functions.php:803 lib/project-instruments.php:359
+#: lib/functions.php:827 lib/project-instruments.php:382
 msgid "Add Instruments"
 msgstr ""
 
-#: lib/functions.php:804
+#: lib/functions.php:828
 msgid ""
 "Display the list of instruments known by the data-base, possibly add new "
 "ones as needed."
 msgstr ""
 
-#: lib/functions.php:818 lib/project-instruments.php:58 lib/projects.php:652
+#: lib/functions.php:842 lib/project-instruments.php:66 lib/projects.php:681
 msgid "Instrumentation Numbers"
 msgstr ""
 
-#: lib/functions.php:819 lib/tooltips.php:263
+#: lib/functions.php:843 lib/tooltips.php:263
 msgid ""
 "Display the desired instrumentaion numbers, i.e. how many musicians are "
 "already registered for each instrument group and how many are finally needed."
 msgstr ""
 
-#: lib/functions.php:833
+#: lib/functions.php:857
 msgid "Add more Musicians"
 msgstr ""
 
-#: lib/functions.php:834
+#: lib/functions.php:858
 msgid ""
 "List of all musicians NOT registered for the selected project. Only through "
 "that table a new musician can enter a project. Look for a hyper-link "
 "Add_to_PROJECT"
 msgstr ""
 
-#: lib/functions.php:848
+#: lib/functions.php:872
 msgid "Transfer Instruments from Musicians"
 msgstr ""
 
-#: lib/functions.php:864
+#: lib/functions.php:888
 msgid "Insurances"
 msgstr ""
 
-#: lib/functions.php:865
+#: lib/functions.php:889
 msgid ""
 "Display a table with an overview about the current state of the member's "
 "instrument insurances."
 msgstr ""
 
-#: lib/functions.php:877
+#: lib/functions.php:901
 msgid "Debit Mandates"
 msgstr ""
 
-#: lib/functions.php:878
+#: lib/functions.php:902
 msgid "Display a table with an overview over all SEPA debit mandates."
 msgstr ""
 
@@ -1656,27 +1661,27 @@ msgstr ""
 msgid "Overview over the Bulk Instrument Insurances"
 msgstr ""
 
-#: lib/instrument-insurance.php:257
+#: lib/instrument-insurance.php:263
 msgid "Bill-to Party"
 msgstr ""
 
-#: lib/instrument-insurance.php:270
+#: lib/instrument-insurance.php:276
 msgid "Insurance Broker"
 msgstr ""
 
-#: lib/instrument-insurance.php:284
+#: lib/instrument-insurance.php:290
 msgid "Insured Object"
 msgstr ""
 
-#: lib/instrument-insurance.php:307
+#: lib/instrument-insurance.php:313
 msgid "Insurance Amount"
 msgstr ""
 
-#: lib/instrument-insurance.php:311
+#: lib/instrument-insurance.php:317
 msgid "Total Insurance"
 msgstr ""
 
-#: lib/instrument-insurance.php:419
+#: lib/instrument-insurance.php:425
 #, php-format
 msgid "Invalid broker/geographical-scope combination: %s - %s"
 msgstr ""
@@ -1726,21 +1731,21 @@ msgstr ""
 msgid "Data inconsisteny, %d is not a unique Id, got %d data sets."
 msgstr ""
 
-#: lib/instrumentation.php:373
+#: lib/instrumentation.php:374
 #, php-format
 msgid "Data inconsistency: Ids do not match (`%s' != `%s')"
 msgstr ""
 
-#: lib/instrumentation.php:382
+#: lib/instrumentation.php:387
 #, php-format
 msgid "Instrument not known by %s, correct that first! %s only plays %s!!!"
 msgstr ""
 
-#: lib/instrumentation.php:384
+#: lib/instrumentation.php:389
 msgid "Click on the following button to enforce your decision"
 msgstr ""
 
-#: lib/instrumentation.php:385
+#: lib/instrumentation.php:390
 #, php-format
 msgid ""
 "This will also add `%s' to %s's list of known instruments. Unfortunately, "
@@ -1748,7 +1753,7 @@ msgid ""
 "Button of your browser."
 msgstr ""
 
-#: lib/instrumentation.php:389
+#: lib/instrumentation.php:394
 #, php-format
 msgid "Really Change %s's instrument!!!"
 msgstr ""
@@ -1757,51 +1762,51 @@ msgstr ""
 msgid "Add new Instruments"
 msgstr ""
 
-#: lib/instruments.php:341
+#: lib/instruments.php:357
 msgid "Needed Instruments"
 msgstr ""
 
-#: lib/instruments.php:346
+#: lib/instruments.php:362
 #, php-format
 msgid "Instrument does not yet exist, cannot change its name: `%s'"
 msgstr ""
 
-#: lib/instruments.php:364 lib/instruments.php:394 lib/instruments.php:404
+#: lib/instruments.php:380 lib/instruments.php:410 lib/instruments.php:420
 #, php-format
 msgid "SQL-Error ``%s''. Could not execute the query ``%s''"
 msgstr ""
 
-#: lib/instruments.php:381
+#: lib/instruments.php:397
 #, php-format
 msgid "SQL-Error ``%s''. Could not execute the query `` %s ''"
 msgstr ""
 
-#: lib/instruments.php:442
+#: lib/instruments.php:458
 #, php-format
 msgid "Could not fetch instruments for project-id %s"
 msgstr ""
 
-#: lib/instruments.php:538
+#: lib/instruments.php:554
 msgid "Streich,Saiten"
 msgstr ""
 
-#: lib/instruments.php:539
+#: lib/instruments.php:555
 msgid "Streich,Zupf"
 msgstr ""
 
-#: lib/instruments.php:540
+#: lib/instruments.php:556
 msgid "Blas,Holz"
 msgstr ""
 
-#: lib/instruments.php:541
+#: lib/instruments.php:557
 msgid "Blas,Blech"
 msgstr ""
 
-#: lib/instruments.php:542
+#: lib/instruments.php:558
 msgid "Schlag"
 msgstr ""
 
-#: lib/instruments.php:543
+#: lib/instruments.php:559
 msgid "Sonstiges"
 msgstr ""
 
@@ -1811,70 +1816,70 @@ msgstr ""
 
 #: lib/musicians.php:46
 #, php-format
-msgid ""
-"Add musicians to the project `%s'\n"
-"<p>\n"
-"This page is the only way to add musicians to projects in order to\n"
-"make sure that the musicians are also automatically added to the\n"
-"`global' musicians data-base (and not only to the project)."
+msgid "Add musicians to the project `%s'"
 msgstr ""
 
-#: lib/musicians.php:219
+#: lib/musicians.php:228
 #, php-format
 msgid "Add to %s"
 msgstr ""
 
-#: lib/musicians.php:299
+#: lib/musicians.php:308
 msgid "Projekte"
 msgstr ""
 
-#: lib/musicians.php:353
+#: lib/musicians.php:362
 msgid "Remarks"
 msgstr ""
 
-#: lib/musicians.php:372
+#: lib/musicians.php:381
 msgid "Instrument Insurance"
 msgstr ""
 
-#: lib/musicians.php:481
+#: lib/musicians.php:515
 #, php-format
 msgid "Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;"
 msgstr ""
 
-#: lib/musicians.php:506
+#: lib/musicians.php:540
 msgid ""
 "Portraits or Avatars can only be added to an existing musician's profile; "
 "please add the new musician without protrait image first."
 msgstr ""
 
-#: lib/musicians.php:520
+#: lib/musicians.php:554
 #, php-format
 msgid "Drop photo to upload (max %s)"
 msgstr ""
 
-#: lib/musicians.php:523
+#: lib/musicians.php:557
 msgid "Delete current photo"
 msgstr ""
 
-#: lib/musicians.php:524
+#: lib/musicians.php:558
 msgid "Edit current photo"
 msgstr ""
 
-#: lib/musicians.php:525
+#: lib/musicians.php:559
 msgid "Upload new photo"
 msgstr ""
 
-#: lib/musicians.php:526
+#: lib/musicians.php:560
 msgid "Select photo from ownCloud"
 msgstr ""
 
-#: lib/musicians.php:534
+#: lib/musicians.php:568
 msgid ""
 "Internal error, don't know what to do concerning portrait images in the "
 "given context."
 msgstr ""
 
-#: lib/musicians.php:1008 lib/musicians.php:1460
+#: lib/musicians.php:746
+#, php-format
+msgid "New Musician for Project `%s'."
+msgstr ""
+
+#: lib/musicians.php:1051 lib/musicians.php:1509
 #, php-format
 msgid ""
 "None of the instruments known by %s are mentioned in the %sinstrumentation-"
@@ -1884,7 +1889,7 @@ msgid ""
 "Please correct the mis-match."
 msgstr ""
 
-#: lib/musicians.php:1019
+#: lib/musicians.php:1062
 #, php-format
 msgid ""
 "Choosing the first instrument known by %s\n"
@@ -1893,7 +1898,12 @@ msgid ""
 "below, if necessary. Choosing ``%s'' as instrument."
 msgstr ""
 
-#: lib/musicians.php:1485
+#: lib/musicians.php:1149
+#, php-format
+msgid "New Musicians for Project `%s'."
+msgstr ""
+
+#: lib/musicians.php:1534
 #, php-format
 msgid ""
 "Generally, the first instrument known by the respective musician\n"
@@ -1903,20 +1913,20 @@ msgid ""
 "below, if necessary."
 msgstr ""
 
-#: lib/php-excel-functions.php:96 lib/sepa-debit-mandates.php:215
+#: lib/php-excel-functions.php:96 lib/sepa-debit-mandates.php:221
 msgid "yes"
 msgstr ""
 
-#: lib/php-excel-functions.php:100 lib/sepa-debit-mandates.php:214
+#: lib/php-excel-functions.php:100 lib/sepa-debit-mandates.php:220
 msgid "no"
 msgstr ""
 
-#: lib/project-instruments.php:56
+#: lib/project-instruments.php:64
 #, php-format
 msgid "Instrumentation Numbers for `%s'"
 msgstr ""
 
-#: lib/project-instruments.php:66
+#: lib/project-instruments.php:74
 msgid ""
 "The target instrumentation numbers can be filled into this table. The `have'-"
 "numbers are the numbers of the musicians already registered for the project."
@@ -1924,69 +1934,70 @@ msgid ""
 "this table click the `Adjust Instrument' option from the `Actions' menu."
 msgstr ""
 
-#: lib/project-instruments.php:246 lib/project-instruments.php:435
-#: lib/projects.php:266 lib/projects.php:271
+#: lib/project-instruments.php:263 lib/project-instruments.php:496
+#: lib/projects.php:271 lib/projects.php:276
 msgid "Actions"
 msgstr ""
 
-#: lib/project-instruments.php:247 lib/project-instruments.php:454
+#: lib/project-instruments.php:263 lib/project-instruments.php:515
 #: templates/expertmode.php:51
 msgid "Adjust Instruments"
 msgstr ""
 
-#: lib/project-instruments.php:241
+#: lib/project-instruments.php:260
 #, php-format
 msgid ""
-"Keine Besetzung für das Projekt gefunden, bitte bei den <A\n"
-"HREF=%s>Projekteigenschaften</A> die Instrumente eintragen, oder im\n"
+"Keine Besetzung für das Projekt gefunden, bitte bei den Projekteigenschaften "
+"die Instrumente eintragen (\"Ändern\"-Knopf betätigen, dann "
+"\"Instrumentierung ändern\"), oder im\n"
 "<u>%s-Menü den ``%s''-Eintrag</u> auswählen, um die Instrumente der bereits\n"
 "``registrierten'' Musiker automatisch eintragen lassen."
 msgstr ""
 
-#: lib/project-instruments.php:249
+#: lib/project-instruments.php:265
 msgid "Instrumentation-Numbers not Found"
 msgstr ""
 
-#: lib/project-instruments.php:318 lib/projects.php:245
+#: lib/project-instruments.php:343 lib/projects.php:250
 msgid "Projekt-Name"
 msgstr ""
 
-#: lib/project-instruments.php:363
+#: lib/project-instruments.php:386
 msgid "Change Instrumentation"
 msgstr ""
 
-#: lib/project-instruments.php:364
+#: lib/project-instruments.php:387
 msgid "Click to add instruments to the project"
 msgstr ""
 
-#: lib/project-instruments.php:381
+#: lib/project-instruments.php:404
 msgid "target"
 msgstr ""
 
-#: lib/project-instruments.php:389
+#: lib/project-instruments.php:412
 msgid "have"
 msgstr ""
 
-#: lib/project-instruments.php:447
+#: lib/project-instruments.php:508
 msgid "Transpose"
 msgstr ""
 
-#: lib/projects.php:77
+#: lib/projects.php:82
 #, php-format
 msgid "%s Projects"
 msgstr ""
 
-#: lib/projects.php:84
+#: lib/projects.php:89
 msgid ""
 "Please click on the project-name of the respective project in order to edit "
 "the instrumentation list or dates or to store other project related data."
 msgstr ""
 
-#: lib/projects.php:257
+#: lib/projects.php:262
 msgid "Append the year to the name"
 msgstr ""
 
-#: lib/projects.php:331
+#: lib/projects.php:336
 msgid ""
 "Comma separates list of extra-fields, e.g.\n"
 "<blockquote>\n"
@@ -2016,54 +2027,54 @@ msgid ""
 "a comma."
 msgstr ""
 
-#: lib/projects.php:357
+#: lib/projects.php:362
 msgid "Flyer"
 msgstr ""
 
-#: lib/projects.php:658
+#: lib/projects.php:687
 msgid "Project Wiki Page"
 msgstr ""
 
-#: lib/projects.php:662
+#: lib/projects.php:691
 msgid "Project Files"
 msgstr ""
 
-#: lib/projects.php:668
+#: lib/projects.php:697
 msgid "SEPA Debit Mandates"
 msgstr ""
 
-#: lib/projects.php:672
+#: lib/projects.php:701
 msgid "Profit and Loss Account"
 msgstr ""
 
-#: lib/projects.php:1175
+#: lib/projects.php:1208
 msgid ""
 "Flyers can only be added to existing projects, please add the new\n"
 "project without a flyer first."
 msgstr ""
 
-#: lib/projects.php:1190
+#: lib/projects.php:1223
 #, php-format
 msgid "Drop image to upload (max %s)"
 msgstr ""
 
-#: lib/projects.php:1193
+#: lib/projects.php:1226
 msgid "Delete current flyer"
 msgstr ""
 
-#: lib/projects.php:1194
+#: lib/projects.php:1227
 msgid "Edit current flyer"
 msgstr ""
 
-#: lib/projects.php:1195
+#: lib/projects.php:1228
 msgid "Upload new flyer"
 msgstr ""
 
-#: lib/projects.php:1196
+#: lib/projects.php:1229
 msgid "Select image from ownCloud"
 msgstr ""
 
-#: lib/projects.php:1204
+#: lib/projects.php:1237
 msgid ""
 "Internal error, don't know what to do concerning project-flyers in the given "
 "context."
@@ -2078,31 +2089,31 @@ msgstr ""
 msgid "Overview over all SEPA Debit Mandates"
 msgstr ""
 
-#: lib/sepa-debit-mandates.php:203
+#: lib/sepa-debit-mandates.php:209
 msgid "Mandate Reference"
 msgstr ""
 
-#: lib/sepa-debit-mandates.php:209
+#: lib/sepa-debit-mandates.php:215
 msgid "One Time"
 msgstr ""
 
-#: lib/sepa-debit-mandates.php:217
+#: lib/sepa-debit-mandates.php:223
 msgid "Date Issued"
 msgstr ""
 
-#: lib/sepa-debit-mandates.php:238
+#: lib/sepa-debit-mandates.php:244
 msgid "Project"
 msgstr ""
 
-#: lib/sepa-debit-mandates.php:267
+#: lib/sepa-debit-mandates.php:273
 msgid "Bank Code"
 msgstr ""
 
-#: lib/sepa-debit-mandates.php:275
+#: lib/sepa-debit-mandates.php:281
 msgid "Bank Account Owner"
 msgstr ""
 
-#: lib/sepa-debit-mandates.php:283
+#: lib/sepa-debit-mandates.php:289
 msgid "Last-Used Date"
 msgstr ""
 
