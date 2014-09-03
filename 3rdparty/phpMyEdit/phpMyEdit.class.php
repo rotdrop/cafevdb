@@ -338,7 +338,7 @@ class phpMyEdit
 			($this->label_cmp($this->savechange, 'Save')  && stristr($options, 'C')) ||
 			($this->label_cmp($this->morechange, 'Apply') && stristr($options, 'C')) ||
 			($this->label_cmp($this->savecopy  , 'Save')  && stristr($options, 'P')) ||
-			($this->label_cmp($this->applycioy , 'Apply') && stristr($options, 'P')) ||
+			($this->label_cmp($this->applycopy , 'Apply') && stristr($options, 'P')) ||
 			($this->label_cmp($this->savedelete, 'Save')  && stristr($options, 'D'));
 	} /* }}} */
 
@@ -3763,7 +3763,11 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		$query_real .= $where_part;
 		// Real query
 		$res = $this->myquery($query_real, __LINE__);
-		$this->message = $this->sql_affected_rows($this->dbh).' '.$this->labels['record changed'];
+		if ($this->sql_affected_rows($this->dbh) == 1) {
+			$this->message = $this->sql_affected_rows($this->dbh).' '.$this->labels['record changed'];
+		} else {
+			$this->message = $this->sql_affected_rows($this->dbh).' '.$this->labels['records changed'];
+		}
 		if (! $res) {
 			return false;
 		}
@@ -3974,12 +3978,12 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		$this->view_operation()	  && $this->page_type = 'V';
 		if ($this->add_operation()
 			|| $this->label_cmp($this->saveadd, 'Save')
+			|| $this->label_cmp($this->applyadd, 'Apply')
 			|| $this->label_cmp($this->moreadd, 'More')) {
 			$this->page_type = 'A';
 		}
 		if ($this->change_operation()
 			|| $this->label_cmp($this->savechange, 'Save')
-			|| $this->label_cmp($this->applyadd, 'Apply')
 			|| $this->label_cmp($this->morechange, 'Apply')) {
 			$this->page_type = 'C';
 		}
@@ -4269,9 +4273,10 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		elseif ($this->label_cmp($this->applyadd, 'Apply')
 				|| $this->label_cmp($this->applycopy, 'Apply')) {
 			$this->add_enabled() && $this->do_add_record();
-			$this->saveadd	= null; // unset($this->saveadd)
-			$this->savecopy = null; // unset($this->savecopy)
-			$this->applyadd = null; // unset($this->applyadd)
+			$this->saveadd	 = null; // unset($this->saveadd)
+			$this->savecopy  = null; // unset($this->savecopy)
+			$this->applyadd  = null; // unset($this->applyadd)
+			$this->applycopy = null; // unset($this->applycopy)
 			$this->operation = $this->labels['Change']; // to force change operation
 			$this->recreate_fdd();
 			$this->recreate_displayed();
@@ -4527,6 +4532,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		/* First get any hard-coded record, then possibly
 		 * override by operation query string.
 		 */
+		$querypart = '';
 		$this->rec	 = $this->get_sys_cgi_var('rec', '');
 		$qpos = strpos($this->operation, '?');
 		if ($qpos !== false) {
@@ -4540,7 +4546,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			echo "pos: $qpos\n";
 			echo '</PRE>';
 		}
-					
+
 		$opreq = parse_url('fake://pme/operation'.$querypart);
 		if (false) {
 			echo '<PRE>';
@@ -4592,9 +4598,13 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 							.'[]='.rawurlencode($val2);
 					}
 				} else {
-					foreach($val as $key2 => $val2) {
-						$this->cgi['persist'] .= '&'.rawurlencode($key)
-							.'['.rawurlencode($key2).']='.rawurlencode($val2);
+					if (false) {
+						foreach($val as $key2 => $val2) {
+							$this->cgi['persist'] .= '&'.rawurlencode($key)
+								.'['.rawurlencode($key2).']='.rawurlencode($val2);
+						}	
+					} else {
+						$this->cgi['persist'] .= '&'.http_build_query(array($key => $val));
 					}
 				}
 			} else {
@@ -4646,6 +4656,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		$this->savedelete	= $this->get_sys_cgi_var('savedelete');
 		$this->canceldelete = $this->get_sys_cgi_var('canceldelete');
 		$this->cancelview	= $this->get_sys_cgi_var('cancelview');
+
 		// Filter setting
 		if (isset($this->sw)) {
 			$this->label_cmp($this->sw, 'Search') && $this->fl = 1;

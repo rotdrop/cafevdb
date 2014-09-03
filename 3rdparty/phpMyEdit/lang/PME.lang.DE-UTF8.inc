@@ -50,6 +50,7 @@ return Array(
 		'of'			=>'von',
 		'record added'  =>'Datensatz hinzugefügt',
 		'record changed'=>'Datensatz geändert',
+		'records changed'=>'Datensätze geändert',
 		'record deleted'=>'Datensatz gelöscht',
 		'Please enter'  =>'Bitte füllen sie dieses Feld aus:',
 		'months' =>	Array(

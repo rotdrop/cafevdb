@@ -45,6 +45,7 @@ return Array(
 		'of'				=>'of',
 		'record added'  	=>'record added',
 		'record changed'	=>'record changed',
+		'records changed'	=>'records changed',
 		'record deleted'	=>'record deleted',
 		'Please enter'  	=>'Please enter',
 		'months' => Array(
