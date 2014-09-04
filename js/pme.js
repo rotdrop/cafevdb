@@ -114,7 +114,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                                             'input[name$="applyadd"],'+
                                             'input[name$="applycopy"]');
     if (button.length > 0) {
-      button = button.first(); // trigger up _and_ down buttons.
+      button = button.first(); // don't trigger up _and_ down buttons.
       button.trigger('click');
     } else {
       // submit the outer form
@@ -262,15 +262,29 @@ var PHPMYEDIT = PHPMYEDIT || {};
           'input[name$="morechange"],'+
           'input[name$="applyadd"],'+
           'input[name$="applycopy"]';
-        
+        var deleteSelector = 'input[name$="savedelete"]';
+
         var post = $(container).find('form.pme-form').serialize();
         post += '&' + $.param(options);
-        var applyButton = container.find(applySelector);
-        if (applyButton.length > 0) {
-          var name  = applyButton.attr('name');
-          var value = applyButton.val();
-          post += '&' + name + "=" + value;
+        var name, value;
+
+        var deleteButton = container.find(deleteSelector);
+        if (deleteButton.length > 0) {
+          name  = deleteButton.attr('name');
+          value = deleteButton.val();
+        } else {
+          var applyButton = container.find(applySelector);
+          if (applyButton.length > 0) {
+            name  = applyButton.attr('name');
+            value = applyButton.val();
+          }
         }
+        var obj = {};
+        obj[name] = value;
+        post += '&' + $.param(obj);
+
+        //alert(post);
+
         $.post(OC.filePath('cafevdb', 'ajax/pme', 'pme-table.php'),
              post,
              function (data) {

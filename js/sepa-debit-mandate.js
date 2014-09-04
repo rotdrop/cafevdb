@@ -422,12 +422,13 @@ $(document).ready(function(){
 
   PHPMYEDIT.addTableLoadCallback('SepaDebitMandates',
                                  {
-                                   callback: function(selector) {
-                                     this.ready(selector);
-                                     alert("Here I am: "+selector);
-                                   },
-                                   context: CAFEVDB.SepaDebitMandate,
-                                   parameters: []
+                                     callback: function(selector, resizeCB) {
+                                         this.ready(selector);
+                                         resizeCB();
+                                         //alert("Here I am: "+selector);
+                                     },
+                                     context: CAFEVDB.SepaDebitMandate,
+                                     parameters: []
                                  });
 
   CAFEVDB.SepaDebitMandate.ready(PHPMYEDIT.defaultSelector);

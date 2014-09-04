@@ -386,54 +386,63 @@ class Instrumentation
     if (!strstr($instruments, $instrument)) {
       $text1 = L::t('Instrument not known by %s, correct that first! %s only plays %s!!!',
                     array($musname, $musname, $instruments));
-      $text2 = L::t('Click on the following button to enforce your decision');
-      $text3 = L::t('This will also add `%s\' to %s\'s list of known instruments. '
-                    .'Unfortunately, all your other changes might be discarded. '.
-                    'You may want to try the `Back\'-Button of your browser.',
-                    array($instrument, $musname));
-      $btnValue = L::t('Really Change %s\'s instrument!!!', array($musname));
-      $btn =<<<__EOT__
-<form style="display:inline;" id="cafev-force-instrument" name="CAFEV_form_besetzung" method="post" action="?app=cafevdb">
-  <input type="submit" name="" value="$btnValue">
-__EOT__;
-
-      if ($pme->cgi['persist'] != '') {
-        $btn .= $pme->get_origvars_html($pme->cgi['persist']);
-      }
-      $btn .= $pme->htmlHiddenSys('mtable', $pme->tb);
-      $btn .= $pme->htmlHiddenSys('mkey', $pme->key);
-      $btn .= $pme->htmlHiddenSys('mkeytype', $pme->key_type);
-      foreach ($pme->mrecs as $key => $val) {
-        $btn .= $pme->htmlHiddenSys('mrecs['.$key.']', $val);
-      }
-      $btn .=<<<__EOT__
-  <input type="hidden" name="Template" value="change-one-musician">
-  <input type="hidden" name="Project" value="$project" />
-  <input type="hidden" name="ProjectId" value="$projectId" />
-  <input type="hidden" name="MusicianId" value="$musicianId" />
-  <input type="hidden" name="ForcedInstrument" value="$instrument" />
-
-__EOT__;
-      $btn .=<<<__EOT__
-</form>
-__EOT__;
-// TODO: will probably not work with bulk-stuff
-  echo <<<__EOT__
 <div class="cafevdb-table-notes" style="height:18ex">
   <div class="cafevdb-note change-instrument">
   <div>$text1</div>
-  <div>$text2: $btn</div>
-  <div>$text3</div>
   </div>
 </div>
 
 __EOT__;
 
-      return false;
+      return true; // so what
     }
     
     return true;
-  }  
+  }
+
+  /**Look up the musician Id in the Besetzungen table and fetch the
+   * musician's data from the Musiker table. We return all data from
+   * the musician in order to be inefficient ;) and in particular the
+   * project-instrument from the Besetzungen table
+   */
+  public static function fetchMusicianData($recordId, $projectId, $handle = false)
+  {
+    $ownConnection = $handle === false;
+
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
+    $query = " SELECT `Musiker`.*,
+ `Besetzungen`.`ProjektId`,`Besetzungen`.`Instrument` as 'ProjektInstrument',
+ `Projekte`.`Name`,`Projekte`.`Jahr`,`Projekte`.`Besetzung`
+ FROM `Musiker`
+   LEFT JOIN `Besetzungen`
+     ON `Musiker`.`Id` = `Besetzungen`.`MusikerId`
+   LEFT JOIN `Projekte`
+     ON `Besetzungen`.`ProjektId` = `Projekte`.`Id`
+     WHERE `Besetzungen`.`Id` = $recordId";
+    if ($projectId > 0) {
+      $query .= " AND `Besetzungen`.`ProjektId` = $projectId";
+    }
+   
+    //throw new \Exception($query);
+ 
+    $result = mySQL::query($query, $handle);
+    if ($result !== false && mysql_num_rows($result) == 1) {
+      $row = mySQL::fetch($result);
+    } else {
+      $row = false;
+    }
+    
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $row;
+  }
+
   
 };
 

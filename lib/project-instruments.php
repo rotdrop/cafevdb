@@ -252,10 +252,6 @@ class ProjectInstruments
       // Also restrict the instruments to the instruments which are required for this project.
       $projectInstruments = Instruments::fetchProjectInstruments($projectId, $handle);
 
-      if ($projectMode) {
-        $opts['filters'] = "`PMEtable0`.`Id` = ".$recordId;
-      }
-        
       if (count($projectInstruments) == 0) {
         Util::alert(L::t('Keine Besetzung für das Projekt gefunden, bitte bei den Projekteigenschaften die Instrumente eintragen ("Ändern"-Knopf betätigen, dann "Instrumentierung ändern"), oder im
 <u>%s-Menü den ``%s\'\'-Eintrag</u> auswählen, um die Instrumente der bereits
@@ -274,6 +270,11 @@ class ProjectInstruments
           $this->recordId = $recordId = mySQL::newestIndex($handle);
         }
       }
+
+      if ($projectMode) {
+        $opts['filters'] = "`PMEtable0`.`Id` = ".$recordId;
+      }
+
     } else {
       $projectInstruments = $instruments;
 

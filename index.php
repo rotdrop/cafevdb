@@ -130,6 +130,8 @@ try {
   OCP\Util::addscript("cafevdb/3rdparty/QuickForm2", "quickform");
   OCP\Util::addscript("cafevdb/3rdparty/QuickForm2", "dualselect");
 
+  OCP\UTIL::addscript("cafevdb/3rdparty", "imagesloaded/imagesloaded.pkgd.min");
+
   // Calendar event hacks
   OCP\Util::addscript('3rdparty/timepicker', 'jquery.ui.timepicker');
   OCP\Util::addStyle('3rdparty/timepicker', 'jquery.ui.timepicker');
@@ -150,7 +152,6 @@ try {
   $project    = Util::cgiValue('Project', '');
   $projectId  = Util::cgiValue('ProjectId', -1);
   $musicianId = Util::cgiValue('MusicianId',-1);
-  $recordKey  = Config::$pmeopts['cgi']['prefix']['sys'].'rec';
   $recordId   = Util::getCGIRecordId();
 
   if (!$config['summary']) {
@@ -197,6 +198,12 @@ try {
   case 'project-instruments':
     OCP\Util::addStyle('cafevdb', $tmplname);
     OCP\Util::addScript('cafevdb', $tmplname);
+    break;
+  case 'brief-instrumentation':
+  case 'detailed-instrumentation':
+  case 'bulk-add-musicians':
+    OCP\Util::addStyle('cafevdb', 'instrumentation');
+    OCP\Util::addScript('cafevdb', 'instrumentation');
     break;
   default:
     /* nothing */

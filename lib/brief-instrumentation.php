@@ -220,6 +220,8 @@ class BriefInstrumentation
                                                         'filters' => "Id = $projectId"
                                                         )
                                       );
+
+    $musIdx = 2;    
     $opts['fdd']['MusikerId'] = array(
                                       'name'     => 'MusikerId',
                                       'input'    => 'R', // read-only
@@ -239,13 +241,22 @@ class BriefInstrumentation
       'name'     => 'Instrument',
       'select'   => 'D',
       'maxlen'   => 36,
-      'css'      => array('postfix' => 'instruments'),
+      'css'      => array('postfix' => 'instrument'),
       'sort'     => true,
       'values' => array(
         'table'   => 'Instrumente',
         'column'  => 'Instrument',
         'orderby' => '$table.Sortierung',
         'description' => array('columns' => array('Instrument')),
+        /* This rather fancy fillter masks out all instruments
+         * currently not registerd with the given musician, but allows
+         * for the currently active instrument.
+         */
+        'filters' => ("FIND_IN_SET(`Instrument`,
+  CONCAT_WS(',',(SELECT `Instrument` FROM \$main_table WHERE \$record_id = `\$main_table`.`Id`),
+                (SELECT `Instrumente` FROM `Musiker`
+                          LEFT JOIN `\$main_table` ON  `\$main_table`.`MusikerId` =`Musiker`.`Id`
+                          WHERE \$record_id = `\$main_table`.`Id`)))"),
         ),
       'values|LF' => array(
         'table'   => 'Instrumente',
@@ -257,6 +268,32 @@ class BriefInstrumentation
         ),
       'valueGroups' => $this->groupedInstruments,
       );
+
+    /* Give the user also the choice to alter the personal list of
+     * instruments for the respective musician, we do this in the same
+     * way as it is done for the project-instruments.
+     */    
+    $opts['fdd']['MusicianInstruments'] = array(
+      'input' => 'V',
+      'name' => L::t('All Instruments'),
+      'display' => array(
+        'prefix' => ('<input style="display:none;" type="button"'.
+                     '       id="add-instruments-button"'.
+                     '       value="'.L::t('Change Known Instruments').'"'.
+                     '       title="'.L::t('Click to change the list of instrumens the musician is capable to perform with.').'"'.
+                     '       name="add-instruments" />'.
+                     '<div id="add-instruments-block">'.
+                     '  <input type="hidden" autofocus="autofocus" />'), // prevent auto-focus on chosen.
+        'postfix' => '</div>'),
+      'css' => array('postfix' => 'add-instruments'), // chosen-hidden select-hidden'),
+      'options' => 'C',
+      'select' => 'M',
+      'sql' => '`PMEjoin'.$musIdx.'`.`Instrumente`',
+      'sqlw' => '`PMEjoin'.$musIdx.'`.`Instrumente`',
+      'values' => $this->instruments,
+      'valueGroups' => $this->groupedInstruments
+      );
+
     $opts['fdd']['Sortierung'] = array('name' => 'Orchester-Sortierung',
                                        'select' => 'T',
                                        'options' => 'VCPR',
@@ -268,6 +305,7 @@ class BriefInstrumentation
                                     'maxlen' => '1',
                                     'sort' => true);
     $opts['fdd']['Stimmführer'] = $this->sectionLeaderColumn;
+
     $opts['fdd']['Bemerkungen'] = array('name'     => 'Bemerkungen',
                                         'select'   => 'T',
                                         'maxlen'   => 65535,
@@ -324,8 +362,8 @@ class BriefInstrumentation
 
     // Check whether the instrument is also mentioned in the musicians
     // data-base. Otherwise add id on request.
-    $opts['triggers']['insert']['before']  = 'CAFEVDB\Instrumentation::beforeInsertFixProjectTrigger';
-    $opts['triggers']['update']['before']  = 'CAFEVDB\Instrumentation::beforeUpdateInstrumentTrigger';
+    //x$opts['triggers']['insert']['before']  = 'CAFEVDB\Instrumentation::beforeInsertFixProjectTrigger';
+    // $opts['triggers']['update']['before']  = 'CAFEVDB\Instrumentation::beforeUpdateInstrumentTrigger';
 
     if ($this->pme_bare) {
       // disable all navigation buttons, probably for html export
