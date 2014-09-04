@@ -641,6 +641,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
     
     var containerSel = this.selector(containerSel);
     var container = this.container(containerSel);
+    var form = container.find('form.pme-form');
 
     //alert(containerSel+" "+container.length);
 
@@ -657,18 +658,19 @@ var PHPMYEDIT = PHPMYEDIT || {};
       return PHPMYEDIT.pseudoSubmit($(this.form), $(this), containerSel, pmepfx);
     });      
 
-    var submitSel = 'form.'+pmepfx+'-form input[class$="navigation"]:submit'+','+
-      'form.'+pmepfx+'-form input.pme-add:submit';
-    container.off('click', submitSel);
-    container.on('click', submitSel, function(event) {
-      event.preventDefault();
-      event.stopImmediatePropagation();
+    if (form.find('input[name="DisplayClass"]').length > 0) {
+      var submitSel = 'form.'+pmepfx+'-form input[class$="navigation"]:submit'+','+
+        'form.'+pmepfx+'-form input.pme-add:submit';
+      container.off('click', submitSel);
+      container.on('click', submitSel, function(event) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
 
-      PHPMYEDIT.tableDialog($(this.form), $(this));
+        PHPMYEDIT.tableDialog($(this.form), $(this));
 
-      return false;
-    });
-
+        return false;
+      });
+    }
 
     var submitSel = 'form.'+pmepfx+'-form :submit';
     container.off('click', submitSel);
