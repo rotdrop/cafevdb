@@ -386,6 +386,7 @@ class Instrumentation
     if (!strstr($instruments, $instrument)) {
       $text1 = L::t('Instrument not known by %s, correct that first! %s only plays %s!!!',
                     array($musname, $musname, $instruments));
+  echo <<<__EOT__
 <div class="cafevdb-table-notes" style="height:18ex">
   <div class="cafevdb-note change-instrument">
   <div>$text1</div>
@@ -393,8 +394,8 @@ class Instrumentation
 </div>
 
 __EOT__;
-
-      return true; // so what
+      return true;
+      // return false;
     }
     
     return true;
