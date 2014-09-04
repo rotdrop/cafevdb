@@ -62,8 +62,18 @@ $(document).ready(function(){
                                        parameters: []
                                    });
 
-    
-
+    PHPMYEDIT.addTableLoadCallback('InstrumentInsurance',
+                                   {
+                                       callback: function(selector, resizeCB) {
+                                           CAFEVDB.exportMenu(selector);
+                                           $(selector).find('input.pme-email').addClass('formsubmit');
+                                           //CAFEVDB.SepaDebitMandate.popupInit(selector);
+                                           //this.ready(selector);
+                                           resizeCB();
+                                       },
+                                       context: CAFEVDB,
+                                       parameters: []
+                                   });
 
     CAFEVDB.tipsy();
 

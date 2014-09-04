@@ -58,6 +58,9 @@ try {
 
   try {
 
+    $generateContents = true;
+    $html = '';
+
     switch ($action) {
     case 'create':
       // Sanity checks
@@ -93,6 +96,7 @@ try {
         return false;  
       }
       $result = Blog::modifyNote($author, $blogId, '', false, false, $author);
+      $generateContents = false;
       break;
     case 'delete':
       // Sanity checks
@@ -114,7 +118,19 @@ try {
       return false;
       break;
     }
-  
+
+    if ($generateContents) {
+      // If everything worked out, then finally fetch the new
+      // blog-threads
+      $tmpl = new OCP\Template(Config::APP_NAME, 'blogthreads');
+
+      $tmpl->assign('timezone', Util::getTimezone());
+      $tmpl->assign('locale', Util::getLocale());
+      $tmpl->assign('user', \OCP\User::getUser());
+
+      $html = $tmpl->fetchPage();
+    }
+
   } catch (\Exception $e) {
     OCP\JSON::error(
       array(
@@ -125,7 +141,7 @@ try {
   }
 
   if ($result) {
-    OCP\JSON::success();
+    OCP\JSON::success(array('data' => array('contents' => $html)));
     return true;
   } else {
     OCP\JSON::error(

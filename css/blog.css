@@ -19,16 +19,14 @@ div.cafevdb-page-header.collapsed #cafevdb-page-blog-header {
   max-width:100%;
 }
 
+#blogframe {
+  margin-left: 0.5em;
+}
+
 #blogframe span.photo {
   position:absolute;
   left:0;
   top:0;
-}
-
-.bloglist ul, div.blogentrypopup ul {
-  list-style-type:circle;
-  list-style-image:url('../../../core/img/actions/info.svg');
-  list-style-position:inside;
 }
 
 .bloglist img.photo {
@@ -163,5 +161,31 @@ span.blogentrytext a:hover {
   text-decoration:underline;
   font-style:italic;
   font-weight:bold;
+}
+
+/* Styling lists inside blog-entry */
+li.blogentry ul, div.blogentrypopup ul {
+  list-style-type:circle;
+  list-style-image:none;
+  list-style-image:url('../img/listitems/info1.svg');
+  list-style-position:inside;
+}
+
+li.blogentry ul ul, div.blogentrypopup ul ul {
+  padding-left: 1em;
+  marging-left: 1em;
+  list-style-type:disc;
+  list-style-image:none;
+  list-style-image:url('../img/listitems/info2.svg');
+  list-style-position:inside;
+  font-size:80%;
+}
+
+li.blogentry ul ul ul, div.blogentrypopup ul ul ul {
+  list-style-type:square;
+  list-style-image:none;
+  list-style-image:url('../img/listitems/info3.svg');
+  list-style-position:inside;
+  font-size:100%;
 }
 
