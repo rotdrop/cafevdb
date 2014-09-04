@@ -2273,9 +2273,15 @@ class EmailHistory
 {
   const CSS_PREFIX = 'cafevdb-page';
 
+  public static function shortTitle()
+  {
+    return "Massenmail-Historie.";
+  }
+
   public static function headerText()
   {
-    $result =<<<__EOT__
+    $result = self::shortTitle();
+    $result .=<<<__EOT__
 <h3>Massenmail-Historie.</h3>
 <H4>Nat&uuml;rlich kann man einmal gesendete Email nicht mehr &auml;ndern, also kann man auch die Daten unten nicht editieren.</H4>
 
@@ -2293,7 +2299,7 @@ __EOT__;
     global $debug_query;
     $debug_query = Util::debugMode('query');
 
-    if (isset($debug_query) && $debug_query) {
+    if (Util::debugMode('request')) {
       echo "<PRE>\n";
       print_r($_POST);
       print_r($_GET);
@@ -2328,11 +2334,13 @@ __EOT__;
     $recordsPerPage = Util::cgiValue('RecordsPerPage',-1);
     $recordsPerPage = Util::cgiValue('RecordsPerPage',-1);
 
-    $opts['cgi']['persist'] = array('Project' => $project,
-                                    'ProjectId' => $projectId,
-                                    'Table' => $opts['tb'],
-                                    'Template' => 'email-history',
-                                    'RecordsPerPage' => $recordsPerPage);
+    $opts['cgi']['persist'] = array(
+      'Project' => $project,
+      'ProjectId' => $projectId,
+      'Table' => $opts['tb'],
+      'DisplayClass' => 'EmailHistory',
+      'Template' => 'email-history',
+      'RecordsPerPage' => $recordsPerPage);
 
     // Name of field which is the unique key
     $opts['key'] = 'Id';
