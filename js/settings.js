@@ -1118,6 +1118,32 @@ $(document).ready(function() {
     return false;
   });
 
+  ///////////////////////////////////////////////////////////////////////////
+  //
+  // CMS stuff
+  //
+  ///////////////////////////////////////////////////////////////////////////
+
+  $('input.redaxo').blur(function(event) {
+    event.preventDefault();
+    $('div.statusmessage').hide();
+    $('span.statusmessage').hide();
+    $.post(OC.filePath('cafevdb', 'ajax/settings', 'redaxo-settings.php'),
+           $(this),
+           function(data) {
+             if (data.status == "success") {
+	       $('.statusmessage').html(data.data.message);
+	       $('.statusmessage').show();
+               return true;
+             } else {
+	       $('.statusmessage').html(data.data.message);
+	       $('.statusmessage').show();
+               return false;
+             }
+	   }, 'json');
+    return false;
+  })
+
 });
 
 // Local Variables: ***

@@ -289,6 +289,9 @@ class Projects
       'textarea' => array('css' => 'wysiwygeditor',
                           'rows' => 5,
                           'cols' => 50),
+      'php|V'    => array('type' => 'function',
+                          'function' => 'CAFEVDB\Projects::projectProgramPME',
+                          'parameters' => array()),
       'sort'     => true,
       'escape' => false
       );
@@ -440,7 +443,7 @@ a comma.'));
     
     // Hack: close the DB connection and re-open again. Somehow OwnCloud
     // damages the stuff ...
-    $pme->sql_disconnect();
+    // $pme->sql_disconnect();
 
     // Also create the project folders.
     $projectPaths = self::maybeCreateProjectFolder($projectId, $projectName);
@@ -460,7 +463,7 @@ a comma.'));
     }
     self::generateWikiOverview();
 
-    $pme->sql_connect();
+    // $pme->sql_connect();
 
     return true;
   }
@@ -632,6 +635,30 @@ a comma.'));
     Util::debugMsg("<<<<ProjektExtraFelder");
 
     return $fields;
+  }
+
+  public static function projectProgramPME($projectName, $opts, $modify, $k, $fds, $fdd, $row)
+  {
+    $redaxoLocation = \OCP\Config::GetAppValue('redaxo', 'redaxolocation', '');
+    $rex = new \Redaxo\App($redaxoLocation);
+
+ /*    if (false) { */
+ /*      $blah = $rex->addArticle("blah2014", 75, 4); */
+
+ /*      $res1 = $rex->moveArticle($blah[0]['article'], 16); */
+ /*      $res2 = $rex->deleteArticle($blah[0]['article'], 16); */
+ /*    } */
+ /*    //$blah = array_merge($blah, $rex->articlesByName("blah2014(\\.[0-9][0-9])?", 75)); */
+ /*    $blah1 = $rex->articlesByName(".*", Config::getValue('redaxoPreview')); */
+ /*    $blah2 = $rex->articlesByName(".*", Config::getValue('redaxoArchive')); */
+ /* '<pre>'.htmlspecialchars(print_r(array_merge($blah1, $blah2), true)).'</pre>'. */
+
+    return '<iframe
+  scrolling="no" 
+  src="'.$rex->redaxoURL().'../?article_id=65"
+  id="redaxo"
+  name="redaxo"
+  style="width:auto;height:auto;overflow:hidden;"></iframe>';
   }
 
   public static function projectActionsPME($projectName, $opts, $modify, $k, $fds, $fdd, $row)
@@ -882,6 +909,74 @@ __EOT__;
     }
 
     return $projects;
+  }
+
+  /**Fetch the ids of the public web pages related to this
+   * project. Often there will be only one, but this need not be the
+   * case.
+   */
+  public static function fetchProjectWebPages($projectId, $handle = false)
+  {
+    $projects = array();
+
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
+    $query = "SELECT * FROM `ProjectWebPages` WHERE 1";
+    if ($projectID > 0) {
+      $query .= " AND `ProjectId` = ".$prjoectId;
+    }
+    $query .= " ORDER BY `ProjectId` ASC, `ArticleId` ASC";
+
+    $webPages = array();
+    $result = mySQL::query($query, $handle, true);
+    if ($result === false) {
+      return false;
+    }
+    while ($line = mySQL::fetch($result)) {
+      $webPages[] = mySQL::fetch($result);
+    }
+
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $webPages;
+  }
+
+  /**Create and add a new web-page. The first one will have the name
+   * of the project, subsequent one have a number attached like
+   * Tango2014-5
+   */
+  public static function createProjectWebPage($projectId, $handle = false)
+  {}
+  
+  /**Delete a web page. This is implemented by moving the page to the
+   * Trashbin category, leaving the real cleanup to a human being.
+   */
+  public static function deleteProjectWebPage($projectId, $articleId, $handle = false)
+  {}
+
+  /**Detach a web page, but do not delete it. Meant as utility routine
+   * for the UI (in order to correct wrong associations).
+   */
+  public static function detachProjectWebPage($projectid, $articleId, $handle = false)
+  {}
+
+  /**Attach an existing web page to the project.
+   */
+  public static function attachProjectWebPage($projectId, $articleId, $handle = false)
+  {}
+
+  /**Seach through the list of all projects and attach those with a
+   * matching name. Something which should go to the "expert"
+   * controls.
+   */
+  public static function attachMatchingWebPages($projectId, $handle = false)
+  {
   }
 
   /**Fetch minimum and maximum project years from the Projekte table.

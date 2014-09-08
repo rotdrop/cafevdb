@@ -49,6 +49,7 @@ $debugModes = array('general' => L::t('General Information'),
   <li><a href="#tabs-4"><?php echo L::t('Sharing'); ?></a></li>
   <li><a href="#tabs-5"><?php echo L::t('Email'); ?></a></li>
   <li><a href="#tabs-6"><?php echo L::t('Development'); ?></a></li>
+  <li><a href="#tabs-7"><?php echo L::t('CMS'); ?></a></li>
 </ul>
 <?php } ?>
 
@@ -113,5 +114,10 @@ foreach ($debugModes as $key => $value) {
     echo $this->inc("share-settings", array('tabNr' => $tabNo++));
     echo $this->inc("email-settings", array('tabNr' => $tabNo++));
     echo $this->inc("devel-settings", array('tabNr' => $tabNo++));
+    echo $this->inc("cms-settings", array('tabNr' => $tabNo++));
   }
 ?>
+
+
+
+    

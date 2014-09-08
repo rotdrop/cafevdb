@@ -86,6 +86,9 @@ projectsbalancefolder
 projectsfolder
 executiveBoardTable
 memberTable
+redaxoPreview
+readxoArchive
+redaxoTrashbin
 ';
   const DFLT_CALS = 'concerts,rehearsals,other,management';
 // L::t('concerts') L::t('rehearsals') L::t('other') L::t('management')

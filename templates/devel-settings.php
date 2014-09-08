@@ -51,6 +51,6 @@ Config::init();
          title="<?php echo Config::toolTips('ownclouddev-link'); ?>"/>
       <label for="phpmyadmin"><?php echo L::t('Owncloud developer documentation'); ?></label>
     </fieldset>
-    <div class="statusmessage" id="msg"></span>  
+    <span class="statusmessage" id="msg"></span>  
   </form>
 </div>

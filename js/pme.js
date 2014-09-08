@@ -396,6 +396,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
                      CAFEVDB.addEditor(container.find('textarea.wysiwygeditor'), function() {
                        pme.transposeReady(containerSel);
                        pme.tableLoadCallback(dpyClass, containerSel, function() {
+                         container.dialog('option', 'height', 'auto');
+                         container.dialog('option', 'width', 'auto');
                          var newHeight = dialogWidget.height()
                            - dialogWidget.find('.ui-dialog-titlebar').outerHeight();
                          dialogHolder.height(newHeight);

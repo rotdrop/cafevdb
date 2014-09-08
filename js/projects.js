@@ -260,10 +260,55 @@ $(document).ready(function(){
                                              if (idField.length > 0) {
                                                  recordId = idField.val();
                                              }
-                                             CAFEVDB.Photo.ready(recordId, resizeCB);
+                                             CAFEVDB.Photo.ready(recordId/*, resizeCB*/);
                                          } else {
-                                             resizeCB();
+                                             /*resizeCB();*/
                                          }
+                                         container.find('iframe').load(function(event) {
+                                             var iframe = $(this);
+                                             var contents = iframe.contents();
+
+                                             // First the pretty-print
+                                             // version. We remove
+                                             // everything except the article itself
+                                             contents.find('div#header').remove();
+                                             contents.find('div#footer').remove();
+                                             contents.find('div.navi').remove();
+                                             contents.find('body').css({'min-width': 'unset',
+                                                                        'width': 'auto'});
+                                             contents.find('div.item-text').css('width', 'auto');
+                                             //this.style.width = contents.find('div.item-text').css('width');
+                                             
+                                             if (false) {
+                                             // The below lines style the edit window.
+                                             contents.find('#rex-navi-logout').remove();
+                                             contents.find('#rex-navi-main').remove();
+                                             contents.find('#rex-redaxo-link').remove();
+                                             contents.find('#rex-footer').remove();
+                                             contents.find('#rex-header').remove();
+                                             contents.find('#rex-title').remove();
+                                             contents.find('div.rex-toolbar.rex-toolbar-has-form').remove();
+                                             contents.find('body').css({ margin: 0,
+                                                                         'background-image': 'none' });
+                                             contents.find('#rex-output').css({margin: 0});
+                                             contents.find('#rex-navi-path a').removeAttr('href');
+                                             var wrapper = contents.find('#rex-wrapper');
+                                             var website = contents.find('#rex-website');
+                                             wrapper.css({ padding: 0,
+                                                           margin: 0,
+                                                           float: 'left' });
+                                             website.css({ width: wrapper.css('width'),
+                                                           'background-image': 'none' });
+
+                                             this.style.width = wrapper.css('width');
+                                             //this.contentWindow.document.body.scrollWidth + 'px';
+                                             }
+                                             this.style.width = 
+                                                 this.contentWindow.document.body.scrollWidth+20 + 'px';
+                                             this.style.height = 
+                                                 this.contentWindow.document.body.scrollHeight + 'px';
+                                             resizeCB();
+                                         });
                                          container.find('span.photo').click(function(event) {
                                              event.preventDefault();
                                              CAFEVDB.Photo.popup(this);

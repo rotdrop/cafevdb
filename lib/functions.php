@@ -493,6 +493,34 @@ __EOT__;
     return $recordId > 0 ? $recordId : -1;
   }  
   
+  public static function composeURL($location)
+  {
+    // Assume an absolute location w.r.t. to SERVERROOT
+    if ($location[0] == '/') {
+      $location = \OC_Helper::makeURLAbsolute($location);
+    }
+    return $location;
+  }
+
+  /**Try to verify a given location up to some respect ...
+   *
+   * @param[in] $location Either an "absolute" path relative to the
+   * server root, starting with '/', or a valid HTML URL.
+   */
+  public static function URLIsValid($location)
+  {
+    $location = self::composeURL($location);
+    
+    \OCP\Util::writeLog(App::APPNAME, "Checking ".$location, LOG_DEBUG);
+
+    // Don't try to access it if it is not a valid URL
+    if (filter_var($location, FILTER_VALIDATE_URL) === false) {
+      return false;
+    }
+    
+    return true;
+  }
+
   public static function entifyString($string)
   {
     if (defined("ENT_XHTML")) {
