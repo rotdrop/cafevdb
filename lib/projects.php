@@ -441,10 +441,6 @@ a comma.'));
     $sqlquery = 'INSERT IGNORE INTO `BesetzungsZahlen` (`ProjektId`) VALUES ('.$projectId.')';
     mySQL::query($sqlquery, $pme->dbh);
     
-    // Hack: close the DB connection and re-open again. Somehow OwnCloud
-    // damages the stuff ...
-    // $pme->sql_disconnect();
-
     // Also create the project folders.
     $projectPaths = self::maybeCreateProjectFolder($projectId, $projectName);
 
@@ -463,7 +459,8 @@ a comma.'));
     }
     self::generateWikiOverview();
 
-    // $pme->sql_connect();
+    // Generate an empty offline page template in the public web-space
+    self::createProjectWebPage($projectId, $pme->dbh);
 
     return true;
   }
@@ -487,10 +484,6 @@ a comma.'));
     // category, we also need to update all linke events in case the
     // short-name has changed.
     $events = Events::events($pme->rec, $pme->dbh);
-
-    // Hack: close the DB connection and re-open again. Somehow OwnCloud
-    // damages the stuff ...
-    $pme->sql_disconnect();
 
     foreach ($events as $event) {
       // Last parameter "true" means to also perform string substitution
@@ -530,9 +523,9 @@ a comma.'));
 
     self::generateWikiOverview();
 
-
-    $pme->sql_connect();
-
+    // TODO: if the name changed, then change also the template, but
+    // is not so important, OTOH, would just look better.
+    
     return true;
   }
 
@@ -549,21 +542,25 @@ a comma.'));
     mySQL::query($sqlquery, $pme->dbh);
 
     // This was the view. We should also remove all stuff from the Besetzungen list.
-    $sqlquery = "DELETE FROM Besetzungen WHERE ProjektId = $pme->rec";
+    $sqlquery = "DELETE FROM Besetzungen WHERE ProjektId = ".$pme->rec;
     mySQL::query($sqlquery, $pme->dbh);
 
-    $sqlquery = "DELETE FROM BesetzungsZahlen WHERE ProjektId = $pme->rec";
+    $sqlquery = "DELETE FROM BesetzungsZahlen WHERE ProjektId = ".$pme->rec;
     mySQL::query($sqlquery, $pme->dbh);
 
-    // And now remove the project folder ...
-
-    // Hack: close the DB connection and re-open again. Somehow OwnCloud
-    // damages the stuff ...
-    $pme->sql_disconnect();
-
+    // And now remove the project folder ... OC has undelete
+    // functionality and we have a long-ranging backup.
     self::removeProjectFolder($oldvals);
 
-    $pme->sql_connect();
+    // Delete the page template from the public web-space. However,
+    // here we only move it to the trashbin.
+    $webPages = self::fetchProjectWebPages($pme->rec, $pme->dbh);
+    foreach ($webPages as $page) {
+      // ignore errors
+      \OCP\Util::writeLog(Config::APP_NAME, "Attempt to delete for ".$pme->rec.": ".$page['ArticleId']." all ".print_r($page, true), \OC_LOG::DEBUG);
+
+      self::deleteProjectWebPage($pme->rec, $page['ArticleId'], $handle);
+    }
 
     return true;
 }
@@ -926,23 +923,28 @@ __EOT__;
     }
 
     $query = "SELECT * FROM `ProjectWebPages` WHERE 1";
-    if ($projectID > 0) {
-      $query .= " AND `ProjectId` = ".$prjoectId;
+    if ($projectId > 0) {
+      $query .= " AND `ProjectId` = ".$projectId;
     }
     $query .= " ORDER BY `ProjectId` ASC, `ArticleId` ASC";
+
+    \OCP\Util::writeLog(Config::APP_NAME, "Query ".$query, \OC_LOG::DEBUG);
 
     $webPages = array();
     $result = mySQL::query($query, $handle, true);
     if ($result === false) {
+      \OCP\Util::writeLog(Config::APP_NAME, "Query ".$query." failed", \OC_LOG::DEBUG);
       return false;
     }
     while ($line = mySQL::fetch($result)) {
-      $webPages[] = mySQL::fetch($result);
+      $webPages[] = $line;
     }
 
     if ($ownConnection) {
       mySQL::close($handle);
     }
+
+    \OCP\Util::writeLog(Config::APP_NAME, "WebPages for ".$projectId." ".print_r($webPages, true), \OC_LOG::DEBUG);
 
     return $webPages;
   }
@@ -952,24 +954,154 @@ __EOT__;
    * Tango2014-5
    */
   public static function createProjectWebPage($projectId, $handle = false)
-  {}
+  {
+    $ownConnection = $handle === false;
+
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
+    $projectName = self::fetchName($projectId, $handle);
+    if ($projectName === false) {
+      if ($ownConnection) {
+        mySQL::close($handle);
+      }
+      return false;
+    }
+
+    // Don't care about the archive, new pages go to preview, and the
+    // id will be unique even in case of a name clash
+    $previewCat = Config::getValue('redaxoPreview');
+    $pageTemplate = Config::getValue('redaxoTemplate');
+    
+    $redaxoLocation = \OCP\Config::GetAppValue('redaxo', 'redaxolocation', '');
+    $rex = new \Redaxo\App($redaxoLocation);
+
+    $articles = $rex->articlesByName($projectName.'(-[0-9]+)?', $previewCat);
+    if (!is_array($articles)) {
+      if ($ownConnection) {
+        mySQL::close($handle);
+      }
+      return false;
+    }
+
+    $names = array();
+    foreach ($articles as $article) {
+      $names[] = $srticle['name'];
+    }
+    $pageName = $projectName;
+    if (array_search($pageName, $names) !== false) {
+      for ($i = 1; ; ++$i) {
+        if (array_search($pageName.'-'.$i, $names) === false) {
+          // this will teminate ;)
+          $pageName = $pageName.'-'.$i;
+          break;
+        }
+      }
+    }
+    
+    $article = $rex->addArticle($pageName, $previewCat, $pageTemplate);
+
+    if ($article === false) {
+      \OCP\Util::writeLog(Config::APP_NAME, "Error generating web page template", \OC_LOG::DEBUG);
+      if ($ownConnection) {
+        mySQL::close($handle);
+      }
+      return false;
+    }
+
+    // just forget about the rest, we can't help it anyway if the
+    // names are not unique
+    $article = $article[0];
+
+    // insert into the db table to form the link
+    if (self::attachProjectWebPage($projectId,
+                                   $article['article'],
+                                   $article['category'], $handle) === false) {
+      \OCP\Util::writeLog(Config::APP_NAME, "Error attaching web page template", \OC_LOG::DEBUG);
+      if ($ownConnection) {
+        mySQL::close($handle);
+      }
+      return false;
+    }
+
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $article;
+  }
   
   /**Delete a web page. This is implemented by moving the page to the
    * Trashbin category, leaving the real cleanup to a human being.
    */
   public static function deleteProjectWebPage($projectId, $articleId, $handle = false)
-  {}
+  {
+    self::detachProjectWebPage($projectId, $articleId);
+    $redaxoLocation = \OCP\Config::GetAppValue('redaxo', 'redaxolocation', '');
+    $rex = new \Redaxo\App($redaxoLocation);
+
+    $trashCategory = Config::getValue('redaxoTrashbin');
+    $result = $rex->moveArticle($articleId, $trashCategory);
+    if ($result === false) {
+      \OCP\Util::writeLog(Config::APP_NAME, "Failed moving ".$articleId." to ".$trashCategory, \OC_LOG::DEBUG);
+    }
+    
+  }
 
   /**Detach a web page, but do not delete it. Meant as utility routine
    * for the UI (in order to correct wrong associations).
    */
-  public static function detachProjectWebPage($projectid, $articleId, $handle = false)
-  {}
+  public static function detachProjectWebPage($projectId, $articleId, $handle = false)
+  {
+    $ownConnection = $handle === false;
+
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
+    $query = "DELETE IGNORE FROM `ProjectWebPages` 
+ WHERE `ProjectId` = ".$projectId." AND `ArticleId` = ". $articleId;
+    $result = mySQL::query($query, $handle);
+    if ($result === false) {
+      \OCP\Util::writeLog(Config::APP_NAME, "Query ".$query." failed", \OC_LOG::DEBUG);
+    }
+
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $result;
+  }
 
   /**Attach an existing web page to the project.
    */
-  public static function attachProjectWebPage($projectId, $articleId, $handle = false)
-  {}
+  public static function attachProjectWebPage($projectId, $article, $category, $handle = false)
+  {
+    $ownConnection = $handle === false;
+
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
+    $query = "INSERT INTO `ProjectWebPages`
+ (`ProjectId`, `ArticleId`, `CategoryId`) VALUES(".$projectId.",".$article.",".$category.")
+ ON DUPLICATE KEY UPDATE `CategoryId` = ".$category;
+
+    $result = mySQL::query($query, $handle);
+    if ($result === false) {
+      \OCP\Util::writeLog(Config::APP_NAME, "Query ".$query." failed", \OC_LOG::DEBUG);
+    }
+
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $result;
+  }
 
   /**Seach through the list of all projects and attach those with a
    * matching name. Something which should go to the "expert"
@@ -977,6 +1109,53 @@ __EOT__;
    */
   public static function attachMatchingWebPages($projectId, $handle = false)
   {
+    $ownConnection = $handle === false;
+
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
+    $projectName = self::fetchName($projectId, $handle);
+    if ($projectName === false) {
+      if ($ownConnection) {
+        mySQL::close($handle);
+      }
+      return false;
+    }
+
+    $previewCat = Config::getValue('redaxoPreview');
+    $archiveCat = Config::getValue('redaxoArchive');
+
+    $redaxoLocation = \OCP\Config::GetAppValue('redaxo', 'redaxolocation', '');
+    $rex = new \Redaxo\App($redaxoLocation);
+
+    $preview = $rex->articlesByName($projectName.'(-[0-9]+)?', $previewCat);
+    if (!is_array($preview)) {
+      if ($ownConnection) {
+        mySQL::close($handle);
+      }
+      return false;
+    }
+    $archive = $rex->articlesByName($projectName.'(-[0-9]+)?', $archiveCat);
+    if (!is_array($archive)) {
+      if ($ownConnection) {
+        mySQL::close($handle);
+      }
+      return false;
+    }
+
+    $articles = array_merge($preview, $archive);
+    foreach ($articles as $article) {
+      // ignore any error
+      self::attachProjectWebPage($projectId, $article['article'], $article['category'], $handle);
+    }
+
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $result;
   }
 
   /**Fetch minimum and maximum project years from the Projekte table.

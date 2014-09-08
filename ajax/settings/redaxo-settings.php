@@ -24,11 +24,12 @@ if (!OC_SubAdmin::isGroupAccessible($user, $group)) {
     return;
 }
 
-$redaxoKeys = array('Preview', 'Archive', 'Trashbin');
+$redaxoKeys = array('Preview', 'Archive', 'Template');
 if (false) {
   L::t('Preview');
   L::t('Archive');
-  L::t('Trashbin');  
+  L::t('Trashbin');
+  L::t('Template');
 }
 
 foreach ($redaxoKeys as $key) {

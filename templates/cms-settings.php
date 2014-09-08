@@ -34,7 +34,7 @@ Config::init();
              placeholder="<?php L::t('preview'); ?>"
              value="<?php echo $_['redaxoPreview']; ?>"
              title="<?php echo Config::toolTips('redaxo-preview'); ?>" />
-      <label for="redaxopreview"><?php echo L::t('Id of Redaxo Preview Category'); ?></label>
+      <label for="redaxoPreview"><?php echo L::t('Id of Redaxo Preview Category'); ?></label>
       <br/>
       <input type="text"
              class="redaxo"
@@ -43,7 +43,7 @@ Config::init();
              placeholder="<?php L::t('archive'); ?>"
              value="<?php echo $_['redaxoArchive']; ?>"
              title="<?php echo Config::toolTips('redaxo-archive'); ?>" />
-      <label for="redaxoarchive"><?php echo L::t('Id of Redaxo Archive Category'); ?></label>
+      <label for="redaxoArchive"><?php echo L::t('Id of Redaxo Archive Category'); ?></label>
       <br/>
       <input type="text"
              class="redaxo"
@@ -52,7 +52,16 @@ Config::init();
              placeholder="<?php L::t('trashbin'); ?>"
              value="<?php echo $_['redaxoTrashbin']; ?>"
              title="<?php echo Config::toolTips('redaxo-trashbin'); ?>" />
-      <label for="redaxotrashbin"><?php echo L::t('Id of Redaxo Trashbin Category'); ?></label>
+      <label for="redaxoTrashbin"><?php echo L::t('Id of Redaxo Trashbin Category'); ?></label>
+      <br/>
+      <input type="text"
+             class="redaxo"
+             id="redaxoTemplate"
+             name="redaxoTemplate"
+             placeholder="<?php L::t('template'); ?>"
+             value="<?php echo $_['redaxoTemplate']; ?>"
+             title="<?php echo Config::toolTips('redaxo-template'); ?>" />
+      <label for="redaxoTemplate"><?php echo L::t('Id of Redaxo Template Category'); ?></label>
       <br/>
     </fieldset>
     <span class="statusmessage" id="msg"></span>  
