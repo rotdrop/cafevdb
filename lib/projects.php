@@ -637,7 +637,9 @@ a comma.'));
   public static function projectProgramPME($projectName, $opts, $modify, $k, $fds, $fdd, $row)
   {
     $redaxoLocation = \OCP\Config::GetAppValue('redaxo', 'redaxolocation', '');
-    $rex = new \Redaxo\App($redaxoLocation);
+    $rex = new \Redaxo\RPC($redaxoLocation);
+
+    $rex->addArticleBlock(122, 2, 0);
 
  /*    if (false) { */
  /*      $blah = $rex->addArticle("blah2014", 75, 4); */
@@ -652,7 +654,7 @@ a comma.'));
 
     return '<iframe
   scrolling="no" 
-  src="'.$rex->redaxoURL().'../?article_id=65"
+  src="'.$rex->redaxoURL(65).'"
   id="redaxo"
   name="redaxo"
   style="width:auto;height:auto;overflow:hidden;"></iframe>';
@@ -976,7 +978,7 @@ __EOT__;
     $pageTemplate = Config::getValue('redaxoTemplate');
     
     $redaxoLocation = \OCP\Config::GetAppValue('redaxo', 'redaxolocation', '');
-    $rex = new \Redaxo\App($redaxoLocation);
+    $rex = new \Redaxo\RPC($redaxoLocation);
 
     $articles = $rex->articlesByName($projectName.'(-[0-9]+)?', $previewCat);
     if (!is_array($articles)) {
@@ -1026,6 +1028,9 @@ __EOT__;
       return false;
     }
 
+    $module = Config::getValue('redaxoDefaultModule');
+    $rex->addArticleBlock($article['article'], $module);
+
     if ($ownConnection) {
       mySQL::close($handle);
     }
@@ -1040,7 +1045,7 @@ __EOT__;
   {
     self::detachProjectWebPage($projectId, $articleId);
     $redaxoLocation = \OCP\Config::GetAppValue('redaxo', 'redaxolocation', '');
-    $rex = new \Redaxo\App($redaxoLocation);
+    $rex = new \Redaxo\RPC($redaxoLocation);
 
     $trashCategory = Config::getValue('redaxoTrashbin');
     $result = $rex->moveArticle($articleId, $trashCategory);
@@ -1128,7 +1133,7 @@ __EOT__;
     $archiveCat = Config::getValue('redaxoArchive');
 
     $redaxoLocation = \OCP\Config::GetAppValue('redaxo', 'redaxolocation', '');
-    $rex = new \Redaxo\App($redaxoLocation);
+    $rex = new \Redaxo\RPC($redaxoLocation);
 
     $preview = $rex->articlesByName($projectName.'(-[0-9]+)?', $previewCat);
     if (!is_array($preview)) {

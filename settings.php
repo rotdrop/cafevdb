@@ -123,7 +123,7 @@ try {
       $tmpl->assign('email'.$key, Config::getValue('email'.$key));
     }
 
-    foreach (array('Preview', 'Archive', 'Trashbin', 'Template') as $key) {
+    foreach (array('Preview', 'Archive', 'Trashbin', 'Template', 'DefaultModule') as $key) {
       $tmpl->assign('redaxo'.$key, Config::getValue('redaxo'.$key));
     }
 

@@ -63,6 +63,14 @@ Config::init();
              title="<?php echo Config::toolTips('redaxo-template'); ?>" />
       <label for="redaxoTemplate"><?php echo L::t('Id of Redaxo Template Category'); ?></label>
       <br/>
+      <input type="text"
+             class="redaxo"
+             id="redaxoDefaultModule"
+             name="redaxoDefaultModule"
+             placeholder="<?php L::t('template'); ?>"
+             value="<?php echo $_['redaxoDefaultModule']; ?>"
+             title="<?php echo Config::toolTips('redaxo-template'); ?>" />
+      <label for="redaxoDefaultModule"><?php echo L::t('Id of Redaxo DefaultModule Category'); ?></label>
     </fieldset>
     <span class="statusmessage" id="msg"></span>  
   </form>

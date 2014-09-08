@@ -24,7 +24,7 @@ if (!OC_SubAdmin::isGroupAccessible($user, $group)) {
     return;
 }
 
-$redaxoKeys = array('Preview', 'Archive', 'Template');
+$redaxoKeys = array('Preview', 'Archive', 'Trashbin', 'Template', 'DefaultModule');
 if (false) {
   L::t('Preview');
   L::t('Archive');

@@ -90,6 +90,7 @@ redaxoPreview
 readxoArchive
 redaxoTrashbin
 redaxoTemplate
+redaxoDefaultModule
 ';
   const DFLT_CALS = 'concerts,rehearsals,other,management';
 // L::t('concerts') L::t('rehearsals') L::t('other') L::t('management')
