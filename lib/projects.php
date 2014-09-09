@@ -282,14 +282,13 @@ class Projects
       );
 
     $opts['fdd']['Programm'] = array(
-      'name'     => 'Programm',
+      'name'     => L::t('Program'),
+      'input'    => 'V',
+      'options'  => 'VCDA', 
       'select'   => 'T',
       'maxlen'   => 65535,
       'css'      => array('postfix' => 'projectremarks'),
-      'textarea' => array('css' => 'wysiwygeditor',
-                          'rows' => 5,
-                          'cols' => 50),
-      'php|V'    => array('type' => 'function',
+      'php|CV'    => array('type' => 'function',
                           'function' => 'CAFEVDB\Projects::projectProgramPME',
                           'parameters' => array()),
       'sort'     => true,
@@ -636,6 +635,11 @@ a comma.'));
 
   public static function projectProgramPME($projectName, $opts, $modify, $k, $fds, $fdd, $row)
   {
+    $tmpl = new \OCP\Template(Config::APP_NAME, 'project-web-articles');
+    $tmpl->assign('projectArticles', array());
+    $html = $tmpl->fetchPage();
+    return $html;
+
     $redaxoLocation = \OCP\Config::GetAppValue('redaxo', 'redaxolocation', '');
     $rex = new \Redaxo\RPC($redaxoLocation);
 
