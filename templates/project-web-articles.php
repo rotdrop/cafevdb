@@ -34,9 +34,27 @@ use CAFEVDB\Projects;
  *
  * $_['projectArticles']
  *
- * to be an array of array('article', 'category', 'name') pointing to
- * the actual articles stored in the CMS. We currently only support
- * Redaxo.
+ * to be an array which contains informations about the public
+ * web-pages related to the project. The elements of the array are
+ * supposed to be arrays which at least carry a 'name' and a 'id'
+ * field. Everything else is abstract.
+ *
+ * The template also expects
+ *
+ * $_['cmsURLTemplate']
+ *
+ * to be a vsprintf template accepts the elements of
+ * $_['projectArticles'] in order to generate the finale iframe source
+ * URL. In this respect the template is independent from the actual
+ * CMS system (but still we only support Redaxo ATM).
+ *
+ * $_['detachedArticles'] may contain articles present in the CMS but
+ * (not yet) linked to the project. We generate a select box in order
+ * to add those to the project.
+ *
+ * $_['action'] should be one of 'add', 'display' or 'change' in order
+ * to indicate the action the user is trying to perform.
+ *
  */
 try {
 
@@ -57,7 +75,7 @@ try {
   foreach ($articles as $article) {
     echo '<div id="projectArticle-'.$nr.'" class="cmsarticleframe cafev">
   <iframe scrolling="no"
-          src="'.$rex->getURL($article['article'], $edit).'"
+          src="'.$rex->getURL($article['id'], $edit).'"
           id="cmsarticle-'.$nr.'"
           name="cmsarticle-'.$nr.'"
           style="width:auto;height:auto;overflow:hidden;"></iframe>

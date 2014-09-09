@@ -648,8 +648,8 @@ a comma.'));
  /*    if (false) { */
  /*      $blah = $rex->addArticle("blah2014", 75, 4); */
 
- /*      $res1 = $rex->moveArticle($blah[0]['article'], 16); */
- /*      $res2 = $rex->deleteArticle($blah[0]['article'], 16); */
+ /*      $res1 = $rex->moveArticle($blah[0]['id'], 16); */
+ /*      $res2 = $rex->deleteArticle($blah[0]['id'], 16); */
  /*    } */
  /*    //$blah = array_merge($blah, $rex->articlesByName("blah2014(\\.[0-9][0-9])?", 75)); */
  /*    $blah1 = $rex->articlesByName(".*", Config::getValue('redaxoPreview')); */
@@ -1023,8 +1023,8 @@ __EOT__;
 
     // insert into the db table to form the link
     if (self::attachProjectWebPage($projectId,
-                                   $article['article'],
-                                   $article['category'], $handle) === false) {
+                                   $article['id'],
+                                   $article['categoryId'], $handle) === false) {
       \OCP\Util::writeLog(Config::APP_NAME, "Error attaching web page template", \OC_LOG::DEBUG);
       if ($ownConnection) {
         mySQL::close($handle);
@@ -1033,7 +1033,7 @@ __EOT__;
     }
 
     $module = Config::getValue('redaxoDefaultModule');
-    $rex->addArticleBlock($article['article'], $module);
+    $rex->addArticleBlock($article['id'], $module);
 
     if ($ownConnection) {
       mySQL::close($handle);
@@ -1157,7 +1157,7 @@ __EOT__;
     $articles = array_merge($preview, $archive);
     foreach ($articles as $article) {
       // ignore any error
-      self::attachProjectWebPage($projectId, $article['article'], $article['category'], $handle);
+      self::attachProjectWebPage($projectId, $article['id'], $article['categoryId'], $handle);
     }
 
     if ($ownConnection) {
