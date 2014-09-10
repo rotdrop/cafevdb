@@ -25,6 +25,7 @@
 CAFEVDB\Error::exceptions(true);
 
 use CAFEVDB\Projects;
+use CAFEVDB\L;
 
 /* For each public web-page related to the project (usually just one)
  * generate an iframe to load it into and use tabs in case of multiple
@@ -36,17 +37,17 @@ use CAFEVDB\Projects;
  *
  * to be an array which contains informations about the public
  * web-pages related to the project. The elements of the array are
- * supposed to be arrays which at least carry a 'name' and a 'id'
+ * supposed to be arrays which at least carry a 'ArticleName' and a 'ArticleId'
  * field. Everything else is abstract.
  *
  * The template also expects
  *
  * $_['cmsURLTemplate']
  *
- * to be a vsprintf template accepts the elements of
- * $_['projectArticles'] in order to generate the finale iframe source
- * URL. In this respect the template is independent from the actual
- * CMS system (but still we only support Redaxo ATM).
+ * with %KEY% value substitutions where KEY may be any key present the
+ * in article arrays. After substitution this forms the final URL for
+ * the iframe source. In this respect the template is independent
+ * from the actual CMS system (but still we only support Redaxo ATM).
  *
  * $_['detachedArticles'] may contain articles present in the CMS but
  * (not yet) linked to the project. We generate a select box in order
@@ -58,30 +59,43 @@ use CAFEVDB\Projects;
  */
 try {
 
-  $redaxoLocation = \OCP\Config::GetAppValue('redaxo', 'redaxolocation', '');
-  $rex = new \Redaxo\RPC($redaxoLocation);
-
   $edit = false;
   $articles = $_['projectArticles'];
   $cnt = count($articles);
-  if ($cnt > 1) {
-    echo '<ul id="cmsarticletabs">
+  echo '<div id="projectWebArticles">
 ';
-    for ($nr = 1; $nr <= $cnt; ++$nr) 
-      echo '  <li><a href="#cmsarticle-'.$nr.'">'.$articles[$nr]['name'].'</a></li>
+  if ($cnt > 1) {
+    echo '  <ul id="cmsarticletabs">
+';
+    for ($nr = 1; $nr <= $cnt; ++$nr) {
+      echo '    <li><a href="#projectArticle-'.$nr.'">'.$articles[$nr-1]['ArticleName'].'</a></li>
+';
+    }
+    echo '  </ul>
 ';
   }
   $nr = 1;
   foreach ($articles as $article) {
-    echo '<div id="projectArticle-'.$nr.'" class="cmsarticleframe cafev">
-  <iframe scrolling="no"
-          src="'.$rex->getURL($article['id'], $edit).'"
+    $url = $_['cmsURLTemplate'];
+    foreach ($article as $key => $value) {
+      $url = str_replace('%'.$key.'%', $value, $url);
+    }
+    echo '  <div id="projectArticle-'.$nr.'" class="cmsarticleframe cafev">
+    <iframe scrolling="no"
+          src="'.$url.'"
+          class="cmsarticle '.$_['action'].'"
           id="cmsarticle-'.$nr.'"
           name="cmsarticle-'.$nr.'"
           style="width:auto;height:auto;overflow:hidden;"></iframe>
-</div>';
+  </div>';
     ++$nr;
   }
+  if ($cnt == 0) {
+    echo '<span id="noWebArticlesFound">'.L::t("No public web pages registered for this project").'</span>
+';    
+  }
+  echo '</div>
+';
 
 } catch (\Exception $e) {
   throw $e;

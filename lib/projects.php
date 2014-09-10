@@ -288,6 +288,8 @@ class Projects
       'select'   => 'T',
       'maxlen'   => 65535,
       'css'      => array('postfix' => 'projectremarks'),
+      'sql'      => 'Id',
+      'sqlw'     => 'Id',
       'php|CV'    => array('type' => 'function',
                           'function' => 'CAFEVDB\Projects::projectProgramPME',
                           'parameters' => array()),
@@ -317,7 +319,7 @@ class Projects
       'select'   => 'T',
       'maxlen'   => 65535,
       'css'      => array('postfix' => 'projectremarks'),
-      'textarea' => array('css' => 'wysiwygeditor',
+      'textarea' => array('css' => 'none', //'wysiwygeditor',
                           'rows' => 5,
                           'cols' => 50),
       'sort'     => true,
@@ -633,35 +635,59 @@ a comma.'));
     return $fields;
   }
 
-  public static function projectProgramPME($projectName, $opts, $modify, $k, $fds, $fdd, $row)
+  /**Genereate the input data for the link to the CMS in order to edit
+   * the project's public web articles inline.
+   *
+   * @todo Do something more useful in the case of an error (database
+   * or CMS unavailable)
+   */
+  public static function projectProgramPME($projectId, $opts, $action, $k, $fds, $fdd, $row)
   {
-    $tmpl = new \OCP\Template(Config::APP_NAME, 'project-web-articles');
-    $tmpl->assign('projectArticles', array());
-    $html = $tmpl->fetchPage();
-    return $html;
-
     $redaxoLocation = \OCP\Config::GetAppValue('redaxo', 'redaxolocation', '');
     $rex = new \Redaxo\RPC($redaxoLocation);
 
-    $rex->addArticleBlock(122, 2, 0);
+    /* Fetch all the data available. */
+    $webPages = self::fetchProjectWebPages($projectId);
+    if ($webPages === false) {
+      return L::t("Unable to fetch public web pages for project id %d",
+                  array($projectId));
+    }
+    $articleIds = array();
+    foreach ($webPages as $idx => $article) {
+      // this is cheap, there are only few articles attached to a project
+      $articleIds[$article['ArticleId']] = $idx;
+    }
+    
+    $detachedPages = array();
+    if ($action == 'add' || $action == 'modify') {
+      // Fetch all articles and remove those already registered
 
- /*    if (false) { */
- /*      $blah = $rex->addArticle("blah2014", 75, 4); */
+      $detachedPages = $rex->articleByName('.*');
+      if ($detachedPages === false) {
+        $detachedPages = array(array('ArticleId' => -1,
+                                     'CategoryId' => -1,
+                                     'ArticleName' => L::t("Error"),
+                                     'Priority' => -1));
+      } else {
+        foreach ($detachedPages as $idx => $article) {
+          if (isset($articleIds[$article['ArticleId']])) {
+            unset($detachedPages[$idx]);
+          }
+        }
+      }
+    }
 
- /*      $res1 = $rex->moveArticle($blah[0]['id'], 16); */
- /*      $res2 = $rex->deleteArticle($blah[0]['id'], 16); */
- /*    } */
- /*    //$blah = array_merge($blah, $rex->articlesByName("blah2014(\\.[0-9][0-9])?", 75)); */
- /*    $blah1 = $rex->articlesByName(".*", Config::getValue('redaxoPreview')); */
- /*    $blah2 = $rex->articlesByName(".*", Config::getValue('redaxoArchive')); */
- /* '<pre>'.htmlspecialchars(print_r(array_merge($blah1, $blah2), true)).'</pre>'. */
-
-    return '<iframe
-  scrolling="no" 
-  src="'.$rex->redaxoURL(65).'"
-  id="redaxo"
-  name="redaxo"
-  style="width:auto;height:auto;overflow:hidden;"></iframe>';
+    $tmpl = new \OCP\Template(Config::APP_NAME, 'project-web-articles');
+    $tmpl->assign('projectArticles', $webPages);
+    $tmpl->assign('detachtedArticles', $detachedPages);
+    $urlTemplate = $rex->redaxoURL('%ArticleId%', $action == 'change');
+    if ($action != 'change') {
+      $urlTemplate .= '&rex_version=1';
+    }
+    $tmpl->assign('cmsURLTemplate', $urlTemplate);
+    $tmpl->assign('action', $action);
+    $html = $tmpl->fetchPage();
+    return $html;
   }
 
   public static function projectActionsPME($projectName, $opts, $modify, $k, $fds, $fdd, $row)
@@ -846,6 +872,33 @@ a comma.'));
     return $returnPaths;
   }
 
+  public static function wikiButtonPME($projectId, $opts, $modify, $k, $fds, $fdd, $row)
+  {
+    $projectName = $row["qf$opts"];
+    return self::wikiButton($projectId, $projectName);
+  }
+
+  public static function wikiButton($projectId, $projectName, $value = false, $eventSelect = array())
+  {
+    if ($value === false) {
+      $value = L::t('Project Notes');
+    }
+    $bvalue      = $value;
+    // Code the value in the name attribute (for java-script)
+    $bname       = "project-wiki?'.urlencode(self::projectWikiLink($projectName)).'">
+    $bname       = htmlspecialchars($bname);
+    $title       = Config::toolTips('project-wiki');
+    //$image = \OCP\Util::imagePath('calendar', 'calendar.svg');
+    $button =<<<__EOT__
+<span class="events">
+  <button type="button" class="events" title="$title" name="$bname" value="$bvalue">
+    <!-- <img class="svg events" src="$image" alt="$bvalue" /> -->
+  </button>
+</span>
+__EOT__;
+    return $button;
+  }
+
   public static function eventButtonPME($projectId, $opts, $modify, $k, $fds, $fdd, $row)
   {
     $projectName = $row["qf$opts"];
@@ -1022,9 +1075,7 @@ __EOT__;
     $article = $article[0];
 
     // insert into the db table to form the link
-    if (self::attachProjectWebPage($projectId,
-                                   $article['id'],
-                                   $article['categoryId'], $handle) === false) {
+    if (self::attachProjectWebPage($projectId, $article, $handle) === false) {
       \OCP\Util::writeLog(Config::APP_NAME, "Error attaching web page template", \OC_LOG::DEBUG);
       if ($ownConnection) {
         mySQL::close($handle);
@@ -1033,7 +1084,7 @@ __EOT__;
     }
 
     $module = Config::getValue('redaxoDefaultModule');
-    $rex->addArticleBlock($article['id'], $module);
+    $rex->addArticleBlock($article['ArticleId'], $module);
 
     if ($ownConnection) {
       mySQL::close($handle);
@@ -1086,8 +1137,15 @@ __EOT__;
   }
 
   /**Attach an existing web page to the project.
+   *
+   * @param $projectId Project Id.
+   *
+   * @param $article Article array as returned from $rex->articlesByName().
+   *
+   * @param $handle mySQL handle.
+   *
    */
-  public static function attachProjectWebPage($projectId, $article, $category, $handle = false)
+  public static function attachProjectWebPage($projectId, $article, $handle = false)
   {
     $ownConnection = $handle === false;
 
@@ -1097,8 +1155,16 @@ __EOT__;
     }
 
     $query = "INSERT INTO `ProjectWebPages`
- (`ProjectId`, `ArticleId`, `CategoryId`) VALUES(".$projectId.",".$article.",".$category.")
- ON DUPLICATE KEY UPDATE `CategoryId` = ".$category;
+ (`ProjectId`, `ArticleId`, `ArticleName`, `CategoryId`, `Priority`) VALUES(".
+      $projectId.",".
+      $article['ArticleId'].", ".
+      "'".$article['ArticleName']."', ".
+      $article['CategoryId'].", ".
+      $article['Priority'].")
+   ON DUPLICATE KEY UPDATE ".
+      "`ArticleName` = '".$article['ArticleName']."', ".
+      "`CategoryId` = ".$article['CategoryId'].", ".
+      "`Priority` = ".$article['Priority'];
 
     $result = mySQL::query($query, $handle);
     if ($result === false) {
@@ -1157,7 +1223,7 @@ __EOT__;
     $articles = array_merge($preview, $archive);
     foreach ($articles as $article) {
       // ignore any error
-      self::attachProjectWebPage($projectId, $article['id'], $article['categoryId'], $handle);
+      self::attachProjectWebPage($projectId, $article, $handle);
     }
 
     if ($ownConnection) {

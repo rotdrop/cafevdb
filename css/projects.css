@@ -56,3 +56,11 @@ td[class$="projectextra"] textarea {
   width: 95%;
 }
 
+div.cmsarticleframe {
+  padding: 0 !important;
+}
+
+table.pme-main a.ui-tabs-anchor:link {
+  
+  
+}

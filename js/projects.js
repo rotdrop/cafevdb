@@ -264,7 +264,12 @@ $(document).ready(function(){
                                          } else {
                                              /*resizeCB();*/
                                          }
-                                         container.find('iframe').load(function(event) {
+                                         var displayFrames = container.find('iframe.cmsarticle.display, iframe.cmsarticle.add');
+                                         var numDisplayFrames = displayFrames.length;
+
+                                         var changeFrames = container.find('iframe.cmsarticle.display, iframe.cmsarticle.change');
+                                         var numChangeFrames = changeFrames.length;
+                                         displayFrames.load(function(event) {
                                              var iframe = $(this);
                                              var contents = iframe.contents();
 
@@ -279,7 +284,23 @@ $(document).ready(function(){
                                              contents.find('div.item-text').css('width', 'auto');
                                              //this.style.width = contents.find('div.item-text').css('width');
                                              
-                                             if (false) {
+                                             this.style.width = 
+                                                 this.contentWindow.document.body.scrollWidth+20 + 'px';
+                                             this.style.height = 
+                                                 this.contentWindow.document.body.scrollHeight + 'px';
+                                             --numDisplayFrames;
+                                             if (numDisplayFrames == 0) {
+                                                 container.find('#projectWebArticles').tabs({
+                                                     selected: 0,
+                                                     heightStyle: 'auto'
+                                                 });
+                                                 resizeCB();
+                                             }
+                                         });
+                                         changeFrames.load(function(event) {
+                                             var iframe = $(this);
+                                             var contents = iframe.contents();
+
                                              // The below lines style the edit window.
                                              contents.find('#rex-navi-logout').remove();
                                              contents.find('#rex-navi-main').remove();
@@ -300,14 +321,20 @@ $(document).ready(function(){
                                              website.css({ width: wrapper.css('width'),
                                                            'background-image': 'none' });
 
-                                             this.style.width = wrapper.css('width');
+                                             //this.style.width = wrapper.css('width');
                                              //this.contentWindow.document.body.scrollWidth + 'px';
-                                             }
+
                                              this.style.width = 
                                                  this.contentWindow.document.body.scrollWidth+20 + 'px';
                                              this.style.height = 
                                                  this.contentWindow.document.body.scrollHeight + 'px';
-                                             resizeCB();
+                                             --numChangeFrames;
+                                             if (numChangeFrames == 0) {
+                                                 container.find('#projectWebArticles').tabs({
+                                                     selected: 0
+                                                 });
+                                                 resizeCB();
+                                             }
                                          });
                                          container.find('span.photo').click(function(event) {
                                              event.preventDefault();

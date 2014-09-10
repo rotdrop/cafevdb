@@ -100,17 +100,17 @@ a.pme-cell-1:hover, a.pme-cell-0:hover {
   font-weight:bold;
 }
 
-.pme-cell-1>a:link, .pme-cell-0>a:link {
+.pme-cell-1>a:not(.ui-tabs-anchor):link, .pme-cell-0>a:not(.ui-tabs-anchor):link {
   color:#0000ff;
   text-decoration:underline;
   font-weight:bold;
 }
-.pme-cell-1>a:visited, .pme-cell-0>a:visited {
+.pme-cell-1>a:not(.ui-tabs-anchor):visited, .pme-cell-0>a:not(.ui-tabs-anchor):visited {
   color:#0000ff;
   text-decoration:underline;
   font-weight:bold;
 }
-.pme-cell-1>a:hover, .pme-cell-0>a:hover {
+.pme-cell-1>a:not(.ui-tabs-anchor):hover, .pme-cell-0>a:not(.ui-tabs-anchor):hover {
   color:#0000ff;
   text-decoration:underline;
   font-style:italic;
@@ -502,17 +502,17 @@ table.pme-main select.pme-filter-projects {
 }
 
 /*Style links in a more ordinary fashion */
-table.pme-main a:link {
+table.pme-main a:not(.ui-tabs-anchor):link {
   color:CornFlowerBlue;
   text-decoration:underline;
   font-weight:bold;
 }
-table.pme-main a:visited {
+table.pme-main a:not(.ui-tabs-anchor):visited {
   color:CornFlowerBlue;
   text-decoration:underline;
   font-weight:bold;
 }
-table.pme-main a:hover {
+table.pme-main a:not(.ui-tabs-anchor):hover {
   color:CornFlowerBlue;
   text-decoration:underline;
   font-style:italic;
