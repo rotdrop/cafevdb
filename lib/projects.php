@@ -315,16 +315,19 @@ class Projects
                                       'valueGroups' => $groupedInstruments);
 
     $opts['fdd']['Bemerkungen'] = array(
-      'name'     => 'Bemerkungen',
+      'name'     => L::t('Project Notes'),
+      'input'    => 'V',
+      'options'  => 'VCDA', 
       'select'   => 'T',
       'maxlen'   => 65535,
       'css'      => array('postfix' => 'projectremarks'),
-      'textarea' => array('css' => 'none', //'wysiwygeditor',
-                          'rows' => 5,
-                          'cols' => 50),
+      'sql'      => 'Id',
+      'sqlw'     => 'Id',
+      'php|CV'    => array('type' => 'function',
+                          'function' => 'CAFEVDB\Projects::projectWikiButtonPME',
+                          'parameters' => array()),
       'sort'     => true,
-      'escape'   => false,
-      'default'  => 'Kosten, Teilnahmebedingungen etc.'
+      'escape' => false
       );
 
     $opts['fdd']['ExtraFelder'] = array('name'     => 'Extra Felder für Teilnehmer',
@@ -872,31 +875,24 @@ a comma.'));
     return $returnPaths;
   }
 
-  public static function wikiButtonPME($projectId, $opts, $modify, $k, $fds, $fdd, $row)
+  public static function projectWikiButtonPME($projectId, $opts, $modify, $k, $fds, $fdd, $row)
   {
     $projectName = $row["qf$opts"];
-    return self::wikiButton($projectId, $projectName);
+    return self::projectWikiButton($projectId, $projectName);
   }
 
-  public static function wikiButton($projectId, $projectName, $value = false, $eventSelect = array())
+  public static function projectWikiButton($projectId, $projectName, $value = false, $eventSelect = array())
   {
     if ($value === false) {
-      $value = L::t('Project Notes');
+      $value = L::t('Project Wiki for %s', array($projectName));
     }
-    $bvalue      = $value;
-    // Code the value in the name attribute (for java-script)
-    $bname       = "project-wiki?'.urlencode(self::projectWikiLink($projectName)).'">
-    $bname       = htmlspecialchars($bname);
-    $title       = Config::toolTips('project-wiki');
-    //$image = \OCP\Util::imagePath('calendar', 'calendar.svg');
-    $button =<<<__EOT__
-<span class="events">
-  <button type="button" class="events" title="$title" name="$bname" value="$bvalue">
-    <!-- <img class="svg events" src="$image" alt="$bvalue" /> -->
-  </button>
-</span>
-__EOT__;
-    return $button;
+    return '<div class="projectWikiButton">
+  <input type="button"
+         id="projectWikiButton"
+         value="'.$value.'"
+         name="projectWikiButton"
+         data-link="'.urlencode(self::projectWikiLink($projectName)).'"
+         title="'.Config::toolTips('project-wiki').'" />';
   }
 
   public static function eventButtonPME($projectId, $opts, $modify, $k, $fds, $fdd, $row)
