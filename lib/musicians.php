@@ -798,6 +798,9 @@ __EOT__;
     $this->template = self::CHANGE_TEMPLATE;
 
     $this->musiciansIds  = Util::cgiValue($this->musiciansKey, array());
+    $numRecords = count($this->musiciansIds);
+    $sort = false && $numRecords > 6;
+    $query = false && $numRecords > 6;
 
     // Probably needs several changes ...
     if (isset($_POST['ForcedInstrument'])) {
@@ -857,7 +860,10 @@ __EOT__;
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
     // F - filter, I - initial sort suppressed
-    $opts['options'] = 'CVDF';
+    $opts['options'] = 'CVD';
+    if ($numRecords > 6) {
+      $opts['options'] .= 'F';
+    }
 
     // Number of lines to display on multiple selection filters
     $opts['multiple'] = '4';
@@ -870,8 +876,8 @@ __EOT__;
     $opts['display'] =  array_merge($opts['display'],
                                     array(
                                       'form'  => true,
-                                      'query' => false,
-                                      'sort'  => true,
+                                      'query' => $query,
+                                      'sort'  => $sort,
                                       'time'  => true,
                                       'tabs'  => false
                                       ));
@@ -937,14 +943,14 @@ __EOT__;
                                'options'  => 'AVCPDR', // auto increment
                                'maxlen'   => 11,
                                'default'  => '0',
-                               'sort'     => true
+                               'sort'     => $sort
                                );
     $opts['fdd']['ProjektId'] = array(
                                       'name'     => 'ProjektId',
                                       'select'   => 'T',
                                       'options'  => 'AVCPDR', // auto increment
                                       'maxlen'   => 11,
-                                      'sort'     => true,
+                                      'sort'     => $sort,
                                       'values' => array(
                                                         'table' => 'Projekte',
                                                         'column' => 'Id',
@@ -959,7 +965,7 @@ __EOT__;
                                       'input'    => 'R',
                                       'select'   => 'T',
                                       'maxlen'   => 11,
-                                      'sort'     => true,
+                                      'sort'     => $sort,
                                       //'options'  => 'LFADV', // no change allowed
                                       'values' => array('table' => 'Musiker',
                                                         'column' => 'Id',
@@ -975,7 +981,7 @@ __EOT__;
       'select'   => 'D',
       'maxlen'   => 36,
       'css'      => array('postfix' => 'instrument'),
-      'sort'     => true,
+      'sort'     => $sort,
       'values' => array(
         'table'   => 'Instrumente',
         'column'  => 'Instrument',
@@ -1033,11 +1039,11 @@ __EOT__;
                                        'options' => 'VCPR',
                                        'input' => 'V',
                                        'sql' => '`PMEjoin4`.`Sortierung`', // this is `Instrumente`
-                                       'sort' => true);
+                                       'sort' => $sort);
     $opts['fdd']['Reihung'] = array('name' => 'Stimme',
                                     'select' => 'N',
                                     'maxlen' => '1',
-                                    'sort' => true);
+                                    'sort' => $sort);
     $opts['fdd']['Stimmführer'] = $this->sectionLeaderColumn;
 
     $opts['fdd']['Bemerkungen'] = array('name'     => 'Bemerkungen',
@@ -1048,7 +1054,7 @@ __EOT__;
                                                             'rows' => 5,
                                                             'cols' => 50),
                                         'escape' => false,
-                                        'sort'     => true);
+                                        'sort'     => $sort);
     $opts['fdd']['Unkostenbeitrag'] = Config::$opts['money'];
     $opts['fdd']['Unkostenbeitrag']['name'] = "Unkostenbeitrag\n(Gagen negativ)";
 
@@ -1087,7 +1093,7 @@ __EOT__;
                                                         'rows' => 2,
                                                         'cols' => 32),
                                     'escape' => false,
-                                    'sort'     => true);
+                                    'sort'     => $sort);
 
       if ($field['tooltip'] !== false) {
         $opts['fdd']["$name"]['tooltip'] = $field['tooltip'];
@@ -1233,6 +1239,13 @@ __EOT__;
 
     $opts['execute'] = $this->execute;
 
+    if ($numRecords <= 6) {
+      foreach ($opts['fdd'] as $key => $value) {
+        $opts['fdd'][$key]['sort'] = false;
+      }
+      //$opts['navigation'] = 'N'; // no navigation
+    }
+    
     // Generate and possibly display the table
     $this->pme = new \phpMyEdit($opts);
 
