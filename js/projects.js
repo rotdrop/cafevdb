@@ -45,7 +45,8 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
     Projects.actions = function(select) {
         
         // determine the export format
-        var selected = select.find('option:selected').val();
+        var selectedOption = select.find('option:selected');
+        var selected = selectedOption.val();
         var values = select.attr('name');
         var optionValues = selected.split('?');
 
@@ -79,9 +80,15 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
             CAFEVDB.formSubmit(url, values, 'get');
             break;
         case 'project-wiki':
-            var url    = OC.linkTo('dokuwikiembed', 'index.php');
-            var values = 'wikiPath='+CAFEVDB.urlencode('/doku.php?id=')+optionValues[1];
-            CAFEVDB.formSubmit(url, values, 'post');
+            if (false) {
+                var url    = OC.linkTo('dokuwikiembed', 'index.php');
+                var values = 'wikiPath='+CAFEVDB.urlencode('/doku.php?id=')+optionValues[1];
+                CAFEVDB.formSubmit(url, values, 'post');
+            } else {
+                var wikiPage = selectedOption.attr('data-wikipage');
+                var popupTitle = selectedOption.attr('data-wikititle');
+                DWEmbed.wikiPopup(wikiPage, popupTitle);                
+            }
             break;
         default:
             OC.dialogs.alert(t('cafevdb', 'Unknown operation:')
@@ -248,103 +255,154 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
 
 $(document).ready(function(){
 
-    PHPMYEDIT.addTableLoadCallback('Projects',
-                                   {
-                                     callback: function(selector, resizeCB) {
-                                         var container = PHPMYEDIT.container(selector);
-                                         this.actionMenu(selector);
-                                         this.pmeFormInit(selector);
-                                         if (container.find('#file_upload_target').length > 0) {
-                                             var idField = container.find('input[name="PME_data_Id"]');
-                                             var recordId = -1;
-                                             if (idField.length > 0) {
-                                                 recordId = idField.val();
-                                             }
-                                             CAFEVDB.Photo.ready(recordId/*, resizeCB*/);
-                                         } else {
-                                             /*resizeCB();*/
-                                         }
-                                         var displayFrames = container.find('iframe.cmsarticle.display, iframe.cmsarticle.add');
-                                         var numDisplayFrames = displayFrames.length;
+    PHPMYEDIT.addTableLoadCallback('Projects', {
+        callback: function(selector, resizeCB) {
+            var container = PHPMYEDIT.container(selector);
+            this.actionMenu(selector);
+            this.pmeFormInit(selector);
+            if (container.find('#file_upload_target').length > 0) {
+                var idField = container.find('input[name="PME_data_Id"]');
+                var recordId = -1;
+                if (idField.length > 0) {
+                    recordId = idField.val();
+                }
+                CAFEVDB.Photo.ready(recordId/*, resizeCB*/);
+            } else {
+                /*resizeCB();*/
+            }
+            var articleBox = container.find('#projectWebArticles');
 
-                                         var changeFrames = container.find('iframe.cmsarticle.display, iframe.cmsarticle.change');
-                                         var numChangeFrames = changeFrames.length;
-                                         displayFrames.load(function(event) {
-                                             var iframe = $(this);
-                                             var contents = iframe.contents();
+            var displayFrames = articleBox.find('iframe.cmsarticleframe.display, iframe.cmsarticleframe.add');
+            var numDisplayFrames = displayFrames.length;
 
-                                             // First the pretty-print
-                                             // version. We remove
-                                             // everything except the article itself
-                                             contents.find('div#header').remove();
-                                             contents.find('div#footer').remove();
-                                             contents.find('div.navi').remove();
-                                             contents.find('body').css({'min-width': 'unset',
-                                                                        'width': 'auto'});
-                                             contents.find('div.item-text').css('width', 'auto');
-                                             //this.style.width = contents.find('div.item-text').css('width');
-                                             
-                                             this.style.width = 
-                                                 this.contentWindow.document.body.scrollWidth+20 + 'px';
-                                             this.style.height = 
-                                                 this.contentWindow.document.body.scrollHeight + 'px';
-                                             --numDisplayFrames;
-                                             if (numDisplayFrames == 0) {
-                                                 container.find('#projectWebArticles').tabs({
-                                                     selected: 0,
-                                                     heightStyle: 'auto'
-                                                 });
-                                                 resizeCB();
-                                             }
-                                         });
-                                         changeFrames.load(function(event) {
-                                             var iframe = $(this);
-                                             var contents = iframe.contents();
+            var changeFrames = articleBox.find('iframe.cmsarticleframe.display, iframe.cmsarticleframe.change');
+            var numChangeFrames = changeFrames.length;
 
-                                             // The below lines style the edit window.
-                                             contents.find('#rex-navi-logout').remove();
-                                             contents.find('#rex-navi-main').remove();
-                                             contents.find('#rex-redaxo-link').remove();
-                                             contents.find('#rex-footer').remove();
-                                             contents.find('#rex-header').remove();
-                                             contents.find('#rex-title').remove();
-                                             contents.find('div.rex-toolbar.rex-toolbar-has-form').remove();
-                                             contents.find('body').css({ margin: 0,
-                                                                         'background-image': 'none' });
-                                             contents.find('#rex-output').css({margin: 0});
-                                             contents.find('#rex-navi-path a').removeAttr('href');
-                                             var wrapper = contents.find('#rex-wrapper');
-                                             var website = contents.find('#rex-website');
-                                             wrapper.css({ padding: 0,
-                                                           margin: 0,
-                                                           float: 'left' });
-                                             website.css({ width: wrapper.css('width'),
-                                                           'background-image': 'none' });
+            // allFrames also contains some div + all available iframes
+            var allFrames = articleBox.find('.cmsarticleframe');
 
-                                             //this.style.width = wrapper.css('width');
-                                             //this.contentWindow.document.body.scrollWidth + 'px';
+            displayFrames.load(function(event) {
+                var iframe = $(this);
+                var contents = iframe.contents();
+                var self = this;
 
-                                             this.style.width = 
-                                                 this.contentWindow.document.body.scrollWidth+20 + 'px';
-                                             this.style.height = 
-                                                 this.contentWindow.document.body.scrollHeight + 'px';
-                                             --numChangeFrames;
-                                             if (numChangeFrames == 0) {
-                                                 container.find('#projectWebArticles').tabs({
-                                                     selected: 0
-                                                 });
-                                                 resizeCB();
-                                             }
-                                         });
-                                         container.find('span.photo').click(function(event) {
-                                             event.preventDefault();
-                                             CAFEVDB.Photo.popup(this);
-                                             return false;
-                                         });
-                                     },
-                                     context: CAFEVDB.Projects,
-                                     parameters: []
-                                   });
+                // First the pretty-print
+                // version. We remove
+                // everything except the article itself
+                contents.find('div#header').remove();
+                contents.find('div#footer').remove();
+                contents.find('div.navi').remove();
+                contents.find('body').css({'min-width': 'unset',
+                                           'width': 'auto'});
+                contents.find('div.item-text').css('width', 'auto');
+                //this.style.width = contents.find('div.item-text').css('width');
+                
+                this.style.width = 
+                    this.contentWindow.document.body.scrollWidth + 'px';
+                this.style.height = 
+                    this.contentWindow.document.body.scrollHeight + 'px';
+                --numDisplayFrames;
+                if (numDisplayFrames == 0) {
+                    articleBox.tabs({
+                        selected: 0,
+                        heightStyle: 'auto',
+                        activate: function(event, ui) {
+                            var frame = ui.newPanel.find('.cmsarticleframe');
+                            var forcedWidth = articleBox.width();
+                            var forcedHeight = articleBox.height() - $('#cmsarticletabs').outerHeight();
+                            frame.width(forcedWidth);
+                            frame.height(forcedHeight);
+                        }
+                    });
+
+                    //var contents = displayFrames.contents();
+                    var forcedWidth = articleBox.width();
+                    var forcedHeight = articleBox.height() - $('#cmsarticletabs').outerHeight();
+                    allFrames.width(forcedWidth);
+                    allFrames.height(forcedHeight);
+                    
+                    resizeCB();
+                }
+            });
+            changeFrames.load(function(event) {
+                var iframe = $(this);
+                var contents = iframe.contents();
+                var self = this;
+
+                // The below lines style the edit window.
+                contents.find('#rex-navi-logout').remove();
+                contents.find('#rex-navi-main').remove();
+                contents.find('#rex-redaxo-link').remove();
+                contents.find('#rex-footer').remove();
+                contents.find('#rex-header').remove();
+                contents.find('#rex-title').remove();
+                contents.find('#rex-a256-searchbar').remove();
+                contents.find('body').css({ margin: 0,
+                                            'background-image': 'none' });
+                contents.find('#rex-output').css({margin: 0});
+                contents.find('#rex-navi-path a').removeAttr('href');
+                var wrapper = contents.find('#rex-wrapper');
+                var website = contents.find('#rex-website');
+                wrapper.css({ padding: 0,
+                              margin: 0,
+                              float: 'left' });
+                website.css({ width: wrapper.css('width'),
+                              'background-image': 'none' });
+                contents.find('textarea').css({ 'max-width': '720px' });
+
+                /* cH says: The following is a
+                 * bloody-fucking-shit-tinymce-fucking-shit hack.
+                 *
+                 * TinyMCE does "illegal" things. There _are_
+                 * initialization callbacks provided bz TinzMCE, but
+                 * NONE of them hacks it. Still tinyMCE changes its
+                 * AFTER the callbacks have been executed. GNAH. This
+                 * half-second timeout reallz is a nuisance and just
+                 * does not hack the general case. FOOBAR.
+                 */
+                var mceFuckingTimeout = 0;
+                if (contents.find('.tinyMCEEditor')) {
+                    mceFuckingTimeout = 500;
+                }
+                setTimeout(function() {
+                    self.style.width = 
+                        self.contentWindow.document.body.scrollWidth + 'px';
+                    self.style.height = 
+                        self.contentWindow.document.body.scrollHeight + 'px';
+                    --numChangeFrames;
+                    if (numChangeFrames == 0) {
+                        container.find('#projectWebArticles').tabs({
+                            selected: 0
+                        });
+                        resizeCB();
+                    }
+                    if (false) {
+                        self.contentWindow.onresize = function() {
+                            alert("hello world: "+this.document.body.scrollHeight);
+                            //                    self.style.width = this.document.body.scrollWidth + 'px';
+                            self.style.height = this.document.body.scrollHeight + 'px'
+                        };
+                    }
+                }, mceFuckingTimeout);
+            });
+            container.find('span.photo').click(function(event) {
+                event.preventDefault();
+                CAFEVDB.Photo.popup(this);
+                return false;
+            });
+            container.find('.wiki-popup').click(function(event) {
+                event.preventDefault();
+
+                var wikiPage = $(this).attr('data-wikipage');
+                var popupTitle = $(this).attr('data-wikititle');
+                DWEmbed.wikiPopup(wikiPage, popupTitle);
+
+                return false;
+            });
+        },
+        context: CAFEVDB.Projects,
+        parameters: []
+    });
     CAFEVDB.Projects.actionMenu();
     var dpyClass = $(PHPMYEDIT.defaultSelector).find('form.pme input[name="DisplayClass"]');
     if (dpyClass.length > 0 && dpyClass.val() === 'Projects') {

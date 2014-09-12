@@ -63,27 +63,35 @@ try {
   $articles = $_['projectArticles'];
   $cnt = count($articles);
   echo '<div id="projectWebArticles">
+  <ul id="cmsarticletabs">
 ';
-  if ($cnt > 1) {
-    echo '  <ul id="cmsarticletabs">
-';
+  if ($cnt > 0) {
     for ($nr = 1; $nr <= $cnt; ++$nr) {
       echo '    <li><a href="#projectArticle-'.$nr.'">'.$articles[$nr-1]['ArticleName'].'</a></li>
 ';
     }
-    echo '  </ul>
+  } else {
+    echo '    <li><a href="#projectArticle-nopage">'.L::t('nothing').'</a></li>
 ';
   }
+  echo '    <li><a href="#projectArticle-newpage">'.'+'.'</a></li>
+';
+  if ($cnt > 0) {
+    echo '    <li><a href="#projectArticle-deletepage">'.'-'.'</a></li>
+';
+  }
+  echo '  </ul>
+';
   $nr = 1;
   foreach ($articles as $article) {
     $url = $_['cmsURLTemplate'];
     foreach ($article as $key => $value) {
       $url = str_replace('%'.$key.'%', $value, $url);
     }
-    echo '  <div id="projectArticle-'.$nr.'" class="cmsarticleframe cafev">
-    <iframe scrolling="no"
+    echo '  <div id="projectArticle-'.$nr.'" class="cmsarticlecontainer cafev">
+    <iframe '.($_['action'] != 'change' ? 'scrolling="no"' : 'scrolling="no"').'
           src="'.$url.'"
-          class="cmsarticle '.$_['action'].'"
+          class="cmsarticleframe '.$_['action'].'"
           id="cmsarticle-'.$nr.'"
           name="cmsarticle-'.$nr.'"
           style="width:auto;height:auto;overflow:hidden;"></iframe>
@@ -91,7 +99,19 @@ try {
     ++$nr;
   }
   if ($cnt == 0) {
-    echo '<span id="noWebArticlesFound">'.L::t("No public web pages registered for this project").'</span>
+    echo '  <div id="projectArticle-nopage" class="cmsarticlecontainer cafev">
+    <div class="cmsarticleframe">'.L::t("No public web pages registered for this project").'</div>
+  </div>
+';    
+  }
+  echo '  <div id="projectArticle-newpage" class="cmsarticlecontainer cafev">
+    <div class="cmsarticleframe">'.L::t("Create new public web page for this project.").'</div>
+  </div>
+';    
+  if ($cnt > 0) {
+    echo '  <div id="projectArticle-deletepage" class="cmsarticlecontainer cafev">
+    <div class="cmsarticleframe">'.L::t("Delete a web article.").'</div>
+  </div>
 ';    
   }
   echo '</div>
