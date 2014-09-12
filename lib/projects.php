@@ -325,7 +325,7 @@ class Projects
       'sqlw'     => 'Id',
       'php|CV'    => array('type' => 'function',
                           'function' => 'CAFEVDB\Projects::projectWikiButtonPME',
-                          'parameters' => array()),
+                          'parameters' => $nameIdx),
       'sort'     => true,
       'escape' => false
       );
@@ -529,6 +529,7 @@ a comma.'));
 
     // TODO: if the name changed, then change also the template, but
     // is not so important, OTOH, would just look better.
+    self::nameProjectWebPages($pme->rec, $newvals['Name'], $pme->dbh);
     
     return true;
   }
@@ -742,7 +743,9 @@ a comma.'));
     </optgroup>
     <optgroup>
     <option title="'.Config::toolTips('project-action-wiki').'"
-            value="project-wiki?'.urlencode(self::projectWikiLink($projectName)).'">
+            value="project-wiki?'.urlencode(self::projectWikiLink($projectName)).'"
+            data-wikipage="'.htmlspecialchars(self::projectWikiLink($projectName)).'"
+            data-wikititle="'.htmlspecialchars(L::t('Project Wiki for %s', array($projectName))).'">
       '.L::t('Project Wiki Page').'
     </option>
     <option title="'.Config::toolTips('project-action-files').'"
@@ -875,9 +878,9 @@ a comma.'));
     return $returnPaths;
   }
 
-  public static function projectWikiButtonPME($projectId, $opts, $modify, $k, $fds, $fdd, $row)
+  public static function projectWikiButtonPME($projectId, $nameIdx, $modify, $k, $fds, $fdd, $row)
   {
-    $projectName = $row["qf$opts"];
+    $projectName = $row["qf$nameIdx"];
     return self::projectWikiButton($projectId, $projectName);
   }
 
@@ -889,9 +892,11 @@ a comma.'));
     return '<div class="projectWikiButton">
   <input type="button"
          id="projectWikiButton"
+         class="wiki-popup"
          value="'.$value.'"
          name="projectWikiButton"
-         data-link="'.urlencode(self::projectWikiLink($projectName)).'"
+         data-wikipage="'.htmlspecialchars(self::projectWikiLink($projectName)).'"
+         data-wikititle="'.htmlspecialchars($value).'"
          title="'.Config::toolTips('project-wiki').'" />';
   }
 
@@ -1174,6 +1179,70 @@ __EOT__;
     return $result;
   }
 
+  /**Set the name of all registered web-pages to the canonical name,
+   * project name given.
+   */
+  public static function nameProjectWebPages($projectId, $projectName = false, $handle = false)
+  {
+    $ownConnection = $handle === false;
+
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
+    /* Fetch the name if necessary */
+    if ($projectName === false) {
+      $projectName = self::fetchName($projectId, $handle);
+    }
+    if ($projectName === false) {
+      if ($ownConnection) {
+        mySQL::close($handle);
+      }
+      return false;
+    }
+
+    /* Fetch all the data available. */
+    $webPages = self::fetchProjectWebPages($projectId);
+    if ($webPages === false) {
+      if ($ownConnection) {
+        mySQL::close($handle);
+      }
+      false;
+    }
+    
+    $redaxoLocation = \OCP\Config::GetAppValue('redaxo', 'redaxolocation', '');
+    $rex = new \Redaxo\RPC($redaxoLocation);
+    if (count($webPages) > 0) {
+      $article = array_shift($webPages);
+      $newName = $projectName;
+      if ($rex->setArticleName($article['ArticleId'], $projectName)) {
+        $query = "UPDATE IGNORE `ProjectWebPages`
+    SET `ArticleName` = '".$newName."'
+    WHERE `ArticleId` = ".$article['ArticleId'];
+        $result = mySQL::query($query, $handle);
+      }
+    }
+    $nr = 1;
+    foreach ($webPages as $article) {
+      $newName = $projectName.'-'.$nr;
+      if ($rex->setArticleName($article['ArticleId'], $newName)) {
+        // if successful then also update the date-base entry
+        $query = "UPDATE IGNORE `ProjectWebPages`
+    SET `ArticleName` = '".$newName."'
+    WHERE `ArticleId` = ".$article['ArticleId'];
+        $result = mySQL::query($query, $handle);
+      }  
+      ++$nr;
+    }
+
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return true;
+  }
+  
   /**Seach through the list of all projects and attach those with a
    * matching name. Something which should go to the "expert"
    * controls.
@@ -1750,6 +1819,65 @@ project without a flyer first.");
    * should be made configurable.
    */
   public static function generateWikiOverview($handle = false)
+  {
+/*
+====== Projekte der Camerata Academica Freiburg e.V. ======
+
+==== 2011 ====
+  * [[Auvergne2011|Auvergne]]
+  * [[Weihnachten2011]]
+
+==== 2012 ====
+  * [[Listenpunkt]]
+  * [[Blah]]
+
+==== 2013 ====
+  * [[Listenpunkt]]
+*/
+    $orchestra = Config::$opts['orchestra']; // for the name-space
+
+    $projects = self::fetchProjects(false, true);
+    
+    $page = "====== Projekte der Camerata Academica Freiburg e.V. ======\n\n";
+
+    $year = -1;    
+    foreach($projects as $id => $row) {
+      if ($row['Jahr'] != $year) {
+        $year = $row['Jahr'];
+        $page .= "\n==== ".$year."====\n";
+      }
+      $name = $row['Name'];
+
+      $matches = false;
+      if (preg_match('/^(.*\D)?(\d{4})$/', $name, $matches) == 1) {
+        $bareName = $matches[1];
+        //$projectYear = $matches[2];
+      } else {
+        $bareName = $name;
+      }
+
+      // A page is tagged with the project name; if this ever should
+      // be changed (which is possible), the change-trigger should
+      // create a new page as coppy from the old one and change the
+      // text of the old one to contain a link to the new page.
+
+      $page .= "  * [[".self::projectWikiLink($name)."|".$bareName."]]\n";
+    }
+
+    $pagename = $orchestra.":projekte";
+
+    $wikiLocation = \OCP\Config::GetAppValue("dokuwikiembed", 'wikilocation', '');
+    $dwembed = new \DWEMBED\App($wikiLocation);
+    $dwembed->putPage($pagename, $page,
+                      array("sum" => "Automatic CAFEVDB synchronization",
+                            "minor" => true));
+
+  }
+
+  /**Generate an almost empty project page. This spares people the
+   * need to click on "new page".
+   */
+  public static function generateProjectWikiPage($handle = false)
   {
 /*
 ====== Projekte der Camerata Academica Freiburg e.V. ======
