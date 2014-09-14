@@ -462,6 +462,7 @@ a comma.'));
                                               "minor" => false));
     }
     self::generateWikiOverview();
+    self::generateProjectWikiPage($projectId, $projectName, $handle);
 
     // Generate an empty offline page template in the public web-space
     self::createProjectWebPage($projectId, $pme->dbh);
@@ -690,6 +691,7 @@ a comma.'));
     }
     $tmpl->assign('cmsURLTemplate', $urlTemplate);
     $tmpl->assign('action', $action);
+    $tmpl->assign('app', Config::APP_NAME);
     $html = $tmpl->fetchPage();
     return $html;
   }
@@ -1876,54 +1878,69 @@ project without a flyer first.");
 
   /**Generate an almost empty project page. This spares people the
    * need to click on "new page".
+   *
+   * - We insert a proper title heading
+   *
+   * - We insert a sub-title "Contacts"
+   *
+   * - We insert a sub-title "Financial Arrangements"
+   *
+   * - We insert a sub-title "Location"
    */
-  public static function generateProjectWikiPage($handle = false)
+  public static function generateProjectWikiPage($projectId, $projectName, $handle)
   {
-/*
-====== Projekte der Camerata Academica Freiburg e.V. ======
-
-==== 2011 ====
-  * [[Auvergne2011|Auvergne]]
-  * [[Weihnachten2011]]
-
-==== 2012 ====
-  * [[Listenpunkt]]
-  * [[Blah]]
-
-==== 2013 ====
-  * [[Listenpunkt]]
-*/
     $orchestra = Config::$opts['orchestra']; // for the name-space
 
-    $projects = self::fetchProjects(false, true);
+    $page = L::t('====== Project %s ======
+
+===== Introduction =====
+
+==== Forword ====
+
+Please keep in mind that the following suggestions are just what they are:
+//suggestions// to give you a start and some ideas about what might be
+useful content for this page. Please keep in mind that there is also a
+dedicated storage area in the OwnCloud where large data-files can be
+stored, for instance image data for flyers and programs, letters and
+so on.
+
+This wiki-page is primarily meant for remembering textual
+information which is in some sense "permanent" for this
+project. Placing such information here spares us the need for
+permanent data-diggin in our email box.
+
+Please do not hesitage to click on the pencil-symbol just at the right
+of this text-box. Editing wiki-content is really-really simple. Please
+just try out! The text below show just some examples. The most basic
+formatting operations are available through buttons on top of the
+editor window (of course: only after you dared to click the edit
+button). More thorough documentation can be found in the
+[[doku>de:dokuwiki|wiki which documents DocuWiki itself]].
+
+===== Contacts =====
+Please add any relevant email and mail-adresses here. Please use the wiki-syntax
+<code>* [[foobar@important.com|Mister Universe]]</code>  
+* [[foobar@important.com|Mister Universe]]
+
+===== Financial Arrangements =====
+Please add any special financial arrangements here. For example:
+single-room fees, double-roome fees. Please consider using an
+unordered list for this like so:
+<code>
+  * single room fee: 3000€
+  * double room fee: 6000€
+  * fee for Cello-players: 1500€
+</code>
+  * single room fee: 3000€
+  * double room fee: 6000€
+  * fee for Cello-players: 1500€
+
+===== Location =====
+Please feel free to add any nice pictures and/or descriptions or whatever
+here. This paragraph is primarily meant for personal amusement.',
+                 array($projectName));
     
-    $page = "====== Projekte der Camerata Academica Freiburg e.V. ======\n\n";
-
-    $year = -1;    
-    foreach($projects as $id => $row) {
-      if ($row['Jahr'] != $year) {
-        $year = $row['Jahr'];
-        $page .= "\n==== ".$year."====\n";
-      }
-      $name = $row['Name'];
-
-      $matches = false;
-      if (preg_match('/^(.*\D)?(\d{4})$/', $name, $matches) == 1) {
-        $bareName = $matches[1];
-        //$projectYear = $matches[2];
-      } else {
-        $bareName = $name;
-      }
-
-      // A page is tagged with the project name; if this ever should
-      // be changed (which is possible), the change-trigger should
-      // create a new page as coppy from the old one and change the
-      // text of the old one to contain a link to the new page.
-
-      $page .= "  * [[".self::projectWikiLink($name)."|".$bareName."]]\n";
-    }
-
-    $pagename = $orchestra.":projekte";
+    $pagename = self::projectWikiLink($projectName);
 
     $wikiLocation = \OCP\Config::GetAppValue("dokuwikiembed", 'wikilocation', '');
     $dwembed = new \DWEMBED\App($wikiLocation);
