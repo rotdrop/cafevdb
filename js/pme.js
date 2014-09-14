@@ -37,6 +37,10 @@ var PHPMYEDIT = PHPMYEDIT || {};
   PHPMYEDIT.dialogCSSId             = 'pme-table-dialog';
   PHPMYEDIT.tableLoadCallbacks      = [];
 
+  PHPMYEDIT.popupPosition           = { my: "middle top",
+                                        at: "middle bottom+50px",
+                                        of: "#header" };
+
   /**Genereate the default selector. */
   PHPMYEDIT.selector = function(selector) {
     if (typeof selector === 'undefined') {
@@ -218,11 +222,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
                    // editors may cause additional resizing
                    CAFEVDB.addEditor(container.find('textarea.wysiwygeditor'), function() {
                      container.dialog('option', 'height', 'auto');
-                     container.dialog('option', 'position', 
-                                      { my: "middle top+5%",
-                                        at: "middle bottom",
-                                        of: "#controls" });
-                                       
+                     container.dialog('option', 'position', pme.popupPosition);
+
                      // re-attach events
                      options.modified = !changeMoreApplyButton.hasClass('pme-change');
                      self.tableDialogHandlers(options, callback);
@@ -341,12 +342,12 @@ var PHPMYEDIT = PHPMYEDIT || {};
            post,
            function (data) {
              var containerSel = '#'+pme.dialogCSSId;
-             var container;
+             var dialogHolder;
              if (data.status == 'success') {
-               container = $('<div id="'+pme.dialogCSSId+'"></div>');
-               container.html(data.data.contents);
-                $('body').append(container);
-               container = $(containerSel);
+               dialogHolder = $('<div id="'+pme.dialogCSSId+'"></div>');
+               dialogHolder.html(data.data.contents);
+                $('body').append(dialogHolder);
+               dialogHolder = $(containerSel);
              } else {
                var info = '';
                if (typeof data.data.message != 'undefined') {
@@ -370,11 +371,9 @@ var PHPMYEDIT = PHPMYEDIT || {};
                modified: false // avoid reload of base table unless necessary
              };
 
-             var popup = container.dialog({
-               title: container.find('span.pme-short-title').html(),
-               position: { my: "middle top+5%",
-                           at: "middle bottom",
-                           of: "#controls" },
+             var popup = dialogHolder.dialog({
+               title: dialogHolder.find('span.pme-short-title').html(),
+               position: pme.popupPosition,
                width: 'auto',
                height: 'auto',
                modal: true,
@@ -393,13 +392,16 @@ var PHPMYEDIT = PHPMYEDIT || {};
                    tableOptions,
                    function() {
 
-                     CAFEVDB.addEditor(container.find('textarea.wysiwygeditor'), function() {
+                     dialogHolder.css('height', 'auto');
+                     CAFEVDB.addEditor(dialogHolder.find('textarea.wysiwygeditor'), function() {
                        pme.transposeReady(containerSel);
                        pme.tableLoadCallback(dpyClass, containerSel, function() {
-                         container.dialog('option', 'height', 'auto');
-                         container.dialog('option', 'width', 'auto');
+                         dialogHolder.dialog('option', 'height', 'auto');
+                         dialogHolder.dialog('option', 'width', 'auto');
                          var newHeight = dialogWidget.height()
                            - dialogWidget.find('.ui-dialog-titlebar').outerHeight();
+                         newHeight -= dialogHolder.outerHeight() - dialogHolder.height();
+                         //alert("Setting height to " + newHeight);
                          dialogHolder.height(newHeight);
                        });
                        CAFEVDB.tipsy(containerSel);

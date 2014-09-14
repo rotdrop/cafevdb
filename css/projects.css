@@ -58,9 +58,23 @@ td[class$="projectextra"] textarea {
 
 div.cmsarticlecontainer {
   padding: 0 !important;
+  /*height:0px;*/
+  overflow:hidden;
 }
 
-table.pme-main a.ui-tabs-anchor:link {
-  
-  
+#projectWebArticles {
+  height: 0;
+  overflow: hidden;
+}
+
+#cmsFrameLoader {
+  position: relative;
+  top: -7px;
+  height: 0;
+  width: 100%;
+  overflow: visible;
+  text-align: center;
+}
+
+#cmsFrameLoader img {
 }

@@ -96,6 +96,47 @@ var CAFEVDB = CAFEVDB || {};
     };
   };
 
+  /**Unfortunately, the textare element does not fire a resize
+   * event. This function emulates one.
+   *
+   * @param textarea jQuery descriptor for the textarea element
+   *
+   * @param delay Optional, defaults to 50. If true, fire the event
+   * immediately, if set, then this is a delay in ms.
+   * 
+   *
+   */
+  CAFEVDB.textareaResize = function(textarea, delay) {
+    if (typeof delay == 'undefined') {
+      delay = 50; // ms
+    }
+    textarea.off('mouseup mousemove');
+    textarea.on('mouseup mousemove', function() {
+      if (this.oldwidth  === null) {
+        this.oldwidth  = this.style.width;
+      }
+      if (this.oldheight === null) {
+        this.oldheight = this.style.height;
+      }
+      if (this.style.width != this.oldwidth || this.style.height != this.oldheight) {
+        var self = this;
+        if (delay > 0) {
+          if (this.resize_timeout) {
+            clearTimeout(this.resize_timeout);
+          }
+          this.resize_timeout = setTimeout(function() {
+            $(self).resize();
+          }, delay);
+        } else {
+          $(this).resize();
+        }
+        this.oldwidth  = this.style.width;
+        this.oldheight = this.style.height;
+      }
+      return true;
+    });
+  };
+
   CAFEVDB.broadcastHeaderVisibility = function(visibility) {
 
     // default: only distribute

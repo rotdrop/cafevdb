@@ -59,9 +59,12 @@ use CAFEVDB\L;
  */
 try {
 
+
   $edit = false;
   $articles = $_['projectArticles'];
   $cnt = count($articles);
+  echo '<div id="cmsFrameLoader"><img src="'.\OCP\Util::imagePath($_['app'], 'loader.gif').'"></div>
+';
   echo '<div id="projectWebArticles">
   <ul id="cmsarticletabs">
 ';
@@ -100,17 +103,17 @@ try {
   }
   if ($cnt == 0) {
     echo '  <div id="projectArticle-nopage" class="cmsarticlecontainer cafev">
-    <div class="cmsarticleframe">'.L::t("No public web pages registered for this project").'</div>
+    <div id="cmsarticle-nopage" class="cmsarticleframe">'.L::t("No public web pages registered for this project").'</div>
   </div>
 ';    
   }
   echo '  <div id="projectArticle-newpage" class="cmsarticlecontainer cafev">
-    <div class="cmsarticleframe">'.L::t("Create new public web page for this project.").'</div>
+    <div id="cmsarticle-newpage" class="cmsarticleframe">'.L::t("Create new public web page for this project.").'</div>
   </div>
 ';    
   if ($cnt > 0) {
     echo '  <div id="projectArticle-deletepage" class="cmsarticlecontainer cafev">
-    <div class="cmsarticleframe">'.L::t("Delete a web article.").'</div>
+    <div id="cmsarticle-deletepage" class="cmsarticleframe">'.L::t("Delete a web article.").'</div>
   </div>
 ';    
   }

@@ -35,17 +35,19 @@ form.cafevdb-control {
  */
 /* make popups scrollable in smaller viewports */
 .ui-dialog.pme-table-dialog {
-  max-height: 98% !important;
+  max-height: 90% !important;
   max-width: 90% !important;
   overflow: hidden;
   padding: 0;
 }
 
 .ui-dialog.pme-table-dialog .ui-dialog-content {
-  /* height has to be compute in order to attach the vertical
+  /* height has to be computed in order to attach the vertical
    * scrollbar to the inner div.
    */
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  //overflow: auto;
 }
 
 /*******************************************************************************

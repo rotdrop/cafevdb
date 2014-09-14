@@ -25,6 +25,16 @@
  *
  */
 
+#pme-table-dialog form.pme-form {
+  padding: 0;
+}
+
+/*******************************************************************************
+ *
+ * Export select via chosen
+ *
+ */
+
 .pme-export-block div {
   vertical-align:middle;
   font-weight:bold;

@@ -258,6 +258,7 @@ $(document).ready(function(){
     PHPMYEDIT.addTableLoadCallback('Projects', {
         callback: function(selector, resizeCB) {
             var container = PHPMYEDIT.container(selector);
+            var containerNode = container[0];
             this.actionMenu(selector);
             this.pmeFormInit(selector);
             if (container.find('#file_upload_target').length > 0) {
@@ -275,59 +276,86 @@ $(document).ready(function(){
             var displayFrames = articleBox.find('iframe.cmsarticleframe.display, iframe.cmsarticleframe.add');
             var numDisplayFrames = displayFrames.length;
 
-            var changeFrames = articleBox.find('iframe.cmsarticleframe.display, iframe.cmsarticleframe.change');
+            var changeFrames = articleBox.find('iframe.cmsarticleframe.change, iframe.cmsarticleframe.change');
             var numChangeFrames = changeFrames.length;
 
             // allFrames also contains some div + all available iframes
             var allFrames = articleBox.find('.cmsarticleframe');
+            var allContainers = articleBox.find('.cmsarticlecontainer');
 
-            displayFrames.load(function(event) {
-                var iframe = $(this);
+            var scrollbarAdjust = function() {
+                var scrollBarWidth = containerNode.offsetWidth - containerNode.clientWidth;
+                articleBox.css('margin-right', scrollBarWidth + 'px');
+            }
+            
+            var forceSize = function(iframe) {
+                var domFrame = iframe[0];
+                var scrollHeight = domFrame.contentWindow.document.body.scrollHeight;
+                var scrollWidth = domFrame.contentWindow.document.body.scrollWidth;
+                iframe.css({ width: scrollWidth + 'px',
+                             height: scrollHeight + 'px',
+                             overflow: 'hidden' });
+                resizeCB();
+                scrollbarAdjust();
+            };
+
+            var disableArticleLoad = function(frame) {
+                var self = frame;
+                var iframe = $(self);
                 var contents = iframe.contents();
-                var self = this;
 
-                // First the pretty-print
-                // version. We remove
-                // everything except the article itself
+                // For the pretty-print version. We remove everything
+                // except the article itself
                 contents.find('div#header').remove();
                 contents.find('div#footer').remove();
                 contents.find('div.navi').remove();
                 contents.find('body').css({'min-width': 'unset',
                                            'width': 'auto'});
                 contents.find('div.item-text').css('width', 'auto');
-                //this.style.width = contents.find('div.item-text').css('width');
+
+                var scrollWidth = self.contentWindow.document.body.scrollWidth;
+                var scrollHeight = self.contentWindow.document.body.scrollHeight;
+                iframe.width(scrollWidth);
+                iframe.height(scrollHeight);
                 
-                this.style.width = 
-                    this.contentWindow.document.body.scrollWidth + 'px';
-                this.style.height = 
-                    this.contentWindow.document.body.scrollHeight + 'px';
+                //alert('height: ' + iframe.height() + ' style ' + iframe.attr('style'));
+
                 --numDisplayFrames;
                 if (numDisplayFrames == 0) {
                     articleBox.tabs({
-                        selected: 0,
+                        active: 0,
                         heightStyle: 'auto',
                         activate: function(event, ui) {
-                            var frame = ui.newPanel.find('.cmsarticleframe');
+                        },
+                        create: function(event, ui) {
+                            articleBox.height('auto');
+
                             var forcedWidth = articleBox.width();
                             var forcedHeight = articleBox.height() - $('#cmsarticletabs').outerHeight();
-                            frame.width(forcedWidth);
-                            frame.height(forcedHeight);
+
+                            allFrames.width(forcedWidth);
+                            allFrames.height(forcedHeight);
+
+                            resizeCB();
+                            scrollbarAdjust();
                         }
                     });
-
-                    //var contents = displayFrames.contents();
-                    var forcedWidth = articleBox.width();
-                    var forcedHeight = articleBox.height() - $('#cmsarticletabs').outerHeight();
-                    allFrames.width(forcedWidth);
-                    allFrames.height(forcedHeight);
-                    
-                    resizeCB();
                 }
-            });
-            changeFrames.load(function(event) {
-                var iframe = $(this);
+            };
+
+            var changeArticleLoad = function(frame) {
+                var self = frame;
+                var iframe = $(self);
                 var contents = iframe.contents();
-                var self = this;
+
+                var wrapper = contents.find('#rex-wrapper');
+                var website = contents.find('#rex-website');
+                var rexForm = wrapper.find('form#REX_FORM');
+
+                // set to auto and fix later for correct size and
+                // scrollbars when necessary.
+                container.css({ height: 'auto',
+                                width: 'auto' });
 
                 // The below lines style the edit window.
                 contents.find('#rex-navi-logout').remove();
@@ -341,8 +369,7 @@ $(document).ready(function(){
                                             'background-image': 'none' });
                 contents.find('#rex-output').css({margin: 0});
                 contents.find('#rex-navi-path a').removeAttr('href');
-                var wrapper = contents.find('#rex-wrapper');
-                var website = contents.find('#rex-website');
+
                 wrapper.css({ padding: 0,
                               margin: 0,
                               float: 'left' });
@@ -350,46 +377,78 @@ $(document).ready(function(){
                               'background-image': 'none' });
                 contents.find('textarea').css({ 'max-width': '720px' });
 
-                /* cH says: The following is a
-                 * bloody-fucking-shit-tinymce-fucking-shit hack.
-                 *
-                 * TinyMCE does "illegal" things. There _are_
-                 * initialization callbacks provided bz TinzMCE, but
-                 * NONE of them hacks it. Still tinyMCE changes its
-                 * AFTER the callbacks have been executed. GNAH. This
-                 * half-second timeout reallz is a nuisance and just
-                 * does not hack the general case. FOOBAR.
-                 */
-                var mceFuckingTimeout = 0;
-                if (contents.find('.tinyMCEEditor')) {
-                    mceFuckingTimeout = 500;
+                var scrollWidth = self.contentWindow.document.body.scrollWidth;
+                var scrollHeight = self.contentWindow.document.body.scrollHeight;
+                iframe.css({ width: scrollWidth + 'px',
+                             height: scrollHeight + 'px' });
+                
+                var articleContainer = iframe.parent();
+                articleContainer.css({ height: 'unset',
+                                       width: 'unset' });
+
+                var editArea = rexForm.find('textarea');
+                if (editArea.length > 0) {
+                    CAFEVDB.textareaResize(editArea);
+                    
+                    rexForm.off('resize', 'textarea');
+                    rexForm.on('resize', 'textarea', function() {
+                        forceSize(iframe);
+                        return false;
+                    });
                 }
-                setTimeout(function() {
-                    self.style.width = 
-                        self.contentWindow.document.body.scrollWidth + 'px';
-                    self.style.height = 
-                        self.contentWindow.document.body.scrollHeight + 'px';
-                    --numChangeFrames;
-                    if (numChangeFrames == 0) {
-                        container.find('#projectWebArticles').tabs({
-                            selected: 0
-                        });
-                        resizeCB();
-                    }
-                    if (false) {
-                        self.contentWindow.onresize = function() {
-                            alert("hello world: "+this.document.body.scrollHeight);
-                            //                    self.style.width = this.document.body.scrollWidth + 'px';
-                            self.style.height = this.document.body.scrollHeight + 'px'
-                        };
-                    }
-                }, mceFuckingTimeout);
+                
+                rexForm.off('resize', '.mceEditor');
+                rexForm.on('resize', '.mceEditor', function() {
+                    forceSize(iframe);
+                    return false;
+                });
+
+                --numChangeFrames;
+                //alert('Change Frames: ' + numChangeFrames);
+                if (numChangeFrames == 0) {
+                    container.find('#projectWebArticles').tabs({
+                        active: 0,
+                        create: function(event, ui) {
+                            articleBox.height('auto');
+                            resizeCB();
+                            scrollbarAdjust();
+                        },
+                        activate: function(event, ui) {
+                            var iframe = ui.newPanel.find('iframe');
+                            if (iframe.length == 1) {
+                                forceSize(iframe);
+                            }
+                        }
+                    });
+                } else if (numChangeFrames < 0) {
+                    // < 0 happens when inside the frame a reload
+                    // is triggered, after the initial loading of all frames.
+                    resizeCB();
+                    scrollbarAdjust();
+                }
+            };
+
+            displayFrames.off('load');
+            displayFrames.on('load', function(event) {
+                var frame = this;
+                $('#cmsFrameLoader').fadeOut(function() {
+                    disableArticleLoad(frame);
+                })
             });
+
+            changeFrames.load(function(event) {
+                var frame = this;
+                $('#cmsFrameLoader').fadeOut(function() {
+                    changeArticleLoad(frame);
+                })
+            });
+
             container.find('span.photo').click(function(event) {
                 event.preventDefault();
                 CAFEVDB.Photo.popup(this);
                 return false;
             });
+
             container.find('.wiki-popup').click(function(event) {
                 event.preventDefault();
 
@@ -409,3 +468,7 @@ $(document).ready(function(){
         CAFEVDB.Projects.pmeFormInit(PHPMYEDIT.defaultSelector);
     }
 });
+
+// Local Variables: ***
+// js-indent-level: 4 ***
+// End: ***
