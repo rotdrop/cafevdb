@@ -106,7 +106,7 @@ redaxoDefaultModule
                                                            'enabled' => true),
                                         // ckeditor still uses excessive inline js-code. NOGO.
                                         'ckeditor' => array('name' => 'CKEditor',
-                                                            'enabled' => true)
+                                                            'enabled' => false)
     );
   public static $expertmode = false;
   public static $debug = array('general' => false,
@@ -632,6 +632,11 @@ redaxoDefaultModule
     foreach ($debug as $key) {
       self::$debug[$key] = true;
     }
+    if (self::$expertmode) {
+      foreach(self::$wysiwygEditors as $key => &$value) {
+        $value['enabled'] = true;
+      }
+    }
 
     self::$pmeopts['url']['images'] = self::APP_BASE . 'img/';
     global $HTTP_SERVER_VARS;
@@ -712,7 +717,7 @@ redaxoDefaultModule
     self::$pmeopts['tooltips'] = ToolTips::toolTips();
   }
 
-  /**Return an (English!) tool-tip for the given key.
+  /**Return a translated tool-tip for the given key.
    */
   public static function toolTips($key)
   {
@@ -720,7 +725,7 @@ redaxoDefaultModule
       if (isset(self::$pmeopts['tooltips'][$key])) {
           $tip = self::$pmeopts['tooltips'][$key];
       }
-      return $tip;
+      return htmlspecialchars($tip);
   }
 };
 
