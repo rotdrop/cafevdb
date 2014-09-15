@@ -242,6 +242,27 @@ oder auszuschalten!'),
         'operation' => L::t('Einzelnen Datensatz anzeigen'),
         ),
 
+      'pme-cancel' => L::t('Stop the current operation. Settings which already have been stored by
+hitting an "Apply" button are maintained, though. You will be returned
+to the previous view'),
+
+      'pme-reload' => L::t('Refreshes the current view by reloading all data from the data-base.'),
+
+      'pme-change' => L::t('Directs you to a form with input fields. From there you can return to
+this form by means of the "Save" or "Back" resp. "Cancel" buttons.'),
+
+      'pme-apply' => L::t('Saves the current values; the current input form will remain active.'),
+
+      'pme-more' => array('moreadd' =>  L::t('Saves the current values and start to generate another new data-set.'),
+                          'morecopy' => L::t('Saves the current values and continues to make yet another copy of the source data-set.'),
+                          'morechange' => L::t('Saves the current values; the current input form will remain active.')),
+
+      'pme-save' => L::t('Saves the current values and returns to the previous view.'),
+
+      'pme-pagerowsselect' => L::t('Limits the number of rows per page to the given value. A "*" means to display all records on one large page.'),
+
+      'pme-gotoselect' => L::t('Jumps directly to the given page'),
+
       'project-actions' => L::t('Pull-down menu with entries to move on
 to pages with the instrumentation, events, instrumentation numbers etc.'),
 
@@ -263,6 +284,11 @@ has been ``closed\'\'.'),
       'project-action-instrumentation-numbers' => L::t('Display the desired instrumentaion numbers, i.e. how many musicians are already registered for each instrument group and how many are finally needed.'),
 
       'project-action-wiki' => L::t('Change to the DokuWiki-page for this project (if there is one)'),
+
+      'project-web-article-add' => L::t('Add a new public web-page to the project, either by generating a new one or by linking an existing web-page to the given project.'),
+
+      'project-web-article-delete' => L::t('Delete the currently displayed web-page fromthe project. The web page will be "detached" from the project and moved to the trash-bin
+"category" (folger) inside the CMS.'),
 
       'project-name-yearattach' => L::t('Append the year to the name if checked.
 Regardless of this checkbox any decimal digit will first be stripped from the end
