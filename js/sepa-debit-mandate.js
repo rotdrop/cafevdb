@@ -394,14 +394,20 @@ var CAFEVDB = CAFEVDB || {};
     var containerSel = PHPMYEDIT.selector(selector);
     var container = PHPMYEDIT.container(containerSel);
 
+    // bail out if not for us.
     var form = container.find('form[class^="pme-form"]');
-    form.find('input').off('blur');
-    form.find('input').on('blur', this.validatePME);
+    var dbTable = form.find('input[value="SepaDebitMandates"]');
+    if (dbTable.length == 0) {
+      return;
+    }
+    var table = form.find('table[summary="SepaDebitMandates"]');
+    table.find('input').off('blur');
+    table.find('input').on('blur', this.validatePME);
 
     CAFEVDB.exportMenu(containerSel);
     container.find('input.pme-email').addClass('formsubmit');
 
-    form.find('input[class$="-sepadate"]').datepicker({
+    table.find('input[class$="-sepadate"]').datepicker({
       dateFormat : 'dd.mm.yy', // this is 4-digit year
       minDate: '01.01.1990',
       beforeShow: function(input) {
