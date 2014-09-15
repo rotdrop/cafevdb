@@ -617,32 +617,32 @@ class Navigation
         'L' => array('<<', '<',
                      $button, 'add',
                      '>', '>>',
-                     'goto', 'rows_per_page'),
+                     'goto', 'rows_per_page','reload'),
         'F' => array('<<', '<',
                      $button, 'add',
                      '>', '>>',
-                     'goto', 'rows_per_page'),
+                     'goto', 'rows_per_page','reload'),
         'A' => array('save', 'apply', 'more', 'cancel'),
         'C' => array('save', 'more', 'cancel'),
         'P' => array('save', 'apply', 'cancel'),
         'D' => array('save', 'cancel'),
-        'V' => array('change', 'cancel')
+        'V' => array('change', 'cancel', 'reload')
         );
     } else {
       $default_buttons_no_B = array(
         'L' => array('<<','<',
                      'misc', $button, 'add',
                      '>','>>',
-                     'goto','rows_per_page'),
+                     'goto','rows_per_page','reload'),
         'F' => array('<<','<',
                      'misc', $button, 'add',
                      '>','>>',
-                     'goto','rows_per_page'),
+                     'goto','rows_per_page','reload'),
         'A' => array('save', 'apply', 'more', 'cancel'),
         'C' => array('save', 'more', 'cancel'),
         'P' => array('save', 'apply', 'cancel'),
-        'D' => array('save','cancel'),
-        'V' => array('change','cancel')
+        'D' => array('save', 'cancel'),
+        'V' => array('change', 'cancel', 'reload')
         );
     }
 
@@ -806,6 +806,7 @@ __EOT__;
       $syspfx = Config::$pmeopts['cgi']['prefix']['sys'];
       $opname = $syspfx.'operation';
       $opwhat = 'View?'.$syspfx.'rec='.$projectId;
+      $opclass  = 'pme-view';
       $title = L::t("The currently active project.");
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
@@ -814,7 +815,7 @@ __EOT__;
   <input type="hidden" name="Template" value="projects"/>
   <input type="hidden" name="Project" value="$project"/>
   <input type="hidden" name="ProjectId" value="$projectId"/>
-  <input type="hidden" name="$opname" value="$opwhat"/>
+  <input type="hidden" name="$opname" value="$opwhat" class="$opclass"/>
   $headervisibility
 </form>
 
