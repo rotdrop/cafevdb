@@ -155,6 +155,9 @@ class Instrumentation
     }
 
     $this->operation  = Util::cgiValue(Config::$pmeopts['cgi']['prefix']['sys']."operation", false);
+    if (Util::cgiValue(Config::$pmeopts['cgi']['prefix']['sys'].'reloadview', false)) {
+      $this->operation = 'View';
+    }
     $this->cancelSave = Util::cgiKeySearch('/'.Config::$pmeopts['cgi']['prefix']['sys'].'(save|cancel)/');
 
     $this->sectionLeaderColumn = array(
