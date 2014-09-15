@@ -141,6 +141,7 @@ class phpMyEdit
 	var $savedelete;
 	var $canceldelete;
 	var $cancelview;
+	var $reloadview;
 
 	// Additional features
 	var $labels;		// multilingual labels
@@ -180,47 +181,47 @@ class phpMyEdit
 		);
 	var $default_buttons = array(
 		'L' => array('<<','<','add','view','change','copy','delete','>','>>',
-					 'goto','rows_per_page'),
+					 'goto','rows_per_page','reload'),
 		'F' => array('<<','<','add','view','change','copy','delete','>','>>',
-					 'goto','rows_per_page'),
+					 'goto','rows_per_page','reload'),
 		'A' => array('save','apply','more','cancel'),
 		'C' => array('save','more','cancel'),
 		'P' => array('save','apply','cancel'),
 		'D' => array('save','cancel'),
-		'V' => array('change','cancel')
+		'V' => array('change','cancel','reload')
 		);
 	var $default_multi_buttons = array(
 		'L' => array('<<','<','misc','add','view','change','copy','delete','>','>>',
-					 'goto','rows_per_page'),
+					 'goto','rows_per_page','reload'),
 		'F' => array('<<','<','misc','add','view','change','copy','delete','>','>>',
-					 'goto','rows_per_page'),
+					 'goto','rows_per_page','reload'),
 		'A' => array('save','apply','more','cancel'),
 		'C' => array('save','more','cancel'),
 		'P' => array('save','apply','cancel'),
 		'D' => array('save','cancel'),
-		'V' => array('change','cancel')
+		'V' => array('change','cancel','reload')
 		);
 	var $default_buttons_no_B = array(
 		'L' => array('<<','<','add','>','>>',
-					 'goto','rows_per_page'),
+					 'goto','rows_per_page','reload'),
 		'F' => array('<<','<','add','>','>>',
-					 'goto','rows_per_page'),
+					 'goto','rows_per_page','reload'),
 		'A' => array('save','apply','more','cancel'),
 		'C' => array('save','more','cancel'),
 		'P' => array('save','apply','cancel'),
 		'D' => array('save','cancel'),
-		'V' => array('change','cancel')
+		'V' => array('change','cancel','reload')
 		);
 	var $default_multi_buttons_no_B = array(
 		'L' => array('<<','<','misc','add','>','>>',
-					 'goto','rows_per_page'),
+					 'goto','rows_per_page','reload'),
 		'F' => array('<<','<','misc','add','>','>>',
-					 'goto','rows_per_page'),
+					 'goto','rows_per_page','reload'),
 		'A' => array('save','apply','more','cancel'),
 		'C' => array('save','more','cancel'),
 		'P' => array('save','apply','cancel'),
 		'D' => array('save','cancel'),
-		'V' => array('change','cancel')
+		'V' => array('change','cancel','reload')
 		);
 
 	// }}}
@@ -304,6 +305,8 @@ class phpMyEdit
 	function change_canceled() { return $this->label_cmp($this->cancelchange, 'Cancel'); }
 	function copy_canceled()   { return $this->label_cmp($this->cancelcopy	, 'Cancel'); }
 	function delete_canceled() { return $this->label_cmp($this->canceldelete, 'Cancel'); }
+
+	function view_reloaded()   { return $this->label_cmp($this->reloadview	, 'Reload'); }
 
 	function disabledTag($k) 
 	{
@@ -2011,6 +2014,18 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 
 	function fetchToolTip($css_class_name, $name, $label = false)
 	{
+		$title = $this->doFetchToolTip($css_class_name, $name, $label);
+		if ($title == '') {
+			// Don't emit emit tooltips
+			return '';
+		} else {
+			return ' title="'.htmlspecialchars($title).'" ';
+		}	
+	}
+	
+
+	function doFetchToolTip($css_class_name, $name, $label = false)
+	{
 		// First clean the CSS-class, it may consist of more than one
 		// class.
 		$css_classes = preg_split('/\s+/', $css_class_name);
@@ -2020,20 +2035,23 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				&& is_array($this->tooltips[$css_class_name])) {
 				$tips = $this->tooltips[$css_class_name];
 				if (isset($tips[$name])) {
-					return ' title="'.htmlspecialchars($tips[$name]).'" ';
+					return $tips[$name];
+				} else {
+					return 'Tooltip-lookup failed for '.
+						$css_class_name.', '.$name.($label ? ', '.$label : '');
 				}
 			}
 		}
 		
 		// otherwise use name, label, css in that order
 		if(isset($this->tooltips[$name])) {
-			return ' title="'.htmlspecialchars($this->tooltips[$name]).'" ';
+			return $this->tooltips[$name];
 		} elseif($label && isset($this->tooltips[$label])) {
-			return ' title="'.htmlspecialchars($this->tooltips[$label]).'" ';	
+			return $this->tooltips[$label];	
 		}
 		foreach ($css_classes as $css_class_name) {
 			if (isset($this->tooltips[$css_class_name])) {
-				return ' title="'.htmlspecialchars($this->tooltips[$css_class_name]).'" ';
+				return $this->tooltips[$css_class_name];
 			}
 			// Then start stripping "components" from the end of the
 			// class, i.e. if we have pme-filter-blah, then also try pme-filter
@@ -2041,7 +2059,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			if ($sfxpos !== false) {
 				$css_class_name = substr($css_class_name, 0, $sfxpos);
 				if (isset($this->tooltips[$css_class_name])) {
-					return ' title="'.htmlspecialchars($this->tooltips[$css_class_name]).'" ';
+					return $this->tooltips[$css_class_name];
 				}
 			}
 		}
@@ -2544,6 +2562,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		echo 'savedelete=',$this->savedelete,'	 ';
 		echo 'canceldelete=',$this->canceldelete,'	 ';
 		echo 'cancelview=',$this->cancelview,'	 ';
+		echo 'reloadview=',$this->reloadview,'	 ';
 		echo 'operation=',$this->operation,'   ';
 		echo "\n";
 	} /* }}} */
@@ -2680,10 +2699,11 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			return $this->htmlSubmit('savedelete', 'Delete',
 									 $this->getCSSclass('save', $position), false, $enabled ? 0 : $disabled, $js);
 		}
-		if (in_array($name, array('save','apply','more'))) {
+		if (in_array($name, array('save','apply','more','reload'))) {
 			$validation = true; // if js validation
 			if	   ($this->page_type == 'D' && $name == 'save' ) { $value = 'Delete'; $validation = false; }
 			elseif ($this->page_type == 'C' && $name == 'more' ) { $value = 'Apply'; }
+			elseif ($name == 'reload') { $value = ucfirst($name); $validation = false; }
 			else $value = ucfirst($name);
 			return $this->htmlSubmit($name.$this->page_types[$this->page_type], $value,
 									 $this->getCSSclass($name, $position), $validation);
@@ -2741,7 +2761,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		if ($name == 'rows_per_page_combo') {
 			$kv_array = array();
 			$nummax = min($this->total_recs, 100);
-			$kv_array[-1] = '*';
+			$kv_array[-1] = '&infin;';
 			for ($i = 1; $i < min(5,$nummax); ++$i) {							 
 				$kv_array[$i] = $i;
 				if ($this->inc == $i) {
@@ -2761,11 +2781,10 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				$selected = '-1';
 			}
 			$disabled = $this->total_recs <= 1;
-			// TODO: add onchange="return this.form.submit();" DONE ???
 			return $this->htmlSelect($this->cgi['prefix']['sys'].'navnp'.$position,
 									 $this->getCSSclass('pagerows', $position), $kv_array, null,
 									 $selected, false, $disabled,
-									 false, true, 'disabledonchange="return this.form.submit();"');
+									 false, false);
 		}
 		if ($name == 'rows_per_page') {
 			$disabled = $this->total_recs <= 1;
@@ -4306,6 +4325,14 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			$this->savedelete = null; // unset($this->savedelete)
 			$this->recreate_fdd();
 		}
+		elseif ($this->label_cmp($this->reloadview, 'Reload')) {
+			$this->operation = $this->labels['View']; // force view operation.
+			$this->reloadview = null;
+			$this->recreate_fdd();
+			$this->recreate_displayed();
+			$this->backward_compatibility();
+		}
+		
 
 		/*
 		 * ======================================================================
@@ -4656,6 +4683,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		$this->savedelete	= $this->get_sys_cgi_var('savedelete');
 		$this->canceldelete = $this->get_sys_cgi_var('canceldelete');
 		$this->cancelview	= $this->get_sys_cgi_var('cancelview');
+		$this->reloadview	= $this->get_sys_cgi_var('reloadview');
 
 		// Filter setting
 		if (isset($this->sw)) {

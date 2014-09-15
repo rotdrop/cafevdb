@@ -32,6 +32,7 @@ return Array(
 		'Save'          	=>'Save',
 		'More'          	=>'More',
 		'Apply'         	=>'Apply',
+		'Reload'         	=>'Reload',
 		'Cancel'        	=>'Cancel',
 		'Search'			=>'Search',
 		'Hide'				=>'Hide',
