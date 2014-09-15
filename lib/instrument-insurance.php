@@ -324,7 +324,7 @@ class InstrumentInsurance
       'php' => array(
         'type' => 'function',
         'function' => 'CAFEVDB\InstrumentInsurance::instrumentInsurancePME',
-        'parameters' => array()
+        'parameters' => array('headervisibility' => $headervisibility)
         )
       );
 
@@ -362,7 +362,7 @@ class InstrumentInsurance
   //!Button redirect
   public static function instrumentInsurancePME($insuranceId, $opts, $action, $k, $fds, $fdd, $row)
   {
-    return Musicians::instrumentInsurance($row['qf1_idx']);
+    return Musicians::instrumentInsurance($row['qf1_idx'], $opts);
   }
 
   /**Fetch the total insurance amount for one musician.
