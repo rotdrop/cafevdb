@@ -170,12 +170,14 @@ var CAFEVDB = CAFEVDB || {};
 	$(this.photo).load(function () {
 	    $('img.cafevdb_inline_image').remove()
 	    $(this).addClass('cafevdb_inline_image');
+	    $(this).insertAfter($('#phototools'));
 	    wrapper.css('width', $(this).get(0).width + 10);
 	    wrapper.removeClass('loading').removeClass('wait');
-	    $(this).insertAfter($('#phototools')).fadeIn();
-            if (typeof callback == 'function') {
-                callback();                
-            }
+            $(this).fadeIn(function() {
+                if (typeof callback == 'function') {
+                    callback();                
+                }
+            });
 	}).error(function () {
 	    // notify the user that the image could not be loaded
 	    OC.dialogs.alert(t('cafevdb', 'Could not open image.'), t('cafevdb', 'Error'));
@@ -341,20 +343,28 @@ var CAFEVDB = CAFEVDB || {};
 		$(this).addClass('transparent');
 	    }
 	);
-	phototools.find('.upload').click(function() {
+	phototools.find('.upload').click(function(event) {
 	    $('#file_upload_start').trigger('click');
+            event.stopImmediatePropagation();
+            return false;
 	});
-	phototools.find('.cloud').click(function() {
+	phototools.find('.cloud').click(function(event) {
 	    OC.dialogs.filepicker(t('cafevdb', 'Select image'), self.cloudPhotoSelected, false, 'image', true);
+            event.stopImmediatePropagation();
+            return false;
 	});
-	phototools.find('.delete').click(function() {
+	phototools.find('.delete').click(function(event) {
 	    $(this).tipsy('hide');
 	    self.deletePhoto();
 	    $(this).hide();
+            event.stopImmediatePropagation();
+            return false;
 	});
-	phototools.find('.edit').click(function() {
+	phototools.find('.edit').click(function(event) {
 	    $(this).tipsy('hide');
 	    self.editCurrentPhoto();
+            event.stopImmediatePropagation();
+            return false;
 	});
 	phototools.find('li a').tipsy();
 
@@ -454,7 +464,8 @@ var CAFEVDB = CAFEVDB || {};
         var container = $(containerSel);
         var overlay = $('<div id="photooverlay" style="width:auto;height:auto;"><div/>');
         var img = container.find('img');
-        overlay.html(img);        
+        var imgClone = img.clone();
+        overlay.html(imgClone);        
         var popup = overlay.dialog({
             title: t('cafevdb', 'Photo Zoom'),
             position: { my: "middle top+5%",
@@ -464,13 +475,17 @@ var CAFEVDB = CAFEVDB || {};
             height: 'auto',
             modal: true,
             closeOnEscape: false,
-            dialogClass: 'photo-zoom',
+            dialogClass: 'photo-zoom no-close transparent-titlebar no-border',
             resizable: false,
             open: function() {
+                var dialogHolder = $(this);
+                imgClone.click(function() {
+                    dialogHolder.dialog('close');
+                });
             },
             close: function() {
                 var dialogHolder = $(this);
-                container.html(img);
+                //container.html(img);
                 dialogHolder.dialog('close');
                 dialogHolder.dialog('destroy').remove();
             },
@@ -487,3 +502,8 @@ $(document).ready(function() {
 
 });
 
+// Local Variables: ***
+// js-indent-level: 4 ***
+// js3-indent-level: 4 ***
+// js3-label-indent-offset: -2 ***
+// End: ***

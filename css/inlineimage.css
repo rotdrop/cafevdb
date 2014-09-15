@@ -22,17 +22,28 @@
   width:0;
   height:0;
 }
-#cafevdb_musician_photo_wrapper {
-  width: 150px;
+#cafevdb_inline_image_wrapper {
+  height: auto;
+  width: auto;
 }
-#cafevdb_musician_photo_wrapper.wait {
+
+#cafevdb_inline_image_wrapper.project_flyer {
+  min-height: 300px;
+}
+
+#cafevdb_inline_image_wrapper.portrait {
+  min-height: 100px;
+}
+
+#cafevdb_inline_image_wrapper.wait {
   opacity: 0.6;
   filter:alpha(opacity=0.6);
   z-index:1000;
   background: url('../../../core/img/loading.gif') no-repeat center center;
   cursor: wait;
 }
-.cafevdb_musician_photo {
+
+.cafevdb_inline_image {
   border-radius: 0.5em;
   border: thin solid #bbb;
   margin: 0.3em;
@@ -41,10 +52,20 @@
   box-shadow: 0 1px 3px #777;
   opacity: 1;
 }
-.cafevdb_musician_photo:hover {
-  background: #fff;
-  cursor: default;
+
+.cafevdb_inline_image:hover {
+  background: #000;
+  cursor: zoom-in;
 }
+
+div#photooverlay {
+  background: #000;
+}
+
+div#photooverlay .cafevdb_inline_image:hover {
+ cursor: zoom-out; 
+}
+
 #phototools {
   position:absolute;
   margin: 5px 0 0 10px;

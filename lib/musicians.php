@@ -389,7 +389,7 @@ __EOT__;
       'php' => array(
         'type' => 'function',
         'function' => 'CAFEVDB\Musicians::instrumentInsurancePME',
-        'parameters' => array()
+        'parameters' => array('headervisibility' => $headervisibility)
         )
       );
 
@@ -506,11 +506,12 @@ __EOT__;
 
   public static function instrumentInsurancePME($musicianId, $opts, $action, $k, $fds, $fdd, $row)
   {
-    return self::instrumentInsurance($musicianId);
+    return self::instrumentInsurance($musicianId, $opts);
   }
 
-  public static function instrumentInsurance($musicianId)
+  public static function instrumentInsurance($musicianId, $opts)
   {
+    $headervisibility = $opts['headervisibility'];
     $amount = InstrumentInsurance::insuranceAmount($musicianId);
     $fee    = InstrumentInsurance::annualFee($musicianId);
     $bval = L::t('Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;',
@@ -540,18 +541,18 @@ __EOT__;
     case 'add':
       return L::t("Portraits or Avatars can only be added to an existing musician's profile; please add the new musician without protrait image first.");
     case 'display':
-      $span = ''
-        .'<span class="photo"><img class="photo" src="'
+      $div = ''
+        .'<div class="photo"><img class="cafevdb_inline_image portrait" src="'
         .\OCP\UTIL::linkTo('cafevdb', 'inlineimage.php').'?RecordId='.$musicianId.'&ImagePHPClass=CAFEVDB\Musicians&ImageSize=1200'
         .'" '
-        .'title="Photo, if available" /></span>';
-      return $span;
+        .'title="Photo, if available" /></div>';
+      return $div;
     case 'change':
       $photoarea = ''
         .'<div id="contact_photo">
         
   <iframe name="file_upload_target" id=\'file_upload_target\' src=""></iframe>
-  <div class="tip propertycontainer" id="cafevdb_inline_image_wrapper" title="'
+  <div class="tip portrait propertycontainer" id="cafevdb_inline_image_wrapper" title="'
       .L::t("Drop photo to upload (max %s)", array(\OCP\Util::humanFileSize(Util::maxUploadSize()))).'"'
         .' data-element="PHOTO">
     <ul id="phototools" class="transparent hidden contacts_property">
