@@ -251,26 +251,145 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
         
     };
 
+    ///Place an ajax call for public web-page management, create,
+    ///delete, attach articles.
+    ///
+    /// @param post The data array with action and information.
+    ///
+    /// Supported post packages:
+    ///
+    /// { Action: delete,
+    ///   ArticleId: XX,
+    ///   ProjectId: XX }
+    ///
+    /// { Action: add,
+    ///   ProjectId: XX,
+    ///   ArticleId: XX }
+    /// 
+    /// For Action 'add' a negative ArticleId triggers the geneation
+    /// of a new article, otherwise it is the id of an existing
+    /// event-announcement to attach to this project.
+    ///
+    Projects.projectWebPageRequest = function(post, container) {
+
+        OC.Notification.hide(function() {
+            $.post(OC.filePath('cafevdb', 'ajax/projects', 'web-articles.php'),
+                post,
+                function (data) {
+                    if (data.status == 'success') {
+                        var rqData = data.data;
+                        if (rqData.message != '') {
+                            OC.Notification.showHtml(rqData.message);
+                        }
+                    } else if (data.status == 'error') {
+                        var rqData = data.data;
+                        OC.Notification.showHtml(rqData.message);
+                        if (data.data.error == 'exception') {
+                            OC.dialogs.alert(rqData.exception+rqData.trace,
+                                t('cafevdb', 'Caught a PHP Exception'),
+                                null, true);
+                        }
+                    }
+                    var form = container.find('table.pme-navigation');
+                    var submit = form.find('input.pme-more, input.pme-reload, input.pme-apply');
+                    submit.first().trigger('click');
+                    setTimeout(function() {
+                        OC.Notification.hide();
+                    }, 5000);
+                    
+                });
+        });
+    };
+
+    /**Dispatch a UI-event and potentially add or delete a public
+     * web-page. This is called as a beforeActive tab-event handler.
+     *
+     * @param event The event provided by jQuery tab widget.
+     * 
+     * @param ui An object with old and new panel und tabs
+     * 
+     * @param container The div which contains the current dialog.
+     * 
+     */
+    Projects.projectWebPageTabHandler = function(event, ui, container) {
+        var tabId = ui.newTab.attr('id');
+        //alert('id' + tabId);
+        switch (tabId) {
+          case 'cmsarticle-tab-newpage':
+            event.stopImmediatePropagation();
+            var projectId = ui.oldPanel.data('projectid');
+            // just do it ...
+            Projects.projectWebPageRequest({ Action: 'add',
+                                             ArticleId: -1,
+                                             ProjectId: projectId },
+                                           container);
+            return false;
+          case 'cmsarticle-tab-deletepage':
+            event.stopImmediatePropagation();
+            var articleId = ui.oldPanel.data('articleid');
+            var projectId = ui.oldPanel.data('projectid');
+            OC.dialogs.confirm(
+                t('cafevdb', 'Really delete the displayed event announcement?'),
+                t('cafevdb', 'Delete Web-Page with Id {ArticleId}?',
+                  { ArticleId: articleId }),
+                function(answer) {
+                    if (!answer) {
+                        return;
+                    }
+                    // do it ...
+                    Projects.projectWebPageRequest({ Action: 'delete',
+                                                     ArticleId: articleId,
+                                                     ProjectId: projectId },
+                                                   container);
+                },
+                true);
+            return false;
+          default:
+            return true;
+        }
+    };
+
 })(window, jQuery, CAFEVDB.Projects);
 
 $(document).ready(function(){
 
     PHPMYEDIT.addTableLoadCallback('Projects', {
         callback: function(selector, resizeCB) {
+            var Projects = this;
             var container = PHPMYEDIT.container(selector);
             var containerNode = container[0];
-            this.actionMenu(selector);
-            this.pmeFormInit(selector);
+            Projects.actionMenu(selector);
+            Projects.pmeFormInit(selector);
+
+            var imagesReady = false;
+            var imagePoller = function(callback) {
+                if (!imagesReady) {
+                    var poller = setInterval(function() {
+                                     if (imagesReady) {
+                                         clearInterval(poller);
+                                         callback();
+                                     }
+                                 }, 100);
+                } else {
+                    callback();
+                }
+            };
+
             if (container.find('#file_upload_target').length > 0) {
                 var idField = container.find('input[name="PME_data_Id"]');
                 var recordId = -1;
                 if (idField.length > 0) {
                     recordId = idField.val();
                 }
-                CAFEVDB.Photo.ready(recordId/*, resizeCB*/);
+                CAFEVDB.Photo.ready(recordId, function() {
+                    imagesReady = true;
+                });
             } else {
-                /*resizeCB();*/
+                container.find('div.photo, span.photo').imagesLoaded(function() {
+                    imagesReady = true;
+                });
             }
+
             var articleBox = container.find('#projectWebArticles');
 
             var displayFrames = articleBox.find('iframe.cmsarticleframe.display, iframe.cmsarticleframe.add');
@@ -280,7 +399,8 @@ $(document).ready(function(){
             var numChangeFrames = changeFrames.length;
 
             // allFrames also contains some div + all available iframes
-            var allFrames = articleBox.find('.cmsarticleframe');
+            var allDisplayFrames = articleBox.find('.cmsarticleframe.display');
+            var allChangeFrames = articleBox.find('.cmsarticleframe.change');
             var allContainers = articleBox.find('.cmsarticlecontainer');
 
             var scrollbarAdjust = function() {
@@ -295,155 +415,218 @@ $(document).ready(function(){
                 iframe.css({ width: scrollWidth + 'px',
                              height: scrollHeight + 'px',
                              overflow: 'hidden' });
-                resizeCB();
-                scrollbarAdjust();
+                imagePoller(function() {
+                    resizeCB();
+                    scrollbarAdjust();
+                });
             };
 
-            var disableArticleLoad = function(frame) {
-                var self = frame;
-                var iframe = $(self);
-                var contents = iframe.contents();
+            var displayArticleLoad = function(frame) {
+                if (typeof frame != 'undefined') {
+                    var self = frame;
+                    var iframe = $(self);
+                    var contents = iframe.contents();
 
-                // For the pretty-print version. We remove everything
-                // except the article itself
-                contents.find('div#header').remove();
-                contents.find('div#footer').remove();
-                contents.find('div.navi').remove();
-                contents.find('body').css({'min-width': 'unset',
-                                           'width': 'auto'});
-                contents.find('div.item-text').css('width', 'auto');
+                    // For the pretty-print version. We remove everything
+                    // except the article itself
+                    contents.find('div#header').remove();
+                    contents.find('div#footer').remove();
+                    contents.find('div.navi').remove();
+                    contents.find('body').css({'min-width': 'unset',
+                                               'width': 'unset'});
+                    contents.find('#content').css({'width': 'auto',
+                                                   'height': '100%'});
+                    contents.find('div.item-text').css({ 'width': 'auto',
+                                                         'margin-left': '50px',
+                                                         'left': 'unset',
+                                                         'position': 'unset' });
 
-                var scrollWidth = self.contentWindow.document.body.scrollWidth;
-                var scrollHeight = self.contentWindow.document.body.scrollHeight;
-                iframe.width(scrollWidth);
-                iframe.height(scrollHeight);
-                
-                //alert('height: ' + iframe.height() + ' style ' + iframe.attr('style'));
+                    var scrollWidth = self.contentWindow.document.body.scrollWidth;
+                    var scrollHeight = self.contentWindow.document.body.scrollHeight;
+                    iframe.css({
+                        width: scrollWidth + 'px',
+                        height: scrollHeight + 'px'
+                    });
+                    
+                    //alert('height: ' + iframe.height() + ' style ' + iframe.attr('style'));
 
-                --numDisplayFrames;
+                    --numDisplayFrames;
+                }
                 if (numDisplayFrames == 0) {
-                    articleBox.tabs({
-                        active: 0,
-                        heightStyle: 'auto',
-                        activate: function(event, ui) {
-                        },
-                        create: function(event, ui) {
-                            articleBox.height('auto');
+                    $('#cmsFrameLoader').fadeOut(function() {
+                        articleBox.tabs({
+                            active: 0,
+                            heightStyle: 'auto',
+                            activate: function(event, ui) {
+                                
+                            },
+                            create: function(event, ui) {
+                                articleBox.height('auto');
+                                
+                                var forcedWidth = articleBox.width();
+                                var forcedHeight = articleBox.height() - $('#cmsarticletabs').outerHeight();
+                                
+                                allDisplayFrames.width(forcedWidth);
+                                allDisplayFrames.height(forcedHeight);
 
-                            var forcedWidth = articleBox.width();
-                            var forcedHeight = articleBox.height() - $('#cmsarticletabs').outerHeight();
+                                imagePoller(function() {
+                                    resizeCB();
+                                    scrollbarAdjust();
+                                });
+                            },
+                            beforeActivate: function(event, ui) {
+                                return Projects.projectWebPageTabHandler(event, ui, container);
+                            }
+                        });
+                    });
+                } else if (numDisplayFrames < 0) {
+                    // can happen, moving dialogs around causes
+                    // reloads, at least with FF.
 
-                            allFrames.width(forcedWidth);
-                            allFrames.height(forcedHeight);
+                    var forcedWidth = articleBox.width();
+                    var forcedHeight = articleBox.height() - $('#cmsarticletabs').outerHeight();
+                    
+                    allDisplayFrames.width(forcedWidth);
+                    allDisplayFrames.height(forcedHeight);
 
+                    if (false) {
+                        // In principle, this should not be necessary
+                        // as the height of the articleBox should not change.
+                        imagePoller(function() {
                             resizeCB();
                             scrollbarAdjust();
-                        }
-                    });
+                        });
+                    }
                 }
             };
 
             var changeArticleLoad = function(frame) {
-                var self = frame;
-                var iframe = $(self);
-                var contents = iframe.contents();
+                if (typeof frame != 'undefined') {
+                    var self = frame;
+                    var iframe = $(self);
+                    var contents = iframe.contents();
 
-                var wrapper = contents.find('#rex-wrapper');
-                var website = contents.find('#rex-website');
-                var rexForm = wrapper.find('form#REX_FORM');
+                    var wrapper = contents.find('#rex-wrapper');
+                    var website = contents.find('#rex-website');
+                    var rexForm = wrapper.find('form#REX_FORM');
 
-                // set to auto and fix later for correct size and
-                // scrollbars when necessary.
-                container.css({ height: 'auto',
-                                width: 'auto' });
+                    // set to auto and fix later for correct size and
+                    // scrollbars when necessary.
+                    container.css({
+                        height: 'auto',
+                        width: 'auto'
+                    });
 
-                // The below lines style the edit window.
-                contents.find('#rex-navi-logout').remove();
-                contents.find('#rex-navi-main').remove();
-                contents.find('#rex-redaxo-link').remove();
-                contents.find('#rex-footer').remove();
-                contents.find('#rex-header').remove();
-                contents.find('#rex-title').remove();
-                contents.find('#rex-a256-searchbar').remove();
-                contents.find('body').css({ margin: 0,
-                                            'background-image': 'none' });
-                contents.find('#rex-output').css({margin: 0});
-                contents.find('#rex-navi-path a').removeAttr('href');
+                    // The below lines style the edit window.
+                    contents.find('#rex-navi-logout').remove();
+                    contents.find('#rex-navi-main').remove();
+                    contents.find('#rex-redaxo-link').remove();
+                    contents.find('#rex-footer').remove();
+                    contents.find('#rex-header').remove();
+                    contents.find('#rex-title').remove();
+                    contents.find('#rex-a256-searchbar').remove();
+                    contents.find('body').css({
+                        margin: 0,
+                        'background-image': 'none'
+                    });
+                    contents.find('#rex-output').css({margin: 0});
+                    contents.find('#rex-navi-path a').removeAttr('href');
 
-                wrapper.css({ padding: 0,
-                              margin: 0,
-                              float: 'left' });
-                website.css({ width: wrapper.css('width'),
-                              'background-image': 'none' });
-                contents.find('textarea').css({ 'max-width': '720px' });
+                    wrapper.css({
+                        padding: 0,
+                        margin: 0,
+                        float: 'left'
+                    });
+                    website.css({
+                        width: '100%', // wrapper.css('width'),
+                        'background-image': 'none'
+                    });
+                    contents.find('textarea').css({ 'max-width': '720px' });
 
-                var scrollWidth = self.contentWindow.document.body.scrollWidth;
-                var scrollHeight = self.contentWindow.document.body.scrollHeight;
-                iframe.css({ width: scrollWidth + 'px',
-                             height: scrollHeight + 'px' });
+                    var scrollWidth = self.contentWindow.document.body.scrollWidth;
+                    var scrollHeight = self.contentWindow.document.body.scrollHeight;
+                    iframe.css({
+                        width: scrollWidth + 'px',
+                        height: scrollHeight + 'px'
+                    });
                 
-                var articleContainer = iframe.parent();
-                articleContainer.css({ height: 'unset',
-                                       width: 'unset' });
+                    var articleContainer = iframe.parent();
+                    articleContainer.css({
+                        height: 'unset',
+                        width: 'unset'
+                    });
 
-                var editArea = rexForm.find('textarea');
-                if (editArea.length > 0) {
-                    CAFEVDB.textareaResize(editArea);
+                    var editArea = rexForm.find('textarea');
+                    if (editArea.length > 0) {
+                        CAFEVDB.textareaResize(editArea);
                     
-                    rexForm.off('resize', 'textarea');
-                    rexForm.on('resize', 'textarea', function() {
+                        rexForm.off('resize', 'textarea');
+                        rexForm.on('resize', 'textarea', function() {
+                            forceSize(iframe);
+                            return false;
+                        });
+                    }
+                    
+                    rexForm.off('resize', '.mceEditor');
+                    rexForm.on('resize', '.mceEditor', function() {
                         forceSize(iframe);
                         return false;
                     });
-                }
-                
-                rexForm.off('resize', '.mceEditor');
-                rexForm.on('resize', '.mceEditor', function() {
-                    forceSize(iframe);
-                    return false;
-                });
 
-                --numChangeFrames;
+                    --numChangeFrames;
+                }
                 //alert('Change Frames: ' + numChangeFrames);
                 if (numChangeFrames == 0) {
-                    container.find('#projectWebArticles').tabs({
-                        active: 0,
-                        create: function(event, ui) {
-                            articleBox.height('auto');
-                            resizeCB();
-                            scrollbarAdjust();
-                        },
-                        activate: function(event, ui) {
-                            var iframe = ui.newPanel.find('iframe');
-                            if (iframe.length == 1) {
-                                forceSize(iframe);
+                    $('#cmsFrameLoader').fadeOut(function() {
+                        container.find('#projectWebArticles').tabs({
+                            active: 0,
+                            create: function(event, ui) {
+                                articleBox.height('auto');
+                                imagePoller(function() {
+                                    resizeCB();
+                                    scrollbarAdjust();
+                                });
+                            },
+                            activate: function(event, ui) {
+                                var iframe = ui.newPanel.find('iframe');
+                                if (iframe.length == 1) {
+                                    forceSize(iframe);
+                                }
+                            },
+                            beforeActivate: function(event, ui) {
+                                return Projects.projectWebPageTabHandler(event, ui, container);
                             }
-                        }
+                        });
                     });
                 } else if (numChangeFrames < 0) {
                     // < 0 happens when inside the frame a reload
                     // is triggered, after the initial loading of all frames.
-                    resizeCB();
-                    scrollbarAdjust();
+                    imagePoller(function() {
+                        resizeCB();
+                        scrollbarAdjust();
+                    });
                 }
             };
 
-            displayFrames.off('load');
-            displayFrames.on('load', function(event) {
-                var frame = this;
-                $('#cmsFrameLoader').fadeOut(function() {
-                    disableArticleLoad(frame);
-                })
-            });
+            if (allDisplayFrames.length > 0) {
+                if (displayFrames.length > 0) {
+                    displayFrames.on('load', function(event) {
+                        displayArticleLoad(this);
+                    });
+                } else {
+                    displayArticleLoad();
+                }
+            } else {
+                if (changeFrames.length > 0) {
+                    changeFrames.on('load', function(event) {
+                        changeArticleLoad(this);
+                    });
+                } else {
+                    changeArticleLoad();
+                }    
+            }
 
-            changeFrames.load(function(event) {
-                var frame = this;
-                $('#cmsFrameLoader').fadeOut(function() {
-                    changeArticleLoad(frame);
-                })
-            });
-
-            container.find('span.photo').click(function(event) {
+            container.find('div.photo, #cafevdb_inline_image_wrapper').click(function(event) {
                 event.preventDefault();
                 CAFEVDB.Photo.popup(this);
                 return false;
@@ -454,7 +637,9 @@ $(document).ready(function(){
 
                 var wikiPage = $(this).attr('data-wikipage');
                 var popupTitle = $(this).attr('data-wikititle');
-                DWEmbed.wikiPopup(wikiPage, popupTitle);
+                DWEmbed.wikiPopup({wikiPage: wikiPage,
+                                   popupTitle: popupTitle,
+                                   modal: false});
 
                 return false;
             });
@@ -471,4 +656,6 @@ $(document).ready(function(){
 
 // Local Variables: ***
 // js-indent-level: 4 ***
+// js3-indent-level: 4 ***
+// js3-label-indent-offset: -2 ***
 // End: ***

@@ -25,6 +25,7 @@
 CAFEVDB\Error::exceptions(true);
 
 use CAFEVDB\Projects;
+use CAFEVDB\Config;
 use CAFEVDB\L;
 
 /* For each public web-page related to the project (usually just one)
@@ -59,8 +60,7 @@ use CAFEVDB\L;
  */
 try {
 
-
-  $edit = false;
+  $projectId = $_['projectId'];
   $articles = $_['projectArticles'];
   $cnt = count($articles);
   echo '<div id="cmsFrameLoader"><img src="'.\OCP\Util::imagePath($_['app'], 'loader.gif').'"></div>
@@ -69,29 +69,33 @@ try {
   <ul id="cmsarticletabs">
 ';
   if ($cnt > 0) {
-    for ($nr = 1; $nr <= $cnt; ++$nr) {
-      echo '    <li><a href="#projectArticle-'.$nr.'">'.$articles[$nr-1]['ArticleName'].'</a></li>
+    for ($nr = 0; $nr < $cnt; ++$nr) {
+      echo '    <li id="cmsarticle-tab-'.$nr.'"><a href="#projectArticle-'.$nr.'">'.$articles[$nr]['ArticleName'].'</a></li>
 ';
     }
   } else {
-    echo '    <li><a href="#projectArticle-nopage">'.L::t('nothing').'</a></li>
+    echo '    <li id="cmsarticle-tab-nopage"><a href="#projectArticle-nopage">'.L::t('nothing').'</a></li>
 ';
   }
-  echo '    <li><a href="#projectArticle-newpage">'.'+'.'</a></li>
+  echo '    <li id="cmsarticle-tab-newpage" class="tip" title="'.Config::toolTips('project-web-article-add').'"><a href="#projectArticle-newpage">'.'+'.'</a></li>
 ';
   if ($cnt > 0) {
-    echo '    <li><a href="#projectArticle-deletepage">'.'-'.'</a></li>
+    echo '    <li id="cmsarticle-tab-deletepage" class="tip" title="'.Config::toolTips('project-web-article-delete').'"><a href="#projectArticle-deletepage">'.'-'.'</a></li>
 ';
   }
   echo '  </ul>
 ';
-  $nr = 1;
+  $nr = 0;
   foreach ($articles as $article) {
     $url = $_['cmsURLTemplate'];
     foreach ($article as $key => $value) {
       $url = str_replace('%'.$key.'%', $value, $url);
     }
-    echo '  <div id="projectArticle-'.$nr.'" class="cmsarticlecontainer cafev">
+    echo '
+  <div id="projectArticle-'.$nr.'"
+       class="cmsarticlecontainer cafev"
+       data-articleid="'.$article['ArticleId'].'"
+       data-projectid="'.$projectId.'">
     <iframe '.($_['action'] != 'change' ? 'scrolling="no"' : 'scrolling="no"').'
           src="'.$url.'"
           class="cmsarticleframe '.$_['action'].'"
@@ -102,18 +106,21 @@ try {
     ++$nr;
   }
   if ($cnt == 0) {
-    echo '  <div id="projectArticle-nopage" class="cmsarticlecontainer cafev">
-    <div id="cmsarticle-nopage" class="cmsarticleframe">'.L::t("No public web pages registered for this project").'</div>
+    echo '  <div id="projectArticle-nopage"
+       class="cmsarticlecontainer cafev"
+       data-articleid="'.$article['ArticleId'].'"
+       data-projectid="'.$projectId.'">
+    <div id="cmsarticle-nopage" class="cmsarticleframe '.$_['action'].'">'.L::t("No public web pages registered for this project").'</div>
   </div>
 ';    
   }
   echo '  <div id="projectArticle-newpage" class="cmsarticlecontainer cafev">
-    <div id="cmsarticle-newpage" class="cmsarticleframe">'.L::t("Create new public web page for this project.").'</div>
+    <div id="cmsarticle-newpage" class="cmsarticleframe '.$_['action'].'">'.L::t("Create new public web page for this project.").'</div>
   </div>
 ';    
   if ($cnt > 0) {
     echo '  <div id="projectArticle-deletepage" class="cmsarticlecontainer cafev">
-    <div id="cmsarticle-deletepage" class="cmsarticleframe">'.L::t("Delete a web article.").'</div>
+    <div id="cmsarticle-deletepage" class="cmsarticleframe '.$_['action'].'">'.L::t("Delete a web article.").'</div>
   </div>
 ';    
   }

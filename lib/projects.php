@@ -683,6 +683,7 @@ a comma.'));
     }
 
     $tmpl = new \OCP\Template(Config::APP_NAME, 'project-web-articles');
+    $tmpl->assign('projectId', $projectId);
     $tmpl->assign('projectArticles', $webPages);
     $tmpl->assign('detachtedArticles', $detachedPages);
     $urlTemplate = $rex->redaxoURL('%ArticleId%', $action == 'change');
@@ -1050,7 +1051,7 @@ __EOT__;
 
     $names = array();
     foreach ($articles as $article) {
-      $names[] = $srticle['name'];
+      $names[] = $article['ArticleName'];
     }
     $pageName = $projectName;
     if (array_search($pageName, $names) !== false) {
@@ -1101,7 +1102,9 @@ __EOT__;
    */
   public static function deleteProjectWebPage($projectId, $articleId, $handle = false)
   {
-    self::detachProjectWebPage($projectId, $articleId);
+    if (self::detachProjectWebPage($projectId, $articleId) === false) {
+      return false;
+    }
     $redaxoLocation = \OCP\Config::GetAppValue('redaxo', 'redaxolocation', '');
     $rex = new \Redaxo\RPC($redaxoLocation);
 
@@ -1110,7 +1113,7 @@ __EOT__;
     if ($result === false) {
       \OCP\Util::writeLog(Config::APP_NAME, "Failed moving ".$articleId." to ".$trashCategory, \OC_LOG::DEBUG);
     }
-    
+    return $result;
   }
 
   /**Detach a web page, but do not delete it. Meant as utility routine
@@ -1624,18 +1627,18 @@ __EOT__;
       return L::t("Flyers can only be added to existing projects, please add the new
 project without a flyer first.");
     case 'display':
-      $span = ''
-        .'<span class="photo"><img class="photo svg" src="'
+      $div = ''
+        .'<div class="photo"><img class="cafevdb_inline_image flyer" src="'
         .\OCP\Util::linkTo('cafevdb', 'inlineimage.php').'?RecordId='.$projectId.'&ImagePHPClass=CAFEVDB\Projects&ImageSize=1200&PlaceHolder='.self::IMAGE_PLACEHOLDER
         .'" '
-        .'title="Flyer, if available" /></span>';
-      return $span;
+        .'title="Flyer, if available" /></div>';
+      return $div;
     case 'change':
       $imagearea = ''
         .'<div id="project_flyer">
         
   <iframe name="file_upload_target" id="file_upload_target" src=""></iframe>
-  <div class="tip propertycontainer" id="cafevdb_inline_image_wrapper" title="'
+  <div class="tip project_flyer propertycontainer" id="cafevdb_inline_image_wrapper" title="'
       .L::t("Drop image to upload (max %s)", array(\OCP\Util::humanFileSize(Util::maxUploadSize()))).'"'
         .' data-element="PHOTO">
     <ul id="phototools" class="transparent hidden contacts_property">

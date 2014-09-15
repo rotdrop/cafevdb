@@ -127,6 +127,72 @@ var PHPMYEDIT = PHPMYEDIT || {};
     }
   }
 
+  /**Reload the current PME-dialog.
+   *
+   * @param container jQuery object describing the dialog-holder,
+   * i.e. the div which contains the html.
+   * 
+   * @param options The current dialog options. In particular
+   * options.ReloadName and options.ReloadValue must hold name and
+   * value of the curent (pseudo-) submit input
+   * element. options.modified must already be up-to-date.
+   *
+   * @param callback The application provided callback which is used
+   * to shape the HTML after loading.
+   */
+  PHPMYEDIT.tableDialogReload = function(options, callback) {
+    var pme  = this;
+
+    var reloadName  = options.ReloadName;
+    var reloadValue = options.ReloadValue;
+
+    var containerSel = '#'+pme.dialogCSSId;
+    var container = $(containerSel);
+    var contentsChanged = false;
+    
+    container.dialog('widget').addClass('pme-table-dialog-blocked');
+
+    var post = container.find('form.pme-form').serialize();
+
+    // add the option values
+    post += '&' + $.param(options);
+
+    // add name and value of the "submit" button.
+    var obj = {};
+    obj[reloadName] = reloadValue;
+    post += '&' + $.param(obj);
+
+    //alert("Post: "+post);
+    $.post(OC.filePath('cafevdb', 'ajax/pme', 'pme-table.php'),
+           post,
+           function (data) {
+             // error handling?
+             if (data.status == 'success') {
+               // remove the WYSIWYG editor, if any is attached
+               CAFEVDB.removeEditor(container.find('textarea.wysiwygeditor'));
+
+               container.css('height', 'auto');
+               $('.tipsy').remove();
+               container.html(data.data.contents);
+
+               // general styling
+               pme.init('pme', containerSel);
+
+               // attach the WYSIWYG editor, if any
+               // editors may cause additional resizing
+               CAFEVDB.addEditor(container.find('textarea.wysiwygeditor'), function() {
+                 container.dialog('option', 'height', 'auto');
+                 container.dialog('option', 'position', pme.popupPosition);
+
+                 // re-attach events
+                 pme.tableDialogHandlers(options, callback);
+               });
+             }
+             return false;
+           });
+    return false;
+  };
+
   /**Overload the phpMyEdit submit buttons in order to be able to
    * display the single data-set display, edit, add and copy form in a
    * popup.
@@ -156,8 +222,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
       callback = function() { return false; };
     }
     
-    var self = this;
-    var containerSel = '#'+self.dialogCSSId;
+    var containerSel = '#'+pme.dialogCSSId;
     var container = $(containerSel);
     var contentsChanged = false;
 
@@ -169,67 +234,50 @@ var PHPMYEDIT = PHPMYEDIT || {};
     cancelButton.on('click', function(event) {
       event.preventDefault();
 
-      container.dialog('close');
+      // When the initial dialog was in view-mode and we are not in
+      // view-mode, then we return to view mode; for me "cancel" feels
+      // more natural when the GUI returns to the previous dialog
+      // instead of returning to the main table. We only have to look
+      // at the name of "this": if it ends with "cancelview" then we
+      // are cancelling a view and close the dialog, otherwise we
+      // return to view mode.
+      if (options.InitialViewOperation && $(this).attr('name').indexOf('cancelview') < 0) {
+        options.ReloadName = options.InitialName;
+        options.ReloadValue = options.InitialValue;
+        pme.tableDialogReload(options, callback);
+      } else {
+        container.dialog('close');
+      }
 
       return false;
     });
     
-    // The complicated ones. This reload new data.
-    var CAMButtonSel = 'input.pme-change,input.pme-apply,input.pme-more';
-    var changeMoreApplyButton = $(container).find(CAMButtonSel);
+    // The complicated ones. This reloads new data.
+    var ReloadButtonSel = 'input.pme-change,input.pme-apply,input.pme-more,input.pme-reload';
+    var reloadingButton = $(container).find(ReloadButtonSel);
     
     // remove non-delegate handlers and stop default actions in any case.
-    changeMoreApplyButton.off('click');
-    changeMoreApplyButton.click(function(event) {
-      event.preventDefault();
-      return true; // allow bubble up
-    });
+    reloadingButton.off('click');
 
     // install a delegate handler on the outer-most container which
     // finally will run after possible inner data-validation handlers
     // have been executed.
-    container.off('click', CAMButtonSel);
+    container.off('click', ReloadButtonSel);
     container.on(
       'click',
-      CAMButtonSel,
+      ReloadButtonSel,
       function(event) {
-        if (!event.isDefaultPrevented()) {
-          event.preventDefault(); // neurotic me
-        }
+        event.preventDefault();
 
-        var post = $(container).find('form.pme-form').serialize();
-        post += '&' + $.param(options);
-        if (changeMoreApplyButton.length > 0) {
-          var name  = changeMoreApplyButton.attr('name');
-          var value = changeMoreApplyButton.val();
-          post += '&' + name + "=" + value;
-        }
-        $.post(OC.filePath('cafevdb', 'ajax/pme', 'pme-table.php'),
-               post,
-               function (data) {
-                 // error handling?
-                 if (data.status == 'success') {
-                   // remove the WYSIWYG editor, if any is attached
-                   CAFEVDB.removeEditor(container.find('textarea.wysiwygeditor'));
+        var submitButton = $(this);
+        var reloadName  = submitButton.attr('name');
+        var reloadValue = submitButton.val();
+        options.ReloadName = reloadName;
+        options.ReloadValue = reloadValue;
+        options.modified = !(submitButton.hasClass('pme-change') || submitButton.hasClass('pme-reload'));
 
-                   container.css('height', 'auto');
-                   container.html(data.data.contents);
+        pme.tableDialogReload(options, callback);
 
-                   // general styling
-                   pme.init('pme', containerSel);
-
-                   // attach the WYSIWYG editor, if any
-                   // editors may cause additional resizing
-                   CAFEVDB.addEditor(container.find('textarea.wysiwygeditor'), function() {
-                     container.dialog('option', 'height', 'auto');
-                     container.dialog('option', 'position', pme.popupPosition);
-
-                     // re-attach events
-                     options.modified = !changeMoreApplyButton.hasClass('pme-change');
-                     self.tableDialogHandlers(options, callback);
-                   });
-                 }
-               });
         return false;
       });
 
@@ -238,16 +286,18 @@ var PHPMYEDIT = PHPMYEDIT || {};
      * In "edit" mode submit the "more" action and reload the
      * surrounding form. When not in edit mode the base form must be the same
      * as the overlay form and a simple form submit should suffice, in principle.
-     * For "more add" we will have to adjust the logic
+     * For "more add" we will have to adjust the logic.
+     * 
+     * It is possible to reach the edit-form from "view-mode". In this
+     * case we want that the save-button returns us to the view-mode
+     * dialog. We achieve this by first simulating a "apply" event,
+     * discarding the generated html-output and then re-submitting to
+     * view-mode.
      *
      */
     var saveButtonSel = 'input.pme-save';
     var saveButton = $(container).find(saveButtonSel);
     saveButton.off('click');
-    saveButton.click(function(event) {
-      event.preventDefault();
-      return true; // allow bubble up
-    });
 
     container.off('click', saveButtonSel);
     container.on(
@@ -255,9 +305,9 @@ var PHPMYEDIT = PHPMYEDIT || {};
       saveButtonSel,
       function(event) {
                    
-        if (!event.isDefaultPrevented()) {
-          event.preventDefault(); // neurotic me
-        }
+        event.preventDefault();
+
+        options.modified = true; // we are the save-button ...
 
         var applySelector =
           'input[name$="morechange"],'+
@@ -286,18 +336,34 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
         //alert(post);
 
-        $.post(OC.filePath('cafevdb', 'ajax/pme', 'pme-table.php'),
-             post,
-             function (data) {
-               // error handling?
-               if (data.status == 'success') {
-                 container.dialog('close');
-                 
-                 self.submitOuterForm();
-                 
-                 return false;
-               }
-             });
+        OC.Notification.hide(function() {
+          $.post(OC.filePath('cafevdb', 'ajax/pme', 'pme-table.php'),
+                 post,
+                 function (data) {
+                   // error handling? Oh well.
+                   if (data.status == 'success') {
+                     if (options.InitialViewOperation) {
+                       options.ReloadName = options.InitialName;
+                       options.ReloadValue = options.InitialValue;
+                       pme.tableDialogReload(options, callback);
+                     } else {
+                       container.dialog('close');
+                     }
+                   } else {
+                     var rqData = data.data;
+                     OC.Notification.showHtml(rqData.message);
+                     if (data.data.error == 'exception') {
+                       OC.dialogs.alert(rqData.exception+rqData.trace,
+                                        t('cafevdb', 'Caught a PHP Exception'),
+                                        null, true);
+                     }
+                   }
+                   setTimeout(function() {
+                     OC.Notification.hide();
+                   }, 5000);
+                   return false;
+                 });
+        });
       return false;
     });
 
@@ -314,12 +380,13 @@ var PHPMYEDIT = PHPMYEDIT || {};
    * @param form The form to take the informatoin from, including the
    * name of the PHP class which generates the response.
    *
-   * @param containerSel A selector for the container which holds the
-   * form response.
+   * @param element The input element which initiates the "form
+   * submit". In particular, we assume PME "view operation" if element
+   * carries a CSS class "pme-viewXXXXX" with XXXXX being anything.
    */
   PHPMYEDIT.tableDialog = function(form, element) {
     var pme  = this;
-    
+
     var post = form.serialize();
     var dpyClass = form.find('input[name="DisplayClass"]');
 
@@ -329,14 +396,35 @@ var PHPMYEDIT = PHPMYEDIT || {};
     }
     dpyClass = dpyClass.val();
 
-    post += '&DisplayClass='+dpyClass;
-    if (element.attr('name')) { // undefined == false
-      var name  = element.attr('name');
-      var value = element.val();
-      var obj = {};
-      obj[name] = value;
-      post += '&' + $.param(obj);
+    var viewOperation = false;
+    var initialName;
+    var initialValue;
+    if (element.attr) {
+      initialName = element.attr('name');
+      if (initialName) {
+        initialValue = element.val();
+        var obj = {};
+        obj[initialName] = initialValue;
+        post += '&' + $.param(obj);
+      }
+
+      var cssClass = element.attr('class');
+      if (cssClass) {
+        var viewClass = 'pme-view';
+        viewOperation = cssClass.indexOf(viewClass) > -1;
+      }
     }
+
+    var tableOptions = {
+      DisplayClass: dpyClass,
+      InitialViewOperation: viewOperation,
+      InitialName: initialName,
+      InitialValue: initialValue,
+      ReloadName: initialName,
+      ReloadValue: initialValue,
+      modified: false // avoid reload of base table unless necessary
+    };
+    post += '&' + $.param(tableOptions);
 
     $.post(OC.filePath('cafevdb', 'ajax/pme', 'pme-table.php'),
            post,
@@ -365,12 +453,6 @@ var PHPMYEDIT = PHPMYEDIT || {};
                }
                return false;
              }
-             var tableOptions = {
-               DisplayClass: dpyClass,
-               ClassArguments: [], // TODO
-               modified: false // avoid reload of base table unless necessary
-             };
-
              var popup = dialogHolder.dialog({
                title: dialogHolder.find('span.pme-short-title').html(),
                position: pme.popupPosition,
@@ -378,12 +460,16 @@ var PHPMYEDIT = PHPMYEDIT || {};
                height: 'auto',
                modal: true,
                closeOnEscape: false,
-               dialogClass: 'pme-table-dialog',
+               dialogClass: 'pme-table-dialog no-close',
                resizable: false,
                open: function() {
 
+                 //var tmp = CAFEVDB.modalWaitNotification("BlahBlah");
+                 //tmp.dialog('close');
                  var dialogHolder = $(this);
                  var dialogWidget = dialogHolder.dialog('widget');
+
+                 dialogWidget.addClass('pme-table-dialog-blocked');
 
                  // general styling
                  pme.init('pme', containerSel);
@@ -403,6 +489,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                          newHeight -= dialogHolder.outerHeight() - dialogHolder.height();
                          //alert("Setting height to " + newHeight);
                          dialogHolder.height(newHeight);
+                         dialogWidget.removeClass('pme-table-dialog-blocked');
                        });
                        CAFEVDB.tipsy(containerSel);
                      });
@@ -412,14 +499,16 @@ var PHPMYEDIT = PHPMYEDIT || {};
                  $('.tipsy').remove();
                  var dialogHolder = $(this);
 
+                 //alert($.param(tableOptions));
                  if (tableOptions.modified === true) {
                    pme.submitOuterForm();
                  }
 
                  dialogHolder.dialog('close');
                  dialogHolder.dialog('destroy').remove();
-               },
+               }
              });
+             return false;
            });
     return true;
   };
@@ -643,11 +732,21 @@ var PHPMYEDIT = PHPMYEDIT || {};
       pmepfx = 'pme';
     }
     
-    var containerSel = this.selector(containerSel);
+    containerSel = this.selector(containerSel);
     var container = this.container(containerSel);
     var form = container.find('form.pme-form');
 
     //alert(containerSel+" "+container.length);
+
+    //Disable page-rows and goto submits, just not necessary
+    container.find('input.pme-pagerows').on('click', function(event) {
+      event.stopImmediatePropagation();
+      return false;
+    });
+    container.find('input.pme-goto').on('click', function(event) {
+      event.stopImmediatePropagation();
+      return false;
+    });
 
     var onChangeSel =
       'input[type="checkbox"].'+pmepfx+'-sort'+','+
