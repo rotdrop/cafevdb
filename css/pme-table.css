@@ -31,10 +31,45 @@
 
 /*******************************************************************************
  *
+ * PME table popups
+ *
+ */
+/* make popups scrollable in smaller viewports */
+.ui-dialog.pme-table-dialog {
+  max-height: 90% !important;
+  max-width: 90% !important;
+  overflow: hidden;
+  padding: 0;
+}
+
+.ui-dialog.pme-table-dialog .ui-dialog-content {
+  /* height has to be computed in order to attach the vertical
+   * scrollbar to the inner div.
+   */
+  overflow-y: auto;
+  overflow-x: hidden;
+  //overflow: auto;
+}
+
+.ui-widget-content.wait-notification {
+  //z-index:100000;
+}
+
+/* Hide the dialog behind the modal layer during loading of slow
+ * elements.
+ */
+.pme-table-dialog-blocked {
+  z-index: 50 !important;
+}
+
+/*******************************************************************************
+ *
  * Export select via chosen
  *
  */
 
+.pme-goto div,
+.pme-pagerows div,
 .pme-export-block div {
   vertical-align:middle;
   font-weight:bold;
@@ -52,11 +87,12 @@
   color:#333;
 }
 
+.pme-goto a.chosen-single,
+.pme-pagerows a.chosen-single,
 .pme-export-block a.chosen-single {
   height: unset;
   background: unset;
   box-shadow: unset;
-  border-radius: 3px;
   outline: medium, none;
   margin: 0px 0px 3px 0px;
   background-color: rgba(240, 240, 240, 0.9);
@@ -65,6 +101,51 @@
   padding: 5px;
   line-height: 16px;
   font-size: 13px;
+}
+
+.pme-goto a.chosen-single:hover, .pme-goto a.chosen-single:focus,
+.pme-pagerows a.chosen-single:hover, .pme-pagerows a.chosen-single:focus,
+.pme-export-block a.chosen-single:hover, .pme-export-block a.chosen-single:focus {
+  background-color:rgba(250,250,250,.9);
+  color:#333;
+}
+
+.pme-export-block a.chosen-single {
+  border-radius: 3px;
+}
+
+.pme-goto a.chosen-single,
+.pme-pagerows a.chosen-single {
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+.pme-goto ul.chosen-results li,
+.pme-pagerows ul.chosen-results li {
+  text-align: right;
+}
+
+
+span.pme-goto input.pme-goto:focus,
+/*span.pme-goto input.pme-goto:hover,*/
+span.pme-goto input.pme-goto:active,
+span.pme-goto input.pme-goto,
+span.pme-pagerows input.pme-pagerows:focus,
+/*span.pme-pagerows input.pme-pagerows:hover,*/
+span.pme-pagerows input.pme-pagerows:active,
+span.pme-pagerows input.pme-pagerows {
+  border-top-left-radius: 3px !important;
+  border-bottom-left-radius: 3px !important;
+  border-top-right-radius: 0px !important;
+  border-bottom-right-radius: 0px !important;
+  background-color: rgba(240,240,240,.9) !important;
+  cursor: default;
+  text-align:right;
+  margin-right:0px;
+  border-right:0px;
+  padding-right:3px;
 }
 
 /*******************************************************************************
@@ -133,6 +214,22 @@ hr.pme-hr {
   margin:0px;
   border-top-width:1px;
   height:1px;
+}
+
+/* Style the "refresh button", reduce the size, remove the text, add a
+ * nice background image.
+ */
+.pme-navigation input.pme-reload {
+  background-image:url('../img/view-refresh.png');
+  background-repeat:no-repeat;
+  background-position: center center;
+  background-size:24px 24px;
+  width:28px;
+  height:28px;
+  vertical-align:middle;
+  margin-top:0px;
+  font-size:0pt;
+  margin-left:48px;
 }
 
 :not(.lt-ie9) input.pme-email-check[type=checkbox] {
@@ -430,7 +527,16 @@ td[class$="photo"] {
 }
 
 td[class$="photo"] img {
+  min-height:100px;
   max-height:300px;
+}
+
+div#contact_photo {
+  min-height:100px;
+}
+
+div#project_flyer {
+  min-height:300px;
 }
 
 td.pme-value-0-msg, td.pme-value-1-msg {

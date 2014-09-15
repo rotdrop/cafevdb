@@ -30,28 +30,6 @@ form.cafevdb-control {
 
 /*******************************************************************************
  *
- * PME table popups
- *
- */
-/* make popups scrollable in smaller viewports */
-.ui-dialog.pme-table-dialog {
-  max-height: 90% !important;
-  max-width: 90% !important;
-  overflow: hidden;
-  padding: 0;
-}
-
-.ui-dialog.pme-table-dialog .ui-dialog-content {
-  /* height has to be computed in order to attach the vertical
-   * scrollbar to the inner div.
-   */
-  overflow-y: auto;
-  overflow-x: hidden;
-  //overflow: auto;
-}
-
-/*******************************************************************************
- *
  * Be noisy on configuration errors.
  *
  */
@@ -371,9 +349,34 @@ div.cafevdb-note a:hover {
  *
  *****************************************************************************/
 
+.ui-dialog-titlebar span {
+  cursor: move;
+}
+
 /* Optionally hide some close button */
 .no-close .ui-dialog-titlebar-close {
   display: none;
+}
+
+.ui-dialog.transparent,
+.ui-dialog.transparent-titlebar {
+  border:0px;
+  background: transparent;
+}
+
+.ui-dialog.transparent .ui-widget-header,
+.ui-dialog.transparent-titlebar .ui-widget-header {
+  opacity:0;
+}
+
+.ui-dialog.transparent  .ui-progressbar-value,
+.ui-dialog.transparent-titlebar .ui-progressbar-value {
+  opacity:1;
+}
+
+.ui-dialog.transparent  .ui-progressbar-value,
+.ui-dialog.transparent-titlebar .ui-progressbar-value {
+  background-color: #CCC;
 }
 
 div.cafevdb-error {

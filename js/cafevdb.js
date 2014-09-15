@@ -96,6 +96,36 @@ var CAFEVDB = CAFEVDB || {};
     };
   };
 
+  /**Display a transparent modal dialog which blocks the UI
+   * 
+   */
+  CAFEVDB.modalWaitNotification = function(message) {
+    var dialogHolder = $('<div class="cafevdb modal-wait-notification"></div>');
+    dialogHolder.html('<div class="cafevdb modal-wait-message">'+message+'</div>'+
+                      '<div class="cafevdb modal-wait-animation"></div>');
+    $('body').append(dialogHolder);
+    dialogHolder.find('div.modal-wait-animation').progressbar({ value: false });
+    dialogHolder.dialog({
+      title: '',
+      position: { my: "center",
+                  at: "center center-20%",
+                  of: window },
+      width: '80%',
+      height: 'auto',
+      modal: true,
+      closeOnEscape: false,
+      dialogClass: 'transparent no-close wait-notification',
+      resizable: false,
+      open: function() {
+      },
+      cloase: function() {
+        dialogHolder.dialog('close');
+        dialogHolder.dialog('destroy').remove();
+      }
+      });
+    return dialogHolder;
+  };
+
   /**Unfortunately, the textare element does not fire a resize
    * event. This function emulates one.
    *
@@ -345,7 +375,7 @@ var CAFEVDB = CAFEVDB || {};
 
     // Emulate a pull-down menu with export options via the chosen
     // plugin.
-    container.find('select.pme-export-choice').chosen({ disable_search:true });  
+    container.find('select.pme-export-choice').chosen({ disable_search: true });  
     container.find('select.pme-export-choice').change(function (event) {
       event.preventDefault();
       
@@ -535,7 +565,9 @@ $(document).ready(function(){
   $('form#projectlabelcontrol :submit').click(function(event) {
     event.preventDefault();
 
-    PHPMYEDIT.tableDialog($(this.form), $(this));
+    var form = $(this.form);
+    var pseudoSubmit = form.find('input.pme-view');
+    PHPMYEDIT.tableDialog($(this.form), pseudoSubmit);
 
     return false;
   });
