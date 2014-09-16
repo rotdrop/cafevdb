@@ -63,13 +63,13 @@
   margin:3px 3px 3px 0px;
 }
 
-#pme-table-container tr.pme-navigation div.chosen-container,
-#pme-table-container tr.pme-navigation select,
-#pme-table-container tr.pme-navigation input {
+.ui-dialog #pme-table-container tr.pme-navigation div.chosen-container,
+.ui-dialog #pme-table-container tr.pme-navigation select,
+.ui-dialog #pme-table-container tr.pme-navigation input {
   float:left;
 }
 
-#pme-table-container tr.pme-navigation input.pme-reload {
+.ui-dialog #pme-table-container tr.pme-navigation input.pme-reload {
   float: right;
   width: 27px;
   height: 27px;
@@ -77,7 +77,7 @@
   margin: 3px 0px 3px 3px;
 }
 
-#pme-table-container table.pme-navigation {
+.ui-dialog #pme-table-container table.pme-navigation {
   width: 100%;
 }
 
