@@ -79,6 +79,8 @@ var CAFEVDB = CAFEVDB || {};
         open  : function(){
           //$('.tipsy').remove();
 
+          CAFEVDB.dialogToBackButton($(this).dialog('widget'));
+
           $('button').tipsy({gravity:'ne', fade:true});
           $('input').tipsy({gravity:'ne', fade:true});
           $('label').tipsy({gravity:'ne', fade:true});
@@ -188,7 +190,7 @@ var CAFEVDB = CAFEVDB || {};
       var post = $('#eventlistform').serializeArray();
 
       if(evntdlgopen == true){
-        // TODO: save event
+        // TODO: maybe save event
         $('#event').dialog('close');
         return false;
       }

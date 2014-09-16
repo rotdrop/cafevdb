@@ -95,6 +95,7 @@ try {
   OCP\Util::addStyle('cafevdb', 'email');
   OCP\Util::addStyle('cafevdb', 'blog');
   OCP\Util::addStyle('cafevdb', 'projects');
+  OCP\Util::addStyle('cafevdb', 'project-instruments');
   OCP\Util::addStyle('cafevdb', 'inlineimage');  
   OCP\Util::addStyle('cafevdb', 'jquery.Jcrop');  
   OCP\Util::addStyle("cafevdb/3rdparty", "chosen/chosen");
@@ -108,6 +109,7 @@ try {
   OCP\Util::addScript('cafevdb', 'events');
   OCP\Util::addScript('cafevdb', 'blog');
   OCP\Util::addScript('cafevdb', 'projects');
+  OCP\Util::addScript('cafevdb', 'project-instruments');
   OCP\Util::addScript('cafevdb', 'sepa-debit-mandate');
   OCP\Util::addScript('cafevdb', 'jquery.Jcrop');
 
@@ -192,10 +194,6 @@ try {
 
   switch ($tmplname) {
   case 'projects':
-    OCP\Util::addStyle('cafevdb', $tmplname);
-    OCP\Util::addScript('cafevdb', $tmplname);
-    break;
-  case 'project-instruments':
     OCP\Util::addStyle('cafevdb', $tmplname);
     OCP\Util::addScript('cafevdb', $tmplname);
     break;

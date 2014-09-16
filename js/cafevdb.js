@@ -281,7 +281,7 @@ var CAFEVDB = CAFEVDB || {};
 
     var form = '<form method="'+method+'" action="'+url+'"></form>';
 
-    form = $(form).appendTo($('body'));
+    form = $(form);
 
     var splitValues = values.split('&');
     for (var i = 0; i < splitValues.length; ++i) {
@@ -291,6 +291,7 @@ var CAFEVDB = CAFEVDB || {};
         .attr('value', CAFEVDB.urldecode(nameValue[1]))
         .appendTo(form);
     }
+    form.appendTo($('body')); // needed?
     form.submit();
   };
 
@@ -405,7 +406,49 @@ var CAFEVDB = CAFEVDB || {};
       $(selector).tipsy(options);      // make it new
     }
   };
-  
+
+  /**Add a to-back-button to the titlebar of a jQuery-UI dialog. The
+   * purpose is to be able to move the top-dialog to be bottom-most,
+   * juse above a potential "modal" window layer.
+   */
+  CAFEVDB.dialogToBackButton = function(dialogWidget) {
+    var toBackButtonTitle = t('cafevdb',
+                              'If multiple dialogs are open, '+
+                              'then move this one to the lowest layer '+
+                              'and display it below the others. '+
+                              'Clicking anywhere on the dialog will bring to the front again.');
+    var toBackButton = $('<button class="toBackButton" title="'+toBackButtonTitle+'"></button>');
+    toBackButton.button({label: '_',
+                         icons: { primary: 'ui-icon-minusthick', secondary: null },
+                         text: false});
+    dialogWidget.find('.ui-dialog-titlebar').append(toBackButton);
+    toBackButton.tipsy({gravity: 'ne', fade: true });
+
+    toBackButton.off('click');
+    toBackButton.on('click', function() {
+      var overlay = $('div.ui-widget-overlay');
+      var overlayIndex = 100; // OwnCloud header resides at 50.
+      if (overlay.length > 0) {
+        overlayIndex = parseInt(overlay.css('z-index'));
+      }
+      // will be only few, so what
+      var needShuffle = false;
+      $('.ui-dialog.ui-widget').each(function(index) {
+        var thisIndex = parseInt($(this).css('z-index'));
+        if (thisIndex == overlayIndex + 1) {
+          needShuffle = true;
+        }
+      }).each(function(index) {
+        if (needShuffle) {
+          var thisIndex = parseInt($(this).css('z-index'));
+          $(this).css('z-index', thisIndex + 1);
+        }
+      });
+      dialogWidget.css('z-index', overlayIndex + 1);
+      return false;
+    });
+  };     
+
   /**Initialize our tipsy stuff. Only exchange for our own thingies, of course.
    */
   CAFEVDB.tipsy = function(containerSel) {
@@ -415,6 +458,11 @@ var CAFEVDB = CAFEVDB || {};
     var container = $(containerSel);
 
     $.fn.tipsy.defaults.html = true;
+
+    container.find('[class*="tipsy-"]').each(function(index) {
+      var gravity = $(this).attr('class').match(/tipsy-([senw][senw])/);
+      $(this).tipsy({gravity:gravity[1], fade:true});
+    });
 
     // container.find('button.settings').tipsy({gravity:'ne', fade:true});
     container.find('button.viewtoggle').tipsy({gravity:'ne', fade:true});

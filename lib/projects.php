@@ -79,7 +79,22 @@ class Projects
 
   public function shortTitle()
   {
-    return L::t("%s Projects", array(ucfirst(Config::getValue('orchestra'))));
+    $projectId = Util::cgiValue('ProjectId', -1);
+    $projectName = Util::cgiValue('Proeject', false);
+    if ($projectId < 0 || !$projectName) {
+      $projectId = Util::getCGIRecordId();
+      $proejctName = false;
+      if ($projectId >= 0) {
+        $projectName = self::fetchName($projectId);
+      }
+    }
+    if ($projectName !== false) {
+      return L::t("%s Project %s",
+                  array(ucfirst(Config::getValue('orchestra')),
+                        $projectName));
+    } else {
+      return L::t("%s Projects", array(ucfirst(Config::getValue('orchestra'))));
+    }
   }
 
   public function headerText()
@@ -314,8 +329,8 @@ class Projects
                                       'values'   => $instruments,
                                       'valueGroups' => $groupedInstruments);
 
-    $opts['fdd']['Bemerkungen'] = array(
-      'name'     => L::t('Project Notes'),
+    $opts['fdd']['Tools'] = array(
+      'name'     => L::t('Toolbox'),
       'input'    => 'V',
       'options'  => 'VCDA', 
       'select'   => 'T',
@@ -324,7 +339,7 @@ class Projects
       'sql'      => 'Id',
       'sqlw'     => 'Id',
       'php|CV'    => array('type' => 'function',
-                          'function' => 'CAFEVDB\Projects::projectWikiButtonPME',
+                          'function' => 'CAFEVDB\Projects::projectToolboxPME',
                           'parameters' => $nameIdx),
       'sort'     => true,
       'escape' => false
@@ -714,64 +729,82 @@ a comma.'));
       $placeHolder = $projectName; // or maybe don't strip.
     }
 
-    // Code the value in the name attribute (for java-script)
-    $params = ""
-      ."ProjectId=$projectId"
-      ."&Project=$projectName";
     $control = '
 <span class="project-actions-block">
   <select data-placeholder="'.$placeHolder.'"
           class="project-actions"
           title="'.Config::toolTips('project-actions').'"
-          name="'.$params.'">
+          data-project-id="'.$projectId.'"
+          data-project-name="'.htmlspecialchars($projectName).'">
     <option value=""></option>
-    <optgroup>
-    <option title="'.Config::toolTips('project-action-events').'" value="events">
-      '.L::t('Events').'
-    </option>
-    </optgroup>
-    <optgroup>
-    <option title="'.Config::toolTips('project-action-brief-instrumentation').'"
-            value="brief-instrumentation">
-      '.L::t('Brief Instrumentation').'
-    </option>
-    <option title="'.Config::toolTips('project-action-detailed-instrumentation').'"
-            value="detailed-instrumentation">
-      '.L::t('Detailed Instrumentation').'
-    </option>
-    <option title="'.Config::toolTips('project-action-instrumentation-numbers').'"
-            value="project-instruments">
-      '.L::t('Instrumentation Numbers').'
-    </option>
-    </optgroup>
-    <optgroup>
-    <option title="'.Config::toolTips('project-action-wiki').'"
-            value="project-wiki?'.urlencode(self::projectWikiLink($projectName)).'"
-            data-wikipage="'.htmlspecialchars(self::projectWikiLink($projectName)).'"
-            data-wikititle="'.htmlspecialchars(L::t('Project Wiki for %s', array($projectName))).'">
-      '.L::t('Project Wiki Page').'
-    </option>
-    <option title="'.Config::toolTips('project-action-files').'"
-            value="project-files?'.$projectPaths['project'].'">
-      '.L::t('Project Files').'
-    </option>
-    </optgroup>
-    <optgroup>
-    <option title="'.Config::toolTips('project-action-debit-mandates').'"
-              value="sepa-debit-mandates">
-      '.L::t('SEPA Debit Mandates').'
-    </option>
-    <option title="'.Config::toolTips('project-action-financial-balance').'"
-              value="profit-and-loss?'.$projectPaths['balance'].'">
-      '.L::t('Profit and Loss Account').'
-    </option>
-    </optgroup>
+'
+.Navigation::htmlTagsFromArray(
+  array('pre' => '<optgroup>', 'post' => '</optgroup>',
+        array('type' => 'option',
+              'title' => Config::toolTips('project-action-events'),
+              'value' => 'events',
+              'name' => L::t('Events')
+          )
+    ))
+.Navigation::htmlTagsFromArray(
+  array('pre' => '<optgroup>', 'post' => '</optgroup>',
+        array('type' => 'option',
+              'title' => Config::toolTips('project-action-brief-instrumentation'),
+              'value' => 'brief-instrumentation',
+              'name' => L::t('Brief Instrumentation')
+          ),
+        array('type' => 'option',
+              'title' => Config::toolTips('project-action-detailed-instrumentation'),
+              'value' => 'detailed-instrumentation',
+              'name' => L::t('Detailed Instrumentation')
+          ),
+        array('type' => 'option',
+              'title' => Config::toolTips('project-action-instrumentation-numbers'),
+              'value' => 'project-instruments',
+              'name' => L::t('Instrumentation Numbers')
+          )
+    ))
+.Navigation::htmlTagsFromArray(
+  array('pre' => '<optgroup>', 'post' => '</optgroup>',
+        array('type' => 'option',
+              'title' => Config::toolTips('project-action-wiki'),
+              'value' => 'project-wiki',
+              'data' => array(
+                'wikiPage' => self::projectWikiLink($projectName),
+                'wikiTitle' => L::t('Project Wiki for %s', array($projectName))
+                ),
+              'name' => L::t('Project Notes')
+          ),
+        array('type' => 'option',
+              'title' => Config::toolTips('project-action-files'),
+              'value' => 'project-files',
+              'data' => array('projectFiles' => $projectPaths['project']),
+              'name' => L::t('Project Files')
+          )
+    ))
+.Navigation::htmlTagsFromArray(
+  array('pre' => '<optgroup>', 'post' => '</optgroup>',
+        array('type' => 'option',
+              'title' => Config::toolTips('project-action-debit-mandates'),
+              'value' => 'sepa-debit-mandates',
+              'name' => L::t('SEPA Debit Mandates')
+          ),
+        array('type' => 'option',
+              'title' => Config::toolTips('project-action-financial-balance'),
+              'value' => 'profit-and-loss',
+              'data' => array('projectFiles' => $projectPaths['balance']),
+              'name' => L::t('Profit and Loss Account')
+          )
+    ))
+.'
   </select>
-</span>';
+</span>
+';
     return $control;
   }
 
-  /**Check for the existence of the project folder
+  /**Check for the existence of the project folders. Returns an array
+   * of folders (balance and general files).
    */
   public static function maybeCreateProjectFolder($projectId, $projectName = false, $only = false)
   {
@@ -881,26 +914,52 @@ a comma.'));
     return $returnPaths;
   }
 
-  public static function projectWikiButtonPME($projectId, $nameIdx, $modify, $k, $fds, $fdd, $row)
+  /**PME-interface to projectToolBox(), see there. */
+  public static function projectToolboxPME($projectId, $nameIdx, $modify, $k, $fds, $fdd, $row)
   {
     $projectName = $row["qf$nameIdx"];
-    return self::projectWikiButton($projectId, $projectName);
+    return self::projectToolbox($projectId, $projectName);
   }
 
-  public static function projectWikiButton($projectId, $projectName, $value = false, $eventSelect = array())
+  /**Gather events, instrumentation numbers and the wiki-page in a
+   * form-set for inclusion into some popups etc.
+   */
+  public static function projectToolbox($projectId, $projectName, $value = false, $eventSelect = array())
   {
-    if ($value === false) {
-      $value = L::t('Project Wiki for %s', array($projectName));
-    }
-    return '<div class="projectWikiButton">
-  <input type="button"
-         id="projectWikiButton"
-         class="wiki-popup"
-         value="'.$value.'"
-         name="projectWikiButton"
-         data-wikipage="'.htmlspecialchars(self::projectWikiLink($projectName)).'"
-         data-wikititle="'.htmlspecialchars($value).'"
-         title="'.Config::toolTips('project-wiki').'" />';
+    $toolbox = Navigation::htmlTagsFromArray(
+      array(
+        'pre' => ('<fieldset class="projectToolbox" '.
+                  'data-project-id="'.$projectId.'" '.
+                  'data-project-name="'.htmlspecialchars($projectName).'">'),
+        'post' => '</fieldset>',
+        array('type' => 'button',
+              'title' => Config::toolTips('project-action-wiki'),
+              'data' => array(
+                'wikiPage' => self::projectWikiLink($projectName),
+                'wikiTitle' => L::t('Project Wiki for %s', array($projectName))
+                ),
+              'class' => 'project-wiki tipsy-se',
+              'value' => 'project-wiki',
+              'name' => L::t('Project Notes')
+          ),
+
+        array('type' => 'button',
+              'title' => Config::toolTips('project-action-events'),
+              'class' => 'events tipsy-se',
+              'value' => 'events',
+              'name' => L::t('Events')
+          ),
+        array('type' => 'button',
+              'title' => Config::toolTips('project-action-instrumentation-numbers'),
+              'class' => 'project-instruments tipsy-se',
+              'value' => 'project-instruments',
+              'name' => L::t('Instrumentation Numbers')
+          )
+        ));
+    return '<div class="projectToolbox">
+'.$toolbox.'
+</div>
+';
   }
 
   public static function eventButtonPME($projectId, $opts, $modify, $k, $fds, $fdd, $row)

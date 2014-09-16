@@ -460,11 +460,9 @@ var CAFEVDB = CAFEVDB || {};
         $(this.uploadDragDrop);
     };
 
-    Photo.popup = function(containerSel) {
-        var container = $(containerSel);
+    Photo.popup = function(image) {
         var overlay = $('<div id="photooverlay" style="width:auto;height:auto;"><div/>');
-        var img = container.find('img');
-        var imgClone = img.clone();
+        var imgClone = $(image).clone();
         overlay.html(imgClone);        
         var popup = overlay.dialog({
             title: t('cafevdb', 'Photo Zoom'),

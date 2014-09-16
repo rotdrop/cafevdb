@@ -51,15 +51,34 @@
   //overflow: auto;
 }
 
-.ui-widget-content.wait-notification {
-  //z-index:100000;
-}
-
 /* Hide the dialog behind the modal layer during loading of slow
  * elements.
  */
 .pme-table-dialog-blocked {
   z-index: 50 !important;
+}
+
+#pme-table-container tr.pme-navigation a.chosen-single {
+  line-height:15px;
+  margin:3px 3px 3px 0px;
+}
+
+#pme-table-container tr.pme-navigation div.chosen-container,
+#pme-table-container tr.pme-navigation select,
+#pme-table-container tr.pme-navigation input {
+  float:left;
+}
+
+#pme-table-container tr.pme-navigation input.pme-reload {
+  float: right;
+  width: 27px;
+  height: 27px;
+  background-size: 27px 27px;
+  margin: 3px 0px 3px 3px;
+}
+
+#pme-table-container table.pme-navigation {
+  width: 100%;
 }
 
 /*******************************************************************************

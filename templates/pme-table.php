@@ -42,7 +42,7 @@ try {
   $reflect = new ReflectionClass('\\CAFEVDB\\'.$class);
   $instance = $reflect->newInstanceArgs($args);
 
-  echo '<div id="pme-table-container" style="height:auto;"></div>';
+  echo '<div id="pme-table-container" style="height:auto;">';
   $instance->display();
   echo '</div>';
 

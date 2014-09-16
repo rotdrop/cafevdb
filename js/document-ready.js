@@ -27,7 +27,7 @@ $(document).ready(function(){
             CAFEVDB.exportMenu(selector);
             container.find('input.pme-email').addClass('formsubmit');
             container.find('input.pme-bulkcommit').addClass('formsubmit');
-            container.find('div.photo, #cafevdb_inline_image_wrapper').click(function(event) {
+            container.find('div.photo, #cafevdb_inline_image_wrapper').on('click', 'img', function(event) {
                 event.preventDefault();
                 CAFEVDB.Photo.popup(this);
                 return false;

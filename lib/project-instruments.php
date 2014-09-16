@@ -46,6 +46,9 @@ class ProjectInstruments
     if ($idPair !== false) {
       if ($this->postProjectId) {
         $this->recordId = $idPair['recordId'];
+        // We also synthesize a record id for PME
+        $recKey = Config::$pmeopts['cgi']['prefix']['sys'].'rec';
+        $_POST[$recKey] = $this->recordId;
       } else if ($this->recordId > 0) {
         $this->projectId = $idPair['projectId'];
         $this->project = Projects::fetchName($this->projectId);

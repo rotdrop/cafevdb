@@ -179,6 +179,9 @@ Calendar={
 				height: 600,
 				resizable: false,
 //				draggable: false,
+                                open  : function() {
+                                        CAFEVDB.dialogToBackButton($(this).dialog('widget'));
+                                },
 				close : function(event, ui) {
 					$(this).dialog('destroy').remove();
 			                if ($('#event_googlemap').dialog('isOpen') == true){
@@ -620,4 +623,9 @@ Calendar={
 	},
 
 }
+
+// Local Variables: ***
+// js3-indent-level: 8 ***
+// js3-indent-tabs-mode: t ***
+// End: ***
 

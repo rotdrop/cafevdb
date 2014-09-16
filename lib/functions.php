@@ -667,42 +667,73 @@ class Navigation
 
     return $result;
   }
-  
+
+  public static function dashesToCamelCase($string, $capitalizeFirstCharacter = false) 
+  {    
+    $str = str_replace(' ', '', ucwords(str_replace('-', ' ', $string)));
+    
+    if (!$capitalizeFirstCharacter) {
+      $str[0] = strtolower($str[0]);
+    }
+    
+    return $str;
+  }
+
   public static function buttonsFromArray($buttons)
   {
+    return self::htmlTagsFromArray($buttons);
+  }
+  
+  /**Generate some html tags. Up to now only buttons and option
+   * elements.
+   */
+  public static function htmlTagsFromArray($tags)
+  {
+    // Global setup, if any
     $pre = $post = $between = '';
-    if (isset($buttons['pre'])) {
-      $pre = $buttons['pre'];
-      unset($buttons['pre']);
+    if (isset($tags['pre'])) {
+      $pre = $tags['pre'];
+      unset($tags['pre']);
     }
-    if (isset($buttons['post'])) {
-      $post = $buttons['post'];
-      unset($buttons['post']);
+    if (isset($tags['post'])) {
+      $post = $tags['post'];
+      unset($tags['post']);
     }
-    if (isset($buttons['between'])) {
-      $between = $buttons['between'];
-      unset($buttons['between']);
+    if (isset($tags['between'])) {
+      $between = $tags['between'];
+      unset($tags['between']);
     }
+
+    // Per element setup
     $html = $pre;
-    foreach ($buttons as $key => $btn) {
-      $type  = isset($btn['type']) ? $btn['type'] : 'button';
-      $name  = $btn['name'];
-      $title = isset($btn['title']) ? $btn['title'] : $name;
-      $style = isset($btn['style']) ? $btn['style'] : '';
-      
+    foreach ($tags as $key => $tag) {
+      $type  = isset($tag['type']) ? $tag['type'] : 'button';
+      $name  = $tag['name'];
+      $value = ' value="'.htmlspecialchars((isset($tag['value']) ? $tag['value'] : $name)).'"';
+      $title = ' title="'.(isset($tag['title']) ? $tag['title'] : $name).'"';
+      $id    = isset($tag['id']) ? ' id="'.$tag['id'].'"' : '';
+      $class = ' class="'.$tag['class'].'"';
+      $data = '';
+      if (isset($tag['data'])) {
+        $dataArray = $tag['data'];
+        if (!is_array($dataArray)) {
+          $dataArray = array('value' => $dataArray);
+        }
+        foreach ($dataArray as $key => $dataValue) {
+          $key = strtolower(preg_replace('/([A-Z])/', '-$1', $key));
+          $data .= ' data-'.$key.'="'.htmlspecialchars($dataValue).'"';
+        }
+      }
       switch ($type) {
       case 'button':
+        $style = isset($tag['style']) ? ' style="'.$tag['style'].'"' : '';
         $html .= ''
-          .'<button class="'.$btn['class'].'" title="'.$title.'"'
-          .(isset($btn['id']) ? ' id="'.$btn['id'].'"' : '')
-          .($style != '' ? ' style="'.$btn['style'].'"' : '')
-          .(isset($btn['js']) ? ' '.$btn['js'].' ' : '')
-          .'>';
-        if (isset($btn['image'])) {
+          .'<button type="button" '.$class.$value.$title.$data.$id.$style.'>';
+        if (isset($tag['image'])) {
           $html .= ''
             .'<img class="svg" '
-            .(isset($btn['id']) ? ' id="'.$btn['id'].'-img" ' : ' ')
-            .'src="'.$btn['image'].'" alt="'.$name.'" />';
+            .(isset($tag['id']) ? ' id="'.$tag['id'].'-img" ' : ' ')
+            .'src="'.$tag['image'].'" alt="'.$name.'" />';
         } else {
           $html .= $name;
         }
@@ -710,17 +741,19 @@ class Navigation
 ';
         break;
       case 'input':
-        if (isset($btn['image'])) {
-          $style = 'background:url(\''.$btn['image'].'\') no-repeat center;'.$style;
+        if (isset($tag['image'])) {
+          $style = 'background:url(\''.$tag['image'].'\') no-repeat center;'.$style;
           $name  = '';
         }                 
+        $style = isset($tag['style']) ? ' style="'.$tag['style'].'"' : '';
+        $name  = $name != '' ? ' name="'.htmlspecialchars($name).'"' : '';
         $html .= ''
-          .'<input type="button" class="'.$btn['class'].'" title="'.$title.'"'
-          .(isset($btn['id']) ? ' id="'.$btn['id'].'"' : '')
-          .($style != '' ? 'style="'.$style.'" ' : '')
-          .(isset($btn['js']) ? ' '.$btn['js'].' ' : '')
-          .'value="'.$name.'" '
-          .'/>
+          .'<input type="button" '.$class.$value.$title.$data.$id.$style.$name.'/>
+';
+        break;
+      case 'option':
+        $html .= ''
+          .'<option '.$class.$value.$title.$data.$id.$style.'>'.$name.'</option>
 ';
         break;
       default:

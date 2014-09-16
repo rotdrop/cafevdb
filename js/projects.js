@@ -41,54 +41,127 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
         var year = name.match(/[^\d](\d{4})$/);
         return year !== null ? year[1] : false;
     };
-    
-    Projects.actions = function(select) {
-        
+
+    /**Generate a popup-dialog with a wiki-page. Not to much project
+     * related, rather general. Page and page-title are assumed to be
+     * attached to the "post"-object
+     */
+    Projects.wikiPopup = function(post) {
+        if ($('#dokuwiki_popup').dialog('isOpen') == true) {
+            $('#dokuwiki_popup').dialog('close').remove();
+        }
+        DWEmbed.wikiPopup({ wikiPage: post.wikiPage,
+                            popupTitle: post.popupTitle,
+                            modal: false },
+                          function(dwDialog, dwDialogWidget) {
+                              CAFEVDB.dialogToBackButton(dwDialogWidget);
+                          });
+    };
+
+    /**Generate a popup-dialog for the events-listing for the given
+     * project.
+     * 
+     * @param post Arguments object:
+     * { Project: 'NAME', ProjectId: XX }
+     */
+    Projects.eventsPopup = function(post) {
+        if ($('#events').dialog('isOpen') == true) {
+            $('#events').dialog('close').remove();
+        } else {
+            $.post(OC.filePath('cafevdb', 'ajax/events', 'events.php'),
+                   post, CAFEVDB.Events.UI.init, 'json');
+        }
+    };
+
+    /**Generate a popup for the instrumentation numbers.
+     * 
+     * @param containerSel The ambient element of the container
+     * (i.e. the base page, or the div holding the dialog this one was
+     * initiated from.
+     * 
+     * @param past Arguments object:
+     * { Project: 'NAME', ProjectId: XX }
+     */
+    Projects.instrumentationNumbersPopup = function(containerSel, post)
+    {
+        // Prepate the data-array for PHPMYEDIT.tableDialogOpen(). The
+        // instrumentation numbers are somewhat nasty and require too
+        // many options.
+
+        var tableOptions = {
+            AmbientContainerSelector: containerSel,
+            DialogHolderCSSId: 'project-instruments-dialog', 
+            Template: 'project-instruments',
+            DisplayClass: 'ProjectInstruments',
+            Table: 'BesetzungsZahlen',
+            Transpose: 'transposed',
+            InhibitTranspose: 'true',
+            headervisibility: CAFEVDB.headervisibility,
+            ProjectId: post.ProjectId,
+            Project: post.Project, // this is the name
+            // Now special options for the dialog popup
+            InitialViewOperation: true,
+            InitialName: 'PME_sys_operation',
+            InitialValue: 'View',
+            ReloadName: 'PME_sys_operation',
+            ReloadValue: 'View',
+            PME_sys_operation: 'View',
+            ModalDialog: false,
+            modified: false
+        };
+        PHPMYEDIT.tableDialogOpen(tableOptions);
+    };
+
+    /**Parse the user-selection from the project-actions menu.
+     * 
+     * Project-id and -name are contained in data-fields of the
+     * select, other potentially needed data is contained in
+     * data-fields in the options.
+     */
+    Projects.actions = function(select, containerSel) {
+        var Projects = this;
+
         // determine the export format
-        var selectedOption = select.find('option:selected');
-        var selected = selectedOption.val();
-        var values = select.attr('name');
-        var optionValues = selected.split('?');
+        var selected = select.find('option:selected');
+        var selectedValue = selected.val();
 
-        selected = optionValues[0];
+        var projectId = select.data('projectId');
+        var projectName = select.data('projectName');
+        var post = {
+            ProjectId: projectId,
+            Project: projectName
+        };
 
-        switch (selected) {
-        case 'events':
-            if ($('#events').dialog('isOpen') == true) {
-                $('#events').dialog('close').remove();
-            } else {
-                // We store the values in the name attribute as serialized
-                // string.
-                $.post(OC.filePath('cafevdb', 'ajax/events', 'events.php'),
-                       values, CAFEVDB.Events.UI.init, 'json');
-            }
-            break;
-        case 'brief-instrumentation':
-        case 'detailed-instrumentation':
-        case 'project-instruments':
-        case 'sepa-debit-mandates':
-            values += '&Template='+selected;
-            values += '&headervisibility='+CAFEVDB.headervisibility;
-
-            CAFEVDB.formSubmit(OC.linkTo('cafevdb', 'index.php'), values, 'post');
+        switch (selectedValue) {
+            // The next 5 actions cannot reasonably loaded in a
+            // popup-box.
+          case 'brief-instrumentation':
+          case 'detailed-instrumentation':
+          case 'sepa-debit-mandates':
+            post.Template = selectedValue;
+            post.headervisibility = CAFEVDB.headervisibility;
+            CAFEVDB.formSubmit(OC.linkTo('cafevdb', 'index.php'), $.param(post), 'post');
             break;
         case 'profit-and-loss':
         case 'project-files':
-            var url    = OC.linkTo('files', 'index.php');
-            var values = 'dir='+optionValues[1];
+            var url  = OC.linkTo('files', 'index.php');
+            var path = selected.data('project-files');
+            CAFEVDB.formSubmit(url, $.param({dir: path}), 'get');
+            break;
 
-            CAFEVDB.formSubmit(url, values, 'get');
+            // The following three can easily be opened in popup
+            // dialogs which is more convenient as it does not destroy
+            // the original view.
+        case 'events':
+            Projects.eventsPopup(post);
+            break;
+        case 'project-instruments':
+            Projects.instrumentationNumbersPopup(containerSel, post);
             break;
         case 'project-wiki':
-            if (false) {
-                var url    = OC.linkTo('dokuwikiembed', 'index.php');
-                var values = 'wikiPath='+CAFEVDB.urlencode('/doku.php?id=')+optionValues[1];
-                CAFEVDB.formSubmit(url, values, 'post');
-            } else {
-                var wikiPage = selectedOption.attr('data-wikipage');
-                var popupTitle = selectedOption.attr('data-wikititle');
-                DWEmbed.wikiPopup(wikiPage, popupTitle);                
-            }
+            post.wikiPage = selected.data('wikiPage');
+            post.popupTitle = selected.data('wikiTitle');
+            Projects.wikiPopup(post);
             break;
         default:
             OC.dialogs.alert(t('cafevdb', 'Unknown operation:')
@@ -113,10 +186,8 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
     };
 
     Projects.actionMenu = function(containerSel) {
-        if (typeof containerSel === 'undefined') {
-            containerSel = PHPMYEDIT.defaultSelector;
-        }
-        var container = $(containerSel);
+        containerSel = PHPMYEDIT.selector(containerSel);
+        var container = PHPMYEDIT.container(containerSel);
         var projectActions = container.find('select.project-actions');
 
         // emulate per-project action pull down menu via chosen
@@ -125,7 +196,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
         projectActions.change(function(event) {
             event.preventDefault();
             
-            return Projects.actions($(this));
+            return Projects.actions($(this), containerSel);
         });  
         projectActions.off('chosen:showing_dropdown');
         projectActions.on('chosen:showing_dropdown', function (chosen) {
@@ -506,6 +577,11 @@ $(document).ready(function(){
                     var iframe = $(self);
                     var contents = iframe.contents();
 
+                    // in order to be prepared for automatic reloads
+                    // caused by resize or redraw events we have to
+                    // update the src-uri of the iframe.
+                    // alert('src: '+ self.contentWindow.location.href);
+
                     var wrapper = contents.find('#rex-wrapper');
                     var website = contents.find('#rex-website');
                     var rexForm = wrapper.find('form#REX_FORM');
@@ -626,23 +702,76 @@ $(document).ready(function(){
                 }    
             }
 
-            container.find('div.photo, #cafevdb_inline_image_wrapper').click(function(event) {
+            container.find('div.photo, #cafevdb_inline_image_wrapper').on('click', 'img', function(event) {
                 event.preventDefault();
                 CAFEVDB.Photo.popup(this);
                 return false;
             });
 
-            container.find('.wiki-popup').click(function(event) {
-                event.preventDefault();
+            var toolbox = container.find('fieldset.projectToolbox');
+            if (toolbox.length > 0) {
+                // If any of the 3 dialogs is already open, move it to top.
+                var popup;
+                if ((popup = $('#events')).dialog('isOpen') === true) {
+                    popup.dialog('moveToTop');
+                    popup.dialog('option', 'position', {
+                        my: 'left top',
+                        at: 'left+20px top+60px',
+                        of: window
+                    });
+                }
+                if ((popup = $('#event')).dialog('isOpen') === true) {
+                    popup.dialog('moveToTop');
+                    popup.dialog('option', 'position', {
+                        my: 'left top',
+                        at: 'left+40px top+40px',
+                        of: window
+                    });
+                }
+                if ((popup = $('#dokuwiki_popup')).dialog('isOpen') === true) {
+                    popup.dialog('moveToTop');
+                    popup.dialog('option', 'position', {
+                        my: 'center top',
+                        at: 'center top+20px',
+                        of: window
+                    });                    
+                }
+                if ((popup = $('#project-instruments-dialog')).dialog('isOpen') === true) {
+                    popup.dialog('moveToTop');
+                    popup.dialog('option', 'position', {
+                        my: 'right top',
+                        at: 'right-20px top+30px',
+                        of: window
+                    });                    
+                }
 
-                var wikiPage = $(this).attr('data-wikipage');
-                var popupTitle = $(this).attr('data-wikititle');
-                DWEmbed.wikiPopup({wikiPage: wikiPage,
-                                   popupTitle: popupTitle,
-                                   modal: false});
-
-                return false;
-            });
+                var projectId = toolbox.data('projectId');
+                var projectName = toolbox.data('projectName');
+                var post = {
+                    ProjectId: projectId,
+                    Project: projectName
+                };
+                toolbox.off('click', '**'); // safeguard
+                toolbox.on('click', 'button.project-wiki',
+                           function(event) {
+                               self = $(this);
+                               post.wikiPage = self.data('wikiPage');
+                               post.popupTitle = self.data('wikiTitle');
+                               Projects.wikiPopup(post);
+                               return false;
+                           });
+                toolbox.on('click', 'button.events',
+                           function(event) {
+                               Projects.eventsPopup(post);
+                               return false;
+                           });
+                toolbox.on('click', 'button.project-instruments',
+                           function(event) {
+                               Projects.instrumentationNumbersPopup(selector, post);
+                               return false;
+                           });
+            };
+            return false;
         },
         context: CAFEVDB.Projects,
         parameters: []

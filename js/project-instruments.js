@@ -115,11 +115,15 @@ var CAFEVDB = CAFEVDB || {};
   };
 
   // Emulate a pull-down menu via chosen jQuery plugin
-  ProjectInstruments.actionMenu = function(containerSel) {
+  ProjectInstruments.actionMenu = function(containerSel, callback) {
     var container = PHPMYEDIT.container(containerSel);
     var actions = container.find('select.pme-instrumentation-actions-choice');
 
-    actions.chosen({ disable_search:true });  
+    actions.off('chosen:showing_dropdown');
+    actions.on('chosen:showing_dropdown', function (chosen) {
+      container.find('ul.chosen-results li.active-result').tipsy({gravity:'w', fade:true});
+    });
+
     actions.off('change'); // safeguard
     actions.change(function (event) {
       event.preventDefault();
@@ -127,10 +131,24 @@ var CAFEVDB = CAFEVDB || {};
       return ProjectInstruments.actions($(this), container);
     });
 
-    actions.off('chosen:showing_dropdown');
-    actions.on('chosen:showing_dropdown', function (chosen) {
-      container.find('ul.chosen-results li.active-result').tipsy({gravity:'w', fade:true});
-    });
+    var countDown = 2;
+    if (typeof callback == 'function') {
+      actions.on('chosen:ready', function() {
+        --countDown;
+        if (countDown == 0) {
+
+          // set to auto and fix later for correct size and
+          // scrollbars when necessary.
+          container.css({
+            height: 'auto',
+            width: 'auto'
+          });
+          callback();
+        }
+      });
+    }
+
+    actions.chosen({ disable_search:true });
   };
 
   ProjectInstruments.openAddInstrumentsDialog = function(selector) {
@@ -179,20 +197,19 @@ var CAFEVDB = CAFEVDB || {};
                            OC.Notification.show(rqData.message);
                          }
                          // Oops. Perhaps only submit on success.
+                         // Close the dialog
+                         $(self).dialog("close");
+
+                         // submit the form with the "right" button,
+                         // i.e. save any possible changes already
+                         // entered by the user. The form-submit
+                         // will then also reload with an up to date
+                         // list of instruments
+                         PHPMYEDIT.triggerSubmit('morechange', container);
+
                          setTimeout(function() {
-                           OC.Notification.hide(function() {
-                             // Close the dialog
-                             $(self).dialog("close");
-
-                             // submit the form with the "right" button,
-                             // i.e. save any possible changes already
-                             // entered by the user. The form-submit
-                             // will then also reload with an up to date
-                             // list of instruments
-                             PHPMYEDIT.triggerSubmit('morechange', container);
-                           });
-                         }, 800);
-
+                           OC.Notification.hide();
+                         }, 5000);
                        } else if (data.status == 'error') {
                          rqData = data.data;
                          if (rqData.error != 'exception') {
@@ -247,10 +264,14 @@ var CAFEVDB = CAFEVDB || {};
     });
   };
 
-  ProjectInstruments.ready = function(selector) {
+  ProjectInstruments.ready = function(selector, callback) {
     var container = PHPMYEDIT.container(selector);
-
     var self = this;
+
+    var select = container.find('select.pme-instrumentation-actions-choice');
+    if (select.length <= 0) {
+      return;
+    }
 
     // Enable the controls, in order not to bloat SQL queries these PME
     // fields are flagged virtual which disables all controls initially.
@@ -260,12 +281,12 @@ var CAFEVDB = CAFEVDB || {};
     container.find('#add-instruments-button').off('click');
     container.find('#add-instruments-button').click(function(event) {
       event.preventDefault();
-
+      
       self.openAddInstrumentsDialog(container);
-
+      
       return false;
     });
-    this.actionMenu(container);
+    this.actionMenu(container, callback);
   }
 
   CAFEVDB.ProjectInstruments = ProjectInstruments;
@@ -277,8 +298,8 @@ $(document).ready(function(){
   PHPMYEDIT.addTableLoadCallback('ProjectInstruments',
                                  {
                                    callback: function(selector, resizeCB) {
-                                     CAFEVDB.ProjectInstruments.ready(selector);
-                                     resizeCB();
+                                     CAFEVDB.ProjectInstruments.ready(selector, resizeCB);
+                                     //resizeCB();
                                    },
                                    context: CAFEVDB.ProjectInstruments,
                                    parameters: []

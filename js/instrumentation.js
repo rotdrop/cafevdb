@@ -200,7 +200,7 @@ $(document).ready(function(){
       var container = $(selector);
       CAFEVDB.exportMenu(selector);
       container.find('input.pme-email').addClass('formsubmit');
-      container.find('span.photo, #cafevdb_inline_image_wrapper').click(function(event) {
+      container.find('span.photo, #cafevdb_inline_image_wrapper').on('click', 'img', function(event) {
         event.preventDefault();
         CAFEVDB.Photo.popup(this);
         return false;

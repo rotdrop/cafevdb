@@ -116,7 +116,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
     var button = button = $(outerForm).find('input[name$="morechange"],'+
                                             'input[name$="applyadd"],'+
-                                            'input[name$="applycopy"]');
+                                            'input[name$="applycopy"],'+
+                                            'input[name$="reloadview"]');
     if (button.length > 0) {
       button = button.first(); // don't trigger up _and_ down buttons.
       button.trigger('click');
@@ -146,7 +147,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
     var reloadName  = options.ReloadName;
     var reloadValue = options.ReloadValue;
 
-    var containerSel = '#'+pme.dialogCSSId;
+    var containerSel = '#'+options.DialogHolderCSSId;
     var container = $(containerSel);
     var contentsChanged = false;
     
@@ -182,7 +183,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                // editors may cause additional resizing
                CAFEVDB.addEditor(container.find('textarea.wysiwygeditor'), function() {
                  container.dialog('option', 'height', 'auto');
-                 container.dialog('option', 'position', pme.popupPosition);
+                 //container.dialog('option', 'position', pme.popupPosition);
 
                  // re-attach events
                  pme.tableDialogHandlers(options, callback);
@@ -222,7 +223,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
       callback = function() { return false; };
     }
     
-    var containerSel = '#'+pme.dialogCSSId;
+    var containerSel = '#'+options.DialogHolderCSSId;
     var container = $(containerSel);
     var contentsChanged = false;
 
@@ -274,8 +275,9 @@ var PHPMYEDIT = PHPMYEDIT || {};
         var reloadValue = submitButton.val();
         options.ReloadName = reloadName;
         options.ReloadValue = reloadValue;
-        options.modified = !(submitButton.hasClass('pme-change') || submitButton.hasClass('pme-reload'));
-
+        if (!submitButton.hasClass('pme-change') && !submitButton.hasClass('pme-reload')) {
+          options.modified = true;
+        }
         pme.tableDialogReload(options, callback);
 
         return false;
@@ -384,7 +386,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
    * submit". In particular, we assume PME "view operation" if element
    * carries a CSS class "pme-viewXXXXX" with XXXXX being anything.
    */
-  PHPMYEDIT.tableDialog = function(form, element) {
+  PHPMYEDIT.tableDialog = function(form, element, containerSel) {
     var pme  = this;
 
     var post = form.serialize();
@@ -416,23 +418,54 @@ var PHPMYEDIT = PHPMYEDIT || {};
     }
 
     var tableOptions = {
+      AmbientContainerSelector: pme.selector(containerSel),
+      DialogHolderCSSId: pme.dialogCSSId,
       DisplayClass: dpyClass,
       InitialViewOperation: viewOperation,
       InitialName: initialName,
       InitialValue: initialValue,
       ReloadName: initialName,
       ReloadValue: initialValue,
+      ModalDialog: true,
       modified: false // avoid reload of base table unless necessary
     };
-    post += '&' + $.param(tableOptions);
+    pme.tableDialogOpen(tableOptions, post);
+    return true;
+  };
 
+  /**Open directly the popup holding the form data. We listen for the
+   * custom event 'pmedialog:changed' on the DialogHolder. This event fill
+   * be forwarded to the AmbientContainer. The idea is that we can
+   * update the "modified" component of chained dialogs in a reliable
+   * way.
+   *
+   * @param tableOptions Option array, see above
+   * 
+   * @param post Additional query parameters. In principle it is also
+   * possible to store all values in tableOptions, as this is added to
+   * the query-string in any case.
+   *
+   * 
+   */
+  PHPMYEDIT.tableDialogOpen = function(tableOptions, post) {
+    var pme = this;
+
+    if (typeof tableOptions.ModalDialog == 'undefined') {
+      tableOptions.ModalDialog = true;
+    }
+    if (typeof post == 'undefined') {
+      post = $.param(tableOptions);
+    } else {
+      post += '&' + $.param(tableOptions);
+    }
+    var containerCSSId = tableOptions.DialogHolderCSSId;
     $.post(OC.filePath('cafevdb', 'ajax/pme', 'pme-table.php'),
            post,
            function (data) {
-             var containerSel = '#'+pme.dialogCSSId;
+             var containerSel = '#'+containerCSSId;
              var dialogHolder;
              if (data.status == 'success') {
-               dialogHolder = $('<div id="'+pme.dialogCSSId+'"></div>');
+               dialogHolder = $('<div id="'+containerCSSId+'"></div>');
                dialogHolder.html(data.data.contents);
                 $('body').append(dialogHolder);
                dialogHolder = $(containerSel);
@@ -453,12 +486,18 @@ var PHPMYEDIT = PHPMYEDIT || {};
                }
                return false;
              }
+             dialogHolder.on('pmedialog:changed', function(event) {
+               //alert('Changed: '+containerCSSId);
+               tableOptions.modified = true;
+               return true; // let it bubble upwards ...
+             });
+
              var popup = dialogHolder.dialog({
                title: dialogHolder.find('span.pme-short-title').html(),
                position: pme.popupPosition,
                width: 'auto',
                height: 'auto',
-               modal: true,
+               modal: tableOptions.ModalDialog,
                closeOnEscape: false,
                dialogClass: 'pme-table-dialog no-close',
                resizable: false,
@@ -468,6 +507,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
                  //tmp.dialog('close');
                  var dialogHolder = $(this);
                  var dialogWidget = dialogHolder.dialog('widget');
+
+                 CAFEVDB.dialogToBackButton(dialogWidget);
 
                  dialogWidget.addClass('pme-table-dialog-blocked');
 
@@ -481,7 +522,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                      dialogHolder.css('height', 'auto');
                      CAFEVDB.addEditor(dialogHolder.find('textarea.wysiwygeditor'), function() {
                        pme.transposeReady(containerSel);
-                       pme.tableLoadCallback(dpyClass, containerSel, function() {
+                       pme.tableLoadCallback(tableOptions.DisplayClass, containerSel, function() {
                          dialogHolder.dialog('option', 'height', 'auto');
                          dialogHolder.dialog('option', 'width', 'auto');
                          var newHeight = dialogWidget.height()
@@ -490,6 +531,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                          //alert("Setting height to " + newHeight);
                          dialogHolder.height(newHeight);
                          dialogWidget.removeClass('pme-table-dialog-blocked');
+                         dialogHolder.dialog('moveToTop');
                        });
                        CAFEVDB.tipsy(containerSel);
                      });
@@ -501,7 +543,9 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
                  //alert($.param(tableOptions));
                  if (tableOptions.modified === true) {
-                   pme.submitOuterForm();
+                   //alert("Changed, triggerring on "+tableOptions.AmbientContainerSelector);
+                   $(tableOptions.AmbientContainerSelector).trigger('pmedialog:changed');
+                   pme.submitOuterForm(tableOptions.AmbientContainerSelector);
                  }
 
                  dialogHolder.dialog('close');
@@ -532,7 +576,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
       pmepfx = 'pme';
     }
 
-    var selector = this.selector(selector);
+    selector = this.selector(selector);
     var container = this.container(selector);
 
     var dpyClass = form.find('input[name="DisplayClass"]');
@@ -769,7 +813,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
         event.preventDefault();
         event.stopImmediatePropagation();
 
-        PHPMYEDIT.tableDialog($(this.form), $(this));
+        PHPMYEDIT.tableDialog($(this.form), $(this), containerSel);
 
         return false;
       });

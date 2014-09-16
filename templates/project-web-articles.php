@@ -77,10 +77,10 @@ try {
     echo '    <li id="cmsarticle-tab-nopage"><a href="#projectArticle-nopage">'.L::t('nothing').'</a></li>
 ';
   }
-  echo '    <li id="cmsarticle-tab-newpage" class="tip" title="'.Config::toolTips('project-web-article-add').'"><a href="#projectArticle-newpage">'.'+'.'</a></li>
+  echo '    <li id="cmsarticle-tab-newpage" class="tip" title="'.Config::toolTips('project-web-article-add').'"><a href="#projectArticle-newpage" class="compact">'.'<span class="ui-icon ui-icon-plusthick">+</span>'.'</a></li>
 ';
   if ($cnt > 0) {
-    echo '    <li id="cmsarticle-tab-deletepage" class="tip" title="'.Config::toolTips('project-web-article-delete').'"><a href="#projectArticle-deletepage">'.'-'.'</a></li>
+    echo '    <li id="cmsarticle-tab-deletepage" class="tip" title="'.Config::toolTips('project-web-article-delete').'"><a href="#projectArticle-deletepage" class="compact">'.'<span class="ui-icon ui-icon-minusthick">-</span>'.'</a></li>
 ';
   }
   echo '  </ul>
