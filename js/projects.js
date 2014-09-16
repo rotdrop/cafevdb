@@ -54,7 +54,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
                             popupTitle: post.popupTitle,
                             modal: false },
                           function(dwDialog, dwDialogWidget) {
-                              CAFEVDB.dialogToBackButton(dwDialogWidget);
+                              CAFEVDB.dialogToBackButton(dwDialog);
                           });
     };
 

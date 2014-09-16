@@ -411,13 +411,14 @@ var CAFEVDB = CAFEVDB || {};
    * purpose is to be able to move the top-dialog to be bottom-most,
    * juse above a potential "modal" window layer.
    */
-  CAFEVDB.dialogToBackButton = function(dialogWidget) {
+  CAFEVDB.dialogToBackButton = function(dialogHolder) {
+    var dialogWidget = dialogHolder.dialog('widget');
     var toBackButtonTitle = t('cafevdb',
                               'If multiple dialogs are open, '+
                               'then move this one to the lowest layer '+
                               'and display it below the others. '+
                               'Clicking anywhere on the dialog will bring to the front again.');
-    var toBackButton = $('<button class="toBackButton" title="'+toBackButtonTitle+'"></button>');
+    var toBackButton = $('<button class="toBackButton customDialogHeaderButton" title="'+toBackButtonTitle+'"></button>');
     toBackButton.button({label: '_',
                          icons: { primary: 'ui-icon-minusthick', secondary: null },
                          text: false});
@@ -447,7 +448,44 @@ var CAFEVDB = CAFEVDB || {};
       dialogWidget.css('z-index', overlayIndex + 1);
       return false;
     });
-  };     
+  };
+
+  /**jQuery UI just is not flexible enough. We want to be able to
+   * completely intercept the things the close button initiates. I
+   * just did not find any other way than to hide the close button
+   * completely and add another button with the same layout instead,
+   * but this time with complete control over the events triggered bz
+   * this button. GNAH. BIG GNAH!
+   * 
+   * If callback is undefined, then simply call the close
+   * method. Otherwise it is called like callback(event, dialogHolder).
+   * 
+   */
+  CAFEVDB.dialogCustomCloseButton = function(dialogHolder, callback) {
+    var dialogWidget = dialogHolder.dialog('widget');
+    var customCloseButtonTitle = t('cafevdb',
+                                   'Close the current dialog and return to the view '+
+                                   'which was active before this dialog had been opened. '+
+                                   'If the current view shows a `Back\' button, then intentionally '+
+                                   'clicking the close-button (THIS button) should just be '+
+                                   'equivalent to clicking the `Back\' button');
+    var customCloseButton = $('<button class="customCloseButton customDialogHeaderButton" title="'+customCloseButtonTitle+'"></button>');
+    customCloseButton.button({label: 'x',
+                              icons: { primary: 'ui-icon-closethick', secondary: null },
+                              text: false});
+    dialogWidget.find('.ui-dialog-titlebar').append(customCloseButton);
+    customCloseButton.tipsy({gravity: 'ne', fade: true });
+
+    customCloseButton.off('click');
+    customCloseButton.on('click', function(event) {
+      if (typeof callback == 'function') {
+        callback(event, dialogHolder)
+      } else {
+        dialogHolder.dialog('close');
+      }
+      return false;
+    });
+  };
 
   /**Initialize our tipsy stuff. Only exchange for our own thingies, of course.
    */

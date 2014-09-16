@@ -79,7 +79,7 @@ var CAFEVDB = CAFEVDB || {};
         open  : function(){
           //$('.tipsy').remove();
 
-          CAFEVDB.dialogToBackButton($(this).dialog('widget'));
+          CAFEVDB.dialogToBackButton($(this));
 
           $('button').tipsy({gravity:'ne', fade:true});
           $('input').tipsy({gravity:'ne', fade:true});

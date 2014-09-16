@@ -499,7 +499,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                height: 'auto',
                modal: tableOptions.ModalDialog,
                closeOnEscape: false,
-               dialogClass: 'pme-table-dialog no-close',
+               dialogClass: 'pme-table-dialog custom-close',
                resizable: false,
                open: function() {
 
@@ -508,7 +508,15 @@ var PHPMYEDIT = PHPMYEDIT || {};
                  var dialogHolder = $(this);
                  var dialogWidget = dialogHolder.dialog('widget');
 
-                 CAFEVDB.dialogToBackButton(dialogWidget);
+                 CAFEVDB.dialogToBackButton(dialogHolder);
+                 CAFEVDB.dialogCustomCloseButton(dialogHolder, function(event, container) {
+                   var cancelButton = container.find('.pme-cancel');
+                   if (cancelButton.length > 0) {
+                     event.stopImmediatePropagation();
+                     cancelButton.trigger('click');
+                   }
+                   return false;
+                 });
 
                  dialogWidget.addClass('pme-table-dialog-blocked');
 
@@ -520,6 +528,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                    function() {
 
                      dialogHolder.css('height', 'auto');
+
                      CAFEVDB.addEditor(dialogHolder.find('textarea.wysiwygeditor'), function() {
                        pme.transposeReady(containerSel);
                        pme.tableLoadCallback(tableOptions.DisplayClass, containerSel, function() {
@@ -537,7 +546,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                      });
                    });
                },
-               close: function() {
+               close: function(event) {
                  $('.tipsy').remove();
                  var dialogHolder = $(this);
 

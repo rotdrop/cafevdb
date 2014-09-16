@@ -247,7 +247,7 @@ hr.pme-hr {
   height:28px;
   vertical-align:middle;
   margin-top:0px;
-  font-size:0pt;
+  text-indent: -99999px;
   margin-left:48px;
 }
 

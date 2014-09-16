@@ -180,7 +180,7 @@ Calendar={
 				resizable: false,
 //				draggable: false,
                                 open  : function() {
-                                        CAFEVDB.dialogToBackButton($(this).dialog('widget'));
+                                        CAFEVDB.dialogToBackButton($(this));
                                 },
 				close : function(event, ui) {
 					$(this).dialog('destroy').remove();

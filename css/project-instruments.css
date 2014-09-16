@@ -64,6 +64,10 @@
  *
  */
 
+#project-instruments-dialog {
+  overflow:unset;
+}
+
 /* make popups scrollable in smaller viewports */
 .ui-dialog.cafevdb-project-instruments {
   max-height: 75% !important;

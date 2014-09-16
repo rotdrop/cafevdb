@@ -133,16 +133,10 @@ var CAFEVDB = CAFEVDB || {};
 
     var countDown = 2;
     if (typeof callback == 'function') {
+      actions.off('chosen:ready');
       actions.on('chosen:ready', function() {
         --countDown;
         if (countDown == 0) {
-
-          // set to auto and fix later for correct size and
-          // scrollbars when necessary.
-          container.css({
-            height: 'auto',
-            width: 'auto'
-          });
           callback();
         }
       });
