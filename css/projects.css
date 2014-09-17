@@ -56,6 +56,12 @@ td[class$="projectextra"] textarea {
   width: 95%;
 }
 
+td[class$="projectinstrumentation"] div.chosen-container {
+  max-width:40em;
+  min-width:20em;
+  width:auto !important;
+}
+
 div.cmsarticlecontainer {
   padding: 0 !important;
   /*height:0px;*/
@@ -77,4 +83,20 @@ div.cmsarticlecontainer {
 }
 
 #cmsFrameLoader img {
+}
+
+#projectArticle-linkpage {
+  overflow:visible; /* for chosen */
+  min-height:10em;
+}
+
+#projectArticle-linkpage [class^="chosen"] {
+  border-radius:3px !important;
+/*  border:1px solid #AAA;*/
+  background-color: #FFF !important;
+}
+
+#cmsarticleselect_chosen {
+  min-width:20em !important;
+  width:auto;
 }

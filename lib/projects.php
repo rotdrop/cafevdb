@@ -296,23 +296,6 @@ class Projects
       'sort'     => false
       );
 
-    $opts['fdd']['Programm'] = array(
-      'name'     => L::t('Program'),
-      'input'    => 'V',
-      'options'  => 'VCDA', 
-      'select'   => 'T',
-      'maxlen'   => 65535,
-      'css'      => array('postfix' => 'projectremarks'),
-      'sql'      => 'Id',
-      'sqlw'     => 'Id',
-      'php|CV'    => array('type' => 'function',
-                          'function' => 'CAFEVDB\Projects::projectProgramPME',
-                          'parameters' => array()),
-      'sort'     => true,
-      'escape' => false
-      );
-
-
     $handle = mySQL::connect(Config::$pmeopts);
     $groupedInstruments = Instruments::fetchGrouped($handle);
     $instruments        = Instruments::fetch($handle);
@@ -378,6 +361,22 @@ This changes the displayed ordering of the columns but the mapping
 to the data-base table remains consistetnt. Optionally, the string after an
 optional second colon is displayed as a "tool-tip". The tool-tip must not contain
 a comma.'));
+
+    $opts['fdd']['Programm'] = array(
+      'name'     => L::t('Program'),
+      'input'    => 'V',
+      'options'  => 'VCDA', 
+      'select'   => 'T',
+      'maxlen'   => 65535,
+      'css'      => array('postfix' => 'projectremarks'),
+      'sql'      => 'Id',
+      'sqlw'     => 'Id',
+      'php|CV'    => array('type' => 'function',
+                          'function' => 'CAFEVDB\Projects::projectProgramPME',
+                          'parameters' => array()),
+      'sort'     => true,
+      'escape' => false
+      );
 
     $opts['fdd']['Flyer'] = array(
       'input' => 'V',
@@ -678,21 +677,23 @@ a comma.'));
       $articleIds[$article['ArticleId']] = $idx;
     }
     
+    $categories = array(array('id' => Config::getValue('redaxoPreview'),
+                              'name' => L::t('Preview')),
+                        array('id' => Config::getValue('redaxoArchive'),
+                              'name' => L::t('Archive')),
+                        array('id' => Config::getValue('redaxoTrashbin'),
+                              'name' => L::t('Trashbin')));
     $detachedPages = array();
-    if ($action == 'add' || $action == 'modify') {
+    foreach ($categories as $category) {
       // Fetch all articles and remove those already registered
-
-      $detachedPages = $rex->articleByName('.*');
-      if ($detachedPages === false) {
-        $detachedPages = array(array('ArticleId' => -1,
-                                     'CategoryId' => -1,
-                                     'ArticleName' => L::t("Error"),
-                                     'Priority' => -1));
-      } else {
-        foreach ($detachedPages as $idx => $article) {
-          if (isset($articleIds[$article['ArticleId']])) {
-            unset($detachedPages[$idx]);
-          }
+      $pages = $rex->articlesByName('.*', $category['id']);
+      \OCP\Util::writeLog(Config::APP_NAME, "Projects: ".$category['id'], \OC_LOG::DEBUG);
+      if (is_array($pages)) {
+        foreach ($pages as $idx => $article) {
+          $article['CategoryName'] = $category['name'];
+          $article['Linked'] = isset($articleIds[$article['ArticleId']]);
+          $detachedPages[] = $article;
+          \OCP\Util::writeLog(Config::APP_NAME, "Projects: ".print_r($article, true), \OC_LOG::DEBUG);
         }
       }
     }
@@ -700,7 +701,7 @@ a comma.'));
     $tmpl = new \OCP\Template(Config::APP_NAME, 'project-web-articles');
     $tmpl->assign('projectId', $projectId);
     $tmpl->assign('projectArticles', $webPages);
-    $tmpl->assign('detachtedArticles', $detachedPages);
+    $tmpl->assign('detachedArticles', $detachedPages);
     $urlTemplate = $rex->redaxoURL('%ArticleId%', $action == 'change');
     if ($action != 'change') {
       $urlTemplate .= '&rex_version=1';
@@ -1210,6 +1211,7 @@ __EOT__;
    * @param $handle mySQL handle.
    *
    */
+
   public static function attachProjectWebPage($projectId, $article, $handle = false)
   {
     $ownConnection = $handle === false;
@@ -1232,15 +1234,28 @@ __EOT__;
       "`Priority` = ".$article['Priority'];
 
     $result = mySQL::query($query, $handle);
-    if ($result === false) {
-      \OCP\Util::writeLog(Config::APP_NAME, "Query ".$query." failed", \OC_LOG::DEBUG);
-    }
-
     if ($ownConnection) {
       mySQL::close($handle);
     }
 
-    return $result;
+    if ($result === false) {
+      \OCP\Util::writeLog(Config::APP_NAME, "Query ".$query." failed", \OC_LOG::DEBUG);
+    } else {
+      // Try to remove from trashbin, if appropriate.
+      $trashCategory = Config::getValue('redaxoTrashbin');
+      $previewCategory = Config::getValue('redaxoPreview');
+      if ($article['CategoryId'] == $trashCategory) {
+        $redaxoLocation = \OCP\Config::GetAppValue('redaxo', 'redaxolocation', '');
+        $rex = new \Redaxo\RPC($redaxoLocation);
+        $articleId = $article['ArticleId'];
+        $result = $rex->moveArticle($articleId, $previewCategory);
+        if ($result === false) {
+          \OCP\Util::writeLog(Config::APP_NAME, "Failed moving ".$articleId." to ".$previewCategory, \OC_LOG::DEBUG);
+        }
+      }
+    }
+
+    return $result !== false;
   }
 
   /**Set the name of all registered web-pages to the canonical name,
@@ -1955,51 +1970,28 @@ project without a flyer first.");
 
     $page = L::t('====== Project %s ======
 
-===== Introduction =====
+===== Forword =====
 
-==== Forword ====
-
-Please keep in mind that the following suggestions are just what they are:
-//suggestions// to give you a start and some ideas about what might be
-useful content for this page. Please keep in mind that there is also a
-dedicated storage area in the OwnCloud where large data-files can be
-stored, for instance image data for flyers and programs, letters and
-so on.
-
-This wiki-page is primarily meant for remembering textual
-information which is in some sense "permanent" for this
-project. Placing such information here spares us the need for
-permanent data-diggin in our email box.
-
-Please do not hesitage to click on the pencil-symbol just at the right
-of this text-box. Editing wiki-content is really-really simple. Please
-just try out! The text below show just some examples. The most basic
-formatting operations are available through buttons on top of the
-editor window (of course: only after you dared to click the edit
-button). More thorough documentation can be found in the
-[[doku>de:dokuwiki|wiki which documents DocuWiki itself]].
+This wiki-page is useful to store selected project related
+informations in comfortable and structured form. This can be useful
+for "permant information" like details about supplementary fees,
+contact informations and the like. In particular, this page could be
+helpful to reduce unnecessary data-digging in our email box.
 
 ===== Contacts =====
 Please add any relevant email and mail-adresses here. Please use the wiki-syntax
-<code>* [[foobar@important.com|Mister Universe]]</code>  
 * [[foobar@important.com|Mister Universe]]
 
 ===== Financial Arrangements =====
 Please add any special financial arrangements here. For example:
 single-room fees, double-roome fees. Please consider using an
 unordered list for this like so:
-<code>
   * single room fee: 3000€
   * double room fee: 6000€
-  * fee for Cello-players: 1500€
-</code>
-  * single room fee: 3000€
-  * double room fee: 6000€
-  * fee for Cello-players: 1500€
+  * supplemenrary fee for Cello-players: 1500€
 
 ===== Location =====
-Please feel free to add any nice pictures and/or descriptions or whatever
-here. This paragraph is primarily meant for personal amusement.',
+Whatever.',
                  array($projectName));
     
     $pagename = self::projectWikiLink($projectName);

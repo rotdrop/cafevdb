@@ -349,6 +349,16 @@ div.cafevdb-note a:hover {
  *
  *****************************************************************************/
 
+.cafevdb-link-icon {
+  background-image:url('../img/link36.svg') !important;
+  background-repeat:no-repeat;
+}
+
+.cafevdb-unlink-icon {
+  background-image:url('../img/brokenlink36.svg') !important;
+  background-repeat:no-repeat;
+}
+
 .ui-tabs a.ui-tabs-anchor.compact {
   padding:0.5em;
 }

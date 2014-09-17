@@ -145,7 +145,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
         case 'profit-and-loss':
         case 'project-files':
             var url  = OC.linkTo('files', 'index.php');
-            var path = selected.data('project-files');
+            var path = selected.data('projectFiles');
             CAFEVDB.formSubmit(url, $.param({dir: path}), 'get');
             break;
 
@@ -331,11 +331,23 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
     ///
     /// { Action: delete,
     ///   ArticleId: XX,
-    ///   ProjectId: XX }
+    ///   ProjectId: XX,
+    ///   ArticleData: JSON }
     ///
     /// { Action: add,
     ///   ProjectId: XX,
-    ///   ArticleId: XX }
+    ///   ArticleId: XX,
+    ///   ArticleData: JSON }
+    /// 
+    /// { Action: link,
+    ///   ProjectId: XX,
+    ///   ArticleId: XX,
+    ///   ArticleData: JSON }
+    /// 
+    /// { Action: unlink,
+    ///   ProjectId: XX,
+    ///   ArticleId: XX,
+    ///   ArticleData: JSON }
     /// 
     /// For Action 'add' a negative ArticleId triggers the geneation
     /// of a new article, otherwise it is the id of an existing
@@ -385,20 +397,46 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
     Projects.projectWebPageTabHandler = function(event, ui, container) {
         var tabId = ui.newTab.attr('id');
         //alert('id' + tabId);
+        var projectId;
+        var articleId;
+        var articleData;
         switch (tabId) {
           case 'cmsarticle-tab-newpage':
             event.stopImmediatePropagation();
-            var projectId = ui.oldPanel.data('projectid');
+            projectId = ui.oldPanel.data('projectId');
             // just do it ...
             Projects.projectWebPageRequest({ Action: 'add',
                                              ArticleId: -1,
                                              ProjectId: projectId },
                                            container);
             return false;
+          case 'cmsarticle-tab-unlinkpage':
+            event.stopImmediatePropagation();
+            articleId = ui.oldPanel.data('articleId');
+            projectId = ui.oldPanel.data('projectId');
+            articleData = ui.oldPanel.data('article');
+            OC.dialogs.confirm(
+                t('cafevdb', 'Really unlink the displayed event announcement?'),
+                t('cafevdb', 'Unlink Web-Page with Id {ArticleId}?',
+                  { ArticleId: articleId }),
+                function(answer) {
+                    if (!answer) {
+                        return;
+                    }
+                    // do it ...
+                    Projects.projectWebPageRequest({ Action: 'unlink',
+                                                     ArticleId: articleId,
+                                                     ArticleData: articleData,
+                                                     ProjectId: projectId },
+                                                   container);
+                },
+                true);          
+            return false;
           case 'cmsarticle-tab-deletepage':
             event.stopImmediatePropagation();
-            var articleId = ui.oldPanel.data('articleid');
-            var projectId = ui.oldPanel.data('projectid');
+            articleId = ui.oldPanel.data('articleId');
+            projectId = ui.oldPanel.data('projectId');
+            articleData = ui.oldPanel.data('article');
             OC.dialogs.confirm(
                 t('cafevdb', 'Really delete the displayed event announcement?'),
                 t('cafevdb', 'Delete Web-Page with Id {ArticleId}?',
@@ -410,6 +448,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
                     // do it ...
                     Projects.projectWebPageRequest({ Action: 'delete',
                                                      ArticleId: articleId,
+                                                     ArticleData: articleData,
                                                      ProjectId: projectId },
                                                    container);
                 },
@@ -474,6 +513,36 @@ $(document).ready(function(){
             var allChangeFrames = articleBox.find('.cmsarticleframe.change');
             var allContainers = articleBox.find('.cmsarticlecontainer');
 
+            var articleSelect = container.find('#cmsarticleselect');
+            articleSelect.chosen({width: 'auto',
+                                  disable_search_threshold: 10,
+                                  no_result_text: t('cafevdb','No values match')});
+            articleSelect.on('chosen:showing_dropdown', function() {
+                articleBox.css('overflow', 'visible');
+                return false;
+            });
+            articleSelect.on('chosen:hiding_dropdown', function() {
+                articleBox.css('overflow', 'hidden');
+                return false;
+            });
+
+            articleSelect.on('change', function(event) {
+                event.preventDefault();
+
+                var projectId = articleSelect.data('projectId');
+                var selected  = articleSelect.find('option:selected');
+                var articleId = selected.val();
+                var articleData = selected.data('article');
+                // just do it ...
+                Projects.projectWebPageRequest({ Action: 'link',
+                                                 ArticleId: articleId,
+                                                 ProjectId: projectId,
+                                                 ArticleData: articleData },
+                                               container);
+
+                return false;
+            });
+
             var scrollbarAdjust = function() {
                 var scrollBarWidth = containerNode.offsetWidth - containerNode.clientWidth;
                 articleBox.css('margin-right', scrollBarWidth + 'px');
@@ -507,10 +576,13 @@ $(document).ready(function(){
                                                'width': 'unset'});
                     contents.find('#content').css({'width': 'auto',
                                                    'height': '100%'});
-                    contents.find('div.item-text').css({ 'width': 'auto',
-                                                         'margin-left': '50px',
-                                                         'left': 'unset',
-                                                         'position': 'unset' });
+                    var itemText = contents.find('div.item-text');
+                    itemText.css({ 'width': '700px',
+                                   //'min-width': '600px',
+                                   'margin-left': '10px',
+                                   'left': 'unset',
+                                   'position': 'unset' });
+                    itemText.children(':not(div.marginalie)').css('margin', '0px 10px 1em 300px');
 
                     var scrollWidth = self.contentWindow.document.body.scrollWidth;
                     var scrollHeight = self.contentWindow.document.body.scrollHeight;
@@ -661,12 +733,16 @@ $(document).ready(function(){
                                 imagePoller(function() {
                                     resizeCB();
                                     scrollbarAdjust();
+                                    //$('#cmsarticleselect_chosen').width('80%');
                                 });
                             },
                             activate: function(event, ui) {
                                 var iframe = ui.newPanel.find('iframe');
                                 if (iframe.length == 1) {
                                     forceSize(iframe);
+                                } else {
+                                    resizeCB();
+                                    scrollbarAdjust();
                                 }
                             },
                             beforeActivate: function(event, ui) {

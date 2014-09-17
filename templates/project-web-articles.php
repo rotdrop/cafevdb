@@ -26,6 +26,7 @@ CAFEVDB\Error::exceptions(true);
 
 use CAFEVDB\Projects;
 use CAFEVDB\Config;
+use CAFEVDB\Navigation;
 use CAFEVDB\L;
 
 /* For each public web-page related to the project (usually just one)
@@ -52,7 +53,11 @@ use CAFEVDB\L;
  *
  * $_['detachedArticles'] may contain articles present in the CMS but
  * (not yet) linked to the project. We generate a select box in order
- * to add those to the project.
+ * to add those to the project. Articles in this array have two
+ * additional fields (besides ArticleName and ArticleId):
+ * CategoryName, which should be used to form optiongroup tags and
+ * "Linked" which is true iff the article is alreaday attached to the
+ * project.
  *
  * $_['action'] should be one of 'add', 'display' or 'change' in order
  * to indicate the action the user is trying to perform.
@@ -79,7 +84,11 @@ try {
   }
   echo '    <li id="cmsarticle-tab-newpage" class="tip" title="'.Config::toolTips('project-web-article-add').'"><a href="#projectArticle-newpage" class="compact">'.'<span class="ui-icon ui-icon-plusthick">+</span>'.'</a></li>
 ';
+  echo '    <li id="cmsarticle-tab-linkpage" class="tip" title="'.Config::toolTips('project-web-article-linkpage').'"><a href="#projectArticle-linkpage" class="compact">'.'<span class="ui-icon cafevdb-link-icon">link</span>'.'</a></li>
+';
   if ($cnt > 0) {
+    echo '    <li id="cmsarticle-tab-unlinkpage" class="tip" title="'.Config::toolTips('project-web-article-unlinkpage').'"><a href="#projectArticle-unlinkpage" class="compact">'.'<span class="ui-icon cafevdb-unlink-icon">link</span>'.'</a></li>
+';
     echo '    <li id="cmsarticle-tab-deletepage" class="tip" title="'.Config::toolTips('project-web-article-delete').'"><a href="#projectArticle-deletepage" class="compact">'.'<span class="ui-icon ui-icon-minusthick">-</span>'.'</a></li>
 ';
   }
@@ -94,8 +103,9 @@ try {
     echo '
   <div id="projectArticle-'.$nr.'"
        class="cmsarticlecontainer cafev"
-       data-articleid="'.$article['ArticleId'].'"
-       data-projectid="'.$projectId.'">
+       data-article-id="'.$article['ArticleId'].'"
+       data-article="'.htmlspecialchars(json_encode($article)).'"
+       data-project-id="'.$projectId.'">
     <iframe '.($_['action'] != 'change' ? 'scrolling="no"' : 'scrolling="no"').'
           src="'.$url.'"
           class="cmsarticleframe '.$_['action'].'"
@@ -108,8 +118,8 @@ try {
   if ($cnt == 0) {
     echo '  <div id="projectArticle-nopage"
        class="cmsarticlecontainer cafev"
-       data-articleid="'.$article['ArticleId'].'"
-       data-projectid="'.$projectId.'">
+       data-article-id="-1"
+       data-project-id="'.$projectId.'">
     <div id="cmsarticle-nopage" class="cmsarticleframe '.$_['action'].'">'.L::t("No public web pages registered for this project").'</div>
   </div>
 ';    
@@ -118,11 +128,67 @@ try {
     <div id="cmsarticle-newpage" class="cmsarticleframe '.$_['action'].'">'.L::t("Create new public web page for this project.").'</div>
   </div>
 ';    
+  echo '  <div id="projectArticle-linkpage" class="cmsarticlecontainer cafev">
+    <div id="cmsarticle-linkpage" class="cmsarticleframe '.$_['action'].'">';
+  echo '
+<select size="10"
+        name="cmsarticleselect"
+        id="cmsarticleselect"
+        class="cmsarticleselect"
+        data-placeholder="'.L::t('Attach existing Pages').'"
+        title="'.Config::toolTips('project-web-article-linkpage-select').'"
+        data-project-id="'.$projectId.'">
+  <option></option>';
+  while ($_['detachedArticles'][0]['Linked']) {
+    array_shift($_['detachedArticles']);
+  }
+  if (count($_['detachedArticles']) > 0) {
+    $oldGroup = $_['detachedArticles'][0]['CategoryName'];
+    echo '
+  <optgroup label="'.$oldGroup.'">';
+  }
+  foreach($_['detachedArticles'] as $article) {
+    if ($article['Linked']) {
+      // Skip linked articles, the idea is then to submit on double-click
+      continue;
+    }
+    $group = $article['CategoryName'];
+    if ($group != $oldGroup) {
+      echo '
+  </optgroup>
+  <optgroup label="'.$group.'">';
+      $oldGroup = $group;
+    }
+    unset($article['CategoryName']);
+    unset($article['Linked']);
+    $option = array('type' => 'option',
+                    'value' => $article['ArticleId'],
+                    'name' => $article['ArticleName'],
+                    'data' => array('article' => json_encode($article)));
+    if ($article['Linked']) {
+      $option['selected'] = 'selected';
+    }
+    echo Navigation::htmlTagsFromArray(array($option));
+  }
+  if (count($_['detachedArticles']) > 0) {
+    echo '
+  </optrgroup>';
+  }
+  echo '    
+</select>';
+  echo '
+    </div>
+  </div>
+';    
   if ($cnt > 0) {
+    echo '  <div id="projectArticle-unlinkpage" class="cmsarticlecontainer cafev">
+    <div id="cmsarticle-unlinkpage" class="cmsarticleframe '.$_['action'].'">'.L::t("Unlink a web-article.").'</div>
+  </div>
+';
     echo '  <div id="projectArticle-deletepage" class="cmsarticlecontainer cafev">
     <div id="cmsarticle-deletepage" class="cmsarticleframe '.$_['action'].'">'.L::t("Delete a web article.").'</div>
   </div>
-';    
+';
   }
   echo '</div>
 ';

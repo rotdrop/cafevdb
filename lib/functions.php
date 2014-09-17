@@ -752,8 +752,12 @@ class Navigation
 ';
         break;
       case 'option':
+        $selected = '';
+        if (isset($tag['selected']) && $tag['selected'] !== false) {
+          $selected = ' selected="selected"';
+        }
         $html .= ''
-          .'<option '.$class.$value.$title.$data.$id.$style.'>'.$name.'</option>
+          .'<option '.$class.$value.$title.$data.$id.$style.$selected.'>'.$name.'</option>
 ';
         break;
       default:

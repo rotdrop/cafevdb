@@ -290,6 +290,12 @@ has been ``closed\'\'.'),
       'project-web-article-delete' => L::t('Delete the currently displayed web-page fromthe project. The web page will be "detached" from the project and moved to the trash-bin
 "category" (folger) inside the CMS.'),
 
+      'project-web-article-linkpage' => L::t("Link existing pages to the project. This can be used, for instance, in order to add a page to the project which has not been created by hitting the `+'-button above, but was created directly in the CMS backend. When linking articles from the `trashbin' category then those articles will automatically moved to the `preview' category; this is some not-so-hidden undelete feature.z"),
+
+      'project-web-article-linkpage-select' => L::t("Please select articles to link to the current project. The articles will be immediately added to the project if you select them. In order to remove the article, please use the `-' button above."),
+
+      'project-web-article-unlinkpage' => L::t("Detach the currently displayed event announcement from the project. Primarily meant to provide means to undo erroneous linking of articles."),
+
       'project-name-yearattach' => L::t('Append the year to the name if checked.
 Regardless of this checkbox any decimal digit will first be stripped from the end
 of the project name before the year is added.'),

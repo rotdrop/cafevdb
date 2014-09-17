@@ -42,9 +42,10 @@ try {
   
   Config::init();
 
-  $action = Util::cgiValue('Action', '');
-  $projectId = Util::cgiValue('ProjectId', -1);
-  $articleId = Util::cgiValue('ArticleId', -1);
+  $action      = Util::cgiValue('Action', '');
+  $projectId   = Util::cgiValue('ProjectId', -1);
+  $articleId   = Util::cgiValue('ArticleId', -1);
+  $articleData = Util::cgiValue('ArticleData', array());
 
   if ($projectId < 0) {
     $debugText .= ob_get_contents();
@@ -56,11 +57,24 @@ try {
     return false;
   }
 
+  if (count($articleData) > 0 && $articleId >= 0 &&
+      $articleData['ArticleId'] != $articleId) {
+    $debugText .= ob_get_contents();
+    @ob_end_clean();
+    OC_JSON::error(
+      array("data" => array(
+              "message" => L::t("Submitted article id %d ".
+                                "does not match the id %d stored in the article-data.",
+                                  array($articleId, $articleData['ArticleId'])),
+              "debug" => $debugText)));
+    return false;
+  }
+
   $message = $debugText;
   $errorMessage = false;
 
-  switch ($action) {
-  case 'delete':
+  if ($action != 'add') {
+    // require both, ArticleId and ArticleData
     if ($articleId < 0) {
       $debugText .= ob_get_contents();
       @ob_end_clean();
@@ -70,26 +84,61 @@ try {
                 "debug" => $debugText)));
       return false;
     }
+    if (count($articleData) == 0) {
+      $debugText .= ob_get_contents();
+      @ob_end_clean();
+      OC_JSON::error(
+        array("data" => array(
+                "message" => L::t("Cannot perform action `%s' with article with id %d, project with id %d: ".
+                                  "missing article-data.",
+                                  array($action, $articleId, $projectId)),
+                "debug" => $debugText)));
+      return false;
+    }
+  }
+
+  switch ($action) {
+  case 'delete':
     if (Projects::deleteProjectWebPage($projectId, $articleId)) {
-      $message = L::t("Removed public web page with id %d from project with id %d.",
-                      array($articleId, $projectId));
+      $message = L::t("Removed public web page %s (id %d) from the project with id %d.",
+                      array($articleData['ArticleName'], $articleId, $projectId));
     } else {
-      $errorMessage = L::t("Failed to remove public web page with id %d from project with id %d.",
-                           array($articleId, $projectId));
+      $errorMessage = L::t("Failed to remove public web page %s (id %d) from the project with id %d.",
+                           array($articleData['ArticleName'], $articleId, $projectId));
     }
     break;
   case 'add':
-    if ($articleId < 0) {
-      // This simply means: create a new page for the project.
-      $article = Projects::createProjectWebPage($projectId);
-      if ($article === false) {
-        $errorMmessage = L::t("Failed to create a new public web page for project with id %d.",
-                              array($projectId));
-      } else {
-        $message = L::t("Created a new public web page with name %s and id %d ".
-                        "for project with id %d",
-                        array($article['ArticleName'], $article['ArticleId'], $projectId));
+    // This simply means: create a new page for the project.
+    $article = Projects::createProjectWebPage($projectId);
+    if ($article === false) {
+      $errorMmessage = L::t("Failed to create a new public web page for the project with id %d.",
+                            array($projectId));
+    } else {
+      $message = L::t("Created a new public web page with name %s and id %d ".
+                      "for project the with id %d",
+                      array($article['ArticleName'], $article['ArticleId'], $projectId));
+    }
+  case 'link':
+    if (Projects::attachProjectWebPage($projectId, $articleData) === false) {
+      $errorMmessage = L::t("Failed to add the article %s (id = %d) to the project with id %d.",
+                            array($articleData['ArticleName'], $articleId, $projectId));
+    } else {
+      $message = L::t("Linked the existing public web-article %s (id %d) to the project with id %d",
+                        array($articleData['ArticleName'], $articleId, $projectId));
+      // If this was a trash-bin article, then move it to the preview category.
+      $trashCategory = Config::getValue('redaxoTrashbin');
+      if ($articleData['CategoryId'] == $trashCategory) {
+        
       }
+    }
+    break;
+  case 'unlink':
+    if (Projects::detachProjectWebPage($projectId, $articleId) === false) {
+      $errorMmessage = L::t("Failed to detach the article %s (id = %d) from the project with id %d.",
+                            array($articleData['ArticleName'], $articleId, $projectId));
+    } else {
+      $message = L::t("Detached the public web-article %s (id %d) from the project with id %d",
+                      array($articleData['ArticleName'], $articleId, $projectId));
     }
     break;
   default:

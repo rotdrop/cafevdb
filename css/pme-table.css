@@ -624,8 +624,9 @@ td.pme-value-1-projectinstrumentation, td.pme-value-0-projectinstrumentation {
 }
 
 table.pme-main [class^="chosen"] {
-  border-radius: 0.5em !important;
-  background-color: rgb(244, 244, 244) !important;
+  /* border-radius: 0.5em !important; */
+  /* background-color: rgb(244, 244, 244) !important; */
+  border-radius: 3px;
 }
 
 table.pme-main select[class^="pme-filter"] {
