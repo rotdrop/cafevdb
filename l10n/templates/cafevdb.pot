@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-16 17:53+0200\n"
+"POT-Creation-Date: 2014-09-18 01:01+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -50,7 +50,7 @@ msgstr ""
 #: ajax/instrumentation/change-project-instrument.php:118
 #: ajax/instruments/adjustInstrumentation.php:91
 #: ajax/instruments/changeInstrumentation.php:148 ajax/pme/pme-table.php:118
-#: ajax/projects/verifyName.php:164 ajax/projects/web-articles.php:134
+#: ajax/projects/verifyName.php:164 ajax/projects/web-articles.php:183
 msgid "Error, caught an exception"
 msgstr ""
 
@@ -193,16 +193,16 @@ msgstr ""
 msgid "%s-detailed"
 msgstr ""
 
-#: ajax/export/excel.php:260 lib/projects.php:1505 lib/projects.php:1506
+#: ajax/export/excel.php:260 lib/projects.php:1520 lib/projects.php:1521
 msgid "Missing Musicians"
 msgstr ""
 
 #: ajax/export/excel.php:285 ajax/export/insurance-export.php:142
-#: lib/projects.php:1508
+#: lib/projects.php:1523
 msgid "Instrument"
 msgstr ""
 
-#: ajax/export/excel.php:286 lib/projects.php:1508
+#: ajax/export/excel.php:286 lib/projects.php:1523
 msgid "Missing"
 msgstr ""
 
@@ -560,43 +560,79 @@ msgid ""
 "Please choose a different name or year."
 msgstr ""
 
-#: ajax/projects/web-articles.php:54
+#: ajax/projects/web-articles.php:55
 #, php-format
 msgid "Invalid or unset project-id: `%s'"
 msgstr ""
 
-#: ajax/projects/web-articles.php:69
+#: ajax/projects/web-articles.php:66
+#, php-format
+msgid ""
+"Submitted article id %d does not match the id %d stored in the article-data."
+msgstr ""
+
+#: ajax/projects/web-articles.php:83
 #, php-format
 msgid "Invalid or unset article-id: `%s'"
 msgstr ""
 
-#: ajax/projects/web-articles.php:74
-#, php-format
-msgid "Removed public web page with id %d from project with id %d."
-msgstr ""
-
-#: ajax/projects/web-articles.php:77
-#, php-format
-msgid "Failed to remove public web page with id %d from project with id %d."
-msgstr ""
-
-#: ajax/projects/web-articles.php:86
-#, php-format
-msgid "Failed to create a new public web page for project with id %d."
-msgstr ""
-
-#: ajax/projects/web-articles.php:89
+#: ajax/projects/web-articles.php:92
 #, php-format
 msgid ""
-"Created a new public web page with name %s and id %d for project with id %d"
+"Cannot perform action `%s' with article with id %d, project with id %d: "
+"missing article-data."
 msgstr ""
 
-#: ajax/projects/web-articles.php:100
+#: ajax/projects/web-articles.php:103
+#, php-format
+msgid "Removed public web page %s (id %d) from the project with id %d."
+msgstr ""
+
+#: ajax/projects/web-articles.php:106
+#, php-format
+msgid ""
+"Failed to remove public web page %s (id %d) from the project with id %d."
+msgstr ""
+
+#: ajax/projects/web-articles.php:114
+#, php-format
+msgid "Failed to create a new public web page for the project with id %d."
+msgstr ""
+
+#: ajax/projects/web-articles.php:117
+#, php-format
+msgid ""
+"Created a new public web page with name %s and id %d for project the with id "
+"%d"
+msgstr ""
+
+#: ajax/projects/web-articles.php:123
+#, php-format
+msgid "Failed to add the article %s (id = %d) to the project with id %d."
+msgstr ""
+
+#: ajax/projects/web-articles.php:126
+#, php-format
+msgid ""
+"Linked the existing public web-article %s (id %d) to the project with id %d"
+msgstr ""
+
+#: ajax/projects/web-articles.php:137
+#, php-format
+msgid "Failed to detach the article %s (id = %d) from the project with id %d."
+msgstr ""
+
+#: ajax/projects/web-articles.php:140
+#, php-format
+msgid "Detached the public web-article %s (id %d) from the project with id %d"
+msgstr ""
+
+#: ajax/projects/web-articles.php:149
 #, php-format
 msgid "Unhandled or empty request: `%s'"
 msgstr ""
 
-#: ajax/projects/web-articles.php:117
+#: ajax/projects/web-articles.php:166
 msgid "Error: "
 msgstr ""
 
@@ -903,15 +939,15 @@ msgstr ""
 msgid "header-visibility changed"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:29
+#: ajax/settings/redaxo-settings.php:29 lib/projects.php:681
 msgid "Preview"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:30
+#: ajax/settings/redaxo-settings.php:30 lib/projects.php:683
 msgid "Archive"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:31
+#: ajax/settings/redaxo-settings.php:31 lib/projects.php:685
 msgid "Trashbin"
 msgstr ""
 
@@ -954,8 +990,7 @@ msgstr ""
 #: js/inlineimage.js:102 js/inlineimage.js:131 js/inlineimage.js:155
 #: js/inlineimage.js:183 js/inlineimage.js:201 js/inlineimage.js:320
 #: js/inlineimage.js:406 js/inlineimage.js:415 js/inlineimage.js:418
-#: js/pme.js:483 js/pme.js:627 js/sepa-debit-mandate.js:62
-#: lib/projects.php:689
+#: js/pme.js:483 js/pme.js:636 js/sepa-debit-mandate.js:62
 msgid "Error"
 msgstr ""
 
@@ -1000,11 +1035,19 @@ msgstr ""
 msgid "Unimplemented"
 msgstr ""
 
-#: js/cafevdb.js:416
+#: js/cafevdb.js:417
 msgid ""
 "If multiple dialogs are open, then move this one to the lowest layer and "
 "display it below the others. Clicking anywhere on the dialog will bring to "
 "the front again."
+msgstr ""
+
+#: js/cafevdb.js:467
+msgid ""
+"Close the current dialog and return to the view which was active before this "
+"dialog had been opened. If the current view shows a `Back' button, then "
+"intentionally clicking the close-button (THIS button) should just be "
+"equivalent to clicking the `Back' button"
 msgstr ""
 
 #: js/calendar.js:237
@@ -1071,7 +1114,7 @@ msgstr ""
 msgid "Do you really want to detach this event from the current project?"
 msgstr ""
 
-#: js/events.js:58 js/events.js:112 js/pme.js:477 js/pme.js:621
+#: js/events.js:58 js/events.js:112 js/pme.js:477 js/pme.js:630
 #: js/sepa-debit-mandate.js:56
 msgid "Unknown error :("
 msgstr ""
@@ -1123,7 +1166,7 @@ msgstr ""
 msgid "Ok"
 msgstr ""
 
-#: js/inlineimage.js:267 js/project-instruments.js:235 lib/email.php:1594
+#: js/inlineimage.js:267 js/project-instruments.js:229 lib/email.php:1594
 #: templates/blogedit.php:39
 msgid "Cancel"
 msgstr ""
@@ -1163,25 +1206,25 @@ msgid "Photo Zoom"
 msgstr ""
 
 #: js/instrumentation.js:77 js/project-instruments.js:63
-#: js/project-instruments.js:217
+#: js/project-instruments.js:211
 msgid "Unkown Error"
 msgstr ""
 
 #: js/instrumentation.js:82 js/pme.js:359 js/project-instruments.js:68
-#: js/project-instruments.js:222 js/projects.js:274 js/projects.js:360
+#: js/project-instruments.js:216 js/projects.js:274 js/projects.js:372
 msgid "Caught a PHP Exception"
 msgstr ""
 
-#: js/instrumentation.js:86 js/pme.js:485 js/pme.js:629
-#: js/project-instruments.js:226
+#: js/instrumentation.js:86 js/pme.js:485 js/pme.js:638
+#: js/project-instruments.js:220
 msgid "Debug Information"
 msgstr ""
 
-#: js/pme.js:733
+#: js/pme.js:742
 msgid "#columns"
 msgstr ""
 
-#: js/pme.js:742
+#: js/pme.js:751
 msgid "#rows"
 msgstr ""
 
@@ -1189,34 +1232,47 @@ msgstr ""
 msgid "Unknown operation:"
 msgstr ""
 
-#: js/project-instruments.js:160
+#: js/project-instruments.js:154
 msgid "Change Project Instrumentation"
 msgstr ""
 
-#: js/project-instruments.js:171 js/sepa-debit-mandate.js:99
+#: js/project-instruments.js:165 js/sepa-debit-mandate.js:99
 msgid "Save"
 msgstr ""
 
-#: js/project-instruments.js:173
+#: js/project-instruments.js:167
 msgid ""
 "Save the new instrumentation and continue adjusting the instrumentation "
 "numbers. The input-form will reload and display the updated list of "
 "instruments."
 msgstr ""
 
-#: js/project-instruments.js:238
+#: js/project-instruments.js:232
 msgid ""
 "Discard the current choice of instruments and close the dialog. The "
 "instrumentation of the project will remain unchanged."
 msgstr ""
 
-#: js/projects.js:403
+#: js/projects.js:419
+msgid "Really unlink the displayed event announcement?"
+msgstr ""
+
+#: js/projects.js:420
+#, python-brace-format
+msgid "Unlink Web-Page with Id {ArticleId}?"
+msgstr ""
+
+#: js/projects.js:441
 msgid "Really delete the displayed event announcement?"
 msgstr ""
 
-#: js/projects.js:404
+#: js/projects.js:442
 #, python-brace-format
 msgid "Delete Web-Page with Id {ArticleId}?"
+msgstr ""
+
+#: js/projects.js:519
+msgid "No values match"
 msgstr ""
 
 #: js/sepa-debit-mandate.js:83 templates/share-settings.php:48
@@ -1309,7 +1365,7 @@ msgstr ""
 msgid "General Personal Data"
 msgstr ""
 
-#: lib/brief-instrumentation.php:58 lib/functions.php:859 lib/projects.php:759
+#: lib/brief-instrumentation.php:58 lib/functions.php:863 lib/projects.php:760
 msgid "Detailed Instrumentation"
 msgstr ""
 
@@ -1430,8 +1486,8 @@ msgstr ""
 msgid "and"
 msgstr ""
 
-#: lib/email.php:1452 lib/projects.php:746 lib/projects.php:950
-#: lib/projects.php:974
+#: lib/email.php:1452 lib/projects.php:747 lib/projects.php:951
+#: lib/projects.php:975
 msgid "Events"
 msgstr ""
 
@@ -1668,116 +1724,116 @@ msgstr ""
 msgid "HTML Export"
 msgstr ""
 
-#: lib/functions.php:760
+#: lib/functions.php:764
 msgid "Error: Unknonwn Button Type"
 msgstr ""
 
-#: lib/functions.php:783
+#: lib/functions.php:787
 msgid "View all Projects"
 msgstr ""
 
-#: lib/functions.php:784
+#: lib/functions.php:788
 msgid "Overview over all known projects (start-page)."
 msgstr ""
 
-#: lib/functions.php:796
+#: lib/functions.php:800
 msgid "Display all Musicians"
 msgstr ""
 
-#: lib/functions.php:797
+#: lib/functions.php:801
 msgid ""
 "Display all musicians stored in the data-base, with detailed facilities for "
 "filtering and sorting."
 msgstr ""
 
-#: lib/functions.php:809
+#: lib/functions.php:813
 msgid ""
 "Mass-email form, use with care. Mass-emails will be logged. Recipients will "
 "be specified by the Bcc: field in the header, so the recipients are "
 "undisclosed to each other."
 msgstr ""
 
-#: lib/functions.php:823
+#: lib/functions.php:827
 msgid "Email History"
 msgstr ""
 
-#: lib/functions.php:824
+#: lib/functions.php:828
 msgid "Display all emails sent by our mass-email form."
 msgstr ""
 
-#: lib/functions.php:843
+#: lib/functions.php:847
 msgid "The currently active project."
 msgstr ""
 
-#: lib/functions.php:860 lib/tooltips.php:271
+#: lib/functions.php:864 lib/tooltips.php:271
 msgid ""
 "Detailed display of all registered musicians for the selected project. The "
 "table will allow for modification of personal data like email, phone, "
 "address etc."
 msgstr ""
 
-#: lib/functions.php:874 lib/projects.php:754
+#: lib/functions.php:878 lib/projects.php:755
 msgid "Brief Instrumentation"
 msgstr ""
 
-#: lib/functions.php:875
+#: lib/functions.php:879
 msgid ""
 "Brief display of all registered musicians for the selected project. The "
 "table will allow for modification of project specific data, like the "
 "instrument, the project-fee etc."
 msgstr ""
 
-#: lib/functions.php:889 lib/project-instruments.php:386
+#: lib/functions.php:893 lib/project-instruments.php:386
 msgid "Add Instruments"
 msgstr ""
 
-#: lib/functions.php:890
+#: lib/functions.php:894
 msgid ""
 "Display the list of instruments known by the data-base, possibly add new "
 "ones as needed."
 msgstr ""
 
-#: lib/functions.php:904 lib/project-instruments.php:69 lib/projects.php:764
-#: lib/projects.php:956
+#: lib/functions.php:908 lib/project-instruments.php:69 lib/projects.php:765
+#: lib/projects.php:957
 msgid "Instrumentation Numbers"
 msgstr ""
 
-#: lib/functions.php:905 lib/tooltips.php:284
+#: lib/functions.php:909 lib/tooltips.php:284
 msgid ""
 "Display the desired instrumentaion numbers, i.e. how many musicians are "
 "already registered for each instrument group and how many are finally needed."
 msgstr ""
 
-#: lib/functions.php:919
+#: lib/functions.php:923
 msgid "Add more Musicians"
 msgstr ""
 
-#: lib/functions.php:920
+#: lib/functions.php:924
 msgid ""
 "List of all musicians NOT registered for the selected project. Only through "
 "that table a new musician can enter a project. Look for a hyper-link "
 "Add_to_PROJECT"
 msgstr ""
 
-#: lib/functions.php:934
+#: lib/functions.php:938
 msgid "Transfer Instruments from Musicians"
 msgstr ""
 
-#: lib/functions.php:950
+#: lib/functions.php:954
 msgid "Insurances"
 msgstr ""
 
-#: lib/functions.php:951
+#: lib/functions.php:955
 msgid ""
 "Display a table with an overview about the current state of the member's "
 "instrument insurances."
 msgstr ""
 
-#: lib/functions.php:963
+#: lib/functions.php:967
 msgid "Debit Mandates"
 msgstr ""
 
-#: lib/functions.php:964
+#: lib/functions.php:968
 msgid "Display a table with an overview over all SEPA debit mandates."
 msgstr ""
 
@@ -2109,15 +2165,11 @@ msgstr ""
 msgid "Append the year to the name"
 msgstr ""
 
-#: lib/projects.php:300
-msgid "Program"
-msgstr ""
-
-#: lib/projects.php:333
+#: lib/projects.php:316
 msgid "Toolbox"
 msgstr ""
 
-#: lib/projects.php:358
+#: lib/projects.php:341
 msgid ""
 "Comma separates list of extra-fields, e.g.\n"
 "<blockquote>\n"
@@ -2147,120 +2199,101 @@ msgid ""
 "a comma."
 msgstr ""
 
-#: lib/projects.php:384
+#: lib/projects.php:366
+msgid "Program"
+msgstr ""
+
+#: lib/projects.php:383
 msgid "Flyer"
 msgstr ""
 
-#: lib/projects.php:672
+#: lib/projects.php:671
 #, php-format
 msgid "Unable to fetch public web pages for project id %d"
 msgstr ""
 
-#: lib/projects.php:774 lib/projects.php:939
+#: lib/projects.php:775 lib/projects.php:940
 #, php-format
 msgid "Project Wiki for %s"
 msgstr ""
 
-#: lib/projects.php:776 lib/projects.php:943
+#: lib/projects.php:777 lib/projects.php:944
 msgid "Project Notes"
 msgstr ""
 
-#: lib/projects.php:782
+#: lib/projects.php:783
 msgid "Project Files"
 msgstr ""
 
-#: lib/projects.php:790
+#: lib/projects.php:791
 msgid "SEPA Debit Mandates"
 msgstr ""
 
-#: lib/projects.php:796
+#: lib/projects.php:797
 msgid "Profit and Loss Account"
 msgstr ""
 
-#: lib/projects.php:1686
+#: lib/projects.php:1701
 msgid ""
 "Flyers can only be added to existing projects, please add the new\n"
 "project without a flyer first."
 msgstr ""
 
-#: lib/projects.php:1701
+#: lib/projects.php:1716
 #, php-format
 msgid "Drop image to upload (max %s)"
 msgstr ""
 
-#: lib/projects.php:1704
+#: lib/projects.php:1719
 msgid "Delete current flyer"
 msgstr ""
 
-#: lib/projects.php:1705
+#: lib/projects.php:1720
 msgid "Edit current flyer"
 msgstr ""
 
-#: lib/projects.php:1706
+#: lib/projects.php:1721
 msgid "Upload new flyer"
 msgstr ""
 
-#: lib/projects.php:1707
+#: lib/projects.php:1722
 msgid "Select image from ownCloud"
 msgstr ""
 
-#: lib/projects.php:1715
+#: lib/projects.php:1730
 msgid ""
 "Internal error, don't know what to do concerning project-flyers in the given "
 "context."
 msgstr ""
 
-#: lib/projects.php:1956
+#: lib/projects.php:1971
 #, php-format
 msgid ""
 "====== Project %s ======\n"
 "\n"
-"===== Introduction =====\n"
+"===== Forword =====\n"
 "\n"
-"==== Forword ====\n"
-"\n"
-"Please keep in mind that the following suggestions are just what they are:\n"
-"//suggestions// to give you a start and some ideas about what might be\n"
-"useful content for this page. Please keep in mind that there is also a\n"
-"dedicated storage area in the OwnCloud where large data-files can be\n"
-"stored, for instance image data for flyers and programs, letters and\n"
-"so on.\n"
-"\n"
-"This wiki-page is primarily meant for remembering textual\n"
-"information which is in some sense \"permanent\" for this\n"
-"project. Placing such information here spares us the need for\n"
-"permanent data-diggin in our email box.\n"
-"\n"
-"Please do not hesitage to click on the pencil-symbol just at the right\n"
-"of this text-box. Editing wiki-content is really-really simple. Please\n"
-"just try out! The text below show just some examples. The most basic\n"
-"formatting operations are available through buttons on top of the\n"
-"editor window (of course: only after you dared to click the edit\n"
-"button). More thorough documentation can be found in the\n"
-"[[doku>de:dokuwiki|wiki which documents DocuWiki itself]].\n"
+"This wiki-page is useful to store selected project related\n"
+"informations in comfortable and structured form. This can be useful\n"
+"for \"permant information\" like details about supplementary fees,\n"
+"contact informations and the like. In particular, this page could be\n"
+"helpful to reduce unnecessary data-digging in our email box.\n"
 "\n"
 "===== Contacts =====\n"
 "Please add any relevant email and mail-adresses here. Please use the wiki-"
 "syntax\n"
-"<code>* [[foobar@important.com|Mister Universe]]</code>  \n"
 "* [[foobar@important.com|Mister Universe]]\n"
 "\n"
 "===== Financial Arrangements =====\n"
 "Please add any special financial arrangements here. For example:\n"
 "single-room fees, double-roome fees. Please consider using an\n"
 "unordered list for this like so:\n"
-"<code>\n"
 "  * single room fee: 3000€\n"
 "  * double room fee: 6000€\n"
-"  * fee for Cello-players: 1500€\n"
-"</code>\n"
-"  * single room fee: 3000€\n"
-"  * double room fee: 6000€\n"
-"  * fee for Cello-players: 1500€\n"
+"  * supplemenrary fee for Cello-players: 1500€\n"
 "\n"
 "===== Location =====\n"
-"Please feel free to add any nice pictures and/or descriptions or whatever\n"
-"here. This paragraph is primarily meant for personal amusement."
+"Whatever."
 msgstr ""
 
 #: lib/sepa-debit-mandates.php:51
@@ -2394,7 +2427,7 @@ msgid ""
 "Enter a short, no-nonsense name for the new template. Please omit spaces."
 msgstr ""
 
-#: lib/tooltips.php:89 templates/project-web-articles.php:77
+#: lib/tooltips.php:89 templates/project-web-articles.php:82
 msgid "nothing"
 msgstr ""
 
@@ -2683,7 +2716,7 @@ msgstr ""
 msgid "Open a page with the musicians registered for the respective project."
 msgstr ""
 
-#: lib/tooltips.php:273 lib/tooltips.php:297
+#: lib/tooltips.php:273 lib/tooltips.php:303
 msgid ""
 "Open a dialog with all known\n"
 "events associated to the project.\n"
@@ -2721,25 +2754,48 @@ msgstr ""
 
 #: lib/tooltips.php:293
 msgid ""
+"Link existing pages to the project. This can be used, for instance, in order "
+"to add a page to the project which has not been created by hitting the `+'-"
+"button above, but was created directly in the CMS backend. When linking "
+"articles from the `trashbin' category then those articles will automatically "
+"moved to the `preview' category; this is some not-so-hidden undelete feature."
+"z"
+msgstr ""
+
+#: lib/tooltips.php:295
+msgid ""
+"Please select articles to link to the current project. The articles will be "
+"immediately added to the project if you select them. In order to remove the "
+"article, please use the `-' button above."
+msgstr ""
+
+#: lib/tooltips.php:297
+msgid ""
+"Detach the currently displayed event announcement from the project. "
+"Primarily meant to provide means to undo erroneous linking of articles."
+msgstr ""
+
+#: lib/tooltips.php:299
+msgid ""
 "Append the year to the name if checked.\n"
 "Regardless of this checkbox any decimal digit will first be stripped from "
 "the end\n"
 "of the project name before the year is added."
 msgstr ""
 
-#: lib/tooltips.php:302
+#: lib/tooltips.php:308
 msgid ""
 "Delete the event from the system\n"
 "(no undo possible)."
 msgstr ""
 
-#: lib/tooltips.php:305
+#: lib/tooltips.php:311
 msgid ""
 "Exclude all events from\n"
 "email-submission"
 msgstr ""
 
-#: lib/tooltips.php:308
+#: lib/tooltips.php:314
 msgid ""
 "Detach the respective event\n"
 "from the project, but do not\n"
@@ -2749,34 +2805,34 @@ msgid ""
 "categories."
 msgstr ""
 
-#: lib/tooltips.php:315
+#: lib/tooltips.php:321
 msgid "Modify the event."
 msgstr ""
 
-#: lib/tooltips.php:317
+#: lib/tooltips.php:323
 msgid "Add a new concert-event to the project."
 msgstr ""
 
-#: lib/tooltips.php:319
+#: lib/tooltips.php:325
 msgid ""
 "Add a private management event which is not exposed to the rest of the world."
 msgstr ""
 
-#: lib/tooltips.php:321
+#: lib/tooltips.php:327
 msgid "Add some other event to the project."
 msgstr ""
 
-#: lib/tooltips.php:323
+#: lib/tooltips.php:329
 msgid "Add a new rehearsal-event to the project."
 msgstr ""
 
-#: lib/tooltips.php:325
+#: lib/tooltips.php:331
 msgid ""
 "Select all events for\n"
 "email-submission"
 msgstr ""
 
-#: lib/tooltips.php:328
+#: lib/tooltips.php:334
 msgid ""
 "Mark the respective event for being\n"
 "sent by email as ICS-attachment per email.\n"
@@ -2786,20 +2842,20 @@ msgid ""
 "recipients."
 msgstr ""
 
-#: lib/tooltips.php:335
+#: lib/tooltips.php:341
 msgid ""
 "Click to open an email-form\n"
 "and send the selected events to\n"
 "selected recipients."
 msgstr ""
 
-#: lib/tooltips.php:339
+#: lib/tooltips.php:345
 msgid ""
 "Add the musician to the project. A new form will open were details like the "
 "instrument etc. can be adjustetd."
 msgstr ""
 
-#: lib/tooltips.php:341
+#: lib/tooltips.php:347
 msgid ""
 "Save the current email for later re-usal in the data-base.\n"
 "An email template can contain per-member substitutions with the syntax "
@@ -2811,36 +2867,36 @@ msgid ""
 "by the pre-names of the organizing committe in order to compose  greetings."
 msgstr ""
 
-#: lib/tooltips.php:347
+#: lib/tooltips.php:353
 msgid "Select one of the email templates previously stored in the data-base."
 msgstr ""
 
-#: lib/tooltips.php:349
+#: lib/tooltips.php:355
 msgid ""
 "Recompute the link between projects and events, using the event-categories "
 "as primary key."
 msgstr ""
 
-#: lib/tooltips.php:351
+#: lib/tooltips.php:357
 msgid ""
 "Check whether the data-base can be accessed with the given account\n"
 "information and password. The password will only be stored in the\n"
 "configuration storage if the test can be performed successfully."
 msgstr ""
 
-#: lib/tooltips.php:355
+#: lib/tooltips.php:361
 msgid ""
 "Try to connect to the specified web-address, will open the web-address in "
 "another window or tab, depending your local browser preferences."
 msgstr ""
 
-#: lib/tooltips.php:357
+#: lib/tooltips.php:363
 msgid ""
 "Add the instruments of the actually registered musicians to the instrument-"
 "table for the project."
 msgstr ""
 
-#: lib/tooltips.php:359
+#: lib/tooltips.php:365
 msgid ""
 "Upload a file from your local computer as attachment. The file will be "
 "removed from the remote-system after the message has been sent."
@@ -3617,15 +3673,23 @@ msgstr ""
 msgid "Minimize or maximize the containing block."
 msgstr ""
 
-#: templates/project-web-articles.php:113
+#: templates/project-web-articles.php:123
 msgid "No public web pages registered for this project"
 msgstr ""
 
-#: templates/project-web-articles.php:118
+#: templates/project-web-articles.php:128
 msgid "Create new public web page for this project."
 msgstr ""
 
-#: templates/project-web-articles.php:123
+#: templates/project-web-articles.php:138
+msgid "Attach existing Pages"
+msgstr ""
+
+#: templates/project-web-articles.php:185
+msgid "Unlink a web-article."
+msgstr ""
+
+#: templates/project-web-articles.php:189
 msgid "Delete a web article."
 msgstr ""
 
