@@ -768,7 +768,7 @@ $(document).ready(function(){
                 } else {
                     displayArticleLoad();
                 }
-            } else {
+            } else if (allChangeFrames.length > 0) {
                 if (changeFrames.length > 0) {
                     changeFrames.on('load', function(event) {
                         changeArticleLoad(this);
@@ -776,6 +776,9 @@ $(document).ready(function(){
                 } else {
                     changeArticleLoad();
                 }    
+            } else {
+                // Just execute the resize callback:
+                resizeCB();
             }
 
             container.find('div.photo, #cafevdb_inline_image_wrapper').on('click', 'img', function(event) {

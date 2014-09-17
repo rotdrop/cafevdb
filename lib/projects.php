@@ -315,7 +315,7 @@ class Projects
     $opts['fdd']['Tools'] = array(
       'name'     => L::t('Toolbox'),
       'input'    => 'V',
-      'options'  => 'VCDA', 
+      'options'  => 'VCD', 
       'select'   => 'T',
       'maxlen'   => 65535,
       'css'      => array('postfix' => 'projectremarks'),
@@ -365,7 +365,7 @@ a comma.'));
     $opts['fdd']['Programm'] = array(
       'name'     => L::t('Program'),
       'input'    => 'V',
-      'options'  => 'VCDA', 
+      'options'  => 'VCD', 
       'select'   => 'T',
       'maxlen'   => 65535,
       'css'      => array('postfix' => 'projectremarks'),
@@ -382,7 +382,7 @@ a comma.'));
       'input' => 'V',
       'name' => L::t('Flyer'),
       'select' => 'T',
-      'options' => 'ACPDV',
+      'options' => 'CPDV',
       'sql' => 'Id',
       'php' => array(
         'type' => 'function',
