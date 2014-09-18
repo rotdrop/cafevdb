@@ -112,6 +112,41 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
         PHPMYEDIT.tableDialogOpen(tableOptions);
     };
 
+    /**Generate a popup for the "project (over-)view.
+     * 
+     * @param containerSel The ambient element of the container
+     * (i.e. the base page, or the div holding the dialog this one was
+     * initiated from.
+     * 
+     * @param past Arguments object:
+     * { Project: 'NAME', ProjectId: XX }
+     */
+    Projects.projectViewPopup = function(containerSel, post)
+    {
+        // Prepate the data-array for PHPMYEDIT.tableDialogOpen(). The
+        // instrumentation numbers are somewhat nasty and require too
+        // many options.
+
+        var tableOptions = {
+            AmbientContainerSelector: containerSel,
+            DialogHolderCSSId: 'project-overview', 
+            Template: 'projects',
+            DisplayClass: 'Projects',
+            headervisibility: CAFEVDB.headervisibility,
+            // Now special options for the dialog popup
+            InitialViewOperation: true,
+            InitialName: 'PME_sys_operation',
+            InitialValue: 'View',
+            ReloadName: 'PME_sys_operation',
+            ReloadValue: 'View',
+            PME_sys_operation: 'View',
+            PME_sys_rec: post.ProjectId,
+            ModalDialog: true,
+            modified: false
+        };
+        PHPMYEDIT.tableDialogOpen(tableOptions);
+    };
+
     /**Parse the user-selection from the project-actions menu.
      * 
      * Project-id and -name are contained in data-fields of the
@@ -133,6 +168,11 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
         };
 
         switch (selectedValue) {
+            // project overview itself ...
+          case 'project-infopage':
+            Projects.projectViewPopup(containerSel, post);
+            break;
+
             // The next 5 actions cannot reasonably loaded in a
             // popup-box.
           case 'brief-instrumentation':

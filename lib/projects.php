@@ -265,7 +265,8 @@ class Projects
       'name'     => L::t('Projekt-Name'),
       'php|LF'  => array('type' => 'function',
                          'function' => 'CAFEVDB\Projects::projectActionsPME',
-                         'parameters' => array("idIndex" => $idIdx)),
+                         'parameters' => array("idIndex" => $idIdx,
+                                               "overview" => true)),
       'display|APC' => array(//"prefix" => "prefix",
                             "postfix" => '<label
   title="'.Config::toolTips("project-name-yearattach").'">
@@ -288,6 +289,7 @@ class Projects
       'php|VCLDF'    => array('type' => 'function',
                               'function' => 'CAFEVDB\Projects::projectActionsPME',
                               'parameters' => array("idIndex" => $idIdx,
+                                                    "overview" => false,
                                                     "placeHolder" => L::t("Actions"))),
       'select'   => 'T',
       'options'  => 'VDR',
@@ -713,14 +715,15 @@ a comma.'));
     return $html;
   }
 
-  public static function projectActionsPME($projectName, $opts, $modify, $k, $fds, $fdd, $row)
+  public static function projectActionsPME($projectName, $opts, $action, $k, $fds, $fdd, $row)
   {
     $projectId   = $row["qf".$opts["idIndex"]];
     $placeHolder = isset($opts['placeHolder']) ? $opts['placeHolder'] : false;
-    return self::projectActions($projectId, $projectName, $placeHolder);
+    $overview = isset($opts['overview']) ? $opts['overview'] : false;
+    return self::projectActions($projectId, $projectName, $placeHolder, $overview);
   }
 
-  public static function projectActions($projectId, $projectName, $placeHolder = false)
+  public static function projectActions($projectId, $projectName, $placeHolder = false, $overview = false)
   {
     $projectPaths = self::maybeCreateProjectFolder($projectId, $projectName);
 
@@ -739,16 +742,19 @@ a comma.'));
           data-project-name="'.htmlspecialchars($projectName).'">
     <option value=""></option>
 '
+.($overview
+  ? Navigation::htmlTagsFromArray(
+    array('pre' => '<optgroup>', 'post' => '</optgroup>',
+          array('type' => 'option',
+                'title' => Config::toolTips('project-infopage'),
+                'value' => 'project-infopage',
+                'name' => L::t('Project Overview')
+            )
+      ))
+  : '')
 .Navigation::htmlTagsFromArray(
   array('pre' => '<optgroup>', 'post' => '</optgroup>',
-        array('type' => 'option',
-              'title' => Config::toolTips('project-action-events'),
-              'value' => 'events',
-              'name' => L::t('Events')
-          )
-    ))
-.Navigation::htmlTagsFromArray(
-  array('pre' => '<optgroup>', 'post' => '</optgroup>',
+
         array('type' => 'option',
               'title' => Config::toolTips('project-action-brief-instrumentation'),
               'value' => 'brief-instrumentation',
@@ -760,9 +766,10 @@ a comma.'));
               'name' => L::t('Detailed Instrumentation')
           ),
         array('type' => 'option',
-              'title' => Config::toolTips('project-action-instrumentation-numbers'),
-              'value' => 'project-instruments',
-              'name' => L::t('Instrumentation Numbers')
+              'title' => Config::toolTips('project-action-files'),
+              'value' => 'project-files',
+              'data' => array('projectFiles' => $projectPaths['project']),
+              'name' => L::t('Project Files')
           )
     ))
 .Navigation::htmlTagsFromArray(
@@ -777,10 +784,14 @@ a comma.'));
               'name' => L::t('Project Notes')
           ),
         array('type' => 'option',
-              'title' => Config::toolTips('project-action-files'),
-              'value' => 'project-files',
-              'data' => array('projectFiles' => $projectPaths['project']),
-              'name' => L::t('Project Files')
+              'title' => Config::toolTips('project-action-events'),
+              'value' => 'events',
+              'name' => L::t('Events')
+          ),
+        array('type' => 'option',
+              'title' => Config::toolTips('project-action-instrumentation-numbers'),
+              'value' => 'project-instruments',
+              'name' => L::t('Instrumentation Numbers')
           )
     ))
 .Navigation::htmlTagsFromArray(
