@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-18 01:01+0200\n"
+"POT-Creation-Date: 2014-09-18 04:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -193,16 +193,16 @@ msgstr ""
 msgid "%s-detailed"
 msgstr ""
 
-#: ajax/export/excel.php:260 lib/projects.php:1520 lib/projects.php:1521
+#: ajax/export/excel.php:260 lib/projects.php:1531 lib/projects.php:1532
 msgid "Missing Musicians"
 msgstr ""
 
 #: ajax/export/excel.php:285 ajax/export/insurance-export.php:142
-#: lib/projects.php:1523
+#: lib/projects.php:1534
 msgid "Instrument"
 msgstr ""
 
-#: ajax/export/excel.php:286 lib/projects.php:1523
+#: ajax/export/excel.php:286 lib/projects.php:1534
 msgid "Missing"
 msgstr ""
 
@@ -939,15 +939,15 @@ msgstr ""
 msgid "header-visibility changed"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:29 lib/projects.php:681
+#: ajax/settings/redaxo-settings.php:29 lib/projects.php:683
 msgid "Preview"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:30 lib/projects.php:683
+#: ajax/settings/redaxo-settings.php:30 lib/projects.php:685
 msgid "Archive"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:31 lib/projects.php:685
+#: ajax/settings/redaxo-settings.php:31 lib/projects.php:687
 msgid "Trashbin"
 msgstr ""
 
@@ -990,7 +990,7 @@ msgstr ""
 #: js/inlineimage.js:102 js/inlineimage.js:131 js/inlineimage.js:155
 #: js/inlineimage.js:183 js/inlineimage.js:201 js/inlineimage.js:320
 #: js/inlineimage.js:406 js/inlineimage.js:415 js/inlineimage.js:418
-#: js/pme.js:483 js/pme.js:636 js/sepa-debit-mandate.js:62
+#: js/pme.js:483 js/pme.js:638 js/sepa-debit-mandate.js:62
 msgid "Error"
 msgstr ""
 
@@ -1031,7 +1031,7 @@ msgstr ""
 msgid "Export to the following format is not yet supported:"
 msgstr ""
 
-#: js/cafevdb.js:334 js/project-instruments.js:87 js/projects.js:169
+#: js/cafevdb.js:334 js/project-instruments.js:87 js/projects.js:209
 msgid "Unimplemented"
 msgstr ""
 
@@ -1114,7 +1114,7 @@ msgstr ""
 msgid "Do you really want to detach this event from the current project?"
 msgstr ""
 
-#: js/events.js:58 js/events.js:112 js/pme.js:477 js/pme.js:630
+#: js/events.js:58 js/events.js:112 js/pme.js:477 js/pme.js:632
 #: js/sepa-debit-mandate.js:56
 msgid "Unknown error :("
 msgstr ""
@@ -1211,24 +1211,24 @@ msgid "Unkown Error"
 msgstr ""
 
 #: js/instrumentation.js:82 js/pme.js:359 js/project-instruments.js:68
-#: js/project-instruments.js:216 js/projects.js:274 js/projects.js:372
+#: js/project-instruments.js:216 js/projects.js:314 js/projects.js:412
 msgid "Caught a PHP Exception"
 msgstr ""
 
-#: js/instrumentation.js:86 js/pme.js:485 js/pme.js:638
+#: js/instrumentation.js:86 js/pme.js:485 js/pme.js:640
 #: js/project-instruments.js:220
 msgid "Debug Information"
 msgstr ""
 
-#: js/pme.js:742
+#: js/pme.js:744
 msgid "#columns"
 msgstr ""
 
-#: js/pme.js:751
+#: js/pme.js:753
 msgid "#rows"
 msgstr ""
 
-#: js/project-instruments.js:85 js/projects.js:167
+#: js/project-instruments.js:85 js/projects.js:207
 msgid "Unknown operation:"
 msgstr ""
 
@@ -1253,25 +1253,25 @@ msgid ""
 "instrumentation of the project will remain unchanged."
 msgstr ""
 
-#: js/projects.js:419
+#: js/projects.js:459
 msgid "Really unlink the displayed event announcement?"
 msgstr ""
 
-#: js/projects.js:420
+#: js/projects.js:460
 #, python-brace-format
 msgid "Unlink Web-Page with Id {ArticleId}?"
 msgstr ""
 
-#: js/projects.js:441
+#: js/projects.js:481
 msgid "Really delete the displayed event announcement?"
 msgstr ""
 
-#: js/projects.js:442
+#: js/projects.js:482
 #, python-brace-format
 msgid "Delete Web-Page with Id {ArticleId}?"
 msgstr ""
 
-#: js/projects.js:519
+#: js/projects.js:559
 msgid "No values match"
 msgstr ""
 
@@ -1365,7 +1365,7 @@ msgstr ""
 msgid "General Personal Data"
 msgstr ""
 
-#: lib/brief-instrumentation.php:58 lib/functions.php:863 lib/projects.php:760
+#: lib/brief-instrumentation.php:58 lib/functions.php:863 lib/projects.php:766
 msgid "Detailed Instrumentation"
 msgstr ""
 
@@ -1486,8 +1486,8 @@ msgstr ""
 msgid "and"
 msgstr ""
 
-#: lib/email.php:1452 lib/projects.php:747 lib/projects.php:951
-#: lib/projects.php:975
+#: lib/email.php:1452 lib/projects.php:789 lib/projects.php:962
+#: lib/projects.php:986
 msgid "Events"
 msgstr ""
 
@@ -1772,7 +1772,7 @@ msgid ""
 "address etc."
 msgstr ""
 
-#: lib/functions.php:878 lib/projects.php:755
+#: lib/functions.php:878 lib/projects.php:761
 msgid "Brief Instrumentation"
 msgstr ""
 
@@ -1793,8 +1793,8 @@ msgid ""
 "ones as needed."
 msgstr ""
 
-#: lib/functions.php:908 lib/project-instruments.php:69 lib/projects.php:765
-#: lib/projects.php:957
+#: lib/functions.php:908 lib/project-instruments.php:69 lib/projects.php:794
+#: lib/projects.php:968
 msgid "Instrumentation Numbers"
 msgstr ""
 
@@ -2098,7 +2098,7 @@ msgid ""
 msgstr ""
 
 #: lib/project-instruments.php:262 lib/project-instruments.php:500
-#: lib/projects.php:286 lib/projects.php:291
+#: lib/projects.php:287 lib/projects.php:293
 msgid "Actions"
 msgstr ""
 
@@ -2161,15 +2161,15 @@ msgid ""
 "the instrumentation list or dates or to store other project related data."
 msgstr ""
 
-#: lib/projects.php:277
+#: lib/projects.php:278
 msgid "Append the year to the name"
 msgstr ""
 
-#: lib/projects.php:316
+#: lib/projects.php:318
 msgid "Toolbox"
 msgstr ""
 
-#: lib/projects.php:341
+#: lib/projects.php:343
 msgid ""
 "Comma separates list of extra-fields, e.g.\n"
 "<blockquote>\n"
@@ -2199,74 +2199,78 @@ msgid ""
 "a comma."
 msgstr ""
 
-#: lib/projects.php:366
+#: lib/projects.php:368
 msgid "Program"
 msgstr ""
 
-#: lib/projects.php:383
+#: lib/projects.php:385
 msgid "Flyer"
 msgstr ""
 
-#: lib/projects.php:671
+#: lib/projects.php:673
 #, php-format
 msgid "Unable to fetch public web pages for project id %d"
 msgstr ""
 
-#: lib/projects.php:775 lib/projects.php:940
+#: lib/projects.php:751
+msgid "Project Overview"
+msgstr ""
+
+#: lib/projects.php:772
+msgid "Project Files"
+msgstr ""
+
+#: lib/projects.php:782 lib/projects.php:951
 #, php-format
 msgid "Project Wiki for %s"
 msgstr ""
 
-#: lib/projects.php:777 lib/projects.php:944
+#: lib/projects.php:784 lib/projects.php:955
 msgid "Project Notes"
 msgstr ""
 
-#: lib/projects.php:783
-msgid "Project Files"
-msgstr ""
-
-#: lib/projects.php:791
+#: lib/projects.php:802
 msgid "SEPA Debit Mandates"
 msgstr ""
 
-#: lib/projects.php:797
+#: lib/projects.php:808
 msgid "Profit and Loss Account"
 msgstr ""
 
-#: lib/projects.php:1701
+#: lib/projects.php:1712
 msgid ""
 "Flyers can only be added to existing projects, please add the new\n"
 "project without a flyer first."
 msgstr ""
 
-#: lib/projects.php:1716
+#: lib/projects.php:1727
 #, php-format
 msgid "Drop image to upload (max %s)"
 msgstr ""
 
-#: lib/projects.php:1719
+#: lib/projects.php:1730
 msgid "Delete current flyer"
 msgstr ""
 
-#: lib/projects.php:1720
+#: lib/projects.php:1731
 msgid "Edit current flyer"
 msgstr ""
 
-#: lib/projects.php:1721
+#: lib/projects.php:1732
 msgid "Upload new flyer"
 msgstr ""
 
-#: lib/projects.php:1722
+#: lib/projects.php:1733
 msgid "Select image from ownCloud"
 msgstr ""
 
-#: lib/projects.php:1730
+#: lib/projects.php:1741
 msgid ""
 "Internal error, don't know what to do concerning project-flyers in the given "
 "context."
 msgstr ""
 
-#: lib/projects.php:1971
+#: lib/projects.php:1982
 #, php-format
 msgid ""
 "====== Project %s ======\n"

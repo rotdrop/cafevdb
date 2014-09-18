@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-18 00:38+0200\n"
-"PO-Revision-Date: 2014-09-18 01:01+0200\n"
+"POT-Creation-Date: 2014-09-18 04:22+0200\n"
+"PO-Revision-Date: 2014-09-18 04:31+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -202,16 +202,16 @@ msgstr "%s-uebersicht"
 msgid "%s-detailed"
 msgstr "%s-detailliert"
 
-#: ajax/export/excel.php:260 lib/projects.php:1520 lib/projects.php:1521
+#: ajax/export/excel.php:260 lib/projects.php:1531 lib/projects.php:1532
 msgid "Missing Musicians"
 msgstr "Fehlende Musiker"
 
 #: ajax/export/excel.php:285 ajax/export/insurance-export.php:142
-#: lib/projects.php:1523
+#: lib/projects.php:1534
 msgid "Instrument"
 msgstr "Instrument"
 
-#: ajax/export/excel.php:286 lib/projects.php:1523
+#: ajax/export/excel.php:286 lib/projects.php:1534
 msgid "Missing"
 msgstr "Defizit"
 
@@ -596,7 +596,9 @@ msgstr "Unsinnige oder fehlende Projekt-Id: `%s'"
 #, php-format
 msgid ""
 "Submitted article id %d does not match the id %d stored in the article-data."
-msgstr "Die übermittelte Artikel-Id %d stimmt nicht mit der Id %d in den Artikel-Daten überein."
+msgstr ""
+"Die übermittelte Artikel-Id %d stimmt nicht mit der Id %d in den Artikel-"
+"Daten überein."
 
 #: ajax/projects/web-articles.php:83
 #, php-format
@@ -615,46 +617,58 @@ msgstr ""
 #: ajax/projects/web-articles.php:103
 #, php-format
 msgid "Removed public web page %s (id %d) from the project with id %d."
-msgstr "Die Web-Seite %s mit der id %d für das Projekt mit der Id %d wurde entfernt."
+msgstr ""
+"Die Web-Seite %s mit der id %d für das Projekt mit der Id %d wurde entfernt."
 
 #: ajax/projects/web-articles.php:106
 #, php-format
 msgid ""
 "Failed to remove public web page %s (id %d) from the project with id %d."
-msgstr "Konnte die Web-Seite %s mit der Id %d vom Projekt mit der Id %d leider nicht entfernen."
+msgstr ""
+"Konnte die Web-Seite %s mit der Id %d vom Projekt mit der Id %d leider nicht "
+"entfernen."
 
 #: ajax/projects/web-articles.php:114
 #, php-format
 msgid "Failed to create a new public web page for the project with id %d."
-msgstr "Konnte leider keine neue Web-Seite für das Projekt mit der Id %d erstellen."
+msgstr ""
+"Konnte leider keine neue Web-Seite für das Projekt mit der Id %d erstellen."
 
 #: ajax/projects/web-articles.php:117
 #, php-format
 msgid ""
 "Created a new public web page with name %s and id %d for project the with id "
 "%d"
-msgstr "Neue Web-Seite %s mit Id %d für das Projekt mit der Id %d wurde angelegt."
+msgstr ""
+"Neue Web-Seite %s mit Id %d für das Projekt mit der Id %d wurde angelegt."
 
 #: ajax/projects/web-articles.php:123
 #, php-format
 msgid "Failed to add the article %s (id = %d) to the project with id %d."
-msgstr "Konnte die Web-Seite %s (Id %d) vom Projekt mit der Id %d leider nicht entfernen."
+msgstr ""
+"Konnte die Web-Seite %s (Id %d) vom Projekt mit der Id %d leider nicht "
+"entfernen."
 
 #: ajax/projects/web-articles.php:126
 #, php-format
 msgid ""
 "Linked the existing public web-article %s (id %d) to the project with id %d"
-msgstr "Die Web-Seite %s (Id %d) wurde mit dem Projekt mit der Id %d verknüpft."
+msgstr ""
+"Die Web-Seite %s (Id %d) wurde mit dem Projekt mit der Id %d verknüpft."
 
 #: ajax/projects/web-articles.php:137
 #, php-format
 msgid "Failed to detach the article %s (id = %d) from the project with id %d."
-msgstr "Konnte die Web-Seite %s (Id %d) vom Projekt mit der Id %d leider nicht entfernen."
+msgstr ""
+"Konnte die Web-Seite %s (Id %d) vom Projekt mit der Id %d leider nicht "
+"entfernen."
 
 #: ajax/projects/web-articles.php:140
 #, php-format
 msgid "Detached the public web-article %s (id %d) from the project with id %d"
-msgstr "Die Web-Seite &s (Id %d) für das Projekt mit der Id %d wurde vom Projekt gelöst."
+msgstr ""
+"Die Web-Seite &s (Id %d) für das Projekt mit der Id %d wurde vom Projekt "
+"gelöst."
 
 #: ajax/projects/web-articles.php:149
 #, php-format
@@ -979,15 +993,15 @@ msgstr "Die Filter-Sichtbarkeit wurde geändert"
 msgid "header-visibility changed"
 msgstr "Die Kopf-Zeilen-Sichtbarkeit wurde geändert."
 
-#: ajax/settings/redaxo-settings.php:29 lib/projects.php:681
+#: ajax/settings/redaxo-settings.php:29 lib/projects.php:683
 msgid "Preview"
 msgstr "Vorschau"
 
-#: ajax/settings/redaxo-settings.php:30 lib/projects.php:683
+#: ajax/settings/redaxo-settings.php:30 lib/projects.php:685
 msgid "Archive"
 msgstr "Archiv"
 
-#: ajax/settings/redaxo-settings.php:31 lib/projects.php:685
+#: ajax/settings/redaxo-settings.php:31 lib/projects.php:687
 msgid "Trashbin"
 msgstr "Mülltonne"
 
@@ -1032,7 +1046,7 @@ msgstr "Alle zu %s"
 #: js/inlineimage.js:102 js/inlineimage.js:131 js/inlineimage.js:155
 #: js/inlineimage.js:183 js/inlineimage.js:201 js/inlineimage.js:320
 #: js/inlineimage.js:406 js/inlineimage.js:415 js/inlineimage.js:418
-#: js/pme.js:483 js/pme.js:636 js/sepa-debit-mandate.js:62
+#: js/pme.js:483 js/pme.js:638 js/sepa-debit-mandate.js:62
 msgid "Error"
 msgstr "Fehler"
 
@@ -1079,7 +1093,7 @@ msgstr "Den Beitrag wirklich löschen?"
 msgid "Export to the following format is not yet supported:"
 msgstr "Export in das folgende Dateiformat wird nicht unterstützt:"
 
-#: js/cafevdb.js:334 js/project-instruments.js:87 js/projects.js:169
+#: js/cafevdb.js:334 js/project-instruments.js:87 js/projects.js:209
 msgid "Unimplemented"
 msgstr "Nicht implementiert"
 
@@ -1174,7 +1188,7 @@ msgstr "Möchten Sie den Termin wirklich löschen?"
 msgid "Do you really want to detach this event from the current project?"
 msgstr "Möchten Sie den Termin wirklich vom Projekt lösen?"
 
-#: js/events.js:58 js/events.js:112 js/pme.js:477 js/pme.js:630
+#: js/events.js:58 js/events.js:112 js/pme.js:477 js/pme.js:632
 #: js/sepa-debit-mandate.js:56
 msgid "Unknown error :("
 msgstr "Irgendein Fehler :("
@@ -1281,25 +1295,25 @@ msgid "Unkown Error"
 msgstr "Irgendein Fehler"
 
 #: js/instrumentation.js:82 js/pme.js:359 js/project-instruments.js:68
-#: js/project-instruments.js:216 js/projects.js:274 js/projects.js:372
+#: js/project-instruments.js:216 js/projects.js:314 js/projects.js:412
 msgid "Caught a PHP Exception"
 msgstr "PHP `Ausnahme' `gefangen'"
 
-#: js/instrumentation.js:86 js/pme.js:485 js/pme.js:638
+#: js/instrumentation.js:86 js/pme.js:485 js/pme.js:640
 #: js/project-instruments.js:220
 msgid "Debug Information"
 msgstr "Debug Informationen"
 
 # #Spalten
-#: js/pme.js:742
+#: js/pme.js:744
 msgid "#columns"
 msgstr "#Spalten"
 
-#: js/pme.js:751
+#: js/pme.js:753
 msgid "#rows"
 msgstr "#Zeilen"
 
-#: js/project-instruments.js:85 js/projects.js:167
+#: js/project-instruments.js:85 js/projects.js:207
 msgid "Unknown operation:"
 msgstr "Unbekannte Aktion:"
 
@@ -1327,26 +1341,28 @@ msgid ""
 "instrumentation of the project will remain unchanged."
 msgstr "Abbrechen. Die Instrumentierung des Projekts wird nicht geändert."
 
-#: js/projects.js:419
+#: js/projects.js:459
 msgid "Really unlink the displayed event announcement?"
-msgstr "Soll die Verknüpfung mit der angezeigten Veranstaltungsankündigung wirklich gelöst werden?"
+msgstr ""
+"Soll die Verknüpfung mit der angezeigten Veranstaltungsankündigung wirklich "
+"gelöst werden?"
 
-#: js/projects.js:420
+#: js/projects.js:460
 #, python-brace-format
 msgid "Unlink Web-Page with Id {ArticleId}?"
 msgstr "Web-Seite mit Id {ArticleId} löschen?"
 
-#: js/projects.js:441
+#: js/projects.js:481
 msgid "Really delete the displayed event announcement?"
 msgstr ""
 "Soll die angezeigte Veranstaltungsankündigung wirklich entfernt werden?"
 
-#: js/projects.js:442
+#: js/projects.js:482
 #, python-brace-format
 msgid "Delete Web-Page with Id {ArticleId}?"
 msgstr "Web-Seite mit Id {ArticleId} löschen?"
 
-#: js/projects.js:519
+#: js/projects.js:559
 msgid "No values match"
 msgstr "Kein Wert passt."
 
@@ -1448,7 +1464,7 @@ msgstr "(Instrument, Bemerkungen etc.)"
 msgid "General Personal Data"
 msgstr "Allgemeine Personendaten"
 
-#: lib/brief-instrumentation.php:58 lib/functions.php:863 lib/projects.php:760
+#: lib/brief-instrumentation.php:58 lib/functions.php:863 lib/projects.php:766
 msgid "Detailed Instrumentation"
 msgstr "Detaillierte Besetzung"
 
@@ -1570,8 +1586,8 @@ msgstr "Anzahl: "
 msgid "and"
 msgstr "und"
 
-#: lib/email.php:1452 lib/projects.php:747 lib/projects.php:951
-#: lib/projects.php:975
+#: lib/email.php:1452 lib/projects.php:789 lib/projects.php:962
+#: lib/projects.php:986
 msgid "Events"
 msgstr "Termine"
 
@@ -1892,7 +1908,7 @@ msgstr ""
 "Daten wie Email, Adresse usw. können hier geändert werden. Projektbezogene "
 "Daten können allerdings nur in der Ansicht `Kurz-Besetzung' geändert werden."
 
-#: lib/functions.php:878 lib/projects.php:755
+#: lib/functions.php:878 lib/projects.php:761
 msgid "Brief Instrumentation"
 msgstr "Kurz-Besetzung"
 
@@ -1919,8 +1935,8 @@ msgstr ""
 "Tabelle mit allen derzeit gespeicherten Instrumenten; weitere Instrumente "
 "können hier einfach hinzugefügt werden."
 
-#: lib/functions.php:908 lib/project-instruments.php:69 lib/projects.php:765
-#: lib/projects.php:957
+#: lib/functions.php:908 lib/project-instruments.php:69 lib/projects.php:794
+#: lib/projects.php:968
 msgid "Instrumentation Numbers"
 msgstr "Besetzungszahlen"
 
@@ -2262,7 +2278,7 @@ msgstr ""
 "anwählen."
 
 #: lib/project-instruments.php:262 lib/project-instruments.php:500
-#: lib/projects.php:286 lib/projects.php:291
+#: lib/projects.php:287 lib/projects.php:293
 msgid "Actions"
 msgstr "Aktionen"
 
@@ -2331,15 +2347,15 @@ msgstr ""
 "Bitte auf den Projekt-Namen klicken um die Besetzung zu ändern, Termine "
 "einzutragen oder andere projekt-bezogene Daten zu speichern."
 
-#: lib/projects.php:277
+#: lib/projects.php:278
 msgid "Append the year to the name"
 msgstr "Jahreszahl anhängen"
 
-#: lib/projects.php:316
+#: lib/projects.php:318
 msgid "Toolbox"
 msgstr "Werkzeuge"
 
-#: lib/projects.php:341
+#: lib/projects.php:343
 msgid ""
 "Comma separates list of extra-fields, e.g.\n"
 "<blockquote>\n"
@@ -2391,42 +2407,47 @@ msgstr ""
 "kann man nach einem 2. Doppelpunkt noch einen Kommentar für die\n"
 "\"Ballon-Hilfe\" angeben; der darf allerdings kein Komma enthalten."
 
-#: lib/projects.php:366
+#: lib/projects.php:368
 msgid "Program"
 msgstr "Programm"
 
-#: lib/projects.php:383
+#: lib/projects.php:385
 msgid "Flyer"
 msgstr "Flyer"
 
-#: lib/projects.php:671
+#: lib/projects.php:673
 #, php-format
 msgid "Unable to fetch public web pages for project id %d"
 msgstr ""
 "Konnte leider die Liste der öffentlichen Web-Seiten für %s nicht ermitteln."
 
-#: lib/projects.php:775 lib/projects.php:940
+#: lib/projects.php:751
+#, fuzzy
+msgid "Project Overview"
+msgstr "Projekt-Übersicht"
+
+#: lib/projects.php:772
+msgid "Project Files"
+msgstr "Projekt-Dateien"
+
+#: lib/projects.php:782 lib/projects.php:951
 #, php-format
 msgid "Project Wiki for %s"
 msgstr "Wiki Projekt-Seite für %s"
 
-#: lib/projects.php:777 lib/projects.php:944
+#: lib/projects.php:784 lib/projects.php:955
 msgid "Project Notes"
 msgstr "Projekt-Notizen"
 
-#: lib/projects.php:783
-msgid "Project Files"
-msgstr "Projekt-Dateien"
-
-#: lib/projects.php:791
+#: lib/projects.php:802
 msgid "SEPA Debit Mandates"
 msgstr "SEPA Lastschriftmandate"
 
-#: lib/projects.php:797
+#: lib/projects.php:808
 msgid "Profit and Loss Account"
 msgstr "Verlustrechnung"
 
-#: lib/projects.php:1701
+#: lib/projects.php:1712
 msgid ""
 "Flyers can only be added to existing projects, please add the new\n"
 "project without a flyer first."
@@ -2434,28 +2455,28 @@ msgstr ""
 "Flyer könner leider nur zu existierenden Projekten hinzugefügt werden; bitte "
 "zuerst das Projekt ohne Flyer anlegen."
 
-#: lib/projects.php:1716
+#: lib/projects.php:1727
 #, php-format
 msgid "Drop image to upload (max %s)"
 msgstr "Bild ablegen zum Hochladen (max %s)"
 
-#: lib/projects.php:1719
+#: lib/projects.php:1730
 msgid "Delete current flyer"
 msgstr "Aktuellen Flyer löschen"
 
-#: lib/projects.php:1720
+#: lib/projects.php:1731
 msgid "Edit current flyer"
 msgstr "Aktuellen Flyer zuschneiden"
 
-#: lib/projects.php:1721
+#: lib/projects.php:1732
 msgid "Upload new flyer"
 msgstr "Neuen Flyer hochladen"
 
-#: lib/projects.php:1722
+#: lib/projects.php:1733
 msgid "Select image from ownCloud"
 msgstr "Bild aus der `Cloud' auswählen"
 
-#: lib/projects.php:1730
+#: lib/projects.php:1741
 msgid ""
 "Internal error, don't know what to do concerning project-flyers in the given "
 "context."
@@ -2463,7 +2484,7 @@ msgstr ""
 "Interner Fehler; keine Ahnung, wie in diesem Kontext mit Projekt-Flyern "
 "umgegangen werden sollte."
 
-#: lib/projects.php:1971
+#: lib/projects.php:1982
 #, php-format
 msgid ""
 "====== Project %s ======\n"
@@ -3176,7 +3197,8 @@ msgid ""
 "Please select articles to link to the current project. The articles will be "
 "immediately added to the project if you select them. In order to remove the "
 "article, please use the `-' button above."
-msgstr "Bitte Artiekel auswählen, die mit diesem Projekt verknüpft werden sollen."
+msgstr ""
+"Bitte Artiekel auswählen, die mit diesem Projekt verknüpft werden sollen."
 
 #: lib/tooltips.php:297
 msgid ""
