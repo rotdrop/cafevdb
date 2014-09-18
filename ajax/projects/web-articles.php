@@ -118,6 +118,7 @@ try {
                       "for project the with id %d",
                       array($article['ArticleName'], $article['ArticleId'], $projectId));
     }
+    break;
   case 'link':
     if (Projects::attachProjectWebPage($projectId, $articleData) === false) {
       $errorMmessage = L::t("Failed to add the article %s (id = %d) to the project with id %d.",
