@@ -31,7 +31,7 @@ var myTinyMCE = myTinyMCE || {};
       "save table directionality template paste textcolor smileys" // emoticons smileys contextmenu
     ],
     //content_css: "css/content.css",
-    toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor smileys | code", // emoticons
+    toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullscreen | forecolor backcolor smileys | code", // emoticons
     style_formats_merge: true,
     style_formats: [
     {
