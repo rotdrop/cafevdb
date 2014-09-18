@@ -480,6 +480,19 @@ var CAFEVDB = CAFEVDB || {};
                 imgClone.click(function() {
                     dialogHolder.dialog('close');
                 });
+                dialogHolder.imagesLoaded(function() {
+                    var dialogWidget = dialogHolder.dialog('widget');
+                    var titleBarHeight = dialogWidget.find('.ui-dialog-titlebar').outerHeight();
+                    var newHeight = dialogWidget.height() - titleBarHeight;
+                    var outerHeight = dialogHolder.outerHeight(true);
+                    if (outerHeight > newHeight) {
+                        var offset = outerHeight - dialogHolder.height();
+                        var imageOuter = imgClone.outerHeight(true);
+                        var imageHeight = imgClone.height();
+                        offset += (imageOuter - imageHeight);
+                        imgClone.height(newHeight - offset);
+                    }
+                });
             },
             close: function() {
                 var dialogHolder = $(this);

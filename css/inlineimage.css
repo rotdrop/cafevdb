@@ -51,6 +51,8 @@
   webkit-box-shadow: 0 1px 3px #777;
   box-shadow: 0 1px 3px #777;
   opacity: 1;
+  /* position:relative;*/
+  /*top:3px; / * for FF */
 }
 
 .cafevdb_inline_image:hover {
@@ -58,12 +60,20 @@
   cursor: zoom-in;
 }
 
+.ui-dialog.ui-widget.photo-zoom {
+  overflow:hidden;
+  max-height:100% !important;
+}
+
 div#photooverlay {
   background: #000;
+  overflow:hidden;
+  border-radius:4px;
+  padding:0.5em;
 }
 
 div#photooverlay .cafevdb_inline_image:hover {
- cursor: zoom-out; 
+  cursor: zoom-out; 
 }
 
 #phototools {
