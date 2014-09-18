@@ -487,6 +487,28 @@ var CAFEVDB = CAFEVDB || {};
     });
   };
 
+  /**Some general PME tweaks.
+   */
+  CAFEVDB.pmeTweaks = function(container) {
+    if (typeof container == 'undefined') {
+      container = $('body');
+    }
+
+    container.find('input[class^="pme-input-"][class$="-birthday"]').datepicker({
+      dateFormat : 'dd.mm.yy', // this is 4-digit year
+      minDate: '01.01.1940'
+    });
+    
+    container.find('input[class^="pme-input-"][class$="-date"]').datepicker({
+      dateFormat : 'dd.mm.yy', // this is 4-digit year
+      minDate: '01.01.1990'
+    });
+    
+    container.find('td[class$="-money"]').filter(function() {
+      return $.trim($(this).text()).indexOf("-") == 0;
+    }).addClass("negative");
+  };
+
   /**Initialize our tipsy stuff. Only exchange for our own thingies, of course.
    */
   CAFEVDB.tipsy = function(containerSel) {

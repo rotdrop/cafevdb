@@ -542,6 +542,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                          dialogWidget.removeClass('pme-table-dialog-blocked');
                          dialogHolder.dialog('moveToTop');
                        });
+                       CAFEVDB.pmeTweaks(dialogHolder);
                        CAFEVDB.tipsy(containerSel);
                      });
                    });
@@ -620,6 +621,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                CAFEVDB.addEditor(container.find('textarea.wysiwygeditor'), function() {
                  self.transposeReady(selector);
                  self.tableLoadCallback(dpyClass, selector, function() {});
+                 CAFEVDB.pmeTweaks(container);
                  CAFEVDB.tipsy(selector);
                });
              } else {

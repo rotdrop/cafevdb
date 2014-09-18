@@ -92,6 +92,8 @@ $(document).ready(function(){
         parameters: []
     });
 
+    CAFEVDB.pmeTweaks();
+
     CAFEVDB.tipsy();
 
     $(PHPMYEDIT.defaultSelector+' input.pme-email').addClass('formsubmit');
