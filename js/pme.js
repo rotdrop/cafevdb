@@ -536,7 +536,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                          dialogHolder.dialog('option', 'width', 'auto');
                          var newHeight = dialogWidget.height()
                            - dialogWidget.find('.ui-dialog-titlebar').outerHeight();
-                         newHeight -= dialogHolder.outerHeight() - dialogHolder.height();
+                         newHeight -= dialogHolder.outerHeight(true) - dialogHolder.height();
                          //alert("Setting height to " + newHeight);
                          dialogHolder.height(newHeight);
                          dialogWidget.removeClass('pme-table-dialog-blocked');
