@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-18 04:31+0200\n"
+"POT-Creation-Date: 2014-09-20 01:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -43,14 +43,14 @@ msgid "Blog entry with id `%s' could not be retrieved."
 msgstr ""
 
 #: ajax/blog/editentry.php:101 ajax/blog/modifyentry.php:162
-#: ajax/events/events.php:120 ajax/events/execute.php:130
-#: ajax/events/new.form.php:195 ajax/events/sendmail.php:76
-#: ajax/finance/sepa-debit-mandate.php:151
+#: ajax/email/emailform.php:123 ajax/events/events.php:120
+#: ajax/events/execute.php:130 ajax/events/new.form.php:195
+#: ajax/events/sendmail.php:76 ajax/finance/sepa-debit-mandate.php:151
 #: ajax/instrumentation/change-musician-instruments.php:193
 #: ajax/instrumentation/change-project-instrument.php:118
 #: ajax/instruments/adjustInstrumentation.php:91
 #: ajax/instruments/changeInstrumentation.php:148 ajax/pme/pme-table.php:118
-#: ajax/projects/verifyName.php:164 ajax/projects/web-articles.php:183
+#: ajax/projects/verifyName.php:164 ajax/projects/web-articles.php:184
 msgid "Error, caught an exception"
 msgstr ""
 
@@ -606,33 +606,33 @@ msgid ""
 "%d"
 msgstr ""
 
-#: ajax/projects/web-articles.php:123
+#: ajax/projects/web-articles.php:124
 #, php-format
 msgid "Failed to add the article %s (id = %d) to the project with id %d."
 msgstr ""
 
-#: ajax/projects/web-articles.php:126
+#: ajax/projects/web-articles.php:127
 #, php-format
 msgid ""
 "Linked the existing public web-article %s (id %d) to the project with id %d"
 msgstr ""
 
-#: ajax/projects/web-articles.php:137
+#: ajax/projects/web-articles.php:138
 #, php-format
 msgid "Failed to detach the article %s (id = %d) from the project with id %d."
 msgstr ""
 
-#: ajax/projects/web-articles.php:140
+#: ajax/projects/web-articles.php:141
 #, php-format
 msgid "Detached the public web-article %s (id %d) from the project with id %d"
 msgstr ""
 
-#: ajax/projects/web-articles.php:149
+#: ajax/projects/web-articles.php:150
 #, php-format
 msgid "Unhandled or empty request: `%s'"
 msgstr ""
 
-#: ajax/projects/web-articles.php:166
+#: ajax/projects/web-articles.php:167
 msgid "Error: "
 msgstr ""
 
@@ -952,6 +952,7 @@ msgid "Trashbin"
 msgstr ""
 
 #: ajax/settings/redaxo-settings.php:32 lib/email.php:1489
+#: templates/part.emailform.message.php:81
 msgid "Template"
 msgstr ""
 
@@ -979,14 +980,14 @@ msgstr ""
 msgid "Unknown WYSIWYG-Editor: `%s'"
 msgstr ""
 
-#: index.php:179 lib/musicians.php:177
+#: index.php:190 lib/musicians.php:177
 #, php-format
 msgid "Add all to %s"
 msgstr ""
 
 #: js/blog.js:53 js/blog.js:155 js/blog.js:193 js/blog.js:286 js/blog.js:317
-#: js/blog.js:345 js/email.js:44 js/email.js:77 js/events.js:64
-#: js/events.js:118 js/inlineimage.js:84 js/inlineimage.js:92
+#: js/blog.js:345 js/email.js:44 js/email.js:77 js/email.js:142
+#: js/events.js:64 js/events.js:118 js/inlineimage.js:84 js/inlineimage.js:92
 #: js/inlineimage.js:102 js/inlineimage.js:131 js/inlineimage.js:155
 #: js/inlineimage.js:183 js/inlineimage.js:201 js/inlineimage.js:320
 #: js/inlineimage.js:406 js/inlineimage.js:415 js/inlineimage.js:418
@@ -1027,22 +1028,22 @@ msgstr ""
 msgid "Really delete the entry?"
 msgstr ""
 
-#: js/cafevdb.js:332
+#: js/cafevdb.js:345
 msgid "Export to the following format is not yet supported:"
 msgstr ""
 
-#: js/cafevdb.js:334 js/project-instruments.js:87 js/projects.js:209
+#: js/cafevdb.js:347 js/project-instruments.js:87 js/projects.js:209
 msgid "Unimplemented"
 msgstr ""
 
-#: js/cafevdb.js:417
+#: js/cafevdb.js:430
 msgid ""
 "If multiple dialogs are open, then move this one to the lowest layer and "
 "display it below the others. Clicking anywhere on the dialog will bring to "
 "the front again."
 msgstr ""
 
-#: js/cafevdb.js:467
+#: js/cafevdb.js:480
 msgid ""
 "Close the current dialog and return to the view which was active before this "
 "dialog had been opened. If the current view shows a `Back' button, then "
@@ -1074,25 +1075,25 @@ msgstr ""
 msgid "Unknown location"
 msgstr ""
 
-#: js/config.php:29 lib/config.php:173
+#: js/config.php:29 lib/config.php:175
 msgid "Select a filter option."
 msgstr ""
 
-#: js/config.php:30 js/config.php:36 lib/config.php:174 lib/config.php:181
+#: js/config.php:30 js/config.php:36 lib/config.php:176 lib/config.php:183
 msgid "No values match."
 msgstr ""
 
-#: js/config.php:31 lib/config.php:176
+#: js/config.php:31 lib/config.php:178
 msgid ""
 "Select from the pull-down menu. Double-click will submit the form. The pull-"
 "down can be closed by clicking anywhere outside the menu."
 msgstr ""
 
-#: js/config.php:35 lib/config.php:180
+#: js/config.php:35 lib/config.php:182
 msgid "Select an option."
 msgstr ""
 
-#: js/config.php:37 lib/config.php:183
+#: js/config.php:37 lib/config.php:185
 msgid ""
 "Select from the pull-down menu. The pull-down can be closed by clicking "
 "anywhere outside the menu."
@@ -1102,7 +1103,64 @@ msgstr ""
 msgid "Not called from main email-form."
 msgstr ""
 
+#: js/email.js:130
+msgid ""
+"Unrecoverable unknown internal error, no further information available, "
+"sorry."
+msgstr ""
+
+#: js/email.js:130
+msgid "Internal Error"
+msgstr ""
+
+#: js/email.js:136 js/events.js:58 js/events.js:112 js/pme.js:477
+#: js/pme.js:632 js/sepa-debit-mandate.js:56
+msgid "Unknown error :("
+msgstr ""
+
+#: js/email.js:144 js/instrumentation.js:86 js/pme.js:485 js/pme.js:640
+#: js/project-instruments.js:220
+msgid "Debug Information"
+msgstr ""
+
+#: js/email.js:149
+msgid "Em@il Form"
+msgstr ""
+
+#: js/email.js:181 lib/email.php:575 lib/emailform.php:558
+msgid "Remaining Recipients"
+msgstr ""
+
+#: js/email.js:182 lib/email.php:576 lib/emailform.php:559
+msgid "Selected Recipients"
+msgstr ""
+
+#: js/email.js:183
+#, python-brace-format
+msgid "Showing all {0}"
+msgstr ""
+
+#: js/email.js:184
+msgid "Filtered"
+msgstr ""
+
+#: js/email.js:184
+msgid "from"
+msgstr ""
+
 #: js/email.js:185
+msgid "Empty list"
+msgstr ""
+
+#: js/email.js:186
+msgid "Filter"
+msgstr ""
+
+#: js/email.js:187
+msgid "show all"
+msgstr ""
+
+#: js/email.js:274
 msgid "Select Attachment"
 msgstr ""
 
@@ -1112,11 +1170,6 @@ msgstr ""
 
 #: js/events.js:48
 msgid "Do you really want to detach this event from the current project?"
-msgstr ""
-
-#: js/events.js:58 js/events.js:112 js/pme.js:477 js/pme.js:632
-#: js/sepa-debit-mandate.js:56
-msgid "Unknown error :("
 msgstr ""
 
 #: js/events.js:267
@@ -1167,7 +1220,7 @@ msgid "Ok"
 msgstr ""
 
 #: js/inlineimage.js:267 js/project-instruments.js:229 lib/email.php:1594
-#: templates/blogedit.php:39
+#: templates/blogedit.php:39 templates/part.emailform.message.php:201
 msgid "Cancel"
 msgstr ""
 
@@ -1213,11 +1266,6 @@ msgstr ""
 #: js/instrumentation.js:82 js/pme.js:359 js/project-instruments.js:68
 #: js/project-instruments.js:216 js/projects.js:314 js/projects.js:412
 msgid "Caught a PHP Exception"
-msgstr ""
-
-#: js/instrumentation.js:86 js/pme.js:485 js/pme.js:640
-#: js/project-instruments.js:220
-msgid "Debug Information"
 msgstr ""
 
 #: js/pme.js:744
@@ -1365,7 +1413,7 @@ msgstr ""
 msgid "General Personal Data"
 msgstr ""
 
-#: lib/brief-instrumentation.php:58 lib/functions.php:863 lib/projects.php:766
+#: lib/brief-instrumentation.php:58 lib/functions.php:938 lib/projects.php:766
 msgid "Detailed Instrumentation"
 msgstr ""
 
@@ -1391,23 +1439,28 @@ msgstr ""
 msgid "Click to enter details of a potential SEPA debit mandate"
 msgstr ""
 
-#: lib/config.php:532
+#: lib/config.php:534
 #, php-format
 msgid "Decryption of `%s`@`%s` failed"
 msgstr ""
 
-#: lib/config.php:536
+#: lib/config.php:538
 #, php-format
 msgid "Encryption of `%s`@`%s` failed"
 msgstr ""
 
-#: lib/config.php:542
+#: lib/config.php:544
 #, php-format
 msgid "Unable to update table data at index %s"
 msgstr ""
 
-#: lib/config.php:701
+#: lib/config.php:703
 msgid "birthday"
+msgstr ""
+
+#: lib/config.php:731
+#, php-format
+msgid "Unknown Tooltip for key `%s' requested."
 msgstr ""
 
 #: lib/detailed-instrumentation.php:300 lib/musicians.php:282
@@ -1426,59 +1479,57 @@ msgstr ""
 msgid "Last Updated"
 msgstr ""
 
-#: lib/email.php:510
+#: lib/email.php:510 lib/emailform.php:493
 msgid "Select Em@il Recipients"
 msgstr ""
 
-#: lib/email.php:518
+#: lib/email.php:518 lib/emailform.php:501
 msgid "Principal Address Collection"
 msgstr ""
 
-#: lib/email.php:544
+#: lib/email.php:544 lib/emailform.php:527
 msgid "Select recipients by member status."
 msgstr ""
 
-#: lib/email.php:545
+#: lib/email.php:545 lib/emailform.php:528
+#: templates/part.emailform.recipients.php:122
 msgid "Select Members by Status"
 msgstr ""
 
-#: lib/email.php:546
+#: lib/email.php:546 lib/emailform.php:529
+#: templates/part.emailform.recipients.php:114
 msgid "Member-Status"
 msgstr ""
 
-#: lib/email.php:574
+#: lib/email.php:574 lib/emailform.php:557
+#: templates/part.emailform.recipients.php:134
 msgid "Email Recipients"
 msgstr ""
 
-#: lib/email.php:575
-msgid "Remaining Recipients"
-msgstr ""
-
-#: lib/email.php:576
-msgid "Selected Recipients"
-msgstr ""
-
-#: lib/email.php:593
+#: lib/email.php:593 lib/emailform.php:576
 msgid "Instrument-Filter"
 msgstr ""
 
-#: lib/email.php:607
+#: lib/email.php:607 lib/emailform.php:590
+#: templates/part.emailform.message.php:78
 msgid "Compose Em@il"
 msgstr ""
 
-#: lib/email.php:617
+#: lib/email.php:617 lib/emailform.php:600
+#: templates/part.emailform.recipients.php:153
 msgid "Apply Filter"
 msgstr ""
 
-#: lib/email.php:624
+#: lib/email.php:624 lib/emailform.php:607
+#: templates/part.emailform.recipients.php:166
 msgid "Reset Filter"
 msgstr ""
 
-#: lib/email.php:633
+#: lib/email.php:633 lib/emailform.php:616
 msgid "Musicians without Em@il"
 msgstr ""
 
-#: lib/email.php:644
+#: lib/email.php:644 lib/emailform.php:627
 msgid "Count: "
 msgstr ""
 
@@ -1487,32 +1538,32 @@ msgid "and"
 msgstr ""
 
 #: lib/email.php:1452 lib/projects.php:789 lib/projects.php:962
-#: lib/projects.php:986
+#: lib/projects.php:986 templates/part.emailform.message.php:39
 msgid "Events"
 msgstr ""
 
-#: lib/email.php:1455
+#: lib/email.php:1455 templates/part.emailform.message.php:42
 msgid "Attached Events"
 msgstr ""
 
-#: lib/email.php:1466
+#: lib/email.php:1466 templates/part.emailform.message.php:53
 #, php-format
 msgid "Edit Event %s"
 msgstr ""
 
-#: lib/email.php:1493
+#: lib/email.php:1493 templates/part.emailform.message.php:87
 msgid "Select email template"
 msgstr ""
 
-#: lib/email.php:1505
+#: lib/email.php:1505 templates/part.emailform.message.php:100
 msgid "New Template Name"
 msgstr ""
 
-#: lib/email.php:1515
+#: lib/email.php:1515 templates/part.emailform.message.php:109
 msgid "Save as Template"
 msgstr ""
 
-#: lib/email.php:1521
+#: lib/email.php:1521 templates/part.emailform.message.php:113
 msgid "Recipients"
 msgstr ""
 
@@ -1520,43 +1571,47 @@ msgstr ""
 msgid "Determined automatically from data-base, see below the email form."
 msgstr ""
 
-#: lib/email.php:1533
+#: lib/email.php:1533 templates/part.emailform.message.php:137
 msgid "Subject"
 msgstr ""
 
-#: lib/email.php:1539
+#: lib/email.php:1539 templates/part.emailform.message.php:148
 msgid "Message-Body"
 msgstr ""
 
-#: lib/email.php:1543
+#: lib/email.php:1543 templates/part.emailform.message.php:152
 msgid "Sender-Name"
 msgstr ""
 
-#: lib/email.php:1548
+#: lib/email.php:1548 templates/part.emailform.message.php:157
 msgid "Sender-Email"
 msgstr ""
 
-#: lib/email.php:1549
+#: lib/email.php:1549 templates/part.emailform.message.php:158
 msgid "Tied to"
 msgstr ""
 
-#: lib/email.php:1552
+#: lib/email.php:1552 templates/part.emailform.message.php:161
 msgid "Add Attachment"
 msgstr ""
 
 #: lib/email.php:1558 lib/email.php:1559
+#: templates/part.emailform.message.php:167
+#: templates/part.emailform.message.php:168
 msgid "Upload new File"
 msgstr ""
 
 #: lib/email.php:1564 lib/email.php:1565
+#: templates/part.emailform.message.php:173
+#: templates/part.emailform.message.php:174
 msgid "Select from Owncloud"
 msgstr ""
 
-#: lib/email.php:1577
+#: lib/email.php:1577 templates/part.emailform.message.php:188
 msgid "Remove"
 msgstr ""
 
-#: lib/email.php:1585
+#: lib/email.php:1585 templates/part.emailform.message.php:196
 msgid "Send Em@il"
 msgstr ""
 
@@ -1704,136 +1759,136 @@ msgstr ""
 msgid "Invalid argument value: `%s'"
 msgstr ""
 
-#: lib/functions.php:577
+#: lib/functions.php:652
 msgid "Export Table"
 msgstr ""
 
-#: lib/functions.php:585
+#: lib/functions.php:660
 msgid "Excel Export"
 msgstr ""
 
-#: lib/functions.php:588
+#: lib/functions.php:663
 msgid "HTML/Spreadsheet"
 msgstr ""
 
-#: lib/functions.php:591
+#: lib/functions.php:666
 msgid "CSV Export"
 msgstr ""
 
-#: lib/functions.php:594
+#: lib/functions.php:669
 msgid "HTML Export"
 msgstr ""
 
-#: lib/functions.php:764
+#: lib/functions.php:839
 msgid "Error: Unknonwn Button Type"
 msgstr ""
 
-#: lib/functions.php:787
+#: lib/functions.php:862
 msgid "View all Projects"
 msgstr ""
 
-#: lib/functions.php:788
+#: lib/functions.php:863
 msgid "Overview over all known projects (start-page)."
 msgstr ""
 
-#: lib/functions.php:800
+#: lib/functions.php:875
 msgid "Display all Musicians"
 msgstr ""
 
-#: lib/functions.php:801
+#: lib/functions.php:876
 msgid ""
 "Display all musicians stored in the data-base, with detailed facilities for "
 "filtering and sorting."
 msgstr ""
 
-#: lib/functions.php:813
+#: lib/functions.php:888
 msgid ""
 "Mass-email form, use with care. Mass-emails will be logged. Recipients will "
 "be specified by the Bcc: field in the header, so the recipients are "
 "undisclosed to each other."
 msgstr ""
 
-#: lib/functions.php:827
+#: lib/functions.php:902
 msgid "Email History"
 msgstr ""
 
-#: lib/functions.php:828
+#: lib/functions.php:903
 msgid "Display all emails sent by our mass-email form."
 msgstr ""
 
-#: lib/functions.php:847
+#: lib/functions.php:922
 msgid "The currently active project."
 msgstr ""
 
-#: lib/functions.php:864 lib/tooltips.php:271
+#: lib/functions.php:939 lib/tooltips.php:308
 msgid ""
 "Detailed display of all registered musicians for the selected project. The "
 "table will allow for modification of personal data like email, phone, "
 "address etc."
 msgstr ""
 
-#: lib/functions.php:878 lib/projects.php:761
+#: lib/functions.php:953 lib/projects.php:761
 msgid "Brief Instrumentation"
 msgstr ""
 
-#: lib/functions.php:879
+#: lib/functions.php:954
 msgid ""
 "Brief display of all registered musicians for the selected project. The "
 "table will allow for modification of project specific data, like the "
 "instrument, the project-fee etc."
 msgstr ""
 
-#: lib/functions.php:893 lib/project-instruments.php:386
+#: lib/functions.php:968 lib/project-instruments.php:386
 msgid "Add Instruments"
 msgstr ""
 
-#: lib/functions.php:894
+#: lib/functions.php:969
 msgid ""
 "Display the list of instruments known by the data-base, possibly add new "
 "ones as needed."
 msgstr ""
 
-#: lib/functions.php:908 lib/project-instruments.php:69 lib/projects.php:794
+#: lib/functions.php:983 lib/project-instruments.php:69 lib/projects.php:794
 #: lib/projects.php:968
 msgid "Instrumentation Numbers"
 msgstr ""
 
-#: lib/functions.php:909 lib/tooltips.php:284
+#: lib/functions.php:984 lib/tooltips.php:321
 msgid ""
 "Display the desired instrumentaion numbers, i.e. how many musicians are "
 "already registered for each instrument group and how many are finally needed."
 msgstr ""
 
-#: lib/functions.php:923
+#: lib/functions.php:998
 msgid "Add more Musicians"
 msgstr ""
 
-#: lib/functions.php:924
+#: lib/functions.php:999
 msgid ""
 "List of all musicians NOT registered for the selected project. Only through "
 "that table a new musician can enter a project. Look for a hyper-link "
 "Add_to_PROJECT"
 msgstr ""
 
-#: lib/functions.php:938
+#: lib/functions.php:1013
 msgid "Transfer Instruments from Musicians"
 msgstr ""
 
-#: lib/functions.php:954
+#: lib/functions.php:1029
 msgid "Insurances"
 msgstr ""
 
-#: lib/functions.php:955
+#: lib/functions.php:1030
 msgid ""
 "Display a table with an overview about the current state of the member's "
 "instrument insurances."
 msgstr ""
 
-#: lib/functions.php:967
+#: lib/functions.php:1042
 msgid "Debit Mandates"
 msgstr ""
 
-#: lib/functions.php:968
+#: lib/functions.php:1043
 msgid "Display a table with an overview over all SEPA debit mandates."
 msgstr ""
 
@@ -2401,6 +2456,75 @@ msgid ""
 msgstr ""
 
 #: lib/tooltips.php:68
+msgid "Choose among all musicians currently registered for this project."
+msgstr ""
+
+#: lib/tooltips.php:70
+msgid ""
+"Choose among all musicians currently <b>NOT</b> registered for this project."
+msgstr ""
+
+#: lib/tooltips.php:72
+msgid ""
+"Choose either among all musicians currently registered for the project\n"
+"or from the complement set. Obviously, selecting both options will\n"
+"give you the choice to select any musician as recipient."
+msgstr ""
+
+#: lib/tooltips.php:76
+msgid ""
+"Select recipients by member status. Normally, conductors and soloists\n"
+"are excluded from receiving mass-email. Please be careful when modifying the "
+"default selection!"
+msgstr ""
+
+#: lib/tooltips.php:79
+msgid ""
+"Apply the currently selected instruments as filter. At your option,\n"
+"you can also simply double-click inside the filter-box in order to activate "
+"your filter-choice."
+msgstr ""
+
+#: lib/tooltips.php:82
+msgid ""
+"SORRY, UNIMPLEMENTED. Should be: Undo the most recent instrument\n"
+"filter and return to the previous state. Please note that this is a\n"
+"one-time undo option, no further history of your filter actions is\n"
+"remembered."
+msgstr ""
+
+#: lib/tooltips.php:87
+msgid ""
+"Reset to the initial pre-selection which was activ when entering this\n"
+"form. This will <b>REALLY</b> void all your recipient selections and\n"
+"reset the form to the initial state. Note, however, that the text of\n"
+"your email will be maintained, the reset only applies to the recipient\n"
+"list."
+msgstr ""
+
+#: lib/tooltips.php:93
+msgid ""
+"Restrict the basic set of musicians to the instruments selected\n"
+"here. The filter is additive: selecting more than one instruments will\n"
+"include the musicians playing either of them."
+msgstr ""
+
+#: lib/tooltips.php:97
+msgid ""
+"Cancel the email composition and close the input form. This has the\n"
+"same effect as clicking the close button on top of the dialog-window. No "
+"email will be sent."
+msgstr ""
+
+#: lib/tooltips.php:100
+msgid ""
+"Attempt to send the stuff you have composed out to your selection of\n"
+"recipients. Please think thrice about it. In case of an error\n"
+"additional diagnostic messages may (or may not ...) be available in\n"
+"the `Debug' tab"
+msgstr ""
+
+#: lib/tooltips.php:105
 msgid ""
 "A flag which indicates not so much social or functional status, but\n"
 "default behaviour for mass-emails as follows\n"
@@ -2426,35 +2550,35 @@ msgid ""
 "in the email form."
 msgstr ""
 
-#: lib/tooltips.php:87
+#: lib/tooltips.php:124
 msgid ""
 "Enter a short, no-nonsense name for the new template. Please omit spaces."
 msgstr ""
 
-#: lib/tooltips.php:89 templates/project-web-articles.php:82
+#: lib/tooltips.php:126 templates/project-web-articles.php:80
 msgid "nothing"
 msgstr ""
 
-#: lib/tooltips.php:91
+#: lib/tooltips.php:128
 msgid ""
 "Choose a file to attach from the files stored remotely on in the OwnCloud "
 "storage area."
 msgstr ""
 
-#: lib/tooltips.php:93
+#: lib/tooltips.php:130
 msgid ""
 "  Click me to add a new\n"
 "row to the current table."
 msgstr ""
 
-#: lib/tooltips.php:96
+#: lib/tooltips.php:133
 msgid ""
 "  Click me to add all selected musicians\n"
 "to the selected project. All selected\n"
 "musicians on all pages will be added."
 msgstr ""
 
-#: lib/tooltips.php:100
+#: lib/tooltips.php:137
 msgid ""
 "  Click me to pre-select\n"
 "all musicians on all pages\n"
@@ -2463,7 +2587,7 @@ msgid ""
 "actually add them."
 msgstr ""
 
-#: lib/tooltips.php:106
+#: lib/tooltips.php:143
 msgid ""
 "  Click me to remove\n"
 "all musicians on all pages\n"
@@ -2471,7 +2595,7 @@ msgid ""
 "the current project."
 msgstr ""
 
-#: lib/tooltips.php:111
+#: lib/tooltips.php:148
 msgid ""
 "  Check me to pre-select\n"
 "this musician for the current\n"
@@ -2481,7 +2605,7 @@ msgid ""
 "musicians."
 msgstr ""
 
-#: lib/tooltips.php:119
+#: lib/tooltips.php:156
 msgid ""
 "Einzelnen Datensatz anzeigen,\n"
 "zeigt ein neues Formular mit\n"
@@ -2489,20 +2613,20 @@ msgid ""
 "und Abbruchmöglichkeit."
 msgstr ""
 
-#: lib/tooltips.php:126
+#: lib/tooltips.php:163
 msgid ""
 "  Klick mich, um die\n"
 "Sortierreihenfolge auf die\n"
 "Voreinstellung zurückzusetzen."
 msgstr ""
 
-#: lib/tooltips.php:129
+#: lib/tooltips.php:166
 msgid ""
 "  Klick mich, um den\n"
 "aktuellen Filter zu löschen."
 msgstr ""
 
-#: lib/tooltips.php:134
+#: lib/tooltips.php:171
 msgid ""
 "Einzelnen Datensatz kopieren,\n"
 "zeigt ein neues Formular mit\n"
@@ -2510,7 +2634,7 @@ msgid ""
 "und Abbruchmöglichkeit."
 msgstr ""
 
-#: lib/tooltips.php:141
+#: lib/tooltips.php:178
 msgid ""
 "Einzelnen Datensatz löschen,\n"
 "zeigt den aktuellen Datensatz zunächst an.\n"
@@ -2519,7 +2643,7 @@ msgid ""
 "VORSICHT!."
 msgstr ""
 
-#: lib/tooltips.php:148
+#: lib/tooltips.php:185
 msgid ""
 "  Klick mich, um eine Em@il an die ausgewählten\n"
 "Musiker zu versenden. Auf der folgenden Seite kann\n"
@@ -2531,7 +2655,7 @@ msgid ""
 "entsprechen."
 msgstr ""
 
-#: lib/tooltips.php:157
+#: lib/tooltips.php:194
 msgid ""
 "  Klick mich, um alle gerade\n"
 "angezeigten Musiker zu der\n"
@@ -2543,14 +2667,14 @@ msgid ""
 "entsprechen."
 msgstr ""
 
-#: lib/tooltips.php:166
+#: lib/tooltips.php:203
 msgid ""
 "  Klick mich, um alle gerade\n"
 "angezeigten Musiker von der\n"
 "Em@il-Auswahl zu entfernen"
 msgstr ""
 
-#: lib/tooltips.php:170
+#: lib/tooltips.php:207
 msgid ""
 "  Adressaten in potentielle\n"
 "Massenmail Adressliste aufnehmen.\n"
@@ -2559,7 +2683,7 @@ msgid ""
 "korrigieren."
 msgstr ""
 
-#: lib/tooltips.php:176
+#: lib/tooltips.php:213
 msgid ""
 "Export the visible part of the data-base to an office-format. The `Excel'-"
 "export should produce useful input for either Libre- or OpenOffice or for "
@@ -2567,27 +2691,27 @@ msgid ""
 "USA."
 msgstr ""
 
-#: lib/tooltips.php:178
+#: lib/tooltips.php:215
 msgid "Export in CSV-format using a semicolon as delimiter (Excel convention)"
 msgstr ""
 
-#: lib/tooltips.php:180
+#: lib/tooltips.php:217
 msgid "Export as `full-featured' Excel-2007 table, `.xslx'."
 msgstr ""
 
-#: lib/tooltips.php:182
+#: lib/tooltips.php:219
 msgid ""
 "Export as HTML page without navigation elements; can also be loaded into "
 "your office-programs."
 msgstr ""
 
-#: lib/tooltips.php:184
+#: lib/tooltips.php:221
 msgid ""
 "Export as HTML page, but set the file type to `spread-sheed'. Should also be "
 "readable by standard office-programs as `Excel'-table."
 msgstr ""
 
-#: lib/tooltips.php:186
+#: lib/tooltips.php:223
 #, php-format
 msgid ""
 "  Field for filter/search criteria.\n"
@@ -2623,13 +2747,13 @@ msgid ""
 "</dl>"
 msgstr ""
 
-#: lib/tooltips.php:219
+#: lib/tooltips.php:256
 msgid ""
 "  Klick mich, um die\n"
 "Suchkriterien zu verstecken."
 msgstr ""
 
-#: lib/tooltips.php:223
+#: lib/tooltips.php:260
 #, php-format
 msgid ""
 "  Klick mich, um die\n"
@@ -2638,89 +2762,89 @@ msgid ""
 "Als Platzhalter verwendet man `%%'."
 msgstr ""
 
-#: lib/tooltips.php:229
+#: lib/tooltips.php:266
 msgid ""
 "  Klick mich, um die\n"
 "Suchkriterien anzuzeigen."
 msgstr ""
 
-#: lib/tooltips.php:233
+#: lib/tooltips.php:270
 msgid ""
 "  Klick mich, um das Sortieren\n"
 "nach diesem Feld ein-\n"
 "oder auszuschalten!"
 msgstr ""
 
-#: lib/tooltips.php:237
+#: lib/tooltips.php:274
 msgid "  Klick mich, um die Sortierreihenfolge umzukehren!"
 msgstr ""
 
-#: lib/tooltips.php:239
+#: lib/tooltips.php:276
 msgid ""
 "Transpose the displayed table; may be beneficial for tables with only a few "
 "rows but many columns!"
 msgstr ""
 
-#: lib/tooltips.php:242
+#: lib/tooltips.php:279
 msgid "Einzelnen Datensatz anzeigen"
 msgstr ""
 
-#: lib/tooltips.php:245
+#: lib/tooltips.php:282
 msgid ""
 "Stop the current operation. Settings which already have been stored by\n"
 "hitting an \"Apply\" button are maintained, though. You will be returned\n"
 "to the previous view"
 msgstr ""
 
-#: lib/tooltips.php:249
+#: lib/tooltips.php:286
 msgid "Refreshes the current view by reloading all data from the data-base."
 msgstr ""
 
-#: lib/tooltips.php:251
+#: lib/tooltips.php:288
 msgid ""
 "Directs you to a form with input fields. From there you can return to\n"
 "this form by means of the \"Save\" or \"Back\" resp. \"Cancel\" buttons."
 msgstr ""
 
-#: lib/tooltips.php:254 lib/tooltips.php:258
+#: lib/tooltips.php:291 lib/tooltips.php:295
 msgid "Saves the current values; the current input form will remain active."
 msgstr ""
 
-#: lib/tooltips.php:256
+#: lib/tooltips.php:293
 msgid "Saves the current values and start to generate another new data-set."
 msgstr ""
 
-#: lib/tooltips.php:257
+#: lib/tooltips.php:294
 msgid ""
 "Saves the current values and continues to make yet another copy of the "
 "source data-set."
 msgstr ""
 
-#: lib/tooltips.php:260
+#: lib/tooltips.php:297
 msgid "Saves the current values and returns to the previous view."
 msgstr ""
 
-#: lib/tooltips.php:262
+#: lib/tooltips.php:299
 msgid ""
 "Limits the number of rows per page to the given value. A \"*\" means to "
 "display all records on one large page."
 msgstr ""
 
-#: lib/tooltips.php:264
+#: lib/tooltips.php:301
 msgid "Jumps directly to the given page"
 msgstr ""
 
-#: lib/tooltips.php:266
+#: lib/tooltips.php:303
 msgid ""
 "Pull-down menu with entries to move on\n"
 "to pages with the instrumentation, events, instrumentation numbers etc."
 msgstr ""
 
-#: lib/tooltips.php:269
+#: lib/tooltips.php:306
 msgid "Open a page with the musicians registered for the respective project."
 msgstr ""
 
-#: lib/tooltips.php:273 lib/tooltips.php:303
+#: lib/tooltips.php:310 lib/tooltips.php:340
 msgid ""
 "Open a dialog with all known\n"
 "events associated to the project.\n"
@@ -2728,35 +2852,35 @@ msgid ""
 "as needed."
 msgstr ""
 
-#: lib/tooltips.php:278
+#: lib/tooltips.php:315
 msgid "Change to the folder with project related files."
 msgstr ""
 
-#: lib/tooltips.php:280
+#: lib/tooltips.php:317
 msgid ""
 "Change to the folder with the financial balance\n"
 "sheets for the project (only available after the project\n"
 "has been ``closed''."
 msgstr ""
 
-#: lib/tooltips.php:286
+#: lib/tooltips.php:323
 msgid "Change to the DokuWiki-page for this project (if there is one)"
 msgstr ""
 
-#: lib/tooltips.php:288
+#: lib/tooltips.php:325
 msgid ""
 "Add a new public web-page to the project, either by generating a new one or "
 "by linking an existing web-page to the given project."
 msgstr ""
 
-#: lib/tooltips.php:290
+#: lib/tooltips.php:327
 msgid ""
 "Delete the currently displayed web-page fromthe project. The web page will "
 "be \"detached\" from the project and moved to the trash-bin\n"
 "\"category\" (folger) inside the CMS."
 msgstr ""
 
-#: lib/tooltips.php:293
+#: lib/tooltips.php:330
 msgid ""
 "Link existing pages to the project. This can be used, for instance, in order "
 "to add a page to the project which has not been created by hitting the `+'-"
@@ -2766,20 +2890,20 @@ msgid ""
 "z"
 msgstr ""
 
-#: lib/tooltips.php:295
+#: lib/tooltips.php:332
 msgid ""
 "Please select articles to link to the current project. The articles will be "
 "immediately added to the project if you select them. In order to remove the "
 "article, please use the `-' button above."
 msgstr ""
 
-#: lib/tooltips.php:297
+#: lib/tooltips.php:334
 msgid ""
 "Detach the currently displayed event announcement from the project. "
 "Primarily meant to provide means to undo erroneous linking of articles."
 msgstr ""
 
-#: lib/tooltips.php:299
+#: lib/tooltips.php:336
 msgid ""
 "Append the year to the name if checked.\n"
 "Regardless of this checkbox any decimal digit will first be stripped from "
@@ -2787,19 +2911,19 @@ msgid ""
 "of the project name before the year is added."
 msgstr ""
 
-#: lib/tooltips.php:308
+#: lib/tooltips.php:345
 msgid ""
 "Delete the event from the system\n"
 "(no undo possible)."
 msgstr ""
 
-#: lib/tooltips.php:311
+#: lib/tooltips.php:348
 msgid ""
 "Exclude all events from\n"
 "email-submission"
 msgstr ""
 
-#: lib/tooltips.php:314
+#: lib/tooltips.php:351
 msgid ""
 "Detach the respective event\n"
 "from the project, but do not\n"
@@ -2809,34 +2933,34 @@ msgid ""
 "categories."
 msgstr ""
 
-#: lib/tooltips.php:321
+#: lib/tooltips.php:358
 msgid "Modify the event."
 msgstr ""
 
-#: lib/tooltips.php:323
+#: lib/tooltips.php:360
 msgid "Add a new concert-event to the project."
 msgstr ""
 
-#: lib/tooltips.php:325
+#: lib/tooltips.php:362
 msgid ""
 "Add a private management event which is not exposed to the rest of the world."
 msgstr ""
 
-#: lib/tooltips.php:327
+#: lib/tooltips.php:364
 msgid "Add some other event to the project."
 msgstr ""
 
-#: lib/tooltips.php:329
+#: lib/tooltips.php:366
 msgid "Add a new rehearsal-event to the project."
 msgstr ""
 
-#: lib/tooltips.php:331
+#: lib/tooltips.php:368
 msgid ""
 "Select all events for\n"
 "email-submission"
 msgstr ""
 
-#: lib/tooltips.php:334
+#: lib/tooltips.php:371
 msgid ""
 "Mark the respective event for being\n"
 "sent by email as ICS-attachment per email.\n"
@@ -2846,20 +2970,20 @@ msgid ""
 "recipients."
 msgstr ""
 
-#: lib/tooltips.php:341
+#: lib/tooltips.php:378
 msgid ""
 "Click to open an email-form\n"
 "and send the selected events to\n"
 "selected recipients."
 msgstr ""
 
-#: lib/tooltips.php:345
+#: lib/tooltips.php:382
 msgid ""
 "Add the musician to the project. A new form will open were details like the "
 "instrument etc. can be adjustetd."
 msgstr ""
 
-#: lib/tooltips.php:347
+#: lib/tooltips.php:384
 msgid ""
 "Save the current email for later re-usal in the data-base.\n"
 "An email template can contain per-member substitutions with the syntax "
@@ -2871,36 +2995,36 @@ msgid ""
 "by the pre-names of the organizing committe in order to compose  greetings."
 msgstr ""
 
-#: lib/tooltips.php:353
+#: lib/tooltips.php:390
 msgid "Select one of the email templates previously stored in the data-base."
 msgstr ""
 
-#: lib/tooltips.php:355
+#: lib/tooltips.php:392
 msgid ""
 "Recompute the link between projects and events, using the event-categories "
 "as primary key."
 msgstr ""
 
-#: lib/tooltips.php:357
+#: lib/tooltips.php:394
 msgid ""
 "Check whether the data-base can be accessed with the given account\n"
 "information and password. The password will only be stored in the\n"
 "configuration storage if the test can be performed successfully."
 msgstr ""
 
-#: lib/tooltips.php:361
+#: lib/tooltips.php:398
 msgid ""
 "Try to connect to the specified web-address, will open the web-address in "
 "another window or tab, depending your local browser preferences."
 msgstr ""
 
-#: lib/tooltips.php:363
+#: lib/tooltips.php:400
 msgid ""
 "Add the instruments of the actually registered musicians to the instrument-"
 "table for the project."
 msgstr ""
 
-#: lib/tooltips.php:365
+#: lib/tooltips.php:402
 msgid ""
 "Upload a file from your local computer as attachment. The file will be "
 "removed from the remote-system after the message has been sent."
@@ -2953,7 +3077,7 @@ msgstr ""
 
 #: templates/app-settings.php:47 templates/app-settings.php:50
 #: templates/app-settings.php:82 templates/email-settings.php:73
-#: templates/settings.php:100 templates/settings.php:103
+#: templates/settings.php:101 templates/settings.php:104
 #: templates/share-settings.php:46
 msgid "show"
 msgstr ""
@@ -3365,8 +3489,20 @@ msgstr ""
 msgid "Test address"
 msgstr ""
 
-#: templates/email.php:78
+#: templates/email.php:78 templates/emailform.php:70
 msgid "Cancel upload"
+msgstr ""
+
+#: templates/emailform.php:35
+msgid "Em@il Recipients"
+msgstr ""
+
+#: templates/emailform.php:36
+msgid "Em@il Message"
+msgstr ""
+
+#: templates/emailform.php:37
+msgid "Status Messages"
 msgstr ""
 
 #: templates/errorpage.php:31
@@ -3677,23 +3813,55 @@ msgstr ""
 msgid "Minimize or maximize the containing block."
 msgstr ""
 
-#: templates/project-web-articles.php:123
+#: templates/part.emailform.message.php:114
+msgid "Determined automatically from data-base, see the recipients tab."
+msgstr ""
+
+#: templates/part.emailform.message.php:117
+msgid "Carbon Copy"
+msgstr ""
+
+#: templates/part.emailform.message.php:127
+msgid "Blind CC"
+msgstr ""
+
+#: templates/part.emailform.recipients.php:69
+msgid "Basic Recipients Set"
+msgstr ""
+
+#: templates/part.emailform.recipients.php:149
+msgid "Instruments Filter"
+msgstr ""
+
+#: templates/part.emailform.recipients.php:159
+msgid "Undo Filter"
+msgstr ""
+
+#: templates/part.emailform.recipients.php:177
+msgid "Select Instruments"
+msgstr ""
+
+#: templates/part.emailform.recipients.php:190
+msgid "Musicians without Email-Address"
+msgstr ""
+
+#: templates/project-web-articles.php:121
 msgid "No public web pages registered for this project"
 msgstr ""
 
-#: templates/project-web-articles.php:128
+#: templates/project-web-articles.php:126
 msgid "Create new public web page for this project."
 msgstr ""
 
-#: templates/project-web-articles.php:138
+#: templates/project-web-articles.php:136
 msgid "Attach existing Pages"
 msgstr ""
 
-#: templates/project-web-articles.php:185
+#: templates/project-web-articles.php:183
 msgid "Unlink a web-article."
 msgstr ""
 
-#: templates/project-web-articles.php:189
+#: templates/project-web-articles.php:187
 msgid "Delete a web article."
 msgstr ""
 
@@ -3799,79 +3967,83 @@ msgstr ""
 msgid "HTTP Request"
 msgstr ""
 
-#: templates/settings.php:46
-msgid "Personal"
+#: templates/settings.php:42
+msgid "Missing Context Help"
 msgstr ""
 
 #: templates/settings.php:47
-msgid "Orchestra"
+msgid "Personal"
 msgstr ""
 
 #: templates/settings.php:48
-msgid "Data-Base"
+msgid "Orchestra"
 msgstr ""
 
 #: templates/settings.php:49
-msgid "Sharing"
+msgid "Data-Base"
 msgstr ""
 
 #: templates/settings.php:50
-msgid "Email"
+msgid "Sharing"
 msgstr ""
 
 #: templates/settings.php:51
-msgid "Development"
+msgid "Email"
 msgstr ""
 
 #: templates/settings.php:52
+msgid "Development"
+msgstr ""
+
+#: templates/settings.php:53
 msgid "CMS"
 msgstr ""
 
-#: templates/settings.php:59
+#: templates/settings.php:60
 msgid "Tool-Tips"
 msgstr ""
 
-#: templates/settings.php:62
+#: templates/settings.php:63
 msgid "Page-Header"
 msgstr ""
 
-#: templates/settings.php:65
+#: templates/settings.php:66
 msgid "Filter-Controls"
 msgstr ""
 
-#: templates/settings.php:68
+#: templates/settings.php:69
 msgid "WYSIWYG Editor"
 msgstr ""
 
-#: templates/settings.php:79
+#: templates/settings.php:80
 msgid "Expert-Mode"
 msgstr ""
 
-#: templates/settings.php:84
+#: templates/settings.php:85
 msgid "Enable Debug Mode"
 msgstr ""
 
-#: templates/settings.php:94
+#: templates/settings.php:95
 msgid "Dummy"
 msgstr ""
 
-#: templates/settings.php:98
+#: templates/settings.php:99
 msgid "Own Password"
 msgstr ""
 
-#: templates/settings.php:101
+#: templates/settings.php:102
 msgid "DB Encryption Key"
 msgstr ""
 
-#: templates/settings.php:104
+#: templates/settings.php:105
 msgid "Set Encryption Key"
 msgstr ""
 
-#: templates/settings.php:105
+#: templates/settings.php:106
 msgid "The encryption key has been set successfully."
 msgstr ""
 
-#: templates/settings.php:106
+#: templates/settings.php:107
 msgid "Unable to set the encryption key."
 msgstr ""
 
