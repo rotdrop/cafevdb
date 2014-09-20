@@ -64,6 +64,43 @@ class ToolTips
       'configrecheck' => L::t('Perform the configuration checks again. If all checks have been passed then you are led on to the ordinary entry page of the application.'),
 
       'emailtest' => L::t('Test the email-settings; try to connect to the SMTP-server and the IMAP-server in turn.'),
+      
+      'email-recipients-from-project' => L::t('Choose among all musicians currently registered for this project.'),
+
+      'email-recipients-except-project' => L::t('Choose among all musicians currently <b>NOT</b> registered for this project.'),
+
+      'email-recipients-basic-set' => L::t('Choose either among all musicians currently registered for the project
+or from the complement set. Obviously, selecting both options will
+give you the choice to select any musician as recipient.'),
+
+      'email-recipients-member-status-filter' => L::t('Select recipients by member status. Normally, conductors and soloists
+are excluded from receiving mass-email. Please be careful when modifying the default selection!'),
+
+      'email-recipients-instruments-filter-apply' => L::t('Apply the currently selected instruments as filter. At your option,
+you can also simply double-click inside the filter-box in order to activate your filter-choice.'),
+
+      'email-recipients-instruments-filter-undo' => L::t('SORRY, UNIMPLEMENTED. Should be: Undo the most recent instrument
+filter and return to the previous state. Please note that this is a
+one-time undo option, no further history of your filter actions is
+remembered.'),
+
+      'email-recipients-instruments-filter-reset' => L::t('Reset to the initial pre-selection which was activ when entering this
+form. This will <b>REALLY</b> void all your recipient selections and
+reset the form to the initial state. Note, however, that the text of
+your email will be maintained, the reset only applies to the recipient
+list.'),
+
+      'email-recipients-instruments-filter' => L::t('Restrict the basic set of musicians to the instruments selected
+here. The filter is additive: selecting more than one instruments will
+include the musicians playing either of them.'),
+
+      'cancel-email-composition' => L::t('Cancel the email composition and close the input form. This has the
+same effect as clicking the close button on top of the dialog-window. No email will be sent.'),
+
+      'send-mass-email' => L::t('Attempt to send the stuff you have composed out to your selection of
+recipients. Please think thrice about it. In case of an error
+additional diagnostic messages may (or may not ...) be available in
+the `Debug\' tab'),
 
       'member-status' => L::t('A flag which indicates not so much social or functional status, but
 default behaviour for mass-emails as follows
