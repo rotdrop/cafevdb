@@ -111,8 +111,10 @@ redaxoDefaultModule
   public static $expertmode = false;
   public static $debug = array('general' => false,
                                'query' => false,
-                               'request' => false);
+                               'request' => false,
+                               'tooltips' => false);
   private static $initialized = false;
+  private static $toolTipsArray = array();
 
   /**List of data-base entries that need to be encrypted. We should
    * invent some "registration" infrastructre for this AND first do a
@@ -714,7 +716,8 @@ redaxoDefaultModule
                            'ProjectId' => -1,
                            'Project' => '',
                            'RecordsPerPage' => -1);
-    self::$pmeopts['tooltips'] = ToolTips::toolTips();
+    self::$toolTipsArray = ToolTips::toolTips();
+    self::$pmeopts['tooltips'] = self::$toolTipsArray;
   }
 
   /**Return a translated tool-tip for the given key.
@@ -722,8 +725,10 @@ redaxoDefaultModule
   public static function toolTips($key)
   {
       $tip = '';
-      if (isset(self::$pmeopts['tooltips'][$key])) {
-          $tip = self::$pmeopts['tooltips'][$key];
+      if (isset(self::$toolTipsArray[$key])) {
+        $tip = self::$toolTipsArray[$key];
+      } else if (self::$debug['tooltips']) {
+        $tip = L::t("Unknown Tooltip for key `%s' requested.", array($key));
       }
       return htmlspecialchars($tip);
   }

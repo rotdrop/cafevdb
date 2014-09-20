@@ -38,7 +38,8 @@ $debugtitle     = L::t("Show a certain amount of debug information, normally not
 
 $debugModes = array('general' => L::t('General Information'),
                     'query' => L::t('SQL Queries'),
-                    'request' => L::t('HTTP Request'));
+                    'request' => L::t('HTTP Request'),
+                    'tooltips' => L::t('Missing Context Help'));
 
 ?>
 <?php if ($_['adminsettings']) { ?>
