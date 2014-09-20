@@ -186,7 +186,6 @@ $(document).ready(function(){
   PHPMYEDIT.addTableLoadCallback('BriefInstrumentation', {
     callback: function(selector, resizeCB) {
       CAFEVDB.exportMenu(selector);
-      $(selector).find('input.pme-email').addClass('formsubmit');
       CAFEVDB.SepaDebitMandate.popupInit(selector);
       this.ready(selector);
       resizeCB();
@@ -199,7 +198,6 @@ $(document).ready(function(){
     callback: function(selector, resizeCB) {
       var container = $(selector);
       CAFEVDB.exportMenu(selector);
-      container.find('input.pme-email').addClass('formsubmit');
       container.find('span.photo, #cafevdb_inline_image_wrapper').on('click', 'img', function(event) {
         event.preventDefault();
         CAFEVDB.Photo.popup(this);
@@ -223,7 +221,6 @@ $(document).ready(function(){
   PHPMYEDIT.addTableLoadCallback('BulkAddMusicians', {
     callback: function(selector, resizeCB) {
       CAFEVDB.exportMenu(selector);
-      $(selector).find('input.pme-email').addClass('formsubmit');
       CAFEVDB.SepaDebitMandate.popupInit(selector);
       this.ready(selector);
       resizeCB();
@@ -231,9 +228,6 @@ $(document).ready(function(){
     context: CAFEVDB.Instrumentation,
     parameters: []
   });
-
-  $(PHPMYEDIT.defaultSelector+' input.pme-email').addClass('formsubmit');
-  $(PHPMYEDIT.defaultSelector+' input.pme-bulkcommit').addClass('formsubmit');
 
   CAFEVDB.Instrumentation.ready();
 

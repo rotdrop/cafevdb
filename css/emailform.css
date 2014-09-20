@@ -1,0 +1,357 @@
+/**Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2011-2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*****************************************************************************
+ *
+ * General stuff, background etc.
+ *
+ */
+div#emailformwrapper {
+  padding:0;
+  background-color:#F2F8FF;
+}
+
+ui-dialog.emailform {
+  overflow:hidden;
+}
+
+/* dialog popup, header */
+
+.ui-dialog.emailform div.ui-dialog-titlebar {
+  padding-bottom:0;
+  border-bottom-right-radius:0;
+  border-bottom-left-radius:0;
+  border-bottom:0;
+}
+#emailformwrapper > div {
+  height:auto !important;
+  overflow-y:auto;
+  overflow-x:hidden;
+}
+
+#emailformdialog {
+  padding:0;
+}
+
+ul#emailformtabs {
+  padding-top:0;
+  border-top-right-radius:0;
+  border-top-left-radius:0;
+  border-top:0;
+}
+
+#emailformdialog fieldset.page {
+  min-width:65em;
+}
+
+/*****************************************************************************
+ *
+ * email composition
+ *
+ */
+
+form#cafevdb-email-composition-form fieldset {
+  max-width:65em;
+}
+form#cafevdb-email-composition-form tr.attachments td {
+  vertical-align:middle;
+}
+form#cafevdb-email-composition-form tr.attachments button {
+  background-color:#C6DEFF;
+  vertical-align:middle;
+  height:28px;
+  padding:5px;  
+  border-style:outset;
+}
+form#cafevdb-email-composition-form tr.attachments button.events {
+  padding:0px;
+}
+form#cafevdb-email-composition-form tr.attachments button.events img  {
+  vertical-align:top;
+  height:26px;
+}
+form#cafevdb-email-composition-form tr.eventattachments img { 
+  height:10px;
+  vertical-align:top;
+}
+form#cafevdb-email-composition-form tr.eventattachments button {
+  background-color:#C6DEFF;
+  vertical-align:middle;
+  height:20px;
+  padding:5px;  
+  border-style:outset;
+  vertical-align:middle;
+}
+
+form#cafevdb-email-composition-form tr.submit td {
+  border-top:1px solid #808080;
+}
+form#cafevdb-email-composition-form tr.submit td.send {
+   width:auto;
+   text-align:full;
+   padding:0;
+   margin:0;
+}
+
+form#cafevdb-email-composition-form td.body {
+  vertical-align:top;
+}
+form#cafevdb-email-composition-form tr.submit td.addresses input {
+   width:auto;
+ }
+form#cafevdb-email-composition-form tr.submit td.addresses {
+   width:auto;
+   text-align:full;
+   padding:0;
+   margin:0;
+}
+form#cafevdb-email-composition-form tr.submit td.reset {
+   width:auto;
+   text-align:right;
+   padding:0;
+   margin:0;
+}
+form#cafevdb-email-composition-form td.reset input {
+  margin-right:0;
+}
+form#cafevdb-email-composition-form td.email-template-save {
+  text-align:right;
+}
+
+form#cafevdb-email-composition-form td.email-address.input {
+  width:100%;
+  padding: 0 1em 0 0;
+}
+form#cafevdb-email-composition-form td.email-address.input input {
+  width:100%;
+}
+
+form#cafevdb-email-composition-form td.subject.input  span.subject.tag {
+  font-family:monospace;
+  font-size:160%;
+  width:auto;
+  max-width:30%;
+  text-align:right;
+  font-weight:bold;
+  display:inline-block;
+  float:left;
+  line-height:2.5em;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+form#cafevdb-email-composition-form td.subject.input span.subject.input {
+  width:70%;
+  padding: 0 1em 0 0;
+  display:inline-block;
+  line-height:2.5em;
+  float:right;
+}
+
+form#cafevdb-email-composition-form td.subject.input input {
+  width:100%;
+}
+
+form#cafevdb-email-composition-form td.messagetext {
+  padding: 0.5em 0;
+}
+
+/*****************************************************************************
+ *
+ * email recipients selection
+ *
+ */
+form#cafevdb-email-recipients-form div.row {
+  width:100%;
+}
+
+form#cafevdb-email-recipients-form div.row:after {
+  content:" ";
+  display:block;
+  height:0;
+  clear: both;
+}
+
+form#cafevdb-email-recipients-form span.container {
+  display:inline-block;
+}
+
+form#cafevdb-email-recipients-form .container.left {
+  float:left;
+}
+
+form#cafevdb-email-recipients-form .container.right {
+  float:right;
+  text-align:right;
+}
+
+form#cafevdb-email-recipients-form .label {
+  font-weight:bold;
+}
+
+form#cafevdb-email-recipients-form .label.top {
+  display:block;
+}
+
+form#cafevdb-email-recipients-form .label.left {
+  display:inline-block;
+  float:left;
+  padding-right:0.5em;
+}
+
+form#cafevdb-email-recipients-form .label.right {
+  display:inline-block;
+  float:right;
+  padding-left:0.5em;
+}
+
+form#cafevdb-email-recipients-form .spacer {
+  width:100%;
+  height:auto;
+  margin: 1em 0 1em 0;
+  text-align:center;
+}
+
+form#cafevdb-email-recipients-form .spacer .ruler {
+  display:inline-block;
+  width:100%;
+  background-color:#000;
+  height:1px;
+  padding:0;
+}
+
+form#cafevdb-email-recipients-form .vmiddle {
+  vertical-align:middle;
+}
+
+form#cafevdb-email-recipients-form .vmiddle * {
+  vertical-align:middle;
+}
+
+/* special elements */
+
+form#cafevdb-email-recipients-form .member-status-filter.container {
+  min-height:5em;
+}
+
+form#cafevdb-email-recipients-form .basic-recipients-set.container.inner {
+  margin: 0 0.5em 0 0.5em;
+  position:relative;
+}
+
+form#cafevdb-email-recipients-form input[type=checkbox] {
+  position:absolute;
+}
+
+form#cafevdb-email-recipients-form .basic-recipients-set.container.outer {
+  display:inline-block;
+}
+
+form#cafevdb-email-recipients-form input[type=checkbox] + .label span.button {
+  display:inline-block;
+  background-color:#F4F4F4 !important;
+  box-shadow:2px 2px 2px #080808;/*, 2px 2px 2px #cfc;*/
+}
+
+form#cafevdb-email-recipients-form input[type=checkbox]:checked + .label span.button {
+  display:inline-block;
+  background-color:LightSteelBlue !important;
+  box-shadow:2px 2px 2px #080808 inset; /*, 1px 1px 1px #cfc inset;*/
+}
+
+form#cafevdb-email-recipients-form .recipients-select.container {
+  width:80%
+}
+
+form#cafevdb-email-recipients-form .instruments-filter.container {
+  width:18%
+}
+
+form#cafevdb-email-recipients-form span#instruments-filter-wrapper {
+  margin-top:0.3em;
+  display:inline-block;
+  width: 100%;
+}
+
+form#cafevdb-email-recipients-form .instruments-filter.container .chosen-container {
+  width:100% !important;
+}
+
+form#cafevdb-email-recipients-form input.instruments-filter-controls.apply {
+  background-image:url('../img/email-new-yes.svg');
+  background-repeat:no-repeat;
+  background-size: 28px 28px;
+  background-position: center;
+  width:28px;
+  height:28px;
+  font-size:0pt;
+  vertical-align:middle;
+}
+
+form#cafevdb-email-recipients-form input.instruments-filter-controls.undo {
+  background-image:url('../img/email-new-undo.svg');
+  background-repeat:no-repeat;
+  background-size: 28px 28px;
+  background-position: center;
+  width:28px;
+  height:28px;
+  font-size:0pt;
+  vertical-align:middle;
+}
+
+form#cafevdb-email-recipients-form input.instruments-filter-controls.reset {
+  background-image:url('../img/email-new-x.svg');
+  background-repeat:no-repeat;
+  background-size: 28px 28px;
+  background-position: center;
+  width:28px;
+  height:28px;
+  font-size:0pt;
+  vertical-align:middle;
+}
+
+/******************************************************************************
+ *
+ * File upload support
+ *
+ */
+
+.file_upload_form {
+  width:0;
+  height:0;
+}
+.file_upload_target {
+ display:none;
+}
+.file_upload_start {
+  ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter:alpha(opacity=0);
+  opacity:0;
+  z-index:1001;
+  width:0;
+  height:0;
+}
+
+/*
+ * Local Variables: ***
+ * cssm-indent-function: cssm-c-style-indenter ***
+ * End: ***
+ */

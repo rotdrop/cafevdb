@@ -28,10 +28,7 @@ var CAFEVDB = CAFEVDB || {};
   CAFEVDB.wysiwygEditor    = 'tinymce';
   CAFEVDB.language         = 'en';
 
-  CAFEVDB.addEditor = function(selector, initCallback) {
-    if (typeof initCallback === 'undefined') {
-      initCallback = function() {};
-    }
+  CAFEVDB.addEditor = function(selector, initCallback, initialHeight) {
     var editorElement;
     if (selector instanceof jQuery) {
       editorElement = selector;
@@ -39,11 +36,16 @@ var CAFEVDB = CAFEVDB || {};
       editorElement = $(selector);
     }
     if (!editorElement.length) {
-      initCallback();
+      if (typeof initCallback == 'function') {
+        initCallback();
+      }
       return;
     }
     switch (this.wysiwygEditor) {
     case 'ckeditor':
+      if (typeof initCallback != 'function') {
+        initCallback = function() {};
+      }
       editorElement.ckeditor(initCallback, {/*enterMode:CKEDITOR.ENTER_P*/});
       break;
     case 'tinymce':
@@ -52,18 +54,29 @@ var CAFEVDB = CAFEVDB || {};
 	  e.stopImmediatePropagation();
 	}
       });
-      var mceConfig = myTinyMCE.getConfig(
-        {
-          setup: function(editor) {
-            myTinyMCE.config.setup(editor);
-          },
-        });
+      var plusConfig;
+      if (typeof initialHeight != 'undefined') {
+        plusConfig = { height: initialHeight };
+      } else {
+        plusConfig = undefined;
+      }
+      var mceConfig = myTinyMCE.getConfig(plusConfig);
+        // {
+        //   setup: function(editor) {
+        //     myTinyMCE.config.setup(editor);
+        //   },
+        // });
       editorElement.tinymce(mceConfig);
       // post-render callback? This is really quere. There is
       // something really broken with the tinzMCE setup.
-      setTimeout(initCallback, 500);
+      if (typeof initCallback == 'function') {
+        setTimeout(initCallback, 500);
+      }
       break;
     default:
+      if (typeof initCallback != 'function') {
+        initCallback = function() {};
+      }
       editorElement.ckeditor(initCallback, {/*enterMode:CKEDITOR.ENTER_P*/});
       break;
     };
@@ -507,6 +520,21 @@ var CAFEVDB = CAFEVDB || {};
     container.find('td[class$="-money"]').filter(function() {
       return $.trim($(this).text()).indexOf("-") == 0;
     }).addClass("negative");
+
+
+    if (false) {
+        $(PHPMYEDIT.defaultSelector + ' input.pme-email').addClass('formsubmit');
+    } else {
+        $(PHPMYEDIT.defaultSelector + ' input.pme-email').on('click', function(event) {
+            event.stopImmediatePropagation();
+            CAFEVDB.Email.emailFormPopup($(this.form).serialize());
+            return false;
+        });
+    }
+
+    // This could also be wrapped into a popup maybe, and lead back to
+    // the brief-instrumentation table on success.
+    $(PHPMYEDIT.defaultSelector + ' input.pme-bulkcommit').addClass('formsubmit');
   };
 
   /**Initialize our tipsy stuff. Only exchange for our own thingies, of course.

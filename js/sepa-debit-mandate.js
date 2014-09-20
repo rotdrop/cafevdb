@@ -405,7 +405,6 @@ var CAFEVDB = CAFEVDB || {};
     table.find('input').on('blur', this.validatePME);
 
     CAFEVDB.exportMenu(containerSel);
-    container.find('input.pme-email').addClass('formsubmit');
 
     table.find('input[class$="-sepadate"]').datepicker({
       dateFormat : 'dd.mm.yy', // this is 4-digit year

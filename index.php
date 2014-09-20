@@ -93,12 +93,11 @@ try {
   OCP\Util::addStyle('cafevdb', 'events');
   OCP\Util::addStyle('cafevdb', 'sepa-debit-mandate');
   OCP\Util::addStyle('cafevdb', 'email');
+  OCP\Util::addStyle('cafevdb', 'emailform');
   OCP\Util::addStyle('cafevdb', 'blog');
   OCP\Util::addStyle('cafevdb', 'projects');
   OCP\Util::addStyle('cafevdb', 'project-instruments');
   OCP\Util::addStyle('cafevdb', 'inlineimage');  
-  OCP\Util::addStyle('cafevdb', 'jquery.Jcrop');  
-  OCP\Util::addStyle("cafevdb/3rdparty", "chosen/chosen");
   OCP\Util::addStyle('3rdparty/fontawesome', 'font-awesome');
   OCP\Util::addStyle('cafevdb', 'font-awesome');
 
@@ -111,7 +110,9 @@ try {
   OCP\Util::addScript('cafevdb', 'projects');
   OCP\Util::addScript('cafevdb', 'project-instruments');
   OCP\Util::addScript('cafevdb', 'sepa-debit-mandate');
+
   OCP\Util::addScript('cafevdb', 'jquery.Jcrop');
+  OCP\Util::addStyle('cafevdb', 'jquery.Jcrop');  
 
   OCP\Util::addscript('files',   'jquery.iframe-transport');
   OCP\Util::addscript('files',   'jquery.fileupload');
@@ -127,14 +128,24 @@ try {
   OCP\Util::addScript('cafevdb/3rdparty', 'ckeditor/ckeditor');
   OCP\Util::addScript('cafevdb/3rdparty', 'ckeditor/adapters/jquery');
   
+  // Updated chosen version
   OCP\Util::addscript("cafevdb/3rdparty", "chosen/chosen.jquery.min");
+  OCP\Util::addStyle("cafevdb/3rdparty", "chosen/chosen");
 
+  // Will be removed ...
   OCP\Util::addscript("cafevdb/3rdparty/QuickForm2", "quickform");
   OCP\Util::addscript("cafevdb/3rdparty/QuickForm2", "dualselect");
 
+  // Callback for waiting until images have been loaded
   OCP\UTIL::addscript("cafevdb/3rdparty", "imagesloaded/imagesloaded.pkgd.min");
 
-  // Calendar event hacks
+  // dual-select list-box for email recipient selection
+  //OCP\Util::addstyle("cafevdb/3rdparty/bootstrap", "bootstrap.min");
+  OCP\Util::addstyle("cafevdb/3rdparty/bootstrap-duallistbox", "bootstrap-duallistbox-quirks");
+  OCP\Util::addstyle("cafevdb/3rdparty/bootstrap-duallistbox", "bootstrap-duallistbox.min");
+  OCP\Util::addscript("cafevdb/3rdparty/bootstrap-duallistbox", "jquery.bootstrap-duallistbox.min");
+  
+  // Calendar event hacks ... TODO: check whether still needed ...
   OCP\Util::addscript('3rdparty/timepicker', 'jquery.ui.timepicker');
   OCP\Util::addStyle('3rdparty/timepicker', 'jquery.ui.timepicker');
   OCP\Util::addscript('', 'jquery.multiselect');

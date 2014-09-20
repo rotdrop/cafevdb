@@ -564,6 +564,81 @@ __EOT__;
  */
 class Navigation
 {
+  const DISABLED = 1;
+  const SELECTED = 2;
+
+  /**Emit select options
+   *
+   * @param $options Array with option tags:
+   *
+   * value => option value
+   * name  => option name
+   * flags => optional or bit-wise or of self::DISABLED, self::SELECTED
+   * title => optional title
+   * label => optional label
+   * group => optional option group
+   *
+   * Optional fields need not be present.
+   */
+  public static function selectOptions($options)
+  {
+    $result = '';
+    $indent = '';
+    if (!is_array($options) || count($options) == 0) {
+      return $result;
+    }
+    $oldGroup = isset($options[0]['group']) ? $options[0]['group'] : false;
+    if ($oldGroup) {
+      $result .= '<optgroup label="'.$oldGroup.'">
+';
+      $indent = '  ';
+    }
+    foreach($options as $option) {
+      $flags = isset($option['flags']) ? $option['flags'] : 0;
+      $disabled = $flags & self::DISABLED ? ' disabled="disabled"' : '';
+      $selected = $flags & self::SELECTED ? ' selected="selected"' : '';
+      $label    = isset($option['label']) ? ' label="'.$option['label'].'"' : '';
+      $title    = isset($option['title']) ? ' title="'.$option['title'].'"' : '';
+      $group = isset($option['group']) ? $option['group'] : false;
+      if ($group != $oldGroup) {
+        $result .= '</optgroup>
+';
+        $oldGroup = $group;
+        $indent = '';
+      }
+      if ($group) {
+        $result .= '<optgroup label="'.$group.'">
+';
+        $indent = '  ';
+      }
+      $result .= $indent.'<option value="'.$option['value'].'"'.
+        $disabled.$selected.$label.$title.
+        '>'.
+        $option['name'].
+        '</option>
+';
+    }
+    return $result;
+  }
+  
+
+  /**Recursively emit hidden input elements to represent the given
+   * data. $value may be a nested array.
+   */
+  public static function persistentCGI($key, $value)
+  {
+    if (is_array($value)) {
+      $result = '';
+      foreach($value as $subkey => $subval) {
+        $result .= self::persistentCGI($key.'['.$subkey.']', $subval)."\n";
+      }
+      return $result;
+    } else {
+      return '<input type="hidden" name="'.$key.'" value="'.htmlspecialchars($value).'"/>'."\n";
+    }
+  }
+  
+
   /**Acutally rather a multi-select than a button, meant as drop-down
    * menu. Generates data which can be passed to prependTableButton()
    * below.

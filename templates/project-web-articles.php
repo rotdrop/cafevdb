@@ -1,5 +1,3 @@
-
-
 <?php
 /**Orchestra member, musician and project management application.
  *

@@ -95,9 +95,6 @@ $(document).ready(function(){
     CAFEVDB.pmeTweaks();
 
     CAFEVDB.tipsy();
-
-    $(PHPMYEDIT.defaultSelector+' input.pme-email').addClass('formsubmit');
-    $(PHPMYEDIT.defaultSelector+' input.pme-bulkcommit').addClass('formsubmit');
     
     if (CAFEVDB.toolTips) {
         $.fn.tipsy.enable();

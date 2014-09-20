@@ -111,6 +111,95 @@ CAFEVDB.Email = CAFEVDB.Email || {};
     CAFEVDB.broadcastHeaderVisibility('expanded');
   };
 
+  /**Open the mass-email form in a popup window
+   */
+  Email.emailFormPopup = function(post) {
+    $.post(OC.filePath('cafevdb', 'ajax/email', 'emailform.php'),
+           post,
+           function(data) {
+             var containerId = 'emailformdialog';
+             var dialogHolder;
+             if (data.status == 'success') {
+               dialogHolder = $('<div id="'+containerId+'"></div>');
+               dialogHolder.html(data.data.contents);
+               $('body').append(dialogHolder);
+             } else {
+               // error handling
+               var info = '';
+               if (typeof data.data == 'undefined') {
+                 OC.dialogs.alert(t('cafevdb', 'Unrecoverable unknown internal error, no further information available, sorry.'), t('cafevdb', 'Internal Error'), undefined, true);
+                 return false;
+               }
+               if (typeof data.data.message != 'undefined') {
+	         info = data.data.message;
+               } else {
+	         info = t('cafevdb', 'Unknown error :(');
+               }
+               if (typeof data.data.error != 'undefined' && data.data.error == 'exception') {
+	         info += '<p><pre>'+data.data.exception+'</pre>';
+	         info += '<p><pre>'+data.data.trace+'</pre>';
+               }
+               OC.dialogs.alert(info, t('cafevdb', 'Error'));
+               if (data.data.debug != '') {
+                 OC.dialogs.alert(data.data.debug, t('cafevdb', 'Debug Information'), null, true);
+               }
+               return false;
+             }
+             var popup = dialogHolder.dialog({
+               title: t('cafevdb', 'Em@il Form'), // todo: add project etc. if appropriate
+               position: { my: "middle top",
+                           at: "middle bottom+50px",
+                           of: "#header" },
+               width: 'auto',
+               height: 'auto',
+               modal: true,
+               closeOnEscape: false,
+               dialogClass: 'emailform custom-close',
+               resizable: false,
+               open: function() {
+                 $('.tipsy').remove();
+                 CAFEVDB.dialogToBackButton(dialogHolder);
+                 CAFEVDB.dialogCustomCloseButton(dialogHolder, function(event, container) {
+                   event.stopImmediatePropagation();
+                   dialogHolder.dialog('close');
+                   return false;
+                 });
+                 dialogHolder.tabs({
+                   active: 0,
+                   heightStyle: 'content' });
+                 CAFEVDB.addEditor(dialogHolder.find('textarea.wysiwygeditor'), undefined, '20em');
+                 $('#cafevdb-email-template-selector').chosen({ disable_search_threshold: 10,
+                                                                width: '10em' });
+                 $('form#cafevdb-email-recipients-form #member-status-filter').chosen();
+
+                 $('form#cafevdb-email-recipients-form #instruments-filter option[value="*"]').remove();
+                 $('form#cafevdb-email-recipients-form #instruments-filter').chosen();
+                 $('form#cafevdb-email-recipients-form #recipients-select').bootstrapDualListbox(
+                   {
+                     // moveOnSelect: false,
+                     // preserveSelectionOnMove : 'all',
+                     nonSelectedListLabel: t('cafevdb', 'Remaining Recipients'),
+                     selectedListLabel   : t('cafevdb', 'Selected Recipients'),
+                     infoText            : '&nbsp;', // t('cafevdb', 'Showing all {0}'),
+                     infoTextTiltered    : '<span class="label label-warning">'+t('cafevdb', 'Filtered')+'</span> {0} '+t('cafevdb', 'from')+' {1}',
+                     infoTextEmpty       : '&nbsp;', // t('cafevdb', 'Empty list'),
+                     filterPlaceHolder   : t('cafevdb', 'Filter'),
+                     filterTextClear     : t('cafevdb', 'show all')
+                   }
+                 );
+                 CAFEVDB.tipsy(dialogHolder);
+               },
+               close: function() {
+                 $('.tipsy').remove();
+                 CAFEVDB.removeEditor(dialogHolder.find('textarea.wysiwygeditor'));
+                 dialogHolder.dialog('close');
+                 dialogHolder.dialog('destroy').remove();
+               }
+             });
+             return false;
+           });
+  };
+
 })(window, jQuery, CAFEVDB.Email);
 
 
