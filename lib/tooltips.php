@@ -77,18 +77,21 @@ give you the choice to select any musician as recipient.'),
 are excluded from receiving mass-email. Please be careful when modifying the default selection!'),
 
       'email-recipients-instruments-filter-apply' => L::t('Apply the currently selected instruments as filter. At your option,
-you can also simply double-click inside the filter-box in order to activate your filter-choice.'),
+you can also simply double-click inside the boxed filter-region in order to activate your filter-choice.'),
 
-      'email-recipients-instruments-filter-undo' => L::t('SORRY, UNIMPLEMENTED. Should be: Undo the most recent instrument
-filter and return to the previous state. Please note that this is a
-one-time undo option, no further history of your filter actions is
-remembered.'),
+      'email-recipients-instruments-filter-undo' => L::t('Undo the last recipient filter operation and restore the previous selection of musicians.'),
+
+      'email-recipients-instruments-filter-redo' => L::t('Redo the last operation undone by the undo button.'),
 
       'email-recipients-instruments-filter-reset' => L::t('Reset to the initial pre-selection which was activ when entering this
 form. This will <b>REALLY</b> void all your recipient selections and
 reset the form to the initial state. Note, however, that the text of
 your email will be maintained, the reset only applies to the recipient
 list.'),
+
+      'email-recipients-instruments-filter-container' => L::t('A double click inside the boxed filter-region will apply the instruments-filter'),
+
+      'email-recipients-instruments-filter-label' => L::t('A double click inside the boxed filter-region will apply the instruments-filter'),
 
       'email-recipients-instruments-filter' => L::t('Restrict the basic set of musicians to the instruments selected
 here. The filter is additive: selecting more than one instruments will
