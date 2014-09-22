@@ -27,57 +27,56 @@ use CAFEVDB\Email;
 
 CAFEVDB\Error::exceptions(true);
 
-try {
+?>
 
-echo '
 <div id="emailformwrapper">
   <ul id="emailformtabs">
-    <li id="emailformrecipients-tab"><a href="#emailformrecipients">'.L::t('Em@il Recipients').'</a></li>
-    <li id="emailformmessage-tab"><a href="#emailformmessage">'.L::t('Em@il Message').'</a></li>
-    <li id="emailformdebug-tab"><a href="#emailformdebug">'.L::t('Status Messages').'</a></li>
-  </ul>';
+    <li id="emailformrecipients-tab">
+      <a href="#emailformrecipients"><?php echo L::t('Em@il Recipients'); ?></a>
+    </li>
+    <li id="emailformmessage-tab">
+      <a href="#emailformmessage"><?php echo L::t('Em@il Message'); ?></a>
+    </li>
+    <li id="emailformdebug-tab">
+      <a href="#emailformdebug"><?php echo L::t('Status Messages'); ?></a>
+    </li>
+  </ul>
+  <form method="post"
+        name="cafevdb-email-from"
+        id="cafevdb-email-form"
+        class="cafevdb-email-form">
+    <fieldset id="cafevdb-email-form-data" class="form-data">
+      <?php echo Navigation::persistentCGI('ProjectName', $_['ProjectName']); ?>
+      <?php echo Navigation::persistentCGI('Project', $_['ProjectName']); ?>
+      <?php echo Navigation::persistentCGI('ProjectId', $_['ProjectId']); ?>
+    </fieldset>
+    <div id="emailformrecipients"><?php echo $this->inc('part.emailform.recipients'); ?></div>
+    <div id="emailformmessage"><?php echo $this->inc('part.emailform.message'); ?></div>
+    <div id="emailformdebug"><pre><?php print_r($_POST); print_r($_); ?></pre></div>
+  </form>
 
-echo '
-  <div id="emailformrecipients">'.$this->inc('part.emailform.recipients').'</div>';
 
-echo '
-  <div id="emailformmessage">'.$this->inc('part.emailform.message').'</div>';
-  
-echo '
-  <div id="emailformdebug"><pre>'.print_r($_POST, true).print_r($_, true).'</pre></div>';
-
-?>
-
-<form data-upload-id='1'
-      id="data-upload-form"
-      class="file_upload_form"
-      action="<?php print_unescaped(OCP\Util::linkTo('cafevdb', 'ajax/email/uploadattachment.php')); ?>"
-      method="post"
-      enctype="multipart/form-data"
-      target="file_upload_target_1">
-  <input type="hidden" name="MAX_FILE_SIZE" id="max_upload"
-						   value="<?php p($_['uploadMaxFilesize']) ?>">
-  <!-- Send the requesttoken, this is needed for older IE versions
-       because they don't send the CSRF token via HTTP header in this case -->
-  <input type="hidden" name="requesttoken" value="<?php p($_['requesttoken']) ?>" id="requesttoken">
-  <input type="hidden" class="max_human_file_size"
-	 value="(max <?php p($_['uploadMaxHumanFilesize']); ?>)">
-  <input type="file" id="file_upload_start" name="files[]" multiple>
-</form>
-<div id="uploadprogresswrapper">
-  <div id="uploadprogressbar"></div>
-  <input type="button" class="stop" style="display:none"
-	 value="<?php p($l->t('Cancel upload'));?>"
-	 />
+  <form data-upload-id='1'
+        id="data-upload-form"
+        class="file_upload_form"
+        action="<?php print_unescaped(OCP\Util::linkTo('cafevdb', 'ajax/email/uploadattachment.php')); ?>"
+        method="post"
+        enctype="multipart/form-data"
+        target="file_upload_target_1">
+    <input type="hidden" name="MAX_FILE_SIZE" id="max_upload"
+	   value="<?php p($_['uploadMaxFilesize']) ?>">
+    <!-- Send the requesttoken, this is needed for older IE versions
+    because they don't send the CSRF token via HTTP header in this case -->
+    <input type="hidden" name="requesttoken" value="<?php p($_['requesttoken']) ?>" id="requesttoken">
+    <input type="hidden" class="max_human_file_size"
+	   value="(max <?php p($_['uploadMaxHumanFilesize']); ?>)">
+    <input type="file" id="file_upload_start" name="files[]" multiple>
+  </form>
+  <div id="uploadprogresswrapper">
+    <div id="uploadprogressbar"></div>
+    <input type="button" class="stop" style="display:none"
+	   value="<?php p($l->t('Cancel upload'));?>"
+	   />
+  </div>
 </div>
 
-<?php
-
-  echo '
-</div>'; // emailformwrapper
-
-} catch (\Exception $e) {
-  throw $e;
-}
-
-?>

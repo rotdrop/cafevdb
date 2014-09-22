@@ -28,7 +28,7 @@ use CAFEVDB\Projects;
 use CAFEVDB\Config;
 use CAFEVDB\Events;
 
-    /* Remember address filter for later */
+/* Remember address filter for later */
 //echo $filter->getPersistent(array('fileAttach' => $this->fileAttach));
 
 $eventAttachButton = '';
@@ -39,29 +39,25 @@ if ($_['ProjectId'] >= 0) {
     $_['ProjectId'], $_['ProjectName'], L::t('Events'), $EventSelect);
   if (!empty($EventSelect)) {
     $attachedEvents = ''
-      .'<tr class="eventattachments"><td>'.L::t('Attached Events').'</td>'
-      .'<td colspan="2"><span id="eventattachments">';
+                    .'<tr class="eventattachments"><td>'.L::t('Attached Events').'</td>'
+                                                             .'<td colspan="2"><span id="eventattachments">';
     foreach ($EventSelect as $id) {
       $event = Events::fetchEvent($id);
       $brief =
-        $event['summary'].', '.
-        Events::briefEventDate($event);
+      $event['summary'].', '.
+      Events::briefEventDate($event);
 
-      $attachedEvents .= ''
-        .'<button '
-        .'type="button" '
-        .'title="'.L::t('Edit Event %s',array($brief)).'" '
-        .'class="eventattachments edit" '
-        .'id="eventattachment-'.$id.'" '
-        .'name="eventattachment[]" '
-        .'value="'.$id.'" '
-        .'>'
-        .'<img '
-        .'alt="'.$id.'" '
-        .'src="'.\OCP\Util::imagePath('calendar', 'calendar.svg').'" '
-        .'class="svg events small" '
-        .'/>'
-        .'</button>';
+      $attachedEvents .= '
+<button type="button"
+        title="'.L::t('Edit Event %s',array($brief)).'"
+        class="eventattachments edit"
+        id="eventattachment-'.$id.'"
+        name="eventattachment[]"
+        value="'.$id.'">
+  <img alt="'.$id.'"
+       src="'.\OCP\Util::imagePath('calendar', 'calendar.svg').'"
+       class="svg events small"/>
+</button>';
     }
     $attachedEvents .= '</span></td></tr>';
   }
@@ -69,14 +65,9 @@ if ($_['ProjectId'] >= 0) {
 
 ?>
 
-<form method="post"
-      name="cafevdb-email-message"
-      enctype="multipart/form-data"
-      id="cafevdb-email-composition-form"
-      class="cafevdb-email-form">
-  <fieldset id="cafevdb-emial-composition-fieldset" class="email-composition page">
-    <!-- <legend id="cafevdb-email-form-legend"><?php echo L::t('Compose Em@il'); ?></legend> -->
-    <table class="cafevdb-email-composition-form">
+<fieldset id="cafevdb-emial-composition-fieldset" class="email-composition page">
+  <!-- <legend id="cafevdb-email-form-legend"><?php echo L::t('Compose Em@il'); ?></legend> -->
+  <table class="cafevdb-email-composition-form">
     <tr class="email-template">
       <td><?php echo L::t("Template"); ?></td>
       <td class="email-template-choose">
@@ -98,7 +89,7 @@ if ($_['ProjectId'] >= 0) {
       </td>
       <td class="email-template-save">
         <input size="20" placeholder="<?php echo L::t('New Template Name'); ?>"
-               <?php echo ($_['templateName'] != '' ? 'value="'.$_['templateName'].'"' : ''); ?>
+        <?php echo ($_['templateName'] != '' ? 'value="'.$_['templateName'].'"' : ''); ?>
                title="<?php echo Config::toolTips('new-email-template'); ?>"
                name="newEmailTemplate"
                type="text"
@@ -153,7 +144,6 @@ if ($_['ProjectId'] >= 0) {
       <td colspan="2"><input value="<?php echo $_['sender']; ?>" size="40" value="CAFEV" name="txtFromName" type="text"></td>
     </tr>
     <tr>
-    <tr>
       <td><?php echo L::t('Sender-Email'); ?></td>
       <td colspan="2"><?php echo L::t('Tied to'); ?> "<?php echo $_['catchAllEmail']; ?>"</td>
     </tr>
@@ -176,20 +166,20 @@ if ($_['ProjectId'] >= 0) {
       </td>
     </tr>
 
-<?php
-echo $attachedEvents;
-foreach ($_['fileAttach'] as $attachment) {
-  $tmpName = $attachment['tmp_name'];
-  $name    = $attachment['name'];
-  $size    = $attachment['size'];
-  $size    = \OC_Helper::humanFileSize($size);
-  echo '
+    <?php
+    echo $attachedEvents;
+    foreach ($_['fileAttach'] as $attachment) {
+      $tmpName = $attachment['tmp_name'];
+      $name    = $attachment['name'];
+      $size    = $attachment['size'];
+      $size    = \OC_Helper::humanFileSize($size);
+      echo '
     <tr>
       <td><button type="submit" name="deleteAttachment[]" value="'.$tmpName.'" >'.L::t('Remove').'</button></td>
       <td colspan="2"><span class="attachmentName">'.$name.' ('.$size.')</span></td>
     </tr>';
-}
-?>
+    }
+    ?>
     <tr class="submit">
       <td class="send">
         <input title="<?php echo Config::toolTips('send-mass-email'); ?>"
@@ -197,10 +187,10 @@ foreach ($_['fileAttach'] as $attachment) {
       </td>
       <td></td>
       <td class="reset">
-         <input title="<?php echo Config::tooltips('cancel-email-composition'); ?>"
-                type="submit" name="cancel" value="<?php echo L::t('Cancel'); ?>" />
+        <input title="<?php echo Config::tooltips('cancel-email-composition'); ?>"
+               type="submit" name="cancel" value="<?php echo L::t('Cancel'); ?>" />
       </td>
     </tr>
-    </table>
-  </fieldset>
-</form>
+  </table>
+</fieldset>
+

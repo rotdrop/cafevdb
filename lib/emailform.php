@@ -29,11 +29,12 @@ namespace CAFEVDB
  * select specific groups of musicians (depending on instrument and
  * project).
  */
-  class EmailRecipientFilter {
+  class EmailRecipientsFilter {
+    const MAX_HISTORY_SIZE = 25; // the history is posted around, so ...
 
     private $projectId;   // Project id or NULL or -1 or ''
-    private $project;     // Project name of NULL or ''
-    private $filter;      // Current instrument filter
+    private $projectNem;  // Project name of NULL or ''
+    private $instrumentsFilter; // Current instrument filter
     private $userBase;    // Select from either project members and/or
     // all musicians w/o project-members
     private $memberFilter;// passive, regular, soloist, conductor, temporary
@@ -49,209 +50,321 @@ namespace CAFEVDB
     private $EMailsDpy;   // Display list with namee an email
 
     // Form elements
-    private $form;           // QuickForm2 form
-    private $baseGroupFieldSet;
-    private $userGroupSelect;
     private $memberStatusNames;
-    private $byStatusSelect;
-    private $filterFieldSet; // Field-set for the filter
-    private $selectFieldSet; // Field-set for adressee selection
-    private $dualSelect;     // QF2 dual-select
-    private $filterSelect;   // Filter by instrument.
 
-    private $submitFieldSet; // Field-set for freeze and reset buttons
-    private $submitFilterFieldSet; // Field-set for freeze and reset buttons
-    private $freezeFieldSet;   // Display emails as list.
-    private $freezeButton;   // Display emails as list.
-    private $filterResetButton;    // Reset to default state
-    private $filterApplyButton;   // Guess what.
-    private $nopeFieldSet;   // No email.
-    private $nopeStatic;     // Actual static form
-
-    private $frozen;         // Whether or not we are active.
+    private $cgiData;   // copy of cgi-data
+    private $submitted; // form has been submitted
+    private $reload;    // form must be reloaded
+    
+    private $jsonFlags; 
+    static private $historyKeys = array('BasicRecipientsSet',
+                                        'MemberStatusFilter',
+                                        'InstrumentsFilter',
+                                        'SelectedRecipients');
+    private $filterHistory;
+    private $historyPosition;
+    private $historySize;    
 
     /* 
      * constructor
      */
     public function __construct(&$_opts, $action = NULL)
     {
+      $this->jsonFlags = JSON_FORCE_OBJECT|JSON_HEX_QUOT|JSON_HEX_APOS;
       if (Util::debugMode('request')) {
         echo '<PRE>';
         print_r($_POST);
         echo '</PRE>';
       }
 
-      $this->frozen = false;
-
       $this->opts = $_opts;
 
-      $this->projectId = Util::cgiValue('ProjectId',-1);
-      $this->project   = Util::cgiValue('Project','');
+      // Fetch all data submitted by form
+      $this->cgiData = Util::cgiValue('emailRecipients', array());
+
+      // Quirk: the usual checkbox issue
+      $this->cgiData['BasicRecipientsSet']['FromProject'] =
+        isset($this->cgiData['BasicRecipientsSet']['FromProject']);
+      $this->cgiData['BasicRecipientsSet']['ExceptProject'] =
+        isset($this->cgiData['BasicRecipientsSet']['ExceptProject']);
+
+      $this->projectId = Util::cgiValue('ProjectId', -1);
+      $this->projectName   = Util::cgiValue('Project', '');
 
       // See wether we were passed specific variables ...
       $pmepfx          = $this->opts['cgi']['prefix']['sys'];
       $this->emailKey  = $pmepfx.'mrecs';
       $this->mtabKey   = $pmepfx.'mtable';
+
+      $this->execute();
+    }
+
+    /**Parse the CGI stuff and compute the list of selected musicians,
+     * either for the initial form setup as during the interaction
+     * with the user.
+     */
+    private function execute() 
+    {
+      // Maybe should also check something else. If submitted is true,
+      // then we use the form data, otherwise the defaults.
+      $this->submitted = $this->cgiValue('FormStatus', '') == 'submitted';
+
+      // "sane" default setttings
       $this->EmailRecs = Util::cgiValue($this->emailKey, array());
-      $this->userBase  = array('fromProject' => $this->projectId >= 0,
-                               'exceptProject' => false);
+      $this->reload = false;
 
-      $table = Util::cgiValue($this->mtabKey,'');
-      $this->remapEmailRecords($table);
-      $this->getMemberStatusNames();
-
-      /* At this point we have the Email-List, either in global or project
-       * context, and possibly a selection of Musicians by Id from the
-       * script which called us. We build a "dual-select" box where the Ids
-       * in the MiscRecs field are remembered.
-       */
-      $this->createForm();
-
-      if ($action) {
-        $this->form->setAttribute('action', $action);
-      }
-    }
-
-    /* 
-     * Include hidden fields to remember stuff across submit.
-     */
-    public function addPersistentCGI($key, $value, &$form = NULL) {
-      if (!$form) {
-        $form = $this->form;
-      }
-
-      if (is_array($value)) {
-        // One could recurse ...
-        foreach($value as $idx => $val) {
-          $this->addPersistentCGI($key.'['.$idx.']', $val, $form);
-        }
-      } else {
-        $form->addElement('hidden', $key)->setValue($value);
-      }
-    }
-
-    /* 
-     * Inject sufficient "hidden" form fields to make data persistent
-     * across reloads
-     */
-    public function emitPersistent(&$form = NULL) {
-    
-      $this->addPersistentCGI('ProjectId', $this->projectId, $form);
-      $this->addPersistentCGI('Project', $this->project, $form);
-      $this->addPersistentCGI('Template', 'email', $form);
-      $this->addPersistentCGI($this->emailKey, $this->EmailRecs, $form);
-      $this->addPersistentCGI('EventSelect',
-                              Util::cgiValue('EventSelect', array()), $form);
-      $this->addPersistentCGI('headervisibility',
-                              Util::cgiValue('headervisibility', 'expanded'), $form);
-    }
-
-    /*
-     * Return a string with our needed data.
-     */
-    public function getPersistent($moreStuff = array())
-    {
-      $form = new \HTML_QuickForm2('emailrecipients');
-    
-      $this->addPersistentCGI('ProjectId', $this->projectId, $form);
-      $this->addPersistentCGI('Project', $this->project, $form);
-      $this->addPersistentCGI('Template', 'email', $form);
-      $this->addPersistentCGI($this->emailKey, $this->EmailRecs, $form);
-      $this->addPersistentCGI('EventSelect',
-                              Util::cgiValue('EventSelect', array()), $form);
-      $this->addPersistentCGI('headervisibility',
-                              Util::cgiValue('headervisibility', 'expanded'), $form);
-
-      $value = $this->form->getValue();
-
-
-      if (false) {
-        echo '<PRE>getPersistent:';
-        print_r($value);
-        echo '</PRE>';
-      }
-
-      foreach (array('SelectedMusicians',
-                     'InstrumentenFilter',
-                     'memberStatusFilter',
-                     'baseGroup') as $key) {
-        if (isset($value[$key])) {
-          $this->addPersistentCGI($key, $value[$key], $form);
+      if ($this->submitted) {
+        if ($this->cgiValue('ResetInstrumentsFilter', false) !== false) {
+          $this->EmailRecs = $this->cgiValue($this->emailKey, array());
+          $this->submitted = false; // fall back to defaults for everything
+          $this->cgiData = array();
+          $this->reload = true;
+        } else if ($this->cgiValue('UndoInstrumentsFilter', false) !== false) {
+          $this->applyHistory(1); // the current state
+          $this->reload = true;
+        } else if ($this->cgiValue('RedoInstrumentsFilter', false) !== false) {
+          $this->applyHistory(-1);
+          $this->reload = true;
         }
       }
-    
-      foreach ($moreStuff as $key => $value) {
-        $this->addPersistentCGI($key, $value, $form);
-      }
 
-      $out = '';
-      foreach ($form as $element) {
-        $out .= $element."\n";
-      }
-
-      return $out;
-    }
-  
-    /*
-     * Fetch the list of instruments (either only for project or all)
-     *
-     * Also: construct the filter by instrument.
-     */
-    private function getInstrumentsFromDb($dbh)
-    {
-      // Get the current list of instruments for the filter
-      if ($this->projectId >= 0 && !$this->userBase['exceptProject']) {
-        $this->instruments = Instruments::fetchProjectMusiciansInstruments($this->projectId, $dbh);
-      } else {
-        $this->instruments = Instruments::fetch($dbh);
-      }
-      array_unshift($this->instruments, '*');
-
-      /* Install the stuff into the form */
-      $this->filterSelect->loadOptions(array_combine($this->instruments,
-                                                     $this->instruments));        
-      $value = $this->form->getValue();
-      $filterInstruments =
-        isset($value['InstrumentenFilter'])
-        ? $value['InstrumentenFilter']
-        : array('*');
-      $this->filterSelect->setValue(
-        array_intersect($filterInstruments, $this->instruments));
-    }
-    
-    private function fetchInstrumentsFilter()
-    {
-      /* Remove instruments from the filter which are not known by the
-       * current list of musicians.
-       */
-      $value = $this->form->getValue();
-      $filterInstruments = $value['InstrumentenFilter'];
-
-      $this->filter = array();
-      foreach ($filterInstruments as $value) {
-        $this->filter[] = $value;
-      }
-    }  
-
-    private function getMemberStatusNames()
-    {
       $dbh = mySQL::connect($this->opts);
+      
+      $this->remapEmailRecords($dbh);
+      $this->getMemberStatusNames($dbh);
+      $this->initMemberStatusFilter();
+      $this->getUserBase();
+      $this->getInstrumentsFromDB($dbh);
+      $this->fetchInstrumentsFilter();
+      $this->getMusiciansFromDB($dbh);
 
-      $memberStatus = mySQL::multiKeys('Musiker', 'MemberStatus', $dbh);
-      $this->memberStatusNames = array();
-      foreach ($memberStatus as $tag) {
-        $this->memberStatusNames[$tag] = strval(L::t($tag));
-      }
       mySQL::close($dbh);
-    }
-  
 
-    private function remapEmailRecords($table)
+      if (!$this->submitted) {
+        // Do this at end in order to have any tweaks around
+        $this->setDefaultHistory();
+      } else if (!$this->reload) {
+        // add the current selection to the history if it is different
+        // from the previous filter selection (i.e.: no-ops like
+        // hitten apply over and over again or multiple double-clicks
+        // will not alter the history.
+        $this->pushHistory();
+      }
+    }
+
+    private function cgiValue($key, $default = null)
     {
+      if (isset($this->cgiData[$key])) {
+        return $this->cgiData[$key];
+      } else {
+        return $default;
+      } 
+    }
+    
+    /**Compose a default history record for the initial state */
+    private function setDefaultHistory()
+    {
+      $this->historyPosition = 0;
+      $this->historySize = 1;
+
+
+      $filter = array(
+        'BasicRecipientsSet' => $this->defaultUserBase(),
+        'MemberStatusFilter' => $this->defaultByStatus(),
+        'InstrumentsFilter' => array(),
+        'SelectedRecipients' => array_intersect($this->EmailRecs,
+                                                array_keys($this->EMailsDpy)));
+
+      // tweak: sort the selected recipients by key
+      sort($filter['SelectedRecipients']);
+
+      $this->filterHistory = array($filter);
+    }
+
+    private function compressHistory()
+    {
+      return base64_encode(gzencode(json_encode($this->filterHistory, $this->jsonFlags)));
+    }
+
+    private function decompressHistory($data)
+    {
+      $decompressedHistory = json_decode(gzdecode(base64_decode($data)), true);
+      if ($decompressedHistory === false) {
+        return false;
+      }
+      $this->filterHistory = $decompressedHistory;
+      return true;
+    }
+
+    /**Decode he current history, filter values and history position
+     * in order to keep track of undo/redo requests. Rather lengthy,
+     * but will return some history record and throw useful errors
+     * when debug is enabled.
+     */
+    private function fetchHistory()
+    {
+      if (!$this->submitted) {
+        $this->setDefaultHistory();
+        return;
+      }
+
+      $jsonHistory = $this->cgiValue('FilterHistory', false);
+      if ($jsonHistory === false) {
+        if (Util::debugMode('emailform')) {
+          throw new \UnexpectedValueException(L::t('No filter-history available'));
+        } else {
+          $this->setDefaultHistory();
+          return;
+        }
+      }
+      
+      $history = json_decode($jsonHistory, true);
+      if ($history === false) {
+        if (Util::debugMode('emailform')) {
+          throw new \InvalidArgumentException(L::t('Unable to decode history from JSON: %s.',
+                                                   array($jsonHistory)));
+        } else {
+          $this->setDefaultHistory();
+          return;
+        }
+      }
+
+      if (!isset($history['historyPosition']) ||
+          !isset($history['historySize']) ||
+          !isset($history['historyData'])) {
+        if (Util::debugMode('emailform')) {
+          throw new \UnexpectedValueException(L::t('Incomplete history data: %s (JSON: %s)',
+                                                   array(print_r($history, true), $jsonHistory)));
+        } else {
+          $this->setDefaultHistory();
+          return;
+        }
+      }
+
+
+      if (!$this->decompressHistory($history['historyData'])) {
+        if (Util::debugMode('emailform')) {
+          throw new \InvalidArgumentException(L::t('Unable to decompress history from JSON: %s.',
+                                                   array($jsonHistory)));
+        } else {
+          $this->setDefaultHistory();
+          return;
+        }
+      }
+
+      $this->historyPosition = $history['historyPosition'];
+      $this->historySize = $history['historySize'];
+      if ($this->historySize != count($this->filterHistory)) {
+        if (Util::debugMode('emailform')) {
+          throw new \OutOfBoundsException(L::t('Submitted history size %d != actual history size %d',
+                                              array($this->historySize, count($this->filterHistory))));
+        } else {
+          $this->setDefaultHistory();
+          return;
+        }
+      }
+      if ($this->historyPosition < 0 || $this->historyPosition > $this->historySize) {
+        if (Util::debugMode('emailform')) {
+          throw new \OutOfBoundsException(L::t('Submitted history position %d outside history size %d.',
+                                               array($this->historyPosition, $this->historySize)));
+        } else {
+          $this->setDefaultHistory();
+          return;
+        }
+      }
+    }
+    
+    /**Push the current filter selection onto the undo-history
+     * stack. Do nothing for dummy commits, i.e. only a changed filter
+     * will be pushed onto the stack.
+     */
+    private function pushHistory()
+    {
+      $filter = array();
+      foreach (self::$historyKeys as $key) {
+        $filter[$key] = $this->cgiValue($key, array());
+      }
+
+      // exclude musicians deselected by the filter from the set of
+      // selected recipients before recording the the history
+      $filter['SelectedRecipients'] =
+        array_intersect($filter['SelectedRecipients'],
+                        array_keys($this->EMailsDpy));
+
+      // tweak: sort the selected recipients by key
+      sort($filter['SelectedRecipients']);
+
+      $this->fetchHistory();
+
+      /* Avoid pushing duplicate history entries. If the new
+       * filter-record matches the current one, then simply discard
+       * the new filter. This is in order to avoid bloating the
+       * history records by repeated user submits of the same filter
+       * or duplicated double-clicks.
+       */
+      $historyFilter = $this->filterHistory[$this->historyPosition];
+      if (!$this->filterEqual($filter, $historyFilter)) {
+        // Pushing a new record removes the history up to the current
+        // position, i.e. redos are not longer possible then. This
+        // seems to be common behaviour as "re-doing" is no longer
+        // well defined in this case.
+        array_splice($this->filterHistory, 0, $this->historyPosition);
+        array_unshift($this->filterHistory, $filter);
+        $this->historyPosition = 0;
+        $this->historySize = count($this->filterHistory);
+        while ($this->historySize > self::MAX_HISTORY_SIZE) {
+          array_pop($this->filterHistory);
+          --$this->historySize;
+        }
+      }
+    }
+
+    /**Relative move inside the history. The function will throw an
+     * exception if emailform-debuggin is enabled and the requested
+     * action would leave the history stack.
+     */
+    private function applyHistory($offset)
+    {
+      $this->fetchHistory();
+
+      $newPosition = $this->historyPosition + $offset;
+      
+      // Check for valid position.
+      if ($newPosition >= $this->historySize || $newPosition < 0) {
+        if (Util::debugMode('emailform')) {
+          throw new \OutOfBoundsException(
+            L::t('Invalid history position %d request, history size is %d',
+                 array($newPosition, $this->historySize)));
+        }
+        return;
+      }
+
+      // Move past the respective history position.
+      $this->historyPosition = $newPosition;
+      $filter = $this->filterHistory[$newPosition];
+      foreach (self::$historyKeys as $key) {
+        $this->cgiData[$key] = $filter[$key];
+      }
+    }
+
+    /**Return true if we consider both filters to be equal
+     */
+    private function filterEqual($filter1, $filter2)
+    {
+      return json_encode($filter1, $this->jsonFlags) == json_encode($filter2, $this->jsonFlags);
+    }
+    
+
+    /**This function is called at the very start. If in project-mode
+     * ids from other tables are remapped to the ids for the
+     * respective project view.
+     */
+    private function remapEmailRecords($dbh)
+    {
+      $table = Util::cgiValue($this->mtabKey,'');
+
       if ($this->projectId >= 0 &&
           ($table == 'Besetzungen' || $table == 'SepaDebitMandates')) {
-
-        $dbh = mySQL::connect($this->opts);
 
         /*
          * This means we have been called from the "brief"
@@ -262,7 +375,7 @@ namespace CAFEVDB
          * to the project view table and continue with that.
          */
         $oldTable = $table;
-        $table = $this->project.'View';
+        $table = $this->projectName.'View';
         switch ($oldTable) {
         case 'Besetzungen':
           $query = 'SELECT `'.$oldTable.'`.`Id` AS \'OrigId\',
@@ -294,24 +407,7 @@ namespace CAFEVDB
           $newEmailRecs[] = $map[$key];
         }
         $this->EmailRecs = $newEmailRecs;
-
-        mySQL::close($dbh);
       }
-    }
-
-    private function memberStatusSQLFilter()
-    {
-      $allStatusFlags = array_keys($this->memberStatusNames);
-      $statusBlackList = array_diff($allStatusFlags, $this->memberFilter);
-
-      // Explicitly include NULL MemberStatus (which in principle should not happen
-      $filter = "AND ( `MemberStatus` IS NULL OR (1 ";
-      foreach ($statusBlackList as $badStatus) {
-        $filter .= " AND `MemberStatus` NOT LIKE '".$badStatus."'";
-      }
-      $filter .= "))";
-
-      return $filter;
     }
 
     /**Fetch musicians from either the "Musiker" table or a project
@@ -364,15 +460,18 @@ namespace CAFEVDB
       }
 
       $query = 'SELECT '.$fields.' FROM ('.$table.') WHERE
-       ( ';
-      foreach ($this->filter as $value) {
-        if ($value == '*') {
-          $query .= "1 OR\n";
-        } else {
+        ';
+      if (count($this->instrumentsFilter) == 0) {
+        $query .= '1
+        ';
+      } else {
+        $query .= '(';
+        foreach ($this->instrumentsFilter as $value) {
           $query .= "`".$restrict."` LIKE '%".$value."%' OR\n";
         }
+        $query .= ' 0)
+        ';
       }
-      $query .= "0 )";
 
       /* Don't bother any conductor etc. with mass-email. */
       $query .= $this->memberStatusSQLFilter();
@@ -382,6 +481,7 @@ namespace CAFEVDB
         echo $query;
         echo '</PRE>';
       }
+      $_POST['QUERY'] = $query;
 
       // Fetch the result or die
       $result = mySQL::query($query, $dbh, true); // here we want to bail out on error
@@ -415,30 +515,29 @@ namespace CAFEVDB
       }
     }
 
-    /*
-     * Fetch the list of musicians for the given context (project/global)
+    /* Fetch the list of musicians for the given context (project/global)
      */
     private function getMusiciansFromDB($dbh)
     {
       $this->NoMail = array();
       $this->EMails = array();
-      $this->EMailsDpy = array();
+      $this->EMailsDpy = array(); // display records
 
       if ($this->projectId < 0) {        
         self::fetchMusicians($dbh, 'Musiker', 'Id', 'Instrumente', -1, true);
       } else {
         // Possibly add musicians from the project
-        if ($this->userBase['fromProject']) {
+        if ($this->userBase['FromProject']) {
           self::fetchMusicians($dbh,
-                               '`'.$this->project.'View'.'`', 'MusikerId', 'Instrument',
+                               '`'.$this->projectName.'View'.'`', 'MusikerId', 'Instrument',
                                $this->projectId, true);
         }
 
         // and/or not from the project
-        if ($this->userBase['exceptProject']) {
+        if ($this->userBase['ExceptProject']) {
           $table =
             '(SELECT a.* FROM Musiker as a
-    LEFT JOIN `'.$this->project.'View'.'` as b
+    LEFT JOIN `'.$this->projectName.'View'.'` as b
       ON a.Id = b.MusikerId 
       WHERE b.MusikerId IS NULL) as c';
           self::fetchMusicians($dbh, $table, 'Id', 'Instrumente', -1, true);
@@ -451,6 +550,35 @@ namespace CAFEVDB
       asort($this->EMailsDpy);
     }
 
+    /* Fetch the list of instruments (either only for project or all)
+     *
+     * Also: construct the filter by instrument.
+     */
+    private function getInstrumentsFromDb($dbh)
+    {
+      // Get the current list of instruments for the filter
+      if ($this->projectId >= 0 && !$this->userBase['ExceptProject']) {
+        $this->instruments = Instruments::fetchProjectMusiciansInstruments($this->projectId, $dbh);
+      } else {
+        $this->instruments = Instruments::fetch($dbh);
+      }
+      array_unshift($this->instruments, '*');
+    }
+
+    private function fetchInstrumentsFilter()
+    {
+      /* Remove instruments from the filter which are not known by the
+       * current list of musicians.
+       */
+      $filterInstruments = $this->cgiValue('InstrumentsFilter', array());
+      array_intersect($filterInstruments, $this->instruments);
+      
+      $this->instrumentsFilter = array();
+      foreach ($filterInstruments as $value) {
+        $this->instrumentsFilter[] = $value;
+      }
+    }
+
     private function defaultByStatus()
     {
       $byStatusDefault = array('regular');
@@ -459,210 +587,54 @@ namespace CAFEVDB
         $byStatusDefault[] = 'temporary';
       }
       return $byStatusDefault;
+    }
+
+    private function getMemberStatusNames($dbh)
+    {
+      $memberStatus = mySQL::multiKeys('Musiker', 'MemberStatus', $dbh);
+      $this->memberStatusNames = array();
+      foreach ($memberStatus as $tag) {
+        $this->memberStatusNames[$tag] = strval(L::t($tag));
+      }
     }  
 
-    /*
-     * Generate a QF2 form
+    /*Get the current filter. Default value, after form submission,
+     * initial setting otherwise.
      */
-    private function createForm()
+    private function initMemberStatusFilter() 
     {
-      $this->form = new \HTML_QuickForm2('emailrecipients');
-
-      $byStatusDefault = $this->defaultByStatus();
-
-      /* Add any variables we want to keep
-       */
-      /* Selected recipient */
-      $this->form->addDataSource(
-        new \HTML_QuickForm2_DataSource_Array(
-          array('SelectedMusicians' => $this->EmailRecs,
-                'InstrumentenFilter' => array('*'),
-                'memberStatusFilter' => $byStatusDefault,
-                'baseGroup' => array(
-                  'selectedUserGroup' => $this->userBase))));
-
-      $this->form->setAttribute('class', 'cafevdb-email-filter');
-
-      /* Groups can only render field-sets well, so make things more
-       * complicated than necessary
-       */
-
-      // Outer field-set with border
-      $outerFS = $this->form->addElement(
-        'fieldset', NULL, array('class' => 'border', 'id' => 'emailRecipientBlock'));
-      $outerFS->setLabel(L::t('Select Em@il Recipients'));
-
-      $this->baseGroupFieldSet = $outerFS->addElement('fieldset', NULL,
-                                                      array('class' => 'basegroup'));
-
-      if ($this->projectId >= 0) {
-        $group = $this->userGroupSelect =
-          $this->baseGroupFieldSet->addElement('group', 'baseGroup');
-        $group->setLabel(L::t('Principal Address Collection'));
-        $check = $group->addElement(
-          'checkbox', 'selectedUserGroup[fromProject]',
-          array('id' => 'selectedUserGroup-fromProject',
-                'value' => true,
-                'class' => 'selectfromproject',
-                'title' => 'Auswahl aus den registrierten Musikern für das Projekt.'));
-        $check->setContent('<span class="selectfromproject">&isin; '.$this->project.'</span>');
-        //$check->setAttribute('checked');
-        
-        $check = $group->addElement(
-          'checkbox', 'selectedUserGroup[exceptProject]',
-          array('id' => 'selectedUserGroup-exceptProject',
-                'value' => true,
-                'class' => 'selectexceptproject',
-                'title' => 'Auswahl aus allen Musikern, die nicht für das Projekt registriert sind.'));
-        $check->setContent('<span class="selectexceptproject">&notin; '.$this->project.'</span>');
-      }
-
-      // Optionally also include recipients which are normally disabled.
-      $this->byStatusSelect = $this->baseGroupFieldSet->addElement(
-        'select', 'memberStatusFilter',
-        array('id' => 'memberStatusFilter',
-              'multiple' => 'multiple',
-              'size' => 5,
-              'class' => 'member-status-filter chosen-rtl',
-              'title' => L::t('Select recipients by member status.'),
-              'data-placeholder' => L::t('Select Members by Status')),
-        array('label' => L::t('Member-Status'),
-              'options' => $this->memberStatusNames));
-      //$this->byStatusSelect->setValue($byStatusDefault);
-
-      $this->selectFieldSet = $outerFS->addElement('fieldset', NULL, array());
-      $this->selectFieldSet->setAttribute('class', 'select');
-
-      $fromToImg = \OCP\Util::imagePath('core', 'actions/play-next.svg');
-      $toFromImg = \OCP\Util::imagePath('core', 'actions/play-previous.svg');
-      
-      $this->dualSelect = $this->selectFieldSet->addElement(
-        'dualselect', 'SelectedMusicians',
-        array('size' => 18, 'class' => 'dualselect', 'id' => 'DualSelectMusicians'),
-        array('options'    => $this->EMailsDpy,
-              'keepSorted' => true,
-              'from_to'    => array(
-                //'content' => ' &gt;&gt; ',
-                'content' => '<img class="svg" src="'.$fromToImg.'" alt=" &lt&lt; " />', 
-                'attributes' => array('class' => 'transfer')),
-              'to_from'    => array(
-                //'content' => ' &lt&lt; ',
-                'content' => '<img class="svg" src="'.$toFromImg.'" alt=" &lt&lt; " />', 
-                'attributes' => array('class' => 'transfer'))
-          )
-        );
-
-      $this->dualSelect->setLabel(
-        array(
-          L::t('Email Recipients'),
-          L::t('Remaining Recipients'),
-          L::t('Selected Recipients')));
-
-      if (false) {
-        $this->dualSelect->addRule(
-          'required', 'Bitte wenigstens einen Adressaten wählen', 1,
-          \HTML_QuickForm2_Rule::ONBLUR_CLIENT_SERVER);
-      }
-
-      $this->filterFieldSet = $outerFS->addElement('fieldset', NULL,
-                                                   array('class' => 'filter'));
-
-      $this->filterSelect = $this->filterFieldSet->addElement(
-        'select', 'InstrumentenFilter',
-        array('id' => 'InstrumentenFilter',
-              'multiple' => 'multiple',
-              'size' => 18,
-              'class' => 'filter'),
-        array('label' => L::t('Instrument-Filter'),
-              'options' => array('*' => '*')));
-
-      /******** Submit buttons follow *******/
-
-      $this->submitFieldSet = $outerFS->addElement(
-        'fieldset', NULL, array('class' => 'submit'));
-
-      $this->freezeFieldSet = $this->submitFieldSet->addElement(
-        'fieldset', NULL, array('class' => 'freeze'));
-
-      $this->freezeButton = $this->freezeFieldSet->addElement(
-        'submit', 'writeMail',
-        array('id' => 'writeMail',
-              'value' => L::t('Compose Em@il'),
-              'title' => 'Beendet die Musiker-Auswahl
-und aktiviert den Editor'));
-
-      $this->submitFilterFieldSet = $this->submitFieldSet->addElement(
-        'fieldset', NULL, array('class' => 'filtersubmit'));
-
-      $this->filterApplyButton = $this->submitFilterFieldSet->addElement(
-        'submit', 'filterApply',
-        array('id' => 'filterApply',
-              'value' => L::t('Apply Filter'),
-              'class' => 'apply',
-              'title' => 'Instrumenten- und Musiker-Fundus-Filter anwenden.'));
-
-      $this->filterResetButton = $this->submitFilterFieldSet->addElement(
-        'submit', 'filterReset',
-        array('id' => 'filterReset',
-              'value' => L::t('Reset Filter'),
-              'class' => 'reset',
-              'title' => 'Von vorne mit den Anfangswerten.'));
-
-      /********** Add a pseudo-form for people without email *************/
-
-      $this->nopeFieldSet =
-        $this->form->addElement(
-          'fieldset', 'NoEm@il', array('class' => 'border'));
-      $this->nopeFieldSet->setLabel(L::t('Musicians without Em@il'));
-      $this->nopeStatic = $this->nopeFieldSet->addElement('static', 'NoEm@il', NULL,
-                                                          array('tagName' => 'div'));
+      if ($this->submitted) {
+        $this->memberFilter = $this->cgiValue('MemberStatusFilter', array());
+      } else {
+        $this->memberFilter = $this->defaultByStatus();
+      }  
     }
-
-    /* Add a static "dummy"-form or people without email */
-    private function updateNoEmailForm() 
-    {    
-
-      if (count($this->NoMail) > 0) {
-        $data = '<PRE>';
-        $data .= L::t("Count: ").count($this->NoMail)."\n";
-        foreach($this->NoMail as $value) {
-          $data .= htmlspecialchars($value['name'])."\n";
-        }
-        $data.= '</PRE>';
     
-        if (!$this->form->getElementById($this->nopeFieldSet->getId())) {
-          $this->form->appendChild($this->nopeFieldSet);
-        }
-        $this->nopeStatic->setContent($data);
-      } elseif ($this->form->getElementById($this->nopeFieldSet->getId())) {
-        $this->form->removeChild($this->nopeFieldSet);
-      }
-    }
-  
-    /*
-     * Are we frozen, i.e. ready to send?
-     */
-    public function isFrozen() 
+
+    /**Form a SQL filter expression for the memeber status. */
+    private function memberStatusSQLFilter()
     {
-      return $this->frozen;
+      $allStatusFlags = array_keys($this->memberStatusNames);
+      $statusBlackList = array_diff($allStatusFlags, $this->memberFilter);
+      
+      // Explicitly include NULL MemberStatus (which in principle should not happen
+      $filter = "AND ( `MemberStatus` IS NULL OR (1 ";
+      foreach ($statusBlackList as $badStatus) {
+        $filter .= " AND `MemberStatus` NOT LIKE '".$badStatus."'";
+      }
+      $filter .= "))";
+      
+      return $filter;
     }
 
-    /*
-     * Return an array with the filtered Email addresses
-     *
-     * value['SelectedMusicians'] contains the form-data, this->EMails
-     * the stuff from the data-base
+    /**The default user base. Simple, but just keep the scheme in sync
+     * with the other two filters and provide a default....()
+     * function.
      */
-    public function getEmails()
+    private function defaultUserBase()
     {
-      $EMails = array();
-      $values = $this->form->getValue();
-      if (isset($values['SelectedMusicians'])) {
-        foreach ($values['SelectedMusicians'] as $key) {
-          $EMails[] = $this->EMails[$key];
-        }
-      }
-      return $EMails;
+      return array('FromProject' => $this->projectId >= 0,
+                   'ExceptProject' => false);
     }
 
     /**Decode the check-boxes which select the set of users we
@@ -670,153 +642,117 @@ und aktiviert den Editor'));
      */
     private function getUserBase()
     {
-      $this->userBase['fromProject']   = false;
-      $this->userBase['exceptProject'] = false;
-      $values = $this->form->getValue();
-      if (isset($values['baseGroup'])) {
-        if (isset($values['baseGroup']['selectedUserGroup']['fromProject'])) {
-          $this->userBase['fromProject'] = true;
-        }
-        if (isset($values['baseGroup']['selectedUserGroup']['exceptProject'])) {
-          $this->userBase['exceptProject'] = true;
-        }
-      }
-    }
-
-    /**Decode the member-status filter
-     */
-    private function getMemberStatusFilter()
-    {
-      $values = $this->form->getValue();
-      if (isset($values['memberStatusFilter'])) {
-        $this->memberFilter = $values['memberStatusFilter'];
+      if (!$this->submitted) {
+        $this->userBase = $this->defaultUserBase();
       } else {
-        $this->memberFilter = array();
-      }
-    }
-
-    /*
-     * Let it run; 
-     */
-    public function execute()
-    {
-      if (true) {
-
-        $this->getUserBase();
-        $this->getMemberStatusFilter();
-
-        $dbh = mySQL::connect($this->opts);
-
-        $this->getInstrumentsFromDB($dbh);
-        $this->fetchInstrumentsFilter();
-        $this->getMusiciansFromDB($dbh);
-
-        mySQL::close($dbh);
-
-        /* Now we need to reinstall the musicians into dualSelect */
-        $this->dualSelect->loadOptions($this->EMailsDpy);
-        
-        /* Also update the "no email" notice. */
-        $this->updateNoEmailForm();
-      }
-
-      $value = $this->form->getValue();
-
-      if (false) {
-        echo '<PRE>';
-        print_r($value);
-        print_r($_POST);
-        echo '</PRE>';
-      }
-
-      // outputting form values
-      if ($this->form->validate()) {
-
-        /*
-         * We implement two further POST actions for communication with
-         * other forms:
-         *
-         * eraseAll -> if set, restart with default
-         *
-         * modifyAdresses -> set, then read the list of musicians by
-         * hand and initialize the quick-form class accordingly
-         * 
-         */
-        if (Util::cgiValue('modifyAddresses','') != '') {
-
-          /* Nothing to do. */
-          
-        } elseif (Util::cgiValue('eraseAll','') != '' || !empty($value['filterReset'])) {
-          $this->dualSelect->toggleFrozen(false);
-          $this->frozen = false;
-
-          /* Reset the musician filter */
-          $this->userBase['fromProject']   = $this->projectId >= 0;
-          $this->userBase['exceptProject'] = false;
-          if ($this->projectId >= 0) {
-            $this->userGroupSelect->setValue(
-              array('selectedBaseGroup' => $this->userBase));
-          }
-
-          $this->memberFilter = $this->defaultByStatus();
-          /* Install default "no-email" stuff */
-          $this->byStatusSelect->setvalue($this->defaultByStatus());
-
-          /* Ok, this means we must re-fetch some stuff from the DB */
-          $dbh = mySQL::connect($this->opts);
-
-          $this->getInstrumentsFromDB($dbh);
-          $this->filterSelect->setValue(array('*'));
-          $this->fetchInstrumentsFilter();
-          $this->getMusiciansFromDB($dbh);
-
-          mySQL::close($dbh);
-
-          /* Now we need to reinstall the musicians into dualSelect */
-          $this->dualSelect->loadOptions($this->EMailsDpy);
-          $this->dualSelect->setValue($this->EmailRecs);
-
-          /* Also update the "no email" notice. */
-          $this->updateNoEmailForm();
-
-        } elseif (!empty($value['writeMail']) ||
-                  Util::cgiValue('saveEmailTemplate') ||
-                  Util::cgiValue('emailTemplateSelector') ||
-                  Util::cgiValue('sendEmail') ||
-                  Util::cgiValue('deleteAttachment')) {
-          $this->frozen = true;
-          $this->dualSelect->toggleFrozen(true);
-          $this->filterFieldSet->toggleFrozen(true);
-          $this->baseGroupFieldSet->toggleFrozen(true);
-            
-          $this->freezeFieldSet->removeChild($this->freezeButton);
-          $this->submitFilterFieldSet->removeChild($this->filterResetButton);
-          $this->submitFilterFieldSet->removeChild($this->filterApplyButton);
-          if (false && $this->form->getElementById($this->nopeFieldSet->getId())) {
-            $this->form->removeChild($this->nopeFieldSet);
-          }
-          
+        $this->userBase = $this->cgiValue('BasicRecipientsSet', false);
+        if ($this->userBase === false) {
+          $this->userBase = $this->defaultUserBase();
         }
       }
-
-      // Emit persistent values possibly only after updating the form
-      $this->emitPersistent();   
     }
-  
 
-    public function render() 
+    /**Return an array of values we want to maintain on form-submit,
+     * intentionally for wrapping into hidden input fields.
+     */
+    public function formData()
     {
-      $renderer = \HTML_QuickForm2_Renderer::factory('default');
-    
-      $this->form->render($renderer);
-      // Nope: DO NOT EMIT INLINE SCRIPTS, instead, include the two needed
-      // libraries directly from the top-level index.php
-      //$renderer->getJavascriptBuilder()->getLibraries(true, true);
-      echo $renderer;
+      return array($this->emailKey => $this->EmailRecs,
+                   'FormStatus' => 'submitted');
     }
+
+    /**Return the current filter history and the filter position as
+     * JSON encoded string.
+     */
+    public function filterHistory()
+    {
+      $history = array('historyPosition' => $this->historyPosition,
+                       'historySize' => count($this->filterHistory),
+                       'historyData' => $this->compressHistory());
+      return json_encode($history, $this->jsonFlags);
+    }
+
+    /**Return the current value of the member status filter or its
+     * initial value.
+     */
+    public function memberStatusFilter()
+    {
+      $memberStatus = $this->cgiValue('MemberStatusFilter',
+                                      $this->submitted ? '' : $this->defaultByStatus());
+      $memberStatus = array_flip($memberStatus);
+      $result = array();
+      foreach($this->memberStatusNames as $tag => $name) {
+        $result[] =  array('value' => $tag,
+                           'name' => $name,
+                           'flags' => isset($memberStatus[$tag]) ? Navigation::SELECTED : 0);
+      }
+      return $result;
+    }
+
+    /**Return the user basic set for the email form template
+     */
+    public function basicRecipientsSet()
+    {
+      return array('FromProject' => $this->userBase['FromProject'] ? 1 : 0,
+                   'ExceptProject' => $this->userBase['ExceptProject'] ? 1 : 0);
+    }
+
+    /**Return the values for the instruments filter.
+     *
+     * TODO: group by instrument kind (strings, wind etc.)
+     */
+    public function instrumentsFilter()
+    {
+      $filterInstruments = $this->cgiValue('InstrumentsFilter', array('*'));
+      $filterInstruments = array_flip(array_intersect($filterInstruments, $this->instruments));
+      $result = array();
+      foreach($this->instruments as $instrument) {
+        $name = $instrument;
+        $value = $instrument == '*'? '' : $instrument;
+        $result[] = array('value' => $value,
+                          'name' => $name,
+                          'flags' => isset($filterInstruments[$instrument]) ? Navigation::SELECTED : 0);
+      }
+      return $result;
+    }
+    
+    /**Return the values for the recipient select box */
+    public function emailRecipientsChoices()
+    {
+      $selectedRecipients = $this->cgiValue('SelectedRecipients', $this->EmailRecs);
+      $selectedRecipients = array_flip($selectedRecipients);
+      $result = array();      
+      foreach($this->EMailsDpy as $key => $email) {
+        $result[] = array('value' => $key,
+                          'name' => $email,
+                          'flags' => isset($selectedRecipients[$key]) ? Navigation::SELECTED : 0);
+      }
+      return $result;
+    }
+    
+    /**Return a list of musicians without email address, if any. */
+    public function missingEmailAddresses()
+    {
+      $result = array();
+      foreach ($this->NoMail as $person) {
+        $result[] = $person['name'];
+      }
+      sort($result);
+      return $result;
+    }
+
+    /**Return true if in initial state */
+    public function initialState() {
+      return !$this->submitted;
+    }
+
+    /**Return true if in reload state */
+    public function reloadState() {
+      return $this->reload;
+    }
+    
 
   };
-
 
 } // CAFEVDB
 
