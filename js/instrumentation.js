@@ -198,11 +198,21 @@ $(document).ready(function(){
     callback: function(selector, resizeCB) {
       var container = $(selector);
       CAFEVDB.exportMenu(selector);
-      container.find('span.photo, #cafevdb_inline_image_wrapper').on('click', 'img', function(event) {
+      container.find('div.photo, #cafevdb_inline_image_wrapper').on('click', 'img', function(event) {
         event.preventDefault();
         CAFEVDB.Photo.popup(this);
         return false;
       });
+
+      $(':button.musician-instrument-insurance').click(function(event) {
+        event.preventDefault();
+        var values = $(this).attr('name');
+        
+        CAFEVDB.formSubmit(OC.linkTo('cafevdb', 'index.php'), values, 'post');
+        
+        return false;
+      });
+
       if (container.find('#file_upload_target').length > 0) {
         var idField = $(selector).find('input[name="PME_data_MusikerId"]');
         var recordId = -1;
@@ -211,7 +221,7 @@ $(document).ready(function(){
         }
         CAFEVDB.Photo.ready(recordId, resizeCB);
       } else {
-        container.find('span.photo').imagesLoaded(resizeCB);
+        container.find('div.photo, span.photo').imagesLoaded(resizeCB);
       }
     },
     context: CAFEVDB,
