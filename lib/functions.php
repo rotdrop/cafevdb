@@ -625,9 +625,15 @@ class Navigation
   /**Recursively emit hidden input elements to represent the given
    * data. $value may be a nested array.
    */
-  public static function persistentCGI($key, $value)
+  public static function persistentCGI($key, $value = false)
   {
-    if (is_array($value)) {
+    if (is_array($key)) {
+      $result = '';
+      foreach ($key as $subkey => $subval) {
+        $result .= self::persistentCGI($subkey, $subval);
+      }
+      return $result;
+    } else if (is_array($value)) {
       $result = '';
       foreach($value as $subkey => $subval) {
         $result .= self::persistentCGI($key.'['.$subkey.']', $subval)."\n";
