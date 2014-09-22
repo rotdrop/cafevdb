@@ -205,7 +205,10 @@ var CAFEVDB = CAFEVDB || {};
   CAFEVDB.stopRKey = function(evt) {
     var evt = (evt) ? evt : ((event) ? event : null);
     var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
-    if ((evt.keyCode == 13) && (node.type=="text"))  {return false;}
+    if ((evt.keyCode == 13) && (node.type=="text"))  {
+      return false;
+    }
+    return true;
   };
 
   CAFEVDB.urldecode = function(str) {
@@ -537,6 +540,56 @@ var CAFEVDB = CAFEVDB || {};
     $(PHPMYEDIT.defaultSelector + ' input.pme-bulkcommit').addClass('formsubmit');
   };
 
+  /**Generate some diagnostic output, mostly needed during application
+   *development.
+   *
+   * @param data The data passed to the callback to $.post()
+   * 
+   * @param required List of required fields in data.data.
+   * 
+   */
+  CAFEVDB.ajaxErrorHandler = function(data, required) {
+    // error handling
+    if (typeof data == 'undefined' ||
+        typeof data.status == 'undefined' ||
+        typeof data.data == 'undefined') {
+      OC.dialogs.alert(t('cafevdb', 'Unrecoverable unknown internal error, '+
+                         'no further information available, sorry.'),
+                       t('cafevdb', 'Internal Error'), undefined, true);
+      return false;
+    }
+    var missing = '';
+    var idx;
+    for (idx = 0; idx < required.length; ++idx) {
+      if (typeof data.data[required[idx]] == 'undefined') {
+        missing += t('cafevdb', 'Field {RequiredField} not present in AJAX response.',
+                     { RequiredField: required[idx] })+"<br>";
+      }
+    }
+    if (data.status != 'success') {
+      var info = '';
+      if (typeof data.data.message != 'undefined') {
+	info += data.data.message;
+      } else {
+	info += t('cafevdb', 'Unknown error :(');
+      }
+      if (typeof data.data.error != 'undefined' && data.data.error == 'exception') {
+	info += '<div class="exception error name"><pre>'+data.data.exception+'</pre></div>';
+	info += '<div class="exception error trace"><pre>'+data.data.trace+'</pre></div>';
+      } else if (missing.length > 0) {
+        // Add missing fields only if no exception was caught as in
+        // this case no regular data-fields have been constructed
+        info = missing + info;
+      }
+      OC.dialogs.alert(info, t('cafevdb', 'Error'), undefined, true, true);
+      if (data.data.debug != '') {
+        OC.dialogs.alert(data.data.debug, t('cafevdb', 'Debug Information'), undefined, true, true);
+      }
+      return false;
+    }
+    return true;
+  };
+
   /**Initialize our tipsy stuff. Only exchange for our own thingies, of course.
    */
   CAFEVDB.tipsy = function(containerSel) {
@@ -546,11 +599,6 @@ var CAFEVDB = CAFEVDB || {};
     var container = $(containerSel);
 
     $.fn.tipsy.defaults.html = true;
-
-    container.find('[class*="tipsy-"]').each(function(index) {
-      var gravity = $(this).attr('class').match(/tipsy-([senw][senw])/);
-      $(this).tipsy({gravity:gravity[1], fade:true});
-    });
 
     // container.find('button.settings').tipsy({gravity:'ne', fade:true});
     container.find('button.viewtoggle').tipsy({gravity:'ne', fade:true});
@@ -576,7 +624,7 @@ var CAFEVDB = CAFEVDB || {};
     container.find('a.action').tipsy({gravity:'s', fade:true, live:true});
     container.find('td .modified').tipsy({gravity:'s', fade:true, live:true});
     container.find('td.lastLogin').tipsy({gravity:'s', fade:true, html:true});
-    container.find('input').tipsy({gravity:'w', fade:true});
+    container.find('input:not([type=hidden])').tipsy({gravity:'w', fade:true});
 
     // everything else.
     container.find('.tip').tipsy({gravity:'w', fade:true});
@@ -595,6 +643,20 @@ var CAFEVDB = CAFEVDB || {};
 
     container.find('textarea[class^="pme-input"]').tipsy(
       {gravity:'sw', fade:true, html:true, className:'tipsy-wide'});
+
+    container.find('[class*="tipsy-"]').each(function(index) {
+      var gravity = $(this).attr('class').match(/tipsy-([senw]+)/);
+      if (gravity && gravity.length == 2 && gravity[1].length > 0) {
+        var oldTipsy = $(this).data('tipsy');
+        $(this).data('tipsy', null); // remove any already installed stuff
+        var options = $.extend({}, oldTipsy, {gravity:gravity[1], fade:true});
+        $(this).tipsy(options);
+      }
+    });
+
+    container.find('.tipsy-off').each(function(index) {
+      $(this).tipsy('disable');
+    });
   }
 
 })(window, jQuery, CAFEVDB);
@@ -683,7 +745,7 @@ $(document).ready(function(){
   $('input.alertdata.cafevdb-page').each(function(index) {
     var title = $(this).attr('name');
     var text  = $(this).attr('value');
-    OC.dialogs.alert(text, title, function () {} , true, true);
+    OC.dialogs.alert(text, title, undefined , true, true);
   });
 
   $('#missing-musicians-block').dialog({
