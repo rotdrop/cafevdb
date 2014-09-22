@@ -66,7 +66,7 @@ var CAFEVDB = CAFEVDB || {};
                    } else {
                      OC.dialogs.alert(rqData.exception+rqData.trace,
                                       t('cafevdb', 'Caught a PHP Exception'),
-                                      null, true);
+                                      undefined, true);
                    }
                  }
                  setTimeout(function() {
@@ -85,7 +85,7 @@ var CAFEVDB = CAFEVDB || {};
       OC.dialogs.alert(t('cafevdb', 'Unknown operation:')
                        +' "'+selected+'"',
                        t('cafevdb', 'Unimplemented'),
-                       null, true);
+                       undefined, true);
       break;
     }
 
@@ -214,10 +214,10 @@ var CAFEVDB = CAFEVDB || {};
                          } else {
                            OC.dialogs.alert(rqData.exception+rqData.trace,
                                             t('cafevdb', 'Caught a PHP Exception'),
-                                            null, true);
+                                            undefined, true);
                          }
                          if (rqData.debug != '') {
-                           OC.dialogs.alert(rqData.debug, t('cafevdb', 'Debug Information'), null, true);
+                           OC.dialogs.alert(rqData.debug, t('cafevdb', 'Debug Information'), undefined, true);
                          }
                        }
                      }, 'json');
