@@ -39,7 +39,8 @@ $debugtitle     = L::t("Show a certain amount of debug information, normally not
 $debugModes = array('general' => L::t('General Information'),
                     'query' => L::t('SQL Queries'),
                     'request' => L::t('HTTP Request'),
-                    'tooltips' => L::t('Missing Context Help'));
+                    'tooltips' => L::t('Missing Context Help'),
+                    'emailform' => L::t('Mass Email Form'));
 
 ?>
 <?php if ($_['adminsettings']) { ?>
@@ -84,7 +85,7 @@ foreach (Config::$wysiwygEditors as $key => $value) {
             name="debugmode"
             data-placeholder="<?php echo L::t('Enable Debug Mode'); ?>"
             class="debug-mode"
-            title="title=<?php echo $debugtitle; ?>">
+            title="<?php echo $debugtitle; ?>">
 <?php
 foreach ($debugModes as $key => $value) {
   echo '<option value="'.$key.'" '.(Config::$debug[$key] ? 'selected="selected"' : '').'>'.$value.'</option>'."\n";

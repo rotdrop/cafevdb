@@ -112,7 +112,8 @@ redaxoDefaultModule
   public static $debug = array('general' => false,
                                'query' => false,
                                'request' => false,
-                               'tooltips' => false);
+                               'tooltips' => false,
+                               'emailform' => false);
   private static $initialized = false;
   private static $toolTipsArray = array();
 
