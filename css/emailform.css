@@ -29,8 +29,10 @@ div#emailformwrapper {
   background-color:#F2F8FF;
 }
 
-ui-dialog.emailform {
+.ui-dialog.emailform {
   overflow:hidden;
+  max-height: 90% !important;
+  max-width: 90% !important;
 }
 
 /* dialog popup, header */
@@ -49,6 +51,8 @@ ui-dialog.emailform {
 
 #emailformdialog {
   padding:0;
+  border-top-right-radius:0;
+  border-top-left-radius:0;
 }
 
 ul#emailformtabs {
@@ -64,35 +68,47 @@ ul#emailformtabs {
 
 /*****************************************************************************
  *
+ * status messages
+ *
+ */
+
+#emailformdialog #emailformdebug {
+  height:auto;
+  width:auto;
+  overflow:auto;
+}
+
+/*****************************************************************************
+ *
  * email composition
  *
  */
 
-form#cafevdb-email-composition-form fieldset {
+form#cafevdb-email-form fieldset.page {
   max-width:65em;
 }
-form#cafevdb-email-composition-form tr.attachments td {
+form#cafevdb-email-form tr.attachments td {
   vertical-align:middle;
 }
-form#cafevdb-email-composition-form tr.attachments button {
+form#cafevdb-email-form tr.attachments button {
   background-color:#C6DEFF;
   vertical-align:middle;
   height:28px;
   padding:5px;  
   border-style:outset;
 }
-form#cafevdb-email-composition-form tr.attachments button.events {
+form#cafevdb-email-form tr.attachments button.events {
   padding:0px;
 }
-form#cafevdb-email-composition-form tr.attachments button.events img  {
+form#cafevdb-email-form tr.attachments button.events img  {
   vertical-align:top;
   height:26px;
 }
-form#cafevdb-email-composition-form tr.eventattachments img { 
+form#cafevdb-email-form tr.eventattachments img { 
   height:10px;
   vertical-align:top;
 }
-form#cafevdb-email-composition-form tr.eventattachments button {
+form#cafevdb-email-form tr.eventattachments button {
   background-color:#C6DEFF;
   vertical-align:middle;
   height:20px;
@@ -101,50 +117,50 @@ form#cafevdb-email-composition-form tr.eventattachments button {
   vertical-align:middle;
 }
 
-form#cafevdb-email-composition-form tr.submit td {
+form#cafevdb-email-form tr.submit td {
   border-top:1px solid #808080;
 }
-form#cafevdb-email-composition-form tr.submit td.send {
+form#cafevdb-email-form tr.submit td.send {
    width:auto;
    text-align:full;
    padding:0;
    margin:0;
 }
 
-form#cafevdb-email-composition-form td.body {
+form#cafevdb-email-form td.body {
   vertical-align:top;
 }
-form#cafevdb-email-composition-form tr.submit td.addresses input {
+form#cafevdb-email-form tr.submit td.addresses input {
    width:auto;
  }
-form#cafevdb-email-composition-form tr.submit td.addresses {
+form#cafevdb-email-form tr.submit td.addresses {
    width:auto;
    text-align:full;
    padding:0;
    margin:0;
 }
-form#cafevdb-email-composition-form tr.submit td.reset {
+form#cafevdb-email-form tr.submit td.reset {
    width:auto;
    text-align:right;
    padding:0;
    margin:0;
 }
-form#cafevdb-email-composition-form td.reset input {
+form#cafevdb-email-form td.reset input {
   margin-right:0;
 }
-form#cafevdb-email-composition-form td.email-template-save {
+form#cafevdb-email-form td.email-template-save {
   text-align:right;
 }
 
-form#cafevdb-email-composition-form td.email-address.input {
+form#cafevdb-email-form td.email-address.input {
   width:100%;
   padding: 0 1em 0 0;
 }
-form#cafevdb-email-composition-form td.email-address.input input {
+form#cafevdb-email-form td.email-address.input input {
   width:100%;
 }
 
-form#cafevdb-email-composition-form td.subject.input  span.subject.tag {
+form#cafevdb-email-form td.subject.input  span.subject.tag {
   font-family:monospace;
   font-size:160%;
   width:auto;
@@ -158,7 +174,7 @@ form#cafevdb-email-composition-form td.subject.input  span.subject.tag {
   text-overflow:ellipsis;
 }
 
-form#cafevdb-email-composition-form td.subject.input span.subject.input {
+form#cafevdb-email-form td.subject.input span.subject.input {
   width:70%;
   padding: 0 1em 0 0;
   display:inline-block;
@@ -166,11 +182,11 @@ form#cafevdb-email-composition-form td.subject.input span.subject.input {
   float:right;
 }
 
-form#cafevdb-email-composition-form td.subject.input input {
+form#cafevdb-email-form td.subject.input input {
   width:100%;
 }
 
-form#cafevdb-email-composition-form td.messagetext {
+form#cafevdb-email-form td.messagetext {
   padding: 0.5em 0;
 }
 
@@ -179,123 +195,152 @@ form#cafevdb-email-composition-form td.messagetext {
  * email recipients selection
  *
  */
-form#cafevdb-email-recipients-form div.row {
+form#cafevdb-email-form div.row {
   width:100%;
 }
 
-form#cafevdb-email-recipients-form div.row:after {
+form#cafevdb-email-form div.row:after {
   content:" ";
   display:block;
   height:0;
   clear: both;
 }
 
-form#cafevdb-email-recipients-form span.container {
+form#cafevdb-email-form span.container {
   display:inline-block;
 }
 
-form#cafevdb-email-recipients-form .container.left {
+form#cafevdb-email-form .container.left {
   float:left;
 }
 
-form#cafevdb-email-recipients-form .container.right {
+form#cafevdb-email-form .container.right {
   float:right;
   text-align:right;
 }
 
-form#cafevdb-email-recipients-form .label {
+form#cafevdb-email-form .label {
   font-weight:bold;
 }
 
-form#cafevdb-email-recipients-form .label.top {
+form#cafevdb-email-form .label.top {
   display:block;
 }
 
-form#cafevdb-email-recipients-form .label.left {
+form#cafevdb-email-form .label.left {
   display:inline-block;
   float:left;
   padding-right:0.5em;
 }
 
-form#cafevdb-email-recipients-form .label.right {
+form#cafevdb-email-form .label.right {
   display:inline-block;
   float:right;
   padding-left:0.5em;
 }
 
-form#cafevdb-email-recipients-form .spacer {
+form#cafevdb-email-form .spacer {
   width:100%;
-  height:auto;
-  margin: 1em 0 1em 0;
+  height:3px;
+  margin: 0.5em 0 1em 0;
   text-align:center;
+  line-height:3px;
 }
 
-form#cafevdb-email-recipients-form .spacer .ruler {
+form#cafevdb-email-form .spacer .ruler {
   display:inline-block;
   width:100%;
   background-color:#000;
   height:1px;
+  vertical-align:middle;
   padding:0;
 }
 
-form#cafevdb-email-recipients-form .vmiddle {
+form#cafevdb-email-form .vmiddle {
   vertical-align:middle;
 }
 
-form#cafevdb-email-recipients-form .vmiddle * {
+form#cafevdb-email-form .vmiddle * {
   vertical-align:middle;
 }
 
 /* special elements */
 
-form#cafevdb-email-recipients-form .member-status-filter.container {
-  min-height:5em;
+
+
+form#cafevdb-email-form .member-status-filter.container {
+  min-height:2em;
+  line-height:2em;
+  width:100%;
 }
 
-form#cafevdb-email-recipients-form .basic-recipients-set.container.inner {
+form#cafevdb-email-form #member_status_filter_chosen { 
+  min-width:40% !important;
+  max-width:80% !important;
+  width:auto !important;
+}
+
+form#cafevdb-email-form .basic-recipients-set.container.inner {
   margin: 0 0.5em 0 0.5em;
   position:relative;
+  max-width:35%;
 }
 
-form#cafevdb-email-recipients-form input[type=checkbox] {
+form#cafevdb-email-form input[type=checkbox] {
   position:absolute;
 }
-
-form#cafevdb-email-recipients-form .basic-recipients-set.container.outer {
-  display:inline-block;
+form#cafevdb-email-form span.basic-recipients-set.container.outer {
+  max-width:100%;
+  white-space:nowrap;
+  overflow:hidden;
 }
 
-form#cafevdb-email-recipients-form input[type=checkbox] + .label span.button {
+form#cafevdb-email-form input[type=checkbox] + .label {
+  width:100%;
+}
+
+form#cafevdb-email-form input[type=checkbox] + .label span.button {
   display:inline-block;
   background-color:#F4F4F4 !important;
   box-shadow:2px 2px 2px #080808;/*, 2px 2px 2px #cfc;*/
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  max-width:100%;
 }
 
-form#cafevdb-email-recipients-form input[type=checkbox]:checked + .label span.button {
+form#cafevdb-email-form input[type=checkbox]:checked + .label span.button {
   display:inline-block;
   background-color:LightSteelBlue !important;
   box-shadow:2px 2px 2px #080808 inset; /*, 1px 1px 1px #cfc inset;*/
+  white-space:nowrap;
+  text-overflow:ellipsis;
 }
 
-form#cafevdb-email-recipients-form .recipients-select.container {
-  width:80%
+form#cafevdb-email-form .recipients-select.container {
+  width:80%;
 }
 
-form#cafevdb-email-recipients-form .instruments-filter.container {
-  width:18%
+form#cafevdb-email-form .instruments-filter.container {
+  width:18%;
+  text-align:center;
+  cursor: pointer;
 }
 
-form#cafevdb-email-recipients-form span#instruments-filter-wrapper {
+form#cafevdb-email-form .instruments-filter.container label {
+}
+
+form#cafevdb-email-form span#instruments-filter-wrapper {
   margin-top:0.3em;
   display:inline-block;
   width: 100%;
 }
 
-form#cafevdb-email-recipients-form .instruments-filter.container .chosen-container {
+form#cafevdb-email-form .instruments-filter.container .chosen-container {
   width:100% !important;
 }
 
-form#cafevdb-email-recipients-form input.instruments-filter-controls.apply {
+form#cafevdb-email-form input.instruments-filter-controls.apply {
   background-image:url('../img/email-new-yes.svg');
   background-repeat:no-repeat;
   background-size: 28px 28px;
@@ -306,7 +351,7 @@ form#cafevdb-email-recipients-form input.instruments-filter-controls.apply {
   vertical-align:middle;
 }
 
-form#cafevdb-email-recipients-form input.instruments-filter-controls.undo {
+form#cafevdb-email-form input.instruments-filter-controls.undo {
   background-image:url('../img/email-new-undo.svg');
   background-repeat:no-repeat;
   background-size: 28px 28px;
@@ -317,7 +362,18 @@ form#cafevdb-email-recipients-form input.instruments-filter-controls.undo {
   vertical-align:middle;
 }
 
-form#cafevdb-email-recipients-form input.instruments-filter-controls.reset {
+form#cafevdb-email-form input.instruments-filter-controls.redo {
+  background-image:url('../img/email-new-redo.svg');
+  background-repeat:no-repeat;
+  background-size: 28px 28px;
+  background-position: center;
+  width:28px;
+  height:28px;
+  font-size:0pt;
+  vertical-align:middle;
+}
+
+form#cafevdb-email-form input.instruments-filter-controls.reset {
   background-image:url('../img/email-new-x.svg');
   background-repeat:no-repeat;
   background-size: 28px 28px;
