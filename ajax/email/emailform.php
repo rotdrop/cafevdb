@@ -35,6 +35,7 @@ use CAFEVDB\Events;
 use CAFEVDB\Util;
 use CAFEVDB\Error;
 use CAFEVDB\Navigation;
+use CAFEVDB\EmailRecipientsFilter;
 
 try {
 
@@ -52,6 +53,13 @@ try {
     $debugText .= '$_POST[] = '.print_r($_POST, true);
   }  
 
+  // Get some common post data, rest has to be handled by the
+  // recipients and the sender class.
+  $projectId   = Util::cgiValue('ProjectId', -1);
+  $projectName = Util::cgiValue('Project', ''); // the name
+
+  $recipientsFilter = new EmailRecipientsFilter(Config::$pmeopts);  
+
   $tmpl = new OCP\Template('cafevdb', 'emailform');
 
   $tmpl->assign('uploadMaxFilesize', Util::maxUploadSize(), false);
@@ -59,12 +67,12 @@ try {
                 OCP\Util::humanFileSize(Util::maxUploadSize()), false);
   $tmpl->assign('requesttoken', \OCP\Util::callRegister());
 
-  $tmpl->assign('ProjectName', 'Foobar');
-  $tmpl->assign('ProjectId', 42);
-  $tmpl->assign('templateName', '');
-  $tmpl->assign('templateNames', array());
+  $tmpl->assign('ProjectName', $projectName);
+  $tmpl->assign('ProjectId', $projectId);
 
   // Needed for the editor
+  $tmpl->assign('templateName', '');
+  $tmpl->assign('templateNames', array());
   $tmpl->assign('BCC', '');
   $tmpl->assign('CC', '');
   $tmpl->assign('mailTag', '[CAFEV-Blah]');
@@ -75,28 +83,13 @@ try {
   $tmpl->assign('fileAttach', array());
   
   // Needed for the recipient selection
-  $tmpl->assign('FormData', array('blah' => array('foo' => 'bar')));
-  $tmpl->assign('BasicRecipientSet', array('FromProject' => 1, 'ExceptProject' => 0));
-  $tmpl->assign('MemberStatusFilter', array(array('name' => 'Name1',
-                                                  'value' => 'Value1',
-                                                  'flags' => Navigation::SELECTED),
-                                            array('name' => 'Name2',
-                                                  'value' => 'Value2',
-                                                  'flags' => Navigation::DISABLED)
-                  ));
-  $tmpl->assign('EmailRecipientsChoices', array(array('value' => 14,
-                                                      'name' => 'himself@claus-justus-heine.de',
-                                                      'flags' => Navigation::SELECTED),
-                                                array('value' => 15,
-                                                      'label' => 'blah',
-                                                      'name' => 'baggins@mordor.lost')
-                 ));
-  $tmpl->assign('InstrumentsFilter', array(array('name' => '*',
-                                                 'value' => '*'),
-                                           array('name' => 'Bratsche',
-                                                 'value' => 'Bratsche')
-                  ));
-  $tmpl->assign('MissingEmailAddresses', array('Bug Bunny', 'Mr. Universe'));
+  $tmpl->assign('RecipientsFormData', $recipientsFilter->formData());
+  $tmpl->assign('FilterHistory', $recipientsFilter->filterHistory());
+  $tmpl->assign('MemberStatusFilter', $recipientsFilter->memberStatusFilter());
+  $tmpl->assign('BasicRecipientsSet', $recipientsFilter->basicRecipientsSet());
+  $tmpl->assign('InstrumentsFilter', $recipientsFilter->instrumentsFilter());
+  $tmpl->assign('EmailRecipientsChoices', $recipientsFilter->emailRecipientsChoices());
+  $tmpl->assign('MissingEmailAddresses', $recipientsFilter->missingEmailAddresses());
 
   $html = $tmpl->fetchPage();
 
@@ -105,6 +98,8 @@ try {
   
   OCP\JSON::success(
     array('data' => array('contents' => $html,
+                          'projectName' => $projectName,
+                          'projectId' => $projectId,
                           'debug' => $debugText)));
   
   return true;
