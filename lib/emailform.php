@@ -68,7 +68,7 @@ namespace CAFEVDB
     /* 
      * constructor
      */
-    public function __construct(&$_opts, $action = NULL)
+    public function __construct()
     {
       $this->jsonFlags = JSON_FORCE_OBJECT|JSON_HEX_QUOT|JSON_HEX_APOS;
       if (Util::debugMode('request')) {
@@ -77,7 +77,8 @@ namespace CAFEVDB
         echo '</PRE>';
       }
 
-      $this->opts = $_opts;
+      Config::init();
+      $this->opts = Config::$pmeopts;
 
       // Fetch all data submitted by form
       $this->cgiData = Util::cgiValue('emailRecipients', array());
@@ -719,9 +720,13 @@ namespace CAFEVDB
     /**Return the values for the recipient select box */
     public function emailRecipientsChoices()
     {
-      $selectedRecipients = $this->cgiValue('SelectedRecipients', $this->EmailRecs);
+      if ($this->submitted) {
+        $selectedRecipients = $this->cgiValue('SelectedRecipients', array());
+      } else {
+        $selectedRecipients = $this->EmailRecs;
+      }
       $selectedRecipients = array_flip($selectedRecipients);
-      $result = array();      
+      $result = array();
       foreach($this->EMailsDpy as $key => $email) {
         $result[] = array('value' => $key,
                           'name' => $email,
@@ -751,7 +756,26 @@ namespace CAFEVDB
       return $this->reload;
     }
     
-
+    /**Return the list of selected recipients. To have this method is
+     * in principle the goal of all the mess above ...
+     */
+    public function selectedRecipients()
+    {
+      if ($this->submitted) {
+        $selectedRecipients = $this->cgiValue('SelectedRecipients', array());
+      } else {
+        $selectedRecipients = $this->EmailRecs;
+      }
+      $selectedRecipients = array_unique($selectedRecipients);
+      $EMails = array();
+      foreach ($selectedRecipients as $key) {
+        if (isset($this->EMails[$key])) {
+          $EMails[] = $this->EMails[$key];
+        }
+      }
+      return $EMails;
+    }
+    
   };
 
 } // CAFEVDB

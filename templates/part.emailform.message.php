@@ -63,6 +63,19 @@ if ($_['ProjectId'] >= 0) {
   }
 }
 
+// Compose one large string with all recipients, separated by comma
+$toString = array();
+foreach($_['TO'] as $recipient) {
+  $name = trim($recipient['name']);
+  $email = trim($recipient['email']);
+  if ($name == '') {
+    $toString[] = $email;
+  } else {
+    $toString[] = $name.' <'.$email.'>';
+  }
+}
+$toString = htmlspecialchars(implode(', ', $toString));
+
 ?>
 
 <fieldset id="cafevdb-emial-composition-fieldset" class="email-composition page">
@@ -100,9 +113,13 @@ if ($_['ProjectId'] >= 0) {
                value="<?php echo L::t('Save as Template'); ?>"/>
       </td>
     </tr>
-    <tr>
-      <td><?php echo L::t('Recipients'); ?></td>
-      <td colspan="2"><?php echo L::t('Determined automatically from data-base, see the recipients tab.'); ?></td>
+    <tr class="email-address">
+      <td class="email-address caption"><?php echo L::t('Recipients'); ?></td>
+      <td class="email-address display" colspan="2">
+        <span title="<?php echo htmlspecialchars($toString); ?>" class="tipsy-s">
+          <?php echo $toString; ?>
+        </span>
+      </td>
     </tr>
     <tr class="email-address">
       <td class="email-address caption"><?php echo L::t('Carbon Copy'); ?></td>

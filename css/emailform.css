@@ -160,6 +160,23 @@ form#cafevdb-email-form td.email-address.input input {
   width:100%;
 }
 
+form#cafevdb-email-form td.email-address.display {
+  width:100%;
+  overflow:hidden;
+}
+
+form#cafevdb-email-form td.email-address.display span {
+  display:inline-block;
+  max-width:45em;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+/* 
+form#cafevdb-email-form td.email-address.display span {
+form#cafevdb-email-form td.email-address.display {
+*/
+
+
 form#cafevdb-email-form td.subject.input  span.subject.tag {
   font-family:monospace;
   font-size:160%;

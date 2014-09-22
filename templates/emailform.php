@@ -46,9 +46,7 @@ CAFEVDB\Error::exceptions(true);
         id="cafevdb-email-form"
         class="cafevdb-email-form">
     <fieldset id="cafevdb-email-form-data" class="form-data">
-      <?php echo Navigation::persistentCGI('ProjectName', $_['ProjectName']); ?>
-      <?php echo Navigation::persistentCGI('Project', $_['ProjectName']); ?>
-      <?php echo Navigation::persistentCGI('ProjectId', $_['ProjectId']); ?>
+      <?php echo Navigation::persistentCGI($_['FormData']); ?>
     </fieldset>
     <div id="emailformrecipients"><?php echo $this->inc('part.emailform.recipients'); ?></div>
     <div id="emailformmessage"><?php echo $this->inc('part.emailform.message'); ?></div>

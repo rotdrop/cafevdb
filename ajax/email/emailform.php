@@ -58,7 +58,9 @@ try {
   $projectId   = Util::cgiValue('ProjectId', -1);
   $projectName = Util::cgiValue('Project', ''); // the name
 
-  $recipientsFilter = new EmailRecipientsFilter(Config::$pmeopts);  
+  $recipientsFilter = new EmailRecipientsFilter();
+  $recipients = $recipientsFilter->selectedRecipients();
+  //$emailComposer = new EmailComposer($recipients);
 
   $tmpl = new OCP\Template('cafevdb', 'emailform');
 
@@ -70,9 +72,25 @@ try {
   $tmpl->assign('ProjectName', $projectName);
   $tmpl->assign('ProjectId', $projectId);
 
+  // Provide enough data s.t. a form-reload will bump the user to the
+  // form the email-dialog was opened from. Ideally, we intercept the
+  // form submit in javascript and simply close the dialog. Most of
+  // the stuff below is a simple safe-guard.
+  $pmepfx   = Config::$pmeopts['cgi']['prefix']['sys'];
+  $emailKey = $pmepfx.'mrecs';
+  $tmpl->assign('FormData', array('ProjectName' => $projectName,
+                                  'Project' => $projectName, // compat
+                                  'ProjectId' => $projectId,
+                                  'Template' => Util::cgiValue('Template', ''),
+                                  'DisplayClass' => Util::cgiValue('DisplayClass', ''),
+                                  $emailKey => Util::cgiValue($emailKey, array()),
+                                  'headervisibility' => Util::cgiValue('headervisibility', ''))
+    );
+
   // Needed for the editor
   $tmpl->assign('templateName', '');
   $tmpl->assign('templateNames', array());
+  $tmpl->assign('TO', $recipients);
   $tmpl->assign('BCC', '');
   $tmpl->assign('CC', '');
   $tmpl->assign('mailTag', '[CAFEV-Blah]');

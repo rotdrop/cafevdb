@@ -241,6 +241,13 @@ CAFEVDB.Email = CAFEVDB.Email || {};
    */
   Email.emailFormCompositionHandlers = function(fieldset, form, dialogHolder, panelHolder) {
     var Email = this;
+
+    fieldset.find('input[name="cancel"]').off('click');
+    fieldset.find('input[name="cancel"]').on('click', function(event) {
+      dialogHolder.dialog('close');
+      return false;
+    });
+   
   };    
 
   /**Open the mass-email form in a popup window
@@ -252,32 +259,15 @@ CAFEVDB.Email = CAFEVDB.Email || {};
            function(data) {
              var containerId = 'emailformdialog';
              var dialogHolder;
-             if (data.status == 'success') {
-               dialogHolder = $('<div id="'+containerId+'"></div>');
-               dialogHolder.html(data.data.contents);
-               $('body').append(dialogHolder);
-             } else {
-               // error handling
-               var info = '';
-               if (typeof data.data == 'undefined') {
-                 OC.dialogs.alert(t('cafevdb', 'Unrecoverable unknown internal error, no further information available, sorry.'), t('cafevdb', 'Internal Error'), undefined, true);
-                 return false;
-               }
-               if (typeof data.data.message != 'undefined') {
-	         info = data.data.message;
-               } else {
-	         info = t('cafevdb', 'Unknown error :(');
-               }
-               if (typeof data.data.error != 'undefined' && data.data.error == 'exception') {
-	         info += '<p><pre>'+data.data.exception+'</pre>';
-	         info += '<p><pre>'+data.data.trace+'</pre>';
-               }
-               OC.dialogs.alert(info, t('cafevdb', 'Error'));
-               if (data.data.debug != '') {
-                 OC.dialogs.alert(data.data.debug, t('cafevdb', 'Debug Information'), undefined, true);
-               }
+
+             if (!CAFEVDB.ajaxErrorHandler(data, ['contents'])) {
                return false;
              }
+
+             dialogHolder = $('<div id="'+containerId+'"></div>');
+             dialogHolder.html(data.data.contents);
+             $('body').append(dialogHolder);
+
              var dlgTitle = '';
              if (data.data.projectId >= 0) {
                dlgTitle = t('cafevdb', 'Em@il Form for {ProjectName}',
