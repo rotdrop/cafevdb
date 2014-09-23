@@ -84,6 +84,16 @@ ul#emailformtabs {
  *
  */
 
+#emailformdialog #emailformcomposer  {
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: 0px !important;
+}
+
+fieldset.email-composition.page {
+  margin-bottom:1em;
+}
+
 form#cafevdb-email-form fieldset.page {
   max-width:65em;
 }
