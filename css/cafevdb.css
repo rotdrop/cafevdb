@@ -45,6 +45,47 @@ div.cfgerror {
 
 /*******************************************************************************
  *
+ * Error popups
+ *
+ */
+
+.error.missing, .error.debug.contents {
+  display:block;
+  font-weight:boild;
+  color:blue;
+  margin:0 2em 0 2em;
+  max-width:100%;
+  overflow:auto;
+  /* white-space:nowrap; */
+}
+
+.error.debug.contents p {
+  /* white-space:nowrap;   */
+}
+
+.error.exception.name {
+  display:block;
+  font-weight:bold;
+  color:red;
+  margin-left:2em;
+}
+
+.error.exception.trace {
+  display:block;
+  font-weight:bold;
+  color:blue;
+  margin: 0 2em 0 2em;
+  max-width:100%;
+  overflow:auto;
+  /* white-space:nowrap; */
+}
+
+.error.exception.trace p {
+  /* white-space:nowrap; */
+}
+
+/*******************************************************************************
+ *
  * Pointer above controls
  *
  */
