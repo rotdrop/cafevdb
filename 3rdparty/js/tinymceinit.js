@@ -21,9 +21,17 @@ var myTinyMCE = myTinyMCE || {};
     browser_spellcheck: true,
     gecko_spellcheck: true,
     file_picker_types: 'file image media',
+
     setup: function(editor) {
       editor.on('PostProcess', myTinyMCE.postProcessCallback);
     },
+    init_instance_callback: function(inst) {
+      inst.getWin().onresize = function(e) {
+        var event = new Event('resize', { bubbles: true, cancelable: true });
+        inst.getContainer().dispatchEvent(event);
+      };
+    },
+
 //    spellchecker_rpc_url: OC.filePath('cafevdb', '3rdparty/js/tinymce/plugins/spellchecker', 'rpc.php'),
     plugins: [
       "advlist autolink link image lists charmap print preview hr anchor pagebreak",  // spellchecker
