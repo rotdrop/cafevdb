@@ -109,6 +109,73 @@ var CAFEVDB = CAFEVDB || {};
     };
   };
 
+  /**Replace the contents of the given editor by contents. */
+  CAFEVDB.updateEditor = function(selector, contents) {
+    var editorElement;
+    if (selector instanceof jQuery) {
+      editorElement = selector;
+    } else {
+      editorElement = $(selector);
+    }
+    if (!editorElement.length) {
+      return;
+    }
+    switch (this.wysiwygEditor) {
+    case 'ckeditor':
+      if (editorElement.ckeditor) {
+        var editor = editorElement.ckeditor().ckeditorGet();
+        editor.setData(contents);
+        // ckeditor snapshots itself on update.
+        //editor.undoManager.save(true);
+      }
+      break;
+    case 'tinymce':
+      editorElement.tinymce().setContent(contents);
+      editorElement.tinymce().undoManager.add();
+      break;
+    default:
+      if (editorElement.ckeditor) {
+        var editor = editorElement.ckeditor().ckeditorGet();
+        editor.setData(contents);
+        // ckeditor snapshots itself on update.
+        //editor.undoManager.save(true);
+      }
+      break;
+    };
+  }
+
+  /**Generate a "snapshot", meaning an undo-level, for instance after
+   * replacing all data by loading email templates and stuff.
+   */
+  CAFEVDB.snapshotEditor = function(selector) {
+    var editorElement;
+    if (selector instanceof jQuery) {
+      editorElement = selector;
+    } else {
+      editorElement = $(selector);
+    }
+    if (!editorElement.length) {
+      return;
+    }
+    switch (this.wysiwygEditor) {
+    case 'ckeditor':
+      if (editorElement.ckeditor) {
+        var editor = editorElement.ckeditor().ckeditorGet();
+        editor.undoManager.save(true);
+      }
+      break;
+    case 'tinymce':
+      editorElement.tinymce().undoManager.add();
+      break;
+    default:
+      if (editorElement.ckeditor) {
+        var editor = editorElement.ckeditor().ckeditorGet();
+        editor.undoManager.save(true);
+      }
+      break;
+    };
+  };
+
   /**Display a transparent modal dialog which blocks the UI
    * 
    */
