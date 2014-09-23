@@ -414,13 +414,44 @@ var CAFEVDB = CAFEVDB || {};
    * @param[in] options Tipsy options
    */
   CAFEVDB.applyTipsy = function(selector, options, container) {
-    if (typeof container !== undefined) {
-      container.find(selector).data('tipsy', null); // remove any already installed stuff
-      container.find(selector).tipsy(options);      // make it new
+    var element;
+    if (selector instanceof jQuery) {
+      element = selector;
+    } else if (typeof container != 'undefined') {
+      element = container.find(selector);
     } else {
-      $(selector).data('tipsy', null); // remove any already installed stuff
-      $(selector).tipsy(options);      // make it new
+      element = $(selector);
     }
+    // fetch suitable options from the elements class attribute
+    var classOptions = { fade: true,
+                         html: true,
+                         gravity: 'se' };
+    var classAttr = element.attr('class');
+    if (typeof classAttr != 'undefined') {
+      if (classAttr.match(/tipsy-off/) !== null) {
+        $(this).tipsy('disable');
+        return;
+      }
+      var tipsyClasses = classAttr.match(/tipsy-[a-z]+/g);
+      var idx;
+      for(idx = 0; idx < tipsyClasses.length; ++idx) {
+        var tipsyClass = tipsyClasses[idx];
+        var gravity = tipsyClass.match(/^tipsy-([senw]{1,2})$/);
+        if (gravity && gravity.length == 2 && gravity[1].length > 0) {
+          classOptions.gravity = gravity[1];
+          continue;
+        }
+        classOptions.className = tipsyClass;
+      }
+    }
+    if (typeof options == 'undefined') {
+      options = classOptions;
+    } else {
+      // supplied options override class options
+      options = $.extend({}, classOptions, options);
+    }
+    element.data('tipsy', null); // remove any already installed stuff
+    element.tipsy(options);      // make it new
   };
 
   /**Add a to-back-button to the titlebar of a jQuery-UI dialog. The
@@ -566,10 +597,12 @@ var CAFEVDB = CAFEVDB || {};
                      { RequiredField: required[idx] })+"<br>";
       }
     }
-    if (data.status != 'success') {
+    if (missing.length > 0 || data.status != 'success') {
       var info = '';
       if (typeof data.data.message != 'undefined') {
 	info += data.data.message;
+      } else if (missing.length > 0) {
+        info += t('cafevdb', 'Missing data');
       } else {
 	info += t('cafevdb', 'Unknown error :(');
       }
@@ -579,11 +612,11 @@ var CAFEVDB = CAFEVDB || {};
       } else if (missing.length > 0) {
         // Add missing fields only if no exception was caught as in
         // this case no regular data-fields have been constructed
-        info = missing + info;
+        info += '<div class="missing error">'+missing+'</div>';
       }
       OC.dialogs.alert(info, t('cafevdb', 'Error'), undefined, true, true);
       if (data.data.debug != '') {
-        OC.dialogs.alert(data.data.debug, t('cafevdb', 'Debug Information'), undefined, true, true);
+        OC.dialogs.alert('<div class="debug error contents">'+data.data.debug+'</div>', t('cafevdb', 'Debug Information'), undefined, true, true);
       }
       return false;
     }
@@ -645,17 +678,28 @@ var CAFEVDB = CAFEVDB || {};
       {gravity:'sw', fade:true, html:true, className:'tipsy-wide'});
 
     container.find('[class*="tipsy-"]').each(function(index) {
-      var gravity = $(this).attr('class').match(/tipsy-([senw]+)/);
-      if (gravity && gravity.length == 2 && gravity[1].length > 0) {
-        var oldTipsy = $(this).data('tipsy');
-        $(this).data('tipsy', null); // remove any already installed stuff
-        var options = $.extend({}, oldTipsy, {gravity:gravity[1], fade:true});
-        $(this).tipsy(options);
+      var options = { fade: true,
+                      html: true };
+      var element = $(this);
+      var classAttr = element.attr('class');
+      if (classAttr.match(/tipsy-off/) !== null) {
+        $(this).tipsy('disable');
+        return;
       }
-    });
-
-    container.find('.tipsy-off').each(function(index) {
-      $(this).tipsy('disable');
+      var tipsyClasses = classAttr.match(/tipsy-[a-z]+/);
+      var idx;
+      for(idx = 0; idx < tipsyClasses.length; ++idx) {
+        var tipsyClass = tipsyClasses[idx];
+        var gravity = tipsyClass.match(/^tipsy-([senw]{1,2})$/);
+        if (gravity && gravity.length == 2 && gravity[1].length > 0) {
+          options.gravity = gravity[1];
+          continue;
+        }
+        options.className = tipsyClass;
+      }
+      var oldTipsy = $(this).data('tipsy');
+      $(this).data('tipsy', null); // remove any already installed stuff
+      $(this).tipsy($.extend({}, oldTipsy, options));
     });
   }
 
