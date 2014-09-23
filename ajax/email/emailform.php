@@ -36,6 +36,7 @@ use CAFEVDB\Util;
 use CAFEVDB\Error;
 use CAFEVDB\Navigation;
 use CAFEVDB\EmailRecipientsFilter;
+use CAFEVDB\EmailComposer;
 
 try {
 
@@ -60,7 +61,7 @@ try {
 
   $recipientsFilter = new EmailRecipientsFilter();
   $recipients = $recipientsFilter->selectedRecipients();
-  //$emailComposer = new EmailComposer($recipients);
+  $composer = new EmailComposer($recipients);
 
   $tmpl = new OCP\Template('cafevdb', 'emailform');
 
@@ -88,17 +89,18 @@ try {
     );
 
   // Needed for the editor
-  $tmpl->assign('templateName', '');
-  $tmpl->assign('templateNames', array());
-  $tmpl->assign('TO', $recipients);
-  $tmpl->assign('BCC', '');
-  $tmpl->assign('CC', '');
-  $tmpl->assign('mailTag', '[CAFEV-Blah]');
-  $tmpl->assign('subject', '');
-  $tmpl->assign('message', '');
-  $tmpl->assign('sender', '');
-  $tmpl->assign('catchAllEmail', '');
+  $tmpl->assign('templateName', $composer->currentEmailTemplate());
+  $tmpl->assign('templateNames', $composer->emailTemplates());
+  $tmpl->assign('TO', $composer->toString());
+  $tmpl->assign('BCC', $composer->blindCarbonCopy());
+  $tmpl->assign('CC', $composer->carbonCopy());
+  $tmpl->assign('mailTag', $composer->subjectTag());
+  $tmpl->assign('subject', $composer->subject());
+  $tmpl->assign('message', $composer->messageText());
+  $tmpl->assign('sender', $composer->fromName());
+  $tmpl->assign('catchAllEmail', $composer->fromAddress());
   $tmpl->assign('fileAttach', array());
+  $tmpl->assign('ComposerFormData', $composer->formData());
   
   // Needed for the recipient selection
   $tmpl->assign('RecipientsFormData', $recipientsFilter->formData());
@@ -131,7 +133,7 @@ try {
     array(
       'data' => array(
         'error' => 'exception',
-        'exception' => $e->getMessage(),
+        'exception' => $e->getFile().'('.$e->getLine().'): '.$e->getMessage(),
         'trace' => $e->getTraceAsString(),
         'message' => L::t('Error, caught an exception'),
         'debug' => $debugText)));

@@ -36,6 +36,7 @@ use CAFEVDB\Util;
 use CAFEVDB\Error;
 use CAFEVDB\Navigation;
 use CAFEVDB\EmailRecipientsFilter;
+use CAFEVDB\EmailComposer;
 
 try {
 
@@ -49,48 +50,63 @@ try {
   $debugText = '';
   $messageText = '';
 
-  if (true || Util::debugMode('request')) {
+  if (Util::debugMode('request')) {
     $debugText .= '$_POST[] = '.print_r($_POST, true);
   }
 
-  $projectId      = Util::cgiValue('ProjectId', -1);
-  $projectName    = Util::cgiValue('ProjectName', ''); // the name
-
-  // TODO: check recipientsData
-
-  // We only need to manipulate the options for the select box. The
-  // other form elements are updated accordingly by their java-script
-  // libraries or by the web-browser.
+  $projectId   = Util::cgiValue('ProjectId', -1);
+  $projectName = Util::cgiValue('ProjectName', ''); // the name
+  $request     = Util::cgiValue('Request', 'update');
+  $formElement = Util::cgiValue('FormElement', 'everything');
 
   $recipientsFilter = new EmailRecipientsFilter();
+  $composer = new EmailComposer($recipientsFilter->selectedRecipients());
 
-  if ($recipientsFilter->reloadState()) {
-    // Rebuild the entire page
-    $recipientsOptions = array();
-    $missingEmailAddresses = '';
+  switch ($request) {
+  case 'update':
+    if ($formElement == 'everything') {
+      $elementData = '';
+      $formElement = '';
 
-    $tmpl = new OCP\Template('cafevdb', 'part.emailform.recipients');
-    $tmpl->assign('ProjectName', $projectName);
-    $tmpl->assign('ProjectId', $projectId);
-    
-    // Needed for the recipient selection
-    $tmpl->assign('RecipientsFormData', $recipientsFilter->formData());
-    $filterHistory = $recipientsFilter->filterHistory();
-    $tmpl->assign('FilterHistory', $filterHistory);
-    $tmpl->assign('MemberStatusFilter', $recipientsFilter->memberStatusFilter());
-    $tmpl->assign('BasicRecipientsSet', $recipientsFilter->basicRecipientsSet());
-    $tmpl->assign('InstrumentsFilter', $recipientsFilter->instrumentsFilter());
-    $tmpl->assign('EmailRecipientsChoices', $recipientsFilter->emailRecipientsChoices());
-    $tmpl->assign('MissingEmailAddresses', $recipientsFilter->missingEmailAddresses());
+      $tmpl = new OCP\Template('cafevdb', 'part.emailform.composer');
+      $tmpl->assign('ProjectName', $projectName);
+      $tmpl->assign('ProjectId', $projectId);
 
-    $contents = $tmpl->fetchPage();
-  } else {
-    $recipientsChoices = $recipientsFilter->emailRecipientsChoices();
-    $recipientsOptions = Navigation::selectOptions($recipientsChoices);
-    $missingEmailAddresses = $recipientsFilter->missingEmailAddresses();
-    $missingEmailAddresses = htmlspecialchars(implode(', ', $missingEmailAddresses));
-    $filterHistory = $recipientsFilter->filterHistory();
-    $contents = '';
+      // Needed for the editor
+      $tmpl->assign('templateName', $composer->currentEmailTemplate());
+      $tmpl->assign('templateNames', $composer->emailTemplates());
+      $tmpl->assign('TO', $composer->toString());
+      $tmpl->assign('BCC', $composer->blindCarbonCopy());
+      $tmpl->assign('CC', $composer->carbonCopy());
+      $tmpl->assign('mailTag', $composer->subjectTag());
+      $tmpl->assign('subject', $composer->subject());
+      $tmpl->assign('message', $composer->messageText());
+      $tmpl->assign('sender', $composer->fromName());
+      $tmpl->assign('catchAllEmail', $composer->fromAddress());
+      $tmpl->assign('fileAttach', array());
+      $tmpl->assign('ComposerFormData', $composer->formData());  
+
+      $elementData = $tmpl->fetchPage();
+    } else {    
+      $contents = '';
+
+      switch ($formElement) {
+      case 'TO':
+        $elementData = $composer->toString();
+        break;
+      default:
+        throw new \InvalidArgumentException(L::t("Unknown form element: `%s'.", $formElement));
+      }
+    }
+    $requestData = array('formElement' => $formElement,
+                         'elementData' => $elementData);
+    break;
+  case 'setTemplate':
+    $requestData = array('templateName' => $composer->currentEmailTemplate(),
+                         'message' => $composer->messageText());
+    break;
+  default:
+    throw new \InvalidArgumentException(L::t("Unknown request: `%s'.", $request));
   }
   
   $debugText .= ob_get_contents();
@@ -99,11 +115,9 @@ try {
   OCP\JSON::success(
     array('data' => array('projectName' => $projectName,
                           'projectId' => $projectId,
-                          'contents' => $contents,
-                          'recipientsOptions' => $recipientsOptions,
-                          'missingEmailAddresses' => $missingEmailAddresses,
-                          'filterHistory' => $filterHistory,
-                          'debug' => $debugText.$filterHistory)));
+                          'request' => $request,
+                          'requestData' => $requestData,
+                          'debug' => $debugText)));
 
   return true;
 
@@ -121,6 +135,7 @@ try {
         'message' => L::t('Error, caught an exception. '.
                           'Please copy the displayed text and send it by email to the web-master.'),
         'debug' => $debugText)));
+ 
   return false;
 }
 
