@@ -192,7 +192,7 @@ try {
         'error' => 'exception',
         'message' => L::t('Error, caught an exception'),
         'debug' => $debugText,
-        'exception' => $e->getMessage(),
+        'exception' => $e->getFile().'('.$e->getLine().'): '.$e->getMessage(),
         'trace' => $e->getTraceAsString(),
         'debug' => $debugText)));
 

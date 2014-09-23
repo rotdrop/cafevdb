@@ -113,7 +113,7 @@ try {
     array(
       'data' => array(
         'error' => 'exception',
-        'exception' => $e->getMessage(),
+        'exception' => $e->getFile().'('.$e->getLine().'): '.$e->getMessage(),
         'trace' => $e->getTraceAsString(),
         'message' => L::t('Error, caught an exception'),
         'debug' => $debugText)));
