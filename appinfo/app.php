@@ -24,6 +24,7 @@ OC::$CLASSPATH['CAFEVDB\Admin'] = 'cafevdb/lib/admin.php';
 OC::$CLASSPATH['CAFEVDB\Config'] = 'cafevdb/lib/config.php';
 OC::$CLASSPATH['CAFEVDB\ConfigCheck'] = 'cafevdb/lib/config.php';
 OC::$CLASSPATH['CAFEVDB\Events'] = 'cafevdb/lib/events.php';
+OC::$CLASSPATH['CAFEVDB\Contacts'] = 'cafevdb/lib/contacts.php';
 OC::$CLASSPATH['CAFEVDB\Blog'] = 'cafevdb/lib/blog.php';
 OC::$CLASSPATH['CAFEVDB\ToolTips'] = 'cafevdb/lib/tooltips.php';
 OC::$CLASSPATH['CAFEVDB\L'] = 'cafevdb/lib/functions.php';
@@ -40,10 +41,8 @@ OC::$CLASSPATH['CAFEVDB\Instrumentation'] = 'cafevdb/lib/instrumentation.php';
 OC::$CLASSPATH['CAFEVDB\BriefInstrumentation'] = 'cafevdb/lib/brief-instrumentation.php';
 OC::$CLASSPATH['CAFEVDB\DetailedInstrumentation'] = 'cafevdb/lib/detailed-instrumentation.php';
 OC::$CLASSPATH['CAFEVDB\ProjectInstruments'] = 'cafevdb/lib/project-instruments.php';
-OC::$CLASSPATH['CAFEVDB\EmailFilter'] = 'cafevdb/lib/email.php';
-OC::$CLASSPATH['CAFEVDB\Email'] = 'cafevdb/lib/email.php';
-OC::$CLASSPATH['CAFEVDB\EmailRecipientsFilter'] = 'cafevdb/lib/emailform.php';
-OC::$CLASSPATH['CAFEVDB\EmailHistory'] = 'cafevdb/lib/email.php';
+OC::$CLASSPATH['CAFEVDB\EmailRecipientsFilter'] = 'cafevdb/lib/emailrecipientsfilter.php';
+OC::$CLASSPATH['CAFEVDB\EmailComposer'] = 'cafevdb/lib/emailcomposer.php';
 OC::$CLASSPATH['CAFEVDB\InstrumentInsurance'] = 'cafevdb/lib/instrument-insurance.php';
 OC::$CLASSPATH['CAFEVDB\PHPExcel\ValueBinder'] = 'cafevdb/lib/php-excel-functions.php';
 OC::$CLASSPATH['CAFEVDB\Finance'] = 'cafevdb/lib/finance.php';
@@ -60,6 +59,7 @@ OC::$CLASSPATH['phpMyEdit'] = 'cafevdb/3rdparty/phpMyEdit/phpMyEdit.class.php';
 OC::$CLASSPATH['html2text'] = 'cafevdb/3rdparty/PHPMailer/extras/class.html2text.php';
 OC::$CLASSPATH['IBAN'] = 'cafevdb/3rdparty/php-iban/oophp-iban.php';
 OC::$CLASSPATH['malkusch\bav\BAV'] = 'cafevdb/3rdparty/bav/autoloader/autoloader.php';
+OC::$CLASSPATH['PHPMailer'] = 'cafevdb/3rdparty/PHPMailer/autoloader.php';
 
 /* Script etc. used by everyone */
 OC_App::registerAdmin( 'cafevdb', 'admin-settings' );
