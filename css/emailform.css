@@ -389,6 +389,12 @@ form#cafevdb-email-form .vmiddle * {
 
 /* special elements */
 
+span.error.contents.item.substitutions {
+  color:red;
+  font-family:monospace;
+  font-weight:bold;
+}
+
 form#cafevdb-email-form .missing-email-addresses span.personal-record {
   color:red;
   font-style:italic;

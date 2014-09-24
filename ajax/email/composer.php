@@ -63,6 +63,11 @@ try {
   if (!isset($requestData['SingleItem'])) {
     $recipientsFilter = new EmailRecipientsFilter();
     $composer = new EmailComposer($recipientsFilter->selectedRecipients());
+    $requestData['errorStatus'] = $composer->errorStatus();
+    $requestData['errorDiagnostics'] = $composer->errorDiagnostics();
+  } else {
+    $requestData['errorStatus'] = false;
+    $requestData['errorDiagnostics'] = '';
   }
 
   $request = $requestData['Request'];
@@ -110,13 +115,15 @@ try {
       break;
     }
   case 'saveTemplate':
-    $templates = $composer->emailTemplates();
-    $options = '';
-    foreach ($templates as $template) {
-      $options .= '<option value="'.$template.'">'.$template.'</option>
+    if (!$requestData['errorStatus'])  {
+      $templates = $composer->emailTemplates();
+      $options = '';
+      foreach ($templates as $template) {
+        $options .= '<option value="'.$template.'">'.$template.'</option>
 ';
+      }
+      $requestData['templateOptions'] = $options;
     }
-    $requestData['templateOptions'] = $options;
     break;
   case 'validateEmailRecipients':
     $mailer = new \PHPMailer(true); // may throw

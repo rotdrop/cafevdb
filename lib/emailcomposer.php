@@ -92,6 +92,9 @@ mandateReference
 
     private $messageContents; // What we finally send out to the world
 
+    private $executionStatus; // false on error
+    private $diagnostics; // mixed, depends on operation
+
     /* 
      * constructor
      */
@@ -121,6 +124,7 @@ mandateReference
 
       $this->messageContents = $this->initialTemplate;
 
+      $this->executionStatus = true;
       $this->execute();
     }
 
@@ -149,8 +153,14 @@ mandateReference
         $this->messageContents = $this->initialTemplate;
         $this->templateNames = $this->fetchTemplateNames(); // refresh
       } else if (($value = $this->cgiValue('SaveTemplate', false))) {
-        $this->storeTemplate($this->cgiValue('TemplateName'), $this->messageContents);
-        $this->templateNames = $this->fetchTemplateNames(); // refresh
+        $result = $this->validateTemplate($this->messageContents);
+        if ($result === true) {
+          $this->storeTemplate($this->cgiValue('TemplateName'), $this->messageContents);
+          $this->templateNames = $this->fetchTemplateNames(); // refresh
+        } else {
+          $this->executionStatus = false;
+          $this->diagnostics = $result;
+        }
       }
     }
 
@@ -191,7 +201,7 @@ mandateReference
 
       $dummy = $template;
 
-      if (preg_match('![$]{MEMBER::[^{]+}!', $dummy)) {
+      if (preg_match('![$]{MEMBER::[^}]+}!', $dummy)) {
         // Fine, we have substitutions. We should now verify that we
         // only have _legal_ substitutions. There are probably more
         // clever ways to do this, but at this point we simply
@@ -203,28 +213,33 @@ mandateReference
           $dummy = preg_replace('/[$]{MEMBER::'.$placeholder.'}/', $column, $dummy);
         }
         
-        if (preg_match('![$]{MEMBER::[^{]+}!', $dummy, $memberTemplateLeftOver)) {
+        if (preg_match('![$]{MEMBER::[^}]+}!', $dummy, $memberTemplateLeftOver)) {
           $templateError[] = 'member';
         }
+        
+        // Now remove all member variables, known or not
+        $dummy = preg_replace('/[$]{MEMBER::[^}]*}/', '', $dummy);
       }
 
       // Now check for global substitutions
       $globalTemplateLeftOver = array();
-      if (preg_match('![$]{GLOBAL::[^{]+}!', $dummy)) {
-        $dummy = $template;
+      if (preg_match('![$]{GLOBAL::[^}]+}!', $dummy)) {
         $variables = $this->emailGlobalVariables();
-        foreach ($vars as $key => $value) {
+        foreach ($variables as $key => $value) {
           $dummy = preg_replace('/[$]{GLOBAL::'.$key.'}/', $value, $dummy);
         }
 
-        if (preg_match('![$]{GLOBAL::[^{]+}!', $dummy, $globalTemplateLeftOver)) {
+        if (preg_match('![$]{GLOBAL::[^}]+}!', $dummy, $globalTemplateLeftOver)) {
           $templateError[] = 'global';
         }        
-      }      
+
+        // Now remove all global variables, known or not
+        $dummy = preg_replace('/[$]{GLOBAL::[^}]*}/', '', $dummy);
+      }
 
       $spuriousTemplateLeftOver = array();      
       // No substitutions should remain. Check for that.
-      if (preg_match('![$]{[^{]+}!', $dummy, $spuriousTemplateLeftOver)) {
+      if (preg_match('![$]{[^}]+}!', $dummy, $spuriousTemplateLeftOver)) {
         $templateError[] = 'spurious';
       }
       
@@ -315,18 +330,20 @@ mandateReference
     {
       $executiveBoard = Config::getValue('executiveBoardTable');
 
-      $handle = mySQL::connect($this->opts);
+      $handle = $this->dataBaseConnect();
 
       $query = "SELECT `Vorname` FROM `".$executiveBoard."View` ORDER BY `Reihung`,`Stimmführer`,`Vorname`";
 
       $result = mySQL::query($query, $handle);
     
+      if ($result === false) {
+        throw new \RuntimeException(L::t('Unable to fetch executive board contents from data-base.'));
+      }
+
       $vorstand = array();
       while ($line = mysql_fetch_assoc($result)) {
         $vorstand[] = $line['Vorname'];
       }
-
-      mySQL::close($handle);
 
       $cnt = count($vorstand);
       $text = $vorstand[0];
@@ -506,6 +523,18 @@ mandateReference
     public function reloadState() 
     {
       return true;
+    }
+
+    /**Return the dispatch status. */
+    public function errorStatus()
+    {
+      return !$this->executionStatus;
+    }
+
+    /**Return possible diagnostics or not. Depending on operation. */
+    public function errorDiagnostics()
+    {
+      return $this->diagnostics;
     }
 
   };

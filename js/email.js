@@ -406,9 +406,61 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                  templateSelector.trigger("chosen:updated");
                  break;
                case 'saveTemplate':
-                 templateSelector.html(requestData.templateOptions);
-                 templateSelector.find('option').prop('selected', false);
-                 templateSelector.trigger("chosen:updated");
+                 if (!requestData.errorStatus) {
+                   templateSelector.html(requestData.templateOptions);
+                   templateSelector.find('option').prop('selected', false);
+                   templateSelector.trigger("chosen:updated");
+                 } else {
+                   var errorList = '';
+                   var failed;
+                   var idx;
+                   failed = requestData.errorDiagnostics.MemberErrors;
+                   if (failed.length > 0) {
+                     errorList += '<div class="error contents substitutions members">';
+                     errorList += ('<span class="error heading">'+
+                                   t('cafevdb', 'Failed individual substitutions')+
+                                   '</span>');
+                     errorList += '<ul>';
+                     for (idx = 0; idx < failed.length; ++idx) {
+                       errorList += '<li><span class="error item contents substitutions">'+failed[idx]+'</span></li>';
+                     }
+                     errorList += '</ul></div>';
+                   }
+                   failed = requestData.errorDiagnostics.GlobalErrors;
+                   if (failed.length > 0) {
+                     errorList += '<div class="error contents substitutions global">';
+                     errorList += ('<span class="error heading">'+
+                                   t('cafevdb', 'Failed global substitutions')+
+                                   '</span>');
+                     errorList += '<ul>';
+                     for (idx = 0; idx < failed.length; ++idx) {
+                       errorList += '<li><span class="error item contents substitutions">'+failed[idx]+'</span></li>';
+                     }
+                     errorList += '</ul></div>';
+                   }
+                   failed = requestData.errorDiagnostics.SpuriousErrors;
+                   if (failed.length > 0) {
+                     errorList += '<div class="error contents substitutions spurious">';
+                     errorList += ('<span class="error heading">'+
+                                   t('cafevdb', 'Failed spurious substitutions')+
+                                   '</span>');
+                     errorList += '<ul>';
+                     for (idx = 0; idx < failed.length; ++idx) {
+                       errorList += '<li><span class="error item contents substitutions">'+failed[idx]+'</span></li>';
+                     }
+                     errorList += '</ul></div>';
+                   }
+                   OC.dialogs.alert('<div class="error contents template">'+
+                                    t('cafevdb',
+                                      'Template not saved due to template validation errors,'+
+                                      'the following variable substitutions could not be resolved:')+
+                                    errorList+
+                                    t('cafevdb',
+                                      'Please understand that the software is really `picky\': '+
+                                      'names have to match exactly. Please use only capital letters for variable names.'),
+                                    t('cafevdb', 'Template could not be saved'),
+                                    undefined, true, true);
+                 }
                  break;
                case 'deleteTemplate':
                  currentTemplate.val(requestData.templateName);
