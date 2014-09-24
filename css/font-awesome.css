@@ -34,3 +34,15 @@ button[class^="icon-"].text:before, button[class*=" icon-"].text:before,
 select[class^="icon-"].text:before, select[class*=" icon-"].text:before {
 	padding-right: 3px;
 }
+
+button.icon-2x:before {
+  font-size:2em;
+}
+
+button.icon-3x:before {
+  font-size:3em;
+}
+
+button.icon-4x:before {
+  font-size:4em;
+}
