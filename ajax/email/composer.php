@@ -50,24 +50,22 @@ try {
   $debugText = '';
   $messageText = '';
 
-  if (Util::debugMode('request')) {
+  if (true || Util::debugMode('request')) {
     $debugText .= '$_POST[] = '.print_r($_POST, true);
   }
 
   $projectId   = Util::cgiValue('ProjectId', -1);
   $projectName = Util::cgiValue('ProjectName', ''); // the name
-  $request     = Util::cgiValue('Request', 'update');
+  $requestData = Util::cgiValue('emailComposer', array('Request' => 'update'));
   $formElement = Util::cgiValue('FormElement', 'everything');
 
   $recipientsFilter = new EmailRecipientsFilter();
   $composer = new EmailComposer($recipientsFilter->selectedRecipients());
 
+  $request = $requestData['Request'];
   switch ($request) {
   case 'update':
     if ($formElement == 'everything') {
-      $elementData = '';
-      $formElement = '';
-
       $tmpl = new OCP\Template('cafevdb', 'part.emailform.composer');
       $tmpl->assign('ProjectName', $projectName);
       $tmpl->assign('ProjectId', $projectId);
@@ -98,12 +96,24 @@ try {
         throw new \InvalidArgumentException(L::t("Unknown form element: `%s'.", $formElement));
       }
     }
-    $requestData = array('formElement' => $formElement,
-                         'elementData' => $elementData);
+    $requestData['formElement'] = $formElement;
+    $requestData['elementData'] = $elementData;
     break;
+  case 'deleteTemplate':
   case 'setTemplate':
-    $requestData = array('templateName' => $composer->currentEmailTemplate(),
-                         'message' => $composer->messageText());
+    $requestData['templateName'] = $composer->currentEmailTemplate();
+    $requestData['message'] = $composer->messageText();
+    if ($request == 'setTemplate') {
+      break;
+    }
+  case 'saveTemplate':
+    $templates = $composer->emailTemplates();
+    $options = '';
+    foreach ($templates as $template) {
+      $options .= '<option value="'.$template.'">'.$template.'</option>
+';
+    }
+    $requestData['templateOptions'] = $options;
     break;
   default:
     throw new \InvalidArgumentException(L::t("Unknown request: `%s'.", $request));

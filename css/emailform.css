@@ -99,6 +99,7 @@ form#cafevdb-email-form fieldset.page {
 }
 form#cafevdb-email-form tr.attachments td {
   vertical-align:middle;
+  padding-bottom:1em;
 }
 form#cafevdb-email-form tr.attachments button {
   background-color:#C6DEFF;
@@ -129,12 +130,19 @@ form#cafevdb-email-form tr.eventattachments button {
 
 form#cafevdb-email-form tr.submit td {
   border-top:1px solid #808080;
+  padding-top:0.5em;
 }
 form#cafevdb-email-form tr.submit td.send {
    width:auto;
    text-align:full;
    padding:0;
    margin:0;
+}
+
+form#cafevdb-email-form tr,
+form#cafevdb-email-form tr:hover,
+form#cafevdb-email-form tr:active { 
+  background-color:inherit;
 }
 
 form#cafevdb-email-form td.body {
@@ -158,16 +166,100 @@ form#cafevdb-email-form tr.submit td.reset {
 form#cafevdb-email-form td.reset input {
   margin-right:0;
 }
-form#cafevdb-email-form td.email-template-save {
+
+
+form#cafevdb-email-form tr.email-template td {
+  border-bottom:1px solid #808080;
+  padding-bottom:0.5em;
+}
+
+form#cafevdb-email-form td.email-template-storage {
   text-align:right;
+}
+
+form#cafevdb-email-form td.email-template-storage input {
+  padding-top:5px;
+}
+
+form#cafevdb-email-form td.email-address.input input.address-book-emails,
+form#cafevdb-email-form td.email-template-storage input.submit {
+  background-repeat:no-repeat;
+  background-size: 24px 24px;
+  background-position: center;
+  width:27px;
+  height:27px;
+  font-size:0pt;
+  vertical-align:middle;
+}
+
+.ui-dialog.chosen-popup-dialog {
+  max-height: 75% !important;
+  overflow: visible;
+  padding: 0;
+}
+.ui-dialog.chosen-popup-dialog .ui-dialog-content {
+  min-height:4.4em !important;
+  padding: 0;
+}
+.ui-dialog.chosen-popup-dialog .ui-dialog-content .chosen-choices {
+  min-height:4.4em;
+}
+.ui-dialog.chosen-popup-dialog .ui-dialog-buttonpane {
+  padding:0;
+  margin-top:0;
+}
+.ui-dialog.chosen-popup-dialog .ui-dialog-buttonpane button {
+  margin-left:0.4em;
+  margin-right:0.4em;
+}
+.ui-dialog.chosen-popup-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
+  float:none;
+}
+.ui-dialog.chosen-popup-dialog .ui-dialog-buttonpane button.save {
+  float:left;
+}
+.ui-dialog.chosen-popup-dialog .ui-dialog-buttonpane button.cancel {
+  float:right;
+}
+
+form#cafevdb-email-form td.email-template-storage input.save-template {
+  background-image:url('../img/save.svg');
+}
+
+form#cafevdb-email-form td.email-template-storage input.delete-template {
+  background-image:url('../img/delete.svg');
+}
+
+form#cafevdb-email-form td.email-address.input input.address-book-emails {
+  background-image:url('../img/contacts.svg');
+  background-color:#000;
+  float:right;
+}
+
+form#cafevdb-email-form .chosen-container { 
+  width:15em !important;
+}
+
+form#cafevdb-email-form .chosen-container .chosen-default { 
+  color:#000;
+  font-weight:bold;
+}
+
+form#cafevdb-email-form #emailCurrentTemplate { 
+  width:12em;
+}
+
+form#cafevdb-email-form td.email-recipients {
+  padding-top:1em;
 }
 
 form#cafevdb-email-form td.email-address.input {
   width:100%;
-  padding: 0 1em 0 0;
+  /*padding: 0 1em 0 0;*/
 }
 form#cafevdb-email-form td.email-address.input input {
-  width:100%;
+  width:90%;
+  float:left;
 }
 
 form#cafevdb-email-form td.email-address.display {

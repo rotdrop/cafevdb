@@ -34,8 +34,8 @@ CAFEVDB\Error::exceptions(true);
     <li id="emailformrecipients-tab">
       <a href="#emailformrecipients"><?php echo L::t('Em@il Recipients'); ?></a>
     </li>
-    <li id="emailformmessage-tab">
-      <a href="#emailformmessage"><?php echo L::t('Em@il Message'); ?></a>
+    <li id="emailformcomposer-tab">
+      <a href="#emailformcomposer"><?php echo L::t('Em@il Message'); ?></a>
     </li>
     <li id="emailformdebug-tab">
       <a href="#emailformdebug"><?php echo L::t('Status Messages'); ?></a>
@@ -49,7 +49,7 @@ CAFEVDB\Error::exceptions(true);
       <?php echo Navigation::persistentCGI($_['FormData']); ?>
     </fieldset>
     <div id="emailformrecipients"><?php echo $this->inc('part.emailform.recipients'); ?></div>
-    <div id="emailformmessage"><?php echo $this->inc('part.emailform.message'); ?></div>
+    <div id="emailformcomposer"><?php echo $this->inc('part.emailform.composer'); ?></div>
     <div id="emailformdebug"><pre><?php print_r($_POST); print_r($_); ?></pre></div>
   </form>
 
