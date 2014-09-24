@@ -184,42 +184,29 @@ var CAFEVDB = CAFEVDB || {};
                        projectInstruments: $(self).find('select').val()
                      },
                      function (data) {
-                       var rqData;
-                       if (data.status == 'success') {
-                         rqData = data.data;
-                         if (rqData.message != '') {
-                           OC.Notification.show(rqData.message);
-                         }
-                         // Oops. Perhaps only submit on success.
-                         // Close the dialog
-                         $(self).dialog("close");
-
-                         // submit the form with the "right" button,
-                         // i.e. save any possible changes already
-                         // entered by the user. The form-submit
-                         // will then also reload with an up to date
-                         // list of instruments
-                         PHPMYEDIT.triggerSubmit('morechange', container);
-
-                         setTimeout(function() {
-                           OC.Notification.hide();
-                         }, 5000);
-                       } else if (data.status == 'error') {
-                         rqData = data.data;
-                         if (rqData.error != 'exception') {
-                           if (rqData.message == '') {
-                             rqData.message = t('cafevdb', 'Unkown Error');
-                           }
-                           OC.Notification.show(rqData.message);
-                         } else {
-                           OC.dialogs.alert(rqData.exception+rqData.trace,
-                                            t('cafevdb', 'Caught a PHP Exception'),
-                                            undefined, true);
-                         }
-                         if (rqData.debug != '') {
-                           OC.dialogs.alert(rqData.debug, t('cafevdb', 'Debug Information'), undefined, true);
-                         }
+                       if (!CAFEVDB.ajaxErrorHandler(data, [])) {
+                         return false;
                        }
+                       var rqData = data.data;
+                       if (rqData.message != '') {
+                         OC.Notification.show(rqData.message);
+                       }
+                       // Oops. Perhaps only submit on success.
+                       // Close the dialog
+                       $(self).dialog("close");
+
+                       // submit the form with the "right" button,
+                       // i.e. save any possible changes already
+                       // entered by the user. The form-submit
+                       // will then also reload with an up to date
+                         // list of instruments
+                       PHPMYEDIT.triggerSubmit('morechange', container);
+                       
+                       setTimeout(function() {
+                         OC.Notification.hide();
+                       }, 5000);
+
+                       return false;
                      }, 'json');
             });
 
