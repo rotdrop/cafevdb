@@ -741,10 +741,11 @@ namespace CAFEVDB
     public function missingEmailAddresses()
     {
       $result = array();
-      foreach ($this->NoMail as $person) {
-        $result[] = $person['name'];
+      foreach ($this->NoMail as $id => $person) {
+        $result[$id] = $person['name'];
       }
-      sort($result);
+      asort($result);
+
       return $result;
     }
 

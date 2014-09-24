@@ -49,7 +49,10 @@ div.cfgerror {
  *
  */
 
-.error.missing, .error.debug.contents {
+.error.missing,
+.error.syntax.contents,
+.error.contents,
+.error.debug.contents {
   display:block;
   font-weight:boild;
   color:blue;

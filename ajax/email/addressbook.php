@@ -62,7 +62,7 @@ try {
 
   // Convert the free-form input to an array (possibly)
   $freeForm = Contacts::parseAddrListToArray($freeForm);
-  
+
   // Fetch all known address-book contacts with email
   $bookContacts = Contacts::emailContacts();
 

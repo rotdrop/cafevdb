@@ -174,7 +174,7 @@ namespace CAFEVDB
       return $result;
     }    
 
-    /** Split a comma separated address list into an array.
+    /** Split a comma separated email address list into an array.
      */
     public static function parseAddrListToArray($list)
     {
@@ -197,7 +197,12 @@ namespace CAFEVDB
       foreach ($t as $addr) {
         if (strpos($addr, '<')) {
           preg_match('!(.*?)\s?<\s*(.*?)\s*>!', $addr, $matches);
-          $emails[$matches[2]] = $matches[1];
+          if (count($matches) != 3) {
+            // just keep the string; but clearly this is broken then
+            $emails[$addr] = '';
+          } else {          
+            $emails[trim($matches[2])] = trim($matches[1]);
+          }
         } else {
           $emails[$addr] = '';
         }

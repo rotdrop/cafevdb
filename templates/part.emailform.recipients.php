@@ -49,6 +49,8 @@ Config::init();
 $projectId = $_['ProjectId'];
 if ($projectId > 0) {
   $projectName = $_['ProjectName'];
+} else {
+  $projectName = '';
 }
 
 ?>
@@ -172,8 +174,15 @@ if ($projectId > 0) {
       <span class="label top missing-email-addresses">
         <?php echo L::t('Musicians without Email-Address'); ?>
       </span>
-      <span id="missing-email-addresses names">
-        <?php echo htmlspecialchars(implode(', ', $_['MissingEmailAddresses'])); ?> 
+      <span class="missing-email-addresses names">
+        <?php
+        $separator = '';
+        foreach ($_['MissingEmailAddresses'] as $id => $name) {
+          echo $separator; $separator = ', ';
+          echo '<span class="missing-email-addresses personal-record" '.
+               '      data-id="'.$id.'">'.htmlspecialchars($name).'</span>';
+        }
+        ?>
       </span>
     </span>
     <span class="container right filter-controls">

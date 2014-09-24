@@ -87,8 +87,14 @@ try {
   } else {
     $recipientsChoices = $recipientsFilter->emailRecipientsChoices();
     $recipientsOptions = Navigation::selectOptions($recipientsChoices);
-    $missingEmailAddresses = $recipientsFilter->missingEmailAddresses();
-    $missingEmailAddresses = htmlspecialchars(implode(', ', $missingEmailAddresses));
+    $missingEmailAddresses = '';
+    $separator = '';
+    foreach ($recipientsFilter->missingEmailAddresses() as $id => $name) {
+      $missingEmailAddresses .= $separator; $separator = ', ';
+      $missingEmailAddresses .=
+        '<span class="missing-email-addresses personal-record" '.
+        '      data-id="'.$id.'">'.htmlspecialchars($name).'</span>';
+    }
     $filterHistory = $recipientsFilter->filterHistory();
     $contents = '';
   }

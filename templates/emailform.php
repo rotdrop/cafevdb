@@ -42,7 +42,7 @@ CAFEVDB\Error::exceptions(true);
     </li>
   </ul>
   <form method="post"
-        name="cafevdb-email-from"
+        name="cafevdb-email-form"
         id="cafevdb-email-form"
         class="cafevdb-email-form">
     <fieldset id="cafevdb-email-form-data" class="form-data">

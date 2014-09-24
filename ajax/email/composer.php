@@ -37,6 +37,7 @@ use CAFEVDB\Error;
 use CAFEVDB\Navigation;
 use CAFEVDB\EmailRecipientsFilter;
 use CAFEVDB\EmailComposer;
+use CAFEVDB\Contacts;
 
 try {
 
@@ -59,8 +60,10 @@ try {
   $requestData = Util::cgiValue('emailComposer', array('Request' => 'update'));
   $formElement = Util::cgiValue('FormElement', 'everything');
 
-  $recipientsFilter = new EmailRecipientsFilter();
-  $composer = new EmailComposer($recipientsFilter->selectedRecipients());
+  if (!isset($requestData['SingleItem'])) {
+    $recipientsFilter = new EmailRecipientsFilter();
+    $composer = new EmailComposer($recipientsFilter->selectedRecipients());
+  }
 
   $request = $requestData['Request'];
   switch ($request) {
@@ -115,6 +118,22 @@ try {
     }
     $requestData['templateOptions'] = $options;
     break;
+  case 'validateEmailRecipients':
+    $mailer = new \PHPMailer(true); // may throw
+    $recipients = Contacts::parseAddrListToArray($requestData['Recipients']);
+    $brokenRecipients = array();
+    foreach ($recipients as $email => $name) {
+      if ($name == '') {
+        $recipient = $email;
+      } else {
+        $recipient = $name.' <'.$email.'>';
+      }
+      if (!$mailer->validateAddress($email)) {
+        $brokenRecipients[] = htmlspecialchars($recipient);
+      }
+    }
+    $requestData['brokenRecipients'] = $brokenRecipients;
+    break;
   default:
     throw new \InvalidArgumentException(L::t("Unknown request: `%s'.", $request));
   }
@@ -127,7 +146,7 @@ try {
                           'projectId' => $projectId,
                           'request' => $request,
                           'requestData' => $requestData,
-                          'debug' => $debugText)));
+                          'debug' => htmlspecialchars($debugText))));
 
   return true;
 
@@ -144,7 +163,7 @@ try {
         'trace' => $e->getTraceAsString(),
         'message' => L::t('Error, caught an exception. '.
                           'Please copy the displayed text and send it by email to the web-master.'),
-        'debug' => $debugText)));
+        'debug' => htmlspecialchars($debugText))));
  
   return false;
 }

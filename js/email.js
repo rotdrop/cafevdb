@@ -127,7 +127,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
     layoutCB();
 
     var recipientsSelect   = fieldset.find('select#recipients-select');
-    var missingAddresses   = fieldset.find('#missing-email-addresses-wrapper');
+    var missingAddresses   = fieldset.find('.missing-email-addresses.names');
     var filterHistoryInput = fieldset.find('#recipients-filter-history');
     var debugOutput        = form.find('#emailformdebug');
 
@@ -227,6 +227,49 @@ CAFEVDB.Email = CAFEVDB.Email || {};
     // "submit" when hitting any of the control buttons
     controlsContainer.off('click', '**');
     controlsContainer.on('click', 'input', applyRecipientsFilter);
+
+    // Give the user a chance to change broken or missing email
+    // addresses from here.
+    dialogHolder.off('pmedialog:changed');
+    dialogHolder.on('pmedialog:changed', applyRecipientsFilter);
+
+    missingAddresses.off('click', 'span.personal-record');
+    missingAddresses.on('click', 'span.personal-record', function(event) {
+      event.preventDefault();
+
+      var tableOptions = {
+        AmbientContainerSelector: '#emailformdialog',
+        DialogHolderCSSId: 'edit-musician-dialog', 
+        headervisibility: CAFEVDB.headervisibility,
+        // Now special options for the dialog popup
+        InitialViewOperation: false,
+        InitialName: 'PME_sys_operation',
+        InitialValue: 'Change',
+        ReloadName: 'PME_sys_operation',
+        ReloadValue: 'Change',
+        PME_sys_operation: 'Change?PME_sys_rec='+$(this).data('id'),
+        PME_sys_rec: $(this).data('id'),
+        ModalDialog: true,
+        modified: false
+      };
+
+      var formData = form.find('fieldset.form-data');
+      var projectId = formData.find('input[name="ProjectId"]').val();
+      var projectName = formData.find('input[name="Project"]').val();
+      tableOptions.ProjectId = projectId;
+      tableOptions.Project = projectName;
+      if (projectId >= 0) {
+        tableOptions.Table = projectName+'View';
+        tableOptions.Template = 'detailed-instrumenation'
+        tableOptions.DisplayClass = 'DetailedInstrumentation';
+      } else {
+        tableOptions.Table = 'Musiker';
+        tableOptions.Template = 'all-musicians';
+        tableOptions.DisplayClass = 'Musicians';
+      }
+      //alert('Data: '+JSON.stringify(tableOptions));
+      PHPMYEDIT.tableDialogOpen(tableOptions);
+    });
   };
 
   /**Add handlers to the control elements, and call the AJAX sciplets
@@ -251,17 +294,24 @@ CAFEVDB.Email = CAFEVDB.Email || {};
 
     // Event dispatcher, so to say
     var applyComposerControls = function(event, request) {
-      event.preventDefault();
+      event.preventDefault();        
       
-      var post = fieldset.serialize();
-      post += '&'+form.find('fieldset.form-data').serialize();
-      if ($(this).is(':button') || $(this).is(':submit')) {
-        var tmp = {};
-        tmp[$(this).attr('name')] = $(this).val();
-        post += '&'+$.param(tmp);
-      }
-      if (typeof request != 'undefined') {
-        post += '&'+$.param({ emailComposer: request });
+      var post = '';
+      if (typeof request != 'undefined' && request.SingleItem) {
+        // Only serialize the request, no need to post all data around.
+        post = $.param({ emailComposer: request });
+      } else {
+        // Serialize almost everything and submit it
+        post = fieldset.serialize();
+        post += '&'+form.find('fieldset.form-data').serialize();
+        if ($(this).is(':button') || $(this).is(':submit')) {
+          var tmp = {};
+          tmp[$(this).attr('name')] = $(this).val();
+          post += '&'+$.param(tmp);
+        }
+        if (typeof request != 'undefined') {
+          post += '&'+$.param({ emailComposer: request });
+        }
       }
       $.post(OC.filePath('cafevdb', 'ajax/email', 'composer.php'),
              post,
@@ -306,6 +356,27 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                                       { FormElement: requestData.formElement }),
                                     t('cafevdb', 'Error'), undefined, true, true);
                    break;
+                 }
+                 break;
+               case 'validateEmailRecipients':
+                 // The request-data is an array of broken
+                 // address. However, we do not replace them. Only
+                 // inform the user about the mess.
+                 var faultyRecipients = requestData.brokenRecipients;
+                 var faultyItems = '';
+                 var idx;
+                 for (idx = 0; idx < faultyRecipients.length; ++idx) {
+                   faultyItems += '<li>'+faultyRecipients[idx]+'</li>';
+                 }
+                 if (faultyItems != '') {
+                   OC.dialogs.alert('<div class="error syntax contents">'+
+                                    t('cafevdb',
+                                      'The following email addresses appear to be invalid. '+
+                                      'The email will not be sent out before these errors are corrected.')+
+                                    '<ul>'+faultyItems+'</ul>'+
+                                    '</div>',
+                                    t('cafevdb', 'Invalid Email Addresses'),
+                                    undefined, true, true);
                  }
                  break;
                case 'setTemplate':
@@ -422,23 +493,38 @@ CAFEVDB.Email = CAFEVDB.Email || {};
     
     /*************************************************************************
      * 
-     * Subject. We simply trim the spaces away. Could also do this in JS.
+     * Subject and sender name. We simply trim the spaces away. Could also do this in JS.
      */
-    var subjectInput = fieldset.find('input.email-subject');
-    subjectInput.off('blur');
-    subjectInput.on('blur', function(event) {
-      //applyComposerControls.call(this, event, { 'Request': 'setSubject' });
-      subjectInput.val(subjectInput.val().trim());
-    });
+    fieldset.off('blur', 'input.email-subject, input.sender-name');
+    fieldset.on('blur', 'input.email-subject, input.sender-name',
+                function(event) {
+                  event.stopImmediatePropagation();
+                  var self = $(this);
+                  self.val(self.val().trim());
+                  return false;
+                });
+
+    /*************************************************************************
+     * 
+     * Validate Cc: and Bcc: entries.
+     */
+    var carbonCopy = fieldset.find('#carbon-copy');
+    var blinkCarbonCopy = fieldset.find('#blind-carbon-copy');
+    fieldset.off('blur', '#carbon-copy, #blind-carbon-copy');
+    fieldset.on('blur', '#carbon-copy, #blind-carbon-copy', function(event) {
+      event.stopImmediatePropagation();
+      applyComposerControls.call(this, event, { 'Request': 'validateEmailRecipients',
+                                                'Recipients': $(this).val(),
+                                                'SingleItem': true
+                                              });
+      return false;
+    })
 
     /*************************************************************************
      * 
      * We try to be nice with Cc: and Bcc: and even provide an
      * address-book connector
      */
-    var carbonCopy = fieldset.find('#carbon-copy');
-    var blinkCarbonCopy = fieldset.find('#blind-carbon-copy');
-
     var addressBookButton = fieldset.find('input.address-book-emails');
     addressBookButton.off('click');
     addressBookButton.on('click', function(event) {

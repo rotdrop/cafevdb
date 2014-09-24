@@ -70,7 +70,7 @@ if ($_['ProjectId'] >= 0) {
   <?php echo Navigation::persistentCGI('emailComposer', $_['ComposerFormData']); ?>
   <table class="cafevdb-email-composition-form">
     <tr class="email-template">
-      <td class="email-template"><?php echo L::t("Templates"); ?></td>
+      <td class="caption email-template"><?php echo L::t("Templates"); ?></td>
       <td class="email-template-choose email-template">
         <label notitle="<?php echo Config::toolTips('select-email-template'); ?>">
           <select size="<?php echo count($_['templateNames']); ?>"
@@ -171,19 +171,24 @@ if ($_['ProjectId'] >= 0) {
       </td>
     </tr>
     <tr>
-      <td class="body"><?php echo L::t('Message-Body'); ?></td>
+      <td class="body caption"><?php echo L::t('Message-Body'); ?></td>
       <td colspan="2" class="messagetext"><textarea name="emailComposer[MessageText]" class="wysiwygeditor" cols="60" rows="20" id="message-text"><?php echo $_['message']; ?></textarea></td>
     </tr>
     <tr>
-      <td><?php echo L::t('Sender-Name'); ?></td>
-      <td colspan="2"><input value="<?php echo $_['sender']; ?>" size="40" value="CAFEV" name="emailComposer[FromName]" type="text"></td>
+      <td class="caption"><?php echo L::t('Sender-Name'); ?></td>
+      <td colspan="2">
+        <input value="<?php echo $_['sender']; ?>"
+               class="sender-name"
+               size="40" value="CAFEV"
+               name="emailComposer[FromName]"
+               type="text"></td>
     </tr>
     <tr>
-      <td><?php echo L::t('Sender-Email'); ?></td>
+      <td class="caption"><?php echo L::t('Sender-Email'); ?></td>
       <td colspan="2"><?php echo L::t('Tied to'); ?> "<?php echo $_['catchAllEmail']; ?>"</td>
     </tr>
     <tr class="attachments">
-      <td class="attachments"><?php echo L::t('Add Attachment'); ?></td>
+      <td class="attachments caption"><?php echo L::t('Add Attachment'); ?></td>
       <td class="attachments" colspan="2">
         <?php echo $eventAttachButton; ?>
         <button type="button"

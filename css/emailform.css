@@ -84,6 +84,10 @@ ul#emailformtabs {
  *
  */
 
+form#cafevdb-email-form td.caption {
+  font-weight:bold;
+}
+
 #emailformdialog #emailformcomposer  {
   overflow-y: auto;
   overflow-x: hidden;
@@ -385,7 +389,24 @@ form#cafevdb-email-form .vmiddle * {
 
 /* special elements */
 
+form#cafevdb-email-form .missing-email-addresses span.personal-record {
+  color:red;
+  font-style:italic;
+  text-decoration:undline;
+  font-weight:bold;
+  cursor:pointer;
+  padding:2px;
+}
 
+form#cafevdb-email-form .missing-email-addresses span.personal-record:hover {
+  box-shadow:1px 1px 1px #080808; /*, 1px 1px 1px #cfc inset;*/
+  background-color:LightSteelBlue;
+}
+
+form#cafevdb-email-form .missing-email-addresses span.personal-record:active {
+  box-shadow:1px 1px 1px #080808 inset; /*, 1px 1px 1px #cfc inset;*/
+  background-color:LightSteelBlue;
+}
 
 form#cafevdb-email-form .member-status-filter.container {
   min-height:2em;
