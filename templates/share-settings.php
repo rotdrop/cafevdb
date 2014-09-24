@@ -68,6 +68,14 @@ $off = $_['shareowner'] == '' ? 'disabled="disabled"' : $alloff;
         <label for="duration"><?php echo L::t('Default Duration for Events');?></label>
       </fieldset>
     </form>
+<!-- Contacts, adressbooks -->
+    <form id="contacts">
+      <fieldset  <?php echo $off; ?> ><legend><?php echo L::t('Contacts'); ?></legend>
+        <input type="text" id="addressbook" name="addressbook" placeholder="<?php echo L::t('addressbook');?>" value="<?php echo $_['sharedaddressbook']; ?>" />
+        <label for="addressbook"><?php echo L::t('Shared Addresbook');?></label>
+      </fieldset>
+    </form>
+<!-- Shared folders -->
     <form id="sharedfolderform">
       <fieldset <?php echo $off; ?> ><legend><?php echo L::t('Shared folder'); ?></legend>
         <input type="hidden" id="sharedfolder-saved" name="sharedfolder-saved" value="<?php echo $_['sharedfolder']; ?>" />

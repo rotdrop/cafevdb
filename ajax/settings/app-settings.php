@@ -16,6 +16,7 @@ use \CAFEVDB\L;
 use \CAFEVDB\Config;
 use \CAFEVDB\ConfigCheck;
 use \CAFEVDB\Events;
+use \CAFEVDB\Contacts;
 use \CAFEVDB\Finance;
 
 // Check if we are a group-admin, otherwise bail out.
@@ -501,6 +502,40 @@ if (isset($_POST['projectsbalancefoldersaved']))
 
   return false;
 }
+
+$key = 'addressbook';
+if (isset($_POST[$key])) {
+  $value = $_POST[$key];
+  $id = Config::getSetting($key.'id', false);
+
+  try {
+    $newId = Contacts::checkSharedAddressBook($value, $id);
+  } catch (Exception $exception) {
+    OC_JSON::error(
+      array(
+        "data" => array(
+          "message" => L::t("Exception: %s(%d): %s",
+                            array($exception->getFile(),
+                                  $exception->getLine(),
+                                  $exception->getMessage())))));    
+    return false;
+  }
+  
+  if ($newId !== false) {
+    Config::setValue($key, $value);
+    if ($id != $newId) {
+      Config::setValue($key.'id', $newId);
+    }
+    OC_JSON::success(array("data" => array( "message" => "$key: $value")));
+  } else {
+    OC_JSON::error(
+      array(
+        "data" => array(
+          "message" => L::t("Unable to set:").' '.$key.' -> '.$value)));
+    return false;
+  }
+  return true;
+} 
 
 $calendarkeys = array('concertscalendar',
                       'rehearsalscalendar',
