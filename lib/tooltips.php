@@ -76,14 +76,14 @@ give you the choice to select any musician as recipient.'),
       'email-recipients-member-status-filter' => L::t('Select recipients by member status. Normally, conductors and soloists
 are excluded from receiving mass-email. Please be careful when modifying the default selection!'),
 
-      'email-recipients-instruments-filter-apply' => L::t('Apply the currently selected instruments as filter. At your option,
+      'email-recipients-filter-apply' => L::t('Apply the currently selected instruments as filter. At your option,
 you can also simply double-click inside the boxed filter-region in order to activate your filter-choice.'),
 
-      'email-recipients-instruments-filter-undo' => L::t('Undo the last recipient filter operation and restore the previous selection of musicians.'),
+      'email-recipients-filter-undo' => L::t('Undo the last recipient filter operation and restore the previous selection of musicians.'),
 
-      'email-recipients-instruments-filter-redo' => L::t('Redo the last operation undone by the undo button.'),
+      'email-recipients-filter-redo' => L::t('Redo the last operation undone by the undo button.'),
 
-      'email-recipients-instruments-filter-reset' => L::t('Reset to the initial pre-selection which was activ when entering this
+      'email-recipients-filter-reset' => L::t('Reset to the initial pre-selection which was activ when entering this
 form. This will <b>REALLY</b> void all your recipient selections and
 reset the form to the initial state. Note, however, that the text of
 your email will be maintained, the reset only applies to the recipient

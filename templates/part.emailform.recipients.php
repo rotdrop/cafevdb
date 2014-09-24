@@ -170,7 +170,8 @@ if ($projectId > 0) {
     <div class="ruler"></div>
   </div>
   <div class="row">
-    <span class="container left missing-email-addresses">
+    <span class="container left missing-email-addresses tipsy-sw"
+          title="<?php echo Config::tooltips('email-recipients-broken-emails'); ?>">
       <span class="label top missing-email-addresses">
         <?php echo L::t('Musicians without Email-Address'); ?>
       </span>
@@ -180,7 +181,7 @@ if ($projectId > 0) {
         foreach ($_['MissingEmailAddresses'] as $id => $name) {
           echo $separator; $separator = ', ';
           echo '<span class="missing-email-addresses personal-record" '.
-               '      data-id="'.$id.'">'.htmlspecialchars($name).'</span>';
+               '      data-id="'.$id.'">'.$name.'</span>';
         }
         ?>
       </span>
@@ -190,27 +191,27 @@ if ($projectId > 0) {
              id="instruments-filter-apply"
              value="<?php echo L::t('Apply Filter'); ?>"
              class="instruments-filter-controls apply"
-             title="<?php echo Config::tooltips('email-recipients-instruments-filter-apply'); ?>"
+             title="<?php echo Config::tooltips('email-recipients-filter-apply'); ?>"
              name="emailRecipients[ApplyInstrumentsFilter]" />
       <input type="button"
              id="instruments-filter-undo"
              value="<?php echo L::t('Undo Filter'); ?>"
              class="instruments-filter-controls undo"
-             title="<?php echo Config::tooltips('email-recipients-instruments-filter-undo'); ?>"
+             title="<?php echo Config::tooltips('email-recipients-filter-undo'); ?>"
              disabled="disabled"
              name="emailRecipients[UndoInstrumentsFilter]" />
       <input type="button"
              id="instruments-filter-redo"
              value="<?php echo L::t('Redo Filter'); ?>"
              class="instruments-filter-controls redo"
-             title="<?php echo Config::tooltips('email-recipients-instruments-filter-redo'); ?>"
+             title="<?php echo Config::tooltips('email-recipients-filter-redo'); ?>"
              disabled="disabled"
              name="emailRecipients[RedoInstrumentsFilter]" />
       <input type="button"
              id="instruments-filter-reset"
              value="<?php echo L::t('Reset Filter'); ?>"
              class="instruments-filter-controls reset"
-             title="<?php echo Config::tooltips('email-recipients-instruments-filter-reset'); ?>"
+             title="<?php echo Config::tooltips('email-recipients-filter-reset'); ?>"
              name="emailRecipients[ResetInstrumentsFilter]" />
     </span>
   </div>

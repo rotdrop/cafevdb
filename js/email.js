@@ -132,25 +132,35 @@ CAFEVDB.Email = CAFEVDB.Email || {};
     var debugOutput        = form.find('#emailformdebug');
 
     // Apply the instruments filter
-    var applyRecipientsFilter = function(event) {
+    var applyRecipientsFilter = function(event, historySnapshot) {
       event.preventDefault();
-      
+
+      historySnapshot = typeof historySnapshot != 'undefined';
+
       var post = fieldset.serialize();
-      post += '&'+form.find('fieldset.form-data').serialize();
-      if ($(this).is(':button')) {
-        var tmp = {};
-        tmp[$(this).attr('name')] = $(this).val();
-        post += '&'+$.param(tmp);
+      if (historySnapshot) {
+        post += '&'+$.param({ emailRecipients: { HistorySnapshot: 'snapshot' }});
+      } else {
+        post += '&'+form.find('fieldset.form-data').serialize();
+        if ($(this).is(':button')) {
+          var tmp = {};
+          tmp[$(this).attr('name')] = $(this).val();
+          post += '&'+$.param(tmp);
+        }
       }
       $.post(OC.filePath('cafevdb', 'ajax/email', 'recipients.php'),
              post,
              function(data) {
-               if (!CAFEVDB.ajaxErrorHandler(data, [
-                 'recipientsOptions', 'missingEmailAddresses', 'filterHistory'
-               ])) {
+               var requiredResponse = historySnapshot
+                                    ? [ 'filterHistory' ]
+                                    : [ 'recipientsOptions', 'missingEmailAddresses', 'filterHistory' ];
+               if (!CAFEVDB.ajaxErrorHandler(data, requiredResponse)) {
                  return false;
                }
-               if (typeof data.data.contents != 'undefined' && data.data.contents.length > 0) {
+               if (historySnapshot) {
+                 // Just update the history, but nothing else
+                 filterHistoryInput.val(data.data.filterHistory);
+               } else if (typeof data.data.contents != 'undefined' && data.data.contents.length > 0) {
                  // replace the entire tab.
                  $('.tipsy').remove();
                  panelHolder.html(data.data.contents);
@@ -190,10 +200,12 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                if (typeof data.data.debug != 'undefined') {
                  debugText = data.data.debug;
                }
-               debugOutput.html('<pre>'+$('<div></div>').text(debugText).html()+'</pre>'+
-                                '<pre>'+$('<div></div>').text(data.data.recipientsOptions).html()+'</pre>'+
-                                data.data.missingEmailAddresses+'</br>'+
-                                $('<div></div>').text(CAFEVDB.urldecode(post)).html())
+               if (!historySnapshot) {
+                 debugOutput.html('<pre>'+$('<div></div>').text(debugText).html()+'</pre>'+
+                                  '<pre>'+$('<div></div>').text(data.data.recipientsOptions).html()+'</pre>'+
+                                  data.data.missingEmailAddresses+'</br>'+
+                                  $('<div></div>').text(CAFEVDB.urldecode(post)).html())
+               }
                return false;
              });
       return false;
@@ -227,6 +239,13 @@ CAFEVDB.Email = CAFEVDB.Email || {};
     // "submit" when hitting any of the control buttons
     controlsContainer.off('click', '**');
     controlsContainer.on('click', 'input', applyRecipientsFilter);
+
+    // Record history when the select box changes. Maybe too slow, but
+    // we will see.
+    recipientsSelect.off('change');
+    recipientsSelect.on('change', function(event) {
+      applyRecipientsFilter(event, true);
+    });
 
     // Give the user a chance to change broken or missing email
     // addresses from here.
@@ -270,6 +289,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
       //alert('Data: '+JSON.stringify(tableOptions));
       PHPMYEDIT.tableDialogOpen(tableOptions);
     });
+      return false;
   };
 
   /**Add handlers to the control elements, and call the AJAX sciplets

@@ -84,6 +84,12 @@ try {
     $tmpl->assign('MissingEmailAddresses', $recipientsFilter->missingEmailAddresses());
 
     $contents = $tmpl->fetchPage();
+  } else if ($recipientsFilter->snapshotState()) {
+    // short-circuit
+    @ob_end_clean();
+    $filterHistory = $recipientsFilter->filterHistory();
+    OCP\JSON::success(array('data' => array('filterHistory' => $filterHistory)));
+    return true;
   } else {
     $recipientsChoices = $recipientsFilter->emailRecipientsChoices();
     $recipientsOptions = Navigation::selectOptions($recipientsChoices);
@@ -93,7 +99,7 @@ try {
       $missingEmailAddresses .= $separator; $separator = ', ';
       $missingEmailAddresses .=
         '<span class="missing-email-addresses personal-record" '.
-        '      data-id="'.$id.'">'.htmlspecialchars($name).'</span>';
+        '      data-id="'.$id.'">'.$name.'</span>';
     }
     $filterHistory = $recipientsFilter->filterHistory();
     $contents = '';

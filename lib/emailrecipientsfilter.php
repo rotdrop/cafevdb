@@ -31,7 +31,7 @@ namespace CAFEVDB
    * project).
    */
   class EmailRecipientsFilter {
-    const MAX_HISTORY_SIZE = 25; // the history is posted around, so ...
+    const MAX_HISTORY_SIZE = 100; // the history is posted around, so ...
 
     private $projectId;   // Project id or NULL or -1 or ''
     private $projectNem;  // Project name of NULL or ''
@@ -46,7 +46,7 @@ namespace CAFEVDB
   
     private $opts;        // Copy of global options
 
-    private $NoMail;      // List of people without email
+    private $brokenEMail;     // List of people without email
     private $EMails;      // List of people with email  
     private $EMailsDpy;   // Display list with namee an email
 
@@ -56,6 +56,7 @@ namespace CAFEVDB
     private $cgiData;   // copy of cgi-data
     private $submitted; // form has been submitted
     private $reload;    // form must be reloaded
+    private $snapshot;  // lean history snapshot, only the history data is valid
     
     private $jsonFlags; 
     static private $historyKeys = array('BasicRecipientsSet',
@@ -114,6 +115,7 @@ namespace CAFEVDB
       // "sane" default setttings
       $this->EmailRecs = Util::cgiValue($this->emailKey, array());
       $this->reload = false;
+      $this->snapshot = false;
 
       if ($this->submitted) {
         if ($this->cgiValue('ResetInstrumentsFilter', false) !== false) {
@@ -127,6 +129,13 @@ namespace CAFEVDB
         } else if ($this->cgiValue('RedoInstrumentsFilter', false) !== false) {
           $this->applyHistory(-1);
           $this->reload = true;
+        } else if ($this->cgiValue('HistorySnapshot', false) !== false) {
+          // fast mode, only CGI data, no DB access. Only the
+          // $this->filterHistory() should be queried afterwards,
+          // everything else is undefined.
+          $this->snapshot = true;
+          $this->pushHistory(true);
+          return;
         }
       }
 
@@ -281,20 +290,23 @@ namespace CAFEVDB
      * stack. Do nothing for dummy commits, i.e. only a changed filter
      * will be pushed onto the stack.
      */
-    private function pushHistory()
+    private function pushHistory($fastMode = false)
     {
       $filter = array();
       foreach (self::$historyKeys as $key) {
         $filter[$key] = $this->cgiValue($key, array());
       }
 
-      // exclude musicians deselected by the filter from the set of
-      // selected recipients before recording the the history
-      $filter['SelectedRecipients'] =
-        array_intersect($filter['SelectedRecipients'],
-                        array_keys($this->EMailsDpy));
+      if (!$fastMode) {
+        // exclude musicians deselected by the filter from the set of
+        // selected recipients before recording the history
+        $filter['SelectedRecipients'] =
+          array_intersect($filter['SelectedRecipients'],
+                          array_keys($this->EMailsDpy));
+        
+        // tweak: sort the selected recipients by key
+      }
 
-      // tweak: sort the selected recipients by key
       sort($filter['SelectedRecipients']);
 
       $this->fetchHistory();
@@ -486,6 +498,11 @@ namespace CAFEVDB
       }
       $_POST['QUERY'] = $query;
 
+      // use the mailer-class we are using later anyway in order to
+      // validate email addresses syntactically now. Add broken
+      // addresses to the "brokenEMail" list.
+      $mailer = new \PHPMailer(true);
+
       // Fetch the result or die
       $result = mySQL::query($query, $dbh, true); // here we want to bail out on error
 
@@ -495,6 +512,7 @@ namespace CAFEVDB
        */
       while ($line = mysql_fetch_assoc($result)) {
         $name = $line['Vorname'].' '.$line['Name'];
+        $rec = $line[$id];
         if ($line['Email'] != '') {
           // We allow comma separated multiple addresses
           $musmail = explode(',',$line['Email']);
@@ -503,17 +521,26 @@ namespace CAFEVDB
             $line['mandateReference'] = '';
           }
           foreach ($musmail as $emailval) {
-            $this->EMails[$line[$id]] =
-              array('email'   => $emailval,
-                    'name'    => $name,
-                    'status'  => $line['MemberStatus'],
-                    'project' => $projectId,
-                    'dbdata'  => $line);
-            $this->EMailsDpy[$line[$id]] =
-              htmlspecialchars($name.' <'.$emailval.'>');
+            if (!$mailer->validateAddress($emailval)) {
+              $bad = htmlspecialchars($name.' <'.$emailval.'>');
+              if (isset($this->brokenEMail[$rec])) {
+                $this->brokenEMail[$rec] .= ', '.$bad;
+              } else {
+                $this->brokenEMail[$rec] = $bad;
+              }
+            } else {
+              $this->EMails[$rec] =
+                array('email'   => $emailval,
+                      'name'    => $name,
+                      'status'  => $line['MemberStatus'],
+                      'project' => $projectId,
+                      'dbdata'  => $line);
+              $this->EMailsDpy[$rec] =
+                htmlspecialchars($name.' <'.$emailval.'>');
+            }
           }
         } else {
-          $this->NoMail[$line[$id]] = array('name' => $name);
+          $this->brokenEMail[$rec] = htmlspecialchars($name);
         }
       }
     }
@@ -522,7 +549,7 @@ namespace CAFEVDB
      */
     private function getMusiciansFromDB($dbh)
     {
-      $this->NoMail = array();
+      $this->brokenEMail = array();
       $this->EMails = array();
       $this->EMailsDpy = array(); // display records
 
@@ -741,8 +768,8 @@ namespace CAFEVDB
     public function missingEmailAddresses()
     {
       $result = array();
-      foreach ($this->NoMail as $id => $person) {
-        $result[$id] = $person['name'];
+      foreach ($this->brokenEMail as $id => $problem) {
+        $result[$id] = $problem;
       }
       asort($result);
 
@@ -758,6 +785,11 @@ namespace CAFEVDB
     public function reloadState() {
       return $this->reload;
     }
+
+    /**Return true when doing a mere history snapshot. */
+    public function snapshotState() {
+      return $this->snapshot;
+    }    
     
     /**Return the list of selected recipients. To have this method is
      * in principle the goal of all the mess above ...
