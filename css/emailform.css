@@ -464,7 +464,7 @@ form#cafevdb-email-form .recipients-select.container {
 
 form#cafevdb-email-form .instruments-filter.container {
   width:18%;
-  text-align:center;
+  text-align:right;
   cursor: pointer;
 }
 
@@ -474,6 +474,7 @@ form#cafevdb-email-form .instruments-filter.container label {
 form#cafevdb-email-form span#instruments-filter-wrapper {
   margin-top:0.3em;
   display:inline-block;
+  text-align:left;
   width: 100%;
 }
 

@@ -43,6 +43,7 @@ namespace CAFEVDB
     private $emailKey;    // Key for EmailsRecs into _POST or _GET
 
     private $instruments; // List of instruments for filtering
+    private $instrumentGroups; // mapping of instruments to groups.
   
     private $opts;        // Copy of global options
 
@@ -592,6 +593,8 @@ namespace CAFEVDB
       } else {
         $this->instruments = Instruments::fetch($dbh);
       }
+      $this->instrumentGroups = Instruments::fetchGrouped($dbh);
+
       array_unshift($this->instruments, '*');
     }
 
@@ -738,9 +741,17 @@ namespace CAFEVDB
       $result = array();
       foreach($this->instruments as $instrument) {
         $name = $instrument;
-        $value = $instrument == '*'? '' : $instrument;
+        if ($instrument == '*') {
+          $value = '';
+          $group = '';
+        } else {
+          $value = $instrument;
+          $group = $this->instrumentGroups[$value];
+        }
+        
         $result[] = array('value' => $value,
                           'name' => $name,
+                          'group' => $group,
                           'flags' => isset($filterInstruments[$instrument]) ? Navigation::SELECTED : 0);
       }
       return $result;

@@ -605,11 +605,11 @@ class Navigation
 ';
         $oldGroup = $group;
         $indent = '';
-      }
-      if ($group) {
-        $result .= '<optgroup label="'.$group.'">
+        if ($group) {
+          $result .= '<optgroup label="'.$group.'">
 ';
-        $indent = '  ';
+          $indent = '  ';
+        }
       }
       $result .= $indent.'<option value="'.$option['value'].'"'.
         $disabled.$selected.$label.$title.
