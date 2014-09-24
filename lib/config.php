@@ -53,6 +53,8 @@ othercalendarid
 managementcalendar
 managementcalendarid
 eventduration
+sharedaddressbook
+sharedaddressbookid
 emailuser
 emailpassword
 emailfromname
