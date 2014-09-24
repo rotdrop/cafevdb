@@ -24,11 +24,12 @@
  */
 namespace CAFEVDB
 {
-/**Wrap the email filter form into a class to make things a little
- * less crowded. This is actually not to filter emails, but rather to
- * select specific groups of musicians (depending on instrument and
- * project).
- */
+
+  /**Wrap the email filter form into a class to make things a little
+   * less crowded. This is actually not to filter emails, but rather to
+   * select specific groups of musicians (depending on instrument and
+   * project).
+   */
   class EmailRecipientsFilter {
     const MAX_HISTORY_SIZE = 25; // the history is posted around, so ...
 
@@ -90,7 +91,7 @@ namespace CAFEVDB
         isset($this->cgiData['BasicRecipientsSet']['ExceptProject']);
 
       $this->projectId = Util::cgiValue('ProjectId', -1);
-      $this->projectName   = Util::cgiValue('Project', '');
+      $this->projectName   = Util::cgiValue('ProjectName', Util::cgiValue('Project', ''));
 
       // See wether we were passed specific variables ...
       $pmepfx          = $this->opts['cgi']['prefix']['sys'];
@@ -153,6 +154,7 @@ namespace CAFEVDB
       }
     }
 
+    /**Fetch a CGI-variable out of the form-select name-space */
     private function cgiValue($key, $default = null)
     {
       if (isset($this->cgiData[$key])) {

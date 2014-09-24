@@ -63,33 +63,21 @@ if ($_['ProjectId'] >= 0) {
   }
 }
 
-// Compose one large string with all recipients, separated by comma
-$toString = array();
-foreach($_['TO'] as $recipient) {
-  $name = trim($recipient['name']);
-  $email = trim($recipient['email']);
-  if ($name == '') {
-    $toString[] = $email;
-  } else {
-    $toString[] = $name.' <'.$email.'>';
-  }
-}
-$toString = htmlspecialchars(implode(', ', $toString));
-
 ?>
 
 <fieldset id="cafevdb-emial-composition-fieldset" class="email-composition page">
   <!-- <legend id="cafevdb-email-form-legend"><?php echo L::t('Compose Em@il'); ?></legend> -->
+  <?php echo Navigation::persistentCGI('emailComposer', $_['ComposerFormData']); ?>
   <table class="cafevdb-email-composition-form">
     <tr class="email-template">
-      <td><?php echo L::t("Template"); ?></td>
-      <td class="email-template-choose">
+      <td class="email-template"><?php echo L::t("Templates"); ?></td>
+      <td class="email-template-choose email-template">
         <label notitle="<?php echo Config::toolTips('select-email-template'); ?>">
           <select size="<?php echo count($_['templateNames']); ?>"
                   class="email-template-selector"
                   title="<?php echo Config::toolTips('select-email-template'); ?>"
                   data-placeholder="<?php echo L::t("Select email template"); ?>"
-                  name="emailTemplateSelector"
+                  name="emailComposer[TemplateSelector]"
                   id="cafevdb-email-template-selector">
             <?php
             foreach ($_['templateNames'] as $template) {
@@ -100,24 +88,34 @@ $toString = htmlspecialchars(implode(', ', $toString));
           </select>
         </label>
       </td>
-      <td class="email-template-save">
+      <td class="email-template-storage email-template">
         <input size="20" placeholder="<?php echo L::t('New Template Name'); ?>"
         <?php echo ($_['templateName'] != '' ? 'value="'.$_['templateName'].'"' : ''); ?>
                title="<?php echo Config::toolTips('new-email-template'); ?>"
-               name="newEmailTemplate"
+               name="emailComposer[TemplateName]"
                type="text"
-               id="newEmailTemplate">
+               id="emailCurrentTemplate">
         <input title="<?php echo Config::toolTips('save-email-template'); ?>"
                type="submit"
-               name="saveEmailTemplate"
-               value="<?php echo L::t('Save as Template'); ?>"/>
+               class="submit save-template"
+               name="emailComposer[SaveTemplate]"
+               value="<?php echo L::t('Save as Template'); ?>"/> 
+        <input title="<?php echo Config::toolTips('delete-email-template'); ?>"
+               type="submit"
+               class="submit delete-template"
+               name="emailComposer[DeleteTemplate]"
+               value="<?php echo L::t('Delete Template'); ?>"/>
       </td>
     </tr>
+    
     <tr class="email-address">
-      <td class="email-address caption"><?php echo L::t('Recipients'); ?></td>
-      <td class="email-address display" colspan="2">
-        <span title="<?php echo htmlspecialchars($toString); ?>" class="tipsy-s">
-          <?php echo $toString; ?>
+      <td class="email-address email-recipients caption"><?php echo L::t('Recipients'); ?></td>
+      <td class="email-address email-recipients display" colspan="2">
+        <span title="<?php echo Config::tooltips('email-recipients-listing').'</br>'.htmlspecialchars($_['TO']); ?>"
+              data-placeholder="<?php echo L::t('No recipients selected.'); ?>"
+              data-title-intro="<?php echo Config::tooltips('email-recipients-listing'); ?>"
+              class="email-recipients tipsy-s tipsy-wide">
+          <?php echo $_['TO'] == '' ? L::t('No recipients selected.') :  $_['TO']; ?>
         </span>
       </td>
     </tr>
@@ -125,20 +123,36 @@ $toString = htmlspecialchars(implode(', ', $toString));
       <td class="email-address caption"><?php echo L::t('Carbon Copy'); ?></td>
       <td class="email-address input" colspan="2">
         <input size="40"
+               title="<?php echo Config::toolTips('email-recipients-freeform-CC'); ?>"
+               class="tipsy-s"
                value="<?php echo htmlspecialchars($_['CC']); ?>"
-               name="txtCC"
+               name="emailComposer[CC]"
                type="text"
-               id="txtCC" />
+               id="carbon-copy" />
+        <input title="<?php echo Config::toolTips('address-book-emails'); ?>"
+               type="submit"
+               class="submit address-book-emails CC"
+               data-for="#carbon-copy"
+               name="emailComposer[AddressBookCC]"
+               value="<?php echo L::t('Address Book'); ?>"/>        
       </td>
     </tr>
     <tr class="email-address">
       <td class="email-address caption"><?php echo L::t('Blind CC'); ?></td>
       <td colspan="2" class="email-address input">
         <input size="40"
+               title="<?php echo Config::toolTips('email-recipients-freeform-BCC'); ?>"
+               class="tipsy-s"
                value="<?php echo htmlspecialchars($_['BCC']); ?>"
-               name="txtBCC"
+               name="emailComposer[BCC]"
                type="text"
-               id="txtBCC"/>
+               id="blind-carbon-copy"/>
+        <input title="<?php echo Config::toolTips('address-book-emails'); ?>"
+               type="submit"
+               class="submit address-book-emails BCC"
+               data-for="#blind-carbon-copy"
+               name="emailComposer[AddressBookBCC]"
+               value="<?php echo L::t('Address Book'); ?>"/>
       </td>
     </tr>
     <tr>
@@ -147,18 +161,22 @@ $toString = htmlspecialchars(implode(', ', $toString));
         <div class="subject container">
           <span class="subject tag"><?php echo htmlspecialchars($_['mailTag']); ?></span>
           <span class="subject input">
-            <input value="<?php echo $_['subject']; ?>" size="40" name="txtSubject" type="text" id="txtSubject">
+            <input value="<?php echo $_['subject']; ?>"
+                   size="40" name="emailComposer[Subject]"
+                   type="text"
+                   class="email-subject"
+                   id="email-composer-subject">
           </span>
         </div>
       </td>
     </tr>
     <tr>
       <td class="body"><?php echo L::t('Message-Body'); ?></td>
-      <td colspan="2" class="messagetext"><textarea name="txtDescription" class="wysiwygeditor" cols="60" rows="20" id="txtDescription"><?php echo $_['message']; ?></textarea></td>
+      <td colspan="2" class="messagetext"><textarea name="emailComposer[MessageText]" class="wysiwygeditor" cols="60" rows="20" id="message-text"><?php echo $_['message']; ?></textarea></td>
     </tr>
     <tr>
       <td><?php echo L::t('Sender-Name'); ?></td>
-      <td colspan="2"><input value="<?php echo $_['sender']; ?>" size="40" value="CAFEV" name="txtFromName" type="text"></td>
+      <td colspan="2"><input value="<?php echo $_['sender']; ?>" size="40" value="CAFEV" name="emailComposer[FromName]" type="text"></td>
     </tr>
     <tr>
       <td><?php echo L::t('Sender-Email'); ?></td>
@@ -192,7 +210,7 @@ $toString = htmlspecialchars(implode(', ', $toString));
       $size    = \OC_Helper::humanFileSize($size);
       echo '
     <tr>
-      <td><button type="submit" name="deleteAttachment[]" value="'.$tmpName.'" >'.L::t('Remove').'</button></td>
+      <td><button type="submit" name="emailComposer[DeleteAttachment][]" value="'.$tmpName.'" >'.L::t('Remove').'</button></td>
       <td colspan="2"><span class="attachmentName">'.$name.' ('.$size.')</span></td>
     </tr>';
     }
@@ -200,12 +218,16 @@ $toString = htmlspecialchars(implode(', ', $toString));
     <tr class="submit">
       <td class="send">
         <input title="<?php echo Config::toolTips('send-mass-email'); ?>"
-               type="submit" name="sendEmail" value="<?php echo L::t('Send Em@il'); ?>"/>
+               class="email-composer submit send"
+               type="submit" name="emailComposer[Send]"
+               value="<?php echo L::t('Send Em@il'); ?>"/>
       </td>
       <td></td>
       <td class="reset">
         <input title="<?php echo Config::tooltips('cancel-email-composition'); ?>"
-               type="submit" name="cancel" value="<?php echo L::t('Cancel'); ?>" />
+               class="email-composer submit cancel"
+               type="submit" name="emailComposer[Cancel]"
+               value="<?php echo L::t('Cancel'); ?>" />
       </td>
     </tr>
   </table>
