@@ -511,7 +511,7 @@ __EOT__;
   {
     $location = self::composeURL($location);
     
-    \OCP\Util::writeLog(App::APPNAME, "Checking ".$location, LOG_DEBUG);
+    \OCP\Util::writeLog(Config::APP_NAME, "Checking ".$location, \OC_LOG::DEBUG);
 
     // Don't try to access it if it is not a valid URL
     if (filter_var($location, FILTER_VALIDATE_URL) === false) {
