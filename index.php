@@ -92,7 +92,7 @@ try {
   OCP\Util::addStyle('cafevdb', 'settings');
   OCP\Util::addStyle('cafevdb', 'events');
   OCP\Util::addStyle('cafevdb', 'sepa-debit-mandate');
-  OCP\Util::addStyle('cafevdb', 'email');
+  //OCP\Util::addStyle('cafevdb', 'email');
   OCP\Util::addStyle('cafevdb', 'emailform');
   OCP\Util::addStyle('cafevdb', 'blog');
   OCP\Util::addStyle('cafevdb', 'projects');
@@ -100,6 +100,7 @@ try {
   OCP\Util::addStyle('cafevdb', 'inlineimage');  
   OCP\Util::addStyle('3rdparty/fontawesome', 'font-awesome');
   OCP\Util::addStyle('cafevdb', 'font-awesome');
+  OCP\Util::addStyle('core', 'icons');
 
   OCP\Util::addScript('cafevdb', 'cafevdb');
   OCP\Util::addScript('cafevdb', 'pme');
@@ -129,8 +130,8 @@ try {
   OCP\Util::addScript('cafevdb/3rdparty', 'ckeditor/adapters/jquery');
   
   // Updated chosen version
-  OCP\Util::addscript("cafevdb/3rdparty", "chosen/chosen.jquery.min");
-  OCP\Util::addStyle("cafevdb/3rdparty", "chosen/chosen");
+  OCP\Util::addscript("cafevdb/3rdparty/chosen", "chosen.jquery.min");
+  OCP\Util::addStyle("cafevdb/3rdparty/chosen", "chosen.min");
 
   // Will be removed ...
   OCP\Util::addscript("cafevdb/3rdparty/QuickForm2", "quickform");
