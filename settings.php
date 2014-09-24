@@ -110,6 +110,8 @@ try {
     $tmpl->assign('managementcalendar', Config::getSetting('managementcalendar', L::t('management')));
     $tmpl->assign('eventduration', Config::getSetting('eventduration', '180'));
 
+    $tmpl->assign('sharedaddressbook', Config::getSetting('sharedaddressbook', L::t('contacts')));
+
     $tmpl->assign('sharedfolder', Config::getSetting('sharedfolder',''));
     $tmpl->assign('projectsfolder', Config::getSetting('projectsfolder',''));
     $tmpl->assign('projectsbalancefolder', Config::getSetting('projectsbalancefolder',''));
