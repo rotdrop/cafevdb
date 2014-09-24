@@ -165,6 +165,7 @@ if ($_['ProjectId'] >= 0) {
                    size="40" name="emailComposer[Subject]"
                    type="text"
                    class="email-subject"
+                   spellcheck="true"
                    id="email-composer-subject">
           </span>
         </div>
