@@ -189,6 +189,10 @@ form.pme-form {
   width:auto;
 }
 
+form.pme-form input[type=text] {
+  width:auto;
+}
+
 .pme-form tr,.pme-form tr:hover,.pme-form tr:active { 
   background-color:inherit;
 }
