@@ -536,6 +536,24 @@ $(document).ready(function() {
 
   ///////////////////////////////////////////////////////////////////////////
   //
+  // Contacts, addressbooks (actually only one ;)
+  //
+  ///////////////////////////////////////////////////////////////////////////
+
+  $('#eventsettings #contacts :input').blur(function(event) {
+    event.preventDefault();
+    $('div.statusmessage').hide();
+    $('span.statusmessage').hide();
+    $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
+           $(this),
+           function(data) {
+	     $('#eventsettings #msg').html(data.data.message);
+	     $('#eventsettings #msg').show();
+	   });
+  });
+
+  ///////////////////////////////////////////////////////////////////////////
+  //
   // Sharing, share-folder
   //
   ///////////////////////////////////////////////////////////////////////////
