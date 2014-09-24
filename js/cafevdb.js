@@ -347,6 +347,95 @@ var CAFEVDB = CAFEVDB || {};
       replace(/\)/g, '%29').replace(/\*/g, '%2A').replace(/%20/g, '+');
   };
 
+  CAFEVDB.chosenPopup = function(contents, userOptions)
+  {
+    var CAFEVDB = this;
+
+    var options = {
+      title: t('cafevdb', 'Choose some Options'),
+      position: { my: "center center",
+                  at: "center center",
+                  of: window },
+      dialogClass: false,
+      saveText: t('cafevdb', 'Save'),
+      saveTitle: t('cafevdb',
+                   'Save the currently selected options and return to the underlying form. '),
+      cancelText: t('cafevdb', 'Cancel'),
+      cancelTitle: t('cafevdb',
+                     'Discard the current selection and close the dialog. '+
+                     'The initial set of selected options will remain unchanged.'),
+      openCallback: false,
+      saveCallback: false,
+      closeCallback: false
+    }
+    $.extend(options, userOptions);
+
+    var cssClass = (options.dialogClass ? options.dialogClass + ' ' : '') + 'chosen-popup-dialog';
+    var dialogHolder = $('<div class="'+cssClass+'"></div>');
+    dialogHolder.html(contents);
+    var selectElement = dialogHolder.find('select');
+    $('body').append(dialogHolder);
+
+    dialogHolder.dialog({
+      title: options.title,
+      position: options.position,
+      dialogClass: cssClass,
+      modal:true,
+      draggable:false,
+      closeOnEscape:false,
+      width:'auto',
+      height:'auto',
+      resizable:false,
+      buttons: [
+        { text: options.saveText,
+          'class': 'save',
+          title: options.saveTitle,
+          click: function() {
+            var self = this;
+
+            var selectedOptions = [];
+            selectElement.find('option:selected').each(function(idx) {
+              var self = $(this);
+              selectedOptions[idx] = { 'value': self.val(),
+                                       'html' : self.html(),
+                                       'text' : self.text() };
+            });
+            //alert('selected: '+JSON.stringify(selectedOptions));
+            if (typeof options.saveCallback == 'function') {
+              options.saveCallback.call(this, selectElement, selectedOptions);
+            }
+
+            return false;
+          }
+        },
+        { text: options.cancelText,
+          'class': 'cancel',
+          title: options.cancelTitle,
+          click: function() {
+            $(this).dialog("close");
+          }
+        }
+      ],
+      open:function() {
+        selectElement.chosen(); //{disable_search_threshold: 10});
+        CAFEVDB.tipsy(dialogHolder.dialog('widget'));
+
+        if (typeof options.openCallback == 'function') {
+          options.openCallback.call(this, selectElement);
+        }
+      },
+      close:function() {
+        if (typeof options.closeCallback == 'function') {
+          options.closeCallback.call(this, selectElement);
+        }
+
+        $('.tipsy').remove();
+        dialogHolder.dialog('close');
+        dialogHolder.dialog('destroy').remove();
+      }
+    });
+  };
+
   /**Create and submit a form with a POST request and given
    * parameters.
    *
