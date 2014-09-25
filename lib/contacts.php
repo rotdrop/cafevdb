@@ -135,7 +135,7 @@ namespace CAFEVDB
       // Finally check, that the display-name matches. Otherwise rename
       // the address-book
       if ($sharedAddressBookInfo['displayname'] != $displayName) {
-        ConfigCheck::sudo($shareowner, function() use ($addressBookId, $displayName) {
+        ConfigCheck::sudo($shareowner, function() use ($addressBookId, $displayName, $backend) {
             $result = $backend->updateAddressBook($addressBookId, array('displayname' => $displayName));
             return $result;
           });
@@ -145,30 +145,42 @@ namespace CAFEVDB
     }
 
     /**Fetch a list of contacts with email addresses for the current
-     * user. The return value is a flat array of the form
+     * user. The return value is a "matrix" of the form
      *
-     * array('email@address.com' => 'John Doe');
+     * array(array('email' => 'email@address.com',
+     *             'name'  => 'John Doe',
+     *             'addressbook' => 'Bookname');
      *
-     * I.e.: the email address is the "unique" key, the data is the
-     * real name (which may even be empty)
-     * 
-     * @todo We may want to add categories etc.
+     * As of now categories are not exported for shared address-books,
+     * so we simply group the entries by addressbook-name.
      */
     public static function emailContacts()
     {
       $result = array();
-
       $app = new \OCA\Contacts\App();
       $addressBooks = $app->getAddressBooksForUser();
+      usort($addressBooks, function($a, $b) {
+          return strcmp($a->getDisplayName(), $b->getDisplayName());
+        });
       foreach ($addressBooks as $addressBook) {
+        $bookName = trim($addressBook->getDisplayName());
         $contacts = $addressBook->getChildren();
         foreach ($contacts as $contact) {
           // $name = (string)$contact->N;
           $fullname = (string)$contact->FN;
           $emails = $contact->select('EMAIL');
+          $theseContacts = array();
           foreach ($emails as $email) {
-            $result[(string)$email] = $fullname;
+            $theseContacts[] = array('email' => trim((string)$email),
+                                     'name'  => trim($fullname),
+                                     'addressBook'  => $bookName);
           }
+          usort($theseContacts, function($a, $b) {
+              $aName = $a['name'] != '' ? $a['name'] : $a['email'];
+              $bName = $b['name'] != '' ? $b['name'] : $b['email'];
+              return strcmp($aName, $bName);
+            });
+          $result = array_merge($result, $theseContacts);
         }
       }
       return $result;

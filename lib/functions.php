@@ -567,6 +567,14 @@ class Navigation
   const DISABLED = 1;
   const SELECTED = 2;
 
+  /**Wrapper around core htmlspecialchars; avoid double encoding,
+   * standard options.
+   */
+  public static function enc($string, $double_encode = false)
+  {
+    return htmlspecialchars($string, ENT_COMPAT|ENT_HTML401, 'UTF-8', $double_encode);
+  }
+
   /**Emit select options
    *
    * @param $options Array with option tags:
@@ -587,7 +595,7 @@ class Navigation
     if (!is_array($options) || count($options) == 0) {
       return $result;
     }
-    $oldGroup = isset($options[0]['group']) ? $options[0]['group'] : false;
+    $oldGroup = isset($options[0]['group']) ? self::enc($options[0]['group']) : false;
     if ($oldGroup) {
       $result .= '<optgroup label="'.$oldGroup.'">
 ';
@@ -597,9 +605,9 @@ class Navigation
       $flags = isset($option['flags']) ? $option['flags'] : 0;
       $disabled = $flags & self::DISABLED ? ' disabled="disabled"' : '';
       $selected = $flags & self::SELECTED ? ' selected="selected"' : '';
-      $label    = isset($option['label']) ? ' label="'.$option['label'].'"' : '';
-      $title    = isset($option['title']) ? ' title="'.$option['title'].'"' : '';
-      $group = isset($option['group']) ? $option['group'] : false;
+      $label    = isset($option['label']) ? ' label="'.self::enc($option['label']).'"' : '';
+      $title    = isset($option['title']) ? ' title="'.self::enc($option['title']).'"' : '';
+      $group = isset($option['group']) ? self::enc($option['group']) : false;
       if ($group != $oldGroup) {
         $result .= '</optgroup>
 ';
@@ -611,10 +619,10 @@ class Navigation
           $indent = '  ';
         }
       }
-      $result .= $indent.'<option value="'.$option['value'].'"'.
+      $result .= $indent.'<option value="'.self::enc($option['value']).'"'.
         $disabled.$selected.$label.$title.
         '>'.
-        $option['name'].
+        self::enc($option['name']).
         '</option>
 ';
     }

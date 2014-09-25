@@ -66,18 +66,49 @@ try {
   // Fetch all known address-book contacts with email
   $bookContacts = Contacts::emailContacts();
 
+  //\OCP\Util::writeLog(Config::APP_NAME, 'ADDRBOOK: '.print_r($bookContacts, true), \OC_LOG::DEBUG);
+  //\OCP\Util::writeLog(Config::APP_NAME, 'ADDRBOOK: '.print_r($freeForm, true), \OC_LOG::DEBUG);
+
+  $addressBookEmails = array();
+  foreach($bookContacts as $entry) {
+    $addressBookEmails[$entry['email']] = $entry['name'];
+  }
+
+  // Convert the free-form input in "book-format", but exclude those
+  // contacts already present in the address-book in order not to list
+  // contacts twice.
+  $emailOptions = array();
+  foreach($freeForm as $email => $name) {
+    if (isset($addressBookEmails[$email]) && $addressBookEmails[$email] == $name) {
+      // FIXME: maybe "give a damn" on the name ...
+      continue;
+    }
+    $emailOptions[] = array('email' => $email,
+                            'name' => $name,
+                            'addressBook' => L::t('Form Input'));
+  }
+
   // The total options list is the union of the (remaining) free-form
   // addresses and the address-book entries
-  $emailOptions = array_merge($bookContacts, $freeForm);
+  $emailOptions = array_merge($emailOptions, $bookContacts);
 
-  foreach ($emailOptions as $email => $name) {
-    if ($name == '') {
-      $emailOptions[$email] = $email;
+  // Now convert it into a form Navigation::selectOptions()
+  // understands
+  $selectOptions = array();
+  foreach($emailOptions as $entry) {
+    $email = $entry['email'];
+    if ($entry['name'] == '') {
+      $displayName = $email;
     } else {
-      $emailOptions[$email] = $name.' <'.$email.'>';
+      $displayName = $entry['name'].' <'.$email.'>';
     }
+    $selectOptions[] = array('value' => $email,
+                             'name' => $displayName,
+                             'flags' => isset($freeForm[$email]) ? Navigation::SELECTED : 0,
+                             'group' => $entry['addressBook']);
   }
-  asort($emailOptions);
+
+  \OCP\Util::writeLog(Config::APP_NAME, 'ADDRBOOK: '.print_r($selectOptions, true), \OC_LOG::DEBUG);
 
   //$phpMailer = new \PHPMailer(true); could validate addresses here
 
@@ -85,8 +116,7 @@ try {
 
   $tmpl->assign('ProjectName', $projectName);
   $tmpl->assign('ProjectId', $projectId);
-  $tmpl->assign('EmailOptions', $emailOptions);
-  $tmpl->assign('EmailSelection', $freeForm);
+  $tmpl->assign('EmailOptions', $selectOptions);
 
   $html = $tmpl->fetchPage();
 

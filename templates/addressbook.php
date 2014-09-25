@@ -33,16 +33,5 @@ CAFEVDB\Error::exceptions(true);
         name="adressBookEmails[]"
         data-placeholder="<?php echo L::t('Select Em@il Recipients'); ?>"
         multiple="multiple">
-  <?php
-  foreach ($_['EmailOptions'] as $email => $display) {
-    $selected = '';
-    if (isset($_['EmailSelection'][$email])) {
-      $selected = ' selected="selected"';
-    } 
-    $email = htmlspecialchars($email);
-    $display = '<em>'.htmlspecialchars($display).'</em>';
-    echo '
-  <option value="'.$email.'"'.$selected.'>'.$display.'</option>';
-  }
-?>
+  <?php echo Navigation::selectOptions($_['EmailOptions']); ?>
 </select>
