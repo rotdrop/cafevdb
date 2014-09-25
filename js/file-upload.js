@@ -27,12 +27,15 @@ CAFEVDB.FileUpload = CAFEVDB.FileUpload || {};
   FileUpload.uploadingFiles = {};
 
   /**To be called at some other document-ready invocation, as required. */
-  FileUpload.init = function (doneCallback, stopCallback) {
+  FileUpload.init = function(doneCallback, stopCallback, dropZone) {
+    if (typeof dropZone == 'undefined') {
+      dropZone = $(document)
+    }
     var fileUploadParam = {
       multipart: true,
       singleFileUploads: true,
       sequentialUploads: true,
-      dropZone: $('#content'), // restrict dropZone to content div
+      dropZone: dropZone, // restrict dropZone to content div
       //singleFileUploads is on by default, so the data.files array will always have length 1
       add: function(e, data) {
         for (var k = 0; k < data.files.length; ++k) {

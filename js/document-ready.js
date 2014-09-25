@@ -103,6 +103,16 @@ $(document).ready(function(){
     }
     CAFEVDB.broadcastHeaderVisibility();
 
+    // Prevent drag&drop outside allowed areas.
+    window.addEventListener("dragover",function(e){
+        e = e || event;
+        e.preventDefault();
+    },false);
+    window.addEventListener("drop",function(e){
+        e = e || event;
+        e.preventDefault();
+    },false);
+    
 });
 
 // Local Variables: ***

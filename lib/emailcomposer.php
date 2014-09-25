@@ -430,6 +430,125 @@ mandateReference
       return $names;
     }
 
+
+    /**** file temporary utilities ***/
+
+
+    /**Delete all temorary files not found in $fileAttach. If the file
+     * is successfully removed, then it is also remove from the
+     * config-space.
+     *
+     * @param[in] $fileAttach List of files @b not to be removed.
+     *
+     * @return Undefined.
+     */
+    private static function cleanTemporaries($fileAttach = array())
+    {
+      // Fetch the files from the config-space
+      $tmpFiles = self::fetchTemporaries();
+
+      $toKeep = array();
+      foreach ($fileAttach as $files) {
+        $tmp = $files['tmp_name'];
+        if (is_file($tmp)) {
+          $toKeep[] = $tmp;
+        }
+      }
+      
+      foreach ($tmpFiles as $key => $tmpFile) {
+        if (array_search($tmpFile, $toKeep) !== false) {
+          continue;
+        }
+        @unlink($tmpFile);
+        if (!@is_file($tmpFile)) {
+          unset($tmpFiles[$key]);
+        }
+      }
+      self::storeTemporaries($tmpFiles);
+    }
+    
+    /**Fetch the list of temporaries from the config-space.
+     */
+    private static function fetchTemporaries()
+    {
+      // Remember the file in the data-base for cleaning up later
+      $tmpFiles = Config::getUserValue('attachments','');
+      $tmpFiles = preg_split('@,@', $tmpFiles, NULL, PREG_SPLIT_NO_EMPTY);
+      
+      return $tmpFiles;
+    }
+
+    /**Store a list of temporaries in the config-space.*/
+    private static function storeTemporaries($tmpFiles)
+    {
+      // Remember the file in the data-base for cleaning up later
+      Config::setUserValue('attachments',implode(',',$tmpFiles));
+    }
+    
+    /**Handle file uploads. In order for upload to survive we have to
+     * move them to an alternate location. And clean up afterwards, of
+     * course. We store the generated temporaries in the user
+     * config-space in order to (latest) remove them on logout/login.
+     *
+     * @param[in,out] $file Typically $_FILES['fileAttach'], but maybe
+     * any file record.
+     *
+     * @return Copy of $file with changed temporary file which
+     * survives script-reload, or @c false on error.
+     */
+    public static function saveAttachment($fileRecord, $local = false)
+    {
+      if ($fileRecord['name'] != '') {
+        $tmpdir = ini_get('upload_tmp_dir');
+        if ($tmpdir == '') {
+          $tmpdir = sys_get_temp_dir();
+        }
+        $tmpFile = tempnam($tmpdir, Config::APP_NAME);
+        if ($tmpFile === false) {
+          return false;
+        }
+
+        // Remember the file in the data-base for cleaning up later
+        $tmpFiles = self::fetchTemporaries();
+        $tmpFiles[] = $tmpFile;
+        self::storeTemporaries($tmpFiles);
+        
+        if ($local) {
+          // Move the uploaded file
+          if (move_uploaded_file($fileRecord['tmp_name'], $tmpFile)) {
+            // Sanitize permissions
+            chmod($tmpFile, 0600);
+          
+            // Remember the uploaded file.
+            $fileRecord['tmp_name'] = $tmpFile;
+          
+            return $fileRecord;
+          }
+        } else {
+          // Make a copy
+          if (copy($fileRecord['tmp_name'], $tmpFile)) {
+            // Sanitize permissions
+            chmod($tmpFile, 0600);
+          
+            // Remember the uploaded file.
+            $fileRecord['tmp_name'] = $tmpFile;
+          
+            return $fileRecord;
+          }
+        }
+
+        // Clean up.
+        unlink($tmpFile);
+        $tmpFiles = self::fetchTemporaries();
+        if (($key = array_search($tmpFile, $tmpFiles)) !== false) {
+          unset($tmpFiles[$key]);
+          self::storeTemporaries($tmpFiles);
+        }
+        return false;
+      }
+      return false;
+    }
+
     /**** public methods exporting data needed by the web-page template ***/
 
     /**General form data for hidden input elements.*/

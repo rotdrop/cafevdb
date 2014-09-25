@@ -20,7 +20,7 @@ use CAFEVDB\L;
 use CAFEVDB\Util;
 use CAFEVDB\Config;
 use CAFEVDB\Ajax;
-use CAFEVDB\Email;
+use CAFEVDB\EmailComposer;
 
 OCP\JSON::checkLoggedIn();
 OCP\JSON::checkAppEnabled(Config::APP_NAME);
@@ -81,8 +81,8 @@ for ($i = 0; $i < $fileCount; $i++) {
   foreach($files as $key => $values) {
     $fileRecord[$key] = $values[$i];
   }
-// Move the temporary files to locations where we can find them later.
-  $fileRecord = Email::saveAttachment($fileRecord);
+  // Move the temporary files to locations where we can find them later.
+  $fileRecord = EmailComposer::saveAttachment($fileRecord);
 
   // Submit the file-record back to the java-script in order to add the
   // data to the form.

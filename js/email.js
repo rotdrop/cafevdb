@@ -78,38 +78,6 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                 }
               });
   };
-  /**Collapse the somewhat lengthy text at the head of the email page.
-   */
-  Email.collapsePageHeader = function () {
-    var pfx    = '#'+CAFEVDB.name+'-email-';
-    var box    = $(pfx+'header-box');
-    var header = $(pfx+'header');
-    var body   = $(pfx+'body');
-    var button = $(pfx+'header-box #viewtoggle');
-
-    box.removeClass('expanded').addClass('collapsed');
-    header.removeClass('expanded').addClass('collapsed');
-    body.removeClass('expanded').addClass('collapsed');
-    button.removeClass('expanded').addClass('collapsed');
-
-    CAFEVDB.broadcastHeaderVisibility('collapsed');
-  };
-  /**Expand the somewhat lengthy text at the head of the email page.
-   */
-  Email.expandPageHeader = function() {
-    var pfx    = '#'+CAFEVDB.name+'-email-';
-    var box    = $(pfx+'header-box');
-    var header = $(pfx+'header');
-    var body   = $(pfx+'body');    
-    var button = $(pfx+'header-box #viewtoggle');
-    
-    box.addClass('expanded').removeClass('collapsed');
-    header.addClass('expanded').removeClass('collapsed');
-    body.addClass('expanded').removeClass('collapsed');
-    button.addClass('expanded').removeClass('collapsed');
-
-    CAFEVDB.broadcastHeaderVisibility('expanded');
-  };
 
   /**Add handlers to the control elements, and call the AJAX sciplets
    * for validation to update the recipients selection tab accordingly.
@@ -594,6 +562,14 @@ CAFEVDB.Email = CAFEVDB.Email || {};
 
     /*************************************************************************
      * 
+     * File upload.
+     */
+    fieldset.find('.attachment.upload').on('click', function() {
+      $('#file_upload_start').trigger('click');
+    });
+
+    /*************************************************************************
+     * 
      * We try to be nice with Cc: and Bcc: and even provide an
      * address-book connector
      */
@@ -837,6 +813,17 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                                                     dialogHolder.find('div#emailformcomposer'),
                                                     layoutMessageComposer);
 
+                 CAFEVDB.FileUpload.init(
+                   function (json) {
+                     alert('hello1');
+                     //CAFEVDB.Email.attachmentFromJSON(json);
+                   },
+                   function () {
+                     alert('hello2');
+                     //CAFEVDB.Email.submitReloadForm();
+                   },
+                   dialogHolder);
+
                },
                close: function() {
                  $('.tipsy').remove();
@@ -854,82 +841,11 @@ CAFEVDB.Email = CAFEVDB.Email || {};
 
 $(document).ready(function(){
 
-  CAFEVDB.FileUpload.init(
-    function (json) {
-      CAFEVDB.Email.attachmentFromJSON(json);
-    },
-    function () {
-      CAFEVDB.Email.submitReloadForm();
-    });
-
-  if ($('#emailrecipients #writeMail').length) {
-
-    qf.elements.dualselect.init('DualSelectMusicians', true);
-
-    $('#memberStatusFilter').chosen();
-
-    $('#memberStatusFilter').change(function(event) {
-      event.preventDefault();
-      $('#emailrecipients').submit();
-    });
-
-    $('#selectedUserGroup-fromProject').click(function(event) {
-      event.preventDefault();
-      $('#emailrecipients').submit();
-    });
-    
-    $('#selectedUserGroup-exceptProject').click(function(event) {
-      event.preventDefault();
-      $('#emailrecipients').submit();
-    });
-  } else {
-    $('#cafevdb-email-template-selector').chosen({ disable_search_threshold: 10});
-
-  
-    $('#cafevdb-email-template-selector').change(function(event) {
-      event.preventDefault();
-      $('#cafevdb-email-form').submit();
-    });
-  }
-
-  $('div.chosen-container').tipsy({gravity:'se', fade:true});
-  $('li.active-result').tipsy({gravity:'w', fade:true});
-  $('label').tipsy({gravity:'ne', fade:true});
- 
-  //$('#InstrumentenFilter-0').chosen();
-
-  $('#cafevdb-email-header-box .viewtoggle').click(function(event) {
-    event.preventDefault();
-
-    var pfx    = 'div.'+CAFEVDB.name+'-email-';
-    var box    = $(pfx+'header-box');
-    var header = $(pfx+'header');
-    var body   = $(pfx+'body');    
-
-    if (CAFEVDB.headervisibility == 'collapsed') {
-      CAFEVDB.Email.expandPageHeader();
-    } else {
-      CAFEVDB.Email.collapsePageHeader();
-    }
-
-    return false;
-  });
-
-  $('input[type=button].upload,button.attachment.upload').click(function() {
-    $('#file_upload_start').trigger('click');
-  });
-
   $('input[type=button].owncloud,button.attachment.owncloud').click(function() {
     OC.dialogs.filepicker(t('cafevdb', 'Select Attachment'),
                           CAFEVDB.Email.owncloudAttachment, false, '', true)
   });
   
-  if (false) {
-  $('#file_upload_start').change(function(){
-    CAFEVDB.Email.uploadAttachments(this.files);
-  });
-  }
-
   $('button.eventattachments.edit').click(function(event) {
     event.preventDefault();
 
@@ -949,13 +865,6 @@ $(document).ready(function(){
       });
     
     return false;
-  });
-
-  $('input.alertdata.cafevdb-email-error').each(function(index) {
-    var title = $(this).attr('name');
-    var text  = $(this).attr('value');
-    OC.dialogs.alert(text, title);
-    $('#cafevdb-email-error').append('<u>'+title+'</u><br/>'+text+'<br/>');
   });
 
 });
