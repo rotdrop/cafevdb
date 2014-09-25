@@ -4,7 +4,7 @@ use CAFEVDB\L;
 use CAFEVDB\Util;
 use CAFEVDB\Config;
 use CAFEVDB\Ajax;
-use CAFEVDB\Email;
+
 
 OCP\JSON::checkLoggedIn();
 OCP\JSON::checkAppEnabled(Config::APP_NAME);
@@ -47,7 +47,7 @@ $fileRecord = array(
   'type' => $fileInfo['mimetype'],
   'size' => $fileInfo['size']);
 
-$fileRecord = Email::saveAttachment($fileRecord, false);
+$fileRecord = EmailComposer::saveAttachment($fileRecord, false);
 
 if ($fileRecord === false) {
   Ajax::bailOut('Couldn\'t save temporary file for: '.$localpath);

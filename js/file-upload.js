@@ -80,6 +80,7 @@ CAFEVDB.FileUpload = CAFEVDB.FileUpload || {};
         if($('html.lte9').length === 0 && data.dataType !== 'iframe') {
 	  $('#uploadprogresswrapper input.stop').show();
         }
+        return false;
       },
       /**
        * called after the first add, does NOT have the data param

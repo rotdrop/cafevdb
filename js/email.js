@@ -469,7 +469,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
 
     /*************************************************************************
      * 
-     * Template handling (save, delte, load)
+     * Template handling (save, delete, load)
      */
 
     fieldset.find('input.submit.save-template').off('click');
@@ -564,8 +564,15 @@ CAFEVDB.Email = CAFEVDB.Email || {};
      * 
      * File upload.
      */
+    fieldset.find('.attachment.upload').off('click');
     fieldset.find('.attachment.upload').on('click', function() {
       $('#file_upload_start').trigger('click');
+    });
+
+    fieldset.find('.attachment.owncloud').off('click');
+    fieldset.find('.attachment.owncloud').on('click', function() {
+      OC.dialogs.filepicker(t('cafevdb', 'Select Attachment'),
+                            CAFEVDB.Email.owncloudAttachment, false, '', true)
     });
 
     /*************************************************************************
@@ -708,6 +715,13 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                        newHeight -= panel.outerHeight(true) - panel.height();
                        panel.height(newHeight);
                      }
+
+                     if (newTabId == 'emailformcomposer-tab') {
+                       $('#file_upload_start').fileupload('option', 'dropZone', ui.newPanel);
+                     } else {
+                       $('#file_upload_start').fileupload('option', 'dropZone', null);
+                     }
+
                      return true;
                    },
                    beforeActivate: function(event, ui) {
@@ -813,6 +827,8 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                                                     dialogHolder.find('div#emailformcomposer'),
                                                     layoutMessageComposer);
 
+                 // Arguably, these should only be active if the
+                 // composer tab is active. Mmmh.
                  CAFEVDB.FileUpload.init(
                    function (json) {
                      alert('hello1');
@@ -822,7 +838,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                      alert('hello2');
                      //CAFEVDB.Email.submitReloadForm();
                    },
-                   dialogHolder);
+                   null);//dialogHolder);
 
                },
                close: function() {
@@ -841,11 +857,6 @@ CAFEVDB.Email = CAFEVDB.Email || {};
 
 $(document).ready(function(){
 
-  $('input[type=button].owncloud,button.attachment.owncloud').click(function() {
-    OC.dialogs.filepicker(t('cafevdb', 'Select Attachment'),
-                          CAFEVDB.Email.owncloudAttachment, false, '', true)
-  });
-  
   $('button.eventattachments.edit').click(function(event) {
     event.preventDefault();
 
