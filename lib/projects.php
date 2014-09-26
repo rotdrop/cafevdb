@@ -789,6 +789,11 @@ a comma.'));
               'name' => L::t('Events')
           ),
         array('type' => 'option',
+              'title' => Config::toolTips('project-action-email'),
+              'value' => 'project-email',
+              'name' => L::t('Em@il')
+          ),
+        array('type' => 'option',
               'title' => Config::toolTips('project-action-instrumentation-numbers'),
               'value' => 'project-instruments',
               'name' => L::t('Instrumentation Numbers')
@@ -954,12 +959,17 @@ a comma.'));
               'value' => 'project-wiki',
               'name' => L::t('Project Notes')
           ),
-
         array('type' => 'button',
               'title' => Config::toolTips('project-action-events'),
               'class' => 'events tipsy-se',
               'value' => 'events',
               'name' => L::t('Events')
+          ),
+        array('type' => 'button',
+              'title' => Config::toolTips('project-action-email'),
+              'class' => 'project-email tipsy-se',
+              'value' => 'project-email',
+              'name' => L::t('Em@il')
           ),
         array('type' => 'button',
               'title' => Config::toolTips('project-action-instrumentation-numbers'),

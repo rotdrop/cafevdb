@@ -67,11 +67,22 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
     Projects.eventsPopup = function(post) {
         if ($('#events').dialog('isOpen') == true) {
             $('#events').dialog('close').remove();
-        } else {
-            $.post(OC.filePath('cafevdb', 'ajax/events', 'events.php'),
-                   post, CAFEVDB.Events.UI.init, 'json');
         }
+        $.post(OC.filePath('cafevdb', 'ajax/events', 'events.php'),
+               post, CAFEVDB.Events.UI.init, 'json');
     };
+
+    /**Generate a popup-dialog for project related email.
+     * 
+     * @param post Arguments object:
+     * { Project: 'NAME', ProjectId: XX }
+     */
+    Projects.emailPopup = function(post) {
+        if ($('#emailformdialog').dialog('isOpen') == true) {
+            $('#emailformdialog').dialog('close').remove();
+        }
+        CAFEVDB.Email.emailFormPopup(post, false);
+    };    
 
     /**Generate a popup for the instrumentation numbers.
      * 
@@ -182,8 +193,8 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
             post.headervisibility = CAFEVDB.headervisibility;
             CAFEVDB.formSubmit(OC.linkTo('cafevdb', 'index.php'), $.param(post), 'post');
             break;
-        case 'profit-and-loss':
-        case 'project-files':
+          case 'profit-and-loss':
+          case 'project-files':
             var url  = OC.linkTo('files', 'index.php');
             var path = selected.data('projectFiles');
             CAFEVDB.formSubmit(url, $.param({dir: path}), 'get');
@@ -192,8 +203,11 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
             // The following three can easily be opened in popup
             // dialogs which is more convenient as it does not destroy
             // the original view.
-        case 'events':
+          case 'events':
             Projects.eventsPopup(post);
+            break;
+          case 'project-email':
+            Projects.emailPopup(post);
             break;
         case 'project-instruments':
             Projects.instrumentationNumbersPopup(containerSel, post);
@@ -205,7 +219,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
             break;
         default:
             OC.dialogs.alert(t('cafevdb', 'Unknown operation:')
-                             +' "'+selected+'"',
+                             +' "'+selectedValue+'"',
                              t('cafevdb', 'Unimplemented'));
         }
         
@@ -847,6 +861,14 @@ $(document).ready(function(){
                         of: window
                     });
                 }
+                if ((popup = $('#emailformdialog')).dialog('isOpen') === true) {
+                    popup.dialog('moveToTop');
+                    popup.dialog('option', 'position', {
+                        my: 'left top',
+                        at: 'left+60px top+60px',
+                        of: window
+                    });
+                }
                 if ((popup = $('#dokuwiki_popup')).dialog('isOpen') === true) {
                     popup.dialog('moveToTop');
                     popup.dialog('option', 'position', {
@@ -868,6 +890,7 @@ $(document).ready(function(){
                 var projectName = toolbox.data('projectName');
                 var post = {
                     ProjectId: projectId,
+                    ProjectName: projectName,
                     Project: projectName
                 };
                 toolbox.off('click', '**'); // safeguard
@@ -882,6 +905,11 @@ $(document).ready(function(){
                 toolbox.on('click', 'button.events',
                            function(event) {
                                Projects.eventsPopup(post);
+                               return false;
+                           });
+                toolbox.on('click', 'button.project-email',
+                           function(event) {
+                               Projects.emailPopup(post);
                                return false;
                            });
                 toolbox.on('click', 'button.project-instruments',
