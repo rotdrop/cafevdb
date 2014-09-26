@@ -1,6 +1,6 @@
 <?php
 /**@author Claus-Justus Heine
- * @copyright 2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2014 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE

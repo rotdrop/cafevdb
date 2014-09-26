@@ -61,7 +61,21 @@ try {
   $freeForm  = Util::cgiValue('FreeFormRecipients', '');
 
   // Convert the free-form input to an array (possibly)
-  $freeForm = Contacts::parseAddrListToArray($freeForm);
+  $parser = new \Mail_RFC822(null, null, null, false);
+  $recipients = $parser->parseAddressList($freeForm);
+  $parseError = $parser->parseError();
+  if ($parseError !== false) {
+    \OCP\Util::writeLog(Config::APP_NAME,
+                        "Parse-error on email address list: ".
+                        vsprintf($parseError['message'], $parseError['data']),
+                        \OCP\Util::DEBUG);
+  }
+  $freeForm = array();
+  foreach($recipients as $emailRecord) {
+    $email = $emailRecord->mailbox.'@'.$emailRecord->host;
+    $name  = $emailRecord->personal;
+    $freeForm[$email] = $name;
+  }
 
   // Fetch all known address-book contacts with email
   $bookContacts = Contacts::emailContacts();
@@ -77,20 +91,20 @@ try {
   // Convert the free-form input in "book-format", but exclude those
   // contacts already present in the address-book in order not to list
   // contacts twice.
-  $emailOptions = array();
+  $formContacts = array();
   foreach($freeForm as $email => $name) {
-    if (isset($addressBookEmails[$email]) && $addressBookEmails[$email] == $name) {
+    if (isset($addressBookEmails[$email]) /* && $addressBookEmails[$email] == $name*/) {
       // FIXME: maybe "give a damn" on the name ...
       continue;
     }
-    $emailOptions[] = array('email' => $email,
+    $formContacts[] = array('email' => $email,
                             'name' => $name,
                             'addressBook' => L::t('Form Input'));
   }
 
   // The total options list is the union of the (remaining) free-form
   // addresses and the address-book entries
-  $emailOptions = array_merge($emailOptions, $bookContacts);
+  $emailOptions = array_merge($formContacts, $bookContacts);
 
   // Now convert it into a form Navigation::selectOptions()
   // understands

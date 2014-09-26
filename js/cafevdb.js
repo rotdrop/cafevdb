@@ -347,6 +347,9 @@ var CAFEVDB = CAFEVDB || {};
       replace(/\)/g, '%29').replace(/\*/g, '%2A').replace(/%20/g, '+');
   };
 
+  /*jQuery dialog popup with one chosen multi-selelct box inside.
+   * 
+   */
   CAFEVDB.chosenPopup = function(contents, userOptions)
   {
     var CAFEVDB = this;
@@ -359,11 +362,12 @@ var CAFEVDB = CAFEVDB || {};
       dialogClass: false,
       saveText: t('cafevdb', 'Save'),
       saveTitle: t('cafevdb',
-                   'Save the currently selected options and return to the underlying form. '),
+                   'Accept the currently selected options and return to the underlying form. '),
       cancelText: t('cafevdb', 'Cancel'),
       cancelTitle: t('cafevdb',
                      'Discard the current selection and close the dialog. '+
                      'The initial set of selected options will remain unchanged.'),
+      buttons: [], // additional buttons.
       openCallback: false,
       saveCallback: false,
       closeCallback: false
@@ -376,6 +380,39 @@ var CAFEVDB = CAFEVDB || {};
     var selectElement = dialogHolder.find('select');
     $('body').append(dialogHolder);
 
+    var buttons = [
+      { text: options.saveText,
+        //icons: { primary: 'ui-icon-check' },
+        'class': 'save',
+        title: options.saveTitle,
+        click: function() {
+          var self = this;
+
+          var selectedOptions = [];
+          selectElement.find('option:selected').each(function(idx) {
+            var self = $(this);
+            selectedOptions[idx] = { 'value': self.val(),
+                                     'html' : self.html(),
+                                     'text' : self.text() };
+          });
+          //alert('selected: '+JSON.stringify(selectedOptions));
+          if (typeof options.saveCallback == 'function') {
+            options.saveCallback.call(this, selectElement, selectedOptions);
+          }
+
+          return false;
+        }
+      },
+      { text: options.cancelText,
+        'class': 'cancel',
+        title: options.cancelTitle,
+        click: function() {
+       $(this).dialog("close");
+     }
+      }
+    ];
+    buttons = buttons.concat(options.buttons);
+
     dialogHolder.dialog({
       title: options.title,
       position: options.position,
@@ -386,39 +423,16 @@ var CAFEVDB = CAFEVDB || {};
       width:'auto',
       height:'auto',
       resizable:false,
-      buttons: [
-        { text: options.saveText,
-          'class': 'save',
-          title: options.saveTitle,
-          click: function() {
-            var self = this;
-
-            var selectedOptions = [];
-            selectElement.find('option:selected').each(function(idx) {
-              var self = $(this);
-              selectedOptions[idx] = { 'value': self.val(),
-                                       'html' : self.html(),
-                                       'text' : self.text() };
-            });
-            //alert('selected: '+JSON.stringify(selectedOptions));
-            if (typeof options.saveCallback == 'function') {
-              options.saveCallback.call(this, selectElement, selectedOptions);
-            }
-
-            return false;
-          }
-        },
-        { text: options.cancelText,
-          'class': 'cancel',
-          title: options.cancelTitle,
-          click: function() {
-            $(this).dialog("close");
-          }
-        }
-      ],
+      buttons: buttons,
       open:function() {
         selectElement.chosen(); //{disable_search_threshold: 10});
-        CAFEVDB.tipsy(dialogHolder.dialog('widget'));
+        var dialogWidget = dialogHolder.dialog('widget');
+        CAFEVDB.tipsy(dialogWidget);
+        dialogHolder.find('.chosen-container').off('dblclick').
+          on('dblclick', function(event) {
+            dialogWidget.find('.ui-dialog-buttonset .ui-button.save').trigger('click');
+            return false;
+          });
 
         if (typeof options.openCallback == 'function') {
           options.openCallback.call(this, selectElement);
@@ -507,7 +521,7 @@ var CAFEVDB = CAFEVDB || {};
     } else {
 
       // this will be the alternate form-action
-      var exportscript = OC.filePath('cafevdb', 'ajax/export', exportscript);
+      exportscript = OC.filePath('cafevdb', 'ajax/export', exportscript);
 
       // Our export-script have the task to convert the display
       // PME-table into another format, so submitting the current
@@ -712,15 +726,11 @@ var CAFEVDB = CAFEVDB || {};
     }).addClass("negative");
 
 
-    if (false) {
-        $(PHPMYEDIT.defaultSelector + ' input.pme-email').addClass('formsubmit');
-    } else {
-        $(PHPMYEDIT.defaultSelector + ' input.pme-email').on('click', function(event) {
-            event.stopImmediatePropagation();
-            CAFEVDB.Email.emailFormPopup($(this.form).serialize());
-            return false;
-        });
-    }
+    $(PHPMYEDIT.defaultSelector + ' input.pme-email').off('click').on('click', function(event) {
+      event.stopImmediatePropagation();
+      CAFEVDB.Email.emailFormPopup($(this.form).serialize());
+      return false;
+    });
 
     // This could also be wrapped into a popup maybe, and lead back to
     // the brief-instrumentation table on success.

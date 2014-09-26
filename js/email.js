@@ -25,54 +25,39 @@ CAFEVDB.Email = CAFEVDB.Email || {};
 (function(window, $, Email, undefined) {
   'use strict';
   Email.enabled = true;
-  Email.numAttached = 0;
 
-  Email.submitReloadForm = function() {
-    // Simply submit the mess in order to let PHP do the update
-    var emailForm = $('form.cafevdb-email-form');
-    $('<input />').attr('type', 'hidden')
-      .attr('name', 'writeMail')
-      .attr('value', 'reload')
-      .appendTo(emailForm);
-    emailForm.submit();
-  };
-
-  Email.attachmentFromJSON = function (response) {
-    var emailForm = $('form.cafevdb-email-form');
-    if (emailForm == '') {
+  Email.attachmentFromJSON = function (response, info) {
+    var fileAttachHolder = $('form.cafevdb-email-form fieldset.attachments input.file-attach');
+    if (fileAttachHolder == '') {
       OC.dialogs.alert(t('cafevdb', 'Not called from main email-form.'),
                        t('cafevdb', 'Error'));
       return;
     }
 
     var file = response.data;
-
-    var k = ++Email.numAttached;
-    // Fine. Attach some hidden inputs to the main form and submit it.
-    $('<input />').attr('type', 'hidden')
-      .attr('name', 'fileAttach[-'+k+'][name]')
-      .attr('value', file.name)
-      .appendTo(emailForm);
-    $('<input />').attr('type', 'hidden')
-      .attr('name', 'fileAttach[-'+k+'][type]')
-      .attr('value', file.type)
-      .appendTo(emailForm);
-    $('<input />').attr('type', 'hidden')
-      .attr('name', 'fileAttach[-'+k+'][size]')
-      .attr('value', file.size)
-      .appendTo(emailForm);
-    $('<input />').attr('type', 'hidden')
-      .attr('name', 'fileAttach[-'+k+'][tmp_name]')
-      .attr('value', file.tmp_name)
-      .appendTo(emailForm);
+    file.status = 'new';
+    if (typeof info == 'object') {
+      file = $.extend(file, info);
+    }
+    var fileAttach = fileAttachHolder.val();
+    if (fileAttach == '') {
+      fileAttach = [ file ];
+    } else {
+      fileAttach = $.parseJSON(fileAttach);
+      fileAttach.push(file);
+    }
+    fileAttachHolder.val(JSON.stringify(fileAttach));
   };
-  Email.owncloudAttachment = function(path) {
+
+  Email.owncloudAttachment = function(path, callback) {
     $.getJSON(OC.filePath('cafevdb', 'ajax', 'email/owncloudattachment.php'),
               {'path':path},
               function(response) {
                 if (response != undefined && response.status == 'success') {
-                  CAFEVDB.Email.attachmentFromJSON(response);
-                  CAFEVDB.Email.submitReloadForm();
+                  CAFEVDB.Email.attachmentFromJSON(response, { 'origin': 'owncloud'});
+                  if (typeof callback == 'function') {
+                    callback();
+                  }
                 } else {
 	          OC.dialogs.alert(response.data.message, t('cafevdb', 'Error'));
                 }
@@ -164,11 +149,11 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                  fieldset.find('#instruments-filter-redo').prop('disabled', true);
                }
 
-               var debugText = '';
-               if (typeof data.data.debug != 'undefined') {
-                 debugText = data.data.debug;
-               }
                if (!historySnapshot) {
+                 var debugText = '';
+                 if (typeof data.data.debug != 'undefined') {
+                   debugText = data.data.debug;
+                 }
                  debugOutput.html('<pre>'+$('<div></div>').text(debugText).html()+'</pre>'+
                                   '<pre>'+$('<div></div>').text(data.data.recipientsOptions).html()+'</pre>'+
                                   data.data.missingEmailAddresses+'</br>'+
@@ -279,6 +264,8 @@ CAFEVDB.Email = CAFEVDB.Email || {};
     var templateSelector = fieldset.find('select.email-template-selector');
     var currentTemplate = fieldset.find('#emailCurrentTemplate');
     var messageText = fieldset.find('textarea');
+    var eventAttachmentsSelector = fieldset.find('select.event-attachments');
+    var fileAttachmentsSelector = fieldset.find('select.file-attachments');
 
     // Event dispatcher, so to say
     var applyComposerControls = function(event, request) {
@@ -312,6 +299,8 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                var request = data.data.request;
                var requestData = data.data.requestData;
                switch (request) {
+               case 'cancel':
+                 break;
                case 'update':
                  switch (requestData.formElement) {
                  case 'everything':
@@ -338,6 +327,39 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                    toSpan.attr('title', title);
                    CAFEVDB.applyTipsy(toSpan);
                    break;
+                 case 'FileAttachments': {
+                   var options = requestData.elementData.options;
+                   //alert('options: '+JSON.stringify(options));
+                   var fileAttach = requestData.elementData.fileAttach;
+                   fieldset.find('input.file-attach').val(JSON.stringify(fileAttach));
+                   fileAttachmentsSelector.html(options);
+                   if (options.length > 0) {
+                     fieldset.find('tr.file-attachments').show();
+                   } else {
+                     fieldset.find('tr.file-attachments').hide();
+                   }
+                   fileAttachmentsSelector.trigger("chosen:updated");
+
+                   panelHolder.trigger('resize');
+                   break;
+                 }
+                 case 'EventAttachments': {
+                   var options = requestData.elementData.options;
+                   var eventAttach = requestData.elementData.eventAttach;
+                   //alert('options: '+JSON.stringify(options));
+                   //alert('options: '+JSON.stringify(requestData.elementData.eventAttach));
+                   eventAttachmentsSelector.html(options);
+
+                   if (/*options.length*/ eventAttach.length > 0) {
+                     fieldset.find('tr.event-attachments').show();
+                   } else {
+                     fieldset.find('tr.event-attachments').hide();
+                   }
+                   eventAttachmentsSelector.trigger("chosen:updated");
+                   panelHolder.trigger('resize');
+
+                   break;
+                 }
                  default:
                    OC.dialogs.alert(t('cafevdb',
                                       'Unknown form element: {FormElement}',
@@ -449,8 +471,9 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                if (typeof data.data.debug != 'undefined') {
                  debugText = data.data.debug;
                }
-               debugOutput.html(//'<pre>'+$('<div></div>').text(debugText).html()+'</pre>'+
-                                $('<div></div>').text(CAFEVDB.urldecode(post)).html())
+               debugOutput.html('<pre>'+debugText+'</pre>'+
+                                JSON.stringify(requestData)+
+                                $('<div></div>').text(CAFEVDB.urldecode(post)).html());
                return false;
              });
       return false;
@@ -463,6 +486,12 @@ CAFEVDB.Email = CAFEVDB.Email || {};
 
     fieldset.find('input.submit.cancel').off('click');
     fieldset.find('input.submit.cancel').on('click', function(event) {
+      applyComposerControls.call(this, event, { 'Request': 'cancel',
+                                                'Cancel': 'DoesNotMatter',
+                                                'FormStatus': 'submitted',
+                                                'SingleItem': true
+                                              });
+      // Close the dialog in any case.
       dialogHolder.dialog('close');
       return false;
     });
@@ -501,8 +530,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
     fieldset.find('input.submit.delete-template').on('click', function(event) {
       var self = this;
       event.preventDefault();
-      // We do a quick client-side validation and ask the user for ok
-      // when a template with the same name is already present.
+      // We do a quick client-side validation and ask the user for ok.
       var current = currentTemplate.val();
       if (templateSelector.find('option[value="'+current+'"]').length > 0) {
         OC.dialogs.confirm(
@@ -549,7 +577,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
      * Validate Cc: and Bcc: entries.
      */
     var carbonCopy = fieldset.find('#carbon-copy');
-    var blinkCarbonCopy = fieldset.find('#blind-carbon-copy');
+    var blindCarbonCopy = fieldset.find('#blind-carbon-copy');
     fieldset.off('blur', '#carbon-copy, #blind-carbon-copy');
     fieldset.on('blur', '#carbon-copy, #blind-carbon-copy', function(event) {
       event.stopImmediatePropagation();
@@ -562,8 +590,105 @@ CAFEVDB.Email = CAFEVDB.Email || {};
 
     /*************************************************************************
      * 
+     * Project events attachments
+     */
+
+    fieldset.find('button.attachment.events').off('click').on('click', function(event) {
+      var formData = form.find('fieldset.form-data');
+      var projectId = formData.find('input[name="ProjectId"]').val();
+      var projectName = formData.find('input[name="Project"]').val();
+      var events = eventAttachmentsSelector.val();
+      if (!events) {
+        events = [];
+      }
+      CAFEVDB.Projects.eventsPopup({ 'ProjectId': projectId,
+                                     'Project': projectName,
+                                     'EventSelect': events});
+      return false;
+    });
+
+    // Update our selected events on request
+    dialogHolder.off('cafevdb:events_changed');
+    dialogHolder.on('cafevdb:events_changed', function(event, events) {
+      var formData = form.find('fieldset.form-data');
+      var projectId = formData.find('input[name="ProjectId"]').val();
+      var projectName = formData.find('input[name="Project"]').val();
+      var requestData = { 'Request': 'update',
+                          'FormElement': 'EventAttachments',
+                          'SingleItem': true,
+                          'ProjectId': projectId,
+                          'ProjectName': projectName, 
+                          'AttachedEvents': events };
+      applyComposerControls.call(this, event, requestData);
+      return false;
+    });
+
+    fieldset.find('input.delete-all-event-attachments').
+      off('click').on('click', function(event) {
+
+      // Ask for confirmation
+      OC.dialogs.confirm(
+        t('cafevdb',
+          'Do you really want to delete all event attachments?'),
+        t('cafevdb', 'Really Delete Attachments?'),
+        function(confirmed) {
+          if (!confirmed) {
+            return false;
+          }
+          // simply void the attachment list
+          eventAttachmentsSelector.val('');
+          eventAttachmentsSelector.trigger('change');
+          eventAttachmentsSelector.trigger('chosen:updated');
+          fieldset.find('tr.event-attachments').hide();
+          return false;
+        },
+        true);
+
+      return false;
+    });
+
+    eventAttachmentsSelector.off('change').on('change', function(event) {
+      var eventDialog = $('.cafevdb-project-events #events');
+      var events = $(this).val();
+      if (!events) {
+        events = [];
+      }
+      eventDialog.trigger('cafevdb:events_changed', [ events ]);
+
+      return false;
+    });
+
+    /*************************************************************************
+     * 
      * File upload.
      */
+
+    var updateFileAttachments = function() {
+      var fileAttach = fieldset.find('input.file-attach').val();
+      var selectedAttachments = fileAttachmentsSelector.val();
+      
+      var requestData = { 'Request': 'update',
+                          'FormElement': 'FileAttachments',
+                          'FileAttach': fileAttach, // JSON data of all files
+                          'SingleItem': true,
+                          'FormStatus': 'submitted' };
+      if (selectedAttachments) {
+        requestData.AttachedFiles = selectedAttachments;
+      }
+      applyComposerControls.call(this, $.Event('click'), requestData);
+      return false;
+    };
+    
+    // Arguably, these should only be active if the
+    // composer tab is active. Mmmh.
+    CAFEVDB.FileUpload.init({
+      doneCallback: function (json) {
+        CAFEVDB.Email.attachmentFromJSON(json, { 'origin': 'local' });
+      },
+      stopCallback: updateFileAttachments,
+      dropZone: null, // initially disabled, enabled on tab-switch
+      inputSelector: '#file_upload_start' });
+    
     fieldset.find('.attachment.upload').off('click');
     fieldset.find('.attachment.upload').on('click', function() {
       $('#file_upload_start').trigger('click');
@@ -572,7 +697,33 @@ CAFEVDB.Email = CAFEVDB.Email || {};
     fieldset.find('.attachment.owncloud').off('click');
     fieldset.find('.attachment.owncloud').on('click', function() {
       OC.dialogs.filepicker(t('cafevdb', 'Select Attachment'),
-                            CAFEVDB.Email.owncloudAttachment, false, '', true)
+                            function(path) {
+                              CAFEVDB.Email.owncloudAttachment(path, updateFileAttachments);
+                              return false;
+                            },
+                            false, '', true)
+    });
+
+    fieldset.find('input.delete-all-file-attachments').
+      off('click').on('click', function(event) {
+
+      // Ask for confirmation
+      OC.dialogs.confirm(
+        t('cafevdb',
+          'Do you really want to delete all file attachments?'),
+        t('cafevdb', 'Really Delete Attachments?'),
+        function(confirmed) {
+          if (!confirmed) {
+            return false;
+          }
+          // simply void the attachment list and issue an update.
+          fieldset.find('input.file-attach').val('{}');
+          updateFileAttachments();
+          return false;
+        },
+        true);
+
+      return false;
     });
 
     /*************************************************************************
@@ -597,31 +748,69 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                ])) {
                  return false;
                }
-
-               CAFEVDB.chosenPopup(data.data.contents,
-                                   {
-                                     title: t('cafevdb', 'Address Book'),
-                                     saveText: t('cafevdb', 'Übernehmen'),
-                                     dialogClass: 'address-book-emails',
-                                     position: { my: "right top",
-                                                 at: "right bottom",
-                                                 of: self },
-                                     saveCallback: function(selectElement, selectedOptions) {
-                                       var recipients = '';
-                                       var numSelected = selectedOptions.length;
-                                       if (numSelected > 0) {
-                                         recipients += selectedOptions[0].text;
-                                         var idx;
-                                         for (idx = 1; idx < numSelected; ++idx) {
-                                           recipients += ', '+selectedOptions[idx].text;
+               CAFEVDB.chosenPopup(data.data.contents, {
+                 title: t('cafevdb', 'Address Book'),
+                 saveText: t('cafevdb', 'Übernehmen'),
+                 buttons: [
+                   { text: t('cafevdb', 'Save Contacts'),
+                     'class': 'save-contacts',
+                     title: t('cafevdb',
+                              'Save the selected supplementary emails to the address-book for later reusal.'),
+                     click: function() {
+                       var dialogHolder = $(this);
+                       var selectElement = dialogHolder.find('select');
+                       // We are interested in all selected options
+                       // inside the first options group
+                       var selectedFreeForm = [];
+                       selectElement.find('optgroup:first option:selected').each(function(idx) {
+                         var self = $(this);
+                         selectedFreeForm[idx] = { 'value': self.val(),
+                                                   'html' : self.html(),
+                                                   'text' : self.text() };
+                       });
+                       var innerPost = { 'AddressBookCandidates': selectedFreeForm };
+                       $.post(OC.filePath('cafevdb', 'ajax/email', 'savecontacts.php'),
+                              innerPost,
+                              function(data) {
+                                if (!CAFEVDB.ajaxErrorHandler(data, [])) {
+                                  return false;
+                                }
+                                $.post(OC.filePath('cafevdb', 'ajax/email', 'addressbook.php'),
+                                       post,
+                                       function(data) {
+                                         if (!CAFEVDB.ajaxErrorHandler(data, ['contents'])) {
+                                           return false;
                                          }
-                                       }
-                                       input.val(recipients);
-                                       input.trigger('blur');
-                                       $(this).dialog('close');
+                                         var newOptions = $(data.data.contents).html();
+                                         selectElement.html(newOptions);
+                                         selectElement.trigger('chosen:updated');
+                                         return false;
+                                       });
+                                return false;
+                              });
+                     }
+                   }
+                 ],
+                 dialogClass: 'address-book-emails',
+                 position: { my: "right top",
+                             at: "right bottom",
+                             of: self },
+                 saveCallback: function(selectElement, selectedOptions) {
+                   var recipients = '';
+                   var numSelected = selectedOptions.length;
+                   if (numSelected > 0) {
+                     recipients += selectedOptions[0].text;
+                     var idx;
+                     for (idx = 1; idx < numSelected; ++idx) {
+                       recipients += ', '+selectedOptions[idx].text;
+                     }
+                   }
+                   input.val(recipients);
+                   input.trigger('blur');
+                   $(this).dialog('close');
                                      }
-                                     /*,closeCallback: function(selectElement) {}*/
-                                   });
+                 /*,closeCallback: function(selectElement) {}*/
+               });
                return false;
              });
       return false;
@@ -654,9 +843,25 @@ CAFEVDB.Email = CAFEVDB.Email || {};
     });
   };
 
-  /**Open the mass-email form in a popup window
+  /**Open the mass-email form in a popup window.
+   *
+   * @param post Necessary post data, either serialized or as
+   * object. In principle post can be empty. For project emails the
+   * following two fields are necessary:
+   * 
+   * - ProjectId: the id
+   * - ProjectName: the name of the project (obsolete: Project)
+   * 
+   * Optional pre-selected ids for email recipients:
+   * 
+   * - PME_sys_mrecs: array of ids of pre-selected musicians
+   * 
+   * - EventSelect: array of ids of events to attach.
    */
-  Email.emailFormPopup = function(post) {
+  Email.emailFormPopup = function(post, modal) {
+    if (typeof modal == 'undefined') {
+      modal = true;
+    }
     var Email = this;
     $.post(OC.filePath('cafevdb', 'ajax/email', 'emailform.php'),
            post,
@@ -686,7 +891,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                            of: "#header" },
                width: 'auto',
                height: 'auto',
-               modal: true,
+               modal: modal,
                closeOnEscape: false,
                dialogClass: 'emailform custom-close',
                resizable: false,
@@ -695,7 +900,8 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                  CAFEVDB.dialogToBackButton(dialogHolder);
                  CAFEVDB.dialogCustomCloseButton(dialogHolder, function(event, container) {
                    event.stopImmediatePropagation();
-                   dialogHolder.dialog('close');
+                   dialogHolder.find('input.submit.cancel[type="submit"]').trigger('click');
+                   //dialogHolder.dialog('close');
                    return false;
                  });
                  var dialogWidget = dialogHolder.dialog('widget');
@@ -741,7 +947,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                      // we better serialize the entire form here
                      var emailForm = $('form#cafevdb-email-form');
                      var post = emailForm.serialize();
-                     post += '&emailComposer[Request]=update&FormElement=TO'; // place our update request
+                     post += '&emailComposer[Request]=update&emailComposer[FormElement]=TO'; // place our update request
                      $.post(OC.filePath('cafevdb', 'ajax/email', 'composer.php'),
                             post,
                             function(data) {
@@ -805,11 +1011,27 @@ CAFEVDB.Email = CAFEVDB.Email || {};
 
                    CAFEVDB.tipsy(dialogHolder.find('div#emailformrecipients'));
                  };
-
+                 
                  var layoutMessageComposer = function() {
                    CAFEVDB.addEditor(dialogHolder.find('textarea.wysiwygeditor'), undefined, '20em');
                    $('#cafevdb-email-template-selector').chosen({ disable_search_threshold: 10 });
-
+                   
+                   var composerPanel = $('#emailformcomposer');
+                   var fileAttachmentsSelect = composerPanel.find('#file-attachments-selector');
+                   fileAttachmentsSelect.chosen();
+                   fileAttachmentsSelect.on('chosen:showing_dropdown', function(event) {
+                     composerPanel.stop().animate({
+                       scrollTop: composerPanel.prop('scrollHeight')
+                     }, 2000);
+                   });
+                   var eventAttachmentsSelect = composerPanel.find('#event-attachments-selector');
+                   eventAttachmentsSelect.chosen();
+                   eventAttachmentsSelect.on('chosen:showing_dropdown', function(event) {
+                     composerPanel.stop().animate({
+                       scrollTop: composerPanel.prop('scrollHeight')
+                     }, 2000);
+                   });
+                   
                    CAFEVDB.tipsy(dialogHolder.find('div#emailformcomposer'));
                  }
 
@@ -826,20 +1048,6 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                                                     dialogHolder,
                                                     dialogHolder.find('div#emailformcomposer'),
                                                     layoutMessageComposer);
-
-                 // Arguably, these should only be active if the
-                 // composer tab is active. Mmmh.
-                 CAFEVDB.FileUpload.init(
-                   function (json) {
-                     alert('hello1');
-                     //CAFEVDB.Email.attachmentFromJSON(json);
-                   },
-                   function () {
-                     alert('hello2');
-                     //CAFEVDB.Email.submitReloadForm();
-                   },
-                   null);//dialogHolder);
-
                },
                close: function() {
                  $('.tipsy').remove();
@@ -853,7 +1061,6 @@ CAFEVDB.Email = CAFEVDB.Email || {};
   };
 
 })(window, jQuery, CAFEVDB.Email);
-
 
 $(document).ready(function(){
 

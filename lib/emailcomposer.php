@@ -95,10 +95,12 @@ mandateReference
     private $executionStatus; // false on error
     private $diagnostics; // mixed, depends on operation
 
+    private $fileAttach;
+
     /* 
      * constructor
      */
-    public function __construct($recipients)
+    public function __construct($recipients = array())
     {
       Config::init();
       $this->opts = Config::$pmeopts;
@@ -111,8 +113,10 @@ mandateReference
 
       $this->cgiData = Util::cgiValue('emailComposer', array());
 
-      $this->projectId   = Util::cgiValue('ProjectId', -1);
-      $this->projectName = Util::cgiValue('ProjectName', Util::cgiValue('Project', ''));
+      $this->projectId   = $this->cgiValue('ProjectId', Util::cgiValue('ProjectId', -1));
+      $this->projectName = $this->cgiValue('ProjectName',
+                                           Util::cgiValue('ProjectName',
+                                                          Util::cgiValue('Project', '')));
       $this->setSubjectTag();
 
       // First initialize defaults, will be overriden based on
@@ -131,9 +135,6 @@ mandateReference
     /**Parse the submitted form data and act accordinly */
     private function execute()
     {
-      $emails = Contacts::emailContacts();
-      \OCP\Util::writeLog(Config::APP_NAME, "Emails: ".print_r($emails, true), \OC_LOG::DEBUG);
-
       // Maybe should also check something else. If submitted is true,
       // then we use the form data, otherwise the defaults.
       $this->submitted = $this->cgiValue('FormStatus', '') == 'submitted';
@@ -161,6 +162,9 @@ mandateReference
           $this->executionStatus = false;
           $this->diagnostics = $result;
         }
+      } else if ($this->cgiValue('Cancel', false)) {
+        // do some cleanup, i.e. remove temporay storage from file attachments
+        self::cleanTemporaries();
       }
     }
 
@@ -435,7 +439,7 @@ mandateReference
 
 
     /**Delete all temorary files not found in $fileAttach. If the file
-     * is successfully removed, then it is also remove from the
+     * is successfully removed, then it is also removed from the
      * config-space.
      *
      * @param[in] $fileAttach List of files @b not to be removed.
@@ -636,6 +640,116 @@ mandateReference
     public function subject()
     {
       return $this->cgiValue('Subject', '');
+    }
+
+    /**Return the file attachment data. */
+    public function fileAttachments()
+    {
+      // JSON encoded array
+      $fileAttachJSON = $this->cgiValue('FileAttach', '{}');
+      $fileAttach = json_decode($fileAttachJSON, true);
+      $selectedAttachments = $this->cgiValue('AttachedFiles', array());
+      $selectedAttachments = array_flip($selectedAttachments);
+      $localFileAttach = array();
+      $ocFileAttach = array();
+      foreach($fileAttach as $attachment) {
+        if ($attachment['status'] == 'new') {
+          $attachment['status'] = 'selected';
+        } else if (isset($selectedAttachments[$attachment['tmp_name']])) {
+          $attachment['status'] = 'selected';
+        } else {
+          $attachment['status'] = 'inactive';
+        }
+        $attachment['name'] = basename($attachment['name']);
+        if($attachment['origin'] == 'owncloud') {
+          $ocFileAttach[] = $attachment;
+        } else {
+          $localFileAttach[] = $attachment;
+        }
+      }
+      
+      usort($ocFileAttach, function($a, $b) {
+          return strcmp($a['name'], $b['name']);
+        });
+      usort($localFileAttach, function($a, $b) {
+          return strcmp($a['name'], $b['name']);
+        });
+
+      return array_merge($localFileAttach, $ocFileAttach);
+    }
+
+    /**A helper function to generate suitable select options for
+     * Navigation::selectOptions()
+     */
+    static public function fileAttachmentOptions($fileAttach)
+    {
+      $selectOptions = array();
+      foreach($fileAttach as $attachment) {
+        $value    = $attachment['tmp_name'];
+        $size     = \OC_Helper::humanFileSize($attachment['size']);
+        $name     = $attachment['name'].' ('.$size.')';
+        $group    = $attachment['origin'] == 'owncloud' ? 'Owncloud' : L::t('Local Filesystem');
+        $selected = $attachment['status'] == 'selected';
+        $selectOptions[] = array('value' => $value,
+                                 'name' => $name,
+                                 'group' => $group,
+                                 'flags' => $selected ? Navigation::SELECTED : 0);
+      }
+      return $selectOptions;
+    }
+    
+    /**Return the file attachment data. This function checks for the
+     * cgi-values of EventSelect or the "local" cgi values
+     * emailComposer[AttachedEvents]. The "legacy" values take
+     * precedence.
+     */
+    public function eventAttachments()
+    {
+      $attachedEvents = Util::cgiValue('EventSelect',
+                                       $this->cgiValue('AttachedEvents', array()));
+      return $attachedEvents;      
+    }
+
+    /**A helper function to generate suitable select options for
+     * Navigation::selectOptions().
+     *
+     * @param $attachedEvents Flat array of attached events.
+     */
+    static public function eventAttachmentOptions($projectId, $attachedEvents)
+    {
+      if ($projectId <= 0) {
+        return array();
+      }
+
+      // fetch all events for this project
+      $events      = Events::events($projectId);
+      $dfltIds     = Events::defaultCalendars();
+      $eventMatrix = Events::eventMatrix($events, $dfltIds);
+
+      // timezone, locale
+      $locale = Util::getLocale();
+      $zone = Util::getTimezone();
+
+      // transpose for faster lookup
+      $attachedEvents = array_flip($attachedEvents);
+
+      // build the select option control array
+      $selectOptions = array();
+      foreach($eventMatrix as $eventGroup) {
+        $group = $eventGroup['name'];
+        foreach($eventGroup['events'] as $event) {
+          $object = $event['object'];
+          $datestring = Events::briefEventDate($object, $zone, $locale);
+          $name = stripslashes($object['summary']).', '.$datestring;
+          $value = $event['EventId'];
+          $selectOptions[] = array('value' => $value,
+                                   'name' => $name,
+                                   'group' => $group,
+                                   'flags' => isset($attachedEvents[$value]) ? Navigation::SELECTED : 0
+            );
+        }
+      }
+      return $selectOptions;
     }
     
     /**If a complete reload has to be done ... for now */

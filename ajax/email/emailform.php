@@ -57,7 +57,8 @@ try {
   // Get some common post data, rest has to be handled by the
   // recipients and the sender class.
   $projectId   = Util::cgiValue('ProjectId', -1);
-  $projectName = Util::cgiValue('Project', ''); // the name
+  $projectName = Util::cgiValue('ProjectName',
+                                Util::cgiValue('Project', '')); // the name
 
   $recipientsFilter = new EmailRecipientsFilter();
   $recipients = $recipientsFilter->selectedRecipients();
@@ -99,7 +100,8 @@ try {
   $tmpl->assign('message', $composer->messageText());
   $tmpl->assign('sender', $composer->fromName());
   $tmpl->assign('catchAllEmail', $composer->fromAddress());
-  $tmpl->assign('fileAttach', array());
+  $tmpl->assign('fileAttachments', $composer->fileAttachments());
+  $tmpl->assign('eventAttachments', $composer->eventAttachments());
   $tmpl->assign('ComposerFormData', $composer->formData());
   
   // Needed for the recipient selection

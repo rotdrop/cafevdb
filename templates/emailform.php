@@ -54,6 +54,7 @@ CAFEVDB\Error::exceptions(true);
   </form>
 
 
+  <!-- Upload support via blueimp. FIXME: is this still up-to-date? Probably got this from OC4 -->
   <form data-upload-id='1'
         id="data-upload-form"
         class="file_upload_form"

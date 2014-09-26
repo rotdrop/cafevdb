@@ -26,42 +26,13 @@ use CAFEVDB\Navigation;
 use CAFEVDB\Email;
 use CAFEVDB\Projects;
 use CAFEVDB\Config;
+use CAFEVDB\EmailComposer;
 use CAFEVDB\Events;
 
-/* Remember address filter for later */
-//echo $filter->getPersistent(array('fileAttach' => $this->fileAttach));
-
-$eventAttachButton = '';
-$attachedEvents = '';
-if ($_['ProjectId'] >= 0) {
-  $EventSelect = Util::cgiValue('EventSelect', array());
-  $eventAttachButton = Projects::eventButton(
-    $_['ProjectId'], $_['ProjectName'], L::t('Events'), $EventSelect);
-  if (!empty($EventSelect)) {
-    $attachedEvents = ''
-                    .'<tr class="eventattachments"><td>'.L::t('Attached Events').'</td>'
-                                                             .'<td colspan="2"><span id="eventattachments">';
-    foreach ($EventSelect as $id) {
-      $event = Events::fetchEvent($id);
-      $brief =
-      $event['summary'].', '.
-      Events::briefEventDate($event);
-
-      $attachedEvents .= '
-<button type="button"
-        title="'.L::t('Edit Event %s',array($brief)).'"
-        class="eventattachments edit"
-        id="eventattachment-'.$id.'"
-        name="eventattachment[]"
-        value="'.$id.'">
-  <img alt="'.$id.'"
-       src="'.\OCP\Util::imagePath('calendar', 'calendar.svg').'"
-       class="svg events small"/>
-</button>';
-    }
-    $attachedEvents .= '</span></td></tr>';
-  }
-}
+$eventAttachmentOptions =
+  EmailComposer::eventAttachmentOptions($_['ProjectId'], $_['eventAttachments']);
+$fileAttachmentOptions = EmailComposer::fileAttachmentOptions($_['fileAttachments']);
+$attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
 
 ?>
 
@@ -191,36 +162,74 @@ if ($_['ProjectId'] >= 0) {
     <tr class="attachments">
       <td class="attachments caption"><?php echo L::t('Add Attachment'); ?></td>
       <td class="attachments" colspan="2">
-        <?php echo $eventAttachButton; ?>
         <button type="button"
                 class="attachment upload"
                 title="<?php echo Config::toolTips('upload-attachment'); ?>"
                 value="<?php echo L::t('Upload new File'); ?>">
-          <img src="<?php echo \OCP\Util::imagePath('core', 'actions/upload.svg'); ?>" alt="<?php echo L::t('Upload new File'); ?>"/>
+          <img class="svg"
+               src="<?php echo \OCP\Util::imagePath('core', 'actions/upload.svg'); ?>"
+               alt="<?php echo L::t('Upload new File'); ?>"/>
         </button>
         <button type="button"
                 class="attachment owncloud"
                 title="<?php echo Config::toolTips('owncloud-attachment'); ?>"
                 value="<?php echo L::t('Select from Owncloud'); ?>">
-          <img src="<?php echo \OCP\Util::imagePath('core', 'places/file.svg'); ?>" alt="<?php echo L::t('Select from Owncloud'); ?>"/>
+          <img class="svg small"
+               src="<?php echo \OCP\Util::imagePath('cafevdb', 'cloud.svg'); ?>"
+               alt="<?php echo L::t('Select from Owncloud'); ?>"/>
+        </button>
+        <button type="button"
+                <?php echo ($_['ProjectId'] < 0 ? 'style="display:none;"' : ''); ?>
+                class="attachment events"
+                title="<?php echo Config::tooltips('events-attachment'); ?>"
+                value="<?php echo L::t('Project Events'); ?>">
+          <img class="svg events"
+               src="<?php echo \OCP\Util::imagePath('cafevdb', 'calendar-dark.svg'); ?>"
+               alt="<?php echo L::t('Select Events'); ?>"
         </button>
       </td>
     </tr>
-
-    <?php
-    echo $attachedEvents;
-    foreach ($_['fileAttach'] as $attachment) {
-      $tmpName = $attachment['tmp_name'];
-      $name    = $attachment['name'];
-      $size    = $attachment['size'];
-      $size    = \OC_Helper::humanFileSize($size);
-      echo '
-    <tr>
-      <td><button type="submit" name="emailComposer[DeleteAttachment][]" value="'.$tmpName.'" >'.L::t('Remove').'</button></td>
-      <td colspan="2"><span class="attachmentName">'.$name.' ('.$size.')</span></td>
-    </tr>';
-    }
-    ?>
+    <tr class="event-attachments"
+      <?php echo count($_['eventAttachments']) == 0 ? 'style="display:none;"' : ''; ?>">
+      <td class="event-attachments caption">
+        <?php echo L::t('Attached Events'); ?>
+      </td>
+      <td class="event-attachments events" colspan="2">
+        <select multiple="multiple"
+                title="<?php echo Config::toolTips('event-attachments-select'); ?>"
+                name="emailComposer[AttachedEvents][]"
+                class="event-attachments select"
+                id="event-attachments-selector">
+          <?php echo Navigation::selectOptions($eventAttachmentOptions); ?>
+        </select>
+        <input title="<?php echo Config::toolTips('delete-all-event-attachments'); ?>"
+               type="submit"
+               class="submit delete-all-event-attachments"
+               name="emailComposer[DeleteAllAttachments]"
+               value="<?php echo L::t('Delete Event Attachments'); ?>"/>
+      </td>
+    </tr>
+    <tr class="file-attachments"
+      <?php echo count($fileAttachmentOptions) == 0 ? 'style="display:none;"' : ''; ?>">
+      <td class="file-attachments caption">
+        <?php echo L::t('Attached Files'); ?>
+      </td>
+      <td class="file-attachments" colspan="2">
+        <select multiple="multiple"
+                title="<?php echo Config::toolTips('file-attachments-select'); ?>"
+                name="emailComposer[AttachedFiles][]"
+                class="file-attachments select"
+                id="file-attachments-selector">
+          <?php echo Navigation::selectOptions($fileAttachmentOptions); ?>
+        </select>
+        <input title="<?php echo Config::toolTips('delete-all-file-attachments'); ?>"
+               type="submit"
+               class="submit delete-all-file-attachments"
+               name="emailComposer[DeleteAllAttachments]"
+               value="<?php echo L::t('Delete All Attachments'); ?>"/>
+      </td>
+    </tr>
+    <tr class="spacer rule below"><td colspan="3"></td></tr>
     <tr class="submit">
       <td class="send">
         <input title="<?php echo Config::toolTips('send-mass-email'); ?>"
@@ -229,7 +238,7 @@ if ($_['ProjectId'] >= 0) {
                value="<?php echo L::t('Send Em@il'); ?>"/>
       </td>
       <td></td>
-      <td class="reset">
+      <td class="cancel">
         <input title="<?php echo Config::tooltips('cancel-email-composition'); ?>"
                class="email-composer submit cancel"
                type="submit" name="emailComposer[Cancel]"
@@ -237,5 +246,13 @@ if ($_['ProjectId'] >= 0) {
       </td>
     </tr>
   </table>
+  <!-- various data fields ... -->
+  <fieldset id="cafevdb-email-form-attachments" class="attachments">
+    <input type="hidden"
+           name="emailComposer[FileAttach]"
+           value="<?php echo htmlspecialchars($attachmentData); ?>"
+           id="file-attach"
+           class="file-attach">
+  </fieldset>
 </fieldset>
 

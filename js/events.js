@@ -91,7 +91,26 @@ var CAFEVDB = CAFEVDB || {};
             $.fn.tipsy.disable();
           }
 
-          $('#events #eventlistform :button').click(CAFEVDB.Events.UI.buttonClick);
+          $('#events #eventlistform :button').off('click').on('click', CAFEVDB.Events.UI.buttonClick);
+
+          $('#events').off('cafevdb:events_changed');
+          $('#events').on('cafevdb:events_changed',function(event, events) {
+            $.post(OC.filePath('cafevdb', 'ajax/events', 'execute.php'),
+                   { ProjectId: Events.projectId,
+                     ProjectName: Events.projectName,
+                     Action: 'redisplay',
+                     EventSelect: events },
+                   CAFEVDB.Events.UI.relist);
+            return false;
+          });
+          $('#events').off('change', 'input.email-check').
+            on('change', 'input.email-check', function(event) {
+            var emailFormDialog = $('div#emailformdialog');
+            if (emailFormDialog.length > 0) {
+              $('input.projectevents-sendmail').trigger('click');
+            }
+            return false;
+          });
         },
         close : function(event, ui) {
           $('.tipsy').remove();
@@ -134,53 +153,27 @@ var CAFEVDB = CAFEVDB || {};
         $.fn.tipsy.disable();
       }
 
-      $('#events #eventlistform div.listing :button').click(CAFEVDB.Events.UI.buttonClick);
+      $('#events #eventlistform div.listing :button').off('click').
+        on('click', CAFEVDB.Events.UI.buttonClick);
+
+      var emailFormDialog = $('div#emailformdialog');
+      if (emailFormDialog.length > 0) {
+        $('input.projectevents-sendmail').trigger('click');
+      }            
 
       return false;
     },
     redisplay: function() {
       var post = $('#eventlistform').serializeArray();
 
-      var type = new Object();
-      type['name']  = 'Action';
-      type['value'] = 'redisplay';
+      var type = { name: 'Action',
+                   value: 'redisplay' };
       post.push(type);
 
       $.post(OC.filePath('cafevdb', 'ajax/events', 'execute.php'),
              post, CAFEVDB.Events.UI.relist);
         
       return true;
-    },
-    addEventSelection: function (post, emailForm, eventData) {
-      var projectName ='';
-      var projectId = '';
-      var ids = '';
-      emailForm.find('input[name^="EventSelect"]').each(function () { $(this).remove(); });
-      jQuery.each(post, function (i, param) {
-        if (param.name == 'EventSelect[]') {
-          $('<input />').attr('type', 'hidden')
-            .attr('name', 'EventSelect[]')
-            .attr('value', param.value)
-            .appendTo(emailForm);
-          ids += param.value + ', ';
-        }
-      });
-      if (emailForm.find('input[name="ProejctId"]').length == 0) {
-        $('<input />').attr('type', 'hidden')
-          .attr('name', 'ProjectId')
-          .attr('value', CAFEVDB.Events.projectId)
-          .appendTo(emailForm);
-      }
-      if (emailForm.find('input[name="Project"]').length == 0) {
-        $('<input />').attr('type', 'hidden')
-          .attr('name', 'Project')
-          .attr('value', CAFEVDB.Events.projectName)
-          .appendTo(emailForm);
-      }
-      ids = ids.substr(0, ids.length - 2);
-      if (eventData != '') {
-        eventData.html(ids);
-      }
     },
     buttonClick: function(event) {
       event.preventDefault();
@@ -209,20 +202,14 @@ var CAFEVDB = CAFEVDB || {};
           return false;
         }
 
-        var type = new Object();
-        type['name']  = 'EventKind';
-        type['value'] = $(this).attr('name');
+        var type = { name: 'EventKind',
+                     value: $(this).attr('name') };
         post.push(type);
 
-        if (false) {
-          $.post(OC.filePath('cafevdb', 'ajax/events', 'new.form.php'),
-                 post, CAFEVDB.Events.UI.relist, 'json');
-        } else {
-          $('#dialog_holder').load(OC.filePath('cafevdb',
-                                               'ajax/events',
-                                               'new.form.php'),
-                                   post, Calendar.UI.startEventDialog);
-        }
+        $('#dialog_holder').load(OC.filePath('cafevdb',
+                                             'ajax/events',
+                                             'new.form.php'),
+                                 post, Calendar.UI.startEventDialog);
         
         return false;
       } else if (name == 'edit') {
@@ -233,9 +220,8 @@ var CAFEVDB = CAFEVDB || {};
 
         // Edit existing event
 
-        var type = new Object();
-        type['name']  = 'id';
-        type['value'] = $(this).val();
+        var type = { name: 'id',
+                     value:  $(this).val() };
         post.push(type);
 
         $('#dialog_holder').load(OC.filePath('calendar',
@@ -248,14 +234,12 @@ var CAFEVDB = CAFEVDB || {};
                  name == 'select' || name == 'deselect') {
         // Execute the task and redisplay the event list.
 
-        var type = new Object();
-        type['name']  = 'EventId';
-        type['value'] = $(this).val();
+        var type = { name: 'EventId',
+                     value: $(this).val() };
         post.push(type);
 
-        var type = new Object();
-        type['name']  = 'Action';
-        type['value'] = $(this).attr('name');
+        type = { name: 'Action',
+                 value: $(this).attr('name') };
         post.push(type);
 
         var really = CAFEVDB.Events.UI.confirmText[name];
@@ -279,56 +263,22 @@ var CAFEVDB = CAFEVDB || {};
         return false;
       } else if (name == 'sendmail') {
 
-        // No need to relist, in principle ...
-        $.post(OC.filePath('cafevdb', 'ajax/events', 'sendmail.php'),
-               post, CAFEVDB.Events.UI.relist);
-
-
-        // Ok, maybe not too elegant. We check whether we have been
-        // opened by the email-form by searching for the respective
-        // form-id. eventData is supposed to be able to contan
-        // html-data. We use it to give some feedback.
-        var emailForm = $('form.cafevdb-email-form');
-        var eventData = $('#eventattachments');
-
-        if (emailForm != '') {
-          CAFEVDB.Events.UI.addEventSelection(post, emailForm, eventData);
-
-          // Add another datum forcing the email form to stay in compose mode.
-          $('<input />').attr('type', 'hidden')
-            .attr('name', 'writeMail')
-            .attr('value', 'reload')
-            .appendTo(emailForm);
-
-          emailForm.submit(); // This closes also the event-dialog.
+        var emailFormDialog = $('div#emailformdialog');
+        if (emailFormDialog.length == 0) {
+          // If the email-form is not open, then open it :)
+          CAFEVDB.Email.emailFormPopup(post);
+        } else {
+          // Email dialog already open. We trigger a custom event to
+          // propagte the data. We only submit the event ids.
+          var events = [];
+          $.each(post, function (i, param) {
+            if (param.name == 'EventSelect[]') {
+              events.push(param.value);
+            }
+          });
+          emailFormDialog.trigger('cafevdb:events_changed', [ events ]);
         }
-
-        // If we have not been called by the email-form then we try to
-        // open it in project mode. To do so we search for an
-        // "ordinaray" PME-form and submit it, with the proper
-        // email-form request.
-        //
-        //<form class="pme-form" method="post" action="?app=cafevdb" name="PME_sys_form">
-        //
-        // We then add the selected events using hidden input elements.
-        var emailForm = $('form.pme-form');
-        if (emailForm != '') {
-          CAFEVDB.Events.UI.addEventSelection(post, emailForm, '');
-
-          // the submit button is
-          //
-          // <input class="pme-misc" name="PME_sys_operation" value="Em@il" type="submit">
-          //
-          $('<input />').attr('type', 'hidden')
-            .attr('name', 'PME_sys_operation')
-            .attr('value', 'Em@il')
-            .appendTo(emailForm);
-
-          emailForm.submit();
-        }
-
-        return false;
-
+        
       } else if (name == 'download') {
 
         // As always, there may be a more elegant solution, but this

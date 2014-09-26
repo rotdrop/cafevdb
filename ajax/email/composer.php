@@ -55,11 +55,15 @@ try {
     $debugText .= '$_POST[] = '.print_r($_POST, true);
   }
 
-  $projectId   = Util::cgiValue('ProjectId', -1);
-  $projectName = Util::cgiValue('ProjectName', ''); // the name
-  $requestData = Util::cgiValue('emailComposer', array('Request' => 'update'));
-  $formElement = Util::cgiValue('FormElement', 'everything');
+  $defaultData = array('Request' => 'update',
+                       'FormElement' => 'everything',
+                       'ProjectId' => Util::cgiValue('ProjectId', -1),
+                       'ProjectName' => Util::cgiValue('ProjectName', ''));
+  $requestData = array_merge($defaultData, Util::cgiValue('emailComposer', array()));
+  $projectId   = $requestData['ProjectId'];
+  $projectName = $requestData['ProjectName'];
 
+  $composer = false;
   if (!isset($requestData['SingleItem'])) {
     $recipientsFilter = new EmailRecipientsFilter();
     $composer = new EmailComposer($recipientsFilter->selectedRecipients());
@@ -72,7 +76,12 @@ try {
 
   $request = $requestData['Request'];
   switch ($request) {
+  case 'cancel':
+    // simply let it do the cleanup
+    $composer = new EmailComposer();
+    break;
   case 'update':
+    $formElement = $requestData['FormElement'];
     if ($formElement == 'everything') {
       $tmpl = new OCP\Template('cafevdb', 'part.emailform.composer');
       $tmpl->assign('ProjectName', $projectName);
@@ -89,16 +98,26 @@ try {
       $tmpl->assign('message', $composer->messageText());
       $tmpl->assign('sender', $composer->fromName());
       $tmpl->assign('catchAllEmail', $composer->fromAddress());
-      $tmpl->assign('fileAttach', array());
+      $tmpl->assign('fileAttachments', $composer->fileAttachments());
       $tmpl->assign('ComposerFormData', $composer->formData());  
 
       $elementData = $tmpl->fetchPage();
     } else {    
-      $contents = '';
-
       switch ($formElement) {
       case 'TO':
         $elementData = $composer->toString();
+        break;
+      case 'FileAttachments':
+        $composer = new EmailComposer();
+        $fileAttach = $composer->fileAttachments();
+        $elementData = array('options' => Navigation::selectOptions(EmailComposer::fileAttachmentOptions($fileAttach)),
+                             'fileAttach' => $fileAttach);
+        break;
+      case 'EventAttachments':
+        $composer = new EmailComposer();
+        $eventAttach = $composer->eventAttachments();
+        $elementData = array('options' => Navigation::selectOptions(EmailComposer::eventAttachmentOptions($projectId, $eventAttach)),
+                             'eventAttach' => $eventAttach);
         break;
       default:
         throw new \InvalidArgumentException(L::t("Unknown form element: `%s'.", $formElement));
@@ -126,17 +145,35 @@ try {
     }
     break;
   case 'validateEmailRecipients':
-    $mailer = new \PHPMailer(true); // may throw
-    $recipients = Contacts::parseAddrListToArray($requestData['Recipients']);
+    $mailer = new \PHPMailer(true);
+    $parser = new \Mail_RFC822(null, null, null, false);
+
     $brokenRecipients = array();
-    foreach ($recipients as $email => $name) {
-      if ($name == '') {
-        $recipient = $email;
-      } else {
-        $recipient = $name.' <'.$email.'>';
-      }
-      if (!$mailer->validateAddress($email)) {
-        $brokenRecipients[] = htmlspecialchars($recipient);
+    $recipients = $parser->parseAddressList($requestData['Recipients']);
+    $parseError = $parser->parseError();
+    if ($parseError !== false) {
+      \OCP\Util::writeLog(Config::APP_NAME,
+                          "Parse-error on email address list: ".
+                          vsprintf($parseError['message'], $parseError['data']),
+                          \OCP\Util::DEBUG);
+      // We report the entire string.
+      $brokenRecipients[] = L::t($parseError['message'], $parseError['data']);
+    } else {
+      \OCP\Util::writeLog(Config::APP_NAME,
+                          "Parsed address list: ".
+                          print_r($recipients, true),
+                          \OCP\Util::DEBUG);
+      foreach ($recipients as $emailRecord) {
+        $email = $emailRecord->mailbox.'@'.$emailRecord->host;
+        $name  = $emailRecord->personal;
+        if ($name == '') {
+          $recipient = $email;
+        } else {
+          $recipient = $name.' <'.$email.'>';
+        }
+        if (!$mailer->validateAddress($email)) {
+          $brokenRecipients[] = htmlspecialchars($recipient);
+        }
       }
     }
     $requestData['brokenRecipients'] = $brokenRecipients;
@@ -153,7 +190,7 @@ try {
                           'projectId' => $projectId,
                           'request' => $request,
                           'requestData' => $requestData,
-                          'debug' => htmlspecialchars($debugText))));
+                          'debug' => 'id: '.$projectId.' name: '.$projectName.' '.htmlspecialchars($debugText))));
 
   return true;
 
