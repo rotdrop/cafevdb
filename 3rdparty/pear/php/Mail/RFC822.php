@@ -183,6 +183,10 @@ class Mail_RFC822 {
         if (isset($validate))       $this->validate       = $validate;
         if (isset($limit))          $this->limit          = $limit;
 
+        if (trim($this->address) == '') {
+            return array();
+        }
+
         $this->structure  = array();
         $this->addresses  = array();
         $this->error      = null;
@@ -195,8 +199,9 @@ class Mail_RFC822 {
         while ($this->address = $this->_splitAddresses($this->address));
 
         if ($this->address === false || isset($this->error)) {
-            require_once 'PEAR.php';
-            return PEAR::raiseError($this->error);
+            //require_once 'PEAR.php';
+            //return PEAR::raiseError($this->error);
+            return array();
         }
 
         // Validate each address individually.  If we encounter an invalid
@@ -205,8 +210,9 @@ class Mail_RFC822 {
             $valid = $this->_validateAddress($address);
 
             if ($valid === false || isset($this->error)) {
-                require_once 'PEAR.php';
-                return PEAR::raiseError($this->error);
+                //require_once 'PEAR.php';
+                //return PEAR::raiseError($this->error);
+                continue;
             }
 
             if (!$this->nestGroups) {
@@ -217,6 +223,22 @@ class Mail_RFC822 {
         }
 
         return $this->structure;
+    }
+
+    /**
+     * Return true or the last error object
+     *
+     * array('message' => MSG,
+     *       'data' => array( ... )
+     *
+     * vsprintf(MSG, data) has to give a valid string
+     */
+    function parseError()
+    {
+        if (isset($this->error)) {
+            return $this->error;
+        }
+        return false;
     }
 
     /**
@@ -253,7 +275,8 @@ class Mail_RFC822 {
 
             // First check there's a colon at all:
             if (strpos($string, ':') === false) {
-                $this->error = 'Invalid address: ' . $string;
+                $this->error = array('message' => 'Invalid address: %s',
+                                     'data' => array($string));
                 return false;
             }
 
@@ -340,7 +363,8 @@ class Mail_RFC822 {
                 if (isset($parts[$i + 1])) {
                     $string = $string . $char . $parts[$i + 1];
                 } else {
-                    $this->error = 'Invalid address spec. Unclosed bracket or quotes';
+                    $this->error = array('message' => 'Invalid address spec. Unclosed bracket or quotes',
+                                         'data' => array());
                     return false;
                 }
             } else {
@@ -406,7 +430,8 @@ class Mail_RFC822 {
         $this->_hasUnclosedBracketsSub($string, $num_angle_end, $chars[1]);
 
         if ($num_angle_start < $num_angle_end) {
-            $this->error = 'Invalid address spec. Unmatched quote or bracket (' . $chars . ')';
+            $this->error = array('message' => 'Invalid address spec. Unmatched quote or bracket (%s)',
+                                 'data' => array($chars));
             return false;
         } else {
             return ($num_angle_start > $num_angle_end);
@@ -457,7 +482,8 @@ class Mail_RFC822 {
 
             // And validate the group part of the name.
             if (!$this->_validatePhrase($groupname)){
-                $this->error = 'Group name did not validate.';
+                $this->error = array('message' => 'Group name did not validate.',
+                                     'data' => array());
                 return false;
             } else {
                 // Don't include groups if we are not nesting
@@ -487,7 +513,8 @@ class Mail_RFC822 {
         // Groupname:;
         // Then errors were appearing.
         if (!count($addresses)){
-            $this->error = 'Empty group.';
+            $this->error = array('message' => 'Empty group.',
+                                 'data' => array());
             return false;
         }
 
@@ -502,7 +529,8 @@ class Mail_RFC822 {
         for ($i = 0; $i < count($addresses); $i++) {
             if (!$this->validateMailbox($addresses[$i])) {
                 if (empty($this->error)) {
-                    $this->error = 'Validation failed for: ' . $addresses[$i];
+                    $this->error = array('message' => 'Validation failed for: %s',
+                                         'data' => array($addresses[$i]));
                 }
                 return false;
             }
@@ -949,3 +977,8 @@ class Mail_RFC822 {
     }
 
 }
+
+// Local Variables: ***
+// mode: php ***
+// c-basic-offset: 4 ***
+// End: ***
