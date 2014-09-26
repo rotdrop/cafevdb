@@ -60,6 +60,8 @@ OC::$CLASSPATH['html2text'] = 'cafevdb/3rdparty/PHPMailer/extras/class.html2text
 OC::$CLASSPATH['IBAN'] = 'cafevdb/3rdparty/php-iban/oophp-iban.php';
 OC::$CLASSPATH['malkusch\bav\BAV'] = 'cafevdb/3rdparty/bav/autoloader/autoloader.php';
 OC::$CLASSPATH['PHPMailer'] = 'cafevdb/3rdparty/PHPMailer/autoloader.php';
+OC::$CLASSPATH['PEAR'] = '3rdparty/PEAR.php';
+OC::$CLASSPATH['Mail_RFC822'] = 'cafevdb/3rdparty/pear/php/Mail/RFC822.php';
 
 /* Script etc. used by everyone */
 OC_App::registerAdmin( 'cafevdb', 'admin-settings' );
@@ -67,6 +69,7 @@ OC_App::registerAdmin( 'cafevdb', 'admin-settings' );
 
 OCP\Util::connectHook('OC_User','post_login','CAFEVDB\Config','loginListener');
 OCP\Util::connectHook('OC_User','post_setPassword','CAFEVDB\Config','changePasswordListener');
+//OCP\Util::connectHook('OC_User', 'logout', 'CAFEVDB\Config', 'logoutListener');
 
 OCP\Util::connectHook('OC_Calendar','addEvent','CAFEVDB\Events','newEventListener');
 OCP\Util::connectHook('OC_Calendar','editEvent','CAFEVDB\Events','changeEventListener');
