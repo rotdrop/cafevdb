@@ -30,6 +30,10 @@
   font-weight:bold;
 }
 
+.project-actions-block .chosen-container .chosen-results {
+  max-height:300px;
+}
+
 .project-actions-block a.chosen-default span {
   /*font-weight:bold;*/
   color:#555;

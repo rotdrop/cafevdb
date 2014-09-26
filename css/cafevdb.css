@@ -99,6 +99,42 @@ input[type=checkbox],input[type=submit],input[type=radio],input[type=button] {
 
 /*******************************************************************************
  *
+ * Chosen popup.
+ *
+ */
+
+.ui-dialog.chosen-popup-dialog {
+  max-height: 75% !important;
+  overflow: visible;
+  padding: 0;
+}
+.ui-dialog.chosen-popup-dialog .ui-dialog-content {
+  min-height:4.4em !important;
+  padding: 0;
+}
+.ui-dialog.chosen-popup-dialog .ui-dialog-content .chosen-choices {
+  min-height:4.4em;
+}
+.ui-dialog.chosen-popup-dialog .ui-dialog-buttonpane {
+  padding:0;
+  margin-top:0;
+}
+.ui-dialog.chosen-popup-dialog .ui-dialog-buttonpane button {
+  margin-left:0.4em;
+  margin-right:0.4em;
+}
+.ui-dialog.chosen-popup-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
+  float:none;
+}
+.ui-dialog.chosen-popup-dialog .ui-dialog-buttonpane button.save {
+  float:left;
+}
+.ui-dialog.chosen-popup-dialog .ui-dialog-buttonpane button.cancel {
+  float:right;
+}
+
+/*******************************************************************************
+ *
  * Configuration page
  *
  */
