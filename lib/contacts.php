@@ -186,43 +186,38 @@ namespace CAFEVDB
       return $result;
     }    
 
-    /** Split a comma separated email address list into an array.
+    /**Add the given email address as possibly new entry to the
+     * address book.
+     *
+     * @param $email Contact to be added array('name' => , 'email' => )
+     * 
      */
-    public static function parseAddrListToArray($list)
+    public static function addEmailContact($email, $addressBookId = false, $backend = 'shared')
     {
-      $t = str_getcsv($list);
-      
-      foreach($t as $k => $v) {
-        $v = trim($v);
-        if ($v == '') {
-            unset($t[$k]);
-            continue;
-        }
-        if (strpos($v,',') !== false) {
-          $t[$k] = '"'.str_replace(' <','" <',$v);
-        } else {
-          $t[$k] = $v;
+      if ($addressBookId === false) {
+        $addressBookId = Config::getValue('addressbookid', false);
+        if ($addressBookId === false) {
+          return false; 
         }
       }
-      
-      $emails = array();
-      foreach ($t as $addr) {
-        if (strpos($addr, '<')) {
-          preg_match('!(.*?)\s?<\s*(.*?)\s*>!', $addr, $matches);
-          if (count($matches) != 3) {
-            // just keep the string; but clearly this is broken then
-            $emails[$addr] = '';
-          } else {          
-            $emails[trim($matches[2])] = trim($matches[1]);
-          }
-        } else {
-          $emails[$addr] = '';
-        }
+      $app = new \OCA\Contacts\App();
+      $addressBook = $app->getAddressBook($backend, $addressBookId);
+      $id = $addressBook->addChild();
+      if ($id === false) {
+        return false;
       }
+      $contact = $addressBook->getChild($id);
+      if ($contact === false) {
+        return false;
+      }
+      $contact->setPropertyByChecksum('new', 'EMAIL',
+                                      $email['email'],
+                                      array('TYPE' => array('OTHER')));
+      unset($contact->FN);
+      $contact->setPropertyByName('FN', $email['name']);
 
-      return $emails;
+      return $contact->save() ? $contact : false;
     }
-
 
   };
 
