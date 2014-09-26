@@ -27,15 +27,20 @@ CAFEVDB.FileUpload = CAFEVDB.FileUpload || {};
   FileUpload.uploadingFiles = {};
 
   /**To be called at some other document-ready invocation, as required. */
-  FileUpload.init = function(doneCallback, stopCallback, dropZone) {
-    if (typeof dropZone == 'undefined') {
-      dropZone = $(document)
-    }
+  FileUpload.init = function(options) {
+    var defaultOptions = {
+      doneCallback: null,
+      stopCallback: null,
+      dropZone: $(document),
+      inputSelector: '#file_upload_start'
+    };
+
+    options = $.extend({}, defaultOptions, options);
     var fileUploadParam = {
       multipart: true,
       singleFileUploads: true,
       sequentialUploads: true,
-      dropZone: dropZone, // restrict dropZone to content div
+      dropZone: options.dropZone, // restrict dropZone to content div
       //singleFileUploads is on by default, so the data.files array will always have length 1
       add: function(e, data) {
         for (var k = 0; k < data.files.length; ++k) {
@@ -154,8 +159,8 @@ CAFEVDB.FileUpload = CAFEVDB.FileUpload || {};
 	      delete FileUpload.uploadingFiles[filename];
 	    }
 
-            if (typeof doneCallback !== 'undefined') {
-              doneCallback(result[k]);
+            if (typeof options.doneCallback == 'function') {
+              options.doneCallback(result[k]);
             }
 
 	  } else {
@@ -185,14 +190,14 @@ CAFEVDB.FileUpload = CAFEVDB.FileUpload || {};
         $('#uploadprogressbar').progressbar('value',100);
         $('#uploadprogressbar').fadeOut();
 
-        if (typeof stopCallback !== 'undefined') {
-          stopCallback();
+        if (typeof options.stopCallback == 'function') {
+          options.stopCallback(e, data);
         }
       }
     };
 
     var file_upload_handler = function() {
-      $('#file_upload_start').fileupload(fileUploadParam);
+      $(options.inputSelector).fileupload(fileUploadParam);
     };
 
     if ( document.getElementById('data-upload-form') ) {
@@ -208,11 +213,13 @@ CAFEVDB.FileUpload = CAFEVDB.FileUpload || {};
     };
 
     if (false) {
-    // warn user not to leave the page while upload is in progress
-    $(window).bind('beforeunload', function(e) {
-      if ($.assocArraySize(CAFEVDB.FileUpload.uploadingFiles) > 0)
-	return t('cafevdb', 'File upload is in progress. Leaving the page now will cancel the upload.');
-    });
+      // warn user not to leave the page while upload is in progress
+      $(window).bind('beforeunload', function(e) {
+        if ($.assocArraySize(CAFEVDB.FileUpload.uploadingFiles) > 0) {
+	  return t('cafevdb', 'File upload is in progress. Leaving the page now will cancel the upload.');
+        }
+        return false;
+      });
     }
 
     //add multiply file upload attribute to all browsers except konqueror (which crashes when it's used)
