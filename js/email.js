@@ -750,7 +750,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                }
                CAFEVDB.chosenPopup(data.data.contents, {
                  title: t('cafevdb', 'Address Book'),
-                 saveText: t('cafevdb', 'Übernehmen'),
+                 saveText: t('cafevdb', 'Accept'),
                  buttons: [
                    { text: t('cafevdb', 'Save Contacts'),
                      'class': 'save-contacts',
