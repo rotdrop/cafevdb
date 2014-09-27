@@ -84,7 +84,7 @@ ul#emailformtabs {
 
 #emailformdialog #emailformdebug {
   height:auto;
-  width:auto;
+  width:65em;
   max-width:65em;
   overflow:auto;
 }
