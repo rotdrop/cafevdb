@@ -92,13 +92,19 @@ if (count($templateDiag) > 0) {
          "names have to match exactly. ".
          "Please use only capital letters for variable names. ".
          "Please do not use spaces. Vaiable substitutions have to start with ".
-         "a dollar-sign, be enclosed by curly braces and consist of a ".
-         "category-name (e.g. `GLOBAL') separated by double colons `::' from ".
-         "the variable name itself (e.g. `ORGANIZERS'). An example is ".
-         "\${GLOBAL::ORGANIZERS}. ".
+         "a dollar-sign `%s', be enclosed by curly braces `%s' and consist of a ".
+         "category-name (e.g. `%s') separated by double colons `%s' from ".
+         "the variable name itself (e.g. `%s'). An example is ".
+         "`%s'. ".
          "Please have a look at the example template `%s' which contains ".
          "a complete list of all known substitutions.",
-         array('<span class="error code">All Variables</span>'));
+         array('<span class="error code">$</span>',
+               '<span class="error code">{...}</span>',
+               '<span class="error code">GLOBAL</span>',
+               '<span class="error code">::</span>',
+               '<span class="error code">ORGANIZER</span>',
+               '<span class="error code">${GLOBAL::ORGANIZER}</span>',
+               '<span class="error code">All Variables</span>'));
   echo ' <div class="error contents explanations">
     '.$explanations.'
   </div>';
@@ -117,10 +123,12 @@ if (count($addressDiag['CC']) != 0 || count($addressDiag['BCC']) != 0) {
   $output = true;
   echo '
 <div class="emailform error group addresses">
-  <span class="error caption addresses">
-    '.L::t('The following email addresses appear to be syntactically incorrect, '.
-           'meaning that they have not the form of an email address:').'
-  </span>';
+  <div class="error contents addresses">
+    <span class="error caption addresses">
+      '.L::t('The following email addresses appear to be syntactically incorrect, '.
+             'meaning that they have not the form of an email address:').'
+    </span>
+  </div>';
   foreach(array('CC', 'BCC') as $header) {
     $addresses = $addressDiag[$header];
     if (count($addresses) > 0) {
@@ -142,12 +150,12 @@ if (count($addressDiag['CC']) != 0 || count($addressDiag['BCC']) != 0) {
   }
   $explanations =
     htmlspecialchars(
-      L::t('No email will be sent out before these errors are corrected. '.
+      L::t('No email will be sent out unless these errors are corrected. '.
            'Please separate individual emails by commas. '.
            'Please use standard-address notation '.
            '(see RFC5322, if your want to know ...), '.
            'remember to enclose the '.
-           'real-name in quotes if they contains a comma. Some valid examples are:')).
+           'real-name in quotes if it contains a comma. Some valid examples are:')).
     '
     <ul>
       <li><span class="error code">'.htmlspecialchars('"Doe, John" <john@doe.org>').'</span></li>
@@ -157,17 +165,69 @@ if (count($addressDiag['CC']) != 0 || count($addressDiag['BCC']) != 0) {
     </ul>';
   echo '
   <div class="error contents explanations">
-  <div class="error caption">'.L::t('Explanations').'</div>
+  <div class="error heading">'.L::t('Explanations').'</div>
     '.$explanations.'
   </div>';
   echo '
 </div>';
 }
 
+/*****************************************************************************
+ *
+ * More trivial stuff: empty fields which should not be empty
+ *
+ */
+if ($diagnostics['SubjectValidation'] !== true) {
+  // empty subject
+  $output = true;
+  $subjectTag = $diagnostics['SubjectValidation'];
+  echo '
+<div class="emailform error group emptysubject">
+  <div class="error contents emptysubject">
+    <div class="error caption emptysubject">'.L::t('Empty Subject').'</div>
+    '.L::t('The subject must not consist of `%s\' as only part. '.
+           'Please correct that before hitting the `Send\'-button again.',
+           array($subjectTag)).'
+  </div>
+</div>';
+}
+
+if ($diagnostics['FromValidation'] !== true) {
+  // empty from name
+  $output = true;
+  $defaultSender = $diagnostics['FromValidation'];
+  echo '
+<div class="emailform error group emptyfrom">
+  <div class="error contents emptyfrom">
+    <div class="error caption emptyfrom">'.L::t('Empty Sender Name').'</div>
+    '.L::t('The sender name should not be empty. '.
+           'Originally, it used to be %s, but seemingly this did not suite your needs. '.
+           'Please fill in a non-empty sender name before hitting the `Send\'-button again.',
+           array($defaultSender)).'
+  </div>
+</div>';
+}
+
+if ($diagnostics['AddressValidation']['Empty']) {
+  // no recipients
+  $output = true;
+  echo '
+<div class="emailform error group norecipients">
+  <div class="error contents norecipients">
+    <div class="error caption norecipients">'.L::t('No Recipients').'</div>
+    '.L::t('You did not specify any recipients (Cc: and Bcc: does not count here!).'.
+           'Please got to the `Em@il Recipients\' panel and select some before '.
+           'hitting the `Send\'-button again. Please possibly take care of the list '.
+           'of musicians without email address at the bottom of the `Em@il Recipients\' panel.').'
+  </div>
+</div>';
+}
+
 if ($output) {
   echo '
 <div class="spacer"><div class="ruler"></div></div>
-<div class="error heading">'.L::t('The most recent status message is always saved to the status panel.').'</div>'; 
+<div class="error heading">'.L::t('The most recent status message is always saved to the status panel. It can be reviewed there even after closing this dialog window.').'</div> 
+<div class="spacer"><div class="ruler"></div></div>';  
 }
 
 ?>

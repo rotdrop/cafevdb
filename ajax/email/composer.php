@@ -64,14 +64,18 @@ try {
   $projectName = $requestData['ProjectName'];
 
   $composer = false;
-  if (!isset($requestData['SingleItem'])) {
-    $recipientsFilter = new EmailRecipientsFilter();
-    $composer = new EmailComposer($recipientsFilter->selectedRecipients());
-    $requestData['errorStatus'] = $composer->errorStatus();
-    $requestData['errorDiagnostics'] = $composer->errorDiagnostics();
-  } else {
+  if (isset($requestData['SingleItem'])) {
     $requestData['errorStatus'] = false;
     $requestData['errorDiagnostics'] = '';
+  } else {
+    $recipients = false;
+    if (Util::cgiValue('emailRecipients', false) !== false) {
+      $recipientsFilter = new EmailRecipientsFilter();
+      $recipients = $recipientsFilter->selectedRecipients();
+    }
+    $composer = new EmailComposer($recipients);
+    $requestData['errorStatus'] = $composer->errorStatus();
+    $requestData['errorDiagnostics'] = $composer->errorDiagnostics();
   }
 
   $request = $requestData['Request'];
@@ -145,7 +149,7 @@ try {
       }
       $requestData['templateOptions'] = $options;
     } else {
-      $requestData['errorDiagnostics']['caption'] =
+      $requestData['errorDiagnostics']['Caption'] =
         L::t('Template could not be saved');
     }
     break;
@@ -156,7 +160,7 @@ try {
     $requestData['errorStatus'] = $composer->errorStatus();
     $requestData['errorDiagnostics'] = $composer->errorDiagnostics();
     if ($requestData['errorStatus']) {
-      $requestData['errorDiagnostics']['caption'] =
+      $requestData['errorDiagnostics']['Caption'] =
         L::t('Email Address Validation Failed');      
     }
     break;
@@ -168,7 +172,7 @@ try {
   @ob_end_clean();
   
   if ($requestData['errorStatus']) {
-    $caption = $requestData['errorDiagnostics']['caption'];
+    $caption = $requestData['errorDiagnostics']['Caption'];
 
     if (Util::debugMode('request') || Util::debugMode('emailform')) {
       $debugText .= print_r($requestData, true);

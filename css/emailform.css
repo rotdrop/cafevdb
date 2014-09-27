@@ -463,6 +463,10 @@ form#cafevdb-email-form .vmiddle * {
   max-width:60em;
 }
 
+.emailform.error.group {
+  padding-bottom:0.5em;
+}
+
 span.error.code,
 span.error.contents.item.substitutions {
   color:red;

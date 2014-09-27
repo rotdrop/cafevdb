@@ -72,6 +72,8 @@ mandateReference
     private $dbh;  ///< Data-base handle.
 
     private $recipients; ///< The list of recipients.
+    private $onLookers;  ///< Cc: and Bcc: recipients.
+
     private $cgiData;
     private $submitted;    
 
@@ -100,18 +102,24 @@ mandateReference
     /* 
      * constructor
      */
-    public function __construct($recipients = array())
+    public function __construct($recipients = false)
     {
       Config::init();
       $this->opts = Config::$pmeopts;
       $this->dbh = false;
 
-      $this->recipients = $recipients;
-
       $this->constructionMode = Config::$opts['emailtestmode'] != 'off';
       $this->setCatchAll();
 
       $this->cgiData = Util::cgiValue('emailComposer', array());
+
+      if ($recipients === false) {
+        $recipients = $this->cgiValue('SelectedRecipients', false);
+      }
+      if (!is_array($recipients)) {
+        $recipients = array(); 
+      }
+      $this->recipients = $recipients;
 
       $this->projectId   = $this->cgiValue('ProjectId', Util::cgiValue('ProjectId', -1));
       $this->projectName = $this->cgiValue('ProjectName',
@@ -179,17 +187,23 @@ mandateReference
         // do some cleanup, i.e. remove temporay storage from file attachments
         self::cleanTemporaries();
       } else if ($this->cgiValue('Send', false)) {
-        // Once more validate all inputs:
-        //
-        // Cc (valid email addresses)
-        // Bcc (valid email addresses)
-        // Subject (must not be empty)
-        // Message-text (variable substitution)
-        // Sender Name (must not be empty)
+        if (!$this->preComposeValidation()) {
+          return;
+        }
+
+        // If we get until here without error, then start to compose
+        // the message. In principle, this should not pose any
+        // problems any more (the recipients email addresses have
+        // already been validated)
+
+
+
+        // Compute the needed checksum in order to catch sending of
+        // duplicates
+
+        // Send the message(s) out
         
-        $this->diagnostics['SubjectValidation'] = $this->cgiValue('Subject', '') != '';
-        $this->diagnostics['FromValidation'] = $this->cgiValue('FromName', '') != '';
-        $this->diagnostics['AddressValidation']['Empty'] = count($this->recipients) == 0;
+        // Copy to send folder
       }
     }
 
@@ -201,6 +215,49 @@ mandateReference
       } else {
         return $default;
       } 
+    }
+
+    /**Pre-message construction validation:
+     *
+     * Cc (valid email addresses)
+     * Bcc (valid email addresses)
+     * Subject (must not be empty)
+     * Message-text (variable substitution)
+     * Sender Name (must not be empty)  
+     */
+    private function preComposeValidation()
+    {
+      // Basic boolean stuff
+      if ($this->cgiValue('Subject', '') == '') {
+        $this->diagnostics['SubjectValidation'] = $this->messageTag;
+        $this->executionStatus = false;
+      } else {
+        $this->diagnostics['SubjectValidation'] = true;
+      }
+      if ($this->cgiValue('FromName', '') == '') {
+        $this->diagnostics['FromValidation'] = $this->catchAllName;
+        $this->executionStatus = false;
+      } else {
+        $this->diagnostics['FromValidation'] = true;
+      }
+      if (count($this->recipients) == 0) {
+        $this->diagnostics['AddressValidation']['Empty'] = true;
+        $this->executionStatus = false;
+      }
+
+      // Template validation (i.e. variable substituions)
+      $this->validateTemplate($this->messageContents);
+
+      // Cc: and Bcc: validation
+      foreach(array('CC', 'BCC') as $key) {
+        $this->onLookers[$key] =
+          $this->validateFreeFormAddresses($key, $this->cgiValue($key, ''));
+      }
+
+      if (!$this->executionStatus) {
+        $this->diagnostics['Caption'] = L::t('Pre-composition validation has failed!');
+      }
+      return $this->executionStatus;
     }
 
     /**Compute the subject tag, depending on whether we are in project
