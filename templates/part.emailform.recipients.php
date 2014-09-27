@@ -173,7 +173,7 @@ if ($projectId > 0) {
     <span class="container left missing-email-addresses tipsy-sw"
           title="<?php echo Config::tooltips('email-recipients-broken-emails'); ?>">
       <span class="label top missing-email-addresses">
-        <?php echo L::t('Musicians without Email-Address'); ?>
+        <?php echo L::t('Musicians without or obviously broken email-address'); ?>
       </span>
       <span class="missing-email-addresses names">
         <?php

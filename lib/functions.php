@@ -585,6 +585,7 @@ class Navigation
    * title => optional title
    * label => optional label
    * group => optional option group
+   * groupClass => optional css, only taken into account on group-change
    *
    * Optional fields need not be present.
    */
@@ -597,7 +598,8 @@ class Navigation
     }
     $oldGroup = isset($options[0]['group']) ? self::enc($options[0]['group']) : false;
     if ($oldGroup) {
-      $result .= '<optgroup label="'.$oldGroup.'">
+      $groupClass = isset($options[0]['groupClass']) ? ' class="'.$options[0]['groupClass'].'"' : '';
+      $result .= '<optgroup label="'.$oldGroup.'"'.$groupClass.'>
 ';
       $indent = '  ';
     }
@@ -614,7 +616,8 @@ class Navigation
         $oldGroup = $group;
         $indent = '';
         if ($group) {
-          $result .= '<optgroup label="'.$group.'">
+          $groupClass = isset($option['groupClass']) ? ' class="'.$option['groupClass'].'"' : '';
+          $result .= '<optgroup label="'.$group.'"'.$groupClass.'>
 ';
           $indent = '  ';
         }
@@ -757,6 +760,12 @@ class Navigation
     return $result;
   }
 
+  /**Take any dashed lower-case string and convert to camel-acse.
+   *
+   * @param $sting the string to convert.
+   *
+   * @param $capitalizeFirstCharacter self explaining.
+   */
   public static function dashesToCamelCase($string, $capitalizeFirstCharacter = false) 
   {    
     $str = str_replace(' ', '', ucwords(str_replace('-', ' ', $string)));
@@ -766,6 +775,14 @@ class Navigation
     }
     
     return $str;
+  }
+
+  /**Take an camel-case string and convert to lower-case with dashes
+   * between the words. First letter may or may not be upper case.
+   */
+  public static function camelCaseToDashes($string)
+  {
+    return strtolower(preg_replace('/([A-Z])/', '-$1', lcfirst($string)));
   }
 
   public static function buttonsFromArray($buttons)
@@ -809,7 +826,7 @@ class Navigation
           $dataArray = array('value' => $dataArray);
         }
         foreach ($dataArray as $key => $dataValue) {
-          $key = strtolower(preg_replace('/([A-Z])/', '-$1', $key));
+          $key = self::camelCaseToDashes($key);
           $data .= ' data-'.$key.'="'.htmlspecialchars($dataValue).'"';
         }
       }

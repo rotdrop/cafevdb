@@ -313,6 +313,19 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                  data,
                  [ 'projectId', 'projectName', 'request', 'requestData' ],
                  validateUnlock)) {
+                 if (data != 'undefined' && data.data != 'undefined') {
+                   var debugText = '';
+                   if (data.data.caption != 'undefined') {
+                     debugText += '<div class="error caption">'+data.data.caption+'</div>';
+                   }
+                   if (data.data.message != 'undefined') {
+                     debugText += data.data.message;
+                   }
+                   if (typeof data.data.debug != 'undefined') {
+                     debugText += '<pre>'+data.data.debug+'</pre>';
+                   }
+                   debugOutput.html(debugText);
+                 }
                  return false;
                }
                var request = data.data.request;
@@ -391,27 +404,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                  }
                  break;
                case 'validateEmailRecipients':
-                 // The request-data is an array of broken
-                 // address. However, we do not replace them. Only
-                 // inform the user about the mess.
-                 var faultyRecipients = requestData.brokenRecipients;
-                 var faultyItems = '';
-                 var idx;
-                 for (idx = 0; idx < faultyRecipients.length; ++idx) {
-                   faultyItems += '<li>'+faultyRecipients[idx]+'</li>';
-                 }
-                 if (faultyItems != '') {
-                   postponeEnable = true;
-                   OC.dialogs.alert('<div class="error syntax contents">'+
-                                    t('cafevdb',
-                                      'The following email addresses appear to be invalid. '+
-                                      'The email will not be sent out before these errors are corrected.')+
-                                    '<ul>'+faultyItems+'</ul>'+
-                                    '</div>',
-                                    t('cafevdb', 'Invalid Email Addresses'),
-                                    validateUnlock,
-                                    true, true);
-                 }
+                 // already reported by the general error-handling functions
                  break;
                case 'setTemplate':
                  currentTemplate.val(requestData.templateName);
@@ -420,63 +413,9 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                  templateSelector.trigger("chosen:updated");
                  break;
                case 'saveTemplate':
-                 if (!requestData.errorStatus) {
-                   templateSelector.html(requestData.templateOptions);
-                   templateSelector.find('option').prop('selected', false);
-                   templateSelector.trigger("chosen:updated");
-                 } else {
-                   var errorList = '';
-                   var failed;
-                   var idx;
-                   failed = requestData.errorDiagnostics.MemberErrors;
-                   if (failed.length > 0) {
-                     errorList += '<div class="error contents substitutions members">';
-                     errorList += ('<span class="error heading">'+
-                                   t('cafevdb', 'Failed individual substitutions')+
-                                   '</span>');
-                     errorList += '<ul>';
-                     for (idx = 0; idx < failed.length; ++idx) {
-                       errorList += '<li><span class="error item contents substitutions">'+failed[idx]+'</span></li>';
-                     }
-                     errorList += '</ul></div>';
-                   }
-                   failed = requestData.errorDiagnostics.GlobalErrors;
-                   if (failed.length > 0) {
-                     errorList += '<div class="error contents substitutions global">';
-                     errorList += ('<span class="error heading">'+
-                                   t('cafevdb', 'Failed global substitutions')+
-                                   '</span>');
-                     errorList += '<ul>';
-                     for (idx = 0; idx < failed.length; ++idx) {
-                       errorList += '<li><span class="error item contents substitutions">'+failed[idx]+'</span></li>';
-                     }
-                     errorList += '</ul></div>';
-                   }
-                   failed = requestData.errorDiagnostics.SpuriousErrors;
-                   if (failed.length > 0) {
-                     errorList += '<div class="error contents substitutions spurious">';
-                     errorList += ('<span class="error heading">'+
-                                   t('cafevdb', 'Failed spurious substitutions')+
-                                   '</span>');
-                     errorList += '<ul>';
-                     for (idx = 0; idx < failed.length; ++idx) {
-                       errorList += '<li><span class="error item contents substitutions">'+failed[idx]+'</span></li>';
-                     }
-                     errorList += '</ul></div>';
-                   }
-                   postponeEnable = true;
-                   OC.dialogs.alert('<div class="error contents template">'+
-                                    t('cafevdb',
-                                      'Template not saved due to template validation errors,'+
-                                      'the following variable substitutions could not be resolved:')+
-                                    errorList+
-                                    t('cafevdb',
-                                      'Please understand that the software is really `picky\': '+
-                                      'names have to match exactly. Please use only capital letters for variable names.'),
-                                    t('cafevdb', 'Template could not be saved'),
-                                    validateUnlock,
-                                    true, true);
-                 }
+                 templateSelector.html(requestData.templateOptions);
+                 templateSelector.find('option').prop('selected', false);
+                 templateSelector.trigger("chosen:updated");
                  break;
                case 'deleteTemplate':
                  currentTemplate.val(requestData.templateName);
@@ -622,27 +561,37 @@ CAFEVDB.Email = CAFEVDB.Email || {};
      * 
      * Validate Cc: and Bcc: entries.
      */
-    var carbonCopy = fieldset.find('#carbon-copy, #blind-carbon-copy');
-    var carbonCopyBlur = function(event) {
+    var carbonCopyBlur = function(event, header) {
       var self = $(this);
       event.stopImmediatePropagation();
-      applyComposerControls.call(this, event, { 'Request': 'validateEmailRecipients',
-                                                'Recipients': $(this).val(),
-                                                'SingleItem': true
-                                              },
+      var request =  { 'Request': 'validateEmailRecipients',
+                       'Recipients': $(this).val(),
+                       'Header': header,
+                       'SingleItem': true };
+      request[header] = request.Recipients; // remove duplicate later
+      applyComposerControls.call(this, event, request,
                                  function(lock) {
                                    sendButton.prop('disabled', lock);
-                                   if (lock) {
-                                     self.off('blur');
+                                   if (true) {
+                                     self.prop('disabled', lock);
                                    } else {
-                                     self.on('blur', carbonCopyBlur);
+                                     if (lock) {
+                                       self.off('blur');
+                                     } else {
+                                       self.on('blur', function(event) {
+                                         carbonCopyBlur.call(this, event, header);
+                                       });
+                                     }
                                    }
                                  });
       return false;
     };
 
-    carbonCopy.off('blur').on('blur', function(event) {
-      return carbonCopyBlur.call(this, event);
+    fieldset.find('#carbon-copy').off('blur').on('blur', function(event) {
+      return carbonCopyBlur.call(this, event, 'CC');
+    });
+    fieldset.find('#blind-carbon-copy').off('blur').on('blur', function(event) {
+      return carbonCopyBlur.call(this, event, 'BCC');
     });
 
     /*************************************************************************
@@ -796,6 +745,9 @@ CAFEVDB.Email = CAFEVDB.Email || {};
       var self = $(this);
       var input = fieldset.find(self.data('for'));
 
+      // We trigger validation before we pop-up.
+      input.trigger('blur');
+
       var post = { 'FreeFormRecipients': input.val() };
       $.post(OC.filePath('cafevdb', 'ajax/email', 'addressbook.php'),
              post,
@@ -819,7 +771,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                        // We are interested in all selected options
                        // inside the first options group
                        var selectedFreeForm = [];
-                       selectElement.find('optgroup:first option:selected').each(function(idx) {
+                       selectElement.find('optgroup.free-form option:selected').each(function(idx) {
                          var self = $(this);
                          selectedFreeForm[idx] = { 'value': self.val(),
                                                    'html' : self.html(),
@@ -841,6 +793,10 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                                          var newOptions = $(data.data.contents).html();
                                          selectElement.html(newOptions);
                                          selectElement.trigger('chosen:updated');
+                                         if(selectElement.find('optgroup.free-form').length == 0) {
+                                           dialogHolder.dialog('widget').
+                                             find('button.save-contacts').prop('disabled', true);
+                                         }
                                          return false;
                                        });
                                 return false;
@@ -852,6 +808,12 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                  position: { my: "right top",
                              at: "right bottom",
                              of: self },
+                 openCallback: function(selectElement) {
+                   if(selectElement.find('optgroup.free-form').length == 0) {
+                     $(this).dialog('widget').
+                       find('button.save-contacts').prop('disabled', true);
+                   }
+                 },
                  saveCallback: function(selectElement, selectedOptions) {
                    var recipients = '';
                    var numSelected = selectedOptions.length;

@@ -85,6 +85,7 @@ ul#emailformtabs {
 #emailformdialog #emailformdebug {
   height:auto;
   width:auto;
+  max-width:65em;
   overflow:auto;
 }
 
@@ -457,6 +458,12 @@ form#cafevdb-email-form .vmiddle * {
 
 /* special elements */
 
+.error.emailform span,
+.error.emailform div {
+  max-width:60em;
+}
+
+span.error.code,
 span.error.contents.item.substitutions {
   color:red;
   font-family:monospace;

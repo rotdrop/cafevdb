@@ -786,7 +786,11 @@ var CAFEVDB = CAFEVDB || {};
       if (data.data.debug != '') {
         OC.dialogs.info('<div class="debug error contents">'+data.data.debug+'</div>', t('cafevdb', 'Debug Information'), undefined, true, true);
       }
-      OC.dialogs.alert(info, t('cafevdb', 'Error'), errorCB, true, true);
+      var caption = data.data.caption;
+      if (typeof caption == 'undefined' || caption == '') {
+        caption = t('cafevdb', 'Error');
+      }
+      OC.dialogs.alert(info, caption, errorCB, true, true);
       return false;
     }
     return true;

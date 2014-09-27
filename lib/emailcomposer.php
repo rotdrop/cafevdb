@@ -128,7 +128,22 @@ mandateReference
 
       $this->messageContents = $this->initialTemplate;
 
+      // Set to false on error
       $this->executionStatus = true;
+
+      // Error diagnostics, can be retrieved by
+      // $this->errorDiagnostics()
+      $this->diagnostics = array(
+        'Caption' => '',
+        'AddressValidation' => array('CC' => array(),
+                                     'BCC' => array(),
+                                     'Empty' => false),
+        'TemplateValidation' => array(),
+        'SubjectValidation' => true,
+        'FromValidation' => true,
+        'MailerException' => false
+        );
+
       $this->execute();
     }
 
@@ -154,17 +169,27 @@ mandateReference
         $this->messageContents = $this->initialTemplate;
         $this->templateNames = $this->fetchTemplateNames(); // refresh
       } else if (($value = $this->cgiValue('SaveTemplate', false))) {
-        $result = $this->validateTemplate($this->messageContents);
-        if ($result === true) {
+        if ($this->validateTemplate($this->messageContents)) {
           $this->storeTemplate($this->cgiValue('TemplateName'), $this->messageContents);
           $this->templateNames = $this->fetchTemplateNames(); // refresh
         } else {
           $this->executionStatus = false;
-          $this->diagnostics = $result;
         }
       } else if ($this->cgiValue('Cancel', false)) {
         // do some cleanup, i.e. remove temporay storage from file attachments
         self::cleanTemporaries();
+      } else if ($this->cgiValue('Send', false)) {
+        // Once more validate all inputs:
+        //
+        // Cc (valid email addresses)
+        // Bcc (valid email addresses)
+        // Subject (must not be empty)
+        // Message-text (variable substitution)
+        // Sender Name (must not be empty)
+        
+        $this->diagnostics['SubjectValidation'] = $this->cgiValue('Subject', '') != '';
+        $this->diagnostics['FromValidation'] = $this->cgiValue('FromName', '') != '';
+        $this->diagnostics['AddressValidation']['Empty'] = count($this->recipients) == 0;
       }
     }
 
@@ -190,18 +215,73 @@ mandateReference
       }
     }
 
+    /**Validate a comma separated list of email address from the Cc:
+     * or Bcc: input.
+     *
+     * @param $header For error diagnostics, either CC or BCC.
+     *
+     * @param $freeForm the value from the input field.
+     *
+     * @return false in case of error, otherwise a borken down list of
+     * recipients array(array('name' => '"Doe, John"', 'email' => 'john@doe.org'),...)
+     */
+    public function validateFreeFormAddresses($header, $freeForm)
+    {
+      $mailer = new \PHPMailer(true);
+      $parser = new \Mail_RFC822(null, null, null, false);
+
+      $brokenRecipients = array();
+      $recipients = $parser->parseAddressList($freeForm);
+      $parseError = $parser->parseError();
+      if ($parseError !== false) {
+        \OCP\Util::writeLog(Config::APP_NAME,
+                            "Parse-error on email address list: ".
+                            vsprintf($parseError['message'], $parseError['data']),
+                            \OCP\Util::DEBUG);
+        // We report the entire string.
+        $brokenRecipients[] = L::t($parseError['message'], $parseError['data']);
+      } else {
+        \OCP\Util::writeLog(Config::APP_NAME,
+                            "Parsed address list: ".
+                            print_r($recipients, true),
+                            \OCP\Util::DEBUG);
+        $recipients = array();
+        foreach ($recipients as $emailRecord) {
+          $email = $emailRecord->mailbox.'@'.$emailRecord->host;
+          $name  = $emailRecord->personal;
+          if ($name == '') {
+            $recipient = $email;
+          } else {
+            $recipient = $name.' <'.$email.'>';
+          }
+          if (!$mailer->validateAddress($email)) {
+            $brokenRecipients[] = htmlspecialchars($recipient);
+          } else {
+            $recipients[] = array('email' => $email,
+                                  'name' => $name);
+          }
+        }
+      }
+      if (count($brokenRecipients) != 0) {
+        $this->diagnostics['AddressValidation'][$header] = $brokenRecipients;
+        $this->executionStatus = false;
+        return false;
+      } else {
+        return $recipients;
+      }
+    }    
+
     /**Validates the given template, i.e. searches for unknown
      * substitutions. This function is invoked right before sending
      * stuff out and before storing drafts. In order to do so we
      * substitute each known variable by a dummy value and then make
      * sure that no variable tag ${...} remains.
      */
-    private function validateTemplate($template)
+    public function validateTemplate($template)
     {
       $templateError = array();
 
       // Check for per-member stubstitutions
-      $memberTemplateLeftOver = array();
 
       $dummy = $template;
 
@@ -217,10 +297,11 @@ mandateReference
           $dummy = preg_replace('/[$]{MEMBER::'.$placeholder.'}/', $column, $dummy);
         }
         
-        if (preg_match('![$]{MEMBER::[^}]+}!', $dummy, $memberTemplateLeftOver)) {
+        if (preg_match('![$]{MEMBER::[^}]+}!', $dummy, $leftOver)) {
           $templateError[] = 'member';
+          $this->diagnostics['TemplateValidation']['MemberErrors'] = $leftOver;
         }
-        
+
         // Now remove all member variables, known or not
         $dummy = preg_replace('/[$]{MEMBER::[^}]*}/', '', $dummy);
       }
@@ -233,8 +314,9 @@ mandateReference
           $dummy = preg_replace('/[$]{GLOBAL::'.$key.'}/', $value, $dummy);
         }
 
-        if (preg_match('![$]{GLOBAL::[^}]+}!', $dummy, $globalTemplateLeftOver)) {
+        if (preg_match('![$]{GLOBAL::[^}]+}!', $dummy, $leftOver)) {
           $templateError[] = 'global';
+          $this->diagnostics['TemplateValidation']['GlobalErrors'] = $leftOver;
         }        
 
         // Now remove all global variables, known or not
@@ -243,18 +325,18 @@ mandateReference
 
       $spuriousTemplateLeftOver = array();      
       // No substitutions should remain. Check for that.
-      if (preg_match('![$]{[^}]+}!', $dummy, $spuriousTemplateLeftOver)) {
+      if (preg_match('![$]{[^}]+}!', $dummy, $leftOver)) {
         $templateError[] = 'spurious';
+        $this->diagnostics['TemplateValidation']['SpuriousErrors'] = $leftOver;
       }
       
       if (count($templateError) == 0) {
         return true;  
       }
+
+      $this->executionStatus = false;
       
-      // Otherwise construct a cooked status return
-      return array('MemberErrors' => $memberTemplateLeftOver,
-                   'GlobalErrors' => $globalTemplateLeftOver,
-                   'SpuriousErrors' => $spuriousTemplateLeftOver);
+      return false;
     }
 
     private function setDefaultTemplate() 

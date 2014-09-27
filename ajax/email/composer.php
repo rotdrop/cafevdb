@@ -51,8 +51,8 @@ try {
   $debugText = '';
   $messageText = '';
 
-  if (true || Util::debugMode('request')) {
-    $debugText .= '$_POST[] = '.print_r($_POST, true);
+  if (Util::debugMode('request') || Util::debugMode('emailform')) {
+    $debugText .= '$_POST = '.print_r($_POST, true);
   }
 
   $defaultData = array('Request' => 'update',
@@ -76,6 +76,8 @@ try {
 
   $request = $requestData['Request'];
   switch ($request) {
+  case 'send':
+    break;
   case 'cancel':
     // simply let it do the cleanup
     $composer = new EmailComposer();
@@ -142,41 +144,21 @@ try {
 ';
       }
       $requestData['templateOptions'] = $options;
+    } else {
+      $requestData['errorDiagnostics']['caption'] =
+        L::t('Template could not be saved');
     }
     break;
   case 'validateEmailRecipients':
-    $mailer = new \PHPMailer(true);
-    $parser = new \Mail_RFC822(null, null, null, false);
-
-    $brokenRecipients = array();
-    $recipients = $parser->parseAddressList($requestData['Recipients']);
-    $parseError = $parser->parseError();
-    if ($parseError !== false) {
-      \OCP\Util::writeLog(Config::APP_NAME,
-                          "Parse-error on email address list: ".
-                          vsprintf($parseError['message'], $parseError['data']),
-                          \OCP\Util::DEBUG);
-      // We report the entire string.
-      $brokenRecipients[] = L::t($parseError['message'], $parseError['data']);
-    } else {
-      \OCP\Util::writeLog(Config::APP_NAME,
-                          "Parsed address list: ".
-                          print_r($recipients, true),
-                          \OCP\Util::DEBUG);
-      foreach ($recipients as $emailRecord) {
-        $email = $emailRecord->mailbox.'@'.$emailRecord->host;
-        $name  = $emailRecord->personal;
-        if ($name == '') {
-          $recipient = $email;
-        } else {
-          $recipient = $name.' <'.$email.'>';
-        }
-        if (!$mailer->validateAddress($email)) {
-          $brokenRecipients[] = htmlspecialchars($recipient);
-        }
-      }
+    $composer = new EmailComposer();
+    $composer->validateFreeFormAddresses($requestData['Header'],
+                                         $requestData['Recipients']);
+    $requestData['errorStatus'] = $composer->errorStatus();
+    $requestData['errorDiagnostics'] = $composer->errorDiagnostics();
+    if ($requestData['errorStatus']) {
+      $requestData['errorDiagnostics']['caption'] =
+        L::t('Email Address Validation Failed');      
     }
-    $requestData['brokenRecipients'] = $brokenRecipients;
     break;
   default:
     throw new \InvalidArgumentException(L::t("Unknown request: `%s'.", $request));
@@ -184,13 +166,36 @@ try {
   
   $debugText .= ob_get_contents();
   @ob_end_clean();
-    
+  
+  if ($requestData['errorStatus']) {
+    $caption = $requestData['errorDiagnostics']['caption'];
+
+    if (Util::debugMode('request') || Util::debugMode('emailform')) {
+      $debugText .= print_r($requestData, true);
+    }
+
+    $tmpl = new OCP\Template('cafevdb', 'part.emailform.errorstatus');
+    $tmpl->assign('Projectname', $projectName);
+    $tmpl->assign('ProjectId', $projectId);
+    $tmpl->assign('Diagnostics', $requestData['errorDiagnostics']);
+    $message = $tmpl->fetchPage();
+
+    OCP\JSON::error(
+      array('data' => array('projectName' => $projectName,
+                            'projectId' => $projectId,
+                            'caption' => $caption,
+                            'message' => $message,
+                            'request' => $request,
+                            'requestData' => $requestData,
+                            'debug' => htmlspecialchars($debugText))));
+  } else {
   OCP\JSON::success(
     array('data' => array('projectName' => $projectName,
                           'projectId' => $projectId,
                           'request' => $request,
                           'requestData' => $requestData,
-                          'debug' => 'id: '.$projectId.' name: '.$projectName.' '.htmlspecialchars($debugText))));
+                          'debug' => htmlspecialchars($debugText))));
+  }
 
   return true;
 

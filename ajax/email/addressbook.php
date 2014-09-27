@@ -99,7 +99,8 @@ try {
     }
     $formContacts[] = array('email' => $email,
                             'name' => $name,
-                            'addressBook' => L::t('Form Input'));
+                            'addressBook' => L::t('Form Input'),
+                            'class' => 'free-form');
   }
 
   // The total options list is the union of the (remaining) free-form
@@ -116,10 +117,15 @@ try {
     } else {
       $displayName = $entry['name'].' <'.$email.'>';
     }
-    $selectOptions[] = array('value' => $email,
-                             'name' => $displayName,
-                             'flags' => isset($freeForm[$email]) ? Navigation::SELECTED : 0,
-                             'group' => $entry['addressBook']);
+    
+    $option = array('value' => $email,
+                    'name' => $displayName,
+                    'flags' => isset($freeForm[$email]) ? Navigation::SELECTED : 0,
+                    'group' => $entry['addressBook']);
+    if (isset($entry['class'])) {
+      $option['groupClass'] = $entry['class'];
+    }
+    $selectOptions[] = $option;
   }
 
   \OCP\Util::writeLog(Config::APP_NAME, 'ADDRBOOK: '.print_r($selectOptions, true), \OC_LOG::DEBUG);
