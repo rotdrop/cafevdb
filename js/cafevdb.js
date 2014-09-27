@@ -347,6 +347,148 @@ var CAFEVDB = CAFEVDB || {};
       replace(/\)/g, '%29').replace(/\*/g, '%2A').replace(/%20/g, '+');
   };
 
+  CAFEVDB.queryData = function(queryString, preserveDuplicates) {
+    /*
+     *
+     * QueryData.js
+     *
+     * A function to parse data from a query string
+     *
+     * Created by Stephen Morley - http://code.stephenmorley.org/ - and released under
+     * the terms of the CC0 1.0 Universal legal code:
+     *
+     * http://creativecommons.org/publicdomain/zero/1.0/legalcode
+     *
+     * Creates an object containing data parsed from the specified query string. The
+     * parameters are:
+     *
+     * queryString        - the query string to parse. The query string may start
+     *                      with a question mark, spaces may be encoded either as
+     *                      plus signs or the escape sequence '%20', and both
+     *                      ampersands and semicolons are permitted as separators.
+     *                      This optional parameter defaults to query string from
+     *                      the page URL.
+     * preserveDuplicates - true if duplicate values should be preserved by storing
+     *                      an array of values, and false if duplicates should
+     *                      overwrite earler occurrences. This optional parameter
+     *                      defaults to false.
+     */
+
+    var result = {};
+    
+    // if a query string wasn't specified, use the query string from the URL
+    if (queryString == undefined){
+      queryString = location.search ? location.search : '';
+    }
+    
+    // remove the leading question mark from the query string if it is present
+    if (queryString.charAt(0) == '?') queryString = queryString.substring(1);
+    
+    // check whether the query string is empty
+    if (queryString.length > 0){
+      
+      // replace plus signs in the query string with spaces
+      queryString = queryString.replace(/\+/g, ' ');
+
+      // split the query string around ampersands and semicolons
+      var queryComponents = queryString.split(/[&;]/g);
+
+      // loop over the query string components
+      for (var index = 0; index < queryComponents.length; index ++){
+        // extract this component's key-value pair
+        var keyValuePair = queryComponents[index].split('=');
+        var key          = decodeURIComponent(keyValuePair[0]);
+        var value        = keyValuePair.length > 1
+                         ? decodeURIComponent(keyValuePair[1])
+                         : '';
+        // check whether duplicates should be preserved
+        if (preserveDuplicates){
+          // create the value array if necessary and store the value
+          if (!(key in this)) this[key] = [];
+          result[key].push(value);
+        }else{
+          // store the value
+          result[key] = value;
+        } 
+      } 
+    }
+    return result;
+  };
+
+  CAFEVDB.print_r = function(array, return_val) {
+    // discuss at: http://phpjs.org/functions/print_r/
+    // original by: Michael White (http://getsprink.com)
+    // improved by: Ben Bryan
+    // improved by: Brett Zamir (http://brett-zamir.me)
+    // improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    // input by: Brett Zamir (http://brett-zamir.me)
+    // depends on: echo
+    // example 1: print_r(1, true);
+    // returns 1: 1
+    var output = '',
+        pad_char = ' ',
+        pad_val = 4,
+        d = window.document,
+        getFuncName = function (fn) {
+          var name = (/\W*function\s+([\w\$]+)\s*\(/)
+                     .exec(fn);
+          if (!name) {
+            return '(Anonymous)';
+          }
+          return name[1];
+        };
+    repeat_char = function (len, pad_char) {
+      var str = '';
+      for (var i = 0; i < len; i++) {
+        str += pad_char;
+      }
+      return str;
+    };
+    formatArray = function (obj, cur_depth, pad_val, pad_char) {
+      if (cur_depth > 0) {
+        cur_depth++;
+      }
+      var base_pad = repeat_char(pad_val * cur_depth, pad_char);
+      var thick_pad = repeat_char(pad_val * (cur_depth + 1), pad_char);
+      var str = '';
+      if (typeof obj === 'object' && obj !== null && obj.constructor && getFuncName(obj.constructor) !==
+          'PHPJS_Resource') {
+        str += 'Array\n' + base_pad + '(\n';
+        for (var key in obj) {
+          if (Object.prototype.toString.call(obj[key]) === '[object Array]') {
+            str += thick_pad + '[' + key + '] => ' + formatArray(obj[key], cur_depth + 1, pad_val, pad_char);
+          } else {
+            str += thick_pad + '[' + key + '] => ' + obj[key] + '\n';
+          }
+        }
+        str += base_pad + ')\n';
+      } else if (obj === null || obj === undefined) {
+        str = '';
+      } else {
+        // for our "resource" class
+        str = obj.toString();
+      }
+      return str;
+    };
+    output = formatArray(array, 0, pad_val, pad_char);
+    if (return_val !== true) {
+      if (d.body) {
+        window.echo(output);
+      } else {
+        try {
+          // We're in XUL, so appending as plain text won't work; trigger an error out of XUL
+          d = XULDocument;
+          window.echo('<pre xmlns="http://www.w3.org/1999/xhtml" style="white-space:pre;">' + output + '</pre>');
+        } catch (e) {
+          // Outputting as plain text may work in some plain XML
+          window.echo(output);
+        }
+      }
+      return true;
+    }
+    return output;
+  };
+
   /*jQuery dialog popup with one chosen multi-selelct box inside.
    * 
    */

@@ -426,22 +426,31 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                  break;
                default:
                  postponeEnable = true;
-                 OC.dialogs.alert(t('cafevdb',
-                                    'Unknown request: {Request}',
-                                    { Request: request }),
-                                  t('cafevdb', 'Error'),
+                 data.data.message =
+                   t('cafevdb', 'Unknown request: {Request}', { Request: request });
+                 data.data.caption = t('cafevdb', 'Error')
+                 OC.dialogs.alert(data.data.message, data.data.caption,
                                   validateUnlock,
                                   true, true);
                  break;
                };
 
                var debugText = '';
-               if (typeof data.data.debug != 'undefined') {
-                 debugText = data.data.debug;
+               if (data.data.caption != 'undefined') {
+                 debugText += '<div class="error caption">'+data.data.caption+'</div>';
                }
-               debugOutput.html('<pre>'+debugText+'</pre>'+
-                                JSON.stringify(requestData)+
-                                $('<div></div>').text(CAFEVDB.urldecode(post)).html());
+               if (data.data.message != 'undefined') {
+                 debugText += data.data.message;
+               }
+               if (typeof data.data.debug != 'undefined') {
+                 debugText += '<pre>'+data.data.debug+'</pre>';
+               }
+               if (debugText != '') {
+                 debugText += '<pre>post = '+CAFEVDB.print_r(CAFEVDB.queryData(post), true)+'</pre>';
+                 debugText += '<pre>requestData = '+CAFEVDB.print_r(requestData, true)+'</pre>';
+                 debugOutput.html(debugText);
+               }
+               
                if (!postponeEnable) {
                  validateUnlock();
                }
