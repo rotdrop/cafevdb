@@ -745,14 +745,17 @@ var CAFEVDB = CAFEVDB || {};
    * @param required List of required fields in data.data.
    * 
    */
-  CAFEVDB.ajaxErrorHandler = function(data, required) {
+  CAFEVDB.ajaxErrorHandler = function(data, required, errorCB) {
+    if (typeof errorCB == 'undefined') {
+      errorCB = function() {};
+    }
     // error handling
     if (typeof data == 'undefined' ||
         typeof data.status == 'undefined' ||
         typeof data.data == 'undefined') {
       OC.dialogs.alert(t('cafevdb', 'Unrecoverable unknown internal error, '+
                          'no further information available, sorry.'),
-                       t('cafevdb', 'Internal Error'), undefined, true);
+                       t('cafevdb', 'Internal Error'), errorCB, true);
       return false;
     }
     var missing = '';
@@ -780,10 +783,10 @@ var CAFEVDB = CAFEVDB || {};
         // this case no regular data-fields have been constructed
         info += '<div class="missing error">'+missing+'</div>';
       }
-      OC.dialogs.alert(info, t('cafevdb', 'Error'), undefined, true, true);
       if (data.data.debug != '') {
-        OC.dialogs.alert('<div class="debug error contents">'+data.data.debug+'</div>', t('cafevdb', 'Debug Information'), undefined, true, true);
+        OC.dialogs.info('<div class="debug error contents">'+data.data.debug+'</div>', t('cafevdb', 'Debug Information'), undefined, true, true);
       }
+      OC.dialogs.alert(info, t('cafevdb', 'Error'), errorCB, true, true);
       return false;
     }
     return true;

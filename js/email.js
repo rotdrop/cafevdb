@@ -265,11 +265,27 @@ CAFEVDB.Email = CAFEVDB.Email || {};
     var currentTemplate = fieldset.find('#emailCurrentTemplate');
     var messageText = fieldset.find('textarea');
     var eventAttachmentsSelector = fieldset.find('select.event-attachments');
-    var fileAttachmentsSelector = fieldset.find('select.file-attachments');
+    var fileAttachmentsSelector = fieldset.find('select.file-attachments');    
+    var sendButton = fieldset.find('input.submit.send');
 
     // Event dispatcher, so to say
-    var applyComposerControls = function(event, request) {
+    var applyComposerControls = function(event, request, validateLockCB) {
       event.preventDefault();        
+      
+      if (typeof validateLockCB == 'undefined') {
+        validateLockCB = function(lock) {};
+      }
+
+      var validateLock = function() {
+        validateLockCB(true)
+      };
+
+      var validateUnlock = function() {
+        validateLockCB(false)
+      };
+
+      // until end of validation
+      validateLock(true);
       
       var post = '';
       if (typeof request != 'undefined' && request.SingleItem) {
@@ -291,9 +307,12 @@ CAFEVDB.Email = CAFEVDB.Email || {};
       $.post(OC.filePath('cafevdb', 'ajax/email', 'composer.php'),
              post,
              function(data) {
-               if (!CAFEVDB.ajaxErrorHandler(data, [
-                 'projectId', 'projectName', 'request', 'requestData'
-               ])) {
+               var postponeEnable = false;
+               $('.tipsy').remove();
+               if (!CAFEVDB.ajaxErrorHandler(
+                 data,
+                 [ 'projectId', 'projectName', 'request', 'requestData' ],
+                 validateUnlock)) {
                  return false;
                }
                var request = data.data.request;
@@ -361,10 +380,13 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                    break;
                  }
                  default:
+                   postponeEnable = true;
                    OC.dialogs.alert(t('cafevdb',
                                       'Unknown form element: {FormElement}',
                                       { FormElement: requestData.formElement }),
-                                    t('cafevdb', 'Error'), undefined, true, true);
+                                    t('cafevdb', 'Error'),
+                                    validateUnlock,
+                                    true, true);
                    break;
                  }
                  break;
@@ -379,6 +401,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                    faultyItems += '<li>'+faultyRecipients[idx]+'</li>';
                  }
                  if (faultyItems != '') {
+                   postponeEnable = true;
                    OC.dialogs.alert('<div class="error syntax contents">'+
                                     t('cafevdb',
                                       'The following email addresses appear to be invalid. '+
@@ -386,7 +409,8 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                                     '<ul>'+faultyItems+'</ul>'+
                                     '</div>',
                                     t('cafevdb', 'Invalid Email Addresses'),
-                                    undefined, true, true);
+                                    validateUnlock,
+                                    true, true);
                  }
                  break;
                case 'setTemplate':
@@ -440,6 +464,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                      }
                      errorList += '</ul></div>';
                    }
+                   postponeEnable = true;
                    OC.dialogs.alert('<div class="error contents template">'+
                                     t('cafevdb',
                                       'Template not saved due to template validation errors,'+
@@ -449,7 +474,8 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                                       'Please understand that the software is really `picky\': '+
                                       'names have to match exactly. Please use only capital letters for variable names.'),
                                     t('cafevdb', 'Template could not be saved'),
-                                    undefined, true, true);
+                                    validateUnlock,
+                                    true, true);
                  }
                  break;
                case 'deleteTemplate':
@@ -460,10 +486,13 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                  templateSelector.trigger("chosen:updated");               
                  break;
                default:
+                 postponeEnable = true;
                  OC.dialogs.alert(t('cafevdb',
                                     'Unknown request: {Request}',
                                     { Request: request }),
-                                  t('cafevdb', 'Error'), undefined, true, true);
+                                  t('cafevdb', 'Error'),
+                                  validateUnlock,
+                                  true, true);
                  break;
                };
 
@@ -474,6 +503,9 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                debugOutput.html('<pre>'+debugText+'</pre>'+
                                 JSON.stringify(requestData)+
                                 $('<div></div>').text(CAFEVDB.urldecode(post)).html());
+               if (!postponeEnable) {
+                 validateUnlock();
+               }
                return false;
              });
       return false;
@@ -481,16 +513,30 @@ CAFEVDB.Email = CAFEVDB.Email || {};
 
     /*************************************************************************
      * 
+     * Finally send the entire mess to the recipients
+     */
+    sendButton.off('click').on('click', function(event) {
+      event.stopImmediatePropagation();
+      applyComposerControls.call(this, event, {
+        'Request': 'send',
+        'Send': 'ThePointOfNoReturn'
+      });
+      return false;
+    });
+
+    /*************************************************************************
+     * 
      * Close the dialog
      */
 
-    fieldset.find('input.submit.cancel').off('click');
-    fieldset.find('input.submit.cancel').on('click', function(event) {
-      applyComposerControls.call(this, event, { 'Request': 'cancel',
-                                                'Cancel': 'DoesNotMatter',
-                                                'FormStatus': 'submitted',
-                                                'SingleItem': true
-                                              });
+    fieldset.find('input.submit.cancel').off('click').
+      on('click', function(event) {
+      applyComposerControls.call(this, event, {
+        'Request': 'cancel',
+        'Cancel': 'DoesNotMatter',
+        'FormStatus': 'submitted',
+        'SingleItem': true
+      });
       // Close the dialog in any case.
       dialogHolder.dialog('close');
       return false;
@@ -576,17 +622,28 @@ CAFEVDB.Email = CAFEVDB.Email || {};
      * 
      * Validate Cc: and Bcc: entries.
      */
-    var carbonCopy = fieldset.find('#carbon-copy');
-    var blindCarbonCopy = fieldset.find('#blind-carbon-copy');
-    fieldset.off('blur', '#carbon-copy, #blind-carbon-copy');
-    fieldset.on('blur', '#carbon-copy, #blind-carbon-copy', function(event) {
+    var carbonCopy = fieldset.find('#carbon-copy, #blind-carbon-copy');
+    var carbonCopyBlur = function(event) {
+      var self = $(this);
       event.stopImmediatePropagation();
       applyComposerControls.call(this, event, { 'Request': 'validateEmailRecipients',
                                                 'Recipients': $(this).val(),
                                                 'SingleItem': true
-                                              });
+                                              },
+                                 function(lock) {
+                                   sendButton.prop('disabled', lock);
+                                   if (lock) {
+                                     self.off('blur');
+                                   } else {
+                                     self.on('blur', carbonCopyBlur);
+                                   }
+                                 });
       return false;
-    })
+    };
+
+    carbonCopy.off('blur').on('blur', function(event) {
+      return carbonCopyBlur.call(this, event);
+    });
 
     /*************************************************************************
      * 
