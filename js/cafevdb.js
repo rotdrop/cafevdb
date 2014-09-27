@@ -404,7 +404,7 @@ var CAFEVDB = CAFEVDB || {};
         // check whether duplicates should be preserved
         if (preserveDuplicates){
           // create the value array if necessary and store the value
-          if (!(key in this)) this[key] = [];
+          if (!(key in result)) result[key] = [];
           result[key].push(value);
         }else{
           // store the value

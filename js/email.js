@@ -446,8 +446,13 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                  debugText += '<pre>'+data.data.debug+'</pre>';
                }
                if (debugText != '') {
-                 debugText += '<pre>post = '+CAFEVDB.print_r(CAFEVDB.queryData(post), true)+'</pre>';
-                 debugText += '<pre>requestData = '+CAFEVDB.print_r(requestData, true)+'</pre>';
+                 var addOn;
+                 addOn = CAFEVDB.print_r(CAFEVDB.queryData(post, true), true)
+                 addOn = $('<div></div>').text(addOn).html();
+                 debugText += '<pre>post = '+addOn+'</pre>';
+                 addOn = CAFEVDB.print_r(requestData, true);
+                 addOn = $('<div></div>').text(addOn).html();
+                 debugText += '<pre>requestData = '+addOn+'</pre>';
                  debugOutput.html(debugText);
                }
                
@@ -467,7 +472,8 @@ CAFEVDB.Email = CAFEVDB.Email || {};
       event.stopImmediatePropagation();
       applyComposerControls.call(this, event, {
         'Request': 'send',
-        'Send': 'ThePointOfNoReturn'
+        'Send': 'ThePointOfNoReturn',
+        'SelectedRecipients': form.find('select#recipients-select').val()
       });
       return false;
     });
@@ -557,8 +563,8 @@ CAFEVDB.Email = CAFEVDB.Email || {};
      * 
      * Subject and sender name. We simply trim the spaces away. Could also do this in JS.
      */
-    fieldset.off('blur', 'input.email-subject, input.sender-name');
-    fieldset.on('blur', 'input.email-subject, input.sender-name',
+    fieldset.off('blur', 'input.email-subject, input.sender-name').
+      on('blur', 'input.email-subject, input.sender-name',
                 function(event) {
                   event.stopImmediatePropagation();
                   var self = $(this);
@@ -754,8 +760,11 @@ CAFEVDB.Email = CAFEVDB.Email || {};
       var self = $(this);
       var input = fieldset.find(self.data('for'));
 
-      // We trigger validation before we pop-up.
-      input.trigger('blur');
+      if (input.val().trim() != '') {
+        // We trigger validation before we pop-up, but no need to do
+        // so on empty input.
+        input.trigger('blur');
+      }
 
       var post = { 'FreeFormRecipients': input.val() };
       $.post(OC.filePath('cafevdb', 'ajax/email', 'addressbook.php'),
