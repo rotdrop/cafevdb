@@ -36,7 +36,7 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
 
 ?>
 
-<fieldset id="cafevdb-emial-composition-fieldset" class="email-composition page">
+<fieldset id="cafevdb-email-composition-fieldset" class="email-composition page">
   <!-- <legend id="cafevdb-email-form-legend"><?php echo L::t('Compose Em@il'); ?></legend> -->
   <?php echo Navigation::persistentCGI('emailComposer', $_['ComposerFormData']); ?>
   <table class="cafevdb-email-composition-form">
