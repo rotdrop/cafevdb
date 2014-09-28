@@ -70,7 +70,7 @@ div.cfgerror {
 .error.caption {
   font-size:110%;
   color:blue;
-  text-style:italic;
+  font-style:italic;
 }
 
 .error.debug.contents p {
@@ -96,6 +96,19 @@ div.cfgerror {
 
 .error.exception.trace p {
   /* white-space:nowrap; */
+}
+
+.error a {
+  font-weight:bold;
+  text-decoration:underline;
+  color:red !important;
+}
+
+.error a:hover {
+  font-weight:bold;
+  font-style:italic;
+  text-decoration:underline;
+  color:red !important;
 }
 
 /*******************************************************************************
