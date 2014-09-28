@@ -336,7 +336,9 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                var request = data.data.request;
                var requestData = data.data.requestData;
                switch (request) {
+               case 'send':
                case 'cancel':
+                 // status feed-back handled by general code.
                  break;
                case 'update':
                  switch (requestData.formElement) {
@@ -629,7 +631,8 @@ CAFEVDB.Email = CAFEVDB.Email || {};
       }
       CAFEVDB.Projects.eventsPopup({ 'ProjectId': projectId,
                                      'Project': projectName,
-                                     'EventSelect': events});
+                                     'EventSelect': events},
+                                   false /* only move to top if already open */);
       return false;
     });
 
@@ -678,6 +681,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
       var events = $(this).val();
       if (!events) {
         events = [];
+        fieldset.find('tr.event-attachments').hide();
       }
       eventDialog.trigger('cafevdb:events_changed', [ events ]);
 

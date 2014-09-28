@@ -45,10 +45,24 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
     /**Generate a popup-dialog with a wiki-page. Not to much project
      * related, rather general. Page and page-title are assumed to be
      * attached to the "post"-object
+     * 
+     * @param post Arguments object:
+     * { Project: 'NAME', ProjectId: XX }
+     * 
+     * @param reopen If true, close any already dialog and re-open it
+     * (the default). If false, only raise an existing dialog to top.
      */
-    Projects.wikiPopup = function(post) {
-        if ($('#dokuwiki_popup').dialog('isOpen') == true) {
-            $('#dokuwiki_popup').dialog('close').remove();
+    Projects.wikiPopup = function(post, reopen) {
+        if (typeof reopen == 'undefined') {
+            reopen = false;
+        }
+        var wikiDlg = $('#dokuwiki_popup');
+        if (wikiDlg.dialog('isOpen') == true) {
+            if (reopen === false) {
+                wikiDlg.dialog('moveToTop');
+                return;
+            }
+            wikiDlg.dialog('close').remove();
         }
         DWEmbed.wikiPopup({ wikiPage: post.wikiPage,
                             popupTitle: post.popupTitle,
@@ -63,10 +77,21 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
      * 
      * @param post Arguments object:
      * { Project: 'NAME', ProjectId: XX }
+     * 
+     * @param reopen If true, close any already dialog and re-open it
+     * (the default). If false, only raise an existing dialog to top.
      */
-    Projects.eventsPopup = function(post) {
-        if ($('#events').dialog('isOpen') == true) {
-            $('#events').dialog('close').remove();
+    Projects.eventsPopup = function(post, reopen) {
+        if (typeof reopen == 'undefined') {
+            reopen = false;
+        }
+        var eventsDlg = $('#events');
+        if (eventsDlg.dialog('isOpen') == true) {
+            if (reopen === false) {
+                eventsDlg.dialog('moveToTop');
+                return;
+            }
+            eventsDlg.dialog('close').remove();
         }
         $.post(OC.filePath('cafevdb', 'ajax/events', 'events.php'),
                post, CAFEVDB.Events.UI.init, 'json');
@@ -76,10 +101,21 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
      * 
      * @param post Arguments object:
      * { Project: 'NAME', ProjectId: XX }
+     * 
+     * @param reopen If true, close any already dialog and re-open it
+     * (the default). If false, only raise an existing dialog to top.
      */
-    Projects.emailPopup = function(post) {
-        if ($('#emailformdialog').dialog('isOpen') == true) {
-            $('#emailformdialog').dialog('close').remove();
+    Projects.emailPopup = function(post, reopen) {
+        if (typeof reopen == 'undefined') {
+            reopen = false;
+        }
+        var emailDlg = $('#emailformdialog');
+        if (emailDlg.dialog('isOpen') == true) {
+            if (reopen === false) {
+                emailDlg.dialog('moveToTop');
+                return;
+            }
+            emailDlg.dialog('close').remove();
         }
         CAFEVDB.Email.emailFormPopup(post, false);
     };    

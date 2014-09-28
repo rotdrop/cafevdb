@@ -105,10 +105,7 @@ var CAFEVDB = CAFEVDB || {};
           });
           $('#events').off('change', 'input.email-check').
             on('change', 'input.email-check', function(event) {
-            var emailFormDialog = $('div#emailformdialog');
-            if (emailFormDialog.length > 0) {
-              $('input.projectevents-sendmail').trigger('click');
-            }
+            Events.UI.updateEmailForm();
             return false;
           });
         },
@@ -119,7 +116,26 @@ var CAFEVDB = CAFEVDB || {};
         }
       });
     },
-
+    updateEmailForm: function(post, emailFormDialog)
+    {
+      if (typeof emailFormDialog == 'undefined') {
+        emailFormDialog = $('div#emailformdialog');
+      }
+      if (emailFormDialog.length > 0) {
+        // Email dialog already open. We trigger a custom event to
+        // propagte the data. We only submit the event ids.
+        if (typeof post == 'undefined') {
+          post = $('#eventlistform').serializeArray();
+        }
+        var events = [];
+        $.each(post, function (i, param) {
+          if (param.name == 'EventSelect[]') {
+            events.push(param.value);
+          }
+        });
+        emailFormDialog.trigger('cafevdb:events_changed', [ events ]);
+      }
+    },
     relist: function(data) {
       if (data.status == 'success') {
         $('#events div.listing').html(data.data.contents);
@@ -156,10 +172,7 @@ var CAFEVDB = CAFEVDB || {};
       $('#events #eventlistform div.listing :button').off('click').
         on('click', CAFEVDB.Events.UI.buttonClick);
 
-      var emailFormDialog = $('div#emailformdialog');
-      if (emailFormDialog.length > 0) {
-        $('input.projectevents-sendmail').trigger('click');
-      }            
+      Events.UI.updateEmailForm();
 
       return false;
     },
@@ -270,13 +283,10 @@ var CAFEVDB = CAFEVDB || {};
         } else {
           // Email dialog already open. We trigger a custom event to
           // propagte the data. We only submit the event ids.
-          var events = [];
-          $.each(post, function (i, param) {
-            if (param.name == 'EventSelect[]') {
-              events.push(param.value);
-            }
-          });
-          emailFormDialog.trigger('cafevdb:events_changed', [ events ]);
+          Events.UI.updateEmailForm(post, emailFormDialog);
+
+          // and we move the email-dialog to front
+          emailFormDialog.dialog('moveToTop');
         }
         
       } else if (name == 'download') {
