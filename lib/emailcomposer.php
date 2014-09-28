@@ -473,12 +473,12 @@ mandateReference
           // names and email addresses.
   
           foreach ($this->onLookers['BCC'] as $value) {
-            $stingBCC .= $value['name'].' <'.$value['email'].'>, ';
+            $stringBCC .= $value['name'].' <'.$value['email'].'>, ';
             // PHP-Mailer adds " for itself as needed
             $value['name'] = trim($value['name'], '"');
             $mail->AddBCC($value['email'], $value['name']);
           }
-          $stringBCC = trim($this->BCC, ', ');
+          $stringBCC = trim($stringBCC, ', ');
         }
         $logMessage->BCC = $stringBCC;
 
