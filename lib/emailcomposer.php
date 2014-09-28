@@ -74,6 +74,7 @@ mandateReference
 ';
     private $opts; ///< For db connection and stuff.
     private $dbh;  ///< Data-base handle.
+    private $user; ///< Owncloud user.
 
     private $recipients; ///< The list of recipients.
     private $onLookers;  ///< Cc: and Bcc: recipients.
@@ -88,7 +89,6 @@ mandateReference
 
     private $catchAllEmail; ///< The fixed From: email address.
     private $catchAllName;  ///< The default From: name.
-    private $senderName;    ///< The modifiable From: name.
 
     private $initialTemplate;
     private $templateNames;
@@ -101,8 +101,6 @@ mandateReference
     private $executionStatus; // false on error
     private $diagnostics; // mixed, depends on operation
 
-    private $fileAttach;
-
     /* 
      * constructor
      */
@@ -111,6 +109,8 @@ mandateReference
       Config::init();
       $this->opts = Config::$pmeopts;
       $this->dbh = false;
+
+      $this->user = \OCP\USER::getUser();
 
       $this->constructionMode = Config::$opts['emailtestmode'] != 'off';
       $this->setCatchAll();
@@ -138,7 +138,7 @@ mandateReference
       $this->executionStatus = true;
 
       // Error diagnostics, can be retrieved by
-      // $this->errorDiagnostics()
+      // $this->statusDiagnostics()
       $this->diagnostics = array(
         'Caption' => '',
         'AddressValidation' => array('CC' => array(),
@@ -147,9 +147,13 @@ mandateReference
         'TemplateValidation' => array(),
         'SubjectValidation' => true,
         'FromValidation' => true,
+        'AttachmentValidation' => array('Files' => array(),
+                                        'Events' => array()),
         'MailerExceptions' => array(),
         'MailerErrors' => array(),
         'Duplicates' => array(),
+        'CopyToSent' => array(), // IMAP stuff
+        'Messages' => array(), // start of sent-messages for log window
         'TotalCount' => 0,
         'FailedCount' => 0
         );
@@ -196,6 +200,9 @@ mandateReference
         // Checks passed, let's see what happens. The mailer may throw
         // any kind of "nasty" exceptions.
         $this->sendMessages();
+        if (!$this->errorStatus()) {
+          $this->diagnostics['Caption'] = L::t('Message sent out successfully!');
+        }
       }
     }
 
@@ -283,10 +290,14 @@ mandateReference
                                        htmlspecialchars($dbdata[$column]),
                                        $strMessage);
           }
+          ++$this->diagnostics['TotalCount'];
           $msg = $this->composeAndSend($strMessage, array($recipient), false);
 	  if ($msg !== false) {
             $this->copyToSentFolder($msg);
-	  }
+            // Don't remember the individual emails
+	  } else {
+            ++$this->diagnostics['FailedCount'];
+          }
         }
 
         // Finally send one message without template substitution (as
@@ -297,6 +308,7 @@ mandateReference
         $msg = $this->composeAndSend($templateMessage, array(), true);
         if ($msg !== false) {
           $this->copyToSentFolder($msg);
+          $this->diagnostics['Messages'] = self::head($msg, 64);
         } else {
           ++$this->diagnostics['FailedCount'];
         }
@@ -305,11 +317,31 @@ mandateReference
         $msg = $this->composeAndSend($message, $this->recipients);
         if ($msg !== false) {
           $this->copyToSentFolder($msg);
+          $this->diagnostics['Messages'] = self::head($msg, 64);
         } else {
-          --$this->diagnostics['TotalCount']; // this is ONE then ...
+          ++$this->diagnostics['FailedCount'];
         }
       }
-      return $this->executionsStatus;
+      return $this->executionStatus;
+    }
+
+    /**Extract the first few line of a text-buffer.
+     *
+     * @param $text The text to compute the "head" of.
+     *
+     * @param $lines The number of lines to return at most.
+     *
+     * @param $separators Regexp for preg_split. The default is just
+     * "/\n/". Note that this is enough for \n and \r\n as the text is
+     * afterwars imploded again with \n separator.
+     */
+    static private function head($text, $lines = 64, $separators = "/\n/")
+    {
+      $text = preg_split($separators, $text, $lines+1);
+      if (isset($text[$lines])) {
+        unset($text[$lines]);
+      }
+      return implode("\n", $text);
     }
 
     /**Compose and send one message. If $EMails only contains one
@@ -338,7 +370,7 @@ mandateReference
       $singleAddress = count($EMails) == 1;
       
       // Construct an array for the data-base log
-      $logMessage = new stdClass;
+      $logMessage = new \stdClass;
       $logMessage->recipients = $EMails;
       $logMessage->message = $strMessage;
 
@@ -372,15 +404,17 @@ mandateReference
           $mail->Password = Config::getValue('emailpassword');
         }
         
-        $mail->Subject = $this->mailTag . ' ' . $this->subject;
+        $mail->Subject = $this->messageTag . ' ' . $this->subject();
         $logMessage->subject = $mail->Subject;
         // pass the correct path in order for automatic image conversion
         $mail->msgHTML($strMessage, __DIR__.'/../', true);
 
-        $mail->AddReplyTo($this->senderEmail, $this->sender);
-        $mail->SetFrom($this->senderEmail, $this->sender);
+        $senderName = $this->fromName();
+        $senderEmail = $this->fromAddress();
+        $mail->AddReplyTo($senderEmail, $senderName);
+        $mail->SetFrom($senderEmail, $senderName);
 
-        if (!self::$constructionMode) {
+        if (!$this->constructionMode) {
           // Loop over all data-base records and add each recipient in turn
           foreach ($EMails as $recipient) {
             if ($singleAddress) {
@@ -410,16 +444,16 @@ mandateReference
           // Always drop a copy to the orchestra's email account for
           // archiving purposes and to catch illegal usage. It is legel
           // to modify $this->sender through the email-form.
-          $mail->AddCC($this->catchAllEmail, $this->sender);
+          $mail->AddCC($this->catchAllEmail, $senderName);
         }
         
         // If we have further Cc's, then add them also
+        $stringCC = '';
         if ($addCC === true && !empty($this->onLookers['CC'])) {
           // Now comes some dirty work: we need to split the string in
           // names and email addresses. We re-construct $this->CC in this
           // context, to normalize it for storage in the email-log.
   
-          $stringCC = '';
           foreach ($this->onLookers['CC'] as $value) {
             $stringCC .= $value['name'].' <'.$value['email'].'>, ';
             // PHP-Mailer adds " for itself as needed
@@ -427,15 +461,15 @@ mandateReference
             $mail->AddCC($value['email'], $value['name']);
           }
           $stringCC = trim($stringCC, ', ');
-          $logMessage->CC = $stringCC;
         }
+        $logMessage->CC = $stringCC;
 
         // Do the same for Bcc
+        $stringBCC = '';
         if ($addCC === true && !empty($this->onLookers['BCC'])) {
           // Now comes some dirty work: we need to split the string in
           // names and email addresses.
   
-          $stringBCC = '';
           foreach ($this->onLookers['BCC'] as $value) {
             $stingBCC .= $value['name'].' <'.$value['email'].'>, ';
             // PHP-Mailer adds " for itself as needed
@@ -443,12 +477,16 @@ mandateReference
             $mail->AddBCC($value['email'], $value['name']);
           }
           $stringBCC = trim($this->BCC, ', ');
-          $logMessage->BCC = $stringCC;
         }
+        $logMessage->BCC = $stringBCC;
 
-        $logMessage->fileAttach = $this->fileAttach;
         // Add all registered attachments.
-        foreach ($this->fileAttach as $attachment) {
+        $attachments = $this->fileAttachments();
+        $logMessage->fileAttach = $attachments;
+        foreach ($attachments as $attachment) {
+          if ($attachment['status'] != 'selected') {
+            continue;
+          }
           $mail->AddAttachment($attachment['tmp_name'],
                                basename($attachment['name']),
                                'base64',
@@ -458,25 +496,30 @@ mandateReference
         // Finally possibly to-be-attached events. This cannot throw,
         // but it does not hurt to keep it here. This way we are just
         // ready with adding data to the message inside the try-block.
-        $eventSelect = $this->cgiValue('AttachedEvents', array());
-        if ($this->projectId >= 0 && !empty($eventSelect)) {
+        $events = $this->eventAttachments();
+        $logMessage->events = $events;
+        if ($this->projectId >= 0 && !empty($events)) {
           // Construct the calendar
-          $calendar = Events::exportEvents($eventSelect, $this->project);
+          $calendar = Events::exportEvents($events, $this->projectName);
           
           // Encode it as attachment
           $mail->AddStringEmbeddedImage($calendar,
-                                        md5($this->project.'.ics'),
-                                        $this->project.'.ics',
+                                        md5($this->projectName.'.ics'),
+                                        $this->projectName.'.ics',
                                         'quoted-printable',
                                         'text/calendar');
         }
-        $logMessage->events = $eventSelect;
 
       } catch (\Exception $exception) {
         // popup an alert and abort the form-processing
       
         $this->executionStatus = false;
-        $this->diagnostics['MailerExceptions'][] = $exception->getMessage();
+        $this->diagnostics['MailerExceptions'][] =
+          $exception->getFile().
+          '('.$exception->getLine().
+          '): '.
+          $exception->getMessage();
+
         return false;
       }
 
@@ -507,6 +550,41 @@ mandateReference
       return $mail->GetSentMIMEMessage();
     }
 
+    /**Take the supplied message and copy it to the "Sent" folder.
+     */
+    private function copyToSentFolder($mimeMessage)
+    {
+      // PEAR IMAP works without the c-client library
+      ini_set('error_reporting', ini_get('error_reporting') & ~E_STRICT);
+
+      $imaphost   = Config::getValue('imapserver');
+      $imapport   = Config::getValue('imapport');
+      $imapsecure = Config::getValue('imapsecure');
+
+      $imap = new \Net_IMAP($imaphost,
+                            $imapport,
+                            $imapsecure == 'starttls' ? true : false, 'UTF-8');
+      $user = Config::getValue('emailuser');
+      $pass = Config::getValue('emailpassword');
+      if (($ret = $imap->login($user, $pass)) !== true) {
+        $this->executionStatus = false;
+        $this->diagnostics['CopyToSent']['login'] = $ret->toString();
+        $imap->disconnect();
+        return false;
+      }
+      if (($ret1 = $imap->appendMessage($mimeMessage, 'Sent')) !== true &&
+          ($ret2 = $imap->appendMessage($mimeMessage, 'INBOX.Sent')) !== true) {
+        $this->executionStatus = false;
+        $this->diagnostics['CopyToSent']['copy'] = array('Sent' => $ret1->toString(),
+                                                         'INBOX.Sent' => $ret2->toString());
+        $imap->disconnect();
+        return false;
+      }
+      $imap->disconnect();
+
+      return true;
+    }
+
     /**Log the sent message to the data base if it is new. Return
      * false if this is a duplicate, return the data-base query string
      * to be executed after successful sending of the message in cas
@@ -526,7 +604,7 @@ mandateReference
       $bulkRecipients = trim($bulkRecipients,',');
       $bulkMD5 = md5($bulkRecipients);
   
-      $textforMD5 = $logMessagethis->subject . $strMessage;
+      $textforMD5 = $logMessage->subject . $logMessage->message;
       $textMD5 = md5($textforMD5);
       
       // compute the MD5 stuff for the attachments
@@ -539,7 +617,8 @@ mandateReference
         }
       }
       if (!empty($logMessage->events)) {
-        $name = array('name' => 'Events-'.implode('-', sort($logMessage->events)));
+        sort($logMessage->events);
+        $name = 'Events-'.implode('-', $logMessage->events);
         $md5 = md5($name);
         $attachLog[] = array('name' => $name, 'md5' => $md5);
       }
@@ -578,17 +657,17 @@ mandateReference
 
       $logQuery .= ') VALUES (';
       $logQuery .= "'".$this->user."','".$_SERVER['REMOTE_ADDR']."'";
-      $logQuery .= ",'".mysql_real_escape_string($bulkRecipients,$handle)."'";
-      $logQuery .= ",'".mysql_real_escape_string($bulkMD5,$handle)."'";
-      $logQuery .= ",'".mysql_real_escape_string($logMessage->CC,$handle)."'";
-      $logQuery .= ",'".mysql_real_escape_string($logMessage->BCC,$handle)."'";
-      $logQuery .= ",'".mysql_real_escape_string($logMessage->subject,$handle)."'";
-      $logQuery .= ",'".mysql_real_escape_string($strMessage,$handle)."'";
-      $logQuery .= ",'".mysql_real_escape_string($textMD5,$handle)."'";
+      $logQuery .= ",'".mysql_real_escape_string($bulkRecipients, $handle)."'";
+      $logQuery .= ",'".mysql_real_escape_string($bulkMD5, $handle)."'";
+      $logQuery .= ",'".mysql_real_escape_string($logMessage->CC, $handle)."'";
+      $logQuery .= ",'".mysql_real_escape_string($logMessage->BCC, $handle)."'";
+      $logQuery .= ",'".mysql_real_escape_string($logMessage->subject, $handle)."'";
+      $logQuery .= ",'".mysql_real_escape_string($logMessage->message, $handle)."'";
+      $logQuery .= ",'".mysql_real_escape_string($textMD5, $handle)."'";
       foreach ($attachLog as $pairs) {
         $logQuery .=
-          ",'".mysql_real_escape_string($pairs['name'],$handle)."'".
-          ",'".mysql_real_escape_string($pairs['md5'],$handle)."'";
+          ",'".mysql_real_escape_string($pairs['name'], $handle)."'".
+          ",'".mysql_real_escape_string($pairs['md5'], $handle)."'";
       }
       $logQuery .= ")";
   
@@ -625,24 +704,27 @@ mandateReference
       return $logQuery;
     }
 
-    /**Pre-message construction validation:
+    /**Pre-message construction validation. Collect all data and
+     *perform some checks on it.
      *
-     * Cc (valid email addresses)
-     * Bcc (valid email addresses)
-     * Subject (must not be empty)
-     * Message-text (variable substitution)
-     * Sender Name (must not be empty)  
+     * - Cc, valid email addresses
+     * - Bcc, valid email addresses
+     * - subject, must not be empty
+     * - message-text, variable substitutions
+     * - sender name, must not be empty
+     * - file attchments, temporary local copy must exist
+     * - events, must exist
      */
     private function preComposeValidation()
     {
       // Basic boolean stuff
-      if ($this->cgiValue('Subject', '') == '') {
+      if ($this->subject() == '') {
         $this->diagnostics['SubjectValidation'] = $this->messageTag;
         $this->executionStatus = false;
       } else {
         $this->diagnostics['SubjectValidation'] = true;
       }
-      if ($this->cgiValue('FromName', '') == '') {
+      if ($this->fromName() == '') {
         $this->diagnostics['FromValidation'] = $this->catchAllName;
         $this->executionStatus = false;
       } else {
@@ -657,9 +739,32 @@ mandateReference
       $this->validateTemplate($this->messageContents);
 
       // Cc: and Bcc: validation
-      foreach(array('CC', 'BCC') as $key) {
+      foreach(array('CC' => $this->carbonCopy(),
+                    'BCC' => $this->blindCarbonCopy()) as $key => $emails) {
         $this->onLookers[$key] =
-          $this->validateFreeFormAddresses($key, $this->cgiValue($key, ''));
+          $this->validateFreeFormAddresses($key, $emails);
+      }
+
+      // file attachments, check the selected ones for readability
+      $attachments = $this->fileAttachments();
+      foreach($attachments as $attachment) {
+        if ($attachment['status'] != 'selected') {
+          continue; // don't bother
+        }
+        if (!is_readable($attachment['tmp_name'])) {
+          $this->executionStatus = false;
+          $attachment->status = 'unreadable';
+          $this->diagnostics['AttchmentValidation']['Files'][] = $attachment;
+        }
+      }
+
+      // event attachment
+      $events = $this->eventAttachments();
+      foreach($events as $eventId) {
+        if (!Events::fetchEvent($eventId)) {
+          $this->executionStatus = false;
+          $this->diagnostics['AttachmentValidation']['Events'][] = $eventId;
+        }
       }
 
       if (!$this->executionStatus) {
@@ -826,7 +931,7 @@ mandateReference
       } else {
         $this->catchAllEmail = Config::getValue('emailfromaddress');
         $this->catchAllName  = Config::getValue('emailfromname');
-      }    
+      }
     }
 
     /**Return an associative array with keys and column names for the
@@ -1180,7 +1285,7 @@ mandateReference
     /**Export CC. */
     public function carbonCopy()
     {
-      return $this->cgiValue('BCC', '');
+      return $this->cgiValue('CC', '');
     }
 
     /**Export Subject. */
@@ -1308,11 +1413,11 @@ mandateReference
     /**Return the dispatch status. */
     public function errorStatus()
     {
-      return !$this->executionStatus;
+      return $this->executionStatus !== true;
     }
 
     /**Return possible diagnostics or not. Depending on operation. */
-    public function errorDiagnostics()
+    public function statusDiagnostics()
     {
       return $this->diagnostics;
     }
