@@ -1,4 +1,4 @@
-/**Orchestra member, musicion and project management application.
+/* Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *

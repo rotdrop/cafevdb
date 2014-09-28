@@ -1,5 +1,5 @@
 <?php
-/**Orchestra member, musician and project management application.
+/* Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -21,9 +21,7 @@
  */
 
 /**@file
- * Load a PME table without outer controls, intended usage are
- * jQuery dialogs. This is the Ajax query callback; it loads a
- * template with "pme-table" which actually echos the HTML.
+ * AJAX handler for saving Cc: and Bcc: to the Owncloud Contacts.
  */
 
 \OCP\JSON::checkLoggedIn();
