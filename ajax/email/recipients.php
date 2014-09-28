@@ -20,7 +20,8 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**@file Load a PME table without outer controls, intended usage are
+/**@file
+ * Load a PME table without outer controls, intended usage are
  * jQuery dialogs. This is the Ajax query callback; it loads a
  * template with "pme-table" which actually echos the HTML.
  */
