@@ -292,9 +292,14 @@ CAFEVDB.Email = CAFEVDB.Email || {};
         // Only serialize the request, no need to post all data around.
         post = $.param({ emailComposer: request });
       } else {
-        // Serialize almost everything and submit it
-        post = fieldset.serialize();
-        post += '&'+form.find('fieldset.form-data').serialize();
+        if (typeof request != 'undefined' && request.SubmitAll) {
+          // Everthing is greedily submitted ...
+          post = form.serialize();
+        } else {
+          // Serialize almost everything and submit it
+          post = fieldset.serialize();
+          post += '&'+form.find('fieldset.form-data').serialize();
+        }
         if ($(this).is(':button') || $(this).is(':submit')) {
           var tmp = {};
           tmp[$(this).attr('name')] = $(this).val();
@@ -473,7 +478,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
       applyComposerControls.call(this, event, {
         'Request': 'send',
         'Send': 'ThePointOfNoReturn',
-        'SelectedRecipients': form.find('select#recipients-select').val()
+        'SubmitAll': true
       });
       return false;
     });
