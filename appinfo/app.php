@@ -62,6 +62,8 @@ OC::$CLASSPATH['malkusch\bav\BAV'] = 'cafevdb/3rdparty/bav/autoloader/autoloader
 OC::$CLASSPATH['PHPMailer'] = 'cafevdb/3rdparty/PHPMailer/autoloader.php';
 OC::$CLASSPATH['PEAR'] = '3rdparty/PEAR.php';
 OC::$CLASSPATH['Mail_RFC822'] = 'cafevdb/3rdparty/pear/php/Mail/RFC822.php';
+OC::$CLASSPATH['Net_IMAP'] = 'cafevdb/3rdparty/pear/php/Net/IMAP.php';
+
 
 /* Script etc. used by everyone */
 OC_App::registerAdmin( 'cafevdb', 'admin-settings' );
