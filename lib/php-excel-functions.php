@@ -27,6 +27,10 @@ namespace CAFEVDB\PHPExcel
 
   use CAFEVDB\L;
 
+  /**Special value-binder class with tweaks the standard
+   * implementation from PHPExcel a little bit. In particular: EURO,
+   * date-formats, some "germanisms".
+   */
   class ValueBinder
     extends \PHPExcel_Cell_DefaultValueBinder
     implements \PHPExcel_Cell_IValueBinder

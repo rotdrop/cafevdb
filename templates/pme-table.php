@@ -20,7 +20,8 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**@file Load a PME table without outer controls, intended usage are
+/**@file
+ * Load a PME table without outer controls, intended usage are
  * jQuery dialogs. It is assumed that $_['DisplayClass'] can be
  * constructed from $_['ClassArguments'] and provides a method
  * display() which actually echos the HTML code to show.
