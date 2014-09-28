@@ -24,37 +24,22 @@
  * @brief Admin settings.
  */
 
-namespace CAFEVDB 
-{
-
-  /** I AM HERE. */
-  class Foobar
-  {
-    /** I AM HERE. */
-    public function myMethod()
-    {
-      return 0;
-    }
-    
-  }
+\OCP\User::checkAdminUser();
+\OCP\JSON::callCheck();
   
-
-  \OCP\User::checkAdminUser();
-  \OCP\JSON::callCheck();
+if (isset($_POST['CAFEVgroup'])) {
+  $value = $_POST['CAFEVgroup'];
+  \OC_AppConfig::setValue('cafevdb', 'usergroup', $value);
   
-  if (isset($_POST['CAFEVgroup'])) {
-    $value = $_POST['CAFEVgroup'];
-    \OC_AppConfig::setValue('cafevdb', 'usergroup', $value);
-  
-    \OC_JSON::success(
-      array("data" => array( "message" => L::t('Setting orchestra group to `%s\'. Please login as group administrator and configure the Camerata DB application.',
-                                               array($value)))));
-    return true;
-  }
-
-  \OC_JSON::error(
-    array("data" => array( "message" => L::t('Unknown request.'))));
-  
-  return false; ///< error return
+  \OC_JSON::success(
+    array("data" => array( "message" => L::t('Setting orchestra group to `%s\'. Please login as group administrator and configure the Camerata DB application.',
+                                             array($value)))));
+  return true;
 }
+
+\OC_JSON::error(
+  array("data" => array( "message" => L::t('Unknown request.'))));
+  
+return false; ///< error return
+
 ?>
