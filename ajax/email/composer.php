@@ -20,9 +20,8 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**@file Load a PME table without outer controls, intended usage are
- * jQuery dialogs. This is the Ajax query callback; it loads a
- * template with "pme-table" which actually echos the HTML.
+/**@file
+ * @brief Mass-email composition AJAX handler.
  */
 
 \OCP\JSON::checkLoggedIn();
@@ -48,7 +47,7 @@ try {
 
   $_GET = array();
 
-  $debugText = '';
+  $debugText = ''; ///< Diagnostic output, only enabled on request.
   $messageText = '';
 
   if (Util::debugMode('request') || Util::debugMode('emailform')) {
@@ -68,11 +67,8 @@ try {
     $requestData['errorStatus'] = false;
     $requestData['errorDiagnostics'] = '';
   } else {
-    $recipients = false;
-    if (Util::cgiValue('emailRecipients', false) !== false) {
-      $recipientsFilter = new EmailRecipientsFilter();
-      $recipients = $recipientsFilter->selectedRecipients();
-    }
+    $recipientsFilter = new EmailRecipientsFilter();
+    $recipients = $recipientsFilter->selectedRecipients();
     $composer = new EmailComposer($recipients);
     $requestData['errorStatus'] = $composer->errorStatus();
     $requestData['errorDiagnostics'] = $composer->errorDiagnostics();
