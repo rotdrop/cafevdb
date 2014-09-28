@@ -918,8 +918,11 @@ var CAFEVDB = CAFEVDB || {};
 	info += t('cafevdb', 'Unknown error :(');
       }
       if (typeof data.data.error != 'undefined' && data.data.error == 'exception') {
-	info += '<div class="exception error name"><pre>'+data.data.exception+'</pre></div>';
-	info += '<div class="exception error trace"><pre>'+data.data.trace+'</pre></div>';
+        var exceptionText = '';
+        exceptionText += '<div class="exception error name"><pre>'+data.data.exception+'</pre></div>';
+	exceptionText += '<div class="exception error trace"><pre>'+data.data.trace+'</pre></div>';
+        info += exceptionText;
+        data.data.message += exceptionText;
       } else if (missing.length > 0) {
         // Add missing fields only if no exception was caught as in
         // this case no regular data-fields have been constructed
@@ -931,6 +934,7 @@ var CAFEVDB = CAFEVDB || {};
       var caption = data.data.caption;
       if (typeof caption == 'undefined' || caption == '') {
         caption = t('cafevdb', 'Error');
+        data.data.caption = caption;
       }
       OC.dialogs.alert(info, caption, errorCB, true, true);
       return false;

@@ -200,6 +200,17 @@ redaxoDefaultModule
     }    
   }
 
+  /**Return email and display name of the admin user for error
+   * feedback messages.
+   */
+  static public function adminContact()
+  {
+    $name = \OCP\User::getDisplayName('admin');
+    $email = \OCP\Config::getUserValue('admin', 'settings', 'email');
+    return array('name' => $name,
+                 'email' => $email);
+  }  
+
   /**A short-cut, redirecting to the stock functions for the
    * logged-in user.
    */

@@ -47,8 +47,9 @@ try {
 
   $_GET = array();
 
+  $caption = ''; ///< Optional status message caption.
+  $messageText = ''; ///< Optional status message.
   $debugText = ''; ///< Diagnostic output, only enabled on request.
-  $messageText = '';
 
   if (Util::debugMode('request') || Util::debugMode('emailform')) {
     $debugText .= '$_POST = '.print_r($_POST, true);
@@ -65,18 +66,30 @@ try {
   $composer = false;
   if (isset($requestData['SingleItem'])) {
     $requestData['errorStatus'] = false;
-    $requestData['errorDiagnostics'] = '';
+    $requestData['diagnostics'] = '';
   } else {
     $recipientsFilter = new EmailRecipientsFilter();
     $recipients = $recipientsFilter->selectedRecipients();
     $composer = new EmailComposer($recipients);
     $requestData['errorStatus'] = $composer->errorStatus();
-    $requestData['errorDiagnostics'] = $composer->errorDiagnostics();
+    $requestData['diagnostics'] = $composer->statusDiagnostics();
   }
 
   $request = $requestData['Request'];
   switch ($request) {
   case 'send':
+    if (!$composer->errorStatus()) {
+      // Echo something back on success, error diagnostics are handled
+      // in a unified way at the end of this script.
+      $diagnostics = $composer->statusDiagnostics();
+      $caption = $diagnostics['Caption'];
+
+      $tmpl = new OCP\Template('cafevdb', 'part.emailform.statuspage');
+      $tmpl->assign('Projectname', $projectName);
+      $tmpl->assign('ProjectId', $projectId);
+      $tmpl->assign('Diagnostics', $diagnostics);
+      $messageText = $tmpl->fetchPage();
+    }
     break;
   case 'cancel':
     // simply let it do the cleanup
@@ -145,7 +158,7 @@ try {
       }
       $requestData['templateOptions'] = $options;
     } else {
-      $requestData['errorDiagnostics']['Caption'] =
+      $requestData['diagnostics']['Caption'] =
         L::t('Template could not be saved');
     }
     break;
@@ -154,9 +167,9 @@ try {
     $composer->validateFreeFormAddresses($requestData['Header'],
                                          $requestData['Recipients']);
     $requestData['errorStatus'] = $composer->errorStatus();
-    $requestData['errorDiagnostics'] = $composer->errorDiagnostics();
+    $requestData['diagnostics'] = $composer->statusDiagnostics();
     if ($requestData['errorStatus']) {
-      $requestData['errorDiagnostics']['Caption'] =
+      $requestData['diagnostics']['Caption'] =
         L::t('Email Address Validation Failed');      
     }
     break;
@@ -166,35 +179,37 @@ try {
   
   $debugText .= ob_get_contents();
   @ob_end_clean();
-  
+
+  if (Util::debugMode('request') || Util::debugMode('emailform')) {
+    $debugText .= print_r($requestData, true);
+  }
+
   if ($requestData['errorStatus']) {
-    $caption = $requestData['errorDiagnostics']['Caption'];
+    $caption = $requestData['diagnostics']['Caption'];
 
-    if (Util::debugMode('request') || Util::debugMode('emailform')) {
-      $debugText .= print_r($requestData, true);
-    }
-
-    $tmpl = new OCP\Template('cafevdb', 'part.emailform.errorstatus');
+    $tmpl = new OCP\Template('cafevdb', 'part.emailform.statuspage');
     $tmpl->assign('Projectname', $projectName);
     $tmpl->assign('ProjectId', $projectId);
-    $tmpl->assign('Diagnostics', $requestData['errorDiagnostics']);
-    $message = $tmpl->fetchPage();
+    $tmpl->assign('Diagnostics', $requestData['diagnostics']);
+    $messageText = $tmpl->fetchPage();
 
     OCP\JSON::error(
       array('data' => array('projectName' => $projectName,
                             'projectId' => $projectId,
                             'caption' => $caption,
-                            'message' => $message,
+                            'message' => $messageText,
                             'request' => $request,
                             'requestData' => $requestData,
                             'debug' => htmlspecialchars($debugText))));
   } else {
-  OCP\JSON::success(
-    array('data' => array('projectName' => $projectName,
-                          'projectId' => $projectId,
-                          'request' => $request,
-                          'requestData' => $requestData,
-                          'debug' => htmlspecialchars($debugText))));
+    OCP\JSON::success(
+      array('data' => array('projectName' => $projectName,
+                            'projectId' => $projectId,
+                            'caption' => $caption,
+                            'message' => $messageText,
+                            'request' => $request,
+                            'requestData' => $requestData,
+                            'debug' => htmlspecialchars($debugText))));
   }
 
   return true;
@@ -204,14 +219,26 @@ try {
   $debugText .= ob_get_contents();
   @ob_end_clean();
 
+  $exceptionText = $e->getFile().'('.$e->getLine().'): '.$e->getMessage();
+  $trace = $e->getTraceAsString();
+
+  $admin = Config::adminContact();
+
+  $mailto = $admin['email'].
+    '?subject='.rawurlencode('[CAFEVDB-Exception] Exceptions from Email-Form').
+    '&body='.rawurlencode($exceptionText."\r\n".$trace);
+  $mailto = '<span class="error email"><a href="mailto:'.$mailto.'">'.$admin['name'].'</a></span>';
+
   OCP\JSON::error(
     array(
       'data' => array(
+        'caption' => L::t('PHP Exception Caught'),
         'error' => 'exception',
-        'exception' => $e->getFile().'('.$e->getLine().'): '.$e->getMessage(),
-        'trace' => $e->getTraceAsString(),
+        'exception' => $exceptionText,
+        'trace' => $trace,
         'message' => L::t('Error, caught an exception. '.
-                          'Please copy the displayed text and send it by email to the web-master.'),
+                          'Please copy the displayed text and send it by email to %s.',
+                          array($mailto)),
         'debug' => htmlspecialchars($debugText))));
  
   return false;

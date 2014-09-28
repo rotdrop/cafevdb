@@ -43,17 +43,77 @@
  *     )
  *   ),
  *   'SubjectValidation' => true/false (empty subject not allowed),
- *   'FromValidateion' => true/false (empty name not allowed),
+ *   'FromValidation' => true/false (empty name not allowed),
  *   'MailerException' => <exception message from PHPMailer>,
  */
 
 use CAFEVDB\L;
 use CAFEVDB\Util;
 use CAFEVDB\Navigation;
-use CAFEVDB\Email;
+use CAFEVDB\Config;
+
+$admin = Config::adminContact();
 
 $diagnostics = $_['Diagnostics'];
+$numTotal = $diagnostics['TotalCount'];
+$numFailed = $diagnostics['FailedCount'];
+
 $output = false; // set to true if anything has been printed
+
+/*****************************************************************************
+ *
+ * Overall status
+ *
+ */
+
+if ($numTotal > 0 && $numFailed == 0) {
+  $output = true;
+  if ($numTotal > 1) {
+    echo '
+<div class="emailform error group messagecount">
+  <span class="error caption messagecount">
+    '.L::t('The mailing software did not signal an error.').
+      L::t('The message was propably sent out successfully.').'
+  </span>
+</div>';
+  } else {
+    echo '
+<div class="emailform error group messagecount">
+  <span class="error caption messagecount">
+    '.L::t('The mailing software did not signal an error.').
+      L::t('%d messages were propably sent out successfully.').'
+  </span>
+</div>';
+  }
+} else if ($numFailed > 0) {
+  $output = true;
+  echo '
+<div class="emailform error group messagecount">
+  <span class="error caption messagecount">
+    '.L::t('The mailing software encountered errors.');
+  if ($numTotal > 1) {
+    if ($numFailed == $numTotal) {
+      echo '
+    '.L::t('Sending of all %d messages has failed, propably no message has been sent.',
+           array($numTotal));
+    } else if ($numFailed == 1) {
+      echo '
+    '.L::t('One (out of %d) message has probably not been sent.',
+           array($numTotal));
+    } else {
+      echo '
+    '.L::t('%d (out of %d) messages have probably not been sent.',
+           array($numTotal));
+    }
+  } else {
+    echo '
+    '.L::t('The message has probably not been sent.',
+           array($numTotal));
+  } 
+  echo '      
+  </span>
+</div>';
+}
 
 /*****************************************************************************
  *
@@ -62,7 +122,7 @@ $output = false; // set to true if anything has been printed
  */
 
 $templateDiag = $diagnostics['TemplateValidation'];
-if (count($templateDiag) > 0) {
+if (!empty($templateDiag)) {
   $output = true;
   $leadIns = array('MemberErrors' => L::t('Failed individual substitutions'),
                    'GlobalErrors' => L::t('Failed global substitutions'),
@@ -119,7 +179,7 @@ if (count($templateDiag) > 0) {
  */
 
 $addressDiag = $diagnostics['AddressValidation'];
-if (count($addressDiag['CC']) != 0 || count($addressDiag['BCC']) != 0) {
+if (!empty($addressDiag['CC']) || !empty($addressDiag['BCC'])) {
   $output = true;
   echo '
 <div class="emailform error group addresses">
@@ -131,7 +191,7 @@ if (count($addressDiag['CC']) != 0 || count($addressDiag['BCC']) != 0) {
   </div>';
   foreach(array('CC', 'BCC') as $header) {
     $addresses = $addressDiag[$header];
-    if (count($addresses) > 0) {
+    if (!empty($addresses)) {
       $lcHeader = strtolower($header);
       echo '
   <div class="error contents addresses '.$lcHeader.'">
@@ -141,7 +201,7 @@ if (count($addressDiag['CC']) != 0 || count($addressDiag['BCC']) != 0) {
     <ul>';
       foreach($addresses as $address) {
         echo '
-      <li><span class="error item contants adresses">'.$address.'</span></li>';
+      <li><span class="error item contents adresses">'.$address.'</span></li>';
       }
       echo '
     </ul>
@@ -222,6 +282,80 @@ if ($diagnostics['AddressValidation']['Empty']) {
   </div>
 </div>';
 }
+
+if (!empty($diagnostics['AttachmentValidation']['Files'])) {
+} 
+
+if (!empty($diagnostics['AttachmentValidation']['Events'])) {
+  $output = true;
+
+  $failedEvents = $diagnostics['AttachmentValidation']['Events'];
+  echo '
+<div class="emailform error group attachments events">
+  <div class="error contents attachments events">
+    <span class="error caption attachments events">
+      '.L::t('The events could not be attached:').'
+    </span>
+    <ul>';
+      foreach($failedEvents as $event) {
+        echo '
+      <li><span class="error item contents">'.$event.'</span></li>';
+      }
+      echo '
+    </ul>
+  </div>
+</div>';  
+}
+
+if (!empty($diagnostics['MailerExceptions'])) {
+  $output = true;
+
+  $exceptions = $diagnostics['MailerExceptions'];
+  $failedEvents = $diagnostics['AttachmentValidation']['Events'];
+  echo '
+<div class="emailform error group attachments events">
+  <div class="error contents attachments events">
+    <span class="error caption attachments events">
+      '.L::t('While trying to send the message(s), the following exception(s) were caught:').'
+    </span>
+    <ul>';
+  foreach($exceptions as $exception) {
+    echo '
+      <li><span class="error item contents exception name">'.$exception.'</span></li>';
+  }
+  echo '
+    </ul>
+  </div>';
+  $mailto = $admin['email'].
+    '?subject='.rawurlencode('[CAFEVDB-Exception] Exceptions from Email-Form').
+    '&body='.rawurlencode(implode("\r\n", $exceptions));
+  $explanations = L::t('This is an internal error. '.
+                       'Please copy this page and send it via email to %s.',
+                       array('<span class="error email">'.
+                             '<a href="mailto:'.$mailto.'">'.
+                             $admin['name'].
+                             '</a>'.
+                             '</span>'));
+  echo '
+  <div class="error contents explanations">
+  <div class="error heading">'.L::t('Explanations').'</div>
+    '.$explanations.'
+  </div>';
+  echo '
+</div>';  
+} 
+
+if (!empty($diagnostics['AttachmentValidation']['MalerErrors'])) {
+} 
+
+if (!empty($diagnostics['AttachmentValidation']['Duplicates'])) {
+} 
+
+if (!empty($diagnostics['AttachmentValidation']['CopyToSent'])) {
+} 
+
+if (!empty($diagnostics['AttachmentValidation']['Messages'])) {
+} 
 
 if ($output) {
   echo '
