@@ -153,7 +153,9 @@ mandateReference
         'MailerErrors' => array(),
         'Duplicates' => array(),
         'CopyToSent' => array(), // IMAP stuff
-        'Messages' => array(), // start of sent-messages for log window
+        'Message' => array('Text' => '',
+                           'Files' => array(),
+                           'Events' => array()), // start of sent-messages for log window
         'TotalCount' => 0,
         'FailedCount' => 0
         );
@@ -305,19 +307,19 @@ mandateReference
         // catch-all. This Message also gets copied to the Sent-folder
         // on the imap server.
         ++$this->diagnostics['TotalCount'];
-        $msg = $this->composeAndSend($templateMessage, array(), true);
-        if ($msg !== false) {
+        $mimeMsg = $this->composeAndSend($templateMessage, array(), true);
+        if ($mimeMsg !== false) {
           $this->copyToSentFolder($msg);
-          $this->diagnostics['Messages'] = self::head($msg, 64);
+          $this->recordMessageDiagnostics($mimeMsg);
         } else {
           ++$this->diagnostics['FailedCount'];
         }
       } else {
         ++$this->diagnostics['TotalCount']; // this is ONE then ...
-        $msg = $this->composeAndSend($message, $this->recipients);
-        if ($msg !== false) {
-          $this->copyToSentFolder($msg);
-          $this->diagnostics['Messages'] = self::head($msg, 64);
+        $mimeMsg = $this->composeAndSend($message, $this->recipients);
+        if ($mimeMsg !== false) {
+          $this->copyToSentFolder($mimeMsg);
+          $this->recordMessageDiagnostics($mimeMsg);
         } else {
           ++$this->diagnostics['FailedCount'];
         }
@@ -550,6 +552,34 @@ mandateReference
       return $mail->GetSentMIMEMessage();
     }
 
+    private function recordMessageDiagnostics($mimeMsg)
+    {
+      // Positive diagnostics
+      $this->diagnostics['Message']['Text'] = self::head($mimeMsg, 40);
+
+      $this->diagnostics['Message']['Files'] = array();  
+      $attachments = $this->fileAttachments();
+      foreach ($attachments as $attachment) {
+        if ($attachment['status'] != 'selected') {
+          continue;
+        }
+        $size     = \OC_Helper::humanFileSize($attachment['size']);
+        $name     = basename($attachment['name']).' ('.$size.')';
+        $this->diagnostics['Message']['Files'][] = $name;
+      }
+
+      $this->diagnostics['Message']['Events'] = array();
+      $events = $this->eventAttachments();
+      $locale = Util::getLocale();
+      $zone = Util::getTimezone();
+      foreach($events as $eventId) {
+        $event = Events::fetchEvent($eventId);
+        $datestring = Events::briefEventDate($event, $zone, $locale);
+        $name = stripslashes($event['summary']).', '.$datestring;
+        $this->diagnostics['Message']['Events'][] = $name;
+      }
+    }
+
     /**Take the supplied message and copy it to the "Sent" folder.
      */
     private function copyToSentFolder($mimeMessage)
@@ -694,9 +724,17 @@ mandateReference
 
       if ($loggedDates != '') {
         $this->executionStatus = false;
-        $this->diagnostics['Duplicate'][] = array(
+        $shortRecipients = array();
+        foreach($logMessage->recipients as $recipient) {
+          $shortRecipients[] = $recipient['name'].' <'.$recipient['email'].'>';
+        }
+        $this->diagnostics['Duplicates'][] = array(
           'dates' => $loggedDates,
-          'recipients' => $logMessage->recipients
+          'recipients' => $shortRecipients,
+          'text' => $logMessage->message,
+          'textMD5' => $textMD5,
+          'bulkMD5' => $bulkMD5,
+          'bulkRecipients' => $bulkRecipients
           );
         return false;
       }
@@ -801,7 +839,7 @@ mandateReference
       $parser = new \Mail_RFC822(null, null, null, false);
 
       $brokenRecipients = array();
-      $recipients = $parser->parseAddressList($freeForm);
+      $parsedRecipients = $parser->parseAddressList($freeForm);
       $parseError = $parser->parseError();
       if ($parseError !== false) {
         \OCP\Util::writeLog(Config::APP_NAME,
@@ -813,10 +851,10 @@ mandateReference
       } else {
         \OCP\Util::writeLog(Config::APP_NAME,
                             "Parsed address list: ".
-                            print_r($recipients, true),
+                            print_r($parsedRecipients, true),
                             \OCP\Util::DEBUG);
         $recipients = array();
-        foreach ($recipients as $emailRecord) {
+        foreach ($parsedRecipients as $emailRecord) {
           $email = $emailRecord->mailbox.'@'.$emailRecord->host;
           $name  = $emailRecord->personal;
           if ($name == '') {
@@ -837,6 +875,10 @@ mandateReference
         $this->executionStatus = false;
         return false;
       } else {
+        \OCP\Util::writeLog(Config::APP_NAME,
+                            "Returned address list: ".
+                            print_r($recipients, true),
+                            \OCP\Util::DEBUG);
         return $recipients;
       }
     }    

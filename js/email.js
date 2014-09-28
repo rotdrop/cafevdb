@@ -337,6 +337,14 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                var requestData = data.data.requestData;
                switch (request) {
                case 'send':
+                 postponeEnable = true;
+                 if (typeof data.data.message != 'undefined' &&
+                     typeof data.data.caption != 'undefined') {
+                   OC.dialogs.alert(data.data.message, data.data.caption,
+                                    validateUnlock,
+                                    true, true);
+                 }
+                 break;
                case 'cancel':
                  // status feed-back handled by general code.
                  break;
