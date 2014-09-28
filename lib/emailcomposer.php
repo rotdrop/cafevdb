@@ -25,6 +25,10 @@
 namespace CAFEVDB
 {
 
+  /**This is the mass-email composer class. We try to be somewhat
+   * careful to have useful error reporting, and avoid sending garbled
+   * messages or duplicates.
+   */
   class EmailComposer {
     const DEFAULT_TEMPLATE = 'Liebe Musiker,
 <p>
@@ -102,7 +106,7 @@ mandateReference
     /* 
      * constructor
      */
-    public function __construct($recipients = false)
+    public function __construct($recipients = array())
     {
       Config::init();
       $this->opts = Config::$pmeopts;
@@ -113,12 +117,6 @@ mandateReference
 
       $this->cgiData = Util::cgiValue('emailComposer', array());
 
-      if ($recipients === false) {
-        $recipients = $this->cgiValue('SelectedRecipients', false);
-      }
-      if (!is_array($recipients)) {
-        $recipients = array(); 
-      }
       $this->recipients = $recipients;
 
       $this->projectId   = $this->cgiValue('ProjectId', Util::cgiValue('ProjectId', -1));
@@ -149,7 +147,11 @@ mandateReference
         'TemplateValidation' => array(),
         'SubjectValidation' => true,
         'FromValidation' => true,
-        'MailerException' => false
+        'MailerExceptions' => array(),
+        'MailerErrors' => array(),
+        'Duplicates' => array(),
+        'TotalCount' => 0,
+        'FailedCount' => 0
         );
 
       $this->execute();
@@ -191,19 +193,9 @@ mandateReference
           return;
         }
 
-        // If we get until here without error, then start to compose
-        // the message. In principle, this should not pose any
-        // problems any more (the recipients email addresses have
-        // already been validated)
-
-
-
-        // Compute the needed checksum in order to catch sending of
-        // duplicates
-
-        // Send the message(s) out
-        
-        // Copy to send folder
+        // Checks passed, let's see what happens. The mailer may throw
+        // any kind of "nasty" exceptions.
+        $this->sendMessages();
       }
     }
 
@@ -215,6 +207,422 @@ mandateReference
       } else {
         return $default;
       } 
+    }
+
+    /**Return true if this email needs per-member substitutions. Up to
+     * now validation is not handled here, but elsewhere. Still this
+     * is not a static method (future ...)
+     */
+    private function isMemeberTemplateEmail($message)
+    {
+      return preg_match('![$]{MEMBER::[^{]+}!', $message); 
+    }
+
+    /**Substitute any global variables into
+     * $this->messageContents.
+     *
+     * @return HTML message with variable substitutions.
+     */
+    private function replaceGlobals()
+    {
+      $message = $this->messageContents;
+      
+      if (preg_match('![$]{GLOBAL::[^{]+}!', $message)) {
+        $vars = $this->emailGlobalVariables();
+        
+        // TODO: one call to preg_replace would be enough, but does
+        // not really matter as long as there is only one global
+        // variable.
+        foreach ($vars as $key => $value) {
+          $message = preg_replace('/[$]{GLOBAL::'.$key.'}/', $value, $message);
+        }
+      }
+      
+      return $message;
+    }
+
+    /**Finally, send the beast out to all recipients, either in
+     * single-email mode or as one message.
+     *
+     * Template emails are emails with per-member variable
+     * substitutions. This means that we cannot send one email to
+     * all recipients, but have to send different emails one by
+     * one. This has some implicatios:
+     *
+     * - extra recipients added through the Cc: and Bcc: fields
+     *   and the catch-all address is not added to each
+     *   email. Instead, we send out the template without
+     *   substitutions.
+     *
+     * - still each single email is logged to the DB in order to
+     *   catch duplicates.
+     *
+     * - each single email is copied to the Sent-folder; this is how it should be.
+     *
+     * - after variable substitution we need to reencode some
+     * - special characters.
+     */
+    private function sendMessages()
+    {
+      // The following cannot fail, in principle. $message is then
+      // the current template without any left-over globals.
+      $message = $this->replaceGlobals();
+
+      if ($this->isMemeberTemplateEmail($message)) {
+        $templateMessage = $message;
+        $variables = $this->emailMemberVariables();
+
+        foreach ($this->recipients as $recipient) {
+          $dbdata = $recipient['dbdata'];
+          $strMessage = $templateMessage;
+          if ($dbdata['Geburtstag'] && $dbdata['Geburtstag'] != '') {
+            $dbdata['Geburtstag'] = date('d.m.Y', strtotime($dbdata['Geburtstag']));
+          }
+          foreach ($variables as $placeholder => $column) {
+            $strMessage = preg_replace('/[$]{MEMBER::'.$placeholder.'}/',
+                                       htmlspecialchars($dbdata[$column]),
+                                       $strMessage);
+          }
+          $msg = $this->composeAndSend($strMessage, array($recipient), false);
+	  if ($msg !== false) {
+            $this->copyToSentFolder($msg);
+	  }
+        }
+
+        // Finally send one message without template substitution (as
+        // this makes no sense) to all Cc:, Bcc: recipients and the
+        // catch-all. This Message also gets copied to the Sent-folder
+        // on the imap server.
+        ++$this->diagnostics['TotalCount'];
+        $msg = $this->composeAndSend($templateMessage, array(), true);
+        if ($msg !== false) {
+          $this->copyToSentFolder($msg);
+        } else {
+          ++$this->diagnostics['FailedCount'];
+        }
+      } else {
+        ++$this->diagnostics['TotalCount']; // this is ONE then ...
+        $msg = $this->composeAndSend($message, $this->recipients);
+        if ($msg !== false) {
+          $this->copyToSentFolder($msg);
+        } else {
+          --$this->diagnostics['TotalCount']; // this is ONE then ...
+        }
+      }
+      return $this->executionsStatus;
+    }
+
+    /**Compose and send one message. If $EMails only contains one
+     * address, then the emails goes out using To: and Cc: fields,
+     * otherwise Bcc: is used, unless sending to the recipients of a
+     * project. All emails are logged with an MD5-sum to the DB in order
+     * to prevent duplicate mass-emails. If a duplicate is detected the
+     * message is not sent out. A duplicate is something with the same
+     * message text and the same recipient list.
+     *
+     * @param[in] $strMessage The message to send.
+     *
+     * @param[in] $EMails The recipient list
+     *
+     * @param[in] $addCC If @c false, then additional CC and BCC recipients will
+     *                   not be added.
+     * 
+     * @return The sent Mime-message which then may be stored in the
+     * Sent-Folder on the imap server (for example).
+     */
+    private function composeAndSend($strMessage, $EMails, $addCC = true)
+    {
+      // If we are sending to a single address (i.e. if $strMessage has
+      // been constructed with per-member variable substitution), then
+      // we do not need to send via BCC.
+      $singleAddress = count($EMails) == 1;
+      
+      // Construct an array for the data-base log
+      $logMessage = new stdClass;
+      $logMessage->recipients = $EMails;
+      $logMessage->message = $strMessage;
+
+      // One big try-catch block. Using exceptions we do not need to
+      // keep track of all return values, which is quite beneficial
+      // here. Some of the stuff below clearly cannot throw, but then
+      // it doesn't hurt to keep it in the try-block. All data is
+      // added in the try block. There is another try-catch-construct
+      // surrounding the actual sending of the message.
+      try {
+
+        $mail = new \PHPMailer(true);
+        $mail->CharSet = 'utf-8';
+        $mail->SingleTo = false;
+
+        // Setup the mail server for testing
+        // $mail->IsSMTP();
+        //$mail->IsMail();
+        $mail->IsSMTP();
+        if (true) {
+          $mail->Host = Config::getValue('smtpserver');
+          $mail->Port = Config::getValue('smtpport');
+          switch (Config::getValue('smtpsecure')) {
+          case 'insecure': $mail->SMTPSecure = ''; break;
+          case 'starttls': $mail->SMTPSecure = 'tls'; break;
+          case 'ssl':      $mail->SMTPSecure = 'ssl'; break;
+          default:         $mail->SMTPSecure = ''; break;
+          }
+          $mail->SMTPAuth = true;
+          $mail->Username = Config::getValue('emailuser');
+          $mail->Password = Config::getValue('emailpassword');
+        }
+        
+        $mail->Subject = $this->mailTag . ' ' . $this->subject;
+        $logMessage->subject = $mail->Subject;
+        // pass the correct path in order for automatic image conversion
+        $mail->msgHTML($strMessage, __DIR__.'/../', true);
+
+        $mail->AddReplyTo($this->senderEmail, $this->sender);
+        $mail->SetFrom($this->senderEmail, $this->sender);
+
+        if (!self::$constructionMode) {
+          // Loop over all data-base records and add each recipient in turn
+          foreach ($EMails as $recipient) {
+            if ($singleAddress) {
+              $mail->AddAddress($recipient['email'], $recipient['name']);
+            } else if ($recipient['project'] < 0) {
+              // blind copy, don't expose the victim to the others.
+              $mail->AddBCC($recipient['email'], $recipient['name']);
+            } else {
+              // Well, people subscribing to one of our projects
+              // simply must not complain, except soloist or
+              // conductors which normally are not bothered with
+              // mass-email at all, but if so, then they are added as Bcc
+              if ($recipient['status'] == 'conductor' ||
+                  $recipient['status'] == 'soloist') {
+                $mail->AddBCC($recipient['email'], $recipient['name']);
+              } else {
+                $mail->AddAddress($recipient['email'], $recipient['name']);
+              }
+            }
+          }
+        } else {
+          // Construction mode: per force only send to the developer
+          $mail->AddAddress($this->catchAllEmail, $this->catchAllName);
+        }
+
+        if ($addCC === true) {
+          // Always drop a copy to the orchestra's email account for
+          // archiving purposes and to catch illegal usage. It is legel
+          // to modify $this->sender through the email-form.
+          $mail->AddCC($this->catchAllEmail, $this->sender);
+        }
+        
+        // If we have further Cc's, then add them also
+        if ($addCC === true && !empty($this->onLookers['CC'])) {
+          // Now comes some dirty work: we need to split the string in
+          // names and email addresses. We re-construct $this->CC in this
+          // context, to normalize it for storage in the email-log.
+  
+          $stringCC = '';
+          foreach ($this->onLookers['CC'] as $value) {
+            $stringCC .= $value['name'].' <'.$value['email'].'>, ';
+            // PHP-Mailer adds " for itself as needed
+            $value['name'] = trim($value['name'], '"');
+            $mail->AddCC($value['email'], $value['name']);
+          }
+          $stringCC = trim($stringCC, ', ');
+          $logMessage->CC = $stringCC;
+        }
+
+        // Do the same for Bcc
+        if ($addCC === true && !empty($this->onLookers['BCC'])) {
+          // Now comes some dirty work: we need to split the string in
+          // names and email addresses.
+  
+          $stringBCC = '';
+          foreach ($this->onLookers['BCC'] as $value) {
+            $stingBCC .= $value['name'].' <'.$value['email'].'>, ';
+            // PHP-Mailer adds " for itself as needed
+            $value['name'] = trim($value['name'], '"');
+            $mail->AddBCC($value['email'], $value['name']);
+          }
+          $stringBCC = trim($this->BCC, ', ');
+          $logMessage->BCC = $stringCC;
+        }
+
+        $logMessage->fileAttach = $this->fileAttach;
+        // Add all registered attachments.
+        foreach ($this->fileAttach as $attachment) {
+          $mail->AddAttachment($attachment['tmp_name'],
+                               basename($attachment['name']),
+                               'base64',
+                               $attachment['type']);
+        }
+
+        // Finally possibly to-be-attached events. This cannot throw,
+        // but it does not hurt to keep it here. This way we are just
+        // ready with adding data to the message inside the try-block.
+        $eventSelect = $this->cgiValue('AttachedEvents', array());
+        if ($this->projectId >= 0 && !empty($eventSelect)) {
+          // Construct the calendar
+          $calendar = Events::exportEvents($eventSelect, $this->project);
+          
+          // Encode it as attachment
+          $mail->AddStringEmbeddedImage($calendar,
+                                        md5($this->project.'.ics'),
+                                        $this->project.'.ics',
+                                        'quoted-printable',
+                                        'text/calendar');
+        }
+        $logMessage->events = $eventSelect;
+
+      } catch (\Exception $exception) {
+        // popup an alert and abort the form-processing
+      
+        $this->executionStatus = false;
+        $this->diagnostics['MailerExceptions'][] = $exception->getMessage();
+        return false;
+      }
+
+      $logQuery = $this->mesageLogQuery($logMessage);
+      if (!$logQuery) {
+        return false;
+      }
+
+      // Finally the point of no return. Send it out!!!      
+      try {
+        if (!$mail->Send()) {
+          // in principle this cannot happen as the mailer DOES use
+          // exceptions ...
+          $this->executionStatus = false;
+          $this->diagnostics['MailerErrors'][] = $Mails;
+          return false;
+        } else {
+          // success, log the message to our data-base
+          $handle = $this->dataBaseConnect();
+          mySQL::query($logQuery, $handle);  
+        }
+      } catch (\Exception $exception) {
+        $this->executionStatus = false;
+        $this->diagnostics['MailerExceptions'][] = $exception->getMessage();
+        return false;
+      }
+
+      return $mail->GetSentMIMEMessage();
+    }
+
+    /**Log the sent message to the data base if it is new. Return
+     * false if this is a duplicate, return the data-base query string
+     * to be executed after successful sending of the message in cas
+     * of success.
+     */
+    private function mesageLogQuery($logMessage)
+    {
+      // Construct the query to store the email in the data-base
+      // log-table.
+
+      // Construct one MD5 for recipients subject and html-text
+      $bulkRecipients = '';
+      foreach ($logMessage->recipients as $pairs) {
+        $bulkRecipients .= $pairs['name'].' <'.$pairs['email'].'>,';
+      }
+
+      $bulkRecipients = trim($bulkRecipients,',');
+      $bulkMD5 = md5($bulkRecipients);
+  
+      $textforMD5 = $logMessagethis->subject . $strMessage;
+      $textMD5 = md5($textforMD5);
+      
+      // compute the MD5 stuff for the attachments
+      $attachLog = array();
+      foreach ($logMessage->fileAttach as $attachment) {
+        if ($attachment['name'] != "") {
+          $md5val = md5_file($attachment['tmp_name']);
+          $attachLog[] = array('name' => $attachment['name'],
+                               'md5' => $md5val);
+        }
+      }
+      if (!empty($logMessage->events)) {
+        $name = array('name' => 'Events-'.implode('-', sort($logMessage->events)));
+        $md5 = md5($name);
+        $attachLog[] = array('name' => $name, 'md5' => $md5);
+      }
+      
+      // Now insert the stuff into the SentEmail table  
+      $handle = $this->dataBaseConnect();
+
+      // First make sure that we have enough columns to store the
+      // attachments (better: only their checksums)
+
+      foreach ($attachLog as $key => $value) {
+        $query = sprintf(
+          'ALTER TABLE `SentEmail`
+  ADD `Attachment%02d` TEXT
+  CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  ADD `MD5Attachment%02d` TEXT
+  CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL',
+          $key, $key);
+
+        // And execute. Just to make that all needed columns exist.
+        
+        $result = mySQL::query($query, $handle, false, true);
+      }
+      
+      // Now construct the real query, but do not execute it until the
+      // message has succesfully been sent.
+
+      $logQuery = "INSERT INTO `SentEmail`
+(`user`,`host`,`BulkRecipients`,`MD5BulkRecipients`,`Cc`,`Bcc`,`Subject`,`HtmlBody`,`MD5Text`";
+      $idx = 0;
+      foreach ($attachLog as $pairs) {
+        $logQuery .=
+          sprintf(",`Attachment%02d`,`MD5Attachment%02d`", $idx, $idx);
+        $idx++;
+      }
+
+      $logQuery .= ') VALUES (';
+      $logQuery .= "'".$this->user."','".$_SERVER['REMOTE_ADDR']."'";
+      $logQuery .= ",'".mysql_real_escape_string($bulkRecipients,$handle)."'";
+      $logQuery .= ",'".mysql_real_escape_string($bulkMD5,$handle)."'";
+      $logQuery .= ",'".mysql_real_escape_string($logMessage->CC,$handle)."'";
+      $logQuery .= ",'".mysql_real_escape_string($logMessage->BCC,$handle)."'";
+      $logQuery .= ",'".mysql_real_escape_string($logMessage->subject,$handle)."'";
+      $logQuery .= ",'".mysql_real_escape_string($strMessage,$handle)."'";
+      $logQuery .= ",'".mysql_real_escape_string($textMD5,$handle)."'";
+      foreach ($attachLog as $pairs) {
+        $logQuery .=
+          ",'".mysql_real_escape_string($pairs['name'],$handle)."'".
+          ",'".mysql_real_escape_string($pairs['md5'],$handle)."'";
+      }
+      $logQuery .= ")";
+  
+      // Now logging is ready to execute. But first check for
+      // duplicate sending attempts. This takes only the recipients,
+      // the subject and the message body into account. Rationale: if
+      // you want to send an updated attachment, then you really
+      // should write a comment on that. Still the test is flaky
+      // enough.
+
+      // Check for duplicates
+      $loggedQuery = "SELECT * FROM `SentEmail` WHERE";
+      $loggedQuery .= " `MD5Text` LIKE '$textMD5'";
+      $loggedQuery .= " AND `MD5BulkRecipients` LIKE '$bulkMD5'";
+      $result = mySQL::query($loggedQuery, $handle);
+  
+      $cnt = 0;
+      $loggedDates = '';
+      if ($line = mySQL::fetch($result)) {
+        $loggedDates .= ', '.$line['Date'];
+        ++$cnt;
+      }
+      $loggedDates = trim($loggedDates,', ');  
+
+      if ($loggedDates != '') {
+        $this->executionStatus = false;
+        $this->diagnostics['Duplicate'][] = array(
+          'dates' => $loggedDates,
+          'recipients' => $logMessage->recipients
+          );
+        return false;
+      }
+      
+      return $logQuery;
     }
 
     /**Pre-message construction validation:
@@ -240,7 +648,7 @@ mandateReference
       } else {
         $this->diagnostics['FromValidation'] = true;
       }
-      if (count($this->recipients) == 0) {
+      if (empty($this->recipients)) {
         $this->diagnostics['AddressValidation']['Empty'] = true;
         $this->executionStatus = false;
       }
@@ -319,7 +727,7 @@ mandateReference
           }
         }
       }
-      if (count($brokenRecipients) != 0) {
+      if (!empty($brokenRecipients)) {
         $this->diagnostics['AddressValidation'][$header] = $brokenRecipients;
         $this->executionStatus = false;
         return false;
@@ -354,7 +762,7 @@ mandateReference
           $dummy = preg_replace('/[$]{MEMBER::'.$placeholder.'}/', $column, $dummy);
         }
         
-        if (preg_match('![$]{MEMBER::[^}]+}!', $dummy, $leftOver)) {
+        if (preg_match('![$]{MEMBER::[^}]!', $dummy, $leftOver)) {
           $templateError[] = 'member';
           $this->diagnostics['TemplateValidation']['MemberErrors'] = $leftOver;
         }
@@ -371,7 +779,7 @@ mandateReference
           $dummy = preg_replace('/[$]{GLOBAL::'.$key.'}/', $value, $dummy);
         }
 
-        if (preg_match('![$]{GLOBAL::[^}]+}!', $dummy, $leftOver)) {
+        if (preg_match('![$]{GLOBAL::[^}]!', $dummy, $leftOver)) {
           $templateError[] = 'global';
           $this->diagnostics['TemplateValidation']['GlobalErrors'] = $leftOver;
         }        
@@ -382,12 +790,12 @@ mandateReference
 
       $spuriousTemplateLeftOver = array();      
       // No substitutions should remain. Check for that.
-      if (preg_match('![$]{[^}]+}!', $dummy, $leftOver)) {
+      if (preg_match('![$]{[^}]!', $dummy, $leftOver)) {
         $templateError[] = 'spurious';
         $this->diagnostics['TemplateValidation']['SpuriousErrors'] = $leftOver;
       }
       
-      if (count($templateError) == 0) {
+      if (empty($templateError)) {
         return true;  
       }
 
