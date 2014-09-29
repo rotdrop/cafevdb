@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-26 23:15+0200\n"
+"POT-Creation-Date: 2014-09-28 19:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,14 +17,14 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ajax/admin-settings.php:19
+#: ajax/admin-settings.php:35
 #, php-format
 msgid ""
 "Setting orchestra group to `%s'. Please login as group administrator and "
 "configure the Camerata DB application."
 msgstr ""
 
-#: ajax/admin-settings.php:25
+#: ajax/admin-settings.php:41
 msgid "Unknown request."
 msgstr ""
 
@@ -43,14 +43,14 @@ msgid "Blog entry with id `%s' could not be retrieved."
 msgstr ""
 
 #: ajax/blog/editentry.php:101 ajax/blog/modifyentry.php:162
-#: ajax/email/addressbook.php:159 ajax/email/emailform.php:140
-#: ajax/email/savecontacts.php:114 ajax/events/events.php:120
+#: ajax/email/addressbook.php:164 ajax/email/emailform.php:139
+#: ajax/email/savecontacts.php:113 ajax/events/events.php:120
 #: ajax/events/execute.php:130 ajax/events/new.form.php:195
 #: ajax/events/sendmail.php:76 ajax/finance/sepa-debit-mandate.php:151
 #: ajax/instrumentation/change-musician-instruments.php:193
 #: ajax/instrumentation/change-project-instrument.php:118
 #: ajax/instruments/adjustInstrumentation.php:91
-#: ajax/instruments/changeInstrumentation.php:148 ajax/pme/pme-table.php:118
+#: ajax/instruments/changeInstrumentation.php:148 ajax/pme/pme-table.php:119
 #: ajax/projects/verifyName.php:164 ajax/projects/web-articles.php:184
 msgid "Error, caught an exception"
 msgstr ""
@@ -74,7 +74,7 @@ msgstr ""
 msgid "Cannot delete a blog-thread without id."
 msgstr ""
 
-#: ajax/blog/modifyentry.php:116 ajax/email/composer.php:182
+#: ajax/blog/modifyentry.php:116 ajax/email/composer.php:177
 #, php-format
 msgid "Unknown request: `%s'."
 msgstr ""
@@ -83,79 +83,98 @@ msgstr ""
 msgid "There was an error with the request"
 msgstr ""
 
-#: ajax/email/addressbook.php:102
+#: ajax/email/addressbook.php:101
 msgid "Form Input"
 msgstr ""
 
-#: ajax/email/composer.php:123
+#: ajax/email/composer.php:138
 #, php-format
 msgid "Unknown form element: `%s'."
 msgstr ""
 
-#: ajax/email/composer.php:208 ajax/email/recipients.php:133
+#: ajax/email/composer.php:162
+msgid "Template could not be saved"
+msgstr ""
+
+#: ajax/email/composer.php:173
+msgid "Email Address Validation Failed"
+msgstr ""
+
+#: ajax/email/composer.php:235
+msgid "PHP Exception Caught"
+msgstr ""
+
+#: ajax/email/composer.php:239
+#, php-format
+msgid ""
+"Error, caught an exception. Please copy the displayed text and send it by "
+"email to %s."
+msgstr ""
+
+#: ajax/email/owncloudattachment.php:38
+msgid "No attachment path was submitted."
+msgstr ""
+
+#: ajax/email/owncloudattachment.php:45
+msgid "File doesn't exist: "
+msgstr ""
+
+#: ajax/email/owncloudattachment.php:49 ajax/inlineimage/oc_image.php:64
+msgid "File doesn't exist:"
+msgstr ""
+
+#: ajax/email/owncloudattachment.php:59
+msgid "Inconsistency:"
+msgstr ""
+
+#: ajax/email/recipients.php:132
 msgid ""
 "Error, caught an exception. Please copy the displayed text and send it by "
 "email to the web-master."
 msgstr ""
 
-#: ajax/email/owncloudattachment.php:30
-msgid "No attachment path was submitted."
-msgstr ""
-
-#: ajax/email/owncloudattachment.php:37
-msgid "File doesn't exist: "
-msgstr ""
-
-#: ajax/email/owncloudattachment.php:41 ajax/inlineimage/oc_image.php:64
-msgid "File doesn't exist:"
-msgstr ""
-
-#: ajax/email/owncloudattachment.php:51
-msgid "Inconsistency:"
-msgstr ""
-
-#: ajax/email/savecontacts.php:97
+#: ajax/email/savecontacts.php:96
 #, php-format
 msgid "The following contacts could not be stored: %s"
 msgstr ""
 
-#: ajax/email/uploadattachment.php:39 ajax/inlineimage/uploadimage.php:86
+#: ajax/email/uploadattachment.php:47 ajax/inlineimage/uploadimage.php:86
 msgid "No file was uploaded. Unknown error"
 msgstr ""
 
-#: ajax/email/uploadattachment.php:45 ajax/inlineimage/uploadimage.php:92
+#: ajax/email/uploadattachment.php:53 ajax/inlineimage/uploadimage.php:92
 msgid "There is no error, the file uploaded with success"
 msgstr ""
 
-#: ajax/email/uploadattachment.php:46
+#: ajax/email/uploadattachment.php:54
 #, php-format
 msgid ""
 "The uploaded file exceeds the upload_max_filesize directive in php.ini: %s"
 msgstr ""
 
-#: ajax/email/uploadattachment.php:48 ajax/inlineimage/uploadimage.php:94
+#: ajax/email/uploadattachment.php:56 ajax/inlineimage/uploadimage.php:94
 msgid ""
 "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in "
 "the HTML form"
 msgstr ""
 
-#: ajax/email/uploadattachment.php:49 ajax/inlineimage/uploadimage.php:95
+#: ajax/email/uploadattachment.php:57 ajax/inlineimage/uploadimage.php:95
 msgid "The uploaded file was only partially uploaded"
 msgstr ""
 
-#: ajax/email/uploadattachment.php:50 ajax/inlineimage/uploadimage.php:96
+#: ajax/email/uploadattachment.php:58 ajax/inlineimage/uploadimage.php:96
 msgid "No file was uploaded"
 msgstr ""
 
-#: ajax/email/uploadattachment.php:51 ajax/inlineimage/uploadimage.php:97
+#: ajax/email/uploadattachment.php:59 ajax/inlineimage/uploadimage.php:97
 msgid "Missing a temporary folder"
 msgstr ""
 
-#: ajax/email/uploadattachment.php:52
+#: ajax/email/uploadattachment.php:60
 msgid "Failed to write to disk"
 msgstr ""
 
-#: ajax/email/uploadattachment.php:70
+#: ajax/email/uploadattachment.php:78
 msgid "Not enough storage available"
 msgstr ""
 
@@ -271,7 +290,7 @@ msgid "Date: %s"
 msgstr ""
 
 #: ajax/export/insurance-export.php:223 lib/instrument-insurance.php:75
-#: lib/php-excel-functions.php:101
+#: lib/php-excel-functions.php:105
 msgid "false"
 msgstr ""
 
@@ -439,8 +458,8 @@ msgstr ""
 #: ajax/instrumentation/change-musician-instruments.php:106
 #: ajax/instrumentation/change-musician-instruments.php:132
 #: ajax/instruments/changeInstrumentation.php:83
-#: ajax/instruments/changeInstrumentation.php:100 ajax/pme/pme-table.php:75
-#: ajax/pme/pme-table.php:92
+#: ajax/instruments/changeInstrumentation.php:100 ajax/pme/pme-table.php:76
+#: ajax/pme/pme-table.php:93
 msgid "invalid arguments"
 msgstr ""
 
@@ -485,7 +504,7 @@ msgid "Instrument choice for %s seems ok."
 msgstr ""
 
 #: ajax/instruments/adjustInstrumentation.php:37
-#: ajax/instruments/changeInstrumentation.php:52 ajax/pme/pme-table.php:63
+#: ajax/instruments/changeInstrumentation.php:52 ajax/pme/pme-table.php:64
 #: ajax/projects/verifyName.php:117
 msgid "missing arguments"
 msgstr ""
@@ -529,11 +548,11 @@ msgstr ""
 msgid "Changing the instrumentation for project `%s' was probably successful."
 msgstr ""
 
-#: ajax/pme/pme-table.php:64
+#: ajax/pme/pme-table.php:65
 msgid "No class name submitted."
 msgstr ""
 
-#: ajax/pme/pme-table.php:76
+#: ajax/pme/pme-table.php:77
 msgid "Class arguments are not an array"
 msgstr ""
 
@@ -1011,8 +1030,8 @@ msgid "Add all to %s"
 msgstr ""
 
 #: js/blog.js:53 js/blog.js:155 js/blog.js:193 js/blog.js:286 js/blog.js:317
-#: js/blog.js:345 js/cafevdb.js:783 js/email.js:33 js/email.js:62
-#: js/email.js:367 js/email.js:466 js/events.js:64 js/events.js:137
+#: js/blog.js:345 js/cafevdb.js:936 js/email.js:33 js/email.js:62
+#: js/email.js:415 js/email.js:446 js/events.js:64 js/events.js:153
 #: js/inlineimage.js:84 js/inlineimage.js:92 js/inlineimage.js:102
 #: js/inlineimage.js:131 js/inlineimage.js:155 js/inlineimage.js:183
 #: js/inlineimage.js:201 js/inlineimage.js:320 js/inlineimage.js:406
@@ -1054,47 +1073,47 @@ msgstr ""
 msgid "Really delete the entry?"
 msgstr ""
 
-#: js/cafevdb.js:358
+#: js/cafevdb.js:500
 msgid "Choose some Options"
 msgstr ""
 
-#: js/cafevdb.js:363 js/project-instruments.js:165 js/sepa-debit-mandate.js:99
+#: js/cafevdb.js:505 js/project-instruments.js:165 js/sepa-debit-mandate.js:99
 msgid "Save"
 msgstr ""
 
-#: js/cafevdb.js:365
+#: js/cafevdb.js:507
 msgid ""
 "Accept the currently selected options and return to the underlying form. "
 msgstr ""
 
-#: js/cafevdb.js:366 js/inlineimage.js:267 js/project-instruments.js:216
+#: js/cafevdb.js:508 js/inlineimage.js:267 js/project-instruments.js:216
 #: lib/email.php:1594 templates/blogedit.php:39
 #: templates/part.emailform.composer.php:245
 msgid "Cancel"
 msgstr ""
 
-#: js/cafevdb.js:368
+#: js/cafevdb.js:510
 msgid ""
 "Discard the current selection and close the dialog. The initial set of "
 "selected options will remain unchanged."
 msgstr ""
 
-#: js/cafevdb.js:518
+#: js/cafevdb.js:660
 msgid "Export to the following format is not yet supported:"
 msgstr ""
 
-#: js/cafevdb.js:520 js/project-instruments.js:87 js/projects.js:223
+#: js/cafevdb.js:662 js/project-instruments.js:87 js/projects.js:259
 msgid "Unimplemented"
 msgstr ""
 
-#: js/cafevdb.js:634
+#: js/cafevdb.js:776
 msgid ""
 "If multiple dialogs are open, then move this one to the lowest layer and "
 "display it below the others. Clicking anywhere on the dialog will bring to "
 "the front again."
 msgstr ""
 
-#: js/cafevdb.js:684
+#: js/cafevdb.js:826
 msgid ""
 "Close the current dialog and return to the view which was active before this "
 "dialog had been opened. If the current view shows a `Back' button, then "
@@ -1102,31 +1121,31 @@ msgid ""
 "equivalent to clicking the `Back' button"
 msgstr ""
 
-#: js/cafevdb.js:753
+#: js/cafevdb.js:898
 msgid ""
 "Unrecoverable unknown internal error, no further information available, "
 "sorry."
 msgstr ""
 
-#: js/cafevdb.js:755
+#: js/cafevdb.js:900
 msgid "Internal Error"
 msgstr ""
 
-#: js/cafevdb.js:762
+#: js/cafevdb.js:907
 #, python-brace-format
 msgid "Field {RequiredField} not present in AJAX response."
 msgstr ""
 
-#: js/cafevdb.js:771
+#: js/cafevdb.js:916
 msgid "Missing data"
 msgstr ""
 
-#: js/cafevdb.js:773 js/events.js:58 js/events.js:131 js/pme.js:477
+#: js/cafevdb.js:918 js/events.js:58 js/events.js:147 js/pme.js:477
 #: js/pme.js:632 js/sepa-debit-mandate.js:56
 msgid "Unknown error :("
 msgstr ""
 
-#: js/cafevdb.js:785 js/instrumentation.js:86 js/pme.js:485 js/pme.js:640
+#: js/cafevdb.js:932 js/instrumentation.js:86 js/pme.js:485 js/pme.js:640
 msgid "Debug Information"
 msgstr ""
 
@@ -1182,177 +1201,139 @@ msgstr ""
 msgid "Not called from main email-form."
 msgstr ""
 
-#: js/email.js:365
+#: js/email.js:413
 #, python-brace-format
 msgid "Unknown form element: {FormElement}"
 msgstr ""
 
-#: js/email.js:384
-msgid ""
-"The following email addresses appear to be invalid. The email will not be "
-"sent out before these errors are corrected."
-msgstr ""
-
-#: js/email.js:388
-msgid "Invalid Email Addresses"
-msgstr ""
-
-#: js/email.js:411
-msgid "Failed individual substitutions"
-msgstr ""
-
-#: js/email.js:423
-msgid "Failed global substitutions"
-msgstr ""
-
-#: js/email.js:435
-msgid "Failed spurious substitutions"
-msgstr ""
-
 #: js/email.js:445
-msgid ""
-"Template not saved due to template validation errors,the following variable "
-"substitutions could not be resolved:"
-msgstr ""
-
-#: js/email.js:449
-msgid ""
-"Please understand that the software is really `picky': names have to match "
-"exactly. Please use only capital letters for variable names."
-msgstr ""
-
-#: js/email.js:451
-msgid "Template could not be saved"
-msgstr ""
-
-#: js/email.js:464
 #, python-brace-format
 msgid "Unknown request: {Request}"
 msgstr ""
 
-#: js/email.js:514
+#: js/email.js:529
 #, python-brace-format
 msgid ""
 "A template with the name `{TemplateName}' already exists, do you want to "
 "overwrite it?"
 msgstr ""
 
-#: js/email.js:516
+#: js/email.js:531
 msgid "Overwrite existing template?"
 msgstr ""
 
-#: js/email.js:538
+#: js/email.js:553
 #, python-brace-format
 msgid ""
 "Do you really want to delete the template with the name `{TemplateName}'?"
 msgstr ""
 
-#: js/email.js:540
+#: js/email.js:555
 msgid "Really Delete Template?"
 msgstr ""
 
-#: js/email.js:549
+#: js/email.js:564
 #, python-brace-format
 msgid "Cannot delete non-existing template `{TemplateName}'"
 msgstr ""
 
-#: js/email.js:551
+#: js/email.js:566
 msgid "Unknown Template"
 msgstr ""
 
-#: js/email.js:632
+#: js/email.js:669
 msgid "Do you really want to delete all event attachments?"
 msgstr ""
 
-#: js/email.js:633 js/email.js:714
+#: js/email.js:670 js/email.js:752
 msgid "Really Delete Attachments?"
 msgstr ""
 
-#: js/email.js:699
+#: js/email.js:737
 msgid "Select Attachment"
 msgstr ""
 
-#: js/email.js:713
+#: js/email.js:751
 msgid "Do you really want to delete all file attachments?"
 msgstr ""
 
-#: js/email.js:752 templates/part.emailform.composer.php:108
+#: js/email.js:796 templates/part.emailform.composer.php:108
 #: templates/part.emailform.composer.php:126
 msgid "Address Book"
 msgstr ""
 
-#: js/email.js:753
+#: js/email.js:797
 msgid "Accept"
 msgstr ""
 
-#: js/email.js:755
+#: js/email.js:799
 msgid "Save Contacts"
 msgstr ""
 
-#: js/email.js:758
+#: js/email.js:802
 msgid ""
 "Save the selected supplementary emails to the address-book for later reusal."
 msgstr ""
 
-#: js/email.js:882
+#: js/email.js:936
 #, python-brace-format
 msgid "Em@il Form for {ProjectName}"
 msgstr ""
 
-#: js/email.js:885
+#: js/email.js:939
 msgid "Em@il Form"
 msgstr ""
 
-#: js/email.js:989
+#: js/email.js:1043
 msgid "Move all"
 msgstr ""
 
-#: js/email.js:990
+#: js/email.js:1044
 msgid "Move selected"
 msgstr ""
 
-#: js/email.js:991
+#: js/email.js:1045
 msgid "Remove selected"
 msgstr ""
 
-#: js/email.js:992
+#: js/email.js:1046
 msgid "Remove all"
 msgstr ""
 
-#: js/email.js:993 lib/email.php:575
+#: js/email.js:1047 lib/email.php:575
 msgid "Remaining Recipients"
 msgstr ""
 
-#: js/email.js:994 lib/email.php:576
+#: js/email.js:1048 lib/email.php:576
 msgid "Selected Recipients"
 msgstr ""
 
-#: js/email.js:995
+#: js/email.js:1049
 #, python-brace-format
 msgid "Showing all {0}"
 msgstr ""
 
-#: js/email.js:997
+#: js/email.js:1051
 msgid "Filtered"
 msgstr ""
 
-#: js/email.js:999
+#: js/email.js:1053
 msgid "from"
 msgstr ""
 
-#: js/email.js:1001
+#: js/email.js:1055
 msgid "Empty list"
 msgstr ""
 
-#: js/email.js:1002
+#: js/email.js:1056
 msgid "Filter"
 msgstr ""
 
-#: js/email.js:1003
+#: js/email.js:1057
 msgid "show all"
 msgstr ""
 
-#: js/email.js:1009
+#: js/email.js:1063
 msgid "Click on the names to move the respective person to the other box"
 msgstr ""
 
@@ -1364,7 +1345,7 @@ msgstr ""
 msgid "Do you really want to detach this event from the current project?"
 msgstr ""
 
-#: js/events.js:251
+#: js/events.js:264
 msgid "Really delete?"
 msgstr ""
 
@@ -1450,7 +1431,7 @@ msgid "Unkown Error"
 msgstr ""
 
 #: js/instrumentation.js:82 js/pme.js:359 js/project-instruments.js:68
-#: js/projects.js:328 js/projects.js:426
+#: js/projects.js:364 js/projects.js:462
 msgid "Caught a PHP Exception"
 msgstr ""
 
@@ -1462,7 +1443,7 @@ msgstr ""
 msgid "#rows"
 msgstr ""
 
-#: js/project-instruments.js:85 js/projects.js:221
+#: js/project-instruments.js:85 js/projects.js:257
 msgid "Unknown operation:"
 msgstr ""
 
@@ -1483,25 +1464,25 @@ msgid ""
 "instrumentation of the project will remain unchanged."
 msgstr ""
 
-#: js/projects.js:473
+#: js/projects.js:509
 msgid "Really unlink the displayed event announcement?"
 msgstr ""
 
-#: js/projects.js:474
+#: js/projects.js:510
 #, python-brace-format
 msgid "Unlink Web-Page with Id {ArticleId}?"
 msgstr ""
 
-#: js/projects.js:495
+#: js/projects.js:531
 msgid "Really delete the displayed event announcement?"
 msgstr ""
 
-#: js/projects.js:496
+#: js/projects.js:532
 #, python-brace-format
 msgid "Delete Web-Page with Id {ArticleId}?"
 msgstr ""
 
-#: js/projects.js:573
+#: js/projects.js:609
 msgid "No values match"
 msgstr ""
 
@@ -1595,7 +1576,7 @@ msgstr ""
 msgid "General Personal Data"
 msgstr ""
 
-#: lib/brief-instrumentation.php:58 lib/functions.php:952 lib/projects.php:766
+#: lib/brief-instrumentation.php:58 lib/functions.php:969 lib/projects.php:766
 msgid "Detailed Instrumentation"
 msgstr ""
 
@@ -1621,26 +1602,26 @@ msgstr ""
 msgid "Click to enter details of a potential SEPA debit mandate"
 msgstr ""
 
-#: lib/config.php:537
+#: lib/config.php:548
 #, php-format
 msgid "Decryption of `%s`@`%s` failed"
 msgstr ""
 
-#: lib/config.php:541
+#: lib/config.php:552
 #, php-format
 msgid "Encryption of `%s`@`%s` failed"
 msgstr ""
 
-#: lib/config.php:547
+#: lib/config.php:558
 #, php-format
 msgid "Unable to update table data at index %s"
 msgstr ""
 
-#: lib/config.php:706
+#: lib/config.php:717
 msgid "birthday"
 msgstr ""
 
-#: lib/config.php:734
+#: lib/config.php:745
 #, php-format
 msgid "Unknown Tooltip for key `%s' requested."
 msgstr ""
@@ -1709,7 +1690,7 @@ msgstr ""
 msgid "Count: "
 msgstr ""
 
-#: lib/email.php:1048 lib/emailcomposer.php:357
+#: lib/email.php:1048 lib/emailcomposer.php:1056
 msgid "and"
 msgstr ""
 
@@ -1922,11 +1903,19 @@ msgstr ""
 msgid "recipient"
 msgstr ""
 
-#: lib/emailcomposer.php:344
+#: lib/emailcomposer.php:206
+msgid "Message sent out successfully!"
+msgstr ""
+
+#: lib/emailcomposer.php:814
+msgid "Pre-composition validation has failed!"
+msgstr ""
+
+#: lib/emailcomposer.php:1043
 msgid "Unable to fetch executive board contents from data-base."
 msgstr ""
 
-#: lib/emailcomposer.php:691
+#: lib/emailcomposer.php:1390
 msgid "Local Filesystem"
 msgstr ""
 
@@ -1977,136 +1966,136 @@ msgstr ""
 msgid "Invalid argument value: `%s'"
 msgstr ""
 
-#: lib/functions.php:666
+#: lib/functions.php:669
 msgid "Export Table"
 msgstr ""
 
-#: lib/functions.php:674
+#: lib/functions.php:677
 msgid "Excel Export"
 msgstr ""
 
-#: lib/functions.php:677
+#: lib/functions.php:680
 msgid "HTML/Spreadsheet"
 msgstr ""
 
-#: lib/functions.php:680
+#: lib/functions.php:683
 msgid "CSV Export"
 msgstr ""
 
-#: lib/functions.php:683
+#: lib/functions.php:686
 msgid "HTML Export"
 msgstr ""
 
-#: lib/functions.php:853
+#: lib/functions.php:870
 msgid "Error: Unknonwn Button Type"
 msgstr ""
 
-#: lib/functions.php:876
+#: lib/functions.php:893
 msgid "View all Projects"
 msgstr ""
 
-#: lib/functions.php:877
+#: lib/functions.php:894
 msgid "Overview over all known projects (start-page)."
 msgstr ""
 
-#: lib/functions.php:889
+#: lib/functions.php:906
 msgid "Display all Musicians"
 msgstr ""
 
-#: lib/functions.php:890
+#: lib/functions.php:907
 msgid ""
 "Display all musicians stored in the data-base, with detailed facilities for "
 "filtering and sorting."
 msgstr ""
 
-#: lib/functions.php:902
+#: lib/functions.php:919
 msgid ""
 "Mass-email form, use with care. Mass-emails will be logged. Recipients will "
 "be specified by the Bcc: field in the header, so the recipients are "
 "undisclosed to each other."
 msgstr ""
 
-#: lib/functions.php:916
+#: lib/functions.php:933
 msgid "Email History"
 msgstr ""
 
-#: lib/functions.php:917
+#: lib/functions.php:934
 msgid "Display all emails sent by our mass-email form."
 msgstr ""
 
-#: lib/functions.php:936
+#: lib/functions.php:953
 msgid "The currently active project."
 msgstr ""
 
-#: lib/functions.php:953 lib/tooltips.php:311
+#: lib/functions.php:970 lib/tooltips.php:311
 msgid ""
 "Detailed display of all registered musicians for the selected project. The "
 "table will allow for modification of personal data like email, phone, "
 "address etc."
 msgstr ""
 
-#: lib/functions.php:967 lib/projects.php:761
+#: lib/functions.php:984 lib/projects.php:761
 msgid "Brief Instrumentation"
 msgstr ""
 
-#: lib/functions.php:968
+#: lib/functions.php:985
 msgid ""
 "Brief display of all registered musicians for the selected project. The "
 "table will allow for modification of project specific data, like the "
 "instrument, the project-fee etc."
 msgstr ""
 
-#: lib/functions.php:982 lib/project-instruments.php:386
+#: lib/functions.php:999 lib/project-instruments.php:386
 msgid "Add Instruments"
 msgstr ""
 
-#: lib/functions.php:983
+#: lib/functions.php:1000
 msgid ""
 "Display the list of instruments known by the data-base, possibly add new "
 "ones as needed."
 msgstr ""
 
-#: lib/functions.php:997 lib/project-instruments.php:69 lib/projects.php:799
+#: lib/functions.php:1014 lib/project-instruments.php:69 lib/projects.php:799
 #: lib/projects.php:978
 msgid "Instrumentation Numbers"
 msgstr ""
 
-#: lib/functions.php:998 lib/tooltips.php:324
+#: lib/functions.php:1015 lib/tooltips.php:324
 msgid ""
 "Display the desired instrumentaion numbers, i.e. how many musicians are "
 "already registered for each instrument group and how many are finally needed."
 msgstr ""
 
-#: lib/functions.php:1012
+#: lib/functions.php:1029
 msgid "Add more Musicians"
 msgstr ""
 
-#: lib/functions.php:1013
+#: lib/functions.php:1030
 msgid ""
 "List of all musicians NOT registered for the selected project. Only through "
 "that table a new musician can enter a project. Look for a hyper-link "
 "Add_to_PROJECT"
 msgstr ""
 
-#: lib/functions.php:1027
+#: lib/functions.php:1044
 msgid "Transfer Instruments from Musicians"
 msgstr ""
 
-#: lib/functions.php:1043
+#: lib/functions.php:1060
 msgid "Insurances"
 msgstr ""
 
-#: lib/functions.php:1044
+#: lib/functions.php:1061
 msgid ""
 "Display a table with an overview about the current state of the member's "
 "instrument insurances."
 msgstr ""
 
-#: lib/functions.php:1056
+#: lib/functions.php:1073
 msgid "Debit Mandates"
 msgstr ""
 
-#: lib/functions.php:1057
+#: lib/functions.php:1074
 msgid "Display a table with an overview over all SEPA debit mandates."
 msgstr ""
 
@@ -2122,7 +2111,7 @@ msgstr ""
 msgid "World"
 msgstr ""
 
-#: lib/instrument-insurance.php:76 lib/php-excel-functions.php:97
+#: lib/instrument-insurance.php:76 lib/php-excel-functions.php:101
 msgid "true"
 msgstr ""
 
@@ -2349,11 +2338,11 @@ msgid ""
 "instrument'below, if necessary."
 msgstr ""
 
-#: lib/php-excel-functions.php:96 lib/sepa-debit-mandates.php:221
+#: lib/php-excel-functions.php:100 lib/sepa-debit-mandates.php:221
 msgid "yes"
 msgstr ""
 
-#: lib/php-excel-functions.php:100 lib/sepa-debit-mandates.php:220
+#: lib/php-excel-functions.php:104 lib/sepa-debit-mandates.php:220
 msgid "no"
 msgstr ""
 
@@ -4101,7 +4090,7 @@ msgid "Select Instruments"
 msgstr ""
 
 #: templates/part.emailform.recipients.php:176
-msgid "Musicians without Email-Address"
+msgid "Musicians without or obviously broken email-address"
 msgstr ""
 
 #: templates/part.emailform.recipients.php:198
@@ -4110,6 +4099,244 @@ msgstr ""
 
 #: templates/part.emailform.recipients.php:205
 msgid "Redo Filter"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:76
+msgid "The mailing software did not signal an error."
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:78
+msgid "The message was propably sent out successfully."
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:85
+msgid "The mailing software did not signal an error. "
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:86
+#, php-format
+msgid "%d messages were propably sent out successfully."
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:96
+msgid "The mailing software encountered errors."
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:100
+#, php-format
+msgid ""
+"Sending of all %d messages has failed, propably no message has been sent."
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:104
+#, php-format
+msgid "One (out of %d) message has probably not been sent."
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:108
+#, php-format
+msgid "%d (out of %d) messages have probably not been sent."
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:113
+msgid "The message has probably not been sent."
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:130
+msgid "Failed individual substitutions"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:131
+msgid "Failed global substitutions"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:132
+msgid "Other failed substitutions"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:136
+msgid ""
+"The operation failed due to template validation errors. The following "
+"template substitutions could not be resolved:"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:154
+#, php-format
+msgid ""
+"Please understand that the software is really `picky'; names have to match "
+"exactly. Please use only capital letters for variable names. Please do not "
+"use spaces. Vaiable substitutions have to start with a dollar-sign `%s', be "
+"enclosed by curly braces `%s' and consist of a category-name (e.g. `%s') "
+"separated by double colons `%s' from the variable name itself (e.g. `%s'). "
+"An example is `%s'. Please have a look at the example template `%s' which "
+"contains a complete list of all known substitutions."
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:191
+msgid ""
+"The following email addresses appear to be syntactically incorrect, meaning "
+"that they have not the form of an email address:"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:202
+#, php-format
+msgid "Broken `%s' addresses"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:216
+msgid ""
+"No email will be sent out unless these errors are corrected. Please separate "
+"individual emails by commas. Please use standard-address notation (see "
+"RFC5322, if your want to know ...), remember to enclose the real-name in "
+"quotes if it contains a comma. Some valid examples are:"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:231
+#: templates/part.emailform.statuspage.php:331
+#: templates/part.emailform.statuspage.php:377
+#: templates/part.emailform.statuspage.php:425
+#: templates/part.emailform.statuspage.php:491
+#: templates/part.emailform.statuspage.php:550
+msgid "Explanations"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:251
+msgid "Empty Subject"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:252
+#, php-format
+msgid ""
+"The subject must not consist of `%s' as only part. Please correct that "
+"before hitting the `Send'-button again."
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:266
+msgid "Empty Sender Name"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:267
+#, php-format
+msgid ""
+"The sender name should not be empty. Originally, it used to be %s, but "
+"seemingly this did not suite your needs. Please fill in a non-empty sender "
+"name before hitting the `Send'-button again."
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:281
+msgid "No Recipients"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:282
+msgid ""
+"You did not specify any recipients (Cc: and Bcc: does not count here!)."
+"Please got to the `Em@il Recipients' panel and select some before hitting "
+"the `Send'-button again. Please possibly take care of the list of musicians "
+"without email address at the bottom of the `Em@il Recipients' panel."
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:311
+msgid ""
+"The event(s) with the following id(s) could not be attached; they do not "
+"seem to exists:"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:325
+#, php-format
+msgid ""
+"This is probably an internal error. Please contact %s. It may be possible to "
+"simply click on the red, underlined text in order to compose a usefull "
+"message."
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:353
+msgid ""
+"While trying to send the message(s), the following exception(s) were caught:"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:366
+#, php-format
+msgid ""
+"This is an internal error. Please copy this page and send it via email to %s."
+"It may be possible to simply click on the red, underlined text in order to "
+"compose a usefull message."
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:401
+msgid ""
+"While trying to send the message(s), the following error(s) have been "
+"encountered:"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:414
+#, php-format
+msgid ""
+"This is an internal error. Please copy this page and send it via email to "
+"%s. It may be possible to simply click on the red, underlined text in order "
+"to compose a usefull message."
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:446
+msgid "Message Duplicates Detected!"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:454
+#, php-format
+msgid "Message already sent at time %s to the following recipient(s):"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:481
+#, php-format
+msgid ""
+"The email-form refuses to send email twice to the same recipients. In order "
+"to send out your email you have either to change the subject or the message "
+"body. If your message has been constructed from a pre-defined message-"
+"template (like the one for the yearly adress-validation) then please add a "
+"self-explaining subject. Otherwise the error is probably really on your "
+"side. Mass-emails should never be submitted twice. If in doubt contact %s. "
+"Please add a detailed description."
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:512
+msgid "Copy to Sent-Folder has Failed"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:521
+#, php-format
+msgid "Could not authenticate with IMAP-server: %s"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:531
+#, php-format
+msgid "Copy to folder %s has failed: %s"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:541
+#, php-format
+msgid ""
+"If no other error messages are echoed on this page, then the emails have "
+"probably been sent successfully. However, copying the sent-out message to "
+"the sent-folder on the email-server has failed. This is nothing you can "
+"solve on your own, please contact %s. It may be possible to simply click on "
+"the red, underlined text in order to compose a usefull message."
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:571
+msgid "The Following Events have been attached to the Message:"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:599
+msgid "The following files have been attached to the message:"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:627
+msgid "First Few Lines of Sent Message"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:642
+msgid ""
+"The most recent status message is always saved to the status panel. It can "
+"be reviewed there even after closing the dialog window."
 msgstr ""
 
 #: templates/project-web-articles.php:121
