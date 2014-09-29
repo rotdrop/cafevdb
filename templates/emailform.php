@@ -77,5 +77,16 @@ CAFEVDB\Error::exceptions(true);
 	   value="<?php p($l->t('Cancel upload'));?>"
 	   />
   </div>
+  <div id="sendingprogresswrapper">
+    <div class="messagecount"></div>
+    <div class="progress row smtp">
+      <span class="title"><?php echo L::t('Message Delivery'); ?></span>
+      <span class="progressbar"></span>
+    </div>
+    <div class="progress row imap">
+      <span class="title"><?php echo L::t('Copy to Sent'); ?></span>
+      <span class="progressbar"></span>
+    </div>
+  </div>
 </div>
 

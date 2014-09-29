@@ -156,6 +156,7 @@ mandateReference
         'Message' => array('Text' => '',
                            'Files' => array(),
                            'Events' => array()), // start of sent-messages for log window
+        'TotalPayload' => 0,
         'TotalCount' => 0,
         'FailedCount' => 0
         );
@@ -222,7 +223,7 @@ mandateReference
      * now validation is not handled here, but elsewhere. Still this
      * is not a static method (future ...)
      */
-    private function isMemeberTemplateEmail($message)
+    private function isMemberTemplateEmail($message)
     {
       return preg_match('![$]{MEMBER::[^{]+}!', $message); 
     }
@@ -277,9 +278,11 @@ mandateReference
       // the current template without any left-over globals.
       $message = $this->replaceGlobals();
 
-      if ($this->isMemeberTemplateEmail($message)) {
+      if ($this->isMemberTemplateEmail($message)) {
         $templateMessage = $message;
         $variables = $this->emailMemberVariables();
+
+        $this->diagnostics['TotalPayload'] = count($this->recipients)+1;
 
         foreach ($this->recipients as $recipient) {
           $dbdata = $recipient['dbdata'];
@@ -315,6 +318,7 @@ mandateReference
           ++$this->diagnostics['FailedCount'];
         }
       } else {
+        $this->diagnostics['TotalPayload'] = 1;
         ++$this->diagnostics['TotalCount']; // this is ONE then ...
         $mimeMsg = $this->composeAndSend($message, $this->recipients);
         if ($mimeMsg !== false) {
@@ -394,7 +398,11 @@ mandateReference
         $progressProvider = new ProgressStatus();
         $phpMailer->ProgressCallback = function($currentLine, $totalLines) use ($progressProvider) {
           if ($currentLine == 0) {
-            $progressProvider->save($currentLine, $totalLines, 'smtp');
+            $tag = array('proto' => 'smtp',
+                         'total' =>  $this->diagnostics['TotalPayload'],
+                         'active' => $this->diagnostics['TotalCount']);
+            $tag = json_encode($tag);
+            $progressProvider->save($currentLine, $totalLines, $tag);
           } else if ($currentLine % 1024 == 0 || $currentLine >= $totalLines) {
             $progressProvider->save($currentLine, $totalLines);
           }
@@ -531,7 +539,7 @@ mandateReference
         return false;
       }
 
-      $logQuery = $this->mesageLogQuery($logMessage);
+      $logQuery = $this->messageLogQuery($logMessage);
       if (!$logQuery) {
         return false;
       }
@@ -611,7 +619,11 @@ mandateReference
                                 return; // ignore non-data transfers
                               }
                               if ($pos == 0) {
-                                $progressProvider->save($pos, $total, 'imap');
+                                $tag = array('proto' => 'imap',
+                                             'total' =>  $this->diagnostics['TotalPayload'],
+                                             'active' => $this->diagnostics['TotalCount']);
+                                $tag = json_encode($tag);
+                                $progressProvider->save($pos, $total, $tag);
                               } else {
                                 $progressProvider->save($pos);
                               }
@@ -626,8 +638,13 @@ mandateReference
         $imap->disconnect();
         return false;
       }
-      if (($ret1 = $imap->appendMessage($mimeMessage, 'Sent')) !== true &&
-          ($ret2 = $imap->appendMessage($mimeMessage, 'INBOX.Sent')) !== true) {
+
+      if (($ret1 = $imap->selectMailbox('Sent')) === true) {
+        $ret1 = $imap->appendMessage($mimeMessage, 'Sent');
+      } else if (($ret2 = $imap->selectMailbox('INBOX.Sent')) === true) {
+        $ret2 = $imap->appendMessage($mimeMessage, 'INBOX.Sent');
+      }
+      if ($ret1 !== true && $ret2 !== true) {
         $this->executionStatus = false;
         $this->diagnostics['CopyToSent']['copy'] = array('Sent' => $ret1->toString(),
                                                          'INBOX.Sent' => $ret2->toString());
@@ -644,7 +661,7 @@ mandateReference
      * to be executed after successful sending of the message in cas
      * of success.
      */
-    private function mesageLogQuery($logMessage)
+    private function messageLogQuery($logMessage)
     {
       // Construct the query to store the email in the data-base
       // log-table.
@@ -1028,12 +1045,12 @@ mandateReference
     private function streetAddress()
     {
       return
-        Config::getValue('streeAddressName01')."<br/>\n".
-        Config::getValue('streeAddressName02')."<br/>\n".
-        Config::getValue('streeAddressStreet')."&nbsp;".
-        Config::getValue('streeAddressHouseNumber')."<br/>\n".
-        Config::getValue('streeAddressZIP')."&nbsp;".
-        Config::getValue('streeAddressCity');
+        Config::getValue('streetAddressName01')."<br/>\n".
+        Config::getValue('streetAddressName02')."<br/>\n".
+        Config::getValue('streetAddressStreet')."&nbsp;".
+        Config::getValue('streetAddressHouseNumber')."<br/>\n".
+        Config::getValue('streetAddressZIP')."&nbsp;".
+        Config::getValue('streetAddressCity');
     }
 
     private function bankAccount()
@@ -1041,7 +1058,7 @@ mandateReference
       $iban = new \IBAN(Config::getValue('bankAccountIBAN'));
       return
         Config::getValue('bankAccountOwner')."<br/>\n".
-        "IBAN ".$iban->HumanFormat()."<br/>\n".
+        "IBAN ".$iban->HumanFormat()." (".$iban->MachineFormat().")<br/>\n".
         "BIC ".Config::getValue('bankAccountBIC');
     }
 

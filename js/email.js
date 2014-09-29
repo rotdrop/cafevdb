@@ -490,28 +490,80 @@ CAFEVDB.Email = CAFEVDB.Email || {};
      */
     sendButton.off('click').on('click', function(event) {
       event.stopImmediatePropagation();
-      var smtpProgress = $('<div id="email-sending-smpt-progress" style="z-index:100000;position:absolute;left:100px;top:100px;width:40em;height:2em;"></div>');
-      $('body').append(smtpProgress);
-      smtpProgress.progressbar({value:0, max:100});
-      var progressPoller = setInterval(
-        function() {
-          $.ajax({
-            type: 'POST',
-            url: OC.filePath('cafevdb', 'ajax/email', 'progress.php'),
-            data: { ProgressId: 0 },
-            success: function(data) {
-              if (typeof data != 'undefined' && typeof data.progress != 'undefined') {
-                var progress = data.progress;
-                var value = progress.current;
-                var max = progress.target;
-                var rel = value / max * 100.0;
-                smtpProgress.progressbar('option', 'value', rel);
-              }
-            },
-            dataType: 'json',
-            async: true });
-        },
-        1000);
+
+      // try to provide status feed-back for large transfers or
+      // sending to many recipients. To this end we poll a special
+      // data-base table. If not finished after 5 seconds, we pop-up a
+      // dialog with status information.
+
+      var initialTimeout = 3000;
+      var pollingTimeout = 800;
+      var progressTimer;
+      var initialTimer;
+      var progressWrapper = dialogHolder.find('div#sendingprogresswrapper');
+      var progressOpen = false;
+
+      var pollProgress = function() {
+        $.post(OC.filePath('cafevdb', 'ajax/email', 'progress.php'),
+               {ProgressId: 0 },
+               function(data) {
+                 var stop = false;
+                 if (typeof data != 'undefined' && typeof data.progress != 'undefined') {
+                   var progress = data.progress;
+                   var value = progress.current;
+                   var max = progress.target;
+                   var rel = value / max * 100.0;
+                   var tagData = $.parseJSON(progress.tag);
+                   var progressTitle;
+                   if (tagData.total > 1) {
+                     progressTitle =
+                       t('cafevdb', 'Sending message {active} out of {total}', tagData);
+                   } else {
+                     progressTitle = t('cafevdb', 'Message delivery in progress');
+                   }
+                   progressWrapper.find('div.messagecount').html(progressTitle);
+                   if (tagData.proto == 'smtp') {
+                     progressWrapper.find('div.imap span.progressbar').
+                       progressbar('option', 'value', 0);
+                   }
+                   progressWrapper.find('div.'+tagData.proto+' span.progressbar').
+                     progressbar('option', 'value', rel);
+                   if (tagData.proto == 'imap' && rel == 100 && tagData.active == tagData.total) {
+                     stop = true;
+                   }
+                 }
+                 if (!stop) {
+                   progressTimer = setTimeout(pollProgress, pollingTimeout);
+                 }
+               });
+      };
+
+      initialTimer = setTimeout(function() {
+                       //alert('count: '+progressWrapper.length);
+                       //alert('count: '+progressWrapper.length);
+                       progressWrapper.show();
+                       progressWrapper.find('span.progressbar').progressbar({value:0, max:100});
+                       progressWrapper.dialog({
+                         title: t('cafevdb', 'Message Delivery Status'),
+                         width: 'auto',
+                         height: 'auto',
+                         modal: true,
+                         closeOnEscape: false,
+                         resizable: false,
+                         dialogClass: 'emailform delivery progress',
+                         open: function() {
+                           progressOpen = true;
+                         },
+                         close: function() {
+                           progressOpen = false;
+                           progressWrapper.find('span.progressbar').progressbar('destroy');
+                           progressWrapper.dialog('destroy');
+                           progressWrapper.hide();
+                         }
+                       });
+                       progressTimer = setTimeout(pollProgress, pollingTimeout);
+                     }, initialTimeout);
+
       applyComposerControls.call(this, event,
                                  {
                                    'Request': 'send',
@@ -526,7 +578,11 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                                      dialogWidget.addClass('pme-table-dialog-blocked');
                                    } else {
                                      $(window).off('beforeunload');
-                                     clearTimeout(progressPoller);
+                                     clearTimeout(initialTimer);
+                                     clearTimeout(progressTimer);
+                                     if (progressOpen) {
+                                       progressWrapper.dialog('close');
+                                     }
                                      dialogWidget.removeClass('pme-table-dialog-blocked');
                                    }
                                  });
