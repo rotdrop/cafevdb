@@ -73,7 +73,8 @@ if ($numTotal > 0 && $numFailed == 0) {
     echo '
 <div class="emailform error group messagecount">
   <span class="error caption messagecount">
-    '.L::t('The mailing software did not signal an error. ').
+    '.L::t('The mailing software did not signal an error.').
+      ' '.
       L::t('The message was propably sent out successfully.').'
   </span>
 </div>';
@@ -320,8 +321,10 @@ if (!empty($diagnostics['AttachmentValidation']['Events'])) {
   </div>';
   $mailto = $admin['email'].
     '?subject='.rawurlencode('[CAFEVDB-InternalError] Event Attachments Do not Exist');
-  $mailto = '<span class="error email"><a href="mailto:'.$mailto.'">'.$admin['name'].'</a></span>';   
-  $explanations = L::t('This is probably an internal error. Please contact %s',
+  $mailto = '<span class="error email"><a href="mailto:'.$mailto.'">'.$admin['name'].'</a></span>';
+  $explanations = L::t('This is probably an internal error. Please contact %s. '.
+                       'It may be possible to simply click on the red, underlined text '.
+                       'in order to compose a usefull message.',
                        array($mailto));  
   echo '
   <div class="error contents explanations">
@@ -338,6 +341,7 @@ if (!empty($diagnostics['AttachmentValidation']['Events'])) {
  *
  */
 if (!empty($diagnostics['MailerExceptions'])) {
+
   $output = true;
 
   $exceptions = $diagnostics['MailerExceptions'];
@@ -360,7 +364,9 @@ if (!empty($diagnostics['MailerExceptions'])) {
     '?subject='.rawurlencode('[CAFEVDB-Exception] Exceptions from Email-Form').
     '&body='.rawurlencode(implode("\r\n", $exceptions));
   $explanations = L::t('This is an internal error. '.
-                       'Please copy this page and send it via email to %s.',
+                       'Please copy this page and send it via email to %s.'.
+                       'It may be possible to simply click on the red, underlined text '.
+                       'in order to compose a usefull message.',
                        array('<span class="error email">'.
                              '<a href="mailto:'.$mailto.'">'.
                              $admin['name'].
@@ -373,7 +379,8 @@ if (!empty($diagnostics['MailerExceptions'])) {
   </div>';
   echo '
 </div>';  
-} 
+
+}
 
 /*****************************************************************************
  *
@@ -382,6 +389,45 @@ if (!empty($diagnostics['MailerExceptions'])) {
  *
  */
 if (!empty($diagnostics['MailerErrors'])) {
+
+  $output = true;
+
+  $errors = $diagnostics['MailerErrors'];
+  $failedEvents = $diagnostics['AttachmentValidation']['Events'];
+  echo '
+<div class="emailform error group attachments events">
+  <div class="error contents attachments events">
+    <span class="error caption attachments events">
+      '.L::t('While trying to send the message(s), the following error(s) have been encountered:').'
+    </span>
+    <ul>';
+  foreach($errors as $error) {
+    echo '
+      <li><span class="error item contents exception name">'.$error.'</span></li>';
+  }
+  echo '
+    </ul>
+  </div>';
+  $mailto = $admin['email'].
+    '?subject='.rawurlencode('[CAFEVDB-ImpossibleMailerErrors] Errors from Email-Form').
+    '&body='.rawurlencode(implode("\r\n", $errors));
+  $explanations = L::t('This is an internal error. '.
+                       'Please copy this page and send it via email to %s. '.
+                       'It may be possible to simply click on the red, underlined text '.
+                       'in order to compose a usefull message.',
+                       array('<span class="error email">'.
+                             '<a href="mailto:'.$mailto.'">'.
+                             $admin['name'].
+                             '</a>'.
+                             '</span>'));
+  echo '
+  <div class="error contents explanations">
+  <div class="error heading">'.L::t('Explanations').'</div>
+    '.$explanations.'
+  </div>';
+  echo '
+</div>';  
+
 } 
 
 /*****************************************************************************
@@ -495,7 +541,9 @@ if (!empty($diagnostics['CopyToSent'])) {
     L::t('If no other error messages are echoed on this page, then '.
          'the emails have probably been sent successfully. However, copying '.
          'the sent-out message to the sent-folder on the email-server has failed. '.
-         'This is nothing you can solve on your own, please contact %s.',
+         'This is nothing you can solve on your own, please contact %s. '.
+         'It may be possible to simply click on the red, underlined text '.
+         'in order to compose a usefull message.',
          array($mailto));
   echo '
   <div class="error contents explanations">
