@@ -212,7 +212,7 @@ CAFEVDB.FileUpload = CAFEVDB.FileUpload || {};
       return size;
     };
 
-    if (true) {
+    if (false) {
       // warn user not to leave the page while upload is in progress
       $(window).bind('beforeunload', function(e) {
         if ($.assocArraySize(CAFEVDB.FileUpload.uploadingFiles) > 0) {
