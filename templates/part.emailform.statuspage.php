@@ -447,6 +447,10 @@ if (!empty($diagnostics['Duplicates'])) {
     </span>
   </div>';
   foreach($duplicates as $duplicate) {
+    if (empty($duplicate['recipients'])) {
+      // This is very likely just the Cc: to the shared email account.
+      continue;
+    }
     $dates = $duplicate['dates'];
     echo '
   <div class="error contents duplicates>
@@ -639,7 +643,9 @@ if ($diagnostics['Message']['Text'] != '') {
 if ($output) {
   echo '
 <div class="spacer"><div class="ruler"></div></div>
-<div class="error heading">'.L::t('The most recent status message is always saved to the status panel. It can be reviewed there even after closing the dialog window.').'</div> 
+<div class="emailform error group">
+  <div class="emailform error heading">'.L::t('The most recent status message is always saved to the status panel. It can be reviewed there even after closing the dialog window.').'</div>
+</div>
 <div class="spacer"><div class="ruler"></div></div>';  
 }
 
