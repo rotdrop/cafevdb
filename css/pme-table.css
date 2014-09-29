@@ -59,7 +59,7 @@
 }
 
 #pme-table-container tr.pme-navigation a.chosen-single {
-  line-height:15px;
+/*  line-height:15px;*/
   margin:3px 3px 3px 0px;
 }
 
@@ -113,7 +113,7 @@
   background: unset;
   box-shadow: unset;
   outline: medium, none;
-  margin: 0px 0px 3px 0px;
+  margin: 0px 0px 3px 0px !important;
   background-color: rgba(240, 240, 240, 0.9);
   color: #555;
   border: 1px solid rgba(190, 190, 190, 0.9);
