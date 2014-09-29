@@ -47,6 +47,7 @@ OC::$CLASSPATH['CAFEVDB\InstrumentInsurance'] = 'cafevdb/lib/instrument-insuranc
 OC::$CLASSPATH['CAFEVDB\PHPExcel\ValueBinder'] = 'cafevdb/lib/php-excel-functions.php';
 OC::$CLASSPATH['CAFEVDB\Finance'] = 'cafevdb/lib/finance.php';
 OC::$CLASSPATH['CAFEVDB\SepaDebitMandates'] = 'cafevdb/lib/sepa-debit-mandates.php';
+OC::$CLASSPATH['CAFEVDB\ProgressStatus'] = 'cafevdb/lib/progress-status.php';
 
 OC::$CLASSPATH['DWEMBED\App'] = 'dokuwikiembed/lib/dokuwikiembed.php';
 OC::$CLASSPATH['DWEMBED\L'] = 'dokuwikiembed/lib/util.php';
@@ -59,11 +60,10 @@ OC::$CLASSPATH['phpMyEdit'] = 'cafevdb/3rdparty/phpMyEdit/phpMyEdit.class.php';
 OC::$CLASSPATH['html2text'] = 'cafevdb/3rdparty/PHPMailer/extras/class.html2text.php';
 OC::$CLASSPATH['IBAN'] = 'cafevdb/3rdparty/php-iban/oophp-iban.php';
 OC::$CLASSPATH['malkusch\bav\BAV'] = 'cafevdb/3rdparty/bav/autoloader/autoloader.php';
-OC::$CLASSPATH['PHPMailer'] = 'cafevdb/3rdparty/PHPMailer/autoloader.php';
+require_once 'cafevdb/3rdparty/PHPMailer/PHPMailerAutoload.php';
 OC::$CLASSPATH['PEAR'] = '3rdparty/PEAR.php';
 OC::$CLASSPATH['Mail_RFC822'] = 'cafevdb/3rdparty/pear/php/Mail/RFC822.php';
 OC::$CLASSPATH['Net_IMAP'] = 'cafevdb/3rdparty/pear/php/Net/IMAP.php';
-
 
 /* Script etc. used by everyone */
 OC_App::registerAdmin( 'cafevdb', 'admin-settings' );

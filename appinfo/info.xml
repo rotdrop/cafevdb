@@ -3,7 +3,7 @@
 	<id>cafevdb</id>
 	<name>Cafevdb</name>
 	<description>Chamber orchestra project data-base application.</description>
-	<version>2.1</version>
+	<version>3.0</version>
 	<licence>Not for public use, contact the author.</licence>
 	<author>Claus-Justus Heine</author>
 	<rememberlogin>false</rememberlogin>
