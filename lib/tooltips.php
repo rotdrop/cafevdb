@@ -65,6 +65,38 @@ class ToolTips
 
       'emailtest' => L::t('Test the email-settings; try to connect to the SMTP-server and the IMAP-server in turn.'),
       
+      'email-recipients-listing' => L::t('List of selected musicians; can be changed in the `Em@il-Recipients\' panel.'),
+
+      'address-book-emails' => L::t('Opens a select-box with choices from the shared Owncloud-addressbook. '.
+                                    'You can also add new em@il-addresses to the address-book for later '.
+                                    'reusal. The addresses can also be added in the Owncloud `Contacts\'-App.'),
+
+      'delete-email-template' => L::t('Delete the selected email-template (you will be asked for '.
+                                      'confirmation before it is actually deleted)'),
+
+      'delete-all-event-attachments' => L::t('Clear the list of selected event-attachments. '.
+                                             'Of course, this does not delete the events from '.
+                                             'their respective calendar, it just de-selects all events '.
+                                             'such that no event will be attached to the email.'),
+
+      'delete-all-file-attachments' => L::t('Delete all uploaded file-attachments from the server. '.
+                                            'This is also done automatically when closing the email-form. '.
+                                            'This will also empty the select box.'),
+
+      'event-attachments-select' => L::t('Select-box with all project-events. You can select events '.
+                                         'as attachments to your email.'),
+
+      'file-attachments-select' => L::t('Select-box with all currently uploaded attachments. Note that a '.
+                                       'file will only be attached to a message if it is also checked in '.
+                                       'this select box.'),
+
+      'email-recipients-broken-emails' => L::t('List of musicians without or with ill-formed email-addresses. '.
+                                              'You can click on the names in order to open a dialog with '.
+                                              'the personal data of the respective musician and correct '.
+                                              'the email addresses there.'),
+
+      'events-attachment' => L::t('Select calendar attachments from the associated project events.'),
+
       'email-recipients-from-project' => L::t('Choose among all musicians currently registered for this project.'),
 
       'email-recipients-except-project' => L::t('Choose among all musicians currently <b>NOT</b> registered for this project.'),
