@@ -946,7 +946,7 @@ var CAFEVDB = CAFEVDB || {};
    */
   CAFEVDB.tipsy = function(containerSel) {
     if (typeof containerSel === 'undefined') {
-      containerSel = '#cafevdb-page-body';
+      containerSel = '#content.app-cafevdb';
     }
     var container = $(containerSel);
 
@@ -1045,6 +1045,10 @@ $(document).ready(function(){
   document.onkeypress = CAFEVDB.stopRKey;
 
   CAFEVDB.exportMenu();
+
+  $('#personalsettings .navigation.home').on('click keydown', function(event) {
+    $('#personalsettings').submit();
+  });
 
   $('#personalsettings .generalsettings').on(
     'click keydown', function(event) {
