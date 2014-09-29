@@ -65,15 +65,16 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
                title="<?php echo Config::toolTips('new-email-template'); ?>"
                name="emailComposer[TemplateName]"
                type="text"
+               class="tipsy-n"
                id="emailCurrentTemplate">
         <input title="<?php echo Config::toolTips('save-email-template'); ?>"
                type="submit"
-               class="submit save-template"
+               class="submit save-template tipsy-wide tipsy-s"
                name="emailComposer[SaveTemplate]"
                value="<?php echo L::t('Save as Template'); ?>"/> 
         <input title="<?php echo Config::toolTips('delete-email-template'); ?>"
                type="submit"
-               class="submit delete-template"
+               class="submit delete-template tipsy-ne"
                name="emailComposer[DeleteTemplate]"
                value="<?php echo L::t('Delete Template'); ?>"/>
       </td>
@@ -102,7 +103,7 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
                id="carbon-copy" />
         <input title="<?php echo Config::toolTips('address-book-emails'); ?>"
                type="submit"
-               class="submit address-book-emails CC"
+               class="submit address-book-emails CC tipsy-e"
                data-for="#carbon-copy"
                name="emailComposer[AddressBookCC]"
                value="<?php echo L::t('Address Book'); ?>"/>        
@@ -120,7 +121,7 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
                id="blind-carbon-copy"/>
         <input title="<?php echo Config::toolTips('address-book-emails'); ?>"
                type="submit"
-               class="submit address-book-emails BCC"
+               class="submit address-book-emails BCC tipsy-e"
                data-for="#blind-carbon-copy"
                name="emailComposer[AddressBookBCC]"
                value="<?php echo L::t('Address Book'); ?>"/>
@@ -204,7 +205,7 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
         </select>
         <input title="<?php echo Config::toolTips('delete-all-event-attachments'); ?>"
                type="submit"
-               class="submit delete-all-event-attachments"
+               class="submit delete-all-event-attachments tipsy-e"
                name="emailComposer[DeleteAllAttachments]"
                value="<?php echo L::t('Delete Event Attachments'); ?>"/>
       </td>
@@ -224,7 +225,7 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
         </select>
         <input title="<?php echo Config::toolTips('delete-all-file-attachments'); ?>"
                type="submit"
-               class="submit delete-all-file-attachments"
+               class="submit delete-all-file-attachments tipsy-e"
                name="emailComposer[DeleteAllAttachments]"
                value="<?php echo L::t('Delete All Attachments'); ?>"/>
       </td>
@@ -240,7 +241,7 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
       <td></td>
       <td class="cancel">
         <input title="<?php echo Config::tooltips('cancel-email-composition'); ?>"
-               class="email-composer submit cancel"
+               class="email-composer submit cancel tipsy-se"
                type="submit" name="emailComposer[Cancel]"
                value="<?php echo L::t('Cancel'); ?>" />
       </td>
@@ -255,4 +256,3 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
            class="file-attach">
   </fieldset>
 </fieldset>
-
