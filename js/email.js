@@ -267,6 +267,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
     var eventAttachmentsSelector = fieldset.find('select.event-attachments');
     var fileAttachmentsSelector = fieldset.find('select.file-attachments');    
     var sendButton = fieldset.find('input.submit.send');
+    var dialogWidget = dialogHolder.dialog('widget');
 
     // Event dispatcher, so to say
     var applyComposerControls = function(event, request, validateLockCB) {
@@ -309,21 +310,25 @@ CAFEVDB.Email = CAFEVDB.Email || {};
           post += '&'+$.param({ emailComposer: request });
         }
       }
-      $.post(OC.filePath('cafevdb', 'ajax/email', 'composer.php'),
-             post,
-             function(data) {
+      //$.post(OC.filePath('cafevdb', 'ajax/email', 'composer.php'),
+      $.ajax({ url: OC.filePath('cafevdb', 'ajax/email', 'composer.php'),
+               type: 'POST',
+               data: post,
+               dataType: 'json',
+               async: true,
+               success: function(data) {
                var postponeEnable = false;
                $('.tipsy').remove();
                if (!CAFEVDB.ajaxErrorHandler(
                  data,
                  [ 'projectId', 'projectName', 'request', 'requestData' ],
                  validateUnlock)) {
-                 if (data != 'undefined' && data.data != 'undefined') {
+                 if (typeof data != 'undefined' && typeof data.data != 'undefined') {
                    var debugText = '';
-                   if (data.data.caption != 'undefined') {
+                   if (typeof data.data.caption != 'undefined') {
                      debugText += '<div class="error caption">'+data.data.caption+'</div>';
                    }
-                   if (data.data.message != 'undefined') {
+                   if (typeof data.data.message != 'undefined') {
                      debugText += data.data.message;
                    }
                    if (typeof data.data.debug != 'undefined') {
@@ -337,12 +342,10 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                var requestData = data.data.requestData;
                switch (request) {
                case 'send':
-                 postponeEnable = true;
                  if (typeof data.data.message != 'undefined' &&
                      typeof data.data.caption != 'undefined') {
                    OC.dialogs.alert(data.data.message, data.data.caption,
-                                    validateUnlock,
-                                    true, true);
+                                    undefined, true, true);
                  }
                  break;
                case 'cancel':
@@ -451,10 +454,10 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                };
 
                var debugText = '';
-               if (data.data.caption != 'undefined') {
+               if (typeof data.data.caption != 'undefined') {
                  debugText += '<div class="error caption">'+data.data.caption+'</div>';
                }
-               if (data.data.message != 'undefined') {
+               if (typeof data.data.message != 'undefined') {
                  debugText += data.data.message;
                }
                if (typeof data.data.debug != 'undefined') {
@@ -475,7 +478,9 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                  validateUnlock();
                }
                return false;
-             });
+               }
+             }
+            );
       return false;
     };
 
@@ -485,11 +490,46 @@ CAFEVDB.Email = CAFEVDB.Email || {};
      */
     sendButton.off('click').on('click', function(event) {
       event.stopImmediatePropagation();
-      applyComposerControls.call(this, event, {
-        'Request': 'send',
-        'Send': 'ThePointOfNoReturn',
-        'SubmitAll': true
-      });
+      var smtpProgress = $('<div id="email-sending-smpt-progress" style="z-index:100000;position:absolute;left:100px;top:100px;width:40em;height:2em;"></div>');
+      $('body').append(smtpProgress);
+      smtpProgress.progressbar({value:0, max:100});
+      var progressPoller = setInterval(
+        function() {
+          $.ajax({
+            type: 'POST',
+            url: OC.filePath('cafevdb', 'ajax/email', 'progress.php'),
+            data: { ProgressId: 0 },
+            success: function(data) {
+              if (typeof data != 'undefined' && typeof data.progress != 'undefined') {
+                var progress = data.progress;
+                var value = progress.current;
+                var max = progress.target;
+                var rel = value / max * 100.0;
+                smtpProgress.progressbar('option', 'value', rel);
+              }
+            },
+            dataType: 'json',
+            async: true });
+        },
+        1000);
+      applyComposerControls.call(this, event,
+                                 {
+                                   'Request': 'send',
+                                   'Send': 'ThePointOfNoReturn',
+                                   'SubmitAll': true
+                                 },
+                                 function(lock) {
+                                   if (lock) {
+                                     $(window).on('beforeunload', function(event) {
+                                       return t('cafevdb', 'Email sending is in progress. Leaving the page now will cancel the email submission.');
+                                     });
+                                     dialogWidget.addClass('pme-table-dialog-blocked');
+                                   } else {
+                                     $(window).off('beforeunload');
+                                     clearTimeout(progressPoller);
+                                     dialogWidget.removeClass('pme-table-dialog-blocked');
+                                   }
+                                 });
       return false;
     });
 
@@ -877,7 +917,6 @@ CAFEVDB.Email = CAFEVDB.Email || {};
 
     panelHolder.off('resize');
     panelHolder.on('resize', function() {
-      var dialogWidget = dialogHolder.dialog('widget');
       var titleOffset = (dialogWidget.find('.ui-dialog-titlebar').outerHeight(true)
                         +
                          dialogWidget.find('.ui-tabs-nav').outerHeight(true));

@@ -384,46 +384,52 @@ mandateReference
       // surrounding the actual sending of the message.
       try {
 
-        $mail = new \PHPMailer(true);
-        $mail->CharSet = 'utf-8';
-        $mail->SingleTo = false;
+        $phpMailer = new \PHPMailer(true);
+        $phpMailer->CharSet = 'utf-8';
+        $phpMailer->SingleTo = false;
 
-        // Setup the mail server for testing
-        // $mail->IsSMTP();
-        //$mail->IsMail();
-        $mail->IsSMTP();
-        if (true) {
-          $mail->Host = Config::getValue('smtpserver');
-          $mail->Port = Config::getValue('smtpport');
-          switch (Config::getValue('smtpsecure')) {
-          case 'insecure': $mail->SMTPSecure = ''; break;
-          case 'starttls': $mail->SMTPSecure = 'tls'; break;
-          case 'ssl':      $mail->SMTPSecure = 'ssl'; break;
-          default:         $mail->SMTPSecure = ''; break;
+        $phpMailer->IsSMTP();
+
+        // Provide some progress feed-back to amuse the user
+        $progressProvider = new ProgressStatus();
+        $phpMailer->ProgressCallback = function($currentLine, $totalLines) use ($progressProvider) {
+          if ($currentLine == 0) {
+            $progressProvider->save($currentLine, $totalLines, 'smtp');
+          } else if ($currentLine % 1024 == 0 || $currentLine >= $totalLines) {
+            $progressProvider->save($currentLine, $totalLines);
           }
-          $mail->SMTPAuth = true;
-          $mail->Username = Config::getValue('emailuser');
-          $mail->Password = Config::getValue('emailpassword');
+        };
+
+        $phpMailer->Host = Config::getValue('smtpserver');
+        $phpMailer->Port = Config::getValue('smtpport');
+        switch (Config::getValue('smtpsecure')) {
+        case 'insecure': $phpMailer->SMTPSecure = ''; break;
+        case 'starttls': $phpMailer->SMTPSecure = 'tls'; break;
+        case 'ssl':      $phpMailer->SMTPSecure = 'ssl'; break;
+        default:         $phpMailer->SMTPSecure = ''; break;
         }
-        
-        $mail->Subject = $this->messageTag . ' ' . $this->subject();
-        $logMessage->subject = $mail->Subject;
+        $phpMailer->SMTPAuth = true;
+        $phpMailer->Username = Config::getValue('emailuser');
+        $phpMailer->Password = Config::getValue('emailpassword');
+
+        $phpMailer->Subject = $this->messageTag . ' ' . $this->subject();
+        $logMessage->subject = $phpMailer->Subject;
         // pass the correct path in order for automatic image conversion
-        $mail->msgHTML($strMessage, __DIR__.'/../', true);
+        $phpMailer->msgHTML($strMessage, __DIR__.'/../', true);
 
         $senderName = $this->fromName();
         $senderEmail = $this->fromAddress();
-        $mail->AddReplyTo($senderEmail, $senderName);
-        $mail->SetFrom($senderEmail, $senderName);
+        $phpMailer->AddReplyTo($senderEmail, $senderName);
+        $phpMailer->SetFrom($senderEmail, $senderName);
 
         if (!$this->constructionMode) {
           // Loop over all data-base records and add each recipient in turn
           foreach ($EMails as $recipient) {
             if ($singleAddress) {
-              $mail->AddAddress($recipient['email'], $recipient['name']);
+              $phpMailer->AddAddress($recipient['email'], $recipient['name']);
             } else if ($recipient['project'] < 0) {
               // blind copy, don't expose the victim to the others.
-              $mail->AddBCC($recipient['email'], $recipient['name']);
+              $phpMailer->AddBCC($recipient['email'], $recipient['name']);
             } else {
               // Well, people subscribing to one of our projects
               // simply must not complain, except soloist or
@@ -431,22 +437,22 @@ mandateReference
               // mass-email at all, but if so, then they are added as Bcc
               if ($recipient['status'] == 'conductor' ||
                   $recipient['status'] == 'soloist') {
-                $mail->AddBCC($recipient['email'], $recipient['name']);
+                $phpMailer->AddBCC($recipient['email'], $recipient['name']);
               } else {
-                $mail->AddAddress($recipient['email'], $recipient['name']);
+                $phpMailer->AddAddress($recipient['email'], $recipient['name']);
               }
             }
           }
         } else {
           // Construction mode: per force only send to the developer
-          $mail->AddAddress($this->catchAllEmail, $this->catchAllName);
+          $phpMailer->AddAddress($this->catchAllEmail, $this->catchAllName);
         }
 
         if ($addCC === true) {
           // Always drop a copy to the orchestra's email account for
           // archiving purposes and to catch illegal usage. It is legel
           // to modify $this->sender through the email-form.
-          $mail->AddCC($this->catchAllEmail, $senderName);
+          $phpMailer->AddCC($this->catchAllEmail, $senderName);
         }
         
         // If we have further Cc's, then add them also
@@ -460,7 +466,7 @@ mandateReference
             $stringCC .= $value['name'].' <'.$value['email'].'>, ';
             // PHP-Mailer adds " for itself as needed
             $value['name'] = trim($value['name'], '"');
-            $mail->AddCC($value['email'], $value['name']);
+            $phpMailer->AddCC($value['email'], $value['name']);
           }
           $stringCC = trim($stringCC, ', ');
         }
@@ -476,7 +482,7 @@ mandateReference
             $stringBCC .= $value['name'].' <'.$value['email'].'>, ';
             // PHP-Mailer adds " for itself as needed
             $value['name'] = trim($value['name'], '"');
-            $mail->AddBCC($value['email'], $value['name']);
+            $phpMailer->AddBCC($value['email'], $value['name']);
           }
           $stringBCC = trim($stringBCC, ', ');
         }
@@ -489,10 +495,10 @@ mandateReference
           if ($attachment['status'] != 'selected') {
             continue;
           }
-          $mail->AddAttachment($attachment['tmp_name'],
-                               basename($attachment['name']),
-                               'base64',
-                               $attachment['type']);
+          $phpMailer->AddAttachment($attachment['tmp_name'],
+                                    basename($attachment['name']),
+                                    'base64',
+                                    $attachment['type']);
         }
 
         // Finally possibly to-be-attached events. This cannot throw,
@@ -505,11 +511,11 @@ mandateReference
           $calendar = Events::exportEvents($events, $this->projectName);
           
           // Encode it as attachment
-          $mail->AddStringEmbeddedImage($calendar,
-                                        md5($this->projectName.'.ics'),
-                                        $this->projectName.'.ics',
-                                        'quoted-printable',
-                                        'text/calendar');
+          $phpMailer->AddStringEmbeddedImage($calendar,
+                                             md5($this->projectName.'.ics'),
+                                             $this->projectName.'.ics',
+                                             'quoted-printable',
+                                             'text/calendar');
         }
 
       } catch (\Exception $exception) {
@@ -532,11 +538,11 @@ mandateReference
 
       // Finally the point of no return. Send it out!!!      
       try {
-        if (!$mail->Send()) {
+        if (!$phpMailer->Send()) {
           // in principle this cannot happen as the mailer DOES use
           // exceptions ...
           $this->executionStatus = false;
-          $this->diagnostics['MailerErrors'][] = $Mails;
+          $this->diagnostics['MailerErrors'][] = $phpMailer->ErrorInfo;
           return false;
         } else {
           // success, log the message to our data-base
@@ -545,11 +551,16 @@ mandateReference
         }
       } catch (\Exception $exception) {
         $this->executionStatus = false;
-        $this->diagnostics['MailerExceptions'][] = $exception->getMessage();
+        $this->diagnostics['MailerExceptions'][] =
+          $exception->getFile().
+          '('.$exception->getLine().
+          '): '.
+          $exception->getMessage();
+
         return false;
       }
 
-      return $mail->GetSentMIMEMessage();
+      return $phpMailer->GetSentMIMEMessage();
     }
 
     private function recordMessageDiagnostics($mimeMsg)
@@ -591,9 +602,22 @@ mandateReference
       $imapport   = Config::getValue('imapport');
       $imapsecure = Config::getValue('imapsecure');
 
+      $progressProvider = new ProgressStatus(0);
       $imap = new \Net_IMAP($imaphost,
                             $imapport,
-                            $imapsecure == 'starttls' ? true : false, 'UTF-8');
+                            $imapsecure == 'starttls' ? true : false, 'UTF-8',
+                            function($pos, $total) use ($progressProvider) {
+                              if ($total < 128) {
+                                return; // ignore non-data transfers
+                              }
+                              if ($pos == 0) {
+                                $progressProvider->save($pos, $total, 'imap');
+                              } else {
+                                $progressProvider->save($pos);
+                              }
+                            },
+                            64*1024); // 64 kb chunk-size
+
       $user = Config::getValue('emailuser');
       $pass = Config::getValue('emailpassword');
       if (($ret = $imap->login($user, $pass)) !== true) {
@@ -835,7 +859,7 @@ mandateReference
      */
     public function validateFreeFormAddresses($header, $freeForm)
     {
-      $mailer = new \PHPMailer(true);
+      $phpMailerer = new \PHPMailer(true);
       $parser = new \Mail_RFC822(null, null, null, false);
 
       $brokenRecipients = array();
@@ -862,7 +886,7 @@ mandateReference
           } else {
             $recipient = $name.' <'.$email.'>';
           }
-          if (!$mailer->validateAddress($email)) {
+          if (!$phpMailerer->validateAddress($email)) {
             $brokenRecipients[] = htmlspecialchars($recipient);
           } else {
             $recipients[] = array('email' => $email,
