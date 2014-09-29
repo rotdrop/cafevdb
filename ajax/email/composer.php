@@ -117,7 +117,7 @@ try {
       $tmpl->assign('sender', $composer->fromName());
       $tmpl->assign('catchAllEmail', $composer->fromAddress());
       $tmpl->assign('fileAttachments', $composer->fileAttachments());
-      $tmpl->assign('ComposerFormData', $composer->formData());  
+      $tmpl->assign('ComposerFormData', $composer->formData());
 
       $elementData = $tmpl->fetchPage();
     } else {    
