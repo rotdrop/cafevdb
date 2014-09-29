@@ -17,8 +17,8 @@
 /**
  * IMAPProtocol.php holds protocol implementation for IMAP.php
  */
-require_once 'Net/IMAPProtocol.php';
-
+//require_once 'Net/IMAPProtocol.php';
+require_once dirname(__FILE__).'/IMAPProtocol.php';
 
 /**
  * Provides an implementation of the IMAP protocol using PEAR's
@@ -46,9 +46,11 @@ class Net_IMAP extends Net_IMAPProtocol
     function Net_IMAP($host = 'localhost',
                       $port = 143, 
                       $enableSTARTTLS = true,
-                      $encoding = 'ISO-8859-1')
+                      $encoding = 'ISO-8859-1',
+                      $progressCallback = null,
+                      $chunkSize = null)
     {
-        $this->Net_IMAPProtocol();
+        $this->Net_IMAPProtocol($progressCallback, $chunkSize);
         $ret             = $this->connect($host, $port, $enableSTARTTLS);
         $this->_encoding = $encoding;
     }

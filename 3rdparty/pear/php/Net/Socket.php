@@ -367,6 +367,9 @@ class Net_Socket extends PEAR
      * @param string  $data      Data to write.
      * @param integer $blocksize Amount of data to write at once.
      *                           NULL means all at once.
+     * @param function $progressCallback Called after each chunk of
+     * $blocksize many bytes or never, if $blocksize is not given
+     *
      *
      * @access public
      * @return mixed If the socket is not connected, returns an instance of
@@ -374,10 +377,17 @@ class Net_Socket extends PEAR
      *               If the write succeeds, returns the number of bytes written
      *               If the write fails, returns false.
      */
-    function write($data, $blocksize = null)
+    function write($data, $blocksize = null, $progressCallback)
     {
         if (!is_resource($this->fp)) {
             return $this->raiseError('not connected');
+        }
+
+        $feedBack = false;
+        $size = 0;
+        if (is_callable($progressCallback) && !is_null($blocksize)) {
+          $feedBack = true;
+          $size = strlen($data);
         }
 
         if (is_null($blocksize) && !OS_WINDOWS) {
@@ -390,11 +400,19 @@ class Net_Socket extends PEAR
             $pos  = 0;
             $size = strlen($data);
             while ($pos < $size) {
+                if ($feedBack) {
+                    call_user_func($progressCallback, $pos, $size);
+                }
+
                 $written = @fwrite($this->fp, substr($data, $pos, $blocksize));
                 if (!$written) {
                     return $written;
                 }
                 $pos += $written;
+            }
+
+            if ($feedBack) {
+                call_user_func($progressCallback, $pos, $size);
             }
 
             return $pos;
