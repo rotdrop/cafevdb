@@ -40,6 +40,9 @@ use CAFEVDB\Contacts;
 
 try {
 
+  // Close this session in order to enable progress feed-back
+  session_write_close();
+
   ob_start();
 
   Error::exceptions(true);
@@ -180,6 +183,9 @@ try {
   $debugText .= ob_get_contents();
   @ob_end_clean();
 
+  // Restart sesssion when finished.
+  session_start();
+
   if (Util::debugMode('request') || Util::debugMode('emailform')) {
     $debugText .= print_r($requestData, true);
   }
@@ -218,6 +224,9 @@ try {
 
   $debugText .= ob_get_contents();
   @ob_end_clean();
+
+  // Restart sesssion when finished.
+  session_start();
 
   $exceptionText = $e->getFile().'('.$e->getLine().'): '.$e->getMessage();
   $trace = $e->getTraceAsString();
