@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-29 08:24+0200\n"
+"POT-Creation-Date: 2014-09-29 08:57+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2085,7 +2085,7 @@ msgstr ""
 msgid "Instrumentation Numbers"
 msgstr ""
 
-#: lib/functions.php:1015 lib/tooltips.php:356
+#: lib/functions.php:1015 lib/tooltips.php:362
 msgid ""
 "Display the desired instrumentaion numbers, i.e. how many musicians are "
 "already registered for each instrument group and how many are finally needed."
@@ -3143,7 +3143,21 @@ msgstr ""
 msgid "Open a page with the musicians registered for the respective project."
 msgstr ""
 
-#: lib/tooltips.php:345 lib/tooltips.php:375
+#: lib/tooltips.php:345
+msgid "Opens the email-form for the project inside a dialog window."
+msgstr ""
+
+#: lib/tooltips.php:347
+msgid ""
+"Opens a dialog-window which gives access to all stored informations for the "
+"project."
+msgstr ""
+
+#: lib/tooltips.php:349
+msgid "Load a new page with all debit-mandates for project-fees"
+msgstr ""
+
+#: lib/tooltips.php:351 lib/tooltips.php:381
 msgid ""
 "Open a dialog with all known\n"
 "events associated to the project.\n"
@@ -3151,35 +3165,35 @@ msgid ""
 "as needed."
 msgstr ""
 
-#: lib/tooltips.php:350
+#: lib/tooltips.php:356
 msgid "Change to the folder with project related files."
 msgstr ""
 
-#: lib/tooltips.php:352
+#: lib/tooltips.php:358
 msgid ""
 "Change to the folder with the financial balance\n"
 "sheets for the project (only available after the project\n"
 "has been ``closed''."
 msgstr ""
 
-#: lib/tooltips.php:358
+#: lib/tooltips.php:364
 msgid "Change to the DokuWiki-page for this project (if there is one)"
 msgstr ""
 
-#: lib/tooltips.php:360
+#: lib/tooltips.php:366
 msgid ""
 "Add a new public web-page to the project, either by generating a new one or "
 "by linking an existing web-page to the given project."
 msgstr ""
 
-#: lib/tooltips.php:362
+#: lib/tooltips.php:368
 msgid ""
 "Delete the currently displayed web-page fromthe project. The web page will "
 "be \"detached\" from the project and moved to the trash-bin\n"
 "\"category\" (folger) inside the CMS."
 msgstr ""
 
-#: lib/tooltips.php:365
+#: lib/tooltips.php:371
 msgid ""
 "Link existing pages to the project. This can be used, for instance, in order "
 "to add a page to the project which has not been created by hitting the `+'-"
@@ -3189,20 +3203,20 @@ msgid ""
 "z"
 msgstr ""
 
-#: lib/tooltips.php:367
+#: lib/tooltips.php:373
 msgid ""
 "Please select articles to link to the current project. The articles will be "
 "immediately added to the project if you select them. In order to remove the "
 "article, please use the `-' button above."
 msgstr ""
 
-#: lib/tooltips.php:369
+#: lib/tooltips.php:375
 msgid ""
 "Detach the currently displayed event announcement from the project. "
 "Primarily meant to provide means to undo erroneous linking of articles."
 msgstr ""
 
-#: lib/tooltips.php:371
+#: lib/tooltips.php:377
 msgid ""
 "Append the year to the name if checked.\n"
 "Regardless of this checkbox any decimal digit will first be stripped from "
@@ -3210,19 +3224,19 @@ msgid ""
 "of the project name before the year is added."
 msgstr ""
 
-#: lib/tooltips.php:380
+#: lib/tooltips.php:386
 msgid ""
 "Delete the event from the system\n"
 "(no undo possible)."
 msgstr ""
 
-#: lib/tooltips.php:383
+#: lib/tooltips.php:389
 msgid ""
 "Exclude all events from\n"
 "email-submission"
 msgstr ""
 
-#: lib/tooltips.php:386
+#: lib/tooltips.php:392
 msgid ""
 "Detach the respective event\n"
 "from the project, but do not\n"
@@ -3232,34 +3246,34 @@ msgid ""
 "categories."
 msgstr ""
 
-#: lib/tooltips.php:393
+#: lib/tooltips.php:399
 msgid "Modify the event."
 msgstr ""
 
-#: lib/tooltips.php:395
+#: lib/tooltips.php:401
 msgid "Add a new concert-event to the project."
 msgstr ""
 
-#: lib/tooltips.php:397
+#: lib/tooltips.php:403
 msgid ""
 "Add a private management event which is not exposed to the rest of the world."
 msgstr ""
 
-#: lib/tooltips.php:399
+#: lib/tooltips.php:405
 msgid "Add some other event to the project."
 msgstr ""
 
-#: lib/tooltips.php:401
+#: lib/tooltips.php:407
 msgid "Add a new rehearsal-event to the project."
 msgstr ""
 
-#: lib/tooltips.php:403
+#: lib/tooltips.php:409
 msgid ""
 "Select all events for\n"
 "email-submission"
 msgstr ""
 
-#: lib/tooltips.php:406
+#: lib/tooltips.php:412
 msgid ""
 "Mark the respective event for being\n"
 "sent by email as ICS-attachment per email.\n"
@@ -3269,20 +3283,20 @@ msgid ""
 "recipients."
 msgstr ""
 
-#: lib/tooltips.php:413
+#: lib/tooltips.php:419
 msgid ""
 "Click to open an email-form\n"
 "and send the selected events to\n"
 "selected recipients."
 msgstr ""
 
-#: lib/tooltips.php:417
+#: lib/tooltips.php:423
 msgid ""
 "Add the musician to the project. A new form will open were details like the "
 "instrument etc. can be adjustetd."
 msgstr ""
 
-#: lib/tooltips.php:419
+#: lib/tooltips.php:425
 msgid ""
 "Save the current email for later re-usal in the data-base.\n"
 "An email template can contain per-member substitutions with the syntax "
@@ -3294,36 +3308,36 @@ msgid ""
 "by the pre-names of the organizing committe in order to compose  greetings."
 msgstr ""
 
-#: lib/tooltips.php:425
+#: lib/tooltips.php:431
 msgid "Select one of the email templates previously stored in the data-base."
 msgstr ""
 
-#: lib/tooltips.php:427
+#: lib/tooltips.php:433
 msgid ""
 "Recompute the link between projects and events, using the event-categories "
 "as primary key."
 msgstr ""
 
-#: lib/tooltips.php:429
+#: lib/tooltips.php:435
 msgid ""
 "Check whether the data-base can be accessed with the given account\n"
 "information and password. The password will only be stored in the\n"
 "configuration storage if the test can be performed successfully."
 msgstr ""
 
-#: lib/tooltips.php:433
+#: lib/tooltips.php:439
 msgid ""
 "Try to connect to the specified web-address, will open the web-address in "
 "another window or tab, depending your local browser preferences."
 msgstr ""
 
-#: lib/tooltips.php:435
+#: lib/tooltips.php:441
 msgid ""
 "Add the instruments of the actually registered musicians to the instrument-"
 "table for the project."
 msgstr ""
 
-#: lib/tooltips.php:437
+#: lib/tooltips.php:443
 msgid ""
 "Upload a file from your local computer as attachment. The file will be "
 "removed from the remote-system after the message has been sent."

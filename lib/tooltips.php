@@ -342,6 +342,12 @@ to pages with the instrumentation, events, instrumentation numbers etc.'),
 
       'project-action-detailed-instrumentation' => L::t("Detailed display of all registered musicians for the selected project. The table will allow for modification of personal data like email, phone, address etc."),
 
+      'project-action-email' => L::t('Opens the email-form for the project inside a dialog window.'),
+
+      'project-infopage' => L::t('Opens a dialog-window which gives access to all stored informations for the project.'),
+
+      'project-action-debit-mandates' => L::t('Load a new page with all debit-mandates for project-fees'),
+
       'project-action-events' => L::t('Open a dialog with all known
 events associated to the project.
 Events can be added and modified
