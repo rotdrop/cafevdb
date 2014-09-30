@@ -1194,7 +1194,7 @@ class mySQL
   {
     $result = @mysql_fetch_array($res, $type);
     if (Util::debugMode('query')) {
-      print_r($result);
+      //print_r($result);
     }
     return $result;
   }
@@ -1230,6 +1230,84 @@ class mySQL
     $set = substr($set,strlen($settype)+2,strlen($set)-strlen($settype)-strlen("();")-1); // Remove "set(" at start and ");" at end
 
     return preg_split("/','/",$set); // Split into an array
+  }
+
+  /**Generate a select from a join from a descriptive array structure.
+   *
+   * $joinStructure = array(
+   *   'JoinColumnName' => array(
+   *     'table' => TABLE,
+   *     'column' => ORIGINALNAME,
+   *     'join' => array(
+   *       'type' => 'INNER'|'LEFT' (don't know if OUTER and RIGHT could work ...)
+   *       'condition' => STRING sql condition, must be there on first joined field
+   *     ),
+   *  ...
+   *
+   * Example:
+   * 
+   * $viewStructure = array(
+   *   'MusikerId' => array(
+   *     'table' => 'Musiker',
+   *     'column' => 'Id',
+   *     // join condition need not be here
+   *     'join' => array('type' => 'INNER')
+   *     ),
+   *   'Instrument' => array(
+   *     'table' => 'Besetzungen',
+   *     'column' => true,
+   *     'join' => array(
+   *       'type' => 'INNER',
+   *       // one and only one of the fields need to provide the join conditions,
+   *       'condition' => ('`Musiker`.`Id` = `Besetzungen`.`MusikerId` '.
+   *                     'AND '.
+   *                     $projectId.' = `Besetzungen`.`ProjektId`')
+   *       ),                                  
+   *     ),
+   *
+   * The left-most join table is always the table of the first element
+   * from $joinStructure.
+   */
+  public static function generateJoinSelect($joinStructure)
+  {
+    $bt = '`';
+    $dot = '.';
+    $ind = '  ';
+    $nl = '
+';
+    $firstTable = reset($joinStructure);
+    if ($firstTable == false) {
+      return false;
+    } else {
+      $firstTable = $firstTable['table'];
+    }
+    $join = $ind.'FROM '.$bt.$firstTable.$bt.$nl;
+    $select = 'SELECT'.$nl;
+    foreach($joinStructure as $joinColumn => $joinedColumn) {
+      $table = $joinedColumn['table'];
+      if (!isset($joinedColumn['column']) || $joinedColumn['column'] === true) {
+        $name = $joinColumn;
+        $as = '';
+      } else {
+        $name = $joinedColumn['column'];
+        $as = ' AS '.$bt.$joinColumn.$bt;
+      }
+      $select .= 
+        $ind.$ind.
+        $bt.$joinedColumn['table'].$bt.$dot.$bt.$name.$bt.
+        $as.
+        ','.$nl;
+      if (isset($joinedColumn['join']['condition'])) {
+        $table = $joinedColumn['table'];
+        $type = $joinedColumn['join']['type'];
+        $cond = $joinedColumn['join']['condition'];
+        $join .=
+          $ind.$ind.
+          $type.' JOIN '.$bt.$table.$bt.$nl.
+          $ind.$ind.$ind.'ON '.$cond.$nl;
+      }
+    }
+    return rtrim($select, "\n,").$nl.$join;
   }
 };
 

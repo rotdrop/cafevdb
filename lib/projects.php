@@ -604,13 +604,21 @@ a comma.'));
    */
   public static function extraFields($projectId, $handle = false)
   {
-    Util::debugMsg(">>>>ProjektExtraFelder: Id = $projectId");
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }      
 
     $query = 'SELECT `ExtraFelder` FROM `Projekte` WHERE `Id` = '.$projectId;
     $result = mySQL::query($query, $handle);
     
     // Get the single line
     $line = mySQL::fetch($result) or Util::error("Couldn't fetch the result for '".$query."'");
+
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
     
     if (Util::debugMode()) {
       print_r($line);
@@ -1589,6 +1597,12 @@ __EOT__;
   {
     Util::debugMsg(">>>> ProjektCreateExtraFelder");
 
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
     // Fetch the extra-fields.
     $extra = self::extraFields($projectId, $handle);
     if (Util::debugMode()) {
@@ -1623,6 +1637,11 @@ __EOT__;
       }
       $fields[] = $row['Field'];
     }
+
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
     if (Util::debugMode()) {
       print_r($fields);
     }
@@ -1640,72 +1659,184 @@ __EOT__;
     return true; // if someone cares
   }
 
+  /**Returns an associative array which describes the project view:
+   * columns names, alias names, underlying table, type of join. The
+   * ordering of the columns here is the ordering of the columns in
+   * the view. The key is the alias name of the column in the view.
+   *
+   * This structure is also used in the PME-stuff in
+   * detailed-instrumentation.php to group the fields of the view
+   * s.t. update queries can be split into updates for single tables
+   * (either Besetzungen or Musiker). mySQL allows write-through
+   * through certain views, but only if the target is a single table.
+   */
+  public static function viewStructure($projectId, $extraFields)
+  {
+    $viewStructure1 = array(
+      'MusikerId' => array('table' => 'Musiker',
+                           'column' => 'Id',
+                           'join' => array('type' => 'INNER')),
+      'Instrument' => array(
+        'table' => 'Besetzungen',
+        'column' => true,
+        'join' => array(
+          'type' => 'INNER',
+          'condition' => ('`Musiker`.`Id` = `Besetzungen`.`MusikerId` '.
+                          'AND '.
+                          $projectId.' = `Besetzungen`.`ProjektId`')
+          ),                                  
+        ),
+      'Reihung' => array('table' => 'Besetzungen',
+                         'column' => true,
+                         'join' => array('type' => 'INNER')),
+
+      'Stimmführer' => array('table' => 'Besetzungen',
+                             'column' => true,
+                             'join' => array('type' => 'INNER')),
+
+      'Familie' => array(
+        'table' => 'Instrumente',
+        'column' => true,
+        'join' => array(
+          'type' => 'LEFT',
+          'condition' => ('`Besetzungen`.`Instrument` = `Instrumente`.`Instrument`')
+          )
+        ),
+      'Sortierung' => array('table' => 'Instrumente',
+                            'column' => true,
+                            'join' => array('type' => 'LEFT')),
+
+      'Anmeldung' => array('table' => 'Besetzungen',
+                           'column' => true,
+                           'join' => array('type' => 'INNER')),
+
+      'Name' => array('table' => 'Musiker',
+                      'column' => true,
+                      'join' => array('type' => 'INNER')),
+      'Vorname' => array('table' => 'Musiker',
+                         'column' => true,
+                         'join' => array('type' => 'INNER')),
+      'Email' => array('table' => 'Musiker',
+                       'column' => true,
+                       'join' => array('type' => 'INNER')),
+      'Telefon' => array('table' => 'Musiker',
+                         'column' => true,
+                         'join' => array('type' => 'INNER')),
+      'Telefon2' => array('table' => 'Musiker',
+                          'column' => true,
+                          'join' => array('type' => 'INNER')),
+      'Strasse' => array('table' => 'Musiker',
+                         'column' => true,
+                         'join' => array('type' => 'INNER')),
+      'Postleitzahl' => array('table' => 'Musiker',
+                              'column' => true,
+                              'join' => array('type' => 'INNER')),
+      'Stadt' => array('table' => 'Musiker',
+                       'column' => true,
+                       'join' => array('type' => 'INNER')),
+      'Land' => array('table' => 'Musiker',
+                      'column' => true,
+                      'join' => array('type' => 'INNER')),
+
+      'Unkostenbeitrag' => array('table' => 'Besetzungen',
+                                 'column' => true,
+                                 'join' => array('type' => 'INNER')),
+      'ProjektBemerkungen' => array('table' => 'Besetzungen',
+                                    'column' => 'Bemerkungen',
+                                    'join' => array('type' => 'INNER'))
+      );
+
+    // "Extra"'s will be added at end. Generate a suitable "SELECT"
+    // string for that. Ordering of field in the table is just the
+    // ordering in the "$extra" table.
+    $extraColumns = array();
+    foreach ($extraFields as $field) {
+      $extraColumns[$field['name']] = array('table' => 'Besetzungen',
+                                            'column' => sprintf('ExtraFeld%02d', $field['pos']),
+                                            'join' => array('type' => 'INNER'));
+    }
+
+    $viewStructure2 = array(
+      'AlleInstrumente' => array('table' => 'Musiker',
+                                 'column' => 'Instrumente',
+                                 'join' => array('type' => 'INNER')),
+      'Sprachpräferenz' => array('table' => 'Musiker',
+                                 'column' => true,
+                                 'join' => array('type' => 'INNER')),
+      'Geburtstag' => array('table' => 'Musiker',
+                            'column' => true,
+                            'join' => array('type' => 'INNER')),
+      'MemberStatus' => array('table' => 'Musiker',
+                              'column' => true,
+                              'join' => array('type' => 'INNER')),
+      'Remarks' => array('table' => 'Musiker',
+                         'column' => true,
+                         'join' => array('type' => 'INNER')),
+
+      'PhotoData' => array(
+        'table' => 'MemberPortraits',
+        'column' => true,
+        'join' => array(
+          'type' => 'LEFT',
+          'condition' => '`MemberPortraits`.`MemberId` = `Musiker`.`Id`'
+          )
+        ),
+
+      'Aktualisiert' => array('table' => 'Musiker',
+                              'column' => true,
+                              'join' => array('type' => 'INNER')),
+      );
+
+    return array_merge($viewStructure1, $extraColumns, $viewStructure2);
+  }
+  
+
   // Create a sensibly sorted view, fit for being exported via
   // phpmyadmin. Take all extra-fields into account, add them at end.
-  public static function createView($projectId, $project = false, $handle = false)
+  public static function createView($projectId, $projectName = false, $handle = false)
   {
     Util::debugMsg(">>>> ProjektCreateView");
 
-    if (! $project) {
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
+    if (!$projectName) {
       // Get the name
-      $project = self::fetchName($projectId, $handle);
+      $projectName = self::fetchName($projectId, $handle);
     }
 
     // Make sure all extra-fields exist
     self::createExtraFields($projectId, $handle);
 
     // Fetch the extra-fields
-    $extra = self::extraFields($projectId, $handle);
+    $extra = self::extraFields($projectId, $handle);    
 
-    // "Extra"'s will be added at end. Generate a suitable "SELECT"
-    // string for that. Ordering of field in the table is just the
-    // ordering in the "$extra" table.
-    $extraquery = '';
-    Util::debugMsg(">>>> ProjektCreateView before extra");
-    foreach ($extra as $field) {
-      $extraquery .= sprintf(', `Besetzungen`.`ExtraFeld%02d` AS `'.$field['name'].'`', $field['pos']);
-    }
-    Util::debugMsg(">>>> ProjektCreateView after extra");
+    $structure = self::viewStructure($projectId, $extra);
+    $sqlSelect = mySQL::generateJoinSelect($structure);
 
-    // Now do all the stuff, do not forget the proper sorting to satisfy
-    // all dummies on earth
-    $sqlquery = 'CREATE OR REPLACE VIEW `'.$project.'View` AS
- SELECT
-   `Musiker`.`Id` AS `MusikerId`,
-   `Besetzungen`.`Instrument`,
-   `Besetzungen`.`Reihung`,
-   `Besetzungen`.`Stimmführer`,`Instrumente`.`Familie`,`Instrumente`.`Sortierung`,
-   `Besetzungen`.`Anmeldung`,
-    `Name`,`Vorname`,
-   `Email`,`Telefon`,`Telefon2`,
-   `Strasse`,`Postleitzahl`,`Stadt`,`Land`,
-   `Besetzungen`.`Unkostenbeitrag`,
-   `Besetzungen`.`Bemerkungen` AS `ProjektBemerkungen`'.
-      ($extraquery != '' ? $extraquery : '').','
-      .' `Instrumente` AS `AlleInstrumente`,`Sprachpräferenz`,`Geburtstag`,
-   `Musiker`.`MemberStatus`,`Musiker`.`Remarks`,`MemberPortraits`.`PhotoData`,`Aktualisiert`';
-
-    // Now do the join
-    $sqlquery .= ' FROM `Musiker`
-   JOIN `Besetzungen`
-     ON `Musiker`.`Id` = MusikerId AND '.$projectId.'= `ProjektId`
-   LEFT JOIN `Instrumente`
-     ON `Besetzungen`.`Instrument` = `Instrumente`.`Instrument`
-   LEFT JOIN `MemberPortraits`
-     ON `MemberPortraits`.`MemberId` = `Musiker`.`Id`';
-
-    // And finally force a sensible default sorting:
+    // Force a sensible default sorting:
     // 1: sort on the natural orchestral ordering defined in Instrumente
     // 2: sort (reverse) on the Stimmfuehrer attribute
     // 3: sort on the sur-name
     // 4: sort on the pre-name
-    $sqlquery .= 'ORDER BY `Instrumente`.`Sortierung` ASC,
+    $sqlSort .= 'ORDER BY `Instrumente`.`Sortierung` ASC,
  `Besetzungen`.`Reihung` ASC,
  `Besetzungen`.`Stimmführer` DESC,
  `Musiker`.`Name` ASC,
  `Musiker`.`Vorname` ASC';
+
+    $sqlQuery = "CREATE OR REPLACE VIEW `".$projectName."View` AS\n"
+      .$sqlSelect
+      .$sqlSort;    
  
-    mySQL::query($sqlquery, $handle);
+    mySQL::query($sqlQuery, $handle);
+
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
 
     return true;
   }
