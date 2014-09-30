@@ -265,7 +265,7 @@ __EOT__;
       'options'  => $ROopts,
       );
     $opts['fdd']['Stimmführer'] = $this->sectionLeaderColumn;
-    $opts['fdd']['Stimmführer']['options'] = $ROopts;
+    //$opts['fdd']['Stimmführer']['options'] = $ROopts;
     $opts['fdd']['Anmeldung'] = $this->registrationColumn;
     $opts['fdd']['Anmeldung']['options'] = $ROopts;
     $opts['fdd']['Sortierung'] = array('name'     => 'Orchester Sortierung',
@@ -439,6 +439,17 @@ __EOT__;
     }
 
     $opts['execute'] = $this->execute;
+
+    // Inject the underlying table name as 'querygroup' parameter
+    // s.t. update queries can be split into several queries which
+    // only target one of the underlying tables.
+    $viewStructure = Projects::viewStructure($projectId, $userExtraFields);
+    //print_r($viewStructure);
+    foreach($opts['fdd'] as $name => &$data) {
+      if (isset($viewStructure[$name])) {
+        $data['querygroup'] = $viewStructure[$name]['table'];
+      }
+    }
 
     $this->pme = new \phpMyEdit($opts); // Generate and possibly display the table
 
