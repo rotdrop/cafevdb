@@ -3600,7 +3600,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 	function do_add_record() /* {{{ */
 	{
 		// Preparing query
-		$query		 = '';
+		$query = ''; // query_groups not supported, would be difficult
 		$key_col_val = '';
 		$newvals	 = array();
 		for ($k = 0; $k < $this->num_fds; $k++) {
@@ -3626,15 +3626,31 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		// Real query (no additional query in this method)
 		foreach ($newvals as $fd => $val) {
 			if ($fd == '') continue;
-			if (isset($this->fdd[$this->fdn[$fd]]['encryption'])) {
+			$fdn = $this->fdn[$fd];
+			$fdd = $this->fdd[$fdn];
+			if (false) {
+				// query_groups not supported, would be difficult
+				if (isset($fdd['querygroup'])) {
+					// Split update query if requested by calling app
+					$query_group = $fdd['querygroup'];
+					if (!isset($query_groups[$query_group])) {
+						$query_groups[$query_group] = '';
+					}
+				} else {
+					$query_group = 'default';
+				}
+				$query = &$query_groups[$query_group];
+			}
+
+			if (isset($fdd['encryption'])) {
 				// encrypt the value
 				$val = call_user_func($this->fdd[$this->fdn[$fd]]['encryption']['encrypt'], $val);
 			}
-			if ($this->col_has_sqlw($this->fdn[$fd])) {
+			if ($this->col_has_sqlw($fdn)) {
 				$val_as	 = addslashes($val);
 				$val_qas = '"'.addslashes($val).'"';
 				$value = $this->substituteVars(
-					$this->fdd[$this->fdn[$fd]]['sqlw'], array(
+					$fdd['sqlw'], array(
 						'val_qas' => $val_qas,
 						'val_as'  => $val_as,
 						'val'	  => $val
@@ -3681,7 +3697,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 	function do_change_record() /* {{{ */
 	{
 		// Preparing queries
-		$query_real	  = '';
+		$query_groups = array('default' => '');
 		$query_oldrec = '';
 		$newvals	  = array();
 		$oldvals	  = array();
@@ -3753,17 +3769,30 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		}
 		echo '<!-- '.print_r($newvals, true).'-->';
 		// Build the real query respecting changes to the newvals array
+		$query_real = null;
 		foreach ($newvals as $fd => $val) {
 			if ($fd == '') continue;
-			if (isset($this->fdd[$this->fdn[$fd]]['encryption'])) {
-				// encrypt the value
-				$val = call_user_func($this->fdd[$this->fdn[$fd]]['encryption']['encrypt'], $val);
+			$fdn = $this->fdn[$fd];
+			$fdd = $this->fdd[$fdn];
+			if (isset($fdd['querygroup'])) {
+				// Split update query if requested by calling app
+				$query_group = $fdd['querygroup'];
+				if (!isset($query_groups[$query_group])) {
+					$query_groups[$query_group] = '';
+				}
+			} else {
+				$query_group = 'default';
 			}
-			if ($this->col_has_sqlw($this->fdn[$fd])) {
+			$query_real = &$query_groups[$query_group];
+			if (isset($fdd['encryption'])) {
+				// encrypt the value
+				$val = call_user_func($fdd['encryption']['encrypt'], $val);
+			}
+			if ($this->col_has_sqlw($fdn)) {
 				$val_as	 = addslashes($val);
 				$val_qas = '"'.addslashes($val).'"';
 				$value = $this->substituteVars(
-					$this->fdd[$this->fdn[$fd]]['sqlw'], array(
+					$fdd['sqlw'], array(
 						'val_qas' => $val_qas,
 						'val_as'  => $val_as,
 						'val'	  => $val
@@ -3779,13 +3808,21 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				$query_real	  .= ','.$this->sd.$fd.$this->ed.'='.$value;
 			}
 		}
-		$query_real .= $where_part;
-		// Real query
-		$res = $this->myquery($query_real, __LINE__);
-		if ($this->sql_affected_rows($this->dbh) == 1) {
-			$this->message = $this->sql_affected_rows($this->dbh).' '.$this->labels['record changed'];
+		$affected_rows = 0;
+		foreach ($query_groups as $group => $query) {
+			if ($query == '') {
+				continue;
+			}
+			$query .= $where_part;
+			// Real query
+			$res = $this->myquery($query, __LINE__) && $res;
+			$num_rows = $this->sql_affected_rows($this->dbh);
+			$affected_rows = max($num_rows, $affected_rows);
+		}
+		if ($affected_rows == 1) {
+			$this->message = $affected_rows.' '.$this->labels['record changed'];
 		} else {
-			$this->message = $this->sql_affected_rows($this->dbh).' '.$this->labels['records changed'];
+			$this->message = $affected_rows.' '.$this->labels['records changed'];
 		}
 		if (! $res) {
 			return false;
