@@ -193,6 +193,8 @@ CAFEVDB.FileUpload = CAFEVDB.FileUpload || {};
         if (typeof options.stopCallback == 'function') {
           options.stopCallback(e, data);
         }
+
+        $(window).off('beforeunload');
       }
     };
 
@@ -212,9 +214,9 @@ CAFEVDB.FileUpload = CAFEVDB.FileUpload || {};
       return size;
     };
 
-    if (false) {
+    if (true) {
       // warn user not to leave the page while upload is in progress
-      $(window).bind('beforeunload', function(e) {
+      $(window).on('beforeunload', function(e) {
         if ($.assocArraySize(CAFEVDB.FileUpload.uploadingFiles) > 0) {
 	  return t('cafevdb', 'File upload is in progress. Leaving the page now will cancel the upload.');
         }

@@ -1673,19 +1673,27 @@ __EOT__;
   public static function viewStructure($projectId, $extraFields)
   {
     $viewStructure1 = array(
-      'MusikerId' => array('table' => 'Musiker',
-                           'column' => 'Id',
-                           'join' => array('type' => 'INNER')),
-      'Instrument' => array(
-        'table' => 'Besetzungen',
-        'column' => true,
+      // Principal key is still the key from the Besetzungen ==
+      // Instrumenation table.
+      'Id' => array('table' => 'Besetzungen',
+                    'column' => true,
+                    'join' => array('type' => 'INNER')),
+
+      'MusikerId' => array(
+        'table' => 'Musiker',
+        'column' => 'Id',
         'join' => array(
           'type' => 'INNER',
-          'condition' => ('`Musiker`.`Id` = `Besetzungen`.`MusikerId` '.
-                          'AND '.
-                          $projectId.' = `Besetzungen`.`ProjektId`')
-          ),                                  
-        ),
+          'condition' => (
+            '`Musiker`.`Id` = `Besetzungen`.`MusikerId` '.
+            'AND '.
+            $projectId.' = `Besetzungen`.`ProjektId`')
+          )),
+
+      'Instrument' => array('table' => 'Besetzungen',
+                            'column' => true,
+                            'join' => array('type' => 'INNER')),
+
       'Reihung' => array('table' => 'Besetzungen',
                          'column' => true,
                          'join' => array('type' => 'INNER')),
@@ -1741,9 +1749,9 @@ __EOT__;
       'Unkostenbeitrag' => array('table' => 'Besetzungen',
                                  'column' => true,
                                  'join' => array('type' => 'INNER')),
-      'ProjektBemerkungen' => array('table' => 'Besetzungen',
-                                    'column' => 'Bemerkungen',
-                                    'join' => array('type' => 'INNER'))
+      'ProjectRemarks' => array('table' => 'Besetzungen',
+                                'column' => 'Bemerkungen',
+                                'join' => array('type' => 'INNER'))
       );
 
     // "Extra"'s will be added at end. Generate a suitable "SELECT"
@@ -1757,7 +1765,7 @@ __EOT__;
     }
 
     $viewStructure2 = array(
-      'AlleInstrumente' => array('table' => 'Musiker',
+      'AllInstruments' => array('table' => 'Musiker',
                                  'column' => 'Instrumente',
                                  'join' => array('type' => 'INNER')),
       'Sprachpräferenz' => array('table' => 'Musiker',

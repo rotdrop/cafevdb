@@ -67,7 +67,8 @@ __EOT__;
     global $debug_query;
     $debug_query = Util::debugMode('query');
 
-    $project         = $this->project;
+    $project         = $this->project; // obsolete
+    $projectName     = $this->project; // the way to go
     $projectId       = $this->projectId;
     $opts            = $this->opts;
     $recordsPerPage  = $this->recordsPerPage;
@@ -75,8 +76,6 @@ __EOT__;
 
     global $HTTP_SERVER_VARS;
     $this->opts['page_name'] = $HTTP_SERVER_VARS['PHP_SELF'].'?app=cafevdb'.'&Template=detailed-instrumentation';
-
-    $ROopts = 'CLFPVR'; // read-only options for all project specific fields.
 
     /*
      * IMPORTANT NOTE: This generated file contains only a subset of huge amount
@@ -107,7 +106,7 @@ __EOT__;
       'headervisibility' => Util::cgiValue('headervisibility','expanded'));
 
     // Name of field which is the unique key
-    $opts['key'] = 'MusikerId';
+    $opts['key'] = 'Id';
 
     // Type of key field (int/real/string/date etc.)
     $opts['key_type'] = 'int';
@@ -202,34 +201,64 @@ __EOT__;
        descriptions fields are also possible. Check documentation for this.
     */
 
+    $opts['fdd'] = array();
+
+    $opts['fdd']['Id'] = array(
+      'name'     => 'Id',
+      'select'   => 'T',
+      'options'  => 'AVCPDR', // auto increment
+      'maxlen'   => 5,
+      'align'    => 'right',
+      'default'  => '0',
+      'sort'     => true
+      );
+
+    $musIdx = count($opts['fdd']);
     $opts['fdd']['MusikerId'] = array(
-                                      'name'     => 'MusikerId',
-                                      'select'   => 'T',
-                                      'options'  => 'AVCPDR', // auto increment
-                                      'maxlen'   => 5,
-                                      'default'  => '0',
-                                      'align'    => 'right',
-                                      'sort'     => true
-                                      );
+      'name'     => L::t('MusicianId'),
+      'title' => 'balh',
+      'select'   => 'T',
+      'options'  => 'AVCPDR', // auto increment
+      'maxlen'   => 5,
+      'align'    => 'right',
+      'default'  => '0',
+      'sort'     => true
+      );
+
+    $opts['fdd']['Vorname'] = array(
+      'name'     => 'Vorname',
+      'select'   => 'T',
+      'maxlen'   => 384,
+      'sort'     => true
+      );
+    $opts['fdd']['Name'] = array(
+      'name'     => 'Name',
+      'select'   => 'T',
+      'maxlen'   => 384,
+      'sort'     => true
+      );
 
     $opts['fdd']['Instrument'] = array(
-                                       'name'     => 'Projekt-Instrument',
-                                       'css'      => array('postfix' => 'instruments'),
-                                       'select'   => 'D',
-                                       'maxlen'   => 36,
-                                       'sort'     => true,
-                                       'values'   => $this->instruments,
-                                       'valueGroups' => $this->groupedInstruments,
-                                       'options'  => $ROopts);
-
-    $opts['fdd']['Instrument'] = array(
-      'name'     => 'Projekt-Instrument',
+      'name'     => 'Instrument',
       'select'   => 'D',
       'maxlen'   => 36,
-      'css'      => array('postfix' => 'instruments'),
+      'css'      => array('postfix' => 'instrument'),
       'sort'     => true,
-      // read-only, so filter all the time
-      'values'   => array(
+      'values' => array(
+        'table'   => 'Instrumente',
+        'column'  => 'Instrument',
+        'orderby' => '$table.Sortierung',
+        'description' => array('columns' => array('Instrument')),
+        /* This rather fancy fillter masks out all instruments
+         * currently not registerd with the given musician, but allows
+         * for the currently active instrument.
+         */
+        'filters' => ("FIND_IN_SET(`Instrument`,
+  CONCAT_WS(',',(SELECT `Instrument` FROM \$main_table WHERE \$record_id = `\$main_table`.`Id`),
+                (SELECT `AllInstruments` FROM `\$main_table`
+                          WHERE \$record_id = `\$main_table`.`Id`)))"),
+        ),
+      'values|LF' => array(
         'table'   => 'Instrumente',
         'column'  => 'Instrument',
         'orderby' => '$table.Sortierung',
@@ -238,70 +267,95 @@ __EOT__;
                       "(SELECT `Instrument` FROM \$main_table WHERE 1)"),
         ),
       'valueGroups' => $this->groupedInstruments,
-      'options'  => $ROopts
       );
 
-    $opts['fdd']['Reihung'] = array('name' => 'Stimme',
-                                    'options' => $ROopts,
-                                    'select' => 'N',
-                                    'maxlen' => '3',
-                                    'sort' => true);
-    $opts['fdd']['Familie'] = array(
-      'name' => 'Instrumenten Familie',
-      'nowrap' => true,
-      'select' => 'M',
-      'maxlen' => 64,
-      'sort' => 'true',
-      //$this->instrumentFamilies,
-      'values' => array(
-        'table'       => 'Instrumente',
-        'column'      => 'Familie',
-        'orderby'     => '$table.Sortierung',
-        'description' => 'Familie',
-        'join'        => '$main_table.Instrument = $join_table.Instrument',
-        'filters'     => ("\$table.\$column IN".
-                          "(SELECT DISTINCT `Familie` FROM \$main_table WHERE 1)"),
-        ),
-      'options'  => $ROopts,
+    $opts['fdd']['AllInstruments'] = array(
+      'name'     => L::t('All Instruments'),
+      'css'      => array('postfix' => 'instruments'),
+      'options'  => 'AVCPD',
+      'select'   => 'M',
+      'maxlen'   => 136,
+      'sort'     => true,
+      'values'   => $this->instruments,
+      'valueGroups' => $this->groupedInstruments,
       );
+
+    $opts['fdd']['Reihung'] = array(
+      'name' => 'Stimme',
+      'select' => 'N',
+      'maxlen' => '3',
+      'sort' => true);
+
     $opts['fdd']['Stimmführer'] = $this->sectionLeaderColumn;
-    //$opts['fdd']['Stimmführer']['options'] = $ROopts;
+
     $opts['fdd']['Anmeldung'] = $this->registrationColumn;
-    $opts['fdd']['Anmeldung']['options'] = $ROopts;
+
     $opts['fdd']['Sortierung'] = array('name'     => 'Orchester Sortierung',
                                        'select'   => 'T',
                                        'options'  => 'VCPR',
                                        'maxlen'   => 8,
                                        'default'  => '0',
                                        'sort'     => true);
-    $opts['fdd']['AlleInstrumente'] = array(
-                                            'name'     => 'Alle Instrumente',
-                                            'css'      => array('postfix' => 'instruments'),
-                                            'options'  => 'AVCPD',
-                                            'select'   => 'M',
-                                            'maxlen'   => 136,
-                                            'sort'     => true,
-                                            'values'   => $this->instruments,
-                                            'valueGroups' => $this->groupedInstruments,
-      );
-
-    $opts['fdd']['Name'] = array(
-                                 'name'     => 'Name',
-                                 'select'   => 'T',
-                                 'maxlen'   => 384,
-                                 'sort'     => true
-                                 );
-    $opts['fdd']['Vorname'] = array(
-                                    'name'     => 'Vorname',
-                                    'select'   => 'T',
-                                    'maxlen'   => 384,
-                                    'sort'     => true
-                                    );
     $opts['fdd']['MemberStatus'] = array('name'     => strval(L::t('Member Status')),
                                          'select'   => 'M',
                                          'maxlen'   => 384,
                                          'sort'     => true,
                                          'values2'  => $this->memberStatusNames);
+
+    $opts['fdd']['Unkostenbeitrag'] = Config::$opts['money'];
+    $opts['fdd']['Unkostenbeitrag']['name'] = "Unkostenbeitrag\n(Gagen negativ)";
+
+    // One virtual field in order to be able to manage SEPA debit mandates
+    $opts['fdd']['SepaDebitMandate'] = array(
+      'input' => 'V',
+      'name' => L::t('SEPA Debit Mandate'),
+      'select' => 'T',
+      'options' => 'LFACPDV',
+      'sql' => '`PMEjoin'.count($opts['fdd']).'`.`mandateReference`', // dummy, make the SQL data base happy
+      'sqlw' => '`PMEjoin'.count($opts['fdd']).'`.`mandateReference`', // dummy, make the SQL data base happy
+      'values' => array(
+        'table' => 'SepaDebitMandates',
+        'column' => 'id',
+        'join' => '$join_table.projectId = '.$projectId.' AND $join_table.musicianId = $main_table.MusikerId',
+        'description' => 'mandateReference'
+        ),
+      'nowrap' => true,
+      'sort' => true,
+      'php' => array(
+        'type' => 'function',
+        'function' => 'CAFEVDB\DetailedInstrumentation::sepaDebitMandatePME',
+        'parameters' => array('project' => $project,
+                              'projectId' => $projectId,
+                              'naked' => $this->pme_bare)
+        )
+      );
+
+    // Generate input fields for the extra columns
+    foreach ($userExtraFields as $field) {
+      $name = $field['name'];    
+      $opts['fdd']["$name"] = array('name'     => $name.' ('.$project.')',
+                                    'select'   => 'T',
+                                    'maxlen'   => 65535,
+                                    'textarea' => array('css' => '',
+                                                        'rows' => 2,
+                                                        'cols' => 32),
+                                    'escape'   => false,
+                                    'sort'     => true);
+      if ($field['tooltip'] !== false) {
+        $opts['fdd']["$name"]['tooltip'] = $field['tooltip'];
+      }
+    }
+    $opts['fdd']['ProjectRemarks'] =
+      array('name' => L::t('Remarks (%s)', array($projectName)),
+            'select'   => 'T',
+            'maxlen'   => 65535,
+            'css'      => array('postfix' => 'remarks'),
+            'textarea' => array('css' => 'wysiwygeditor',
+                                'rows' => 5,
+                                'cols' => 50),
+            'escape' => false,
+            'sort'     => true
+        );
 
     $opts['fdd']['Email'] = Config::$opts['email'];
     $opts['fdd']['Telefon'] = array(
@@ -342,39 +396,6 @@ __EOT__;
                                  'maxlen'   => 384,
                                  'default'  => 'Deutschland',
                                  'sort'     => true);
-    $opts['fdd']['ProjektBemerkungen'] = array('name'     =>  'Bemerkungen ('.$project.')',
-                                               'select'   => 'T',
-                                               'options' => $ROopts,
-                                               'maxlen'   => 65535,
-                                               'css'      => array('postfix' => 'remarks'),
-                                               'textarea' => array('css' => 'wysiwygeditor',
-                                                                   'rows' => 5,
-                                                                   'cols' => 50),
-                                               'escape' => false,
-                                               'sort'     => true
-                                               );
-    $opts['fdd']['Unkostenbeitrag'] = Config::$opts['money'];
-    $opts['fdd']['Unkostenbeitrag']['name'] = "Unkostenbeitrag\n(Gagen negativ)";
-    $opts['fdd']['Unkostenbeitrag']['options'] = $ROopts;
-
-
-    // Generate input fields for the extra columns
-    foreach ($userExtraFields as $field) {
-      $name = $field['name'];    
-      $opts['fdd']["$name"] = array('name'     => $name.' ('.$project.')',
-                                    'select'   => 'T',
-                                    'options'  => $ROopts,
-                                    'maxlen'   => 65535,
-                                    'textarea' => array('css' => '',
-                                                        'rows' => 2,
-                                                        'cols' => 32),
-                                    'escape'   => false,
-                                    'sort'     => true);
-      if ($field['tooltip'] !== false) {
-        $opts['fdd']["$name"]['tooltip'] = $field['tooltip'];
-      }
-    }
-
     $opts['fdd']['Geburtstag'] = Config::$opts['birthday'];
 
     $opts['fdd']['Remarks'] = array('name'     => strval(L::t('General Remarks')),
@@ -484,6 +505,50 @@ __EOT__;
     }   
 
   } // display()
+
+  public static function sepaDebitMandatePME($referenceId, $opts, $action, $k, $fds, $fdd, $row)
+  {
+    if ($opts['naked']) {
+      return $row['qf'.$k];
+    }
+
+    // Fetch the data from the array $row.
+    $projectId = $opts['projectId'];
+    $project   = $opts['project'];
+
+    // Careful: this changes when rearranging the ordering of the display
+    $musican    = $row['qf2'];
+    $musicianId = $row['qf2_idx'];
+
+    if ($row['qf'.$k] != '') {
+      $value = $row['qf'.$k];
+    } else {
+      $value = L::t("SEPA Debit Mandate");
+    }
+    return self::sepaDebitMandateButton($value, $musicianId, $musician, $projectId, $project);
+  }
+
+  /**Generate a clickable form element which finally will display the
+   * debit-mandate dialog, i.e. load some template stuff by means of
+   * some java-script and ajax blah.
+   */
+  public static function sepaDebitMandateButton($value, $musicianId, $musician, $projectId, $project)
+  {
+    $css= ($value == L::t("SEPA Debit Mandate")) ? "no-sepa-debit-mandate" : "sepa-debit-mandate";
+    $button = '<div class="sepa-debit-mandate">'
+      .'<input type="button" '
+      .'       id="sepa-debit-mandate-'.$musicianId.'-'.$projectId.'"'
+      .'       class="'.$css.'" '
+      .'       value="'.$value.'" '
+      .'       title="'.L::t("Click to enter details of a potential SEPA debit mandate").' " '
+      .'       name="'
+      .'MusicianId='.$musicianId.'&amp;'
+      .'MusicianName='.$musician.'&amp;'
+      .'ProjectId='.$projectId.'&amp;'
+      .'ProjectName='.$project.'" />'
+      .'</div>';
+    return $button;
+  }
 
 }; // class DetailedInstrumentation
 

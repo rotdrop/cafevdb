@@ -198,6 +198,7 @@ $(document).ready(function(){
     callback: function(selector, resizeCB) {
       var container = $(selector);
       CAFEVDB.exportMenu(selector);
+      CAFEVDB.SepaDebitMandate.popupInit(selector);
       container.find('div.photo, #cafevdb_inline_image_wrapper').on('click', 'img', function(event) {
         event.preventDefault();
         CAFEVDB.Photo.popup(this);
