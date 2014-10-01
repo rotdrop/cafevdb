@@ -140,10 +140,12 @@ try {
                        'inlineimage.php: no valid image found', OCP\Util::DEBUG);
     getStandardImage($placeHolder);
   }
+
   header('Content-Type: '.$image->mimeType());
   $image->show();
 
 } catch (Exception $e) {
+
   $tmpl = new OCP\Template( 'cafevdb', 'errorpage', 'user' );
   $tmpl->assign('error', 'exception');
   $tmpl->assign('exception', $e->getMessage());
