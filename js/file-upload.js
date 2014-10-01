@@ -26,19 +26,39 @@ CAFEVDB.FileUpload = CAFEVDB.FileUpload || {};
   'use strict';
   FileUpload.uploadingFiles = {};
 
+  FileUpload.cancelUploads = function() {
+    $.each(FileUpload.uploadingFiles, function(index, file) {
+      if(typeof file['abort'] === 'function') {
+	file.abort();
+      } else {
+        $.each(file, function(i, f) {
+	  f.abort();
+	  delete file[i];
+        });
+        delete FileUpload.uploadingFiles[index];
+      }
+    });
+  };
+
   /**To be called at some other document-ready invocation, as required. */
   FileUpload.init = function(options) {
     var defaultOptions = {
       doneCallback: null,
       stopCallback: null,
       dropZone: $(document),
+      containerSelector: '#file_upload_wrapper',
       inputSelector: '#file_upload_start'
     };
 
     options = $.extend({}, defaultOptions, options);
+
+    var container = $(options.containerSelector);
+    var form = container.find('form.file_upload_form');
+    var fileUploadStart = form.find(options.inputSelector);
+
     var fileUploadParam = {
       multipart: true,
-      singleFileUploads: true,
+      singleFileUploads: false,
       sequentialUploads: true,
       dropZone: options.dropZone, // restrict dropZone to content div
       //singleFileUploads is on by default, so the data.files array will always have length 1
@@ -46,7 +66,7 @@ CAFEVDB.FileUpload = CAFEVDB.FileUpload || {};
         for (var k = 0; k < data.files.length; ++k) {
           if(data.files[k].type === '' && data.files[k].size == 4096) {
 	    data.textStatus = 'dirorzero';
-	    data.errorThrown = t('files','Unable to upload your file as it is a directory or has 0 bytes');
+	    data.errorThrown = t('cafevdb', 'Unable to upload your file as it is a directory or has 0 bytes');
 	    var fu = $(this).data('blueimp-fileupload') || $(this).data('fileupload');
 	    fu._trigger('fail', e, data);
 	    return true; //don't upload this file but go on with next in queue
@@ -58,9 +78,9 @@ CAFEVDB.FileUpload = CAFEVDB.FileUpload || {};
 	  totalSize+=file.size;
         });
 
-        if(totalSize>$('#max_upload').val()){
+        if(totalSize > form.find('#max_upload').val()){
 	  data.textStatus = 'notenoughspace';
-	  data.errorThrown = t('files','Not enough space available');
+	  data.errorThrown = t('cafevdb', 'Not enough space available');
 	  var fu = $(this).data('blueimp-fileupload') || $(this).data('fileupload');
 	  fu._trigger('fail', e, data);
 	  return false; //don't upload anything
@@ -83,7 +103,7 @@ CAFEVDB.FileUpload = CAFEVDB.FileUpload || {};
         }
         //show cancel button
         if($('html.lte9').length === 0 && data.dataType !== 'iframe') {
-	  $('#uploadprogresswrapper input.stop').show();
+	  container.find('div.uploadprogresswrapper input.stop').show();
         }
         return false;
       },
@@ -92,39 +112,49 @@ CAFEVDB.FileUpload = CAFEVDB.FileUpload || {};
        * @param e
        */
       start: function(e) {
+        // warn user not to leave the page while upload is in progress
+        $(window).on('beforeunload', function(e) {
+          if ($.assocArraySize(FileUpload.uploadingFiles) > 0) {
+	    return t('cafevdb', 'File upload is in progress. Leaving the page now will cancel the upload.');
+          }
+          return false;
+        });
+
         //IE < 10 does not fire the necessary events for the progress bar.
         if($('html.lte9').length > 0) {
 	  return;
         }
-        $('#uploadprogressbar').progressbar({value:0});
-        $('#uploadprogressbar').fadeIn();
+        var progressBar = container.find('div.uploadprogressbar');
+        progressBar.progressbar({value:0});
+        progressBar.fadeIn();
       },
       fail: function(e, data) {
         if (typeof data.textStatus !== 'undefined' && data.textStatus !== 'success' ) {
 	  if (data.textStatus === 'abort') {
-	    $('#notification').text(t('files', 'Upload cancelled.'));
+	    $('#notification').text(t('cafevdb', 'Upload cancelled.'));
 	  } else {
 	    // HTTP connection problem
-	    $('#notification').text("BLAH"+data.errorThrown);
+	    $('#notification').text(data.errorThrown);
 	  }
 	  $('#notification').fadeIn();
 	  //hide notification after 5 sec
 	  setTimeout(function() {
 	    $('#notification').fadeOut();
-	  }, 5000);
+	  }, 10000);
         }
-        delete FileUploadploadingFiles[data.files[0].name];
+        delete FileUpload.uploadingFiles[data.files[0].name];
+        $(window).off('beforeunload');
       },
       progress: function(e, data) {
-        // TODO: show nice progress bar in file row
       },
       progressall: function(e, data) {
         //IE < 10 does not fire the necessary events for the progress bar.
         if($('html.lte9').length > 0) {
 	  return;
         }
+        //alert('total: '+ data.total+' loaded: '+data.loaded);
         var progress = (data.loaded/data.total)*100;
-        $('#uploadprogressbar').progressbar('value',progress);
+        container.find('div.uploadprogressbar').progressbar('value',progress);
       },
       /**
        * called for every successful upload
@@ -140,36 +170,54 @@ CAFEVDB.FileUpload = CAFEVDB.FileUpload || {};
 	  //fetch response from iframe
 	  response = data.result[0].body.innerText;
         }
-
         var result = $.parseJSON(response);
 
         var k;
-        for (k = 0; k < result.length; ++k) {
-	  if(typeof result[k] !== 'undefined' && result[k].status === 'success') {
-	    var filename = result[k].data.originalname;
-
-	    // delete jqXHR reference
-	    if (typeof data.context !== 'undefined' && data.context.data('type') === 'dir') {
-	      var dirName = data.context.data('file');
-	      delete FileUpload.uploadingFiles[dirName][filename];
-	      if ($.assocArraySize(FileUpload.uploadingFiles[dirName]) == 0) {
-	        delete FileUpload.uploadingFiles[dirName];
-	      }
-	    } else {
-	      delete FileUpload.uploadingFiles[filename];
-	    }
-
-            if (typeof options.doneCallback == 'function') {
-              options.doneCallback(result[k]);
-            }
-
-	  } else {
-	    data.textStatus = 'servererror';
-	    data.errorThrown = t('files', result.data.message);
-	    var fu = $(this).data('blueimp-fileupload') || $(this).data('fileupload');
-	    fu._trigger('fail', e, data);
-            break;
+        var errors = [];
+        if (typeof result.length == 'undefined') {
+          if (typeof result.status != 'undefined') {
+            errors.push(result.data.message);
+          } else {
+            errors.push(t('cafevdb', 'Unknown error uploading files'));
           }
+        } else {
+          for (k = 0; k < result.length; ++k) {
+	    if(typeof result[k] !== 'undefined' && result[k].status === 'success') {
+	      var filename = result[k].data.originalname;
+
+	      // delete jqXHR reference
+	      if (typeof data.context !== 'undefined' && data.context.data('type') === 'dir') {
+	        var dirName = data.context.data('file');
+	        delete FileUpload.uploadingFiles[dirName][filename];
+	        if ($.assocArraySize(FileUpload.uploadingFiles[dirName]) == 0) {
+	          delete FileUpload.uploadingFiles[dirName];
+	        }
+	      } else {
+	        delete FileUpload.uploadingFiles[filename];
+	      }
+              
+              if (typeof options.doneCallback == 'function') {
+                options.doneCallback(result[k]);
+              }
+              
+	    } else {
+              errors.push(result[k].data.message);
+            }
+          }
+        }
+
+        if (errors.length > 0) {
+	  data.textStatus = 'servererror';
+          data.errorThrown = '';
+          if (errors.length > 1) {
+            for (k = 0; k < errors.length; ++k) {
+	      data.errorThrown += t('cafevdb', 'Error {NR}: ', { NR: k })+errors[k]+"\n";
+            }
+          } else {
+	    data.errorThrown += errors[0];
+          }
+	  var fu = $(this).data('blueimp-fileupload') || $(this).data('fileupload');
+	  fu._trigger('fail', e, data);
 	}
       },
       /**
@@ -178,8 +226,10 @@ CAFEVDB.FileUpload = CAFEVDB.FileUpload || {};
        * @param data
        */
       stop: function(e, data) {
+        var form = $(options.formSelector);
+
         if(data.dataType !== 'iframe') {
-	  $('#uploadprogresswrapper input.stop').hide();
+	  container.find('div.uploadprogresswrapper input.stop').hide();
         }
 
         //IE < 10 does not fire the necessary events for the progress bar.
@@ -187,8 +237,9 @@ CAFEVDB.FileUpload = CAFEVDB.FileUpload || {};
 	  return;
         }
 
-        $('#uploadprogressbar').progressbar('value',100);
-        $('#uploadprogressbar').fadeOut();
+        var progressBar = container.find('div.uploadprogressbar');
+        progressBar.progressbar('value',100);
+        progressBar.fadeOut();
 
         if (typeof options.stopCallback == 'function') {
           options.stopCallback(e, data);
@@ -199,10 +250,10 @@ CAFEVDB.FileUpload = CAFEVDB.FileUpload || {};
     };
 
     var file_upload_handler = function() {
-      $(options.inputSelector).fileupload(fileUploadParam);
+      fileUploadStart.fileupload(fileUploadParam);
     };
 
-    if ( document.getElementById('data-upload-form') ) {
+    if (container.length > 0) {
       $(file_upload_handler);
     }
     $.assocArraySize = function(obj) {
@@ -214,19 +265,14 @@ CAFEVDB.FileUpload = CAFEVDB.FileUpload || {};
       return size;
     };
 
-    if (true) {
-      // warn user not to leave the page while upload is in progress
-      $(window).on('beforeunload', function(e) {
-        if ($.assocArraySize(CAFEVDB.FileUpload.uploadingFiles) > 0) {
-	  return t('cafevdb', 'File upload is in progress. Leaving the page now will cancel the upload.');
-        }
-        return false;
-      });
-    }
+    container.find('div.uploadprogresswrapper input.stop').on('click', function(event) {
+      FileUpload.cancelUploads();
+      return false;
+    });
 
     //add multiply file upload attribute to all browsers except konqueror (which crashes when it's used)
     if (navigator.userAgent.search(/konqueror/i)==-1 || true) {
-      $('#file_upload_start').attr('multiple','multiple')
+      fileUploadStart.attr('multiple','multiple')
     }
   };
 })(window, jQuery, CAFEVDB.FileUpload);

@@ -660,7 +660,7 @@ form#cafevdb-email-form input.instruments-filter-controls.reset {
   height:0;
 }
 .file_upload_target {
- display:none;
+  display:none;
 }
 .file_upload_start {
   ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";

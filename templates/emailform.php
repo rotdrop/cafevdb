@@ -55,27 +55,29 @@ CAFEVDB\Error::exceptions(true);
 
 
   <!-- Upload support via blueimp. FIXME: is this still up-to-date? Probably got this from OC4 -->
-  <form data-upload-id='1'
-        id="data-upload-form"
-        class="file_upload_form"
-        action="<?php print_unescaped(OCP\Util::linkTo('cafevdb', 'ajax/email/uploadattachment.php')); ?>"
-        method="post"
-        enctype="multipart/form-data"
-        target="file_upload_target_1">
-    <input type="hidden" name="MAX_FILE_SIZE" id="max_upload"
-	   value="<?php p($_['uploadMaxFilesize']) ?>">
-    <!-- Send the requesttoken, this is needed for older IE versions
-    because they don't send the CSRF token via HTTP header in this case -->
-    <input type="hidden" name="requesttoken" value="<?php p($_['requesttoken']) ?>" id="requesttoken">
-    <input type="hidden" class="max_human_file_size"
-	   value="(max <?php p($_['uploadMaxHumanFilesize']); ?>)">
-    <input type="file" id="file_upload_start" name="files[]" multiple>
-  </form>
-  <div id="uploadprogresswrapper">
-    <div id="uploadprogressbar"></div>
-    <input type="button" class="stop" style="display:none"
-	   value="<?php p($l->t('Cancel upload'));?>"
-	   />
+  <div id="attachment_upload_wrapper" class="data_upload_wrapper">
+    <form data-upload-id='1'
+          id="attachment_upload_form"
+          class="file_upload_form"
+          action="<?php print_unescaped(OCP\Util::linkTo('cafevdb', 'ajax/email/uploadattachment.php')); ?>"
+          method="post"
+          enctype="multipart/form-data"
+          target="attachment_upload_target_1">
+      <input type="hidden" name="MAX_FILE_SIZE" id="max_upload"
+	     value="<?php p($_['uploadMaxFilesize']) ?>">
+      <!-- Send the requesttoken, this is needed for older IE versions
+      because they don't send the CSRF token via HTTP header in this case -->
+      <input type="hidden" name="requesttoken" value="<?php p($_['requesttoken']) ?>" id="requesttoken">
+      <input type="hidden" class="max_human_file_size"
+	     value="(max <?php p($_['uploadMaxHumanFilesize']); ?>)">
+      <input type="file" class="file_upload_start" id="attachment_upload_start" name="files[]" multiple="multiple">
+    </form>
+    <div class="uploadprogresswrapper">
+      <div class="uploadprogressbar"></div>
+      <input type="button" class="stop" style="display:none"
+	     value="<?php p($l->t('Cancel upload'));?>"
+	     />
+    </div>
   </div>
   <div id="sendingprogresswrapper">
     <div class="messagecount"></div>
