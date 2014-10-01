@@ -462,30 +462,17 @@ var PHPMYEDIT = PHPMYEDIT || {};
     $.post(OC.filePath('cafevdb', 'ajax/pme', 'pme-table.php'),
            post,
            function (data) {
-             var containerSel = '#'+containerCSSId;
-             var dialogHolder;
-             if (data.status == 'success') {
-               dialogHolder = $('<div id="'+containerCSSId+'"></div>');
-               dialogHolder.html(data.data.contents);
-                $('body').append(dialogHolder);
-               dialogHolder = $(containerSel);
-             } else {
-               var info = '';
-               if (typeof data.data.message != 'undefined') {
-	         info = data.data.message;
-               } else {
-	         info = t('cafevdb', 'Unknown error :(');
-               }
-               if (typeof data.data.error != 'undefined' && data.data.error == 'exception') {
-	         info += '<p><pre>'+data.data.exception+'</pre>';
-	         info += '<p><pre>'+data.data.trace+'</pre>';
-               }
-               OC.dialogs.alert(info, t('cafevdb', 'Error'));
-               if (data.data.debug != '') {
-                 OC.dialogs.alert(data.data.debug, t('cafevdb', 'Debug Information'), undefined, true);
-               }
+             if (!CAFEVDB.ajaxErrorHandler(data, [ 'contents' ])) {
                return false;
              }
+
+             var containerSel = '#'+containerCSSId;
+             var dialogHolder;
+             dialogHolder = $('<div id="'+containerCSSId+'"></div>');
+             dialogHolder.html(data.data.contents);
+             $('body').append(dialogHolder);
+             dialogHolder = $(containerSel);
+
              dialogHolder.on('pmedialog:changed', function(event) {
                //alert('Changed: '+containerCSSId);
                tableOptions.modified = true;
