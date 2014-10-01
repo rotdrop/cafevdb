@@ -420,7 +420,7 @@ __EOT__;
 
     $query = " SELECT `Musiker`.*,
  `Besetzungen`.`ProjektId`,`Besetzungen`.`Instrument` as 'ProjektInstrument',
- `Projekte`.`Name`,`Projekte`.`Jahr`,`Projekte`.`Besetzung`
+ `Projekte`.`Name` AS `Projekt`,`Projekte`.`Jahr`,`Projekte`.`Besetzung`
  FROM `Musiker`
    LEFT JOIN `Besetzungen`
      ON `Musiker`.`Id` = `Besetzungen`.`MusikerId`
