@@ -556,7 +556,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                          },
                          close: function() {
                            progressOpen = false;
-                           progressWrapper.find('span.progressbar').progressbar('destroy');
+                           //progressWrapper.find('span.progressbar').progressbar('destroy');
                            progressWrapper.dialog('destroy');
                            progressWrapper.hide();
                          }
@@ -821,11 +821,13 @@ CAFEVDB.Email = CAFEVDB.Email || {};
       },
       stopCallback: updateFileAttachments,
       dropZone: null, // initially disabled, enabled on tab-switch
-      inputSelector: '#file_upload_start' });
+      inputSelector: '#attachment_upload_start',
+      containerSelector: '#attachment_upload_wrapper'
+    });
     
     fieldset.find('.attachment.upload').off('click');
     fieldset.find('.attachment.upload').on('click', function() {
-      $('#file_upload_start').trigger('click');
+      $('#attachment_upload_start').trigger('click');
     });
 
     fieldset.find('.attachment.owncloud').off('click');
@@ -1072,9 +1074,9 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                      }
 
                      if (newTabId == 'emailformcomposer-tab') {
-                       $('#file_upload_start').fileupload('option', 'dropZone', ui.newPanel);
+                       $('#attachment_upload_start').fileupload('option', 'dropZone', ui.newPanel);
                      } else {
-                       $('#file_upload_start').fileupload('option', 'dropZone', null);
+                       $('#attachment_upload_start').fileupload('option', 'dropZone', null);
                      }
 
                      return true;
