@@ -703,7 +703,8 @@ class phpMyEdit
 			return $this->fdd[$field]['sql'];
 		}
 		// on copy/change always use simple key retrieving, or given sql descriptor
-		if ($this->add_operation()
+		if ($this->virtual($field)
+			|| $this->add_operation()
 			|| $this->copy_operation()
 			|| $this->change_operation()) {
 			return $this->col_has_sql($field)
@@ -847,7 +848,7 @@ class phpMyEdit
 	{
 		$fields = array();
 		for ($k = 0; $k < $this->num_fds; $k++) {
-			if (! $this->displayed[$k] && $k != $this->key_num) {
+			if (false/*! $this->displayed[$k] && $k != $this->key_num*/) {
 				continue;
 			}
 			$fields[] = $this->fqn($k).' AS '.$this->sd.'qf'.$k.$this->ed; // no delimiters here, or maybe some yes
@@ -1771,10 +1772,15 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			}
 			$elements[] = $div_idx;
 		}
-		if ($postfix) {
+		if ($postfix && $postfix[0] != ' ') {
 			$elements[] = $postfix;
 		}
-		return join($this->css['separator'], $elements);
+		$css = join($this->css['separator'], $elements);
+
+		if ($postfix && $postfix[0] == ' ') {
+			$css .= $postfix;
+		}
+		return $css;
 	} /* }}} */
 
 	/**
