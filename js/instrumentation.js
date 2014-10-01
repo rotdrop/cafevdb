@@ -49,7 +49,8 @@ var CAFEVDB = CAFEVDB || {};
   Instrumentation.validateInstrumentChoices = function(container,
                                                        selectMusicianInstrument,
                                                        ajaxScript,
-                                                       finalizeCB) {
+                                                       finalizeCB,
+                                                       errorCB) {
     var projectId = container.find('input[name="ProjectId"]').val();
     var recordId = container.find('input[name="PME_sys_rec"]').val();
     
@@ -64,11 +65,21 @@ var CAFEVDB = CAFEVDB || {};
                var rqData;
                var timeout = 3000;
                if (data.status == 'success') {
+                 // Oops. Perhaps only submit on success.
+                 finalizeCB();
+
                  rqData = data.data;
                  if (rqData.notice != '') {
                    timeout = 10000;
                  }
-                 OC.Notification.show(rqData.message+''+rqData.notice);
+                 var info = rqData.message + ' ' + rqData.notice;
+                 info = info.trim();
+                 if (info != '') {
+                   OC.Notification.show(info);
+                   setTimeout(function() {
+                     OC.Notification.hide();
+                   }, timeout);
+                 }
                } else if (data.status == 'error') {
                  rqData = data.data;
                  timeout = 6000;
@@ -85,11 +96,13 @@ var CAFEVDB = CAFEVDB || {};
                  if (rqData.debug != '') {
                    OC.dialogs.alert(rqData.debug, t('cafevdb', 'Debug Information'), null, true);
                  }
+                 if (typeof errorCB == 'function' && typeof rqData.instruments != 'undefined') {
+                   errorCB(rqData.instruments);
+                 }
+                 setTimeout(function() {
+                   OC.Notification.hide();
+                 }, timeout);
                }
-               // Oops. Perhaps only submit on success.
-               setTimeout(function() {
-                 OC.Notification.hide(finalizeCB);
-               }, timeout);
 
                return false;
              }, 'json');
@@ -97,15 +110,15 @@ var CAFEVDB = CAFEVDB || {};
   };
 
   Instrumentation.ready = function(selector) {
-    var selector = PHPMYEDIT.selector(selector);
+    selector = PHPMYEDIT.selector(selector);
     var container = PHPMYEDIT.container(selector);
 
     var self = this;
 
     // Enable the controls, in order not to bloat SQL queries these PME
     // fields are flagged virtual which disables all controls initially.
-    var selectMusicianInstruments = container.find('#add-instruments-block select');
-    var selectProjectInstrument = container.find('select[class$="-instrument"]');
+    var selectMusicianInstruments = container.find('select.musician-instruments');
+    var selectProjectInstrument = container.find('select.project-instrument');
 
     $('#add-instruments-button').hide();
     $('#add-instruments-block div.chosen-container').show();    
@@ -123,13 +136,13 @@ var CAFEVDB = CAFEVDB || {};
         OC.filePath('cafevdb', 'ajax/instrumentation', 'change-project-instrument.php'),
         function () {
 
-          // Reenable, other the value will not be submitted
+          // Reenable, otherwise the value will not be submitted
           selectMusicianInstruments.prop('disabled', false);
           selectMusicianInstruments.trigger('chosen:updated');
           
           //No need to submit, the validation-script does not alter DB
           //data.
-          //PHPMYEDIT.submitOuterForm(selector);
+          PHPMYEDIT.submitOuterForm(selector);
         });
 
       return false;
@@ -156,8 +169,26 @@ var CAFEVDB = CAFEVDB || {};
           // entered by the user. The form-submit
           // will then also reload with an up to date
           // list of instruments
-          //PHPMYEDIT.triggerSubmit('morechange', container);
           PHPMYEDIT.submitOuterForm(selector);
+        },
+        function(oldInstruments) {
+          var i;
+          var selected = {};
+          for (i = 0; i < oldInstruments.length; ++i) {
+            selected[oldInstruments[i]] = true;
+          }
+          selectMusicianInstruments.find('option').each(function(idx) {
+            var self = $(this);
+            if (typeof selected[self.val()] != 'undefined') {
+              self.prop('selected', true);
+            } else {
+              self.prop('selected', false);
+            }
+          });
+          // Reenable, otherwise the value will not be submitted
+          selectProjectInstrument.prop('disabled', false);
+          selectProjectInstrument.trigger('chosen:updated');
+          selectMusicianInstruments.trigger('chosen:updated');
         });
 
       return false;
@@ -199,6 +230,8 @@ $(document).ready(function(){
       var container = $(selector);
       CAFEVDB.exportMenu(selector);
       CAFEVDB.SepaDebitMandate.popupInit(selector);
+      this.ready(selector);
+
       container.find('div.photo, #cafevdb_inline_image_wrapper').on('click', 'img', function(event) {
         event.preventDefault();
         CAFEVDB.Photo.popup(this);
@@ -225,7 +258,7 @@ $(document).ready(function(){
         container.find('div.photo, span.photo').imagesLoaded(resizeCB);
       }
     },
-    context: CAFEVDB,
+    context: CAFEVDB.Instrumentation,
     parameters: []
   });
 

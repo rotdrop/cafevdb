@@ -221,7 +221,7 @@ class BriefInstrumentation
                                                         )
                                       );
 
-    $musIdx = 2;    
+    $musIdx = count($opts['fdd']);
     $opts['fdd']['MusikerId'] = array(
                                       'name'     => 'MusikerId',
                                       'input'    => 'R', // read-only
@@ -235,13 +235,13 @@ class BriefInstrumentation
                                                                                'divs' => array(', ')
                                                                                ))
                                       );
-    $opts['fdd']['Anmeldung'] = $this->registrationColumn;
 
+    $instIdx = count($opts['fdd']);
     $opts['fdd']['Instrument'] = array(
       'name'     => 'Instrument',
       'select'   => 'D',
       'maxlen'   => 36,
-      'css'      => array('postfix' => 'instrument'),
+      'css'      => array('postfix' => ' project-instrument'),
       'sort'     => true,
       'values' => array(
         'table'   => 'Instrumente',
@@ -285,7 +285,7 @@ class BriefInstrumentation
                      '<div id="add-instruments-block">'.
                      '  <input type="hidden" autofocus="autofocus" />'), // prevent auto-focus on chosen.
         'postfix' => '</div>'),
-      'css' => array('postfix' => 'add-instruments'), // chosen-hidden select-hidden'),
+      'css' => array('postfix' => ' musician-instruments brief'), // chosen-hidden select-hidden'),
       'options' => 'C',
       'select' => 'M',
       'sql' => '`PMEjoin'.$musIdx.'`.`Instrumente`',
@@ -298,7 +298,7 @@ class BriefInstrumentation
                                        'select' => 'T',
                                        'options' => 'VCPR',
                                        'input' => 'V',
-                                       'sql' => '`PMEjoin4`.`Sortierung`', // this is `Instrumente`
+                                       'sql' => '`PMEjoin'.$instIdx.'`.`Sortierung`', // this is `Instrumente`
                                        'sort' => true);
     $opts['fdd']['Reihung'] = array('name' => 'Stimme',
                                     'select' => 'N',
@@ -306,15 +306,8 @@ class BriefInstrumentation
                                     'sort' => true);
     $opts['fdd']['Stimmführer'] = $this->sectionLeaderColumn;
 
-    $opts['fdd']['Bemerkungen'] = array('name'     => 'Bemerkungen',
-                                        'select'   => 'T',
-                                        'maxlen'   => 65535,
-                                        'css'      => array('postfix' => 'remarks'),
-                                        'textarea' => array('css' => 'wysiwygeditor',
-                                                            'rows' => 5,
-                                                            'cols' => 50),
-                                        'escape' => false,
-                                        'sort'   => true);
+    $opts['fdd']['Anmeldung'] = $this->registrationColumn;
+
     $opts['fdd']['Unkostenbeitrag'] = Config::$opts['money'];
     $opts['fdd']['Unkostenbeitrag']['name'] = "Unkostenbeitrag\n(Gagen negativ)";
 
@@ -359,6 +352,16 @@ class BriefInstrumentation
         $opts['fdd']["$name"]['tooltip'] = $field['tooltip'];
       }
     }
+
+    $opts['fdd']['Bemerkungen'] = array('name'     => 'Bemerkungen',
+                                        'select'   => 'T',
+                                        'maxlen'   => 65535,
+                                        'css'      => array('postfix' => 'remarks'),
+                                        'textarea' => array('css' => 'wysiwygeditor',
+                                                            'rows' => 5,
+                                                            'cols' => 50),
+                                        'escape' => false,
+                                        'sort'   => true);
 
     // Check whether the instrument is also mentioned in the musicians
     // data-base. Otherwise add id on request.

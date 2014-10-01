@@ -204,7 +204,8 @@ __EOT__;
     $opts['fdd'] = array();
 
     $opts['fdd']['Id'] = array(
-      'name'     => 'Id',
+      'css'      =>  array('postfix'  => ' tab-instrumentation'),
+      'name'     => L::t('Instrumentation Id'),
       'select'   => 'T',
       'options'  => 'AVCPDR', // auto increment
       'maxlen'   => 5,
@@ -213,10 +214,11 @@ __EOT__;
       'sort'     => true
       );
 
-    $musIdx = count($opts['fdd']);
+    $musIdIdx = count($opts['fdd']);
     $opts['fdd']['MusikerId'] = array(
-      'name'     => L::t('MusicianId'),
-      'title' => 'balh',
+      'css'      =>  array('postfix'  => ' tab-musician'),
+      'name'     => L::t('Musician Id'),
+      //'input'    => 'H',
       'select'   => 'T',
       'options'  => 'AVCPDR', // auto increment
       'maxlen'   => 5,
@@ -225,13 +227,18 @@ __EOT__;
       'sort'     => true
       );
 
+    $musFirstNameIdx = count($opts['fdd']);
     $opts['fdd']['Vorname'] = array(
+      'css'      =>  array('postfix'  => ' tab-all'),
       'name'     => 'Vorname',
       'select'   => 'T',
       'maxlen'   => 384,
       'sort'     => true
       );
+
+    $musLastNameIdx = count($opts['fdd']);
     $opts['fdd']['Name'] = array(
+      'css'      =>  array('postfix'  => ' tab-all'),
       'name'     => 'Name',
       'select'   => 'T',
       'maxlen'   => 384,
@@ -242,7 +249,7 @@ __EOT__;
       'name'     => 'Instrument',
       'select'   => 'D',
       'maxlen'   => 36,
-      'css'      => array('postfix' => 'instrument'),
+      'css'      => array('postfix' => ' project-instrument tab-instrumentation'),
       'sort'     => true,
       'values' => array(
         'table'   => 'Instrumente',
@@ -271,7 +278,7 @@ __EOT__;
 
     $opts['fdd']['AllInstruments'] = array(
       'name'     => L::t('All Instruments'),
-      'css'      => array('postfix' => 'instruments'),
+      'css'      => array('postfix' => ' musician-instruments tab-instrumentation tab-musician'),
       'options'  => 'AVCPD',
       'select'   => 'M',
       'maxlen'   => 136,
@@ -281,14 +288,17 @@ __EOT__;
       );
 
     $opts['fdd']['Reihung'] = array(
+      'css'      =>  array('postfix'  => ' tab-instrumentation'),
       'name' => 'Stimme',
       'select' => 'N',
       'maxlen' => '3',
       'sort' => true);
 
     $opts['fdd']['Stimmführer'] = $this->sectionLeaderColumn;
+    $opts['fdd']['Stimmführer']['css'] = array('postfix'  => ' tab-instrumentation');
 
     $opts['fdd']['Anmeldung'] = $this->registrationColumn;
+    $opts['fdd']['Anmeldung']['css'] = array('postfix'  => ' tab-project');
 
     $opts['fdd']['Sortierung'] = array('name'     => 'Orchester Sortierung',
                                        'select'   => 'T',
@@ -297,6 +307,7 @@ __EOT__;
                                        'default'  => '0',
                                        'sort'     => true);
     $opts['fdd']['MemberStatus'] = array('name'     => strval(L::t('Member Status')),
+                                         'css' => array('postfix'  => ' tab-project tab-musician'),
                                          'select'   => 'M',
                                          'maxlen'   => 384,
                                          'sort'     => true,
@@ -304,10 +315,12 @@ __EOT__;
 
     $opts['fdd']['Unkostenbeitrag'] = Config::$opts['money'];
     $opts['fdd']['Unkostenbeitrag']['name'] = "Unkostenbeitrag\n(Gagen negativ)";
+    $opts['fdd']['Unkostenbeitrag']['css'] = array('postfix'  => ' tab-project');
 
     // One virtual field in order to be able to manage SEPA debit mandates
     $opts['fdd']['SepaDebitMandate'] = array(
       'input' => 'V',
+      'css' => array('postfix'  => ' tab-project'),
       'name' => L::t('SEPA Debit Mandate'),
       'select' => 'T',
       'options' => 'LFACPDV',
@@ -326,6 +339,9 @@ __EOT__;
         'function' => 'CAFEVDB\DetailedInstrumentation::sepaDebitMandatePME',
         'parameters' => array('project' => $project,
                               'projectId' => $projectId,
+                              'musicianIdIdx' => $musIdIdx,
+                              'musicianFirstNameIdx' => $musFirstNameIdx,
+                              'musicianLastNameIx' => $musLastNameIdx,
                               'naked' => $this->pme_bare)
         )
       );
@@ -334,6 +350,7 @@ __EOT__;
     foreach ($userExtraFields as $field) {
       $name = $field['name'];    
       $opts['fdd']["$name"] = array('name'     => $name.' ('.$project.')',
+                                    'css' => array('postfix'  => ' tab-project'),
                                     'select'   => 'T',
                                     'maxlen'   => 65535,
                                     'textarea' => array('css' => '',
@@ -347,6 +364,7 @@ __EOT__;
     }
     $opts['fdd']['ProjectRemarks'] =
       array('name' => L::t('Remarks (%s)', array($projectName)),
+            'css' => array('postfix'  => ' tab-project'),
             'select'   => 'T',
             'maxlen'   => 65535,
             'css'      => array('postfix' => 'remarks'),
@@ -359,63 +377,77 @@ __EOT__;
 
     $opts['fdd']['Email'] = Config::$opts['email'];
     $opts['fdd']['Telefon'] = array(
-                                    'name'     => 'Telefon',
-                                    'nowrap' => true,
-                                    'select'   => 'T',
-                                    'maxlen'   => 384,
-                                    'sort'     => true
-                                    );
+      'css' => array('postfix'  => ' tab-musician'),
+      'name'     => 'Telefon',
+      'nowrap' => true,
+      'select'   => 'T',
+      'maxlen'   => 384,
+      'sort'     => true
+      );
     $opts['fdd']['Telefon2'] = array(
-                                     'name'     => 'Telefon2',
-                                     'nowrap' => true,
-                                     'select'   => 'T',
-                                     'maxlen'   => 384,
-                                     'sort'     => true
-                                     );
+      'css' => array('postfix'  => ' tab-musician'),
+      'name'     => 'Telefon2',
+      'nowrap' => true,
+      'select'   => 'T',
+      'maxlen'   => 384,
+      'sort'     => true
+      );
     $opts['fdd']['Strasse'] = array(
-                                    'name'     => 'Strasse',
-                                    'nowrap' => true,
-                                    'select'   => 'T',
-                                    'maxlen'   => 384,
-                                    'sort'     => true
-                                    );
+      'css' => array('postfix'  => ' tab-musician'),
+      'name'     => 'Strasse',
+      'nowrap' => true,
+      'select'   => 'T',
+      'maxlen'   => 384,
+      'sort'     => true
+      );
     $opts['fdd']['Postleitzahl'] = array(
-                                         'name'     => 'Postleitzahl',
-                                         'select'   => 'T',
-                                         'maxlen'   => 11,
-                                         'sort'     => true
-                                         );
+      'css' => array('postfix'  => ' tab-musician'),
+      'name'     => 'Postleitzahl',
+      'select'   => 'T',
+      'maxlen'   => 11,
+      'sort'     => true
+      );
     $opts['fdd']['Stadt'] = array(
-                                  'name'     => 'Stadt',
-                                  'select'   => 'T',
-                                  'maxlen'   => 384,
-                                  'sort'     => true
-                                  );
-    $opts['fdd']['Land'] = array('name'     => 'Land',
-                                 'select'   => 'T',
-                                 'maxlen'   => 384,
-                                 'default'  => 'Deutschland',
-                                 'sort'     => true);
+      'css' => array('postfix'  => ' tab-musician'),
+      'name'     => 'Stadt',
+      'select'   => 'T',
+      'maxlen'   => 384,
+      'sort'     => true
+      );
+    $opts['fdd']['Land'] = array(
+      'name'     => L::t('Country'),
+      'css' => array('postfix'  => ' tab-musician'),
+      'select'   => 'T',
+      'maxlen'   => 384,
+      'default'  => 'Deutschland',
+      'sort'     => true,
+      );
     $opts['fdd']['Geburtstag'] = Config::$opts['birthday'];
+    $opts['fdd']['Geburtstag']['css'] = array('postfix'  => ' tab-musician');
 
-    $opts['fdd']['Remarks'] = array('name'     => strval(L::t('General Remarks')),
-                                    'select'   => 'T',
-                                    'maxlen'   => 65535,
-                                    'css'      => array('postfix' => 'remarks'),
-                                    'textarea' => array('css' => 'wysiwygeditor',
-                                                        'rows' => 5,
-                                                        'cols' => 50),
-                                    'escape'   => false,
-                                    'sort'     => true);
+    $opts['fdd']['Remarks'] = array(
+      'name'     => strval(L::t('General Remarks')),
+      'css' => array('postfix'  => ' tab-musician'),
+      'select'   => 'T',
+      'maxlen'   => 65535,
+      'css'      => array('postfix' => 'remarks'),
+      'textarea' => array('css' => 'wysiwygeditor',
+                          'rows' => 5,
+                          'cols' => 50),
+      'escape'   => false,
+      'sort'     => true);
 
-    $opts['fdd']['Sprachpräferenz'] = array('name'     => 'Spachpräferenz',
-                                            'select'   => 'D',
-                                            'maxlen'   => 128,
-                                            'default'  => 'Deutsch',
-                                            'sort'     => true,
-                                            'values'   => Config::$opts['languages']);
+    $opts['fdd']['Sprachpräferenz'] = array(
+      'css' => array('postfix'  => ' tab-musician'),
+      'name'     => 'Spachpräferenz',
+      'select'   => 'D',
+      'maxlen'   => 128,
+      'default'  => 'Deutsch',
+      'sort'     => true,
+      'values'   => Config::$opts['languages']);
 
     $opts['fdd']['Portrait'] = array(
+      'css' => array('postfix'  => ' tab-musician'),
       'input' => 'V',
       'name' => L::t('Photo'),
       'select' => 'T',
@@ -429,12 +461,14 @@ __EOT__;
       'default' => '',
       'sort' => false);
 
-    $opts['fdd']['Aktualisiert'] = array_merge(Config::$opts['datetime'],
-                                               array("name" => L::t("Last Updated"),
-                                                     "default" => date(Config::$opts['datetime']['datemask']),
-                                                     "nowrap" => true,
-                                                     "options" => 'LFAVCPDR' // Set by update trigger.
-                                                 ));
+    $opts['fdd']['Aktualisiert'] = array_merge(
+      Config::$opts['datetime'],
+      array("name" => L::t("Last Updated"),
+            'css' => array('postfix'  => ' tab-all'),
+            "default" => date(Config::$opts['datetime']['datemask']),
+            "nowrap" => true,
+            "options" => 'LFAVCPDR' // Set by update trigger.
+        ));
 
     $opts['triggers']['update']['before'] = array();
     $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeUpdateRemoveUnchanged';
@@ -515,10 +549,16 @@ __EOT__;
     // Fetch the data from the array $row.
     $projectId = $opts['projectId'];
     $project   = $opts['project'];
+    $musIdIdx         = $opts['musicianIdIdx'];
+    $musFirstNameIdx  = $opts['musicianFirstNameIdx'];
+    $musLastNameIdx   = $opts['musicianLastNameIdx'];
 
     // Careful: this changes when rearranging the ordering of the display
-    $musican    = $row['qf2'];
-    $musicianId = $row['qf2_idx'];
+    $musicianId = $row['qf'.$musIdIdx];
+    $musicianFirstName = $row['qf'.$musFirstNameIdx];
+    $musicianLastName = $row['qf'.$musLastNameIdx];
+
+    $musician = $musicianFirstName.' '.$musicianLastName;
 
     if ($row['qf'.$k] != '') {
       $value = $row['qf'.$k];

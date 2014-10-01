@@ -130,19 +130,20 @@ try {
       OCP\JSON::error(
         array(
           'data' => array('error' => L::t('invalid arguments'),
+                          'instruments' => $oldMusicianInstruments,
                           'message' => L::t('Attempt to remove the instrument the musician is supposed to play.'),
                           'debug' => $debugText)));
       return false;
     }
-  }
   
     
-  if (!$haveNew) {
-    // Auto-add?
-    $notice = L::t("Please consider to add the registered project instrument `%s' to %s's ".
-                   "list of instruments (or possibly change the project instrument). Please note ".
-                   "that ",
-                   array($projectInstrument, $musRow['Vorname']));
+    if (!$haveNew) {
+      // Auto-add?
+      $notice = L::t("Please consider to add the registered project instrument `%s' to %s's ".
+                     "list of instruments (or possibly change the project instrument). Please note ".
+                     "that ",
+                     array($projectInstrument, $musRow['Vorname']));
+    }  
   }
   
   // ok, we have a valid musician-id, a valid intrument list, let it go    
@@ -158,7 +159,8 @@ try {
     OCP\JSON::error(
       array(
         'data' => array('error' => L::t('data base error'),
-                        'message' => L::t('Failed to update in project instrumentation'),
+                        'instruments' => $oldMusicianInstruments,
+                        'message' => L::t('Failed to update the musician\'s instrument list.'),
                         'debug' => $debugText)));
     return false;
   } else {
@@ -169,8 +171,11 @@ try {
     OCP\JSON::success(
       array(
         'data' => array(
-          'message' => L::t("Changing the instrument list for the musician `%s' was probably successful.",
-                            array($musRow['Vorname'].' '.$musRow['Name'])),
+          'instruments' => $musicianInstruments,              
+          'message' => ($notice == ''
+                        ? '' // don't annoy the user with success messages.
+                        : L::t("Changing the instrument list for the musician `%s' was probably successful.",
+                               array($musRow['Vorname'].' '.$musRow['Name']))),
           'notice' => $notice,
           'debug' => $debugText)));
 
