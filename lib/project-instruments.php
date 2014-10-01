@@ -393,7 +393,7 @@ class ProjectInstruments
                      '<div id="add-instruments-block">'.
                      '  <input type="hidden" autofocus="autofocus" />'), // prevent auto-focus on chosen.
         'postfix' => '</div>'),
-      'css' => array('postfix' => 'add-instruments chosen-hidden select-hidden'),
+      'css' => array('postfix' => ' project-instruments chosen-hidden select-hidden'),
       'options' => 'C',
       'select' => 'M',
       'sql' => '`PMEjoin'.$idIdx.'`.`Besetzung`',

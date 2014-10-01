@@ -469,7 +469,7 @@ table.pme-navigation {
   border-spacing:0px;
 }
 
-td[class|='pme-header'], th[class|='pme-header'] {
+td[class^='pme-header'], th[class^='pme-header'] {
   border:#004d9c 1px solid;
   padding:4px;
   background:#add8e6;
@@ -482,6 +482,10 @@ td[class|='pme-navigation'], th[class|='pme-navigation'] {
 
 td[class|='pme-sortinfo'], td[class|='pme-queryinfo']  {
   background:#C6DEFF;
+}
+
+form.pme-form .tab-all {
+  /* display:none; */
 }
 
 td[class|='pme-filter'], th[class|='pme-filter'] {
@@ -515,10 +519,10 @@ td.pme-stats   {
   padding-left:10ex;
 }
 
-td[class|='pme-cell-0'] {
+td[class^='pme-cell-0'] {
   background:#B7CEEC;
 }
-td[class|='pme-cell-1'] {
+td[class^='pme-cell-1'] {
   background:#C6DEFF;
 }
 
@@ -569,7 +573,7 @@ td.pme-value-0-msg, td.pme-value-1-msg {
   text-wrap:normal;
 }
 
-td.pme-cell-0-instruments, td.pme-cell-1-instruments { 
+td.pme-cell-0.musician-instruments, td.pme-cell-1.musician-instruments { 
   width:12em;
   max-width:12em;
   max-height:1em;

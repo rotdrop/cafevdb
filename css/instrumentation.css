@@ -41,7 +41,7 @@
   padding: 0;
 }
 
-#add-instruments-block select[class*="add-instruments"] {
+#add-instruments-block select.musician-instruments {
   width: 20em;
 }
 

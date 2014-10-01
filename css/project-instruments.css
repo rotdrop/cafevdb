@@ -88,7 +88,7 @@
   padding: 0;
 }
 
-#add-instruments-block select[class*="add-instruments"] {
+#add-instruments-block select.project-instruments {
   width: 20em;
 }
 

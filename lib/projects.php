@@ -764,14 +764,14 @@ a comma.'));
   array('pre' => '<optgroup>', 'post' => '</optgroup>',
 
         array('type' => 'option',
+              'title' => Config::toolTips('project-action-detailed-instrumentation'),
+              'value' => 'detailed-instrumentation',
+              'name' => L::t('Instrumentation')
+          ),
+        array('type' => 'option',
               'title' => Config::toolTips('project-action-brief-instrumentation'),
               'value' => 'brief-instrumentation',
               'name' => L::t('Brief Instrumentation')
-          ),
-        array('type' => 'option',
-              'title' => Config::toolTips('project-action-detailed-instrumentation'),
-              'value' => 'detailed-instrumentation',
-              'name' => L::t('Detailed Instrumentation')
           ),
         array('type' => 'option',
               'title' => Config::toolTips('project-action-files'),

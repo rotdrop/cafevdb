@@ -966,7 +966,7 @@ __EOT__;
       break;
 
     case 'detailed':
-      $value = L::t("Detailed Instrumentation");
+      $value = L::t("Instrumentation");
       $title = L::t("Detailed display of all registered musicians for the selected project. The table will allow for modification of personal data like email, phone, address etc.");
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
