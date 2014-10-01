@@ -180,7 +180,13 @@ var CAFEVDB = CAFEVDB || {};
             });
 	}).error(function () {
 	    // notify the user that the image could not be loaded
-	    OC.dialogs.alert(t('cafevdb', 'Could not open image.'), t('cafevdb', 'Error'));
+	    OC.dialogs.alert(t('cafevdb', 'Could not open image.'), t('cafevdb', 'Error'),
+                             function () {
+                                 if (typeof callback == 'function') {
+                                     // Still the callback needs to run ...
+                                     callback();                
+                                 }
+                             });
 	    //self.notify({message:t('cafevdb', 'Error loading image.')});
 	}).attr('src', OC.linkTo('cafevdb', 'inlineimage.php')+identstr+refreshstr);
 	this.loadPhotoHandlers();
