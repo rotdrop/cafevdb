@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-29 08:57+0200\n"
-"PO-Revision-Date: 2014-09-29 08:59+0200\n"
+"POT-Creation-Date: 2014-10-01 11:35+0200\n"
+"PO-Revision-Date: 2014-10-01 11:38+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -252,16 +252,16 @@ msgstr "%s-uebersicht"
 msgid "%s-detailed"
 msgstr "%s-detailliert"
 
-#: ajax/export/excel.php:260 lib/projects.php:1541 lib/projects.php:1542
+#: ajax/export/excel.php:260 lib/projects.php:1549 lib/projects.php:1550
 msgid "Missing Musicians"
 msgstr "Fehlende Musiker"
 
 #: ajax/export/excel.php:285 ajax/export/insurance-export.php:142
-#: lib/projects.php:1544
+#: lib/projects.php:1552
 msgid "Instrument"
 msgstr "Instrument"
 
-#: ajax/export/excel.php:286 lib/projects.php:1544
+#: ajax/export/excel.php:286 lib/projects.php:1552
 msgid "Missing"
 msgstr "Defizit"
 
@@ -413,7 +413,7 @@ msgid "No image path was submitted."
 msgstr "Es wurde kein Datei-Pfad für das Bild übermittelt."
 
 #: ajax/inlineimage/oc_image.php:69 ajax/inlineimage/oc_image.php:72
-#: js/inlineimage.js:184
+#: js/inlineimage.js:190
 msgid "Error loading image."
 msgstr "Fehler beim Laden des Bildes."
 
@@ -1048,15 +1048,15 @@ msgstr "Die Filter-Sichtbarkeit wurde geändert"
 msgid "header-visibility changed"
 msgstr "Die Kopf-Zeilen-Sichtbarkeit wurde geändert."
 
-#: ajax/settings/redaxo-settings.php:29 lib/projects.php:683
+#: ajax/settings/redaxo-settings.php:29 lib/projects.php:691
 msgid "Preview"
 msgstr "Vorschau"
 
-#: ajax/settings/redaxo-settings.php:30 lib/projects.php:685
+#: ajax/settings/redaxo-settings.php:30 lib/projects.php:693
 msgid "Archive"
 msgstr "Archiv"
 
-#: ajax/settings/redaxo-settings.php:31 lib/projects.php:687
+#: ajax/settings/redaxo-settings.php:31 lib/projects.php:695
 msgid "Trashbin"
 msgstr "Mülltonne"
 
@@ -1100,8 +1100,8 @@ msgstr "Alle zu %s"
 #: js/email.js:418 js/email.js:449 js/events.js:64 js/events.js:153
 #: js/inlineimage.js:84 js/inlineimage.js:92 js/inlineimage.js:102
 #: js/inlineimage.js:131 js/inlineimage.js:155 js/inlineimage.js:183
-#: js/inlineimage.js:201 js/inlineimage.js:320 js/inlineimage.js:406
-#: js/inlineimage.js:415 js/inlineimage.js:418 js/pme.js:483 js/pme.js:638
+#: js/inlineimage.js:207 js/inlineimage.js:326 js/inlineimage.js:412
+#: js/inlineimage.js:421 js/inlineimage.js:424 js/pme.js:490 js/pme.js:642
 #: js/sepa-debit-mandate.js:62
 msgid "Error"
 msgstr "Fehler"
@@ -1158,7 +1158,7 @@ msgid ""
 "Accept the currently selected options and return to the underlying form. "
 msgstr "Übernimmt die aktuellen Werte und kehrt zur vorherigen Ansicht zurück."
 
-#: js/cafevdb.js:508 js/inlineimage.js:267 js/project-instruments.js:216
+#: js/cafevdb.js:508 js/inlineimage.js:273 js/project-instruments.js:216
 #: lib/email.php:1594 templates/blogedit.php:39
 #: templates/part.emailform.composer.php:246
 msgid "Cancel"
@@ -1223,12 +1223,12 @@ msgstr "In der AJAX-Antwort fehlt das Feld {RequiredField}."
 msgid "Missing data"
 msgstr "Fehlende Daten"
 
-#: js/cafevdb.js:918 js/events.js:58 js/events.js:147 js/pme.js:477
-#: js/pme.js:632 js/sepa-debit-mandate.js:56
+#: js/cafevdb.js:918 js/events.js:58 js/events.js:147 js/pme.js:478
+#: js/pme.js:488 js/pme.js:636 js/sepa-debit-mandate.js:56
 msgid "Unknown error :("
 msgstr "Irgendein Fehler :("
 
-#: js/cafevdb.js:932 js/instrumentation.js:86 js/pme.js:485 js/pme.js:640
+#: js/cafevdb.js:932 js/instrumentation.js:86 js/pme.js:485 js/pme.js:644
 msgid "Debug Information"
 msgstr "Debug Informationen"
 
@@ -1485,7 +1485,7 @@ msgstr "Nicht genug Speicherplatz vorhanden."
 msgid "Upload cancelled."
 msgstr "Hochladen abgebrochen."
 
-#: js/file-upload.js:219
+#: js/file-upload.js:221
 msgid ""
 "File upload is in progress. Leaving the page now will cancel the upload."
 msgstr ""
@@ -1496,7 +1496,7 @@ msgstr ""
 msgid "No files selected for upload."
 msgstr "Keine Dateien zum Hochladen ausgewählt."
 
-#: js/inlineimage.js:92 js/inlineimage.js:396
+#: js/inlineimage.js:92 js/inlineimage.js:402
 msgid ""
 "The file you are trying to upload exceed the maximum size for file uploads "
 "on this server."
@@ -1508,41 +1508,41 @@ msgstr ""
 msgid "Could not open image."
 msgstr "Die Bilddatei konnte nicht geöffnet werden."
 
-#: js/inlineimage.js:256
+#: js/inlineimage.js:262
 msgid "Edit inline image"
 msgstr "Bild editieren"
 
-#: js/inlineimage.js:261
+#: js/inlineimage.js:267
 msgid "Ok"
 msgstr "Fertig"
 
-#: js/inlineimage.js:280
+#: js/inlineimage.js:286
 msgid "Error loading inline image."
 msgstr "Fehler beim Laden des Bildes."
 
-#: js/inlineimage.js:297
+#: js/inlineimage.js:303
 msgid "Network or server error. Please inform administrator."
 msgstr ""
 "Netzwerk- oder Server-Fehler. Telefonieren Sie mit den System-"
 "Administratoren."
 
-#: js/inlineimage.js:352
+#: js/inlineimage.js:358
 msgid "Select image"
 msgstr "Bild auswählen"
 
-#: js/inlineimage.js:396
+#: js/inlineimage.js:402
 msgid "Upload too large"
 msgstr "Datei zu groß zum Laden"
 
-#: js/inlineimage.js:400
+#: js/inlineimage.js:406
 msgid "Only image files can be used as profile picture."
 msgstr "Für das Avatar-Bild können nur Bild-Dateien verwendet werden."
 
-#: js/inlineimage.js:400
+#: js/inlineimage.js:406
 msgid "Wrong file type"
 msgstr "Ungültiger Dateityp."
 
-#: js/inlineimage.js:406
+#: js/inlineimage.js:412
 msgid ""
 "Your browser doesn't support AJAX upload. Please click on the profile "
 "picture to select a photo to upload."
@@ -1550,7 +1550,7 @@ msgstr ""
 "Ihr Web-Browser harmoniert nicht mit den üblichen Web-Applikationen. Bitte "
 "klicken Sie auf das Bild, um eine neue Bilddatei hoch zu laden."
 
-#: js/inlineimage.js:468
+#: js/inlineimage.js:474
 msgid "Photo Zoom"
 msgstr "Großes Foto"
 
@@ -1564,11 +1564,11 @@ msgid "Caught a PHP Exception"
 msgstr "PHP `Ausnahme' `gefangen'"
 
 # #Spalten
-#: js/pme.js:744
+#: js/pme.js:748
 msgid "#columns"
 msgstr "#Spalten"
 
-#: js/pme.js:753
+#: js/pme.js:757
 msgid "#rows"
 msgstr "#Zeilen"
 
@@ -1660,7 +1660,8 @@ msgstr ""
 
 #: js/sepa-debit-mandate.js:139 lib/brief-instrumentation.php:324
 #: lib/brief-instrumentation.php:410 lib/brief-instrumentation.php:421
-#: lib/musicians.php:1065
+#: lib/detailed-instrumentation.php:324 lib/detailed-instrumentation.php:566
+#: lib/detailed-instrumentation.php:577 lib/musicians.php:1065
 msgid "SEPA Debit Mandate"
 msgstr "SEPA Lastschriftmandat"
 
@@ -1719,7 +1720,7 @@ msgstr "(Instrument, Bemerkungen etc.)"
 msgid "General Personal Data"
 msgstr "Allgemeine Personendaten"
 
-#: lib/brief-instrumentation.php:58 lib/functions.php:969 lib/projects.php:766
+#: lib/brief-instrumentation.php:58
 msgid "Detailed Instrumentation"
 msgstr "Detaillierte Besetzung"
 
@@ -1727,7 +1728,8 @@ msgstr "Detaillierte Besetzung"
 msgid "(see above; address, email, name, picture etc.)"
 msgstr "(s.o.; Adresse, Email, Name, Protrait etc.)"
 
-#: lib/brief-instrumentation.php:278 lib/musicians.php:1018
+#: lib/brief-instrumentation.php:278 lib/detailed-instrumentation.php:280
+#: lib/musicians.php:1018
 msgid "All Instruments"
 msgstr "Alle Instrumente"
 
@@ -1741,7 +1743,7 @@ msgid ""
 "with."
 msgstr "Anklicken um die Instrumentenliste des Musikers zu ändern."
 
-#: lib/brief-instrumentation.php:427
+#: lib/brief-instrumentation.php:427 lib/detailed-instrumentation.php:583
 msgid "Click to enter details of a potential SEPA debit mandate"
 msgstr ""
 "Anklicken um ggf. Informationen über ein SEPA-Lastschriftmandat einzutragen"
@@ -1770,19 +1772,36 @@ msgstr "Geburtstag"
 msgid "Unknown Tooltip for key `%s' requested."
 msgstr "Unbekannter Tooltip `%s' angefordert."
 
-#: lib/detailed-instrumentation.php:300 lib/musicians.php:282
+#: lib/detailed-instrumentation.php:208
+msgid "Instrumentation Id"
+msgstr "Besetzungs-Id"
+
+#: lib/detailed-instrumentation.php:220
+msgid "Musician Id"
+msgstr "Musiker-Id"
+
+#: lib/detailed-instrumentation.php:309 lib/musicians.php:282
 msgid "Member Status"
 msgstr "Status"
 
-#: lib/detailed-instrumentation.php:380
+#: lib/detailed-instrumentation.php:366
+#, php-format
+msgid "Remarks (%s)"
+msgstr "Bemerkungen (%s)"
+
+#: lib/detailed-instrumentation.php:418
+msgid "Country"
+msgstr "Land"
+
+#: lib/detailed-instrumentation.php:429
 msgid "General Remarks"
 msgstr "Allgemeine Bemerkungen"
 
-#: lib/detailed-instrumentation.php:399 lib/musicians.php:398
+#: lib/detailed-instrumentation.php:452 lib/musicians.php:398
 msgid "Photo"
 msgstr "Foto"
 
-#: lib/detailed-instrumentation.php:412 lib/musicians.php:412
+#: lib/detailed-instrumentation.php:466 lib/musicians.php:412
 msgid "Last Updated"
 msgstr "Letzte Aktualisierung"
 
@@ -1838,8 +1857,8 @@ msgstr "Anzahl: "
 msgid "and"
 msgstr "und"
 
-#: lib/email.php:1452 lib/projects.php:789 lib/projects.php:966
-#: lib/projects.php:996
+#: lib/email.php:1452 lib/projects.php:797 lib/projects.php:974
+#: lib/projects.php:1004
 msgid "Events"
 msgstr "Termine"
 
@@ -2208,7 +2227,11 @@ msgstr ""
 msgid "The currently active project."
 msgstr "Das gerade ausgewählte Projekt."
 
-#: lib/functions.php:970 lib/tooltips.php:343
+#: lib/functions.php:969 lib/projects.php:769
+msgid "Instrumentation"
+msgstr "Besetzung"
+
+#: lib/functions.php:970
 msgid ""
 "Detailed display of all registered musicians for the selected project. The "
 "table will allow for modification of personal data like email, phone, "
@@ -2218,7 +2241,7 @@ msgstr ""
 "Daten wie Email, Adresse usw. können hier geändert werden. Projektbezogene "
 "Daten können allerdings nur in der Ansicht `Kurz-Besetzung' geändert werden."
 
-#: lib/functions.php:984 lib/projects.php:761
+#: lib/functions.php:984 lib/projects.php:774
 msgid "Brief Instrumentation"
 msgstr "Kurz-Besetzung"
 
@@ -2245,12 +2268,12 @@ msgstr ""
 "Tabelle mit allen derzeit gespeicherten Instrumenten; weitere Instrumente "
 "können hier einfach hinzugefügt werden."
 
-#: lib/functions.php:1014 lib/project-instruments.php:69 lib/projects.php:799
-#: lib/projects.php:978
+#: lib/functions.php:1014 lib/project-instruments.php:69 lib/projects.php:807
+#: lib/projects.php:986
 msgid "Instrumentation Numbers"
 msgstr "Besetzungszahlen"
 
-#: lib/functions.php:1015 lib/tooltips.php:362
+#: lib/functions.php:1015 lib/tooltips.php:368
 msgid ""
 "Display the desired instrumentaion numbers, i.e. how many musicians are "
 "already registered for each instrument group and how many are finally needed."
@@ -2725,42 +2748,42 @@ msgstr "Programm"
 msgid "Flyer"
 msgstr "Flyer"
 
-#: lib/projects.php:673
+#: lib/projects.php:681
 #, php-format
 msgid "Unable to fetch public web pages for project id %d"
 msgstr ""
 "Konnte leider die Liste der öffentlichen Web-Seiten für %s nicht ermitteln."
 
-#: lib/projects.php:751
+#: lib/projects.php:759
 msgid "Project Overview"
 msgstr "Projekt-Übersicht"
 
-#: lib/projects.php:772
+#: lib/projects.php:780
 msgid "Project Files"
 msgstr "Projekt-Dateien"
 
-#: lib/projects.php:782 lib/projects.php:956
+#: lib/projects.php:790 lib/projects.php:964
 #, php-format
 msgid "Project Wiki for %s"
 msgstr "Wiki Projekt-Seite für %s"
 
-#: lib/projects.php:784 lib/projects.php:960
+#: lib/projects.php:792 lib/projects.php:968
 msgid "Project Notes"
 msgstr "Projekt-Notizen"
 
-#: lib/projects.php:794 lib/projects.php:972
+#: lib/projects.php:802 lib/projects.php:980
 msgid "Em@il"
 msgstr "Em@il"
 
-#: lib/projects.php:807
+#: lib/projects.php:815
 msgid "SEPA Debit Mandates"
 msgstr "SEPA Lastschriftmandate"
 
-#: lib/projects.php:813
+#: lib/projects.php:821
 msgid "Profit and Loss Account"
 msgstr "Verlustrechnung"
 
-#: lib/projects.php:1722
+#: lib/projects.php:1861
 msgid ""
 "Flyers can only be added to existing projects, please add the new\n"
 "project without a flyer first."
@@ -2768,28 +2791,28 @@ msgstr ""
 "Flyer könner leider nur zu existierenden Projekten hinzugefügt werden; bitte "
 "zuerst das Projekt ohne Flyer anlegen."
 
-#: lib/projects.php:1737
+#: lib/projects.php:1876
 #, php-format
 msgid "Drop image to upload (max %s)"
 msgstr "Bild ablegen zum Hochladen (max %s)"
 
-#: lib/projects.php:1740
+#: lib/projects.php:1879
 msgid "Delete current flyer"
 msgstr "Aktuellen Flyer löschen"
 
-#: lib/projects.php:1741
+#: lib/projects.php:1880
 msgid "Edit current flyer"
 msgstr "Aktuellen Flyer zuschneiden"
 
-#: lib/projects.php:1742
+#: lib/projects.php:1881
 msgid "Upload new flyer"
 msgstr "Neuen Flyer hochladen"
 
-#: lib/projects.php:1743
+#: lib/projects.php:1882
 msgid "Select image from ownCloud"
 msgstr "Bild aus der `Cloud' auswählen"
 
-#: lib/projects.php:1751
+#: lib/projects.php:1890
 msgid ""
 "Internal error, don't know what to do concerning project-flyers in the given "
 "context."
@@ -2797,7 +2820,7 @@ msgstr ""
 "Interner Fehler; keine Ahnung, wie in diesem Kontext mit Projekt-Flyern "
 "umgegangen werden sollte."
 
-#: lib/projects.php:1992
+#: lib/projects.php:2131
 #, php-format
 msgid ""
 "====== Project %s ======\n"
@@ -3619,17 +3642,31 @@ msgstr ""
 "für die Instrumentierung, den Terminen und anderen\n"
 "Informationen zu wechseln."
 
-#: lib/tooltips.php:341
-msgid "Open a page with the musicians registered for the respective project."
+#: lib/tooltips.php:342
+msgid ""
+"Open a page with a very brief summary about the musicians registered\n"
+"for the respective project. All details about the registered musicians\n"
+"are shown in the ordinary `Instrumentation' table"
 msgstr ""
-"Öffnet eine Seite mit allen Musikern, die für dieses Projekt registriert "
-"sind."
+"Öffnet eine Seite mit einer sehr knappen Zusammenfassung der für das\n"
+"Projekt registrierten Musiker. Eine detaillierte Tabelle der Besetzung\n"
+"mit allen personenbezogenen Daten erhält man über die normale Besetzungstabelle `Besetzung'."
 
-#: lib/tooltips.php:345
+#: lib/tooltips.php:347
+msgid ""
+"Display all registered musicians for the selected project. The table\n"
+"        shows project related details as well as all stored personal\n"
+"        \"information about the respective musician"
+msgstr ""
+"Detaillierte Ansicht der Besetzung für das aktuelle Projekt. Die\n"
+"Tabelle zeigt alle für das Projekt registrierten Musiker mit allen\n"
+"gespeicherten personenbezogenen Daten."
+
+#: lib/tooltips.php:351
 msgid "Opens the email-form for the project inside a dialog window."
 msgstr "Öffnet das Em@il-Formular für das Projekt in einem Dialog-Fenster."
 
-#: lib/tooltips.php:347
+#: lib/tooltips.php:353
 msgid ""
 "Opens a dialog-window which gives access to all stored informations for the "
 "project."
@@ -3639,11 +3676,12 @@ msgstr ""
 "öffentlichen Konzertankündigungen auf unserer Web-Seite bearbeitet\n"
 "werden und vieles andere mehr."
 
-#: lib/tooltips.php:349
+#: lib/tooltips.php:355
 msgid "Load a new page with all debit-mandates for project-fees"
-msgstr "Lädt eine neue Web-Seite mit allen Lastschrift-Mandaten zu diesem Projekt."
+msgstr ""
+"Lädt eine neue Web-Seite mit allen Lastschrift-Mandaten zu diesem Projekt."
 
-#: lib/tooltips.php:351 lib/tooltips.php:381
+#: lib/tooltips.php:357 lib/tooltips.php:387
 msgid ""
 "Open a dialog with all known\n"
 "events associated to the project.\n"
@@ -3653,11 +3691,11 @@ msgstr ""
 "Tabelle mit allen Terminen zum jeweiligen Projekt.\n"
 "Termine können dort hinzugefügt, geändert oder auch gelöscht werden."
 
-#: lib/tooltips.php:356
+#: lib/tooltips.php:362
 msgid "Change to the folder with project related files."
 msgstr "Zum Ordner mit den Projekt-Dateien wechseln."
 
-#: lib/tooltips.php:358
+#: lib/tooltips.php:364
 msgid ""
 "Change to the folder with the financial balance\n"
 "sheets for the project (only available after the project\n"
@@ -3667,12 +3705,12 @@ msgstr ""
 "Die Informationen sind natürlich erst nach Abschluß des Projekts\n"
 "vorhanden."
 
-#: lib/tooltips.php:364
+#: lib/tooltips.php:370
 msgid "Change to the DokuWiki-page for this project (if there is one)"
 msgstr ""
 "Zur DokuWiki-Seite für das Projekt wechseln (falls die denn existiert)."
 
-#: lib/tooltips.php:366
+#: lib/tooltips.php:372
 msgid ""
 "Add a new public web-page to the project, either by generating a new one or "
 "by linking an existing web-page to the given project."
@@ -3682,7 +3720,7 @@ msgstr ""
 "erstellt wird oder aber eine bestehende Ankündigung mit diesem Projekt\n"
 "verknüpft wird."
 
-#: lib/tooltips.php:368
+#: lib/tooltips.php:374
 msgid ""
 "Delete the currently displayed web-page fromthe project. The web page will "
 "be \"detached\" from the project and moved to the trash-bin\n"
@@ -3692,7 +3730,7 @@ msgstr ""
 "Web-Seite wird vom Projekt gelöst und im CMS in die\n"
 "Mülleimer-Kategorie (Ordner) verschoben."
 
-#: lib/tooltips.php:371
+#: lib/tooltips.php:377
 msgid ""
 "Link existing pages to the project. This can be used, for instance, in order "
 "to add a page to the project which has not been created by hitting the `+'-"
@@ -3709,7 +3747,7 @@ msgstr ""
 "herausfischen und zur `Vorschau' hinzufügen, indem man ihn hier wieder\n"
 "mit diesem Projekt verkn[pft."
 
-#: lib/tooltips.php:373
+#: lib/tooltips.php:379
 msgid ""
 "Please select articles to link to the current project. The articles will be "
 "immediately added to the project if you select them. In order to remove the "
@@ -3717,7 +3755,7 @@ msgid ""
 msgstr ""
 "Bitte Artiekel auswählen, die mit diesem Projekt verknüpft werden sollen."
 
-#: lib/tooltips.php:375
+#: lib/tooltips.php:381
 msgid ""
 "Detach the currently displayed event announcement from the project. "
 "Primarily meant to provide means to undo erroneous linking of articles."
@@ -3726,7 +3764,7 @@ msgstr ""
 "Veranstaltungsankündigung und diesem Projekt. Primär als\n"
 "\"Undo\"-Funktion nach versehentlichem Verknüpfen gemeint."
 
-#: lib/tooltips.php:377
+#: lib/tooltips.php:383
 msgid ""
 "Append the year to the name if checked.\n"
 "Regardless of this checkbox any decimal digit will first be stripped from "
@@ -3738,7 +3776,7 @@ msgstr ""
 "entfernt,\n"
 "bevor möglicherweise die Jahreszahl angehängt wird."
 
-#: lib/tooltips.php:386
+#: lib/tooltips.php:392
 msgid ""
 "Delete the event from the system\n"
 "(no undo possible)."
@@ -3746,13 +3784,13 @@ msgstr ""
 "Termin komplett aus dem Kalender löschen, kann nicht rückgängig gemacht "
 "werden."
 
-#: lib/tooltips.php:389
+#: lib/tooltips.php:395
 msgid ""
 "Exclude all events from\n"
 "email-submission"
 msgstr "Auswahl zum Download bzw. Email-Versand bei allen Terminen entfernen."
 
-#: lib/tooltips.php:392
+#: lib/tooltips.php:398
 msgid ""
 "Detach the respective event\n"
 "from the project, but do not\n"
@@ -3765,37 +3803,37 @@ msgstr ""
 "Es ist möglich, den Termin wieder zum Projekt hinzuzufügen, indem man den "
 "Projekt-Namen zu der Katergorien-Liste des Termins hinzufügt."
 
-#: lib/tooltips.php:399
+#: lib/tooltips.php:405
 msgid "Modify the event."
 msgstr "Termin ändern."
 
-#: lib/tooltips.php:401
+#: lib/tooltips.php:407
 msgid "Add a new concert-event to the project."
 msgstr ""
 "Neuen Konzert-Termin für das Projekt in den Konzerte-Kalender eintragen."
 
-#: lib/tooltips.php:403
+#: lib/tooltips.php:409
 msgid ""
 "Add a private management event which is not exposed to the rest of the world."
 msgstr ""
 "Vorstands-Termin hinzufügen. Die Vorstandstermine sind nicht öffentlich "
 "sichtbar."
 
-#: lib/tooltips.php:405
+#: lib/tooltips.php:411
 msgid "Add some other event to the project."
 msgstr "Sonstigen Termin für das Projekt eintragen."
 
-#: lib/tooltips.php:407
+#: lib/tooltips.php:413
 msgid "Add a new rehearsal-event to the project."
 msgstr "Neuen Proben-Termin für das Projekt in den Proben-Kalender eintragen."
 
-#: lib/tooltips.php:409
+#: lib/tooltips.php:415
 msgid ""
 "Select all events for\n"
 "email-submission"
 msgstr "Alle Termin für Download bzw. Email-Attachment auswählen."
 
-#: lib/tooltips.php:412
+#: lib/tooltips.php:418
 msgid ""
 "Mark the respective event for being\n"
 "sent by email as ICS-attachment per email.\n"
@@ -3809,7 +3847,7 @@ msgstr ""
 "Versand an ausgewählte Empfänger vorgenommen werden kann. Alternativ können "
 "die ausgwählten Termine auch einfach herunter-geladen werden."
 
-#: lib/tooltips.php:419
+#: lib/tooltips.php:425
 msgid ""
 "Click to open an email-form\n"
 "and send the selected events to\n"
@@ -3818,7 +3856,7 @@ msgstr ""
 "Ausgewählte Termine als ICS-Attachment per Email veschicken; öffnet ein "
 "Email-Formular."
 
-#: lib/tooltips.php:423
+#: lib/tooltips.php:429
 msgid ""
 "Add the musician to the project. A new form will open were details like the "
 "instrument etc. can be adjustetd."
@@ -3826,7 +3864,7 @@ msgstr ""
 "Fügt den Musiker zum Projekt hinzu. Auf der Folgeseite können dann Details "
 "eingetragen werden."
 
-#: lib/tooltips.php:425
+#: lib/tooltips.php:431
 msgid ""
 "Save the current email for later re-usal in the data-base.\n"
 "An email template can contain per-member substitutions with the syntax "
@@ -3846,13 +3884,13 @@ msgstr ""
 "die mit den Vornamen der Vorstandsmitglieder ersetzt wird, um Grußformeln zu "
 "erzeugen."
 
-#: lib/tooltips.php:431
+#: lib/tooltips.php:437
 msgid "Select one of the email templates previously stored in the data-base."
 msgstr ""
 "Vorlage aus dem Vorlagen-Pool auswählen; neue Vorlagen können mittels "
 "``Vorlage speichern'' erzeugt werden."
 
-#: lib/tooltips.php:433
+#: lib/tooltips.php:439
 msgid ""
 "Recompute the link between projects and events, using the event-categories "
 "as primary key."
@@ -3860,7 +3898,7 @@ msgstr ""
 "Zuordnung der Termine zu den Projekten neu berechnen. Dabei dienen die "
 "Projekt-Kategorien als Kriterium."
 
-#: lib/tooltips.php:435
+#: lib/tooltips.php:441
 msgid ""
 "Check whether the data-base can be accessed with the given account\n"
 "information and password. The password will only be stored in the\n"
@@ -3870,7 +3908,7 @@ msgstr ""
 "Zugriffsinformationen. Das neue Passwort wird nur dann gespeichert, wenn der "
 "Test erfolgreich absolviert wurde."
 
-#: lib/tooltips.php:439
+#: lib/tooltips.php:445
 msgid ""
 "Try to connect to the specified web-address, will open the web-address in "
 "another window or tab, depending your local browser preferences."
@@ -3878,7 +3916,7 @@ msgstr ""
 "Versuche, die eingestellte Web-Adresse in einen anderen Fenster oder Tab zu "
 "öffnen (abhängig von den Einstellungen des Web-Browsers)."
 
-#: lib/tooltips.php:441
+#: lib/tooltips.php:447
 msgid ""
 "Add the instruments of the actually registered musicians to the instrument-"
 "table for the project."
@@ -3886,7 +3924,7 @@ msgstr ""
 "Die Instrumente der bereits registrierten Musiker in die Besetzungstabelle "
 "eintragen; die Soll-Besetzungszahlen werden allerdings nicht angepasst."
 
-#: lib/tooltips.php:443
+#: lib/tooltips.php:449
 msgid ""
 "Upload a file from your local computer as attachment. The file will be "
 "removed from the remote-system after the message has been sent."
@@ -4521,11 +4559,8 @@ msgid "Recreate all Views"
 msgstr "`Views' regenerieren"
 
 #: templates/expertmode.php:42
-msgid "Recreate the `Detailed Instrumentation' hybrid-table for each project"
-msgstr ""
-"Die `Detaillierte Besetzung' (inklusive persönlicher Daten) besteht "
-"eigentlich aus einer Ansicht auf zwei Tabellen. Anklicken, um alle diese "
-"virtuellen Tabellen neu zu erzeugen."
+msgid "Recreate the `Instrumentation' hybrid-table for each project"
+msgstr "Die `Besetzung' (inklusive persönlicher Daten) besteht eigentlich aus einer Ansicht auf zwei Tabellen. Anklicken, um alle diese virtuellen Tabellen neu zu erzeugen."
 
 #: templates/expertmode.php:46
 msgid "Check Instruments"
@@ -5464,6 +5499,12 @@ msgstr "PROJEKT"
 #: templates/share-settings.php:121
 msgid "Financial balance folder"
 msgstr "Finanz-Ordner"
+
+#~ msgid ""
+#~ "Open a page with the musicians registered for the respective project."
+#~ msgstr ""
+#~ "Öffnet eine Seite mit allen Musikern, die für dieses Projekt registriert "
+#~ "sind."
 
 #~ msgid "Invalid Email Addresses"
 #~ msgstr "Ungültige Em@il Adressen"
