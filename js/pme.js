@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -17,6 +17,10 @@
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ */
+/**@file
+ *
+ * General PME table stuff, popup-handling.
  */
 
 var PHPMYEDIT = PHPMYEDIT || {};
@@ -254,7 +258,11 @@ var PHPMYEDIT = PHPMYEDIT || {};
     });
     
     // The complicated ones. This reloads new data.
-    var ReloadButtonSel = 'input.pme-change,input.pme-apply,input.pme-more,input.pme-reload';
+    var ReloadButtonSel =
+      'input.pme-change,'+
+      'input.pme-apply,'+
+      'input.pme-more,'+
+      'input.pme-reload';
     var reloadingButton = $(container).find(ReloadButtonSel);
     
     // remove non-delegate handlers and stop default actions in any case.
@@ -302,6 +310,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
     saveButton.off('click');
 
     container.off('click', saveButtonSel);
+    //if (false)
     container.on(
       'click',
       saveButtonSel,
@@ -342,27 +351,32 @@ var PHPMYEDIT = PHPMYEDIT || {};
           $.post(OC.filePath('cafevdb', 'ajax/pme', 'pme-table.php'),
                  post,
                  function (data) {
-                   // error handling? Oh well.
-                   if (data.status == 'success') {
-                     if (options.InitialViewOperation) {
-                       options.ReloadName = options.InitialName;
-                       options.ReloadValue = options.InitialValue;
-                       pme.tableDialogReload(options, callback);
-                     } else {
-                       container.dialog('close');
-                     }
-                   } else {
-                     var rqData = data.data;
-                     OC.Notification.showHtml(rqData.message);
-                     if (data.data.error == 'exception') {
-                       OC.dialogs.alert(rqData.exception+rqData.trace,
-                                        t('cafevdb', 'Caught a PHP Exception'),
-                                        undefined, true);
-                     }
+                   if (!CAFEVDB.ajaxErrorHandler(data, [ 'contents' ])) {
+                     return false;
                    }
-                   setTimeout(function() {
-                     OC.Notification.hide();
-                   }, 5000);
+
+                   // phpMyEdit echos mySQL-errors back.
+                   if (typeof data.data.sqlerror != 'undefined' &&
+                       data.data.sqlerror.error != 0) {
+                     $('#notification').text('MySQL Error: '+
+                                             data.data.sqlerror.error+
+                                             ': '+
+                                             data.data.sqlerror.message);
+	             $('#notification').fadeIn();
+	             //hide notification after 5 sec
+	             setTimeout(function() {
+	               $('#notification').fadeOut();
+	             }, 10000);
+                   }
+
+                   if (options.InitialViewOperation) {
+                     options.ReloadName = options.InitialName;
+                     options.ReloadValue = options.InitialValue;
+                     pme.tableDialogReload(options, callback);
+                   } else {
+                     container.dialog('close');
+                   }
+
                    return false;
                  });
         });
@@ -590,7 +604,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
     // TODO: arguments
     var post = form.serialize();
     post += '&DisplayClass='+dpyClass;
-    if (element.attr('name')) { // undefined == false
+    if (element.attr('name') &&
+        (!element.is(':checkbox') || element.is(':checked'))) {
       var name  = element.attr('name');
       var value = element.val();
       var obj = {};
@@ -806,20 +821,25 @@ var PHPMYEDIT = PHPMYEDIT || {};
     if (form.find('input[name="DisplayClass"]').length > 0) {
       var submitSel = 'form.'+pmepfx+'-form input[class$="navigation"]:submit'+','+
         'form.'+pmepfx+'-form input.pme-add:submit';
-      container.off('click', submitSel);
-      container.on('click', submitSel, function(event) {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-
-        PHPMYEDIT.tableDialog($(this.form), $(this), containerSel);
-
-        return false;
+      container.off('click', submitSel).
+        on('click', submitSel, function(event) {
+        var self = $(this);
+        if (!self.hasClass('pme-custom')) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          
+          PHPMYEDIT.tableDialog($(this.form), $(this), containerSel);
+          
+          return false;
+        } else {
+          return true;
+        }
       });
     }
 
     var submitSel = 'form.'+pmepfx+'-form :submit';
-    container.off('click', submitSel);
-    container.on('click', submitSel, function(event) {
+    container.off('click', submitSel).
+      on('click', submitSel, function(event) {
       event.preventDefault();
 
       //alert("Button: "+$(this).attr('name'));
