@@ -97,6 +97,7 @@ try {
   OCP\Util::addStyle('cafevdb', 'blog');
   OCP\Util::addStyle('cafevdb', 'projects');
   OCP\Util::addStyle('cafevdb', 'project-instruments');
+  OCP\Util::addStyle('cafevdb', 'instrumentation');
   OCP\Util::addStyle('cafevdb', 'inlineimage');  
   OCP\Util::addStyle('3rdparty/fontawesome', 'font-awesome');
   OCP\Util::addStyle('cafevdb', 'font-awesome');
@@ -111,6 +112,7 @@ try {
   OCP\Util::addScript('cafevdb', 'projects');
   OCP\Util::addScript('cafevdb', 'project-instruments');
   OCP\Util::addScript('cafevdb', 'sepa-debit-mandate');
+  OCP\Util::addScript('cafevdb', 'instrumentation');
 
   OCP\Util::addScript('cafevdb', 'jquery.Jcrop');
   OCP\Util::addStyle('cafevdb', 'jquery.Jcrop');  
@@ -202,22 +204,6 @@ try {
         }
       }
     }
-  }
-
-  switch ($tmplname) {
-  case 'projects':
-    OCP\Util::addStyle('cafevdb', $tmplname);
-    OCP\Util::addScript('cafevdb', $tmplname);
-    break;
-  case 'brief-instrumentation':
-  case 'detailed-instrumentation':
-  case 'bulk-add-musicians':
-    OCP\Util::addStyle('cafevdb', 'instrumentation');
-    OCP\Util::addScript('cafevdb', 'instrumentation');
-    break;
-  default:
-    /* nothing */
-    break;
   }
 
   // One last script to load after the other, e.g. to get the tipsy
