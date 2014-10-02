@@ -314,9 +314,12 @@ oder auszuschalten!'),
         'operation' => L::t('Einzelnen Datensatz anzeigen'),
         ),
 
-      'pme-cancel' => L::t('Stop the current operation. Settings which already have been stored by
+      'pme-cancel' => array(
+        'default' => L::t('Stop the current operation. Settings which already have been stored by
 hitting an "Apply" button are maintained, though. You will be returned
-to the previous view'),
+to the previous view.'),
+        'canceldelete' => L::t('Stop the current operation. You will be returned to the previous view.')
+        ),        
 
       'pme-reload' => L::t('Refreshes the current view by reloading all data from the data-base.'),
 
@@ -329,7 +332,10 @@ this form by means of the "Save" or "Back" resp. "Cancel" buttons.'),
                           'morecopy' => L::t('Saves the current values and continues to make yet another copy of the source data-set.'),
                           'morechange' => L::t('Saves the current values; the current input form will remain active.')),
 
-      'pme-save' => L::t('Saves the current values and returns to the previous view.'),
+      'pme-save' => array(
+        'default' => L::t('Saves the current values and returns to the previous view.'),
+        'savedelete' => L::t('Deletes the current record and returns to the previous view.')
+        ),
 
       'pme-pagerowsselect' => L::t('Limits the number of rows per page to the given value. A "*" means to display all records on one large page.'),
 
