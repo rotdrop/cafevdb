@@ -2042,6 +2042,8 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				$tips = $this->tooltips[$css_class_name];
 				if (isset($tips[$name])) {
 					return $tips[$name];
+				} else if (isset($tips['default'])) {
+					return $tips['default'];
 				} else {
 					return 'Tooltip-lookup failed for '.
 						$css_class_name.', '.$name.($label ? ', '.$label : '');
@@ -2667,6 +2669,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			return $this->htmlSubmit($name['name'], $name['value'], $name['css'], $name['js_validation'], $name['disabled'], $name['js']);
 		}
 		$disabled = 1; // show disabled by default
+		$listAllClass = $this->listall() ? ' listall' : '';
 		if ($name[0] == '+') { $name = substr($name, 1); $disabled =  0; } // always show disabled as enabled
 		if ($name[0] == '-') { $name = substr($name, 1); $disabled = -1; } // don't show disabled
 		if ($name == 'cancel') {
@@ -2734,11 +2737,9 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		// now some goto buttons/dropdowns/inputs...
 		if ($name == 'goto_text') {
 			$ret = '<span class="'.$this->getCSSclass('goto', $position).'">';
-			$ret .= '<input type="text" class="'.$this->getCSSclass('gotopn', $position).'"';
+			$ret .= '<input type="text" class="'.$this->getCSSclass('gotopn', $position).$listAllClass.'"';
 			$ret .= ' name="'.$this->cgi['prefix']['sys'].'navpn'.$position.'" value="'.($current_page+1).'"';
 			$ret .= ' size="'.(strlen($total_pages)+1).'" maxlength="'.(strlen($total_pages)+1).'"';
-			// TODO some js here.... on enter submit, on click erase ?...
-			$ret .=' disabledonkeypress="return '.$this->js['prefix'].'filter_handler(this.form, event);" />';
 			$ret .= $this->display_button('goto_combo',$position);
 			$ret .= '</span>';
 			return $ret;
@@ -2751,12 +2752,13 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				$kv_array[$this->inc * $i] = $i + 1;
 			}
 			return $this->htmlSelect($this->cgi['prefix']['sys'].ltrim($disabledgoto).'navfm'.$position,
-									 $this->getCSSclass('goto', $position), $kv_array, null,
+									 $this->getCSSclass('goto', $position).$listAllClass,
+									 $kv_array, null,
 									 (string)$this->fm, false, $disabledgoto,
 									 false, true);
 		}
 		if ($name == 'goto') {
-			$ret = '<span class="'.$this->getCSSclass('goto', $position).'">';
+			$ret = '<span class="'.$this->getCSSclass('goto', $position).$listAllClass.'">';
 			$ret .= $this->htmlSubmit('navop', 'Go to',
 									  $this->getCSSclass('goto', $position),
 									  false, ($this->listall() || ($disablednext && $disabledprev)) ? $disabled : 0);
@@ -2811,7 +2813,8 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				$name2 = $nav_values[$name];
 			}
 			return $this->htmlSubmit('navop', ucfirst($name),
-									 $this->getCSSclass($name2, $position), false, $$disabled_var ? $disabled : 0);
+									 $this->getCSSclass($name2, $position).$listAllClass,
+									 false, $$disabled_var ? $disabled : 0);
 		}
 		if(isset($this->labels[$name])) return $this->labels[$name];
 		return $name;
