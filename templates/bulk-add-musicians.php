@@ -32,7 +32,7 @@ $nav = '';
 $nav .= Navigation::button('projectlabel', $table->project, $table->projectId);
 $nav .= Navigation::button('projects');
 $nav .= Navigation::button('add', $table->project, $table->projectId);
-$nav .= Navigation::button('brief', $table->project, $table->projectId);
+$nav .= Navigation::button('detailed', $table->project, $table->projectId);
 $nav .= Navigation::button('projectinstruments', $table->project, $table->projectId);
 
 echo $this->inc('part.common.header',
