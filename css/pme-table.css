@@ -83,9 +83,13 @@
 
 /*******************************************************************************
  *
- * Export select via chosen
+ * Select boxes via chosen etc.
  *
  */
+
+tr.pme-navigation .listall {
+  display:none;
+}
 
 .pme-goto div,
 .pme-pagerows div,
@@ -243,7 +247,7 @@ hr.pme-hr {
  * nice background image.
  */
 .pme-navigation input.pme-reload {
-  background-image:url('../img/view-refresh.png');
+  background-image:url('../img/view-refresh-greyscale.png');
   background-repeat:no-repeat;
   background-position: center center;
   background-size:24px 24px;
