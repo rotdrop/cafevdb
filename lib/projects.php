@@ -1564,6 +1564,32 @@ __EOT__;
     }
   }
 
+  /**Fetch the list of needed instruments. */
+  public static function fetchInstrumentation($projectId, $handle = false)
+  {
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
+    $query = "SELECT `Besetzung` FROM `Projekte` WHERE `Id` = $projectId";
+    $result = mySQL::query($query, $handle);
+
+    $instrumentation = false;
+    $row = false;
+    if ($result !== false && mysql_num_rows($result) == 1) {
+      $row = mySQL::fetch($instres);
+      $instrumentation = explode(',', $row['Besetzung']);
+    }
+    
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $instrumentation;
+  }
+
   /** Fetch the project-name name corresponding to $projectId.
    */
   public static function fetchName($projectId, $handle = false)
