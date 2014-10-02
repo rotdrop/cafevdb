@@ -47,6 +47,8 @@ try {
 
   $debugText = '';
   $messageText = '';
+  $mySQLError = array('error' => 0,
+                      'message' => '');
 
   if (Util::debugMode('request')) {
     $debugText .= '$_POST[] = '.print_r($_POST, true);
@@ -96,11 +98,24 @@ try {
     return false;
   }
 
+  // Search for MySQL error messages echoes by phpMyEdit, sometimes
+  // the contents of the template will be discarded, but we still want
+  //
+  // to get the error messages.
+  //
+  // <h4>MySQL error 1288</h4>The target table Spielwiese2013View of the DELETE is not updatable<hr size="1">
+
+  if (preg_match('|<h4>MySQL error (\d+)</h4>\s*([^<]+)|', $html, $matches)) {
+    $mySQLError = array('error' => $matches[1],
+                        'message' => $matches[2]);
+  }
+
   $debugText .= ob_get_contents();
   @ob_end_clean();
   
   OCP\JSON::success(
     array('data' => array('contents' => $html,
+                          'sqlerror' => $mySQLError,
                           'debug' => $debugText)));
   
   return true;
@@ -117,6 +132,7 @@ try {
         'exception' => $e->getFile().'('.$e->getLine().'): '.$e->getMessage(),
         'trace' => $e->getTraceAsString(),
         'message' => L::t('Error, caught an exception'),
+        'sqlerror' => $mySQLError,
         'debug' => $debugText)));
   return false;
 }
