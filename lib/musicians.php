@@ -237,6 +237,7 @@ make sure that the musicians are also automatically added to the
 ."<div class=\"register-musician\">"
 ."<input type=\"button\" "
 ."value=\"$bval\" "
+."data-musician-id=\"@@key@@\" "
 ."title=\"$tip\" "
 ."name=\""
 ."Template=bulk-add-musicians&amp;"
