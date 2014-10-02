@@ -378,10 +378,13 @@ namespace CAFEVDB
      */
     private function remapEmailRecords($dbh)
     {
-      $table = Util::cgiValue($this->mtabKey,'');
+      $oldTable = Util::cgiValue($this->mtabKey,'');
+      $table = $this->projectName.'View';
 
       if ($this->projectId >= 0 &&
-          ($table == 'Besetzungen' || $table == 'SepaDebitMandates')) {
+          (/*$oldTable == $table ||
+             $oldTable == 'Besetzungen' ||*/
+           $table == 'SepaDebitMandates')) {
 
         /*
          * This means we have been called from the "brief"
@@ -391,9 +394,12 @@ namespace CAFEVDB
          * If called from the "Besetzungen" table, we remap the Id's
          * to the project view table and continue with that.
          */
-        $oldTable = $table;
-        $table = $this->projectName.'View';
         switch ($oldTable) {
+        case $table:
+          $query = 'SELECT `'.$table.'`.`Id` AS \'OrigId\',
+  `'.$table.'`.`MusikerId` AS \'MusikerId\'
+  FROM `'.$table;
+          break;
         case 'Besetzungen':
           $query = 'SELECT `'.$oldTable.'`.`Id` AS \'OrigId\',
   `'.$table.'`.`MusikerId` AS \'MusikerId\'
@@ -466,18 +472,25 @@ namespace CAFEVDB
                            'Land',
                            'Geburtstag',
                            'MemberStatus');
-      $sep = '`,`';
-      $fields = '`'.$id.$sep.implode($sep, $columnNames).'`';
+      $btk = '`';
+      $comma = ',';
+      $sep = $btk.$comma.$btk;
+      $dot = '.';
+      $origId = $btk.'MainTable'.$btk.$dot.$btk.'Id'.$btk.' AS '.$btk.'OrigId'.$btk;
+      $fields =
+        $origId.$comma.$btk.$id.$btk.$comma.
+        $btk.implode($sep, $columnNames).$btk;
 
+      $table .= ' AS MainTable';
       if ($projectId > 0) { // Add the project fee
         $fields .= ',`Unkostenbeitrag`,`mandateReference`';
         // join table with the SEPA mandate reference table
-        $table .= "LEFT JOIN `SepaDebitMandates` ON "
+        $table .= " LEFT JOIN `SepaDebitMandates` ON "
           ."( `MusikerId` = `musicianId` AND `projectId` = ".$projectId." ) ";
       }
 
-      $query = 'SELECT '.$fields.' FROM ('.$table.') WHERE
-        ';
+      $query = "SELECT $fields FROM ($table) WHERE
+        ";
       if (count($this->instrumentsFilter) == 0) {
         $query .= '1
         ';
@@ -514,7 +527,7 @@ namespace CAFEVDB
        */
       while ($line = mysql_fetch_assoc($result)) {
         $name = $line['Vorname'].' '.$line['Name'];
-        $rec = $line[$id];
+        $rec = $line['OrigId'];
         if ($line['Email'] != '') {
           // We allow comma separated multiple addresses
           $musmail = explode(',',$line['Email']);
@@ -561,7 +574,7 @@ namespace CAFEVDB
         // Possibly add musicians from the project
         if ($this->userBase['FromProject']) {
           self::fetchMusicians($dbh,
-                               '`'.$this->projectName.'View'.'`', 'MusikerId', 'Instrument',
+                               $this->projectName.'View', 'MusikerId', 'Instrument',
                                $this->projectId, true);
         }
 
@@ -571,7 +584,7 @@ namespace CAFEVDB
             '(SELECT a.* FROM Musiker as a
     LEFT JOIN `'.$this->projectName.'View'.'` as b
       ON a.Id = b.MusikerId 
-      WHERE b.MusikerId IS NULL) as c';
+      WHERE b.MusikerId IS NULL)';
           self::fetchMusicians($dbh, $table, 'Id', 'Instrumente', -1, true);
         }
 
