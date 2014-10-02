@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-10-01 11:38+0200\n"
+"POT-Creation-Date: 2014-10-01 16:12+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -48,7 +48,7 @@ msgstr ""
 #: ajax/events/events.php:120 ajax/events/execute.php:130
 #: ajax/events/new.form.php:195 ajax/events/sendmail.php:76
 #: ajax/finance/sepa-debit-mandate.php:151
-#: ajax/instrumentation/change-musician-instruments.php:193
+#: ajax/instrumentation/change-musician-instruments.php:198
 #: ajax/instrumentation/change-project-instrument.php:118
 #: ajax/instruments/adjustInstrumentation.php:91
 #: ajax/instruments/changeInstrumentation.php:148 ajax/pme/pme-table.php:119
@@ -144,44 +144,49 @@ msgstr ""
 msgid "The following contacts could not be stored: %s"
 msgstr ""
 
-#: ajax/email/uploadattachment.php:47 ajax/inlineimage/uploadimage.php:86
+#: ajax/email/uploadattachment.php:54 ajax/inlineimage/uploadimage.php:86
 msgid "No file was uploaded. Unknown error"
 msgstr ""
 
-#: ajax/email/uploadattachment.php:53 ajax/inlineimage/uploadimage.php:92
+#: ajax/email/uploadattachment.php:60 ajax/inlineimage/uploadimage.php:92
 msgid "There is no error, the file uploaded with success"
 msgstr ""
 
-#: ajax/email/uploadattachment.php:54
+#: ajax/email/uploadattachment.php:61
 #, php-format
 msgid ""
 "The uploaded file exceeds the upload_max_filesize directive in php.ini: %s"
 msgstr ""
 
-#: ajax/email/uploadattachment.php:56 ajax/inlineimage/uploadimage.php:94
+#: ajax/email/uploadattachment.php:63 ajax/inlineimage/uploadimage.php:94
 msgid ""
 "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in "
 "the HTML form"
 msgstr ""
 
-#: ajax/email/uploadattachment.php:57 ajax/inlineimage/uploadimage.php:95
+#: ajax/email/uploadattachment.php:64 ajax/inlineimage/uploadimage.php:95
 msgid "The uploaded file was only partially uploaded"
 msgstr ""
 
-#: ajax/email/uploadattachment.php:58 ajax/inlineimage/uploadimage.php:96
+#: ajax/email/uploadattachment.php:65 ajax/inlineimage/uploadimage.php:96
 msgid "No file was uploaded"
 msgstr ""
 
-#: ajax/email/uploadattachment.php:59 ajax/inlineimage/uploadimage.php:97
+#: ajax/email/uploadattachment.php:66 ajax/inlineimage/uploadimage.php:97
 msgid "Missing a temporary folder"
 msgstr ""
 
-#: ajax/email/uploadattachment.php:60
+#: ajax/email/uploadattachment.php:67
 msgid "Failed to write to disk"
 msgstr ""
 
-#: ajax/email/uploadattachment.php:78
+#: ajax/email/uploadattachment.php:88
 msgid "Not enough storage available"
+msgstr ""
+
+#: ajax/email/uploadattachment.php:108
+#, php-format
+msgid "Couldn't save temporary file for: %s"
 msgstr ""
 
 #: ajax/events/events.php:62 ajax/events/execute.php:39
@@ -450,7 +455,7 @@ msgid "Temporary file: '%s' has gone AWOL?"
 msgstr ""
 
 #: ajax/instrumentation/change-musician-instruments.php:88
-#: ajax/instrumentation/change-musician-instruments.php:160
+#: ajax/instrumentation/change-musician-instruments.php:161
 #: ajax/instrumentation/change-project-instrument.php:73
 #: ajax/instruments/changeInstrumentation.php:116
 msgid "data base error"
@@ -475,7 +480,7 @@ msgstr ""
 msgid "Unknown instruments in list: %s"
 msgstr ""
 
-#: ajax/instrumentation/change-musician-instruments.php:133
+#: ajax/instrumentation/change-musician-instruments.php:134
 msgid "Attempt to remove the instrument the musician is supposed to play."
 msgstr ""
 
@@ -486,12 +491,11 @@ msgid ""
 "of instruments (or possibly change the project instrument). Please note that "
 msgstr ""
 
-#: ajax/instrumentation/change-musician-instruments.php:161
-#: ajax/instruments/changeInstrumentation.php:117
-msgid "Failed to update in project instrumentation"
+#: ajax/instrumentation/change-musician-instruments.php:163
+msgid "Failed to update the musician's instrument list."
 msgstr ""
 
-#: ajax/instrumentation/change-musician-instruments.php:172
+#: ajax/instrumentation/change-musician-instruments.php:177
 #, php-format
 msgid ""
 "Changing the instrument list for the musician `%s' was probably successful."
@@ -547,6 +551,10 @@ msgstr ""
 
 #: ajax/instruments/changeInstrumentation.php:84
 msgid "No instrument list submitted"
+msgstr ""
+
+#: ajax/instruments/changeInstrumentation.php:117
+msgid "Failed to update in project instrumentation"
 msgstr ""
 
 #: ajax/instruments/changeInstrumentation.php:128
@@ -1041,7 +1049,7 @@ msgstr ""
 #: js/inlineimage.js:84 js/inlineimage.js:92 js/inlineimage.js:102
 #: js/inlineimage.js:131 js/inlineimage.js:155 js/inlineimage.js:183
 #: js/inlineimage.js:207 js/inlineimage.js:326 js/inlineimage.js:412
-#: js/inlineimage.js:421 js/inlineimage.js:424 js/pme.js:490 js/pme.js:642
+#: js/inlineimage.js:421 js/inlineimage.js:424 js/pme.js:625
 #: js/sepa-debit-mandate.js:62
 msgid "Error"
 msgstr ""
@@ -1146,12 +1154,12 @@ msgstr ""
 msgid "Missing data"
 msgstr ""
 
-#: js/cafevdb.js:918 js/events.js:58 js/events.js:147 js/pme.js:478
-#: js/pme.js:488 js/pme.js:636 js/sepa-debit-mandate.js:56
+#: js/cafevdb.js:918 js/events.js:58 js/events.js:147 js/pme.js:619
+#: js/sepa-debit-mandate.js:56
 msgid "Unknown error :("
 msgstr ""
 
-#: js/cafevdb.js:932 js/instrumentation.js:86 js/pme.js:485 js/pme.js:644
+#: js/cafevdb.js:932 js/instrumentation.js:97 js/pme.js:627
 msgid "Debug Information"
 msgstr ""
 
@@ -1270,95 +1278,95 @@ msgstr ""
 msgid "Do you really want to delete all event attachments?"
 msgstr ""
 
-#: js/email.js:766 js/email.js:848
+#: js/email.js:766 js/email.js:850
 msgid "Really Delete Attachments?"
 msgstr ""
 
-#: js/email.js:833
+#: js/email.js:835
 msgid "Select Attachment"
 msgstr ""
 
-#: js/email.js:847
+#: js/email.js:849
 msgid "Do you really want to delete all file attachments?"
 msgstr ""
 
-#: js/email.js:892 templates/part.emailform.composer.php:109
+#: js/email.js:894 templates/part.emailform.composer.php:109
 #: templates/part.emailform.composer.php:127
 msgid "Address Book"
 msgstr ""
 
-#: js/email.js:893
+#: js/email.js:895
 msgid "Accept"
 msgstr ""
 
-#: js/email.js:895
+#: js/email.js:897
 msgid "Save Contacts"
 msgstr ""
 
-#: js/email.js:898
+#: js/email.js:900
 msgid ""
 "Save the selected supplementary emails to the address-book for later reusal."
 msgstr ""
 
-#: js/email.js:1031
+#: js/email.js:1033
 #, python-brace-format
 msgid "Em@il Form for {ProjectName}"
 msgstr ""
 
-#: js/email.js:1034
+#: js/email.js:1036
 msgid "Em@il Form"
 msgstr ""
 
-#: js/email.js:1138
+#: js/email.js:1140
 msgid "Move all"
 msgstr ""
 
-#: js/email.js:1139
+#: js/email.js:1141
 msgid "Move selected"
 msgstr ""
 
-#: js/email.js:1140
+#: js/email.js:1142
 msgid "Remove selected"
 msgstr ""
 
-#: js/email.js:1141
+#: js/email.js:1143
 msgid "Remove all"
 msgstr ""
 
-#: js/email.js:1142 lib/email.php:575
+#: js/email.js:1144 lib/email.php:575
 msgid "Remaining Recipients"
 msgstr ""
 
-#: js/email.js:1143 lib/email.php:576
+#: js/email.js:1145 lib/email.php:576
 msgid "Selected Recipients"
 msgstr ""
 
-#: js/email.js:1144
+#: js/email.js:1146
 #, python-brace-format
 msgid "Showing all {0}"
 msgstr ""
 
-#: js/email.js:1146
+#: js/email.js:1148
 msgid "Filtered"
 msgstr ""
 
-#: js/email.js:1148
+#: js/email.js:1150
 msgid "from"
 msgstr ""
 
-#: js/email.js:1150
+#: js/email.js:1152
 msgid "Empty list"
 msgstr ""
 
-#: js/email.js:1151
+#: js/email.js:1153
 msgid "Filter"
 msgstr ""
 
-#: js/email.js:1152
+#: js/email.js:1154
 msgid "show all"
 msgstr ""
 
-#: js/email.js:1158
+#: js/email.js:1160
 msgid "Click on the names to move the respective person to the other box"
 msgstr ""
 
@@ -1378,21 +1386,30 @@ msgstr ""
 msgid "Advanced operations, use with care"
 msgstr ""
 
-#: js/file-upload.js:49
+#: js/file-upload.js:69
 msgid "Unable to upload your file as it is a directory or has 0 bytes"
 msgstr ""
 
-#: js/file-upload.js:63
+#: js/file-upload.js:83
 msgid "Not enough space available"
 msgstr ""
 
-#: js/file-upload.js:105
+#: js/file-upload.js:118
+msgid ""
+"File upload is in progress. Leaving the page now will cancel the upload."
+msgstr ""
+
+#: js/file-upload.js:134
 msgid "Upload cancelled."
 msgstr ""
 
-#: js/file-upload.js:221
-msgid ""
-"File upload is in progress. Leaving the page now will cancel the upload."
+#: js/file-upload.js:181
+msgid "Unknown error uploading files"
+msgstr ""
+
+#: js/file-upload.js:214
+#, python-brace-format
+msgid "Error {NR}: "
 msgstr ""
 
 #: js/inlineimage.js:84
@@ -1451,20 +1468,20 @@ msgstr ""
 msgid "Photo Zoom"
 msgstr ""
 
-#: js/instrumentation.js:77 js/project-instruments.js:63
+#: js/instrumentation.js:88 js/project-instruments.js:63
 msgid "Unkown Error"
 msgstr ""
 
-#: js/instrumentation.js:82 js/pme.js:359 js/project-instruments.js:68
+#: js/instrumentation.js:93 js/pme.js:359 js/project-instruments.js:68
 #: js/projects.js:364 js/projects.js:462
 msgid "Caught a PHP Exception"
 msgstr ""
 
-#: js/pme.js:748
+#: js/pme.js:731
 msgid "#columns"
 msgstr ""
 
-#: js/pme.js:757
+#: js/pme.js:740
 msgid "#rows"
 msgstr ""
 
@@ -1543,8 +1560,8 @@ msgid ""
 "in case of desinformation or misunderstanding. Use with care."
 msgstr ""
 
-#: js/sepa-debit-mandate.js:139 lib/brief-instrumentation.php:324
-#: lib/brief-instrumentation.php:410 lib/brief-instrumentation.php:421
+#: js/sepa-debit-mandate.js:139 lib/brief-instrumentation.php:317
+#: lib/brief-instrumentation.php:413 lib/brief-instrumentation.php:424
 #: lib/detailed-instrumentation.php:324 lib/detailed-instrumentation.php:566
 #: lib/detailed-instrumentation.php:577 lib/musicians.php:1065
 msgid "SEPA Debit Mandate"
@@ -1625,7 +1642,7 @@ msgid ""
 "with."
 msgstr ""
 
-#: lib/brief-instrumentation.php:427 lib/detailed-instrumentation.php:583
+#: lib/brief-instrumentation.php:430 lib/detailed-instrumentation.php:583
 msgid "Click to enter details of a potential SEPA debit mandate"
 msgstr ""
 
@@ -3839,7 +3856,7 @@ msgstr ""
 msgid "Test address"
 msgstr ""
 
-#: templates/email.php:78 templates/emailform.php:77
+#: templates/email.php:78 templates/emailform.php:78
 msgid "Cancel upload"
 msgstr ""
 
@@ -3855,11 +3872,11 @@ msgstr ""
 msgid "Status Messages"
 msgstr ""
 
-#: templates/emailform.php:83
+#: templates/emailform.php:85
 msgid "Message Delivery"
 msgstr ""
 
-#: templates/emailform.php:87
+#: templates/emailform.php:89
 msgid "Copy to Sent"
 msgstr ""
 
