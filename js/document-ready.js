@@ -33,6 +33,24 @@ $(document).ready(function(){
                 return false;
             });
 
+            container.find('input.register-musician').off('click').
+                on('click', function(event) {
+
+                // var form = container.find('form.pme-form');
+                // var projectId = form.find('input[name="ProjectId"]').val();
+                // var projectName = form.find('input[name="Project"]').val();
+                
+                // CAFEVDB.Instrumentation.personalRecordDialog(
+                //     $(this).data('record-id'),
+                //     {
+                //         ProjectId: projectId,
+                //         ProjectName: projectName,
+                //         InitialValue: 'Change'
+                //     });
+
+                return false;
+            });
+
             $(':button.musician-instrument-insurance').click(function(event) {
                 event.preventDefault();
                 var values = $(this).attr('name');

@@ -209,40 +209,22 @@ CAFEVDB.Email = CAFEVDB.Email || {};
     missingAddresses.on('click', 'span.personal-record', function(event) {
       event.preventDefault();
 
-      var tableOptions = {
-        AmbientContainerSelector: '#emailformdialog',
-        DialogHolderCSSId: 'edit-musician-dialog', 
-        headervisibility: CAFEVDB.headervisibility,
-        // Now special options for the dialog popup
-        InitialViewOperation: false,
-        InitialName: 'PME_sys_operation',
-        InitialValue: 'Change',
-        ReloadName: 'PME_sys_operation',
-        ReloadValue: 'Change',
-        PME_sys_operation: 'Change?PME_sys_rec='+$(this).data('id'),
-        PME_sys_rec: $(this).data('id'),
-        ModalDialog: true,
-        modified: false
-      };
-
       var formData = form.find('fieldset.form-data');
       var projectId = formData.find('input[name="ProjectId"]').val();
       var projectName = formData.find('input[name="Project"]').val();
-      tableOptions.ProjectId = projectId;
-      tableOptions.Project = projectName;
-      if (projectId >= 0) {
-        tableOptions.Table = projectName+'View';
-        tableOptions.Template = 'detailed-instrumenation'
-        tableOptions.DisplayClass = 'DetailedInstrumentation';
-      } else {
-        tableOptions.Table = 'Musiker';
-        tableOptions.Template = 'all-musicians';
-        tableOptions.DisplayClass = 'Musicians';
-      }
-      //alert('Data: '+JSON.stringify(tableOptions));
-      PHPMYEDIT.tableDialogOpen(tableOptions);
-    });
+
+      CAFEVDB.Instrumentation.personalRecordDialog(
+        $(this).data('id'),
+        {
+          ProjectId: projectId,
+          ProjectName: projectName,
+          InitialValue: 'Change',
+          AmbientContainerSelector: '#emailformdialog'
+        });
+                                                   
       return false;
+    });
+    return false;
   };
 
   /**Add handlers to the control elements, and call the AJAX sciplets

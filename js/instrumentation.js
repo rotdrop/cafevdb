@@ -24,9 +24,77 @@ var CAFEVDB = CAFEVDB || {};
 (function(window, $, CAFEVDB, undefined) {
   'use strict';
   var Instrumentation = function() {};
-  
-  Instrumentation.actions = function(select, container) {};
 
+  /**Open a dialog in order to edit the personal reccords of one
+   * musician.
+   * 
+   * @param record The record id. This is either the Id from the
+   * Musiker table or the Id from the Besetzungen table, depending on
+   * what else is passed in the second argument
+   * 
+   * @param options Object. Additional option. In particular ProjectId
+   * and ProjectName are honored, and the optiones IntialValue and
+   * ReloadValue which should be one of 'View' or 'Change' (though
+   * 'Delete' should also work).
+   *
+   */
+  Instrumentation.personalRecordDialog = function(record, options) {
+
+    if (typeof options == 'undefined') {
+      options = {
+        InitialValue: 'View',
+        ReloadValue: 'View',
+        ProjectId: -1
+      };
+    }
+    if (typeof options.InitialValue == 'undefined') {
+      options.InitialValue = 'View';
+    }
+    if (typeof options.ReloadValue == 'undefined') {
+      options.ReloadValue = options.InitialValue;
+    }
+    if (typeof options.Project != 'undefined') {
+      options.ProjectName = options.Project;
+    } else if (typeof options.ProjectName != 'undefined') {
+      options.Project = options.ProjectName;
+    }
+
+    var tableOptions = {
+      ProjectId: -1,
+      ProjectName: '',
+      Project: '',
+      AmbientContainerSelector: PHPMYEDIT.selector(),
+      DialogHolderCSSId: 'personal-record-dialog', 
+      headervisibility: CAFEVDB.headervisibility,
+      // Now special options for the dialog popup
+      InitialViewOperation: options.InitialValue == 'View',
+      InitialName: 'PME_sys_operation',
+      InitialValue: 'View',
+      ReloadName: 'PME_sys_operation',
+      ReloadValue: 'View',
+      PME_sys_operation: options.ReloadValue + '?PME_sys_rec='+record,
+      PME_sys_rec: record,
+      ModalDialog: true,
+      modified: false
+    };
+
+    // Merge remaining options in.
+    tableOptions = $.extend(tableOptions, options);
+
+    if (options.ProjectId >= 0) {
+      tableOptions.Table = options.projectName+'View';
+      tableOptions.Template = 'detailed-instrumenation'
+      tableOptions.DisplayClass = 'DetailedInstrumentation';
+    } else {
+      tableOptions.Table = 'Musiker';
+      tableOptions.Template = 'all-musicians';
+      tableOptions.DisplayClass = 'Musicians';
+    }
+
+    //alert('options: '+CAFEVDB.print_r(tableOptions, true));
+    
+    PHPMYEDIT.tableDialogOpen(tableOptions);
+  };
   
   /**Trigger server-side validation and fetch the result.
    *
@@ -206,6 +274,33 @@ var CAFEVDB = CAFEVDB || {};
       });
     }
 
+    container.find('form.pme-form input.pme-add').
+      addClass('pme-custom').prop('disabled', false).
+      off('click').on('click', function(event) {
+
+      //alert('click');
+
+      var form = $(this.form);
+
+      var inputTweak = [
+        { name: "Template", value: "add-musicians" },
+        { name: "Table", value: "Musiker" },
+        { name: "DisplayClass", value: "Musicians" },
+        { name: "ClassArguments[0]", value: "1" }
+      ];
+
+      var idx;
+      for (idx = 0; idx < inputTweak.length; ++idx) {
+        var name = inputTweak[idx].name;
+        var value = inputTweak[idx].value;
+        form.find('input[name="'+name+'"]').remove();
+        form.append('<input type="hidden" name="'+name+'" value="'+value+'"/>"');
+      }
+
+      PHPMYEDIT.pseudoSubmit(form, $(this), PHPMYEDIT.selector());
+
+      return false;
+    });
   };
 
   CAFEVDB.Instrumentation = Instrumentation;
