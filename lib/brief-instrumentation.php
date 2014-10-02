@@ -365,7 +365,7 @@ class BriefInstrumentation
 
     // Check whether the instrument is also mentioned in the musicians
     // data-base. Otherwise add id on request.
-    //x$opts['triggers']['insert']['before']  = 'CAFEVDB\Instrumentation::beforeInsertFixProjectTrigger';
+    // $opts['triggers']['insert']['before']  = 'CAFEVDB\Instrumentation::beforeInsertFixProjectTrigger';
     // $opts['triggers']['update']['before']  = 'CAFEVDB\Instrumentation::beforeUpdateInstrumentTrigger';
 
     if ($this->pme_bare) {
