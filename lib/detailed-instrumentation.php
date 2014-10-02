@@ -118,7 +118,7 @@ __EOT__;
     // A - add,  C - change, P - copy, V - view, D - delete,
     // F - filter, I - initial sort suppressed
     // This is a view, undeletable.
-    $opts['options'] = 'CPVFM';
+    $opts['options'] = 'CPVDFM';
 
     // Number of lines to display on multiple selection filters
     $opts['multiple'] = '6';
@@ -473,6 +473,7 @@ __EOT__;
     $opts['triggers']['update']['before'] = array();
     $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeUpdateRemoveUnchanged';
     $opts['triggers']['update']['before'][]  = 'CAFEVDB\Musicians::beforeTriggerSetTimestamp';
+    $opts['triggers']['delete']['before'][]  = 'CAFEVDB\DetailedInstrumentation::beforeDeleteTrigger';
 
     if ($this->pme_bare) {
       // disable all navigation buttons, probably for html export
@@ -539,6 +540,34 @@ __EOT__;
     }   
 
   } // display()
+
+  /**This is the phpMyEdit before-delete trigger. We cannot delete
+   * lines from the view directly, we have to resort to the underlying
+   * 'Besetzungen' table (which obviously is also what we want here!).
+   *
+   * phpMyEdit calls the trigger (callback) with
+   * the following arguments:
+   *
+   * @param[in] $pme The phpMyEdit instance
+   *
+   * @param[in] $op The operation, 'insert', 'update' etc.
+   *
+   * @param[in] $step 'before' or 'after'
+   *
+   * @param[in] $oldvals Self-explanatory.
+   *
+   * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
+   *
+   * @param[in,out] &$newvals Set of new values, which may also be modified.
+   *
+   * @return boolean. If returning @c false the operation will be terminated
+   */
+  public static function beforeDeleteTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
+  {//DELETE FROM Spielwiese2013View WHERE (Id = 146)
+    $query = "DELETE FROM `Besetzungen` WHERE `Id` = ".$oldvals['Id'];
+    $result = $pme->myquery($query);
+    return false;
+  }
 
   public static function sepaDebitMandatePME($referenceId, $opts, $action, $k, $fds, $fdd, $row)
   {
