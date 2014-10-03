@@ -117,7 +117,7 @@ try {
     $musRow = Musicians::fetchMusicianPersonalData($musicianId, $handle);
     if ($musRow === false) {
       $failedMusicians[] = array('id' = $musicianId,
-                                 'error' => L::t('Data Base Error'),
+                                 'caption' => L::t('Data Base Error'),
                                  'message' => mySQL::error());
       continue;
     }
@@ -147,7 +147,7 @@ try {
     if (mySQL::query($prjquery, $handle) === false ||
         ($instrumentationId = mySQL::newestIndex($handle) === false))  {
       $failedMusicians[] = array('id' = $musicianId,
-                                 'error' => L::t('Data Base Error'),
+                                 'caption' => L::t('Data Base Error'),
                                  'message' => mySQL::error());
       continue;
     }
@@ -160,10 +160,16 @@ try {
     mySQL::close($handle);
     $debugText .= ob_get_contents();
     @ob_end_clean();
+    
+    $message = L::t('No musician could be added to the project.');
+
+    foreach ($failedMusicians as $failure) {
+      $mesage .= $failure.' '.$failure['message'];
+    }
 
     OCP\JSON::error(
       array(
-        'data' => array('error' => L::t('Data Base Error'),
+        'data' => array('caption' => L::t('Operation failed'),
                         'message' => L::t('No musician could be added to the project.'),
                         'debug' => $debugText)));
     return false;
