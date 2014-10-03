@@ -114,7 +114,7 @@ try {
   $failedMusicians = array();
   $addedMusicians = array();
   foreach ($musiciansIds as $musicianId) {
-    $musRow = Musicians::fetchMusicianData($musicianId, $handle);
+    $musRow = Musicians::fetchMusicianPersonalData($musicianId, $handle);
     if ($musRow === false) {
       $failedMusicians[] = array('id' = $musicianId,
                                  'error' => L::t('Data Base Error'),

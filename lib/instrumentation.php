@@ -427,7 +427,7 @@ __EOT__;
    LEFT JOIN `Projekte`
      ON `Besetzungen`.`ProjektId` = `Projekte`.`Id`
      WHERE `Besetzungen`.`Id` = $recordId";
-    if ($projectId > 0) {
+    if ($projectId >= 0) {
       $query .= " AND `Besetzungen`.`ProjektId` = $projectId";
     }
    
