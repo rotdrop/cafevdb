@@ -27,29 +27,45 @@ $(document).ready(function(){
             CAFEVDB.exportMenu(selector);
             container.find('input.pme-email').addClass('formsubmit');
             container.find('input.pme-bulkcommit').addClass('formsubmit');
-            container.find('div.photo, #cafevdb_inline_image_wrapper').on('click', 'img', function(event) {
-                event.preventDefault();
-                CAFEVDB.Photo.popup(this);
-                return false;
-            });
+            container.find('div.photo, #cafevdb_inline_image_wrapper').
+		on('click', 'img', function(event) {
+                    event.preventDefault();
+                    CAFEVDB.Photo.popup(this);
+                    return false;
+		});
 
             container.find('input.register-musician').off('click').
                 on('click', function(event) {
 
-                // var form = container.find('form.pme-form');
-                // var projectId = form.find('input[name="ProjectId"]').val();
-                // var projectName = form.find('input[name="Project"]').val();
-                
-                // CAFEVDB.Instrumentation.personalRecordDialog(
-                //     $(this).data('record-id'),
-                //     {
-                //         ProjectId: projectId,
-                //         ProjectName: projectName,
-                //         InitialValue: 'Change'
-                //     });
+                    var form = container.find('form.pme-form');
+                    var projectId = form.find('input[name="ProjectId"]').val();
+                    var projectName = form.find('input[name="Project"]').val();
+                    var musicianId = $(this).data('record-id');
 
-                return false;
-            });
+ 		    $.post(OC.filePath('cafevdb', 'ajax/instrumentation', 'add-musicians.php'),
+			   {
+			       'ProjectId': projectId,
+			       'ProjectName': projectName,
+			       'MusicianId': musicianId,
+			   }, function(data) {
+			       if (!CAFEVDB.ajaxErrorHandler(data, [
+				   'musicians'
+			       ])) {
+				   return false;
+			       }
+			       var musician = data.data.musicians[0];
+			       CAFEVDB.Instrumentation.personalRecordDialog(
+				   musician.instrumentationId,
+				   {
+				       ProjectId: projectId,
+				       ProjectName: projectName,
+				       InitialValue: 'Change'
+				   });
+			   }
+			  );
+
+                    return false;
+		});
 
             $(':button.musician-instrument-insurance').click(function(event) {
                 event.preventDefault();

@@ -407,7 +407,7 @@ __EOT__;
   /**Look up the musician Id in the Besetzungen table and fetch the
    * musician's data from the Musiker table. We return all data from
    * the musician in order to be inefficient ;) and in particular the
-   * project-instrument from the Besetzungen table
+   * project-instrument from the Besetzungen table.
    */
   public static function fetchMusicianData($recordId, $projectId, $handle = false)
   {

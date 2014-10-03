@@ -703,6 +703,69 @@ __EOT__;
     return $modified;
   }
 
+  /**Fetch all known data from the Musiker table for the respective musician.  */
+  public static function fetchMusicianData($recordId, $handle = false)
+  {
+    $ownConnection = $handle === false;
+
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
+    $query = "SELECT * FROM `Musiker` WHERE `Id` = $musicianId";
+
+    $result = mySQL::query($query, $handle);
+    if ($result !== false && mysql_num_rows($result) == 1) {
+      $row = mySQL::fetch($result);
+    } else {
+      $row = false;
+    }
+    
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $row;
+  }
+
+  /**In principle a musician can have multiple entries per
+   * project. Unique is only the combination
+   * project-musician-instrument-position. In principle, if a musician
+   * plays more than one instrument in different pieces in a project,
+   * he or she could be listed twice.
+   */
+  public static function fetchMusicianProjectData($musicianId, $projectId, $handle = false)
+  {
+    $ownConnection = $handle === false;
+
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
+    $query = " SELECT *
+ FROM `Besetzungen`
+     WHERE `Besetzungen`.`MusikerId` = $musicianId
+       AND `Besetzungen`.`ProjektId` = $projectId";
+
+    $result = mySQL::query($query, $handle);
+    if ($result !== false) {
+      $rows = array();
+      while ($row = mySQL::fetch($result)) {
+        $rows[] = $row;
+      }
+    } else {
+      $rows = false;
+    }
+    
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $rows;
+  }
+
   /** Fetch the musician-name name corresponding to $musicianId.
    */
   public static function fetchName($musicianId, $handle = false)

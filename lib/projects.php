@@ -1582,7 +1582,7 @@ __EOT__;
       $row = mySQL::fetch($instres);
       $instrumentation = explode(',', $row['Besetzung']);
     }
-    
+
     if ($ownConnection) {
       mySQL::close($handle);
     }

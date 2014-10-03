@@ -1152,6 +1152,16 @@ class mySQL
     return true;
   }
 
+  public static function error($handle = false)
+  {
+    if ($handle !== false) {
+      return @mysql_error($handle);
+      
+    } else {
+      return @mysql_error();
+    }
+  }
+
   public static function query($query, $handle = false, $die = false, $silent = false)
   {
     if (false && Util::debugMode()) {
