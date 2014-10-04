@@ -117,7 +117,7 @@ try {
   foreach ($musiciansIds as $musicianId) {
     $musRow = Musicians::fetchMusicianPersonalData($musicianId, $handle);
     if ($musRow === false) {
-      $failedMusicians[] = array('id' = $musicianId,
+      $failedMusicians[] = array('id' => $musicianId,
                                  'caption' => L::t('Data Base Error'),
                                  'message' => mySQL::error());
       continue;
@@ -147,7 +147,7 @@ try {
     $instrumentationId = -1;
     if (mySQL::query($prjquery, $handle) === false ||
         ($instrumentationId = mySQL::newestIndex($handle) === false))  {
-      $failedMusicians[] = array('id' = $musicianId,
+      $failedMusicians[] = array('id' => $musicianId,
                                  'caption' => L::t('Data Base Error'),
                                  'message' => mySQL::error());
       continue;
