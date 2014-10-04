@@ -36,7 +36,7 @@ if ($project != '') {
   $nav .= Navigation::button('projects');
   $nav .= Navigation::button('instruments', $project, $projectId);  
   $nav .= Navigation::button('add', $project, $projectId);  
-  $nav .= Navigation::button('brief', $project, $projectId);
+  $nav .= Navigation::button('detailed', $project, $projectId);
 } else {
   $nav .= Navigation::button('projects');
   $nav .= Navigation::button('instruments');
