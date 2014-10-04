@@ -120,7 +120,7 @@ try {
       $failedMusicians[] = array('id' => $musicianId,
                                  'caption' => L::t('Data Base error'),
                                  'message' => L::t('Unable to fetch musician\'s personal information for id %d, data-base error: %s',
-				 array($musicianId, mySQL::error())));
+                                                   array($musicianId, mySQL::error())));
       continue;
     }
     $musInstruments = explode(',', $musRow['Instrumente']);
@@ -149,7 +149,7 @@ try {
     if (mySQL::query($query, $handle) === false) {
       $failedMusicians[] = array('id' => $musicianId,
                                  'caption' => L::t('Adding %s (id = %d) failed.',
-				 array($fullName, $musicianId)),
+                                                   array($fullName, $musicianId)),
                                  'message' => mySQL::error());
       continue;
     }
@@ -158,13 +158,13 @@ try {
     if ($instrumentationId === false || $instrumentationId === 0) {
       $failedMusicians[] = array('id' => $musicianId,
                                  'caption' => L::t('Unable to get the new id for %s (id = %d)',
-				 	array($fullName, $musicianId)),
+                                                   array($fullName, $musicianId)),
                                  'message' => mySQL::error());
       continue;
     }
 
     $addedMusicians[] = array('musicianId' => $musicianId,
-    				'rows' => $numRows,
+                              'rows' => $numRows,
                               'instrumentationId' => $instrumentationId);
   }
   
@@ -174,7 +174,7 @@ try {
     @ob_end_clean();
     
     $message = L::t('No musician could be added to the projecti, #failures: %d.',
-    	count($failedMusicians));
+                    count($failedMusicians));
 
     foreach ($failedMusicians as $failure) {
       $message .= ' '.$failure['caption'].' '.print_r($failure['message'], true);
@@ -194,8 +194,8 @@ try {
           'message' => ($notice == ''
                         ? '' // don't annoy the user with success messages.
                         : L::t("Operation succeeded with the following notifications:")),
-                        'notice' => $notice,
-                        'debug' => $debugText)));
+          'notice' => $notice,
+          'debug' => $debugText)));
     return true;
   }
 
@@ -220,6 +220,6 @@ try {
 
   return false;
 
-}
+  }
 
 ?>
