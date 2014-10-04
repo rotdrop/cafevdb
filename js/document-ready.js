@@ -74,6 +74,33 @@ $(document).ready(function(){
                     return false;
 		});
 
+            container.find('input.pme-bulkcommit').
+		addClass('pme-custom').prop('disabled', false).
+		off('click').on('click', function(event) {
+
+                    var form = container.find('form.pme-form');
+		    var post = form.serialize();
+
+		    // Load the underlying base-view in any case in order to go "back" ...
+		    Instrumentation.loadDetailedInstrumentation(form);
+
+		    // Open the change-musician dialog with the newly
+		    // added musician in case of success.
+ 		    $.post(OC.filePath('cafevdb', 'ajax/instrumentation', 'add-musicians.php'),
+			   post, function(data) {
+			       if (!CAFEVDB.ajaxErrorHandler(data, [
+				   'musicians'
+			       ])) {
+				   return false;
+			       }
+			       // TODO: reload base table with filter preselect for added musicians.
+			       alert('I am here!');
+			   }
+			  );
+
+                    return false;
+		});
+
             $(':button.musician-instrument-insurance').click(function(event) {
                 event.preventDefault();
                 var values = $(this).attr('name');
