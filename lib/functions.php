@@ -1195,6 +1195,11 @@ class mySQL
       }
   }
 
+  public static function changedRows($handle = false, $die = true, $silent = false)
+  {
+    return mysql_affected_rows($handle);
+  }
+
   public static function newestIndex($handle = false, $die = true, $silent = false)
   {
     return mysql_insert_id($handle);
