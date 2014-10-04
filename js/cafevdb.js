@@ -876,7 +876,7 @@ var CAFEVDB = CAFEVDB || {};
 
     // This could also be wrapped into a popup maybe, and lead back to
     // the brief-instrumentation table on success.
-    $(PHPMYEDIT.defaultSelector + ' input.pme-bulkcommit').addClass('formsubmit');
+    //$(PHPMYEDIT.defaultSelector + ' input.pme-bulkcommit').addClass('formsubmit');
   };
 
   /**Generate some diagnostic output, mostly needed during application
