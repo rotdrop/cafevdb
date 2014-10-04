@@ -40,7 +40,7 @@ $(document).ready(function(){
                     var form = container.find('form.pme-form');
                     var projectId = form.find('input[name="ProjectId"]').val();
                     var projectName = form.find('input[name="Project"]').val();
-                    var musicianId = $(this).data('record-id');
+                    var musicianId = $(this).data('musician-id');
 
  		    $.post(OC.filePath('cafevdb', 'ajax/instrumentation', 'add-musicians.php'),
 			   {
@@ -54,6 +54,7 @@ $(document).ready(function(){
 				   return false;
 			       }
 			       var musician = data.data.musicians[0];
+			       //alert('data: '+CAFEVDB.print_r(data.data.musicians, true));
 			       CAFEVDB.Instrumentation.personalRecordDialog(
 				   musician.instrumentationId,
 				   {
