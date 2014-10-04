@@ -59,11 +59,11 @@ try {
 
   $projectId = Util::cgiValue('ProjectId', -1);
   $projectName = Util::cgiValue('ProjectName', -1);
-  $musicianId = Util::cgiValue('MusicianId', false);
+  $musicianId = Util::cgiValue('MusicianId', -1);
 
   $musiciansIds = array();
-  if ($musicianId !== false) {
-    $musiciansIds[] = $musicianId;
+  if ($musicianId !== -1) {
+    $musiciansIds[] = $musicianId+43;
   } else {
     $pmepfx       = Config::$pmeopts['cgi']['prefix']['sys'];
     $musiciansKey = $pmepfx.'mrecs';
