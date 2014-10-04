@@ -118,13 +118,14 @@ try {
     $musRow = Musicians::fetchMusicianPersonalData($musicianId, $handle);
     if ($musRow === false) {
       $failedMusicians[] = array('id' => $musicianId,
-                                 'caption' => L::t('Data Base Error'),
-                                 'message' => mySQL::error());
+                                 'caption' => L::t('Data Base error'),
+                                 'message' => L::t('Unable to fetch musician\'s personal information for id %d, data-base error: %s',
+				 array($musicianId, mySQL::error())));
       continue;
     }
     $musInstruments = explode(',', $musRow['Instrumente']);
 
-    $fullName = $musrow['Vorname']." ".$musrow['Name'];
+    $fullName = $musRow['Vorname']." ".$musRow['Name'];
 
     $both = array_intersect($projectInstruments, $musInstruments);
     if (!empty($both)) {
@@ -142,10 +143,10 @@ try {
     }
 
     $query = "INSERT INTO `Besetzungen` (`MusikerId`,`ProjektId`,`Instrument`)
- VALUES ('$musicianId','$this->projectId','$musInstrument')";
+ VALUES ('$musicianId','$projectId','$musInstrument')";
 
     $instrumentationId = -1;
-    if (mySQL::query($prjquery, $handle) === false ||
+    if (mySQL::query($query, $handle) === false ||
         ($instrumentationId = mySQL::newestIndex($handle) === false))  {
       $failedMusicians[] = array('id' => $musicianId,
                                  'caption' => L::t('Data Base Error'),
@@ -162,16 +163,17 @@ try {
     $debugText .= ob_get_contents();
     @ob_end_clean();
     
-    $message = L::t('No musician could be added to the project.');
+    $message = L::t('No musician could be added to the projecti, #failures: %d.',
+    	count($failedMusicians));
 
     foreach ($failedMusicians as $failure) {
-      $mesage .= $failure.' '.$failure['message'];
+      $message .= ' '.$failure['caption'].' '.print_r($failure['message'], true);
     }
 
     OCP\JSON::error(
       array(
         'data' => array('caption' => L::t('Operation failed'),
-                        'message' => L::t('No musician could be added to the project.'),
+                        'message' => $message,
                         'debug' => $debugText)));
     return false;
   } else {
