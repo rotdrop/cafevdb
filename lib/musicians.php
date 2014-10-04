@@ -704,7 +704,7 @@ __EOT__;
   }
 
   /**Fetch all known data from the Musiker table for the respective musician.  */
-  public static function fetchMusicianPersonalData($recordId, $handle = false)
+  public static function fetchMusicianPersonalData($musicianId, $handle = false)
   {
     $ownConnection = $handle === false;
 

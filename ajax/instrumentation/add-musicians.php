@@ -44,13 +44,14 @@ use CAFEVDB\mySQL;
   
 $handle = false;
 
-try {
+Error::exceptions(true);
 
-  ob_start();
-  
-  Error::exceptions(true);
-  
+ob_start();
+
+try {
   $_GET = array();
+
+  Config::init();
 
   $debugText = '';
   $messageText = '';
@@ -177,12 +178,12 @@ try {
     OCP\JSON::success(
       array(
         'data' => array(
-          'musicians' => $addedMusicians
+          'musicians' => $addedMusicians,
           'message' => ($notice == ''
                         ? '' // don't annoy the user with success messages.
-                        : L::t("Operation succeeded with the following notifications:"),
+                        : L::t("Operation succeeded with the following notifications:")),
                         'notice' => $notice,
-                        'debug' => $debugText))));
+                        'debug' => $debugText)));
     return true;
   }
 
