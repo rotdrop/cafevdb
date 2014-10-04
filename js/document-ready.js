@@ -54,7 +54,7 @@ $(document).ready(function(){
 				   return false;
 			       }
 			       var musician = data.data.musicians[0];
-			       //alert('data: '+CAFEVDB.print_r(data.data.musicians, true));
+			       //alert('data: '+CAFEVDB.print_r(musician, true));
 			       CAFEVDB.Instrumentation.personalRecordDialog(
 				   musician.instrumentationId,
 				   {
