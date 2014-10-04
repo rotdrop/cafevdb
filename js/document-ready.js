@@ -42,6 +42,11 @@ $(document).ready(function(){
                     var projectName = form.find('input[name="Project"]').val();
                     var musicianId = $(this).data('musician-id');
 
+		    // Load the underlying base-view in any case in order to go "back" ...
+		    Instrumentation.loadDetailedInstrumentation(form);
+
+		    // Open the change-musician dialog with the newly
+		    // added musician in case of success.
  		    $.post(OC.filePath('cafevdb', 'ajax/instrumentation', 'add-musicians.php'),
 			   {
 			       'ProjectId': projectId,
@@ -60,7 +65,8 @@ $(document).ready(function(){
 				   {
 				       ProjectId: projectId,
 				       ProjectName: projectName,
-				       InitialValue: 'Change'
+				       InitialValue: 'Change',
+				       modified: true
 				   });
 			   }
 			  );

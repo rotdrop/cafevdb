@@ -177,11 +177,61 @@ var CAFEVDB = CAFEVDB || {};
     });
   };
 
+  /**Pseudo-submit an underlying PME-form with tweaked form data.
+   *
+   * @param formData Data for hidden input elements which replace the
+   * form's "native" data. Example:
+   *
+   * formData = [
+   *   { name: "Template", value: "detailed-instrumentation" },
+   *   { name: "Table", value: "Musiker" },
+   *   { name: "DisplayClass", value: "Musicians" },
+   *   { name: "ClassArguments[0]", value: "1" }
+   * ];
+   *
+   * The form is submitted with an empty pseudo-submit button.
+   */
+  Instrumentation.loadPMETable = function(form, formData) {
+    var idx;
+    for (idx = 0; idx < formData.length; ++idx) {
+      var name = formData[idx].name;
+      var value = formData[idx].value;
+      form.find('input[name="'+name+'"]').remove();
+      form.append('<input type="hidden" name="'+name+'" value="'+value+'"/>"');
+    }
+    
+    PHPMYEDIT.pseudoSubmit(form, {}, PHPMYEDIT.selector());
+  };
+
+  Instrumentation.loadAddMusicians = function(form) {
+    var inputTweak = [
+      { name: "Template", value: "detailed-instrumentation" },
+      { name: "Table", value: "Musiker" },
+      { name: "DisplayClass", value: "Musicians" },
+      { name: "ClassArguments[0]", value: "1" }
+    ];
+    
+    Instrumentation.loadPMETable(form, inputTweak);
+  };
+
+  Instrumentation.loadDetailedInstrumentation = function(form) {
+    var projectName = form.find('input[name="Project"]').val();
+    var table = projectName+'View';
+
+    var inputTweak = [
+      { name: "Template", value: "detailed-instrumentation" },
+      { name: "Table", value: "Musiker" },
+      { name: "DisplayClass", value: "DetailedInstrumentation" },
+    ];    
+    Instrumentation.loadPMETable(form, inputTweak);
+  };
+
   Instrumentation.ready = function(selector) {
     selector = PHPMYEDIT.selector(selector);
     var container = PHPMYEDIT.container(selector);
 
     var self = this;
+    var Instrumentation = this;
 
     // Enable the controls, in order not to bloat SQL queries these PME
     // fields are flagged virtual which disables all controls initially.
@@ -262,45 +312,25 @@ var CAFEVDB = CAFEVDB || {};
       return false;
     });
     
-    if (false) {
-      var addInstrumentsButton = container.find('#add-instruments-button')
-      addInstrumentsButton.off('click');
-      addInstrumentsButton.click(function(event) {
-        event.preventDefault();
-
-        self.openAddInstrumentsDialog(container);
-
-        return false;
-      });
-    }
-
     container.find('form.pme-form input.pme-add').
       addClass('pme-custom').prop('disabled', false).
       off('click').on('click', function(event) {
 
-      //alert('click');
+	//alert('click');
 
-      var form = $(this.form);
+	var form = $(this.form);
+	
+	var inputTweak = [
+          { name: "Template", value: "detailed-instrumentation" },
+          { name: "Table", value: "Musiker" },
+          { name: "DisplayClass", value: "Musicians" },
+          { name: "ClassArguments[0]", value: "1" }
+	];
+	
+	Instrumentation.loadPMETable(form, inputTweak);
 
-      var inputTweak = [
-        { name: "Template", value: "add-musicians" },
-        { name: "Table", value: "Musiker" },
-        { name: "DisplayClass", value: "Musicians" },
-        { name: "ClassArguments[0]", value: "1" }
-      ];
-
-      var idx;
-      for (idx = 0; idx < inputTweak.length; ++idx) {
-        var name = inputTweak[idx].name;
-        var value = inputTweak[idx].value;
-        form.find('input[name="'+name+'"]').remove();
-        form.append('<input type="hidden" name="'+name+'" value="'+value+'"/>"');
-      }
-
-      PHPMYEDIT.pseudoSubmit(form, $(this), PHPMYEDIT.selector());
-
-      return false;
-    });
+	return false;
+      });
   };
 
   CAFEVDB.Instrumentation = Instrumentation;
