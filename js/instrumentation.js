@@ -199,8 +199,10 @@ var CAFEVDB = CAFEVDB || {};
       form.find('input[name="'+name+'"]').remove();
       form.append('<input type="hidden" name="'+name+'" value="'+value+'"/>"');
     }
-    
-    PHPMYEDIT.pseudoSubmit(form, {}, PHPMYEDIT.selector());
+   
+    var pseudoButton = $('<input type="submit"/>');
+
+    PHPMYEDIT.pseudoSubmit(form, pseudoButton, PHPMYEDIT.selector());
   };
 
   Instrumentation.loadAddMusicians = function(form) {
@@ -316,7 +318,7 @@ var CAFEVDB = CAFEVDB || {};
       addClass('pme-custom').prop('disabled', false).
       off('click').on('click', function(event) {
 
-	Instrumentation.loadAddMusicians(form);
+	Instrumentation.loadAddMusicians($(this.form));
 
 	return false;
       });
