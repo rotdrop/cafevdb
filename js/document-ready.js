@@ -83,7 +83,7 @@ $(document).ready(function(){
                     var post = form.serialize();
 
                     // Load the underlying base-view in any case in order to go "back" ...
-                    Instrumentation.loadDetailedInstrumentation(form);
+                    CAFEVDB.Instrumentation.loadDetailedInstrumentation(form);
 
                     // Open the change-musician dialog with the newly
                     // added musician in case of success.
