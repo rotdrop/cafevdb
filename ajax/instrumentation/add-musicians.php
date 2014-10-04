@@ -146,15 +146,25 @@ try {
  VALUES ('$musicianId','$projectId','$musInstrument')";
 
     $instrumentationId = -1;
-    if (mySQL::query($query, $handle) === false ||
-        ($instrumentationId = mySQL::newestIndex($handle) === false))  {
+    if (mySQL::query($query, $handle) === false) {
       $failedMusicians[] = array('id' => $musicianId,
-                                 'caption' => L::t('Data Base Error'),
+                                 'caption' => L::t('Adding %s (id = %d) failed.',
+				 array($fullName, $musicianId)),
+                                 'message' => mySQL::error());
+      continue;
+    }
+    $numRows = mySQL::changedRows($handle);
+    $instrumentationId = mySQL::newestIndex($handle);
+    if ($instrumentationId === false || $instrumentationId === 0) {
+      $failedMusicians[] = array('id' => $musicianId,
+                                 'caption' => L::t('Unable to get the new id for %s (id = %d)',
+				 	array($fullName, $musicianId)),
                                  'message' => mySQL::error());
       continue;
     }
 
     $addedMusicians[] = array('musicianId' => $musicianId,
+    				'rows' => $numRows,
                               'instrumentationId' => $instrumentationId);
   }
   
