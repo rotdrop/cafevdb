@@ -220,7 +220,7 @@ var CAFEVDB = CAFEVDB || {};
 
     var inputTweak = [
       { name: "Template", value: "detailed-instrumentation" },
-      { name: "Table", value: "Musiker" },
+      { name: "Table", value: table },
       { name: "DisplayClass", value: "DetailedInstrumentation" },
     ];    
     Instrumentation.loadPMETable(form, inputTweak);
@@ -316,18 +316,7 @@ var CAFEVDB = CAFEVDB || {};
       addClass('pme-custom').prop('disabled', false).
       off('click').on('click', function(event) {
 
-	//alert('click');
-
-	var form = $(this.form);
-	
-	var inputTweak = [
-          { name: "Template", value: "detailed-instrumentation" },
-          { name: "Table", value: "Musiker" },
-          { name: "DisplayClass", value: "Musicians" },
-          { name: "ClassArguments[0]", value: "1" }
-	];
-	
-	Instrumentation.loadPMETable(form, inputTweak);
+	Instrumentation.loadAddMusicians(form);
 
 	return false;
       });
