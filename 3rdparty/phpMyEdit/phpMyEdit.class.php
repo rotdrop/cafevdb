@@ -923,7 +923,17 @@ class phpMyEdit
 					$tmp_ov_val = '';
 					foreach ($ov['value'] as $ov_val) {
 						strlen($tmp_ov_val) > 0 && $tmp_ov_val .= ' OR ';
-						$tmp_ov_val .= sprintf('FIND_IN_SET("%s",%s)', $ov_val, $field);
+						if ($ov_val == '') {
+							// interprete this as empty or NULL
+							$tmp_ov_val .= sprintf("(%s IS NULL OR %s LIKE '')", $field, $field);
+						} else {
+							$tmp_ov_val .= sprintf('FIND_IN_SET("%s",%s)', $ov_val, $field);
+						}
+					}
+					if (isset($ov['oper']) &&
+						strtoupper($ov['oper']) == 'NOT' || $ov['oper'] == '!') {
+						$tmp_ov_val = sprintf('(%s IS NULL OR NOT (%s))',
+											  $field, $tmp_ov_val);
 					}
 					$where[] = "($tmp_ov_val)";
 				} else {
@@ -973,26 +983,28 @@ class phpMyEdit
 				if (in_array('*', $m)) {
 					continue;
 				}
+				$not = ($mc == '!' || strtoupper($mc) == 'NOT');
 				if ($this->col_has_values($k) && $this->col_has_multiple($k)) {
 					foreach (array_keys($m) as $key) {
 						$m[$key] = addslashes($m[$key]);
 					}
 					$qo[$this->fqn($k)] = array('value' => $m);
+					if ($not) {
+						$qo[$this->fqn($k)]['oper'] = 'NOT';
+					}
 				} else {
 					$qf_op = '';
 					foreach (array_keys($m) as $key) {
 						if ($qf_op == '') {
-							$qf_op	 = 'IN';
+							$qf_op	 = ($not ? 'NOT ' : '').'IN';
 							$qf_val	 = '"'.addslashes($m[$key]).'"';
-							$afilter = ' IN ("'.addslashes($m[$key]).'"'; // )
 						} else {
-							$afilter = $afilter.',"'.addslashes($m[$key]).'"';
 							$qf_val .= ',"'.addslashes($m[$key]).'"';
 						}
 						$this->qfn .= '&'.$this->cgi['prefix']['sys'].$l.'['.rawurlencode($key).']='.rawurlencode($m[$key]);
 					}
-					$afilter = $afilter.')';
 					// XXX: $dont_desc and $dont_cols hack
+					// cH: what is this???
 					$dont_desc = isset($this->fdd[$k]['values']['description']);
 					if (isset($this->fdd[$k]['values']['queryvalues']) ||
 						(isset($this->fdd[$k]['values']['forcedesc']) &&
@@ -1032,6 +1044,7 @@ class phpMyEdit
 					$this->qfn .= '&'.$this->cgi['prefix']['sys'].$l .'='.rawurlencode($m);
 					$this->qfn .= '&'.$this->cgi['prefix']['sys'].$lc.'='.rawurlencode($mc);
 				} else {
+
 					/**The old behaviour was simply too unflexible:
 					 * just adding wildcars around the search
 					 * string. The following hack introduces the
@@ -3112,7 +3125,6 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		$this->form_begin();
 		if ($this->display['form']) {
 			//echo $this->get_origvars_html($this->get_sfn_cgi_vars());
-			echo $this->htmlHiddenSys('fl', $this->fl);
 			// Display buttons at top and/or bottom of page.
 			$this->display_list_table_buttons('up');
 			if ($this->cgi['persist'] != '') {
@@ -3127,6 +3139,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 					echo $this->htmlHiddenSys('sfn['.$key.']', $val);
 				}
 			}
+			echo $this->htmlHiddenSys('fl', $this->fl);
 			echo $this->htmlHiddenSys('qfn', $this->qfn);
 			echo $this->htmlHiddenSys('fm', $this->fm);
 			echo $this->htmlHiddenSys('np', $this->inc);
