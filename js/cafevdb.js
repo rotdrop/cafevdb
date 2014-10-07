@@ -745,15 +745,17 @@ var CAFEVDB = CAFEVDB || {};
         return;
       }
       var tipsyClasses = classAttr.match(/tipsy-[a-z]+/g);
-      var idx;
-      for(idx = 0; idx < tipsyClasses.length; ++idx) {
-        var tipsyClass = tipsyClasses[idx];
-        var gravity = tipsyClass.match(/^tipsy-([senw]{1,2})$/);
-        if (gravity && gravity.length == 2 && gravity[1].length > 0) {
-          classOptions.gravity = gravity[1];
-          continue;
+      if (tipsyClasses) {
+        var idx;
+        for(idx = 0; idx < tipsyClasses.length; ++idx) {
+          var tipsyClass = tipsyClasses[idx];
+          var gravity = tipsyClass.match(/^tipsy-([senw]{1,2})$/);
+          if (gravity && gravity.length == 2 && gravity[1].length > 0) {
+            classOptions.gravity = gravity[1];
+            continue;
+          }
+          classOptions.className = tipsyClass;
         }
-        classOptions.className = tipsyClass;
       }
     }
     if (typeof options == 'undefined') {
