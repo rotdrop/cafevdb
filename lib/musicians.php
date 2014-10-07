@@ -71,7 +71,8 @@ make sure that the musicians are also automatically added to the
     $debug_query = Util::debugMode('query');
 
     $template        = $this->template;
-    $project         = $this->project;
+    $projectName     = $this->project;
+    $project         = $projectName;
     $projectId       = $this->projectId;
     $recordsPerPage  = $this->recordsPerPage;
     $opts            = $this->opts;
@@ -112,6 +113,7 @@ make sure that the musicians are also automatically added to the
 
     if ($this->projectMode) {
       $opts['cgi']['append'][Config::$pmeopts['cgi']['prefix']['sys'].'fl'] = 1;
+      $opts['cgi']['overwrite'][Config::$pmeopts['cgi']['prefix']['sys'].'fl'] = 1;
     }
 
     // Name of field which is the unique key
@@ -172,9 +174,9 @@ make sure that the musicians are also automatically added to the
     */
 
     if ($this->projectMode) {
-       $opts['filters'] = "(SELECT COUNT(*) FROM `Besetzungen` WHERE MusikerId = PMEtable0.Id AND ProjektId = $projectId) = 0";
-       $opts['misccssclass']   = 'bulkcommit';
-       $opts['labels']['Misc'] = strval(L::t('Add all to %s', array($project)));
+      $opts['filters'] = "(SELECT COUNT(*) FROM `Besetzungen` WHERE MusikerId = PMEtable0.Id AND ProjektId = $projectId) = 0";
+      $opts['misccssclass']   = 'bulkcommit';
+      $opts['labels']['Misc'] = strval(L::t('Add all to %s', array($project)));
     }
 
     /* Field definitions
@@ -292,6 +294,7 @@ make sure that the musicians are also automatically added to the
     // cooked filter list
     $allProjects = Projects::fetchProjects(false /* no db handle */, true /* include years */);
     $projectQueryValues = array('*' => '*'); // catch-all filter
+    $projectQueryValues[''] = L::t('no projects yet');
     foreach ($allProjects as $proj) {
       $projectQueryValues[$proj['Name']] = $proj['Jahr'].': '.$proj['Name'];      
     }
@@ -303,11 +306,18 @@ LEFT JOIN Projekte ON Projekte.Id = Besetzungen.ProjektId
 GROUP BY MusikerId
 __EOT__;
 
+    $projectIdx = count($opts['fdd']);
+    if (false && $this->projectMode) {
+      $pfx = Config::$pmeopts['cgi']['prefix']['sys'];
+      $key = 'qf'.$projectIdx;
+      $opts['cgi']['append'][$pfx.$key.'_id'] = array($projectName);
+      $opts['cgi']['append'][$pfx.$key.'_comp'] = 'not';
+    }
     $opts['fdd']['Projekte'] =
       array('input' => 'VR', // virtual, read perm
             'options' => 'LFV', //just do the join, don't display anything
             'select' => 'M',
-            'name' => L::t('Projekte'),
+            'name' => L::t('Projects'),
             'sort' => true,
             'sql' => 'PMEjoin'.count($opts['fdd']).'.Projekte',
             'sqlw' => 'PMEjoin'.count($opts['fdd']).'.Projekte',
