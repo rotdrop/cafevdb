@@ -386,7 +386,7 @@ __EOT__;
                                             'maxlen'   => 128,
                                             'default'  => 'Deutschland',
                                             'sort'     => true,
-                                            'values'   => Config::$opts['languages']);
+                                            'values2'   => Config::$opts['languages']);
 
     $opts['fdd']['Insurance'] = array(
       'input' => 'V',

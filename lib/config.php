@@ -722,8 +722,19 @@ redaxoDefaultModule
                                     'datemask' => 'd.m.Y');
 //                                    'default' => '01.01.1900');
     //  add as needed
-    self::$opts['languages'] = explode(',','Deutsch,Englisch,Französich,Spanisch,Polnisch,Russisch,Japanisch,Koreanisch');
-    sort(self::$opts['languages']);
+    self::$opts['languages'] = array(
+      '' => L::t('no preference'),
+      'german' => L::t('German'),
+      'english' => L::t('English'),
+      'french' => L::t('French'),
+      'spanish' => L::t('Spanish'),
+      'portuguese' => L::t('Portuguese'),
+      'polish' => L::t('Polish'),
+      'russian' => L::t('Russian'),
+      'chinese' => L::t('Chinese'),
+      'japanese' => L::t('Japaneese'),
+      'korean' => L::t('Korean'));
+
 
     self::$cgiVars = array('Template' => 'blog',
                            'MusicianId' => -1,
