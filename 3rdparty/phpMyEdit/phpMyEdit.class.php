@@ -598,7 +598,7 @@ class phpMyEdit
 	{
 		// allow for unconditional override
 		if (isset($this->fdd[$field_num]['values']['queryvalues'])) {
-			return (array) $prepnd + (array) $this->fdd[$field_num]['values']['queryvalues'] + (array) $append;
+			return (array) $prepend + (array) $this->fdd[$field_num]['values']['queryvalues'] + (array) $append;
 		} else {
 			return (array) $prepend + (array) $this->fdd[$field_num]['values2']
 				+ (isset($this->fdd[$field_num]['values']['table']) || $strict
@@ -995,11 +995,12 @@ class phpMyEdit
 				} else {
 					$qf_op = '';
 					foreach (array_keys($m) as $key) {
+						$val = '"'.addslashes($m[$key]).'"';
 						if ($qf_op == '') {
 							$qf_op	 = ($not ? 'NOT ' : '').'IN';
-							$qf_val	 = '"'.addslashes($m[$key]).'"';
+							$qf_val	 = $val;
 						} else {
-							$qf_val .= ',"'.addslashes($m[$key]).'"';
+							$qf_val .= ','.$val;
 						}
 						$this->qfn .= '&'.$this->cgi['prefix']['sys'].$l.'['.rawurlencode($key).']='.rawurlencode($m[$key]);
 					}
