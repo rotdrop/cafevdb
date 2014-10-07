@@ -36,6 +36,8 @@ use CAFEVDB\Events;
 use CAFEVDB\Util;
 use CAFEVDB\Error;
 
+$debugText = '';
+
 try {
 
   ob_start();
@@ -45,7 +47,6 @@ try {
 
   $_GET = array();
 
-  $debugText = '';
   $messageText = '';
   $mySQLError = array('error' => 0,
                       'message' => '');
