@@ -174,7 +174,7 @@ make sure that the musicians are also automatically added to the
     */
 
     if ($this->projectMode) {
-      $opts['filters'] = "(SELECT COUNT(*) FROM `Besetzungen` WHERE MusikerId = PMEtable0.Id AND ProjektId = $projectId) = 0";
+//      $opts['filters'] = "(SELECT COUNT(*) FROM `Besetzungen` WHERE MusikerId = PMEtable0.Id AND ProjektId = $projectId) = 0";
       $opts['misccssclass']   = 'bulkcommit';
       $opts['labels']['Misc'] = strval(L::t('Add all to %s', array($project)));
     }
@@ -296,7 +296,7 @@ make sure that the musicians are also automatically added to the
     $projectQueryValues = array('*' => '*'); // catch-all filter
     $projectQueryValues[''] = L::t('no projects yet');
     foreach ($allProjects as $proj) {
-      $projectQueryValues[$proj['Name']] = $proj['Jahr'].': '.$proj['Name'];      
+      $projectQueryValues[$proj['Name']] = $proj['Jahr'].': '.$proj['Name'];
     }
 
     $derivedtable =<<<__EOT__
@@ -307,11 +307,11 @@ GROUP BY MusikerId
 __EOT__;
 
     $projectIdx = count($opts['fdd']);
-    if (false && $this->projectMode) {
+    if ($this->projectMode) {
       $pfx = Config::$pmeopts['cgi']['prefix']['sys'];
       $key = 'qf'.$projectIdx;
       $opts['cgi']['append'][$pfx.$key.'_id'] = array($projectName);
-      $opts['cgi']['append'][$pfx.$key.'_comp'] = 'not';
+      $opts['cgi']['append'][$pfx.$key.'_comp'] = array('not');
     }
     $opts['fdd']['Projekte'] =
       array('input' => 'VR', // virtual, read perm
