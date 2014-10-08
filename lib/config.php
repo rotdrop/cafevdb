@@ -97,6 +97,7 @@ redaxoDefaultModule
   const DFLT_CALS = 'concerts,rehearsals,other,management';
 // L::t('concerts') L::t('rehearsals') L::t('other') L::t('management')
   const APP_BASE  = 'apps/cafevdb/';
+  public static $privateKey = false; ///< Storage
   public static $prefix = false;
   public static $triggers = false;
   public static $pmeopts = array();
@@ -260,19 +261,13 @@ redaxoDefaultModule
       $privKey = self::getUserValue('privateSSLKey', '', $login);
     }
 
-    $privKey = openssl_pkey_get_private ($privKey, $password);
+    $privKey = openssl_pkey_get_private($privKey, $password);
     if ($privKey === false) {
       return;
     }
 
-    if (false) {
-      // Probably not necessary and not a good idea.
-      if (openssl_pkey_export($privKey, $privKey) === false) {
-        return;
-      }
-    }
-
-    // Success. Store the decrypted private key in the session data.
+    // Success. Store the private key. This may or may not be
+    // permanent storage. ATM, it is not.
     self::setPrivateKey($privKey);
   }
 
@@ -377,26 +372,112 @@ redaxoDefaultModule
     return true;
   }
 
-  static public function setPrivateKey($key) {
-    \OC::$session->set('CAFEVDB\\privatekey', $key);
+  /**PHP session variable key to use for storing something tagged with
+   * $key.
+   */
+  private static function sessionKey($key)
+  {
+    return Config::APP_NAME.'\\'.$key;
   }
 
+  /**Store something in the session-data. It is completely left open
+   * how this is done.
+   *
+   * sessionStoreValue() and sessionRetrieveValue() should be the only
+   * interface points to the PHP session (except for, ahem, tweaks).
+   */
+  static public function sessionStoreValue($key, $value)
+  {
+    \OC::$session->set(self::sessionKey($key), $value);
+  }
+
+  /**Fetch something from the session-data. It is completely left open
+   * how this is done.
+   *
+   * @param $key The key tagging the desired data.
+   *
+   * @param $default What to return if the data is not
+   * available. Defaults to @c false.
+   *
+   * sessionStoreValue() and sessionRetrieveValue() should be the only
+   * interface points to the PHP session (except for, ahem, tweaks).
+   */
+  static public function sessionRetrieveValue($key, $default = false)
+  {
+    $key = self::sessionKey($key);
+    return \OC::$session->exists($key)
+      ? \OC::$session->get($key)
+      : $default;
+  }
+
+  /**Set the private key used to decode some sensible data like the
+   * general shared encryption key and so forth.
+   *
+   * @param $key The key to safe.
+   *
+   * @param $storeDecrypted Whether or not to export the key before
+   * storing it. This will convert the key-argument, which may only be
+   * a resource, to a string-representation of the key.
+   *
+   * @param $permanent Whether or not to store the key in permanent
+   * storage, which means something at least persisitent during the
+   * lifetime of the PHP session. Whether or not this is really the
+   * PHP $_SESSION data is left open.
+   *
+   * @return @c true in the case of success, @c false otherwise.
+   *
+   */
+  static public function setPrivateKey($key, $storeDecrypted = false, $permanent = false) {
+    if ($storeDecrypted) {
+      // Really: DO NOT DO THIS. PERIOD.
+      if (openssl_pkey_export($key, $key) === false) {
+        return false;
+      }      
+    }
+    if ($permanent) {
+      self::sessionStoreValue('privatekey', $key);
+    } else {
+      self::$privateKey = $key;
+    }
+    return true;
+  }
+
+  /**Return the private key. First try local storage as static class
+   * variable. If unset, try the session. Else return @c false.
+   */
   static public function getPrivateKey() {
-    return \OC::$session->exists('CAFEVDB\\privatekey')
-      ? \OC::$session->get('CAFEVDB\\privatekey')
-      : '';
+    if (self::$privateKey !== false) {
+      return self::$privateKey;
+    } else {
+      return self::sessionRetrieveValue('privatekey');
+    }
   }
 
+  /**Store the encryption key in the session data. This cannot (i.e.:
+   *must not) fail.
+   *
+   * @param $key The encryption key to store.
+   */
   static public function setEncryptionKey($key) {
-    \OC::$session->set('CAFEVDB\\encryptionkey', $key);
+    self::sessionStoreValue('encryptionkey', $key);
   }
 
+  /**Retrieve the encryption key from the session data.
+   *
+   * @return @c false in case of error, otherwise the encryption key.
+   */
   static public function getEncryptionKey() {
-    return \OC::$session->exists('CAFEVDB\\encryptionkey')
-      ? \OC::$session->get('CAFEVDB\\encryptionkey')
-      : '';
+    return self::sessionRetrieveValue('encryptionkey');
   }
 
+  /**Check the validity of the encryption. In order to do so we fetch
+   * an encrypted representation of the key from the OC config space
+   * and try to decrypt that key with the given key. If the decrypted
+   * key matches our key, then we accept the key.
+   *
+   * @bug This scheme of storing a key which is encrypted with itself
+   * is a security issue. Think about it. It really is.
+   */
   static public function encryptionKeyValid($sesdbkey = false)
   {
     if ($sesdbkey === false) {
