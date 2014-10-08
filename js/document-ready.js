@@ -29,78 +29,80 @@ $(document).ready(function(){
 
             container.find('div.photo, #cafevdb_inline_image_wrapper').
                 on('click', 'img', function(event) {
-                    event.preventDefault();
-                    CAFEVDB.Photo.popup(this);
-                    return false;
-                });
+                event.preventDefault();
+                CAFEVDB.Photo.popup(this);
+                return false;
+            });
 
             container.find('input.register-musician').off('click').
                 on('click', function(event) {
 
-                    var form = container.find('form.pme-form');
-                    var projectId = form.find('input[name="ProjectId"]').val();
-                    var projectName = form.find('input[name="Project"]').val();
-                    var musicianId = $(this).data('musician-id');
+                var form = container.find('form.pme-form');
+                var projectId = form.find('input[name="ProjectId"]').val();
+                var projectName = form.find('input[name="Project"]').val();
+                var musicianId = $(this).data('musician-id');
 
-                    // Load the underlying base-view in any case in order to go "back" ...
-                    CAFEVDB.Instrumentation.loadDetailedInstrumentation(form);
+                // Load the underlying base-view in any case in order to go "back" ...
+                CAFEVDB.Instrumentation.loadDetailedInstrumentation(form);
 
-                    // Open the change-musician dialog with the newly
-                    // added musician in case of success.
-                    $.post(OC.filePath('cafevdb', 'ajax/instrumentation', 'add-musicians.php'),
-                           {
-                               'ProjectId': projectId,
-                               'ProjectName': projectName,
-                               'MusicianId': musicianId,
-                           }, function(data) {
-                               if (!CAFEVDB.ajaxErrorHandler(data, [
-                                   'musicians'
-                               ])) {
-                                   return false;
-                               }
-                               var musician = data.data.musicians[0];
-                               //alert('data: '+CAFEVDB.print_r(musician, true));
-                               CAFEVDB.Instrumentation.personalRecordDialog(
-                                   musician.instrumentationId,
-                                   {
-                                       ProjectId: projectId,
-                                       ProjectName: projectName,
-                                       InitialValue: 'Change',
-                                       modified: true
-                                   });
-                           }
-                          );
+                // Open the change-musician dialog with the newly
+                // added musician in case of success.
+                $.post(OC.filePath('cafevdb', 'ajax/instrumentation', 'add-musicians.php'),
+                       {
+                           'ProjectId': projectId,
+                           'ProjectName': projectName,
+                           'MusicianId': musicianId
+                       }, function(data) {
+                              if (!CAFEVDB.ajaxErrorHandler(data, [
+                                  'musicians'
+                              ])) {
+                                  return false;
+                              }
+                              var musician = data.data.musicians[0];
+                              //alert('data: '+CAFEVDB.print_r(musician, true));
+                              CAFEVDB.Instrumentation.personalRecordDialog(
+                                  musician.instrumentationId,
+                                  {
+                                      ProjectId: projectId,
+                                      ProjectName: projectName,
+                                      InitialValue: 'Change',
+                                      modified: true
+                                  });
+                              return false;
+                          }
+                      );
 
-                    return false;
-                });
+                return false;
+            });
 
             //container.find('input.pme-bulkcommit').addClass('formsubmit');
             container.find('input.pme-bulkcommit').
                 addClass('pme-custom').prop('disabled', false).
                 off('click').on('click', function(event) {
 
-                    var form = container.find('form.pme-form');
-                    var post = form.serialize();
+                var form = container.find('form.pme-form');
+                var post = form.serialize();
 
-                    // Load the underlying base-view in any case in order to go "back" ...
-                    CAFEVDB.Instrumentation.loadDetailedInstrumentation(form);
+                // Load the underlying base-view in any case in order to go "back" ...
+                CAFEVDB.Instrumentation.loadDetailedInstrumentation(form);
 
-                    // Open the change-musician dialog with the newly
-                    // added musician in case of success.
-                    $.post(OC.filePath('cafevdb', 'ajax/instrumentation', 'add-musicians.php'),
-                           post, function(data) {
-                               if (!CAFEVDB.ajaxErrorHandler(data, [
-                                   'musicians'
-                               ])) {
-                                   return false;
-                               }
-                               // TODO: reload base table with filter preselect for added musicians.
-                               alert('I am here!');
-                           }
-                          );
+                // Open the change-musician dialog with the newly
+                // added musician in case of success.
+                $.post(OC.filePath('cafevdb', 'ajax/instrumentation', 'add-musicians.php'),
+                       post, function(data) {
+                                 if (!CAFEVDB.ajaxErrorHandler(data, [
+                                     'musicians'
+                                 ])) {
+                                     return false;
+                                 }
+                                 // TODO: reload base table with filter preselect for added musicians.
+                                 alert('I am here!');
+                                 return false;
+                             }
+                      );
 
-                    return false;
-                });
+                return false;
+            });
 
             $(':button.musician-instrument-insurance').click(function(event) {
                 event.preventDefault();

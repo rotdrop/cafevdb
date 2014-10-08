@@ -162,7 +162,7 @@ var CAFEVDB = CAFEVDB || {};
                                     null, true);
                  }
                  if (rqData.debug != '') {
-                   OC.dialogs.alert(rqData.debug, t('cafevdb', 'Debug Information'), null, true);
+                   OC.dialogs.alert(rqData.debug, t('cafevdb', 'Debug Information'), undefined, true);
                  }
                  if (typeof errorCB == 'function' && typeof rqData.instruments != 'undefined') {
                    errorCB(rqData.instruments);
@@ -193,6 +193,7 @@ var CAFEVDB = CAFEVDB || {};
    */
   Instrumentation.loadPMETable = function(form, formData) {
     var idx;
+    form.find('[name*="PME_sys"]').remove();
     for (idx = 0; idx < formData.length; ++idx) {
       var name = formData[idx].name;
       var value = formData[idx].value;
@@ -223,7 +224,7 @@ var CAFEVDB = CAFEVDB || {};
     var inputTweak = [
       { name: "Template", value: "detailed-instrumentation" },
       { name: "Table", value: table },
-      { name: "DisplayClass", value: "DetailedInstrumentation" },
+      { name: "DisplayClass", value: "DetailedInstrumentation" }
     ];    
     Instrumentation.loadPMETable(form, inputTweak);
   };
@@ -238,7 +239,9 @@ var CAFEVDB = CAFEVDB || {};
     // Enable the controls, in order not to bloat SQL queries these PME
     // fields are flagged virtual which disables all controls initially.
     var selectMusicianInstruments = container.find('select.musician-instruments');
-    var selectProjectInstrument = container.find('select.project-instrument');
+    var selectProjectInstrument = container.find('select.pme-input-0.project-instrument'+
+                                                 ','+
+                                                 'select.pme-input-1.project-instrument');
 
     $('#add-instruments-button').hide();
     $('#add-instruments-block div.chosen-container').show();    
