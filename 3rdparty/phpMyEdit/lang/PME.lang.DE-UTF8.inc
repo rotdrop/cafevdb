@@ -39,6 +39,8 @@ return Array(
 		'Apply'         =>'Anwenden',
 		'Reload'        =>'Aktualisieren',
 		'Cancel'        =>'Zurück', //Abbrechen',
+		'Not'		=>'Nicht',
+		'Negate'		=>'Negieren',
 		'Search'		=>'Suche',
 		'Hide'			=>'Verstecken',
 		'Clear'			=>'Löschen',

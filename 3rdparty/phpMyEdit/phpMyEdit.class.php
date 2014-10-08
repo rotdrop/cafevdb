@@ -983,7 +983,13 @@ class phpMyEdit
 				if (in_array('*', $m)) {
 					continue;
 				}
-				$not = ($mc == '!' || strtoupper($mc) == 'NOT');
+				if (is_array($mc)) {
+					foreach ($mc as $idx => $cmp) {
+						$this->qfn .= '&'.$this->cgi['prefix']['sys'].$lc.'['.rawurlencode($idx).']='.rawurlencode($cmp);
+					}
+					$mc = implode(' ', $mc);
+				}
+				$not = ($mc == '!' || strtoupper($mc) == 'NOT') || strtoupper($mc) == 'NEGATE';
 				if ($this->col_has_values($k) && $this->col_has_multiple($k)) {
 					foreach (array_keys($m) as $key) {
 						$m[$key] = addslashes($m[$key]);
@@ -2242,6 +2248,12 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		if (! is_array($selected)) {
 			$selected = $selected === null ? array() : array($selected);
 		}
+		if (count($kv_array) == 1 || $multiple) {
+			$type = 'checkbox';
+		} else {
+			$type = 'radio';
+		}
+		$br = count($kv_array) == 1 ? '' : '<br>';
 		$found = false;
 		foreach ($kv_array as $key => $value) {
 			$labelhelp = $help
@@ -2251,7 +2263,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				? ' title="'.htmlspecialchars($help).'" '
 				: $this->fetchToolTip($css, $name, $css.'radio');
 			$ret .= '<label'.$labelhelp.' class="'.htmlspecialchars($css).'-label">';
-			$ret .= '<input type="'.($multiple ? 'checkbox' : 'radio').'" name="';
+			$ret .= '<input type="'.$type.'" name="';
 			$ret .= htmlspecialchars($name).'[]" value="'.htmlspecialchars($key).'"';
 			$ret .= ' class="'.htmlspecialchars($css).'"';
 			//$ret .= $inputhelp; // not need if labelhelp
@@ -2265,7 +2277,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			}
 			$strip_tags && $value = strip_tags($value);
 			$escape		&& $value = htmlspecialchars($value);
-			$ret .= '>'.$value.'</label><br>'."\n";
+			$ret .= '>'.$value.'</label>'.$br."\n";
 		}
 		return $ret;
 	} /* }}} */
@@ -2914,11 +2926,17 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				$vals		= $this->set_values($k, array('*' => '*'), null, $from_table);
 				$groups     = $this->fdd[$fd]['valueGroups'] ? $this->fdd[$k]['valueGroups'] : null;
 				$selected	= $mi;
+				$negate     = count($selected) == 0 ? null : $mc; // reset if none selected
+				$negate_css_class_name = $this->getCSSclass('filter-negate', null, null, $css_postfix);
 				$multiple	= $this->col_has_multiple_select($k);
 				$multiple  |= $this->fdd[$fd]['select'] == 'M' || $this->fdd[$fd]['select'] == 'C';
 				$readonly	= false;
 				$strip_tags = true;
 				//$escape	  = true;
+				echo $this->htmlRadioCheck($this->cgi['prefix']['sys'].$l.'_comp', $negate_css_class_name,
+										   array('not' => $this->labels['Not']), $negate,
+										   true /* checkbox */);
+				echo '<br>';
 				echo $this->htmlSelect($this->cgi['prefix']['sys'].$l.'_id', $css_class_name,
 									   $vals, $groups,
 									   $selected, $multiple || true, $readonly, $strip_tags, $escape);
