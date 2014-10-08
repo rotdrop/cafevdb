@@ -424,11 +424,6 @@ input.pme-bulkcommit+[type=submit] {
 /*   /\* border-radius:4px; *\/ */
 /* } */
 
-input.pme-filter {
-  width:auto;
-  white-space:nowrap;
-}
-
 /* input.pme-email[type=submit]:selected { */
 /*   background-image:url(../img/e_mail.png); */
 /*   background-repeat:no-repeat; */
@@ -473,27 +468,24 @@ table.pme-navigation {
   border-spacing:0px;
 }
 
-td[class^='pme-header'], th[class^='pme-header'] {
+td[class*='pme-header'], th[class*='pme-header'] {
+  vertical-align:bottom;
   border:#004d9c 1px solid;
   padding:4px;
   background:#add8e6;
 }
 
-td[class|='pme-navigation'], th[class|='pme-navigation'] {
+td[class*='pme-navigation'], th[class*='pme-navigation'] {
   white-space:nowrap;
   background:#C6DEFF;
 }
 
-td[class|='pme-sortinfo'], td[class|='pme-queryinfo']  {
+td[class*='pme-sortinfo'], td[class*='pme-queryinfo']  {
   background:#C6DEFF;
 }
 
 form.pme-form .tab-all {
   /* display:none; */
-}
-
-td[class|='pme-filter'], th[class|='pme-filter'] {
-  background:#C6DEFF;
 }
 
 td.negative { 
@@ -504,10 +496,10 @@ td.pme-cell-0-money, td.pme-cell-1-money {
   text-align:right;
 }
 
-td[class|='pme-key'], td[class|='pme-value'],
-td[class|='pme-help'], td[class|='pme-navigation'], th[class|='pme-navigation'],
-td[class|='pme-cell'], td[class|='pme-sortinfo'],
-td[class|='pme-filter'], th[class|='pme-filter'], td[class|='pme-queryinfo'] {
+td[class*='pme-key'], td[class*='pme-value'],
+td[class*='pme-help'], td[class*='pme-navigation'], th[class*='pme-navigation'],
+td[class*='pme-cell'], td[class*='pme-sortinfo'],
+td[class*='pme-filter'], th[class*='pme-filter'], td[class*='pme-queryinfo'] {
   border:#004d9c 1px solid;
   padding:3px;
 }
@@ -639,6 +631,20 @@ table.pme-main [class^="chosen"] {
   /* border-radius: 0.5em !important; */
   /* background-color: rgb(244, 244, 244) !important; */
   border-radius: 3px;
+}
+
+input.pme-filter {
+  width:auto;
+  white-space:nowrap;
+}
+
+td[class*='pme-filter'], th[class*='pme-filter'] {
+  vertical-align:top;
+  background:#C6DEFF;
+}
+
+table.pme-main label.pme-filter-negate {
+  vertical-align:top;
 }
 
 table.pme-main select[class^="pme-filter"] {
