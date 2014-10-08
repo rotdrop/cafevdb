@@ -255,7 +255,9 @@ korrigieren.'),
 
       'pme-export-htmlexcel' => L::t('Export as HTML page, but set the file type to `spread-sheed\'. Should also be readable by standard office-programs as `Excel\'-table.'),
 
-      'pme-filter' => L::t('  Field for filter/search criteria.
+      'pme-filter-negate' => L::t('Negate the filter, i.e. search for anything not matching the selected options.'),
+
+      'pme-filter' => L::t('Field for filter/search criteria.
 Short explanation: simply type somthing and press <code>ENTER</code>.
 <br/>
 In more detail: For numerical fields there is a select-box with comparison
