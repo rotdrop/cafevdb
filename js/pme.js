@@ -899,7 +899,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
       }
         
       // Then the general stuff
-      container.find("select[class^='"+pmepfx+"-filter']").chosen({width:'100%',
+      container.find("select[class^='"+pmepfx+"-filter']").chosen({//width:'100%',
                                                                    no_results_text:noRes});
 
       var dblClickSel =
