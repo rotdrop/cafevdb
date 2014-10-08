@@ -931,7 +931,9 @@ var CAFEVDB = CAFEVDB || {};
         info += '<div class="missing error">'+missing+'</div>';
       }
       if (data.data.debug != '') {
-        OC.dialogs.info('<div class="debug error contents">'+data.data.debug+'</div>', t('cafevdb', 'Debug Information'), undefined, true, true);
+        OC.dialogs.info('<div class="debug error contents">'+data.data.debug+'</div>',
+                        t('cafevdb', 'Debug Information'),
+                        undefined, true, true);
       }
       var caption = data.data.caption;
       if (typeof caption == 'undefined' || caption == '') {
@@ -983,19 +985,19 @@ var CAFEVDB = CAFEVDB || {};
     // everything else.
     container.find('.tip').tipsy({gravity:'w', fade:true});
 
-    CAFEVDB.applyTipsy('select[class|="pme-filter"]',
+    CAFEVDB.applyTipsy('select[class*="pme-filter"]',
                        {gravity:'n', fade:true, html:true, className:'tipsy-wide'},
                        container);
 
-    CAFEVDB.applyTipsy('input[class|="pme-filter"]',
+    CAFEVDB.applyTipsy('input[class*="pme-filter"]',
                        {gravity:'n', fade:true, html:true, className:'tipsy-wide'},
                        container);
 
-    CAFEVDB.applyTipsy('label[class$="memberstatus-label"]',
+    CAFEVDB.applyTipsy('label[class*="memberstatus-label"]',
                        {gravity:'n', fade:true, html:true, className:'tipsy-wide'},
                        container);
 
-    container.find('textarea[class^="pme-input"]').tipsy(
+    container.find('textarea[class*="pme-input"]').tipsy(
       {gravity:'sw', fade:true, html:true, className:'tipsy-wide'});
 
     container.find('[class*="tipsy-"]').each(function(index) {
