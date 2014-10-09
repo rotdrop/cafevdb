@@ -19,7 +19,59 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-$(document).ready(function(){
+$(document).ready(function() {
+
+    var loadPage = function(post) {
+        $.post(OC.filePath('cafevdb', 'ajax', 'page-loader.php'),
+               post,
+               function(data) {
+                   if (!CAFEVDB.ajaxErrorHandler(data, [ 'contents' ])) {
+                       return false;
+                   }
+                   // This is a "complete" page reload, so inject the
+                   // contents into #contents
+                   $('div#content').html(data.data.contents);
+                   CAFEVDB.tipsy();
+                   CAFEVDB.runReadyCallbacks();
+                   return false;
+               });
+    };
+
+    // Any pending form-submit which has not been caught otherwise is
+    // here intercepted and redirected to the page-loader in order to
+    // reduce load-time and to record usable history information.
+    $('div#content').on('submit', 'form', function(event) {
+        var form = $(this);
+        var action = form.attr('action');
+        alert('action: '+action);
+        if (action != '') {
+            // not for us, external target.
+            return true;
+        }
+        $('.tipsy').remove();
+        var post = form.serialize();
+        loadPage(post);
+        return false;
+    });
+
+    // Any pending form-submit which has not been caught otherwise is
+    // here intercepted and redirected to the page-loader in order to
+    // reduce load-time and to record usable history information.
+    $('div#content').on('click', ':submit', function(event) {
+        $('.tipsy').remove();
+        var form = $(this.form);
+        var action = form.attr('action');
+        alert('action: '+action);
+        var post = form.serialize();
+        var self = $(this);
+        if (self.attr('name')) {
+            var obj = {};
+            obj[self.attr('name')] = self.val();
+            post += '&' + $.param(obj);
+        }
+        loadPage(post);
+        return false;
+    });
 
     PHPMYEDIT.addTableLoadCallback('Musicians', {
         callback: function(selector, resizeCB) {
@@ -163,27 +215,34 @@ $(document).ready(function(){
         parameters: []
     });
 
-    CAFEVDB.pmeTweaks();
+    CAFEVDB.addReadyCallback(function() {
+        CAFEVDB.exportMenu();
 
-    CAFEVDB.tipsy();
-    
-    if (CAFEVDB.toolTips) {
-        $.fn.tipsy.enable();
-    } else {
-        $.fn.tipsy.disable();
-    }
-    CAFEVDB.broadcastHeaderVisibility();
+        CAFEVDB.pmeTweaks();
 
-    // Prevent drag&drop outside allowed areas.
-    window.addEventListener("dragover",function(e){
-        e = e || event;
-        e.preventDefault();
-    },false);
-    window.addEventListener("drop",function(e){
-        e = e || event;
-        e.preventDefault();
-    },false);
+        CAFEVDB.tipsy();
     
+        if (CAFEVDB.toolTips) {
+            $.fn.tipsy.enable();
+        } else {
+            $.fn.tipsy.disable();
+        }
+        CAFEVDB.broadcastHeaderVisibility();
+        
+        // Prevent drag&drop outside allowed areas.
+        window.addEventListener("dragover",function(e){
+            e = e || event;
+            e.preventDefault();
+        },false);
+        window.addEventListener("drop",function(e){
+            e = e || event;
+            e.preventDefault();
+        },false);
+    });
+
+    // The final callback stuf ...
+    CAFEVDB.runReadyCallbacks();
+
 });
 
 // Local Variables: ***

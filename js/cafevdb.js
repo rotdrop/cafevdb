@@ -27,6 +27,22 @@ var CAFEVDB = CAFEVDB || {};
   CAFEVDB.toolTips         = true;
   CAFEVDB.wysiwygEditor    = 'tinymce';
   CAFEVDB.language         = 'en';
+  CAFEVDB.readyCallbacks   = []; ///< quasi-document-ready-callbacks
+
+  CAFEVDB.addReadyCallback = function(callBack) {
+    this.readyCallbacks.push(callBack);
+  };
+
+  CAFEVDB.runReadyCallbacks = function() {
+    var idx;
+    for (idx = 0; idx < this.readyCallbacks.length; ++idx) {
+      var callback = this.readyCallbacks[idx];
+      if (typeof callback == 'function') {
+        callback();
+      }
+    }
+    return false;
+  };
 
   CAFEVDB.addEditor = function(selector, initCallback, initialHeight) {
     var editorElement;
@@ -619,7 +635,7 @@ var CAFEVDB = CAFEVDB || {};
         .attr('value', CAFEVDB.urldecode(nameValue[1]))
         .appendTo(form);
     }
-    form.appendTo($('body')); // needed?
+    form.appendTo($('div#content')); // needed?
     form.submit();
   };
 
@@ -1048,97 +1064,115 @@ $(document).ready(function(){
 
   document.onkeypress = CAFEVDB.stopRKey;
 
-  CAFEVDB.exportMenu();
+  var content = $('#content');
 
-  $('#personalsettings .navigation.home').on('click keydown', function(event) {
-    $('#personalsettings').submit();
-  });
+  if (false)
+  content.on('click keydown',
+             '#personalsettings .navigation.home',
+             function(event) {
+               $('#personalsettings').submit();
+             });
 
-  $('#personalsettings .generalsettings').on(
-    'click keydown', function(event) {
-      event.preventDefault();
+  content.on('click keydown',
+             '#personalsettings .generalsettings',
+             function(event) {
+               event.preventDefault();
 
-      $("#appsettings").tabs({ selected: 0});
+               $("#appsettings").tabs({ selected: 0});
+               
+               OC.appSettings({appid:'cafevdb', loadJS:true,
+                               cache:false, scriptName:'settings.php'});
+             });
 
-      OC.appSettings({appid:'cafevdb', loadJS:true,
-                      cache:false, scriptName:'settings.php'});
+  content.on('click keydown',
+             '#personalsettings .expert',
+             function(event) {
+               event.preventDefault();
+               OC.appSettings({appid:'cafevdb', loadJS:'expertmode.js',
+                               cache:false, scriptName:'expert.php'});
+             });
+
+  content.on('click',
+             ':button.events',
+             function(event) {
+               event.preventDefault();
+               if ($('#events').dialog('isOpen') == true) {
+                 $('#events').dialog('close').remove();
+               } else {
+                 // We store the values in the name attribute as serialized
+                 // string.
+                 var values = $(this).attr('name');
+                 $.post(OC.filePath('cafevdb', 'ajax/events', 'events.php'),
+                        values, CAFEVDB.Events.UI.init, 'json');
+               }
+               return false;
+             });
+
+  content.on('click',
+             ':button.instrumentation',
+             function(event) {
+               event.preventDefault();
+               
+               var values = $(this).attr('name');
+               values += '&headervisibility='+CAFEVDB.headervisibility;
+               
+               CAFEVDB.formSubmit('', values, 'post');
+               
+               return false;
+             });
+
+  content.on('click',
+             ':button.register-musician',
+             function(event) {
+               event.preventDefault();
+               var values = $(this).attr('name');
+
+               CAFEVDB.formSubmit('', values, 'post');
+
+               return false;
+             });
+
+  content.on('click',
+             ':button.musician-instrument-insurance',
+             function(event) {
+               event.preventDefault();
+               var values = $(this).attr('name');
+
+               CAFEVDB.formSubmit('', values, 'post');
+
+               return false;
+             });
+
+  content.on('click',
+             'form#projectlabelcontrol :submit',
+             function(event) {
+               event.stopImmediatePropagation();
+
+               var form = $(this.form);
+               var pseudoSubmit = form.find('input.pme-view');
+               PHPMYEDIT.tableDialog($(this.form), pseudoSubmit);
+
+               return false;
+             });
+
+  CAFEVDB.addReadyCallback(function() {
+    $('input.alertdata.cafevdb-page').each(function(index) {
+      var title = $(this).attr('name');
+      var text  = $(this).attr('value');
+      OC.dialogs.alert(text, title, undefined , true, true);
     });
-
-  $('#personalsettings .expert').on('click keydown', function(event) {
-    event.preventDefault();
-    OC.appSettings({appid:'cafevdb', loadJS:'expertmode.js',
-                    cache:false, scriptName:'expert.php'});
-  });
-
-  $(':button.events').click(function(event) {
-    event.preventDefault();
-    if ($('#events').dialog('isOpen') == true) {
-      $('#events').dialog('close').remove();
-    } else {
-      // We store the values in the name attribute as serialized
-      // string.
-      var values = $(this).attr('name');
-      $.post(OC.filePath('cafevdb', 'ajax/events', 'events.php'),
-             values, CAFEVDB.Events.UI.init, 'json');
-    }
-    return false;
-  });
-
-  $(':button.instrumentation').click(function(event) {
-    event.preventDefault();
-
-    var values = $(this).attr('name');
-    values += '&headervisibility='+CAFEVDB.headervisibility;
-
-    CAFEVDB.formSubmit(OC.linkTo('cafevdb', 'index.php'), values, 'post');
-
-    return false;
-  });
-
-  $(':button.register-musician').click(function(event) {
-    event.preventDefault();
-    var values = $(this).attr('name');
-
-    CAFEVDB.formSubmit(OC.linkTo('cafevdb', 'index.php'), values, 'post');
-
-    return false;
-  });
-
-  $(':button.musician-instrument-insurance').click(function(event) {
-    event.preventDefault();
-    var values = $(this).attr('name');
-
-    CAFEVDB.formSubmit(OC.linkTo('cafevdb', 'index.php'), values, 'post');
-
-    return false;
-  });
-
-  $('input.alertdata.cafevdb-page').each(function(index) {
-    var title = $(this).attr('name');
-    var text  = $(this).attr('value');
-    OC.dialogs.alert(text, title, undefined , true, true);
-  });
-
-  $('#missing-musicians-block').dialog({
-    //dialogClass: 'no-close',
-    width:'auto',
-    height:'auto',
-    resizable: false,
-    autoResize: true,
-    position:{my:'left top',
-              at:'left+1% bottom+10%',
-              of:'form.pme-form'
-             }
-  });
-
-  $('form#projectlabelcontrol :submit').click(function(event) {
-    event.preventDefault();
-
-    var form = $(this.form);
-    var pseudoSubmit = form.find('input.pme-view');
-    PHPMYEDIT.tableDialog($(this.form), pseudoSubmit);
-
-    return false;
+    
+    $('#missing-musicians-block').dialog({
+      //dialogClass: 'no-close',
+      width:'auto',
+      height:'auto',
+      resizable: false,
+      autoResize: true,
+      position:{my:'left top',
+                at:'left+1% bottom+10%',
+                of:'form.pme-form'
+               }
+    });
   });
 
 });

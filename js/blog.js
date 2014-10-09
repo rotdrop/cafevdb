@@ -226,129 +226,130 @@ CAFEVDB = CAFEVDB || {};
 
 $(document).ready(function() {
 
-  $('#blogeditform').submit(function () { return false; });
+  CAFEVDB.addReadyCallback(function() {
+    $('#blogeditform').submit(function () { return false; });
 
-  $('#blogform #blognewentry').click(function(event) {
-    event.preventDefault();
-    var post = $('#blogform').serializeArray();
-    $.post(OC.filePath('cafevdb','ajax/blog','editentry.php'),
-           post,
-           CAFEVDB.Blog.editWindow, 'json');
-    return false;
-  });
+    $('#blogform #blognewentry').click(function(event) {
+      event.preventDefault();
+      var post = $('#blogform').serializeArray();
+      $.post(OC.filePath('cafevdb','ajax/blog','editentry.php'),
+             post,
+             CAFEVDB.Blog.editWindow, 'json');
+      return false;
+    });
 
-  // Use delegate handlers for dynamic content
-  var blogThreads = $('#blogthreads');
+    // Use delegate handlers for dynamic content
+    var blogThreads = $('#blogthreads');
 
-  blogThreads.on('click',
-                 '#blogentryactions button.reply',
-                 function(event) {
-                   event.preventDefault();
-                   $.post(OC.filePath('cafevdb','ajax/blog','editentry.php'),
-                          { blogId: -1,
-                            inReply: $(this).val() },
-                          CAFEVDB.Blog.editWindow, 'json');
-                   return false;
-                 });
+    blogThreads.on('click',
+                   '#blogentryactions button.reply',
+                   function(event) {
+                     event.preventDefault();
+                     $.post(OC.filePath('cafevdb','ajax/blog','editentry.php'),
+                            { blogId: -1,
+                              inReply: $(this).val() },
+                            CAFEVDB.Blog.editWindow, 'json');
+                     return false;
+                   });
 
-  blogThreads.on('click',
-                 '#blogentryactions button.edit',
-                 function(event) {
-                   event.preventDefault();
-                   $.post(OC.filePath('cafevdb','ajax/blog','editentry.php'),
-                          { blogId: $(this).val() ,
-                            inReply: -1
-                          },
-                          CAFEVDB.Blog.editWindow, 'json');
-                   return false;
-                 });
+    blogThreads.on('click',
+                   '#blogentryactions button.edit',
+                   function(event) {
+                     event.preventDefault();
+                     $.post(OC.filePath('cafevdb','ajax/blog','editentry.php'),
+                            { blogId: $(this).val() ,
+                              inReply: -1
+                            },
+                            CAFEVDB.Blog.editWindow, 'json');
+                     return false;
+                   });
 
-  
-  blogThreads.on('click',
-                 '#blogentryactions button.delete',
-                 function(event) {
-                   event.preventDefault();
-                   var blogId = $(this).val();
-                   OC.dialogs.confirm(t('cafevdb', 'The entire message thread will be deleted if you press `Yes\''),
-                                      t('cafevdb', 'Really delete the entry?'),
-                                      function (decision) {
-                                        if (decision) {
-                                          $.post(OC.filePath('cafevdb','ajax/blog','modifyentry.php'),
-                                                 { action: 'delete',
-                                                   blogId: blogId },
-                                                 function (data) {
-                                                   if (data.status == 'success') {
-                                                     $('#blogthreads').html(data.data.contents);
-                                                     CAFEVDB.Blog.popupMessages();
-                                                     return true;
-                                                   } else {
-                                                     OC.dialogs.alert(data.data.message,
-                                                                      t('cafevdb', 'Error'));
-                                                     return true;
-                                                   }
-                                                 }, 'json');
-                                        }
-                                      },
-                                      true);
-                   return false;
-                 });
+    
+    blogThreads.on('click',
+                   '#blogentryactions button.delete',
+                   function(event) {
+                     event.preventDefault();
+                     var blogId = $(this).val();
+                     OC.dialogs.confirm(t('cafevdb', 'The entire message thread will be deleted if you press `Yes\''),
+                                        t('cafevdb', 'Really delete the entry?'),
+                                        function (decision) {
+                                          if (decision) {
+                                            $.post(OC.filePath('cafevdb','ajax/blog','modifyentry.php'),
+                                                   { action: 'delete',
+                                                     blogId: blogId },
+                                                   function (data) {
+                                                     if (data.status == 'success') {
+                                                       $('#blogthreads').html(data.data.contents);
+                                                       CAFEVDB.Blog.popupMessages();
+                                                       return true;
+                                                     } else {
+                                                       OC.dialogs.alert(data.data.message,
+                                                                        t('cafevdb', 'Error'));
+                                                       return true;
+                                                     }
+                                                   }, 'json');
+                                          }
+                                        },
+                                        true);
+                     return false;
+                   });
 
-  blogThreads.on('click',
-                 '#blogentryactions button.raise',
-                 function(event) {
-                   event.preventDefault();
-                   var id = $(this).val();
-                   var prio = $('#blogpriority'+id).val();
-                   $.post(OC.filePath('cafevdb','ajax/blog','modifyentry.php'),
-                          { action: 'modify',
-                            text: '',
-                            blogId: id,
-                            priority: +prio+1,
-                            popup: false,
-                            inReply: -1
-                          },
-                          function (data) {
-                            if (data.status == 'success') {
-                              $('#blogthreads').html(data.data.contents);
-                              CAFEVDB.Blog.popupMessages();
-                              return true;
-                            } else {
-                              OC.dialogs.alert(data.data.message,
-                                               t('cafevdb', 'Error'));
-                              return true;
-                            }
-                          }, 'json');
-                   return false;
-                 });
+    blogThreads.on('click',
+                   '#blogentryactions button.raise',
+                   function(event) {
+                     event.preventDefault();
+                     var id = $(this).val();
+                     var prio = $('#blogpriority'+id).val();
+                     $.post(OC.filePath('cafevdb','ajax/blog','modifyentry.php'),
+                            { action: 'modify',
+                              text: '',
+                              blogId: id,
+                              priority: +prio+1,
+                              popup: false,
+                              inReply: -1
+                            },
+                            function (data) {
+                              if (data.status == 'success') {
+                                $('#blogthreads').html(data.data.contents);
+                                CAFEVDB.Blog.popupMessages();
+                                return true;
+                              } else {
+                                OC.dialogs.alert(data.data.message,
+                                                 t('cafevdb', 'Error'));
+                                return true;
+                              }
+                            }, 'json');
+                     return false;
+                   });
 
-  blogThreads.on('click',
-                 '#blogentryactions button.lower',
-                 function(event) {
-                   event.preventDefault();
-                   var id = $(this).val();
-                   var prio = $('#blogpriority'+id).val();
-                   $.post(OC.filePath('cafevdb','ajax/blog','modifyentry.php'),
-                          { action: 'modify',
-                            text: '',
-                            blogId: id,
-                            priority: +prio-1,
-                            popup: false,
-                            inReply: -1
-                          },
-                          function (data) {
-                            if (data.status == 'success') {
-                              $('#blogthreads').html(data.data.contents);
-                              CAFEVDB.Blog.popupMessages();
-                              return true;
-                            } else {
-                              OC.dialogs.alert(data.data.message,
-                                               t('cafevdb', 'Error'));
-                              return true;
-                            }
-                          }, 'json');
-                   return false;
-                 });
-  
+    blogThreads.on('click',
+                   '#blogentryactions button.lower',
+                   function(event) {
+                     event.preventDefault();
+                     var id = $(this).val();
+                     var prio = $('#blogpriority'+id).val();
+                     $.post(OC.filePath('cafevdb','ajax/blog','modifyentry.php'),
+                            { action: 'modify',
+                              text: '',
+                              blogId: id,
+                              priority: +prio-1,
+                              popup: false,
+                              inReply: -1
+                            },
+                            function (data) {
+                              if (data.status == 'success') {
+                                $('#blogthreads').html(data.data.contents);
+                                CAFEVDB.Blog.popupMessages();
+                                return true;
+                              } else {
+                                OC.dialogs.alert(data.data.message,
+                                                 t('cafevdb', 'Error'));
+                                return true;
+                              }
+                            }, 'json');
+                     return false;
+                   });
+  });  
 
 });
 

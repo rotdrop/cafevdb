@@ -227,7 +227,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
           case 'sepa-debit-mandates':
             post.Template = selectedValue;
             post.headervisibility = CAFEVDB.headervisibility;
-            CAFEVDB.formSubmit(OC.linkTo('cafevdb', 'index.php'), $.param(post), 'post');
+            CAFEVDB.formSubmit('', $.param(post), 'post');
             break;
           case 'profit-and-loss':
           case 'project-files':
@@ -959,11 +959,14 @@ $(document).ready(function(){
         context: CAFEVDB.Projects,
         parameters: []
     });
-    CAFEVDB.Projects.actionMenu();
-    var dpyClass = $(PHPMYEDIT.defaultSelector).find('form.pme input[name="DisplayClass"]');
-    if (dpyClass.length > 0 && dpyClass.val() === 'Projects') {
-        CAFEVDB.Projects.pmeFormInit(PHPMYEDIT.defaultSelector);
-    }
+
+    CAFEVDB.addReadyCallback(function() {
+        CAFEVDB.Projects.actionMenu();
+        var dpyClass = $(PHPMYEDIT.defaultSelector).find('form.pme input[name="DisplayClass"]');
+        if (dpyClass.length > 0 && dpyClass.val() === 'Projects') {
+            CAFEVDB.Projects.pmeFormInit(PHPMYEDIT.defaultSelector);
+        }
+    });
 });
 
 // Local Variables: ***

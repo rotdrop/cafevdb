@@ -970,8 +970,10 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
 $(document).ready(function(){
 
-  PHPMYEDIT.transposeReady();
-  PHPMYEDIT.init('pme');
+  CAFEVDB.addReadyCallback(function() {
+    PHPMYEDIT.transposeReady();
+    PHPMYEDIT.init('pme');
+  });
 
 });
 
