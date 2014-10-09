@@ -26,116 +26,121 @@
  * template with "pme-table" which actually echos the HTML.
  */
 
-\OCP\JSON::checkLoggedIn();
-\OCP\JSON::checkAppEnabled('cafevdb');
-\OCP\JSON::callCheck();
+namespace CAFEVDB 
+{
 
-use CAFEVDB\L;
-use CAFEVDB\Config;
-use CAFEVDB\Events;
-use CAFEVDB\Util;
-use CAFEVDB\Error;
+  \OCP\JSON::checkLoggedIn();
+  \OCP\JSON::checkAppEnabled('cafevdb');
+  \OCP\JSON::callCheck();
 
-$debugText = '';
+  $debugText = '';
 
-try {
+  try {
 
-  ob_start();
+    ob_start();
 
-  Error::exceptions(true);
-  Config::init();
+    Error::exceptions(true);
+    Config::init();
 
-  $_GET = array();
+    $_GET = array();
 
-  $messageText = '';
-  $mySQLError = array('error' => 0,
-                      'message' => '');
+    $messageText = '';
+    $mySQLError = array('error' => 0,
+                        'message' => '');
 
-  if (Util::debugMode('request')) {
-    $debugText .= '$_POST[] = '.print_r($_POST, true);
-  }  
+    if (Util::debugMode('request')) {
+      $debugText .= '$_POST[] = '.print_r($_POST, true);
+    }  
 
-  $displayClass = Util::cgiValue('DisplayClass', false);
-  $classArguments = Util::cgiValue('ClassArguments', array());
+    $displayClass = Util::cgiValue('DisplayClass', false);
+    $classArguments = Util::cgiValue('ClassArguments', array());
 
-  if (!$displayClass) {
-    $debugText .= ob_get_contents();
-    @ob_end_clean();
+    $dialogMode = Util::cgiValue('AmbientContainerSelector', false) != false;
+    if (!$dialogMode) {
+      $pageLoader = new PageLoader();
+      $pageLoader->pushHistory($_POST);
+    }
 
-    OCP\JSON::error(
-      array(
-        'data' => array('error' => L::t("missing arguments"),
-                        'message' => L::t("No class name submitted."),
-                        'debug' => $debugText)));
-    return false;
-  }
+    if (!$displayClass) {
+      $debugText .= ob_get_contents();
+      @ob_end_clean();
 
-  if (!is_array($classArguments)) {
-    $debugText .= ob_get_contents();
-    @ob_end_clean();
-
-    OCP\JSON::error(
-      array(
-        'data' => array('error' => L::t('invalid arguments'),
-                        'message' => L::t('Class arguments are not an array'),
-                        'debug' => $debugText)));
-    return false;
-  }
-
-  $tmpl = new OCP\Template('cafevdb', 'pme-table');
-  $tmpl->assign('DisplayClass', $displayClass);
-  $tmpl->assign('ClassArguments', $classArguments);
-  
-  $tmpl->assign('recordId', Util::getCGIRecordId());
-
-  $html = $tmpl->fetchPage();
-
-  if (false) {
-    OCP\JSON::error(
-      array(
-        'data' => array('error' => L::t('invalid arguments'),
-                        'message' => print_r($_POST, true),
-                        'debug' => $debugText)));
-    return false;
-  }
-
-  // Search for MySQL error messages echoes by phpMyEdit, sometimes
-  // the contents of the template will be discarded, but we still want
-  //
-  // to get the error messages.
-  //
-  // <h4>MySQL error 1288</h4>The target table Spielwiese2013View of the DELETE is not updatable<hr size="1">
-
-  if (preg_match('|<h4>MySQL error (\d+)</h4>\s*([^<]+)|', $html, $matches)) {
-    $mySQLError = array('error' => $matches[1],
-                        'message' => $matches[2]);
-  }
-
-  $debugText .= ob_get_contents();
-  @ob_end_clean();
-  
-  OCP\JSON::success(
-    array('data' => array('contents' => $html,
-                          'sqlerror' => $mySQLError,
+      \OCP\JSON::error(
+        array(
+          'data' => array('error' => L::t("missing arguments"),
+                          'message' => L::t("No class name submitted."),
                           'debug' => $debugText)));
+      return false;
+    }
+
+    if (!is_array($classArguments)) {
+      $debugText .= ob_get_contents();
+      @ob_end_clean();
+
+      \OCP\JSON::error(
+        array(
+          'data' => array('error' => L::t('invalid arguments'),
+                          'message' => L::t('Class arguments are not an array'),
+                          'debug' => $debugText)));
+      return false;
+    }
+
+    $tmpl = new \OCP\Template('cafevdb', 'pme-table');
+    $tmpl->assign('DisplayClass', $displayClass);
+    $tmpl->assign('ClassArguments', $classArguments);
   
-  return true;
+    $tmpl->assign('recordId', Util::getCGIRecordId());
 
-} catch (\Exception $e) {
+    $html = $tmpl->fetchPage();
 
-  $debugText .= ob_get_contents();
-  @ob_end_clean();
+    if (false) {
+      \OCP\JSON::error(
+        array(
+          'data' => array('error' => L::t('invalid arguments'),
+                          'message' => print_r($_POST, true),
+                          'debug' => $debugText)));
+      return false;
+    }
 
-  OCP\JSON::error(
-    array(
-      'data' => array(
-        'error' => 'exception',
-        'exception' => $e->getFile().'('.$e->getLine().'): '.$e->getMessage(),
-        'trace' => $e->getTraceAsString(),
-        'message' => L::t('Error, caught an exception'),
-        'sqlerror' => $mySQLError,
-        'debug' => $debugText)));
-  return false;
-}
+    // Search for MySQL error messages echoes by phpMyEdit, sometimes
+    // the contents of the template will be discarded, but we still want
+    //
+    // to get the error messages.
+    //
+    // <h4>MySQL error 1288</h4>The target table Spielwiese2013View of the DELETE is not updatable<hr size="1">
+
+    if (preg_match('|<h4>MySQL error (\d+)</h4>\s*([^<]+)|', $html, $matches)) {
+      $mySQLError = array('error' => $matches[1],
+                          'message' => $matches[2]);
+    }
+
+    $debugText .= ob_get_contents();
+    @ob_end_clean();
+  
+    \OCP\JSON::success(
+      array('data' => array('contents' => $html,
+                            'sqlerror' => $mySQLError,
+                            'debug' => $debugText)));
+  
+    return true;
+
+  } catch (\Exception $e) {
+
+    $debugText .= ob_get_contents();
+    @ob_end_clean();
+
+    \OCP\JSON::error(
+      array(
+        'data' => array(
+          'error' => 'exception',
+          'exception' => $e->getFile().'('.$e->getLine().'): '.$e->getMessage(),
+          'trace' => $e->getTraceAsString(),
+          'message' => L::t('Error, caught an exception'),
+          'sqlerror' => $mySQLError,
+          'debug' => $debugText)));
+    return false;
+  }
+
+} // namespace CAFEVDB
 
 ?>

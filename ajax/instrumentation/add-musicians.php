@@ -220,6 +220,6 @@ try {
 
   return false;
 
-  }
+}
 
 ?>
