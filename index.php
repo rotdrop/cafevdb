@@ -24,229 +24,159 @@
  * Main entry point.
  */
 
-use CAFEVDB\L;
-use CAFEVDB\Config;
-use CAFEVDB\Admin;
-use CAFEVDB\ConfigCheck;
-use CAFEVDB\Util;
-use CAFEVDB\Navigation;
-use CAFEVDB\Error;
+namespace CAFEVDB 
+{
 
-// Check if we are a user
-OCP\User::checkLoggedIn();
-OCP\App::checkAppEnabled('cafevdb');
+  // Check if we are a user
+  \OCP\User::checkLoggedIn();
+  \OCP\App::checkAppEnabled('cafevdb');
 
-Config::init();
+  Config::init();
 
-$group = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
-$user  = OCP\USER::getUser();
+  $group = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
+  $user  = \OCP\USER::getUser();
 
-OCP\Util::addStyle('cafevdb', 'cafevdb');
-OCP\Util::addStyle('cafevdb', 'tipsy');
+  \OCP\Util::addStyle('cafevdb', 'cafevdb');
+  \OCP\Util::addStyle('cafevdb', 'tipsy');
 
-if (!OC_Group::inGroup($user, $group)) {
-  $tmpl = new OCP\Template( 'cafevdb', 'errorpage', 'user' );
-  $tmpl->assign('error', 'notamember');
-  return $tmpl->printPage();
-} else if( !\OC_App::isEnabled('calendar')) {
-  $tmpl = new OCP\Template( 'cafevdb', 'errorpage', 'user' );
-  $tmpl->assign('error', 'nocalendar');
-  return $tmpl->printPage();
-} else if( !\OC_App::isEnabled('contacts')) {
-  $tmpl = new OCP\Template( 'cafevdb', 'errorpage', 'user' );
-  $tmpl->assign('error', 'nocontacts');
-  return $tmpl->printPage();
-}
-
-try {
-  
-  Error::exceptions(true);
-  
-  // Are we a group-admin?
-  $admin = OC_SubAdmin::isGroupAccessible($user, $group);
-
-  $tooltips   = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb', 'tooltips', 'on');
-  $usrHdrVis  = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb', 'headervisibility', 'expanded');
-  $usrFiltVis = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb', 'filtervisibility', 'off');
-  $encrkey    = Config::getEncryptionKey();
-
-  // Initialize with cgi or user-value
-  $headervisibility = Util::cgiValue('headervisibility', $usrHdrVis);
-
-  // Filter visibility is stored here:  
-  Config::$pmeopts['cgi']['append'][Config::$pmeopts['cgi']['prefix']['sys'].'fl'] =
-    $usrFiltVis == 'off' ? 0 : 1;
-
-  Util::addExternalScript("https://maps.google.com/maps/api/js?sensor=false");
-  Util::addExternalScript(OC_Helper::linkTo('calendar/js', 'l10n.php'));
-
-  // js/config.php generated dynamic JavaScript and thus "cheats" the
-  // CSP rules. We have here the possibility to pass some selected
-  // CGI-parameters or other PHP-variables on to the JavaScript code.
-  Util::addExternalScript(OC_Helper::linkToRoute('cafevdb_config',
-                                                 array('headervisibility' => $headervisibility))); 
-
-  OCP\App::setActiveNavigationEntry( 'cafevdb' );
-
-  OCP\Util::addStyle('cafevdb', 'pme-table');
-  OCP\Util::addStyle('cafevdb', 'settings');
-  OCP\Util::addStyle('cafevdb', 'events');
-  OCP\Util::addStyle('cafevdb', 'sepa-debit-mandate');
-  //OCP\Util::addStyle('cafevdb', 'email');
-  OCP\Util::addStyle('cafevdb', 'emailform');
-  OCP\Util::addStyle('cafevdb', 'blog');
-  OCP\Util::addStyle('cafevdb', 'projects');
-  OCP\Util::addStyle('cafevdb', 'project-instruments');
-  OCP\Util::addStyle('cafevdb', 'instrumentation');
-  OCP\Util::addStyle('cafevdb', 'inlineimage');  
-  OCP\Util::addStyle('3rdparty/fontawesome', 'font-awesome');
-  OCP\Util::addStyle('cafevdb', 'font-awesome');
-  OCP\Util::addStyle('core', 'icons');
-
-  OCP\Util::addScript('cafevdb', 'cafevdb');
-  OCP\Util::addScript('cafevdb', 'pme');
-  OCP\Util::addScript('cafevdb', 'page');
-  OCP\Util::addScript('cafevdb', 'inlineimage');
-  OCP\Util::addScript('cafevdb', 'events');
-  OCP\Util::addScript('cafevdb', 'blog');
-  OCP\Util::addScript('cafevdb', 'projects');
-  OCP\Util::addScript('cafevdb', 'project-instruments');
-  OCP\Util::addScript('cafevdb', 'sepa-debit-mandate');
-  OCP\Util::addScript('cafevdb', 'instrumentation');
-
-  OCP\Util::addScript('cafevdb', 'jquery.Jcrop');
-  OCP\Util::addStyle('cafevdb', 'jquery.Jcrop');  
-
-  OCP\Util::addscript('files',   'jquery.iframe-transport');
-  OCP\Util::addscript('files',   'jquery.fileupload');
-  OCP\Util::addscript('cafevdb', 'file-upload');
-
-  OCP\Util::addScript('cafevdb', 'email');
-
-  // TinyMCE stuff
-  OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/tinymce.min');
-  OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/jquery.tinymce.min');
-  OCP\Util::addScript('cafevdb/3rdparty', 'tinymceinit');
-  // CKEditor stuff
-  OCP\Util::addScript('cafevdb/3rdparty', 'ckeditor/ckeditor');
-  OCP\Util::addScript('cafevdb/3rdparty', 'ckeditor/adapters/jquery');
-  
-  // Updated chosen version
-  OCP\Util::addscript("cafevdb/3rdparty/chosen", "chosen.jquery.min");
-  OCP\Util::addStyle("cafevdb/3rdparty/chosen", "chosen.min");
-
-  // Will be removed ...
-  OCP\Util::addscript("cafevdb/3rdparty/QuickForm2", "quickform");
-  OCP\Util::addscript("cafevdb/3rdparty/QuickForm2", "dualselect");
-
-  // Callback for waiting until images have been loaded
-  OCP\UTIL::addscript("cafevdb/3rdparty", "imagesloaded/imagesloaded.pkgd.min");
-
-  // dual-select list-box for email recipient selection
-  //OCP\Util::addstyle("cafevdb/3rdparty/bootstrap", "bootstrap.min");
-  OCP\Util::addstyle("cafevdb/3rdparty/bootstrap-duallistbox", "bootstrap-duallistbox-quirks");
-  OCP\Util::addstyle("cafevdb/3rdparty/bootstrap-duallistbox", "bootstrap-duallistbox.min");
-  OCP\Util::addscript("cafevdb/3rdparty/bootstrap-duallistbox", "jquery.bootstrap-duallistbox.min");
-  
-  // Calendar event hacks ... TODO: check whether still needed ...
-  OCP\Util::addscript('3rdparty/timepicker', 'jquery.ui.timepicker');
-  OCP\Util::addStyle('3rdparty/timepicker', 'jquery.ui.timepicker');
-  OCP\Util::addscript('', 'jquery.multiselect');
-  OCP\Util::addStyle('', 'jquery.multiselect');
-  OCP\Util::addscript('contacts','jquery.multi-autocomplete');
-  OCP\Util::addscript('','tags');
-  OCP\Util::addScript('cafevdb', 'calendar');
-  OCP\Util::addScript('calendar', 'on-event');
-
-  // end event hacks
-
-  // Determine which template has to be used
-
-  $config = ConfigCheck::configured();
-
-  // following three may or may not be set
-  $project    = Util::cgiValue('Project', '');
-  $projectId  = Util::cgiValue('ProjectId', -1);
-  $musicianId = Util::cgiValue('MusicianId',-1);
-  $recordId   = Util::getCGIRecordId();
-
-  if (!$config['summary']) {
-    $tmplname = 'configcheck';
-  } else {
-    /* Special hack to determine if the email-form was requested
-     * through the pme-miscinfo button and in order to determine the
-     * record key
-     */
-    $opreq  = Util::cgiValue(Config::$pmeopts['cgi']['prefix']['sys'].'operation');
-    $op     = parse_url($opreq, PHP_URL_PATH);
-
-    if (false) {
-      echo "<PRE>\n";
-      print_r($opargs);
-      echo $recordId;
-      echo "</PRE>\n";
-    }
-
-    if ($op == "Em@il") {
-      $tmplname = 'email';
-      $_POST['Template'] = 'email';
-    } else if (strpos($op, strval(L::t('Add all to %s', $project))) === 0) {
-      $tmplname = 'bulk-add-musicians';
-      $_POST['Template'] = 'bulk-add-musicians';
-    } else {
-      $tmplname = Util::cgiValue('Template', 'blog');
-      if (false) {
-        // Does not seem to work well.
-        if ($op == '' && $recordId < 0) {
-          // Enable 5 Minutes of Cache for non-critical requests.
-          \OCP\Response::enableCaching(15);
-          \OCP\Response::setLastModifiedHeader(Admin::getLastModified());
-        }
-      }
-    }
+  if (!\OC_Group::inGroup($user, $group)) {
+    $tmpl = new \OCP\Template( 'cafevdb', 'errorpage', 'user' );
+    $tmpl->assign('error', 'notamember');
+    return $tmpl->printPage();
+  } else if( !\OC_App::isEnabled('calendar')) {
+    $tmpl = new \OCP\Template( 'cafevdb', 'errorpage', 'user' );
+    $tmpl->assign('error', 'nocalendar');
+    return $tmpl->printPage();
+  } else if( !\OC_App::isEnabled('contacts')) {
+    $tmpl = new \OCP\Template( 'cafevdb', 'errorpage', 'user' );
+    $tmpl->assign('error', 'nocontacts');
+    return $tmpl->printPage();
   }
 
-  // One last script to load after the other, e.g. to get the tipsy
-  // stuff and so on right
-  OCP\Util::addScript('cafevdb', 'document-ready');
-
-  $tmpl = new OCP\Template('cafevdb', $tmplname, 'user');
+  try {
   
-  $tmpl->assign('configcheck', $config);
-  $tmpl->assign('orchestra', Config::getValue('orchestra'));
-  $tmpl->assign('groupadmin', $admin);
-  $tmpl->assign('usergroup', $group);
-  $tmpl->assign('user', $user);
-  $tmpl->assign('expertmode', Config::$expertmode);
-  $tmpl->assign('tooltips', $tooltips);
-  $tmpl->assign('encryptionkey', $encrkey);
-  $tmpl->assign('uploadMaxFilesize', Util::maxUploadSize(), false);
-  $tmpl->assign('uploadMaxHumanFilesize',
-                OCP\Util::humanFileSize(Util::maxUploadSize()), false);
-  $tmpl->assign('projectName', $project);
-  $tmpl->assign('projectId', $projectId);
-  $tmpl->assign('musicianId', $musicianId);
-  $tmpl->assign('recordId', $recordId);
-  $tmpl->assign('locale', Util::getLocale());
-  $tmpl->assign('timezone', Util::getTimezone());
+    Error::exceptions(true);
+  
+    Util::addExternalScript("https://maps.google.com/maps/api/js?sensor=false");
+    Util::addExternalScript(\OC_Helper::linkTo('calendar/js', 'l10n.php'));
 
-  $tmpl->assign('headervisibility', $headervisibility);
+    // js/config.php generated dynamic JavaScript and thus "cheats" the
+    // CSP rules. We have here the possibility to pass some selected
+    // CGI-parameters or other PHP-variables on to the JavaScript code.
+    $usrHdrVis  = Config::getUserValue('headervisibility', 'expanded', $user);
+    $headervisibility = Util::cgiValue('headervisibility', $usrHdrVis);
+    Util::addExternalScript(
+      \OC_Helper::linkToRoute('cafevdb_config',
+                              array('headervisibility' => $headervisibility))); 
 
-  $tmpl->printPage();
+    \OCP\App::setActiveNavigationEntry( 'cafevdb' );
 
-} catch (Exception $e) {
-  ob_end_clean();
-  $tmpl = new OCP\Template( 'cafevdb', 'errorpage', 'user' );
-  $tmpl->assign('error', 'exception');
-  $tmpl->assign('exception', $e->getMessage());
-  $tmpl->assign('trace', $e->getTraceAsString());
-  $tmpl->assign('debug', true);
-  $admin =
-    \OCP\User::getDisplayName('admin').
-    ' <'.\OCP\Config::getUserValue('admin', 'settings', 'email').'>';
-  $tmpl->assign('admin', htmlentities($admin));
+    \OCP\Util::addStyle('cafevdb', 'pme-table');
+    \OCP\Util::addStyle('cafevdb', 'settings');
+    \OCP\Util::addStyle('cafevdb', 'events');
+    \OCP\Util::addStyle('cafevdb', 'sepa-debit-mandate');
+    //\OCP\Util::addStyle('cafevdb', 'email');
+    \OCP\Util::addStyle('cafevdb', 'emailform');
+    \OCP\Util::addStyle('cafevdb', 'blog');
+    \OCP\Util::addStyle('cafevdb', 'projects');
+    \OCP\Util::addStyle('cafevdb', 'project-instruments');
+    \OCP\Util::addStyle('cafevdb', 'instrumentation');
+    \OCP\Util::addStyle('cafevdb', 'inlineimage');  
+    \OCP\Util::addStyle('3rdparty/fontawesome', 'font-awesome');
+    \OCP\Util::addStyle('cafevdb', 'font-awesome');
+    \OCP\Util::addStyle('core', 'icons');
 
-  return $tmpl->printPage();
-}
+    \OCP\Util::addScript('cafevdb', 'cafevdb');
+    \OCP\Util::addScript('cafevdb', 'pme');
+    \OCP\Util::addScript('cafevdb', 'page');
+    \OCP\Util::addScript('cafevdb', 'inlineimage');
+    \OCP\Util::addScript('cafevdb', 'events');
+    \OCP\Util::addScript('cafevdb', 'blog');
+    \OCP\Util::addScript('cafevdb', 'projects');
+    \OCP\Util::addScript('cafevdb', 'project-instruments');
+    \OCP\Util::addScript('cafevdb', 'sepa-debit-mandate');
+    \OCP\Util::addScript('cafevdb', 'instrumentation');
+
+    \OCP\Util::addScript('cafevdb', 'jquery.Jcrop');
+    \OCP\Util::addStyle('cafevdb', 'jquery.Jcrop');  
+
+    \OCP\Util::addscript('files',   'jquery.iframe-transport');
+    \OCP\Util::addscript('files',   'jquery.fileupload');
+    \OCP\Util::addscript('cafevdb', 'file-upload');
+
+    \OCP\Util::addScript('cafevdb', 'email');
+
+    // TinyMCE stuff
+    \OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/tinymce.min');
+    \OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/jquery.tinymce.min');
+    \OCP\Util::addScript('cafevdb/3rdparty', 'tinymceinit');
+    // CKEditor stuff
+    \OCP\Util::addScript('cafevdb/3rdparty', 'ckeditor/ckeditor');
+    \OCP\Util::addScript('cafevdb/3rdparty', 'ckeditor/adapters/jquery');
+  
+    // Updated chosen version
+    \OCP\Util::addscript("cafevdb/3rdparty/chosen", "chosen.jquery.min");
+    \OCP\Util::addStyle("cafevdb/3rdparty/chosen", "chosen.min");
+
+    // Will be removed ...
+    \OCP\Util::addscript("cafevdb/3rdparty/QuickForm2", "quickform");
+    \OCP\Util::addscript("cafevdb/3rdparty/QuickForm2", "dualselect");
+
+    // Callback for waiting until images have been loaded
+    \OCP\UTIL::addscript("cafevdb/3rdparty", "imagesloaded/imagesloaded.pkgd.min");
+
+    // dual-select list-box for email recipient selection
+    //\OCP\Util::addstyle("cafevdb/3rdparty/bootstrap", "bootstrap.min");
+    \OCP\Util::addstyle("cafevdb/3rdparty/bootstrap-duallistbox", "bootstrap-duallistbox-quirks");
+    \OCP\Util::addstyle("cafevdb/3rdparty/bootstrap-duallistbox", "bootstrap-duallistbox.min");
+    \OCP\Util::addscript("cafevdb/3rdparty/bootstrap-duallistbox", "jquery.bootstrap-duallistbox.min");
+  
+    // Calendar event hacks ... TODO: check whether still needed ...
+    \OCP\Util::addscript('3rdparty/timepicker', 'jquery.ui.timepicker');
+    \OCP\Util::addStyle('3rdparty/timepicker', 'jquery.ui.timepicker');
+    \OCP\Util::addscript('', 'jquery.multiselect');
+    \OCP\Util::addStyle('', 'jquery.multiselect');
+    \OCP\Util::addscript('contacts','jquery.multi-autocomplete');
+    \OCP\Util::addscript('','tags');
+    \OCP\Util::addScript('cafevdb', 'calendar');
+    \OCP\Util::addScript('calendar', 'on-event');
+
+    // end event hacks
+
+    // One last script to load after the other, e.g. to get the
+    // tipsy stuff and so on right
+    \OCP\Util::addScript('cafevdb', 'document-ready');    
+
+    // Load the requested page :)
+    $pageLoader = new PageLoader();
+    if (!isset($_POST['Template']) && !$pageLoader->emptyHistory()) {
+      if (Util::debugMode('request')) {
+        echo '<PRE>';
+        print_r($_POST);
+        echo '</PRE>';
+      }
+      $_POST = $pageLoader->fetchHistory(0);
+    } else {
+      $pageLoader->pushHistory($_POST);
+    }
+    $pageLoader->template('user')->printPage();
+
+  } catch (Exception $e) {
+
+    ob_end_clean();
+    $tmpl = new \OCP\Template( 'cafevdb', 'errorpage', 'user' );
+    $tmpl->assign('error', 'exception');
+    $tmpl->assign('exception', $e->getMessage());
+    $tmpl->assign('trace', $e->getTraceAsString());
+    $tmpl->assign('debug', true);
+    $admin = \OCP\User::getDisplayName('admin').
+      ' <'.\OCP\Config::getUserValue('admin', 'settings', 'email').'>';
+    $tmpl->assign('admin', htmlentities($admin));
+
+    return $tmpl->printPage();
+
+  }
+
+} // namespace CAFEVDB
 
 ?>
