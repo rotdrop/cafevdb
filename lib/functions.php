@@ -831,10 +831,19 @@ class Navigation
         }
       }
       switch ($type) {
+      case 'resetbutton':
+      case 'submitbutton':
       case 'button':
+        if ($type == 'resetbutton') {
+          $buttonType = 'reset';
+        } else if ($type == 'submitbutton') {
+          $buttonType = 'submit';
+        } else {
+          $buttonType = 'button';
+        }
         $style = isset($tag['style']) ? ' style="'.$tag['style'].'"' : '';
         $html .= ''
-          .'<button type="button" '.$class.$value.$title.$data.$id.$style.'>';
+          .'<button type="'.$buttonType.'" '.$class.$value.$title.$data.$id.$style.'>';
         if (isset($tag['image'])) {
           $html .= ''
             .'<img class="svg" '
@@ -893,7 +902,7 @@ class Navigation
       $value = L::t("View all Projects");
       $title = L::t("Overview over all known projects (start-page).");
       $form =<<<__EOT__
-<form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
+<form class="cafevdb-control" id="$controlid" method="post" action="">
   <input type="submit" name="Projects" value="$value" title="$title"/>
   <input type="hidden" name="Template" value="projects"/>
   $headervisibility
@@ -906,7 +915,7 @@ __EOT__;
       $value = L::t("Display all Musicians");
       $title = L::t("Display all musicians stored in the data-base, with detailed facilities for filtering and sorting.");
       $form =<<<__EOT__
-<form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
+<form class="cafevdb-control" id="$controlid" method="post" action="">
   <input type="submit" value="$value" title="$title"/>
   <input type="hidden" name="Template" value="all-musicians"/>
   $headervisibility
@@ -918,7 +927,7 @@ __EOT__;
     case 'email':
       $title = L::t("Mass-email form, use with care. Mass-emails will be logged. Recipients will be specified by the Bcc: field in the header, so the recipients are undisclosed to each other.");
       $form =<<<__EOT__
-<form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
+<form class="cafevdb-control" id="$controlid" method="post" action="">
   <input type="submit" name="" value="Em@il" title="$title"/>
   <input type="hidden" name="Template" value="email"/>
   <input type="hidden" name="Project" value="$project"/>
@@ -933,7 +942,7 @@ __EOT__;
       $value = L::t("Email History");
       $title = L::t("Display all emails sent by our mass-email form.");
       $form =<<<__EOT__
-<form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
+<form class="cafevdb-control" id="$controlid" method="post" action="">
   <input type="submit" value="$value" title="$title"/>
   <input type="hidden" name="Template" value="email-history"/>
   <input type="hidden" name="Project" value="$project"/>
@@ -952,7 +961,7 @@ __EOT__;
       $opclass  = 'pme-view';
       $title = L::t("The currently active project.");
       $form =<<<__EOT__
-<form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
+<form class="cafevdb-control" id="$controlid" method="post" action="">
   <input type="submit" name="Project" value="$project" title="$title"/>
   <input type="hidden" name="DisplayClass" value="Projects"/>
   <input type="hidden" name="Template" value="projects"/>
@@ -969,7 +978,7 @@ __EOT__;
       $value = L::t("Instrumentation");
       $title = L::t("Detailed display of all registered musicians for the selected project. The table will allow for modification of personal data like email, phone, address etc.");
       $form =<<<__EOT__
-<form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
+<form class="cafevdb-control" id="$controlid" method="post" action="">
   <input type="submit" value="$value" title="$title"/>
   <input type="hidden" name="Template" value="detailed-instrumentation"/>
   <input type="hidden" name="Project" value="$project"/>
@@ -984,7 +993,7 @@ __EOT__;
       $value = L::t("Brief Instrumentation");
       $title = L::t("Brief display of all registered musicians for the selected project. The table will allow for modification of project specific data, like the instrument, the project-fee etc.");
       $form =<<<__EOT__
-<form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
+<form class="cafevdb-control" id="$controlid" method="post" action="">
   <input type="submit" value="$value" title="$title"/>
   <input type="hidden" name="Template" value="brief-instrumentation"/>
   <input type="hidden" name="Project" value="$project"/>
@@ -999,7 +1008,7 @@ __EOT__;
       $value = L::t("Add Instruments");
       $title = L::t("Display the list of instruments known by the data-base, possibly add new ones as needed.");
       $form =<<<__EOT__
-<form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
+<form class="cafevdb-control" id="$controlid" method="post" action="">
   <input type="submit" value="$value" title="$title"/>
   <input type="hidden" name="Template" value="instruments"/>
   <input type="hidden" name="Project" value="$project"/>
@@ -1014,7 +1023,7 @@ __EOT__;
       $value = L::t('Instrumentation Numbers');
       $title = L::t('Display the desired instrumentaion numbers, i.e. how many musicians are already registered for each instrument group and how many are finally needed.');
       $form =<<<__EOT__
-<form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
+<form class="cafevdb-control" id="$controlid" method="post" action="">
   <input type="submit" name="" value="$value" title="$title"/>
   <input type="hidden" name="Template" value="project-instruments"/>
   <input type="hidden" name="Project" value="$project"/>
@@ -1029,7 +1038,7 @@ __EOT__;
       $value = L::t("Add more Musicians");
       $title = L::t("List of all musicians NOT registered for the selected project. Only through that table a new musician can enter a project. Look for a hyper-link Add_to_PROJECT");
       $form =<<<__EOT__
-<form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
+<form class="cafevdb-control" id="$controlid" method="post" action="">
   <input type="submit" value="$value" title="$title"/>
   <input type="hidden" name="Template" value="add-musicians"/>
   <input type="hidden" name="Project" value="$project"/>
@@ -1044,7 +1053,7 @@ __EOT__;
       $value = strval(L::t('Transfer Instruments from Musicians'));
       $title = strval(Config::toolTips('transfer-instruments'));
       $form =<<<__EOT__
-<form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
+<form class="cafevdb-control" id="$controlid" method="post" action="">
   <input type="submit" value="$value" title="$title" />
   <input type="hidden" name="ProjectId" value="$projectId" />
   <input type="hidden" name="Project"   value="$project" />
@@ -1060,7 +1069,7 @@ __EOT__;
       $value = L::t("Insurances");
       $title = L::t("Display a table with an overview about the current state of the member's instrument insurances.");
       $form =<<<__EOT__
-<form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
+<form class="cafevdb-control" id="$controlid" method="post" action="">
   <input type="submit" value="$value" title="$title"/>
   <input type="hidden" name="Template" value="instrument-insurance"/>
   $headervisibility
@@ -1073,7 +1082,7 @@ __EOT__;
       $value = L::t("Debit Mandates");
       $title = L::t("Display a table with an overview over all SEPA debit mandates.");
       $form =<<<__EOT__
-<form class="cafevdb-control" id="$controlid" method="post" action="?app=cafevdb">
+<form class="cafevdb-control" id="$controlid" method="post" action="">
   <input type="submit" value="$value" title="$title"/>
   <input type="hidden" name="Template" value="sepa-debit-mandates"/>
   $headervisibility
