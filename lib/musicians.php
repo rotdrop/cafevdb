@@ -31,6 +31,7 @@ class Musicians
   extends Instrumentation
 {
   const CSS_PREFIX = 'cafevdb-page';
+  const CSS_CLASS = 'musicians';
   private $projectMode;
 
   function __construct($mode = false, $execute = true) {
@@ -40,7 +41,17 @@ class Musicians
 
   public function shortTitle()
   {
-    if (!$this->projectMode) {
+    if ($this->deleteOperation()) {
+      return L::t('Remove all data of the displayed musician?');
+    } else if ($this->copyOperation()) {
+      return L::t('Copy the displayed musician?');
+    } else if ($this->viewOperation()) {
+      return L::t('Display of ll stored personal data for the shown musician.');
+    } else if ($this->changeOperation()) {
+      return L::t('Edit the personal data of the displayed musician.');
+    } else if ($this->addOperation()) {
+      return L::t('Add a new musician to the data-base.');
+    } else if (!$this->projectMode) {
       return L::t('Overview over all registered musicians');
     } else {
       return L::t("Add musicians to the project `%s'", array($this->project)); 
@@ -308,10 +319,14 @@ __EOT__;
 
     $projectIdx = count($opts['fdd']);
     if ($this->projectMode) {
-      $pfx = Config::$pmeopts['cgi']['prefix']['sys'];
-      $key = 'qf'.$projectIdx;
-      $opts['cgi']['append'][$pfx.$key.'_id'] = array($projectName);
-      $opts['cgi']['append'][$pfx.$key.'_comp'] = array('not');
+      $opts['cgi']['persist']['ProjectMode'] = true;
+      if (!Util::cgiValue('ProjectMode', false)) {
+        // start initially filtered, but let the user choose other things.
+        $pfx = Config::$pmeopts['cgi']['prefix']['sys'];
+        $key = 'qf'.$projectIdx;
+        $opts['cgi']['append'][$pfx.$key.'_id'] = array($projectName);
+        $opts['cgi']['append'][$pfx.$key.'_comp'] = array('not');
+      }
     }
     $opts['fdd']['Projekte'] =
       array('input' => 'VR', // virtual, read perm

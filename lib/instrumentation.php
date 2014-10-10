@@ -44,6 +44,8 @@ class Instrumentation
   protected $pme;
   protected $execute;
   protected $pme_bare;
+  protected $pmeSysPfx;
+  protected $pmeTranslations;
   protected $secionLeaderColumn;
   protected $registrationColumn;
 
@@ -104,15 +106,61 @@ class Instrumentation
     $this->pme->export($cellFilter, $lineCallback, $css);
     $this->pme->sql_disconnect();
   }        
+  
+  protected function pmeCompareButtonValue($a, $b)
+  {
+    return ($a == $b ||
+            (isset($this->pmeTranslations[$a]) && $this->pmeTranslations[$a] == $b) ||
+            (isset($this->pmeTranslations[$b]) && $this->pmeTranslations[$b] == $a));
+  }
 
-  /**Disable some extra stuff (image upload etc.) when displaying the entire table.
-   */
+  /**Are we in change mode? */
+  public function addOperation()
+  {
+    if (!isset($this->pme)) {
+      return $this->pmeCompareButtonValue($this->operation, 'Add');
+    } else {
+      return $this->pme->add_operation();
+    }
+  }
+
+  /**Are we in change mode? */
   public function changeOperation()
   {
     if (!isset($this->pme)) {
-      return false;
+      return $this->pmeCompareButtonValue($this->operation, 'Change');
     } else {
-      return $this->pme->change_operation() || $this->pme->add_operation();
+      return $this->pme->change_operation();
+    }
+  }
+
+  /**Are we in copy mode? */
+  public function copyOperation()
+  {
+    if (!isset($this->pme)) {
+      return $this->pmeCompareButtonValue($this->operation, 'Copy');
+    } else {
+      return $this->pme->copy_operation();
+    }
+  }
+
+  /**Are we in view mode? */
+  public function viewOperation()
+  {
+    if (!isset($this->pme)) {
+      return $this->pmeCompareButtonValue($this->operation, 'View');
+    } else {
+      return $this->pme->view_operation();
+    }
+  }
+
+  /**Are we in delete mode?*/
+  public function deleteOperation()
+  {
+    if (!isset($this->pme)) {
+      return $this->pmeCompareButtonValue($this->operation, 'Delete');
+    } else {
+      return $this->pme->delete_operation(); 
     }
   }
 
@@ -126,6 +174,12 @@ class Instrumentation
       return $this->pme->list_operation();
     }
   }
+
+  /**Return a PME sys variable. */
+  public function pmeSysValue($key)
+  {
+    return Util::cgiValue($this->pmeSysPfx.$key, false);
+  }  
 
   /**Determine if we have the default ordering of rows. */
   public function defaultOrdering() 
@@ -154,8 +208,21 @@ class Instrumentation
       echo "</PRE>\n";
     }
 
-    $this->operation  = Util::cgiValue(Config::$pmeopts['cgi']['prefix']['sys']."operation", false);
-    if (Util::cgiValue(Config::$pmeopts['cgi']['prefix']['sys'].'reloadview', false)) {
+    $this->pmeSysPfx = Config::$pmeopts['cgi']['prefix']['sys'];
+
+    $this->pmeTranslations = $this->pmeSysValue('translations');
+    if (file_exists($this->pmeTranslations)) {
+      $this->pmeTranslations = include($this->pmeTranslations);
+    } else {
+      $this->pmeTranslations = array(
+        // some default stuff
+        'Add' => 'Add',
+        'Change' => 'Change'
+        );
+    }
+
+    $this->operation  = $this->pmeSysValue('operation');
+    if ($this->pmeSysValue('reloadview')) {
       $this->operation = 'View';
     }
     $this->cancelSave = Util::cgiKeySearch('/'.Config::$pmeopts['cgi']['prefix']['sys'].'(save|cancel)/');
@@ -445,6 +512,49 @@ __EOT__;
     }
 
     return $row;
+  }
+
+  /**Fetch all entries for the given musician-id (may be more than one or none)
+   */
+  public static function fetchByMusicianId($musicianId, $projectId, $handle = false)
+  {
+    $ownConnection = $handle === false;
+
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
+    $query = " SELECT `Musiker`.*,
+ `Besetzungen`.`ProjektId`,`Besetzungen`.`Instrument` as 'ProjektInstrument',
+ `Projekte`.`Name` AS `Projekt`,`Projekte`.`Jahr`,`Projekte`.`Besetzung`
+ FROM `Musiker`
+   LEFT JOIN `Besetzungen`
+     ON `Musiker`.`Id` = `Besetzungen`.`MusikerId`
+   LEFT JOIN `Projekte`
+     ON `Besetzungen`.`ProjektId` = `Projekte`.`Id`
+     WHERE `Musiker`.`Id` = $musicianId";
+    if ($projectId >= 0) {
+      $query .= " AND `Besetzungen`.`ProjektId` = $projectId";
+    }
+   
+    //throw new \Exception($query);
+
+    $result = mySQL::query($query, $handle);
+    if ($result !== false) {
+      $data = array();
+      while ($row = mySQL::fetch($result)) {
+        $data[] = $row;
+      }
+    } else {
+      $data = false;
+    }
+    
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $data;
   }
 
   

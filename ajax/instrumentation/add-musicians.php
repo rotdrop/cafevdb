@@ -127,9 +127,34 @@ try {
 
     $fullName = $musRow['Vorname']." ".$musRow['Name'];
 
-    $both = array_intersect($projectInstruments, $musInstruments);
+    $musProjectData = Instrumentation::fetchByMusicianid($musicianId, $projectId, $handle);
+    if ($musRow === false) {
+      $failedMusicians[] = array('id' => $musicianId,
+                                 'caption' => L::t('Data Base error'),
+                                 'message' => L::t('Unable to fetch musician\'s project information for id %d, data-base error: %s',
+                                                   array($musicianId, mySQL::error())));
+      continue;
+    }
+
+    $musicianProjectInstruments = array();
+    if (count($musProjectData) > 0) {
+      foreach($musProjectData as $row) {
+        $musicianProjectInstruments[] = $row['ProjektInstrument'];
+      }
+      $notice .= L::t("The musician %s is already registered for the project with the ".
+                      "instruments %s.",
+                      array($fullName, implode(',', $musicianProjectInstruments)));
+    }
+    
+    $both = array_values(array_intersect($projectInstruments, $musInstruments));
+
     if (!empty($both)) {
-      $musInstrument = $both[0];
+      $leftOver = array_values( array_diff($both, $musicianProjectInstruments));
+      if (!empty($leftOver)) {
+        $musInstrument = $leftOver[0];
+      } else {
+        $musInstrument = null;
+      }
     } else if (!empty($musInstruments)) {
       $musInstrument = $musInstruments[0];
       $notice .= L::t("None of the instruments known by %s are mentioned in the "
