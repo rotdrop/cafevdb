@@ -846,10 +846,31 @@ class Navigation
         $html .= ''
           .'<button type="'.$buttonType.'" '.$disabled.$class.$value.$title.$data.$id.$style.'>';
         if (isset($tag['image'])) {
-          $html .= ''
-            .'<img class="svg" '
-            .(isset($tag['id']) ? ' id="'.$tag['id'].'-img" ' : ' ')
-            .'src="'.$tag['image'].'" alt="'.$name.'" />';
+          $images = false;
+          if (!is_array($tag['image'])) {
+            $images = array($tag['image']);
+          } else {
+            $images = $tag['image'];
+          }
+          $count = 0;
+          foreach ($images as $image) {
+            if (isset($tag['id'])) {
+              $id = $tag['id'].'-img';
+              if ($count > 0) {
+                $id .= '-'.$count;
+              }
+              $id = ' id="'.$id.'"';
+            } else {
+              $id = '';
+            }
+            $class = ' number-'.$count;
+            $html .= ''.
+              '<img class="svg'.$class.'" '.
+              $id.
+              'src="'.$image.'" alt="'.$name.'" '.
+              ' />';
+            ++$count;
+          }
         } else {
           $html .= $name;
         }
