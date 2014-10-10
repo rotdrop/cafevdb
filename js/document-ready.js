@@ -140,7 +140,6 @@ $(document).ready(function() {
         } else {
             $.fn.tipsy.disable();
         }
-        CAFEVDB.broadcastHeaderVisibility();
         
         // Prevent drag&drop outside allowed areas.
         window.addEventListener("dragover",function(e){
