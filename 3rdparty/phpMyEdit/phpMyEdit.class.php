@@ -2277,7 +2277,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			}
 			$strip_tags && $value = strip_tags($value);
 			$escape		&& $value = htmlspecialchars($value);
-			$ret .= '>'.$value.'</label>'.$br."\n";
+			$ret .= '><span class="pme-label">'.$value.'</span></label>'.$br."\n";
 		}
 		return $ret;
 	} /* }}} */
@@ -2933,13 +2933,15 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				$readonly	= false;
 				$strip_tags = true;
 				//$escape	  = true;
+				echo '<div class="'.$negate_css_class_name.'">';
 				echo $this->htmlRadioCheck($this->cgi['prefix']['sys'].$l.'_comp', $negate_css_class_name,
 										   array('not' => $this->labels['Not']), $negate,
 										   true /* checkbox */);
-				echo '<br>';
+				echo '</div><div class="'.$css_class_name.'">';
 				echo $this->htmlSelect($this->cgi['prefix']['sys'].$l.'_id', $css_class_name,
 									   $vals, $groups,
 									   $selected, $multiple || true, $readonly, $strip_tags, $escape);
+				echo '</div>';
 			} elseif (($this->fdd[$fd]['select'] == 'N' ||
 					   $this->fdd[$fd]['select'] == 'T')
 					  &&			  
