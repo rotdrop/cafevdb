@@ -135,12 +135,6 @@ $(document).ready(function() {
 
         CAFEVDB.tipsy();
     
-        if (CAFEVDB.toolTips) {
-            $.fn.tipsy.enable();
-        } else {
-            $.fn.tipsy.disable();
-        }
-        
         // Prevent drag&drop outside allowed areas.
         window.addEventListener("dragover",function(e){
             e = e || event;

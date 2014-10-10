@@ -947,10 +947,9 @@ var CAFEVDB = CAFEVDB || {};
     }
     var container = $(containerSel);
 
-    $.fn.tipsy.defaults.html = true;
-
     // container.find('button.settings').tipsy({gravity:'ne', fade:true});
     container.find('button.viewtoggle').tipsy({gravity:'ne', fade:true});
+
     container.find('div.viewtoggle').tipsy({gravity:'se', fade:true});
     container.find('select').tipsy({gravity:'w', fade:true});
     container.find('div.chosen-container').tipsy({gravity:'sw', fade:true});
@@ -1017,6 +1016,14 @@ var CAFEVDB = CAFEVDB || {};
       $(this).data('tipsy', null); // remove any already installed stuff
       $(this).tipsy($.extend({}, oldTipsy, options));
     });
+
+    // Tipsy greedily enables itself when attaching it to elements, so
+    // ...
+    if (CAFEVDB.toolTips) {
+      $.fn.tipsy.enable();
+    } else {
+      $.fn.tipsy.disable();
+    }
   }
 
 })(window, jQuery, CAFEVDB);
