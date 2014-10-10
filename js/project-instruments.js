@@ -50,31 +50,18 @@ var CAFEVDB = CAFEVDB || {};
         $.post(OC.filePath('cafevdb', 'ajax/instruments', 'adjustInstrumentation.php'),
                post,
                function (data) {
-                 var rqData = '';
-                 if (data.status == 'success') {
-                   rqData = data.data;
-                   if (rqData.message != '') {
-                     OC.Notification.show(rqData.message);
-                   }
-                 } else if (data.status == 'error') {
-                   rqData = data.data;
-                   if (rqData.error != 'exception') {
-                     if (rqData.message == '') {
-                       rqData.message = t('cafevdb', 'Unkown Error');
-                     }
-                     OC.Notification.show(rqData.message);
-                   } else {
-                     OC.dialogs.alert(rqData.exception+rqData.trace,
-                                      t('cafevdb', 'Caught a PHP Exception'),
-                                      undefined, true);
-                   }
+                 if (!CAFEVDB.ajaxErrorHandler(data, [])) {
+                   // do nothing
+                 } else if (data.data.message != '') {
+                     OC.Notification.show(data.data.message);
                  }
                  setTimeout(function() {
                    OC.Notification.hide(function() {
-                     // Anyhow, reload and see what happens.
+                     // Anyhow, reload and see what happens. Hit
+                     // either the save and continue or the reload
+                     // button.
                      if (!PHPMYEDIT.triggerSubmit('morechange')) {
-                       PHPMYEDIT.pseudoSubmit(container.find('form.pme-form'), $(),
-                                              PHPMYEDIT.container(container));
+                       PHPMYEDIT.triggerSubmit('reloadView');
                      }
                    });
                  }, 1000);
@@ -286,7 +273,9 @@ $(document).ready(function(){
                                    parameters: []
                                  });
 
-  CAFEVDB.ProjectInstruments.ready();
+  CAFEVDB.addReadyCallback(function() {
+    CAFEVDB.ProjectInstruments.ready();
+  });
 
 });
 
