@@ -104,6 +104,7 @@ try {
   
   // Needed for the recipient selection
   $tmpl->assign('RecipientsFormData', $recipientsFilter->formData());
+  $history = $recipientsFilter->filterHistory();
   $tmpl->assign('FilterHistory', $recipientsFilter->filterHistory());
   $tmpl->assign('MemberStatusFilter', $recipientsFilter->memberStatusFilter());
   $tmpl->assign('BasicRecipientsSet', $recipientsFilter->basicRecipientsSet());
@@ -120,6 +121,7 @@ try {
     array('data' => array('contents' => $html,
                           'projectName' => $projectName,
                           'projectId' => $projectId,
+                          'filterHistory' => $history,
                           'debug' => $debugText)));
   
   return true;

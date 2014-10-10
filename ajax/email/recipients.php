@@ -49,6 +49,7 @@ try {
   $messageText = '';
 
   if (true || Util::debugMode('request')) {
+    $debugText .= '$_SESSION[] = '.print_r(Config::sessionRetrieveValue('FilterHistory'), true);
     $debugText .= '$_POST[] = '.print_r($_POST, true);
   }
 
@@ -114,7 +115,7 @@ try {
                           'recipientsOptions' => $recipientsOptions,
                           'missingEmailAddresses' => $missingEmailAddresses,
                           'filterHistory' => $filterHistory,
-                          'debug' => $debugText.$filterHistory)));
+                          'debug' => $debugText)));
 
   return true;
 

@@ -32,6 +32,7 @@ namespace CAFEVDB
    */
   class EmailRecipientsFilter {
     const MAX_HISTORY_SIZE = 100; // the history is posted around, so ...
+    const SESSION_HISTORY_KEY = 'FilterHistory';
 
     private $projectId;   // Project id or NULL or -1 or ''
     private $projectNem;  // Project name of NULL or ''
@@ -104,6 +105,12 @@ namespace CAFEVDB
       $this->execute();
     }
 
+    /**Store the history records to the session data. */
+    public function __destruct()
+    {
+      $this->storeHistory();
+    }
+
     /**Parse the CGI stuff and compute the list of selected musicians,
      * either for the initial form setup as during the interaction
      * with the user.
@@ -120,6 +127,7 @@ namespace CAFEVDB
       $this->snapshot = false;
 
       if ($this->submitted) {
+        $this->loadHistory(); // Fetch the filter-history from the session, if any.
         if ($this->cgiValue('ResetInstrumentsFilter', false) !== false) {
           $this->EmailRecs = $this->cgiValue($this->emailKey, array());
           $this->submitted = false; // fall back to defaults for everything
@@ -181,7 +189,6 @@ namespace CAFEVDB
       $this->historyPosition = 0;
       $this->historySize = 1;
 
-
       $filter = array(
         'BasicRecipientsSet' => $this->defaultUserBase(),
         'MemberStatusFilter' => $this->defaultByStatus(),
@@ -192,102 +199,73 @@ namespace CAFEVDB
       // tweak: sort the selected recipients by key
       sort($filter['SelectedRecipients']);
 
-      $this->filterHistory = array($filter);
+      $md5 = md5(serialize($filter));
+      $data = $filter;
+      $this->filterHistory = array(array('md5' => $md5,
+                                         'data' => $data));
     }
 
-    private function compressHistory()
+    /**Store the history to somewhere, probably the session-data. */
+    private function storeHistory()
     {
-      return base64_encode(gzencode(json_encode($this->filterHistory, $this->jsonFlags)));
+      $storageValue = array('size' => $this->historySize,
+                            'position' => $this->historyPosition,
+                            'records' => $this->filterHistory);
+      Config::sessionStoreValue(self::SESSION_HISTORY_KEY, $storageValue);
     }
 
-    private function decompressHistory($data)
+    /**Load the history from the session data. */
+    private function loadHistory()
     {
-      $decompressedHistory = json_decode(gzdecode(base64_decode($data)), true);
-      if ($decompressedHistory === false) {
+      $loadHistory = Config::sessionRetrieveValue(self::SESSION_HISTORY_KEY);
+      if (!$this->validateHistory($loadHistory)) {
+        $this->setDefaultHistory();
         return false;
       }
-      $this->filterHistory = $decompressedHistory;
+      $this->historySize = $loadHistory['size'];
+      $this->historyPosition = $loadHistory['position'];
+      $this->filterHistory = $loadHistory['records'];
       return true;
     }
 
-    /**Decode he current history, filter values and history position
-     * in order to keep track of undo/redo requests. Rather lengthy,
-     * but will return some history record and throw useful errors
-     * when debug is enabled.
+    /**Validate the given history records, return false on error.
      */
-    private function fetchHistory()
+    private function validateHistory($history)
     {
-      if (!$this->submitted) {
-        $this->setDefaultHistory();
-        return;
+      if ($history === false ||
+          !isset($history['size']) ||
+          !isset($history['position']) ||
+          !isset($history['records']) ||
+          !$this->validateHistoryRecords($history)) {
+        return false;
       }
-
-      $jsonHistory = $this->cgiValue('FilterHistory', false);
-      if ($jsonHistory === false) {
-        if (Util::debugMode('emailform')) {
-          throw new \UnexpectedValueException(L::t('No filter-history available'));
-        } else {
-          $this->setDefaultHistory();
-          return;
-        }
-      }
-      
-      $history = json_decode($jsonHistory, true);
-      if ($history === false) {
-        if (Util::debugMode('emailform')) {
-          throw new \InvalidArgumentException(L::t('Unable to decode history from JSON: %s.',
-                                                   array($jsonHistory)));
-        } else {
-          $this->setDefaultHistory();
-          return;
-        }
-      }
-
-      if (!isset($history['historyPosition']) ||
-          !isset($history['historySize']) ||
-          !isset($history['historyData'])) {
-        if (Util::debugMode('emailform')) {
-          throw new \UnexpectedValueException(L::t('Incomplete history data: %s (JSON: %s)',
-                                                   array(print_r($history, true), $jsonHistory)));
-        } else {
-          $this->setDefaultHistory();
-          return;
-        }
-      }
-
-
-      if (!$this->decompressHistory($history['historyData'])) {
-        if (Util::debugMode('emailform')) {
-          throw new \InvalidArgumentException(L::t('Unable to decompress history from JSON: %s.',
-                                                   array($jsonHistory)));
-        } else {
-          $this->setDefaultHistory();
-          return;
-        }
-      }
-
-      $this->historyPosition = $history['historyPosition'];
-      $this->historySize = $history['historySize'];
-      if ($this->historySize != count($this->filterHistory)) {
-        if (Util::debugMode('emailform')) {
-          throw new \OutOfBoundsException(L::t('Submitted history size %d != actual history size %d',
-                                              array($this->historySize, count($this->filterHistory))));
-        } else {
-          $this->setDefaultHistory();
-          return;
-        }
-      }
-      if ($this->historyPosition < 0 || $this->historyPosition > $this->historySize) {
-        if (Util::debugMode('emailform')) {
-          throw new \OutOfBoundsException(L::t('Submitted history position %d outside history size %d.',
-                                               array($this->historyPosition, $this->historySize)));
-        } else {
-          $this->setDefaultHistory();
-          return;
-        }
-      }
+      return true;
     }
     
+    /**Validate one history entry */
+    private function validateHistoryRecord($record) {
+      if (!is_array($record)) {
+        return false;
+      }
+      $md5 = '';
+      if (!isset($record['md5']) ||
+          !isset($record['data']) ||
+          $record['md5'] != ($md5 = md5(serialize($record['data'])))) {
+        return false;
+      }
+      return true;
+    }
+    
+    /**Validate all history records. */
+    private function validateHistoryRecords($history) {
+      foreach($history['records'] as $record) {
+        if (!$this->validateHistoryRecord($record)) {
+          return false;
+        }
+      }
+      return true;
+    }    
+
     /**Push the current filter selection onto the undo-history
      * stack. Do nothing for dummy commits, i.e. only a changed filter
      * will be pushed onto the stack.
@@ -310,8 +288,7 @@ namespace CAFEVDB
       }
 
       sort($filter['SelectedRecipients']);
-
-      $this->fetchHistory();
+      $md5 = md5(serialize($filter));
 
       /* Avoid pushing duplicate history entries. If the new
        * filter-record matches the current one, then simply discard
@@ -320,13 +297,14 @@ namespace CAFEVDB
        * or duplicated double-clicks.
        */
       $historyFilter = $this->filterHistory[$this->historyPosition];
-      if (!$this->filterEqual($filter, $historyFilter)) {
+      if ($historyFilter['md5'] != $md5) {
         // Pushing a new record removes the history up to the current
         // position, i.e. redos are not longer possible then. This
         // seems to be common behaviour as "re-doing" is no longer
         // well defined in this case.
         array_splice($this->filterHistory, 0, $this->historyPosition);
-        array_unshift($this->filterHistory, $filter);
+        array_unshift($this->filterHistory, array('md5' => $md5,
+                                                  'data' => $filter));
         $this->historyPosition = 0;
         $this->historySize = count($this->filterHistory);
         while ($this->historySize > self::MAX_HISTORY_SIZE) {
@@ -342,8 +320,6 @@ namespace CAFEVDB
      */
     private function applyHistory($offset)
     {
-      $this->fetchHistory();
-
       $newPosition = $this->historyPosition + $offset;
       
       // Check for valid position.
@@ -356,21 +332,14 @@ namespace CAFEVDB
         return;
       }
 
-      // Move past the respective history position.
+      // Move to the new history position.
       $this->historyPosition = $newPosition;
-      $filter = $this->filterHistory[$newPosition];
+
+      $filter = $this->filterHistory[$newPosition]['data'];
       foreach (self::$historyKeys as $key) {
         $this->cgiData[$key] = $filter[$key];
       }
     }
-
-    /**Return true if we consider both filters to be equal
-     */
-    private function filterEqual($filter1, $filter2)
-    {
-      return json_encode($filter1, $this->jsonFlags) == json_encode($filter2, $this->jsonFlags);
-    }
-    
 
     /**This function is called at the very start. If in project-mode
      * ids from other tables are remapped to the ids for the
@@ -713,10 +682,8 @@ namespace CAFEVDB
      */
     public function filterHistory()
     {
-      $history = array('historyPosition' => $this->historyPosition,
-                       'historySize' => count($this->filterHistory),
-                       'historyData' => $this->compressHistory());
-      return json_encode($history, $this->jsonFlags);
+      return array('historyPosition' => $this->historyPosition,
+                   'historySize' => count($this->filterHistory));
     }
 
     /**Return the current value of the member status filter or its

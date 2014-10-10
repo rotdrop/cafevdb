@@ -134,7 +134,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                  missingAddresses.html(data.data.missingEmailAddresses);
                }
 
-               var filterHistory = $.parseJSON(data.data.filterHistory);
+               var filterHistory = data.data.filterHistory;
                if (filterHistory.historyPosition >= 0 &&
                    filterHistory.historyPosition < filterHistory.historySize-1) {
                  // enable the undo button

@@ -57,10 +57,6 @@ if ($projectId > 0) {
 
 <fieldset id="cafevdb-email-recipients-fieldset" class="email-recipients page">
   <?php echo Navigation::persistentCGI('emailRecipients', $_['RecipientsFormData']); ?>
-  <input id="recipients-filter-history"
-         type="hidden"
-         name="emailRecipients[FilterHistory]"
-         value="<?php echo htmlspecialchars($_['FilterHistory']); ?>">
   <?php if ($projectId >= 0) { ?>
     <div class="cafevdb-email-form row">
       <span id="basic-recipient-set-wrapper" class="basic-recipients-set container outer left">
