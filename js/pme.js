@@ -464,6 +464,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
   PHPMYEDIT.tableDialogOpen = function(tableOptions, post) {
     var pme = this;
 
+    CAFEVDB.Page.busyIcon(true);
+
     if (typeof tableOptions.ModalDialog == 'undefined') {
       tableOptions.ModalDialog = true;
     }
@@ -477,6 +479,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
            post,
            function (data) {
              if (!CAFEVDB.ajaxErrorHandler(data, [ 'contents' ])) {
+               CAFEVDB.Page.busyIcon(false);
                return false;
              }
 
@@ -545,6 +548,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                        });
                        CAFEVDB.pmeTweaks(dialogHolder);
                        CAFEVDB.tipsy(containerSel);
+                       CAFEVDB.Page.busyIcon(false);
                      });
                    });
                },
@@ -600,6 +604,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
       }
       return form.submit();
     }
+    CAFEVDB.Page.busyIcon(true);
     dpyClass = dpyClass.val();
     // TODO: arguments
     var post = form.serialize();
@@ -615,34 +620,43 @@ var PHPMYEDIT = PHPMYEDIT || {};
     $.post(OC.filePath('cafevdb', 'ajax/pme', 'pme-table.php'),
            post,
            function (data) {
-             if (data.status == 'success') {
-               $('.tipsy').remove();
-               CAFEVDB.removeEditor(container.find('textarea.wysiwygeditor'));
-               container.html(data.data.contents);
-               self.init(pmepfx, selector);
-               CAFEVDB.addEditor(container.find('textarea.wysiwygeditor'), function() {
-                 self.transposeReady(selector);
-                 self.tableLoadCallback(dpyClass, selector, function() {});
-                 CAFEVDB.pmeTweaks(container);
-                 CAFEVDB.tipsy(selector);
-               });
-             } else {
-               var info = '';
-               if (typeof data.data.message != 'undefined') {
-	         info = data.data.message;
-               } else {
-	         info = t('cafevdb', 'Unknown error :(');
-               }
-               if (typeof data.data.error != 'undefined' && data.data.error == 'exception') {
-	         info += '<p><pre>'+data.data.exception+'</pre>';
-	         info += '<p><pre>'+data.data.trace+'</pre>';
-               }
-               OC.dialogs.alert(info, t('cafevdb', 'Error'));
-               if (data.data.debug != '') {
-                 OC.dialogs.alert(data.data.debug, t('cafevdb', 'Debug Information'), undefined, true);
-               }
-               return false;               
+             if (!CAFEVDB.ajaxErrorHandler(
+               data, [ 'contents', 'history' ])) {
+               CAFEVDB.Page.busyIcon(false);
+               return false;
              }
+
+             // phpMyEdit echos mySQL-errors back.
+             if (typeof data.data.sqlerror != 'undefined' &&
+                 data.data.sqlerror.error != 0) {
+               $('#notification').text('MySQL Error: '+
+                                       data.data.sqlerror.error+
+                                       ': '+
+                                       data.data.sqlerror.message);
+	       $('#notification').fadeIn();
+	       //hide notification after 5 sec
+	       setTimeout(function() {
+	         $('#notification').fadeOut();
+	       }, 10000);
+             }
+
+             if (data.data.history.size > 0) {
+               CAFEVDB.Page.historySize = data.data.history.size;
+               CAFEVDB.Page.historyPosition = data.data.history.position;
+               CAFEVDB.Page.updateHistoryControls();
+             }
+
+             $('.tipsy').remove();
+             CAFEVDB.removeEditor(container.find('textarea.wysiwygeditor'));
+             container.html(data.data.contents);
+             self.init(pmepfx, selector);
+             CAFEVDB.addEditor(container.find('textarea.wysiwygeditor'), function() {
+               self.transposeReady(selector);
+               self.tableLoadCallback(dpyClass, selector, function() {});
+               CAFEVDB.pmeTweaks(container);
+               CAFEVDB.tipsy(selector);
+               CAFEVDB.Page.busyIcon(false);
+             });
              return false;
            });
     return false;

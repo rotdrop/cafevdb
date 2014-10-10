@@ -63,30 +63,52 @@ var CAFEVDB = CAFEVDB || {};
     CAFEVDB.broadcastHeaderVisibility('expanded');
   };
 
+  Page.busyIcon = function(on) {
+    if (on) {
+      $('#reloadbutton img.number-0').hide();
+      $('#reloadbutton img.number-1').show();
+    } else {
+      $('#reloadbutton img.number-1').hide();
+      $('#reloadbutton img.number-0').show();
+    }
+  };
+
   /**Load a page through the history-aware AJAX page loader. */
   Page.loadPage = function(post) {
-    $('.tipsy').remove();
+    Page.busyIcon(true);
     $.post(OC.filePath('cafevdb', 'ajax', 'page-loader.php'),
            post,
            function(data) {
-             if (!CAFEVDB.ajaxErrorHandler(data, [ 'contents' ])) {
+             if (!CAFEVDB.ajaxErrorHandler(data, [
+               'contents',
+               'history' ])) {
+               Page.busyIcon(false);
                return false;
              }
+
+             CAFEVDB.Page.historyPosition = data.data.history.position;
+             CAFEVDB.Page.historySize = data.data.history.size;
+
+             // remove left-over tipsy
+             $('.tipsy').remove();
 
              // This is a "complete" page reload, so inject the
              // contents into #contents
              $('div#content').html(data.data.contents);
+             Page.busyIcon(false);
              CAFEVDB.tipsy();
-
-             // Reload the JS configuration file
-             $.getScript(OC.filePath(CAFEVDB.name, 'js', 'config.php')+
-                         '?headervisibility='+
-                         CAFEVDB.headervisibility,
-                         function() {
-                           CAFEVDB.runReadyCallbacks();
-                         });
+             CAFEVDB.runReadyCallbacks();
              return false;
            });
+  };
+
+  Page.updateHistoryControls = function() {
+    var redo = $('#personalsettings .navigation.redo');
+    var undo = $('#personalsettings .navigation.undo');
+
+    //alert('history: '+CAFEVDB.Page.historyPosition+' size '+CAFEVDB.Page.historySize);
+    redo.prop('disabled', CAFEVDB.Page.historyPosition == 0);
+    undo.prop('disabled', CAFEVDB.Page.historySize - CAFEVDB.Page.historyPosition <= 1);
   };
 
   CAFEVDB.Page = Page;
@@ -101,10 +123,15 @@ $(document).ready(function(){
              '#personalsettings .navigation.reload',
              function(event) {
                event.stopImmediatePropagation();
-               CAFEVDB.Page.loadPage({
-                 'HistoryOffset': 0,
-                 'headervisibility': CAFEVDB.headervisibility
-               });
+               var pmeReload = content.find('form.pme-form input.pme-reload').first();
+               if (pmeReload.length > 0) {
+                 pmeReload.trigger('click');
+               } else {
+                 CAFEVDB.Page.loadPage({
+                   'HistoryOffset': 0,
+                   'headervisibility': CAFEVDB.headervisibility
+                 });
+               }
                return false;
              });
 
@@ -132,12 +159,9 @@ $(document).ready(function(){
 
   CAFEVDB.addReadyCallback(function() {
 
-    var redo = $('#personalsettings .navigation.redo');
-    var undo = $('#personalsettings .navigation.undo');
+    //content.find('form.pme-form input.pme-reload').hide();
 
-    //alert('history: '+CAFEVDB.Page.historyPosition+' size '+CAFEVDB.Page.historySize);
-    redo.prop('disabled', CAFEVDB.Page.historyPosition == 0);
-    undo.prop('disabled', CAFEVDB.Page.historySize - CAFEVDB.Page.historyPosition <= 1);
+    CAFEVDB.Page.updateHistoryControls();
 
     $('#cafevdb-page-header-box .viewtoggle').click(function(event) {
       event.preventDefault();
