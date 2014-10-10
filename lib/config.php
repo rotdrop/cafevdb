@@ -156,44 +156,13 @@ redaxoDefaultModule
    * variable-value pairs (global scope). Additionally it is possible
    * to emit any other java-script code here, although this is
    * probably not the intended usage.
+   *
+   * We do not use this but instead stick to our own config.php which
+   * is loader AFTER all JS structures have been initialized, this is
+   * simply much easier.
    */
   public static function jsLoadHook($params) {
     //$jsAssign = &$params['array'];
-    //$jsAssign['DWEmbed'] = 'DWEmbed || {}';
-
-    self::init();
-
-    $user             = \OCP\USER::getUser();
-    $tooltips         = \OCP\Config::getUserValue($user, 'cafevdb', 'tooltips', '');
-    $language         = \OCP\Config::getUserValue($user, 'core', 'lang', 'en');
-
-    $array = array(
-      "CAFEVDB.toolTips" => ($tooltips == "off" ? 'false' : 'true'),
-      "CAFEVDB.wysiwygEditor" => "'".self::$opts['editor']."'",
-      "CAFEVDB.language" => "'".$language."'",
-      "PHPMYEDIT.filterSelectPlaceholder" => "'".L::t("Select a filter option.")."'",
-      "PHPMYEDIT.filterSelectNoResult" => "'".L::t("No values match.")."'",
-      "PHPMYEDIT.filterSelectChosen" => "true",
-      "PHPMYEDIT.filterSelectChosenTitle" => "'".L::t("Select from the pull-down menu. ".
-                                                      "Double-click will submit the form. ".
-                                                      "The pull-down can be closed by clicking ".
-                                                      "anywhere outside the menu.")."'",
-      "PHPMYEDIT.inputSelectPlaceholder" => "'".L::t("Select an option.")."'",
-      "PHPMYEDIT.inputSelectNoResult" => "'".L::t("No values match.")."'",
-      "PHPMYEDIT.inputSelectChosen" => "true",
-      "PHPMYEDIT.inputSelectChosenTitle" => "'".L::t("Select from the pull-down menu. ".
-                                                     "The pull-down can be closed by clicking ".
-                                                     "anywhere outside the menu.")."'",
-      "PHPMYEDIT.chosenPixelWidth" => "['projectname']",
-      );
-
-    // Echo it
-    echo "var CAFEVDB = CAFEVDB || {};\n";
-    echo "CAFEVDB.Projects = CAFEVDB.Projects || {};\n";
-    echo "var PHPMYEDIT = PHPMYEDIT || {} ;\n";
-    foreach ($array as  $setting => $value) {
-      echo($setting ."=".$value.";\n");
-    }    
   }
 
   /**Return email and display name of the admin user for error
