@@ -49,10 +49,6 @@ try {
   $projectId   = Util::cgiValue('ProjectId', -1);
   $projectName = Util::cgiValue('ProjectName', '');
 
-  $usrHdrVis  = OCP\Config::getUserValue(OCP\USER::getUser(),'cafevdb', 'headervisibility', 'expanded');
-  // Initialize with cgi or user-value
-  $headervisibility = Util::cgiValue('headervisibility', $usrHdrVis);
-
   if ($projectId < 0 ||
       ($projectName == '' &&
        ($projectName = CAFEVDB\Projects::fetchName($projectId)) == '')) {
@@ -86,7 +82,7 @@ try {
 
   $locale = Util::getLocale();
 
-  Util::addExternalScript(OC_Helper::linkTo('cafevdb/js', 'config.php').'?headervisibility='.$headervisibility);
+  Util::addExternalScript(OC_Helper::linkTo('cafevdb/js', 'config.php'));
   Util::addExternalScript(OC_Helper::linkTo('calendar/js', 'l10n.php'));
 
   $tmpl = new OCP\Template('cafevdb', 'events');

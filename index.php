@@ -63,11 +63,7 @@ namespace CAFEVDB
     // js/config.php generated dynamic JavaScript and thus "cheats" the
     // CSP rules. We have here the possibility to pass some selected
     // CGI-parameters or other PHP-variables on to the JavaScript code.
-    $usrHdrVis  = Config::getUserValue('headervisibility', 'expanded', $user);
-    $headervisibility = Util::cgiValue('headervisibility', $usrHdrVis);
-    Util::addExternalScript(
-      \OC_Helper::linkToRoute('cafevdb_config',
-                              array('headervisibility' => $headervisibility))); 
+    Util::addExternalScript(\OC_Helper::linkToRoute('cafevdb_config', array()));
 
     \OCP\App::setActiveNavigationEntry( 'cafevdb' );
 
@@ -149,9 +145,6 @@ namespace CAFEVDB
     if (!isset($_POST['Template']) && !$pageLoader->historyEmpty()) {
       $originalPost = $_POST;
       $_POST = $pageLoader->fetchHistory(0);
-      if (isset($originalPost['headervisibility'])) {
-        $_POST['headervisibility'] = $originalPost['headervisibility'];
-      }
       $_POST['OriginalPost'] = $originalPost;
     } else {
       $pageLoader->pushHistory($_POST);

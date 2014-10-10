@@ -46,7 +46,7 @@ class Musicians
     } else if ($this->copyOperation()) {
       return L::t('Copy the displayed musician?');
     } else if ($this->viewOperation()) {
-      return L::t('Display of ll stored personal data for the shown musician.');
+      return L::t('Display of all stored personal data for the shown musician.');
     } else if ($this->changeOperation()) {
       return L::t('Edit the personal data of the displayed musician.');
     } else if ($this->addOperation()) {
@@ -88,8 +88,6 @@ make sure that the musicians are also automatically added to the
     $recordsPerPage  = $this->recordsPerPage;
     $opts            = $this->opts;
 
-    $headervisibility = Util::cgiValue('headervisibility','expanded');
-
     /*
      * IMPORTANT NOTE: This generated file contains only a subset of huge amount
      * of options that can be used with phpMyEdit. To get information about all
@@ -119,8 +117,7 @@ make sure that the musicians are also automatically added to the
       ? 'add-musicians' : 'all-musicians',
       'Table' => $opts['tb'],
       'DisplayClass' => 'Musicians',
-      'ClassArguments' => array($this->projectMode),
-      'headervisibility' => $headervisibility);
+      'ClassArguments' => array($this->projectMode));
 
     if ($this->projectMode) {
       $opts['cgi']['append'][Config::$pmeopts['cgi']['prefix']['sys'].'fl'] = 1;
@@ -409,7 +406,7 @@ __EOT__;
       'php' => array(
         'type' => 'function',
         'function' => 'CAFEVDB\Musicians::instrumentInsurancePME',
-        'parameters' => array('headervisibility' => $headervisibility)
+        'parameters' => array()
         )
       );
 
@@ -531,7 +528,6 @@ __EOT__;
 
   public static function instrumentInsurance($musicianId, $opts)
   {
-    $headervisibility = $opts['headervisibility'];
     $amount = InstrumentInsurance::insuranceAmount($musicianId);
     $fee    = InstrumentInsurance::annualFee($musicianId);
     $bval = L::t('Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;',
@@ -543,7 +539,6 @@ __EOT__;
       ."title=\"$tip\" "
       ."name=\""
       ."Template=instrument-insurance&amp;"
-      ."headervisibility=$headervisibility&amp;"
       ."MusicianId=".$musicianId."\" "
       ."class=\"musician-instrument-insurance\" />"
       ."</div>";

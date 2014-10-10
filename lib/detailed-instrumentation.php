@@ -87,8 +87,7 @@ class DetailedInstrumentation
       'ProjectId' => $projectId,
       'Template' => 'detailed-instrumentation',
       'Table' => $opts['tb'],
-      'DisplayClass' => 'DetailedInstrumentation',
-      'headervisibility' => Util::cgiValue('headervisibility','expanded'));
+      'DisplayClass' => 'DetailedInstrumentation');
 
     // Name of field which is the unique key
     $opts['key'] = 'Id';

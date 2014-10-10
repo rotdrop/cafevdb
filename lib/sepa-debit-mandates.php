@@ -76,8 +76,6 @@ class SepaDebitMandates
     $opts            = $this->opts;
     $musicianId      = $this->musicianId;
 
-    $headervisibility = Util::cgiValue('headervisibility','expanded');
-
     $opts['tb'] = 'SepaDebitMandates';
 
     // Number of records to display on the screen
@@ -90,8 +88,7 @@ class SepaDebitMandates
       'MusicianId' => $musicianId,
       'Template' => 'sepa-debit-mandates',
       'Table' => $opts['tb'],
-      'DisplayClass' => 'SepaDebitMandates',
-      'headervisibility' => $headervisibility);
+      'DisplayClass' => 'SepaDebitMandates');
 
     // Name of field which is the unique key
     $opts['key'] = 'id';

@@ -87,8 +87,7 @@ class Instruments
       'ProjektId' => $projectId,
       'Template' => 'instruments',
       'DisplayClass' => 'Instruments',
-      'RecordsPerPage' => $recordsPerPage,
-      'headervisibility' => Util::cgiValue('headervisibility', 'expanded'));
+      'RecordsPerPage' => $recordsPerPage);
 
     // Name of field which is the unique key
     $opts['key'] = 'Id';

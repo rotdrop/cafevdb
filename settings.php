@@ -48,7 +48,6 @@ try {
   $tmpl = new OCP\Template( 'cafevdb', 'settings');
 
   $tooltips         = OCP\Config::getUserValue($user, 'cafevdb', 'tooltips','on');
-  $headervisibility = OCP\Config::getUserValue($user, 'cafevdb', 'headervisibility', 'expanded');
   $filtervisibility = OCP\Config::getUserValue($user, 'cafevdb', 'filtervisibility', 'off');
 
   $editor      = OCP\Config::getUserValue($user, 'cafevdb', 'wysiwygEditor', 'tinymce');
@@ -58,7 +57,6 @@ try {
   $tmpl->assign('expertmode', $expertmode);
   $tmpl->assign('tooltips', $tooltips);
   $tmpl->assign('editor', $editor);
-  $tmpl->assign('headervisibility', $headervisibility);
   $tmpl->assign('filtervisibility', $filtervisibility);
   $tmpl->assign('encryptionkey', $encrkey);
   $tmpl->assign('adminsettings', false);

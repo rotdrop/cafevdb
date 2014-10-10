@@ -80,18 +80,6 @@ $(document).ready(function() {
     return false;
   });
 
-  $('#headervisibility').change(function(event) {
-    event.preventDefault();
-    var post = $("#headervisibility").serialize();
-    $.post(OC.filePath('cafevdb', 'ajax/settings', 'headervisibility.php') , post, function(data) {return;});
-    if ($('#headervisibility').attr('checked')) {
-      CAFEVDB.Page.expandHeader();
-    } else {
-      CAFEVDB.Page.collapseHeader();
-    }
-    return false;
-  });
-
   $('#filtervisibility').change(function(event) {
     event.preventDefault();
     var post = $("#filtervisibility").serialize();

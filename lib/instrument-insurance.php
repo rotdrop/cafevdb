@@ -107,9 +107,6 @@ class InstrumentInsurance
     $opts            = $this->opts;
     $musicianId      = $this->musicianId;
 
-    $headervisibility = Util::cgiValue('headervisibility','expanded');
-
-
     /*
      * IMPORTANT NOTE: This generated file contains only a subset of huge amount
      * of options that can be used with phpMyEdit. To get information about all
@@ -138,8 +135,7 @@ class InstrumentInsurance
       'MusicianId' => $musicianId,
       'Template' => 'instrument-insurance',
       'DisplayClass' => 'InstrumentInsurance',
-      'Table' => $opts['tb'],
-      'headervisibility' => $headervisibility);
+      'Table' => $opts['tb']);
 
     // Name of field which is the unique key
     $opts['key'] = 'Id';
@@ -324,7 +320,7 @@ class InstrumentInsurance
       'php' => array(
         'type' => 'function',
         'function' => 'CAFEVDB\InstrumentInsurance::instrumentInsurancePME',
-        'parameters' => array('headervisibility' => $headervisibility)
+        'parameters' => array()
         )
       );
 

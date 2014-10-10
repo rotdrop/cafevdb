@@ -156,9 +156,6 @@ redaxoDefaultModule
    * variable-value pairs (global scope). Additionally it is possible
    * to emit any other java-script code here, although this is
    * probably not the intended usage.
-   *
-   * CAVEAT: for the headervisibility we still need to do this
-   * ourselves, so the hook is not connected ATM.
    */
   public static function jsLoadHook($params) {
     //$jsAssign = &$params['array'];
@@ -166,13 +163,11 @@ redaxoDefaultModule
 
     self::init();
 
-    $headervisibility = Util::cgiValue('headervisibility', 'expanded');
     $user             = \OCP\USER::getUser();
     $tooltips         = \OCP\Config::getUserValue($user, 'cafevdb', 'tooltips', '');
     $language         = \OCP\Config::getUserValue($user, 'core', 'lang', 'en');
 
     $array = array(
-      "CAFEVDB.headervisibility" => "'".$headervisibility."'",
       "CAFEVDB.toolTips" => ($tooltips == "off" ? 'false' : 'true'),
       "CAFEVDB.wysiwygEditor" => "'".self::$opts['editor']."'",
       "CAFEVDB.language" => "'".$language."'",

@@ -29,40 +29,6 @@ var CAFEVDB = CAFEVDB || {};
   Page.historyPosition = 0;
   Page.historySize = 1;
 
-  /**Optionally collapse the somewhat lengthy text at the head of db pages.
-   */
-  Page.collapseHeader = function() {
-    var pfx    = 'div.'+CAFEVDB.name+'-page-';
-    var box    = $(pfx+'header-box');
-    var header = $(pfx+'header');
-    var body   = $(pfx+'body');
-    var button = $(pfx+'header-box #viewtoggle');
-    
-    box.removeClass('expanded').addClass('collapsed');
-    header.removeClass('expanded').addClass('collapsed');
-    body.removeClass('expanded').addClass('collapsed');
-    button.removeClass('expanded').addClass('collapsed');
-
-    CAFEVDB.broadcastHeaderVisibility('collapsed');
-  };
-
-  /**Optionally expand the somewhat lengthy text at the head of db pages.
-   */
-  Page.expandHeader = function() {
-    var pfx    = 'div.'+CAFEVDB.name+'-page-';
-    var box    = $(pfx+'header-box');
-    var header = $(pfx+'header');
-    var body   = $(pfx+'body');
-    var button = $(pfx+'header-box #viewtoggle');
-
-    box.addClass('expanded').removeClass('collapsed');
-    header.addClass('expanded').removeClass('collapsed');
-    body.addClass('expanded').removeClass('collapsed');
-    button.addClass('expanded').removeClass('collapsed');
-
-    CAFEVDB.broadcastHeaderVisibility('expanded');
-  };
-
   Page.busyIcon = function(on) {
     if (on) {
       $('#reloadbutton img.number-0').hide();
@@ -128,8 +94,7 @@ $(document).ready(function(){
                  pmeReload.trigger('click');
                } else {
                  CAFEVDB.Page.loadPage({
-                   'HistoryOffset': 0,
-                   'headervisibility': CAFEVDB.headervisibility
+                   'HistoryOffset': 0
                  });
                }
                return false;
@@ -140,8 +105,7 @@ $(document).ready(function(){
              function(event) {
                event.stopImmediatePropagation();
                CAFEVDB.Page.loadPage({
-                 'HistoryOffset': 1,
-                 'headervisibility': CAFEVDB.headervisibility
+                 'HistoryOffset': 1
                });
                return false;
              });
@@ -151,8 +115,7 @@ $(document).ready(function(){
              function(event) {
                event.stopImmediatePropagation();
                CAFEVDB.Page.loadPage({
-                 'HistoryOffset': -1,
-                 'headervisibility': CAFEVDB.headervisibility
+                 'HistoryOffset': -1
                });
                return false;
              });
@@ -170,12 +133,6 @@ $(document).ready(function(){
       var box    = $(pfx+'header-box');
       var header = $(pfx+'page-header');
       var body   = $(pfx+'body');
-
-      if (CAFEVDB.headervisibility == 'collapsed') {
-        CAFEVDB.Page.expandHeader();
-      } else {
-        CAFEVDB.Page.collapseHeader();
-      }
 
       return false;
     });

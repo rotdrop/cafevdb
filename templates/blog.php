@@ -28,7 +28,6 @@ use CAFEVDB\Util;
 
 $css_pfx = 'cafevdb-page';
 $css_class = 'blog-page';
-$hdr_vis = $_['headervisibility'];
 
 $nav = '';
 $nav .= Navigation::button('projects');
@@ -59,7 +58,6 @@ echo $this->inc('part.common.header',
 <div id="blogframe">
   <form id="blogform" method="post">
     <input type="hidden" name="app" value="<?php echo Config::APP_NAME; ?>" />
-    <input type="hidden" name="headervisibility" value="<?php echo $hdr_vis; ?>" />
     <input
       type="submit"
       title="<?php echo Config::toolTips('blog-newentry');?>"

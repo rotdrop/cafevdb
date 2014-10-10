@@ -913,9 +913,6 @@ class Navigation
       return self::buttonsFromArray($id);
     }
 
-    $headervisibility = '<input type="hidden" name="headervisibility" '
-      .'value="'.Util::cgiValue('headervisibility', 'expanded').'" />';
-
     $controlid = $id.'control';
     $form = '';
     switch ($id) {
@@ -927,7 +924,6 @@ class Navigation
 <form class="cafevdb-control" id="$controlid" method="post" action="">
   <input type="submit" name="Projects" value="$value" title="$title"/>
   <input type="hidden" name="Template" value="projects"/>
-  $headervisibility
 </form>
 
 __EOT__;
@@ -940,7 +936,6 @@ __EOT__;
 <form class="cafevdb-control" id="$controlid" method="post" action="">
   <input type="submit" value="$value" title="$title"/>
   <input type="hidden" name="Template" value="all-musicians"/>
-  $headervisibility
 </form>
 
 __EOT__;
@@ -954,7 +949,6 @@ __EOT__;
   <input type="hidden" name="Template" value="email"/>
   <input type="hidden" name="Project" value="$project"/>
   <input type="hidden" name="ProjectId" value="$projectId"/>
-  $headervisibility
 </form>
 
 __EOT__;
@@ -969,7 +963,6 @@ __EOT__;
   <input type="hidden" name="Template" value="email-history"/>
   <input type="hidden" name="Project" value="$project"/>
   <input type="hidden" name="ProjectId" value="$projectId"/>
-  $headervisibility
 </form>
 
 __EOT__;
@@ -990,7 +983,6 @@ __EOT__;
   <input type="hidden" name="Project" value="$project"/>
   <input type="hidden" name="ProjectId" value="$projectId"/>
   <input type="hidden" name="$opname" value="$opwhat" class="$opclass"/>
-  $headervisibility
 </form>
 
 __EOT__;
@@ -1005,7 +997,6 @@ __EOT__;
   <input type="hidden" name="Template" value="detailed-instrumentation"/>
   <input type="hidden" name="Project" value="$project"/>
   <input type="hidden" name="ProjectId" value="$projectId"/>
-  $headervisibility
 </form>
 
 __EOT__;
@@ -1020,7 +1011,6 @@ __EOT__;
   <input type="hidden" name="Template" value="instruments"/>
   <input type="hidden" name="Project" value="$project"/>
   <input type="hidden" name="ProjectId" value="$projectId"/>
-  $headervisibility
 </form>
 
 __EOT__;
@@ -1035,7 +1025,6 @@ __EOT__;
   <input type="hidden" name="Template" value="project-instruments"/>
   <input type="hidden" name="Project" value="$project"/>
   <input type="hidden" name="ProjectId" value="$projectId"/>
-  $headervisibility
 </form>
 
 __EOT__;
@@ -1050,7 +1039,6 @@ __EOT__;
   <input type="hidden" name="Template" value="add-musicians"/>
   <input type="hidden" name="Project" value="$project"/>
   <input type="hidden" name="ProjectId" value="$projectId"/>
-  $headervisibility
 </form>
 
 __EOT__;
@@ -1066,7 +1054,6 @@ __EOT__;
   <input type="hidden" name="Project"   value="$project" />
   <input type="hidden" name="Template"  value="project-instruments" />
   <input type="hidden" name="Action"    value="transfer-instruments" />
-  $headervisibility
 </form>
 
 __EOT__;
@@ -1079,7 +1066,6 @@ __EOT__;
 <form class="cafevdb-control" id="$controlid" method="post" action="">
   <input type="submit" value="$value" title="$title"/>
   <input type="hidden" name="Template" value="instrument-insurance"/>
-  $headervisibility
 </form>
 
 __EOT__;
@@ -1092,7 +1078,6 @@ __EOT__;
 <form class="cafevdb-control" id="$controlid" method="post" action="">
   <input type="submit" value="$value" title="$title"/>
   <input type="hidden" name="Template" value="sepa-debit-mandates"/>
-  $headervisibility
 </form>
 
 __EOT__;

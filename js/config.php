@@ -14,7 +14,6 @@ namespace CAFEVDB {
 
   $user = \OCP\USER::getUser();
 
-  $headervisibility = Util::cgiValue('headervisibility', 'expanded');
   $tooltips         = \OCP\Config::getUserValue($user, 'cafevdb', 'tooltips', '');
   $language         = \OCP\Config::getUserValue($user, 'core', 'lang', 'en');
   $editor           = \OCP\Config::getUserValue($user, 'cafevdb', 'wysiwygEditor', 'tinymce');
@@ -22,7 +21,6 @@ namespace CAFEVDB {
   $pageLoader = new PageLoader();
 
   $array = array(
-    "CAFEVDB.headervisibility" => "'".$headervisibility."'",
     "CAFEVDB.toolTips" => ($tooltips == "off" ? 'false' : 'true'),
     "CAFEVDB.wysiwygEditor" => "'".$editor."'",
     "CAFEVDB.language" => "'".$language."'",

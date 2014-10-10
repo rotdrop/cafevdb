@@ -171,8 +171,7 @@ class ProjectInstruments
       'InhibitTranspose' => $inhibitTranspose ? 'true' : 'false',
       'Table' => $opts['tb'],
       'DisplayClass' => 'ProjectInstruments',
-      'ClassArguments' => array('_' => array('recordId')),
-      'headervisibility' => Util::cgiValue('headervisibility', 'expanded'));
+      'ClassArguments' => array('_' => array('recordId')));
 
     if ($projectMode) {
       $opts['cgi']['persist']['Project'] = $project;

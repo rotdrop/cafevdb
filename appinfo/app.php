@@ -81,13 +81,7 @@ OCP\Util::connectHook('OC_Calendar','moveEvent','CAFEVDB\Events','moveEventListe
 OCP\Util::connectHook('OC_Calendar', 'deleteCalendar', 'CAFEVDB\Events', 'killCalendarListener');
 OCP\Util::connectHook('OC_Calendar', 'editCalendar', 'CAFEVDB\Events', 'editCalendarListener');
 
-/* Hurray! There is a config hook!
- *
- * CAVEAT: for the headervisibility we still need to do this
- * ourselves, so the hook is not connected ATM. The point is that we
- * sometimes transfer the value of the headervisibility as cgi-arg,
- * but this is not available to the oc.js config script.
- */
+/* Hurray! There is a config hook! */
 //OCP\Util::connectHook('\OCP\Config', 'js', 'CAFEVDB\Config', 'jsLoadHook');
 
 OCP\App::addNavigationEntry( array( 

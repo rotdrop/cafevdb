@@ -65,7 +65,6 @@ var CAFEVDB = CAFEVDB || {};
       Project: '',
       AmbientContainerSelector: PHPMYEDIT.selector(),
       DialogHolderCSSId: 'personal-record-dialog', 
-      headervisibility: CAFEVDB.headervisibility,
       // Now special options for the dialog popup
       InitialViewOperation: options.InitialValue == 'View',
       InitialName: 'PME_sys_operation',

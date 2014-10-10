@@ -59,9 +59,6 @@ namespace CAFEVDB
       // Restore from history or die. The call may throw
       $originalPost = $_POST;
       $_POST = $pageLoader->fetchHistory($historyOffset);
-      if (isset($originalPost['headervisibility'])) {
-        $_POST['headervisibility'] = $originalPost['headervisibility'];
-      }
       $_POST['OriginalPost'] = $originalPost;
     } else {
       // record new history

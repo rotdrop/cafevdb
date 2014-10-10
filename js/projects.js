@@ -143,7 +143,6 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
             Table: 'BesetzungsZahlen',
             Transpose: 'transposed',
             InhibitTranspose: 'true',
-            headervisibility: CAFEVDB.headervisibility,
             ProjectId: post.ProjectId,
             Project: post.Project, // this is the name
             // Now special options for the dialog popup
@@ -179,7 +178,6 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
             DialogHolderCSSId: 'project-overview', 
             Template: 'projects',
             DisplayClass: 'Projects',
-            headervisibility: CAFEVDB.headervisibility,
             // Now special options for the dialog popup
             InitialViewOperation: true,
             InitialName: 'PME_sys_operation',
@@ -225,7 +223,6 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
           case 'detailed-instrumentation':
           case 'sepa-debit-mandates':
             post.Template = selectedValue;
-            post.headervisibility = CAFEVDB.headervisibility;
             CAFEVDB.formSubmit('', $.param(post), 'post');
             break;
           case 'profit-and-loss':

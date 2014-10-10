@@ -84,8 +84,7 @@ try {
                                   'ProjectId' => $projectId,
                                   'Template' => Util::cgiValue('Template', ''),
                                   'DisplayClass' => Util::cgiValue('DisplayClass', ''),
-                                  $emailKey => Util::cgiValue($emailKey, array()),
-                                  'headervisibility' => Util::cgiValue('headervisibility', ''))
+                                  $emailKey => Util::cgiValue($emailKey, array()))
     );
 
   // Needed for the editor

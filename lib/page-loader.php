@@ -95,11 +95,7 @@ namespace CAFEVDB {
       $admin = \OC_SubAdmin::isGroupAccessible($user, $group);
 
       $tooltips   = Config::getUserValue('tooltips', 'on', $user);
-      $usrHdrVis  = Config::getUserValue('headervisibility', 'expanded', $user);
       $usrFiltVis = Config::getUserValue('filtervisibility', 'off', $user);
-
-      // Initialize with cgi or user-value
-      $headervisibility = Util::cgiValue('headervisibility', $usrHdrVis);
 
       // Filter visibility is stored here:
       $pmeSysPfx = Config::$pmeopts['cgi']['prefix']['sys'];
@@ -142,8 +138,6 @@ namespace CAFEVDB {
       $tmpl->assign('timezone', Util::getTimezone());
       $tmpl->assign('historySize', $this->historySize());
       $tmpl->assign('historyPosition', $this->historyPosition());
-
-      $tmpl->assign('headervisibility', $headervisibility);
 
       return $tmpl;
     }

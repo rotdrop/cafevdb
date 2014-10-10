@@ -126,8 +126,7 @@ class Projects
       'Template' => 'projects',
       'DisplayClass' => 'Projects',
       'ClassArguments' => array(),
-      'app' => Util::cgiValue('app'), // ???
-      'headervisibility' => Util::cgiValue('headervisibility','expanded'));
+      'app' => Util::cgiValue('app')); // ????
 
     $opts['tb'] = 'Projekte';
 

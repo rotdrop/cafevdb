@@ -29,8 +29,6 @@ echo Util::emitInlineScripts();
 
 $tooltipstitle  = L::t("Control the display of tooltips. ".
                       "Warning: this works globally for all OwnCloud applications.");
-$headervistitle = L::t("Start with visible page header-texts. This affects only ".
-                       "the initial visibility of the page-headers.");
 $filtervistitle = L::t("Initially display the filter-controls on all atable. This affects only ".
                        "the initial visibility of the filter-buttons and -inputs.");
 $experttitle    = L::t("Show a second button which leads to a dialog with `advanced' settings");
@@ -60,10 +58,7 @@ $debugModes = array('general' => L::t('General Information'),
     <input id="tooltips" type="checkbox" name="tooltips" <?php echo $_['tooltips'] == 'on' ? 'checked="checked"' : ''; ?> id="tooltips" title="<?php echo $tooltipstitle ?>"/>
     <label for="tooltips" title="<?php echo $tooltipstitle; ?>"><?php echo L::t('Tool-Tips') ?></label>
     <br />
-    <input id="headervisibility" type="checkbox" name="headervisibility" <?php echo $_['headervisibility'] == 'expanded' ? 'checked="checked"' : ''; ?> id="tooltips" title="<?php echo $headervistitle ?>"/>
-    <label for="headervisibility" title="<?php echo $headervistitle; ?>"><?php echo L::t('Page-Header') ?></label>
-    <br />
-    <input id="filtervisibility" type="checkbox" name="filtervisibility" <?php echo $_['filtervisibility'] == 'on' ? 'checked="checked"' : ''; ?> id="tooltips" title="<?php echo $headervistitle ?>"/>
+    <input id="filtervisibility" type="checkbox" name="filtervisibility" <?php echo $_['filtervisibility'] == 'on' ? 'checked="checked"' : ''; ?> title="<?php echo $filtervistitle ?>"/>
     <label for="filtervisibility" title="<?php echo $filtervistitle; ?>"><?php echo L::t('Filter-Controls') ?></label>
     <br />
     <select name="wysiwygEditor"

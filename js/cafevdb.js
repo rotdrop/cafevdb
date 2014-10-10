@@ -23,7 +23,6 @@ var CAFEVDB = CAFEVDB || {};
 
 (function(window, $, CAFEVDB, undefined) {
   CAFEVDB.name             = 'cafevdb';
-  CAFEVDB.headervisibility = 'expanded';
   CAFEVDB.toolTips         = true;
   CAFEVDB.wysiwygEditor    = 'tinymce';
   CAFEVDB.language         = 'en';
@@ -260,28 +259,6 @@ var CAFEVDB = CAFEVDB || {};
         this.oldheight = this.style.height;
       }
       return true;
-    });
-  };
-
-  CAFEVDB.broadcastHeaderVisibility = function(visibility) {
-
-    // default: only distribute
-
-    if (typeof visibility === 'undefined' || !visibility) {
-      visibility = this.headervisibility;
-    }
-
-    // Sanity check
-    if (visibility != 'expanded' && visibility != 'collapsed') {
-      return;
-    }
-
-    // Keep in sync
-    this.headervisibility = visibility;
-
-    // Insert the new state into all hidden inputs for formsubmit
-    $('input[name="headervisibility"]').each(function (idx) {
-      $(this).val(visibility);
     });
   };
 
@@ -1114,7 +1091,6 @@ $(document).ready(function(){
                event.preventDefault();
                
                var values = $(this).attr('name');
-               values += '&headervisibility='+CAFEVDB.headervisibility;
                
                CAFEVDB.formSubmit('', values, 'post');
                
