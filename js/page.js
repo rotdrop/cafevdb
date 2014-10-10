@@ -23,7 +23,12 @@ var CAFEVDB = CAFEVDB || {};
 
 (function(window, $, CAFEVDB, undefined) {
   'use strict';
+
   var Page = function() {};
+
+  Page.historyPosition = 0;
+  Page.historySize = 1;
+
   /**Optionally collapse the somewhat lengthy text at the head of db pages.
    */
   Page.collapseHeader = function() {
@@ -40,6 +45,7 @@ var CAFEVDB = CAFEVDB || {};
 
     CAFEVDB.broadcastHeaderVisibility('collapsed');
   };
+
   /**Optionally expand the somewhat lengthy text at the head of db pages.
    */
   Page.expandHeader = function() {
@@ -57,27 +63,98 @@ var CAFEVDB = CAFEVDB || {};
     CAFEVDB.broadcastHeaderVisibility('expanded');
   };
 
+  /**Load a page through the history-aware AJAX page loader. */
+  Page.loadPage = function(post) {
+    $('.tipsy').remove();
+    $.post(OC.filePath('cafevdb', 'ajax', 'page-loader.php'),
+           post,
+           function(data) {
+             if (!CAFEVDB.ajaxErrorHandler(data, [ 'contents' ])) {
+               return false;
+             }
+
+             // This is a "complete" page reload, so inject the
+             // contents into #contents
+             $('div#content').html(data.data.contents);
+             CAFEVDB.tipsy();
+
+             // Reload the JS configuration file
+             $.getScript(OC.filePath(CAFEVDB.name, 'js', 'config.php')+
+                         '?headervisibility='+
+                         CAFEVDB.headervisibility,
+                         function() {
+                           CAFEVDB.runReadyCallbacks();
+                         });
+             return false;
+           });
+  };
+
   CAFEVDB.Page = Page;
 
 })(window, jQuery, CAFEVDB);
 
 $(document).ready(function(){
 
-  $('#cafevdb-page-header-box .viewtoggle').click(function(event) {
-    event.preventDefault();
+  var content = $('#content');
 
-    var pfx    = 'div.'+CAFEVDB.name+'-page-';
-    var box    = $(pfx+'header-box');
-    var header = $(pfx+'page-header');
-    var body   = $(pfx+'body');
+  content.on('click keydown',
+             '#personalsettings .navigation.reload',
+             function(event) {
+               event.stopImmediatePropagation();
+               CAFEVDB.Page.loadPage({
+                 'HistoryOffset': 0,
+                 'headervisibility': CAFEVDB.headervisibility
+               });
+               return false;
+             });
 
-    if (CAFEVDB.headervisibility == 'collapsed') {
-      CAFEVDB.Page.expandHeader();
-    } else {
-      CAFEVDB.Page.collapseHeader();
-    }
+  content.on('click keydown',
+             '#personalsettings .navigation.undo',
+             function(event) {
+               event.stopImmediatePropagation();
+               CAFEVDB.Page.loadPage({
+                 'HistoryOffset': 1,
+                 'headervisibility': CAFEVDB.headervisibility
+               });
+               return false;
+             });
 
-    return false;
+  content.on('click keydown',
+             '#personalsettings .navigation.redo',
+             function(event) {
+               event.stopImmediatePropagation();
+               CAFEVDB.Page.loadPage({
+                 'HistoryOffset': -1,
+                 'headervisibility': CAFEVDB.headervisibility
+               });
+               return false;
+             });
+
+  CAFEVDB.addReadyCallback(function() {
+
+    var redo = $('#personalsettings .navigation.redo');
+    var undo = $('#personalsettings .navigation.undo');
+
+    //alert('history: '+CAFEVDB.Page.historyPosition+' size '+CAFEVDB.Page.historySize);
+    redo.prop('disabled', CAFEVDB.Page.historyPosition == 0);
+    undo.prop('disabled', CAFEVDB.Page.historySize - CAFEVDB.Page.historyPosition <= 1);
+
+    $('#cafevdb-page-header-box .viewtoggle').click(function(event) {
+      event.preventDefault();
+
+      var pfx    = 'div.'+CAFEVDB.name+'-page-';
+      var box    = $(pfx+'header-box');
+      var header = $(pfx+'page-header');
+      var body   = $(pfx+'body');
+
+      if (CAFEVDB.headervisibility == 'collapsed') {
+        CAFEVDB.Page.expandHeader();
+      } else {
+        CAFEVDB.Page.collapseHeader();
+      }
+
+      return false;
+    });
   });
 
 });

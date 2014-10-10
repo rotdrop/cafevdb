@@ -139,6 +139,8 @@ namespace CAFEVDB {
       $tmpl->assign('recordId', $recordId);
       $tmpl->assign('locale', Util::getLocale());
       $tmpl->assign('timezone', Util::getTimezone());
+      $tmpl->assign('historySize', $this->historySize());
+      $tmpl->assign('historyPosition', $this->historyPosition());
 
       $tmpl->assign('headervisibility', $headervisibility);
 
@@ -177,9 +179,21 @@ namespace CAFEVDB {
       return $this->historyRecords[$this->historyPosition];
     }
 
+    /**Return the current position into the history. */
+    public function historyPosition()
+    {
+      return $this->historyPosition;
+    }
+
+    /**Return the current position into the history. */
+    public function historySize()
+    {
+      return $this->historySize;
+    }
+
     /**Return true if the recorded history is essentially empty.
      */
-    public function emptyHistory()
+    public function historyEmpty()
     {
       return $this->historySize <= 1 && count($this->historyRecords[0]) == 0;
     }

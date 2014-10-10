@@ -31,6 +31,7 @@ class DetailedInstrumentation
   extends Instrumentation
 {
   const CSS_PREFIX = 'cafevdb-page';
+  const CSS_CLASS = 'instrumentation';
 
   function __construct($execute = true) {
     parent::__construct($execute);

@@ -149,13 +149,13 @@ namespace CAFEVDB
 
     // Load the requested page :)
     $pageLoader = new PageLoader();
-    if (!isset($_POST['Template']) && !$pageLoader->emptyHistory()) {
-      if (Util::debugMode('request')) {
-        echo '<PRE>';
-        print_r($_POST);
-        echo '</PRE>';
-      }
+    if (!isset($_POST['Template']) && !$pageLoader->historyEmpty()) {
+      $originalPost = $_POST;
       $_POST = $pageLoader->fetchHistory(0);
+      if (isset($originalPost['headervisibility'])) {
+        $_POST['headervisibility'] = $originalPost['headervisibility'];
+      }
+      $_POST['OriginalPost'] = $originalPost;
     } else {
       $pageLoader->pushHistory($_POST);
     }

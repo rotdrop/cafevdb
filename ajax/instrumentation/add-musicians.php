@@ -63,7 +63,7 @@ try {
 
   $musiciansIds = array();
   if ($musicianId !== -1) {
-    $musiciansIds[] = $musicianId+43;
+    $musiciansIds[] = $musicianId;
   } else {
     $pmepfx       = Config::$pmeopts['cgi']['prefix']['sys'];
     $musiciansKey = $pmepfx.'mrecs';

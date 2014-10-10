@@ -819,6 +819,7 @@ class Navigation
       $title = ' title="'.(isset($tag['title']) ? $tag['title'] : $name).'"';
       $id    = isset($tag['id']) ? ' id="'.$tag['id'].'"' : '';
       $class = ' class="'.$tag['class'].'"';
+      $disabled = (isset($tag['disabled']) && $tag['disabled']) ? ' disabled="disabled"' : '';
       $data = '';
       if (isset($tag['data'])) {
         $dataArray = $tag['data'];
@@ -843,7 +844,7 @@ class Navigation
         }
         $style = isset($tag['style']) ? ' style="'.$tag['style'].'"' : '';
         $html .= ''
-          .'<button type="'.$buttonType.'" '.$class.$value.$title.$data.$id.$style.'>';
+          .'<button type="'.$buttonType.'" '.$disabled.$class.$value.$title.$data.$id.$style.'>';
         if (isset($tag['image'])) {
           $html .= ''
             .'<img class="svg" '

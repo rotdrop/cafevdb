@@ -392,7 +392,11 @@ $(document).ready(function(){
     parameters: []
   });
 
-  CAFEVDB.Instrumentation.ready();
+  CAFEVDB.addReadyCallback(function() {
+    if ($('div#cafevdb-page-body.instrumentation').length > 0) {
+      CAFEVDB.Instrumentation.ready();
+    }
+  });
 
 });
 

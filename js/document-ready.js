@@ -21,36 +21,19 @@
 
 $(document).ready(function() {
 
-    var loadPage = function(post) {
-        $.post(OC.filePath('cafevdb', 'ajax', 'page-loader.php'),
-               post,
-               function(data) {
-                   if (!CAFEVDB.ajaxErrorHandler(data, [ 'contents' ])) {
-                       return false;
-                   }
-                   // This is a "complete" page reload, so inject the
-                   // contents into #contents
-                   $('div#content').html(data.data.contents);
-                   CAFEVDB.tipsy();
-                   CAFEVDB.runReadyCallbacks();
-                   return false;
-               });
-    };
-
     // Any pending form-submit which has not been caught otherwise is
     // here intercepted and redirected to the page-loader in order to
     // reduce load-time and to record usable history information.
     $('div#content').on('submit', 'form', function(event) {
         var form = $(this);
         var action = form.attr('action');
-        alert('action: '+action);
         if (action != '') {
             // not for us, external target.
             return true;
         }
-        $('.tipsy').remove();
         var post = form.serialize();
-        loadPage(post);
+        //alert('post: '+post);
+        CAFEVDB.Page.loadPage(post);
         return false;
     });
 
@@ -58,10 +41,7 @@ $(document).ready(function() {
     // here intercepted and redirected to the page-loader in order to
     // reduce load-time and to record usable history information.
     $('div#content').on('click', ':submit', function(event) {
-        $('.tipsy').remove();
         var form = $(this.form);
-        var action = form.attr('action');
-        alert('action: '+action);
         var post = form.serialize();
         var self = $(this);
         if (self.attr('name')) {
@@ -69,7 +49,8 @@ $(document).ready(function() {
             obj[self.attr('name')] = self.val();
             post += '&' + $.param(obj);
         }
-        loadPage(post);
+        //alert('post: '+post);
+        CAFEVDB.Page.loadPage(post);
         return false;
     });
 

@@ -27,6 +27,7 @@ use CAFEVDB\Projects;
 
 $table = new DetailedInstrumentation();
 $css_pfx = DetailedInstrumentation::CSS_PREFIX;
+$css_class = DetailedInstrumentation::CSS_CLASS;
 
 $nav = '';
 $nav .= Navigation::button('projectlabel', $table->project, $table->projectId);
@@ -36,6 +37,7 @@ $nav .= Navigation::button('projectinstruments', $table->project, $table->projec
 
 echo $this->inc('part.common.header',
                 array('css-prefix' => $css_pfx,
+                      'css-class' => $css_class,
                       'navigationcontrols' => $nav,
                       'header' => $table->headerText()));
 
