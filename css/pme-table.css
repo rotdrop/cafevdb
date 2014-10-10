@@ -247,7 +247,8 @@ hr.pme-hr {
  * nice background image.
  */
 .pme-navigation input.pme-reload {
-  background-image:url('../img/view-refresh-greyscale.png');
+  /*background-image:url('../img/view-refresh-greyscale.png');*/
+  background-image:url('../img/reload.svg');
   background-repeat:no-repeat;
   background-position: center center;
   background-size:24px 24px;
