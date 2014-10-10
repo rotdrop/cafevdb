@@ -193,7 +193,7 @@ class Instrumentation
   protected function __construct($_execute = true)
   {
     $this->execute = $_execute;
-    $this->pme = false;
+    $this->pme = null;
     $this->pme_bare = false;
 
     Config::init();

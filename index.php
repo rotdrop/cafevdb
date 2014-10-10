@@ -119,10 +119,6 @@ namespace CAFEVDB
     \OCP\Util::addscript("cafevdb/3rdparty/chosen", "chosen.jquery.min");
     \OCP\Util::addStyle("cafevdb/3rdparty/chosen", "chosen.min");
 
-    // Will be removed ...
-    \OCP\Util::addscript("cafevdb/3rdparty/QuickForm2", "quickform");
-    \OCP\Util::addscript("cafevdb/3rdparty/QuickForm2", "dualselect");
-
     // Callback for waiting until images have been loaded
     \OCP\UTIL::addscript("cafevdb/3rdparty", "imagesloaded/imagesloaded.pkgd.min");
 

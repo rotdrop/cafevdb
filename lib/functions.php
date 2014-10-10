@@ -1011,21 +1011,6 @@ __EOT__;
 __EOT__;
       break;
 
-    case 'brief':
-      $value = L::t("Brief Instrumentation");
-      $title = L::t("Brief display of all registered musicians for the selected project. The table will allow for modification of project specific data, like the instrument, the project-fee etc.");
-      $form =<<<__EOT__
-<form class="cafevdb-control" id="$controlid" method="post" action="">
-  <input type="submit" value="$value" title="$title"/>
-  <input type="hidden" name="Template" value="brief-instrumentation"/>
-  <input type="hidden" name="Project" value="$project"/>
-  <input type="hidden" name="ProjectId" value="$projectId"/>
-  $headervisibility
-</form>
-
-__EOT__;
-      break;
-
     case 'instruments':
       $value = L::t("Add Instruments");
       $title = L::t("Display the list of instruments known by the data-base, possibly add new ones as needed.");

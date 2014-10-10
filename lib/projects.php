@@ -754,19 +754,19 @@ a comma.'));
               'name' => L::t('Instrumentation')
           ),
         array('type' => 'option',
-              'title' => Config::toolTips('project-action-brief-instrumentation'),
-              'value' => 'brief-instrumentation',
-              'name' => L::t('Brief Instrumentation')
-          ),
+              'title' => Config::toolTips('project-action-instrumentation-numbers'),
+              'value' => 'project-instruments',
+              'name' => L::t('Instrumentation Numbers')
+          )
+    ))
+.Navigation::htmlTagsFromArray(
+  array('pre' => '<optgroup>', 'post' => '</optgroup>',
         array('type' => 'option',
               'title' => Config::toolTips('project-action-files'),
               'value' => 'project-files',
               'data' => array('projectFiles' => $projectPaths['project']),
               'name' => L::t('Project Files')
-          )
-    ))
-.Navigation::htmlTagsFromArray(
-  array('pre' => '<optgroup>', 'post' => '</optgroup>',
+          ),
         array('type' => 'option',
               'title' => Config::toolTips('project-action-wiki'),
               'value' => 'project-wiki',
@@ -786,11 +786,6 @@ a comma.'));
               'value' => 'project-email',
               'name' => L::t('Em@il')
           ),
-        array('type' => 'option',
-              'title' => Config::toolTips('project-action-instrumentation-numbers'),
-              'value' => 'project-instruments',
-              'name' => L::t('Instrumentation Numbers')
-          )
     ))
 .Navigation::htmlTagsFromArray(
   array('pre' => '<optgroup>', 'post' => '</optgroup>',

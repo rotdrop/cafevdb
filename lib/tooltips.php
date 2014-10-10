@@ -346,11 +346,6 @@ this form by means of the "Save" or "Back" resp. "Cancel" buttons.'),
       'project-actions' => L::t('Pull-down menu with entries to move on
 to pages with the instrumentation, events, instrumentation numbers etc.'),
 
-      'project-action-brief-instrumentation' => L::t(
-        'Open a page with a very brief summary about the musicians registered
-for the respective project. All details about the registered musicians
-are shown in the ordinary `Instrumentation\' table'),
-
       'project-action-detailed-instrumentation' => L::t(
         'Display all registered musicians for the selected project. The table
         shows project related details as well as all stored personal

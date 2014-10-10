@@ -222,7 +222,6 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
 
             // The next 5 actions cannot reasonably loaded in a
             // popup-box.
-          case 'brief-instrumentation':
           case 'detailed-instrumentation':
           case 'sepa-debit-mandates':
             post.Template = selectedValue;
