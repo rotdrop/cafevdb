@@ -868,7 +868,10 @@ $(document).ready(function(){
                 }    
             } else {
                 // Just execute the resize callback:
-                resizeCB();
+                imagePoller(function() {
+                    resizeCB();
+                    scrollbarAdjust();
+                });
             }
 
             container.find('div.photo, #cafevdb_inline_image_wrapper').on('click', 'img', function(event) {
