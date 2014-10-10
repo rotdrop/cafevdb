@@ -41,7 +41,7 @@ namespace CAFEVDB {
   class PageLoader
   {
     const MAX_HISTORY_SIZE = 100;
-    const SESSION_KEY = 'PageHistory';
+    const SESSION_HISTORY_KEY = 'PageHistory';
 
     /**The data-contents. A "cooked" array structure with the
      * following components:
@@ -54,7 +54,7 @@ namespace CAFEVDB {
     private $historyPosition;
     private $historySize;
 
-    /***/
+    /**Initialize a sane do-nothing record. */
     private function defaultHistory()
     {
       $this->historySize = 1;
@@ -205,20 +205,20 @@ namespace CAFEVDB {
     /**Store the current state whereever. Currently the PHP session
      * data, but this is not guaranteed.
      */
-    public function storeHistory() 
+    private function storeHistory() 
     {
       $storageValue = array('size' => $this->historySize,
                             'position' => $this->historyPosition,
                             'records' => $this->historyRecords);
-      Config::sessionStoreValue(self::SESSION_KEY, $storageValue);
+      Config::sessionStoreValue(self::SESSION_HISTORY_KEY, $storageValue);
     }
 
-    /**Load the history sate. Initialize to default state in case of
+    /**Load the history state. Initialize to default state in case of
      * errors.
      */
-    public function loadHistory()
+    private function loadHistory()
     {
-      $loadValue = Config::sessionRetrieveValue(self::SESSION_KEY);
+      $loadValue = Config::sessionRetrieveValue(self::SESSION_HISTORY_KEY);
       if (!$this->validateHistory($loadValue)) {
         $this->defaultHistory();
         return false;
