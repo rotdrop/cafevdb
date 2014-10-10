@@ -59,7 +59,8 @@ namespace CAFEVDB {
     {
       $this->historySize = 1;
       $this->historyPosition = 0;
-      $this->historyRecords = array(array());
+      $this->historyRecords = array(array('md5' => md5(serialize(array())),
+                                          'data' => array()));
     }
     
     /**Fetch any existing history from the session or initialize an
@@ -151,15 +152,22 @@ namespace CAFEVDB {
     public function pushHistory($data = false)
     {
       if ($data === false) {
-        $date = $_POST;
+        $data = $_POST;
       }
-      array_splice($this->historyRecords, 0, $this->historyPosition);
-      array_unshift($this->historyRecords, $data);
-      $this->historyPosition = 0;
-      $this->historySize = count($this->historyRecords);
-      while ($this->historySize > self::MAX_HISTORY_SIZE) {
-        array_pop($this->historyRecords);
-        --$this->historySize;
+      ksort($data);
+      $md5 = md5(serialize($data));
+      $historyData = $this->historyRecords[$this->historyPosition];
+      if ($historyData['md5'] != $md5) {
+        // add the new record if it appears to be new
+        array_splice($this->historyRecords, 0, $this->historyPosition);
+        array_unshift($this->historyRecords, array('md5' => $md5,
+                                                   'data' => $data));
+        $this->historyPosition = 0;
+        $this->historySize = count($this->historyRecords);
+        while ($this->historySize > self::MAX_HISTORY_SIZE) {
+          array_pop($this->historyRecords);
+          --$this->historySize;
+        }
       }
     }
 
@@ -176,7 +184,9 @@ namespace CAFEVDB {
       }
       
       $this->historyPosition = $newPosition;
-      return $this->historyRecords[$this->historyPosition];
+
+      // Could check for valid data here, but so what
+      return $this->historyRecords[$this->historyPosition]['data'];
     }
 
     /**Return the current position into the history. */
@@ -195,7 +205,7 @@ namespace CAFEVDB {
      */
     public function historyEmpty()
     {
-      return $this->historySize <= 1 && count($this->historyRecords[0]) == 0;
+      return $this->historySize <= 1 && count($this->historyRecords[0]['data']) == 0;
     }
 
     /**Store the current state whereever. Currently the PHP session
@@ -242,6 +252,9 @@ namespace CAFEVDB {
     /**Validate one history entry */
     private function validateHistoryRecord($record) {
       if (!is_array($record)) {
+        return false;
+      }
+      if (!isset($record['md5']) || $record['md5'] != md5(serialize($record['data']))) {
         return false;
       }
       return true;
