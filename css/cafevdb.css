@@ -330,48 +330,8 @@ div[class|='cafevdb-nav']>div {
  *
  */
 
-#cafevdb-page-header-box #viewtogglebar {
-  position:absolute;
-  bottom:0;
-  overflow:visible;
-  background-color:#BBB;
-  right:0;
-  width:100%;
-  height:1ex;
-  cursor:pointer;
-  border:0px;
-  opacity:0.5;
-  /*border-bottom:1ex solid #eee;*/
-  /* -moz-box-shadow:-3px 0 7px #777; */
-  /* -webkit-box-shadow:-3px 0 7px #777; */
-  /*box-shadow: 0 0.5ex 1ex #777;*/
-}
-
-div.cafevdb-page-header-box,
-div.cafevdb-page-header-box.expanded {
-  position:fixed;
-  padding-top:5ex;
-  z-index:25;
-  background-color:inherit;
-  opacity:1.0;
-  width:100%;
-  height:17ex;
-  overflow:hidden;
-  border-bottom:1px solid #777;
-  -moz-box-shadow:-3px 0 7px #777;
-  -webkit-box-shadow:-3px 0 7px #777;
-  box-shadow: -3px 0 7px #777;
-}
-
-div.cafevdb-page-header,
-div.cafevdb-page-header.expanded {
-  position:fixed;
-  padding-top:1ex;
-  padding-left:1ex;
-  height:16ex;
-  /*margin-right:40px;*/
-  overflow:hidden;
-  /*width:80%;*/
+div#controls {
+  background-color: #F2F8FF;
 }
 
 div.cafevdb-page-header-text {
@@ -379,42 +339,59 @@ div.cafevdb-page-header-text {
   font-weight: bold;
 }
 
-div.cafevdb-page-body,
-div.cafevdb-page-body.expanded {
+div.cafevdb-page-header-box {
+  position:fixed;
+  padding-top:5ex;
+  z-index:25;
+  background-color:inherit;
+  opacity:1.0;
+  width:100%;
+  height:4ex;
+  overflow:hidden;
+  border-bottom:1px solid #777;
+  -moz-box-shadow:-3px 0 7px #777;
+  -webkit-box-shadow:-3px 0 7px #777;
+  box-shadow: -3px 0 7px #777;
+}
+
+div.cafevdb-page-header {
+  position:fixed;
+  padding-top:1ex;
+  padding-left:1ex;
+  height:3ex;
+  overflow:hidden;
+  font-weight:bold;
+}
+
+div.cafevdb-page-body {
+  padding-top:10ex;
   position:relative;
-  padding-top:23ex;
 }
 
-div.cafevdb-page-header-box.collapsed { height:4ex; }
-div.cafevdb-page-header.collapsed { height:3ex; }
-div.cafevdb-page-body.collapsed { padding-top:10ex; }
-
-#cafevdb-page-header-box #viewtoggle,
-#cafevdb-page-header-box #viewtoggle.expanded {
-  position:relative;
-  z-index:26;
-  float:right;
-  margin-top:13ex;
-  margin-right:84px;
-  max-height: 26px;
-  padding: 5px;
-  vertical-align:middle;
+#cafevdb-page-body input.pme-reload {
+  display:none !important;
+  position:absolute !important;
+  left:-10000px !important;
 }
 
-#cafevdb-page-header-box #viewtoggle.collapsed {
-  margin-top:0.3em;
+#reloadbutton img {
+  width:24px;
+  height:24px;
 }
 
-#viewtoggle #viewtoggle-img, #viewtoggle.expanded #viewtoggle-img {
-  background:url('../../../core/img/actions/upload.svg') no-repeat center;
+#reloadbutton img.number-1 {
+  display:none;
 }
 
-#viewtoggle.collapsed #viewtoggle-img {
-  background:url('../../../core/img/actions/download.svg') no-repeat center;
-}
-
-div.cafevdb-page-header-box button.viewtoggle:active {
-  background-color:SteelBlue;
+#cafevdb-loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 128px;
+  height: 14px;
+  margin-top: -7px; /* Half the height */
+  margin-left: -64px; /* Half the width */
+  z-index:10000;
 }
 
 /*
