@@ -640,12 +640,39 @@ input.pme-filter {
 }
 
 td[class*='pme-filter'], th[class*='pme-filter'] {
-  vertical-align:top;
+  vertical-align:bottom;
   background:#C6DEFF;
+}
+
+table.pme-main div.pme-filter-negate {
+  height:0px;
+  width:0px;
+  overflow:visible;
 }
 
 table.pme-main label.pme-filter-negate {
   vertical-align:top;
+}
+
+table.pme-main label.pme-filter-negate span {
+  display:inline-block;
+  text-indent:-10000px;
+  width:24px;
+  height:24px;
+  position:relative;
+  top:-12px;
+  background:url(../img/dont.svg);
+  cursor:pointer;
+  opacity:0.4;
+  z-index:1;
+}
+
+table.pme-main label.pme-filter-negate input[type=checkbox]:checked ~ span {
+  opacity:1.0;
+}
+
+table.pme-main label.pme-filter-negate input[type=checkbox] {
+  display:none;
 }
 
 table.pme-main select[class^="pme-filter"] {
