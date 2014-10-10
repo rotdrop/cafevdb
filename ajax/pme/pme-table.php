@@ -54,11 +54,16 @@ namespace CAFEVDB
 
     $displayClass = Util::cgiValue('DisplayClass', false);
     $classArguments = Util::cgiValue('ClassArguments', array());
-
     $dialogMode = Util::cgiValue('AmbientContainerSelector', false) != false;
-    if (!$dialogMode) {
+    $reloadAction = Util::cgiValue('PME_sys_reloadlist', false) != false;
+
+    $historySize = -1;
+    $historyPosition = -1;
+    if (!$dialogMode && !$reloadAction) {
       $pageLoader = new PageLoader();
       $pageLoader->pushHistory($_POST);
+      $historySize = $pageLoader->historySize();
+      $historyPosition = $pageLoader->historyPosition();
     }
 
     if (!$displayClass) {
@@ -93,15 +98,6 @@ namespace CAFEVDB
 
     $html = $tmpl->fetchPage();
 
-    if (false) {
-      \OCP\JSON::error(
-        array(
-          'data' => array('error' => L::t('invalid arguments'),
-                          'message' => print_r($_POST, true),
-                          'debug' => $debugText)));
-      return false;
-    }
-
     // Search for MySQL error messages echoes by phpMyEdit, sometimes
     // the contents of the template will be discarded, but we still want
     //
@@ -118,9 +114,12 @@ namespace CAFEVDB
     @ob_end_clean();
   
     \OCP\JSON::success(
-      array('data' => array('contents' => $html,
-                            'sqlerror' => $mySQLError,
-                            'debug' => $debugText)));
+      array('data' => array(
+              'contents' => $html,
+              'sqlerror' => $mySQLError,
+              'history' => array('size' => $historySize,
+                                 'position' => $historyPosition),
+              'debug' => $debugText)));
   
     return true;
 

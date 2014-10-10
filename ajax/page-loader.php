@@ -77,8 +77,11 @@ namespace CAFEVDB
     @ob_end_clean();
   
     \OCP\JSON::success(
-      array('data' => array('contents' => $html,
-                            'debug' => $debugText)));
+      array('data' => array(
+              'contents' => $html,
+              'history' => array('size' => $pageLoader->historySize(),
+                                 'position' => $pageLoader->historyPosition()),
+              'debug' => $debugText)));
     
     return true;
 
