@@ -30,8 +30,6 @@ echo Util::emitInlineScripts();
 
 $css_pfx   = $_['css-prefix'];
 $css_class = isset($_['css-class']) ? ' '.$_['css-class'] : '';
-$hdr_vis   = $_['headervisibility'];
-$_hdr_vis  = ' '.$_['headervisibility'];
 
 $redoDisabled = $_['historyPosition'] == 0;
 $undoDisabled = $_['historySize'] - $_['historyPosition'] <= 1;
@@ -49,7 +47,8 @@ $settingscontrols = Navigation::buttonsFromArray(
     'reload' => array(
       'name' => L::t('Reload'),
       'title' => L::t('Reload the current view.'),
-      'image' => \OCP\Util::imagePath('cafevdb', 'reload.svg'),
+      'image' => array(\OCP\Util::imagePath('cafevdb', 'reload.svg'),
+                       \OCP\Util::imagePath('core', 'loading.gif')),
       'class' => 'reload navigation history',
       'id' => 'reloadbutton',
       'type' => 'submitbutton'),
@@ -82,16 +81,6 @@ $settingscontrols = Navigation::buttonsFromArray(
       'class' => 'settings generalsettings',
       'id' => 'settingsbutton')
     ));
-$viewtoggle = Navigation::buttonsFromArray(
-  array(
-    'viewtoggle' => array(
-      'name' => L::t('Toggle Visibility'),
-      'type' => 'button',
-      'title' => L::t('Minimize or maximize the containing block.'),
-      'image' => \OCP\Util::imagePath('cafevdb', 'transparent.svg'),
-      'class' => 'viewtoggle'.$_hdr_vis,
-      'id' => 'viewtoggle')
-    ));
 
 if (!isset($_['headerblock']) && isset($_['header'])) {
   $header = $_['header']; 
@@ -103,7 +92,6 @@ if (!isset($_['headerblock']) && isset($_['header'])) {
 <div id="controls">
 <?php echo $_['navigationcontrols']; ?>
 <form id="personalsettings" method="post" action="?app=<?php echo Config::APP_NAME; ?>">
-  <input type="hidden" name="headervisibility" value="<?php echo $hdr_vis; ?>" />
   <input type="hidden" name="requesttoken" value="<?php echo \OCP\Util::callRegister(); ?>" />
   <?php echo $settingscontrols; ?>
 </form>
@@ -111,13 +99,12 @@ if (!isset($_['headerblock']) && isset($_['header'])) {
 <div class="cafevdb-general" id="cafevdb-general">
   <!-- divs for a header which can be hidden on button click. -->
   <?php echo isset($_['headerblock']) ? '<!-- ' : ''; ?>
-  <div id="<?php echo $css_pfx; ?>-header-box" class="<?php echo $css_pfx; ?>-header-box<?php echo $_hdr_vis; ?>">
-    <div id="<?php echo $css_pfx; ?>-header" class="<?php echo $css_pfx; ?>-header<?php echo $_hdr_vis; ?>">
+  <div id="<?php echo $css_pfx; ?>-header-box" class="<?php echo $css_pfx; ?>-header-box<?php echo $css_class; ?>">
+    <div id="<?php echo $css_pfx; ?>-header" class="<?php echo $css_pfx; ?>-header<?php echo $css_class; ?>">
       <?php echo $header; ?>
     </div>
-    <?php echo $viewtoggle; ?>
-    <div id="viewtogglebar" class="viewtoggle <?php echo $_hdr_vis; ?>" title="<?php echo L::t('Minimize or maximize the containing block.'); ?>"></div>
   </div>
   <?php echo isset($_['headerblock']) ? ' -->' : ''; ?>
   <?php echo isset($_['headerblock']) ? $_['headerblock'] : ''; ?>
-  <div id="<?php echo $css_pfx; ?>-body" class="<?php echo $css_pfx; ?>-body<?php echo $_hdr_vis; ?><?php echo $css_class; ?>">
+  <div id="<?php echo $css_pfx; ?>-body" class="<?php echo $css_pfx; ?>-body<?php echo $css_class; ?>">
+

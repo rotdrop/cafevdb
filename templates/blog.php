@@ -27,6 +27,7 @@ use CAFEVDB\Navigation;
 use CAFEVDB\Util;
 
 $css_pfx = 'cafevdb-page';
+$css_class = 'blog-page';
 $hdr_vis = $_['headervisibility'];
 
 $nav = '';
@@ -49,6 +50,7 @@ of the current application (top left besides the cloud-icon).')
 
 echo $this->inc('part.common.header',
                 array('css-prefix' => $css_pfx,
+                      'css-class' => $css_class,
                       'navigationcontrols' => $nav,
                       'header' => $header));
 

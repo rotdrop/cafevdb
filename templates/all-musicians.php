@@ -26,6 +26,7 @@ use CAFEVDB\Musicians;
 
 $table = new Musicians();
 $css_pfx = Musicians::CSS_PREFIX;
+$css_class = Musicians::CSS_CLASS;
 
 $nav = '';
 $nav .= Navigation::button('projects');
@@ -36,6 +37,7 @@ $nav .= Navigation::button('debitmandates');
 
 echo $this->inc('part.common.header',
                 array('css-prefix' => $css_pfx,
+                      'css-class' => $css_class,
                       'navigationcontrols' => $nav,
                       'header' => $table->headerText()));
 
