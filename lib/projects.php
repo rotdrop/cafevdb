@@ -66,17 +66,6 @@ class Projects
     $this->pme_bare = !$enable;
   }
 
-  /**Disable some extra stuff (image upload etc.) when displaying the entire table.
-   */
-  public function changeOperation()
-  {
-    if (!isset($this->pme)) {
-      return false;
-    } else {
-      return $this->pme->change_operation() || $this->pme->add_operation();
-    }
-  }
-
   public function shortTitle()
   {
     $projectId = Util::cgiValue('ProjectId', -1);
@@ -99,11 +88,7 @@ class Projects
 
   public function headerText()
   {
-    $header  = $this->shortTitle();
-    $header .= '<p>';
-    $header .= L::t("Please click on the project-name of the respective project in order to edit the instrumentation list or dates or to store other project related data.");
-
-    return '<div class="'.self::CSS_PREFIX.'-header-text">'.$header.'</div>';
+    return $this->shortTitle();
   }
 
   public function display()
@@ -1579,7 +1564,7 @@ __EOT__;
     $instrumentation = false;
     $row = false;
     if ($result !== false && mysql_num_rows($result) == 1) {
-      $row = mySQL::fetch($instres);
+      $row = mySQL::fetch($result);
       $instrumentation = explode(',', $row['Besetzung']);
     }
 

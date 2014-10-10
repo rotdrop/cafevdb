@@ -44,23 +44,7 @@ class DetailedInstrumentation
 
   public function headerText()
   {
-    $header =<<<__EOT__
-    <h3>Besetzung Projekt $this->project.</h3>
-      <H4><ul>
-      <li><span style="color:red">Musiker entfernen:</span>
-      <span style="font-style:italic">"Short Display for $this->project"</span>
-      <li><span style="color:red">Projekt-Daten</span>
-      <span style="font-style:italic">"Short Display for $this->project"</span>
-      (Projekt-Instrument, Stimmführer, Projekt-Bemerkungen etc.)
-      <li><span style="color:red">Personen-Daten</span>
-      <span style="font-style:italic">diese Tabelle</span>
-      (Adresse, Email, Name etc.)
-      </ul>
-      </H4>
-
-__EOT__;
-
-    return $header;
+    return $this->shortTitle();
   }
 
   function display()
