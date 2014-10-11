@@ -105,6 +105,14 @@ $(document).ready(function() {
         parameters: []
     });
 
+    PHPMYEDIT.addTableLoadCallback('Instruments', {
+        callback: function(selector, resizeCB) {
+            resizeCB();
+        },
+        context: CAFEVDB,
+        parameters: []
+    });
+
     PHPMYEDIT.addTableLoadCallback('InstrumentInsurance', {
         callback: function(selector, resizeCB) {
             CAFEVDB.exportMenu(selector);

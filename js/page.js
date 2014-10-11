@@ -52,6 +52,9 @@ var CAFEVDB = CAFEVDB || {};
                return false;
              }
 
+             // Remove pending dialog when moving away from the page
+             $('.ui-dialog-content').dialog('destroy').remove();
+
              CAFEVDB.Page.historyPosition = data.data.history.position;
              CAFEVDB.Page.historySize = data.data.history.size;
 

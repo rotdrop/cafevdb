@@ -113,6 +113,9 @@ var CAFEVDB = CAFEVDB || {};
           $('.tipsy').remove();
           $('#event').dialog('close');
           $(this).dialog('destroy').remove();
+
+          // Remove modal plane if appropriate
+          CAFEVDB.modalizer(false);
         }
       });
     },

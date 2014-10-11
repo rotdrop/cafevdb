@@ -1017,6 +1017,11 @@ CAFEVDB.Email = CAFEVDB.Email || {};
              } else {
                dlgTitle = t('cafevdb', 'Em@il Form');
              }
+
+             if (modal) {
+               CAFEVDB.modalizer(true);
+             }
+
              var popup = dialogHolder.dialog({
                title: dlgTitle,
                position: { my: "middle top",
@@ -1024,7 +1029,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                            of: "#header" },
                width: 'auto',
                height: 'auto',
-               modal: modal,
+               modal: false, // modal,
                closeOnEscape: false,
                dialogClass: 'emailform custom-close',
                resizable: false,
@@ -1187,6 +1192,9 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                  CAFEVDB.removeEditor(dialogHolder.find('textarea.wysiwygeditor'));
                  dialogHolder.dialog('close');
                  dialogHolder.dialog('destroy').remove();
+
+                 // Also close all other open dialogs.
+                 CAFEVDB.modalizer(false);
                }
              });
              return false;

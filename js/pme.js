@@ -36,14 +36,19 @@ var PHPMYEDIT = PHPMYEDIT || {};
   PHPMYEDIT.inputSelectNoResult     = 'No values match';
   PHPMYEDIT.inputSelectChosenTitle  = 'Select from the pull-down menu.';
   PHPMYEDIT.chosenPixelWidth        = [];
+  PHPMYEDIT.pmePrefix               = 'pme';
 
   PHPMYEDIT.defaultSelector         = '#cafevdb-page-body';
   PHPMYEDIT.dialogCSSId             = 'pme-table-dialog';
   PHPMYEDIT.tableLoadCallbacks      = [];
 
-  PHPMYEDIT.popupPosition           = { my: "middle top",
-                                        at: "middle bottom+50px",
-                                        of: "#header" };
+  // PHPMYEDIT.popupPosition           = { my: "middle top",
+  //                                       at: "middle bottom+50px",
+  //                                       of: "#header" };
+
+  PHPMYEDIT.popupPosition           = { my: "left top",
+                                        at: "left+5% top+5%",
+                                        of: window };
 
   /**Genereate the default selector. */
   PHPMYEDIT.selector = function(selector) {
@@ -232,6 +237,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
     var contentsChanged = false;
 
     container.off('click', '**');
+
+    PHPMYEDIT.installTabHandler(container, callback);
 
     // The easy one, but for changed contents
     var cancelButton = $(container).find('input.pme-cancel');
@@ -496,12 +503,16 @@ var PHPMYEDIT = PHPMYEDIT || {};
                return true; // let it bubble upwards ...
              });
 
+             if (tableOptions.ModalDialog) {
+               CAFEVDB.modalizer(true);
+             }
+
              var popup = dialogHolder.dialog({
                title: dialogHolder.find('span.pme-short-title').html(),
                position: pme.popupPosition,
                width: 'auto',
                height: 'auto',
-               modal: tableOptions.ModalDialog,
+               modal: false, //tableOptions.ModalDialog,
                closeOnEscape: false,
                dialogClass: 'pme-table-dialog custom-close',
                resizable: false,
@@ -563,8 +574,14 @@ var PHPMYEDIT = PHPMYEDIT || {};
                    pme.submitOuterForm(tableOptions.AmbientContainerSelector);
                  }
 
+                 //Close also all further dialogs; we consider an
+                 //PME-table dialog as the primary beast
+
                  dialogHolder.dialog('close');
                  dialogHolder.dialog('destroy').remove();
+
+                 //$('.ui-dialog-content').dialog('close');
+                 CAFEVDB.modalizer(false);
                }
              });
              return false;
@@ -795,6 +812,159 @@ var PHPMYEDIT = PHPMYEDIT || {};
     }
   };
 
+  PHPMYEDIT.installFilterChosen = function(containerSel) {
+    if (!this.selectChosen) {
+      return;
+    }
+
+    var pmepfx = this.pmePrefix;
+
+    var container = this.container(containerSel);
+
+    var noRes = this.filterSelectNoResult;
+
+    container.find("select[class^='"+pmepfx+"-comp-filter']").chosen({width:"auto", disable_search_threshold: 10});
+
+    // Provide a data-placeholder and also remove the match-all
+    // filter, which is not needed when using chosen.
+    container.find("select[class^='"+pmepfx+"-filter']").attr("data-placeholder", this.filterSelectPlaceholder);
+    container.off('change', 'select[class^="'+pmepfx+'-filter"]');
+    container.find("select[class^='"+pmepfx+"-filter'] option[value='*']").remove();
+
+    // Play a dirty trick in order not to pass width:auto to chosen
+    // for some particalar thingies
+    var k;
+    for (k = 0; k < PHPMYEDIT.chosenPixelWidth.length; ++k) {
+      var tag = PHPMYEDIT.chosenPixelWidth[k];
+      var pxlWidth = Math.round(container.find("td[class^='"+pmepfx+"-filter-"+tag+"']").width());
+      container.find("select[class^='"+pmepfx+"-filter-"+tag+"']").chosen({width:pxlWidth+60+'px',
+                                                                           no_results_text:noRes});
+    }
+    
+    // Then the general stuff
+    container.find("select[class^='"+pmepfx+"-filter']").chosen({//width:'100%',
+      no_results_text:noRes});
+
+    var dblClickSel =
+      'td[class^="'+pmepfx+'-filter"] ul.chosen-choices li.search-field input[type="text"]'+','+
+      'td[class^="'+pmepfx+'-filter"] div.chosen-container';
+    container.off('dblclick', dblClickSel);
+    container.on('dblclick', dblClickSel, function(event) {
+      event.preventDefault();
+      // There doesn't seem to be a "this" for dblclick, though
+      // searching the web did not reveal similar problems. Doesn't
+      // matter, use the div as dummy
+      PHPMYEDIT.blah = event;
+      PHPMYEDIT.blah2 = $(event.target);
+      return PHPMYEDIT.pseudoSubmit(container.find('form.pme-form'), $(event.target), containerSel, pmepfx);
+    });
+
+    container.find("td[class^='"+pmepfx+"-filter'] div.chosen-container").attr("title", this.filterSelectChosenTitle);
+  };
+
+  PHPMYEDIT.installInputChosen = function(containerSel) {
+    if (!this.selectChosen) {
+      return;
+    }
+
+    var pmepfx = this.pmePrefix;
+
+    var container = this.container(containerSel);
+
+    var noRes = this.inputSelectNoResult;
+
+    // Provide a data-placeholder and also remove the match-all
+    // filter, which is not needed when using chosen.
+    container.find("select[class^='"+pmepfx+"-input']").attr("data-placeholder", this.inputSelectPlaceholder);
+    container.off('change', 'select[class^="'+pmepfx+'-input"]');
+    container.find("select[class^='"+pmepfx+"-input'] option[value='*']").remove();
+
+    // Play a dirty trick in order not to pass width:auto to chosen
+    // for some particalar thingies
+    var k;
+    for (k = 0; k < PHPMYEDIT.chosenPixelWidth.length; ++k) {
+      var tag = PHPMYEDIT.chosenPixelWidth[k];
+      var pxlWidth = Math.round(container.find("td[class^='"+pmepfx+"-input-"+tag+"']").width());
+      container.find("select[class^='"+pmepfx+"-input-"+tag+"']").chosen({width:pxlWidth+'px',
+                                                                          disable_search_threshold: 10,
+                                                                          no_results_text:noRes});
+    }
+    
+    // Then the general stuff
+    container.find("select[class^='"+pmepfx+"-input']").chosen({//width:'100%',
+      disable_search_threshold: 10,
+      no_results_text:noRes});
+
+    // Set title explicitly
+    container.find("td[class^='"+pmepfx+"-input'] div.chosen-container").attr("title", this.inputSelectChosenTitle);
+    container.find("td[class^='"+pmepfx+"-value'] div.chosen-container").attr("title", this.inputSelectChosenTitle);
+
+    // Copy over titles
+    container.find("td[class^='"+pmepfx+"-value']").each(function(index) {
+      var selectBox;
+      var selectTitle = "";
+      selectBox = $(this).children("select[class^='"+pmepfx+"-input']").first();
+      if (typeof $(selectBox).attr("title") !== 'undefined') {
+        selectTitle = selectBox.attr("title");
+      } else if (typeof $(selectBox).attr("original-title") !== 'undefined') {
+        selectTitle = selectBox.attr("original-title");
+      }
+      if (selectTitle.length != 0) {
+        $(this).children("div.chosen-container").first().attr("title", selectTitle);
+      }
+    });
+
+  };
+
+  PHPMYEDIT.installTabHandler = function(containerSel, callback) {
+    var container = this.container(containerSel);
+
+    if (typeof callback != 'function') {
+      callback = function() {
+        CAFEVDB.tipsy(container);
+      }
+    }
+
+    container.off('click', 'li.pme-navigation.table-tabs');
+    container.on('click', 'li.pme-navigation.table-tabs', function(event) {
+      var form  = container.find('form.pme-form');
+      var table = form.find('table.pme-main');
+
+      var oldTabClass = form.find('li.table-tabs.selected a').attr('href').substring(1);
+      var tabClass = $(this).find('a').attr('href').substring(1);
+
+      //alert('old tab: ' + oldTabClass + ' new tab: ' + tabClass);
+
+      // Inject the display triggers ...
+      table.removeClass(oldTabClass).addClass(tabClass);
+
+      // Record the tab in the form data
+      form.find('input[name="PME_sys_cur_tab"]').val(tabClass.substring(4));
+
+      // for styling and logic ...
+      form.find('li.pme-navigation.table-tabs').removeClass('selected');
+      $(this).addClass('selected');
+
+      // account for unstyled chosen selected
+      var pfx = (tabClass == 'tab-all') ? '' : 'td.' + tabClass + ' ';
+      var reattachChosen = false;
+      form.find(pfx + 'div.chosen-container').each(function(idx) {
+        if ($(this).width() == 0) {
+          $(this).prev().chosen('destroy');
+          reattachChosen = true;
+        }
+      });
+      if (reattachChosen) {
+        PHPMYEDIT.installFilterChosen(container);
+        PHPMYEDIT.installInputChosen(container);
+      }
+
+      $('.tipsy').remove();
+      callback();
+
+      return false;
+    });
+  };
 
   PHPMYEDIT.init = function(pmepfx, containerSel) {
     var self = this;
@@ -861,6 +1031,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
       return PHPMYEDIT.pseudoSubmit($(this.form), $(this), containerSel, pmepfx);
     });
 
+    PHPMYEDIT.installTabHandler(container);
+
     if (this.selectChosen) {
       var gotoSelect = container.find("select."+pmepfx+"-goto");
       gotoSelect.chosen({width:"auto", disable_search_threshold: 10});
@@ -891,93 +1063,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
       return true; // other key pressed
     });
 
-    if (this.selectChosen) {
-      var noRes = this.filterSelectNoResult;
-
-      container.find("select[class^='"+pmepfx+"-comp-filter']").chosen({width:"auto", disable_search_threshold: 10});
-
-      // Provide a data-placeholder and also remove the match-all
-      // filter, which is not needed when using chosen.
-      container.find("select[class^='"+pmepfx+"-filter']").attr("data-placeholder", this.filterSelectPlaceholder);
-      container.off('change', 'select[class^="'+pmepfx+'-filter"]');
-      container.find("select[class^='"+pmepfx+"-filter'] option[value='*']").remove();
-
-      // Play a dirty trick in order not to pass width:auto to chosen
-      // for some particalar thingies
-      var k;
-      for (k = 0; k < PHPMYEDIT.chosenPixelWidth.length; ++k) {
-        var tag = PHPMYEDIT.chosenPixelWidth[k];
-        var pxlWidth = Math.round(container.find("td[class^='"+pmepfx+"-filter-"+tag+"']").width());
-        container.find("select[class^='"+pmepfx+"-filter-"+tag+"']").chosen({width:pxlWidth+60+'px',
-                                                                             no_results_text:noRes});
-      }
-        
-      // Then the general stuff
-      container.find("select[class^='"+pmepfx+"-filter']").chosen({//width:'100%',
-                                                                   no_results_text:noRes});
-
-      var dblClickSel =
-        'td[class^="'+pmepfx+'-filter"] ul.chosen-choices li.search-field input[type="text"]'+','+
-        'td[class^="'+pmepfx+'-filter"] div.chosen-container';
-      container.off('dblclick', dblClickSel);
-      container.on('dblclick', dblClickSel, function(event) {
-        event.preventDefault();
-        // There doesn't seem to be a "this" for dblclick, though
-        // searching the web did not reveal similar problems. Doesn't
-        // matter, use the div as dummy
-        PHPMYEDIT.blah = event;
-        PHPMYEDIT.blah2 = $(event.target);
-        return PHPMYEDIT.pseudoSubmit(container.find('form.pme-form'), $(event.target), containerSel, pmepfx);
-      });
-
-      container.find("td[class^='"+pmepfx+"-filter'] div.chosen-container").attr("title", this.filterSelectChosenTitle);
-    }
-
-    if (this.selectChosen) {
-      var noRes = this.inputSelectNoResult;
-
-      // Provide a data-placeholder and also remove the match-all
-      // filter, which is not needed when using chosen.
-      container.find("select[class^='"+pmepfx+"-input']").attr("data-placeholder", this.inputSelectPlaceholder);
-      container.off('change', 'select[class^="'+pmepfx+'-input"]');
-      container.find("select[class^='"+pmepfx+"-input'] option[value='*']").remove();
-
-      // Play a dirty trick in order not to pass width:auto to chosen
-      // for some particalar thingies
-      var k;
-      for (k = 0; k < PHPMYEDIT.chosenPixelWidth.length; ++k) {
-        var tag = PHPMYEDIT.chosenPixelWidth[k];
-        var pxlWidth = Math.round(container.find("td[class^='"+pmepfx+"-input-"+tag+"']").width());
-        container.find("select[class^='"+pmepfx+"-input-"+tag+"']").chosen({width:pxlWidth+'px',
-                                                                            disable_search_threshold: 10,
-                                                                            no_results_text:noRes});
-      }
-       
-      // Then the general stuff
-      container.find("select[class^='"+pmepfx+"-input']").chosen({//width:'100%',
-        disable_search_threshold: 10,
-        no_results_text:noRes});
-
-      // Set title explicitly
-      container.find("td[class^='"+pmepfx+"-input'] div.chosen-container").attr("title", this.inputSelectChosenTitle);
-      container.find("td[class^='"+pmepfx+"-value'] div.chosen-container").attr("title", this.inputSelectChosenTitle);
-
-      // Copy over titles
-      container.find("td[class^='"+pmepfx+"-value']").each(function(index) {
-        var selectBox;
-        var selectTitle = "";
-        selectBox = $(this).children("select[class^='"+pmepfx+"-input']").first();
-        if (typeof $(selectBox).attr("title") !== 'undefined') {
-          selectTitle = selectBox.attr("title");
-        } else if (typeof $(selectBox).attr("original-title") !== 'undefined') {
-          selectTitle = selectBox.attr("original-title");
-        }
-        if (selectTitle.length != 0) {
-          $(this).children("div.chosen-container").first().attr("title", selectTitle);
-        }
-      });
-
-    }
+    this.installFilterChosen(container);
+    this.installInputChosen(container);
 
   };
 })(window, jQuery, PHPMYEDIT);

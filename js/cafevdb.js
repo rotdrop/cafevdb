@@ -28,10 +28,16 @@ var CAFEVDB = CAFEVDB || {};
   CAFEVDB.language         = 'en';
   CAFEVDB.readyCallbacks   = []; ///< quasi-document-ready-callbacks
 
+  /**Register callbacks which are run after partial page reload in
+   * order to "fake" document-ready. An alternate possibility would
+   * have been to attach handlers to a custom signal and trigger that
+   * signal if necessary.
+   */
   CAFEVDB.addReadyCallback = function(callBack) {
     this.readyCallbacks.push(callBack);
   };
 
+  /**Run artificial document-ready stuff. */
   CAFEVDB.runReadyCallbacks = function() {
     var idx;
     for (idx = 0; idx < this.readyCallbacks.length; ++idx) {
@@ -43,6 +49,7 @@ var CAFEVDB = CAFEVDB || {};
     return false;
   };
 
+  /**Add a WYSIWYG editor to the element specified by @a selector. */
   CAFEVDB.addEditor = function(selector, initCallback, initialHeight) {
     var editorElement;
     if (selector instanceof jQuery) {
@@ -97,6 +104,7 @@ var CAFEVDB = CAFEVDB || {};
     };
   };
 
+  /**Remove a WYSIWYG editor from the element specified by @a selector. */
   CAFEVDB.removeEditor = function(selector) {
     var editorElement;
     if (selector instanceof jQuery) {
@@ -213,7 +221,7 @@ var CAFEVDB = CAFEVDB || {};
       resizable: false,
       open: function() {
       },
-      cloase: function() {
+      close: function() {
         dialogHolder.dialog('close');
         dialogHolder.dialog('destroy').remove();
       }
@@ -674,7 +682,6 @@ var CAFEVDB = CAFEVDB || {};
     // menu, so let the text remain at its default value. Make sure to
     // also remove and re-attach the tool-tips, otherwise some of the
     // tips remain, because chosen() removes the element underneath.
-    
     select.children('option').each(function(i, elm) {
       $(elm).removeAttr('selected');
     });
@@ -759,6 +766,68 @@ var CAFEVDB = CAFEVDB || {};
     }
     element.data('tipsy', null); // remove any already installed stuff
     element.tipsy(options);      // make it new
+  };
+
+
+  /**Open one invisible modal dialog in order to have a persistent
+   * overlay for a group of dialogs.
+   */
+  CAFEVDB.modalizer = function(open) {
+    var modalizer = $('#cafevdb-modalizer');
+    if (open) {
+      if (modalizer.length > 0) {
+        return modalizer;
+      }
+      var dialogHolder = $('<div id="cafevdb-modalizer"></div>');
+      $('body').append(dialogHolder);
+      dialogHolder.dialog({
+        title: '',
+        position: { my: "top left",
+                    at: "top-100% left-100%",
+                    of: window },
+        width: '0px',
+        height: '0px',
+        modal: true,
+        closeOnEscape: false,
+        dialogClass: 'transparent no-close',
+        resizable: false,
+        open: function() {
+          // This one must be ours.
+
+          CAFEVDB.dialogOverlay = $('.ui-widget-overlay:last');
+        },
+        close: function() {
+          CAFEVDB.dialogOverlay = false;
+          dialogHolder.dialog('close');
+          dialogHolder.dialog('destroy').remove();
+        }
+      });
+      return dialogHolder;
+    } else {
+      if (modalizer.length <= 0) {
+        return true;
+      }
+      var overlayIndex = parseInt(modalizer.dialog('widget').css('z-index'));
+      //alert('overlay index: '+overlayIndex);
+      var numDialogs = 0;
+      $('.ui-dialog.ui-widget').each(function(index) {
+        var thisIndex = parseInt($(this).css('z-index'));
+        //alert('that index: '+thisIndex);
+        if (thisIndex >= overlayIndex) {
+          ++numDialogs;
+        }
+      });
+
+      //alert('num dialogs open: '+numDialogs);
+      if (numDialogs > 1) {
+        // one is the modalizer itself, of course.
+        return modalizer;
+      }
+
+      modalizer.dialog('close');
+
+      return true;
+    }  
   };
 
   /**Add a to-back-button to the titlebar of a jQuery-UI dialog. The
@@ -962,6 +1031,7 @@ var CAFEVDB = CAFEVDB || {};
     container.find('.header-right img').tipsy({gravity:'ne', fade:true});
     container.find('img').tipsy({gravity:'nw', fade:true});
     container.find('button').tipsy({gravity:'w', fade:true});
+    container.find('li.pme-navigation.table-tabs').tipsy({gravity:'nw', fade:true});
 
     // original tipsy stuff
     container.find('.displayName .action').tipsy({gravity:'se', fade:true, live:true});
@@ -1142,20 +1212,25 @@ $(document).ready(function(){
     $('input.alertdata.cafevdb-page').each(function(index) {
       var title = $(this).attr('name');
       var text  = $(this).attr('value');
-      OC.dialogs.alert(text, title, undefined , true, true);
+      OC.dialogs.alert(text, title, undefined, true, true);
     });
-    
-    $('#missing-musicians-block').dialog({
-      //dialogClass: 'no-close',
-      width:'auto',
-      height:'auto',
-      resizable: false,
-      autoResize: true,
-      position:{my:'left top',
-                at:'left+1% bottom+10%',
-                of:'form.pme-form'
-               }
-    });
+
+    if ($('#missing-musicians-block').length > 0) {
+      $('#missing-musicians-block').dialog({
+        //dialogClass: 'no-close',
+        width:'auto',
+        height:'auto',
+        resizable: false,
+        autoResize: true,
+        position:{my:'left top',
+                  at:'left+1% bottom+10%',
+                  of:'form.pme-form'
+                 },
+        close: function() {
+          $(this).dialog('destroy').remove();
+        }
+      });
+    }
   });
 
 });
