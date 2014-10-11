@@ -343,6 +343,14 @@ this form by means of the "Save" or "Back" resp. "Cancel" buttons.'),
 
       'pme-gotoselect' => L::t('Jumps directly to the given page'),
 
+      'project-instrumentation-tab' => L::t('Displays the columns directly related to the instrumentation for the project.'),
+
+      'project-metadata-tab' => L::t('Displays `meta-data\' like project fees, single/double room preferences, debit-mandates and the like.'),
+
+      'project-personaldata-tab' => L::t('Displays the personal data of the respective musicians, like address, email, date of birth if known, phone numbers.'),
+
+      'pme-showall-tab' => L::t('Simply blends in all the columns of the table as if all the tabs would be activated at the same time.'),
+
       'project-actions' => L::t('Pull-down menu with entries to move on
 to pages with the instrumentation, events, instrumentation numbers etc.'),
 
