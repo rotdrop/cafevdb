@@ -162,7 +162,7 @@ class Projects
                                       'query' => true,
                                       'sort'  => true,
                                       'time'  => true,
-                                      'tabs'  => true
+                                      'tabs'  => false
                                       ));
 
     /* Get the user's default language and use it if possible or you can

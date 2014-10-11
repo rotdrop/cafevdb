@@ -232,7 +232,7 @@ class ProjectInstruments
                                      'query' => true,
                                      'sort'  => $sort,
                                      'time'  => true,
-                                     'tabs'  => true
+                                     'tabs'  => false
                                      ));
 
     /* Get the user's default language and use it if possible or you can

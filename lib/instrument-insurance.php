@@ -168,7 +168,7 @@ class InstrumentInsurance
                                       'query' => true,
                                       'sort'  => true,
                                       'time'  => true,
-                                      'tabs'  => true
+                                      'tabs'  => false
                                       ));
 
     // Set default prefixes for variables
