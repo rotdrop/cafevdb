@@ -31,6 +31,137 @@
 
 /*******************************************************************************
  *
+ * "table" tabs
+ *
+ */
+
+tr.table-tabs {
+  background-color:inherit;
+}
+
+tr.table-tabs td li.table-tabs {
+  float:left;
+  position:relative;
+  top:0px;
+  margin:1px 0.2em 0px 0px;
+  padding:0px;
+  white-space:nowrap;
+  color:#555;
+  font-weight:bold;
+  border:1px solid #DDD;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  border-top-left-radius:4px;
+  border-top-right-radius:4px;
+  line-height:1.3;
+  background: url('../../../core/css/images/ui-bg_glass_100_f8f8f8_1x400.png') repeat-x scroll 50% 50% #F8F8F8;
+  border-bottom-width:0px;
+  opacity:0.9;
+}
+
+tr.table-tabs td li a {
+  float:left;
+  padding:0.5em 1em;
+  color:#555;
+}
+
+tr.table-tabs td li.selected a {
+  color:#1D2D44;
+}
+
+tr.table-tabs td li.selected {
+  margin-bottom:-3px;
+  padding-bottom:3px;
+  border:1px solid #1D2D44;
+  opacity:1.0;
+}
+
+tr.table-tabs ul {
+  line-height:1.3;
+  border-radius:4px;
+  list-style:none outside none;
+  margin:0px;
+  padding:0.2em 0.2em 0px;
+  border:1px solid #1D2D44;
+  color:#FFF;
+  font-weight:bold;
+  font-size:100%;
+  background: url('../../../core/css/images/ui-bg_flat_35_1d2d44_40x100.png') repeat-x scroll 50% 50% #1D2D44;
+  overflow:hidden;
+  margin-bottom:-2px;
+  z-index:1;
+}
+
+form.pme-form th[class*=tab-],
+form.pme-form td[class*=tab-] {
+  display:none;
+}
+
+/**Display data on every tab. */
+form.pme-form tr th.tab-all,
+form.pme-form tr td.tab-all {
+  display:table-cell;
+}
+
+/**Display all tabs. */
+form.pme-form table.pme-main.tab-all tr th,
+form.pme-form table.pme-main.tab-all tr  td {
+  display:table-cell;
+}
+
+/**Otherwise diplay is triggerred by "diagonal" CSS classes */
+form.pme-form table.pme-main.tab-0 th.tab-0,
+form.pme-form table.pme-main.tab-0 td.tab-0 {
+  display:table-cell;
+}
+
+form.pme-form table.pme-main.tab-1 th.tab-1,
+form.pme-form table.pme-main.tab-1 td.tab-1 {
+  display:table-cell;
+}
+
+form.pme-form table.pme-main.tab-2 th.tab-2,
+form.pme-form table.pme-main.tab-2 td.tab-2 {
+  display:table-cell;
+}
+
+form.pme-form table.pme-main.tab-3 th.tab-3,
+form.pme-form table.pme-main.tab-3 td.tab-3 {
+  display:table-cell;
+}
+
+form.pme-form table.pme-main.tab-4 th.tab-4,
+form.pme-form table.pme-main.tab-4 td.tab-4 {
+  display:table-cell;
+}
+
+form.pme-form table.pme-main.tab-5 th.tab-5,
+form.pme-form table.pme-main.tab-5 td.tab-5 {
+  display:table-cell;
+}
+
+form.pme-form table.pme-main.tab-6 th.tab-6,
+form.pme-form table.pme-main.tab-6 td.tab-6 {
+  display:table-cell;
+}
+
+form.pme-form table.pme-main.tab-7 th.tab-7,
+form.pme-form table.pme-main.tab-7 td.tab-7 {
+  display:table-cell;
+}
+
+form.pme-form table.pme-main.tab-8 th.tab-8,
+form.pme-form table.pme-main.tab-8 td.tab-8 {
+  display:table-cell;
+}
+
+form.pme-form table.pme-main.tab-9 th.tab-9,
+form.pme-form table.pme-main.tab-9 td.tab-9 {
+  display:table-cell;
+}
+
+/*******************************************************************************
+ *
  * PME table popups
  *
  */
