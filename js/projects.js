@@ -305,9 +305,9 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
         if (form.find(submitSel).length > 0) {
 
             var nameSelector =
-                'input.pme-input-0-projectname'+
+                'input.pme-input-0.projectname'+
                 ','+
-                'input.pme-input-1-projectname';
+                'input.pme-input-1.projectname';
             var yearSelector = 'select[name="PME_data_Jahr"]';
             var attachSelector = '#project-name-yearattach';
 

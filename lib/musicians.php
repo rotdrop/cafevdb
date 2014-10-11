@@ -276,7 +276,7 @@ make sure that the musicians are also automatically added to the
 
     $opts['fdd']['Instrumente'] = array(
                                         'name'        => 'Instrumente',
-                                        'css'         => array('postfix' => 'instruments'),
+                                        'css'         => array('postfix' => ' instruments'),
                                         'select'      => 'M',
                                         'maxlen'      => 137,
                                         'sort'        => true,
@@ -290,7 +290,7 @@ make sure that the musicians are also automatically added to the
                                          'select'  => 'D',
                                          'maxlen'  => 128,
                                          'sort'    => true,
-                                         'css'     => array('postfix' => 'memberstatus'),
+                                         'css'     => array('postfix' => ' memberstatus'),
                                          'values2' => $this->memberStatusNames,
                                          'tooltip' => config::toolTips('member-status'));
 
@@ -330,7 +330,7 @@ __EOT__;
             'sort' => true,
             'sql' => 'PMEjoin'.$projectsIdx.'.Projekte',
             'sqlw' => 'PMEjoin'.$projectsIdx.'.Projekte',
-            'css'      => array('postfix' => 'projects'),
+            'css'      => array('postfix' => ' projects'),
             'values' => array( //API for currently making a join in PME.
               'table' =>
               array('sql' => $derivedtable,

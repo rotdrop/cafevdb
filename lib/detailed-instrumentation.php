@@ -406,7 +406,7 @@ __EOT__;
       'sort' => true,
       'sql' => 'PMEjoin'.$projectsIdx.'.Projekte',
       'sqlw' => 'PMEjoin'.$projectsIdx.'.Projekte',
-      'css'      => array('postfix' => 'projects'),
+      'css'      => array('postfix' => ' projects'),
       'values' => array( //API for currently making a join in PME.
         'table' =>
         array('sql' => $derivedtable,

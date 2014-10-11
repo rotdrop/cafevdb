@@ -707,14 +707,16 @@ td.pme-cell-0.musician-instruments, td.pme-cell-1.musician-instruments {
   max-height:1em;
   white-space:nowrap;
   overflow:hidden;
+  text-overflow:ellipsis;
 }
 
-td.pme-cell-0-projects, td.pme-cell-1-projects { 
+td.pme-cell-0.projects, td.pme-cell-1.projects { 
   width:20em;
   max-width:20em;
   max-height:1em;
   white-space:nowrap;
   overflow:hidden;
+  text-overflow:ellipsis;
 }
 
 /* Hide everything but the first line */
@@ -727,6 +729,7 @@ td.pme-cell-0-rehearsalremarks, td.pme-cell-1-rehearsalremarks {
   max-height:1em;
   white-space:nowrap;
   overflow:hidden;
+  text-overflow:ellipsis;
 }
 
 /* Make all remarks shorter */
@@ -742,6 +745,7 @@ td.pme-cell-0-rehearsalremarks p:nth-child(1):first-line, td.pme-cell-1-rehearsa
   max-height:1em;
   white-space:nowrap;
   overflow:hidden;
+  text-overflow:ellipsis;
 }
 
 /* Something special for the instrumentation. */
@@ -755,7 +759,7 @@ td[class^="pme-cell"] div.projectinstrumentation {
   overflow:hidden;
 }
 
-td.pme-value-1-projectinstrumentation, td.pme-value-0-projectinstrumentation {
+td.pme-value-1.projectinstrumentation, td.pme-value-0.projectinstrumentation {
   white-space:normal;
 }
 
@@ -781,11 +785,13 @@ table.pme-main div.pme-filter-negate {
   overflow:visible;
 }
 
+table.pme-main label.pme-filter-negate-label,
 table.pme-main label.pme-filter-negate {
   vertical-align:top;
 }
 
-table.pme-main label.pme-filter-negate span {
+table.pme-main label.pme-filter-negate span,
+table.pme-main label.pme-filter-negate-label span {
   display:inline-block;
   text-indent:-10000px;
   width:24px;
@@ -798,11 +804,13 @@ table.pme-main label.pme-filter-negate span {
   z-index:1;
 }
 
-table.pme-main label.pme-filter-negate input[type=checkbox]:checked ~ span {
+table.pme-main label.pme-filter-negate input[type=checkbox]:checked ~ span,
+table.pme-main label.pme-filter-negate-label input[type=checkbox]:checked ~ span {
   opacity:1.0;
 }
 
-table.pme-main label.pme-filter-negate input[type=checkbox] {
+table.pme-main label.pme-filter-negate input[type=checkbox],
+table.pme-main label.pme-filter-negate-label input[type=checkbox] {
   display:none;
 }
 
@@ -810,7 +818,7 @@ table.pme-main select[class^="pme-filter"] {
   width:100%;
 }
 
-table.pme-main select.pme-filter-projects {
+table.pme-main select.pme-filter.projects {
   width:auto;
 }
 

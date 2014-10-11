@@ -1055,7 +1055,8 @@ var CAFEVDB = CAFEVDB || {};
                        {gravity:'n', fade:true, html:true, className:'tipsy-wide'},
                        container);
 
-    CAFEVDB.applyTipsy('label[class*="memberstatus-label"]',
+    if (false)
+    CAFEVDB.applyTipsy('label.memberstatus-label',
                        {gravity:'n', fade:true, html:true, className:'tipsy-wide'},
                        container);
 

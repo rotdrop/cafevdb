@@ -263,7 +263,7 @@ class Projects
 </label>'),
       'select'   => 'D',
       'maxlen'   => 64,
-      'css'      => array('postfix' => 'projectname'),
+      'css'      => array('postfix' => ' projectname'),
       'sort'     => true,
       );
 
@@ -294,7 +294,7 @@ class Projects
                                       'sort'     => true,
                                       'display|LF' => array("prefix" => '<div class="projectinstrumentation">',
                                                             "postfix" => '</div>'),
-                                      'css'      => array('postfix' => 'projectinstrumentation'),
+                                      'css'      => array('postfix' => ' projectinstrumentation'),
                                       'values'   => $instruments,
                                       'valueGroups' => $groupedInstruments);
 
