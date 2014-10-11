@@ -157,7 +157,7 @@ make sure that the musicians are also automatically added to the
                                       'query' => true,
                                       'sort'  => true,
                                       'time'  => true,
-                                      'tabs'  => true
+                                      'tabs'  => false
                                       ));
 
     // Set default prefixes for variables
@@ -259,6 +259,21 @@ make sure that the musicians are also automatically added to the
         //'php' => "AddMusician.php"
         );
     }
+
+    $opts['fdd']['Name'] = array(
+                                 'name'     => 'Name',
+                                 'select'   => 'T',
+                                 'maxlen'   => 128,
+                                 'sort'     => true
+                                 );
+
+    $opts['fdd']['Vorname'] = array(
+                                    'name'     => 'Vorname',
+                                    'select'   => 'T',
+                                    'maxlen'   => 128,
+                                    'sort'     => true
+                                    );
+
     $opts['fdd']['Instrumente'] = array(
                                         'name'        => 'Instrumente',
                                         'css'         => array('postfix' => 'instruments'),
@@ -268,19 +283,6 @@ make sure that the musicians are also automatically added to the
                                         'values'      => $this->instruments,
                                         'valueGroups' => $this->groupedInstruments,
       );
-    $opts['fdd']['Name'] = array(
-                                 'name'     => 'Name',
-                                 'select'   => 'T',
-                                 'maxlen'   => 128,
-                                 'sort'     => true
-                                 );
-    $opts['fdd']['Vorname'] = array(
-                                    'name'     => 'Vorname',
-                                    'select'   => 'T',
-                                    'maxlen'   => 128,
-                                    'sort'     => true
-                                    );
-
     /* Make "Status" a set, 'soloist','conductor','noemail', where in
      * general the first two imply the last.
      */
@@ -308,25 +310,26 @@ LEFT JOIN Projekte ON Projekte.Id = Besetzungen.ProjektId
 GROUP BY MusikerId
 __EOT__;
 
-    $projectIdx = count($opts['fdd']);
+    $projectsIdx = count($opts['fdd']);
     if ($this->projectMode) {
       $opts['cgi']['persist']['ProjectMode'] = true;
       if (!Util::cgiValue('ProjectMode', false)) {
         // start initially filtered, but let the user choose other things.
         $pfx = Config::$pmeopts['cgi']['prefix']['sys'];
-        $key = 'qf'.$projectIdx;
+        $key = 'qf'.$projectsIdx;
         $opts['cgi']['append'][$pfx.$key.'_id'] = array($projectName);
         $opts['cgi']['append'][$pfx.$key.'_comp'] = array('not');
       }
     }
+
     $opts['fdd']['Projekte'] =
       array('input' => 'VR', // virtual, read perm
-            'options' => 'LFV', //just do the join, don't display anything
+            'options' => 'LFV', // List View and Filter
             'select' => 'M',
             'name' => L::t('Projects'),
             'sort' => true,
-            'sql' => 'PMEjoin'.count($opts['fdd']).'.Projekte',
-            'sqlw' => 'PMEjoin'.count($opts['fdd']).'.Projekte',
+            'sql' => 'PMEjoin'.$projectsIdx.'.Projekte',
+            'sqlw' => 'PMEjoin'.$projectsIdx.'.Projekte',
             'css'      => array('postfix' => 'projects'),
             'values' => array( //API for currently making a join in PME.
               'table' =>
@@ -338,6 +341,20 @@ __EOT__;
               'queryvalues' => $projectQueryValues
               ),
         );
+
+    $opts['fdd']['Telefon'] = array(
+                                    'name'     => 'Telefon',
+                                    'select'   => 'T',
+                                    'maxlen'   => 128,
+                                    'sort'     => true
+                                    );
+    $opts['fdd']['Telefon2'] = array(
+                                     'name'     => 'Telefon2',
+                                     'select'   => 'T',
+                                     'maxlen'   => 128,
+                                     'sort'     => true
+                                     );
+    $opts['fdd']['Email'] = Config::$opts['email'];
 
     $opts['fdd']['Strasse'] = array(
                                     'name'     => 'Strasse',
@@ -362,20 +379,8 @@ __EOT__;
                                  'maxlen'   => 128,
                                  'default'  => 'Deutschland',
                                  'sort'     => true);
-    $opts['fdd']['Telefon'] = array(
-                                    'name'     => 'Telefon',
-                                    'select'   => 'T',
-                                    'maxlen'   => 128,
-                                    'sort'     => true
-                                    );
-    $opts['fdd']['Telefon2'] = array(
-                                     'name'     => 'Telefon2',
-                                     'select'   => 'T',
-                                     'maxlen'   => 128,
-                                     'sort'     => true
-                                     );
+
     $opts['fdd']['Geburtstag'] = Config::$opts['birthday'];
-    $opts['fdd']['Email'] = Config::$opts['email'];
 
     $opts['fdd']['Remarks'] = array('name'     => strval(L::t('Remarks')),
                                     'select'   => 'T',
