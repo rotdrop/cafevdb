@@ -121,7 +121,22 @@ class DetailedInstrumentation
                                      'query' => true,
                                      'sort'  => true,
                                      'time'  => true,
-                                     'tabs'  => true
+                                     'tabs' => array(
+                                       array('id' => 'instrumentation',
+                                             'default' => true,
+                                             'tooltip' => Config::toolTips('project-instrumentation-tab'),
+                                             'name' => L::t('Instrumentation related data')),
+                                       array('id' => 'project',
+                                             'tooltip' => Config::toolTips('project-metadata-tab'),
+                                             'name' => L::t('Project related data')),
+                                       array('id' => 'musician',
+                                             'tooltip' => Config::toolTips('project-personaldata-tab'),
+                                             'name' => L::t('Personal data')),
+                                       array('id' => 'tab-all',
+                                             'tooltip' => Config::toolTips('pme-showall-tab'),
+                                             'name' => L::t('Display all columns')
+                                         )
+                                       )
                                      ));
 
     // Set default prefixes for variables
@@ -188,19 +203,18 @@ class DetailedInstrumentation
     $opts['fdd'] = array();
 
     $opts['fdd']['Id'] = array(
-      'css'      =>  array('postfix'  => ' tab-instrumentation'),
       'name'     => L::t('Instrumentation Id'),
       'select'   => 'T',
       'options'  => 'AVCPDR', // auto increment
       'maxlen'   => 5,
       'align'    => 'right',
       'default'  => '0',
-      'sort'     => true
+      'sort'     => true,
+      'tab'      => array('id' => 'instrumentation')
       );
 
     $musIdIdx = count($opts['fdd']);
     $opts['fdd']['MusikerId'] = array(
-      'css'      =>  array('postfix'  => ' tab-musician'),
       'name'     => L::t('Musician Id'),
       //'input'    => 'H',
       'select'   => 'T',
@@ -208,32 +222,33 @@ class DetailedInstrumentation
       'maxlen'   => 5,
       'align'    => 'right',
       'default'  => '0',
-      'sort'     => true
+      'sort'     => true,
+      'tab'      => array('id' => 'musician')
       );
 
     $musFirstNameIdx = count($opts['fdd']);
     $opts['fdd']['Vorname'] = array(
-      'css'      =>  array('postfix'  => ' tab-all'),
       'name'     => 'Vorname',
       'select'   => 'T',
       'maxlen'   => 384,
-      'sort'     => true
+      'sort'     => true,
+      'tab'      => array('id' => 'tab-all') // display on all tabs, or just give -1
       );
 
     $musLastNameIdx = count($opts['fdd']);
     $opts['fdd']['Name'] = array(
-      'css'      =>  array('postfix'  => ' tab-all'),
       'name'     => 'Name',
       'select'   => 'T',
       'maxlen'   => 384,
-      'sort'     => true
+      'sort'     => true,
+      'tab'      => array('id' => 'tab-all')
       );
 
     $opts['fdd']['Instrument'] = array(
       'name'     => 'Instrument',
       'select'   => 'D',
       'maxlen'   => 36,
-      'css'      => array('postfix' => ' project-instrument tab-instrumentation'),
+      'css'      => array('postfix' => ' project-instrument'),
       'sort'     => true,
       'values' => array(
         'table'   => 'Instrumente',
@@ -258,53 +273,59 @@ class DetailedInstrumentation
                       "(SELECT `Instrument` FROM \$main_table WHERE 1)"),
         ),
       'valueGroups' => $this->groupedInstruments,
+      'tab' => array('id' => 'instrumentation')
       );
+
+    $opts['fdd']['Reihung'] = array(
+      'name' => 'Stimme',
+      'select' => 'N',
+      'maxlen' => '3',
+      'sort' => true,
+      'tab' => array('id' => 'instrumentation'));
+
+    $opts['fdd']['Stimmführer'] = $this->sectionLeaderColumn;
+    $opts['fdd']['Stimmführer']['tab'] = array('id' => 'instrumentation');
+
+    $opts['fdd']['Anmeldung'] = $this->registrationColumn;
+    $opts['fdd']['Anmeldung']['tab'] = array('id' => 'project');
 
     $opts['fdd']['AllInstruments'] = array(
       'name'     => L::t('All Instruments'),
-      'css'      => array('postfix' => ' musician-instruments tab-instrumentation tab-musician'),
-      'options'  => 'AVCPD',
+      'css'      => array('postfix' => ' musician-instruments'),
+      //'options'  => 'AVCPD',
       'select'   => 'M',
       'maxlen'   => 136,
       'sort'     => true,
       'values'   => $this->instruments,
       'valueGroups' => $this->groupedInstruments,
+      'tab'      => array('id' => array('musician', 'instrumentation'))
       );
 
-    $opts['fdd']['Reihung'] = array(
-      'css'      =>  array('postfix'  => ' tab-instrumentation'),
-      'name' => 'Stimme',
-      'select' => 'N',
-      'maxlen' => '3',
-      'sort' => true);
-
-    $opts['fdd']['Stimmführer'] = $this->sectionLeaderColumn;
-    $opts['fdd']['Stimmführer']['css'] = array('postfix'  => ' tab-instrumentation');
-
-    $opts['fdd']['Anmeldung'] = $this->registrationColumn;
-    $opts['fdd']['Anmeldung']['css'] = array('postfix'  => ' tab-project');
-
-    $opts['fdd']['Sortierung'] = array('name'     => 'Orchester Sortierung',
-                                       'select'   => 'T',
-                                       'options'  => 'VCPR',
-                                       'maxlen'   => 8,
-                                       'default'  => '0',
-                                       'sort'     => true);
-    $opts['fdd']['MemberStatus'] = array('name'     => strval(L::t('Member Status')),
-                                         'css' => array('postfix'  => ' tab-project tab-musician'),
-                                         'select'   => 'M',
-                                         'maxlen'   => 384,
-                                         'sort'     => true,
-                                         'values2'  => $this->memberStatusNames);
+    $opts['fdd']['Sortierung'] = array(
+      'name'     => 'Orchester Sortierung',
+      'select'   => 'T',
+      'options'  => 'R',
+      'maxlen'   => 8,
+      'default'  => '0',
+      'sort'     => true
+      );
+    $opts['fdd']['MemberStatus'] = array(
+      'name'     => strval(L::t('Member Status')),
+      'tab'      => array('id' => array('musician')), // multiple tabs are legal
+      'select'   => 'M',
+      'maxlen'   => 384,
+      'sort'     => true,
+      'values2'  => $this->memberStatusNames
+      );
 
     $opts['fdd']['Unkostenbeitrag'] = Config::$opts['money'];
     $opts['fdd']['Unkostenbeitrag']['name'] = "Unkostenbeitrag\n(Gagen negativ)";
-    $opts['fdd']['Unkostenbeitrag']['css'] = array('postfix'  => ' tab-project');
+    $opts['fdd']['Unkostenbeitrag']['tab'] = array('id' => 'project');
 
     // One virtual field in order to be able to manage SEPA debit mandates
     $opts['fdd']['SepaDebitMandate'] = array(
       'input' => 'V',
-      'css' => array('postfix'  => ' tab-project'),
+      'tab' => array('id' => 'project'),
       'name' => L::t('SEPA Debit Mandate'),
       'select' => 'T',
       'options' => 'LFACPDV',
@@ -334,7 +355,7 @@ class DetailedInstrumentation
     foreach ($userExtraFields as $field) {
       $name = $field['name'];    
       $opts['fdd']["$name"] = array('name'     => $name.' ('.$project.')',
-                                    'css' => array('postfix'  => ' tab-project'),
+                                    'tab' => array('id' => 'project'),
                                     'select'   => 'T',
                                     'maxlen'   => 65535,
                                     'textarea' => array('css' => '',
@@ -348,7 +369,6 @@ class DetailedInstrumentation
     }
     $opts['fdd']['ProjectRemarks'] =
       array('name' => L::t('Remarks (%s)', array($projectName)),
-            'css' => array('postfix'  => ' tab-project'),
             'select'   => 'T',
             'maxlen'   => 65535,
             'css'      => array('postfix' => 'remarks'),
@@ -356,43 +376,85 @@ class DetailedInstrumentation
                                 'rows' => 5,
                                 'cols' => 50),
             'escape' => false,
-            'sort'     => true
+            'sort'   => true,
+            'tab'    => array('id' => 'project')
         );
 
+    // fetch the list of all projects in order to provide a somewhat
+    // cooked filter list
+    $allProjects = Projects::fetchProjects(false /* no db handle */, true /* include years */);
+    $projectQueryValues = array('*' => '*'); // catch-all filter
+    $projectQueryValues[''] = L::t('no projects yet');
+    foreach ($allProjects as $proj) {
+      $projectQueryValues[$proj['Name']] = $proj['Jahr'].': '.$proj['Name'];
+    }
+
+    $derivedtable =<<<__EOT__
+SELECT `Besetzungen`.`MusikerId`,GROUP_CONCAT(DISTINCT Projekte.Name ORDER BY Projekte.Name ASC SEPARATOR ',') AS Projekte FROM
+Besetzungen
+LEFT JOIN Projekte ON Projekte.Id = Besetzungen.ProjektId
+GROUP BY MusikerId
+__EOT__;
+
+    $projectsIdx = count($opts['fdd']);
+    $opts['fdd']['Projekte'] = array(
+      'tab' => array('id' => array('musician')),
+      'input' => 'VR', // virtual, read perm
+      'options' => 'LFV', //just do the join, don't display anything
+      'select' => 'M',
+      'name' => L::t('Projects'),
+      'sort' => true,
+      'sql' => 'PMEjoin'.$projectsIdx.'.Projekte',
+      'sqlw' => 'PMEjoin'.$projectsIdx.'.Projekte',
+      'css'      => array('postfix' => 'projects'),
+      'values' => array( //API for currently making a join in PME.
+        'table' =>
+        array('sql' => $derivedtable,
+              'kind' => 'derived'),
+        'column' => 'MusikerId',
+        'join' => '$main_table.`MusikerId` = $join_table.`MusikerId`',
+        'description' => 'Projekte',
+        'queryvalues' => $projectQueryValues
+        ),
+      );
+
+
     $opts['fdd']['Email'] = Config::$opts['email'];
+    $opts['fdd']['Email']['tab'] = array('id' => 'musician');
+
     $opts['fdd']['Telefon'] = array(
-      'css' => array('postfix'  => ' tab-musician'),
+      'tab'      => array('id' => 'musician'),
       'name'     => 'Telefon',
-      'nowrap' => true,
+      'nowrap'   => true,
       'select'   => 'T',
       'maxlen'   => 384,
       'sort'     => true
       );
     $opts['fdd']['Telefon2'] = array(
-      'css' => array('postfix'  => ' tab-musician'),
+      'tab'      => array('id' => 'musician'),
       'name'     => 'Telefon2',
-      'nowrap' => true,
+      'nowrap'   => true,
       'select'   => 'T',
       'maxlen'   => 384,
       'sort'     => true
       );
     $opts['fdd']['Strasse'] = array(
-      'css' => array('postfix'  => ' tab-musician'),
+      'tab'      => array('id' => 'musician'),
       'name'     => 'Strasse',
-      'nowrap' => true,
+      'nowrap'   => true,
       'select'   => 'T',
       'maxlen'   => 384,
       'sort'     => true
       );
     $opts['fdd']['Postleitzahl'] = array(
-      'css' => array('postfix'  => ' tab-musician'),
+      'tab'      => array('id' => 'musician'),
       'name'     => 'Postleitzahl',
       'select'   => 'T',
       'maxlen'   => 11,
       'sort'     => true
       );
     $opts['fdd']['Stadt'] = array(
-      'css' => array('postfix'  => ' tab-musician'),
+      'tab'      => array('id' => 'musician'),
       'name'     => 'Stadt',
       'select'   => 'T',
       'maxlen'   => 384,
@@ -400,18 +462,18 @@ class DetailedInstrumentation
       );
     $opts['fdd']['Land'] = array(
       'name'     => L::t('Country'),
-      'css' => array('postfix'  => ' tab-musician'),
+      'tab'      => array('id' => 'musician'),
       'select'   => 'T',
       'maxlen'   => 384,
       'default'  => 'Deutschland',
       'sort'     => true,
       );
     $opts['fdd']['Geburtstag'] = Config::$opts['birthday'];
-    $opts['fdd']['Geburtstag']['css'] = array('postfix'  => ' tab-musician');
+    $opts['fdd']['Geburtstag']['tab'] = 'musician';
 
     $opts['fdd']['Remarks'] = array(
       'name'     => strval(L::t('General Remarks')),
-      'css' => array('postfix'  => ' tab-musician'),
+      'tab'      => array('id' => 'musician'),
       'select'   => 'T',
       'maxlen'   => 65535,
       'css'      => array('postfix' => 'remarks'),
@@ -422,7 +484,7 @@ class DetailedInstrumentation
       'sort'     => true);
 
     $opts['fdd']['Sprachpräferenz'] = array(
-      'css' => array('postfix'  => ' tab-musician'),
+      'tab'      => array('id' => 'musician'),
       'name'     => 'Spachpräferenz',
       'select'   => 'D',
       'maxlen'   => 128,
@@ -431,13 +493,13 @@ class DetailedInstrumentation
       'values'   => Config::$opts['languages']);
 
     $opts['fdd']['Portrait'] = array(
-      'css' => array('postfix'  => ' tab-musician'),
-      'input' => 'V',
-      'name' => L::t('Photo'),
-      'select' => 'T',
+      'tab'     => array('id' => 'musician'),
+      'input'   => 'V',
+      'name'    => L::t('Photo'),
+      'select'  => 'T',
       'options' => 'ACPDV',
-      'sql' => 'MusikerId',
-      'php' => array(
+      'sql'     => '`PMEtable0`.`MusikerId`',
+      'php'     => array(
         'type' => 'function',
         'function' => 'CAFEVDB\Musicians::portraitImageLinkPME',
         'parameters' => array()
@@ -448,9 +510,9 @@ class DetailedInstrumentation
     $opts['fdd']['Aktualisiert'] = array_merge(
       Config::$opts['datetime'],
       array("name" => L::t("Last Updated"),
-            'css' => array('postfix'  => ' tab-all'),
+            'tab'     => array('id' => array('project', 'musician', 'instrumentation')),
             "default" => date(Config::$opts['datetime']['datemask']),
-            "nowrap" => true,
+            "nowrap"  => true,
             "options" => 'LFAVCPDR' // Set by update trigger.
         ));
 
@@ -470,7 +532,7 @@ class DetailedInstrumentation
                                         'query' => false,
                                         'sort'  => false,
                                         'time'  => false,
-                                        'tabs'  => false
+                                        'tabs'  => false,
                                         ));
       // Disable sorting buttons
       foreach ($opts['fdd'] as $key => $value) {
