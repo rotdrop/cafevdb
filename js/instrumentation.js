@@ -360,13 +360,17 @@ $(document).ready(function(){
       CAFEVDB.SepaDebitMandate.popupInit(selector);
       this.ready(selector);
 
-      container.find('div.photo, #cafevdb_inline_image_wrapper').on('click', 'img', function(event) {
+      container.find('div.photo, #cafevdb_inline_image_wrapper').
+        off('click', 'img').
+        on('click', 'img', function(event) {
         event.preventDefault();
         CAFEVDB.Photo.popup(this);
         return false;
       });
 
-      $(':button.musician-instrument-insurance').click(function(event) {
+      $(':button.musician-instrument-insurance').
+        off('click').
+        on('click', function(event) {
         event.preventDefault();
         var values = $(this).attr('name');
         
@@ -385,17 +389,6 @@ $(document).ready(function(){
       } else {
         container.find('div.photo, span.photo').imagesLoaded(resizeCB);
       }
-    },
-    context: CAFEVDB.Instrumentation,
-    parameters: []
-  });
-
-  PHPMYEDIT.addTableLoadCallback('BulkAddMusicians', {
-    callback: function(selector, resizeCB) {
-      CAFEVDB.exportMenu(selector);
-      CAFEVDB.SepaDebitMandate.popupInit(selector);
-      this.ready(selector);
-      resizeCB();
     },
     context: CAFEVDB.Instrumentation,
     parameters: []
