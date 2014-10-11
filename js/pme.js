@@ -525,6 +525,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
                  CAFEVDB.dialogToBackButton(dialogHolder);
                  CAFEVDB.dialogCustomCloseButton(dialogHolder, function(event, container) {
+                   event.preventDefault();
                    var cancelButton = container.find('.pme-cancel');
                    if (cancelButton.length > 0) {
                      event.stopImmediatePropagation();
@@ -574,14 +575,16 @@ var PHPMYEDIT = PHPMYEDIT || {};
                    pme.submitOuterForm(tableOptions.AmbientContainerSelector);
                  }
 
-                 //Close also all further dialogs; we consider an
-                 //PME-table dialog as the primary beast
+                 dialogHolder.dialog('destroy');
 
-                 dialogHolder.dialog('close');
-                 dialogHolder.dialog('destroy').remove();
+                 // At least konq. has the bug that removing a form
+                 // with submit inputs will submit the form. Verz strang.
+                 dialogHolder.find('form input[type="submit"]').remove();
+                 dialogHolder.remove();
 
-                 //$('.ui-dialog-content').dialog('close');
+                 // Remove modal plane if appropriate
                  CAFEVDB.modalizer(false);
+                 return false;
                }
              });
              return false;
