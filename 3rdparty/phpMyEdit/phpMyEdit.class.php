@@ -159,6 +159,9 @@ class phpMyEdit
 	var $navigation;	// navigation style
 	var $buttons;
 	var $tabs;			// TAB names
+	var $tabs_help;     // Tooltips, if any
+	var $tabs_by_id;    // TAB indices by Id
+	var $tabs_by_name;  // TAB indices by Id
 	var $timer = null;	// phpMyEdit_timer object
 	var $sd; var $ed;	// sql start and end delimiters '`' in case of MySQL
 
@@ -307,6 +310,14 @@ class phpMyEdit
 	function delete_canceled() { return $this->label_cmp($this->canceldelete, 'Cancel'); }
 
 	function view_reloaded()   { return $this->label_cmp($this->reloadview	, 'Reload'); }
+
+	/**Wrapper around core htmlspecialchars; avoid double encoding,
+	 * standard options.
+	 */
+	public function enc($string, $double_encode = false)
+	{
+		return htmlspecialchars($string, ENT_COMPAT|ENT_HTML401, 'UTF-8', $double_encode);
+	}
 
 	function disabledTag($k) 
 	{
@@ -1208,182 +1219,94 @@ class phpMyEdit
 		}
 
 		$page_name = htmlspecialchars($this->page_name);
-		if ($this->add_operation() || $this->change_operation() || $this->copy_operation()
-			|| $this->view_operation() || $this->delete_operation()) {
-			$field_to_tab = array();
-			for ($tab = $k = $this->cur_tab = 0; $k < $this->num_fds; $k++) {
-				if (isset($this->fdd[$k]['tab'])) {
-					if ($tab == 0 && $k > 0) {
-						$this->tabs[0] = 'PMEtab0';
-						$this->cur_tab = 1;
+		if ($this->display['tabs']) {
+			if (is_array($this->display['tabs'])) {
+				// tab-names explicitly given.
+				$this->tabs = array();
+				$this->tabs_help    = array();
+				$this->tabs_by_id   = array('tab-all' => 'all');
+				$this->tabs_by_name = array('tab-all' => 'all');
+				$this->cur_tab = 0; // unless overridden
+				foreach($this->display['tabs'] as $idx => $tabdef) {
+					if ($tabdef['id'] == 'tab-all') {
+						$idx = 'all';
+					}
+					$this->tabs[$idx] = $tabdef['name'];
+					$this->tabs_by_id[$tabdef['id']]= $idx;
+					$this->tabs_by_name[$tabdef['name']] = $idx;
+					if (isset($tabdef['default']) && $tabdef['default']) {
+						$this->cur_tab = $idx;
+					}
+					if (isset($tabdef['tooltip'])) {
+						$this->tabs_help[$idx] = $tabdef['tooltip'];
+					}
+				}
+			} else {
+				// tab definitions only in fdd
+				for ($tab = $k = $this->cur_tab = 0; $k < $this->num_fds; $k++) {
+					if (isset($this->fdd[$k]['tab'])) {
+						if ($tab == 0 && $k > 0) {
+							$this->tabs[0] = 'PMEtab0';
+							$this->cur_tab = 1;
+							$tab++;
+						}
+						if (is_array($this->fdd[$k]['tab'])) {
+							$this->tabs[$tab] = @$this->fdd[$k]['tab']['name'];
+							$this->fdd[$k]['tab']['default'] && $this->cur_tab = $tab;
+						} else {
+							$this->tabs[$tab] = @$this->fdd[$k]['tab'];
+						}
+						$this->tabs_by_id[$this->tabs[$tab]] = $tab;
+						$this->tabs_by_name[$this->tabs[$tab]] = $tab;
 						$tab++;
 					}
-					if (is_array($this->fdd[$k]['tab'])) {
-						$this->tabs[$tab] = @$this->fdd[$k]['tab']['name'];
-						$this->fdd[$k]['tab']['default'] && $this->cur_tab = $tab;
-					} else {
-						$this->tabs[$tab] = @$this->fdd[$k]['tab'];
-					}
-					$tab++;
 				}
-				$field_to_tab[$k] = max(0, $tab - 1);
 			}
-			if (preg_match('/^'.$this->dhtml['prefix'].'tab(\d+)$/', $this->get_sys_cgi_var('cur_tab'), $parts)) {
-				$this->cur_tab = $parts[1];
-			}
-			if ($this->tabs_enabled()) {
-				// initial TAB styles
-				echo '<style type="text/css" media="screen">',"\n";
-				for ($i = 0; $i < count($this->tabs); $i++) {
-					echo '	#'.$this->dhtml['prefix'].'tab',$i,' { display: ';
-					echo (($i == $this->cur_tab || $this->tabs[$i] == 'PMEtab0' ) ? 'block' : 'none') ,'; }',"\n";
-				}
-				echo '</style>',"\n";
-				// TAB javascripts
-				echo '<!--<script type="text/javascript">',"\n\n";
-				$css_class_name1 = $this->getCSSclass('tab', $position);
-				$css_class_name2 = $this->getCSSclass('tab-selected', $position);
-				echo 'var '.$this->js['prefix'].'cur_tab  = "'.$this->dhtml['prefix'].'tab',$this->cur_tab,'";
+			$this->cur_tab = $this->get_sys_cgi_var('cur_tab', $this->cur_tab);
 
-function '.$this->js['prefix'].'show_tab(tab_name)
-{';
-				if ($this->nav_up()) {
-					echo '
-	document.getElementById('.$this->js['prefix'].'cur_tab+"_up_label").className = "',$css_class_name1,'";
-	document.getElementById('.$this->js['prefix'].'cur_tab+"_up_link").className = "',$css_class_name1,'";
-	document.getElementById(tab_name+"_up_label").className = "',$css_class_name2,'";
-	document.getElementById(tab_name+"_up_link").className = "',$css_class_name2,'";';
-				}
-				if ($this->nav_down()) {
-					echo '
-	document.getElementById('.$this->js['prefix'].'cur_tab+"_down_label").className = "',$css_class_name1,'";
-	document.getElementById('.$this->js['prefix'].'cur_tab+"_down_link").className = "',$css_class_name1,'";
-	document.getElementById(tab_name+"_down_label").className = "',$css_class_name2,'";
-	document.getElementById(tab_name+"_down_link").className = "',$css_class_name2,'";';
-				}
-				echo '
-	document.getElementById('.$this->js['prefix'].'cur_tab).style.display = "none";
-	document.getElementById(tab_name).style.display = "block";
-	'.$this->js['prefix'].'cur_tab = tab_name;
-	document.'.$this->cgi['prefix']['sys'].'form.'.$this->cgi['prefix']['sys'].'cur_tab.value = tab_name;
-}',"\n\n";
-				echo '// </script> -->', "\n";
-			}
-		}
-
-		if ($this->add_operation() || $this->change_operation() || $this->copy_operation()) {
-			$first_required = true;
+			// Transfer tab definitions to the CSS which will be
+			// emitted automatically. Columns without tab definitions
+			// will got the last mentioned tab. The first columns
+			// without tab definitions will go to the default tab.
+			$tab_idx = $this->tabs_by_name[$this->tabs[$this->cur_tab]];
+			$tab_postfix = ' tab-'.$tab_idx;
 			for ($k = 0; $k < $this->num_fds; $k++) {
-				if ($this->displayed[$k] && ! $this->disabled($k) && ! $this->hidden($k)
-					&& (@$this->fdd[$k]['js']['required'] || isset($this->fdd[$k]['js']['regexp']))) {
-					if ($first_required) {
-						$first_required = false;
-						echo '<!-- <script type="text/javascript">',"\n";
-						echo '
-function '.$this->js['prefix'].'trim(str)
-{
-	while (str.substring(0, 1) == " "
-			|| str.substring(0, 1) == "\\n"
-			|| str.substring(0, 1) == "\\r")
-	{
-		str = str.substring(1, str.length);
-	}
-	while (str.substring(str.length - 1, str.length) == " "
-			|| str.substring(str.length - 1, str.length) == "\\n"
-			|| str.substring(str.length - 1, str.length) == "\\r")
-	{
-		str = str.substring(0, str.length - 1);
-	}
-	return str;
-}
-
-function '.$this->js['prefix'].'form_control(theForm)
-{',"\n";
-					}
-					if ($this->col_has_values($k)) {
-						$condition = 'theForm.'.$this->cgi['prefix']['data'].$this->fds[$k].'.selectedIndex == -1';
-						$multiple  = $this->col_has_multiple_select($k);
+				if (isset($this->fdd[$k]['tab'])) {
+					$tab_def = $this->fdd[$k]['tab'];
+					if (!is_array($tab_def)) {
+						if (isset($this->tabs_by_id[$tab_def])) {
+							$tab_idx = $this->tabs_by_id[$tab_def];
+						} else if (isset($this->tabs_by_name[$tab_def])) {
+							$tab_idx = $this->tabs_by_name[$tab_def];
+						} // else give a damn
+						$tab_postfix = ' tab-'.$tab_idx;
 					} else {
-						$condition = '';
-						$multiple  = false;
-						if ($this->fdd[$k]['js']['required']) {
-							$condition = $this->js['prefix'].'trim(theForm.'.$this->cgi['prefix']['data'].$this->fds[$k].'.value) == ""';
-						}
-						if (isset($this->fdd[$k]['js']['regexp'])) {
-							$condition .= (strlen($condition) > 0 ? ' || ' : '');
-							$condition .= sprintf('!(%s.test('.$this->js['prefix'].'trim(theForm.%s.value)))',
-												  $this->fdd[$k]['js']['regexp'], $this->cgi['prefix']['data'].$this->fds[$k]);
+						if (isset($tab_def['id'])) {
+							$idList = $tab_def['id'];
+							if (!is_array($idList)) {
+								$idList = array($idList);
+							}
+							$tab_postfix = '';
+							foreach($idList as $id) {
+								$tab_idx = $this->tabs_by_id[$id];
+								$tab_postfix .= ' tab-'.$tab_idx;
+							}
+						} else if (isset($tab_def['name'])) {
+							$tab_idx = $this->tabs_by_name[$tab_def];
+							$tab_postfix = ' tab-'.$idx;
 						}
 					}
+				} // else just use the most recent tab-postfix
 
-					/* Multiple selects have their name like ''name[]''.
-					   It is not possible to work with them directly, because
-					   theForm.name[].something will result into JavaScript
-					   syntax error. Following search algorithm is provided
-					   as a workaround for this.
-					*/
-					if ($multiple) {
-						echo '
-	multiple_select = null;
-	for (i = 0; i < theForm.length; i++) {
-		if (theForm.elements[i].name == "',$this->cgi['prefix']['data'].$this->fds[$k],'[]") {
-			multiple_select = theForm.elements[i];
-			break;
-		}
-	}
-	if (multiple_select != null && multiple_select.selectedIndex == -1) {';
-					} else {
-						echo '
-	if (',$condition,') {';
-					}
-					echo '
-		alert("';
-					if (isset($this->fdd[$k]['js']['hint'])) {
-						echo htmlspecialchars($this->fdd[$k]['js']['hint']);
-					} else {
-						echo $this->labels['Please enter'],' ',$this->fdd[$k]['name'],'.';
-					}
-					echo '");';
-					if ($this->tabs_enabled() && $field_to_tab[$k] >= $this->cur_tab) {
-						echo '
-		'.$this->js['prefix'].'show_tab("'.$this->dhtml['prefix'].'tab',$field_to_tab[$k],'");';
-					}
-					echo '
-		theForm.',$this->cgi['prefix']['data'].$this->fds[$k],'.focus();
-		return false;
-	}',"\n";
-				}
+				// make sure we have css-postfix set. array_merge()
+				// keeps the key of the later array
+				$this->fdd[$k] = array_merge(array('css' => array('postfix' => '')), $this->fdd[$k]);
+				$this->fdd[$k]['css']['postfix'] .= $tab_postfix; // append it
 			}
-			if (! $first_required) {
-				echo '
-	return true;
-}',"\n\n";
-				echo '// </script>  -->', "\n";
-			}
-		}
-
-		if ($this->filter_operation()) {
-			echo '<!-- <script type="text/javascript">',"\n";
-			echo '
-function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
-{
-	var pressed_key = null;
-	if (theEvent.which) {
-		pressed_key = theEvent.which;
-	} else {
-		pressed_key = theEvent.keyCode;
-	}
-	if (pressed_key == 13) { // enter pressed
-		theForm.submit();
-		return false;
-	}
-	return true;
-}',"\n\n";
-			echo '//</script> -->', "\n";
 		}
 
 		if ($this->display['form']) {
-			echo '<form class="',$this->getCSSclass('form'),'" method="post"';
+			echo '<form class="',$this->getCSSclass('form'),$tab_class,'" method="post"';
 			echo ' action="',$page_name,'" name="'.$this->cgi['prefix']['sys'].'form">',"\n";
 		}
 		return true;
@@ -1398,20 +1321,30 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 
 	function display_tab_labels($position) /* {{{ */
 	{
-		if (! is_array($this->tabs)) {
+		if ($position != 'up' || !$this->tabs_enabled()) {
 			return false;
 		}
 		echo '<table summary="labels" class="',$this->getCSSclass('tab', $position),'">',"\n";
-		echo '<tr class="',$this->getCSSclass('tab', $position),'">',"\n";
-		for ($i = ($this->tabs[0] == 'PMEtab0' ? 1 : 0); $i < count($this->tabs); $i++) {
-			$css_class_name = $this->getCSSclass($i != $this->cur_tab ? 'tab' : 'tab-selected', $position);
-			echo '<td class="',$css_class_name,'" id="'.$this->dhtml['prefix'].'tab',$i,'_',$position,'_label">';
-			echo '<a class="',$css_class_name,'" id="'.$this->dhtml['prefix'].'tab',$i,'_',$position,'_link';
-			echo '" href="javascript:'.$this->js['prefix'].'show_tab(\''.$this->dhtml['prefix'].'tab',$i,'\')">';
-			echo $this->tabs[$i],'</a></td>',"\n";
+		echo '<tr class="'.$this->getCSSclass('navigation', $position).' table-tabs">'."\n";
+		echo '<td colspan="2" class="table-tabs">'."\n";
+		echo '<div class="'.$this->getCSSclass('navigation', $position).' table-tabs container">'."\n";
+		echo '<ul class="'.$this->getCSSclass('navigation', $position).' table-tabs tab-menu">'."\n";
+		foreach($this->tabs as $idx => $name) {
+			$selected = strval($idx) == strval($this->cur_tab) ? ' selected' : '';
+			if (isset($this->tabs_help[$idx])) {
+				$title = ' title="'.$this->tabs_help[$idx].'"';
+			} else {
+				$title = '';
+			}
+			$class = $this->getCSSclass('navigation', $position).' table-tabs tab-menu'.$selected;
+			echo '<li class="'.$class.'"'.$title.'>'."\n";
+			echo '<a href="#tab-'.$idx.'">'.$name.'</a>'."\n";
+			echo '</li>'."\n";
 		}
-		echo '<td class="',$this->getCSSclass('tab-end', $position),'">&nbsp;</td>',"\n";
-		echo '</tr>',"\n";
+		echo '</ul>'."\n";
+		echo '</div>'."\n";
+		echo '</td>'."\n";
+		echo '</tr>'."\n";
 		echo '</table>',"\n";
 	} /* }}} */
 
@@ -1421,14 +1354,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 
 	function display_add_record() /* {{{ */
 	{
-		for ($tab = 0, $k = 0; $k < $this->num_fds; $k++) {
-			if (isset($this->fdd[$k]['tab']) && $this->tabs_enabled() && $k > 0) {
-				$tab++;
-				echo '</table>',"\n";
-				echo '</div>',"\n";
-				echo '<div id="'.$this->dhtml['prefix'].'tab',$tab,'">',"\n";
-				echo '<table class="',$this->getCSSclass('main'),'" summary="',$this->tb,'">',"\n";
-			}
+		for ($k = 0; $k < $this->num_fds; $k++) {
 			if (! $this->displayed[$k]) {
 				continue;
 			}
@@ -1506,7 +1432,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 				}
 				echo '<input class="',$css_class_name,'" ';
 				if ($helptip) {
-					echo 'title="'.htmlspecialchars($helptip).'" ';
+					echo 'title="'.$this->enc($helptip).'" ';
 				}
 				echo ($this->password($k) ? 'type="password"' : 'type="text"');
 				echo ($this->disabled($k) ? ' disabled' : '');
@@ -1545,14 +1471,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		if (! ($row = $this->sql_fetch($res))) {
 			return false;
 		}
-		for ($tab = 0, $k = 0; $k < $this->num_fds; $k++) {
-			if (isset($this->fdd[$k]['tab']) && $this->tabs_enabled() && $k > 0) {
-				$tab++;
-				echo '</table>',"\n";
-				echo '</div>',"\n";
-				echo '<div id="'.$this->dhtml['prefix'].'tab',$tab,'">',"\n";
-				echo '<table class="',$this->getCSSclass('main'),'" summary="',$this->tb,'">',"\n";
-			}
+		for ($k = 0; $k < $this->num_fds; $k++) {
 			if (! $this->displayed[$k]) {
 				continue;
 			}
@@ -1635,6 +1554,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			$vals = $this->set_values($k);
 			$multiValues = count($vals) > 1;
 		}
+
 		/* If multi is not requested and the value-array has only one
 		 * element, then do not emit multi-controls, because this has
 		 * not been requested.
@@ -1660,11 +1580,11 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			} else {
 				echo include($php);
 			}
-		} elseif ($vals &&
+		} elseif ($vals !== false &&
 			(stristr("MCOD", $this->fdd[$k]['select']) !== false || $multiValues)) {
 			$groups     = $this->fdd[$k]['valueGroups'] ? $this->fdd[$k]['valueGroups'] : null;
 			$multiple	= $this->col_has_multiple($k);
-			$readonly	= $this->disabledTag($k);
+			$readonly	= $this->disabledTag($k) || count($vals) == 0;
 			$strip_tags = true;
 			$selected = @$row["qf$k"];
 			if ($selected === null) {
@@ -1704,7 +1624,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			}
 			echo '<input class="',$css_class_name,'" type="text"';
 			if ($help) {
-				echo 'title="'.htmlspecialchars($help).'" ';
+				echo 'title="'.$this->enc($help).'" ';
 			}
 			echo ($readonly !== false ? ' '.$readonly : '');
 			echo ' name="',$this->cgi['prefix']['data'].$this->fds[$k],'" value="';
@@ -1742,7 +1662,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		}
 		echo '<input class="',$this->getCSSclass('value', null, true, $css_postfix),'" type="password"';
 		if ($help) {
-			echo ' title="'.htmlspecialchars($help).'"';
+			echo ' title="'.$this->enc($help).'"';
 		}
 		echo ($this->disabled($k) ? ' disabled' : '');
 		echo ' name="',$this->cgi['prefix']['data'].$this->fds[$k],'" value="';
@@ -2042,10 +1962,10 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 	{
 		$title = $this->doFetchToolTip($css_class_name, $name, $label);
 		if ($title == '') {
-			// Don't emit emit tooltips
+			// Don't emit tooltips
 			return '';
 		} else {
-			return ' title="'.htmlspecialchars($title).'" ';
+			return ' title="'.$this->enc($title).'" ';
 		}	
 	}
 	
@@ -2178,7 +2098,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			}
 		}
 		if ($help) {
-			$ret .= '"'.' title="'.htmlspecialchars($help).'" ';
+			$ret .= '"'.' title="'.$this->enc($help).'" ';
 		} else {
 			$ret .= '"'.$this->fetchToolTip($css, $name, $css.'select');
 		}
@@ -2257,10 +2177,10 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		$found = false;
 		foreach ($kv_array as $key => $value) {
 			$labelhelp = $help
-				? ' title="'.htmlspecialchars($help).'" '
+				? ' title="'.$this->enc($help).'" '
 				: $this->fetchToolTip($css, $name, $css.'radiolabel');
 			$inputhelp = $help
-				? ' title="'.htmlspecialchars($help).'" '
+				? ' title="'.$this->enc($help).'" '
 				: $this->fetchToolTip($css, $name, $css.'radio');
 			$ret .= '<label'.$labelhelp.' class="'.htmlspecialchars($css).'-label">';
 			$ret .= '<input type="'.$type.'" name="';
@@ -2309,7 +2229,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			$ret .= ' wrap="virtual"';
 		}
 		if ($help) {
-			$ret .= ' title="'.htmlspecialchars($help).'"';
+			$ret .= ' title="'.$this->enc($help).'"';
 		}
 		$ret .= '>';
 		if ($escape) {
@@ -2632,7 +2552,30 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		if($this->display['num_records'])
 			echo '&nbsp; ',$this->labels['Records'],':&nbsp;',$this->total_recs;
 		if($this->display['num_pages'] || $this->display['num_records']) echo '</td>';
-		echo '</tr></table>',"\n";
+		echo '</tr>',"\n";
+		if ($position == 'up' && $this->tabs_enabled()) {
+			echo '<tr class="'.$this->getCSSclass('navigation', $position).' table-tabs">'."\n";
+			echo '<td colspan="2" class="table-tabs">'."\n";
+			echo '<div class="'.$this->getCSSclass('navigation', $position).' table-tabs container">'."\n";
+			echo '<ul class="'.$this->getCSSclass('navigation', $position).' table-tabs tab-menu">'."\n";
+			foreach($this->tabs as $idx => $name) {
+				$selected = strval($idx) == strval($this->cur_tab) ? ' selected' : '';
+				if (isset($this->tabs_help[$idx])) {
+					$title = ' title="'.$this->tabs_help[$idx].'"';
+				} else {
+					$title = '';
+				}
+				$class = $this->getCSSclass('navigation', $position).' table-tabs tab-menu'.$selected;
+				echo '<li class="'.$class.'"'.$title.'>'."\n";
+				echo '<a href="#tab-'.$idx.'">'.$name.'</a>'."\n";
+				echo '</li>'."\n";
+			}
+			echo '</ul>'."\n";
+			echo '</div>'."\n";
+			echo '</td>'."\n";
+			echo '</tr>'."\n";
+		}
+		echo '</table>',"\n";
 		if($position == 'up') echo '<hr size="1" class="'.$this->getCSSclass('hr', 'up').'" />'."\n";
 	} /* }}} */
 
@@ -3165,9 +3108,16 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 			echo $this->htmlHiddenSys('fm', $this->fm);
 			echo $this->htmlHiddenSys('np', $this->inc);
 			echo $this->htmlHiddenSys('translations', $this->translations);	
+			echo $this->htmlHiddenSys('cur_tab', $this->cur_tab);
+		}
+
+		if ($this->tabs_enabled()) {
+			$tab_class = $this->cur_tab < 0 ? ' tab-all' : ' tab-'.$this->cur_tab;
+		} else {
+			$tab_class = '';
 		}
 	
-		echo '<table class="',$this->getCSSclass('main'),'" summary="',$this->tb,'">',"\n";
+		echo '<table class="',$this->getCSSclass('main'),$tab_class,'" summary="',$this->tb,'">',"\n";
 		echo '<thead><tr class="',$this->getCSSclass('header'),'">',"\n";
 		/*
 		 * System (navigation, selection) columns counting
@@ -3610,7 +3560,7 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		}
 		echo $this->get_origvars_html($this->get_sfn_cgi_vars());
 		echo $this->get_origvars_html($this->qfn);
-		echo $this->htmlHiddenSys('cur_tab', $this->dhtml['prefix'].'tab'.$this->cur_tab);
+		echo $this->htmlHiddenSys('cur_tab', $this->cur_tab);
 		echo $this->htmlHiddenSys('qfn', $this->qfn);
 		echo $this->htmlHiddenSys('rec', $this->copy_operation() ? '' : $this->rec);
 		echo $this->htmlHiddenSys('fm', $this->fm);
@@ -3618,19 +3568,20 @@ function '.$this->js['prefix'].'filter_handler(theForm, theEvent)
 		echo $this->htmlHiddenSys('translations', $this->translations);
 		echo $this->htmlHiddenSys('fl', $this->fl);
 		$this->display_record_buttons('up');
+
 		if ($this->tabs_enabled()) {
-			echo '<div id="'.$this->dhtml['prefix'].'tab0">',"\n";
+			$tab_class = $this->cur_tab < 0 ? ' tab-all' : ' tab-'.$this->cur_tab;
+		} else {
+			$tab_class = '';
 		}
-		echo '<table class="',$this->getCSSclass('main'),'" summary="',$this->tb,'"><tbody>',"\n";
+
+		echo '<table class="',$this->getCSSclass('main'),$tab_class,'" summary="',$this->tb,'"><tbody>',"\n";
 		if ($this->add_operation()) {
 			$this->display_add_record();
 		} else {
 			$this->display_copy_change_delete_record();
 		}
 		echo '</tbody></table>',"\n";
-		if ($this->tabs_enabled()) {
-			echo '</div>',"\n";
-		}		
 		$this->display_record_buttons('down');
 
 		$this->form_end();
