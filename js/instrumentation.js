@@ -341,17 +341,6 @@ var CAFEVDB = CAFEVDB || {};
 
 $(document).ready(function(){
 
-  PHPMYEDIT.addTableLoadCallback('BriefInstrumentation', {
-    callback: function(selector, resizeCB) {
-      CAFEVDB.exportMenu(selector);
-      CAFEVDB.SepaDebitMandate.popupInit(selector);
-      this.ready(selector);
-      resizeCB();
-    },
-    context: CAFEVDB.Instrumentation,
-    parameters: []
-  });
-
   PHPMYEDIT.addTableLoadCallback('DetailedInstrumentation', {
     callback: function(selector, resizeCB) {
       var container = $(selector);
