@@ -954,7 +954,11 @@ var CAFEVDB = CAFEVDB || {};
       }
       var post = form.serialize();
       post += '&PME_sys_mrecs[]=' + recordId;
-      CAFEVDB.Email.emailFormPopup(post);
+      post += '&emailRecipients[MemberStatusFilter][0]=regular';
+      post += '&emailRecipients[MemberStatusFilter][1]=passive';
+      post += '&emailRecipients[MemberStatusFilter][2]=soloist';
+      post += '&emailRecipients[MemberStatusFilter][3]=conductor';
+      CAFEVDB.Email.emailFormPopup(post, true, true);
       return false;
     });
 

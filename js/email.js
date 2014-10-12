@@ -172,26 +172,36 @@ CAFEVDB.Email = CAFEVDB.Email || {};
     // Instruments filter
     if (true) {
       var instrumentsFilter = fieldset.find('.instruments-filter.container');
-      instrumentsFilter.on('dblclick', applyRecipientsFilter);
+      instrumentsFilter.on('dblclick', function(event) {
+        applyRecipientsFilter(event);
+      });
     } else {
       var instrumentsFilter = fieldset.find('.instruments-filter.container select');
       instrumentsFilter.off('change');
-      instrumentsFilter.on('change', applyRecipientsFilter);
+      instrumentsFilter.on('change', function(event) {
+        applyRecipientsFilter(event);
+      });
     }
 
     // Member status filter
     var memberStatusFilter = fieldset.find('select.member-status-filter');
     memberStatusFilter.off('change');
-    memberStatusFilter.on('change', applyRecipientsFilter);
+    memberStatusFilter.on('change', function(event) {
+      applyRecipientsFilter(event);
+    });
 
     // Basic set
     var basicRecipientsSet = fieldset.find('.basic-recipients-set.container input[type="checkbox"]');
     basicRecipientsSet.off('change');
-    basicRecipientsSet.on('change', applyRecipientsFilter);
+    basicRecipientsSet.on('change', function(event) {
+      applyRecipientsFilter(event);
+    });
 
     // "submit" when hitting any of the control buttons
     controlsContainer.off('click', '**');
-    controlsContainer.on('click', 'input', applyRecipientsFilter);
+    controlsContainer.on('click', 'input', function(event) {
+      applyRecipientsFilter(event);
+    });
 
     // Record history when the select box changes. Maybe too slow, but
     // we will see.
@@ -203,7 +213,9 @@ CAFEVDB.Email = CAFEVDB.Email || {};
     // Give the user a chance to change broken or missing email
     // addresses from here.
     dialogHolder.off('pmedialog:changed');
-    dialogHolder.on('pmedialog:changed', applyRecipientsFilter);
+    dialogHolder.on('pmedialog:changed', function(event) {
+      applyRecipientsFilter(event);
+    });
 
     missingAddresses.off('click', 'span.personal-record');
     missingAddresses.on('click', 'span.personal-record', function(event) {
@@ -991,9 +1003,12 @@ CAFEVDB.Email = CAFEVDB.Email || {};
    * 
    * - EventSelect: array of ids of events to attach.
    */
-  Email.emailFormPopup = function(post, modal) {
+  Email.emailFormPopup = function(post, modal, single) {
     if (typeof modal == 'undefined') {
       modal = true;
+    }
+    if (typeof single == 'undefined') {
+      single = false;
     }
     var Email = this;
     $.post(OC.filePath('cafevdb', 'ajax/email', 'emailform.php'),
@@ -1043,8 +1058,14 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                    return false;
                  });
                  var dialogWidget = dialogHolder.dialog('widget');
+                 if (single) {
+                   dialogHolder.find('li#emailformrecipients-tab').prop('disabled', true);
+                   dialogHolder.find('li#emailformrecipients-tab a').prop('disabled', true);
+                 }
+
                  dialogHolder.tabs({
-                   active: 0,
+                   active: single ? 1 : 0,
+                   disabled: single ? [0] : [],
                    heightStyle: 'content',
                    activate: function(event, ui) {
                      var newTabId = ui.newTab.attr('id');
@@ -1111,6 +1132,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                      return true;
                    }
                  });
+
                  var emailForm = $('form#cafevdb-email-form');
 
                  var layoutRecipientsFilter = function() {

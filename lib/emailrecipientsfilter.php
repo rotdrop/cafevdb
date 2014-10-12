@@ -619,6 +619,9 @@ namespace CAFEVDB
      */
     private function initMemberStatusFilter() 
     {
+      $this->memberFilter = $this->cgiValue('MemberStatusFilter',
+                                            $this->defaultByStatus());
+      return;
       if ($this->submitted) {
         $this->memberFilter = $this->cgiValue('MemberStatusFilter', array());
       } else {
