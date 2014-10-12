@@ -705,7 +705,9 @@ var CAFEVDB = CAFEVDB || {};
     // Emulate a pull-down menu with export options via the chosen
     // plugin.
     container.find('select.pme-export-choice').chosen({ disable_search: true });  
-    container.find('select.pme-export-choice').change(function (event) {
+    container.find('select.pme-export-choice').
+      off('change').
+      on('change', function (event) {
       event.preventDefault();
       
       return CAFEVDB.tableExportMenu($(this));
@@ -932,9 +934,27 @@ var CAFEVDB = CAFEVDB || {};
     }).addClass("negative");
 
 
-    $(PHPMYEDIT.defaultSelector + ' input.pme-email').off('click').on('click', function(event) {
+    $(PHPMYEDIT.defaultSelector + ' input.pme-email').
+      off('click').
+      on('click', function(event) {
       event.stopImmediatePropagation();
       CAFEVDB.Email.emailFormPopup($(this.form).serialize());
+      return false;
+    });
+
+    var form = container.find('form.pme-form').first();
+    form.find('a.email').off('click').on('click', function(event) {
+      event.preventDefault();
+      var href = $(this).attr('href');
+      var recordId = href.match(/[?]recordId=(\d+)$/);
+      if (typeof recordId[1] != 'undefined') {
+        recordId = recordId[1];
+      } else {
+        return false; // Mmmh, echo error diagnostics to the user?
+      }
+      var post = form.serialize();
+      post += '&PME_sys_mrecs[]=' + recordId;
+      CAFEVDB.Email.emailFormPopup(post);
       return false;
     });
 

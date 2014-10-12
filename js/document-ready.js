@@ -58,7 +58,7 @@ $(document).ready(function() {
         callback: function(selector, resizeCB) {
             var container = $(selector);
             CAFEVDB.exportMenu(selector);
-            container.find('input.pme-email').addClass('formsubmit');
+            //container.find('input.pme-email').addClass('formsubmit');
 
             container.find('div.photo, #cafevdb_inline_image_wrapper').
                 on('click', 'img', function(event) {
@@ -116,7 +116,7 @@ $(document).ready(function() {
     PHPMYEDIT.addTableLoadCallback('InstrumentInsurance', {
         callback: function(selector, resizeCB) {
             CAFEVDB.exportMenu(selector);
-            $(selector).find('input.pme-email').addClass('formsubmit');
+            //$(selector).find('input.pme-email').addClass('formsubmit');
             //CAFEVDB.SepaDebitMandate.popupInit(selector);
             //this.ready(selector);
 

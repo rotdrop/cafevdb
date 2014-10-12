@@ -726,9 +726,9 @@ redaxoDefaultModule
     //self::$pmeopts['css']['position'] = true;
     self::$opts['editor'] = self::getUserValue('wysiwygEditor', 'tinymce');
 
-    self::$opts['phpmyadmin'] = 'https://ch.homelinux.net:8888/phpmyadmin/index.php?user=camerata&db=camerata';
     self::$opts['email'] = array('name'     => 'Em@il',
-                                 'URL'      => 'mailto:$link',
+                                 'css'      => array('postfix' => ' email'),
+                                 'URL'      => 'mailto:$link?recordId=$key',
                                  'URLdisp'  => '$value',
                                  'select'   => 'T',
                                  'maxlen'   => 768,
