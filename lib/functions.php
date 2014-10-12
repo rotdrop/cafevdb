@@ -1088,6 +1088,33 @@ __EOT__;
   }
 };
 
+/**Try to correct common human input errors. Not much, ATM. */
+class FuzzyInput
+{
+  /**Check $input for "transposition error". Interchange each
+   * consecutive pair of letters, try to validate by $callback, return
+   * an array of transposed input strings, for which $callback
+   * returned true.
+   */
+  public static function transposition($input, $callback)
+  {
+    if (!is_callable($callback)) {
+      return array();
+    }
+    $result = array();
+    $len = strlen($input);
+    for ($idx = 0; $idx < $len - 1; ++$idx) {
+      $victim = $input;
+      $victim[$idx] = $input[$idx+1];
+      $victim[$idx+1] = $input[$idx];
+      if ($callback($victim)) {
+        $result[] = $victim;
+      }
+    }
+    return $result;
+  }
+};
+
 /**Support class for connecting to a mySQL database.
  */
 class mySQL

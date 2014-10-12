@@ -267,36 +267,59 @@ var CAFEVDB = CAFEVDB || {};
     $.post(OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-settings.php'),
            post,
            function (data) {
-             if (data.status == "success") {
-               if (data.data.value) {
-                 $(element).val(data.data.value);
+             if (!CAFEVDB.ajaxErrorHandler(data, [ 'suggestions', 'message' ])) {
+               if (data.data.suggestions !== '') {
+                 var hints = t('cafevdb', 'Suggested alternatives based on common human mis-transcriptions:')
+                           + ' '
+                           + data.data.suggestions
+                           + '. '
+                           + t('cafevdb', 'Please do not accept these alternatives lightly!');
+	         $(dialogId+' #suggestions').html(hints);
                }
-               if (data.data.iban) {
-                 $('input.bankAccountIBAN').val(data.data.iban);
-               }
+               // One special case: if the user has submitted an IBAN
+               // and the BLZ appeared to be valid after all checks,
+               // then inject it into the form. Seems to be a common
+               // case, more or less.
                if (data.data.blz) {
                  $('input.bankAccountBLZ').val(data.data.blz);
                }
-               if (data.data.bic) {
-                 $('input.bankAccountBIC').val(data.data.bic);
-               }
+
 	       $(dialogId+' #msg').html(data.data.message);
 	       $(dialogId+' #msg').show();
-               if ($(dialogId+' #suggestion').html() !== '') {
-	         $(dialogId+' #suggestion').show();
-               }
-               return true;
-             } else {
-               if (data.data.suggestion !== '') {
-	         $(dialogId+' #suggestion').html(data.data.suggestion);
-               }
-	       $(dialogId+' #msg').html(data.data.message);
-	       $(dialogId+' #msg').show();
-               if ($(dialogId+' #suggestion').html() !== '') {
-	         $(dialogId+' #suggestion').show();
+               if ($(dialogId+' #suggestions').html() !== '') {
+	         $(dialogId+' #suggestions').show();
                }
                return false;
              }
+
+             if (data.data.value) {
+               $(element).val(data.data.value);
+             }
+             if (data.data.iban) {
+               $('input.bankAccountIBAN').val(data.data.iban);
+             }
+             if (data.data.blz) {
+               $('input.bankAccountBLZ').val(data.data.blz);
+             }
+             if (data.data.bic) {
+               $('input.bankAccountBIC').val(data.data.bic);
+             }
+	     $(dialogId+' #msg').html(data.data.message);
+	     $(dialogId+' #msg').show();
+             if (data.data.suggestions !== '') {
+               var hints = t('cafevdb', 'Suggested alternatives based on common human mis-transcriptions:')
+                         + ' '
+                         + data.data.suggestions
+                         + '. '
+                         + t('cafevdb', 'Please do not accept these alternatives lightly!');
+	       $(dialogId+' #suggestions').html(hints);
+	       $(dialogId+' #suggestions').show();
+             } else {
+	       $(dialogId+' #suggestions').html('');
+	       $(dialogId+' #suggestions').hide();
+             }
+             return true;
+
            }, 'json');
   };
   /**Validate version for the PME dialog. */

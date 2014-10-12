@@ -90,7 +90,7 @@ $recurring = L::t('Type: ').($_['nonrecurring'] ? L::t('nonrecurring') : L::t('p
   </form>
   <div class="sepastatusblock">
     <span class="statusmessage" id="msg"></span>
-    <span class="statusmessage" id="suggestion"></span>
+    <span class="statusmessage" id="suggestions"></span>
     <div id="debug"></div>
   </div>
 </div>

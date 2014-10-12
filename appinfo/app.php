@@ -45,6 +45,7 @@ OC::$CLASSPATH['CAFEVDB\EmailComposer'] = 'cafevdb/lib/emailcomposer.php';
 OC::$CLASSPATH['CAFEVDB\InstrumentInsurance'] = 'cafevdb/lib/instrument-insurance.php';
 OC::$CLASSPATH['CAFEVDB\PHPExcel\ValueBinder'] = 'cafevdb/lib/php-excel-functions.php';
 OC::$CLASSPATH['CAFEVDB\Finance'] = 'cafevdb/lib/finance.php';
+OC::$CLASSPATH['CAFEVDB\FuzzyInput'] = 'cafevdb/lib/functions.php';
 OC::$CLASSPATH['CAFEVDB\SepaDebitMandates'] = 'cafevdb/lib/sepa-debit-mandates.php';
 OC::$CLASSPATH['CAFEVDB\ProgressStatus'] = 'cafevdb/lib/progress-status.php';
 OC::$CLASSPATH['CAFEVDB\PageLoader'] = 'cafevdb/lib/page-loader.php';

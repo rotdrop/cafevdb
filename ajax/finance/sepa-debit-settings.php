@@ -20,186 +20,345 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-\OCP\JSON::checkLoggedIn();
-\OCP\JSON::checkAppEnabled('cafevdb');
-\OCP\JSON::callCheck();
+namespace CAFEVDB {
 
-use \CAFEVDB\L;
-use \CAFEVDB\Config;
-use \CAFEVDB\Util;
-use \CAFEVDB\Projects;
-use \CAFEVDB\Finance;
+  \OCP\JSON::checkLoggedIn();
+  \OCP\JSON::checkAppEnabled('cafevdb');
+  \OCP\JSON::callCheck();
 
-$_GET = array(); // disable GET
+  Error::exceptions(true);
+  $debugText = '';
 
-$requiredKeys = array('ProjectId', 'MusicianId', 'mandateReference');
-foreach ($requiredKeys as $required) {
-  if (!Util::cgiValue($required, null, false)) {
-    OC_JSON::error(
-      array("data" => array(
-              "message" => L::t("Required information `%s' not provided.", array($required)).print_r($_POST, true))));
-    return false;
-  }
-}
+  ob_start();
 
-$projectId  = Util::cgiValue('ProjectId');
-$musicianId = Util::cgiValue('MusicianId');
-$reference  = Util::cgiValue('mandateReference');
+  try {
+    $_GET = array(); // only post is allowed
 
-$projectName = Projects::fetchName($projectId);
-$members = Config::getSetting('memberTable', L::t('ClubMembers'));
-$nonrecurring = $projectName !== $members;
-
-$IBAN = Util::cgiValue('bankAccountIBAN');
-$BLZ  = Util::cgiValue('bankAccountBLZ');
-$BIC  = Util::cgiValue('bankAccountBIC');
-
-$changed = Util::cgiValue('changed');
-$value = Util::cgiValue($changed);
-
-switch ($changed) {
-case 'lastUsedDate':
-  // Store the lastUsedDate immediately, if other fields are disabled
-  if (Util::cgiValue('mandateDate', false) === false) {
-    $mandate = array('mandateReference' => $reference,
-                     'musicianId' => $musicianId,
-                     'projectId' => $projectId,
-                     'lastUsedDate' => $value);
-    if (!Finance::storeSepaMandate($mandate)) {
-      OC_JSON::error(
-        array("data" => array(
-                'message' => L::t('Failed setting `%s\' to `%s\'.',
-                                  array($changed, $value)),
-                'suggestion' => '')));
-      return false;
+    if (Util::debugMode('request')) {
+      $debugText .= '$_POST[] = '.print_r($_POST, true);
     }
-  }
-case 'bankAccountOwner':
-case 'mandateDate':
-  // Whatever the user like ;)
-  // The date-picker does some validation on its own, so just live with it.
-  OC_JSON::success(
-    array("data" => array(
-            'message' => L::t('Value for `%s\' set to `%s\'.',
-                              array($changed, $value)),
-            'value' => $value)));
-  return true;
-case 'bankAccountIBAN':
-  if ($value == '') {
-    $IBAN = '';
-    break;
-  }
-  $value = preg_replace('/\s+/', '', $value); // eliminate space
-  $iban = new \IBAN($value);
-  if (!$iban->Verify() && is_numeric($value)) {
-    // maybe simply the bank account number, if we have a BLZ,
-    // then compute the IBAN
-    $blz = $BLZ;
-    $bav = new \malkusch\bav\BAV;
-    if ($bav->isValidBank($blz)) {
-      $value = Finance::makeIBAN($blz, $value);
-    }
-  }
-  $iban = new \IBAN($value);
-  if ($iban->Verify()) {
-    $value = $iban->MachineFormat();
-    $IBAN = $value;
-    
-    // Compute as well the BLZ and the BIC
-    $blz = $iban->Bank();
-    $bav = new \malkusch\bav\BAV;
-    if ($bav->isValidBank($blz)) {
-      $BLZ = $blz;
-      $BIC = $bav->getMainAgency($blz)->getBIC();
-    }
-  } else {
-    $message = L::t("Invalid IBAN: `%s'.", array($value));
-    $suggestion = '';
-    $suggestions = $iban->MistranscriptionSuggestions();
-    $intro = L::t("Perhaps you meant");
-    while (count($suggestions) > 0) {
-      $alternative = array_shift($suggestions);
-      if ($iban->Verify($alternative)) {
-        $alternative = $iban->MachineFormat($alternative);
-        $alternative = $iban->HumanFormat($alternative);
-        $suggestion .= $intro . " `".$alternative."'";
-        $into = L::t("or");
+
+    $requiredKeys = array('ProjectId', 'MusicianId', 'mandateReference');
+    foreach ($requiredKeys as $required) {
+      if (!Util::cgiValue($required, null, false)) {
+        $debugText .= ob_get_contents();
+        @ob_end_clean();
+
+        \OC_JSON::error(
+          array("data" => array(
+                  'message' => L::t("Required information `%s' not provided.", array($required)),
+                  'debug' => $debugText)));
+        return false;
       }
     }
-    OC_JSON::error(
-      array("data" => array('message' => $message,
-                            'suggestion' => $suggestion)));
-    return false;
-  }
-  break;
-case 'bankAccountBLZ':
-  if ($value == '') {
-    $BLZ = '';
-    break;
-  }
-  $value = preg_replace('/\s+/', '', $value);
-  $bav = new \malkusch\bav\BAV;
-  if ($bav->isValidBank($value)) {
-    // set also the BIC
-    $BLZ = $value;
-    $agency = $bav->getMainAgency($value);
-    $bic = $agency->getBIC();
-    if (Finance::validateSWIFT($bic)) {
-      $BIC = $bic;
-    }
-  } else {
-    OC_JSON::error(
-      array("data" => array(
-              'message' => L::t('Value for `%s\' invalid: `%s\'.',
-                                array($changed, $value)),
-              'suggestion' => '')));
-    return false;
-  }
-  break;
-case 'bankAccountBIC':
-  if ($value == '') {
-    $BIC = '';
-    break;
-  }
-  $value = preg_replace('/\s+/', '', $value);
-  if (!Finance::validateSWIFT($value)) {
-    // maybe a BLZ
-    $bav = new \malkusch\bav\BAV;
-    if ($bav->isValidBank($value)) {
-      $BLZ = $value;
-      $agency = $bav->getMainAgency($value);
-      $value = $agency->getBIC();
-      // Set also the BLZ
-    }
-  }
-  if (Finance::validateSWIFT($value)) {
-    $BIC = $value;
-  } else {
-    OC_JSON::error(
-      array("data" => array(
-              'message' => L::t('Value for `%s\' invalid: `%s\'.',
-                                array($changed, $value)),
-              'suggestion' => '')));
-    return false;
-  }
-  break;
-default:
-  OC_JSON::error(
-    array("data" => array(
-            "message" => L::t("Unhandled request:")." ".print_r($_POST, true))));
-  return false;
-}
 
-// return with all the sanitized and canonicalized values for the
-// bank-account
+    $projectId  = Util::cgiValue('ProjectId');
+    $musicianId = Util::cgiValue('MusicianId');
+    $reference  = Util::cgiValue('mandateReference');
 
-OC_JSON::success(
-  array("data" => array(
-          'message' => L::t('Value for `%s\' set to `%s\'.', array($changed, $value)),
-          'value' => $value,
-          'iban' => $IBAN,
-          'blz' => $BLZ,
-          'bic' => $BIC)));
-return true;  
+    $projectName = Projects::fetchName($projectId);
+    $members = Config::getSetting('memberTable', L::t('ClubMembers'));
+    $nonrecurring = $projectName !== $members;
+
+    $IBAN = Util::cgiValue('bankAccountIBAN');
+    $BLZ  = Util::cgiValue('bankAccountBLZ', '');
+    $BIC  = Util::cgiValue('bankAccountBIC');
+
+    $changed = Util::cgiValue('changed');
+    $value = Util::cgiValue($changed);
+    
+    switch ($changed) {
+    case 'lastUsedDate':
+      // Store the lastUsedDate immediately, if other fields are disabled
+      if (Util::cgiValue('mandateDate', false) === false) {
+        $mandate = array('mandateReference' => $reference,
+                         'musicianId' => $musicianId,
+                         'projectId' => $projectId,
+                         'lastUsedDate' => $value);
+        if (!Finance::storeSepaMandate($mandate)) {
+          $debugText .= ob_get_contents();
+          @ob_end_clean();
+
+          \OC_JSON::error(
+            array("data" => array(
+                    'message' => L::t('Failed setting `%s\' to `%s\'.',
+                                      array($changed, $value)),
+                    'suggestions' => '',
+                    'debug' => $debugText)));
+          return false;
+        }
+      }
+    case 'bankAccountOwner':
+    case 'mandateDate':
+      // Whatever the user like ;)
+      // The date-picker does some validation on its own, so just live with it.
+      \OC_JSON::success(
+        array("data" => array(
+                'message' => L::t('Value for `%s\' set to `%s\'.',
+                                  array($changed, $value)),
+                'suggestions' =>'',
+                'value' => $value)));
+      return true;
+
+    case 'bankAccountIBAN':
+      if ($value == '') {
+        $IBAN = '';
+        break;
+      }
+      $value = preg_replace('/\s+/', '', $value); // eliminate space
+      $iban = new \IBAN($value);
+      if (!$iban->Verify() && is_numeric($value)) {
+        // maybe simply the bank account number, if we have a BLZ,
+        // then compute the IBAN
+        $blz = $BLZ;
+        $bav = new \malkusch\bav\BAV;
+
+        if ($BLZ == '') {
+          $debugText .= ob_get_contents();
+          @ob_end_clean();
+
+          \OC_JSON::error(
+            array("data" => array('message' => L::T('BLZ not given, cannot validate the bank account.'),
+                                  'suggestions' => '',
+                                  'debug' => $debugText)));
+          return false;
+        }
+
+        // First validate the BLZ
+        if (!$bav->isValidBank($blz)) {
+          if (strlen($blz) != 8 || !is_numeric($blz)) {
+            $message = L::t('A German bank id consists of exactly 8 digits: %s.',
+                            array($blz));
+            $suggestions = '';
+          } else {
+            $suggestions = FuzzyInput::transposition($blz, function($input) use($bav) {
+                return $bav->isValidBank($input);
+              });
+            $message = L::t("Invalid German(?) bank id %s.",
+                            array($blz));
+            $suggestions = implode(', ', $suggestions);
+          }
+          
+          $debugText .= ob_get_contents();
+          @ob_end_clean();
+          
+          \OC_JSON::error(
+            array("data" => array('message' => $message,
+                                  'suggestions' => $suggestions,
+                                  'debug' => $debugText)));
+          return false;
+        }
+
+        // BLZ is valid -- or at least appears to be valid
+
+        // assume this is a bank account number and validate it with BAV
+        if ($bav->isValidAccount($value)) {
+          $value = Finance::makeIBAN($blz, $value);
+        } else {
+          $message = L::t("Invalid German(?) bank account number %s @ %s.",
+                          array($value, $blz));
+          $suggestions = FuzzyInput::transposition($value, function($input) use ($bav) {
+              return $bav->isValidAccount($input);
+            });
+          $suggestions = implode(', ', $suggestions);
+
+          $debugText .= ob_get_contents();
+          @ob_end_clean();
+
+          \OC_JSON::error(
+            array("data" => array(
+                    'message' => $message,
+                    'suggestions' => $suggestions,
+                    'blz' => $blz,
+                    'debug' => $debugText)));
+          return false;
+        }
+      }
+      $iban = new \IBAN($value);
+      if ($iban->Verify()) {
+        // Still this may be a valid "hand" generated IBAN but with the
+        // wrong bank-account number. If this is a German IBAN, then also
+        // check the bank account number with BAV.
+        if ($iban->Country() == 'DE') {
+          $ktnr = $iban->Account();
+          $blz = $iban->Bank();
+          $bav = new \malkusch\bav\BAV;
+          if (!$bav->isValidBank($blz)) {
+            $suggestions = FuzzyInput::transposition($blz, function($input) use($bav) {
+                return $bav->isValidBank($input);
+              });
+            $message = L::t("Invalid German(?) bank id %s.",
+                            array($blz));
+            $suggestions = implode(', ', $suggestions);
+
+            $debugText .= ob_get_contents();
+            @ob_end_clean();
+
+            \OC_JSON::error(
+              array("data" => array('message' => $message,
+                                    'suggestions' => $suggestions,
+                                    'debug' => $debugText)));
+            return false;
+          }
+
+          // BLZ is valid after this point
+
+          if (!$bav->isValidAccount($ktnr)) {
+            $message = L::t("Invalid German(?) bank account number %s @ %s.",
+                            array($ktnr, $blz));
+            $suggestions = FuzzyInput::transposition($ktnr, function($input) use ($bav) {
+                return $bav->isValidAccount($input);
+              });
+            $suggestions = implode(', ', $suggestions);
+
+            $debugText .= ob_get_contents();
+            @ob_end_clean();
+
+            \OC_JSON::error(
+              array("data" => array('message' => $message,
+                                    'suggestions' => $suggestions,
+                                    'blz' => $blz,
+                                    'debug' => $debugText)));
+            return false;
+          }
+        }
+      
+        $value = $iban->MachineFormat();
+        $IBAN = $value;
+    
+        // Compute as well the BLZ and the BIC
+        $blz = $iban->Bank();
+        $bav = new \malkusch\bav\BAV;
+        if ($bav->isValidBank($blz)) {
+          $BLZ = $blz;
+          $BIC = $bav->getMainAgency($blz)->getBIC();
+        }
+      } else {
+        $message = L::t("Invalid IBAN: `%s'.", array($value));
+        $suggestions = array();
+        foreach ($iban->MistranscriptionSuggestions() as $alternative) {
+          if ($iban->Verify($alternative)) {
+            $alternative = $iban->MachineFormat($alternative);
+            $alternative = $iban->HumanFormat($alternative);
+            $suggestions[] = $alternative;
+          }
+        }
+        $suggestions = implode(', ', $suggestions);
+        
+        $debugText .= ob_get_contents();
+        @ob_end_clean();
+
+        \OC_JSON::error(
+          array("data" => array('message' => $message,
+                                'suggestions' => $suggestions,
+                                'debug' => $debugText)));
+
+        return false;
+      }
+      break;
+    case 'bankAccountBLZ':
+      if ($value == '') {
+        $BLZ = '';
+        break;
+      }
+      $value = preg_replace('/\s+/', '', $value);
+      $bav = new \malkusch\bav\BAV;
+      if ($bav->isValidBank($value)) {
+        // set also the BIC
+        $BLZ = $value;
+        $agency = $bav->getMainAgency($value);
+        $bic = $agency->getBIC();
+        if (Finance::validateSWIFT($bic)) {
+          $BIC = $bic;
+        }
+      } else {
+
+        $debugText .= ob_get_contents();
+        @ob_end_clean();
+
+        \OC_JSON::error(
+          array("data" => array(
+                  'message' => L::t('Value for `%s\' invalid: `%s\'.',
+                                    array($changed, $value)),
+                  'suggestions' => '',
+                  'debug' => $debugText)));
+        return false;
+      }
+      break;
+    case 'bankAccountBIC':
+      if ($value == '') {
+        $BIC = '';
+        break;
+      }
+      $value = preg_replace('/\s+/', '', $value);
+      if (!Finance::validateSWIFT($value)) {
+        // maybe a BLZ
+        $bav = new \malkusch\bav\BAV;
+        if ($bav->isValidBank($value)) {
+          $BLZ = $value;
+          $agency = $bav->getMainAgency($value);
+          $value = $agency->getBIC();
+          // Set also the BLZ
+        }
+      }
+      if (Finance::validateSWIFT($value)) {
+        $BIC = $value;
+      } else {
+
+        $debugText .= ob_get_contents();
+        @ob_end_clean();
+
+        \OC_JSON::error(
+          array("data" => array(
+                  'message' => L::t('Value for `%s\' invalid: `%s\'.',
+                                    array($changed, $value)),
+                  'suggestions' => '',
+                  'debug' => $debugText)));
+        return false;
+      }
+      break;
+    default:
+
+      $debugText .= ob_get_contents();
+      @ob_end_clean();
+
+      \OC_JSON::error(
+        array("data" => array(
+                'message' => L::t("Unhandled request:"),
+                'debug' => $debugText)));
+      return false;
+    }
+
+    // return with all the sanitized and canonicalized values for the
+    // bank-account
+
+    \OC_JSON::success(
+      array("data" => array(
+              'message' => L::t('Value for `%s\' set to `%s\'.', array($changed, $value)),
+              'suggestions' => '',
+              'value' => $value,
+              'iban' => $IBAN,
+              'blz' => $BLZ,
+              'bic' => $BIC)));
+    return true;  
+
+  } catch (\Exception $e) {
+    $debugText .= ob_get_contents();
+    @ob_end_clean();
+
+    \OCP\JSON::error(
+      array(
+        'data' => array(
+          'error' => 'exception',
+          'message' => L::t('Error, caught an exception'),
+          'debug' => $debugText,
+          'exception' => $e->getFile().'('.$e->getLine().'): '.$e->getMessage(),
+          'trace' => $e->getTraceAsString(),
+          'debug' => $debugText)));
+    
+    return false;
+  }
+
+} //namespace CAFVDB
 
 ?>
