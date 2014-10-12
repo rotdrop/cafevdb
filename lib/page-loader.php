@@ -50,6 +50,7 @@ namespace CAFEVDB {
      *       'position' => <current position into history records>,
      *       'records' => array(# => <clone of $_POST>)); 
      */
+    private $session;
     private $historyRecords;
     private $historyPosition;
     private $historySize;
@@ -67,11 +68,13 @@ namespace CAFEVDB {
      * empty history if no history record is found.
      */
     public function __construct() {
+      $this->session = new Session();
       $this->loadHistory();
     }
 
     /**Store the history away. */
     public function __destruct() {
+      //\OCP\Util::writeLog(Config::APP_NAME, "PageLoader DTOR", \OCP\Util::DEBUG);
       $this->storeHistory();
     }
 
@@ -106,10 +109,10 @@ namespace CAFEVDB {
       $config = ConfigCheck::configured();
 
       // following three may or may not be set
-      $project    = Util::cgiValue('Project', '');
-      $projectId  = Util::cgiValue('ProjectId', -1);
-      $musicianId = Util::cgiValue('MusicianId', -1);
-      $recordId   = Util::getCGIRecordId();
+      $projectName = Util::cgiValue('ProjectName', '');
+      $projectId   = Util::cgiValue('ProjectId', -1);
+      $musicianId  = Util::cgiValue('MusicianId', -1);
+      $recordId    = Util::getCGIRecordId();
 
       if (!$config['summary']) {
         $tmplname = 'configcheck';
@@ -130,7 +133,7 @@ namespace CAFEVDB {
       $tmpl->assign('uploadMaxFilesize', Util::maxUploadSize(), false);
       $tmpl->assign('uploadMaxHumanFilesize',
                     \OCP\Util::humanFileSize(Util::maxUploadSize()), false);
-      $tmpl->assign('projectName', $project);
+      $tmpl->assign('projectName', $projectName);
       $tmpl->assign('projectId', $projectId);
       $tmpl->assign('musicianId', $musicianId);
       $tmpl->assign('recordId', $recordId);
@@ -210,7 +213,7 @@ namespace CAFEVDB {
       $storageValue = array('size' => $this->historySize,
                             'position' => $this->historyPosition,
                             'records' => $this->historyRecords);
-      Config::sessionStoreValue(self::SESSION_HISTORY_KEY, $storageValue);
+      $this->session->storeValue(self::SESSION_HISTORY_KEY, $storageValue);
     }
 
     /**Load the history state. Initialize to default state in case of
@@ -218,7 +221,7 @@ namespace CAFEVDB {
      */
     private function loadHistory()
     {
-      $loadValue = Config::sessionRetrieveValue(self::SESSION_HISTORY_KEY);
+      $loadValue = $this->session->retrieveValue(self::SESSION_HISTORY_KEY);
       if (!$this->validateHistory($loadValue)) {
         $this->defaultHistory();
         return false;

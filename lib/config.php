@@ -119,6 +119,7 @@ redaxoDefaultModule
                                'emailform' => false);
   private static $initialized = false;
   private static $toolTipsArray = array();
+  private static $session = false;
 
   /**List of data-base entries that need to be encrypted. We should
    * invent some "registration" infrastructre for this AND first do a
@@ -336,14 +337,6 @@ redaxoDefaultModule
     return true;
   }
 
-  /**PHP session variable key to use for storing something tagged with
-   * $key.
-   */
-  private static function sessionKey($key)
-  {
-    return Config::APP_NAME.'\\'.$key;
-  }
-
   /**Store something in the session-data. It is completely left open
    * how this is done.
    *
@@ -352,7 +345,8 @@ redaxoDefaultModule
    */
   static public function sessionStoreValue($key, $value)
   {
-    \OC::$session->set(self::sessionKey($key), $value);
+    self::init();
+    self::$session->storeValue($key, $value);
   }
 
   /**Fetch something from the session-data. It is completely left open
@@ -368,10 +362,8 @@ redaxoDefaultModule
    */
   static public function sessionRetrieveValue($key, $default = false)
   {
-    $key = self::sessionKey($key);
-    return \OC::$session->exists($key)
-      ? \OC::$session->get($key)
-      : $default;
+    self::init();
+    return self::$session->retrieveValue($key, $default);
   }
 
   /**Set the private key used to decode some sensible data like the
@@ -669,6 +661,8 @@ redaxoDefaultModule
     }
     self::$initialized = true;
 
+    self::$session = new Session();
+
     // Fetch possibly encrypted config values from the OC data-base
     self::decryptConfigValues();
 
@@ -784,7 +778,7 @@ redaxoDefaultModule
     self::$cgiVars = array('Template' => 'blog',
                            'MusicianId' => -1,
                            'ProjectId' => -1,
-                           'Project' => '',
+                           'ProjectName' => '',
                            'RecordsPerPage' => -1);
     self::$toolTipsArray = ToolTips::toolTips();
     self::$pmeopts['tooltips'] = self::$toolTipsArray;
