@@ -1222,6 +1222,21 @@ $(document).ready(function(){
                return false;
              });
 
+  content.on('click',
+             'form#projectinstrumentscontrol :submit',
+             function(event) {
+               event.stopImmediatePropagation();
+               var form = $(this.form);
+               var projectName = $(this.form).find('input[name="ProjectNaame"]').val();
+               var projectId =  $(this.form).find('input[name="ProjectId"]').val();
+               CAFEVDB.Projects.instrumentationNumbersPopup(
+                 PHPMYEDIT.defaultSelector, {
+                   ProjectId: projectId,
+                   ProjectName: projectName
+                 });
+               return false;
+             });
+
   CAFEVDB.addReadyCallback(function() {
     $('input.alertdata.cafevdb-page').each(function(index) {
       var title = $(this).attr('name');
