@@ -65,17 +65,18 @@
  */
 
 #project-instruments-dialog {
-  overflow:unset;
+  /*overflow:;*/
+  min-width:30em;
 }
 
-/* make popups scrollable in smaller viewports */
+/*******************************************************************************
+ *
+ * add projects dialog
+ *
+ */
+
 .ui-dialog.cafevdb-project-instruments {
   max-height: 75% !important;
-  /*top: 15% !important;*/
-  /* At least firefox has problems with overflow-x and
-     * overflow-y. Also konqueror (webkit) */
-  /* overflow-x: hidden; */
-  /* overflow-y: visible; */
   overflow: visible;
   padding: 0;
 }

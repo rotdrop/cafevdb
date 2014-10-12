@@ -118,17 +118,11 @@ var CAFEVDB = CAFEVDB || {};
       return ProjectInstruments.actions($(this), container);
     });
 
-    var countDown = 2;
     if (typeof callback == 'function') {
-      actions.off('chosen:ready');
-      actions.on('chosen:ready', function() {
-        --countDown;
-        if (countDown == 0) {
-          callback();
-        }
+      actions.off('chosen:ready').on('chosen:ready', function() {
+        callback();
       });
     }
-
     actions.chosen({ disable_search:true });
   };
 

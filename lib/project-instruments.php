@@ -190,7 +190,7 @@ class ProjectInstruments
       if ($inhibitTranspose) {
         $opts['options'] .= 'V';
       }
-      $opts['navigation'] = 'GUD';
+      $opts['navigation'] = 'GU';
       $sort = false;
     } else {
       // Sorting field(s)
