@@ -32,7 +32,7 @@ $css_class = DetailedInstrumentation::CSS_CLASS;
 $nav = '';
 $nav .= Navigation::button('projectlabel', $table->projectName, $table->projectId);
 $nav .= Navigation::button('projects');
-$nav .= Navigation::button('detailed', $table->projectName, $table->projectId);
+//$nav .= Navigation::button('detailed', $table->projectName, $table->projectId);
 $nav .= Navigation::button('projectinstruments', $table->projectName, $table->projectId);
 $nav .= Navigation::button('instruments', $table->projectName, $table->projectId);
 
