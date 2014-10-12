@@ -39,6 +39,13 @@ class DetailedInstrumentation
 
   public function shortTitle()
   {
+    if ($this->deleteOperation()) {
+      return L::t('Remove the musician from %s?', array($this->projectName));
+    } else if ($this->viewOperation()) {
+      return L::t('Display of all stored data for the shown musician.');
+    } else if ($this->changeOperation()) {
+      return L::t('Edit the data of the displayed musician.');
+    }
     return L::t("Instrumentation for Project `%s'", array($this->projectName));
   }
 
