@@ -1030,30 +1030,15 @@ __EOT__;
 __EOT__;
       break;
 
-    case 'add':
-      $value = L::t("Add more Musicians");
-      $title = L::t("List of all musicians NOT registered for the selected project. Only through that table a new musician can enter a project. Look for a hyper-link Add_to_PROJECT");
+    case 'debitmandates':
+      $value = L::t('Debit Mandates');
+      $title = L::t('Display a table with the SEPA debit mandates related to the project.');
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="">
-  <input type="submit" value="$value" title="$title"/>
-  <input type="hidden" name="Template" value="add-musicians"/>
+  <input type="submit" name="" value="$value" title="$title"/>
+  <input type="hidden" name="Template" value="sepa-debit-mandates"/>
   <input type="hidden" name="ProjectName" value="$projectName"/>
   <input type="hidden" name="ProjectId" value="$projectId"/>
-</form>
-
-__EOT__;
-      break;
-
-    case 'transfer-instruments':
-      $value = strval(L::t('Transfer Instruments from Musicians'));
-      $title = strval(Config::toolTips('transfer-instruments'));
-      $form =<<<__EOT__
-<form class="cafevdb-control" id="$controlid" method="post" action="">
-  <input type="submit" value="$value" title="$title" />
-  <input type="hidden" name="ProjectId" value="$projectId" />
-  <input type="hidden" name="ProjectName"   value="$projectName" />
-  <input type="hidden" name="Template"  value="project-instruments" />
-  <input type="hidden" name="Action"    value="transfer-instruments" />
 </form>
 
 __EOT__;
