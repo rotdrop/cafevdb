@@ -26,16 +26,16 @@ use CAFEVDB\SepaDebitMandates;
 
 $table = new SepaDebitMandates();
 
-$project = $_['projectName'];
+$projectName = $_['projectName'];
 $projectId = $_['projectId'];
 $css_pfx = SepaDebitMandates::CSS_PREFIX;
 
 $nav = '';
 if ($projectId >= 0) {
-  $nav .= Navigation::button('projectlabel', $project, $projectId);
+  $nav .= Navigation::button('projectlabel', $projectName, $projectId);
   $nav .= Navigation::button('projects');
-  $nav .= Navigation::button('detailed', $project, $projectId);  
-  $nav .= Navigation::button('projectinstruments');
+  $nav .= Navigation::button('detailed', $projectName, $projectId);
+  $nav .= Navigation::button('projectinstruments', $projectName, $projectId);
 } else {
   $nav .= Navigation::button('projects');
   $nav .= Navigation::button('all');
