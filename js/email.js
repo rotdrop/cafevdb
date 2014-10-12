@@ -173,13 +173,13 @@ CAFEVDB.Email = CAFEVDB.Email || {};
     if (true) {
       var instrumentsFilter = fieldset.find('.instruments-filter.container');
       instrumentsFilter.on('dblclick', function(event) {
-        applyRecipientsFilter(event);
+        applyRecipientsFilter.call(this, event);
       });
     } else {
       var instrumentsFilter = fieldset.find('.instruments-filter.container select');
       instrumentsFilter.off('change');
       instrumentsFilter.on('change', function(event) {
-        applyRecipientsFilter(event);
+        applyRecipientsFilter.call(this, event);
       });
     }
 
@@ -187,34 +187,34 @@ CAFEVDB.Email = CAFEVDB.Email || {};
     var memberStatusFilter = fieldset.find('select.member-status-filter');
     memberStatusFilter.off('change');
     memberStatusFilter.on('change', function(event) {
-      applyRecipientsFilter(event);
+      applyRecipientsFilter.call(this, event);
     });
 
     // Basic set
     var basicRecipientsSet = fieldset.find('.basic-recipients-set.container input[type="checkbox"]');
     basicRecipientsSet.off('change');
     basicRecipientsSet.on('change', function(event) {
-      applyRecipientsFilter(event);
+      applyRecipientsFilter.call(this, event);
     });
 
     // "submit" when hitting any of the control buttons
     controlsContainer.off('click', '**');
     controlsContainer.on('click', 'input', function(event) {
-      applyRecipientsFilter(event);
+      applyRecipientsFilter.call(this, event);
     });
 
     // Record history when the select box changes. Maybe too slow, but
     // we will see.
     recipientsSelect.off('change');
     recipientsSelect.on('change', function(event) {
-      applyRecipientsFilter(event, true);
+      applyRecipientsFilter.call(this, event, true);
     });
 
     // Give the user a chance to change broken or missing email
     // addresses from here.
     dialogHolder.off('pmedialog:changed');
     dialogHolder.on('pmedialog:changed', function(event) {
-      applyRecipientsFilter(event);
+      applyRecipientsFilter.call(this, event);
     });
 
     missingAddresses.off('click', 'span.personal-record');
