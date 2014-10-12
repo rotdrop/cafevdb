@@ -30,7 +30,6 @@ $css_pfx = InstrumentInsurance::CSS_PREFIX;
 $nav = '';
 $nav .= Navigation::button('projects');
 $nav .= Navigation::button('all');
-$nav .= Navigation::button('projectinstruments');
 $nav .= Navigation::button('instruments');
 
 echo $this->inc('part.common.header',

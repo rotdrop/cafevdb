@@ -33,12 +33,12 @@ $css_pfx = SepaDebitMandates::CSS_PREFIX;
 $nav = '';
 if ($projectId >= 0) {
   $nav .= Navigation::button('projectlabel', $project, $projectId);
-  $nav .= Navigation::button('detailed', $project, $projectId);  
   $nav .= Navigation::button('projects');
+  $nav .= Navigation::button('detailed', $project, $projectId);  
+  $nav .= Navigation::button('projectinstruments');
 } else {
   $nav .= Navigation::button('projects');
   $nav .= Navigation::button('all');
-  $nav .= Navigation::button('projectinstruments');
   $nav .= Navigation::button('instruments');
 }
 
