@@ -150,7 +150,7 @@ class SepaDebitMandates
       $opts['filters'] = $junctor."`PMEtable0`.`musicianId` = ".$musicianId;
       $junctor = " AND ";
     }
-    if ($musicianId > 0) {
+    if ($projectId > 0) {
       $opts['filters'] = $junctor."`PMEtable0`.`projectId` = ".$projectId;
       $junctor = " AND ";
     }
@@ -246,8 +246,8 @@ class SepaDebitMandates
                                       //'options'  => 'LFADV', // no change allowed
                                       'default' => 0,
                                       'values' => array('table' => 'Projekte',
-                                                         'column' => 'Id',
-                                                         'description' => 'Name')
+                                                        'column' => 'Id',
+                                                        'description' => 'Name')
       );
 
     $opts['fdd']['IBAN'] = array('name'   => 'IBAN',
