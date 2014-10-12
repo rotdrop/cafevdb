@@ -101,7 +101,7 @@ class InstrumentInsurance
     $debug_query = Util::debugMode('query');
 
     $template        = $this->template;
-    $project         = $this->project;
+    $projectName     = $this->projectName;
     $projectId       = $this->projectId;
     $recordsPerPage  = $this->recordsPerPage;
     $opts            = $this->opts;
@@ -130,7 +130,7 @@ class InstrumentInsurance
     $opts['inc'] = $recordsPerPage;
 
     $opts['cgi']['persist'] = array(
-      'Project' => $project,
+      'ProjectName' => $projectName,
       'ProjectId' => $projectId,
       'MusicianId' => $musicianId,
       'Template' => 'instrument-insurance',

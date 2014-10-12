@@ -47,7 +47,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
      * attached to the "post"-object
      * 
      * @param post Arguments object:
-     * { Project: 'NAME', ProjectId: XX }
+     * { ProjectName: 'NAME', ProjectId: XX }
      * 
      * @param reopen If true, close any already dialog and re-open it
      * (the default). If false, only raise an existing dialog to top.
@@ -82,7 +82,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
      * project.
      * 
      * @param post Arguments object:
-     * { Project: 'NAME', ProjectId: XX }
+     * { ProjectName: 'NAME', ProjectId: XX }
      * 
      * @param reopen If true, close any already dialog and re-open it
      * (the default). If false, only raise an existing dialog to top.
@@ -106,7 +106,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
     /**Generate a popup-dialog for project related email.
      * 
      * @param post Arguments object:
-     * { Project: 'NAME', ProjectId: XX }
+     * { ProjectName: 'NAME', ProjectId: XX }
      * 
      * @param reopen If true, close any already dialog and re-open it
      * (the default). If false, only raise an existing dialog to top.
@@ -133,7 +133,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
      * initiated from.
      * 
      * @param past Arguments object:
-     * { Project: 'NAME', ProjectId: XX }
+     * { ProjectName: 'NAME', ProjectId: XX }
      */
     Projects.instrumentationNumbersPopup = function(containerSel, post)
     {
@@ -150,7 +150,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
             Transpose: 'transposed',
             InhibitTranspose: 'true',
             ProjectId: post.ProjectId,
-            Project: post.Project, // this is the name
+            ProjectName: post.ProjectName, // this is the name
             // Now special options for the dialog popup
             InitialViewOperation: true,
             InitialName: 'PME_sys_operation',
@@ -171,7 +171,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
      * initiated from.
      * 
      * @param past Arguments object:
-     * { Project: 'NAME', ProjectId: XX }
+     * { ProjectName: 'NAME', ProjectId: XX }
      */
     Projects.projectViewPopup = function(containerSel, post)
     {
@@ -215,7 +215,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
         var projectName = select.data('projectName');
         var post = {
             ProjectId: projectId,
-            Project: projectName
+            ProjectName: projectName
         };
 
         switch (selectedValue) {
@@ -931,8 +931,7 @@ $(document).ready(function(){
                 var projectName = toolbox.data('projectName');
                 var post = {
                     ProjectId: projectId,
-                    ProjectName: projectName,
-                    Project: projectName
+                    ProjectName: projectName
                 };
                 toolbox.off('click', '**'); // safeguard
                 toolbox.on('click', 'button.project-wiki',

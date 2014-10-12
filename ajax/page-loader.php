@@ -49,6 +49,11 @@ namespace CAFEVDB
   ob_start();
 
   try {
+
+    if (Util::debugMode('request')) {
+      $debugText .= '$_POST = '.print_r($_POST, true);
+    }
+
     $_GET = array(); // only post is allowed
 
     $pageLoader = new PageLoader();
@@ -80,6 +85,8 @@ namespace CAFEVDB
                                  'position' => $pageLoader->historyPosition()),
               'debug' => $debugText)));
     
+    unset($pageLoader); // trigger destroy
+
     return true;
 
   } catch (\Exception $e) {

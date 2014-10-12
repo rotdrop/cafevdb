@@ -31,7 +31,7 @@ class Instrumentation
 {
   public $musicianId;
   public $projectId;
-  public $project;
+  public $projectName; ///< project name
   public $template;
   protected $operation;
   protected $recordsPerPage;
@@ -259,7 +259,7 @@ class Instrumentation
 
     $this->musicianId = $this->opts['cgi']['persist']['MusicianId'];
     $this->projectId = $this->opts['cgi']['persist']['ProjectId'];
-    $this->project = $this->opts['cgi']['persist']['Project'];;
+    $this->projectName = $this->opts['cgi']['persist']['ProjectName'];;
     $this->template = $this->opts['cgi']['persist']['Template'];;
     $this->recordsPerPage = $this->opts['cgi']['persist']['RecordsPerPage'];
 
@@ -320,9 +320,9 @@ class Instrumentation
    */
   public static function beforeInsertFixProjectTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
-    $project = CAFEVDB\Util::cgiValue('Project');
-    $projectId =  CAFEVDB\Util::cgiValue('ProjectId');
-    $musicianId = CAFEVDB\Util::cgiValue('MusicianId');
+    $projectName = CAFEVDB\Util::cgiValue('ProjectName');
+    $projectId   =  CAFEVDB\Util::cgiValue('ProjectId');
+    $musicianId  = CAFEVDB\Util::cgiValue('MusicianId');
 
     // We check here whether the change of the instrument or player is in
     // some sense consistent with the Musiker table. We know that only
@@ -359,10 +359,10 @@ class Instrumentation
    */
   public static function beforeUpdateInstrumentTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
-    $project    = Util::cgiValue('Project');
-    $projectId  = Util::cgiValue('ProjectId');
-    $musicianId = Util::cgiValue('MusicianId', -1);
-    $table      = Util::cgiValue('Table', false);
+    $projectName = Util::cgiValue('ProjectName');
+    $projectId   = Util::cgiValue('ProjectId');
+    $musicianId  = Util::cgiValue('MusicianId', -1);
+    $table       = Util::cgiValue('Table', false);
 
     // We check here whether the change of the instrument or player is in
     // some sense consistent with the Musiker table. We know that only

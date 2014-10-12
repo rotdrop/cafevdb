@@ -25,18 +25,18 @@ use CAFEVDB\Util;
 use CAFEVDB\Navigation;
 use CAFEVDB\EmailHistory;
 
-$project = Util::cgiValue('Project');
+$projectName = Util::cgiValue('ProjectName');
 $projectId = Util::cgiValue('ProjectId',-1);
 $css_pfx = EmailHistory::CSS_PREFIX;
 
 $nav = '';
 if ($projectId >= 0) {
-  $nav .= Navigation::button('projectlabel', $project, $projectId);
+  $nav .= Navigation::button('projectlabel', $projectName, $projectId);
   $nav .= Navigation::button('projects');
-  $nav .= Navigation::button('email', $project, $projectId);
-  $nav .= Navigation::button('detailedg', $project, $projectId);
-  $nav .= Navigation::button('projectinstruments', $project, $projectId);
-  $nav .= Navigation::button('instruments', $project, $projectId); 
+  $nav .= Navigation::button('email', $projectName, $projectId);
+  $nav .= Navigation::button('detailedg', $projectName, $projectId);
+  $nav .= Navigation::button('projectinstruments', $projectName, $projectId);
+  $nav .= Navigation::button('instruments', $projectName, $projectId); 
 } else {
   $nav .= Navigation::button('projects');
   $nav .= Navigation::button('email');

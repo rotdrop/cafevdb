@@ -39,7 +39,7 @@ class DetailedInstrumentation
 
   public function shortTitle()
   {
-    return L::t("Instrumentation for Project `%s'", array($this->project));
+    return L::t("Instrumentation for Project `%s'", array($this->projectName));
   }
 
   public function headerText()
@@ -52,8 +52,7 @@ class DetailedInstrumentation
     global $debug_query;
     $debug_query = Util::debugMode('query');
 
-    $project         = $this->project; // obsolete
-    $projectName     = $this->project; // the way to go
+    $projectName     = $this->projectName;
     $projectId       = $this->projectId;
     $opts            = $this->opts;
     $recordsPerPage  = $this->recordsPerPage;
@@ -80,10 +79,10 @@ class DetailedInstrumentation
 
     $opts['inc'] = $recordsPerPage;
 
-    $opts['tb'] = $project . 'View';
+    $opts['tb'] = $projectName . 'View';
 
     $opts['cgi']['persist'] = array(
-      'Project' => $project,
+      'ProjectName' => $projectName,
       'ProjectId' => $projectId,
       'Template' => 'detailed-instrumentation',
       'Table' => $opts['tb'],
@@ -342,11 +341,11 @@ class DetailedInstrumentation
       'php' => array(
         'type' => 'function',
         'function' => 'CAFEVDB\DetailedInstrumentation::sepaDebitMandatePME',
-        'parameters' => array('project' => $project,
+        'parameters' => array('projectName' => $projectName,
                               'projectId' => $projectId,
                               'musicianIdIdx' => $musIdIdx,
                               'musicianFirstNameIdx' => $musFirstNameIdx,
-                              'musicianLastNameIx' => $musLastNameIdx,
+                              'musicianLastNameIdx' => $musLastNameIdx,
                               'naked' => $this->pme_bare)
         )
       );
@@ -354,7 +353,7 @@ class DetailedInstrumentation
     // Generate input fields for the extra columns
     foreach ($userExtraFields as $field) {
       $name = $field['name'];    
-      $opts['fdd']["$name"] = array('name'     => $name.' ('.$project.')',
+      $opts['fdd']["$name"] = array('name'     => $name.' ('.$projectName.')',
                                     'tab' => array('id' => 'project'),
                                     'select'   => 'T',
                                     'maxlen'   => 65535,
@@ -622,16 +621,16 @@ __EOT__;
     }
 
     // Fetch the data from the array $row.
-    $projectId = $opts['projectId'];
-    $project   = $opts['project'];
+    $projectId        = $opts['projectId'];
+    $projectName      = $opts['projectName'];
     $musIdIdx         = $opts['musicianIdIdx'];
     $musFirstNameIdx  = $opts['musicianFirstNameIdx'];
     $musLastNameIdx   = $opts['musicianLastNameIdx'];
 
     // Careful: this changes when rearranging the ordering of the display
-    $musicianId = $row['qf'.$musIdIdx];
+    $musicianId        = $row['qf'.$musIdIdx];
     $musicianFirstName = $row['qf'.$musFirstNameIdx];
-    $musicianLastName = $row['qf'.$musLastNameIdx];
+    $musicianLastName  = $row['qf'.$musLastNameIdx];
 
     $musician = $musicianFirstName.' '.$musicianLastName;
 
@@ -640,14 +639,14 @@ __EOT__;
     } else {
       $value = L::t("SEPA Debit Mandate");
     }
-    return self::sepaDebitMandateButton($value, $musicianId, $musician, $projectId, $project);
+    return self::sepaDebitMandateButton($value, $musicianId, $musician, $projectId, $projectName);
   }
 
   /**Generate a clickable form element which finally will display the
    * debit-mandate dialog, i.e. load some template stuff by means of
    * some java-script and ajax blah.
    */
-  public static function sepaDebitMandateButton($value, $musicianId, $musician, $projectId, $project)
+  public static function sepaDebitMandateButton($value, $musicianId, $musician, $projectId, $projectName)
   {
     $css= ($value == L::t("SEPA Debit Mandate")) ? "no-sepa-debit-mandate" : "sepa-debit-mandate";
     $button = '<div class="sepa-debit-mandate">'

@@ -21,11 +21,11 @@ case 'all-musicians':
   break;
 case 'brief-instrumentation':
   $table = new CAFEVDB\BriefInstrumentation(false);
-  $name = Util::cgiValue('Project').'-brief';
+  $name = Util::cgiValue('ProjectName').'-brief';
   break;
 case 'detailed-instrumentation':
   $table = new CAFEVDB\DetailedInstrumentation(false);
-  $name = Util::cgiValue('Project').'-detailed';
+  $name = Util::cgiValue('ProjectName').'-detailed';
   break;
 case 'instrument-insurance':
   $table = new CAFEVDB\InstrumentInsurance(false);

@@ -943,6 +943,20 @@ var CAFEVDB = CAFEVDB || {};
     //$(PHPMYEDIT.defaultSelector + ' input.pme-bulkcommit').addClass('formsubmit');
   };
 
+  /**Popup a dialog with debug info if data.data.debug is set and non
+   * empty.
+   */
+  CAFEVDB.debugPopup = function(data) {
+    if (typeof data != 'undefined' &&
+        typeof data.data != 'undefined' &&
+        typeof data.data.debug != 'undefined' &&
+        data.data.debug != '') {
+      OC.dialogs.info('<div class="debug error contents">'+data.data.debug+'</div>',
+                      t('cafevdb', 'Debug Information'),
+                      undefined, true, true);
+    }
+  };
+  
   /**Generate some diagnostic output, mostly needed during application
    *development.
    *
@@ -992,11 +1006,10 @@ var CAFEVDB = CAFEVDB || {};
         // this case no regular data-fields have been constructed
         info += '<div class="missing error">'+missing+'</div>';
       }
-      if (data.data.debug != '') {
-        OC.dialogs.info('<div class="debug error contents">'+data.data.debug+'</div>',
-                        t('cafevdb', 'Debug Information'),
-                        undefined, true, true);
-      }
+
+      // Display additional debug info if any
+      CAFEVDB.debugPopup(data);
+
       var caption = data.data.caption;
       if (typeof caption == 'undefined' || caption == '') {
         caption = t('cafevdb', 'Error');

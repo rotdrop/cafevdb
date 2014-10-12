@@ -57,7 +57,7 @@ class Instruments
     $debug_query = Util::debugMode('query');
 
     $template        = $this->template;
-    $project         = $this->project;
+    $projectName     = $this->projectName;
     $projectId       = $this->projectId;
     $opts            = $this->opts;
     $instruments     = $this->instruments;
@@ -83,8 +83,8 @@ class Instruments
     $opts['tb'] = 'Instrumente';
 
     $opts['cgi']['persist'] = array(
-      'Projekt' => $project,
-      'ProjektId' => $projectId,
+      'ProjectName' => $projectName,
+      'ProjectId' => $projectId,
       'Template' => 'instruments',
       'DisplayClass' => 'Instruments',
       'RecordsPerPage' => $recordsPerPage);

@@ -211,7 +211,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
 
       var formData = form.find('fieldset.form-data');
       var projectId = formData.find('input[name="ProjectId"]').val();
-      var projectName = formData.find('input[name="Project"]').val();
+      var projectName = formData.find('input[name="ProjectName"]').val();
 
       CAFEVDB.Instrumentation.personalRecordDialog(
         $(this).data('id'),
@@ -710,13 +710,13 @@ CAFEVDB.Email = CAFEVDB.Email || {};
     fieldset.find('button.attachment.events').off('click').on('click', function(event) {
       var formData = form.find('fieldset.form-data');
       var projectId = formData.find('input[name="ProjectId"]').val();
-      var projectName = formData.find('input[name="Project"]').val();
+      var projectName = formData.find('input[name="ProjectName"]').val();
       var events = eventAttachmentsSelector.val();
       if (!events) {
         events = [];
       }
       CAFEVDB.Projects.eventsPopup({ 'ProjectId': projectId,
-                                     'Project': projectName,
+                                     'ProjectName': projectName,
                                      'EventSelect': events},
                                    false /* only move to top if already open */);
       return false;
@@ -727,7 +727,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
     dialogHolder.on('cafevdb:events_changed', function(event, events) {
       var formData = form.find('fieldset.form-data');
       var projectId = formData.find('input[name="ProjectId"]').val();
-      var projectName = formData.find('input[name="Project"]').val();
+      var projectName = formData.find('input[name="ProjectName"]').val();
       var requestData = { 'Request': 'update',
                           'FormElement': 'EventAttachments',
                           'SingleItem': true,

@@ -32,14 +32,14 @@ case 'all-musicians':
 case 'brief-instrumentation':
   $table = new CAFEVDB\BriefInstrumentation(false);  
   $projectId   = $table->projectId;
-  $projectName = $table->project;
+  $projectName = $table->projectName;
   $name = L::t("%s-brief", array($projectName));
   $instrumentCol = 2;
   break;
 case 'detailed-instrumentation':
   $table = new CAFEVDB\DetailedInstrumentation(false);
   $projectId = $table->projectId;
-  $projectName = $table->project;
+  $projectName = $table->projectName;
   $name = L::t("%s-detailed", array($projectName));
   $instrumentCol = 0;
   break;

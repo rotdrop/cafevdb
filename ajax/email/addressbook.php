@@ -55,7 +55,7 @@ try {
   // Get some common post data, rest has to be handled by the
   // recipients and the sender class.
   $projectId   = Util::cgiValue('ProjectId', -1);
-  $projectName = Util::cgiValue('Project', ''); // the name
+  $projectName = Util::cgiValue('ProjectName', ''); // the name
 
   $freeForm  = Util::cgiValue('FreeFormRecipients', '');
 

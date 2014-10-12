@@ -56,8 +56,7 @@ try {
   // Get some common post data, rest has to be handled by the
   // recipients and the sender class.
   $projectId   = Util::cgiValue('ProjectId', -1);
-  $projectName = Util::cgiValue('ProjectName',
-                                Util::cgiValue('Project', '')); // the name
+  $projectName = Util::cgiValue('ProjectName', '');
 
   $recipientsFilter = new EmailRecipientsFilter();
   $recipients = $recipientsFilter->selectedRecipients();
@@ -80,7 +79,6 @@ try {
   $pmepfx   = Config::$pmeopts['cgi']['prefix']['sys'];
   $emailKey = $pmepfx.'mrecs';
   $tmpl->assign('FormData', array('ProjectName' => $projectName,
-                                  'Project' => $projectName, // compat
                                   'ProjectId' => $projectId,
                                   'Template' => Util::cgiValue('Template', ''),
                                   'DisplayClass' => Util::cgiValue('DisplayClass', ''),

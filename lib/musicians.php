@@ -54,7 +54,7 @@ class Musicians
     } else if (!$this->projectMode) {
       return L::t('Overview over all registered musicians');
     } else {
-      return L::t("Add musicians to the project `%s'", array($this->project)); 
+      return L::t("Add musicians to the project `%s'", array($this->projectName)); 
     }
   }
 
@@ -82,8 +82,7 @@ make sure that the musicians are also automatically added to the
     $debug_query = Util::debugMode('query');
 
     $template        = $this->template;
-    $projectName     = $this->project;
-    $project         = $projectName;
+    $projectName     = $this->projectName;
     $projectId       = $this->projectId;
     $recordsPerPage  = $this->recordsPerPage;
     $opts            = $this->opts;
@@ -111,7 +110,7 @@ make sure that the musicians are also automatically added to the
     $opts['inc'] = $recordsPerPage;
 
     $opts['cgi']['persist'] = array(
-      'Project' => $project,
+      'ProjectName' => $projectName,
       'ProjectId' => $projectId,
       'Template' => $this->projectMode
       ? 'add-musicians' : 'all-musicians',
@@ -184,7 +183,7 @@ make sure that the musicians are also automatically added to the
     if ($this->projectMode) {
 //      $opts['filters'] = "(SELECT COUNT(*) FROM `Besetzungen` WHERE MusikerId = PMEtable0.Id AND ProjektId = $projectId) = 0";
       $opts['misccssclass']   = 'bulkcommit';
-      $opts['labels']['Misc'] = strval(L::t('Add all to %s', array($project)));
+      $opts['labels']['Misc'] = strval(L::t('Add all to %s', array($projectName)));
     }
 
     /* Field definitions
@@ -235,7 +234,7 @@ make sure that the musicians are also automatically added to the
       'sort'     => true
       );
 
-    $bval = strval(L::t('Add to %s', array($project)));
+    $bval = strval(L::t('Add to %s', array($projectName)));
     $tip  = strval(Config::toolTips('register-musician'));
     if ($this->projectMode) {
       $opts['fdd']['AddMusicians'] = array(

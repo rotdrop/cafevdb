@@ -95,7 +95,7 @@ namespace CAFEVDB
 
       $this->projectId = Util::cgiValue('ProjectId', -1);
       $this->projectName   = Util::cgiValue('ProjectName',
-                                            Util::cgiValue('Project', ''));
+                                            Util::cgiValue('ProjectName', ''));
 
       // See wether we were passed specific variables ...
       $pmepfx          = $this->opts['cgi']['prefix']['sys'];

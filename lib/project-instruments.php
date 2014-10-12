@@ -51,7 +51,7 @@ class ProjectInstruments
         $_POST[$recKey] = $this->recordId;
       } else if ($this->recordId > 0) {
         $this->projectId = $idPair['projectId'];
-        $this->project = Projects::fetchName($this->projectId);
+        $this->projectName = Projects::fetchName($this->projectId);
       }
     }
 
@@ -63,8 +63,8 @@ class ProjectInstruments
 
   public function shortTitle()
   {
-    if ($this->project) {
-      return L::t("Instrumentation Numbers for `%s'", array($this->project));
+    if ($this->projectName) {
+      return L::t("Instrumentation Numbers for `%s'", array($this->projectName));
     } else {
       return L::t("Instrumentation Numbers");
     }
@@ -114,7 +114,7 @@ class ProjectInstruments
     }
 
     $template        = $this->template;
-    $project         = $this->project;
+    $projectName     = $this->projectName;
     $projectId       = $this->projectId;
     $recordId        = $this->recordId;
     $instruments     = $this->instruments;
@@ -174,8 +174,8 @@ class ProjectInstruments
       'ClassArguments' => array('_' => array('recordId')));
 
     if ($projectMode) {
-      $opts['cgi']['persist']['Project'] = $project;
-      $opts['cgi']['persist']['ProjectId'] = $projectId;
+      $opts['cgi']['persist']['ProjectName'] = $projectName;
+      $opts['cgi']['persist']['ProjectId']   = $projectId;
     }
 
     // Name of field which is the unique key

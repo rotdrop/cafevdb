@@ -27,7 +27,7 @@ use CAFEVDB\ProjectInstruments;
 
 $table = new ProjectInstruments($_['recordId']);
 $css_pfx = ProjectInstruments::CSS_PREFIX;
-$project = $table->project;
+$project = $table->projectName;
 $projectId = $table->projectId;
 
 $nav = '';

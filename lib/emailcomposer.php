@@ -122,7 +122,7 @@ mandateReference
       $this->projectId   = $this->cgiValue('ProjectId', Util::cgiValue('ProjectId', -1));
       $this->projectName = $this->cgiValue('ProjectName',
                                            Util::cgiValue('ProjectName',
-                                                          Util::cgiValue('Project', '')));
+                                                          Util::cgiValue('ProjectName', '')));
       $this->setSubjectTag();
 
       // First initialize defaults, will be overriden based on

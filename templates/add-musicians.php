@@ -29,12 +29,12 @@ $css_pfx = Musicians::CSS_PREFIX;
 $css_class = Musicians::CSS_CLASS;
 
 $nav = '';
-$nav .= Navigation::button('projectlabel', $table->project, $table->projectId);
+$nav .= Navigation::button('projectlabel', $table->projectName, $table->projectId);
 $nav .= Navigation::button('projects');
-$nav .= Navigation::button('detailed', $table->project, $table->projectId);
-$nav .= Navigation::button('projectinstruments', $table->project, $table->projectId);
-$nav .= Navigation::button('instruments', $table->project, $table->projectId);
-//$nav .= Navigation::button('detailed', $table->project, $table->projectId);
+$nav .= Navigation::button('detailed', $table->projectName, $table->projectId);
+$nav .= Navigation::button('projectinstruments', $table->projectName, $table->projectId);
+$nav .= Navigation::button('instruments', $table->projectName, $table->projectId);
+//$nav .= Navigation::button('detailed', $table->projectName, $table->projectId);
 
 echo $this->inc('part.common.header',
                 array('css-prefix' => $css_pfx,

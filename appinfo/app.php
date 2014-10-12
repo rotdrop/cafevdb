@@ -49,6 +49,7 @@ OC::$CLASSPATH['CAFEVDB\FuzzyInput'] = 'cafevdb/lib/functions.php';
 OC::$CLASSPATH['CAFEVDB\SepaDebitMandates'] = 'cafevdb/lib/sepa-debit-mandates.php';
 OC::$CLASSPATH['CAFEVDB\ProgressStatus'] = 'cafevdb/lib/progress-status.php';
 OC::$CLASSPATH['CAFEVDB\PageLoader'] = 'cafevdb/lib/page-loader.php';
+OC::$CLASSPATH['CAFEVDB\Session'] = 'cafevdb/lib/session.php';
 
 OC::$CLASSPATH['DWEMBED\App'] = 'dokuwikiembed/lib/dokuwikiembed.php';
 OC::$CLASSPATH['DWEMBED\L'] = 'dokuwikiembed/lib/util.php';

@@ -907,7 +907,7 @@ class Navigation
     return $html;
   }
 
-  public static function button($id='projects', $project='', $projectId=-1)
+  public static function button($id = 'projects', $projectName = '', $projectId = -1)
   {
     if (is_array($id)) {
       return self::buttonsFromArray($id);
@@ -947,7 +947,7 @@ __EOT__;
 <form class="cafevdb-control" id="$controlid" method="post" action="">
   <input type="submit" name="" value="Em@il" title="$title"/>
   <input type="hidden" name="Template" value="email"/>
-  <input type="hidden" name="Project" value="$project"/>
+  <input type="hidden" name="ProjectName" value="$projectName"/>
   <input type="hidden" name="ProjectId" value="$projectId"/>
 </form>
 
@@ -961,7 +961,7 @@ __EOT__;
 <form class="cafevdb-control" id="$controlid" method="post" action="">
   <input type="submit" value="$value" title="$title"/>
   <input type="hidden" name="Template" value="email-history"/>
-  <input type="hidden" name="Project" value="$project"/>
+  <input type="hidden" name="ProjectName" value="$projectName"/>
   <input type="hidden" name="ProjectId" value="$projectId"/>
 </form>
 
@@ -977,10 +977,10 @@ __EOT__;
       $title = L::t("The currently active project.");
       $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="">
-  <input type="submit" name="Project" value="$project" title="$title"/>
+  <input type="submit" name="ProjectName" value="$projectName" title="$title"/>
   <input type="hidden" name="DisplayClass" value="Projects"/>
   <input type="hidden" name="Template" value="projects"/>
-  <input type="hidden" name="Project" value="$project"/>
+  <input type="hidden" name="ProjectName" value="$projectName"/>
   <input type="hidden" name="ProjectId" value="$projectId"/>
   <input type="hidden" name="$opname" value="$opwhat" class="$opclass"/>
 </form>
@@ -995,7 +995,7 @@ __EOT__;
 <form class="cafevdb-control" id="$controlid" method="post" action="">
   <input type="submit" value="$value" title="$title"/>
   <input type="hidden" name="Template" value="detailed-instrumentation"/>
-  <input type="hidden" name="Project" value="$project"/>
+  <input type="hidden" name="ProjectName" value="$projectName"/>
   <input type="hidden" name="ProjectId" value="$projectId"/>
 </form>
 
@@ -1009,7 +1009,7 @@ __EOT__;
 <form class="cafevdb-control" id="$controlid" method="post" action="">
   <input type="submit" value="$value" title="$title"/>
   <input type="hidden" name="Template" value="instruments"/>
-  <input type="hidden" name="Project" value="$project"/>
+  <input type="hidden" name="ProjectName" value="$projectName"/>
   <input type="hidden" name="ProjectId" value="$projectId"/>
 </form>
 
@@ -1023,7 +1023,7 @@ __EOT__;
 <form class="cafevdb-control" id="$controlid" method="post" action="">
   <input type="submit" name="" value="$value" title="$title"/>
   <input type="hidden" name="Template" value="project-instruments"/>
-  <input type="hidden" name="Project" value="$project"/>
+  <input type="hidden" name="ProjectName" value="$projectName"/>
   <input type="hidden" name="ProjectId" value="$projectId"/>
 </form>
 
@@ -1037,7 +1037,7 @@ __EOT__;
 <form class="cafevdb-control" id="$controlid" method="post" action="">
   <input type="submit" value="$value" title="$title"/>
   <input type="hidden" name="Template" value="add-musicians"/>
-  <input type="hidden" name="Project" value="$project"/>
+  <input type="hidden" name="ProjectName" value="$projectName"/>
   <input type="hidden" name="ProjectId" value="$projectId"/>
 </form>
 
@@ -1051,7 +1051,7 @@ __EOT__;
 <form class="cafevdb-control" id="$controlid" method="post" action="">
   <input type="submit" value="$value" title="$title" />
   <input type="hidden" name="ProjectId" value="$projectId" />
-  <input type="hidden" name="Project"   value="$project" />
+  <input type="hidden" name="ProjectName"   value="$projectName" />
   <input type="hidden" name="Template"  value="project-instruments" />
   <input type="hidden" name="Action"    value="transfer-instruments" />
 </form>

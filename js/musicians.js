@@ -28,7 +28,7 @@ var CAFEVDB = CAFEVDB || {};
 
   Musicians.addMusicians = function(form, post) {
     var projectId = form.find('input[name="ProjectId"]').val();
-    var projectName = form.find('input[name="Project"]').val();
+    var projectName = form.find('input[name="ProjectName"]').val();
     if (typeof post == 'undefined') {
       post = form.serialize();
     }
@@ -81,7 +81,7 @@ var CAFEVDB = CAFEVDB || {};
 
       var form = container.find('form.pme-form');
       var projectId = form.find('input[name="ProjectId"]').val();
-      var projectName = form.find('input[name="Project"]').val();
+      var projectName = form.find('input[name="ProjectName"]').val();
       var musicianId = $(this).data('musician-id');
 
       self.addMusicians(form, {

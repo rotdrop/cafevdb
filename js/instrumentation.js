@@ -62,7 +62,6 @@ var CAFEVDB = CAFEVDB || {};
     var tableOptions = {
       ProjectId: -1,
       ProjectName: '',
-      Project: '',
       AmbientContainerSelector: PHPMYEDIT.selector(),
       DialogHolderCSSId: 'personal-record-dialog', 
       // Now special options for the dialog popup
@@ -217,7 +216,7 @@ var CAFEVDB = CAFEVDB || {};
   };
 
   Instrumentation.loadDetailedInstrumentation = function(form, musicians) {
-    var projectName = form.find('input[name="Project"]').val();
+    var projectName = form.find('input[name="ProjectName"]').val();
     var table = projectName+'View';
 
     var inputTweak = [
