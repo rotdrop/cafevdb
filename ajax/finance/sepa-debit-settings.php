@@ -47,6 +47,7 @@ namespace CAFEVDB {
         \OC_JSON::error(
           array("data" => array(
                   'message' => L::t("Required information `%s' not provided.", array($required)),
+                  'suggestions' => '',
                   'debug' => $debugText)));
         return false;
       }
@@ -325,6 +326,7 @@ namespace CAFEVDB {
       \OC_JSON::error(
         array("data" => array(
                 'message' => L::t("Unhandled request:"),
+                'suggestions' => '',
                 'debug' => $debugText)));
       return false;
     }
