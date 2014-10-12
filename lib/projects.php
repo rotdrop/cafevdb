@@ -791,7 +791,7 @@ a comma.'));
         array('type' => 'option',
               'title' => Config::toolTips('project-action-debit-mandates'),
               'value' => 'sepa-debit-mandates',
-              'name' => L::t('SEPA Debit Mandates')
+              'name' => L::t('Debit Mandates')
           ),
         array('type' => 'option',
               'title' => Config::toolTips('project-action-financial-balance'),

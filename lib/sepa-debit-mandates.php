@@ -47,6 +47,13 @@ class SepaDebitMandates
 
   public function shortTitle()
   {
+    if ($this->deleteOperation()) {
+      return L::t('Remove this Debit-Mandate?');
+    } else if ($this->viewOperation()) {
+      return L::t('Debit-Mandate');
+    } else if ($this->changeOperation()) {
+      return L::t('Change this Debit-Mandate');
+    }
     if ($this->projectId > 0 && $this->projectName != '') {
       return L::t('Overview over all SEPA Debit Mandates for %s',
                   array($this->projectName));
