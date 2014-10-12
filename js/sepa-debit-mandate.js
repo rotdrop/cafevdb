@@ -38,33 +38,31 @@ var CAFEVDB = CAFEVDB || {};
      *                 data.data.debug. data.data.debug is placed
      *                 inside the '#debug' div.
      */
-  SepaDebitMandate.init = function(data) {
+  SepaDebitMandate.init = function(data, reloadCB) {
     var self = SepaDebitMandate;
-    if (data.status == 'success') {
-      $('#dialog_holder').html(data.data.contents);
-      self.projectId = data.data.projectId;
-      self.projectName = data.data.projectName;
-      self.musicianId = data.data.musicianId;
-      self.musicianName = data.data.musicianName;
-      self.mandateId = data.data.mandateId;
-      self.mandateReference = data.data.mandateReference;
-    } else {
-      var info = '';
-      if (typeof data.data.message != 'undefined') {
-	info = data.data.message;
-      } else {
-	info = t('cafevdb', 'Unknown error :(');
-      }
-      if (typeof data.data.error != 'undefined' && data.data.error == 'exception') {
-	info += '<p><pre>'+data.data.exception+'</pre>';
-	info += '<p><pre>'+data.data.trace+'</pre>';
-      }
-      OC.dialogs.alert(info, t('cafevdb', 'Error'));
+
+    if (!CAFEVDB.ajaxErrorHandler(data, [
+      'contents',
+      'projectId', 'projectName',
+      'musicianId', 'musicianName',
+      'mandateId', 'mandateReference'
+    ])) {
+      return false;
     }
-    if (typeof data.data.debug != 'undefined') {
-      $('div.debug').html(data.data.debug);
-      $('div.debug').show();
+
+    if (typeof reloadCB != 'function') {
+      reloadCB = function() {};
     }
+
+    $('#dialog_holder').html(data.data.contents);
+    self.projectId = data.data.projectId;
+    self.projectName = data.data.projectName;
+    self.musicianId = data.data.musicianId;
+    self.musicianName = data.data.musicianName;
+    self.mandateId = data.data.mandateId;
+    self.mandateReference = data.data.mandateReference;
+
+    CAFEVDB.debugPopup(data);
     
     var popup = $('#sepa-debit-mandate-dialog').dialog({
       position: { my: "middle top+50%",
@@ -78,7 +76,7 @@ var CAFEVDB = CAFEVDB || {};
       dialogClass: 'no-close',
       buttons: [
         {
-          class: 'change',
+          'class': 'change',
           id: 'sepaMandateChange',
           text: t('cafevdb', 'Change'),
           title: t('cafevdb', 'Change the SEPA mandate. Note that the SEPA mandate-reference is automatically computed and cannot be changed.'),
@@ -94,7 +92,7 @@ var CAFEVDB = CAFEVDB || {};
           }
         },
         {
-          class: 'save',
+          'class': 'save',
           id: 'sepaMandateSave',
           text: t('cafevdb', 'Save'),
           title: t('cafevdb', 'Close the form and save the data in the underlying data-base storage.'),
@@ -103,12 +101,12 @@ var CAFEVDB = CAFEVDB || {};
             self.store(function () {
               $('#sepa-debit-mandate-'+self.musicianId+'-'+self.projectId).val(self.mandateReference);
               $(dlg).dialog('close');
-              //$('form.pme-form').submit();
+              reloadCB();
             });
           }
         },
         {
-          class: 'apply',
+          'class': 'apply',
           text: t('cafevdb', 'Apply'),
           title: t('cafevdb', 'Save the data in the underlying data-base storage. Keep the form open.'),
           click: function(event) {
@@ -126,11 +124,12 @@ var CAFEVDB = CAFEVDB || {};
               $(dlg).dialog("widget").find('input.mandateDate').attr("disabled", true);
               $(dlg).dialog("widget").find('button.change').attr("disabled", false);
               $('.tipsy').remove(); // clean up left-over balloons
+              reloadCB();
             });
           }
         },
         {
-          class: 'delete',
+          'class': 'delete',
           text: t('cafevdb', 'Delete'),
           title: t('cafevdb', 'Delete this mandate from the data-base. Normally, this should only be done in case of desinformation or misunderstanding. Use with care.'),
           click: function() {
@@ -138,19 +137,19 @@ var CAFEVDB = CAFEVDB || {};
             self.delete(function () {
               $('#sepa-debit-mandate-'+self.musicianId+'-'+self.projectId).val(t('cafevdb', 'SEPA Debit Mandate'));
               $(dlg).dialog('close');
-              //$('form.pme-form').submit();
+              reloadCB();
             });
           }
         },
         {
-          class: 'close',
+          'class': 'close',
           text: t('cafevdb', 'Close'),
           title: t('cafevdb', 'Discard all filled-in data and close the form. Note that this will not undo any changes previously stored in the data-base by pressing the `Apply\' button.'),
           click: function() {
             $(this).dialog('close');
             //$('form.pme-form').submit();
           }
-        },
+        }
       ],
       open: function(){
         //$('.tipsy').remove();
@@ -200,6 +199,7 @@ var CAFEVDB = CAFEVDB || {};
         $(this).dialog('destroy').remove();
       }
     });
+    return false;
   };
 
   // Store the form data. We assume that validation already has been
@@ -226,6 +226,7 @@ var CAFEVDB = CAFEVDB || {};
              }
            });
   };
+
   // Delete a mandate
   SepaDebitMandate.delete = function(callbackOk) {
     var dialogId = '#sepa-debit-mandate-dialog';
@@ -249,7 +250,8 @@ var CAFEVDB = CAFEVDB || {};
              }
            });
   };
-  /**Validate version for the our popup-dialog. */
+
+  /**Validate version for our popup-dialog. */
   SepaDebitMandate.validate = function(event) {
     var element = this;
     var dialogId = '#sepa-debit-mandate-dialog';
@@ -322,6 +324,7 @@ var CAFEVDB = CAFEVDB || {};
 
            }, 'json');
   };
+
   /**Validate version for the PME dialog. */
   SepaDebitMandate.validatePME = function(event) {
     var element = this;
@@ -346,7 +349,7 @@ var CAFEVDB = CAFEVDB || {};
         PME_data_bankAccountOwner: 'bankAccountOwner',
         PME_data_IBAN: 'bankAccountIBAN',
         PME_data_BIC: 'bankAccountBIC',
-        PME_data_BLZ: 'bankAccountBLZ',
+        PME_data_BLZ: 'bankAccountBLZ'
     };
     var changed = $(this).attr('name');
     changed = inputMapping[changed];
@@ -368,25 +371,28 @@ var CAFEVDB = CAFEVDB || {};
     $.post(OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-settings.php'),
            post,
            function (data) {
-             if (data.status == "success") {
-                 $('#cafevdb-page-debug').html(data.data.message);
-                 $('#cafevdb-page-debug').show();
-               if (data.data.value) {
-                 $(element).val(data.data.value);
-               }
-               if (data.data.iban) {
-                 $('input[name="PME_data_IBAN"]').val(data.data.iban);
-               }
-               if (data.data.bic) {
-                 $('input[name="PME_data_BIC"]').val(data.data.bic);
-               }
+             if (!CAFEVDB.ajaxErrorHandler(data, [ 'suggestions', 'message' ])) {
                if (data.data.blz) {
-                 $('input[name="PME_data_BLZ"]').val(data.data.blz);
+                 $('input.bankAccountBLZ').val(data.data.blz);
                }
-               return true;
-             } else {
                return false;
              }
+
+             $('#cafevdb-page-debug').html(data.data.message);
+             $('#cafevdb-page-debug').show();
+             if (data.data.value) {
+               $(element).val(data.data.value);
+             }
+             if (data.data.iban) {
+               $('input[name="PME_data_IBAN"]').val(data.data.iban);
+             }
+             if (data.data.bic) {
+               $('input[name="PME_data_BIC"]').val(data.data.bic);
+             }
+             if (data.data.blz) {
+               $('input[name="PME_data_BLZ"]').val(data.data.blz);
+             }
+             return true;
            }, 'json');
   };
 
@@ -395,6 +401,7 @@ var CAFEVDB = CAFEVDB || {};
 
     var containerSel = PHPMYEDIT.selector(selector);
     var container = PHPMYEDIT.container(containerSel);
+    var pmeReload = container.find('form.pme-form input.pme-reload').first();
 
     container.find(':button[class$="sepa-debit-mandate"]').click(function(event) {
       event.preventDefault();
@@ -405,7 +412,14 @@ var CAFEVDB = CAFEVDB || {};
         // string.
         var values = $(this).attr('name');
         $.post(OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-mandate.php'),
-               values, self.init, 'json');
+               values, function(data) {
+                         self.init(data, function() {
+                           if (pmeReload.length > 0) {
+                             pmeReload.trigger('click');
+                           }
+                         });
+                       },
+               'json');
       }
       return false;
     });
@@ -459,6 +473,9 @@ $(document).ready(function(){
                                      parameters: []
                                  });
 
-  CAFEVDB.SepaDebitMandate.ready(PHPMYEDIT.defaultSelector);
-  CAFEVDB.SepaDebitMandate.popupInit(PHPMYEDIT.defaultSelector);
+  CAFEVDB.addReadyCallback(function() {
+    CAFEVDB.SepaDebitMandate.ready(PHPMYEDIT.defaultSelector);
+    CAFEVDB.SepaDebitMandate.popupInit(PHPMYEDIT.defaultSelector);
+  });
+
 });

@@ -12,3 +12,7 @@ input.no-sepa-debit-mandate {
   filter: alpha(opacity=30);
   opacity: .3;  
 }
+
+form#sepa-debit-mandate-form :disabled {
+  opacity:1.0;
+}

@@ -47,9 +47,9 @@ class SepaDebitMandates
 
   public function shortTitle()
   {
-    if ($this->projectId > 0 && $this->project != '') {
+    if ($this->projectId > 0 && $this->projectName != '') {
       return L::t('Overview over all SEPA Debit Mandates for %s',
-                  array($this->project));
+                  array($this->projectName));
     } else {
       return L::t('Overview over all SEPA Debit Mandates');
     }    
@@ -70,7 +70,7 @@ class SepaDebitMandates
     $debug_query = Util::debugMode('query');
 
     $template        = $this->template;
-    $project         = $this->project;
+    $projectName     = $this->projectName;
     $projectId       = $this->projectId;
     $recordsPerPage  = $this->recordsPerPage;
     $opts            = $this->opts;
@@ -83,7 +83,7 @@ class SepaDebitMandates
     $opts['inc'] = $recordsPerPage;
 
     $opts['cgi']['persist'] = array(
-      'Project' => $project,
+      'ProjectName' => $projectName,
       'ProjectId' => $projectId,
       'MusicianId' => $musicianId,
       'Template' => 'sepa-debit-mandates',
