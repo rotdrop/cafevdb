@@ -523,6 +523,7 @@ __EOT__;
         ));
 
     $opts['triggers']['update']['before'] = array();
+    $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
     $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeUpdateRemoveUnchanged';
     $opts['triggers']['update']['before'][]  = 'CAFEVDB\Musicians::beforeTriggerSetTimestamp';
     $opts['triggers']['delete']['before'][]  = 'CAFEVDB\DetailedInstrumentation::beforeDeleteTrigger';

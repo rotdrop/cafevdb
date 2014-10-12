@@ -545,6 +545,8 @@ __EOT__;
    * @param[in,out] &$newvals Set of new values, which may also be modified.
    *
    * @return boolean. If returning @c false the operation will be terminated
+   *
+   * This trigger simply removes all unchanged fields.
    */
   public static function beforeUpdateRemoveUnchanged($pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
@@ -556,6 +558,32 @@ __EOT__;
     }
 
     return count($newvals) > 0;
+  }
+
+  /** phpMyEdit calls the triggers (callbacks) with the following arguments:
+   *
+   * @param[in] $pme The phpMyEdit instance
+   *
+   * @param[in] $op The operation, 'insert', 'update' etc.
+   *
+   * @param[in] $step 'before' or 'after'
+   *
+   * @param[in] $oldvals Self-explanatory.
+   *
+   * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
+   *
+   * @param[in,out] &$newvals Set of new values, which may also be modified.
+   *
+   * @return boolean. If returning @c false the operation will be terminated
+   *
+   * This trigger trims any spaces from the new fields.
+   */
+  public static function beforeAnythingTrimAnything($pme, $op, $step, $oldvals, &$changed, &$newvals)
+  {
+    foreach ($newvals as $key => &$value) {
+      $value = trim($value);
+    }
+    return true;
   }
 
 };

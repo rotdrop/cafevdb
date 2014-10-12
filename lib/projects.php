@@ -382,7 +382,9 @@ a comma.'));
     // We could try to use 'before' triggers in order to verify the
     // data. However, at the moment the stuff does not work without JS
     // anyway, and we use Ajax calls to verify the form data.
-
+    
+    $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
+    $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
     $opts['triggers']['update']['after'] = 'CAFEVDB\Projects::afterUpdateTrigger';
     $opts['triggers']['insert']['after'] = 'CAFEVDB\Projects::afterInsertTrigger';
     $opts['triggers']['delete']['after'] = 'CAFEVDB\Projects::afterDeleteTrigger';
