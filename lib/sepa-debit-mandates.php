@@ -330,6 +330,77 @@ class SepaDebitMandates
 
   } // display()
 
+  /**Provide a very primitive direct matrix representation, filtered
+   * by the given project and/or musician.
+   */
+  static public function tableExport($projectId, $musicianId = -1, $handle = false)
+  {
+    $ownConnection = $handle === false;
+
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
+    $query = "SELECT `Musiker`.`Name`,`Musiker`.`Vorname`,`Projekte`.`Name` as 'ProjectName',`".self::MEMBER_TABLE."`.*,`Besetzungen`.`Unkostenbeitrag` FROM ".self::MEMBER_TABLE."
+  LEFT JOIN `Besetzungen` ON `Besetzungen`.`ProjektId` = `".self::MEMBER_TABLE."`.`projectId`
+  LEFT JOIN `Musiker` ON `Musiker`.`Id` = `".self::MEMBER_TABLE."`.`musicianId`
+  LEFT JOIN `Projekte` ON `Projekte`.`Id` = `".self::MEMBER_TABLE."`.`projectI`
+  WHERE `projectId` = ".$projectId;
+    if ($musicianId > 0) {
+      $query .= " AND `musicianId = ".$musicianId;
+    }
+
+    $result = mySQL::query($query, $handle);
+    $table = array();
+    while ($row = mySQL::fetch($result)) {
+      $table[] = $row;
+    }
+      
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+    
+    return $table;
+  }
+    
+  /**Export the respective debit-mandates and generate a flat table
+   * view which can 1 to 1 be exported into a CSV table suitable to
+   * finally issue the debit mandates to the respective credit
+   * institutes.
+   */
+  static public function aqBankingDebitNotes($debitTable)
+  {
+    $iban  = new \IBAN(Config::getValue('bankAccountIBAN'));
+    $iban  = $iban->MachineFormat();
+    $bic   = Config::getValue('bankAccountBIC');
+    $owner = Config::getValue('bankAccountOwner');
+    $executionDate = date('Y/M/d', strtotime('+ 10 day1'));
+      
+    // "localBic";"localIban";"remoteBic";"remoteIban";"date";"value/value";"value/currency";"localName";"remoteName";"creditorSchemeId";"mandateId";"mandateDate/dateString";"mandateDebitorName";"sequenceType";"purpose[0]";"purpose[1]";"purpose[2]";"purpose[3]"
+    $result = array();
+    foreach($debitTable as $row) {
+      $result[] = array('localBic' => $bic,
+                        'localIBan' => $iban,
+                        'remoteBic' => Config::decrypt($row['BIC']),
+                        'remoteIban' => Config::decrypt($row['IBAN']),
+                        'data' => $executionDate,
+                        'value/value' => $row['Unkostenbeitrag'],
+                        'value/currency' => 'EUR',
+                        'localName' => $owner,
+                        'remoteName' => Config::decrypt($row['bankAccountOwner']),
+                        'creditorSchemeId' => Config::getValue('bankAccountCreditorIdentifier'),
+                        'mandateId' => $row['mandateReference'],
+                        'mandateDate/dateString' => date('YMd', $row['mandateDate']),
+                        'mandateDebitorName' => $row['Name'].', '.$row['Vorname'],
+                        'sequenceType' => $row['nonrecurring'] ? 'once' : 'FIXME',
+                        'purpose' => array(L::t('Fees for %s', array($row['ProjectName'])),
+                                           '', '', '')
+        );
+    }
+    return $result;
+  }
+
 }; // class definition.
 
 }
