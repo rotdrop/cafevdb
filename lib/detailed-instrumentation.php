@@ -648,6 +648,12 @@ __EOT__;
    */
   public static function sepaDebitMandateButton($value, $musicianId, $musician, $projectId, $projectName)
   {
+    $data = array('MusicianId' => $musicianId,
+                  'MusicianName' => $musician,
+                  'ProjectId' => $projectId,
+                  'ProjectName' => $projectName);
+    $data = htmlspecialchars(json_encode($data));
+
     $css= ($value == L::t("SEPA Debit Mandate")) ? "no-sepa-debit-mandate" : "sepa-debit-mandate";
     $button = '<div class="sepa-debit-mandate">'
       .'<input type="button" '
@@ -655,11 +661,9 @@ __EOT__;
       .'       class="'.$css.'" '
       .'       value="'.$value.'" '
       .'       title="'.L::t("Click to enter details of a potential SEPA debit mandate").' " '
-      .'       name="'
-      .'MusicianId='.$musicianId.'&amp;'
-      .'MusicianName='.$musician.'&amp;'
-      .'ProjectId='.$projectId.'&amp;'
-      .'ProjectName='.$project.'" />'
+      .'       name="SepaDebitMandate" '
+      .'       data-debit-mandate="'.$data.'" '
+      .'/>'
       .'</div>';
     return $button;
   }

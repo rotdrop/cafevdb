@@ -410,7 +410,8 @@ var CAFEVDB = CAFEVDB || {};
       } else {
         // We store the values in the name attribute as serialized
         // string.
-        var values = $(this).attr('name');
+        var values = $(this).data('debitMandate');
+        //alert('data: ' + CAFEVDB.print_r(values, true));
         $.post(OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-mandate.php'),
                values, function(data) {
                          self.init(data, function() {
