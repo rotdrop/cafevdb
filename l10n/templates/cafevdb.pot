@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-10-12 17:44+0200\n"
+"POT-Creation-Date: 2014-10-13 01:25+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -247,16 +247,16 @@ msgstr ""
 msgid "%s-detailed"
 msgstr ""
 
-#: ajax/export/excel.php:260 lib/projects.php:1528 lib/projects.php:1529
+#: ajax/export/excel.php:260 lib/projects.php:1530 lib/projects.php:1531
 msgid "Missing Musicians"
 msgstr ""
 
 #: ajax/export/excel.php:285 ajax/export/insurance-export.php:142
-#: lib/projects.php:1531
+#: lib/projects.php:1533
 msgid "Instrument"
 msgstr ""
 
-#: ajax/export/excel.php:286 lib/projects.php:1531
+#: ajax/export/excel.php:286 lib/projects.php:1533
 msgid "Missing"
 msgstr ""
 
@@ -1095,15 +1095,15 @@ msgstr ""
 msgid "filter-visibility changed"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:29 lib/projects.php:675
+#: ajax/settings/redaxo-settings.php:29 lib/projects.php:677
 msgid "Preview"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:30 lib/projects.php:677
+#: ajax/settings/redaxo-settings.php:30 lib/projects.php:679
 msgid "Archive"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:31 lib/projects.php:679
+#: ajax/settings/redaxo-settings.php:31 lib/projects.php:681
 msgid "Trashbin"
 msgstr ""
 
@@ -1136,8 +1136,8 @@ msgid "Unknown WYSIWYG-Editor: `%s'"
 msgstr ""
 
 #: js/blog.js:53 js/blog.js:155 js/blog.js:193 js/blog.js:287 js/blog.js:318
-#: js/blog.js:346 js/cafevdb.js:1015 js/email.js:33 js/email.js:62
-#: js/email.js:400 js/email.js:431 js/events.js:64 js/events.js:156
+#: js/blog.js:346 js/cafevdb.js:1039 js/email.js:33 js/email.js:62
+#: js/email.js:412 js/email.js:443 js/events.js:64 js/events.js:156
 #: js/inlineimage.js:84 js/inlineimage.js:92 js/inlineimage.js:102
 #: js/inlineimage.js:131 js/inlineimage.js:155 js/inlineimage.js:183
 #: js/inlineimage.js:207 js/inlineimage.js:326 js/inlineimage.js:412
@@ -1210,14 +1210,14 @@ msgstr ""
 msgid "Unimplemented"
 msgstr ""
 
-#: js/cafevdb.js:840
+#: js/cafevdb.js:842
 msgid ""
 "If multiple dialogs are open, then move this one to the lowest layer and "
 "display it below the others. Clicking anywhere on the dialog will bring to "
 "the front again."
 msgstr ""
 
-#: js/cafevdb.js:890
+#: js/cafevdb.js:892
 msgid ""
 "Close the current dialog and return to the view which was active before this "
 "dialog had been opened. If the current view shows a `Back' button, then "
@@ -1225,30 +1225,30 @@ msgid ""
 "equivalent to clicking the `Back' button"
 msgstr ""
 
-#: js/cafevdb.js:955 js/instrumentation.js:163
+#: js/cafevdb.js:979 js/instrumentation.js:163
 msgid "Debug Information"
 msgstr ""
 
-#: js/cafevdb.js:976
+#: js/cafevdb.js:1000
 msgid ""
 "Unrecoverable unknown internal error, no further information available, "
 "sorry."
 msgstr ""
 
-#: js/cafevdb.js:978
+#: js/cafevdb.js:1002
 msgid "Internal Error"
 msgstr ""
 
-#: js/cafevdb.js:985
+#: js/cafevdb.js:1009
 #, python-brace-format
 msgid "Field {RequiredField} not present in AJAX response."
 msgstr ""
 
-#: js/cafevdb.js:994
+#: js/cafevdb.js:1018
 msgid "Missing data"
 msgstr ""
 
-#: js/cafevdb.js:996 js/events.js:58 js/events.js:150
+#: js/cafevdb.js:1020 js/events.js:58 js/events.js:150
 msgid "Unknown error :("
 msgstr ""
 
@@ -1304,158 +1304,158 @@ msgstr ""
 msgid "Not called from main email-form."
 msgstr ""
 
-#: js/email.js:398
+#: js/email.js:410
 #, python-brace-format
 msgid "Unknown form element: {FormElement}"
 msgstr ""
 
-#: js/email.js:430
+#: js/email.js:442
 #, python-brace-format
 msgid "Unknown request: {Request}"
 msgstr ""
 
-#: js/email.js:502
+#: js/email.js:514
 #, python-brace-format
 msgid "Sending message {active} out of {total}"
 msgstr ""
 
-#: js/email.js:504
+#: js/email.js:516
 msgid "Message delivery in progress"
 msgstr ""
 
-#: js/email.js:529
+#: js/email.js:541
 msgid "Message Delivery Status"
 msgstr ""
 
-#: js/email.js:558
+#: js/email.js:570
 msgid ""
 "Email sending is in progress. Leaving the page now will cancel the email "
 "submission."
 msgstr ""
 
-#: js/email.js:607
+#: js/email.js:619
 #, python-brace-format
 msgid ""
 "A template with the name `{TemplateName}' already exists, do you want to "
 "overwrite it?"
 msgstr ""
 
-#: js/email.js:609
+#: js/email.js:621
 msgid "Overwrite existing template?"
 msgstr ""
 
-#: js/email.js:631
+#: js/email.js:643
 #, python-brace-format
 msgid ""
 "Do you really want to delete the template with the name `{TemplateName}'?"
 msgstr ""
 
-#: js/email.js:633
+#: js/email.js:645
 msgid "Really Delete Template?"
 msgstr ""
 
-#: js/email.js:642
+#: js/email.js:654
 #, python-brace-format
 msgid "Cannot delete non-existing template `{TemplateName}'"
 msgstr ""
 
-#: js/email.js:644
+#: js/email.js:656
 msgid "Unknown Template"
 msgstr ""
 
-#: js/email.js:747
+#: js/email.js:759
 msgid "Do you really want to delete all event attachments?"
 msgstr ""
 
-#: js/email.js:748 js/email.js:832
+#: js/email.js:760 js/email.js:844
 msgid "Really Delete Attachments?"
 msgstr ""
 
-#: js/email.js:817
+#: js/email.js:829
 msgid "Select Attachment"
 msgstr ""
 
-#: js/email.js:831
+#: js/email.js:843
 msgid "Do you really want to delete all file attachments?"
 msgstr ""
 
-#: js/email.js:876 templates/part.emailform.composer.php:109
+#: js/email.js:888 templates/part.emailform.composer.php:109
 #: templates/part.emailform.composer.php:127
 msgid "Address Book"
 msgstr ""
 
-#: js/email.js:877
+#: js/email.js:889
 msgid "Accept"
 msgstr ""
 
-#: js/email.js:879
+#: js/email.js:891
 msgid "Save Contacts"
 msgstr ""
 
-#: js/email.js:882
+#: js/email.js:894
 msgid ""
 "Save the selected supplementary emails to the address-book for later reusal."
 msgstr ""
 
-#: js/email.js:1015
+#: js/email.js:1030
 #, python-brace-format
 msgid "Em@il Form for {ProjectName}"
 msgstr ""
 
-#: js/email.js:1018
+#: js/email.js:1033
 msgid "Em@il Form"
 msgstr ""
 
-#: js/email.js:1127
+#: js/email.js:1149
 msgid "Move all"
 msgstr ""
 
-#: js/email.js:1128
+#: js/email.js:1150
 msgid "Move selected"
 msgstr ""
 
-#: js/email.js:1129
+#: js/email.js:1151
 msgid "Remove selected"
 msgstr ""
 
-#: js/email.js:1130
+#: js/email.js:1152
 msgid "Remove all"
 msgstr ""
 
-#: js/email.js:1131
+#: js/email.js:1153
 msgid "Remaining Recipients"
 msgstr ""
 
-#: js/email.js:1132
+#: js/email.js:1154
 msgid "Selected Recipients"
 msgstr ""
 
-#: js/email.js:1133
+#: js/email.js:1155
 #, python-brace-format
 msgid "Showing all {0}"
 msgstr ""
 
-#: js/email.js:1135
+#: js/email.js:1157
 msgid "Filtered"
 msgstr ""
 
-#: js/email.js:1137
+#: js/email.js:1159
 msgid "from"
 msgstr ""
 
-#: js/email.js:1139
+#: js/email.js:1161
 msgid "Empty list"
 msgstr ""
 
-#: js/email.js:1140
+#: js/email.js:1162
 msgid "Filter"
 msgstr ""
 
-#: js/email.js:1141
+#: js/email.js:1163
 msgid "show all"
 msgstr ""
 
-#: js/email.js:1147
+#: js/email.js:1169
 msgid "Click on the names to move the respective person to the other box"
 msgstr ""
 
@@ -1649,7 +1649,7 @@ msgid ""
 msgstr ""
 
 #: js/sepa-debit-mandate.js:138 lib/detailed-instrumentation.php:335
-#: lib/detailed-instrumentation.php:647 lib/detailed-instrumentation.php:664
+#: lib/detailed-instrumentation.php:648 lib/detailed-instrumentation.php:665
 msgid "SEPA Debit Mandate"
 msgstr ""
 
@@ -1827,7 +1827,7 @@ msgstr ""
 msgid "Last Updated"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:670
+#: lib/detailed-instrumentation.php:671
 msgid "Click to enter details of a potential SEPA debit mandate"
 msgstr ""
 
@@ -1869,118 +1869,118 @@ msgstr ""
 msgid "Invalid argument value: `%s'"
 msgstr ""
 
-#: lib/functions.php:669
+#: lib/functions.php:697
 msgid "Export Table"
 msgstr ""
 
-#: lib/functions.php:677
+#: lib/functions.php:705
 msgid "Excel Export"
 msgstr ""
 
-#: lib/functions.php:680
+#: lib/functions.php:708
 msgid "HTML/Spreadsheet"
 msgstr ""
 
-#: lib/functions.php:683
+#: lib/functions.php:711
 msgid "CSV Export"
 msgstr ""
 
-#: lib/functions.php:686
+#: lib/functions.php:714
 msgid "HTML Export"
 msgstr ""
 
-#: lib/functions.php:901
+#: lib/functions.php:929
 msgid "Error: Unknonwn Button Type"
 msgstr ""
 
-#: lib/functions.php:921
+#: lib/functions.php:949
 msgid "View all Projects"
 msgstr ""
 
-#: lib/functions.php:922
+#: lib/functions.php:950
 msgid "Overview over all known projects (start-page)."
 msgstr ""
 
-#: lib/functions.php:933
+#: lib/functions.php:961
 msgid "Display all Musicians"
 msgstr ""
 
-#: lib/functions.php:934
+#: lib/functions.php:962
 msgid ""
 "Display all musicians stored in the data-base, with detailed facilities for "
 "filtering and sorting."
 msgstr ""
 
-#: lib/functions.php:945
+#: lib/functions.php:973
 msgid ""
 "Mass-email form, use with care. Mass-emails will be logged. Recipients will "
 "be specified by the Bcc: field in the header, so the recipients are "
 "undisclosed to each other."
 msgstr ""
 
-#: lib/functions.php:958
+#: lib/functions.php:986
 msgid "Email History"
 msgstr ""
 
-#: lib/functions.php:959
+#: lib/functions.php:987
 msgid "Display all emails sent by our mass-email form."
 msgstr ""
 
-#: lib/functions.php:977
+#: lib/functions.php:1005
 msgid "The currently active project."
 msgstr ""
 
-#: lib/functions.php:992 lib/projects.php:753
+#: lib/functions.php:1020 lib/projects.php:755
 msgid "Instrumentation"
 msgstr ""
 
-#: lib/functions.php:993
+#: lib/functions.php:1021
 msgid ""
 "Detailed display of all registered musicians for the selected project. The "
 "table will allow for modification of personal data like email, phone, "
 "address etc."
 msgstr ""
 
-#: lib/functions.php:1006 lib/project-instruments.php:385
+#: lib/functions.php:1034 lib/project-instruments.php:385
 msgid "Add Instruments"
 msgstr ""
 
-#: lib/functions.php:1007
+#: lib/functions.php:1035
 msgid ""
 "Display the list of instruments known by the data-base, possibly add new "
 "ones as needed."
 msgstr ""
 
-#: lib/functions.php:1020 lib/project-instruments.php:69 lib/projects.php:758
-#: lib/projects.php:965
+#: lib/functions.php:1048 lib/project-instruments.php:69 lib/projects.php:760
+#: lib/projects.php:967
 msgid "Instrumentation Numbers"
 msgstr ""
 
-#: lib/functions.php:1021 lib/tooltips.php:379
+#: lib/functions.php:1049 lib/tooltips.php:379
 msgid ""
 "Display the desired instrumentaion numbers, i.e. how many musicians are "
 "already registered for each instrument group and how many are finally needed."
 msgstr ""
 
-#: lib/functions.php:1034 lib/functions.php:1060 lib/projects.php:794
+#: lib/functions.php:1062 lib/functions.php:1088 lib/projects.php:796
 msgid "Debit Mandates"
 msgstr ""
 
-#: lib/functions.php:1035
+#: lib/functions.php:1063
 msgid "Display a table with the SEPA debit mandates related to the project."
 msgstr ""
 
-#: lib/functions.php:1048
+#: lib/functions.php:1076
 msgid "Insurances"
 msgstr ""
 
-#: lib/functions.php:1049
+#: lib/functions.php:1077
 msgid ""
 "Display a table with an overview about the current state of the member's "
 "instrument insurances."
 msgstr ""
 
-#: lib/functions.php:1061
+#: lib/functions.php:1089
 msgid "Display a table with an overview over all SEPA debit mandates."
 msgstr ""
 
@@ -2067,21 +2067,6 @@ msgstr ""
 
 #: lib/instrumentation.php:285
 msgid "temporary"
-msgstr ""
-
-#: lib/instrumentation.php:427
-#, php-format
-msgid "Data inconsisteny, %d is not a unique Id, got %d data sets."
-msgstr ""
-
-#: lib/instrumentation.php:444
-#, php-format
-msgid "Data inconsistency: Ids do not match (`%s' != `%s')"
-msgstr ""
-
-#: lib/instrumentation.php:457
-#, php-format
-msgid "Instrument not known by %s, correct that first! %s only plays %s!!!"
 msgstr ""
 
 #: lib/instruments.php:42
@@ -2187,39 +2172,39 @@ msgstr ""
 msgid "Instrument Insurance"
 msgstr ""
 
-#: lib/musicians.php:537
+#: lib/musicians.php:539
 #, php-format
 msgid "Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;"
 msgstr ""
 
-#: lib/musicians.php:561
+#: lib/musicians.php:563
 msgid ""
 "Portraits or Avatars can only be added to an existing musician's profile; "
 "please add the new musician without protrait image first."
 msgstr ""
 
-#: lib/musicians.php:575
+#: lib/musicians.php:577
 #, php-format
 msgid "Drop photo to upload (max %s)"
 msgstr ""
 
-#: lib/musicians.php:578
+#: lib/musicians.php:580
 msgid "Delete current photo"
 msgstr ""
 
-#: lib/musicians.php:579
+#: lib/musicians.php:581
 msgid "Edit current photo"
 msgstr ""
 
-#: lib/musicians.php:580
+#: lib/musicians.php:582
 msgid "Upload new photo"
 msgstr ""
 
-#: lib/musicians.php:581
+#: lib/musicians.php:583
 msgid "Select photo from ownCloud"
 msgstr ""
 
-#: lib/musicians.php:589
+#: lib/musicians.php:591
 msgid ""
 "Internal error, don't know what to do concerning portrait images in the "
 "given context."
@@ -2350,74 +2335,74 @@ msgstr ""
 msgid "Flyer"
 msgstr ""
 
-#: lib/projects.php:665
+#: lib/projects.php:667
 #, php-format
 msgid "Unable to fetch public web pages for project id %d"
 msgstr ""
 
-#: lib/projects.php:743
+#: lib/projects.php:745
 msgid "Project Overview"
 msgstr ""
 
-#: lib/projects.php:767
+#: lib/projects.php:769
 msgid "Project Files"
 msgstr ""
 
-#: lib/projects.php:774 lib/projects.php:943
+#: lib/projects.php:776 lib/projects.php:945
 #, php-format
 msgid "Project Wiki for %s"
 msgstr ""
 
-#: lib/projects.php:776 lib/projects.php:947
+#: lib/projects.php:778 lib/projects.php:949
 msgid "Project Notes"
 msgstr ""
 
-#: lib/projects.php:781 lib/projects.php:953 lib/projects.php:983
+#: lib/projects.php:783 lib/projects.php:955 lib/projects.php:985
 msgid "Events"
 msgstr ""
 
-#: lib/projects.php:786 lib/projects.php:959
+#: lib/projects.php:788 lib/projects.php:961
 msgid "Em@il"
 msgstr ""
 
-#: lib/projects.php:800
+#: lib/projects.php:802
 msgid "Profit and Loss Account"
 msgstr ""
 
-#: lib/projects.php:1866
+#: lib/projects.php:1868
 msgid ""
 "Flyers can only be added to existing projects, please add the new\n"
 "project without a flyer first."
 msgstr ""
 
-#: lib/projects.php:1881
+#: lib/projects.php:1883
 #, php-format
 msgid "Drop image to upload (max %s)"
 msgstr ""
 
-#: lib/projects.php:1884
+#: lib/projects.php:1886
 msgid "Delete current flyer"
 msgstr ""
 
-#: lib/projects.php:1885
+#: lib/projects.php:1887
 msgid "Edit current flyer"
 msgstr ""
 
-#: lib/projects.php:1886
+#: lib/projects.php:1888
 msgid "Upload new flyer"
 msgstr ""
 
-#: lib/projects.php:1887
+#: lib/projects.php:1889
 msgid "Select image from ownCloud"
 msgstr ""
 
-#: lib/projects.php:1895
+#: lib/projects.php:1897
 msgid ""
 "Internal error, don't know what to do concerning project-flyers in the given "
 "context."
 msgstr ""
 
-#: lib/projects.php:2136
+#: lib/projects.php:2138
 #, php-format
 msgid ""
 "====== Project %s ======\n"
@@ -2494,6 +2479,11 @@ msgstr ""
 
 #: lib/sepa-debit-mandates.php:293
 msgid "Last-Used Date"
+msgstr ""
+
+#: lib/sepa-debit-mandates.php:397
+#, php-format
+msgid "Fees for %s"
 msgstr ""
 
 #: lib/tooltips.php:44
