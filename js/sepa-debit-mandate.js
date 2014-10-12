@@ -248,6 +248,7 @@ var CAFEVDB = CAFEVDB || {};
              } else {
                return false;
              }
+
            });
   };
 
@@ -439,8 +440,13 @@ var CAFEVDB = CAFEVDB || {};
       return;
     }
     var table = form.find('table[summary="SepaDebitMandates"]');
-    table.find('input').off('blur');
-    table.find('input').on('blur', this.validatePME);
+    table.find('input[type="text"]').
+      not('.pme-filter').
+      off('blur').
+      on('blur', function(event) {
+      alert('hello');
+      self.validatePME(event);
+    });
 
     CAFEVDB.exportMenu(containerSel);
 
@@ -451,7 +457,7 @@ var CAFEVDB = CAFEVDB || {};
         $(input).unbind('blur');
       },
       onSelect: function(dateText, inst) {
-        $(this).blur(CAFEVDB.SepaDebitMandate.validatePME);
+        $(this).blur(self.validatePME);
         $(this).focus();
         $(this).blur();
       }
