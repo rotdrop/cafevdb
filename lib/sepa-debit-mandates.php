@@ -343,7 +343,8 @@ class SepaDebitMandates
     }
 
     $query = "SELECT `Musiker`.`Name`,`Musiker`.`Vorname`,`Projekte`.`Name` as 'ProjectName',`".self::MEMBER_TABLE."`.*,`Besetzungen`.`Unkostenbeitrag` FROM ".self::MEMBER_TABLE."
-  LEFT JOIN `Besetzungen` ON `Besetzungen`.`ProjektId` = `".self::MEMBER_TABLE."`.`projectId`
+  LEFT JOIN `Besetzungen` ON (`Besetzungen`.`ProjektId` = `".self::MEMBER_TABLE."`.`projectId`
+    AND `Besetzungen`.`MusikerId` = `".self::MEMBER_TABLE."`.`musicianId`)
   LEFT JOIN `Musiker` ON `Musiker`.`Id` = `".self::MEMBER_TABLE."`.`musicianId`
   LEFT JOIN `Projekte` ON `Projekte`.`Id` = `".self::MEMBER_TABLE."`.`projectI`
   WHERE `projectId` = ".$projectId;
