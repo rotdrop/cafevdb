@@ -2,16 +2,6 @@ $(document).ready(function(){
 
     $('#appsettings_popup h2').html(t('cafevdb', 'Advanced operations, use with care'));
 
-    $('button').tipsy({gravity:'ne', fade:true});
-    $('input').tipsy({gravity:'ne', fade:true});
-    $('label').tipsy({gravity:'ne', fade:true});
-
-    if (CAFEVDB.toolTips) {
-        $.fn.tipsy.enable();
-    } else {
-        $.fn.tipsy.disable();
-    }
-
     $('#syncevents').click(function(){
         var post  = $( '#syncevents' ).serialize();
         $.post( OC.filePath('cafevdb', 'ajax/expertmode', 'syncevents.php'), post, function(data){
@@ -53,5 +43,13 @@ $(document).ready(function(){
 	    $('#expertmode .msg').html(data);
         });
     });
+
+  ///////////////////////////////////////////////////////////////////////////
+  //
+  // Tooltips
+  //
+  ///////////////////////////////////////////////////////////////////////////
+
+  CAFEVDB.tipsy('#appsettings_popup');
 
 });

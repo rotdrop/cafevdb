@@ -41,17 +41,7 @@ $(document).ready(function() {
       }
     });
   }
-    
-  $('button').tipsy({gravity:'ne', fade:true});
-  $('input').tipsy({gravity:'ne', fade:true});
-  $('label').tipsy({gravity:'ne', fade:true});
 
-  if (CAFEVDB.toolTips) {
-    $.fn.tipsy.enable();
-  } else {
-    $.fn.tipsy.disable();
-  }
- 
   $('#expertmode').change(function(event) {
     event.preventDefault();
     var post = $("#expertmode").serialize();
@@ -1150,6 +1140,14 @@ $(document).ready(function() {
     return false;
   })
 
+  ///////////////////////////////////////////////////////////////////////////
+  //
+  // Tooltips
+  //
+  ///////////////////////////////////////////////////////////////////////////
+
+  CAFEVDB.tipsy('#appsettings_popup');
+ 
 });
 
 // Local Variables: ***
