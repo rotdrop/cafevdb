@@ -49,7 +49,7 @@
       </field>
 
       <index>
-        <name>index</name>
+        <name>id_user</name>
         <unique>1</unique>
         <field>
           <name>id</name>
