@@ -33,6 +33,7 @@ namespace CAFEVDB
 class Config
 {
   const APP_NAME  = 'cafevdb';
+  const DISPLAY_NAME = 'Camerata DB';
   /**Configuration keys. In order for encryption/decryption to work
    * properly, every config setting has to be listed here.
    */

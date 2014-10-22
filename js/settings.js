@@ -1142,6 +1142,35 @@ $(document).ready(function() {
 
   ///////////////////////////////////////////////////////////////////////////
   //
+  // Credits list
+  //
+  ///////////////////////////////////////////////////////////////////////////
+
+  var loadCredits = function() {
+    $.post(OC.filePath('cafevdb', 'ajax/settings', 'creditslist.php'),
+           {},
+           function(data) {
+             if (!CAFEVDB.ajaxErrorHandler(data, [ 'contents' ])) {
+               return false;
+             }
+             $('div.cafevdb.about div.product.credits.list').html(data.data.contents);
+             return false;
+           });
+  };
+  if (CAFEVDB.creditsTimer > 0) {
+    clearInterval(CAFEVDB.creditsTimer);
+  }
+  CAFEVDB.creditsTimer = setInterval(function() {
+                           if ($('div.cafevdb.about div.product.credits.list').length > 0) {
+                             loadCredits()
+                           } else {
+                             clearInterval(CAFEVDB.creditsTimer);
+                           }
+                         }, 30000);
+  
+
+  ///////////////////////////////////////////////////////////////////////////
+  //
   // Tooltips
   //
   ///////////////////////////////////////////////////////////////////////////

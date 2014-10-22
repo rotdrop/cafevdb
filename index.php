@@ -69,6 +69,7 @@ namespace CAFEVDB
 
     \OCP\Util::addStyle('cafevdb', 'pme-table');
     \OCP\Util::addStyle('cafevdb', 'settings');
+    \OCP\Util::addStyle('cafevdb', 'about');
     \OCP\Util::addStyle('cafevdb', 'events');
     \OCP\Util::addStyle('cafevdb', 'sepa-debit-mandate');
     //\OCP\Util::addStyle('cafevdb', 'email');

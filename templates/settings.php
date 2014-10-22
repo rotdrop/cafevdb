@@ -41,17 +41,18 @@ $debugModes = array('general' => L::t('General Information'),
                     'emailform' => L::t('Mass Email Form'));
 
 ?>
-<?php if ($_['adminsettings']) { ?>
 <ul id="adminsettingstabs">
   <li><a href="#tabs-1"><?php echo L::t('Personal'); ?></a></li>
-  <li><a href="#tabs-2"><?php echo L::t('Orchestra'); ?></a></li>
-  <li><a href="#tabs-3"><?php echo L::t('Data-Base'); ?></a></li>
-  <li><a href="#tabs-4"><?php echo L::t('Sharing'); ?></a></li>
-  <li><a href="#tabs-5"><?php echo L::t('Email'); ?></a></li>
-  <li><a href="#tabs-6"><?php echo L::t('Development'); ?></a></li>
-  <li><a href="#tabs-7"><?php echo L::t('CMS'); ?></a></li>
+  <?php $tabNo = 2; if ($_['adminsettings']) { ?>
+    <li><a href="#tabs-<?php echo $tabNo++; ?>"><?php echo L::t('Orchestra'); ?></a></li>
+    <li><a href="#tabs-<?php echo $tabNo++; ?>"><?php echo L::t('Data-Base'); ?></a></li>
+    <li><a href="#tabs-<?php echo $tabNo++; ?>"><?php echo L::t('Sharing'); ?></a></li>
+    <li><a href="#tabs-<?php echo $tabNo++; ?>"><?php echo L::t('Email'); ?></a></li>
+    <li><a href="#tabs-<?php echo $tabNo++; ?>"><?php echo L::t('Development'); ?></a></li>
+    <li><a href="#tabs-<?php echo $tabNo++; ?>"><?php echo L::t('CMS'); ?></a></li>
+  <?php } ?>
+  <li><a href="#tabs-<?php echo $tabNo++; ?>"><?php echo L::t('?'); ?></a></li>
 </ul>
-<?php } ?>
 
 <div id="tabs-1" class="personalblock <?php if ($_['adminsettings']) echo 'admin'; ?>">
   <form id="cafevdb">
@@ -113,8 +114,5 @@ foreach ($debugModes as $key => $value) {
     echo $this->inc("devel-settings", array('tabNr' => $tabNo++));
     echo $this->inc("cms-settings", array('tabNr' => $tabNo++));
   }
+  echo $this->inc("about", array('tabNr' => $tabNo++));
 ?>
-
-
-
-    

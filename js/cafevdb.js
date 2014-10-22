@@ -27,6 +27,7 @@ var CAFEVDB = CAFEVDB || {};
   CAFEVDB.wysiwygEditor    = 'tinymce';
   CAFEVDB.language         = 'en';
   CAFEVDB.readyCallbacks   = []; ///< quasi-document-ready-callbacks
+  CAFEVDB.creditsTimer     = -1;
 
   /**Register callbacks which are run after partial page reload in
    * order to "fake" document-ready. An alternate possibility would

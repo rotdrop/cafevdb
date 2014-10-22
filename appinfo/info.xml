@@ -1,11 +1,74 @@
 <?xml version="1.0"?>
 <info>
 	<id>cafevdb</id>
-	<name>Cafevdb</name>
-	<description>Chamber orchestra project data-base application.</description>
+	<name>CAFeV DB</name>
+	<description>Orchestra Management Application.</description>
+        <codename>Creeping Featurism</codename>
 	<version>3.0</version>
-	<licence>Not for public use, contact the author.</licence>
-	<author>Claus-Justus Heine</author>
+	<licence>AGPL</licence>
+	<author>Claus-Justus Heine &amp;lt;himself@claus-justus-heine.de&amp;gt;</author>
 	<rememberlogin>false</rememberlogin>
+        <credits>
+          <item>
+            <title>The PHP Project</title>
+            <link>http://www.php.net</link>
+          </item>
+          <item>
+            <title>The Free Software Foundation in General</title>
+            <link>http://www.fsf.org</link>
+          </item>
+          <item>
+            <title>The OwnCloud Groupware Stuff</title>
+            <link>http://www.owncloud.org</link>
+          </item>
+          <item>
+            <title>The Ghost behind: GCC</title>
+            <link>http://gcc.gnu.org</link>
+          </item>
+          <item>
+            <title>The SABRE Project -- Calendar, Contacts and Tasks</title>
+            <link>http://www.sabre.io</link>
+          </item>
+          <item>
+            <title>JQuery Chosen Styler -- The Select-Box Prettyfier</title>
+            <link>http://harvesthq.github.io/chosen</link>
+          </item>
+          <item>
+            <title>JQuery UI JavaScript Library</title>
+            <link>http://jqueryui.com</link>
+          </item>
+          <item>
+            <title>PHP Mailer - **THE** Mailing Software for PHP Scripts</title>
+            <link>https://github.com/PHPMailer/PHPMailer</link>
+          </item>
+          <item>
+            <title>PHP MyEdit -- The MySQL Data Base Table Tamer</title>
+            <link>http://www.phpmyedit.org</link>
+          </item>
+          <item>
+            <title>PHPExcel -- Convert SQL Tables to Office Tables</title>
+            <link>https://phpexcel.codeplex.com/</link>
+          </item>
+          <item>
+            <title>Doku Wiki -- Wiki Software</title>
+            <link>http://www.dokuwiki.org</link>
+          </item>
+          <item>
+            <title>GIT -- A Revision Control System</title>
+            <link>http://www.git-scm.org</link>
+          </item>
+          <item>
+            <title>BAV -- The German Bank Account Validator</title>
+            <link>http://bav.malkusch.de</link>
+          </item>
+          <item>
+            <title>Bootstrap Dual Listbox</title>
+            <link>http://www.virtuosoft.eu/code/bootstrap-duallistbox/</link>
+          </item>
+          <item>
+            <title>PHP IBAN Library</title>
+            <link>http://code.google.com/p/php-iban/</link>
+          </item>
+        </credits>
 	<require>7</require>
 </info>
