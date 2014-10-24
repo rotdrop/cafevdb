@@ -96,6 +96,7 @@ CAFEVDB = CAFEVDB || {};
       close : function(event, ui) {
         //$('#blogtextarea').tinymce().remove();
         //$('#blogtextarea').ckeditor().remove();
+        $('.tipsy').remove();
         CAFEVDB.removeEditor('#blogtextarea');
         $(this).dialog('destroy').remove();
       }
@@ -143,7 +144,7 @@ CAFEVDB = CAFEVDB || {};
              text: $('#blogtextarea').val(),
              priority: $('#blogpriority').val(),
              popup: popupValue,
-             clearReader: clearReaderValue,
+             clearReader: clearReaderValue
            }, function (data) {
              if (data.status == 'success') {
                $('#blogedit').dialog('close').remove();
