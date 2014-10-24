@@ -803,6 +803,51 @@ redaxoDefaultModule
  */
 class ConfigCheck
 {
+  public static function checkImapServer($host, $port, $secure, $user, $password)
+  {
+    $oldReporting = ini_get('error_reporting');
+    ini_set('error_reporting', $oldReporting & ~E_STRICT);
+
+    $imap = new \Net_IMAP($host, $port, $secure == 'starttls' ? true : false, 'UTF-8');
+    $result = $imap->login($user, $password) === true;
+    $imap->disconnect();
+
+    ini_set('error_reporting', $oldReporting);
+      
+    return $result;
+  }
+
+  public static function checkSmtpServer($host, $port, $secure, $user, $password)
+  {
+    $result = true;
+
+    $mail = new \PHPMailer(true);
+    $mail->CharSet = 'utf-8';
+    $mail->SingleTo = false;
+    $mail->IsSMTP();
+
+    $mail->Host = $host;
+    $mail->Port = $port;
+    switch ($secure) {
+    case 'insecure': $mail->SMTPSecure = ''; break;
+    case 'starttls': $mail->SMTPSecure = 'tls'; break;
+    case 'ssl':      $mail->SMTPSecure = 'ssl'; break;
+    default:         $mail->SMTPSecure = ''; break;
+    }
+    $mail->SMTPAuth = true;
+    $mail->Username = $user;
+    $mail->Password = $password;
+        
+    try {
+      $mail->SmtpConnect();
+      $mail->SmtpClose();
+    } catch (\Exception $exception) {
+      $result = false;
+    }    
+
+    return $result;
+  }
+
   /**Check whether the shared object exists. Note: this function has
    *to be executed under the uid of the user the object belongs
    *to. See ConfigCheck::sudo().

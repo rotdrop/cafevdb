@@ -396,11 +396,12 @@ mandateReference
 
         // Provide some progress feed-back to amuse the user
         $progressProvider = new ProgressStatus();
-        $phpMailer->ProgressCallback = function($currentLine, $totalLines) use ($progressProvider) {
+        $diagnostics = $this->diagnostics;
+        $phpMailer->ProgressCallback = function($currentLine, $totalLines) use ($diagnostics, $progressProvider) {
           if ($currentLine == 0) {
             $tag = array('proto' => 'smtp',
-                         'total' =>  $this->diagnostics['TotalPayload'],
-                         'active' => $this->diagnostics['TotalCount']);
+                         'total' =>  $diagnostics['TotalPayload'],
+                         'active' => $diagnostics['TotalCount']);
             $tag = json_encode($tag);
             $progressProvider->save($currentLine, $totalLines, $tag);
           } else if ($currentLine % 1024 == 0 || $currentLine >= $totalLines) {
@@ -611,17 +612,18 @@ mandateReference
       $imapsecure = Config::getValue('imapsecure');
 
       $progressProvider = new ProgressStatus(0);
+      $diagnostics = $this->diagnostics;
       $imap = new \Net_IMAP($imaphost,
                             $imapport,
                             $imapsecure == 'starttls' ? true : false, 'UTF-8',
-                            function($pos, $total) use ($progressProvider) {
+                            function($pos, $total) use ($diagnostics, $progressProvider) {
                               if ($total < 128) {
                                 return; // ignore non-data transfers
                               }
                               if ($pos == 0) {
                                 $tag = array('proto' => 'imap',
-                                             'total' =>  $this->diagnostics['TotalPayload'],
-                                             'active' => $this->diagnostics['TotalCount']);
+                                             'total' =>  $diagnostics['TotalPayload'],
+                                             'active' => $diagnostics['TotalCount']);
                                 $tag = json_encode($tag);
                                 $progressProvider->save($pos, $total, $tag);
                               } else {

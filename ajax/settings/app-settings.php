@@ -755,7 +755,7 @@ if (isset($_POST['emailtest'])) {
   $secure   = Config::getValue('imapsecure');
 
   $imapok = false;
-  if (CAFEVDB\Email::checkImapServer($host, $port, $secure, $user, $password)) {
+  if (ConfigCheck::checkImapServer($host, $port, $secure, $user, $password)) {
     $imapmsg = L::t('IMAP connection seems functional.');
     $imapok = true;
   } else {
@@ -767,7 +767,7 @@ if (isset($_POST['emailtest'])) {
   $secure   = Config::getValue('smtpsecure');
   
   $smtpok = false;
-  if (CAFEVDB\Email::checkSmtpServer($host, $port, $secure, $user, $password)) {
+  if (ConfigCheck::checkSmtpServer($host, $port, $secure, $user, $password)) {
     $smtpmsg = L::t('SMTP connection seems functional.');
     $smtpok = true;
   } else {
