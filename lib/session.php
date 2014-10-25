@@ -25,32 +25,56 @@
 namespace CAFEVDB
 {
 
+  /**Yet another session wrapper. We store per-user data in an
+   * array. As there is not in all cases a logout-procedure, we
+   * remember the user and erase the data if the current user does not
+   * match.
+   */
   class Session
   {
     private $session;
+    private $user;
+    private $sessionKey;
+    private $data;
     
     public function __construct() {
       // Keep a reference to the underlying session handler
       $this->session = \OC::$session;
+
+      // Fetch the current user
+      $this->user  = \OCP\USER::getUser();
+      
+      // Fetch our data
+      $this->sessionKey = strtoupper(Config::APP_NAME);
+
+      $clean = true;
+      if ($this->session->exists($this->sessionKey)) {
+        $this->data = $this->session->get($this->sessionKey);
+        if ($this->data['user'] == $this->user) {
+          $clean = false;
+        }
+      }
+
+      // clean on no data or user mismatch
+      if ($clean) {
+        $this->clearValues();
+      }
     }
 
-    /**PHP session variable key to use for storing something tagged with
-     * $key.
-     */
-    private static function sessionKey($key)
+    /**Remove all session variables for the current user. */
+    public function clearValues()
     {
-      return Config::APP_NAME.'\\'.$key;
-    }
+      $this->data = array('user' => $this->user);
+      $this->session->set($this->sessionKey, $this->data);
+    }    
 
     /**Store something in the session-data. It is completely left open
      * how this is done.
-     *
-     * sessionStoreValue() and sessionRetrieveValue() should be the only
-     * interface points to the PHP session (except for, ahem, tweaks).
      */
     public function storeValue($key, $value)
     {
-      $this->session->set(self::sessionKey($key), $value);
+      $this->data[$key] = $value;
+      $this->session->set($this->sessionKey, $this->data);
     }
 
     /**Fetch something from the session-data. It is completely left open
@@ -66,8 +90,7 @@ namespace CAFEVDB
      */
     public function retrieveValue($key, $default = false)
     {
-      $key = self::sessionKey($key);
-      return $this->session->exists($key) ? $this->session->get($key) : $default;
+      return isset($this->data[$key]) ? $this->data[$key] : $default;
     }
   }
 
