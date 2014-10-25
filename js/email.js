@@ -502,7 +502,8 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                {ProgressId: 0 },
                function(data) {
                  var stop = false;
-                 if (typeof data != 'undefined' && typeof data.progress != 'undefined') {
+                 if (progressOpen &&
+                     typeof data != 'undefined' && typeof data.progress != 'undefined') {
                    var progress = data.progress;
                    var value = progress.current;
                    var max = progress.target;
