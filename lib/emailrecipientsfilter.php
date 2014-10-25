@@ -33,6 +33,7 @@ namespace CAFEVDB
   class EmailRecipientsFilter {
     const MAX_HISTORY_SIZE = 100; // the history is posted around, so ...
     const SESSION_HISTORY_KEY = 'FilterHistory';
+    private $session;
 
     private $projectId;   // Project id or NULL or -1 or ''
     private $projectNem;  // Project name of NULL or ''
@@ -80,6 +81,8 @@ namespace CAFEVDB
         print_r($_POST);
         echo '</PRE>';
       }
+
+      $this->session = new Session();
 
       Config::init();
       $this->opts = Config::$pmeopts;
@@ -211,13 +214,13 @@ namespace CAFEVDB
       $storageValue = array('size' => $this->historySize,
                             'position' => $this->historyPosition,
                             'records' => $this->filterHistory);
-      Config::sessionStoreValue(self::SESSION_HISTORY_KEY, $storageValue);
+      $this->session->storeValue(self::SESSION_HISTORY_KEY, $storageValue);
     }
 
     /**Load the history from the session data. */
     private function loadHistory()
     {
-      $loadHistory = Config::sessionRetrieveValue(self::SESSION_HISTORY_KEY);
+      $loadHistory = $this->session->retrieveValue(self::SESSION_HISTORY_KEY);
       if (!$this->validateHistory($loadHistory)) {
         $this->setDefaultHistory();
         return false;
