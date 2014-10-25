@@ -544,7 +544,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                          modal: true,
                          closeOnEscape: false,
                          resizable: false,
-                         dialogClass: 'emailform delivery progress',
+                         dialogClass: 'emailform delivery progress no-close',
                          open: function() {
                            progressOpen = true;
                          },
