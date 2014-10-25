@@ -79,7 +79,7 @@ namespace CAFEVDB {
     }
 
     /**Return a ready-to-use template, template-values are already
-     * assigned. The returned template is read for printPage() or
+     * assigned. The returned template is ready for printPage() or
      * fetchPage().
      */
     public function template($renderas = "")
