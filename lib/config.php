@@ -138,15 +138,28 @@ redaxoDefaultModule
 
   public static function loginListener($params)
   {
+    self::init();    
     $group = self::getAppValue('usergroup', '');
     $user = $params['uid'];
     if ($group != '' && \OC_Group::inGroup($user, $group)) {
+      // Fetch the encryption key and store in the session data
       self::initPrivateKey($user, $params['password']);
       self::initEncryptionKey($user);
     }
   }
 
+  public static function logoutListener($params)
+  {
+    self::init();    
+
+    // OC does not destroy the session on logout, additionally, there
+    // is not alway a logout event. But if there is one, we destroy
+    // our session data.
+    self::$session->clearValues();
+  }
+
   public static function changePasswordListener($params) {
+    self::init();    
     $group = self::getAppValue('usergroup', '');
     $user = $params['uid'];
     if ($group != '' && \OC_Group::inGroup($user, $group)) {
@@ -244,6 +257,7 @@ redaxoDefaultModule
 
     if ($usrdbkey == '') {
       // No key -> unencrypted, maybe
+      \OCP\Util::writeLog(Config::APP_NAME, "No Encryption Key", \OCP\Util::DEBUG);
       return;
     }
 
@@ -253,6 +267,7 @@ redaxoDefaultModule
 
     // Try to decrypt the $usrdbkey
     if (openssl_private_decrypt($usrdbkey, $usrdbkey, $privKey) === false) {
+      \OCP\Util::writeLog(Config::APP_NAME, "Decryption of EncryptionKey failed", \OCP\Util::DEBUG);
       return;
     }
 
@@ -263,6 +278,7 @@ redaxoDefaultModule
     if ($sysdbkey != $usrdbkey) {
       // Failed
       self::setEncryptionKey('');
+      \OCP\Util::writeLog(Config::APP_NAME, "EncryptionKeys do not match", \OCP\Util::DEBUG);
       return;
     }
 
@@ -416,6 +432,7 @@ redaxoDefaultModule
    * @param $key The encryption key to store.
    */
   static public function setEncryptionKey($key) {
+    //\OCP\Util::writeLog(Config::APP_NAME, "Storing encryption key: ".$key, \OCP\Util::DEBUG);
     self::sessionStoreValue('encryptionkey', $key);
   }
 
