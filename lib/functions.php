@@ -600,7 +600,11 @@ class Navigation
    */
   public static function enc($string, $double_encode = false)
   {
-    return htmlspecialchars($string, ENT_COMPAT|ENT_HTML401, 'UTF-8', $double_encode);
+    $ent = ENT_COMPAT;
+    if (defined("ENT_HTML401")) {
+      $ent |= ENT_HTML401;
+    }
+    return htmlspecialchars($string, $ent, 'UTF-8', $double_encode);
   }
 
   /**Emit select options
