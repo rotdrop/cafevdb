@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-10-26 13:25+0100\n"
+"POT-Creation-Date: 2014-10-26 22:24+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -54,7 +54,7 @@ msgstr ""
 #: ajax/instrumentation/change-project-instrument.php:118
 #: ajax/instruments/adjustInstrumentation.php:104
 #: ajax/instruments/changeInstrumentation.php:159 ajax/page-loader.php:100
-#: ajax/pme/pme-table.php:137 ajax/projects/verifyName.php:160
+#: ajax/pme/pme-table.php:137 ajax/projects/verifyName.php:159
 #: ajax/projects/web-articles.php:180 ajax/settings/creditslist.php:79
 msgid "Error, caught an exception"
 msgstr ""
@@ -247,16 +247,16 @@ msgstr ""
 msgid "%s-detailed"
 msgstr ""
 
-#: ajax/export/excel.php:260 lib/projects.php:1530 lib/projects.php:1531
+#: ajax/export/excel.php:260 lib/projects.php:1545 lib/projects.php:1546
 msgid "Missing Musicians"
 msgstr ""
 
 #: ajax/export/excel.php:285 ajax/export/insurance-export.php:142
-#: lib/projects.php:1533
+#: lib/projects.php:1548
 msgid "Instrument"
 msgstr ""
 
-#: ajax/export/excel.php:286 lib/projects.php:1533
+#: ajax/export/excel.php:286 lib/projects.php:1548
 msgid "Missing"
 msgstr ""
 
@@ -377,7 +377,7 @@ msgid "Value for `%s' invalid: `%s'."
 msgstr ""
 
 #: ajax/finance/sepa-debit-settings.php:328
-#: ajax/settings/app-settings.php:1093 ajax/settings/redaxo-settings.php:62
+#: ajax/settings/app-settings.php:1093 ajax/settings/redaxo-settings.php:71
 msgid "Unhandled request:"
 msgstr ""
 
@@ -1095,28 +1095,33 @@ msgstr ""
 msgid "filter-visibility changed"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:29 lib/projects.php:677
+#: ajax/settings/redaxo-settings.php:37 lib/projects.php:678
 msgid "Preview"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:30 lib/projects.php:679
+#: ajax/settings/redaxo-settings.php:38 lib/projects.php:682
 msgid "Archive"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:31 lib/projects.php:681
+#: ajax/settings/redaxo-settings.php:39 lib/projects.php:680
+#: lib/projects.php:1111
+msgid "Rehearsals"
+msgstr ""
+
+#: ajax/settings/redaxo-settings.php:40 lib/projects.php:684
 msgid "Trashbin"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:32
+#: ajax/settings/redaxo-settings.php:41
 msgid "Template"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:47
+#: ajax/settings/redaxo-settings.php:56
 #, php-format
 msgid "Redaxo categorie Id for `%s' set to %s"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:53
+#: ajax/settings/redaxo-settings.php:62
 #, php-format
 msgid "Category id must be integer and positive, got `%s'."
 msgstr ""
@@ -1565,11 +1570,11 @@ msgstr ""
 msgid "Caught a PHP Exception"
 msgstr ""
 
-#: js/pme.js:780
+#: js/pme.js:789
 msgid "#columns"
 msgstr ""
 
-#: js/pme.js:789
+#: js/pme.js:798
 msgid "#rows"
 msgstr ""
 
@@ -1680,70 +1685,70 @@ msgstr ""
 msgid "Please standby, the operation will take some time!"
 msgstr ""
 
-#: lib/config.php:603
+#: lib/config.php:605
 #, php-format
 msgid "Decryption of `%s`@`%s` failed"
 msgstr ""
 
-#: lib/config.php:607
+#: lib/config.php:609
 #, php-format
 msgid "Encryption of `%s`@`%s` failed"
 msgstr ""
 
-#: lib/config.php:613
+#: lib/config.php:615
 #, php-format
 msgid "Unable to update table data at index %s"
 msgstr ""
 
-#: lib/config.php:774
+#: lib/config.php:776
 msgid "birthday"
 msgstr ""
 
-#: lib/config.php:783
+#: lib/config.php:785
 msgid "no preference"
 msgstr ""
 
-#: lib/config.php:784
+#: lib/config.php:786
 msgid "German"
 msgstr ""
 
-#: lib/config.php:785
+#: lib/config.php:787
 msgid "English"
 msgstr ""
 
-#: lib/config.php:786
+#: lib/config.php:788
 msgid "French"
 msgstr ""
 
-#: lib/config.php:787
+#: lib/config.php:789
 msgid "Spanish"
 msgstr ""
 
-#: lib/config.php:788
+#: lib/config.php:790
 msgid "Portuguese"
 msgstr ""
 
-#: lib/config.php:789
+#: lib/config.php:791
 msgid "Polish"
 msgstr ""
 
-#: lib/config.php:790
+#: lib/config.php:792
 msgid "Russian"
 msgstr ""
 
-#: lib/config.php:791
+#: lib/config.php:793
 msgid "Chinese"
 msgstr ""
 
-#: lib/config.php:792
+#: lib/config.php:794
 msgid "Japaneese"
 msgstr ""
 
-#: lib/config.php:793
+#: lib/config.php:795
 msgid "Korean"
 msgstr ""
 
-#: lib/config.php:813
+#: lib/config.php:815
 #, php-format
 msgid "Unknown Tooltip for key `%s' requested."
 msgstr ""
@@ -1930,7 +1935,7 @@ msgstr ""
 msgid "The currently active project."
 msgstr ""
 
-#: lib/functions.php:1011 lib/projects.php:755
+#: lib/functions.php:1011 lib/projects.php:758
 msgid "Instrumentation"
 msgstr ""
 
@@ -1951,8 +1956,8 @@ msgid ""
 "ones as needed."
 msgstr ""
 
-#: lib/functions.php:1039 lib/project-instruments.php:69 lib/projects.php:760
-#: lib/projects.php:967
+#: lib/functions.php:1039 lib/project-instruments.php:69 lib/projects.php:763
+#: lib/projects.php:970
 msgid "Instrumentation Numbers"
 msgstr ""
 
@@ -1962,7 +1967,7 @@ msgid ""
 "already registered for each instrument group and how many are finally needed."
 msgstr ""
 
-#: lib/functions.php:1053 lib/functions.php:1079 lib/projects.php:796
+#: lib/functions.php:1053 lib/functions.php:1079 lib/projects.php:799
 msgid "Debit Mandates"
 msgstr ""
 
@@ -2335,74 +2340,74 @@ msgstr ""
 msgid "Flyer"
 msgstr ""
 
-#: lib/projects.php:667
+#: lib/projects.php:668
 #, php-format
 msgid "Unable to fetch public web pages for project id %d"
 msgstr ""
 
-#: lib/projects.php:745
+#: lib/projects.php:748
 msgid "Project Overview"
 msgstr ""
 
-#: lib/projects.php:769
+#: lib/projects.php:772
 msgid "Project Files"
 msgstr ""
 
-#: lib/projects.php:776 lib/projects.php:945
+#: lib/projects.php:779 lib/projects.php:948
 #, php-format
 msgid "Project Wiki for %s"
 msgstr ""
 
-#: lib/projects.php:778 lib/projects.php:949
+#: lib/projects.php:781 lib/projects.php:952
 msgid "Project Notes"
 msgstr ""
 
-#: lib/projects.php:783 lib/projects.php:955 lib/projects.php:985
+#: lib/projects.php:786 lib/projects.php:958 lib/projects.php:988
 msgid "Events"
 msgstr ""
 
-#: lib/projects.php:788 lib/projects.php:961
+#: lib/projects.php:791 lib/projects.php:964
 msgid "Em@il"
 msgstr ""
 
-#: lib/projects.php:802
+#: lib/projects.php:805
 msgid "Profit and Loss Account"
 msgstr ""
 
-#: lib/projects.php:1868
+#: lib/projects.php:1883
 msgid ""
 "Flyers can only be added to existing projects, please add the new\n"
 "project without a flyer first."
 msgstr ""
 
-#: lib/projects.php:1883
+#: lib/projects.php:1898
 #, php-format
 msgid "Drop image to upload (max %s)"
 msgstr ""
 
-#: lib/projects.php:1886
+#: lib/projects.php:1901
 msgid "Delete current flyer"
 msgstr ""
 
-#: lib/projects.php:1887
+#: lib/projects.php:1902
 msgid "Edit current flyer"
 msgstr ""
 
-#: lib/projects.php:1888
+#: lib/projects.php:1903
 msgid "Upload new flyer"
 msgstr ""
 
-#: lib/projects.php:1889
+#: lib/projects.php:1904
 msgid "Select image from ownCloud"
 msgstr ""
 
-#: lib/projects.php:1897
+#: lib/projects.php:1912
 msgid ""
 "Internal error, don't know what to do concerning project-flyers in the given "
 "context."
 msgstr ""
 
-#: lib/projects.php:2138
+#: lib/projects.php:2153
 #, php-format
 msgid ""
 "====== Project %s ======\n"
@@ -2712,7 +2717,7 @@ msgid ""
 "Enter a short, no-nonsense name for the new template. Please omit spaces."
 msgstr ""
 
-#: lib/tooltips.php:161 templates/project-web-articles.php:80
+#: lib/tooltips.php:161 templates/project-web-articles.php:77
 msgid "nothing"
 msgstr ""
 
@@ -3080,8 +3085,8 @@ msgstr ""
 
 #: lib/tooltips.php:383
 msgid ""
-"Add a new public web-page to the project, either by generating a new one or "
-"by linking an existing web-page to the given project."
+"Add a new public web-page to the project by generating a new, empty concert "
+"announcement."
 msgstr ""
 
 #: lib/tooltips.php:385
@@ -3249,7 +3254,7 @@ msgstr ""
 msgid "concerts"
 msgstr ""
 
-#: settings.php:103
+#: settings.php:103 templates/cms-settings.php:52
 msgid "rehearsals"
 msgstr ""
 
@@ -3456,24 +3461,33 @@ msgstr ""
 msgid "Id of Redaxo Archive Category"
 msgstr ""
 
-#: templates/cms-settings.php:52
+#: templates/cms-settings.php:55
+msgid "Id of Redaxo Rehearsals Category"
+msgstr ""
+
+#: templates/cms-settings.php:61
 msgid "trashbin"
 msgstr ""
 
-#: templates/cms-settings.php:55
+#: templates/cms-settings.php:64
 msgid "Id of Redaxo Trashbin Category"
 msgstr ""
 
-#: templates/cms-settings.php:61 templates/cms-settings.php:70
+#: templates/cms-settings.php:70 templates/cms-settings.php:79
+#: templates/cms-settings.php:88
 msgid "template"
 msgstr ""
 
-#: templates/cms-settings.php:64
+#: templates/cms-settings.php:73
 msgid "Id of Redaxo Default-Template"
 msgstr ""
 
-#: templates/cms-settings.php:73
-msgid "Id of Redaxo Default-Module"
+#: templates/cms-settings.php:82
+msgid "Id of Redaxo Concert-Module"
+msgstr ""
+
+#: templates/cms-settings.php:91
+msgid "Id of Redaxo Rehearsals-Module"
 msgstr ""
 
 #: templates/configcheck.php:33
@@ -4441,23 +4455,23 @@ msgid ""
 "be reviewed there even after closing the dialog window."
 msgstr ""
 
-#: templates/project-web-articles.php:121
+#: templates/project-web-articles.php:118
 msgid "No public web pages registered for this project"
 msgstr ""
 
-#: templates/project-web-articles.php:126
+#: templates/project-web-articles.php:123
 msgid "Create new public web page for this project."
 msgstr ""
 
-#: templates/project-web-articles.php:136
+#: templates/project-web-articles.php:133
 msgid "Attach existing Pages"
 msgstr ""
 
-#: templates/project-web-articles.php:183
+#: templates/project-web-articles.php:180
 msgid "Unlink a web-article."
 msgstr ""
 
-#: templates/project-web-articles.php:187
+#: templates/project-web-articles.php:184
 msgid "Delete a web article."
 msgstr ""
 
