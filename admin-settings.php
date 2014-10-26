@@ -20,18 +20,22 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-OCP\User::checkAdminUser();
+namespace CAFEVDB {
 
-//OCP\Util::addStyle('cafevdb', 'cafevdb');
-//OCP\Util::addStyle('cafevdb', 'tipsy');
-OCP\Util::addStyle( "cafevdb", "admin-settings" );
-OCP\Util::addScript( "cafevdb", "admin-settings" );
+  \OCP\User::checkAdminUser();
 
-$tmpl = new OCP\Template( 'cafevdb', 'admin-settings');
+  //OCP\Util::addStyle('cafevdb', 'cafevdb');
+  //OCP\Util::addStyle('cafevdb', 'tipsy');
+  \OCP\Util::addStyle( "cafevdb", "admin-settings" );
+  \OCP\Util::addScript( "cafevdb", "admin-settings" );
 
-CAFEVDB\Config::init();
-$strict = !CAFEVDB\Config::encryptionKeyValid();
+  $tmpl = new OCP\Template( 'cafevdb', 'admin-settings');
 
-$tmpl->assign('usergroup', \OC_AppConfig::getValue('cafevdb', 'usergroup', ''));
+  Config::init();
+  $strict = !Config::encryptionKeyValid();
 
-return $tmpl->fetchPage();
+  $tmpl->assign('usergroup', \OC_AppConfig::getValue('cafevdb', 'usergroup', ''));
+
+  return $tmpl->fetchPage();
+
+} // namespace CAFEVDB

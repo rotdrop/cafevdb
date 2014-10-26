@@ -117,6 +117,8 @@ try {
                           'filterHistory' => $filterHistory,
                           'debug' => $debugText)));
 
+  unset($recipientsFilter);
+
   return true;
 
 } catch (\Exception $e) {

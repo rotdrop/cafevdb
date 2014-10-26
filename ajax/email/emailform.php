@@ -121,6 +121,9 @@ try {
                           'projectId' => $projectId,
                           'filterHistory' => $history,
                           'debug' => $debugText)));
+
+  unset($recipientsFilter);
+  unset($composer);
   
   return true;
 

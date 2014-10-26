@@ -25,384 +25,384 @@
 namespace CAFEVDB
 {
 
-/**Display all or selected musicians.
- */
-class SepaDebitMandates
-  extends Instrumentation
-{
-  const CSS_PREFIX = 'cafevdb-page';
-  const RATE_TABLE = 'InsuranceRates';
-  const MEMBER_TABLE = 'SepaDebitMandates';
-  const TAXES = 0.19;
-  protected $broker;
-  protected $brokerNames;
-  protected $scope;
-  protected $scopeNames;
-  protected $accessory;
-  protected $accessoryNames;
-
-  function __construct($execute = true) {
-    parent::__construct($execute);
-  }
-
-  public function shortTitle()
-  {
-    if ($this->deleteOperation()) {
-      return L::t('Remove this Debit-Mandate?');
-    } else if ($this->viewOperation()) {
-      return L::t('Debit-Mandate');
-    } else if ($this->changeOperation()) {
-      return L::t('Change this Debit-Mandate');
-    }
-    if ($this->projectId > 0 && $this->projectName != '') {
-      return L::t('Overview over all SEPA Debit Mandates for %s',
-                  array($this->projectName));
-    } else {
-      return L::t('Overview over all SEPA Debit Mandates');
-    }    
-  }
-
-  public function headerText()
-  {
-    return $this->shortTitle();
-  }
-
-  /**Display the list of all musicians. If $projectMode == true,
-   * filter out all musicians present in $projectId and add a
-   * hyperlink which will add the Musician to the respective project.
+  /**Display all or selected musicians.
    */
-  public function display()
+  class SepaDebitMandates
+    extends Instrumentation
   {
-    global $debug_query;
-    $debug_query = Util::debugMode('query');
+    const CSS_PREFIX = 'cafevdb-page';
+    const RATE_TABLE = 'InsuranceRates';
+    const MEMBER_TABLE = 'SepaDebitMandates';
+    const TAXES = 0.19;
+    protected $broker;
+    protected $brokerNames;
+    protected $scope;
+    protected $scopeNames;
+    protected $accessory;
+    protected $accessoryNames;
 
-    $template        = $this->template;
-    $projectName     = $this->projectName;
-    $projectId       = $this->projectId;
-    $recordsPerPage  = $this->recordsPerPage;
-    $opts            = $this->opts;
-    $musicianId      = $this->musicianId;
-
-    $opts['tb'] = 'SepaDebitMandates';
-
-    // Number of records to display on the screen
-    // Value of -1 lists all records in a table
-    $opts['inc'] = $recordsPerPage;
-
-    $opts['cgi']['persist'] = array(
-      'ProjectName' => $projectName,
-      'ProjectId' => $projectId,
-      'MusicianId' => $musicianId,
-      'Template' => 'sepa-debit-mandates',
-      'Table' => $opts['tb'],
-      'DisplayClass' => 'SepaDebitMandates');
-
-    // Name of field which is the unique key
-    $opts['key'] = 'id';
-
-    // Type of key field (int/real/string/date etc.)
-    $opts['key_type'] = 'int';
-
-    // Sorting field(s)
-    $opts['sort_field'] = array('Broker','GeographicalScope','MusicianId','Accessory');
-
-    // Options you wish to give the users
-    // A - add,  C - change, P - copy, V - view, D - delete,
-    // F - filter, I - initial sort suppressed
-    $opts['options'] = 'CVDFM';
-
-    // Number of lines to display on multiple selection filters
-    $opts['multiple'] = '5';
-
-    // Navigation style: B - buttons (default), T - text links, G - graphic links
-    // Buttons position: U - up, D - down (default)
-    //$opts['navigation'] = 'DB';
-
-    $export = Navigation::tableExportButton();
-    $opts['buttons'] = Navigation::prependTableButton($export, true);
-
-    // Display special page elements
-    $opts['display'] =  array_merge($opts['display'],
-                                    array(
-                                      'form'  => true,
-                                      'query' => true,
-                                      'sort'  => true,
-                                      'time'  => true,
-                                      'tabs'  => false
-                                      ));
-
-    // Set default prefixes for variables
-    $opts['js']['prefix']               = 'PME_js_';
-    $opts['dhtml']['prefix']            = 'PME_dhtml_';
-    $opts['cgi']['prefix']['operation'] = 'PME_op_';
-    $opts['cgi']['prefix']['sys']       = 'PME_sys_';
-    $opts['cgi']['prefix']['data']      = 'PME_data_';
-
-    /* Get the user's default language and use it if possible or you can
-       specify particular one you want to use. Refer to official documentation
-       for list of available languages. */
-    //  $opts['language'] = $_SERVER['HTTP_ACCEPT_LANGUAGE'] . '-UTF8';
-
-    /* Table-level filter capability. If set, it is included in the WHERE clause
-       of any generated SELECT statement in SQL query. This gives you ability to
-       work only with subset of data from table.
-
-       $opts['filters'] = "column1 like '%11%' AND column2<17";
-       $opts['filters'] = "section_id = 9";
-       $opts['filters'] = "PMEtable0.sessions_count > 200";
-    */
-
-    $junctor = '';
-    if ($musicianId > 0) {
-      $opts['filters'] = $junctor."`PMEtable0`.`musicianId` = ".$musicianId;
-      $junctor = " AND ";
-    }
-    if ($projectId > 0) {
-      $opts['filters'] = $junctor."`PMEtable0`.`projectId` = ".$projectId;
-      $junctor = " AND ";
+      function __construct($execute = true) {
+      parent::__construct($execute);
     }
 
-    /* Field definitions
+    public function shortTitle()
+    {
+      if ($this->deleteOperation()) {
+        return L::t('Remove this Debit-Mandate?');
+      } else if ($this->viewOperation()) {
+        return L::t('Debit-Mandate');
+      } else if ($this->changeOperation()) {
+        return L::t('Change this Debit-Mandate');
+      }
+      if ($this->projectId > 0 && $this->projectName != '') {
+        return L::t('Overview over all SEPA Debit Mandates for %s',
+                    array($this->projectName));
+      } else {
+        return L::t('Overview over all SEPA Debit Mandates');
+      }    
+    }
+
+    public function headerText()
+    {
+      return $this->shortTitle();
+    }
+
+    /**Display the list of all musicians. If $projectMode == true,
+     * filter out all musicians present in $projectId and add a
+     * hyperlink which will add the Musician to the respective project.
+     */
+    public function display()
+    {
+      global $debug_query;
+      $debug_query = Util::debugMode('query');
+
+      $template        = $this->template;
+      $projectName     = $this->projectName;
+      $projectId       = $this->projectId;
+      $recordsPerPage  = $this->recordsPerPage;
+      $opts            = $this->opts;
+      $musicianId      = $this->musicianId;
+
+      $opts['tb'] = 'SepaDebitMandates';
+
+      // Number of records to display on the screen
+      // Value of -1 lists all records in a table
+      $opts['inc'] = $recordsPerPage;
+
+      $opts['cgi']['persist'] = array(
+        'ProjectName' => $projectName,
+        'ProjectId' => $projectId,
+        'MusicianId' => $musicianId,
+        'Template' => 'sepa-debit-mandates',
+        'Table' => $opts['tb'],
+        'DisplayClass' => 'SepaDebitMandates');
+
+      // Name of field which is the unique key
+      $opts['key'] = 'id';
+
+      // Type of key field (int/real/string/date etc.)
+      $opts['key_type'] = 'int';
+
+      // Sorting field(s)
+      $opts['sort_field'] = array('Broker','GeographicalScope','MusicianId','Accessory');
+
+      // Options you wish to give the users
+      // A - add,  C - change, P - copy, V - view, D - delete,
+      // F - filter, I - initial sort suppressed
+      $opts['options'] = 'CVDFM';
+
+      // Number of lines to display on multiple selection filters
+      $opts['multiple'] = '5';
+
+      // Navigation style: B - buttons (default), T - text links, G - graphic links
+      // Buttons position: U - up, D - down (default)
+      //$opts['navigation'] = 'DB';
+
+      $export = Navigation::tableExportButton();
+      $opts['buttons'] = Navigation::prependTableButton($export, true);
+
+      // Display special page elements
+      $opts['display'] =  array_merge($opts['display'],
+                                      array(
+                                        'form'  => true,
+                                        'query' => true,
+                                        'sort'  => true,
+                                        'time'  => true,
+                                        'tabs'  => false
+                                        ));
+
+      // Set default prefixes for variables
+      $opts['js']['prefix']               = 'PME_js_';
+      $opts['dhtml']['prefix']            = 'PME_dhtml_';
+      $opts['cgi']['prefix']['operation'] = 'PME_op_';
+      $opts['cgi']['prefix']['sys']       = 'PME_sys_';
+      $opts['cgi']['prefix']['data']      = 'PME_data_';
+
+      /* Get the user's default language and use it if possible or you can
+         specify particular one you want to use. Refer to official documentation
+         for list of available languages. */
+      //  $opts['language'] = $_SERVER['HTTP_ACCEPT_LANGUAGE'] . '-UTF8';
+
+      /* Table-level filter capability. If set, it is included in the WHERE clause
+         of any generated SELECT statement in SQL query. This gives you ability to
+         work only with subset of data from table.
+
+         $opts['filters'] = "column1 like '%11%' AND column2<17";
+         $opts['filters'] = "section_id = 9";
+         $opts['filters'] = "PMEtable0.sessions_count > 200";
+      */
+
+      $junctor = '';
+      if ($musicianId > 0) {
+        $opts['filters'] = $junctor."`PMEtable0`.`musicianId` = ".$musicianId;
+        $junctor = " AND ";
+      }
+      if ($projectId > 0) {
+        $opts['filters'] = $junctor."`PMEtable0`.`projectId` = ".$projectId;
+        $junctor = " AND ";
+      }
+
+      /* Field definitions
    
-       Fields will be displayed left to right on the screen in the order in which they
-       appear in generated list. Here are some most used field options documented.
+         Fields will be displayed left to right on the screen in the order in which they
+         appear in generated list. Here are some most used field options documented.
 
-       ['name'] is the title used for column headings, etc.;
-       ['maxlen'] maximum length to display add/edit/search input boxes
-       ['trimlen'] maximum length of string content to display in row listing
-       ['width'] is an optional display width specification for the column
-       e.g.  ['width'] = '100px';
-       ['mask'] a string that is used by sprintf() to format field output
-       ['sort'] true or false; means the users may sort the display on this column
-       ['strip_tags'] true or false; whether to strip tags from content
-       ['nowrap'] true or false; whether this field should get a NOWRAP
-       ['select'] T - text, N - numeric, D - drop-down, M - multiple selection
-       ['options'] optional parameter to control whether a field is displayed
-       L - list, F - filter, A - add, C - change, P - copy, D - delete, V - view
-       Another flags are:
-       R - indicates that a field is read only
-       W - indicates that a field is a password field
-       H - indicates that a field is to be hidden and marked as hidden
-       ['URL'] is used to make a field 'clickable' in the display
-       e.g.: 'mailto:$value', 'http://$value' or '$page?stuff';
-       ['URLtarget']  HTML target link specification (for example: _blank)
-       ['textarea']['rows'] and/or ['textarea']['cols']
-       specifies a textarea is to be used to give multi-line input
-       e.g. ['textarea']['rows'] = 5; ['textarea']['cols'] = 10
-       ['values'] restricts user input to the specified constants,
-       e.g. ['values'] = array('A','B','C') or ['values'] = range(1,99)
-       ['values']['table'] and ['values']['column'] restricts user input
-       to the values found in the specified column of another table
-       ['values']['description'] = 'desc_column'
-       The optional ['values']['description'] field allows the value(s) displayed
-       to the user to be different to those in the ['values']['column'] field.
-       This is useful for giving more meaning to column values. Multiple
-       descriptions fields are also possible. Check documentation for this.
-    */
+         ['name'] is the title used for column headings, etc.;
+         ['maxlen'] maximum length to display add/edit/search input boxes
+         ['trimlen'] maximum length of string content to display in row listing
+         ['width'] is an optional display width specification for the column
+         e.g.  ['width'] = '100px';
+         ['mask'] a string that is used by sprintf() to format field output
+         ['sort'] true or false; means the users may sort the display on this column
+         ['strip_tags'] true or false; whether to strip tags from content
+         ['nowrap'] true or false; whether this field should get a NOWRAP
+         ['select'] T - text, N - numeric, D - drop-down, M - multiple selection
+         ['options'] optional parameter to control whether a field is displayed
+         L - list, F - filter, A - add, C - change, P - copy, D - delete, V - view
+         Another flags are:
+         R - indicates that a field is read only
+         W - indicates that a field is a password field
+         H - indicates that a field is to be hidden and marked as hidden
+         ['URL'] is used to make a field 'clickable' in the display
+         e.g.: 'mailto:$value', 'http://$value' or '$page?stuff';
+         ['URLtarget']  HTML target link specification (for example: _blank)
+         ['textarea']['rows'] and/or ['textarea']['cols']
+         specifies a textarea is to be used to give multi-line input
+         e.g. ['textarea']['rows'] = 5; ['textarea']['cols'] = 10
+         ['values'] restricts user input to the specified constants,
+         e.g. ['values'] = array('A','B','C') or ['values'] = range(1,99)
+         ['values']['table'] and ['values']['column'] restricts user input
+         to the values found in the specified column of another table
+         ['values']['description'] = 'desc_column'
+         The optional ['values']['description'] field allows the value(s) displayed
+         to the user to be different to those in the ['values']['column'] field.
+         This is useful for giving more meaning to column values. Multiple
+         descriptions fields are also possible. Check documentation for this.
+      */
 
-    $opts['fdd']['id'] = array(
-      'name'     => 'Id',
-      'select'   => 'T',
-      'options'  => 'AVCPDR', // auto increment
-      'maxlen'   => 5,
-      'align'    => 'right',
-      'default'  => '0',
-      'sort'     => true
-      );
+      $opts['fdd']['id'] = array(
+        'name'     => 'Id',
+        'select'   => 'T',
+        'options'  => 'AVCPDR', // auto increment
+        'maxlen'   => 5,
+        'align'    => 'right',
+        'default'  => '0',
+        'sort'     => true
+        );
 
-    $opts['fdd']['mandateReference'] = array('name'   => L::t('Mandate Reference'),
-                                             'input'  => 'R',
-                                             'select' => 'T',
-                                             'maxlen' => 35,
-                                             'sort'   => true);
+      $opts['fdd']['mandateReference'] = array('name'   => L::t('Mandate Reference'),
+                                               'input'  => 'R',
+                                               'select' => 'T',
+                                               'maxlen' => 35,
+                                               'sort'   => true);
 
-    $opts['fdd']['nonrecurring'] = array('name'   => L::t('One Time'),
-                                         'input'  => 'R',
-                                         'select' => 'T',
-                                         'maxlen' => 35,
-                                         'sort'   => true,
-                                         'values2' => array('0' => L::t('no'),
-                                                            '1' => L::t('yes')));
+      $opts['fdd']['nonrecurring'] = array('name'   => L::t('One Time'),
+                                           'input'  => 'R',
+                                           'select' => 'T',
+                                           'maxlen' => 35,
+                                           'sort'   => true,
+                                           'values2' => array('0' => L::t('no'),
+                                                              '1' => L::t('yes')));
 
-    $opts['fdd']['mandateDate'] = array('name'     => L::t('Date Issued'),
-                                        'select'   => 'T',
-                                        'maxlen'   => 10,
-                                        'sort'     => true,
-                                        'css'      => array('postfix' => 'sepadate'),
-                                        'datemask' => 'd.m.Y');
+      $opts['fdd']['mandateDate'] = array('name'     => L::t('Date Issued'),
+                                          'select'   => 'T',
+                                          'maxlen'   => 10,
+                                          'sort'     => true,
+                                          'css'      => array('postfix' => 'sepadate'),
+                                          'datemask' => 'd.m.Y');
 
-    $opts['fdd']['musicianId'] = array('name'     => L::t('Musician'),
-                                       'input'    => 'R',
-                                       'select'   => 'T',
-                                       'maxlen'   => 11,
-                                       'sort'     => true,
-                                       //'options'  => 'LFADV', // no change allowed
-                                       'default' => 0,
-                                       'values' => array('table' => 'Musiker',
-                                                         'column' => 'Id',
-                                                         'description' => array('columns' => array('Name', 'Vorname'),
-                                                                                'divs' => array(', ')
-                                                           ))
-      );
-
-    $opts['fdd']['projectId'] = array('name'     => L::t('Project'),
-                                      'input'    => 'R',
-                                      'select'   => 'T',
-                                      'maxlen'   => 11,
-                                      'sort'     => true,
-                                      //'options'  => 'LFADV', // no change allowed
-                                      'default' => 0,
-                                      'values' => array('table' => 'Projekte',
-                                                        'column' => 'Id',
-                                                        'description' => 'Name')
-      );
-
-    $opts['fdd']['IBAN'] = array('name'   => 'IBAN',
-                                 'options' => 'LACPDV',
-                                 'select' => 'T',
-                                 'maxlen' => 35,
-                                 'encryption' => array(
-                                   'encrypt' => '\CAFEVDB\Config::encrypt',
-                                   'decrypt' => '\CAFEVDB\Config::decrypt',
-                                   ));
-
-    $opts['fdd']['BIC'] = array('name'   => 'BIC',
-                                'select' => 'T',
-                                'maxlen' => 35,
-                                'encryption' => array(
-                                  'encrypt' => '\CAFEVDB\Config::encrypt',
-                                  'decrypt' => '\CAFEVDB\Config::decrypt',
-                                  ));
-
-    $opts['fdd']['BLZ'] = array('name'   => L::t('Bank Code'),
-                                'select' => 'T',
-                                'maxlen' => 35,
-                                'encryption' => array(
-                                  'encrypt' => '\CAFEVDB\Config::encrypt',
-                                  'decrypt' => '\CAFEVDB\Config::decrypt',
-                                  ));
-
-    $opts['fdd']['bankAccountOwner'] = array('name'   => L::t('Bank Account Owner'),
-                                             'select' => 'T',
-                                             'maxlen' => 35,
-                                             'encryption' => array(
-                                               'encrypt' => '\CAFEVDB\Config::encrypt',
-                                               'decrypt' => '\CAFEVDB\Config::decrypt',
-                                               ));
-
-    $opts['fdd']['lastUsedDate'] = array('name'     => L::t('Last-Used Date'),
+      $opts['fdd']['musicianId'] = array('name'     => L::t('Musician'),
+                                         'input'    => 'R',
                                          'select'   => 'T',
-                                         'maxlen'   => 10,
+                                         'maxlen'   => 11,
                                          'sort'     => true,
-                                         'css'      => array('postfix' => 'sepadate'),
-                                         'datemask' => 'd.m.Y');
+                                         //'options'  => 'LFADV', // no change allowed
+                                         'default' => 0,
+                                         'values' => array('table' => 'Musiker',
+                                                           'column' => 'Id',
+                                                           'description' => array('columns' => array('Name', 'Vorname'),
+                                                                                  'divs' => array(', ')
+                                                             ))
+        );
+
+      $opts['fdd']['projectId'] = array('name'     => L::t('Project'),
+                                        'input'    => 'R',
+                                        'select'   => 'T',
+                                        'maxlen'   => 11,
+                                        'sort'     => true,
+                                        //'options'  => 'LFADV', // no change allowed
+                                        'default' => 0,
+                                        'values' => array('table' => 'Projekte',
+                                                          'column' => 'Id',
+                                                          'description' => 'Name')
+        );
+
+      $opts['fdd']['IBAN'] = array('name'   => 'IBAN',
+                                   'options' => 'LACPDV',
+                                   'select' => 'T',
+                                   'maxlen' => 35,
+                                   'encryption' => array(
+                                     'encrypt' => '\CAFEVDB\Config::encrypt',
+                                     'decrypt' => '\CAFEVDB\Config::decrypt',
+                                     ));
+
+      $opts['fdd']['BIC'] = array('name'   => 'BIC',
+                                  'select' => 'T',
+                                  'maxlen' => 35,
+                                  'encryption' => array(
+                                    'encrypt' => '\CAFEVDB\Config::encrypt',
+                                    'decrypt' => '\CAFEVDB\Config::decrypt',
+                                    ));
+
+      $opts['fdd']['BLZ'] = array('name'   => L::t('Bank Code'),
+                                  'select' => 'T',
+                                  'maxlen' => 35,
+                                  'encryption' => array(
+                                    'encrypt' => '\CAFEVDB\Config::encrypt',
+                                    'decrypt' => '\CAFEVDB\Config::decrypt',
+                                    ));
+
+      $opts['fdd']['bankAccountOwner'] = array('name'   => L::t('Bank Account Owner'),
+                                               'select' => 'T',
+                                               'maxlen' => 35,
+                                               'encryption' => array(
+                                                 'encrypt' => '\CAFEVDB\Config::encrypt',
+                                                 'decrypt' => '\CAFEVDB\Config::decrypt',
+                                                 ));
+
+      $opts['fdd']['lastUsedDate'] = array('name'     => L::t('Last-Used Date'),
+                                           'select'   => 'T',
+                                           'maxlen'   => 10,
+                                           'sort'     => true,
+                                           'css'      => array('postfix' => 'sepadate'),
+                                           'datemask' => 'd.m.Y');
 
     
 
-    if ($this->pme_bare) {
-      // disable all navigation buttons, probably for html export
-      $opts['navigation'] = 'N'; // no navigation
-      $opts['options'] = '';
-      // Don't display special page elements
-      $opts['display'] =  array_merge($opts['display'],
-                                      array(
-                                        'form'  => false,
-                                        'query' => false,
-                                        'sort'  => false,
-                                        'time'  => false,
-                                        'tabs'  => false
-                                        ));
-      // Disable sorting buttons
-      foreach ($opts['fdd'] as $key => $value) {
-        $opts['fdd'][$key]['sort'] = false;
+      if ($this->pme_bare) {
+        // disable all navigation buttons, probably for html export
+        $opts['navigation'] = 'N'; // no navigation
+        $opts['options'] = '';
+        // Don't display special page elements
+        $opts['display'] =  array_merge($opts['display'],
+                                        array(
+                                          'form'  => false,
+                                          'query' => false,
+                                          'sort'  => false,
+                                          'time'  => false,
+                                          'tabs'  => false
+                                          ));
+        // Disable sorting buttons
+        foreach ($opts['fdd'] as $key => $value) {
+          $opts['fdd'][$key]['sort'] = false;
+        }
       }
-    }
 
-    $opts['execute'] = $this->execute;
+      $opts['execute'] = $this->execute;
 
-    $this->pme = new \phpMyEdit($opts);
+      $this->pme = new \phpMyEdit($opts);
 
-    if (Util::debugMode('request')) {
-      echo '<PRE>';
-      print_r($_POST);
-      echo '</PRE>';
-    }
+      if (Util::debugMode('request')) {
+        echo '<PRE>';
+        print_r($_POST);
+        echo '</PRE>';
+      }
 
-  } // display()
+    } // display()
 
-  /**Provide a very primitive direct matrix representation, filtered
-   * by the given project and/or musician.
-   */
-  static public function tableExport($projectId, $musicianId = -1, $handle = false)
-  {
-    $ownConnection = $handle === false;
+    /**Provide a very primitive direct matrix representation, filtered
+     * by the given project and/or musician.
+     */
+    static public function tableExport($projectId, $musicianId = -1, $handle = false)
+    {
+      $ownConnection = $handle === false;
 
-    if ($ownConnection) {
-      Config::init();
-      $handle = mySQL::connect(Config::$pmeopts);
-    }
+      if ($ownConnection) {
+        Config::init();
+        $handle = mySQL::connect(Config::$pmeopts);
+      }
 
-    $query = "SELECT `Musiker`.`Name`,`Musiker`.`Vorname`,`Projekte`.`Name` as 'ProjectName',`".self::MEMBER_TABLE."`.*,`Besetzungen`.`Unkostenbeitrag` FROM ".self::MEMBER_TABLE."
+      $query = "SELECT `Musiker`.`Name`,`Musiker`.`Vorname`,`Projekte`.`Name` as 'ProjectName',`".self::MEMBER_TABLE."`.*,`Besetzungen`.`Unkostenbeitrag` FROM ".self::MEMBER_TABLE."
   LEFT JOIN `Besetzungen` ON (`Besetzungen`.`ProjektId` = `".self::MEMBER_TABLE."`.`projectId`
     AND `Besetzungen`.`MusikerId` = `".self::MEMBER_TABLE."`.`musicianId`)
   LEFT JOIN `Musiker` ON `Musiker`.`Id` = `".self::MEMBER_TABLE."`.`musicianId`
   LEFT JOIN `Projekte` ON `Projekte`.`Id` = `".self::MEMBER_TABLE."`.`projectI`
   WHERE `projectId` = ".$projectId;
-    if ($musicianId > 0) {
-      $query .= " AND `musicianId = ".$musicianId;
-    }
+      if ($musicianId > 0) {
+        $query .= " AND `musicianId = ".$musicianId;
+      }
 
-    $result = mySQL::query($query, $handle);
-    $table = array();
-    while ($row = mySQL::fetch($result)) {
-      $table[] = $row;
-    }
+      $result = mySQL::query($query, $handle);
+      $table = array();
+      while ($row = mySQL::fetch($result)) {
+        $table[] = $row;
+      }
       
-    if ($ownConnection) {
-      mySQL::close($handle);
+      if ($ownConnection) {
+        mySQL::close($handle);
+      }
+    
+      return $table;
     }
     
-    return $table;
-  }
-    
-  /**Export the respective debit-mandates and generate a flat table
-   * view which can 1 to 1 be exported into a CSV table suitable to
-   * finally issue the debit mandates to the respective credit
-   * institutes.
-   */
-  static public function aqBankingDebitNotes($debitTable)
-  {
-    $iban  = new \IBAN(Config::getValue('bankAccountIBAN'));
-    $iban  = $iban->MachineFormat();
-    $bic   = Config::getValue('bankAccountBIC');
-    $owner = Config::getValue('bankAccountOwner');
-    $executionDate = date('Y/M/d', strtotime('+ 10 day1'));
+    /**Export the respective debit-mandates and generate a flat table
+     * view which can 1 to 1 be exported into a CSV table suitable to
+     * finally issue the debit mandates to the respective credit
+     * institutes.
+     */
+    static public function aqBankingDebitNotes($debitTable)
+    {
+      $iban  = new \IBAN(Config::getValue('bankAccountIBAN'));
+      $iban  = $iban->MachineFormat();
+      $bic   = Config::getValue('bankAccountBIC');
+      $owner = Config::getValue('bankAccountOwner');
+      $executionDate = date('Y/M/d', strtotime('+ 10 day1'));
       
-    // "localBic";"localIban";"remoteBic";"remoteIban";"date";"value/value";"value/currency";"localName";"remoteName";"creditorSchemeId";"mandateId";"mandateDate/dateString";"mandateDebitorName";"sequenceType";"purpose[0]";"purpose[1]";"purpose[2]";"purpose[3]"
-    $result = array();
-    foreach($debitTable as $row) {
-      $result[] = array('localBic' => $bic,
-                        'localIBan' => $iban,
-                        'remoteBic' => Config::decrypt($row['BIC']),
-                        'remoteIban' => Config::decrypt($row['IBAN']),
-                        'data' => $executionDate,
-                        'value/value' => $row['Unkostenbeitrag'],
-                        'value/currency' => 'EUR',
-                        'localName' => $owner,
-                        'remoteName' => Config::decrypt($row['bankAccountOwner']),
-                        'creditorSchemeId' => Config::getValue('bankAccountCreditorIdentifier'),
-                        'mandateId' => $row['mandateReference'],
-                        'mandateDate/dateString' => date('YMd', $row['mandateDate']),
-                        'mandateDebitorName' => $row['Name'].', '.$row['Vorname'],
-                        'sequenceType' => $row['nonrecurring'] ? 'once' : 'FIXME',
-                        'purpose' => array(L::t('Fees for %s', array($row['ProjectName'])),
-                                           '', '', '')
-        );
+      // "localBic";"localIban";"remoteBic";"remoteIban";"date";"value/value";"value/currency";"localName";"remoteName";"creditorSchemeId";"mandateId";"mandateDate/dateString";"mandateDebitorName";"sequenceType";"purpose[0]";"purpose[1]";"purpose[2]";"purpose[3]"
+      $result = array();
+      foreach($debitTable as $row) {
+        $result[] = array('localBic' => $bic,
+                          'localIBan' => $iban,
+                          'remoteBic' => Config::decrypt($row['BIC']),
+                          'remoteIban' => Config::decrypt($row['IBAN']),
+                          'data' => $executionDate,
+                          'value/value' => $row['Unkostenbeitrag'],
+                          'value/currency' => 'EUR',
+                          'localName' => $owner,
+                          'remoteName' => Config::decrypt($row['bankAccountOwner']),
+                          'creditorSchemeId' => Config::getValue('bankAccountCreditorIdentifier'),
+                          'mandateId' => $row['mandateReference'],
+                          'mandateDate/dateString' => date('YMd', $row['mandateDate']),
+                          'mandateDebitorName' => $row['Name'].', '.$row['Vorname'],
+                          'sequenceType' => $row['nonrecurring'] ? 'once' : 'FIXME',
+                          'purpose' => array(L::t('Fees for %s', array($row['ProjectName'])),
+                                             '', '', '')
+          );
+      }
+      return $result;
     }
-    return $result;
-  }
 
-}; // class definition.
+  }; // class definition.
 
 }
 

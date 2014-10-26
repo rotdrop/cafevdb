@@ -572,6 +572,8 @@ mandateReference
       return $phpMailer->GetSentMIMEMessage();
     }
 
+    /**Record diagnostic output from the actual message composition for the status page. 
+     */
     private function recordMessageDiagnostics($mimeMsg)
     {
       // Positive diagnostics

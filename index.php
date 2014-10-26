@@ -162,7 +162,7 @@ namespace CAFEVDB
     $tmpl->assign('debug', true);
     $admin = \OCP\User::getDisplayName('admin').
       ' <'.\OCP\Config::getUserValue('admin', 'settings', 'email').'>';
-    $tmpl->assign('admin', htmlentities($admin));
+    $tmpl->assign('admin', Util::htmlEncode($admin));
 
     return $tmpl->printPage();
 
