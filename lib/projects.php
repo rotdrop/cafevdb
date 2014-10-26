@@ -467,7 +467,8 @@ a comma.'));
       self::generateProjectWikiPage($projectId, $projectName, $handle);
 
       // Generate an empty offline page template in the public web-space
-      self::createProjectWebPage($projectId, $pme->dbh);
+      self::createProjectWebPage($projectId, 'concert', $pme->dbh);
+      self::createProjectWebPage($projectId, 'rehearsals', $pme->dbh);
 
       return true;
     }
@@ -675,6 +676,8 @@ a comma.'));
     
       $categories = array(array('id' => Config::getValue('redaxoPreview'),
                                 'name' => L::t('Preview')),
+                          array('id' => Config::getValue('redaxoRehearsals'),
+                                'name' => L::t('Rehearsals')),
                           array('id' => Config::getValue('redaxoArchive'),
                                 'name' => L::t('Archive')),
                           array('id' => Config::getValue('redaxoTrashbin'),
@@ -1086,7 +1089,7 @@ __EOT__;
      * of the project, subsequent one have a number attached like
      * Tango2014-5
      */
-    public static function createProjectWebPage($projectId, $handle = false)
+    public static function createProjectWebPage($projectId, $kind = 'concert', $handle = false)
     {
       $ownConnection = $handle === false;
 
@@ -1103,15 +1106,29 @@ __EOT__;
         return false;
       }
 
-      // Don't care about the archive, new pages go to preview, and the
-      // id will be unique even in case of a name clash
-      $previewCat = Config::getValue('redaxoPreview');
+      switch ($kind) {
+      case 'rehearsals':
+        $prefix = L::t('Rehearsals').' ';
+        $category = Config::getValue('redaxoRehearsals');
+        $module = Config::getValue('redaxoRehearsalsModule');
+        break;
+      default:
+        // Don't care about the archive, new pages go to preview, and the
+        // id will be unique even in case of a name clash
+        $prefix = '';
+        $category = Config::getValue('redaxoPreview');
+        $module = Config::getValue('redaxoConcertModule');
+        break;
+      }
+
+      // General page template
       $pageTemplate = Config::getValue('redaxoTemplate');
     
       $redaxoLocation = \OCP\Config::GetAppValue('redaxo', 'redaxolocation', '');
       $rex = new \Redaxo\RPC($redaxoLocation);
 
-      $articles = $rex->articlesByName($projectName.'(-[0-9]+)?', $previewCat);
+      $pageName = $prefix.$projectName;
+      $articles = $rex->articlesByName($pageName.'(-[0-9]+)?', $category);
       if (!is_array($articles)) {
         if ($ownConnection) {
           mySQL::close($handle);
@@ -1123,7 +1140,6 @@ __EOT__;
       foreach ($articles as $article) {
         $names[] = $article['ArticleName'];
       }
-      $pageName = $projectName;
       if (array_search($pageName, $names) !== false) {
         for ($i = 1; ; ++$i) {
           if (array_search($pageName.'-'.$i, $names) === false) {
@@ -1134,7 +1150,7 @@ __EOT__;
         }
       }
     
-      $article = $rex->addArticle($pageName, $previewCat, $pageTemplate);
+      $article = $rex->addArticle($pageName, $category, $pageTemplate);
 
       if ($article === false) {
         \OCP\Util::writeLog(Config::APP_NAME, "Error generating web page template", \OC_LOG::DEBUG);
@@ -1157,7 +1173,6 @@ __EOT__;
         return false;
       }
 
-      $module = Config::getValue('redaxoDefaultModule');
       $rex->addArticleBlock($article['ArticleId'], $module);
 
       if ($ownConnection) {

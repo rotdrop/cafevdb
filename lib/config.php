@@ -90,10 +90,12 @@ projectsfolder
 executiveBoardTable
 memberTable
 redaxoPreview
-readxoArchive
+redaxoArchive
+redaxoRehearsals
 redaxoTrashbin
 redaxoTemplate
-redaxoDefaultModule
+redaxoConcertModule
+redaxoRehearsalsModule
 ';
     const DFLT_CALS = 'concerts,rehearsals,other,management';
 // L::t('concerts') L::t('rehearsals') L::t('other') L::t('management')

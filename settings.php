@@ -120,7 +120,13 @@ namespace CAFEVDB {
         $tmpl->assign('email'.$key, Config::getValue('email'.$key));
       }
 
-      foreach (array('Preview', 'Archive', 'Trashbin', 'Template', 'DefaultModule') as $key) {
+      foreach (array('Preview',
+                     'Archive',
+                     'Rehearsals',
+                     'Trashbin',
+                     'Template',
+                     'ConcertModule',
+                     'RehearsalsModule') as $key) {
         $tmpl->assign('redaxo'.$key, Config::getValue('redaxo'.$key));
       }
 

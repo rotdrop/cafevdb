@@ -47,6 +47,15 @@ Config::init();
       <br/>
       <input type="text"
              class="redaxo"
+             id="redaxoRehearsals"
+             name="redaxoRehearsals"
+             placeholder="<?php L::t('rehearsals'); ?>"
+             value="<?php echo $_['redaxoRehearsals']; ?>"
+             title="<?php echo Config::toolTips('redaxo-rehearsals'); ?>" />
+      <label for="redaxoArchive"><?php echo L::t('Id of Redaxo Rehearsals Category'); ?></label>
+      <br/>
+      <input type="text"
+             class="redaxo"
              id="redaxoTrashbin"
              name="redaxoTrashbin"
              placeholder="<?php L::t('trashbin'); ?>"
@@ -65,12 +74,21 @@ Config::init();
       <br/>
       <input type="text"
              class="redaxo"
-             id="redaxoDefaultModule"
-             name="redaxoDefaultModule"
+             id="redaxoConcertModule"
+             name="redaxoConcertModule"
              placeholder="<?php L::t('template'); ?>"
-             value="<?php echo $_['redaxoDefaultModule']; ?>"
+             value="<?php echo $_['redaxoConcertModule']; ?>"
              title="<?php echo Config::toolTips('redaxo-template'); ?>" />
-      <label for="redaxoDefaultModule"><?php echo L::t('Id of Redaxo Default-Module'); ?></label>
+      <label for="redaxoConcertModule"><?php echo L::t('Id of Redaxo Concert-Module'); ?></label>
+      <br/>
+      <input type="text"
+             class="redaxo"
+             id="redaxoRehearsalsModule"
+             name="redaxoRehearsalsModule"
+             placeholder="<?php L::t('template'); ?>"
+             value="<?php echo $_['redaxoRehearsalsModule']; ?>"
+             title="<?php echo Config::toolTips('redaxo-template'); ?>" />
+      <label for="redaxoRehearsalsModule"><?php echo L::t('Id of Redaxo Rehearsals-Module'); ?></label>
     </fieldset>
     <span class="statusmessage" id="msg"></span>  
   </form>

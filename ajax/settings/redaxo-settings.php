@@ -24,10 +24,19 @@ if (!OC_SubAdmin::isGroupAccessible($user, $group)) {
     return;
 }
 
-$redaxoKeys = array('Preview', 'Archive', 'Trashbin', 'Template', 'DefaultModule');
+$redaxoKeys = array(
+  'Preview',
+  'Archive',
+  'Rehearsals',
+  'Trashbin',
+  'Template',
+  'ConcertModule',
+  'RehearsalsModule'
+  );
 if (false) {
   L::t('Preview');
   L::t('Archive');
+  L::t('Rehearsals');
   L::t('Trashbin');
   L::t('Template');
 }
