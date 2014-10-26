@@ -380,7 +380,7 @@ has been ``closed\'\'.'),
 
       'project-action-wiki' => L::t('Change to the DokuWiki-page for this project (if there is one)'),
 
-      'project-web-article-add' => L::t('Add a new public web-page to the project, either by generating a new one or by linking an existing web-page to the given project.'),
+      'project-web-article-add' => L::t('Add a new public web-page to the project by generating a new, empty concert announcement.'),
 
       'project-web-article-delete' => L::t('Delete the currently displayed web-page fromthe project. The web page will be "detached" from the project and moved to the trash-bin
 "category" (folger) inside the CMS.'),
