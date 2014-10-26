@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-10-26 22:24+0100\n"
+"POT-Creation-Date: 2014-10-26 23:25+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -104,11 +104,11 @@ msgstr ""
 msgid "Email Address Validation Failed"
 msgstr ""
 
-#: ajax/email/composer.php:252
+#: ajax/email/composer.php:255 ajax/email/recipients.php:140
 msgid "PHP Exception Caught"
 msgstr ""
 
-#: ajax/email/composer.php:256
+#: ajax/email/composer.php:259 ajax/email/recipients.php:144
 #, php-format
 msgid ""
 "Error, caught an exception. Please copy the displayed text and send it by "
@@ -134,12 +134,6 @@ msgstr ""
 #: ajax/email/progress.php:54
 #, php-format
 msgid "Unable to fetch progress status with id %d"
-msgstr ""
-
-#: ajax/email/recipients.php:135
-msgid ""
-"Error, caught an exception. Please copy the displayed text and send it by "
-"email to the web-master."
 msgstr ""
 
 #: ajax/email/savecontacts.php:96
@@ -1874,118 +1868,118 @@ msgstr ""
 msgid "Invalid argument value: `%s'"
 msgstr ""
 
-#: lib/functions.php:688
+#: lib/functions.php:696
 msgid "Export Table"
 msgstr ""
 
-#: lib/functions.php:696
+#: lib/functions.php:704
 msgid "Excel Export"
 msgstr ""
 
-#: lib/functions.php:699
+#: lib/functions.php:707
 msgid "HTML/Spreadsheet"
 msgstr ""
 
-#: lib/functions.php:702
+#: lib/functions.php:710
 msgid "CSV Export"
 msgstr ""
 
-#: lib/functions.php:705
+#: lib/functions.php:713
 msgid "HTML Export"
 msgstr ""
 
-#: lib/functions.php:920
+#: lib/functions.php:928
 msgid "Error: Unknonwn Button Type"
 msgstr ""
 
-#: lib/functions.php:940
+#: lib/functions.php:948
 msgid "View all Projects"
 msgstr ""
 
-#: lib/functions.php:941
+#: lib/functions.php:949
 msgid "Overview over all known projects (start-page)."
 msgstr ""
 
-#: lib/functions.php:952
+#: lib/functions.php:960
 msgid "Display all Musicians"
 msgstr ""
 
-#: lib/functions.php:953
+#: lib/functions.php:961
 msgid ""
 "Display all musicians stored in the data-base, with detailed facilities for "
 "filtering and sorting."
 msgstr ""
 
-#: lib/functions.php:964
+#: lib/functions.php:972
 msgid ""
 "Mass-email form, use with care. Mass-emails will be logged. Recipients will "
 "be specified by the Bcc: field in the header, so the recipients are "
 "undisclosed to each other."
 msgstr ""
 
-#: lib/functions.php:977
+#: lib/functions.php:985
 msgid "Email History"
 msgstr ""
 
-#: lib/functions.php:978
+#: lib/functions.php:986
 msgid "Display all emails sent by our mass-email form."
 msgstr ""
 
-#: lib/functions.php:996
+#: lib/functions.php:1004
 msgid "The currently active project."
 msgstr ""
 
-#: lib/functions.php:1011 lib/projects.php:758
+#: lib/functions.php:1019 lib/projects.php:758
 msgid "Instrumentation"
 msgstr ""
 
-#: lib/functions.php:1012
+#: lib/functions.php:1020
 msgid ""
 "Detailed display of all registered musicians for the selected project. The "
 "table will allow for modification of personal data like email, phone, "
 "address etc."
 msgstr ""
 
-#: lib/functions.php:1025 lib/project-instruments.php:385
+#: lib/functions.php:1033 lib/project-instruments.php:385
 msgid "Add Instruments"
 msgstr ""
 
-#: lib/functions.php:1026
+#: lib/functions.php:1034
 msgid ""
 "Display the list of instruments known by the data-base, possibly add new "
 "ones as needed."
 msgstr ""
 
-#: lib/functions.php:1039 lib/project-instruments.php:69 lib/projects.php:763
+#: lib/functions.php:1047 lib/project-instruments.php:69 lib/projects.php:763
 #: lib/projects.php:970
 msgid "Instrumentation Numbers"
 msgstr ""
 
-#: lib/functions.php:1040 lib/tooltips.php:379
+#: lib/functions.php:1048 lib/tooltips.php:379
 msgid ""
 "Display the desired instrumentaion numbers, i.e. how many musicians are "
 "already registered for each instrument group and how many are finally needed."
 msgstr ""
 
-#: lib/functions.php:1053 lib/functions.php:1079 lib/projects.php:799
+#: lib/functions.php:1061 lib/functions.php:1087 lib/projects.php:799
 msgid "Debit Mandates"
 msgstr ""
 
-#: lib/functions.php:1054
+#: lib/functions.php:1062
 msgid "Display a table with the SEPA debit mandates related to the project."
 msgstr ""
 
-#: lib/functions.php:1067
+#: lib/functions.php:1075
 msgid "Insurances"
 msgstr ""
 
-#: lib/functions.php:1068
+#: lib/functions.php:1076
 msgid ""
 "Display a table with an overview about the current state of the member's "
 "instrument insurances."
 msgstr ""
 
-#: lib/functions.php:1080
+#: lib/functions.php:1088
 msgid "Display a table with an overview over all SEPA debit mandates."
 msgstr ""
 
@@ -4451,8 +4445,8 @@ msgstr ""
 
 #: templates/part.emailform.statuspage.php:644
 msgid ""
-"The most recent status message is always saved to the status panel. It can "
-"be reviewed there even after closing the dialog window."
+"The most recent status messages are always saved to the status panel. Please "
+"see there for detailed diagnostics."
 msgstr ""
 
 #: templates/project-web-articles.php:118
