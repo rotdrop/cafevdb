@@ -249,10 +249,11 @@ td.eventdata-0-brief, td.eventdata-1-brief {
 	float: right;
 }
 #from, #to {
-	width: 65px;
+	width: 80px;
 	margin: 0;
 }
 #fromtime, #totime {
+	width: 80px;
 	margin: 0;
 }
 #event-allday {
