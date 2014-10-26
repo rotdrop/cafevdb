@@ -339,7 +339,7 @@ __EOT__;
       //$title = addslashes($title);
       $class = $cssid === false ? '' : ' '.$cssid;
       echo '<input type="hidden" class="alertdata'.$class.
-        '" name="'.htmlspecialchars($title).'" value="'.htmlspecialchars($text).'">'."\n";
+        '" name="'.Util::htmlEscape($title).'" value="'.Util::htmlEscape($text).'">'."\n";
       echo '<div class="alertblock'.$class.' cafevdb-error"><span class="title">'.$title.'</span><div class="text">'.$text.'</div></div>';
     }
 
@@ -529,6 +529,14 @@ __EOT__;
       return htmlentities($string, null, 'UTF-8', $double_encode);
     }
 
+    /**Wrapper around htmlspecialchars(); avoid double encoding, standard
+     * options, UTF-8 for stone-age PHP versions.
+     */
+    public static function htmlEscape($string, $ent = null, $double_encode = false)
+    {
+      return htmlspecialchars($string, null, 'UTF-8', $double_encode);
+    }
+
     /** phpMyEdit calls the triggers (callbacks) with the following arguments:
      *
      * @param[in] $pme The phpMyEdit instance
@@ -615,7 +623,7 @@ __EOT__;
       if (!is_array($options) || count($options) == 0) {
         return $result;
       }
-      $oldGroup = isset($options[0]['group']) ? htmlspecialchars($options[0]['group']) : false;
+      $oldGroup = isset($options[0]['group']) ? Util::htmlEscape($options[0]['group']) : false;
       if ($oldGroup) {
         $groupClass = isset($options[0]['groupClass']) ? ' class="'.$options[0]['groupClass'].'"' : '';
         $result .= '<optgroup label="'.$oldGroup.'"'.$groupClass.'>
@@ -626,9 +634,9 @@ __EOT__;
         $flags = isset($option['flags']) ? $option['flags'] : 0;
         $disabled = $flags & self::DISABLED ? ' disabled="disabled"' : '';
         $selected = $flags & self::SELECTED ? ' selected="selected"' : '';
-        $label    = isset($option['label']) ? ' label="'.htmlspecialchars($option['label']).'"' : '';
-        $title    = isset($option['title']) ? ' title="'.htmlspecialchars($option['title']).'"' : '';
-        $group = isset($option['group']) ? htmlspecialchars($option['group']) : false;
+        $label    = isset($option['label']) ? ' label="'.Util::htmlEscape($option['label']).'"' : '';
+        $title    = isset($option['title']) ? ' title="'.Util::htmlEscape($option['title']).'"' : '';
+        $group = isset($option['group']) ? Util::htmlEscape($option['group']) : false;
         if ($group != $oldGroup) {
           $result .= '</optgroup>
 ';
@@ -641,10 +649,10 @@ __EOT__;
             $indent = '  ';
           }
         }
-        $result .= $indent.'<option value="'.htmlspecialchars($option['value']).'"'.
+        $result .= $indent.'<option value="'.Util::htmlEscape($option['value']).'"'.
           $disabled.$selected.$label.$title.
           '>'.
-          htmlspecialchars($option['name']).
+          Util::htmlEscape($option['name']).
           '</option>
 ';
       }
@@ -670,7 +678,7 @@ __EOT__;
         }
         return $result;
       } else {
-        return '<input type="hidden" name="'.$key.'" value="'.htmlspecialchars($value).'"/>'."\n";
+        return '<input type="hidden" name="'.$key.'" value="'.Util::htmlEscape($value).'"/>'."\n";
       }
     }
   
@@ -834,7 +842,7 @@ __EOT__;
       foreach ($tags as $key => $tag) {
         $type  = isset($tag['type']) ? $tag['type'] : 'button';
         $name  = $tag['name'];
-        $value = ' value="'.htmlspecialchars((isset($tag['value']) ? $tag['value'] : $name)).'"';
+        $value = ' value="'.Util::htmlEscape((isset($tag['value']) ? $tag['value'] : $name)).'"';
         $title = ' title="'.(isset($tag['title']) ? $tag['title'] : $name).'"';
         $id    = isset($tag['id']) ? ' id="'.$tag['id'].'"' : '';
         $class = ' class="'.$tag['class'].'"';
@@ -847,7 +855,7 @@ __EOT__;
           }
           foreach ($dataArray as $key => $dataValue) {
             $key = self::camelCaseToDashes($key);
-            $data .= ' data-'.$key.'="'.htmlspecialchars($dataValue).'"';
+            $data .= ' data-'.$key.'="'.Util::htmlEscape($dataValue).'"';
           }
         }
         switch ($type) {
@@ -902,7 +910,7 @@ __EOT__;
             $name  = '';
           }                 
           $style = isset($tag['style']) ? ' style="'.$tag['style'].'"' : '';
-          $name  = $name != '' ? ' name="'.htmlspecialchars($name).'"' : '';
+          $name  = $name != '' ? ' name="'.Util::htmlEscape($name).'"' : '';
           $html .= ''
             .'<input type="button" '.$class.$value.$title.$data.$id.$style.$name.'/>
 ';
