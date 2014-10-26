@@ -651,6 +651,18 @@ form#cafevdb-email-form input.instruments-filter-controls.reset {
 
 /******************************************************************************
  *
+ * Hide message text in oc-dialog after sending, still visible in
+ * status-tab, which really is enough
+ *
+ */
+.oc-dialog .group.message.text {
+  display:none;
+  height:0;
+  max-height:0;
+}
+
+/******************************************************************************
+ *
  * File upload support
  *
  */

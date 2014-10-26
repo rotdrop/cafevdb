@@ -24,118 +24,131 @@
  * Recipients filter AJAX handler for mass-email sending.
  */
 
-\OCP\JSON::checkLoggedIn();
-\OCP\JSON::checkAppEnabled('cafevdb');
-\OCP\JSON::callCheck();
+namespace CAFEVDB {
 
-use CAFEVDB\L;
-use CAFEVDB\Config;
-use CAFEVDB\Events;
-use CAFEVDB\Util;
-use CAFEVDB\Error;
-use CAFEVDB\Navigation;
-use CAFEVDB\EmailRecipientsFilter;
+  \OCP\JSON::checkLoggedIn();
+  \OCP\JSON::checkAppEnabled('cafevdb');
+  \OCP\JSON::callCheck();
 
-try {
+  $recipientsFilter = false;
 
-  ob_start();
+  try {
 
-  Error::exceptions(true);
-  Config::init();
+    ob_start();
 
-  $_GET = array();
+    Error::exceptions(true);
+    Config::init();
 
-  $debugText = '';
-  $messageText = '';
+    $_GET = array();
 
-  if (true || Util::debugMode('request')) {
+    $debugText = '';
+    $messageText = '';
+
+    if (true || Util::debugMode('request')) {
 //    $debugText .= '$_SESSION[] = '.print_r(Config::sessionRetrieveValue('FilterHistory'), true);
-    $debugText .= '$_POST[] = '.print_r($_POST, true);
-  }
-
-  $projectId      = Util::cgiValue('ProjectId', -1);
-  $projectName    = Util::cgiValue('ProjectName', ''); // the name
-
-  // TODO: check recipientsData
-
-  // We only need to manipulate the options for the select box. The
-  // other form elements are updated accordingly by their java-script
-  // libraries or by the web-browser.
-
-  $recipientsFilter = new EmailRecipientsFilter();
-
-  if ($recipientsFilter->reloadState()) {
-    // Rebuild the entire page
-    $recipientsOptions = array();
-    $missingEmailAddresses = '';
-
-    $tmpl = new OCP\Template('cafevdb', 'part.emailform.recipients');
-    $tmpl->assign('ProjectName', $projectName);
-    $tmpl->assign('ProjectId', $projectId);
-    
-    // Needed for the recipient selection
-    $tmpl->assign('RecipientsFormData', $recipientsFilter->formData());
-    $filterHistory = $recipientsFilter->filterHistory();
-    $tmpl->assign('FilterHistory', $filterHistory);
-    $tmpl->assign('MemberStatusFilter', $recipientsFilter->memberStatusFilter());
-    $tmpl->assign('BasicRecipientsSet', $recipientsFilter->basicRecipientsSet());
-    $tmpl->assign('InstrumentsFilter', $recipientsFilter->instrumentsFilter());
-    $tmpl->assign('EmailRecipientsChoices', $recipientsFilter->emailRecipientsChoices());
-    $tmpl->assign('MissingEmailAddresses', $recipientsFilter->missingEmailAddresses());
-
-    $contents = $tmpl->fetchPage();
-  } else if ($recipientsFilter->snapshotState()) {
-    // short-circuit
-    @ob_end_clean();
-    $filterHistory = $recipientsFilter->filterHistory();
-    OCP\JSON::success(array('data' => array('filterHistory' => $filterHistory)));
-    return true;
-  } else {
-    $recipientsChoices = $recipientsFilter->emailRecipientsChoices();
-    $recipientsOptions = Navigation::selectOptions($recipientsChoices);
-    $missingEmailAddresses = '';
-    $separator = '';
-    foreach ($recipientsFilter->missingEmailAddresses() as $id => $name) {
-      $missingEmailAddresses .= $separator; $separator = ', ';
-      $missingEmailAddresses .=
-        '<span class="missing-email-addresses personal-record" '.
-        '      data-id="'.$id.'">'.$name.'</span>';
+      $debugText .= '$_POST[] = '.print_r($_POST, true);
     }
-    $filterHistory = $recipientsFilter->filterHistory();
-    $contents = '';
-  }
-  
-  $debugText .= ob_get_contents();
-  @ob_end_clean();
+
+    $projectId      = Util::cgiValue('ProjectId', -1);
+    $projectName    = Util::cgiValue('ProjectName', ''); // the name
+
+    // TODO: check recipientsData
+
+    // We only need to manipulate the options for the select box. The
+    // other form elements are updated accordingly by their java-script
+    // libraries or by the web-browser.
+
+    $recipientsFilter = new EmailRecipientsFilter();
+
+    if ($recipientsFilter->reloadState()) {
+      // Rebuild the entire page
+      $recipientsOptions = array();
+      $missingEmailAddresses = '';
+
+      $tmpl = new \OCP\Template('cafevdb', 'part.emailform.recipients');
+      $tmpl->assign('ProjectName', $projectName);
+      $tmpl->assign('ProjectId', $projectId);
     
-  OCP\JSON::success(
-    array('data' => array('projectName' => $projectName,
-                          'projectId' => $projectId,
-                          'contents' => $contents,
-                          'recipientsOptions' => $recipientsOptions,
-                          'missingEmailAddresses' => $missingEmailAddresses,
-                          'filterHistory' => $filterHistory,
-                          'debug' => $debugText)));
+      // Needed for the recipient selection
+      $tmpl->assign('RecipientsFormData', $recipientsFilter->formData());
+      $filterHistory = $recipientsFilter->filterHistory();
+      $tmpl->assign('FilterHistory', $filterHistory);
+      $tmpl->assign('MemberStatusFilter', $recipientsFilter->memberStatusFilter());
+      $tmpl->assign('BasicRecipientsSet', $recipientsFilter->basicRecipientsSet());
+      $tmpl->assign('InstrumentsFilter', $recipientsFilter->instrumentsFilter());
+      $tmpl->assign('EmailRecipientsChoices', $recipientsFilter->emailRecipientsChoices());
+      $tmpl->assign('MissingEmailAddresses', $recipientsFilter->missingEmailAddresses());
 
-  unset($recipientsFilter);
+      $contents = $tmpl->fetchPage();
+    } else if ($recipientsFilter->snapshotState()) {
+      // short-circuit
+      @ob_end_clean();
+      $filterHistory = $recipientsFilter->filterHistory();
+      \OCP\JSON::success(array('data' => array('filterHistory' => $filterHistory)));
+      return true;
+    } else {
+      $recipientsChoices = $recipientsFilter->emailRecipientsChoices();
+      $recipientsOptions = Navigation::selectOptions($recipientsChoices);
+      $missingEmailAddresses = '';
+      $separator = '';
+      foreach ($recipientsFilter->missingEmailAddresses() as $id => $name) {
+        $missingEmailAddresses .= $separator; $separator = ', ';
+        $missingEmailAddresses .=
+          '<span class="missing-email-addresses personal-record" '.
+          '      data-id="'.$id.'">'.$name.'</span>';
+      }
+      $filterHistory = $recipientsFilter->filterHistory();
+      $contents = '';
+    }
+  
+    unset($recipientsFilter);
 
-  return true;
+    $debugText .= ob_get_contents();
+    @ob_end_clean();
+    
+    \OCP\JSON::success(
+      array('data' => array('projectName' => $projectName,
+                            'projectId' => $projectId,
+                            'contents' => $contents,
+                            'recipientsOptions' => $recipientsOptions,
+                            'missingEmailAddresses' => $missingEmailAddresses,
+                            'filterHistory' => $filterHistory,
+                            'debug' => $debugText)));
 
-} catch (\Exception $e) {
+    return true;
 
-  $debugText .= ob_get_contents();
-  @ob_end_clean();
+  } catch (\Exception $e) {
 
-  OCP\JSON::error(
-    array(
-      'data' => array(
-        'error' => 'exception',
-        'exception' => $e->getFile().'('.$e->getLine().'): '.$e->getMessage(),
-        'trace' => $e->getTraceAsString(),
-        'message' => L::t('Error, caught an exception. '.
-                          'Please copy the displayed text and send it by email to the web-master.'),
-        'debug' => $debugText)));
-  return false;
-}
+    unset($recipientsFilter);
+
+    $debugText .= ob_get_contents();
+    @ob_end_clean();
+
+    $exceptionText = $e->getFile().'('.$e->getLine().'): '.$e->getMessage();
+    $trace = $e->getTraceAsString();
+
+    $admin = Config::adminContact();
+
+    $mailto = $admin['email'].
+      '?subject='.rawurlencode('[CAFEVDB-Exception] Exceptions from Email-Form').
+      '&body='.rawurlencode($exceptionText."\r\n".$trace);
+    $mailto = '<span class="error email"><a href="mailto:'.$mailto.'">'.$admin['name'].'</a></span>';
+
+    \OCP\JSON::error(
+      array(
+        'data' => array(
+          'caption' => L::t('PHP Exception Caught'),
+          'error' => 'exception',
+          'exception' => $exceptionText,
+          'trace' => $trace,
+          'message' => L::t('Error, caught an exception. '.
+                            'Please copy the displayed text and send it by email to %s.',
+                            array($mailto)),
+          'debug' => htmlspecialchars($debugText))));
+
+    return false;
+  }
+
+} // namespace CAFEVDB
 
 ?>

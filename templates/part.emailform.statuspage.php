@@ -641,7 +641,7 @@ namespace CAFEVDB {
     echo '
 <div class="spacer"><div class="ruler"></div></div>
 <div class="emailform error group">
-  <div class="emailform error heading">'.L::t('The most recent status message is always saved to the status panel. It can be reviewed there even after closing the dialog window.').'</div>
+  <div class="emailform error heading">'.L::t('The most recent status messages are always saved to the status panel. Please see there for detailed diagnostics.').'</div>
 </div>
 <div class="spacer"><div class="ruler"></div></div>';  
   }

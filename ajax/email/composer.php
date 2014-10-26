@@ -182,12 +182,15 @@ namespace CAFEVDB {
       throw new \InvalidArgumentException(L::t("Unknown request: `%s'.", $request));
     }
   
-    $debugText .= ob_get_contents();
-    @ob_end_clean();
+    unset($composer);
+    unset($recipientsFilter);
 
     // Restart sesssion when finished.
     session_start();
     $sessionSuspended = false;
+
+    $debugText .= ob_get_contents();
+    @ob_end_clean();
 
     if (Util::debugMode('request') || Util::debugMode('emailform')) {
       $debugText .= print_r($requestData, true);
@@ -221,20 +224,20 @@ namespace CAFEVDB {
                               'debug' => htmlspecialchars($debugText))));
     }
 
-    unset($composer);
-    unset($recipientsFilter);
-
     return true;
 
   } catch (\Exception $e) {
 
-    $debugText .= ob_get_contents();
-    @ob_end_clean();
+    unset($composer);
+    unset($recipientsFilter);
 
     if ($sessionSuspended) {
       // Restart sesssion when finished.
       session_start();
     }
+
+    $debugText .= ob_get_contents();
+    @ob_end_clean();
 
     $exceptionText = $e->getFile().'('.$e->getLine().'): '.$e->getMessage();
     $trace = $e->getTraceAsString();
