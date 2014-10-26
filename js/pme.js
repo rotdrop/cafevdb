@@ -355,10 +355,18 @@ var PHPMYEDIT = PHPMYEDIT || {};
         //alert(post);
 
         OC.Notification.hide(function() {
+          var dialogWidget = container.dialog('widget');
+
+          dialogWidget.addClass('pme-table-dialog-blocked');
+          CAFEVDB.Page.busyIcon(true);
+
           $.post(OC.filePath('cafevdb', 'ajax/pme', 'pme-table.php'),
                  post,
                  function (data) {
+                   CAFEVDB.Page.busyIcon(false);
+
                    if (!CAFEVDB.ajaxErrorHandler(data, [ 'contents' ])) {
+                     dialogWidget.removeClass('pme-table-dialog-blocked');
                      return false;
                    }
 
@@ -377,6 +385,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                    }
 
                    if (options.InitialViewOperation) {
+                     dialogWidget.removeClass('pme-table-dialog-blocked');
                      options.ReloadName = options.InitialName;
                      options.ReloadValue = options.InitialValue;
                      pme.tableDialogReload(options, callback);
