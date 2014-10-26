@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-10-13 01:25+0200\n"
+"POT-Creation-Date: 2014-10-26 13:25+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -43,7 +43,7 @@ msgid "Blog entry with id `%s' could not be retrieved."
 msgstr ""
 
 #: ajax/blog/editentry.php:101 ajax/blog/modifyentry.php:162
-#: ajax/email/addressbook.php:164 ajax/email/emailform.php:138
+#: ajax/email/addressbook.php:164 ajax/email/emailform.php:141
 #: ajax/email/progress.php:73 ajax/email/savecontacts.php:113
 #: ajax/events/events.php:116 ajax/events/execute.php:130
 #: ajax/events/new.form.php:195 ajax/events/sendmail.php:76
@@ -52,10 +52,10 @@ msgstr ""
 #: ajax/instrumentation/add-musicians.php:240
 #: ajax/instrumentation/change-musician-instruments.php:198
 #: ajax/instrumentation/change-project-instrument.php:118
-#: ajax/instruments/adjustInstrumentation.php:91
-#: ajax/instruments/changeInstrumentation.php:148 ajax/page-loader.php:100
-#: ajax/pme/pme-table.php:137 ajax/projects/verifyName.php:164
-#: ajax/projects/web-articles.php:184
+#: ajax/instruments/adjustInstrumentation.php:104
+#: ajax/instruments/changeInstrumentation.php:159 ajax/page-loader.php:100
+#: ajax/pme/pme-table.php:137 ajax/projects/verifyName.php:160
+#: ajax/projects/web-articles.php:180 ajax/settings/creditslist.php:79
 msgid "Error, caught an exception"
 msgstr ""
 
@@ -78,7 +78,7 @@ msgstr ""
 msgid "Cannot delete a blog-thread without id."
 msgstr ""
 
-#: ajax/blog/modifyentry.php:116 ajax/email/composer.php:180
+#: ajax/blog/modifyentry.php:116 ajax/email/composer.php:182
 #, php-format
 msgid "Unknown request: `%s'."
 msgstr ""
@@ -91,24 +91,24 @@ msgstr ""
 msgid "Form Input"
 msgstr ""
 
-#: ajax/email/composer.php:141
+#: ajax/email/composer.php:143
 #, php-format
 msgid "Unknown form element: `%s'."
 msgstr ""
 
-#: ajax/email/composer.php:165
+#: ajax/email/composer.php:167
 msgid "Template could not be saved"
 msgstr ""
 
-#: ajax/email/composer.php:176
+#: ajax/email/composer.php:178
 msgid "Email Address Validation Failed"
 msgstr ""
 
-#: ajax/email/composer.php:244
+#: ajax/email/composer.php:252
 msgid "PHP Exception Caught"
 msgstr ""
 
-#: ajax/email/composer.php:248
+#: ajax/email/composer.php:256
 #, php-format
 msgid ""
 "Error, caught an exception. Please copy the displayed text and send it by "
@@ -136,7 +136,7 @@ msgstr ""
 msgid "Unable to fetch progress status with id %d"
 msgstr ""
 
-#: ajax/email/recipients.php:133
+#: ajax/email/recipients.php:135
 msgid ""
 "Error, caught an exception. Please copy the displayed text and send it by "
 "email to the web-master."
@@ -147,47 +147,47 @@ msgstr ""
 msgid "The following contacts could not be stored: %s"
 msgstr ""
 
-#: ajax/email/uploadattachment.php:54 ajax/inlineimage/uploadimage.php:86
+#: ajax/email/uploadattachment.php:49 ajax/inlineimage/uploadimage.php:86
 msgid "No file was uploaded. Unknown error"
 msgstr ""
 
-#: ajax/email/uploadattachment.php:60 ajax/inlineimage/uploadimage.php:92
+#: ajax/email/uploadattachment.php:55 ajax/inlineimage/uploadimage.php:92
 msgid "There is no error, the file uploaded with success"
 msgstr ""
 
-#: ajax/email/uploadattachment.php:61
+#: ajax/email/uploadattachment.php:56
 #, php-format
 msgid ""
 "The uploaded file exceeds the upload_max_filesize directive in php.ini: %s"
 msgstr ""
 
-#: ajax/email/uploadattachment.php:63 ajax/inlineimage/uploadimage.php:94
+#: ajax/email/uploadattachment.php:58 ajax/inlineimage/uploadimage.php:94
 msgid ""
 "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in "
 "the HTML form"
 msgstr ""
 
-#: ajax/email/uploadattachment.php:64 ajax/inlineimage/uploadimage.php:95
+#: ajax/email/uploadattachment.php:59 ajax/inlineimage/uploadimage.php:95
 msgid "The uploaded file was only partially uploaded"
 msgstr ""
 
-#: ajax/email/uploadattachment.php:65 ajax/inlineimage/uploadimage.php:96
+#: ajax/email/uploadattachment.php:60 ajax/inlineimage/uploadimage.php:96
 msgid "No file was uploaded"
 msgstr ""
 
-#: ajax/email/uploadattachment.php:66 ajax/inlineimage/uploadimage.php:97
+#: ajax/email/uploadattachment.php:61 ajax/inlineimage/uploadimage.php:97
 msgid "Missing a temporary folder"
 msgstr ""
 
-#: ajax/email/uploadattachment.php:67
+#: ajax/email/uploadattachment.php:62
 msgid "Failed to write to disk"
 msgstr ""
 
-#: ajax/email/uploadattachment.php:88
+#: ajax/email/uploadattachment.php:83
 msgid "Not enough storage available"
 msgstr ""
 
-#: ajax/email/uploadattachment.php:108
+#: ajax/email/uploadattachment.php:103
 #, php-format
 msgid "Couldn't save temporary file for: %s"
 msgstr ""
@@ -328,7 +328,7 @@ msgid "Musician-id and/or name not set"
 msgstr ""
 
 #: ajax/finance/sepa-debit-mandate.php:84
-#: ajax/finance/sepa-debit-settings.php:61 settings.php:92
+#: ajax/finance/sepa-debit-settings.php:61 settings.php:89
 msgid "ClubMembers"
 msgstr ""
 
@@ -338,10 +338,10 @@ msgid "Failed setting `%s' to `%s'."
 msgstr ""
 
 #: ajax/finance/sepa-debit-settings.php:98
-#: ajax/finance/sepa-debit-settings.php:339 ajax/settings/app-settings.php:870
-#: ajax/settings/app-settings.php:891 ajax/settings/app-settings.php:906
-#: ajax/settings/app-settings.php:941 ajax/settings/app-settings.php:980
-#: ajax/settings/app-settings.php:1004 ajax/settings/app-settings.php:1016
+#: ajax/finance/sepa-debit-settings.php:339 ajax/settings/app-settings.php:876
+#: ajax/settings/app-settings.php:897 ajax/settings/app-settings.php:912
+#: ajax/settings/app-settings.php:947 ajax/settings/app-settings.php:986
+#: ajax/settings/app-settings.php:1010 ajax/settings/app-settings.php:1022
 #, php-format
 msgid "Value for `%s' set to `%s'."
 msgstr ""
@@ -363,7 +363,7 @@ msgstr ""
 msgid "Invalid German(?) bank account number %s @ %s."
 msgstr ""
 
-#: ajax/finance/sepa-debit-settings.php:238 ajax/settings/app-settings.php:949
+#: ajax/finance/sepa-debit-settings.php:238 ajax/settings/app-settings.php:955
 #, php-format
 msgid "Invalid IBAN: `%s'."
 msgstr ""
@@ -371,13 +371,13 @@ msgstr ""
 #: ajax/finance/sepa-debit-settings.php:282
 #: ajax/finance/sepa-debit-settings.php:314
 #: ajax/finance/sepa-debit-store.php:64 ajax/finance/sepa-debit-store.php:75
-#: ajax/settings/app-settings.php:1027
+#: ajax/settings/app-settings.php:1033
 #, php-format
 msgid "Value for `%s' invalid: `%s'."
 msgstr ""
 
 #: ajax/finance/sepa-debit-settings.php:328
-#: ajax/settings/app-settings.php:1087 ajax/settings/redaxo-settings.php:62
+#: ajax/settings/app-settings.php:1093 ajax/settings/redaxo-settings.php:62
 msgid "Unhandled request:"
 msgstr ""
 
@@ -551,7 +551,7 @@ msgstr ""
 #: ajax/instrumentation/change-musician-instruments.php:88
 #: ajax/instrumentation/change-musician-instruments.php:161
 #: ajax/instrumentation/change-project-instrument.php:73
-#: ajax/instruments/changeInstrumentation.php:116
+#: ajax/instruments/changeInstrumentation.php:128
 msgid "data base error"
 msgstr ""
 
@@ -562,13 +562,13 @@ msgstr ""
 
 #: ajax/instrumentation/change-musician-instruments.php:106
 #: ajax/instrumentation/change-musician-instruments.php:132
-#: ajax/instruments/changeInstrumentation.php:83
-#: ajax/instruments/changeInstrumentation.php:100 ajax/pme/pme-table.php:87
+#: ajax/instruments/changeInstrumentation.php:95
+#: ajax/instruments/changeInstrumentation.php:112 ajax/pme/pme-table.php:87
 msgid "invalid arguments"
 msgstr ""
 
 #: ajax/instrumentation/change-musician-instruments.php:107
-#: ajax/instruments/changeInstrumentation.php:101
+#: ajax/instruments/changeInstrumentation.php:113
 #, php-format
 msgid "Unknown instruments in list: %s"
 msgstr ""
@@ -606,51 +606,51 @@ msgstr ""
 msgid "Instrument choice for %s seems ok."
 msgstr ""
 
-#: ajax/instruments/adjustInstrumentation.php:37
-#: ajax/instruments/changeInstrumentation.php:52 ajax/pme/pme-table.php:75
-#: ajax/projects/verifyName.php:117
+#: ajax/instruments/adjustInstrumentation.php:50
+#: ajax/instruments/changeInstrumentation.php:64 ajax/pme/pme-table.php:75
+#: ajax/projects/verifyName.php:113
 msgid "missing arguments"
 msgstr ""
 
-#: ajax/instruments/adjustInstrumentation.php:38
-#: ajax/instruments/changeInstrumentation.php:53
+#: ajax/instruments/adjustInstrumentation.php:51
+#: ajax/instruments/changeInstrumentation.php:65
 msgid "No project id submitted."
 msgstr ""
 
-#: ajax/instruments/adjustInstrumentation.php:51
-#: ajax/instruments/changeInstrumentation.php:67
+#: ajax/instruments/adjustInstrumentation.php:64
+#: ajax/instruments/changeInstrumentation.php:79
 msgid "invalid project"
 msgstr ""
 
-#: ajax/instruments/adjustInstrumentation.php:53
-#: ajax/instruments/changeInstrumentation.php:69
+#: ajax/instruments/adjustInstrumentation.php:66
+#: ajax/instruments/changeInstrumentation.php:81
 #, php-format
 msgid "There doesn't seem to be a project associated with id %s."
 msgstr ""
 
-#: ajax/instruments/adjustInstrumentation.php:66
+#: ajax/instruments/adjustInstrumentation.php:79
 msgid "operation failed"
 msgstr ""
 
-#: ajax/instruments/adjustInstrumentation.php:67
+#: ajax/instruments/adjustInstrumentation.php:80
 #, php-format
 msgid "Adjusting the instrumentation for project ``%s'' probably failed."
 msgstr ""
 
-#: ajax/instruments/adjustInstrumentation.php:78
+#: ajax/instruments/adjustInstrumentation.php:91
 #, php-format
 msgid "Adjusting the instrumentation for project `%s' was probably successful."
 msgstr ""
 
-#: ajax/instruments/changeInstrumentation.php:84
+#: ajax/instruments/changeInstrumentation.php:96
 msgid "No instrument list submitted"
 msgstr ""
 
-#: ajax/instruments/changeInstrumentation.php:117
+#: ajax/instruments/changeInstrumentation.php:129
 msgid "Failed to update in project instrumentation"
 msgstr ""
 
-#: ajax/instruments/changeInstrumentation.php:128
+#: ajax/instruments/changeInstrumentation.php:140
 #, php-format
 msgid "Changing the instrumentation for project `%s' was probably successful."
 msgstr ""
@@ -663,394 +663,394 @@ msgstr ""
 msgid "Class arguments are not an array"
 msgstr ""
 
-#: ajax/projects/verifyName.php:48
+#: ajax/projects/verifyName.php:44
 msgid "project-year"
 msgstr ""
 
-#: ajax/projects/verifyName.php:48
+#: ajax/projects/verifyName.php:44
 msgid "project-name"
 msgstr ""
 
-#: ajax/projects/verifyName.php:53
+#: ajax/projects/verifyName.php:49
 #, php-format
 msgid "The %s must not be empty.\n"
 msgstr ""
 
-#: ajax/projects/verifyName.php:88
+#: ajax/projects/verifyName.php:84
 msgid "The project-name must not only consist of the year-number."
 msgstr ""
 
-#: ajax/projects/verifyName.php:91
+#: ajax/projects/verifyName.php:87
 msgid "No project-name given."
 msgstr ""
 
-#: ajax/projects/verifyName.php:95
+#: ajax/projects/verifyName.php:91
 msgid "No project-year given."
 msgstr ""
 
-#: ajax/projects/verifyName.php:97
+#: ajax/projects/verifyName.php:93
 msgid "The project-year has to consist of four digits, e.g. ``1984''."
 msgstr ""
 
-#: ajax/projects/verifyName.php:108
+#: ajax/projects/verifyName.php:104
 msgid "Internal error: unknown request"
 msgstr ""
 
-#: ajax/projects/verifyName.php:131
+#: ajax/projects/verifyName.php:127
 msgid "already existent"
 msgstr ""
 
-#: ajax/projects/verifyName.php:132
+#: ajax/projects/verifyName.php:128
 #, php-format
 msgid ""
 "A project with the name ``%s'' already exists in the year %s.\n"
 "Please choose a different name or year."
 msgstr ""
 
-#: ajax/projects/web-articles.php:55
+#: ajax/projects/web-articles.php:51
 #, php-format
 msgid "Invalid or unset project-id: `%s'"
 msgstr ""
 
-#: ajax/projects/web-articles.php:66
+#: ajax/projects/web-articles.php:62
 #, php-format
 msgid ""
 "Submitted article id %d does not match the id %d stored in the article-data."
 msgstr ""
 
-#: ajax/projects/web-articles.php:83
+#: ajax/projects/web-articles.php:79
 #, php-format
 msgid "Invalid or unset article-id: `%s'"
 msgstr ""
 
-#: ajax/projects/web-articles.php:92
+#: ajax/projects/web-articles.php:88
 #, php-format
 msgid ""
 "Cannot perform action `%s' with article with id %d, project with id %d: "
 "missing article-data."
 msgstr ""
 
-#: ajax/projects/web-articles.php:103
+#: ajax/projects/web-articles.php:99
 #, php-format
 msgid "Removed public web page %s (id %d) from the project with id %d."
 msgstr ""
 
-#: ajax/projects/web-articles.php:106
+#: ajax/projects/web-articles.php:102
 #, php-format
 msgid ""
 "Failed to remove public web page %s (id %d) from the project with id %d."
 msgstr ""
 
-#: ajax/projects/web-articles.php:114
+#: ajax/projects/web-articles.php:110
 #, php-format
 msgid "Failed to create a new public web page for the project with id %d."
 msgstr ""
 
-#: ajax/projects/web-articles.php:117
+#: ajax/projects/web-articles.php:113
 #, php-format
 msgid ""
 "Created a new public web page with name %s and id %d for project the with id "
 "%d"
 msgstr ""
 
-#: ajax/projects/web-articles.php:124
+#: ajax/projects/web-articles.php:120
 #, php-format
 msgid "Failed to add the article %s (id = %d) to the project with id %d."
 msgstr ""
 
-#: ajax/projects/web-articles.php:127
+#: ajax/projects/web-articles.php:123
 #, php-format
 msgid ""
 "Linked the existing public web-article %s (id %d) to the project with id %d"
 msgstr ""
 
-#: ajax/projects/web-articles.php:138
+#: ajax/projects/web-articles.php:134
 #, php-format
 msgid "Failed to detach the article %s (id = %d) from the project with id %d."
 msgstr ""
 
-#: ajax/projects/web-articles.php:141
+#: ajax/projects/web-articles.php:137
 #, php-format
 msgid "Detached the public web-article %s (id %d) from the project with id %d"
 msgstr ""
 
-#: ajax/projects/web-articles.php:150
+#: ajax/projects/web-articles.php:146
 #, php-format
 msgid "Unhandled or empty request: `%s'"
 msgstr ""
 
-#: ajax/projects/web-articles.php:167
+#: ajax/projects/web-articles.php:163
 msgid "Error: "
 msgstr ""
 
-#: ajax/settings/app-settings.php:45
+#: ajax/settings/app-settings.php:52
 msgid "Wrong old key."
 msgstr ""
 
-#: ajax/settings/app-settings.php:79
+#: ajax/settings/app-settings.php:86
 msgid "Configuration locked, refusing to change encryption key."
 msgstr ""
 
-#: ajax/settings/app-settings.php:88
+#: ajax/settings/app-settings.php:95
 msgid ""
 "Configuration locked by somebody else, refusing to change encryption key."
 msgstr ""
 
-#: ajax/settings/app-settings.php:134 ajax/settings/app-settings.php:737
+#: ajax/settings/app-settings.php:141 ajax/settings/app-settings.php:743
 #, php-format
 msgid "Failed for: %s"
 msgstr ""
 
-#: ajax/settings/app-settings.php:138
+#: ajax/settings/app-settings.php:145
 msgid "Key installed successfully!"
 msgstr ""
 
-#: ajax/settings/app-settings.php:149
+#: ajax/settings/app-settings.php:156
 #, php-format
 msgid "Name of orchestra set to `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:159
+#: ajax/settings/app-settings.php:166
 #, php-format
 msgid "DB-server set to `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:169
+#: ajax/settings/app-settings.php:176
 #, php-format
 msgid "DB-name set to `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:179
+#: ajax/settings/app-settings.php:186
 #, php-format
 msgid "DB-login set to `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:196
+#: ajax/settings/app-settings.php:203
 msgid "DB-test passed and DB-password set."
 msgstr ""
 
-#: ajax/settings/app-settings.php:201
+#: ajax/settings/app-settings.php:208
 msgid ""
 "DB-test failed. Check the account settings. Check was performed with the new "
 "password."
 msgstr ""
 
-#: ajax/settings/app-settings.php:209
+#: ajax/settings/app-settings.php:216
 msgid "DB-test passed with stored password (empty input ignored)."
 msgstr ""
 
-#: ajax/settings/app-settings.php:214
+#: ajax/settings/app-settings.php:221
 msgid "DB-test failed with stored password (empty input ignored)."
 msgstr ""
 
-#: ajax/settings/app-settings.php:232
+#: ajax/settings/app-settings.php:239
 #, php-format
 msgid "Submitted `%s' != `%s' (stored)"
 msgstr ""
 
-#: ajax/settings/app-settings.php:241
+#: ajax/settings/app-settings.php:248
 #, php-format
 msgid "New share-owner `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:246
+#: ajax/settings/app-settings.php:253
 #, php-format
 msgid "Failure creating account `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:259
+#: ajax/settings/app-settings.php:266
 #, php-format
 msgid "Keeping old share-owner `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:264
+#: ajax/settings/app-settings.php:271
 #, php-format
 msgid "Failure checking account `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:280
+#: ajax/settings/app-settings.php:287
 msgid "Unable to share without share-holder `dummy-user'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:289 ajax/settings/app-settings.php:359
-#: ajax/settings/app-settings.php:449
+#: ajax/settings/app-settings.php:296 ajax/settings/app-settings.php:366
+#: ajax/settings/app-settings.php:456
 #, php-format
 msgid "Inconsistency, submitted `%s' != `%s' (stored)"
 msgstr ""
 
-#: ajax/settings/app-settings.php:302 ajax/settings/app-settings.php:374
-#: ajax/settings/app-settings.php:463
+#: ajax/settings/app-settings.php:309 ajax/settings/app-settings.php:381
+#: ajax/settings/app-settings.php:470
 #, php-format
 msgid "New shared folder `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:307 ajax/settings/app-settings.php:380
-#: ajax/settings/app-settings.php:469
+#: ajax/settings/app-settings.php:314 ajax/settings/app-settings.php:387
+#: ajax/settings/app-settings.php:476
 #, php-format
 msgid "Failure creating folder `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:320 ajax/settings/app-settings.php:395
-#: ajax/settings/app-settings.php:484
+#: ajax/settings/app-settings.php:327 ajax/settings/app-settings.php:402
+#: ajax/settings/app-settings.php:491
 #, php-format
 msgid "Keeping old shared folder `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:325 ajax/settings/app-settings.php:401
-#: ajax/settings/app-settings.php:490
+#: ajax/settings/app-settings.php:332 ajax/settings/app-settings.php:408
+#: ajax/settings/app-settings.php:497
 #, php-format
 msgid "Failure checking folder `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:331 ajax/settings/app-settings.php:408
-#: ajax/settings/app-settings.php:497
+#: ajax/settings/app-settings.php:338 ajax/settings/app-settings.php:415
+#: ajax/settings/app-settings.php:504
 #, php-format
 msgid "Failure checking folder `%s', caught an exception `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:349 ajax/settings/app-settings.php:427
+#: ajax/settings/app-settings.php:356 ajax/settings/app-settings.php:434
 msgid "Unable to define project-folder without shared parent folder."
 msgstr ""
 
-#: ajax/settings/app-settings.php:436
+#: ajax/settings/app-settings.php:443
 msgid ""
 "Unable to define the financial balance folder without project folder name."
 msgstr ""
 
-#: ajax/settings/app-settings.php:517
+#: ajax/settings/app-settings.php:524
 #, php-format
 msgid "Exception: %s(%d): %s"
 msgstr ""
 
-#: ajax/settings/app-settings.php:534 ajax/settings/app-settings.php:570
+#: ajax/settings/app-settings.php:541 ajax/settings/app-settings.php:577
 msgid "Unable to set:"
 msgstr ""
 
-#: ajax/settings/app-settings.php:556 ajax/settings/encryptionkey.php:42
+#: ajax/settings/app-settings.php:563 ajax/settings/encryptionkey.php:62
 msgid "Exception:"
 msgstr ""
 
-#: ajax/settings/app-settings.php:581
+#: ajax/settings/app-settings.php:588
 msgid "minutes"
 msgstr ""
 
-#: ajax/settings/app-settings.php:601
+#: ajax/settings/app-settings.php:608
 msgid "Changed password for"
 msgstr ""
 
-#: ajax/settings/app-settings.php:607
+#: ajax/settings/app-settings.php:614
 msgid "Failed changing password for"
-msgstr ""
-
-#: ajax/settings/app-settings.php:628
-#, php-format
-msgid "Using `%s' at %s as %s-server."
 msgstr ""
 
 #: ajax/settings/app-settings.php:634
 #, php-format
+msgid "Using `%s' at %s as %s-server."
+msgstr ""
+
+#: ajax/settings/app-settings.php:640
+#, php-format
 msgid "Unable to determine the IP-address for %s."
 msgstr ""
 
-#: ajax/settings/app-settings.php:651
+#: ajax/settings/app-settings.php:657
 msgid "Using "
 msgstr ""
 
-#: ajax/settings/app-settings.php:658
+#: ajax/settings/app-settings.php:664
 #, php-format
 msgid "`%s' doesn't seem to be a candidate for an IP-port."
 msgstr ""
 
-#: ajax/settings/app-settings.php:682
+#: ajax/settings/app-settings.php:688
 msgid "Unknown transport security method:"
 msgstr ""
 
-#: ajax/settings/app-settings.php:693
+#: ajax/settings/app-settings.php:699
 #, php-format
 msgid "Using `%s' for message transport."
 msgstr ""
 
-#: ajax/settings/app-settings.php:707
+#: ajax/settings/app-settings.php:713
 #, php-format
 msgid "Using `%s' as login."
 msgstr ""
 
-#: ajax/settings/app-settings.php:717
+#: ajax/settings/app-settings.php:723
 msgid "Password has been changed."
 msgstr ""
 
-#: ajax/settings/app-settings.php:742
+#: ajax/settings/app-settings.php:748
 msgid "Email credentials installed successfully!"
 msgstr ""
 
-#: ajax/settings/app-settings.php:759
+#: ajax/settings/app-settings.php:765
 msgid "IMAP connection seems functional."
 msgstr ""
 
-#: ajax/settings/app-settings.php:762
+#: ajax/settings/app-settings.php:768
 msgid "Unable to establish IMAP connection."
 msgstr ""
 
-#: ajax/settings/app-settings.php:771
+#: ajax/settings/app-settings.php:777
 msgid "SMTP connection seems functional."
 msgstr ""
 
-#: ajax/settings/app-settings.php:774
+#: ajax/settings/app-settings.php:780
 msgid "Unable to establish SMTP connection."
 msgstr ""
 
-#: ajax/settings/app-settings.php:791
+#: ajax/settings/app-settings.php:797
 msgid "UNSPECIFIED"
 msgstr ""
 
-#: ajax/settings/app-settings.php:795
+#: ajax/settings/app-settings.php:801
 #, php-format
 msgid "Email test-mode enabled, sending only to %s"
 msgstr ""
 
-#: ajax/settings/app-settings.php:799
+#: ajax/settings/app-settings.php:805
 msgid "Email test-mode disable, will send to all!!!"
 msgstr ""
 
-#: ajax/settings/app-settings.php:810 ajax/settings/app-settings.php:839
+#: ajax/settings/app-settings.php:816 ajax/settings/app-settings.php:845
 #, php-format
 msgid "`%s' doesn't seem to be a valid email-address."
 msgstr ""
 
-#: ajax/settings/app-settings.php:818
+#: ajax/settings/app-settings.php:824
 #, php-format
 msgid "Using `%s' as email-address for test-mode."
 msgstr ""
 
-#: ajax/settings/app-settings.php:828
+#: ajax/settings/app-settings.php:834
 #, php-format
 msgid "Using `%s' as name of the sender identity."
 msgstr ""
 
-#: ajax/settings/app-settings.php:847
+#: ajax/settings/app-settings.php:853
 #, php-format
 msgid "Using `%s' as sender email-address."
 msgstr ""
 
-#: ajax/settings/app-settings.php:952
+#: ajax/settings/app-settings.php:958
 msgid "Perhaps you meant"
 msgstr ""
 
-#: ajax/settings/app-settings.php:959
+#: ajax/settings/app-settings.php:965
 msgid "or"
 msgstr ""
 
-#: ajax/settings/app-settings.php:1045
+#: ajax/settings/app-settings.php:1051
 #, php-format
 msgid "Link for `%s' set to `%s'."
 msgstr ""
 
-#: ajax/settings/app-settings.php:1058
+#: ajax/settings/app-settings.php:1064
 #, php-format
 msgid "Unable to test link for `%s' without a link target."
 msgstr ""
 
-#: ajax/settings/app-settings.php:1064
+#: ajax/settings/app-settings.php:1070
 #, php-format
 msgid "New window or tab with `%s'?"
 msgstr ""
@@ -1060,20 +1060,20 @@ msgstr ""
 msgid "Debug-modes changed to `%s'"
 msgstr ""
 
-#: ajax/settings/encryptionkey.php:21
+#: ajax/settings/encryptionkey.php:41
 #, php-format
 msgid "Invalid password for `%s'"
 msgstr ""
 
-#: ajax/settings/encryptionkey.php:28
+#: ajax/settings/encryptionkey.php:48
 msgid "Invalid encryption key."
 msgstr ""
 
-#: ajax/settings/encryptionkey.php:46
+#: ajax/settings/encryptionkey.php:66
 msgid "Encryption key stored."
 msgstr ""
 
-#: ajax/settings/encryptionkey.php:51
+#: ajax/settings/encryptionkey.php:71
 #, php-format
 msgid "Unknown request: `%s'"
 msgstr ""
@@ -1135,8 +1135,8 @@ msgstr ""
 msgid "Unknown WYSIWYG-Editor: `%s'"
 msgstr ""
 
-#: js/blog.js:53 js/blog.js:155 js/blog.js:193 js/blog.js:287 js/blog.js:318
-#: js/blog.js:346 js/cafevdb.js:1039 js/email.js:33 js/email.js:62
+#: js/blog.js:53 js/blog.js:156 js/blog.js:194 js/blog.js:288 js/blog.js:319
+#: js/blog.js:347 js/cafevdb.js:1040 js/email.js:33 js/email.js:62
 #: js/email.js:412 js/email.js:443 js/events.js:64 js/events.js:156
 #: js/inlineimage.js:84 js/inlineimage.js:92 js/inlineimage.js:102
 #: js/inlineimage.js:131 js/inlineimage.js:155 js/inlineimage.js:183
@@ -1149,75 +1149,75 @@ msgstr ""
 msgid "Edit Blog Entry"
 msgstr ""
 
-#: js/blog.js:111
+#: js/blog.js:112
 msgid ""
 "The message content has been changed and will be lost if you press `Yes'"
 msgstr ""
 
-#: js/blog.js:112
+#: js/blog.js:113
 msgid "Really cancel current entry?"
 msgstr ""
 
-#: js/blog.js:172
+#: js/blog.js:173
 msgid "One-time Blog Popup"
 msgstr ""
 
-#: js/blog.js:179
+#: js/blog.js:180
 msgid "I have read this popup, please bother me no more!"
 msgstr ""
 
-#: js/blog.js:180
+#: js/blog.js:181
 msgid "Mark this popup as read; the popup will not show up again."
 msgstr ""
 
-#: js/blog.js:273
+#: js/blog.js:274
 msgid "The entire message thread will be deleted if you press `Yes'"
 msgstr ""
 
-#: js/blog.js:274
+#: js/blog.js:275
 msgid "Really delete the entry?"
 msgstr ""
 
-#: js/cafevdb.js:501
+#: js/cafevdb.js:502
 msgid "Choose some Options"
 msgstr ""
 
-#: js/cafevdb.js:506 js/project-instruments.js:146 js/sepa-debit-mandate.js:97
+#: js/cafevdb.js:507 js/project-instruments.js:146 js/sepa-debit-mandate.js:97
 msgid "Save"
 msgstr ""
 
-#: js/cafevdb.js:508
+#: js/cafevdb.js:509
 msgid ""
 "Accept the currently selected options and return to the underlying form. "
 msgstr ""
 
-#: js/cafevdb.js:509 js/inlineimage.js:273 js/project-instruments.js:197
+#: js/cafevdb.js:510 js/inlineimage.js:273 js/project-instruments.js:197
 #: templates/blogedit.php:39 templates/part.emailform.composer.php:246
 msgid "Cancel"
 msgstr ""
 
-#: js/cafevdb.js:511
+#: js/cafevdb.js:512
 msgid ""
 "Discard the current selection and close the dialog. The initial set of "
 "selected options will remain unchanged."
 msgstr ""
 
-#: js/cafevdb.js:661
+#: js/cafevdb.js:662
 msgid "Export to the following format is not yet supported:"
 msgstr ""
 
-#: js/cafevdb.js:663 js/project-instruments.js:74 js/projects.js:261
+#: js/cafevdb.js:664 js/project-instruments.js:74 js/projects.js:261
 msgid "Unimplemented"
 msgstr ""
 
-#: js/cafevdb.js:842
+#: js/cafevdb.js:843
 msgid ""
 "If multiple dialogs are open, then move this one to the lowest layer and "
 "display it below the others. Clicking anywhere on the dialog will bring to "
 "the front again."
 msgstr ""
 
-#: js/cafevdb.js:892
+#: js/cafevdb.js:893
 msgid ""
 "Close the current dialog and return to the view which was active before this "
 "dialog had been opened. If the current view shows a `Back' button, then "
@@ -1225,30 +1225,30 @@ msgid ""
 "equivalent to clicking the `Back' button"
 msgstr ""
 
-#: js/cafevdb.js:979 js/instrumentation.js:163
+#: js/cafevdb.js:980 js/instrumentation.js:163
 msgid "Debug Information"
 msgstr ""
 
-#: js/cafevdb.js:1000
+#: js/cafevdb.js:1001
 msgid ""
 "Unrecoverable unknown internal error, no further information available, "
 "sorry."
 msgstr ""
 
-#: js/cafevdb.js:1002
+#: js/cafevdb.js:1003
 msgid "Internal Error"
 msgstr ""
 
-#: js/cafevdb.js:1009
+#: js/cafevdb.js:1010
 #, python-brace-format
 msgid "Field {RequiredField} not present in AJAX response."
 msgstr ""
 
-#: js/cafevdb.js:1018
+#: js/cafevdb.js:1019
 msgid "Missing data"
 msgstr ""
 
-#: js/cafevdb.js:1020 js/events.js:58 js/events.js:150
+#: js/cafevdb.js:1021 js/events.js:58 js/events.js:150
 msgid "Unknown error :("
 msgstr ""
 
@@ -1314,148 +1314,148 @@ msgstr ""
 msgid "Unknown request: {Request}"
 msgstr ""
 
-#: js/email.js:514
+#: js/email.js:515
 #, python-brace-format
 msgid "Sending message {active} out of {total}"
 msgstr ""
 
-#: js/email.js:516
+#: js/email.js:517
 msgid "Message delivery in progress"
 msgstr ""
 
-#: js/email.js:541
+#: js/email.js:542
 msgid "Message Delivery Status"
 msgstr ""
 
-#: js/email.js:570
+#: js/email.js:571
 msgid ""
 "Email sending is in progress. Leaving the page now will cancel the email "
 "submission."
 msgstr ""
 
-#: js/email.js:619
+#: js/email.js:620
 #, python-brace-format
 msgid ""
 "A template with the name `{TemplateName}' already exists, do you want to "
 "overwrite it?"
 msgstr ""
 
-#: js/email.js:621
+#: js/email.js:622
 msgid "Overwrite existing template?"
 msgstr ""
 
-#: js/email.js:643
+#: js/email.js:644
 #, python-brace-format
 msgid ""
 "Do you really want to delete the template with the name `{TemplateName}'?"
 msgstr ""
 
-#: js/email.js:645
+#: js/email.js:646
 msgid "Really Delete Template?"
 msgstr ""
 
-#: js/email.js:654
+#: js/email.js:655
 #, python-brace-format
 msgid "Cannot delete non-existing template `{TemplateName}'"
 msgstr ""
 
-#: js/email.js:656
+#: js/email.js:657
 msgid "Unknown Template"
 msgstr ""
 
-#: js/email.js:759
+#: js/email.js:760
 msgid "Do you really want to delete all event attachments?"
 msgstr ""
 
-#: js/email.js:760 js/email.js:844
+#: js/email.js:761 js/email.js:845
 msgid "Really Delete Attachments?"
 msgstr ""
 
-#: js/email.js:829
+#: js/email.js:830
 msgid "Select Attachment"
 msgstr ""
 
-#: js/email.js:843
+#: js/email.js:844
 msgid "Do you really want to delete all file attachments?"
 msgstr ""
 
-#: js/email.js:888 templates/part.emailform.composer.php:109
+#: js/email.js:889 templates/part.emailform.composer.php:109
 #: templates/part.emailform.composer.php:127
 msgid "Address Book"
 msgstr ""
 
-#: js/email.js:889
+#: js/email.js:890
 msgid "Accept"
 msgstr ""
 
-#: js/email.js:891
+#: js/email.js:892
 msgid "Save Contacts"
 msgstr ""
 
-#: js/email.js:894
+#: js/email.js:895
 msgid ""
 "Save the selected supplementary emails to the address-book for later reusal."
 msgstr ""
 
-#: js/email.js:1030
+#: js/email.js:1031
 #, python-brace-format
 msgid "Em@il Form for {ProjectName}"
 msgstr ""
 
-#: js/email.js:1033
+#: js/email.js:1034
 msgid "Em@il Form"
 msgstr ""
 
-#: js/email.js:1149
+#: js/email.js:1150
 msgid "Move all"
 msgstr ""
 
-#: js/email.js:1150
+#: js/email.js:1151
 msgid "Move selected"
 msgstr ""
 
-#: js/email.js:1151
+#: js/email.js:1152
 msgid "Remove selected"
 msgstr ""
 
-#: js/email.js:1152
+#: js/email.js:1153
 msgid "Remove all"
 msgstr ""
 
-#: js/email.js:1153
+#: js/email.js:1154
 msgid "Remaining Recipients"
 msgstr ""
 
-#: js/email.js:1154
+#: js/email.js:1155
 msgid "Selected Recipients"
 msgstr ""
 
-#: js/email.js:1155
+#: js/email.js:1156
 #, python-brace-format
 msgid "Showing all {0}"
 msgstr ""
 
-#: js/email.js:1157
+#: js/email.js:1158
 msgid "Filtered"
 msgstr ""
 
-#: js/email.js:1159
+#: js/email.js:1160
 msgid "from"
 msgstr ""
 
-#: js/email.js:1161
+#: js/email.js:1162
 msgid "Empty list"
 msgstr ""
 
-#: js/email.js:1162
+#: js/email.js:1163
 msgid "Filter"
 msgstr ""
 
-#: js/email.js:1163
+#: js/email.js:1164
 msgid "show all"
 msgstr ""
 
-#: js/email.js:1169
+#: js/email.js:1170
 msgid "Click on the names to move the respective person to the other box"
 msgstr ""
 
@@ -1672,78 +1672,78 @@ msgstr ""
 msgid "Please do not accept these alternatives lightly!"
 msgstr ""
 
-#: js/settings.js:110 js/settings.js:132 js/settings.js:188
+#: js/settings.js:100 js/settings.js:122 js/settings.js:178
 msgid "Error:"
 msgstr ""
 
-#: js/settings.js:226
+#: js/settings.js:216
 msgid "Please standby, the operation will take some time!"
 msgstr ""
 
-#: lib/config.php:585
+#: lib/config.php:603
 #, php-format
 msgid "Decryption of `%s`@`%s` failed"
 msgstr ""
 
-#: lib/config.php:589
+#: lib/config.php:607
 #, php-format
 msgid "Encryption of `%s`@`%s` failed"
 msgstr ""
 
-#: lib/config.php:595
+#: lib/config.php:613
 #, php-format
 msgid "Unable to update table data at index %s"
 msgstr ""
 
-#: lib/config.php:756
+#: lib/config.php:774
 msgid "birthday"
 msgstr ""
 
-#: lib/config.php:765
+#: lib/config.php:783
 msgid "no preference"
 msgstr ""
 
-#: lib/config.php:766
+#: lib/config.php:784
 msgid "German"
 msgstr ""
 
-#: lib/config.php:767
+#: lib/config.php:785
 msgid "English"
 msgstr ""
 
-#: lib/config.php:768
+#: lib/config.php:786
 msgid "French"
 msgstr ""
 
-#: lib/config.php:769
+#: lib/config.php:787
 msgid "Spanish"
 msgstr ""
 
-#: lib/config.php:770
+#: lib/config.php:788
 msgid "Portuguese"
 msgstr ""
 
-#: lib/config.php:771
+#: lib/config.php:789
 msgid "Polish"
 msgstr ""
 
-#: lib/config.php:772
+#: lib/config.php:790
 msgid "Russian"
 msgstr ""
 
-#: lib/config.php:773
+#: lib/config.php:791
 msgid "Chinese"
 msgstr ""
 
-#: lib/config.php:774
+#: lib/config.php:792
 msgid "Japaneese"
 msgstr ""
 
-#: lib/config.php:775
+#: lib/config.php:793
 msgid "Korean"
 msgstr ""
 
-#: lib/config.php:795
+#: lib/config.php:813
 #, php-format
 msgid "Unknown Tooltip for key `%s' requested."
 msgstr ""
@@ -1835,23 +1835,23 @@ msgstr ""
 msgid "Message sent out successfully!"
 msgstr ""
 
-#: lib/emailcomposer.php:850
+#: lib/emailcomposer.php:854
 msgid "Pre-composition validation has failed!"
 msgstr ""
 
-#: lib/emailcomposer.php:1079
+#: lib/emailcomposer.php:1083
 msgid "Unable to fetch executive board contents from data-base."
 msgstr ""
 
-#: lib/emailcomposer.php:1092
+#: lib/emailcomposer.php:1096
 msgid "and"
 msgstr ""
 
-#: lib/emailcomposer.php:1426
+#: lib/emailcomposer.php:1430
 msgid "Local Filesystem"
 msgstr ""
 
-#: lib/emailrecipientsfilter.php:329 lib/page-loader.php:179
+#: lib/emailrecipientsfilter.php:332 lib/page-loader.php:179
 #, php-format
 msgid "Invalid history position %d request, history size is %d"
 msgstr ""
@@ -1869,118 +1869,118 @@ msgstr ""
 msgid "Invalid argument value: `%s'"
 msgstr ""
 
-#: lib/functions.php:697
+#: lib/functions.php:688
 msgid "Export Table"
 msgstr ""
 
-#: lib/functions.php:705
+#: lib/functions.php:696
 msgid "Excel Export"
 msgstr ""
 
-#: lib/functions.php:708
+#: lib/functions.php:699
 msgid "HTML/Spreadsheet"
 msgstr ""
 
-#: lib/functions.php:711
+#: lib/functions.php:702
 msgid "CSV Export"
 msgstr ""
 
-#: lib/functions.php:714
+#: lib/functions.php:705
 msgid "HTML Export"
 msgstr ""
 
-#: lib/functions.php:929
+#: lib/functions.php:920
 msgid "Error: Unknonwn Button Type"
 msgstr ""
 
-#: lib/functions.php:949
+#: lib/functions.php:940
 msgid "View all Projects"
 msgstr ""
 
-#: lib/functions.php:950
+#: lib/functions.php:941
 msgid "Overview over all known projects (start-page)."
 msgstr ""
 
-#: lib/functions.php:961
+#: lib/functions.php:952
 msgid "Display all Musicians"
 msgstr ""
 
-#: lib/functions.php:962
+#: lib/functions.php:953
 msgid ""
 "Display all musicians stored in the data-base, with detailed facilities for "
 "filtering and sorting."
 msgstr ""
 
-#: lib/functions.php:973
+#: lib/functions.php:964
 msgid ""
 "Mass-email form, use with care. Mass-emails will be logged. Recipients will "
 "be specified by the Bcc: field in the header, so the recipients are "
 "undisclosed to each other."
 msgstr ""
 
-#: lib/functions.php:986
+#: lib/functions.php:977
 msgid "Email History"
 msgstr ""
 
-#: lib/functions.php:987
+#: lib/functions.php:978
 msgid "Display all emails sent by our mass-email form."
 msgstr ""
 
-#: lib/functions.php:1005
+#: lib/functions.php:996
 msgid "The currently active project."
 msgstr ""
 
-#: lib/functions.php:1020 lib/projects.php:755
+#: lib/functions.php:1011 lib/projects.php:755
 msgid "Instrumentation"
 msgstr ""
 
-#: lib/functions.php:1021
+#: lib/functions.php:1012
 msgid ""
 "Detailed display of all registered musicians for the selected project. The "
 "table will allow for modification of personal data like email, phone, "
 "address etc."
 msgstr ""
 
-#: lib/functions.php:1034 lib/project-instruments.php:385
+#: lib/functions.php:1025 lib/project-instruments.php:385
 msgid "Add Instruments"
 msgstr ""
 
-#: lib/functions.php:1035
+#: lib/functions.php:1026
 msgid ""
 "Display the list of instruments known by the data-base, possibly add new "
 "ones as needed."
 msgstr ""
 
-#: lib/functions.php:1048 lib/project-instruments.php:69 lib/projects.php:760
+#: lib/functions.php:1039 lib/project-instruments.php:69 lib/projects.php:760
 #: lib/projects.php:967
 msgid "Instrumentation Numbers"
 msgstr ""
 
-#: lib/functions.php:1049 lib/tooltips.php:379
+#: lib/functions.php:1040 lib/tooltips.php:379
 msgid ""
 "Display the desired instrumentaion numbers, i.e. how many musicians are "
 "already registered for each instrument group and how many are finally needed."
 msgstr ""
 
-#: lib/functions.php:1062 lib/functions.php:1088 lib/projects.php:796
+#: lib/functions.php:1053 lib/functions.php:1079 lib/projects.php:796
 msgid "Debit Mandates"
 msgstr ""
 
-#: lib/functions.php:1063
+#: lib/functions.php:1054
 msgid "Display a table with the SEPA debit mandates related to the project."
 msgstr ""
 
-#: lib/functions.php:1076
+#: lib/functions.php:1067
 msgid "Insurances"
 msgstr ""
 
-#: lib/functions.php:1077
+#: lib/functions.php:1068
 msgid ""
 "Display a table with an overview about the current state of the member's "
 "instrument insurances."
 msgstr ""
 
-#: lib/functions.php:1089
+#: lib/functions.php:1080
 msgid "Display a table with an overview over all SEPA debit mandates."
 msgstr ""
 
@@ -2481,7 +2481,7 @@ msgstr ""
 msgid "Last-Used Date"
 msgstr ""
 
-#: lib/sepa-debit-mandates.php:397
+#: lib/sepa-debit-mandates.php:398
 #, php-format
 msgid "Fees for %s"
 msgstr ""
@@ -3241,27 +3241,27 @@ msgid ""
 "removed from the remote-system after the message has been sent."
 msgstr ""
 
-#: settings.php:94
+#: settings.php:91
 msgid "ExecutiveBoardMembers"
 msgstr ""
 
-#: settings.php:105
+#: settings.php:102
 msgid "concerts"
 msgstr ""
 
-#: settings.php:106
+#: settings.php:103
 msgid "rehearsals"
 msgstr ""
 
-#: settings.php:107
+#: settings.php:104
 msgid "other"
 msgstr ""
 
-#: settings.php:108
+#: settings.php:105
 msgid "management"
 msgstr ""
 
-#: settings.php:111
+#: settings.php:108
 msgid "contacts"
 msgstr ""
 
@@ -3296,7 +3296,7 @@ msgstr ""
 
 #: templates/app-settings.php:47 templates/app-settings.php:50
 #: templates/app-settings.php:82 templates/email-settings.php:73
-#: templates/settings.php:97 templates/settings.php:100
+#: templates/settings.php:98 templates/settings.php:101
 #: templates/share-settings.php:46
 msgid "show"
 msgstr ""
@@ -4203,66 +4203,66 @@ msgstr ""
 msgid "Reset Filter"
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:76
+#: templates/part.emailform.statuspage.php:73
 msgid "The mailing software did not signal an error."
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:78
+#: templates/part.emailform.statuspage.php:75
 msgid "The message was propably sent out successfully."
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:85
+#: templates/part.emailform.statuspage.php:82
 msgid "The mailing software did not signal an error. "
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:86
+#: templates/part.emailform.statuspage.php:83
 #, php-format
 msgid "%d messages were propably sent out successfully."
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:96
+#: templates/part.emailform.statuspage.php:93
 msgid "The mailing software encountered errors."
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:100
+#: templates/part.emailform.statuspage.php:97
 #, php-format
 msgid ""
 "Sending of all %d messages has failed, propably no message has been sent."
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:104
+#: templates/part.emailform.statuspage.php:101
 #, php-format
 msgid "One (out of %d) message has probably not been sent."
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:108
+#: templates/part.emailform.statuspage.php:105
 #, php-format
 msgid "%d (out of %d) messages have probably not been sent."
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:113
+#: templates/part.emailform.statuspage.php:110
 msgid "The message has probably not been sent."
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:130
+#: templates/part.emailform.statuspage.php:127
 msgid "Failed individual substitutions"
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:131
+#: templates/part.emailform.statuspage.php:128
 msgid "Failed global substitutions"
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:132
+#: templates/part.emailform.statuspage.php:129
 msgid "Other failed substitutions"
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:136
+#: templates/part.emailform.statuspage.php:133
 msgid ""
 "The operation failed due to template validation errors. The following "
 "template substitutions could not be resolved:"
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:154
+#: templates/part.emailform.statuspage.php:151
 #, php-format
 msgid ""
 "Please understand that the software is really `picky'; names have to match "
@@ -4274,18 +4274,18 @@ msgid ""
 "contains a complete list of all known substitutions."
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:191
+#: templates/part.emailform.statuspage.php:188
 msgid ""
 "The following email addresses appear to be syntactically incorrect, meaning "
 "that they have not the form of an email address:"
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:202
+#: templates/part.emailform.statuspage.php:199
 #, php-format
 msgid "Broken `%s' addresses"
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:216
+#: templates/part.emailform.statuspage.php:213
 msgid ""
 "No email will be sent out unless these errors are corrected. Please separate "
 "individual emails by commas. Please use standard-address notation (see "
@@ -4293,31 +4293,31 @@ msgid ""
 "quotes if it contains a comma. Some valid examples are:"
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:231
-#: templates/part.emailform.statuspage.php:331
-#: templates/part.emailform.statuspage.php:377
-#: templates/part.emailform.statuspage.php:425
-#: templates/part.emailform.statuspage.php:495
-#: templates/part.emailform.statuspage.php:554
+#: templates/part.emailform.statuspage.php:228
+#: templates/part.emailform.statuspage.php:328
+#: templates/part.emailform.statuspage.php:374
+#: templates/part.emailform.statuspage.php:422
+#: templates/part.emailform.statuspage.php:492
+#: templates/part.emailform.statuspage.php:551
 msgid "Explanations"
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:251
+#: templates/part.emailform.statuspage.php:248
 msgid "Empty Subject"
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:252
+#: templates/part.emailform.statuspage.php:249
 #, php-format
 msgid ""
 "The subject must not consist of `%s' as only part. Please correct that "
 "before hitting the `Send'-button again."
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:266
+#: templates/part.emailform.statuspage.php:263
 msgid "Empty Sender Name"
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:267
+#: templates/part.emailform.statuspage.php:264
 #, php-format
 msgid ""
 "The sender name should not be empty. Originally, it used to be %s, but "
@@ -4325,11 +4325,11 @@ msgid ""
 "name before hitting the `Send'-button again."
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:281
+#: templates/part.emailform.statuspage.php:278
 msgid "No Recipients"
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:282
+#: templates/part.emailform.statuspage.php:279
 msgid ""
 "You did not specify any recipients (Cc: and Bcc: does not count here!)."
 "Please got to the `Em@il Recipients' panel and select some before hitting "
@@ -4337,13 +4337,13 @@ msgid ""
 "without email address at the bottom of the `Em@il Recipients' panel."
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:311
+#: templates/part.emailform.statuspage.php:308
 msgid ""
 "The event(s) with the following id(s) could not be attached; they do not "
 "seem to exists:"
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:325
+#: templates/part.emailform.statuspage.php:322
 #, php-format
 msgid ""
 "This is probably an internal error. Please contact %s. It may be possible to "
@@ -4351,12 +4351,12 @@ msgid ""
 "message."
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:353
+#: templates/part.emailform.statuspage.php:350
 msgid ""
 "While trying to send the message(s), the following exception(s) were caught:"
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:366
+#: templates/part.emailform.statuspage.php:363
 #, php-format
 msgid ""
 "This is an internal error. Please copy this page and send it via email to %s."
@@ -4364,13 +4364,13 @@ msgid ""
 "compose a usefull message."
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:401
+#: templates/part.emailform.statuspage.php:398
 msgid ""
 "While trying to send the message(s), the following error(s) have been "
 "encountered:"
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:414
+#: templates/part.emailform.statuspage.php:411
 #, php-format
 msgid ""
 "This is an internal error. Please copy this page and send it via email to "
@@ -4378,16 +4378,16 @@ msgid ""
 "to compose a usefull message."
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:446
+#: templates/part.emailform.statuspage.php:443
 msgid "Message Duplicates Detected!"
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:458
+#: templates/part.emailform.statuspage.php:455
 #, php-format
 msgid "Message already sent at time %s to the following recipient(s):"
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:485
+#: templates/part.emailform.statuspage.php:482
 #, php-format
 msgid ""
 "The email-form refuses to send email twice to the same recipients. In order "
@@ -4399,21 +4399,21 @@ msgid ""
 "Please add a detailed description."
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:516
+#: templates/part.emailform.statuspage.php:513
 msgid "Copy to Sent-Folder has Failed"
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:525
+#: templates/part.emailform.statuspage.php:522
 #, php-format
 msgid "Could not authenticate with IMAP-server: %s"
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:535
+#: templates/part.emailform.statuspage.php:532
 #, php-format
 msgid "Copy to folder %s has failed: %s"
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:545
+#: templates/part.emailform.statuspage.php:542
 #, php-format
 msgid ""
 "If no other error messages are echoed on this page, then the emails have "
@@ -4423,19 +4423,19 @@ msgid ""
 "the red, underlined text in order to compose a usefull message."
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:575
+#: templates/part.emailform.statuspage.php:572
 msgid "The Following Events have been attached to the Message:"
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:603
+#: templates/part.emailform.statuspage.php:600
 msgid "The following files have been attached to the message:"
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:631
+#: templates/part.emailform.statuspage.php:628
 msgid "First Few Lines of Sent Message"
 msgstr ""
 
-#: templates/part.emailform.statuspage.php:647
+#: templates/part.emailform.statuspage.php:644
 msgid ""
 "The most recent status message is always saved to the status panel. It can "
 "be reviewed there even after closing the dialog window."
@@ -4565,7 +4565,7 @@ msgstr ""
 msgid "Mass Email Form"
 msgstr ""
 
-#: templates/settings.php:46
+#: templates/settings.php:45
 msgid "Personal"
 msgstr ""
 
@@ -4593,47 +4593,51 @@ msgstr ""
 msgid "CMS"
 msgstr ""
 
-#: templates/settings.php:59
+#: templates/settings.php:54
+msgid "?"
+msgstr ""
+
+#: templates/settings.php:60
 msgid "Tool-Tips"
 msgstr ""
 
-#: templates/settings.php:62
+#: templates/settings.php:63
 msgid "Filter-Controls"
 msgstr ""
 
-#: templates/settings.php:65
+#: templates/settings.php:66
 msgid "WYSIWYG Editor"
 msgstr ""
 
-#: templates/settings.php:76
+#: templates/settings.php:77
 msgid "Expert-Mode"
 msgstr ""
 
-#: templates/settings.php:81
+#: templates/settings.php:82
 msgid "Enable Debug Mode"
 msgstr ""
 
-#: templates/settings.php:91
+#: templates/settings.php:92
 msgid "Dummy"
 msgstr ""
 
-#: templates/settings.php:95
+#: templates/settings.php:96
 msgid "Own Password"
 msgstr ""
 
-#: templates/settings.php:98
+#: templates/settings.php:99
 msgid "DB Encryption Key"
 msgstr ""
 
-#: templates/settings.php:101
+#: templates/settings.php:102
 msgid "Set Encryption Key"
 msgstr ""
 
-#: templates/settings.php:102
+#: templates/settings.php:103
 msgid "The encryption key has been set successfully."
 msgstr ""
 
-#: templates/settings.php:103
+#: templates/settings.php:104
 msgid "Unable to set the encryption key."
 msgstr ""
 
