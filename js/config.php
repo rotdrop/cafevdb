@@ -5,6 +5,8 @@ namespace CAFEVDB {
 
   // Check if we are a user
   \OCP\User::checkLoggedIn();
+
+  // And whether the app is enabled
   \OCP\App::checkAppEnabled('cafevdb');
 
   // Set the content type to Javascript
