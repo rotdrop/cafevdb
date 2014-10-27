@@ -1044,6 +1044,43 @@ __EOT__;
       return $projects;
     }
 
+    /**Fetch the project id for the given web-article id,
+     *
+     * @return The project id or false if no project found.
+     */
+    public static function fetchWebPageProjects($articleId, $handle = false)
+    {
+      $projects = array();
+
+      $ownConnection = $handle === false;
+      if ($ownConnection) {
+        Config::init();
+        $handle = mySQL::connect(Config::$pmeopts);
+      }
+
+      $query = "SELECT * FROM `ProjectWebPages` WHERE ";
+      $query .= " `ArticleId` = ".$articleId;
+      $query .= " ORDER BY `ProjectId` ASC, `ArticleId` ASC";
+
+      \OCP\Util::writeLog(Config::APP_NAME, "Query ".$query, \OC_LOG::DEBUG);
+
+      $webPages = array();
+      $result = mySQL::query($query, $handle, true);
+      if ($result === false) {
+        \OCP\Util::writeLog(Config::APP_NAME, "Query ".$query." failed", \OC_LOG::DEBUG);
+        return false;
+      }
+      while ($line = mySQL::fetch($result)) {
+        $projects[] = $line['ProjectId'];
+      }
+
+      if ($ownConnection) {
+        mySQL::close($handle);
+      }
+
+      return $projects;
+    }
+
     /**Fetch the ids of the public web pages related to this
      * project. Often there will be only one, but this need not be the
      * case.

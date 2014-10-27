@@ -727,11 +727,14 @@ __EOT__;
 
     /**Return the IDs of the default calendars.
      */
-    public static function defaultCalendars()
+    public static function defaultCalendars($public = false)
     {
       $cals = explode(',',Config::DFLT_CALS);
       $result = array();
       foreach ($cals as $cal) {
+        if ($public && $cal == 'management') {
+          continue;
+        }
         $result[] = Config::getValue($cal.'calendar'.'id');
       }
       return $result;
@@ -812,8 +815,15 @@ __EOT__;
       return $event;
     }
 
-    /**Form a brief event date in the given locale. */
-    public static function briefEventDate($event, $timezone = null, $locale = null)
+    /**Form start and end date and time in given timezone and locale,
+     * return is an array 
+     *
+     * array('start' => array('date' => ..., 'time' => ..., 'allday' => ...), 'end' => ...)
+     *
+     * @param eventObject The corresponding event object, i.e. the
+     * data stored in the data-base.
+     */
+    public static function eventTimes($eventObject, $timezone = null, $locale = null)
     {
       if ($timezone === null) {
         $timezone = Util::getTimezone();
@@ -822,8 +832,8 @@ __EOT__;
         $locale = Util::getLocale();
       }
 
-      $start = $event['startdate'];
-      $end   = $event['enddate'];
+      $start = $eventObject['startdate'];
+      $end   = $eventObject['enddate'];
 
       $startStamp = $start->getTimestamp();
       $endStamp = $end->getTimestamp();
@@ -837,8 +847,8 @@ __EOT__;
       //
       // If so, the event is meant for the whole day. In this case we
       // just fetch the date in UTC and forget about the time.
-      $startEntireDay = strstr($event['calendardata'], 'DTSTART;VALUE=DATE:') !== false;
-      $endEntireDay = strstr($event['calendardata'], 'DTEND;VALUE=DATE:') !== false;
+      $startEntireDay = strstr($eventObject['calendardata'], 'DTSTART;VALUE=DATE:') !== false;
+      $endEntireDay = strstr($eventObject['calendardata'], 'DTEND;VALUE=DATE:') !== false;
 
       if ($startEntireDay) {
         $startdate = Util::strftime("%x", $startStamp, 'UTC', $locale);
@@ -859,12 +869,75 @@ __EOT__;
       $enddate = Util::strftime("%x", $endStamp, $timezone, $locale);
       $endtime = Util::strftime("%H:%M", $endStamp, $timezone, $locale);
 
-      if ($startdate == $enddate) {
-        $datestring = $startdate.($startEntireDay ? '' : ', '.$starttime);
+      return array('start' => array('date' => $startdate,
+                                    'time' => $starttime,
+                                    'allday' => $startEntireDay),
+                   'end' => array('date' => $enddate,
+                                  'time' => $endtime,
+                                  'allday' => $endEntireDay));
+    }
+
+    /**Form a brief event date in the given locale. */
+    public static function briefEventDate($eventObject, $timezone = null, $locale = null)
+    {
+      $times = self::eventTimes($eventObject, $timezone, $locale);
+
+      if ($times['start']['date'] == $times['end']['date']) {
+        $datestring = $times['start']['date'].($times['start']['allday'] ? '' : ', '.$times['start']['time']);
       } else {
-        $datestring = $startdate.' - '.$enddate;
+        $datestring = $times['start']['date'].' - '.$times['end']['date'];
       }
       return $datestring;
+    }
+
+    /**Form an array with the most relevant event data. */
+    public static function eventData($eventObject, $timezone = null, $locale = null)
+    {
+      $times = self::eventTimes($eventObject, $timezone, $locale);
+      $summary = stripslashes($eventObject['summary']);
+
+      $vcalendar = self::getVCalendar($eventObject);
+      $vobject = self::getVObject($vcalendar);
+
+      $location = $vobject->getAsString('LOCATION');
+      $description = $vobject->getAsString('DESCRIPTION');
+
+      return array('times' => $times,
+                   'summary' => $summary,
+                   'location' => $location,
+                   'description' => $description);
+    }
+
+    /**Return event data for given project id and calendar id*/
+    public static function projectEventData($projectId, $calendarIds = null, $timezone = null, $locale = null)
+    {
+      $events = self::events($projectId);
+
+      if (!$calendarIds) {
+        $calendarIds = self::defaultCalendars(true);
+      }
+
+      $result = array();
+
+      foreach ($calendarIds as $id) {
+        $result[$id] = array(
+          'name' => strval(L::t('Unknown Calendar').' '.$id),
+          'events' => array());
+        $cal = \OC_Calendar_Calendar::find($id);
+        if ($cal != false && $cal['displayname']) {
+          $result[$id]['name'] = $cal['displayname'];
+        }
+      }
+      foreach ($events as $event) {
+        $object = $event['object'];
+        $calId = array_search($object['calendarid'], $calendarIds);
+        if ($calId !== false) {
+          $calId = $calendarIds[$calId];
+          $result[$calId]['events'][] = self::eventData($object, $timezone, $locale);
+        }
+      }
+
+      return array_values($result);
     }
 
     /**Fetch the list of events associated with $projectId. This

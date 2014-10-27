@@ -34,14 +34,18 @@ use \CAFEVDB\Util;
 $this->create('cafevdb_config', 'js/config.js')
   ->actionInclude('cafevdb/js/config.php');
 
+/*Return an array of project-events, given the respective project id. */
 \OCP\API::register(
   'get',
-  '/apps/'.Config::APP_NAME.'/projects/events/byProjectId/{projectId}/{calendarId}/{timezone}/{locale}',
+  '/apps/'.Config::APP_NAME.'/projects/events/byProjectId/{projectId}/{timezone}/{locale}',
   function($params) {
-    \OCP\Util::writeLog(Config::APP_NAME, "event route: ".print_r($params, true), \OCP\Util::DEBUG);
+    //\OCP\Util::writeLog(Config::APP_NAME, "event route: ".print_r($params, true), \OCP\Util::DEBUG);
     
+    $projectId = $params['projectId'];
+    $timezone = $params['timezone'];
+    $locale = $params['locale'];
 
-    return new \OC_OCS_Result(array('name' => "Hello World"));
+    return new \OC_OCS_Result(Events::projectEventData($projectId, null, $timezone, $locale));
   },
   Config::APP_NAME,
   \OC_API::USER_AUTH,
@@ -49,7 +53,39 @@ $this->create('cafevdb_config', 'js/config.js')
   array('timezone' => Util::getTimezone(),
         'locale' => Util::getLocale()),
   // requirements
-  array('projectId', 'calendarId')
+  array('projectId')
+  );
+
+/*Return an array of project-events, given the respective web-article id. */
+\OCP\API::register(
+  'get',
+  '/apps/'.Config::APP_NAME.'/projects/events/byWebPageId/{articleId}/{timezone}/{locale}',
+  function($params) {
+    //\OCP\Util::writeLog(Config::APP_NAME, "event route: ".print_r($params, true), \OCP\Util::DEBUG);
+
+    $articleId = $params['articleId'];
+    $timezone = $params['timezone'];
+    $locale = $params['locale'];
+
+    $projects = Projects::fetchWebPageProjects($articleId);
+    $data = array();
+    foreach ($projects as $projectId) {
+      $name = Projects::fetchName($projectId);
+      if ($name === false) {
+        continue;
+      }
+      $data[$name] = Events::projectEventData($projectId, null, $timezone, $locale);
+    }
+
+    return new \OC_OCS_Result($data);
+  },
+  Config::APP_NAME,
+  \OC_API::USER_AUTH,
+  // defaults
+  array('timezone' => Util::getTimezone(),
+        'locale' => Util::getLocale()),
+  // requirements
+  array('articleId')
   );
 
 ?>
