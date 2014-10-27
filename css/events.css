@@ -330,6 +330,15 @@ div.google-popup {
   box-shadow: 0 0.5ex 1ex #777;
 }
 
+/* Hide the category selector. We use the categories to link events to
+ * projects, or at least to restore event-project connection. Better not
+ * let the user fiddle with that.
+ */
+.cafevdb.eventdlg input#category,
+.cafevdb.eventdlg a#editCategories {
+  display:none;
+}
+
 /*
  * LocalVariables: ***
  * cssm-indent-function: cssm-c-style-indenter ***

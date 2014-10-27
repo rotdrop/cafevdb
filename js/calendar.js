@@ -168,16 +168,17 @@ Calendar={
 				}
 			});
 			$( "#event" ).tabs({ selected: 0});
+			$('#event').find('select[name="calendar"]').prop('disabled', true);
 			$('#event').dialog({
                                 position: {
                                         my: "left-40% top+50%",
                                         at: "left top",
-                                        of: 'div[aria-describedby="events"]',
-                                        
+                                        of: 'div[aria-describedby="events"]'
                                 },
 				width : 520,
 				height: 600,
 				resizable: false,
+                                dialogClass: 'cafevdb eventdlg',
 //				draggable: false,
                                 open  : function() {
                                         CAFEVDB.dialogToBackButton($(this));
