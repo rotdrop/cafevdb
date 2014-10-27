@@ -384,7 +384,7 @@ redaxoRehearsalsModule
     static public function sessionRetrieveValue($key, $default = false)
     {
       if (self::$session === false) {
-        return $default;
+        self::$session = new Session();
       }
       return self::$session->retrieveValue($key, $default);
     }
