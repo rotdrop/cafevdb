@@ -527,7 +527,13 @@ __EOT__;
      */
     public static function htmlEncode($string, $ent = null, $double_encode = false)
     {
-      return htmlentities($string, null, 'UTF-8', $double_encode);
+      if (!$ent) {
+        $ent = ENT_COMPAT;
+        if (defined(ENT_HTML401)) {
+          $ent |= ENT_HTML401;
+        }
+      }
+      return htmlentities($string, $ent, 'UTF-8', $double_encode);
     }
 
     /**Wrapper around htmlspecialchars(); avoid double encoding, standard
@@ -535,7 +541,13 @@ __EOT__;
      */
     public static function htmlEscape($string, $ent = null, $double_encode = false)
     {
-      return htmlspecialchars($string, null, 'UTF-8', $double_encode);
+      if (!$ent) {
+        $ent = ENT_COMPAT;
+        if (defined(ENT_HTML401)) {
+          $ent |= ENT_HTML401;
+        }
+      }
+      return htmlspecialchars($string, $ent, 'UTF-8', $double_encode);
     }
 
     /** phpMyEdit calls the triggers (callbacks) with the following arguments:
