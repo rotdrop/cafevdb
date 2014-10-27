@@ -122,7 +122,7 @@ redaxoRehearsalsModule
                                  'emailform' => false);
     private static $initialized = false;
     private static $toolTipsArray = array();
-    private static $session = false;
+    public static $session = false;
 
     /**List of data-base entries that need to be encrypted. We should
      * invent some "registration" infrastructre for this AND first do a
@@ -140,7 +140,7 @@ redaxoRehearsalsModule
 
     public static function loginListener($params)
     {
-      self::init();    
+      //self::init();
       $group = self::getAppValue('usergroup', '');
       $user = $params['uid'];
       if ($group != '' && \OC_Group::inGroup($user, $group)) {
@@ -364,7 +364,9 @@ redaxoRehearsalsModule
      */
     static public function sessionStoreValue($key, $value)
     {
-      self::init();
+      if (self::$session === false) {
+        self::$session = new Session();
+      }
       self::$session->storeValue($key, $value);
     }
 
@@ -381,7 +383,9 @@ redaxoRehearsalsModule
      */
     static public function sessionRetrieveValue($key, $default = false)
     {
-      self::init();
+      if (self::$session === false) {
+        return $default;
+      }
       return self::$session->retrieveValue($key, $default);
     }
 
@@ -681,7 +685,9 @@ redaxoRehearsalsModule
       }
       self::$initialized = true;
 
-      self::$session = new Session();
+      if (self::$session === false) {
+        self::$session = new Session();
+      }
 
       // Fetch possibly encrypted config values from the OC data-base
       self::decryptConfigValues();
