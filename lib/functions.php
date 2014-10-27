@@ -245,6 +245,7 @@ __EOT__;
     /**Return the timezone, from the calendar app. */
     public static function getTimezone()
     {
+      \OC::$CLASSPATH['OC_Calendar_App'] = 'calendar/lib/app.php';
       return \OC_Calendar_App::getTimezone();
     }  
 
