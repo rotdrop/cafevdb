@@ -510,7 +510,7 @@ namespace CAFEVDB {
     return false;
   }
 
-  $key = 'addressbook';
+  $key = 'sharedaddressbook';
   if (isset($_POST[$key])) {
     $value = $_POST[$key];
     $id = Config::getSetting($key.'id', false);

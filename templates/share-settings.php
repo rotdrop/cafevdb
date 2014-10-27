@@ -71,7 +71,7 @@ $off = $_['shareowner'] == '' ? 'disabled="disabled"' : $alloff;
 <!-- Contacts, adressbooks -->
     <form id="contacts">
       <fieldset  <?php echo $off; ?> ><legend><?php echo L::t('Contacts'); ?></legend>
-        <input type="text" id="addressbook" name="addressbook" placeholder="<?php echo L::t('addressbook');?>" value="<?php echo $_['sharedaddressbook']; ?>" />
+        <input type="text" id="addressbook" name="sharedaddressbook" placeholder="<?php echo L::t('addressbook');?>" value="<?php echo $_['sharedaddressbook']; ?>" />
         <label for="addressbook"><?php echo L::t('Shared Addresbook');?></label>
       </fieldset>
     </form>
