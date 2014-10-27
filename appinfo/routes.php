@@ -20,7 +20,36 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+OC::$CLASSPATH['CAFEVDB\Config'] = OC_App::getAppPath('cafevdb').'/lib/config.php';
+OC::$CLASSPATH['CAFEVDB\Projects'] = OC_App::getAppPath('cafevdb').'/lib/projects.php';
+OC::$CLASSPATH['CAFEVDB\Events'] = OC_App::getAppPath('cafevdb').'/lib/events.php';
+OC::$CLASSPATH['CAFEVDB\Util'] = OC_App::getAppPath('cafevdb').'/lib/functions.php';
+
+use \CAFEVDB\Config;
+use \CAFEVDB\Events;
+use \CAFEVDB\Projects;
+use \CAFEVDB\Util;
+
+// Internal config link
 $this->create('cafevdb_config', 'js/config.js')
   ->actionInclude('cafevdb/js/config.php');
+
+\OCP\API::register(
+  'get',
+  '/apps/'.Config::APP_NAME.'/projects/events/byProjectId/{projectId}/{calendarId}/{timezone}/{locale}',
+  function($params) {
+    \OCP\Util::writeLog(Config::APP_NAME, "event route: ".print_r($params, true), \OCP\Util::DEBUG);
+    
+
+    return new \OC_OCS_Result(array('name' => "Hello World"));
+  },
+  Config::APP_NAME,
+  \OC_API::USER_AUTH,
+  // defaults
+  array('timezone' => Util::getTimezone(),
+        'locale' => Util::getLocale()),
+  // requirements
+  array('projectId', 'calendarId')
+  );
 
 ?>
