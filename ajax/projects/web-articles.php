@@ -53,7 +53,8 @@ namespace CAFEVDB {
       return false;
     }
 
-    if (count($articleData) > 0 && $articleId >= 0 &&
+    if (count($articleData) > 0 &&
+        $articleId >= 0 &&
         $articleData['ArticleId'] != $articleId) {
       $debugText .= ob_get_contents();
       @ob_end_clean();
@@ -160,7 +161,7 @@ namespace CAFEVDB {
     } else {
       \OC_JSON::error(
         array("data" => array(
-                "message" => L::t("Error: ").$errorMessage,
+                "message" => L::t("Error: %s", array($errorMessage)),
                 "debug" => $debugText)));
       return false;
     }
@@ -170,16 +171,28 @@ namespace CAFEVDB {
     $debugText .= ob_get_contents();
     @ob_end_clean();
 
-    // For whatever reason we need to entify quotes, otherwise jquery throws an error.
+    $exceptionText = $e->getFile().'('.$e->getLine().'): '.$e->getMessage();
+    $trace = $e->getTraceAsString();
+
+    $admin = Config::adminContact();
+
+    $mailto = $admin['email'].
+      '?subject='.rawurlencode('[CAFEVDB-Exception] Exceptions while linking Web-Articles').
+      '&body='.rawurlencode($exceptionText."\r\n".$trace);
+    $mailto = '<span class="error email"><a href="mailto:'.$mailto.'">'.$admin['name'].'</a></span>';
+
     \OCP\JSON::error(
       array(
         'data' => array(
+          'caption' => L::t('PHP Exception Caught'),
           'error' => 'exception',
-          'exception' =>  $e->getMessage(),
-          'trace' => $e->getTraceAsString(),
-          'message' => Util::htmlEncode(L::t('Error, caught an exception')),
-          'debug' => $debugText)));
-
+          'exception' => $exceptionText,
+          'trace' => $trace,
+          'message' => L::t('Error, caught an exception. '.
+                            'Please copy the displayed text and send it by email to %s.',
+                            array($mailto)),
+          'debug' => htmlspecialchars($debugText))));
+ 
     return false;
   }
 
