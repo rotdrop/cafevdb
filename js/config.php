@@ -3,10 +3,14 @@
 
 namespace CAFEVDB {
 
-// Set the content type to Javascript
-  header("Content-type: text/javascript");
+  // Check if we are a user
+  \OCP\User::checkLoggedIn();
+  \OCP\App::checkAppEnabled('cafevdb');
 
-// Disallow caching
+  // Set the content type to Javascript
+  \OCP\JSON::setContentTypeHeader('text/javascript');
+
+  // Disallow caching
   header("Cache-Control: no-cache, must-revalidate"); 
   header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); 
 
