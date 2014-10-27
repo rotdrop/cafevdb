@@ -45,13 +45,20 @@ $this->create('cafevdb_config', 'js/config.js')
     $timezone = $params['timezone'];
     $locale = $params['locale'];
 
+    if (!$timezone) {
+      $timezone = Util::getTimezone();
+    }
+    if (!$locale) {
+      $locale = Util::getLocale();
+    } 
+
     return new \OC_OCS_Result(Events::projectEventData($projectId, null, $timezone, $locale));
   },
   Config::APP_NAME,
   \OC_API::USER_AUTH,
   // defaults
-  array('timezone' => Util::getTimezone(),
-        'locale' => Util::getLocale()),
+  array('timezone' => false,
+        'locale' => false),
   // requirements
   array('projectId')
   );
@@ -67,7 +74,15 @@ $this->create('cafevdb_config', 'js/config.js')
     $timezone = $params['timezone'];
     $locale = $params['locale'];
 
+    if (!$timezone) {
+      $timezone = Util::getTimezone();
+    }
+    if (!$locale) {
+      $locale = Util::getLocale();
+    } 
+
     $projects = Projects::fetchWebPageProjects($articleId);
+
     $data = array();
     foreach ($projects as $projectId) {
       $name = Projects::fetchName($projectId);
@@ -82,8 +97,8 @@ $this->create('cafevdb_config', 'js/config.js')
   Config::APP_NAME,
   \OC_API::USER_AUTH,
   // defaults
-  array('timezone' => Util::getTimezone(),
-        'locale' => Util::getLocale()),
+  array('timezone' => false,
+        'locale' => false),
   // requirements
   array('articleId')
   );
