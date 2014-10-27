@@ -92,6 +92,12 @@ namespace CAFEVDB
     {
       return isset($this->data[$key]) ? $this->data[$key] : $default;
     }
+
+    public function sessionData()
+    {
+      return $this->data;
+    }
+    
   }
 
 } // namespace CAFEVDB
