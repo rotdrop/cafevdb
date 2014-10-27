@@ -451,19 +451,10 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
             $.post(OC.filePath('cafevdb', 'ajax/projects', 'web-articles.php'),
                 post,
                 function (data) {
-                    if (data.status == 'success') {
-                        var rqData = data.data;
-                        if (rqData.message != '') {
-                            OC.Notification.showHtml(rqData.message);
-                        }
-                    } else if (data.status == 'error') {
-                        var rqData = data.data;
-                        OC.Notification.showHtml(rqData.message);
-                        if (data.data.error == 'exception') {
-                            OC.dialogs.alert(rqData.exception+rqData.trace,
-                                t('cafevdb', 'Caught a PHP Exception'),
-                                null, true);
-                        }
+                    if (!CAFEVDB.ajaxErrorHandler(data, [])) {
+                        // do nothing
+                    } else if (data.data.message != '') {
+                        OC.Notification.showHtml(data.data.message);
                     }
                     var form = container.find('table.pme-navigation');
                     var submit = form.find('input.pme-more, input.pme-reload, input.pme-apply');
