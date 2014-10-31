@@ -74,13 +74,20 @@ $this->create('cafevdb_config', 'js/config.js')
     $timezone = $params['timezone'];
     $locale = $params['locale'];
 
+    // OC uses symphony which rawurldecodes the request URL. This
+    // implies that in order to pass a slash / we caller must
+    // urlencode that thingy twice, and Symphony consequently will
+    // only deliver encoded data in this case.
+    
     if (!$timezone) {
       $timezone = Util::getTimezone();
     }
     if (!$locale) {
       $locale = Util::getLocale();
     } 
-
+    $timezone = rawurldecode($timezone);
+    $locale = rawurldecode($locale);
+    
     $projects = Projects::fetchWebPageProjects($articleId);
 
     $data = array();
