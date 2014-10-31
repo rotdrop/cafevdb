@@ -123,11 +123,6 @@ namespace CAFEVDB {
       } else {
         $message = L::t("Linked the existing public web-article %s (id %d) to the project with id %d",
                         array($articleData['ArticleName'], $articleId, $projectId));
-        // If this was a trash-bin article, then move it to the preview category.
-        $trashCategory = Config::getValue('redaxoTrashbin');
-        if ($articleData['CategoryId'] == $trashCategory) {
-        
-        }
       }
       break;
     case 'unlink':
