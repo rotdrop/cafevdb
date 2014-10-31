@@ -28,9 +28,9 @@ $table   = new Projects();
 $css_pfx = Projects::CSS_PREFIX;
 
 $nav = '';
-$nav .= Navigation::button('projectinstruments');
-$nav .= Navigation::button('instruments');
+//$nav .= Navigation::button('projectinstruments');
 $nav .= Navigation::button('all');
+$nav .= Navigation::button('instruments');
 
 echo $this->inc('part.common.header',
                 array('css-prefix' => $css_pfx,

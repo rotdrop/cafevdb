@@ -32,7 +32,7 @@ $css_class = 'blog-page';
 $nav = '';
 $nav .= Navigation::button('projects');
 $nav .= Navigation::button('all');
-$nav .= Navigation::button('projectinstruments');
+//$nav .= Navigation::button('projectinstruments');
 $nav .= Navigation::button('instruments');
 
 $header = ''
