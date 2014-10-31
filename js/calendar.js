@@ -168,7 +168,17 @@ Calendar={
 				}
 			});
 			$( "#event" ).tabs({ selected: 0});
-			$('#event').find('select[name="calendar"]').prop('disabled', true);
+                        var eventForm = $('#event_form');
+                        var calSelect = eventForm.find('select[name="calendar"]');
+                        // Search for the selected option, if none is
+                        // selected, take the first (new event)
+                        var cal = calSelect.children(':selected');
+                        if (cal.length == 0) {
+                                cal = calSelect.children('option').first();
+                        }
+                        var calId = cal.val();
+			calSelect.prop('disabled', true);
+                        eventForm.append('<input type="hidden" name="calendar" value="'+calId+'"/>');
 			$('#event').dialog({
                                 position: {
                                         my: "left-40% top+50%",

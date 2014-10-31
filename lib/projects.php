@@ -1305,14 +1305,18 @@ __EOT__;
       } else {
         // Try to remove from trashbin, if appropriate.
         $trashCategory = Config::getValue('redaxoTrashbin');
-        $previewCategory = Config::getValue('redaxoPreview');
         if ($article['CategoryId'] == $trashCategory) {
+          if (stristr($article['ArticleName'], L::t('Rehearsals')) !== false) {
+            $destinationCategory = Config::getValue('redaxoRehearsals');
+          } else {
+            $destinationCategory = Config::getValue('redaxoPreview');
+          }
           $redaxoLocation = \OCP\Config::GetAppValue('redaxo', 'redaxolocation', '');
           $rex = new \Redaxo\RPC($redaxoLocation);
           $articleId = $article['ArticleId'];
-          $result = $rex->moveArticle($articleId, $previewCategory);
+          $result = $rex->moveArticle($articleId, $destinationCategory);
           if ($result === false) {
-            \OCP\Util::writeLog(Config::APP_NAME, "Failed moving ".$articleId." to ".$previewCategory, \OC_LOG::DEBUG);
+            \OCP\Util::writeLog(Config::APP_NAME, "Failed moving ".$articleId." to ".$destinationCategory, \OC_LOG::DEBUG);
           }
         }
       }

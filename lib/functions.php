@@ -529,7 +529,7 @@ __EOT__;
     {
       if (!$ent) {
         $ent = ENT_COMPAT;
-        if (defined(ENT_HTML401)) {
+        if (defined('ENT_HTML401')) {
           $ent |= ENT_HTML401;
         }
       }
@@ -543,7 +543,7 @@ __EOT__;
     {
       if (!$ent) {
         $ent = ENT_COMPAT;
-        if (defined(ENT_HTML401)) {
+        if (defined('ENT_HTML401')) {
           $ent |= ENT_HTML401;
         }
       }

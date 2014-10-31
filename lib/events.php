@@ -869,10 +869,14 @@ __EOT__;
       $enddate = Util::strftime("%x", $endStamp, $timezone, $locale);
       $endtime = Util::strftime("%H:%M", $endStamp, $timezone, $locale);
 
-      return array('start' => array('date' => $startdate,
+      return array('timezone' => $timezone,
+                   'locale' => $locale,
+                   'start' => array('stamp' => $startStamp,
+                                    'date' => $startdate,
                                     'time' => $starttime,
                                     'allday' => $startEntireDay),
-                   'end' => array('date' => $enddate,
+                   'end' => array('stamp' => $endStamp,
+                                  'date' => $enddate,
                                   'time' => $endtime,
                                   'allday' => $endEntireDay));
     }
@@ -893,14 +897,15 @@ __EOT__;
     /**Form an array with the most relevant event data. */
     public static function eventData($eventObject, $timezone = null, $locale = null)
     {
-      $times = self::eventTimes($eventObject, $timezone, $locale);
-      $summary = stripslashes($eventObject['summary']);
-
       $vcalendar = self::getVCalendar($eventObject);
       $vobject = self::getVObject($vcalendar);
 
-      $location = $vobject->getAsString('LOCATION');
-      $description = $vobject->getAsString('DESCRIPTION');
+      $times = self::eventTimes($eventObject, $timezone, $locale);
+
+      $quoted = array('\,' => ',', '\;' => ';');
+      $summary = strtr($eventObject['summary'], $quoted);
+      $location = strtr($vobject->getAsString('LOCATION'), $quoted);
+      $description = strtr($vobject->getAsString('DESCRIPTION'), $quoted);
 
       return array('times' => $times,
                    'summary' => $summary,
