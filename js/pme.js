@@ -161,6 +161,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
     var contentsChanged = false;
     
     container.dialog('widget').addClass('pme-table-dialog-blocked');
+    container.find('.pme-navigation input.pme-reload').addClass('loading');
 
     var post = container.find('form.pme-form').serialize();
 
@@ -367,6 +368,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
                    if (!CAFEVDB.ajaxErrorHandler(data, [ 'contents' ])) {
                      dialogWidget.removeClass('pme-table-dialog-blocked');
+                     container.find('.pme-navigation input.pme-reload').removeClass('loading');
                      return false;
                    }
 

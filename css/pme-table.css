@@ -391,6 +391,11 @@ hr.pme-hr {
   margin-left:48px;
 }
 
+.pme-navigation input.pme-reload.loading {
+  /*background-image:url('../img/view-refresh-greyscale.png');*/
+  background-image:url('../../../core/img/loading.gif');
+}
+
 :not(.lt-ie9) input.pme-email-check[type=checkbox] {
   display:none;
   /* visibility:hidden; */
