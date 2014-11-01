@@ -266,7 +266,7 @@ var CAFEVDB = CAFEVDB || {};
     var post;
     post = $('#sepa-debit-mandate-form').serialize();
     post += "&"+$.param( { 'changed': $(this).attr('name') } );
-    
+
     $.post(OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-settings.php'),
            post,
            function (data) {
@@ -404,13 +404,14 @@ var CAFEVDB = CAFEVDB || {};
     var container = PHPMYEDIT.container(containerSel);
     var pmeReload = container.find('form.pme-form input.pme-reload').first();
 
-    container.find(':button[class$="sepa-debit-mandate"]').click(function(event) {
+    container.find(':button[class$="sepa-debit-mandate"]').
+      off('click').
+      on('click', function(event) {
       event.preventDefault();
       if (container.find('#sepa-debit-mandate-dialog').dialog('isOpen') == true) {
         container.find('#sepa-debit-mandate-dialog').dialog('close').remove();
       } else {
-        // We store the values in the name attribute as serialized
-        // string.
+        // We store the values in the data attribute.
         var values = $(this).data('debitMandate');
         //alert('data: ' + CAFEVDB.print_r(values, true));
         $.post(OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-mandate.php'),
