@@ -920,17 +920,17 @@ var CAFEVDB = CAFEVDB || {};
       container = $('body');
     }
 
-    container.find('input[class^="pme-input-"][class$="-birthday"]').datepicker({
+    container.find('input.birthday').datepicker({
       dateFormat : 'dd.mm.yy', // this is 4-digit year
       minDate: '01.01.1940'
     });
     
-    container.find('input[class^="pme-input-"][class$="-date"]').datepicker({
+    container.find('input.datetime').datepicker({
       dateFormat : 'dd.mm.yy', // this is 4-digit year
       minDate: '01.01.1990'
     });
     
-    container.find('td[class$="-money"]').filter(function() {
+    container.find('td.money').filter(function() {
       return $.trim($(this).text()).indexOf("-") == 0;
     }).addClass("negative");
 

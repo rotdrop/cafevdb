@@ -765,7 +765,7 @@ redaxoRehearsalsModule
       self::$opts['money'] = array('name' => 'Unkostenbeitrag<BR/>(Gagen negativ)',
                                    //'phpview' => self::$prefix . 'money.inc.php',
                                    'mask'  => '%02.02f'.'&euro;',
-                                   'css'   => array('postfix' => 'money'),
+                                   'css'   => array('postfix' => ' money'),
                                    //'align' => 'right',
                                    'select' => 'N',
                                    'maxlen' => '6',
@@ -776,14 +776,14 @@ redaxoRehearsalsModule
                                       'maxlen'   => 19,
                                       'sort'     => true,
                                       'datemask' => 'd.m.Y H:i:s',
-                                      'css'      => array('postfix' => 'datetime'),
+                                      'css'      => array('postfix' => ' datetime'),
         );
 
       self::$opts['birthday'] = array('name'     => strval(L::t('birthday')),
                                       'select'   => 'T',
                                       'maxlen'   => 10,
                                       'sort'     => true,
-                                      'css'      => array('postfix' => 'birthday'),
+                                      'css'      => array('postfix' => ' birthday'),
                                       'datemask' => 'd.m.Y');
 //                                    'default' => '01.01.1900');
       //  add as needed
