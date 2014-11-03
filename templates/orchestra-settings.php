@@ -109,17 +109,19 @@ $off = $_['orchestra'] == '' ? 'disabled="disabled"' : '';
     <fieldset <?php echo $off; ?> >
       <legend><?php echo L::t('Executive board and club members'); ?></legend>
       <input class="specialMemberTables" type="text"
-           id="memberTable"
-           name="memberTable"
-           value="<?php echo $_['memberTable']; ?>"
-           title="<?php echo L::t('Name of the table listing the permanent members of the orchestra'); ?>"
-           placeholder="<?php echo L::t('member-table'); ?>"/><br/>
+             id="memberTable"
+             name="memberTable"
+             value="<?php echo $_['memberTable']; ?>"
+             title="<?php echo L::t('Name of the table listing the permanent members of the orchestra. Only one of name or id have to be given, the other setting is filled automatically.'); ?>"
+             placeholder="<?php echo L::t('member-table'); ?>"/>
+      <br/>
       <input class="specialMemberTables" type="text"
-           id="executiveBoardTable"
-           name="executiveBoardTable"
-           value="<?php echo $_['executiveBoardTable']; ?>"
-           title="<?php echo L::t('Name of the table listing the members of the executive board'); ?>"
-           placeholder="<?php echo L::t('executive board table'); ?>"/><br/>
+             id="executiveBoardTable"
+             name="executiveBoardTable"
+             value="<?php echo $_['executiveBoardTable']; ?>"
+             title="<?php echo L::t('Name of the table listing the members of the executive board. Only one of name or id have to be given, the other setting is filled automatically.'); ?>"
+             placeholder="<?php echo L::t('executive board table'); ?>"/>
+      <br/>
     </fieldset>
     <span class="statusmessage" id="msg"></span>
     <span class="statusmessage" id="suggestion"></span>
