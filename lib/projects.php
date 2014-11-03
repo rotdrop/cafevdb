@@ -1651,6 +1651,31 @@ __EOT__;
 
       return $row && isset($row['Name']) ? $row['Name'] : false;
     }
+    
+    /** Fetch the project-id corresponding to $projectName
+     */
+    public static function fetchId($projectName, $handle = false)
+    {
+      $ownConnection = $handle === false;
+      if ($ownConnection) {
+        Config::init();
+        $handle = mySQL::connect(Config::$pmeopts);
+      }
+
+      $query = "SELECT `Id` FROM `Projekte` WHERE `Name` = '".$projectName."'";
+      $result = mySQL::query($query, $handle);
+
+      $row = false;
+      if ($result !== false && mysql_num_rows($result) == 1) {
+        $row = mySQL::fetch($result);
+      }
+    
+      if ($ownConnection) {
+        mySQL::close($handle);
+      }
+
+      return $row && isset($row['Id']) ? $row['Id'] : false;
+    }
 
     /**Make sure the "Besetzungen"-table has enough extra fields. All
      * extra-fields are text-fields.
