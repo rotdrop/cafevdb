@@ -314,6 +314,10 @@ namespace CAFEVDB
         'escape' => false
         );
 
+      $opts['fdd']['Unkostenbeitrag'] = Config::$opts['money'];
+      $opts['fdd']['Unkostenbeitrag']['name'] = "Teilnehmerbeitrag";
+      $opts['fdd']['Unkostenbeitrag']['tooltip'] = L::t('Default project fee for ordinary participants. This should NOT include reductions of any kind. The value displayed here is the default value inserted into the instrumentation table for the project.');
+
       $opts['fdd']['ExtraFelder'] = array('name'     => 'Extra Felder für Teilnehmer',
                                           'options'  => 'FLAVCPD',
                                           'select'   => 'T',
@@ -1006,6 +1010,35 @@ __EOT__;
       return $button;
     }
 
+    /**Fetch all project data for the given id or name.
+     */
+    public static function fetchById($id, $handle = false)
+    {
+      $projects = array();
+
+      $ownConnection = $handle === false;
+      if ($ownConnection) {
+        Config::init();
+        $handle = mySQL::connect(Config::$pmeopts);
+      }
+      
+      $query = "SELECT *";
+      $query .= " FROM `Projekte`";
+      $query .= " WHERE `Id` = ".$id;
+      
+      $result = mySQL::query($query, $handle, true);
+      $project = false;
+      if ($result !== false && mysql_num_rows($result) == 1) {
+        $project = mySQL::fetch($result);
+      }
+
+      if ($ownConnection) {
+        mySQL::close($handle);
+      }
+
+      return $project;
+    }
+
     /**Fetch the list of projects from the data base as a short id=>name
      * field.
      */
@@ -1627,6 +1660,33 @@ __EOT__;
       return $instrumentation;
     }
 
+    /** Fetch the project-fees for the given project.
+     */
+    public static function fetchFees($projectId, $handle = false)
+    {
+      $ownConnection = $handle === false;
+      if ($ownConnection) {
+        Config::init();
+        $handle = mySQL::connect(Config::$pmeopts);
+      }
+
+      $column = 'Unkostenbeitrag';
+      
+      $query = 'SELECT `'.$column.'` FROM `Projekte` WHERE `Id` = '.$projectId;
+      $result = mySQL::query($query, $handle);
+
+      $row = false;
+      if ($result !== false && mysql_num_rows($result) == 1) {
+        $row = mySQL::fetch($result);
+      }
+    
+      if ($ownConnection) {
+        mySQL::close($handle);
+      }
+
+      return $row && isset($row[$column]) ? $row[$column] : false;
+    }
+    
     /** Fetch the project-name name corresponding to $projectId.
      */
     public static function fetchName($projectId, $handle = false)

@@ -167,8 +167,9 @@ try {
                       array($fullName));
     }
 
-    $query = "INSERT INTO `Besetzungen` (`MusikerId`,`ProjektId`,`Instrument`)
- VALUES ('$musicianId','$projectId','$musInstrument')";
+    $fees = Projects::fetchFees($projectId, $handle);
+    $query = "INSERT INTO `Besetzungen` (`MusikerId`,`ProjektId`,`Instrument`,`Unkostenbeitrag`)
+ VALUES ('$musicianId','$projectId','$musInstrument','$fees')";
 
     $instrumentationId = -1;
     if (mySQL::query($query, $handle) === false) {

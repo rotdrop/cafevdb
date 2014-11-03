@@ -65,8 +65,7 @@ class DetailedInstrumentation
     $recordsPerPage  = $this->recordsPerPage;
     $userExtraFields = $this->userExtraFields;
 
-    global $HTTP_SERVER_VARS;
-    $this->opts['page_name'] = $HTTP_SERVER_VARS['PHP_SELF'].'?app=cafevdb'.'&Template=detailed-instrumentation';
+    $project = Projects::fetchById($projectId);
 
     /*
      * IMPORTANT NOTE: This generated file contains only a subset of huge amount
@@ -327,7 +326,7 @@ class DetailedInstrumentation
     $opts['fdd']['Unkostenbeitrag'] = Config::$opts['money'];
     $opts['fdd']['Unkostenbeitrag']['name'] = "Unkostenbeitrag\n(Gagen negativ)";
     $opts['fdd']['Unkostenbeitrag']['tab'] = array('id' => 'project');
-
+    $opts['fdd']['Unkostenbeitrag']['default'] = $project['Unkostenbeitrag'];
 
     $memberTableId = Config::getValue('memberTableId');
     $debitJoinCondition =
