@@ -88,7 +88,9 @@ bankAccountCreditorIdentifier
 projectsbalancefolder
 projectsfolder
 executiveBoardTable
+executiveBoardTableId
 memberTable
+memberTableId
 redaxoPreview
 redaxoArchive
 redaxoRehearsals
