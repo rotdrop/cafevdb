@@ -328,19 +328,30 @@ class DetailedInstrumentation
     $opts['fdd']['Unkostenbeitrag']['name'] = "Unkostenbeitrag\n(Gagen negativ)";
     $opts['fdd']['Unkostenbeitrag']['tab'] = array('id' => 'project');
 
+
+    $memberTableId = Config::getValue('memberTableId');
+    $debitJoinCondition =
+      '('.
+      '$join_table.projectId = '.$projectId.
+      ' OR '.
+      '$join_table.projectId = '.$memberTableId.
+      ')'.
+      ' AND $join_table.musicianId = $main_table.MusikerId';
+    
     // One virtual field in order to be able to manage SEPA debit mandates
+    $mandateIdx = count($opts['fdd']);
     $opts['fdd']['SepaDebitMandate'] = array(
       'input' => 'V',
       'tab' => array('id' => 'project'),
       'name' => L::t('SEPA Debit Mandate'),
       'select' => 'T',
       'options' => 'LFACPDV',
-      'sql' => '`PMEjoin'.count($opts['fdd']).'`.`mandateReference`', // dummy, make the SQL data base happy
-      'sqlw' => '`PMEjoin'.count($opts['fdd']).'`.`mandateReference`', // dummy, make the SQL data base happy
+      'sql' => '`PMEjoin'.$mandateIdx.'`.`mandateReference`', // dummy, make the SQL data base happy
+      'sqlw' => '`PMEjoin'.$mandateIdx.'`.`mandateReference`', // dummy, make the SQL data base happy
       'values' => array(
         'table' => 'SepaDebitMandates',
         'column' => 'id',
-        'join' => '$join_table.projectId = '.$projectId.' AND $join_table.musicianId = $main_table.MusikerId',
+        'join' => $debitJoinCondition,
         'description' => 'mandateReference'
         ),
       'nowrap' => true,
@@ -355,6 +366,15 @@ class DetailedInstrumentation
                               'musicianLastNameIdx' => $musLastNameIdx,
                               'naked' => $this->pme_bare)
         )
+      );
+
+    $opts['fdd']['DebitMandateProject'] = array(
+      'input' => 'V',
+      'name' => L::t('SEPA Debit Mandate Project'),
+      'select' => 'T',
+      'options' => 'H',
+      'sql' => '`PMEjoin'.$mandateIdx.'`.`projectId`', // dummy, make the SQL data base happy
+      'sqlw' => '`PMEjoin'.$mandateIdx.'`.`projectId`' // dummy, make the SQL data base happy
       );
 
     // Generate input fields for the extra columns
@@ -628,12 +648,17 @@ __EOT__;
       return $row['qf'.$k];
     }
 
-    // Fetch the data from the array $row.
+    // Fetch the options ...
     $projectId        = $opts['projectId'];
     $projectName      = $opts['projectName'];
     $musIdIdx         = $opts['musicianIdIdx'];
     $musFirstNameIdx  = $opts['musicianFirstNameIdx'];
     $musLastNameIdx   = $opts['musicianLastNameIdx'];
+
+    if ($row['qf'.($k+1)] != $projectId) {
+      $projectId = $row['qf'.($k+1)];
+      $projectName = Projects::fetchName($projectId);
+    }    
 
     // Careful: this changes when rearranging the ordering of the display
     $musicianId        = $row['qf'.$musIdIdx];
@@ -647,6 +672,7 @@ __EOT__;
     } else {
       $value = L::t("SEPA Debit Mandate");
     }
+
     return self::sepaDebitMandateButton($value, $musicianId, $musician, $projectId, $projectName);
   }
 
