@@ -74,8 +74,10 @@ namespace CAFEVDB {
 
     /**Store the history away. */
     public function __destruct() {
-      //\OCP\Util::writeLog(Config::APP_NAME, "PageLoader DTOR", \OCP\Util::DEBUG);
-      $this->storeHistory();
+      //\OCP\Util::writeLog(Config::APP_NAME, "PageLoader DTOR",
+      // \OCP\Util::DEBUG); This just does not work as expected,
+      // problems with order of execution of destructors.
+      // $this->storeHistory();
     }
 
     /**Return a ready-to-use template, template-values are already
@@ -208,7 +210,7 @@ namespace CAFEVDB {
     /**Store the current state whereever. Currently the PHP session
      * data, but this is not guaranteed.
      */
-    private function storeHistory() 
+    public function storeHistory() 
     {
       $storageValue = array('size' => $this->historySize,
                             'position' => $this->historyPosition,

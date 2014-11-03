@@ -45,9 +45,10 @@ namespace CAFEVDB
 
   Error::exceptions(true);
   $debugText = '';
+  $pageLoader = false;
   
   ob_start();
-
+  
   try {
 
     if (Util::debugMode('request')) {
@@ -84,25 +85,38 @@ namespace CAFEVDB
               'history' => array('size' => $pageLoader->historySize(),
                                  'position' => $pageLoader->historyPosition()),
               'debug' => $debugText)));
-    
-    unset($pageLoader); // trigger destroy
 
+    $pageLoader->storeHistory();
+    
     return true;
 
   } catch (\Exception $e) {
+
     $debugText .= ob_get_contents();
     @ob_end_clean();
+
+    $exceptionText = $e->getFile().'('.$e->getLine().'): '.$e->getMessage();
+    $trace = $e->getTraceAsString();
+
+    $admin = Config::adminContact();
+
+    $mailto = $admin['email'].
+      '?subject='.rawurlencode('[CAFEVDB-Exception] Exceptions from Email-Form').
+      '&body='.rawurlencode($exceptionText."\r\n".$trace);
+    $mailto = '<span class="error email"><a href="mailto:'.$mailto.'">'.$admin['name'].'</a></span>';
 
     \OCP\JSON::error(
       array(
         'data' => array(
+          'caption' => L::t('PHP Exception Caught'),
           'error' => 'exception',
-          'message' => L::t('Error, caught an exception'),
-          'debug' => $debugText,
-          'exception' => $e->getFile().'('.$e->getLine().'): '.$e->getMessage(),
-          'trace' => $e->getTraceAsString(),
-          'debug' => $debugText)));
-    
+          'exception' => $exceptionText,
+          'trace' => $trace,
+          'message' => L::t('Error, caught an exception. '.
+                            'Please copy the displayed text and send it by email to %s.',
+                            array($mailto)),
+          'debug' => htmlspecialchars($debugText))));
+ 
     return false;
   }
 }
