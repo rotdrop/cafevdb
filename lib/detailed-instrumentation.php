@@ -328,54 +328,57 @@ class DetailedInstrumentation
     $opts['fdd']['Unkostenbeitrag']['tab'] = array('id' => 'project');
     $opts['fdd']['Unkostenbeitrag']['default'] = $project['Unkostenbeitrag'];
 
-    $memberTableId = Config::getValue('memberTableId');
-    $debitJoinCondition =
-      '('.
-      '$join_table.projectId = '.$projectId.
-      ' OR '.
-      '$join_table.projectId = '.$memberTableId.
-      ')'.
-      ' AND $join_table.musicianId = $main_table.MusikerId';
+    if (Projects::needDebitMandates($projectId)) {
     
-    // One virtual field in order to be able to manage SEPA debit mandates
-    $mandateIdx = count($opts['fdd']);
-    $opts['fdd']['SepaDebitMandate'] = array(
-      'input' => 'V',
-      'tab' => array('id' => 'project'),
-      'name' => L::t('SEPA Debit Mandate'),
-      'select' => 'T',
-      'options' => 'LFACPDV',
-      'sql' => '`PMEjoin'.$mandateIdx.'`.`mandateReference`', // dummy, make the SQL data base happy
-      'sqlw' => '`PMEjoin'.$mandateIdx.'`.`mandateReference`', // dummy, make the SQL data base happy
-      'values' => array(
-        'table' => 'SepaDebitMandates',
-        'column' => 'id',
-        'join' => $debitJoinCondition,
-        'description' => 'mandateReference'
-        ),
-      'nowrap' => true,
-      'sort' => true,
-      'php' => array(
-        'type' => 'function',
-        'function' => 'CAFEVDB\DetailedInstrumentation::sepaDebitMandatePME',
-        'parameters' => array('projectName' => $projectName,
-                              'projectId' => $projectId,
-                              'musicianIdIdx' => $musIdIdx,
-                              'musicianFirstNameIdx' => $musFirstNameIdx,
-                              'musicianLastNameIdx' => $musLastNameIdx,
-                              'naked' => $this->pme_bare)
-        )
-      );
+      $memberTableId = Config::getValue('memberTableId');
+      $debitJoinCondition =
+        '('.
+        '$join_table.projectId = '.$projectId.
+        ' OR '.
+        '$join_table.projectId = '.$memberTableId.
+        ')'.
+        ' AND $join_table.musicianId = $main_table.MusikerId';
+    
+      // One virtual field in order to be able to manage SEPA debit mandates
+      $mandateIdx = count($opts['fdd']);
+      $opts['fdd']['SepaDebitMandate'] = array(
+        'input' => 'V',
+        'tab' => array('id' => 'project'),
+        'name' => L::t('SEPA Debit Mandate'),
+        'select' => 'T',
+        'options' => 'LFACPDV',
+        'sql' => '`PMEjoin'.$mandateIdx.'`.`mandateReference`', // dummy, make the SQL data base happy
+        'sqlw' => '`PMEjoin'.$mandateIdx.'`.`mandateReference`', // dummy, make the SQL data base happy
+        'values' => array(
+          'table' => 'SepaDebitMandates',
+          'column' => 'id',
+          'join' => $debitJoinCondition,
+          'description' => 'mandateReference'
+          ),
+        'nowrap' => true,
+        'sort' => true,
+        'php' => array(
+          'type' => 'function',
+          'function' => 'CAFEVDB\DetailedInstrumentation::sepaDebitMandatePME',
+          'parameters' => array('projectName' => $projectName,
+                                'projectId' => $projectId,
+                                'musicianIdIdx' => $musIdIdx,
+                                'musicianFirstNameIdx' => $musFirstNameIdx,
+                                'musicianLastNameIdx' => $musLastNameIdx,
+                                'naked' => $this->pme_bare)
+          )
+        );
 
-    $opts['fdd']['DebitMandateProject'] = array(
-      'input' => 'V',
-      'name' => L::t('SEPA Debit Mandate Project'),
-      'select' => 'T',
-      'options' => 'H',
-      'sql' => '`PMEjoin'.$mandateIdx.'`.`projectId`', // dummy, make the SQL data base happy
-      'sqlw' => '`PMEjoin'.$mandateIdx.'`.`projectId`' // dummy, make the SQL data base happy
-      );
-
+      $opts['fdd']['DebitMandateProject'] = array(
+        'input' => 'V',
+        'name' => L::t('SEPA Debit Mandate Project'),
+        'select' => 'T',
+        'options' => 'H',
+        'sql' => '`PMEjoin'.$mandateIdx.'`.`projectId`', // dummy, make the SQL data base happy
+        'sqlw' => '`PMEjoin'.$mandateIdx.'`.`projectId`' // dummy, make the SQL data base happy
+        );
+    }
+    
     // Generate input fields for the extra columns
     foreach ($userExtraFields as $field) {
       $name = $field['name'];    

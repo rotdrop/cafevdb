@@ -1684,7 +1684,47 @@ __EOT__;
         mySQL::close($handle);
       }
 
-      return $row && isset($row[$column]) ? $row[$column] : false;
+      return $row && isset($row[$column]) ? floatval($row[$column]) : false;
+    }
+
+    /**Return true if this project has a potential need for debit
+     * mandates.
+     */
+    public static function needDebitMandates($projectId, $handle = false)
+    {
+      $ownConnection = $handle === false;
+      if ($ownConnection) {
+        Config::init();
+        $handle = mySQL::connect(Config::$pmeopts);
+      }
+
+      $memberTableId = Config::getValue('memberTableId');
+      $result = $projectId == $memberTableId;
+
+      if (!$result) {
+        $fees = self::fetchFees($projectId, $handle);
+        $result = $fees != 0;
+      }
+
+      if (!$result) {
+        $query = "SELECT GREATEST(0,MAX(Unkostenbeitrag)) as MaximumFee FROM `Besetzungen` WHER `ProjektId` == $projectId";
+        $qres = mySQL::query($query, $handle);
+
+        $max = 0;
+        if ($qres !== false && mysql_num_rows($qres) == 1) {
+          $row = mySQL::fetch($qres);
+          if (isset($row['MaximumFee'])) {
+            $max = floatval($row['MaximumFee']);
+          }
+        }
+        $result = $max > 0;
+      }
+      
+      if ($ownConnection) {
+        mySQL::close($handle);
+      }
+
+      return $result;
     }
     
     /** Fetch the project-name name corresponding to $projectId.
