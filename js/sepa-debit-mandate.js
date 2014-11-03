@@ -395,6 +395,7 @@ var CAFEVDB = CAFEVDB || {};
              }
              return true;
            }, 'json');
+    return false;
   };
 
   SepaDebitMandate.popupInit = function(selector) {
@@ -441,17 +442,11 @@ var CAFEVDB = CAFEVDB || {};
       return;
     }
     var table = form.find('table[summary="SepaDebitMandates"]');
-    table.find('input[type="text"]').
-      not('.pme-filter').
-      off('blur').
-      on('blur', function(event) {
-      alert('hello');
-      self.validatePME(event);
-    });
+    table.find('input[type="text"]').not('.pme-filter').off('blur').on('blur', self.validatePME);
 
     CAFEVDB.exportMenu(containerSel);
 
-    table.find('input[class$="-sepadate"]').datepicker({
+    table.find('input.sepadate').datepicker({
       dateFormat : 'dd.mm.yy', // this is 4-digit year
       minDate: '01.01.1990',
       beforeShow: function(input) {
