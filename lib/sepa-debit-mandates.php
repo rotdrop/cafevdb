@@ -41,7 +41,7 @@ namespace CAFEVDB
     protected $accessory;
     protected $accessoryNames;
 
-      function __construct($execute = true) {
+    function __construct($execute = true) {
       parent::__construct($execute);
     }
 
@@ -158,7 +158,20 @@ namespace CAFEVDB
         $junctor = " AND ";
       }
       if ($projectId > 0) {
-        $opts['filters'] = $junctor."`PMEtable0`.`projectId` = ".$projectId;
+        $opts['filters'] =
+          $junctor.
+          "(".
+          "`PMEtable0`.`projectId` = ".$projectId.
+          " OR ".
+          "(".
+          "`PMEtable0`.`projectId` = ".Config::getValue('memberTableId').
+          " AND ".
+          "(".
+          "SELECT COUNT(*) FROM `Besetzungen` ".
+          "  WHERE `MusikerId` = `PMEtable0`.`musicianId` AND `ProjektId` = ".$projectId.
+          ")".
+          ")".
+          ")";
         $junctor = " AND ";
       }
 
@@ -228,7 +241,7 @@ namespace CAFEVDB
                                           'select'   => 'T',
                                           'maxlen'   => 10,
                                           'sort'     => true,
-                                          'css'      => array('postfix' => 'sepadate'),
+                                          'css'      => array('postfix' => ' sepadate'),
                                           'datemask' => 'd.m.Y');
 
       $opts['fdd']['musicianId'] = array('name'     => L::t('Musician'),
@@ -294,7 +307,7 @@ namespace CAFEVDB
                                            'select'   => 'T',
                                            'maxlen'   => 10,
                                            'sort'     => true,
-                                           'css'      => array('postfix' => 'sepadate'),
+                                           'css'      => array('postfix' => ' sepadate'),
                                            'datemask' => 'd.m.Y');
 
     
