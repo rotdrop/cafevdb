@@ -58,7 +58,6 @@ $(document).ready(function() {
         callback: function(selector, resizeCB) {
             var container = $(selector);
             CAFEVDB.exportMenu(selector);
-            //container.find('input.pme-email').addClass('formsubmit');
 
             container.find('div.photo, #cafevdb_inline_image_wrapper').
                 on('click', 'img', function(event) {
@@ -93,18 +92,6 @@ $(document).ready(function() {
         parameters: []
     });
     
-    PHPMYEDIT.addTableLoadCallback('EmailHistory', {
-        callback: function(selector, resizeCB) {
-            //CAFEVDB.exportMenu(selector);
-            //$(selector).find('input.pme-email').addClass('formsubmit');
-            //CAFEVDB.SepaDebitMandate.popupInit(selector);
-            //this.ready(selector);
-            resizeCB();
-        },
-        context: CAFEVDB.Email,
-        parameters: []
-    });
-
     PHPMYEDIT.addTableLoadCallback('Instruments', {
         callback: function(selector, resizeCB) {
             resizeCB();
@@ -116,9 +103,6 @@ $(document).ready(function() {
     PHPMYEDIT.addTableLoadCallback('InstrumentInsurance', {
         callback: function(selector, resizeCB) {
             CAFEVDB.exportMenu(selector);
-            //$(selector).find('input.pme-email').addClass('formsubmit');
-            //CAFEVDB.SepaDebitMandate.popupInit(selector);
-            //this.ready(selector);
 
             $(':button.musician-instrument-insurance').click(function(event) {
                 event.preventDefault();
