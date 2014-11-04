@@ -182,7 +182,7 @@ make sure that the musicians are also automatically added to the
 
     if ($this->projectMode) {
 //      $opts['filters'] = "(SELECT COUNT(*) FROM `Besetzungen` WHERE MusikerId = PMEtable0.Id AND ProjektId = $projectId) = 0";
-      $opts['misccssclass']   = 'bulkcommit';
+      $opts['misc']['css']['major']   = 'bulkcommit';
       $opts['labels']['Misc'] = strval(L::t('Add all to %s', array($projectName)));
     }
 

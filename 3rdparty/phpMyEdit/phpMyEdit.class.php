@@ -155,7 +155,8 @@ class phpMyEdit
 	var $notify;		// change notification e-mail adresses
 	var $logtable;		// name of optional logtable
 	var $miscphp;		// callback function for multi-purpose custom misc button 
-	var $misccss;       // css class name for misc buttons
+	var $misccss;       // major css class name for misc buttons
+	var $misccss2;      // minor css class name for misc buttons
 	var $navigation;	// navigation style
 	var $buttons;
 	var $tabs;			// TAB names
@@ -2656,18 +2657,18 @@ class phpMyEdit
 		if ($name == 'misc') {
 			$enabled	 = $this->misc_enabled();
 			$cssname     = $this->misccss;
-			$nav = '<span class="'.$this->getCSSclass($cssname, $position).'">';
+			$nav = '<span class="'.$this->getCSSclass($cssname, $position, null, $this->misccss2).'">';
 			$nav .= $this->htmlSubmit(
 				'operation', ucfirst($name),
-				$this->getCSSclass($cssname, $position), false, $enabled ? 0 : $disabled);
+				$this->getCSSclass($cssname, $position, null, $this->misccss2), false, $enabled ? 0 : $disabled);
 			// One button to select the result of the current query
 			$nav .= $this->htmlSubmit(
 				'operation', '+',
-				$this->getCSSclass($cssname.'+', $position), false, $enabled ? 0 : $disabled);
+				$this->getCSSclass($cssname.'+', $position, null, $this->misccss2), false, $enabled ? 0 : $disabled);
 			// One button to deselect the result of the current query
 			$nav .= $this->htmlSubmit(
 				'operation', '-',
-				$this->getCSSclass($cssname.'-', $position), false, $enabled ? 0 : $disabled);
+				$this->getCSSclass($cssname.'-', $position, null, $this->misccss2), false, $enabled ? 0 : $disabled);
 			$nav .= '</span>';
 			return $nav;
 		}
@@ -3381,7 +3382,7 @@ class phpMyEdit
 						echo ' /></td>',"\n";
 					}
 					if ($this->nav_custom_multi()) {
-						$css	  = $this->getCSSclass($this->misccss.'-check');
+						$css	  = $this->getCSSclass($this->misccss.'-check', null, $this->misccss2);
 						$namebase = $this->cgi['prefix']['sys'].'mrecs';
 						$name	  = $namebase.'[]';
 						$ttip	  = $this->fetchToolTip($css, $name);
@@ -3407,7 +3408,7 @@ class phpMyEdit
 							// Remove, remember all others
 							unset($this->mrecs[$mrecs_key]);
 						}
-						echo ' /><div class="'.$this->getCSSclass($this->misccss.'-check').'"></div></label></td>'."\n";
+						echo ' /><div class="'.$this->getCSSclass($this->misccss.'-check', null, $this->misccss2).'"></div></label></td>'."\n";
 					}
 				} elseif ($this->filter_enabled()) {
 					echo '<td class="',$css_class_name,'" colspan="',$this->sys_cols,'">&nbsp;</td>',"\n";
@@ -4442,10 +4443,16 @@ class phpMyEdit
 		$this->triggers	 = @$opts['triggers'];
 		$this->notify	 = @$opts['notify'];
 		$this->logtable	 = @$opts['logtable'];
-		$this->miscphp	 = @$opts['miscphp'];
-		$this->misccss   = @$opts['misccssclass'];
+		$this->miscphp	 = @$opts['misc']['php'];
+		$this->misccss   = @$opts['misc']['css']['major'];
+		$this->misccss2  = @$opts['misc']['css']['minor'];
 		if (!$this->misccss) {
 			$this->misccss = 'misc';
+		}
+		if (!$this->misccss2) {
+			$this->misccss2 = ' foobar';
+		} else {
+			$this->misccss2 = ' '.$this->misccss2;
 		}
 		$this->page_name = @$opts['page_name'];
 		if (! isset($this->page_name)) {
