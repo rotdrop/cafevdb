@@ -770,7 +770,7 @@ redaxoRehearsalsModule
                                    'css'   => array('postfix' => ' money'),
                                    //'align' => 'right',
                                    'select' => 'N',
-                                   'maxlen' => '6',
+                                   'maxlen' => '8', // NB: +NNNN.NN = 8
                                    'escape' => false,
                                    'sort' => true);
     

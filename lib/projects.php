@@ -1707,7 +1707,7 @@ __EOT__;
       }
 
       if (!$result) {
-        $query = "SELECT GREATEST(0,MAX(Unkostenbeitrag)) as MaximumFee FROM `Besetzungen` WHER `ProjektId` == $projectId";
+        $query = "SELECT GREATEST(0,MAX(Unkostenbeitrag)) as MaximumFee FROM `Besetzungen` WHERE `ProjektId` = $projectId";
         $qres = mySQL::query($query, $handle);
 
         $max = 0;

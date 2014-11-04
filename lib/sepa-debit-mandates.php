@@ -346,8 +346,13 @@ namespace CAFEVDB
     /**Provide a very primitive direct matrix representation, filtered
      * by the given project and/or musician.
      */
-    static public function tableExport($projectId, $musicianId = -1, $handle = false)
+    static public function projectTableExport($projectId, $musicianId = -1, $handle = false)
     {
+      $where = "`projectId` = ".$projectId;
+      if ($musicianId > 0) {
+        $query .= " AND `musicianId = ".$musicianId;
+      }
+
       $ownConnection = $handle === false;
 
       if ($ownConnection) {
@@ -359,15 +364,14 @@ namespace CAFEVDB
   LEFT JOIN `Besetzungen` ON (`Besetzungen`.`ProjektId` = `".self::MEMBER_TABLE."`.`projectId`
     AND `Besetzungen`.`MusikerId` = `".self::MEMBER_TABLE."`.`musicianId`)
   LEFT JOIN `Musiker` ON `Musiker`.`Id` = `".self::MEMBER_TABLE."`.`musicianId`
-  LEFT JOIN `Projekte` ON `Projekte`.`Id` = `".self::MEMBER_TABLE."`.`projectI`
-  WHERE `projectId` = ".$projectId;
-      if ($musicianId > 0) {
-        $query .= " AND `musicianId = ".$musicianId;
-      }
+  LEFT JOIN `Projekte` ON `Projekte`.`Id` = `".self::MEMBER_TABLE."`.`projectId`
+  WHERE ".$where;
 
       $result = mySQL::query($query, $handle);
       $table = array();
       while ($row = mySQL::fetch($result)) {
+        $row['purpose'] = array(L::t('Fees for %s', array($row['ProjectName'])),
+                                '', '', '');
         $table[] = $row;
       }
       
@@ -389,7 +393,15 @@ namespace CAFEVDB
       $iban  = $iban->MachineFormat();
       $bic   = Config::getValue('bankAccountBIC');
       $owner = Config::getValue('bankAccountOwner');
-      $executionDate = date('Y/M/d', strtotime('+ 10 day1'));
+      $executionDate = date('Y/M/d', strtotime('+ 10 days'));
+
+      if ($row['nonrecurring']) {
+        $sequenceType = 'once';
+      } else if ($row['lastUsedDate'] == '0000-00-00') {
+        $sequenceType = 'first';
+      } else {
+        $sequenceType = 'following';
+      }  
       
       // "localBic";"localIban";"remoteBic";"remoteIban";"date";"value/value";"value/currency";"localName";"remoteName";"creditorSchemeId";"mandateId";"mandateDate/dateString";"mandateDebitorName";"sequenceType";"purpose[0]";"purpose[1]";"purpose[2]";"purpose[3]"
       $result = array();
@@ -408,8 +420,7 @@ namespace CAFEVDB
                           'mandateDate/dateString' => date('YMd', $row['mandateDate']),
                           'mandateDebitorName' => $row['Name'].', '.$row['Vorname'],
                           'sequenceType' => $row['nonrecurring'] ? 'once' : 'FIXME',
-                          'purpose' => array(L::t('Fees for %s', array($row['ProjectName'])),
-                                             '', '', '')
+                          'purpose' => $row['purpose']
           );
       }
       return $result;
