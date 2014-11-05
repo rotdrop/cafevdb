@@ -32,7 +32,7 @@ namespace CAFEVDB {
 
   date_default_timezone_set(Util::getTimezone());
   
-  $name = strftime('%Y%m%d-%H%M%S').'-CAFEV-emailform.html';
+  $name = strftime('%Y%m%d-%H%M%S').'-CAFEVDB-emailform.html';
 
   header('Content-type: text/html');
   header('Content-disposition: attachment;filename='.$name);
