@@ -1841,8 +1841,15 @@ class phpMyEdit
 	function makeTimeString($k, $row)
 	{
 		$value = '';
-		if ($row["qf$k"."_timestamp"] != '') {
-			$data = $row["qf$k".'_timestamp'];
+		$stamp = $row["qf$k"."_timestamp"];
+		switch ($stamp) {
+		case '':
+		case 0:
+		case '0000-00-00':
+			// Invalid date and time
+			break;
+		default:
+			$olddata = $data = $row["qf$k".'_timestamp'];
 			if (!is_numeric($data)) {
 				// Convert whatever is contained in the timestamp field to
 				// seconds since the epoch.
@@ -3382,7 +3389,7 @@ class phpMyEdit
 						echo ' /></td>',"\n";
 					}
 					if ($this->nav_custom_multi()) {
-						$css	  = $this->getCSSclass($this->misccss.'-check', null, $this->misccss2);
+						$css	  = $this->getCSSclass($this->misccss.'-check', null, null, $this->misccss2);
 						$namebase = $this->cgi['prefix']['sys'].'mrecs';
 						$name	  = $namebase.'[]';
 						$ttip	  = $this->fetchToolTip($css, $name);
@@ -3408,7 +3415,7 @@ class phpMyEdit
 							// Remove, remember all others
 							unset($this->mrecs[$mrecs_key]);
 						}
-						echo ' /><div class="'.$this->getCSSclass($this->misccss.'-check', null, $this->misccss2).'"></div></label></td>'."\n";
+						echo ' /><div class="'.$this->getCSSclass($this->misccss.'-check', null, null, $this->misccss2).'"></div></label></td>'."\n";
 					}
 				} elseif ($this->filter_enabled()) {
 					echo '<td class="',$css_class_name,'" colspan="',$this->sys_cols,'">&nbsp;</td>',"\n";
