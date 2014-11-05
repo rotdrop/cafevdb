@@ -682,6 +682,7 @@ redaxoRehearsalsModule
     }
 
     static public function init() {
+      
       if (self::$initialized == true) {
         return;
       }
@@ -690,6 +691,8 @@ redaxoRehearsalsModule
       if (self::$session === false) {
         self::$session = new Session();
       }
+
+      date_default_timezone_set(Util::getTimezone());
 
       // Fetch possibly encrypted config values from the OC data-base
       self::decryptConfigValues();
