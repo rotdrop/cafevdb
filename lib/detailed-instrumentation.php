@@ -371,7 +371,7 @@ class DetailedInstrumentation
 
       $opts['fdd']['DebitMandateProject'] = array(
         'input' => 'V',
-        'name' => L::t('SEPA Debit Mandate Project'),
+        'name' => 'internal data',
         'select' => 'T',
         'options' => 'H',
         'sql' => '`PMEjoin'.$mandateIdx.'`.`projectId`', // dummy, make the SQL data base happy
