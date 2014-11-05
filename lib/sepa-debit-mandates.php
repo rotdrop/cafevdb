@@ -50,7 +50,11 @@ namespace CAFEVDB
       if ($this->deleteOperation()) {
         return L::t('Remove this Debit-Mandate?');
       } else if ($this->viewOperation()) {
-        return L::t('Debit-Mandate');
+        if ($this->projectId > 0 && $this->projectName != '') {
+          return L::t('Debit-Mandate for %s', array($this->projectName));
+        } else {
+          return L::t('Debit-Mandate');
+        }
       } else if ($this->changeOperation()) {
         return L::t('Change this Debit-Mandate');
       }
@@ -110,7 +114,9 @@ namespace CAFEVDB
       // A - add,  C - change, P - copy, V - view, D - delete,
       // F - filter, I - initial sort suppressed
       $opts['options'] = 'CVDFM';
-      $opts['misc']['css']['minor'] = 'debit-transfer';
+      $opts['misc']['css']['major'] = 'debit-note';
+      $opts['misc']['css']['minor'] = 'debit-note tipsy-nw';
+      $opts['labels']['Misc'] = L::t('Debit');
       
       // Number of lines to display on multiple selection filters
       $opts['multiple'] = '5';
@@ -259,6 +265,30 @@ namespace CAFEVDB
                                                              ))
         );
 
+      if ($projectId >= 0) {
+        // Add the amount to debit
+
+        $feeIdx = count($opts['fdd']);
+        $opts['fdd']['projectFee'] = Config::$opts['money'];
+        $opts['fdd']['projectFee'] = array_merge(
+          Config::$opts['money'],
+          array(
+            'input' => 'V',
+            'options' => 'LFACPDV',
+            'name' => L::t('Project Fee'),
+            'sql' => '`PMEjoin'.$feeIdx.'`.`Unkostenbeitrag`',
+            'sqlw' => '`PMEjoin'.$feeIdx.'`.`Unkostenbeitrag`',
+            'values' => array('table' => 'Besetzungen',
+                              'column' => 'Unkostenbeitrag',
+                              'join' => ('$main_table.musicianId = $join_table.MusikerId'.
+                                         ' AND '.
+                                         $projectId.' = $join_table.ProjektId'),
+                              'description' => 'Unkostenbeitrag'
+              )
+            )
+          );
+      }
+
       $opts['fdd']['projectId'] = array('name'     => L::t('Project'),
                                         'input'    => 'R',
                                         'select'   => 'T',
@@ -290,7 +320,7 @@ namespace CAFEVDB
 
       $opts['fdd']['BLZ'] = array('name'   => L::t('Bank Code'),
                                   'select' => 'T',
-                                  'maxlen' => 35,
+                                  'maxlen' => 12,
                                   'encryption' => array(
                                     'encrypt' => '\CAFEVDB\Config::encrypt',
                                     'decrypt' => '\CAFEVDB\Config::decrypt',
@@ -298,7 +328,7 @@ namespace CAFEVDB
 
       $opts['fdd']['bankAccountOwner'] = array('name'   => L::t('Bank Account Owner'),
                                                'select' => 'T',
-                                               'maxlen' => 35,
+                                               'maxlen' => 80,
                                                'encryption' => array(
                                                  'encrypt' => '\CAFEVDB\Config::encrypt',
                                                  'decrypt' => '\CAFEVDB\Config::decrypt',
