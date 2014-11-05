@@ -30,13 +30,13 @@ namespace CAFEVDB {
   \OCP\JSON::checkAppEnabled('cafevdb');
   \OCP\JSON::callCheck();
 
-// Need to unset to trigger destructers in the correct order
+  // Need to unset to trigger destructers in the correct order
   $composer = false;
   $recipientsFilter = false;
 
-// Need to suspend the session for the progress bar (otherwise opening
-// the current session in the progress-callback will block until
-// send-script has finished)
+  // Need to suspend the session for the progress bar (otherwise opening
+  // the current session in the progress-callback will block until
+  // send-script has finished)
   $sessionSuspended = false;
 
   try {
@@ -119,6 +119,7 @@ namespace CAFEVDB {
         $tmpl->assign('sender', $composer->fromName());
         $tmpl->assign('catchAllEmail', $composer->fromAddress());
         $tmpl->assign('fileAttachments', $composer->fileAttachments());
+        $tmpl->assign('eventAttachments', $composer->eventAttachments());
         $tmpl->assign('ComposerFormData', $composer->formData());
 
         $elementData = $tmpl->fetchPage();
