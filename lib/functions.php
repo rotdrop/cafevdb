@@ -420,6 +420,9 @@ __EOT__;
       } elseif (isset(Config::$cgiVars["$key"])) {
         $value = Config::$cgiVars["$key"];
       }
+      if (is_string($value)) {
+        $value = trim($value);
+      }
       if (!$allowEmpty && !is_null($default) && $value == '') {
         $value = $default;
       }
