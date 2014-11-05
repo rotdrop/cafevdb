@@ -458,6 +458,21 @@ var CAFEVDB = CAFEVDB || {};
         $(this).blur();
       }
     });
+
+    container.find('input.pme-debit-note').
+      off('click').
+      on('click', function(event) {
+      event.stopImmediatePropagation();
+      var post = $(this.form).serialize();
+      post += '&'+$.param({
+        'emailComposer[TemplateSelector]': t('cafevdb', 'ProjectDebitNoteAnnouncement'),
+        'emailComposer[Subject]': t('cafevdb', 'Debit notes due in 14 days')
+      });
+      CAFEVDB.Email.emailFormPopup(post);
+
+      return false;
+    });
+
   };
 
   CAFEVDB.SepaDebitMandate = SepaDebitMandate;
