@@ -29,8 +29,11 @@ namespace CAFEVDB {
   \OCP\JSON::checkAppEnabled('cafevdb');
   \OCP\JSON::callCheck();
 
+  date_default_timezone_set(Util::getTimezone());
+  $date = strftime('%Y%m%d-%H%M%S');
+  
   Error::exceptions(true);
-  $debugText = '';
+  $output = '';
   
   ob_start();
 
@@ -38,33 +41,36 @@ namespace CAFEVDB {
 
     Config::init();
 
-    if (Util::debugMode('request')) {
-      $debugText .= '$_POST = '.print_r($_POST, true);
-    }
-
-    $name = strftime('%Y%m%d-%H%M%S').'-CAFEV-'.$name.'.csv';
-    header('Content-type: text/csv');
-    header('Content-disposition: attachment;filename='.htmlspecialchars($name));
+    header('Content-type: text/ascii');
+    header('Content-disposition: attachment;filename=blah.txt');
     header('Cache-Control: max-age=0');
 
-    $outstream = fopen("php://output",'w');
-
-    $debugText .= ob_get_contents();
     @ob_end_clean();
-    
-    \OC_JSON::error(
-      array("data" => array(
-              'message' => L::t("Unhandled request:"),
-              'suggestions' => '',
-              'debug' => $debugText)));
-    return false;
+
+    print_r($_POST);
 
   } catch (\Exception $e) {
 
     $debugText .= ob_get_contents();
     @ob_end_clean();
 
-    $exceptionText = $e->getFile().'('.$e->getLine().'): '.$e->getMessage();
+    $name = $date.'-CAFEVDB-exception.html';
+    
+    header('Content-type: text/html');
+    header('Content-disposition: attachment;filename='.$name);
+    header('Cache-Control: max-age=0');
+
+    echo <<<__EOT__
+<!DOCTYPE HTML>
+  <html>
+    <head>
+      <title>Exception Debug Output</title>
+      <meta charset="utf-8">
+    </head>
+    <body>
+__EOT__;
+
+        $exceptionText = $e->getFile().'('.$e->getLine().'): '.$e->getMessage();
     $trace = $e->getTraceAsString();
 
     $admin = Config::adminContact();
@@ -74,20 +80,19 @@ namespace CAFEVDB {
       '&body='.rawurlencode($exceptionText."\r\n".$trace);
     $mailto = '<span class="error email"><a href="mailto:'.$mailto.'">'.$admin['name'].'</a></span>';
 
-    \OCP\JSON::error(
-      array(
-        'data' => array(
-          'caption' => L::t('PHP Exception Caught'),
-          'error' => 'exception',
-          'exception' => $exceptionText,
-          'trace' => $trace,
-          'message' => L::t('Error, caught an exception. '.
-                            'Please copy the displayed text and send it by email to %s.',
-                            array($mailto)),
-          'debug' => htmlspecialchars($debugText))));
- 
-    return false;
+    echo '<h1>'.L::t('PHP Exception Caught').'</h1>
+<blockquote>'.L::t('Error, caught an exception. '.
+                   'Please copy the displayed text and send it by email to %s.',
+                   array($mailto)).'</blockquote>
+<pre>'.$exceptionText.'</pre>
+<h2>'.L::t('Trace').'</h2>
+<pre>'.$trace.'</pre>';
   }
+
+  echo <<<__EOT__
+  </body>
+</html>
+__EOT__;
 
 } //namespace CAFVDB
 
