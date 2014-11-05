@@ -99,7 +99,9 @@ namespace CAFEVDB
         'MusicianId' => $musicianId,
         'Template' => 'sepa-debit-mandates',
         'Table' => $opts['tb'],
-        'DisplayClass' => 'SepaDebitMandates');
+        'DisplayClass' => 'SepaDebitMandates',
+        'requesttoken' => \OCP\Util::callRegister()
+        );
 
       // Name of field which is the unique key
       $opts['key'] = 'id';
