@@ -180,38 +180,35 @@ var CAFEVDB = CAFEVDB || {};
    * @param formData Data for hidden input elements which replace the
    * form's "native" data. Example:
    *
-   * formData = [
-   *   { name: "Template", value: "detailed-instrumentation" },
-   *   { name: "Table", value: "Musiker" },
-   *   { name: "DisplayClass", value: "Musicians" },
-   *   { name: "ClassArguments[0]", value: "1" }
-   * ];
+   * formData = {
+   *   Template: "detailed-instrumentation",
+   *   Table: "Musiker",
+   *   DisplayClass: "Musicians",
+   *   'ClassArguments[0]': "1"
+   * };
    *
    * The form is submitted with an empty pseudo-submit button.
    */
   Instrumentation.loadPMETable = function(form, formData) {
-    var idx;
-    form.find('[name*="PME_sys"]').remove();
-    for (idx = 0; idx < formData.length; ++idx) {
-      var name = formData[idx].name;
-      var value = formData[idx].value;
-      form.find('input[name="'+name+'"]').remove();
-      form.append('<input type="hidden" name="'+name+'" value="'+value+'"/>"');
-    }
-   
-    //var pseudoButton = $('<input type="submit"/>');
-    //PHPMYEDIT.pseudoSubmit(form, pseudoButton, PHPMYEDIT.selector());
-    CAFEVDB.Page.loadPage(form.serialize());
+    form.find('input').not('[name*="PME_sys"]').each(function(idx) {
+      var self = $(this);
+      var name = self.attr('name');
+      if (name) {
+        if (typeof formData[name] == 'undefined') {
+          formData[name] = self.val();
+        }
+      }
+    });
+    CAFEVDB.Page.loadPage(formData);
   };
 
   Instrumentation.loadAddMusicians = function(form) {
-    var inputTweak = [
-      { name: "Template", value: "add-musicians" },
-      { name: "Table", value: "Musiker" },
-      { name: "DisplayClass", value: "Musicians" },
-      { name: "ClassArguments[0]", value: "1" }
-    ];
-    
+    var inputTweak = {
+      Template: "add-musicians",
+      Table: "Musiker",
+      DisplayClass: "Musicians",
+      "ClassArguments[0]": "1"
+    };
     Instrumentation.loadPMETable(form, inputTweak);
   };
 
@@ -219,18 +216,18 @@ var CAFEVDB = CAFEVDB || {};
     var projectName = form.find('input[name="ProjectName"]').val();
     var table = projectName+'View';
 
-    var inputTweak = [
-      { name: "Template", value: "detailed-instrumentation" },
-      { name: "Table", value: table },
-      { name: "DisplayClass", value: "DetailedInstrumentation" }
-    ];    
-
+    var inputTweak = {
+      Template: "detailed-instrumentation",
+      Table: table,
+      DisplayClass: "DetailedInstrumentation"
+    };
+    
     if (typeof musicians != 'undefined') {
       var idx;
       for (idx = 0; idx < musicians.length; ++idx) {
         var name = 'PME_sys_qf0_id['+idx+']';
         var value = musicians[idx].instrumentationId;
-        inputTweak.push({ name: name, value: value });
+        inputTweak[name] = value;
       }
     }
 
@@ -329,10 +326,10 @@ var CAFEVDB = CAFEVDB || {};
       addClass('pme-custom').prop('disabled', false).
       off('click').on('click', function(event) {
 
-	Instrumentation.loadAddMusicians($(this.form));
-
-	return false;
-      });
+      Instrumentation.loadAddMusicians($(this.form));
+      
+      return false;
+    });
   };
 
   CAFEVDB.Instrumentation = Instrumentation;
