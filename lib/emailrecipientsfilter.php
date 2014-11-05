@@ -52,6 +52,7 @@ namespace CAFEVDB
     private $brokenEMail;     // List of people without email
     private $EMails;      // List of people with email  
     private $EMailsDpy;   // Display list with namee an email
+    private $frozen;      // Only allow the preselected recipients (i.e. for debit notes)
 
     // Form elements
     private $memberStatusNames;
@@ -105,6 +106,8 @@ namespace CAFEVDB
       $this->emailKey  = $pmepfx.'mrecs';
       $this->mtabKey   = $pmepfx.'mtable';
 
+      $this->frozen = $this->cgiValue('FrozenRecipients', false);
+
       $this->execute();
     }
 
@@ -131,8 +134,8 @@ namespace CAFEVDB
 
       if ($this->submitted) {
         $this->loadHistory(); // Fetch the filter-history from the session, if any.
+        $this->EmailRecs = $this->cgiValue($this->emailKey, array());
         if ($this->cgiValue('ResetInstrumentsFilter', false) !== false) {
-          $this->EmailRecs = $this->cgiValue($this->emailKey, array());
           $this->submitted = false; // fall back to defaults for everything
           $this->cgiData = array();
           $this->reload = true;
@@ -351,48 +354,30 @@ namespace CAFEVDB
     private function remapEmailRecords($dbh)
     {
       $oldTable = Util::cgiValue($this->mtabKey,'');
-      $table = $this->projectName.'View';
 
-      if ($this->projectId >= 0 &&
-          (/*$oldTable == $table ||
-             $oldTable == 'Besetzungen' ||*/
-           $table == 'SepaDebitMandates')) {
+      if ($this->projectId >= 0 && $oldTable == 'SepaDebitMandates') {
+        $this->frozen = true;
+        
+        $table = $this->projectName.'View';
 
-        /*
-         * This means we have been called from the "brief"
-         * instrumentation view. The other possibility is to be called
-         * from the detailed view, or the total view of all musicians.
-         *
-         * If called from the "Besetzungen" table, we remap the Id's
-         * to the project view table and continue with that.
-         */
-        switch ($oldTable) {
-        case $table:
-          $query = 'SELECT `'.$table.'`.`Id` AS \'OrigId\',
-  `'.$table.'`.`MusikerId` AS \'MusikerId\'
-  FROM `'.$table;
-          break;
-        case 'Besetzungen':
-          $query = 'SELECT `'.$oldTable.'`.`Id` AS \'OrigId\',
-  `'.$table.'`.`MusikerId` AS \'MusikerId\'
-  FROM `'.$table.'` LEFT JOIN `'.$oldTable.'`
-  ON `'.$table.'`.`MusikerId` = `'.$oldTable.'`.`MusikerId`
-  WHERE `'.$oldTable.'`.`ProjektId` = '.$this->projectId;
-          break;
-        case 'SepaDebitMandates':
-          $query = 'SELECT `'.$oldTable.'`.`id` AS \'OrigId\',
-  `'.$table.'`.`MusikerId` AS \'MusikerId\'
+        // Remap all email records to the ids from the project view.
+        
+        $query = 'SELECT `'.$oldTable.'`.`id` AS \'OrigId\',
+  `'.$table.'`.`Id` AS \'BesetzungsId\'
   FROM `'.$table.'` LEFT JOIN `'.$oldTable.'`
   ON `'.$table.'`.`MusikerId` = `'.$oldTable.'`.`musicianId`
-  WHERE `'.$oldTable.'`.`projectId` = '.$this->projectId;
-          break;
-        }
+  WHERE (`'.$oldTable.'`.`projectId` = '.$this->projectId.
+          ' OR '.
+          '`'.$oldTable.'`.`projectId` = '.Config::getValue('memberTableId').
+          ')';
+
+        $_POST['QUERY'] = $query;
 
         // Fetch the result (or die) and remap the Ids
         $result = mySQL::query($query, $dbh);
         $map = array();
         while ($line = mysql_fetch_assoc($result)) {
-          $map[$line['OrigId']] = $line['MusikerId'];
+          $map[$line['OrigId']] = $line['BesetzungsId'];
         }
         $newEmailRecs = array();
         foreach ($this->EmailRecs as $key) {
@@ -483,7 +468,7 @@ namespace CAFEVDB
         echo $query;
         echo '</PRE>';
       }
-      $_POST['QUERY'] = $query;
+      //$_POST['QUERY'] = $query;
 
       // use the mailer-class we are using later anyway in order to
       // validate email addresses syntactically now. Add broken
@@ -600,8 +585,11 @@ namespace CAFEVDB
 
     private function defaultByStatus()
     {
+      if ($this->frozen) {
+        return array_keys($this->memberStatusNames);
+      }
       $byStatusDefault = array('regular');
-      if ($this->projectId >= 0) {
+      if ($this->projectId > 0) {
         $byStatusDefault[] = 'passive';
         $byStatusDefault[] = 'temporary';
       }
@@ -624,12 +612,6 @@ namespace CAFEVDB
     {
       $this->memberFilter = $this->cgiValue('MemberStatusFilter',
                                             $this->defaultByStatus());
-      return;
-      if ($this->submitted) {
-        $this->memberFilter = $this->cgiValue('MemberStatusFilter', array());
-      } else {
-        $this->memberFilter = $this->defaultByStatus();
-      }  
     }
     
 
@@ -680,6 +662,7 @@ namespace CAFEVDB
     public function formData()
     {
       return array($this->emailKey => $this->EmailRecs,
+                   'FrozenRecipients' => $this->frozen,
                    'FormStatus' => 'submitted');
     }
 
@@ -753,8 +736,12 @@ namespace CAFEVDB
         $selectedRecipients = $this->EmailRecs;
       }
       $selectedRecipients = array_flip($selectedRecipients);
+      
       $result = array();
       foreach($this->EMailsDpy as $key => $email) {
+        if ($this->frozen && array_search($key, $this->EmailRecs) === false) {
+          continue;
+        }
         $result[] = array('value' => $key,
                           'name' => $email,
                           'flags' => isset($selectedRecipients[$key]) ? Navigation::SELECTED : 0);
@@ -766,8 +753,11 @@ namespace CAFEVDB
     public function missingEmailAddresses()
     {
       $result = array();
-      foreach ($this->brokenEMail as $id => $problem) {
-        $result[$id] = $problem;
+      foreach ($this->brokenEMail as $key => $problem) {
+        if ($this->frozen && array_search($key, $this->EmailRecs) === false) {
+          continue;
+        }
+        $result[$key] = $problem;
       }
       asort($result);
 
@@ -787,8 +777,8 @@ namespace CAFEVDB
     /**Return true when doing a mere history snapshot. */
     public function snapshotState() {
       return $this->snapshot;
-    }    
-    
+    }
+
     /**Return the list of selected recipients. To have this method is
      * in principle the goal of all the mess above ...
      */
@@ -800,6 +790,7 @@ namespace CAFEVDB
         $selectedRecipients = $this->EmailRecs;
       }
       $selectedRecipients = array_unique($selectedRecipients);
+      //$_POST['blah'] = print_r($this->EMails, true);
       $EMails = array();
       foreach ($selectedRecipients as $key) {
         if (isset($this->EMails[$key])) {
@@ -807,6 +798,14 @@ namespace CAFEVDB
         }
       }
       return $EMails;
+    }
+
+    /**Return true if the list of recipients is frozen,
+     * i.e. restricted to the pre-selected recipients.
+     */
+    public function frozenRecipients()
+    {
+      return $this->frozen;
     }
     
   };
