@@ -112,14 +112,14 @@ $off = $_['orchestra'] == '' ? 'disabled="disabled"' : '';
              id="memberTable"
              name="memberTable"
              value="<?php echo $_['memberTable']; ?>"
-             title="<?php echo L::t('Name of the table listing the permanent members of the orchestra. Only one of name or id have to be given, the other setting is filled automatically.'); ?>"
+             title="<?php echo L::t('Name of the table listing the permanent members of the orchestra.'); ?>"
              placeholder="<?php echo L::t('member-table'); ?>"/>
       <br/>
       <input class="specialMemberTables" type="text"
              id="executiveBoardTable"
              name="executiveBoardTable"
              value="<?php echo $_['executiveBoardTable']; ?>"
-             title="<?php echo L::t('Name of the table listing the members of the executive board. Only one of name or id have to be given, the other setting is filled automatically.'); ?>"
+             title="<?php echo L::t('Name of the table listing the members of the executive board.'); ?>"
              placeholder="<?php echo L::t('executive board table'); ?>"/>
       <br/>
     </fieldset>
