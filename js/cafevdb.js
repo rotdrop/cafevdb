@@ -667,7 +667,7 @@ var CAFEVDB = CAFEVDB || {};
       // this will be the alternate form-action
       exportscript = OC.filePath('cafevdb', 'ajax/export', exportscript);
 
-      // Our export-script have the task to convert the display
+      // Our export-scripts have the task to convert the display
       // PME-table into another format, so submitting the current
       // pme-form to another backend-script just makes sure sure that we
       // really get all selected parameters and can regenerate the
