@@ -748,7 +748,7 @@ redaxoRehearsalsModule
       // Navigation style: B - buttons (default), T - text links, G - graphic links
       // Buttons position: U - up, D - down (default)
       self::$pmeopts['navigation'] = 'GUDM';
-      self::$pmeopts['misc'] = array('php' => 'dummy',
+      self::$pmeopts['misc'] = array('php' => function() { return true; },
                                      'css' => array('major' => 'email'));
       self::$pmeopts['labels']['Misc'] = 'Em@il';
       //self::$pmeopts['labels']['Sort Field'] = 'Sortierfeld';
