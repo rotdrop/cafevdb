@@ -657,11 +657,6 @@ __EOT__;
     $musFirstNameIdx  = $opts['musicianFirstNameIdx'];
     $musLastNameIdx   = $opts['musicianLastNameIdx'];
 
-    if ($row['qf'.($k+1)] != $projectId) {
-      $projectId = $row['qf'.($k+1)];
-      $projectName = Projects::fetchName($projectId);
-    }    
-
     // Careful: this changes when rearranging the ordering of the display
     $musicianId        = $row['qf'.$musIdIdx];
     $musicianFirstName = $row['qf'.$musFirstNameIdx];
@@ -671,6 +666,10 @@ __EOT__;
 
     if ($row['qf'.$k] != '') {
       $value = $row['qf'.$k];
+      if ($row['qf'.($k+1)] != $projectId) {
+        $projectId = $row['qf'.($k+1)];
+        $projectName = Projects::fetchName($projectId);
+      }
     } else {
       $value = L::t("SEPA Debit Mandate");
     }
