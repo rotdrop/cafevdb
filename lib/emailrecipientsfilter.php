@@ -183,7 +183,11 @@ namespace CAFEVDB
     private function cgiValue($key, $default = null)
     {
       if (isset($this->cgiData[$key])) {
-        return $this->cgiData[$key];
+        $value = $this->cgiData[$key];
+        if (is_string($value)) {
+          $value = trim($value);
+        }
+        return $value;
       } else {
         return $default;
       } 
@@ -442,8 +446,17 @@ namespace CAFEVDB
       if ($projectId > 0) { // Add the project fee
         $fields .= ',`Unkostenbeitrag`,`mandateReference`';
         // join table with the SEPA mandate reference table
+        $memberTableId = Config::getValue('memberTableId');
+        $joinCond =
+          '('.
+          'projectId = '.$projectId.
+          ' OR '.
+          'projectId = '.$memberTableId.
+          ')'.
+          ' AND musicianId = MusikerId';
+
         $table .= " LEFT JOIN `SepaDebitMandates` ON "
-          ."( `MusikerId` = `musicianId` AND `projectId` = ".$projectId." ) ";
+          ."( ".$joinCond." ) ";
       }
 
       $query = "SELECT $fields FROM ($table) WHERE

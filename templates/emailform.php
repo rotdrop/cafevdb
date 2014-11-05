@@ -53,6 +53,8 @@ CAFEVDB\Error::exceptions(true);
     <div id="emailformdebug"><pre><?php print_r($_POST); print_r($_); ?></pre></div>
   </form>
 
+  <!-- Download support via iframe -->
+  <iframe name="emailformdownloadframe" id="emailformdownloadframe" style="display:none;" src="about:blank"></iframe> 
 
   <!-- Upload support via blueimp. FIXME: is this still up-to-date? Probably got this from OC4 -->
   <div id="attachment_upload_wrapper" class="data_upload_wrapper">

@@ -80,8 +80,9 @@ namespace CAFEVDB {
 <div class="emailform error group messagecount">
   <span class="error caption messagecount">
     '.L::t('The mailing software did not signal an error. ').
-    L::t('%d messages were propably sent out successfully.',
-         array($numTotal)).'
+        ' '.
+        L::t('%d messages were propably sent out successfully.',
+             array($numTotal)).'
   </span>
 </div>';
     }

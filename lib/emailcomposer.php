@@ -100,7 +100,7 @@ mandateReference
 
     private $executionStatus; // false on error
     private $diagnostics; // mixed, depends on operation
-
+    
     /* 
      * constructor
      */
@@ -172,13 +172,22 @@ mandateReference
       $this->submitted = $this->cgiValue('FormStatus', '') == 'submitted';
 
       if (!$this->submitted) {
-        // Leave everything at default state
+        // Leave everything at default state, except for an optional
+        // initial template and subject
+        $initialTemplate = $this->cgiValue('TemplateSelector', false);
+        if ($initialTemplate !== false) {
+          $template = $this->fetchTemplate($initialTemplate);
+          if ($template !== false) {
+            $this->templateName = $initialTemplate;
+            $this->messageContents = $template;
+          }
+        }
         return;
       }
 
       $this->messageContents = $this->cgiValue('MessageText', $this->initialTemplate);
       if (($value = $this->cgiValue('TemplateSelector', false))) {
-        $this->templateName =$value;
+        $this->templateName = $value;
         $this->messageContents = $this->fetchTemplate($this->templateName);
       } else if (($value = $this->cgiValue('DeleteTemplate', false))) {
         $this->deleteTemplate($this->cgiValue('TemplateName'));
@@ -204,7 +213,18 @@ mandateReference
         // any kind of "nasty" exceptions.
         $this->sendMessages();
         if (!$this->errorStatus()) {
-          $this->diagnostics['Caption'] = L::t('Message sent out successfully!');
+          $this->diagnostics['Caption'] = L::t('Message(s) sent out successfully!');
+        }
+      } else if ($this->cgiValue('MessageExport', false)) {
+        if (!$this->preComposeValidation()) {
+          return;
+        }
+
+        // Checks passed, let's see what happens. The mailer may throw
+        // any kind of "nasty" exceptions.
+        $this->exportMessages();
+        if (!$this->errorStatus()) {
+          $this->diagnostics['Caption'] = L::t('Message(s) exported successfully!');
         }
       }
     }
@@ -213,7 +233,11 @@ mandateReference
     private function cgiValue($key, $default = null)
     {
       if (isset($this->cgiData[$key])) {
-        return $this->cgiData[$key];
+        $value = $this->cgiData[$key];
+        if (is_string($value)) {
+          $value = trim($value);
+        }
+        return $value;
       } else {
         return $default;
       } 
@@ -787,6 +811,237 @@ mandateReference
       return $logQuery;
     }
 
+    /**Compose and export one message to PDF.
+     *
+     * @param[in] $strMessage The message to send.
+     *
+     * @param[in] $EMails The recipient list
+     *
+     * @param[in] $addCC If @c false, then additional CC and BCC recipients will
+     *                   not be added.
+     * 
+     * @return true or false.
+     */
+    private function composeAndExport($strMessage, $EMails, $addCC = true)
+    {
+      // If we are sending to a single address (i.e. if $strMessage has
+      // been constructed with per-member variable substitution), then
+      // we do not need to send via BCC.
+      $singleAddress = count($EMails) == 1;
+      
+      // Construct an array for the data-base log
+      $logMessage = new \stdClass;
+      $logMessage->recipients = $EMails;
+      $logMessage->message = $strMessage;
+
+      // First part: go through the composition part of PHPMailer in
+      // order to have some consistency checks. If this works, we
+      // export the message text, with a short header.
+      try {
+
+        $phpMailer = new \PHPMailer(true);
+        $phpMailer->CharSet = 'utf-8';
+        $phpMailer->SingleTo = false;
+
+        $phpMailer->Subject = $this->messageTag . ' ' . $this->subject();
+        $logMessage->subject = $phpMailer->Subject;
+        // pass the correct path in order for automatic image conversion
+        $phpMailer->msgHTML($strMessage, __DIR__.'/../', true);
+
+        $senderName = $this->fromName();
+        $senderEmail = $this->fromAddress();
+        $phpMailer->AddReplyTo($senderEmail, $senderName);
+        $phpMailer->SetFrom($senderEmail, $senderName);
+
+        // Loop over all data-base records and add each recipient in turn
+        foreach ($EMails as $recipient) {
+          if ($singleAddress) {
+            $phpMailer->AddAddress($recipient['email'], $recipient['name']);
+          } else if ($recipient['project'] < 0) {
+            // blind copy, don't expose the victim to the others.
+            $phpMailer->AddBCC($recipient['email'], $recipient['name']);
+          } else {
+            // Well, people subscribing to one of our projects
+            // simply must not complain, except soloist or
+            // conductors which normally are not bothered with
+            // mass-email at all, but if so, then they are added as Bcc
+            if ($recipient['status'] == 'conductor' ||
+                $recipient['status'] == 'soloist') {
+              $phpMailer->AddBCC($recipient['email'], $recipient['name']);
+            } else {
+              $phpMailer->AddAddress($recipient['email'], $recipient['name']);
+            }
+          }
+        }
+
+        if ($addCC === true) {
+          // Always drop a copy to the orchestra's email account for
+          // archiving purposes and to catch illegal usage. It is legel
+          // to modify $this->sender through the email-form.
+          $phpMailer->AddCC($this->catchAllEmail, $senderName);
+        }
+        
+        // If we have further Cc's, then add them also
+        $stringCC = '';
+        if ($addCC === true && !empty($this->onLookers['CC'])) {
+          // Now comes some dirty work: we need to split the string in
+          // names and email addresses. We re-construct $this->CC in this
+          // context, to normalize it for storage in the email-log.
+  
+          foreach ($this->onLookers['CC'] as $value) {
+            $stringCC .= $value['name'].' <'.$value['email'].'>, ';
+            // PHP-Mailer adds " for itself as needed
+            $value['name'] = trim($value['name'], '"');
+            $phpMailer->AddCC($value['email'], $value['name']);
+          }
+          $stringCC = trim($stringCC, ', ');
+        }
+        $logMessage->CC = $stringCC;
+
+        // Do the same for Bcc
+        $stringBCC = '';
+        if ($addCC === true && !empty($this->onLookers['BCC'])) {
+          // Now comes some dirty work: we need to split the string in
+          // names and email addresses.
+  
+          foreach ($this->onLookers['BCC'] as $value) {
+            $stringBCC .= $value['name'].' <'.$value['email'].'>, ';
+            // PHP-Mailer adds " for itself as needed
+            $value['name'] = trim($value['name'], '"');
+            $phpMailer->AddBCC($value['email'], $value['name']);
+          }
+          $stringBCC = trim($stringBCC, ', ');
+        }
+        $logMessage->BCC = $stringBCC;
+
+        // Add all registered attachments.
+        $attachments = $this->fileAttachments();
+        $logMessage->fileAttach = $attachments;
+        foreach ($attachments as $attachment) {
+          if ($attachment['status'] != 'selected') {
+            continue;
+          }
+          $phpMailer->AddAttachment($attachment['tmp_name'],
+                                    basename($attachment['name']),
+                                    'base64',
+                                    $attachment['type']);
+        }
+
+        // Finally possibly to-be-attached events. This cannot throw,
+        // but it does not hurt to keep it here. This way we are just
+        // ready with adding data to the message inside the try-block.
+        $events = $this->eventAttachments();
+        $logMessage->events = $events;
+        if ($this->projectId >= 0 && !empty($events)) {
+          // Construct the calendar
+          $calendar = Events::exportEvents($events, $this->projectName);
+          
+          // Encode it as attachment
+          $phpMailer->AddStringEmbeddedImage($calendar,
+                                             md5($this->projectName.'.ics'),
+                                             $this->projectName.'.ics',
+                                             'quoted-printable',
+                                             'text/calendar');
+        }
+
+      } catch (\Exception $exception) {
+        // popup an alert and abort the form-processing
+      
+        $this->executionStatus = false;
+        $this->diagnostics['MailerExceptions'][] =
+          $exception->getFile().
+          '('.$exception->getLine().
+          '): '.
+          $exception->getMessage();
+
+        return false;
+      }
+
+            // Finally the point of no return. Send it out!!!      
+      try {
+        if (!$phpMailer->preSend()) {
+          // in principle this cannot happen as the mailer DOES use
+          // exceptions ...
+          $this->executionStatus = false;
+          $this->diagnostics['MailerErrors'][] = $phpMailer->ErrorInfo;
+          return false;
+        } else {
+          // success, log the message to our data-base
+          $handle = $this->dataBaseConnect();
+        }
+      } catch (\Exception $exception) {
+        $this->executionStatus = false;
+        $this->diagnostics['MailerExceptions'][] =
+          $exception->getFile().
+          '('.$exception->getLine().
+          '): '.
+          $exception->getMessage();
+
+        return false;
+      }
+
+      echo '<div style="font-weight:bold;font-size:120%;color:red;"><pre>'.$phpMailer->getMailHeaders().'</pre></div>';
+
+      echo $strMessage;
+
+      echo '<hr style="page-break-after:always;"/>';
+
+      return true;
+    }
+
+    /**Generate a PDF-export with all variables substituted. This is
+     *primarily meant in order to debug actual variable substitutions,
+     *or to have hardcopies from debit note notifications and other
+     *important emails.
+     */
+    private function exportMessages()
+    {
+      // The following cannot fail, in principle. $message is then
+      // the current template without any left-over globals.
+      $message = $this->replaceGlobals();
+
+      if ($this->isMemberTemplateEmail($message)) {
+        $templateMessage = $message;
+        $variables = $this->emailMemberVariables();
+
+        $this->diagnostics['TotalPayload'] = count($this->recipients)+1;
+
+        foreach ($this->recipients as $recipient) {
+          $dbdata = $recipient['dbdata'];
+          $strMessage = $templateMessage;
+          if ($dbdata['Geburtstag'] && $dbdata['Geburtstag'] != '') {
+            $dbdata['Geburtstag'] = date('d.m.Y', strtotime($dbdata['Geburtstag']));
+          }
+          foreach ($variables as $placeholder => $column) {
+            $strMessage = preg_replace('/[$]{MEMBER::'.$placeholder.'}/',
+                                       htmlspecialchars($dbdata[$column]),
+                                       $strMessage);
+          }
+          ++$this->diagnostics['TotalCount'];
+          if (!$this->composeAndExport($strMessage, array($recipient), false)) {
+            ++$this->diagnostics['FailedCount'];
+          }
+        }
+
+        // Finally send one message without template substitution (as
+        // this makes no sense) to all Cc:, Bcc: recipients and the
+        // catch-all. This Message also gets copied to the Sent-folder
+        // on the imap server.
+        ++$this->diagnostics['TotalCount'];
+        if (!$this->composeAndExport($templateMessage, array(), true)) {
+          ++$this->diagnostics['FailedCount'];
+        }
+      } else {
+        $this->diagnostics['TotalPayload'] = 1;
+        ++$this->diagnostics['TotalCount']; // this is ONE then ...
+        if (!$this->composeAndExport($message, $this->recipients)) {
+          ++$this->diagnostics['FailedCount'];
+        }
+      }
+
+      return $this->executionStatus;
+    }
+
     /**Pre-message construction validation. Collect all data and
      *perform some checks on it.
      *
@@ -1041,6 +1296,7 @@ mandateReference
         'CREDITORIDENTIFIER' => Config::getValue('bankAccountCreditorIdentifier'),
         'ADDRESS' => $this->streetAddress(),
         'BANKACCOUNT' => $this->bankAccount(),
+        'PROJECT' => $this->projectName,
         );
 
       return $globalVars;

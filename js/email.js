@@ -586,13 +586,33 @@ CAFEVDB.Email = CAFEVDB.Email || {};
 
     /*************************************************************************
      * 
-     * Message export to html
+     * Message export to html.
      */
     fieldset.find('input.submit.message-export').off('click').
       on('click', function(event) {
 
+      var downloadName = 'emailformdownloadframe';
+
+      // empty the iframe contents in order to reset the error status
+      var downloadFrame = $('iframe#'+downloadName);
+      downloadFrame.contents().find('body').html('');
+
+      downloadFrame.off('load').on('load', function() {
+        var frameBody = downloadFrame.contents().find('body').html();
+        if (frameBody != '') {
+          OC.dialogs.alert(t('cafevdb', 'Unable to export message(s):')+
+                           ' '+
+                           frameBody,
+                           t('cafevdb', 'Error'),
+                           undefined, true, true);
+        }
+      });
+
       var oldAction = form.attr('action');
+      var oldTarget = form.attr('target');
       form.attr('action', OC.filePath('cafevdb', 'ajax/email', 'exporter.php'));
+      form.attr('target', downloadName);
+      
       var $fakeSubmit = $('<input type="hidden" name="'+$(this).attr('name')+'" value="whatever"/>');
       form.append($fakeSubmit);
       form.submit();
@@ -601,6 +621,11 @@ CAFEVDB.Email = CAFEVDB.Email || {};
         form.removeAttr('action');
       } else {
         form.attr('action', oldAction);
+      }
+      if (!oldTarget) {
+        form.removeAttr('target');
+      } else {
+        form.attr('target', oldTarget);
       }
 
       return false;
