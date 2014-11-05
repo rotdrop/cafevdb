@@ -64,6 +64,9 @@ class ToolTips
       'configrecheck' => L::t('Perform the configuration checks again. If all checks have been passed then you are led on to the ordinary entry page of the application.'),
 
       'emailtest' => L::t('Test the email-settings; try to connect to the SMTP-server and the IMAP-server in turn.'),
+
+      'email-message-export' => L::t('Export the email text as HTML. In the case of per-member variable
+substitutions this will result in a multi-page document with proper page breaks after each message, with all variables substituted.'),
       
       'email-recipients-listing' => L::t('List of selected musicians; can be changed in the `Em@il-Recipients\' panel.'),
 
@@ -217,6 +220,14 @@ weiteren Bestätigung. Trotzdem:
 VORSICHT!.'),
         ),
 
+      'pme-debit-note' => L::t("Click me to export a CSV-table with the selected debit notes suitable for use with AQBanking command-line tool `aqbanking-cli'. Please refer to the HOWTO in the wiki for further information. Clicking this button will also open the email dialog in order to inform the selected musicians about debiting their bank account."),
+
+      'pme-debit-note+' => L::t('Select all displayed debit-notes for export.'),
+
+      'pme-debit-note-' => L::t('Deselect all displayed debit-notes from export selection.'),
+
+      'pme-debit-note-check' => L::t("Select this debit note for debiting the project fees. In order to actually export the debit-note you have to hit the `Debit' button above."),
+      
       'pme-email' => L::t('  Klick mich, um eine Em@il an die ausgewählten
 Musiker zu versenden. Auf der folgenden Seite kann
 die Auswahl dann noch modifiziert werden.
