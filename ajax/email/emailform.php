@@ -82,6 +82,7 @@ try {
                                   'ProjectId' => $projectId,
                                   'Template' => Util::cgiValue('Template', ''),
                                   'DisplayClass' => Util::cgiValue('DisplayClass', ''),
+                                  'requesttoken' => \OCP\Util::callRegister(),
                                   $emailKey => Util::cgiValue($emailKey, array()))
     );
 
