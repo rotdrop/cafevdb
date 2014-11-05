@@ -33,6 +33,8 @@ $css_pfx = $_['css-prefix'];
 <div id="dialog_holder" class="popup topleft hidden"></div>
 <div id="appsettings" class="popup topright hidden"></div>
 
+<iframe name="pmeformdownloadframe" id="pmeformdownloadframe" style="display:none;" src="about:blank"></iframe>
+  
 <script id="cropBoxTemplate" type="text/template">
 	<form id="cropform"
 		class="coords"
