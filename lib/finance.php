@@ -135,7 +135,7 @@ namespace CAFEVDB
       // Convert to a date format understood by mySQL.
       $dateFields = array('lastUsedDate', 'mandateDate');
       foreach ($dateFields as $date) {
-        if (isset($mandate[$date])) {
+        if (isset($mandate[$date]) && $mandate[$date] != '') {
           $stamp = strtotime($mandate[$date]);
           $value = date('Y-m-d', $stamp);
           if ($stamp != strtotime($value)) {
