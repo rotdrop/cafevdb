@@ -796,7 +796,7 @@ __EOT__;
       $handle = mySQL::connect(Config::$pmeopts);
     }
 
-    $query = 'SELECT `Name`,`Vorname` FROM `Musiker` WHERE `Id` = '.$musicianId;
+    $query = 'SELECT `Name`,`Vorname`,`Email` FROM `Musiker` WHERE `Id` = '.$musicianId;
     $result = mySQL::query($query, $handle);
 
     $row = false;
@@ -808,8 +808,9 @@ __EOT__;
       mySQL::close($handle);
     }
 
-    return array('firstName' => isset($row['Vorname']) ? $row['Vorname'] : 'X',
-                 'lastName' => isset($row['Name']) ? $row['Name'] : 'X');
+    return array('firstName' => (isset($row['Vorname']) && $row['Vorname'] != '') ? $row['Vorname'] : 'X',
+                 'lastName' => (isset($row['Name']) && $row['Name'] != '') ? $row['Name'] : 'X',
+                 'email' => (isset($row['Email']) && $row['Email'] != '') ? $row['Email'] : 'X');
   }
   
 };
