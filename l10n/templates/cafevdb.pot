@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-10-26 23:25+0100\n"
+"POT-Creation-Date: 2014-11-05 11:42+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -49,13 +49,12 @@ msgstr ""
 #: ajax/events/new.form.php:195 ajax/events/sendmail.php:76
 #: ajax/finance/sepa-debit-mandate.php:157
 #: ajax/finance/sepa-debit-settings.php:355
-#: ajax/instrumentation/add-musicians.php:240
+#: ajax/instrumentation/add-musicians.php:241
 #: ajax/instrumentation/change-musician-instruments.php:198
 #: ajax/instrumentation/change-project-instrument.php:118
 #: ajax/instruments/adjustInstrumentation.php:104
-#: ajax/instruments/changeInstrumentation.php:159 ajax/page-loader.php:100
-#: ajax/pme/pme-table.php:137 ajax/projects/verifyName.php:159
-#: ajax/projects/web-articles.php:180 ajax/settings/creditslist.php:79
+#: ajax/instruments/changeInstrumentation.php:159 ajax/pme/pme-table.php:137
+#: ajax/projects/verifyName.php:159 ajax/settings/creditslist.php:79
 msgid "Error, caught an exception"
 msgstr ""
 
@@ -105,10 +104,14 @@ msgid "Email Address Validation Failed"
 msgstr ""
 
 #: ajax/email/composer.php:255 ajax/email/recipients.php:140
+#: ajax/finance/sepa-debit-export.php:80 ajax/page-loader.php:111
+#: ajax/projects/web-articles.php:182 ajax/settings/app-settings.php:1151
 msgid "PHP Exception Caught"
 msgstr ""
 
 #: ajax/email/composer.php:259 ajax/email/recipients.php:144
+#: ajax/finance/sepa-debit-export.php:84 ajax/page-loader.php:115
+#: ajax/projects/web-articles.php:186 ajax/settings/app-settings.php:1155
 #, php-format
 msgid ""
 "Error, caught an exception. Please copy the displayed text and send it by "
@@ -241,16 +244,16 @@ msgstr ""
 msgid "%s-detailed"
 msgstr ""
 
-#: ajax/export/excel.php:260 lib/projects.php:1545 lib/projects.php:1546
+#: ajax/export/excel.php:260 lib/projects.php:1619 lib/projects.php:1620
 msgid "Missing Musicians"
 msgstr ""
 
 #: ajax/export/excel.php:285 ajax/export/insurance-export.php:142
-#: lib/projects.php:1548
+#: lib/projects.php:1622
 msgid "Instrument"
 msgstr ""
 
-#: ajax/export/excel.php:286 lib/projects.php:1548
+#: ajax/export/excel.php:286 lib/projects.php:1622
 msgid "Missing"
 msgstr ""
 
@@ -259,7 +262,7 @@ msgid "Total Insurance Amount: "
 msgstr ""
 
 #: ajax/export/insurance-export.php:141 lib/instrument-insurance.php:247
-#: lib/sepa-debit-mandates.php:234
+#: lib/sepa-debit-mandates.php:250
 msgid "Musician"
 msgstr ""
 
@@ -317,6 +320,12 @@ msgstr ""
 msgid "Unable to delete SEPA debit mandate from data-base."
 msgstr ""
 
+#: ajax/finance/sepa-debit-export.php:57
+#: ajax/finance/sepa-debit-settings.php:328
+#: ajax/settings/app-settings.php:1129 ajax/settings/redaxo-settings.php:71
+msgid "Unhandled request:"
+msgstr ""
+
 #: ajax/finance/sepa-debit-mandate.php:72
 msgid "Musician-id and/or name not set"
 msgstr ""
@@ -332,10 +341,10 @@ msgid "Failed setting `%s' to `%s'."
 msgstr ""
 
 #: ajax/finance/sepa-debit-settings.php:98
-#: ajax/finance/sepa-debit-settings.php:339 ajax/settings/app-settings.php:876
-#: ajax/settings/app-settings.php:897 ajax/settings/app-settings.php:912
-#: ajax/settings/app-settings.php:947 ajax/settings/app-settings.php:986
-#: ajax/settings/app-settings.php:1010 ajax/settings/app-settings.php:1022
+#: ajax/finance/sepa-debit-settings.php:339 ajax/settings/app-settings.php:885
+#: ajax/settings/app-settings.php:933 ajax/settings/app-settings.php:948
+#: ajax/settings/app-settings.php:983 ajax/settings/app-settings.php:1022
+#: ajax/settings/app-settings.php:1046 ajax/settings/app-settings.php:1058
 #, php-format
 msgid "Value for `%s' set to `%s'."
 msgstr ""
@@ -357,7 +366,7 @@ msgstr ""
 msgid "Invalid German(?) bank account number %s @ %s."
 msgstr ""
 
-#: ajax/finance/sepa-debit-settings.php:238 ajax/settings/app-settings.php:955
+#: ajax/finance/sepa-debit-settings.php:238 ajax/settings/app-settings.php:991
 #, php-format
 msgid "Invalid IBAN: `%s'."
 msgstr ""
@@ -365,14 +374,9 @@ msgstr ""
 #: ajax/finance/sepa-debit-settings.php:282
 #: ajax/finance/sepa-debit-settings.php:314
 #: ajax/finance/sepa-debit-store.php:64 ajax/finance/sepa-debit-store.php:75
-#: ajax/settings/app-settings.php:1033
+#: ajax/settings/app-settings.php:1069
 #, php-format
 msgid "Value for `%s' invalid: `%s'."
-msgstr ""
-
-#: ajax/finance/sepa-debit-settings.php:328
-#: ajax/settings/app-settings.php:1093 ajax/settings/redaxo-settings.php:71
-msgid "Unhandled request:"
 msgstr ""
 
 #: ajax/finance/sepa-debit-store.php:84
@@ -519,26 +523,26 @@ msgstr ""
 msgid "The musician %s doesn't seem to play any instrument ..."
 msgstr ""
 
-#: ajax/instrumentation/add-musicians.php:176
+#: ajax/instrumentation/add-musicians.php:177
 #, php-format
 msgid "Adding %s (id = %d) failed."
 msgstr ""
 
-#: ajax/instrumentation/add-musicians.php:185
+#: ajax/instrumentation/add-musicians.php:186
 #, php-format
 msgid "Unable to get the new id for %s (id = %d)"
 msgstr ""
 
-#: ajax/instrumentation/add-musicians.php:201
+#: ajax/instrumentation/add-musicians.php:202
 #, php-format
 msgid "No musician could be added to the projecti, #failures: %d."
 msgstr ""
 
-#: ajax/instrumentation/add-musicians.php:210
+#: ajax/instrumentation/add-musicians.php:211
 msgid "Operation failed"
 msgstr ""
 
-#: ajax/instrumentation/add-musicians.php:221
+#: ajax/instrumentation/add-musicians.php:222
 msgid "Operation succeeded with the following notifications:"
 msgstr ""
 
@@ -706,345 +710,362 @@ msgstr ""
 msgid "Invalid or unset project-id: `%s'"
 msgstr ""
 
-#: ajax/projects/web-articles.php:62
+#: ajax/projects/web-articles.php:63
 #, php-format
 msgid ""
 "Submitted article id %d does not match the id %d stored in the article-data."
 msgstr ""
 
-#: ajax/projects/web-articles.php:79
+#: ajax/projects/web-articles.php:80
 #, php-format
 msgid "Invalid or unset article-id: `%s'"
 msgstr ""
 
-#: ajax/projects/web-articles.php:88
+#: ajax/projects/web-articles.php:89
 #, php-format
 msgid ""
 "Cannot perform action `%s' with article with id %d, project with id %d: "
 "missing article-data."
 msgstr ""
 
-#: ajax/projects/web-articles.php:99
+#: ajax/projects/web-articles.php:100
 #, php-format
 msgid "Removed public web page %s (id %d) from the project with id %d."
 msgstr ""
 
-#: ajax/projects/web-articles.php:102
+#: ajax/projects/web-articles.php:103
 #, php-format
 msgid ""
 "Failed to remove public web page %s (id %d) from the project with id %d."
 msgstr ""
 
-#: ajax/projects/web-articles.php:110
+#: ajax/projects/web-articles.php:111
 #, php-format
 msgid "Failed to create a new public web page for the project with id %d."
 msgstr ""
 
-#: ajax/projects/web-articles.php:113
+#: ajax/projects/web-articles.php:114
 #, php-format
 msgid ""
 "Created a new public web page with name %s and id %d for project the with id "
 "%d"
 msgstr ""
 
-#: ajax/projects/web-articles.php:120
+#: ajax/projects/web-articles.php:121
 #, php-format
 msgid "Failed to add the article %s (id = %d) to the project with id %d."
 msgstr ""
 
-#: ajax/projects/web-articles.php:123
+#: ajax/projects/web-articles.php:124
 #, php-format
 msgid ""
 "Linked the existing public web-article %s (id %d) to the project with id %d"
 msgstr ""
 
-#: ajax/projects/web-articles.php:134
+#: ajax/projects/web-articles.php:130
 #, php-format
 msgid "Failed to detach the article %s (id = %d) from the project with id %d."
 msgstr ""
 
-#: ajax/projects/web-articles.php:137
+#: ajax/projects/web-articles.php:133
 #, php-format
 msgid "Detached the public web-article %s (id %d) from the project with id %d"
 msgstr ""
 
-#: ajax/projects/web-articles.php:146
+#: ajax/projects/web-articles.php:142
 #, php-format
 msgid "Unhandled or empty request: `%s'"
 msgstr ""
 
-#: ajax/projects/web-articles.php:163
-msgid "Error: "
+#: ajax/projects/web-articles.php:159
+#, php-format
+msgid "Error: %s"
 msgstr ""
 
-#: ajax/settings/app-settings.php:52
+#: ajax/settings/app-settings.php:63
 msgid "Wrong old key."
 msgstr ""
 
-#: ajax/settings/app-settings.php:86
+#: ajax/settings/app-settings.php:97
 msgid "Configuration locked, refusing to change encryption key."
 msgstr ""
 
-#: ajax/settings/app-settings.php:95
+#: ajax/settings/app-settings.php:106
 msgid ""
 "Configuration locked by somebody else, refusing to change encryption key."
 msgstr ""
 
-#: ajax/settings/app-settings.php:141 ajax/settings/app-settings.php:743
+#: ajax/settings/app-settings.php:152 ajax/settings/app-settings.php:754
 #, php-format
 msgid "Failed for: %s"
 msgstr ""
 
-#: ajax/settings/app-settings.php:145
+#: ajax/settings/app-settings.php:156
 msgid "Key installed successfully!"
 msgstr ""
 
-#: ajax/settings/app-settings.php:156
+#: ajax/settings/app-settings.php:167
 #, php-format
 msgid "Name of orchestra set to `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:166
+#: ajax/settings/app-settings.php:177
 #, php-format
 msgid "DB-server set to `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:176
+#: ajax/settings/app-settings.php:187
 #, php-format
 msgid "DB-name set to `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:186
+#: ajax/settings/app-settings.php:197
 #, php-format
 msgid "DB-login set to `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:203
+#: ajax/settings/app-settings.php:214
 msgid "DB-test passed and DB-password set."
 msgstr ""
 
-#: ajax/settings/app-settings.php:208
+#: ajax/settings/app-settings.php:219
 msgid ""
 "DB-test failed. Check the account settings. Check was performed with the new "
 "password."
 msgstr ""
 
-#: ajax/settings/app-settings.php:216
+#: ajax/settings/app-settings.php:227
 msgid "DB-test passed with stored password (empty input ignored)."
 msgstr ""
 
-#: ajax/settings/app-settings.php:221
+#: ajax/settings/app-settings.php:232
 msgid "DB-test failed with stored password (empty input ignored)."
 msgstr ""
 
-#: ajax/settings/app-settings.php:239
+#: ajax/settings/app-settings.php:250
 #, php-format
 msgid "Submitted `%s' != `%s' (stored)"
 msgstr ""
 
-#: ajax/settings/app-settings.php:248
+#: ajax/settings/app-settings.php:259
 #, php-format
 msgid "New share-owner `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:253
+#: ajax/settings/app-settings.php:264
 #, php-format
 msgid "Failure creating account `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:266
+#: ajax/settings/app-settings.php:277
 #, php-format
 msgid "Keeping old share-owner `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:271
+#: ajax/settings/app-settings.php:282
 #, php-format
 msgid "Failure checking account `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:287
+#: ajax/settings/app-settings.php:298
 msgid "Unable to share without share-holder `dummy-user'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:296 ajax/settings/app-settings.php:366
-#: ajax/settings/app-settings.php:456
+#: ajax/settings/app-settings.php:307 ajax/settings/app-settings.php:377
+#: ajax/settings/app-settings.php:467
 #, php-format
 msgid "Inconsistency, submitted `%s' != `%s' (stored)"
 msgstr ""
 
-#: ajax/settings/app-settings.php:309 ajax/settings/app-settings.php:381
-#: ajax/settings/app-settings.php:470
+#: ajax/settings/app-settings.php:320 ajax/settings/app-settings.php:392
+#: ajax/settings/app-settings.php:481
 #, php-format
 msgid "New shared folder `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:314 ajax/settings/app-settings.php:387
-#: ajax/settings/app-settings.php:476
+#: ajax/settings/app-settings.php:325 ajax/settings/app-settings.php:398
+#: ajax/settings/app-settings.php:487
 #, php-format
 msgid "Failure creating folder `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:327 ajax/settings/app-settings.php:402
-#: ajax/settings/app-settings.php:491
+#: ajax/settings/app-settings.php:338 ajax/settings/app-settings.php:413
+#: ajax/settings/app-settings.php:502
 #, php-format
 msgid "Keeping old shared folder `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:332 ajax/settings/app-settings.php:408
-#: ajax/settings/app-settings.php:497
+#: ajax/settings/app-settings.php:343 ajax/settings/app-settings.php:419
+#: ajax/settings/app-settings.php:508
 #, php-format
 msgid "Failure checking folder `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:338 ajax/settings/app-settings.php:415
-#: ajax/settings/app-settings.php:504
+#: ajax/settings/app-settings.php:349 ajax/settings/app-settings.php:426
+#: ajax/settings/app-settings.php:515
 #, php-format
 msgid "Failure checking folder `%s', caught an exception `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:356 ajax/settings/app-settings.php:434
+#: ajax/settings/app-settings.php:367 ajax/settings/app-settings.php:445
 msgid "Unable to define project-folder without shared parent folder."
 msgstr ""
 
-#: ajax/settings/app-settings.php:443
+#: ajax/settings/app-settings.php:454
 msgid ""
 "Unable to define the financial balance folder without project folder name."
 msgstr ""
 
-#: ajax/settings/app-settings.php:524
+#: ajax/settings/app-settings.php:535
 #, php-format
 msgid "Exception: %s(%d): %s"
 msgstr ""
 
-#: ajax/settings/app-settings.php:541 ajax/settings/app-settings.php:577
+#: ajax/settings/app-settings.php:552 ajax/settings/app-settings.php:588
 msgid "Unable to set:"
 msgstr ""
 
-#: ajax/settings/app-settings.php:563 ajax/settings/encryptionkey.php:62
+#: ajax/settings/app-settings.php:574 ajax/settings/encryptionkey.php:62
 msgid "Exception:"
 msgstr ""
 
-#: ajax/settings/app-settings.php:588
+#: ajax/settings/app-settings.php:599
 msgid "minutes"
 msgstr ""
 
-#: ajax/settings/app-settings.php:608
+#: ajax/settings/app-settings.php:619
 msgid "Changed password for"
 msgstr ""
 
-#: ajax/settings/app-settings.php:614
+#: ajax/settings/app-settings.php:625
 msgid "Failed changing password for"
 msgstr ""
 
-#: ajax/settings/app-settings.php:634
+#: ajax/settings/app-settings.php:645
 #, php-format
 msgid "Using `%s' at %s as %s-server."
 msgstr ""
 
-#: ajax/settings/app-settings.php:640
+#: ajax/settings/app-settings.php:651
 #, php-format
 msgid "Unable to determine the IP-address for %s."
 msgstr ""
 
-#: ajax/settings/app-settings.php:657
+#: ajax/settings/app-settings.php:668
 msgid "Using "
 msgstr ""
 
-#: ajax/settings/app-settings.php:664
+#: ajax/settings/app-settings.php:675
 #, php-format
 msgid "`%s' doesn't seem to be a candidate for an IP-port."
 msgstr ""
 
-#: ajax/settings/app-settings.php:688
+#: ajax/settings/app-settings.php:699
 msgid "Unknown transport security method:"
 msgstr ""
 
-#: ajax/settings/app-settings.php:699
+#: ajax/settings/app-settings.php:710
 #, php-format
 msgid "Using `%s' for message transport."
 msgstr ""
 
-#: ajax/settings/app-settings.php:713
+#: ajax/settings/app-settings.php:724
 #, php-format
 msgid "Using `%s' as login."
 msgstr ""
 
-#: ajax/settings/app-settings.php:723
+#: ajax/settings/app-settings.php:734
 msgid "Password has been changed."
 msgstr ""
 
-#: ajax/settings/app-settings.php:748
+#: ajax/settings/app-settings.php:759
 msgid "Email credentials installed successfully!"
 msgstr ""
 
-#: ajax/settings/app-settings.php:765
+#: ajax/settings/app-settings.php:776
 msgid "IMAP connection seems functional."
 msgstr ""
 
-#: ajax/settings/app-settings.php:768
+#: ajax/settings/app-settings.php:779
 msgid "Unable to establish IMAP connection."
 msgstr ""
 
-#: ajax/settings/app-settings.php:777
+#: ajax/settings/app-settings.php:788
 msgid "SMTP connection seems functional."
 msgstr ""
 
-#: ajax/settings/app-settings.php:780
+#: ajax/settings/app-settings.php:791
 msgid "Unable to establish SMTP connection."
 msgstr ""
 
-#: ajax/settings/app-settings.php:797
+#: ajax/settings/app-settings.php:808
 msgid "UNSPECIFIED"
 msgstr ""
 
-#: ajax/settings/app-settings.php:801
+#: ajax/settings/app-settings.php:812
 #, php-format
 msgid "Email test-mode enabled, sending only to %s"
 msgstr ""
 
-#: ajax/settings/app-settings.php:805
+#: ajax/settings/app-settings.php:816
 msgid "Email test-mode disable, will send to all!!!"
 msgstr ""
 
-#: ajax/settings/app-settings.php:816 ajax/settings/app-settings.php:845
+#: ajax/settings/app-settings.php:827 ajax/settings/app-settings.php:856
 #, php-format
 msgid "`%s' doesn't seem to be a valid email-address."
 msgstr ""
 
-#: ajax/settings/app-settings.php:824
+#: ajax/settings/app-settings.php:835
 #, php-format
 msgid "Using `%s' as email-address for test-mode."
 msgstr ""
 
-#: ajax/settings/app-settings.php:834
+#: ajax/settings/app-settings.php:845
 #, php-format
 msgid "Using `%s' as name of the sender identity."
 msgstr ""
 
-#: ajax/settings/app-settings.php:853
+#: ajax/settings/app-settings.php:864
 #, php-format
 msgid "Using `%s' as sender email-address."
 msgstr ""
 
-#: ajax/settings/app-settings.php:958
+#: ajax/settings/app-settings.php:903
+msgid ""
+"Table name is either not unique, or the table does not exist yet. Please "
+"create a project of this name manually."
+msgstr ""
+
+#: ajax/settings/app-settings.php:907
+#, php-format
+msgid "Table-id %d."
+msgstr ""
+
+#: ajax/settings/app-settings.php:912
+#, php-format
+msgid "Value for `%s' set to `%s'. %s"
+msgstr ""
+
+#: ajax/settings/app-settings.php:994
 msgid "Perhaps you meant"
 msgstr ""
 
-#: ajax/settings/app-settings.php:965
+#: ajax/settings/app-settings.php:1001
 msgid "or"
 msgstr ""
 
-#: ajax/settings/app-settings.php:1051
+#: ajax/settings/app-settings.php:1087
 #, php-format
 msgid "Link for `%s' set to `%s'."
 msgstr ""
 
-#: ajax/settings/app-settings.php:1064
+#: ajax/settings/app-settings.php:1100
 #, php-format
 msgid "Unable to test link for `%s' without a link target."
 msgstr ""
 
-#: ajax/settings/app-settings.php:1070
+#: ajax/settings/app-settings.php:1106
 #, php-format
 msgid "New window or tab with `%s'?"
 msgstr ""
@@ -1089,20 +1110,20 @@ msgstr ""
 msgid "filter-visibility changed"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:37 lib/projects.php:678
+#: ajax/settings/redaxo-settings.php:37 lib/projects.php:682
 msgid "Preview"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:38 lib/projects.php:682
+#: ajax/settings/redaxo-settings.php:38 lib/projects.php:686
 msgid "Archive"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:39 lib/projects.php:680
-#: lib/projects.php:1111
+#: ajax/settings/redaxo-settings.php:39 lib/projects.php:684
+#: lib/projects.php:1181 lib/projects.php:1342
 msgid "Rehearsals"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:40 lib/projects.php:684
+#: ajax/settings/redaxo-settings.php:40 lib/projects.php:688
 msgid "Trashbin"
 msgstr ""
 
@@ -1251,49 +1272,49 @@ msgstr ""
 msgid "Unknown error :("
 msgstr ""
 
-#: js/calendar.js:237
+#: js/calendar.js:248
 msgid "Deletion failed"
 msgstr ""
 
-#: js/calendar.js:353
+#: js/calendar.js:364
 msgid "Browser determined position"
 msgstr ""
 
-#: js/calendar.js:366
+#: js/calendar.js:377
 msgid "Detailed search at Google-Maps"
 msgstr ""
 
-#: js/calendar.js:394
+#: js/calendar.js:405
 msgid "Location not found:"
 msgstr ""
 
-#: js/calendar.js:396
+#: js/calendar.js:407
 msgid "No location specified."
 msgstr ""
 
-#: js/calendar.js:398
+#: js/calendar.js:409
 msgid "Unknown location"
 msgstr ""
 
-#: js/config.php:30
+#: js/config.php:36
 msgid "Select a filter option."
 msgstr ""
 
-#: js/config.php:31 js/config.php:37
+#: js/config.php:37 js/config.php:43
 msgid "No values match."
 msgstr ""
 
-#: js/config.php:32
+#: js/config.php:38
 msgid ""
 "Select from the pull-down menu. Double-click will submit the form. The pull-"
 "down can be closed by clicking anywhere outside the menu."
 msgstr ""
 
-#: js/config.php:36
+#: js/config.php:42
 msgid "Select an option."
 msgstr ""
 
-#: js/config.php:38
+#: js/config.php:44
 msgid ""
 "Select from the pull-down menu. The pull-down can be closed by clicking "
 "anywhere outside the menu."
@@ -1560,15 +1581,15 @@ msgstr ""
 msgid "Unkown Error"
 msgstr ""
 
-#: js/instrumentation.js:159 js/projects.js:366 js/projects.js:464
+#: js/instrumentation.js:159 js/projects.js:366
 msgid "Caught a PHP Exception"
 msgstr ""
 
-#: js/pme.js:789
+#: js/pme.js:791
 msgid "#columns"
 msgstr ""
 
-#: js/pme.js:798
+#: js/pme.js:800
 msgid "#rows"
 msgstr ""
 
@@ -1593,25 +1614,25 @@ msgid ""
 "instrumentation of the project will remain unchanged."
 msgstr ""
 
-#: js/projects.js:511
+#: js/projects.js:502
 msgid "Really unlink the displayed event announcement?"
 msgstr ""
 
-#: js/projects.js:512
+#: js/projects.js:503
 #, python-brace-format
 msgid "Unlink Web-Page with Id {ArticleId}?"
 msgstr ""
 
-#: js/projects.js:533
+#: js/projects.js:524
 msgid "Really delete the displayed event announcement?"
 msgstr ""
 
-#: js/projects.js:534
+#: js/projects.js:525
 #, python-brace-format
 msgid "Delete Web-Page with Id {ArticleId}?"
 msgstr ""
 
-#: js/projects.js:611
+#: js/projects.js:602
 msgid "No values match"
 msgstr ""
 
@@ -1647,8 +1668,8 @@ msgid ""
 "in case of desinformation or misunderstanding. Use with care."
 msgstr ""
 
-#: js/sepa-debit-mandate.js:138 lib/detailed-instrumentation.php:335
-#: lib/detailed-instrumentation.php:648 lib/detailed-instrumentation.php:665
+#: js/sepa-debit-mandate.js:138 lib/detailed-instrumentation.php:347
+#: lib/detailed-instrumentation.php:675 lib/detailed-instrumentation.php:693
 msgid "SEPA Debit Mandate"
 msgstr ""
 
@@ -1679,70 +1700,70 @@ msgstr ""
 msgid "Please standby, the operation will take some time!"
 msgstr ""
 
-#: lib/config.php:605
+#: lib/config.php:611
 #, php-format
 msgid "Decryption of `%s`@`%s` failed"
 msgstr ""
 
-#: lib/config.php:609
+#: lib/config.php:615
 #, php-format
 msgid "Encryption of `%s`@`%s` failed"
 msgstr ""
 
-#: lib/config.php:615
+#: lib/config.php:621
 #, php-format
 msgid "Unable to update table data at index %s"
 msgstr ""
 
-#: lib/config.php:776
+#: lib/config.php:784
 msgid "birthday"
 msgstr ""
 
-#: lib/config.php:785
+#: lib/config.php:793
 msgid "no preference"
 msgstr ""
 
-#: lib/config.php:786
+#: lib/config.php:794
 msgid "German"
 msgstr ""
 
-#: lib/config.php:787
+#: lib/config.php:795
 msgid "English"
 msgstr ""
 
-#: lib/config.php:788
+#: lib/config.php:796
 msgid "French"
 msgstr ""
 
-#: lib/config.php:789
+#: lib/config.php:797
 msgid "Spanish"
 msgstr ""
 
-#: lib/config.php:790
+#: lib/config.php:798
 msgid "Portuguese"
 msgstr ""
 
-#: lib/config.php:791
+#: lib/config.php:799
 msgid "Polish"
 msgstr ""
 
-#: lib/config.php:792
+#: lib/config.php:800
 msgid "Russian"
 msgstr ""
 
-#: lib/config.php:793
+#: lib/config.php:801
 msgid "Chinese"
 msgstr ""
 
-#: lib/config.php:794
+#: lib/config.php:802
 msgid "Japaneese"
 msgstr ""
 
-#: lib/config.php:795
+#: lib/config.php:803
 msgid "Korean"
 msgstr ""
 
-#: lib/config.php:815
+#: lib/config.php:823
 #, php-format
 msgid "Unknown Tooltip for key `%s' requested."
 msgstr ""
@@ -1765,68 +1786,68 @@ msgstr ""
 msgid "Instrumentation for Project `%s'"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:134
+#: lib/detailed-instrumentation.php:133
 msgid "Instrumentation related data"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:137
+#: lib/detailed-instrumentation.php:136
 msgid "Project related data"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:140
+#: lib/detailed-instrumentation.php:139
 msgid "Personal data"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:143
+#: lib/detailed-instrumentation.php:142
 msgid "Display all columns"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:212
+#: lib/detailed-instrumentation.php:211
 msgid "Instrumentation Id"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:224
+#: lib/detailed-instrumentation.php:223
 msgid "Musician Id"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:299
+#: lib/detailed-instrumentation.php:298
 msgid "All Instruments"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:319 lib/musicians.php:288
+#: lib/detailed-instrumentation.php:318 lib/musicians.php:288
 msgid "Member Status"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:377
+#: lib/detailed-instrumentation.php:399
 #, php-format
 msgid "Remarks (%s)"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:393 lib/musicians.php:300
+#: lib/detailed-instrumentation.php:415 lib/musicians.php:300
 msgid "no projects yet"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:411 lib/musicians.php:328
+#: lib/detailed-instrumentation.php:433 lib/musicians.php:328
 msgid "Projects"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:470
+#: lib/detailed-instrumentation.php:492
 msgid "Country"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:481
+#: lib/detailed-instrumentation.php:503
 msgid "General Remarks"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:504 lib/musicians.php:419
+#: lib/detailed-instrumentation.php:526 lib/musicians.php:419
 msgid "Photo"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:518 lib/musicians.php:433
+#: lib/detailed-instrumentation.php:540 lib/musicians.php:433
 msgid "Last Updated"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:671
+#: lib/detailed-instrumentation.php:699
 msgid "Click to enter details of a potential SEPA debit mandate"
 msgstr ""
 
@@ -1850,16 +1871,16 @@ msgstr ""
 msgid "Local Filesystem"
 msgstr ""
 
-#: lib/emailrecipientsfilter.php:332 lib/page-loader.php:179
+#: lib/emailrecipientsfilter.php:332 lib/page-loader.php:181
 #, php-format
 msgid "Invalid history position %d request, history size is %d"
 msgstr ""
 
-#: lib/events.php:762
+#: lib/events.php:765 lib/events.php:929
 msgid "Unknown Calendar"
 msgstr ""
 
-#: lib/events.php:769
+#: lib/events.php:772
 msgid "Miscellaneous Calendars"
 msgstr ""
 
@@ -1868,118 +1889,118 @@ msgstr ""
 msgid "Invalid argument value: `%s'"
 msgstr ""
 
-#: lib/functions.php:696
+#: lib/functions.php:709
 msgid "Export Table"
 msgstr ""
 
-#: lib/functions.php:704
+#: lib/functions.php:717
 msgid "Excel Export"
 msgstr ""
 
-#: lib/functions.php:707
+#: lib/functions.php:720
 msgid "HTML/Spreadsheet"
 msgstr ""
 
-#: lib/functions.php:710
+#: lib/functions.php:723
 msgid "CSV Export"
 msgstr ""
 
-#: lib/functions.php:713
+#: lib/functions.php:726
 msgid "HTML Export"
 msgstr ""
 
-#: lib/functions.php:928
+#: lib/functions.php:941
 msgid "Error: Unknonwn Button Type"
 msgstr ""
 
-#: lib/functions.php:948
+#: lib/functions.php:961
 msgid "View all Projects"
 msgstr ""
 
-#: lib/functions.php:949
+#: lib/functions.php:962
 msgid "Overview over all known projects (start-page)."
 msgstr ""
 
-#: lib/functions.php:960
+#: lib/functions.php:973
 msgid "Display all Musicians"
 msgstr ""
 
-#: lib/functions.php:961
+#: lib/functions.php:974
 msgid ""
 "Display all musicians stored in the data-base, with detailed facilities for "
 "filtering and sorting."
 msgstr ""
 
-#: lib/functions.php:972
+#: lib/functions.php:985
 msgid ""
 "Mass-email form, use with care. Mass-emails will be logged. Recipients will "
 "be specified by the Bcc: field in the header, so the recipients are "
 "undisclosed to each other."
 msgstr ""
 
-#: lib/functions.php:985
+#: lib/functions.php:998
 msgid "Email History"
 msgstr ""
 
-#: lib/functions.php:986
+#: lib/functions.php:999
 msgid "Display all emails sent by our mass-email form."
 msgstr ""
 
-#: lib/functions.php:1004
+#: lib/functions.php:1017
 msgid "The currently active project."
 msgstr ""
 
-#: lib/functions.php:1019 lib/projects.php:758
+#: lib/functions.php:1032 lib/projects.php:762
 msgid "Instrumentation"
 msgstr ""
 
-#: lib/functions.php:1020
+#: lib/functions.php:1033
 msgid ""
 "Detailed display of all registered musicians for the selected project. The "
 "table will allow for modification of personal data like email, phone, "
 "address etc."
 msgstr ""
 
-#: lib/functions.php:1033 lib/project-instruments.php:385
+#: lib/functions.php:1046 lib/project-instruments.php:385
 msgid "Add Instruments"
 msgstr ""
 
-#: lib/functions.php:1034
+#: lib/functions.php:1047
 msgid ""
 "Display the list of instruments known by the data-base, possibly add new "
 "ones as needed."
 msgstr ""
 
-#: lib/functions.php:1047 lib/project-instruments.php:69 lib/projects.php:763
-#: lib/projects.php:970
+#: lib/functions.php:1060 lib/project-instruments.php:69 lib/projects.php:767
+#: lib/projects.php:974
 msgid "Instrumentation Numbers"
 msgstr ""
 
-#: lib/functions.php:1048 lib/tooltips.php:379
+#: lib/functions.php:1061 lib/tooltips.php:387
 msgid ""
 "Display the desired instrumentaion numbers, i.e. how many musicians are "
 "already registered for each instrument group and how many are finally needed."
 msgstr ""
 
-#: lib/functions.php:1061 lib/functions.php:1087 lib/projects.php:799
+#: lib/functions.php:1074 lib/functions.php:1100 lib/projects.php:803
 msgid "Debit Mandates"
 msgstr ""
 
-#: lib/functions.php:1062
+#: lib/functions.php:1075
 msgid "Display a table with the SEPA debit mandates related to the project."
 msgstr ""
 
-#: lib/functions.php:1075
+#: lib/functions.php:1088
 msgid "Insurances"
 msgstr ""
 
-#: lib/functions.php:1076
+#: lib/functions.php:1089
 msgid ""
 "Display a table with an overview about the current state of the member's "
 "instrument insurances."
 msgstr ""
 
-#: lib/functions.php:1088
+#: lib/functions.php:1101
 msgid "Display a table with an overview over all SEPA debit mandates."
 msgstr ""
 
@@ -2209,11 +2230,11 @@ msgid ""
 "given context."
 msgstr ""
 
-#: lib/php-excel-functions.php:100 lib/sepa-debit-mandates.php:225
+#: lib/php-excel-functions.php:100 lib/sepa-debit-mandates.php:241
 msgid "yes"
 msgstr ""
 
-#: lib/php-excel-functions.php:104 lib/sepa-debit-mandates.php:224
+#: lib/php-excel-functions.php:104 lib/sepa-debit-mandates.php:240
 msgid "no"
 msgstr ""
 
@@ -2296,7 +2317,14 @@ msgstr ""
 msgid "Toolbox"
 msgstr ""
 
-#: lib/projects.php:327
+#: lib/projects.php:319
+msgid ""
+"Default project fee for ordinary participants. This should NOT include "
+"reductions of any kind. The value displayed here is the default value "
+"inserted into the instrumentation table for the project."
+msgstr ""
+
+#: lib/projects.php:331
 msgid ""
 "Comma separates list of extra-fields, e.g.\n"
 "<blockquote>\n"
@@ -2326,82 +2354,82 @@ msgid ""
 "a comma."
 msgstr ""
 
-#: lib/projects.php:352
+#: lib/projects.php:356
 msgid "Program"
 msgstr ""
 
-#: lib/projects.php:369
+#: lib/projects.php:373
 msgid "Flyer"
 msgstr ""
 
-#: lib/projects.php:668
+#: lib/projects.php:672
 #, php-format
 msgid "Unable to fetch public web pages for project id %d"
 msgstr ""
 
-#: lib/projects.php:748
+#: lib/projects.php:752
 msgid "Project Overview"
 msgstr ""
 
-#: lib/projects.php:772
+#: lib/projects.php:776
 msgid "Project Files"
 msgstr ""
 
-#: lib/projects.php:779 lib/projects.php:948
+#: lib/projects.php:783 lib/projects.php:952
 #, php-format
 msgid "Project Wiki for %s"
 msgstr ""
 
-#: lib/projects.php:781 lib/projects.php:952
+#: lib/projects.php:785 lib/projects.php:956
 msgid "Project Notes"
 msgstr ""
 
-#: lib/projects.php:786 lib/projects.php:958 lib/projects.php:988
+#: lib/projects.php:790 lib/projects.php:962 lib/projects.php:992
 msgid "Events"
 msgstr ""
 
-#: lib/projects.php:791 lib/projects.php:964
+#: lib/projects.php:795 lib/projects.php:968
 msgid "Em@il"
 msgstr ""
 
-#: lib/projects.php:805
+#: lib/projects.php:809
 msgid "Profit and Loss Account"
 msgstr ""
 
-#: lib/projects.php:1883
+#: lib/projects.php:2049
 msgid ""
 "Flyers can only be added to existing projects, please add the new\n"
 "project without a flyer first."
 msgstr ""
 
-#: lib/projects.php:1898
+#: lib/projects.php:2064
 #, php-format
 msgid "Drop image to upload (max %s)"
 msgstr ""
 
-#: lib/projects.php:1901
+#: lib/projects.php:2067
 msgid "Delete current flyer"
 msgstr ""
 
-#: lib/projects.php:1902
+#: lib/projects.php:2068
 msgid "Edit current flyer"
 msgstr ""
 
-#: lib/projects.php:1903
+#: lib/projects.php:2069
 msgid "Upload new flyer"
 msgstr ""
 
-#: lib/projects.php:1904
+#: lib/projects.php:2070
 msgid "Select image from ownCloud"
 msgstr ""
 
-#: lib/projects.php:1912
+#: lib/projects.php:2078
 msgid ""
 "Internal error, don't know what to do concerning project-flyers in the given "
 "context."
 msgstr ""
 
-#: lib/projects.php:2153
+#: lib/projects.php:2319
 #, php-format
 msgid ""
 "====== Project %s ======\n"
@@ -2452,35 +2480,39 @@ msgstr ""
 msgid "Overview over all SEPA Debit Mandates"
 msgstr ""
 
-#: lib/sepa-debit-mandates.php:213
+#: lib/sepa-debit-mandates.php:115
+msgid "Debit"
+msgstr ""
+
+#: lib/sepa-debit-mandates.php:229
 msgid "Mandate Reference"
 msgstr ""
 
-#: lib/sepa-debit-mandates.php:219
+#: lib/sepa-debit-mandates.php:235
 msgid "One Time"
 msgstr ""
 
-#: lib/sepa-debit-mandates.php:227
+#: lib/sepa-debit-mandates.php:243
 msgid "Date Issued"
 msgstr ""
 
-#: lib/sepa-debit-mandates.php:248
+#: lib/sepa-debit-mandates.php:264
 msgid "Project"
 msgstr ""
 
-#: lib/sepa-debit-mandates.php:277
+#: lib/sepa-debit-mandates.php:293
 msgid "Bank Code"
 msgstr ""
 
-#: lib/sepa-debit-mandates.php:285
+#: lib/sepa-debit-mandates.php:301
 msgid "Bank Account Owner"
 msgstr ""
 
-#: lib/sepa-debit-mandates.php:293
+#: lib/sepa-debit-mandates.php:309
 msgid "Last-Used Date"
 msgstr ""
 
-#: lib/sepa-debit-mandates.php:398
+#: lib/sepa-debit-mandates.php:376
 #, php-format
 msgid "Fees for %s"
 msgstr ""
@@ -2801,6 +2833,29 @@ msgstr ""
 
 #: lib/tooltips.php:220
 msgid ""
+"Click me to export a CSV-table with the selected debit notes suitable for "
+"use with AQBanking command-line tool `aqbanking-cli'. Please refer to the "
+"HOWTO in the wiki for further information. Clicking this button will also "
+"open the email dialog in order to inform the selected musicians about "
+"debiting their bank account."
+msgstr ""
+
+#: lib/tooltips.php:222
+msgid "Select all displayed debit-notes for export."
+msgstr ""
+
+#: lib/tooltips.php:224
+msgid "Deselect all displayed debit-notes from export selection."
+msgstr ""
+
+#: lib/tooltips.php:226
+msgid ""
+"Select this debit note for debiting the project fees. In order to actually "
+"export the debit-note you have to hit the `Debit' button above."
+msgstr ""
+
+#: lib/tooltips.php:228
+msgid ""
 "  Klick mich, um eine Em@il an die ausgewählten\n"
 "Musiker zu versenden. Auf der folgenden Seite kann\n"
 "die Auswahl dann noch modifiziert werden.\n"
@@ -2811,7 +2866,7 @@ msgid ""
 "entsprechen."
 msgstr ""
 
-#: lib/tooltips.php:229
+#: lib/tooltips.php:237
 msgid ""
 "  Klick mich, um alle gerade\n"
 "angezeigten Musiker zu der\n"
@@ -2823,14 +2878,14 @@ msgid ""
 "entsprechen."
 msgstr ""
 
-#: lib/tooltips.php:238
+#: lib/tooltips.php:246
 msgid ""
 "  Klick mich, um alle gerade\n"
 "angezeigten Musiker von der\n"
 "Em@il-Auswahl zu entfernen"
 msgstr ""
 
-#: lib/tooltips.php:242
+#: lib/tooltips.php:250
 msgid ""
 "  Adressaten in potentielle\n"
 "Massenmail Adressliste aufnehmen.\n"
@@ -2839,7 +2894,7 @@ msgid ""
 "korrigieren."
 msgstr ""
 
-#: lib/tooltips.php:248
+#: lib/tooltips.php:256
 msgid ""
 "Export the visible part of the data-base to an office-format. The `Excel'-"
 "export should produce useful input for either Libre- or OpenOffice or for "
@@ -2847,33 +2902,33 @@ msgid ""
 "USA."
 msgstr ""
 
-#: lib/tooltips.php:250
+#: lib/tooltips.php:258
 msgid "Export in CSV-format using a semicolon as delimiter (Excel convention)"
 msgstr ""
 
-#: lib/tooltips.php:252
+#: lib/tooltips.php:260
 msgid "Export as `full-featured' Excel-2007 table, `.xslx'."
 msgstr ""
 
-#: lib/tooltips.php:254
+#: lib/tooltips.php:262
 msgid ""
 "Export as HTML page without navigation elements; can also be loaded into "
 "your office-programs."
 msgstr ""
 
-#: lib/tooltips.php:256
+#: lib/tooltips.php:264
 msgid ""
 "Export as HTML page, but set the file type to `spread-sheed'. Should also be "
 "readable by standard office-programs as `Excel'-table."
 msgstr ""
 
-#: lib/tooltips.php:258
+#: lib/tooltips.php:266
 msgid ""
 "Negate the filter, i.e. search for anything not matching the selected "
 "options."
 msgstr ""
 
-#: lib/tooltips.php:260
+#: lib/tooltips.php:268
 #, php-format
 msgid ""
 "Field for filter/search criteria.\n"
@@ -2909,13 +2964,13 @@ msgid ""
 "</dl>"
 msgstr ""
 
-#: lib/tooltips.php:293
+#: lib/tooltips.php:301
 msgid ""
 "  Klick mich, um die\n"
 "Suchkriterien zu verstecken."
 msgstr ""
 
-#: lib/tooltips.php:297
+#: lib/tooltips.php:305
 #, php-format
 msgid ""
 "  Klick mich, um die\n"
@@ -2924,137 +2979,137 @@ msgid ""
 "Als Platzhalter verwendet man `%%'."
 msgstr ""
 
-#: lib/tooltips.php:303
+#: lib/tooltips.php:311
 msgid ""
 "  Klick mich, um die\n"
 "Suchkriterien anzuzeigen."
 msgstr ""
 
-#: lib/tooltips.php:307
+#: lib/tooltips.php:315
 msgid ""
 "  Klick mich, um das Sortieren\n"
 "nach diesem Feld ein-\n"
 "oder auszuschalten!"
 msgstr ""
 
-#: lib/tooltips.php:311
+#: lib/tooltips.php:319
 msgid "  Klick mich, um die Sortierreihenfolge umzukehren!"
 msgstr ""
 
-#: lib/tooltips.php:313
+#: lib/tooltips.php:321
 msgid ""
 "Transpose the displayed table; may be beneficial for tables with only a few "
 "rows but many columns!"
 msgstr ""
 
-#: lib/tooltips.php:316
+#: lib/tooltips.php:324
 msgid "Einzelnen Datensatz anzeigen"
 msgstr ""
 
-#: lib/tooltips.php:320
+#: lib/tooltips.php:328
 msgid ""
 "Stop the current operation. Settings which already have been stored by\n"
 "hitting an \"Apply\" button are maintained, though. You will be returned\n"
 "to the previous view."
 msgstr ""
 
-#: lib/tooltips.php:323
+#: lib/tooltips.php:331
 msgid "Stop the current operation. You will be returned to the previous view."
 msgstr ""
 
-#: lib/tooltips.php:326
+#: lib/tooltips.php:334
 msgid "Refreshes the current view by reloading all data from the data-base."
 msgstr ""
 
-#: lib/tooltips.php:328
+#: lib/tooltips.php:336
 msgid ""
 "Directs you to a form with input fields. From there you can return to\n"
 "this form by means of the \"Save\" or \"Back\" resp. \"Cancel\" buttons."
 msgstr ""
 
-#: lib/tooltips.php:331 lib/tooltips.php:335
+#: lib/tooltips.php:339 lib/tooltips.php:343
 msgid "Saves the current values; the current input form will remain active."
 msgstr ""
 
-#: lib/tooltips.php:333
+#: lib/tooltips.php:341
 msgid "Saves the current values and start to generate another new data-set."
 msgstr ""
 
-#: lib/tooltips.php:334
+#: lib/tooltips.php:342
 msgid ""
 "Saves the current values and continues to make yet another copy of the "
 "source data-set."
 msgstr ""
 
-#: lib/tooltips.php:338
+#: lib/tooltips.php:346
 msgid "Saves the current values and returns to the previous view."
 msgstr ""
 
-#: lib/tooltips.php:339
+#: lib/tooltips.php:347
 msgid "Deletes the current record and returns to the previous view."
 msgstr ""
 
-#: lib/tooltips.php:342
+#: lib/tooltips.php:350
 msgid ""
 "Limits the number of rows per page to the given value. A \"*\" means to "
 "display all records on one large page."
 msgstr ""
 
-#: lib/tooltips.php:344
+#: lib/tooltips.php:352
 msgid "Jumps directly to the given page"
 msgstr ""
 
-#: lib/tooltips.php:346
+#: lib/tooltips.php:354
 msgid ""
 "Displays the columns directly related to the instrumentation for the project."
 msgstr ""
 
-#: lib/tooltips.php:348
+#: lib/tooltips.php:356
 msgid ""
 "Displays `meta-data' like project fees, single/double room preferences, "
 "debit-mandates and the like."
 msgstr ""
 
-#: lib/tooltips.php:350
+#: lib/tooltips.php:358
 msgid ""
 "Displays the personal data of the respective musicians, like address, email, "
 "date of birth if known, phone numbers."
 msgstr ""
 
-#: lib/tooltips.php:352
+#: lib/tooltips.php:360
 msgid ""
 "Simply blends in all the columns of the table as if all the tabs would be "
 "activated at the same time."
 msgstr ""
 
-#: lib/tooltips.php:354
+#: lib/tooltips.php:362
 msgid ""
 "Pull-down menu with entries to move on\n"
 "to pages with the instrumentation, events, instrumentation numbers etc."
 msgstr ""
 
-#: lib/tooltips.php:358
+#: lib/tooltips.php:366
 msgid ""
 "Display all registered musicians for the selected project. The table\n"
 "        shows project related details as well as all stored personal\n"
 "        \"information about the respective musician"
 msgstr ""
 
-#: lib/tooltips.php:362
+#: lib/tooltips.php:370
 msgid "Opens the email-form for the project inside a dialog window."
 msgstr ""
 
-#: lib/tooltips.php:364
+#: lib/tooltips.php:372
 msgid ""
 "Opens a dialog-window which gives access to all stored informations for the "
 "project."
 msgstr ""
 
-#: lib/tooltips.php:366
+#: lib/tooltips.php:374
 msgid "Load a new page with all debit-mandates for project-fees"
 msgstr ""
 
-#: lib/tooltips.php:368 lib/tooltips.php:398
+#: lib/tooltips.php:376 lib/tooltips.php:406
 msgid ""
 "Open a dialog with all known\n"
 "events associated to the project.\n"
@@ -3062,35 +3117,35 @@ msgid ""
 "as needed."
 msgstr ""
 
-#: lib/tooltips.php:373
+#: lib/tooltips.php:381
 msgid "Change to the folder with project related files."
 msgstr ""
 
-#: lib/tooltips.php:375
+#: lib/tooltips.php:383
 msgid ""
 "Change to the folder with the financial balance\n"
 "sheets for the project (only available after the project\n"
 "has been ``closed''."
 msgstr ""
 
-#: lib/tooltips.php:381
+#: lib/tooltips.php:389
 msgid "Change to the DokuWiki-page for this project (if there is one)"
 msgstr ""
 
-#: lib/tooltips.php:383
+#: lib/tooltips.php:391
 msgid ""
 "Add a new public web-page to the project by generating a new, empty concert "
 "announcement."
 msgstr ""
 
-#: lib/tooltips.php:385
+#: lib/tooltips.php:393
 msgid ""
 "Delete the currently displayed web-page fromthe project. The web page will "
 "be \"detached\" from the project and moved to the trash-bin\n"
 "\"category\" (folger) inside the CMS."
 msgstr ""
 
-#: lib/tooltips.php:388
+#: lib/tooltips.php:396
 msgid ""
 "Link existing pages to the project. This can be used, for instance, in order "
 "to add a page to the project which has not been created by hitting the `+'-"
@@ -3100,20 +3155,20 @@ msgid ""
 "z"
 msgstr ""
 
-#: lib/tooltips.php:390
+#: lib/tooltips.php:398
 msgid ""
 "Please select articles to link to the current project. The articles will be "
 "immediately added to the project if you select them. In order to remove the "
 "article, please use the `-' button above."
 msgstr ""
 
-#: lib/tooltips.php:392
+#: lib/tooltips.php:400
 msgid ""
 "Detach the currently displayed event announcement from the project. "
 "Primarily meant to provide means to undo erroneous linking of articles."
 msgstr ""
 
-#: lib/tooltips.php:394
+#: lib/tooltips.php:402
 msgid ""
 "Append the year to the name if checked.\n"
 "Regardless of this checkbox any decimal digit will first be stripped from "
@@ -3121,19 +3176,19 @@ msgid ""
 "of the project name before the year is added."
 msgstr ""
 
-#: lib/tooltips.php:403
+#: lib/tooltips.php:411
 msgid ""
 "Delete the event from the system\n"
 "(no undo possible)."
 msgstr ""
 
-#: lib/tooltips.php:406
+#: lib/tooltips.php:414
 msgid ""
 "Exclude all events from\n"
 "email-submission"
 msgstr ""
 
-#: lib/tooltips.php:409
+#: lib/tooltips.php:417
 msgid ""
 "Detach the respective event\n"
 "from the project, but do not\n"
@@ -3143,34 +3198,34 @@ msgid ""
 "categories."
 msgstr ""
 
-#: lib/tooltips.php:416
+#: lib/tooltips.php:424
 msgid "Modify the event."
 msgstr ""
 
-#: lib/tooltips.php:418
+#: lib/tooltips.php:426
 msgid "Add a new concert-event to the project."
 msgstr ""
 
-#: lib/tooltips.php:420
+#: lib/tooltips.php:428
 msgid ""
 "Add a private management event which is not exposed to the rest of the world."
 msgstr ""
 
-#: lib/tooltips.php:422
+#: lib/tooltips.php:430
 msgid "Add some other event to the project."
 msgstr ""
 
-#: lib/tooltips.php:424
+#: lib/tooltips.php:432
 msgid "Add a new rehearsal-event to the project."
 msgstr ""
 
-#: lib/tooltips.php:426
+#: lib/tooltips.php:434
 msgid ""
 "Select all events for\n"
 "email-submission"
 msgstr ""
 
-#: lib/tooltips.php:429
+#: lib/tooltips.php:437
 msgid ""
 "Mark the respective event for being\n"
 "sent by email as ICS-attachment per email.\n"
@@ -3180,20 +3235,20 @@ msgid ""
 "recipients."
 msgstr ""
 
-#: lib/tooltips.php:436
+#: lib/tooltips.php:444
 msgid ""
 "Click to open an email-form\n"
 "and send the selected events to\n"
 "selected recipients."
 msgstr ""
 
-#: lib/tooltips.php:440
+#: lib/tooltips.php:448
 msgid ""
 "Add the musician to the project. A new form will open were details like the "
 "instrument etc. can be adjustetd."
 msgstr ""
 
-#: lib/tooltips.php:442
+#: lib/tooltips.php:450
 msgid ""
 "Save the current email for later re-usal in the data-base.\n"
 "An email template can contain per-member substitutions with the syntax "
@@ -3205,36 +3260,36 @@ msgid ""
 "by the pre-names of the organizing committe in order to compose  greetings."
 msgstr ""
 
-#: lib/tooltips.php:448
+#: lib/tooltips.php:456
 msgid "Select one of the email templates previously stored in the data-base."
 msgstr ""
 
-#: lib/tooltips.php:450
+#: lib/tooltips.php:458
 msgid ""
 "Recompute the link between projects and events, using the event-categories "
 "as primary key."
 msgstr ""
 
-#: lib/tooltips.php:452
+#: lib/tooltips.php:460
 msgid ""
 "Check whether the data-base can be accessed with the given account\n"
 "information and password. The password will only be stored in the\n"
 "configuration storage if the test can be performed successfully."
 msgstr ""
 
-#: lib/tooltips.php:456
+#: lib/tooltips.php:464
 msgid ""
 "Try to connect to the specified web-address, will open the web-address in "
 "another window or tab, depending your local browser preferences."
 msgstr ""
 
-#: lib/tooltips.php:458
+#: lib/tooltips.php:466
 msgid ""
 "Add the instruments of the actually registered musicians to the instrument-"
 "table for the project."
 msgstr ""
 
-#: lib/tooltips.php:460
+#: lib/tooltips.php:468
 msgid ""
 "Upload a file from your local computer as attachment. The file will be "
 "removed from the remote-system after the message has been sent."
@@ -4005,18 +4060,18 @@ msgid "Executive board and club members"
 msgstr ""
 
 #: templates/orchestra-settings.php:115
-msgid "Name of the table listing the permanent members of the orchestra"
+msgid "Name of the table listing the permanent members of the orchestra."
 msgstr ""
 
 #: templates/orchestra-settings.php:116
 msgid "member-table"
 msgstr ""
 
-#: templates/orchestra-settings.php:121
-msgid "Name of the table listing the members of the executive board"
+#: templates/orchestra-settings.php:122
+msgid "Name of the table listing the members of the executive board."
 msgstr ""
 
-#: templates/orchestra-settings.php:122
+#: templates/orchestra-settings.php:123
 msgid "executive board table"
 msgstr ""
 
