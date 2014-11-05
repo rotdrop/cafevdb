@@ -586,6 +586,29 @@ CAFEVDB.Email = CAFEVDB.Email || {};
 
     /*************************************************************************
      * 
+     * Message export to html
+     */
+    fieldset.find('input.submit.message-export').off('click').
+      on('click', function(event) {
+
+      var oldAction = form.attr('action');
+      form.attr('action', OC.filePath('cafevdb', 'ajax/email', 'exporter.php'));
+      var $fakeSubmit = $('<input type="hidden" name="'+$(this).attr('name')+'" value="whatever"/>');
+      form.append($fakeSubmit);
+      form.submit();
+      $fakeSubmit.remove();
+      if (!oldAction) {
+        form.removeAttr('action');
+      } else {
+        form.attr('action', oldAction);
+      }
+
+      return false;
+    });
+
+
+    /*************************************************************************
+     * 
      * Close the dialog
      */
 
