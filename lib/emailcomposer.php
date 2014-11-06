@@ -270,6 +270,20 @@ mandateReference
         foreach ($vars as $key => $value) {
           $message = preg_replace('/[$]{GLOBAL::'.$key.'}/', $value, $message);
         }
+
+        // Support date substitutions. Format is
+        // ${GLOBAL::DATE:dateformat:datestring} where dateformat
+        // defaults to d.m.Y. datestring is everything understood by
+        // strtotime().
+        $message = preg_replace_callback(
+          '/[$]{GLOBAL::DATE:([^:]*):([^:]*)}/',
+          function($matches) {
+            $dateFormat = $matches[1];
+            $timeString = $matches[2];
+            return date($dateFormat, strtotime($timeString));
+          },
+          $message
+          );
       }
       
       return $message;
@@ -1222,10 +1236,23 @@ mandateReference
       $globalTemplateLeftOver = array();
       if (preg_match('![$]{GLOBAL::[^}]+}!', $dummy)) {
         $variables = $this->emailGlobalVariables();
+
+        // dummy replace all "ordinary" global variables
         foreach ($variables as $key => $value) {
           $dummy = preg_replace('/[$]{GLOBAL::'.$key.'}/', $value, $dummy);
         }
 
+        // replace all date-strings, but give a damn on valid results. Grin 8-)
+        $dummy = preg_replace_callback(
+          '/[$]{GLOBAL::DATE:([^:]*):([^:]*)}/',
+          function($matches) {
+            $dateFormat = $matches[1];
+            $timeString = $matches[2];
+            return date($dateFormat, strtotime($timeString));
+          },
+          $dummy
+          );
+        
         if (preg_match('![$]{GLOBAL::[^}]!', $dummy, $leftOver)) {
           $templateError[] = 'global';
           $this->diagnostics['TemplateValidation']['GlobalErrors'] = $leftOver;
