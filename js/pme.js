@@ -466,7 +466,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
   };
 
   /**Open directly the popup holding the form data. We listen for the
-   * custom event 'pmedialog:changed' on the DialogHolder. This event fill
+   * custom event 'pmedialog:changed' on the DialogHolder. This event will
    * be forwarded to the AmbientContainer. The idea is that we can
    * update the "modified" component of chained dialogs in a reliable
    * way.
