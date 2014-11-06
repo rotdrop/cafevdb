@@ -11,6 +11,7 @@
 namespace malkusch\bav;
 
 require_once __DIR__ . "/../autoloader/autoloader.php";
+require_once __DIR__ . '/../../../../../lib/base.php';
 
 try {
     ConfigurationRegistry::getConfiguration()->setUpdatePlan(null);
