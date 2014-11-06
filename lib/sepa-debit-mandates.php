@@ -381,7 +381,9 @@ namespace CAFEVDB
      */
     static public function projectTableExport($projectId, $musicianId = -1, $handle = false)
     {
-      $where = "`projectId` = ".$projectId;
+      $where = "( `projectId` = ".$projectId.
+        " OR ".
+        "`projectId` = ".Config::getValue('memberTableId')." )";
       if ($musicianId > 0) {
         $query .= " AND `musicianId = ".$musicianId;
       }
@@ -394,8 +396,8 @@ namespace CAFEVDB
       }
 
       $query = "SELECT `Musiker`.`Name`,`Musiker`.`Vorname`,`Projekte`.`Name` as 'ProjectName',`".self::MEMBER_TABLE."`.*,`Besetzungen`.`Unkostenbeitrag` FROM ".self::MEMBER_TABLE."
-  LEFT JOIN `Besetzungen` ON (`Besetzungen`.`ProjektId` = `".self::MEMBER_TABLE."`.`projectId`
-    AND `Besetzungen`.`MusikerId` = `".self::MEMBER_TABLE."`.`musicianId`)
+  JOIN (SELECT * FROM Besetzungen WHERE ProjektId = ".$projectId.") AS Besetzungen
+  ON `Besetzungen`.`MusikerId` = `".self::MEMBER_TABLE."`.`musicianId`
   LEFT JOIN `Musiker` ON `Musiker`.`Id` = `".self::MEMBER_TABLE."`.`musicianId`
   LEFT JOIN `Projekte` ON `Projekte`.`Id` = `".self::MEMBER_TABLE."`.`projectId`
   WHERE ".$where;
@@ -405,7 +407,7 @@ namespace CAFEVDB
       while ($row = mySQL::fetch($result)) {
         $row['purpose'] = array(L::t('Fees for %s', array($row['ProjectName'])),
                                 '', '', '');
-        $table[] = $row;
+        $table[$row['id']] = $row;
       }
       
       if ($ownConnection) {
@@ -426,34 +428,36 @@ namespace CAFEVDB
       $iban  = $iban->MachineFormat();
       $bic   = Config::getValue('bankAccountBIC');
       $owner = Config::getValue('bankAccountOwner');
-      $executionDate = date('Y/M/d', strtotime('+ 10 days'));
+      $executionDate = date('Y/m/d', strtotime('+ 14 days'));
 
-      if ($row['nonrecurring']) {
-        $sequenceType = 'once';
-      } else if ($row['lastUsedDate'] == '0000-00-00') {
-        $sequenceType = 'first';
-      } else {
-        $sequenceType = 'following';
-      }  
-      
       // "localBic";"localIban";"remoteBic";"remoteIban";"date";"value/value";"value/currency";"localName";"remoteName";"creditorSchemeId";"mandateId";"mandateDate/dateString";"mandateDebitorName";"sequenceType";"purpose[0]";"purpose[1]";"purpose[2]";"purpose[3]"
       $result = array();
-      foreach($debitTable as $row) {
-        $result[] = array('localBic' => $bic,
-                          'localIBan' => $iban,
-                          'remoteBic' => Config::decrypt($row['BIC']),
-                          'remoteIban' => Config::decrypt($row['IBAN']),
-                          'data' => $executionDate,
-                          'value/value' => $row['Unkostenbeitrag'],
-                          'value/currency' => 'EUR',
-                          'localName' => $owner,
-                          'remoteName' => Config::decrypt($row['bankAccountOwner']),
-                          'creditorSchemeId' => Config::getValue('bankAccountCreditorIdentifier'),
-                          'mandateId' => $row['mandateReference'],
-                          'mandateDate/dateString' => date('YMd', $row['mandateDate']),
-                          'mandateDebitorName' => $row['Name'].', '.$row['Vorname'],
-                          'sequenceType' => $row['nonrecurring'] ? 'once' : 'FIXME',
-                          'purpose' => $row['purpose']
+      foreach($debitTable as $id => $row) {
+
+        if ($row['nonrecurring']) {
+          $sequenceType = 'once';
+        } else if ($row['lastUsedDate'] == '0000-00-00') {
+          $sequenceType = 'first';
+        } else {
+          $sequenceType = 'following';
+        }
+      
+        $result[] = array(
+          'localBic' => $bic,
+          'localIBan' => $iban,
+          'remoteBic' => Config::decrypt($row['BIC']),
+          'remoteIban' => Config::decrypt($row['IBAN']),
+          'date' => $executionDate,
+          'value/value' => $row['Unkostenbeitrag'],
+          'value/currency' => 'EUR',
+          'localName' => $owner,
+          'remoteName' => Config::decrypt($row['bankAccountOwner']),
+          'creditorSchemeId' => Config::getValue('bankAccountCreditorIdentifier'),
+          'mandateId' => $row['mandateReference'],
+          'mandateDate/dateString' => date('Ymd', strtotime($row['mandateDate'])),
+          'mandateDebitorName' => $row['Name'].', '.$row['Vorname'],
+          'sequenceType' => $sequenceType,
+          'purpose' => $row['purpose']
           );
       }
       return $result;

@@ -41,17 +41,41 @@ namespace CAFEVDB {
 
     Config::init();
 
+    // See wether we were passed specific variables ...
+    $pmepfx      = Config::$pmeopts['cgi']['prefix']['sys'];
+    $recordsKey  = $pmepfx.'mrecs';
+
+    $projectId = Util::cgiValue('ProjectId', -1);
+    $projectName = Util::cgiValue('ProjectName', 'X');
+    $selectedMandates = array_unique(Util::cgiValue($recordsKey, array()));
+    
+    if ($projectId < 0 || $projectName == 'X') {
+      throw new \InvalidArgumentException(L::t('Project name and/or id are missing'));
+    }
+
+    $debitTable = SepaDebitMandates::projectTableExport($projectId);
+    $filteredTable = array();
+    foreach($selectedMandates as $id) {
+      $filteredTable[] = $debitTable[$id];
+    }
+    
+    $name = $date.'-aqbanking-debit-notes-'.$projectName.'.csv';
+    
     header('Content-type: text/ascii');
-    header('Content-disposition: attachment;filename=blah.txt');
+    header('Content-disposition: attachment;filename='.$name);
     header('Cache-Control: max-age=0');
 
     @ob_end_clean();
 
     print_r($_POST);
 
+    $aqDebitTable = SepaDebitMandates::aqBankingDebitNotes($filteredTable);
+
+    print_r($aqDebitTable);
+    
   } catch (\Exception $e) {
 
-    $debugText .= ob_get_contents();
+    $debugText = ob_get_contents();
     @ob_end_clean();
 
     $name = $date.'-CAFEVDB-exception.html';
