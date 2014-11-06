@@ -89,7 +89,6 @@ namespace CAFEVDB {
           return false;
         }
       }
-    case 'bankAccountOwner':
     case 'mandateDate':
       // Whatever the user likes ;)
       // The date-picker does some validation on its own, so just live with it.
@@ -100,7 +99,28 @@ namespace CAFEVDB {
                 'suggestions' =>'',
                 'value' => $value)));
       return true;
-
+    case 'bankAccountOwner':
+      $value = Finance::sepaTranslit($value);
+      if (!Finance::validateSepaString($value)) {
+        $debugText .= ob_get_contents();
+        @ob_end_clean();
+        
+        \OC_JSON::error(
+          array("data" => array(
+                  'message' => L::t("Account owner contains invalid characters: %s",
+                                    array($value)),
+                  'suggestions' => '',
+                  'debug' => $debugText)));
+        return false;
+      }
+      \OC_JSON::success(
+        array("data" => array(
+                'message' => L::t('Value for `%s\' set to `%s\'.',
+                                  array($changed, $value)),
+                'suggestions' =>'',
+                'value' => $value)));
+      return true;
+      break;
     case 'bankAccountIBAN':
       if ($value == '') {
         $IBAN = '';

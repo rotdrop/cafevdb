@@ -33,7 +33,29 @@ namespace CAFEVDB
       array('table' => 'SepaDebitMandates',
             'key' => 'id',
             'encryptedColumns' => array('IBAN', 'BIC', 'BLZ', 'bankAccountOwner'));
+    public static $sepaCharset = "a-zA-Z0-9 \/?:().,'+-";
+    public static $sepaPurposeLength = 35;
 
+    /**Convert an UTF-8 encoded string to the brain-damaged SEPA
+     * requirements. Thank you so much, you idiots. Banks.
+     */
+    public static function sepaTranslit($string)
+    {
+      $oldLocale = setlocale(LC_ALL, 'de_DE.UTF8');
+      $result = iconv("utf-8","ascii//TRANSLIT", $string);
+      setlocale(LC_ALL, $oldLocale);
+      return $result;
+    }
+
+    /**Validate whether the given string conforms to the brain-damaged
+     * SEPA requirements. Thank you so much, you idiots. Banks.
+     */
+    public static function validateSepaString($string)
+    {
+      return !preg_match('@[^'.self::$sepaCharset.']@', $string);
+    }
+    
+    
     /**The "SEPA mandat reference" must be unique per mandat, consist
      * more or less of alpha-numeric characters and has a maximum length
      * of 35 characters. We choose the format
@@ -247,13 +269,28 @@ namespace CAFEVDB
           throw new \InvalidArgumentException(L::t('Missing fields in debit mandate: %s. Full data record: %s',
                                                    array($key, print_r($mandate, true))));
         }
+        if ($key == 'lastUsedDate') {
+          continue;
+        }
+        if ((string)$mandate[$key] == '') {
+          throw new \InvalidArgumentException(L::t('Empty fields in debit mandate: %s. Full data record: %s',
+                                                   array($key, print_r($mandate, true))));
+        }
       }
 
+      // Verify that bankAccountOwner conforms to the brain-damaged
+      // SEPA charset. Thank you so much. Banks.
+      if (!self::validateSepaString($mandate['bankAccountOwner'])) {
+        throw new \InvalidArgumentException(L::t('Illegal characters in bank account owner field. '.
+                                                 'Full data record: %s',
+                                                 array(print_r($mandate, true))));
+      }
+      
       // Verify that the dates are not in the future, and that the
       // mandateDate is set (last used maybe 0)
       foreach(array('mandateDate', 'lastUsedDate') as $dateKey) {
         $date = $mandate[$dateKey];
-        if ($date == '0000-00-00') {
+        if ($date == '0000-00-00' || $date == '1970-01-01') {
           continue;
         }
         $stamp = strtotime($date);
@@ -267,6 +304,49 @@ namespace CAFEVDB
       if ($dateIssued == '0000-00-00') {
         throw new \InvalidArgumentException(L::t('Missing mandate date. Full data record: %s',
                                                  array(print_r($mandate, true))));
+      }
+
+      // Check IBAN and BIC: extract the bank and bank account id,
+      // check both with BAV, regenerate the BIC
+      $IBAN = $mandate['IBAN'];
+      $BLZ  = $mandate['BLZ'];
+      $BIC  = $mandate['BIC'];
+
+      $iban = new \IBAN($IBAN);
+      if (!$iban->Verify()) {
+        throw new \InvalidArgumentException(L::t('Invalid IBAN: %s. Full data record: %s',
+                                                 array($IBAN, print_r($mandate, true))));
+      }
+
+      if ($iban->Country() == 'DE') {
+        // otherwise: not implemented yet
+        $ibanBLZ = $iban->Bank();
+        $ibanKTO = $iban->Account();
+
+        if ($BLZ != $ibanBLZ) {
+          throw new \InvalidArgumentException(L::t('BLZ and IBAN do not match: %s != %s. Full data record: %s',
+                                                   array($BLZ, $ibanBLZ, print_r($mandate, true))));
+        }
+        
+        $bav = new \malkusch\bav\BAV;
+
+        if (!$bav->isValidBank($ibanBLZ)) {
+          throw new \InvalidArgumentException(L::t('Invalid German BLZ: %s. Full data record: %s',
+                                                 array($BLZ, print_r($mandate, true))));
+        }
+
+        if (!$bav->isValidAccount($ibanKTO)) {
+          throw new \InvalidArgumentException(L::t('Invalid German bank account: %s @ %s. Full data record: %s',
+                                                   array($ibanKTO, $BLZ, print_r($mandate, true))));
+        }
+
+        $blzBIC = $bav->getMainAgency($ibanBLZ)->getBIC();
+        if ($blzBIC != $BIC) {
+          throw new \InvalidArgumentException(L::t('Probably invalid BIC: %s. Computed: %s. '.
+                                                   'Full data record: %s',
+                                                   array($BIC, $blzBIC, print_r($mandate, true))));
+        }
+
       }
       
       return true;

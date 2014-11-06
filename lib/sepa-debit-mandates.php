@@ -405,8 +405,9 @@ namespace CAFEVDB
       $result = mySQL::query($query, $handle);
       $table = array();
       while ($row = mySQL::fetch($result)) {
-        $row['purpose'] = array(L::t('Fees for %s', array($row['projectName'])),
-                                '', '', '');
+        $row['purpose'] = array($row['projectName'],
+                                L::t('Project Fees'),
+                                '', '');
         $table[$row['id']] = $row;
       }
       
@@ -457,7 +458,10 @@ namespace CAFEVDB
           'mandateDate/dateString' => date('Ymd', strtotime($row['mandateDate'])),
           'mandateDebitorName' => $row['Name'].', '.$row['Vorname'],
           'sequenceType' => $sequenceType,
-          'purpose' => $row['purpose']
+          'purpose[0]' => $row['purpose'][0],
+          'purpose[1]' => $row['purpose'][1],
+          'purpose[2]' => $row['purpose'][2],
+          'purpose[3]' => $row['purpose'][3]
           );
       }
       return $result;
