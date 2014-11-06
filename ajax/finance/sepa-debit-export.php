@@ -63,31 +63,45 @@ namespace CAFEVDB {
                                                  array(print_r($row, true))));
       }
       Finance::validateSepaMandate($row);
-      $filteredTable[] = $row;
-    }
-
-    // Consistency check. In case of an error, generate an exception.
-    foreach($filteredTable as &$debitNote) {
-      if ($debitNote['projectFee'] <= 0) {
+      if ($row['projectFee'] <= 0) {
         throw new \InvalidArgumentException(L::t('Refusing to debit 0€. Full debit record: %s',
-                                                 array(print_r($debitNote, true))));
+                                                 array(print_r($row, true))));
       }
-      foreach($debitNote['purpose'] as &$purposeLine) {
+      foreach($row['purpose'] as &$purposeLine) {
         $purposeLine = Finance::sepaTranslit($purposeLine);
         if (!Finance::validateSepaString($purposeLine)) {
           throw new \InvalidArgumentException(L::t('Illegal characters in debit purpose: %S. '.
                                                    'Full debit record: %s',
-                                                   array($purposeLine, print_r($debitNote, true))));
+                                                   array($purposeLine, print_r($row, true))));
         }
         if (strlen($purposeLine) > Finance::$sepaPurposeLength) {
           throw new \InvalidArgumentException(L::t('Purpose field has %d characters, allowed are %d. '.
                                                    'Full debit record: %s',
                                                    array(strlen($purposeLine),
                                                          Finance::$sepaPurposeLength,
-                                                         print_r($debitNote, true))));
+                                                         print_r($row, true))));
         }
       }
-    }  
+      $filteredTable[] = $row;
+    }
+
+    // It worked out until now. Update the "last issued" stamp
+
+    $handle = mySQL::connect(Config::$pmeopts);
+    $nowStamp = time();
+    $nowdate = date('Y-m-d', $nowStamp);
+    $table = Finance::$dataBaseInfo['table'];
+    $allQuery = '';
+    foreach($filteredTable as $debitNote) {
+      $query = "UPDATE `".$table."` SET `lastUsedDate` = '".$nowdate."' WHERE `id` = ".$debitNote['id'];
+      $result = mySQL::query($query, $handle);
+      $allQuery .= $query;
+    }
+    mySQL::close($handle);
+
+    //throw new \InvalidArgumentException($allQuery);
+    
+    // Actually export the data.
     
     $name = $date.'-aqbanking-debit-notes-'.$projectName.'.csv';
     
@@ -98,13 +112,17 @@ namespace CAFEVDB {
     @ob_end_clean();
 
     //print_r($_POST);
+    //print_r($blah);
+    //print_r($debitTable);
+    //print_r($selectedMandates);    
 
     $aqDebitTable = SepaDebitMandates::aqBankingDebitNotes($filteredTable);
 
     //print_r($aqDebitTable);
 
     // The rows of the aqDebitTable must have the following fields:
-    $aqColumns = array("localBic","localIban","remoteBic","remoteIban","date","value/value","value/currency","localName","remoteName","creditorSchemeId","mandateId","mandateDate/dateString","mandateDebitorName","sequenceType","purpose[0]","purpose[1]","purpose[2]","purpose[3]");
+    $aqColumns = array("localBic",
+"localIban","remoteBic","remoteIban","date","value/value","value/currency","localName","remoteName","creditorSchemeId","mandateId","mandateDate/dateString","mandateDebitorName","sequenceType","purpose[0]","purpose[1]","purpose[2]","purpose[3]");
 
     $outstream = fopen("php://output",'w');
 
