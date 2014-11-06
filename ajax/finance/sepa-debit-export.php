@@ -53,11 +53,27 @@ namespace CAFEVDB {
       throw new \InvalidArgumentException(L::t('Project name and/or id are missing'));
     }
 
+    $encKey = Config::getEncryptionKey();
     $debitTable = SepaDebitMandates::projectTableExport($projectId);
     $filteredTable = array();
     foreach($selectedMandates as $id) {
-      $filteredTable[] = $debitTable[$id];
+      $row = $debitTable[$id];
+      if (!Finance::decryptSepaMandate($row)) {
+        throw new \InvalidArgumentException(L::t('Unable to decrypt debit mandate. Full debit record: %s',
+                                                 array(print_r($row, true))));
+      }
+      Finance::validateSepaMandate($row);
+      $filteredTable[] = $row;
     }
+
+    // Consistency check. In case of an error, generate an exception.
+    foreach($filteredTable as $mandate) {
+      if ($mandate['projectFee'] <= 0) {
+        throw new \InvalidArgumentException(L::t('Refusing to debit 0€. Full debit record: %s',
+                                                 array(print_r($mandate, true))));
+      }
+    } 
+    
     
     $name = $date.'-aqbanking-debit-notes-'.$projectName.'.csv';
     

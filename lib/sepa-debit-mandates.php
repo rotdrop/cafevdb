@@ -395,7 +395,7 @@ namespace CAFEVDB
         $handle = mySQL::connect(Config::$pmeopts);
       }
 
-      $query = "SELECT `Musiker`.`Name`,`Musiker`.`Vorname`,`Projekte`.`Name` as 'ProjectName',`".self::MEMBER_TABLE."`.*,`Besetzungen`.`Unkostenbeitrag` FROM ".self::MEMBER_TABLE."
+      $query = "SELECT `Musiker`.`Name`,`Musiker`.`Vorname`,`Projekte`.`Name` as 'projectName',`".self::MEMBER_TABLE."`.*,`Besetzungen`.`Unkostenbeitrag` AS 'projectFee' FROM ".self::MEMBER_TABLE."
   JOIN (SELECT * FROM Besetzungen WHERE ProjektId = ".$projectId.") AS Besetzungen
   ON `Besetzungen`.`MusikerId` = `".self::MEMBER_TABLE."`.`musicianId`
   LEFT JOIN `Musiker` ON `Musiker`.`Id` = `".self::MEMBER_TABLE."`.`musicianId`
@@ -405,7 +405,7 @@ namespace CAFEVDB
       $result = mySQL::query($query, $handle);
       $table = array();
       while ($row = mySQL::fetch($result)) {
-        $row['purpose'] = array(L::t('Fees for %s', array($row['ProjectName'])),
+        $row['purpose'] = array(L::t('Fees for %s', array($row['projectName'])),
                                 '', '', '');
         $table[$row['id']] = $row;
       }
@@ -445,13 +445,13 @@ namespace CAFEVDB
         $result[] = array(
           'localBic' => $bic,
           'localIBan' => $iban,
-          'remoteBic' => Config::decrypt($row['BIC']),
-          'remoteIban' => Config::decrypt($row['IBAN']),
+          'remoteBic' => $row['BIC'],
+          'remoteIban' => $row['IBAN'],
           'date' => $executionDate,
-          'value/value' => $row['Unkostenbeitrag'],
+          'value/value' => $row['projectFee'],
           'value/currency' => 'EUR',
           'localName' => $owner,
-          'remoteName' => Config::decrypt($row['bankAccountOwner']),
+          'remoteName' => $row['bankAccountOwner'],
           'creditorSchemeId' => Config::getValue('bankAccountCreditorIdentifier'),
           'mandateId' => $row['mandateReference'],
           'mandateDate/dateString' => date('Ymd', strtotime($row['mandateDate'])),

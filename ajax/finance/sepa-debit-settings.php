@@ -91,7 +91,7 @@ namespace CAFEVDB {
       }
     case 'bankAccountOwner':
     case 'mandateDate':
-      // Whatever the user like ;)
+      // Whatever the user likes ;)
       // The date-picker does some validation on its own, so just live with it.
       \OC_JSON::success(
         array("data" => array(

@@ -94,16 +94,8 @@ namespace CAFEVDB
         }      
       }
 
-      if ($mandate !== false && self::$useEncryption) {
-        $enckey = Config::getEncryptionKey();
-        foreach (self::$dataBaseInfo['encryptedColumns'] as $column) {
-          $value = Config::decrypt($mandate[$column], $enckey);
-          if ($value === false) {
-            $mandate = false;
-            break;
-          }
-          $mandate[$column] = $value;
-        }
+      if (!self::decryptSepaMandate($mandate)) {
+        $mandate = false;
       }
 
       if ($ownConnection) {
@@ -112,7 +104,23 @@ namespace CAFEVDB
 
       return $mandate;
     }
-  
+
+    /**Given a mandate with encrypted columns, decrypt them. */
+    public static function decryptSepaMandate(&$mandate)
+    {
+      if (is_array($mandate) && self::$useEncryption) {
+        $enckey = Config::getEncryptionKey();
+        foreach (self::$dataBaseInfo['encryptedColumns'] as $column) {
+          $value = Config::decrypt($mandate[$column], $enckey);
+          if ($value === false) {
+            return false;
+          }
+          $mandate[$column] = $value;
+        }
+      }
+      return true;
+    }
+    
     /**Store a SEPA-mandate, possibly with only partial
      * information. mandateReference, musicianId and projectId are
      * required.
@@ -222,6 +230,48 @@ namespace CAFEVDB
       return true; // hopefully
     }
 
+    /**Verify the given mandate, throw an InvalidArgumentException */
+    public static function validateSepaMandate($mandate)
+    {
+      $keys = array('mandateReference',
+                    'mandateDate',
+                    'lastUsedDate',
+                    'musicianId',
+                    'projectId',
+                    'nonrecurring',
+                    'IBAN',
+                    'BLZ',
+                    'bankAccountOwner');
+      foreach($keys as $key) {
+        if (!isset($mandate[$key])) {
+          throw new \InvalidArgumentException(L::t('Missing fields in debit mandate: %s. Full data record: %s',
+                                                   array($key, print_r($mandate, true))));
+        }
+      }
+
+      // Verify that the dates are not in the future, and that the
+      // mandateDate is set (last used maybe 0)
+      foreach(array('mandateDate', 'lastUsedDate') as $dateKey) {
+        $date = $mandate[$dateKey];
+        if ($date == '0000-00-00') {
+          continue;
+        }
+        $stamp = strtotime($date);
+        $now = time();
+        if ($now < $stamp) {
+          throw new \InvalidArgumentException(L::t('Mandate issued or used in the future: %s????. Full data record: %s',
+                                                   array($date, print_r($mandate, true))));
+        }
+      }
+      $dateIssued = $mandate['mandateDate'];
+      if ($dateIssued == '0000-00-00') {
+        throw new \InvalidArgumentException(L::t('Missing mandate date. Full data record: %s',
+                                                 array(print_r($mandate, true))));
+      }
+      
+      return true;
+    }
+    
     /********************************************************
      * Funktionen fuer die Umwandlung und Verifizierung von IBAN/BIC
      * Fragen/Kommentare bitte auf http://donauweb.at/ebusiness-blog/2013/07/25/iban-und-bic-statt-konto-und-blz/
