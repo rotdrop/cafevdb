@@ -76,6 +76,9 @@ class InstrumentInsurance
       L::t('true');
     }
 
+    $this->projectName = Config::getValue('memberTable');
+    $this->projectId = Config::getValue('memberTableId');
+    
     mySQL::close($handle);
   }
 
