@@ -104,6 +104,8 @@ $(document).ready(function() {
         callback: function(selector, resizeCB) {
             CAFEVDB.exportMenu(selector);
 
+            CAFEVDB.SepaDebitMandate.insuranceReady(selector);
+
             $(':button.musician-instrument-insurance').click(function(event) {
                 event.preventDefault();
                 var values = $(this).attr('name');
@@ -138,7 +140,7 @@ $(document).ready(function() {
         },false);
     });
 
-    // The final callback stuf ...
+    // The final callback stuff ...
     CAFEVDB.runReadyCallbacks();
 
 });

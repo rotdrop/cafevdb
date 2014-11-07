@@ -429,6 +429,30 @@ var CAFEVDB = CAFEVDB || {};
     });
   };
 
+  SepaDebitMandate.insuranceReady = function(selector) {
+    var self = this;
+
+    var containerSel = PHPMYEDIT.selector(selector);
+    var container = PHPMYEDIT.container(containerSel);
+
+    container.find('input.pme-debit-note').
+      off('click').
+      on('click', function(event) {
+
+      event.preventDefault();
+
+      var post = $(this.form).serialize();
+      post += '&'+$.param({
+        'emailComposer[TemplateSelector]': t('cafevdb', 'InsuranceDebitNoteAnnouncement'),
+        'emailComposer[Subject]': t('cafevdb', 'Debit notes due in 14 days')
+      });
+      CAFEVDB.Email.emailFormPopup(post);
+
+      return false;
+    });
+    return true;
+  };
+
   SepaDebitMandate.ready = function(selector) {
     var self = this;
 
@@ -437,9 +461,15 @@ var CAFEVDB = CAFEVDB || {};
 
     // bail out if not for us.
     var form = container.find('form[class^="pme-form"]');
-    var dbTable = form.find('input[value="SepaDebitMandates"]');
+    var dbTable;
+    dbTable = form.find('input[value="InstrumentInsurance"]');
+    if (dbTable.length > 0) {
+      return self.insuranceReady(selector);
+    }
+
+    dbTable = form.find('input[value="SepaDebitMandates"]');
     if (dbTable.length == 0) {
-      return;
+      return true;
     }
     var table = form.find('table[summary="SepaDebitMandates"]');
     table.find('input[type="text"]').not('.pme-filter').off('blur').on('blur', self.validatePME);
@@ -513,6 +543,7 @@ var CAFEVDB = CAFEVDB || {};
       return false;
     });
 
+    return true;
   };
 
   CAFEVDB.SepaDebitMandate = SepaDebitMandate;
