@@ -486,7 +486,8 @@ var CAFEVDB = CAFEVDB || {};
         var oldTarget = form.attr('target');
         form.attr('action', OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-export.php'));
         form.attr('target', downloadName);
-      
+
+        // TODO: this is quite crappy
         var $fakeSubmit = $('<input type="hidden" name="'+$(this).attr('name')+'" value="whatever"/>');
         form.append($fakeSubmit);
         form.submit();
