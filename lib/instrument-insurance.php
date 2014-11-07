@@ -153,6 +153,9 @@ class InstrumentInsurance
     // A - add,  C - change, P - copy, V - view, D - delete,
     // F - filter, I - initial sort suppressed
     $opts['options'] = 'ACVDFM';
+    $opts['misc']['css']['major'] = 'debit-note';
+    $opts['misc']['css']['minor'] = 'debit-note insurance tipsy-nw';
+    $opts['labels']['Misc'] = L::t('Debit');    
 
     // Number of lines to display on multiple selection filters
     $opts['multiple'] = '5';
