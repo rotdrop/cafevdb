@@ -353,19 +353,45 @@ namespace CAFEVDB
 
     /**This function is called at the very start. If in project-mode
      * ids from other tables are remapped to the ids for the
-     * respective project view.
+     * respective project vie.w
      */
     private function remapEmailRecords($dbh)
     {
       $oldTable = Util::cgiValue($this->mtabKey,'');
+      $remap = false;
+      
+      if ($oldTable == 'InstrumentInsurance') {
+        $this->projectName = Config::getValue('memberTable');
+        $this->projectId = Config::getValue('memberTableId');
+        
+        $this->frozen = true; // restrict to initial set of recipients
 
+        $table = $this->projectName.'View';
+
+                // Remap all email records to the ids from the project view.
+        $query = 'SELECT `'.$oldTable.'`.`Id` AS \'OrigId\',
+  `'.$table.'`.`Id` AS \'BesetzungsId\'
+  FROM `'.$table.'` RIGHT JOIN `'.$oldTable.'`
+  ON (
+       `'.$oldTable.'`.`BillToParty` <= 0
+       AND
+       `'.$table.'`.`MusikerId` = `'.$oldTable.'`.`MusicianId`
+    ) OR (
+       `'.$oldTable.'`.`BillToParty` > 0
+       AND
+       `'.$table.'`.`MusikerId` = `'.$oldTable.'`.`BillToParty`
+    )
+    WHERE 1';
+
+        $remap = true;
+      }
+      
       if ($this->projectId >= 0 && $oldTable == 'SepaDebitMandates') {
-        $this->frozen = true;
+        $this->frozen = true; // restrict to initial set of recipients
         
         $table = $this->projectName.'View';
 
         // Remap all email records to the ids from the project view.
-        
         $query = 'SELECT `'.$oldTable.'`.`id` AS \'OrigId\',
   `'.$table.'`.`Id` AS \'BesetzungsId\'
   FROM `'.$table.'` LEFT JOIN `'.$oldTable.'`
@@ -375,8 +401,11 @@ namespace CAFEVDB
           '`'.$oldTable.'`.`projectId` = '.Config::getValue('memberTableId').
           ')';
 
-        $_POST['QUERY'] = $query;
+        // $_POST['QUERY'] = $query;
+        $remap = true;
+      }
 
+      if ($remap) {
         // Fetch the result (or die) and remap the Ids
         $result = mySQL::query($query, $dbh);
         $map = array();
@@ -386,7 +415,16 @@ namespace CAFEVDB
         $newEmailRecs = array();
         foreach ($this->EmailRecs as $key) {
           if (!isset($map[$key])) {
-            Util::error('Musician in Table, but has no Id as Musician');
+            if (false) {
+              // can happen after deleting records
+              // TODO: sanitize this.
+              Util::error(L::t('Musician %d in Table, but has no Id as Musician. '.
+                               'POST: %s'.
+                               'Map: %s'.
+                               'SQL-Query: %s',
+                               array($key, print_r($_POST, true), print_r($map, true), $query)));
+            }
+            continue;
           }
           $newEmailRecs[] = $map[$key];
         }
@@ -439,7 +477,7 @@ namespace CAFEVDB
       $dot = '.';
       $origId = $btk.'MainTable'.$btk.$dot.$btk.'Id'.$btk.' AS '.$btk.'OrigId'.$btk;
       $fields =
-        $origId.$comma.$btk.$id.$btk.$comma.
+        $origId.$comma.$btk.$id.$btk.' AS '.$btk.'musicianId'.$btk.$comma.
         $btk.implode($sep, $columnNames).$btk;
 
       $table .= ' AS MainTable';
@@ -505,6 +543,7 @@ namespace CAFEVDB
             $line['Unkostenbeitrag'] = '';
             $line['mandateReference'] = '';
           }
+          $line['insuranceFee'] = '0,00';
           foreach ($musmail as $emailval) {
             if (!$mailer->validateAddress($emailval)) {
               $bad = htmlspecialchars($name.' <'.$emailval.'>');
@@ -527,6 +566,15 @@ namespace CAFEVDB
         } else {
           $this->brokenEMail[$rec] = htmlspecialchars($name);
         }
+      }
+      foreach($this->EMails as $key => $record) {
+        $dbdata = $record['dbdata'];
+        setlocale(LC_MONETARY, Util::getLocale());
+        $fee = money_format('%n', InstrumentInsurance::annualFee($dbdata['musicianId'], $dbh));
+        $dbdata['insuranceFee'] = $fee;
+        $fee = money_format('%n', $dbdata['Unkostenbeitrag']);
+        $dbdata['Unkostenbeitrag'] = $fee;
+        $this->EMails[$key]['dbdata'] = $dbdata;
       }
     }
 

@@ -57,6 +57,7 @@ LAND
 GEBURTSTAG
 UNKOSTENBEITRAG
 SEPAMANDATSREFERENZ
+VERSICHERUNGSBEITRAG
 ';
     const MEMBERCOLUMNS = '
 Vorname
@@ -71,6 +72,7 @@ Land
 Geburtstag
 Unkostenbeitrag
 mandateReference
+insuranceFee
 ';
     private $opts; ///< For db connection and stuff.
     private $dbh;  ///< Data-base handle.
