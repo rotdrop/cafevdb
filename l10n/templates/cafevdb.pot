@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-07 10:43+0100\n"
+"POT-Creation-Date: 2014-11-07 11:23+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -104,14 +104,14 @@ msgid "Email Address Validation Failed"
 msgstr ""
 
 #: ajax/email/composer.php:256 ajax/email/exporter.php:95
-#: ajax/email/recipients.php:140 ajax/finance/sepa-debit-export.php:168
+#: ajax/email/recipients.php:140 ajax/finance/sepa-debit-export.php:179
 #: ajax/page-loader.php:111 ajax/projects/web-articles.php:182
 #: ajax/settings/app-settings.php:1151
 msgid "PHP Exception Caught"
 msgstr ""
 
 #: ajax/email/composer.php:260 ajax/email/exporter.php:96
-#: ajax/email/recipients.php:144 ajax/finance/sepa-debit-export.php:169
+#: ajax/email/recipients.php:144 ajax/finance/sepa-debit-export.php:180
 #: ajax/page-loader.php:115 ajax/projects/web-articles.php:186
 #: ajax/settings/app-settings.php:1155
 #, php-format
@@ -120,7 +120,7 @@ msgid ""
 "email to %s."
 msgstr ""
 
-#: ajax/email/exporter.php:100 ajax/finance/sepa-debit-export.php:173
+#: ajax/email/exporter.php:100 ajax/finance/sepa-debit-export.php:184
 msgid "Trace"
 msgstr ""
 
@@ -326,26 +326,26 @@ msgstr ""
 msgid "Unable to delete SEPA debit mandate from data-base."
 msgstr ""
 
-#: ajax/finance/sepa-debit-export.php:53
+#: ajax/finance/sepa-debit-export.php:54
 msgid "Project name and/or id are missing"
-msgstr ""
-
-#: ajax/finance/sepa-debit-export.php:62
-#, php-format
-msgid "Unable to decrypt debit mandate. Full debit record: %s"
-msgstr ""
-
-#: ajax/finance/sepa-debit-export.php:67
-#, php-format
-msgid "Refusing to debit 0€. Full debit record: %s"
 msgstr ""
 
 #: ajax/finance/sepa-debit-export.php:73
 #, php-format
-msgid "Illegal characters in debit purpose: %s. Full debit record: %s"
+msgid "Unable to decrypt debit mandate. Full debit record: %s"
 msgstr ""
 
 #: ajax/finance/sepa-debit-export.php:78
+#, php-format
+msgid "Refusing to debit 0€. Full debit record: %s"
+msgstr ""
+
+#: ajax/finance/sepa-debit-export.php:84
+#, php-format
+msgid "Illegal characters in debit purpose: %s. Full debit record: %s"
+msgstr ""
+
+#: ajax/finance/sepa-debit-export.php:89
 #, php-format
 msgid "Purpose field has %d characters, allowed are %d. Full debit record: %s"
 msgstr ""
@@ -2164,7 +2164,7 @@ msgstr ""
 msgid "Total Insurance"
 msgstr ""
 
-#: lib/instrument-insurance.php:427
+#: lib/instrument-insurance.php:469
 #, php-format
 msgid "Invalid broker/geographical-scope combination: %s - %s"
 msgstr ""
@@ -2308,7 +2308,7 @@ msgstr ""
 msgid "Remarks"
 msgstr ""
 
-#: lib/musicians.php:403
+#: lib/musicians.php:403 lib/sepa-debit-mandates.php:403
 msgid "Instrument Insurance"
 msgstr ""
 
@@ -2637,7 +2637,12 @@ msgstr ""
 msgid "Last-Used Date"
 msgstr ""
 
-#: lib/sepa-debit-mandates.php:409
+#: lib/sepa-debit-mandates.php:404
+#, php-format
+msgid "Annual Fee Year %s"
+msgstr ""
+
+#: lib/sepa-debit-mandates.php:446
 msgid "Project Fees"
 msgstr ""
 

@@ -553,6 +553,7 @@
 "Bank Code" => "BLZ",
 "Bank Account Owner" => "Kontoinhaber",
 "Last-Used Date" => "Letzte Verwendung",
+"Annual Fee Year %s" => "Jahresbeitrag fuer %s",
 "Project Fees" => "Unkostenbeitrag",
 "Write a new bulletin entry." => "Einen neuen Pinnwand-Eintrag verfassen.",
 "Disable the pop-up function for this blog-note. The list of associated readers is maintained, so reenabling the pop-up function will still not present this note to users already on the reader-list." => "Deaktiviere die Popup-Funktion für diese Nachricht. Die Leser-Liste\nbleibt jedoch erhalten, so dass die Nachricht auch bei erneutem\nAktivieren der Popup-Funkion Benutzern auf der Leser-Liste nicht noch\neinmal präsentiert wird.",
