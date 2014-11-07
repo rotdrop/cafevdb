@@ -45,8 +45,9 @@ namespace CAFEVDB {
     $pmepfx      = Config::$pmeopts['cgi']['prefix']['sys'];
     $recordsKey  = $pmepfx.'mrecs';
 
-    $projectId = Util::cgiValue('ProjectId', -1);
+    $projectId   = Util::cgiValue('ProjectId', -1);
     $projectName = Util::cgiValue('ProjectName', 'X');
+    $table       = Util::cgiValue('Table', '');
     $selectedMandates = array_unique(Util::cgiValue($recordsKey, array()));
     
     if ($projectId < 0 || $projectName == 'X') {
@@ -54,7 +55,19 @@ namespace CAFEVDB {
     }
 
     $encKey = Config::getEncryptionKey();
-    $debitTable = SepaDebitMandates::projectTableExport($projectId);
+
+    switch ($table) {
+    case 'InstrumentInsurance':
+      // $oldIds = $selectedMandates;
+      $selectedMandates = InstrumentInsurance::remapToDebitIds($selectedMandates);
+      $debitTable = SepaDebitMandates::insuranceTableExport();
+      // throw new \Exception('ID: '.print_r($selectedMandates, true).' old ID '.print_r($oldIds, true).' table '.print_r($debitTable, true));
+      break;
+    default:
+      $debitTable = SepaDebitMandates::projectTableExport($projectId);
+      break;
+    }
+
     $filteredTable = array();
     foreach($selectedMandates as $id) {
       $row = $debitTable[$id];
@@ -63,7 +76,7 @@ namespace CAFEVDB {
                                                  array(print_r($row, true))));
       }
       Finance::validateSepaMandate($row);
-      if ($row['projectFee'] <= 0) {
+      if ($row['amount'] <= 0) {
         throw new \InvalidArgumentException(L::t('Refusing to debit 0€. Full debit record: %s',
                                                  array(print_r($row, true))));
       }

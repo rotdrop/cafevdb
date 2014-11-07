@@ -434,6 +434,7 @@ var CAFEVDB = CAFEVDB || {};
 
     var containerSel = PHPMYEDIT.selector(selector);
     var container = PHPMYEDIT.container(containerSel);
+    var form = container.find('form[class^="pme-form"]');
 
     container.find('input.pme-debit-note').
       off('click').
@@ -442,6 +443,46 @@ var CAFEVDB = CAFEVDB || {};
       event.preventDefault();
 
       var post = $(this.form).serialize();
+
+      // This is a nightmare, needs to be cleaned up.
+      if (true) {
+        var downloadName = 'pmeformdownloadframe';
+        var downloadFrame = $('iframe#'+downloadName);
+        downloadFrame.contents().find('body').html('');
+
+        downloadFrame.off('load').on('load', function() {
+          var frameBody = downloadFrame.contents().find('body').html();
+          if (frameBody != '') {
+            OC.dialogs.alert(t('cafevdb', 'Unable to export debit notes:')+
+                             ' '+
+                             frameBody,
+                             t('cafevdb', 'Error'),
+                             undefined, true, true);
+          }
+        });
+
+        var oldAction = form.attr('action');
+        var oldTarget = form.attr('target');
+        form.attr('action', OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-export.php'));
+        form.attr('target', downloadName);
+
+        // TODO: this is quite crappy
+        var $fakeSubmit = $('<input type="hidden" name="'+$(this).attr('name')+'" value="whatever"/>');
+        form.append($fakeSubmit);
+        form.submit();
+        $fakeSubmit.remove();
+        if (!oldAction) {
+          form.removeAttr('action');
+        } else {
+          form.attr('action', oldAction);
+        }
+        if (!oldTarget) {
+          form.removeAttr('target');
+        } else {
+          form.attr('target', oldTarget);
+        }
+      }
+
       post += '&'+$.param({
         'emailComposer[TemplateSelector]': t('cafevdb', 'InsuranceDebitNoteAnnouncement'),
         'emailComposer[Subject]': t('cafevdb', 'Debit notes due in 14 days')

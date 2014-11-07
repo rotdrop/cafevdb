@@ -376,6 +376,40 @@ namespace CAFEVDB
 
     } // display()
 
+    /**Provide a very primitive direct matrix representation,
+     * optionally only for the given musician.
+     */
+    static public function insuranceTableExport($musicianId = -1, $handle = false)
+    {
+      $ownConnection = $handle === false;
+
+      if ($ownConnection) {
+        Config::init();
+        $handle = mySQL::connect(Config::$pmeopts);
+      }
+
+      $table = self::projectTableExport(Config::getValue('memberTableId'), $musicianId, $handle);
+
+      // We want to debit the annual insurance fees. Hence replace the
+      // amount with the insurance fee and the purpose with something useful
+      $result = array();
+      foreach($table as $key => $record) {
+        $musicianId = $record['musicianId'];
+        $fee = InstrumentInsurance::annualFee($musicianId, $handle);
+        $record['amount'] = $fee;
+        $record['purpose'] = array(L::t('Instrument Insurance'),
+                                   L::t('Annual Fee Year %s', array(date('Y', time()))),
+                                   '', '');
+        $result[$key] = $record;
+      }
+
+      if ($ownConnection) {
+        mySQL::close($handle);
+      }
+
+      return $result;
+    }
+    
     /**Provide a very primitive direct matrix representation, filtered
      * by the given project and/or musician.
      */
@@ -395,7 +429,7 @@ namespace CAFEVDB
         $handle = mySQL::connect(Config::$pmeopts);
       }
 
-      $query = "SELECT `Musiker`.`Name`,`Musiker`.`Vorname`,`Projekte`.`Name` as 'projectName',`".self::MEMBER_TABLE."`.*,`Besetzungen`.`Unkostenbeitrag` AS 'projectFee' FROM ".self::MEMBER_TABLE."
+      $query = "SELECT `Musiker`.`Name`,`Musiker`.`Vorname`,`Projekte`.`Name` as 'projectName',`".self::MEMBER_TABLE."`.*,`Besetzungen`.`Unkostenbeitrag` AS 'amount' FROM ".self::MEMBER_TABLE."
   JOIN (SELECT * FROM Besetzungen WHERE ProjektId = ".$projectId.") AS Besetzungen
   ON `Besetzungen`.`MusikerId` = `".self::MEMBER_TABLE."`.`musicianId`
   LEFT JOIN `Musiker` ON `Musiker`.`Id` = `".self::MEMBER_TABLE."`.`musicianId`
@@ -449,7 +483,7 @@ namespace CAFEVDB
           'remoteBic' => $row['BIC'],
           'remoteIban' => $row['IBAN'],
           'date' => $executionDate,
-          'value/value' => $row['projectFee'],
+          'value/value' => $row['amount'],
           'value/currency' => 'EUR',
           'localName' => $owner,
           'remoteName' => $row['bankAccountOwner'],

@@ -138,7 +138,8 @@ class InstrumentInsurance
       'MusicianId' => $musicianId,
       'Template' => 'instrument-insurance',
       'DisplayClass' => 'InstrumentInsurance',
-      'Table' => $opts['tb']);
+      'Table' => $opts['tb'],
+      'requesttoken' => \OCP\Util::callRegister());
 
     // Name of field which is the unique key
     $opts['key'] = 'Id';
@@ -392,6 +393,60 @@ class InstrumentInsurance
     return $amount;
   }
 
+  /**Convert an array insurance ids to a (smaller) array of the
+   * corresponding ids of member-view
+   */
+  public static function remapToDebitIds($insuranceIds, $handle = false)
+  {
+    $projectName = Config::getValue('memberTable');
+    $projectId = Config::getValue('memberTableId');
+
+    $insuranceTable = 'InstrumentInsurance';
+    $debitTable = 'SepaDebitMandates';
+    
+    // remap insurance ids to debit mandate ids
+    $query = 'SELECT `'.$insuranceTable.'`.`Id` AS \'OrigId\',
+  `'.$debitTable.'`.`id` AS \'DebitId\'
+  FROM `'.$debitTable.'` RIGHT JOIN `'.$insuranceTable.'`
+  ON (
+       `'.$insuranceTable.'`.`BillToParty` <= 0
+       AND
+       `'.$debitTable.'`.`musicianId` = `'.$insuranceTable.'`.`MusicianId`
+    ) OR (
+       `'.$insuranceTable.'`.`BillToParty` > 0
+       AND
+       `'.$debitTable.'`.`musicianId` = `'.$insuranceTable.'`.`BillToParty`
+    )
+    WHERE `'.$debitTable.'`.`projectId` = '.$projectId;
+
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
+    // Fetch the result (or die) and remap the Ids
+    $result = mySQL::query($query, $handle);
+    $map = array();
+    while ($line = mysql_fetch_assoc($result)) {
+      $map[$line['OrigId']] = $line['DebitId'];
+    }
+    
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    $result = array();
+    foreach($insuranceIds as $key) {
+      if (!isset($map[$key])) {
+        continue;
+      }
+      $result[] = $map[$key];
+    }
+
+    return array_unique($result);
+  }
+  
   /**Compute the annual insurance fee for the respective
    * musician. Note that the relevant column is the "BillToParty".
    */
@@ -435,7 +490,7 @@ class InstrumentInsurance
       mySQL::close($handle);
     }
 
-    return $fee;
+    return round($fee, 0);
   }
 
 }; // class definition.
