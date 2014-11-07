@@ -274,11 +274,11 @@ insuranceFee
         }
 
         // Support date substitutions. Format is
-        // ${GLOBAL::DATE:dateformat:datestring} where dateformat
+        // ${GLOBAL::DATUM:dateformat:datestring} where dateformat
         // defaults to d.m.Y. datestring is everything understood by
         // strtotime().
         $message = preg_replace_callback(
-          '/[$]{GLOBAL::DATE:([^:]*):([^:]*)}/',
+          '/[$]{GLOBAL::DATUM:([^:]*):([^:]*)}/',
           function($matches) {
             $dateFormat = $matches[1];
             $timeString = $matches[2];
@@ -1246,7 +1246,7 @@ insuranceFee
 
         // replace all date-strings, but give a damn on valid results. Grin 8-)
         $dummy = preg_replace_callback(
-          '/[$]{GLOBAL::DATE:([^:]*):([^:]*)}/',
+          '/[$]{GLOBAL::DATUM:([^:]*):([^:]*)}/',
           function($matches) {
             $dateFormat = $matches[1];
             $timeString = $matches[2];
