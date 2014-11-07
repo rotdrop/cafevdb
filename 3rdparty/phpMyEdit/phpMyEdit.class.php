@@ -3892,6 +3892,10 @@ class phpMyEdit
 		if (! $res) {
 			return false;
 		}
+
+		// remove deleted record from misc selection
+		unset($this->mrecs[$this->rec]);
+		
 		// Notify list
 		if (@$this->notify['delete'] || @$this->notify['all']) {
 			$this->email_notify($oldvals, false);
