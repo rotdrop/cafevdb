@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-05 23:13+0100\n"
+"POT-Creation-Date: 2014-11-07 10:43+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -48,7 +48,7 @@ msgstr ""
 #: ajax/events/events.php:116 ajax/events/execute.php:130
 #: ajax/events/new.form.php:195 ajax/events/sendmail.php:76
 #: ajax/finance/sepa-debit-mandate.php:157
-#: ajax/finance/sepa-debit-settings.php:355
+#: ajax/finance/sepa-debit-settings.php:375
 #: ajax/instrumentation/add-musicians.php:241
 #: ajax/instrumentation/change-musician-instruments.php:198
 #: ajax/instrumentation/change-project-instrument.php:118
@@ -104,14 +104,14 @@ msgid "Email Address Validation Failed"
 msgstr ""
 
 #: ajax/email/composer.php:256 ajax/email/exporter.php:95
-#: ajax/email/recipients.php:140 ajax/finance/sepa-debit-export.php:80
+#: ajax/email/recipients.php:140 ajax/finance/sepa-debit-export.php:168
 #: ajax/page-loader.php:111 ajax/projects/web-articles.php:182
 #: ajax/settings/app-settings.php:1151
 msgid "PHP Exception Caught"
 msgstr ""
 
 #: ajax/email/composer.php:260 ajax/email/exporter.php:96
-#: ajax/email/recipients.php:144 ajax/finance/sepa-debit-export.php:84
+#: ajax/email/recipients.php:144 ajax/finance/sepa-debit-export.php:169
 #: ajax/page-loader.php:115 ajax/projects/web-articles.php:186
 #: ajax/settings/app-settings.php:1155
 #, php-format
@@ -120,7 +120,7 @@ msgid ""
 "email to %s."
 msgstr ""
 
-#: ajax/email/exporter.php:100
+#: ajax/email/exporter.php:100 ajax/finance/sepa-debit-export.php:173
 msgid "Trace"
 msgstr ""
 
@@ -267,16 +267,16 @@ msgstr ""
 msgid "Total Insurance Amount: "
 msgstr ""
 
-#: ajax/export/insurance-export.php:141 lib/instrument-insurance.php:247
-#: lib/sepa-debit-mandates.php:254
+#: ajax/export/insurance-export.php:141 lib/instrument-insurance.php:253
+#: lib/sepa-debit-mandates.php:256
 msgid "Musician"
 msgstr ""
 
-#: ajax/export/insurance-export.php:143 lib/instrument-insurance.php:298
+#: ajax/export/insurance-export.php:143 lib/instrument-insurance.php:304
 msgid "Manufacturer"
 msgstr ""
 
-#: ajax/export/insurance-export.php:144 lib/instrument-insurance.php:303
+#: ajax/export/insurance-export.php:144 lib/instrument-insurance.php:309
 msgid "Year of Construction"
 msgstr ""
 
@@ -284,7 +284,7 @@ msgstr ""
 msgid "Instrument Insurance Amount"
 msgstr ""
 
-#: ajax/export/insurance-export.php:146 lib/instrument-insurance.php:291
+#: ajax/export/insurance-export.php:146 lib/instrument-insurance.php:297
 msgid "Accessory"
 msgstr ""
 
@@ -297,7 +297,7 @@ msgid "Musician Insurance Total"
 msgstr ""
 
 #: ajax/export/insurance-export.php:190 ajax/export/insurance-export.php:217
-#: lib/instrument-insurance.php:279
+#: lib/instrument-insurance.php:285
 msgid "Geographical Scope"
 msgstr ""
 
@@ -326,10 +326,28 @@ msgstr ""
 msgid "Unable to delete SEPA debit mandate from data-base."
 msgstr ""
 
-#: ajax/finance/sepa-debit-export.php:57
-#: ajax/finance/sepa-debit-settings.php:328
-#: ajax/settings/app-settings.php:1129 ajax/settings/redaxo-settings.php:71
-msgid "Unhandled request:"
+#: ajax/finance/sepa-debit-export.php:53
+msgid "Project name and/or id are missing"
+msgstr ""
+
+#: ajax/finance/sepa-debit-export.php:62
+#, php-format
+msgid "Unable to decrypt debit mandate. Full debit record: %s"
+msgstr ""
+
+#: ajax/finance/sepa-debit-export.php:67
+#, php-format
+msgid "Refusing to debit 0€. Full debit record: %s"
+msgstr ""
+
+#: ajax/finance/sepa-debit-export.php:73
+#, php-format
+msgid "Illegal characters in debit purpose: %s. Full debit record: %s"
+msgstr ""
+
+#: ajax/finance/sepa-debit-export.php:78
+#, php-format
+msgid "Purpose field has %d characters, allowed are %d. Full debit record: %s"
 msgstr ""
 
 #: ajax/finance/sepa-debit-mandate.php:72
@@ -346,8 +364,9 @@ msgstr ""
 msgid "Failed setting `%s' to `%s'."
 msgstr ""
 
-#: ajax/finance/sepa-debit-settings.php:98
-#: ajax/finance/sepa-debit-settings.php:339 ajax/settings/app-settings.php:885
+#: ajax/finance/sepa-debit-settings.php:97
+#: ajax/finance/sepa-debit-settings.php:118
+#: ajax/finance/sepa-debit-settings.php:359 ajax/settings/app-settings.php:885
 #: ajax/settings/app-settings.php:933 ajax/settings/app-settings.php:948
 #: ajax/settings/app-settings.php:983 ajax/settings/app-settings.php:1022
 #: ajax/settings/app-settings.php:1046 ajax/settings/app-settings.php:1058
@@ -355,34 +374,44 @@ msgstr ""
 msgid "Value for `%s' set to `%s'."
 msgstr ""
 
-#: ajax/finance/sepa-debit-settings.php:131
+#: ajax/finance/sepa-debit-settings.php:110
+#, php-format
+msgid "Account owner contains invalid characters: %s"
+msgstr ""
+
+#: ajax/finance/sepa-debit-settings.php:151
 #, php-format
 msgid "A German bank id consists of exactly 8 digits: %s."
 msgstr ""
 
-#: ajax/finance/sepa-debit-settings.php:138
-#: ajax/finance/sepa-debit-settings.php:191
+#: ajax/finance/sepa-debit-settings.php:158
+#: ajax/finance/sepa-debit-settings.php:211
 #, php-format
 msgid "Invalid German(?) bank id %s."
 msgstr ""
 
-#: ajax/finance/sepa-debit-settings.php:159
-#: ajax/finance/sepa-debit-settings.php:208
+#: ajax/finance/sepa-debit-settings.php:179
+#: ajax/finance/sepa-debit-settings.php:228
 #, php-format
 msgid "Invalid German(?) bank account number %s @ %s."
 msgstr ""
 
-#: ajax/finance/sepa-debit-settings.php:238 ajax/settings/app-settings.php:991
+#: ajax/finance/sepa-debit-settings.php:258 ajax/settings/app-settings.php:991
 #, php-format
 msgid "Invalid IBAN: `%s'."
 msgstr ""
 
-#: ajax/finance/sepa-debit-settings.php:282
-#: ajax/finance/sepa-debit-settings.php:314
+#: ajax/finance/sepa-debit-settings.php:302
+#: ajax/finance/sepa-debit-settings.php:334
 #: ajax/finance/sepa-debit-store.php:64 ajax/finance/sepa-debit-store.php:75
 #: ajax/settings/app-settings.php:1069
 #, php-format
 msgid "Value for `%s' invalid: `%s'."
+msgstr ""
+
+#: ajax/finance/sepa-debit-settings.php:348
+#: ajax/settings/app-settings.php:1129 ajax/settings/redaxo-settings.php:71
+msgid "Unhandled request:"
 msgstr ""
 
 #: ajax/finance/sepa-debit-store.php:84
@@ -1168,6 +1197,7 @@ msgstr ""
 #: js/inlineimage.js:102 js/inlineimage.js:131 js/inlineimage.js:155
 #: js/inlineimage.js:183 js/inlineimage.js:207 js/inlineimage.js:326
 #: js/inlineimage.js:412 js/inlineimage.js:421 js/inlineimage.js:424
+#: js/sepa-debit-mandate.js:510
 msgid "Error"
 msgstr ""
 
@@ -1702,12 +1732,20 @@ msgstr ""
 msgid "Please do not accept these alternatives lightly!"
 msgstr ""
 
-#: js/sepa-debit-mandate.js:468
-msgid "ProjectDebitNoteAnnouncement"
+#: js/sepa-debit-mandate.js:446
+msgid "InsuranceDebitNoteAnnouncement"
 msgstr ""
 
-#: js/sepa-debit-mandate.js:469
+#: js/sepa-debit-mandate.js:447 js/sepa-debit-mandate.js:539
 msgid "Debit notes due in 14 days"
+msgstr ""
+
+#: js/sepa-debit-mandate.js:507
+msgid "Unable to export debit notes:"
+msgstr ""
+
+#: js/sepa-debit-mandate.js:538
+msgid "ProjectDebitNoteAnnouncement"
 msgstr ""
 
 #: js/settings.js:100 js/settings.js:122 js/settings.js:178
@@ -1869,27 +1907,27 @@ msgstr ""
 msgid "Click to enter details of a potential SEPA debit mandate"
 msgstr ""
 
-#: lib/emailcomposer.php:216
+#: lib/emailcomposer.php:218
 msgid "Message(s) sent out successfully!"
 msgstr ""
 
-#: lib/emailcomposer.php:227
+#: lib/emailcomposer.php:229
 msgid "Message(s) exported successfully!"
 msgstr ""
 
-#: lib/emailcomposer.php:1109
+#: lib/emailcomposer.php:1125
 msgid "Pre-composition validation has failed!"
 msgstr ""
 
-#: lib/emailcomposer.php:1339
+#: lib/emailcomposer.php:1368
 msgid "Unable to fetch executive board contents from data-base."
 msgstr ""
 
-#: lib/emailcomposer.php:1352
+#: lib/emailcomposer.php:1381
 msgid "and"
 msgstr ""
 
-#: lib/emailcomposer.php:1686
+#: lib/emailcomposer.php:1715
 msgid "Local Filesystem"
 msgstr ""
 
@@ -1898,12 +1936,68 @@ msgstr ""
 msgid "Invalid history position %d request, history size is %d"
 msgstr ""
 
+#: lib/emailrecipientsfilter.php:421
+#, php-format
+msgid ""
+"Musician %d in Table, but has no Id as Musician. POST: %sMap: %sSQL-Query: %s"
+msgstr ""
+
 #: lib/events.php:765 lib/events.php:929
 msgid "Unknown Calendar"
 msgstr ""
 
 #: lib/events.php:772
 msgid "Miscellaneous Calendars"
+msgstr ""
+
+#: lib/finance.php:269
+#, php-format
+msgid "Missing fields in debit mandate: %s. Full data record: %s"
+msgstr ""
+
+#: lib/finance.php:276
+#, php-format
+msgid "Empty fields in debit mandate: %s. Full data record: %s"
+msgstr ""
+
+#: lib/finance.php:284
+#, php-format
+msgid "Illegal characters in bank account owner field. Full data record: %s"
+msgstr ""
+
+#: lib/finance.php:299
+#, php-format
+msgid "Mandate issued or used in the future: %s????. Full data record: %s"
+msgstr ""
+
+#: lib/finance.php:305
+#, php-format
+msgid "Missing mandate date. Full data record: %s"
+msgstr ""
+
+#: lib/finance.php:317
+#, php-format
+msgid "Invalid IBAN: %s. Full data record: %s"
+msgstr ""
+
+#: lib/finance.php:327
+#, php-format
+msgid "BLZ and IBAN do not match: %s != %s. Full data record: %s"
+msgstr ""
+
+#: lib/finance.php:334
+#, php-format
+msgid "Invalid German BLZ: %s. Full data record: %s"
+msgstr ""
+
+#: lib/finance.php:339
+#, php-format
+msgid "Invalid German bank account: %s @ %s. Full data record: %s"
+msgstr ""
+
+#: lib/finance.php:345
+#, php-format
+msgid "Probably invalid BIC: %s. Computed: %s. Full data record: %s"
 msgstr ""
 
 #: lib/functions.php:119
@@ -2042,31 +2136,35 @@ msgstr ""
 msgid "true"
 msgstr ""
 
-#: lib/instrument-insurance.php:84
+#: lib/instrument-insurance.php:87
 msgid "Overview over the Bulk Instrument Insurances"
 msgstr ""
 
-#: lib/instrument-insurance.php:259
+#: lib/instrument-insurance.php:158 lib/sepa-debit-mandates.php:121
+msgid "Debit"
+msgstr ""
+
+#: lib/instrument-insurance.php:265
 msgid "Bill-to Party"
 msgstr ""
 
-#: lib/instrument-insurance.php:272
+#: lib/instrument-insurance.php:278
 msgid "Insurance Broker"
 msgstr ""
 
-#: lib/instrument-insurance.php:286
+#: lib/instrument-insurance.php:292
 msgid "Insured Object"
 msgstr ""
 
-#: lib/instrument-insurance.php:309
+#: lib/instrument-insurance.php:315
 msgid "Insurance Amount"
 msgstr ""
 
-#: lib/instrument-insurance.php:313
+#: lib/instrument-insurance.php:319
 msgid "Total Insurance"
 msgstr ""
 
-#: lib/instrument-insurance.php:421
+#: lib/instrument-insurance.php:427
 #, php-format
 msgid "Invalid broker/geographical-scope combination: %s - %s"
 msgstr ""
@@ -2252,11 +2350,11 @@ msgid ""
 "given context."
 msgstr ""
 
-#: lib/php-excel-functions.php:100 lib/sepa-debit-mandates.php:245
+#: lib/php-excel-functions.php:100 lib/sepa-debit-mandates.php:247
 msgid "yes"
 msgstr ""
 
-#: lib/php-excel-functions.php:104 lib/sepa-debit-mandates.php:244
+#: lib/php-excel-functions.php:104 lib/sepa-debit-mandates.php:246
 msgid "no"
 msgstr ""
 
@@ -2507,45 +2605,40 @@ msgstr ""
 msgid "Overview over all SEPA Debit Mandates"
 msgstr ""
 
-#: lib/sepa-debit-mandates.php:119
-msgid "Debit"
-msgstr ""
-
-#: lib/sepa-debit-mandates.php:233
+#: lib/sepa-debit-mandates.php:235
 msgid "Mandate Reference"
 msgstr ""
 
-#: lib/sepa-debit-mandates.php:239
+#: lib/sepa-debit-mandates.php:241
 msgid "One Time"
 msgstr ""
 
-#: lib/sepa-debit-mandates.php:247
+#: lib/sepa-debit-mandates.php:249
 msgid "Date Issued"
 msgstr ""
 
-#: lib/sepa-debit-mandates.php:278
+#: lib/sepa-debit-mandates.php:280
 msgid "Project Fee"
 msgstr ""
 
-#: lib/sepa-debit-mandates.php:292
+#: lib/sepa-debit-mandates.php:294
 msgid "Project"
 msgstr ""
 
-#: lib/sepa-debit-mandates.php:321
+#: lib/sepa-debit-mandates.php:323
 msgid "Bank Code"
 msgstr ""
 
-#: lib/sepa-debit-mandates.php:329
+#: lib/sepa-debit-mandates.php:331
 msgid "Bank Account Owner"
 msgstr ""
 
-#: lib/sepa-debit-mandates.php:337
+#: lib/sepa-debit-mandates.php:339
 msgid "Last-Used Date"
 msgstr ""
 
-#: lib/sepa-debit-mandates.php:404
-#, php-format
-msgid "Fees for %s"
+#: lib/sepa-debit-mandates.php:409
+msgid "Project Fees"
 msgstr ""
 
 #: lib/tooltips.php:44

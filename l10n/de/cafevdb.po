@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-05 23:07+0100\n"
-"PO-Revision-Date: 2014-11-05 23:13+0100\n"
+"POT-Creation-Date: 2014-11-07 10:43+0100\n"
+"PO-Revision-Date: 2014-11-07 10:43+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -49,7 +49,7 @@ msgstr "Die Notiz mit Id `%s' konnte nicht geladen werden."
 #: ajax/events/events.php:116 ajax/events/execute.php:130
 #: ajax/events/new.form.php:195 ajax/events/sendmail.php:76
 #: ajax/finance/sepa-debit-mandate.php:157
-#: ajax/finance/sepa-debit-settings.php:355
+#: ajax/finance/sepa-debit-settings.php:375
 #: ajax/instrumentation/add-musicians.php:241
 #: ajax/instrumentation/change-musician-instruments.php:198
 #: ajax/instrumentation/change-project-instrument.php:118
@@ -107,14 +107,14 @@ msgid "Email Address Validation Failed"
 msgstr "Em@il Adresse(n) ungültig"
 
 #: ajax/email/composer.php:256 ajax/email/exporter.php:95
-#: ajax/email/recipients.php:140 ajax/finance/sepa-debit-export.php:80
+#: ajax/email/recipients.php:140 ajax/finance/sepa-debit-export.php:168
 #: ajax/page-loader.php:111 ajax/projects/web-articles.php:182
 #: ajax/settings/app-settings.php:1151
 msgid "PHP Exception Caught"
 msgstr "PHP `Ausnahme' `gefangen'"
 
 #: ajax/email/composer.php:260 ajax/email/exporter.php:96
-#: ajax/email/recipients.php:144 ajax/finance/sepa-debit-export.php:84
+#: ajax/email/recipients.php:144 ajax/finance/sepa-debit-export.php:169
 #: ajax/page-loader.php:115 ajax/projects/web-articles.php:186
 #: ajax/settings/app-settings.php:1155
 #, php-format
@@ -125,7 +125,7 @@ msgstr ""
 "Fehler, PHP-`Ausnahme' `gefangen'. Bitte den angezeigten Text kopieren und "
 "per Email an %s senden."
 
-#: ajax/email/exporter.php:100
+#: ajax/email/exporter.php:100 ajax/finance/sepa-debit-export.php:173
 msgid "Trace"
 msgstr "Trace"
 
@@ -278,16 +278,16 @@ msgstr "Defizit"
 msgid "Total Insurance Amount: "
 msgstr "Gesamtversicherungssumme: "
 
-#: ajax/export/insurance-export.php:141 lib/instrument-insurance.php:247
-#: lib/sepa-debit-mandates.php:254
+#: ajax/export/insurance-export.php:141 lib/instrument-insurance.php:253
+#: lib/sepa-debit-mandates.php:256
 msgid "Musician"
 msgstr "Musiker"
 
-#: ajax/export/insurance-export.php:143 lib/instrument-insurance.php:298
+#: ajax/export/insurance-export.php:143 lib/instrument-insurance.php:304
 msgid "Manufacturer"
 msgstr "Hersteller"
 
-#: ajax/export/insurance-export.php:144 lib/instrument-insurance.php:303
+#: ajax/export/insurance-export.php:144 lib/instrument-insurance.php:309
 msgid "Year of Construction"
 msgstr "Herstellungsjahr"
 
@@ -295,7 +295,7 @@ msgstr "Herstellungsjahr"
 msgid "Instrument Insurance Amount"
 msgstr "Versicherungssumme des Instruments"
 
-#: ajax/export/insurance-export.php:146 lib/instrument-insurance.php:291
+#: ajax/export/insurance-export.php:146 lib/instrument-insurance.php:297
 msgid "Accessory"
 msgstr "Zubehör"
 
@@ -308,7 +308,7 @@ msgid "Musician Insurance Total"
 msgstr "Gesamtversicherungssumme des Musikers"
 
 #: ajax/export/insurance-export.php:190 ajax/export/insurance-export.php:217
-#: lib/instrument-insurance.php:279
+#: lib/instrument-insurance.php:285
 msgid "Geographical Scope"
 msgstr "Geltungsbereich"
 
@@ -337,11 +337,31 @@ msgstr "SEPA-Lastschriftmandat aus der Datenbank gelöscht."
 msgid "Unable to delete SEPA debit mandate from data-base."
 msgstr "Kann das SEPA-Lastschriftmandat nicht löschen."
 
-#: ajax/finance/sepa-debit-export.php:57
-#: ajax/finance/sepa-debit-settings.php:328
-#: ajax/settings/app-settings.php:1129 ajax/settings/redaxo-settings.php:71
-msgid "Unhandled request:"
-msgstr "Unbekannte Anfrage:"
+#: ajax/finance/sepa-debit-export.php:53
+msgid "Project name and/or id are missing"
+msgstr "Projektname und/oder -id fehlen"
+
+#: ajax/finance/sepa-debit-export.php:62
+#, php-format
+msgid "Unable to decrypt debit mandate. Full debit record: %s"
+msgstr "Kann das SEPA-Lastschriftmandat nicht entschlüsseln. Datensatz: %s"
+
+#: ajax/finance/sepa-debit-export.php:67
+#, php-format
+msgid "Refusing to debit 0€. Full debit record: %s"
+msgstr "Ich weigere mich, 0€ einzuziehen. Datensatz: %s"
+
+#: ajax/finance/sepa-debit-export.php:73
+#, php-format
+msgid "Illegal characters in debit purpose: %s. Full debit record: %s"
+msgstr "Ungültige Buchstaben im Verwendungszweck-Feld: %s. Datensatz: %s"
+
+#: ajax/finance/sepa-debit-export.php:78
+#, php-format
+msgid "Purpose field has %d characters, allowed are %d. Full debit record: %s"
+msgstr ""
+"Verwendungszweckfeld zu lang (%d Buchstaben), erlaubt sind nur %d. "
+"Datensatz: %s"
 
 #: ajax/finance/sepa-debit-mandate.php:72
 msgid "Musician-id and/or name not set"
@@ -357,8 +377,9 @@ msgstr "Vereinsmitglieder"
 msgid "Failed setting `%s' to `%s'."
 msgstr "Konnte den Wert für `%s' nicht als `%s' speichern."
 
-#: ajax/finance/sepa-debit-settings.php:98
-#: ajax/finance/sepa-debit-settings.php:339 ajax/settings/app-settings.php:885
+#: ajax/finance/sepa-debit-settings.php:97
+#: ajax/finance/sepa-debit-settings.php:118
+#: ajax/finance/sepa-debit-settings.php:359 ajax/settings/app-settings.php:885
 #: ajax/settings/app-settings.php:933 ajax/settings/app-settings.php:948
 #: ajax/settings/app-settings.php:983 ajax/settings/app-settings.php:1022
 #: ajax/settings/app-settings.php:1046 ajax/settings/app-settings.php:1058
@@ -366,35 +387,45 @@ msgstr "Konnte den Wert für `%s' nicht als `%s' speichern."
 msgid "Value for `%s' set to `%s'."
 msgstr "Wert für `%s' auf `%s' gesetzt."
 
-#: ajax/finance/sepa-debit-settings.php:131
+#: ajax/finance/sepa-debit-settings.php:110
+#, php-format
+msgid "Account owner contains invalid characters: %s"
+msgstr "Kontoinhaber enthält ungültige Buchstaben: %s"
+
+#: ajax/finance/sepa-debit-settings.php:151
 #, php-format
 msgid "A German bank id consists of exactly 8 digits: %s."
 msgstr "Eine Deutsche Bankleitzahl besteht aus genau 8 Ziffern: %s."
 
-#: ajax/finance/sepa-debit-settings.php:138
-#: ajax/finance/sepa-debit-settings.php:191
+#: ajax/finance/sepa-debit-settings.php:158
+#: ajax/finance/sepa-debit-settings.php:211
 #, php-format
 msgid "Invalid German(?) bank id %s."
 msgstr "Ungültige Deutsche(?) Bankleitzahl %s."
 
-#: ajax/finance/sepa-debit-settings.php:159
-#: ajax/finance/sepa-debit-settings.php:208
+#: ajax/finance/sepa-debit-settings.php:179
+#: ajax/finance/sepa-debit-settings.php:228
 #, php-format
 msgid "Invalid German(?) bank account number %s @ %s."
 msgstr "Ungültige Deutsche(?) Kontonummer %s @ %s."
 
-#: ajax/finance/sepa-debit-settings.php:238 ajax/settings/app-settings.php:991
+#: ajax/finance/sepa-debit-settings.php:258 ajax/settings/app-settings.php:991
 #, php-format
 msgid "Invalid IBAN: `%s'."
 msgstr "Ungültige IBAN: `%s'."
 
-#: ajax/finance/sepa-debit-settings.php:282
-#: ajax/finance/sepa-debit-settings.php:314
+#: ajax/finance/sepa-debit-settings.php:302
+#: ajax/finance/sepa-debit-settings.php:334
 #: ajax/finance/sepa-debit-store.php:64 ajax/finance/sepa-debit-store.php:75
 #: ajax/settings/app-settings.php:1069
 #, php-format
 msgid "Value for `%s' invalid: `%s'."
 msgstr "Der Wert für `%s' ist ungültig: `%s'."
+
+#: ajax/finance/sepa-debit-settings.php:348
+#: ajax/settings/app-settings.php:1129 ajax/settings/redaxo-settings.php:71
+msgid "Unhandled request:"
+msgstr "Unbekannte Anfrage:"
 
 #: ajax/finance/sepa-debit-store.php:84
 msgid "SEPA debit mandate stored in data-base."
@@ -1239,6 +1270,7 @@ msgstr "Unbekannter WYSIWYG-Edtior: `%s'"
 #: js/inlineimage.js:102 js/inlineimage.js:131 js/inlineimage.js:155
 #: js/inlineimage.js:183 js/inlineimage.js:207 js/inlineimage.js:326
 #: js/inlineimage.js:412 js/inlineimage.js:421 js/inlineimage.js:424
+#: js/sepa-debit-mandate.js:510
 msgid "Error"
 msgstr "Fehler"
 
@@ -1831,13 +1863,21 @@ msgstr "Mögliche Alternativen ausgehend von den üblichen Übertragungsfehlern:
 msgid "Please do not accept these alternatives lightly!"
 msgstr "Bitte die Alternativen nicht leichtsinnig übernehmen!"
 
-#: js/sepa-debit-mandate.js:468
-msgid "ProjectDebitNoteAnnouncement"
-msgstr "ProjektLastschriftAnkündigung"
+#: js/sepa-debit-mandate.js:446
+msgid "InsuranceDebitNoteAnnouncement"
+msgstr "VersicherungsLastschriftAnkündigung"
 
-#: js/sepa-debit-mandate.js:469
+#: js/sepa-debit-mandate.js:447 js/sepa-debit-mandate.js:539
 msgid "Debit notes due in 14 days"
 msgstr "Lastschrifteinzug in 14 Tagen"
+
+#: js/sepa-debit-mandate.js:507
+msgid "Unable to export debit notes:"
+msgstr "Kann die Lastschrifteinzüge nicht exportieren:"
+
+#: js/sepa-debit-mandate.js:538
+msgid "ProjectDebitNoteAnnouncement"
+msgstr "ProjektLastschriftAnkündigung"
 
 #: js/settings.js:100 js/settings.js:122 js/settings.js:178
 msgid "Error:"
@@ -1999,27 +2039,27 @@ msgid "Click to enter details of a potential SEPA debit mandate"
 msgstr ""
 "Anklicken um ggf. Informationen über ein SEPA-Lastschriftmandat einzutragen"
 
-#: lib/emailcomposer.php:216
+#: lib/emailcomposer.php:218
 msgid "Message(s) sent out successfully!"
 msgstr "Die Nachricht(en) wurde erfolgreich gesendet!"
 
-#: lib/emailcomposer.php:227
+#: lib/emailcomposer.php:229
 msgid "Message(s) exported successfully!"
 msgstr "Die Nachricht(en) wurde erfolgreich gesendet!"
 
-#: lib/emailcomposer.php:1109
+#: lib/emailcomposer.php:1125
 msgid "Pre-composition validation has failed!"
 msgstr "Em@il Vorab-Check ist fehlgeschlagen!"
 
-#: lib/emailcomposer.php:1339
+#: lib/emailcomposer.php:1368
 msgid "Unable to fetch executive board contents from data-base."
 msgstr "Kann die Vorstands-Mitglieder nicht aus der Datenbank extrahieren."
 
-#: lib/emailcomposer.php:1352
+#: lib/emailcomposer.php:1381
 msgid "and"
 msgstr "und"
 
-#: lib/emailcomposer.php:1686
+#: lib/emailcomposer.php:1715
 msgid "Local Filesystem"
 msgstr "Lokale Dateien"
 
@@ -2028,6 +2068,14 @@ msgstr "Lokale Dateien"
 msgid "Invalid history position %d request, history size is %d"
 msgstr "Ungültige Position %d, Länge der Filter-Historie ist %d."
 
+#: lib/emailrecipientsfilter.php:421
+#, php-format
+msgid ""
+"Musician %d in Table, but has no Id as Musician. POST: %sMap: %sSQL-Query: %s"
+msgstr ""
+"\"Musiker %d in Tabelle, hat aber keine Id als Musiker. POST: %sMap: %sSQL-"
+"Query: %s\""
+
 #: lib/events.php:765 lib/events.php:929
 msgid "Unknown Calendar"
 msgstr "Unbekannter Kalender."
@@ -2035,6 +2083,58 @@ msgstr "Unbekannter Kalender."
 #: lib/events.php:772
 msgid "Miscellaneous Calendars"
 msgstr "Weitere Kalender"
+
+#: lib/finance.php:269
+#, php-format
+msgid "Missing fields in debit mandate: %s. Full data record: %s"
+msgstr "Fehlende Felder im Lastschrifteinzug: %s. Datensatz: %s"
+
+#: lib/finance.php:276
+#, php-format
+msgid "Empty fields in debit mandate: %s. Full data record: %s"
+msgstr "Leere Felder im Lastschrifteinzug: %s. Datensatz: %s"
+
+#: lib/finance.php:284
+#, php-format
+msgid "Illegal characters in bank account owner field. Full data record: %s"
+msgstr "Ungültige Buchstaben im Kontoinhaberfeld. Datensatz: %s"
+
+#: lib/finance.php:299
+#, php-format
+msgid "Mandate issued or used in the future: %s????. Full data record: %s"
+msgstr ""
+"Lastschriftmandat in der Zukunft ausgestellt oder verwendet: %s????. "
+"Datensatz: %s"
+
+#: lib/finance.php:305
+#, php-format
+msgid "Missing mandate date. Full data record: %s"
+msgstr "Fehlendes Mandatsdatum. Datensatz: %s"
+
+#: lib/finance.php:317
+#, php-format
+msgid "Invalid IBAN: %s. Full data record: %s"
+msgstr "Ungültige IBAN: %s. Datensatz: %s"
+
+#: lib/finance.php:327
+#, php-format
+msgid "BLZ and IBAN do not match: %s != %s. Full data record: %s"
+msgstr "BLZ und IBAN passen nicht zusammen: %s != %s. Datensatz: %s"
+
+#: lib/finance.php:334
+#, php-format
+msgid "Invalid German BLZ: %s. Full data record: %s"
+msgstr "Ungültige Deutsche Bankleitzahl: %s. Datensatz: %s"
+
+#: lib/finance.php:339
+#, php-format
+msgid "Invalid German bank account: %s @ %s. Full data record: %s"
+msgstr "Ungültige Deutsche(?) Kontonummer %s @ %s. Datensatz: %s"
+
+#: lib/finance.php:345
+#, php-format
+msgid "Probably invalid BIC: %s. Computed: %s. Full data record: %s"
+msgstr "Vermutlich falsche BIC: %s. Automatisch ermittelt: %s. Datensatz: %s"
 
 #: lib/functions.php:119
 #, php-format
@@ -2191,31 +2291,35 @@ msgstr "Welt"
 msgid "true"
 msgstr "wahr"
 
-#: lib/instrument-insurance.php:84
+#: lib/instrument-insurance.php:87
 msgid "Overview over the Bulk Instrument Insurances"
 msgstr "Übersicht über die Instrumentensammelversicherungen"
 
-#: lib/instrument-insurance.php:259
+#: lib/instrument-insurance.php:158 lib/sepa-debit-mandates.php:121
+msgid "Debit"
+msgstr "Einziehen"
+
+#: lib/instrument-insurance.php:265
 msgid "Bill-to Party"
 msgstr "Zahlungspflichtiger"
 
-#: lib/instrument-insurance.php:272
+#: lib/instrument-insurance.php:278
 msgid "Insurance Broker"
 msgstr "Versicherungsmakler"
 
-#: lib/instrument-insurance.php:286
+#: lib/instrument-insurance.php:292
 msgid "Insured Object"
 msgstr "Versicherter Gegenstand"
 
-#: lib/instrument-insurance.php:309
+#: lib/instrument-insurance.php:315
 msgid "Insurance Amount"
 msgstr "Versicherungssumme"
 
-#: lib/instrument-insurance.php:313
+#: lib/instrument-insurance.php:319
 msgid "Total Insurance"
 msgstr "Gesamtversicherungssumme"
 
-#: lib/instrument-insurance.php:421
+#: lib/instrument-insurance.php:427
 #, php-format
 msgid "Invalid broker/geographical-scope combination: %s - %s"
 msgstr "Der Makler %s bietet keine Versicherung für den Geltungsberich %s an"
@@ -2412,11 +2516,11 @@ msgstr ""
 "Interner Fehler; keine Ahnung, wie im gegebenen Kontext mit\n"
 "Portrait-Bildern verfahren werden sollte."
 
-#: lib/php-excel-functions.php:100 lib/sepa-debit-mandates.php:245
+#: lib/php-excel-functions.php:100 lib/sepa-debit-mandates.php:247
 msgid "yes"
 msgstr "ja"
 
-#: lib/php-excel-functions.php:104 lib/sepa-debit-mandates.php:244
+#: lib/php-excel-functions.php:104 lib/sepa-debit-mandates.php:246
 msgid "no"
 msgstr "nein"
 
@@ -2736,46 +2840,41 @@ msgstr "Übersicht über alle SEPA-Lastschriftmandate für %s"
 msgid "Overview over all SEPA Debit Mandates"
 msgstr "Übersicht über alle SEPA Lastschriftmandate"
 
-#: lib/sepa-debit-mandates.php:119
-msgid "Debit"
-msgstr "Einziehen"
-
-#: lib/sepa-debit-mandates.php:233
+#: lib/sepa-debit-mandates.php:235
 msgid "Mandate Reference"
 msgstr "Mandatsreferenz"
 
-#: lib/sepa-debit-mandates.php:239
+#: lib/sepa-debit-mandates.php:241
 msgid "One Time"
 msgstr "Einmalig"
 
-#: lib/sepa-debit-mandates.php:247
+#: lib/sepa-debit-mandates.php:249
 msgid "Date Issued"
 msgstr "Ausstellungsdatum"
 
-#: lib/sepa-debit-mandates.php:278
+#: lib/sepa-debit-mandates.php:280
 msgid "Project Fee"
 msgstr "Unkostenbeitrag"
 
-#: lib/sepa-debit-mandates.php:292
+#: lib/sepa-debit-mandates.php:294
 msgid "Project"
 msgstr "Projekt"
 
-#: lib/sepa-debit-mandates.php:321
+#: lib/sepa-debit-mandates.php:323
 msgid "Bank Code"
 msgstr "BLZ"
 
-#: lib/sepa-debit-mandates.php:329
+#: lib/sepa-debit-mandates.php:331
 msgid "Bank Account Owner"
 msgstr "Kontoinhaber"
 
-#: lib/sepa-debit-mandates.php:337
+#: lib/sepa-debit-mandates.php:339
 msgid "Last-Used Date"
 msgstr "Letzte Verwendung"
 
-#: lib/sepa-debit-mandates.php:404
-#, php-format
-msgid "Fees for %s"
-msgstr "Unkostenbeitrag für %s"
+#: lib/sepa-debit-mandates.php:409
+msgid "Project Fees"
+msgstr "Unkostenbeitrag"
 
 #: lib/tooltips.php:44
 msgid "Write a new bulletin entry."
@@ -5545,3 +5644,6 @@ msgstr "PROJEKT"
 #: templates/share-settings.php:121
 msgid "Financial balance folder"
 msgstr "Finanz-Ordner"
+
+#~ msgid "Fees for %s"
+#~ msgstr "Unkostenbeitrag für %s"

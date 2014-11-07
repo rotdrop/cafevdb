@@ -70,7 +70,7 @@ namespace CAFEVDB {
       foreach($row['purpose'] as &$purposeLine) {
         $purposeLine = Finance::sepaTranslit($purposeLine);
         if (!Finance::validateSepaString($purposeLine)) {
-          throw new \InvalidArgumentException(L::t('Illegal characters in debit purpose: %S. '.
+          throw new \InvalidArgumentException(L::t('Illegal characters in debit purpose: %s. '.
                                                    'Full debit record: %s',
                                                    array($purposeLine, print_r($row, true))));
         }
