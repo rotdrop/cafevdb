@@ -315,6 +315,30 @@ class InstrumentInsurance
     $opts['fdd']['InsuranceAmount'] = Config::$opts['money'];
     $opts['fdd']['InsuranceAmount']['name'] = strval(L::t('Insurance Amount'));
 
+    $rateIdx = count($opts['fdd']);
+    $opts['fdd']['InsuranceRate'] = array(
+      'input' => 'V',
+      'name' => L::t('Insurance Rate'),
+      'options' => 'LFACPDV',
+      'sql' => '`PMEjoin'.$rateIdx.'`.`Rate`',
+      'sqlw' => '`PMEjoin'.$rateIdx.'`.`Rate`',
+      'values' => array(
+        'table' => 'InsuranceRates',
+        'column' => 'Rate',
+        'join' => '$join_table.Broker = $main_table.Broker'.
+        ' AND '.
+        '$join_table.GeographicalScope = $main_table.GeographicalScope',
+        'description' => 'Rate')
+      );
+
+    $opts['fdd']['InsuranceFee'] = array(
+      'input' => 'V',
+      'name' => L::t('Insurance Fee'),
+      'options' => 'LFACPDV',
+      'sql' => 'ROUND(`PMEtable0`.`InsuranceAmount` * `PMEjoin'.$rateIdx.'`.`Rate`, 2)',
+      'sqlw' => '`PMEjoin'.$rateIdx.'`.`Rate`'
+      );
+
     $opts['fdd']['InsuranceTotal'] = array(
       'input' => 'V',
       'name' => L::t('Total Insurance'),
