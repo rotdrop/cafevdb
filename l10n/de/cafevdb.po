@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-07 11:22+0100\n"
-"PO-Revision-Date: 2014-11-07 11:23+0100\n"
+"POT-Creation-Date: 2014-11-07 21:06+0100\n"
+"PO-Revision-Date: 2014-11-07 21:08+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -107,14 +107,14 @@ msgid "Email Address Validation Failed"
 msgstr "Em@il Adresse(n) ungültig"
 
 #: ajax/email/composer.php:256 ajax/email/exporter.php:95
-#: ajax/email/recipients.php:140 ajax/finance/sepa-debit-export.php:179
+#: ajax/email/recipients.php:140 ajax/finance/sepa-debit-export.php:181
 #: ajax/page-loader.php:111 ajax/projects/web-articles.php:182
 #: ajax/settings/app-settings.php:1151
 msgid "PHP Exception Caught"
 msgstr "PHP `Ausnahme' `gefangen'"
 
 #: ajax/email/composer.php:260 ajax/email/exporter.php:96
-#: ajax/email/recipients.php:144 ajax/finance/sepa-debit-export.php:180
+#: ajax/email/recipients.php:144 ajax/finance/sepa-debit-export.php:182
 #: ajax/page-loader.php:115 ajax/projects/web-articles.php:186
 #: ajax/settings/app-settings.php:1155
 #, php-format
@@ -125,7 +125,7 @@ msgstr ""
 "Fehler, PHP-`Ausnahme' `gefangen'. Bitte den angezeigten Text kopieren und "
 "per Email an %s senden."
 
-#: ajax/email/exporter.php:100 ajax/finance/sepa-debit-export.php:184
+#: ajax/email/exporter.php:100 ajax/finance/sepa-debit-export.php:186
 msgid "Trace"
 msgstr "Trace"
 
@@ -278,16 +278,16 @@ msgstr "Defizit"
 msgid "Total Insurance Amount: "
 msgstr "Gesamtversicherungssumme: "
 
-#: ajax/export/insurance-export.php:141 lib/instrument-insurance.php:253
+#: ajax/export/insurance-export.php:141 lib/instrument-insurance.php:254
 #: lib/sepa-debit-mandates.php:256
 msgid "Musician"
 msgstr "Musiker"
 
-#: ajax/export/insurance-export.php:143 lib/instrument-insurance.php:304
+#: ajax/export/insurance-export.php:143 lib/instrument-insurance.php:305
 msgid "Manufacturer"
 msgstr "Hersteller"
 
-#: ajax/export/insurance-export.php:144 lib/instrument-insurance.php:309
+#: ajax/export/insurance-export.php:144 lib/instrument-insurance.php:310
 msgid "Year of Construction"
 msgstr "Herstellungsjahr"
 
@@ -295,7 +295,7 @@ msgstr "Herstellungsjahr"
 msgid "Instrument Insurance Amount"
 msgstr "Versicherungssumme des Instruments"
 
-#: ajax/export/insurance-export.php:146 lib/instrument-insurance.php:297
+#: ajax/export/insurance-export.php:146 lib/instrument-insurance.php:298
 msgid "Accessory"
 msgstr "Zubehör"
 
@@ -308,7 +308,7 @@ msgid "Musician Insurance Total"
 msgstr "Gesamtversicherungssumme des Musikers"
 
 #: ajax/export/insurance-export.php:190 ajax/export/insurance-export.php:217
-#: lib/instrument-insurance.php:285
+#: lib/instrument-insurance.php:286
 msgid "Geographical Scope"
 msgstr "Geltungsbereich"
 
@@ -341,22 +341,22 @@ msgstr "Kann das SEPA-Lastschriftmandat nicht löschen."
 msgid "Project name and/or id are missing"
 msgstr "Projektname und/oder -id fehlen"
 
-#: ajax/finance/sepa-debit-export.php:73
+#: ajax/finance/sepa-debit-export.php:75
 #, php-format
 msgid "Unable to decrypt debit mandate. Full debit record: %s"
 msgstr "Kann das SEPA-Lastschriftmandat nicht entschlüsseln. Datensatz: %s"
 
-#: ajax/finance/sepa-debit-export.php:78
+#: ajax/finance/sepa-debit-export.php:80
 #, php-format
 msgid "Refusing to debit 0€. Full debit record: %s"
 msgstr "Ich weigere mich, 0€ einzuziehen. Datensatz: %s"
 
-#: ajax/finance/sepa-debit-export.php:84
+#: ajax/finance/sepa-debit-export.php:86
 #, php-format
 msgid "Illegal characters in debit purpose: %s. Full debit record: %s"
 msgstr "Ungültige Buchstaben im Verwendungszweck-Feld: %s. Datensatz: %s"
 
-#: ajax/finance/sepa-debit-export.php:89
+#: ajax/finance/sepa-debit-export.php:91
 #, php-format
 msgid "Purpose field has %d characters, allowed are %d. Full debit record: %s"
 msgstr ""
@@ -1270,7 +1270,7 @@ msgstr "Unbekannter WYSIWYG-Edtior: `%s'"
 #: js/inlineimage.js:102 js/inlineimage.js:131 js/inlineimage.js:155
 #: js/inlineimage.js:183 js/inlineimage.js:207 js/inlineimage.js:326
 #: js/inlineimage.js:412 js/inlineimage.js:421 js/inlineimage.js:424
-#: js/sepa-debit-mandate.js:510
+#: js/sepa-debit-mandate.js:459 js/sepa-debit-mandate.js:551
 msgid "Error"
 msgstr "Fehler"
 
@@ -1863,19 +1863,19 @@ msgstr "Mögliche Alternativen ausgehend von den üblichen Übertragungsfehlern:
 msgid "Please do not accept these alternatives lightly!"
 msgstr "Bitte die Alternativen nicht leichtsinnig übernehmen!"
 
-#: js/sepa-debit-mandate.js:446
-msgid "InsuranceDebitNoteAnnouncement"
-msgstr "VersicherungsLastschriftAnkündigung"
-
-#: js/sepa-debit-mandate.js:447 js/sepa-debit-mandate.js:539
-msgid "Debit notes due in 14 days"
-msgstr "Lastschrifteinzug in 14 Tagen"
-
-#: js/sepa-debit-mandate.js:507
+#: js/sepa-debit-mandate.js:456 js/sepa-debit-mandate.js:548
 msgid "Unable to export debit notes:"
 msgstr "Kann die Lastschrifteinzüge nicht exportieren:"
 
-#: js/sepa-debit-mandate.js:538
+#: js/sepa-debit-mandate.js:487
+msgid "InsuranceDebitNoteAnnouncement"
+msgstr "VersicherungsLastschriftAnkündigung"
+
+#: js/sepa-debit-mandate.js:488 js/sepa-debit-mandate.js:580
+msgid "Debit notes due in 14 days"
+msgstr "Lastschrifteinzug in 14 Tagen"
+
+#: js/sepa-debit-mandate.js:579
 msgid "ProjectDebitNoteAnnouncement"
 msgstr "ProjektLastschriftAnkündigung"
 
@@ -2295,31 +2295,39 @@ msgstr "wahr"
 msgid "Overview over the Bulk Instrument Insurances"
 msgstr "Übersicht über die Instrumentensammelversicherungen"
 
-#: lib/instrument-insurance.php:158 lib/sepa-debit-mandates.php:121
+#: lib/instrument-insurance.php:159 lib/sepa-debit-mandates.php:121
 msgid "Debit"
 msgstr "Einziehen"
 
-#: lib/instrument-insurance.php:265
+#: lib/instrument-insurance.php:266
 msgid "Bill-to Party"
 msgstr "Zahlungspflichtiger"
 
-#: lib/instrument-insurance.php:278
+#: lib/instrument-insurance.php:279
 msgid "Insurance Broker"
 msgstr "Versicherungsmakler"
 
-#: lib/instrument-insurance.php:292
+#: lib/instrument-insurance.php:293
 msgid "Insured Object"
 msgstr "Versicherter Gegenstand"
 
-#: lib/instrument-insurance.php:315
+#: lib/instrument-insurance.php:316
 msgid "Insurance Amount"
 msgstr "Versicherungssumme"
 
-#: lib/instrument-insurance.php:319
+#: lib/instrument-insurance.php:321
+msgid "Insurance Rate"
+msgstr "Rate"
+
+#: lib/instrument-insurance.php:336
+msgid "Insurance Fee"
+msgstr "Versicherungs-Beitrag"
+
+#: lib/instrument-insurance.php:344
 msgid "Total Insurance"
 msgstr "Gesamtversicherungssumme"
 
-#: lib/instrument-insurance.php:469
+#: lib/instrument-insurance.php:506
 #, php-format
 msgid "Invalid broker/geographical-scope combination: %s - %s"
 msgstr "Der Makler %s bietet keine Versicherung für den Geltungsberich %s an"
@@ -2470,7 +2478,7 @@ msgstr "Musiker hinzufügen"
 msgid "Remarks"
 msgstr "Bemerkungen"
 
-#: lib/musicians.php:403 lib/sepa-debit-mandates.php:403
+#: lib/musicians.php:403 lib/sepa-debit-mandates.php:400
 msgid "Instrument Insurance"
 msgstr "Instrumentenversicherung"
 
@@ -2872,7 +2880,7 @@ msgstr "Kontoinhaber"
 msgid "Last-Used Date"
 msgstr "Letzte Verwendung"
 
-#: lib/sepa-debit-mandates.php:404
+#: lib/sepa-debit-mandates.php:401
 #, php-format
 msgid "Annual Fee Year %s"
 msgstr "Jahresbeitrag fuer %s"
