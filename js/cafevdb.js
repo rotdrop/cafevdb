@@ -1224,6 +1224,7 @@ $(document).ready(function(){
                return false;
              });
 
+  if (false) // no longer needed?
   content.on('click',
              ':button.musician-instrument-insurance',
              function(event) {

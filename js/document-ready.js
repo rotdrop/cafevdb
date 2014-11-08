@@ -72,7 +72,7 @@ $(document).ready(function() {
                 event.preventDefault();
                 var values = $(this).attr('name');
                 
-                CAFEVDB.formSubmit(OC.linkTo('cafevdb', 'index.php'), values, 'post');
+                CAFEVDB.Page.loadPage($(this).attr('name'));
                 
                 return false;
             });
@@ -110,7 +110,7 @@ $(document).ready(function() {
                 event.preventDefault();
                 var values = $(this).attr('name');
                 
-                CAFEVDB.formSubmit(OC.linkTo('cafevdb', 'index.php'), values, 'post');
+                CAFEVDB.Page.loadPage($(this).attr('name'));
                 
                 return false;
             });
