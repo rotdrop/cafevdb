@@ -429,6 +429,8 @@ namespace CAFEVDB
         $handle = mySQL::connect(Config::$pmeopts);
       }
 
+      $projectName = Projects::fetchName($projectId, $handle);
+
       $query = "SELECT `Musiker`.`Name`,`Musiker`.`Vorname`,`Projekte`.`Name` as 'projectName',`".self::MEMBER_TABLE."`.*,`Besetzungen`.`Unkostenbeitrag` AS 'amount' FROM ".self::MEMBER_TABLE."
   JOIN (SELECT * FROM Besetzungen WHERE ProjektId = ".$projectId.") AS Besetzungen
   ON `Besetzungen`.`MusikerId` = `".self::MEMBER_TABLE."`.`musicianId`
@@ -439,6 +441,7 @@ namespace CAFEVDB
       $result = mySQL::query($query, $handle);
       $table = array();
       while ($row = mySQL::fetch($result)) {
+        $row['projectName'] = $projectName;
         $row['purpose'] = array($row['projectName'],
                                 L::t('Project Fees'),
                                 '', '');
