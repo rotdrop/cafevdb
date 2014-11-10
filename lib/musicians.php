@@ -786,6 +786,51 @@ __EOT__;
     return $rows;
   }
 
+  /**Fetch the street address of the respected musician. Needed in
+   * order to generate automated snail-mails.
+   *
+   * Return value is a flat array:
+   *
+   * array('firstName' => ...,
+   *       'surName' => ...,
+   *       'street' => ...,
+   *       'city' => ...,
+   *       'ZIP' => ...);
+   */
+  public static function fetchStreetAddress($musicianId, $handle = false)
+  {
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
+    $query =
+      'SELECT '.
+      '`Name` AS `surName`'.
+      ', '.
+      '`Vorname` AS `firstName`'.
+      ', '.
+      '`Strasse` AS `street`'.
+      ', '.
+      '`Stadt` AS `city`'.
+      ', '.
+      '`Postleitzahl` AS `ZIP`';
+    $query .= ' FROM `Musiker` WHERE `Id` = '.$musicianId;
+    $result = mySQL::query($query, $handle);
+
+    $row = false;
+    if ($result !== false && mysql_num_rows($result) == 1) {
+      $row = mySQL::fetch($result);
+    }
+    
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $row;
+  }
+  
   /** Fetch the musician-name name corresponding to $musicianId.
    */
   public static function fetchName($musicianId, $handle = false)
