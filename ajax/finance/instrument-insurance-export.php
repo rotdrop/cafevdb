@@ -39,7 +39,6 @@ namespace CAFEVDB {
 
     setlocale(LC_ALL, Util::getLocale());
     $name = strftime('%Y%m%d-%H%M%S').'-CAFEVDB-instrument-insurance.html';
-  
 
     // See wether we were passed specific variables ...
     $pmepfx      = Config::$pmeopts['cgi']['prefix']['sys'];
@@ -61,6 +60,28 @@ namespace CAFEVDB {
     
     mySQL::close($handle);
 
+    if (true) {
+
+      $name = /*strftime('%Y%m%d-%H%M%S').'-*/'CAFEVDB-instrument-insurance.pdf';
+
+      //$letter = PDFLetter::testLetter($name, 'D');
+
+      $letter = InstrumentInsurance::musicianOverviewLetter($insurances[0]);
+      
+      header('Content-type: application/pdf');
+      header('Content-disposition: attachment;filename='.$name);
+      header('Cache-Control: no-cache, no-store, must-revalidate'); // HTTP 1.1.
+      header('Pragma: no-cache'); // HTTP 1.0.
+      header('Expires: 0'); // Proxies.
+      
+      $outstream = fopen("php://output",'w');
+
+      fwrite($outstream, $letter);
+      
+      fclose($outstream);
+      
+    } else {
+      
     header('Content-type: text/html');
     header('Content-disposition: attachment;filename='.$name);
     header('Cache-Control: max-age=0');
@@ -164,7 +185,9 @@ __EOT__;
   </body>
 </html>
 __EOT__;
-
+    }
+    
+  
   } catch (\Exception $e) {
 
     header('Content-type: text/html');
@@ -197,12 +220,13 @@ __EOT__;
 <pre>'.$exceptionText.'</pre>
 <h2>'.L::t('Trace').'</h2>
 <pre>'.$trace.'</pre>';
-  }
 
-  echo <<<__EOT__
+    echo <<<__EOT__
   </body>
 </html>
 __EOT__;
+
+  }
 
 } // namespace
 
