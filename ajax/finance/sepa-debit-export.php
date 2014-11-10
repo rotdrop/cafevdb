@@ -61,10 +61,12 @@ namespace CAFEVDB {
       // $oldIds = $selectedMandates;
       $selectedMandates = InstrumentInsurance::remapToDebitIds($selectedMandates);
       $debitTable = SepaDebitMandates::insuranceTableExport();
-      // throw new \Exception('ID: '.print_r($selectedMandates, true).' old ID '.print_r($oldIds, true).' table '.print_r($debitTable, true));
+      // throw new \Exception('ID: '.print_r($selectedMandates, true).' old ID '.print_r($oldIds, true).' table '.print_r($debitTable, true));          
+      $name = $date.'-aqbanking-debit-notes-insurance.csv';
       break;
     default:
-      $debitTable = SepaDebitMandates::projectTableExport($projectId);
+      $debitTable = SepaDebitMandates::projectTableExport($projectId);    
+      $name = $date.'-aqbanking-debit-notes-'.$projectName.'.csv';
       break;
     }
 
@@ -115,8 +117,6 @@ namespace CAFEVDB {
     //throw new \InvalidArgumentException($allQuery);
     
     // Actually export the data.
-    
-    $name = $date.'-aqbanking-debit-notes-'.$projectName.'.csv';
     
     header('Content-type: text/ascii');
     header('Content-disposition: attachment;filename='.$name);
