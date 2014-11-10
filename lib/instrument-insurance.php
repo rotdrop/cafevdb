@@ -333,9 +333,9 @@ class InstrumentInsurance
 
     $opts['fdd']['InsuranceFee'] = array(
       'input' => 'V',
-      'name' => L::t('Insurance Fee'),
+      'name' => L::t('Insurance Fee')."<br/>".L::t('including taxes'),
       'options' => 'LFACPDV',
-      'sql' => 'ROUND(`PMEtable0`.`InsuranceAmount` * `PMEjoin'.$rateIdx.'`.`Rate`, 2)',
+      'sql' => 'ROUND(`PMEtable0`.`InsuranceAmount` * `PMEjoin'.$rateIdx.'`.`Rate` * (1+'.self::TAXES.'), 2)',
       'sqlw' => '`PMEjoin'.$rateIdx.'`.`Rate`'
       );
 
@@ -417,8 +417,8 @@ class InstrumentInsurance
     return $amount;
   }
 
-  /**Convert an array insurance ids to a (smaller) array of the
-   * corresponding ids of member-view
+  /**Convert an array of insurance ids to a (smaller) array of the
+   * corresponding debit-mandate ids
    */
   public static function remapToDebitIds($insuranceIds, $handle = false)
   {
@@ -471,10 +471,159 @@ class InstrumentInsurance
     return array_unique($result);
   }
   
-  /**Compute the annual insurance fee for the respective
-   * musician. Note that the relevant column is the "BillToParty".
+  /**Convert an array of insurance ids to a (smaller) array of the
+   * related musician ids. Each insurance entry has one exactly one
+   * musician-in-charge, so this should work in principle.
    */
-  public static function annualFee($musicianId, $handle = false)
+  public static function remapToMusicianIds($insuranceIds, $handle = false)
+  {
+    $projectName = Config::getValue('memberTable');
+    $projectId = Config::getValue('memberTableId');
+
+    $insuranceTable = 'InstrumentInsurance';
+    $otherTable = 'Musiker';
+    $musicianId = 'Id';
+    
+    // remap insurance ids to musician ids
+    $query = 'SELECT `'.$insuranceTable.'`.`Id` AS \'OrigId\',
+  `'.$otherTable.'`.`id` AS \'OtherId\'
+  FROM `'.$otherTable.'` RIGHT JOIN `'.$insuranceTable.'`
+  ON (
+       `'.$insuranceTable.'`.`BillToParty` <= 0
+       AND
+       `'.$otherTable.'`.`'.$musicianId.'` = `'.$insuranceTable.'`.`MusicianId`
+    ) OR (
+       `'.$insuranceTable.'`.`BillToParty` > 0
+       AND
+       `'.$otherTable.'`.`'.$musicianId.'` = `'.$insuranceTable.'`.`BillToParty`
+    )
+    WHERE 1';
+
+    //throw new \Exception('QUERY: '.$query);
+    
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
+    // Fetch the result (or die) and remap the Ids
+    $result = mySQL::query($query, $handle);
+    $map = array();
+    while ($line = mysql_fetch_assoc($result)) {
+      $map[$line['OrigId']] = $line['OtherId'];
+    }
+    
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    $result = array();
+    foreach($insuranceIds as $key) {
+      if (!isset($map[$key])) {
+        continue;
+      }
+      $result[] = $map[$key];
+    }
+
+    return array_unique($result);
+  }
+
+  /**Generate an overview table to the respective musician. This is
+   * meant for back-report to the musician, so we do not need all
+   * fields. We include
+   *
+   * Broker, Geog. Scope, Object, Manufacturer, Amount, Rate, Fee
+   *
+   * Potentially, insured musician and payer may be different. We
+   * generate a table of the form
+   *
+   * array('payer' => array(<Name and Address Information>),
+   *       'totals' => <Total Fee including taxes>,
+   *       'musicians' => array(MusID => array('name' => <Human Readable Name>,
+   *                                           'subtotals' => <Total Fee for this one, incl. Taxes>,
+   *                                           'items' => array(<Insured Items>)
+   */
+  public static function musicianOverview($musicianId, $handle = false)
+  {
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
+    $streetAddress = Musicians::fetchStreetAddress($musicianId, $handle);
+    
+    $insurances = array('payer' => $streetAddress,
+                        'totals' => 0,
+                        'musicians' => array());
+
+    $rates = self::fetchRates($handle);
+    
+    $query = "SELECT * FROM `".self::MEMBER_TABLE."` WHERE ("
+      . " ( (ISNULL(`BillToParty`) OR `BillToParty` <= 0) AND `MusicianId` = ".$musicianId." ) "
+      . " OR "
+      . " `BillToParty` = ".$musicianId
+      . " )";
+    
+    $result = mySQL::query($query, $handle);
+    while ($row = mySQL::fetch($result)) {
+      $musId = $row['MusicianId'];
+      if (!isset($insurances['musicians'][$musId])) {
+        $insurances['musicians'][$musId] = array(
+          'name' => '',
+          'subTotals' => 0.0,
+          'items' => array()
+          );
+      }
+      $rateKey = $row['Broker'].$row['GeographicalScope'];
+      $itemInfo = array('broker' => $row['Broker'],
+                        'scope' => $row['GeographicalScope'],
+                        'object' => $row['Object'],
+                        'manufacturer' =>  $row['Manufacturer'],
+                        'amount' => $row['InsuranceAmount'],
+                        'rate' => $rates[$rateKey]);
+
+      $amount = floatval($itemInfo['amount']);
+      $rate = floatval($itemInfo['rate']);
+      $itemInfo['amount'] = $amount; // convert to float
+      $itemInfo['rate'] = $rate; // convert to float
+      $itemInfo['fee'] = $amount * $rate; // * (1.0 + (float)self::TAXES);
+      $insurances['musicians'][$musId]['items'][] = $itemInfo;
+    }
+
+    $totals = 0.0;
+    foreach($insurances['musicians'] as $id => $info) {
+      $subtotals = 0.0;
+      foreach($info['items'] as $itemInfo) {
+        $subtotals += $itemInfo['fee'];
+      }
+      $insurances['musicians'][$id]['subTotals'] = $subtotals;
+      $totals += $subtotals;
+      $name = Musicians::fetchName($id, $handle);
+      $insurances['musicians'][$id]['name'] = $name['firstName'].' '.$name['lastName'];
+    }
+    $insurances['totals'] = $totals;
+    
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $insurances;
+  }
+
+  /**Fetch the insurance rates of the respective brokers. For the time
+   * being brokers offer different rates, independent from the
+   * instrument, but depending on the geographical scope (Germany,
+   * Europe, World).
+   *
+   * Return value is an associative array of the form
+   *
+   * array(BROKERSCOPE => RATE)
+   *
+   * where "RATE" is the actual fraction, not the percentage.
+   */
+  public static function fetchRates($handle = false)
   {
     $ownConnection = $handle === false;
     if ($ownConnection) {
@@ -489,8 +638,27 @@ class InstrumentInsurance
       $rateKey = $row['Broker'].$row['GeographicalScope'];
       $rates[$rateKey] = $row['Rate'];
     }
-
     //print_r($rates);
+
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $rates;
+  }
+  
+  /**Compute the annual insurance fee for the respective
+   * musician. Note that the relevant column is the "BillToParty".
+   */
+  public static function annualFee($musicianId, $handle = false)
+  {
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
+    $rates = self::fetchRates($handle);
 
     $fee = 0.0;
     $query = "SELECT * FROM `".self::MEMBER_TABLE."` WHERE ("

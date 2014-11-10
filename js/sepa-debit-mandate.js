@@ -442,47 +442,48 @@ var CAFEVDB = CAFEVDB || {};
 
       event.preventDefault();
 
+      var downloadName = 'pmeformdownloadframe';
+      var downloadFrame = $('iframe#'+downloadName);
+      downloadFrame.contents().find('body').html('');
+
+      downloadFrame.off('load').on('load', function() {
+        var frameBody = downloadFrame.contents().find('body').html();
+        if (frameBody != '') {
+          OC.dialogs.alert(t('cafevdb', 'Unable to export debit notes:')+
+                           ' '+
+                           frameBody,
+                           t('cafevdb', 'Error'),
+                           undefined, true, true);
+        }
+      });
+
+      var downloadName2 = 'pmeformdownloadframetwo';
+      var downloadFrame2 = $('iframe#'+downloadName2);
+      downloadFrame2.contents().find('body').html('');
+
+      downloadFrame2.off('load').on('load', function() {
+        var frameBody = downloadFrame2.contents().find('body').html();
+        if (frameBody != '') {
+          OC.dialogs.alert(t('cafevdb', 'Unable to export insurance overviews:')+
+                           ' '+
+                           frameBody,
+                           t('cafevdb', 'Error'),
+                           undefined, true, true);
+        }
+      });
+
+      var values = $(this.form).serializeArray();
+      var action;
+
+      values.push({name: $(this).attr('name'), value: $(this).val()});
+
+      action = OC.filePath('cafevdb', 'ajax/finance', 'instrument-insurance-export.php');
+      CAFEVDB.iframeFormSubmit(action, downloadName2, values);
+
+      action = OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-export.php');
+      CAFEVDB.iframeFormSubmit(action, downloadName, values);
+
       var post = $(this.form).serialize();
-
-      // This is a nightmare, needs to be cleaned up.
-      if (true) {
-        var downloadName = 'pmeformdownloadframe';
-        var downloadFrame = $('iframe#'+downloadName);
-        downloadFrame.contents().find('body').html('');
-
-        downloadFrame.off('load').on('load', function() {
-          var frameBody = downloadFrame.contents().find('body').html();
-          if (frameBody != '') {
-            OC.dialogs.alert(t('cafevdb', 'Unable to export debit notes:')+
-                             ' '+
-                             frameBody,
-                             t('cafevdb', 'Error'),
-                             undefined, true, true);
-          }
-        });
-
-        var oldAction = form.attr('action');
-        var oldTarget = form.attr('target');
-        form.attr('action', OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-export.php'));
-        form.attr('target', downloadName);
-
-        // TODO: this is quite crappy
-        var $fakeSubmit = $('<input type="hidden" name="'+$(this).attr('name')+'" value="whatever"/>');
-        form.append($fakeSubmit);
-        form.submit();
-        $fakeSubmit.remove();
-        if (!oldAction) {
-          form.removeAttr('action');
-        } else {
-          form.attr('action', oldAction);
-        }
-        if (!oldTarget) {
-          form.removeAttr('target');
-        } else {
-          form.attr('target', oldTarget);
-        }
-      }
-
       post += '&'+$.param({
         'emailComposer[TemplateSelector]': t('cafevdb', 'InsuranceDebitNoteAnnouncement'),
         'emailComposer[Subject]': t('cafevdb', 'Debit notes due in 14 days')
@@ -535,46 +536,31 @@ var CAFEVDB = CAFEVDB || {};
       on('click', function(event) {
 
       event.stopImmediatePropagation();
+
+      var downloadName = 'pmeformdownloadframe';
+      var downloadFrame = $('iframe#'+downloadName);
+      downloadFrame.contents().find('body').html('');
+
+      downloadFrame.off('load').on('load', function() {
+        var frameBody = downloadFrame.contents().find('body').html();
+        if (frameBody != '') {
+          OC.dialogs.alert(t('cafevdb', 'Unable to export debit notes:')+
+                           ' '+
+                           frameBody,
+                           t('cafevdb', 'Error'),
+                           undefined, true, true);
+        }
+      });
+
+      var values = $(this.form).serializeArray();
+      var action = OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-export.php');
+      var target = downloadName;
+
+      values.push({name: $(this).attr('name'), value: $(this).val()});
+
+      CAFEVDB.iframeFormSubmit(action, target, values);
+
       var post = $(this.form).serialize();
-
-      if (true) {
-        var downloadName = 'pmeformdownloadframe';
-        var downloadFrame = $('iframe#'+downloadName);
-        downloadFrame.contents().find('body').html('');
-
-        downloadFrame.off('load').on('load', function() {
-          var frameBody = downloadFrame.contents().find('body').html();
-          if (frameBody != '') {
-            OC.dialogs.alert(t('cafevdb', 'Unable to export debit notes:')+
-                             ' '+
-                             frameBody,
-                             t('cafevdb', 'Error'),
-                             undefined, true, true);
-          }
-        });
-
-        var oldAction = form.attr('action');
-        var oldTarget = form.attr('target');
-        form.attr('action', OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-export.php'));
-        form.attr('target', downloadName);
-
-        // TODO: this is quite crappy
-        var $fakeSubmit = $('<input type="hidden" name="'+$(this).attr('name')+'" value="whatever"/>');
-        form.append($fakeSubmit);
-        form.submit();
-        $fakeSubmit.remove();
-        if (!oldAction) {
-          form.removeAttr('action');
-        } else {
-          form.attr('action', oldAction);
-        }
-        if (!oldTarget) {
-          form.removeAttr('target');
-        } else {
-          form.attr('target', oldTarget);
-        }
-      }
-
       post += '&'+$.param({
         'emailComposer[TemplateSelector]': t('cafevdb', 'ProjectDebitNoteAnnouncement'),
         'emailComposer[Subject]': t('cafevdb', 'Debit notes due in 14 days')
