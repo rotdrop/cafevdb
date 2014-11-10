@@ -612,6 +612,176 @@ class InstrumentInsurance
     return $insurances;
   }
 
+  /**Take the data provided by self::musicianOverview() to generate a
+   * PDF with a DIN-letter in order to send the overview to the
+   * respective musician by SnailMail. The resulting letter will be
+   * returned as string.
+   */
+  public static function musicianOverviewLetter($overview, $name = 'dummy.pdf', $dest = 'S')
+  {
+    $year = strftime('%Y');
+    $css = "insurance-overview-table";
+    $style = '<style>
+  table.'.$css.' {
+    border: #000 1px solid;
+    border-collapse:collapse;
+    border-spacing:0px;
+    /*width:auto; not with tcpdf ... */
+  }
+  table.'.$css.' td {
+    border: #000 1px solid;
+    min-width:5em;
+    padding: 0.1em 0.5em 0.1em 0.5em;
+  }
+  table.'.$css.' th {
+    border: #000 1px solid;
+    min-width:5em;
+    padding: 0.1em 0.5em 0.1em 0.5em;
+    text-align:center;
+    font-weight:bold;
+    font-style:italic;
+  }
+  table.'.$css.' td.summary {
+    text-align:right;
+  }
+  td.money, td.percentage {
+    text-align:right;
+  }
+  table.totals {
+    font-weight:bold;
+  }
+</style>';
+    
+    // create a PDF object
+    $pdf = new PDFLetter(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+ 
+    // set document (meta) information
+    $pdf->SetCreator(PDF_CREATOR);
+    $pdf->SetAuthor('Claus-Justus Heine');
+    $pdf->SetTitle(L::t('Annual Insurance Fees for %s, %d. %s',
+                        array($overview['payer']['firstName'].' '.$overview['payer']['surName'],
+                              $year,
+                              Config::getValue('streetAddressName01'))));
+    $pdf->SetSubject(L::t('Overview over insured instruments and insurance fee details and summary'));
+    $pdf->SetKeywords('invoice, insurance, instruments');
+ 
+    // add a page
+    $pdf->addPage();
+
+    // Falzmarken
+    $pdf->Line(3,105,6,105);
+    $pdf->Line(3,148,8,148);
+    $pdf->Line(3,210,6,210);
+ 
+    // Address record
+    $pdf->frontHeader(
+      'c/o Claus-Justus Heine<br>'.
+      'Engelboldstr. 97<br>'.
+      '70569 Stuttgart<br>'.
+      'Phon: 0151-651 6666 0<br>'.
+      'M@il: Kassenwart@CAFeV.DE'
+      );
+    $pdf->addressFieldSender('C.-J. Heine, Engelboldstr. 97, 70569 Stuttgart');
+    $pdf->addressFieldRecipient(
+      $overview['payer']['firstName'].' '.$overview['payer']['surName'].'
+'.$overview['payer']['street'].'
+'.$overview['payer']['ZIP'].' '.$overview['payer']['city']
+      );
+
+    $pdf->date(strftime('%x'));
+
+    $pdf->subject(L::t("Annular insurance fees for %d", array($year)));
+    $pdf->letterOpen(L::t('Dear %s,', array($overview['payer']['firstName'])));
+      
+    $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
+                        10,
+                        PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+1*PDFLetter::FONT_SIZE,
+                        L::t('this letter informs you about the details of the instrument-insurances
+we are maintaining for you on your behalf. This letter is
+machine-generated; in case of any inconsistencies or other questions
+please contact us as soon as possible in order to avoid any further
+misunderstandings. This letter is sent to you by traditional
+"snail-mail" for data-security reason. Please keep a copy of this
+letter in a safe place; further insurance-charts will only be sent to
+you if something changes. However, you may request information about
+your insured items at any time, but we require you to send us a
+prepaid envelope with proper address-information to us. We kindly thank your understanding.'), '', 1);
+
+    $html = '';
+    foreach($overview['musicians'] as $id => $insurance) {
+      $html .= '
+<h4>'.L::t('Insured Person: %s', array($insurance['name'])).'</h4>
+<table cellpadding="2" class="'.$css.'">
+  <tr>
+    <th>'.L::t('Vendor').'</th>
+    <th width="90">'.L::t('Scope').'</th>
+    <th width="80">'.L::t('Object').'</th>
+    <th>'.L::t('Manufacturer').'</th>
+    <th width="60">'.L::t('Amount').'</th>
+    <th width="45">'.L::t('Rate').'</th>
+    <th>'.L::t('Fee').'</th> 
+  </tr>';
+      foreach($insurance['items'] as $object) {
+        $html .= '
+  <tr>
+    <td class="text">'.$object['broker'].'</td>
+    <td class="text">'.L::t($object['scope']).'</td>
+    <td class="text">'.$object['object'].'</td>
+    <td class="text">'.$object['manufacturer'].'</td>
+    <td class="money">'.money_format('%n', $object['amount']).'</td>
+    <td class="percentage">'.($object['rate']*100.0).' %'.'</td>
+    <td class="money">'.money_format('%n', $object['fee']).'</td>
+  </tr>';
+      }
+      $html .= '
+  <tr>
+    <td class="summary" colspan="6">'.
+      L::t('Sub-totals (excluding taxes)',
+           array(InstrumentInsurance::TAXES)).'
+    </td>
+    <td class="money">'.money_format('%n', $insurance['subTotals']).'</td>
+  </tr>
+</table>';
+
+      $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
+                          10,
+                          PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+1*PDFLetter::FONT_SIZE,
+                          $style.$html, '', 1);
+
+    }
+
+    $totals = $overview['totals'];
+    $taxRate = floatval(InstrumentInsurance::TAXES);
+    $taxes = $totals * $taxRate;
+    $html = '';
+    $html .= '
+<table class="totals">
+  <tr>
+    <td class="summary">'.L::t('Total amount excluding taxes:').'</td>
+    <td class="money">'.money_format('%n', $totals).'</td>
+  </tr>
+  <tr>
+    <td class="summary">'.L::t('%0.2f %% insurance taxes:', array($taxRate*100.0)).'</td>
+    <td class="money">'.money_format('%n', $taxes).'</td>
+  </tr>
+  <tr>
+    <td class="summary">'.L::t('Total amount to pay:').'</td>
+    <td class="money">'.money_format('%n', $totals+$taxes).'</td>
+  </tr>
+</table>';    
+
+    
+    $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
+                        10,
+                        PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+1*PDFLetter::FONT_SIZE,
+                        $style.$html, '', 1);
+    
+    $pdf->letterClose(L::t('Best wishes,'), 'Claus-Justus Heine (Kassenwart)');
+      
+    //Close and output PDF document
+    return $pdf->Output($name, $dest);    
+  }
+  
   /**Fetch the insurance rates of the respective brokers. For the time
    * being brokers offer different rates, independent from the
    * instrument, but depending on the geographical scope (Germany,
