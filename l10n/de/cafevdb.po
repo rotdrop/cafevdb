@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-07 21:06+0100\n"
-"PO-Revision-Date: 2014-11-07 21:08+0100\n"
+"POT-Creation-Date: 2014-11-10 21:35+0100\n"
+"PO-Revision-Date: 2014-11-10 21:42+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -107,16 +107,18 @@ msgid "Email Address Validation Failed"
 msgstr "Em@il Adresse(n) ungültig"
 
 #: ajax/email/composer.php:256 ajax/email/exporter.php:95
-#: ajax/email/recipients.php:140 ajax/finance/sepa-debit-export.php:181
-#: ajax/page-loader.php:111 ajax/projects/web-articles.php:182
-#: ajax/settings/app-settings.php:1151
+#: ajax/email/recipients.php:140
+#: ajax/finance/instrument-insurance-export.php:216
+#: ajax/finance/sepa-debit-export.php:181 ajax/page-loader.php:111
+#: ajax/projects/web-articles.php:182 ajax/settings/app-settings.php:1151
 msgid "PHP Exception Caught"
 msgstr "PHP `Ausnahme' `gefangen'"
 
 #: ajax/email/composer.php:260 ajax/email/exporter.php:96
-#: ajax/email/recipients.php:144 ajax/finance/sepa-debit-export.php:182
-#: ajax/page-loader.php:115 ajax/projects/web-articles.php:186
-#: ajax/settings/app-settings.php:1155
+#: ajax/email/recipients.php:144
+#: ajax/finance/instrument-insurance-export.php:217
+#: ajax/finance/sepa-debit-export.php:182 ajax/page-loader.php:115
+#: ajax/projects/web-articles.php:186 ajax/settings/app-settings.php:1155
 #, php-format
 msgid ""
 "Error, caught an exception. Please copy the displayed text and send it by "
@@ -125,7 +127,9 @@ msgstr ""
 "Fehler, PHP-`Ausnahme' `gefangen'. Bitte den angezeigten Text kopieren und "
 "per Email an %s senden."
 
-#: ajax/email/exporter.php:100 ajax/finance/sepa-debit-export.php:186
+#: ajax/email/exporter.php:100
+#: ajax/finance/instrument-insurance-export.php:221
+#: ajax/finance/sepa-debit-export.php:186
 msgid "Trace"
 msgstr "Trace"
 
@@ -283,7 +287,9 @@ msgstr "Gesamtversicherungssumme: "
 msgid "Musician"
 msgstr "Musiker"
 
-#: ajax/export/insurance-export.php:143 lib/instrument-insurance.php:305
+#: ajax/export/insurance-export.php:143
+#: ajax/finance/instrument-insurance-export.php:133
+#: lib/instrument-insurance.php:305 lib/instrument-insurance.php:719
 msgid "Manufacturer"
 msgstr "Hersteller"
 
@@ -322,6 +328,57 @@ msgstr "Datum: %s"
 msgid "false"
 msgstr "falsch"
 
+#: ajax/finance/instrument-insurance-export.php:130
+#: lib/instrument-insurance.php:716
+msgid "Vendor"
+msgstr "Anbieter"
+
+#: ajax/finance/instrument-insurance-export.php:131
+#: lib/instrument-insurance.php:717
+msgid "Scope"
+msgstr "Geltungsbereich"
+
+#: ajax/finance/instrument-insurance-export.php:132
+#: lib/instrument-insurance.php:718
+msgid "Object"
+msgstr "Gegenstand"
+
+#: ajax/finance/instrument-insurance-export.php:134
+#: lib/instrument-insurance.php:720
+msgid "Amount"
+msgstr "Betrag"
+
+#: ajax/finance/instrument-insurance-export.php:135
+#: lib/instrument-insurance.php:721
+msgid "Rate"
+msgstr "Rate"
+
+#: ajax/finance/instrument-insurance-export.php:136
+#: lib/instrument-insurance.php:722
+msgid "Fee"
+msgstr "Beitrag"
+
+#: ajax/finance/instrument-insurance-export.php:153
+#: lib/instrument-insurance.php:739
+msgid "Sub-totals (excluding taxes)"
+msgstr "Zwischensumme (ohne Steuern)"
+
+#: ajax/finance/instrument-insurance-export.php:166
+#: lib/instrument-insurance.php:760
+msgid "Total amount excluding taxes:"
+msgstr "Gesamtbetrag ohne Steuern:"
+
+#: ajax/finance/instrument-insurance-export.php:170
+#: lib/instrument-insurance.php:764
+#, php-format
+msgid "%0.2f %% insurance taxes:"
+msgstr "%0.2f %% Versicherungssteuer:"
+
+#: ajax/finance/instrument-insurance-export.php:174
+#: lib/instrument-insurance.php:768
+msgid "Total amount to pay:"
+msgstr "Rechnungsbetrag"
+
 #: ajax/finance/sepa-debit-delete.php:40
 #: ajax/finance/sepa-debit-settings.php:49
 #: ajax/finance/sepa-debit-store.php:40
@@ -341,22 +398,22 @@ msgstr "Kann das SEPA-Lastschriftmandat nicht löschen."
 msgid "Project name and/or id are missing"
 msgstr "Projektname und/oder -id fehlen"
 
-#: ajax/finance/sepa-debit-export.php:75
+#: ajax/finance/sepa-debit-export.php:77
 #, php-format
 msgid "Unable to decrypt debit mandate. Full debit record: %s"
 msgstr "Kann das SEPA-Lastschriftmandat nicht entschlüsseln. Datensatz: %s"
 
-#: ajax/finance/sepa-debit-export.php:80
+#: ajax/finance/sepa-debit-export.php:82
 #, php-format
 msgid "Refusing to debit 0€. Full debit record: %s"
 msgstr "Ich weigere mich, 0€ einzuziehen. Datensatz: %s"
 
-#: ajax/finance/sepa-debit-export.php:86
+#: ajax/finance/sepa-debit-export.php:88
 #, php-format
 msgid "Illegal characters in debit purpose: %s. Full debit record: %s"
 msgstr "Ungültige Buchstaben im Verwendungszweck-Feld: %s. Datensatz: %s"
 
-#: ajax/finance/sepa-debit-export.php:91
+#: ajax/finance/sepa-debit-export.php:93
 #, php-format
 msgid "Purpose field has %d characters, allowed are %d. Full debit record: %s"
 msgstr ""
@@ -1264,13 +1321,14 @@ msgid "Unknown WYSIWYG-Editor: `%s'"
 msgstr "Unbekannter WYSIWYG-Edtior: `%s'"
 
 #: js/blog.js:53 js/blog.js:156 js/blog.js:194 js/blog.js:288 js/blog.js:319
-#: js/blog.js:347 js/cafevdb.js:1040 js/email.js:33 js/email.js:62
+#: js/blog.js:347 js/cafevdb.js:1061 js/email.js:33 js/email.js:62
 #: js/email.js:412 js/email.js:443 js/email.js:606 js/events.js:64
 #: js/events.js:156 js/inlineimage.js:84 js/inlineimage.js:92
 #: js/inlineimage.js:102 js/inlineimage.js:131 js/inlineimage.js:155
 #: js/inlineimage.js:183 js/inlineimage.js:207 js/inlineimage.js:326
 #: js/inlineimage.js:412 js/inlineimage.js:421 js/inlineimage.js:424
-#: js/sepa-debit-mandate.js:459 js/sepa-debit-mandate.js:551
+#: js/sepa-debit-mandate.js:455 js/sepa-debit-mandate.js:470
+#: js/sepa-debit-mandate.js:550
 msgid "Error"
 msgstr "Fehler"
 
@@ -1339,15 +1397,15 @@ msgstr ""
 "Verwirft die aktuelle Auswahl und schließt das Fenster. Die\n"
 "ursprünglichen Optionen werden unverändert beibehalten."
 
-#: js/cafevdb.js:662
+#: js/cafevdb.js:683
 msgid "Export to the following format is not yet supported:"
 msgstr "Export in das folgende Dateiformat wird nicht unterstützt:"
 
-#: js/cafevdb.js:664 js/project-instruments.js:74 js/projects.js:261
+#: js/cafevdb.js:685 js/project-instruments.js:74 js/projects.js:261
 msgid "Unimplemented"
 msgstr "Nicht implementiert"
 
-#: js/cafevdb.js:843
+#: js/cafevdb.js:864
 msgid ""
 "If multiple dialogs are open, then move this one to the lowest layer and "
 "display it below the others. Clicking anywhere on the dialog will bring to "
@@ -1358,7 +1416,7 @@ msgstr ""
 "angezeigt. Anklicken irgendeines Bereiches dieses Fensters bringt es\n"
 "dann wieder nach vorne."
 
-#: js/cafevdb.js:893
+#: js/cafevdb.js:914
 msgid ""
 "Close the current dialog and return to the view which was active before this "
 "dialog had been opened. If the current view shows a `Back' button, then "
@@ -1369,11 +1427,11 @@ msgstr ""
 "es in diesem Fenster außerdem noch einen `Zurück'-Knopf gibt, dann\n"
 "sollte der eigentlich das gleiche bewirken."
 
-#: js/cafevdb.js:980 js/instrumentation.js:163
+#: js/cafevdb.js:1001 js/instrumentation.js:163
 msgid "Debug Information"
 msgstr "Debug Informationen"
 
-#: js/cafevdb.js:1001
+#: js/cafevdb.js:1022
 msgid ""
 "Unrecoverable unknown internal error, no further information available, "
 "sorry."
@@ -1381,20 +1439,20 @@ msgstr ""
 "Tut uns leid, unbekannte interner Fehler, weitere Informationen sind\n"
 "leider nicht verfügbar."
 
-#: js/cafevdb.js:1003
+#: js/cafevdb.js:1024
 msgid "Internal Error"
 msgstr "Irgendein Fehler"
 
-#: js/cafevdb.js:1010
+#: js/cafevdb.js:1031
 #, python-brace-format
 msgid "Field {RequiredField} not present in AJAX response."
 msgstr "In der AJAX-Antwort fehlt das Feld {RequiredField}."
 
-#: js/cafevdb.js:1019
+#: js/cafevdb.js:1040
 msgid "Missing data"
 msgstr "Fehlende Daten"
 
-#: js/cafevdb.js:1021 js/events.js:58 js/events.js:150
+#: js/cafevdb.js:1042 js/events.js:58 js/events.js:150
 msgid "Unknown error :("
 msgstr "Irgendein Fehler :("
 
@@ -1863,19 +1921,25 @@ msgstr "Mögliche Alternativen ausgehend von den üblichen Übertragungsfehlern:
 msgid "Please do not accept these alternatives lightly!"
 msgstr "Bitte die Alternativen nicht leichtsinnig übernehmen!"
 
-#: js/sepa-debit-mandate.js:456 js/sepa-debit-mandate.js:548
+#: js/sepa-debit-mandate.js:452 js/sepa-debit-mandate.js:547
 msgid "Unable to export debit notes:"
 msgstr "Kann die Lastschrifteinzüge nicht exportieren:"
 
-#: js/sepa-debit-mandate.js:487
+#: js/sepa-debit-mandate.js:467
+#, fuzzy
+#| msgid "Unable to export debit notes:"
+msgid "Unable to export insurance overviews:"
+msgstr "Kann die Lastschrifteinzüge nicht exportieren:"
+
+#: js/sepa-debit-mandate.js:488
 msgid "InsuranceDebitNoteAnnouncement"
 msgstr "VersicherungsLastschriftAnkündigung"
 
-#: js/sepa-debit-mandate.js:488 js/sepa-debit-mandate.js:580
+#: js/sepa-debit-mandate.js:489 js/sepa-debit-mandate.js:566
 msgid "Debit notes due in 14 days"
 msgstr "Lastschrifteinzug in 14 Tagen"
 
-#: js/sepa-debit-mandate.js:579
+#: js/sepa-debit-mandate.js:565
 msgid "ProjectDebitNoteAnnouncement"
 msgstr "ProjektLastschriftAnkündigung"
 
@@ -2323,11 +2387,72 @@ msgstr "Rate"
 msgid "Insurance Fee"
 msgstr "Versicherungs-Beitrag"
 
+#: lib/instrument-insurance.php:336
+msgid "including taxes"
+msgstr "inklusive Steuern"
+
 #: lib/instrument-insurance.php:344
 msgid "Total Insurance"
 msgstr "Gesamtversicherungssumme"
 
-#: lib/instrument-insurance.php:506
+#: lib/instrument-insurance.php:661
+#, php-format
+msgid "Annual Insurance Fees for %s, %d. %s"
+msgstr "Versicherungs-Jahresbeitrag für %s, %d. %s"
+
+#: lib/instrument-insurance.php:665
+#, fuzzy
+#| msgid "Overview over the Bulk Instrument Insurances"
+msgid "Overview over insured instruments and insurance fee details and summary"
+msgstr "Übersicht über die Instrumentensammelversicherungen"
+
+#: lib/instrument-insurance.php:693
+#, php-format
+msgid "Annular insurance fees for %d"
+msgstr "Versicherungs-Jahresbeitrag %d"
+
+#: lib/instrument-insurance.php:694
+#, php-format
+msgid "Dear %s,"
+msgstr "Liebe, Lieber %s,"
+
+#: lib/instrument-insurance.php:699
+msgid ""
+"this letter informs you about the details of the instrument-insurances\n"
+"we are maintaining for you on your behalf. This letter is\n"
+"machine-generated; in case of any inconsistencies or other questions\n"
+"please contact us as soon as possible in order to avoid any further\n"
+"misunderstandings. This letter is sent to you by traditional\n"
+"\"snail-mail\" for data-security reason. Please keep a copy of this\n"
+"letter in a safe place; further insurance-charts will only be sent to\n"
+"you if something changes. However, you may request information about\n"
+"your insured items at any time, but we require you to send us a\n"
+"prepaid envelope with proper address-information to us. We kindly thank your "
+"understanding."
+msgstr ""
+"dieses Schreiben informiert Dich über die Instrumenten-Versicherungen,\n"
+"die wir für Dich in Deinem Auftrag verwalten. Dieser Brief wird\n"
+"automatisch erzeugt; bitte kontaktiere uns so schnell wie möglich,\n"
+"falls es Unstimmigkeiten oder andere Probleme gibt, damit weitere\n"
+"Missverständnisse vermieden werden können. Aus Datenschutzgründen\n"
+"verschicken wir diese Aufstellung ausschließlich auf herkömmlichen\n"
+"Postweg. Bitte bewahre dieses Schreiben auf; weitere Aufstellungen\n"
+"verschicken wir automatisch nur dann, wenn sich an der\n"
+"Versicherungssumme etwas ändern sollte. Selbstverständlich aber kannst\n"
+"Du eine Aufstellung Deiner versicherten Gegenstände jederzeit von uns\n"
+"bekommen; jedoch musst Du uns dazu einen ausreichen frankierten und\n"
+"adressierten Rückumschlag zusenden."
+
+#: lib/instrument-insurance.php:713
+#, php-format
+msgid "Insured Person: %s"
+msgstr "Versicherte Person: %s"
+
+#: lib/instrument-insurance.php:779
+msgid "Best wishes,"
+msgstr "Herzliche Grüße,"
+
+#: lib/instrument-insurance.php:844
 #, php-format
 msgid "Invalid broker/geographical-scope combination: %s - %s"
 msgstr "Der Makler %s bietet keine Versicherung für den Geltungsberich %s an"
