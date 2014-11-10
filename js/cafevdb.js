@@ -625,6 +625,27 @@ var CAFEVDB = CAFEVDB || {};
     form.submit();
   };
 
+  /**Generate a form with given values, inject action (URL) and target
+   * (iframe, ..), add to document, submit, remove from document.
+   * 
+   * @param action URL
+   * 
+   * @param target IFRAME
+   * 
+   * @param values Format see jQuery serializeArray
+   * 
+   */
+  CAFEVDB.iframeFormSubmit = function(action, target, values)
+  {
+    var idx;
+    var form = $('<form method="post" action="'+action+'" target="'+target+'"></form>');
+    for(idx = 0; idx < values.length; ++idx) {
+      form.append('<input type="hidden" name="'+values[idx].name+'" value="'+values[idx].value+'"/>');
+    }
+    $('body').append(form);
+    form.submit().remove();
+  };
+
   CAFEVDB.tableExportMenu = function(select) {
     // determine the export format
     var selected = select.find('option:selected').val();
