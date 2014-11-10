@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-11-10 21:35+0100\n"
-"PO-Revision-Date: 2014-11-10 21:42+0100\n"
+"PO-Revision-Date: 2014-11-10 21:49+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -2414,7 +2414,7 @@ msgstr "Versicherungs-Jahresbeitrag %d"
 #: lib/instrument-insurance.php:694
 #, php-format
 msgid "Dear %s,"
-msgstr "Liebe, Lieber %s,"
+msgstr "Liebe/Lieber %s,"
 
 #: lib/instrument-insurance.php:699
 msgid ""
