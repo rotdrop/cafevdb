@@ -815,7 +815,9 @@ __EOT__;
       ', '.
       '`Stadt` AS `city`'.
       ', '.
-      '`Postleitzahl` AS `ZIP`';
+      '`Postleitzahl` AS `ZIP`'.
+      ', '.
+      '`Telefon` AS `phone`';
     $query .= ' FROM `Musiker` WHERE `Id` = '.$musicianId;
     $result = mySQL::query($query, $handle);
 
