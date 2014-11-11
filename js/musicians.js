@@ -49,14 +49,18 @@ var CAFEVDB = CAFEVDB || {};
                // open single person change dialog
                var musician = data.data.musicians[0];
                //alert('data: '+CAFEVDB.print_r(musician, true));                       
-               CAFEVDB.Instrumentation.loadDetailedInstrumentation(form);
-               CAFEVDB.Instrumentation.personalRecordDialog(
-                 musician.instrumentationId,
-                 {
-                   ProjectId: projectId,
-                   ProjectName: projectName,
-                   InitialValue: 'Change',
-                   modified: true
+               CAFEVDB.Instrumentation.loadDetailedInstrumentation(
+                 form,
+                 undefined,
+                 function() {
+                   CAFEVDB.Instrumentation.personalRecordDialog(
+                     musician.instrumentationId,
+                     {
+                       ProjectId: projectId,
+                       ProjectName: projectName,
+                       InitialValue: 'Change',
+                       modified: true
+                     });
                  });
              } else {
                // load the instrumentation table, initially restricted to the new musicians
