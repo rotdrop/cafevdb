@@ -61,6 +61,10 @@ class ToolTips
 
       'blogentry-sticky' => L::t('Toggle the sticky marker; sticky notes are listed at the top of the list.'),
 
+      'club-member-project' => L::t('Name of the pseudo-project listing the permanent members of the orchestra.'),
+
+      'executive-board-project' => L::t('Name of the pseudo-project listing the members of the executive board.'),
+      
       'configrecheck' => L::t('Perform the configuration checks again. If all checks have been passed then you are led on to the ordinary entry page of the application.'),
 
       'emailtest' => L::t('Test the email-settings; try to connect to the SMTP-server and the IMAP-server in turn.'),
