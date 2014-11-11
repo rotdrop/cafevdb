@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-11 13:28+0100\n"
-"PO-Revision-Date: 2014-11-11 13:28+0100\n"
+"POT-Creation-Date: 2014-11-11 17:25+0100\n"
+"PO-Revision-Date: 2014-11-11 17:40+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -108,17 +108,17 @@ msgstr "Em@il Adresse(n) ungültig"
 
 #: ajax/email/composer.php:256 ajax/email/exporter.php:95
 #: ajax/email/recipients.php:140
-#: ajax/finance/instrument-insurance-export.php:216
+#: ajax/finance/instrument-insurance-export.php:171
 #: ajax/finance/sepa-debit-export.php:181 ajax/page-loader.php:111
-#: ajax/projects/web-articles.php:182 ajax/settings/app-settings.php:1151
+#: ajax/projects/web-articles.php:182 ajax/settings/app-settings.php:1175
 msgid "PHP Exception Caught"
 msgstr "PHP `Ausnahme' `gefangen'"
 
 #: ajax/email/composer.php:260 ajax/email/exporter.php:96
 #: ajax/email/recipients.php:144
-#: ajax/finance/instrument-insurance-export.php:217
+#: ajax/finance/instrument-insurance-export.php:172
 #: ajax/finance/sepa-debit-export.php:182 ajax/page-loader.php:115
-#: ajax/projects/web-articles.php:186 ajax/settings/app-settings.php:1155
+#: ajax/projects/web-articles.php:186 ajax/settings/app-settings.php:1179
 #, php-format
 msgid ""
 "Error, caught an exception. Please copy the displayed text and send it by "
@@ -128,7 +128,7 @@ msgstr ""
 "per Email an %s senden."
 
 #: ajax/email/exporter.php:100
-#: ajax/finance/instrument-insurance-export.php:221
+#: ajax/finance/instrument-insurance-export.php:176
 #: ajax/finance/sepa-debit-export.php:186
 msgid "Trace"
 msgstr "Trace"
@@ -287,9 +287,8 @@ msgstr "Gesamtversicherungssumme: "
 msgid "Musician"
 msgstr "Musiker"
 
-#: ajax/export/insurance-export.php:143
-#: ajax/finance/instrument-insurance-export.php:133
-#: lib/instrument-insurance.php:305 lib/instrument-insurance.php:722
+#: ajax/export/insurance-export.php:143 lib/instrument-insurance.php:305
+#: lib/instrument-insurance.php:752
 msgid "Manufacturer"
 msgstr "Hersteller"
 
@@ -328,56 +327,30 @@ msgstr "Datum: %s"
 msgid "false"
 msgstr "falsch"
 
-#: ajax/finance/instrument-insurance-export.php:130
-#: lib/instrument-insurance.php:719
-msgid "Vendor"
-msgstr "Anbieter"
+#: ajax/finance/instrument-insurance-export.php:96
+msgid "Unable to create temporay file for zip-archive."
+msgstr "Die temporäre Datei für das Zip-Archiv konnte nicht erzeugt werden."
 
-#: ajax/finance/instrument-insurance-export.php:131
-#: lib/instrument-insurance.php:720
-msgid "Scope"
-msgstr "Geltungsbereich"
+#: ajax/finance/instrument-insurance-export.php:102
+msgid "Unable to open temporary file for zip-archive."
+msgstr "Die temporäre Datei für das Zip-Archiv konnte nicht geöffnet werden."
 
-#: ajax/finance/instrument-insurance-export.php:132
-#: lib/instrument-insurance.php:721
-msgid "Object"
-msgstr "Gegenstand"
-
-#: ajax/finance/instrument-insurance-export.php:134
-#: lib/instrument-insurance.php:723
-msgid "Amount"
-msgstr "Betrag"
-
-#: ajax/finance/instrument-insurance-export.php:135
-#: lib/instrument-insurance.php:724
-msgid "Rate"
-msgstr "Rate"
-
-#: ajax/finance/instrument-insurance-export.php:136
-#: lib/instrument-insurance.php:725
-msgid "Fee"
-msgstr "Beitrag"
-
-#: ajax/finance/instrument-insurance-export.php:153
-#: lib/instrument-insurance.php:742
-msgid "Sub-totals (excluding taxes)"
-msgstr "Zwischensumme (ohne Steuern)"
-
-#: ajax/finance/instrument-insurance-export.php:166
-#: lib/instrument-insurance.php:766
-msgid "Total amount excluding taxes:"
-msgstr "Gesamtbetrag ohne Steuern:"
-
-#: ajax/finance/instrument-insurance-export.php:170
-#: lib/instrument-insurance.php:770
+#: ajax/finance/instrument-insurance-export.php:110
 #, php-format
-msgid "%0.2f %% insurance taxes:"
-msgstr "%0.2f %% Versicherungssteuer:"
+msgid "Unable to add %s to zip-archive"
+msgstr "Konnte %s nicht zum Zip-Archiv hinzufügen."
 
-#: ajax/finance/instrument-insurance-export.php:174
-#: lib/instrument-insurance.php:774
-msgid "Total amount to pay:"
-msgstr "Rechnungsbetrag:"
+#: ajax/finance/instrument-insurance-export.php:116
+msgid "Unable to close temporary file for zip-archive."
+msgstr "Die temporäre Datei für das Zip-Archiv konnte nicht geschlossen werden.;\n"
+
+#: ajax/finance/instrument-insurance-export.php:121
+msgid "Unable to read zip archive from disk."
+msgstr "Konnte das fertige Zip-Archiv nicht einlesen."
+
+#: ajax/finance/instrument-insurance-export.php:126
+msgid "instrument-insurance"
+msgstr "Instrumenten-Versicherung"
 
 #: ajax/finance/sepa-debit-delete.php:40
 #: ajax/finance/sepa-debit-settings.php:49
@@ -437,9 +410,9 @@ msgstr "Konnte den Wert für `%s' nicht als `%s' speichern."
 #: ajax/finance/sepa-debit-settings.php:97
 #: ajax/finance/sepa-debit-settings.php:118
 #: ajax/finance/sepa-debit-settings.php:359 ajax/settings/app-settings.php:885
-#: ajax/settings/app-settings.php:933 ajax/settings/app-settings.php:948
-#: ajax/settings/app-settings.php:983 ajax/settings/app-settings.php:1022
-#: ajax/settings/app-settings.php:1046 ajax/settings/app-settings.php:1058
+#: ajax/settings/app-settings.php:957 ajax/settings/app-settings.php:972
+#: ajax/settings/app-settings.php:1007 ajax/settings/app-settings.php:1046
+#: ajax/settings/app-settings.php:1070 ajax/settings/app-settings.php:1082
 #, php-format
 msgid "Value for `%s' set to `%s'."
 msgstr "Wert für `%s' auf `%s' gesetzt."
@@ -466,7 +439,8 @@ msgstr "Ungültige Deutsche(?) Bankleitzahl %s."
 msgid "Invalid German(?) bank account number %s @ %s."
 msgstr "Ungültige Deutsche(?) Kontonummer %s @ %s."
 
-#: ajax/finance/sepa-debit-settings.php:258 ajax/settings/app-settings.php:991
+#: ajax/finance/sepa-debit-settings.php:258
+#: ajax/settings/app-settings.php:1015
 #, php-format
 msgid "Invalid IBAN: `%s'."
 msgstr "Ungültige IBAN: `%s'."
@@ -474,13 +448,13 @@ msgstr "Ungültige IBAN: `%s'."
 #: ajax/finance/sepa-debit-settings.php:302
 #: ajax/finance/sepa-debit-settings.php:334
 #: ajax/finance/sepa-debit-store.php:64 ajax/finance/sepa-debit-store.php:75
-#: ajax/settings/app-settings.php:1069
+#: ajax/settings/app-settings.php:1093
 #, php-format
 msgid "Value for `%s' invalid: `%s'."
 msgstr "Der Wert für `%s' ist ungültig: `%s'."
 
 #: ajax/finance/sepa-debit-settings.php:348
-#: ajax/settings/app-settings.php:1129 ajax/settings/redaxo-settings.php:71
+#: ajax/settings/app-settings.php:1153 ajax/settings/redaxo-settings.php:71
 msgid "Unhandled request:"
 msgstr "Unbekannte Anfrage:"
 
@@ -1210,25 +1184,35 @@ msgstr "Projekt-id %d."
 msgid "Value for `%s' set to `%s'. %s"
 msgstr "Wert für `%s' auf `%s' gesetzt. %s"
 
-#: ajax/settings/app-settings.php:994
+#: ajax/settings/app-settings.php:927
+#, php-format
+msgid "Musician with id %d does not seem to exist"
+msgstr "Ein Musiker mit der Id existiert leider nicht."
+
+#: ajax/settings/app-settings.php:936
+#, php-format
+msgid "Value for `%s' set to `%s'"
+msgstr "Wert für `%s' auf `%s' gesetzt."
+
+#: ajax/settings/app-settings.php:1018
 msgid "Perhaps you meant"
 msgstr "Vielleicht meinten Sie"
 
-#: ajax/settings/app-settings.php:1001
+#: ajax/settings/app-settings.php:1025
 msgid "or"
 msgstr "oder"
 
-#: ajax/settings/app-settings.php:1087
+#: ajax/settings/app-settings.php:1111
 #, php-format
 msgid "Link for `%s' set to `%s'."
 msgstr "Web-Link für `%s' als `%s' eingestellt."
 
-#: ajax/settings/app-settings.php:1100
+#: ajax/settings/app-settings.php:1124
 #, php-format
 msgid "Unable to test link for `%s' without a link target."
 msgstr "Kann den Web-Link für `%s' nicht ohne Ziel-Adresse testen."
 
-#: ajax/settings/app-settings.php:1106
+#: ajax/settings/app-settings.php:1130
 #, php-format
 msgid "New window or tab with `%s'?"
 msgstr "Neues Fenster oder Tab erschienen für `%s'?"
@@ -1321,7 +1305,7 @@ msgid "Unknown WYSIWYG-Editor: `%s'"
 msgstr "Unbekannter WYSIWYG-Edtior: `%s'"
 
 #: js/blog.js:53 js/blog.js:156 js/blog.js:194 js/blog.js:288 js/blog.js:319
-#: js/blog.js:347 js/cafevdb.js:1065 js/email.js:33 js/email.js:62
+#: js/blog.js:347 js/cafevdb.js:1061 js/email.js:33 js/email.js:62
 #: js/email.js:412 js/email.js:443 js/email.js:606 js/events.js:64
 #: js/events.js:156 js/inlineimage.js:84 js/inlineimage.js:92
 #: js/inlineimage.js:102 js/inlineimage.js:131 js/inlineimage.js:155
@@ -1371,25 +1355,25 @@ msgstr ""
 msgid "Really delete the entry?"
 msgstr "Den Beitrag wirklich löschen?"
 
-#: js/cafevdb.js:506
+#: js/cafevdb.js:502
 msgid "Choose some Options"
 msgstr "Wähle aus den Optionen"
 
-#: js/cafevdb.js:511 js/project-instruments.js:146 js/sepa-debit-mandate.js:97
+#: js/cafevdb.js:507 js/project-instruments.js:146 js/sepa-debit-mandate.js:97
 msgid "Save"
 msgstr "Speichern"
 
-#: js/cafevdb.js:513
+#: js/cafevdb.js:509
 msgid ""
 "Accept the currently selected options and return to the underlying form. "
 msgstr "Übernimmt die aktuellen Werte und kehrt zur vorherigen Ansicht zurück."
 
-#: js/cafevdb.js:514 js/inlineimage.js:273 js/project-instruments.js:197
+#: js/cafevdb.js:510 js/inlineimage.js:273 js/project-instruments.js:197
 #: templates/blogedit.php:39 templates/part.emailform.composer.php:251
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: js/cafevdb.js:516
+#: js/cafevdb.js:512
 msgid ""
 "Discard the current selection and close the dialog. The initial set of "
 "selected options will remain unchanged."
@@ -1397,15 +1381,15 @@ msgstr ""
 "Verwirft die aktuelle Auswahl und schließt das Fenster. Die\n"
 "ursprünglichen Optionen werden unverändert beibehalten."
 
-#: js/cafevdb.js:687
+#: js/cafevdb.js:683
 msgid "Export to the following format is not yet supported:"
 msgstr "Export in das folgende Dateiformat wird nicht unterstützt:"
 
-#: js/cafevdb.js:689 js/project-instruments.js:74 js/projects.js:261
+#: js/cafevdb.js:685 js/project-instruments.js:74 js/projects.js:261
 msgid "Unimplemented"
 msgstr "Nicht implementiert"
 
-#: js/cafevdb.js:868
+#: js/cafevdb.js:864
 msgid ""
 "If multiple dialogs are open, then move this one to the lowest layer and "
 "display it below the others. Clicking anywhere on the dialog will bring to "
@@ -1416,7 +1400,7 @@ msgstr ""
 "angezeigt. Anklicken irgendeines Bereiches dieses Fensters bringt es\n"
 "dann wieder nach vorne."
 
-#: js/cafevdb.js:918
+#: js/cafevdb.js:914
 msgid ""
 "Close the current dialog and return to the view which was active before this "
 "dialog had been opened. If the current view shows a `Back' button, then "
@@ -1427,11 +1411,11 @@ msgstr ""
 "es in diesem Fenster außerdem noch einen `Zurück'-Knopf gibt, dann\n"
 "sollte der eigentlich das gleiche bewirken."
 
-#: js/cafevdb.js:1005 js/instrumentation.js:163
+#: js/cafevdb.js:1001 js/instrumentation.js:163
 msgid "Debug Information"
 msgstr "Debug Informationen"
 
-#: js/cafevdb.js:1026
+#: js/cafevdb.js:1022
 msgid ""
 "Unrecoverable unknown internal error, no further information available, "
 "sorry."
@@ -1439,20 +1423,20 @@ msgstr ""
 "Tut uns leid, unbekannte interner Fehler, weitere Informationen sind\n"
 "leider nicht verfügbar."
 
-#: js/cafevdb.js:1028
+#: js/cafevdb.js:1024
 msgid "Internal Error"
 msgstr "Irgendein Fehler"
 
-#: js/cafevdb.js:1035
+#: js/cafevdb.js:1031
 #, python-brace-format
 msgid "Field {RequiredField} not present in AJAX response."
 msgstr "In der AJAX-Antwort fehlt das Feld {RequiredField}."
 
-#: js/cafevdb.js:1044
+#: js/cafevdb.js:1040
 msgid "Missing data"
 msgstr "Fehlende Daten"
 
-#: js/cafevdb.js:1046 js/events.js:58 js/events.js:150
+#: js/cafevdb.js:1042 js/events.js:58 js/events.js:150
 msgid "Unknown error :("
 msgstr "Irgendein Fehler :("
 
@@ -1800,11 +1784,11 @@ msgid "Caught a PHP Exception"
 msgstr "PHP `Ausnahme' `gefangen'"
 
 # #Spalten
-#: js/pme.js:792
+#: js/pme.js:791
 msgid "#columns"
 msgstr "#Spalten"
 
-#: js/pme.js:801
+#: js/pme.js:800
 msgid "#rows"
 msgstr "#Zeilen"
 
@@ -2393,40 +2377,44 @@ msgstr "inklusive Steuern"
 msgid "Total Insurance"
 msgstr "Gesamtversicherungssumme"
 
-#: lib/instrument-insurance.php:661
+#: lib/instrument-insurance.php:625
+msgid "insurance"
+msgstr "Versicherung"
+
+#: lib/instrument-insurance.php:681
 #, php-format
 msgid "Annual Insurance Fees for %s, %d. %s"
 msgstr "Versicherungs-Jahresbeitrag für %s, %d. %s"
 
-#: lib/instrument-insurance.php:665
+#: lib/instrument-insurance.php:685
 msgid "Overview over insured instruments and insurance fee details and summary"
 msgstr "Übersicht über die versicherten Instrumente und Versicherungsbeiträge"
 
-#: lib/instrument-insurance.php:693
+#: lib/instrument-insurance.php:702
+msgid "treasurer"
+msgstr "Schatzmeister"
+
+#: lib/instrument-insurance.php:724
 #, php-format
 msgid "Annular insurance fees for %d"
 msgstr "Versicherungs-Jahresbeitrag %d"
 
-#: lib/instrument-insurance.php:694
+#: lib/instrument-insurance.php:725
 #, php-format
 msgid "Dear %s,"
 msgstr "Liebe/Lieber %s,"
 
-#: lib/instrument-insurance.php:699
+#: lib/instrument-insurance.php:730
 msgid ""
 "this letter informs you about the details of the instrument-insurances\n"
 "we are maintaining for you on your behalf. This letter is\n"
 "machine-generated; in case of any inconsistencies or other questions\n"
 "please contact us as soon as possible in order to avoid any further\n"
-"misunderstandings. This letter is sent to you by traditional\n"
-"\"snail-mail\" for data-security reason (or vie PGP-encrypted email; if you "
-"do not know, what this is, then please do not ask). Please keep a copy of "
-"this\n"
-"letter in a safe place; further insurance-charts will only be sent to\n"
-"you if something changes. However, you may request information about\n"
-"your insured items at any time, but we require you to send us a\n"
-"prepaid envelope with proper address-information to us. We kindly thank your "
-"understanding."
+"misunderstandings. This letter is sent to you by traditional mail for\n"
+"data-security reason. Please keep a copy of this letter in a safe\n"
+"place; further insurance-charts will only be sent automatically to you\n"
+"if something changes. Of course, you may request this information about\n"
+"your insured items at any time. Just ask."
 msgstr ""
 "dieses Schreiben informiert Dich über die Instrumenten-Versicherungen,\n"
 "die wir für Dich in Deinem Auftrag verwalten. Dieser Brief wird\n"
@@ -2435,22 +2423,78 @@ msgstr ""
 "Missverständnisse vermieden werden können. Aus Datenschutzgründen\n"
 "verschicken wir diese Aufstellung ausschließlich auf herkömmlichen\n"
 "Postweg. Bitte bewahre dieses Schreiben auf; weitere Aufstellungen\n"
-"verschicken wir automatisch nur dann, wenn sich an der\n"
-"Versicherungssumme etwas ändern sollte. Selbstverständlich aber kannst\n"
-"Du eine Aufstellung Deiner versicherten Gegenstände jederzeit von uns\n"
-"bekommen; wir bitten jedoch dafür um einen ausreichen frankierten und\n"
-"adressierten Rückumschlag. Vielen Dank."
+"verschicken wir automatisch nur dann, wenn sich an der Versicherung\n"
+"etwas ändern sollte. Selbstverständlich aber kannst Du auf Nachfrage\n"
+"jederzeit von uns eine Aufstellung Deiner versicherten Gegenstände\n"
+"bekommen."
 
-#: lib/instrument-insurance.php:716
+#: lib/instrument-insurance.php:746
 #, php-format
 msgid "Insured Person: %s"
 msgstr "Versicherte Person: %s"
 
-#: lib/instrument-insurance.php:785
+#: lib/instrument-insurance.php:749
+msgid "Vendor"
+msgstr "Anbieter"
+
+#: lib/instrument-insurance.php:750
+msgid "Scope"
+msgstr "Geltungsbereich"
+
+#: lib/instrument-insurance.php:751
+msgid "Object"
+msgstr "Gegenstand"
+
+#: lib/instrument-insurance.php:753
+msgid "Amount"
+msgstr "Betrag"
+
+#: lib/instrument-insurance.php:754
+msgid "Rate"
+msgstr "Rate"
+
+#: lib/instrument-insurance.php:755
+msgid "Fee"
+msgstr "Beitrag"
+
+#: lib/instrument-insurance.php:772
+msgid "Sub-totals (excluding taxes)"
+msgstr "Zwischensumme (ohne Steuern)"
+
+#: lib/instrument-insurance.php:796
+msgid "Total amount excluding taxes:"
+msgstr "Gesamtbetrag ohne Steuern:"
+
+#: lib/instrument-insurance.php:800
+#, php-format
+msgid "%0.2f %% insurance taxes:"
+msgstr "%0.2f %% Versicherungssteuer:"
+
+#: lib/instrument-insurance.php:804
+msgid "Total amount to pay:"
+msgstr "Rechnungsbetrag:"
+
+#: lib/instrument-insurance.php:815
+msgid ""
+"You have granted us a debit-mandate. The total amount due will be debited "
+"from your bank-account, no further action from your side is required. We "
+"will inform you by email about the date of the debit at least 14 days in "
+"advance of the bank transaction."
+msgstr ""
+"Du hast uns ein Lastschrift-Mandat erteilt, der oben genannte\n"
+"Gesamtbetrag wird von Deinem Konto eingezogen. Wir informieren Dich\n"
+"wenigstens 14 Tage im voraus per Email über das genaue Datum der\n"
+"Kontobelastung."
+
+#: lib/instrument-insurance.php:821
 msgid "Best wishes,"
 msgstr "Herzliche Grüße,"
 
-#: lib/instrument-insurance.php:850
+#: lib/instrument-insurance.php:822
+msgid "Treasurer"
+msgstr "Schatzmeister"
+
+#: lib/instrument-insurance.php:887
 #, php-format
 msgid "Invalid broker/geographical-scope combination: %s - %s"
 msgstr "Der Makler %s bietet keine Versicherung für den Geltungsberich %s an"
