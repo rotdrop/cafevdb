@@ -816,6 +816,16 @@ a comma.'));
       return $control;
     }
 
+    /**Generate an option table with all participants, suitable to be
+     * staffed into Navigation::selectOtions(). This is a single
+     * select, only one musician may be preselected. The key is the
+     * musician id.
+     */
+    public static function participantOptions($projectId, $musicianId = -1, $handle = false)
+    {
+      
+    }
+
     /**Check for the existence of the project folders. Returns an array
      * of folders (balance and general files).
      */
