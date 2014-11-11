@@ -819,11 +819,46 @@ a comma.'));
     /**Generate an option table with all participants, suitable to be
      * staffed into Navigation::selectOtions(). This is a single
      * select, only one musician may be preselected. The key is the
-     * musician id.
+     * musician id. The options are meant for a single-choice select box.
+     *
+     * @param $projectId The id of the project to fetch the musician options from
+     *
+     * @param $musicianId A pre-selected musician, defaults to none
      */
-    public static function participantOptions($projectId, $musicianId = -1, $handle = false)
+    public static function participantOptions($projectId, $projectName = false, $musicianId = -1, $handle = false)
     {
+      $ownConnection = $handle === false;
+      if ($ownConnection) {
+        Config::init();
+        $handle = mySQL::connect(Config::$pmeopts);
+      }
+
+      if ($projectName === false) {
+        $projectName = self::fetchName($projectId, $handle);
+      }
+
+      $table = $projectName.'View';
+
+      $options = array();
+
+      // simply fetch all participants
+      $query = "SELECT `Name`,`Vorname`,`MusikerId` FROM `".$table."` WHERE 1";
       
+      $result = mySQL::query($query, $handle, true);
+      while($row = mySQL::fetch($result)) {
+        $key = $row['MusikerId'];
+        $name = $row['Vorname'].' '.$row['Name'];
+        $flags = ($key == $musicianId) ? Navigation::SELECTED : 0;
+        $options[] = array('value' => $key,
+                           'name' => $name,
+                           'flags' => $flags);
+      }
+
+      if ($ownConnection) {
+        mySQL::close($handle);
+      }
+
+      return $options;
     }
 
     /**Check for the existence of the project folders. Returns an array
