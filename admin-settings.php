@@ -29,7 +29,7 @@ namespace CAFEVDB {
   \OCP\Util::addStyle( "cafevdb", "admin-settings" );
   \OCP\Util::addScript( "cafevdb", "admin-settings" );
 
-  $tmpl = new OCP\Template( 'cafevdb', 'admin-settings');
+  $tmpl = new \OCP\Template( 'cafevdb', 'admin-settings');
 
   Config::init();
   $strict = !Config::encryptionKeyValid();
