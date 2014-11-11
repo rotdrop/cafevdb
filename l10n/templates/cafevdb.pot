@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-10 21:53+0100\n"
+"POT-Creation-Date: 2014-11-11 09:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -254,16 +254,16 @@ msgstr ""
 msgid "%s-detailed"
 msgstr ""
 
-#: ajax/export/excel.php:260 lib/projects.php:1619 lib/projects.php:1620
+#: ajax/export/excel.php:260 lib/projects.php:1628 lib/projects.php:1629
 msgid "Missing Musicians"
 msgstr ""
 
 #: ajax/export/excel.php:285 ajax/export/insurance-export.php:142
-#: lib/projects.php:1622
+#: lib/projects.php:1631
 msgid "Instrument"
 msgstr ""
 
-#: ajax/export/excel.php:286 lib/projects.php:1622
+#: ajax/export/excel.php:286 lib/projects.php:1631
 msgid "Missing"
 msgstr ""
 
@@ -278,7 +278,7 @@ msgstr ""
 
 #: ajax/export/insurance-export.php:143
 #: ajax/finance/instrument-insurance-export.php:133
-#: lib/instrument-insurance.php:305 lib/instrument-insurance.php:719
+#: lib/instrument-insurance.php:305 lib/instrument-insurance.php:722
 msgid "Manufacturer"
 msgstr ""
 
@@ -318,53 +318,53 @@ msgid "false"
 msgstr ""
 
 #: ajax/finance/instrument-insurance-export.php:130
-#: lib/instrument-insurance.php:716
+#: lib/instrument-insurance.php:719
 msgid "Vendor"
 msgstr ""
 
 #: ajax/finance/instrument-insurance-export.php:131
-#: lib/instrument-insurance.php:717
+#: lib/instrument-insurance.php:720
 msgid "Scope"
 msgstr ""
 
 #: ajax/finance/instrument-insurance-export.php:132
-#: lib/instrument-insurance.php:718
+#: lib/instrument-insurance.php:721
 msgid "Object"
 msgstr ""
 
 #: ajax/finance/instrument-insurance-export.php:134
-#: lib/instrument-insurance.php:720
+#: lib/instrument-insurance.php:723
 msgid "Amount"
 msgstr ""
 
 #: ajax/finance/instrument-insurance-export.php:135
-#: lib/instrument-insurance.php:721
+#: lib/instrument-insurance.php:724
 msgid "Rate"
 msgstr ""
 
 #: ajax/finance/instrument-insurance-export.php:136
-#: lib/instrument-insurance.php:722
+#: lib/instrument-insurance.php:725
 msgid "Fee"
 msgstr ""
 
 #: ajax/finance/instrument-insurance-export.php:153
-#: lib/instrument-insurance.php:739
+#: lib/instrument-insurance.php:742
 msgid "Sub-totals (excluding taxes)"
 msgstr ""
 
 #: ajax/finance/instrument-insurance-export.php:166
-#: lib/instrument-insurance.php:760
+#: lib/instrument-insurance.php:766
 msgid "Total amount excluding taxes:"
 msgstr ""
 
 #: ajax/finance/instrument-insurance-export.php:170
-#: lib/instrument-insurance.php:764
+#: lib/instrument-insurance.php:770
 #, php-format
 msgid "%0.2f %% insurance taxes:"
 msgstr ""
 
 #: ajax/finance/instrument-insurance-export.php:174
-#: lib/instrument-insurance.php:768
+#: lib/instrument-insurance.php:774
 msgid "Total amount to pay:"
 msgstr ""
 
@@ -1211,7 +1211,7 @@ msgid "Archive"
 msgstr ""
 
 #: ajax/settings/redaxo-settings.php:39 lib/projects.php:684
-#: lib/projects.php:1181 lib/projects.php:1342
+#: lib/projects.php:1190 lib/projects.php:1351
 msgid "Rehearsals"
 msgstr ""
 
@@ -2150,7 +2150,7 @@ msgid ""
 msgstr ""
 
 #: lib/functions.php:1063 lib/project-instruments.php:69 lib/projects.php:767
-#: lib/projects.php:974
+#: lib/projects.php:983
 msgid "Instrumentation Numbers"
 msgstr ""
 
@@ -2264,7 +2264,9 @@ msgid ""
 "machine-generated; in case of any inconsistencies or other questions\n"
 "please contact us as soon as possible in order to avoid any further\n"
 "misunderstandings. This letter is sent to you by traditional\n"
-"\"snail-mail\" for data-security reason. Please keep a copy of this\n"
+"\"snail-mail\" for data-security reason (or vie PGP-encrypted email; if you "
+"do not know, what this is, then please do not ask). Please keep a copy of "
+"this\n"
 "letter in a safe place; further insurance-charts will only be sent to\n"
 "you if something changes. However, you may request information about\n"
 "your insured items at any time, but we require you to send us a\n"
@@ -2272,16 +2274,16 @@ msgid ""
 "understanding."
 msgstr ""
 
-#: lib/instrument-insurance.php:713
+#: lib/instrument-insurance.php:716
 #, php-format
 msgid "Insured Person: %s"
 msgstr ""
 
-#: lib/instrument-insurance.php:779
+#: lib/instrument-insurance.php:785
 msgid "Best wishes,"
 msgstr ""
 
-#: lib/instrument-insurance.php:844
+#: lib/instrument-insurance.php:850
 #, php-format
 msgid "Invalid broker/geographical-scope combination: %s - %s"
 msgstr ""
@@ -2612,20 +2614,20 @@ msgstr ""
 msgid "Project Files"
 msgstr ""
 
-#: lib/projects.php:783 lib/projects.php:952
+#: lib/projects.php:783 lib/projects.php:961
 #, php-format
 msgid "Project Wiki for %s"
 msgstr ""
 
-#: lib/projects.php:785 lib/projects.php:956
+#: lib/projects.php:785 lib/projects.php:965
 msgid "Project Notes"
 msgstr ""
 
-#: lib/projects.php:790 lib/projects.php:962 lib/projects.php:992
+#: lib/projects.php:790 lib/projects.php:971 lib/projects.php:1001
 msgid "Events"
 msgstr ""
 
-#: lib/projects.php:795 lib/projects.php:968
+#: lib/projects.php:795 lib/projects.php:977
 msgid "Em@il"
 msgstr ""
 
@@ -2633,40 +2635,40 @@ msgstr ""
 msgid "Profit and Loss Account"
 msgstr ""
 
-#: lib/projects.php:2049
+#: lib/projects.php:2058
 msgid ""
 "Flyers can only be added to existing projects, please add the new\n"
 "project without a flyer first."
 msgstr ""
 
-#: lib/projects.php:2064
+#: lib/projects.php:2073
 #, php-format
 msgid "Drop image to upload (max %s)"
 msgstr ""
 
-#: lib/projects.php:2067
+#: lib/projects.php:2076
 msgid "Delete current flyer"
 msgstr ""
 
-#: lib/projects.php:2068
+#: lib/projects.php:2077
 msgid "Edit current flyer"
 msgstr ""
 
-#: lib/projects.php:2069
+#: lib/projects.php:2078
 msgid "Upload new flyer"
 msgstr ""
 
-#: lib/projects.php:2070
+#: lib/projects.php:2079
 msgid "Select image from ownCloud"
 msgstr ""
 
-#: lib/projects.php:2078
+#: lib/projects.php:2087
 msgid ""
 "Internal error, don't know what to do concerning project-flyers in the given "
 "context."
 msgstr ""
 
-#: lib/projects.php:2319
+#: lib/projects.php:2328
 #, php-format
 msgid ""
 "====== Project %s ======\n"
