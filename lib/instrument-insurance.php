@@ -701,25 +701,28 @@ we are maintaining for you on your behalf. This letter is
 machine-generated; in case of any inconsistencies or other questions
 please contact us as soon as possible in order to avoid any further
 misunderstandings. This letter is sent to you by traditional
-"snail-mail" for data-security reason. Please keep a copy of this
+"snail-mail" for data-security reason (or vie PGP-encrypted email; if you do not know, what this is, then please do not ask). Please keep a copy of this
 letter in a safe place; further insurance-charts will only be sent to
 you if something changes. However, you may request information about
 your insured items at any time, but we require you to send us a
 prepaid envelope with proper address-information to us. We kindly thank your understanding.'), '', 1);
 
+    // Slightly smaller for table
+    $pdf->SetFont(PDF_FONT_NAME_MAIN, '', PDFLetter::FONT_SIZE-2);
+    
     $html = '';
     foreach($overview['musicians'] as $id => $insurance) {
       $html .= '
 <h4>'.L::t('Insured Person: %s', array($insurance['name'])).'</h4>
 <table cellpadding="2" class="'.$css.'">
   <tr>
-    <th>'.L::t('Vendor').'</th>
-    <th width="90">'.L::t('Scope').'</th>
+    <th width="60">'.L::t('Vendor').'</th>
+    <th width="70">'.L::t('Scope').'</th>
     <th width="80">'.L::t('Object').'</th>
     <th>'.L::t('Manufacturer').'</th>
     <th width="60">'.L::t('Amount').'</th>
     <th width="45">'.L::t('Rate').'</th>
-    <th>'.L::t('Fee').'</th> 
+    <th width="50">'.L::t('Fee').'</th> 
   </tr>';
       foreach($insurance['items'] as $object) {
         $html .= '
@@ -750,6 +753,9 @@ prepaid envelope with proper address-information to us. We kindly thank your und
 
     }
 
+    // Slightly smaller for table
+    $pdf->SetFont(PDF_FONT_NAME_MAIN, '', PDFLetter::FONT_SIZE);
+
     $totals = $overview['totals'];
     $taxRate = floatval(InstrumentInsurance::TAXES);
     $taxes = $totals * $taxRate;
@@ -757,8 +763,8 @@ prepaid envelope with proper address-information to us. We kindly thank your und
     $html .= '
 <table class="totals">
   <tr>
-    <td class="summary">'.L::t('Total amount excluding taxes:').'</td>
-    <td class="money">'.money_format('%n', $totals).'</td>
+    <td width="150" class="summary">'.L::t('Total amount excluding taxes:').'</td>
+    <td width="80" class="money">'.money_format('%n', $totals).'</td>
   </tr>
   <tr>
     <td class="summary">'.L::t('%0.2f %% insurance taxes:', array($taxRate*100.0)).'</td>
