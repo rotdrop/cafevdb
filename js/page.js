@@ -40,7 +40,7 @@ var CAFEVDB = CAFEVDB || {};
   };
 
   /**Load a page through the history-aware AJAX page loader. */
-  Page.loadPage = function(post) {
+  Page.loadPage = function(post, afterLoadCallback) {
     Page.busyIcon(true);
     $.post(OC.filePath('cafevdb', 'ajax', 'page-loader.php'),
            post,
@@ -67,6 +67,9 @@ var CAFEVDB = CAFEVDB || {};
              Page.busyIcon(false);
              CAFEVDB.tipsy();
              CAFEVDB.runReadyCallbacks();
+             if (typeof afterLoadCallback == 'function') {
+               afterLoadCallback();
+             }
              return false;
            });
   };

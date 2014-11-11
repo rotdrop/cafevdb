@@ -189,7 +189,7 @@ var CAFEVDB = CAFEVDB || {};
    *
    * The form is submitted with an empty pseudo-submit button.
    */
-  Instrumentation.loadPMETable = function(form, formData) {
+  Instrumentation.loadPMETable = function(form, formData, afterLoadCallback) {
     form.find('input').not('[name*="PME_sys"]').each(function(idx) {
       var self = $(this);
       var name = self.attr('name');
@@ -199,20 +199,20 @@ var CAFEVDB = CAFEVDB || {};
         }
       }
     });
-    CAFEVDB.Page.loadPage(formData);
+    CAFEVDB.Page.loadPage(formData, afterLoadCallback);
   };
 
-  Instrumentation.loadAddMusicians = function(form) {
+  Instrumentation.loadAddMusicians = function(form, afterLoadCallback) {
     var inputTweak = {
       Template: "add-musicians",
       Table: "Musiker",
       DisplayClass: "Musicians",
       "ClassArguments[0]": "1"
     };
-    Instrumentation.loadPMETable(form, inputTweak);
+    Instrumentation.loadPMETable(form, inputTweak, afterLoadCallback);
   };
 
-  Instrumentation.loadDetailedInstrumentation = function(form, musicians) {
+  Instrumentation.loadDetailedInstrumentation = function(form, musicians, afterLoadCallback) {
     var projectName = form.find('input[name="ProjectName"]').val();
     var table = projectName+'View';
 
@@ -231,7 +231,7 @@ var CAFEVDB = CAFEVDB || {};
       }
     }
 
-    Instrumentation.loadPMETable(form, inputTweak);
+    Instrumentation.loadPMETable(form, inputTweak, afterLoadCallback);
   };
 
   Instrumentation.ready = function(selector) {
