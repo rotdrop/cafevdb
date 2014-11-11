@@ -30,6 +30,8 @@ namespace CAFEVDB {
   \OCP\JSON::checkAppEnabled('cafevdb');
   \OCP\JSON::callCheck();
 
+  $tmpFile = false;
+  
   try {
 
     Error::exceptions(true);
@@ -38,7 +40,6 @@ namespace CAFEVDB {
     $_GET = array();
 
     setlocale(LC_ALL, Util::getLocale());
-    $name = strftime('%Y%m%d-%H%M%S').'-CAFEVDB-instrument-insurance.html';
 
     // See wether we were passed specific variables ...
     $pmepfx      = Config::$pmeopts['cgi']['prefix']['sys'];
@@ -60,9 +61,13 @@ namespace CAFEVDB {
     
     mySQL::close($handle);
 
-    if (true) {
-
-      $name = /*strftime('%Y%m%d-%H%M%S').'-*/'CAFEVDB-instrument-insurance.pdf';
+    if (count($insurances) == 1) {
+      // export a single PFF
+      $firstName = $insurances[0]['payer']['firstName'];
+      $surName = $insurances[0]['payer']['surName'];
+      $id =  $insurances[0]['payerId'];
+      
+      $name = InstrumentInsurance::musicianOverviewPDFName($insurances[0]);
 
       //$letter = PDFLetter::testLetter($name, 'D');
 
@@ -79,117 +84,67 @@ namespace CAFEVDB {
       fwrite($outstream, $letter);
       
       fclose($outstream);
-      
     } else {
-      
-    header('Content-type: text/html');
-    header('Content-disposition: attachment;filename='.$name);
-    header('Cache-Control: max-age=0');
+      // export a zip-archive in order to avoid tons of download dialogs
 
-  echo <<<__EOT__
-<!DOCTYPE HTML>
-  <html>
-    <head>
-      <title>$name</title>
-      <meta charset="utf-8">
-    </head>
-    <body>
-__EOT__;
-
-  $css = "insurance-overview-table";
-
-  echo '
-<style>
-  table.'.$css.' {
-    border: #000 1px solid;
-    border-collapse:collapse;
-    border-spacing:0px;
-    width:auto;
-  }
-  table.'.$css.' th, table.'.$css.' td {
-    border: #000 1px solid;
-    min-width:5em;
-    padding: 0.1em 0.5em 0.1em 0.5em;
-  }
-  table.'.$css.' td.summary {
-    text-align:right;
-  }
-  td.money, td.percentage {
-    text-align:right;
-  }
-  table.totals {
-    font-weight:bold;
-  }
-</style>';
-  
-  foreach($insurances as $insurancePayer) {
-    foreach($insurancePayer['musicians'] as $id => $insurance) {
-      echo '
-<table class="'.$css.'">
-  <tr>
-    <th>'.L::t('Vendor').'</th>
-    <th>'.L::t('Scope').'</th>
-    <th>'.L::t('Object').'</th>
-    <th>'.L::t('Manufacturer').'</th>
-    <th>'.L::t('Amount').'</th>
-    <th>'.L::t('Rate').'</th>
-    <th>'.L::t('Fee').'</th> 
-  </tr>';
-      foreach($insurance['items'] as $object) {
-        echo '
-  <tr>
-    <td class="text">'.$object['broker'].'</td>
-    <td class="text">'.L::t($object['scope']).'</td>
-    <td class="text">'.$object['object'].'</td>
-    <td class="text">'.$object['manufacturer'].'</td>
-    <td class="money">'.money_format('%n', $object['amount']).'</td>
-    <td class="percentage">'.($object['rate']*100.0).' %'.'</td>
-    <td class="money">'.money_format('%n', $object['fee']).'</td>
-  </tr>';
+      $tmpdir = ini_get('upload_tmp_dir');
+      if ($tmpdir == '') {
+        $tmpdir = sys_get_temp_dir();
+      }      
+      $tmpFile = tempnam($tmpdir, Config::APP_NAME.'.zip');
+      if ($tmpFile === false) {
+        throw new \RuntimeException(L::t('Unable to create temporay file for zip-archive.'));
       }
-      echo '
-  <tr>
-    <td class="summary" colspan="6">'.
-      L::t('Sub-totals (excluding taxes)',
-           array(InstrumentInsurance::TAXES)).'
-    </td>
-    <td class="money">'.money_format('%n', $insurance['subTotals']).'</td>
-  </tr>
-</table>';
-    }
-    $totals = $insurancePayer['totals'];
-    $taxRate = floatval(InstrumentInsurance::TAXES);
-    $taxes = $totals * $taxRate;
-    echo '
-<table class="totals">
-  <tr>
-    <td class="summary">'.L::t('Total amount excluding taxes:').'</td>
-    <td class="money">'.money_format('%n', $totals).'</td>
-  </tr>
-  <tr>
-    <td class="summary">'.L::t('%0.2f %% insurance taxes:', array($taxRate*100.0)).'</td>
-    <td class="money">'.money_format('%n', $taxes).'</td>
-  </tr>
-  <tr>
-    <td class="summary">'.L::t('Total amount to pay:').'</td>
-    <td class="money">'.money_format('%n', $totals+$taxes).'</td>
-  </tr>
-</table>';
-  }
-  
-  echo '<pre>';
-  print_r($insurances);
-  echo '</pre>';
-  
-  echo <<<__EOT__
-  </body>
-</html>
-__EOT__;
+
+      $zip = new \ZipArchive();
+      $opened = $zip->open($tmpFile, \ZIPARCHIVE::CREATE | \ZIPARCHIVE::OVERWRITE );
+      if ($opened !== true) {
+        throw new \RuntimeException(L::t('Unable to open temporary file for zip-archive.'));
+      }
+
+      foreach ($insurances as $insurance) {
+        $name = InstrumentInsurance::musicianOverviewPDFName($insurance);
+        $letter = InstrumentInsurance::musicianOverviewLetter($insurance);
+
+        if ($zip->addFromString($name, $letter) === false) {
+          throw new \RuntimeException(L::t('Unable to add %s to zip-archive',
+                                           array($name)));
+        }
+      }
+
+      if ($zip->close() === false) {
+        throw new \RuntimeException(L::t('Unable to close temporary file for zip-archive.'));
+      }
+
+      $zipData = file_get_contents($tmpFile);
+      if ($zipData === false) {
+        throw new \RuntimeException(L::t('Unable to read zip archive from disk.'));
+      }
+
+      unlink($tmpFile);
+      
+      $name = strftime('%Y%m%d-%H%M%S').'-'.strtolower(L::t('instrument-insurance')).'.zip';
+
+      header('Content-type: application/zip');
+      header('Content-disposition: attachment;filename='.$name);
+      header('Cache-Control: no-cache, no-store, must-revalidate'); // HTTP 1.1.
+      header('Pragma: no-cache'); // HTTP 1.0.
+      header('Expires: 0'); // Proxies.
+      
+      $outstream = fopen("php://output",'w');
+
+      fwrite($outstream, $zipData);
+      
+      fclose($outstream);
+      
     }
     
-  
   } catch (\Exception $e) {
 
+    if ($tmpFile !== false) {
+      unlink($tmpFile);
+    }
+    
     header('Content-type: text/html');
     header('Cache-Control: max-age=0');
 

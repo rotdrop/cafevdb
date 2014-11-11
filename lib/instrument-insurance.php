@@ -555,6 +555,7 @@ class InstrumentInsurance
     $streetAddress = Musicians::fetchStreetAddress($musicianId, $handle);
     
     $insurances = array('payer' => $streetAddress,
+                        'payerId' => $musicianId,
                         'totals' => 0,
                         'musicians' => array());
 
@@ -612,6 +613,20 @@ class InstrumentInsurance
     return $insurances;
   }
 
+  /**Small support function in order to generate a consistent
+   * file-name for the exported PDFs.
+   */
+  public static function musicianOverviewPDFName($overview) 
+  {
+    $firstName = $overview['payer']['firstName'];
+    $surName = $overview['payer']['surName'];
+    $id =  $overview['payerId'];
+    
+    $name = strftime('%Y%m%d-%H%M%S').'-'.$id.'-'.$firstName.$surName.'-'.L::t('insurance').'.pdf';
+
+    return $name;
+  }
+  
   /**Take the data provided by self::musicianOverview() to generate a
    * PDF with a DIN-letter in order to send the overview to the
    * respective musician by SnailMail. The resulting letter will be
@@ -619,6 +634,11 @@ class InstrumentInsurance
    */
   public static function musicianOverviewLetter($overview, $name = 'dummy.pdf', $dest = 'S')
   {
+    // Get the id of the treasurer
+    $treasurer = Musicians::fetchStreetAddress(Config::getValue('treasurerId'));
+
+    // Some styling, however TCPDF does not support all of these. In
+    // particular padding and min-width are ignored at all.
     $year = strftime('%Y');
     $css = "insurance-overview-table";
     $style = '<style>
@@ -657,7 +677,7 @@ class InstrumentInsurance
  
     // set document (meta) information
     $pdf->SetCreator(PDF_CREATOR);
-    $pdf->SetAuthor('Claus-Justus Heine');
+    $pdf->SetAuthor($treasurer['firstName'].' '.$treasurer['surName']);
     $pdf->SetTitle(L::t('Annual Insurance Fees for %s, %d. %s',
                         array($overview['payer']['firstName'].' '.$overview['payer']['surName'],
                               $year,
@@ -675,13 +695,24 @@ class InstrumentInsurance
  
     // Address record
     $pdf->frontHeader(
-      'c/o Claus-Justus Heine<br>'.
-      'Engelboldstr. 97<br>'.
-      '70569 Stuttgart<br>'.
-      'Phon: 0151-651 6666 0<br>'.
-      'M@il: Kassenwart@CAFeV.DE'
+      'c/o '.$treasurer['firstName'].' '.$treasurer['surName'].'<br>'.
+      $treasurer['street'].'<br>'.
+      $treasurer['ZIP'].' '.$treasurer['city'].'<br>'.
+      'Phon: '.$treasurer['phone'].'<br>'.
+      'M@il: '.L::t('treasurer').strstr(Config::getValue('emailfromaddress'), '@')
       );
-    $pdf->addressFieldSender('C.-J. Heine, Engelboldstr. 97, 70569 Stuttgart');
+
+    preg_match_all('/([^\s-])[^\s-]*([\s-]+|$)/', $treasurer['firstName'], $firstNames);
+    $initials = '';
+    foreach($firstNames[1] as $idx => $initial) {
+      $separator = $firstNames[2][$idx];
+      $initials .= $initial.'.'.(ctype_space($separator) ? ' ' : $separator);
+    }
+    
+    $pdf->addressFieldSender($initials.' '.$treasurer['surName'].', '.
+                             $treasurer['street'].', '.
+                             $treasurer['ZIP'].' '.
+                             $treasurer['city']);
     $pdf->addressFieldRecipient(
       $overview['payer']['firstName'].' '.$overview['payer']['surName'].'
 '.$overview['payer']['street'].'
@@ -700,12 +731,11 @@ class InstrumentInsurance
 we are maintaining for you on your behalf. This letter is
 machine-generated; in case of any inconsistencies or other questions
 please contact us as soon as possible in order to avoid any further
-misunderstandings. This letter is sent to you by traditional
-"snail-mail" for data-security reason (or vie PGP-encrypted email; if you do not know, what this is, then please do not ask). Please keep a copy of this
-letter in a safe place; further insurance-charts will only be sent to
-you if something changes. However, you may request information about
-your insured items at any time, but we require you to send us a
-prepaid envelope with proper address-information to us. We kindly thank your understanding.'), '', 1);
+misunderstandings. This letter is sent to you by traditional mail for
+data-security reason. Please keep a copy of this letter in a safe
+place; further insurance-charts will only be sent automatically to you
+if something changes. Of course, you may request this information about
+your insured items at any time. Just ask.'), '', 1);
 
     // Slightly smaller for table
     $pdf->SetFont(PDF_FONT_NAME_MAIN, '', PDFLetter::FONT_SIZE-2);
@@ -779,10 +809,19 @@ prepaid envelope with proper address-information to us. We kindly thank your und
     
     $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
                         10,
-                        PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+1*PDFLetter::FONT_SIZE,
+                        PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+0.5*PDFLetter::FONT_SIZE,
                         $style.$html, '', 1);
-    
-    $pdf->letterClose(L::t('Best wishes,'), 'Claus-Justus Heine (Kassenwart)');
+
+    $html = L::t('You have granted us a debit-mandate. The total amount due will be debited from your bank-account, no further action from your side is required. We will inform you by email about the date of the debit at least 14 days in advance of the bank transaction.');
+    $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
+                        10,
+                        PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+0.5*PDFLetter::FONT_SIZE,
+                        $style.$html, '', 1);
+
+    $signature = \OCP\Util::imagePath(Config::APP_NAME, 'treasurer-signature.png');
+    $pdf->letterClose(L::t('Best wishes,'),
+                      $treasurer['firstName'].' '.$treasurer['surName'].' ('.L::t('Treasurer').')',
+                      $signature);
       
     //Close and output PDF document
     return $pdf->Output($name, $dest);    

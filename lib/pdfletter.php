@@ -52,7 +52,13 @@ namespace CAFEVDB
 
     public function frontHeader($executiveMember)
     {
-      $executiveMember = 'Camerate Academica Freiburg e.V<br>'.$executiveMember;
+      $addr1 = Config::getValue('streetAddressName01');
+      $addr2 = Config::getValue('streetAddressName02');
+      $street = Config::getValue('streetAddressStreet');
+      $ZIP = Config::getValue('streetAddressZIP');
+      $city = Config::getValue('streetAddressCity');
+      
+      $executiveMember = $addr1.'<br>'.$executiveMember;
       $this->SetCellPadding(0);
       $this->SetFont(PDF_FONT_NAME_MAIN, '', self::FONT_HEADER);
       $this->writeHtmlCell(self::ADDRESS_WIDTH, self::ADDRESS_TOP-self::TOP_MARGIN,
@@ -63,9 +69,9 @@ namespace CAFEVDB
                    130, self::TOP_MARGIN, self::LOGO_SIZE);
 
       $this->writeHtmlCell(65, 0, 125, self::TOP_MARGIN+self::LOGO_SIZE+5,
-                           'Camerata Academica Freiburg e.V.<br>'.
-                           'Vereinssitz: c/o Katharina Puff<br>'.
-                           'Schlehenrain 19, 79108 Freiburg i.Br.',
+                           $addr1.'<br>'.
+                           'Vereinssitz: '.$addr2.'<br>'.
+                           $street.', '.$ZIP.' '.$city,
                            0, // border
                            0, // ln
                            false, // fill
@@ -163,12 +169,18 @@ namespace CAFEVDB
       $this->Cell($textWidth, self::FONT_SIZE, $startFormula, 0, false, 'L');
     }
 
-    public function letterClose($endFormula, $signature)
+    public function letterClose($endFormula, $signature, $signatureImage = false)
     {
       $textWidth = self::PAGE_WIDTH-self::LEFT_TEXT_MARGIN-self::RIGHT_TEXT_MARGIN;
       $this->SetXY(self::LEFT_TEXT_MARGIN, $this->GetY() + self::FONT_SIZE);
       $this->Cell($textWidth, self::FONT_SIZE, $endFormula, 0, false, 'L');
-      $this->SetXY(self::LEFT_TEXT_MARGIN, $this->GetY() + 2*self::FONT_SIZE);
+      $y = $this->GetY();
+      if ($signatureImage !== false /*&& file_exists($signatureImage)*/) {
+        $this->Image($signatureImage,
+                     self::LEFT_TEXT_MARGIN+10,
+                     $this->GetY()+1*self::FONT_SIZE, 6*self::FONT_SIZE);
+      }
+      $this->SetXY(self::LEFT_TEXT_MARGIN, $y + 2*self::FONT_SIZE);
       $this->Cell($textWidth, self::FONT_SIZE, $signature, 0, false, 'L');
     }
 
