@@ -73,6 +73,9 @@ phpmyadminoc
 sourcecode
 sourcedocs
 ownclouddev
+presidentId
+secretaryId
+treasurerId
 streetAddressName01
 streetAddressName02
 streetAddressStreet

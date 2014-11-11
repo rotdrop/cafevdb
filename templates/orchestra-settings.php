@@ -20,10 +20,9 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use CAFEVDB\L;
-use CAFEVDB\Config;
+namespace CAFEVDB {
 
-$off = $_['orchestra'] == '' ? 'disabled="disabled"' : '';
+  $off = $_['orchestra'] == '' ? 'disabled="disabled"' : '';
 
 ?>
 <div id="tabs-<?php echo $_['tabNr']; ?>" class="personalblock admin">
@@ -112,18 +111,62 @@ $off = $_['orchestra'] == '' ? 'disabled="disabled"' : '';
              id="memberTable"
              name="memberTable"
              value="<?php echo $_['memberTable']; ?>"
-             title="<?php echo L::t('Name of the table listing the permanent members of the orchestra.'); ?>"
+             title="<?php echo Config::toolTips('club-member-project'); ?>"
              placeholder="<?php echo L::t('member-table'); ?>"/>
+      <label for="memberTable"
+             title="<?php echo Config::toolTips('club-member-project'); ?>">
+        <?php echo L::t('Club Member Project'); ?>
+      </label>
       <br/>
       <input class="specialMemberTables" type="text"
              id="executiveBoardTable"
              name="executiveBoardTable"
              value="<?php echo $_['executiveBoardTable']; ?>"
-             title="<?php echo L::t('Name of the table listing the members of the executive board.'); ?>"
+             title="<?php echo Config::toolTips('executive-board-project'); ?>"
              placeholder="<?php echo L::t('executive board table'); ?>"/>
+      <label for="executiveBoardTable"
+             title="<?php echo Config::toolTips('executive-board-project'); ?>">
+        <?php echo L::t('Executive Board Project'); ?>
+      </label>
       <br/>
+      <select id="presidentSelect"
+              data-placeholder="<?php echo L::t('Select the President'); ?>"
+              title="<?php echo L::t('President of the orchestra'); ?>"
+              name="presidentId"
+              class="executive-board-ids tipsy-sw">
+        <option></option>
+        <?php
+        echo Navigation::selectOptions(
+          Projects::participantOptions($_['executiveBoardTableId'], $_['executiveBoardTable'], $_['presidentId']));
+        ?>
+      </select>
+      <select id="secretarySelect"
+              data-placeholder="<?php echo L::t('Select the Secretary'); ?>"
+              title="<?php echo L::t('Secretary of the orchestra'); ?>"
+              name="secretaryId"
+              class="executive-board-ids tipsy-sw">
+        <option></option>
+        <?php
+        echo Navigation::selectOptions(
+          Projects::participantOptions($_['executiveBoardTableId'], $_['executiveBoardTable'], $_['secretaryId']));
+        ?>
+      </select>
+      <select id="treasurerSelect"
+              data-placeholder="<?php echo L::t('Select the Treasurer'); ?>"
+              title="<?php echo L::t('Treasurer of the orchestra'); ?>"
+              name="treasurerId"
+              class="executive-board-ids tipsy-sw">
+        <option></option>
+        <?php
+        echo Navigation::selectOptions(
+          Projects::participantOptions($_['executiveBoardTableId'], $_['executiveBoardTable'], $_['treasurerId']));
+        ?>
+      </select>
     </fieldset>
     <span class="statusmessage" id="msg"></span>
     <span class="statusmessage" id="suggestion"></span>
   </form>
 </div>
+<?php
+} // namespace CAFEVDB
+?>

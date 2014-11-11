@@ -1019,6 +1019,33 @@ $(document).ready(function() {
     return false;
   })
 
+
+  $('select.executive-board-ids').
+    chosen({
+      disable_search_threshold: 10,
+      allow_single_deselect: true,
+      width: '30%'
+    }).
+    on('change', function(event) {
+    event.preventDefault();
+    $('div.statusmessage').hide();
+    $('span.statusmessage').hide();
+    $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
+           $(this),
+           function(data) {
+             if (data.status == "success") {
+	       $('#orchestra #msg').html(data.data.message);
+	       $('#orchestra #msg').show();
+               return true;
+             } else {
+	       $('#orchestra #msg').html(data.data.message);
+	       $('#orchestra #msg').show();
+               return false;
+             }
+	   }, 'json');    
+    return false;
+  });
+
   ///////////////////////////////////////////////////////////////////////////
   //
   // bank account settings
@@ -1180,5 +1207,5 @@ $(document).ready(function() {
 });
 
 // Local Variables: ***
-// js-indent-level: 2 ***
+// js3-indent-level: 2 ***
 // End: ***

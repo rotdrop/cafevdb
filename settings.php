@@ -89,8 +89,17 @@ namespace CAFEVDB {
                     Config::getSetting('memberTable', L::t('ClubMembers')));
       $tmpl->assign('executiveBoardTable',
                     Config::getSetting('executiveBoardTable', L::t('ExecutiveBoardMembers')));
-
+      $tmpl->assign('memberTableId',
+                    Config::getSetting('memberTableId', -1));
+      $tmpl->assign('executiveBoardTableId',
+                    Config::getSetting('executiveBoardTableId', -1));
+      
       $tmpl->assign('orchestra', Config::getValue('orchestra'));
+
+      // musician ids of the officials
+      $tmpl->assign('presidentId', Config::getSetting('presidentId', -1));
+      $tmpl->assign('secretaryId', Config::getSetting('secretaryId', -1));
+      $tmpl->assign('treasurerId', Config::getSetting('treasurerId', -1));
 
       $tmpl->assign('dbserver', Config::getValue('dbserver'));
       $tmpl->assign('dbname', Config::getValue('dbname'));
