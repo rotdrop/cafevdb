@@ -33,7 +33,7 @@ CAFEVDB.Insurances = CAFEVDB.Insurances || {};
         var submitSel = 'input.pme-save,input.pme-apply,input.pme-more';
 
         if (form.find(submitSel).length > 0) {
-            var rateDialog = false;
+            var rateDialog = container.find('input.broker').length > 0;
 
             // for the insurance rates
             var broker;
@@ -50,18 +50,19 @@ CAFEVDB.Insurances = CAFEVDB.Insurances || {};
             var constructionYear;
             var insuranceAmount;
 
-            var blurInputs;
-            var oldValues;
+            var textInputs;
 
-            // for the insurance rates
-            broker = container.find('input.broker');
-            rate   = container.find('input.rate');
+            var key;
 
-            if (broker.length > 0) {
-                rateDialog = true;
+            if (rateDialog) {
+                // for the insurance rates
+                broker = container.find('input.broker');
+                rate   = container.find('input.rate');
 
-                oldValues = [ broker.val(), rate.val() ];
-                blurInputs = [ broker, rate ];
+                textInputs = {
+                    'broker': broker,
+                    'rate': rate
+                }
             } else {
                 // for the insured items
 
@@ -75,53 +76,24 @@ CAFEVDB.Insurances = CAFEVDB.Insurances || {};
                 constructionYear = container.find('input.construction-year');
                 insuranceAmount = container.find('input.amount');
 
-                if (false) {
-                    // doesn't make too much sense.
-                    //alert('hello'+constructionYear.length);
-                    constructionYear.datepicker({
-                        changeMonth: false,
-                        constrainInput: true,
-                        gotoCurrent: true,
-                        monthNames: [ '', '', '', '', '', '', '', '', '', '', '', '' ],
-                        changeYear: true,
-                        showButtonPanel: true,
-                        dateFormat: 'yy',
-                        yearRange: '-300:+0',
-                        stepMonths: 12,
-                        minDate: null,
-                        beforeShow: function(input) {
-                            $(input).unbind('blur');
-                        },
-                        onSelect: function(dateText, inst) {
-                            //$(this).blur(self.validate);
-                            $(this).focus();
-                            $(this).blur();
-                        }
-                    }).focus(function() {
-                        var thisCalendar = $(this);
-                        $('.ui-datepicker-calendar').detach();
-		        $('.ui-datepicker-close').click(function() {
-                            var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
-                            thisCalendar.datepicker('setDate', new Date(year, 1, 1));
-		        });
-                    });
-                }
-
                 // need to disable all of these on blur in order to avoid
                 // focus ping-pong
-                oldValues = [
-                    insuredItem.val(), manufacturer.val(), constructionYear.val(), insuranceAmount.val()
-                ];
-                blurInputs = [
-                    insuredItem, manufacturer, constructionYear, insuranceAmount
-                ];
+                textInputs = {
+                    'insured-item': insuredItem,
+                    'manufacturer': manufacturer,
+                    'construction-year': constructionYear,
+                    'amount': insuranceAmount
+                };
             }
 
+            var oldValues = {};
+            for (key in textInputs) {
+                oldValues[key] = textInputs[key].val();
+            }
+            
             var blurLock = function(lock) {
-                var idx;
-
-                for (idx = 0; idx < blurInputs.length; ++idx) {
-                    blurInputs[idx].prop('disabled', lock);
+                for (var key in textInputs) {
+                    textInputs[key].prop('disabled', lock);
                 }
             };
 
@@ -149,10 +121,12 @@ CAFEVDB.Insurances = CAFEVDB.Insurances || {};
                     $.post(OC.filePath('cafevdb', 'ajax/insurance', 'validate.php'),
                            post,
                            function(data) {
-                               var idx;
-                               if (!CAFEVDB.ajaxErrorHandler(data, [], validateUnlock)) {
-                                   for (idx = 0; idx < blurInputs.length; ++idx) {
-                                       blurInputs[idx].val(oldValues[idx]);
+                               var key;
+                               if (!CAFEVDB.ajaxErrorHandler(data,
+                                                             Object.keys(textInputs),
+                                                             validateUnlock)) {
+                                   for (key in textInputs) {
+                                       textInputs[key].val(oldValues[key]);
                                    }
                                } else {
                                    if (data.data.message != '') {
@@ -162,11 +136,13 @@ CAFEVDB.Insurances = CAFEVDB.Insurances || {};
                                        }, 5000);
                                    }
                                    //alert('data: '+CAFEVDB.print_r(data.data, true));
-                                   if (rateDialog) {
-                                       broker.val(data.data.broker);
-                                       rate.val(data.data.rate);
+                                   if (typeof textInputs[postAddOn] != 'undefined') {
+                                       textInputs[postAddOn].val(data.data[postAddOn]);
                                    }
                                    if (postAddOn == 'submit') {
+                                       for (key in textInputs) {
+                                           textInputs[key].val(data.data[key]);
+                                       }
                                        if (typeof button != 'undefined') {
                                            $(form).off('click', submitSel);
                                            button.trigger('click');
@@ -174,8 +150,8 @@ CAFEVDB.Insurances = CAFEVDB.Insurances || {};
                                            form.submit();
                                        }
                                    }
-                                   for (idx = 0; idx < blurInputs.length; ++idx) {
-                                       oldValues[idx] = blurInputs[idx].val()
+                                   for (key in textInputs) {
+                                       oldValues[key] = textInputs[key].val();
                                    }
 
                                    validateUnlock();
@@ -186,29 +162,23 @@ CAFEVDB.Insurances = CAFEVDB.Insurances || {};
                 });
             };
 
-            // validate brokers and rates
+            // Validate text inputs. We assume that select boxes work
+            // out just fine.
 
-            broker.
-                off('blur').
-                on('blur', function(event) {
-                event.preventDefault();
-                
-                validate('broker', undefined, blurLock);
+            for (key in textInputs) {
+                textInputs[key].
+                    off('blur').
+                    on('blur', { control: key }, function(event) {
 
-                return false;
-            });
+                    event.preventDefault();
 
-            rate.
-                off('blur').
-                on('blur', function(event) {
-                event.preventDefault();
+                    validate(event.data.control, undefined, blurLock);
 
-                validate('rate', undefined, blurLock);
-                
-                return false;                
-            });
+                    return false;
+                });
+            }
 
-            // validate new input for insured items
+            // intercept form-submit until validated
 
             form.
                 off('click', submitSel).
