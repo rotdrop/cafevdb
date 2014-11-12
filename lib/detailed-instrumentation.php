@@ -382,7 +382,7 @@ class DetailedInstrumentation
     // Generate input fields for the extra columns
     foreach ($userExtraFields as $field) {
       $name = $field['name'];    
-      $opts['fdd']["$name"] = array('name'     => $name.' ('.$projectName.')',
+      $opts['fdd']["$name"] = array('name'     => $name.'\n('.$projectName.')',
                                     'tab' => array('id' => 'project'),
                                     'select'   => 'T',
                                     'maxlen'   => 65535,
@@ -396,7 +396,7 @@ class DetailedInstrumentation
       }
     }
     $opts['fdd']['ProjectRemarks'] =
-      array('name' => L::t('Remarks (%s)', array($projectName)),
+      array('name' => L::t("Remarks\n(%s)", array($projectName)),
             'select'   => 'T',
             'maxlen'   => 65535,
             'css'      => array('postfix' => 'remarks'),
