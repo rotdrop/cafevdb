@@ -69,7 +69,7 @@ namespace CAFEVDB
     public function shortTitle()
     {
       $projectId = Util::cgiValue('ProjectId', -1);
-      $projectName = Util::cgiValue('Proeject', false);
+      $projectName = Util::cgiValue('ProjectName', false);
       if ($projectId < 0 || !$projectName) {
         $projectId = Util::getCGIRecordId();
         $proejctName = false;
@@ -230,7 +230,7 @@ namespace CAFEVDB
       $currentYear = date('Y');
       $yearRange = self::fetchYearRange();
       $yearValues = array(' ');
-      for ($year = $currentYear - $yearRange["min"] - 1; $year < $currentYear + 5; $year++) {
+      for ($year = $yearRange["min"] - 1; $year < $currentYear + 5; $year++) {
         $yearValues[] = $year;
       }
 
