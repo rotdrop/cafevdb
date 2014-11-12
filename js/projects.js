@@ -304,10 +304,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
 
         if (form.find(submitSel).length > 0) {
 
-            var nameSelector =
-                'input.pme-input-0.projectname'+
-                ','+
-                'input.pme-input-1.projectname';
+            var nameSelector = 'input.projectname';
             var yearSelector = 'select[name="PME_data_Jahr"]';
             var attachSelector = '#project-name-yearattach';
 
@@ -333,7 +330,17 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
                     $.post(OC.filePath('cafevdb', 'ajax/projects', 'verifyName.php'),
                            post,
                            function (data) {
-                               if (data.status == 'success') {
+                               if (!CAFEVDB.ajaxErrorHandler(data, [
+                                   'projectName', 'projectYear'
+                                   ], function() {})) {
+                                   if (name.val() == '') {
+                                       name.val(oldProjectName);
+                                   }
+                                   if (year.val() == '') {
+                                       year.val(oldProjectYear);
+                                       year.trigger('chosen:updated');
+                                   }
+                               } else {
                                    var rqData = data.data;
                                    if (rqData.message != '') {
                                        OC.Notification.showHtml(rqData.message);
@@ -350,21 +357,6 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
                                        } else {
                                            form.submit();
                                        }
-                                   }
-                               } else if (data.status == 'error') {
-                                   rqData = data.data;
-                                   OC.Notification.showHtml(rqData.message);
-                                   if (name.val() == '') {
-                                       name.val(oldProjectName);
-                                   }
-                                   if (year.val() == '') {
-                                       year.val(oldProjectYear);
-                                       year.trigger('chosen:updated');
-                                   }
-                                   if (data.data.error == 'exception') {
-                                       OC.dialogs.alert(rqData.exception+rqData.trace,
-                                                        t('cafevdb', 'Caught a PHP Exception'),
-                                                        null, true);
                                    }
                                }
                            });

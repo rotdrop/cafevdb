@@ -62,30 +62,29 @@ namespace CAFEVDB {
     $infoMessage = "";
     switch ($control) {
     case "submit":
+      
     case "name":
       // No whitespace, s.v.p., and CamelCase
-      $whiteSpace = false;
-    $projectName = preg_replace_callback('/\s+(\S)(\S*)(\s*$)?/', function ($matches) {
-        $whiteSpace = true;
-        return strtoupper($matches[1]).$matches[2];
-      }, $projectName);
-    if ($whiteSpace) {
-      $infoMessage .= "White-space has been removed from the project-name.";
-    }
-    $matches = array();
-    // Get the year from the name, if set
-    if (preg_match('/^(.*\D)?(\d{4})$/', $projectName, $matches) == 1) {
-      $projectName = $matches[1];
-      if ($control != "submit" && $attachYear) {
-        // the year-control wins when submitting the form
-        $projectYear = $matches[2];
+      $origName = $projectName;
+      $projectName = ucwords($projectName);
+      $projectName = preg_replace('/\s+/', '', $projectName);
+      if ($origName != $projectName) {
+        $infoMessage .= L::t("The project name has been simplified.");
       }
-      if ($projectName == "") {
-        $errorMessage .= L::t("The project-name must not only consist of the year-number.");
+      $matches = array();
+      // Get the year from the name, if set
+      if (preg_match('/^(.*\D)?(\d{4})$/', $projectName, $matches) == 1) {
+        $projectName = $matches[1];
+        if ($control != "submit" && $attachYear) {
+          // the year-control wins when submitting the form
+          $projectYear = $matches[2];
+        }
+        if ($projectName == "") {
+          $errorMessage .= L::t("The project-name must not only consist of the year-number.");
+        }
+      } else if ($projectName == "") {
+        $errorMessage .= L::t("No project-name given.");
       }
-    } else if ($projectName == "") {
-      $errorMessage .= L::t("No project-name given.");
-    }
     case "year":
       if ($projectYear == "") {
         $errorMessage .= L::t("No project-year given.");
