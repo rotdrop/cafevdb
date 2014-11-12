@@ -38,13 +38,19 @@ namespace CAFEVDB
     const ADDRESS_TOP = 45;
     const ADDRESS_WIDTH = 80;
     const ADDRESS_HEIGHT = 45;
-    const FONT_SIZE = 10;
+    const FONT_SIZE = 12;
     const FONT_SENDER = 8;
     const FONT_FOOTER = 8;
     const FONT_HEADER = 10;
+    const FONT_RECIPIENT = 12;
     const FOOTER_HEIGHT = 20;
     const PT = 0.3527777777777777;
 
+    /**Return the font-size converted to mm. */
+    public function fontSize($ptSize = self::FONT_SIZE) {
+      return $ptSize * self::PT;
+    }
+    
     public function Header() {
       //		$this->setJPEGQuality(90);
       // $this->Image('logo.png', 120, 10, 75, 0, 'PNG', 'http://www.finalwebsites.com');
@@ -133,7 +139,8 @@ namespace CAFEVDB
 
     public function addressFieldRecipient($recipient)
     {
-      $fontHeight = self::PT * self::FONT_SENDER;
+      $this->SetFont(PDF_FONT_NAME_MAIN, '', self::FONT_RECIPIENT);
+      $fontHeight = self::PT * self::FONT_RECIPIENT;
       if (false)
         $this->writeHtmlCell(self::ADDRESS_WIDTH, self::ADDRESS_HEIGHT-3*$fontHeight,
                              self::LEFT_MARGIN, self::ADDRESS_TOP+3*$fontHeight,
@@ -141,13 +148,26 @@ namespace CAFEVDB
       $this->SetXY(self::LEFT_MARGIN, self::ADDRESS_TOP+4*$fontHeight);
       $this->MultiCell(self::ADDRESS_WIDTH, self::ADDRESS_HEIGHT-4*$fontHeight,
                        $recipient, 0, 'L');
+      $this->SetFont(PDF_FONT_NAME_MAIN, '', self::FONT_SIZE);
     }
 
+    /**Folding marks. */
+    public function foldingMarks()
+    {
+      // Falzmarken
+      $oldLineWidth = $this->GetLineWidth();
+      $this->SetLineWidth(0.3);
+      $this->Line(3,105,6,105);
+      $this->Line(3,148,8,148);
+      $this->Line(3,210,6,210);
+      $this->SetLineWidth($oldLineWidth);
+    }
+    
     public function date($date)
     {
       $this->SetCellPadding(0);
-      $this->SetXY(125, 100 - self::FONT_SIZE);
-      $this->Cell(65, self::FONT_SIZE, $date, 0, false, 'R');
+      $this->SetXY(125, 100 - 1*$this->fontSize());
+      $this->Cell(65, $this->fontSize(), $date, 0, false, 'R');
     }
 
     public function subject($subject)
@@ -156,7 +176,7 @@ namespace CAFEVDB
       $this->SetXY(self::LEFT_TEXT_MARGIN, 100);
       $this->SetFont(PDF_FONT_NAME_MAIN, 'B', self::FONT_SIZE);
       $this->Cell(self::PAGE_WIDTH-self::LEFT_TEXT_MARGIN-self::RIGHT_TEXT_MARGIN,
-                  self::FONT_SIZE,
+                  $this->fontSize(),
                   $subject, 0, false, 'L');        
       $this->SetFont(PDF_FONT_NAME_MAIN, '', self::FONT_SIZE);
     }
@@ -165,23 +185,24 @@ namespace CAFEVDB
     {
       $textWidth = self::PAGE_WIDTH-self::LEFT_TEXT_MARGIN-self::RIGHT_TEXT_MARGIN;
       $this->SetCellPadding(0);
-      $this->SetXY(self::LEFT_TEXT_MARGIN, 100+1*self::FONT_SIZE);
-      $this->Cell($textWidth, self::FONT_SIZE, $startFormula, 0, false, 'L');
+      $this->SetXY(self::LEFT_TEXT_MARGIN, 100+2*$this->fontSize());
+      $this->Cell($textWidth, $this->fontSize(), $startFormula, 0, false, 'L');
     }
 
     public function letterClose($endFormula, $signature, $signatureImage = false)
     {
       $textWidth = self::PAGE_WIDTH-self::LEFT_TEXT_MARGIN-self::RIGHT_TEXT_MARGIN;
-      $this->SetXY(self::LEFT_TEXT_MARGIN, $this->GetY() + self::FONT_SIZE);
-      $this->Cell($textWidth, self::FONT_SIZE, $endFormula, 0, false, 'L');
+      $this->SetXY(self::LEFT_TEXT_MARGIN, $this->GetY() + $this->fontSize());
+      $this->Cell($textWidth, $this->fontSize(), $endFormula, 0, false, 'L');
       $y = $this->GetY();
       if ($signatureImage !== false /*&& file_exists($signatureImage)*/) {
         $this->Image($signatureImage,
                      self::LEFT_TEXT_MARGIN+10,
-                     $this->GetY()+1*self::FONT_SIZE, 6*self::FONT_SIZE);
+                     $this->GetY()+1.5*$this->fontSize(),
+                     0, 4*$this->fontSize());                     
       }
-      $this->SetXY(self::LEFT_TEXT_MARGIN, $y + 2*self::FONT_SIZE);
-      $this->Cell($textWidth, self::FONT_SIZE, $signature, 0, false, 'L');
+      $this->SetXY(self::LEFT_TEXT_MARGIN, $y + 4*$this->fontSize());
+      $this->Cell($textWidth, $this->fontSize(), $signature, 0, false, 'L');
     }
 
     public function letter($startFormula, $body, $endFormula, $signature)
@@ -189,7 +210,7 @@ namespace CAFEVDB
       $this->letterOpen($startFormula);
       $this->writeHtmlCell(self::PAGE_WIDTH-self::LEFT_TEXT_MARGIN-self::RIGHT_TEXT_MARGIN,
                            300,
-                           self::LEFT_TEXT_MARGIN, 100+4*self::FONT_SIZE,
+                           self::LEFT_TEXT_MARGIN, 100+4*$this->fontSize(),
                            $body);
       $this->letterClose($endFormular, $signature);
     }
@@ -241,7 +262,7 @@ Engelboldstr. 97
 
       $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
                           150,
-                          PDFLetter::LEFT_TEXT_MARGIN, 100+4*PDFLetter::FONT_SIZE,
+                          PDFLetter::LEFT_TEXT_MARGIN, 100+4*$pdf->fontSize(),
                           '<table>
   <tr><td>Blah</td></tr>
 </table>');
