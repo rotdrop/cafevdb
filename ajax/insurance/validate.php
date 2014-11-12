@@ -50,6 +50,7 @@ namespace CAFEVDB {
       $broker = Util::cgiValue('PME_data_Broker');
       $rate = Util::cgiValue('PME_data_Rate');
       switch($control) {
+      case 'submit':
       case 'broker':
         // No whitespace, s.v.p., and CamelCase
         $origBroker = $broker;
@@ -61,7 +62,9 @@ namespace CAFEVDB {
         if ($broker != $origBroker) {
           $infoMessage .= L::t("Broker-name has been simplified.");
         }
-        break;
+        if ($control != 'submit') {
+          break;
+        }
       case 'rate':
         $rate = floatval($rate);
         if ($rate <= 0 || $rate > 1e-2) {
@@ -70,7 +73,7 @@ namespace CAFEVDB {
         }
         break;
       default:
-        $errorMessage = L::t("Internal error: unknown request");
+        $errorMessage = L::t("Internal error: unknown request: %s", array($control));
         break;
       }
       if ($errorMessage == '') {
