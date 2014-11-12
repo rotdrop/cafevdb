@@ -330,15 +330,21 @@ class InstrumentInsurance
     
     $opts['fdd']['InsuranceAmount'] = Config::$opts['money'];
     $opts['fdd']['InsuranceAmount']['name'] = strval(L::t('Insurance Amount'));
-    $opts['fdd']['InsuranceAmount']['css'] = array('postfix' => ' amount');
+    $opts['fdd']['InsuranceAmount']['css'] = array('postfix' => ' amount align-right');
 
     $rateIdx = count($opts['fdd']);
     $opts['fdd']['InsuranceRate'] = array(
       'input' => 'V',
+      'css' => array('postfix' => ' align-right'),
       'name' => L::t('Insurance Rate'),
       'options' => 'LFACPDV',
       'sql' => '`PMEjoin'.$rateIdx.'`.`Rate`',
       'sqlw' => '`PMEjoin'.$rateIdx.'`.`Rate`',
+      'php' => array(
+        'type' => 'function',
+        'function' => 'CAFEVDB\InstrumentInsurance::displayPercentageValuePME',
+        'parameters' => array()
+        ),
       'values' => array(
         'table' => 'InsuranceRates',
         'column' => 'Rate',
@@ -350,10 +356,16 @@ class InstrumentInsurance
 
     $opts['fdd']['InsuranceFee'] = array(
       'input' => 'V',
+      'css' => array('postfix' => ' align-right'),
       'name' => L::t('Insurance Fee')."<br/>".L::t('including taxes'),
       'options' => 'LFACPDV',
       'sql' => 'ROUND(`PMEtable0`.`InsuranceAmount` * `PMEjoin'.$rateIdx.'`.`Rate` * (1+'.self::TAXES.'), 2)',
-      'sqlw' => '`PMEjoin'.$rateIdx.'`.`Rate`'
+      'sqlw' => '`PMEjoin'.$rateIdx.'`.`Rate`',
+      'php' => array(
+        'type' => 'function',
+        'function' => 'CAFEVDB\InstrumentInsurance::displayMoneyValuePME',
+        'parameters' => array()
+        ),
       );
 
     $opts['fdd']['InsuranceTotal'] = array(
@@ -402,6 +414,27 @@ class InstrumentInsurance
     }
 
   } // display()
+
+  //!Just display the given value
+  public static function displayPercentageValuePME($insuranceId, $opts, $action, $k, $fds, $fdd, $row)
+  {
+    $value = floatval($row['qf'.$k]) * 100;
+    $oldlocale = setlocale(LC_ALL, Util::getLocale());
+    $result = floatval($value).' %';
+    setlocale(LC_ALL, $oldlocale);
+    
+    return $result;
+  }
+  
+  //!Just display the given value
+  public static function displayMoneyValuePME($insuranceId, $opts, $action, $k, $fds, $fdd, $row)
+  {
+    $oldlocale = setlocale(LC_ALL, Util::getLocale());
+    $result = money_format('%n', $row['qf'.$k]);
+    setlocale(LC_ALL, $oldlocale);
+
+    return $result;
+  }
 
   //!Button redirect
   public static function instrumentInsurancePME($insuranceId, $opts, $action, $k, $fds, $fdd, $row)
@@ -582,7 +615,8 @@ class InstrumentInsurance
       . " ( (ISNULL(`BillToParty`) OR `BillToParty` <= 0) AND `MusicianId` = ".$musicianId." ) "
       . " OR "
       . " `BillToParty` = ".$musicianId
-      . " )";
+      . " )"
+      . " ORDER BY `Broker`,`GeographicalScope` ASC";
     
     $result = mySQL::query($query, $handle);
     while ($row = mySQL::fetch($result)) {
@@ -663,18 +697,18 @@ class InstrumentInsurance
     $css = "insurance-overview-table";
     $style = '<style>
   table.'.$css.' {
-    border: #000 1px solid;
+    border: 0.3mm solid #000;
     border-collapse:collapse;
     border-spacing:0px;
     /*width:auto; not with tcpdf ... */
   }
   table.'.$css.' td {
-    border: #000 1px solid;
+    border: 0.3mm solid #000;
     min-width:5em;
     padding: 0.1em 0.5em 0.1em 0.5em;
   }
   table.'.$css.' th {
-    border: #000 1px solid;
+    border: 0.3mm solid #000;
     min-width:5em;
     padding: 0.1em 0.5em 0.1em 0.5em;
     text-align:center;
@@ -708,10 +742,8 @@ class InstrumentInsurance
     // add a page
     $pdf->addPage();
 
-    // Falzmarken
-    $pdf->Line(3,105,6,105);
-    $pdf->Line(3,148,8,148);
-    $pdf->Line(3,210,6,210);
+    // folding marks for DIN-Brief
+    $pdf->foldingMarks();
  
     // Address record
     $pdf->frontHeader(
@@ -746,7 +778,7 @@ class InstrumentInsurance
       
     $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
                         10,
-                        PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+1*PDFLetter::FONT_SIZE,
+                        PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+2*$pdf->fontSize(),
                         L::t('this letter informs you about the details of the instrument-insurances
 we are maintaining for you on your behalf. This letter is
 machine-generated; in case of any inconsistencies or other questions
@@ -758,16 +790,16 @@ if something changes. Of course, you may request this information about
 your insured items at any time. Just ask.'), '', 1);
 
     // Slightly smaller for table
-    $pdf->SetFont(PDF_FONT_NAME_MAIN, '', PDFLetter::FONT_SIZE-2);
+    $pdf->SetFont(PDF_FONT_NAME_MAIN, '', 10);
     
-    $html = '';
     foreach($overview['musicians'] as $id => $insurance) {
+      $html = '';
       $html .= '
 <h4>'.L::t('Insured Person: %s', array($insurance['name'])).'</h4>
 <table cellpadding="2" class="'.$css.'">
   <tr>
-    <th width="60">'.L::t('Vendor').'</th>
-    <th width="70">'.L::t('Scope').'</th>
+    <th width="70">'.L::t('Vendor').'</th>
+    <th width="60">'.L::t('Scope').'</th>
     <th width="80">'.L::t('Object').'</th>
     <th>'.L::t('Manufacturer').'</th>
     <th width="60">'.L::t('Amount').'</th>
@@ -798,12 +830,12 @@ your insured items at any time. Just ask.'), '', 1);
 
       $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
                           10,
-                          PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+1*PDFLetter::FONT_SIZE,
+                          PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+1*$pdf->fontSize(),
                           $style.$html, '', 1);
 
     }
 
-    // Slightly smaller for table
+    // Restore font size
     $pdf->SetFont(PDF_FONT_NAME_MAIN, '', PDFLetter::FONT_SIZE);
 
     $totals = $overview['totals'];
@@ -813,7 +845,7 @@ your insured items at any time. Just ask.'), '', 1);
     $html .= '
 <table class="totals">
   <tr>
-    <td width="150" class="summary">'.L::t('Total amount excluding taxes:').'</td>
+    <td width="180" class="summary">'.L::t('Total amount excluding taxes:').'</td>
     <td width="80" class="money">'.money_format('%n', $totals).'</td>
   </tr>
   <tr>
@@ -829,13 +861,13 @@ your insured items at any time. Just ask.'), '', 1);
     
     $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
                         10,
-                        PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+0.5*PDFLetter::FONT_SIZE,
+                        PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+0.5*$pdf->fontSize(),
                         $style.$html, '', 1);
 
     $html = L::t('You have granted us a debit-mandate. The total amount due will be debited from your bank-account, no further action from your side is required. We will inform you by email about the date of the debit at least 14 days in advance of the bank transaction.');
     $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
                         10,
-                        PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+0.5*PDFLetter::FONT_SIZE,
+                        PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+0.5*$pdf->fontSize(),
                         $style.$html, '', 1);
 
     $signature = \OCP\Util::imagePath(Config::APP_NAME, 'treasurer-signature.png');
