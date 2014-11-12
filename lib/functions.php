@@ -1099,6 +1099,18 @@ __EOT__;
 __EOT__;
         break;
 
+      case 'insurancerates':
+        $value = L::t("Insurance Rates");
+        $title = L::t("Display a table with the insurance rates for the individual instrument insurances.");
+        $form =<<<__EOT__
+<form class="cafevdb-control" id="$controlid" method="post" action="">
+  <input type="submit" value="$value" title="$title"/>
+  <input type="hidden" name="Template" value="insurance-rates"/>
+</form>
+
+__EOT__;
+        break;
+
       case 'debitmandates':
         $value = L::t("Debit Mandates");
         $title = L::t("Display a table with an overview over all SEPA debit mandates.");
@@ -1292,7 +1304,14 @@ __EOT__;
       } elseif (strcasecmp(substr($set,0,4),'enum') == 0) {
         $settype = 'enum';
       } else {
-        return null;
+        // fetch all values
+        $query = "SELECT DISTINCT `".$column."` FROM `".$table."` WHERE 1";
+        $result = mySQL::query($query, $handle) or die("Couldn't execute query");
+        $values = array();
+        while ($line = mySQL::fetch($result)) {
+          $values[] = $line[$column];
+        }
+        return $values;
       }
       $set = substr($set,strlen($settype)+2,strlen($set)-strlen($settype)-strlen("();")-1); // Remove "set(" at start and ");" at end
 

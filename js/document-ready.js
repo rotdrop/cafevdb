@@ -100,28 +100,6 @@ $(document).ready(function() {
         parameters: []
     });
 
-    PHPMYEDIT.addTableLoadCallback('InstrumentInsurance', {
-        callback: function(selector, resizeCB) {
-            CAFEVDB.exportMenu(selector);
-
-            CAFEVDB.SepaDebitMandate.insuranceReady(selector);
-
-            $(':button.musician-instrument-insurance').click(function(event) {
-                event.preventDefault();
-                var values = $(this).attr('name');
-                
-                CAFEVDB.Page.loadPage($(this).attr('name'));
-                
-                return false;
-            });
-
-            resizeCB();
-
-        },
-        context: CAFEVDB,
-        parameters: []
-    });
-
     CAFEVDB.addReadyCallback(function() {
         CAFEVDB.exportMenu();
 

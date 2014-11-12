@@ -297,7 +297,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
     };
 
     Projects.pmeFormInit = function(containerSel) {
-        var containerSel = PHPMYEDIT.selector(containerSel);
+        containerSel = PHPMYEDIT.selector(containerSel);
         var container = PHPMYEDIT.container(containerSel);
         var form = container.find('form[class^="pme-form"]');
         var submitSel = 'input.pme-save,input.pme-apply,input.pme-more';
@@ -957,7 +957,7 @@ $(document).ready(function(){
 
     CAFEVDB.addReadyCallback(function() {
         CAFEVDB.Projects.actionMenu();
-        var dpyClass = $(PHPMYEDIT.defaultSelector).find('form.pme input[name="DisplayClass"]');
+        var dpyClass = $(PHPMYEDIT.defaultSelector).find('form.pme-form input[name="DisplayClass"]');
         if (dpyClass.length > 0 && dpyClass.val() === 'Projects') {
             CAFEVDB.Projects.pmeFormInit(PHPMYEDIT.defaultSelector);
         }

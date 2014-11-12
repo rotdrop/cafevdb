@@ -260,27 +260,27 @@ make sure that the musicians are also automatically added to the
     }
 
     $opts['fdd']['Name'] = array(
-                                 'name'     => 'Name',
-                                 'select'   => 'T',
-                                 'maxlen'   => 128,
-                                 'sort'     => true
-                                 );
+      'name'     => L::t('Surname'),
+      'select'   => 'T',
+      'maxlen'   => 128,
+      'sort'     => true
+      );
 
     $opts['fdd']['Vorname'] = array(
-                                    'name'     => 'Vorname',
-                                    'select'   => 'T',
-                                    'maxlen'   => 128,
-                                    'sort'     => true
-                                    );
+      'name'     => L::t('Forename'),
+      'select'   => 'T',
+      'maxlen'   => 128,
+      'sort'     => true
+      );
 
     $opts['fdd']['Instrumente'] = array(
-                                        'name'        => 'Instrumente',
-                                        'css'         => array('postfix' => ' instruments'),
-                                        'select'      => 'M',
-                                        'maxlen'      => 137,
-                                        'sort'        => true,
-                                        'values'      => $this->instruments,
-                                        'valueGroups' => $this->groupedInstruments,
+      'name'        => L::t('Instruments'),
+      'css'         => array('postfix' => ' instruments'),
+      'select'      => 'M',
+      'maxlen'      => 137,
+      'sort'        => true,
+      'values'      => $this->instruments,
+      'valueGroups' => $this->groupedInstruments,
       );
     /* Make "Status" a set, 'soloist','conductor','noemail', where in
      * general the first two imply the last.

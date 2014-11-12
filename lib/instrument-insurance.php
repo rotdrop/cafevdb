@@ -46,14 +46,14 @@ class InstrumentInsurance
 
     $handle = mySQL::connect($this->opts);
 
-    $this->broker = mySQL::multiKeys('InstrumentInsurance', 'Broker', $handle);
+    $this->broker = mySQL::multiKeys('InsuranceRates', 'Broker', $handle);
     // brokerNames ... maybe store an additional table with further
     // information about the brokers
     foreach ($this->broker as $tag) {
       $this->brokerNames[$tag] = $tag;
     }
     
-    $this->scope = mySQL::multiKeys('InstrumentInsurance', 'GeographicalScope', $handle);
+    $this->scope = mySQL::multiKeys('InsuranceRates', 'GeographicalScope', $handle);
     $this->scopeNames = array();
     foreach ($this->scope as $tag) {
       $this->scopeNames[$tag] = strval(L::t($tag));
@@ -618,8 +618,11 @@ class InstrumentInsurance
    */
   public static function musicianOverviewPDFName($overview) 
   {
-    $firstName = $overview['payer']['firstName'];
-    $surName = $overview['payer']['surName'];
+    // We also remove the most common special characters, is just more
+    // handy in file-names.
+    $firstName = Finance::sepaTranslit($overview['payer']['firstName']);
+    $surName = Finance::sepaTranslit($overview['payer']['surName']);
+    
     $id =  $overview['payerId'];
     
     $name = strftime('%Y%m%d-%H%M%S').'-'.$id.'-'.$firstName.$surName.'-'.L::t('insurance').'.pdf';

@@ -477,7 +477,7 @@ var CAFEVDB = CAFEVDB || {};
 
       values.push({name: $(this).attr('name'), value: $(this).val()});
 
-      action = OC.filePath('cafevdb', 'ajax/finance', 'instrument-insurance-export.php');
+      action = OC.filePath('cafevdb', 'ajax/insurance', 'instrument-insurance-export.php');
       CAFEVDB.iframeFormSubmit(action, downloadName2, values);
 
       action = OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-export.php');

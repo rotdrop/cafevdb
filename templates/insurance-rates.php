@@ -20,28 +20,29 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use CAFEVDB\L;
-use CAFEVDB\Navigation;
-use CAFEVDB\InstrumentInsurance;
+namespace CAFEVDB
+{
 
-$table = new InstrumentInsurance();
-$css_pfx = InstrumentInsurance::CSS_PREFIX;
+  $table = new InsuranceRates();
+  $css_pfx = InsuranceRates::CSS_PREFIX;
 
-$nav = '';
-$nav .= Navigation::button('projects');
-$nav .= Navigation::button('all');
-$nav .= Navigation::button('insurancerates');
+  $nav = '';
+  $nav .= Navigation::button('projects');
+  $nav .= Navigation::button('all');
+  $nav .= Navigation::button('insurances');
+  $nav .= Navigation::button('debitmandates');
 
-echo $this->inc('part.common.header',
-                array('css-prefix' => $css_pfx,
-                      'navigationcontrols' => $nav,
-                      'header' => $table->headerText()));
+  echo $this->inc('part.common.header',
+                  array('css-prefix' => $css_pfx,
+                        'navigationcontrols' => $nav,
+                        'header' => $table->headerText()));
 
+  
+  // Issue the main part. The method will echo itself
+  $table->display();
 
-// Issue the main part. The method will echo itself
-$table->display();
-
-// Close some still opened divs
-echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
+  // Close some still opened divs
+  echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
+}
 
 ?>

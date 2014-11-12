@@ -94,6 +94,7 @@ namespace CAFEVDB
     \OCP\Util::addScript('cafevdb', 'sepa-debit-mandate');
     \OCP\Util::addScript('cafevdb', 'instrumentation');
     \OCP\Util::addScript('cafevdb', 'musicians');
+    \OCP\Util::addScript('cafevdb', 'insurance');
 
     \OCP\Util::addScript('cafevdb', 'jquery.Jcrop');
     \OCP\Util::addStyle('cafevdb', 'jquery.Jcrop');  
