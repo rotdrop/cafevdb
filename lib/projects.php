@@ -34,12 +34,29 @@ namespace CAFEVDB
     private $pme;
     private $pme_bare;
     private $execute;
-
+    private $projectId;
+    private $projectName;
+    
     public function __construct($execute = true)
     {
       $this->execute = $execute;
       $this->pme = false;
       $this->pme_bare = false;
+      $this->projectId = false;
+      $this->projectName = false;
+
+      $projectId = Util::cgiValue('ProjectId', false);
+      $projectName = Util::cgiValue('ProjectName', false);
+      if ($projectId === false  || !$projectName) {
+        $projectId = Util::getCGIRecordId();
+        $proejctName = false;
+        if ($projectId >= 0) {
+          $projectName = self::fetchName($projectId);
+        }
+      }
+
+      $this->projectId = $projectId;
+      $this->projectName = $projectName;
 
       Config::init();
     }
@@ -68,19 +85,10 @@ namespace CAFEVDB
 
     public function shortTitle()
     {
-      $projectId = Util::cgiValue('ProjectId', -1);
-      $projectName = Util::cgiValue('ProjectName', false);
-      if ($projectId < 0 || !$projectName) {
-        $projectId = Util::getCGIRecordId();
-        $proejctName = false;
-        if ($projectId >= 0) {
-          $projectName = self::fetchName($projectId);
-        }
-      }
-      if ($projectName !== false) {
+      if ($this->projectName !== false) {
         return L::t("%s Project %s",
                     array(ucfirst(Config::getValue('orchestra')),
-                          $projectName));
+                          $this->projectName));
       } else {
         return L::t("%s Projects", array(ucfirst(Config::getValue('orchestra'))));
       }
@@ -244,6 +252,12 @@ namespace CAFEVDB
         'values'   => $yearValues,
         );
 
+      if ($this->projectName != '' &&
+          self::yearFromName($this->projectName) === false) {
+        $checked = '';
+      } else {
+        $checked = 'checked';
+      }
       $nameIdx = count($opts['fdd']);
       $opts['fdd']['Name'] = array(
         'name'     => L::t('Projekt-Name'),
@@ -257,7 +271,7 @@ namespace CAFEVDB
   <input type="checkbox"
          name="yearattach"
          id="project-name-yearattach"
-         checked
+         '.$checked.'
   />
 '.L::t("Append the year to the name").'
 </label>'),
@@ -576,6 +590,21 @@ a comma.'));
       }
 
       return true;
+    }
+
+    /**Extract the year from the name (if appropriate). Return false
+     * if the year is not attached to the name.
+     */
+    public static function yearFromName($projectName)
+    {
+      if (preg_match('/^(.*\D)?(\d{4})$/', $projectName, $matches) == 1) {
+        $name = $matches[1];
+        $year = $matches[2];
+        if ($name.$year == $projectName) {
+          return $year;
+        }
+      }
+      return false;
     }
 
     /**Generate an associative array of extra-fields. The key is the
