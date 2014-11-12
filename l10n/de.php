@@ -465,7 +465,7 @@
 "Display a table with the SEPA debit mandates related to the project." => "Zeigt eine Tabelle mit den SEPA-Lastschriftmandaten für das Projekt an.",
 "Insurances" => "Versicherungen",
 "Display a table with an overview about the current state of the member's instrument insurances." => "Zeigt eine Tabelle mit einer Übersicht über die Instrumentensammelversicherungen an.",
-"Insurance Rates" => "Versicherungs-Rate",
+"Insurance Rates" => "Versicherungs-Raten",
 "Display a table with the insurance rates for the individual instrument insurances." => "Zeigt eine Tabelle mit einer Übersicht über die Versicherungsraten der\nInstrumenten-Sammelversicherungen an.",
 "Display a table with an overview over all SEPA debit mandates." => "Zeigt eine Tabelle mit einer Übersicht über alle SEPA Lastschriftmandate an.",
 "Germany" => "Deutschland",
