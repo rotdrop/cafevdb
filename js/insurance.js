@@ -33,12 +33,97 @@ CAFEVDB.Insurances = CAFEVDB.Insurances || {};
         var submitSel = 'input.pme-save,input.pme-apply,input.pme-more';
 
         if (form.find(submitSel).length > 0) {
-            // for the insurance rates
-            var broker = container.find('input.broker');
-            var rate   = container.find('input.rate');
+            var rateDialog = false;
 
-            var oldBroker = broker.val();
-            var oldRate = rate.val();
+            // for the insurance rates
+            var broker;
+            var rate;
+
+            // for the insured items
+            var musicianId;
+            var billToParty;
+            var brokerSelect;
+            var scopeSelect;
+            var insuredItem;
+            var accessorySelect;
+            var manufacturer;
+            var constructionYear;
+            var insuranceAmount;
+
+            var blurInputs;
+            var oldValues;
+
+            // for the insurance rates
+            broker = container.find('input.broker');
+            rate   = container.find('input.rate');
+
+            if (broker.length > 0) {
+                rateDialog = true;
+
+                oldValues = [ broker.val(), rate.val() ];
+                blurInputs = [ broker, rate ];
+            } else {
+                // for the insured items
+
+                musicianId = container.find('input.musician-id');
+                billToParty = container.find('input.bill-to-party');
+                brokerSelect = container.find('select.broker-select');
+                scopeSelect = container.find('select.scope-select');
+                insuredItem = container.find('input.insured-item');
+                accessorySelect = container.find('select.accessory');
+                manufacturer = container.find('input.manufacturer');
+                constructionYear = container.find('input.construction-year');
+                insuranceAmount = container.find('input.amount');
+
+                if (false) {
+                    // doesn't make too much sense.
+                    //alert('hello'+constructionYear.length);
+                    constructionYear.datepicker({
+                        changeMonth: false,
+                        constrainInput: true,
+                        gotoCurrent: true,
+                        monthNames: [ '', '', '', '', '', '', '', '', '', '', '', '' ],
+                        changeYear: true,
+                        showButtonPanel: true,
+                        dateFormat: 'yy',
+                        yearRange: '-300:+0',
+                        stepMonths: 12,
+                        minDate: null,
+                        beforeShow: function(input) {
+                            $(input).unbind('blur');
+                        },
+                        onSelect: function(dateText, inst) {
+                            //$(this).blur(self.validate);
+                            $(this).focus();
+                            $(this).blur();
+                        }
+                    }).focus(function() {
+                        var thisCalendar = $(this);
+                        $('.ui-datepicker-calendar').detach();
+		        $('.ui-datepicker-close').click(function() {
+                            var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+                            thisCalendar.datepicker('setDate', new Date(year, 1, 1));
+		        });
+                    });
+                }
+
+                // need to disable all of these on blur in order to avoid
+                // focus ping-pong
+                oldValues = [
+                    insuredItem.val(), manufacturer.val(), constructionYear.val(), insuranceAmount.val()
+                ];
+                blurInputs = [
+                    insuredItem, manufacturer, constructionYear, insuranceAmount
+                ];
+            }
+
+            var blurLock = function(lock) {
+                var idx;
+
+                for (idx = 0; idx < blurInputs.length; ++idx) {
+                    blurInputs[idx].prop('disabled', lock);
+                }
+            };
 
             var validate = function(postAddOn, button, lockCallback) {
 
@@ -64,9 +149,11 @@ CAFEVDB.Insurances = CAFEVDB.Insurances || {};
                     $.post(OC.filePath('cafevdb', 'ajax/insurance', 'validate.php'),
                            post,
                            function(data) {
+                               var idx;
                                if (!CAFEVDB.ajaxErrorHandler(data, [], validateUnlock)) {
-                                   broker.val(oldBroker);
-                                   rate.val(oldRate);
+                                   for (idx = 0; idx < blurInputs.length; ++idx) {
+                                       blurInputs[idx].val(oldValues[idx]);
+                                   }
                                } else {
                                    if (data.data.message != '') {
                                        OC.Notification.show(data.data.message);
@@ -75,8 +162,10 @@ CAFEVDB.Insurances = CAFEVDB.Insurances || {};
                                        }, 5000);
                                    }
                                    //alert('data: '+CAFEVDB.print_r(data.data, true));
-                                   broker.val(data.data.broker);
-                                   rate.val(data.data.rate);
+                                   if (rateDialog) {
+                                       broker.val(data.data.broker);
+                                       rate.val(data.data.rate);
+                                   }
                                    if (postAddOn == 'submit') {
                                        if (typeof button != 'undefined') {
                                            $(form).off('click', submitSel);
@@ -85,8 +174,10 @@ CAFEVDB.Insurances = CAFEVDB.Insurances || {};
                                            form.submit();
                                        }
                                    }
-                                   oldBroker = broker.val();
-                                   oldRate = rate.val();
+                                   for (idx = 0; idx < blurInputs.length; ++idx) {
+                                       oldValues[idx] = blurInputs[idx].val()
+                                   }
+
                                    validateUnlock();
                                }
 
@@ -95,17 +186,15 @@ CAFEVDB.Insurances = CAFEVDB.Insurances || {};
                 });
             };
 
+            // validate brokers and rates
+
             broker.
                 off('blur').
                 on('blur', function(event) {
                 event.preventDefault();
                 
-                validate('broker', undefined, function(lock) {
-                    // disable all inputs in order to avoid event ping-pong
-                    broker.prop('disabled', lock);
-                    rate.prop('disabled', lock);
-                });
-                
+                validate('broker', undefined, blurLock);
+
                 return false;
             });
 
@@ -114,14 +203,12 @@ CAFEVDB.Insurances = CAFEVDB.Insurances || {};
                 on('blur', function(event) {
                 event.preventDefault();
 
-                validate('rate', undefined, function(lock) {
-                    // disable all inputs in order to avoid event ping-pong
-                    broker.prop('disabled', lock);
-                    rate.prop('disabled', lock);
-                });
+                validate('rate', undefined, blurLock);
                 
                 return false;                
             });
+
+            // validate new input for insured items
 
             form.
                 off('click', submitSel).
@@ -157,6 +244,8 @@ $(document).ready(function(){
             CAFEVDB.exportMenu(selector);
 
             CAFEVDB.SepaDebitMandate.insuranceReady(selector);
+
+            CAFEVDB.Insurances.pmeFormInit(selector);
 
             $(':button.musician-instrument-insurance').click(function(event) {
                 event.preventDefault();

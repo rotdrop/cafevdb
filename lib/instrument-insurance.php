@@ -251,69 +251,86 @@ class InstrumentInsurance
       'sort'     => true
       );
 
-    $opts['fdd']['MusicianId'] = array('name'     => strval(L::t('Musician')),
-                                       'select'   => 'T',
-                                       'maxlen'   => 11,
-                                       'sort'     => true,
-                                       //'options'  => 'LFADV', // no change allowed
-                                       'default' => 0,
-                                       'values' => array('table' => 'Musiker',
-                                                         'column' => 'Id',
-                                                         'description' => array('columns' => array('Name', 'Vorname'),
-                                                                                'divs' => array(', ')
-                                                           ))
+    $opts['fdd']['MusicianId'] = array(
+      'name'     => strval(L::t('Musician')),
+      'css'      => array('postfix' => ' musician-id'),
+      'select'   => 'T',
+      'maxlen'   => 11,
+      'sort'     => true,
+      //'options'  => 'LFADV', // no change allowed
+      'default' => 0,
+      'values' => array('table' => 'Musiker',
+                        'column' => 'Id',
+                        'description' => array('columns' => array('Name', 'Vorname'),
+                                               'divs' => array(', ')
+                          ))
       );
-    $opts['fdd']['BillToParty'] = array('name'     => strval(L::t('Bill-to Party')),
-                                        'select'   => 'T',
-                                        'maxlen'   => 11,
-                                        'sort'     => true,
-                                        'default'  => 0,
-                                        //'options'  => 'LFADV', // no change allowed
-                                        'values' => array('table' => 'Musiker',
-                                                          'column' => 'Id',
-                                                          'description' => array('columns' => array('Name', 'Vorname'),
-                                                                                 'divs' => array(', ')
-                                                            ))
-                                      );
+    $opts['fdd']['BillToParty'] = array(
+      'name'     => strval(L::t('Bill-to Party')),
+      'css'      => array('postfix' => ' bill-to-party'),
+      'select'   => 'T',
+      'maxlen'   => 11,
+      'sort'     => true,
+      'default'  => 0,
+      //'options'  => 'LFADV', // no change allowed
+      'values' => array('table' => 'Musiker',
+                        'column' => 'Id',
+                        'description' => array('columns' => array('Name', 'Vorname'),
+                                               'divs' => array(', ')
+                          ))
+      );
 
-    $opts['fdd']['Broker'] = array('name' => strval(L::t('Insurance Broker')),
-                                   'select'   => 'D',
-                                   'maxlen'   => 384,
-                                   'sort'     => true,
-                                   'default'  => '',
-                                   'values2'  => $this->brokerNames);
+    $opts['fdd']['Broker'] = array(
+      'name' => strval(L::t('Insurance Broker')),
+      'css'      => array('postfix' => ' broker-select'),
+      'select'   => 'D',
+      'maxlen'   => 384,
+      'sort'     => true,
+      'default'  => '',
+      'values2'  => $this->brokerNames);
 
-    $opts['fdd']['GeographicalScope'] = array('name' => strval(L::t('Geographical Scope')),
-                                              'select'   => 'D',
-                                              'maxlen'   => 384,
-                                              'sort'     => true,
-                                              'default'  => '',
-                                              'values2'  => $this->scopeNames);
+    $opts['fdd']['GeographicalScope'] = array(
+      'name' => strval(L::t('Geographical Scope')),
+      'css'      => array('postfix' => ' scope-select'),
+      'select'   => 'D',
+      'maxlen'   => 384,
+      'sort'     => true,
+      'default'  => '',
+      'values2'  => $this->scopeNames);
 
-    $opts['fdd']['Object'] = array('name'     => strval(L::t('Insured Object')),
-                                   'select'   => 'T',
-                                   'maxlen'   => 384,
-                                   'sort'     => true);
+    $opts['fdd']['Object'] = array(
+      'name'     => strval(L::t('Insured Object')),
+      'css'      => array('postfix' => ' insured-item'),
+      'select'   => 'T',
+      'maxlen'   => 384,
+      'sort'     => true);
 
-    $opts['fdd']['Accessory'] = array('name' => strval(L::t('Accessory')),
-                                      'select'   => 'D',
-                                      'maxlen'   => 384,
-                                      'sort'     => true,
-                                      'default' => 'false',
-                                      'values2'  => $this->accessoryNames);
+    $opts['fdd']['Accessory'] = array(
+      'name' => strval(L::t('Accessory')),
+      'css'      => array('postfix' => ' accessory'),
+      'select'   => 'D',
+      'maxlen'   => 384,
+      'sort'     => true,
+      'default' => 'false',
+      'values2'  => $this->accessoryNames);
 
-    $opts['fdd']['Manufacturer'] = array('name'     => strval(L::t('Manufacturer')),
-                                         'select'   => 'T',
-                                         'maxlen'   => 384,
-                                         'sort'     => true);
-
-    $opts['fdd']['YearOfConstruction'] = array('name'     => strval(L::t('Year of Construction')),
-                                              'select'   => 'T',
-                                              'maxlen'   => 384,
-                                              'sort'     => true);
-
+    $opts['fdd']['Manufacturer'] = array(
+      'name'     => strval(L::t('Manufacturer')),
+      'css'      => array('postfix' => ' manufacturer'),
+      'select'   => 'T',
+      'maxlen'   => 384,
+      'sort'     => true);
+    
+    $opts['fdd']['YearOfConstruction'] = array(
+      'name'     => strval(L::t('Year of Construction')),
+      'css'      => array('postfix' => ' construction-year'),
+      'select'   => 'T',
+      'maxlen'   => 6,
+      'sort'     => true);
+    
     $opts['fdd']['InsuranceAmount'] = Config::$opts['money'];
     $opts['fdd']['InsuranceAmount']['name'] = strval(L::t('Insurance Amount'));
+    $opts['fdd']['InsuranceAmount']['css'] = array('postfix' => ' amount');
 
     $rateIdx = count($opts['fdd']);
     $opts['fdd']['InsuranceRate'] = array(
