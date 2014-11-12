@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-12 20:46+0100\n"
-"PO-Revision-Date: 2014-11-12 21:31+0100\n"
+"POT-Creation-Date: 2014-11-12 22:20+0100\n"
+"PO-Revision-Date: 2014-11-12 22:26+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -771,62 +771,53 @@ msgstr ""
 "sein."
 
 #: ajax/insurance/validate.php:89
-#, fuzzy, php-format
-#| msgid "Internal error: unknown request"
+#, php-format
 msgid "Internal error: unknown request: %s"
-msgstr "Interner Fehler: unbekannte Anfrage."
+msgstr "Interner Fehler: unbekannte Anfrage: %s"
 
 #: ajax/insurance/validate.php:125
 msgid "Insured musician is missing"
-msgstr ""
+msgstr "Der Versicherungsnehmer wurde nicht angegeben."
 
 #: ajax/insurance/validate.php:146
-#, fuzzy
-#| msgid "Insurance Broker"
 msgid "Insurance broker is missing."
-msgstr "Versicherungsmakler"
+msgstr "Angabe Versicherungsmakler fehlt."
 
 #: ajax/insurance/validate.php:155
 msgid "Geographical scope for the insurance is missing."
-msgstr ""
+msgstr "Der Geltungsbereich für die Versicherung fehlt."
 
 #: ajax/insurance/validate.php:163
-#, fuzzy
-#| msgid "Broker-name has been simplified."
 msgid "Insured object has not been specified."
-msgstr "Der Makler-Name wurde vereinfacht."
+msgstr "Der zu versichernde Gegenstand wurde nicht angegeben."
 
 #: ajax/insurance/validate.php:172
 msgid "Object classification (instrument, accessory) is missing."
-msgstr ""
+msgstr "Zubehör-/Instrument-Klassifizierung fehlt."
 
 #: ajax/insurance/validate.php:180
-#, fuzzy
-#| msgid "Manufacturer"
 msgid "Manufacturer field is empty."
-msgstr "Hersteller"
+msgstr "Der Hersteller wurde nicht angegeben."
 
 #: ajax/insurance/validate.php:189 ajax/insurance/validate.php:191
 msgid "unknown"
-msgstr ""
+msgstr "unbekannt"
 
 #: ajax/insurance/validate.php:190
 msgid "Construction year is unknown."
-msgstr ""
+msgstr "Das Herstellungsjahr wurde nicht angegeben."
 
 #: ajax/insurance/validate.php:203
-#, fuzzy
-#| msgid "Total Insurance Amount: "
 msgid "The insurance amount is missing."
-msgstr "Gesamtversicherungssumme: "
+msgstr "Die Versicherungssumme fehlt."
 
 #: ajax/insurance/validate.php:209
 msgid "Insurance amount should be a mere number"
-msgstr ""
+msgstr "Die Versicherungssumme sollte einfach eine Zahl sein."
 
 #: ajax/insurance/validate.php:212
 msgid "Insurance amount should be an integral number"
-msgstr ""
+msgstr "Die Versicherungssumme sollte eine ganze Zahl sein."
 
 #: ajax/insurance/validate.php:217 ajax/insurance/validate.php:230
 #: ajax/projects/verifyName.php:103
@@ -834,10 +825,8 @@ msgid "Internal error: unknown request"
 msgstr "Interner Fehler: unbekannte Anfrage."
 
 #: ajax/insurance/validate.php:239
-#, fuzzy
-#| msgid "missing arguments"
 msgid "missing or wrong arguments"
-msgstr "fehlende Parameter"
+msgstr "fehlende oder unsinnige Parameter"
 
 #: ajax/pme/pme-table.php:76
 msgid "No class name submitted."
@@ -861,10 +850,8 @@ msgid "The %s must not be empty.\n"
 msgstr "%s darf nicht leer sein.\\n"
 
 #: ajax/projects/verifyName.php:72
-#, fuzzy
-#| msgid "Broker-name has been simplified."
 msgid "The project name has been simplified."
-msgstr "Der Makler-Name wurde vereinfacht."
+msgstr "Der Projekt-Name wurde vereinfacht."
 
 #: ajax/projects/verifyName.php:83
 msgid "The project-name must not only consist of the year-number."
@@ -2136,8 +2123,10 @@ msgstr "Status"
 
 #: lib/detailed-instrumentation.php:399
 #, php-format
-msgid "Remarks (%s)"
-msgstr "Bemerkungen (%s)"
+msgid ""
+"Remarks\n"
+"(%s)"
+msgstr "Bemerkungen\\n(%s)"
 
 #: lib/detailed-instrumentation.php:415 lib/musicians.php:300
 msgid "no projects yet"

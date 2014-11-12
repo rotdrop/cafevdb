@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-12 21:31+0100\n"
+"POT-Creation-Date: 2014-11-12 22:26+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1989,7 +1989,9 @@ msgstr ""
 
 #: lib/detailed-instrumentation.php:399
 #, php-format
-msgid "Remarks (%s)"
+msgid ""
+"Remarks\n"
+"(%s)"
 msgstr ""
 
 #: lib/detailed-instrumentation.php:415 lib/musicians.php:300
