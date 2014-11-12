@@ -629,6 +629,7 @@ td.negative {
   color:#FF0000;
 }
 
+td.align-right, td.money,
 td.pme-cell-0-money, td.pme-cell-1-money {
   text-align:right;
 }
