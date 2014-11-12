@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-11 17:25+0100\n"
-"PO-Revision-Date: 2014-11-11 17:40+0100\n"
+"POT-Creation-Date: 2014-11-12 01:17+0100\n"
+"PO-Revision-Date: 2014-11-12 01:21+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -107,17 +107,17 @@ msgid "Email Address Validation Failed"
 msgstr "Em@il Adresse(n) ungültig"
 
 #: ajax/email/composer.php:256 ajax/email/exporter.php:95
-#: ajax/email/recipients.php:140
-#: ajax/finance/instrument-insurance-export.php:171
-#: ajax/finance/sepa-debit-export.php:181 ajax/page-loader.php:111
+#: ajax/email/recipients.php:140 ajax/finance/sepa-debit-export.php:181
+#: ajax/insurance/instrument-insurance-export.php:171
+#: ajax/insurance/validate.php:121 ajax/page-loader.php:111
 #: ajax/projects/web-articles.php:182 ajax/settings/app-settings.php:1175
 msgid "PHP Exception Caught"
 msgstr "PHP `Ausnahme' `gefangen'"
 
 #: ajax/email/composer.php:260 ajax/email/exporter.php:96
-#: ajax/email/recipients.php:144
-#: ajax/finance/instrument-insurance-export.php:172
-#: ajax/finance/sepa-debit-export.php:182 ajax/page-loader.php:115
+#: ajax/email/recipients.php:144 ajax/finance/sepa-debit-export.php:182
+#: ajax/insurance/instrument-insurance-export.php:172
+#: ajax/insurance/validate.php:125 ajax/page-loader.php:115
 #: ajax/projects/web-articles.php:186 ajax/settings/app-settings.php:1179
 #, php-format
 msgid ""
@@ -127,9 +127,8 @@ msgstr ""
 "Fehler, PHP-`Ausnahme' `gefangen'. Bitte den angezeigten Text kopieren und "
 "per Email an %s senden."
 
-#: ajax/email/exporter.php:100
-#: ajax/finance/instrument-insurance-export.php:176
-#: ajax/finance/sepa-debit-export.php:186
+#: ajax/email/exporter.php:100 ajax/finance/sepa-debit-export.php:186
+#: ajax/insurance/instrument-insurance-export.php:176
 msgid "Trace"
 msgstr "Trace"
 
@@ -288,7 +287,7 @@ msgid "Musician"
 msgstr "Musiker"
 
 #: ajax/export/insurance-export.php:143 lib/instrument-insurance.php:305
-#: lib/instrument-insurance.php:752
+#: lib/instrument-insurance.php:755
 msgid "Manufacturer"
 msgstr "Hersteller"
 
@@ -326,31 +325,6 @@ msgstr "Datum: %s"
 #: lib/php-excel-functions.php:105
 msgid "false"
 msgstr "falsch"
-
-#: ajax/finance/instrument-insurance-export.php:96
-msgid "Unable to create temporay file for zip-archive."
-msgstr "Die temporäre Datei für das Zip-Archiv konnte nicht erzeugt werden."
-
-#: ajax/finance/instrument-insurance-export.php:102
-msgid "Unable to open temporary file for zip-archive."
-msgstr "Die temporäre Datei für das Zip-Archiv konnte nicht geöffnet werden."
-
-#: ajax/finance/instrument-insurance-export.php:110
-#, php-format
-msgid "Unable to add %s to zip-archive"
-msgstr "Konnte %s nicht zum Zip-Archiv hinzufügen."
-
-#: ajax/finance/instrument-insurance-export.php:116
-msgid "Unable to close temporary file for zip-archive."
-msgstr "Die temporäre Datei für das Zip-Archiv konnte nicht geschlossen werden.;\n"
-
-#: ajax/finance/instrument-insurance-export.php:121
-msgid "Unable to read zip archive from disk."
-msgstr "Konnte das fertige Zip-Archiv nicht einlesen."
-
-#: ajax/finance/instrument-insurance-export.php:126
-msgid "instrument-insurance"
-msgstr "Instrumenten-Versicherung"
 
 #: ajax/finance/sepa-debit-delete.php:40
 #: ajax/finance/sepa-debit-settings.php:49
@@ -704,7 +678,8 @@ msgid "Instrument choice for %s seems ok."
 msgstr "Die Instrumenten-Auswahl für %s ist wohl in Ordnung."
 
 #: ajax/instruments/adjustInstrumentation.php:50
-#: ajax/instruments/changeInstrumentation.php:64 ajax/pme/pme-table.php:75
+#: ajax/instruments/changeInstrumentation.php:64
+#: ajax/insurance/validate.php:95 ajax/pme/pme-table.php:75
 #: ajax/projects/verifyName.php:113
 msgid "missing arguments"
 msgstr "fehlende Parameter"
@@ -758,6 +733,47 @@ msgstr ""
 "Das Ändern der Instrumentierung für das Projekt `%s' war vermutlich "
 "erfolgreich."
 
+#: ajax/insurance/instrument-insurance-export.php:96
+msgid "Unable to create temporay file for zip-archive."
+msgstr "Die temporäre Datei für das Zip-Archiv konnte nicht erzeugt werden."
+
+#: ajax/insurance/instrument-insurance-export.php:102
+msgid "Unable to open temporary file for zip-archive."
+msgstr "Die temporäre Datei für das Zip-Archiv konnte nicht geöffnet werden."
+
+#: ajax/insurance/instrument-insurance-export.php:110
+#, php-format
+msgid "Unable to add %s to zip-archive"
+msgstr "Konnte %s nicht zum Zip-Archiv hinzufügen."
+
+#: ajax/insurance/instrument-insurance-export.php:116
+msgid "Unable to close temporary file for zip-archive."
+msgstr ""
+"Die temporäre Datei für das Zip-Archiv konnte nicht geschlossen werden.;\n"
+
+#: ajax/insurance/instrument-insurance-export.php:121
+msgid "Unable to read zip archive from disk."
+msgstr "Konnte das fertige Zip-Archiv nicht einlesen."
+
+#: ajax/insurance/instrument-insurance-export.php:126
+msgid "instrument-insurance"
+msgstr "Instrumenten-Versicherung"
+
+#: ajax/insurance/validate.php:62
+msgid "Broker-name has been simplified."
+msgstr "Der Makler-Name wurde vereinfacht."
+
+#: ajax/insurance/validate.php:68
+#, php-format
+msgid ""
+"Invalid insurance rate %f, should be larger than 0 and less than 1 percent."
+msgstr "Unsinnige Versicherungsrate %f, sollte größer 0 und kleiner als 1 Prozent sein."
+
+#: ajax/insurance/validate.php:73 ajax/insurance/validate.php:86
+#: ajax/projects/verifyName.php:104
+msgid "Internal error: unknown request"
+msgstr "Interner Fehler: unbekannte Anfrage."
+
 #: ajax/pme/pme-table.php:76
 msgid "No class name submitted."
 msgstr "Es wurde keine Klassenname übermittelt."
@@ -794,10 +810,6 @@ msgstr "Kein Projekt-Jahr angegeben."
 #: ajax/projects/verifyName.php:93
 msgid "The project-year has to consist of four digits, e.g. ``1984''."
 msgstr "Das Projekt-Jahr muss aus vier Ziffern bestehen."
-
-#: ajax/projects/verifyName.php:104
-msgid "Internal error: unknown request"
-msgstr "Interner Fehler: unbekannte Anfrage."
 
 #: ajax/projects/verifyName.php:127
 msgid "already existent"
@@ -2295,7 +2307,7 @@ msgstr ""
 "Anzeige der angestrebten Besetzungszahlen. Natürlich kann man die dann auch "
 "anpassen ..."
 
-#: lib/functions.php:1077 lib/functions.php:1103 lib/projects.php:803
+#: lib/functions.php:1077 lib/functions.php:1115 lib/projects.php:803
 msgid "Debit Mandates"
 msgstr "Lastschriftmandate"
 
@@ -2316,7 +2328,19 @@ msgstr ""
 "Zeigt eine Tabelle mit einer Übersicht über die "
 "Instrumentensammelversicherungen an."
 
+#: lib/functions.php:1103
+msgid "Insurance Rates"
+msgstr "Versicherungs-Rate"
+
 #: lib/functions.php:1104
+msgid ""
+"Display a table with the insurance rates for the individual instrument "
+"insurances."
+msgstr ""
+"Zeigt eine Tabelle mit einer Übersicht über die Versicherungsraten der\n"
+"Instrumenten-Sammelversicherungen an."
+
+#: lib/functions.php:1116
 msgid "Display a table with an overview over all SEPA debit mandates."
 msgstr ""
 "Zeigt eine Tabelle mit einer Übersicht über alle SEPA Lastschriftmandate an."
@@ -2377,34 +2401,34 @@ msgstr "inklusive Steuern"
 msgid "Total Insurance"
 msgstr "Gesamtversicherungssumme"
 
-#: lib/instrument-insurance.php:625
+#: lib/instrument-insurance.php:628
 msgid "insurance"
 msgstr "Versicherung"
 
-#: lib/instrument-insurance.php:681
+#: lib/instrument-insurance.php:684
 #, php-format
 msgid "Annual Insurance Fees for %s, %d. %s"
 msgstr "Versicherungs-Jahresbeitrag für %s, %d. %s"
 
-#: lib/instrument-insurance.php:685
+#: lib/instrument-insurance.php:688
 msgid "Overview over insured instruments and insurance fee details and summary"
 msgstr "Übersicht über die versicherten Instrumente und Versicherungsbeiträge"
 
-#: lib/instrument-insurance.php:702
+#: lib/instrument-insurance.php:705
 msgid "treasurer"
 msgstr "Schatzmeister"
 
-#: lib/instrument-insurance.php:724
+#: lib/instrument-insurance.php:727
 #, php-format
 msgid "Annular insurance fees for %d"
 msgstr "Versicherungs-Jahresbeitrag %d"
 
-#: lib/instrument-insurance.php:725
+#: lib/instrument-insurance.php:728
 #, php-format
 msgid "Dear %s,"
 msgstr "Liebe/Lieber %s,"
 
-#: lib/instrument-insurance.php:730
+#: lib/instrument-insurance.php:733
 msgid ""
 "this letter informs you about the details of the instrument-insurances\n"
 "we are maintaining for you on your behalf. This letter is\n"
@@ -2428,53 +2452,53 @@ msgstr ""
 "jederzeit von uns eine Aufstellung Deiner versicherten Gegenstände\n"
 "bekommen."
 
-#: lib/instrument-insurance.php:746
+#: lib/instrument-insurance.php:749
 #, php-format
 msgid "Insured Person: %s"
 msgstr "Versicherte Person: %s"
 
-#: lib/instrument-insurance.php:749
+#: lib/instrument-insurance.php:752
 msgid "Vendor"
 msgstr "Anbieter"
 
-#: lib/instrument-insurance.php:750
+#: lib/instrument-insurance.php:753 lib/insurance-rates.php:231
 msgid "Scope"
 msgstr "Geltungsbereich"
 
-#: lib/instrument-insurance.php:751
+#: lib/instrument-insurance.php:754
 msgid "Object"
 msgstr "Gegenstand"
 
-#: lib/instrument-insurance.php:753
+#: lib/instrument-insurance.php:756
 msgid "Amount"
 msgstr "Betrag"
 
-#: lib/instrument-insurance.php:754
+#: lib/instrument-insurance.php:757
 msgid "Rate"
 msgstr "Rate"
 
-#: lib/instrument-insurance.php:755
+#: lib/instrument-insurance.php:758
 msgid "Fee"
 msgstr "Beitrag"
 
-#: lib/instrument-insurance.php:772
+#: lib/instrument-insurance.php:775
 msgid "Sub-totals (excluding taxes)"
 msgstr "Zwischensumme (ohne Steuern)"
 
-#: lib/instrument-insurance.php:796
+#: lib/instrument-insurance.php:799
 msgid "Total amount excluding taxes:"
 msgstr "Gesamtbetrag ohne Steuern:"
 
-#: lib/instrument-insurance.php:800
+#: lib/instrument-insurance.php:803
 #, php-format
 msgid "%0.2f %% insurance taxes:"
 msgstr "%0.2f %% Versicherungssteuer:"
 
-#: lib/instrument-insurance.php:804
+#: lib/instrument-insurance.php:807
 msgid "Total amount to pay:"
 msgstr "Rechnungsbetrag:"
 
-#: lib/instrument-insurance.php:815
+#: lib/instrument-insurance.php:818
 msgid ""
 "You have granted us a debit-mandate. The total amount due will be debited "
 "from your bank-account, no further action from your side is required. We "
@@ -2486,15 +2510,15 @@ msgstr ""
 "wenigstens 14 Tage im voraus per Email über das genaue Datum der\n"
 "Kontobelastung."
 
-#: lib/instrument-insurance.php:821
+#: lib/instrument-insurance.php:825
 msgid "Best wishes,"
 msgstr "Herzliche Grüße,"
 
-#: lib/instrument-insurance.php:822
+#: lib/instrument-insurance.php:826
 msgid "Treasurer"
 msgstr "Schatzmeister"
 
-#: lib/instrument-insurance.php:887
+#: lib/instrument-insurance.php:892
 #, php-format
 msgid "Invalid broker/geographical-scope combination: %s - %s"
 msgstr "Der Makler %s bietet keine Versicherung für den Geltungsberich %s an"
@@ -2598,6 +2622,14 @@ msgstr "Schlagwerk"
 msgid "Sonstiges"
 msgstr "Sonstiges"
 
+#: lib/insurance-rates.php:77
+msgid "Instrument Insurance Rates"
+msgstr "Instrumenten-Versicherungs-Raten"
+
+#: lib/insurance-rates.php:223
+msgid "Broker"
+msgstr "Anbieter"
+
 #: lib/musicians.php:45
 msgid "Remove all data of the displayed musician?"
 msgstr "Alle Daten des angezeigten Musikers entfernen?"
@@ -2640,6 +2672,18 @@ msgstr "Zu %s"
 #: lib/musicians.php:241
 msgid "Add Musicians"
 msgstr "Musiker hinzufügen"
+
+#: lib/musicians.php:263
+msgid "Surname"
+msgstr "Nachname"
+
+#: lib/musicians.php:270
+msgid "Forename"
+msgstr "Vorname"
+
+#: lib/musicians.php:277
+msgid "Instruments"
+msgstr "Instrumente"
 
 #: lib/musicians.php:384
 msgid "Remarks"
