@@ -230,7 +230,7 @@ namespace CAFEVDB
       $currentYear = date('Y');
       $yearRange = self::fetchYearRange();
       $yearValues = array(' ');
-      for ($year = $currentYear - 2 /*$yearRange["min"] - 1*/; $year < $currentYear + 5; $year++) {
+      for ($year = $currentYear - $yearRange["min"] - 1; $year < $currentYear + 5; $year++) {
         $yearValues[] = $year;
       }
 
