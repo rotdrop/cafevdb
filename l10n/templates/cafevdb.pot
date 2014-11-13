@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-12 22:26+0100\n"
+"POT-Creation-Date: 2014-11-13 08:46+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -253,16 +253,16 @@ msgstr ""
 msgid "%s-detailed"
 msgstr ""
 
-#: ajax/export/excel.php:260 lib/projects.php:1664 lib/projects.php:1665
+#: ajax/export/excel.php:260 lib/projects.php:1693 lib/projects.php:1694
 msgid "Missing Musicians"
 msgstr ""
 
 #: ajax/export/excel.php:285 ajax/export/insurance-export.php:142
-#: lib/projects.php:1667
+#: lib/projects.php:1696
 msgid "Instrument"
 msgstr ""
 
-#: ajax/export/excel.php:286 lib/projects.php:1667
+#: ajax/export/excel.php:286 lib/projects.php:1696
 msgid "Missing"
 msgstr ""
 
@@ -276,7 +276,7 @@ msgid "Musician"
 msgstr ""
 
 #: ajax/export/insurance-export.php:143 lib/instrument-insurance.php:318
-#: lib/instrument-insurance.php:804
+#: lib/instrument-insurance.php:808
 msgid "Manufacturer"
 msgstr ""
 
@@ -1253,20 +1253,20 @@ msgstr ""
 msgid "filter-visibility changed"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:37 lib/projects.php:682
+#: ajax/settings/redaxo-settings.php:37 lib/projects.php:711
 msgid "Preview"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:38 lib/projects.php:686
+#: ajax/settings/redaxo-settings.php:38 lib/projects.php:715
 msgid "Archive"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:39 lib/projects.php:684
-#: lib/projects.php:1226 lib/projects.php:1387
+#: ajax/settings/redaxo-settings.php:39 lib/projects.php:713
+#: lib/projects.php:1255 lib/projects.php:1416
 msgid "Rehearsals"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:40 lib/projects.php:688
+#: ajax/settings/redaxo-settings.php:40 lib/projects.php:717
 msgid "Trashbin"
 msgstr ""
 
@@ -2181,7 +2181,7 @@ msgstr ""
 msgid "The currently active project."
 msgstr ""
 
-#: lib/functions.php:1035 lib/projects.php:762
+#: lib/functions.php:1035 lib/projects.php:791
 msgid "Instrumentation"
 msgstr ""
 
@@ -2202,8 +2202,8 @@ msgid ""
 "ones as needed."
 msgstr ""
 
-#: lib/functions.php:1063 lib/project-instruments.php:69 lib/projects.php:767
-#: lib/projects.php:1019
+#: lib/functions.php:1063 lib/project-instruments.php:69 lib/projects.php:796
+#: lib/projects.php:1048
 msgid "Instrumentation Numbers"
 msgstr ""
 
@@ -2213,7 +2213,7 @@ msgid ""
 "already registered for each instrument group and how many are finally needed."
 msgstr ""
 
-#: lib/functions.php:1077 lib/functions.php:1115 lib/projects.php:803
+#: lib/functions.php:1077 lib/functions.php:1115 lib/projects.php:832
 msgid "Debit Mandates"
 msgstr ""
 
@@ -2305,30 +2305,30 @@ msgstr ""
 msgid "insurance"
 msgstr ""
 
-#: lib/instrument-insurance.php:735
+#: lib/instrument-insurance.php:738
 #, php-format
 msgid "Annual Insurance Fees for %s, %d. %s"
 msgstr ""
 
-#: lib/instrument-insurance.php:739
+#: lib/instrument-insurance.php:742
 msgid "Overview over insured instruments and insurance fee details and summary"
 msgstr ""
 
-#: lib/instrument-insurance.php:754
+#: lib/instrument-insurance.php:757
 msgid "treasurer"
 msgstr ""
 
-#: lib/instrument-insurance.php:776
+#: lib/instrument-insurance.php:779
 #, php-format
 msgid "Annular insurance fees for %d"
 msgstr ""
 
-#: lib/instrument-insurance.php:777
+#: lib/instrument-insurance.php:780
 #, php-format
 msgid "Dear %s,"
 msgstr ""
 
-#: lib/instrument-insurance.php:782
+#: lib/instrument-insurance.php:785
 msgid ""
 "this letter informs you about the details of the instrument-insurances\n"
 "we are maintaining for you on your behalf. This letter is\n"
@@ -2341,53 +2341,53 @@ msgid ""
 "your insured items at any time. Just ask."
 msgstr ""
 
-#: lib/instrument-insurance.php:798
+#: lib/instrument-insurance.php:802
 #, php-format
 msgid "Insured Person: %s"
 msgstr ""
 
-#: lib/instrument-insurance.php:801
+#: lib/instrument-insurance.php:805
 msgid "Vendor"
 msgstr ""
 
-#: lib/instrument-insurance.php:802 lib/insurance-rates.php:231
+#: lib/instrument-insurance.php:806 lib/insurance-rates.php:231
 msgid "Scope"
 msgstr ""
 
-#: lib/instrument-insurance.php:803
+#: lib/instrument-insurance.php:807
 msgid "Object"
 msgstr ""
 
-#: lib/instrument-insurance.php:805
+#: lib/instrument-insurance.php:809
 msgid "Amount"
 msgstr ""
 
-#: lib/instrument-insurance.php:806
+#: lib/instrument-insurance.php:810
 msgid "Rate"
 msgstr ""
 
-#: lib/instrument-insurance.php:807
+#: lib/instrument-insurance.php:811
 msgid "Fee"
 msgstr ""
 
-#: lib/instrument-insurance.php:824
+#: lib/instrument-insurance.php:828
 msgid "Sub-totals (excluding taxes)"
 msgstr ""
 
-#: lib/instrument-insurance.php:848
+#: lib/instrument-insurance.php:853
 msgid "Total amount excluding taxes:"
 msgstr ""
 
-#: lib/instrument-insurance.php:852
+#: lib/instrument-insurance.php:857
 #, php-format
 msgid "%0.2f %% insurance taxes:"
 msgstr ""
 
-#: lib/instrument-insurance.php:856
+#: lib/instrument-insurance.php:861
 msgid "Total amount to pay:"
 msgstr ""
 
-#: lib/instrument-insurance.php:867
+#: lib/instrument-insurance.php:871
 msgid ""
 "You have granted us a debit-mandate. The total amount due will be debited "
 "from your bank-account, no further action from your side is required. We "
@@ -2395,15 +2395,15 @@ msgid ""
 "advance of the bank transaction."
 msgstr ""
 
-#: lib/instrument-insurance.php:874
+#: lib/instrument-insurance.php:878
 msgid "Best wishes,"
 msgstr ""
 
-#: lib/instrument-insurance.php:875
+#: lib/instrument-insurance.php:879
 msgid "Treasurer"
 msgstr ""
 
-#: lib/instrument-insurance.php:941
+#: lib/instrument-insurance.php:945
 #, php-format
 msgid "Invalid broker/geographical-scope combination: %s - %s"
 msgstr ""
@@ -2609,6 +2609,14 @@ msgid ""
 "given context."
 msgstr ""
 
+#: lib/pdfletter.php:100 lib/pdfletter.php:101
+msgid "page"
+msgstr ""
+
+#: lib/pdfletter.php:100 lib/pdfletter.php:101
+msgid "of"
+msgstr ""
+
 #: lib/php-excel-functions.php:100 lib/sepa-debit-mandates.php:247
 msgid "yes"
 msgstr ""
@@ -2631,7 +2639,7 @@ msgid ""
 msgstr ""
 
 #: lib/project-instruments.php:261 lib/project-instruments.php:499
-#: lib/projects.php:271 lib/projects.php:277
+#: lib/projects.php:285 lib/projects.php:291
 msgid "Actions"
 msgstr ""
 
@@ -2654,7 +2662,7 @@ msgstr ""
 msgid "Instrumentation-Numbers not Found"
 msgstr ""
 
-#: lib/project-instruments.php:346 lib/projects.php:249
+#: lib/project-instruments.php:346 lib/projects.php:263
 msgid "Projekt-Name"
 msgstr ""
 
@@ -2678,32 +2686,32 @@ msgstr ""
 msgid "Transpose"
 msgstr ""
 
-#: lib/projects.php:81
+#: lib/projects.php:89
 #, php-format
 msgid "%s Project %s"
 msgstr ""
 
-#: lib/projects.php:85
+#: lib/projects.php:93
 #, php-format
 msgid "%s Projects"
 msgstr ""
 
-#: lib/projects.php:262
+#: lib/projects.php:276
 msgid "Append the year to the name"
 msgstr ""
 
-#: lib/projects.php:302
+#: lib/projects.php:316
 msgid "Toolbox"
 msgstr ""
 
-#: lib/projects.php:319
+#: lib/projects.php:333
 msgid ""
 "Default project fee for ordinary participants. This should NOT include "
 "reductions of any kind. The value displayed here is the default value "
 "inserted into the instrumentation table for the project."
 msgstr ""
 
-#: lib/projects.php:331
+#: lib/projects.php:345
 msgid ""
 "Comma separates list of extra-fields, e.g.\n"
 "<blockquote>\n"
@@ -2733,82 +2741,82 @@ msgid ""
 "a comma."
 msgstr ""
 
-#: lib/projects.php:356
+#: lib/projects.php:370
 msgid "Program"
 msgstr ""
 
-#: lib/projects.php:373
+#: lib/projects.php:387
 msgid "Flyer"
 msgstr ""
 
-#: lib/projects.php:672
+#: lib/projects.php:701
 #, php-format
 msgid "Unable to fetch public web pages for project id %d"
 msgstr ""
 
-#: lib/projects.php:752
+#: lib/projects.php:781
 msgid "Project Overview"
 msgstr ""
 
-#: lib/projects.php:776
+#: lib/projects.php:805
 msgid "Project Files"
 msgstr ""
 
-#: lib/projects.php:783 lib/projects.php:997
+#: lib/projects.php:812 lib/projects.php:1026
 #, php-format
 msgid "Project Wiki for %s"
 msgstr ""
 
-#: lib/projects.php:785 lib/projects.php:1001
+#: lib/projects.php:814 lib/projects.php:1030
 msgid "Project Notes"
 msgstr ""
 
-#: lib/projects.php:790 lib/projects.php:1007 lib/projects.php:1037
+#: lib/projects.php:819 lib/projects.php:1036 lib/projects.php:1066
 msgid "Events"
 msgstr ""
 
-#: lib/projects.php:795 lib/projects.php:1013
+#: lib/projects.php:824 lib/projects.php:1042
 msgid "Em@il"
 msgstr ""
 
-#: lib/projects.php:809
+#: lib/projects.php:838
 msgid "Profit and Loss Account"
 msgstr ""
 
-#: lib/projects.php:2094
+#: lib/projects.php:2123
 msgid ""
 "Flyers can only be added to existing projects, please add the new\n"
 "project without a flyer first."
 msgstr ""
 
-#: lib/projects.php:2109
+#: lib/projects.php:2138
 #, php-format
 msgid "Drop image to upload (max %s)"
 msgstr ""
 
-#: lib/projects.php:2112
+#: lib/projects.php:2141
 msgid "Delete current flyer"
 msgstr ""
 
-#: lib/projects.php:2113
+#: lib/projects.php:2142
 msgid "Edit current flyer"
 msgstr ""
 
-#: lib/projects.php:2114
+#: lib/projects.php:2143
 msgid "Upload new flyer"
 msgstr ""
 
-#: lib/projects.php:2115
+#: lib/projects.php:2144
 msgid "Select image from ownCloud"
 msgstr ""
 
-#: lib/projects.php:2123
+#: lib/projects.php:2152
 msgid ""
 "Internal error, don't know what to do concerning project-flyers in the given "
 "context."
 msgstr ""
 
-#: lib/projects.php:2364
+#: lib/projects.php:2393
 #, php-format
 msgid ""
 "====== Project %s ======\n"

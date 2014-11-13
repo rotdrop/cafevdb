@@ -557,6 +557,8 @@
 "Upload new photo" => "Neues Foto hochladen",
 "Select photo from ownCloud" => "Foto aus der `Cloud' auswählen",
 "Internal error, don't know what to do concerning portrait images in the given context." => "Interner Fehler; keine Ahnung, wie im gegebenen Kontext mit\nPortrait-Bildern verfahren werden sollte.",
+"page" => "Seite",
+"of" => "von",
 "yes" => "ja",
 "no" => "nein",
 "Instrumentation Numbers for `%s'" => "Besetzungszahlen für `%s'",
