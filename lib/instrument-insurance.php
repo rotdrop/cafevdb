@@ -696,6 +696,9 @@ class InstrumentInsurance
     $year = strftime('%Y');
     $css = "insurance-overview-table";
     $style = '<style>
+  .no-page-break {
+    page-break-inside:avoid;
+  }
   table.'.$css.' {
     border: 0.3mm solid #000;
     border-collapse:collapse;
@@ -794,9 +797,10 @@ your insured items at any time. Just ask.'), '', 1);
     
     foreach($overview['musicians'] as $id => $insurance) {
       $html = '';
+//<div class="no-page-break">
       $html .= '
 <h4>'.L::t('Insured Person: %s', array($insurance['name'])).'</h4>
-<table cellpadding="2" class="'.$css.'">
+<table class="no-page-break" cellpadding="2" class="'.$css.'">
   <tr>
     <th width="70">'.L::t('Vendor').'</th>
     <th width="60">'.L::t('Scope').'</th>
@@ -827,6 +831,7 @@ your insured items at any time. Just ask.'), '', 1);
     <td class="money">'.money_format('%n', $insurance['subTotals']).'</td>
   </tr>
 </table>';
+//</div>';
 
       $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
                           10,
@@ -843,7 +848,7 @@ your insured items at any time. Just ask.'), '', 1);
     $taxes = $totals * $taxRate;
     $html = '';
     $html .= '
-<table class="totals">
+<table class="totals no-page-break">
   <tr>
     <td width="180" class="summary">'.L::t('Total amount excluding taxes:').'</td>
     <td width="80" class="money">'.money_format('%n', $totals).'</td>
@@ -856,22 +861,28 @@ your insured items at any time. Just ask.'), '', 1);
     <td class="summary">'.L::t('Total amount to pay:').'</td>
     <td class="money">'.money_format('%n', $totals+$taxes).'</td>
   </tr>
-</table>';    
+</table>';
 
+    $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
+                        10,
+                        PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+0.5*$pdf->fontSize(),
+                        $style.$html, '', 1);
     
-    $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
-                        10,
-                        PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+0.5*$pdf->fontSize(),
-                        $style.$html, '', 1);
-
     $html = L::t('You have granted us a debit-mandate. The total amount due will be debited from your bank-account, no further action from your side is required. We will inform you by email about the date of the debit at least 14 days in advance of the bank transaction.');
-    $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
-                        10,
-                        PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+0.5*$pdf->fontSize(),
-                        $style.$html, '', 1);
 
-    $signature = \OCP\Util::imagePath(Config::APP_NAME, 'treasurer-signature.png');
-    $pdf->letterClose(L::t('Best wishes,'),
+    if (false) {
+      $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
+                          10,
+                          PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+0.5*$pdf->fontSize(),
+                          $style.$html, '', 1);
+      $closing = L::t('Best wishes,');
+    } else {
+      $html .= '<p>'.L::t('Best wishes,');
+      $closing = $html;
+    }  
+
+    $signature = __DIR__.'/../img/'.'treasurer-signature.png';
+    $pdf->letterClose($closing,
                       $treasurer['firstName'].' '.$treasurer['surName'].' ('.L::t('Treasurer').')',
                       $signature);
       

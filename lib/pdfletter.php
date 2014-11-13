@@ -31,6 +31,7 @@ namespace CAFEVDB
     const PAGE_WIDTH = 210;
     const PAGE_HEIGHT = 297;
     const LOGO_SIZE = 60;
+    const SUB_LOGO_WIDTH = 80;
     const TOP_MARGIN = 10;
     const LEFT_MARGIN = 20;
     const LEFT_TEXT_MARGIN = 25;
@@ -44,6 +45,7 @@ namespace CAFEVDB
     const FONT_HEADER = 10;
     const FONT_RECIPIENT = 12;
     const FOOTER_HEIGHT = 20;
+    const FIRST_FOOTER_HEIGHT = 25;
     const PT = 0.3527777777777777;
 
     /**Return the font-size converted to mm. */
@@ -61,6 +63,7 @@ namespace CAFEVDB
       $addr1 = Config::getValue('streetAddressName01');
       $addr2 = Config::getValue('streetAddressName02');
       $street = Config::getValue('streetAddressStreet');
+      $street .= ' '.Config::getValue('streetAddressHouseNumber');
       $ZIP = Config::getValue('streetAddressZIP');
       $city = Config::getValue('streetAddressCity');
       
@@ -71,10 +74,13 @@ namespace CAFEVDB
                            self::LEFT_MARGIN, self::TOP_MARGIN,
                            $executiveMember,
                            0 /*border*/);
-      $this->Image(\OCP\Util::imagePath(Config::APP_NAME, 'logo-greyf1024x1024.png'),
-                   130, self::TOP_MARGIN, self::LOGO_SIZE);
+      $this->Image(__DIR__.'/../img/'.'logo-greyf1024x1024.png',
+                   self::PAGE_WIDTH - self::RIGHT_TEXT_MARGIN - self::LOGO_SIZE, self::TOP_MARGIN,
+                   self::LOGO_SIZE);
 
-      $this->writeHtmlCell(65, 0, 125, self::TOP_MARGIN+self::LOGO_SIZE+5,
+      $this->writeHtmlCell(self::SUB_LOGO_WIDTH, 0,
+                           self::PAGE_WIDTH - self::RIGHT_TEXT_MARGIN - self::SUB_LOGO_WIDTH,
+                           self::TOP_MARGIN + self::LOGO_SIZE + 5,
                            $addr1.'<br>'.
                            'Vereinssitz: '.$addr2.'<br>'.
                            $street.', '.$ZIP.' '.$city,
@@ -92,35 +98,56 @@ namespace CAFEVDB
       $fontHeight = $this->getStringHeight(0, 'Camerata');
       $textWidth = self::PAGE_WIDTH-self::LEFT_TEXT_MARGIN-self::RIGHT_TEXT_MARGIN;
 
-      $this->Line(self::LEFT_MARGIN, self::PAGE_HEIGHT-self::FOOTER_HEIGHT,
-                  self::LEFT_MARGIN+$textWidth, self::PAGE_HEIGHT-self::FOOTER_HEIGHT);
+      $page = $this->getAliasNumPage();
+      $total = $this->getAliasNbPages();
+      $pages = L::t('page').' '.$page.' '.L::t('of').' '.$total;
+      $pagesDummy = L::t('page').' '.'9'.' '.L::t('of').' '.'9';
+      $pagesWidth = $this->GetStringWidth($pagesDummy);
 
       if ($this->getPage() == 1) {
-        $this->SetXY(self::LEFT_MARGIN, -(self::FOOTER_HEIGHT-(1)*$fontHeight));
+
+        $this->Line(self::LEFT_MARGIN, self::PAGE_HEIGHT-self::FIRST_FOOTER_HEIGHT,
+                    self::LEFT_MARGIN+$textWidth, self::PAGE_HEIGHT-self::FIRST_FOOTER_HEIGHT);
+
+        // TODO: read bank from data-base
+        $this->SetXY(self::LEFT_MARGIN, -(self::FIRST_FOOTER_HEIGHT-(0.5)*$fontHeight));
         $this->Cell(60, 0, 'Camerata Academica Freiburg e.V.', 0, false, 'L');
-        $this->SetXY(self::LEFT_MARGIN, -(self::FOOTER_HEIGHT-(2)*$fontHeight));
+        $this->SetXY(self::LEFT_MARGIN, -(self::FIRST_FOOTER_HEIGHT-(1.5)*$fontHeight));
         $this->Cell(60, 0, 'Amtsgericht Freiburg, VR 3604', 0, false, 'L');
-        $this->SetXY(self::LEFT_MARGIN, -(self::FOOTER_HEIGHT-(3)*$fontHeight));
+        $this->SetXY(self::LEFT_MARGIN, -(self::FIRST_FOOTER_HEIGHT-(2.5)*$fontHeight));
         $this->Cell(60, 0, 'Mitglied im BDLO, 1087C', 0, false, 'L');
 
-        $this->SetXY(self::LEFT_MARGIN+60, -(self::FOOTER_HEIGHT-(1)*$fontHeight));
+        $this->SetXY(self::LEFT_MARGIN+60, -(self::FIRST_FOOTER_HEIGHT-(0.5)*$fontHeight));
         $this->Cell(60, 0, 'IBAN: DE95680900000020213507', 0, false, 'L');
-        $this->SetXY(self::LEFT_MARGIN+60, -(self::FOOTER_HEIGHT-(2)*$fontHeight));
+        $this->SetXY(self::LEFT_MARGIN+60, -(self::FIRST_FOOTER_HEIGHT-(1.5)*$fontHeight));
         $this->Cell(60, 0, 'BIC: GENODE61FR1', 0, false, 'L');
-        $this->SetXY(self::LEFT_MARGIN+60, -(self::FOOTER_HEIGHT-(3)*$fontHeight));
+        $this->SetXY(self::LEFT_MARGIN+60, -(self::FIRST_FOOTER_HEIGHT-(2.5)*$fontHeight));
         $this->Cell(60, 0, 'Volksbank Freiburg e.G.', 0, false, 'L');
 
-        $this->SetXY(self::LEFT_MARGIN+120, -(self::FOOTER_HEIGHT-(1)*$fontHeight));
+        $this->SetXY(self::LEFT_MARGIN+120, -(self::FIRST_FOOTER_HEIGHT-(0.5)*$fontHeight));
         $this->Cell(60, 0, 'IBAN: DE08680501010010114285', 0, false, 'L');
-        $this->SetXY(self::LEFT_MARGIN+120, -(self::FOOTER_HEIGHT-(2)*$fontHeight));
+        $this->SetXY(self::LEFT_MARGIN+120, -(self::FIRST_FOOTER_HEIGHT-(1.5)*$fontHeight));
         $this->Cell(60, 0, 'BIC: FRSPDE66XXX', 0, false, 'L');
-        $this->SetXY(self::LEFT_MARGIN+120, -(self::FOOTER_HEIGHT-(3)*$fontHeight));
+        $this->SetXY(self::LEFT_MARGIN+120, -(self::FIRST_FOOTER_HEIGHT-(2.5)*$fontHeight));
         $this->Cell(60, 0, 'Sparkasse Freiburg', 0, false, 'L');
+        
+        $this->SetXY(
+          self::LEFT_MARGIN + 0.5*($textWidth-$pagesWidth-10),
+          - self::FIRST_FOOTER_HEIGHT - 0.5*$fontHeight
+          );
+        $this->SetFillColor(255);
+        $this->Cell($pagesWidth+10, $fontHeight, '', 0, false, 'C', true);
+        $this->SetXY(
+          self::LEFT_MARGIN + 0.5*($textWidth-$pagesWidth),
+          - self::FIRST_FOOTER_HEIGHT - 0.5*$fontHeight
+          );
+        $this->Cell($textWidth, $fontHeight, $pages, 0, false, 'L', false);
       } else {
-        $page = $this->getAliasNumPage();
-        $total = $this->getAliasNbPages();
+        $this->Line(self::LEFT_MARGIN, self::PAGE_HEIGHT-self::FOOTER_HEIGHT,
+                    self::LEFT_MARGIN+$textWidth, self::PAGE_HEIGHT-self::FOOTER_HEIGHT);
+
         $this->SetXY(self::LEFT_MARGIN, -(self::FOOTER_HEIGHT-(1)*$fontHeight));
-        $this->Cell($textWidth, 0, 'Seite '.$page.' von '.$total, 0, false, 'C');
+        $this->Cell($textWidth, 0, $pages, 0, false, 'C');
       }
 
       $this->SetFont(PDF_FONT_NAME_MAIN, '', self::FONT_SIZE);
@@ -191,9 +218,15 @@ namespace CAFEVDB
 
     public function letterClose($endFormula, $signature, $signatureImage = false)
     {
+      $this->startTransaction();
+      $startPage = $this->getPage();
+      
       $textWidth = self::PAGE_WIDTH-self::LEFT_TEXT_MARGIN-self::RIGHT_TEXT_MARGIN;
-      $this->SetXY(self::LEFT_TEXT_MARGIN, $this->GetY() + $this->fontSize());
-      $this->Cell($textWidth, $this->fontSize(), $endFormula, 0, false, 'L');
+      //$this->SetXY(self::LEFT_TEXT_MARGIN, $this->GetY() + $this->fontSize());
+      //$this->Cell($textWidth, $this->fontSize(), $endFormula, 0, false, 'L');
+      $this->writeHtmlCell($textWidth, $this->fontSize(),
+                           self::LEFT_TEXT_MARGIN, $this->GetY() + $this->fontSize(),
+                           $endFormula, '', 1);
       $y = $this->GetY();
       if ($signatureImage !== false /*&& file_exists($signatureImage)*/) {
         $this->Image($signatureImage,
@@ -203,6 +236,16 @@ namespace CAFEVDB
       }
       $this->SetXY(self::LEFT_TEXT_MARGIN, $y + 4*$this->fontSize());
       $this->Cell($textWidth, $this->fontSize(), $signature, 0, false, 'L');
+
+      $endPage = $this->getPage();
+
+      if ($startPage != $endPage) {
+        $this->rollbackTransaction(true);
+        $this->addPage();
+        $this->letterClose($endFormula, $signature, $signatureImage);
+      } else {
+        $this->commitTransaction();
+      }
     }
 
     public function letter($startFormula, $body, $endFormula, $signature)
