@@ -288,7 +288,10 @@ namespace CAFEVDB
       
       // Verify that the dates are not in the future, and that the
       // mandateDate is set (last used maybe 0)
-      foreach(array('mandateDate', 'lastUsedDate') as $dateKey) {
+      //
+      // lastUsedDate should be the date of the actual debit, so it
+      // can very well refer to a transaction in the future.
+      foreach(array('mandateDate'/*, 'lastUsedDate'*/) as $dateKey) {
         $date = $mandate[$dateKey];
         if ($date == '0000-00-00' || $date == '1970-01-01') {
           continue;
