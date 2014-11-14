@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-13 08:46+0100\n"
+"POT-Creation-Date: 2014-11-14 19:07+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1987,11 +1987,8 @@ msgstr ""
 msgid "Member Status"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:399
-#, php-format
-msgid ""
-"Remarks\n"
-"(%s)"
+#: lib/detailed-instrumentation.php:399 lib/musicians.php:384
+msgid "Remarks"
 msgstr ""
 
 #: lib/detailed-instrumentation.php:415 lib/musicians.php:300
@@ -2395,15 +2392,15 @@ msgid ""
 "advance of the bank transaction."
 msgstr ""
 
-#: lib/instrument-insurance.php:878
+#: lib/instrument-insurance.php:878 lib/instrument-insurance.php:880
 msgid "Best wishes,"
 msgstr ""
 
-#: lib/instrument-insurance.php:879
+#: lib/instrument-insurance.php:886
 msgid "Treasurer"
 msgstr ""
 
-#: lib/instrument-insurance.php:945
+#: lib/instrument-insurance.php:952
 #, php-format
 msgid "Invalid broker/geographical-scope combination: %s - %s"
 msgstr ""
@@ -2563,10 +2560,6 @@ msgstr ""
 msgid "Instruments"
 msgstr ""
 
-#: lib/musicians.php:384
-msgid "Remarks"
-msgstr ""
-
 #: lib/musicians.php:403 lib/sepa-debit-mandates.php:400
 msgid "Instrument Insurance"
 msgstr ""
@@ -2609,11 +2602,11 @@ msgid ""
 "given context."
 msgstr ""
 
-#: lib/pdfletter.php:100 lib/pdfletter.php:101
+#: lib/pdfletter.php:103 lib/pdfletter.php:104
 msgid "page"
 msgstr ""
 
-#: lib/pdfletter.php:100 lib/pdfletter.php:101
+#: lib/pdfletter.php:103 lib/pdfletter.php:104
 msgid "of"
 msgstr ""
 
@@ -3762,7 +3755,7 @@ msgstr ""
 
 #: templates/app-settings.php:47 templates/app-settings.php:50
 #: templates/app-settings.php:82 templates/email-settings.php:73
-#: templates/settings.php:98 templates/settings.php:101
+#: templates/settings.php:106 templates/settings.php:109
 #: templates/share-settings.php:46
 msgid "show"
 msgstr ""
@@ -5028,119 +5021,119 @@ msgstr ""
 msgid "last used date"
 msgstr ""
 
-#: templates/settings.php:30
+#: templates/settings.php:29
 msgid ""
 "Control the display of tooltips. Warning: this works globally for all "
 "OwnCloud applications."
 msgstr ""
 
-#: templates/settings.php:32
+#: templates/settings.php:31
 msgid ""
 "Initially display the filter-controls on all atable. This affects only the "
 "initial visibility of the filter-buttons and -inputs."
 msgstr ""
 
-#: templates/settings.php:34
+#: templates/settings.php:33
 msgid "Show a second button which leads to a dialog with `advanced' settings"
 msgstr ""
 
-#: templates/settings.php:35
+#: templates/settings.php:34
 msgid "Show a certain amount of debug information, normally not needed."
 msgstr ""
 
-#: templates/settings.php:37
+#: templates/settings.php:36
 msgid "General Information"
 msgstr ""
 
-#: templates/settings.php:38
+#: templates/settings.php:37
 msgid "SQL Queries"
 msgstr ""
 
-#: templates/settings.php:39
+#: templates/settings.php:38
 msgid "HTTP Request"
 msgstr ""
 
-#: templates/settings.php:40
+#: templates/settings.php:39
 msgid "Missing Context Help"
 msgstr ""
 
-#: templates/settings.php:41
+#: templates/settings.php:40
 msgid "Mass Email Form"
 msgstr ""
 
-#: templates/settings.php:45
+#: templates/settings.php:53
 msgid "Personal"
 msgstr ""
 
-#: templates/settings.php:47
+#: templates/settings.php:55
 msgid "Orchestra"
 msgstr ""
 
-#: templates/settings.php:48
+#: templates/settings.php:56
 msgid "Data-Base"
 msgstr ""
 
-#: templates/settings.php:49
+#: templates/settings.php:57
 msgid "Sharing"
 msgstr ""
 
-#: templates/settings.php:50
+#: templates/settings.php:58
 msgid "Email"
 msgstr ""
 
-#: templates/settings.php:51
+#: templates/settings.php:59
 msgid "Development"
 msgstr ""
 
-#: templates/settings.php:52
+#: templates/settings.php:60
 msgid "CMS"
 msgstr ""
 
-#: templates/settings.php:54
+#: templates/settings.php:62
 msgid "?"
 msgstr ""
 
-#: templates/settings.php:60
+#: templates/settings.php:68
 msgid "Tool-Tips"
 msgstr ""
 
-#: templates/settings.php:63
+#: templates/settings.php:71
 msgid "Filter-Controls"
 msgstr ""
 
-#: templates/settings.php:66
+#: templates/settings.php:74
 msgid "WYSIWYG Editor"
 msgstr ""
 
-#: templates/settings.php:77
+#: templates/settings.php:85
 msgid "Expert-Mode"
 msgstr ""
 
-#: templates/settings.php:82
+#: templates/settings.php:90
 msgid "Enable Debug Mode"
 msgstr ""
 
-#: templates/settings.php:92
+#: templates/settings.php:100
 msgid "Dummy"
 msgstr ""
 
-#: templates/settings.php:96
+#: templates/settings.php:104
 msgid "Own Password"
 msgstr ""
 
-#: templates/settings.php:99
+#: templates/settings.php:107
 msgid "DB Encryption Key"
 msgstr ""
 
-#: templates/settings.php:102
+#: templates/settings.php:110
 msgid "Set Encryption Key"
 msgstr ""
 
-#: templates/settings.php:103
+#: templates/settings.php:111
 msgid "The encryption key has been set successfully."
 msgstr ""
 
-#: templates/settings.php:104
+#: templates/settings.php:112
 msgid "Unable to set the encryption key."
 msgstr ""
 

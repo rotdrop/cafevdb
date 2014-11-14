@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-13 08:46+0100\n"
-"PO-Revision-Date: 2014-11-13 08:44+0100\n"
+"POT-Creation-Date: 2014-11-14 19:07+0100\n"
+"PO-Revision-Date: 2014-11-13 21:06+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -1985,7 +1985,7 @@ msgstr "Kann die Versicherungs-Übersichten nicht exportieren:"
 
 #: js/sepa-debit-mandate.js:488
 msgid "InsuranceDebitNoteAnnouncement"
-msgstr "VersicherungsLastschriftAnkündigung"
+msgstr "VersicherungsLastschriftAnkuendigung"
 
 #: js/sepa-debit-mandate.js:489 js/sepa-debit-mandate.js:566
 msgid "Debit notes due in 14 days"
@@ -1993,7 +1993,7 @@ msgstr "Lastschrifteinzug in 14 Tagen"
 
 #: js/sepa-debit-mandate.js:565
 msgid "ProjectDebitNoteAnnouncement"
-msgstr "ProjektLastschriftAnkündigung"
+msgstr "ProjektLastschriftAnkuendigung"
 
 #: js/settings.js:100 js/settings.js:122 js/settings.js:178
 msgid "Error:"
@@ -2121,12 +2121,9 @@ msgstr "Alle Instrumente"
 msgid "Member Status"
 msgstr "Status"
 
-#: lib/detailed-instrumentation.php:399
-#, php-format
-msgid ""
-"Remarks\n"
-"(%s)"
-msgstr "Bemerkungen\\n(%s)"
+#: lib/detailed-instrumentation.php:399 lib/musicians.php:384
+msgid "Remarks"
+msgstr "Bemerkungen"
 
 #: lib/detailed-instrumentation.php:415 lib/musicians.php:300
 msgid "no projects yet"
@@ -2570,15 +2567,15 @@ msgstr ""
 "wenigstens 14 Tage im voraus per Email über das genaue Datum der\n"
 "Kontobelastung."
 
-#: lib/instrument-insurance.php:878
+#: lib/instrument-insurance.php:878 lib/instrument-insurance.php:880
 msgid "Best wishes,"
 msgstr "Herzliche Grüße,"
 
-#: lib/instrument-insurance.php:879
+#: lib/instrument-insurance.php:886
 msgid "Treasurer"
 msgstr "Schatzmeister"
 
-#: lib/instrument-insurance.php:945
+#: lib/instrument-insurance.php:952
 #, php-format
 msgid "Invalid broker/geographical-scope combination: %s - %s"
 msgstr "Der Makler %s bietet keine Versicherung für den Geltungsberich %s an"
@@ -2745,10 +2742,6 @@ msgstr "Vorname"
 msgid "Instruments"
 msgstr "Instrumente"
 
-#: lib/musicians.php:384
-msgid "Remarks"
-msgstr "Bemerkungen"
-
 #: lib/musicians.php:403 lib/sepa-debit-mandates.php:400
 msgid "Instrument Insurance"
 msgstr "Instrumentenversicherung"
@@ -2795,11 +2788,11 @@ msgstr ""
 "Interner Fehler; keine Ahnung, wie im gegebenen Kontext mit\n"
 "Portrait-Bildern verfahren werden sollte."
 
-#: lib/pdfletter.php:100 lib/pdfletter.php:101
+#: lib/pdfletter.php:103 lib/pdfletter.php:104
 msgid "page"
 msgstr "Seite"
 
-#: lib/pdfletter.php:100 lib/pdfletter.php:101
+#: lib/pdfletter.php:103 lib/pdfletter.php:104
 msgid "of"
 msgstr "von"
 
@@ -4323,7 +4316,7 @@ msgstr "Aktueller Schlüssel"
 
 #: templates/app-settings.php:47 templates/app-settings.php:50
 #: templates/app-settings.php:82 templates/email-settings.php:73
-#: templates/settings.php:98 templates/settings.php:101
+#: templates/settings.php:106 templates/settings.php:109
 #: templates/share-settings.php:46
 msgid "show"
 msgstr "zeigen"
@@ -5753,7 +5746,7 @@ msgstr "Datum des letzten Bankeinzugs zu diesem Mandat"
 msgid "last used date"
 msgstr "letzte Verwendung"
 
-#: templates/settings.php:30
+#: templates/settings.php:29
 msgid ""
 "Control the display of tooltips. Warning: this works globally for all "
 "OwnCloud applications."
@@ -5761,7 +5754,7 @@ msgstr ""
 "Steuert die Anzeige von Tool-Tips. Achtung: die Einstellung gilt dann für "
 "alle OwnCloud-Apps."
 
-#: templates/settings.php:32
+#: templates/settings.php:31
 msgid ""
 "Initially display the filter-controls on all atable. This affects only the "
 "initial visibility of the filter-buttons and -inputs."
@@ -5769,109 +5762,109 @@ msgstr ""
 "Zeige die Filter- und Suchoptionen anfangs an. Diese Auswahl beeinflusst "
 "lediglich die Anfangseinstellung."
 
-#: templates/settings.php:34
+#: templates/settings.php:33
 msgid "Show a second button which leads to a dialog with `advanced' settings"
 msgstr ""
 "Blendet einen weiteren `Button' ein, der zu einem Experten-Dialog hinleitet"
 
-#: templates/settings.php:35
+#: templates/settings.php:34
 msgid "Show a certain amount of debug information, normally not needed."
 msgstr ""
 "Informationen zur Fehlersuche anzeigen, wird normalerweise nicht benötigt."
 
-#: templates/settings.php:37
+#: templates/settings.php:36
 msgid "General Information"
 msgstr "Allgemeine Informationen"
 
-#: templates/settings.php:38
+#: templates/settings.php:37
 msgid "SQL Queries"
 msgstr "SQL Abfragen"
 
-#: templates/settings.php:39
+#: templates/settings.php:38
 msgid "HTTP Request"
 msgstr "HTTP Anfragen"
 
-#: templates/settings.php:40
+#: templates/settings.php:39
 msgid "Missing Context Help"
 msgstr "Fehlende Kontext-Hilfe"
 
-#: templates/settings.php:41
+#: templates/settings.php:40
 msgid "Mass Email Form"
 msgstr "Em@il Formular"
 
-#: templates/settings.php:45
+#: templates/settings.php:53
 msgid "Personal"
 msgstr "Persönliches"
 
-#: templates/settings.php:47
+#: templates/settings.php:55
 msgid "Orchestra"
 msgstr "Orchester"
 
-#: templates/settings.php:48
+#: templates/settings.php:56
 msgid "Data-Base"
 msgstr "Datenbank"
 
-#: templates/settings.php:49
+#: templates/settings.php:57
 msgid "Sharing"
 msgstr "Sharing"
 
-#: templates/settings.php:50
+#: templates/settings.php:58
 msgid "Email"
 msgstr "Email"
 
-#: templates/settings.php:51
+#: templates/settings.php:59
 msgid "Development"
 msgstr "Entwicklung"
 
-#: templates/settings.php:52
+#: templates/settings.php:60
 msgid "CMS"
 msgstr "CMS"
 
-#: templates/settings.php:54
+#: templates/settings.php:62
 msgid "?"
 msgstr "?"
 
-#: templates/settings.php:60
+#: templates/settings.php:68
 msgid "Tool-Tips"
 msgstr "Ballon-Hilfe"
 
-#: templates/settings.php:63
+#: templates/settings.php:71
 msgid "Filter-Controls"
 msgstr "Such-Filter"
 
-#: templates/settings.php:66
+#: templates/settings.php:74
 msgid "WYSIWYG Editor"
 msgstr "WYSIWYG Editor"
 
-#: templates/settings.php:77
+#: templates/settings.php:85
 msgid "Expert-Mode"
 msgstr "Experten-Modus"
 
-#: templates/settings.php:82
+#: templates/settings.php:90
 msgid "Enable Debug Mode"
 msgstr "Debug-Modus einschalten"
 
-#: templates/settings.php:92
+#: templates/settings.php:100
 msgid "Dummy"
 msgstr "Strohpuppe"
 
-#: templates/settings.php:96
+#: templates/settings.php:104
 msgid "Own Password"
 msgstr "Eigenes Passwort"
 
-#: templates/settings.php:99
+#: templates/settings.php:107
 msgid "DB Encryption Key"
 msgstr "DB Schlüssel"
 
-#: templates/settings.php:102
+#: templates/settings.php:110
 msgid "Set Encryption Key"
 msgstr "Schlüssel speichern"
 
-#: templates/settings.php:103
+#: templates/settings.php:111
 msgid "The encryption key has been set successfully."
 msgstr "Der Schlüssel wurde erfolgreich installiert."
 
-#: templates/settings.php:104
+#: templates/settings.php:112
 msgid "Unable to set the encryption key."
 msgstr "Kann den Schlüssel nicht installieren."
 
@@ -5969,6 +5962,11 @@ msgstr "PROJEKT"
 #: templates/share-settings.php:121
 msgid "Financial balance folder"
 msgstr "Finanz-Ordner"
+
+#~ msgid ""
+#~ "Remarks\n"
+#~ "(%s)"
+#~ msgstr "Bemerkungen\\n(%s)"
 
 #~ msgid "Fees for %s"
 #~ msgstr "Unkostenbeitrag für %s"
