@@ -960,7 +960,7 @@ your insured items at any time. Just ask.'), '', 1);
       mySQL::close($handle);
     }
 
-    return round($fee, 0);
+    return round($fee, 2);
   }
 
 }; // class definition.
