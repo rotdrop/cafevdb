@@ -100,15 +100,17 @@ namespace CAFEVDB {
       $filteredTable[] = $row;
     }
 
+    $timeStamp = strtotime('+ 14 days');    
+    $aqDebitTable = SepaDebitMandates::aqBankingDebitNotes($filteredTable, $timeStamp);
+
     // It worked out until now. Update the "last issued" stamp
 
     $handle = mySQL::connect(Config::$pmeopts);
-    $nowStamp = time();
-    $nowdate = date('Y-m-d', $nowStamp);
+    $dateIssued = date('Y-m-d', $timeStamp);
     $table = Finance::$dataBaseInfo['table'];
     $allQuery = '';
     foreach($filteredTable as $debitNote) {
-      $query = "UPDATE `".$table."` SET `lastUsedDate` = '".$nowdate."' WHERE `id` = ".$debitNote['id'];
+      $query = "UPDATE `".$table."` SET `lastUsedDate` = '".$dateIssued."' WHERE `id` = ".$debitNote['id'];
       $result = mySQL::query($query, $handle);
       $allQuery .= $query;
     }
@@ -124,21 +126,15 @@ namespace CAFEVDB {
 
     @ob_end_clean();
 
-    //print_r($_POST);
-    //print_r($blah);
-    //print_r($debitTable);
-    //print_r($selectedMandates);    
-
-    $aqDebitTable = SepaDebitMandates::aqBankingDebitNotes($filteredTable);
-
-    //print_r($aqDebitTable);
-
     // The rows of the aqDebitTable must have the following fields:
     $aqColumns = array("localBic",
 "localIban","remoteBic","remoteIban","date","value/value","value/currency","localName","remoteName","creditorSchemeId","mandateId","mandateDate/dateString","mandateDebitorName","sequenceType","purpose[0]","purpose[1]","purpose[2]","purpose[3]");
 
     $outstream = fopen("php://output",'w');
 
+    // fputcsv() is locale sensitive.
+    setlocale(LC_ALL, 'C');
+    
     fputcsv($outstream, $aqColumns, ";", '"');
     foreach($aqDebitTable as $row) {
       fputcsv($outstream, array_values($row), ";", '"');

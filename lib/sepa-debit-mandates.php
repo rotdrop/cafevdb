@@ -459,14 +459,24 @@ namespace CAFEVDB
      * view which can 1 to 1 be exported into a CSV table suitable to
      * finally issue the debit mandates to the respective credit
      * institutes.
+     *
+     * @param $debitTable As returned by
+     * SepaDebitMandates::projectTableExport() or by
+     * SepaDebitMandates::insuranceTableExport()
+     *
+     * @param $timeStamp Execution time. Unix time stamp.
      */
-    static public function aqBankingDebitNotes($debitTable)
+    static public function aqBankingDebitNotes($debitTable, $timeStamp = false)
     {
+      if ($timeStamp === false) {
+        $timeStamp = strtotime('+ 14 days');
+      }
+      
       $iban  = new \IBAN(Config::getValue('bankAccountIBAN'));
       $iban  = $iban->MachineFormat();
       $bic   = Config::getValue('bankAccountBIC');
       $owner = Config::getValue('bankAccountOwner');
-      $executionDate = date('Y/m/d', strtotime('+ 14 days'));
+      $executionDate = date('Y/m/d', $timeStamp);
 
       // "localBic";"localIban";"remoteBic";"remoteIban";"date";"value/value";"value/currency";"localName";"remoteName";"creditorSchemeId";"mandateId";"mandateDate/dateString";"mandateDebitorName";"sequenceType";"purpose[0]";"purpose[1]";"purpose[2]";"purpose[3]"
       $result = array();
