@@ -572,7 +572,7 @@ namespace CAFEVDB
         setlocale(LC_MONETARY, Util::getLocale());
         $fee = money_format('%n', InstrumentInsurance::annualFee($dbdata['musicianId'], $dbh));
         $dbdata['insuranceFee'] = $fee;
-        $fee = money_format('%n', $dbdata['Unkostenbeitrag']);
+        $fee = money_format('%n', intval($dbdata['Unkostenbeitrag']));
         $dbdata['Unkostenbeitrag'] = $fee;
         $this->EMails[$key]['dbdata'] = $dbdata;
       }
