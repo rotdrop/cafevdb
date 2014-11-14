@@ -231,7 +231,7 @@ namespace CAFEVDB
       if ($signatureImage !== false /*&& file_exists($signatureImage)*/) {
         $this->Image($signatureImage,
                      self::LEFT_TEXT_MARGIN+10,
-                     $this->GetY()+1.5*$this->fontSize(),
+                     $this->GetY()+1*$this->fontSize(),
                      0, 4*$this->fontSize());                     
       }
       $this->SetXY(self::LEFT_TEXT_MARGIN, $y + 4*$this->fontSize());
