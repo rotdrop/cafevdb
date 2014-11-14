@@ -117,7 +117,7 @@ var CAFEVDB = CAFEVDB || {};
               // If we are about to display an existing mandate, first
               // disable all inputs and leave only the "close" and
               // "change" buttons enabled, and the lastUsed date.
-              $(dlg).dialog("widget").find('button.save').attr("disabled", true);
+              //$(dlg).dialog("widget").find('button.save').attr("disabled", true);
               $(dlg).dialog("widget").find('button.apply').attr("disabled", true);
               $(dlg).dialog("widget").find('button.delete').attr("disabled", true);
               $(dlg).dialog("widget").find('input[class^="bankAccount"]').attr("disabled", true);
