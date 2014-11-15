@@ -87,6 +87,7 @@ var CAFEVDB = CAFEVDB || {};
             $(this).dialog("widget").find('button.delete').attr("disabled", false);
             $(this).dialog("widget").find('input[class^="bankAccount"]').attr("disabled", false);
             $(this).dialog("widget").find('input.mandateDate').attr("disabled", false);
+            $(this).dialog("widget").find('input.lastUsedDate').attr("disabled", false);
             $(this).dialog("widget").find('button.change').attr("disabled", true);
             $('.tipsy').remove(); // clean up left-over balloons
           }
@@ -117,11 +118,12 @@ var CAFEVDB = CAFEVDB || {};
               // If we are about to display an existing mandate, first
               // disable all inputs and leave only the "close" and
               // "change" buttons enabled, and the lastUsed date.
-              //$(dlg).dialog("widget").find('button.save').attr("disabled", true);
+              $(dlg).dialog("widget").find('button.save').attr("disabled", true);
               $(dlg).dialog("widget").find('button.apply').attr("disabled", true);
               $(dlg).dialog("widget").find('button.delete').attr("disabled", true);
               $(dlg).dialog("widget").find('input[class^="bankAccount"]').attr("disabled", true);
               $(dlg).dialog("widget").find('input.mandateDate').attr("disabled", true);
+              $(dlg).dialog("widget").find('input.lastUsedDate').attr("disabled", true);
               $(dlg).dialog("widget").find('button.change').attr("disabled", false);
               $('.tipsy').remove(); // clean up left-over balloons
               reloadCB();
@@ -163,6 +165,7 @@ var CAFEVDB = CAFEVDB || {};
           $(this).dialog("widget").find('button.delete').attr("disabled", true);
           $(this).dialog("widget").find('input[class^="bankAccount"]').attr("disabled", true);
           $(this).dialog("widget").find('input.mandateDate').attr("disabled", true);
+          $(this).dialog("widget").find('input.lastUsedDate').attr("disabled", true);
         } else {
           $(this).dialog("widget").find('button.change').attr("disabled", true);
         }
@@ -216,6 +219,9 @@ var CAFEVDB = CAFEVDB || {};
     $.post(OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-store.php'),
            post,
            function (data) {
+             if (!CAFEVDB.ajaxErrorHandler(data, [ 'message' ])) {
+               return false;
+             }
 	     $(dialogId+' #msg').html(data.data.message);
 	     $(dialogId+' #msg').show();
              if (data.status == "success") {
