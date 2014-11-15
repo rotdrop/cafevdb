@@ -867,10 +867,9 @@ var PHPMYEDIT = PHPMYEDIT || {};
       event.preventDefault();
       // There doesn't seem to be a "this" for dblclick, though
       // searching the web did not reveal similar problems. Doesn't
-      // matter, use the div as dummy
-      PHPMYEDIT.blah = event;
-      PHPMYEDIT.blah2 = $(event.target);
-      return PHPMYEDIT.pseudoSubmit(container.find('form.pme-form'), $(event.target), containerSel, pmepfx);
+      // matter, we just trigger the click on the query-submit button
+      //return PHPMYEDIT.pseudoSubmit(container.find('form.pme-form'), $(event.target), containerSel, pmepfx);
+      container.find('td.pme-filter input.pme-query').trigger('click');
     });
 
     container.find("td[class^='"+pmepfx+"-filter'] div.chosen-container").attr("title", this.filterSelectChosenTitle);
