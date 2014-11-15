@@ -106,8 +106,8 @@ namespace CAFEVDB {
 
     $tmpl->assign('mandateId', $mandate['id']);
     $tmpl->assign('mandateReference', $mandate['mandateReference']);
-    $tmpl->assign('mandateDate', $mandate['mandateDate']);
-    $tmpl->assign('lastUsedDate', $mandate['lastUsedDate']);
+    $tmpl->assign('mandateDate', date('d.m.Y', strtotime($mandate['mandateDate'])));
+    $tmpl->assign('lastUsedDate', date('d.m.Y', strtotime($mandate['lastUsedDate'])));
     $tmpl->assign('nonrecurring', $mandate['nonrecurring']);
 
     $tmpl->assign('bankAccountOwner', $mandate['bankAccountOwner']);
