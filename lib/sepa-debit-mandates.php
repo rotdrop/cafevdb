@@ -304,7 +304,7 @@ namespace CAFEVDB
 
       $opts['fdd']['projectId'] = array('name'     => L::t('Project'),
                                         'input'    => 'R',
-                                        'select'   => 'T',
+                                        'select'   => 'M',
                                         'maxlen'   => 11,
                                         'sort'     => true,
                                         //'options'  => 'LFADV', // no change allowed

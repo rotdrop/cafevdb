@@ -520,7 +520,7 @@ var CAFEVDB = CAFEVDB || {};
       return true;
     }
     var table = form.find('table[summary="SepaDebitMandates"]');
-    table.find('input[type="text"]').not('.pme-filter').off('blur').on('blur', self.validatePME);
+    table.find('input[type="text"]').not('tr.pme-filter input').off('blur').on('blur', self.validatePME);
 
     CAFEVDB.exportMenu(containerSel);
 
