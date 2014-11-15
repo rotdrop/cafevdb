@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-14 19:07+0100\n"
-"PO-Revision-Date: 2014-11-13 21:06+0100\n"
+"POT-Creation-Date: 2014-11-15 18:49+0100\n"
+"PO-Revision-Date: 2014-11-15 18:02+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -107,18 +107,19 @@ msgid "Email Address Validation Failed"
 msgstr "Em@il Adresse(n) ungültig"
 
 #: ajax/email/composer.php:256 ajax/email/exporter.php:95
-#: ajax/email/recipients.php:140 ajax/finance/sepa-debit-export.php:181
+#: ajax/email/recipients.php:140 ajax/finance/sepa-debit-export.php:217
+#: ajax/finance/sepa-debit-store.php:112
 #: ajax/insurance/instrument-insurance-export.php:171
 #: ajax/insurance/validate.php:265 ajax/page-loader.php:111
-#: ajax/projects/web-articles.php:182 ajax/settings/app-settings.php:1175
+#: ajax/projects/web-articles.php:182 ajax/settings/app-settings.php:1176
 msgid "PHP Exception Caught"
 msgstr "PHP `Ausnahme' `gefangen'"
 
 #: ajax/email/composer.php:260 ajax/email/exporter.php:96
-#: ajax/email/recipients.php:144 ajax/finance/sepa-debit-export.php:182
+#: ajax/email/recipients.php:144 ajax/finance/sepa-debit-store.php:116
 #: ajax/insurance/instrument-insurance-export.php:172
 #: ajax/insurance/validate.php:269 ajax/page-loader.php:115
-#: ajax/projects/web-articles.php:186 ajax/settings/app-settings.php:1179
+#: ajax/projects/web-articles.php:186 ajax/settings/app-settings.php:1180
 #, php-format
 msgid ""
 "Error, caught an exception. Please copy the displayed text and send it by "
@@ -127,7 +128,7 @@ msgstr ""
 "Fehler, PHP-`Ausnahme' `gefangen'. Bitte den angezeigten Text kopieren und "
 "per Email an %s senden."
 
-#: ajax/email/exporter.php:100 ajax/finance/sepa-debit-export.php:186
+#: ajax/email/exporter.php:100
 #: ajax/insurance/instrument-insurance-export.php:176
 msgid "Trace"
 msgstr "Trace"
@@ -236,7 +237,7 @@ msgid "Done. %d events synchronized, %d new."
 msgstr "Fertig. %d Ereignisse synchronisiert, %d neue."
 
 #: ajax/export/csv.php:32 ajax/export/excel.php:49 ajax/export/html.php:32
-#: ajax/export/insurance-export.php:90
+#: ajax/export/insurance-export.php:90 ajax/finance/sepa-debit-export.php:68
 msgid "instrument insurances"
 msgstr "Instrumenten-Versicherungen"
 
@@ -282,7 +283,7 @@ msgid "Total Insurance Amount: "
 msgstr "Gesamtversicherungssumme: "
 
 #: ajax/export/insurance-export.php:141 lib/instrument-insurance.php:255
-#: lib/sepa-debit-mandates.php:256
+#: lib/sepa-debit-mandates.php:267
 msgid "Musician"
 msgstr "Musiker"
 
@@ -328,7 +329,7 @@ msgstr "falsch"
 
 #: ajax/finance/sepa-debit-delete.php:40
 #: ajax/finance/sepa-debit-settings.php:49
-#: ajax/finance/sepa-debit-store.php:40
+#: ajax/finance/sepa-debit-store.php:46
 #, php-format
 msgid "Required information `%s' not provided."
 msgstr "Informationen zu `%s' fehlen."
@@ -341,31 +342,57 @@ msgstr "SEPA-Lastschriftmandat aus der Datenbank gelöscht."
 msgid "Unable to delete SEPA debit mandate from data-base."
 msgstr "Kann das SEPA-Lastschriftmandat nicht löschen."
 
-#: ajax/finance/sepa-debit-export.php:54
+#: ajax/finance/sepa-debit-export.php:55
 msgid "Project name and/or id are missing"
 msgstr "Projektname und/oder -id fehlen"
 
-#: ajax/finance/sepa-debit-export.php:77
-#, php-format
-msgid "Unable to decrypt debit mandate. Full debit record: %s"
-msgstr "Kann das SEPA-Lastschriftmandat nicht entschlüsseln. Datensatz: %s"
+#: ajax/finance/sepa-debit-export.php:84
+msgid "Unable to decrypt debit mandate."
+msgstr "Kann das Lastschriftmandat nicht dechiffrieren."
 
-#: ajax/finance/sepa-debit-export.php:82
-#, php-format
-msgid "Refusing to debit 0€. Full debit record: %s"
-msgstr "Ich weigere mich, 0€ einzuziehen. Datensatz: %s"
+#: ajax/finance/sepa-debit-export.php:86 ajax/finance/sepa-debit-export.php:97
+#: ajax/finance/sepa-debit-export.php:108
+#: ajax/finance/sepa-debit-export.php:118
+msgid "Full debit record:"
+msgstr "Betroffener Datensatz:"
 
-#: ajax/finance/sepa-debit-export.php:88
+#: ajax/finance/sepa-debit-export.php:95
 #, php-format
-msgid "Illegal characters in debit purpose: %s. Full debit record: %s"
-msgstr "Ungültige Buchstaben im Verwendungszweck-Feld: %s. Datensatz: %s"
+msgid "Refusing to debit %s."
+msgstr "Ich weigere mich, einen Betrag von %s einzuziehen."
 
-#: ajax/finance/sepa-debit-export.php:93
+#: ajax/finance/sepa-debit-export.php:106
 #, php-format
-msgid "Purpose field has %d characters, allowed are %d. Full debit record: %s"
-msgstr ""
-"Verwendungszweckfeld zu lang (%d Buchstaben), erlaubt sind nur %d. "
-"Datensatz: %s"
+msgid "Illegal characters in debit purpose: %s. "
+msgstr "Ungültige Buchstaben im Verwendungszweck-Feld: %s."
+
+#: ajax/finance/sepa-debit-export.php:115
+#, php-format
+msgid "Purpose field has %d characters, allowed are %d."
+msgstr "Verwendungszweckfeld zu lang (%d Buchstaben), erlaubt sind nur %d."
+
+#: ajax/finance/sepa-debit-export.php:138
+msgid "Debit notes submission deadline"
+msgstr "Deadline für Lastschrifteinreichung"
+
+#: ajax/finance/sepa-debit-export.php:141
+#: ajax/finance/sepa-debit-export.php:152
+msgid "Exported CSV file name:"
+msgstr "Exportierte CSV-Datei:"
+
+#: ajax/finance/sepa-debit-export.php:145
+#: ajax/finance/sepa-debit-export.php:156
+msgid "Due date:"
+msgstr "Fälligkeitstermin:"
+
+#: ajax/finance/sepa-debit-export.php:149
+msgid "Debit notes due"
+msgstr "Lastschriften fällig"
+
+#: ajax/finance/sepa-debit-export.php:220
+#, php-format
+msgid "Please copy the displayed text and send it by email to %s."
+msgstr "Bitte den angezeigten Text kopieren und per Email an %s senden."
 
 #: ajax/finance/sepa-debit-mandate.php:72
 msgid "Musician-id and/or name not set"
@@ -383,10 +410,10 @@ msgstr "Konnte den Wert für `%s' nicht als `%s' speichern."
 
 #: ajax/finance/sepa-debit-settings.php:97
 #: ajax/finance/sepa-debit-settings.php:118
-#: ajax/finance/sepa-debit-settings.php:359 ajax/settings/app-settings.php:885
-#: ajax/settings/app-settings.php:957 ajax/settings/app-settings.php:972
-#: ajax/settings/app-settings.php:1007 ajax/settings/app-settings.php:1046
-#: ajax/settings/app-settings.php:1070 ajax/settings/app-settings.php:1082
+#: ajax/finance/sepa-debit-settings.php:359 ajax/settings/app-settings.php:886
+#: ajax/settings/app-settings.php:958 ajax/settings/app-settings.php:973
+#: ajax/settings/app-settings.php:1008 ajax/settings/app-settings.php:1047
+#: ajax/settings/app-settings.php:1071 ajax/settings/app-settings.php:1083
 #, php-format
 msgid "Value for `%s' set to `%s'."
 msgstr "Wert für `%s' auf `%s' gesetzt."
@@ -414,31 +441,38 @@ msgid "Invalid German(?) bank account number %s @ %s."
 msgstr "Ungültige Deutsche(?) Kontonummer %s @ %s."
 
 #: ajax/finance/sepa-debit-settings.php:258
-#: ajax/settings/app-settings.php:1015
+#: ajax/settings/app-settings.php:1016
 #, php-format
 msgid "Invalid IBAN: `%s'."
 msgstr "Ungültige IBAN: `%s'."
 
 #: ajax/finance/sepa-debit-settings.php:302
 #: ajax/finance/sepa-debit-settings.php:334
-#: ajax/finance/sepa-debit-store.php:64 ajax/finance/sepa-debit-store.php:75
-#: ajax/settings/app-settings.php:1093
+#: ajax/settings/app-settings.php:1094
 #, php-format
 msgid "Value for `%s' invalid: `%s'."
 msgstr "Der Wert für `%s' ist ungültig: `%s'."
 
 #: ajax/finance/sepa-debit-settings.php:348
-#: ajax/settings/app-settings.php:1153 ajax/settings/redaxo-settings.php:71
+#: ajax/settings/app-settings.php:1154 ajax/settings/redaxo-settings.php:71
 msgid "Unhandled request:"
 msgstr "Unbekannte Anfrage:"
 
-#: ajax/finance/sepa-debit-store.php:84
+#: ajax/finance/sepa-debit-store.php:69
 msgid "SEPA debit mandate stored in data-base."
 msgstr "SEPA-Lastschriftmandat gespeichert."
 
-#: ajax/finance/sepa-debit-store.php:89
+#: ajax/finance/sepa-debit-store.php:74
 msgid "Unable to store SEPA debit mandate in data-base."
 msgstr "Kann das SEPA-Lastschriftmandata nicht sichern."
+
+#: ajax/finance/sepa-debit-store.php:87
+msgid "Invalid Argument Exception"
+msgstr "Ausnahme: unsinniger Paramter-Wert."
+
+#: ajax/finance/sepa-debit-store.php:91
+msgid "Invalid arguments"
+msgstr "Unsinnige Paramter-Werte"
 
 #: ajax/inlineimage/currentimage.php:41 ajax/inlineimage/deleteimage.php:36
 #: ajax/inlineimage/oc_image.php:44 ajax/inlineimage/uploadimage.php:52
@@ -990,7 +1024,7 @@ msgstr ""
 "Konfiguration durch anderen Zugriff gesperrt, kann den Schlüssel nicht "
 "ändern."
 
-#: ajax/settings/app-settings.php:152 ajax/settings/app-settings.php:754
+#: ajax/settings/app-settings.php:152 ajax/settings/app-settings.php:755
 #, php-format
 msgid "Failed for: %s"
 msgstr "Fehlgeschlagen für: %s"
@@ -1125,117 +1159,117 @@ msgstr ""
 msgid "Exception: %s(%d): %s"
 msgstr "Ausnahme: %s(%d): %s"
 
-#: ajax/settings/app-settings.php:552 ajax/settings/app-settings.php:588
+#: ajax/settings/app-settings.php:552 ajax/settings/app-settings.php:589
 msgid "Unable to set:"
 msgstr "Einstellung kann nicht vorgenommen werden:"
 
-#: ajax/settings/app-settings.php:574 ajax/settings/encryptionkey.php:62
+#: ajax/settings/app-settings.php:575 ajax/settings/encryptionkey.php:62
 msgid "Exception:"
 msgstr "Fehler:"
 
-#: ajax/settings/app-settings.php:599
+#: ajax/settings/app-settings.php:600
 msgid "minutes"
 msgstr "Minuten"
 
-#: ajax/settings/app-settings.php:619
+#: ajax/settings/app-settings.php:620
 msgid "Changed password for"
 msgstr "Passwort ändern für"
 
-#: ajax/settings/app-settings.php:625
+#: ajax/settings/app-settings.php:626
 msgid "Failed changing password for"
 msgstr "Das Passwort kann nicht geändert werden für"
 
-#: ajax/settings/app-settings.php:645
+#: ajax/settings/app-settings.php:646
 #, php-format
 msgid "Using `%s' at %s as %s-server."
 msgstr "Verwende `%s' mit Adresse %s als `%s'-Server"
 
-#: ajax/settings/app-settings.php:651
+#: ajax/settings/app-settings.php:652
 #, php-format
 msgid "Unable to determine the IP-address for %s."
 msgstr "Die IP-Adresse für %s kann nicht ermittelt werden."
 
-#: ajax/settings/app-settings.php:668
+#: ajax/settings/app-settings.php:669
 msgid "Using "
 msgstr "Verwende "
 
-#: ajax/settings/app-settings.php:675
+#: ajax/settings/app-settings.php:676
 #, php-format
 msgid "`%s' doesn't seem to be a candidate for an IP-port."
 msgstr "`%s' scheint kein gültiger Netzwerk-Port zu sein."
 
-#: ajax/settings/app-settings.php:699
+#: ajax/settings/app-settings.php:700
 msgid "Unknown transport security method:"
 msgstr "Unbekannte Verschlüsselungs-Technologie:"
 
-#: ajax/settings/app-settings.php:710
+#: ajax/settings/app-settings.php:711
 #, php-format
 msgid "Using `%s' for message transport."
 msgstr "Verwende `%s' für den Versand der Nachrichten."
 
-#: ajax/settings/app-settings.php:724
+#: ajax/settings/app-settings.php:725
 #, php-format
 msgid "Using `%s' as login."
 msgstr "Verwende `%s' als Login."
 
-#: ajax/settings/app-settings.php:734
+#: ajax/settings/app-settings.php:735
 msgid "Password has been changed."
 msgstr "Das Passwort wurde geändert."
 
-#: ajax/settings/app-settings.php:759
+#: ajax/settings/app-settings.php:760
 msgid "Email credentials installed successfully!"
 msgstr "Email Authentifizierung erfolgreich gesetzt!"
 
-#: ajax/settings/app-settings.php:776
+#: ajax/settings/app-settings.php:777
 msgid "IMAP connection seems functional."
 msgstr "Die IMAP-Verbindung scheint zu funktionieren."
 
-#: ajax/settings/app-settings.php:779
+#: ajax/settings/app-settings.php:780
 msgid "Unable to establish IMAP connection."
 msgstr "Kann die IMAP-Verbindung nicht aufbauen."
 
-#: ajax/settings/app-settings.php:788
+#: ajax/settings/app-settings.php:789
 msgid "SMTP connection seems functional."
 msgstr "Die SMTP-Verbindung scheint zu funkionieren."
 
-#: ajax/settings/app-settings.php:791
+#: ajax/settings/app-settings.php:792
 msgid "Unable to establish SMTP connection."
 msgstr "Kann die SMTP-Verbindung nicht aufbauen."
 
-#: ajax/settings/app-settings.php:808
+#: ajax/settings/app-settings.php:809
 msgid "UNSPECIFIED"
 msgstr "NICHT SPEZIFIERT"
 
-#: ajax/settings/app-settings.php:812
+#: ajax/settings/app-settings.php:813
 #, php-format
 msgid "Email test-mode enabled, sending only to %s"
 msgstr "Email-Test-Modus in Kraft, Emails werden nur an `%s' gesendet."
 
-#: ajax/settings/app-settings.php:816
+#: ajax/settings/app-settings.php:817
 msgid "Email test-mode disable, will send to all!!!"
 msgstr "Email-Test-Modus ausgeschaltet, Massen-Mails werden verschickt!!!"
 
-#: ajax/settings/app-settings.php:827 ajax/settings/app-settings.php:856
+#: ajax/settings/app-settings.php:828 ajax/settings/app-settings.php:857
 #, php-format
 msgid "`%s' doesn't seem to be a valid email-address."
 msgstr "`%s' scheint keine gültige Email-Adresse zu sein."
 
-#: ajax/settings/app-settings.php:835
+#: ajax/settings/app-settings.php:836
 #, php-format
 msgid "Using `%s' as email-address for test-mode."
 msgstr "Verwende `%s' als Email-Adresse für den Test-Modus."
 
-#: ajax/settings/app-settings.php:845
+#: ajax/settings/app-settings.php:846
 #, php-format
 msgid "Using `%s' as name of the sender identity."
 msgstr "Verwende `%s' als Klartext-Namen des Absenders."
 
-#: ajax/settings/app-settings.php:864
+#: ajax/settings/app-settings.php:865
 #, php-format
 msgid "Using `%s' as sender email-address."
 msgstr "Verwende `%s' als Email-Adresse des Absenders."
 
-#: ajax/settings/app-settings.php:903
+#: ajax/settings/app-settings.php:904
 msgid ""
 "Table name is either not unique, or the table does not exist yet. Please "
 "create a project of this name manually."
@@ -1244,45 +1278,45 @@ msgstr ""
 "existiert nicht. Bitte sorge dafür, dass es genau ein Projekt mit diesem "
 "Namen gibt."
 
-#: ajax/settings/app-settings.php:907
+#: ajax/settings/app-settings.php:908
 #, php-format
 msgid "Table-id %d."
 msgstr "Projekt-id %d."
 
-#: ajax/settings/app-settings.php:912
+#: ajax/settings/app-settings.php:913
 #, php-format
 msgid "Value for `%s' set to `%s'. %s"
 msgstr "Wert für `%s' auf `%s' gesetzt. %s"
 
-#: ajax/settings/app-settings.php:927
+#: ajax/settings/app-settings.php:928
 #, php-format
 msgid "Musician with id %d does not seem to exist"
 msgstr "Ein Musiker mit der Id existiert leider nicht."
 
-#: ajax/settings/app-settings.php:936
+#: ajax/settings/app-settings.php:937
 #, php-format
 msgid "Value for `%s' set to `%s'"
 msgstr "Wert für `%s' auf `%s' gesetzt."
 
-#: ajax/settings/app-settings.php:1018
+#: ajax/settings/app-settings.php:1019
 msgid "Perhaps you meant"
 msgstr "Vielleicht meinten Sie"
 
-#: ajax/settings/app-settings.php:1025
+#: ajax/settings/app-settings.php:1026
 msgid "or"
 msgstr "oder"
 
-#: ajax/settings/app-settings.php:1111
+#: ajax/settings/app-settings.php:1112
 #, php-format
 msgid "Link for `%s' set to `%s'."
 msgstr "Web-Link für `%s' als `%s' eingestellt."
 
-#: ajax/settings/app-settings.php:1124
+#: ajax/settings/app-settings.php:1125
 #, php-format
 msgid "Unable to test link for `%s' without a link target."
 msgstr "Kann den Web-Link für `%s' nicht ohne Ziel-Adresse testen."
 
-#: ajax/settings/app-settings.php:1130
+#: ajax/settings/app-settings.php:1131
 #, php-format
 msgid "New window or tab with `%s'?"
 msgstr "Neues Fenster oder Tab erschienen für `%s'?"
@@ -1377,12 +1411,12 @@ msgstr "Unbekannter WYSIWYG-Edtior: `%s'"
 #: js/blog.js:53 js/blog.js:156 js/blog.js:194 js/blog.js:288 js/blog.js:319
 #: js/blog.js:347 js/cafevdb.js:1061 js/email.js:33 js/email.js:62
 #: js/email.js:412 js/email.js:443 js/email.js:606 js/events.js:64
-#: js/events.js:156 js/inlineimage.js:84 js/inlineimage.js:92
+#: js/events.js:149 js/inlineimage.js:84 js/inlineimage.js:92
 #: js/inlineimage.js:102 js/inlineimage.js:131 js/inlineimage.js:155
 #: js/inlineimage.js:183 js/inlineimage.js:207 js/inlineimage.js:326
 #: js/inlineimage.js:412 js/inlineimage.js:421 js/inlineimage.js:424
-#: js/sepa-debit-mandate.js:455 js/sepa-debit-mandate.js:470
-#: js/sepa-debit-mandate.js:550
+#: js/sepa-debit-mandate.js:461 js/sepa-debit-mandate.js:476
+#: js/sepa-debit-mandate.js:556
 msgid "Error"
 msgstr "Fehler"
 
@@ -1429,7 +1463,7 @@ msgstr "Den Beitrag wirklich löschen?"
 msgid "Choose some Options"
 msgstr "Wähle aus den Optionen"
 
-#: js/cafevdb.js:507 js/project-instruments.js:146 js/sepa-debit-mandate.js:97
+#: js/cafevdb.js:507 js/project-instruments.js:146 js/sepa-debit-mandate.js:98
 msgid "Save"
 msgstr "Speichern"
 
@@ -1506,7 +1540,7 @@ msgstr "In der AJAX-Antwort fehlt das Feld {RequiredField}."
 msgid "Missing data"
 msgstr "Fehlende Daten"
 
-#: js/cafevdb.js:1042 js/events.js:58 js/events.js:150
+#: js/cafevdb.js:1042 js/events.js:58 js/events.js:143
 msgid "Unknown error :("
 msgstr "Irgendein Fehler :("
 
@@ -1745,7 +1779,7 @@ msgstr "Möchten Sie den Termin wirklich löschen?"
 msgid "Do you really want to detach this event from the current project?"
 msgstr "Möchten Sie den Termin wirklich vom Projekt lösen?"
 
-#: js/events.js:267
+#: js/events.js:253
 msgid "Really delete?"
 msgstr "Wirklich löschen?"
 
@@ -1923,23 +1957,23 @@ msgstr ""
 "Das SEPA-Lastschriftmandat ändern. Die Mandatsreferenz wird\n"
 "automatisch vergeben und kann nicht geändert werden."
 
-#: js/sepa-debit-mandate.js:98
+#: js/sepa-debit-mandate.js:99
 msgid "Close the form and save the data in the underlying data-base storage."
 msgstr "Schließt das Formular und speichert die Daten in der Datenbank."
 
-#: js/sepa-debit-mandate.js:110
+#: js/sepa-debit-mandate.js:111
 msgid "Apply"
 msgstr "Anwenden"
 
-#: js/sepa-debit-mandate.js:111
+#: js/sepa-debit-mandate.js:112
 msgid "Save the data in the underlying data-base storage. Keep the form open."
 msgstr "Speichert die Daten in der Datenbank. Das Formular bleibt offen."
 
-#: js/sepa-debit-mandate.js:133 templates/blogthreads.php:97
+#: js/sepa-debit-mandate.js:135 templates/blogthreads.php:97
 msgid "Delete"
 msgstr "Löschen"
 
-#: js/sepa-debit-mandate.js:134
+#: js/sepa-debit-mandate.js:136
 msgid ""
 "Delete this mandate from the data-base. Normally, this should only be done "
 "in case of desinformation or misunderstanding. Use with care."
@@ -1948,16 +1982,16 @@ msgstr ""
 "sollte das aufgrund falscher Eintragungen oder Mißverständnissen mit\n"
 "den Musikern nötig sein."
 
-#: js/sepa-debit-mandate.js:138 lib/detailed-instrumentation.php:347
+#: js/sepa-debit-mandate.js:140 lib/detailed-instrumentation.php:347
 #: lib/detailed-instrumentation.php:674 lib/detailed-instrumentation.php:692
 msgid "SEPA Debit Mandate"
 msgstr "SEPA Lastschriftmandat"
 
-#: js/sepa-debit-mandate.js:146
+#: js/sepa-debit-mandate.js:148
 msgid "Close"
 msgstr "Schließen"
 
-#: js/sepa-debit-mandate.js:147
+#: js/sepa-debit-mandate.js:149
 msgid ""
 "Discard all filled-in data and close the form. Note that this will not undo "
 "any changes previously stored in the data-base by pressing the `Apply' "
@@ -1967,31 +2001,31 @@ msgstr ""
 "Änderungen, die vorher über den `Anwenden'-Knopf gespeichert wurden,\n"
 "nicht rückgängig gemacht."
 
-#: js/sepa-debit-mandate.js:275 js/sepa-debit-mandate.js:313
+#: js/sepa-debit-mandate.js:281 js/sepa-debit-mandate.js:319
 msgid "Suggested alternatives based on common human mis-transcriptions:"
 msgstr "Mögliche Alternativen ausgehend von den üblichen Übertragungsfehlern:"
 
-#: js/sepa-debit-mandate.js:279 js/sepa-debit-mandate.js:317
+#: js/sepa-debit-mandate.js:285 js/sepa-debit-mandate.js:323
 msgid "Please do not accept these alternatives lightly!"
 msgstr "Bitte die Alternativen nicht leichtsinnig übernehmen!"
 
-#: js/sepa-debit-mandate.js:452 js/sepa-debit-mandate.js:547
+#: js/sepa-debit-mandate.js:458 js/sepa-debit-mandate.js:553
 msgid "Unable to export debit notes:"
 msgstr "Kann die Lastschrifteinzüge nicht exportieren:"
 
-#: js/sepa-debit-mandate.js:467
+#: js/sepa-debit-mandate.js:473
 msgid "Unable to export insurance overviews:"
 msgstr "Kann die Versicherungs-Übersichten nicht exportieren:"
 
-#: js/sepa-debit-mandate.js:488
+#: js/sepa-debit-mandate.js:494
 msgid "InsuranceDebitNoteAnnouncement"
 msgstr "VersicherungsLastschriftAnkuendigung"
 
-#: js/sepa-debit-mandate.js:489 js/sepa-debit-mandate.js:566
+#: js/sepa-debit-mandate.js:495 js/sepa-debit-mandate.js:572
 msgid "Debit notes due in 14 days"
 msgstr "Lastschrifteinzug in 14 Tagen"
 
-#: js/sepa-debit-mandate.js:565
+#: js/sepa-debit-mandate.js:571
 msgid "ProjectDebitNoteAnnouncement"
 msgstr "ProjektLastschriftAnkuendigung"
 
@@ -2003,70 +2037,70 @@ msgstr "Fehler:"
 msgid "Please standby, the operation will take some time!"
 msgstr "Bitte warten, das dauert jetzt ein wenig!"
 
-#: lib/config.php:614
+#: lib/config.php:616
 #, php-format
 msgid "Decryption of `%s`@`%s` failed"
 msgstr "Entschlüsselung von `%s' @ `%s' fehlgeschlagen"
 
-#: lib/config.php:618
+#: lib/config.php:620
 #, php-format
 msgid "Encryption of `%s`@`%s` failed"
 msgstr "Verschlüsselung von `%s' @ `%s' fehlgeschlagen"
 
-#: lib/config.php:624
+#: lib/config.php:626
 #, php-format
 msgid "Unable to update table data at index %s"
 msgstr "Kann die Tabellenzeile mit Index %s nicht ändern"
 
-#: lib/config.php:790
+#: lib/config.php:792
 msgid "birthday"
 msgstr "Geburtstag"
 
-#: lib/config.php:799
+#: lib/config.php:801
 msgid "no preference"
 msgstr "Keine Präferenz"
 
-#: lib/config.php:800
+#: lib/config.php:802
 msgid "German"
 msgstr "Deutsch"
 
-#: lib/config.php:801
+#: lib/config.php:803
 msgid "English"
 msgstr "Englisch"
 
-#: lib/config.php:802
+#: lib/config.php:804
 msgid "French"
 msgstr "Französisch"
 
-#: lib/config.php:803
+#: lib/config.php:805
 msgid "Spanish"
 msgstr "Spanisch"
 
-#: lib/config.php:804
+#: lib/config.php:806
 msgid "Portuguese"
 msgstr "Portugiesisch"
 
-#: lib/config.php:805
+#: lib/config.php:807
 msgid "Polish"
 msgstr "Polnisch"
 
-#: lib/config.php:806
+#: lib/config.php:808
 msgid "Russian"
 msgstr "Russisch"
 
-#: lib/config.php:807
+#: lib/config.php:809
 msgid "Chinese"
 msgstr "Chinesisch"
 
-#: lib/config.php:808
+#: lib/config.php:810
 msgid "Japaneese"
 msgstr "Japanisch"
 
-#: lib/config.php:809
+#: lib/config.php:811
 msgid "Korean"
 msgstr "Koreanisch"
 
-#: lib/config.php:829
+#: lib/config.php:831
 #, php-format
 msgid "Unknown Tooltip for key `%s' requested."
 msgstr "Unbekannter Tooltip `%s' angefordert."
@@ -2154,27 +2188,27 @@ msgid "Click to enter details of a potential SEPA debit mandate"
 msgstr ""
 "Anklicken um ggf. Informationen über ein SEPA-Lastschriftmandat einzutragen"
 
-#: lib/emailcomposer.php:218
+#: lib/emailcomposer.php:219
 msgid "Message(s) sent out successfully!"
 msgstr "Die Nachricht(en) wurde erfolgreich gesendet!"
 
-#: lib/emailcomposer.php:229
+#: lib/emailcomposer.php:230
 msgid "Message(s) exported successfully!"
 msgstr "Die Nachricht(en) wurde erfolgreich gesendet!"
 
-#: lib/emailcomposer.php:1125
+#: lib/emailcomposer.php:1126
 msgid "Pre-composition validation has failed!"
 msgstr "Em@il Vorab-Check ist fehlgeschlagen!"
 
-#: lib/emailcomposer.php:1368
+#: lib/emailcomposer.php:1369
 msgid "Unable to fetch executive board contents from data-base."
 msgstr "Kann die Vorstands-Mitglieder nicht aus der Datenbank extrahieren."
 
-#: lib/emailcomposer.php:1381
+#: lib/emailcomposer.php:1382
 msgid "and"
 msgstr "und"
 
-#: lib/emailcomposer.php:1715
+#: lib/emailcomposer.php:1716
 msgid "Local Filesystem"
 msgstr "Lokale Dateien"
 
@@ -2191,65 +2225,121 @@ msgstr ""
 "\"Musiker %d in Tabelle, hat aber keine Id als Musiker. POST: %sMap: %sSQL-"
 "Query: %s\""
 
-#: lib/events.php:765 lib/events.php:929
+#: lib/events.php:260
+msgid "Unable to create event from given data:"
+msgstr "Kann den Termin nicht aus den übermittelten Daten erstellen:"
+
+#: lib/events.php:853 lib/events.php:1040
 msgid "Unknown Calendar"
 msgstr "Unbekannter Kalender."
 
-#: lib/events.php:772
+#: lib/events.php:860
 msgid "Miscellaneous Calendars"
 msgstr "Weitere Kalender"
 
-#: lib/finance.php:269
-#, php-format
-msgid "Missing fields in debit mandate: %s. Full data record: %s"
-msgstr "Fehlende Felder im Lastschrifteinzug: %s. Datensatz: %s"
+#: lib/finance.php:56 settings.php:115
+msgid "finance"
+msgstr "Kasse"
 
-#: lib/finance.php:276
+#: lib/finance.php:238
 #, php-format
-msgid "Empty fields in debit mandate: %s. Full data record: %s"
-msgstr "Leere Felder im Lastschrifteinzug: %s. Datensatz: %s"
+msgid "Unable to update the last-used date to %s"
+msgstr "Kann das Datum der letzten Verwendung nicht auf %s setzen."
 
-#: lib/finance.php:284
-#, php-format
-msgid "Illegal characters in bank account owner field. Full data record: %s"
-msgstr "Ungültige Buchstaben im Kontoinhaberfeld. Datensatz: %s"
+#: lib/finance.php:240
+msgid "Data-base query:"
+msgstr "Datenbank-Abfrage:"
 
-#: lib/finance.php:299
-#, php-format
-msgid "Mandate issued or used in the future: %s????. Full data record: %s"
-msgstr ""
-"Lastschriftmandat in der Zukunft ausgestellt oder verwendet: %s????. "
-"Datensatz: %s"
+#: lib/finance.php:376
+msgid "mandate reference"
+msgstr "Mandatsreferenz"
 
-#: lib/finance.php:305
-#, php-format
-msgid "Missing mandate date. Full data record: %s"
-msgstr "Fehlendes Mandatsdatum. Datensatz: %s"
+#: lib/finance.php:377
+msgid "date of issue"
+msgstr "Ausstellungsdatum:"
 
-#: lib/finance.php:317
-#, php-format
-msgid "Invalid IBAN: %s. Full data record: %s"
-msgstr "Ungültige IBAN: %s. Datensatz: %s"
+#: lib/finance.php:378
+msgid "date of last usage"
+msgstr "Letztes Einzugsdatum:"
 
-#: lib/finance.php:327
-#, php-format
-msgid "BLZ and IBAN do not match: %s != %s. Full data record: %s"
-msgstr "BLZ und IBAN passen nicht zusammen: %s != %s. Datensatz: %s"
+#: lib/finance.php:379
+msgid "musician id"
+msgstr "Musiker-Id"
 
-#: lib/finance.php:334
-#, php-format
-msgid "Invalid German BLZ: %s. Full data record: %s"
-msgstr "Ungültige Deutsche Bankleitzahl: %s. Datensatz: %s"
+#: lib/finance.php:380
+msgid "project id"
+msgstr "Projekt-Id"
 
-#: lib/finance.php:339
-#, php-format
-msgid "Invalid German bank account: %s @ %s. Full data record: %s"
-msgstr "Ungültige Deutsche(?) Kontonummer %s @ %s. Datensatz: %s"
+#: lib/finance.php:381
+msgid "non recurring"
+msgstr "einmalig"
 
-#: lib/finance.php:345
+#: lib/finance.php:383
+msgid "bank code"
+msgstr "BLZ"
+
+#: lib/finance.php:384
+msgid "bank account owner"
+msgstr "Kontoinhaber"
+
+#: lib/finance.php:389
 #, php-format
-msgid "Probably invalid BIC: %s. Computed: %s. Full data record: %s"
-msgstr "Vermutlich falsche BIC: %s. Automatisch ermittelt: %s. Datensatz: %s"
+msgid "Missing fields in debit mandate: %s (%s)."
+msgstr "Fehlende Felder im Lastschrifteinzug: %s (%s)."
+
+#: lib/finance.php:391 lib/finance.php:403 lib/finance.php:417
+#: lib/finance.php:439 lib/finance.php:451 lib/finance.php:468
+#: lib/finance.php:483 lib/finance.php:495 lib/finance.php:505
+msgid "Full data record:"
+msgstr "Betroffener Datensatz:"
+
+#: lib/finance.php:401
+#, php-format
+msgid "Empty fields in debit mandate: %s (%s)."
+msgstr "Leere Felder im Lastschrifteinzug: %s %s)."
+
+#: lib/finance.php:415
+msgid "Illegal characters in bank account owner field"
+msgstr "Ungültige Buchstaben im Kontoinhaberfeld."
+
+#: lib/finance.php:437
+#, php-format
+msgid "Mandate issued in the future: %s????"
+msgstr "Lastschriftmandat in der Zukunft ausgestellt: %s????."
+
+#: lib/finance.php:448
+msgid "Missing mandate date"
+msgstr "Fehlendes Mandatsdatum"
+
+#: lib/finance.php:466
+#, php-format
+msgid "Invalid IBAN: %s"
+msgstr "Ungültige IBAN: %s."
+
+#: lib/finance.php:481
+#, php-format
+msgid "BLZ and IBAN do not match: %s != %s"
+msgstr "BLZ und IBAN passen nicht zusammen: %s != %s."
+
+#: lib/finance.php:493
+#, php-format
+msgid "Invalid German BLZ: %s."
+msgstr "Ungültige Deutsche(?) Bankleitzahl %s."
+
+#: lib/finance.php:503
+#, php-format
+msgid "Invalid German bank account: %s @ %s."
+msgstr "Ungültige Deutsche(?) Kontonummer %s @ %s."
+
+#: lib/finance.php:514
+#, php-format
+msgid "Probably invalid BIC: %s. Computed: %s. "
+msgstr "Vermutlich falsche BIC: %s. Automatisch ermittelt: %s."
+
+#: lib/finance.php:516
+#, php-format
+msgid "Full data record: %s"
+msgstr "Ungültige IBAN: %s."
 
 #: lib/functions.php:119
 #, php-format
@@ -2422,7 +2512,7 @@ msgstr "wahr"
 msgid "Overview over the Bulk Instrument Insurances"
 msgstr "Übersicht über die Instrumentensammelversicherungen"
 
-#: lib/instrument-insurance.php:159 lib/sepa-debit-mandates.php:121
+#: lib/instrument-insurance.php:159 lib/sepa-debit-mandates.php:124
 msgid "Debit"
 msgstr "Einziehen"
 
@@ -2742,7 +2832,7 @@ msgstr "Vorname"
 msgid "Instruments"
 msgstr "Instrumente"
 
-#: lib/musicians.php:403 lib/sepa-debit-mandates.php:400
+#: lib/musicians.php:403 lib/sepa-debit-mandates.php:403
 msgid "Instrument Insurance"
 msgstr "Instrumentenversicherung"
 
@@ -2796,11 +2886,11 @@ msgstr "Seite"
 msgid "of"
 msgstr "von"
 
-#: lib/php-excel-functions.php:100 lib/sepa-debit-mandates.php:247
+#: lib/php-excel-functions.php:100 lib/sepa-debit-mandates.php:250
 msgid "yes"
 msgstr "ja"
 
-#: lib/php-excel-functions.php:104 lib/sepa-debit-mandates.php:246
+#: lib/php-excel-functions.php:104 lib/sepa-debit-mandates.php:249
 msgid "no"
 msgstr "nein"
 
@@ -3120,44 +3210,44 @@ msgstr "Übersicht über alle SEPA-Lastschriftmandate für %s"
 msgid "Overview over all SEPA Debit Mandates"
 msgstr "Übersicht über alle SEPA Lastschriftmandate"
 
-#: lib/sepa-debit-mandates.php:235
+#: lib/sepa-debit-mandates.php:238
 msgid "Mandate Reference"
 msgstr "Mandatsreferenz"
 
-#: lib/sepa-debit-mandates.php:241
+#: lib/sepa-debit-mandates.php:244
 msgid "One Time"
 msgstr "Einmalig"
 
-#: lib/sepa-debit-mandates.php:249
+#: lib/sepa-debit-mandates.php:252
 msgid "Date Issued"
 msgstr "Ausstellungsdatum"
 
-#: lib/sepa-debit-mandates.php:280
-msgid "Project Fee"
-msgstr "Unkostenbeitrag"
-
-#: lib/sepa-debit-mandates.php:294
-msgid "Project"
-msgstr "Projekt"
-
-#: lib/sepa-debit-mandates.php:323
-msgid "Bank Code"
-msgstr "BLZ"
-
-#: lib/sepa-debit-mandates.php:331
-msgid "Bank Account Owner"
-msgstr "Kontoinhaber"
-
-#: lib/sepa-debit-mandates.php:339
+#: lib/sepa-debit-mandates.php:259
 msgid "Last-Used Date"
 msgstr "Letzte Verwendung"
 
-#: lib/sepa-debit-mandates.php:401
+#: lib/sepa-debit-mandates.php:291
+msgid "Project Fee"
+msgstr "Unkostenbeitrag"
+
+#: lib/sepa-debit-mandates.php:305
+msgid "Project"
+msgstr "Projekt"
+
+#: lib/sepa-debit-mandates.php:334
+msgid "Bank Code"
+msgstr "BLZ"
+
+#: lib/sepa-debit-mandates.php:342
+msgid "Bank Account Owner"
+msgstr "Kontoinhaber"
+
+#: lib/sepa-debit-mandates.php:404
 #, php-format
 msgid "Annual Fee Year %s"
 msgstr "Jahresbeitrag fuer %s"
 
-#: lib/sepa-debit-mandates.php:446
+#: lib/sepa-debit-mandates.php:449
 msgid "Project Fees"
 msgstr "Unkostenbeitrag"
 
@@ -4281,7 +4371,7 @@ msgstr "Sonstiges"
 msgid "management"
 msgstr "Vorstand"
 
-#: settings.php:117
+#: settings.php:118
 msgid "contacts"
 msgstr "Kontakte"
 
@@ -4880,13 +4970,17 @@ msgstr "Neue Probe"
 msgid "Add Other Event"
 msgstr "Sonst. Termin"
 
-#: templates/events.php:44
+#: templates/events.php:45
 msgid "Management Event"
 msgstr "Vorstands-Termin"
 
-#: templates/events.php:51
+#: templates/events.php:52
 msgid "Download"
 msgstr "Herunterladen"
+
+#: templates/events.php:59
+msgid "Finance Event"
+msgstr "Kassen-Termin"
 
 #: templates/eventslisting.php:49
 msgid "no events"
@@ -5876,13 +5970,13 @@ msgstr "Share-Strohpuppe"
 msgid "shareowner"
 msgstr "Share-Strohpuppe"
 
-#: templates/share-settings.php:39 templates/share-settings.php:90
-#: templates/share-settings.php:108 templates/share-settings.php:126
+#: templates/share-settings.php:39 templates/share-settings.php:93
+#: templates/share-settings.php:111 templates/share-settings.php:129
 msgid "force"
 msgstr "zwingen"
 
-#: templates/share-settings.php:40 templates/share-settings.php:92
-#: templates/share-settings.php:110 templates/share-settings.php:128
+#: templates/share-settings.php:40 templates/share-settings.php:95
+#: templates/share-settings.php:113 templates/share-settings.php:131
 msgid "Check"
 msgstr "Überprüfen"
 
@@ -5900,6 +5994,7 @@ msgstr "Kalender"
 
 #: templates/share-settings.php:54 templates/share-settings.php:57
 #: templates/share-settings.php:60 templates/share-settings.php:63
+#: templates/share-settings.php:66
 msgid "calendarname"
 msgstr "Kalender-Name"
 
@@ -5920,48 +6015,67 @@ msgid "Management-Calendar"
 msgstr "Interner Vorstands-Kalender"
 
 #: templates/share-settings.php:67
+msgid "Finance-Calendar"
+msgstr "Interner Kassen-Kalender"
+
+#: templates/share-settings.php:70
 msgid "#Minutes"
 msgstr "#Minuten"
 
-#: templates/share-settings.php:68
+#: templates/share-settings.php:71
 msgid "Default Duration for Events"
 msgstr "Voreinstellung Termin-Dauer"
 
-#: templates/share-settings.php:73
+#: templates/share-settings.php:76
 msgid "Contacts"
 msgstr "Kontakte"
 
-#: templates/share-settings.php:74
+#: templates/share-settings.php:77
 msgid "addressbook"
 msgstr "Adressbuch"
 
-#: templates/share-settings.php:75
+#: templates/share-settings.php:78
 msgid "Shared Addresbook"
 msgstr "Gemeinsames Adressbuch"
 
-#: templates/share-settings.php:80
+#: templates/share-settings.php:83
 msgid "Shared folder"
 msgstr "Gemeinsamer Ordner"
 
-#: templates/share-settings.php:86
+#: templates/share-settings.php:89
 msgid "shared folder"
 msgstr "Gemeinsamer Ordner"
 
-#: templates/share-settings.php:103
+#: templates/share-settings.php:106
 msgid "Project folder"
 msgstr "Projekt-Dateien"
 
-#: templates/share-settings.php:105 templates/share-settings.php:123
+#: templates/share-settings.php:108 templates/share-settings.php:126
 msgid "YEAR"
 msgstr "JAHR"
 
-#: templates/share-settings.php:105 templates/share-settings.php:123
+#: templates/share-settings.php:108 templates/share-settings.php:126
 msgid "PROJECT"
 msgstr "PROJEKT"
 
-#: templates/share-settings.php:121
+#: templates/share-settings.php:124
 msgid "Financial balance folder"
 msgstr "Finanz-Ordner"
+
+#~ msgid "bank id"
+#~ msgstr "BLZ"
+
+#~ msgid "Unable to decrypt debit mandate. Full debit record: %s"
+#~ msgstr "Kann das SEPA-Lastschriftmandat nicht entschlüsseln. Datensatz: %s"
+
+#~ msgid "Missing mandate date. Full data record: %s"
+#~ msgstr "Fehlendes Mandatsdatum. Datensatz: %s"
+
+#~ msgid "Invalid German BLZ: %s. Full data record: %s"
+#~ msgstr "Ungültige Deutsche Bankleitzahl: %s. Datensatz: %s"
+
+#~ msgid "Invalid German bank account: %s @ %s. Full data record: %s"
+#~ msgstr "Ungültige Deutsche(?) Kontonummer %s @ %s. Datensatz: %s"
 
 #~ msgid ""
 #~ "Remarks\n"
