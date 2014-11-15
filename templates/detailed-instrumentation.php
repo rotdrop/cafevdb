@@ -20,38 +20,40 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use CAFEVDB\L;
-use CAFEVDB\Navigation;
-use CAFEVDB\DetailedInstrumentation;
-use CAFEVDB\Projects;
+namespace CAFEVDB {
 
-$table = new DetailedInstrumentation();
-$css_pfx = DetailedInstrumentation::CSS_PREFIX;
-$css_class = DetailedInstrumentation::CSS_CLASS;
+  $table = new DetailedInstrumentation();
+  $css_pfx = DetailedInstrumentation::CSS_PREFIX;
+  $css_class = DetailedInstrumentation::CSS_CLASS;
 
-$nav = '';
-$nav .= Navigation::button('projectlabel', $table->projectName, $table->projectId);
-$nav .= Navigation::button('projects');
-//$nav .= Navigation::button('detailed', $table->projectName, $table->projectId);
-$nav .= Navigation::button('projectinstruments', $table->projectName, $table->projectId);
-$nav .= Navigation::button('debitmandates', $table->projectName, $table->projectId);
-$nav .= Navigation::button('instruments', $table->projectName, $table->projectId);
+  $nav = '';
+  $nav .= Navigation::button('projectlabel', $table->projectName, $table->projectId);
+  $nav .= Navigation::button('projects');
+  //$nav .= Navigation::button('detailed', $table->projectName, $table->projectId);
+  $nav .= Navigation::button('projectinstruments', $table->projectName, $table->projectId);
+  $nav .= Navigation::button('debitmandates', $table->projectName, $table->projectId);
+  if ($table->projectName == Config::getValue('memberTable')) {
+    $nav .= Navigation::button('insurances');
+  } else {
+    $nav .= Navigation::button('instruments', $table->projectName, $table->projectId);
+  }
 
-echo $this->inc('part.common.header',
-                array('css-prefix' => $css_pfx,
-                      'css-class' => $css_class,
-                      'navigationcontrols' => $nav,
-                      'header' => $table->headerText()));
+  echo $this->inc('part.common.header',
+                  array('css-prefix' => $css_pfx,
+                        'css-class' => $css_class,
+                        'navigationcontrols' => $nav,
+                        'header' => $table->headerText()));
 
-// Issue the main part. The method will echo itself
-$table->display();
+  // Issue the main part. The method will echo itself
+  $table->display();
 
-if ($table->listOperation()) {
-  Projects::missingInstrumentationTable($table->projectId);
-}
+  if ($table->listOperation()) {
+    Projects::missingInstrumentationTable($table->projectId);
+  }
 
-// Close some still opened divs
-echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
+  // Close some still opened divs
+  echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
+
+} // namespace CAFEVDB
 
 ?>
-
