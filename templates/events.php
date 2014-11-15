@@ -41,7 +41,8 @@ $class   = $_['CSSClass'];
       <input id="concert"   class="submit" name="concerts"   type="button" value="<?php echo L::t('Add Concert'); ?>"    title="<?php echo Config::toolTips('projectevents-newconcert'); ?>" />
       <input id="rehearsal" class="submit" name="rehearsals" type="button" value="<?php echo L::t('Add Rehearsal') ?>"   title="<?php echo Config::toolTips('projectevents-newrehearsal'); ?>"/>
       <input id="other"     class="submit" name="other"      type="button" value="<?php echo L::t('Add Other Event') ?>" title="<?php echo Config::toolTips('projectevents-newother'); ?>" />
-      <input id="management"     class="submit" name="management"      type="button" value="<?php echo L::t('Management Event') ?>" title="<?php echo Config::toolTips('projectevents-newmanagement'); ?>" />
+    </td><td class="management">
+      <input id="management" class="submit management" name="management" type="button" value="<?php echo L::t('Management Event') ?>" title="<?php echo Config::toolTips('projectevents-newmanagement'); ?>" />
     </td></tr>
     <tr><td>
       <span class="<?php echo $class; ?>-email">
@@ -50,6 +51,13 @@ $class   = $_['CSSClass'];
       <span class="<?php echo $class; ?>-download">
         <input type="button" class="<?php echo $class; ?>-download" name="download" value="<?php echo L::t('Download'); ?>" title="<?php echo Config::toolTips('projectevents-download'); ?>" />
       </span>
+    </td><td class="management">
+      <input id="finance"
+             class="submit management"
+             name="finance"
+             type="button"
+             value="<?php echo L::t('Finance Event') ?>"
+             title="<?php echo Config::toolTips('projectevents-newfinance'); ?>" />
     </td>
 </tr>
   </table>
