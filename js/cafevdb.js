@@ -1131,7 +1131,7 @@ var CAFEVDB = CAFEVDB || {};
         $(this).tipsy('disable');
         return;
       }
-      var tipsyClasses = classAttr.match(/tipsy-[a-z]+/);
+      var tipsyClasses = classAttr.match(/tipsy-[a-z]+/g);
       var idx;
       for(idx = 0; idx < tipsyClasses.length; ++idx) {
         var tipsyClass = tipsyClasses[idx];
