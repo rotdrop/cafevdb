@@ -492,7 +492,7 @@ var CAFEVDB = CAFEVDB || {};
       var post = $(this.form).serialize();
       post += '&'+$.param({
         'emailComposer[TemplateSelector]': t('cafevdb', 'InsuranceDebitNoteAnnouncement'),
-        'emailComposer[Subject]': t('cafevdb', 'Debit notes due in 14 days')
+        'emailComposer[Subject]': t('cafevdb', 'Debit notes due in 17 days')
       });
       CAFEVDB.Email.emailFormPopup(post);
 
@@ -569,7 +569,7 @@ var CAFEVDB = CAFEVDB || {};
       var post = $(this.form).serialize();
       post += '&'+$.param({
         'emailComposer[TemplateSelector]': t('cafevdb', 'ProjectDebitNoteAnnouncement'),
-        'emailComposer[Subject]': t('cafevdb', 'Debit notes due in 14 days')
+        'emailComposer[Subject]': t('cafevdb', 'Debit notes due in 17 days')
       });
       CAFEVDB.Email.emailFormPopup(post);
 
