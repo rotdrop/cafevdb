@@ -37,6 +37,7 @@ class Musicians
   function __construct($mode = false, $execute = true) {
     parent::__construct($execute);
     $this->projectMode = $mode;
+    $this->recordsPerPage = 25;
   }
 
   public function shortTitle()
