@@ -54,9 +54,13 @@ foreach ($_['EventMatrix'] as $key => $eventGroup) {
     $calId  = $event['CalendarId'];
     $object = $event['object'];
     $brief  = htmlspecialchars(stripslashes($object['summary']));
-
+    $description = htmlspecialchars(nl2br("\n".stripslashes(Events::getDescription($object))));
+    
     $datestring = Events::briefEventDate($object, $zone, $locale);
+    $longDate = Events::longEventDate($object, $zone, $locale);
 
+    $description = $longDate.'<br/>'.$brief.$description;
+    
     echo <<<__EOT__
     <tr class="$class">
       <td class="eventbuttons-$n">
@@ -79,8 +83,8 @@ __EOT__;
         <input class="email-check" title="" id="email-check-$evtId" type="checkbox" name="EventSelect[]" value="$evtId" $checked />
         <div class="email-check" /></label>
       </td>
-      <td class="eventdata-$n-brief" id="brief-$evtId">$brief</td>
-      <td class="eventdata-$n-date" id="data-$evtId">$datestring</td>
+      <td class="eventdata-$n-brief tipsy-s tipsy-wide" id="brief-$evtId" title="$description">$brief</td>
+      <td class="eventdata-$n-date tipsy-se tipsy-wide" id="data-$evtId" title="$description">$datestring</td>
     </tr>
 __EOT__;
     $n = ($n + 1) & 1;
