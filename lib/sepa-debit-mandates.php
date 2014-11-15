@@ -115,7 +115,10 @@ namespace CAFEVDB
       // Options you wish to give the users
       // A - add,  C - change, P - copy, V - view, D - delete,
       // F - filter, I - initial sort suppressed
-      $opts['options'] = 'CVDFM';
+      $opts['options'] = 'CVDF';
+      if ($projectId > 0 && $projectName != '') {
+        $opts['options'] .= 'M';
+      }
       $opts['misc']['css']['major'] = 'debit-note';
       $opts['misc']['css']['minor'] = 'debit-note tipsy-nw';
       $opts['labels']['Misc'] = L::t('Debit');
@@ -253,6 +256,14 @@ namespace CAFEVDB
                                           'css'      => array('postfix' => ' sepadate'),
                                           'datemask' => 'd.m.Y');
 
+      $opts['fdd']['lastUsedDate'] = array('name'     => L::t('Last-Used Date'),
+                                           'select'   => 'T',
+                                           'maxlen'   => 10,
+                                           'sort'     => true,
+                                           'css'      => array('postfix' => ' sepadate'),
+                                           'datemask' => 'd.m.Y');
+
+    
       $opts['fdd']['musicianId'] = array('name'     => L::t('Musician'),
                                          'input'    => 'R',
                                          'select'   => 'T',
@@ -336,14 +347,6 @@ namespace CAFEVDB
                                                  'decrypt' => '\CAFEVDB\Config::decrypt',
                                                  ));
 
-      $opts['fdd']['lastUsedDate'] = array('name'     => L::t('Last-Used Date'),
-                                           'select'   => 'T',
-                                           'maxlen'   => 10,
-                                           'sort'     => true,
-                                           'css'      => array('postfix' => ' sepadate'),
-                                           'datemask' => 'd.m.Y');
-
-    
 
       if ($this->pme_bare) {
         // disable all navigation buttons, probably for html export
@@ -454,7 +457,7 @@ namespace CAFEVDB
     
       return $table;
     }
-    
+
     /**Export the respective debit-mandates and generate a flat table
      * view which can 1 to 1 be exported into a CSV table suitable to
      * finally issue the debit mandates to the respective credit
@@ -469,7 +472,7 @@ namespace CAFEVDB
     static public function aqBankingDebitNotes($debitTable, $timeStamp = false)
     {
       if ($timeStamp === false) {
-        $timeStamp = strtotime('+ 14 days');
+        $timeStamp = strtotime('+ 17 days');
       }
       
       $iban  = new \IBAN(Config::getValue('bankAccountIBAN'));
