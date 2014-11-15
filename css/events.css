@@ -57,19 +57,29 @@ form.projectevents {
 }
 
 .projectevents table.topbuttons {
-  border:#004d9c 0px solid;
+  border:0px solid #004d9c;
   border-collapse:collapse;
   border-spacing:0px;
+  width:100%;
 }
 .projectevents td.topbuttons { 
   text-align:left;
   vertical-align:middle;
 }
 
-.projectevents input[class|='projectevents-sendmail'],
+.projectevents input.projectevents-sendmail,
 .projectevents input.submit {
   height:28px;
   vertical-align:middle;
+}
+
+.projectevents td.management {
+  padding-left:1em;
+}
+
+.projectevents td.management input {
+  width:100%;
+  /*background-color:#C6DEFF !important;*/
 }
 
 .projectevents input.projectevents-sendmail-deselect[type=button] {
@@ -166,7 +176,7 @@ label.email-check {
 }
 
 .projectevents table.listing {
-  border:#004d9c 0px solid;
+  border:0px solid #004d9c;
   border-collapse:collapse;
   border-spacing:0px;
 }
@@ -179,7 +189,7 @@ label.email-check {
 
 td[class|='eventdata'], td[class|='eventbuttons'], td[class|='eventemail'] {
   /*vertical-align:middle;*/
-  border:#004d9c 1px solid;
+  border:1px solid #004d9c;
   padding:3px;
 }
 
@@ -203,15 +213,17 @@ td[class|='eventbuttons'], td[class|='eventemail'] {
 
 td.eventdata-0-date, td.eventdata-1-date {
   max-height:1em;
+  width:10.5em !important;
 }
 
 /* Hide everything but the first line*/
 td.eventdata-0-brief, td.eventdata-1-brief {
-  max-width:19.2em;
-  min-width:19.2em;
+  max-width:18.5em;
+  min-width:18.5em;
   max-height:1em;
   /* white-space:normal; */
   overflow:hidden;
+  text-overflow:ellipsis !important;
   vertical-align:middle;
 }
 
