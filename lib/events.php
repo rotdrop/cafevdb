@@ -74,7 +74,7 @@ namespace CAFEVDB
      * through the categories tag of the event. Any event with a
      * category equal to the project's name is considered as belonging
      * to the project, it it addtionally belongs to one of the three
-     * shared calendars (conerts, rehearsals, other).
+     * shared calendars (conerts, rehearsals, other, management, finance).
      *
      * @param[in] $eventId The OwnCloud-Id of the event.
      *
@@ -230,6 +230,71 @@ namespace CAFEVDB
       return \OC_Calendar_App::getEventObject($eventId, false, false);
     }
 
+    /**Inject a new event into the given calendar. This function calls
+     * OC_Calendar_Object::createVCalendarFromRequest($request). $request
+     * is a post-array. One example, in order to create a simple
+     * non-repeating event:
+     *
+     * array('title' => TITLE,
+     *       'from' => dd-mm-yyyy,
+     *       'to' => dd-mm-yyyy,
+     *       'allday' => on (or unset),
+     *       'location' => WHERE (may be empty),
+     *       'categories' => <list, comma separated>,
+     *       'description' => TEXT,
+     *       'repeat' => 'doesnotrepeat',
+     *       'calendar' => CALID
+     *
+     * We also support adding a reminder: 'alarm' => unset or interval
+     * in seconds (i.e. time-stamp diff). The function may throw
+     * errors.
+     */
+    public static function newEvent($eventData)
+    {
+      \OC::$CLASSPATH['OC_Calendar_Object'] = 'calendar/lib/object.php';
+
+      $errarr = \OC_Calendar_Object::validateRequest($eventData);
+      if ($errarr) {
+        throw new \InvalidArgumentException(
+          "\n".
+          L::t("Unable to create event from given data:").
+          "\n".
+          print_r($eventData, true));
+      }
+
+      
+      $calendarId = $eventData['calendar'];
+      $vcalendar = \OC_Calendar_Object::createVCalendarFromRequest($eventData);
+
+      $alarm = isset($eventData['alarm']) ? $eventData['alarm'] : false;
+      if ($alarm !== false) {        
+      /*
+BEGIN:VALARM
+DESCRIPTION:
+ACTION:DISPLAY
+TRIGGER;VALUE=DURATION:-P1D
+X-KDE-KCALCORE-ENABLED:TRUE
+END:VALARM
+      */
+        $valarm = new \OC_VObject('VALARM');
+        $valarm->setString('DESCRIPTION', $eventData['title']);
+        $valarm->setString('ACTION', 'DISPLAY');
+        $dinterval = new \DateTime();
+        $dinterval->add(new \DateInterval('PT'.$alarm.'S'));
+        $interval = $dinterval->diff(new \DateTime);
+        $alarmValue = sprintf('%sP%s%s%s%s',
+                              $interval->format('%r'),
+                              $interval->format('%d') > 0 ? $interval->format('%dD') : null,
+                              ($interval->format('%h') > 0 || $interval->format('%i') > 0) ? 'T' : null,
+                              $interval->format('%h') > 0 ? $interval->format('%hH') : null,
+                              $interval->format('%i') > 0 ? $interval->format('%iM') : null);
+        $valarm->addProperty('TRIGGER', $alarmValue, array('VALUE' => 'DURATION'));
+        $vcalendar->VEVENT->add($valarm);
+      }
+
+      $eventId = \OC_Calendar_Object::add($calendarId, $vcalendar->serialize());
+    }
+
     /**Return the OC calendar-id
      *
      * @param[in] $event Either an id or the event data from the
@@ -371,7 +436,7 @@ namespace CAFEVDB
      *
      * @return A string with the event's brief title
      */
-    protected static function getSummary($stuff)
+    public static function getSummary($stuff)
     {
       if ($stuff instanceof \OC_VObject) {
         $vcalendar = $stuff;
@@ -407,6 +472,29 @@ namespace CAFEVDB
       $vobject->setString('SUMMARY', $summary);
 
       return $vcalendar;
+    }
+
+    /**Return the description for the given event.
+     *
+     * @param[in] $stuff Either a VCALENDAR object, or the inner VEVENT,
+     * VTODO etc. or an OC-event (array, row from the data-base) or just
+     * an event Id (in which case the row from the data-base will be
+     * fetched).
+     *
+     * @return A string with the event's brief title
+     */
+    public static function getDescription($stuff)
+    {
+      if ($stuff instanceof \OC_VObject) {
+        $vcalendar = $stuff;
+      } else {
+        $vcalendar = self::getVCalendar($stuff);
+      }    
+      $vobject = self::getVObject($vcalendar);
+
+      $description = $vobject->getAsString('DESCRIPTION');
+
+      return $description;
     }
 
     /**Add the given event to any of the known projects if its category
@@ -732,7 +820,7 @@ __EOT__;
       $cals = explode(',',Config::DFLT_CALS);
       $result = array();
       foreach ($cals as $cal) {
-        if ($public && $cal == 'management') {
+        if ($public && ($cal == 'management' || $cal == 'finance')) {
           continue;
         }
         $result[] = Config::getValue($cal.'calendar'.'id');
@@ -890,6 +978,29 @@ __EOT__;
         $datestring = $times['start']['date'].($times['start']['allday'] ? '' : ', '.$times['start']['time']);
       } else {
         $datestring = $times['start']['date'].' - '.$times['end']['date'];
+      }
+      return $datestring;
+    }
+
+    /**Form a brief long event date in the given locale. */
+    public static function longEventDate($eventObject, $timezone = null, $locale = null)
+    {
+      $times = self::eventTimes($eventObject, $timezone, $locale);
+
+      if ($times['start']['date'] == $times['end']['date']) {
+        $datestring = $times['start']['date'];
+        if (!$times['start']['allday']) {
+          $datestring .= ', '.$times['start']['time'].' - '.$times['end']['time'];
+        }
+      } else {
+        $datestring = $times['start']['date'];
+        if (!$times['start']['allday']) {
+          $datestring .= ', '.$times['start']['time'];
+        }
+        $datestring .= '  -  '.$times['end']['date'];
+        if (!$times['start']['allday']) {
+          $datestring .= ', '.$times['end']['time'];
+        }
       }
       return $datestring;
     }
