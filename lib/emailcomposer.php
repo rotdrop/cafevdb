@@ -109,6 +109,7 @@ insuranceFee
     public function __construct($recipients = array())
     {
       Config::init();
+
       $this->opts = Config::$pmeopts;
       $this->dbh = false;
 
@@ -1365,7 +1366,7 @@ insuranceFee
       $result = mySQL::query($query, $handle);
     
       if ($result === false) {
-        throw new \RuntimeException(L::t('Unable to fetch executive board contents from data-base.'));
+        throw new \RuntimeException("\n".L::t('Unable to fetch executive board contents from data-base.'));
       }
 
       $vorstand = array();
