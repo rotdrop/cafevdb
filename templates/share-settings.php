@@ -63,6 +63,9 @@ $off = $_['shareowner'] == '' ? 'disabled="disabled"' : $alloff;
         <input type="text" id="management" name="managementcalendar" placeholder="<?php echo L::t('calendarname');?>" value="<?php echo $_['managementcalendar']; ?>" />
         <label for="management"><?php echo L::t('Management-Calendar');?></label>
         <br/>
+        <input type="text" id="finance" name="financecalendar" placeholder="<?php echo L::t('calendarname');?>" value="<?php echo $_['financecalendar']; ?>" />
+        <label for="finance"><?php echo L::t('Finance-Calendar');?></label>
+        <br/>
 <!-- DEFAULT DURATION FOR EVENTS -->
         <input type="text" id="duration" name="eventduration" placeholder="<?php echo L::t('#Minutes');?>" value="<?php echo $_['eventduration']; ?>" />
         <label for="duration"><?php echo L::t('Default Duration for Events');?></label>

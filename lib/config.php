@@ -53,6 +53,8 @@ othercalendar
 othercalendarid
 managementcalendar
 managementcalendarid
+financecalendar
+financecalendarid
 eventduration
 sharedaddressbook
 sharedaddressbookid
@@ -102,8 +104,8 @@ redaxoTemplate
 redaxoConcertModule
 redaxoRehearsalsModule
 ';
-    const DFLT_CALS = 'concerts,rehearsals,other,management';
-// L::t('concerts') L::t('rehearsals') L::t('other') L::t('management')
+    const DFLT_CALS = 'concerts,rehearsals,other,management,finance';
+// L::t('concerts') L::t('rehearsals') L::t('other') L::t('management') L::t('finance')
     const APP_BASE  = 'apps/cafevdb/';
     public static $privateKey = false; ///< Storage
     public static $prefix = false;

@@ -112,6 +112,7 @@ namespace CAFEVDB {
       $tmpl->assign('rehearsalscalendar', Config::getSetting('rehearsalscalendar', L::t('rehearsals')));
       $tmpl->assign('othercalendar', Config::getSetting('othercalendar', L::t('other')));
       $tmpl->assign('managementcalendar', Config::getSetting('managementcalendar', L::t('management')));
+      $tmpl->assign('financecalendar', Config::getSetting('financecalendar', L::t('finance')));
       $tmpl->assign('eventduration', Config::getSetting('eventduration', '180'));
 
       $tmpl->assign('sharedaddressbook', Config::getSetting('sharedaddressbook', L::t('contacts')));

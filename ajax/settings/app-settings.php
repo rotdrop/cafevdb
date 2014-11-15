@@ -558,7 +558,8 @@ namespace CAFEVDB {
     $calendarkeys = array('concertscalendar',
                           'rehearsalscalendar',
                           'othercalendar',
-                          'managementcalendar');
+                          'managementcalendar',
+                          'financecalendar');
 
     foreach ($calendarkeys as $key) {
       if (isset($_POST[$key])) {
