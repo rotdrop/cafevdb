@@ -275,18 +275,20 @@ insuranceFee
         }
 
         // Support date substitutions. Format is
-        // ${GLOBAL::DATUM:dateformat:datestring} where dateformat
+        // ${GLOBAL::DATE:dateformat:datestring} where dateformat
         // defaults to d.m.Y. datestring is everything understood by
         // strtotime().
+        $oldLocale = setlocale(LC_TIME, Util::getLocale());
         $message = preg_replace_callback(
-          '/[$]{GLOBAL::DATUM:([^:]*):([^:]*)}/',
+          '/[$]{GLOBAL::DATE:([^!]*)!([^}]*)}/',
           function($matches) {
             $dateFormat = $matches[1];
             $timeString = $matches[2];
-            return date($dateFormat, strtotime($timeString));
+            return strftime($dateFormat, strtotime($timeString));
           },
           $message
           );
+        setlocale(LC_TIME, $oldLocale);
       }
       
       return $message;
@@ -1226,9 +1228,9 @@ insuranceFee
           $dummy = preg_replace('/[$]{MEMBER::'.$placeholder.'}/', $column, $dummy);
         }
         
-        if (preg_match('![$]{MEMBER::[^}]!', $dummy, $leftOver)) {
+        if (preg_match('![$]{MEMBER::[^}]+!', $dummy, $leftOver)) {
           $templateError[] = 'member';
-          $this->diagnostics['TemplateValidation']['MemberErrors'] = $leftOver;
+          $this->diagnostics['TemplateValidation']['MemberErrors'] = $leftOver.'}';
         }
 
         // Now remove all member variables, known or not
@@ -1247,18 +1249,18 @@ insuranceFee
 
         // replace all date-strings, but give a damn on valid results. Grin 8-)
         $dummy = preg_replace_callback(
-          '/[$]{GLOBAL::DATUM:([^:]*):([^:]*)}/',
+          '/[$]{GLOBAL::DATE:([^!]*)!([^}]*)}/',
           function($matches) {
             $dateFormat = $matches[1];
             $timeString = $matches[2];
-            return date($dateFormat, strtotime($timeString));
+            return strftime($dateFormat, strtotime($timeString));
           },
           $dummy
           );
         
-        if (preg_match('![$]{GLOBAL::[^}]!', $dummy, $leftOver)) {
+        if (preg_match('![$]{GLOBAL::[^}]+!', $dummy, $leftOver)) {
           $templateError[] = 'global';
-          $this->diagnostics['TemplateValidation']['GlobalErrors'] = $leftOver;
+          $this->diagnostics['TemplateValidation']['GlobalErrors'] = $leftOver.'}';
         }        
 
         // Now remove all global variables, known or not
@@ -1267,9 +1269,9 @@ insuranceFee
 
       $spuriousTemplateLeftOver = array();      
       // No substitutions should remain. Check for that.
-      if (preg_match('![$]{[^}]!', $dummy, $leftOver)) {
+      if (preg_match('![$]{[^}]+!', $dummy, $leftOver)) {
         $templateError[] = 'spurious';
-        $this->diagnostics['TemplateValidation']['SpuriousErrors'] = $leftOver;
+        $this->diagnostics['TemplateValidation']['SpuriousErrors'] = $leftOver.'}';
       }
       
       if (empty($templateError)) {
@@ -1326,7 +1328,7 @@ insuranceFee
         'CREDITORIDENTIFIER' => Config::getValue('bankAccountCreditorIdentifier'),
         'ADDRESS' => $this->streetAddress(),
         'BANKACCOUNT' => $this->bankAccount(),
-        'PROJECT' => $this->projectName,
+        'PROJECT' => $this->projectName != '' ? $this->projectName : L::t('no project involved'), 
         );
 
       return $globalVars;
