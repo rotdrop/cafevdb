@@ -355,7 +355,7 @@ insuranceFee
         ++$this->diagnostics['TotalCount'];
         $mimeMsg = $this->composeAndSend($templateMessage, array(), true);
         if ($mimeMsg !== false) {
-          $this->copyToSentFolder($msg);
+          $this->copyToSentFolder($mimeMsg);
           $this->recordMessageDiagnostics($mimeMsg);
         } else {
           ++$this->diagnostics['FailedCount'];
@@ -1261,7 +1261,7 @@ insuranceFee
         if (preg_match('![$]{GLOBAL::[^}]+!', $dummy, $leftOver)) {
           $templateError[] = 'global';
           $this->diagnostics['TemplateValidation']['GlobalErrors'] = $leftOver.'}';
-        }        
+        }
 
         // Now remove all global variables, known or not
         $dummy = preg_replace('/[$]{GLOBAL::[^}]*}/', '', $dummy);
