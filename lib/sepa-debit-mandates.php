@@ -302,16 +302,23 @@ namespace CAFEVDB
           );
       }
 
-      $opts['fdd']['projectId'] = array('name'     => L::t('Project'),
-                                        'input'    => 'R',
-                                        'select'   => 'M',
-                                        'maxlen'   => 11,
-                                        'sort'     => true,
-                                        //'options'  => 'LFADV', // no change allowed
-                                        'default' => 0,
-                                        'values' => array('table' => 'Projekte',
-                                                          'column' => 'Id',
-                                                          'description' => 'Name')
+      $opts['fdd']['projectId'] = array(
+        'name'     => L::t('Project'),
+        'input'    => 'R',
+        'select'   => 'D',
+        'maxlen'   => 11,
+        'sort'     => true,
+        //'options'  => 'LFADV', // no change allowed
+        'default' => 0,
+        'css'      => array('postfix' => ' mandate-project'),
+        'values' => array(
+          'table' => 'Projekte',
+          'column' => 'Id',
+          'description' => array(
+            'columns' => array('year' => 'Jahr', 'name' => 'Name'),
+            'divs' => array('year' => ': ')
+            )
+          )
         );
 
       $opts['fdd']['IBAN'] = array('name'   => 'IBAN',
@@ -368,6 +375,11 @@ namespace CAFEVDB
       }
 
       $opts['execute'] = $this->execute;
+
+      $opts['triggers']['update']['before'] = array();
+      $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
+      $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeUpdateRemoveUnchanged';
+      $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
 
       $this->pme = new \phpMyEdit($opts);
 
