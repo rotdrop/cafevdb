@@ -34,6 +34,7 @@ namespace CAFEVDB {
   
   Error::exceptions(true);
   $output = '';
+  $nl = "\n";
   
   ob_start();
 
@@ -51,7 +52,7 @@ namespace CAFEVDB {
     $selectedMandates = array_unique(Util::cgiValue($recordsKey, array()));
     
     if ($projectId < 0 || $projectName == 'X') {
-      throw new \InvalidArgumentException(L::t('Project name and/or id are missing'));
+      throw new \InvalidArgumentException($nl.L::t('Project name and/or id are missing'));
     }
 
     $encKey = Config::getEncryptionKey();
@@ -63,10 +64,14 @@ namespace CAFEVDB {
       $debitTable = SepaDebitMandates::insuranceTableExport();
       // throw new \Exception('ID: '.print_r($selectedMandates, true).' old ID '.print_r($oldIds, true).' table '.print_r($debitTable, true));          
       $name = $date.'-aqbanking-debit-notes-insurance.csv';
+      $calendarProject = Config::getValue('memberTable');
+      $calendarTitlePart = L::t('instrument insurances');
       break;
     default:
       $debitTable = SepaDebitMandates::projectTableExport($projectId);    
       $name = $date.'-aqbanking-debit-notes-'.$projectName.'.csv';
+      $calendarProject = $projectName;
+      $calendarTitlePart = $projectName;
       break;
     }
 
@@ -74,49 +79,83 @@ namespace CAFEVDB {
     foreach($selectedMandates as $id) {
       $row = $debitTable[$id];
       if (!Finance::decryptSepaMandate($row)) {
-        throw new \InvalidArgumentException(L::t('Unable to decrypt debit mandate. Full debit record: %s',
-                                                 array(print_r($row, true))));
+        throw new \InvalidArgumentException(
+          $nl.
+          L::t('Unable to decrypt debit mandate.').
+          $nl.
+          L::t('Full debit record:').
+          $nl.
+          print_r($row, true));
       }
       Finance::validateSepaMandate($row);
       if ($row['amount'] <= 0) {
-        throw new \InvalidArgumentException(L::t('Refusing to debit 0€. Full debit record: %s',
-                                                 array(print_r($row, true))));
+        setlocale(LC_MONETARY, Util::getLocale());
+        throw new \InvalidArgumentException(
+          $nl.
+          L::t('Refusing to debit %s.', array(money_format('%n', $row['amount']))).
+          $nl.
+          L::t('Full debit record:').
+          $nl.
+          print_r($row, true));
       }
       foreach($row['purpose'] as &$purposeLine) {
         $purposeLine = Finance::sepaTranslit($purposeLine);
         if (!Finance::validateSepaString($purposeLine)) {
-          throw new \InvalidArgumentException(L::t('Illegal characters in debit purpose: %s. '.
-                                                   'Full debit record: %s',
-                                                   array($purposeLine, print_r($row, true))));
+          throw new \InvalidArgumentException(
+            $nl.
+            L::t('Illegal characters in debit purpose: %s. ', array($purposeLine)).
+            $nl.
+            L::t('Full debit record:').
+            $nl.
+            print_r($row, true));
         }
         if (strlen($purposeLine) > Finance::$sepaPurposeLength) {
-          throw new \InvalidArgumentException(L::t('Purpose field has %d characters, allowed are %d. '.
-                                                   'Full debit record: %s',
-                                                   array(strlen($purposeLine),
-                                                         Finance::$sepaPurposeLength,
-                                                         print_r($row, true))));
+          throw new \InvalidArgumentException(
+            $nl.
+            L::t('Purpose field has %d characters, allowed are %d.',
+                 array(strlen($purposeLine), Finance::$sepaPurposeLength)).
+            $nl.
+            L::t('Full debit record:').
+            $nl.
+            print_r($row, true));
         }
       }
       $filteredTable[] = $row;
     }
 
-    $timeStamp = strtotime('+ 14 days');    
+    // We use 17 days, we have to announce 14 days in advance and
+    // submit after 7 days the debit notes to the bank. The bank need
+    // the debit notes up to 6 "working days" in advance. Worst case
+    // would be Saturday to Monday which is then "hacked" by the 10
+    // day limit
+    $timeStamp = strtotime('+ 17 days');
     $aqDebitTable = SepaDebitMandates::aqBankingDebitNotes($filteredTable, $timeStamp);
 
     // It worked out until now. Update the "last issued" stamp
+    Finance::stampSepaMandates($filteredTable, $timeStamp);
 
-    $handle = mySQL::connect(Config::$pmeopts);
-    $dateIssued = date('Y-m-d', $timeStamp);
-    $table = Finance::$dataBaseInfo['table'];
-    $allQuery = '';
-    foreach($filteredTable as $debitNote) {
-      $query = "UPDATE `".$table."` SET `lastUsedDate` = '".$dateIssued."' WHERE `id` = ".$debitNote['id'];
-      $result = mySQL::query($query, $handle);
-      $allQuery .= $query;
-    }
-    mySQL::close($handle);
-
-    //throw new \InvalidArgumentException($allQuery);
+    $submissionStamp = strtotime('+ 7 days');
+    Finance::financeEvent(L::t('Debit notes submission deadline').
+                          ', '.
+                          $calendarTitlePart,
+                          L::t('Exported CSV file name:').
+                          "\n\n".
+                          $name.
+                          "\n\n".
+                          L::t('Due date:').' '.date('d.m.Y', $timeStamp),
+                          $calendarProject,
+                          $submissionStamp,
+                          24*60*60 /* alert one day in advance */);
+    Finance::financeEvent(L::t('Debit notes due').
+                          ', '.
+                          $calendarTitlePart,
+                          L::t('Exported CSV file name:').
+                          "\n\n".
+                          $name.
+                          "\n\n".
+                          L::t('Due date:').' '.date('d.m.Y', $timeStamp),
+                          $calendarProject,
+                          $timeStamp);
     
     // Actually export the data.
     
@@ -142,7 +181,7 @@ namespace CAFEVDB {
     fclose($outstream);
 
     return true;
-    
+
   } catch (\Exception $e) {
 
     $debugText = ob_get_contents();
@@ -151,7 +190,7 @@ namespace CAFEVDB {
     $name = $date.'-CAFEVDB-exception.html';
     
     header('Content-type: text/html');
-    header('Content-disposition: attachment;filename='.$name);
+    header('Content-disposition: inline;filename='.$name);
     header('Cache-Control: max-age=0');
 
     echo <<<__EOT__
@@ -164,7 +203,7 @@ namespace CAFEVDB {
     <body>
 __EOT__;
 
-        $exceptionText = $e->getFile().'('.$e->getLine().'): '.$e->getMessage();
+    $exceptionText = $e->getFile().'('.$e->getLine().'): '.$e->getMessage();
     $trace = $e->getTraceAsString();
 
     $admin = Config::adminContact();
@@ -173,20 +212,22 @@ __EOT__;
       '?subject='.rawurlencode('[CAFEVDB-Exception] Exceptions from Email-Form').
       '&body='.rawurlencode($exceptionText."\r\n".$trace);
     $mailto = '<span class="error email"><a href="mailto:'.$mailto.'">'.$admin['name'].'</a></span>';
+    
+    echo '<h1>'.
+      L::t('PHP Exception Caught').
+      '</h1>
+<blockquote>'.
+      L::t('Please copy the displayed text and send it by email to %s.', array($mailto)).
+'</blockquote>
+<div class="exception error name"><pre>'.$exceptionText.'</pre></div>
+<div class="exception error trace"><pre>'.$trace.'</pre></div>';
 
-    echo '<h1>'.L::t('PHP Exception Caught').'</h1>
-<blockquote>'.L::t('Error, caught an exception. '.
-                   'Please copy the displayed text and send it by email to %s.',
-                   array($mailto)).'</blockquote>
-<pre>'.$exceptionText.'</pre>
-<h2>'.L::t('Trace').'</h2>
-<pre>'.$trace.'</pre>';
-  }
-
-  echo <<<__EOT__
+    echo <<<__EOT__
   </body>
 </html>
 __EOT__;
+}
+
 
 } //namespace CAFVDB
 

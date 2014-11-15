@@ -36,6 +36,43 @@ namespace CAFEVDB
     public static $sepaCharset = "a-zA-Z0-9 \/?:().,'+-";
     public static $sepaPurposeLength = 35;
 
+    /**Add an event to the finance calendar, possibly including a
+     * reminder.
+     *
+     * @param title
+     * @param description (may be empty)
+     * @param projectiName (may be empty)
+     * @param timeStamp
+     * @param alarm (maybe <= 0 for no alarm)
+     */
+    static public function financeEvent($title, $description, $projectName, $timeStamp, $alarm = false)
+    {
+      $eventKind = 'finance';
+      $categories = '';
+      if ($projectName) {
+        // This triggers adding the event to the respective project when added
+        $categories .= $projectName.',';
+      }
+      $categories .= L::t('finance');
+      $calKey       = $eventKind.'calendar';
+      $calendarName = Config::getSetting($calKey, L::t($eventKind));
+      $calendarId   = Config::getSetting($calKey.'id', false);
+      
+      $eventData = array('title' => $title,
+                         'from' => date('d-m-Y', $timeStamp),
+                         'to' => date('d-m-Y', $timeStamp),
+                         'allday' => 'on',
+                         'location' => 'Cyber-Space',
+                         'categories' => $categories,
+                         'description' => $description,
+                         'repeat' => 'doesnotrepeat',
+                         'calendar' => $calendarId,
+                         'alarm' => $alarm);
+      
+      return Events::newEvent($eventData);
+    }
+
+
     /**Convert an UTF-8 encoded string to the brain-damaged SEPA
      * requirements. Thank you so much, you idiots. Banks.
      */
@@ -142,6 +179,72 @@ namespace CAFEVDB
       }
       return true;
     }
+
+    /**Update the last used time-stamp for the given array if ids
+     *
+     * @param mixed $ids Either one specific id, or an array of ids or
+     * an array of debit-notees as returned by
+     * SepaDebitMandates::insuranceTableExport() or
+     * SepaDebitMandates::projectTableExport()
+     *
+     * @param int $timeStamp Unix time stamp. Default to now + 14 days if unset.
+     *
+     * @param $handle Data-base handle. Will be aquired if unset.
+     */
+    public static function stampSepaMandates($ids, $timeStamp = false, $handle = false)
+    {
+      // convert to flat id array for all supported cases
+      if (is_int($ids)) {
+        $ids = array($ids);
+      } else if (is_array($ids)) {
+        if (count($ids) == 0) {
+          return true;
+        }
+        if (is_array($ids[0])) {
+          $notes = $ids;
+          $ids = array();
+          foreach ($notes as $debitNote) {
+            $ids[] = $debitNote['id'];
+          }
+        }
+      }
+
+      if ($timeStamp === false) {
+        date_default_timezone_set(Util::getTimezone());
+        $timeStamp = strtotime('+ 14 days');
+      }
+
+      $dateIssued = date('Y-m-d', $timeStamp);
+      
+      $ownConnection = $handle === false;
+      if ($ownConnection) {
+        Config::init();
+        $handle = mySQL::connect(Config::$pmeopts);
+      }
+
+      $table = Finance::$dataBaseInfo['table'];
+      $idSet = '('.implode(',', $ids).')';
+      $query = "UPDATE `".$table."` SET `lastUsedDate` = '".$dateIssued."' WHERE `id` IN ".$idSet;
+      
+      $result = mySQL::query($query, $handle);
+
+      if ($ownConnection) {
+        mySQL::close($handle);
+      }
+
+      if (!$result) {
+        throw new \RuntimeException(
+          "\n".
+          L::t('Unable to update the last-used date to %s', array($dateIssued)).
+          "\n".
+          L::t('Data-base query:').
+          "\n".
+          $query);
+      }
+
+      return $result;
+    }
+    
     
     /**Store a SEPA-mandate, possibly with only partial
      * information. mandateReference, musicianId and projectId are
@@ -212,7 +315,12 @@ namespace CAFEVDB
         $query = "UPDATE `".$table."` SET ";
         $setter = array();
         foreach ($mandate as $key => $value) {
-          $setter[] = "`".$key."`='".$value."'";
+          if ($key == 'lastUsedDate' || $value != '') {
+            // only store non-empty fields, with the exception of
+            // last-used which we may want to reset in case we did not
+            // really submit the debit note.
+            $setter[] = "`".$key."`='".$value."'";
+          }
         }
         $query .= implode(", ", $setter);
         $query .= " WHERE `mandateReference` = '".$ref."'";
@@ -255,6 +363,7 @@ namespace CAFEVDB
     /**Verify the given mandate, throw an InvalidArgumentException */
     public static function validateSepaMandate($mandate)
     {
+      $nl = "\n";
       $keys = array('mandateReference',
                     'mandateDate',
                     'lastUsedDate',
@@ -264,26 +373,50 @@ namespace CAFEVDB
                     'IBAN',
                     'BLZ',
                     'bankAccountOwner');
+      $names = array('mandateReference' => L::t('mandate reference'),
+                     'mandateDate' => L::t('date of issue'),
+                     'lastUsedDate' => L::t('date of last usage'),
+                     'musicianId' => L::t('musician id'),
+                     'projectId' => L::t('project id'),
+                     'nonrecurring' => L::t('non recurring'),
+                     'IBAN' => 'IBAN',
+                     'BLZ' => L::t('bank code'),
+                     'bankAccountOwner' => L::t('bank account owner'));
       foreach($keys as $key) {
         if (!isset($mandate[$key])) {
-          throw new \InvalidArgumentException(L::t('Missing fields in debit mandate: %s. Full data record: %s',
-                                                   array($key, print_r($mandate, true))));
+          throw new \InvalidArgumentException(
+            $nl.
+            L::t('Missing fields in debit mandate: %s (%s).', array($key, $names[$key])).
+            $nl.
+            L::t('Full data record:').
+            $nl.
+            print_r($mandate, true));
         }
         if ($key == 'lastUsedDate') {
           continue;
         }
         if ((string)$mandate[$key] == '') {
-          throw new \InvalidArgumentException(L::t('Empty fields in debit mandate: %s. Full data record: %s',
-                                                   array($key, print_r($mandate, true))));
+          throw new \InvalidArgumentException(
+            $nl.
+            L::t('Empty fields in debit mandate: %s (%s).', array($key, $names[$key])).
+            $nl.
+            L::t('Full data record:').
+            $nl.
+            print_r($mandate, true));
+
         }
       }
 
       // Verify that bankAccountOwner conforms to the brain-damaged
       // SEPA charset. Thank you so much. Banks.
       if (!self::validateSepaString($mandate['bankAccountOwner'])) {
-        throw new \InvalidArgumentException(L::t('Illegal characters in bank account owner field. '.
-                                                 'Full data record: %s',
-                                                 array(print_r($mandate, true))));
+        throw new \InvalidArgumentException(
+          $nl.
+          L::t('Illegal characters in bank account owner field').
+          $nl.
+          L::t('Full data record:').
+          $nl.
+          print_r($mandate, true));
       }
       
       // Verify that the dates are not in the future, and that the
@@ -299,14 +432,25 @@ namespace CAFEVDB
         $stamp = strtotime($date);
         $now = time();
         if ($now < $stamp) {
-          throw new \InvalidArgumentException(L::t('Mandate issued or used in the future: %s????. Full data record: %s',
-                                                   array($date, print_r($mandate, true))));
+          throw new \InvalidArgumentException(
+            $nl.
+            L::t('Mandate issued in the future: %s????', array($date)).
+            $nl.
+            L::t('Full data record:').
+            $nl.
+            print_r($mandate, true));
         }
       }
       $dateIssued = $mandate['mandateDate'];
       if ($dateIssued == '0000-00-00') {
-        throw new \InvalidArgumentException(L::t('Missing mandate date. Full data record: %s',
-                                                 array(print_r($mandate, true))));
+        throw new \InvalidArgumentException(
+          $nl.
+          L::t('Missing mandate date').
+          $nl.
+          $nl.
+          L::t('Full data record:').
+          $nl.
+          print_r($mandate, true));
       }
 
       // Check IBAN and BIC: extract the bank and bank account id,
@@ -317,8 +461,13 @@ namespace CAFEVDB
 
       $iban = new \IBAN($IBAN);
       if (!$iban->Verify()) {
-        throw new \InvalidArgumentException(L::t('Invalid IBAN: %s. Full data record: %s',
-                                                 array($IBAN, print_r($mandate, true))));
+        throw new \InvalidArgumentException(
+          $nl.
+          L::t('Invalid IBAN: %s', array($IBAN)).
+          $nl.
+          L::t('Full data record:').
+          $nl.
+          print_r($mandate, true));
       }
 
       if ($iban->Country() == 'DE') {
@@ -327,27 +476,46 @@ namespace CAFEVDB
         $ibanKTO = $iban->Account();
 
         if ($BLZ != $ibanBLZ) {
-          throw new \InvalidArgumentException(L::t('BLZ and IBAN do not match: %s != %s. Full data record: %s',
-                                                   array($BLZ, $ibanBLZ, print_r($mandate, true))));
+          throw new \InvalidArgumentException(
+            $nl.
+            L::t('BLZ and IBAN do not match: %s != %s', array($BLZ, $ibanBLZ)).
+            $nl.
+            L::t('Full data record:').
+            $nl.
+            print_r($mandate, true));
         }
         
         $bav = new \malkusch\bav\BAV;
 
         if (!$bav->isValidBank($ibanBLZ)) {
-          throw new \InvalidArgumentException(L::t('Invalid German BLZ: %s. Full data record: %s',
-                                                 array($BLZ, print_r($mandate, true))));
+          throw new \InvalidArgumentException(
+            $nl.
+            L::t('Invalid German BLZ: %s.', array($BLZ)).
+            $nl.
+            L::t('Full data record:').
+            $nl.
+            print_r($mandate, true));
         }
 
         if (!$bav->isValidAccount($ibanKTO)) {
-          throw new \InvalidArgumentException(L::t('Invalid German bank account: %s @ %s. Full data record: %s',
-                                                   array($ibanKTO, $BLZ, print_r($mandate, true))));
+          throw new \InvalidArgumentException(
+            $nl.
+            L::t('Invalid German bank account: %s @ %s.', array($ibanKTO, $BLZ)).
+            $nl.
+            L::t('Full data record:').
+            $nl.
+            print_r($mandate, true));
         }
 
         $blzBIC = $bav->getMainAgency($ibanBLZ)->getBIC();
         if ($blzBIC != $BIC) {
-          throw new \InvalidArgumentException(L::t('Probably invalid BIC: %s. Computed: %s. '.
-                                                   'Full data record: %s',
-                                                   array($BIC, $blzBIC, print_r($mandate, true))));
+          throw new \InvalidArgumentException(
+            $nl.
+            L::t('Probably invalid BIC: %s. Computed: %s. ', array($BIC, $blzBIC)).
+            $nl.
+            L::t('Full data record: %s').
+            $nl.
+            print_r($mandate, true));
         }
 
       }
