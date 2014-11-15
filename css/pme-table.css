@@ -629,7 +629,9 @@ td.negative {
   color:#FF0000;
 }
 
-td.align-right, td.money,
+td.align-right,
+td.pme-cell-0.align-right, td.pme-cell-1.align-right,
+td.pme-cell-0.money, td.pme-cell-1.money,
 td.pme-cell-0-money, td.pme-cell-1-money {
   text-align:right;
 }
@@ -640,6 +642,7 @@ td[class*='pme-cell'], td[class*='pme-sortinfo'],
 td[class*='pme-filter'], th[class*='pme-filter'], td[class*='pme-queryinfo'] {
   border:#004d9c 1px solid;
   padding:3px;
+  text-align:left;
 }
 td.pme-buttons {
   text-align:left;
@@ -719,6 +722,17 @@ td.pme-cell-0.musician-instruments, td.pme-cell-1.musician-instruments {
 td.pme-cell-0.projects, td.pme-cell-1.projects { 
   width:20em;
   max-width:20em;
+  max-height:1em;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+th.pme-header.mandate-project, th.pme-header.mandate-project,
+td.pme-cell-0.mandate-project, td.pme-cell-1.mandate-project {
+  width:15em;
+  min-width:15em;
+  max-width:15em;
   max-height:1em;
   white-space:nowrap;
   overflow:hidden;
