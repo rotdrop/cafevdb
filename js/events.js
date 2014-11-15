@@ -81,15 +81,8 @@ var CAFEVDB = CAFEVDB || {};
 
           CAFEVDB.dialogToBackButton($(this));
 
-          $('button').tipsy({gravity:'ne', fade:true});
-          $('input').tipsy({gravity:'ne', fade:true});
-          $('label').tipsy({gravity:'ne', fade:true});
-
-          if (CAFEVDB.toolTips) {
-            $.fn.tipsy.enable();
-          } else {
-            $.fn.tipsy.disable();
-          }
+          $('.tipsy').remove();
+          CAFEVDB.tipsy('#events');
 
           $('#events #eventlistform :button').off('click').on('click', CAFEVDB.Events.UI.buttonClick);
 
@@ -162,15 +155,7 @@ var CAFEVDB = CAFEVDB || {};
 
       $('.tipsy').remove();
 
-      $('button').tipsy({gravity:'ne', fade:true});
-      $('input').tipsy({gravity:'ne', fade:true});
-      $('label').tipsy({gravity:'ne', fade:true});
-
-      if (CAFEVDB.toolTips) {
-        $.fn.tipsy.enable();
-      } else {
-        $.fn.tipsy.disable();
-      }
+      CAFEVDB.tipsy('#events div.listing');
 
       $('#events #eventlistform div.listing :button').off('click').
         on('click', CAFEVDB.Events.UI.buttonClick);
@@ -211,7 +196,8 @@ var CAFEVDB = CAFEVDB || {};
       if (name == 'concerts' ||
           name == 'rehearsals' ||
           name == 'other' ||
-          name == 'management') {
+          name == 'management' ||
+          name == 'finance') {
         // These are the new-event buttons.
 
         if(evntdlgopen == true){
