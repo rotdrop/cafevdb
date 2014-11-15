@@ -217,7 +217,7 @@ __EOT__;
     /**Format the right way (tm). */
     public static function strftime($format, $timestamp = null, $tz = null, $locale = null)
     {
-      $oldtz     = date_default_timezone_get();
+      $oldtz = date_default_timezone_get();
       if ($tz) {
         date_default_timezone_set($tz);
       }
