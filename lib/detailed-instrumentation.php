@@ -35,6 +35,7 @@ class DetailedInstrumentation
 
   function __construct($execute = true) {
     parent::__construct($execute);
+    $this->recordsPerPage = 20;
   }
 
   public function shortTitle()
@@ -662,7 +663,7 @@ __EOT__;
     $musicianFirstName = $row['qf'.$musFirstNameIdx];
     $musicianLastName  = $row['qf'.$musLastNameIdx];
 
-    $musician = $musicianFirstName.' '.$musicianLastName;
+    $musician = $musicianLastName.', '.$musicianFirstName;
 
     if ($row['qf'.$k] != '') {
       $value = $row['qf'.$k];
