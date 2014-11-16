@@ -45,9 +45,10 @@ $off = $_['orchestra'] == '' ? 'disabled="disabled"' : '';
       <input class="cafevdb-password" type="password" id="oldkey" name="oldkey" placeholder="<?php echo L::t('Current Key');?>" data-typetoggle="#oldkey-show" />
       <input class="cafevdb-password-show" type="checkbox" id="oldkey-show" name="show" />
       <label class="cafevdb-password-show" for="oldkey-show"><?php echo L::t('show');?></label>
-      <input class="cafevdb-password" type="password" id="key" name="systemkey" placeholder="<?php echo L::t('New Key');?>" data-typetoggle="#systemkey-show" />
+      <input class="cafevdb-password randomkey" type="password" id="key" name="systemkey" placeholder="<?php echo L::t('New Key');?>" data-typetoggle="#systemkey-show" />
       <input class="cafevdb-password-show" type="checkbox" id="systemkey-show" name="show" />
       <label class="cafevdb-password-show" for="systemkey-show"><?php echo L::t('show');?></label>
+      <input name="keygenerate" id="keygenerate" type="button" value="<?php echo L::t('Generate'); ?>" title="<?php echo L::t('Generate a random encryption key');?>" />
       <input id="keychangebutton" type="button" value="<?php echo L::t('Change Encryption Key');?>" />
       <!-- <span><?php echo $_['encryptionkey']; ?></span> -->
       <div class="statusmessage" id="changed"><?php echo L::t('The encryption key was changed');?></div>
@@ -56,13 +57,13 @@ $off = $_['orchestra'] == '' ? 'disabled="disabled"' : '';
       <div class="statusmessage" id="equal"><?php echo L::t('The keys are the same and remain unchanged.');?></div>
       <div class="statusmessage" id="standby"><?php echo L::t('Please standby, this action needs some seconds.');?></div>
     </fieldset>
-<!-- DISTRIBUTE ENCRYPTION-KEY -->
+    <!-- DISTRIBUTE ENCRYPTION-KEY -->
     <fieldset id="keydistribute" <?php echo $off; ?> >
       <input id="keydistributebutton" type="button" name="keydistribute" value="<?php echo L::t('Distribute Encryption Key');?>" title="<?php echo L::t('Insert the data-base encryption key into the user preferences of all users belonging to the user group. The data-base key will be encrypted by the respective user\'s public key.') ?>" />
       <span class="statusmessage" id="msg"></span>
     </fieldset>
   </form>
-<!-- GENERAL DATA-BASE STUFF -->
+  <!-- GENERAL DATA-BASE STUFF -->
   <form id="dbsettings">
     <fieldset id="dbgeneral"  <?php echo $off; ?> ><legend><?php echo L::t('Database settings'); ?></legend>
       <input type="text" name="dbserver" id="dbserver" value="<?php echo $_['dbserver']; ?>" placeholder="<?php echo L::t('Server');?>" />

@@ -159,6 +159,12 @@ namespace CAFEVDB
     private static $inlineScripts = array();
     private static $externalScripts = array();
 
+    /**Generate a random byte sequence in hex notation.*/
+    static public function generateRandomBytes($length)
+    {
+      return \OCP\Util::generateRandomBytes($length);
+    }
+
     /**Add some java-script external code (e.g. Google maps). Emit it
      * with emitExternalScripts().
      */

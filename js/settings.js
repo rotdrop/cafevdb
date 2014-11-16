@@ -250,6 +250,33 @@ $(document).ready(function() {
     }
   });
 
+  $('form#systemkey #keygenerate').click(function(event) {
+    event.preventDefault();
+
+    $('div.statusmessage').hide();
+    $('span.statusmessage').hide();
+    $('#eventsettings #msg').empty();
+    if ($('form#systemkey #key').is(':visible')) {
+      $('#systemkey-show').click();
+    }
+    // Ajax foo
+    $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
+           $(this),
+           function(data) {
+             if (data.status == "success") {
+               // Make sure both inputs have the same value
+               $('form#systemkey input[name="systemkey-clone"]').val(data.data.message);
+               $('form#systemkey input[name="systemkey"]').val(data.data.message);
+             } else {
+               $('#eventsettings #msg').html(data.data.message);
+               $('#eventsettings #msg').show();
+             }
+             return false;
+           });
+
+    return false;
+  });  
+
   $('#keydistributebutton').click(function() {
     $('div.statusmessage').hide();
     $('span.statusmessage').hide();
@@ -472,9 +499,7 @@ $(document).ready(function() {
     $('span.statusmessage').hide();
     $('#eventsettings #msg').empty();
     if ($('fieldset.sharingpassword #sharingpassword').is(':visible')) {
-      $('#sharingpassword-show').attr('checked','checked');
       $('#sharingpassword-show').click();
-      $('#sharingpassword-show').attr('checked','checked');
     }
     // Ajax foo
     $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),

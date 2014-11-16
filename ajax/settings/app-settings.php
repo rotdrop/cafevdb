@@ -44,7 +44,12 @@ namespace CAFEVDB {
     $caption = ''; ///< Optional status message caption.
     $messageText = ''; ///< Optional status message.
     $debugText = ''; ///< Diagnostic output, only enabled on request.
-  
+
+    if (isset($_POST['keygenerate'])) {
+      \OC_JSON::success(array("data" => array( "message" => Util::generateRandomBytes(32) )));
+      return;
+    }
+    
     if (isset($_POST['systemkey']) && isset($_POST['oldkey'])) {
 
       $oldkey   = $_POST['oldkey'];
@@ -53,7 +58,7 @@ namespace CAFEVDB {
       // Remember the old session-key, needs to be restored in case of error
       $actkey = Config::getEncryptionKey();
 
-      // Make sure the old key ist installed properly
+      // Make sure the old key is installed properly
       Config::setEncryptionKey($oldkey);
 
       // Now fetch the key itself
@@ -98,7 +103,7 @@ namespace CAFEVDB {
         return false;
       }
 
-      $lockPhrase = \OCP\Util::generateRandomBytes();
+      $lockPhrase = Util::generateRandomBytes(32);
       Config::setAppValue('configlock', $lockPhrase);
       $configLock = Config::getAppValue('configlock', false);
       if ($configLock !== $lockPhrase) {
@@ -602,7 +607,7 @@ namespace CAFEVDB {
     }
 
     if (isset($_POST['passwordgenerate'])) {
-      \OC_JSON::success(array("data" => array( "message" => \OC_User::generatePassword() )));
+      \OC_JSON::success(array("data" => array( "message" => Util::generateRandomBytes(32) )));
       return;
     }
 

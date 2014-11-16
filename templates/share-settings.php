@@ -41,7 +41,7 @@ $off = $_['shareowner'] == '' ? 'disabled="disabled"' : $alloff;
       </fieldset>
 <!-- CHANGE ITS PASSWORD -->
       <fieldset class="sharingpassword" <?php echo $alloff; ?> >
-        <input type="password" id="sharingpassword" name="sharingpassword" placeholder="<?php echo L::t('Share-Password');?>" data-typetoggle="#sharingpassword-show" />
+        <input type="password" id="sharingpassword" class="randompassword" name="sharingpassword" placeholder="<?php echo L::t('Share-Password');?>" data-typetoggle="#sharingpassword-show" />
         <input class="cafevdb-password-show" type="checkbox" id="sharingpassword-show" name="sharingpassword-show" />
         <label class="cafevdb-password-show" for="sharingpassword-show"><?php echo L::t('show');?></label>
         <input name="passwordgenerate" id="generate" type="button" value="<?php echo L::t('Generate');?>" />

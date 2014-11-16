@@ -34,6 +34,8 @@ namespace CAFEVDB
   {
     const APP_NAME  = 'cafevdb';
     const DISPLAY_NAME = 'Camerata DB';
+    const MCRYPT_CIPHER = MCRYPT_RIJNDAEL_128;
+    const MCRYPT_MODE = MCRYPT_MODE_ECB;
     /**Configuration keys. In order for encryption/decryption to work
      * properly, every config setting has to be listed here.
      */
@@ -439,6 +441,41 @@ redaxoRehearsalsModule
       }
     }
 
+    /**Pad the given key to a supprted length. */
+    static private function padEncryptionKey($key)
+    {
+      if ($key == '') {
+        return $key;
+      }
+
+      $keySize  = mcrypt_module_get_algo_key_size(self::MCRYPT_CIPHER);
+      $keySizes = mcrypt_module_get_supported_key_sizes(self::MCRYPT_CIPHER);
+      if (count($keySizes) == 0) {
+        $keySizes = array($keySize);
+      }
+      sort($keySizes);
+      $maxSize = $keySizes[count($keySizes) - 1];
+      $klen = strlen($key);
+      if ($klen > $maxSize) {
+        $key = substr($key, 0, $maxSize);
+      } else {
+        foreach($keySizes as $size) {
+          if ($size >= $klen) {
+            $key = str_pad($key, $size, "\0");
+            break;
+          }
+        }
+      }
+      return $key;
+    }
+
+    /**Generate a random key of the maximum supported size */
+    static public function generateEncryptionKey()
+    {
+      $size = mcrypt_module_get_algo_key_size(self::MCRYPT_CIPHER);
+      return Util::generateRandomBytes($size);
+    }
+    
     /**Store the encryption key in the session data. This cannot (i.e.:
      *must not) fail.
      *
@@ -446,6 +483,7 @@ redaxoRehearsalsModule
      */
     static public function setEncryptionKey($key) {
       //\OCP\Util::writeLog(Config::APP_NAME, "Storing encryption key: ".$key, \OCP\Util::DEBUG);
+      $key = self::padEncryptionKey($key);
       self::sessionStoreValue('encryptionkey', $key);
     }
 
@@ -477,6 +515,7 @@ redaxoRehearsalsModule
 
       // Now try to decrypt the data-base encryption key
       $sysdbkey = self::decrypt($sysdbkey, $sesdbkey);
+      $sysdbkey = self::padEncryptionKey($sysdbkey);
 
       return $sysdbkey !== false && $sysdbkey == $sesdbkey;
     }
@@ -584,6 +623,11 @@ redaxoRehearsalsModule
     {
       $ownConnection = $handle === false;
 
+      // pad both keys to required length, acts as no-op on empty keys
+      // or keys with supported length.
+      $newKey = self::padEncryptionKey($newKey);
+      $oldKey = self::padEncryptionKey($oldKey);
+      
       if ($ownConnection) {
         self::init();
         $handle = mySQL::connect(self::$pmeopts);
@@ -613,7 +657,8 @@ redaxoRehearsalsModule
             foreach ($columns as $valueKey) {
               $value = self::decrypt($row[$valueKey], $oldKey);
               if ($value === false) {
-                throw new \Exception(L::t("Decryption of `%s`@`%s` failed", array($valueKey, $tableName)));
+                //throw new \Exception(L::t("Decryption of `%s`@`%s` failed", array($valueKey, $tableName)));
+                throw new \Exception(L::t("Decryption of `%s`@`%s` failed", array($oldKey, strlen($oldKey))));
               }
               $value = self::encrypt($value, $newKey);
               if ($value === false) {
@@ -1315,11 +1360,11 @@ redaxoRehearsalsModule
     
       $path = '/'.$sharedFolder;
 
-      trigger_error("Path: ".print_r($projectsFolder, true), E_USER_NOTICE);
+      //trigger_error("Path: ".print_r($projectsFolder, true), E_USER_NOTICE);
       
       foreach ($projectsFolder as $pathComponent) {
         $path .= '/'.$pathComponent;
-        trigger_error("Path: ".$path, E_USER_NOTICE);
+        //trigger_error("Path: ".$path, E_USER_NOTICE);
         if (!$fileView->is_dir($path)) {
           if ($fileView->file_exists($path)) {
             $fileView->unlink($path);
