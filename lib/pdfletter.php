@@ -48,6 +48,17 @@ namespace CAFEVDB
     const FIRST_FOOTER_HEIGHT = 28;
     const PT = 0.3527777777777777;
 
+    public function __construct($orientation = 'P',
+                                $unit = 'mm',
+                                $format = 'A4',
+                                $unicode = true,
+                                $encoding = 'UTF-8',
+                                $diskcache = false,
+                                $pdfa = false) {
+      parent::__construct($orientation, $unit, $format, $unicode, $encoding, $diskcache, $pdfa);
+      $this->SetAutoPageBreak(true, self::FIRST_FOOTER_HEIGHT+10);
+    }
+    
     /**Return the font-size converted to mm. */
     public function fontSize($ptSize = self::FONT_SIZE) {
       return $ptSize * self::PT;
@@ -274,9 +285,7 @@ namespace CAFEVDB
       $pdf->addPage();
 
       // Falzmarken
-      $pdf->Line(3,105,6,105);
-      $pdf->Line(3,148,8,148);
-      $pdf->Line(3,210,6,210);
+      $pdf->foldingMarks();
  
       // Address record
       $pdf->frontHeader(

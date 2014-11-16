@@ -741,7 +741,7 @@ class InstrumentInsurance
                               Config::getValue('streetAddressName01'))));
     $pdf->SetSubject(L::t('Overview over insured instruments and insurance fee details and summary'));
     $pdf->SetKeywords('invoice, insurance, instruments');
- 
+
     // add a page
     $pdf->addPage();
 
@@ -833,10 +833,27 @@ your insured items at any time. Just ask.'), '', 1);
 </table>';
 //</div>';
 
+      // We do not want to split the table across pages
+      $pdf->startTransaction();
+      $startPage = $pdf->getPage();
+      
       $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
                           10,
                           PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+1*$pdf->fontSize(),
                           $style.$html, '', 1);
+
+      $endPage = $pdf->getPage();
+      if ($startPage != $endPage) {
+        $pdf->rollbackTransaction(true);
+        $pdf->addPage();
+        // Do it again on a new page
+        $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
+                            10,
+                            PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+1*$pdf->fontSize(),
+                            $style.$html, '', 1);        
+      } else {
+        $pdf->commitTransaction();
+      }
 
     }
 
