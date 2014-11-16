@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-16 13:22+0100\n"
+"POT-Creation-Date: 2014-11-16 22:16+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -108,7 +108,7 @@ msgstr ""
 #: ajax/finance/sepa-debit-store.php:112
 #: ajax/insurance/instrument-insurance-export.php:171
 #: ajax/insurance/validate.php:265 ajax/page-loader.php:111
-#: ajax/projects/web-articles.php:182 ajax/settings/app-settings.php:1176
+#: ajax/projects/web-articles.php:182 ajax/settings/app-settings.php:1181
 msgid "PHP Exception Caught"
 msgstr ""
 
@@ -116,7 +116,7 @@ msgstr ""
 #: ajax/email/recipients.php:144 ajax/finance/sepa-debit-store.php:116
 #: ajax/insurance/instrument-insurance-export.php:172
 #: ajax/insurance/validate.php:269 ajax/page-loader.php:115
-#: ajax/projects/web-articles.php:186 ajax/settings/app-settings.php:1180
+#: ajax/projects/web-articles.php:186 ajax/settings/app-settings.php:1185
 #, php-format
 msgid ""
 "Error, caught an exception. Please copy the displayed text and send it by "
@@ -403,10 +403,10 @@ msgstr ""
 
 #: ajax/finance/sepa-debit-settings.php:97
 #: ajax/finance/sepa-debit-settings.php:118
-#: ajax/finance/sepa-debit-settings.php:359 ajax/settings/app-settings.php:886
-#: ajax/settings/app-settings.php:958 ajax/settings/app-settings.php:973
-#: ajax/settings/app-settings.php:1008 ajax/settings/app-settings.php:1047
-#: ajax/settings/app-settings.php:1071 ajax/settings/app-settings.php:1083
+#: ajax/finance/sepa-debit-settings.php:359 ajax/settings/app-settings.php:891
+#: ajax/settings/app-settings.php:963 ajax/settings/app-settings.php:978
+#: ajax/settings/app-settings.php:1013 ajax/settings/app-settings.php:1052
+#: ajax/settings/app-settings.php:1076 ajax/settings/app-settings.php:1088
 #, php-format
 msgid "Value for `%s' set to `%s'."
 msgstr ""
@@ -434,20 +434,20 @@ msgid "Invalid German(?) bank account number %s @ %s."
 msgstr ""
 
 #: ajax/finance/sepa-debit-settings.php:258
-#: ajax/settings/app-settings.php:1016
+#: ajax/settings/app-settings.php:1021
 #, php-format
 msgid "Invalid IBAN: `%s'."
 msgstr ""
 
 #: ajax/finance/sepa-debit-settings.php:302
 #: ajax/finance/sepa-debit-settings.php:334
-#: ajax/settings/app-settings.php:1094
+#: ajax/settings/app-settings.php:1099
 #, php-format
 msgid "Value for `%s' invalid: `%s'."
 msgstr ""
 
 #: ajax/finance/sepa-debit-settings.php:348
-#: ajax/settings/app-settings.php:1154 ajax/settings/redaxo-settings.php:71
+#: ajax/settings/app-settings.php:1159 ajax/settings/redaxo-settings.php:71
 msgid "Unhandled request:"
 msgstr ""
 
@@ -955,300 +955,300 @@ msgstr ""
 msgid "Error: %s"
 msgstr ""
 
-#: ajax/settings/app-settings.php:63
+#: ajax/settings/app-settings.php:68
 msgid "Wrong old key."
 msgstr ""
 
-#: ajax/settings/app-settings.php:97
+#: ajax/settings/app-settings.php:102
 msgid "Configuration locked, refusing to change encryption key."
 msgstr ""
 
-#: ajax/settings/app-settings.php:106
+#: ajax/settings/app-settings.php:111
 msgid ""
 "Configuration locked by somebody else, refusing to change encryption key."
 msgstr ""
 
-#: ajax/settings/app-settings.php:152 ajax/settings/app-settings.php:755
+#: ajax/settings/app-settings.php:157 ajax/settings/app-settings.php:760
 #, php-format
 msgid "Failed for: %s"
 msgstr ""
 
-#: ajax/settings/app-settings.php:156
+#: ajax/settings/app-settings.php:161
 msgid "Key installed successfully!"
 msgstr ""
 
-#: ajax/settings/app-settings.php:167
+#: ajax/settings/app-settings.php:172
 #, php-format
 msgid "Name of orchestra set to `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:177
+#: ajax/settings/app-settings.php:182
 #, php-format
 msgid "DB-server set to `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:187
+#: ajax/settings/app-settings.php:192
 #, php-format
 msgid "DB-name set to `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:197
+#: ajax/settings/app-settings.php:202
 #, php-format
 msgid "DB-login set to `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:214
+#: ajax/settings/app-settings.php:219
 msgid "DB-test passed and DB-password set."
 msgstr ""
 
-#: ajax/settings/app-settings.php:219
+#: ajax/settings/app-settings.php:224
 msgid ""
 "DB-test failed. Check the account settings. Check was performed with the new "
 "password."
 msgstr ""
 
-#: ajax/settings/app-settings.php:227
+#: ajax/settings/app-settings.php:232
 msgid "DB-test passed with stored password (empty input ignored)."
 msgstr ""
 
-#: ajax/settings/app-settings.php:232
+#: ajax/settings/app-settings.php:237
 msgid "DB-test failed with stored password (empty input ignored)."
 msgstr ""
 
-#: ajax/settings/app-settings.php:250
+#: ajax/settings/app-settings.php:255
 #, php-format
 msgid "Submitted `%s' != `%s' (stored)"
 msgstr ""
 
-#: ajax/settings/app-settings.php:259
+#: ajax/settings/app-settings.php:264
 #, php-format
 msgid "New share-owner `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:264
+#: ajax/settings/app-settings.php:269
 #, php-format
 msgid "Failure creating account `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:277
+#: ajax/settings/app-settings.php:282
 #, php-format
 msgid "Keeping old share-owner `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:282
+#: ajax/settings/app-settings.php:287
 #, php-format
 msgid "Failure checking account `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:298
+#: ajax/settings/app-settings.php:303
 msgid "Unable to share without share-holder `dummy-user'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:307 ajax/settings/app-settings.php:377
-#: ajax/settings/app-settings.php:467
+#: ajax/settings/app-settings.php:312 ajax/settings/app-settings.php:382
+#: ajax/settings/app-settings.php:472
 #, php-format
 msgid "Inconsistency, submitted `%s' != `%s' (stored)"
 msgstr ""
 
-#: ajax/settings/app-settings.php:320 ajax/settings/app-settings.php:392
-#: ajax/settings/app-settings.php:481
+#: ajax/settings/app-settings.php:325 ajax/settings/app-settings.php:397
+#: ajax/settings/app-settings.php:486
 #, php-format
 msgid "New shared folder `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:325 ajax/settings/app-settings.php:398
-#: ajax/settings/app-settings.php:487
+#: ajax/settings/app-settings.php:330 ajax/settings/app-settings.php:403
+#: ajax/settings/app-settings.php:492
 #, php-format
 msgid "Failure creating folder `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:338 ajax/settings/app-settings.php:413
-#: ajax/settings/app-settings.php:502
+#: ajax/settings/app-settings.php:343 ajax/settings/app-settings.php:418
+#: ajax/settings/app-settings.php:507
 #, php-format
 msgid "Keeping old shared folder `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:343 ajax/settings/app-settings.php:419
-#: ajax/settings/app-settings.php:508
+#: ajax/settings/app-settings.php:348 ajax/settings/app-settings.php:424
+#: ajax/settings/app-settings.php:513
 #, php-format
 msgid "Failure checking folder `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:349 ajax/settings/app-settings.php:426
-#: ajax/settings/app-settings.php:515
+#: ajax/settings/app-settings.php:354 ajax/settings/app-settings.php:431
+#: ajax/settings/app-settings.php:520
 #, php-format
 msgid "Failure checking folder `%s', caught an exception `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:367 ajax/settings/app-settings.php:445
+#: ajax/settings/app-settings.php:372 ajax/settings/app-settings.php:450
 msgid "Unable to define project-folder without shared parent folder."
 msgstr ""
 
-#: ajax/settings/app-settings.php:454
+#: ajax/settings/app-settings.php:459
 msgid ""
 "Unable to define the financial balance folder without project folder name."
 msgstr ""
 
-#: ajax/settings/app-settings.php:535
+#: ajax/settings/app-settings.php:540
 #, php-format
 msgid "Exception: %s(%d): %s"
 msgstr ""
 
-#: ajax/settings/app-settings.php:552 ajax/settings/app-settings.php:589
+#: ajax/settings/app-settings.php:557 ajax/settings/app-settings.php:594
 msgid "Unable to set:"
 msgstr ""
 
-#: ajax/settings/app-settings.php:575 ajax/settings/encryptionkey.php:62
+#: ajax/settings/app-settings.php:580 ajax/settings/encryptionkey.php:62
 msgid "Exception:"
 msgstr ""
 
-#: ajax/settings/app-settings.php:600
+#: ajax/settings/app-settings.php:605
 msgid "minutes"
 msgstr ""
 
-#: ajax/settings/app-settings.php:620
+#: ajax/settings/app-settings.php:625
 msgid "Changed password for"
 msgstr ""
 
-#: ajax/settings/app-settings.php:626
+#: ajax/settings/app-settings.php:631
 msgid "Failed changing password for"
 msgstr ""
 
-#: ajax/settings/app-settings.php:646
+#: ajax/settings/app-settings.php:651
 #, php-format
 msgid "Using `%s' at %s as %s-server."
 msgstr ""
 
-#: ajax/settings/app-settings.php:652
+#: ajax/settings/app-settings.php:657
 #, php-format
 msgid "Unable to determine the IP-address for %s."
 msgstr ""
 
-#: ajax/settings/app-settings.php:669
+#: ajax/settings/app-settings.php:674
 msgid "Using "
 msgstr ""
 
-#: ajax/settings/app-settings.php:676
+#: ajax/settings/app-settings.php:681
 #, php-format
 msgid "`%s' doesn't seem to be a candidate for an IP-port."
 msgstr ""
 
-#: ajax/settings/app-settings.php:700
+#: ajax/settings/app-settings.php:705
 msgid "Unknown transport security method:"
 msgstr ""
 
-#: ajax/settings/app-settings.php:711
+#: ajax/settings/app-settings.php:716
 #, php-format
 msgid "Using `%s' for message transport."
 msgstr ""
 
-#: ajax/settings/app-settings.php:725
+#: ajax/settings/app-settings.php:730
 #, php-format
 msgid "Using `%s' as login."
 msgstr ""
 
-#: ajax/settings/app-settings.php:735
+#: ajax/settings/app-settings.php:740
 msgid "Password has been changed."
 msgstr ""
 
-#: ajax/settings/app-settings.php:760
+#: ajax/settings/app-settings.php:765
 msgid "Email credentials installed successfully!"
 msgstr ""
 
-#: ajax/settings/app-settings.php:777
+#: ajax/settings/app-settings.php:782
 msgid "IMAP connection seems functional."
 msgstr ""
 
-#: ajax/settings/app-settings.php:780
+#: ajax/settings/app-settings.php:785
 msgid "Unable to establish IMAP connection."
 msgstr ""
 
-#: ajax/settings/app-settings.php:789
+#: ajax/settings/app-settings.php:794
 msgid "SMTP connection seems functional."
 msgstr ""
 
-#: ajax/settings/app-settings.php:792
+#: ajax/settings/app-settings.php:797
 msgid "Unable to establish SMTP connection."
 msgstr ""
 
-#: ajax/settings/app-settings.php:809
+#: ajax/settings/app-settings.php:814
 msgid "UNSPECIFIED"
 msgstr ""
 
-#: ajax/settings/app-settings.php:813
+#: ajax/settings/app-settings.php:818
 #, php-format
 msgid "Email test-mode enabled, sending only to %s"
 msgstr ""
 
-#: ajax/settings/app-settings.php:817
+#: ajax/settings/app-settings.php:822
 msgid "Email test-mode disable, will send to all!!!"
 msgstr ""
 
-#: ajax/settings/app-settings.php:828 ajax/settings/app-settings.php:857
+#: ajax/settings/app-settings.php:833 ajax/settings/app-settings.php:862
 #, php-format
 msgid "`%s' doesn't seem to be a valid email-address."
 msgstr ""
 
-#: ajax/settings/app-settings.php:836
+#: ajax/settings/app-settings.php:841
 #, php-format
 msgid "Using `%s' as email-address for test-mode."
 msgstr ""
 
-#: ajax/settings/app-settings.php:846
+#: ajax/settings/app-settings.php:851
 #, php-format
 msgid "Using `%s' as name of the sender identity."
 msgstr ""
 
-#: ajax/settings/app-settings.php:865
+#: ajax/settings/app-settings.php:870
 #, php-format
 msgid "Using `%s' as sender email-address."
 msgstr ""
 
-#: ajax/settings/app-settings.php:904
+#: ajax/settings/app-settings.php:909
 msgid ""
 "Table name is either not unique, or the table does not exist yet. Please "
 "create a project of this name manually."
 msgstr ""
 
-#: ajax/settings/app-settings.php:908
+#: ajax/settings/app-settings.php:913
 #, php-format
 msgid "Table-id %d."
 msgstr ""
 
-#: ajax/settings/app-settings.php:913
+#: ajax/settings/app-settings.php:918
 #, php-format
 msgid "Value for `%s' set to `%s'. %s"
 msgstr ""
 
-#: ajax/settings/app-settings.php:928
+#: ajax/settings/app-settings.php:933
 #, php-format
 msgid "Musician with id %d does not seem to exist"
 msgstr ""
 
-#: ajax/settings/app-settings.php:937
+#: ajax/settings/app-settings.php:942
 #, php-format
 msgid "Value for `%s' set to `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:1019
+#: ajax/settings/app-settings.php:1024
 msgid "Perhaps you meant"
 msgstr ""
 
-#: ajax/settings/app-settings.php:1026
+#: ajax/settings/app-settings.php:1031
 msgid "or"
 msgstr ""
 
-#: ajax/settings/app-settings.php:1112
+#: ajax/settings/app-settings.php:1117
 #, php-format
 msgid "Link for `%s' set to `%s'."
 msgstr ""
 
-#: ajax/settings/app-settings.php:1125
+#: ajax/settings/app-settings.php:1130
 #, php-format
 msgid "Unable to test link for `%s' without a link target."
 msgstr ""
 
-#: ajax/settings/app-settings.php:1131
+#: ajax/settings/app-settings.php:1136
 #, php-format
 msgid "New window or tab with `%s'?"
 msgstr ""
@@ -1909,70 +1909,70 @@ msgstr ""
 msgid "Please standby, the operation will take some time!"
 msgstr ""
 
-#: lib/config.php:616
+#: lib/config.php:661
 #, php-format
 msgid "Decryption of `%s`@`%s` failed"
 msgstr ""
 
-#: lib/config.php:620
+#: lib/config.php:665
 #, php-format
 msgid "Encryption of `%s`@`%s` failed"
 msgstr ""
 
-#: lib/config.php:626
+#: lib/config.php:671
 #, php-format
 msgid "Unable to update table data at index %s"
 msgstr ""
 
-#: lib/config.php:792
+#: lib/config.php:837
 msgid "birthday"
 msgstr ""
 
-#: lib/config.php:801
+#: lib/config.php:846
 msgid "no preference"
 msgstr ""
 
-#: lib/config.php:802
+#: lib/config.php:847
 msgid "German"
 msgstr ""
 
-#: lib/config.php:803
+#: lib/config.php:848
 msgid "English"
 msgstr ""
 
-#: lib/config.php:804
+#: lib/config.php:849
 msgid "French"
 msgstr ""
 
-#: lib/config.php:805
+#: lib/config.php:850
 msgid "Spanish"
 msgstr ""
 
-#: lib/config.php:806
+#: lib/config.php:851
 msgid "Portuguese"
 msgstr ""
 
-#: lib/config.php:807
+#: lib/config.php:852
 msgid "Polish"
 msgstr ""
 
-#: lib/config.php:808
+#: lib/config.php:853
 msgid "Russian"
 msgstr ""
 
-#: lib/config.php:809
+#: lib/config.php:854
 msgid "Chinese"
 msgstr ""
 
-#: lib/config.php:810
+#: lib/config.php:855
 msgid "Japaneese"
 msgstr ""
 
-#: lib/config.php:811
+#: lib/config.php:856
 msgid "Korean"
 msgstr ""
 
-#: lib/config.php:831
+#: lib/config.php:876
 #, php-format
 msgid "Unknown Tooltip for key `%s' requested."
 msgstr ""
@@ -2219,128 +2219,128 @@ msgstr ""
 msgid "Invalid argument value: `%s'"
 msgstr ""
 
-#: lib/functions.php:712
+#: lib/functions.php:718
 msgid "Export Table"
 msgstr ""
 
-#: lib/functions.php:720
+#: lib/functions.php:726
 msgid "Excel Export"
 msgstr ""
 
-#: lib/functions.php:723
+#: lib/functions.php:729
 msgid "HTML/Spreadsheet"
 msgstr ""
 
-#: lib/functions.php:726
+#: lib/functions.php:732
 msgid "CSV Export"
 msgstr ""
 
-#: lib/functions.php:729
+#: lib/functions.php:735
 msgid "HTML Export"
 msgstr ""
 
-#: lib/functions.php:944
+#: lib/functions.php:950
 msgid "Error: Unknonwn Button Type"
 msgstr ""
 
-#: lib/functions.php:964
+#: lib/functions.php:970
 msgid "View all Projects"
 msgstr ""
 
-#: lib/functions.php:965
+#: lib/functions.php:971
 msgid "Overview over all known projects (start-page)."
 msgstr ""
 
-#: lib/functions.php:976
+#: lib/functions.php:982
 msgid "Display all Musicians"
 msgstr ""
 
-#: lib/functions.php:977
+#: lib/functions.php:983
 msgid ""
 "Display all musicians stored in the data-base, with detailed facilities for "
 "filtering and sorting."
 msgstr ""
 
-#: lib/functions.php:988
+#: lib/functions.php:994
 msgid ""
 "Mass-email form, use with care. Mass-emails will be logged. Recipients will "
 "be specified by the Bcc: field in the header, so the recipients are "
 "undisclosed to each other."
 msgstr ""
 
-#: lib/functions.php:1001
+#: lib/functions.php:1007
 msgid "Email History"
 msgstr ""
 
-#: lib/functions.php:1002
+#: lib/functions.php:1008
 msgid "Display all emails sent by our mass-email form."
 msgstr ""
 
-#: lib/functions.php:1020
+#: lib/functions.php:1026
 msgid "The currently active project."
 msgstr ""
 
-#: lib/functions.php:1035 lib/projects.php:794
+#: lib/functions.php:1041 lib/projects.php:794
 msgid "Instrumentation"
 msgstr ""
 
-#: lib/functions.php:1036
+#: lib/functions.php:1042
 msgid ""
 "Detailed display of all registered musicians for the selected project. The "
 "table will allow for modification of personal data like email, phone, "
 "address etc."
 msgstr ""
 
-#: lib/functions.php:1049 lib/project-instruments.php:385
+#: lib/functions.php:1055 lib/project-instruments.php:385
 msgid "Add Instruments"
 msgstr ""
 
-#: lib/functions.php:1050
+#: lib/functions.php:1056
 msgid ""
 "Display the list of instruments known by the data-base, possibly add new "
 "ones as needed."
 msgstr ""
 
-#: lib/functions.php:1063 lib/project-instruments.php:69 lib/projects.php:799
+#: lib/functions.php:1069 lib/project-instruments.php:69 lib/projects.php:799
 #: lib/projects.php:1051
 msgid "Instrumentation Numbers"
 msgstr ""
 
-#: lib/functions.php:1064 lib/tooltips.php:394
+#: lib/functions.php:1070 lib/tooltips.php:394
 msgid ""
 "Display the desired instrumentaion numbers, i.e. how many musicians are "
 "already registered for each instrument group and how many are finally needed."
 msgstr ""
 
-#: lib/functions.php:1077 lib/functions.php:1115 lib/projects.php:835
+#: lib/functions.php:1083 lib/functions.php:1121 lib/projects.php:835
 msgid "Debit Mandates"
 msgstr ""
 
-#: lib/functions.php:1078
+#: lib/functions.php:1084
 msgid "Display a table with the SEPA debit mandates related to the project."
 msgstr ""
 
-#: lib/functions.php:1091
+#: lib/functions.php:1097
 msgid "Insurances"
 msgstr ""
 
-#: lib/functions.php:1092
+#: lib/functions.php:1098
 msgid ""
 "Display a table with an overview about the current state of the member's "
 "instrument insurances."
 msgstr ""
 
-#: lib/functions.php:1103
+#: lib/functions.php:1109
 msgid "Insurance Rates"
 msgstr ""
 
-#: lib/functions.php:1104
+#: lib/functions.php:1110
 msgid ""
 "Display a table with the insurance rates for the individual instrument "
 "insurances."
 msgstr ""
 
-#: lib/functions.php:1116
+#: lib/functions.php:1122
 msgid "Display a table with an overview over all SEPA debit mandates."
 msgstr ""
 
@@ -2473,20 +2473,20 @@ msgstr ""
 msgid "Sub-totals (excluding taxes)"
 msgstr ""
 
-#: lib/instrument-insurance.php:853
+#: lib/instrument-insurance.php:870
 msgid "Total amount excluding taxes:"
 msgstr ""
 
-#: lib/instrument-insurance.php:857
+#: lib/instrument-insurance.php:874
 #, php-format
 msgid "%0.2f %% insurance taxes:"
 msgstr ""
 
-#: lib/instrument-insurance.php:861
+#: lib/instrument-insurance.php:878
 msgid "Total amount to pay:"
 msgstr ""
 
-#: lib/instrument-insurance.php:871
+#: lib/instrument-insurance.php:888
 msgid ""
 "You have granted us a debit-mandate. The total amount due will be debited "
 "from your bank-account, no further action from your side is required. We "
@@ -2494,15 +2494,15 @@ msgid ""
 "advance of the bank transaction."
 msgstr ""
 
-#: lib/instrument-insurance.php:878 lib/instrument-insurance.php:880
+#: lib/instrument-insurance.php:895 lib/instrument-insurance.php:897
 msgid "Best wishes,"
 msgstr ""
 
-#: lib/instrument-insurance.php:886
+#: lib/instrument-insurance.php:903
 msgid "Treasurer"
 msgstr ""
 
-#: lib/instrument-insurance.php:952
+#: lib/instrument-insurance.php:969
 #, php-format
 msgid "Invalid broker/geographical-scope combination: %s - %s"
 msgstr ""
@@ -2704,11 +2704,11 @@ msgid ""
 "given context."
 msgstr ""
 
-#: lib/pdfletter.php:103 lib/pdfletter.php:104
+#: lib/pdfletter.php:114 lib/pdfletter.php:115
 msgid "page"
 msgstr ""
 
-#: lib/pdfletter.php:103 lib/pdfletter.php:104
+#: lib/pdfletter.php:114 lib/pdfletter.php:115
 msgid "of"
 msgstr ""
 
@@ -3856,7 +3856,7 @@ msgid "Current Key"
 msgstr ""
 
 #: templates/app-settings.php:47 templates/app-settings.php:50
-#: templates/app-settings.php:82 templates/email-settings.php:73
+#: templates/app-settings.php:83 templates/email-settings.php:73
 #: templates/settings.php:106 templates/settings.php:109
 #: templates/share-settings.php:46
 msgid "show"
@@ -3866,74 +3866,82 @@ msgstr ""
 msgid "New Key"
 msgstr ""
 
+#: templates/app-settings.php:51 templates/share-settings.php:47
+msgid "Generate"
+msgstr ""
+
 #: templates/app-settings.php:51
+msgid "Generate a random encryption key"
+msgstr ""
+
+#: templates/app-settings.php:52
 msgid "Change Encryption Key"
 msgstr ""
 
-#: templates/app-settings.php:53
+#: templates/app-settings.php:54
 msgid "The encryption key was changed"
 msgstr ""
 
-#: templates/app-settings.php:54
+#: templates/app-settings.php:55
 msgid "Unable to change the encryption key"
 msgstr ""
 
-#: templates/app-settings.php:55
+#: templates/app-settings.php:56
 msgid "Data will be stored unencrypted"
 msgstr ""
 
-#: templates/app-settings.php:56
+#: templates/app-settings.php:57
 msgid "The keys are the same and remain unchanged."
 msgstr ""
 
-#: templates/app-settings.php:57
+#: templates/app-settings.php:58
 msgid "Please standby, this action needs some seconds."
 msgstr ""
 
-#: templates/app-settings.php:61
+#: templates/app-settings.php:62
 msgid "Distribute Encryption Key"
 msgstr ""
 
-#: templates/app-settings.php:61
+#: templates/app-settings.php:62
 msgid ""
 "Insert the data-base encryption key into the user preferences of all users "
 "belonging to the user group. The data-base key will be encrypted by the "
 "respective user's public key."
 msgstr ""
 
-#: templates/app-settings.php:67
+#: templates/app-settings.php:68
 msgid "Database settings"
 msgstr ""
 
-#: templates/app-settings.php:68
+#: templates/app-settings.php:69
 msgid "Server"
 msgstr ""
 
-#: templates/app-settings.php:69
+#: templates/app-settings.php:70
 msgid "Database Server"
 msgstr ""
 
-#: templates/app-settings.php:71
+#: templates/app-settings.php:72
 msgid "Database"
 msgstr ""
 
-#: templates/app-settings.php:72
+#: templates/app-settings.php:73
 msgid "Database Name"
 msgstr ""
 
-#: templates/app-settings.php:74
+#: templates/app-settings.php:75
 msgid "User"
 msgstr ""
 
-#: templates/app-settings.php:75
+#: templates/app-settings.php:76
 msgid "Database User"
 msgstr ""
 
-#: templates/app-settings.php:80 templates/email-settings.php:71
+#: templates/app-settings.php:81 templates/email-settings.php:71
 msgid "New Password"
 msgstr ""
 
-#: templates/app-settings.php:83
+#: templates/app-settings.php:84
 msgid "Test Database Password"
 msgstr ""
 
@@ -5271,10 +5279,6 @@ msgstr ""
 
 #: templates/share-settings.php:44
 msgid "Share-Password"
-msgstr ""
-
-#: templates/share-settings.php:47
-msgid "Generate"
 msgstr ""
 
 #: templates/share-settings.php:53
