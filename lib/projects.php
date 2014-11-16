@@ -2368,7 +2368,7 @@ project without a flyer first.");
         $page .= "  * [[".self::projectWikiLink($name)."|".$bareName."]]\n";
       }
 
-      $pagename = $orchestra.":projekte:projekte";
+      $pagename = self::projectWikiLink('projekte');
 
       $wikiLocation = \OCP\Config::GetAppValue("dokuwikiembed", 'wikilocation', '');
       $dwembed = new \DWEMBED\App($wikiLocation);
