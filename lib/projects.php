@@ -579,6 +579,9 @@ a comma.'));
       // functionality and we have a long-ranging backup.
       self::removeProjectFolder($oldvals);
 
+      // Regenerate the TOC page in the wiki.
+      self::generateWikiOverview();
+
       // Delete the page template from the public web-space. However,
       // here we only move it to the trashbin.
       $webPages = self::fetchProjectWebPages($pme->rec, $pme->dbh);
@@ -2365,7 +2368,7 @@ project without a flyer first.");
         $page .= "  * [[".self::projectWikiLink($name)."|".$bareName."]]\n";
       }
 
-      $pagename = $orchestra.":projekte";
+      $pagename = $orchestra.":projekte:projekte";
 
       $wikiLocation = \OCP\Config::GetAppValue("dokuwikiembed", 'wikilocation', '');
       $dwembed = new \DWEMBED\App($wikiLocation);
