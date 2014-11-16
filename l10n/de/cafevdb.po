@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-16 12:49+0100\n"
-"PO-Revision-Date: 2014-11-16 12:51+0100\n"
+"POT-Creation-Date: 2014-11-16 13:15+0100\n"
+"PO-Revision-Date: 2014-11-16 13:22+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -223,13 +223,17 @@ msgstr "Ungültige Operation."
 msgid "Cannot access calendar: `%s'"
 msgstr "Auf den Kalender kann nicht zugegriffen werden: `%s'"
 
-#: ajax/expertmode/clearoutput.php:11 templates/expertmode.php:73
+#: ajax/expertmode/clearoutput.php:11 templates/expertmode.php:78
 msgid "empty"
 msgstr "leer"
 
 #: ajax/expertmode/example.php:11
 msgid "Hello World!"
 msgstr "Also, `Hello World!' muss man nun wirklich nicht übersetzen ..."
+
+#: ajax/expertmode/makewikiprojecttoc.php:32
+msgid "Recreated the project list in the wiki."
+msgstr "Wiki-Projekt-Übersicht wurde aktualisiert."
 
 #: ajax/expertmode/syncevents.php:70
 #, php-format
@@ -2923,7 +2927,7 @@ msgid "Actions"
 msgstr "Aktionen"
 
 #: lib/project-instruments.php:261 lib/project-instruments.php:518
-#: templates/expertmode.php:51
+#: templates/expertmode.php:56
 msgid "Adjust Instruments"
 msgstr "Instrumente abgleichen"
 
@@ -4763,7 +4767,7 @@ msgstr "ist nicht eingestellt"
 msgid "Edit an event"
 msgstr "Ein Ereignis bearbeiten"
 
-#: templates/devel-settings.php:29 templates/expertmode.php:76
+#: templates/devel-settings.php:29 templates/expertmode.php:81
 msgid "Links"
 msgstr "Web-Links"
 
@@ -5006,10 +5010,21 @@ msgstr ""
 "zu erzeugen."
 
 #: templates/expertmode.php:46
+msgid "Recreate Wiki Project TOC"
+msgstr "Projekt-Übersicht im Wiki erzeugen"
+
+#: templates/expertmode.php:47
+msgid "Recreate table of contents for the project pages in the wiki"
+msgstr ""
+"Erzeuge oder aktualisiere die Projekt-Übersicht im Wiki; eine Seite\n"
+"mit Links zu den jeweiligen Projekt-Seiten, sortiert nach dem Jahr, in\n"
+"dem das Projekt stattfand."
+
+#: templates/expertmode.php:51
 msgid "Check Instruments"
 msgstr "Instrumenten-Konsistenztest"
 
-#: templates/expertmode.php:47
+#: templates/expertmode.php:52
 msgid ""
 "Check whether the instrumentation numbers table and the musicians table "
 "mention the same instruments"
@@ -5017,7 +5032,7 @@ msgstr ""
 "Testen, ob die in den verschiedenen Tabellen der Datenbank verwendeten "
 "Instrumente auch tatsächlich in allen Tabellen angelegt sind."
 
-#: templates/expertmode.php:52
+#: templates/expertmode.php:57
 msgid ""
 "Make sure the instruments table contains at least any instrument played by "
 "any musician."
@@ -5026,35 +5041,35 @@ msgstr ""
 "verwendeten Instrumente auch tatsächlich in allen Tabellen angelegt sind "
 "(Vorsicht: klappt derzeit nicht)."
 
-#: templates/expertmode.php:56
+#: templates/expertmode.php:61
 msgid "Example"
 msgstr "Beispiel"
 
-#: templates/expertmode.php:57
+#: templates/expertmode.php:62
 msgid "Example Do-Nothing Button"
 msgstr "Beispiel-Knopf ohne Wirkung"
 
-#: templates/expertmode.php:62
+#: templates/expertmode.php:67
 msgid "Predefined data-base operations"
-msgstr "Vordefiniert Datenbank-Operationen"
+msgstr "Vordefinierte Datenbank-Operationen"
 
-#: templates/expertmode.php:64
+#: templates/expertmode.php:69
 msgid "Operation generated Response"
 msgstr "Rückmeldungen der Operationen"
 
-#: templates/expertmode.php:68
+#: templates/expertmode.php:73
 msgid "Clear Output"
 msgstr "Ausgabe Löschen"
 
-#: templates/expertmode.php:70
+#: templates/expertmode.php:75
 msgid "Remove output, if any is present."
 msgstr "Eventuell vorhande Nachrichten vorangegangener Operationen entfernen."
 
-#: templates/expertmode.php:78
+#: templates/expertmode.php:83
 msgid "Database musicians/projects"
 msgstr "Datenbank Musiker/Projekte"
 
-#: templates/expertmode.php:81
+#: templates/expertmode.php:86
 msgid ""
 "Open the login-window to the data-base back-bone. Although this is `expert "
 "mode' you will fall in love with the `export' facilities of the data-base "
@@ -5064,20 +5079,20 @@ msgstr ""
 "`Experten-Operationen' betietelt, aber Sie werden dennoch die `Export'-"
 "Funktionen des Datenbank-Backends schätzen. Versuchen Sie es doch einmal!"
 
-#: templates/expertmode.php:84
+#: templates/expertmode.php:89
 msgid "Database Owncloud"
 msgstr "Owncloud Datenbank"
 
-#: templates/expertmode.php:87
+#: templates/expertmode.php:92
 msgid ""
 "Open the login-window to the data-base back-bone for the Owncloud WebUI."
 msgstr "Datenbank-Administration für das Owncloud-WebUI."
 
-#: templates/expertmode.php:90
+#: templates/expertmode.php:95
 msgid "Source-Code Archive"
 msgstr "Quell-Code-Archiv"
 
-#: templates/expertmode.php:93
+#: templates/expertmode.php:98
 msgid ""
 "View the git-repository holding all revision of this entire mess. Mostly "
 "useful for web-developers."
@@ -5085,22 +5100,22 @@ msgstr ""
 "Anzeige des Git-Archivs für den Quellcode der Web-Applikation. Eigentlich "
 "nur für Entwickler nützlich."
 
-#: templates/expertmode.php:96
+#: templates/expertmode.php:101
 msgid "Source-Code Documentation"
 msgstr "Quell-Code Dokumentation"
 
-#: templates/expertmode.php:99
+#: templates/expertmode.php:104
 msgid ""
 "Internal documentation of the `CAFEV-App', mostly useful for web-developers."
 msgstr ""
 "Interne Dokumentation des Quell-Codes der Web-Applikation, eigentlich nur "
 "für Entwickler nützlich."
 
-#: templates/expertmode.php:102
+#: templates/expertmode.php:107
 msgid "Owncloud Developer Documentation"
 msgstr "Owncloud Entwickler-Dokumentation."
 
-#: templates/expertmode.php:105
+#: templates/expertmode.php:110
 msgid "Owncloud Developer Manual, mostly useful for web-developers."
 msgstr ""
 "Owncloud Entwickler Anleitungen, eigentlich nur für Entwickler nützlich."

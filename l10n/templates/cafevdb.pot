@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-16 12:51+0100\n"
+"POT-Creation-Date: 2014-11-16 13:22+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -214,12 +214,16 @@ msgstr ""
 msgid "Cannot access calendar: `%s'"
 msgstr ""
 
-#: ajax/expertmode/clearoutput.php:11 templates/expertmode.php:73
+#: ajax/expertmode/clearoutput.php:11 templates/expertmode.php:78
 msgid "empty"
 msgstr ""
 
 #: ajax/expertmode/example.php:11
 msgid "Hello World!"
+msgstr ""
+
+#: ajax/expertmode/makewikiprojecttoc.php:32
+msgid "Recreated the project list in the wiki."
 msgstr ""
 
 #: ajax/expertmode/syncevents.php:70
@@ -2735,7 +2739,7 @@ msgid "Actions"
 msgstr ""
 
 #: lib/project-instruments.php:261 lib/project-instruments.php:518
-#: templates/expertmode.php:51
+#: templates/expertmode.php:56
 msgid "Adjust Instruments"
 msgstr ""
 
@@ -4158,7 +4162,7 @@ msgstr ""
 msgid "Edit an event"
 msgstr ""
 
-#: templates/devel-settings.php:29 templates/expertmode.php:76
+#: templates/devel-settings.php:29 templates/expertmode.php:81
 msgid "Links"
 msgstr ""
 
@@ -4382,89 +4386,97 @@ msgid "Recreate the `Instrumentation' hybrid-table for each project"
 msgstr ""
 
 #: templates/expertmode.php:46
-msgid "Check Instruments"
+msgid "Recreate Wiki Project TOC"
 msgstr ""
 
 #: templates/expertmode.php:47
+msgid "Recreate table of contents for the project pages in the wiki"
+msgstr ""
+
+#: templates/expertmode.php:51
+msgid "Check Instruments"
+msgstr ""
+
+#: templates/expertmode.php:52
 msgid ""
 "Check whether the instrumentation numbers table and the musicians table "
 "mention the same instruments"
 msgstr ""
 
-#: templates/expertmode.php:52
+#: templates/expertmode.php:57
 msgid ""
 "Make sure the instruments table contains at least any instrument played by "
 "any musician."
 msgstr ""
 
-#: templates/expertmode.php:56
+#: templates/expertmode.php:61
 msgid "Example"
 msgstr ""
 
-#: templates/expertmode.php:57
+#: templates/expertmode.php:62
 msgid "Example Do-Nothing Button"
 msgstr ""
 
-#: templates/expertmode.php:62
+#: templates/expertmode.php:67
 msgid "Predefined data-base operations"
 msgstr ""
 
-#: templates/expertmode.php:64
+#: templates/expertmode.php:69
 msgid "Operation generated Response"
 msgstr ""
 
-#: templates/expertmode.php:68
+#: templates/expertmode.php:73
 msgid "Clear Output"
 msgstr ""
 
-#: templates/expertmode.php:70
+#: templates/expertmode.php:75
 msgid "Remove output, if any is present."
 msgstr ""
 
-#: templates/expertmode.php:78
+#: templates/expertmode.php:83
 msgid "Database musicians/projects"
 msgstr ""
 
-#: templates/expertmode.php:81
+#: templates/expertmode.php:86
 msgid ""
 "Open the login-window to the data-base back-bone. Although this is `expert "
 "mode' you will fall in love with the `export' facilities of the data-base "
 "back-bone. TRY IT OUT! DO IT!"
 msgstr ""
 
-#: templates/expertmode.php:84
+#: templates/expertmode.php:89
 msgid "Database Owncloud"
 msgstr ""
 
-#: templates/expertmode.php:87
+#: templates/expertmode.php:92
 msgid ""
 "Open the login-window to the data-base back-bone for the Owncloud WebUI."
 msgstr ""
 
-#: templates/expertmode.php:90
+#: templates/expertmode.php:95
 msgid "Source-Code Archive"
 msgstr ""
 
-#: templates/expertmode.php:93
+#: templates/expertmode.php:98
 msgid ""
 "View the git-repository holding all revision of this entire mess. Mostly "
 "useful for web-developers."
 msgstr ""
 
-#: templates/expertmode.php:96
+#: templates/expertmode.php:101
 msgid "Source-Code Documentation"
 msgstr ""
 
-#: templates/expertmode.php:99
+#: templates/expertmode.php:104
 msgid ""
 "Internal documentation of the `CAFEV-App', mostly useful for web-developers."
 msgstr ""
 
-#: templates/expertmode.php:102
+#: templates/expertmode.php:107
 msgid "Owncloud Developer Documentation"
 msgstr ""
 
-#: templates/expertmode.php:105
+#: templates/expertmode.php:110
 msgid "Owncloud Developer Manual, mostly useful for web-developers."
 msgstr ""
 
