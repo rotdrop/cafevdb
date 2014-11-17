@@ -260,8 +260,15 @@ make sure that the musicians are also automatically added to the
         );
     }
 
+    if ($this->addOperation()) {
+      $addCSS = 'add-musician';
+    } else {
+      $addCSS = '';
+    }
+    
     $opts['fdd']['Name'] = array(
       'name'     => L::t('Surname'),
+      'css'      => array('postfix' => ' musician-name'.' '.$addCSS),
       'select'   => 'T',
       'maxlen'   => 128,
       'sort'     => true
@@ -269,6 +276,7 @@ make sure that the musicians are also automatically added to the
 
     $opts['fdd']['Vorname'] = array(
       'name'     => L::t('Forename'),
+      'css'      => array('postfix' => ' musician-name'.' '.$addCSS),
       'select'   => 'T',
       'maxlen'   => 128,
       'sort'     => true
@@ -860,7 +868,32 @@ __EOT__;
                  'lastName' => (isset($row['Name']) && $row['Name'] != '') ? $row['Name'] : 'X',
                  'email' => (isset($row['Email']) && $row['Email'] != '') ? $row['Email'] : 'X');
   }
-  
+
+  /** Fetch the entire mess of duplicate musicians by name.
+   */
+  public static function musiciansByName($firstName, $surName, $handle = false)
+  {
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
+    $query = "SELECT * FROM `Musiker` WHERE `Name` = '".$surName."' AND `Vorname` = '".$firstName."'";
+    $result = mySQL::query($query, $handle);
+
+    $musicians = array();
+    while ($row = mySQL::fetch($result)) {
+      $musicians[] = $row;
+    }
+
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $musicians;
+  }
+
 };
 
 } // namespace CAFEVDB

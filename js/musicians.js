@@ -80,6 +80,32 @@ var CAFEVDB = CAFEVDB || {};
       container = $('body');
     }
 
+    container.find('input.musician-name.add-musician').
+      off('blur').
+      on('blur', function(event) {
+      event.stopImmediatePropagation();
+      
+      var form = container.find('form.pme-form');
+      $.post(OC.filePath('cafevdb', 'ajax/musicians', 'validate.php'),
+             form.serialize(),
+             function (data) {
+               if (!CAFEVDB.ajaxErrorHandler(data, [ 'message' ])) {
+                 return false;
+               }
+               if (data.data.message != '') {
+                 container.find('input.musician-name').prop('disabled', true);
+                 OC.dialogs.alert(data.data.message,
+                                  t('cafevdb', 'Please play fair!'),
+                                  function() {
+                                    container.find('input.musician-name').prop('disabled', false);
+                                  }, true, true);
+               }
+               return false;
+             });
+
+      return false;
+    });
+
     container.find('input.register-musician').off('click').
       on('click', function(event) {
 
