@@ -21,6 +21,12 @@
 
 $(document).ready(function() {
 
+    $.widget("ui.dialog", $.ui.dialog, {
+        _allowInteraction: function(event) {
+            return !!$(event.target).closest(".mce-container").length || this._super( event );
+        }
+    });
+
     // Any pending form-submit which has not been caught otherwise is
     // here intercepted and redirected to the page-loader in order to
     // reduce load-time and to record usable history information.
