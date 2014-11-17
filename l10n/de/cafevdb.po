@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-16 22:16+0100\n"
-"PO-Revision-Date: 2014-11-16 22:16+0100\n"
+"POT-Creation-Date: 2014-11-17 23:48+0100\n"
+"PO-Revision-Date: 2014-11-17 23:58+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -110,16 +110,18 @@ msgstr "Em@il Adresse(n) ungültig"
 #: ajax/email/recipients.php:140 ajax/finance/sepa-debit-export.php:217
 #: ajax/finance/sepa-debit-store.php:112
 #: ajax/insurance/instrument-insurance-export.php:171
-#: ajax/insurance/validate.php:265 ajax/page-loader.php:111
-#: ajax/projects/web-articles.php:182 ajax/settings/app-settings.php:1181
+#: ajax/insurance/validate.php:265 ajax/musicians/validate.php:97
+#: ajax/page-loader.php:111 ajax/projects/web-articles.php:182
+#: ajax/settings/app-settings.php:1181
 msgid "PHP Exception Caught"
 msgstr "PHP `Ausnahme' `gefangen'"
 
 #: ajax/email/composer.php:260 ajax/email/exporter.php:96
 #: ajax/email/recipients.php:144 ajax/finance/sepa-debit-store.php:116
 #: ajax/insurance/instrument-insurance-export.php:172
-#: ajax/insurance/validate.php:269 ajax/page-loader.php:115
-#: ajax/projects/web-articles.php:186 ajax/settings/app-settings.php:1185
+#: ajax/insurance/validate.php:269 ajax/musicians/validate.php:101
+#: ajax/page-loader.php:115 ajax/projects/web-articles.php:186
+#: ajax/settings/app-settings.php:1185
 #, php-format
 msgid ""
 "Error, caught an exception. Please copy the displayed text and send it by "
@@ -865,6 +867,27 @@ msgstr "Interner Fehler: unbekannte Anfrage."
 #: ajax/insurance/validate.php:239
 msgid "missing or wrong arguments"
 msgstr "fehlende oder unsinnige Parameter"
+
+#: ajax/musicians/validate.php:60
+msgid "Musician(s) with the same first and sur-name already exist:"
+msgstr "Musiker/Musikerinnen mit demselben Namen sind bereits eingetragen:"
+
+#: ajax/musicians/validate.php:65
+msgid ""
+"Please do not add duplicates to the data-base. If you do, then others\n"
+"will have to clean up after you. This would just not be fair :(\n"
+"\n"
+"Please continue if you know what you are doing. Please use the seach\n"
+"facilities before adding new musicians. Please do not act\n"
+"blindly. Thanks."
+msgstr ""
+"Bitte füge keine Duplikate zur Datenbank hinzu. Andernfalls müssen\n"
+"andere das Chaos hinter Dir aufräumen. Das wäre wirklich nicht sehr fair :(\n"
+"\n"
+"Bitte die Meldung einfach ignorieren, falls Du weißt, was Du da tust.\n"
+"Bitte benutze i.d.R. zunächst die Suchfunktionen der Datenbank bevor Du\n"
+"potentiell neue Musiker hinzufügst. Bitte nicht hastig und blind agieren.\n"
+"Danke."
 
 #: ajax/pme/pme-table.php:76
 msgid "No class name submitted."
@@ -1891,6 +1914,10 @@ msgstr "Irgendein Fehler"
 msgid "Caught a PHP Exception"
 msgstr "PHP `Ausnahme' `gefangen'"
 
+#: js/musicians.js:98
+msgid "Please play fair!"
+msgstr "Bitte um Fair-Play!"
+
 # #Spalten
 #: js/pme.js:791
 msgid "#columns"
@@ -2155,19 +2182,19 @@ msgstr "Musiker-Id"
 msgid "All Instruments"
 msgstr "Alle Instrumente"
 
-#: lib/detailed-instrumentation.php:319 lib/musicians.php:289
+#: lib/detailed-instrumentation.php:319 lib/musicians.php:297
 msgid "Member Status"
 msgstr "Status"
 
-#: lib/detailed-instrumentation.php:400 lib/musicians.php:385
+#: lib/detailed-instrumentation.php:400 lib/musicians.php:393
 msgid "Remarks"
 msgstr "Bemerkungen"
 
-#: lib/detailed-instrumentation.php:416 lib/musicians.php:301
+#: lib/detailed-instrumentation.php:416 lib/musicians.php:309
 msgid "no projects yet"
 msgstr "Ohne Projekt"
 
-#: lib/detailed-instrumentation.php:434 lib/musicians.php:329
+#: lib/detailed-instrumentation.php:434 lib/musicians.php:337
 msgid "Projects"
 msgstr "Projekte"
 
@@ -2179,11 +2206,11 @@ msgstr "Land"
 msgid "General Remarks"
 msgstr "Allgemeine Bemerkungen"
 
-#: lib/detailed-instrumentation.php:527 lib/musicians.php:420
+#: lib/detailed-instrumentation.php:527 lib/musicians.php:428
 msgid "Photo"
 msgstr "Foto"
 
-#: lib/detailed-instrumentation.php:541 lib/musicians.php:434
+#: lib/detailed-instrumentation.php:541 lib/musicians.php:442
 msgid "Last Updated"
 msgstr "Letzte Aktualisierung"
 
@@ -2828,28 +2855,28 @@ msgstr "Zu %s"
 msgid "Add Musicians"
 msgstr "Musiker hinzufügen"
 
-#: lib/musicians.php:264
+#: lib/musicians.php:270
 msgid "Surname"
 msgstr "Nachname"
 
-#: lib/musicians.php:271
+#: lib/musicians.php:278
 msgid "Forename"
 msgstr "Vorname"
 
-#: lib/musicians.php:278
+#: lib/musicians.php:286
 msgid "Instruments"
 msgstr "Instrumente"
 
-#: lib/musicians.php:404 lib/sepa-debit-mandates.php:415
+#: lib/musicians.php:412 lib/sepa-debit-mandates.php:415
 msgid "Instrument Insurance"
 msgstr "Instrumentenversicherung"
 
-#: lib/musicians.php:540
+#: lib/musicians.php:548
 #, php-format
 msgid "Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;"
 msgstr "Gesamtsumme %02.02f &euro;, Jahresbeitrag %02.02f &euro;"
 
-#: lib/musicians.php:564
+#: lib/musicians.php:572
 msgid ""
 "Portraits or Avatars can only be added to an existing musician's profile; "
 "please add the new musician without protrait image first."
@@ -2857,28 +2884,28 @@ msgstr ""
 "Portraits oder Avatar-Bilder können nur zu existierenden Musiker-Daten "
 "hinzugefügt werden; bitte zuerst den Musiker ohne Bild hinzufügen."
 
-#: lib/musicians.php:578
+#: lib/musicians.php:586
 #, php-format
 msgid "Drop photo to upload (max %s)"
 msgstr "Foto ablegen zum Hochladen (max %s)"
 
-#: lib/musicians.php:581
+#: lib/musicians.php:589
 msgid "Delete current photo"
 msgstr "Aktuelles Foto löschen"
 
-#: lib/musicians.php:582
+#: lib/musicians.php:590
 msgid "Edit current photo"
 msgstr "Aktuelles Foto editieren"
 
-#: lib/musicians.php:583
+#: lib/musicians.php:591
 msgid "Upload new photo"
 msgstr "Neues Foto hochladen"
 
-#: lib/musicians.php:584
+#: lib/musicians.php:592
 msgid "Select photo from ownCloud"
 msgstr "Foto aus der `Cloud' auswählen"
 
-#: lib/musicians.php:592
+#: lib/musicians.php:600
 msgid ""
 "Internal error, don't know what to do concerning portrait images in the "
 "given context."

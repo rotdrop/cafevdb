@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-16 22:16+0100\n"
+"POT-Creation-Date: 2014-11-17 23:58+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -107,16 +107,18 @@ msgstr ""
 #: ajax/email/recipients.php:140 ajax/finance/sepa-debit-export.php:217
 #: ajax/finance/sepa-debit-store.php:112
 #: ajax/insurance/instrument-insurance-export.php:171
-#: ajax/insurance/validate.php:265 ajax/page-loader.php:111
-#: ajax/projects/web-articles.php:182 ajax/settings/app-settings.php:1181
+#: ajax/insurance/validate.php:265 ajax/musicians/validate.php:97
+#: ajax/page-loader.php:111 ajax/projects/web-articles.php:182
+#: ajax/settings/app-settings.php:1181
 msgid "PHP Exception Caught"
 msgstr ""
 
 #: ajax/email/composer.php:260 ajax/email/exporter.php:96
 #: ajax/email/recipients.php:144 ajax/finance/sepa-debit-store.php:116
 #: ajax/insurance/instrument-insurance-export.php:172
-#: ajax/insurance/validate.php:269 ajax/page-loader.php:115
-#: ajax/projects/web-articles.php:186 ajax/settings/app-settings.php:1185
+#: ajax/insurance/validate.php:269 ajax/musicians/validate.php:101
+#: ajax/page-loader.php:115 ajax/projects/web-articles.php:186
+#: ajax/settings/app-settings.php:1185
 #, php-format
 msgid ""
 "Error, caught an exception. Please copy the displayed text and send it by "
@@ -824,6 +826,20 @@ msgstr ""
 
 #: ajax/insurance/validate.php:239
 msgid "missing or wrong arguments"
+msgstr ""
+
+#: ajax/musicians/validate.php:60
+msgid "Musician(s) with the same first and sur-name already exist:"
+msgstr ""
+
+#: ajax/musicians/validate.php:65
+msgid ""
+"Please do not add duplicates to the data-base. If you do, then others\n"
+"will have to clean up after you. This would just not be fair :(\n"
+"\n"
+"Please continue if you know what you are doing. Please use the seach\n"
+"facilities before adding new musicians. Please do not act\n"
+"blindly. Thanks."
 msgstr ""
 
 #: ajax/pme/pme-table.php:76
@@ -1774,6 +1790,10 @@ msgstr ""
 msgid "Caught a PHP Exception"
 msgstr ""
 
+#: js/musicians.js:98
+msgid "Please play fair!"
+msgstr ""
+
 #: js/pme.js:791
 msgid "#columns"
 msgstr ""
@@ -2023,19 +2043,19 @@ msgstr ""
 msgid "All Instruments"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:319 lib/musicians.php:289
+#: lib/detailed-instrumentation.php:319 lib/musicians.php:297
 msgid "Member Status"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:400 lib/musicians.php:385
+#: lib/detailed-instrumentation.php:400 lib/musicians.php:393
 msgid "Remarks"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:416 lib/musicians.php:301
+#: lib/detailed-instrumentation.php:416 lib/musicians.php:309
 msgid "no projects yet"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:434 lib/musicians.php:329
+#: lib/detailed-instrumentation.php:434 lib/musicians.php:337
 msgid "Projects"
 msgstr ""
 
@@ -2047,11 +2067,11 @@ msgstr ""
 msgid "General Remarks"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:527 lib/musicians.php:420
+#: lib/detailed-instrumentation.php:527 lib/musicians.php:428
 msgid "Photo"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:541 lib/musicians.php:434
+#: lib/detailed-instrumentation.php:541 lib/musicians.php:442
 msgid "Last Updated"
 msgstr ""
 
@@ -2650,55 +2670,55 @@ msgstr ""
 msgid "Add Musicians"
 msgstr ""
 
-#: lib/musicians.php:264
+#: lib/musicians.php:270
 msgid "Surname"
 msgstr ""
 
-#: lib/musicians.php:271
+#: lib/musicians.php:278
 msgid "Forename"
 msgstr ""
 
-#: lib/musicians.php:278
+#: lib/musicians.php:286
 msgid "Instruments"
 msgstr ""
 
-#: lib/musicians.php:404 lib/sepa-debit-mandates.php:415
+#: lib/musicians.php:412 lib/sepa-debit-mandates.php:415
 msgid "Instrument Insurance"
 msgstr ""
 
-#: lib/musicians.php:540
+#: lib/musicians.php:548
 #, php-format
 msgid "Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;"
 msgstr ""
 
-#: lib/musicians.php:564
+#: lib/musicians.php:572
 msgid ""
 "Portraits or Avatars can only be added to an existing musician's profile; "
 "please add the new musician without protrait image first."
 msgstr ""
 
-#: lib/musicians.php:578
+#: lib/musicians.php:586
 #, php-format
 msgid "Drop photo to upload (max %s)"
 msgstr ""
 
-#: lib/musicians.php:581
+#: lib/musicians.php:589
 msgid "Delete current photo"
 msgstr ""
 
-#: lib/musicians.php:582
+#: lib/musicians.php:590
 msgid "Edit current photo"
 msgstr ""
 
-#: lib/musicians.php:583
+#: lib/musicians.php:591
 msgid "Upload new photo"
 msgstr ""
 
-#: lib/musicians.php:584
+#: lib/musicians.php:592
 msgid "Select photo from ownCloud"
 msgstr ""
 
-#: lib/musicians.php:592
+#: lib/musicians.php:600
 msgid ""
 "Internal error, don't know what to do concerning portrait images in the "
 "given context."
