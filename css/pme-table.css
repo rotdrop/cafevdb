@@ -827,6 +827,7 @@ table.pme-main label.pme-filter-negate-label span {
 table.pme-main label.pme-filter-negate input[type=checkbox]:checked ~ span,
 table.pme-main label.pme-filter-negate-label input[type=checkbox]:checked ~ span {
   opacity:1.0;
+  background:url(../img/dontred.svg);
 }
 
 table.pme-main label.pme-filter-negate input[type=checkbox],
