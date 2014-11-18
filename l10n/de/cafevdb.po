@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-17 23:48+0100\n"
-"PO-Revision-Date: 2014-11-17 23:58+0100\n"
+"POT-Creation-Date: 2014-11-18 09:22+0100\n"
+"PO-Revision-Date: 2014-11-18 09:23+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -110,7 +110,7 @@ msgstr "Em@il Adresse(n) ungültig"
 #: ajax/email/recipients.php:140 ajax/finance/sepa-debit-export.php:217
 #: ajax/finance/sepa-debit-store.php:112
 #: ajax/insurance/instrument-insurance-export.php:171
-#: ajax/insurance/validate.php:265 ajax/musicians/validate.php:97
+#: ajax/insurance/validate.php:265 ajax/musicians/validate.php:96
 #: ajax/page-loader.php:111 ajax/projects/web-articles.php:182
 #: ajax/settings/app-settings.php:1181
 msgid "PHP Exception Caught"
@@ -119,7 +119,7 @@ msgstr "PHP `Ausnahme' `gefangen'"
 #: ajax/email/composer.php:260 ajax/email/exporter.php:96
 #: ajax/email/recipients.php:144 ajax/finance/sepa-debit-store.php:116
 #: ajax/insurance/instrument-insurance-export.php:172
-#: ajax/insurance/validate.php:269 ajax/musicians/validate.php:101
+#: ajax/insurance/validate.php:269 ajax/musicians/validate.php:100
 #: ajax/page-loader.php:115 ajax/projects/web-articles.php:186
 #: ajax/settings/app-settings.php:1185
 #, php-format
@@ -875,19 +875,17 @@ msgstr "Musiker/Musikerinnen mit demselben Namen sind bereits eingetragen:"
 #: ajax/musicians/validate.php:65
 msgid ""
 "Please do not add duplicates to the data-base. If you do, then others\n"
-"will have to clean up after you. This would just not be fair :(\n"
+"will have to clean up after you.\n"
 "\n"
 "Please continue if you know what you are doing. Please use the seach\n"
-"facilities before adding new musicians. Please do not act\n"
-"blindly. Thanks."
+"facilities before adding new musicians. Thanks."
 msgstr ""
 "Bitte füge keine Duplikate zur Datenbank hinzu. Andernfalls müssen\n"
-"andere das Chaos hinter Dir aufräumen. Das wäre wirklich nicht sehr fair :(\n"
+"andere das Chaos hinter Dir aufräumen.\n"
 "\n"
 "Bitte die Meldung einfach ignorieren, falls Du weißt, was Du da tust.\n"
 "Bitte benutze i.d.R. zunächst die Suchfunktionen der Datenbank bevor Du\n"
-"potentiell neue Musiker hinzufügst. Bitte nicht hastig und blind agieren.\n"
-"Danke."
+"potentiell neue Musiker hinzufügst. Danke."
 
 #: ajax/pme/pme-table.php:76
 msgid "No class name submitted."
@@ -1915,8 +1913,8 @@ msgid "Caught a PHP Exception"
 msgstr "PHP `Ausnahme' `gefangen'"
 
 #: js/musicians.js:98
-msgid "Please play fair!"
-msgstr "Bitte um Fair-Play!"
+msgid "Possible Duplicate!"
+msgstr "Doppelter Datenbankeintag?"
 
 # #Spalten
 #: js/pme.js:791
@@ -6111,6 +6109,9 @@ msgstr "PROJEKT"
 #: templates/share-settings.php:124
 msgid "Financial balance folder"
 msgstr "Finanz-Ordner"
+
+#~ msgid "Please play fair!"
+#~ msgstr "Bitte um Fair-Play!"
 
 #~ msgid "bank id"
 #~ msgstr "BLZ"

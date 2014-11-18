@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-17 23:58+0100\n"
+"POT-Creation-Date: 2014-11-18 09:23+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -107,7 +107,7 @@ msgstr ""
 #: ajax/email/recipients.php:140 ajax/finance/sepa-debit-export.php:217
 #: ajax/finance/sepa-debit-store.php:112
 #: ajax/insurance/instrument-insurance-export.php:171
-#: ajax/insurance/validate.php:265 ajax/musicians/validate.php:97
+#: ajax/insurance/validate.php:265 ajax/musicians/validate.php:96
 #: ajax/page-loader.php:111 ajax/projects/web-articles.php:182
 #: ajax/settings/app-settings.php:1181
 msgid "PHP Exception Caught"
@@ -116,7 +116,7 @@ msgstr ""
 #: ajax/email/composer.php:260 ajax/email/exporter.php:96
 #: ajax/email/recipients.php:144 ajax/finance/sepa-debit-store.php:116
 #: ajax/insurance/instrument-insurance-export.php:172
-#: ajax/insurance/validate.php:269 ajax/musicians/validate.php:101
+#: ajax/insurance/validate.php:269 ajax/musicians/validate.php:100
 #: ajax/page-loader.php:115 ajax/projects/web-articles.php:186
 #: ajax/settings/app-settings.php:1185
 #, php-format
@@ -835,11 +835,10 @@ msgstr ""
 #: ajax/musicians/validate.php:65
 msgid ""
 "Please do not add duplicates to the data-base. If you do, then others\n"
-"will have to clean up after you. This would just not be fair :(\n"
+"will have to clean up after you.\n"
 "\n"
 "Please continue if you know what you are doing. Please use the seach\n"
-"facilities before adding new musicians. Please do not act\n"
-"blindly. Thanks."
+"facilities before adding new musicians. Thanks."
 msgstr ""
 
 #: ajax/pme/pme-table.php:76
@@ -1791,7 +1790,7 @@ msgid "Caught a PHP Exception"
 msgstr ""
 
 #: js/musicians.js:98
-msgid "Please play fair!"
+msgid "Possible Duplicate!"
 msgstr ""
 
 #: js/pme.js:791
