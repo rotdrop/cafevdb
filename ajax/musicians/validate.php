@@ -63,11 +63,10 @@ namespace CAFEVDB {
         "\n".
         L::t(
 'Please do not add duplicates to the data-base. If you do, then others
-will have to clean up after you. This would just not be fair :(
+will have to clean up after you.
 
 Please continue if you know what you are doing. Please use the seach
-facilities before adding new musicians. Please do not act
-blindly. Thanks.');
+facilities before adding new musicians. Thanks.');
     }
 
     \OCP\JSON::success(

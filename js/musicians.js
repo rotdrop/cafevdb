@@ -95,7 +95,7 @@ var CAFEVDB = CAFEVDB || {};
                if (data.data.message != '') {
                  container.find('input.musician-name').prop('disabled', true);
                  OC.dialogs.alert(data.data.message,
-                                  t('cafevdb', 'Please play fair!'),
+                                  t('cafevdb', 'Possible Duplicate!'),
                                   function() {
                                     container.find('input.musician-name').prop('disabled', false);
                                   }, true, true);
