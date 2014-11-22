@@ -144,7 +144,7 @@ var CAFEVDB = CAFEVDB || {};
       resizable: false,
       buttons: [
         { text: t('cafevdb', 'Save'),
-          class: 'save',
+          'class': 'save',
           title: t('cafevdb', 'Save the new instrumentation and '+
                    'continue adjusting the instrumentation numbers. '+
                    'The input-form will reload and display the updated list of instruments.'),
@@ -195,7 +195,7 @@ var CAFEVDB = CAFEVDB || {};
           }
         },
         { text: t('cafevdb', 'Cancel'),
-          class: 'cancel',
+          'class': 'cancel',
           title: t('cafevdb',
                    'Discard the current choice of instruments and close the dialog. '+
                    'The instrumentation of the project will remain unchanged.'),
