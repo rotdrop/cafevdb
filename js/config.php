@@ -20,9 +20,13 @@ namespace CAFEVDB {
 
   $user = \OCP\USER::getUser();
 
-  $tooltips         = \OCP\Config::getUserValue($user, 'cafevdb', 'tooltips', '');
-  $language         = \OCP\Config::getUserValue($user, 'core', 'lang', 'en');
-  $editor           = \OCP\Config::getUserValue($user, 'cafevdb', 'wysiwygEditor', 'tinymce');
+  $tooltips  = \OCP\Config::getUserValue($user, 'cafevdb', 'tooltips', '');
+  $language  = \OCP\Config::getUserValue($user, 'core', 'lang', 'en');
+  $editor    = \OCP\Config::getUserValue($user, 'cafevdb', 'wysiwygEditor', 'tinymce');
+
+  $admin = Config::adminContact();
+  $adminEmail = $admin['email'];
+  $adminName = $admin['name'];
 
   $pageLoader = new PageLoader();
 
@@ -32,6 +36,9 @@ namespace CAFEVDB {
     "CAFEVDB.language" => "'".$language."'",
     "CAFEVDB.Page.historySize" => $pageLoader->historySize(),
     "CAFEVDB.Page.historyPosition" => $pageLoader->historyPosition(),
+    "CAFEVDB.adminEmail" => "'".$adminEmail."'",
+    "CAFEVDB.adminName" => "'".$adminName."'",
+    "CAFEVDB.phpUserAgent" => "'".$_SERVER['HTTP_USER_AGENT']."'",
     "PHPMYEDIT.selectChosen" => "true",
     "PHPMYEDIT.filterSelectPlaceholder" => "'".L::t("Select a filter option.")."'",
     "PHPMYEDIT.filterSelectNoResult" => "'".L::t("No values match.")."'",

@@ -52,6 +52,7 @@ div.cfgerror {
 .error.missing,
 .error.syntax.contents,
 .error.contents,
+.error.general,
 .error.debug.contents {
   display:block;
  /* font-weight:bold;*/
@@ -65,6 +66,10 @@ div.cfgerror {
 .error.caption,
 .error.heading {
   font-weight:bold;
+}
+
+.error.general {
+  max-width:60em;
 }
 
 .error.caption {

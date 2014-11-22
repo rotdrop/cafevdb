@@ -24,124 +24,136 @@
  * Lead-in handler for email-form.
  */
 
-\OCP\JSON::checkLoggedIn();
-\OCP\JSON::checkAppEnabled('cafevdb');
-\OCP\JSON::callCheck();
+namespace CAFEVDB {  
 
-use CAFEVDB\L;
-use CAFEVDB\Config;
-use CAFEVDB\Events;
-use CAFEVDB\Util;
-use CAFEVDB\Error;
-use CAFEVDB\Navigation;
-use CAFEVDB\EmailRecipientsFilter;
-use CAFEVDB\EmailComposer;
+  \OCP\JSON::checkLoggedIn();
+  \OCP\JSON::checkAppEnabled('cafevdb');
+  \OCP\JSON::callCheck();
 
-try {
+  try {
 
-  ob_start();
+    ob_start();
 
-  Error::exceptions(true);
-  Config::init();
+    Error::exceptions(true);
+    Config::init();
 
-  $_GET = array();
+    $_GET = array();
 
-  $debugText = '';
-  $messageText = '';
+    $debugText = '';
+    $messageText = '';
 
-  if (Util::debugMode('request')) {
-    $debugText .= '$_POST[] = '.print_r($_POST, true);
-  }  
+    if (Util::debugMode('request')) {
+      $debugText .= '$_POST[] = '.print_r($_POST, true);
+    }  
 
-  // Get some common post data, rest has to be handled by the
-  // recipients and the sender class.
-  $projectId   = Util::cgiValue('ProjectId', -1);
-  $projectName = Util::cgiValue('ProjectName', '');
+    // Get some common post data, rest has to be handled by the
+    // recipients and the sender class.
+    $projectId   = Util::cgiValue('ProjectId', -1);
+    $projectName = Util::cgiValue('ProjectName', '');
 
-  $recipientsFilter = new EmailRecipientsFilter();
-  $recipients = $recipientsFilter->selectedRecipients();
-  $composer = new EmailComposer($recipients);
+    $recipientsFilter = new EmailRecipientsFilter();
+    $recipients = $recipientsFilter->selectedRecipients();
+    $composer = new EmailComposer($recipients);
 
-  $tmpl = new OCP\Template('cafevdb', 'emailform');
+    $tmpl = new \OCP\Template('cafevdb', 'emailform');
 
-  $tmpl->assign('uploadMaxFilesize', Util::maxUploadSize(), false);
-  $tmpl->assign('uploadMaxHumanFilesize',
-                OCP\Util::humanFileSize(Util::maxUploadSize()), false);
-  $tmpl->assign('requesttoken', \OCP\Util::callRegister());
+    $tmpl->assign('uploadMaxFilesize', Util::maxUploadSize(), false);
+    $tmpl->assign('uploadMaxHumanFilesize',
+                  \OCP\Util::humanFileSize(Util::maxUploadSize()), false);
+    $tmpl->assign('requesttoken', \OCP\Util::callRegister());
 
-  $tmpl->assign('ProjectName', $projectName);
-  $tmpl->assign('ProjectId', $projectId);
+    $tmpl->assign('ProjectName', $projectName);
+    $tmpl->assign('ProjectId', $projectId);
 
-  // Provide enough data s.t. a form-reload will bump the user to the
-  // form the email-dialog was opened from. Ideally, we intercept the
-  // form submit in javascript and simply close the dialog. Most of
-  // the stuff below is a simple safe-guard.
-  $pmepfx   = Config::$pmeopts['cgi']['prefix']['sys'];
-  $emailKey = $pmepfx.'mrecs';
-  $tmpl->assign('FormData', array('ProjectName' => $projectName,
-                                  'ProjectId' => $projectId,
-                                  'Template' => Util::cgiValue('Template', ''),
-                                  'DisplayClass' => Util::cgiValue('DisplayClass', ''),
-                                  'requesttoken' => \OCP\Util::callRegister(),
-                                  $emailKey => Util::cgiValue($emailKey, array()))
-    );
+    // Provide enough data s.t. a form-reload will bump the user to the
+    // form the email-dialog was opened from. Ideally, we intercept the
+    // form submit in javascript and simply close the dialog. Most of
+    // the stuff below is a simple safe-guard.
+    $pmepfx   = Config::$pmeopts['cgi']['prefix']['sys'];
+    $emailKey = $pmepfx.'mrecs';
+    $tmpl->assign('FormData', array('ProjectName' => $projectName,
+                                    'ProjectId' => $projectId,
+                                    'Template' => Util::cgiValue('Template', ''),
+                                    'DisplayClass' => Util::cgiValue('DisplayClass', ''),
+                                    'requesttoken' => \OCP\Util::callRegister(),
+                                    $emailKey => Util::cgiValue($emailKey, array()))
+      );
 
-  // Needed for the editor
-  $tmpl->assign('templateName', $composer->currentEmailTemplate());
-  $tmpl->assign('templateNames', $composer->emailTemplates());
-  $tmpl->assign('TO', $composer->toString());
-  $tmpl->assign('BCC', $composer->blindCarbonCopy());
-  $tmpl->assign('CC', $composer->carbonCopy());
-  $tmpl->assign('mailTag', $composer->subjectTag());
-  $tmpl->assign('subject', $composer->subject());
-  $tmpl->assign('message', $composer->messageText());
-  $tmpl->assign('sender', $composer->fromName());
-  $tmpl->assign('catchAllEmail', $composer->fromAddress());
-  $tmpl->assign('fileAttachments', $composer->fileAttachments());
-  $tmpl->assign('eventAttachments', $composer->eventAttachments());
-  $tmpl->assign('ComposerFormData', $composer->formData());
+    // Needed for the editor
+    $tmpl->assign('templateName', $composer->currentEmailTemplate());
+    $tmpl->assign('templateNames', $composer->emailTemplates());
+    $tmpl->assign('TO', $composer->toString());
+    $tmpl->assign('BCC', $composer->blindCarbonCopy());
+    $tmpl->assign('CC', $composer->carbonCopy());
+    $tmpl->assign('mailTag', $composer->subjectTag());
+    $tmpl->assign('subject', $composer->subject());
+    $tmpl->assign('message', $composer->messageText());
+    $tmpl->assign('sender', $composer->fromName());
+    $tmpl->assign('catchAllEmail', $composer->fromAddress());
+    $tmpl->assign('fileAttachments', $composer->fileAttachments());
+    $tmpl->assign('eventAttachments', $composer->eventAttachments());
+    $tmpl->assign('ComposerFormData', $composer->formData());
   
-  // Needed for the recipient selection
-  $tmpl->assign('RecipientsFormData', $recipientsFilter->formData());
-  $history = $recipientsFilter->filterHistory();
-  $tmpl->assign('FilterHistory', $recipientsFilter->filterHistory());
-  $tmpl->assign('MemberStatusFilter', $recipientsFilter->memberStatusFilter());
-  $tmpl->assign('BasicRecipientsSet', $recipientsFilter->basicRecipientsSet());
-  $tmpl->assign('InstrumentsFilter', $recipientsFilter->instrumentsFilter());
-  $tmpl->assign('EmailRecipientsChoices', $recipientsFilter->emailRecipientsChoices());
-  $tmpl->assign('MissingEmailAddresses', $recipientsFilter->missingEmailAddresses());
+    // Needed for the recipient selection
+    $tmpl->assign('RecipientsFormData', $recipientsFilter->formData());
+    $history = $recipientsFilter->filterHistory();
+    $tmpl->assign('FilterHistory', $recipientsFilter->filterHistory());
+    $tmpl->assign('MemberStatusFilter', $recipientsFilter->memberStatusFilter());
+    $tmpl->assign('BasicRecipientsSet', $recipientsFilter->basicRecipientsSet());
+    $tmpl->assign('InstrumentsFilter', $recipientsFilter->instrumentsFilter());
+    $tmpl->assign('EmailRecipientsChoices', $recipientsFilter->emailRecipientsChoices());
+    $tmpl->assign('MissingEmailAddresses', $recipientsFilter->missingEmailAddresses());
 
-  $html = $tmpl->fetchPage();
+    $html = $tmpl->fetchPage();
 
-  $debugText .= ob_get_contents();
-  @ob_end_clean();
+    $debugText .= ob_get_contents();
+    @ob_end_clean();
   
-  OCP\JSON::success(
-    array('data' => array('contents' => $html,
-                          'projectName' => $projectName,
-                          'projectId' => $projectId,
-                          'filterHistory' => $history,
-                          'debug' => $debugText)));
+    \OCP\JSON::success(
+      array('data' => array('contents' => $html,
+                            'projectName' => $projectName,
+                            'projectId' => $projectId,
+                            'filterHistory' => $history,
+                            'debug' => $debugText)));
 
-  unset($recipientsFilter);
-  unset($composer);
+    unset($recipientsFilter);
+    unset($composer);
   
-  return true;
+    return true;
 
-} catch (\Exception $e) {
+  } catch (\Exception $e) {
 
-  $debugText .= ob_get_contents();
-  @ob_end_clean();
+    unset($recipientsFilter);
+    unset($composer);
+  
+    $debugText .= ob_get_contents();
+    @ob_end_clean();
 
-  OCP\JSON::error(
-    array(
-      'data' => array(
-        'error' => 'exception',
-        'exception' => $e->getFile().'('.$e->getLine().'): '.$e->getMessage(),
-        'trace' => $e->getTraceAsString(),
-        'message' => L::t('Error, caught an exception'),
-        'debug' => $debugText)));
-  return false;
-}
+    $exceptionText = $e->getFile().'('.$e->getLine().'): '.$e->getMessage();
+    $trace = $e->getTraceAsString();
+
+    $admin = Config::adminContact();
+
+    $mailto = $admin['email'].
+      '?subject='.rawurlencode('[CAFEVDB-Exception] Exceptions from Email-Form').
+      '&body='.rawurlencode($exceptionText."\r\n".$trace."\r\n"."_POST[] = ".print_r($_POST, true));
+    $mailto = '<span class="error email"><a href="mailto:'.$mailto.'">'.$admin['name'].'</a></span>';
+
+    \OCP\JSON::error(
+      array(
+        'data' => array(
+          'caption' => L::t('PHP Exception Caught'),
+          'error' => 'exception',
+          'exception' => $exceptionText,
+          'trace' => $trace,
+          'message' => L::t('Error, caught an exception. '.
+                            'Please copy the displayed text and send it by email to %s.',
+                            array($mailto)),
+          'debug' => htmlspecialchars($debugText)))); 
+
+    return false;
+  }
+
+} // namespace CAFEVDB
 
 ?>
