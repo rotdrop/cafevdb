@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-18 09:23+0100\n"
+"POT-Creation-Date: 2014-11-22 14:51+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -43,11 +43,10 @@ msgid "Blog entry with id `%s' could not be retrieved."
 msgstr ""
 
 #: ajax/blog/editentry.php:101 ajax/blog/modifyentry.php:162
-#: ajax/email/addressbook.php:164 ajax/email/emailform.php:142
-#: ajax/email/progress.php:73 ajax/email/savecontacts.php:113
-#: ajax/events/events.php:116 ajax/events/execute.php:130
-#: ajax/events/new.form.php:195 ajax/events/sendmail.php:76
-#: ajax/finance/sepa-debit-mandate.php:157
+#: ajax/email/addressbook.php:164 ajax/email/progress.php:73
+#: ajax/email/savecontacts.php:113 ajax/events/events.php:116
+#: ajax/events/execute.php:130 ajax/events/new.form.php:195
+#: ajax/events/sendmail.php:76 ajax/finance/sepa-debit-mandate.php:157
 #: ajax/finance/sepa-debit-settings.php:375
 #: ajax/instrumentation/add-musicians.php:241
 #: ajax/instrumentation/change-musician-instruments.php:198
@@ -103,19 +102,21 @@ msgstr ""
 msgid "Email Address Validation Failed"
 msgstr ""
 
-#: ajax/email/composer.php:256 ajax/email/exporter.php:95
-#: ajax/email/recipients.php:140 ajax/finance/sepa-debit-export.php:217
+#: ajax/email/composer.php:256 ajax/email/emailform.php:145
+#: ajax/email/exporter.php:95 ajax/email/recipients.php:140
+#: ajax/finance/sepa-debit-export.php:320
 #: ajax/finance/sepa-debit-store.php:112
-#: ajax/insurance/instrument-insurance-export.php:171
+#: ajax/insurance/instrument-insurance-export.php:168
 #: ajax/insurance/validate.php:265 ajax/musicians/validate.php:96
 #: ajax/page-loader.php:111 ajax/projects/web-articles.php:182
 #: ajax/settings/app-settings.php:1181
 msgid "PHP Exception Caught"
 msgstr ""
 
-#: ajax/email/composer.php:260 ajax/email/exporter.php:96
-#: ajax/email/recipients.php:144 ajax/finance/sepa-debit-store.php:116
-#: ajax/insurance/instrument-insurance-export.php:172
+#: ajax/email/composer.php:260 ajax/email/emailform.php:149
+#: ajax/email/exporter.php:96 ajax/email/recipients.php:144
+#: ajax/finance/sepa-debit-store.php:116
+#: ajax/insurance/instrument-insurance-export.php:169
 #: ajax/insurance/validate.php:269 ajax/musicians/validate.php:100
 #: ajax/page-loader.php:115 ajax/projects/web-articles.php:186
 #: ajax/settings/app-settings.php:1185
@@ -126,7 +127,7 @@ msgid ""
 msgstr ""
 
 #: ajax/email/exporter.php:100
-#: ajax/insurance/instrument-insurance-export.php:176
+#: ajax/insurance/instrument-insurance-export.php:173
 msgid "Trace"
 msgstr ""
 
@@ -366,25 +367,45 @@ msgstr ""
 msgid "Purpose field has %d characters, allowed are %d."
 msgstr ""
 
-#: ajax/finance/sepa-debit-export.php:138
+#: ajax/finance/sepa-debit-export.php:192
+#: ajax/insurance/instrument-insurance-export.php:93
+msgid "Unable to create temporay file for zip-archive."
+msgstr ""
+
+#: ajax/finance/sepa-debit-export.php:198
+#: ajax/insurance/instrument-insurance-export.php:99
+msgid "Unable to open temporary file for zip-archive."
+msgstr ""
+
+#: ajax/finance/sepa-debit-export.php:223
+#: ajax/insurance/instrument-insurance-export.php:113
+msgid "Unable to close temporary file for zip-archive."
+msgstr ""
+
+#: ajax/finance/sepa-debit-export.php:228
+#: ajax/insurance/instrument-insurance-export.php:118
+msgid "Unable to read zip archive from disk."
+msgstr ""
+
+#: ajax/finance/sepa-debit-export.php:238
 msgid "Debit notes submission deadline"
 msgstr ""
 
-#: ajax/finance/sepa-debit-export.php:141
-#: ajax/finance/sepa-debit-export.php:152
+#: ajax/finance/sepa-debit-export.php:241
+#: ajax/finance/sepa-debit-export.php:252
 msgid "Exported CSV file name:"
 msgstr ""
 
-#: ajax/finance/sepa-debit-export.php:145
-#: ajax/finance/sepa-debit-export.php:156
+#: ajax/finance/sepa-debit-export.php:245
+#: ajax/finance/sepa-debit-export.php:256
 msgid "Due date:"
 msgstr ""
 
-#: ajax/finance/sepa-debit-export.php:149
+#: ajax/finance/sepa-debit-export.php:249
 msgid "Debit notes due"
 msgstr ""
 
-#: ajax/finance/sepa-debit-export.php:220
+#: ajax/finance/sepa-debit-export.php:323
 #, php-format
 msgid "Please copy the displayed text and send it by email to %s."
 msgstr ""
@@ -735,28 +756,12 @@ msgstr ""
 msgid "Changing the instrumentation for project `%s' was probably successful."
 msgstr ""
 
-#: ajax/insurance/instrument-insurance-export.php:96
-msgid "Unable to create temporay file for zip-archive."
-msgstr ""
-
-#: ajax/insurance/instrument-insurance-export.php:102
-msgid "Unable to open temporary file for zip-archive."
-msgstr ""
-
-#: ajax/insurance/instrument-insurance-export.php:110
+#: ajax/insurance/instrument-insurance-export.php:107
 #, php-format
 msgid "Unable to add %s to zip-archive"
 msgstr ""
 
-#: ajax/insurance/instrument-insurance-export.php:116
-msgid "Unable to close temporary file for zip-archive."
-msgstr ""
-
-#: ajax/insurance/instrument-insurance-export.php:121
-msgid "Unable to read zip archive from disk."
-msgstr ""
-
-#: ajax/insurance/instrument-insurance-export.php:126
+#: ajax/insurance/instrument-insurance-export.php:123
 msgid "instrument-insurance"
 msgstr ""
 
@@ -800,6 +805,7 @@ msgid "Manufacturer field is empty."
 msgstr ""
 
 #: ajax/insurance/validate.php:189 ajax/insurance/validate.php:191
+#: js/cafevdb.js:31 js/cafevdb.js:32 js/cafevdb.js:33
 msgid "unknown"
 msgstr ""
 
@@ -1354,9 +1360,9 @@ msgid "Unknown WYSIWYG-Editor: `%s'"
 msgstr ""
 
 #: js/blog.js:53 js/blog.js:156 js/blog.js:194 js/blog.js:288 js/blog.js:319
-#: js/blog.js:347 js/cafevdb.js:1061 js/email.js:33 js/email.js:62
-#: js/email.js:412 js/email.js:443 js/email.js:606 js/events.js:64
-#: js/events.js:149 js/inlineimage.js:84 js/inlineimage.js:92
+#: js/blog.js:347 js/cafevdb.js:1063 js/cafevdb.js:1125 js/email.js:33
+#: js/email.js:62 js/email.js:412 js/email.js:443 js/email.js:606
+#: js/events.js:64 js/events.js:149 js/inlineimage.js:84 js/inlineimage.js:92
 #: js/inlineimage.js:102 js/inlineimage.js:131 js/inlineimage.js:155
 #: js/inlineimage.js:183 js/inlineimage.js:207 js/inlineimage.js:326
 #: js/inlineimage.js:412 js/inlineimage.js:421 js/inlineimage.js:424
@@ -1398,46 +1404,46 @@ msgstr ""
 msgid "Really delete the entry?"
 msgstr ""
 
-#: js/cafevdb.js:502
+#: js/cafevdb.js:505
 msgid "Choose some Options"
 msgstr ""
 
-#: js/cafevdb.js:507 js/project-instruments.js:146 js/sepa-debit-mandate.js:98
+#: js/cafevdb.js:510 js/project-instruments.js:146 js/sepa-debit-mandate.js:98
 msgid "Save"
 msgstr ""
 
-#: js/cafevdb.js:509
+#: js/cafevdb.js:512
 msgid ""
 "Accept the currently selected options and return to the underlying form. "
 msgstr ""
 
-#: js/cafevdb.js:510 js/inlineimage.js:273 js/project-instruments.js:197
+#: js/cafevdb.js:513 js/inlineimage.js:273 js/project-instruments.js:197
 #: templates/blogedit.php:39 templates/part.emailform.composer.php:251
 msgid "Cancel"
 msgstr ""
 
-#: js/cafevdb.js:512
+#: js/cafevdb.js:515
 msgid ""
 "Discard the current selection and close the dialog. The initial set of "
 "selected options will remain unchanged."
 msgstr ""
 
-#: js/cafevdb.js:683
+#: js/cafevdb.js:686
 msgid "Export to the following format is not yet supported:"
 msgstr ""
 
-#: js/cafevdb.js:685 js/project-instruments.js:74 js/projects.js:261
+#: js/cafevdb.js:688 js/project-instruments.js:74 js/projects.js:261
 msgid "Unimplemented"
 msgstr ""
 
-#: js/cafevdb.js:864
+#: js/cafevdb.js:867
 msgid ""
 "If multiple dialogs are open, then move this one to the lowest layer and "
 "display it below the others. Clicking anywhere on the dialog will bring to "
 "the front again."
 msgstr ""
 
-#: js/cafevdb.js:914
+#: js/cafevdb.js:917
 msgid ""
 "Close the current dialog and return to the view which was active before this "
 "dialog had been opened. If the current view shows a `Back' button, then "
@@ -1445,31 +1451,52 @@ msgid ""
 "equivalent to clicking the `Back' button"
 msgstr ""
 
-#: js/cafevdb.js:1001 js/instrumentation.js:163
+#: js/cafevdb.js:1004 js/instrumentation.js:163
 msgid "Debug Information"
 msgstr ""
 
-#: js/cafevdb.js:1022
+#: js/cafevdb.js:1033
 msgid ""
 "Unrecoverable unknown internal error, no further information available, "
 "sorry."
 msgstr ""
 
-#: js/cafevdb.js:1024
+#: js/cafevdb.js:1035
 msgid "Internal Error"
 msgstr ""
 
-#: js/cafevdb.js:1031
+#: js/cafevdb.js:1042
 #, python-brace-format
 msgid "Field {RequiredField} not present in AJAX response."
 msgstr ""
 
-#: js/cafevdb.js:1040
+#: js/cafevdb.js:1051
 msgid "Missing data"
 msgstr ""
 
-#: js/cafevdb.js:1042 js/events.js:58 js/events.js:143
+#: js/cafevdb.js:1053 js/events.js:58 js/events.js:143
 msgid "Unknown error :("
+msgstr ""
+
+#: js/cafevdb.js:1083
+msgid "Something went wrong."
+msgstr ""
+
+#: js/cafevdb.js:1085
+msgid ""
+"If it should be the case that you are already logged in for a long time "
+"without interacting with the web-app, then please logout and login again. "
+msgstr ""
+
+#: js/cafevdb.js:1089
+msgid ""
+"I any case it may help to logoff and logon again, as a temporary work-"
+"around. "
+msgstr ""
+
+#: js/cafevdb.js:1092
+#, python-brace-format
+msgid "Feedback email: {AutoReport}"
 msgstr ""
 
 #: js/calendar.js:248
@@ -1496,25 +1523,25 @@ msgstr ""
 msgid "Unknown location"
 msgstr ""
 
-#: js/config.php:36
+#: js/config.php:43
 msgid "Select a filter option."
 msgstr ""
 
-#: js/config.php:37 js/config.php:43
+#: js/config.php:44 js/config.php:50
 msgid "No values match."
 msgstr ""
 
-#: js/config.php:38
+#: js/config.php:45
 msgid ""
 "Select from the pull-down menu. Double-click will submit the form. The pull-"
 "down can be closed by clicking anywhere outside the menu."
 msgstr ""
 
-#: js/config.php:42
+#: js/config.php:49
 msgid "Select an option."
 msgstr ""
 
-#: js/config.php:44
+#: js/config.php:51
 msgid ""
 "Select from the pull-down menu. The pull-down can be closed by clicking "
 "anywhere outside the menu."
