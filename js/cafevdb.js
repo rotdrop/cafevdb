@@ -1089,7 +1089,7 @@ var CAFEVDB = CAFEVDB || {};
                        + t('cafevdb', 'I any case it may help to logoff and logon again, as a '
                                     + 'temporary work-around. ');
           generalHint += '<br/>'
-                       + t('cafevdb', 'Semi-automated error report: {AutoReport}',
+                       + t('cafevdb', 'Feedback email: {AutoReport}',
                            { AutoReport: autoReport });
           info += '<div class="error general">'+generalHint+'</div>';
           break;
