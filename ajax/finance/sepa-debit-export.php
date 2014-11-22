@@ -63,13 +63,13 @@ namespace CAFEVDB {
       $selectedMandates = InstrumentInsurance::remapToDebitIds($selectedMandates);
       $debitTable = SepaDebitMandates::insuranceTableExport();
       // throw new \Exception('ID: '.print_r($selectedMandates, true).' old ID '.print_r($oldIds, true).' table '.print_r($debitTable, true));          
-      $name = $date.'-aqbanking-debit-notes-insurance.csv';
+      $name = $date.'-aqbanking-debit-notes-insurance';
       $calendarProject = Config::getValue('memberTable');
       $calendarTitlePart = L::t('instrument insurances');
       break;
     default:
       $debitTable = SepaDebitMandates::projectTableExport($projectId);    
-      $name = $date.'-aqbanking-debit-notes-'.$projectName.'.csv';
+      $name = $date.'-aqbanking-debit-notes-'.$projectName;
       $calendarProject = $projectName;
       $calendarTitlePart = $projectName;
       break;
@@ -131,8 +131,108 @@ namespace CAFEVDB {
     $timeStamp = strtotime('+ 17 days');
     $aqDebitTable = SepaDebitMandates::aqBankingDebitNotes($filteredTable, $timeStamp);
 
-    // It worked out until now. Update the "last issued" stamp
-    Finance::stampSepaMandates($filteredTable, $timeStamp);
+    // We must not mix once, first, following debit notes. So extract
+    // into single tables and provide one CSV file for each of the
+    // different debit-note types.
+    $aqSequenceTables = array();
+    foreach($aqDebitTable as $row) {
+      $sequenceType = $row['sequenceType'];
+      if (!isset($acSequenceTables[$sequenceType])) {
+        $acSequenceTables[$sequenceType] = array();
+      } 
+      $aqSequenceTables[$sequenceType][] = $row;
+    }
+    
+    // Actually export the data.
+
+    // The rows of the aqDebitTable must have the following fields:
+    $aqColumns = array("localBic",
+                       "localIban",
+                       "remoteBic",
+                       "remoteIban",
+                       "date",
+                       "value/value",
+                       "value/currency",
+                       "localName",
+                       "remoteName",
+                       "creditorSchemeId",
+                       "mandateId",
+                       "mandateDate/dateString",
+                       "mandateDebitorName",
+                       "sequenceType",
+                       "purpose[0]",
+                       "purpose[1]",
+                       "purpose[2]",
+                       "purpose[3]");
+
+    $exportData = '';
+    if (count($aqSequenceTables) <= 1) {
+      foreach($aqSequenceTables as $sequenceType => $debitTable) {
+
+        $outstream = fopen("php://memory", 'w');
+
+        // fputcsv() is locale sensitive.
+        setlocale(LC_ALL, 'C');
+    
+        fputcsv($outstream, $aqColumns, ";", '"');
+        foreach($aqDebitTable as $row) {
+          fputcsv($outstream, array_values($row), ";", '"');
+        }
+        rewind($outstream);
+        $exportData = stream_get_contents($outstream);
+
+        fclose($outstream);
+      }
+    } else {
+      // export a ZIP-archive
+
+      $tmpdir = sys_get_temp_dir();
+      $tmpFile = tempnam($tmpdir, Config::APP_NAME.'.zip');
+      if ($tmpFile === false) {
+        throw new \RuntimeException(L::t('Unable to create temporay file for zip-archive.'));
+      }
+
+      $zip = new \ZipArchive();
+      $opened = $zip->open($tmpFile, \ZIPARCHIVE::CREATE | \ZIPARCHIVE::OVERWRITE );
+      if ($opened !== true) {
+        throw new \RuntimeException(L::t('Unable to open temporary file for zip-archive.'));
+      }
+      
+      foreach($aqSequenceTables as $sequenceType => $debitTable) {
+        $sequenceName = $name.'-'.$sequenceType.'.csv';
+
+        $outstream = fopen("php://memory", 'w');
+        
+        // fputcsv() is locale sensitive.
+        $oldLocale = setlocale(LC_ALL, 'C');
+    
+        fputcsv($outstream, $aqColumns, ";", '"');
+        foreach($debitTable as $row) {
+          fputcsv($outstream, array_values($row), ";", '"');
+        }
+        setlocale(LC_ALL, $oldLocale);
+
+        rewind($outstream);
+        $csvData = stream_get_contents($outstream);
+        fclose($outstream);
+
+        $zip->addFromString($sequenceName, $csvData);
+      }
+
+      if ($zip->close() === false) {
+        throw new \RuntimeException(L::t('Unable to close temporary file for zip-archive.'));
+      }
+
+      $exportData = file_get_contents($tmpFile);
+      if ($exportData === false) {
+        throw new \RuntimeException(L::t('Unable to read zip archive from disk.'));
+      }
+
+      unlink($tmpFile);
+    }
+    
+    // It worked out until now. Update the "last issued" stamp and
+    // inject proper events into the finance calendar.
 
     $submissionStamp = strtotime('+ 7 days');
     Finance::financeEvent(L::t('Debit notes submission deadline').
@@ -156,30 +256,33 @@ namespace CAFEVDB {
                           L::t('Due date:').' '.date('d.m.Y', $timeStamp),
                           $calendarProject,
                           $timeStamp);
-    
-    // Actually export the data.
-    
-    header('Content-type: text/ascii');
+
+    Finance::stampSepaMandates($filteredTable, $timeStamp);
+
+    // finally present the download data to the browser. The idea is
+    // that the following code is unlikely to throw an error. So: if
+    // it worked out until here, it should be ok
+
+    if (count($aqSequenceTables) <= 1) {
+      $name .= '-'.$sequenceType.'.csv';
+      header('Content-type: text/csv');
+    } else {
+      $name .= '.zip';      
+      header('Content-type: application/zip');
+    }
     header('Content-disposition: attachment;filename='.$name);
-    header('Cache-Control: max-age=0');
+    header('Cache-Control: max-age=0, no-cache, no-store, must-revalidate'); // HTTP 1.1.
+    header('Pragma: no-cache'); // HTTP 1.0.
+    header('Expires: 0'); // Proxies.
 
     @ob_end_clean();
-
-    // The rows of the aqDebitTable must have the following fields:
-    $aqColumns = array("localBic",
-"localIban","remoteBic","remoteIban","date","value/value","value/currency","localName","remoteName","creditorSchemeId","mandateId","mandateDate/dateString","mandateDebitorName","sequenceType","purpose[0]","purpose[1]","purpose[2]","purpose[3]");
-
+      
     $outstream = fopen("php://output",'w');
 
-    // fputcsv() is locale sensitive.
-    setlocale(LC_ALL, 'C');
+    fwrite($outstream, $exportData);
+      
+    fclose($outstream);      
     
-    fputcsv($outstream, $aqColumns, ";", '"');
-    foreach($aqDebitTable as $row) {
-      fputcsv($outstream, array_values($row), ";", '"');
-    }
-    fclose($outstream);
-
     return true;
 
   } catch (\Exception $e) {
