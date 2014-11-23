@@ -4460,9 +4460,7 @@ class phpMyEdit
 		if (!$this->misccss) {
 			$this->misccss = 'misc';
 		}
-		if (!$this->misccss2) {
-			$this->misccss2 = ' foobar';
-		} else {
+		if ($this->misccss2) {
 			$this->misccss2 = ' '.$this->misccss2;
 		}
 		$this->page_name = @$opts['page_name'];
