@@ -69,7 +69,7 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
                id="emailCurrentTemplate">
         <input title="<?php echo Config::toolTips('save-email-template'); ?>"
                type="submit"
-               class="submit save-template tipsy-wide tipsy-s"
+               class="submit save-template tipsy-wide tipsy-ne"
                name="emailComposer[SaveTemplate]"
                value="<?php echo L::t('Save as Template'); ?>"/> 
         <input title="<?php echo Config::toolTips('delete-email-template'); ?>"
@@ -86,7 +86,7 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
         <span title="<?php echo Config::tooltips('email-recipients-listing').'</br>'.htmlspecialchars($_['TO']); ?>"
               data-placeholder="<?php echo L::t('No recipients selected.'); ?>"
               data-title-intro="<?php echo Config::tooltips('email-recipients-listing'); ?>"
-              class="email-recipients tipsy-s tipsy-wide">
+              class="email-recipients tipsy-n tipsy-mostwide">
           <?php echo $_['TO'] == '' ? L::t('No recipients selected.') :  $_['TO']; ?>
         </span>
       </td>

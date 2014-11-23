@@ -19,8 +19,19 @@
  * License along with this library.  If not, see <http://www.gnu.org/
 
 /* Ok, some of our tooltips need more space ... */
+
 .tipsy-wide .tipsy-inner {
-  max-width:400px;
+  max-width:40em;
+  text-align:left;
+}
+
+.tipsy-verywide .tipsy-inner {
+  max-width:60em;
+  text-align:left;
+}
+
+.tipsy-mostwide .tipsy-inner {
+  max-width:80em;
   text-align:left;
 }
 
