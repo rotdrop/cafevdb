@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-22 14:48+0100\n"
-"PO-Revision-Date: 2014-11-22 14:51+0100\n"
+"POT-Creation-Date: 2014-11-23 22:10+0100\n"
+"PO-Revision-Date: 2014-11-23 22:10+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -1425,7 +1425,7 @@ msgstr ""
 "Die Kategorie sollte ganzzahlig und positiv sein, das ist wohl nicht der "
 "Fall: `%s'."
 
-#: ajax/settings/tooltips.php:19
+#: ajax/settings/tooltips.php:37
 msgid "tooltips changed"
 msgstr "Tool-Tip Einstellung geändert"
 
@@ -1583,13 +1583,17 @@ msgstr "Irgendetwas ist schief gelaufen."
 msgid ""
 "If it should be the case that you are already logged in for a long time "
 "without interacting with the web-app, then please logout and login again. "
-msgstr "Falls Du bereits längere Zeit angemeldet bist, ohne mit der Web-App zu interagieren, dann melde Dich bitte and und wieder an."
+msgstr ""
+"Falls Du bereits längere Zeit angemeldet bist, ohne mit der Web-App zu "
+"interagieren, dann melde Dich bitte ab und wieder an."
 
 #: js/cafevdb.js:1089
 msgid ""
 "I any case it may help to logoff and logon again, as a temporary work-"
 "around. "
-msgstr "Als einstweiliger `Work-Around' kann man in jedem Fall versuchen, sich ab- und wieder an zu melden und den Vorgang zu wiederholen."
+msgstr ""
+"Als einstweiligen `Work-Around' kann man in jedem Fall versuchen, sich ab- "
+"und wieder an zu melden und den Vorgang zu wiederholen."
 
 #: js/cafevdb.js:1092
 #, python-brace-format
@@ -1944,11 +1948,11 @@ msgid "Possible Duplicate!"
 msgstr "Doppelter Datenbankeintag?"
 
 # #Spalten
-#: js/pme.js:791
+#: js/pme.js:794
 msgid "#columns"
 msgstr "#Spalten"
 
-#: js/pme.js:800
+#: js/pme.js:803
 msgid "#rows"
 msgstr "#Zeilen"
 
@@ -2085,11 +2089,11 @@ msgstr "Lastschrifteinzug in 17 Tagen"
 msgid "ProjectDebitNoteAnnouncement"
 msgstr "ProjektLastschriftAnkuendigung"
 
-#: js/settings.js:100 js/settings.js:122 js/settings.js:178
+#: js/settings.js:96 js/settings.js:118 js/settings.js:174
 msgid "Error:"
 msgstr "Fehler:"
 
-#: js/settings.js:216
+#: js/settings.js:212
 msgid "Please standby, the operation will take some time!"
 msgstr "Bitte warten, das dauert jetzt ein wenig!"
 
@@ -2406,43 +2410,43 @@ msgstr "Ungültige IBAN: %s."
 msgid "Invalid argument value: `%s'"
 msgstr "Unsinniger Paramter-Wert: `%s'"
 
-#: lib/functions.php:718
+#: lib/functions.php:725
 msgid "Export Table"
 msgstr "Exportieren"
 
-#: lib/functions.php:726
+#: lib/functions.php:733
 msgid "Excel Export"
 msgstr "`Excel' Export"
 
-#: lib/functions.php:729
+#: lib/functions.php:736
 msgid "HTML/Spreadsheet"
 msgstr "HTML/Excel"
 
-#: lib/functions.php:732
+#: lib/functions.php:739
 msgid "CSV Export"
 msgstr "CSV Export"
 
-#: lib/functions.php:735
+#: lib/functions.php:742
 msgid "HTML Export"
 msgstr "HTML Export"
 
-#: lib/functions.php:950
+#: lib/functions.php:957
 msgid "Error: Unknonwn Button Type"
 msgstr "Fehler: Unbekannter Knopf-Typ"
 
-#: lib/functions.php:970
+#: lib/functions.php:977
 msgid "View all Projects"
 msgstr "Alle Projekte"
 
-#: lib/functions.php:971
+#: lib/functions.php:978
 msgid "Overview over all known projects (start-page)."
 msgstr "Alle gespeicherten Projekte anzeigen; Startseite der `Camerata App'."
 
-#: lib/functions.php:982
+#: lib/functions.php:989
 msgid "Display all Musicians"
 msgstr "Alle Musiker"
 
-#: lib/functions.php:983
+#: lib/functions.php:990
 msgid ""
 "Display all musicians stored in the data-base, with detailed facilities for "
 "filtering and sorting."
@@ -2450,7 +2454,7 @@ msgstr ""
 "Alle Musiker anzeigen, die in der Datenbank gespeichert sind. Es gibt dabei "
 "ausführliche Such- und Auswahlfunktionalität."
 
-#: lib/functions.php:994
+#: lib/functions.php:1001
 msgid ""
 "Mass-email form, use with care. Mass-emails will be logged. Recipients will "
 "be specified by the Bcc: field in the header, so the recipients are "
@@ -2461,25 +2465,25 @@ msgstr ""
 "außerdem wird die ganze Pracht in der Daten bank gespeichter (siehe `Email "
 "Historie')"
 
-#: lib/functions.php:1007
+#: lib/functions.php:1014
 msgid "Email History"
 msgstr "Em@il Historie"
 
-#: lib/functions.php:1008
+#: lib/functions.php:1015
 msgid "Display all emails sent by our mass-email form."
 msgstr ""
 "Zeigt alle über unser unsägliches Massen-Mail gespamten Emails an. "
 "Insebesondere werden hier auch die Bcc: Empfänger gespeichert."
 
-#: lib/functions.php:1026
+#: lib/functions.php:1033
 msgid "The currently active project."
 msgstr "Das gerade ausgewählte Projekt."
 
-#: lib/functions.php:1041 lib/projects.php:794
+#: lib/functions.php:1048 lib/projects.php:794
 msgid "Instrumentation"
 msgstr "Besetzung"
 
-#: lib/functions.php:1042
+#: lib/functions.php:1049
 msgid ""
 "Detailed display of all registered musicians for the selected project. The "
 "table will allow for modification of personal data like email, phone, "
@@ -2489,11 +2493,11 @@ msgstr ""
 "Daten wie Email, Adresse usw. können hier geändert werden. Projektbezogene "
 "Daten können allerdings nur in der Ansicht `Kurz-Besetzung' geändert werden."
 
-#: lib/functions.php:1055 lib/project-instruments.php:385
+#: lib/functions.php:1062 lib/project-instruments.php:385
 msgid "Add Instruments"
 msgstr "Neue Instrumente"
 
-#: lib/functions.php:1056
+#: lib/functions.php:1063
 msgid ""
 "Display the list of instruments known by the data-base, possibly add new "
 "ones as needed."
@@ -2501,12 +2505,12 @@ msgstr ""
 "Tabelle mit allen derzeit gespeicherten Instrumenten; weitere Instrumente "
 "können hier einfach hinzugefügt werden."
 
-#: lib/functions.php:1069 lib/project-instruments.php:69 lib/projects.php:799
+#: lib/functions.php:1076 lib/project-instruments.php:69 lib/projects.php:799
 #: lib/projects.php:1051
 msgid "Instrumentation Numbers"
 msgstr "Besetzungszahlen"
 
-#: lib/functions.php:1070 lib/tooltips.php:394
+#: lib/functions.php:1077 lib/tooltips.php:394
 msgid ""
 "Display the desired instrumentaion numbers, i.e. how many musicians are "
 "already registered for each instrument group and how many are finally needed."
@@ -2514,20 +2518,20 @@ msgstr ""
 "Anzeige der angestrebten Besetzungszahlen. Natürlich kann man die dann auch "
 "anpassen ..."
 
-#: lib/functions.php:1083 lib/functions.php:1121 lib/projects.php:835
+#: lib/functions.php:1090 lib/functions.php:1128 lib/projects.php:835
 msgid "Debit Mandates"
 msgstr "Lastschriftmandate"
 
-#: lib/functions.php:1084
+#: lib/functions.php:1091
 msgid "Display a table with the SEPA debit mandates related to the project."
 msgstr ""
 "Zeigt eine Tabelle mit den SEPA-Lastschriftmandaten für das Projekt an."
 
-#: lib/functions.php:1097
+#: lib/functions.php:1104
 msgid "Insurances"
 msgstr "Versicherungen"
 
-#: lib/functions.php:1098
+#: lib/functions.php:1105
 msgid ""
 "Display a table with an overview about the current state of the member's "
 "instrument insurances."
@@ -2535,11 +2539,11 @@ msgstr ""
 "Zeigt eine Tabelle mit einer Übersicht über die "
 "Instrumentensammelversicherungen an."
 
-#: lib/functions.php:1109
+#: lib/functions.php:1116
 msgid "Insurance Rates"
 msgstr "Versicherungs-Raten"
 
-#: lib/functions.php:1110
+#: lib/functions.php:1117
 msgid ""
 "Display a table with the insurance rates for the individual instrument "
 "insurances."
@@ -2547,7 +2551,7 @@ msgstr ""
 "Zeigt eine Tabelle mit einer Übersicht über die Versicherungsraten der\n"
 "Instrumenten-Sammelversicherungen an."
 
-#: lib/functions.php:1122
+#: lib/functions.php:1129
 msgid "Display a table with an overview over all SEPA debit mandates."
 msgstr ""
 "Zeigt eine Tabelle mit einer Übersicht über alle SEPA Lastschriftmandate an."
