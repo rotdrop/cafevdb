@@ -62,11 +62,7 @@ $(document).ready(function() {
     event.preventDefault();
     var post = $("#tooltips").serialize();
     $.post(OC.filePath('cafevdb', 'ajax/settings', 'tooltips.php') , post, function(data) {return;});
-    if ($('#tooltips').attr('checked')) {
-      $.fn.tipsy.enable();
-    } else {
-      $.fn.tipsy.disable();
-    }
+    CAFEVDB.toolTipsOnOff($(this).attr('checked'));
     return false;
   });
 
