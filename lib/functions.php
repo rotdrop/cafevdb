@@ -605,12 +605,19 @@ __EOT__;
      *
      * @return boolean. If returning @c false the operation will be terminated
      *
-     * This trigger trims any spaces from the new fields.
+     * This trigger trims any spaces from the new fields. In order to
+     * sanitize old data records this trigger function adds to
+     * $changed if trimming changes something. Otherwise
+     * self::beforeUpdateRemoveUnchanged() would silently ignore the
+     * sanitized values.
      */
     public static function beforeAnythingTrimAnything($pme, $op, $step, $oldvals, &$changed, &$newvals)
     {
       foreach ($newvals as $key => &$value) {
         $value = trim($value);
+        if (array_search($key, $changed) === false && $oldvals[$key] != $value) {
+          $changed[] = $key;
+        }
       }
       return true;
     }
