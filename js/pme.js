@@ -648,6 +648,9 @@ var PHPMYEDIT = PHPMYEDIT || {};
       obj[name] = value;
       post += '&' + $.param(obj);
     }
+    container.find('input').prop('disabled', true);
+    container.find('select').prop('disabled', true);
+    container.find('select').trigger('chosen:updated');
     $.post(OC.filePath('cafevdb', 'ajax/pme', 'pme-table.php'),
            post,
            function (data) {

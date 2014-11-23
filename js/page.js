@@ -41,6 +41,10 @@ var CAFEVDB = CAFEVDB || {};
 
   /**Load a page through the history-aware AJAX page loader. */
   Page.loadPage = function(post, afterLoadCallback) {
+    var container = $('div#content');
+    container.find('input').prop('disabled', true);
+    container.find('select').prop('disabled', true);
+    container.find('select').trigger('chosen:updated');
     Page.busyIcon(true);
     $.post(OC.filePath('cafevdb', 'ajax', 'page-loader.php'),
            post,
