@@ -1131,6 +1131,15 @@ var CAFEVDB = CAFEVDB || {};
     return true;
   };
 
+  CAFEVDB.toolTipsOnOff = function(onOff) {
+    CAFEVDB.toolTips = !!onOff;
+    if (CAFEVDB.toolTips) {
+      $.fn.tipsy.enable();
+    } else {
+      $.fn.tipsy.disable();
+    }
+  };
+
   /**Initialize our tipsy stuff. Only exchange for our own thingies, of course.
    */
   CAFEVDB.tipsy = function(containerSel) {
