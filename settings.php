@@ -44,7 +44,7 @@ namespace CAFEVDB {
 
     $tmpl = new \OCP\Template( 'cafevdb', 'settings');
 
-    $tooltips         = \OCP\Config::getUserValue($user, 'cafevdb', 'tooltips','on');
+    $tooltips         = \OCP\Config::getUserValue($user, 'cafevdb', 'tooltips', 'on');
     $filtervisibility = \OCP\Config::getUserValue($user, 'cafevdb', 'filtervisibility', 'off');
 
     $editor      = \OCP\Config::getUserValue($user, 'cafevdb', 'wysiwygEditor', 'tinymce');
