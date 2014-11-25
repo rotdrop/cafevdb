@@ -28,13 +28,14 @@ namespace CAFEVDB {
   \OCP\JSON::callCheck();
   
   // Get data
-  if( isset( $_POST['tooltips'] ) ) {
+  if (isset($_POST['tooltips'])) {
     $tooltips=$_POST['tooltips'];
   } else {
     $tooltips='off';
   }
-  \OCP\Config::setUserValue( OCP\USER::getUser(), 'cafevdb', 'tooltips', $tooltips );
+  \OCP\Config::setUserValue(\OCP\USER::getUser(), 'cafevdb', 'tooltips', $tooltips );
   \OCP\JSON::success(array('data' => array( 'message' => L::t('tooltips changed') )));
+
   return true;
 
 } // namespace CAFEVDB
