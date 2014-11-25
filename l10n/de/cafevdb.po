@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-23 22:10+0100\n"
-"PO-Revision-Date: 2014-11-23 22:10+0100\n"
+"POT-Creation-Date: 2014-11-25 23:08+0100\n"
+"PO-Revision-Date: 2014-11-25 23:10+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -5324,35 +5324,35 @@ msgstr "Schatzmeister(in) auswählen"
 msgid "Treasurer of the orchestra"
 msgstr "Schatzmeister des Orchesters"
 
-#: templates/part.common.header.php:40
+#: templates/part.common.header.php:37
 msgid "Back"
 msgstr "Zurück"
 
-#: templates/part.common.header.php:41
+#: templates/part.common.header.php:38
 msgid "Navigate back to the previous view in the recorded history."
 msgstr "Zurück zur vorigen Ansicht in der Seiten-Historie."
 
-#: templates/part.common.header.php:48
+#: templates/part.common.header.php:45
 msgid "Reload"
 msgstr "Neu laden"
 
-#: templates/part.common.header.php:49
+#: templates/part.common.header.php:46
 msgid "Reload the current view."
 msgstr "Aktuelle Ansicht neu laden."
 
-#: templates/part.common.header.php:56
+#: templates/part.common.header.php:53
 msgid "Next"
 msgstr "Nach vorn"
 
-#: templates/part.common.header.php:57
+#: templates/part.common.header.php:54
 msgid "Navigate to the next view in the recorded history."
 msgstr "Zur nächsten Ansicht in der Seiten-Historie wechseln."
 
-#: templates/part.common.header.php:64
+#: templates/part.common.header.php:61
 msgid "Startpage"
 msgstr "Startseite"
 
-#: templates/part.common.header.php:65
+#: templates/part.common.header.php:62
 msgid "Navigate back to the start-page."
 msgstr "Führt zurück zur Start-Seite der `App'."
 
@@ -5377,6 +5377,14 @@ msgstr ""
 #: templates/part.common.header.php:79
 msgid "Personal Settings."
 msgstr "Individuelle Einstellungen."
+
+#: templates/part.common.header.php:84
+msgid "Tooltip Button"
+msgstr "Tooltip Button"
+
+#: templates/part.common.header.php:85
+msgid "Toggle Tooltips"
+msgstr "Ballon-Hilfe ein- und ausschalten"
 
 #: templates/part.emailform.composer.php:40
 msgid "Compose Em@il"

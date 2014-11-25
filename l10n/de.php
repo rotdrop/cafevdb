@@ -957,6 +957,8 @@
 "Expert Operations" => "Experten-Menü",
 "Expert Operations like recreating views etc." => "A C H T U N G !\n\tK O M B J U D E R - R A U M\nDieser Raum is voll bis unner de Deck\nmit de dollste elekdrische\nun vollelekdronische Anlaache.\nStaune und gugge derf jeder, awwer\nrummworschdele un Gnöbbsche drücke\nuff de Kombjuder dörffe nur mir,\ndie Exberde.\nAber bitte einfach nicht abschrecken lassen ...",
 "Personal Settings." => "Individuelle Einstellungen.",
+"Tooltip Button" => "Tooltip Button",
+"Toggle Tooltips" => "Ballon-Hilfe ein- und ausschalten",
 "Compose Em@il" => "Email verfassen",
 "Templates" => "Vorlagen",
 "Select email template" => "Vorlage auswählen",
