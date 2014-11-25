@@ -14,8 +14,8 @@
    inkscape:version="0.48.5 r10040"
    sodipodi:docname="save-contacts.svg"
    inkscape:export-filename="/var/www/localhost/htdocs/owncloud7/apps/cafevdb/img/save-contacts.png"
-   inkscape:export-xdpi="2.7"
-   inkscape:export-ydpi="2.7">
+   inkscape:export-xdpi="67.5"
+   inkscape:export-ydpi="67.5">
   <metadata
      id="metadata10">
     <rdf:RDF>
@@ -24,7 +24,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
