@@ -1267,16 +1267,40 @@ $(document).ready(function(){
 
                $("#appsettings").tabs({ selected: 0});
                
-               OC.appSettings({appid:'cafevdb', loadJS:true,
-                               cache:false, scriptName:'settings.php'});
+               OC.appSettings({
+                 appid:'cafevdb',
+                 loadJS:true,
+                 cache:false,
+                 scriptName:'settings.php'
+               });
              });
 
   content.on('click keydown',
              '#personalsettings .expert',
              function(event) {
                event.preventDefault();
-               OC.appSettings({appid:'cafevdb', loadJS:'expertmode.js',
-                               cache:false, scriptName:'expert.php'});
+               OC.appSettings({
+                 appid:'cafevdb',
+                 loadJS:'expertmode.js',
+                 cache:false,
+                 scriptName:'expert.php'
+               });
+             });
+
+  content.on('click keydown',
+             '#personalsettings .tooltips',
+             function(event) {
+               event.preventDefault();
+               CAFEVDB.toolTipsOnOff(!CAFEVDB.toolTips);
+               $.post(OC.filePath('cafevdb', 'ajax/settings', 'tooltips.php'),
+                      CAFEVDB.toolTips ? { tooltips: 'on' } : {},
+                      function(data) { return; });
+               if (CAFEVDB.toolTips) {
+                 $(this).removeClass('tooltips-disabled').addClass('tooltips-enabled');
+               } else {
+                 $(this).removeClass('tooltips-enabled').addClass('tooltips-disabled');
+               }
+               return false;
              });
 
   content.on('click',
