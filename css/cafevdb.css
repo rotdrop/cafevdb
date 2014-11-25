@@ -329,6 +329,23 @@ div[class|='cafevdb-nav']>div {
   padding: 5px 2px 5px 2px;
 }
 
+div#controls div.buttonseparator {
+  display:inline-block;
+  background:#000;
+  height:30px;
+  width:1px;
+  vertical-align:middle;
+  opacity:0.5;
+}
+
+#tooltipbutton {
+  margin-right:0.3em;
+}
+
+#tooltipbutton.tooltips-enabled {
+  box-shadow:2px 2px 2px #080808 inset; /*, 1px 1px 1px #cfc inset;*/
+}
+
 /*****************************************************************************
  *
  * Header stuff
