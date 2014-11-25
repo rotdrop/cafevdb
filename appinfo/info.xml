@@ -30,6 +30,14 @@
             <link>http://www.sabre.io</link>
           </item>
           <item>
+            <title>JQuery -- JavaScript toolkit</title>
+            <link>http://www.jquery.com</link>
+          </item>
+          <item>
+            <title>JQuery UI -- JavaScript GUI toolkit</title>
+            <link>http://www.jqueryui.com</link>
+          </item>
+          <item>
             <title>JQuery Chosen Styler -- The Select-Box Prettyfier</title>
             <link>http://harvesthq.github.io/chosen</link>
           </item>
@@ -52,6 +60,14 @@
           <item>
             <title>Doku Wiki -- Wiki Software</title>
             <link>http://www.dokuwiki.org</link>
+          </item>
+          <item>
+            <title>roundcube -- webmail software</title>
+            <link>http://www.roundcube.net</link>
+          </item>
+          <item>
+            <title>REDAXO CMS -- content management system</title>
+            <link>http://www.redaxo.org</link>
           </item>
           <item>
             <title>GIT -- A Revision Control System</title>
