@@ -21,6 +21,16 @@
 
 $(document).ready(function() {
 
+  var popup = $('#appsettings_popup');
+  var button = $('#settingsbutton');
+  var arrow = popup.find('span.arrow.up');
+
+  var offset = (popup.offset().left + popup.outerWidth()
+               - button.offset().left - button.outerWidth()/2
+               - arrow.outerWidth()/2);
+
+  arrow.css({ right: offset });
+
   var adminSettings = $('#adminsettingstabs').length > 0;
 
   if (adminSettings) {
@@ -48,11 +58,11 @@ $(document).ready(function() {
     $.post(OC.filePath('cafevdb', 'ajax/settings', 'expertmode.php') , post, function(data) {return;});
     if ($('#expertmode').attr('checked')) {
       $('#expertbutton').show();
-      $('#expertbutton').css('float','left');
-      $('select.debug-mode').removeAttr('disabled');
+      $('#expertbutton').css('float', 'left');
+      $('select.debug-mode').prop('disabled', false);
     } else {
-      $('#expertbutton').css('display','none');
-      $('select.debug-mode').attr('disabled', 'disabled');
+      $('#expertbutton').hide();
+      $('select.debug-mode').prop('disabled', true);
     }
     $('select.debug-mode').trigger('chosen:updated');
     return false;
