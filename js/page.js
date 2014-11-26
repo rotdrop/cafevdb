@@ -52,6 +52,10 @@ var CAFEVDB = CAFEVDB || {};
              if (!CAFEVDB.ajaxErrorHandler(data, [
                'contents',
                'history' ])) {
+               // re-enable inputs on error
+               container.find('input').prop('disabled', false);
+               container.find('select').prop('disabled', false);
+               container.find('select').trigger('chosen:updated');
                Page.busyIcon(false);
                return false;
              }

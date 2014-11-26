@@ -656,6 +656,10 @@ var PHPMYEDIT = PHPMYEDIT || {};
            function (data) {
              if (!CAFEVDB.ajaxErrorHandler(
                data, [ 'contents', 'history' ])) {
+               // re-enable on error
+               container.find('input').prop('disabled', false);
+               container.find('select').prop('disabled', false);
+               container.find('select').trigger('chosen:updated');
                CAFEVDB.Page.busyIcon(false);
                return false;
              }
