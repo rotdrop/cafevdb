@@ -950,7 +950,7 @@ __EOT__;
             $selected = ' selected="selected"';
           }
           $html .= ''
-            .'<option '.$class.$value.$title.$data.$id.$style.$selected.'>'.$name.'</option>
+            .'<option '.$class.$value.$title.$data.$id.$style.$selected.$disabled.'>'.$name.'</option>
 ';
           break;
         default:
