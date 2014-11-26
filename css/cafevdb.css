@@ -116,6 +116,14 @@ div.cfgerror {
   color:red !important;
 }
 
+.error.specialrole {
+  text-align:center;
+  font-weight:bold;
+  color:red;
+  font-size:200%;
+  margin-top:2em;
+}
+
 /*******************************************************************************
  *
  * Pointer above controls

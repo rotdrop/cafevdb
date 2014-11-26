@@ -832,6 +832,7 @@ a comma.'));
                              array('type' => 'option',
                                    'title' => Config::toolTips('project-action-debit-mandates'),
                                    'value' => 'sepa-debit-mandates',
+                                   'disabled' => !Config::isTreasurer(),
                                    'name' => L::t('Debit Mandates')
                                ),
                              array('type' => 'option',

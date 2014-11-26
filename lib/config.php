@@ -706,6 +706,7 @@ redaxoRehearsalsModule
       self::setAppValue($key, $value);
     }
 
+    /**Like getValue(), but with default. */
     static public function getSetting($key, $default = '', $strict = false)
     {
       $value = self::getValue($key, $strict);
@@ -713,6 +714,55 @@ redaxoRehearsalsModule
         $value = $default;
       }
       return $value;
+    }
+
+    /**Helper function to determine if this user has a special role.*/
+    static private function matchDisplayName($musicianId, $uid = null)
+    {
+      $name = Musicians::fetchName($musicianId);
+      $dbName = trim($name['firstName'].' '.$name['lastName']);
+      $dbName = preg_replace('/\s+/', ' ', $dbName);
+      
+      $ocName = trim(\OC_User::getDisplayName($uid));
+      $ocName = preg_replace('/\s+/', ' ', $ocName);
+      
+      return strtolower($ocName) == strtolower($dbName);
+    }
+
+    /**Return true if the logged in user is the treasurer. We do this
+     * by matching the real name of the logged in user.
+     */
+    static public function isTreasurer($uid = null)
+    {
+      $musicianId = Config::getSetting('treasurerId', -1);
+      if ($musicianId == -1) {
+        return false;
+      }
+      return self::matchDisplayName($musicianId);
+    }
+
+    /**Return true if the logged in user is the secretary. We do this
+     * by matching the real name of the logged in user.
+     */
+    static public function isSecretary($uid = null)
+    {
+      $musicianId = Config::getSetting('secretaryId', -1);
+      if ($musicianId == -1) {
+        return false;
+      }
+      return self::matchDisplayName($musicianId);
+    }
+
+    /**Return true if the logged in user is the president. We do this
+     * by matching the real name of the logged in user.
+     */
+    static public function isPresident($uid = null)
+    {
+      $musicianId = Config::getSetting('presidentId', -1);
+      if ($musicianId == -1) {
+        return false;
+      }
+      return self::matchDisplayName($musicianId);
     }
 
     static public function getValue($key, $strict = false)
