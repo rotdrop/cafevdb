@@ -38,7 +38,6 @@ namespace CAFEVDB
                         'header' => $table->headerText()));
 
   
-  // Issue the main part. The method will echo itself
   $table->display();
 
   // Close some still opened divs

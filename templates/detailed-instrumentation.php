@@ -31,9 +31,13 @@ namespace CAFEVDB {
   $nav .= Navigation::button('projects');
   //$nav .= Navigation::button('detailed', $table->projectName, $table->projectId);
   $nav .= Navigation::button('projectinstruments', $table->projectName, $table->projectId);
-  $nav .= Navigation::button('debitmandates', $table->projectName, $table->projectId);
+  if (Config::isTreasurer()) {
+    $nav .= Navigation::button('debitmandates', $table->projectName, $table->projectId);
+  }
   if ($table->projectName == Config::getValue('memberTable')) {
-    $nav .= Navigation::button('insurances');
+    if (Config::isTreasurer()) {
+      $nav .= Navigation::button('insurances');
+    }
   } else {
     $nav .= Navigation::button('instruments', $table->projectName, $table->projectId);
   }

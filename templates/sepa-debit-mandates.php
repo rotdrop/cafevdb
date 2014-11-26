@@ -20,37 +20,43 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use CAFEVDB\L;
-use CAFEVDB\Navigation;
-use CAFEVDB\SepaDebitMandates;
+namespace CAFEVDB {
 
-$table = new SepaDebitMandates();
+  $table = new SepaDebitMandates();
 
-$projectName = $_['projectName'];
-$projectId = $_['projectId'];
-$css_pfx = SepaDebitMandates::CSS_PREFIX;
+  $projectName = $_['projectName'];
+  $projectId = $_['projectId'];
+  $css_pfx = SepaDebitMandates::CSS_PREFIX;
 
-$nav = '';
-if ($projectId >= 0) {
-  $nav .= Navigation::button('projectlabel', $projectName, $projectId);
-  $nav .= Navigation::button('projects');
-  $nav .= Navigation::button('detailed', $projectName, $projectId);
-  $nav .= Navigation::button('projectinstruments', $projectName, $projectId);
-} else {
-  $nav .= Navigation::button('projects');
-  $nav .= Navigation::button('all');
-  $nav .= Navigation::button('instruments');
-}
+  $nav = '';
+  if ($projectId >= 0) {
+    $nav .= Navigation::button('projectlabel', $projectName, $projectId);
+    $nav .= Navigation::button('projects');
+    $nav .= Navigation::button('detailed', $projectName, $projectId);
+    $nav .= Navigation::button('projectinstruments', $projectName, $projectId);
+  } else {
+    $nav .= Navigation::button('projects');
+    $nav .= Navigation::button('all');
+    $nav .= Navigation::button('instruments');
+  }
 
-echo $this->inc('part.common.header',
-                array('css-prefix' => $css_pfx,
-                      'navigationcontrols' => $nav,
-                      'header' => $table->headerText()));
+  echo $this->inc('part.common.header',
+                  array('css-prefix' => $css_pfx,
+                        'navigationcontrols' => $nav,
+                        'header' => $table->headerText()));
 
-// Issue the main part. The method will echo itself
-$table->display();
+  if (Config::isTreasurer()) {
+    $table->display();
+  } else {
+    echo '<div class="specialrole error">'.
+      L::t("Sorry, this view is only available to the %s.",
+           array(L::t('treasurer'))).
+      '</div>';
+  }
 
-// Close some still opened divs
-echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
+  // Close some still opened divs
+  echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
+
+} // namespace CAFEVDB
 
 ?>
