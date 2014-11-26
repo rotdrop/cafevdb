@@ -912,6 +912,7 @@
 "Internal documentation of the `CAFEV-App', mostly useful for web-developers." => "Interne Dokumentation des Quell-Codes der Web-Applikation, eigentlich nur für Entwickler nützlich.",
 "Owncloud Developer Documentation" => "Owncloud Entwickler-Dokumentation.",
 "Owncloud Developer Manual, mostly useful for web-developers." => "Owncloud Entwickler Anleitungen, eigentlich nur für Entwickler nützlich.",
+"Sorry, this view is only available to the %s." => "Tut mir leid, aber diese Ansicht steht nur dem %s zur Verfügung.",
 "Street Address" => "Postanschrift",
 "The name of the orchestra" => "Name des Orchesters",
 "The name of the orchestra (line 2)" => "Name des Orchesters (Zeile 2)",

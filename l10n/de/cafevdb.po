@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-25 23:08+0100\n"
-"PO-Revision-Date: 2014-11-25 23:10+0100\n"
+"POT-Creation-Date: 2014-11-26 02:08+0100\n"
+"PO-Revision-Date: 2014-11-26 02:09+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -272,16 +272,16 @@ msgstr "%s-uebersicht"
 msgid "%s-detailed"
 msgstr "%s-detailliert"
 
-#: ajax/export/excel.php:260 lib/projects.php:1696 lib/projects.php:1697
+#: ajax/export/excel.php:260 lib/projects.php:1697 lib/projects.php:1698
 msgid "Missing Musicians"
 msgstr "Fehlende Musiker"
 
 #: ajax/export/excel.php:285 ajax/export/insurance-export.php:142
-#: lib/projects.php:1699
+#: lib/projects.php:1700
 msgid "Instrument"
 msgstr "Instrument"
 
-#: ajax/export/excel.php:286 lib/projects.php:1699
+#: ajax/export/excel.php:286 lib/projects.php:1700
 msgid "Missing"
 msgstr "Defizit"
 
@@ -1401,7 +1401,7 @@ msgid "Archive"
 msgstr "Archiv"
 
 #: ajax/settings/redaxo-settings.php:39 lib/projects.php:716
-#: lib/projects.php:1258 lib/projects.php:1419
+#: lib/projects.php:1259 lib/projects.php:1420
 msgid "Rehearsals"
 msgstr "Proben"
 
@@ -1839,7 +1839,7 @@ msgstr "Möchten Sie den Termin wirklich vom Projekt lösen?"
 msgid "Really delete?"
 msgstr "Wirklich löschen?"
 
-#: js/expertmode.js:3
+#: js/expertmode.js:34
 msgid "Advanced operations, use with care"
 msgstr "Experten-Operationen"
 
@@ -1948,11 +1948,11 @@ msgid "Possible Duplicate!"
 msgstr "Doppelter Datenbankeintag?"
 
 # #Spalten
-#: js/pme.js:794
+#: js/pme.js:798
 msgid "#columns"
 msgstr "#Spalten"
 
-#: js/pme.js:803
+#: js/pme.js:807
 msgid "#rows"
 msgstr "#Zeilen"
 
@@ -2089,11 +2089,11 @@ msgstr "Lastschrifteinzug in 17 Tagen"
 msgid "ProjectDebitNoteAnnouncement"
 msgstr "ProjektLastschriftAnkuendigung"
 
-#: js/settings.js:96 js/settings.js:118 js/settings.js:174
+#: js/settings.js:106 js/settings.js:128 js/settings.js:184
 msgid "Error:"
 msgstr "Fehler:"
 
-#: js/settings.js:212
+#: js/settings.js:222
 msgid "Please standby, the operation will take some time!"
 msgstr "Bitte warten, das dauert jetzt ein wenig!"
 
@@ -2112,55 +2112,55 @@ msgstr "Verschlüsselung von `%s' @ `%s' fehlgeschlagen"
 msgid "Unable to update table data at index %s"
 msgstr "Kann die Tabellenzeile mit Index %s nicht ändern"
 
-#: lib/config.php:837
+#: lib/config.php:887
 msgid "birthday"
 msgstr "Geburtstag"
 
-#: lib/config.php:846
+#: lib/config.php:896
 msgid "no preference"
 msgstr "Keine Präferenz"
 
-#: lib/config.php:847
+#: lib/config.php:897
 msgid "German"
 msgstr "Deutsch"
 
-#: lib/config.php:848
+#: lib/config.php:898
 msgid "English"
 msgstr "Englisch"
 
-#: lib/config.php:849
+#: lib/config.php:899
 msgid "French"
 msgstr "Französisch"
 
-#: lib/config.php:850
+#: lib/config.php:900
 msgid "Spanish"
 msgstr "Spanisch"
 
-#: lib/config.php:851
+#: lib/config.php:901
 msgid "Portuguese"
 msgstr "Portugiesisch"
 
-#: lib/config.php:852
+#: lib/config.php:902
 msgid "Polish"
 msgstr "Polnisch"
 
-#: lib/config.php:853
+#: lib/config.php:903
 msgid "Russian"
 msgstr "Russisch"
 
-#: lib/config.php:854
+#: lib/config.php:904
 msgid "Chinese"
 msgstr "Chinesisch"
 
-#: lib/config.php:855
+#: lib/config.php:905
 msgid "Japaneese"
 msgstr "Japanisch"
 
-#: lib/config.php:856
+#: lib/config.php:906
 msgid "Korean"
 msgstr "Koreanisch"
 
-#: lib/config.php:876
+#: lib/config.php:926
 #, php-format
 msgid "Unknown Tooltip for key `%s' requested."
 msgstr "Unbekannter Tooltip `%s' angefordert."
@@ -2506,7 +2506,7 @@ msgstr ""
 "können hier einfach hinzugefügt werden."
 
 #: lib/functions.php:1076 lib/project-instruments.php:69 lib/projects.php:799
-#: lib/projects.php:1051
+#: lib/projects.php:1052
 msgid "Instrumentation Numbers"
 msgstr "Besetzungszahlen"
 
@@ -2518,7 +2518,7 @@ msgstr ""
 "Anzeige der angestrebten Besetzungszahlen. Natürlich kann man die dann auch "
 "anpassen ..."
 
-#: lib/functions.php:1090 lib/functions.php:1128 lib/projects.php:835
+#: lib/functions.php:1090 lib/functions.php:1128 lib/projects.php:836
 msgid "Debit Mandates"
 msgstr "Lastschriftmandate"
 
@@ -2625,7 +2625,8 @@ msgstr "Versicherungs-Jahresbeitrag für %s, %d. %s"
 msgid "Overview over insured instruments and insurance fee details and summary"
 msgstr "Übersicht über die versicherten Instrumente und Versicherungsbeiträge"
 
-#: lib/instrument-insurance.php:757
+#: lib/instrument-insurance.php:757 templates/instrument-insurance.php:44
+#: templates/sepa-debit-mandates.php:53
 msgid "treasurer"
 msgstr "Schatzmeister"
 
@@ -3131,28 +3132,28 @@ msgstr "Projekt-Übersicht"
 msgid "Project Files"
 msgstr "Projekt-Dateien"
 
-#: lib/projects.php:815 lib/projects.php:1029
+#: lib/projects.php:815 lib/projects.php:1030
 #, php-format
 msgid "Project Wiki for %s"
 msgstr "Wiki Projekt-Seite für %s"
 
-#: lib/projects.php:817 lib/projects.php:1033
+#: lib/projects.php:817 lib/projects.php:1034
 msgid "Project Notes"
 msgstr "Projekt-Notizen"
 
-#: lib/projects.php:822 lib/projects.php:1039 lib/projects.php:1069
+#: lib/projects.php:822 lib/projects.php:1040 lib/projects.php:1070
 msgid "Events"
 msgstr "Termine"
 
-#: lib/projects.php:827 lib/projects.php:1045
+#: lib/projects.php:827 lib/projects.php:1046
 msgid "Em@il"
 msgstr "Em@il"
 
-#: lib/projects.php:841
+#: lib/projects.php:842
 msgid "Profit and Loss Account"
 msgstr "Verlustrechnung"
 
-#: lib/projects.php:2126
+#: lib/projects.php:2127
 msgid ""
 "Flyers can only be added to existing projects, please add the new\n"
 "project without a flyer first."
@@ -3160,28 +3161,28 @@ msgstr ""
 "Flyer könner leider nur zu existierenden Projekten hinzugefügt werden; bitte "
 "zuerst das Projekt ohne Flyer anlegen."
 
-#: lib/projects.php:2141
+#: lib/projects.php:2142
 #, php-format
 msgid "Drop image to upload (max %s)"
 msgstr "Bild ablegen zum Hochladen (max %s)"
 
-#: lib/projects.php:2144
+#: lib/projects.php:2145
 msgid "Delete current flyer"
 msgstr "Aktuellen Flyer löschen"
 
-#: lib/projects.php:2145
+#: lib/projects.php:2146
 msgid "Edit current flyer"
 msgstr "Aktuellen Flyer zuschneiden"
 
-#: lib/projects.php:2146
+#: lib/projects.php:2147
 msgid "Upload new flyer"
 msgstr "Neuen Flyer hochladen"
 
-#: lib/projects.php:2147
+#: lib/projects.php:2148
 msgid "Select image from ownCloud"
 msgstr "Bild aus der `Cloud' auswählen"
 
-#: lib/projects.php:2155
+#: lib/projects.php:2156
 msgid ""
 "Internal error, don't know what to do concerning project-flyers in the given "
 "context."
@@ -3189,7 +3190,7 @@ msgstr ""
 "Interner Fehler; keine Ahnung, wie in diesem Kontext mit Projekt-Flyern "
 "umgegangen werden sollte."
 
-#: lib/projects.php:2396
+#: lib/projects.php:2397
 #, php-format
 msgid ""
 "====== Project %s ======\n"
@@ -5183,6 +5184,11 @@ msgstr "Owncloud Entwickler-Dokumentation."
 msgid "Owncloud Developer Manual, mostly useful for web-developers."
 msgstr ""
 "Owncloud Entwickler Anleitungen, eigentlich nur für Entwickler nützlich."
+
+#: templates/instrument-insurance.php:43 templates/sepa-debit-mandates.php:52
+#, php-format
+msgid "Sorry, this view is only available to the %s."
+msgstr "Tut mir leid, aber diese Ansicht steht nur dem %s zur Verfügung."
 
 #: templates/orchestra-settings.php:31
 msgid "Street Address"
