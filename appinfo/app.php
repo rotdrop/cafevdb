@@ -74,6 +74,9 @@ OC::$CLASSPATH['TCPDF'] = 'cafevdb/3rdparty/tcpdf/tcpdf.php';
 OC_App::registerAdmin( 'cafevdb', 'admin-settings' );
 //OCP\App::registerPersonal( 'cafevdb', 'settings' );
 
+// use exceptions for error reporting by default.
+CAFEVDB\Error::exceptions(true);
+
 OCP\Util::connectHook('OC_User','post_login','CAFEVDB\Config','loginListener');
 OCP\Util::connectHook('OC_User','post_setPassword','CAFEVDB\Config','changePasswordListener');
 OCP\Util::connectHook('OC_User', 'logout', 'CAFEVDB\Config', 'logoutListener');
