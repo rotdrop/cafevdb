@@ -89,6 +89,9 @@ function iban_get_bban_part($iban) {
 
 # Check the checksum of an IBAN - code modified from Validate_Finance PEAR class
 function iban_verify_checksum($iban) {
+ if (strlen($iban) < 6) {
+   return false;
+ }
  # convert to machine format
  $iban = iban_to_machine_format($iban);
  # move first 4 chars (countrycode and checksum) to the end of the string
@@ -321,7 +324,9 @@ function iban_countries() {
 # suggestions for what the user might have meant, based upon common
 # mistranscriptions.
 function iban_mistranscription_suggestions($incorrect_iban) {
- 
+
+ $incorrect_iban = iban_to_machine_format($incorrect_iban);
+
  # abort on ridiculous length input (but be liberal)
  $length = strlen($incorrect_iban);
  if($length<5 || $length>34) { return array('(length bad)'); }

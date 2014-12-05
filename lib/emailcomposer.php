@@ -976,7 +976,7 @@ insuranceFee
         return false;
       }
 
-            // Finally the point of no return. Send it out!!!      
+      // Finally the point of no return. Send it out!!!      
       try {
         if (!$phpMailer->preSend()) {
           // in principle this cannot happen as the mailer DOES use
@@ -999,7 +999,7 @@ insuranceFee
         return false;
       }
 
-      echo '<div style="font-weight:bold;font-size:120%;color:red;"><pre>'.$phpMailer->getMailHeaders().'</pre></div>';
+      echo '<div style="font-weight:bold;font-size:120%;color:red;"><pre>'.htmlspecialchars($phpMailer->getMailHeaders()).'</pre></div>';
 
       echo $strMessage;
 

@@ -184,17 +184,26 @@ var CAFEVDB = CAFEVDB || {};
           dateFormat : 'dd.mm.yy', // this is 4-digit year
           minDate: '01.01.1990',
           beforeShow: function(input) {
-            $(input).unbind('blur');
+            $(input).off('blur');
           },
           onSelect: function(dateText, inst) {
-            $(this).blur(self.validate);
-            $(this).focus();
-            $(this).blur();
+            var input = $(this);
+            input.on('blur', function(event) {
+              self.validate.call(this, event, function(lock) {
+                input.prop('disabled', lock);
+              });
+            });
+            input.focus();
+            input.blur();
           }
         });
 
-        $('#sepa-debit-mandate-form input[type="text"]').blur(self.validate);
-
+        $('#sepa-debit-mandate-form input[type="text"]').on('blur', function(event) {
+          var input = $(this);
+          self.validate.call(this, event, function(lock) {
+            input.prop('disabled', lock);
+          });
+        });
       },
       close: function(event, ui) {
         $('.tipsy').remove();
@@ -259,9 +268,21 @@ var CAFEVDB = CAFEVDB || {};
   };
 
   /**Validate version for our popup-dialog. */
-  SepaDebitMandate.validate = function(event) {
+  SepaDebitMandate.validate = function(event, validateLockCB) {
     var element = this;
     var dialogId = '#sepa-debit-mandate-dialog';
+
+    if (typeof validateLockCB == 'undefined') {
+      validateLockCB = function(lock) {};
+    }
+
+    var validateLock = function() {
+      validateLockCB(true)
+    };
+    
+    var validateUnlock = function() {
+      validateLockCB(false)
+    };    
 
     event.preventDefault();
     $('div.statusmessage').hide();
@@ -273,10 +294,15 @@ var CAFEVDB = CAFEVDB || {};
     post = $('#sepa-debit-mandate-form').serialize();
     post += "&"+$.param( { 'changed': $(this).attr('name') } );
 
+    // until end of validation
+    validateLock();
+
     $.post(OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-settings.php'),
            post,
            function (data) {
-             if (!CAFEVDB.ajaxErrorHandler(data, [ 'suggestions', 'message' ])) {
+             if (!CAFEVDB.ajaxErrorHandler(data,
+                                           [ 'suggestions', 'message' ],
+                                           validateUnlock)) {
                if (data.data.suggestions !== '') {
                  var hints = t('cafevdb', 'Suggested alternatives based on common human mis-transcriptions:')
                            + ' '
@@ -327,6 +353,9 @@ var CAFEVDB = CAFEVDB || {};
 	       $(dialogId+' #suggestions').html('');
 	       $(dialogId+' #suggestions').hide();
              }
+
+             validateUnlock();
+
              return true;
 
            }, 'json');
