@@ -147,6 +147,15 @@ redaxoRehearsalsModule
       return preg_split('/\s+/', trim(self::CFG_KEYS));
     }
 
+    public static function inGroup($user = null)
+    {
+      if (!$user) {
+        $user = \OC_User::getUser();
+      }
+      $group = self::getAppValue('usergroup', '');
+      return $group != '' && \OC_Group::inGroup($user, $group);
+    }
+
     public static function loginListener($params)
     {
       //self::init();
