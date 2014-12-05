@@ -82,7 +82,9 @@ namespace CAFEVDB
      */
     public static function newEventListener($eventId)
     {
-      self::maybeAddEvent($eventId);
+      if (Config::inGroup()) {
+        self::maybeAddEvent($eventId);
+      }
     }
 
     /**An event has been changed. The link between projects and events
@@ -95,22 +97,32 @@ namespace CAFEVDB
      */
     public static function changeEventListener($eventId)
     {
-      self::syncEvent($eventId);
+      if (Config::inGroup()) {
+        self::syncEvent($eventId);
+      }
     }
 
     public static function killEventListener($eventId)
     {
-      self::maybeKillEvent($eventId);
+      if (Config::inGroup()) {
+        self::maybeKillEvent($eventId);
+      }
     }
 
     public static function moveEventListener($eventId)
     {
       // Maybe check whether all members of the orchester group can
       // still access the event. But do nothing for now.
+      if (Config::inGroup()) {
+      }
     }
 
     public static function killCalendarListener($calendarId)
     {
+      if (!Config::inGroup()) {
+        return;
+      }
+
       Config::init();
       $handle = mySQL::connect(Config::$dbopts);
 
@@ -134,6 +146,10 @@ namespace CAFEVDB
 
     public static function editCalendarListener($calendarId)
     {
+      if (!Config::inGroup()) {
+        return;
+      }
+
       // We simply should update our idea of the name of the calender if
       // it is one of our four calendars, rename the calendar back to
       // what we want it to be
@@ -236,6 +252,98 @@ namespace CAFEVDB
      * non-repeating event:
      *
      * array('title' => TITLE,
+     *       'description' => TEXT,
+     *       'location' => WHERE (may be empty),
+     *       'categories' => <list, comma separated>,
+     *       'location' => WHERE (may be empty),
+     *       'priority' => true/false, (translates to "starred")
+     *       'start' => dd-mm-yyyy,
+     *       'due' => dd-mm-yyyy,
+     *       'calendar' => CALID
+     *
+     * We also support adding a reminder: 'alarm' => unset or interval
+     * in seconds (i.e. time-stamp diff). The function may throw
+     * errors.
+     */
+    public static function newTask($taskData)
+    {
+      $response = Util::postToRoute('tasks.tasks.addTask',
+                                    array(),
+                                    array('calendarID' => $taskData['calendar'],
+                                          'name' => $taskData['title'],
+                                          'starred' => $taskData['priority'],
+                                          'due' => $taskData['due'],
+                                          'start' => $taskData['start']),
+                                    'urlencoded');
+
+      if (!isset($response['task']['id'])) {
+        throw new \RunTimeException(L::t('Unexpected response while creating new task: %s',
+                                         array(print_r($response, true))));
+      }
+      $id = $response['task']['id'];
+
+      if (isset($taskData['description'])) {        
+        $response = Util::postToRoute('tasks.tasks.setTaskNote',
+                                      array('taskID' => $id),
+                                      array('note' => $taskData['description']),
+                                      'urlencoded');
+        if (!is_array($response) || count($response) > 0) {
+          throw new \RunTimeException(L::t('Unexpected response while creating new task: %s',
+                                           array(print_r($response, true))));
+        }
+      }
+      if (isset($taskData['location']) && $taskData['location'] != '') {
+        $response = Util::postToRoute('tasks.tasks.setLocation',
+                                      array('taskID' => $id),
+                                      array('location' => $taskData['location']),
+                                      'urlencoded');
+        if (!is_array($response) || count($response) > 0) {
+          throw new \RunTimeException(L::t('Unexpected response while creating new task: %s',
+                                           array(print_r($response, true))));
+        }
+      }
+      if (isset($taskData['categories']) && $taskData['categories'] != '') {
+        $response = Util::postToRoute('tasks.tasks.setCategories',
+                                      array('taskID' => $id),
+                                      array('categories' => $taskData['categories']),
+                                      'urlencoded');
+        if (!is_array($response) || count($response) > 0) {
+          throw new \RunTimeException(L::t('Unexpected response while creating new task: %s',
+                                           array(print_r($response, true))));
+        }
+      }
+      if (isset($taskData['alarm']) && $taskData['alarm']) {
+        $dinterval = new \DateTime();
+        $dinterval->add(new \DateInterval('PT'.$taskData['alarm'].'S'));
+        $interval = $dinterval->diff(new \DateTime);
+
+        // We always remind a period before the due date.
+        $response = Util::postToRoute('tasks.tasks.setReminderDate',
+                                      array('taskID' => $id),
+                                      array('action' => "DISPLAY",
+                                            'invert' => true,
+                                            'description' => $taskData['title'],
+                                            'related' => "END",
+                                            'type' => "DURATION",
+                                            'week' => 0,
+                                            'day' => $interval->format('%d'),
+                                            'hour' => $interval->format('%h'),
+                                            'minute' => $interval->format('%i'),
+                                            'second' => 0),
+                                      'urlencoded');
+        if (!is_array($response) || count($response) > 0) {
+          throw new \RunTimeException(L::t('Unexpected response while creating new task: %s',
+                                           array(print_r($response, true))));
+        }
+      }
+    }
+    
+    /**Inject a new event into the given calendar. This function calls
+     * OC_Calendar_Object::createVCalendarFromRequest($request). $request
+     * is a post-array. One example, in order to create a simple
+     * non-repeating event:
+     *
+     * array('title' => TITLE,
      *       'from' => dd-mm-yyyy,
      *       'to' => dd-mm-yyyy,
      *       'allday' => on (or unset),
@@ -261,7 +369,6 @@ namespace CAFEVDB
           "\n".
           print_r($eventData, true));
       }
-
       
       $calendarId = $eventData['calendar'];
       $vcalendar = \OC_Calendar_Object::createVCalendarFromRequest($eventData);

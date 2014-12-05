@@ -41,7 +41,7 @@ namespace CAFEVDB
      *
      * @param title
      * @param description (may be empty)
-     * @param projectiName (may be empty)
+     * @param projectName (may be empty)
      * @param timeStamp
      * @param alarm (maybe <= 0 for no alarm)
      */
@@ -72,6 +72,40 @@ namespace CAFEVDB
       return Events::newEvent($eventData);
     }
 
+    /**Add a task to the finance calendar, possibly including a
+     * reminder.
+     *
+     * @param title
+     * @param description (may be empty)
+     * @param projectName (may be empty)
+     * @param timeStamp
+     * @param alarm (maybe <= 0 for no alarm)
+     */
+    static public function financeTask($title, $description, $projectName, $timeStamp, $alarm = false)
+    {
+      $taskKind = 'finance';
+      $categories = '';
+      if ($projectName) {
+        // This triggers adding the task to the respective project when added
+        $categories .= $projectName.',';
+      }
+      $categories .= L::t('finance');
+      $calKey       = $taskKind.'calendar';
+      $calendarName = Config::getSetting($calKey, L::t($taskKind));
+      $calendarId   = Config::getSetting($calKey.'id', false);
+      
+      $taskData = array('title' => $title,
+                         'due' => date('d-m-Y', $timeStamp),
+                         'start' => date('d-m-Y'),
+                         'location' => 'Cyber-Space',
+                         'categories' => $categories,
+                         'description' => $description,
+                         'calendar' => $calendarId,
+                         'priority' => 99, // will get a star if != 0
+                         'alarm' => $alarm);
+      
+      return Events::newTask($taskData);
+    }
 
     /**Convert an UTF-8 encoded string to the brain-damaged SEPA
      * requirements. Thank you so much, you idiots. Banks.

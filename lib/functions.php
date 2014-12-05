@@ -622,6 +622,78 @@ __EOT__;
       return true;
     }
 
+    public static function postToRoute($route,
+                                       $routeParams = array(),
+                                       $postData = array(), $type = 'json')
+    {
+      $url = \OC_Helper::makeURLAbsolute(\OC_Helper::linkToRoute($route, $routeParams));
+
+      if (!is_array($postData)) {
+        $postData = array($postData);
+      }
+      $postData['requesttoken'] = \OC_Util::callRegister();
+      $url .= '?requesttoken='.\OC_Util::callRegister();
+      
+      switch ($type) {
+      case 'json':
+        if (is_array($postData)) {
+          $postData = \OC_JSON::encode($postData);
+        }
+        $httpHeader = 'Content-Type: application/json'."\r\n".
+          'Content-Length: '.strlen($postData);
+        break;
+      case 'urlencoded':
+        if (is_array($postData)) {
+          $postData = http_build_query($postData, '', '&');
+        }
+        $httpHeader = 'Content-Type: application/x-www-form-urlencoded'."\r\n".
+          'Content-Length: '.strlen($postData);
+        break;
+      default:
+        throw new \InvalidArgumentException(L::t("Supported data formats are JSON and URLENCODED"));
+        break;
+      }
+
+      $cookies = array();
+      foreach($_COOKIE as $name => $value) {
+        $cookies[] = "$name=$value";
+      }
+      $cookies = (count($cookies) > 0) ? "Cookie: " . join("; ", $cookies) . "\r\n" : '';
+
+      $context = stream_context_create(array('http' => array(
+                                               'method' => 'post',
+                                               'header' => $httpHeader."\r\n".$cookies,
+                                               'content' => $postData,
+                                               'follow_location' => 1
+                                               )));
+
+      session_write_close(); // avoid deadlock
+
+      $fp = fopen($url, 'rb', false, $context);
+      $result = '';
+
+      if ($fp === false) {
+        throw new \RunTimeException(L::t("Unable to post to route %s (%s)", array($route, $url)));
+      }
+
+      $result = stream_get_contents($fp);
+      fclose($fp);
+
+      session_start(); // restart it
+
+      $data = json_decode($result, true);
+      if (!is_array($data) || (count($data) > 0 && !isset($data['data']))) {
+        throw new \RunTimeException(
+          L::t("Invalid response from API call: %s", array(print_r($result, true))));
+      }
+
+      if (isset($data['data'])) {
+        return $data['data'];
+      } else {
+        return $data;
+      }
+    }
+    
   };
 
 /**Support class to generate navigation buttons and the like.
@@ -1199,7 +1271,8 @@ __EOT__;
       // Open a new connection to the given data-base.
       $handle = @mysql_connect($opts['hn'], $opts['un'], $opts['pw'], true);
       if ($handle === false) {
-        Util::error('Could not connect to data-base server: "'.@mysql_error().'"', $die, $silent);
+        Util::error(L::t("Could not connect to data-base server `%s': %s",
+                         array($opts['hn'], @mysql_error())), $die, $silent);
         return false;
       }
 
@@ -1211,7 +1284,7 @@ __EOT__;
       $dbres = @mysql_select_db($opts['db'], $handle);
   
       if (!$dbres) {
-        Util::error('Unable to select '.$opts['db'], $die, $silent);
+        Util::error(L::t('Unable to select %s', array($opts['db'])), $die, $silent);
         return false;
       }
       return $handle;

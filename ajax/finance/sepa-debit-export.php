@@ -246,6 +246,18 @@ namespace CAFEVDB {
                           $calendarProject,
                           $submissionStamp,
                           24*60*60 /* alert one day in advance */);
+    Finance::financeTask(L::t('Debit notes submission deadline').
+                         ', '.
+                         $calendarTitlePart,
+                         L::t('Exported CSV file name:').
+                         "\n\n".
+                         $name.
+                         "\n\n".
+                         L::t('Due date:').' '.date('d.m.Y', $timeStamp),
+                         $calendarProject,
+                         $submissionStamp,
+                         24*60*60 /* alert one day in advance */);
+
     Finance::financeEvent(L::t('Debit notes due').
                           ', '.
                           $calendarTitlePart,
