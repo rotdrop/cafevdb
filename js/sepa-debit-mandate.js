@@ -203,7 +203,7 @@ var CAFEVDB = CAFEVDB || {};
               });
             });
             input.focus();
-            input.blur();
+            input.trigger('blur');
           }
         });
 
@@ -395,8 +395,21 @@ var CAFEVDB = CAFEVDB || {};
   };
 
   /**Validate version for the PME dialog. */
-  SepaDebitMandate.validatePME = function(event) {
+  SepaDebitMandate.validatePME = function(event, validateLockCB) {
     var element = this;
+
+    if (typeof validateLockCB == 'undefined') {
+      validateLockCB = function(lock) {};
+    }
+
+    var validateLock = function() {
+      validateLockCB(true)
+    };
+    
+    var validateUnlock = function() {
+      validateLockCB(false)
+    };    
+
     event.preventDefault();
 
     // we use the same Ajax validation script; we remap the form
@@ -436,11 +449,16 @@ var CAFEVDB = CAFEVDB || {};
       changed: changed
     };
 
+    // until end of validation
+    validateLock();    
+
     var post = $.param(mandateData);
     $.post(OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-settings.php'),
            post,
            function (data) {
-             if (!CAFEVDB.ajaxErrorHandler(data, [ 'suggestions', 'message' ])) {
+             if (!CAFEVDB.ajaxErrorHandler(data,
+                                           [ 'suggestions', 'message' ],
+                                           validateUnlock)) {
                if (data.data.blz) {
                  $('input.bankAccountBLZ').val(data.data.blz);
                }
@@ -461,6 +479,9 @@ var CAFEVDB = CAFEVDB || {};
              if (data.data.blz) {
                $('input[name="PME_data_BLZ"]').val(data.data.blz);
              }
+
+             validateUnlock();
+
              return true;
            }, 'json');
     return false;
@@ -582,7 +603,17 @@ var CAFEVDB = CAFEVDB || {};
       return true;
     }
     var table = form.find('table[summary="SepaDebitMandates"]');
-    table.find('input[type="text"]').not('tr.pme-filter input').off('blur').on('blur', self.validatePME);
+
+    var validateInput = function(event) {
+      var input = $(this);
+      self.validatePME.call(this, event, function(lock) {
+        input.prop('disabled', lock);
+      });
+    };
+
+    table.find('input[type="text"]').not('tr.pme-filter input').
+      off('blur').
+      on('blur', validateInput);
 
     CAFEVDB.exportMenu(containerSel);
 
@@ -593,9 +624,9 @@ var CAFEVDB = CAFEVDB || {};
         $(input).unbind('blur');
       },
       onSelect: function(dateText, inst) {
-        $(this).blur(self.validatePME);
+        $(this).on('blur', validateInput);
         $(this).focus();
-        $(this).blur();
+        $(this).trigger('blur');
       }
     });
 
