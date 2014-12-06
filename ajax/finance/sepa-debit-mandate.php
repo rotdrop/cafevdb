@@ -85,7 +85,7 @@ namespace CAFEVDB {
       $nonrecurring = $projectName !== $members;
       $mandate = array('id' => -1,
                        'mandateReference' => $ref,
-                       'mandateDate' => '',
+                       'mandateDate' => '01-'.date('m-Y'),
                        'lastUsedDate' =>'',
                        'musicianId' => $musicianId,
                        'projectId' => $projectId,
