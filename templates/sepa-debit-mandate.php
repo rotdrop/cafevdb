@@ -66,7 +66,7 @@ $recurring = L::t('Type: ').($_['nonrecurring'] ? L::t('nonrecurring') : L::t('p
            id="bankAccountBIC"
            name="bankAccountBIC"
            value="<?php echo $_['bankAccountBIC']; ?>"
-           title="<?php echo L::t('Optional BIC of the account'); ?>"
+           title="<?php echo L::t('Optionally the BIC of the account; will be computed automatically if left blank.'); ?>"
            placeholder="<?php echo L::t('BIC of bank account'); ?>"/><br/>
     <label for="mandateDate"><?php echo L::t("Date issued:"); ?></label>
     <input class="mandateDate" type="text"
@@ -75,7 +75,9 @@ $recurring = L::t('Type: ').($_['nonrecurring'] ? L::t('nonrecurring') : L::t('p
            value="<?php echo $_['mandateDate']; ?>"
            title="<?php echo L::t('Date of mandate grant'); ?>"
            placeholder="<?php echo L::t('mandate date'); ?>"/>
-<?php if ($_['nonrecurring']) echo '<!-- '; ?>
+<?php if ($_['nonrecurring']) { ?>
+    <input type="hidden" name="lastUsedDate" value="<?php echo $_['lastUsedDate']; ?>"/>
+<?php } else { ?>
     <label for="lastUsedDate"><?php echo L::t("Date of last usage:"); ?>
       <input class="lastUsedDate" type="text"
              id="lastUsedDate"
@@ -84,13 +86,24 @@ $recurring = L::t('Type: ').($_['nonrecurring'] ? L::t('nonrecurring') : L::t('p
              value="<?php echo $_['lastUsedDate']; ?>"
              title="<?php echo L::t('Date of last usage of debit-mandate'); ?>"
              placeholder="<?php echo L::t('last used date'); ?>"/>
-    </label><br/>
-<?php if ($_['nonrecurring']) echo ' -->'; ?>
+    </label>
+<?php } ?><br/>
     <span id="debitRecurringInfo"><?php echo $recurring; ?></span>
+    <label class="sepa-validation-toggle"
+           for="sepa-validation-toggle"
+           title="<?php echo Config::toolTips('sepa-instant-validation'); ?>">
+      <?php echo L::t('Instant IBAN Validation:'); ?>
+      <input type="checkbox"
+             checked="checked"
+             class="sepa-validation-toggle"
+             name="sepa-validation-toggle"
+             id="sepa-validation-toggle"/>
+      <div class="sepa-validation-toggle"></div>
+    </label>
   </form>
   <div class="sepastatusblock">
-    <span class="statusmessage" id="msg"></span>
-    <span class="statusmessage" id="suggestions"></span>
+    <span class="statusmessage" style="display:inline-block;" id="msg"></span>
+    <span class="statusmessage" style="display:inline-block;" id="suggestions"></span>
     <div id="debug"></div>
   </div>
 </div>

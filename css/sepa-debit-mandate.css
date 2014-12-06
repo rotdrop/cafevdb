@@ -17,6 +17,27 @@ form#sepa-debit-mandate-form :disabled {
   opacity:1.0;
 }
 
+form#sepa-debit-mandate-form label.sepa-validation-toggle {
+  float:right;
+}
+
+form#sepa-debit-mandate-form input.sepa-validation-toggle {
+  display:none;
+}
+
+form#sepa-debit-mandate-form div.sepa-validation-toggle {
+  display:inline-block;
+  width:24px;
+  height:24px;
+  background:url(../img/forgetit.png);
+  cursor:pointer;
+  vertical-align:middle;
+}
+
+form#sepa-debit-mandate-form input.sepa-validation-toggle:checked ~ div.sepa-validation-toggle {
+  background:url(../img/letsdoit.png);
+}
+
 input.pme-debit-note-[type=submit] {
   background-image:url('../img/euro-x.png');
   background-repeat:no-repeat;

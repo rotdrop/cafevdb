@@ -462,6 +462,8 @@ by the pre-names of the organizing committe in order to compose  greetings.'),
 
       'select-email-template' => L::t('Select one of the email templates previously stored in the data-base.'),
 
+      'sepa-instant-validation' => L::t('Toggle instant validation and automatic computation of derived bank account data. If instant validation is disabled, the final values will still be validated and an error message will appear if an error is detected. It is only possible to save of store the debit-mandate if instant validation is enabled.'),
+      
       'syncevents' => L::t('Recompute the link between projects and events, using the event-categories as primary key.'),
 
       'test-dbpassword' => L::t('Check whether the data-base can be accessed with the given account

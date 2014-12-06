@@ -30,14 +30,17 @@ var CAFEVDB = CAFEVDB || {};
   SepaDebitMandate.musicianName = '';
   SepaDebitMandate.mandateId = -1;
   SepaDebitMandate.mandateReference = '';
-    /**Initialize the mess with contents
-     *
-     * @param[in] data JSON response with the fields data.status,
-     *                 data.data.contents,
-     *                 data.data.message is place in an error-popup if status != 'success'
-     *                 data.data.debug. data.data.debug is placed
-     *                 inside the '#debug' div.
-     */
+  SepaDebitMandate.instantValidation = true;
+
+  /**Initialize the mess with contents. The "mess" is a dialog window
+   *with the input form element for the bank account data.
+   *
+   * @param[in] data JSON response with the fields data.status,
+   *                 data.data.contents,
+   *                 data.data.message is place in an error-popup if status != 'success'
+   *                 data.data.debug. data.data.debug is placed
+   *                 inside the '#debug' div.
+   */
   SepaDebitMandate.init = function(data, reloadCB) {
     var self = SepaDebitMandate;
 
@@ -63,6 +66,9 @@ var CAFEVDB = CAFEVDB || {};
     self.mandateReference = data.data.mandateReference;
 
     CAFEVDB.debugPopup(data);
+
+    var mandateForm = $('#dialog_holder').find('#sepa-debit-mandate-form');
+    self.instantValidation = mandateForm.find('#sepa-validation-toggle').prop('checked');
     
     var popup = $('#sepa-debit-mandate-dialog').dialog({
       position: { my: "middle top+50%",
@@ -82,13 +88,13 @@ var CAFEVDB = CAFEVDB || {};
           title: t('cafevdb', 'Change the SEPA mandate. Note that the SEPA mandate-reference is automatically computed and cannot be changed.'),
           click: function() {
             // enable the form, disable the change button
-            $(this).dialog("widget").find('button.save').attr("disabled", false);
-            $(this).dialog("widget").find('button.apply').attr("disabled", false);
+            $(this).dialog("widget").find('button.save').attr("disabled", !self.instantValidation);
+            $(this).dialog("widget").find('button.apply').attr("disabled", !self.instantValidation);
             $(this).dialog("widget").find('button.delete').attr("disabled", false);
-            $(this).dialog("widget").find('input[class^="bankAccount"]').attr("disabled", false);
-            $(this).dialog("widget").find('input.mandateDate').attr("disabled", false);
-            $(this).dialog("widget").find('input.lastUsedDate').attr("disabled", false);
             $(this).dialog("widget").find('button.change').attr("disabled", true);
+            mandateForm.find('input[class^="bankAccount"]').attr("disabled", false);
+            mandateForm.find('input.mandateDate').attr("disabled", false);
+            mandateForm.find('input.lastUsedDate').attr("disabled", false);
             $('.tipsy').remove(); // clean up left-over balloons
           }
         },
@@ -121,10 +127,10 @@ var CAFEVDB = CAFEVDB || {};
               $(dlg).dialog("widget").find('button.save').attr("disabled", true);
               $(dlg).dialog("widget").find('button.apply').attr("disabled", true);
               $(dlg).dialog("widget").find('button.delete').attr("disabled", true);
-              $(dlg).dialog("widget").find('input[class^="bankAccount"]').attr("disabled", true);
-              $(dlg).dialog("widget").find('input.mandateDate').attr("disabled", true);
-              $(dlg).dialog("widget").find('input.lastUsedDate').attr("disabled", true);
               $(dlg).dialog("widget").find('button.change').attr("disabled", false);
+              mandateForm.find('input[class^="bankAccount"]').attr("disabled", true);
+              mandateForm.find('input.mandateDate').attr("disabled", true);
+              mandateForm.find('input.lastUsedDate').attr("disabled", true);
               $('.tipsy').remove(); // clean up left-over balloons
               reloadCB();
             });
@@ -154,20 +160,23 @@ var CAFEVDB = CAFEVDB || {};
         }
       ],
       open: function(){
+        var dlg = $(this);
         //$('.tipsy').remove();
         
         if (self.mandateId > 0) {
           // If we are about to display an existing mandate, first
           // disable all inputs and leave only the "close" and
-          // "change" buttons enabled, and the lastUsed date.
-          $(this).dialog("widget").find('button.save').attr("disabled", true);
-          $(this).dialog("widget").find('button.apply').attr("disabled", true);
-          $(this).dialog("widget").find('button.delete').attr("disabled", true);
-          $(this).dialog("widget").find('input[class^="bankAccount"]').attr("disabled", true);
-          $(this).dialog("widget").find('input.mandateDate').attr("disabled", true);
-          $(this).dialog("widget").find('input.lastUsedDate').attr("disabled", true);
+          // "change" buttons enabled.
+          dlg.dialog("widget").find('button.save').attr("disabled", true);
+          dlg.dialog("widget").find('button.apply').attr("disabled", true);
+          dlg.dialog("widget").find('button.delete').attr("disabled", true);
+          mandateForm.find('input[class^="bankAccount"]').attr("disabled", true);
+          mandateForm.find('input.mandateDate').attr("disabled", true);
+          mandateForm.find('input.lastUsedDate').attr("disabled", true);
         } else {
-          $(this).dialog("widget").find('button.change').attr("disabled", true);
+          dlg.dialog("widget").find('button.save').attr("disabled", !self.instantValidation);
+          dlg.dialog("widget").find('button.apply').attr("disabled", !self.instantValidation);
+          dlg.dialog("widget").find('button.change').attr("disabled", true);
         }
 
         $('button').tipsy({gravity:'ne', fade:true});
@@ -198,11 +207,35 @@ var CAFEVDB = CAFEVDB || {};
           }
         });
 
-        $('#sepa-debit-mandate-form input[type="text"]').on('blur', function(event) {
+        var validateInput = function(event) {
           var input = $(this);
           self.validate.call(this, event, function(lock) {
             input.prop('disabled', lock);
           });
+        };
+
+        mandateForm.find('input[type="text"]').on('blur', validateInput);
+
+        // Switch off for IBAN in order not to annoy Martina
+        if (!self.instantValidation) {
+          mandateForm.find('#bankAccountIBAN').off('blur');
+        }
+
+        mandateForm.find('#sepa-validation-toggle').on('change', function(event) {
+          event.preventDefault();
+
+          self.instantValidation = $(this).prop('checked');
+          // Switch off for IBAN in order not to annoy Martina
+          
+          mandateForm.find('#bankAccountIBAN').off('blur');
+          if (self.instantValidation) {
+            mandateForm.find('#bankAccountIBAN').on('blur', validateInput);
+            mandateForm.find('#bankAccountIBAN').trigger('blur');
+          }
+          dlg.dialog("widget").find('button.save').attr("disabled", !self.instantValidation);
+          dlg.dialog("widget").find('button.apply').attr("disabled", !self.instantValidation);
+
+          return false;
         });
       },
       close: function(event, ui) {
