@@ -42,7 +42,7 @@ namespace CAFEVDB\PHPExcel
      * @param mixed $value			Value to bind in cell
      * @return boolean
      */
-    public function bindValue(PHPExcel_Cell $cell, $value = null)
+    public function bindValue(\PHPExcel_Cell $cell, $value = null)
     {		
       // sanitize UTF-8 strings
       if (is_string($value)) {
