@@ -327,7 +327,7 @@ class InstrumentInsurance
       'select'   => 'T',
       'maxlen'   => 6,
       'sort'     => true);
-    
+
     $opts['fdd']['InsuranceAmount'] = Config::$opts['money'];
     $opts['fdd']['InsuranceAmount']['name'] = strval(L::t('Insurance Amount'));
     $opts['fdd']['InsuranceAmount']['css'] = array('postfix' => ' amount align-right');
@@ -384,6 +384,9 @@ class InstrumentInsurance
         )
       );
 
+    $opts['fdd']['StartOfInsurance'] = Config::$opts['birthday'];
+    $opts['fdd']['StartOfInsurance']['name'] = strval(L::t('Start of Insurance'));
+    
     if ($this->pme_bare) {
       // disable all navigation buttons, probably for html export
       $opts['navigation'] = 'N'; // no navigation
