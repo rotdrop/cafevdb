@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-06 02:58+0100\n"
+"POT-Creation-Date: 2014-12-13 21:15+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -284,7 +284,7 @@ msgid "Musician"
 msgstr ""
 
 #: ajax/export/insurance-export.php:143 lib/instrument-insurance.php:318
-#: lib/instrument-insurance.php:808
+#: lib/instrument-insurance.php:811
 msgid "Manufacturer"
 msgstr ""
 
@@ -1369,8 +1369,8 @@ msgstr ""
 #: js/inlineimage.js:102 js/inlineimage.js:131 js/inlineimage.js:155
 #: js/inlineimage.js:183 js/inlineimage.js:207 js/inlineimage.js:326
 #: js/inlineimage.js:412 js/inlineimage.js:421 js/inlineimage.js:424
-#: js/sepa-debit-mandate.js:523 js/sepa-debit-mandate.js:538
-#: js/sepa-debit-mandate.js:618
+#: js/sepa-debit-mandate.js:544 js/sepa-debit-mandate.js:559
+#: js/sepa-debit-mandate.js:649
 msgid "Error"
 msgstr ""
 
@@ -1931,23 +1931,23 @@ msgstr ""
 msgid "Please do not accept these alternatives lightly!"
 msgstr ""
 
-#: js/sepa-debit-mandate.js:520 js/sepa-debit-mandate.js:615
+#: js/sepa-debit-mandate.js:541 js/sepa-debit-mandate.js:646
 msgid "Unable to export debit notes:"
 msgstr ""
 
-#: js/sepa-debit-mandate.js:535
+#: js/sepa-debit-mandate.js:556
 msgid "Unable to export insurance overviews:"
 msgstr ""
 
-#: js/sepa-debit-mandate.js:556
+#: js/sepa-debit-mandate.js:577
 msgid "InsuranceDebitNoteAnnouncement"
 msgstr ""
 
-#: js/sepa-debit-mandate.js:557 js/sepa-debit-mandate.js:634
+#: js/sepa-debit-mandate.js:578 js/sepa-debit-mandate.js:665
 msgid "Debit notes due in 17 days"
 msgstr ""
 
-#: js/sepa-debit-mandate.js:633
+#: js/sepa-debit-mandate.js:664
 msgid "ProjectDebitNoteAnnouncement"
 msgstr ""
 
@@ -2480,35 +2480,39 @@ msgstr ""
 msgid "Total Insurance"
 msgstr ""
 
-#: lib/instrument-insurance.php:679
+#: lib/instrument-insurance.php:388
+msgid "Start of Insurance"
+msgstr ""
+
+#: lib/instrument-insurance.php:682
 msgid "insurance"
 msgstr ""
 
-#: lib/instrument-insurance.php:738
+#: lib/instrument-insurance.php:741
 #, php-format
 msgid "Annual Insurance Fees for %s, %d. %s"
 msgstr ""
 
-#: lib/instrument-insurance.php:742
+#: lib/instrument-insurance.php:745
 msgid "Overview over insured instruments and insurance fee details and summary"
 msgstr ""
 
-#: lib/instrument-insurance.php:757 templates/instrument-insurance.php:44
+#: lib/instrument-insurance.php:760 templates/instrument-insurance.php:44
 #: templates/sepa-debit-mandates.php:53
 msgid "treasurer"
 msgstr ""
 
-#: lib/instrument-insurance.php:779
+#: lib/instrument-insurance.php:782
 #, php-format
 msgid "Annular insurance fees for %d"
 msgstr ""
 
-#: lib/instrument-insurance.php:780
+#: lib/instrument-insurance.php:783
 #, php-format
 msgid "Dear %s,"
 msgstr ""
 
-#: lib/instrument-insurance.php:785
+#: lib/instrument-insurance.php:788
 msgid ""
 "this letter informs you about the details of the instrument-insurances\n"
 "we are maintaining for you on your behalf. This letter is\n"
@@ -2521,53 +2525,53 @@ msgid ""
 "your insured items at any time. Just ask."
 msgstr ""
 
-#: lib/instrument-insurance.php:802
+#: lib/instrument-insurance.php:805
 #, php-format
 msgid "Insured Person: %s"
 msgstr ""
 
-#: lib/instrument-insurance.php:805
+#: lib/instrument-insurance.php:808
 msgid "Vendor"
 msgstr ""
 
-#: lib/instrument-insurance.php:806 lib/insurance-rates.php:231
+#: lib/instrument-insurance.php:809 lib/insurance-rates.php:231
 msgid "Scope"
 msgstr ""
 
-#: lib/instrument-insurance.php:807
+#: lib/instrument-insurance.php:810
 msgid "Object"
 msgstr ""
 
-#: lib/instrument-insurance.php:809
+#: lib/instrument-insurance.php:812
 msgid "Amount"
 msgstr ""
 
-#: lib/instrument-insurance.php:810
+#: lib/instrument-insurance.php:813
 msgid "Rate"
 msgstr ""
 
-#: lib/instrument-insurance.php:811
+#: lib/instrument-insurance.php:814
 msgid "Fee"
 msgstr ""
 
-#: lib/instrument-insurance.php:828
+#: lib/instrument-insurance.php:831
 msgid "Sub-totals (excluding taxes)"
 msgstr ""
 
-#: lib/instrument-insurance.php:870
+#: lib/instrument-insurance.php:873
 msgid "Total amount excluding taxes:"
 msgstr ""
 
-#: lib/instrument-insurance.php:874
+#: lib/instrument-insurance.php:877
 #, php-format
 msgid "%0.2f %% insurance taxes:"
 msgstr ""
 
-#: lib/instrument-insurance.php:878
+#: lib/instrument-insurance.php:881
 msgid "Total amount to pay:"
 msgstr ""
 
-#: lib/instrument-insurance.php:888
+#: lib/instrument-insurance.php:891
 msgid ""
 "You have granted us a debit-mandate. The total amount due will be debited "
 "from your bank-account, no further action from your side is required. We "
@@ -2575,15 +2579,15 @@ msgid ""
 "advance of the bank transaction."
 msgstr ""
 
-#: lib/instrument-insurance.php:895 lib/instrument-insurance.php:897
+#: lib/instrument-insurance.php:898 lib/instrument-insurance.php:900
 msgid "Best wishes,"
 msgstr ""
 
-#: lib/instrument-insurance.php:903
+#: lib/instrument-insurance.php:906
 msgid "Treasurer"
 msgstr ""
 
-#: lib/instrument-insurance.php:969
+#: lib/instrument-insurance.php:972
 #, php-format
 msgid "Invalid broker/geographical-scope combination: %s - %s"
 msgstr ""
