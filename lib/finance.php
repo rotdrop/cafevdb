@@ -187,6 +187,15 @@ namespace CAFEVDB
         }      
       }
 
+      if ($mandate && !isset($mandate['sequenceType'])) {
+        if ($mandate['nonrecurring']) {
+          $mandate['sequenceType'] = 'once';
+        } else {
+          $mandate['sequenceType'] = 'permanent';
+        }
+        unset($mandate['nonrecurring']);
+      }
+
       if (!self::decryptSepaMandate($mandate)) {
         $mandate = false;
       }
@@ -295,6 +304,12 @@ namespace CAFEVDB
         return false;
       }
 
+      if (isset($mandate['sequenceType'])) {
+        $sequenceType = $mandate['sequenceType'];
+        $mandate['nonrecurring'] = $sequenceType == 'once';
+        unset($mandate['sequenceType']);
+      }
+      
       $ref = $mandate['mandateReference'];
       $mus = $mandate['musicianId'];
       $prj = $mandate['projectId'];
@@ -403,7 +418,7 @@ namespace CAFEVDB
                     'lastUsedDate',
                     'musicianId',
                     'projectId',
-                    'nonrecurring',
+                    'sequenceType',
                     'IBAN',
                     'BLZ',
                     'bankAccountOwner');
@@ -412,7 +427,7 @@ namespace CAFEVDB
                      'lastUsedDate' => L::t('date of last usage'),
                      'musicianId' => L::t('musician id'),
                      'projectId' => L::t('project id'),
-                     'nonrecurring' => L::t('non recurring'),
+                     'sequenceType' => L::t('sequence type'),
                      'IBAN' => 'IBAN',
                      'BLZ' => L::t('bank code'),
                      'bankAccountOwner' => L::t('bank account owner'));

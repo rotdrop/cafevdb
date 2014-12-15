@@ -31,7 +31,7 @@ $musId   = $_['MusicianId'];
 $musName = $_['MusicianName'];
 $class   = $_['CSSClass'];
 
-$recurring = L::t('Type: ').($_['nonrecurring'] ? L::t('nonrecurring') : L::t('permanent'));
+$recurring = L::t('Type: ').($_['sequenceType'] == 'once' ? L::t('once') : L::t('permanent'));
 
 ?>
 <div id="sepa-debit-mandate-dialog" title="<?php echo $title;?>">
@@ -43,7 +43,7 @@ $recurring = L::t('Type: ').($_['nonrecurring'] ? L::t('nonrecurring') : L::t('p
     <input type="hidden" name="MusicianId"   value="<?php echo $musId; ?>" />
     <input type="hidden" name="MusicianName" value="<?php echo $musName; ?>" />
     <input type="hidden" name="mandateReference" value="<?php echo $_['mandateReference']; ?>" />
-    <input type="hidden" name="nonrecurring" value="<?php echo $_['nonrecurring']; ?>" />
+    <input type="hidden" name="sequenceType" value="<?php echo $_['sequenceType']; ?>" />
     <input class="bankAccountOwner" type="text"
            id="bankAccountOwner"
            name="bankAccountOwner"
@@ -75,13 +75,13 @@ $recurring = L::t('Type: ').($_['nonrecurring'] ? L::t('nonrecurring') : L::t('p
            value="<?php echo $_['mandateDate']; ?>"
            title="<?php echo L::t('Date of mandate grant'); ?>"
            placeholder="<?php echo L::t('mandate date'); ?>"/>
-<?php if ($_['nonrecurring']) { ?>
+<?php if ($_['sequenceType'] == 'once') { ?>
     <input type="hidden" name="lastUsedDate" value="<?php echo $_['lastUsedDate']; ?>"/>
 <?php } else { ?>
     <label for="lastUsedDate"><?php echo L::t("Date of last usage:"); ?>
       <input class="lastUsedDate" type="text"
              id="lastUsedDate"
-             <?php echo $_['nonrecurring'] ? 'disabled' : '' ?>
+             <?php echo $_['sequenceType'] == 'once' ? 'disabled' : '' ?>
              name="lastUsedDate"
              value="<?php echo $_['lastUsedDate']; ?>"
              title="<?php echo L::t('Date of last usage of debit-mandate'); ?>"

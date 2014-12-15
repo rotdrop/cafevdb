@@ -50,7 +50,7 @@ namespace CAFEVDB {
 
     // Compose the mandate
     $mandate = array('mandateReference' => Util::cgiValue('mandateReference'),
-                     'nonrecurring' => Util::cgiValue('nonrecurring'),
+                     'sequenceType' => Util::cgiValue('sequenceType'),
                      'musicianId' => Util::cgiValue('MusicianId'),
                      'projectId' => Util::cgiValue('ProjectId'),
                      'mandateDate' => Util::cgiValue('mandateDate'),

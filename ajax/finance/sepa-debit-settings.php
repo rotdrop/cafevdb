@@ -59,7 +59,7 @@ namespace CAFEVDB {
 
     $projectName = Projects::fetchName($projectId);
     $members = Config::getSetting('memberTable', L::t('ClubMembers'));
-    $nonrecurring = $projectName !== $members;
+    $sequenceType = $projectName !== $members ? 'once' : 'permanent';
 
     $IBAN = Util::cgiValue('bankAccountIBAN');
     $BLZ  = Util::cgiValue('bankAccountBLZ', '');

@@ -82,14 +82,14 @@ namespace CAFEVDB {
     if ($mandate === false) {
       $ref = Finance::generateSepaMandateReference($projectId, $musicianId);
       $members = Config::getSetting('memberTable', L::t('ClubMembers'));
-      $nonrecurring = $projectName !== $members;
+      $sequenceType = $projectName !== $members ? 'once' : 'permanent';
       $mandate = array('id' => -1,
                        'mandateReference' => $ref,
                        'mandateDate' => '01-'.date('m-Y'),
                        'lastUsedDate' =>'',
                        'musicianId' => $musicianId,
                        'projectId' => $projectId,
-                       'nonrecurring' => $nonrecurring,
+                       'sequenceType' => $sequenceType,
                        'IBAN' => '',
                        'BIC' => '',
                        'BLZ' => '',
@@ -108,7 +108,7 @@ namespace CAFEVDB {
     $tmpl->assign('mandateReference', $mandate['mandateReference']);
     $tmpl->assign('mandateDate', date('d.m.Y', strtotime($mandate['mandateDate'])));
     $tmpl->assign('lastUsedDate', date('d.m.Y', strtotime($mandate['lastUsedDate'])));
-    $tmpl->assign('nonrecurring', $mandate['nonrecurring']);
+    $tmpl->assign('sequenceType', $mandate['sequenceType']);
 
     $tmpl->assign('bankAccountOwner', $mandate['bankAccountOwner']);
 
