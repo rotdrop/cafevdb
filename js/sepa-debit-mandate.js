@@ -418,7 +418,7 @@ var CAFEVDB = CAFEVDB || {};
     // MusicianId
     // ProjectId
     // mandateReference
-    // nonrecurring
+    // sequenceType
     // bankAccountOwner
     // bankAccountIBAN
     // bankAccountBLZ
