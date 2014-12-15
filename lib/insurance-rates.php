@@ -46,7 +46,8 @@ namespace CAFEVDB
       Config::init();
       
       $handle = mySQL::connect(Config::$pmeopts);
-      $this->scope = mySQL::multiKeys(self::TABLE, 'GeographicalScope', $handle);
+      $this->scope  = mySQL::multiKeys(self::TABLE, 'GeographicalScope', $handle);
+      $this->broker = mySQL::multiKeys(self::TABLE, 'Broker', $handle);
       mySQL::close($handle);
     }
 
@@ -224,7 +225,8 @@ namespace CAFEVDB
         'css'      => array('postfix' => ' broker'),
         'select'   => 'D',
         'maxlen'   => 128,
-        'sort'     => $sort
+        'sort'     => $sort,
+        'values'   => $this->broker,
         );
       
       $opts['fdd']['GeographicalScope'] = array(
@@ -237,14 +239,18 @@ namespace CAFEVDB
         );
 
       $opts['fdd']['Rate'] = array(
-        'name'     => 'Rate',
+        'name'     => L::t('Rate'),
         'css'      => array('postfix' => ' rate'),
         'select'   => 'N',
         'maxlen'   => 11,
         'default'  => 0.0,
         'sort'     => $sort,
         );
-      
+
+      $opts['fdd']['DueDate'] = Config::$opts['birthday'];
+      $opts['fdd']['DueDate']['name'] = L::t('Due Date');
+      $opts['fdd']['DueDate']['sort'] = $sort;
+
       $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
       $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
 
