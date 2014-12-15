@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-13 21:13+0100\n"
-"PO-Revision-Date: 2014-12-13 21:15+0100\n"
+"POT-Creation-Date: 2014-12-15 20:59+0100\n"
+"PO-Revision-Date: 2014-12-15 21:07+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -2315,102 +2315,102 @@ msgstr "Weitere Kalender"
 msgid "finance"
 msgstr "Kasse"
 
-#: lib/finance.php:272
+#: lib/finance.php:281
 #, php-format
 msgid "Unable to update the last-used date to %s"
 msgstr "Kann das Datum der letzten Verwendung nicht auf %s setzen."
 
-#: lib/finance.php:274
+#: lib/finance.php:283
 msgid "Data-base query:"
 msgstr "Datenbank-Abfrage:"
 
-#: lib/finance.php:410
+#: lib/finance.php:425
 msgid "mandate reference"
 msgstr "Mandatsreferenz"
 
-#: lib/finance.php:411
+#: lib/finance.php:426
 msgid "date of issue"
 msgstr "Ausstellungsdatum:"
 
-#: lib/finance.php:412
+#: lib/finance.php:427
 msgid "date of last usage"
 msgstr "Letztes Einzugsdatum:"
 
-#: lib/finance.php:413
+#: lib/finance.php:428
 msgid "musician id"
 msgstr "Musiker-Id"
 
-#: lib/finance.php:414
+#: lib/finance.php:429
 msgid "project id"
 msgstr "Projekt-Id"
 
-#: lib/finance.php:415
-msgid "non recurring"
-msgstr "einmalig"
+#: lib/finance.php:430
+msgid "sequence type"
+msgstr "Wiederholungsart"
 
-#: lib/finance.php:417
+#: lib/finance.php:432
 msgid "bank code"
 msgstr "BLZ"
 
-#: lib/finance.php:418
+#: lib/finance.php:433
 msgid "bank account owner"
 msgstr "Kontoinhaber"
 
-#: lib/finance.php:423
+#: lib/finance.php:438
 #, php-format
 msgid "Missing fields in debit mandate: %s (%s)."
 msgstr "Fehlende Felder im Lastschrifteinzug: %s (%s)."
 
-#: lib/finance.php:425 lib/finance.php:437 lib/finance.php:451
-#: lib/finance.php:473 lib/finance.php:485 lib/finance.php:502
-#: lib/finance.php:517 lib/finance.php:529 lib/finance.php:539
+#: lib/finance.php:440 lib/finance.php:452 lib/finance.php:466
+#: lib/finance.php:488 lib/finance.php:500 lib/finance.php:517
+#: lib/finance.php:532 lib/finance.php:544 lib/finance.php:554
 msgid "Full data record:"
 msgstr "Betroffener Datensatz:"
 
-#: lib/finance.php:435
+#: lib/finance.php:450
 #, php-format
 msgid "Empty fields in debit mandate: %s (%s)."
 msgstr "Leere Felder im Lastschrifteinzug: %s %s)."
 
-#: lib/finance.php:449
+#: lib/finance.php:464
 msgid "Illegal characters in bank account owner field"
 msgstr "Ungültige Buchstaben im Kontoinhaberfeld."
 
-#: lib/finance.php:471
+#: lib/finance.php:486
 #, php-format
 msgid "Mandate issued in the future: %s????"
 msgstr "Lastschriftmandat in der Zukunft ausgestellt: %s????."
 
-#: lib/finance.php:482
+#: lib/finance.php:497
 msgid "Missing mandate date"
 msgstr "Fehlendes Mandatsdatum"
 
-#: lib/finance.php:500
+#: lib/finance.php:515
 #, php-format
 msgid "Invalid IBAN: %s"
 msgstr "Ungültige IBAN: %s."
 
-#: lib/finance.php:515
+#: lib/finance.php:530
 #, php-format
 msgid "BLZ and IBAN do not match: %s != %s"
 msgstr "BLZ und IBAN passen nicht zusammen: %s != %s."
 
-#: lib/finance.php:527
+#: lib/finance.php:542
 #, php-format
 msgid "Invalid German BLZ: %s."
 msgstr "Ungültige Deutsche(?) Bankleitzahl %s."
 
-#: lib/finance.php:537
+#: lib/finance.php:552
 #, php-format
 msgid "Invalid German bank account: %s @ %s."
 msgstr "Ungültige Deutsche(?) Kontonummer %s @ %s."
 
-#: lib/finance.php:548
+#: lib/finance.php:563
 #, php-format
 msgid "Probably invalid BIC: %s. Computed: %s. "
 msgstr "Vermutlich falsche BIC: %s. Automatisch ermittelt: %s."
 
-#: lib/finance.php:550
+#: lib/finance.php:565
 #, php-format
 msgid "Full data record: %s"
 msgstr "Ungültige IBAN: %s."
@@ -2711,7 +2711,7 @@ msgstr "Versicherte Person: %s"
 msgid "Vendor"
 msgstr "Anbieter"
 
-#: lib/instrument-insurance.php:809 lib/insurance-rates.php:231
+#: lib/instrument-insurance.php:809 lib/insurance-rates.php:233
 msgid "Scope"
 msgstr "Bereich"
 
@@ -2723,7 +2723,7 @@ msgstr "Gegenstand"
 msgid "Amount"
 msgstr "Betrag"
 
-#: lib/instrument-insurance.php:813
+#: lib/instrument-insurance.php:813 lib/insurance-rates.php:242
 msgid "Rate"
 msgstr "Rate"
 
@@ -2768,7 +2768,7 @@ msgstr "Herzliche Grüße,"
 msgid "Treasurer"
 msgstr "Schatzmeister"
 
-#: lib/instrument-insurance.php:972
+#: lib/instrument-insurance.php:1008
 #, php-format
 msgid "Invalid broker/geographical-scope combination: %s - %s"
 msgstr "Der Makler %s bietet keine Versicherung für den Geltungsberich %s an"
@@ -2872,13 +2872,17 @@ msgstr "Schlagwerk"
 msgid "Sonstiges"
 msgstr "Sonstiges"
 
-#: lib/insurance-rates.php:77
+#: lib/insurance-rates.php:78
 msgid "Instrument Insurance Rates"
 msgstr "Instrumenten-Versicherungs-Raten"
 
-#: lib/insurance-rates.php:223
+#: lib/insurance-rates.php:224
 msgid "Broker"
 msgstr "Anbieter"
+
+#: lib/insurance-rates.php:251
+msgid "Due Date"
+msgstr "Fälligkeitstermin"
 
 #: lib/musicians.php:46
 msgid "Remove all data of the displayed musician?"
@@ -5936,7 +5940,7 @@ msgid "Type: "
 msgstr "Art: "
 
 #: templates/sepa-debit-mandate.php:34
-msgid "nonrecurring"
+msgid "once"
 msgstr "einmalig"
 
 #: templates/sepa-debit-mandate.php:34
@@ -6218,6 +6222,12 @@ msgstr "PROJEKT"
 #: templates/share-settings.php:124
 msgid "Financial balance folder"
 msgstr "Finanz-Ordner"
+
+#~ msgid "non recurring"
+#~ msgstr "einmalig"
+
+#~ msgid "nonrecurring"
+#~ msgstr "einmalig"
 
 #~ msgid "Optional BIC of the account"
 #~ msgstr "Optional die BIC der Bankverbindung"
