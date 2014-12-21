@@ -1228,9 +1228,9 @@ insuranceFee
           $dummy = preg_replace('/[$]{MEMBER::'.$placeholder.'}/', $column, $dummy);
         }
         
-        if (preg_match('![$]{MEMBER::[^}]+!', $dummy, $leftOver)) {
+        if (preg_match('![$]{MEMBER::[^}]+}?!', $dummy, $leftOver)) {
           $templateError[] = 'member';
-          $this->diagnostics['TemplateValidation']['MemberErrors'] = $leftOver.'}';
+          $this->diagnostics['TemplateValidation']['MemberErrors'] = $leftOver;
         }
 
         // Now remove all member variables, known or not
@@ -1258,9 +1258,9 @@ insuranceFee
           $dummy
           );
         
-        if (preg_match('![$]{GLOBAL::[^}]+!', $dummy, $leftOver)) {
+        if (preg_match('![$]{GLOBAL::[^}]+}?!', $dummy, $leftOver)) {
           $templateError[] = 'global';
-          $this->diagnostics['TemplateValidation']['GlobalErrors'] = $leftOver.'}';
+          $this->diagnostics['TemplateValidation']['GlobalErrors'] = $leftOver;
         }
 
         // Now remove all global variables, known or not
@@ -1269,9 +1269,9 @@ insuranceFee
 
       $spuriousTemplateLeftOver = array();      
       // No substitutions should remain. Check for that.
-      if (preg_match('![$]{[^}]+!', $dummy, $leftOver)) {
+      if (preg_match('![$]{[^}]+}?!', $dummy, $leftOver)) {
         $templateError[] = 'spurious';
-        $this->diagnostics['TemplateValidation']['SpuriousErrors'] = $leftOver.'}';
+        $this->diagnostics['TemplateValidation']['SpuriousErrors'] = $leftOver;
       }
       
       if (empty($templateError)) {
