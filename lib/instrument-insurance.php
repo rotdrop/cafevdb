@@ -974,11 +974,20 @@ your insured items at any time. Just ask.'), '', 1);
       $date = new DateTime();
       $date->setTimestamp($dateStamp);
 
-      $distance = $date->diff($dueDate, true);
+      $distance = $date->diff($dueDate);
 
-      $month = $distance->forma('%m');
+      // Get the distance in months and years
+      $months = $distance->format('%m');
+      $years = $distance->format('%y');
+
+      // round to the closest year
+      $months = round($months / 12.0) * 12;
+
+      $dueDate->modify("+ ".$years." years" ." ". "+ ".$months." months");
 
       date_default_timezone_set($old_tz);
+               
+      return $dueDate;
     }
     
     /**Compute the annual insurance fee for the respective
