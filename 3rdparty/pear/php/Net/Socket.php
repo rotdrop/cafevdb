@@ -126,7 +126,11 @@ class Net_Socket extends PEAR
                   strstr($addr, '/') !== false) {
             $this->addr = $addr;
         } else {
-            $this->addr = @gethostbyname($addr);
+            //$this->addr = @gethostbyname($addr);
+
+            // Stick to the host name, otherwise SSL certificate name
+            // validation may fail.
+            $this->addr = $addr;
         }
 
         $this->port = $port % 65536;
