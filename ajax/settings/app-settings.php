@@ -778,11 +778,13 @@ namespace CAFEVDB {
       $secure   = Config::getValue('imapsecure');
 
       $imapok = false;
-      if (ConfigCheck::checkImapServer($host, $port, $secure, $user, $password)) {
+      $imapResult = ConfigCheck::checkImapServer($host, $port, $secure, $user, $password);
+      if ($imapResult === true) {
         $imapmsg = L::t('IMAP connection seems functional.');
         $imapok = true;
       } else {
-        $imapmsg = L::t('Unable to establish IMAP connection.');
+        $imapmsg = L::t('Unable to establish IMAP connection: %s.',
+                        array($imapResult->toString()));
       }
 
       $host     = Config::getValue('smtpserver');
