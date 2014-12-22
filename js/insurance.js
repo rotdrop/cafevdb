@@ -33,7 +33,7 @@ CAFEVDB.Insurances = CAFEVDB.Insurances || {};
         var submitSel = 'input.pme-save,input.pme-apply,input.pme-more';
 
         if (form.find(submitSel).length > 0) {
-            var rateDialog = container.find('input.broker').length > 0;
+            var rateDialog = container.find('select.broker').length > 0;
 
             // for the insurance rates
             var broker;
@@ -56,11 +56,11 @@ CAFEVDB.Insurances = CAFEVDB.Insurances || {};
 
             if (rateDialog) {
                 // for the insurance rates
-                broker = container.find('input.broker');
+                //broker = container.find('input.broker');
                 rate   = container.find('input.rate');
 
                 textInputs = {
-                    'broker': broker,
+                    //'broker': broker,
                     'rate': rate
                 }
             } else {
