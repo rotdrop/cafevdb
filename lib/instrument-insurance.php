@@ -637,24 +637,45 @@ namespace CAFEVDB
                           'object' => $row['Object'],
                           'manufacturer' =>  $row['Manufacturer'],
                           'amount' => $row['InsuranceAmount'],
-                          'rate' => $rates[$rateKey]);
+                          'start' => $row['StartOfInsurance'],
+                          'rate' => $rates[$rateKey]['rate'],
+                          'due' => $rates[$rateKey]['due']
+          );
 
         $amount = floatval($itemInfo['amount']);
         $rate = floatval($itemInfo['rate']);
         $itemInfo['amount'] = $amount; // convert to float
         $itemInfo['rate'] = $rate; // convert to float
         $itemInfo['fee'] = $amount * $rate; // * (1.0 + (float)self::TAXES);
+        $itemInfo['fraction'] = self::yearFraction($itemInfo['start'], $itemInfo['due']) -1.0;
+        $itemInfo['due'] = $itemInfo['due']->format('d.m.Y');
+        $itemInfo['start'] = strftime('%x', strtotime($itemInfo['start']));
+
+        // add fractional insurance fees
+        $itemInfo['correction'] = 0.0;
+        
+        if ($itemInfo['fraction'] != 0.0) {
+          $fraction = $itemInfo['fraction'];
+          $itemInfo['correction'] = round($fraction * $itemInfo['fee'], 2);
+        }
+        
         $insurances['musicians'][$musId]['items'][] = $itemInfo;
       }
 
       $totals = 0.0;
       foreach($insurances['musicians'] as $id => $info) {
+        // ordinary annular fees
         $subtotals = 0.0;
+        $corrections = 0.0;
         foreach($info['items'] as $itemInfo) {
           $subtotals += $itemInfo['fee'];
+          $corrections += $itemInfo['correction'];
         }
         $insurances['musicians'][$id]['subTotals'] = $subtotals;
+        $insurances['musicians'][$id]['corrections'] = $corrections;
         $totals += $subtotals;
+        $totals += $corrections;
+
         $name = Musicians::fetchName($id, $handle);
         $insurances['musicians'][$id]['name'] = $name['firstName'].' '.$name['lastName'];
       }
@@ -724,7 +745,7 @@ namespace CAFEVDB
   table.'.$css.' td.summary {
     text-align:right;
   }
-  td.money, td.percentage {
+  td.money, td.percentage, td.date {
     text-align:right;
   }
   table.totals {
@@ -799,6 +820,7 @@ your insured items at any time. Just ask.'), '', 1);
       $pdf->SetFont(PDF_FONT_NAME_MAIN, '', 10);
     
       foreach($overview['musicians'] as $id => $insurance) {
+        $firstYearFixup = false;
         $html = '';
 //<div class="no-page-break">
         $html .= '
@@ -814,6 +836,7 @@ your insured items at any time. Just ask.'), '', 1);
     <th width="50">'.L::t('Fee').'</th> 
   </tr>';
         foreach($insurance['items'] as $object) {
+          // regular annual fee
           $html .= '
   <tr>
     <td class="text">'.$object['broker'].'</td>
@@ -824,6 +847,11 @@ your insured items at any time. Just ask.'), '', 1);
     <td class="percentage">'.($object['rate']*100.0).' %'.'</td>
     <td class="money">'.money_format('%n', $object['fee']).'</td>
   </tr>';
+          // if we have fractional fees for the first year, then just
+          // remember that this is the case and emit another table
+          if ($object['fraction'] != 0.0) {
+            $firstYearFixup = true;
+          }
         }
         $html .= '
   <tr>
@@ -858,8 +886,81 @@ your insured items at any time. Just ask.'), '', 1);
           $pdf->commitTransaction();
         }
 
-      }
+        // Now emit the correction for the first year, if applicable
+        if (!$firstYearFixup) {
+          continue;
+        }
 
+        $html = '';
+//<div class="no-page-break">
+        $html .= '
+<p>'.
+          L::t('Corrections for partial insurance periods.').
+          '<br/>'.
+          L::t('Insurances starting after the due-date will be charged in the following year.').
+          '</p>
+<table class="no-page-break" cellpadding="2" class="'.$css.'">
+  <tr>
+    <th width="60">'.L::t('Due').'</th>
+    <th width="60">'.L::t('Start').'</th>
+    <th width="80">'.L::t('Object').'</th>
+    <th width="60">'.L::t('Amount').'</th>
+    <th width="45">'.L::t('Rate').'</th>
+    <th width="50">'.L::t('Factor').'</th> 
+    <th width="50">'.L::t('Fee').'</th> 
+  </tr>';        
+        foreach($insurance['items'] as $object) {
+          $fraction = $object['fraction'];
+          if ($fraction == 0.0) { // regular fee
+            continue;
+          }
+          $correction = $object['correction'];
+          $fraction = round($fraction, 2) * 100.0;
+          $html .= '
+  <tr>
+    <td class="date">'.$object['due'].'</td>
+    <td class="date">'.L::t($object['start']).'</td>
+    <td class="text">'.$object['object'].'</td>
+    <td class="money">'.money_format('%n', $object['amount']).'</td>
+    <td class="percentage">'.($object['rate']*100.0).' %'.'</td>
+    <td class="percentage">'.$fraction.' %'.'</td>
+    <td class="money">'.money_format('%n', $correction).'</td>
+  </tr>';          
+        }
+        $html .= '
+  <tr>
+    <td class="summary" colspan="6">'.
+        L::t('Sum of corrections (excluding taxes)',
+             array(InstrumentInsurance::TAXES)).'
+    </td>
+    <td class="money">'.money_format('%n', $insurance['corrections']).'</td>
+  </tr>
+</table>';
+//</div>';
+
+        // We do not want to split the table across pages
+        $pdf->startTransaction();
+        $startPage = $pdf->getPage();
+      
+        $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
+                            10,
+                            PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+1*$pdf->fontSize(),
+                            $style.$html, '', 1);
+
+        $endPage = $pdf->getPage();
+        if ($startPage != $endPage) {
+          $pdf->rollbackTransaction(true);
+          $pdf->addPage();
+          // Do it again on a new page
+          $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
+                              10,
+                              PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+1*$pdf->fontSize(),
+                              $style.$html, '', 1);        
+        } else {
+          $pdf->commitTransaction();
+        }        
+      }
+      
       // Restore font size
       $pdf->SetFont(PDF_FONT_NAME_MAIN, '', PDFLetter::FONT_SIZE);
 
@@ -934,7 +1035,12 @@ your insured items at any time. Just ask.'), '', 1);
       $result = mySQL::query($query, $handle);
       while ($row = mySQL::fetch($result)) {
         $rateKey = $row['Broker'].$row['GeographicalScope'];
-        $rates[$rateKey] = $row['Rate'];
+        $dueDate = $row['DueDate'];
+        if (strval($dueDate) != '') {
+          $dueDate = self::dueDate($dueDate);
+        }
+        $rates[$rateKey] = array('rate' => $row['Rate'],
+                                 'due' => $dueDate);
       }
       //print_r($rates);
 
@@ -947,17 +1053,17 @@ your insured items at any time. Just ask.'), '', 1);
 
     /**Compute the closest matching due date. The insurance contracts
      * "always" last for one year, so "closest" is the within 6 month
-     * in either direction.
+     * in either direction, i.e. the due-date of this 12 months
+     * window given the start-date of the insurance contract.
      *
-     * @param $rate One row of the rate table, which includes the
-     * first due-date (start of the contract) in the 'DueDate' field.
+     * @param $dueDate Start of the insurance contract.
      *
      * @param $date The point in time we are looking at. If
      * unspecified then this is the current date.
      */
-    public static function dueDate($rate, $date = null)
+    public static function dueDate($dueDate, $date = null)
     {
-      $oldtz = date_default_timezone_get();
+      $oldTZ = date_default_timezone_get();
       $tz = Util::getTimezone();
       date_default_timezone_set($tz);
 
@@ -967,11 +1073,9 @@ your insured items at any time. Just ask.'), '', 1);
         $dateStamp = strtotime($date);
       }
 
-      $dueStamp = strtotime($rate['DueDate']);
-      $dueDate = new DateTime();
-      $dueDate->setTimestamp($dueStamp);
+      $dueDate = new \DateTime($dueDate);
 
-      $date = new DateTime();
+      $date = new \DateTime();
       $date->setTimestamp($dateStamp);
 
       $distance = $date->diff($dueDate);
@@ -985,11 +1089,61 @@ your insured items at any time. Just ask.'), '', 1);
 
       $dueDate->modify("+ ".$years." years" ." ". "+ ".$months." months");
 
-      date_default_timezone_set($old_tz);
+      date_default_timezone_set($oldTZ);
                
       return $dueDate;
     }
-    
+
+    /**Compute the fraction of the running insurance year given @a
+     * startDate. This can be used to compute the fraction of the
+     * annual insurance fee if people register their instruments
+     * somewhere in the middle of an insurance year. The policy ATM is
+     * to charge fractional fees together with the invoice for the
+     * following year (even when it should be a large fraction like
+     * 11/12). Maybe change that if it should show that this is a
+     * financial problem. At the moment the last date of the yearly
+     * invoice is not stored in the DB, so there is no stable way to
+     * handle this in another fashion ATM.
+     *
+     * @param $insuranceStart The start-date of the instrument
+     * insurance. A string suitable to initialize a PHP
+     * DateTime-object.
+     *
+     * @param $dueDate The start of the insurance year for this
+     * contract. This should be a PHP DateTime-object.
+     *
+     * @return Fraction >= 1
+     *
+     */
+    private static function yearFraction($insuranceStart, $dueDate)
+    {
+      if (is_string($dueDate)) {
+        $dueDate = new \DateTime($dueDate);
+      }
+
+      $startDate = new \DateTime($insuranceStart);
+      $distance = $startDate->diff($dueDate);
+
+      // for our purpose everything > 0 days is a month, we only charge
+      // full months
+      if ($distance->d > 0) {
+        $distance->m++;
+      }
+      $distance->d = 0;
+
+      $fraction = 0.0;
+      if (!$distance->invert) {
+        $fraction = 1.0;
+        // fractional insurance fees are charged not before the
+        // following year.
+        $month = $months = $distance->m + $distance->y * 12;
+        if ($month < 12) {
+          $fraction += floatval($month)/12.0;
+        }
+      }
+      return $fraction;
+    }
+
     /**Compute the annual insurance fee for the respective
      * musician. Note that the relevant column is the "BillToParty".
      */
@@ -1002,7 +1156,7 @@ your insured items at any time. Just ask.'), '', 1);
       }
 
       $rates = self::fetchRates($handle);
-
+      
       $fee = 0.0;
       $query = "SELECT * FROM `".self::MEMBER_TABLE."` WHERE ("
         . " ( (ISNULL(`BillToParty`) OR `BillToParty` <= 0) AND `MusicianId` = ".$musicianId." ) "
@@ -1017,7 +1171,12 @@ your insured items at any time. Just ask.'), '', 1);
           Util::error(L::t("Invalid broker/geographical-scope combination: %s - %s",
                            array($row['Broker'], $row['GeographicalScope'])));
         }
-        $fee += $amount * $rates[$rateKey];
+        $rate = $amount * $rates[$rateKey]['rate'];
+        $startDate = $row['StartOfInsurance'];
+        if ($startDate != '') {
+          $rate *= self::yearFraction($startDate, $rates[$rateKey]['due']);
+        }
+        $fee += $rate;
       }
       $fee += $fee * self::TAXES;
     
