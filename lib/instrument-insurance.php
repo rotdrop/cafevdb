@@ -359,7 +359,7 @@ namespace CAFEVDB
         'css' => array('postfix' => ' align-right'),
         'name' => L::t('Insurance Fee')."<br/>".L::t('including taxes'),
         'options' => 'LFACPDV',
-        'sql' => 'ROUND(`PMEtable0`.`InsuranceAmount` * `PMEjoin'.$rateIdx.'`.`Rate` * (1+'.self::TAXES.'), 2)',
+        'sql' => 'ROUND(`PMEtable0`.`InsuranceAmount` * `PMEjoin'.$rateIdx.'`.`Rate` * (1+'.(float)self::TAXES.'), 2)',
         'sqlw' => '`PMEjoin'.$rateIdx.'`.`Rate`',
         'php' => array(
           'type' => 'function',
