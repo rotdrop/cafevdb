@@ -55,7 +55,9 @@ namespace CAFEVDB
     $displayClass = Util::cgiValue('DisplayClass', false);
     $classArguments = Util::cgiValue('ClassArguments', array());
     $dialogMode = Util::cgiValue('AmbientContainerSelector', false) != false;
-    $reloadAction = Util::cgiValue('PME_sys_reloadlist', false) != false;
+    $reloadAction = false;
+    $reloadAction = Util::cgiValue('PME_sys_reloadlist', $reloadAction) != false;
+    $reloadAction = Util::cgiValue('PME_sys_reloadfilter', $reloadAction) != false;
 
     $historySize = -1;
     $historyPosition = -1;
@@ -64,6 +66,8 @@ namespace CAFEVDB
       $pageLoader->pushHistory($_POST);
       $historySize = $pageLoader->historySize();
       $historyPosition = $pageLoader->historyPosition();
+    } else {
+      $pageLoader = false;
     }
 
     if (!$displayClass) {
@@ -120,7 +124,11 @@ namespace CAFEVDB
               'history' => array('size' => $historySize,
                                  'position' => $historyPosition),
               'debug' => $debugText)));
-  
+
+    if ($pageLoader !== false) {
+      $pageLoader->storeHistory();
+    }
+
     return true;
 
   } catch (\Exception $e) {
