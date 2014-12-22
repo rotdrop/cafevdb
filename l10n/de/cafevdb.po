@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-15 20:59+0100\n"
-"PO-Revision-Date: 2014-12-15 21:07+0100\n"
+"POT-Creation-Date: 2014-12-22 06:20+0100\n"
+"PO-Revision-Date: 2014-12-22 06:24+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -112,7 +112,7 @@ msgstr "Em@il Adresse(n) ungültig"
 #: ajax/insurance/instrument-insurance-export.php:168
 #: ajax/insurance/validate.php:265 ajax/musicians/validate.php:96
 #: ajax/page-loader.php:111 ajax/projects/web-articles.php:182
-#: ajax/settings/app-settings.php:1181
+#: ajax/settings/app-settings.php:1183
 msgid "PHP Exception Caught"
 msgstr "PHP `Ausnahme' `gefangen'"
 
@@ -122,7 +122,7 @@ msgstr "PHP `Ausnahme' `gefangen'"
 #: ajax/insurance/instrument-insurance-export.php:169
 #: ajax/insurance/validate.php:269 ajax/musicians/validate.php:100
 #: ajax/page-loader.php:115 ajax/projects/web-articles.php:186
-#: ajax/settings/app-settings.php:1185
+#: ajax/settings/app-settings.php:1187
 #, php-format
 msgid ""
 "Error, caught an exception. Please copy the displayed text and send it by "
@@ -295,7 +295,7 @@ msgid "Musician"
 msgstr "Musiker"
 
 #: ajax/export/insurance-export.php:143 lib/instrument-insurance.php:318
-#: lib/instrument-insurance.php:811
+#: lib/instrument-insurance.php:833
 msgid "Manufacturer"
 msgstr "Hersteller"
 
@@ -441,10 +441,10 @@ msgstr "Konnte den Wert für `%s' nicht als `%s' speichern."
 
 #: ajax/finance/sepa-debit-settings.php:97
 #: ajax/finance/sepa-debit-settings.php:118
-#: ajax/finance/sepa-debit-settings.php:359 ajax/settings/app-settings.php:891
-#: ajax/settings/app-settings.php:963 ajax/settings/app-settings.php:978
-#: ajax/settings/app-settings.php:1013 ajax/settings/app-settings.php:1052
-#: ajax/settings/app-settings.php:1076 ajax/settings/app-settings.php:1088
+#: ajax/finance/sepa-debit-settings.php:359 ajax/settings/app-settings.php:893
+#: ajax/settings/app-settings.php:965 ajax/settings/app-settings.php:980
+#: ajax/settings/app-settings.php:1015 ajax/settings/app-settings.php:1054
+#: ajax/settings/app-settings.php:1078 ajax/settings/app-settings.php:1090
 #, php-format
 msgid "Value for `%s' set to `%s'."
 msgstr "Wert für `%s' auf `%s' gesetzt."
@@ -472,20 +472,20 @@ msgid "Invalid German(?) bank account number %s @ %s."
 msgstr "Ungültige Deutsche(?) Kontonummer %s @ %s."
 
 #: ajax/finance/sepa-debit-settings.php:258
-#: ajax/settings/app-settings.php:1021
+#: ajax/settings/app-settings.php:1023
 #, php-format
 msgid "Invalid IBAN: `%s'."
 msgstr "Ungültige IBAN: `%s'."
 
 #: ajax/finance/sepa-debit-settings.php:302
 #: ajax/finance/sepa-debit-settings.php:334
-#: ajax/settings/app-settings.php:1099
+#: ajax/settings/app-settings.php:1101
 #, php-format
 msgid "Value for `%s' invalid: `%s'."
 msgstr "Der Wert für `%s' ist ungültig: `%s'."
 
 #: ajax/finance/sepa-debit-settings.php:348
-#: ajax/settings/app-settings.php:1159 ajax/settings/redaxo-settings.php:71
+#: ajax/settings/app-settings.php:1161 ajax/settings/redaxo-settings.php:71
 msgid "Unhandled request:"
 msgstr "Unbekannte Anfrage:"
 
@@ -1254,56 +1254,57 @@ msgstr "Das Passwort wurde geändert."
 msgid "Email credentials installed successfully!"
 msgstr "Email Authentifizierung erfolgreich gesetzt!"
 
-#: ajax/settings/app-settings.php:782
+#: ajax/settings/app-settings.php:783
 msgid "IMAP connection seems functional."
 msgstr "Die IMAP-Verbindung scheint zu funktionieren."
 
-#: ajax/settings/app-settings.php:785
-msgid "Unable to establish IMAP connection."
-msgstr "Kann die IMAP-Verbindung nicht aufbauen."
+#: ajax/settings/app-settings.php:786
+#, php-format
+msgid "Unable to establish IMAP connection: %s."
+msgstr "Kann die IMAP-Verbindung nicht aufbauen: %s."
 
-#: ajax/settings/app-settings.php:794
+#: ajax/settings/app-settings.php:796
 msgid "SMTP connection seems functional."
 msgstr "Die SMTP-Verbindung scheint zu funkionieren."
 
-#: ajax/settings/app-settings.php:797
+#: ajax/settings/app-settings.php:799
 msgid "Unable to establish SMTP connection."
 msgstr "Kann die SMTP-Verbindung nicht aufbauen."
 
-#: ajax/settings/app-settings.php:814
+#: ajax/settings/app-settings.php:816
 msgid "UNSPECIFIED"
 msgstr "NICHT SPEZIFIERT"
 
-#: ajax/settings/app-settings.php:818
+#: ajax/settings/app-settings.php:820
 #, php-format
 msgid "Email test-mode enabled, sending only to %s"
 msgstr "Email-Test-Modus in Kraft, Emails werden nur an `%s' gesendet."
 
-#: ajax/settings/app-settings.php:822
+#: ajax/settings/app-settings.php:824
 msgid "Email test-mode disable, will send to all!!!"
 msgstr "Email-Test-Modus ausgeschaltet, Massen-Mails werden verschickt!!!"
 
-#: ajax/settings/app-settings.php:833 ajax/settings/app-settings.php:862
+#: ajax/settings/app-settings.php:835 ajax/settings/app-settings.php:864
 #, php-format
 msgid "`%s' doesn't seem to be a valid email-address."
 msgstr "`%s' scheint keine gültige Email-Adresse zu sein."
 
-#: ajax/settings/app-settings.php:841
+#: ajax/settings/app-settings.php:843
 #, php-format
 msgid "Using `%s' as email-address for test-mode."
 msgstr "Verwende `%s' als Email-Adresse für den Test-Modus."
 
-#: ajax/settings/app-settings.php:851
+#: ajax/settings/app-settings.php:853
 #, php-format
 msgid "Using `%s' as name of the sender identity."
 msgstr "Verwende `%s' als Klartext-Namen des Absenders."
 
-#: ajax/settings/app-settings.php:870
+#: ajax/settings/app-settings.php:872
 #, php-format
 msgid "Using `%s' as sender email-address."
 msgstr "Verwende `%s' als Email-Adresse des Absenders."
 
-#: ajax/settings/app-settings.php:909
+#: ajax/settings/app-settings.php:911
 msgid ""
 "Table name is either not unique, or the table does not exist yet. Please "
 "create a project of this name manually."
@@ -1312,45 +1313,45 @@ msgstr ""
 "existiert nicht. Bitte sorge dafür, dass es genau ein Projekt mit diesem "
 "Namen gibt."
 
-#: ajax/settings/app-settings.php:913
+#: ajax/settings/app-settings.php:915
 #, php-format
 msgid "Table-id %d."
 msgstr "Projekt-id %d."
 
-#: ajax/settings/app-settings.php:918
+#: ajax/settings/app-settings.php:920
 #, php-format
 msgid "Value for `%s' set to `%s'. %s"
 msgstr "Wert für `%s' auf `%s' gesetzt. %s"
 
-#: ajax/settings/app-settings.php:933
+#: ajax/settings/app-settings.php:935
 #, php-format
 msgid "Musician with id %d does not seem to exist"
 msgstr "Ein Musiker mit der Id existiert leider nicht."
 
-#: ajax/settings/app-settings.php:942
+#: ajax/settings/app-settings.php:944
 #, php-format
 msgid "Value for `%s' set to `%s'"
 msgstr "Wert für `%s' auf `%s' gesetzt."
 
-#: ajax/settings/app-settings.php:1024
+#: ajax/settings/app-settings.php:1026
 msgid "Perhaps you meant"
 msgstr "Vielleicht meinten Sie"
 
-#: ajax/settings/app-settings.php:1031
+#: ajax/settings/app-settings.php:1033
 msgid "or"
 msgstr "oder"
 
-#: ajax/settings/app-settings.php:1117
+#: ajax/settings/app-settings.php:1119
 #, php-format
 msgid "Link for `%s' set to `%s'."
 msgstr "Web-Link für `%s' als `%s' eingestellt."
 
-#: ajax/settings/app-settings.php:1130
+#: ajax/settings/app-settings.php:1132
 #, php-format
 msgid "Unable to test link for `%s' without a link target."
 msgstr "Kann den Web-Link für `%s' nicht ohne Ziel-Adresse testen."
 
-#: ajax/settings/app-settings.php:1136
+#: ajax/settings/app-settings.php:1138
 #, php-format
 msgid "New window or tab with `%s'?"
 msgstr "Neues Fenster oder Tab erschienen für `%s'?"
@@ -2315,102 +2316,108 @@ msgstr "Weitere Kalender"
 msgid "finance"
 msgstr "Kasse"
 
-#: lib/finance.php:281
+#: lib/finance.php:315
 #, php-format
 msgid "Unable to update the last-used date to %s"
 msgstr "Kann das Datum der letzten Verwendung nicht auf %s setzen."
 
-#: lib/finance.php:283
+#: lib/finance.php:317
 msgid "Data-base query:"
 msgstr "Datenbank-Abfrage:"
 
-#: lib/finance.php:425
+#: lib/finance.php:463
 msgid "mandate reference"
 msgstr "Mandatsreferenz"
 
-#: lib/finance.php:426
+#: lib/finance.php:464
 msgid "date of issue"
 msgstr "Ausstellungsdatum:"
 
-#: lib/finance.php:427
+#: lib/finance.php:465
 msgid "date of last usage"
 msgstr "Letztes Einzugsdatum:"
 
-#: lib/finance.php:428
+#: lib/finance.php:466
 msgid "musician id"
 msgstr "Musiker-Id"
 
-#: lib/finance.php:429
+#: lib/finance.php:467
 msgid "project id"
 msgstr "Projekt-Id"
 
-#: lib/finance.php:430
+#: lib/finance.php:468
 msgid "sequence type"
 msgstr "Wiederholungsart"
 
-#: lib/finance.php:432
+#: lib/finance.php:470
 msgid "bank code"
 msgstr "BLZ"
 
-#: lib/finance.php:433
+#: lib/finance.php:471
 msgid "bank account owner"
 msgstr "Kontoinhaber"
 
-#: lib/finance.php:438
+#: lib/finance.php:488
 #, php-format
 msgid "Missing fields in debit mandate: %s (%s)."
 msgstr "Fehlende Felder im Lastschrifteinzug: %s (%s)."
 
-#: lib/finance.php:440 lib/finance.php:452 lib/finance.php:466
-#: lib/finance.php:488 lib/finance.php:500 lib/finance.php:517
-#: lib/finance.php:532 lib/finance.php:544 lib/finance.php:554
+#: lib/finance.php:490 lib/finance.php:502 lib/finance.php:516
+#: lib/finance.php:538 lib/finance.php:550 lib/finance.php:564
+#: lib/finance.php:581 lib/finance.php:596 lib/finance.php:608
+#: lib/finance.php:618
 msgid "Full data record:"
 msgstr "Betroffener Datensatz:"
 
-#: lib/finance.php:450
+#: lib/finance.php:500
 #, php-format
 msgid "Empty fields in debit mandate: %s (%s)."
 msgstr "Leere Felder im Lastschrifteinzug: %s %s)."
 
-#: lib/finance.php:464
+#: lib/finance.php:514
 msgid "Illegal characters in bank account owner field"
 msgstr "Ungültige Buchstaben im Kontoinhaberfeld."
 
-#: lib/finance.php:486
+#: lib/finance.php:536
 #, php-format
 msgid "Mandate issued in the future: %s????"
 msgstr "Lastschriftmandat in der Zukunft ausgestellt: %s????."
 
-#: lib/finance.php:497
+#: lib/finance.php:547
 msgid "Missing mandate date"
 msgstr "Fehlendes Mandatsdatum"
 
-#: lib/finance.php:515
+#: lib/finance.php:560
+#, php-format
+msgid "Invalid sequence type `%s', should be one of %s"
+msgstr "Ungültige Wiederholungsart `%s', zulässig sind %s"
+
+#: lib/finance.php:579
 #, php-format
 msgid "Invalid IBAN: %s"
 msgstr "Ungültige IBAN: %s."
 
-#: lib/finance.php:530
+#: lib/finance.php:594
 #, php-format
 msgid "BLZ and IBAN do not match: %s != %s"
 msgstr "BLZ und IBAN passen nicht zusammen: %s != %s."
 
-#: lib/finance.php:542
+#: lib/finance.php:606
 #, php-format
 msgid "Invalid German BLZ: %s."
 msgstr "Ungültige Deutsche(?) Bankleitzahl %s."
 
-#: lib/finance.php:552
+#: lib/finance.php:616
 #, php-format
 msgid "Invalid German bank account: %s @ %s."
 msgstr "Ungültige Deutsche(?) Kontonummer %s @ %s."
 
-#: lib/finance.php:563
+#: lib/finance.php:627
 #, php-format
 msgid "Probably invalid BIC: %s. Computed: %s. "
 msgstr "Vermutlich falsche BIC: %s. Automatisch ermittelt: %s."
 
-#: lib/finance.php:565
+#: lib/finance.php:629
 #, php-format
 msgid "Full data record: %s"
 msgstr "Ungültige IBAN: %s."
@@ -2650,35 +2657,35 @@ msgstr "Gesamtversicherungssumme"
 msgid "Start of Insurance"
 msgstr "Versicherungsbeginn"
 
-#: lib/instrument-insurance.php:682
+#: lib/instrument-insurance.php:703
 msgid "insurance"
 msgstr "Versicherung"
 
-#: lib/instrument-insurance.php:741
+#: lib/instrument-insurance.php:762
 #, php-format
 msgid "Annual Insurance Fees for %s, %d. %s"
 msgstr "Versicherungs-Jahresbeitrag für %s, %d. %s"
 
-#: lib/instrument-insurance.php:745
+#: lib/instrument-insurance.php:766
 msgid "Overview over insured instruments and insurance fee details and summary"
 msgstr "Übersicht über die versicherten Instrumente und Versicherungsbeiträge"
 
-#: lib/instrument-insurance.php:760 templates/instrument-insurance.php:44
+#: lib/instrument-insurance.php:781 templates/instrument-insurance.php:44
 #: templates/sepa-debit-mandates.php:53
 msgid "treasurer"
 msgstr "Schatzmeister"
 
-#: lib/instrument-insurance.php:782
+#: lib/instrument-insurance.php:803
 #, php-format
 msgid "Annular insurance fees for %d"
 msgstr "Versicherungs-Jahresbeitrag %d"
 
-#: lib/instrument-insurance.php:783
+#: lib/instrument-insurance.php:804
 #, php-format
 msgid "Dear %s,"
 msgstr "Liebe/Lieber %s,"
 
-#: lib/instrument-insurance.php:788
+#: lib/instrument-insurance.php:809
 msgid ""
 "this letter informs you about the details of the instrument-insurances\n"
 "we are maintaining for you on your behalf. This letter is\n"
@@ -2702,53 +2709,79 @@ msgstr ""
 "jederzeit von uns eine Aufstellung Deiner versicherten Gegenstände\n"
 "bekommen."
 
-#: lib/instrument-insurance.php:805
+#: lib/instrument-insurance.php:827
 #, php-format
 msgid "Insured Person: %s"
 msgstr "Versicherte Person: %s"
 
-#: lib/instrument-insurance.php:808
+#: lib/instrument-insurance.php:830
 msgid "Vendor"
 msgstr "Anbieter"
 
-#: lib/instrument-insurance.php:809 lib/insurance-rates.php:233
+#: lib/instrument-insurance.php:831 lib/insurance-rates.php:233
 msgid "Scope"
 msgstr "Bereich"
 
-#: lib/instrument-insurance.php:810
+#: lib/instrument-insurance.php:832 lib/instrument-insurance.php:906
 msgid "Object"
 msgstr "Gegenstand"
 
-#: lib/instrument-insurance.php:812
+#: lib/instrument-insurance.php:834 lib/instrument-insurance.php:907
 msgid "Amount"
 msgstr "Betrag"
 
-#: lib/instrument-insurance.php:813 lib/insurance-rates.php:242
+#: lib/instrument-insurance.php:835 lib/instrument-insurance.php:908
+#: lib/insurance-rates.php:242
 msgid "Rate"
 msgstr "Rate"
 
-#: lib/instrument-insurance.php:814
+#: lib/instrument-insurance.php:836 lib/instrument-insurance.php:910
 msgid "Fee"
 msgstr "Beitrag"
 
-#: lib/instrument-insurance.php:831
+#: lib/instrument-insurance.php:859
 msgid "Sub-totals (excluding taxes)"
 msgstr "Zwischensumme (ohne Steuern)"
 
-#: lib/instrument-insurance.php:873
+#: lib/instrument-insurance.php:898
+msgid "Corrections for partial insurance periods."
+msgstr "Korrekturen für nicht-volle Versicherungsjahre."
+
+#: lib/instrument-insurance.php:900
+msgid ""
+"Insurances starting after the due-date will be charged in the following year."
+msgstr "Versicherungen, die nach dem Fälligkeitstermin beginnen, werden erst im Folgejahr berechnet."
+
+#: lib/instrument-insurance.php:904
+msgid "Due"
+msgstr "Fälligkeit"
+
+#: lib/instrument-insurance.php:905
+msgid "Start"
+msgstr "Beginn"
+
+#: lib/instrument-insurance.php:909
+msgid "Factor"
+msgstr "Faktor"
+
+#: lib/instrument-insurance.php:933
+msgid "Sum of corrections (excluding taxes)"
+msgstr "Summe der Korrekturen (ohne Steuern)"
+
+#: lib/instrument-insurance.php:974
 msgid "Total amount excluding taxes:"
 msgstr "Gesamtbetrag ohne Steuern:"
 
-#: lib/instrument-insurance.php:877
+#: lib/instrument-insurance.php:978
 #, php-format
 msgid "%0.2f %% insurance taxes:"
 msgstr "%0.2f %% Versicherungssteuer:"
 
-#: lib/instrument-insurance.php:881
+#: lib/instrument-insurance.php:982
 msgid "Total amount to pay:"
 msgstr "Rechnungsbetrag:"
 
-#: lib/instrument-insurance.php:891
+#: lib/instrument-insurance.php:992
 msgid ""
 "You have granted us a debit-mandate. The total amount due will be debited "
 "from your bank-account, no further action from your side is required. We "
@@ -2760,15 +2793,15 @@ msgstr ""
 "wenigstens 14 Tage im voraus per Email über das genaue Datum der\n"
 "Kontobelastung."
 
-#: lib/instrument-insurance.php:898 lib/instrument-insurance.php:900
+#: lib/instrument-insurance.php:999 lib/instrument-insurance.php:1001
 msgid "Best wishes,"
 msgstr "Herzliche Grüße,"
 
-#: lib/instrument-insurance.php:906
+#: lib/instrument-insurance.php:1007
 msgid "Treasurer"
 msgstr "Schatzmeister"
 
-#: lib/instrument-insurance.php:1008
+#: lib/instrument-insurance.php:1171
 #, php-format
 msgid "Invalid broker/geographical-scope combination: %s - %s"
 msgstr "Der Makler %s bietet keine Versicherung für den Geltungsberich %s an"
