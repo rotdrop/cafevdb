@@ -207,6 +207,40 @@ namespace CAFEVDB
       return $mandate;
     }
 
+    /**Set the sequence type based on the last-used date and the
+     * recurring/non-recurring status. 
+     */
+    public static function sepaMandateSequenceType($mandate) 
+    {
+      if (!isset($mandate['lastUsedDate'])) {
+        // Need the date to decide about the type
+        if (isset($mandate['nonrecurring'])) {
+          return $mandate['nonrecurring'] ? 'once' : 'permanent';
+        } else if (isset($mandate['sequenceType'])) {
+          return $mandate['sequenceType'];
+        }
+      } else if (isset($mandate['nonrecurring'])) {
+        if ($mandate['nonrecurring']) {
+          return 'once';
+        } else if ($mandate['lastUsedDate'] == '0000-00-00') {
+          return 'first';
+        } else {
+          return 'following';
+        }
+        unset($mandate['nonrecurring']);
+        $mandate['sequenceType'] = $sequenceType;
+      } else if (isset($mandate['sequenceType'])) {
+        if ($mandate['sequenceType'] == 'permanent') {
+          return ($mandate['lastUsedDate'] == '0000-00-00') ? 'first' : 'following';
+        } else {
+          return $mandate['sequenceType'];
+        }
+      }
+
+      // error: cannot compute sequenceType.
+      return false;
+    }
+    
     /**Given a mandate with encrypted columns, decrypt them. */
     public static function decryptSepaMandate(&$mandate)
     {
@@ -409,7 +443,11 @@ namespace CAFEVDB
       return true; // hopefully
     }
 
-    /**Verify the given mandate, throw an InvalidArgumentException */
+    /**Verify the given mandate, throw an
+     * InvalidArgumentException. The sequence type may or may not
+     * already have been converted to the actual type based on the
+     * lastUsedDate.
+     */
     public static function validateSepaMandate($mandate)
     {
       $nl = "\n";
@@ -431,6 +469,18 @@ namespace CAFEVDB
                      'IBAN' => 'IBAN',
                      'BLZ' => L::t('bank code'),
                      'bankAccountOwner' => L::t('bank account owner'));
+
+      ////////////////////////////////////////////////////////////////
+      //
+      // Compat hack: we store "nonrecurring", but later want to have
+      // "sequenceType". Also, the sequence type still may be simply
+      // 'permanent'.
+      if (!isset($mandate['sequenceType'])) {
+        $mandate['sequenceType'] = self::sepaMandateSequenceType($mandate);
+      }
+      //
+      ////////////////////////////////////////////////////////////////
+      
       foreach($keys as $key) {
         if (!isset($mandate[$key])) {
           throw new \InvalidArgumentException(
@@ -502,6 +552,20 @@ namespace CAFEVDB
           print_r($mandate, true));
       }
 
+      $sequenceType = self::sepaMandateSequenceType($mandate);
+      $allowedTypes = array('once', 'permanent', 'first', 'following');
+      if (array_search($sequenceType, $allowedTypes) === false) {
+        throw new \InvalidArgumentException(
+          $nl.
+          L::t("Invalid sequence type `%s', should be one of %s",
+               array($sequenceType, implode(',', $allowedTypes))).
+          $nl.
+          $nl.
+          L::t('Full data record:').
+          $nl.
+          print_r($mandate, true));
+      }
+      
       // Check IBAN and BIC: extract the bank and bank account id,
       // check both with BAV, regenerate the BIC
       $IBAN = $mandate['IBAN'];

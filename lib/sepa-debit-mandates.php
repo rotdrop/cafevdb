@@ -497,13 +497,7 @@ namespace CAFEVDB
       $result = array();
       foreach($debitTable as $id => $row) {
 
-        if ($row['nonrecurring']) {
-          $sequenceType = 'once';
-        } else if ($row['lastUsedDate'] == '0000-00-00') {
-          $sequenceType = 'first';
-        } else {
-          $sequenceType = 'following';
-        }
+        $sequenceType = Finance::sepaMandateSequenceType($row);
       
         $result[] = array(
           'localBic' => $bic,
