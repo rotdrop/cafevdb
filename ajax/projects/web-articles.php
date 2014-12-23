@@ -108,17 +108,36 @@ namespace CAFEVDB {
       // This simply means: create a new page for the project.
       $article = Projects::createProjectWebPage($projectId);
       if ($article === false) {
-        $errorMmessage = L::t("Failed to create a new public web page for the project with id %d.",
+        $errorMessage = L::t("Failed to create a new public web page for the project with id %d.",
                               array($projectId));
       } else {
         $message = L::t("Created a new public web page with name %s and id %d ".
-                        "for project the with id %d",
+                        "for the project with id %d.",
                         array($article['ArticleName'], $article['ArticleId'], $projectId));
+        // If there is no rehearsal page attached to the project, then attach one
+        $articles = Projects::fetchProjectWebPages($projectId);
+        $rehearsalsCat = Config::getValue('redaxoRehearsals');
+        $rehearsal = false;
+        foreach($articles as $row) {
+          if ($row['CategoryId'] == $rehearsalsCat) {
+            $rehearsal = $row;
+            break;
+          }
+        }
+        if ($rehearsal === false) {
+          // create one, but ignore anypotential error
+          $article = Projects::createProjectWebPage($projectId, 'rehearsals');
+          if ($article === false) {
+            $message .= ' '.L::t("Failed to create additionally a new rehearsal web-page.");
+          } else {
+            $message .= ' '.L::t("Created additionally a new rehearsal web page.");
+          }
+        }
       }
       break;
     case 'link':
       if (Projects::attachProjectWebPage($projectId, $articleData) === false) {
-        $errorMmessage = L::t("Failed to add the article %s (id = %d) to the project with id %d.",
+        $errorMessage = L::t("Failed to add the article %s (id = %d) to the project with id %d.",
                               array($articleData['ArticleName'], $articleId, $projectId));
       } else {
         $message = L::t("Linked the existing public web-article %s (id %d) to the project with id %d",
@@ -127,7 +146,7 @@ namespace CAFEVDB {
       break;
     case 'unlink':
       if (Projects::detachProjectWebPage($projectId, $articleId) === false) {
-        $errorMmessage = L::t("Failed to detach the article %s (id = %d) from the project with id %d.",
+        $errorMessage = L::t("Failed to detach the article %s (id = %d) from the project with id %d.",
                               array($articleData['ArticleName'], $articleId, $projectId));
       } else {
         $message = L::t("Detached the public web-article %s (id %d) from the project with id %d",

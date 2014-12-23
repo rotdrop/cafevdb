@@ -1235,7 +1235,11 @@ __EOT__;
 
     /**Create and add a new web-page. The first one will have the name
      * of the project, subsequent one have a number attached like
-     * Tango2014-5
+     * Tango2014-5.
+     *
+     * @param $projectId Id of the project
+     *
+     * @param $kind One of 'concert' or 'rehearsals'
      */
     public static function createProjectWebPage($projectId, $kind = 'concert', $handle = false)
     {
@@ -1499,7 +1503,7 @@ __EOT__;
       return true;
     }
   
-    /**Seach through the list of all projects and attach those with a
+    /**Search through the list of all projects and attach those with a
      * matching name. Something which should go to the "expert"
      * controls.
      */
@@ -1520,28 +1524,41 @@ __EOT__;
         return false;
       }
 
-      $previewCat = Config::getValue('redaxoPreview');
-      $archiveCat = Config::getValue('redaxoArchive');
+      $previewCat    = Config::getValue('redaxoPreview');
+      $archiveCat    = Config::getValue('redaxoArchive');
+      $rehearsalsCat = Config::getValue('redaxoRehearsals');
 
       $redaxoLocation = \OCP\Config::GetAppValue('redaxo', 'redaxolocation', '');
       $rex = new \Redaxo\RPC($redaxoLocation);
 
-      $preview = $rex->articlesByName($projectName.'(-[0-9]+)?', $previewCat);
+      $cntRe = '(?:-[0-9]+)?';
+      
+      $preview = $rex->articlesByName($projectName.$cntRe, $previewCat);
       if (!is_array($preview)) {
         if ($ownConnection) {
           mySQL::close($handle);
         }
         return false;
       }
-      $archive = $rex->articlesByName($projectName.'(-[0-9]+)?', $archiveCat);
+      $archive = $rex->articlesByName($projectName.$cntRe, $archiveCat);
       if (!is_array($archive)) {
         if ($ownConnection) {
           mySQL::close($handle);
         }
         return false;
       }
+      $rehearsals = $rex->articlesByName(L::t('Rehearsals').' '.$projectName.$cntRe, $rehearsalsCat);
+      if (!is_array($rehearsals)) {
+        if ($ownConnection) {
+          mySQL::close($handle);
+        }
+        return false;
+      }
 
-      $articles = array_merge($preview, $archive);
+      $articles = array_merge($preview, $archive, $rehearsals);
+
+      //\OCP\Util::writeLog(Config::APP_NAME, "Web pages for ".$projectName.": ".print_r($articles, true), \OC_LOG::DEBUG);
+      
       foreach ($articles as $article) {
         // ignore any error
         self::attachProjectWebPage($projectId, $article, $handle);
@@ -1551,7 +1568,7 @@ __EOT__;
         mySQL::close($handle);
       }
 
-      return $result;
+      return true;
     }
 
     /**Fetch minimum and maximum project years from the Projekte table.

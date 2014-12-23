@@ -119,7 +119,10 @@ namespace CAFEVDB {
   </div>
 ';    
     }
-    echo '  <div id="projectArticle-newpage" class="cmsarticlecontainer cafev">
+    echo '  <div id="projectArticle-newpage"
+       class="cmsarticlecontainer cafev"
+       data-article-id="-1"
+       data-project-id="'.$projectId.'">
     <div id="cmsarticle-newpage" class="cmsarticleframe '.$_['action'].'">'.L::t("Create new public web page for this project.").'</div>
   </div>
 ';    

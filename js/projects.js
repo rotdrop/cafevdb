@@ -478,7 +478,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
         switch (tabId) {
           case 'cmsarticle-tab-newpage':
             event.stopImmediatePropagation();
-            projectId = ui.oldPanel.data('projectId');
+            projectId = ui.newPanel.data('projectId');
             // just do it ...
             Projects.projectWebPageRequest({ Action: 'add',
                                              ArticleId: -1,
@@ -490,6 +490,10 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
             articleId = ui.oldPanel.data('articleId');
             projectId = ui.oldPanel.data('projectId');
             articleData = ui.oldPanel.data('article');
+            if (articleId == undefined) {
+                // so what
+                return false;
+            }
             OC.dialogs.confirm(
                 t('cafevdb', 'Really unlink the displayed event announcement?'),
                 t('cafevdb', 'Unlink Web-Page with Id {ArticleId}?',
@@ -512,6 +516,10 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
             articleId = ui.oldPanel.data('articleId');
             projectId = ui.oldPanel.data('projectId');
             articleData = ui.oldPanel.data('article');
+            if (articleId == undefined) {
+                // so what
+                return false;
+            }
             OC.dialogs.confirm(
                 t('cafevdb', 'Really delete the displayed event announcement?'),
                 t('cafevdb', 'Delete Web-Page with Id {ArticleId}?',

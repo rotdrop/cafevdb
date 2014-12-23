@@ -54,6 +54,13 @@ $(document).ready(function(){
     });
   });
 
+  $('#attachwebpages').click(function(){
+    var post  = $(this).serialize();
+    $.post( OC.filePath('cafevdb', 'ajax/expertmode', 'attachwebpages.php'), post, function(data){
+      $('#expertmode .msg').html(data);
+    });
+  });
+
   $('#checkinstruments').click(function(){
     var post  = $( '#checkinstruments' ).serialize();
     $.post( OC.filePath('cafevdb', 'ajax/expertmode', 'checkinstruments.php'), post, function(data){
