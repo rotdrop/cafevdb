@@ -121,29 +121,30 @@ class DetailedInstrumentation
     $opts['buttons'] = Navigation::prependTableButton($export, true);
 
     // Display special page elements
-    $opts['display'] = array_merge($opts['display'],
-                                   array(
-                                     'form'  => true,
-                                     'query' => true,
-                                     'sort'  => true,
-                                     'time'  => true,
-                                     'tabs' => array(
-                                       array('id' => 'instrumentation',
-                                             'default' => true,
-                                             'tooltip' => Config::toolTips('project-instrumentation-tab'),
-                                             'name' => L::t('Instrumentation related data')),
-                                       array('id' => 'project',
-                                             'tooltip' => Config::toolTips('project-metadata-tab'),
-                                             'name' => L::t('Project related data')),
-                                       array('id' => 'musician',
-                                             'tooltip' => Config::toolTips('project-personaldata-tab'),
-                                             'name' => L::t('Personal data')),
-                                       array('id' => 'tab-all',
-                                             'tooltip' => Config::toolTips('pme-showall-tab'),
-                                             'name' => L::t('Display all columns')
-                                         )
-                                       )
-                                     ));
+    $opts['display'] = array_merge(
+      $opts['display'],
+      array(
+        'form'  => true,
+        'query' => true,
+        'sort'  => true,
+        'time'  => true,
+        'tabs' => array(
+          array('id' => 'instrumentation',
+                'default' => true,
+                'tooltip' => Config::toolTips('project-instrumentation-tab'),
+                'name' => L::t('Instrumentation related data')),
+          array('id' => 'project',
+                'tooltip' => Config::toolTips('project-metadata-tab'),
+                'name' => L::t('Project related data')),
+          array('id' => 'musician',
+                'tooltip' => Config::toolTips('project-personaldata-tab'),
+                'name' => L::t('Personal data')),
+          array('id' => 'tab-all',
+                'tooltip' => Config::toolTips('pme-showall-tab'),
+                'name' => L::t('Display all columns'))
+          )
+        )
+      );
 
     // Set default prefixes for variables
     $opts['js']['prefix']               = 'PME_js_';
