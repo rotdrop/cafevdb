@@ -151,14 +151,30 @@ make sure that the musicians are also automatically added to the
     }
 
     // Display special page elements
-    $opts['display'] =  array_merge($opts['display'],
-                                    array(
-                                      'form'  => true,
-                                      'query' => true,
-                                      'sort'  => true,
-                                      'time'  => true,
-                                      'tabs'  => false
-                                      ));
+    $opts['display'] =  array_merge(
+      $opts['display'],
+      array(
+        'form'  => true,
+        'query' => true,
+        'sort'  => true,
+        'time'  => true,
+        'tabs'  => array(
+          array('id' => 'orchestra',
+                'default' => true,
+                'tooltip' => Config::toolTips('musician-orchestra-tab'),
+                'name' => L::t('Instruments and Status')),
+          array('id' => 'contact',
+                'tooltip' => Config::toolTips('musican-contact-tab'),
+                'name' => L::t('Contact Information')),
+          array('id' => 'miscinfo',
+                'tooltip' => Config::toolTips('musician-miscinfo-tab'),
+                'name' => L::t('Miscellaneous Data')),
+          array('id' => 'tab-all',
+                'tooltip' => Config::toolTips('pme-showall-tab'),
+                'name' => L::t('Display all columns'))
+          )
+        )
+      );
 
     // Set default prefixes for variables
     $opts['js']['prefix']               = 'PME_js_';
@@ -226,6 +242,7 @@ make sure that the musicians are also automatically added to the
     */
 
     $opts['fdd']['Id'] = array(
+      'tab'      => array('id' => 'miscinfo'),
       'name'     => 'Id',
       'select'   => 'T',
       'options'  => 'AVCPDR', // auto increment
@@ -239,6 +256,7 @@ make sure that the musicians are also automatically added to the
     $tip  = strval(Config::toolTips('register-musician'));
     if ($this->projectMode) {
       $opts['fdd']['AddMusicians'] = array(
+        'tab' => array('id' => 'orchestra'),
         'name' => L::t('Add Musicians'),
         'select' => 'T',
         'options' => 'VLR',
@@ -255,7 +273,7 @@ make sure that the musicians are also automatically added to the
 .",'@@key@@',`PMEtable0`.`Id`)",
         'escape' => false,
         'nowrap' => true,
-        'sort' =>false
+        'sort' =>false,
         //'php' => "AddMusician.php"
         );
     }
@@ -267,6 +285,7 @@ make sure that the musicians are also automatically added to the
     }
     
     $opts['fdd']['Name'] = array(
+      'tab'      => array('id' => 'tab-all'),
       'name'     => L::t('Surname'),
       'css'      => array('postfix' => ' musician-name'.' '.$addCSS),
       'select'   => 'T',
@@ -275,6 +294,7 @@ make sure that the musicians are also automatically added to the
       );
 
     $opts['fdd']['Vorname'] = array(
+      'tab'      => array('id' => 'tab-all'),
       'name'     => L::t('Forename'),
       'css'      => array('postfix' => ' musician-name'.' '.$addCSS),
       'select'   => 'T',
@@ -283,6 +303,7 @@ make sure that the musicians are also automatically added to the
       );
 
     $opts['fdd']['Instrumente'] = array(
+      'tab'         => array('id' => 'orchestra'),
       'name'        => L::t('Instruments'),
       'css'         => array('postfix' => ' instruments'),
       'select'      => 'M',
@@ -331,83 +352,104 @@ __EOT__;
     }
 
     $opts['fdd']['Projekte'] =
-      array('input' => 'VR', // virtual, read perm
-            'options' => 'LFV', // List View and Filter
-            'select' => 'M',
-            'name' => L::t('Projects'),
-            'sort' => true,
-            'sql' => 'PMEjoin'.$projectsIdx.'.Projekte',
-            'sqlw' => 'PMEjoin'.$projectsIdx.'.Projekte',
-            'css'      => array('postfix' => ' projects'),
-            'values' => array( //API for currently making a join in PME.
-              'table' =>
-              array('sql' => $derivedtable,
-                    'kind' => 'derived'),
-              'column' => 'MusikerId',
-              'join' => '$main_table.Id = $join_table.MusikerId',
-              'description' => 'Projekte',
-              'queryvalues' => $projectQueryValues
-              ),
+      array(
+        'tab'      => array('id' => 'orchestra'),
+        'input' => 'VR', // virtual, read perm
+        'options' => 'LFV', // List View and Filter
+        'select' => 'M',
+        'name' => L::t('Projects'),
+        'sort' => true,
+        'sql' => 'PMEjoin'.$projectsIdx.'.Projekte',
+        'sqlw' => 'PMEjoin'.$projectsIdx.'.Projekte',
+        'css'      => array('postfix' => ' projects'),
+        'values' => array( //API for currently making a join in PME.
+          'table' =>
+          array('sql' => $derivedtable,
+                'kind' => 'derived'),
+          'column' => 'MusikerId',
+          'join' => '$main_table.Id = $join_table.MusikerId',
+          'description' => 'Projekte',
+          'queryvalues' => $projectQueryValues
+          ),
         );
 
     $opts['fdd']['Telefon'] = array(
-                                    'name'     => 'Telefon',
-                                    'select'   => 'T',
-                                    'maxlen'   => 128,
-                                    'sort'     => true
-                                    );
+      'tab'      => array('id' => 'contact'),
+      'name'     => 'Telefon',
+      'select'   => 'T',
+      'maxlen'   => 128,
+      'sort'     => true
+      );
+
     $opts['fdd']['Telefon2'] = array(
-                                     'name'     => 'Telefon2',
-                                     'select'   => 'T',
-                                     'maxlen'   => 128,
-                                     'sort'     => true
-                                     );
+      'tab'      => array('id' => 'contact'),
+      'name'     => 'Telefon2',
+      'select'   => 'T',
+      'maxlen'   => 128,
+      'sort'     => true
+      );
+
     $opts['fdd']['Email'] = Config::$opts['email'];
+    $opts['fdd']['Email']['tab'] = array('id' => 'contact');
 
     $opts['fdd']['Strasse'] = array(
-                                    'name'     => 'Strasse',
-                                    'select'   => 'T',
-                                    'maxlen'   => 128,
-                                    'sort'     => true
-                                    );
+      'tab'      => array('id' => 'contact'),
+      'name'     => 'Strasse',
+      'select'   => 'T',
+      'maxlen'   => 128,
+      'sort'     => true
+      );
+
     $opts['fdd']['Postleitzahl'] = array(
-                                         'name'     => 'Postleitzahl',
-                                         'select'   => 'T',
-                                         'maxlen'   => 11,
-                                         'sort'     => true
-                                         );
+      'tab'      => array('id' => 'contact'),
+      'name'     => 'Postleitzahl',
+      'select'   => 'T',
+      'maxlen'   => 11,
+      'sort'     => true
+      );
+
     $opts['fdd']['Stadt'] = array(
-                                  'name'     => 'Stadt',
-                                  'select'   => 'T',
-                                  'maxlen'   => 128,
-                                  'sort'     => true
-                                  );
-    $opts['fdd']['Land'] = array('name'     => 'Land',
-                                 'select'   => 'T',
-                                 'maxlen'   => 128,
-                                 'default'  => 'Deutschland',
-                                 'sort'     => true);
+      'tab'      => array('id' => 'contact'),
+      'name'     => 'Stadt',
+      'select'   => 'T',
+      'maxlen'   => 128,
+      'sort'     => true
+      );
+
+    $opts['fdd']['Land'] = array(
+      'tab'      => array('id' => 'contact'),
+      'name'     => 'Land',
+      'select'   => 'T',
+      'maxlen'   => 128,
+      'default'  => 'Deutschland',
+      'sort'     => true);
 
     $opts['fdd']['Geburtstag'] = Config::$opts['birthday'];
+    $opts['fdd']['Geburtstag']['tab'] = array('id' => 'miscinfo');
 
-    $opts['fdd']['Remarks'] = array('name'     => strval(L::t('Remarks')),
-                                    'select'   => 'T',
-                                    'maxlen'   => 65535,
-                                    'css'      => array('postfix' => 'remarks'),
-                                    'textarea' => array('css' => 'wysiwygeditor',
-                                                        'rows' => 5,
-                                                        'cols' => 50),
-                                    'escape' => false,
-                                    'sort'     => true);
+    $opts['fdd']['Remarks'] = array(
+      'tab'      => array('id' => 'orchestra'),
+      'name'     => strval(L::t('Remarks')),
+      'select'   => 'T',
+      'maxlen'   => 65535,
+      'css'      => array('postfix' => 'remarks'),
+      'textarea' => array('css' => 'wysiwygeditor',
+                          'rows' => 5,
+                          'cols' => 50),
+      'escape' => false,
+      'sort'     => true);
 
-    $opts['fdd']['Sprachpräferenz'] = array('name'     => 'Spachpräferenz',
-                                            'select'   => 'D',
-                                            'maxlen'   => 128,
-                                            'default'  => 'Deutschland',
-                                            'sort'     => true,
-                                            'values2'   => Config::$opts['languages']);
+    $opts['fdd']['Sprachpräferenz'] = array(
+      'tab'      => array('id' => 'miscinfo'),
+      'name'     => 'Spachpräferenz',
+      'select'   => 'D',
+      'maxlen'   => 128,
+      'default'  => 'Deutschland',
+      'sort'     => true,
+      'values2'   => Config::$opts['languages']);
 
     $opts['fdd']['Insurance'] = array(
+      'tab'      => array('id' => 'miscinfo'),
       'input' => 'V',
       'name' => L::t('Instrument Insurance'),
       'select' => 'T',
@@ -424,6 +466,7 @@ __EOT__;
       );
 
     $opts['fdd']['Portrait'] = array(
+      'tab'      => array('id' => 'miscinfo'),
       'input' => 'V',
       'name' => L::t('Photo'),
       'select' => 'T',
@@ -438,12 +481,17 @@ __EOT__;
       'default' => '',
       'sort' => false);
 
-    $opts['fdd']['Aktualisiert'] = array_merge(Config::$opts['datetime'],
-                                               array("name" => L::t("Last Updated"),
-                                                     "default" => date(Config::$opts['datetime']['datemask']),
-                                                     "nowrap" => true,
-                                                     "options" => 'LFAVCPDR' // Set by update trigger.
-                                                 ));
+    $opts['fdd']['Aktualisiert'] =
+      array_merge(
+        Config::$opts['datetime'],
+        array(
+          'tab' => array('id' => 'miscinfo'),
+          "name" => L::t("Last Updated"),
+          "default" => date(Config::$opts['datetime']['datemask']),
+          "nowrap" => true,
+          "options" => 'LFAVCPDR' // Set by update trigger.
+          )
+        );
 
     $opts['triggers']['update']['before'] = array();
     $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
