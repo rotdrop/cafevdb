@@ -1194,6 +1194,8 @@ var CAFEVDB = CAFEVDB || {};
 
     container.find('textarea[class*="pme-input"]').tipsy(
       {gravity:'sw', fade:true, html:true, className:'tipsy-wide'});
+    container.find('table.pme-main td').tipsy(
+      {gravity:'sw', fade:true, html:true, className:'tipsy-wide'});
 
     container.find('[class*="tipsy-"]').each(function(index) {
       var options = { fade: true,
