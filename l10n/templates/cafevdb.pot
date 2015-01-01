@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-23 03:28+0100\n"
+"POT-Creation-Date: 2015-01-01 16:27+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1920,8 +1920,8 @@ msgid ""
 "in case of desinformation or misunderstanding. Use with care."
 msgstr ""
 
-#: js/sepa-debit-mandate.js:146 lib/detailed-instrumentation.php:348
-#: lib/detailed-instrumentation.php:675 lib/detailed-instrumentation.php:693
+#: js/sepa-debit-mandate.js:146 lib/detailed-instrumentation.php:349
+#: lib/detailed-instrumentation.php:676 lib/detailed-instrumentation.php:694
 msgid "SEPA Debit Mandate"
 msgstr ""
 
@@ -2058,67 +2058,67 @@ msgstr ""
 msgid "Instrumentation for Project `%s'"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:134
+#: lib/detailed-instrumentation.php:135
 msgid "Instrumentation related data"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:137
+#: lib/detailed-instrumentation.php:138
 msgid "Project related data"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:140
+#: lib/detailed-instrumentation.php:141
 msgid "Personal data"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:143
+#: lib/detailed-instrumentation.php:144 lib/musicians.php:174
 msgid "Display all columns"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:212
+#: lib/detailed-instrumentation.php:213
 msgid "Instrumentation Id"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:224
+#: lib/detailed-instrumentation.php:225
 msgid "Musician Id"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:299
+#: lib/detailed-instrumentation.php:300
 msgid "All Instruments"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:319 lib/musicians.php:297
+#: lib/detailed-instrumentation.php:320 lib/musicians.php:318
 msgid "Member Status"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:400 lib/musicians.php:393
+#: lib/detailed-instrumentation.php:401 lib/musicians.php:432
 msgid "Remarks"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:416 lib/musicians.php:309
+#: lib/detailed-instrumentation.php:417 lib/musicians.php:330
 msgid "no projects yet"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:434 lib/musicians.php:337
+#: lib/detailed-instrumentation.php:435 lib/musicians.php:360
 msgid "Projects"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:493
+#: lib/detailed-instrumentation.php:494
 msgid "Country"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:504
+#: lib/detailed-instrumentation.php:505
 msgid "General Remarks"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:527 lib/musicians.php:428
+#: lib/detailed-instrumentation.php:528 lib/musicians.php:471
 msgid "Photo"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:541 lib/musicians.php:442
+#: lib/detailed-instrumentation.php:542 lib/musicians.php:489
 msgid "Last Updated"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:699
+#: lib/detailed-instrumentation.php:700
 msgid "Click to enter details of a potential SEPA debit mandate"
 msgstr ""
 
@@ -2770,69 +2770,81 @@ msgstr ""
 msgid "Add musicians to the project `%s'"
 msgstr ""
 
-#: lib/musicians.php:187
+#: lib/musicians.php:165
+msgid "Instruments and Status"
+msgstr ""
+
+#: lib/musicians.php:168
+msgid "Contact Information"
+msgstr ""
+
+#: lib/musicians.php:171
+msgid "Miscellaneous Data"
+msgstr ""
+
+#: lib/musicians.php:203
 #, php-format
 msgid "Add all to %s"
 msgstr ""
 
-#: lib/musicians.php:238
+#: lib/musicians.php:255
 #, php-format
 msgid "Add to %s"
 msgstr ""
 
-#: lib/musicians.php:242
+#: lib/musicians.php:260
 msgid "Add Musicians"
 msgstr ""
 
-#: lib/musicians.php:270
+#: lib/musicians.php:289
 msgid "Surname"
 msgstr ""
 
-#: lib/musicians.php:278
+#: lib/musicians.php:298
 msgid "Forename"
 msgstr ""
 
-#: lib/musicians.php:286
+#: lib/musicians.php:307
 msgid "Instruments"
 msgstr ""
 
-#: lib/musicians.php:412 lib/sepa-debit-mandates.php:415
+#: lib/musicians.php:454 lib/sepa-debit-mandates.php:415
 msgid "Instrument Insurance"
 msgstr ""
 
-#: lib/musicians.php:548
+#: lib/musicians.php:596
 #, php-format
 msgid "Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;"
 msgstr ""
 
-#: lib/musicians.php:572
+#: lib/musicians.php:620
 msgid ""
 "Portraits or Avatars can only be added to an existing musician's profile; "
 "please add the new musician without protrait image first."
 msgstr ""
 
-#: lib/musicians.php:586
+#: lib/musicians.php:634
 #, php-format
 msgid "Drop photo to upload (max %s)"
 msgstr ""
 
-#: lib/musicians.php:589
+#: lib/musicians.php:637
 msgid "Delete current photo"
 msgstr ""
 
-#: lib/musicians.php:590
+#: lib/musicians.php:638
 msgid "Edit current photo"
 msgstr ""
 
-#: lib/musicians.php:591
+#: lib/musicians.php:639
 msgid "Upload new photo"
 msgstr ""
 
-#: lib/musicians.php:592
+#: lib/musicians.php:640
 msgid "Select photo from ownCloud"
 msgstr ""
 
-#: lib/musicians.php:600
+#: lib/musicians.php:648
 msgid ""
 "Internal error, don't know what to do concerning portrait images in the "
 "given context."
