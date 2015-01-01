@@ -332,6 +332,8 @@ namespace CAFEVDB
       $opts['fdd']['Unkostenbeitrag'] = Config::$opts['money'];
       $opts['fdd']['Unkostenbeitrag']['name'] = "Teilnehmerbeitrag";
       $opts['fdd']['Unkostenbeitrag']['tooltip'] = L::t('Default project fee for ordinary participants. This should NOT include reductions of any kind. The value displayed here is the default value inserted into the instrumentation table for the project.');
+      $opts['fdd']['Unkostenbeitrag']['display|LF'] = array('popup' => 'tooltip');
+      $opts['fdd']['Unkostenbeitrag']['css']['postfix'] .= ' tipsy-se';
 
       $opts['fdd']['ExtraFelder'] = array('name'     => 'Extra Felder für Teilnehmer',
                                           'options'  => 'FLAVCPD',
