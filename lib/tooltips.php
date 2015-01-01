@@ -39,11 +39,19 @@ namespace CAFEVDB
     static private function makeToolTips() 
     {
       return array(
+        'address-book-emails' => L::t('Opens a select-box with choices from the shared Owncloud-addressbook. You can also add new em@il-addresses to the address-book for later reusal. The addresses can also be added in the Owncloud `Contacts\'-App.'),
+
+        'blog-acceptentry' => '',
+
+        'blog-cancelentry' => '',
+
         'blog-newentry' => L::t('Write a new bulletin entry.'),
 
         'blog-popup-clear' => L::t('Disable the pop-up function for this blog-note. The list of associated readers is maintained, so reenabling the pop-up function will still not present this note to users already on the reader-list.'),
 
         'blog-popup-set' => L::t('Place this note in a pop-up window after login. The window will only pop-up once, the list of readers is remembered.'),
+
+        'blog-priority' => '',
 
         'blog-reader-clear' => L::t('Clear the list of readers of this note. Consequently, if this note is marked as popup, then it will pop-up again after clearing the list of readers.'),
 
@@ -59,64 +67,34 @@ namespace CAFEVDB
 
         'blogentry-sticky' => L::t('Toggle the sticky marker; sticky notes are listed at the top of the list.'),
 
+        'cancel-email-composition' => L::t('Cancel the email composition and close the input form. This has the
+same effect as clicking the close button on top of the dialog-window. No email will be sent.'),
+
         'club-member-project' => L::t('Name of the pseudo-project listing the permanent members of the orchestra.'),
 
-        'executive-board-project' => L::t('Name of the pseudo-project listing the members of the executive board.'),
-      
         'configrecheck' => L::t('Perform the configuration checks again. If all checks have been passed then you are led on to the ordinary entry page of the application.'),
 
-        'emailtest' => L::t('Test the email-settings; try to connect to the SMTP-server and the IMAP-server in turn.'),
+        'delete-all-event-attachments' => L::t('Clear the list of selected event-attachments. Of course, this does not delete the events from their respective calendar, it just de-selects all events such that no event will be attached to the email.'),
+
+        'delete-all-file-attachments' => L::t('Delete all uploaded file-attachments from the server. This is also done automatically when closing the email-form. This will also empty the select box.'),
+
+        'delete-email-template' => L::t('Delete the selected email-template (you will be asked for confirmation before it is actually deleted)'),
+
+        'email-account-distribute' => '',
 
         'email-message-export' => L::t('Export the email text as HTML. In the case of per-member variable
 substitutions this will result in a multi-page document with proper page breaks after each message, with all variables substituted.'),
-      
-        'email-recipients-listing' => L::t('List of selected musicians; can be changed in the `Em@il-Recipients\' panel.'),
-
-        'address-book-emails' => L::t('Opens a select-box with choices from the shared Owncloud-addressbook. '.
-                                      'You can also add new em@il-addresses to the address-book for later '.
-                                      'reusal. The addresses can also be added in the Owncloud `Contacts\'-App.'),
-
-        'delete-email-template' => L::t('Delete the selected email-template (you will be asked for '.
-                                        'confirmation before it is actually deleted)'),
-
-        'delete-all-event-attachments' => L::t('Clear the list of selected event-attachments. '.
-                                               'Of course, this does not delete the events from '.
-                                               'their respective calendar, it just de-selects all events '.
-                                               'such that no event will be attached to the email.'),
-
-        'delete-all-file-attachments' => L::t('Delete all uploaded file-attachments from the server. '.
-                                              'This is also done automatically when closing the email-form. '.
-                                              'This will also empty the select box.'),
-
-        'event-attachments-select' => L::t('Select-box with all project-events. You can select events '.
-                                           'as attachments to your email.'),
-
-        'file-attachments-select' => L::t('Select-box with all currently uploaded attachments. Note that a '.
-                                          'file will only be attached to a message if it is also checked in '.
-                                          'this select box.'),
-
-        'email-recipients-broken-emails' => L::t('List of musicians without or with ill-formed email-addresses. '.
-                                                 'You can click on the names in order to open a dialog with '.
-                                                 'the personal data of the respective musician and correct '.
-                                                 'the email addresses there.'),
-
-        'events-attachment' => L::t('Select calendar attachments from the associated project events.'),
-
-        'email-recipients-from-project' => L::t('Choose among all musicians currently registered for this project.'),
-
-        'email-recipients-except-project' => L::t('Choose among all musicians currently <b>NOT</b> registered for this project.'),
 
         'email-recipients-basic-set' => L::t('Choose either among all musicians currently registered for the project
 or from the complement set. Obviously, selecting both options will
 give you the choice to select any musician as recipient.'),
 
-        'email-recipients-member-status-filter' => L::t('Select recipients by member status. Normally, conductors and soloists
-are excluded from receiving mass-email. Please be careful when modifying the default selection!'),
+        'email-recipients-broken-emails' => L::t('List of musicians without or with ill-formed email-addresses. You can click on the names in order to open a dialog with the personal data of the respective musician and correct the email addresses there.'),
+
+        'email-recipients-except-project' => L::t('Choose among all musicians currently <b>NOT</b> registered for this project.'),
 
         'email-recipients-filter-apply' => L::t('Apply the currently selected instruments as filter. At your option,
 you can also simply double-click inside the boxed filter-region in order to activate your filter-choice.'),
-
-        'email-recipients-filter-undo' => L::t('Undo the last recipient filter operation and restore the previous selection of musicians.'),
 
         'email-recipients-filter-redo' => L::t('Redo the last operation undone by the undo button.'),
 
@@ -126,21 +104,36 @@ reset the form to the initial state. Note, however, that the text of
 your email will be maintained, the reset only applies to the recipient
 list.'),
 
-        'email-recipients-instruments-filter-container' => L::t('A double click inside the boxed filter-region will apply the instruments-filter'),
+        'email-recipients-filter-undo' => L::t('Undo the last recipient filter operation and restore the previous selection of musicians.'),
 
-        'email-recipients-instruments-filter-label' => L::t('A double click inside the boxed filter-region will apply the instruments-filter'),
+        'email-recipients-freeform-BCC' => '',
+
+        'email-recipients-freeform-CC' => '',
+
+        'email-recipients-from-project' => L::t('Choose among all musicians currently registered for this project.'),
 
         'email-recipients-instruments-filter' => L::t('Restrict the basic set of musicians to the instruments selected
 here. The filter is additive: selecting more than one instruments will
 include the musicians playing either of them.'),
 
-        'cancel-email-composition' => L::t('Cancel the email composition and close the input form. This has the
-same effect as clicking the close button on top of the dialog-window. No email will be sent.'),
+        'email-recipients-instruments-filter-container' => L::t('A double click inside the boxed filter-region will apply the instruments-filter'),
 
-        'send-mass-email' => L::t('Attempt to send the stuff you have composed out to your selection of
-recipients. Please think thrice about it. In case of an error
-additional diagnostic messages may (or may not ...) be available in
-the `Debug\' tab'),
+        'email-recipients-instruments-filter-label' => L::t('A double click inside the boxed filter-region will apply the instruments-filter'),
+
+        'email-recipients-listing' => L::t('List of selected musicians; can be changed in the `Em@il-Recipients\' panel.'),
+
+        'email-recipients-member-status-filter' => L::t('Select recipients by member status. Normally, conductors and soloists
+are excluded from receiving mass-email. Please be careful when modifying the default selection!'),
+
+        'emailtest' => L::t('Test the email-settings; try to connect to the SMTP-server and the IMAP-server in turn.'),
+
+        'event-attachments-select' => L::t('Select-box with all project-events. You can select events as attachments to your email.'),
+
+        'events-attachment' => L::t('Select calendar attachments from the associated project events.'),
+
+        'executive-board-project' => L::t('Name of the pseudo-project listing the members of the executive board.'),
+
+        'file-attachments-select' => L::t('Select-box with all currently uploaded attachments. Note that a file will only be attached to a message if it is also checked in this select box.'),
 
         'member-status' => L::t('A flag which indicates not so much social or functional status, but
 default behaviour for mass-emails as follows
@@ -161,14 +154,30 @@ default behaviour for mass-emails as follows
 All classes of members can be explicitly added to a specific mass-emails through the controls
 in the email form.'),
 
+        'musican-contact-tab' => '',
+
+        'musician-instrument-insurance' => '',
+
+        'musician-miscinfo-tab' => '',
+
+        'musician-orchestra-tab' => '',
+
         'new-email-template' => L::t('Enter a short, no-nonsense name for the new template. Please omit spaces.'),
 
         'nothing' => L::t('nothing'),
 
         'owncloud-attachment' => L::t('Choose a file to attach from the files stored remotely on in the OwnCloud storage area.'),
 
+        'ownclouddev-link' => '',
+
+        'phpmyadmin-link' => '',
+
+        'phpmyadminoc-link' => '',
+
         'pme-add' => L::t('  Click me to add a new
 row to the current table.'),
+
+        'pme-apply' => L::t('Saves the current values; the current input form will remain active.'),
 
         'pme-bulkcommit' => L::t('  Click me to add all selected musicians
 to the selected project. All selected
@@ -192,6 +201,16 @@ project. Please click the
 actually add all selected
 musicians.'),
 
+        'pme-cancel' => array(
+          'default' => L::t('Stop the current operation. Settings which already have been stored by
+hitting an "Apply" button are maintained, though. You will be returned
+to the previous view.'),
+          'canceldelete' => L::t('Stop the current operation. You will be returned to the previous view.'),
+          ),
+
+        'pme-change' => L::t('Directs you to a form with input fields. From there you can return to
+this form by means of the "Save" or "Back" resp. "Cancel" buttons.'),
+
         'pme-change-navigation' => array(
           'operation' => L::t('Einzelnen Datensatz anzeigen,
 zeigt ein neues Formular mit
@@ -214,6 +233,14 @@ detaillierten Eingabefeldern
 und Abbruchmöglichkeit.'),
           ),
 
+        'pme-debit-note' => L::t('Click me to export a CSV-table with the selected debit notes suitable for use with AQBanking command-line tool `aqbanking-cli\'. Please refer to the HOWTO in the wiki for further information. Clicking this button will also open the email dialog in order to inform the selected musicians about debiting their bank account.'),
+
+        'pme-debit-note+' => L::t('Select all displayed debit-notes for export.'),
+
+        'pme-debit-note-' => L::t('Deselect all displayed debit-notes from export selection.'),
+
+        'pme-debit-note-check' => L::t('Select this debit note for debiting the project fees. In order to actually export the debit-note you have to hit the `Debit\' button above.'),
+
         'pme-delete-navigation' => array(
           'operation' => L::t('Einzelnen Datensatz löschen,
 zeigt den aktuellen Datensatz zunächst an.
@@ -222,14 +249,6 @@ weiteren Bestätigung. Trotzdem:
 VORSICHT!.'),
           ),
 
-        'pme-debit-note' => L::t("Click me to export a CSV-table with the selected debit notes suitable for use with AQBanking command-line tool `aqbanking-cli'. Please refer to the HOWTO in the wiki for further information. Clicking this button will also open the email dialog in order to inform the selected musicians about debiting their bank account."),
-
-        'pme-debit-note+' => L::t('Select all displayed debit-notes for export.'),
-
-        'pme-debit-note-' => L::t('Deselect all displayed debit-notes from export selection.'),
-
-        'pme-debit-note-check' => L::t("Select this debit note for debiting the project fees. In order to actually export the debit-note you have to hit the `Debit' button above."),
-      
         'pme-email' => L::t('  Klick mich, um eine Em@il an die ausgewählten
 Musiker zu versenden. Auf der folgenden Seite kann
 die Auswahl dann noch modifiziert werden.
@@ -268,8 +287,6 @@ korrigieren.'),
 
         'pme-export-htmlexcel' => L::t('Export as HTML page, but set the file type to `spread-sheed\'. Should also be readable by standard office-programs as `Excel\'-table.'),
 
-        'pme-filter-negate' => L::t('Negate the filter, i.e. search for anything not matching the selected options.'),
-
         'pme-filter' => L::t('Field for filter/search criteria.
 Short explanation: simply type somthing and press <code>ENTER</code>.
 <br/>
@@ -302,20 +319,43 @@ It is also possible to match empty fields, in particular:
 <dd>match any row with empty search-field</dd>
 </dl>'),
 
+        'pme-filter-negate' => L::t('Negate the filter, i.e. search for anything not matching the selected options.'),
+
+        'pme-gotoselect' => L::t('Jumps directly to the given page'),
+
         'pme-hide' => array(
           'sw' => L::t('  Klick mich, um die
 Suchkriterien zu verstecken.'),
           ),
+
+        'pme-instrumentation-actions' => '',
+
+        'pme-more' => array(
+          'moreadd' => L::t('Saves the current values and start to generate another new data-set.'),
+          'morecopy' => L::t('Saves the current values and continues to make yet another copy of the source data-set.'),
+          'morechange' => L::t('Saves the current values; the current input form will remain active.'),
+          ),
+
+        'pme-pagerowsselect' => L::t('Limits the number of rows per page to the given value. A "*" means to display all records on one large page.'),
 
         'pme-query' => L::t('  Klick mich, um die
 aktuellen Suchkriterien anzuwenden. Suchkriterien
 können in den Feldern eingegeben werden.
 Als Platzhalter verwendet man `%%\'.'),
 
+        'pme-reload' => L::t('Refreshes the current view by reloading all data from the data-base.'),
+
+        'pme-save' => array(
+          'default' => L::t('Saves the current values and returns to the previous view.'),
+          'savedelete' => L::t('Deletes the current record and returns to the previous view.'),
+          ),
+
         'pme-search' => array(
           'sw' => L::t('  Klick mich, um die
 Suchkriterien anzuzeigen.'),
           ),
+
+        'pme-showall-tab' => L::t('Simply blends in all the columns of the table as if all the tabs would be activated at the same time.'),
 
         'pme-sort' => L::t('  Klick mich, um das Sortieren
 nach diesem Feld ein-
@@ -329,54 +369,13 @@ oder auszuschalten!'),
           'operation' => L::t('Einzelnen Datensatz anzeigen'),
           ),
 
-        'pme-cancel' => array(
-          'default' => L::t('Stop the current operation. Settings which already have been stored by
-hitting an "Apply" button are maintained, though. You will be returned
-to the previous view.'),
-          'canceldelete' => L::t('Stop the current operation. You will be returned to the previous view.')
-          ),        
+        'project-action-debit-mandates' => L::t('Load a new page with all debit-mandates for project-fees'),
 
-        'pme-reload' => L::t('Refreshes the current view by reloading all data from the data-base.'),
-
-        'pme-change' => L::t('Directs you to a form with input fields. From there you can return to
-this form by means of the "Save" or "Back" resp. "Cancel" buttons.'),
-
-        'pme-apply' => L::t('Saves the current values; the current input form will remain active.'),
-
-        'pme-more' => array('moreadd' =>  L::t('Saves the current values and start to generate another new data-set.'),
-                            'morecopy' => L::t('Saves the current values and continues to make yet another copy of the source data-set.'),
-                            'morechange' => L::t('Saves the current values; the current input form will remain active.')),
-
-        'pme-save' => array(
-          'default' => L::t('Saves the current values and returns to the previous view.'),
-          'savedelete' => L::t('Deletes the current record and returns to the previous view.')
-          ),
-
-        'pme-pagerowsselect' => L::t('Limits the number of rows per page to the given value. A "*" means to display all records on one large page.'),
-
-        'pme-gotoselect' => L::t('Jumps directly to the given page'),
-
-        'project-instrumentation-tab' => L::t('Displays the columns directly related to the instrumentation for the project.'),
-
-        'project-metadata-tab' => L::t('Displays `meta-data\' like project fees, single/double room preferences, debit-mandates and the like.'),
-
-        'project-personaldata-tab' => L::t('Displays the personal data of the respective musicians, like address, email, date of birth if known, phone numbers.'),
-
-        'pme-showall-tab' => L::t('Simply blends in all the columns of the table as if all the tabs would be activated at the same time.'),
-
-        'project-actions' => L::t('Pull-down menu with entries to move on
-to pages with the instrumentation, events, instrumentation numbers etc.'),
-
-        'project-action-detailed-instrumentation' => L::t(
-          'Display all registered musicians for the selected project. The table
+        'project-action-detailed-instrumentation' => L::t('Display all registered musicians for the selected project. The table
         shows project related details as well as all stored personal
         "information about the respective musician'),
 
         'project-action-email' => L::t('Opens the email-form for the project inside a dialog window.'),
-
-        'project-infopage' => L::t('Opens a dialog-window which gives access to all stored informations for the project.'),
-
-        'project-action-debit-mandates' => L::t('Load a new page with all debit-mandates for project-fees'),
 
         'project-action-events' => L::t('Open a dialog with all known
 events associated to the project.
@@ -393,20 +392,31 @@ has been ``closed\'\'.'),
 
         'project-action-wiki' => L::t('Change to the DokuWiki-page for this project (if there is one)'),
 
+        'project-actions' => L::t('Pull-down menu with entries to move on
+to pages with the instrumentation, events, instrumentation numbers etc.'),
+
+        'project-infopage' => L::t('Opens a dialog-window which gives access to all stored informations for the project.'),
+
+        'project-instrumentation-tab' => L::t('Displays the columns directly related to the instrumentation for the project.'),
+
+        'project-metadata-tab' => L::t('Displays `meta-data\' like project fees, single/double room preferences, debit-mandates and the like.'),
+
+        'project-name-yearattach' => L::t('Append the year to the name if checked.
+Regardless of this checkbox any decimal digit will first be stripped from the end
+of the project name before the year is added.'),
+
+        'project-personaldata-tab' => L::t('Displays the personal data of the respective musicians, like address, email, date of birth if known, phone numbers.'),
+
         'project-web-article-add' => L::t('Add a new public web-page to the project by generating a new, empty concert announcement.'),
 
         'project-web-article-delete' => L::t('Delete the currently displayed web-page fromthe project. The web page will be "detached" from the project and moved to the trash-bin
 "category" (folger) inside the CMS.'),
 
-        'project-web-article-linkpage' => L::t("Link existing pages to the project. This can be used, for instance, in order to add a page to the project which has not been created by hitting the `+'-button above, but was created directly in the CMS backend. When linking articles from the `trashbin' category then those articles will automatically moved to the `preview' category; this is some not-so-hidden undelete feature.z"),
+        'project-web-article-linkpage' => L::t('Link existing pages to the project. This can be used, for instance, in order to add a page to the project which has not been created by hitting the `+\'-button above, but was created directly in the CMS backend. When linking articles from the `trashbin\' category then those articles will automatically moved to the `preview\' category; this is some not-so-hidden undelete feature.z'),
 
-        'project-web-article-linkpage-select' => L::t("Please select articles to link to the current project. The articles will be immediately added to the project if you select them. In order to remove the article, please use the `-' button above."),
+        'project-web-article-linkpage-select' => L::t('Please select articles to link to the current project. The articles will be immediately added to the project if you select them. In order to remove the article, please use the `-\' button above.'),
 
-        'project-web-article-unlinkpage' => L::t("Detach the currently displayed event announcement from the project. Primarily meant to provide means to undo erroneous linking of articles."),
-
-        'project-name-yearattach' => L::t('Append the year to the name if checked.
-Regardless of this checkbox any decimal digit will first be stripped from the end
-of the project name before the year is added.'),
+        'project-web-article-unlinkpage' => L::t('Detach the currently displayed event announcement from the project. Primarily meant to provide means to undo erroneous linking of articles.'),
 
         'projectevents-button' => L::t('Open a dialog with all known
 events associated to the project.
@@ -426,9 +436,13 @@ The event can be reattached by
 adding the project-name to its
 categories.'),
 
+        'projectevents-download' => '',
+
         'projectevents-edit' => L::t('Modify the event.'),
 
         'projectevents-newconcert' => L::t('Add a new concert-event to the project.'),
+
+        'projectevents-newfinance' => '',
 
         'projectevents-newmanagement' => L::t('Add a private management event which is not exposed to the rest of the world.'),
 
@@ -450,6 +464,20 @@ recipients.'),
 and send the selected events to
 selected recipients.'),
 
+        'projectsbalancefolder-force' => '',
+
+        'projectsfolder-force' => '',
+
+        'redaxo-archive' => '',
+
+        'redaxo-preview' => '',
+
+        'redaxo-rehearsals' => '',
+
+        'redaxo-template' => '',
+
+        'redaxo-trashbin' => '',
+
         'register-musician' => L::t('Add the musician to the project. A new form will open were details like the instrument etc. can be adjustetd.'),
 
         'save-email-template' => L::t('Save the current email for later re-usal in the data-base.
@@ -460,9 +488,24 @@ by the pre-names of the organizing committe in order to compose  greetings.'),
 
         'select-email-template' => L::t('Select one of the email templates previously stored in the data-base.'),
 
+        'send-mass-email' => L::t('Attempt to send the stuff you have composed out to your selection of
+recipients. Please think thrice about it. In case of an error
+additional diagnostic messages may (or may not ...) be available in
+the `Debug\' tab'),
+
         'sepa-instant-validation' => L::t('Toggle instant validation and automatic computation of derived bank account data. If instant validation is disabled, the final values will still be validated and an error message will appear if an error is detected. It is only possible to save of store the debit-mandate if instant validation is enabled.'),
-      
+
+        'sharedfolder-force' => '',
+
+        'shareowner-force' => '',
+
+        'sourcecode-link' => '',
+
+        'sourcedocs-link' => '',
+
         'syncevents' => L::t('Recompute the link between projects and events, using the event-categories as primary key.'),
+
+        'test-cafevdb_dbpassword' => '',
 
         'test-dbpassword' => L::t('Check whether the data-base can be accessed with the given account
 information and password. The password will only be stored in the
@@ -473,6 +516,9 @@ configuration storage if the test can be performed successfully.'),
         'transfer-instruments' => L::t('Add the instruments of the actually registered musicians to the instrument-table for the project.'),
 
         'upload-attachment' => L::t('Upload a file from your local computer as attachment. The file will be removed from the remote-system after the message has been sent.'),
+
+        'wysiwyg-edtior' => '',
+
 
         );
     
@@ -486,5 +532,4 @@ configuration storage if the test can be performed successfully.'),
  * c-basic-offset: 2 ***
  * End: ***
  */
-
 ?>
