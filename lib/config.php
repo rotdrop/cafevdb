@@ -929,7 +929,7 @@ redaxoRehearsalsModule
     public static function toolTips($key)
     {
       $tip = '';
-      if (isset(self::$toolTipsArray[$key])) {
+      if (isset(self::$toolTipsArray[$key]) && !empty(self::$toolTipsArray[$key])) {
         $tip = self::$toolTipsArray[$key];
       } else if (self::$debug['tooltips']) {
         $tip = L::t("Unknown Tooltip for key `%s' requested.", array($key));
