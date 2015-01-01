@@ -740,9 +740,7 @@ td.pme-cell-0.mandate-project, td.pme-cell-1.mandate-project {
 }
 
 /* Hide everything but the first line */
-td.pme-cell-0-remarks, td.pme-cell-1-remarks,
-td.pme-cell-0-projectremarks, td.pme-cell-1-projectremarks,
-td.pme-cell-0-rehearsalremarks, td.pme-cell-1-rehearsalremarks { 
+table.pme-main td.remarks {
   font-size:25%;
   line-height:100%;
   max-width:20em;
@@ -753,12 +751,8 @@ td.pme-cell-0-rehearsalremarks, td.pme-cell-1-rehearsalremarks {
 }
 
 /* Make all remarks shorter */
-td.pme-cell-0-remarks:first-line, td.pme-cell-1-remarks:first-line,
-td.pme-cell-0-remarks p:nth-child(1):first-line, td.pme-cell-1-remarks p:nth-child(1):first-line,
-td.pme-cell-0-projectremarks:first-line, td.pme-cell-1-projectremarks:first-line,
-td.pme-cell-0-projectremarks p:nth-child(1):first-line, td.pme-cell-1-projectremarks p:nth-child(1):first-line,
-td.pme-cell-0-rehearsalremarks:first-line, td.pme-cell-1-rehearsalremarks:first-line,
-td.pme-cell-0-rehearsalremarks p:nth-child(1):first-line, td.pme-cell-1-rehearsalremarks p:nth-child(1):first-line {
+table.pme-main td.remarks:first-line,
+table.pme-main td.remarks p:nth-child(1):first-line {
   font-size:400%; /* seem to be relative to !first-line */
   line-height:100%;
   max-width:20em;

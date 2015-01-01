@@ -306,9 +306,10 @@ namespace CAFEVDB
                                         'select'   => 'M',
                                         'maxlen'   => 11,
                                         'sort'     => true,
-                                        'display|LF' => array("prefix" => '<div class="projectinstrumentation">',
+                                        'display|LF' => array("popup" => 'data',
+                                                              "prefix" => '<div class="projectinstrumentation">',
                                                               "postfix" => '</div>'),
-                                        'css'      => array('postfix' => ' projectinstrumentation'),
+                                        'css'      => array('postfix' => ' projectinstrumentation tipsy-se'),
                                         'values'   => $instruments,
                                         'valueGroups' => $groupedInstruments);
 
@@ -318,7 +319,7 @@ namespace CAFEVDB
         'options'  => 'VCD', 
         'select'   => 'T',
         'maxlen'   => 65535,
-        'css'      => array('postfix' => 'projectremarks'),
+        'css'      => array('postfix' => ' projecttoolbox'),
         'sql'      => 'Id',
         'sqlw'     => 'Id',
         'php|CV'    => array('type' => 'function',
@@ -342,7 +343,8 @@ namespace CAFEVDB
                                                               'cols' => 80),
                                           'sort'     => false,
                                           'escape'   => false,
-                                          'tooltip'  => L::t('Comma separates list of extra-fields, e.g.
+                                          //'display|LF' => array('popup' => 'tooltip'),
+                                          'tooltip'  => L::t('Comma separated list of extra-fields, e.g.
 <blockquote>
   SingleRoom:1:TooltipSingleRoom,Fee:2:TooltipForFee
 </blockquote>
@@ -372,7 +374,7 @@ a comma.'));
         'options'  => 'VCD', 
         'select'   => 'T',
         'maxlen'   => 65535,
-        'css'      => array('postfix' => 'projectremarks'),
+        'css'      => array('postfix' => ' projectprogram'),
         'sql'      => 'Id',
         'sqlw'     => 'Id',
         'php|CV'    => array('type' => 'function',

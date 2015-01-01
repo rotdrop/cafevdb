@@ -1523,7 +1523,7 @@ class phpMyEdit
 					echo '<td class="',$this->getCSSclass('value', null, true, $css_postfix),'"';
 					echo $this->getColAttributes($k),'>',$this->labels['hidden'],'</td>',"\n";
 				} else {
-					$this->display_delete_field($row, $k);
+					$this->display_delete_field($row, $k, $helptip);
 				}
 				if ($this->guidance) {
 					$css_class_name = $this->getCSSclass('help', null, true, $css_postfix);
@@ -1674,11 +1674,12 @@ class phpMyEdit
 		echo '</td>',"\n";
 	} /* }}} */
 
-	function display_delete_field($row, $k) /* {{{ */
+	function display_delete_field($row, $k, $helptip) /* {{{ */
 	{
 		$css_postfix	= @$this->fdd[$k]['css']['postfix'];
 		$css_class_name = $this->getCSSclass('value', null, true, $css_postfix);
-		echo '<td class="',$css_class_name,'"',$this->getColAttributes($k),">\n";
+		$title          = !empty($helptip) ? ' title="'.$this->enc($helptip).'"' : '';
+		echo '<td class="',$css_class_name,'"',$this->getColAttributes($k),$title,">\n";
 		if (isset($this->fdd[$k]['display']['prefix'])) {
 			echo $this->fdd[$k]['display']['prefix'];
 		}
@@ -3432,12 +3433,32 @@ class phpMyEdit
 					echo '<td class="',$css_class_name,'">',$this->labels['hidden'],'</td>',"\n";
 					continue;
 				}
+				$cell_data = $this->cellDisplay($k, $row, $css_class_name);
+				$title = '';
+				if (isset($this->fdd[$k]['display']['popup'])) {
+					$helptip = NULL;
+					switch ($this->fdd[$k]['display']['popup']) {
+					case 'data':
+						$helptip = $cell_data;
+						break;
+					case 'tooltip':
+						if (isset($this->fdd[$k]['tooltip']) && $this->fdd[$k]['tooltip'] != '') {
+							$helptip = $this->fdd[$k]['tooltip'];
+						}
+						break;
+					default:
+						break;
+					}
+					if ($helptip) {	
+						$title = ' title="'.$this->enc($helptip).'"';
+					}
+				}
 				echo '<td class="',$css_class_name,'"',$this->getColAttributes($fd),' ';
-				echo $this->getColAlign($fd),'>';
+				echo $this->getColAlign($fd),$title,'>';
 				if (isset($this->fdd[$k]['display']['prefix'])) {
 					echo $this->fdd[$k]['display']['prefix'];
 				}
-				echo $this->cellDisplay($k, $row, $css_class_name);
+				echo $cell_data;
 				if (isset($this->fdd[$k]['display']['postfix'])) {
 					echo $this->fdd[$k]['display']['postfix'];
 				}
