@@ -1,6 +1,6 @@
 [submodule "3rdparty/PHPMailer"]
 	path = 3rdparty/PHPMailer
-	url = https://github.com/PHPMailer/PHPMailer.git
+	url = https://github.com/rotdrop/PHPMailer-cafevdb.git
 [submodule "3rdparty/bav"]
 	path = 3rdparty/bav
-	url = https://github.com/bav-php/bav.git
+	url = https://github.com/rotdrop/bav-cafevdb.git
