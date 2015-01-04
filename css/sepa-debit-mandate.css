@@ -1,0 +1,91 @@
+div.sepastatusblock {
+  min-height: 4ex;
+}
+
+#sepa-debit-mandate-dialog input.mandateDate,
+#sepa-debit-mandate-dialog input.lastUsedDate { 
+  width: 6em;
+}
+
+input.no-sepa-debit-mandate {
+  ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
+  filter: alpha(opacity=30);
+  opacity: .3;  
+}
+
+form#sepa-debit-mandate-form :disabled {
+  opacity:1.0;
+}
+
+form#sepa-debit-mandate-form label.sepa-validation-toggle {
+  float:right;
+}
+
+form#sepa-debit-mandate-form input.sepa-validation-toggle {
+  display:none;
+}
+
+form#sepa-debit-mandate-form div.sepa-validation-toggle {
+  display:inline-block;
+  width:24px;
+  height:24px;
+  background:url(../img/forgetit.png);
+  cursor:pointer;
+  vertical-align:middle;
+}
+
+form#sepa-debit-mandate-form input.sepa-validation-toggle:checked ~ div.sepa-validation-toggle {
+  background:url(../img/letsdoit.png);
+}
+
+input.pme-debit-note-[type=submit] {
+  background-image:url('../img/euro-x.png');
+  background-repeat:no-repeat;
+  width:28px;
+  height:28px;
+  font-size:0pt;
+  vertical-align:middle;
+  margin-top: 0px;
+}
+input.pme-debit-note+[type=submit] {
+  background-image:url('../img/euro-yes.png');
+  background-repeat:no-repeat;
+  width:28px;
+  height:28px;
+  font-size:0pt;
+  vertical-align:middle;
+  margin-top: 0px;
+}
+input.pme-debit-note[type=submit] {
+  background-image:url('../img/euro.png');
+  background-repeat:no-repeat;
+  background-position:0px;
+  padding-left:24px;
+  /*padding-top:0px;*/
+  min-height:28px;
+  vertical-align:middle;
+  /* border-radius:4px; */
+  margin-top: 0px;
+}
+
+:not(.lt-ie9) input.pme-debit-note-check[type=checkbox] {
+  display:none;
+  /* visibility:hidden; */
+  /* position:fixed; */
+  /* left:0px; */
+  /* top:0px; */
+}
+:not(.lt-ie9) div.pme-debit-note-check {
+  width:24px;
+  height:24px;
+  background:url(../img/euro.png);
+  cursor:pointer;
+  vertical-align:middle;
+}
+:not(.lt-ie9) input.pme-debit-note-check[type=checkbox]:checked ~ div.pme-debit-note-check {
+  width:24px;
+  height:24px;
+  background:url(../img/euro-yes.png);
+  vertical-align:middle;
+}
+

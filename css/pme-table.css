@@ -1,0 +1,863 @@
+/**Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2011-2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*******************************************************************************
+ *
+ * Export select via chosen
+ *
+ */
+
+#pme-table-dialog form.pme-form {
+  padding: 0;
+}
+
+/*******************************************************************************
+ *
+ * "table" tabs
+ *
+ */
+
+tr.table-tabs {
+  background-color:inherit;
+}
+
+tr.table-tabs td li.table-tabs {
+  float:left;
+  position:relative;
+  top:0px;
+  margin:1px 0.2em 0px 0px;
+  padding:0px;
+  white-space:nowrap;
+  color:#555;
+  font-weight:bold;
+  border:1px solid #DDD;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  border-top-left-radius:4px;
+  border-top-right-radius:4px;
+  line-height:1.3;
+  background: url('../../../core/css/images/ui-bg_glass_100_f8f8f8_1x400.png') repeat-x scroll 50% 50% #F8F8F8;
+  border-bottom-width:0px;
+  opacity:0.9;
+}
+
+tr.table-tabs td li a {
+  float:left;
+  padding:0.5em 1em;
+  color:#555;
+}
+
+tr.table-tabs td li.selected a {
+  color:#1D2D44;
+}
+
+tr.table-tabs td li.selected {
+  margin-bottom:-3px;
+  padding-bottom:3px;
+  border:1px solid #1D2D44;
+  opacity:1.0;
+}
+
+tr.table-tabs ul {
+  line-height:1.3;
+  border-radius:4px;
+  list-style:none outside none;
+  margin:0px;
+  padding:0.2em 0.2em 0px;
+  border:1px solid #1D2D44;
+  color:#FFF;
+  font-weight:bold;
+  font-size:100%;
+  background: url('../../../core/css/images/ui-bg_flat_35_1d2d44_40x100.png') repeat-x scroll 50% 50% #1D2D44;
+  overflow:hidden;
+  margin-bottom:-2px;
+  z-index:1;
+}
+
+form.pme-form th[class*=tab-],
+form.pme-form td[class*=tab-] {
+  display:none;
+}
+
+/**Display data on every tab. */
+form.pme-form tr th.tab-all,
+form.pme-form tr td.tab-all {
+  display:table-cell;
+}
+
+/**Display all tabs. */
+form.pme-form table.pme-main.tab-all tr th,
+form.pme-form table.pme-main.tab-all tr  td {
+  display:table-cell;
+}
+
+/**Otherwise diplay is triggerred by "diagonal" CSS classes */
+form.pme-form table.pme-main.tab-0 th.tab-0,
+form.pme-form table.pme-main.tab-0 td.tab-0 {
+  display:table-cell;
+}
+
+form.pme-form table.pme-main.tab-1 th.tab-1,
+form.pme-form table.pme-main.tab-1 td.tab-1 {
+  display:table-cell;
+}
+
+form.pme-form table.pme-main.tab-2 th.tab-2,
+form.pme-form table.pme-main.tab-2 td.tab-2 {
+  display:table-cell;
+}
+
+form.pme-form table.pme-main.tab-3 th.tab-3,
+form.pme-form table.pme-main.tab-3 td.tab-3 {
+  display:table-cell;
+}
+
+form.pme-form table.pme-main.tab-4 th.tab-4,
+form.pme-form table.pme-main.tab-4 td.tab-4 {
+  display:table-cell;
+}
+
+form.pme-form table.pme-main.tab-5 th.tab-5,
+form.pme-form table.pme-main.tab-5 td.tab-5 {
+  display:table-cell;
+}
+
+form.pme-form table.pme-main.tab-6 th.tab-6,
+form.pme-form table.pme-main.tab-6 td.tab-6 {
+  display:table-cell;
+}
+
+form.pme-form table.pme-main.tab-7 th.tab-7,
+form.pme-form table.pme-main.tab-7 td.tab-7 {
+  display:table-cell;
+}
+
+form.pme-form table.pme-main.tab-8 th.tab-8,
+form.pme-form table.pme-main.tab-8 td.tab-8 {
+  display:table-cell;
+}
+
+form.pme-form table.pme-main.tab-9 th.tab-9,
+form.pme-form table.pme-main.tab-9 td.tab-9 {
+  display:table-cell;
+}
+
+/*******************************************************************************
+ *
+ * PME table popups
+ *
+ */
+/* make popups scrollable in smaller viewports */
+.ui-dialog.pme-table-dialog {
+  max-height: 90% !important;
+  max-width: 90% !important;
+  overflow: hidden;
+  padding: 0;
+}
+
+.ui-dialog.pme-table-dialog .ui-dialog-content {
+  /* height has to be computed in order to attach the vertical
+   * scrollbar to the inner div.
+   */
+  overflow-y: auto;
+  overflow-x: hidden;
+  //overflow: auto;
+}
+
+/* Hide the dialog behind the modal layer during loading of slow
+ * elements.
+ */
+.pme-table-dialog-blocked {
+  z-index: 50 !important;
+}
+
+#pme-table-container tr.pme-navigation a.chosen-single {
+/*  line-height:15px;*/
+  margin:3px 3px 3px 0px;
+}
+
+.ui-dialog #pme-table-container tr.pme-navigation div.chosen-container,
+.ui-dialog #pme-table-container tr.pme-navigation select,
+.ui-dialog #pme-table-container tr.pme-navigation input {
+  float:left;
+}
+
+.ui-dialog #pme-table-container tr.pme-navigation input.pme-reload {
+  float: right;
+  width: 27px;
+  height: 27px;
+  background-size: 24px 24px;
+  margin: 3px 0px 3px 3px;
+}
+
+.ui-dialog #pme-table-container table.pme-navigation {
+  width: 100%;
+}
+
+/*******************************************************************************
+ *
+ * Select boxes via chosen etc.
+ *
+ */
+
+tr.pme-navigation .listall {
+  display:none;
+}
+
+.pme-goto div,
+.pme-pagerows div,
+.pme-export-block div {
+  vertical-align:middle;
+  font-weight:bold;
+}
+
+.pme-export-block a.chosen-default span {
+  /*font-weight:bold;*/
+  color:#555;
+}
+
+.pme-export-block a.chosen-default span:hover,
+.pme-export-block a.chosen-default span:focus,
+.pme-export-block a.chosen-default span:active {
+  /*font-weight:bold;*/
+  color:#333;
+}
+
+.pme-goto a.chosen-single,
+.pme-pagerows a.chosen-single,
+.pme-export-block a.chosen-single {
+  height: unset;
+  background: unset;
+  box-shadow: unset;
+  outline: medium, none;
+  margin: 1px 0px 3px 0px !important;
+  background-color: rgba(240, 240, 240, 0.9);
+  color: #555;
+  border: 1px solid rgba(190, 190, 190, 0.9);
+  padding: 5px;
+  line-height: 16px;
+  font-size: 13px;
+}
+
+.pme-goto a.chosen-single:hover, .pme-goto a.chosen-single:focus,
+.pme-pagerows a.chosen-single:hover, .pme-pagerows a.chosen-single:focus,
+.pme-export-block a.chosen-single:hover, .pme-export-block a.chosen-single:focus {
+  background-color:rgba(250,250,250,.9);
+  color:#333;
+}
+
+.pme-export-block a.chosen-single {
+  border-radius: 3px;
+}
+
+.pme-goto a.chosen-single,
+.pme-pagerows a.chosen-single {
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+.pme-goto ul.chosen-results li,
+.pme-pagerows ul.chosen-results li {
+  text-align: right;
+}
+
+
+span.pme-goto input.pme-goto:focus,
+/*span.pme-goto input.pme-goto:hover,*/
+span.pme-goto input.pme-goto:active,
+span.pme-goto input.pme-goto,
+span.pme-pagerows input.pme-pagerows:focus,
+/*span.pme-pagerows input.pme-pagerows:hover,*/
+span.pme-pagerows input.pme-pagerows:active,
+span.pme-pagerows input.pme-pagerows {
+  border-top-left-radius: 3px !important;
+  border-bottom-left-radius: 3px !important;
+  border-top-right-radius: 0px !important;
+  border-bottom-right-radius: 0px !important;
+  background-color: rgba(240,240,240,.9) !important;
+  cursor: default;
+  text-align:right;
+  margin-right:0px;
+  border-right:0px;
+  padding-right:3px;
+}
+
+/*******************************************************************************
+ *
+ * Hide some virtual extra controls by default
+ *
+ */
+
+td.chosen-hidden div.chosen-container {
+  display: none;
+}
+
+/*******************************************************************************
+ *
+ * PME general stuff
+ *
+ */
+
+form.pme-form {
+  padding-left:1ex;
+  background-color:#f2f8ff;
+  width:auto;
+}
+
+form.pme-form input[type=text] {
+  width:auto;
+}
+
+.pme-form tr,.pme-form tr:hover,.pme-form tr:active { 
+  background-color:inherit;
+}
+
+a.pme-cell-1:link, a.pme-cell-0:link {
+  color:#0000ff;
+  text-decoration:underline;
+  font-weight:bold;
+}
+a.pme-cell-1:visited, a.pme-cell-0:visited {
+  color:#0000ff;
+  text-decoration:underline;
+  font-weight:bold;
+}
+a.pme-cell-1:hover, a.pme-cell-0:hover {
+  color:#0000ff;
+  text-decoration:underline;
+  font-style:italic;
+  font-weight:bold;
+}
+
+.pme-cell-1>a:not(.ui-tabs-anchor):link, .pme-cell-0>a:not(.ui-tabs-anchor):link {
+  color:#0000ff;
+  text-decoration:underline;
+  font-weight:bold;
+}
+.pme-cell-1>a:not(.ui-tabs-anchor):visited, .pme-cell-0>a:not(.ui-tabs-anchor):visited {
+  color:#0000ff;
+  text-decoration:underline;
+  font-weight:bold;
+}
+.pme-cell-1>a:not(.ui-tabs-anchor):hover, .pme-cell-0>a:not(.ui-tabs-anchor):hover {
+  color:#0000ff;
+  text-decoration:underline;
+  font-style:italic;
+  font-weight:bold;
+}
+
+hr.pme-hr {
+  border:0px solid;
+  padding:0px;
+  margin:0px;
+  border-top-width:1px;
+  height:1px;
+}
+
+/* Style the "refresh button", reduce the size, remove the text, add a
+ * nice background image.
+ */
+.pme-navigation input.pme-reload {
+  /*background-image:url('../img/view-refresh-greyscale.png');*/
+  background-image:url('../img/reload.svg');
+  background-repeat:no-repeat;
+  background-position: center center;
+  background-size:24px 24px;
+  width:28px;
+  height:28px;
+  vertical-align:middle;
+  margin-top:0px;
+  text-indent: -99999px;
+  margin-left:48px;
+}
+
+.pme-navigation input.pme-reload.loading {
+  /*background-image:url('../img/view-refresh-greyscale.png');*/
+  background-image:url('../../../core/img/loading.gif');
+}
+
+:not(.lt-ie9) input.pme-email-check[type=checkbox] {
+  display:none;
+  /* visibility:hidden; */
+  /* position:fixed; */
+  /* left:0px; */
+  /* top:0px; */
+}
+:not(.lt-ie9) div.pme-email-check {
+  width:24px;
+  height:24px;
+  background:url(../img/e_mail.png);
+  cursor:pointer;
+  vertical-align:middle;
+}
+:not(.lt-ie9) input.pme-email-check[type=checkbox]:checked ~ div.pme-email-check {
+  width:24px;
+  height:24px;
+  background:url(../img/e_mail_checked.png);
+  vertical-align:middle;
+}
+
+:not(.lt-ie9) input.pme-bulkcommit-check[type=checkbox] {
+  display:none;
+  /* visibility:hidden; */
+  /* position:fixed; */
+  /* left:0px; */
+  /* top:0px; */
+}
+:not(.lt-ie9) div.pme-bulkcommit-check {
+  width:24px;
+  height:24px;
+  background:url(../img/eighthrest24.png);
+  cursor:pointer;
+  vertical-align:middle;
+}
+:not(.lt-ie9) input.pme-bulkcommit-check[type=checkbox]:checked ~ div.pme-bulkcommit-check {
+  width:24px;
+  height:24px;
+  background:url(../img/eighthnote24.png);
+  vertical-align:middle;
+}
+
+input.pme-view-navigation {
+  background:url(../img/pme-view.png) no-repeat !important;
+  width:16px !important;
+  height:15px !important;
+  border:0 !important;
+  font-size:0 !important;
+  vertical-align:middle;
+}
+
+input.pme-copy-navigation {
+  background:url(../img/pme-copy.png) no-repeat !important;
+  width:16px !important;
+  height:15px !important;
+  border:0 !important;
+  font-size:0 !important;
+  vertical-align:middle;
+}
+
+input.pme-change-navigation {
+  background:url(../img/pme-change.png) no-repeat !important;
+  width:16px !important;
+  height:15px !important;
+  border:0 !important;
+  font-size:0 !important;
+  vertical-align:middle;
+}
+
+input.pme-delete-navigation {
+  background:url(../img/pme-delete.png) no-repeat !important;
+  width:16px !important;
+  height:15px !important;
+  border:0 !important;
+  font-size:0 !important;
+  vertical-align:middle;
+}
+ 
+:not(.lt-ie9) input.pme-sort[type=checkbox] { 
+  display:none;
+}
+div.pme-sort {
+  /* width:93px; */
+  /* height:14px; */
+  /* text-align:center; */
+  font-style:italic;
+  opacity:0.2;
+  display:inline-block;
+}
+input.pme-sort[type=checkbox]:checked ~ div.pme-sort {
+  /* width:93px; */
+  /* height:14px; */
+  /* background:url(../img/sortierfeld.png); */
+  /* text-align:center; */
+  opacity:1.0;
+  display:inline-block;
+}
+input.pme-sort-rvrt[type=submit] {
+  background-image:url('../img/ok_process-16x16.png');
+  background-repeat:no-repeat;
+  background-position:0px;
+  background-origin:padding-box;
+  background-clip:padding-box;
+  min-height:16px;
+  padding-left:16px;
+  overflow:visible;
+}
+
+input.pme-email-[type=submit] {
+  background-image:url('../img/e_mail_X.png');
+  background-repeat:no-repeat;
+  width:28px;
+  height:28px;
+  font-size:0pt;
+  vertical-align:middle;
+  margin-top: 0px;
+}
+input.pme-email+[type=submit] {
+  background-image:url('../img/e_mail_checked.png');
+  background-repeat:no-repeat;
+  width:28px;
+  height:28px;
+  font-size:0pt;
+  vertical-align:middle;
+  margin-top: 0px;
+}
+input.pme-email[type=submit] {
+  background-image:url('../img/e_mail.png');
+  background-repeat:no-repeat;
+  background-position:0px;
+  padding-left:24px;
+  /*padding-top:0px;*/
+  min-height:28px;
+  vertical-align:middle;
+  /* border-radius:4px; */
+  margin-top: 0px;
+}
+
+input.pme-bulkcommit-[type=submit] {
+  background-image:url('../img/eighthrest24.png');
+  background-repeat:no-repeat;
+  width:28px;
+  height:28px;
+  font-size:0pt;
+  vertical-align:middle;
+}
+input.pme-bulkcommit+[type=submit] {
+  background-image:url('../img/eighthnote24.png');
+  background-repeat:no-repeat;
+  width:28px;
+  height:28px;
+  font-size:0pt;
+  vertical-align:middle;
+}
+/* input.pme-bulkcommit[type=submit] { */
+/*   background-image:url('../img/eighthnote24.png'); */
+/*   background-repeat:no-repeat; */
+/*   background-position:0px; */
+/*   padding-left:24px; */
+/*   /\*padding-top:0px;*\/ */
+/*   min-height:28px; */
+/*   vertical-align:middle; */
+/*   /\* border-radius:4px; *\/ */
+/* } */
+
+/* input.pme-email[type=submit]:selected { */
+/*   background-image:url(../img/e_mail.png); */
+/*   background-repeat:no-repeat; */
+/*   background-position:0px; */
+/*   background-origin:padding-box; */
+/*   background-clip:padding-box; */
+/*   padding-left:24px; */
+/*   min-height:28px; */
+/*   vertical-align:middle; */
+/* } */
+
+td.pme-buttons > .pme-email {
+  white-space:nowrap;
+}
+td.pme-buttons > .pme-bulkcommit {
+  white-space:nowrap;
+}
+
+td.pme-buttons > .pme-goto {
+  white-space:nowrap;
+}
+
+td.pme-buttons > .pme-pagerows {
+  white-space:nowrap;
+}
+
+/*******************************************************************************
+ *
+ * PME table layout (more pme stuff)
+ *
+ */
+
+table.pme-main {
+  border:#004d9c 1px solid;
+  border-collapse:collapse;
+  border-spacing:0px;
+  width:auto;
+}
+table.pme-navigation {
+  border:#004d9c 0px solid;
+  border-collapse:collapse;
+  border-spacing:0px;
+}
+
+td[class*='pme-header'], th[class*='pme-header'] {
+  vertical-align:bottom;
+  border:#004d9c 1px solid;
+  padding:4px;
+  background:#add8e6;
+}
+
+td[class*='pme-navigation'], th[class*='pme-navigation'] {
+  white-space:nowrap;
+  background:#C6DEFF;
+}
+
+td[class*='pme-sortinfo'], td[class*='pme-queryinfo']  {
+  background:#C6DEFF;
+}
+
+form.pme-form .tab-all {
+  /* display:none; */
+}
+
+td.negative { 
+  color:#FF0000;
+}
+
+td.align-right,
+td.pme-cell-0.align-right, td.pme-cell-1.align-right,
+td.pme-cell-0.money, td.pme-cell-1.money,
+td.pme-cell-0-money, td.pme-cell-1-money {
+  text-align:right;
+}
+
+td[class*='pme-key'], td[class*='pme-value'],
+td[class*='pme-help'], td[class*='pme-navigation'], th[class*='pme-navigation'],
+td[class*='pme-cell'], td[class*='pme-sortinfo'],
+td[class*='pme-filter'], th[class*='pme-filter'], td[class*='pme-queryinfo'] {
+  border:#004d9c 1px solid;
+  padding:3px;
+  text-align:left;
+}
+td.pme-buttons {
+  text-align:left;
+  vertical-align:middle;
+}
+td.pme-message {
+  text-align:center;
+}
+td.pme-stats   {
+  text-align:right;
+  padding-left:10ex;
+}
+
+td[class^='pme-cell-0'] {
+  background:#B7CEEC;
+}
+td[class^='pme-cell-1'] {
+  background:#C6DEFF;
+}
+
+/* Hide everything but the first line */
+td.pme-cell-0-rcpt, td.pme-cell-1-rcpt,
+td.pme-cell-0-msg, td.pme-cell-1-msg,
+td.pme-cell-0-cc, td.pme-cell-1-cc,
+td.pme-cell-0-bcc, td.pme-cell-1-bcc { 
+  font-size:25%;
+  line-height:100%;
+  max-width:20em;
+  max-height:1em;
+/*  white-space:normal;*/
+  overflow:hidden;
+}
+
+td[class$="projectflyer"] {
+  max-width:90%;
+  white-space:normal;
+}
+
+td[class$="projectflyer"] img {
+  height:300px;
+}
+
+td[class$="photo"] {
+  max-width:90%;
+  white-space:normal;
+}
+
+td[class$="photo"] img {
+  min-height:100px;
+  max-height:300px;
+}
+
+div#contact_photo {
+  min-height:100px;
+}
+
+div#project_flyer {
+  min-height:300px;
+}
+
+td.pme-value-0-msg, td.pme-value-1-msg {
+  max-width:80ex;
+  /*font-size:25%;*/
+  white-space:normal;
+  text-wrap:normal;
+}
+
+td.pme-cell-0.musician-instruments, td.pme-cell-1.musician-instruments { 
+  width:12em;
+  max-width:12em;
+  max-height:1em;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+td.pme-cell-0.projects, td.pme-cell-1.projects { 
+  width:20em;
+  max-width:20em;
+  max-height:1em;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+th.pme-header.mandate-project, th.pme-header.mandate-project,
+td.pme-cell-0.mandate-project, td.pme-cell-1.mandate-project {
+  width:15em;
+  min-width:15em;
+  max-width:15em;
+  max-height:1em;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+/* Hide everything but the first line */
+table.pme-main td.remarks {
+  font-size:25%;
+  line-height:100%;
+  max-width:20em;
+  max-height:1em;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+/* Make all remarks shorter */
+table.pme-main td.remarks:first-line,
+table.pme-main td.remarks p:nth-child(1):first-line {
+  font-size:400%; /* seem to be relative to !first-line */
+  line-height:100%;
+  max-width:20em;
+  max-height:1em;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+/* Something special for the instrumentation. */
+td[class^="pme-cell"] div.projectinstrumentation { 
+  font-size:50%;
+  line-height:100%;
+  max-width:64ex;
+  width:auto;
+  max-height:4em;
+  white-space:normal;
+  overflow:hidden;
+}
+
+td.pme-value-1.projectinstrumentation, td.pme-value-0.projectinstrumentation {
+  white-space:normal;
+}
+
+table.pme-main [class^="chosen"] {
+  /* border-radius: 0.5em !important; */
+  /* background-color: rgb(244, 244, 244) !important; */
+  border-radius: 3px;
+}
+
+input.pme-filter {
+  width:auto;
+  white-space:nowrap;
+}
+
+td[class*='pme-filter'], th[class*='pme-filter'] {
+  vertical-align:bottom;
+  background:#C6DEFF;
+}
+
+table.pme-main div.pme-filter-negate {
+  height:0px;
+  width:0px;
+  overflow:visible;
+}
+
+table.pme-main label.pme-filter-negate-label,
+table.pme-main label.pme-filter-negate {
+  vertical-align:top;
+}
+
+table.pme-main label.pme-filter-negate span,
+table.pme-main label.pme-filter-negate-label span {
+  display:inline-block;
+  text-indent:-10000px;
+  width:24px;
+  height:24px;
+  position:relative;
+  top:-12px;
+  background:url(../img/dont.svg);
+  cursor:pointer;
+  opacity:0.4;
+  z-index:1;
+}
+
+table.pme-main label.pme-filter-negate input[type=checkbox]:checked ~ span,
+table.pme-main label.pme-filter-negate-label input[type=checkbox]:checked ~ span {
+  opacity:1.0;
+  background:url(../img/dontred.svg);
+}
+
+table.pme-main label.pme-filter-negate input[type=checkbox],
+table.pme-main label.pme-filter-negate-label input[type=checkbox] {
+  display:none;
+}
+
+table.pme-main select[class^="pme-filter"] {
+  width:100%;
+}
+
+table.pme-main select.pme-filter.projects {
+  width:auto;
+}
+
+/*Style links in a more ordinary fashion */
+table.pme-main a:not(.ui-tabs-anchor):link {
+  color:CornFlowerBlue;
+  text-decoration:underline;
+  font-weight:bold;
+}
+table.pme-main a:not(.ui-tabs-anchor):visited {
+  color:CornFlowerBlue;
+  text-decoration:underline;
+  font-weight:bold;
+}
+table.pme-main a:not(.ui-tabs-anchor):hover {
+  color:CornFlowerBlue;
+  text-decoration:underline;
+  font-style:italic;
+  font-weight:bold;
+}
+
+
+/*
+ * Local Variables: ***
+ * cssm-indent-level: 2 ***
+ * End: ***
+ */

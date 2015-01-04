@@ -1,0 +1,358 @@
+/**Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2011-2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#events {padding: 0;margin: 0;margin-top:0px}
+
+#events {
+  background-color:#d0dcec;
+}
+
+form.projectevents {
+  position:relative;
+  padding-top:1ex;
+  padding-left:0ex;
+  /*background-color:#e6f1ff;*/
+}
+
+#events select,#events input,#events option,#events button {
+  border-radius:4px;
+  background-color:#F4F4F4;
+}
+
+/* #events input:checked,#events select:checked,#events option:checked,#events button:checked { */
+/*   border-radius:4px; */
+/*   background-color:SteelBlue; */
+/* } */
+
+#events input:active,/*select:active,*/#events option:active,#events button:active {  
+  border-radius:4px;
+  background-color:SteelBlue;
+}
+
+.projectevents tr,.projectevents tr:hover,
+.projectevents tr:active { 
+  background-color:inherit;
+}
+
+.projectevents div.topbuttons {
+  padding:1em 0.3em 0 0.3em;
+}
+
+.projectevents table.topbuttons {
+  border:0px solid #004d9c;
+  border-collapse:collapse;
+  border-spacing:0px;
+  width:100%;
+}
+.projectevents td.topbuttons { 
+  text-align:left;
+  vertical-align:middle;
+}
+
+.projectevents input.projectevents-sendmail,
+.projectevents input.submit {
+  height:28px;
+  vertical-align:middle;
+}
+
+.projectevents td.management {
+  padding-left:1em;
+}
+
+.projectevents td.management input {
+  width:100%;
+  /*background-color:#C6DEFF !important;*/
+}
+
+.projectevents input.projectevents-sendmail-deselect[type=button] {
+  background-image:url('../img/e_mail_X.png');
+  background-repeat:no-repeat;
+  width:28px;
+  height:28px;
+  vertical-align:middle;
+  font-size:0pt;
+}
+.projectevents input.projectevents-sendmail-select[type=button] {
+  background-image:url('../img/e_mail_checked.png');
+  background-repeat:no-repeat;
+  width:28px;
+  height:28px;
+  vertical-align:middle;
+  font-size:0pt;
+}
+
+.projectevents input.projectevents-sendmail[type=button] {
+  background-image:url('../img/e_mail.png');
+  background-repeat:no-repeat;
+  background-position:0px;
+  padding-left:24px;
+  min-height:28px;
+  vertical-align:middle;
+}
+
+.projectevents input.detach {
+  background:url(../img/link_break16x16.png);
+  background-repeat:no-repeat;
+  min-width:0;
+  width:16px;
+  height:15px;
+  border:0;
+  font-size:0;
+  vertical-align:middle;
+}
+
+.projectevents input.edit {
+  background:url(../img/pme-change.png);
+  background-repeat:no-repeat;
+  min-width:0;
+  width:16px;
+  height:15px;
+  border:0;
+  font-size:0;
+  vertical-align:middle;
+}
+
+.projectevents input.delete {
+  background:url(../img/pme-delete.png);
+  background-repeat:no-repeat;
+  min-width:0;
+  width:16px;
+  height:15px;
+  border:0;
+  font-size:0;
+  vertical-align:middle;
+}
+
+:not(.lt-ie9) .projectevents input.email-check[type=checkbox] {
+  display:none;
+  /* visibility:hidden; */
+  /* position:fixed; */
+  /* left:0px; */
+  /* top:0px; */
+}
+:not(.lt-ie9) .projectevents div.email-check {
+  width:24px;
+  height:24px;
+  /*padding:0px;*/
+  background:url(../img/e_mail.png);
+  cursor:pointer;
+  /*font-size:0;*/
+  /*vertical-align:middle;*/
+}
+:not(.lt-ie9) .projectevents input.email-check[type=checkbox]:checked ~ div.email-check {
+  width:24px;
+  height:24px;
+  /*padding:0px;*/
+  background:url(../img/e_mail_checked.png);
+  /*cursor:crosshair;*/
+  /*font-size:0;*/
+  /*vertical-align:middle;*/
+}
+
+label.email-check {
+  /*vertical-align:middle;*/
+}
+
+.projectevents div.listing {
+  padding:1em 0.3em 0 0.3em;
+}
+
+.projectevents table.listing {
+  border:0px solid #004d9c;
+  border-collapse:collapse;
+  border-spacing:0px;
+}
+
+/* th[class|='pme-header']	{ */
+/*   border:#004d9c 1px solid; */
+/*   padding:4px; */
+/*   background:#add8e6; */
+/* } */
+
+td[class|='eventdata'], td[class|='eventbuttons'], td[class|='eventemail'] {
+  /*vertical-align:middle;*/
+  border:1px solid #004d9c;
+  padding:3px;
+}
+
+td[class|='eventdata-0'] {
+  /*text-align:inherit;*/
+  background:#B7CEEC;
+  /* vertical-align:middle; */
+}
+
+td[class|='eventdata-1'] {
+  /*text-align:inherit;*/
+  background:#C6DEFF;
+  /* vertical-align:middle; */
+}
+
+td[class|='eventbuttons'], td[class|='eventemail'] {
+  /*text-align:left;*/
+  background:#C6DEFF;
+  /*vertical-align:middle;*/
+}
+
+td.eventdata-0-date, td.eventdata-1-date {
+  max-height:1em;
+  width:10.5em !important;
+}
+
+/* Hide everything but the first line*/
+td.eventdata-0-brief, td.eventdata-1-brief {
+  max-width:18.5em;
+  min-width:18.5em;
+  max-height:1em;
+  /* white-space:normal; */
+  overflow:hidden;
+  text-overflow:ellipsis !important;
+  vertical-align:middle;
+}
+
+/* Add some setting s.t. the event forms are displayed corrctly */
+
+#event {
+	height: initial !important;
+	padding: 0;
+	margin: -5px 0 5px;
+}
+
+/* input fields take whole width */
+#event-title,
+#event-location,
+#category,
+#event-description {
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	width: 100%;
+	margin: 3px 0;
+}
+/* bigger event title in detail view */
+#event-title {
+	font-size: 20px;
+}
+/* group from and to date fields */
+#event-time {
+	display: block;
+	margin: 5px 0;
+}
+#event-time-from {
+	float: left;
+}
+#event-time-to {
+	float: right;
+}
+#from, #to {
+	width: 80px;
+	margin: 0;
+}
+#fromtime, #totime {
+	width: 80px;
+	margin: 0;
+}
+#event-allday {
+	display: inline-block;
+	margin: 7px 0;
+}
+/* location input field leaves room for google button */
+#event-location {
+	width: 90%;
+}
+#google-location {
+	display: inline-block;
+	padding: 0.25em 0.5em;
+}
+#google-location img {
+	width:2em;
+	height:2em;
+	vertical-align:middle;
+}
+/* category input field leaves room for edit button */
+#category {
+	width: 90%;
+}
+#editCategories {
+	display: inline-block;
+	padding: 6px 12px;
+}
+/* whole line for buttons of 'Advanced' and 'Export' */
+#advanced_options_button,
+#editEvent-export {
+	display: block;
+	margin: 0;
+}
+/* normal font weight for secondary buttons for less obtrusiveness */
+#advanced_options_button,
+#editEvent-export,
+#editEvent-delete {
+	font-weight: normal;
+}
+/* more space for action buttons below */
+#actions {
+	height: 45px;
+}
+
+/* make popups scrollable in smaller viewports */
+.ui-dialog.cafevdb-project-events {
+	max-height: 75% !important;
+	/*top: 15% !important;*/
+	overflow-y: auto;
+	overflow-x: hidden;
+	padding: 0;
+}
+
+.ui-dialog.cafevdb-project-events .ui-dialog-content {
+	overflow: initial;
+}
+
+div.google-popup { 
+  overflow: hidden;
+  max-height: unset !important;
+}
+
+/* Hide the advanced options in the event form */
+#advanced_options_bar {
+  cursor:pointer;
+  background-color:#BBB;
+  margin-top:0.5ex;
+  margin-bottom:0.5ex;
+  height:1ex;
+  vertical-align:middle;
+  border-top:2px solid #000;
+  moz-box-shadow:-3px 0 7px #777;
+  webkit-box-shadow:-3px 0 7px #777;
+  box-shadow: 0 0.5ex 1ex #777;
+}
+
+/* Hide the category selector. We use the categories to link events to
+ * projects, or at least to restore event-project connection. Better not
+ * let the user fiddle with that.
+ */
+.cafevdb.eventdlg input#category,
+.cafevdb.eventdlg a#editCategories {
+  display:none;
+}
+
+/*
+ * LocalVariables: ***
+ * cssm-indent-function: cssm-c-style-indenter ***
+ * End: ***
+ */

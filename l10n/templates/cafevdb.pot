@@ -1,0 +1,5538 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-01 20:47+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ajax/admin-settings.php:35
+#, php-format
+msgid ""
+"Setting orchestra group to `%s'. Please login as group administrator and "
+"configure the Camerata DB application."
+msgstr ""
+
+#: ajax/admin-settings.php:41
+msgid "Unknown request."
+msgstr ""
+
+#: ajax/blog/editentry.php:36 ajax/blog/modifyentry.php:46
+msgid "Refusing to create blog entry without author identity."
+msgstr ""
+
+#: ajax/blog/editentry.php:48 ajax/blog/modifyentry.php:138
+#, php-format
+msgid "Error, caught an exception `%s'."
+msgstr ""
+
+#: ajax/blog/editentry.php:56
+#, php-format
+msgid "Blog entry with id `%s' could not be retrieved."
+msgstr ""
+
+#: ajax/blog/editentry.php:101 ajax/blog/modifyentry.php:162
+#: ajax/email/addressbook.php:164 ajax/email/progress.php:73
+#: ajax/email/savecontacts.php:113 ajax/events/events.php:116
+#: ajax/events/execute.php:130 ajax/events/new.form.php:195
+#: ajax/events/sendmail.php:76 ajax/finance/sepa-debit-mandate.php:157
+#: ajax/finance/sepa-debit-settings.php:375
+#: ajax/instrumentation/add-musicians.php:241
+#: ajax/instrumentation/change-musician-instruments.php:198
+#: ajax/instrumentation/change-project-instrument.php:118
+#: ajax/instruments/adjustInstrumentation.php:104
+#: ajax/instruments/changeInstrumentation.php:159 ajax/pme/pme-table.php:145
+#: ajax/projects/verifyName.php:158 ajax/settings/creditslist.php:68
+msgid "Error, caught an exception"
+msgstr ""
+
+#: ajax/blog/modifyentry.php:54
+#, php-format
+msgid ""
+"Message priority should be numeric (and in principle positiv and in the "
+"range 0 - 255). I got `%s'"
+msgstr ""
+
+#: ajax/blog/modifyentry.php:71
+msgid "Refusing to create empty blog entry."
+msgstr ""
+
+#: ajax/blog/modifyentry.php:83 ajax/blog/modifyentry.php:95
+msgid "Cannot modify a blog-entry without id."
+msgstr ""
+
+#: ajax/blog/modifyentry.php:107
+msgid "Cannot delete a blog-thread without id."
+msgstr ""
+
+#: ajax/blog/modifyentry.php:116 ajax/email/composer.php:183
+#, php-format
+msgid "Unknown request: `%s'."
+msgstr ""
+
+#: ajax/blog/modifyentry.php:150
+msgid "There was an error with the request"
+msgstr ""
+
+#: ajax/email/addressbook.php:101
+msgid "Form Input"
+msgstr ""
+
+#: ajax/email/composer.php:144
+#, php-format
+msgid "Unknown form element: `%s'."
+msgstr ""
+
+#: ajax/email/composer.php:168
+msgid "Template could not be saved"
+msgstr ""
+
+#: ajax/email/composer.php:179
+msgid "Email Address Validation Failed"
+msgstr ""
+
+#: ajax/email/composer.php:256 ajax/email/emailform.php:145
+#: ajax/email/exporter.php:95 ajax/email/recipients.php:140
+#: ajax/finance/sepa-debit-export.php:332
+#: ajax/finance/sepa-debit-store.php:112
+#: ajax/insurance/instrument-insurance-export.php:168
+#: ajax/insurance/validate.php:265 ajax/musicians/validate.php:96
+#: ajax/page-loader.php:111 ajax/projects/web-articles.php:201
+#: ajax/settings/app-settings.php:1183
+msgid "PHP Exception Caught"
+msgstr ""
+
+#: ajax/email/composer.php:260 ajax/email/emailform.php:149
+#: ajax/email/exporter.php:96 ajax/email/recipients.php:144
+#: ajax/finance/sepa-debit-store.php:116
+#: ajax/insurance/instrument-insurance-export.php:169
+#: ajax/insurance/validate.php:269 ajax/musicians/validate.php:100
+#: ajax/page-loader.php:115 ajax/projects/web-articles.php:205
+#: ajax/settings/app-settings.php:1187
+#, php-format
+msgid ""
+"Error, caught an exception. Please copy the displayed text and send it by "
+"email to %s."
+msgstr ""
+
+#: ajax/email/exporter.php:100
+#: ajax/insurance/instrument-insurance-export.php:173
+msgid "Trace"
+msgstr ""
+
+#: ajax/email/owncloudattachment.php:38
+msgid "No attachment path was submitted."
+msgstr ""
+
+#: ajax/email/owncloudattachment.php:45
+msgid "File doesn't exist: "
+msgstr ""
+
+#: ajax/email/owncloudattachment.php:49 ajax/inlineimage/oc_image.php:64
+msgid "File doesn't exist:"
+msgstr ""
+
+#: ajax/email/owncloudattachment.php:59
+msgid "Inconsistency:"
+msgstr ""
+
+#: ajax/email/progress.php:54
+#, php-format
+msgid "Unable to fetch progress status with id %d"
+msgstr ""
+
+#: ajax/email/savecontacts.php:96
+#, php-format
+msgid "The following contacts could not be stored: %s"
+msgstr ""
+
+#: ajax/email/uploadattachment.php:49 ajax/inlineimage/uploadimage.php:86
+msgid "No file was uploaded. Unknown error"
+msgstr ""
+
+#: ajax/email/uploadattachment.php:55 ajax/inlineimage/uploadimage.php:92
+msgid "There is no error, the file uploaded with success"
+msgstr ""
+
+#: ajax/email/uploadattachment.php:56
+#, php-format
+msgid ""
+"The uploaded file exceeds the upload_max_filesize directive in php.ini: %s"
+msgstr ""
+
+#: ajax/email/uploadattachment.php:58 ajax/inlineimage/uploadimage.php:94
+msgid ""
+"The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in "
+"the HTML form"
+msgstr ""
+
+#: ajax/email/uploadattachment.php:59 ajax/inlineimage/uploadimage.php:95
+msgid "The uploaded file was only partially uploaded"
+msgstr ""
+
+#: ajax/email/uploadattachment.php:60 ajax/inlineimage/uploadimage.php:96
+msgid "No file was uploaded"
+msgstr ""
+
+#: ajax/email/uploadattachment.php:61 ajax/inlineimage/uploadimage.php:97
+msgid "Missing a temporary folder"
+msgstr ""
+
+#: ajax/email/uploadattachment.php:62
+msgid "Failed to write to disk"
+msgstr ""
+
+#: ajax/email/uploadattachment.php:83
+msgid "Not enough storage available"
+msgstr ""
+
+#: ajax/email/uploadattachment.php:103
+#, php-format
+msgid "Couldn't save temporary file for: %s"
+msgstr ""
+
+#: ajax/events/events.php:58 ajax/events/execute.php:39
+#: ajax/events/new.form.php:53 ajax/events/sendmail.php:33
+#: ajax/finance/sepa-debit-mandate.php:57
+msgid "Project-id and/or name not set"
+msgstr ""
+
+#: ajax/events/execute.php:96
+msgid "Invalid operation: "
+msgstr ""
+
+#: ajax/events/new.form.php:83
+#, php-format
+msgid "Cannot access calendar: `%s'"
+msgstr ""
+
+#: ajax/expertmode/attachwebpages.php:39
+msgid "Linked all matching web-pages to the respective projects."
+msgstr ""
+
+#: ajax/expertmode/clearoutput.php:11 templates/expertmode.php:83
+msgid "empty"
+msgstr ""
+
+#: ajax/expertmode/example.php:11
+msgid "Hello World!"
+msgstr ""
+
+#: ajax/expertmode/makewikiprojecttoc.php:32
+msgid "Recreated the project list in the wiki."
+msgstr ""
+
+#: ajax/expertmode/syncevents.php:70
+#, php-format
+msgid "Done. %d events synchronized, %d new."
+msgstr ""
+
+#: ajax/export/csv.php:32 ajax/export/excel.php:49 ajax/export/html.php:32
+#: ajax/export/insurance-export.php:90 ajax/finance/sepa-debit-export.php:68
+msgid "instrument insurances"
+msgstr ""
+
+#: ajax/export/csv.php:36 ajax/export/excel.php:56 ajax/export/html.php:36
+msgid "SEPA debit mandates"
+msgstr ""
+
+#: ajax/export/csv.php:77 ajax/export/excel.php:427 ajax/export/html.php:92
+msgid "The export function for this table is not implemented, sorry."
+msgstr ""
+
+#: ajax/export/excel.php:30
+msgid "musicians"
+msgstr ""
+
+#: ajax/export/excel.php:36
+#, php-format
+msgid "%s-brief"
+msgstr ""
+
+#: ajax/export/excel.php:43
+#, php-format
+msgid "%s-detailed"
+msgstr ""
+
+#: ajax/export/excel.php:260 lib/projects.php:1716 lib/projects.php:1717
+msgid "Missing Musicians"
+msgstr ""
+
+#: ajax/export/excel.php:285 ajax/export/insurance-export.php:142
+#: lib/projects.php:1719
+msgid "Instrument"
+msgstr ""
+
+#: ajax/export/excel.php:286 lib/projects.php:1719
+msgid "Missing"
+msgstr ""
+
+#: ajax/export/insurance-export.php:53
+msgid "Total Insurance Amount: "
+msgstr ""
+
+#: ajax/export/insurance-export.php:141 lib/instrument-insurance.php:255
+#: lib/sepa-debit-mandates.php:267
+msgid "Musician"
+msgstr ""
+
+#: ajax/export/insurance-export.php:143 lib/instrument-insurance.php:318
+#: lib/instrument-insurance.php:833
+msgid "Manufacturer"
+msgstr ""
+
+#: ajax/export/insurance-export.php:144 lib/instrument-insurance.php:325
+msgid "Year of Construction"
+msgstr ""
+
+#: ajax/export/insurance-export.php:145
+msgid "Instrument Insurance Amount"
+msgstr ""
+
+#: ajax/export/insurance-export.php:146 lib/instrument-insurance.php:309
+msgid "Accessory"
+msgstr ""
+
+#: ajax/export/insurance-export.php:147
+msgid "Accessory Insurance Amount"
+msgstr ""
+
+#: ajax/export/insurance-export.php:148
+msgid "Musician Insurance Total"
+msgstr ""
+
+#: ajax/export/insurance-export.php:190 ajax/export/insurance-export.php:217
+#: lib/instrument-insurance.php:293
+msgid "Geographical Scope"
+msgstr ""
+
+#: ajax/export/insurance-export.php:191 ajax/export/insurance-export.php:218
+#, php-format
+msgid "Date: %s"
+msgstr ""
+
+#: ajax/export/insurance-export.php:223 lib/instrument-insurance.php:75
+#: lib/php-excel-functions.php:105
+msgid "false"
+msgstr ""
+
+#: ajax/finance/sepa-debit-delete.php:40
+#: ajax/finance/sepa-debit-settings.php:49
+#: ajax/finance/sepa-debit-store.php:46
+#, php-format
+msgid "Required information `%s' not provided."
+msgstr ""
+
+#: ajax/finance/sepa-debit-delete.php:51
+msgid "SEPA debit mandate deleted from data-base."
+msgstr ""
+
+#: ajax/finance/sepa-debit-delete.php:56
+msgid "Unable to delete SEPA debit mandate from data-base."
+msgstr ""
+
+#: ajax/finance/sepa-debit-export.php:55
+msgid "Project name and/or id are missing"
+msgstr ""
+
+#: ajax/finance/sepa-debit-export.php:84
+msgid "Unable to decrypt debit mandate."
+msgstr ""
+
+#: ajax/finance/sepa-debit-export.php:86 ajax/finance/sepa-debit-export.php:97
+#: ajax/finance/sepa-debit-export.php:108
+#: ajax/finance/sepa-debit-export.php:118
+msgid "Full debit record:"
+msgstr ""
+
+#: ajax/finance/sepa-debit-export.php:95
+#, php-format
+msgid "Refusing to debit %s."
+msgstr ""
+
+#: ajax/finance/sepa-debit-export.php:106
+#, php-format
+msgid "Illegal characters in debit purpose: %s. "
+msgstr ""
+
+#: ajax/finance/sepa-debit-export.php:115
+#, php-format
+msgid "Purpose field has %d characters, allowed are %d."
+msgstr ""
+
+#: ajax/finance/sepa-debit-export.php:192
+#: ajax/insurance/instrument-insurance-export.php:93
+msgid "Unable to create temporay file for zip-archive."
+msgstr ""
+
+#: ajax/finance/sepa-debit-export.php:198
+#: ajax/insurance/instrument-insurance-export.php:99
+msgid "Unable to open temporary file for zip-archive."
+msgstr ""
+
+#: ajax/finance/sepa-debit-export.php:223
+#: ajax/insurance/instrument-insurance-export.php:113
+msgid "Unable to close temporary file for zip-archive."
+msgstr ""
+
+#: ajax/finance/sepa-debit-export.php:228
+#: ajax/insurance/instrument-insurance-export.php:118
+msgid "Unable to read zip archive from disk."
+msgstr ""
+
+#: ajax/finance/sepa-debit-export.php:238
+#: ajax/finance/sepa-debit-export.php:249
+msgid "Debit notes submission deadline"
+msgstr ""
+
+#: ajax/finance/sepa-debit-export.php:241
+#: ajax/finance/sepa-debit-export.php:252
+#: ajax/finance/sepa-debit-export.php:264
+msgid "Exported CSV file name:"
+msgstr ""
+
+#: ajax/finance/sepa-debit-export.php:245
+#: ajax/finance/sepa-debit-export.php:256
+#: ajax/finance/sepa-debit-export.php:268
+msgid "Due date:"
+msgstr ""
+
+#: ajax/finance/sepa-debit-export.php:261
+msgid "Debit notes due"
+msgstr ""
+
+#: ajax/finance/sepa-debit-export.php:335
+#, php-format
+msgid "Please copy the displayed text and send it by email to %s."
+msgstr ""
+
+#: ajax/finance/sepa-debit-mandate.php:72
+msgid "Musician-id and/or name not set"
+msgstr ""
+
+#: ajax/finance/sepa-debit-mandate.php:84
+#: ajax/finance/sepa-debit-settings.php:61 settings.php:89
+msgid "ClubMembers"
+msgstr ""
+
+#: ajax/finance/sepa-debit-settings.php:85
+#, php-format
+msgid "Failed setting `%s' to `%s'."
+msgstr ""
+
+#: ajax/finance/sepa-debit-settings.php:97
+#: ajax/finance/sepa-debit-settings.php:118
+#: ajax/finance/sepa-debit-settings.php:359 ajax/settings/app-settings.php:893
+#: ajax/settings/app-settings.php:965 ajax/settings/app-settings.php:980
+#: ajax/settings/app-settings.php:1015 ajax/settings/app-settings.php:1054
+#: ajax/settings/app-settings.php:1078 ajax/settings/app-settings.php:1090
+#, php-format
+msgid "Value for `%s' set to `%s'."
+msgstr ""
+
+#: ajax/finance/sepa-debit-settings.php:110
+#, php-format
+msgid "Account owner contains invalid characters: %s"
+msgstr ""
+
+#: ajax/finance/sepa-debit-settings.php:151
+#, php-format
+msgid "A German bank id consists of exactly 8 digits: %s."
+msgstr ""
+
+#: ajax/finance/sepa-debit-settings.php:158
+#: ajax/finance/sepa-debit-settings.php:211
+#, php-format
+msgid "Invalid German(?) bank id %s."
+msgstr ""
+
+#: ajax/finance/sepa-debit-settings.php:179
+#: ajax/finance/sepa-debit-settings.php:228
+#, php-format
+msgid "Invalid German(?) bank account number %s @ %s."
+msgstr ""
+
+#: ajax/finance/sepa-debit-settings.php:258
+#: ajax/settings/app-settings.php:1023
+#, php-format
+msgid "Invalid IBAN: `%s'."
+msgstr ""
+
+#: ajax/finance/sepa-debit-settings.php:302
+#: ajax/finance/sepa-debit-settings.php:334
+#: ajax/settings/app-settings.php:1101
+#, php-format
+msgid "Value for `%s' invalid: `%s'."
+msgstr ""
+
+#: ajax/finance/sepa-debit-settings.php:348
+#: ajax/settings/app-settings.php:1161 ajax/settings/redaxo-settings.php:71
+msgid "Unhandled request:"
+msgstr ""
+
+#: ajax/finance/sepa-debit-store.php:69
+msgid "SEPA debit mandate stored in data-base."
+msgstr ""
+
+#: ajax/finance/sepa-debit-store.php:74
+msgid "Unable to store SEPA debit mandate in data-base."
+msgstr ""
+
+#: ajax/finance/sepa-debit-store.php:87
+msgid "Invalid Argument Exception"
+msgstr ""
+
+#: ajax/finance/sepa-debit-store.php:91
+msgid "Invalid arguments"
+msgstr ""
+
+#: ajax/inlineimage/currentimage.php:41 ajax/inlineimage/deleteimage.php:36
+#: ajax/inlineimage/oc_image.php:44 ajax/inlineimage/uploadimage.php:52
+#: ajax/inlineimage/uploadimage.php:83
+msgid "No record ID was submitted."
+msgstr ""
+
+#: ajax/inlineimage/currentimage.php:46
+#, php-format
+msgid "Error reading inline image for ID = %s."
+msgstr ""
+
+#: ajax/inlineimage/currentimage.php:56
+msgid "Error saving temporary file."
+msgstr ""
+
+#: ajax/inlineimage/currentimage.php:59
+msgid "The loading image is not valid."
+msgstr ""
+
+#: ajax/inlineimage/deleteimage.php:40
+msgid "Deleting the photo may have failed."
+msgstr ""
+
+#: ajax/inlineimage/oc_image.php:49
+msgid "No image path was submitted."
+msgstr ""
+
+#: ajax/inlineimage/oc_image.php:69 ajax/inlineimage/oc_image.php:72
+#: js/inlineimage.js:190
+msgid "Error loading image."
+msgstr ""
+
+#: ajax/inlineimage/oc_image.php:86 ajax/inlineimage/uploadimage.php:74
+#: ajax/inlineimage/uploadimage.php:124
+#, php-format
+msgid "Couldn't save temporary image: %s"
+msgstr ""
+
+#: ajax/inlineimage/savecrop.php:57
+msgid "While trying to save cropped photo: missing record id."
+msgstr ""
+
+#: ajax/inlineimage/savecrop.php:77
+msgid "Error saving image in DB"
+msgstr ""
+
+#: ajax/inlineimage/savecrop.php:87
+msgid "Error resizing image"
+msgstr ""
+
+#: ajax/inlineimage/savecrop.php:90
+msgid "Error cropping image"
+msgstr ""
+
+#: ajax/inlineimage/savecrop.php:93
+msgid "Error creating temporary image"
+msgstr ""
+
+#: ajax/inlineimage/savecrop.php:96
+#, php-format
+msgid "Error finding image: %s"
+msgstr ""
+
+#: ajax/inlineimage/uploadimage.php:77 ajax/inlineimage/uploadimage.php:127
+#, php-format
+msgid "Couldn't load temporary image: %s"
+msgstr ""
+
+#: ajax/inlineimage/uploadimage.php:93
+msgid "The uploaded file exceeds the upload_max_filesize directive in php.ini"
+msgstr ""
+
+#: ajax/inlineimage/uploadimage.php:130
+#, php-format
+msgid "Temporary file: '%s' has gone AWOL?"
+msgstr ""
+
+#: ajax/instrumentation/add-musicians.php:80
+#: ajax/instrumentation/add-musicians.php:92
+msgid "Invalid Argument"
+msgstr ""
+
+#: ajax/instrumentation/add-musicians.php:81
+msgid "Missing Musician Id"
+msgstr ""
+
+#: ajax/instrumentation/add-musicians.php:93
+msgid "Missing Project Id"
+msgstr ""
+
+#: ajax/instrumentation/add-musicians.php:109
+msgid "Data Base Error"
+msgstr ""
+
+#: ajax/instrumentation/add-musicians.php:110
+msgid "Failed to fetch the project's instrumentation"
+msgstr ""
+
+#: ajax/instrumentation/add-musicians.php:121
+#: ajax/instrumentation/add-musicians.php:133
+msgid "Data Base error"
+msgstr ""
+
+#: ajax/instrumentation/add-musicians.php:122
+#, php-format
+msgid ""
+"Unable to fetch musician's personal information for id %d, data-base error: "
+"%s"
+msgstr ""
+
+#: ajax/instrumentation/add-musicians.php:134
+#, php-format
+msgid ""
+"Unable to fetch musician's project information for id %d, data-base error: %s"
+msgstr ""
+
+#: ajax/instrumentation/add-musicians.php:144
+#, php-format
+msgid ""
+"The musician %s is already registered for the project with the instruments "
+"%s."
+msgstr ""
+
+#: ajax/instrumentation/add-musicians.php:160
+#, php-format
+msgid ""
+"None of the instruments known by %s are mentioned in the instrumentation-"
+"list for the project. The musician is added nevertheless to the project with "
+"the instrument `%s'"
+msgstr ""
+
+#: ajax/instrumentation/add-musicians.php:166
+#, php-format
+msgid "The musician %s doesn't seem to play any instrument ..."
+msgstr ""
+
+#: ajax/instrumentation/add-musicians.php:177
+#, php-format
+msgid "Adding %s (id = %d) failed."
+msgstr ""
+
+#: ajax/instrumentation/add-musicians.php:186
+#, php-format
+msgid "Unable to get the new id for %s (id = %d)"
+msgstr ""
+
+#: ajax/instrumentation/add-musicians.php:202
+#, php-format
+msgid "No musician could be added to the projecti, #failures: %d."
+msgstr ""
+
+#: ajax/instrumentation/add-musicians.php:211
+msgid "Operation failed"
+msgstr ""
+
+#: ajax/instrumentation/add-musicians.php:222
+msgid "Operation succeeded with the following notifications:"
+msgstr ""
+
+#: ajax/instrumentation/change-musician-instruments.php:88
+#: ajax/instrumentation/change-musician-instruments.php:161
+#: ajax/instrumentation/change-project-instrument.php:73
+#: ajax/instruments/changeInstrumentation.php:128
+msgid "data base error"
+msgstr ""
+
+#: ajax/instrumentation/change-musician-instruments.php:89
+#: ajax/instrumentation/change-project-instrument.php:74
+msgid "Failed to fetch musician's data"
+msgstr ""
+
+#: ajax/instrumentation/change-musician-instruments.php:106
+#: ajax/instrumentation/change-musician-instruments.php:132
+#: ajax/instruments/changeInstrumentation.php:95
+#: ajax/instruments/changeInstrumentation.php:112 ajax/pme/pme-table.php:91
+msgid "invalid arguments"
+msgstr ""
+
+#: ajax/instrumentation/change-musician-instruments.php:107
+#: ajax/instruments/changeInstrumentation.php:113
+#, php-format
+msgid "Unknown instruments in list: %s"
+msgstr ""
+
+#: ajax/instrumentation/change-musician-instruments.php:134
+msgid "Attempt to remove the instrument the musician is supposed to play."
+msgstr ""
+
+#: ajax/instrumentation/change-musician-instruments.php:142
+#, php-format
+msgid ""
+"Please consider to add the registered project instrument `%s' to %s's list "
+"of instruments (or possibly change the project instrument). Please note that "
+msgstr ""
+
+#: ajax/instrumentation/change-musician-instruments.php:163
+msgid "Failed to update the musician's instrument list."
+msgstr ""
+
+#: ajax/instrumentation/change-musician-instruments.php:177
+#, php-format
+msgid ""
+"Changing the instrument list for the musician `%s' was probably successful."
+msgstr ""
+
+#: ajax/instrumentation/change-project-instrument.php:87
+#, php-format
+msgid ""
+"Please consider to add the registered project instrument `%s' to %s's list "
+"of instruments (or possibly change the project instrument)."
+msgstr ""
+
+#: ajax/instrumentation/change-project-instrument.php:98
+#, php-format
+msgid "Instrument choice for %s seems ok."
+msgstr ""
+
+#: ajax/instruments/adjustInstrumentation.php:50
+#: ajax/instruments/changeInstrumentation.php:64 ajax/pme/pme-table.php:79
+#: ajax/projects/verifyName.php:112
+msgid "missing arguments"
+msgstr ""
+
+#: ajax/instruments/adjustInstrumentation.php:51
+#: ajax/instruments/changeInstrumentation.php:65
+msgid "No project id submitted."
+msgstr ""
+
+#: ajax/instruments/adjustInstrumentation.php:64
+#: ajax/instruments/changeInstrumentation.php:79
+msgid "invalid project"
+msgstr ""
+
+#: ajax/instruments/adjustInstrumentation.php:66
+#: ajax/instruments/changeInstrumentation.php:81
+#, php-format
+msgid "There doesn't seem to be a project associated with id %s."
+msgstr ""
+
+#: ajax/instruments/adjustInstrumentation.php:79
+msgid "operation failed"
+msgstr ""
+
+#: ajax/instruments/adjustInstrumentation.php:80
+#, php-format
+msgid "Adjusting the instrumentation for project ``%s'' probably failed."
+msgstr ""
+
+#: ajax/instruments/adjustInstrumentation.php:91
+#, php-format
+msgid "Adjusting the instrumentation for project `%s' was probably successful."
+msgstr ""
+
+#: ajax/instruments/changeInstrumentation.php:96
+msgid "No instrument list submitted"
+msgstr ""
+
+#: ajax/instruments/changeInstrumentation.php:129
+msgid "Failed to update in project instrumentation"
+msgstr ""
+
+#: ajax/instruments/changeInstrumentation.php:140
+#, php-format
+msgid "Changing the instrumentation for project `%s' was probably successful."
+msgstr ""
+
+#: ajax/insurance/instrument-insurance-export.php:107
+#, php-format
+msgid "Unable to add %s to zip-archive"
+msgstr ""
+
+#: ajax/insurance/instrument-insurance-export.php:123
+msgid "instrument-insurance"
+msgstr ""
+
+#: ajax/insurance/validate.php:74
+msgid "Broker-name has been simplified."
+msgstr ""
+
+#: ajax/insurance/validate.php:84
+#, php-format
+msgid ""
+"Invalid insurance rate %f, should be larger than 0 and less than 1 percent."
+msgstr ""
+
+#: ajax/insurance/validate.php:89
+#, php-format
+msgid "Internal error: unknown request: %s"
+msgstr ""
+
+#: ajax/insurance/validate.php:125
+msgid "Insured musician is missing"
+msgstr ""
+
+#: ajax/insurance/validate.php:146
+msgid "Insurance broker is missing."
+msgstr ""
+
+#: ajax/insurance/validate.php:155
+msgid "Geographical scope for the insurance is missing."
+msgstr ""
+
+#: ajax/insurance/validate.php:163
+msgid "Insured object has not been specified."
+msgstr ""
+
+#: ajax/insurance/validate.php:172
+msgid "Object classification (instrument, accessory) is missing."
+msgstr ""
+
+#: ajax/insurance/validate.php:180
+msgid "Manufacturer field is empty."
+msgstr ""
+
+#: ajax/insurance/validate.php:189 ajax/insurance/validate.php:191
+#: js/cafevdb.js:31 js/cafevdb.js:32 js/cafevdb.js:33
+msgid "unknown"
+msgstr ""
+
+#: ajax/insurance/validate.php:190
+msgid "Construction year is unknown."
+msgstr ""
+
+#: ajax/insurance/validate.php:203
+msgid "The insurance amount is missing."
+msgstr ""
+
+#: ajax/insurance/validate.php:209
+msgid "Insurance amount should be a mere number"
+msgstr ""
+
+#: ajax/insurance/validate.php:212
+msgid "Insurance amount should be an integral number"
+msgstr ""
+
+#: ajax/insurance/validate.php:217 ajax/insurance/validate.php:230
+#: ajax/projects/verifyName.php:103
+msgid "Internal error: unknown request"
+msgstr ""
+
+#: ajax/insurance/validate.php:239
+msgid "missing or wrong arguments"
+msgstr ""
+
+#: ajax/musicians/validate.php:60
+msgid "Musician(s) with the same first and sur-name already exist:"
+msgstr ""
+
+#: ajax/musicians/validate.php:65
+msgid ""
+"Please do not add duplicates to the data-base. If you do, then others\n"
+"will have to clean up after you.\n"
+"\n"
+"Please continue if you know what you are doing. Please use the seach\n"
+"facilities before adding new musicians. Thanks."
+msgstr ""
+
+#: ajax/pme/pme-table.php:80
+msgid "No class name submitted."
+msgstr ""
+
+#: ajax/pme/pme-table.php:92
+msgid "Class arguments are not an array"
+msgstr ""
+
+#: ajax/projects/verifyName.php:44
+msgid "project-year"
+msgstr ""
+
+#: ajax/projects/verifyName.php:44
+msgid "project-name"
+msgstr ""
+
+#: ajax/projects/verifyName.php:49
+#, php-format
+msgid "The %s must not be empty.\n"
+msgstr ""
+
+#: ajax/projects/verifyName.php:72
+msgid "The project name has been simplified."
+msgstr ""
+
+#: ajax/projects/verifyName.php:83
+msgid "The project-name must not only consist of the year-number."
+msgstr ""
+
+#: ajax/projects/verifyName.php:86
+msgid "No project-name given."
+msgstr ""
+
+#: ajax/projects/verifyName.php:90
+msgid "No project-year given."
+msgstr ""
+
+#: ajax/projects/verifyName.php:92
+msgid "The project-year has to consist of four digits, e.g. ``1984''."
+msgstr ""
+
+#: ajax/projects/verifyName.php:126
+msgid "already existent"
+msgstr ""
+
+#: ajax/projects/verifyName.php:127
+#, php-format
+msgid ""
+"A project with the name ``%s'' already exists in the year %s.\n"
+"Please choose a different name or year."
+msgstr ""
+
+#: ajax/projects/web-articles.php:51
+#, php-format
+msgid "Invalid or unset project-id: `%s'"
+msgstr ""
+
+#: ajax/projects/web-articles.php:63
+#, php-format
+msgid ""
+"Submitted article id %d does not match the id %d stored in the article-data."
+msgstr ""
+
+#: ajax/projects/web-articles.php:80
+#, php-format
+msgid "Invalid or unset article-id: `%s'"
+msgstr ""
+
+#: ajax/projects/web-articles.php:89
+#, php-format
+msgid ""
+"Cannot perform action `%s' with article with id %d, project with id %d: "
+"missing article-data."
+msgstr ""
+
+#: ajax/projects/web-articles.php:100
+#, php-format
+msgid "Removed public web page %s (id %d) from the project with id %d."
+msgstr ""
+
+#: ajax/projects/web-articles.php:103
+#, php-format
+msgid ""
+"Failed to remove public web page %s (id %d) from the project with id %d."
+msgstr ""
+
+#: ajax/projects/web-articles.php:111
+#, php-format
+msgid "Failed to create a new public web page for the project with id %d."
+msgstr ""
+
+#: ajax/projects/web-articles.php:114
+#, php-format
+msgid ""
+"Created a new public web page with name %s and id %d for the project with id "
+"%d."
+msgstr ""
+
+#: ajax/projects/web-articles.php:131
+msgid "Failed to create additionally a new rehearsal web-page."
+msgstr ""
+
+#: ajax/projects/web-articles.php:133
+msgid "Created additionally a new rehearsal web page."
+msgstr ""
+
+#: ajax/projects/web-articles.php:140
+#, php-format
+msgid "Failed to add the article %s (id = %d) to the project with id %d."
+msgstr ""
+
+#: ajax/projects/web-articles.php:143
+#, php-format
+msgid ""
+"Linked the existing public web-article %s (id %d) to the project with id %d"
+msgstr ""
+
+#: ajax/projects/web-articles.php:149
+#, php-format
+msgid "Failed to detach the article %s (id = %d) from the project with id %d."
+msgstr ""
+
+#: ajax/projects/web-articles.php:152
+#, php-format
+msgid "Detached the public web-article %s (id %d) from the project with id %d"
+msgstr ""
+
+#: ajax/projects/web-articles.php:161
+#, php-format
+msgid "Unhandled or empty request: `%s'"
+msgstr ""
+
+#: ajax/projects/web-articles.php:178
+#, php-format
+msgid "Error: %s"
+msgstr ""
+
+#: ajax/settings/app-settings.php:68
+msgid "Wrong old key."
+msgstr ""
+
+#: ajax/settings/app-settings.php:102
+msgid "Configuration locked, refusing to change encryption key."
+msgstr ""
+
+#: ajax/settings/app-settings.php:111
+msgid ""
+"Configuration locked by somebody else, refusing to change encryption key."
+msgstr ""
+
+#: ajax/settings/app-settings.php:157 ajax/settings/app-settings.php:760
+#, php-format
+msgid "Failed for: %s"
+msgstr ""
+
+#: ajax/settings/app-settings.php:161
+msgid "Key installed successfully!"
+msgstr ""
+
+#: ajax/settings/app-settings.php:172
+#, php-format
+msgid "Name of orchestra set to `%s'"
+msgstr ""
+
+#: ajax/settings/app-settings.php:182
+#, php-format
+msgid "DB-server set to `%s'"
+msgstr ""
+
+#: ajax/settings/app-settings.php:192
+#, php-format
+msgid "DB-name set to `%s'"
+msgstr ""
+
+#: ajax/settings/app-settings.php:202
+#, php-format
+msgid "DB-login set to `%s'"
+msgstr ""
+
+#: ajax/settings/app-settings.php:219
+msgid "DB-test passed and DB-password set."
+msgstr ""
+
+#: ajax/settings/app-settings.php:224
+msgid ""
+"DB-test failed. Check the account settings. Check was performed with the new "
+"password."
+msgstr ""
+
+#: ajax/settings/app-settings.php:232
+msgid "DB-test passed with stored password (empty input ignored)."
+msgstr ""
+
+#: ajax/settings/app-settings.php:237
+msgid "DB-test failed with stored password (empty input ignored)."
+msgstr ""
+
+#: ajax/settings/app-settings.php:255
+#, php-format
+msgid "Submitted `%s' != `%s' (stored)"
+msgstr ""
+
+#: ajax/settings/app-settings.php:264
+#, php-format
+msgid "New share-owner `%s'"
+msgstr ""
+
+#: ajax/settings/app-settings.php:269
+#, php-format
+msgid "Failure creating account `%s'"
+msgstr ""
+
+#: ajax/settings/app-settings.php:282
+#, php-format
+msgid "Keeping old share-owner `%s'"
+msgstr ""
+
+#: ajax/settings/app-settings.php:287
+#, php-format
+msgid "Failure checking account `%s'"
+msgstr ""
+
+#: ajax/settings/app-settings.php:303
+msgid "Unable to share without share-holder `dummy-user'"
+msgstr ""
+
+#: ajax/settings/app-settings.php:312 ajax/settings/app-settings.php:382
+#: ajax/settings/app-settings.php:472
+#, php-format
+msgid "Inconsistency, submitted `%s' != `%s' (stored)"
+msgstr ""
+
+#: ajax/settings/app-settings.php:325 ajax/settings/app-settings.php:397
+#: ajax/settings/app-settings.php:486
+#, php-format
+msgid "New shared folder `%s'"
+msgstr ""
+
+#: ajax/settings/app-settings.php:330 ajax/settings/app-settings.php:403
+#: ajax/settings/app-settings.php:492
+#, php-format
+msgid "Failure creating folder `%s'"
+msgstr ""
+
+#: ajax/settings/app-settings.php:343 ajax/settings/app-settings.php:418
+#: ajax/settings/app-settings.php:507
+#, php-format
+msgid "Keeping old shared folder `%s'"
+msgstr ""
+
+#: ajax/settings/app-settings.php:348 ajax/settings/app-settings.php:424
+#: ajax/settings/app-settings.php:513
+#, php-format
+msgid "Failure checking folder `%s'"
+msgstr ""
+
+#: ajax/settings/app-settings.php:354 ajax/settings/app-settings.php:431
+#: ajax/settings/app-settings.php:520
+#, php-format
+msgid "Failure checking folder `%s', caught an exception `%s'"
+msgstr ""
+
+#: ajax/settings/app-settings.php:372 ajax/settings/app-settings.php:450
+msgid "Unable to define project-folder without shared parent folder."
+msgstr ""
+
+#: ajax/settings/app-settings.php:459
+msgid ""
+"Unable to define the financial balance folder without project folder name."
+msgstr ""
+
+#: ajax/settings/app-settings.php:540
+#, php-format
+msgid "Exception: %s(%d): %s"
+msgstr ""
+
+#: ajax/settings/app-settings.php:557 ajax/settings/app-settings.php:594
+msgid "Unable to set:"
+msgstr ""
+
+#: ajax/settings/app-settings.php:580 ajax/settings/encryptionkey.php:62
+msgid "Exception:"
+msgstr ""
+
+#: ajax/settings/app-settings.php:605
+msgid "minutes"
+msgstr ""
+
+#: ajax/settings/app-settings.php:625
+msgid "Changed password for"
+msgstr ""
+
+#: ajax/settings/app-settings.php:631
+msgid "Failed changing password for"
+msgstr ""
+
+#: ajax/settings/app-settings.php:651
+#, php-format
+msgid "Using `%s' at %s as %s-server."
+msgstr ""
+
+#: ajax/settings/app-settings.php:657
+#, php-format
+msgid "Unable to determine the IP-address for %s."
+msgstr ""
+
+#: ajax/settings/app-settings.php:674
+msgid "Using "
+msgstr ""
+
+#: ajax/settings/app-settings.php:681
+#, php-format
+msgid "`%s' doesn't seem to be a candidate for an IP-port."
+msgstr ""
+
+#: ajax/settings/app-settings.php:705
+msgid "Unknown transport security method:"
+msgstr ""
+
+#: ajax/settings/app-settings.php:716
+#, php-format
+msgid "Using `%s' for message transport."
+msgstr ""
+
+#: ajax/settings/app-settings.php:730
+#, php-format
+msgid "Using `%s' as login."
+msgstr ""
+
+#: ajax/settings/app-settings.php:740
+msgid "Password has been changed."
+msgstr ""
+
+#: ajax/settings/app-settings.php:765
+msgid "Email credentials installed successfully!"
+msgstr ""
+
+#: ajax/settings/app-settings.php:783
+msgid "IMAP connection seems functional."
+msgstr ""
+
+#: ajax/settings/app-settings.php:786
+#, php-format
+msgid "Unable to establish IMAP connection: %s."
+msgstr ""
+
+#: ajax/settings/app-settings.php:796
+msgid "SMTP connection seems functional."
+msgstr ""
+
+#: ajax/settings/app-settings.php:799
+msgid "Unable to establish SMTP connection."
+msgstr ""
+
+#: ajax/settings/app-settings.php:816
+msgid "UNSPECIFIED"
+msgstr ""
+
+#: ajax/settings/app-settings.php:820
+#, php-format
+msgid "Email test-mode enabled, sending only to %s"
+msgstr ""
+
+#: ajax/settings/app-settings.php:824
+msgid "Email test-mode disable, will send to all!!!"
+msgstr ""
+
+#: ajax/settings/app-settings.php:835 ajax/settings/app-settings.php:864
+#, php-format
+msgid "`%s' doesn't seem to be a valid email-address."
+msgstr ""
+
+#: ajax/settings/app-settings.php:843
+#, php-format
+msgid "Using `%s' as email-address for test-mode."
+msgstr ""
+
+#: ajax/settings/app-settings.php:853
+#, php-format
+msgid "Using `%s' as name of the sender identity."
+msgstr ""
+
+#: ajax/settings/app-settings.php:872
+#, php-format
+msgid "Using `%s' as sender email-address."
+msgstr ""
+
+#: ajax/settings/app-settings.php:911
+msgid ""
+"Table name is either not unique, or the table does not exist yet. Please "
+"create a project of this name manually."
+msgstr ""
+
+#: ajax/settings/app-settings.php:915
+#, php-format
+msgid "Table-id %d."
+msgstr ""
+
+#: ajax/settings/app-settings.php:920
+#, php-format
+msgid "Value for `%s' set to `%s'. %s"
+msgstr ""
+
+#: ajax/settings/app-settings.php:935
+#, php-format
+msgid "Musician with id %d does not seem to exist"
+msgstr ""
+
+#: ajax/settings/app-settings.php:944
+#, php-format
+msgid "Value for `%s' set to `%s'"
+msgstr ""
+
+#: ajax/settings/app-settings.php:1026
+msgid "Perhaps you meant"
+msgstr ""
+
+#: ajax/settings/app-settings.php:1033
+msgid "or"
+msgstr ""
+
+#: ajax/settings/app-settings.php:1119
+#, php-format
+msgid "Link for `%s' set to `%s'."
+msgstr ""
+
+#: ajax/settings/app-settings.php:1132
+#, php-format
+msgid "Unable to test link for `%s' without a link target."
+msgstr ""
+
+#: ajax/settings/app-settings.php:1138
+#, php-format
+msgid "New window or tab with `%s'?"
+msgstr ""
+
+#: ajax/settings/debugmode.php:28
+#, php-format
+msgid "Debug-modes changed to `%s'"
+msgstr ""
+
+#: ajax/settings/encryptionkey.php:41
+#, php-format
+msgid "Invalid password for `%s'"
+msgstr ""
+
+#: ajax/settings/encryptionkey.php:48
+msgid "Invalid encryption key."
+msgstr ""
+
+#: ajax/settings/encryptionkey.php:66
+msgid "Encryption key stored."
+msgstr ""
+
+#: ajax/settings/encryptionkey.php:71
+#, php-format
+msgid "Unknown request: `%s'"
+msgstr ""
+
+#: ajax/settings/exampletext.php:6 ajax/settings/exampletext.php:19
+msgid "Example-Text changed"
+msgstr ""
+
+#: ajax/settings/exampletext.php:22
+msgid "Invalid request"
+msgstr ""
+
+#: ajax/settings/expertmode.php:18
+#, php-format
+msgid "Expertmode changed to `%s'"
+msgstr ""
+
+#: ajax/settings/filtervisibility.php:19
+msgid "filter-visibility changed"
+msgstr ""
+
+#: ajax/settings/redaxo-settings.php:37 lib/projects.php:716
+msgid "Preview"
+msgstr ""
+
+#: ajax/settings/redaxo-settings.php:38 lib/projects.php:720
+msgid "Archive"
+msgstr ""
+
+#: ajax/settings/redaxo-settings.php:39 lib/projects.php:718
+#: lib/projects.php:1265 lib/projects.php:1426 lib/projects.php:1552
+msgid "Rehearsals"
+msgstr ""
+
+#: ajax/settings/redaxo-settings.php:40 lib/projects.php:722
+msgid "Trashbin"
+msgstr ""
+
+#: ajax/settings/redaxo-settings.php:41
+msgid "Template"
+msgstr ""
+
+#: ajax/settings/redaxo-settings.php:56
+#, php-format
+msgid "Redaxo categorie Id for `%s' set to %s"
+msgstr ""
+
+#: ajax/settings/redaxo-settings.php:62
+#, php-format
+msgid "Category id must be integer and positive, got `%s'."
+msgstr ""
+
+#: ajax/settings/tooltips.php:37
+msgid "tooltips changed"
+msgstr ""
+
+#: ajax/settings/wysiwyg-editor.php:20
+#, php-format
+msgid "Setting `%s' to `%s'"
+msgstr ""
+
+#: ajax/settings/wysiwyg-editor.php:25
+#, php-format
+msgid "Unknown WYSIWYG-Editor: `%s'"
+msgstr ""
+
+#: js/blog.js:53 js/blog.js:156 js/blog.js:194 js/blog.js:288 js/blog.js:319
+#: js/blog.js:347 js/cafevdb.js:1063 js/cafevdb.js:1125 js/email.js:33
+#: js/email.js:62 js/email.js:412 js/email.js:443 js/email.js:606
+#: js/events.js:64 js/events.js:149 js/inlineimage.js:84 js/inlineimage.js:92
+#: js/inlineimage.js:102 js/inlineimage.js:131 js/inlineimage.js:155
+#: js/inlineimage.js:183 js/inlineimage.js:207 js/inlineimage.js:326
+#: js/inlineimage.js:412 js/inlineimage.js:421 js/inlineimage.js:424
+#: js/sepa-debit-mandate.js:544 js/sepa-debit-mandate.js:559
+#: js/sepa-debit-mandate.js:649
+msgid "Error"
+msgstr ""
+
+#: js/blog.js:63
+msgid "Edit Blog Entry"
+msgstr ""
+
+#: js/blog.js:112
+msgid ""
+"The message content has been changed and will be lost if you press `Yes'"
+msgstr ""
+
+#: js/blog.js:113
+msgid "Really cancel current entry?"
+msgstr ""
+
+#: js/blog.js:173
+msgid "One-time Blog Popup"
+msgstr ""
+
+#: js/blog.js:180
+msgid "I have read this popup, please bother me no more!"
+msgstr ""
+
+#: js/blog.js:181
+msgid "Mark this popup as read; the popup will not show up again."
+msgstr ""
+
+#: js/blog.js:274
+msgid "The entire message thread will be deleted if you press `Yes'"
+msgstr ""
+
+#: js/blog.js:275
+msgid "Really delete the entry?"
+msgstr ""
+
+#: js/cafevdb.js:505
+msgid "Choose some Options"
+msgstr ""
+
+#: js/cafevdb.js:510 js/project-instruments.js:146
+#: js/sepa-debit-mandate.js:104
+msgid "Save"
+msgstr ""
+
+#: js/cafevdb.js:512
+msgid ""
+"Accept the currently selected options and return to the underlying form. "
+msgstr ""
+
+#: js/cafevdb.js:513 js/inlineimage.js:273 js/project-instruments.js:197
+#: templates/blogedit.php:39 templates/part.emailform.composer.php:251
+msgid "Cancel"
+msgstr ""
+
+#: js/cafevdb.js:515
+msgid ""
+"Discard the current selection and close the dialog. The initial set of "
+"selected options will remain unchanged."
+msgstr ""
+
+#: js/cafevdb.js:686
+msgid "Export to the following format is not yet supported:"
+msgstr ""
+
+#: js/cafevdb.js:688 js/project-instruments.js:74 js/projects.js:261
+msgid "Unimplemented"
+msgstr ""
+
+#: js/cafevdb.js:867
+msgid ""
+"If multiple dialogs are open, then move this one to the lowest layer and "
+"display it below the others. Clicking anywhere on the dialog will bring to "
+"the front again."
+msgstr ""
+
+#: js/cafevdb.js:917
+msgid ""
+"Close the current dialog and return to the view which was active before this "
+"dialog had been opened. If the current view shows a `Back' button, then "
+"intentionally clicking the close-button (THIS button) should just be "
+"equivalent to clicking the `Back' button"
+msgstr ""
+
+#: js/cafevdb.js:1004 js/instrumentation.js:163
+msgid "Debug Information"
+msgstr ""
+
+#: js/cafevdb.js:1033
+msgid ""
+"Unrecoverable unknown internal error, no further information available, "
+"sorry."
+msgstr ""
+
+#: js/cafevdb.js:1035
+msgid "Internal Error"
+msgstr ""
+
+#: js/cafevdb.js:1042
+#, python-brace-format
+msgid "Field {RequiredField} not present in AJAX response."
+msgstr ""
+
+#: js/cafevdb.js:1051
+msgid "Missing data"
+msgstr ""
+
+#: js/cafevdb.js:1053 js/events.js:58 js/events.js:143
+msgid "Unknown error :("
+msgstr ""
+
+#: js/cafevdb.js:1083
+msgid "Something went wrong."
+msgstr ""
+
+#: js/cafevdb.js:1085
+msgid ""
+"If it should be the case that you are already logged in for a long time "
+"without interacting with the web-app, then please logout and login again. "
+msgstr ""
+
+#: js/cafevdb.js:1089
+msgid ""
+"I any case it may help to logoff and logon again, as a temporary work-"
+"around. "
+msgstr ""
+
+#: js/cafevdb.js:1092
+#, python-brace-format
+msgid "Feedback email: {AutoReport}"
+msgstr ""
+
+#: js/calendar.js:248
+msgid "Deletion failed"
+msgstr ""
+
+#: js/calendar.js:364
+msgid "Browser determined position"
+msgstr ""
+
+#: js/calendar.js:377
+msgid "Detailed search at Google-Maps"
+msgstr ""
+
+#: js/calendar.js:405
+msgid "Location not found:"
+msgstr ""
+
+#: js/calendar.js:407
+msgid "No location specified."
+msgstr ""
+
+#: js/calendar.js:409
+msgid "Unknown location"
+msgstr ""
+
+#: js/config.php:43
+msgid "Select a filter option."
+msgstr ""
+
+#: js/config.php:44 js/config.php:50
+msgid "No values match."
+msgstr ""
+
+#: js/config.php:45
+msgid ""
+"Select from the pull-down menu. Double-click will submit the form. The pull-"
+"down can be closed by clicking anywhere outside the menu."
+msgstr ""
+
+#: js/config.php:49
+msgid "Select an option."
+msgstr ""
+
+#: js/config.php:51
+msgid ""
+"Select from the pull-down menu. The pull-down can be closed by clicking "
+"anywhere outside the menu."
+msgstr ""
+
+#: js/email.js:32
+msgid "Not called from main email-form."
+msgstr ""
+
+#: js/email.js:410
+#, python-brace-format
+msgid "Unknown form element: {FormElement}"
+msgstr ""
+
+#: js/email.js:442
+#, python-brace-format
+msgid "Unknown request: {Request}"
+msgstr ""
+
+#: js/email.js:515
+#, python-brace-format
+msgid "Sending message {active} out of {total}"
+msgstr ""
+
+#: js/email.js:517
+msgid "Message delivery in progress"
+msgstr ""
+
+#: js/email.js:542
+msgid "Message Delivery Status"
+msgstr ""
+
+#: js/email.js:571
+msgid ""
+"Email sending is in progress. Leaving the page now will cancel the email "
+"submission."
+msgstr ""
+
+#: js/email.js:603
+msgid "Unable to export message(s):"
+msgstr ""
+
+#: js/email.js:668
+#, python-brace-format
+msgid ""
+"A template with the name `{TemplateName}' already exists, do you want to "
+"overwrite it?"
+msgstr ""
+
+#: js/email.js:670
+msgid "Overwrite existing template?"
+msgstr ""
+
+#: js/email.js:692
+#, python-brace-format
+msgid ""
+"Do you really want to delete the template with the name `{TemplateName}'?"
+msgstr ""
+
+#: js/email.js:694
+msgid "Really Delete Template?"
+msgstr ""
+
+#: js/email.js:703
+#, python-brace-format
+msgid "Cannot delete non-existing template `{TemplateName}'"
+msgstr ""
+
+#: js/email.js:705
+msgid "Unknown Template"
+msgstr ""
+
+#: js/email.js:808
+msgid "Do you really want to delete all event attachments?"
+msgstr ""
+
+#: js/email.js:809 js/email.js:893
+msgid "Really Delete Attachments?"
+msgstr ""
+
+#: js/email.js:878
+msgid "Select Attachment"
+msgstr ""
+
+#: js/email.js:892
+msgid "Do you really want to delete all file attachments?"
+msgstr ""
+
+#: js/email.js:937 templates/part.emailform.composer.php:109
+#: templates/part.emailform.composer.php:127
+msgid "Address Book"
+msgstr ""
+
+#: js/email.js:938
+msgid "Accept"
+msgstr ""
+
+#: js/email.js:940
+msgid "Save Contacts"
+msgstr ""
+
+#: js/email.js:943
+msgid ""
+"Save the selected supplementary emails to the address-book for later reusal."
+msgstr ""
+
+#: js/email.js:1079
+#, python-brace-format
+msgid "Em@il Form for {ProjectName}"
+msgstr ""
+
+#: js/email.js:1082
+msgid "Em@il Form"
+msgstr ""
+
+#: js/email.js:1198
+msgid "Move all"
+msgstr ""
+
+#: js/email.js:1199
+msgid "Move selected"
+msgstr ""
+
+#: js/email.js:1200
+msgid "Remove selected"
+msgstr ""
+
+#: js/email.js:1201
+msgid "Remove all"
+msgstr ""
+
+#: js/email.js:1202
+msgid "Remaining Recipients"
+msgstr ""
+
+#: js/email.js:1203
+msgid "Selected Recipients"
+msgstr ""
+
+#: js/email.js:1204
+#, python-brace-format
+msgid "Showing all {0}"
+msgstr ""
+
+#: js/email.js:1206
+msgid "Filtered"
+msgstr ""
+
+#: js/email.js:1208
+msgid "from"
+msgstr ""
+
+#: js/email.js:1210
+msgid "Empty list"
+msgstr ""
+
+#: js/email.js:1211
+msgid "Filter"
+msgstr ""
+
+#: js/email.js:1212
+msgid "show all"
+msgstr ""
+
+#: js/email.js:1218
+msgid "Click on the names to move the respective person to the other box"
+msgstr ""
+
+#: js/events.js:46
+msgid "Do you really want to delete this event?"
+msgstr ""
+
+#: js/events.js:48
+msgid "Do you really want to detach this event from the current project?"
+msgstr ""
+
+#: js/events.js:253
+msgid "Really delete?"
+msgstr ""
+
+#: js/expertmode.js:34
+msgid "Advanced operations, use with care"
+msgstr ""
+
+#: js/file-upload.js:69
+msgid "Unable to upload your file as it is a directory or has 0 bytes"
+msgstr ""
+
+#: js/file-upload.js:83
+msgid "Not enough space available"
+msgstr ""
+
+#: js/file-upload.js:118
+msgid ""
+"File upload is in progress. Leaving the page now will cancel the upload."
+msgstr ""
+
+#: js/file-upload.js:134
+msgid "Upload cancelled."
+msgstr ""
+
+#: js/file-upload.js:181
+msgid "Unknown error uploading files"
+msgstr ""
+
+#: js/file-upload.js:214
+#, python-brace-format
+msgid "Error {NR}: "
+msgstr ""
+
+#: js/inlineimage.js:84
+msgid "No files selected for upload."
+msgstr ""
+
+#: js/inlineimage.js:92 js/inlineimage.js:402
+msgid ""
+"The file you are trying to upload exceed the maximum size for file uploads "
+"on this server."
+msgstr ""
+
+#: js/inlineimage.js:183
+msgid "Could not open image."
+msgstr ""
+
+#: js/inlineimage.js:262
+msgid "Edit inline image"
+msgstr ""
+
+#: js/inlineimage.js:267
+msgid "Ok"
+msgstr ""
+
+#: js/inlineimage.js:286
+msgid "Error loading inline image."
+msgstr ""
+
+#: js/inlineimage.js:303
+msgid "Network or server error. Please inform administrator."
+msgstr ""
+
+#: js/inlineimage.js:358
+msgid "Select image"
+msgstr ""
+
+#: js/inlineimage.js:402
+msgid "Upload too large"
+msgstr ""
+
+#: js/inlineimage.js:406
+msgid "Only image files can be used as profile picture."
+msgstr ""
+
+#: js/inlineimage.js:406
+msgid "Wrong file type"
+msgstr ""
+
+#: js/inlineimage.js:412
+msgid ""
+"Your browser doesn't support AJAX upload. Please click on the profile "
+"picture to select a photo to upload."
+msgstr ""
+
+#: js/inlineimage.js:474
+msgid "Photo Zoom"
+msgstr ""
+
+#: js/instrumentation.js:154
+msgid "Unkown Error"
+msgstr ""
+
+#: js/instrumentation.js:159
+msgid "Caught a PHP Exception"
+msgstr ""
+
+#: js/musicians.js:98
+msgid "Possible Duplicate!"
+msgstr ""
+
+#: js/pme.js:798
+msgid "#columns"
+msgstr ""
+
+#: js/pme.js:807
+msgid "#rows"
+msgstr ""
+
+#: js/project-instruments.js:72 js/projects.js:259
+msgid "Unknown operation:"
+msgstr ""
+
+#: js/project-instruments.js:135
+msgid "Change Project Instrumentation"
+msgstr ""
+
+#: js/project-instruments.js:148
+msgid ""
+"Save the new instrumentation and continue adjusting the instrumentation "
+"numbers. The input-form will reload and display the updated list of "
+"instruments."
+msgstr ""
+
+#: js/project-instruments.js:200
+msgid ""
+"Discard the current choice of instruments and close the dialog. The "
+"instrumentation of the project will remain unchanged."
+msgstr ""
+
+#: js/projects.js:498
+msgid "Really unlink the displayed event announcement?"
+msgstr ""
+
+#: js/projects.js:499
+#, python-brace-format
+msgid "Unlink Web-Page with Id {ArticleId}?"
+msgstr ""
+
+#: js/projects.js:524
+msgid "Really delete the displayed event announcement?"
+msgstr ""
+
+#: js/projects.js:525
+#, python-brace-format
+msgid "Delete Web-Page with Id {ArticleId}?"
+msgstr ""
+
+#: js/projects.js:602
+msgid "No values match"
+msgstr ""
+
+#: js/sepa-debit-mandate.js:87 templates/share-settings.php:48
+msgid "Change"
+msgstr ""
+
+#: js/sepa-debit-mandate.js:88
+msgid ""
+"Change the SEPA mandate. Note that the SEPA mandate-reference is "
+"automatically computed and cannot be changed."
+msgstr ""
+
+#: js/sepa-debit-mandate.js:105
+msgid "Close the form and save the data in the underlying data-base storage."
+msgstr ""
+
+#: js/sepa-debit-mandate.js:117
+msgid "Apply"
+msgstr ""
+
+#: js/sepa-debit-mandate.js:118
+msgid "Save the data in the underlying data-base storage. Keep the form open."
+msgstr ""
+
+#: js/sepa-debit-mandate.js:141 templates/blogthreads.php:97
+msgid "Delete"
+msgstr ""
+
+#: js/sepa-debit-mandate.js:142
+msgid ""
+"Delete this mandate from the data-base. Normally, this should only be done "
+"in case of desinformation or misunderstanding. Use with care."
+msgstr ""
+
+#: js/sepa-debit-mandate.js:146 lib/detailed-instrumentation.php:349
+#: lib/detailed-instrumentation.php:676 lib/detailed-instrumentation.php:694
+msgid "SEPA Debit Mandate"
+msgstr ""
+
+#: js/sepa-debit-mandate.js:154
+msgid "Close"
+msgstr ""
+
+#: js/sepa-debit-mandate.js:155
+msgid ""
+"Discard all filled-in data and close the form. Note that this will not undo "
+"any changes previously stored in the data-base by pressing the `Apply' "
+"button."
+msgstr ""
+
+#: js/sepa-debit-mandate.js:340 js/sepa-debit-mandate.js:378
+msgid "Suggested alternatives based on common human mis-transcriptions:"
+msgstr ""
+
+#: js/sepa-debit-mandate.js:344 js/sepa-debit-mandate.js:382
+msgid "Please do not accept these alternatives lightly!"
+msgstr ""
+
+#: js/sepa-debit-mandate.js:541 js/sepa-debit-mandate.js:646
+msgid "Unable to export debit notes:"
+msgstr ""
+
+#: js/sepa-debit-mandate.js:556
+msgid "Unable to export insurance overviews:"
+msgstr ""
+
+#: js/sepa-debit-mandate.js:577
+msgid "InsuranceDebitNoteAnnouncement"
+msgstr ""
+
+#: js/sepa-debit-mandate.js:578 js/sepa-debit-mandate.js:665
+msgid "Debit notes due in 17 days"
+msgstr ""
+
+#: js/sepa-debit-mandate.js:664
+msgid "ProjectDebitNoteAnnouncement"
+msgstr ""
+
+#: js/settings.js:106 js/settings.js:128 js/settings.js:184
+msgid "Error:"
+msgstr ""
+
+#: js/settings.js:222
+msgid "Please standby, the operation will take some time!"
+msgstr ""
+
+#: lib/config.php:670
+#, php-format
+msgid "Decryption of `%s`@`%s` failed"
+msgstr ""
+
+#: lib/config.php:674
+#, php-format
+msgid "Encryption of `%s`@`%s` failed"
+msgstr ""
+
+#: lib/config.php:680
+#, php-format
+msgid "Unable to update table data at index %s"
+msgstr ""
+
+#: lib/config.php:896
+msgid "birthday"
+msgstr ""
+
+#: lib/config.php:905
+msgid "no preference"
+msgstr ""
+
+#: lib/config.php:906
+msgid "German"
+msgstr ""
+
+#: lib/config.php:907
+msgid "English"
+msgstr ""
+
+#: lib/config.php:908
+msgid "French"
+msgstr ""
+
+#: lib/config.php:909
+msgid "Spanish"
+msgstr ""
+
+#: lib/config.php:910
+msgid "Portuguese"
+msgstr ""
+
+#: lib/config.php:911
+msgid "Polish"
+msgstr ""
+
+#: lib/config.php:912
+msgid "Russian"
+msgstr ""
+
+#: lib/config.php:913
+msgid "Chinese"
+msgstr ""
+
+#: lib/config.php:914
+msgid "Japaneese"
+msgstr ""
+
+#: lib/config.php:915
+msgid "Korean"
+msgstr ""
+
+#: lib/config.php:935
+#, php-format
+msgid "Unknown Tooltip for key `%s' requested."
+msgstr ""
+
+#: lib/detailed-instrumentation.php:44
+#, php-format
+msgid "Remove the musician from %s?"
+msgstr ""
+
+#: lib/detailed-instrumentation.php:46
+msgid "Display of all stored data for the shown musician."
+msgstr ""
+
+#: lib/detailed-instrumentation.php:48
+msgid "Edit the data of the displayed musician."
+msgstr ""
+
+#: lib/detailed-instrumentation.php:50
+#, php-format
+msgid "Instrumentation for Project `%s'"
+msgstr ""
+
+#: lib/detailed-instrumentation.php:135
+msgid "Instrumentation related data"
+msgstr ""
+
+#: lib/detailed-instrumentation.php:138
+msgid "Project related data"
+msgstr ""
+
+#: lib/detailed-instrumentation.php:141
+msgid "Personal data"
+msgstr ""
+
+#: lib/detailed-instrumentation.php:144 lib/musicians.php:174
+msgid "Display all columns"
+msgstr ""
+
+#: lib/detailed-instrumentation.php:213
+msgid "Instrumentation Id"
+msgstr ""
+
+#: lib/detailed-instrumentation.php:225
+msgid "Musician Id"
+msgstr ""
+
+#: lib/detailed-instrumentation.php:300
+msgid "All Instruments"
+msgstr ""
+
+#: lib/detailed-instrumentation.php:320 lib/musicians.php:319
+msgid "Member Status"
+msgstr ""
+
+#: lib/detailed-instrumentation.php:401 lib/musicians.php:434
+msgid "Remarks"
+msgstr ""
+
+#: lib/detailed-instrumentation.php:417 lib/musicians.php:331
+msgid "no projects yet"
+msgstr ""
+
+#: lib/detailed-instrumentation.php:435 lib/musicians.php:361
+msgid "Projects"
+msgstr ""
+
+#: lib/detailed-instrumentation.php:494
+msgid "Country"
+msgstr ""
+
+#: lib/detailed-instrumentation.php:505
+msgid "General Remarks"
+msgstr ""
+
+#: lib/detailed-instrumentation.php:528 lib/musicians.php:474
+msgid "Photo"
+msgstr ""
+
+#: lib/detailed-instrumentation.php:542 lib/musicians.php:492
+msgid "Last Updated"
+msgstr ""
+
+#: lib/detailed-instrumentation.php:700
+msgid "Click to enter details of a potential SEPA debit mandate"
+msgstr ""
+
+#: lib/emailcomposer.php:219
+msgid "Message(s) sent out successfully!"
+msgstr ""
+
+#: lib/emailcomposer.php:230
+msgid "Message(s) exported successfully!"
+msgstr ""
+
+#: lib/emailcomposer.php:1128
+msgid "Pre-composition validation has failed!"
+msgstr ""
+
+#: lib/emailcomposer.php:1331
+msgid "no project involved"
+msgstr ""
+
+#: lib/emailcomposer.php:1371
+msgid "Unable to fetch executive board contents from data-base."
+msgstr ""
+
+#: lib/emailcomposer.php:1384
+msgid "and"
+msgstr ""
+
+#: lib/emailcomposer.php:1718
+msgid "Local Filesystem"
+msgstr ""
+
+#: lib/emailrecipientsfilter.php:339 lib/page-loader.php:181
+#, php-format
+msgid "Invalid history position %d request, history size is %d"
+msgstr ""
+
+#: lib/emailrecipientsfilter.php:421
+#, php-format
+msgid ""
+"Musician %d in Table, but has no Id as Musician. POST: %sMap: %sSQL-Query: %s"
+msgstr ""
+
+#: lib/events.php:280 lib/events.php:291 lib/events.php:301 lib/events.php:311
+#: lib/events.php:335
+#, php-format
+msgid "Unexpected response while creating new task: %s"
+msgstr ""
+
+#: lib/events.php:368
+msgid "Unable to create event from given data:"
+msgstr ""
+
+#: lib/events.php:960 lib/events.php:1147
+msgid "Unknown Calendar"
+msgstr ""
+
+#: lib/events.php:967
+msgid "Miscellaneous Calendars"
+msgstr ""
+
+#: lib/finance.php:56 lib/finance.php:92 settings.php:115
+msgid "finance"
+msgstr ""
+
+#: lib/finance.php:315
+#, php-format
+msgid "Unable to update the last-used date to %s"
+msgstr ""
+
+#: lib/finance.php:317
+msgid "Data-base query:"
+msgstr ""
+
+#: lib/finance.php:463
+msgid "mandate reference"
+msgstr ""
+
+#: lib/finance.php:464
+msgid "date of issue"
+msgstr ""
+
+#: lib/finance.php:465
+msgid "date of last usage"
+msgstr ""
+
+#: lib/finance.php:466
+msgid "musician id"
+msgstr ""
+
+#: lib/finance.php:467
+msgid "project id"
+msgstr ""
+
+#: lib/finance.php:468
+msgid "sequence type"
+msgstr ""
+
+#: lib/finance.php:470
+msgid "bank code"
+msgstr ""
+
+#: lib/finance.php:471
+msgid "bank account owner"
+msgstr ""
+
+#: lib/finance.php:488
+#, php-format
+msgid "Missing fields in debit mandate: %s (%s)."
+msgstr ""
+
+#: lib/finance.php:490 lib/finance.php:502 lib/finance.php:516
+#: lib/finance.php:538 lib/finance.php:550 lib/finance.php:564
+#: lib/finance.php:581 lib/finance.php:596 lib/finance.php:608
+#: lib/finance.php:618
+msgid "Full data record:"
+msgstr ""
+
+#: lib/finance.php:500
+#, php-format
+msgid "Empty fields in debit mandate: %s (%s)."
+msgstr ""
+
+#: lib/finance.php:514
+msgid "Illegal characters in bank account owner field"
+msgstr ""
+
+#: lib/finance.php:536
+#, php-format
+msgid "Mandate issued in the future: %s????"
+msgstr ""
+
+#: lib/finance.php:547
+msgid "Missing mandate date"
+msgstr ""
+
+#: lib/finance.php:560
+#, php-format
+msgid "Invalid sequence type `%s', should be one of %s"
+msgstr ""
+
+#: lib/finance.php:579
+#, php-format
+msgid "Invalid IBAN: %s"
+msgstr ""
+
+#: lib/finance.php:594
+#, php-format
+msgid "BLZ and IBAN do not match: %s != %s"
+msgstr ""
+
+#: lib/finance.php:606
+#, php-format
+msgid "Invalid German BLZ: %s."
+msgstr ""
+
+#: lib/finance.php:616
+#, php-format
+msgid "Invalid German bank account: %s @ %s."
+msgstr ""
+
+#: lib/finance.php:627
+#, php-format
+msgid "Probably invalid BIC: %s. Computed: %s. "
+msgstr ""
+
+#: lib/finance.php:629
+#, php-format
+msgid "Full data record: %s"
+msgstr ""
+
+#: lib/functions.php:119
+#, php-format
+msgid "Invalid argument value: `%s'"
+msgstr ""
+
+#: lib/functions.php:653
+msgid "Supported data formats are JSON and URLENCODED"
+msgstr ""
+
+#: lib/functions.php:676
+#, php-format
+msgid "Unable to post to route %s (%s)"
+msgstr ""
+
+#: lib/functions.php:687
+#, php-format
+msgid "Invalid response from API call: %s"
+msgstr ""
+
+#: lib/functions.php:797
+msgid "Export Table"
+msgstr ""
+
+#: lib/functions.php:805
+msgid "Excel Export"
+msgstr ""
+
+#: lib/functions.php:808
+msgid "HTML/Spreadsheet"
+msgstr ""
+
+#: lib/functions.php:811
+msgid "CSV Export"
+msgstr ""
+
+#: lib/functions.php:814
+msgid "HTML Export"
+msgstr ""
+
+#: lib/functions.php:1029
+msgid "Error: Unknonwn Button Type"
+msgstr ""
+
+#: lib/functions.php:1049
+msgid "View all Projects"
+msgstr ""
+
+#: lib/functions.php:1050
+msgid "Overview over all known projects (start-page)."
+msgstr ""
+
+#: lib/functions.php:1061
+msgid "Display all Musicians"
+msgstr ""
+
+#: lib/functions.php:1062
+msgid ""
+"Display all musicians stored in the data-base, with detailed facilities for "
+"filtering and sorting."
+msgstr ""
+
+#: lib/functions.php:1073
+msgid ""
+"Mass-email form, use with care. Mass-emails will be logged. Recipients will "
+"be specified by the Bcc: field in the header, so the recipients are "
+"undisclosed to each other."
+msgstr ""
+
+#: lib/functions.php:1086
+msgid "Email History"
+msgstr ""
+
+#: lib/functions.php:1087
+msgid "Display all emails sent by our mass-email form."
+msgstr ""
+
+#: lib/functions.php:1105
+msgid "The currently active project."
+msgstr ""
+
+#: lib/functions.php:1120 lib/projects.php:796
+msgid "Instrumentation"
+msgstr ""
+
+#: lib/functions.php:1121
+msgid ""
+"Detailed display of all registered musicians for the selected project. The "
+"table will allow for modification of personal data like email, phone, "
+"address etc."
+msgstr ""
+
+#: lib/functions.php:1134 lib/project-instruments.php:385
+msgid "Add Instruments"
+msgstr ""
+
+#: lib/functions.php:1135
+msgid ""
+"Display the list of instruments known by the data-base, possibly add new "
+"ones as needed."
+msgstr ""
+
+#: lib/functions.php:1148 lib/project-instruments.php:69 lib/projects.php:801
+#: lib/projects.php:1054
+msgid "Instrumentation Numbers"
+msgstr ""
+
+#: lib/functions.php:1149 lib/tooltips.php:391
+msgid ""
+"Display the desired instrumentaion numbers, i.e. how many musicians are "
+"already registered for each instrument group and how many are finally needed."
+msgstr ""
+
+#: lib/functions.php:1162 lib/functions.php:1200 lib/projects.php:838
+msgid "Debit Mandates"
+msgstr ""
+
+#: lib/functions.php:1163
+msgid "Display a table with the SEPA debit mandates related to the project."
+msgstr ""
+
+#: lib/functions.php:1176
+msgid "Insurances"
+msgstr ""
+
+#: lib/functions.php:1177
+msgid ""
+"Display a table with an overview about the current state of the member's "
+"instrument insurances."
+msgstr ""
+
+#: lib/functions.php:1188
+msgid "Insurance Rates"
+msgstr ""
+
+#: lib/functions.php:1189
+msgid ""
+"Display a table with the insurance rates for the individual instrument "
+"insurances."
+msgstr ""
+
+#: lib/functions.php:1201
+msgid "Display a table with an overview over all SEPA debit mandates."
+msgstr ""
+
+#: lib/functions.php:1274
+#, php-format
+msgid "Could not connect to data-base server `%s': %s"
+msgstr ""
+
+#: lib/functions.php:1287
+#, php-format
+msgid "Unable to select %s"
+msgstr ""
+
+#: lib/instrument-insurance.php:63
+msgid "Germany"
+msgstr ""
+
+#: lib/instrument-insurance.php:64
+msgid "Europe"
+msgstr ""
+
+#: lib/instrument-insurance.php:65
+msgid "World"
+msgstr ""
+
+#: lib/instrument-insurance.php:76 lib/php-excel-functions.php:101
+msgid "true"
+msgstr ""
+
+#: lib/instrument-insurance.php:87
+msgid "Overview over the Bulk Instrument Insurances"
+msgstr ""
+
+#: lib/instrument-insurance.php:159 lib/sepa-debit-mandates.php:124
+msgid "Debit"
+msgstr ""
+
+#: lib/instrument-insurance.php:269
+msgid "Bill-to Party"
+msgstr ""
+
+#: lib/instrument-insurance.php:284
+msgid "Insurance Broker"
+msgstr ""
+
+#: lib/instrument-insurance.php:302
+msgid "Insured Object"
+msgstr ""
+
+#: lib/instrument-insurance.php:332
+msgid "Insurance Amount"
+msgstr ""
+
+#: lib/instrument-insurance.php:339
+msgid "Insurance Rate"
+msgstr ""
+
+#: lib/instrument-insurance.php:360
+msgid "Insurance Fee"
+msgstr ""
+
+#: lib/instrument-insurance.php:360
+msgid "including taxes"
+msgstr ""
+
+#: lib/instrument-insurance.php:373
+msgid "Total Insurance"
+msgstr ""
+
+#: lib/instrument-insurance.php:388
+msgid "Start of Insurance"
+msgstr ""
+
+#: lib/instrument-insurance.php:703
+msgid "insurance"
+msgstr ""
+
+#: lib/instrument-insurance.php:762
+#, php-format
+msgid "Annual Insurance Fees for %s, %d. %s"
+msgstr ""
+
+#: lib/instrument-insurance.php:766
+msgid "Overview over insured instruments and insurance fee details and summary"
+msgstr ""
+
+#: lib/instrument-insurance.php:781 templates/instrument-insurance.php:44
+#: templates/sepa-debit-mandates.php:53
+msgid "treasurer"
+msgstr ""
+
+#: lib/instrument-insurance.php:803
+#, php-format
+msgid "Annular insurance fees for %d"
+msgstr ""
+
+#: lib/instrument-insurance.php:804
+#, php-format
+msgid "Dear %s,"
+msgstr ""
+
+#: lib/instrument-insurance.php:809
+msgid ""
+"this letter informs you about the details of the instrument-insurances\n"
+"we are maintaining for you on your behalf. This letter is\n"
+"machine-generated; in case of any inconsistencies or other questions\n"
+"please contact us as soon as possible in order to avoid any further\n"
+"misunderstandings. This letter is sent to you by traditional mail for\n"
+"data-security reason. Please keep a copy of this letter in a safe\n"
+"place; further insurance-charts will only be sent automatically to you\n"
+"if something changes. Of course, you may request this information about\n"
+"your insured items at any time. Just ask."
+msgstr ""
+
+#: lib/instrument-insurance.php:827
+#, php-format
+msgid "Insured Person: %s"
+msgstr ""
+
+#: lib/instrument-insurance.php:830
+msgid "Vendor"
+msgstr ""
+
+#: lib/instrument-insurance.php:831 lib/insurance-rates.php:233
+msgid "Scope"
+msgstr ""
+
+#: lib/instrument-insurance.php:832 lib/instrument-insurance.php:906
+msgid "Object"
+msgstr ""
+
+#: lib/instrument-insurance.php:834 lib/instrument-insurance.php:907
+msgid "Amount"
+msgstr ""
+
+#: lib/instrument-insurance.php:835 lib/instrument-insurance.php:908
+#: lib/insurance-rates.php:242
+msgid "Rate"
+msgstr ""
+
+#: lib/instrument-insurance.php:836 lib/instrument-insurance.php:910
+msgid "Fee"
+msgstr ""
+
+#: lib/instrument-insurance.php:859
+msgid "Sub-totals (excluding taxes)"
+msgstr ""
+
+#: lib/instrument-insurance.php:898
+msgid "Corrections for partial insurance periods."
+msgstr ""
+
+#: lib/instrument-insurance.php:900
+msgid ""
+"Insurances starting after the due-date will be charged in the following year."
+msgstr ""
+
+#: lib/instrument-insurance.php:904
+msgid "Due"
+msgstr ""
+
+#: lib/instrument-insurance.php:905
+msgid "Start"
+msgstr ""
+
+#: lib/instrument-insurance.php:909
+msgid "Factor"
+msgstr ""
+
+#: lib/instrument-insurance.php:933
+msgid "Sum of corrections (excluding taxes)"
+msgstr ""
+
+#: lib/instrument-insurance.php:974
+msgid "Total amount excluding taxes:"
+msgstr ""
+
+#: lib/instrument-insurance.php:978
+#, php-format
+msgid "%0.2f %% insurance taxes:"
+msgstr ""
+
+#: lib/instrument-insurance.php:982
+msgid "Total amount to pay:"
+msgstr ""
+
+#: lib/instrument-insurance.php:992
+msgid ""
+"You have granted us a debit-mandate. The total amount due will be debited "
+"from your bank-account, no further action from your side is required. We "
+"will inform you by email about the date of the debit at least 14 days in "
+"advance of the bank transaction."
+msgstr ""
+
+#: lib/instrument-insurance.php:999 lib/instrument-insurance.php:1001
+msgid "Best wishes,"
+msgstr ""
+
+#: lib/instrument-insurance.php:1007
+msgid "Treasurer"
+msgstr ""
+
+#: lib/instrument-insurance.php:1171
+#, php-format
+msgid "Invalid broker/geographical-scope combination: %s - %s"
+msgstr ""
+
+#: lib/instrumentation.php:231
+msgid "Section Leader"
+msgstr ""
+
+#: lib/instrumentation.php:238
+#, php-format
+msgid "Set to `%s' in order to mark the section leader"
+msgstr ""
+
+#: lib/instrumentation.php:243
+msgid "Registration"
+msgstr ""
+
+#: lib/instrumentation.php:250
+#, php-format
+msgid ""
+"Set to `%s' in order to mark participants who passed a personally signed "
+"registration form to us."
+msgstr ""
+
+#: lib/instrumentation.php:281
+msgid "regular"
+msgstr ""
+
+#: lib/instrumentation.php:282
+msgid "passive"
+msgstr ""
+
+#: lib/instrumentation.php:283
+msgid "soloist"
+msgstr ""
+
+#: lib/instrumentation.php:284
+msgid "conductor"
+msgstr ""
+
+#: lib/instrumentation.php:285
+msgid "temporary"
+msgstr ""
+
+#: lib/instruments.php:42
+msgid "Add new Instruments"
+msgstr ""
+
+#: lib/instruments.php:356
+msgid "Needed Instruments"
+msgstr ""
+
+#: lib/instruments.php:361
+#, php-format
+msgid "Instrument does not yet exist, cannot change its name: `%s'"
+msgstr ""
+
+#: lib/instruments.php:379 lib/instruments.php:409 lib/instruments.php:419
+#, php-format
+msgid "SQL-Error ``%s''. Could not execute the query ``%s''"
+msgstr ""
+
+#: lib/instruments.php:396
+#, php-format
+msgid "SQL-Error ``%s''. Could not execute the query `` %s ''"
+msgstr ""
+
+#: lib/instruments.php:457
+#, php-format
+msgid "Could not fetch instruments for project-id %s"
+msgstr ""
+
+#: lib/instruments.php:553
+msgid "Streich,Saiten"
+msgstr ""
+
+#: lib/instruments.php:554
+msgid "Streich,Zupf"
+msgstr ""
+
+#: lib/instruments.php:555
+msgid "Blas,Holz"
+msgstr ""
+
+#: lib/instruments.php:556
+msgid "Blas,Blech"
+msgstr ""
+
+#: lib/instruments.php:557
+msgid "Schlag"
+msgstr ""
+
+#: lib/instruments.php:558
+msgid "Sonstiges"
+msgstr ""
+
+#: lib/insurance-rates.php:78
+msgid "Instrument Insurance Rates"
+msgstr ""
+
+#: lib/insurance-rates.php:224
+msgid "Broker"
+msgstr ""
+
+#: lib/insurance-rates.php:251
+msgid "Due Date"
+msgstr ""
+
+#: lib/musicians.php:46
+msgid "Remove all data of the displayed musician?"
+msgstr ""
+
+#: lib/musicians.php:48
+msgid "Copy the displayed musician?"
+msgstr ""
+
+#: lib/musicians.php:50
+msgid "Display of all stored personal data for the shown musician."
+msgstr ""
+
+#: lib/musicians.php:52
+msgid "Edit the personal data of the displayed musician."
+msgstr ""
+
+#: lib/musicians.php:54
+msgid "Add a new musician to the data-base."
+msgstr ""
+
+#: lib/musicians.php:56
+msgid "Overview over all registered musicians"
+msgstr ""
+
+#: lib/musicians.php:58
+#, php-format
+msgid "Add musicians to the project `%s'"
+msgstr ""
+
+#: lib/musicians.php:165
+msgid "Instruments and Status"
+msgstr ""
+
+#: lib/musicians.php:168
+msgid "Contact Information"
+msgstr ""
+
+#: lib/musicians.php:171
+msgid "Miscellaneous Data"
+msgstr ""
+
+#: lib/musicians.php:203
+#, php-format
+msgid "Add all to %s"
+msgstr ""
+
+#: lib/musicians.php:255
+#, php-format
+msgid "Add to %s"
+msgstr ""
+
+#: lib/musicians.php:260
+msgid "Add Musicians"
+msgstr ""
+
+#: lib/musicians.php:289
+msgid "Surname"
+msgstr ""
+
+#: lib/musicians.php:298
+msgid "Forename"
+msgstr ""
+
+#: lib/musicians.php:307
+msgid "Instruments"
+msgstr ""
+
+#: lib/musicians.php:457 lib/sepa-debit-mandates.php:415
+msgid "Instrument Insurance"
+msgstr ""
+
+#: lib/musicians.php:599
+#, php-format
+msgid "Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;"
+msgstr ""
+
+#: lib/musicians.php:623
+msgid ""
+"Portraits or Avatars can only be added to an existing musician's profile; "
+"please add the new musician without protrait image first."
+msgstr ""
+
+#: lib/musicians.php:637
+#, php-format
+msgid "Drop photo to upload (max %s)"
+msgstr ""
+
+#: lib/musicians.php:640
+msgid "Delete current photo"
+msgstr ""
+
+#: lib/musicians.php:641
+msgid "Edit current photo"
+msgstr ""
+
+#: lib/musicians.php:642
+msgid "Upload new photo"
+msgstr ""
+
+#: lib/musicians.php:643
+msgid "Select photo from ownCloud"
+msgstr ""
+
+#: lib/musicians.php:651
+msgid ""
+"Internal error, don't know what to do concerning portrait images in the "
+"given context."
+msgstr ""
+
+#: lib/pdfletter.php:114 lib/pdfletter.php:115
+msgid "page"
+msgstr ""
+
+#: lib/pdfletter.php:114 lib/pdfletter.php:115
+msgid "of"
+msgstr ""
+
+#: lib/php-excel-functions.php:100 lib/sepa-debit-mandates.php:250
+msgid "yes"
+msgstr ""
+
+#: lib/php-excel-functions.php:104 lib/sepa-debit-mandates.php:249
+msgid "no"
+msgstr ""
+
+#: lib/project-instruments.php:67
+#, php-format
+msgid "Instrumentation Numbers for `%s'"
+msgstr ""
+
+#: lib/project-instruments.php:77
+msgid ""
+"The target instrumentation numbers can be filled into this table. The `have'-"
+"numbers are the numbers of the musicians already registered for the project."
+"In order to transfer the instruments of the already registerd musicions into "
+"this table click the `Adjust Instrument' option from the `Actions' menu."
+msgstr ""
+
+#: lib/project-instruments.php:261 lib/project-instruments.php:499
+#: lib/projects.php:285 lib/projects.php:291
+msgid "Actions"
+msgstr ""
+
+#: lib/project-instruments.php:261 lib/project-instruments.php:518
+#: templates/expertmode.php:61
+msgid "Adjust Instruments"
+msgstr ""
+
+#: lib/project-instruments.php:258
+#, php-format
+msgid ""
+"Keine Besetzung für das Projekt gefunden, bitte bei den Projekteigenschaften "
+"die Instrumente eintragen (\"Ändern\"-Knopf betätigen, dann "
+"\"Instrumentierung ändern\"), oder im\n"
+"<u>%s-Menü den ``%s''-Eintrag</u> auswählen, um die Instrumente der bereits\n"
+"``registrierten'' Musiker automatisch eintragen lassen."
+msgstr ""
+
+#: lib/project-instruments.php:263
+msgid "Instrumentation-Numbers not Found"
+msgstr ""
+
+#: lib/project-instruments.php:346 lib/projects.php:263
+msgid "Projekt-Name"
+msgstr ""
+
+#: lib/project-instruments.php:389
+msgid "Change Instrumentation"
+msgstr ""
+
+#: lib/project-instruments.php:390
+msgid "Click to add instruments to the project"
+msgstr ""
+
+#: lib/project-instruments.php:407
+msgid "target"
+msgstr ""
+
+#: lib/project-instruments.php:415
+msgid "have"
+msgstr ""
+
+#: lib/project-instruments.php:511
+msgid "Transpose"
+msgstr ""
+
+#: lib/projects.php:89
+#, php-format
+msgid "%s Project %s"
+msgstr ""
+
+#: lib/projects.php:93
+#, php-format
+msgid "%s Projects"
+msgstr ""
+
+#: lib/projects.php:276
+msgid "Append the year to the name"
+msgstr ""
+
+#: lib/projects.php:317
+msgid "Toolbox"
+msgstr ""
+
+#: lib/projects.php:334
+msgid ""
+"Default project fee for ordinary participants. This should NOT include "
+"reductions of any kind. The value displayed here is the default value "
+"inserted into the instrumentation table for the project."
+msgstr ""
+
+#: lib/projects.php:347
+msgid ""
+"Comma separated list of extra-fields, e.g.\n"
+"<blockquote>\n"
+"  SingleRoom:1:TooltipSingleRoom,Fee:2:TooltipForFee\n"
+"</blockquote>\n"
+"or simply  \n"
+"<blockquote>\n"
+"  SingleRoom,Fee\n"
+"</blockquote>\n"
+"\n"
+"The number after the colon (and the colon) are optional, if present, the\n"
+"number determines the mapping of the extra columns to columns of the\n"
+"underlying data-base table. Internally the extra columns are simply named\n"
+"\"ExtraField01\" etc. The display ordering of the extra columns corresponds\n"
+"to the order of the fields given here (i.e. \"SingleRoom\" would be the "
+"displayed\n"
+"left of \"Fee\"). If this ordering is changed, one should specify the "
+"mapping\n"
+"of the fields to the data-base columns, e.g. like so:\n"
+"<blockquote>\n"
+"  Fee:2,SingleRoom:1\n"
+"</blockquote>\n"
+"This changes the displayed ordering of the columns but the mapping\n"
+"to the data-base table remains consistetnt. Optionally, the string after an\n"
+"optional second colon is displayed as a \"tool-tip\". The tool-tip must not "
+"contain\n"
+"a comma."
+msgstr ""
+
+#: lib/projects.php:372
+msgid "Program"
+msgstr ""
+
+#: lib/projects.php:389
+msgid "Flyer"
+msgstr ""
+
+#: lib/projects.php:706
+#, php-format
+msgid "Unable to fetch public web pages for project id %d"
+msgstr ""
+
+#: lib/projects.php:786
+msgid "Project Overview"
+msgstr ""
+
+#: lib/projects.php:810
+msgid "Project Files"
+msgstr ""
+
+#: lib/projects.php:817 lib/projects.php:1032
+#, php-format
+msgid "Project Wiki for %s"
+msgstr ""
+
+#: lib/projects.php:819 lib/projects.php:1036
+msgid "Project Notes"
+msgstr ""
+
+#: lib/projects.php:824 lib/projects.php:1042 lib/projects.php:1072
+msgid "Events"
+msgstr ""
+
+#: lib/projects.php:829 lib/projects.php:1048
+msgid "Em@il"
+msgstr ""
+
+#: lib/projects.php:844
+msgid "Profit and Loss Account"
+msgstr ""
+
+#: lib/projects.php:2146
+msgid ""
+"Flyers can only be added to existing projects, please add the new\n"
+"project without a flyer first."
+msgstr ""
+
+#: lib/projects.php:2161
+#, php-format
+msgid "Drop image to upload (max %s)"
+msgstr ""
+
+#: lib/projects.php:2164
+msgid "Delete current flyer"
+msgstr ""
+
+#: lib/projects.php:2165
+msgid "Edit current flyer"
+msgstr ""
+
+#: lib/projects.php:2166
+msgid "Upload new flyer"
+msgstr ""
+
+#: lib/projects.php:2167
+msgid "Select image from ownCloud"
+msgstr ""
+
+#: lib/projects.php:2175
+msgid ""
+"Internal error, don't know what to do concerning project-flyers in the given "
+"context."
+msgstr ""
+
+#: lib/projects.php:2416
+#, php-format
+msgid ""
+"====== Project %s ======\n"
+"\n"
+"===== Forword =====\n"
+"\n"
+"This wiki-page is useful to store selected project related\n"
+"informations in comfortable and structured form. This can be useful\n"
+"for \"permant information\" like details about supplementary fees,\n"
+"contact informations and the like. In particular, this page could be\n"
+"helpful to reduce unnecessary data-digging in our email box.\n"
+"\n"
+"===== Contacts =====\n"
+"Please add any relevant email and mail-adresses here. Please use the wiki-"
+"syntax\n"
+"* [[foobar@important.com|Mister Universe]]\n"
+"\n"
+"===== Financial Arrangements =====\n"
+"Please add any special financial arrangements here. For example:\n"
+"single-room fees, double-roome fees. Please consider using an\n"
+"unordered list for this like so:\n"
+"  * single room fee: 3000€\n"
+"  * double room fee: 6000€\n"
+"  * supplemenrary fee for Cello-players: 1500€\n"
+"\n"
+"===== Location =====\n"
+"Whatever."
+msgstr ""
+
+#: lib/sepa-debit-mandates.php:51
+msgid "Remove this Debit-Mandate?"
+msgstr ""
+
+#: lib/sepa-debit-mandates.php:54
+#, php-format
+msgid "Debit-Mandate for %s"
+msgstr ""
+
+#: lib/sepa-debit-mandates.php:56
+msgid "Debit-Mandate"
+msgstr ""
+
+#: lib/sepa-debit-mandates.php:59
+msgid "Change this Debit-Mandate"
+msgstr ""
+
+#: lib/sepa-debit-mandates.php:62
+#, php-format
+msgid "Overview over all SEPA Debit Mandates for %s"
+msgstr ""
+
+#: lib/sepa-debit-mandates.php:65
+msgid "Overview over all SEPA Debit Mandates"
+msgstr ""
+
+#: lib/sepa-debit-mandates.php:238
+msgid "Mandate Reference"
+msgstr ""
+
+#: lib/sepa-debit-mandates.php:244
+msgid "One Time"
+msgstr ""
+
+#: lib/sepa-debit-mandates.php:252
+msgid "Date Issued"
+msgstr ""
+
+#: lib/sepa-debit-mandates.php:259
+msgid "Last-Used Date"
+msgstr ""
+
+#: lib/sepa-debit-mandates.php:291
+msgid "Project Fee"
+msgstr ""
+
+#: lib/sepa-debit-mandates.php:306
+msgid "Project"
+msgstr ""
+
+#: lib/sepa-debit-mandates.php:341
+msgid "Bank Code"
+msgstr ""
+
+#: lib/sepa-debit-mandates.php:349
+msgid "Bank Account Owner"
+msgstr ""
+
+#: lib/sepa-debit-mandates.php:416
+#, php-format
+msgid "Annual Fee Year %s"
+msgstr ""
+
+#: lib/sepa-debit-mandates.php:461
+msgid "Project Fees"
+msgstr ""
+
+#: lib/tooltips.php:42
+msgid ""
+"Opens a select-box with choices from the shared Owncloud-addressbook. You "
+"can also add new em@il-addresses to the address-book for later reusal. The "
+"addresses can also be added in the Owncloud `Contacts'-App."
+msgstr ""
+
+#: lib/tooltips.php:48
+msgid "Write a new bulletin entry."
+msgstr ""
+
+#: lib/tooltips.php:50
+msgid ""
+"Disable the pop-up function for this blog-note. The list of associated "
+"readers is maintained, so reenabling the pop-up function will still not "
+"present this note to users already on the reader-list."
+msgstr ""
+
+#: lib/tooltips.php:52
+msgid ""
+"Place this note in a pop-up window after login. The window will only pop-up "
+"once, the list of readers is remembered."
+msgstr ""
+
+#: lib/tooltips.php:56
+msgid ""
+"Clear the list of readers of this note. Consequently, if this note is marked "
+"as popup, then it will pop-up again after clearing the list of readers."
+msgstr ""
+
+#: lib/tooltips.php:58
+msgid "Delete the message and the message-thread depending on this message."
+msgstr ""
+
+#: lib/tooltips.php:60
+msgid "Edit the bulletin entry; everyone is allowed to do so."
+msgstr ""
+
+#: lib/tooltips.php:62
+msgid ""
+"Decrease the display priority; move the note closer to the bottom of the "
+"page."
+msgstr ""
+
+#: lib/tooltips.php:64
+msgid ""
+"Increase the display priority; move the note closer to the top of the page."
+msgstr ""
+
+#: lib/tooltips.php:66
+msgid "Write a follow-up to the bulletin entry."
+msgstr ""
+
+#: lib/tooltips.php:68
+msgid ""
+"Toggle the sticky marker; sticky notes are listed at the top of the list."
+msgstr ""
+
+#: lib/tooltips.php:70
+msgid ""
+"Cancel the email composition and close the input form. This has the\n"
+"same effect as clicking the close button on top of the dialog-window. No "
+"email will be sent."
+msgstr ""
+
+#: lib/tooltips.php:73
+msgid ""
+"Name of the pseudo-project listing the permanent members of the orchestra."
+msgstr ""
+
+#: lib/tooltips.php:75
+msgid ""
+"Perform the configuration checks again. If all checks have been passed then "
+"you are led on to the ordinary entry page of the application."
+msgstr ""
+
+#: lib/tooltips.php:77
+msgid ""
+"Clear the list of selected event-attachments. Of course, this does not "
+"delete the events from their respective calendar, it just de-selects all "
+"events such that no event will be attached to the email."
+msgstr ""
+
+#: lib/tooltips.php:79
+msgid ""
+"Delete all uploaded file-attachments from the server. This is also done "
+"automatically when closing the email-form. This will also empty the select "
+"box."
+msgstr ""
+
+#: lib/tooltips.php:81
+msgid ""
+"Delete the selected email-template (you will be asked for confirmation "
+"before it is actually deleted)"
+msgstr ""
+
+#: lib/tooltips.php:85
+msgid ""
+"Export the email text as HTML. In the case of per-member variable\n"
+"substitutions this will result in a multi-page document with proper page "
+"breaks after each message, with all variables substituted."
+msgstr ""
+
+#: lib/tooltips.php:88
+msgid ""
+"Choose either among all musicians currently registered for the project\n"
+"or from the complement set. Obviously, selecting both options will\n"
+"give you the choice to select any musician as recipient."
+msgstr ""
+
+#: lib/tooltips.php:92
+msgid ""
+"List of musicians without or with ill-formed email-addresses. You can click "
+"on the names in order to open a dialog with the personal data of the "
+"respective musician and correct the email addresses there."
+msgstr ""
+
+#: lib/tooltips.php:94
+msgid ""
+"Choose among all musicians currently <b>NOT</b> registered for this project."
+msgstr ""
+
+#: lib/tooltips.php:96
+msgid ""
+"Apply the currently selected instruments as filter. At your option,\n"
+"you can also simply double-click inside the boxed filter-region in order to "
+"activate your filter-choice."
+msgstr ""
+
+#: lib/tooltips.php:99
+msgid "Redo the last operation undone by the undo button."
+msgstr ""
+
+#: lib/tooltips.php:101
+msgid ""
+"Reset to the initial pre-selection which was activ when entering this\n"
+"form. This will <b>REALLY</b> void all your recipient selections and\n"
+"reset the form to the initial state. Note, however, that the text of\n"
+"your email will be maintained, the reset only applies to the recipient\n"
+"list."
+msgstr ""
+
+#: lib/tooltips.php:107
+msgid ""
+"Undo the last recipient filter operation and restore the previous selection "
+"of musicians."
+msgstr ""
+
+#: lib/tooltips.php:113
+msgid "Choose among all musicians currently registered for this project."
+msgstr ""
+
+#: lib/tooltips.php:115
+msgid ""
+"Restrict the basic set of musicians to the instruments selected\n"
+"here. The filter is additive: selecting more than one instruments will\n"
+"include the musicians playing either of them."
+msgstr ""
+
+#: lib/tooltips.php:119 lib/tooltips.php:121
+msgid ""
+"A double click inside the boxed filter-region will apply the instruments-"
+"filter"
+msgstr ""
+
+#: lib/tooltips.php:123
+msgid ""
+"List of selected musicians; can be changed in the `Em@il-Recipients' panel."
+msgstr ""
+
+#: lib/tooltips.php:125
+msgid ""
+"Select recipients by member status. Normally, conductors and soloists\n"
+"are excluded from receiving mass-email. Please be careful when modifying the "
+"default selection!"
+msgstr ""
+
+#: lib/tooltips.php:128
+msgid ""
+"Test the email-settings; try to connect to the SMTP-server and the IMAP-"
+"server in turn."
+msgstr ""
+
+#: lib/tooltips.php:130
+msgid ""
+"Select-box with all project-events. You can select events as attachments to "
+"your email."
+msgstr ""
+
+#: lib/tooltips.php:132
+msgid "Select calendar attachments from the associated project events."
+msgstr ""
+
+#: lib/tooltips.php:134
+msgid "Name of the pseudo-project listing the members of the executive board."
+msgstr ""
+
+#: lib/tooltips.php:136
+msgid ""
+"Select-box with all currently uploaded attachments. Note that a file will "
+"only be attached to a message if it is also checked in this select box."
+msgstr ""
+
+#: lib/tooltips.php:138
+msgid ""
+"A flag which indicates not so much social or functional status, but\n"
+"default behaviour for mass-emails as follows\n"
+"<br/>\n"
+"<dl>\n"
+"<dt>regular</dt>\n"
+"<dd>ordinary member, receives mass-emails</dd>\n"
+"<dt>passive</dt>\n"
+"<dd>passive member, does not receive mass-emails unless participating in a "
+"project.</dd>\n"
+"<dt>temporary</dt>\n"
+"<dd>like passive, but defines another class of musicians during email-"
+"address selection</dd>\n"
+"<dt>conductor</dt>\n"
+"<dd>does not even receive mass-emails when participating in a project</dd>\n"
+"<dt>soloist</dt>\n"
+"<dd>like conductor, but defines yet another class for email-recipient "
+"selection</dd>\n"
+"</dl>\n"
+"<br/>\n"
+"All classes of members can be explicitly added to a specific mass-emails "
+"through the controls\n"
+"in the email form."
+msgstr ""
+
+#: lib/tooltips.php:165
+msgid ""
+"Enter a short, no-nonsense name for the new template. Please omit spaces."
+msgstr ""
+
+#: lib/tooltips.php:167 templates/project-web-articles.php:77
+msgid "nothing"
+msgstr ""
+
+#: lib/tooltips.php:169
+msgid ""
+"Choose a file to attach from the files stored remotely on in the OwnCloud "
+"storage area."
+msgstr ""
+
+#: lib/tooltips.php:177
+msgid ""
+"  Click me to add a new\n"
+"row to the current table."
+msgstr ""
+
+#: lib/tooltips.php:180 lib/tooltips.php:336
+msgid "Saves the current values; the current input form will remain active."
+msgstr ""
+
+#: lib/tooltips.php:182
+msgid ""
+"  Click me to add all selected musicians\n"
+"to the selected project. All selected\n"
+"musicians on all pages will be added."
+msgstr ""
+
+#: lib/tooltips.php:186
+msgid ""
+"  Click me to pre-select\n"
+"all musicians on all pages\n"
+"for the current project.\n"
+"Please click the ``Add all''-button to\n"
+"actually add them."
+msgstr ""
+
+#: lib/tooltips.php:192
+msgid ""
+"  Click me to remove\n"
+"all musicians on all pages\n"
+"from the pre-selection for\n"
+"the current project."
+msgstr ""
+
+#: lib/tooltips.php:197
+msgid ""
+"  Check me to pre-select\n"
+"this musician for the current\n"
+"project. Please click the\n"
+" ``Add all''-button to\n"
+"actually add all selected\n"
+"musicians."
+msgstr ""
+
+#: lib/tooltips.php:205
+msgid ""
+"Stop the current operation. Settings which already have been stored by\n"
+"hitting an \"Apply\" button are maintained, though. You will be returned\n"
+"to the previous view."
+msgstr ""
+
+#: lib/tooltips.php:208
+msgid "Stop the current operation. You will be returned to the previous view."
+msgstr ""
+
+#: lib/tooltips.php:211
+msgid ""
+"Directs you to a form with input fields. From there you can return to\n"
+"this form by means of the \"Save\" or \"Back\" resp. \"Cancel\" buttons."
+msgstr ""
+
+#: lib/tooltips.php:215
+msgid ""
+"Einzelnen Datensatz anzeigen,\n"
+"zeigt ein neues Formular mit\n"
+"detaillierten Eingabefeldern\n"
+"und Abbruchmöglichkeit."
+msgstr ""
+
+#: lib/tooltips.php:222
+msgid ""
+"  Klick mich, um die\n"
+"Sortierreihenfolge auf die\n"
+"Voreinstellung zurückzusetzen."
+msgstr ""
+
+#: lib/tooltips.php:225
+msgid ""
+"  Klick mich, um den\n"
+"aktuellen Filter zu löschen."
+msgstr ""
+
+#: lib/tooltips.php:230
+msgid ""
+"Einzelnen Datensatz kopieren,\n"
+"zeigt ein neues Formular mit\n"
+"detaillierten Eingabefeldern\n"
+"und Abbruchmöglichkeit."
+msgstr ""
+
+#: lib/tooltips.php:236
+msgid ""
+"Click me to export a CSV-table with the selected debit notes suitable for "
+"use with AQBanking command-line tool `aqbanking-cli'. Please refer to the "
+"HOWTO in the wiki for further information. Clicking this button will also "
+"open the email dialog in order to inform the selected musicians about "
+"debiting their bank account."
+msgstr ""
+
+#: lib/tooltips.php:238
+msgid "Select all displayed debit-notes for export."
+msgstr ""
+
+#: lib/tooltips.php:240
+msgid "Deselect all displayed debit-notes from export selection."
+msgstr ""
+
+#: lib/tooltips.php:242
+msgid ""
+"Select this debit note for debiting the project fees. In order to actually "
+"export the debit-note you have to hit the `Debit' button above."
+msgstr ""
+
+#: lib/tooltips.php:245
+msgid ""
+"Einzelnen Datensatz löschen,\n"
+"zeigt den aktuellen Datensatz zunächst an.\n"
+"Gelöscht wird der erst nach einer\n"
+"weiteren Bestätigung. Trotzdem:\n"
+"VORSICHT!."
+msgstr ""
+
+#: lib/tooltips.php:252
+msgid ""
+"  Klick mich, um eine Em@il an die ausgewählten\n"
+"Musiker zu versenden. Auf der folgenden Seite kann\n"
+"die Auswahl dann noch modifiziert werden.\n"
+"`ausgewält' bedeutet: nicht\n"
+"nur die auf der aktuellen\n"
+"Anzeige-Seite, sondern\n"
+"alle, die den Such-Kriterien\n"
+"entsprechen."
+msgstr ""
+
+#: lib/tooltips.php:261
+msgid ""
+"  Klick mich, um alle gerade\n"
+"angezeigten Musiker zu der\n"
+"Em@il-Auswahl hinzuzufügen.\n"
+"`angezeigt' bedeutet: nicht\n"
+"nur die auf der aktuellen\n"
+"Anzeige-Seite, sondern\n"
+"alle, die den Such-Kriterien\n"
+"entsprechen."
+msgstr ""
+
+#: lib/tooltips.php:270
+msgid ""
+"  Klick mich, um alle gerade\n"
+"angezeigten Musiker von der\n"
+"Em@il-Auswahl zu entfernen"
+msgstr ""
+
+#: lib/tooltips.php:274
+msgid ""
+"  Adressaten in potentielle\n"
+"Massenmail Adressliste aufnehmen.\n"
+"Die Adressaten kann man\n"
+"vor dem Senden der Em@il noch\n"
+"korrigieren."
+msgstr ""
+
+#: lib/tooltips.php:280
+msgid ""
+"Export the visible part of the data-base to an office-format. The `Excel'-"
+"export should produce useful input for either Libre- or OpenOffice or for "
+"the product of some well-known software-corporation with seat in Redmond, "
+"USA."
+msgstr ""
+
+#: lib/tooltips.php:282
+msgid "Export in CSV-format using a semicolon as delimiter (Excel convention)"
+msgstr ""
+
+#: lib/tooltips.php:284
+msgid "Export as `full-featured' Excel-2007 table, `.xslx'."
+msgstr ""
+
+#: lib/tooltips.php:286
+msgid ""
+"Export as HTML page without navigation elements; can also be loaded into "
+"your office-programs."
+msgstr ""
+
+#: lib/tooltips.php:288
+msgid ""
+"Export as HTML page, but set the file type to `spread-sheed'. Should also be "
+"readable by standard office-programs as `Excel'-table."
+msgstr ""
+
+#: lib/tooltips.php:290
+#, php-format
+msgid ""
+"Field for filter/search criteria.\n"
+"Short explanation: simply type somthing and press <code>ENTER</code>.\n"
+"<br/>\n"
+"In more detail: For numerical fields there is a select-box with comparison\n"
+"operators on the left. For text-fields there are `catch-all' wild-cards\n"
+"`%%' and `*'. Text-fields allow (in particular) for the following\n"
+"filter possibilities (meaning that <code>SOMETHING</code> is your example\n"
+"search-string):\n"
+"<br/><br/>\n"
+"<dl>\n"
+"<dt>SOMETHING</dt>\n"
+"<dd>search for the wild-card expression %%SOMETHING%%</dd>\n"
+"<dt>\"SOMETHING\"</dt>\n"
+"<dd>search for exactly the expression SOMETHING</dd>\n"
+"<dt>!SOMETHING</dt>\n"
+"<dd>match everything not being matched by SOMETHING</dd>\n"
+"</dl>\n"
+"<br/>\n"
+"Single quotes are equivalent to double-quotes; instead of `!' one may\n"
+"use as well use `!=', instead of using quotes it is also possible to\n"
+"prefix the search expression by either `=' or `=='.\n"
+"It is also possible to match empty fields, in particular:\n"
+"<br/>\n"
+"<dl>\n"
+"<dt>\"%%\"</dt>\n"
+"<dt>!\"\"</dt>\n"
+"<dd>match any row with something non-empty in the search-field</dd>\n"
+"<dt>\"\"</dt>\n"
+"<dt>!\"%%\"</dt>\n"
+"<dd>match any row with empty search-field</dd>\n"
+"</dl>"
+msgstr ""
+
+#: lib/tooltips.php:322
+msgid ""
+"Negate the filter, i.e. search for anything not matching the selected "
+"options."
+msgstr ""
+
+#: lib/tooltips.php:324
+msgid "Jumps directly to the given page"
+msgstr ""
+
+#: lib/tooltips.php:327
+msgid ""
+"  Klick mich, um die\n"
+"Suchkriterien zu verstecken."
+msgstr ""
+
+#: lib/tooltips.php:334
+msgid "Saves the current values and start to generate another new data-set."
+msgstr ""
+
+#: lib/tooltips.php:335
+msgid ""
+"Saves the current values and continues to make yet another copy of the "
+"source data-set."
+msgstr ""
+
+#: lib/tooltips.php:339
+msgid ""
+"Limits the number of rows per page to the given value. A \"*\" means to "
+"display all records on one large page."
+msgstr ""
+
+#: lib/tooltips.php:341
+#, php-format
+msgid ""
+"  Klick mich, um die\n"
+"aktuellen Suchkriterien anzuwenden. Suchkriterien\n"
+"können in den Feldern eingegeben werden.\n"
+"Als Platzhalter verwendet man `%%'."
+msgstr ""
+
+#: lib/tooltips.php:346
+msgid "Refreshes the current view by reloading all data from the data-base."
+msgstr ""
+
+#: lib/tooltips.php:349
+msgid "Saves the current values and returns to the previous view."
+msgstr ""
+
+#: lib/tooltips.php:350
+msgid "Deletes the current record and returns to the previous view."
+msgstr ""
+
+#: lib/tooltips.php:354
+msgid ""
+"  Klick mich, um die\n"
+"Suchkriterien anzuzeigen."
+msgstr ""
+
+#: lib/tooltips.php:358
+msgid ""
+"Simply blends in all the columns of the table as if all the tabs would be "
+"activated at the same time."
+msgstr ""
+
+#: lib/tooltips.php:360
+msgid ""
+"  Klick mich, um das Sortieren\n"
+"nach diesem Feld ein-\n"
+"oder auszuschalten!"
+msgstr ""
+
+#: lib/tooltips.php:364
+msgid "  Klick mich, um die Sortierreihenfolge umzukehren!"
+msgstr ""
+
+#: lib/tooltips.php:366
+msgid ""
+"Transpose the displayed table; may be beneficial for tables with only a few "
+"rows but many columns!"
+msgstr ""
+
+#: lib/tooltips.php:369
+msgid "Einzelnen Datensatz anzeigen"
+msgstr ""
+
+#: lib/tooltips.php:372
+msgid "Load a new page with all debit-mandates for project-fees"
+msgstr ""
+
+#: lib/tooltips.php:374
+msgid ""
+"Display all registered musicians for the selected project. The table\n"
+"        shows project related details as well as all stored personal\n"
+"        \"information about the respective musician"
+msgstr ""
+
+#: lib/tooltips.php:378
+msgid "Opens the email-form for the project inside a dialog window."
+msgstr ""
+
+#: lib/tooltips.php:380 lib/tooltips.php:421
+msgid ""
+"Open a dialog with all known\n"
+"events associated to the project.\n"
+"Events can be added and modified\n"
+"as needed."
+msgstr ""
+
+#: lib/tooltips.php:385
+msgid "Change to the folder with project related files."
+msgstr ""
+
+#: lib/tooltips.php:387
+msgid ""
+"Change to the folder with the financial balance\n"
+"sheets for the project (only available after the project\n"
+"has been ``closed''."
+msgstr ""
+
+#: lib/tooltips.php:393
+msgid "Change to the DokuWiki-page for this project (if there is one)"
+msgstr ""
+
+#: lib/tooltips.php:395
+msgid ""
+"Pull-down menu with entries to move on\n"
+"to pages with the instrumentation, events, instrumentation numbers etc."
+msgstr ""
+
+#: lib/tooltips.php:398
+msgid ""
+"Opens a dialog-window which gives access to all stored informations for the "
+"project."
+msgstr ""
+
+#: lib/tooltips.php:400
+msgid ""
+"Displays the columns directly related to the instrumentation for the project."
+msgstr ""
+
+#: lib/tooltips.php:402
+msgid ""
+"Displays `meta-data' like project fees, single/double room preferences, "
+"debit-mandates and the like."
+msgstr ""
+
+#: lib/tooltips.php:404
+msgid ""
+"Append the year to the name if checked.\n"
+"Regardless of this checkbox any decimal digit will first be stripped from "
+"the end\n"
+"of the project name before the year is added."
+msgstr ""
+
+#: lib/tooltips.php:408
+msgid ""
+"Displays the personal data of the respective musicians, like address, email, "
+"date of birth if known, phone numbers."
+msgstr ""
+
+#: lib/tooltips.php:410
+msgid ""
+"Add a new public web-page to the project by generating a new, empty concert "
+"announcement."
+msgstr ""
+
+#: lib/tooltips.php:412
+msgid ""
+"Delete the currently displayed web-page fromthe project. The web page will "
+"be \"detached\" from the project and moved to the trash-bin\n"
+"\"category\" (folger) inside the CMS."
+msgstr ""
+
+#: lib/tooltips.php:415
+msgid ""
+"Link existing pages to the project. This can be used, for instance, in order "
+"to add a page to the project which has not been created by hitting the `+'-"
+"button above, but was created directly in the CMS backend. When linking "
+"articles from the `trashbin' category then those articles will automatically "
+"moved to the `preview' category; this is some not-so-hidden undelete feature."
+"z"
+msgstr ""
+
+#: lib/tooltips.php:417
+msgid ""
+"Please select articles to link to the current project. The articles will be "
+"immediately added to the project if you select them. In order to remove the "
+"article, please use the `-' button above."
+msgstr ""
+
+#: lib/tooltips.php:419
+msgid ""
+"Detach the currently displayed event announcement from the project. "
+"Primarily meant to provide means to undo erroneous linking of articles."
+msgstr ""
+
+#: lib/tooltips.php:426
+msgid ""
+"Delete the event from the system\n"
+"(no undo possible)."
+msgstr ""
+
+#: lib/tooltips.php:429
+msgid ""
+"Exclude all events from\n"
+"email-submission"
+msgstr ""
+
+#: lib/tooltips.php:432
+msgid ""
+"Detach the respective event\n"
+"from the project, but do not\n"
+"delete it from the calender.\n"
+"The event can be reattached by\n"
+"adding the project-name to its\n"
+"categories."
+msgstr ""
+
+#: lib/tooltips.php:441
+msgid "Modify the event."
+msgstr ""
+
+#: lib/tooltips.php:443
+msgid "Add a new concert-event to the project."
+msgstr ""
+
+#: lib/tooltips.php:447
+msgid ""
+"Add a private management event which is not exposed to the rest of the world."
+msgstr ""
+
+#: lib/tooltips.php:449
+msgid "Add some other event to the project."
+msgstr ""
+
+#: lib/tooltips.php:451
+msgid "Add a new rehearsal-event to the project."
+msgstr ""
+
+#: lib/tooltips.php:453
+msgid ""
+"Select all events for\n"
+"email-submission"
+msgstr ""
+
+#: lib/tooltips.php:456
+msgid ""
+"Mark the respective event for being\n"
+"sent by email as ICS-attachment per email.\n"
+"Hitting the email button above the form\n"
+"will open an Email form suitable for\n"
+"sending the marked events to selected\n"
+"recipients."
+msgstr ""
+
+#: lib/tooltips.php:463
+msgid ""
+"Click to open an email-form\n"
+"and send the selected events to\n"
+"selected recipients."
+msgstr ""
+
+#: lib/tooltips.php:481
+msgid ""
+"Add the musician to the project. A new form will open were details like the "
+"instrument etc. can be adjustetd."
+msgstr ""
+
+#: lib/tooltips.php:483
+msgid ""
+"Save the current email for later re-usal in the data-base.\n"
+"An email template can contain per-member substitutions with the syntax "
+"${MEMBER::VARIABLE},\n"
+"where VARIABLE is one of VORNAME, NAME, EMAIL, TELEFON_1, TELEFON_2, "
+"STRASSE, PLZ, STADT and LAND.\n"
+"There is also one global (i.e. not per-member) substitution ${GLOABL::"
+"ORGANIZER} which is substituted\n"
+"by the pre-names of the organizing committe in order to compose  greetings."
+msgstr ""
+
+#: lib/tooltips.php:489
+msgid "Select one of the email templates previously stored in the data-base."
+msgstr ""
+
+#: lib/tooltips.php:491
+msgid ""
+"Attempt to send the stuff you have composed out to your selection of\n"
+"recipients. Please think thrice about it. In case of an error\n"
+"additional diagnostic messages may (or may not ...) be available in\n"
+"the `Debug' tab"
+msgstr ""
+
+#: lib/tooltips.php:496
+msgid ""
+"Toggle instant validation and automatic computation of derived bank account "
+"data. If instant validation is disabled, the final values will still be "
+"validated and an error message will appear if an error is detected. It is "
+"only possible to save of store the debit-mandate if instant validation is "
+"enabled."
+msgstr ""
+
+#: lib/tooltips.php:506
+msgid ""
+"Recompute the link between projects and events, using the event-categories "
+"as primary key."
+msgstr ""
+
+#: lib/tooltips.php:510
+msgid ""
+"Check whether the data-base can be accessed with the given account\n"
+"information and password. The password will only be stored in the\n"
+"configuration storage if the test can be performed successfully."
+msgstr ""
+
+#: lib/tooltips.php:514
+msgid ""
+"Try to connect to the specified web-address, will open the web-address in "
+"another window or tab, depending your local browser preferences."
+msgstr ""
+
+#: lib/tooltips.php:516
+msgid ""
+"Add the instruments of the actually registered musicians to the instrument-"
+"table for the project."
+msgstr ""
+
+#: lib/tooltips.php:518
+msgid ""
+"Upload a file from your local computer as attachment. The file will be "
+"removed from the remote-system after the message has been sent."
+msgstr ""
+
+#: settings.php:91
+msgid "ExecutiveBoardMembers"
+msgstr ""
+
+#: settings.php:111
+msgid "concerts"
+msgstr ""
+
+#: settings.php:112 templates/cms-settings.php:52
+msgid "rehearsals"
+msgstr ""
+
+#: settings.php:113
+msgid "other"
+msgstr ""
+
+#: settings.php:114
+msgid "management"
+msgstr ""
+
+#: settings.php:118
+msgid "contacts"
+msgstr ""
+
+#: templates/addressbook.php:34
+msgid "Select Em@il Recipients"
+msgstr ""
+
+#: templates/admin-settings.php:32
+msgid "Group"
+msgstr ""
+
+#: templates/admin-settings.php:33
+msgid "User Group"
+msgstr ""
+
+#: templates/app-settings.php:31
+msgid "General settings"
+msgstr ""
+
+#: templates/app-settings.php:37 templates/app-settings.php:38
+#: templates/orchestra-settings.php:37 templates/orchestra-settings.php:43
+msgid "name of orchestra"
+msgstr ""
+
+#: templates/app-settings.php:44
+msgid "Encryption settings"
+msgstr ""
+
+#: templates/app-settings.php:45
+msgid "Current Key"
+msgstr ""
+
+#: templates/app-settings.php:47 templates/app-settings.php:50
+#: templates/app-settings.php:83 templates/email-settings.php:73
+#: templates/settings.php:106 templates/settings.php:109
+#: templates/share-settings.php:46
+msgid "show"
+msgstr ""
+
+#: templates/app-settings.php:48
+msgid "New Key"
+msgstr ""
+
+#: templates/app-settings.php:51 templates/share-settings.php:47
+msgid "Generate"
+msgstr ""
+
+#: templates/app-settings.php:51
+msgid "Generate a random encryption key"
+msgstr ""
+
+#: templates/app-settings.php:52
+msgid "Change Encryption Key"
+msgstr ""
+
+#: templates/app-settings.php:54
+msgid "The encryption key was changed"
+msgstr ""
+
+#: templates/app-settings.php:55
+msgid "Unable to change the encryption key"
+msgstr ""
+
+#: templates/app-settings.php:56
+msgid "Data will be stored unencrypted"
+msgstr ""
+
+#: templates/app-settings.php:57
+msgid "The keys are the same and remain unchanged."
+msgstr ""
+
+#: templates/app-settings.php:58
+msgid "Please standby, this action needs some seconds."
+msgstr ""
+
+#: templates/app-settings.php:62
+msgid "Distribute Encryption Key"
+msgstr ""
+
+#: templates/app-settings.php:62
+msgid ""
+"Insert the data-base encryption key into the user preferences of all users "
+"belonging to the user group. The data-base key will be encrypted by the "
+"respective user's public key."
+msgstr ""
+
+#: templates/app-settings.php:68
+msgid "Database settings"
+msgstr ""
+
+#: templates/app-settings.php:69
+msgid "Server"
+msgstr ""
+
+#: templates/app-settings.php:70
+msgid "Database Server"
+msgstr ""
+
+#: templates/app-settings.php:72
+msgid "Database"
+msgstr ""
+
+#: templates/app-settings.php:73
+msgid "Database Name"
+msgstr ""
+
+#: templates/app-settings.php:75
+msgid "User"
+msgstr ""
+
+#: templates/app-settings.php:76
+msgid "Database User"
+msgstr ""
+
+#: templates/app-settings.php:81 templates/email-settings.php:71
+msgid "New Password"
+msgstr ""
+
+#: templates/app-settings.php:84
+msgid "Test Database Password"
+msgstr ""
+
+#: templates/blog.php:40
+msgid ""
+"Camerata DB start page - the data-base operations can be accessed\n"
+"through the respective navigation buttons at the top of the page. The\n"
+"page below may be used as a bulletin-board. Please click on the\n"
+"login-name (top right) to reach the pull-down menu for logout and\n"
+"configuration options. The applications menu is hidden under the name\n"
+"of the current application (top left besides the cloud-icon)."
+msgstr ""
+
+#: templates/blog.php:64
+msgid "New note"
+msgstr ""
+
+#: templates/blogedit.php:33
+msgid "Submit"
+msgstr ""
+
+#: templates/blogedit.php:59
+msgid "Set Blog Popup"
+msgstr ""
+
+#: templates/blogedit.php:68
+msgid "Clear Blog Popup"
+msgstr ""
+
+#: templates/blogedit.php:77
+msgid "Clear Reader List"
+msgstr ""
+
+#: templates/blogthreads.php:59
+msgid "Avatar pictures can be uploaded through the personal settings page."
+msgstr ""
+
+#: templates/blogthreads.php:68
+#, php-format
+msgid ", priority %d"
+msgstr ""
+
+#: templates/blogthreads.php:74
+#, php-format
+msgid ", latest change by `%s', %s"
+msgstr ""
+
+#: templates/blogthreads.php:82
+msgid "Reply"
+msgstr ""
+
+#: templates/blogthreads.php:85
+msgid "Edit"
+msgstr ""
+
+#: templates/blogthreads.php:90
+msgid "Raise priority"
+msgstr ""
+
+#: templates/blogthreads.php:93
+msgid "Lower priority"
+msgstr ""
+
+#: templates/cms-settings.php:29
+msgid "Redaxo Categories"
+msgstr ""
+
+#: templates/cms-settings.php:34
+msgid "preview"
+msgstr ""
+
+#: templates/cms-settings.php:37
+msgid "Id of Redaxo Preview Category"
+msgstr ""
+
+#: templates/cms-settings.php:43
+msgid "archive"
+msgstr ""
+
+#: templates/cms-settings.php:46
+msgid "Id of Redaxo Archive Category"
+msgstr ""
+
+#: templates/cms-settings.php:55
+msgid "Id of Redaxo Rehearsals Category"
+msgstr ""
+
+#: templates/cms-settings.php:61
+msgid "trashbin"
+msgstr ""
+
+#: templates/cms-settings.php:64
+msgid "Id of Redaxo Trashbin Category"
+msgstr ""
+
+#: templates/cms-settings.php:70 templates/cms-settings.php:79
+#: templates/cms-settings.php:88
+msgid "template"
+msgstr ""
+
+#: templates/cms-settings.php:73
+msgid "Id of Redaxo Default-Template"
+msgstr ""
+
+#: templates/cms-settings.php:82
+msgid "Id of Redaxo Concert-Module"
+msgstr ""
+
+#: templates/cms-settings.php:91
+msgid "Id of Redaxo Rehearsals-Module"
+msgstr ""
+
+#: templates/configcheck.php:33
+msgid ""
+"It may be that you simply have to log-off and log-in again because your "
+"login-session has timed out. Otherwise the following instructions apply:\n"
+"<p>\n"
+"Several basic configuraton options are missing. Please follow they\n"
+"instructions below. If this is a new installation then you will\n"
+"probably also have to adjust several other settings in the\n"
+"configuration menu (click on the gear-symbol in the top-right\n"
+"corner). You need to have the role of a group-administrator to do\n"
+"so. You may want to configure your language preferences."
+msgstr ""
+
+#: templates/configcheck.php:56
+msgid "Test again"
+msgstr ""
+
+#: templates/configcheck.php:66
+msgid ""
+"You need to specify a name for the orchestra.  Please click as\n"
+"group-administrator on the gear-symbol in the top-right corner and\n"
+"specify a short-hand name for the orchestra in the\n"
+"`Administration'-tab. This is just a tag to provide defaults for\n"
+"user-ids and folders; it should be a short one-word identifier."
+msgstr ""
+
+#: templates/configcheck.php:72
+msgid ""
+"You need to create a dedicatd user group.\n"
+"You have to log-in as administrator to do so."
+msgstr ""
+
+#: templates/configcheck.php:75
+#, php-format
+msgid ""
+"You need to create a dummy-user which owns all shared resources\n"
+"(calendars, files etc.). You need to be a group-admin for the\n"
+"orchestra user group `%s' to do so. You can create the share-owner\n"
+"uid by setting the respective field in the application settings menu\n"
+"(click as group-admin on the gear-symbol in the top-right corner and\n"
+"choose the `Sharing'-tab)."
+msgstr ""
+
+#: templates/configcheck.php:83
+#, php-format
+msgid ""
+"You need to create a dedicated shared folder shared among the\n"
+"user-group `%s'. You can do so through the respective web-form in the\n"
+"application settings windows accessible through the gear-symbol in the\n"
+"top-right corner. Click on the symbol and choose the `Sharing'-tab in\n"
+"the settings-window. You need to be a group-admin, otherwise the\n"
+"application settings are not visible for you."
+msgstr ""
+
+#: templates/configcheck.php:91
+msgid ""
+"You need to configure the database access. You can do so through the\n"
+"respective web-form in the application settings windows accessible\n"
+"through the gear-symbol in the upper left corner. Click on the\n"
+"gear-symbol and choose the `Administration'-tab.You need to be a\n"
+"group-admin, otherwise the application settings are not visible for\n"
+"you."
+msgstr ""
+
+#: templates/configcheck.php:99
+msgid ""
+"You may want to set an encryption key for encrypting configuration\n"
+"values and (in the future) sensitive data in the members- and project\n"
+"database.  You can do so through the respective web-form in the\n"
+"application settings windows accessible through the gear-symbol in the\n"
+"upper left corner. You need to be a group-admin, otherwise the\n"
+"application settings are not visible for you. Note also that after\n"
+"installing a non-empty encryption key each user has to log-out and\n"
+"log-in again in order to be able to access the encrypted values."
+msgstr ""
+
+#: templates/configcheck.php:113
+msgid "You are a group administrator."
+msgstr ""
+
+#: templates/configcheck.php:114
+msgid "You are not a group administrator."
+msgstr ""
+
+#: templates/configcheck.php:116
+#, php-format
+msgid ""
+"Ask a user with group-administrator rights to perform the required\n"
+"settings or ask the Owncloud-administror to assign to you the rol of a\n"
+"group-administrator for the group `%s'."
+msgstr ""
+
+#: templates/configcheck.php:135 templates/configcheck.php:160
+msgid "is set"
+msgstr ""
+
+#: templates/configcheck.php:135
+msgid "is missing"
+msgstr ""
+
+#: templates/configcheck.php:139 templates/configcheck.php:155
+msgid "Additional diagnostic message:"
+msgstr ""
+
+#: templates/configcheck.php:165
+msgid "is set, but inaccessible"
+msgstr ""
+
+#: templates/configcheck.php:170
+msgid "is not set"
+msgstr ""
+
+#: templates/debug.php:2
+msgid "Edit an event"
+msgstr ""
+
+#: templates/devel-settings.php:29 templates/expertmode.php:86
+msgid "Links"
+msgstr ""
+
+#: templates/devel-settings.php:30 templates/devel-settings.php:34
+#: templates/devel-settings.php:38 templates/devel-settings.php:42
+#: templates/devel-settings.php:46
+msgid "Test Link"
+msgstr ""
+
+#: templates/devel-settings.php:32
+#, php-format
+msgid "Link to %s"
+msgstr ""
+
+#: templates/devel-settings.php:36
+#, php-format
+msgid "Link to Owncloud@%s"
+msgstr ""
+
+#: templates/devel-settings.php:39 templates/devel-settings.php:40
+msgid "Link to the source-code"
+msgstr ""
+
+#: templates/devel-settings.php:43 templates/devel-settings.php:44
+msgid "Link to the source-code documentation"
+msgstr ""
+
+#: templates/devel-settings.php:49
+msgid "Link to Owncloud Developer Information"
+msgstr ""
+
+#: templates/devel-settings.php:52
+msgid "Owncloud developer documentation"
+msgstr ""
+
+#: templates/email-settings.php:34 templates/part.common.header.php:78
+msgid "Settings"
+msgstr ""
+
+#: templates/email-settings.php:47 templates/email-settings.php:55
+msgid "security"
+msgstr ""
+
+#: templates/email-settings.php:65
+msgid "Email Account"
+msgstr ""
+
+#: templates/email-settings.php:66
+msgid "Email-User"
+msgstr ""
+
+#: templates/email-settings.php:67
+msgid "Login for email account."
+msgstr ""
+
+#: templates/email-settings.php:74
+msgid "Change email password"
+msgstr ""
+
+#: templates/email-settings.php:75
+msgid "The email password was changed"
+msgstr ""
+
+#: templates/email-settings.php:76
+msgid "Unable to change the email password"
+msgstr ""
+
+#: templates/email-settings.php:79
+msgid "Distribute Email Account"
+msgstr ""
+
+#: templates/email-settings.php:83
+msgid "Bulk Sender Identity"
+msgstr ""
+
+#: templates/email-settings.php:84
+msgid "Real Sender Name"
+msgstr ""
+
+#: templates/email-settings.php:85
+msgid "From: name"
+msgstr ""
+
+#: templates/email-settings.php:86
+msgid "Email From Adress"
+msgstr ""
+
+#: templates/email-settings.php:87
+msgid "From: address"
+msgstr ""
+
+#: templates/email-settings.php:89
+msgid "Test Settings"
+msgstr ""
+
+#: templates/email-settings.php:90
+msgid "Test Email Setup"
+msgstr ""
+
+#: templates/email-settings.php:91 templates/email-settings.php:92
+msgid "Email test-mode; send emails only to the email test-address."
+msgstr ""
+
+#: templates/email-settings.php:92
+msgid "Test-Mode"
+msgstr ""
+
+#: templates/email-settings.php:93
+msgid "Test Email Adress"
+msgstr ""
+
+#: templates/email-settings.php:94
+msgid "Test address"
+msgstr ""
+
+#: templates/emailform.php:35
+msgid "Em@il Recipients"
+msgstr ""
+
+#: templates/emailform.php:38
+msgid "Em@il Message"
+msgstr ""
+
+#: templates/emailform.php:41
+msgid "Status Messages"
+msgstr ""
+
+#: templates/emailform.php:80
+msgid "Cancel upload"
+msgstr ""
+
+#: templates/emailform.php:87
+msgid "Message Delivery"
+msgstr ""
+
+#: templates/emailform.php:91
+msgid "Copy to Sent"
+msgstr ""
+
+#: templates/errorpage.php:31
+#, php-format
+msgid ""
+"CamerataDB Error: You are not a member of the dedicated orchestra\n"
+"group , you are `%s'.  If this is a first-time setup, then please\n"
+"define a dedicated user-group and specify that group in the\n"
+"appropriate field in the `Admin'-section of the admin-settings. You\n"
+"should also assign at least one user and one or more dedicated\n"
+"group-administrators to the user-group.  Afterwards one of the\n"
+"group-administrators should log-in and perform the necessary\n"
+"configuration steps to finish the setup. You need administrative\n"
+"privileges to create an initial orchestra group and group\n"
+"administrator."
+msgstr ""
+
+#: templates/errorpage.php:47
+#, php-format
+msgid "CamerataDB Error: got the error message `%s'!"
+msgstr ""
+
+#: templates/errorpage.php:49
+#, php-format
+msgid ""
+"Please save the output and send it to the system administrator: `%s'. Many "
+"thanks for that!"
+msgstr ""
+
+#: templates/errorpage.php:60
+msgid "CamerataDB Error: We need the calendar app to be enabled."
+msgstr ""
+
+#: templates/errorpage.php:63
+msgid "CamerataDB Error: We need the contacts app to be enabled."
+msgstr ""
+
+#: templates/errorpage.php:66
+msgid "Something is wrong, but what?"
+msgstr ""
+
+#: templates/events.php:30
+msgid "Events for"
+msgstr ""
+
+#: templates/events.php:41
+msgid "Add Concert"
+msgstr ""
+
+#: templates/events.php:42
+msgid "Add Rehearsal"
+msgstr ""
+
+#: templates/events.php:43
+msgid "Add Other Event"
+msgstr ""
+
+#: templates/events.php:45
+msgid "Management Event"
+msgstr ""
+
+#: templates/events.php:52
+msgid "Download"
+msgstr ""
+
+#: templates/events.php:59
+msgid "Finance Event"
+msgstr ""
+
+#: templates/eventslisting.php:49
+msgid "no events"
+msgstr ""
+
+#: templates/expertmode.php:36
+msgid "Synchronize Events"
+msgstr ""
+
+#: templates/expertmode.php:41
+msgid "Recreate all Views"
+msgstr ""
+
+#: templates/expertmode.php:42
+msgid "Recreate the `Instrumentation' hybrid-table for each project"
+msgstr ""
+
+#: templates/expertmode.php:46
+msgid "Recreate Wiki Project TOC"
+msgstr ""
+
+#: templates/expertmode.php:47
+msgid "Recreate table of contents for the project pages in the wiki"
+msgstr ""
+
+#: templates/expertmode.php:51
+msgid "Attach matching Web-Pages"
+msgstr ""
+
+#: templates/expertmode.php:52
+msgid "Link all web-pages matching the project name to the respective project"
+msgstr ""
+
+#: templates/expertmode.php:56
+msgid "Check Instruments"
+msgstr ""
+
+#: templates/expertmode.php:57
+msgid ""
+"Check whether the instrumentation numbers table and the musicians table "
+"mention the same instruments"
+msgstr ""
+
+#: templates/expertmode.php:62
+msgid ""
+"Make sure the instruments table contains at least any instrument played by "
+"any musician."
+msgstr ""
+
+#: templates/expertmode.php:66
+msgid "Example"
+msgstr ""
+
+#: templates/expertmode.php:67
+msgid "Example Do-Nothing Button"
+msgstr ""
+
+#: templates/expertmode.php:72
+msgid "Predefined data-base operations"
+msgstr ""
+
+#: templates/expertmode.php:74
+msgid "Operation generated Response"
+msgstr ""
+
+#: templates/expertmode.php:78
+msgid "Clear Output"
+msgstr ""
+
+#: templates/expertmode.php:80
+msgid "Remove output, if any is present."
+msgstr ""
+
+#: templates/expertmode.php:88
+msgid "Database musicians/projects"
+msgstr ""
+
+#: templates/expertmode.php:91
+msgid ""
+"Open the login-window to the data-base back-bone. Although this is `expert "
+"mode' you will fall in love with the `export' facilities of the data-base "
+"back-bone. TRY IT OUT! DO IT!"
+msgstr ""
+
+#: templates/expertmode.php:94
+msgid "Database Owncloud"
+msgstr ""
+
+#: templates/expertmode.php:97
+msgid ""
+"Open the login-window to the data-base back-bone for the Owncloud WebUI."
+msgstr ""
+
+#: templates/expertmode.php:100
+msgid "Source-Code Archive"
+msgstr ""
+
+#: templates/expertmode.php:103
+msgid ""
+"View the git-repository holding all revision of this entire mess. Mostly "
+"useful for web-developers."
+msgstr ""
+
+#: templates/expertmode.php:106
+msgid "Source-Code Documentation"
+msgstr ""
+
+#: templates/expertmode.php:109
+msgid ""
+"Internal documentation of the `CAFEV-App', mostly useful for web-developers."
+msgstr ""
+
+#: templates/expertmode.php:112
+msgid "Owncloud Developer Documentation"
+msgstr ""
+
+#: templates/expertmode.php:115
+msgid "Owncloud Developer Manual, mostly useful for web-developers."
+msgstr ""
+
+#: templates/instrument-insurance.php:43 templates/sepa-debit-mandates.php:52
+#, php-format
+msgid "Sorry, this view is only available to the %s."
+msgstr ""
+
+#: templates/orchestra-settings.php:31
+msgid "Street Address"
+msgstr ""
+
+#: templates/orchestra-settings.php:36
+msgid "The name of the orchestra"
+msgstr ""
+
+#: templates/orchestra-settings.php:42
+msgid "The name of the orchestra (line 2)"
+msgstr ""
+
+#: templates/orchestra-settings.php:48 templates/orchestra-settings.php:49
+msgid "street part of street address of orchestra"
+msgstr ""
+
+#: templates/orchestra-settings.php:54
+msgid "house number part of street address of orchestra"
+msgstr ""
+
+#: templates/orchestra-settings.php:55
+msgid "Nr"
+msgstr ""
+
+#: templates/orchestra-settings.php:60
+msgid "ZIP part of street address of orchestra"
+msgstr ""
+
+#: templates/orchestra-settings.php:61
+msgid "ZIP"
+msgstr ""
+
+#: templates/orchestra-settings.php:66
+msgid "city part of address of orchestra"
+msgstr ""
+
+#: templates/orchestra-settings.php:67
+msgid "city"
+msgstr ""
+
+#: templates/orchestra-settings.php:72
+msgid "optional country part of address of orchestra"
+msgstr ""
+
+#: templates/orchestra-settings.php:73
+msgid "country (optional)"
+msgstr ""
+
+#: templates/orchestra-settings.php:76
+msgid "Bank Account"
+msgstr ""
+
+#: templates/orchestra-settings.php:81
+msgid "owner of the orchestra's bank account"
+msgstr ""
+
+#: templates/orchestra-settings.php:82 templates/sepa-debit-mandate.php:52
+msgid "owner of bank account"
+msgstr ""
+
+#: templates/orchestra-settings.php:87
+msgid "Optional BLZ of the orchestra's bank account"
+msgstr ""
+
+#: templates/orchestra-settings.php:88 templates/sepa-debit-mandate.php:58
+msgid "BLZ of bank account"
+msgstr ""
+
+#: templates/orchestra-settings.php:93
+msgid ""
+"IBAN or number of the orchestra's bank account. If this is a account number,"
+"then please first enter the BLZ"
+msgstr ""
+
+#: templates/orchestra-settings.php:94 templates/sepa-debit-mandate.php:64
+msgid "IBAN or no. of bank account"
+msgstr ""
+
+#: templates/orchestra-settings.php:99
+msgid "Optional BIC of the orchestra's bank account"
+msgstr ""
+
+#: templates/orchestra-settings.php:100 templates/sepa-debit-mandate.php:70
+msgid "BIC of bank account"
+msgstr ""
+
+#: templates/orchestra-settings.php:105
+msgid "Creditor identifier of the orchestra"
+msgstr ""
+
+#: templates/orchestra-settings.php:106
+msgid "orchestra's CI"
+msgstr ""
+
+#: templates/orchestra-settings.php:109
+msgid "Executive board and club members"
+msgstr ""
+
+#: templates/orchestra-settings.php:115
+msgid "member-table"
+msgstr ""
+
+#: templates/orchestra-settings.php:118
+msgid "Club Member Project"
+msgstr ""
+
+#: templates/orchestra-settings.php:126
+msgid "executive board table"
+msgstr ""
+
+#: templates/orchestra-settings.php:129
+msgid "Executive Board Project"
+msgstr ""
+
+#: templates/orchestra-settings.php:133
+msgid "Select the President"
+msgstr ""
+
+#: templates/orchestra-settings.php:134
+msgid "President of the orchestra"
+msgstr ""
+
+#: templates/orchestra-settings.php:144
+msgid "Select the Secretary"
+msgstr ""
+
+#: templates/orchestra-settings.php:145
+msgid "Secretary of the orchestra"
+msgstr ""
+
+#: templates/orchestra-settings.php:155
+msgid "Select the Treasurer"
+msgstr ""
+
+#: templates/orchestra-settings.php:156
+msgid "Treasurer of the orchestra"
+msgstr ""
+
+#: templates/part.common.header.php:37
+msgid "Back"
+msgstr ""
+
+#: templates/part.common.header.php:38
+msgid "Navigate back to the previous view in the recorded history."
+msgstr ""
+
+#: templates/part.common.header.php:45
+msgid "Reload"
+msgstr ""
+
+#: templates/part.common.header.php:46
+msgid "Reload the current view."
+msgstr ""
+
+#: templates/part.common.header.php:53
+msgid "Next"
+msgstr ""
+
+#: templates/part.common.header.php:54
+msgid "Navigate to the next view in the recorded history."
+msgstr ""
+
+#: templates/part.common.header.php:61
+msgid "Startpage"
+msgstr ""
+
+#: templates/part.common.header.php:62
+msgid "Navigate back to the start-page."
+msgstr ""
+
+#: templates/part.common.header.php:71
+msgid "Expert Operations"
+msgstr ""
+
+#: templates/part.common.header.php:72
+msgid "Expert Operations like recreating views etc."
+msgstr ""
+
+#: templates/part.common.header.php:79
+msgid "Personal Settings."
+msgstr ""
+
+#: templates/part.common.header.php:84
+msgid "Tooltip Button"
+msgstr ""
+
+#: templates/part.common.header.php:85
+msgid "Toggle Tooltips"
+msgstr ""
+
+#: templates/part.emailform.composer.php:40
+msgid "Compose Em@il"
+msgstr ""
+
+#: templates/part.emailform.composer.php:44
+msgid "Templates"
+msgstr ""
+
+#: templates/part.emailform.composer.php:50
+msgid "Select email template"
+msgstr ""
+
+#: templates/part.emailform.composer.php:63
+msgid "New Template Name"
+msgstr ""
+
+#: templates/part.emailform.composer.php:74
+msgid "Save as Template"
+msgstr ""
+
+#: templates/part.emailform.composer.php:79
+msgid "Delete Template"
+msgstr ""
+
+#: templates/part.emailform.composer.php:84
+msgid "Recipients"
+msgstr ""
+
+#: templates/part.emailform.composer.php:87
+#: templates/part.emailform.composer.php:90
+msgid "No recipients selected."
+msgstr ""
+
+#: templates/part.emailform.composer.php:95
+msgid "Carbon Copy"
+msgstr ""
+
+#: templates/part.emailform.composer.php:113
+msgid "Blind CC"
+msgstr ""
+
+#: templates/part.emailform.composer.php:131
+msgid "Subject"
+msgstr ""
+
+#: templates/part.emailform.composer.php:147
+msgid "Message-Body"
+msgstr ""
+
+#: templates/part.emailform.composer.php:151
+msgid "Sender-Name"
+msgstr ""
+
+#: templates/part.emailform.composer.php:160
+msgid "Sender-Email"
+msgstr ""
+
+#: templates/part.emailform.composer.php:161
+msgid "Tied to"
+msgstr ""
+
+#: templates/part.emailform.composer.php:164
+msgid "Add Attachment"
+msgstr ""
+
+#: templates/part.emailform.composer.php:169
+#: templates/part.emailform.composer.php:172
+msgid "Upload new File"
+msgstr ""
+
+#: templates/part.emailform.composer.php:177
+#: templates/part.emailform.composer.php:180
+msgid "Select from Owncloud"
+msgstr ""
+
+#: templates/part.emailform.composer.php:186
+msgid "Project Events"
+msgstr ""
+
+#: templates/part.emailform.composer.php:189
+msgid "Select Events"
+msgstr ""
+
+#: templates/part.emailform.composer.php:196
+msgid "Attached Events"
+msgstr ""
+
+#: templates/part.emailform.composer.php:210
+msgid "Delete Event Attachments"
+msgstr ""
+
+#: templates/part.emailform.composer.php:216
+msgid "Attached Files"
+msgstr ""
+
+#: templates/part.emailform.composer.php:230
+msgid "Delete All Attachments"
+msgstr ""
+
+#: templates/part.emailform.composer.php:239
+msgid "Send Em@il"
+msgstr ""
+
+#: templates/part.emailform.composer.php:245
+msgid "Export Messages"
+msgstr ""
+
+#: templates/part.emailform.recipients.php:66
+msgid "Basic Recipients Set"
+msgstr ""
+
+#: templates/part.emailform.recipients.php:113
+msgid "Member-Status"
+msgstr ""
+
+#: templates/part.emailform.recipients.php:121
+msgid "Select Members by Status"
+msgstr ""
+
+#: templates/part.emailform.recipients.php:133
+msgid "Email Recipients"
+msgstr ""
+
+#: templates/part.emailform.recipients.php:149
+msgid "Instruments Filter"
+msgstr ""
+
+#: templates/part.emailform.recipients.php:158
+msgid "Select Instruments"
+msgstr ""
+
+#: templates/part.emailform.recipients.php:172
+msgid "Musicians without or obviously broken email-address"
+msgstr ""
+
+#: templates/part.emailform.recipients.php:188
+msgid "Apply Filter"
+msgstr ""
+
+#: templates/part.emailform.recipients.php:194
+msgid "Undo Filter"
+msgstr ""
+
+#: templates/part.emailform.recipients.php:201
+msgid "Redo Filter"
+msgstr ""
+
+#: templates/part.emailform.recipients.php:208
+msgid "Reset Filter"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:73
+msgid "The mailing software did not signal an error."
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:75
+msgid "The message was propably sent out successfully."
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:82
+msgid "The mailing software did not signal an error. "
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:84
+#, php-format
+msgid "%d messages were propably sent out successfully."
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:94
+msgid "The mailing software encountered errors."
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:98
+#, php-format
+msgid ""
+"Sending of all %d messages has failed, propably no message has been sent."
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:102
+#, php-format
+msgid "One (out of %d) message has probably not been sent."
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:106
+#, php-format
+msgid "%d (out of %d) messages have probably not been sent."
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:111
+msgid "The message has probably not been sent."
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:128
+msgid "Failed individual substitutions"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:129
+msgid "Failed global substitutions"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:130
+msgid "Other failed substitutions"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:134
+msgid ""
+"The operation failed due to template validation errors. The following "
+"template substitutions could not be resolved:"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:152
+#, php-format
+msgid ""
+"Please understand that the software is really `picky'; names have to match "
+"exactly. Please use only capital letters for variable names. Please do not "
+"use spaces. Vaiable substitutions have to start with a dollar-sign `%s', be "
+"enclosed by curly braces `%s' and consist of a category-name (e.g. `%s') "
+"separated by double colons `%s' from the variable name itself (e.g. `%s'). "
+"An example is `%s'. Please have a look at the example template `%s' which "
+"contains a complete list of all known substitutions."
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:189
+msgid ""
+"The following email addresses appear to be syntactically incorrect, meaning "
+"that they have not the form of an email address:"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:200
+#, php-format
+msgid "Broken `%s' addresses"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:214
+msgid ""
+"No email will be sent out unless these errors are corrected. Please separate "
+"individual emails by commas. Please use standard-address notation (see "
+"RFC5322, if your want to know ...), remember to enclose the real-name in "
+"quotes if it contains a comma. Some valid examples are:"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:229
+#: templates/part.emailform.statuspage.php:329
+#: templates/part.emailform.statuspage.php:375
+#: templates/part.emailform.statuspage.php:423
+#: templates/part.emailform.statuspage.php:493
+#: templates/part.emailform.statuspage.php:552
+msgid "Explanations"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:249
+msgid "Empty Subject"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:250
+#, php-format
+msgid ""
+"The subject must not consist of `%s' as only part. Please correct that "
+"before hitting the `Send'-button again."
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:264
+msgid "Empty Sender Name"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:265
+#, php-format
+msgid ""
+"The sender name should not be empty. Originally, it used to be %s, but "
+"seemingly this did not suite your needs. Please fill in a non-empty sender "
+"name before hitting the `Send'-button again."
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:279
+msgid "No Recipients"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:280
+msgid ""
+"You did not specify any recipients (Cc: and Bcc: does not count here!)."
+"Please got to the `Em@il Recipients' panel and select some before hitting "
+"the `Send'-button again. Please possibly take care of the list of musicians "
+"without email address at the bottom of the `Em@il Recipients' panel."
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:309
+msgid ""
+"The event(s) with the following id(s) could not be attached; they do not "
+"seem to exists:"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:323
+#, php-format
+msgid ""
+"This is probably an internal error. Please contact %s. It may be possible to "
+"simply click on the red, underlined text in order to compose a usefull "
+"message."
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:351
+msgid ""
+"While trying to send the message(s), the following exception(s) were caught:"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:364
+#, php-format
+msgid ""
+"This is an internal error. Please copy this page and send it via email to %s."
+"It may be possible to simply click on the red, underlined text in order to "
+"compose a usefull message."
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:399
+msgid ""
+"While trying to send the message(s), the following error(s) have been "
+"encountered:"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:412
+#, php-format
+msgid ""
+"This is an internal error. Please copy this page and send it via email to "
+"%s. It may be possible to simply click on the red, underlined text in order "
+"to compose a usefull message."
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:444
+msgid "Message Duplicates Detected!"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:456
+#, php-format
+msgid "Message already sent at time %s to the following recipient(s):"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:483
+#, php-format
+msgid ""
+"The email-form refuses to send email twice to the same recipients. In order "
+"to send out your email you have either to change the subject or the message "
+"body. If your message has been constructed from a pre-defined message-"
+"template (like the one for the yearly adress-validation) then please add a "
+"self-explaining subject. Otherwise the error is probably really on your "
+"side. Mass-emails should never be submitted twice. If in doubt contact %s. "
+"Please add a detailed description."
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:514
+msgid "Copy to Sent-Folder has Failed"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:523
+#, php-format
+msgid "Could not authenticate with IMAP-server: %s"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:533
+#, php-format
+msgid "Copy to folder %s has failed: %s"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:543
+#, php-format
+msgid ""
+"If no other error messages are echoed on this page, then the emails have "
+"probably been sent successfully. However, copying the sent-out message to "
+"the sent-folder on the email-server has failed. This is nothing you can "
+"solve on your own, please contact %s. It may be possible to simply click on "
+"the red, underlined text in order to compose a usefull message."
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:573
+msgid "The Following Events have been attached to the Message:"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:601
+msgid "The following files have been attached to the message:"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:629
+msgid "First Few Lines of Sent Message"
+msgstr ""
+
+#: templates/part.emailform.statuspage.php:645
+msgid ""
+"The most recent status messages are always saved to the status panel. Please "
+"see there for detailed diagnostics."
+msgstr ""
+
+#: templates/project-web-articles.php:118
+msgid "No public web pages registered for this project"
+msgstr ""
+
+#: templates/project-web-articles.php:126
+msgid "Create new public web page for this project."
+msgstr ""
+
+#: templates/project-web-articles.php:136
+msgid "Attach existing Pages"
+msgstr ""
+
+#: templates/project-web-articles.php:183
+msgid "Unlink a web-article."
+msgstr ""
+
+#: templates/project-web-articles.php:187
+msgid "Delete a web article."
+msgstr ""
+
+#: templates/sepa-debit-mandate.php:26
+#, php-format
+msgid "SEPA Debit Mandate of %s"
+msgstr ""
+
+#: templates/sepa-debit-mandate.php:34
+msgid "Type: "
+msgstr ""
+
+#: templates/sepa-debit-mandate.php:34
+msgid "once"
+msgstr ""
+
+#: templates/sepa-debit-mandate.php:34
+msgid "permanent"
+msgstr ""
+
+#: templates/sepa-debit-mandate.php:39
+#, php-format
+msgid "Mandate-Reference: %s"
+msgstr ""
+
+#: templates/sepa-debit-mandate.php:51
+msgid "owner of the bank account, probably same as musician"
+msgstr ""
+
+#: templates/sepa-debit-mandate.php:57
+msgid "Optional BLZ of the musician's bank account"
+msgstr ""
+
+#: templates/sepa-debit-mandate.php:63
+msgid ""
+"IBAN or number of the bank account. If this is a account number, then please "
+"first enter the BLZ"
+msgstr ""
+
+#: templates/sepa-debit-mandate.php:69
+msgid ""
+"Optionally the BIC of the account; will be computed automatically if left "
+"blank."
+msgstr ""
+
+#: templates/sepa-debit-mandate.php:71
+msgid "Date issued:"
+msgstr ""
+
+#: templates/sepa-debit-mandate.php:76
+msgid "Date of mandate grant"
+msgstr ""
+
+#: templates/sepa-debit-mandate.php:77
+msgid "mandate date"
+msgstr ""
+
+#: templates/sepa-debit-mandate.php:81
+msgid "Date of last usage:"
+msgstr ""
+
+#: templates/sepa-debit-mandate.php:87
+msgid "Date of last usage of debit-mandate"
+msgstr ""
+
+#: templates/sepa-debit-mandate.php:88
+msgid "last used date"
+msgstr ""
+
+#: templates/sepa-debit-mandate.php:95
+msgid "Instant IBAN Validation:"
+msgstr ""
+
+#: templates/settings.php:29
+msgid ""
+"Control the display of tooltips. Warning: this works globally for all "
+"OwnCloud applications."
+msgstr ""
+
+#: templates/settings.php:31
+msgid ""
+"Initially display the filter-controls on all atable. This affects only the "
+"initial visibility of the filter-buttons and -inputs."
+msgstr ""
+
+#: templates/settings.php:33
+msgid "Show a second button which leads to a dialog with `advanced' settings"
+msgstr ""
+
+#: templates/settings.php:34
+msgid "Show a certain amount of debug information, normally not needed."
+msgstr ""
+
+#: templates/settings.php:36
+msgid "General Information"
+msgstr ""
+
+#: templates/settings.php:37
+msgid "SQL Queries"
+msgstr ""
+
+#: templates/settings.php:38
+msgid "HTTP Request"
+msgstr ""
+
+#: templates/settings.php:39
+msgid "Missing Context Help"
+msgstr ""
+
+#: templates/settings.php:40
+msgid "Mass Email Form"
+msgstr ""
+
+#: templates/settings.php:53
+msgid "Personal"
+msgstr ""
+
+#: templates/settings.php:55
+msgid "Orchestra"
+msgstr ""
+
+#: templates/settings.php:56
+msgid "Data-Base"
+msgstr ""
+
+#: templates/settings.php:57
+msgid "Sharing"
+msgstr ""
+
+#: templates/settings.php:58
+msgid "Email"
+msgstr ""
+
+#: templates/settings.php:59
+msgid "Development"
+msgstr ""
+
+#: templates/settings.php:60
+msgid "CMS"
+msgstr ""
+
+#: templates/settings.php:62
+msgid "?"
+msgstr ""
+
+#: templates/settings.php:68
+msgid "Tool-Tips"
+msgstr ""
+
+#: templates/settings.php:71
+msgid "Filter-Controls"
+msgstr ""
+
+#: templates/settings.php:74
+msgid "WYSIWYG Editor"
+msgstr ""
+
+#: templates/settings.php:85
+msgid "Expert-Mode"
+msgstr ""
+
+#: templates/settings.php:90
+msgid "Enable Debug Mode"
+msgstr ""
+
+#: templates/settings.php:100
+msgid "Dummy"
+msgstr ""
+
+#: templates/settings.php:104
+msgid "Own Password"
+msgstr ""
+
+#: templates/settings.php:107
+msgid "DB Encryption Key"
+msgstr ""
+
+#: templates/settings.php:110
+msgid "Set Encryption Key"
+msgstr ""
+
+#: templates/settings.php:111
+msgid "The encryption key has been set successfully."
+msgstr ""
+
+#: templates/settings.php:112
+msgid "Unable to set the encryption key."
+msgstr ""
+
+#: templates/share-settings.php:34
+msgid "Share owner"
+msgstr ""
+
+#: templates/share-settings.php:37
+msgid "shareowner"
+msgstr ""
+
+#: templates/share-settings.php:39 templates/share-settings.php:93
+#: templates/share-settings.php:111 templates/share-settings.php:129
+msgid "force"
+msgstr ""
+
+#: templates/share-settings.php:40 templates/share-settings.php:95
+#: templates/share-settings.php:113 templates/share-settings.php:131
+msgid "Check"
+msgstr ""
+
+#: templates/share-settings.php:44
+msgid "Share-Password"
+msgstr ""
+
+#: templates/share-settings.php:53
+msgid "Calendars"
+msgstr ""
+
+#: templates/share-settings.php:54 templates/share-settings.php:57
+#: templates/share-settings.php:60 templates/share-settings.php:63
+#: templates/share-settings.php:66
+msgid "calendarname"
+msgstr ""
+
+#: templates/share-settings.php:55
+msgid "Calendar for Concerts"
+msgstr ""
+
+#: templates/share-settings.php:58
+msgid "Calendar for Rehearsals"
+msgstr ""
+
+#: templates/share-settings.php:61
+msgid "Calendar for other Events"
+msgstr ""
+
+#: templates/share-settings.php:64
+msgid "Management-Calendar"
+msgstr ""
+
+#: templates/share-settings.php:67
+msgid "Finance-Calendar"
+msgstr ""
+
+#: templates/share-settings.php:70
+msgid "#Minutes"
+msgstr ""
+
+#: templates/share-settings.php:71
+msgid "Default Duration for Events"
+msgstr ""
+
+#: templates/share-settings.php:76
+msgid "Contacts"
+msgstr ""
+
+#: templates/share-settings.php:77
+msgid "addressbook"
+msgstr ""
+
+#: templates/share-settings.php:78
+msgid "Shared Addresbook"
+msgstr ""
+
+#: templates/share-settings.php:83
+msgid "Shared folder"
+msgstr ""
+
+#: templates/share-settings.php:89
+msgid "shared folder"
+msgstr ""
+
+#: templates/share-settings.php:106
+msgid "Project folder"
+msgstr ""
+
+#: templates/share-settings.php:108 templates/share-settings.php:126
+msgid "YEAR"
+msgstr ""
+
+#: templates/share-settings.php:108 templates/share-settings.php:126
+msgid "PROJECT"
+msgstr ""
+
+#: templates/share-settings.php:124
+msgid "Financial balance folder"
+msgstr ""
