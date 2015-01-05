@@ -34,6 +34,7 @@ CAFEVDB.Insurances = CAFEVDB.Insurances || {};
 
         if (form.find(submitSel).length > 0) {
             var rateDialog = container.find('select.broker').length > 0;
+            var brokerDialog = container.find('input.broker').length > 0;
 
             // for the insurance rates
             var broker;
@@ -54,10 +55,16 @@ CAFEVDB.Insurances = CAFEVDB.Insurances || {};
 
             var key;
 
-            if (rateDialog) {
+            if (brokerDialog) {
+                broker = container.find('input.broker');
+
+                textInputs = {
+                    'broker': broker
+                }
+            } else if (rateDialog) {
                 // for the insurance rates
                 //broker = container.find('input.broker');
-                rate   = container.find('input.rate');
+                rate = container.find('input.rate');
 
                 textInputs = {
                     //'broker': broker,
@@ -201,6 +208,15 @@ CAFEVDB.Insurances = CAFEVDB.Insurances || {};
 $(document).ready(function(){
 
     PHPMYEDIT.addTableLoadCallback('InsuranceRates', {
+        callback: function(selector, resizeCB) {
+            CAFEVDB.Insurances.pmeFormInit(selector);
+            resizeCB();
+        },
+        context: CAFEVDB.Insurances,
+        parameters: []
+    });
+
+    PHPMYEDIT.addTableLoadCallback('InsuranceBrokers', {
         callback: function(selector, resizeCB) {
             CAFEVDB.Insurances.pmeFormInit(selector);
             resizeCB();

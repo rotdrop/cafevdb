@@ -44,6 +44,7 @@ OC::$CLASSPATH['CAFEVDB\EmailRecipientsFilter'] = 'cafevdb/lib/emailrecipientsfi
 OC::$CLASSPATH['CAFEVDB\EmailComposer'] = 'cafevdb/lib/emailcomposer.php';
 OC::$CLASSPATH['CAFEVDB\InstrumentInsurance'] = 'cafevdb/lib/instrument-insurance.php';
 OC::$CLASSPATH['CAFEVDB\InsuranceRates'] = 'cafevdb/lib/insurance-rates.php';
+OC::$CLASSPATH['CAFEVDB\InsuranceBrokers'] = 'cafevdb/lib/insurance-brokers.php';
 OC::$CLASSPATH['CAFEVDB\PHPExcel\ValueBinder'] = 'cafevdb/lib/php-excel-functions.php';
 OC::$CLASSPATH['CAFEVDB\Finance'] = 'cafevdb/lib/finance.php';
 OC::$CLASSPATH['CAFEVDB\FuzzyInput'] = 'cafevdb/lib/functions.php';

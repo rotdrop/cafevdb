@@ -48,6 +48,45 @@ namespace CAFEVDB {
     $control = Util::cgiValue('control');
 
     switch($class) {
+    case 'InsuranceBrokers':
+      $cgiKeys = array('broker' => 'ShortName');
+      $values = array();
+      foreach($cgiKeys as $key => $cgiKey) {
+        $values[$key] = Util::cgiValue($cgiPfx.$cgiKey, false);
+        if (is_string($values[$key])) {
+          $values[$key] = trim($values[$key]);
+        }
+      }
+
+      switch($control) {
+      case 'submit':
+      case 'broker':
+        $broker = $values['broker'];
+        // No whitespace, s.v.p., and CamelCase
+        $origBroker = $broker;
+        
+        $broker = trim($broker);
+        $broker = ucwords($broker);
+        $broker = preg_replace('/\s+/', '', $broker);
+
+        if ($broker != $origBroker) {
+          $infoMessage .= L::t("Broker-name has been simplified.");
+          $values['broker'] = $broker;
+        }
+        break;
+      default:
+        $errorMessage = L::t("Internal error: unknown request: %s", array($control));
+        break;
+      }
+      if ($errorMessage == '') {
+        \OCP\JSON::success(
+          array('data' => array_merge($values,
+                                      array('message' => $infoMessage,
+                                            'debug' => $debugText))));
+        return true;
+      }
+      
+      break;
     case 'InsuranceRates':
       $cgiKeys = array('broker' => 'Broker',
                        'rate' => 'Rate');

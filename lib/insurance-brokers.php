@@ -27,13 +27,10 @@ namespace CAFEVDB
 
 /** Helper class for displaying projects.
  */
-  class InsuranceRates
+  class InsuranceBrokers
   {
     const CSS_PREFIX = 'cafevdb-page';
-    const TABLE = 'InsuranceRates';
-    const BROKER = 'InsuranceBrokers';
-    
-    private $broker;
+    const TABLE = 'InsuranceBrokers';
     private $scope;    
     private $pme;
     private $pme_bare;
@@ -46,11 +43,6 @@ namespace CAFEVDB
       $this->pme_bare = false;
 
       Config::init();
-      
-      $handle = mySQL::connect(Config::$pmeopts);
-      $this->scope  = mySQL::multiKeys(self::TABLE, 'GeographicalScope', $handle);
-      $this->broker = mySQL::multiKeys(self::BROKER, 'ShortName', $handle);
-      mySQL::close($handle);
     }
 
     public function deactivate() 
@@ -77,7 +69,7 @@ namespace CAFEVDB
 
     public function shortTitle()
     {
-      return L::t('Instrument Insurance Rates');
+      return L::t('Instrument Insurance Brokers');
     }
 
     public function headerText()
@@ -117,12 +109,12 @@ namespace CAFEVDB
       $opts = Config::$pmeopts;
 
       $opts['cgi']['persist'] = array(
-        'Template' => 'insurance-rates',
-        'DisplayClass' => 'InsuranceRates',
+        'Template' => 'insurance-brokers',
+        'DisplayClass' => 'InsuranceBrokers',
         'ClassArguments' => array(),
         'app' => Util::cgiValue('app')); // ????
 
-      $opts['tb'] = 'InsuranceRates';
+      $opts['tb'] = 'InsuranceBrokers';
 
       // Name of field which is the unique key
       $opts['key'] = 'Id';
@@ -222,37 +214,14 @@ namespace CAFEVDB
         'sort'     => $sort,
         );
 
-      $opts['fdd']['Broker'] = array(
-        'name'     => L::t('Broker'),
+      $opts['fdd']['ShortName'] = array(
+        'name'     => L::t('Short Name'),
         'css'      => array('postfix' => ' broker'),
-        'select'   => 'D',
-        'maxlen'   => 128,
+        'select'   => 'T',
+        'maxlen'   => 40,
         'sort'     => $sort,
-        'values'   => $this->broker,
         );
       
-      $opts['fdd']['GeographicalScope'] = array(
-        'name'        => L::t('Scope'),
-        'css'         => array('postfix' => ' scope'),
-        'select'      => 'D',
-        'maxlen'      => 137,
-        'sort'        => $sort,
-        'values'      => $this->scope,
-        );
-
-      $opts['fdd']['Rate'] = array(
-        'name'     => L::t('Rate'),
-        'css'      => array('postfix' => ' rate'),
-        'select'   => 'N',
-        'maxlen'   => 11,
-        'default'  => 0.0,
-        'sort'     => $sort,
-        );
-
-      $opts['fdd']['DueDate'] = Config::$opts['birthday'];
-      $opts['fdd']['DueDate']['name'] = L::t('Due Date');
-      $opts['fdd']['DueDate']['sort'] = $sort;
-
       $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
       $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
 
@@ -261,7 +230,7 @@ namespace CAFEVDB
 
     }
 
-  }; // class InsuranceRates
+  }; // class InsuranceBrokers
 
 }
 

@@ -30,6 +30,7 @@ namespace CAFEVDB
   $nav .= Navigation::button('projects');
   $nav .= Navigation::button('all');
   $nav .= Navigation::button('insurances');
+  $nav .= Navigation::button('insurancebrokers');
   $nav .= Navigation::button('debitmandates');
 
   echo $this->inc('part.common.header',

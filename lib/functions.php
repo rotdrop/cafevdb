@@ -1196,6 +1196,18 @@ __EOT__;
 __EOT__;
         break;
 
+      case 'insurancebrokers':
+        $value = L::t("Insurance Brokers");
+        $title = L::t("Display a table with the insurance brokers.");
+        $form =<<<__EOT__
+<form class="cafevdb-control" id="$controlid" method="post" action="">
+  <input type="submit" value="$value" title="$title"/>
+  <input type="hidden" name="Template" value="insurance-brokers"/>
+</form>
+
+__EOT__;
+        break;
+
       case 'debitmandates':
         $value = L::t("Debit Mandates");
         $title = L::t("Display a table with an overview over all SEPA debit mandates.");
