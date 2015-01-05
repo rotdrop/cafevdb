@@ -1,2 +1,0 @@
-#addFilter("eGroupware-gallery* wrong-script-interpreter")
-setBadness('wrong-script-interpreter', 0)
