@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-01 20:47+0100\n"
+"POT-Creation-Date: 2015-01-05 03:18+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -107,7 +107,7 @@ msgstr ""
 #: ajax/finance/sepa-debit-export.php:332
 #: ajax/finance/sepa-debit-store.php:112
 #: ajax/insurance/instrument-insurance-export.php:168
-#: ajax/insurance/validate.php:265 ajax/musicians/validate.php:96
+#: ajax/insurance/validate.php:304 ajax/musicians/validate.php:96
 #: ajax/page-loader.php:111 ajax/projects/web-articles.php:201
 #: ajax/settings/app-settings.php:1183
 msgid "PHP Exception Caught"
@@ -117,7 +117,7 @@ msgstr ""
 #: ajax/email/exporter.php:96 ajax/email/recipients.php:144
 #: ajax/finance/sepa-debit-store.php:116
 #: ajax/insurance/instrument-insurance-export.php:169
-#: ajax/insurance/validate.php:269 ajax/musicians/validate.php:100
+#: ajax/insurance/validate.php:308 ajax/musicians/validate.php:100
 #: ajax/page-loader.php:115 ajax/projects/web-articles.php:205
 #: ajax/settings/app-settings.php:1187
 #, php-format
@@ -265,16 +265,16 @@ msgstr ""
 msgid "%s-detailed"
 msgstr ""
 
-#: ajax/export/excel.php:260 lib/projects.php:1716 lib/projects.php:1717
+#: ajax/export/excel.php:260 lib/projects.php:1718 lib/projects.php:1719
 msgid "Missing Musicians"
 msgstr ""
 
 #: ajax/export/excel.php:285 ajax/export/insurance-export.php:142
-#: lib/projects.php:1719
+#: lib/projects.php:1721
 msgid "Instrument"
 msgstr ""
 
-#: ajax/export/excel.php:286 lib/projects.php:1719
+#: ajax/export/excel.php:286 lib/projects.php:1721
 msgid "Missing"
 msgstr ""
 
@@ -772,72 +772,72 @@ msgstr ""
 msgid "instrument-insurance"
 msgstr ""
 
-#: ajax/insurance/validate.php:74
+#: ajax/insurance/validate.php:73 ajax/insurance/validate.php:113
 msgid "Broker-name has been simplified."
 msgstr ""
 
-#: ajax/insurance/validate.php:84
+#: ajax/insurance/validate.php:78 ajax/insurance/validate.php:128
+#, php-format
+msgid "Internal error: unknown request: %s"
+msgstr ""
+
+#: ajax/insurance/validate.php:123
 #, php-format
 msgid ""
 "Invalid insurance rate %f, should be larger than 0 and less than 1 percent."
 msgstr ""
 
-#: ajax/insurance/validate.php:89
-#, php-format
-msgid "Internal error: unknown request: %s"
-msgstr ""
-
-#: ajax/insurance/validate.php:125
+#: ajax/insurance/validate.php:164
 msgid "Insured musician is missing"
 msgstr ""
 
-#: ajax/insurance/validate.php:146
+#: ajax/insurance/validate.php:185
 msgid "Insurance broker is missing."
 msgstr ""
 
-#: ajax/insurance/validate.php:155
+#: ajax/insurance/validate.php:194
 msgid "Geographical scope for the insurance is missing."
 msgstr ""
 
-#: ajax/insurance/validate.php:163
+#: ajax/insurance/validate.php:202
 msgid "Insured object has not been specified."
 msgstr ""
 
-#: ajax/insurance/validate.php:172
+#: ajax/insurance/validate.php:211
 msgid "Object classification (instrument, accessory) is missing."
 msgstr ""
 
-#: ajax/insurance/validate.php:180
+#: ajax/insurance/validate.php:219
 msgid "Manufacturer field is empty."
 msgstr ""
 
-#: ajax/insurance/validate.php:189 ajax/insurance/validate.php:191
+#: ajax/insurance/validate.php:228 ajax/insurance/validate.php:230
 #: js/cafevdb.js:31 js/cafevdb.js:32 js/cafevdb.js:33
 msgid "unknown"
 msgstr ""
 
-#: ajax/insurance/validate.php:190
+#: ajax/insurance/validate.php:229
 msgid "Construction year is unknown."
 msgstr ""
 
-#: ajax/insurance/validate.php:203
+#: ajax/insurance/validate.php:242
 msgid "The insurance amount is missing."
 msgstr ""
 
-#: ajax/insurance/validate.php:209
+#: ajax/insurance/validate.php:248
 msgid "Insurance amount should be a mere number"
 msgstr ""
 
-#: ajax/insurance/validate.php:212
+#: ajax/insurance/validate.php:251
 msgid "Insurance amount should be an integral number"
 msgstr ""
 
-#: ajax/insurance/validate.php:217 ajax/insurance/validate.php:230
+#: ajax/insurance/validate.php:256 ajax/insurance/validate.php:269
 #: ajax/projects/verifyName.php:103
 msgid "Internal error: unknown request"
 msgstr ""
 
-#: ajax/insurance/validate.php:239
+#: ajax/insurance/validate.php:278
 msgid "missing or wrong arguments"
 msgstr ""
 
@@ -1330,20 +1330,20 @@ msgstr ""
 msgid "filter-visibility changed"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:37 lib/projects.php:716
+#: ajax/settings/redaxo-settings.php:37 lib/projects.php:718
 msgid "Preview"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:38 lib/projects.php:720
+#: ajax/settings/redaxo-settings.php:38 lib/projects.php:722
 msgid "Archive"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:39 lib/projects.php:718
-#: lib/projects.php:1265 lib/projects.php:1426 lib/projects.php:1552
+#: ajax/settings/redaxo-settings.php:39 lib/projects.php:720
+#: lib/projects.php:1267 lib/projects.php:1428 lib/projects.php:1554
 msgid "Rehearsals"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:40 lib/projects.php:722
+#: ajax/settings/redaxo-settings.php:40 lib/projects.php:724
 msgid "Trashbin"
 msgstr ""
 
@@ -2369,7 +2369,7 @@ msgstr ""
 msgid "The currently active project."
 msgstr ""
 
-#: lib/functions.php:1120 lib/projects.php:796
+#: lib/functions.php:1120 lib/projects.php:798
 msgid "Instrumentation"
 msgstr ""
 
@@ -2390,8 +2390,8 @@ msgid ""
 "ones as needed."
 msgstr ""
 
-#: lib/functions.php:1148 lib/project-instruments.php:69 lib/projects.php:801
-#: lib/projects.php:1054
+#: lib/functions.php:1148 lib/project-instruments.php:69 lib/projects.php:803
+#: lib/projects.php:1056
 msgid "Instrumentation Numbers"
 msgstr ""
 
@@ -2401,7 +2401,7 @@ msgid ""
 "already registered for each instrument group and how many are finally needed."
 msgstr ""
 
-#: lib/functions.php:1162 lib/functions.php:1200 lib/projects.php:838
+#: lib/functions.php:1162 lib/functions.php:1212 lib/projects.php:840
 msgid "Debit Mandates"
 msgstr ""
 
@@ -2429,16 +2429,24 @@ msgid ""
 "insurances."
 msgstr ""
 
+#: lib/functions.php:1200
+msgid "Insurance Brokers"
+msgstr ""
+
 #: lib/functions.php:1201
+msgid "Display a table with the insurance brokers."
+msgstr ""
+
+#: lib/functions.php:1213
 msgid "Display a table with an overview over all SEPA debit mandates."
 msgstr ""
 
-#: lib/functions.php:1274
+#: lib/functions.php:1286
 #, php-format
 msgid "Could not connect to data-base server `%s': %s"
 msgstr ""
 
-#: lib/functions.php:1287
+#: lib/functions.php:1299
 #, php-format
 msgid "Unable to select %s"
 msgstr ""
@@ -2516,7 +2524,7 @@ msgstr ""
 msgid "Overview over insured instruments and insurance fee details and summary"
 msgstr ""
 
-#: lib/instrument-insurance.php:781 templates/instrument-insurance.php:44
+#: lib/instrument-insurance.php:781 templates/instrument-insurance.php:45
 #: templates/sepa-debit-mandates.php:53
 msgid "treasurer"
 msgstr ""
@@ -2553,7 +2561,7 @@ msgstr ""
 msgid "Vendor"
 msgstr ""
 
-#: lib/instrument-insurance.php:831 lib/insurance-rates.php:233
+#: lib/instrument-insurance.php:831 lib/insurance-rates.php:235
 msgid "Scope"
 msgstr ""
 
@@ -2566,7 +2574,7 @@ msgid "Amount"
 msgstr ""
 
 #: lib/instrument-insurance.php:835 lib/instrument-insurance.php:908
-#: lib/insurance-rates.php:242
+#: lib/insurance-rates.php:244
 msgid "Rate"
 msgstr ""
 
@@ -2729,15 +2737,23 @@ msgstr ""
 msgid "Sonstiges"
 msgstr ""
 
-#: lib/insurance-rates.php:78
+#: lib/insurance-brokers.php:72
+msgid "Instrument Insurance Brokers"
+msgstr ""
+
+#: lib/insurance-brokers.php:218
+msgid "Short Name"
+msgstr ""
+
+#: lib/insurance-rates.php:80
 msgid "Instrument Insurance Rates"
 msgstr ""
 
-#: lib/insurance-rates.php:224
+#: lib/insurance-rates.php:226
 msgid "Broker"
 msgstr ""
 
-#: lib/insurance-rates.php:251
+#: lib/insurance-rates.php:253
 msgid "Due Date"
 msgstr ""
 
@@ -2952,7 +2968,7 @@ msgid ""
 "inserted into the instrumentation table for the project."
 msgstr ""
 
-#: lib/projects.php:347
+#: lib/projects.php:349
 msgid ""
 "Comma separated list of extra-fields, e.g.\n"
 "<blockquote>\n"
@@ -2982,82 +2998,82 @@ msgid ""
 "a comma."
 msgstr ""
 
-#: lib/projects.php:372
+#: lib/projects.php:374
 msgid "Program"
 msgstr ""
 
-#: lib/projects.php:389
+#: lib/projects.php:391
 msgid "Flyer"
 msgstr ""
 
-#: lib/projects.php:706
+#: lib/projects.php:708
 #, php-format
 msgid "Unable to fetch public web pages for project id %d"
 msgstr ""
 
-#: lib/projects.php:786
+#: lib/projects.php:788
 msgid "Project Overview"
 msgstr ""
 
-#: lib/projects.php:810
+#: lib/projects.php:812
 msgid "Project Files"
 msgstr ""
 
-#: lib/projects.php:817 lib/projects.php:1032
+#: lib/projects.php:819 lib/projects.php:1034
 #, php-format
 msgid "Project Wiki for %s"
 msgstr ""
 
-#: lib/projects.php:819 lib/projects.php:1036
+#: lib/projects.php:821 lib/projects.php:1038
 msgid "Project Notes"
 msgstr ""
 
-#: lib/projects.php:824 lib/projects.php:1042 lib/projects.php:1072
+#: lib/projects.php:826 lib/projects.php:1044 lib/projects.php:1074
 msgid "Events"
 msgstr ""
 
-#: lib/projects.php:829 lib/projects.php:1048
+#: lib/projects.php:831 lib/projects.php:1050
 msgid "Em@il"
 msgstr ""
 
-#: lib/projects.php:844
+#: lib/projects.php:846
 msgid "Profit and Loss Account"
 msgstr ""
 
-#: lib/projects.php:2146
+#: lib/projects.php:2148
 msgid ""
 "Flyers can only be added to existing projects, please add the new\n"
 "project without a flyer first."
 msgstr ""
 
-#: lib/projects.php:2161
+#: lib/projects.php:2163
 #, php-format
 msgid "Drop image to upload (max %s)"
 msgstr ""
 
-#: lib/projects.php:2164
+#: lib/projects.php:2166
 msgid "Delete current flyer"
 msgstr ""
 
-#: lib/projects.php:2165
+#: lib/projects.php:2167
 msgid "Edit current flyer"
 msgstr ""
 
-#: lib/projects.php:2166
+#: lib/projects.php:2168
 msgid "Upload new flyer"
 msgstr ""
 
-#: lib/projects.php:2167
+#: lib/projects.php:2169
 msgid "Select image from ownCloud"
 msgstr ""
 
-#: lib/projects.php:2175
+#: lib/projects.php:2177
 msgid ""
 "Internal error, don't know what to do concerning project-flyers in the given "
 "context."
 msgstr ""
 
-#: lib/projects.php:2416
+#: lib/projects.php:2418
 #, php-format
 msgid ""
 "====== Project %s ======\n"
@@ -4651,7 +4667,7 @@ msgstr ""
 msgid "Owncloud Developer Manual, mostly useful for web-developers."
 msgstr ""
 
-#: templates/instrument-insurance.php:43 templates/sepa-debit-mandates.php:52
+#: templates/instrument-insurance.php:44 templates/sepa-debit-mandates.php:52
 #, php-format
 msgid "Sorry, this view is only available to the %s."
 msgstr ""
