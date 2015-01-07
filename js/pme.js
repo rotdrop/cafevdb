@@ -177,7 +177,16 @@ var PHPMYEDIT = PHPMYEDIT || {};
     $.post(OC.filePath('cafevdb', 'ajax/pme', 'pme-table.php'),
            post,
            function (data) {
-             // error handling?
+
+             if (!CAFEVDB.ajaxErrorHandler(data, [ 'contents' ])) {
+               var dialogWidget = container.dialog('widget');
+
+               CAFEVDB.Page.busyIcon(false);
+               dialogWidget.removeClass('pme-table-dialog-blocked');
+               container.find('.pme-navigation input.pme-reload').removeClass('loading');
+               return false;
+             }
+
              if (data.status == 'success') {
                // remove the WYSIWYG editor, if any is attached
                CAFEVDB.removeEditor(container.find('textarea.wysiwygeditor'));
@@ -198,6 +207,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
                  // re-attach events
                  pme.tableDialogHandlers(options, callback);
                });
+             } else {
+               alert('blah');
              }
              return false;
            });

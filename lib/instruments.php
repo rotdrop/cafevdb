@@ -267,7 +267,8 @@ class Instruments
     $sqlquery = "ALTER TABLE `Musiker` CHANGE `Instrumente`
  `Instrumente` SET('" . implode("','", $instruments) . "')";
     if (!$pme->myquery($sqlquery)) {
-      Util::error("Could not execute the query\n".$sqlquery."\nSQL-Error: ".mysql_error(), true);
+      Util::error(L::t("Could not execute the query\n%s\nSQL-Error: %s",
+                       array($sqlquery, mysql_error())), true);
     }
 
     // Now do the same with the Besetzungen-table
@@ -328,103 +329,103 @@ class Instruments
     if (array_search('Instrument', $changed) === false) {
       return true;
     } else {
-      if (false) {
-        trigger_error('Attempt to Change Instrument\'s Name Denied!!!! Never do that.', E_USER_ERROR);
-        return false;
-      } else {
-        // This is a nightmare. later
+      // This is a nightmare. later
 
-        /* Ok. Attempt to rename. Fetch all multi-keys from all tables,
-         * check that the old value is already present and replace it
-         * with the new value ..
-         */
-        $oldInstrument = $oldvals['Instrument'];
-        $instrument = $newvals['Instrument'];
+      /* Ok. Attempt to rename. Fetch all multi-keys from all tables,
+       * check that the old value is already present and replace it
+       * with the new value ..
+       */
+      $oldInstrument = $oldvals['Instrument'];
+      $instrument = $newvals['Instrument'];
 
-        $tables = array();
-        $tables[] = array('name' => 'Musiker',
-                          'field' => 'Instrumente',
-                          'type' =>  'SET',
-                          'comment' => '');
-        $tables[] = array('name' => 'Besetzungen',
-                          'field' => 'Instrument',
-                          'type' => 'ENUM',
-                          'comment' => '');
-        $tables[] = array('name' => 'Projekte',
-                          'field' => 'Besetzung',
-                          'type' => 'SET',
-                          'comment' => L::t('Needed Instruments'));
+      $tables = array();
+      $tables[] = array('name' => 'Musiker',
+                        'field' => 'Instrumente',
+                        'type' =>  'SET',
+                        'comment' => '');
+      $tables[] = array('name' => 'Besetzungen',
+                        'field' => 'Instrument',
+                        'type' => 'ENUM',
+                        'comment' => '');
+      $tables[] = array('name' => 'Projekte',
+                        'field' => 'Besetzung',
+                        'type' => 'SET',
+                        'comment' => L::t('Needed Instruments'));
 
-        foreach ($tables as $table) {
-          $instruments = mySQL::multiKeys($table['name'], $table['field'], $pme->dbh);
-          if ($key === false) {
-            trigger_error(L::t("Instrument does not yet exist, cannot change its name: `%s'",
-                               array($oldInstrument)), E_USER_ERROR);
-          }
+      foreach ($tables as $table) {
+        $instruments = mySQL::multiKeys($table['name'], $table['field'], $pme->dbh);
+        if (!array_search($oldInstrument, $instruments)) {
+          trigger_error(L::t("Instrument `%s' does not yet exist in table `%s', cannot change its name to `%s'",
+                             array($oldInstrument, $table['name'], $instrument)), E_USER_ERROR);
         }
+        if (array_search($instrument, $instruments)) {
+          trigger_error(L::t("Instrument `%s' already exists in table `%s', cannot change its name from `%s'",
+                             array($instrument, $table['name'], $oldInstrument)), E_USER_ERROR);
+        }
+      }
 
-        // Fine, loop again and exchange it
-        foreach ($tables as $table) {
-          $instruments = mySQL::multiKeys($table['name'], $table['field'], $pme->dbh);
-          $comment = $table['comment'] != '' ? " COMMENT '".$table['comment']."'" : "";
+      // Fine, loop again and exchange it
+      foreach ($tables as $table) {
+        $instruments = mySQL::multiKeys($table['name'], $table['field'], $pme->dbh);
+
+        $comment = $table['comment'] != '' ? " COMMENT '".$table['comment']."'" : "";
         
-          // 1st step: inject new enum value
-          $instruments[] = $instrument;
-          sort($instruments, SORT_FLAG_CASE|SORT_STRING);
+        // 1st step: inject new enum value
+        $instruments[] = $instrument;
+        sort($instruments, SORT_FLAG_CASE|SORT_STRING);
 
-          $sqlQuery = "ALTER TABLE `".$table['name']."` CHANGE `".$table['field']."`
+        $sqlQuery = "ALTER TABLE `".$table['name']."` CHANGE `".$table['field']."`
  `".$table['field']."` ".$table['type']."('".implode("','", $instruments)."')";
         
-          if (!$pme->myquery($sqlQuery)) {
-            Util::error(L::t("SQL-Error ``%s''. Could not execute the query ``%s''",
-                             array(mysql_error(), $sqlQuery)), true);
-            return false;
-          }
-
-          // 2nd step: alter all rows to use the new enum value
-          if ($table['type'] == 'ENUM') {
-            $sqlQuery = "UPDATE `".$table['name']."`
- SET `".$table['field']."` = '".$instrument."'
- WHERE `".$table['field']."` = '".$oldInstrument."'";
-          } else {
-            $sqlQuery = "UPDATE `".$table['name']."`
- SET `".$table['field']."` = TRIM(',' FROM CONCAT(`".$table['field']."`,',','".$instrument."'))
- WHERE `".$table['field']."` LIKE '%".$oldInstrument."%'";
-          }
-        
-          if (!$pme->myquery($sqlQuery)) {
-            Util::error(L::t("SQL-Error ``%s''. Could not execute the query `` %s ''",
-                             array(mysql_error(), $sqlQuery)), true);
-            return false;
-          }
-
-          // 3rd step: drop old enum value
-          $key = array_search($oldInstrument, $instruments);
-          unset($instruments[$key]);
-          sort($instruments, SORT_FLAG_CASE|SORT_STRING);
-          $sqlQuery = "ALTER TABLE `".$table['name']."` CHANGE `".$table['field']."`
- `".$table['field']."` ".$table['type']."('".implode("','", $instruments)."')";
-        
-          if (!$pme->myquery($sqlQuery)) {
-            Util::error(L::t("SQL-Error ``%s''. Could not execute the query ``%s''",
-                             array(mysql_error(), $sqlQuery)), true);
-            return false;
-          }
-        }
-
-        // Finally change the column name in "BesetzungsZahlen"
-        $sqlQuery = "ALTER TABLE `BesetzungsZahlen` CHANGE `".$oldInstrument."` `".$instrument."`
-  TINYINT NOT NULL DEFAULT '0'";
         if (!$pme->myquery($sqlQuery)) {
           Util::error(L::t("SQL-Error ``%s''. Could not execute the query ``%s''",
                            array(mysql_error(), $sqlQuery)), true);
           return false;
         }
 
-        // And in principle, if anything goes wrong, we should clean up ...
+        // 2nd step: alter all rows to use the new enum value
+        if ($table['type'] == 'ENUM') {
+          $sqlQuery = "UPDATE `".$table['name']."`
+ SET `".$table['field']."` = '".$instrument."'
+ WHERE `".$table['field']."` = '".$oldInstrument."'";
+        } else {
+          $sqlQuery = "UPDATE `".$table['name']."`
+ SET `".$table['field']."` = TRIM(',' FROM CONCAT(`".$table['field']."`,',','".$instrument."'))
+ WHERE `".$table['field']."` LIKE '%".$oldInstrument."%'";
+        }
+        
+        if (!$pme->myquery($sqlQuery)) {
+          Util::error(L::t("SQL-Error ``%s''. Could not execute the query `` %s ''",
+                           array(mysql_error(), $sqlQuery)), true);
+          return false;
+        }
 
-        return true;
+        // 3rd step: drop old enum value
+        $key = array_search($oldInstrument, $instruments);
+        unset($instruments[$key]);
+        sort($instruments, SORT_FLAG_CASE|SORT_STRING);
+        $sqlQuery = "ALTER TABLE `".$table['name']."` CHANGE `".$table['field']."`
+ `".$table['field']."` ".$table['type']."('".implode("','", $instruments)."')";
+        
+        if (!$pme->myquery($sqlQuery)) {
+          Util::error(L::t("SQL-Error ``%s''. Could not execute the query ``%s''",
+                           array(mysql_error(), $sqlQuery)), true);
+          return false;
+        }
       }
+
+      // Finally change the column name in "BesetzungsZahlen"
+      $sqlQuery = "ALTER TABLE `BesetzungsZahlen` CHANGE `".$oldInstrument."` `".$instrument."`
+  TINYINT NOT NULL DEFAULT '0'";
+      if (!$pme->myquery($sqlQuery)) {
+        Util::error(L::t("SQL-Error ``%s''. Could not execute the query ``%s''",
+                         array(mysql_error(), $sqlQuery)), true);
+        return false;
+      }
+
+      // And in principle, if anything goes wrong, we should clean up ...
+
+      return true;
     }
   }
 
