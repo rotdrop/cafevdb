@@ -4,6 +4,4 @@
 	branch = cafebdb
 [submodule "3rdparty/bav"]
 	path = 3rdparty/bav
-	url = https://github.com/rotdrop/bav-cafevdb.git
-	branch = cafevdb
-
+	url = https://github.com/rotdrop/bav-occonf.git
