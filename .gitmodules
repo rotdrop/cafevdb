@@ -5,3 +5,4 @@
 [submodule "3rdparty/bav"]
 	path = 3rdparty/bav
 	url = https://github.com/rotdrop/bav-occonf.git
+	branch = occonf
