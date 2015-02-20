@@ -594,7 +594,7 @@ input[disabled]:hover,
 .chosen-disabled.chosen-container a:hover,
 .chosen-disabled a span:hover,
 .chosen-disabled li span:hover {
-  background-image:url('../../../core/img/actions/lock.svg') !important;
+  background-image:url('../img/lock.svg') !important;
   background-repeat:no-repeat;
   background-position:center center;
 }
