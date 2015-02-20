@@ -82,8 +82,8 @@ try {
 
   $locale = Util::getLocale();
 
-  Util::addExternalScript(OC_Helper::linkTo('cafevdb/js', 'config.php'));
-  Util::addExternalScript(OC_Helper::linkTo('calendar/js', 'l10n.php'));
+  Util::addExternalScript(OC_Helper::linkToRoute('cafevdb_config'));
+  Util::addExternalScript(OC_Helper::linkTo('calendar', 'js/l10n.php'));
 
   $tmpl = new OCP\Template('cafevdb', 'events');
 

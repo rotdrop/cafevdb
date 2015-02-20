@@ -34,7 +34,7 @@ use \CAFEVDB\Util;
 $this->create('cafevdb_config', 'js/config.js')
   ->actionInclude('cafevdb/js/config.php');
 
-$this->create('cafevdb_index', '/')
+$this->create('cafevdb_root', '/')
   ->actionInclude('cafevdb/index.php');
 
 // include automatically generated routes
