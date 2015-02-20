@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-05 03:18+0100\n"
+"POT-Creation-Date: 2015-02-20 13:21+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1837,11 +1837,11 @@ msgstr ""
 msgid "Possible Duplicate!"
 msgstr ""
 
-#: js/pme.js:798
+#: js/pme.js:809
 msgid "#columns"
 msgstr ""
 
-#: js/pme.js:807
+#: js/pme.js:818
 msgid "#rows"
 msgstr ""
 
@@ -2689,51 +2689,68 @@ msgstr ""
 msgid "Add new Instruments"
 msgstr ""
 
-#: lib/instruments.php:356
+#: lib/instruments.php:270
+#, php-format
+msgid ""
+"Could not execute the query\n"
+"%s\n"
+"SQL-Error: %s"
+msgstr ""
+
+#: lib/instruments.php:353
 msgid "Needed Instruments"
 msgstr ""
 
-#: lib/instruments.php:361
+#: lib/instruments.php:358
 #, php-format
-msgid "Instrument does not yet exist, cannot change its name: `%s'"
+msgid ""
+"Instrument `%s' does not yet exist in table `%s', cannot change its name to `"
+"%s'"
 msgstr ""
 
-#: lib/instruments.php:379 lib/instruments.php:409 lib/instruments.php:419
+#: lib/instruments.php:362
+#, php-format
+msgid ""
+"Instrument `%s' already exists in table `%s', cannot change its name from `"
+"%s'"
+msgstr ""
+
+#: lib/instruments.php:381 lib/instruments.php:411 lib/instruments.php:421
 #, php-format
 msgid "SQL-Error ``%s''. Could not execute the query ``%s''"
 msgstr ""
 
-#: lib/instruments.php:396
+#: lib/instruments.php:398
 #, php-format
 msgid "SQL-Error ``%s''. Could not execute the query `` %s ''"
 msgstr ""
 
-#: lib/instruments.php:457
+#: lib/instruments.php:458
 #, php-format
 msgid "Could not fetch instruments for project-id %s"
 msgstr ""
 
-#: lib/instruments.php:553
+#: lib/instruments.php:554
 msgid "Streich,Saiten"
 msgstr ""
 
-#: lib/instruments.php:554
+#: lib/instruments.php:555
 msgid "Streich,Zupf"
 msgstr ""
 
-#: lib/instruments.php:555
+#: lib/instruments.php:556
 msgid "Blas,Holz"
 msgstr ""
 
-#: lib/instruments.php:556
+#: lib/instruments.php:557
 msgid "Blas,Blech"
 msgstr ""
 
-#: lib/instruments.php:557
+#: lib/instruments.php:558
 msgid "Schlag"
 msgstr ""
 
-#: lib/instruments.php:558
+#: lib/instruments.php:559
 msgid "Sonstiges"
 msgstr ""
 

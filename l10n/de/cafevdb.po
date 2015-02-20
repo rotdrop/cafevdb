@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-05 03:16+0100\n"
+"POT-Creation-Date: 2015-02-20 13:21+0100\n"
 "PO-Revision-Date: 2015-01-05 03:18+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
@@ -1965,11 +1965,11 @@ msgid "Possible Duplicate!"
 msgstr "Doppelter Datenbankeintag?"
 
 # #Spalten
-#: js/pme.js:798
+#: js/pme.js:809
 msgid "#columns"
 msgstr "#Spalten"
 
-#: js/pme.js:807
+#: js/pme.js:818
 msgid "#rows"
 msgstr "#Zeilen"
 
@@ -2600,7 +2600,8 @@ msgstr "Versicherungsmakler"
 
 #: lib/functions.php:1201
 msgid "Display a table with the insurance brokers."
-msgstr "Zeigt eine Tabelle mit einer Übersicht über die Versicherungsanbieter an."
+msgstr ""
+"Zeigt eine Tabelle mit einer Übersicht über die Versicherungsanbieter an."
 
 #: lib/functions.php:1213
 msgid "Display a table with an overview over all SEPA debit mandates."
@@ -2874,56 +2875,79 @@ msgstr "Aushilfe"
 msgid "Add new Instruments"
 msgstr "Neue Instrumente"
 
-#: lib/instruments.php:356
+#: lib/instruments.php:270
+#, fuzzy, php-format
+#| msgid "SQL-Error ``%s''. Could not execute the query ``%s''"
+msgid ""
+"Could not execute the query\n"
+"%s\n"
+"SQL-Error: %s"
+msgstr ""
+"SQL-Fehler ``%s''. Die folgende Abfrage konnte nicht ausgeführt werden: ``"
+"%s''"
+
+#: lib/instruments.php:353
 msgid "Needed Instruments"
 msgstr "Benötigte Instrumente"
 
-#: lib/instruments.php:361
-#, php-format
-msgid "Instrument does not yet exist, cannot change its name: `%s'"
+#: lib/instruments.php:358
+#, fuzzy, php-format
+#| msgid "Instrument does not yet exist, cannot change its name: `%s'"
+msgid ""
+"Instrument `%s' does not yet exist in table `%s', cannot change its name to `"
+"%s'"
 msgstr ""
 "Das Instrument `%s' gibt es aber leider gar, wie soll ich das dann umbenenen?"
 
-#: lib/instruments.php:379 lib/instruments.php:409 lib/instruments.php:419
+#: lib/instruments.php:362
+#, fuzzy, php-format
+#| msgid "Instrument does not yet exist, cannot change its name: `%s'"
+msgid ""
+"Instrument `%s' already exists in table `%s', cannot change its name from `"
+"%s'"
+msgstr ""
+"Das Instrument `%s' gibt es aber leider gar, wie soll ich das dann umbenenen?"
+
+#: lib/instruments.php:381 lib/instruments.php:411 lib/instruments.php:421
 #, php-format
 msgid "SQL-Error ``%s''. Could not execute the query ``%s''"
 msgstr ""
 "SQL-Fehler ``%s''. Die folgende Abfrage konnte nicht ausgeführt werden: ``"
 "%s''"
 
-#: lib/instruments.php:396
+#: lib/instruments.php:398
 #, php-format
 msgid "SQL-Error ``%s''. Could not execute the query `` %s ''"
 msgstr ""
 "SQL-Fehler ``%s''. Die folgende Abfrage konnte nicht ausgeführt werden: ``"
 "%s''"
 
-#: lib/instruments.php:457
+#: lib/instruments.php:458
 #, php-format
 msgid "Could not fetch instruments for project-id %s"
 msgstr "Konnte die Instrumente des Musikers mit der Id %s nicht ermitteln."
 
-#: lib/instruments.php:553
+#: lib/instruments.php:554
 msgid "Streich,Saiten"
 msgstr "Streicher"
 
-#: lib/instruments.php:554
+#: lib/instruments.php:555
 msgid "Streich,Zupf"
 msgstr "Zupfinstrumente"
 
-#: lib/instruments.php:555
+#: lib/instruments.php:556
 msgid "Blas,Holz"
 msgstr "Holzbläser"
 
-#: lib/instruments.php:556
+#: lib/instruments.php:557
 msgid "Blas,Blech"
 msgstr "Bechbläser"
 
-#: lib/instruments.php:557
+#: lib/instruments.php:558
 msgid "Schlag"
 msgstr "Schlagwerk"
 
-#: lib/instruments.php:558
+#: lib/instruments.php:559
 msgid "Sonstiges"
 msgstr "Sonstiges"
 
