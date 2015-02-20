@@ -34,6 +34,12 @@ use \CAFEVDB\Util;
 $this->create('cafevdb_config', 'js/config.js')
   ->actionInclude('cafevdb/js/config.php');
 
+$this->create('cafevdb_index', '/')
+  ->actionInclude('cafevdb/index.php');
+
+// include automatically generated routes
+include 'autoroutes.php';
+
 /*Return an array of project-events, given the respective project id. */
 \OCP\API::register(
   'get',
