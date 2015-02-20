@@ -39,7 +39,7 @@ namespace CAFEVDB
     
     public function __construct() {
       // Keep a reference to the underlying session handler
-      $this->session = \OC::$session;
+      $this->session = \OC::$server->getSession();
 
       // Fetch the current user
       $this->user  = \OCP\USER::getUser();

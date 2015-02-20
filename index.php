@@ -79,7 +79,7 @@ namespace CAFEVDB
     \OCP\Util::addStyle('cafevdb', 'project-instruments');
     \OCP\Util::addStyle('cafevdb', 'instrumentation');
     \OCP\Util::addStyle('cafevdb', 'inlineimage');  
-    \OCP\Util::addStyle('3rdparty/fontawesome', 'font-awesome');
+//    \OCP\Util::addStyle('3rdparty/fontawesome', 'font-awesome');
     \OCP\Util::addStyle('cafevdb', 'font-awesome');
     \OCP\Util::addStyle('core', 'icons');
 
@@ -127,10 +127,10 @@ namespace CAFEVDB
     \OCP\Util::addscript("cafevdb/3rdparty/bootstrap-duallistbox", "jquery.bootstrap-duallistbox.min");
   
     // Calendar event hacks ... TODO: check whether still needed ...
-    \OCP\Util::addscript('3rdparty/timepicker', 'jquery.ui.timepicker');
-    \OCP\Util::addStyle('3rdparty/timepicker', 'jquery.ui.timepicker');
-    \OCP\Util::addscript('', 'jquery.multiselect');
-    \OCP\Util::addStyle('', 'jquery.multiselect');
+    \OCP\Util::addscript('calendar/3rdparty/timepicker', 'jquery.ui.timepicker');
+    \OCP\Util::addStyle('calendar/3rdparty/timepicker', 'jquery.ui.timepicker');
+    \OCP\Util::addscript('calendar/3rdparty/jquery.multiselect', 'jquery.multiselect');
+    \OCP\Util::addStyle('calendar/3rdparty/jquery.multiselect', 'jquery.multiselect');
     \OCP\Util::addscript('contacts','jquery.multi-autocomplete');
     \OCP\Util::addscript('','tags');
     \OCP\Util::addScript('cafevdb', 'calendar');
@@ -153,7 +153,7 @@ namespace CAFEVDB
     }
     $pageLoader->template('user')->printPage();
 
-  } catch (Exception $e) {
+  } catch (\Exception $e) {
 
     ob_end_clean();
     $tmpl = new \OCP\Template( 'cafevdb', 'errorpage', 'user' );
