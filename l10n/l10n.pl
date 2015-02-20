@@ -90,7 +90,7 @@ sub getPluralInfo {
 }
 
 my $task = shift( @ARGV );
-my $place = '../../cafevdb';
+my $place = '../../' . shift( @ARGV );
 
 die( "Usage: l10n.pl task\ntask: read, write\n" ) unless $task && $place;
 
