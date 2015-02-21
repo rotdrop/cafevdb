@@ -98,22 +98,22 @@ namespace CAFEVDB {
 <div id="controls">
 <?php echo $_['navigationcontrols']; ?>
   <form id="personalsettings" method="post" action="?app=<?php echo Config::APP_NAME; ?>">
-  <input type="hidden" name="requesttoken" value="<?php echo \OCP\Util::callRegister(); ?>" />
-<?php echo $navigationControls; ?>
-<div class="buttonseparator"></div>
-<?php echo $settingsControls; ?>
+    <input type="hidden" name="requesttoken" value="<?php echo \OCP\Util::callRegister(); ?>" />
+    <?php echo $navigationControls; ?>
+    <div class="buttonseparator"></div>
+    <?php echo $settingsControls; ?>
   </form>
-  </div>
-  <div class="cafevdb-general" id="cafevdb-general">
-  <!-- divs for a header which can be hidden on button click. -->
-<?php echo isset($_['headerblock']) ? '<!-- ' : ''; ?>
+</div>
+<div class="cafevdb-general" id="cafevdb-general"> <!-- used to eliminate the pixel-size of the control bar -->
+  <?php echo isset($_['headerblock']) ? '<!-- ' : ''; ?>
   <div id="<?php echo $css_pfx; ?>-header-box" class="<?php echo $css_pfx; ?>-header-box<?php echo $css_class; ?>">
-  <div id="<?php echo $css_pfx; ?>-header" class="<?php echo $css_pfx; ?>-header<?php echo $css_class; ?>">
-<?php echo $header; ?>
+    <div id="<?php echo $css_pfx; ?>-header" class="<?php echo $css_pfx; ?>-header<?php echo $css_class; ?>">
+      <?php echo $header; ?>
+    </div>
   </div>
-  </div>
-<?php echo isset($_['headerblock']) ? ' -->' : ''; ?>
-<?php echo isset($_['headerblock']) ? $_['headerblock'] : ''; ?>
-  <div id="<?php echo $css_pfx; ?>-body" class="<?php echo $css_pfx; ?>-body<?php echo $css_class; ?>">
+  <?php echo isset($_['headerblock']) ? ' -->' : ''; ?>
+  <?php echo isset($_['headerblock']) ? $_['headerblock'] : ''; ?>
+  <div id="<?php echo $css_pfx; ?>-container" class="<?php echo $css_pfx; ?>-container<?php echo $css_class; ?>"> <!-- used to have something with 100 height for scrollbars -->
+    <div id="<?php echo $css_pfx; ?>-body" class="<?php echo $css_pfx; ?>-body<?php echo $css_class; ?>">
 
 <?php } // namespace CAFEVDB ?>
