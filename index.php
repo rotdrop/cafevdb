@@ -97,7 +97,9 @@ namespace CAFEVDB
     \OCP\Util::addScript('cafevdb', 'insurance');
 
     \OCP\Util::addScript('cafevdb', 'jquery.Jcrop');
-    \OCP\Util::addStyle('cafevdb', 'jquery.Jcrop');  
+    \OCP\Util::addStyle('cafevdb', 'jquery.Jcrop');
+
+    \OCP\Util::addScript('core', 'jquery-showpassword');
 
     \OCP\Util::addscript('files',   'jquery.iframe-transport');
     \OCP\Util::addscript('files',   'jquery.fileupload');
