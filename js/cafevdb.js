@@ -256,6 +256,7 @@ var CAFEVDB = CAFEVDB || {};
         this.oldheight = this.style.height;
       }
       if (this.style.width != this.oldwidth || this.style.height != this.oldheight) {
+alert('trigger resize');
         var self = this;
         if (delay > 0) {
           if (this.resize_timeout) {

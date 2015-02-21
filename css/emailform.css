@@ -30,7 +30,7 @@ div#emailformwrapper {
 }
 
 .ui-dialog.emailform {
-  overflow:visible;
+  overflow:hidden;
   max-height: 90% !important;
   max-width: 90% !important;
 }
@@ -78,6 +78,18 @@ ul#emailformtabs {
 
 /*****************************************************************************
  *
+ * recipients filters
+ *
+ */
+
+#emailformdialog #emailformrecipients {
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: 0px !important;
+}
+
+/*****************************************************************************
+ *
  * status messages
  *
  */
@@ -95,15 +107,15 @@ ul#emailformtabs {
  *
  */
 
-form#cafevdb-email-form td.caption {
-  font-weight:bold;
-  vertical-align:top;
-}
-
 #emailformdialog #emailformcomposer  {
   overflow-y: auto;
   overflow-x: hidden;
   padding-bottom: 0px !important;
+}
+
+form#cafevdb-email-form td.caption {
+  font-weight:bold;
+  vertical-align:top;
 }
 
 fieldset.email-composition.page {

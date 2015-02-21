@@ -64,6 +64,24 @@ CAFEVDB.Email = CAFEVDB.Email || {};
               });
   };
 
+  Email.tabResize = function (dialogWidget, panelHolder) {
+    var titleOffset = (dialogWidget.find('.ui-dialog-titlebar').outerHeight(true)
+                      +
+                       dialogWidget.find('.ui-tabs-nav').outerHeight(true));
+    var panelHeight = panelHolder.outerHeight(true);
+    var panelOffset = panelHeight - panelHolder.height();
+    var dialogHeight = dialogWidget.height();
+    if (panelHeight > dialogHeight - titleOffset) {
+      
+      panelHolder.css('max-height', (dialogHeight-titleOffset-panelOffset)+'px');
+    }
+    if (panelHolder.get(0).scrollHeight > panelHolder.outerHeight(true)) {
+      panelHolder.css('padding-right', '2.4em');
+    } else {
+      panelHolder.css('padding-right', '');
+    }
+  };
+
   /**Add handlers to the control elements, and call the AJAX sciplets
    * for validation to update the recipients selection tab accordingly.
    * 
@@ -236,6 +254,12 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                                                    
       return false;
     });
+
+    panelHolder.off('resize');
+    panelHolder.on('resize', function() {
+      Email.tabResize(dialogHolder.dialog('widget'), panelHolder);
+    });
+
     return false;
   };
 
@@ -1018,22 +1042,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
 
     panelHolder.off('resize');
     panelHolder.on('resize', function() {
-      var titleOffset = (dialogWidget.find('.ui-dialog-titlebar').outerHeight(true)
-                        +
-                         dialogWidget.find('.ui-tabs-nav').outerHeight(true));
-      var panelHeight = panelHolder.outerHeight(true);
-      var panelOffset = panelHeight - panelHolder.height();
-      var dialogHeight = dialogWidget.height();
-      if (panelHeight > dialogHeight - titleOffset) {
-
-        panelHolder.css('max-height', (dialogHeight-titleOffset-panelOffset)+'px');
-      }
-      if (panelHolder.get(0).scrollHeight > panelHolder.outerHeight(true)) {
-        panelHolder.css('padding-right', '2.4em');
-      } else {
-        panelHolder.css('padding-right', '');
-      }
-      return true;
+      Email.tabResize(dialogWidget, panelHolder);
     });
   };
 
@@ -1116,6 +1125,10 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                    active: single ? 1 : 0,
                    disabled: single ? [0] : [],
                    heightStyle: 'content',
+                   create: function(event, ui) {
+                     Email.tabResize(dialogWidget, ui.panel);
+                     return true;
+                   },
                    activate: function(event, ui) {
                      var newTabId = ui.newTab.attr('id');
 
@@ -1128,12 +1141,17 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                        newHeight -= $('#emailformtabs').outerHeight(true);
                        newHeight -= panel.outerHeight(true) - panel.height();
                        panel.height(newHeight);
-                     }
-
-                     if (newTabId == 'emailformcomposer-tab') {
-                       $('#attachment_upload_start').fileupload('option', 'dropZone', ui.newPanel);
                      } else {
-                       $('#attachment_upload_start').fileupload('option', 'dropZone', null);
+                       if (newTabId == 'emailformcomposer-tab') {
+                         $('#attachment_upload_start').fileupload('option', 'dropZone', ui.newPanel);
+                       } else {
+                         $('#attachment_upload_start').fileupload('option', 'dropZone', null);
+                       }
+
+                       // At least in FF their is also a resize event,
+                       // but only for the composition window. Don't
+                       // know why.
+                       Email.tabResize(dialogWidget, ui.newPanel);
                      }
 
                      return true;
@@ -1146,7 +1164,8 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                      var newTabId = ui.newTab.attr('id');
                      var oldTabId = ui.oldTab.attr('id');
 
-                     ui.newPanel.css('height','auto');
+                     ui.newPanel.css('max-height', '');
+                     ui.newPanel.css('height', 'auto');
 
                      if (oldTabId != 'emailformrecipients-tab' || newTabId != 'emailformcomposer-tab') {
                        return true;
