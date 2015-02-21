@@ -1,11 +1,11 @@
 div.cafevdb-page-header-box.blog-page {
-  height:19ex;
+  height:18ex;
 }
 div.cafevdb-page-header.blog-page {
   height:17ex;
 }
-div.cafevdb-page-body.blog-page {
-  padding-top:25ex;
+div.cafevdb-page-container.blog-page {
+  padding-top:19ex;
 }
 
 #cafevdb-page-blog-header {
@@ -30,7 +30,7 @@ div.cafevdb-page-header.collapsed #cafevdb-page-blog-header {
 }
 
 #blogframe {
-  margin-left: 0.5em;
+    margin-left: 0.5em;
 }
 
 #blogframe span.photo {
