@@ -99,6 +99,8 @@ CAFEVDB.Email = CAFEVDB.Email || {};
 
     var recipientsSelect   = fieldset.find('select#recipients-select');
     var missingAddresses   = fieldset.find('.missing-email-addresses.names');
+    var missingLabel       = fieldset.find('.missing-email-addresses.label');
+    var noMissingLabel     = fieldset.find('.missing-email-addresses.label.empty');
     var filterHistoryInput = fieldset.find('#recipients-filter-history');
     var debugOutput        = form.find('#emailformdebug');
 
@@ -150,6 +152,13 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                  recipientsSelect.bootstrapDualListbox('refresh', true);
                  filterHistoryInput.val(data.data.filterHistory);
                  missingAddresses.html(data.data.missingEmailAddresses);
+                 if (data.data.missingEmailAddresses.length > 0) {
+                   missingLabel.removeClass('hidden');
+                   noMissingLabel.addClass('hidden');
+                 } else {
+                   missingLabel.addClass('hidden');
+                   noMissingLabel.removeClass('hidden');
+                 }
                }
 
                var filterHistory = data.data.filterHistory;

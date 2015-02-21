@@ -702,6 +702,10 @@ input[type=checkbox].cafevdb-password-show + label.cafevdb-password-show {
   text-indent: -10000em;
 }
 
+.hidden {
+  display:none !important;
+}
+
 /*
  * Local Variables: ***
  * cssm-indent-level: 2 ***

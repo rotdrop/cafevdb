@@ -53,6 +53,16 @@ if ($projectId > 0) {
   $projectName = '';
 }
 
+$noMissingClass = '';
+$missingClass = '';
+if (count($_['MissingEmailAddresses']) > 0) {
+  $noMissingClass = ' hidden';
+} else {
+  $missingClass = ' hidden';
+}
+$noMissingText = L::t('No Musician without or obviously broken email-address found :)');
+$missingText = L::t('Musicians without or obviously broken email-address');
+
 ?>
 
 <fieldset id="cafevdb-email-recipients-fieldset" class="email-recipients page">
@@ -168,8 +178,11 @@ if ($projectId > 0) {
   <div class="row">
     <span class="container left missing-email-addresses tipsy-sw"
           title="<?php echo Config::tooltips('email-recipients-broken-emails'); ?>">
-      <span class="label top missing-email-addresses">
-        <?php echo L::t('Musicians without or obviously broken email-address'); ?>
+      <span class="label top missing-email-addresses<?php echo $missingClass; ?>">
+        <?php echo $missingText; ?>
+      </span>
+      <span class="label top missing-email-addresses empty<?php echo $noMissingClass; ?>">
+        <?php echo $noMissingText; ?>
       </span>
       <span class="missing-email-addresses names">
         <?php
