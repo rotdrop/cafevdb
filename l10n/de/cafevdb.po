@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-02-22 00:10+0100\n"
-"PO-Revision-Date: 2015-01-05 03:18+0100\n"
+"PO-Revision-Date: 2015-02-22 00:24+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -2876,37 +2876,35 @@ msgid "Add new Instruments"
 msgstr "Neue Instrumente"
 
 #: lib/instruments.php:270
-#, fuzzy, php-format
-#| msgid "SQL-Error ``%s''. Could not execute the query ``%s''"
+#, php-format
 msgid ""
 "Could not execute the query\n"
 "%s\n"
 "SQL-Error: %s"
 msgstr ""
-"SQL-Fehler ``%s''. Die folgende Abfrage konnte nicht ausgeführt werden: ``"
-"%s''"
+"Die folgende Abfrage konnte nicht ausgeführt werden:\n"
+"%s\n"
+"SQL-Fehler: %s"
 
 #: lib/instruments.php:353
 msgid "Needed Instruments"
 msgstr "Benötigte Instrumente"
 
 #: lib/instruments.php:358
-#, fuzzy, php-format
-#| msgid "Instrument does not yet exist, cannot change its name: `%s'"
+#, php-format
 msgid ""
 "Instrument `%s' does not yet exist in table `%s', cannot change its name to `"
 "%s'"
-msgstr ""
-"Das Instrument `%s' gibt es aber leider gar, wie soll ich das dann umbenenen?"
+msgstr "Das Instrument `%s' gibt es aber leider gar nicht, wie soll ich das dann zu `%s' umbenenen?"
 
 #: lib/instruments.php:362
-#, fuzzy, php-format
-#| msgid "Instrument does not yet exist, cannot change its name: `%s'"
+#, php-format
 msgid ""
 "Instrument `%s' already exists in table `%s', cannot change its name from `"
 "%s'"
 msgstr ""
-"Das Instrument `%s' gibt es aber leider gar, wie soll ich das dann umbenenen?"
+"Das Instrument `%s' gibt es bereits in der Tabelle `%s', kann den\n"
+"ursprünglichen Namen `%s' nicht ändern."
 
 #: lib/instruments.php:381 lib/instruments.php:411 lib/instruments.php:421
 #, php-format
@@ -5668,10 +5666,8 @@ msgid "Export Messages"
 msgstr "Em@il exportiern"
 
 #: templates/part.emailform.recipients.php:63
-#, fuzzy
-#| msgid "Musicians without or obviously broken email-address"
 msgid "No Musician without or obviously broken email-address found :)"
-msgstr "Musiker ohne oder mit offensichtlich ungültiger Em@il"
+msgstr "Keine Musiker ohne oder mit offensichtlich ungültiger Em@il gefunden :)"
 
 #: templates/part.emailform.recipients.php:64
 msgid "Musicians without or obviously broken email-address"
