@@ -603,6 +603,7 @@ table.pme-navigation {
   border:#004d9c 0px solid;
   border-collapse:collapse;
   border-spacing:0px;
+  width:100%;
 }
 
 td[class*='pme-header'], th[class*='pme-header'] {
@@ -653,7 +654,8 @@ td.pme-message {
 }
 td.pme-stats   {
   text-align:right;
-  padding-left:10ex;
+  padding-left:1em;
+  padding-right:0.5em;
 }
 
 td[class^='pme-cell-0'] {
