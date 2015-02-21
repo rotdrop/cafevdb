@@ -918,7 +918,7 @@ redaxoRehearsalsModule
       self::$cgiVars = array('Template' => 'blog',
                              'MusicianId' => -1,
                              'ProjectId' => -1,
-                             'ProjectName' => '',
+                             'ProjectName' => false,
                              'RecordsPerPage' => -1);
       self::$toolTipsArray = ToolTips::toolTips();
       self::$pmeopts['tooltips'] = self::$toolTipsArray;
