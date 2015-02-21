@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-02-22 00:13+0100\n"
-"PO-Revision-Date: 2015-02-22 00:22+0100\n"
+"PO-Revision-Date: 2015-02-22 00:29+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -2903,7 +2903,8 @@ msgid ""
 "Instrument `%s' already exists in table `%s', cannot change its name from `"
 "%s'"
 msgstr ""
-"Das Instrument `%s' gibt es aber leider gar, wie soll ich das dann umbenenen?"
+"Das Instrument `%s' gibt es bereits in der Tabelle `%s', kann den\n"
+"ursprünglichen Namen `%s' nicht ändern."
 
 #: lib/instruments.php:381 lib/instruments.php:411 lib/instruments.php:421
 #, php-format
