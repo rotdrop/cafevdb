@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-02-20 13:21+0100\n"
+"POT-Creation-Date: 2015-02-22 00:10+0100\n"
 "PO-Revision-Date: 2015-01-05 03:18+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
@@ -1455,10 +1455,10 @@ msgstr "Setze `%s' auf `%s'"
 msgid "Unknown WYSIWYG-Editor: `%s'"
 msgstr "Unbekannter WYSIWYG-Edtior: `%s'"
 
-#: js/blog.js:53 js/blog.js:156 js/blog.js:194 js/blog.js:288 js/blog.js:319
-#: js/blog.js:347 js/cafevdb.js:1063 js/cafevdb.js:1125 js/email.js:33
-#: js/email.js:62 js/email.js:412 js/email.js:443 js/email.js:606
-#: js/events.js:64 js/events.js:149 js/inlineimage.js:84 js/inlineimage.js:92
+#: js/blog.js:53 js/blog.js:156 js/blog.js:207 js/blog.js:243
+#: js/cafevdb.js:1063 js/cafevdb.js:1125 js/email.js:33 js/email.js:62
+#: js/email.js:445 js/email.js:476 js/email.js:639 js/events.js:64
+#: js/events.js:149 js/inlineimage.js:84 js/inlineimage.js:92
 #: js/inlineimage.js:102 js/inlineimage.js:131 js/inlineimage.js:155
 #: js/inlineimage.js:183 js/inlineimage.js:207 js/inlineimage.js:326
 #: js/inlineimage.js:412 js/inlineimage.js:421 js/inlineimage.js:424
@@ -1482,27 +1482,27 @@ msgstr ""
 msgid "Really cancel current entry?"
 msgstr "Wirklich abbrechen?"
 
-#: js/blog.js:173
+#: js/blog.js:186
 msgid "One-time Blog Popup"
 msgstr "Einmalige Popup-Notiz"
 
-#: js/blog.js:180
+#: js/blog.js:193
 msgid "I have read this popup, please bother me no more!"
 msgstr "Ich hab's gelesen, bitte nicht wieder anzeigen!"
 
-#: js/blog.js:181
+#: js/blog.js:194
 msgid "Mark this popup as read; the popup will not show up again."
 msgstr ""
 "Die Nachricht als gelesen markieren; das Popup-Fenster wird nicht wieder "
 "erscheinen."
 
-#: js/blog.js:274
+#: js/blog.js:302
 msgid "The entire message thread will be deleted if you press `Yes'"
 msgstr ""
 "Die Nachricht und alle `Follow-Ups' werden gelöscht, wenn Sie auf `Ja' "
 "klicken."
 
-#: js/blog.js:275
+#: js/blog.js:303
 msgid "Really delete the entry?"
 msgstr "Den Beitrag wirklich löschen?"
 
@@ -1674,30 +1674,30 @@ msgstr ""
 msgid "Not called from main email-form."
 msgstr "Nicht vom Haupt-Formular aufgerufen (Fehler)."
 
-#: js/email.js:410
+#: js/email.js:443
 #, python-brace-format
 msgid "Unknown form element: {FormElement}"
 msgstr "Unbekanntes Formularfeld: {FormElement}"
 
-#: js/email.js:442
+#: js/email.js:475
 #, python-brace-format
 msgid "Unknown request: {Request}"
 msgstr "Unbekannte Anfrage: {Request}"
 
-#: js/email.js:515
+#: js/email.js:548
 #, python-brace-format
 msgid "Sending message {active} out of {total}"
 msgstr "Sende Nachricht %d von %d"
 
-#: js/email.js:517
+#: js/email.js:550
 msgid "Message delivery in progress"
 msgstr "Nachrichten-Auslieferung ist im Gang"
 
-#: js/email.js:542
+#: js/email.js:575
 msgid "Message Delivery Status"
 msgstr "Em@il-Sende-Monitor"
 
-#: js/email.js:571
+#: js/email.js:604
 msgid ""
 "Email sending is in progress. Leaving the page now will cancel the email "
 "submission."
@@ -1705,11 +1705,11 @@ msgstr ""
 "Nachrichten werden gerade gesendet. Das Verlassen der Seite würde den\n"
 "Vorgang möglicherweise abbrechen."
 
-#: js/email.js:603
+#: js/email.js:636
 msgid "Unable to export message(s):"
 msgstr "Kann die Nachricht(en) nicht exportieren:"
 
-#: js/email.js:668
+#: js/email.js:701
 #, python-brace-format
 msgid ""
 "A template with the name `{TemplateName}' already exists, do you want to "
@@ -1718,127 +1718,127 @@ msgstr ""
 "Es gibt bereits eine Vorlage mit dem Namen `{TemplateName}'; soll die "
 "überschrieben werden?"
 
-#: js/email.js:670
+#: js/email.js:703
 msgid "Overwrite existing template?"
 msgstr "Existierende Vorlage überschreiben?"
 
-#: js/email.js:692
+#: js/email.js:725
 #, python-brace-format
 msgid ""
 "Do you really want to delete the template with the name `{TemplateName}'?"
 msgstr ""
 "Möchten Sie die Email-Vorlage mit dem Namen {TemplateName} wirklich löschen?"
 
-#: js/email.js:694
+#: js/email.js:727
 msgid "Really Delete Template?"
 msgstr "Vorlage tatsächlich löschen?"
 
-#: js/email.js:703
+#: js/email.js:736
 #, python-brace-format
 msgid "Cannot delete non-existing template `{TemplateName}'"
 msgstr ""
 "Die Vorlage {TemplateName} existiert nicht und kann deshalb auch nicht "
 "gelöscht werden."
 
-#: js/email.js:705
+#: js/email.js:738
 msgid "Unknown Template"
 msgstr "Unbekannte Email-Vorlage."
 
-#: js/email.js:808
+#: js/email.js:841
 msgid "Do you really want to delete all event attachments?"
 msgstr "Möchten Sie wirklich alle Termin-Anhänge löschen?"
 
-#: js/email.js:809 js/email.js:893
+#: js/email.js:842 js/email.js:926
 msgid "Really Delete Attachments?"
 msgstr "Anhänge wirklich löschen?"
 
-#: js/email.js:878
+#: js/email.js:911
 msgid "Select Attachment"
 msgstr "Anhang auswählen"
 
-#: js/email.js:892
+#: js/email.js:925
 msgid "Do you really want to delete all file attachments?"
 msgstr "Möchten Sie wirklich alle Datei-Anhänge löschen?"
 
-#: js/email.js:937 templates/part.emailform.composer.php:109
+#: js/email.js:970 templates/part.emailform.composer.php:109
 #: templates/part.emailform.composer.php:127
 msgid "Address Book"
 msgstr "Adressbuch"
 
-#: js/email.js:938
+#: js/email.js:971
 msgid "Accept"
 msgstr "Übernehmen"
 
-#: js/email.js:940
+#: js/email.js:973
 msgid "Save Contacts"
 msgstr "Kontakte speichern"
 
-#: js/email.js:943
+#: js/email.js:976
 msgid ""
 "Save the selected supplementary emails to the address-book for later reusal."
 msgstr ""
 "Sichere die zusätzlichen Emails aus dem Eingabefeld im Adressbuch,\n"
 "damit die später wieder verwendet werden können."
 
-#: js/email.js:1079
+#: js/email.js:1097
 #, python-brace-format
 msgid "Em@il Form for {ProjectName}"
 msgstr "Em@il Formular für {ProjectName}"
 
-#: js/email.js:1082
+#: js/email.js:1100
 msgid "Em@il Form"
 msgstr "Em@il Formular"
 
-#: js/email.js:1198
+#: js/email.js:1226
 msgid "Move all"
 msgstr "Alle auswählen"
 
-#: js/email.js:1199
+#: js/email.js:1227
 msgid "Move selected"
 msgstr "Ausgewählte verschieben"
 
-#: js/email.js:1200
+#: js/email.js:1228
 msgid "Remove selected"
 msgstr "Ausgewählte entfernen"
 
-#: js/email.js:1201
+#: js/email.js:1229
 msgid "Remove all"
 msgstr "Alle entfernen"
 
-#: js/email.js:1202
+#: js/email.js:1230
 msgid "Remaining Recipients"
 msgstr "Verbleibende Empfänger"
 
-#: js/email.js:1203
+#: js/email.js:1231
 msgid "Selected Recipients"
 msgstr "Ausgewählte Empfänger"
 
-#: js/email.js:1204
+#: js/email.js:1232
 #, python-brace-format
 msgid "Showing all {0}"
 msgstr "Alle {0} werden angezeigt"
 
-#: js/email.js:1206
+#: js/email.js:1234
 msgid "Filtered"
 msgstr "Suchergebnis"
 
-#: js/email.js:1208
+#: js/email.js:1236
 msgid "from"
 msgstr "aus"
 
-#: js/email.js:1210
+#: js/email.js:1238
 msgid "Empty list"
 msgstr "Leere Liste"
 
-#: js/email.js:1211
+#: js/email.js:1239
 msgid "Filter"
 msgstr "Suchbegriff"
 
-#: js/email.js:1212
+#: js/email.js:1240
 msgid "show all"
 msgstr "alle anzeigen"
 
-#: js/email.js:1218
+#: js/email.js:1246
 msgid "Click on the names to move the respective person to the other box"
 msgstr ""
 "Bitte die Namen anklicken, um den jeweiligen Adressaten in den anderen "
@@ -2046,7 +2046,7 @@ msgstr "Anwenden"
 msgid "Save the data in the underlying data-base storage. Keep the form open."
 msgstr "Speichert die Daten in der Datenbank. Das Formular bleibt offen."
 
-#: js/sepa-debit-mandate.js:141 templates/blogthreads.php:97
+#: js/sepa-debit-mandate.js:141 templates/blogthreads.php:98
 msgid "Delete"
 msgstr "Löschen"
 
@@ -4771,19 +4771,19 @@ msgstr ", Priorität %d"
 msgid ", latest change by `%s', %s"
 msgstr ", zuletzt geändert von `%s', %s"
 
-#: templates/blogthreads.php:82
+#: templates/blogthreads.php:83
 msgid "Reply"
 msgstr "Anworten"
 
-#: templates/blogthreads.php:85
+#: templates/blogthreads.php:86
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: templates/blogthreads.php:90
+#: templates/blogthreads.php:91
 msgid "Raise priority"
 msgstr "Darstellungspriorität erhöhen"
 
-#: templates/blogthreads.php:93
+#: templates/blogthreads.php:94
 msgid "Lower priority"
 msgstr "Darstellungspriorität vermindern."
 
@@ -5667,47 +5667,53 @@ msgstr "Em@il verschicken"
 msgid "Export Messages"
 msgstr "Em@il exportiern"
 
-#: templates/part.emailform.recipients.php:66
-msgid "Basic Recipients Set"
-msgstr "Auswahl-Kontext"
+#: templates/part.emailform.recipients.php:63
+#, fuzzy
+#| msgid "Musicians without or obviously broken email-address"
+msgid "No Musician without or obviously broken email-address found :)"
+msgstr "Musiker ohne oder mit offensichtlich ungültiger Em@il"
 
-#: templates/part.emailform.recipients.php:113
-msgid "Member-Status"
-msgstr "Mitgliedsstatus"
-
-#: templates/part.emailform.recipients.php:121
-msgid "Select Members by Status"
-msgstr "Empfänger gemäß Status"
-
-#: templates/part.emailform.recipients.php:133
-msgid "Email Recipients"
-msgstr "Em@il Empfänger"
-
-#: templates/part.emailform.recipients.php:149
-msgid "Instruments Filter"
-msgstr "Instrumenten-Filter"
-
-#: templates/part.emailform.recipients.php:158
-msgid "Select Instruments"
-msgstr "Instrumente auswählen"
-
-#: templates/part.emailform.recipients.php:172
+#: templates/part.emailform.recipients.php:64
 msgid "Musicians without or obviously broken email-address"
 msgstr "Musiker ohne oder mit offensichtlich ungültiger Em@il"
 
-#: templates/part.emailform.recipients.php:188
+#: templates/part.emailform.recipients.php:76
+msgid "Basic Recipients Set"
+msgstr "Auswahl-Kontext"
+
+#: templates/part.emailform.recipients.php:123
+msgid "Member-Status"
+msgstr "Mitgliedsstatus"
+
+#: templates/part.emailform.recipients.php:131
+msgid "Select Members by Status"
+msgstr "Empfänger gemäß Status"
+
+#: templates/part.emailform.recipients.php:143
+msgid "Email Recipients"
+msgstr "Em@il Empfänger"
+
+#: templates/part.emailform.recipients.php:159
+msgid "Instruments Filter"
+msgstr "Instrumenten-Filter"
+
+#: templates/part.emailform.recipients.php:168
+msgid "Select Instruments"
+msgstr "Instrumente auswählen"
+
+#: templates/part.emailform.recipients.php:201
 msgid "Apply Filter"
 msgstr "Filter anwenden"
 
-#: templates/part.emailform.recipients.php:194
+#: templates/part.emailform.recipients.php:207
 msgid "Undo Filter"
 msgstr "Filter `Undo'"
 
-#: templates/part.emailform.recipients.php:201
+#: templates/part.emailform.recipients.php:214
 msgid "Redo Filter"
 msgstr "Filter `Redo'"
 
-#: templates/part.emailform.recipients.php:208
+#: templates/part.emailform.recipients.php:221
 msgid "Reset Filter"
 msgstr "Filter zurücksetzen"
 
