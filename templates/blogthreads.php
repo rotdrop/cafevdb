@@ -76,7 +76,8 @@ if ($blog['status'] == 'error') {
 
     $text  = $msg['message'];
     echo '  <li class="blogentry level'.$level.'"><div class="blogentry level'.$level.'">
-    <span class="photo"><img class="photo" src="'.$avatar.'" '.$imgtitle.'/></span>
+    <!-- <span class="photo"><img class="photo" src="'.$avatar.'" '.$imgtitle.'/></span> -->
+    <span class="avatar photo" data-author="'.$author.'" data-size="64"></span>
     <span id="blogentryactions">
       <button class="blogbutton reply" id="blogreply'.$id.'" name="blogreply'.$id.'" value="'.$id.'" title="'.Config::toolTips('blogentry-reply').'">
         <img class="png blogbutton reply" src="'.\OCP\Util::imagePath('cafevdb', 'reply.png').'" alt="'.L::t('Reply').'"/>
