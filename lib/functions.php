@@ -654,33 +654,52 @@ __EOT__;
         break;
       }
 
-      $cookies = array();
-      foreach($_COOKIE as $name => $value) {
-        $cookies[] = "$name=$value";
+      if (function_exists('curl_version')) {
+        $cookies = array();
+        foreach($_COOKIE as $name => $value) {
+          $cookies[] = "$name=$value";
+        }
+        session_write_close(); // avoid deadlock
+        $c = curl_init($url);
+        curl_setopt($c, CURLOPT_VERBOSE, 1);
+        curl_setopt($c, CURLOPT_POST, 1);
+        curl_setopt($c, CURLOPT_POSTFIELDS, $postData);
+        if (count($cookies) > 0) {
+          curl_setopt($c, CURLOPT_COOKIE, join("; ", $cookies));
+        }
+        curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
+        $result = curl_exec($c);
+        curl_close($c);
+        session_start(); // restart it
+      } else {
+        $cookies = array();
+        foreach($_COOKIE as $name => $value) {
+          $cookies[] = "$name=$value";
+        }
+        $cookies = (count($cookies) > 0) ? "Cookie: " . join("; ", $cookies) . "\r\n" : '';
+
+        $context = stream_context_create(array('http' => array(
+                                                 'method' => 'post',
+                                                 'header' => $httpHeader."\r\n".$cookies,
+                                                 'content' => $postData,
+                                                 'follow_location' => 1
+                                                 )));
+
+        session_write_close(); // avoid deadlock
+
+        $fp = fopen($url, 'rb', false, $context);
+        $result = '';
+
+        if ($fp === false) {
+          throw new \RunTimeException(L::t("Unable to post to route %s (%s)", array($route, $url)));
+        }
+
+        $result = stream_get_contents($fp);
+        fclose($fp);
+
+        session_start(); // restart it
       }
-      $cookies = (count($cookies) > 0) ? "Cookie: " . join("; ", $cookies) . "\r\n" : '';
-
-      $context = stream_context_create(array('http' => array(
-                                               'method' => 'post',
-                                               'header' => $httpHeader."\r\n".$cookies,
-                                               'content' => $postData,
-                                               'follow_location' => 1
-                                               )));
-
-      session_write_close(); // avoid deadlock
-
-      $fp = fopen($url, 'rb', false, $context);
-      $result = '';
-
-      if ($fp === false) {
-        throw new \RunTimeException(L::t("Unable to post to route %s (%s)", array($route, $url)));
-      }
-
-      $result = stream_get_contents($fp);
-      fclose($fp);
-
-      session_start(); // restart it
-
+      
       $data = json_decode($result, true);
       if (!is_array($data) || (count($data) > 0 && !isset($data['data']))) {
         throw new \RunTimeException(
