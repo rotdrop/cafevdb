@@ -107,7 +107,11 @@ namespace CAFEVDB {
     $tmpl->assign('mandateId', $mandate['id']);
     $tmpl->assign('mandateReference', $mandate['mandateReference']);
     $tmpl->assign('mandateDate', date('d.m.Y', strtotime($mandate['mandateDate'])));
-    $tmpl->assign('lastUsedDate', date('d.m.Y', strtotime($mandate['lastUsedDate'])));
+    if ($mandate['lastUsedDate']) {
+      $tmpl->assign('lastUsedDate', date('d.m.Y', strtotime($mandate['lastUsedDate'])));
+    } else {
+      $tmpl->assign('lastUsedDate', '');
+    }
     $tmpl->assign('sequenceType', $mandate['sequenceType']);
 
     $tmpl->assign('bankAccountOwner', $mandate['bankAccountOwner']);
