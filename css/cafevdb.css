@@ -702,7 +702,7 @@ input[type=checkbox].cafevdb-password-show + label.cafevdb-password-show {
   text-indent: -10000em;
 }
 
-.hidden {
+.reallyhidden {
   display:none !important;
 }
 
