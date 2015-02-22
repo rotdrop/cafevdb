@@ -56,9 +56,9 @@ if ($projectId > 0) {
 $noMissingClass = '';
 $missingClass = '';
 if (count($_['MissingEmailAddresses']) > 0) {
-  $noMissingClass = ' hidden';
+  $noMissingClass = ' reallyhidden';
 } else {
-  $missingClass = ' hidden';
+  $missingClass = ' reallyhidden';
 }
 $noMissingText = L::t('No Musician without or obviously broken email-address found :)');
 $missingText = L::t('Musicians without or obviously broken email-address');

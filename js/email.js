@@ -153,11 +153,11 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                  filterHistoryInput.val(data.data.filterHistory);
                  missingAddresses.html(data.data.missingEmailAddresses);
                  if (data.data.missingEmailAddresses.length > 0) {
-                   missingLabel.removeClass('hidden');
-                   noMissingLabel.addClass('hidden');
+                   missingLabel.removeClass('reallyhidden');
+                   noMissingLabel.addClass('reallyhidden');
                  } else {
-                   missingLabel.addClass('hidden');
-                   noMissingLabel.removeClass('hidden');
+                   missingLabel.addClass('reallyhidden');
+                   noMissingLabel.removeClass('reallyhidden');
                  }
                }
 
