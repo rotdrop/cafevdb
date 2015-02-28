@@ -93,7 +93,7 @@ namespace CAFEVDB {
                        'IBAN' => '',
                        'BIC' => '',
                        'BLZ' => '',
-                       'bankAccountOwner' => $musicianName);
+                       'bankAccountOwner' => Finance::sepaTranslit($musicianName));
     }
 
     $tmpl = new \OCP\Template('cafevdb', 'sepa-debit-mandate');
