@@ -641,8 +641,14 @@ __EOT__;
    */
   public static function beforeDeleteTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {//DELETE FROM Spielwiese2013View WHERE (Id = 146)
-    $query = "DELETE FROM `Besetzungen` WHERE `Id` = ".$oldvals['Id'];
-    $result = $pme->myquery($query);
+    $id = $oldvals['Id'];
+    $where = "`Id` = ".$id;
+    $realOldVals = mySQL::fetchRows('Besetzungen', $where, $pme->dbh);
+    $query = "DELETE FROM `Besetzungen` WHERE ".$where;
+    $result = mySQL::query($query, $pme->dbh);
+    if ($result !== false && count($realOldVals) == 1) {
+      mySQL::logDelete('Besetzungen', 'Id', $realOldVals[0], $pme->dbh);
+    }
     return false;
   }
 

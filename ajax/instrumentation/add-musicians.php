@@ -168,11 +168,12 @@ try {
     }
 
     $fees = Projects::fetchFees($projectId, $handle);
-    $query = "INSERT INTO `Besetzungen` (`MusikerId`,`ProjektId`,`Instrument`,`Unkostenbeitrag`)
- VALUES ('$musicianId','$projectId','$musInstrument','$fees')";
-
+    $values = array('MusikerId' => $musicianId,
+                    'ProjektId' => $projectId,
+                    'Instrument' => $musInstrument,
+                    'Unkostenbeitrag' => $fees);
     $instrumentationId = -1;
-    if (mySQL::query($query, $handle) === false) {
+    if (mySQL::insert('Besetzungen', $values, $handle) === false) {
       $failedMusicians[] = array('id' => $musicianId,
                                  'caption' => L::t('Adding %s (id = %d) failed.',
                                                    array($fullName, $musicianId)),
@@ -188,6 +189,7 @@ try {
                                  'message' => mySQL::error());
       continue;
     }
+    mySQL::logInsert('Besetzungen', $instrumentationId, $values, $handle);
 
     $addedMusicians[] = array('musicianId' => $musicianId,
                               'rows' => $numRows,
