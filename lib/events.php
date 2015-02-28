@@ -659,23 +659,10 @@ END:VALARM
     protected static function register($projectId, $eventId, $calendarId,
                                        $handle = false)
     {
-      $ownConnection = $handle === false;
-      if ($ownConnection) {
-        Config::init();
-        $handle = mySQL::connect(Config::$pmeopts);
-      }
-        
-      // Link it in.
-      $query = ''
-        ."INSERT INTO `ProjectEvents`"
-        ."  (`ProjectId`,`EventId`,`CalendarID`)"
-        ."  VALUES ('$projectId','$eventId','$calendarId')";
-      mySQL::query($query, $handle);
-
-
-      if ($ownConnection) {
-        mySQL::close($handle);
-      }
+      $values = array('ProjectId' => $projectId,
+                      'EventId' => $eventId,
+                      'CalendarID' => $calendarId);
+      $result = mySQL::insert('ProjectEvents', $values, $handle);
     }
 
     /**Unconditionally unregister the given event with the given project.
