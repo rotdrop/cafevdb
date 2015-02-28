@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-02-22 00:10+0100\n"
+"POT-Creation-Date: 2015-02-28 17:11+0100\n"
 "PO-Revision-Date: 2015-02-22 00:24+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
@@ -47,9 +47,9 @@ msgstr "Die Notiz mit Id `%s' konnte nicht geladen werden."
 #: ajax/email/addressbook.php:164 ajax/email/progress.php:73
 #: ajax/email/savecontacts.php:113 ajax/events/events.php:116
 #: ajax/events/execute.php:130 ajax/events/new.form.php:195
-#: ajax/events/sendmail.php:76 ajax/finance/sepa-debit-mandate.php:157
+#: ajax/events/sendmail.php:76 ajax/finance/sepa-debit-mandate.php:161
 #: ajax/finance/sepa-debit-settings.php:375
-#: ajax/instrumentation/add-musicians.php:241
+#: ajax/instrumentation/add-musicians.php:243
 #: ajax/instrumentation/change-musician-instruments.php:198
 #: ajax/instrumentation/change-project-instrument.php:118
 #: ajax/instruments/adjustInstrumentation.php:104
@@ -655,28 +655,28 @@ msgstr ""
 msgid "The musician %s doesn't seem to play any instrument ..."
 msgstr "Der Musiker %s scheint kein einziges Instrument zu spielen ..."
 
-#: ajax/instrumentation/add-musicians.php:177
+#: ajax/instrumentation/add-musicians.php:178
 #, php-format
 msgid "Adding %s (id = %d) failed."
 msgstr "Hinzufügen von %s (Id = %d) fehlgeschlagen."
 
-#: ajax/instrumentation/add-musicians.php:186
+#: ajax/instrumentation/add-musicians.php:187
 #, php-format
 msgid "Unable to get the new id for %s (id = %d)"
 msgstr "Kann die neue Id für %s (Id = %d) nicht ermitteln."
 
-#: ajax/instrumentation/add-musicians.php:202
+#: ajax/instrumentation/add-musicians.php:204
 #, php-format
 msgid "No musician could be added to the projecti, #failures: %d."
 msgstr ""
 "Keine Musiker konnten zum Projekt hinzugefügt werden, Anzahl der Fehlschäge: "
 "%d."
 
-#: ajax/instrumentation/add-musicians.php:211
+#: ajax/instrumentation/add-musicians.php:213
 msgid "Operation failed"
 msgstr "Aktion fehlgeschlagen"
 
-#: ajax/instrumentation/add-musicians.php:222
+#: ajax/instrumentation/add-musicians.php:224
 msgid "Operation succeeded with the following notifications:"
 msgstr "Die Aktion hatte Erfolg. Folgende Anmerkungen wurden übermittelt:"
 
@@ -1462,8 +1462,8 @@ msgstr "Unbekannter WYSIWYG-Edtior: `%s'"
 #: js/inlineimage.js:102 js/inlineimage.js:131 js/inlineimage.js:155
 #: js/inlineimage.js:183 js/inlineimage.js:207 js/inlineimage.js:326
 #: js/inlineimage.js:412 js/inlineimage.js:421 js/inlineimage.js:424
-#: js/sepa-debit-mandate.js:544 js/sepa-debit-mandate.js:559
-#: js/sepa-debit-mandate.js:649
+#: js/sepa-debit-mandate.js:560 js/sepa-debit-mandate.js:575
+#: js/sepa-debit-mandate.js:665
 msgid "Error"
 msgstr "Fehler"
 
@@ -2060,7 +2060,7 @@ msgstr ""
 "den Musikern nötig sein."
 
 #: js/sepa-debit-mandate.js:146 lib/detailed-instrumentation.php:349
-#: lib/detailed-instrumentation.php:676 lib/detailed-instrumentation.php:694
+#: lib/detailed-instrumentation.php:682 lib/detailed-instrumentation.php:700
 msgid "SEPA Debit Mandate"
 msgstr "SEPA Lastschriftmandat"
 
@@ -2078,31 +2078,31 @@ msgstr ""
 "Änderungen, die vorher über den `Anwenden'-Knopf gespeichert wurden,\n"
 "nicht rückgängig gemacht."
 
-#: js/sepa-debit-mandate.js:340 js/sepa-debit-mandate.js:378
+#: js/sepa-debit-mandate.js:356 js/sepa-debit-mandate.js:394
 msgid "Suggested alternatives based on common human mis-transcriptions:"
 msgstr "Mögliche Alternativen ausgehend von den üblichen Übertragungsfehlern:"
 
-#: js/sepa-debit-mandate.js:344 js/sepa-debit-mandate.js:382
+#: js/sepa-debit-mandate.js:360 js/sepa-debit-mandate.js:398
 msgid "Please do not accept these alternatives lightly!"
 msgstr "Bitte die Alternativen nicht leichtsinnig übernehmen!"
 
-#: js/sepa-debit-mandate.js:541 js/sepa-debit-mandate.js:646
+#: js/sepa-debit-mandate.js:557 js/sepa-debit-mandate.js:662
 msgid "Unable to export debit notes:"
 msgstr "Kann die Lastschrifteinzüge nicht exportieren:"
 
-#: js/sepa-debit-mandate.js:556
+#: js/sepa-debit-mandate.js:572
 msgid "Unable to export insurance overviews:"
 msgstr "Kann die Versicherungs-Übersichten nicht exportieren:"
 
-#: js/sepa-debit-mandate.js:577
+#: js/sepa-debit-mandate.js:593
 msgid "InsuranceDebitNoteAnnouncement"
 msgstr "VersicherungsLastschriftAnkuendigung"
 
-#: js/sepa-debit-mandate.js:578 js/sepa-debit-mandate.js:665
+#: js/sepa-debit-mandate.js:594 js/sepa-debit-mandate.js:681
 msgid "Debit notes due in 17 days"
 msgstr "Lastschrifteinzug in 17 Tagen"
 
-#: js/sepa-debit-mandate.js:664
+#: js/sepa-debit-mandate.js:680
 msgid "ProjectDebitNoteAnnouncement"
 msgstr "ProjektLastschriftAnkuendigung"
 
@@ -2114,17 +2114,17 @@ msgstr "Fehler:"
 msgid "Please standby, the operation will take some time!"
 msgstr "Bitte warten, das dauert jetzt ein wenig!"
 
-#: lib/config.php:670
+#: lib/config.php:669
 #, php-format
 msgid "Decryption of `%s`@`%s` failed"
 msgstr "Entschlüsselung von `%s' @ `%s' fehlgeschlagen"
 
-#: lib/config.php:674
+#: lib/config.php:673
 #, php-format
 msgid "Encryption of `%s`@`%s` failed"
 msgstr "Verschlüsselung von `%s' @ `%s' fehlgeschlagen"
 
-#: lib/config.php:680
+#: lib/config.php:679
 #, php-format
 msgid "Unable to update table data at index %s"
 msgstr "Kann die Tabellenzeile mit Index %s nicht ändern"
@@ -2260,7 +2260,7 @@ msgstr "Foto"
 msgid "Last Updated"
 msgstr "Letzte Aktualisierung"
 
-#: lib/detailed-instrumentation.php:700
+#: lib/detailed-instrumentation.php:706
 msgid "Click to enter details of a potential SEPA debit mandate"
 msgstr ""
 "Anklicken um ggf. Informationen über ein SEPA-Lastschriftmandat einzutragen"
@@ -2316,11 +2316,11 @@ msgstr "Unerwartete Antwort beim Erzeugen der neuen Aufgabe: %s"
 msgid "Unable to create event from given data:"
 msgstr "Kann den Termin nicht aus den übermittelten Daten erstellen:"
 
-#: lib/events.php:960 lib/events.php:1147
+#: lib/events.php:947 lib/events.php:1134
 msgid "Unknown Calendar"
 msgstr "Unbekannter Kalender."
 
-#: lib/events.php:967
+#: lib/events.php:954
 msgid "Miscellaneous Calendars"
 msgstr "Weitere Kalender"
 
@@ -2377,7 +2377,7 @@ msgstr "Fehlende Felder im Lastschrifteinzug: %s (%s)."
 #: lib/finance.php:490 lib/finance.php:502 lib/finance.php:516
 #: lib/finance.php:538 lib/finance.php:550 lib/finance.php:564
 #: lib/finance.php:581 lib/finance.php:596 lib/finance.php:608
-#: lib/finance.php:618
+#: lib/finance.php:618 lib/finance.php:629
 msgid "Full data record:"
 msgstr "Betroffener Datensatz:"
 
@@ -2429,67 +2429,62 @@ msgstr "Ungültige Deutsche(?) Kontonummer %s @ %s."
 msgid "Probably invalid BIC: %s. Computed: %s. "
 msgstr "Vermutlich falsche BIC: %s. Automatisch ermittelt: %s."
 
-#: lib/finance.php:629
-#, php-format
-msgid "Full data record: %s"
-msgstr "Ungültige IBAN: %s."
-
-#: lib/functions.php:119
+#: lib/functions.php:126
 #, php-format
 msgid "Invalid argument value: `%s'"
 msgstr "Unsinniger Paramter-Wert: `%s'"
 
-#: lib/functions.php:653
+#: lib/functions.php:660
 msgid "Supported data formats are JSON and URLENCODED"
 msgstr "Nur die Datenformate JSON und URLENCODED werden unterstützt"
 
-#: lib/functions.php:676
+#: lib/functions.php:701
 #, php-format
 msgid "Unable to post to route %s (%s)"
 msgstr "Kann die service URL %s (%s) nicht erreichen.\""
 
-#: lib/functions.php:687
+#: lib/functions.php:713
 #, php-format
 msgid "Invalid response from API call: %s"
 msgstr "Ungültige Antwort auf eine API Anfrage: %s"
 
-#: lib/functions.php:797
+#: lib/functions.php:823
 msgid "Export Table"
 msgstr "Exportieren"
 
-#: lib/functions.php:805
+#: lib/functions.php:831
 msgid "Excel Export"
 msgstr "`Excel' Export"
 
-#: lib/functions.php:808
+#: lib/functions.php:834
 msgid "HTML/Spreadsheet"
 msgstr "HTML/Excel"
 
-#: lib/functions.php:811
+#: lib/functions.php:837
 msgid "CSV Export"
 msgstr "CSV Export"
 
-#: lib/functions.php:814
+#: lib/functions.php:840
 msgid "HTML Export"
 msgstr "HTML Export"
 
-#: lib/functions.php:1029
+#: lib/functions.php:1055
 msgid "Error: Unknonwn Button Type"
 msgstr "Fehler: Unbekannter Knopf-Typ"
 
-#: lib/functions.php:1049
+#: lib/functions.php:1075
 msgid "View all Projects"
 msgstr "Alle Projekte"
 
-#: lib/functions.php:1050
+#: lib/functions.php:1076
 msgid "Overview over all known projects (start-page)."
 msgstr "Alle gespeicherten Projekte anzeigen; Startseite der `Camerata App'."
 
-#: lib/functions.php:1061
+#: lib/functions.php:1087
 msgid "Display all Musicians"
 msgstr "Alle Musiker"
 
-#: lib/functions.php:1062
+#: lib/functions.php:1088
 msgid ""
 "Display all musicians stored in the data-base, with detailed facilities for "
 "filtering and sorting."
@@ -2497,7 +2492,7 @@ msgstr ""
 "Alle Musiker anzeigen, die in der Datenbank gespeichert sind. Es gibt dabei "
 "ausführliche Such- und Auswahlfunktionalität."
 
-#: lib/functions.php:1073
+#: lib/functions.php:1099
 msgid ""
 "Mass-email form, use with care. Mass-emails will be logged. Recipients will "
 "be specified by the Bcc: field in the header, so the recipients are "
@@ -2508,25 +2503,25 @@ msgstr ""
 "außerdem wird die ganze Pracht in der Daten bank gespeichter (siehe `Email "
 "Historie')"
 
-#: lib/functions.php:1086
+#: lib/functions.php:1112
 msgid "Email History"
 msgstr "Em@il Historie"
 
-#: lib/functions.php:1087
+#: lib/functions.php:1113
 msgid "Display all emails sent by our mass-email form."
 msgstr ""
 "Zeigt alle über unser unsägliches Massen-Mail gespamten Emails an. "
 "Insebesondere werden hier auch die Bcc: Empfänger gespeichert."
 
-#: lib/functions.php:1105
+#: lib/functions.php:1131
 msgid "The currently active project."
 msgstr "Das gerade ausgewählte Projekt."
 
-#: lib/functions.php:1120 lib/projects.php:798
+#: lib/functions.php:1146 lib/projects.php:798
 msgid "Instrumentation"
 msgstr "Besetzung"
 
-#: lib/functions.php:1121
+#: lib/functions.php:1147
 msgid ""
 "Detailed display of all registered musicians for the selected project. The "
 "table will allow for modification of personal data like email, phone, "
@@ -2536,11 +2531,11 @@ msgstr ""
 "Daten wie Email, Adresse usw. können hier geändert werden. Projektbezogene "
 "Daten können allerdings nur in der Ansicht `Kurz-Besetzung' geändert werden."
 
-#: lib/functions.php:1134 lib/project-instruments.php:385
+#: lib/functions.php:1160 lib/project-instruments.php:385
 msgid "Add Instruments"
 msgstr "Neue Instrumente"
 
-#: lib/functions.php:1135
+#: lib/functions.php:1161
 msgid ""
 "Display the list of instruments known by the data-base, possibly add new "
 "ones as needed."
@@ -2548,12 +2543,12 @@ msgstr ""
 "Tabelle mit allen derzeit gespeicherten Instrumenten; weitere Instrumente "
 "können hier einfach hinzugefügt werden."
 
-#: lib/functions.php:1148 lib/project-instruments.php:69 lib/projects.php:803
+#: lib/functions.php:1174 lib/project-instruments.php:69 lib/projects.php:803
 #: lib/projects.php:1056
 msgid "Instrumentation Numbers"
 msgstr "Besetzungszahlen"
 
-#: lib/functions.php:1149 lib/tooltips.php:391
+#: lib/functions.php:1175 lib/tooltips.php:391
 msgid ""
 "Display the desired instrumentaion numbers, i.e. how many musicians are "
 "already registered for each instrument group and how many are finally needed."
@@ -2561,20 +2556,20 @@ msgstr ""
 "Anzeige der angestrebten Besetzungszahlen. Natürlich kann man die dann auch "
 "anpassen ..."
 
-#: lib/functions.php:1162 lib/functions.php:1212 lib/projects.php:840
+#: lib/functions.php:1188 lib/functions.php:1238 lib/projects.php:840
 msgid "Debit Mandates"
 msgstr "Lastschriftmandate"
 
-#: lib/functions.php:1163
+#: lib/functions.php:1189
 msgid "Display a table with the SEPA debit mandates related to the project."
 msgstr ""
 "Zeigt eine Tabelle mit den SEPA-Lastschriftmandaten für das Projekt an."
 
-#: lib/functions.php:1176
+#: lib/functions.php:1202
 msgid "Insurances"
 msgstr "Versicherungen"
 
-#: lib/functions.php:1177
+#: lib/functions.php:1203
 msgid ""
 "Display a table with an overview about the current state of the member's "
 "instrument insurances."
@@ -2582,11 +2577,11 @@ msgstr ""
 "Zeigt eine Tabelle mit einer Übersicht über die "
 "Instrumentensammelversicherungen an."
 
-#: lib/functions.php:1188
+#: lib/functions.php:1214
 msgid "Insurance Rates"
 msgstr "Versicherungs-Raten"
 
-#: lib/functions.php:1189
+#: lib/functions.php:1215
 msgid ""
 "Display a table with the insurance rates for the individual instrument "
 "insurances."
@@ -2594,26 +2589,26 @@ msgstr ""
 "Zeigt eine Tabelle mit einer Übersicht über die Versicherungsraten der\n"
 "Instrumenten-Sammelversicherungen an."
 
-#: lib/functions.php:1200
+#: lib/functions.php:1226
 msgid "Insurance Brokers"
 msgstr "Versicherungsmakler"
 
-#: lib/functions.php:1201
+#: lib/functions.php:1227
 msgid "Display a table with the insurance brokers."
 msgstr ""
 "Zeigt eine Tabelle mit einer Übersicht über die Versicherungsanbieter an."
 
-#: lib/functions.php:1213
+#: lib/functions.php:1239
 msgid "Display a table with an overview over all SEPA debit mandates."
 msgstr ""
 "Zeigt eine Tabelle mit einer Übersicht über alle SEPA Lastschriftmandate an."
 
-#: lib/functions.php:1286
+#: lib/functions.php:1312
 #, php-format
 msgid "Could not connect to data-base server `%s': %s"
 msgstr "Konnte den Datenbank-Server `%s' nicht erreichen: %s"
 
-#: lib/functions.php:1299
+#: lib/functions.php:1325
 #, php-format
 msgid "Unable to select %s"
 msgstr "Kann die Tabelle %s nicht auswählen"
@@ -2895,7 +2890,9 @@ msgstr "Benötigte Instrumente"
 msgid ""
 "Instrument `%s' does not yet exist in table `%s', cannot change its name to `"
 "%s'"
-msgstr "Das Instrument `%s' gibt es aber leider gar nicht, wie soll ich das dann zu `%s' umbenenen?"
+msgstr ""
+"Das Instrument `%s' gibt es aber leider gar nicht, wie soll ich das dann zu `"
+"%s' umbenenen?"
 
 #: lib/instruments.php:362
 #, php-format
@@ -5667,7 +5664,8 @@ msgstr "Em@il exportiern"
 
 #: templates/part.emailform.recipients.php:63
 msgid "No Musician without or obviously broken email-address found :)"
-msgstr "Keine Musiker ohne oder mit offensichtlich ungültiger Em@il gefunden :)"
+msgstr ""
+"Keine Musiker ohne oder mit offensichtlich ungültiger Em@il gefunden :)"
 
 #: templates/part.emailform.recipients.php:64
 msgid "Musicians without or obviously broken email-address"
@@ -6333,6 +6331,9 @@ msgstr "PROJEKT"
 #: templates/share-settings.php:124
 msgid "Financial balance folder"
 msgstr "Finanz-Ordner"
+
+#~ msgid "Full data record: %s"
+#~ msgstr "Ungültige IBAN: %s."
 
 #~ msgid "non recurring"
 #~ msgstr "einmalig"
