@@ -41,6 +41,13 @@
   padding: 0;
 }
 
+/* Make the dialog somewhat smaller, otherwise the select 'family' box
+yields scrollbars and will be hidden */
+div.pme-table-container.Instruments {
+    height:25em !important;
+    background-color: #F2F8FF;
+}
+
 #add-instruments-block select.musician-instruments {
   width: 20em;
 }
