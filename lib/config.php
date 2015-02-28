@@ -111,7 +111,6 @@ redaxoRehearsalsModule
     const APP_BASE  = 'apps/cafevdb/';
     public static $privateKey = false; ///< Storage
     public static $prefix = false;
-    public static $triggers = false;
     public static $pmeopts = array();
     public static $dbopts = array();
     public static $opts = array();
@@ -809,9 +808,10 @@ redaxoRehearsalsModule
       if (!self::$prefix) {
         self::$prefix = self::APP_BASE . "lib/";
       }
-      if (!self::$triggers) {
-        self::$triggers = self::$prefix . "triggers/";
-      }
+
+      // Oh well. This is just a hack to pass the OC-user to the
+      // changelog table of PME.
+      $_SERVER['REMOTE_USER'] = \OC_User::getUser();
 
       self::$dbopts['hn'] = @self::$opts['dbserver'];
       self::$dbopts['un'] = @self::$opts['dbuser'];
