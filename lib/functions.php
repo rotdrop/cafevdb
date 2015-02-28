@@ -51,7 +51,14 @@ namespace CAFEVDB
         // Mea Culpa: don't include a new-line after end tag
         //strval(self::$l->t('blah'));
       }
-      return (string)self::$l->t($text, $parameters);
+      //return (string)self::$l->t($text, $parameters);
+      try {
+        $l10nText = self::$l->t($text, $parameters);
+        $result = $l10nText->__toString();
+        return $result;
+      } catch (\Exception $e) {
+        throw new \Exception('Cannot translate string: "'.$text.'", arguments: '.print_r($parameters, true), -1, $e);
+      }
     }
   };
 
