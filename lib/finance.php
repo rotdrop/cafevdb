@@ -626,7 +626,7 @@ namespace CAFEVDB
             $nl.
             L::t('Probably invalid BIC: %s. Computed: %s. ', array($BIC, $blzBIC)).
             $nl.
-            L::t('Full data record: %s').
+            L::t('Full data record:').
             $nl.
             print_r($mandate, true));
         }

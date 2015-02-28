@@ -162,21 +162,28 @@ var CAFEVDB = CAFEVDB || {};
       open: function(){
         var dlg = $(this);
         //$('.tipsy').remove();
+
+        var buttons = {
+          save: dlg.dialog("widget").find('button.save'),
+          apply: dlg.dialog("widget").find('button.apply'),
+          delete: dlg.dialog("widget").find('button.delete'),
+          change: dlg.dialog("widget").find('button.change')
+        };
         
         if (self.mandateId > 0) {
           // If we are about to display an existing mandate, first
           // disable all inputs and leave only the "close" and
           // "change" buttons enabled.
-          dlg.dialog("widget").find('button.save').attr("disabled", true);
-          dlg.dialog("widget").find('button.apply').attr("disabled", true);
-          dlg.dialog("widget").find('button.delete').attr("disabled", true);
+          buttons.save.attr("disabled", true);
+          buttons.apply.attr("disabled", true);
+          buttons['delete'].attr("disabled", true);
           mandateForm.find('input[class^="bankAccount"]').attr("disabled", true);
           mandateForm.find('input.mandateDate').attr("disabled", true);
           mandateForm.find('input.lastUsedDate').attr("disabled", true);
         } else {
-          dlg.dialog("widget").find('button.save').attr("disabled", !self.instantValidation);
-          dlg.dialog("widget").find('button.apply').attr("disabled", !self.instantValidation);
-          dlg.dialog("widget").find('button.change').attr("disabled", true);
+          buttons.save.attr("disabled", !self.instantValidation);
+          buttons.apply.attr("disabled", !self.instantValidation);
+          buttons.change.attr("disabled", true);
         }
 
         $('button').tipsy({gravity:'ne', fade:true});
@@ -210,7 +217,16 @@ var CAFEVDB = CAFEVDB || {};
         var validateInput = function(event) {
           var input = $(this);
           self.validate.call(this, event, function(lock) {
+            // disable the text field during validation
             input.prop('disabled', lock);
+            // disable save and apply during validation
+            if (lock) {
+              buttons.save.attr('disabled', true);
+              buttons.apply.attr('disabled', true);
+            } else {
+              buttons.save.attr("disabled", !self.instantValidation);
+              buttons.apply.attr("disabled", !self.instantValidation);
+            }
           });
         };
 
@@ -232,8 +248,8 @@ var CAFEVDB = CAFEVDB || {};
             mandateForm.find('#bankAccountIBAN').on('blur', validateInput);
             mandateForm.find('#bankAccountIBAN').trigger('blur');
           }
-          dlg.dialog("widget").find('button.save').attr("disabled", !self.instantValidation);
-          dlg.dialog("widget").find('button.apply').attr("disabled", !self.instantValidation);
+          buttons.save.attr("disabled", !self.instantValidation);
+          buttons.apply.attr("disabled", !self.instantValidation);
 
           return false;
         });
