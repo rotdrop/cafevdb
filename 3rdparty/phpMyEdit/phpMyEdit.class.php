@@ -3702,6 +3702,9 @@ class phpMyEdit
 		}
 		// Note change in log table
 		if ($this->logtable) {
+			if (empty($key_col_val)) {
+				$key_col_val = $this->rec;
+			}
 			$query = sprintf('INSERT INTO %s'
 							 .' (updated, user, host, operation, tab, rowkey, col, oldval, newval)'
 							 .' VALUES (NOW(), "%s", "%s", "insert", "%s", "%s", "", "", "%s")',
