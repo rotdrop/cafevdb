@@ -511,10 +511,10 @@ namespace CAFEVDB
             $nl.
             print_r($mandate, true));
         }
-        if ($key == 'lastUsedDate') {
-          continue;
-        }
         if ((string)$mandate[$key] == '') {
+          if ($key == 'lastUsedDate') {
+            continue;
+          }
           throw new \InvalidArgumentException(
             $nl.
             L::t('Empty fields in debit mandate: %s (%s).', array($key, $names[$key])).
