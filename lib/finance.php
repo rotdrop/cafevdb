@@ -167,7 +167,7 @@ namespace CAFEVDB
     /**Fetch an exisiting reference given project and musician. This
      * fetch the entire db-row, i.e. everything known about the mandate.
      */
-    public static function fetchSepaMandate($projectId, $musicianId, $handle = false)
+    public static function fetchSepaMandate($projectId, $musicianId, $handle = false, $cooked = true)
     {
       $mandate = false;
 
@@ -187,19 +187,21 @@ namespace CAFEVDB
         }      
       }
 
-      if ($mandate && !isset($mandate['sequenceType'])) {
-        if ($mandate['nonrecurring']) {
-          $mandate['sequenceType'] = 'once';
-        } else {
-          $mandate['sequenceType'] = 'permanent';
+      if ($cooked) {
+        if ($mandate && !isset($mandate['sequenceType'])) {
+          if ($mandate['nonrecurring']) {
+            $mandate['sequenceType'] = 'once';
+          } else {
+            $mandate['sequenceType'] = 'permanent';
+          }
+          unset($mandate['nonrecurring']);
         }
-        unset($mandate['nonrecurring']);
-      }
 
-      if (!self::decryptSepaMandate($mandate)) {
-        $mandate = false;
+        if (!self::decryptSepaMandate($mandate)) {
+          $mandate = false;
+        }
       }
-
+      
       if ($ownConnection) {
         mySQL::close($handle);
       }
@@ -241,6 +243,24 @@ namespace CAFEVDB
       return false;
     }
     
+    /**Given a mandate with plain text columns, encrypt them. */
+    public static function encryptSepaMandate(&$mandate)
+    {
+      if (is_array($mandate) && self::$useEncryption) {
+        $enckey = Config::getEncryptionKey();
+        foreach (self::$dataBaseInfo['encryptedColumns'] as $column) {
+          if (isset($mandate[$column])) {
+            $value = Config::encrypt($mandate[$column], $enckey);
+            if ($value === false) {
+              return false;
+            }
+            $mandate[$column] = $value;
+          }
+        }
+      }
+      return true;
+    }
+
     /**Given a mandate with encrypted columns, decrypt them. */
     public static function decryptSepaMandate(&$mandate)
     {
@@ -300,11 +320,17 @@ namespace CAFEVDB
       }
 
       $table = Finance::$dataBaseInfo['table'];
-      $idSet = '('.implode(',', $ids).')';
-      $query = "UPDATE `".$table."` SET `lastUsedDate` = '".$dateIssued."' WHERE `id` IN ".$idSet;
+      $where = "`id` IN (".implode(',', $ids).")";
+      $newValues = array('lastUsedDate' => $dateIssued);
+      $result = mySQL::update($table, $where, $newValues, $handle);
+      if ($result !== false) {
+        // log the change, but give a danm on the old time-stamp
+        foreach($ids as $id) {
+          $oldValues = array('id' => $id);
+          mySQL::logUpdate($table, 'id', $oldValues, $newValues, $handle);
+        }
+      }
       
-      $result = mySQL::query($query, $handle);
-
       if ($ownConnection) {
         mySQL::close($handle);
       }
@@ -361,18 +387,7 @@ namespace CAFEVDB
         }
       }
 
-      if (self::$useEncryption) {
-        $enckey = Config::getEncryptionKey();
-        foreach (self::$dataBaseInfo['encryptedColumns'] as $column) {
-          if (isset($mandate[$column])) {
-            $value = Config::encrypt($mandate[$column], $enckey);
-            if ($value === false) {
-              return false;
-            }
-            $mandate[$column] = $value;
-          }
-        }
-      }
+      self::encryptSepaMandate($mandate);
 
       $ownConnection = $handle === false;
       if ($ownConnection) {
@@ -382,7 +397,8 @@ namespace CAFEVDB
 
       $table = self::$dataBaseInfo['table'];
 
-      $oldMandate = self::fetchSepaMandate($prj, $mus, $handle);
+      // fetch the old mandate, but keep the old values encrypted
+      $oldMandate = self::fetchSepaMandate($prj, $mus, $handle, false);
       if ($oldMandate) {
         // Sanity checks
         if (!is_array($oldMandate) ||
@@ -395,27 +411,23 @@ namespace CAFEVDB
           return false;
         }
         // passed: issue an update query
-        $query = "UPDATE `".$table."` SET ";
-        $setter = array();
         foreach ($mandate as $key => $value) {
-          if ($key == 'lastUsedDate' || $value != '') {
-            // only store non-empty fields, with the exception of
-            // last-used which we may want to reset in case we did not
-            // really submit the debit note.
-            $setter[] = "`".$key."`='".$value."'";
+          if ($value == '' && $key != 'lastUsedDate') {
+            unset($mandate[$key]);
           }
         }
-        $query .= implode(", ", $setter);
-        $query .= " WHERE `mandateReference` = '".$ref."'";
+        $where = "`mandateReference` = '".$ref."'";
+        $result = mySQL::update($table, $where, $mandate, $handle);
+        if ($result !== false) {
+          mySQL::logUpdate($table, 'id', $oldMandate, $mandate, $handle);
+        }
       } else {
         // insert query
-        $query = "INSERT INTO `".$table."` ";
-        $query .= "(`".implode("`,`",array_keys($mandate))."`) ";
-        $query .= " VALUES ";
-        $query .= "('".implode("','",array_values($mandate))."') ";
+        $result = mySQL::insert($table, $mandate, $handle);
+        if ($result !== false) {
+          mySQL::logInsert($table, mySQL::newestIndex($handle), $mandate, $handle);
+        }
       }
-
-      $result = mySQL::query($query, $handle);
 
       if ($ownConnection) {
         mySQL::close($handle);
@@ -433,9 +445,17 @@ namespace CAFEVDB
         $handle = mySQL::connect(Config::$pmeopts);
       }
 
-      $query = "DELETE FROM `SepaDebitMandates` WHERE `projectId` = $projectId AND `musicianId` = $musicianId";
-      mySQL::query($query, $handle);
+      $table = 'SepaDebitMandates';
+      $where = "`projectId` = $projectId AND `musicianId` = $musicianId";
+      $oldValues = mySQL::fetchRows($table, $where, $handle);
+      
+      $query = "DELETE FROM `".$table."` WHERE ".$where;
+      $result = mySQL::query($query, $handle);
 
+      if ($result !== false && count($oldValues) > 0) {
+        mySQL::logDelete($table, 'id', $oldValues[0], $handle);
+      }
+      
       if ($ownConnection) {
         mySQL::close($handle);
       }
