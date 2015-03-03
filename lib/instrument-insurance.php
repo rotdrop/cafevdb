@@ -591,11 +591,11 @@ namespace CAFEVDB
      * Potentially, insured musician and payer may be different. We
      * generate a table of the form
      *
-     * array('payer' => array(<Name and Address Information>),
-     *       'totals' => <Total Fee including taxes>,
-     *       'musicians' => array(MusID => array('name' => <Human Readable Name>,
-     *                                           'subtotals' => <Total Fee for this one, incl. Taxes>,
-     *                                           'items' => array(<Insured Items>)
+     * array('payer' => array(NAME_AND_ADDRESS_INFORMATION),
+     *       'totals' => TOTAL_FEE_INCLUDING_TAXES,
+     *       'musicians' => array(MusID => array('name' => HUMAN_READABLE_NAME,
+     *                                           'subtotals' => TOTAL_FEE_FOR_THIS_ONE_WITH_TAXES,
+     *                                           'items' => array(INSURED_ITEMS)
      */
     public static function musicianOverview($musicianId, $handle = false)
     {

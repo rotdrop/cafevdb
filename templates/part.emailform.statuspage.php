@@ -30,22 +30,22 @@
  * records are:
  *
  * array(
- *   'Explanations' => <text>
+ *   'Explanations' => TEXT,
  *   'AddressValidation' => array(
- *     'CC' => array(<list of broken emails>),
- *     'BCC' => array(<list of broken emails>),
+ *     'CC' => array(LIST_OF_BROKEN_EMAILS),
+ *     'BCC' => array(LIST_OF_BROKEN_EMAILS),
  *     'Empty' => true (no recipients not allowed)
  *     ),
  *   'TemplateValidation' => array(
- *     'MemberErrors' => array(<list of failed substitutions>),
- *     'GlobalErrors' => array(<list of failed substitutions>),
- *     'SpuriousErrors' => array(<list of failed substitutions>)
+ *     'MemberErrors' => array(LIST_OF_FAILED_SUBSTITUTIONS),
+ *     'GlobalErrors' => array(LIST_OF_FAILED_SUBSTITUTIONS),
+ *     'SpuriousErrors' => array(LIST_OF_FAILED_SUBSTITUTIONS)
  *     )
  *   ),
  *   'SubjectValidation' => true/false (empty subject not allowed),
  *   'FromValidation' => true/false (empty name not allowed),
- *   'MailerException' => <exception message from PHPMailer>,
- *   'Message' => <first few lines of sent message>
+ *   'MailerException' => EXCEPTION_MESSAGE_FROM_PHP_MAILER,
+ *   'Message' => FIRST_FEW_LINES_OF_SENT_MESSAGE
  */
 
 namespace CAFEVDB {

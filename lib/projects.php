@@ -495,7 +495,7 @@ a comma.'));
       return true;
     }
   
-    /**@copydoc CAFEVDB\Projects::afterInsterTrigger. */
+    /**@copydoc Projects::afterInsertTrigger() */
     public static function afterUpdateTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
     {
       // Simply recreate the view, update the extra tables etc.
@@ -560,7 +560,7 @@ a comma.'));
       return true;
     }
 
-    /**@copydoc CAFEVDB\Projects::afterInsterTrigger. */
+    /**@copydoc Projects::afterInsertTrigger() */
     public static function afterDeleteTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
     {
       $projectName = $oldvals['Name'];
@@ -860,7 +860,13 @@ a comma.'));
      *
      * @param $projectId The id of the project to fetch the musician options from
      *
-     * @param $musicianId A pre-selected musician, defaults to none
+     * @param $projectName Optional project name, will be queried from
+     * DB if not specified.
+     *
+     * @param $musicianId A pre-selected musician, defaults to none.
+     *
+     * @param $handle Data-base handle, new connection will be opened
+     * if not specified.
      */
     public static function participantOptions($projectId, $projectName = false, $musicianId = -1, $handle = false)
     {

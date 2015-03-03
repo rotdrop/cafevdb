@@ -218,7 +218,7 @@ class Blog
    * layout:
    *
    * array('status' => 'success',
-   *       'data' => array([0] => array('head' => <ThreadHead>,
+   *       'data' => array([0] => array('head' => THREAD_HEAD,
    *                                    'children' => array([0] => array('head' =>
    *
    * and so on, i.e. a representatin of the message-thread tree. Data
