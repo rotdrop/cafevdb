@@ -1002,8 +1002,15 @@ __EOT__;
      *
      * array('start' => array('date' => ..., 'time' => ..., 'allday' => ...), 'end' => ...)
      *
-     * @param eventObject The corresponding event object, i.e. the
+     * @param $eventObject The corresponding event object, i.e. the
      * data stored in the data-base.
+     *
+     * @param $timezone Explicit time zone to use, otherwise fetched
+     * from user-settings.
+     *
+     * @param $locale Explicit language setting to use, otherwise
+     * fetched from user-settings.
+     * 
      */
     public static function eventTimes($eventObject, $timezone = null, $locale = null)
     {

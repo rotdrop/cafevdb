@@ -1521,10 +1521,13 @@ insuranceFee
      * course. We store the generated temporaries in the user
      * config-space in order to (latest) remove them on logout/login.
      *
-     * @param[in,out] $file Typically $_FILES['fileAttach'], but maybe
+     * @param[in,out] $fileRecord Typically $_FILES['fileAttach'], but maybe
      * any file record.
      *
-     * @return Copy of $file with changed temporary file which
+     * @param $local If @c true the underlying file will be renamed,
+     * otherwise copied.
+     *
+     * @return Copy of $fileRecord with changed temporary file which
      * survives script-reload, or @c false on error.
      */
     public static function saveAttachment($fileRecord, $local = false)

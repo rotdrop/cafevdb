@@ -1386,7 +1386,7 @@ redaxoRehearsalsModule
     /**Check for existence of the project folder and create it when not
      * found.
      *
-     * @param[in] $projectsfolder The name of the folder. The name may
+     * @param[in] $projectsFolder The name of the folder. The name may
      * be composed of several path components.
      *
      * @return bool, @c true on success.

@@ -43,10 +43,10 @@ try {
   Error::exceptions(true);
   Config::init();
 
-  $_GET = array();
+  $_GET = array(); //< CGI GET variables are disabled.
 
-  $debugText = '';
-  $messageText = '';
+  $debugText = ''; //< Debug text for error diagnostics.
+  $messageText = ''; //< Message text for status messages.
 
   if (Util::debugMode('request')) {
     $debugText .= '$_POST[] = '.print_r($_POST, true);
@@ -54,15 +54,15 @@ try {
 
   // Get some common post data, rest has to be handled by the
   // recipients and the sender class.
-  $projectId   = Util::cgiValue('ProjectId', -1);
-  $projectName = Util::cgiValue('ProjectName', ''); // the name
+  $projectId   = Util::cgiValue('ProjectId', -1); //< Project id, if any.
+  $projectName = Util::cgiValue('ProjectName', ''); //< Project name, if any
 
-  $freeForm  = Util::cgiValue('FreeFormRecipients', '');
+  $freeForm  = Util::cgiValue('FreeFormRecipients', ''); //< Free form recipients from Cc: or Bcc:
 
   // Convert the free-form input to an array (possibly)
-  $parser = new \Mail_RFC822(null, null, null, false);
-  $recipients = $parser->parseAddressList($freeForm);
-  $parseError = $parser->parseError();
+  $parser = new \Mail_RFC822(null, null, null, false); //< RFC822 parser for address verification.
+  $recipients = $parser->parseAddressList($freeForm); //< Normalized recipients as array.
+  $parseError = $parser->parseError(); //< Status from RFC822 parser.
   if ($parseError !== false) {
     \OCP\Util::writeLog(Config::APP_NAME,
                         "Parse-error on email address list: ".
@@ -77,7 +77,7 @@ try {
   }
 
   // Fetch all known address-book contacts with email
-  $bookContacts = Contacts::emailContacts();
+  $bookContacts = Contacts::emailContacts(); //<
 
   //\OCP\Util::writeLog(Config::APP_NAME, 'ADDRBOOK: '.print_r($bookContacts, true), \OC_LOG::DEBUG);
   //\OCP\Util::writeLog(Config::APP_NAME, 'ADDRBOOK: '.print_r($freeForm, true), \OC_LOG::DEBUG);

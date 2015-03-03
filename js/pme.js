@@ -227,7 +227,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
    * callback also attaches handlers to the save, change etc. buttons
    * then these should be attached as delegate event handlers to the
    * pme-form. The event handlers installed by this functions are
-   * installed as delegate handlers at the #pme-table-dialog div.
+   * installed as delegate handlers at the \#pme-table-dialog div.
    *
    * @bug This function is by far too long.
    *

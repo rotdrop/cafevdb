@@ -46,9 +46,9 @@ namespace CAFEVDB {
     /**The data-contents. A "cooked" array structure with the
      * following components:
      *
-     * array('size' => <number of history records>,
-     *       'position' => <current position into history records>,
-     *       'records' => array(# => <clone of $_POST>)); 
+     * array('size' => NUMBER_OF_HISTORY_RECORDS,
+     *       'position' => CURRENT_POSITION_INTO_HISTORY_RECORDS,
+     *       'records' => array(# => clone of $_POST)); 
      */
     private $session;
     private $historyRecords;

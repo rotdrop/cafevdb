@@ -180,9 +180,9 @@ namespace CAFEVDB
       self::$externalScripts[] = $script;
     }
 
-    /**Dump all external java-script scripts previously add with
+    /**Dump all external java-script scripts previously added with
      * addExternalScript(). Each inline-script is wrapped into a separate
-     * <script></script> element to make debugging easier.
+     * @<script@>@</script@> element to make debugging easier.
      */
     public static function emitExternalScripts()
     {
@@ -208,7 +208,7 @@ __EOT__;
 
     /**Dump all inline java-script scripts previously add with
      * addInlineScript(). Each inline-script is wrapped into a separate
-     * <script></script> element to make debugging easier.
+     * @<script@>@</script@> element to make debugging easier.
      */
     public static function emitInlineScripts()
     {
@@ -294,7 +294,7 @@ __EOT__;
       return Config::$expertmode && Config::$debug[$key];    
     }
 
-    /**Emit an error message or exception. If CAFEVDB\Error::exceptions()
+    /**Emit an error message or exception. If CAFEVDB\\Error::exceptions()
      * returns @c true, then an exception is thrown, otherwise execution
      * is terminated by die(). Execution continues if $die = false. No
      * messages are printed, if @c $silent = @c true.
