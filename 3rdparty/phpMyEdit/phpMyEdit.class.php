@@ -3634,6 +3634,15 @@ class phpMyEdit
 				} else {
 					$fn = $this->get_data_cgi_var($fd);
 				}
+				if ($this->col_has_datemask($k)) {
+					$fn = trim($fn);
+					if ($fn != '') {
+						// Convert back to a date/time object understood by mySQL
+						$stamps = strtotime($fn);
+						$fn = date('Y-m-d H:i:s', $stamps);
+						echo "<!-- ".$fn." -->\n";
+					}
+				}
 				if ($fd == $this->key) {
 					$key_col_val = $fn;
 				}
