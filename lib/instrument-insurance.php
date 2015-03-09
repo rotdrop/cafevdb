@@ -325,7 +325,7 @@ namespace CAFEVDB
         'name'     => strval(L::t('Year of Construction')),
         'css'      => array('postfix' => ' construction-year'),
         'select'   => 'T',
-        'maxlen'   => 6,
+        'maxlen'   => 20,
         'sort'     => true);
 
       $opts['fdd']['InsuranceAmount'] = Config::$opts['money'];
