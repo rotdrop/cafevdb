@@ -11,6 +11,7 @@ OCP\App::checkAppEnabled(Config::APP_NAME);
 
 function dumpRow($exportData, $sheet, $row, $offset, &$rowCnt, $header = false)
 {
+  $moneyColumns = array('E', 'G', 'H'); // aligned right
   $column = 'A';
   foreach ($exportData as $cellValue) {
     $sheet->setCellValue($column.($row+$offset), $cellValue);
@@ -31,6 +32,16 @@ function dumpRow($exportData, $sheet, $row, $offset, &$rowCnt, $header = false)
           )
         )
       );
+    foreach($moneyColumns as $col) {
+      $sheet->getStyle($col.($row+$offset))->applyFromArray(
+        array(
+          'alignment' => array(
+            'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_RIGHT,
+            'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+            )
+          )
+        );
+    }
   }
 }
 
