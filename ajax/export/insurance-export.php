@@ -237,7 +237,10 @@ $table->export(
       $exportData[3] = $lineData[7];
       $exportData[4] = $lineData[8];
     } else {
-      $exportData[5] = $lineData[4]." ".$lineData[6]." ".$lineData[7];
+      $exportData[5] = $lineData[4]." ".$lineData[6];
+      if ($lineData[7] != L::t('unknown')) {
+        $exportData[5] .= ", ".$lineData[7];
+      }
       $exportData[6] = $lineData[8];
     }
     $exportData[7] = '';
