@@ -137,6 +137,7 @@ namespace CAFEVDB {
       }
       break;
     case 'InstrumentInsurance':
+      $errorMessage = array();
       // control -> name mapping
       $cgiKeys = array('musician-id' => 'MusicianId',
                        'bill-to-party' => 'BillToParty',
@@ -161,7 +162,7 @@ namespace CAFEVDB {
         $value = $values['musician-id'];
         if ($value === false) {
           // must not be empty
-          $errorMessage = L::t('Insured musician is missing');
+          $errorMessage[] = L::t('Insured musician is missing');
         } else {
           // ? check perhaps for existence, however, this is an id
           // generated from a select box with values from the DB.
@@ -171,7 +172,7 @@ namespace CAFEVDB {
         }
       case 'bill-to-party':
         $value = $values['bill-to-party'];
-        if ($value !== false) {
+        if (empty($value)) {
           // ? check perhaps for existence, however, this is an id
           // generated from a select box with values from the DB.
         }
@@ -180,42 +181,42 @@ namespace CAFEVDB {
         }
       case 'broker-select':
         $value = $values['broker-select'];
-        if ($value === false) {
+        if (empty($value)) {
           // must not be empty
-          $errorMessage = L::t('Insurance broker is missing.');
+          $errorMessage[] = L::t('Insurance broker is missing.');
         }
         if ($control != 'submit') {
           break;
         }
       case 'scope-select':
         $value = $values['scope-select'];
-        if ($value === false) {
+        if (empty($value)) {
           // must not be empty
-          $errorMessage = L::t('Geographical scope for the insurance is missing.');
+          $errorMessage[] = L::t('Geographical scope for the insurance is missing.');
         }
         if ($control != 'submit') { 
           break;
         }
       case 'insured-item':
         $value = $values['insured-item'];
-        if ((string)$value == '') {
-          $errorMessage = L::t('Insured object has not been specified.');
+        if (empty($value)) {
+          $errorMessage[] = L::t('Insured object has not been specified.');
         }
         if ($control != 'submit') {
           break;
         }
       case 'accessory':
         $value = $values['accessory'];
-        if ($value === false) {
+        if (empty($value)) {
           // must not be empty
-          $errorMessage = L::t('Object classification (instrument, accessory) is missing.');
+          $errorMessage[] = L::t('Object classification (instrument, accessory) is missing.');
         }
         if ($control != 'submit') {
           break;
         }
       case 'manufacturer': 
         $value = $values['manufacturer'];
-        if ($value === false || $value == '') {
+        if (empty($value)) {
           $infoMessage .= L::t("Manufacturer field is empty.");
         } else {
           // Mmmh.
@@ -225,7 +226,7 @@ namespace CAFEVDB {
         }
       case 'construction-year': 
         $value = Util::cgiValue($cgiPfx.$cgiKeys['construction-year']);
-        if ((string)$value == '' || $value === (string)L::t('unknown')) {
+        if (empty($value) || $value === (string)L::t('unknown')) {
           $infoMessage .= L::t("Construction year is unknown.");          
           $values['construction-year'] = L::t('unknown');
           // allow free-style like "ca. 1900" and such.
@@ -238,31 +239,33 @@ namespace CAFEVDB {
         }
       case 'amount':          
         $value = Util::cgiValue($cgiPfx.$cgiKeys['amount']);
-        if ((string)$value == '') {
-          $errorMessage = L::t('The insurance amount is missing.');
+        if (empty($value)) {
+          $errorMessage[] = L::t('The insurance amount is missing.');
         } else {
           $LocaleInfo = localeconv();
           $value = str_replace($LocaleInfo["mon_thousands_sep"] , "", $value);
           $value = str_replace($LocaleInfo["mon_decimal_point"] , ".", $value);
           if (!is_numeric($value)) {
-            $errorMessage = L::t('Insurance amount should be a mere number');
+            $errorMessage[] = L::t('Insurance amount should be a mere number.');
           }
           if ((string)floatval($value) != (string)intval($value)) {
-            $errorMessage = L::t('Insurance amount should be an integral number');
+            $errorMessage[] = L::t('Insurance amount should be an integral number.');
           }
         }
         break; // break at last item
       default:
-        $errorMessage = L::t("Internal error: unknown request");
+        $errorMessage[] = L::t("Internal error: unknown request.");
         break;
       }
 
-      if ($errorMessage == '') {
+      if (empty($errorMessage)) {
         \OCP\JSON::success(
           array('data' => array_merge($values,
                                       array('message' => $infoMessage,
                                             'debug' => $debugText))));
         return true;
+      } else {
+        $errorMessage = implode(' ', $errorMessage);
       }
       break;
     default:
