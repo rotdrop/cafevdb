@@ -922,9 +922,15 @@ var PHPMYEDIT = PHPMYEDIT || {};
     }
     
     // Then the general stuff
-    container.find("select[class^='"+pmepfx+"-input']").chosen({//width:'100%',
-      disable_search_threshold: 10,
-      no_results_text:noRes});
+    container.find("select[class^='"+pmepfx+"-input']").each(function(index) {
+      var self = $(this);
+      self.chosen({
+        //width:'100%',
+        disable_search_threshold: 10,
+        no_results_text: noRes,
+        allow_single_deselect: self.hasClass('allow-empty')
+      });
+    });
 
     // Set title explicitly
     container.find("td[class^='"+pmepfx+"-input'] div.chosen-container").attr("title", this.inputSelectChosenTitle);
