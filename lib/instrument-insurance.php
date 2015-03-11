@@ -32,6 +32,7 @@ namespace CAFEVDB
   {
     const CSS_PREFIX = 'cafevdb-page';
     const RATE_TABLE = 'InsuranceRates';
+    const BROKER_TABLE = 'InsuranceBrokers';
     const MEMBER_TABLE = 'InstrumentInsurance';
     const TAXES = 0.19;
     protected $broker;
@@ -148,7 +149,7 @@ namespace CAFEVDB
       $opts['key_type'] = 'int';
 
       // Sorting field(s)
-      $opts['sort_field'] = array('Broker','GeographicalScope','MusicianId','Accessory');
+      $opts['sort_field'] = array('Broker', 'GeographicalScope', 'MusicianId', 'Accessory');
 
       // Options you wish to give the users
       // A - add,  C - change, P - copy, V - view, D - delete,
@@ -1025,7 +1026,7 @@ your insured items at any time. Just ask.'), '', 1);
      *
      * where "RATE" is the actual fraction, not the percentage.
      */
-    public static function fetchRates($handle = false)
+    public static function fetchRates($handle = false, $translate = false)
     {
       $ownConnection = $handle === false;
       if ($ownConnection) {
@@ -1037,13 +1038,18 @@ your insured items at any time. Just ask.'), '', 1);
       $query = "SELECT * FROM `".self::RATE_TABLE."` WHERE 1";
       $result = mySQL::query($query, $handle);
       while ($row = mySQL::fetch($result)) {
-        $rateKey = $row['Broker'].$row['GeographicalScope'];
+        $scope = $row['GeographicalScope'];
+        if ($translate) {
+          $scope = L::t($scope);
+        }
+        $rateKey = $row['Broker'].$scope;
         $dueDate = $row['DueDate'];
         if (strval($dueDate) != '') {
           $dueDate = self::dueDate($dueDate);
         }
         $rates[$rateKey] = array('rate' => $row['Rate'],
-                                 'due' => $dueDate);
+                                 'due' => $dueDate,
+                                 'policy' => $row['PolicyNumber']);
       }
       //print_r($rates);
 
@@ -1054,6 +1060,31 @@ your insured items at any time. Just ask.'), '', 1);
       return $rates;
     }
 
+    public static function fetchBrokers($handle = false) 
+    {
+      $ownConnection = $handle === false;
+      if ($ownConnection) {
+        Config::init();
+        $handle = mySQL::connect(Config::$pmeopts);
+      }
+
+      $brokers = array();
+      $query = "SELECT * FROM `".self::BROKER_TABLE."` WHERE 1";
+      $result = mySQL::query($query, $handle);
+      while ($row = mySQL::fetch($result)) {
+        $key = $row['ShortName'];
+        $brokers[$key] = array('name' => $row['LongName'],
+                               'address' => $row['Address']);
+      }
+      //print_r($rates);
+
+      if ($ownConnection) {
+        mySQL::close($handle);
+      }
+
+      return $brokers;
+    }
+    
     /**Compute the closest matching due date. The insurance contracts
      * "always" last for one year, so "closest" is the within 6 month
      * in either direction, i.e. the due-date of this 12 months

@@ -222,6 +222,25 @@ namespace CAFEVDB
         'sort'     => $sort,
         );
       
+      $opts['fdd']['LongName'] = array(
+        'name'     => L::t('Name'),
+        'css'      => array('postfix' => ' brokername'),
+        'select'   => 'T',
+        'maxlen'   => 255,
+        'sort'     => $sort,
+        );
+
+      $opts['fdd']['Address'] = array(
+        'name'     => L::t('Address'),
+        'css'      => array('postfix' => ' brokeraddress'),
+        'select'   => 'T',
+        'maxlen'   => 512,
+        'textarea' => array('css' => 'wysiwygeditor',
+                            'rows' => 5,
+                            'cols' => 50),
+        'sort'     => $sort,
+        );
+      
       $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
       $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
 
