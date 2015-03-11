@@ -5,6 +5,7 @@ use CAFEVDB\Events;
 use CAFEVDB\Config;
 use CAFEVDB\Projects;
 use CAFEVDB\Util;
+use CAFEVDB\InstrumentInsurance;
 
 OCP\User::checkLoggedIn();
 OCP\App::checkAppEnabled(Config::APP_NAME);
@@ -97,7 +98,7 @@ if (!defined('PHPEXCEL_ROOT')) {
 
 $template = Util::cgiValue('Template', '');
 
-$table = new CAFEVDB\InstrumentInsurance(false);
+$table = new InstrumentInsurance(false);
 $name = L::t('instrument insurances');
 
 $table->deactivate();
@@ -106,7 +107,7 @@ $table->display(); // strange, but need be here
 $creator   = Config::getValue('emailfromname', 'Bilbo Baggins');
 $email     = Config::getValue('emailfromaddress', 'bilbo@nowhere.com');
 $date      = strftime('%Y%m%d-%H%M%S');
-$humanDate = strftime('%d.%m.%Y %H:%M:%S');
+$humanDate = strftime('%d.%m.%Y'); // %H:%M:%S');
 $filename  = $date.'-CAFEV-'.$name.'.xlsx';
 
 $lang = \OC_L10N::findLanguage(Config::APP_NAME);
@@ -134,7 +135,7 @@ $objPHPExcel->getProperties()->setCreator($creator)
 ->setCategory("Database Table Export");
 $sheet = $objPHPExcel->getActiveSheet();
 
-$offset = $headerOffset = 5;
+$offset = $headerOffset = 6;
 $rowCnt = 0;
 
 /* Export the table, create extra lines for each musician with its
@@ -159,8 +160,8 @@ $headerLine  = array(
   L::t('Musician Insurance Total')
   );
 
-$brokerName = array('DrewesRunge' => "Drewes & Runge GmbH & Co. KG",
-                    'LaMusica' => "La Musica");
+$brokerNames = InstrumentInsurance::fetchBrokers();
+$rates = InstrumentInsurance::fetchRates(false, true);
 
 $table->export(
   // Cell-data filter
@@ -177,8 +178,8 @@ $table->export(
    */
   function ($i, $lineData) use (&$sheet, &$objPHPExcel, &$offset, &$rowCnt, $headerLine,
                                 &$brokerScope, &$musician, &$musicianTotal, &$total,
-                                &$numRecords, $name, $creator, $email, $brokerName, $humanDate,
-                                $headerOffset) {
+                                &$numRecords, $name, $creator, $email, $brokerNames, $rates,
+                                $humanDate, $headerOffset) {
     if ($i == 1) {
       dumpRow($headerLine, $sheet, $i, $offset, $rowCnt, true);
       return;
@@ -196,11 +197,11 @@ $table->export(
       $brokerScope = $lineData[2].$lineData[3];
       $newMusician = true;
 
-      $sheet->setCellValue("A1", $name.", ".$brokerName[$lineData[2]]);
+      $sheet->setCellValue("A1", $name.", ".$brokerNames[$lineData[2]]['name']);
       $sheet->setCellValue("A2", $creator." &lt;".$email."&gt;");
-      $sheet->setCellValue("A3", L::t('Geographical Scope')." ".$lineData[3]);
-      $sheet->setCellValue("A4", L::t('Date: %s', array($humanDate)));
-
+      $sheet->setCellValue("A3", L::t('Policy Number').": ".$rates[$brokerScope]['policy']);
+      $sheet->setCellValue("A4", L::t('Geographical Scope').": ".$lineData[3]);
+      $sheet->setCellValue("A5", L::t('Date').": ".$humanDate);
     } else {
       $newScope = $lineData[2].$lineData[3];
 
@@ -223,10 +224,11 @@ $table->export(
         $rowCnt = 0;
         dumpRow($headerLine, $sheet, $i-1, $offset, $rowCnt, true);
 
-        $sheet->setCellValue("A1", $name.", ".$brokerName[$lineData[2]]);
+        $sheet->setCellValue("A1", $name.", ".$brokerNames[$lineData[2]]['name']);
         $sheet->setCellValue("A2", $creator." &lt;".$email."&gt;");
-        $sheet->setCellValue("A3", L::t('Geographical Scope')." ".$lineData[3]);
-        $sheet->setCellValue("A4", L::t('Date: %s', array($humanDate)));
+        $sheet->setCellValue("A3", L::t('Policy Number').": ".$rates[$brokerScope]['policy']);
+        $sheet->setCellValue("A4", L::t('Geographical Scope').": ".$lineData[3]);
+        $sheet->setCellValue("A5", L::t('Date').": ".$humanDate);
       }
     }
 
@@ -295,7 +297,7 @@ for ($sheetIdx = 0; $sheetIdx < $objPHPExcel->getSheetCount(); $sheetIdx++) {
 
   $sheet->getStyle("A".(1+$headerOffset).":".$sheet->getHighestColumn().(1+$headerOffset))->getAlignment()->setWrapText(true);
 
-  $sheet->getStyle('A6:'.$sheet->getHighestColumn().$sheet->getHighestRow())->applyFromArray(
+  $sheet->getStyle("A".(1+$headerOffset).":".$sheet->getHighestColumn().$sheet->getHighestRow())->applyFromArray(
     array(
       'borders' => array(
         'allborders'     => array(
@@ -326,13 +328,12 @@ for ($sheetIdx = 0; $sheetIdx < $objPHPExcel->getSheetCount(); $sheetIdx++) {
  */
 
   $highCol = $sheet->getHighestColumn();
-  $sheet->mergeCells("A1:".$highCol."1");
-  $sheet->mergeCells("A2:".$highCol."2");  
-  $sheet->mergeCells("A3:".$highCol."3");
-  $sheet->mergeCells("A4:".$highCol."4");  
-
+  for($i = 1; $i < $headerOffset; ++$i) {
+    $sheet->mergeCells("A".$i.":".$highCol.$i);
+  }
+  
   // Format the mess a little bit
-  $sheet->getStyle("A1:".$highCol."4")->applyFromArray(
+  $sheet->getStyle("A1:".$highCol.($headerOffset-1))->applyFromArray(
     array(
       'font'    => array(
         'bold'   => true,
@@ -350,7 +351,7 @@ for ($sheetIdx = 0; $sheetIdx < $objPHPExcel->getSheetCount(); $sheetIdx++) {
       )
     );
 
-  $sheet->getStyle("A1:".$highCol."4")->applyFromArray(
+  $sheet->getStyle("A1:".$highCol.($headerOffset-1))->applyFromArray(
     array(
       'alignment' => array(
         'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,

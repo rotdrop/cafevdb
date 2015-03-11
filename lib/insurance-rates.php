@@ -253,6 +253,14 @@ namespace CAFEVDB
       $opts['fdd']['DueDate']['name'] = L::t('Due Date');
       $opts['fdd']['DueDate']['sort'] = $sort;
 
+      $opts['fdd']['PolicyNumber'] = array(
+        'name' => L::t('Policy Number'),
+        'css' => array('postfix' => ' policy'),
+        'select' => 'T',
+        'maxlen' => 127,
+        'sort' => $sort
+        );
+      
       $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
       $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
 
