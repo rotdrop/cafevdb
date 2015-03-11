@@ -25,8 +25,7 @@
 namespace CAFEVDB
 {
 
-/**Support for internationalization.
- */
+  /**Support for internationalization. */
   class L
   {
     private static $l = false;
@@ -60,9 +59,9 @@ namespace CAFEVDB
         throw new \Exception('Cannot translate string: "'.$text.'", arguments: '.print_r($parameters, true), -1, $e);
       }
     }
-  };
+  }; // class L
 
-/**Ajax specific support class. */
+  /**Ajax specific support class. */
   class Ajax
   {
     public static function bailOut($msg, $tracelevel = 1, $debuglevel = \OCP\Util::ERROR)
@@ -87,10 +86,9 @@ namespace CAFEVDB
                             $debuglevel);
       }
     }
-  };
+  }; // class Ajax
 
-/**Supportclass for error handling.
- */
+  /**Supportclass for error handling. */
   class Error
   {
     private static $exceptionsActive = false;
@@ -157,10 +155,9 @@ namespace CAFEVDB
 
       throw new \ErrorException($message, 0, $severity, $filename, $lineno);
     }
-  };
+  }; // class Error
 
-/**Utility class.
- */
+  /**Utility class. */
   class Util
   {
     private static $inlineScripts = array();
@@ -397,7 +394,8 @@ __EOT__;
       exit;
     }
 
-    /**Emit a page header alowing for a cache duration of $minutes many minutes
+    /**Emit a page header alowing for a cache duration of $minutes
+     * many minutes.
      */
     public static function cacheHeader($minutes)
     {
@@ -629,6 +627,18 @@ __EOT__;
       return true;
     }
 
+    /**Post to an Owncloud route.
+     *
+     * @param[in] $route Route name (i.e.: not the URL)
+     *
+     * @param[in] $routeParams Parameters built in to the URL (despite
+     * the fact that we use POST)
+     *
+     * @param[in] $postData Stuff passed by the POST method.
+     *
+     * @param[in] $type How $postData is encoded. Can be 'json' or
+     * 'urlencoded'. Default is 'json'.
+     */
     public static function postToRoute($route,
                                        $routeParams = array(),
                                        $postData = array(), $type = 'json')
@@ -641,7 +651,7 @@ __EOT__;
       $postData['requesttoken'] = \OC_Util::callRegister();
       $url .= '?requesttoken='.\OC_Util::callRegister();
       
-      switch ($type) {
+      switch (strtolower($type)) {
       case 'json':
         if (is_array($postData)) {
           $postData = \OC_JSON::encode($postData);
@@ -722,8 +732,8 @@ __EOT__;
     
   };
 
-/**Support class to generate navigation buttons and the like.
- */
+  /**Support class to generate navigation buttons and the like.
+   */
   class Navigation
   {
     const DISABLED = 1;
