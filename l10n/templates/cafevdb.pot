@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-11 09:51+0100\n"
+"POT-Creation-Date: 2015-03-11 15:32+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -239,7 +239,7 @@ msgid "Done. %d events synchronized, %d new."
 msgstr ""
 
 #: ajax/export/csv.php:32 ajax/export/excel.php:49 ajax/export/html.php:32
-#: ajax/export/insurance-export.php:101 ajax/finance/sepa-debit-export.php:68
+#: ajax/export/insurance-export.php:102 ajax/finance/sepa-debit-export.php:68
 msgid "instrument insurances"
 msgstr ""
 
@@ -269,7 +269,7 @@ msgstr ""
 msgid "Missing Musicians"
 msgstr ""
 
-#: ajax/export/excel.php:285 ajax/export/insurance-export.php:153
+#: ajax/export/excel.php:285 ajax/export/insurance-export.php:154
 #: lib/projects.php:1727
 msgid "Instrument"
 msgstr ""
@@ -278,56 +278,60 @@ msgstr ""
 msgid "Missing"
 msgstr ""
 
-#: ajax/export/insurance-export.php:64
+#: ajax/export/insurance-export.php:65
 msgid "Total Insurance Amount: "
 msgstr ""
 
-#: ajax/export/insurance-export.php:152 lib/instrument-insurance.php:255
+#: ajax/export/insurance-export.php:153 lib/instrument-insurance.php:256
 #: lib/sepa-debit-mandates.php:267
 msgid "Musician"
 msgstr ""
 
-#: ajax/export/insurance-export.php:154 lib/instrument-insurance.php:318
-#: lib/instrument-insurance.php:836
+#: ajax/export/insurance-export.php:155 lib/instrument-insurance.php:319
+#: lib/instrument-insurance.php:837
 msgid "Manufacturer"
 msgstr ""
 
-#: ajax/export/insurance-export.php:155 lib/instrument-insurance.php:325
+#: ajax/export/insurance-export.php:156 lib/instrument-insurance.php:326
 msgid "Year of Construction"
 msgstr ""
 
-#: ajax/export/insurance-export.php:156
+#: ajax/export/insurance-export.php:157
 msgid "Instrument Insurance Amount"
 msgstr ""
 
-#: ajax/export/insurance-export.php:157 lib/instrument-insurance.php:309
+#: ajax/export/insurance-export.php:158 lib/instrument-insurance.php:310
 msgid "Accessory"
 msgstr ""
 
-#: ajax/export/insurance-export.php:158
+#: ajax/export/insurance-export.php:159
 msgid "Accessory Insurance Amount"
 msgstr ""
 
-#: ajax/export/insurance-export.php:159
+#: ajax/export/insurance-export.php:160
 msgid "Musician Insurance Total"
 msgstr ""
 
-#: ajax/export/insurance-export.php:201 ajax/export/insurance-export.php:228
-#: lib/instrument-insurance.php:293
+#: ajax/export/insurance-export.php:202 ajax/export/insurance-export.php:229
+#: lib/insurance-rates.php:257
+msgid "Policy Number"
+msgstr ""
+
+#: ajax/export/insurance-export.php:203 ajax/export/insurance-export.php:230
+#: lib/instrument-insurance.php:294
 msgid "Geographical Scope"
 msgstr ""
 
-#: ajax/export/insurance-export.php:202 ajax/export/insurance-export.php:229
-#, php-format
-msgid "Date: %s"
+#: ajax/export/insurance-export.php:204 ajax/export/insurance-export.php:231
+msgid "Date"
 msgstr ""
 
-#: ajax/export/insurance-export.php:234 lib/instrument-insurance.php:75
-#: lib/php-excel-functions.php:105
+#: ajax/export/insurance-export.php:236 lib/instrument-insurance.php:76
+#: lib/php-excel-functions.php:104
 msgid "false"
 msgstr ""
 
-#: ajax/export/insurance-export.php:241 ajax/insurance/validate.php:229
+#: ajax/export/insurance-export.php:243 ajax/insurance/validate.php:229
 #: ajax/insurance/validate.php:231 js/cafevdb.js:31 js/cafevdb.js:32
 #: js/cafevdb.js:33
 msgid "unknown"
@@ -2450,95 +2454,95 @@ msgstr ""
 msgid "Unable to select %s"
 msgstr ""
 
-#: lib/instrument-insurance.php:63
+#: lib/instrument-insurance.php:64
 msgid "Germany"
 msgstr ""
 
-#: lib/instrument-insurance.php:64
+#: lib/instrument-insurance.php:65
 msgid "Europe"
 msgstr ""
 
-#: lib/instrument-insurance.php:65
+#: lib/instrument-insurance.php:66
 msgid "World"
 msgstr ""
 
-#: lib/instrument-insurance.php:76 lib/php-excel-functions.php:101
+#: lib/instrument-insurance.php:77 lib/php-excel-functions.php:100
 msgid "true"
 msgstr ""
 
-#: lib/instrument-insurance.php:87
+#: lib/instrument-insurance.php:88
 msgid "Overview over the Bulk Instrument Insurances"
 msgstr ""
 
-#: lib/instrument-insurance.php:159 lib/sepa-debit-mandates.php:124
+#: lib/instrument-insurance.php:160 lib/sepa-debit-mandates.php:124
 msgid "Debit"
 msgstr ""
 
-#: lib/instrument-insurance.php:269
+#: lib/instrument-insurance.php:270
 msgid "Bill-to Party"
 msgstr ""
 
-#: lib/instrument-insurance.php:284
+#: lib/instrument-insurance.php:285
 msgid "Insurance Broker"
 msgstr ""
 
-#: lib/instrument-insurance.php:302
+#: lib/instrument-insurance.php:303
 msgid "Insured Object"
 msgstr ""
 
-#: lib/instrument-insurance.php:332
+#: lib/instrument-insurance.php:333
 msgid "Insurance Amount"
 msgstr ""
 
-#: lib/instrument-insurance.php:339
+#: lib/instrument-insurance.php:340
 msgid "Insurance Rate"
 msgstr ""
 
-#: lib/instrument-insurance.php:360
+#: lib/instrument-insurance.php:361
 msgid "Insurance Fee"
 msgstr ""
 
-#: lib/instrument-insurance.php:360
+#: lib/instrument-insurance.php:361
 msgid "including taxes"
 msgstr ""
 
-#: lib/instrument-insurance.php:373
+#: lib/instrument-insurance.php:374
 msgid "Total Insurance"
 msgstr ""
 
-#: lib/instrument-insurance.php:388
+#: lib/instrument-insurance.php:389
 msgid "Start of Insurance"
 msgstr ""
 
-#: lib/instrument-insurance.php:706
+#: lib/instrument-insurance.php:707
 msgid "insurance"
 msgstr ""
 
-#: lib/instrument-insurance.php:765
+#: lib/instrument-insurance.php:766
 #, php-format
 msgid "Annual Insurance Fees for %s, %d. %s"
 msgstr ""
 
-#: lib/instrument-insurance.php:769
+#: lib/instrument-insurance.php:770
 msgid "Overview over insured instruments and insurance fee details and summary"
 msgstr ""
 
-#: lib/instrument-insurance.php:784 templates/instrument-insurance.php:45
+#: lib/instrument-insurance.php:785 templates/instrument-insurance.php:45
 #: templates/sepa-debit-mandates.php:53
 msgid "treasurer"
 msgstr ""
 
-#: lib/instrument-insurance.php:806
+#: lib/instrument-insurance.php:807
 #, php-format
 msgid "Annular insurance fees for %d"
 msgstr ""
 
-#: lib/instrument-insurance.php:807
+#: lib/instrument-insurance.php:808
 #, php-format
 msgid "Dear %s,"
 msgstr ""
 
-#: lib/instrument-insurance.php:812
+#: lib/instrument-insurance.php:813
 msgid ""
 "this letter informs you about the details of the instrument-insurances\n"
 "we are maintaining for you on your behalf. This letter is\n"
@@ -2551,79 +2555,79 @@ msgid ""
 "your insured items at any time. Just ask."
 msgstr ""
 
-#: lib/instrument-insurance.php:830
+#: lib/instrument-insurance.php:831
 #, php-format
 msgid "Insured Person: %s"
 msgstr ""
 
-#: lib/instrument-insurance.php:833
+#: lib/instrument-insurance.php:834
 msgid "Vendor"
 msgstr ""
 
-#: lib/instrument-insurance.php:834 lib/insurance-rates.php:235
+#: lib/instrument-insurance.php:835 lib/insurance-rates.php:235
 msgid "Scope"
 msgstr ""
 
-#: lib/instrument-insurance.php:835 lib/instrument-insurance.php:909
+#: lib/instrument-insurance.php:836 lib/instrument-insurance.php:910
 msgid "Object"
 msgstr ""
 
-#: lib/instrument-insurance.php:837 lib/instrument-insurance.php:910
+#: lib/instrument-insurance.php:838 lib/instrument-insurance.php:911
 msgid "Amount"
 msgstr ""
 
-#: lib/instrument-insurance.php:838 lib/instrument-insurance.php:911
+#: lib/instrument-insurance.php:839 lib/instrument-insurance.php:912
 #: lib/insurance-rates.php:244
 msgid "Rate"
 msgstr ""
 
-#: lib/instrument-insurance.php:839 lib/instrument-insurance.php:913
+#: lib/instrument-insurance.php:840 lib/instrument-insurance.php:914
 msgid "Fee"
 msgstr ""
 
-#: lib/instrument-insurance.php:862
+#: lib/instrument-insurance.php:863
 msgid "Sub-totals (excluding taxes)"
 msgstr ""
 
-#: lib/instrument-insurance.php:901
+#: lib/instrument-insurance.php:902
 msgid "Corrections for partial insurance periods."
 msgstr ""
 
-#: lib/instrument-insurance.php:903
+#: lib/instrument-insurance.php:904
 msgid ""
 "Insurances starting after the due-date will be charged in the following year."
 msgstr ""
 
-#: lib/instrument-insurance.php:907
+#: lib/instrument-insurance.php:908
 msgid "Due"
 msgstr ""
 
-#: lib/instrument-insurance.php:908
+#: lib/instrument-insurance.php:909
 msgid "Start"
 msgstr ""
 
-#: lib/instrument-insurance.php:912
+#: lib/instrument-insurance.php:913
 msgid "Factor"
 msgstr ""
 
-#: lib/instrument-insurance.php:936
+#: lib/instrument-insurance.php:937
 msgid "Sum of corrections (excluding taxes)"
 msgstr ""
 
-#: lib/instrument-insurance.php:977
+#: lib/instrument-insurance.php:978
 msgid "Total amount excluding taxes:"
 msgstr ""
 
-#: lib/instrument-insurance.php:981
+#: lib/instrument-insurance.php:982
 #, php-format
 msgid "%0.2f %% insurance taxes:"
 msgstr ""
 
-#: lib/instrument-insurance.php:985
+#: lib/instrument-insurance.php:986
 msgid "Total amount to pay:"
 msgstr ""
 
-#: lib/instrument-insurance.php:995
+#: lib/instrument-insurance.php:996
 msgid ""
 "You have granted us a debit-mandate. The total amount due will be debited "
 "from your bank-account, no further action from your side is required. We "
@@ -2631,15 +2635,15 @@ msgid ""
 "advance of the bank transaction."
 msgstr ""
 
-#: lib/instrument-insurance.php:1002 lib/instrument-insurance.php:1004
+#: lib/instrument-insurance.php:1003 lib/instrument-insurance.php:1005
 msgid "Best wishes,"
 msgstr ""
 
-#: lib/instrument-insurance.php:1010
+#: lib/instrument-insurance.php:1011
 msgid "Treasurer"
 msgstr ""
 
-#: lib/instrument-insurance.php:1174
+#: lib/instrument-insurance.php:1205
 #, php-format
 msgid "Invalid broker/geographical-scope combination: %s - %s"
 msgstr ""
@@ -2759,6 +2763,14 @@ msgstr ""
 
 #: lib/insurance-brokers.php:218
 msgid "Short Name"
+msgstr ""
+
+#: lib/insurance-brokers.php:226
+msgid "Name"
+msgstr ""
+
+#: lib/insurance-brokers.php:234
+msgid "Address"
 msgstr ""
 
 #: lib/insurance-rates.php:80
@@ -2890,11 +2902,11 @@ msgstr ""
 msgid "of"
 msgstr ""
 
-#: lib/php-excel-functions.php:100 lib/sepa-debit-mandates.php:250
+#: lib/php-excel-functions.php:99 lib/sepa-debit-mandates.php:250
 msgid "yes"
 msgstr ""
 
-#: lib/php-excel-functions.php:104 lib/sepa-debit-mandates.php:249
+#: lib/php-excel-functions.php:103 lib/sepa-debit-mandates.php:249
 msgid "no"
 msgstr ""
 
