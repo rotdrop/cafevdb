@@ -91,8 +91,7 @@ namespace CAFEVDB\PHPExcel
         }
 
         // Handle remaining stuff by html2text
-        $h2t = new \html2text();
-        $h2t->set_html($value);
+        $h2t = new \html2text($value, false, array('width' => 0));
         $value = trim($h2t->get_text());
 
         // Well, 'ja' or 'nein' ... should also count for truth values, maybe
@@ -220,3 +219,4 @@ namespace CAFEVDB\PHPExcel
 
 
 ?>
+
