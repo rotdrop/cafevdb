@@ -267,7 +267,7 @@ namespace CAFEVDB
         );
       $opts['fdd']['BillToParty'] = array(
         'name'     => strval(L::t('Bill-to Party')),
-        'css'      => array('postfix' => ' bill-to-party'),
+        'css'      => array('postfix' => ' bill-to-party allow-empty'),
         'select'   => 'T',
         'maxlen'   => 11,
         'sort'     => true,
