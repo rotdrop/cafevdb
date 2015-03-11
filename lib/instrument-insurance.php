@@ -386,7 +386,10 @@ namespace CAFEVDB
 
       $opts['fdd']['StartOfInsurance'] = Config::$opts['birthday'];
       $opts['fdd']['StartOfInsurance']['name'] = strval(L::t('Start of Insurance'));
-    
+
+      $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
+      $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
+      
       if ($this->pme_bare) {
         // disable all navigation buttons, probably for html export
         $opts['navigation'] = 'N'; // no navigation
