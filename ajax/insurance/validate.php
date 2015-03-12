@@ -49,7 +49,9 @@ namespace CAFEVDB {
 
     switch($class) {
     case 'InsuranceBrokers':
-      $cgiKeys = array('broker' => 'ShortName');
+      $cgiKeys = array('broker' => 'ShortName',
+                       'brokername' => 'LongName',
+                       'brokeraddress' => 'Address');
       $values = array();
       foreach($cgiKeys as $key => $cgiKey) {
         $values[$key] = Util::cgiValue($cgiPfx.$cgiKey, false);
@@ -73,6 +75,16 @@ namespace CAFEVDB {
           $infoMessage .= L::t("Broker-name has been simplified.");
           $values['broker'] = $broker;
         }
+        if ($control != 'submit') {
+          break;
+        }
+      case 'brokername':
+        $values['brokername'] = trim($values['brokername']);
+        if ($control != 'submit') {
+          break;
+        }
+        break;
+      case 'brokeraddress':
         break;
       default:
         $errorMessage = L::t("Internal error: unknown request: %s", array($control));
@@ -89,7 +101,10 @@ namespace CAFEVDB {
       break;
     case 'InsuranceRates':
       $cgiKeys = array('broker' => 'Broker',
-                       'rate' => 'Rate');
+                       'rate' => 'Rate',
+                       'date' => 'DueDate',
+                       'policy' => 'PolicyNumber'
+        );
       $values = array();
       foreach($cgiKeys as $key => $cgiKey) {
         $values[$key] = Util::cgiValue($cgiPfx.$cgiKey, false);
@@ -124,6 +139,10 @@ namespace CAFEVDB {
                                array($rate));
         }
         break;
+      case 'date':
+        // date is validated client-side by date-picker
+      case 'policy':
+        break; // no way to validate
       default:
         $errorMessage = L::t("Internal error: unknown request: %s", array($control));
         break;

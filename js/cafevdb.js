@@ -944,7 +944,7 @@ var CAFEVDB = CAFEVDB || {};
       container = $('body');
     }
 
-    container.find('input.birthday').datepicker({
+    container.find('input.date').datepicker({
       dateFormat : 'dd.mm.yy', // this is 4-digit year
       minDate: '01.01.1940'
     });

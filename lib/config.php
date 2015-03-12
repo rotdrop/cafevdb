@@ -893,13 +893,14 @@ redaxoRehearsalsModule
                                       'css'      => array('postfix' => ' datetime'),
         );
 
-      self::$opts['birthday'] = array('name'     => strval(L::t('birthday')),
-                                      'select'   => 'T',
-                                      'maxlen'   => 10,
-                                      'sort'     => true,
-                                      'css'      => array('postfix' => ' birthday'),
-                                      'datemask' => 'd.m.Y');
-//                                    'default' => '01.01.1900');
+      self::$opts['date'] = array('name'     => strval(L::t('birthday')),
+                                  'select'   => 'T',
+                                  'maxlen'   => 10,
+                                  'sort'     => true,
+                                  'css'      => array('postfix' => ' birthday date'),
+                                  'datemask' => 'd.m.Y');
+      self::$opts['birthday'] = self::$opts['date'];
+      
       //  add as needed
       self::$opts['languages'] = array(
         '' => L::t('no preference'),
