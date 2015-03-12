@@ -207,8 +207,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
                  // re-attach events
                  pme.tableDialogHandlers(options, callback);
                });
-             } else {
-               alert('blah');
+//             } else {
+//               alert('blah');
              }
              return false;
            });
