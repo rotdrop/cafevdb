@@ -249,7 +249,7 @@ namespace CAFEVDB
         'sort'     => $sort,
         );
 
-      $opts['fdd']['DueDate'] = Config::$opts['birthday'];
+      $opts['fdd']['DueDate'] = Config::$opts['date'];
       $opts['fdd']['DueDate']['name'] = L::t('Due Date');
       $opts['fdd']['DueDate']['sort'] = $sort;
 

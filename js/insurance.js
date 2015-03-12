@@ -31,65 +31,35 @@ CAFEVDB.Insurances = CAFEVDB.Insurances || {};
         var container = PHPMYEDIT.container(containerSel);
         var form = container.find('form[class^="pme-form"]');
         var submitSel = 'input.pme-save,input.pme-apply,input.pme-more';
+        var submits = form.find(submitSel);
 
-        if (form.find(submitSel).length > 0) {
+        if (submits.length > 0) {
             var rateDialog = container.find('select.broker').length > 0;
             var brokerDialog = container.find('input.broker').length > 0;
 
-            // for the insurance rates
-            var broker;
-            var rate;
-
-            // for the insured items
-            var musicianId;
-            var billToParty;
-            var brokerSelect;
-            var scopeSelect;
-            var insuredItem;
-            var accessorySelect;
-            var manufacturer;
-            var constructionYear;
-            var insuranceAmount;
-
             var textInputs;
-
             var key;
 
             if (brokerDialog) {
-                broker = container.find('input.broker');
-
                 textInputs = {
-                    'broker': broker
+                    'broker': container.find('input.broker'),
+                    'brokername': container.find('input.brokername'),
+                    'brokeraddress': container.find('textarea.brokeraddress')
                 }
             } else if (rateDialog) {
-                // for the insurance rates
-                //broker = container.find('input.broker');
-                rate = container.find('input.rate');
-
                 textInputs = {
-                    //'broker': broker,
-                    'rate': rate
+                    'rate': container.find('input.rate'),
+                    //'date': container.find('input.date'),
+                    'policy': container.find('input.policy')
                 }
             } else {
-                // for the insured items
-
-                musicianId = container.find('input.musician-id');
-                billToParty = container.find('input.bill-to-party');
-                brokerSelect = container.find('select.broker-select');
-                scopeSelect = container.find('select.scope-select');
-                insuredItem = container.find('input.insured-item');
-                accessorySelect = container.find('select.accessory');
-                manufacturer = container.find('input.manufacturer');
-                constructionYear = container.find('input.construction-year');
-                insuranceAmount = container.find('input.amount');
-
                 // need to disable all of these on blur in order to avoid
                 // focus ping-pong
                 textInputs = {
-                    'insured-item': insuredItem,
-                    'manufacturer': manufacturer,
-                    'construction-year': constructionYear,
-                    'amount': insuranceAmount
+                    'insured-item': container.find('input.insured-item'),
+                    'manufacturer': container.find('input.manufacturer'),
+                    'construction-year': container.find('input.construction-year'),
+                    'amount': container.find('input.amount')
                 };
             }
 
@@ -102,6 +72,7 @@ CAFEVDB.Insurances = CAFEVDB.Insurances || {};
                 for (var key in textInputs) {
                     textInputs[key].prop('disabled', lock);
                 }
+                submits.prop('disabled', lock);
             };
 
             var validate = function(postAddOn, button, lockCallback) {
