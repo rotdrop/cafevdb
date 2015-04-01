@@ -995,14 +995,17 @@ var CAFEVDB = CAFEVDB || {};
   /**Popup a dialog with debug info if data.data.debug is set and non
    * empty.
    */
-  CAFEVDB.debugPopup = function(data) {
+  CAFEVDB.debugPopup = function(data, callback) {
     if (typeof data != 'undefined' &&
         typeof data.data != 'undefined' &&
         typeof data.data.debug != 'undefined' &&
         data.data.debug != '') {
+      if (typeof callback != 'function') {
+        callback = undefined;
+      }
       OC.dialogs.info('<div class="debug error contents">'+data.data.debug+'</div>',
                       t('cafevdb', 'Debug Information'),
-                      undefined, true, true);
+                      callback, true, true);
     }
   };
   
@@ -1057,8 +1060,15 @@ var CAFEVDB = CAFEVDB || {};
           // Basic OC checks
         case 'authentication_error':
         case 'unknown_user':
-        case 'application_not_enabled':
-        case 'token_expired': {
+        case 'token_expired':
+          errorCB = function() {
+            if(OC.webroot !== '') {
+              window.location.replace(OC.webroot);
+            } else {
+              window.location.replace('/');
+            }
+          };
+        case 'application_not_enabled': {
           missing = '';
           caption = t('cafevdb', 'Error');
           var autoReport = '<a href="mailto:'
