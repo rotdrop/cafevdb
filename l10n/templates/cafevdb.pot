@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-11 15:40+0100\n"
+"POT-Creation-Date: 2015-04-02 12:58+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -107,7 +107,7 @@ msgstr ""
 #: ajax/finance/sepa-debit-export.php:332
 #: ajax/finance/sepa-debit-store.php:112
 #: ajax/insurance/instrument-insurance-export.php:168
-#: ajax/insurance/validate.php:307 ajax/musicians/validate.php:96
+#: ajax/insurance/validate.php:326 ajax/musicians/validate.php:96
 #: ajax/page-loader.php:111 ajax/projects/web-articles.php:201
 #: ajax/settings/app-settings.php:1183
 msgid "PHP Exception Caught"
@@ -117,7 +117,7 @@ msgstr ""
 #: ajax/email/exporter.php:96 ajax/email/recipients.php:144
 #: ajax/finance/sepa-debit-store.php:116
 #: ajax/insurance/instrument-insurance-export.php:169
-#: ajax/insurance/validate.php:311 ajax/musicians/validate.php:100
+#: ajax/insurance/validate.php:330 ajax/musicians/validate.php:100
 #: ajax/page-loader.php:115 ajax/projects/web-articles.php:205
 #: ajax/settings/app-settings.php:1187
 #, php-format
@@ -331,8 +331,8 @@ msgstr ""
 msgid "false"
 msgstr ""
 
-#: ajax/export/insurance-export.php:243 ajax/insurance/validate.php:229
-#: ajax/insurance/validate.php:231 js/cafevdb.js:31 js/cafevdb.js:32
+#: ajax/export/insurance-export.php:243 ajax/insurance/validate.php:248
+#: ajax/insurance/validate.php:250 js/cafevdb.js:31 js/cafevdb.js:32
 #: js/cafevdb.js:33
 msgid "unknown"
 msgstr ""
@@ -782,70 +782,70 @@ msgstr ""
 msgid "instrument-insurance"
 msgstr ""
 
-#: ajax/insurance/validate.php:73 ajax/insurance/validate.php:113
+#: ajax/insurance/validate.php:75 ajax/insurance/validate.php:128
 msgid "Broker-name has been simplified."
 msgstr ""
 
-#: ajax/insurance/validate.php:78 ajax/insurance/validate.php:128
+#: ajax/insurance/validate.php:90 ajax/insurance/validate.php:147
 #, php-format
 msgid "Internal error: unknown request: %s"
 msgstr ""
 
-#: ajax/insurance/validate.php:123
+#: ajax/insurance/validate.php:138
 #, php-format
 msgid ""
 "Invalid insurance rate %f, should be larger than 0 and less than 1 percent."
 msgstr ""
 
-#: ajax/insurance/validate.php:165
+#: ajax/insurance/validate.php:184
 msgid "Insured musician is missing"
 msgstr ""
 
-#: ajax/insurance/validate.php:186
+#: ajax/insurance/validate.php:205
 msgid "Insurance broker is missing."
 msgstr ""
 
-#: ajax/insurance/validate.php:195
+#: ajax/insurance/validate.php:214
 msgid "Geographical scope for the insurance is missing."
 msgstr ""
 
-#: ajax/insurance/validate.php:203
+#: ajax/insurance/validate.php:222
 msgid "Insured object has not been specified."
 msgstr ""
 
-#: ajax/insurance/validate.php:212
+#: ajax/insurance/validate.php:231
 msgid "Object classification (instrument, accessory) is missing."
 msgstr ""
 
-#: ajax/insurance/validate.php:220
+#: ajax/insurance/validate.php:239
 msgid "Manufacturer field is empty."
 msgstr ""
 
-#: ajax/insurance/validate.php:230
+#: ajax/insurance/validate.php:249
 msgid "Construction year is unknown."
 msgstr ""
 
-#: ajax/insurance/validate.php:243
+#: ajax/insurance/validate.php:262
 msgid "The insurance amount is missing."
 msgstr ""
 
-#: ajax/insurance/validate.php:249
+#: ajax/insurance/validate.php:268
 msgid "Insurance amount should be a mere number."
 msgstr ""
 
-#: ajax/insurance/validate.php:252
+#: ajax/insurance/validate.php:271
 msgid "Insurance amount should be an integral number."
 msgstr ""
 
-#: ajax/insurance/validate.php:257
+#: ajax/insurance/validate.php:276
 msgid "Internal error: unknown request."
 msgstr ""
 
-#: ajax/insurance/validate.php:272 ajax/projects/verifyName.php:103
+#: ajax/insurance/validate.php:291 ajax/projects/verifyName.php:103
 msgid "Internal error: unknown request"
 msgstr ""
 
-#: ajax/insurance/validate.php:281
+#: ajax/insurance/validate.php:300
 msgid "missing or wrong arguments"
 msgstr ""
 
@@ -1384,7 +1384,7 @@ msgid "Unknown WYSIWYG-Editor: `%s'"
 msgstr ""
 
 #: js/blog.js:53 js/blog.js:156 js/blog.js:207 js/blog.js:243
-#: js/cafevdb.js:1063 js/cafevdb.js:1125 js/email.js:33 js/email.js:62
+#: js/cafevdb.js:1074 js/cafevdb.js:1138 js/email.js:33 js/email.js:62
 #: js/email.js:445 js/email.js:476 js/email.js:639 js/events.js:64
 #: js/events.js:149 js/inlineimage.js:84 js/inlineimage.js:92
 #: js/inlineimage.js:102 js/inlineimage.js:131 js/inlineimage.js:155
@@ -1476,50 +1476,51 @@ msgid ""
 "equivalent to clicking the `Back' button"
 msgstr ""
 
-#: js/cafevdb.js:1004 js/instrumentation.js:163
+#: js/cafevdb.js:1007 js/instrumentation.js:163
 msgid "Debug Information"
 msgstr ""
 
-#: js/cafevdb.js:1033
+#: js/cafevdb.js:1036
 msgid ""
 "Unrecoverable unknown internal error, no further information available, "
 "sorry."
 msgstr ""
 
-#: js/cafevdb.js:1035
+#: js/cafevdb.js:1038
 msgid "Internal Error"
 msgstr ""
 
-#: js/cafevdb.js:1042
+#: js/cafevdb.js:1045
 #, python-brace-format
 msgid "Field {RequiredField} not present in AJAX response."
 msgstr ""
 
-#: js/cafevdb.js:1051
+#: js/cafevdb.js:1054
 msgid "Missing data"
 msgstr ""
 
-#: js/cafevdb.js:1053 js/events.js:58 js/events.js:143
+#: js/cafevdb.js:1056 js/events.js:58 js/events.js:143
 msgid "Unknown error :("
 msgstr ""
 
-#: js/cafevdb.js:1083
+#: js/cafevdb.js:1094
 msgid "Something went wrong."
 msgstr ""
 
-#: js/cafevdb.js:1085
+#: js/cafevdb.js:1096
 msgid ""
 "If it should be the case that you are already logged in for a long time "
-"without interacting with the web-app, then please logout and login again. "
+"without interacting with the web-app, then the reason for this error is "
+"probably a simple timeout."
 msgstr ""
 
-#: js/cafevdb.js:1089
+#: js/cafevdb.js:1101
 msgid ""
 "I any case it may help to logoff and logon again, as a temporary work-"
-"around. "
+"around. You will be redirected to the log-in page when you close this window."
 msgstr ""
 
-#: js/cafevdb.js:1092
+#: js/cafevdb.js:1105
 #, python-brace-format
 msgid "Feedback email: {AutoReport}"
 msgstr ""
@@ -1999,51 +2000,51 @@ msgstr ""
 msgid "birthday"
 msgstr ""
 
-#: lib/config.php:905
+#: lib/config.php:906
 msgid "no preference"
 msgstr ""
 
-#: lib/config.php:906
+#: lib/config.php:907
 msgid "German"
 msgstr ""
 
-#: lib/config.php:907
+#: lib/config.php:908
 msgid "English"
 msgstr ""
 
-#: lib/config.php:908
+#: lib/config.php:909
 msgid "French"
 msgstr ""
 
-#: lib/config.php:909
+#: lib/config.php:910
 msgid "Spanish"
 msgstr ""
 
-#: lib/config.php:910
+#: lib/config.php:911
 msgid "Portuguese"
 msgstr ""
 
-#: lib/config.php:911
+#: lib/config.php:912
 msgid "Polish"
 msgstr ""
 
-#: lib/config.php:912
+#: lib/config.php:913
 msgid "Russian"
 msgstr ""
 
-#: lib/config.php:913
+#: lib/config.php:914
 msgid "Chinese"
 msgstr ""
 
-#: lib/config.php:914
+#: lib/config.php:915
 msgid "Japaneese"
 msgstr ""
 
-#: lib/config.php:915
+#: lib/config.php:916
 msgid "Korean"
 msgstr ""
 
-#: lib/config.php:935
+#: lib/config.php:936
 #, php-format
 msgid "Unknown Tooltip for key `%s' requested."
 msgstr ""
