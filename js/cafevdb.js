@@ -1061,6 +1061,7 @@ var CAFEVDB = CAFEVDB || {};
         case 'authentication_error':
         case 'unknown_user':
         case 'token_expired':
+        case 'application_not_enabled': {
           errorCB = function() {
             if(OC.webroot !== '') {
               window.location.replace(OC.webroot);
@@ -1068,7 +1069,7 @@ var CAFEVDB = CAFEVDB || {};
               window.location.replace('/');
             }
           };
-        case 'application_not_enabled': {
+
           missing = '';
           caption = t('cafevdb', 'Error');
           var autoReport = '<a href="mailto:'
@@ -1094,10 +1095,12 @@ var CAFEVDB = CAFEVDB || {};
           generalHint += '<br/>'
                        + t('cafevdb', 'If it should be the case that you are already '
                                     + 'logged in for a long time without interacting '
-                                    + 'with the web-app, then please logout and login again. ');
+                                    + 'with the web-app, then the reason for this '
+                                    + 'error is probably a simple timeout.');
           generalHint += '<br/>'
                        + t('cafevdb', 'I any case it may help to logoff and logon again, as a '
-                                    + 'temporary work-around. ');
+                                    + 'temporary work-around. You will be redirected to the '
+                                    + 'log-in page when you close this window.');
           generalHint += '<br/>'
                        + t('cafevdb', 'Feedback email: {AutoReport}',
                            { AutoReport: autoReport });
