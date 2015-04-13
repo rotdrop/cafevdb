@@ -87,7 +87,7 @@ namespace CAFEVDB {
     } else {
       // export a zip-archive in order to avoid tons of download dialogs
 
-      $tmpdir = sys_get_temp_dir();
+      $tmpdir = get_temp_dir();
       $tmpFile = tempnam($tmpdir, Config::APP_NAME.'.zip');
       if ($tmpFile === false) {
         throw new \RuntimeException(L::t('Unable to create temporay file for zip-archive.'));
