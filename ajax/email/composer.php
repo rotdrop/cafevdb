@@ -39,6 +39,10 @@ namespace CAFEVDB {
   // send-script has finished)
   $sessionSuspended = false;
 
+  $caption = ''; ///< Optional status message caption.
+  $messageText = ''; ///< Optional status message.
+  $debugText = ''; ///< Diagnostic output, only enabled on request.
+
   try {
 
     // Close this session in order to enable progress feed-back
@@ -51,10 +55,6 @@ namespace CAFEVDB {
     Config::init();
 
     $_GET = array();
-
-    $caption = ''; ///< Optional status message caption.
-    $messageText = ''; ///< Optional status message.
-    $debugText = ''; ///< Diagnostic output, only enabled on request.
 
     if (Util::debugMode('request') || Util::debugMode('emailform')) {
       $debugText .= '$_POST = '.print_r($_POST, true);

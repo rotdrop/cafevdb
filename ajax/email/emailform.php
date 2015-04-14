@@ -109,6 +109,9 @@ namespace CAFEVDB {
     $debugText .= ob_get_contents();
     @ob_end_clean();
   
+    unset($recipientsFilter);
+    unset($composer);
+
     \OCP\JSON::success(
       array('data' => array('contents' => $html,
                             'projectName' => $projectName,
@@ -116,9 +119,6 @@ namespace CAFEVDB {
                             'filterHistory' => $history,
                             'debug' => $debugText)));
 
-    unset($recipientsFilter);
-    unset($composer);
-  
     return true;
 
   } catch (\Exception $e) {
