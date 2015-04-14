@@ -1070,12 +1070,15 @@ CAFEVDB.Email = CAFEVDB.Email || {};
    * 
    * - EventSelect: array of ids of events to attach.
    */
-  Email.emailFormPopup = function(post, modal, single) {
-    if (typeof modal == 'undefined') {
+  Email.emailFormPopup = function(post, modal, single, afterInit) {
+    if (typeof modal == 'undefined' || modal == undefined) {
       modal = true;
     }
-    if (typeof single == 'undefined') {
+    if (typeof single == 'undefined' || single == undefined) {
       single = false;
+    }
+    if (typeof afterInit != 'function') {
+      afterInit = function() {};
     }
     var Email = this;
     $.post(OC.filePath('cafevdb', 'ajax/email', 'emailform.php'),
@@ -1087,6 +1090,8 @@ CAFEVDB.Email = CAFEVDB.Email || {};
              if (!CAFEVDB.ajaxErrorHandler(data, ['contents'])) {
                return false;
              }
+
+             afterInit();
 
              dialogHolder = $('<div id="'+containerId+'"></div>');
              dialogHolder.html(data.data.contents);

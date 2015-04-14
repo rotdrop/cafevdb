@@ -221,6 +221,7 @@ namespace CAFEVDB
       $storageValue = array('size' => $this->historySize,
                             'position' => $this->historyPosition,
                             'records' => $this->filterHistory);
+      //throw new \Exception(print_r($storageValue, true));
       $this->session->storeValue(self::SESSION_HISTORY_KEY, $storageValue);
     }
 
@@ -647,6 +648,9 @@ namespace CAFEVDB
     private function defaultByStatus()
     {
       if ($this->frozen) {
+        if (!$this->memberStatusNames) {
+          $this->memberStatusNames = array();
+        }
         return array_keys($this->memberStatusNames);
       }
       $byStatusDefault = array('regular');

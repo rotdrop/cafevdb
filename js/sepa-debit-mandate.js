@@ -578,22 +578,26 @@ var CAFEVDB = CAFEVDB || {};
       });
 
       var values = $(this.form).serializeArray();
-      var action;
 
       values.push({name: $(this).attr('name'), value: $(this).val()});
-
-      action = OC.filePath('cafevdb', 'ajax/insurance', 'instrument-insurance-export.php');
-      CAFEVDB.iframeFormSubmit(action, downloadName2, values);
-
-      action = OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-export.php');
-      CAFEVDB.iframeFormSubmit(action, downloadName, values);
 
       var post = $(this.form).serialize();
       post += '&'+$.param({
         'emailComposer[TemplateSelector]': t('cafevdb', 'InsuranceDebitNoteAnnouncement'),
         'emailComposer[Subject]': t('cafevdb', 'Debit notes due in 17 days')
       });
-      CAFEVDB.Email.emailFormPopup(post);
+      CAFEVDB.Email.emailFormPopup(
+        post,
+        undefined,
+        undefined,
+        function() {
+          var action;
+          action = OC.filePath('cafevdb', 'ajax/insurance', 'instrument-insurance-export.php');
+          CAFEVDB.iframeFormSubmit(action, downloadName2, values);
+          
+          action = OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-export.php');
+          CAFEVDB.iframeFormSubmit(action, downloadName, values);  
+        });
 
       return false;
     });
@@ -673,14 +677,17 @@ var CAFEVDB = CAFEVDB || {};
 
       values.push({name: $(this).attr('name'), value: $(this).val()});
 
-      CAFEVDB.iframeFormSubmit(action, target, values);
-
       var post = $(this.form).serialize();
       post += '&'+$.param({
         'emailComposer[TemplateSelector]': t('cafevdb', 'ProjectDebitNoteAnnouncement'),
         'emailComposer[Subject]': t('cafevdb', 'Debit notes due in 17 days')
       });
-      CAFEVDB.Email.emailFormPopup(post);
+      CAFEVDB.Email.emailFormPopup(post,
+                                   undefined,
+                                   undefined,
+                                   function() {
+                                     CAFEVDB.iframeFormSubmit(action, target, values);
+                                   });
 
       return false;
     });
