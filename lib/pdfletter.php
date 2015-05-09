@@ -20,6 +20,14 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace 
+{
+  // a hack in order to cope with search_lucence which somehow draws
+  // in another private instance of TCPDF which albeit is incomplete
+  // and comes without fonts.
+  require_once(dirname(__FILE__).'/../3rdparty/tcpdf/tcpdf.php');
+}
+
 /**CamerataDB namespace to prevent name-collisions.
  */
 namespace CAFEVDB
