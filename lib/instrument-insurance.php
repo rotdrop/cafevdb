@@ -666,7 +666,9 @@ namespace CAFEVDB
         $insurances['musicians'][$musId]['items'][] = $itemInfo;
       }
 
-      $totals = 0.0;
+      $totals     = 0.0;
+      $annual     = 0.0;
+      $fractional = 0.0;
       foreach($insurances['musicians'] as $id => $info) {
         // ordinary annular fees
         $subtotals = 0.0;
@@ -677,6 +679,10 @@ namespace CAFEVDB
         }
         $insurances['musicians'][$id]['subTotals'] = $subtotals;
         $insurances['musicians'][$id]['corrections'] = $corrections;
+
+        $annual += $subtotals;
+        $fractional += $corrections;
+        
         $totals += $subtotals;
         $totals += $corrections;
 
@@ -684,6 +690,8 @@ namespace CAFEVDB
         $insurances['musicians'][$id]['name'] = $name['firstName'].' '.$name['lastName'];
       }
       $insurances['totals'] = $totals;
+      $insurances['annual'] = $annual;
+      $insurances['fractional'] = $fractional;
     
       if ($ownConnection) {
         mySQL::close($handle);
@@ -828,7 +836,7 @@ your insured items at any time. Just ask.'), '', 1);
         $html = '';
 //<div class="no-page-break">
         $html .= '
-<h4>'.L::t('Insured Person: %s', array($insurance['name'])).'</h4>
+<h3>'.L::t('Insured Person: %s', array($insurance['name'])).'</h3>
 <table class="no-page-break" cellpadding="2" class="'.$css.'">
   <tr>
     <th width="70">'.L::t('Vendor').'</th>
@@ -891,18 +899,27 @@ your insured items at any time. Just ask.'), '', 1);
         }
 
         // Now emit the correction for the first year, if applicable
-        if (!$firstYearFixup) {
+        if (false && !$firstYearFixup) {
           continue;
         }
 
-        $html = '';
-//<div class="no-page-break">
-        $html .= '
+        $htmlTxt = '';
+        $htmlTxt .= '
 <p>'.
-          L::t('Corrections for partial insurance periods.').
-          '<br/>'.
-          L::t('Insurances starting after the due-date will be charged in the following year.').
-          '</p>
+        L::t('Start and end of the regular insurance period is as 
+indicated in the column "Due" in the following table. The actual start of
+the insurance for the particular item is as indicated in the column "Start".
+In the first year, we charge a fraction of the regular annual fee for the
+insurance period between "Start" and "Due" as indicated in the column "Factor"').
+          '</p>';
+        $pdf->SetFont(PDF_FONT_NAME_MAIN, '', PDFLetter::FONT_SIZE); // Restore font size
+        $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
+                            10,
+                            PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+1*$pdf->fontSize(),
+                            $style.$htmlTxt, '', 1);
+
+        $html = '';
+        $html .= '
 <table class="no-page-break" cellpadding="2" class="'.$css.'">
   <tr>
     <th width="60">'.L::t('Due').'</th>
@@ -915,7 +932,7 @@ your insured items at any time. Just ask.'), '', 1);
   </tr>';        
         foreach($insurance['items'] as $object) {
           $fraction = $object['fraction'];
-          if ($fraction == 0.0) { // regular fee
+          if (false && $fraction == 0.0) { // regular fee
             continue;
           }
           $correction = $object['correction'];
@@ -942,10 +959,12 @@ your insured items at any time. Just ask.'), '', 1);
 </table>';
 //</div>';
 
+        
         // We do not want to split the table across pages
         $pdf->startTransaction();
         $startPage = $pdf->getPage();
       
+        $pdf->SetFont(PDF_FONT_NAME_MAIN, '', 10); // Slightly smaller for table
         $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
                             10,
                             PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+1*$pdf->fontSize(),
@@ -956,6 +975,7 @@ your insured items at any time. Just ask.'), '', 1);
           $pdf->rollbackTransaction(true);
           $pdf->addPage();
           // Do it again on a new page
+          $pdf->SetFont(PDF_FONT_NAME_MAIN, '', 10); // Slightly smaller for table
           $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
                               10,
                               PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+1*$pdf->fontSize(),
@@ -968,11 +988,54 @@ your insured items at any time. Just ask.'), '', 1);
       // Restore font size
       $pdf->SetFont(PDF_FONT_NAME_MAIN, '', PDFLetter::FONT_SIZE);
 
+      $html = '
+<H3>'.
+        L::t('Total Insurance Fees').'
+</H3>';
+      $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
+                          10,
+                          PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+2*$pdf->fontSize(),
+                          $style.$html, '', 1);
+
+      $totals = $overview['annual'];
+      $taxRate = floatval(InstrumentInsurance::TAXES);
+      $taxes = $totals * $taxRate;
+      $html = '';
+      $html .= '
+<p>'.
+      L::t('Regular annual insurance fee for all insured items of all musicians').'
+</p>
+<table class="totals no-page-break">
+  <tr>
+    <td width="220" class="summary">'.L::t('Annual amount excluding taxes:').'</td>
+    <td width="80" class="money">'.money_format('%n', $totals).'</td>
+  </tr>
+  <tr>
+    <td class="summary">'.L::t('%0.2f %% insurance taxes:', array($taxRate*100.0)).'</td>
+    <td class="money">'.money_format('%n', $taxes).'</td>
+  </tr>
+  <tr>
+    <td class="summary">'.L::t('Total amount to pay:').'</td>
+    <td class="money">'.money_format('%n', $totals+$taxes).'</td>
+  </tr>
+</table>'
+;
+      $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
+                          10,
+                          PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+0*$pdf->fontSize(),
+                          $style.$html, '', 1);
+
       $totals = $overview['totals'];
       $taxRate = floatval(InstrumentInsurance::TAXES);
       $taxes = $totals * $taxRate;
       $html = '';
       $html .= '
+<p>'.
+      L::t('The amount to pay for newly insured items may be larger than the regular annual
+fee as it may contain the fees for the time between the start of the insurance for
+the individual items and the regular due-date, as indicated in the tables above.
+The actual total amount, including fees for "partial" insurance perdiods is as follows:').'
+</p>
 <table class="totals no-page-break">
   <tr>
     <td width="180" class="summary">'.L::t('Total amount excluding taxes:').'</td>
@@ -990,9 +1053,9 @@ your insured items at any time. Just ask.'), '', 1);
 
       $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
                           10,
-                          PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+0.5*$pdf->fontSize(),
+                          PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+1*$pdf->fontSize(),
                           $style.$html, '', 1);
-    
+      
       $html = L::t('You have granted us a debit-mandate. The total amount due will be debited from your bank-account, no further action from your side is required. We will inform you by email about the date of the debit at least 14 days in advance of the bank transaction.');
 
       if (false) {
