@@ -275,7 +275,7 @@ insuranceFee
         }
 
         // Support date substitutions. Format is
-        // ${GLOBAL::DATE:dateformat:datestring} where dateformat
+        // ${GLOBAL::DATE:dateformat!datestring} where dateformat
         // defaults to d.m.Y. datestring is everything understood by
         // strtotime().
         $oldLocale = setlocale(LC_TIME, Util::getLocale());
