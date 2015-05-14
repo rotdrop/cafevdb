@@ -101,6 +101,7 @@ namespace CAFEVDB {
 
       $tooltips   = Config::getUserValue('tooltips', 'on', $user);
       $usrFiltVis = Config::getUserValue('filtervisibility', 'off', $user);
+      $pageRows   = Config::getUserValue('pagerows', 20, $user);
 
       // Filter visibility is stored here:
       $pmeSysPfx = Config::$pmeopts['cgi']['prefix']['sys'];

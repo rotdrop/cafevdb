@@ -44,13 +44,15 @@ namespace CAFEVDB {
 
     $tmpl = new \OCP\Template( 'cafevdb', 'settings');
 
-    $tooltips         = \OCP\Config::getUserValue($user, 'cafevdb', 'tooltips', 'on');
-    $filtervisibility = \OCP\Config::getUserValue($user, 'cafevdb', 'filtervisibility', 'off');
+    $tooltips         = Config::getUserValue('tooltips', 'on', $user);
+    $filtervisibility = Config::getUserValue('filtervisibility', 'off', $user);
 
-    $editor      = \OCP\Config::getUserValue($user, 'cafevdb', 'wysiwygEditor', 'tinymce');
-    $expertmode  = \OCP\Config::getUserValue($user, 'cafevdb', 'expertmode','');
+    $pagerows    = Config::getUserValue('pagerows', 20, $user);
+    $editor      = Config::getUserValue('wysiwygEditor', 'tinymce', $user);
+    $expertmode  = Config::getUserValue('expertmode', '', $user);
     $encrkey     = Config::getEncryptionKey();
 
+    $tmpl->assign('pagerows', $pagerows);
     $tmpl->assign('expertmode', $expertmode);
     $tmpl->assign('tooltips', $tooltips);
     $tmpl->assign('editor', $editor);

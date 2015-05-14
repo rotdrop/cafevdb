@@ -30,6 +30,9 @@ namespace CAFEVDB
                     "Warning: this works globally for all OwnCloud applications.");
   $filtervistitle = L::t("Initially display the filter-controls on all atable. This affects only ".
                     "the initial visibility of the filter-buttons and -inputs.");
+  $pagerowstitle  = L::t("Initial rows-per-page value for the display of various tables. ".
+                    "Most tables allow adjusting this value by individual controls. ".
+  "This setting affects only the initial setting; changes will only be visible after reloading the pages.");
   $experttitle    = L::t("Show a second button which leads to a dialog with `advanced' settings");
   $debugtitle     = L::t("Show a certain amount of debug information, normally not needed.");
 
@@ -38,7 +41,17 @@ namespace CAFEVDB
                       'request' => L::t('HTTP Request'),
                       'tooltips' => L::t('Missing Context Help'),
                       'emailform' => L::t('Mass Email Form'));
-  
+
+  $pageRows = floor($_['pagerows'] / 10) * 10;
+  $pageRowsOptions = array(-1 => '&infin;');
+  $maxRows = 100;
+  for ($i = 10; $i <= $maxRows; $i += 10) {
+    $pageRowsOptions[$i] = $i;
+  }
+  if ($pageRows > $maxRows) {
+    $pageRows = 0;
+  }  
+
   Config::init();
   $timezone = Util::getTimezone();
   $locale = Util::getLocale();
@@ -70,17 +83,34 @@ namespace CAFEVDB
       <input id="filtervisibility" type="checkbox" name="filtervisibility" <?php echo $_['filtervisibility'] == 'on' ? 'checked="checked"' : ''; ?> title="<?php echo $filtervistitle ?>"/>
       <label for="filtervisibility" title="<?php echo $filtervistitle; ?>"><?php echo L::t('Filter-Controls') ?></label>
       <br />
-      <select name="wysiwygEditor"
-              data-placeholder="<?php echo L::t('WYSIWYG Editor'); ?>"
-              class="wysiwyg-editor"
-              title="<?php echo Config::toolTips('wysiwyg-edtior'); ?>">
-        <?php
-        foreach (Config::$wysiwygEditors as $key => $value) {
-          $disabled = $value['enabled'] ? '' : ' disabled="disabled" ';
-          echo '<option value="'.$key.'" '.$disabled.($_['editor'] == $key ? 'selected="selected"' : '').'>'.$value['name'].'</option>'."\n";
-        }
-        ?>
-      </select></br>
+      <div class="table-pagerows settings-control">
+        <select name="pagerows"
+                data-placeholder="<?php echo L::t('#Rows'); ?>"
+                class="table-pagerows"
+                id="table-pagerows"
+                title="<?php echo $pagerowstitle; ?>">
+          <?php
+          foreach($pageRowsOptions as $value => $text) {
+            $selected = $value == $pageRows ? ' selected="selected"' : '';
+            echo '<option value="'.$value.'"'.$selected.'>'.$text.'</option>'."\n";
+          }
+          ?>
+        </select>
+        <label for="table-pagerows"><?php echo L::t('Display #Rows/Page in Tables'); ?></label>
+      </div>
+      <div class="wysiwygeditor settings-control">
+        <select name="wysiwygEditor"
+                data-placeholder="<?php echo L::t('WYSIWYG Editor'); ?>"
+                class="wysiwyg-editor"
+                title="<?php echo Config::toolTips('wysiwyg-edtior'); ?>">
+          <?php
+          foreach (Config::$wysiwygEditors as $key => $value) {
+            $disabled = $value['enabled'] ? '' : ' disabled="disabled" ';
+            echo '<option value="'.$key.'" '.$disabled.($_['editor'] == $key ? 'selected="selected"' : '').'>'.$value['name'].'</option>'."\n";
+          }
+          ?>
+        </select>
+      </div>
       <input id="expertmode" type="checkbox" name="expertmode" <?php echo $_['expertmode'] == 'on' ? 'checked="checked"' : ''; ?> id="expertmode" title="<?php echo $experttitle ?>"/>
       <label for="expertmode" title="<?php echo $experttitle; ?>"><?php echo L::t('Expert-Mode') ?></label>
       <br />
@@ -111,11 +141,12 @@ namespace CAFEVDB
       <div class="statusmessage" id="changed"><?php echo L::t('The encryption key has been set successfully.');?></div>
       <div class="statusmessage" id="error"><?php echo L::t('Unable to set the encryption key.');?></div>
     </form>
-    <div>
-      <span><?php echo $timestamp; ?>
-      <span><?php echo $time; ?>
-      <span><?php echo $timezone; ?>
-      <span><?php echo $locale; ?>
+    <div class="locale information">
+      <span class="locale heading"><?php echo L::t('Locale Information:'); ?></span>
+      <span class="locale timestamp"><?php echo $timestamp; ?></span>
+      <span class="locale time"><?php echo $time; ?></span>
+      <span class="locale timezone"><?php echo $timezone; ?></span>
+      <span class="locale thelocale"><?php echo $locale; ?></span>
     </div>
   </div>
 <?php
