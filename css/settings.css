@@ -121,3 +121,31 @@ input.randompassword {
 input.randomkey {
   width: 18em;
 }
+
+#appsettings_popup div.settings-control {
+  margin:0.2ex 0 0.2ex 0;
+}
+
+#appsettings_popup div.locale.information {
+  margin-top:1ex;
+}
+
+#appsettings_popup span.locale.heading {
+  font-weight:bold;
+}
+
+#appsettings_popup span.locale.timestamp {
+  color:red;
+}
+
+#appsettings_popup span.locale.time {
+  color:blue;
+}
+
+#appsettings_popup span.locale.timezone {
+  color:red;
+}
+
+#appsettings_popup span.locale.thelocale {
+  color:blue;
+}

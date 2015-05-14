@@ -35,7 +35,7 @@ class DetailedInstrumentation
 
   function __construct($execute = true) {
     parent::__construct($execute);
-    $this->recordsPerPage = 20;
+    //$this->recordsPerPage = 20;
   }
 
   public function shortTitle()

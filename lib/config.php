@@ -920,9 +920,10 @@ redaxoRehearsalsModule
                              'MusicianId' => -1,
                              'ProjectId' => -1,
                              'ProjectName' => false,
-                             'RecordsPerPage' => -1);
+                             'RecordsPerPage' => self::getUserValue('pagerows', 20));
       self::$toolTipsArray = ToolTips::toolTips();
       self::$pmeopts['tooltips'] = self::$toolTipsArray;
+      self::$pmeopts['inc'] = self::$cgiVars['RecordsPerPage'];
     }
 
     /**Return a translated tool-tip for the given key.

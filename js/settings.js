@@ -90,6 +90,30 @@ $(document).ready(function() {
     return false;
   });
 
+  $('select.table-pagerows').chosen({
+    disable_search:true,
+    width:'10ex'
+  });
+  $('select.table-pagerows').change(function(event) {
+    event.preventDefault();
+    var select = $(this);
+    $('#cafevdb #msg').hide();
+
+    $.post(OC.filePath('cafevdb', 'ajax/settings', 'pagerows.php'),
+           select.serialize(),
+           function (data) {
+             if (data.status == 'success') {
+               $('#cafevdb #msg').html(data.data.message);
+             } else {
+               $('#cafevdb #msg').html(t('cafevdb','Error:')+' '+data.data.message);
+             }
+             $('#cafevdb #msg').show();
+             return false;
+           }, 'json');
+
+    return false;
+  });
+
   $('select.debug-mode').chosen({ disable_search:true });
   $('select.debug-mode').change(function(event) {
     event.preventDefault();
