@@ -176,6 +176,9 @@ $this->create("cafevdb_ajax_settings_filtervisibility.php", "ajax/settings/filte
 $this->create("cafevdb_ajax_settings_redaxo-settings.php", "ajax/settings/redaxo-settings.php")
   ->actionInclude("cafevdb/ajax/settings/redaxo-settings.php");
 
+$this->create("cafevdb_ajax_settings_pagerows.php", "ajax/settings/pagerows.php")
+  ->actionInclude("cafevdb/ajax/settings/pagerows.php");
+
 $this->create("cafevdb_ajax_settings_tooltips.php", "ajax/settings/tooltips.php")
   ->actionInclude("cafevdb/ajax/settings/tooltips.php");
 
