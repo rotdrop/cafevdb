@@ -95,8 +95,12 @@ namespace CAFEVDB {
   }
 
 ?>
-<div id="controls">
+
+<div id="app-navigation" class="app-navigation">
 <?php echo $_['navigationcontrols']; ?>
+</div>
+<div id="app-content">
+<div id="controls">
   <form id="personalsettings" method="post" action="?app=<?php echo Config::APP_NAME; ?>">
     <input type="hidden" name="requesttoken" value="<?php echo \OCP\Util::callRegister(); ?>" />
     <?php echo $navigationControls; ?>
@@ -104,7 +108,7 @@ namespace CAFEVDB {
     <?php echo $settingsControls; ?>
   </form>
 </div>
-<div class="cafevdb-general" id="cafevdb-general"> <!-- used to eliminate the pixel-size of the control bar -->
+<div class="cafevdb-general" data-snap-ignore="true" id="cafevdb-general"> <!-- used to eliminate the pixel-size of the control bar -->
   <?php echo isset($_['headerblock']) ? '<!-- ' : ''; ?>
   <div id="<?php echo $css_pfx; ?>-header-box" class="<?php echo $css_pfx; ?>-header-box<?php echo $css_class; ?>">
     <div id="<?php echo $css_pfx; ?>-header" class="<?php echo $css_pfx; ?>-header<?php echo $css_class; ?>">

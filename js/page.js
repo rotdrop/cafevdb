@@ -70,14 +70,28 @@ var CAFEVDB = CAFEVDB || {};
              $('.tipsy').remove();
 
              // This is a "complete" page reload, so inject the
-             // contents into #contents
-             $('div#content').html(data.data.contents);
+             // contents into #contents.
+             //
+             // avoid overriding event handler, although this should
+             // be somewhat slower than replacing everything in one run.
+
+             // remember the navigation toggle
+             var navToggle = $('#app-navigation-toggle').clone(true);
+             var newContent = $('<div>'+data.data.contents+'</div>');
+             var newAppContent = newContent.find('#app-content').children();
+             var newAppNavigation = newContent.find('#app-navigation').children();
+             
+             $('#app-navigation').empty().prepend(newAppNavigation);
+             $('#app-content').empty().prepend(newAppContent);
+             $('#app-content').prepend(navToggle);
+
              Page.busyIcon(false);
              CAFEVDB.tipsy();
              CAFEVDB.runReadyCallbacks();
              if (typeof afterLoadCallback == 'function') {
                afterLoadCallback();
              }
+
              return false;
            });
   };

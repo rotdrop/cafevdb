@@ -30,6 +30,7 @@ $css_pfx = $_['css-prefix'];
   <div class="debug" id="<?php echo $css_pfx; ?>-debug"></div>
   <div id="cafevdb-error-block" class="cafevdb-error"></div>
 </div> <!-- cafevdb-general -->
+</div> <!-- app-content -->
 <div id="fullcalendar"></div>
 <div id="dialog_holder" class="popup topleft hidden"></div>
 <div id="appsettings" class="popup topright hidden"></div>
