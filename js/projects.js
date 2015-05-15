@@ -284,6 +284,17 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
 
         // emulate per-project action pull down menu via chosen
         projectActions.chosen({ disable_search:true });
+
+        if (projectActions.data('chosen') == undefined) {
+            // restore the data-placeholder as first option if chosen
+            // is not active
+            projectActions.each(function(index) {
+                var self = $(this);
+                var placeHolder = self.data('placeholder');
+                self.find('option:first').html(placeHolder);
+            });
+        }
+
         projectActions.off('change');
         projectActions.change(function(event) {
             event.preventDefault();
