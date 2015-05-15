@@ -157,8 +157,6 @@ namespace CAFEVDB
 
   } catch (\Exception $e) {
 
-    exit;
-    
     $tmpl = new \OCP\Template( 'cafevdb', 'errorpage', 'user' );
     $tmpl->assign('error', 'exception');
     $tmpl->assign('exception', $e->getMessage());
