@@ -39,7 +39,7 @@ var myTinyMCE = myTinyMCE || {};
       "save table directionality template paste textcolor smileys" // emoticons smileys contextmenu
     ],
     //content_css: "css/content.css",
-    toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullscreen | forecolor backcolor smileys | code", // emoticons
+    toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullscreen | forecolor backcolor smileys | code", // emoticons
     style_formats_merge: true,
     style_formats: [
     {
@@ -95,11 +95,21 @@ var myTinyMCE = myTinyMCE || {};
       ]
     ]
   };
+  myTinyMCE.smallConfig = {
+    toolbar: "fullscreen | undo redo | bold italic | bullist indent outdent",
+    menubar: false,
+    statusbar: false
+  };
   myTinyMCE.getConfig = function(plusConfig) {
     if (typeof plusConfig === 'undefined') {
       plusConfig = {};
     }
-    return $.extend({}, myTinyMCE.config, plusConfig);
+    var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+    if (width <= 768) { // perhaps mobile
+      return $.extend({}, myTinyMCE.config, myTinyMCE.smallConfig, plusConfig);      
+    } else {
+      return $.extend({}, myTinyMCE.config, plusConfig);
+    }
   };
   myTinyMCE.init = function(lang) {
     myTinyMCE.config.language = lang;
