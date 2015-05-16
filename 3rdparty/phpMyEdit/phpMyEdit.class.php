@@ -3280,15 +3280,17 @@ class phpMyEdit
 		while ((!$fetched && ($row = $this->sql_fetch($res)) != false)
 			   || ($fetched && $row != false)) {
 			$fetched = false;
-			echo '<tr class="',$this->getCSSclass('row', null, 'next'),'">',"\n";
-			if ($this->sys_cols) { /* {{{ */
-				if ($this->col_has_values($this->key_num)) {
-					$key_rec = $row['qf'.$this->key_num.'_idx'];
-				} else {
-					$key_rec = $row['qf'.$this->key_num];
-				}
+			if ($this->col_has_values($this->key_num)) {
+				$key_rec = $row['qf'.$this->key_num.'_idx'];
+			} else {
+				$key_rec = $row['qf'.$this->key_num];
+			}
+			//$key_rec	   = $row['qf'.$this->key_num];
 
-				//$key_rec	   = $row['qf'.$this->key_num];
+			echo
+				'<tr class="'.$this->getCSSclass('row', null, 'next').'"'.
+				'    data-'./*$this->cgi['prefix']['sys']*/'PME_sys_'.'rec="'.$key_rec.'">'."\n";
+			if ($this->sys_cols) { /* {{{ */
 				$css_class_name = $this->getCSSclass('navigation', null, true);
 				if ($select_recs) {
 					if (! $this->nav_buttons() || $this->sys_cols > 1) {
@@ -3308,12 +3310,13 @@ class phpMyEdit
 					if ($this->nav_graphic_links()) {
 						$imgstyle =
 							'background:url('.$this->url['images'].'%s) no-repeat;'.
-							'width:16px;height:15px;border:0;font-size:0';
-/* We need the information about the current record, we append it to
- * the translated operation. Ugly, but still much cleaner than
- * textlinks.
- */
+ 							'width:16px;height:15px;border:0;font-size:0';
+						/* We need the information about the current record, we append it to
+						 * the translated operation. Ugly, but still much cleaner than
+						 * textlinks.
+						 */
 						$record = $this->cgi['prefix']['sys'].'rec'.'='.$key_rec;
+						echo '<div class="'.$css_class_name.' graphic-links">';
 						echo $this->htmlSubmit(
 							'operation',
 							$viewTitle.'?'.$record,
@@ -3350,6 +3353,7 @@ class phpMyEdit
 							$this->delete_enabled() == false,
 							NULL,
 							sprintf($imgstyle, 'pme-delete.png'));
+						echo '</div>';
 					}
 					if ($this->nav_text_links()) {
 						if ($this->nav_graphic_links()) {

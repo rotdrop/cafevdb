@@ -460,6 +460,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
       }
     }
 
+    //alert('post: '+CAFEVDB.print_r(post, true));
+
     var tableOptions = {
       AmbientContainerSelector: pme.selector(containerSel),
       DialogHolderCSSId: pme.dialogCSSId,
@@ -1039,6 +1041,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
       return PHPMYEDIT.pseudoSubmit($(this.form), $(this), containerSel, pmepfx);
     });      
 
+    // view/change/copy/delete buttons lead to a a popup
     if (form.find('input[name="DisplayClass"]').length > 0) {
       var submitSel = 'form.'+pmepfx+'-form input[class$="navigation"]:submit'+','+
         'form.'+pmepfx+'-form input.pme-add:submit';
@@ -1056,8 +1059,23 @@ var PHPMYEDIT = PHPMYEDIT || {};
           return true;
         }
       });
+
+      var rowSelector = 'form.'+pmepfx+'-form td[class^="'+pmepfx+'-cell"]';
+      container.off('click', rowSelector).
+        on('click', rowSelector, function(event) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        var recordId = $(this).parent().data(pmepfx+'_sys_rec');
+        var PMEPFX = pmepfx.toUpperCase();
+        var recordKey = PMEPFX+'_sys_rec';
+        var recordEl = '<input type="hidden" class="'+pmepfx+'-view-navigation" value="View?'+recordKey+'='+recordId+'" name="'+PMEPFX+'_sys_operation" />';
+
+        PHPMYEDIT.tableDialog(form, $(recordEl), containerSel);
+        return false;
+      });
     }
 
+    // All remaining submit event result in a reload
     var submitSel = 'form.'+pmepfx+'-form :submit';
     container.off('click', submitSel).
       on('click', submitSel, function(event) {
