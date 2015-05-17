@@ -910,7 +910,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
     // filter, which is not needed when using chosen.
     container.find("select[class^='"+pmepfx+"-input']").attr("data-placeholder", this.inputSelectPlaceholder);
     container.off('change', 'select[class^="'+pmepfx+'-input"]');
-    container.find("select[class^='"+pmepfx+"-input'] option[value='*']").remove();
+//    container.find("select[class^='"+pmepfx+"-input'] option[value='*']").remove();
 
     // Play a dirty trick in order not to pass width:auto to chosen
     // for some particalar thingies
@@ -926,6 +926,9 @@ var PHPMYEDIT = PHPMYEDIT || {};
     // Then the general stuff
     container.find("select[class^='"+pmepfx+"-input']").each(function(index) {
       var self = $(this);
+      if (self.hasClass('no-chosen')) {
+        return;
+      }
       self.chosen({
         //width:'100%',
         disable_search_threshold: 10,
@@ -1060,9 +1063,19 @@ var PHPMYEDIT = PHPMYEDIT || {};
         }
       });
 
-      var rowSelector = 'form.'+pmepfx+'-form td[class^="'+pmepfx+'-cell"]';
+      // Trigger "view operation" when clicking on a data-row.
+      var rowSelector = 'form.'+pmepfx+'-form td[class^="'+pmepfx+'-cell"]:not(.control)';
       container.off('click', rowSelector).
         on('click', rowSelector, function(event) {
+
+        if (event.target != this) {
+          // divs and spans which make it up to here will be ignored,
+          // everything else results in the default action.
+          if (!$(event.target).is('span') && !$(event.target).is('div')) {
+            return true;
+          }
+        }
+
         event.preventDefault();
         event.stopImmediatePropagation();
         var recordId = $(this).parent().data(pmepfx+'_sys_rec');

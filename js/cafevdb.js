@@ -80,11 +80,12 @@ var CAFEVDB = CAFEVDB || {};
 	  e.stopImmediatePropagation();
 	}
       });
-      var plusConfig;
+      var plusConfig = {};
+      if (!editorElement.is('textarea')) {
+        plusConfig.inline = true;
+      }
       if (typeof initialHeight != 'undefined') {
-        plusConfig = { height: initialHeight };
-      } else {
-        plusConfig = undefined;
+        plusConfig.height = initialHeight;
       }
       var mceConfig = myTinyMCE.getConfig(plusConfig);
         // {
@@ -94,7 +95,7 @@ var CAFEVDB = CAFEVDB || {};
         // });
       editorElement.tinymce(mceConfig);
       // post-render callback? This is really quere. There is
-      // something really broken with the tinzMCE setup.
+      // something really broken with the tinyMCE setup.
       if (typeof initCallback == 'function') {
         setTimeout(initCallback, 500);
       }
@@ -494,6 +495,22 @@ var CAFEVDB = CAFEVDB || {};
     return output;
   };
 
+  CAFEVDB.chosenActive = function(select) {
+    return select.data('chosen') != undefined;
+  };
+
+  CAFEVDB.fixupNoChosenMenu = function(select) {
+    if (!this.chosenActive(select)) {
+      // restore the data-placeholder as first option if chosen
+      // is not active
+      select.each(function(index) {
+        var self = $(this);
+        var placeHolder = self.data('placeholder');
+        self.find('option:first').html(placeHolder);
+      });
+    }
+  }
+
   /*jQuery dialog popup with one chosen multi-selelct box inside.
    * 
    */
@@ -805,7 +822,7 @@ var CAFEVDB = CAFEVDB || {};
       if (modalizer.length > 0) {
         return modalizer;
       }
-      var dialogHolder = $('<div id="cafevdb-modalizer"></div>');
+      var dialogHolder = $('<div id="cafevdb-modalizer" class="cafevdb-modalizer"></div>');
       $('body').append(dialogHolder);
       dialogHolder.dialog({
         title: '',
@@ -816,7 +833,7 @@ var CAFEVDB = CAFEVDB || {};
         height: '0px',
         modal: true,
         closeOnEscape: false,
-        dialogClass: 'transparent no-close',
+        dialogClass: 'transparent no-close zero-size',
         resizable: false,
         open: function() {
           // This one must be ours.
@@ -1150,8 +1167,17 @@ var CAFEVDB = CAFEVDB || {};
       $.fn.tipsy.enable();
     } else {
       $.fn.tipsy.disable();
+      $('.tipsy').remove(); // remove any left-over items.
     }
   };
+
+  CAFEVDB.snapperClose = function() {
+    if ($('body').hasClass('snapjs-left')) {
+      //alert('snapper open');
+      $('#app-navigation-toggle').trigger('click');
+    }
+  };
+
 
   /**Initialize our tipsy stuff. Only exchange for our own thingies, of course.
    */
@@ -1369,6 +1395,7 @@ $(document).ready(function(){
                return false;
              });
 
+  // Display the overview-page for the given project.
   content.on('click',
              'form#projectlabelcontrol :submit',
              function(event) {
@@ -1381,6 +1408,18 @@ $(document).ready(function(){
                return false;
              });
 
+  // Same as above, but with <li>-style navigation (OC standard)
+  content.on('click', 'div#app-navigation li.nav-projectlabelcontrol a',
+             function(event) {
+               event.stopImmediatePropagation();
+               
+               var data = $(this).data('json');
+
+               CAFEVDB.Projects.projectViewPopup(PHPMYEDIT.selector(), data);
+               return false;
+             });
+
+  // Display the instrumentation numbers in a dialog widget
   content.on('click',
              'form#projectinstrumentscontrol :submit',
              function(event) {
@@ -1394,6 +1433,16 @@ $(document).ready(function(){
                    ProjectName: projectName
                  });
                return false;
+             });
+
+  // Same as above, but with <li>-style navigation (OC standard)
+  content.on('click', 'div#app-navigation li.nav-projectinstrumentscontrol a',
+             function(event) {
+               event.stopImmediatePropagation();
+
+               var data = $(this).data('json');
+               CAFEVDB.Projects.instrumentationNumbersPopup(PHPMYEDIT.defaultSelector, data);
+               return false;               
              });
 
   CAFEVDB.addReadyCallback(function() {

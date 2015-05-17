@@ -218,6 +218,8 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
             ProjectName: projectName
         };
 
+        var error = false;
+
         switch (selectedValue) {
             // project overview itself ...
           case 'project-infopage':
@@ -259,6 +261,8 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
             OC.dialogs.alert(t('cafevdb', 'Unknown operation:')
                              +' "'+selectedValue+'"',
                              t('cafevdb', 'Unimplemented'));
+            error = true;
+            break;
         }
         
         // Cheating. In principle we mis-use this as a simple pull-down
@@ -274,6 +278,11 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
         $('div.chosen-container').tipsy({gravity:'sw', fade:true});
         $('li.active-result').tipsy({gravity:'w', fade:true});
 
+        if (!error) {
+            //alert('try to close snapper');
+            CAFEVDB.snapperClose();
+        }
+
         return false;
     };
 
@@ -285,15 +294,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
         // emulate per-project action pull down menu via chosen
         projectActions.chosen({ disable_search:true });
 
-        if (projectActions.data('chosen') == undefined) {
-            // restore the data-placeholder as first option if chosen
-            // is not active
-            projectActions.each(function(index) {
-                var self = $(this);
-                var placeHolder = self.data('placeholder');
-                self.find('option:first').html(placeHolder);
-            });
-        }
+        CAFEVDB.fixupNoChosenMenu(projectActions);
 
         projectActions.off('change');
         projectActions.change(function(event) {
@@ -302,7 +303,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
             return Projects.actions($(this), containerSel);
         });  
         projectActions.off('chosen:showing_dropdown');
-        projectActions.on('chosen:showing_dropdown', function (chosen) {
+        projectActions.on('chosen:showing_dropdown', function (event) {
             container.find('ul.chosen-results li.active-result').tipsy({gravity:'w', fade:true});
         });
     };

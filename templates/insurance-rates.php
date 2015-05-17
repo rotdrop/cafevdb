@@ -26,12 +26,18 @@ namespace CAFEVDB
   $table = new InsuranceRates();
   $css_pfx = InsuranceRates::CSS_PREFIX;
 
+  $navListItems = $_['pageControls'] == 'listItems';
+
   $nav = '';
-  $nav .= Navigation::button('projects');
-  $nav .= Navigation::button('all');
-  $nav .= Navigation::button('insurances');
-  $nav .= Navigation::button('insurancebrokers');
-  $nav .= Navigation::button('debitmandates');
+  $nav .= Navigation::pageControlElement('projects', $navListItems);
+  $nav .= Navigation::pageControlElement('all', $navListItems);
+  $nav .= Navigation::pageControlElement('insurances', $navListItems);
+  $nav .= Navigation::pageControlElement('insurancebrokers', $navListItems);
+  $nav .= Navigation::pageControlElement('debitmandates', $navListItems);
+
+  if ($navListItems) {
+    $nav = '<ul>'.$nav.'</ul>';
+  }
 
   echo $this->inc('part.common.header',
                   array('css-prefix' => $css_pfx,

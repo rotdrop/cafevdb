@@ -277,7 +277,7 @@ namespace CAFEVDB
 </label>'),
         'select'   => 'D',
         'maxlen'   => 64,
-        'css'      => array('postfix' => ' projectname'),
+        'css'      => array('postfix' => ' projectname control'),
         'sort'     => true,
         );
 
@@ -293,6 +293,7 @@ namespace CAFEVDB
         'options'  => 'VDR',
         'maxlen'   => 11,
         'default'  => '0',
+        'css'      => array('postfix' => ' control'),
         'sort'     => false
         );
 
@@ -397,7 +398,7 @@ a comma.'));
           'function' => 'CAFEVDB\Projects::flyerImageLinkPME',
           'parameters' => array()
           ),
-        'css' => array('postfix' => 'projectflyer'),
+        'css' => array('postfix' => ' projectflyer'),
         'default' => '',
         'sort' => false);
 

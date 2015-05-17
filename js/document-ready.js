@@ -27,10 +27,12 @@ $(document).ready(function() {
         }
     });
 
+    var content = $('#content');
+
     // Any pending form-submit which has not been caught otherwise is
     // here intercepted and redirected to the page-loader in order to
     // reduce load-time and to record usable history information.
-    $('div#content').on('submit', 'form', function(event) {
+    content.on('submit', 'form', function(event) {
         var form = $(this);
         var action = form.attr('action');
         if (action != '') {
@@ -46,7 +48,7 @@ $(document).ready(function() {
     // Any pending form-submit which has not been caught otherwise is
     // here intercepted and redirected to the page-loader in order to
     // reduce load-time and to record usable history information.
-    $('div#content').on('click', ':submit', function(event) {
+    content.on('click', ':submit', function(event) {
         var form = $(this.form);
         var post = form.serialize();
         var self = $(this);
@@ -57,6 +59,15 @@ $(document).ready(function() {
         }
         //alert('post: '+post);
         CAFEVDB.Page.loadPage(post);
+        return false;
+    });
+
+    // Intercept app-navigation events here and redirect to the page
+    // loader
+    content.on('click', 'div#app-navigation li a', function(event) {
+        var post = $(this).data('post');
+        CAFEVDB.Page.loadPage(post);
+        //alert('post: '+post);
         return false;
     });
 

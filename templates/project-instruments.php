@@ -20,39 +20,43 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use CAFEVDB\L;
-use CAFEVDB\Util;
-use CAFEVDB\Navigation;
-use CAFEVDB\ProjectInstruments;
+namespace CAFEVDB {
+  
+  $table = new ProjectInstruments($_['recordId']);
+  $css_pfx = ProjectInstruments::CSS_PREFIX;
+  $project = $table->projectName;
+  $projectId = $table->projectId;
 
-$table = new ProjectInstruments($_['recordId']);
-$css_pfx = ProjectInstruments::CSS_PREFIX;
-$project = $table->projectName;
-$projectId = $table->projectId;
+  $navListItems = $_['pageControls'] == 'listItems';
 
-$nav = '';
-if ($project != '') {
-  $nav .= Navigation::button('projectlabel', $project, $projectId);
-  $nav .= Navigation::button('projects');
-  $nav .= Navigation::button('instruments', $project, $projectId);  
-  $nav .= Navigation::button('add', $project, $projectId);  
-  $nav .= Navigation::button('detailed', $project, $projectId);
-} else {
-  $nav .= Navigation::button('projects');
-  $nav .= Navigation::button('instruments');
-  $nav .= Navigation::button('all');
-}
+  $nav = '';
+  if ($project != '') {
+    $nav .= Navigation::pageControlElement('projectlabel', $navListItems, $project, $projectId);
+    $nav .= Navigation::pageControlElement('projects', $navListItems);
+    $nav .= Navigation::pageControlElement('instruments', $navListItems, $project, $projectId);  
+    $nav .= Navigation::pageControlElement('add', $navListItems, $project, $projectId);  
+    $nav .= Navigation::pageControlElement('detailed', $navListItems, $project, $projectId);
+  } else {
+    $nav .= Navigation::pageControlElement('projects', $navListItems);
+    $nav .= Navigation::pageControlElement('instruments', $navListItems);
+    $nav .= Navigation::pageControlElement('all', $navListItems);
+  }
 
-echo $this->inc('part.common.header',
-                array('css-prefix' => $css_pfx,
-                      'navigationcontrols' => $nav,
-                      'header' => $table->headerText()));
+  if ($navListItems) {
+    $nav = '<ul>'.$nav.'</ul>';
+  }
 
-// Issue the main part. The method will "echo itself"
-$table->display();
+  echo $this->inc('part.common.header',
+                  array('css-prefix' => $css_pfx,
+                        'navigationcontrols' => $nav,
+                        'header' => $table->headerText()));
 
-// Close some still opened divs
-echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
+  // Issue the main part. The method will "echo itself"
+  $table->display();
+
+  // Close some still opened divs
+  echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
+
+} // CAFEVDB
 
 ?>
-

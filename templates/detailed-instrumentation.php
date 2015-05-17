@@ -26,20 +26,26 @@ namespace CAFEVDB {
   $css_pfx = DetailedInstrumentation::CSS_PREFIX;
   $css_class = DetailedInstrumentation::CSS_CLASS;
 
+  $navListItems = $_['pageControls'] == 'listItems';
+
   $nav = '';
-  $nav .= Navigation::button('projectlabel', $table->projectName, $table->projectId);
-  $nav .= Navigation::button('projects');
-  //$nav .= Navigation::button('detailed', $table->projectName, $table->projectId);
-  $nav .= Navigation::button('projectinstruments', $table->projectName, $table->projectId);
+  $nav .= Navigation::pageControlElement('projectlabel', $navListItems, $table->projectName, $table->projectId);
+  $nav .= Navigation::pageControlElement('projects', $navListItems);
+  //$nav .= Navigation::pageControlElement('detailed', $navListItems, $table->projectName, $table->projectId);
+  $nav .= Navigation::pageControlElement('projectinstruments', $navListItems, $table->projectName, $table->projectId);
   if (Config::isTreasurer()) {
-    $nav .= Navigation::button('debitmandates', $table->projectName, $table->projectId);
+    $nav .= Navigation::pageControlElement('debitmandates', $navListItems, $table->projectName, $table->projectId);
   }
-  if ($table->projectName == Config::getValue('memberTable')) {
+  if ($table->projectName == Config::getValue('memberTable', $navListItems)) {
     if (Config::isTreasurer()) {
-      $nav .= Navigation::button('insurances');
+      $nav .= Navigation::pageControlElement('insurances', $navListItems);
     }
   } else {
-    $nav .= Navigation::button('instruments', $table->projectName, $table->projectId);
+    $nav .= Navigation::pageControlElement('instruments', $navListItems, $table->projectName, $table->projectId);
+  }
+
+  if ($navListItems) {
+    $nav = '<ul>'.$nav.'</ul>';
   }
 
   echo $this->inc('part.common.header',

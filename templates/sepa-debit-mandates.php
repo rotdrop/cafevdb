@@ -28,16 +28,22 @@ namespace CAFEVDB {
   $projectId = $_['projectId'];
   $css_pfx = SepaDebitMandates::CSS_PREFIX;
 
+  $navListItems = $_['pageControls'] == 'listItems';
+
   $nav = '';
   if ($projectId >= 0) {
-    $nav .= Navigation::button('projectlabel', $projectName, $projectId);
-    $nav .= Navigation::button('projects');
-    $nav .= Navigation::button('detailed', $projectName, $projectId);
-    $nav .= Navigation::button('projectinstruments', $projectName, $projectId);
+    $nav .= Navigation::pageControlElement('projectlabel', $navListItems, $projectName, $projectId);
+    $nav .= Navigation::pageControlElement('projects', $navListItems);
+    $nav .= Navigation::pageControlElement('detailed', $navListItems, $projectName, $projectId);
+    $nav .= Navigation::pageControlElement('projectinstruments', $navListItems, $projectName, $projectId);
   } else {
-    $nav .= Navigation::button('projects');
-    $nav .= Navigation::button('all');
-    $nav .= Navigation::button('instruments');
+    $nav .= Navigation::pageControlElement('projects', $navListItems);
+    $nav .= Navigation::pageControlElement('all', $navListItems);
+    $nav .= Navigation::pageControlElement('instruments', $navListItems);
+  }
+
+  if ($navListItems) {
+    $nav = '<ul>'.$nav.'</ul>';
   }
 
   echo $this->inc('part.common.header',

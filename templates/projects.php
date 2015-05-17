@@ -20,27 +20,33 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */ 
 
-use CAFEVDB\L;
-use CAFEVDB\Navigation;
-use CAFEVDB\Projects;
+namespace CAFEVDB {
+  
+  $table   = new Projects();
+  $css_pfx = Projects::CSS_PREFIX;
 
-$table   = new Projects();
-$css_pfx = Projects::CSS_PREFIX;
+  $navListItems = $_['pageControls'] == 'listItems';
 
-$nav = '';
-//$nav .= Navigation::button('projectinstruments');
-$nav .= Navigation::button('all');
-$nav .= Navigation::button('instruments');
+  $nav = '';
+  //$nav .= Navigation::pageControlElement('projectinstruments', $navListItems);
+  $nav .= Navigation::pageControlElement('all', $navListItems);
+  $nav .= Navigation::pageControlElement('instruments', $navListItems);
 
-echo $this->inc('part.common.header',
-                array('css-prefix' => $css_pfx,
-                      'navigationcontrols' => $nav,
-                      'header' => $table->headerText()));
+  if ($navListItems) {
+    $nav = '<ul>'.$nav.'</ul>';
+  }
 
-// Issue the main part. The method will echo itself
-$table->display();
+  echo $this->inc('part.common.header',
+                  array('css-prefix' => $css_pfx,
+                        'navigationcontrols' => $nav,
+                        'header' => $table->headerText()));
 
-// Close some still opened divs
-echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
+  // Issue the main part. The method will echo itself
+  $table->display();
+
+  // Close some still opened divs
+  echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
+
+} // CAFEVDB
 
 ?>

@@ -144,7 +144,8 @@ namespace CAFEVDB {
       $tmpl->assign('timezone', Util::getTimezone());
       $tmpl->assign('historySize', $this->historySize());
       $tmpl->assign('historyPosition', $this->historyPosition());
-
+      $tmpl->assign('pageControls', 'listItems');
+      
       return $tmpl;
     }
 

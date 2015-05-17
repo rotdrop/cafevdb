@@ -20,40 +20,45 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use CAFEVDB\L;
-use CAFEVDB\Util;
-use CAFEVDB\Navigation;
-use CAFEVDB\EmailHistory;
+namespace CAFEVDB {
+  
+  $projectName = Util::cgiValue('ProjectName');
+  $projectId = Util::cgiValue('ProjectId',-1);
+  $css_pfx = EmailHistory::CSS_PREFIX;
 
-$projectName = Util::cgiValue('ProjectName');
-$projectId = Util::cgiValue('ProjectId',-1);
-$css_pfx = EmailHistory::CSS_PREFIX;
+  $navListItems = $_['pageControls'] == 'listItems';
 
-$nav = '';
-if ($projectId >= 0) {
-  $nav .= Navigation::button('projectlabel', $projectName, $projectId);
-  $nav .= Navigation::button('projects');
-  $nav .= Navigation::button('email', $projectName, $projectId);
-  $nav .= Navigation::button('detailedg', $projectName, $projectId);
-  $nav .= Navigation::button('projectinstruments', $projectName, $projectId);
-  $nav .= Navigation::button('instruments', $projectName, $projectId); 
-} else {
-  $nav .= Navigation::button('projects');
-  $nav .= Navigation::button('email');
-  $nav .= Navigation::button('all');
-  $nav .= Navigation::button('projectinstruments');
-  $nav .= Navigation::button('instruments');
+  $nav = '';
+  if ($projectId >= 0) {
+    $nav .= Navigation::pageControlElement('projectlabel', $navListItems, $projectName, $projectId);
+    $nav .= Navigation::pageControlElement('projects', $navListItems);
+    $nav .= Navigation::pageControlElement('email', $navListItems, $projectName, $projectId);
+    $nav .= Navigation::pageControlElement('detailedg', $navListItems, $projectName, $projectId);
+    $nav .= Navigation::pageControlElement('projectinstruments', $navListItems, $projectName, $projectId);
+    $nav .= Navigation::pageControlElement('instruments', $navListItems, $projectName, $projectId); 
+  } else {
+    $nav .= Navigation::pageControlElement('projects', $navListItems);
+    $nav .= Navigation::pageControlElement('email', $navListItems);
+    $nav .= Navigation::pageControlElement('all', $navListItems);
+    $nav .= Navigation::pageControlElement('projectinstruments', $navListItems);
+    $nav .= Navigation::pageControlElement('instruments', $navListItems);
+  }
+
+  if ($navListItems) {
+    $nav = '<ul>'.$nav.'</ul>';
+  }
+
+  echo $this->inc('part.common.header',
+                  array('css-prefix' => $css_pfx,
+                        'navigationcontrols' => $nav,
+                        'header' => EmailHistory::headerText()));
+
+  // Issue the main part. The method will echo itself
+  EmailHistory::display();
+
+  // Close some still opened divs
+  echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
+
 }
-
-echo $this->inc('part.common.header',
-                array('css-prefix' => $css_pfx,
-                      'navigationcontrols' => $nav,
-                      'header' => EmailHistory::headerText()));
-
-// Issue the main part. The method will echo itself
-EmailHistory::display();
-
-// Close some still opened divs
-echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
 
 ?>

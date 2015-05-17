@@ -1061,7 +1061,102 @@ __EOT__;
       return $html;
     }
 
+    /**Generate a couple of standard buttons, identified by Ids.
+     *
+     * @param[in] string $id One of
+     *   - an array; in this case buttonsFromArray() is called with the supplied data.
+     *   - projects Project Overview.
+     *   - all Overview of all musicians.
+     *   - email Mass-email dialog (obsolete).
+     *   - emailhistory History of sent mass-emails (obsolete).
+     * - projectlabel A button which leads to an overview page of the
+     *      current project, parameters $projectName and $projevtId
+     *      habe to be given.
+     * - detailed Instrumentation list for the project. Formerly there
+     *      was also a "brief" instrumentation list, which is no longer
+     *      there.
+     * - instruments List of all known instruments with cross-link to WikiPedia.
+     * - projectinstrumens Page with instrumentation number for the project.
+     * - debitmandates Page with debit mandates for the project.
+     * - insurances Page with instrument insurances.
+     * - insurancerates Page with knwon insurance rates.
+     * - insurancebrokers Page with knwon brokers, including (maybe) their address.
+     *
+     * @param[in] string $projectName name of the project if needed.
+     * @param[ịn] int $projectId Id of the project if needed.
+     * form with submit button.
+     *
+     * @return string The HTML form control requested.
+     */
     public static function button($id = 'projects', $projectName = '', $projectId = -1)
+    {
+      return self::pageControlElement($id, false, $projectName, $projectId);
+    }
+    
+    /**Generate a couple of list item with anchors for the app-nabigation menu.
+     *
+     * @param[in] string $id One of
+     *   - an array; in this case buttonsFromArray() is called with the supplied data.
+     *   - projects Project Overview.
+     *   - all Overview of all musicians.
+     *   - email Mass-email dialog (obsolete).
+     *   - emailhistory History of sent mass-emails (obsolete).
+     * - projectlabel A button which leads to an overview page of the
+     *      current project, parameters $projectName and $projevtId
+     *      habe to be given.
+     * - detailed Instrumentation list for the project. Formerly there
+     *      was also a "brief" instrumentation list, which is no longer
+     *      there.
+     * - instruments List of all known instruments with cross-link to WikiPedia.
+     * - projectinstrumens Page with instrumentation number for the project.
+     * - debitmandates Page with debit mandates for the project.
+     * - insurances Page with instrument insurances.
+     * - insurancerates Page with knwon insurance rates.
+     * - insurancebrokers Page with knwon brokers, including (maybe) their address.
+     *
+     * @param[in] string $projectName name of the project if needed.
+     * @param[ịn] int $projectId Id of the project if needed.
+     * form with submit button.
+     *
+     * @return string The HTML form control requested.
+     */
+    public static function pageControlItem($id = 'projects', $projectName = '', $projectId = -1)
+    {
+      return self::pageControlElement($id, true, $projectName, $projectId);
+    }
+    
+    /**Generate a couple of standard buttons, identified by Ids.
+     *
+     * @param[in] string $id One of
+     *   - an array; in this case buttonsFromArray() is called with the supplied data.
+     *   - projects Project Overview.
+     *   - all Overview of all musicians.
+     *   - email Mass-email dialog (obsolete).
+     *   - emailhistory History of sent mass-emails (obsolete).
+     * - projectlabel A button which leads to an overview page of the
+     *      current project, parameters $projectName and $projevtId
+     *      habe to be given.
+     * - detailed Instrumentation list for the project. Formerly there
+     *      was also a "brief" instrumentation list, which is no longer
+     *      there.
+     * - instruments List of all known instruments with cross-link to WikiPedia.
+     * - projectinstrumens Page with instrumentation number for the project.
+     * - debitmandates Page with debit mandates for the project.
+     * - insurances Page with instrument insurances.
+     * - insurancerates Page with knwon insurance rates.
+     * - insurancebrokers Page with knwon brokers, including (maybe) their address.
+     *
+     * @param[in} bool $asListItem Generate a list item instead of a
+     * @param[in] string $projectName name of the project if needed.
+     * @param[ịn] int $projectId Id of the project if needed.
+     * form with submit button.
+     *
+     * @return string The HTML form control requested.
+     */
+    public static function pageControlElement($id = 'projects',
+                                              $asListItem = false,
+                                              $projectName = '',
+                                              $projectId = -1)
     {
       if (is_array($id)) {
         return self::buttonsFromArray($id);
@@ -1069,35 +1164,54 @@ __EOT__;
 
       $controlid = $id.'control';
       $form = '';
+      $value = '';
+      $title = '';
+      $post = array();
+      $json = array();
+
       switch ($id) {
 
       case 'projects':
         $value = L::t("View all Projects");
         $title = L::t("Overview over all known projects (start-page).");
-        $form =<<<__EOT__
+        if ($asListItem) {
+          $post = array('Projects' => $value, 'Template' => 'projects');
+        } else {
+          $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="">
   <input type="submit" name="Projects" value="$value" title="$title"/>
   <input type="hidden" name="Template" value="projects"/>
 </form>
 
 __EOT__;
+        }
         break;
 
       case 'all':
         $value = L::t("Display all Musicians");
         $title = L::t("Display all musicians stored in the data-base, with detailed facilities for filtering and sorting.");
+        if ($asListItem) {
+          $post = array('AllMusicians' => $value,
+                        'Template' => 'all-musicians');
+        } else {
         $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="">
-  <input type="submit" value="$value" title="$title"/>
+  <input type="submit" name="AllMusicians" value="$value" title="$title"/>
   <input type="hidden" name="Template" value="all-musicians"/>
 </form>
 
 __EOT__;
+        }
         break;
 
       case 'email':
         $title = L::t("Mass-email form, use with care. Mass-emails will be logged. Recipients will be specified by the Bcc: field in the header, so the recipients are undisclosed to each other.");
-        $form =<<<__EOT__
+        if ($asListItem) {
+          $post = array('Template' => 'email',
+                        'ProjectName' => $projectName,
+                        'ProjectId' => $projectId);
+        } else {
+          $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="">
   <input type="submit" name="" value="Em@il" title="$title"/>
   <input type="hidden" name="Template" value="email"/>
@@ -1106,12 +1220,18 @@ __EOT__;
 </form>
 
 __EOT__;
+        }
         break;
 
       case 'emailhistory':
         $value = L::t("Email History");
         $title = L::t("Display all emails sent by our mass-email form.");
-        $form =<<<__EOT__
+        if ($asListItem) {
+          $post = array('Template' => 'email-history',
+                        'ProjectName' => $projectName,
+                        'ProjectId' > $projectId);
+        } else {
+          $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="">
   <input type="submit" value="$value" title="$title"/>
   <input type="hidden" name="Template" value="email-history"/>
@@ -1120,6 +1240,7 @@ __EOT__;
 </form>
 
 __EOT__;
+        }
         break;
 
       case 'projectlabel':
@@ -1128,8 +1249,15 @@ __EOT__;
         $opname = $syspfx.'operation';
         $opwhat = 'View?'.$syspfx.'rec='.$projectId;
         $opclass  = 'pme-view';
-        $title = L::t("The currently active project.");
-        $form =<<<__EOT__
+        $title = L::t("Display an overview page for the currently active project.
+The overview-page gives the possibility to add events, change the instrumentation
+and even edit the public web-pages for the project and other things.");
+        $value = $projectName;
+        if ($asListItem) {
+          $json = array('ProjectName' => $projectName,
+                        'ProjectId' => $projectId);
+        } else {
+          $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="">
   <input type="submit" name="ProjectName" value="$projectName" title="$title"/>
   <input type="hidden" name="DisplayClass" value="Projects"/>
@@ -1140,12 +1268,18 @@ __EOT__;
 </form>
 
 __EOT__;
+        }
         break;
 
       case 'detailed':
         $value = L::t("Instrumentation");
         $title = L::t("Detailed display of all registered musicians for the selected project. The table will allow for modification of personal data like email, phone, address etc.");
-        $form =<<<__EOT__
+        if ($asListItem) {
+          $post = array('Template' => 'detailed-instrumentation',
+                        'ProjectName' => $projectName,
+                        'ProjectId' => $projectId);
+        } else {
+          $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="">
   <input type="submit" value="$value" title="$title"/>
   <input type="hidden" name="Template" value="detailed-instrumentation"/>
@@ -1154,12 +1288,18 @@ __EOT__;
 </form>
 
 __EOT__;
+        }
         break;
 
       case 'instruments':
         $value = L::t("Add Instruments");
         $title = L::t("Display the list of instruments known by the data-base, possibly add new ones as needed.");
-        $form =<<<__EOT__
+        if ($asListItem) {
+          $post = array('Template' => 'instruments',
+                        'ProjectName' => $projectName,
+                        'ProjectId' => $projectId);
+        } else {
+          $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="">
   <input type="submit" value="$value" title="$title"/>
   <input type="hidden" name="Template" value="instruments"/>
@@ -1168,12 +1308,18 @@ __EOT__;
 </form>
 
 __EOT__;
+        }
         break;
 
       case 'projectinstruments':
         $value = L::t('Instrumentation Numbers');
         $title = L::t('Display the desired instrumentaion numbers, i.e. how many musicians are already registered for each instrument group and how many are finally needed.');
-        $form =<<<__EOT__
+        if ($asListItem) {
+          $json = array('Template' => 'project-instruments',
+                        'ProjectName' => $projectName,
+                        'ProjectId' => $projectId);
+        } else {
+          $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="">
   <input type="submit" name="" value="$value" title="$title"/>
   <input type="hidden" name="Template" value="project-instruments"/>
@@ -1182,12 +1328,18 @@ __EOT__;
 </form>
 
 __EOT__;
+        }
         break;
 
       case 'debitmandates':
         $value = L::t('Debit Mandates');
         $title = L::t('Display a table with the SEPA debit mandates related to the project.');
-        $form =<<<__EOT__
+        if ($asListItem) {
+          $post = array('Template' => 'sepa-debit-mandates',
+                        'ProjectName' => $projectName,
+                        'ProjectId' => $projectId);
+        } else {
+          $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="">
   <input type="submit" name="" value="$value" title="$title"/>
   <input type="hidden" name="Template" value="sepa-debit-mandates"/>
@@ -1196,57 +1348,74 @@ __EOT__;
 </form>
 
 __EOT__;
+        }
         break;
 
       case 'insurances':
         $value = L::t("Insurances");
         $title = L::t("Display a table with an overview about the current state of the member's instrument insurances.");
-        $form =<<<__EOT__
+        if ($asListItem) {
+          $post = array('Template' => 'instrument-insurance');
+        } else {
+          $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="">
   <input type="submit" value="$value" title="$title"/>
   <input type="hidden" name="Template" value="instrument-insurance"/>
 </form>
 
 __EOT__;
+        }
         break;
 
       case 'insurancerates':
         $value = L::t("Insurance Rates");
         $title = L::t("Display a table with the insurance rates for the individual instrument insurances.");
-        $form =<<<__EOT__
+        if ($asListItem) {
+          $post = array('Template' => 'insurance-rates');
+        } else {
+          $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="">
   <input type="submit" value="$value" title="$title"/>
   <input type="hidden" name="Template" value="insurance-rates"/>
 </form>
 
 __EOT__;
+
+        }
         break;
 
       case 'insurancebrokers':
         $value = L::t("Insurance Brokers");
         $title = L::t("Display a table with the insurance brokers.");
-        $form =<<<__EOT__
+        if ($asListItem) {
+          $post = array('Template' => 'insurance-brokers');
+        } else {
+          $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="">
   <input type="submit" value="$value" title="$title"/>
   <input type="hidden" name="Template" value="insurance-brokers"/>
 </form>
 
 __EOT__;
-        break;
-
-      case 'debitmandates':
-        $value = L::t("Debit Mandates");
-        $title = L::t("Display a table with an overview over all SEPA debit mandates.");
-        $form =<<<__EOT__
-<form class="cafevdb-control" id="$controlid" method="post" action="">
-  <input type="submit" value="$value" title="$title"/>
-  <input type="hidden" name="Template" value="sepa-debit-mandates"/>
-</form>
-
-__EOT__;
+        }
         break;
       }
 
+      if ($asListItem) {
+        $post = http_build_query($post, '', '&');
+        $json = htmlspecialchars(json_encode($json));
+        $form =<<<__EOT__
+<li class="nav-$controlid tipsy-nw" title="$title">
+  <a href="#"
+     data-id="$controlid"
+     data-post="$post"
+     data-json="$json">
+$value
+  </a>
+</li>
+__EOT__;
+      }
+      
       return $form;
     }
   };
