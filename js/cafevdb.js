@@ -1292,6 +1292,33 @@ $(document).ready(function(){
 
   document.onkeypress = CAFEVDB.stopRKey;
 
+  $(window).on('resize', function(event) {
+    var delay = 50;
+    var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+    var height = (window.innerHeight > 0) ? window.innerHeight : screen.height;
+    if (window.oldWidth === null) {
+      window.oldWidth = -1;
+    }
+    if (window.oldHeight === null) {
+      window.oldHeight = -1;
+    }
+    if (window.oldWidth != width || window.oldHeight != height) {
+      if (delay > 0) {
+        if (window.resizeTimeout) {
+          clearTimeout(window.resizeTimeout);
+        }
+        window.resizeTimeout = setTimeout(
+          function() {
+            $('.resize-target, .ui-dialog-content').trigger('resize');
+          }, delay);
+      } else {
+        $('.resize-target, .ui-dialog-content').trigger('resize');
+      }
+      window.oldHeight = height;
+      window.oldWidth = width;
+    }
+  });
+
   var content = $('#content');
 
   if (false)

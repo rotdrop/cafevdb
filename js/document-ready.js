@@ -77,7 +77,8 @@ $(document).ready(function() {
             CAFEVDB.exportMenu(selector);
 
             container.find('div.photo, #cafevdb_inline_image_wrapper').
-                on('click', 'img', function(event) {
+                off('click', 'img.zoomable').
+                on('click', 'img.zoomable', function(event) {
                 event.preventDefault();
                 CAFEVDB.Photo.popup(this);
                 return false;

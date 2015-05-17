@@ -516,7 +516,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
              var containerSel = '#'+containerCSSId;
              var dialogHolder;
-             dialogHolder = $('<div id="'+containerCSSId+'"></div>');
+             dialogHolder = $('<div id="'+containerCSSId+'" class="resize-target"></div>');
              dialogHolder.html(data.data.contents);
              $('body').append(dialogHolder);
              dialogHolder = $(containerSel);
@@ -538,7 +538,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                height: 'auto',
                modal: false, //tableOptions.ModalDialog,
                closeOnEscape: false,
-               dialogClass: 'pme-table-dialog custom-close',
+               dialogClass: 'pme-table-dialog custom-close resize-target',
                resizable: false,
                open: function() {
 
@@ -563,30 +563,33 @@ var PHPMYEDIT = PHPMYEDIT || {};
                  // general styling
                  pme.init('pme', containerSel);
 
-                 pme.tableDialogHandlers(
-                   tableOptions,
-                   function() {
+                 var resizeHandler = function() {
+                   dialogHolder.dialog('option', 'height', 'auto');
+                   dialogHolder.dialog('option', 'width', 'auto');
+                   var newHeight = dialogWidget.height()
+                                 - dialogWidget.find('.ui-dialog-titlebar').outerHeight();
+                   newHeight -= dialogHolder.outerHeight(true) - dialogHolder.height();
+                   //alert("Setting height to " + newHeight);
+                   dialogHolder.height(newHeight);
+                 };
 
-                     dialogHolder.css('height', 'auto');
+                 pme.tableDialogHandlers(tableOptions, function() {
+                   dialogHolder.css('height', 'auto');
 
-                     CAFEVDB.addEditor(dialogHolder.find('textarea.wysiwygeditor'), function() {
-                       pme.transposeReady(containerSel);
-                       pme.tableLoadCallback(tableOptions.DisplayClass, containerSel, function() {
-                         dialogHolder.dialog('option', 'height', 'auto');
-                         dialogHolder.dialog('option', 'width', 'auto');
-                         var newHeight = dialogWidget.height()
-                           - dialogWidget.find('.ui-dialog-titlebar').outerHeight();
-                         newHeight -= dialogHolder.outerHeight(true) - dialogHolder.height();
-                         //alert("Setting height to " + newHeight);
-                         dialogHolder.height(newHeight);
-                         dialogWidget.removeClass('pme-table-dialog-blocked');
-                         dialogHolder.dialog('moveToTop');
-                       });
-                       CAFEVDB.pmeTweaks(dialogHolder);
-                       CAFEVDB.tipsy(containerSel);
-                       CAFEVDB.Page.busyIcon(false);
+                   CAFEVDB.addEditor(dialogHolder.find('textarea.wysiwygeditor'), function() {
+                     pme.transposeReady(containerSel);
+                     pme.tableLoadCallback(tableOptions.DisplayClass, containerSel, function() {
+                       resizeHandler();
+                       dialogWidget.removeClass('pme-table-dialog-blocked');
+                       dialogHolder.dialog('moveToTop');
                      });
+                     CAFEVDB.pmeTweaks(dialogHolder);
+                     CAFEVDB.tipsy(containerSel);
+                     CAFEVDB.Page.busyIcon(false);                     
                    });
+                 });
+
+                 dialogHolder.on('resize', resizeHandler);
                },
                close: function(event) {
                  $('.tipsy').remove();
