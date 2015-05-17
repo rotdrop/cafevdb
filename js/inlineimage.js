@@ -467,7 +467,7 @@ var CAFEVDB = CAFEVDB || {};
     };
 
     Photo.popup = function(image) {
-        var overlay = $('<div id="photooverlay" style="width:auto;height:auto;"><div/>');
+        var overlay = $('<div id="photooverlay" style="width:auto;height:auto;"></div>');
         var imgClone = $(image).clone();
         overlay.html(imgClone);        
         var popup = overlay.dialog({
@@ -491,12 +491,24 @@ var CAFEVDB = CAFEVDB || {};
                     var titleBarHeight = dialogWidget.find('.ui-dialog-titlebar').outerHeight();
                     var newHeight = dialogWidget.height() - titleBarHeight;
                     var outerHeight = dialogHolder.outerHeight(true);
+                    var newWidth = dialogWidget.width();
+                    var outerWidth = dialogHolder.outerWidth(true);
+
                     if (outerHeight > newHeight) {
-                        var offset = outerHeight - dialogHolder.height();
-                        var imageOuter = imgClone.outerHeight(true);
                         var imageHeight = imgClone.height();
-                        offset += (imageOuter - imageHeight);
-                        imgClone.height(newHeight - offset);
+                        var imageWidth  = imgClone.width();
+                        var imageRatio = imageWidth / imageHeight;
+                        var vOffset = outerHeight - dialogHolder.height();
+                        vOffset += (imgClone.outerHeight(true) - imageHeight);
+                        newHeight -= vOffset;
+                        var hOffset = outerWidth - dialogHolder.width();
+                        hOffset += (imgClone.outerWidth(true) - imageWidth);
+                        newWidth -= hOffset;
+                        if (newHeight * imageRatio > newWidth) {
+                            imgClone.width(newWidth);
+                        } else {
+                            imgClone.height(newHeight);
+                        }
                     }
                 });
             },
