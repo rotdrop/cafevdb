@@ -83,6 +83,7 @@ namespace CAFEVDB
     \OCP\Util::addStyle('cafevdb', 'font-awesome');
     \OCP\Util::addStyle('core', 'icons');
     \OCP\Util::addStyle('cafevdb', 'navsnapper');
+    \OCP\Util::addStyle('cafevdb', 'mobile');
     
     \OCP\Util::addScript('cafevdb', 'cafevdb');
     \OCP\Util::addScript('cafevdb', 'pme');
