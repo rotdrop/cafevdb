@@ -98,7 +98,20 @@ var myTinyMCE = myTinyMCE || {};
   myTinyMCE.smallConfig = {
     toolbar: "fullscreen | undo redo | bold italic | bullist indent outdent",
     menubar: false,
-    statusbar: false
+    statusbar: false,
+    init_instance_callback: function(editor) {
+      myTinyMCE.config.init_instance_callback(editor);
+      editor.on('focus', function(event) {
+        editor.execCommand('mceFullScreen');
+      });
+      editor.on('FullscreenStateChanged', function(event) {
+        if (!event.state) {
+          $('input#focusstealer').focus().blur();
+        } else {
+          editor.focus(true);
+        }
+      });
+    }
   };
   myTinyMCE.getConfig = function(plusConfig) {
     if (typeof plusConfig === 'undefined') {
@@ -106,7 +119,7 @@ var myTinyMCE = myTinyMCE || {};
     }
     var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
     if (width <= 768) { // perhaps mobile
-      return $.extend({}, myTinyMCE.config, myTinyMCE.smallConfig, plusConfig);      
+      return $.extend({}, myTinyMCE.config, myTinyMCE.smallConfig, plusConfig, { width: width });
     } else {
       return $.extend({}, myTinyMCE.config, plusConfig);
     }
