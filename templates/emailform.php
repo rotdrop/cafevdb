@@ -32,13 +32,13 @@ CAFEVDB\Error::exceptions(true);
 <div id="emailformwrapper">
   <ul id="emailformtabs">
     <li id="emailformrecipients-tab">
-      <a href="#emailformrecipients"><?php echo L::t('Em@il Recipients'); ?></a>
+      <a href="#emailformrecipients"><?php echo L::t('Recipients'); ?></a>
     </li>
     <li id="emailformcomposer-tab">
-      <a href="#emailformcomposer"><?php echo L::t('Em@il Message'); ?></a>
+      <a href="#emailformcomposer"><?php echo L::t('Message'); ?></a>
     </li>
     <li id="emailformdebug-tab">
-      <a href="#emailformdebug"><?php echo L::t('Status Messages'); ?></a>
+      <a href="#emailformdebug"><?php echo L::t('Status'); ?></a>
     </li>
   </ul>
   <form method="post"
@@ -48,9 +48,9 @@ CAFEVDB\Error::exceptions(true);
     <fieldset id="cafevdb-email-form-data" class="form-data">
       <?php echo Navigation::persistentCGI($_['FormData']); ?>
     </fieldset>
-    <div id="emailformrecipients"><?php echo $this->inc('part.emailform.recipients'); ?></div>
-    <div id="emailformcomposer"><?php echo $this->inc('part.emailform.composer'); ?></div>
-    <div id="emailformdebug"><pre><?php print_r($_POST); print_r($_); ?></pre></div>
+    <div id="emailformrecipients" class="resize-target"><?php echo $this->inc('part.emailform.recipients'); ?></div>
+    <div id="emailformcomposer" class="resize-target"><?php echo $this->inc('part.emailform.composer'); ?></div>
+    <div id="emailformdebug" class="resize-target"><pre><?php print_r($_POST); print_r($_); ?></pre></div>
   </form>
 
   <!-- Download support via iframe -->

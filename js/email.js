@@ -65,14 +65,17 @@ CAFEVDB.Email = CAFEVDB.Email || {};
   };
 
   Email.tabResize = function (dialogWidget, panelHolder) {
+    //panelHolder.css('width', 'auto');
+    //panelHolder.css('height', 'auto');
+    panelHolder.css('max-height', 'unset'); // reset in order to get auto-configuration
     var titleOffset = (dialogWidget.find('.ui-dialog-titlebar').outerHeight(true)
                       +
                        dialogWidget.find('.ui-tabs-nav').outerHeight(true));
     var panelHeight = panelHolder.outerHeight(true);
     var panelOffset = panelHeight - panelHolder.height();
     var dialogHeight = dialogWidget.height();
+    //alert('outer: '+panelHeight+' dialog '+dialogHeight);
     if (panelHeight > dialogHeight - titleOffset) {
-      
       panelHolder.css('max-height', (dialogHeight-titleOffset-panelOffset)+'px');
     }
     if (panelHolder.get(0).scrollHeight > panelHolder.outerHeight(true)) {

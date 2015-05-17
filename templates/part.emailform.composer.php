@@ -103,7 +103,7 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
                id="carbon-copy" />
         <input title="<?php echo Config::toolTips('address-book-emails'); ?>"
                type="submit"
-               class="submit address-book-emails CC tipsy-e"
+               class="submit address-book-emails CC tipsy-ne"
                data-for="#carbon-copy"
                name="emailComposer[AddressBookCC]"
                value="<?php echo L::t('Address Book'); ?>"/>        
@@ -121,7 +121,7 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
                id="blind-carbon-copy"/>
         <input title="<?php echo Config::toolTips('address-book-emails'); ?>"
                type="submit"
-               class="submit address-book-emails BCC tipsy-e"
+               class="submit address-book-emails BCC tipsy-ne"
                data-for="#blind-carbon-copy"
                name="emailComposer[AddressBookBCC]"
                value="<?php echo L::t('Address Book'); ?>"/>
@@ -205,7 +205,7 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
         </select>
         <input title="<?php echo Config::toolTips('delete-all-event-attachments'); ?>"
                type="submit"
-               class="submit delete-all-event-attachments tipsy-e"
+               class="submit delete-all-event-attachments tipsy-se"
                name="emailComposer[DeleteAllAttachments]"
                value="<?php echo L::t('Delete Event Attachments'); ?>"/>
       </td>
@@ -225,7 +225,7 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
         </select>
         <input title="<?php echo Config::toolTips('delete-all-file-attachments'); ?>"
                type="submit"
-               class="submit delete-all-file-attachments tipsy-e"
+               class="submit delete-all-file-attachments tipsy-se"
                name="emailComposer[DeleteAllAttachments]"
                value="<?php echo L::t('Delete All Attachments'); ?>"/>
       </td>

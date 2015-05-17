@@ -150,7 +150,7 @@ $missingText = L::t('Musicians without or obviously broken email-address');
         <?php echo Navigation::selectOptions($_['EmailRecipientsChoices']); ?>
       </select>
     </span>
-    <span class="instruments-filter container right tipsy-e"
+    <span class="instruments-filter container right tipsy-se"
           title="<?php echo Config::tooltips('email-recipients-instruments-filter-container'); ?>">
       <span class="label top">
         <label for="instruments-filter"

@@ -32,7 +32,7 @@ div#emailformwrapper {
 .ui-dialog.emailform {
   overflow:hidden;
   max-height: 90%; /* !important;*/
-  max-width: 90%; /* !important;*/
+  /*max-width: 90%; *//* !important;*/
 }
 
 /* dialog popup, header */
@@ -332,7 +332,8 @@ form#cafevdb-email-form .chosen-container .chosen-default {
 }
 
 form#cafevdb-email-form #emailCurrentTemplate { 
-  width:16em;
+    width:16em;
+    margin-left:1em;
 }
 
 form#cafevdb-email-form td.email-recipients {
@@ -698,6 +699,7 @@ form#cafevdb-email-form input.instruments-filter-controls.reset {
 
 /*
  * Local Variables: ***
+ * css-indent-offset: 2 ***
  * cssm-indent-function: cssm-c-style-indenter ***
  * End: ***
  */
