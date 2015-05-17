@@ -535,6 +535,7 @@ __EOT__;
         'parameters' => array()
         ),
       'default' => '',
+      'css' => array('postfix' => ' photo'),
       'sort' => false);
 
     $opts['fdd']['Aktualisiert'] = array_merge(
