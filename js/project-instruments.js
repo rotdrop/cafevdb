@@ -107,7 +107,7 @@ var CAFEVDB = CAFEVDB || {};
     var actions = container.find('select.pme-instrumentation-actions-choice');
 
     actions.off('chosen:showing_dropdown');
-    actions.on('chosen:showing_dropdown', function (chosen) {
+    actions.on('chosen:showing_dropdown', function (event) {
       container.find('ul.chosen-results li.active-result').tipsy({gravity:'w', fade:true});
     });
 
@@ -124,6 +124,15 @@ var CAFEVDB = CAFEVDB || {};
       });
     }
     actions.chosen({ disable_search:true });
+
+    CAFEVDB.fixupNoChosenMenu(actions);
+
+    // If chosen could not be installed for some reason ...
+    if (!CAFEVDB.chosenActive(actions)) {
+      callback();
+    }
+
+
   };
 
   ProjectInstruments.openAddInstrumentsDialog = function(selector) {
@@ -216,8 +225,17 @@ var CAFEVDB = CAFEVDB || {};
           $.fn.tipsy.disable();
         }
 
-        container.find('#add-instruments-block div.chosen-container').show();
-        container.find('#add-instruments-block div.chosen-container').trigger('blur');
+        var dialogHolder = $(this);
+        var select = dialogHolder.find('select.project-instruments');
+        //alert('select: '+select.length);
+        select.chosen({
+          disable_search_threshold: 10,
+          no_results_text: PHPMYEDIT.inputSelectNoResult
+        });
+
+        var chosenContainer = dialogHolder.find('div.chosen-container');
+        chosenContainer.attr('title', PHPMYEDIT.inputSelectChosenTitle);
+        chosenContainer.tipsy({gravity:'sw', fade:true});
       },
       close: function () {
         $('.tipsy').remove(); // avoid orphan tooltips
