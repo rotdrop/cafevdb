@@ -255,8 +255,15 @@ li.cafevdb-page-config-check span.set {
 
 #personalsettings {
   /*margin-right: 10px;*/
-  float: right;
   font-size: 12px;
+}
+
+body.snapjs-left #personalsettings {
+  float: left;
+}
+
+#personalsettings {
+  float: right;
 }
 
 #expertmode>input[type=button] {
@@ -282,6 +289,14 @@ li.cafevdb-page-config-check span.set {
   font-style:italic;
   border-style:outset;
   background-color:#C6DEFF;
+}
+
+#app-navigation li.nav-projectlabelcontrol > a {
+  background-color:#C6DEFF;
+}
+
+#app-navigation li.nav-projectlabelcontrol > a:hover {
+  background-color:SteelBlue;
 }
 
 :disabled { 
@@ -412,6 +427,16 @@ div.cafevdb-page-body {
   overflow-y:auto;
 }
 
+form.focusstealer {
+  position:absolute !important;
+  left:-10000px !important;
+}
+
+form.focusstealer input.focusstealer {
+  width:0px !important;
+  height:0px !important;
+}
+
 #cafevdb-page-body input.pme-reload {
   display:none !important;
   position:absolute !important;
@@ -506,6 +531,15 @@ a.ui-tabs-anchor.compact span.ui-icon {
   display: none;
 }
 
+.ui-dialog.zero-size {
+  width:0px !important;
+  height:0px !important;
+  max-width:0px !important;
+  max-height:0px !important;
+  min-width:0px !important;
+  min-height:0px !important;
+}
+
 .ui-dialog .ui-dialog-titlebar .customDialogHeaderButton {
   position: absolute;
   top: 50%;
@@ -525,6 +559,7 @@ a.ui-tabs-anchor.compact span.ui-icon {
   margin: -10px 0px 0px;
   padding: 1px;
 }
+
 
 .ui-dialog.no-close .ui-dialog-titlebar .toBackButton {
   right: 0.3em;
@@ -662,15 +697,15 @@ input[disabled]:hover,
 
 /* make popups scrollable in smaller viewports */
 .ui-dialog {
-	max-height: 75% !important;
-	/*top: 15% !important;*/
-	overflow-y: auto;
-	overflow-x: hidden;
-	padding: 0;
+  max-height: 75%; /* !important;*/
+  /*top: 15% !important;*/
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0;
 }
 
 .ui-dialog .ui-dialog-content {
-	overflow: initial;
+  overflow: initial;
 }
 
 /***************************************************************************** 

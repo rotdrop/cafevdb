@@ -186,7 +186,7 @@ form.pme-form table.pme-main.tab-9 td.tab-9 {
  * elements.
  */
 .pme-table-dialog-blocked {
-  z-index: 50 !important;
+  z-index: 90 !important;
 }
 
 #pme-table-container tr.pme-navigation a.chosen-single {
@@ -308,8 +308,9 @@ span.pme-pagerows input.pme-pagerows {
  *
  */
 
-td.chosen-hidden div.chosen-container {
-  display: none;
+td.chosen-hidden div.chosen-container,
+td.select-hidden select {
+    display: none;
 }
 
 /*******************************************************************************
@@ -594,16 +595,19 @@ td.pme-buttons > .pme-pagerows {
  */
 
 table.pme-main {
+  background-color:#f2f8ff;
   border:#004d9c 1px solid;
   border-collapse:collapse;
   border-spacing:0px;
   width:auto;
 }
 table.pme-navigation {
+  background-color:#f2f8ff;
   border:#004d9c 0px solid;
   border-collapse:collapse;
   border-spacing:0px;
   width:100%;
+  
 }
 
 td[class*='pme-header'], th[class*='pme-header'] {
@@ -678,21 +682,21 @@ td.pme-cell-0-bcc, td.pme-cell-1-bcc {
   overflow:hidden;
 }
 
-td[class$="projectflyer"] {
+td.projectflyer {
   max-width:90%;
   white-space:normal;
 }
 
-td[class$="projectflyer"] img {
+td.projectflyer img {
   height:300px;
 }
 
-td[class$="photo"] {
+td.photo {
   max-width:90%;
   white-space:normal;
 }
 
-td[class$="photo"] img {
+td.photo img {
   min-height:100px;
   max-height:300px;
 }

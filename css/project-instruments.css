@@ -77,12 +77,12 @@
 
 .ui-dialog.cafevdb-project-instruments {
   max-height: 75% !important;
-  overflow: visible;
+  overflow: visible !important;
   padding: 0;
 }
 
 .ui-dialog.cafevdb-project-instruments .ui-dialog-content {
-  overflow: visible;
+  overflow: visible !important;
 }
 
 #add-instruments-block {

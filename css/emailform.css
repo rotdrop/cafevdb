@@ -31,8 +31,8 @@ div#emailformwrapper {
 
 .ui-dialog.emailform {
   overflow:hidden;
-  max-height: 90% !important;
-  max-width: 90% !important;
+  max-height: 90%; /* !important;*/
+  max-width: 90%; /* !important;*/
 }
 
 /* dialog popup, header */
@@ -124,6 +124,7 @@ fieldset.email-composition.page {
 
 form#cafevdb-email-form fieldset.page {
   max-width:65em;
+  padding-right:1.2em;
 }
 form#cafevdb-email-form tr.attachments td {
   vertical-align:middle;

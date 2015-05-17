@@ -7,6 +7,10 @@ div.sepastatusblock {
   width: 6em;
 }
 
+#sepa-debit-mandate-dialog label {
+  display:inline-block;
+}
+
 input.no-sepa-debit-mandate {
   ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
   filter: alpha(opacity=30);
@@ -89,3 +93,12 @@ input.pme-debit-note[type=submit] {
   vertical-align:middle;
 }
 
+/*
+ * Local Variables: ***
+ * css-indent-offset: 2 ***
+ * cssm-indent-level: 2 ***
+ * cssm-indent-mirror-mode: t ***
+ * cssm-newline-before-closing-bracket: t ***
+ * cssm-indent-function: cssm-c-style-indenter ***
+ * End: ***
+ */
