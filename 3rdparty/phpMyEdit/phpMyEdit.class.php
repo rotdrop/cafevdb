@@ -2123,7 +2123,7 @@ class phpMyEdit
 		}
 		$found = false;
 		$lastGroup = null;
-		$ret .= '<option value=""></option>'."\n";
+		$ret .= $multiple ? '' : '<option value=""></option>'."\n";
 		foreach ($kv_array as $key => $value) {
 			if (is_array($kg_array) && $kg_array[$key] != $lastGroup) {
 				if (isset($lastGroup)) {
