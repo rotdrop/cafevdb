@@ -480,7 +480,7 @@ __EOT__;
         'function' => 'CAFEVDB\Musicians::portraitImageLinkPME',
         'parameters' => array()
         ),
-      'css' => array('postfix' => 'photo'),
+      'css' => array('postfix' => ' photo'),
       'default' => '',
       'sort' => false);
 
@@ -623,7 +623,7 @@ __EOT__;
       return L::t("Portraits or Avatars can only be added to an existing musician's profile; please add the new musician without protrait image first.");
     case 'display':
       $div = ''
-        .'<div class="photo"><img class="cafevdb_inline_image portrait" src="'
+        .'<div class="photo"><img class="cafevdb_inline_image portrait zoomable" src="'
         .\OCP\UTIL::linkTo('cafevdb', 'inlineimage.php').'?RecordId='.$musicianId.'&ImagePHPClass=CAFEVDB\Musicians&ImageSize=1200'
         .'" '
         .'title="Photo, if available" /></div>';

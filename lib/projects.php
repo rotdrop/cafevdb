@@ -2156,7 +2156,7 @@ __EOT__;
 project without a flyer first.");
       case 'display':
         $div = ''
-          .'<div class="photo"><img class="cafevdb_inline_image flyer" src="'
+          .'<div class="photo"><img class="cafevdb_inline_image flyer zoomable" src="'
           .\OCP\Util::linkTo('cafevdb', 'inlineimage.php').'?RecordId='.$projectId.'&ImagePHPClass=CAFEVDB\Projects&ImageSize=1200&PlaceHolder='.self::IMAGE_PLACEHOLDER
           .'" '
           .'title="Flyer, if available" /></div>';

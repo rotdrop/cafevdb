@@ -469,7 +469,8 @@ var CAFEVDB = CAFEVDB || {};
     Photo.popup = function(image) {
         var overlay = $('<div id="photooverlay" style="width:auto;height:auto;"></div>');
         var imgClone = $(image).clone();
-        overlay.html(imgClone);        
+        imgClone.removeClass('zoomable');
+        overlay.html(imgClone);
         var popup = overlay.dialog({
             title: t('cafevdb', 'Photo Zoom'),
             position: { my: "middle top+5%",
