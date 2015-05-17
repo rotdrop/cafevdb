@@ -49,31 +49,31 @@ use CAFEVDB\Config;
     />
     <?php } ?>
     <?php if ($_['popup'] === false) { ?>
-      <input
-        type="checkbox"
-        name="popupset"
-        title="<?php echo Config::toolTips('blog-popup-set'); ?>"
-        id="blogpopupset"
-      />
       <label for="blogpopupset"
-        title="<?php echo Config::toolTips('blog-popup-set'); ?>"><?php echo L::t('Set Blog Popup') ?></label>
+             title="<?php echo Config::toolTips('blog-popup-set'); ?>">
+        <input type="checkbox"
+               name="popupset"
+               title="<?php echo Config::toolTips('blog-popup-set'); ?>"
+               id="blogpopupset"/>
+        <?php echo L::t('Set Blog Popup') ?>
+      </label>
     <?php } else { ?>
-      <input
-        type="checkbox"
-        name="popupclear"
-        title="<?php echo Config::toolTips('blog-popup-clear'); ?>"
-        id="blogpopupclear"
-      />
       <label for="blogpopupclear"
-        title="<?php echo Config::toolTips('blog-popup-clear'); ?>"><?php echo L::t('Clear Blog Popup') ?></label>
+             title="<?php echo Config::toolTips('blog-popup-clear'); ?>">
+        <input type="checkbox"
+               name="popupclear"
+               title="<?php echo Config::toolTips('blog-popup-clear'); ?>"
+               id="blogpopupclear"/>
+        <?php echo L::t('Clear Blog Popup') ?>
+      </label>
     <?php } ?>      
-      <input
-        type="checkbox"
-        name="readerclear"
-        title="<?php echo Config::toolTips('blog-reader-clear'); ?>"
-        id="blogreaderclear"
-      />
       <label for="blogreaderclear"
-        title="<?php echo Config::toolTips('blog-reader-clear'); ?>"><?php echo L::t('Clear Reader List') ?></label>
+             title="<?php echo Config::toolTips('blog-reader-clear'); ?>">
+        <input type="checkbox"
+               name="readerclear"
+               title="<?php echo Config::toolTips('blog-reader-clear'); ?>"
+               id="blogreaderclear"/>
+        <?php echo L::t('Clear Reader List') ?>
+      </label>
   </form>
 </div>

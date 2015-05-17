@@ -69,6 +69,48 @@
 
   #appsettings_popup div.personalblock.admin {
   }
+
+  .ui-dialog.chosen-popup-dialog {
+    overflow: visible !important;
+  }
+
+  .ui-dialog .ui-dialog-content.chosen-popup-dialog {
+    overflow: initial !important;
+  }
+
+  fieldset#cafevdb-email-composition-fieldset {
+    min-width:unset !important;
+  }
+
+  /* Tabs will display in multiple lines ... */
+  tr.table-tabs td li.table-tabs {
+    float:right !important;
+  }
+  
+  tr.table-tabs td li.selected {
+    float:left !important;
+  }
+
+  .bloglist li.blogentry {
+    margin-right: 0.5ex !important;
+  }
+
+  .bloglist .blogentrytitle {
+    margin-top: 20px;
+  }
+
+  div#blogedit {
+    padding:0px;
+  }
+
+  div#blogedit div.mce-container {
+    border-width: 0px !important;
+  }
+
+  #cafevdb-page-blog-header {
+    background-image:unset !important;
+    padding-left: 0px !important;
+  }
 }
 
 /*

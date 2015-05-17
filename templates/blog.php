@@ -40,11 +40,11 @@ namespace CAFEVDB {
   $header = ''
     .'<div class="'.$css_pfx.'-blog" id="'.$css_pfx.'-blog-header">
 '.L::t('Camerata DB start page - the data-base operations can be accessed
-through the respective navigation buttons at the top of the page. The
-page below may be used as a bulletin-board. Please click on the
-login-name (top right) to reach the pull-down menu for logout and
-configuration options. The applications menu is hidden under the name
-of the current application (top left besides the cloud-icon).')
+through the menu-button %s (left top). Please click on the login-name
+(top right) for logout and configuration options. Click right of the
+cloud-icon (top left) to reach the app-menu.',
+       array('<div class="icon-menu inline"></div>')
+  )
     .'</div>
 ';
 

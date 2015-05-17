@@ -21,6 +21,10 @@ div.cafevdb-page-container.blog-page {
   font-weight:bold;
 }
 
+div#cafevdb-general div.inline {
+  display:inline-block;
+}
+
 div.cafevdb-page-header.collapsed #cafevdb-page-blog-header {
   height:3ex;
   padding-left:4ex;
@@ -133,7 +137,7 @@ div.cafevdb-page-header.collapsed #cafevdb-page-blog-header {
 }
 
 .bloglist span.blogentrycenter {
-  margin-left:21ex;
+  margin-left:80px;
 }
 
 div.blogentrypopup { 
@@ -199,3 +203,16 @@ li.blogentry ul ul ul, div.blogentrypopup ul ul ul {
   font-size:100%;
 }
 
+div#blogedit label {
+  display:inline-block;
+}
+
+/*
+ * Local Variables: ***
+ * css-indent-offset: 2 ***
+ * cssm-indent-level: 2 ***
+ * cssm-indent-mirror-mode: t ***
+ * cssm-newline-before-closing-bracket: t ***
+ * cssm-indent-function: cssm-c-style-indenter ***
+ * End: ***
+ */
