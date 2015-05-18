@@ -153,6 +153,14 @@ var PHPMYEDIT = PHPMYEDIT || {};
   PHPMYEDIT.tableDialogReload = function(options, callback) {
     var pme  = this;
 
+/*
+ * TODO: after successful delete return to base table, change the
+ * title of the dialog in order to indicate the proper operation, then
+ * remove the navigation buttons, at least on mobile devices.
+ *
+ *
+ */
+
     var reloadName  = options.ReloadName;
     var reloadValue = options.ReloadValue;
 
@@ -279,6 +287,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
     // The complicated ones. This reloads new data.
     var ReloadButtonSel =
       'input.pme-change,'+
+      'input.pme-delete,'+
+      'input.pme-copy,'+
       'input.pme-apply,'+
       'input.pme-more,'+
       'input.pme-reload';
@@ -302,7 +312,10 @@ var PHPMYEDIT = PHPMYEDIT || {};
         var reloadValue = submitButton.val();
         options.ReloadName = reloadName;
         options.ReloadValue = reloadValue;
-        if (!submitButton.hasClass('pme-change') && !submitButton.hasClass('pme-reload')) {
+        if (!submitButton.hasClass('pme-change') &&
+            !submitButton.hasClass('pme-delete') &&
+            !submitButton.hasClass('pme-copy') &&
+            !submitButton.hasClass('pme-reload')) {
           options.modified = true;
         }
         pme.tableDialogReload(options, callback);
@@ -397,7 +410,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
 	             }, 10000);
                    }
 
-                   if (options.InitialViewOperation) {
+                   if (options.InitialViewOperation && deleteButton.length <= 0) {
+                     // return to initial view, but not after deletion
                      dialogWidget.removeClass('pme-table-dialog-blocked');
                      options.ReloadName = options.InitialName;
                      options.ReloadValue = options.InitialValue;
@@ -1020,7 +1034,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
     
     containerSel = this.selector(containerSel);
     var container = this.container(containerSel);
-    var form = container.find('form.pme-form');
+    var form = container.find('form.'+pmepfx+'-form');
 
     //alert(containerSel+" "+container.length);
 
@@ -1086,6 +1100,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
         var recordKey = PMEPFX+'_sys_rec';
         var recordEl = '<input type="hidden" class="'+pmepfx+'-view-navigation" value="View?'+recordKey+'='+recordId+'" name="'+PMEPFX+'_sys_operation" />';
 
+        // this does not necessarily has a form attribute
+        var form = container.find('form.'+pmepfx+'-form');
         PHPMYEDIT.tableDialog(form, $(recordEl), containerSel);
         return false;
       });

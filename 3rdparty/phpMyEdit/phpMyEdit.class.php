@@ -192,7 +192,7 @@ class phpMyEdit
 		'C' => array('save','more','cancel'),
 		'P' => array('save','apply','cancel'),
 		'D' => array('save','cancel'),
-		'V' => array('change','cancel','reload')
+		'V' => array('change','copy','delete','cancel','reload')
 		);
 	var $default_multi_buttons = array(
 		'L' => array('<<','<','misc','add','view','change','copy','delete','>','>>',
@@ -203,7 +203,7 @@ class phpMyEdit
 		'C' => array('save','more','cancel'),
 		'P' => array('save','apply','cancel'),
 		'D' => array('save','cancel'),
-		'V' => array('change','cancel','reload')
+		'V' => array('change','copy','delete','cancel','reload')
 		);
 	var $default_buttons_no_B = array(
 		'L' => array('<<','<','add','>','>>',
@@ -214,7 +214,7 @@ class phpMyEdit
 		'C' => array('save','more','cancel'),
 		'P' => array('save','apply','cancel'),
 		'D' => array('save','cancel'),
-		'V' => array('change','cancel','reload')
+		'V' => array('change','copy','delete','cancel','reload')
 		);
 	var $default_multi_buttons_no_B = array(
 		'L' => array('<<','<','misc','add','>','>>',
@@ -225,7 +225,7 @@ class phpMyEdit
 		'C' => array('save','more','cancel'),
 		'P' => array('save','apply','cancel'),
 		'D' => array('save','cancel'),
-		'V' => array('change','cancel','reload')
+		'V' => array('change','copy','delete','cancel','reload')
 		);
 
 	// }}}
@@ -3395,11 +3395,12 @@ class phpMyEdit
 					}
 					if ($this->nav_custom_multi()) {
 						$css	  = $this->getCSSclass($this->misccss.'-check', null, null, $this->misccss2);
+						$misccss  = $this->getCSSclass('misc');
 						$namebase = $this->cgi['prefix']['sys'].'mrecs';
 						$name	  = $namebase.'[]';
 						$ttip	  = $this->fetchToolTip($css, $name);
-														
-						echo '<td class="',$css_class_name,'">'
+
+						echo '<td class="'.$css_class_name.' '.$misccss.'">'
 							.'<label class="'.$css
 							.'" for="'.$namebase.'-'.htmlspecialchars($key_rec)
 							.'" '.$ttip.'>'

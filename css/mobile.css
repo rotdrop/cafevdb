@@ -23,6 +23,15 @@
 
 @media only screen and (max-width: 768px) {
 
+  table.pme-main td[class*="pme-navigation"] .graphic-links {
+    display:none;
+  }
+
+  table.pme-main td[class*="pme-navigation"]:not(.pme-misc) {
+    width:0px !important;
+    padding:0px !important;
+  }
+  
   .ui-dialog, .ui-dialog.pme-table-dialog {
     left:0px !important;
     top:0px !important;
@@ -37,6 +46,7 @@
   .ui-dialog .ui-dialog-content,
   .ui-dialog.pme-table-dialog .ui-dialog-content {
     overflow:auto !important;
+    padding:0.3em !important;
   }
 
   #emailformcomposer, #emailformrecipients {
@@ -83,11 +93,11 @@
   }
 
   /* Tabs will display in multiple lines ... */
-  tr.table-tabs td li.table-tabs {
+  div.pme-table-dialog tr.table-tabs td li.table-tabs {
     float:right !important;
   }
   
-  tr.table-tabs td li.selected {
+  div.pme-table-dialog tr.table-tabs td li.selected {
     float:left !important;
   }
 

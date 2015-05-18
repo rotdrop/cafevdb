@@ -872,7 +872,7 @@ __EOT__;
           'C' => array('save', 'more', 'cancel'),
           'P' => array('save', 'apply', 'cancel'),
           'D' => array('save', 'cancel'),
-          'V' => array('change', 'cancel', 'reload')
+          'V' => array('change', 'copy', 'delete', 'cancel', 'reload')
           );
       } else {
         $default_buttons_no_B = array(
@@ -888,7 +888,7 @@ __EOT__;
           'C' => array('save', 'more', 'cancel'),
           'P' => array('save', 'apply', 'cancel'),
           'D' => array('save', 'cancel'),
-          'V' => array('change', 'cancel', 'reload')
+          'V' => array('change', 'copy', 'delete', 'cancel', 'reload')
           );
       }
 
