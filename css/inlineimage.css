@@ -73,6 +73,7 @@ div#photooverlay {
   padding:0.5em;
 }
 
+div#photooverlay:hover,
 div#photooverlay .cafevdb_inline_image:hover {
   cursor: zoom-out; 
 }

@@ -484,7 +484,7 @@ var CAFEVDB = CAFEVDB || {};
             resizable: false,
             open: function() {
                 var dialogHolder = $(this);
-                imgClone.click(function() {
+                dialogHolder.click(function() {
                     dialogHolder.dialog('close');
                 });
                 dialogHolder.imagesLoaded(function() {
@@ -511,6 +511,7 @@ var CAFEVDB = CAFEVDB || {};
                             imgClone.height(newHeight);
                         }
                     }
+                    imgClone.css('margin-left', (dialogHolder.width() - imgClone.width())/2);
                 });
             },
             close: function() {
