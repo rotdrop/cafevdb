@@ -31,7 +31,7 @@
     width:0px !important;
     padding:0px !important;
   }
-  
+
   .ui-dialog, .ui-dialog.pme-table-dialog {
     left:0px !important;
     top:0px !important;
@@ -101,6 +101,10 @@
     float:left !important;
   }
 
+  div.pme-table-dialog td.pme-buttons input:disabled {
+    display:none;
+  }
+  
   .bloglist li.blogentry {
     margin-right: 0.5ex !important;
   }
