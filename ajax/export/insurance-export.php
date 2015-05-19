@@ -1,10 +1,13 @@
 <?php
 
+// TODO: inject summation formuals
+
 use CAFEVDB\L;
 use CAFEVDB\Events;
 use CAFEVDB\Config;
 use CAFEVDB\Projects;
 use CAFEVDB\Util;
+use CAFEVDB\Finance;
 use CAFEVDB\InstrumentInsurance;
 
 OCP\User::checkLoggedIn();
@@ -247,7 +250,10 @@ $table->export(
     }
     $exportData[7] = '';
 
-    $musicianTotal += $lineData[8];
+    $monetary = Finance::parseCurrency($lineData[8]);
+    if ($monetary !== false) {
+      $musicianTotal += $monetary['amount'];
+    }
 
     dumpRow($exportData, $sheet, $i, $offset, $rowCnt);
 

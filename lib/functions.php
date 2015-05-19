@@ -235,7 +235,7 @@ __EOT__;
         date_default_timezone_set($tz);
       }
     
-      $oldlocale = setlocale(LC_TIME, 0);
+      $oldlocale = setlocale(LC_TIME, '0');
       if ($locale) {
         setlocale(LC_TIME, $locale);
       }
