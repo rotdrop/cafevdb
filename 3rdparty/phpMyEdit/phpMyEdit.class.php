@@ -1082,7 +1082,10 @@ class phpMyEdit
 					 * Otherwise the filter value is augmented with
 					 * surrounding wildcards as before.
 					 */
-					
+
+					$m    = trim($m); // trim accidentally injected
+									  // space from free-form
+									  // search-fields
 					$ids  = array();
 					$ar	  = array();
 					$matches = array();
@@ -1094,7 +1097,11 @@ class phpMyEdit
 						preg_match("/^==?(.*)$/", $m, $matches)) {
 						// A quoted string, if empty, matches the
 						// empty string or NULL, if not empty, matches
-						// itself
+						// itself. Un-quoted strings are trimmed to
+						// cope with accidentally injected
+						// white-space. Quoted strings are not trimmed
+						// in order to be able to search for
+						// whitespace.
 						$afilter = trim($matches[1]);
 						$compare = 'equal';
 					} else if (preg_match("/^!=?'(.*)'$/", $m, $matches) ||
