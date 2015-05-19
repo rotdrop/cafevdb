@@ -244,11 +244,11 @@ tr.pme-navigation .listall {
 .pme-goto a.chosen-single,
 .pme-pagerows a.chosen-single,
 .pme-export-block a.chosen-single {
-  height: unset;
-  background: unset;
-  box-shadow: unset;
+  height: auto;
+  background: transparent;
+  box-shadow: none;
   outline: medium, none;
-  margin: 1px 0px 3px 0px !important;
+  margin: 0px 0px 3px 0px !important;
   background-color: rgba(240, 240, 240, 0.9);
   color: #555;
   border: 1px solid rgba(190, 190, 190, 0.9);

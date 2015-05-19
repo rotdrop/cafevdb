@@ -324,8 +324,8 @@ td.eventdata-0-brief, td.eventdata-1-brief {
 }
 
 div.google-popup { 
-  overflow: hidden;
-  max-height: unset !important;
+  overflow:hidden;
+  max-height:none !important;
 }
 
 /* Hide the advanced options in the event form */

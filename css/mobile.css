@@ -71,10 +71,10 @@
   }
 
   #appsettings_popup div.personalblock.cafevdb.about {
-    max-width: unset !important;
-    width: unset !important;
-    min-width: unset !important;
-    min-height: unset !important;
+    max-width:none !important;
+    width: auto !important;
+    min-width:0 !important;
+    min-height:0 !important;
   }
 
   #appsettings_popup div.personalblock.admin {
@@ -89,7 +89,7 @@
   }
 
   fieldset#cafevdb-email-composition-fieldset {
-    min-width:unset !important;
+    min-width:0 !important;
   }
 
   /* Tabs will display in multiple lines ... */
@@ -122,7 +122,7 @@
   }
 
   #cafevdb-page-blog-header {
-    background-image:unset !important;
+    background-image:none !important;
     padding-left: 0px !important;
   }
 }

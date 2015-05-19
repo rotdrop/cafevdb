@@ -519,7 +519,7 @@ div.cafevdb-note a:hover {
 
 a.ui-tabs-anchor.compact span.ui-icon { 
   margin:0;
-  float:unset;
+  float:none;
 }
 
 .ui-dialog-titlebar span {

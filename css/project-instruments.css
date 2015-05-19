@@ -43,11 +43,11 @@
 }
 
 .pme-instrumentation-actions-block a.chosen-single {
-  height: unset;
-  background: unset;
-  box-shadow: unset;
+  height: auto;
+  background: transparent;
+  box-shadow: none;
   border-radius: 3px;
-  outline: medium, none;
+  outline: medium none;
   margin: 0px 0px 3px 0px;
   background-color: rgba(240, 240, 240, 0.9);
   color: #555;
