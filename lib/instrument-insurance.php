@@ -332,7 +332,7 @@ namespace CAFEVDB
       $opts['fdd']['InsuranceAmount'] = Config::$opts['money'];
       $opts['fdd']['InsuranceAmount']['name'] = strval(L::t('Insurance Amount'));
       $opts['fdd']['InsuranceAmount']['css'] = array('postfix' => ' amount align-right');
-      $opts['fdd']['InsuranceAmount']['php'] = array(
+      $opts['fdd']['InsuranceAmount']['php|LFPDV'] = array(
         'type' => 'function',
         'function' => 'CAFEVDB\InstrumentInsurance::displayMoneyValuePME',
         'parameters' => array()
