@@ -112,7 +112,8 @@ namespace CAFEVDB
      */
     public static function sepaTranslit($string)
     {
-      $oldLocale = setlocale(LC_ALL, 'de_DE.UTF8');
+      $oldLocale = setlocale(LC_ALL, '0');
+      setlocale(LC_ALL, 'de_DE.UTF8');
       $result = iconv("utf-8","ascii//TRANSLIT", $string);
       setlocale(LC_ALL, $oldLocale);
       return $result;
@@ -734,7 +735,69 @@ namespace CAFEVDB
     {
       return preg_match('/^([a-zA-Z]){4}([a-zA-Z]){2}([0-9a-zA-Z]){2}([0-9a-zA-Z]{3})?$/i', $swift);
     }
-  
+
+    /**Take a locale-formatted string and parse it into a float.
+     */
+    public static function parseCurrency($value, $noThrow = false)
+    {
+      $value = trim($value);
+      if (strstr($value, '€') !== false) {
+        $currencyCode = '€';
+      } else if (strstr($value, '$') !== false) {
+        $currencyCode = '$';
+      } else if (is_numeric($value)) {
+        // just return e.g. if C-locale is active
+        $currencyCode = '';
+      } else if ($noThrow) {
+        return false;
+      } else {
+        throw new \InvalidArgumentException(
+          L::t("Cannot parse `%s' Only plain number, € and \$ currencies are supported.",
+               array((string)$value)));
+      }
+
+      switch ($currencyCode) {
+      case '€':
+        // Allow either comma or decimal point as separator
+        if (preg_match('/^(€)? *([+-]?) *(\d{1,3}(\.\d{3})*|(\d+))(\,(\d{2}))? *(€)?$/',
+                       $value, $matches)
+            ||
+            preg_match('/^(€)? *([+-]?) *(\d{1,3}(\,\d{3})*|(\d+))(\.(\d{2}))? *(€)?$/',
+                       $value, $matches)) {
+          //print_r($matches);
+          // Convert value to number
+          //
+          // $matches[2] optional sign
+          // $matches[3] integral part
+          // $matches[7] fractional part
+          $fraction = isset($matches[7]) ? $matches[7] : '00';
+          $value = (float)($matches[2].str_replace(array(',', '.'), '', $matches[3]).'.'.$fraction);
+        } else if ($noThrow) {
+          return false;
+        } else {
+          throw new \InvalidArgumentException(L::t("Cannot parse number string `%s'", array((string)$value)));
+        }
+        break;
+      case '$':
+        if (preg_match('/^\$? *([+-])? *(\d{1,3}(\,\d{3})*|(\d+))(\.(\d{2}))? *\$?$/', $value, $matches)) {
+          // Convert value to number
+          //
+          // $matches[1] optional sign
+          // $matches[2] integral part
+          // $matches[6] fractional part
+          $fraction = isset($matches[6]) ? $matches[6] : '00';
+          $value = (float)($matches[1].str_replace(array(',', '.'), '', $matches[2]).'.'.$fraction);
+        } else if ($noThrow) {
+          return false;
+        } else {
+          throw new \InvalidArgumentException(L::t("Cannot parse number string `%s'", array((string)$value)));
+        }
+        break;
+      }
+      return array('amount' => $value,
+                   'currency' => $currencyCode);
+    }
+
   };
 
 } // namespace CAFEVDB

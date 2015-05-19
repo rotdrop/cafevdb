@@ -332,6 +332,11 @@ namespace CAFEVDB
       $opts['fdd']['InsuranceAmount'] = Config::$opts['money'];
       $opts['fdd']['InsuranceAmount']['name'] = strval(L::t('Insurance Amount'));
       $opts['fdd']['InsuranceAmount']['css'] = array('postfix' => ' amount align-right');
+      $opts['fdd']['InsuranceAmount']['php'] = array(
+        'type' => 'function',
+        'function' => 'CAFEVDB\InstrumentInsurance::displayMoneyValuePME',
+        'parameters' => array()
+        );
 
       $rateIdx = count($opts['fdd']);
       $opts['fdd']['InsuranceRate'] = array(
@@ -426,7 +431,8 @@ namespace CAFEVDB
     public static function displayPercentageValuePME($insuranceId, $opts, $action, $k, $fds, $fdd, $row)
     {
       $value = floatval($row['qf'.$k]) * 100;
-      $oldlocale = setlocale(LC_ALL, Util::getLocale());
+      $oldlocale = setlocale(LC_ALL, '0');
+      setlocale(LC_ALL, Util::getLocale());
       $result = floatval($value).' %';
       setlocale(LC_ALL, $oldlocale);
     
@@ -436,7 +442,8 @@ namespace CAFEVDB
     //!Just display the given value
     public static function displayMoneyValuePME($insuranceId, $opts, $action, $k, $fds, $fdd, $row)
     {
-      $oldlocale = setlocale(LC_ALL, Util::getLocale());
+      $oldlocale = setlocale(LC_ALL, '0');
+      setlocale(LC_ALL, Util::getLocale());
       $result = money_format('%n', $row['qf'.$k]);
       setlocale(LC_ALL, $oldlocale);
 

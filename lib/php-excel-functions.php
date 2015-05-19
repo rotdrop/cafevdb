@@ -26,6 +26,7 @@ namespace CAFEVDB\PHPExcel
 {
 
   use CAFEVDB\L;
+  use CAFEVDB\Finance;
 
   /**Special value-binder class with tweaks the standard
    * implementation from PHPExcel a little bit. In particular: EURO,
@@ -56,30 +57,27 @@ namespace CAFEVDB\PHPExcel
       // negative. And we want to support €, of course.
       if ($dataType === \PHPExcel_Cell_DataType::TYPE_STRING && !$value instanceof \PHPExcel_RichText) {
         // Check for currency
-        $currencyCode = \PHPExcel_Shared_String::SanitizeUTF8('€');
-        if (preg_match('/^ *-? *(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})? *'.preg_quote($currencyCode).' *$/', $value)) {
-          // Convert value to number
-          $value = (float) trim(str_replace(array($currencyCode,','), '', $value));
-          $cell->setValueExplicit($value, \PHPExcel_Cell_DataType::TYPE_NUMERIC);
-          // Set style
-          $format = \PHPExcel_Style_NumberFormat::FORMAT_CURRENCY_EUR_SIMPLE;
-          //$format = '#.##0,00 [$€];[ROT]-#.##0,00 [$€]';
-          $format = '#,##0.00 [$€]';
-          $format = '#,##0.00 [$€];[RED]-#,##0.00 [$€]';
-          $cell->getParent()->getStyle( $cell->getCoordinate() )
-            ->getNumberFormat()->setFormatCode( $format );
-          return true;
-        }
-
-        // Check for currency in USD, why not
-        if (preg_match('/^\$ *(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?$/', $value)) {
-          // Convert value to number
-          $value = (float) trim(str_replace(array('$',','), '', $value));
-          $cell->setValueExplicit( $value, \PHPExcel_Cell_DataType::TYPE_NUMERIC);
-          // Set style
-          $cell->getParent()->getStyle( $cell->getCoordinate() )
-            ->getNumberFormat()->setFormatCode( \PHPExcel_Style_NumberFormat::FORMAT_CURRENCY_USD_SIMPLE );
-          return true;
+        $monetary = Finance::parseCurrency($value, true);
+        if ($monetary !== false) {
+          switch ($monetary['currency']) {
+          case '€':
+            // Set value
+            $cell->setValueExplicit($monetary['amount'], \PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            // Set style
+            $format = \PHPExcel_Style_NumberFormat::FORMAT_CURRENCY_EUR_SIMPLE;
+            //$format = '#.##0,00 [$€];[ROT]-#.##0,00 [$€]';
+            $format = '#,##0.00 [$€]';
+            $format = '#,##0.00 [$€];[RED]-#,##0.00 [$€]';
+            $cell->getParent()->getStyle( $cell->getCoordinate() )
+              ->getNumberFormat()->setFormatCode( $format );
+            return true;
+          case '$':
+            $cell->setValueExplicit($monetary['amount'], \PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            // Set style
+            $cell->getParent()->getStyle( $cell->getCoordinate() )
+              ->getNumberFormat()->setFormatCode( \PHPExcel_Style_NumberFormat::FORMAT_CURRENCY_USD_SIMPLE );
+            return true;
+          }
         }
 
         // Interpret some basic html
