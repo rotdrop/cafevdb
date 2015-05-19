@@ -783,6 +783,7 @@ function makeArray( obj ) {
 
   if ( $ ) {
     $.fn.imagesLoaded = function( options, callback ) {
+      cache = {};
       var instance = new ImagesLoaded( this, options, callback );
       return instance.jqDeferred.promise( $(this) );
     };
