@@ -197,8 +197,10 @@ $table->export(
 
     if ($brokerScope === false) { // setup
       $musician    = $lineData[0];
-      $brokerScope = $lineData[2].$lineData[3];
+      $brokerScope = $lineData[2].' '.$lineData[3];
       $newMusician = true;
+
+      $sheet->setTitle($brokerScope);
 
       $sheet->setCellValue("A1", $name.", ".$brokerNames[$lineData[2]]['name']);
       $sheet->setCellValue("A2", $creator." &lt;".$email."&gt;");
@@ -206,7 +208,7 @@ $table->export(
       $sheet->setCellValue("A4", L::t('Geographical Scope').": ".$lineData[3]);
       $sheet->setCellValue("A5", L::t('Date').": ".$humanDate);
     } else {
-      $newScope = $lineData[2].$lineData[3];
+      $newScope = $lineData[2].' '.$lineData[3];
 
       if ($musician != $lineData[0] || $newScope != $brokerScope) {
         dumpMusicianTotal($sheet, $i, $offset++, $rowCnt, $musicianTotal);
@@ -222,6 +224,7 @@ $table->export(
         $objPHPExcel->createSheet();
         $objPHPExcel->setActiveSheetIndex($objPHPExcel->getSheetCount() - 1);
         $sheet = $objPHPExcel->getActiveSheet();
+        $sheet->setTitle($newScope);
         $brokerScope = $newScope;
         $offset = $headerOffset - $i + 2;
         $rowCnt = 0;
