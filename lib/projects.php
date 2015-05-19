@@ -145,7 +145,7 @@ namespace CAFEVDB
       $opts['key_type'] = 'int';
 
       // Sorting field(s)
-      $opts['sort_field'] = array('Jahr', 'Id');
+      $opts['sort_field'] = array('-Jahr', 'Name');
 
       // Number of records to display on the screen
       // Value of -1 lists all records in a table
