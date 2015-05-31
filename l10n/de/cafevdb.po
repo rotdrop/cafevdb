@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-15 00:07+0200\n"
-"PO-Revision-Date: 2015-05-15 00:10+0200\n"
+"POT-Creation-Date: 2015-05-31 17:43+0200\n"
+"PO-Revision-Date: 2015-05-31 17:49+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -248,7 +248,7 @@ msgid "Done. %d events synchronized, %d new."
 msgstr "Fertig. %d Ereignisse synchronisiert, %d neue."
 
 #: ajax/export/csv.php:32 ajax/export/excel.php:49 ajax/export/html.php:32
-#: ajax/export/insurance-export.php:102 ajax/finance/sepa-debit-export.php:68
+#: ajax/export/insurance-export.php:105 ajax/finance/sepa-debit-export.php:68
 msgid "instrument insurances"
 msgstr "Instrumenten-Versicherungen"
 
@@ -276,73 +276,73 @@ msgstr "%s-uebersicht"
 msgid "%s-detailed"
 msgstr "%s-detailliert"
 
-#: ajax/export/excel.php:260 lib/projects.php:1724 lib/projects.php:1725
+#: ajax/export/excel.php:260 lib/projects.php:1725 lib/projects.php:1726
 msgid "Missing Musicians"
 msgstr "Fehlende Musiker"
 
-#: ajax/export/excel.php:285 ajax/export/insurance-export.php:154
-#: lib/projects.php:1727
+#: ajax/export/excel.php:285 ajax/export/insurance-export.php:157
+#: lib/projects.php:1728
 msgid "Instrument"
 msgstr "Instrument"
 
-#: ajax/export/excel.php:286 lib/projects.php:1727
+#: ajax/export/excel.php:286 lib/projects.php:1728
 msgid "Missing"
 msgstr "Defizit"
 
-#: ajax/export/insurance-export.php:65
+#: ajax/export/insurance-export.php:68
 msgid "Total Insurance Amount: "
 msgstr "Gesamtversicherungssumme: "
 
-#: ajax/export/insurance-export.php:153 lib/instrument-insurance.php:256
+#: ajax/export/insurance-export.php:156 lib/instrument-insurance.php:256
 #: lib/sepa-debit-mandates.php:267
 msgid "Musician"
 msgstr "Musiker"
 
-#: ajax/export/insurance-export.php:155 lib/instrument-insurance.php:319
-#: lib/instrument-insurance.php:845
+#: ajax/export/insurance-export.php:158 lib/instrument-insurance.php:319
+#: lib/instrument-insurance.php:852
 msgid "Manufacturer"
 msgstr "Hersteller"
 
-#: ajax/export/insurance-export.php:156 lib/instrument-insurance.php:326
+#: ajax/export/insurance-export.php:159 lib/instrument-insurance.php:326
 msgid "Year of Construction"
 msgstr "Herstellungsjahr"
 
-#: ajax/export/insurance-export.php:157
+#: ajax/export/insurance-export.php:160
 msgid "Instrument Insurance Amount"
 msgstr "Versicherungssumme des Instruments"
 
-#: ajax/export/insurance-export.php:158 lib/instrument-insurance.php:310
+#: ajax/export/insurance-export.php:161 lib/instrument-insurance.php:310
 msgid "Accessory"
 msgstr "Zubehör"
 
-#: ajax/export/insurance-export.php:159
+#: ajax/export/insurance-export.php:162
 msgid "Accessory Insurance Amount"
 msgstr "Versicherungssumme des Zubehörs"
 
-#: ajax/export/insurance-export.php:160
+#: ajax/export/insurance-export.php:163
 msgid "Musician Insurance Total"
 msgstr "Gesamtversicherungssumme des Musikers"
 
-#: ajax/export/insurance-export.php:202 ajax/export/insurance-export.php:229
+#: ajax/export/insurance-export.php:207 ajax/export/insurance-export.php:235
 #: lib/insurance-rates.php:257
 msgid "Policy Number"
 msgstr "Versicherungsnummer"
 
-#: ajax/export/insurance-export.php:203 ajax/export/insurance-export.php:230
+#: ajax/export/insurance-export.php:208 ajax/export/insurance-export.php:236
 #: lib/instrument-insurance.php:294
 msgid "Geographical Scope"
 msgstr "Geltungsbereich"
 
-#: ajax/export/insurance-export.php:204 ajax/export/insurance-export.php:231
+#: ajax/export/insurance-export.php:209 ajax/export/insurance-export.php:237
 msgid "Date"
 msgstr "Datum"
 
-#: ajax/export/insurance-export.php:236 lib/instrument-insurance.php:76
-#: lib/php-excel-functions.php:104
+#: ajax/export/insurance-export.php:242 lib/instrument-insurance.php:76
+#: lib/php-excel-functions.php:102
 msgid "false"
 msgstr "falsch"
 
-#: ajax/export/insurance-export.php:243 ajax/insurance/validate.php:248
+#: ajax/export/insurance-export.php:249 ajax/insurance/validate.php:248
 #: ajax/insurance/validate.php:250 js/cafevdb.js:31 js/cafevdb.js:32
 #: js/cafevdb.js:33
 msgid "unknown"
@@ -1421,20 +1421,20 @@ msgstr "Die Filter-Sichtbarkeit wurde geändert"
 msgid "Setting `%s' to `%s'"
 msgstr "Setze `%s' auf `%s'"
 
-#: ajax/settings/redaxo-settings.php:37 lib/projects.php:718
+#: ajax/settings/redaxo-settings.php:37 lib/projects.php:719
 msgid "Preview"
 msgstr "Vorschau"
 
-#: ajax/settings/redaxo-settings.php:38 lib/projects.php:722
+#: ajax/settings/redaxo-settings.php:38 lib/projects.php:723
 msgid "Archive"
 msgstr "Archiv"
 
-#: ajax/settings/redaxo-settings.php:39 lib/projects.php:720
-#: lib/projects.php:1273 lib/projects.php:1434 lib/projects.php:1560
+#: ajax/settings/redaxo-settings.php:39 lib/projects.php:721
+#: lib/projects.php:1274 lib/projects.php:1435 lib/projects.php:1561
 msgid "Rehearsals"
 msgstr "Proben"
 
-#: ajax/settings/redaxo-settings.php:40 lib/projects.php:724
+#: ajax/settings/redaxo-settings.php:40 lib/projects.php:725
 msgid "Trashbin"
 msgstr "Mülltonne"
 
@@ -1464,8 +1464,8 @@ msgid "Unknown WYSIWYG-Editor: `%s'"
 msgstr "Unbekannter WYSIWYG-Edtior: `%s'"
 
 #: js/blog.js:53 js/blog.js:156 js/blog.js:207 js/blog.js:243
-#: js/cafevdb.js:1074 js/cafevdb.js:1138 js/email.js:33 js/email.js:62
-#: js/email.js:445 js/email.js:476 js/email.js:639 js/events.js:64
+#: js/cafevdb.js:1091 js/cafevdb.js:1155 js/email.js:33 js/email.js:62
+#: js/email.js:448 js/email.js:479 js/email.js:642 js/events.js:64
 #: js/events.js:149 js/inlineimage.js:84 js/inlineimage.js:92
 #: js/inlineimage.js:102 js/inlineimage.js:131 js/inlineimage.js:155
 #: js/inlineimage.js:183 js/inlineimage.js:207 js/inlineimage.js:326
@@ -1514,26 +1514,26 @@ msgstr ""
 msgid "Really delete the entry?"
 msgstr "Den Beitrag wirklich löschen?"
 
-#: js/cafevdb.js:505
+#: js/cafevdb.js:522
 msgid "Choose some Options"
 msgstr "Wähle aus den Optionen"
 
-#: js/cafevdb.js:510 js/project-instruments.js:146
+#: js/cafevdb.js:527 js/project-instruments.js:155
 #: js/sepa-debit-mandate.js:104
 msgid "Save"
 msgstr "Speichern"
 
-#: js/cafevdb.js:512
+#: js/cafevdb.js:529
 msgid ""
 "Accept the currently selected options and return to the underlying form. "
 msgstr "Übernimmt die aktuellen Werte und kehrt zur vorherigen Ansicht zurück."
 
-#: js/cafevdb.js:513 js/inlineimage.js:273 js/project-instruments.js:197
+#: js/cafevdb.js:530 js/inlineimage.js:273 js/project-instruments.js:206
 #: templates/blogedit.php:39 templates/part.emailform.composer.php:251
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: js/cafevdb.js:515
+#: js/cafevdb.js:532
 msgid ""
 "Discard the current selection and close the dialog. The initial set of "
 "selected options will remain unchanged."
@@ -1541,15 +1541,15 @@ msgstr ""
 "Verwirft die aktuelle Auswahl und schließt das Fenster. Die\n"
 "ursprünglichen Optionen werden unverändert beibehalten."
 
-#: js/cafevdb.js:686
+#: js/cafevdb.js:703
 msgid "Export to the following format is not yet supported:"
 msgstr "Export in das folgende Dateiformat wird nicht unterstützt:"
 
-#: js/cafevdb.js:688 js/project-instruments.js:74 js/projects.js:261
+#: js/cafevdb.js:705 js/project-instruments.js:74 js/projects.js:263
 msgid "Unimplemented"
 msgstr "Nicht implementiert"
 
-#: js/cafevdb.js:867
+#: js/cafevdb.js:884
 msgid ""
 "If multiple dialogs are open, then move this one to the lowest layer and "
 "display it below the others. Clicking anywhere on the dialog will bring to "
@@ -1560,7 +1560,7 @@ msgstr ""
 "angezeigt. Anklicken irgendeines Bereiches dieses Fensters bringt es\n"
 "dann wieder nach vorne."
 
-#: js/cafevdb.js:917
+#: js/cafevdb.js:934
 msgid ""
 "Close the current dialog and return to the view which was active before this "
 "dialog had been opened. If the current view shows a `Back' button, then "
@@ -1571,11 +1571,11 @@ msgstr ""
 "es in diesem Fenster außerdem noch einen `Zurück'-Knopf gibt, dann\n"
 "sollte der eigentlich das gleiche bewirken."
 
-#: js/cafevdb.js:1007 js/instrumentation.js:163
+#: js/cafevdb.js:1024 js/instrumentation.js:163
 msgid "Debug Information"
 msgstr "Debug Informationen"
 
-#: js/cafevdb.js:1036
+#: js/cafevdb.js:1053
 msgid ""
 "Unrecoverable unknown internal error, no further information available, "
 "sorry."
@@ -1583,28 +1583,28 @@ msgstr ""
 "Tut uns leid, unbekannte interner Fehler, weitere Informationen sind\n"
 "leider nicht verfügbar."
 
-#: js/cafevdb.js:1038
+#: js/cafevdb.js:1055
 msgid "Internal Error"
 msgstr "Irgendein Fehler"
 
-#: js/cafevdb.js:1045
+#: js/cafevdb.js:1062
 #, python-brace-format
 msgid "Field {RequiredField} not present in AJAX response."
 msgstr "In der AJAX-Antwort fehlt das Feld {RequiredField}."
 
-#: js/cafevdb.js:1054
+#: js/cafevdb.js:1071
 msgid "Missing data"
 msgstr "Fehlende Daten"
 
-#: js/cafevdb.js:1056 js/events.js:58 js/events.js:143
+#: js/cafevdb.js:1073 js/events.js:58 js/events.js:143
 msgid "Unknown error :("
 msgstr "Irgendein Fehler :("
 
-#: js/cafevdb.js:1094
+#: js/cafevdb.js:1111
 msgid "Something went wrong."
 msgstr "Irgendetwas ist schief gelaufen."
 
-#: js/cafevdb.js:1096
+#: js/cafevdb.js:1113
 msgid ""
 "If it should be the case that you are already logged in for a long time "
 "without interacting with the web-app, then the reason for this error is "
@@ -1613,7 +1613,7 @@ msgstr ""
 "Falls Du bereits längere Zeit angemeldet bist, ohne mit der Web-App zu\n"
 "interagieren, dann ist das der Grund für den Fehler."
 
-#: js/cafevdb.js:1101
+#: js/cafevdb.js:1118
 msgid ""
 "I any case it may help to logoff and logon again, as a temporary work-"
 "around. You will be redirected to the log-in page when you close this window."
@@ -1622,7 +1622,7 @@ msgstr ""
 "ab- und wieder an zu melden und den Vorgang zu wiederholen. Wenn Du\n"
 "dieses Fenster schließt, wirst Du zur Login-Seite weiter geleitet."
 
-#: js/cafevdb.js:1105
+#: js/cafevdb.js:1122
 #, python-brace-format
 msgid "Feedback email: {AutoReport}"
 msgstr "Rückmeldung per Email: {AutoReport}"
@@ -1684,30 +1684,30 @@ msgstr ""
 msgid "Not called from main email-form."
 msgstr "Nicht vom Haupt-Formular aufgerufen (Fehler)."
 
-#: js/email.js:443
+#: js/email.js:446
 #, python-brace-format
 msgid "Unknown form element: {FormElement}"
 msgstr "Unbekanntes Formularfeld: {FormElement}"
 
-#: js/email.js:475
+#: js/email.js:478
 #, python-brace-format
 msgid "Unknown request: {Request}"
 msgstr "Unbekannte Anfrage: {Request}"
 
-#: js/email.js:548
+#: js/email.js:551
 #, python-brace-format
 msgid "Sending message {active} out of {total}"
 msgstr "Sende Nachricht %d von %d"
 
-#: js/email.js:550
+#: js/email.js:553
 msgid "Message delivery in progress"
 msgstr "Nachrichten-Auslieferung ist im Gang"
 
-#: js/email.js:575
+#: js/email.js:578
 msgid "Message Delivery Status"
 msgstr "Em@il-Sende-Monitor"
 
-#: js/email.js:604
+#: js/email.js:607
 msgid ""
 "Email sending is in progress. Leaving the page now will cancel the email "
 "submission."
@@ -1715,11 +1715,11 @@ msgstr ""
 "Nachrichten werden gerade gesendet. Das Verlassen der Seite würde den\n"
 "Vorgang möglicherweise abbrechen."
 
-#: js/email.js:636
+#: js/email.js:639
 msgid "Unable to export message(s):"
 msgstr "Kann die Nachricht(en) nicht exportieren:"
 
-#: js/email.js:701
+#: js/email.js:704
 #, python-brace-format
 msgid ""
 "A template with the name `{TemplateName}' already exists, do you want to "
@@ -1728,127 +1728,127 @@ msgstr ""
 "Es gibt bereits eine Vorlage mit dem Namen `{TemplateName}'; soll die "
 "überschrieben werden?"
 
-#: js/email.js:703
+#: js/email.js:706
 msgid "Overwrite existing template?"
 msgstr "Existierende Vorlage überschreiben?"
 
-#: js/email.js:725
+#: js/email.js:728
 #, python-brace-format
 msgid ""
 "Do you really want to delete the template with the name `{TemplateName}'?"
 msgstr ""
 "Möchten Sie die Email-Vorlage mit dem Namen {TemplateName} wirklich löschen?"
 
-#: js/email.js:727
+#: js/email.js:730
 msgid "Really Delete Template?"
 msgstr "Vorlage tatsächlich löschen?"
 
-#: js/email.js:736
+#: js/email.js:739
 #, python-brace-format
 msgid "Cannot delete non-existing template `{TemplateName}'"
 msgstr ""
 "Die Vorlage {TemplateName} existiert nicht und kann deshalb auch nicht "
 "gelöscht werden."
 
-#: js/email.js:738
+#: js/email.js:741
 msgid "Unknown Template"
 msgstr "Unbekannte Email-Vorlage."
 
-#: js/email.js:841
+#: js/email.js:844
 msgid "Do you really want to delete all event attachments?"
 msgstr "Möchten Sie wirklich alle Termin-Anhänge löschen?"
 
-#: js/email.js:842 js/email.js:926
+#: js/email.js:845 js/email.js:929
 msgid "Really Delete Attachments?"
 msgstr "Anhänge wirklich löschen?"
 
-#: js/email.js:911
+#: js/email.js:914
 msgid "Select Attachment"
 msgstr "Anhang auswählen"
 
-#: js/email.js:925
+#: js/email.js:928
 msgid "Do you really want to delete all file attachments?"
 msgstr "Möchten Sie wirklich alle Datei-Anhänge löschen?"
 
-#: js/email.js:970 templates/part.emailform.composer.php:109
+#: js/email.js:973 templates/part.emailform.composer.php:109
 #: templates/part.emailform.composer.php:127
 msgid "Address Book"
 msgstr "Adressbuch"
 
-#: js/email.js:971
+#: js/email.js:974
 msgid "Accept"
 msgstr "Übernehmen"
 
-#: js/email.js:973
+#: js/email.js:976
 msgid "Save Contacts"
 msgstr "Kontakte speichern"
 
-#: js/email.js:976
+#: js/email.js:979
 msgid ""
 "Save the selected supplementary emails to the address-book for later reusal."
 msgstr ""
 "Sichere die zusätzlichen Emails aus dem Eingabefeld im Adressbuch,\n"
 "damit die später wieder verwendet werden können."
 
-#: js/email.js:1102
+#: js/email.js:1105
 #, python-brace-format
 msgid "Em@il Form for {ProjectName}"
 msgstr "Em@il Formular für {ProjectName}"
 
-#: js/email.js:1105
+#: js/email.js:1108
 msgid "Em@il Form"
 msgstr "Em@il Formular"
 
-#: js/email.js:1231
+#: js/email.js:1234
 msgid "Move all"
 msgstr "Alle auswählen"
 
-#: js/email.js:1232
+#: js/email.js:1235
 msgid "Move selected"
 msgstr "Ausgewählte verschieben"
 
-#: js/email.js:1233
+#: js/email.js:1236
 msgid "Remove selected"
 msgstr "Ausgewählte entfernen"
 
-#: js/email.js:1234
+#: js/email.js:1237
 msgid "Remove all"
 msgstr "Alle entfernen"
 
-#: js/email.js:1235
+#: js/email.js:1238
 msgid "Remaining Recipients"
 msgstr "Verbleibende Empfänger"
 
-#: js/email.js:1236
+#: js/email.js:1239
 msgid "Selected Recipients"
 msgstr "Ausgewählte Empfänger"
 
-#: js/email.js:1237
+#: js/email.js:1240
 #, python-brace-format
 msgid "Showing all {0}"
 msgstr "Alle {0} werden angezeigt"
 
-#: js/email.js:1239
+#: js/email.js:1242
 msgid "Filtered"
 msgstr "Suchergebnis"
 
-#: js/email.js:1241
+#: js/email.js:1244
 msgid "from"
 msgstr "aus"
 
-#: js/email.js:1243
+#: js/email.js:1246
 msgid "Empty list"
 msgstr "Leere Liste"
 
-#: js/email.js:1244
+#: js/email.js:1247
 msgid "Filter"
 msgstr "Suchbegriff"
 
-#: js/email.js:1245
+#: js/email.js:1248
 msgid "show all"
 msgstr "alle anzeigen"
 
-#: js/email.js:1251
+#: js/email.js:1254
 msgid "Click on the names to move the respective person to the other box"
 msgstr ""
 "Bitte die Namen anklicken, um den jeweiligen Adressaten in den anderen "
@@ -1958,7 +1958,7 @@ msgstr ""
 "Ihr Web-Browser harmoniert nicht mit den üblichen Web-Applikationen. Bitte "
 "klicken Sie auf das Bild, um eine neue Bilddatei hoch zu laden."
 
-#: js/inlineimage.js:474
+#: js/inlineimage.js:475
 msgid "Photo Zoom"
 msgstr "Großes Foto"
 
@@ -1975,23 +1975,23 @@ msgid "Possible Duplicate!"
 msgstr "Doppelter Datenbankeintag?"
 
 # #Spalten
-#: js/pme.js:809
+#: js/pme.js:828
 msgid "#columns"
 msgstr "#Spalten"
 
-#: js/pme.js:818
+#: js/pme.js:837
 msgid "#rows"
 msgstr "#Zeilen"
 
-#: js/project-instruments.js:72 js/projects.js:259
+#: js/project-instruments.js:72 js/projects.js:261
 msgid "Unknown operation:"
 msgstr "Unbekannte Aktion:"
 
-#: js/project-instruments.js:135
+#: js/project-instruments.js:144
 msgid "Change Project Instrumentation"
 msgstr "Instrumentierung ändern"
 
-#: js/project-instruments.js:148
+#: js/project-instruments.js:157
 msgid ""
 "Save the new instrumentation and continue adjusting the instrumentation "
 "numbers. The input-form will reload and display the updated list of "
@@ -2001,34 +2001,34 @@ msgstr ""
 "der Besetzungszahlen. The Eingabe-Formular wird dazu mit der\n"
 "aktualisierten Instrumentenliste neu geladen."
 
-#: js/project-instruments.js:200
+#: js/project-instruments.js:209
 msgid ""
 "Discard the current choice of instruments and close the dialog. The "
 "instrumentation of the project will remain unchanged."
 msgstr "Abbrechen. Die Instrumentierung des Projekts wird nicht geändert."
 
-#: js/projects.js:498
+#: js/projects.js:510
 msgid "Really unlink the displayed event announcement?"
 msgstr ""
 "Soll die Verknüpfung mit der angezeigten Veranstaltungsankündigung wirklich "
 "gelöst werden?"
 
-#: js/projects.js:499
+#: js/projects.js:511
 #, python-brace-format
 msgid "Unlink Web-Page with Id {ArticleId}?"
 msgstr "Web-Seite mit Id {ArticleId} löschen?"
 
-#: js/projects.js:524
+#: js/projects.js:536
 msgid "Really delete the displayed event announcement?"
 msgstr ""
 "Soll die angezeigte Veranstaltungsankündigung wirklich entfernt werden?"
 
-#: js/projects.js:525
+#: js/projects.js:537
 #, python-brace-format
 msgid "Delete Web-Page with Id {ArticleId}?"
 msgstr "Web-Seite mit Id {ArticleId} löschen?"
 
-#: js/projects.js:602
+#: js/projects.js:614
 msgid "No values match"
 msgstr "Kein Wert passt."
 
@@ -2070,7 +2070,7 @@ msgstr ""
 "den Musikern nötig sein."
 
 #: js/sepa-debit-mandate.js:146 lib/detailed-instrumentation.php:349
-#: lib/detailed-instrumentation.php:682 lib/detailed-instrumentation.php:700
+#: lib/detailed-instrumentation.php:683 lib/detailed-instrumentation.php:701
 msgid "SEPA Debit Mandate"
 msgstr "SEPA Lastschriftmandat"
 
@@ -2266,11 +2266,11 @@ msgstr "Allgemeine Bemerkungen"
 msgid "Photo"
 msgstr "Foto"
 
-#: lib/detailed-instrumentation.php:542 lib/musicians.php:492
+#: lib/detailed-instrumentation.php:543 lib/musicians.php:492
 msgid "Last Updated"
 msgstr "Letzte Aktualisierung"
 
-#: lib/detailed-instrumentation.php:706
+#: lib/detailed-instrumentation.php:707
 msgid "Click to enter details of a potential SEPA debit mandate"
 msgstr ""
 "Anklicken um ggf. Informationen über ein SEPA-Lastschriftmandat einzutragen"
@@ -2283,27 +2283,27 @@ msgstr "Die Nachricht(en) wurde erfolgreich gesendet!"
 msgid "Message(s) exported successfully!"
 msgstr "Die Nachricht(en) wurde erfolgreich gesendet!"
 
-#: lib/emailcomposer.php:1128
+#: lib/emailcomposer.php:1129
 msgid "Pre-composition validation has failed!"
 msgstr "Em@il Vorab-Check ist fehlgeschlagen!"
 
-#: lib/emailcomposer.php:1331
+#: lib/emailcomposer.php:1332
 msgid "no project involved"
 msgstr "Kein Projekt zugeordnet"
 
-#: lib/emailcomposer.php:1371
+#: lib/emailcomposer.php:1372
 msgid "Unable to fetch executive board contents from data-base."
 msgstr "Kann die Vorstands-Mitglieder nicht aus der Datenbank extrahieren."
 
-#: lib/emailcomposer.php:1384
+#: lib/emailcomposer.php:1385
 msgid "and"
 msgstr "und"
 
-#: lib/emailcomposer.php:1721
+#: lib/emailcomposer.php:1722
 msgid "Local Filesystem"
 msgstr "Lokale Dateien"
 
-#: lib/emailrecipientsfilter.php:340 lib/page-loader.php:182
+#: lib/emailrecipientsfilter.php:340 lib/page-loader.php:183
 #, php-format
 msgid "Invalid history position %d request, history size is %d"
 msgstr "Ungültige Position %d, Länge der Filter-Historie ist %d."
@@ -2338,106 +2338,116 @@ msgstr "Weitere Kalender"
 msgid "finance"
 msgstr "Kasse"
 
-#: lib/finance.php:341
+#: lib/finance.php:342
 #, php-format
 msgid "Unable to update the last-used date to %s"
 msgstr "Kann das Datum der letzten Verwendung nicht auf %s setzen."
 
-#: lib/finance.php:343
+#: lib/finance.php:344
 msgid "Data-base query:"
 msgstr "Datenbank-Abfrage:"
 
-#: lib/finance.php:483
+#: lib/finance.php:484
 msgid "mandate reference"
 msgstr "Mandatsreferenz"
 
-#: lib/finance.php:484
+#: lib/finance.php:485
 msgid "date of issue"
 msgstr "Ausstellungsdatum:"
 
-#: lib/finance.php:485
+#: lib/finance.php:486
 msgid "date of last usage"
 msgstr "Letztes Einzugsdatum:"
 
-#: lib/finance.php:486
+#: lib/finance.php:487
 msgid "musician id"
 msgstr "Musiker-Id"
 
-#: lib/finance.php:487
+#: lib/finance.php:488
 msgid "project id"
 msgstr "Projekt-Id"
 
-#: lib/finance.php:488
+#: lib/finance.php:489
 msgid "sequence type"
 msgstr "Wiederholungsart"
 
-#: lib/finance.php:490
+#: lib/finance.php:491
 msgid "bank code"
 msgstr "BLZ"
 
-#: lib/finance.php:491
+#: lib/finance.php:492
 msgid "bank account owner"
 msgstr "Kontoinhaber"
 
-#: lib/finance.php:508
+#: lib/finance.php:509
 #, php-format
 msgid "Missing fields in debit mandate: %s (%s)."
 msgstr "Fehlende Felder im Lastschrifteinzug: %s (%s)."
 
-#: lib/finance.php:510 lib/finance.php:522 lib/finance.php:536
-#: lib/finance.php:558 lib/finance.php:570 lib/finance.php:584
-#: lib/finance.php:601 lib/finance.php:616 lib/finance.php:628
-#: lib/finance.php:638 lib/finance.php:649
+#: lib/finance.php:511 lib/finance.php:523 lib/finance.php:537
+#: lib/finance.php:559 lib/finance.php:571 lib/finance.php:585
+#: lib/finance.php:602 lib/finance.php:617 lib/finance.php:629
+#: lib/finance.php:639 lib/finance.php:650
 msgid "Full data record:"
 msgstr "Betroffener Datensatz:"
 
-#: lib/finance.php:520
+#: lib/finance.php:521
 #, php-format
 msgid "Empty fields in debit mandate: %s (%s)."
 msgstr "Leere Felder im Lastschrifteinzug: %s %s)."
 
-#: lib/finance.php:534
+#: lib/finance.php:535
 msgid "Illegal characters in bank account owner field"
 msgstr "Ungültige Buchstaben im Kontoinhaberfeld."
 
-#: lib/finance.php:556
+#: lib/finance.php:557
 #, php-format
 msgid "Mandate issued in the future: %s????"
 msgstr "Lastschriftmandat in der Zukunft ausgestellt: %s????."
 
-#: lib/finance.php:567
+#: lib/finance.php:568
 msgid "Missing mandate date"
 msgstr "Fehlendes Mandatsdatum"
 
-#: lib/finance.php:580
+#: lib/finance.php:581
 #, php-format
 msgid "Invalid sequence type `%s', should be one of %s"
 msgstr "Ungültige Wiederholungsart `%s', zulässig sind %s"
 
-#: lib/finance.php:599
+#: lib/finance.php:600
 #, php-format
 msgid "Invalid IBAN: %s"
 msgstr "Ungültige IBAN: %s."
 
-#: lib/finance.php:614
+#: lib/finance.php:615
 #, php-format
 msgid "BLZ and IBAN do not match: %s != %s"
 msgstr "BLZ und IBAN passen nicht zusammen: %s != %s."
 
-#: lib/finance.php:626
+#: lib/finance.php:627
 #, php-format
 msgid "Invalid German BLZ: %s."
 msgstr "Ungültige Deutsche(?) Bankleitzahl %s."
 
-#: lib/finance.php:636
+#: lib/finance.php:637
 #, php-format
 msgid "Invalid German bank account: %s @ %s."
 msgstr "Ungültige Deutsche(?) Kontonummer %s @ %s."
 
-#: lib/finance.php:647
+#: lib/finance.php:648
 #, php-format
 msgid "Probably invalid BIC: %s. Computed: %s. "
 msgstr "Vermutlich falsche BIC: %s. Automatisch ermittelt: %s."
+
+#: lib/finance.php:755
+#, php-format
+msgid "Cannot parse `%s' Only plain number, € and $ currencies are supported."
+msgstr "Kann `%s' nicht interpretieren. Lediglich bloße Zahlen oder Währungen in € und $ erlaubt."
+
+#: lib/finance.php:778 lib/finance.php:793
+#, php-format
+msgid "Cannot parse number string `%s'"
+msgstr "Kann die Zahlangabe `%s' nicht interpretieren."
 
 #: lib/functions.php:126
 #, php-format
@@ -2482,19 +2492,19 @@ msgstr "HTML Export"
 msgid "Error: Unknonwn Button Type"
 msgstr "Fehler: Unbekannter Knopf-Typ"
 
-#: lib/functions.php:1075
+#: lib/functions.php:1175
 msgid "View all Projects"
 msgstr "Alle Projekte"
 
-#: lib/functions.php:1076
+#: lib/functions.php:1176
 msgid "Overview over all known projects (start-page)."
 msgstr "Alle gespeicherten Projekte anzeigen; Startseite der `Camerata App'."
 
-#: lib/functions.php:1087
+#: lib/functions.php:1191
 msgid "Display all Musicians"
 msgstr "Alle Musiker"
 
-#: lib/functions.php:1088
+#: lib/functions.php:1192
 msgid ""
 "Display all musicians stored in the data-base, with detailed facilities for "
 "filtering and sorting."
@@ -2502,7 +2512,7 @@ msgstr ""
 "Alle Musiker anzeigen, die in der Datenbank gespeichert sind. Es gibt dabei "
 "ausführliche Such- und Auswahlfunktionalität."
 
-#: lib/functions.php:1099
+#: lib/functions.php:1208
 msgid ""
 "Mass-email form, use with care. Mass-emails will be logged. Recipients will "
 "be specified by the Bcc: field in the header, so the recipients are "
@@ -2513,25 +2523,34 @@ msgstr ""
 "außerdem wird die ganze Pracht in der Daten bank gespeichter (siehe `Email "
 "Historie')"
 
-#: lib/functions.php:1112
+#: lib/functions.php:1227
 msgid "Email History"
 msgstr "Em@il Historie"
 
-#: lib/functions.php:1113
+#: lib/functions.php:1228
 msgid "Display all emails sent by our mass-email form."
 msgstr ""
 "Zeigt alle über unser unsägliches Massen-Mail gespamten Emails an. "
 "Insebesondere werden hier auch die Bcc: Empfänger gespeichert."
 
-#: lib/functions.php:1131
-msgid "The currently active project."
-msgstr "Das gerade ausgewählte Projekt."
+#: lib/functions.php:1252
+msgid ""
+"Display an overview page for the currently active project.\n"
+"The overview-page gives the possibility to add events, change the "
+"instrumentation\n"
+"and even edit the public web-pages for the project and other things."
+msgstr ""
+"Zeigt eine Übersichtsseite für das aktuelle Projekt an. Die\n"
+"Übersichtsseite bietet die Möglichkeit, Termine hinzuzufügen. die\n"
+"Instrumentierung zu ändern und sogar die Konzert- und\n"
+"Probenankündigungen auf der öffentlichen Webseite zu editieren. \"Und\n"
+"vieles mehr\"."
 
-#: lib/functions.php:1146 lib/projects.php:798
+#: lib/functions.php:1275 lib/projects.php:799
 msgid "Instrumentation"
 msgstr "Besetzung"
 
-#: lib/functions.php:1147
+#: lib/functions.php:1276
 msgid ""
 "Detailed display of all registered musicians for the selected project. The "
 "table will allow for modification of personal data like email, phone, "
@@ -2541,11 +2560,11 @@ msgstr ""
 "Daten wie Email, Adresse usw. können hier geändert werden. Projektbezogene "
 "Daten können allerdings nur in der Ansicht `Kurz-Besetzung' geändert werden."
 
-#: lib/functions.php:1160 lib/project-instruments.php:385
+#: lib/functions.php:1295 lib/project-instruments.php:385
 msgid "Add Instruments"
 msgstr "Neue Instrumente"
 
-#: lib/functions.php:1161
+#: lib/functions.php:1296
 msgid ""
 "Display the list of instruments known by the data-base, possibly add new "
 "ones as needed."
@@ -2553,12 +2572,12 @@ msgstr ""
 "Tabelle mit allen derzeit gespeicherten Instrumenten; weitere Instrumente "
 "können hier einfach hinzugefügt werden."
 
-#: lib/functions.php:1174 lib/project-instruments.php:69 lib/projects.php:803
-#: lib/projects.php:1062
+#: lib/functions.php:1315 lib/project-instruments.php:69 lib/projects.php:804
+#: lib/projects.php:1063
 msgid "Instrumentation Numbers"
 msgstr "Besetzungszahlen"
 
-#: lib/functions.php:1175 lib/tooltips.php:391
+#: lib/functions.php:1316 lib/tooltips.php:391
 msgid ""
 "Display the desired instrumentaion numbers, i.e. how many musicians are "
 "already registered for each instrument group and how many are finally needed."
@@ -2566,20 +2585,20 @@ msgstr ""
 "Anzeige der angestrebten Besetzungszahlen. Natürlich kann man die dann auch "
 "anpassen ..."
 
-#: lib/functions.php:1188 lib/functions.php:1238 lib/projects.php:840
+#: lib/functions.php:1335 lib/projects.php:841
 msgid "Debit Mandates"
 msgstr "Lastschriftmandate"
 
-#: lib/functions.php:1189
+#: lib/functions.php:1336
 msgid "Display a table with the SEPA debit mandates related to the project."
 msgstr ""
 "Zeigt eine Tabelle mit den SEPA-Lastschriftmandaten für das Projekt an."
 
-#: lib/functions.php:1202
+#: lib/functions.php:1355
 msgid "Insurances"
 msgstr "Versicherungen"
 
-#: lib/functions.php:1203
+#: lib/functions.php:1356
 msgid ""
 "Display a table with an overview about the current state of the member's "
 "instrument insurances."
@@ -2587,11 +2606,11 @@ msgstr ""
 "Zeigt eine Tabelle mit einer Übersicht über die "
 "Instrumentensammelversicherungen an."
 
-#: lib/functions.php:1214
+#: lib/functions.php:1371
 msgid "Insurance Rates"
 msgstr "Versicherungs-Raten"
 
-#: lib/functions.php:1215
+#: lib/functions.php:1372
 msgid ""
 "Display a table with the insurance rates for the individual instrument "
 "insurances."
@@ -2599,26 +2618,21 @@ msgstr ""
 "Zeigt eine Tabelle mit einer Übersicht über die Versicherungsraten der\n"
 "Instrumenten-Sammelversicherungen an."
 
-#: lib/functions.php:1226
+#: lib/functions.php:1388
 msgid "Insurance Brokers"
 msgstr "Versicherungsmakler"
 
-#: lib/functions.php:1227
+#: lib/functions.php:1389
 msgid "Display a table with the insurance brokers."
 msgstr ""
 "Zeigt eine Tabelle mit einer Übersicht über die Versicherungsanbieter an."
 
-#: lib/functions.php:1239
-msgid "Display a table with an overview over all SEPA debit mandates."
-msgstr ""
-"Zeigt eine Tabelle mit einer Übersicht über alle SEPA Lastschriftmandate an."
-
-#: lib/functions.php:1312
+#: lib/functions.php:1481
 #, php-format
 msgid "Could not connect to data-base server `%s': %s"
 msgstr "Konnte den Datenbank-Server `%s' nicht erreichen: %s"
 
-#: lib/functions.php:1325
+#: lib/functions.php:1494
 #, php-format
 msgid "Unable to select %s"
 msgstr "Kann die Tabelle %s nicht auswählen"
@@ -2635,7 +2649,7 @@ msgstr "Europa"
 msgid "World"
 msgstr "Welt"
 
-#: lib/instrument-insurance.php:77 lib/php-excel-functions.php:100
+#: lib/instrument-insurance.php:77 lib/php-excel-functions.php:98
 msgid "true"
 msgstr "wahr"
 
@@ -2663,55 +2677,55 @@ msgstr "Versicherter Gegenstand"
 msgid "Insurance Amount"
 msgstr "Versicherungssumme"
 
-#: lib/instrument-insurance.php:340
+#: lib/instrument-insurance.php:345
 msgid "Insurance Rate"
 msgstr "Rate"
 
-#: lib/instrument-insurance.php:361
+#: lib/instrument-insurance.php:366
 msgid "Insurance Fee"
 msgstr "Versicherungs-Beitrag"
 
-#: lib/instrument-insurance.php:361
+#: lib/instrument-insurance.php:366
 msgid "including taxes"
 msgstr "inklusive Steuern"
 
-#: lib/instrument-insurance.php:374
+#: lib/instrument-insurance.php:379
 msgid "Total Insurance"
 msgstr "Gesamtversicherungssumme"
 
-#: lib/instrument-insurance.php:389
+#: lib/instrument-insurance.php:394
 msgid "Start of Insurance"
 msgstr "Versicherungsbeginn"
 
-#: lib/instrument-insurance.php:715
+#: lib/instrument-insurance.php:722
 msgid "insurance"
 msgstr "Versicherung"
 
-#: lib/instrument-insurance.php:774
+#: lib/instrument-insurance.php:781
 #, php-format
 msgid "Annual Insurance Fees for %s, %d. %s"
 msgstr "Versicherungs-Jahresbeitrag für %s, %d. %s"
 
-#: lib/instrument-insurance.php:778
+#: lib/instrument-insurance.php:785
 msgid "Overview over insured instruments and insurance fee details and summary"
 msgstr "Übersicht über die versicherten Instrumente und Versicherungsbeiträge"
 
-#: lib/instrument-insurance.php:793 templates/instrument-insurance.php:45
-#: templates/sepa-debit-mandates.php:53
+#: lib/instrument-insurance.php:800 templates/instrument-insurance.php:53
+#: templates/sepa-debit-mandates.php:59
 msgid "treasurer"
 msgstr "Schatzmeister"
 
-#: lib/instrument-insurance.php:815
+#: lib/instrument-insurance.php:822
 #, php-format
 msgid "Annular insurance fees for %d"
 msgstr "Versicherungs-Jahresbeitrag %d"
 
-#: lib/instrument-insurance.php:816
+#: lib/instrument-insurance.php:823
 #, php-format
 msgid "Dear %s,"
 msgstr "Liebe/Lieber %s,"
 
-#: lib/instrument-insurance.php:821
+#: lib/instrument-insurance.php:828
 msgid ""
 "this letter informs you about the details of the instrument-insurances\n"
 "we are maintaining for you on your behalf. This letter is\n"
@@ -2735,41 +2749,41 @@ msgstr ""
 "jederzeit von uns eine Aufstellung Deiner versicherten Gegenstände\n"
 "bekommen."
 
-#: lib/instrument-insurance.php:839
+#: lib/instrument-insurance.php:846
 #, php-format
 msgid "Insured Person: %s"
 msgstr "Versicherte Person: %s"
 
-#: lib/instrument-insurance.php:842
+#: lib/instrument-insurance.php:849
 msgid "Vendor"
 msgstr "Anbieter"
 
-#: lib/instrument-insurance.php:843 lib/insurance-rates.php:235
+#: lib/instrument-insurance.php:850 lib/insurance-rates.php:235
 msgid "Scope"
 msgstr "Bereich"
 
-#: lib/instrument-insurance.php:844 lib/instrument-insurance.php:927
+#: lib/instrument-insurance.php:851 lib/instrument-insurance.php:934
 msgid "Object"
 msgstr "Gegenstand"
 
-#: lib/instrument-insurance.php:846 lib/instrument-insurance.php:928
+#: lib/instrument-insurance.php:853 lib/instrument-insurance.php:935
 msgid "Amount"
 msgstr "Betrag"
 
-#: lib/instrument-insurance.php:847 lib/instrument-insurance.php:929
+#: lib/instrument-insurance.php:854 lib/instrument-insurance.php:936
 #: lib/insurance-rates.php:244
 msgid "Rate"
 msgstr "Rate"
 
-#: lib/instrument-insurance.php:848 lib/instrument-insurance.php:931
+#: lib/instrument-insurance.php:855 lib/instrument-insurance.php:938
 msgid "Fee"
 msgstr "Beitrag"
 
-#: lib/instrument-insurance.php:871
+#: lib/instrument-insurance.php:878
 msgid "Sub-totals (excluding taxes)"
 msgstr "Zwischensumme (ohne Steuern)"
 
-#: lib/instrument-insurance.php:909
+#: lib/instrument-insurance.php:916
 msgid ""
 "Start and end of the regular insurance period is as \n"
 "indicated in the column \"Due\" in the following table. The actual start of\n"
@@ -2786,44 +2800,44 @@ msgstr ""
 "Zeit zwischen \"Beginn\" und \"Fälligkeit\" als Anteil am Jahresbeitrag\n"
 "einmalig in Rechnung gestellt, Spalte \"Faktor\"."
 
-#: lib/instrument-insurance.php:925
+#: lib/instrument-insurance.php:932
 msgid "Due"
 msgstr "Fälligkeit"
 
-#: lib/instrument-insurance.php:926
+#: lib/instrument-insurance.php:933
 msgid "Start"
 msgstr "Beginn"
 
-#: lib/instrument-insurance.php:930
+#: lib/instrument-insurance.php:937
 msgid "Factor"
 msgstr "Faktor"
 
-#: lib/instrument-insurance.php:954
+#: lib/instrument-insurance.php:961
 msgid "Sum of corrections (excluding taxes)"
 msgstr "Summe der Korrekturen (ohne Steuern)"
 
-#: lib/instrument-insurance.php:993
+#: lib/instrument-insurance.php:1000
 msgid "Total Insurance Fees"
 msgstr "Gesamtversicherungsbeitrag"
 
-#: lib/instrument-insurance.php:1006
+#: lib/instrument-insurance.php:1013
 msgid "Regular annual insurance fee for all insured items of all musicians"
 msgstr "Regulärer Jahresbeitrag für alle versicherten Gegenstände"
 
-#: lib/instrument-insurance.php:1010
+#: lib/instrument-insurance.php:1017
 msgid "Annual amount excluding taxes:"
 msgstr "Jahresbeitrag ohne Steuern:"
 
-#: lib/instrument-insurance.php:1014 lib/instrument-insurance.php:1045
+#: lib/instrument-insurance.php:1021 lib/instrument-insurance.php:1052
 #, php-format
 msgid "%0.2f %% insurance taxes:"
 msgstr "%0.2f %% Versicherungssteuer:"
 
-#: lib/instrument-insurance.php:1018 lib/instrument-insurance.php:1049
+#: lib/instrument-insurance.php:1025 lib/instrument-insurance.php:1056
 msgid "Total amount to pay:"
 msgstr "Rechnungsbetrag:"
 
-#: lib/instrument-insurance.php:1034
+#: lib/instrument-insurance.php:1041
 msgid ""
 "The amount to pay for newly insured items may be larger than the regular "
 "annual\n"
@@ -2841,11 +2855,11 @@ msgstr ""
 "oben. Der aktuelle Gesamtbeitrag, einschließlich dieser Korrekturen,\n"
 "beläuft sich auf:"
 
-#: lib/instrument-insurance.php:1041
+#: lib/instrument-insurance.php:1048
 msgid "Total amount excluding taxes:"
 msgstr "Gesamtbetrag ohne Steuern:"
 
-#: lib/instrument-insurance.php:1059
+#: lib/instrument-insurance.php:1066
 msgid ""
 "You have granted us a debit-mandate. The total amount due will be debited "
 "from your bank-account, no further action from your side is required. We "
@@ -2857,15 +2871,15 @@ msgstr ""
 "wenigstens 14 Tage im voraus per Email über das genaue Datum der\n"
 "Kontobelastung."
 
-#: lib/instrument-insurance.php:1066 lib/instrument-insurance.php:1068
+#: lib/instrument-insurance.php:1073 lib/instrument-insurance.php:1075
 msgid "Best wishes,"
 msgstr "Herzliche Grüße,"
 
-#: lib/instrument-insurance.php:1074
+#: lib/instrument-insurance.php:1081
 msgid "Treasurer"
 msgstr "Schatzmeister"
 
-#: lib/instrument-insurance.php:1268
+#: lib/instrument-insurance.php:1275
 #, php-format
 msgid "Invalid broker/geographical-scope combination: %s - %s"
 msgstr "Der Makler %s bietet keine Versicherung für den Geltungsberich %s an"
@@ -3141,11 +3155,11 @@ msgstr "Seite"
 msgid "of"
 msgstr "von"
 
-#: lib/php-excel-functions.php:99 lib/sepa-debit-mandates.php:250
+#: lib/php-excel-functions.php:97 lib/sepa-debit-mandates.php:250
 msgid "yes"
 msgstr "ja"
 
-#: lib/php-excel-functions.php:103 lib/sepa-debit-mandates.php:249
+#: lib/php-excel-functions.php:101 lib/sepa-debit-mandates.php:249
 msgid "no"
 msgstr "nein"
 
@@ -3234,11 +3248,11 @@ msgstr "%s Projekte"
 msgid "Append the year to the name"
 msgstr "Jahreszahl anhängen"
 
-#: lib/projects.php:317
+#: lib/projects.php:318
 msgid "Toolbox"
 msgstr "Werkzeuge"
 
-#: lib/projects.php:334
+#: lib/projects.php:335
 msgid ""
 "Default project fee for ordinary participants. This should NOT include "
 "reductions of any kind. The value displayed here is the default value "
@@ -3248,7 +3262,7 @@ msgstr ""
 "Rabatte enthalten. Der hier angezeigt Betrag wird auch als\n"
 "Voreinstellung bei neuen Projekt-Mitspielern eingetragen."
 
-#: lib/projects.php:349
+#: lib/projects.php:350
 msgid ""
 "Comma separated list of extra-fields, e.g.\n"
 "<blockquote>\n"
@@ -3300,50 +3314,50 @@ msgstr ""
 "kann man nach einem 2. Doppelpunkt noch einen Kommentar für die\n"
 "\"Ballon-Hilfe\" angeben; der darf allerdings kein Komma enthalten."
 
-#: lib/projects.php:374
+#: lib/projects.php:375
 msgid "Program"
 msgstr "Programm"
 
-#: lib/projects.php:391
+#: lib/projects.php:392
 msgid "Flyer"
 msgstr "Flyer"
 
-#: lib/projects.php:708
+#: lib/projects.php:709
 #, php-format
 msgid "Unable to fetch public web pages for project id %d"
 msgstr ""
 "Konnte leider die Liste der öffentlichen Web-Seiten für %s nicht ermitteln."
 
-#: lib/projects.php:788
+#: lib/projects.php:789
 msgid "Project Overview"
 msgstr "Projekt-Übersicht"
 
-#: lib/projects.php:812
+#: lib/projects.php:813
 msgid "Project Files"
 msgstr "Projekt-Dateien"
 
-#: lib/projects.php:819 lib/projects.php:1040
+#: lib/projects.php:820 lib/projects.php:1041
 #, php-format
 msgid "Project Wiki for %s"
 msgstr "Wiki Projekt-Seite für %s"
 
-#: lib/projects.php:821 lib/projects.php:1044
+#: lib/projects.php:822 lib/projects.php:1045
 msgid "Project Notes"
 msgstr "Projekt-Notizen"
 
-#: lib/projects.php:826 lib/projects.php:1050 lib/projects.php:1080
+#: lib/projects.php:827 lib/projects.php:1051 lib/projects.php:1081
 msgid "Events"
 msgstr "Termine"
 
-#: lib/projects.php:831 lib/projects.php:1056
+#: lib/projects.php:832 lib/projects.php:1057
 msgid "Em@il"
 msgstr "Em@il"
 
-#: lib/projects.php:846
+#: lib/projects.php:847
 msgid "Profit and Loss Account"
 msgstr "Verlustrechnung"
 
-#: lib/projects.php:2154
+#: lib/projects.php:2155
 msgid ""
 "Flyers can only be added to existing projects, please add the new\n"
 "project without a flyer first."
@@ -3351,28 +3365,28 @@ msgstr ""
 "Flyer könner leider nur zu existierenden Projekten hinzugefügt werden; bitte "
 "zuerst das Projekt ohne Flyer anlegen."
 
-#: lib/projects.php:2169
+#: lib/projects.php:2170
 #, php-format
 msgid "Drop image to upload (max %s)"
 msgstr "Bild ablegen zum Hochladen (max %s)"
 
-#: lib/projects.php:2172
+#: lib/projects.php:2173
 msgid "Delete current flyer"
 msgstr "Aktuellen Flyer löschen"
 
-#: lib/projects.php:2173
+#: lib/projects.php:2174
 msgid "Edit current flyer"
 msgstr "Aktuellen Flyer zuschneiden"
 
-#: lib/projects.php:2174
+#: lib/projects.php:2175
 msgid "Upload new flyer"
 msgstr "Neuen Flyer hochladen"
 
-#: lib/projects.php:2175
+#: lib/projects.php:2176
 msgid "Select image from ownCloud"
 msgstr "Bild aus der `Cloud' auswählen"
 
-#: lib/projects.php:2183
+#: lib/projects.php:2184
 msgid ""
 "Internal error, don't know what to do concerning project-flyers in the given "
 "context."
@@ -3380,7 +3394,7 @@ msgstr ""
 "Interner Fehler; keine Ahnung, wie in diesem Kontext mit Projekt-Flyern "
 "umgegangen werden sollte."
 
-#: lib/projects.php:2424
+#: lib/projects.php:2425
 #, php-format
 msgid ""
 "====== Project %s ======\n"
@@ -4769,23 +4783,21 @@ msgstr "Neues Passwort"
 msgid "Test Database Password"
 msgstr "Datenbank-Passwort testen"
 
-#: templates/blog.php:40
+#: templates/blog.php:42
+#, php-format
 msgid ""
 "Camerata DB start page - the data-base operations can be accessed\n"
-"through the respective navigation buttons at the top of the page. The\n"
-"page below may be used as a bulletin-board. Please click on the\n"
-"login-name (top right) to reach the pull-down menu for logout and\n"
-"configuration options. The applications menu is hidden under the name\n"
-"of the current application (top left besides the cloud-icon)."
+"through the menu-button %s (left top). Please click on the login-name\n"
+"(top right) for logout and configuration options. Click right of the\n"
+"cloud-icon (top left) to reach the app-menu."
 msgstr ""
 "Camerata DB Startseite - die eigentlichen Datenbanken-Operationen\n"
-"erreicht man über die Navigatíonsleiste oben. Die aktuelle Seite kann\n"
-"man als eine Art Pinnwand benutzen. Klick auf den Login-Namen öffnet\n"
-"ein Menü mit Abmelde- und Konfigurations-Funktionen (rechts\n"
-"oben). Anwendungen verbergen sich unter dem Namen der aktuellen\n"
-"Anwendung neben der \"Wolke\" (links oben)."
+"erreicht man über den Menü-Button %s (oben links). Klick auf den\n"
+"Login-Namen öffnet ein Menü mit Abmelde- und Konfigurations-Funktionen\n"
+"(rechts oben). Anwendungen verbergen sich unter dem Namen der\n"
+"aktuellen Anwendung neben der \"Wolke\" (links oben)."
 
-#: templates/blog.php:64
+#: templates/blog.php:65
 msgid "New note"
 msgstr "Neue Notiz"
 
@@ -4793,15 +4805,15 @@ msgstr "Neue Notiz"
 msgid "Submit"
 msgstr "Abschicken"
 
-#: templates/blogedit.php:59
+#: templates/blogedit.php:58
 msgid "Set Blog Popup"
 msgstr "Popup-Funktion aktiviern"
 
-#: templates/blogedit.php:68
+#: templates/blogedit.php:67
 msgid "Clear Blog Popup"
 msgstr "Popup-Funktion deaktivieren"
 
-#: templates/blogedit.php:77
+#: templates/blogedit.php:76
 msgid "Clear Reader List"
 msgstr "Leser-Liste löschen"
 
@@ -5155,17 +5167,17 @@ msgstr "Em@il-Test-Adresse"
 msgid "Test address"
 msgstr "Test-Adresse"
 
-#: templates/emailform.php:35
-msgid "Em@il Recipients"
-msgstr "Em@il-Empfänger"
+#: templates/emailform.php:35 templates/part.emailform.composer.php:84
+msgid "Recipients"
+msgstr "Adressaten"
 
 #: templates/emailform.php:38
-msgid "Em@il Message"
-msgstr "Em@il-Nachricht"
+msgid "Message"
+msgstr "Nachricht"
 
 #: templates/emailform.php:41
-msgid "Status Messages"
-msgstr "Status-Berichte"
+msgid "Status"
+msgstr "Status"
 
 #: templates/emailform.php:80
 msgid "Cancel upload"
@@ -5402,7 +5414,7 @@ msgid "Owncloud Developer Manual, mostly useful for web-developers."
 msgstr ""
 "Owncloud Entwickler Anleitungen, eigentlich nur für Entwickler nützlich."
 
-#: templates/instrument-insurance.php:44 templates/sepa-debit-mandates.php:52
+#: templates/instrument-insurance.php:52 templates/sepa-debit-mandates.php:58
 #, php-format
 msgid "Sorry, this view is only available to the %s."
 msgstr "Tut mir leid, aber diese Ansicht steht nur dem %s zur Verfügung."
@@ -5632,10 +5644,6 @@ msgstr "Vorlage speichern"
 #: templates/part.emailform.composer.php:79
 msgid "Delete Template"
 msgstr "Vorlage löschen"
-
-#: templates/part.emailform.composer.php:84
-msgid "Recipients"
-msgstr "Adressaten"
 
 #: templates/part.emailform.composer.php:87
 #: templates/part.emailform.composer.php:90
@@ -6409,6 +6417,23 @@ msgstr "PROJEKT"
 #: templates/share-settings.php:124
 msgid "Financial balance folder"
 msgstr "Finanz-Ordner"
+
+#~ msgid "The currently active project."
+#~ msgstr "Das gerade ausgewählte Projekt."
+
+#~ msgid "Display a table with an overview over all SEPA debit mandates."
+#~ msgstr ""
+#~ "Zeigt eine Tabelle mit einer Übersicht über alle SEPA Lastschriftmandate "
+#~ "an."
+
+#~ msgid "Em@il Recipients"
+#~ msgstr "Em@il-Empfänger"
+
+#~ msgid "Em@il Message"
+#~ msgstr "Em@il-Nachricht"
+
+#~ msgid "Status Messages"
+#~ msgstr "Status-Berichte"
 
 #~ msgid "Corrections for partial insurance periods."
 #~ msgstr "Korrekturen für nicht-volle Versicherungsjahre."
