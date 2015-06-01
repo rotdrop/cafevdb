@@ -1091,6 +1091,9 @@ var PHPMYEDIT = PHPMYEDIT || {};
           var target = $(event.target);
           // divs and spans which make it up to here will be ignored,
           // everything else results in the default action.
+          if (target.is('.'+pmepfx+'-email-check')) {
+            return true;
+          }
           if (target.is('.graphic-links')) {
             return false;
           }
