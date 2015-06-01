@@ -1081,14 +1081,20 @@ var PHPMYEDIT = PHPMYEDIT || {};
       });
 
       // Trigger "view operation" when clicking on a data-row.
-      var rowSelector = 'form.'+pmepfx+'-form td[class^="'+pmepfx+'-cell"]:not(.control)';
+      var rowSelector = 'form.'+pmepfx+'-form td[class^="'+pmepfx+'-cell"]:not(.control)'
+                      + ','
+                      + 'form.'+pmepfx+'-form td[class^="'+pmepfx+'-navigation"]';
       container.off('click', rowSelector).
         on('click', rowSelector, function(event) {
 
         if (event.target != this) {
+          var target = $(event.target);
           // divs and spans which make it up to here will be ignored,
           // everything else results in the default action.
-          if (!$(event.target).is('span') && !$(event.target).is('div')) {
+          if (target.is('.graphic-links')) {
+            return false;
+          }
+          if (!target.is('span') && !target.is('div')) {
             return true;
           }
         }
@@ -1100,7 +1106,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
         var recordKey = PMEPFX+'_sys_rec';
         var recordEl = '<input type="hidden" class="'+pmepfx+'-view-navigation" value="View?'+recordKey+'='+recordId+'" name="'+PMEPFX+'_sys_operation" />';
 
-        // this does not necessarily has a form attribute
+        // "this" does not necessarily has a form attribute
         var form = container.find('form.'+pmepfx+'-form');
         PHPMYEDIT.tableDialog(form, $(recordEl), containerSel);
         return false;

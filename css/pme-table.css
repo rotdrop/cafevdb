@@ -861,6 +861,10 @@ table.pme-main a:not(.ui-tabs-anchor):hover {
   font-weight:bold;
 }
 
+form.pme-form tr[class^="pme-row"]:hover td[class^="pme-cell"],
+form.pme-form tr[class^="pme-row"]:hover td[class^="pme-navigation"] {
+  background-color: #9BAFC8;
+}
 
 /*
  * Local Variables: ***
