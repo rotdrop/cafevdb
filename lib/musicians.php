@@ -375,22 +375,21 @@ __EOT__;
           ),
         );
 
-    $opts['fdd']['Telefon'] = array(
+    $opts['fdd']['MobilePhone'] = array(
       'tab'      => array('id' => 'contact'),
-      'name'     => 'Telefon',
+      'name'     => L::t('Mobile Phone'),
       'select'   => 'T',
       'maxlen'   => 128,
       'sort'     => true
       );
 
-    $opts['fdd']['Telefon2'] = array(
+    $opts['fdd']['FixedLinePhone'] = array(
       'tab'      => array('id' => 'contact'),
-      'name'     => 'Telefon2',
+      'name'     => L::t('Fixed Line Phone'),
       'select'   => 'T',
       'maxlen'   => 128,
       'sort'     => true
       );
-
     $opts['fdd']['Email'] = Config::$opts['email'];
     $opts['fdd']['Email']['tab'] = array('id' => 'contact');
 

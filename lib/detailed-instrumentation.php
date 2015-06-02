@@ -452,17 +452,17 @@ __EOT__;
     $opts['fdd']['Email'] = Config::$opts['email'];
     $opts['fdd']['Email']['tab'] = array('id' => 'musician');
 
-    $opts['fdd']['Telefon'] = array(
+    $opts['fdd']['MobilePhone'] = array(
       'tab'      => array('id' => 'musician'),
-      'name'     => 'Telefon',
+      'name'     => L::t('Mobile Phone'),
       'nowrap'   => true,
       'select'   => 'T',
       'maxlen'   => 384,
       'sort'     => true
       );
-    $opts['fdd']['Telefon2'] = array(
+    $opts['fdd']['FixedLinePhone'] = array(
       'tab'      => array('id' => 'musician'),
-      'name'     => 'Telefon2',
+      'name'     => L::t('Fixed Line Phone'),
       'nowrap'   => true,
       'select'   => 'T',
       'maxlen'   => 384,
