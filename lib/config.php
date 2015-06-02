@@ -878,7 +878,7 @@ redaxoRehearsalsModule
     
       self::$opts['money'] = array('name' => 'Unkostenbeitrag<BR/>(Gagen negativ)',
                                    //'phpview' => self::$prefix . 'money.inc.php',
-                                   'mask'  => '%02.02f'.'&euro;',
+                                   'mask'  => '%02.02f'.' &euro;',
                                    'css'   => array('postfix' => ' money'),
                                    //'align' => 'right',
                                    'select' => 'N',
