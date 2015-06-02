@@ -2124,7 +2124,7 @@ __EOT__;
       // 2: sort (reverse) on the Stimmfuehrer attribute
       // 3: sort on the sur-name
       // 4: sort on the pre-name
-      $sqlSort .= 'ORDER BY `Instrumente`.`Sortierung` ASC,
+      $sqlSort = 'ORDER BY `Instrumente`.`Sortierung` ASC,
  `Besetzungen`.`Reihung` ASC,
  `Besetzungen`.`Stimmführer` DESC,
  `Musiker`.`Name` ASC,
