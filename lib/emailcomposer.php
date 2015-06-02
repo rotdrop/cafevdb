@@ -63,8 +63,8 @@ VERSICHERUNGSBEITRAG
 Vorname
 Name
 Email
-Telefon
-Telefon2
+MobilePhone
+FixedLinePhone
 Strasse
 Postleitzahl
 Stadt
