@@ -334,7 +334,7 @@ make sure that the musicians are also automatically added to the
     }
 
     $derivedtable =<<<__EOT__
-SELECT MusikerId,GROUP_CONCAT(DISTINCT Projekte.Name ORDER BY Projekte.Name ASC SEPARATOR ',') AS Projekte FROM
+SELECT MusikerId,GROUP_CONCAT(DISTINCT Projekte.Name ORDER BY Projekte.Name ASC SEPARATOR ', ') AS Projekte FROM
 Besetzungen
 LEFT JOIN Projekte ON Projekte.Id = Besetzungen.ProjektId
 GROUP BY MusikerId
@@ -363,7 +363,7 @@ __EOT__;
         'sql' => 'PMEjoin'.$projectsIdx.'.Projekte',
         'sqlw' => 'PMEjoin'.$projectsIdx.'.Projekte',
         'css'      => array('postfix' => ' projects tipsy-se'),
-        'display|LF' => array('popup' => 'data'),
+        'display|LVF' => array('popup' => 'data'),
         'values' => array( //API for currently making a join in PME.
           'table' =>
           array('sql' => $derivedtable,

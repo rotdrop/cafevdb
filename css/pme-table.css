@@ -329,7 +329,7 @@ form.pme-form input[type=text] {
   width:auto;
 }
 
-.pme-form tr,.pme-form tr:hover,.pme-form tr:active { 
+.pme-form tr,.pme-form tr:hover,.pme-form tr:active {
   background-color:inherit;
 }
 
@@ -474,8 +474,8 @@ input.pme-delete-navigation {
   font-size:0 !important;
   vertical-align:middle;
 }
- 
-:not(.lt-ie9) input.pme-sort[type=checkbox] { 
+
+:not(.lt-ie9) input.pme-sort[type=checkbox] {
   display:none;
 }
 div.pme-sort {
@@ -630,7 +630,7 @@ form.pme-form .tab-all {
   /* display:none; */
 }
 
-td.negative { 
+td.negative {
   color:#FF0000;
 }
 
@@ -673,7 +673,7 @@ td[class^='pme-cell-1'] {
 td.pme-cell-0-rcpt, td.pme-cell-1-rcpt,
 td.pme-cell-0-msg, td.pme-cell-1-msg,
 td.pme-cell-0-cc, td.pme-cell-1-cc,
-td.pme-cell-0-bcc, td.pme-cell-1-bcc { 
+td.pme-cell-0-bcc, td.pme-cell-1-bcc {
   font-size:25%;
   line-height:100%;
   max-width:20em;
@@ -716,7 +716,7 @@ td.pme-value-0-msg, td.pme-value-1-msg {
   text-wrap:normal;
 }
 
-td.pme-cell-0.musician-instruments, td.pme-cell-1.musician-instruments { 
+td.pme-cell-0.musician-instruments, td.pme-cell-1.musician-instruments {
   width:12em;
   max-width:12em;
   max-height:1em;
@@ -725,9 +725,18 @@ td.pme-cell-0.musician-instruments, td.pme-cell-1.musician-instruments {
   text-overflow:ellipsis;
 }
 
-td.pme-cell-0.projects, td.pme-cell-1.projects { 
+td.pme-cell-0.projects, td.pme-cell-1.projects {
   width:20em;
   max-width:20em;
+  max-height:1em;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+td.pme-value-0.projects, td.pme-value-1.projects {
+  width:38em;
+  max-width:38em;
   max-height:1em;
   white-space:nowrap;
   overflow:hidden;
@@ -743,6 +752,18 @@ td.pme-cell-0.mandate-project, td.pme-cell-1.mandate-project {
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
+}
+
+/* In view mode remarks should show up as usual */
+table.pme-main td.remarks.pme-value-0,
+table.pme-main td.remarks.pme-value-1,
+table.pme-main td.remarks.pme-value-0:first-line,
+table.pme-main td.remarks.pme-value-0 p:nth-child(1):first-line,
+table.pme-main td.remarks.pme-value-1:first-line,
+table.pme-main td.remarks.pme-value-1 p:nth-child(1):first-line {
+    font-size:100%;
+    max-height:auto;
+    white-space:normal;
 }
 
 /* Hide everything but the first line */
@@ -769,7 +790,7 @@ table.pme-main td.remarks p:nth-child(1):first-line {
 }
 
 /* Something special for the instrumentation. */
-td[class^="pme-cell"] div.projectinstrumentation { 
+td[class^="pme-cell"] div.projectinstrumentation {
   font-size:50%;
   line-height:100%;
   max-width:64ex;

@@ -401,7 +401,8 @@ class DetailedInstrumentation
       array('name' => L::t("Remarks")."\n(".$projectName.")",
             'select'   => 'T',
             'maxlen'   => 65535,
-            'css'      => array('postfix' => 'remarks'),
+            'css'      => array('postfix' => ' remarks tipsy-e'),
+            'display|LF' => array('popup' => 'data'),
             'textarea' => array('css' => 'wysiwygeditor',
                                 'rows' => 5,
                                 'cols' => 50),
@@ -420,7 +421,7 @@ class DetailedInstrumentation
     }
 
     $derivedtable =<<<__EOT__
-SELECT `Besetzungen`.`MusikerId`,GROUP_CONCAT(DISTINCT Projekte.Name ORDER BY Projekte.Name ASC SEPARATOR ',') AS Projekte FROM
+SELECT `Besetzungen`.`MusikerId`,GROUP_CONCAT(DISTINCT Projekte.Name ORDER BY Projekte.Name ASC SEPARATOR ', ') AS Projekte FROM
 Besetzungen
 LEFT JOIN Projekte ON Projekte.Id = Besetzungen.ProjektId
 GROUP BY MusikerId
@@ -437,6 +438,7 @@ __EOT__;
       'sql' => 'PMEjoin'.$projectsIdx.'.Projekte',
       'sqlw' => 'PMEjoin'.$projectsIdx.'.Projekte',
       'css'      => array('postfix' => ' projects'),
+      'display|LVF' => array('popup' => 'data'),
       'values' => array( //API for currently making a join in PME.
         'table' =>
         array('sql' => $derivedtable,
@@ -520,7 +522,8 @@ __EOT__;
       'tab'      => array('id' => 'musician'),
       'select'   => 'T',
       'maxlen'   => 65535,
-      'css'      => array('postfix' => 'remarks'),
+      'css'      => array('postfix' => ' remarks tipsy-e'),
+      'display|LF' => array('popup' => 'data'),
       'textarea' => array('css' => 'wysiwygeditor',
                           'rows' => 5,
                           'cols' => 50),
