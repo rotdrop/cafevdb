@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-15 00:06+0200\n"
+"POT-Creation-Date: 2015-06-05 12:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -108,8 +108,8 @@ msgstr ""
 #: ajax/finance/sepa-debit-store.php:112
 #: ajax/insurance/instrument-insurance-export.php:168
 #: ajax/insurance/validate.php:326 ajax/musicians/validate.php:96
-#: ajax/page-loader.php:111 ajax/projects/web-articles.php:201
-#: ajax/settings/app-settings.php:1183
+#: ajax/musicians/validatephone.php:132 ajax/page-loader.php:111
+#: ajax/projects/web-articles.php:201 ajax/settings/app-settings.php:1207
 msgid "PHP Exception Caught"
 msgstr ""
 
@@ -118,8 +118,8 @@ msgstr ""
 #: ajax/finance/sepa-debit-store.php:116
 #: ajax/insurance/instrument-insurance-export.php:169
 #: ajax/insurance/validate.php:330 ajax/musicians/validate.php:100
-#: ajax/page-loader.php:115 ajax/projects/web-articles.php:205
-#: ajax/settings/app-settings.php:1187
+#: ajax/musicians/validatephone.php:136 ajax/page-loader.php:115
+#: ajax/projects/web-articles.php:205 ajax/settings/app-settings.php:1211
 #, php-format
 msgid ""
 "Error, caught an exception. Please copy the displayed text and send it by "
@@ -221,7 +221,7 @@ msgstr ""
 msgid "Linked all matching web-pages to the respective projects."
 msgstr ""
 
-#: ajax/expertmode/clearoutput.php:11 templates/expertmode.php:83
+#: ajax/expertmode/clearoutput.php:11 templates/expertmode.php:87
 msgid "empty"
 msgstr ""
 
@@ -239,7 +239,7 @@ msgid "Done. %d events synchronized, %d new."
 msgstr ""
 
 #: ajax/export/csv.php:32 ajax/export/excel.php:49 ajax/export/html.php:32
-#: ajax/export/insurance-export.php:102 ajax/finance/sepa-debit-export.php:68
+#: ajax/export/insurance-export.php:105 ajax/finance/sepa-debit-export.php:68
 msgid "instrument insurances"
 msgstr ""
 
@@ -269,7 +269,7 @@ msgstr ""
 msgid "Missing Musicians"
 msgstr ""
 
-#: ajax/export/excel.php:285 ajax/export/insurance-export.php:154
+#: ajax/export/excel.php:285 ajax/export/insurance-export.php:157
 #: lib/projects.php:1727
 msgid "Instrument"
 msgstr ""
@@ -278,62 +278,62 @@ msgstr ""
 msgid "Missing"
 msgstr ""
 
-#: ajax/export/insurance-export.php:65
+#: ajax/export/insurance-export.php:68
 msgid "Total Insurance Amount: "
 msgstr ""
 
-#: ajax/export/insurance-export.php:153 lib/instrument-insurance.php:256
+#: ajax/export/insurance-export.php:156 lib/instrument-insurance.php:256
 #: lib/sepa-debit-mandates.php:267
 msgid "Musician"
 msgstr ""
 
-#: ajax/export/insurance-export.php:155 lib/instrument-insurance.php:319
-#: lib/instrument-insurance.php:845
+#: ajax/export/insurance-export.php:158 lib/instrument-insurance.php:319
+#: lib/instrument-insurance.php:852
 msgid "Manufacturer"
 msgstr ""
 
-#: ajax/export/insurance-export.php:156 lib/instrument-insurance.php:326
+#: ajax/export/insurance-export.php:159 lib/instrument-insurance.php:326
 msgid "Year of Construction"
 msgstr ""
 
-#: ajax/export/insurance-export.php:157
+#: ajax/export/insurance-export.php:160
 msgid "Instrument Insurance Amount"
 msgstr ""
 
-#: ajax/export/insurance-export.php:158 lib/instrument-insurance.php:310
+#: ajax/export/insurance-export.php:161 lib/instrument-insurance.php:310
 msgid "Accessory"
 msgstr ""
 
-#: ajax/export/insurance-export.php:159
+#: ajax/export/insurance-export.php:162
 msgid "Accessory Insurance Amount"
 msgstr ""
 
-#: ajax/export/insurance-export.php:160
+#: ajax/export/insurance-export.php:163
 msgid "Musician Insurance Total"
 msgstr ""
 
-#: ajax/export/insurance-export.php:202 ajax/export/insurance-export.php:229
+#: ajax/export/insurance-export.php:207 ajax/export/insurance-export.php:235
 #: lib/insurance-rates.php:257
 msgid "Policy Number"
 msgstr ""
 
-#: ajax/export/insurance-export.php:203 ajax/export/insurance-export.php:230
+#: ajax/export/insurance-export.php:208 ajax/export/insurance-export.php:236
 #: lib/instrument-insurance.php:294
 msgid "Geographical Scope"
 msgstr ""
 
-#: ajax/export/insurance-export.php:204 ajax/export/insurance-export.php:231
+#: ajax/export/insurance-export.php:209 ajax/export/insurance-export.php:237
 msgid "Date"
 msgstr ""
 
-#: ajax/export/insurance-export.php:236 lib/instrument-insurance.php:76
-#: lib/php-excel-functions.php:104
+#: ajax/export/insurance-export.php:242 lib/instrument-insurance.php:76
+#: lib/php-excel-functions.php:102
 msgid "false"
 msgstr ""
 
-#: ajax/export/insurance-export.php:243 ajax/insurance/validate.php:248
+#: ajax/export/insurance-export.php:249 ajax/insurance/validate.php:248
 #: ajax/insurance/validate.php:250 js/cafevdb.js:31 js/cafevdb.js:32
-#: js/cafevdb.js:33
+#: js/cafevdb.js:33 lib/phonenumbers.php:79 lib/phonenumbers.php:191
 msgid "unknown"
 msgstr ""
 
@@ -432,7 +432,7 @@ msgid "Musician-id and/or name not set"
 msgstr ""
 
 #: ajax/finance/sepa-debit-mandate.php:84
-#: ajax/finance/sepa-debit-settings.php:61 settings.php:91
+#: ajax/finance/sepa-debit-settings.php:61 settings.php:93
 msgid "ClubMembers"
 msgstr ""
 
@@ -444,9 +444,10 @@ msgstr ""
 #: ajax/finance/sepa-debit-settings.php:97
 #: ajax/finance/sepa-debit-settings.php:118
 #: ajax/finance/sepa-debit-settings.php:359 ajax/settings/app-settings.php:893
-#: ajax/settings/app-settings.php:965 ajax/settings/app-settings.php:980
-#: ajax/settings/app-settings.php:1015 ajax/settings/app-settings.php:1054
-#: ajax/settings/app-settings.php:1078 ajax/settings/app-settings.php:1090
+#: ajax/settings/app-settings.php:916 ajax/settings/app-settings.php:989
+#: ajax/settings/app-settings.php:1004 ajax/settings/app-settings.php:1039
+#: ajax/settings/app-settings.php:1078 ajax/settings/app-settings.php:1102
+#: ajax/settings/app-settings.php:1114
 #, php-format
 msgid "Value for `%s' set to `%s'."
 msgstr ""
@@ -474,20 +475,20 @@ msgid "Invalid German(?) bank account number %s @ %s."
 msgstr ""
 
 #: ajax/finance/sepa-debit-settings.php:258
-#: ajax/settings/app-settings.php:1023
+#: ajax/settings/app-settings.php:1047
 #, php-format
 msgid "Invalid IBAN: `%s'."
 msgstr ""
 
 #: ajax/finance/sepa-debit-settings.php:302
 #: ajax/finance/sepa-debit-settings.php:334
-#: ajax/settings/app-settings.php:1101
+#: ajax/settings/app-settings.php:1125
 #, php-format
 msgid "Value for `%s' invalid: `%s'."
 msgstr ""
 
 #: ajax/finance/sepa-debit-settings.php:348
-#: ajax/settings/app-settings.php:1161 ajax/settings/redaxo-settings.php:71
+#: ajax/settings/app-settings.php:1185 ajax/settings/redaxo-settings.php:71
 msgid "Unhandled request:"
 msgstr ""
 
@@ -858,8 +859,29 @@ msgid ""
 "Please do not add duplicates to the data-base. If you do, then others\n"
 "will have to clean up after you.\n"
 "\n"
-"Please continue if you know what you are doing. Please use the seach\n"
+"Please continue if you know what you are doing. Please use the search\n"
 "facilities before adding new musicians. Thanks."
+msgstr ""
+
+#: ajax/musicians/validatephone.php:65 ajax/musicians/validatephone.php:74
+#, php-format
+msgid "The phone number %s does not appear to be a valid phone number. "
+msgstr ""
+
+#: ajax/musicians/validatephone.php:85
+#, php-format
+msgid ""
+"This (%s) is a fixed line phone number, injecting it in the correct column."
+msgstr ""
+
+#: ajax/musicians/validatephone.php:94
+#, php-format
+msgid "This (%s) is a mobile phone number, injecting it in the correct column."
+msgstr ""
+
+#: ajax/musicians/validatephone.php:102
+#, php-format
+msgid "The phone number %s does not appear to be a mobile phone number. "
 msgstr ""
 
 #: ajax/pme/pme-table.php:80
@@ -1249,51 +1271,58 @@ msgstr ""
 msgid "Using `%s' as sender email-address."
 msgstr ""
 
-#: ajax/settings/app-settings.php:911
+#: ajax/settings/app-settings.php:908
+#, php-format
+msgid ""
+"Telephone numbers %s does not appear to be a valid phone number in "
+"international format (e.g. +49 761 123456)."
+msgstr ""
+
+#: ajax/settings/app-settings.php:935
 msgid ""
 "Table name is either not unique, or the table does not exist yet. Please "
 "create a project of this name manually."
 msgstr ""
 
-#: ajax/settings/app-settings.php:915
+#: ajax/settings/app-settings.php:939
 #, php-format
 msgid "Table-id %d."
 msgstr ""
 
-#: ajax/settings/app-settings.php:920
+#: ajax/settings/app-settings.php:944
 #, php-format
 msgid "Value for `%s' set to `%s'. %s"
 msgstr ""
 
-#: ajax/settings/app-settings.php:935
+#: ajax/settings/app-settings.php:959
 #, php-format
 msgid "Musician with id %d does not seem to exist"
 msgstr ""
 
-#: ajax/settings/app-settings.php:944
+#: ajax/settings/app-settings.php:968
 #, php-format
 msgid "Value for `%s' set to `%s'"
 msgstr ""
 
-#: ajax/settings/app-settings.php:1026
+#: ajax/settings/app-settings.php:1050
 msgid "Perhaps you meant"
 msgstr ""
 
-#: ajax/settings/app-settings.php:1033
+#: ajax/settings/app-settings.php:1057
 msgid "or"
 msgstr ""
 
-#: ajax/settings/app-settings.php:1119
+#: ajax/settings/app-settings.php:1143
 #, php-format
 msgid "Link for `%s' set to `%s'."
 msgstr ""
 
-#: ajax/settings/app-settings.php:1132
+#: ajax/settings/app-settings.php:1156
 #, php-format
 msgid "Unable to test link for `%s' without a link target."
 msgstr ""
 
-#: ajax/settings/app-settings.php:1138
+#: ajax/settings/app-settings.php:1162
 #, php-format
 msgid "New window or tab with `%s'?"
 msgstr ""
@@ -1842,7 +1871,11 @@ msgstr ""
 msgid "Caught a PHP Exception"
 msgstr ""
 
-#: js/musicians.js:98
+#: js/musicians.js:109
+msgid "Phone Number Validation"
+msgstr ""
+
+#: js/musicians.js:138
 msgid "Possible Duplicate!"
 msgstr ""
 
@@ -1981,70 +2014,70 @@ msgstr ""
 msgid "Please standby, the operation will take some time!"
 msgstr ""
 
-#: lib/config.php:669
+#: lib/config.php:670
 #, php-format
 msgid "Decryption of `%s`@`%s` failed"
 msgstr ""
 
-#: lib/config.php:673
+#: lib/config.php:674
 #, php-format
 msgid "Encryption of `%s`@`%s` failed"
 msgstr ""
 
-#: lib/config.php:679
+#: lib/config.php:680
 #, php-format
 msgid "Unable to update table data at index %s"
 msgstr ""
 
-#: lib/config.php:896
+#: lib/config.php:897
 msgid "birthday"
 msgstr ""
 
-#: lib/config.php:906
+#: lib/config.php:907
 msgid "no preference"
 msgstr ""
 
-#: lib/config.php:907
+#: lib/config.php:908
 msgid "German"
 msgstr ""
 
-#: lib/config.php:908
+#: lib/config.php:909
 msgid "English"
 msgstr ""
 
-#: lib/config.php:909
+#: lib/config.php:910
 msgid "French"
 msgstr ""
 
-#: lib/config.php:910
+#: lib/config.php:911
 msgid "Spanish"
 msgstr ""
 
-#: lib/config.php:911
+#: lib/config.php:912
 msgid "Portuguese"
 msgstr ""
 
-#: lib/config.php:912
+#: lib/config.php:913
 msgid "Polish"
 msgstr ""
 
-#: lib/config.php:913
+#: lib/config.php:914
 msgid "Russian"
 msgstr ""
 
-#: lib/config.php:914
+#: lib/config.php:915
 msgid "Chinese"
 msgstr ""
 
-#: lib/config.php:915
+#: lib/config.php:916
 msgid "Japaneese"
 msgstr ""
 
-#: lib/config.php:916
+#: lib/config.php:917
 msgid "Korean"
 msgstr ""
 
-#: lib/config.php:937
+#: lib/config.php:938
 #, php-format
 msgid "Unknown Tooltip for key `%s' requested."
 msgstr ""
@@ -2099,7 +2132,7 @@ msgstr ""
 msgid "Member Status"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:401 lib/musicians.php:434
+#: lib/detailed-instrumentation.php:401 lib/musicians.php:450
 msgid "Remarks"
 msgstr ""
 
@@ -2111,6 +2144,14 @@ msgstr ""
 msgid "Projects"
 msgstr ""
 
+#: lib/detailed-instrumentation.php:457 lib/musicians.php:380
+msgid "Mobile Phone"
+msgstr ""
+
+#: lib/detailed-instrumentation.php:465 lib/musicians.php:396
+msgid "Fixed Line Phone"
+msgstr ""
+
 #: lib/detailed-instrumentation.php:494
 msgid "Country"
 msgstr ""
@@ -2119,11 +2160,11 @@ msgstr ""
 msgid "General Remarks"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:528 lib/musicians.php:474
+#: lib/detailed-instrumentation.php:528 lib/musicians.php:490
 msgid "Photo"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:542 lib/musicians.php:492
+#: lib/detailed-instrumentation.php:542 lib/musicians.php:508
 msgid "Last Updated"
 msgstr ""
 
@@ -2139,23 +2180,23 @@ msgstr ""
 msgid "Message(s) exported successfully!"
 msgstr ""
 
-#: lib/emailcomposer.php:1128
+#: lib/emailcomposer.php:1129
 msgid "Pre-composition validation has failed!"
 msgstr ""
 
-#: lib/emailcomposer.php:1331
+#: lib/emailcomposer.php:1332
 msgid "no project involved"
 msgstr ""
 
-#: lib/emailcomposer.php:1371
+#: lib/emailcomposer.php:1372
 msgid "Unable to fetch executive board contents from data-base."
 msgstr ""
 
-#: lib/emailcomposer.php:1384
+#: lib/emailcomposer.php:1385
 msgid "and"
 msgstr ""
 
-#: lib/emailcomposer.php:1721
+#: lib/emailcomposer.php:1722
 msgid "Local Filesystem"
 msgstr ""
 
@@ -2188,109 +2229,119 @@ msgstr ""
 msgid "Miscellaneous Calendars"
 msgstr ""
 
-#: lib/finance.php:56 lib/finance.php:92 settings.php:117
+#: lib/finance.php:56 lib/finance.php:92 settings.php:119
 msgid "finance"
 msgstr ""
 
-#: lib/finance.php:341
+#: lib/finance.php:342
 #, php-format
 msgid "Unable to update the last-used date to %s"
 msgstr ""
 
-#: lib/finance.php:343
+#: lib/finance.php:344
 msgid "Data-base query:"
 msgstr ""
 
-#: lib/finance.php:483
+#: lib/finance.php:484
 msgid "mandate reference"
 msgstr ""
 
-#: lib/finance.php:484
+#: lib/finance.php:485
 msgid "date of issue"
 msgstr ""
 
-#: lib/finance.php:485
+#: lib/finance.php:486
 msgid "date of last usage"
 msgstr ""
 
-#: lib/finance.php:486
+#: lib/finance.php:487
 msgid "musician id"
 msgstr ""
 
-#: lib/finance.php:487
+#: lib/finance.php:488
 msgid "project id"
 msgstr ""
 
-#: lib/finance.php:488
+#: lib/finance.php:489
 msgid "sequence type"
 msgstr ""
 
-#: lib/finance.php:490
+#: lib/finance.php:491
 msgid "bank code"
 msgstr ""
 
-#: lib/finance.php:491
+#: lib/finance.php:492
 msgid "bank account owner"
 msgstr ""
 
-#: lib/finance.php:508
+#: lib/finance.php:509
 #, php-format
 msgid "Missing fields in debit mandate: %s (%s)."
 msgstr ""
 
-#: lib/finance.php:510 lib/finance.php:522 lib/finance.php:536
-#: lib/finance.php:558 lib/finance.php:570 lib/finance.php:584
-#: lib/finance.php:601 lib/finance.php:616 lib/finance.php:628
-#: lib/finance.php:638 lib/finance.php:649
+#: lib/finance.php:511 lib/finance.php:523 lib/finance.php:537
+#: lib/finance.php:559 lib/finance.php:571 lib/finance.php:585
+#: lib/finance.php:602 lib/finance.php:617 lib/finance.php:629
+#: lib/finance.php:639 lib/finance.php:650
 msgid "Full data record:"
 msgstr ""
 
-#: lib/finance.php:520
+#: lib/finance.php:521
 #, php-format
 msgid "Empty fields in debit mandate: %s (%s)."
 msgstr ""
 
-#: lib/finance.php:534
+#: lib/finance.php:535
 msgid "Illegal characters in bank account owner field"
 msgstr ""
 
-#: lib/finance.php:556
+#: lib/finance.php:557
 #, php-format
 msgid "Mandate issued in the future: %s????"
 msgstr ""
 
-#: lib/finance.php:567
+#: lib/finance.php:568
 msgid "Missing mandate date"
 msgstr ""
 
-#: lib/finance.php:580
+#: lib/finance.php:581
 #, php-format
 msgid "Invalid sequence type `%s', should be one of %s"
 msgstr ""
 
-#: lib/finance.php:599
+#: lib/finance.php:600
 #, php-format
 msgid "Invalid IBAN: %s"
 msgstr ""
 
-#: lib/finance.php:614
+#: lib/finance.php:615
 #, php-format
 msgid "BLZ and IBAN do not match: %s != %s"
 msgstr ""
 
-#: lib/finance.php:626
+#: lib/finance.php:627
 #, php-format
 msgid "Invalid German BLZ: %s."
 msgstr ""
 
-#: lib/finance.php:636
+#: lib/finance.php:637
 #, php-format
 msgid "Invalid German bank account: %s @ %s."
 msgstr ""
 
-#: lib/finance.php:647
+#: lib/finance.php:648
 #, php-format
 msgid "Probably invalid BIC: %s. Computed: %s. "
+msgstr ""
+
+#: lib/finance.php:755
+#, php-format
+msgid "Cannot parse `%s' Only plain number, € and $ currencies are supported."
+msgstr ""
+
+#: lib/finance.php:778 lib/finance.php:793
+#, php-format
+msgid "Cannot parse number string `%s'"
 msgstr ""
 
 #: lib/functions.php:124
@@ -2298,159 +2349,159 @@ msgstr ""
 msgid "Invalid argument value: `%s'"
 msgstr ""
 
-#: lib/functions.php:670
+#: lib/functions.php:673
 msgid "Supported data formats are JSON and URLENCODED"
 msgstr ""
 
-#: lib/functions.php:711
+#: lib/functions.php:714
 #, php-format
 msgid "Unable to post to route %s (%s)"
 msgstr ""
 
-#: lib/functions.php:723
+#: lib/functions.php:726
 #, php-format
 msgid "Invalid response from API call: %s"
 msgstr ""
 
-#: lib/functions.php:833
+#: lib/functions.php:836
 msgid "Export Table"
 msgstr ""
 
-#: lib/functions.php:841
+#: lib/functions.php:844
 msgid "Excel Export"
 msgstr ""
 
-#: lib/functions.php:844
+#: lib/functions.php:847
 msgid "HTML/Spreadsheet"
 msgstr ""
 
-#: lib/functions.php:847
+#: lib/functions.php:850
 msgid "CSV Export"
 msgstr ""
 
-#: lib/functions.php:850
+#: lib/functions.php:853
 msgid "HTML Export"
 msgstr ""
 
-#: lib/functions.php:1065
+#: lib/functions.php:1068
 msgid "Error: Unknonwn Button Type"
 msgstr ""
 
-#: lib/functions.php:1085
+#: lib/functions.php:1088
 msgid "View all Projects"
 msgstr ""
 
-#: lib/functions.php:1086
+#: lib/functions.php:1089
 msgid "Overview over all known projects (start-page)."
 msgstr ""
 
-#: lib/functions.php:1097
+#: lib/functions.php:1100
 msgid "Display all Musicians"
 msgstr ""
 
-#: lib/functions.php:1098
+#: lib/functions.php:1101
 msgid ""
 "Display all musicians stored in the data-base, with detailed facilities for "
 "filtering and sorting."
 msgstr ""
 
-#: lib/functions.php:1109
+#: lib/functions.php:1112
 msgid ""
 "Mass-email form, use with care. Mass-emails will be logged. Recipients will "
 "be specified by the Bcc: field in the header, so the recipients are "
 "undisclosed to each other."
 msgstr ""
 
-#: lib/functions.php:1122
+#: lib/functions.php:1125
 msgid "Email History"
 msgstr ""
 
-#: lib/functions.php:1123
+#: lib/functions.php:1126
 msgid "Display all emails sent by our mass-email form."
 msgstr ""
 
-#: lib/functions.php:1141
+#: lib/functions.php:1144
 msgid "The currently active project."
 msgstr ""
 
-#: lib/functions.php:1156 lib/projects.php:798
+#: lib/functions.php:1159 lib/projects.php:798
 msgid "Instrumentation"
 msgstr ""
 
-#: lib/functions.php:1157
+#: lib/functions.php:1160
 msgid ""
 "Detailed display of all registered musicians for the selected project. The "
 "table will allow for modification of personal data like email, phone, "
 "address etc."
 msgstr ""
 
-#: lib/functions.php:1170 lib/project-instruments.php:385
+#: lib/functions.php:1173 lib/project-instruments.php:385
 msgid "Add Instruments"
 msgstr ""
 
-#: lib/functions.php:1171
+#: lib/functions.php:1174
 msgid ""
 "Display the list of instruments known by the data-base, possibly add new "
 "ones as needed."
 msgstr ""
 
-#: lib/functions.php:1184 lib/project-instruments.php:69 lib/projects.php:803
+#: lib/functions.php:1187 lib/project-instruments.php:69 lib/projects.php:803
 #: lib/projects.php:1062
 msgid "Instrumentation Numbers"
 msgstr ""
 
-#: lib/functions.php:1185 lib/tooltips.php:391
+#: lib/functions.php:1188 lib/tooltips.php:391
 msgid ""
 "Display the desired instrumentaion numbers, i.e. how many musicians are "
 "already registered for each instrument group and how many are finally needed."
 msgstr ""
 
-#: lib/functions.php:1198 lib/functions.php:1248 lib/projects.php:840
+#: lib/functions.php:1201 lib/functions.php:1251 lib/projects.php:840
 msgid "Debit Mandates"
 msgstr ""
 
-#: lib/functions.php:1199
+#: lib/functions.php:1202
 msgid "Display a table with the SEPA debit mandates related to the project."
 msgstr ""
 
-#: lib/functions.php:1212
+#: lib/functions.php:1215
 msgid "Insurances"
 msgstr ""
 
-#: lib/functions.php:1213
+#: lib/functions.php:1216
 msgid ""
 "Display a table with an overview about the current state of the member's "
 "instrument insurances."
 msgstr ""
 
-#: lib/functions.php:1224
+#: lib/functions.php:1227
 msgid "Insurance Rates"
 msgstr ""
 
-#: lib/functions.php:1225
+#: lib/functions.php:1228
 msgid ""
 "Display a table with the insurance rates for the individual instrument "
 "insurances."
 msgstr ""
 
-#: lib/functions.php:1236
+#: lib/functions.php:1239
 msgid "Insurance Brokers"
 msgstr ""
 
-#: lib/functions.php:1237
+#: lib/functions.php:1240
 msgid "Display a table with the insurance brokers."
 msgstr ""
 
-#: lib/functions.php:1249
+#: lib/functions.php:1252
 msgid "Display a table with an overview over all SEPA debit mandates."
 msgstr ""
 
-#: lib/functions.php:1322
+#: lib/functions.php:1325
 #, php-format
 msgid "Could not connect to data-base server `%s': %s"
 msgstr ""
 
-#: lib/functions.php:1335
+#: lib/functions.php:1338
 #, php-format
 msgid "Unable to select %s"
 msgstr ""
@@ -2467,7 +2518,7 @@ msgstr ""
 msgid "World"
 msgstr ""
 
-#: lib/instrument-insurance.php:77 lib/php-excel-functions.php:100
+#: lib/instrument-insurance.php:77 lib/php-excel-functions.php:98
 msgid "true"
 msgstr ""
 
@@ -2495,55 +2546,55 @@ msgstr ""
 msgid "Insurance Amount"
 msgstr ""
 
-#: lib/instrument-insurance.php:340
+#: lib/instrument-insurance.php:345
 msgid "Insurance Rate"
 msgstr ""
 
-#: lib/instrument-insurance.php:361
+#: lib/instrument-insurance.php:366
 msgid "Insurance Fee"
 msgstr ""
 
-#: lib/instrument-insurance.php:361
+#: lib/instrument-insurance.php:366
 msgid "including taxes"
 msgstr ""
 
-#: lib/instrument-insurance.php:374
+#: lib/instrument-insurance.php:379
 msgid "Total Insurance"
 msgstr ""
 
-#: lib/instrument-insurance.php:389
+#: lib/instrument-insurance.php:394
 msgid "Start of Insurance"
 msgstr ""
 
-#: lib/instrument-insurance.php:715
+#: lib/instrument-insurance.php:722
 msgid "insurance"
 msgstr ""
 
-#: lib/instrument-insurance.php:774
+#: lib/instrument-insurance.php:781
 #, php-format
 msgid "Annual Insurance Fees for %s, %d. %s"
 msgstr ""
 
-#: lib/instrument-insurance.php:778
+#: lib/instrument-insurance.php:785
 msgid "Overview over insured instruments and insurance fee details and summary"
 msgstr ""
 
-#: lib/instrument-insurance.php:793 templates/instrument-insurance.php:45
+#: lib/instrument-insurance.php:800 templates/instrument-insurance.php:45
 #: templates/sepa-debit-mandates.php:53
 msgid "treasurer"
 msgstr ""
 
-#: lib/instrument-insurance.php:815
+#: lib/instrument-insurance.php:822
 #, php-format
 msgid "Annular insurance fees for %d"
 msgstr ""
 
-#: lib/instrument-insurance.php:816
+#: lib/instrument-insurance.php:823
 #, php-format
 msgid "Dear %s,"
 msgstr ""
 
-#: lib/instrument-insurance.php:821
+#: lib/instrument-insurance.php:828
 msgid ""
 "this letter informs you about the details of the instrument-insurances\n"
 "we are maintaining for you on your behalf. This letter is\n"
@@ -2556,41 +2607,41 @@ msgid ""
 "your insured items at any time. Just ask."
 msgstr ""
 
-#: lib/instrument-insurance.php:839
+#: lib/instrument-insurance.php:846
 #, php-format
 msgid "Insured Person: %s"
 msgstr ""
 
-#: lib/instrument-insurance.php:842
+#: lib/instrument-insurance.php:849
 msgid "Vendor"
 msgstr ""
 
-#: lib/instrument-insurance.php:843 lib/insurance-rates.php:235
+#: lib/instrument-insurance.php:850 lib/insurance-rates.php:235
 msgid "Scope"
 msgstr ""
 
-#: lib/instrument-insurance.php:844 lib/instrument-insurance.php:927
+#: lib/instrument-insurance.php:851 lib/instrument-insurance.php:934
 msgid "Object"
 msgstr ""
 
-#: lib/instrument-insurance.php:846 lib/instrument-insurance.php:928
+#: lib/instrument-insurance.php:853 lib/instrument-insurance.php:935
 msgid "Amount"
 msgstr ""
 
-#: lib/instrument-insurance.php:847 lib/instrument-insurance.php:929
+#: lib/instrument-insurance.php:854 lib/instrument-insurance.php:936
 #: lib/insurance-rates.php:244
 msgid "Rate"
 msgstr ""
 
-#: lib/instrument-insurance.php:848 lib/instrument-insurance.php:931
+#: lib/instrument-insurance.php:855 lib/instrument-insurance.php:938
 msgid "Fee"
 msgstr ""
 
-#: lib/instrument-insurance.php:871
+#: lib/instrument-insurance.php:878
 msgid "Sub-totals (excluding taxes)"
 msgstr ""
 
-#: lib/instrument-insurance.php:909
+#: lib/instrument-insurance.php:916
 msgid ""
 "Start and end of the regular insurance period is as \n"
 "indicated in the column \"Due\" in the following table. The actual start of\n"
@@ -2601,44 +2652,44 @@ msgid ""
 "\"Factor\""
 msgstr ""
 
-#: lib/instrument-insurance.php:925
+#: lib/instrument-insurance.php:932
 msgid "Due"
 msgstr ""
 
-#: lib/instrument-insurance.php:926
+#: lib/instrument-insurance.php:933
 msgid "Start"
 msgstr ""
 
-#: lib/instrument-insurance.php:930
+#: lib/instrument-insurance.php:937
 msgid "Factor"
 msgstr ""
 
-#: lib/instrument-insurance.php:954
+#: lib/instrument-insurance.php:961
 msgid "Sum of corrections (excluding taxes)"
 msgstr ""
 
-#: lib/instrument-insurance.php:993
+#: lib/instrument-insurance.php:1000
 msgid "Total Insurance Fees"
 msgstr ""
 
-#: lib/instrument-insurance.php:1006
+#: lib/instrument-insurance.php:1013
 msgid "Regular annual insurance fee for all insured items of all musicians"
 msgstr ""
 
-#: lib/instrument-insurance.php:1010
+#: lib/instrument-insurance.php:1017
 msgid "Annual amount excluding taxes:"
 msgstr ""
 
-#: lib/instrument-insurance.php:1014 lib/instrument-insurance.php:1045
+#: lib/instrument-insurance.php:1021 lib/instrument-insurance.php:1052
 #, php-format
 msgid "%0.2f %% insurance taxes:"
 msgstr ""
 
-#: lib/instrument-insurance.php:1018 lib/instrument-insurance.php:1049
+#: lib/instrument-insurance.php:1025 lib/instrument-insurance.php:1056
 msgid "Total amount to pay:"
 msgstr ""
 
-#: lib/instrument-insurance.php:1034
+#: lib/instrument-insurance.php:1041
 msgid ""
 "The amount to pay for newly insured items may be larger than the regular "
 "annual\n"
@@ -2650,11 +2701,11 @@ msgid ""
 "is as follows:"
 msgstr ""
 
-#: lib/instrument-insurance.php:1041
+#: lib/instrument-insurance.php:1048
 msgid "Total amount excluding taxes:"
 msgstr ""
 
-#: lib/instrument-insurance.php:1059
+#: lib/instrument-insurance.php:1066
 msgid ""
 "You have granted us a debit-mandate. The total amount due will be debited "
 "from your bank-account, no further action from your side is required. We "
@@ -2662,15 +2713,15 @@ msgid ""
 "advance of the bank transaction."
 msgstr ""
 
-#: lib/instrument-insurance.php:1066 lib/instrument-insurance.php:1068
+#: lib/instrument-insurance.php:1073 lib/instrument-insurance.php:1075
 msgid "Best wishes,"
 msgstr ""
 
-#: lib/instrument-insurance.php:1074
+#: lib/instrument-insurance.php:1081
 msgid "Treasurer"
 msgstr ""
 
-#: lib/instrument-insurance.php:1268
+#: lib/instrument-insurance.php:1275
 #, php-format
 msgid "Invalid broker/geographical-scope combination: %s - %s"
 msgstr ""
@@ -2879,43 +2930,43 @@ msgstr ""
 msgid "Instruments"
 msgstr ""
 
-#: lib/musicians.php:457 lib/sepa-debit-mandates.php:415
+#: lib/musicians.php:473 lib/sepa-debit-mandates.php:415
 msgid "Instrument Insurance"
 msgstr ""
 
-#: lib/musicians.php:599
+#: lib/musicians.php:615
 #, php-format
 msgid "Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;"
 msgstr ""
 
-#: lib/musicians.php:623
+#: lib/musicians.php:639
 msgid ""
 "Portraits or Avatars can only be added to an existing musician's profile; "
 "please add the new musician without protrait image first."
 msgstr ""
 
-#: lib/musicians.php:637
+#: lib/musicians.php:653
 #, php-format
 msgid "Drop photo to upload (max %s)"
 msgstr ""
 
-#: lib/musicians.php:640
+#: lib/musicians.php:656
 msgid "Delete current photo"
 msgstr ""
 
-#: lib/musicians.php:641
+#: lib/musicians.php:657
 msgid "Edit current photo"
 msgstr ""
 
-#: lib/musicians.php:642
+#: lib/musicians.php:658
 msgid "Upload new photo"
 msgstr ""
 
-#: lib/musicians.php:643
+#: lib/musicians.php:659
 msgid "Select photo from ownCloud"
 msgstr ""
 
-#: lib/musicians.php:651
+#: lib/musicians.php:667
 msgid ""
 "Internal error, don't know what to do concerning portrait images in the "
 "given context."
@@ -2929,11 +2980,88 @@ msgstr ""
 msgid "of"
 msgstr ""
 
-#: lib/php-excel-functions.php:99 lib/sepa-debit-mandates.php:250
+#: lib/phonenumbers.php:70
+msgid "fixed line"
+msgstr ""
+
+#: lib/phonenumbers.php:71
+msgid "mobile"
+msgstr ""
+
+#: lib/phonenumbers.php:72
+msgid "fixed line or mobile"
+msgstr ""
+
+#: lib/phonenumbers.php:73
+msgid "premium rate"
+msgstr ""
+
+#: lib/phonenumbers.php:74
+msgid "shared cost"
+msgstr ""
+
+#: lib/phonenumbers.php:75
+msgid "VOIP"
+msgstr ""
+
+#: lib/phonenumbers.php:76
+msgid "personal number"
+msgstr ""
+
+#: lib/phonenumbers.php:77
+msgid "pager"
+msgstr ""
+
+#: lib/phonenumbers.php:78
+msgid "UAN"
+msgstr ""
+
+#: lib/phonenumbers.php:80
+msgid "emergency"
+msgstr ""
+
+#: lib/phonenumbers.php:81
+msgid "voicemail"
+msgstr ""
+
+#: lib/phonenumbers.php:82
+msgid "short code"
+msgstr ""
+
+#: lib/phonenumbers.php:83
+msgid "standard rate"
+msgstr ""
+
+#: lib/phonenumbers.php:196
+#, php-format
+msgid "Type    : %s"
+msgstr ""
+
+#: lib/phonenumbers.php:197
+#, php-format
+msgid "Country : %s"
+msgstr ""
+
+#: lib/phonenumbers.php:198
+#, php-format
+msgid "Location: %s"
+msgstr ""
+
+#: lib/phonenumbers.php:199
+#, php-format
+msgid "TimeZone: %s"
+msgstr ""
+
+#: lib/phonenumbers.php:200
+#, php-format
+msgid "Provider: %s"
+msgstr ""
+
+#: lib/php-excel-functions.php:97 lib/sepa-debit-mandates.php:250
 msgid "yes"
 msgstr ""
 
-#: lib/php-excel-functions.php:103 lib/sepa-debit-mandates.php:249
+#: lib/php-excel-functions.php:101 lib/sepa-debit-mandates.php:249
 msgid "no"
 msgstr ""
 
@@ -4028,27 +4156,27 @@ msgid ""
 "removed from the remote-system after the message has been sent."
 msgstr ""
 
-#: settings.php:93
+#: settings.php:95
 msgid "ExecutiveBoardMembers"
 msgstr ""
 
-#: settings.php:113
+#: settings.php:115
 msgid "concerts"
 msgstr ""
 
-#: settings.php:114 templates/cms-settings.php:52
+#: settings.php:116 templates/cms-settings.php:52
 msgid "rehearsals"
 msgstr ""
 
-#: settings.php:115
+#: settings.php:117
 msgid "other"
 msgstr ""
 
-#: settings.php:116
+#: settings.php:118
 msgid "management"
 msgstr ""
 
-#: settings.php:120
+#: settings.php:122
 msgid "contacts"
 msgstr ""
 
@@ -4396,7 +4524,7 @@ msgstr ""
 msgid "Edit an event"
 msgstr ""
 
-#: templates/devel-settings.php:29 templates/expertmode.php:86
+#: templates/devel-settings.php:29 templates/expertmode.php:90
 msgid "Links"
 msgstr ""
 
@@ -4652,73 +4780,77 @@ msgid ""
 msgstr ""
 
 #: templates/expertmode.php:66
+msgid "Sanitize Phone Numbers"
+msgstr ""
+
+#: templates/expertmode.php:70
 msgid "Example"
 msgstr ""
 
-#: templates/expertmode.php:67
+#: templates/expertmode.php:71
 msgid "Example Do-Nothing Button"
 msgstr ""
 
-#: templates/expertmode.php:72
+#: templates/expertmode.php:76
 msgid "Predefined data-base operations"
 msgstr ""
 
-#: templates/expertmode.php:74
+#: templates/expertmode.php:78
 msgid "Operation generated Response"
 msgstr ""
 
-#: templates/expertmode.php:78
+#: templates/expertmode.php:82
 msgid "Clear Output"
 msgstr ""
 
-#: templates/expertmode.php:80
+#: templates/expertmode.php:84
 msgid "Remove output, if any is present."
 msgstr ""
 
-#: templates/expertmode.php:88
+#: templates/expertmode.php:92
 msgid "Database musicians/projects"
 msgstr ""
 
-#: templates/expertmode.php:91
+#: templates/expertmode.php:95
 msgid ""
 "Open the login-window to the data-base back-bone. Although this is `expert "
 "mode' you will fall in love with the `export' facilities of the data-base "
 "back-bone. TRY IT OUT! DO IT!"
 msgstr ""
 
-#: templates/expertmode.php:94
+#: templates/expertmode.php:98
 msgid "Database Owncloud"
 msgstr ""
 
-#: templates/expertmode.php:97
+#: templates/expertmode.php:101
 msgid ""
 "Open the login-window to the data-base back-bone for the Owncloud WebUI."
 msgstr ""
 
-#: templates/expertmode.php:100
+#: templates/expertmode.php:104
 msgid "Source-Code Archive"
 msgstr ""
 
-#: templates/expertmode.php:103
+#: templates/expertmode.php:107
 msgid ""
 "View the git-repository holding all revision of this entire mess. Mostly "
 "useful for web-developers."
 msgstr ""
 
-#: templates/expertmode.php:106
+#: templates/expertmode.php:110
 msgid "Source-Code Documentation"
 msgstr ""
 
-#: templates/expertmode.php:109
+#: templates/expertmode.php:113
 msgid ""
 "Internal documentation of the `CAFEV-App', mostly useful for web-developers."
 msgstr ""
 
-#: templates/expertmode.php:112
+#: templates/expertmode.php:116
 msgid "Owncloud Developer Documentation"
 msgstr ""
 
-#: templates/expertmode.php:115
+#: templates/expertmode.php:119
 msgid "Owncloud Developer Manual, mostly useful for web-developers."
 msgstr ""
 
@@ -4775,93 +4907,101 @@ msgstr ""
 msgid "country (optional)"
 msgstr ""
 
-#: templates/orchestra-settings.php:76
+#: templates/orchestra-settings.php:78
+msgid "Phone number in international format, e.g. +49-761-123456."
+msgstr ""
+
+#: templates/orchestra-settings.php:79
+msgid "phone"
+msgstr ""
+
+#: templates/orchestra-settings.php:82
 msgid "Bank Account"
 msgstr ""
 
-#: templates/orchestra-settings.php:81
+#: templates/orchestra-settings.php:87
 msgid "owner of the orchestra's bank account"
 msgstr ""
 
-#: templates/orchestra-settings.php:82 templates/sepa-debit-mandate.php:52
+#: templates/orchestra-settings.php:88 templates/sepa-debit-mandate.php:52
 msgid "owner of bank account"
 msgstr ""
 
-#: templates/orchestra-settings.php:87
+#: templates/orchestra-settings.php:93
 msgid "Optional BLZ of the orchestra's bank account"
 msgstr ""
 
-#: templates/orchestra-settings.php:88 templates/sepa-debit-mandate.php:58
+#: templates/orchestra-settings.php:94 templates/sepa-debit-mandate.php:58
 msgid "BLZ of bank account"
 msgstr ""
 
-#: templates/orchestra-settings.php:93
+#: templates/orchestra-settings.php:99
 msgid ""
 "IBAN or number of the orchestra's bank account. If this is a account number,"
 "then please first enter the BLZ"
 msgstr ""
 
-#: templates/orchestra-settings.php:94 templates/sepa-debit-mandate.php:64
+#: templates/orchestra-settings.php:100 templates/sepa-debit-mandate.php:64
 msgid "IBAN or no. of bank account"
 msgstr ""
 
-#: templates/orchestra-settings.php:99
+#: templates/orchestra-settings.php:105
 msgid "Optional BIC of the orchestra's bank account"
 msgstr ""
 
-#: templates/orchestra-settings.php:100 templates/sepa-debit-mandate.php:70
+#: templates/orchestra-settings.php:106 templates/sepa-debit-mandate.php:70
 msgid "BIC of bank account"
 msgstr ""
 
-#: templates/orchestra-settings.php:105
+#: templates/orchestra-settings.php:111
 msgid "Creditor identifier of the orchestra"
 msgstr ""
 
-#: templates/orchestra-settings.php:106
+#: templates/orchestra-settings.php:112
 msgid "orchestra's CI"
 msgstr ""
 
-#: templates/orchestra-settings.php:109
+#: templates/orchestra-settings.php:115
 msgid "Executive board and club members"
 msgstr ""
 
-#: templates/orchestra-settings.php:115
+#: templates/orchestra-settings.php:121
 msgid "member-table"
 msgstr ""
 
-#: templates/orchestra-settings.php:118
+#: templates/orchestra-settings.php:124
 msgid "Club Member Project"
 msgstr ""
 
-#: templates/orchestra-settings.php:126
+#: templates/orchestra-settings.php:132
 msgid "executive board table"
 msgstr ""
 
-#: templates/orchestra-settings.php:129
+#: templates/orchestra-settings.php:135
 msgid "Executive Board Project"
 msgstr ""
 
-#: templates/orchestra-settings.php:133
+#: templates/orchestra-settings.php:139
 msgid "Select the President"
 msgstr ""
 
-#: templates/orchestra-settings.php:134
+#: templates/orchestra-settings.php:140
 msgid "President of the orchestra"
 msgstr ""
 
-#: templates/orchestra-settings.php:144
+#: templates/orchestra-settings.php:150
 msgid "Select the Secretary"
 msgstr ""
 
-#: templates/orchestra-settings.php:145
+#: templates/orchestra-settings.php:151
 msgid "Secretary of the orchestra"
 msgstr ""
 
-#: templates/orchestra-settings.php:155
+#: templates/orchestra-settings.php:161
 msgid "Select the Treasurer"
 msgstr ""
 
-#: templates/orchestra-settings.php:156
+#: templates/orchestra-settings.php:162
 msgid "Treasurer of the orchestra"
 msgstr ""
 
