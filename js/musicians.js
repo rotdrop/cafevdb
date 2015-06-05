@@ -120,6 +120,45 @@ var CAFEVDB = CAFEVDB || {};
       return false;
     });
 
+    container.find('input.email').
+      not('.pme-filter').
+      off('blur').
+      on('blur', function(event) {
+
+      event.stopImmediatePropagation();
+
+      var form = container.find('form.pme-form');
+      var email = form.find('input.email');
+      var post = form.serialize();
+      email.prop('disabled', true);
+      $.post(OC.filePath('cafevdb', 'ajax/musicians', 'validateemail.php'),
+             post,
+             function (data) {
+               if (!CAFEVDB.ajaxErrorHandler(data, [ 'message',
+                                                     'email' ],
+                                             function() {
+                      email.prop('disabled', false);
+                    })) {
+                 return false;
+               }
+               // inject the sanitized value into their proper input fields
+               form.find('input[name$="Email"]').val(data.data.email);
+               if (data.data.message != '') {
+                 OC.dialogs.alert(data.data.message,
+                                  t('cafevdb', 'Email Validation'),
+                                  function() {
+                                    email.prop('disabled', false);
+                                  }, true, true);
+                 CAFEVDB.debugPopup(data);
+               } else {
+                 email.prop('disabled', false);
+               }
+               return false;
+             });
+
+      return false;
+    });
+
     container.find('input.musician-name.add-musician').
       off('blur').
       on('blur', function(event) {

@@ -48,8 +48,8 @@ Störung.';
 VORNAME
 NAME
 EMAIL
-MOBILTELEFON
-FESTNETZTELEFON
+MOBILFUNK
+FESTNETZ
 STRASSE
 PLZ
 STADT
@@ -82,7 +82,7 @@ insuranceFee
     private $onLookers;  ///< Cc: and Bcc: recipients.
 
     private $cgiData;
-    private $submitted;    
+    private $submitted;
 
     private $projectId;
     private $projectName;
@@ -95,15 +95,15 @@ insuranceFee
     private $initialTemplate;
     private $templateNames;
     private $templateName;
-    
+
     private $messageTag;
 
     private $messageContents; // What we finally send out to the world
 
     private $executionStatus; // false on error
     private $diagnostics; // mixed, depends on operation
-    
-    /* 
+
+    /*
      * constructor
      */
     public function __construct($recipients = array())
@@ -243,7 +243,7 @@ insuranceFee
         return $value;
       } else {
         return $default;
-      } 
+      }
     }
 
     /**Return true if this email needs per-member substitutions. Up to
@@ -252,7 +252,7 @@ insuranceFee
      */
     private function isMemberTemplateEmail($message)
     {
-      return preg_match('![$]{MEMBER::[^{]+}!', $message); 
+      return preg_match('![$]{MEMBER::[^{]+}!', $message);
     }
 
     /**Substitute any global variables into
@@ -263,10 +263,10 @@ insuranceFee
     private function replaceGlobals()
     {
       $message = $this->messageContents;
-      
+
       if (preg_match('![$]{GLOBAL::[^{]+}!', $message)) {
         $vars = $this->emailGlobalVariables();
-        
+
         // TODO: one call to preg_replace would be enough, but does
         // not really matter as long as there is only one global
         // variable.
@@ -291,7 +291,7 @@ insuranceFee
           );
         setlocale(LC_TIME, $oldLocale);
       }
-      
+
       return $message;
     }
 
@@ -408,7 +408,7 @@ insuranceFee
      *
      * @param[in] $addCC If @c false, then additional CC and BCC recipients will
      *                   not be added.
-     * 
+     *
      * @return The sent Mime-message which then may be stored in the
      * Sent-Folder on the imap server (for example).
      */
@@ -418,7 +418,7 @@ insuranceFee
       // been constructed with per-member variable substitution), then
       // we do not need to send via BCC.
       $singleAddress = count($EMails) == 1;
-      
+
       // Construct an array for the data-base log
       $logMessage = new \stdClass;
       $logMessage->recipients = $EMails;
@@ -507,14 +507,14 @@ insuranceFee
           // to modify $this->sender through the email-form.
           $phpMailer->AddCC($this->catchAllEmail, $senderName);
         }
-        
+
         // If we have further Cc's, then add them also
         $stringCC = '';
         if ($addCC === true && !empty($this->onLookers['CC'])) {
           // Now comes some dirty work: we need to split the string in
           // names and email addresses. We re-construct $this->CC in this
           // context, to normalize it for storage in the email-log.
-  
+
           foreach ($this->onLookers['CC'] as $value) {
             $stringCC .= $value['name'].' <'.$value['email'].'>, ';
             // PHP-Mailer adds " for itself as needed
@@ -530,7 +530,7 @@ insuranceFee
         if ($addCC === true && !empty($this->onLookers['BCC'])) {
           // Now comes some dirty work: we need to split the string in
           // names and email addresses.
-  
+
           foreach ($this->onLookers['BCC'] as $value) {
             $stringBCC .= $value['name'].' <'.$value['email'].'>, ';
             // PHP-Mailer adds " for itself as needed
@@ -562,7 +562,7 @@ insuranceFee
         if ($this->projectId >= 0 && !empty($events)) {
           // Construct the calendar
           $calendar = Events::exportEvents($events, $this->projectName);
-          
+
           // Encode it as attachment
           $phpMailer->AddStringEmbeddedImage($calendar,
                                              md5($this->projectName.'.ics'),
@@ -573,7 +573,7 @@ insuranceFee
 
       } catch (\Exception $exception) {
         // popup an alert and abort the form-processing
-      
+
         $this->executionStatus = false;
         $this->diagnostics['MailerExceptions'][] =
           $exception->getFile().
@@ -589,7 +589,7 @@ insuranceFee
         return false;
       }
 
-      // Finally the point of no return. Send it out!!!      
+      // Finally the point of no return. Send it out!!!
       try {
         if (!$phpMailer->Send()) {
           // in principle this cannot happen as the mailer DOES use
@@ -600,7 +600,7 @@ insuranceFee
         } else {
           // success, log the message to our data-base
           $handle = $this->dataBaseConnect();
-          mySQL::query($logQuery, $handle);  
+          mySQL::query($logQuery, $handle);
         }
       } catch (\Exception $exception) {
         $this->executionStatus = false;
@@ -616,14 +616,14 @@ insuranceFee
       return $phpMailer->GetSentMIMEMessage();
     }
 
-    /**Record diagnostic output from the actual message composition for the status page. 
+    /**Record diagnostic output from the actual message composition for the status page.
      */
     private function recordMessageDiagnostics($mimeMsg)
     {
       // Positive diagnostics
       $this->diagnostics['Message']['Text'] = self::head($mimeMsg, 40);
 
-      $this->diagnostics['Message']['Files'] = array();  
+      $this->diagnostics['Message']['Files'] = array();
       $attachments = $this->fileAttachments();
       foreach ($attachments as $attachment) {
         if ($attachment['status'] != 'selected') {
@@ -722,10 +722,10 @@ insuranceFee
 
       $bulkRecipients = trim($bulkRecipients,',');
       $bulkMD5 = md5($bulkRecipients);
-  
+
       $textforMD5 = $logMessage->subject . $logMessage->message;
       $textMD5 = md5($textforMD5);
-      
+
       // compute the MD5 stuff for the attachments
       $attachLog = array();
       foreach ($logMessage->fileAttach as $attachment) {
@@ -741,8 +741,8 @@ insuranceFee
         $md5 = md5($name);
         $attachLog[] = array('name' => $name, 'md5' => $md5);
       }
-      
-      // Now insert the stuff into the SentEmail table  
+
+      // Now insert the stuff into the SentEmail table
       $handle = $this->dataBaseConnect();
 
       // First make sure that we have enough columns to store the
@@ -758,10 +758,10 @@ insuranceFee
           $key, $key);
 
         // And execute. Just to make that all needed columns exist.
-        
+
         $result = mySQL::query($query, $handle, false, true);
       }
-      
+
       // Now construct the real query, but do not execute it until the
       // message has succesfully been sent.
 
@@ -789,7 +789,7 @@ insuranceFee
           ",'".mysql_real_escape_string($pairs['md5'], $handle)."'";
       }
       $logQuery .= ")";
-  
+
       // Now logging is ready to execute. But first check for
       // duplicate sending attempts. This takes only the recipients,
       // the subject and the message body into account. Rationale: if
@@ -802,14 +802,14 @@ insuranceFee
       $loggedQuery .= " `MD5Text` LIKE '$textMD5'";
       $loggedQuery .= " AND `MD5BulkRecipients` LIKE '$bulkMD5'";
       $result = mySQL::query($loggedQuery, $handle);
-  
+
       $cnt = 0;
       $loggedDates = '';
       if ($line = mySQL::fetch($result)) {
         $loggedDates .= ', '.$line['Date'];
         ++$cnt;
       }
-      $loggedDates = trim($loggedDates,', ');  
+      $loggedDates = trim($loggedDates,', ');
 
       if ($loggedDates != '') {
         $this->executionStatus = false;
@@ -827,7 +827,7 @@ insuranceFee
           );
         return false;
       }
-      
+
       return $logQuery;
     }
 
@@ -839,7 +839,7 @@ insuranceFee
      *
      * @param[in] $addCC If @c false, then additional CC and BCC recipients will
      *                   not be added.
-     * 
+     *
      * @return true or false.
      */
     private function composeAndExport($strMessage, $EMails, $addCC = true)
@@ -848,7 +848,7 @@ insuranceFee
       // been constructed with per-member variable substitution), then
       // we do not need to send via BCC.
       $singleAddress = count($EMails) == 1;
-      
+
       // Construct an array for the data-base log
       $logMessage = new \stdClass;
       $logMessage->recipients = $EMails;
@@ -900,14 +900,14 @@ insuranceFee
           // to modify $this->sender through the email-form.
           $phpMailer->AddCC($this->catchAllEmail, $senderName);
         }
-        
+
         // If we have further Cc's, then add them also
         $stringCC = '';
         if ($addCC === true && !empty($this->onLookers['CC'])) {
           // Now comes some dirty work: we need to split the string in
           // names and email addresses. We re-construct $this->CC in this
           // context, to normalize it for storage in the email-log.
-  
+
           foreach ($this->onLookers['CC'] as $value) {
             $stringCC .= $value['name'].' <'.$value['email'].'>, ';
             // PHP-Mailer adds " for itself as needed
@@ -923,7 +923,7 @@ insuranceFee
         if ($addCC === true && !empty($this->onLookers['BCC'])) {
           // Now comes some dirty work: we need to split the string in
           // names and email addresses.
-  
+
           foreach ($this->onLookers['BCC'] as $value) {
             $stringBCC .= $value['name'].' <'.$value['email'].'>, ';
             // PHP-Mailer adds " for itself as needed
@@ -955,7 +955,7 @@ insuranceFee
         if ($this->projectId >= 0 && !empty($events)) {
           // Construct the calendar
           $calendar = Events::exportEvents($events, $this->projectName);
-          
+
           // Encode it as attachment
           $phpMailer->AddStringEmbeddedImage($calendar,
                                              md5($this->projectName.'.ics'),
@@ -966,7 +966,7 @@ insuranceFee
 
       } catch (\Exception $exception) {
         // popup an alert and abort the form-processing
-      
+
         $this->executionStatus = false;
         $this->diagnostics['MailerExceptions'][] =
           $exception->getFile().
@@ -977,7 +977,7 @@ insuranceFee
         return false;
       }
 
-      // Finally the point of no return. Send it out!!!      
+      // Finally the point of no return. Send it out!!!
       try {
         if (!$phpMailer->preSend()) {
           // in principle this cannot happen as the mailer DOES use
@@ -1155,7 +1155,7 @@ insuranceFee
      */
     public function validateFreeFormAddresses($header, $freeForm)
     {
-      $phpMailerer = new \PHPMailer(true);
+      $phpMailer = new \PHPMailer(true);
       $parser = new \Mail_RFC822(null, null, null, false);
 
       $brokenRecipients = array();
@@ -1177,12 +1177,14 @@ insuranceFee
         foreach ($parsedRecipients as $emailRecord) {
           $email = $emailRecord->mailbox.'@'.$emailRecord->host;
           $name  = $emailRecord->personal;
-          if ($name == '') {
+          if ($name === '') {
             $recipient = $email;
           } else {
             $recipient = $name.' <'.$email.'>';
           }
-          if (!$phpMailerer->validateAddress($email)) {
+          if ($emailRecord->host === 'localhost') {
+            $brokenRecipients[] = htmlspecialchars($recipient);
+          } else if (!$phpMailer->validateAddress($email)) {
             $brokenRecipients[] = htmlspecialchars($recipient);
           } else {
             $recipients[] = array('email' => $email,
@@ -1201,7 +1203,7 @@ insuranceFee
                             \OCP\Util::DEBUG);
         return $recipients;
       }
-    }    
+    }
 
     /**Validates the given template, i.e. searches for unknown
      * substitutions. This function is invoked right before sending
@@ -1223,12 +1225,12 @@ insuranceFee
         // clever ways to do this, but at this point we simply
         // substitute any legal variable by DUMMY and check that no
         // unknown ${...} substitution tag remains. Mmmh.
-        
+
         $variables = $this->emailMemberVariables();
         foreach ($variables as $placeholder => $column) {
           $dummy = preg_replace('/[$]{MEMBER::'.$placeholder.'}/', $column, $dummy);
         }
-        
+
         if (preg_match('![$]{MEMBER::[^}]+}?!', $dummy, $leftOver)) {
           $templateError[] = 'member';
           $this->diagnostics['TemplateValidation']['MemberErrors'] = $leftOver;
@@ -1258,7 +1260,7 @@ insuranceFee
           },
           $dummy
           );
-        
+
         if (preg_match('![$]{GLOBAL::[^}]+}?!', $dummy, $leftOver)) {
           $templateError[] = 'global';
           $this->diagnostics['TemplateValidation']['GlobalErrors'] = $leftOver;
@@ -1268,28 +1270,28 @@ insuranceFee
         $dummy = preg_replace('/[$]{GLOBAL::[^}]*}/', '', $dummy);
       }
 
-      $spuriousTemplateLeftOver = array();      
+      $spuriousTemplateLeftOver = array();
       // No substitutions should remain. Check for that.
       if (preg_match('![$]{[^}]+}?!', $dummy, $leftOver)) {
         $templateError[] = 'spurious';
         $this->diagnostics['TemplateValidation']['SpuriousErrors'] = $leftOver;
       }
-      
+
       if (empty($templateError)) {
-        return true;  
+        return true;
       }
 
       $this->executionStatus = false;
-      
+
       return false;
     }
 
-    private function setDefaultTemplate() 
+    private function setDefaultTemplate()
     {
       // Make sure that at least the default template exists and install
       // that as default text
       $this->initialTemplate = self::DEFAULT_TEMPLATE;
-      
+
       $dbTemplate = $this->fetchTemplate('Default');
       if ($dbTemplate === false) {
         $this->storeTemplate('Default', $this->initialTemplate);
@@ -1298,9 +1300,9 @@ insuranceFee
       }
     }
 
-    private function setCatchAll() 
+    private function setCatchAll()
     {
-      if ($this->constructionMode) {      
+      if ($this->constructionMode) {
         $this->catchAllEmail = Config::getValue('emailtestaddress');
         $this->catchAllName  = 'Bilbo Baggins';
       } else {
@@ -1329,7 +1331,7 @@ insuranceFee
         'CREDITORIDENTIFIER' => Config::getValue('bankAccountCreditorIdentifier'),
         'ADDRESS' => $this->streetAddress(),
         'BANKACCOUNT' => $this->bankAccount(),
-        'PROJECT' => $this->projectName != '' ? $this->projectName : L::t('no project involved'), 
+        'PROJECT' => $this->projectName != '' ? $this->projectName : L::t('no project involved'),
         );
 
       return $globalVars;
@@ -1367,7 +1369,7 @@ insuranceFee
       $query = "SELECT `Vorname` FROM `".$executiveBoard."View` ORDER BY `Reihung`,`Stimmführer`,`Vorname`";
 
       $result = mySQL::query($query, $handle);
-    
+
       if ($result === false) {
         throw new \RuntimeException("\n".L::t('Unable to fetch executive board contents from data-base.'));
       }
@@ -1386,7 +1388,7 @@ insuranceFee
 
       return $text;
     }
-  
+
     private function dataBaseConnect()
     {
       if ($this->dbh === false) {
@@ -1445,7 +1447,7 @@ insuranceFee
 
       return $numrows == 1 ? $line['Contents'] : false;
     }
-  
+
     /**Return a flat array with all known template names.
      */
     private function fetchTemplateNames()
@@ -1486,7 +1488,7 @@ insuranceFee
           $toKeep[] = $tmp;
         }
       }
-      
+
       foreach ($tmpFiles as $key => $tmpFile) {
         if (array_search($tmpFile, $toKeep) !== false) {
           continue;
@@ -1498,7 +1500,7 @@ insuranceFee
       }
       self::storeTemporaries($tmpFiles);
     }
-    
+
     /**Fetch the list of temporaries from the config-space.
      */
     private static function fetchTemporaries()
@@ -1506,7 +1508,7 @@ insuranceFee
       // Remember the file in the data-base for cleaning up later
       $tmpFiles = Config::getUserValue('attachments','');
       $tmpFiles = preg_split('@,@', $tmpFiles, NULL, PREG_SPLIT_NO_EMPTY);
-      
+
       return $tmpFiles;
     }
 
@@ -1516,7 +1518,7 @@ insuranceFee
       // Remember the file in the data-base for cleaning up later
       Config::setUserValue('attachments',implode(',',$tmpFiles));
     }
-    
+
     /**Handle file uploads. In order for upload to survive we have to
      * move them to an alternate location. And clean up afterwards, of
      * course. We store the generated temporaries in the user
@@ -1547,16 +1549,16 @@ insuranceFee
         $tmpFiles = self::fetchTemporaries();
         $tmpFiles[] = $tmpFile;
         self::storeTemporaries($tmpFiles);
-        
+
         if ($local) {
           // Move the uploaded file
           if (move_uploaded_file($fileRecord['tmp_name'], $tmpFile)) {
             // Sanitize permissions
             chmod($tmpFile, 0600);
-          
+
             // Remember the uploaded file.
             $fileRecord['tmp_name'] = $tmpFile;
-          
+
             return $fileRecord;
           }
         } else {
@@ -1564,10 +1566,10 @@ insuranceFee
           if (copy($fileRecord['tmp_name'], $tmpFile)) {
             // Sanitize permissions
             chmod($tmpFile, 0600);
-          
+
             // Remember the uploaded file.
             $fileRecord['tmp_name'] = $tmpFile;
-          
+
             return $fileRecord;
           }
         }
@@ -1587,7 +1589,7 @@ insuranceFee
     /**** public methods exporting data needed by the web-page template ***/
 
     /**General form data for hidden input elements.*/
-    public function formData() 
+    public function formData()
     {
       return array('FormStatus' => 'submitted');
     }
@@ -1626,7 +1628,7 @@ insuranceFee
     /**Export the currently selected template name. */
     public function currentEmailTemplate()
     {
-      return $this->templateName;      
+      return $this->templateName;
     }
 
     /**Export the subject tag depending on whether we ar in "project-mode" or not. */
@@ -1642,7 +1644,7 @@ insuranceFee
     {
       return $this->cgiValue('FromName', $this->catchAllName);
     }
-    
+
     /**Return the current From: addres. This is fixed and cannot be changed. */
     public function fromAddress()
     {
@@ -1654,13 +1656,13 @@ insuranceFee
     {
       return $this->messageContents;
     }
-    
+
     /**Export BCC. */
     public function blindCarbonCopy()
     {
       return $this->cgiValue('BCC', '');
     }
-    
+
     /**Export CC. */
     public function carbonCopy()
     {
@@ -1698,7 +1700,7 @@ insuranceFee
           $localFileAttach[] = $attachment;
         }
       }
-      
+
       usort($ocFileAttach, function($a, $b) {
           return strcmp($a['name'], $b['name']);
         });
@@ -1728,7 +1730,7 @@ insuranceFee
       }
       return $selectOptions;
     }
-    
+
     /**Return the file attachment data. This function checks for the
      * cgi-values of EventSelect or the "local" cgi values
      * emailComposer[AttachedEvents]. The "legacy" values take
@@ -1738,7 +1740,7 @@ insuranceFee
     {
       $attachedEvents = Util::cgiValue('EventSelect',
                                        $this->cgiValue('AttachedEvents', array()));
-      return $attachedEvents;      
+      return $attachedEvents;
     }
 
     /**A helper function to generate suitable select options for
@@ -1782,9 +1784,9 @@ insuranceFee
       }
       return $selectOptions;
     }
-    
+
     /**If a complete reload has to be done ... for now */
-    public function reloadState() 
+    public function reloadState()
     {
       return true;
     }
