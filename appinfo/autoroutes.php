@@ -146,6 +146,9 @@ $this->create("cafevdb_ajax_musicians_validate.php", "ajax/musicians/validate.ph
 $this->create("cafevdb_ajax_musicians_validatephone.php", "ajax/musicians/validatephone.php")
   ->actionInclude("cafevdb/ajax/musicians/validatephone.php");
 
+$this->create("cafevdb_ajax_musicians_validateemail.php", "ajax/musicians/validateemail.php")
+  ->actionInclude("cafevdb/ajax/musicians/validateemail.php");
+
 $this->create("cafevdb_ajax_page-loader.php", "ajax/page-loader.php")
   ->actionInclude("cafevdb/ajax/page-loader.php");
 
