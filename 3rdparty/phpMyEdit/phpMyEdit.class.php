@@ -1485,6 +1485,9 @@ class phpMyEdit
 			}
 			$helptip = NULL;
 			if (isset($this->fdd[$k]['display']['popup'])) {
+				$css_postfix	= @$this->fdd[$k]['css']['postfix'];
+				$css_class_name = $this->getCSSclass('cell', null, true, $css_postfix);
+				$cell_data = $this->cellDisplay($k, $row, $css_class_name);
 				$popup = $this->fdd[$k]['display']['popup'];
 				if ($popup === 'data') {
 					$helptip = $cell_data;
@@ -1494,9 +1497,6 @@ class phpMyEdit
 					}
 				} else if (is_callable($popup)) {
 					$helptip = call_user_func($popup, $cell_data);
-				}
-				if ($helptip) {
-					$title = ' title="'.$this->enc($helptip).'"';
 				}
 			} else if (isset($this->fdd[$k]['tooltip']) && $this->fdd[$k]['tooltip'] != '') {
 				$helptip = $this->fdd[$k]['tooltip'];
@@ -1646,7 +1646,7 @@ class phpMyEdit
 			}
 			echo '<input class="',$css_class_name,'" type="text"';
 			if ($help) {
-				echo 'title="'.$this->enc($help).'" ';
+				echo ' title="'.$this->enc($help).'" ';
 			}
 			echo ($readonly !== false ? ' '.$readonly : '');
 			echo ' name="',$this->cgi['prefix']['data'].$this->fds[$k],'" value="';
