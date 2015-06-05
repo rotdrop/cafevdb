@@ -62,7 +62,7 @@ namespace CAFEVDB
       self::$numberTypes = array_flip($r->getConstants());
       foreach (self::$numberTypes as $id => $name) {
         if ($name != 'UAN' && $name != 'VOIP') {
-          self::$numberTypes[$id] = strtolower(str_replace('_', ' ', $name));
+          self::$numberTypes[$id] = L::t(strtolower(str_replace('_', ' ', $name)));
         }
       }
 
