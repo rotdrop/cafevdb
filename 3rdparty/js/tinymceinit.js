@@ -21,6 +21,8 @@ var myTinyMCE = myTinyMCE || {};
     browser_spellcheck: true,
     gecko_spellcheck: true,
     file_picker_types: 'file image media',
+    relative_urls: false,
+    convert_urls: false,
 
     setup: function(editor) {
       editor.on('PostProcess', myTinyMCE.postProcessCallback);
@@ -46,15 +48,15 @@ var myTinyMCE = myTinyMCE || {};
         title: 'Image Left',
         selector: 'img',
         styles: {
-            'float': 'left', 
+            'float': 'left',
             'margin': '0 10px 0 10px'
         }
      },
      {
          title: 'Image Right',
-         selector: 'img', 
+         selector: 'img',
          styles: {
-             'float': 'right', 
+             'float': 'right',
              'margin': '0 0 10px 10px'
          }
      }
@@ -139,4 +141,3 @@ $(document).ready(function() {
 // Local Variables: ***
 // js-indent-level: 2 ***
 // End: ***
-
