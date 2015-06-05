@@ -43,14 +43,19 @@ namespace CAFEVDB
       }
 
       $orgPhone = Config::getValue('phoneNumber', '');
-      $orgObject = self::$backend->parse($orgPhone, null);
-      self::$defaultRegion = self::$backend->getRegionCodeForNumber($orgObject);
-      $nationalSignificantNumber = self::$backend->getNationalSignificantNumber($orgObject);
-      $areaCodeLength = self::$backend->getLengthOfGeographicalAreaCode($orgObject);
-      if ($areaCodeLength > 0) {
-        self::$defaultPrefix = substr($nationalSignificantNumber, 0, $areaCodeLength);
+      if ($orgPhone != '') {
+        $orgObject = self::$backend->parse($orgPhone, null);
+        self::$defaultRegion = self::$backend->getRegionCodeForNumber($orgObject);
+        $nationalSignificantNumber = self::$backend->getNationalSignificantNumber($orgObject);
+        $areaCodeLength = self::$backend->getLengthOfGeographicalAreaCode($orgObject);
+        if ($areaCodeLength > 0) {
+          self::$defaultPrefix = substr($nationalSignificantNumber, 0, $areaCodeLength);
+        } else {
+          self::$defaultPrefix = '';
+        }
       } else {
-        self::$dafultPrefix = '';
+        self::$defaultPrefix = '';
+        self::$defaultRegion = 'ZZ';
       }
 
       $r = new \ReflectionClass('\libphonenumber\PhoneNumberType');
