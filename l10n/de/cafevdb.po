@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-31 17:43+0200\n"
-"PO-Revision-Date: 2015-05-31 17:49+0200\n"
+"POT-Creation-Date: 2015-06-05 12:43+0200\n"
+"PO-Revision-Date: 2015-06-05 12:49+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -111,8 +111,8 @@ msgstr "Em@il Adresse(n) ungültig"
 #: ajax/finance/sepa-debit-store.php:112
 #: ajax/insurance/instrument-insurance-export.php:168
 #: ajax/insurance/validate.php:326 ajax/musicians/validate.php:96
-#: ajax/page-loader.php:111 ajax/projects/web-articles.php:201
-#: ajax/settings/app-settings.php:1183
+#: ajax/musicians/validatephone.php:132 ajax/page-loader.php:111
+#: ajax/projects/web-articles.php:201 ajax/settings/app-settings.php:1207
 msgid "PHP Exception Caught"
 msgstr "PHP `Ausnahme' `gefangen'"
 
@@ -121,8 +121,8 @@ msgstr "PHP `Ausnahme' `gefangen'"
 #: ajax/finance/sepa-debit-store.php:116
 #: ajax/insurance/instrument-insurance-export.php:169
 #: ajax/insurance/validate.php:330 ajax/musicians/validate.php:100
-#: ajax/page-loader.php:115 ajax/projects/web-articles.php:205
-#: ajax/settings/app-settings.php:1187
+#: ajax/musicians/validatephone.php:136 ajax/page-loader.php:115
+#: ajax/projects/web-articles.php:205 ajax/settings/app-settings.php:1211
 #, php-format
 msgid ""
 "Error, caught an exception. Please copy the displayed text and send it by "
@@ -230,7 +230,7 @@ msgstr "Auf den Kalender kann nicht zugegriffen werden: `%s'"
 msgid "Linked all matching web-pages to the respective projects."
 msgstr "Alle passenden Web-Seiten wurden mit ihren Projekten verknüpft."
 
-#: ajax/expertmode/clearoutput.php:11 templates/expertmode.php:83
+#: ajax/expertmode/clearoutput.php:11 templates/expertmode.php:87
 msgid "empty"
 msgstr "leer"
 
@@ -344,7 +344,7 @@ msgstr "falsch"
 
 #: ajax/export/insurance-export.php:249 ajax/insurance/validate.php:248
 #: ajax/insurance/validate.php:250 js/cafevdb.js:31 js/cafevdb.js:32
-#: js/cafevdb.js:33
+#: js/cafevdb.js:33 lib/phonenumbers.php:79 lib/phonenumbers.php:191
 msgid "unknown"
 msgstr "unbekannt"
 
@@ -444,7 +444,7 @@ msgid "Musician-id and/or name not set"
 msgstr "Musiker-Name und/oder Id unbekannt."
 
 #: ajax/finance/sepa-debit-mandate.php:84
-#: ajax/finance/sepa-debit-settings.php:61 settings.php:91
+#: ajax/finance/sepa-debit-settings.php:61 settings.php:93
 msgid "ClubMembers"
 msgstr "Vereinsmitglieder"
 
@@ -456,9 +456,10 @@ msgstr "Konnte den Wert für `%s' nicht als `%s' speichern."
 #: ajax/finance/sepa-debit-settings.php:97
 #: ajax/finance/sepa-debit-settings.php:118
 #: ajax/finance/sepa-debit-settings.php:359 ajax/settings/app-settings.php:893
-#: ajax/settings/app-settings.php:965 ajax/settings/app-settings.php:980
-#: ajax/settings/app-settings.php:1015 ajax/settings/app-settings.php:1054
-#: ajax/settings/app-settings.php:1078 ajax/settings/app-settings.php:1090
+#: ajax/settings/app-settings.php:916 ajax/settings/app-settings.php:989
+#: ajax/settings/app-settings.php:1004 ajax/settings/app-settings.php:1039
+#: ajax/settings/app-settings.php:1078 ajax/settings/app-settings.php:1102
+#: ajax/settings/app-settings.php:1114
 #, php-format
 msgid "Value for `%s' set to `%s'."
 msgstr "Wert für `%s' auf `%s' gesetzt."
@@ -486,20 +487,20 @@ msgid "Invalid German(?) bank account number %s @ %s."
 msgstr "Ungültige Deutsche(?) Kontonummer %s @ %s."
 
 #: ajax/finance/sepa-debit-settings.php:258
-#: ajax/settings/app-settings.php:1023
+#: ajax/settings/app-settings.php:1047
 #, php-format
 msgid "Invalid IBAN: `%s'."
 msgstr "Ungültige IBAN: `%s'."
 
 #: ajax/finance/sepa-debit-settings.php:302
 #: ajax/finance/sepa-debit-settings.php:334
-#: ajax/settings/app-settings.php:1101
+#: ajax/settings/app-settings.php:1125
 #, php-format
 msgid "Value for `%s' invalid: `%s'."
 msgstr "Der Wert für `%s' ist ungültig: `%s'."
 
 #: ajax/finance/sepa-debit-settings.php:348
-#: ajax/settings/app-settings.php:1161 ajax/settings/redaxo-settings.php:71
+#: ajax/settings/app-settings.php:1185 ajax/settings/redaxo-settings.php:71
 msgid "Unhandled request:"
 msgstr "Unbekannte Anfrage:"
 
@@ -898,7 +899,7 @@ msgid ""
 "Please do not add duplicates to the data-base. If you do, then others\n"
 "will have to clean up after you.\n"
 "\n"
-"Please continue if you know what you are doing. Please use the seach\n"
+"Please continue if you know what you are doing. Please use the search\n"
 "facilities before adding new musicians. Thanks."
 msgstr ""
 "Bitte füge keine Duplikate zur Datenbank hinzu. Andernfalls müssen\n"
@@ -907,6 +908,27 @@ msgstr ""
 "Bitte die Meldung einfach ignorieren, falls Du weißt, was Du da tust.\n"
 "Bitte benutze i.d.R. zunächst die Suchfunktionen der Datenbank bevor Du\n"
 "potentiell neue Musiker hinzufügst. Danke."
+
+#: ajax/musicians/validatephone.php:65 ajax/musicians/validatephone.php:74
+#, php-format
+msgid "The phone number %s does not appear to be a valid phone number. "
+msgstr "Die Rufnummer %s scheint keine gültige Telefonnummer zu sein."
+
+#: ajax/musicians/validatephone.php:85
+#, php-format
+msgid ""
+"This (%s) is a fixed line phone number, injecting it in the correct column."
+msgstr "Die Nummer %s ist eine Festnetznummer, schiebe die in die richtige Spalte."
+
+#: ajax/musicians/validatephone.php:94
+#, php-format
+msgid "This (%s) is a mobile phone number, injecting it in the correct column."
+msgstr "Die Nummer %s ist eine Mobilfunknummer, schiebe die in die richtige Spalte."
+
+#: ajax/musicians/validatephone.php:102
+#, php-format
+msgid "The phone number %s does not appear to be a mobile phone number. "
+msgstr "Die Rufnummer %s scheint keine Mobilfunknummer zu sein."
 
 #: ajax/pme/pme-table.php:80
 msgid "No class name submitted."
@@ -1324,7 +1346,14 @@ msgstr "Verwende `%s' als Klartext-Namen des Absenders."
 msgid "Using `%s' as sender email-address."
 msgstr "Verwende `%s' als Email-Adresse des Absenders."
 
-#: ajax/settings/app-settings.php:911
+#: ajax/settings/app-settings.php:908
+#, php-format
+msgid ""
+"Telephone numbers %s does not appear to be a valid phone number in "
+"international format (e.g. +49 761 123456)."
+msgstr "Die Rufnummer %s scheint keine gültige Telefonnummer in internationalem Format zu sein (z.B. +49 761 123456)."
+
+#: ajax/settings/app-settings.php:935
 msgid ""
 "Table name is either not unique, or the table does not exist yet. Please "
 "create a project of this name manually."
@@ -1333,45 +1362,45 @@ msgstr ""
 "existiert nicht. Bitte sorge dafür, dass es genau ein Projekt mit diesem "
 "Namen gibt."
 
-#: ajax/settings/app-settings.php:915
+#: ajax/settings/app-settings.php:939
 #, php-format
 msgid "Table-id %d."
 msgstr "Projekt-id %d."
 
-#: ajax/settings/app-settings.php:920
+#: ajax/settings/app-settings.php:944
 #, php-format
 msgid "Value for `%s' set to `%s'. %s"
 msgstr "Wert für `%s' auf `%s' gesetzt. %s"
 
-#: ajax/settings/app-settings.php:935
+#: ajax/settings/app-settings.php:959
 #, php-format
 msgid "Musician with id %d does not seem to exist"
 msgstr "Ein Musiker mit der Id existiert leider nicht."
 
-#: ajax/settings/app-settings.php:944
+#: ajax/settings/app-settings.php:968
 #, php-format
 msgid "Value for `%s' set to `%s'"
 msgstr "Wert für `%s' auf `%s' gesetzt."
 
-#: ajax/settings/app-settings.php:1026
+#: ajax/settings/app-settings.php:1050
 msgid "Perhaps you meant"
 msgstr "Vielleicht meinten Sie"
 
-#: ajax/settings/app-settings.php:1033
+#: ajax/settings/app-settings.php:1057
 msgid "or"
 msgstr "oder"
 
-#: ajax/settings/app-settings.php:1119
+#: ajax/settings/app-settings.php:1143
 #, php-format
 msgid "Link for `%s' set to `%s'."
 msgstr "Web-Link für `%s' als `%s' eingestellt."
 
-#: ajax/settings/app-settings.php:1132
+#: ajax/settings/app-settings.php:1156
 #, php-format
 msgid "Unable to test link for `%s' without a link target."
 msgstr "Kann den Web-Link für `%s' nicht ohne Ziel-Adresse testen."
 
-#: ajax/settings/app-settings.php:1138
+#: ajax/settings/app-settings.php:1162
 #, php-format
 msgid "New window or tab with `%s'?"
 msgstr "Neues Fenster oder Tab erschienen für `%s'?"
@@ -1970,7 +1999,11 @@ msgstr "Irgendein Fehler"
 msgid "Caught a PHP Exception"
 msgstr "PHP `Ausnahme' `gefangen'"
 
-#: js/musicians.js:98
+#: js/musicians.js:109
+msgid "Phone Number Validation"
+msgstr "Rufnummernvalidierung"
+
+#: js/musicians.js:138
 msgid "Possible Duplicate!"
 msgstr "Doppelter Datenbankeintag?"
 
@@ -2124,70 +2157,70 @@ msgstr "Fehler:"
 msgid "Please standby, the operation will take some time!"
 msgstr "Bitte warten, das dauert jetzt ein wenig!"
 
-#: lib/config.php:669
+#: lib/config.php:670
 #, php-format
 msgid "Decryption of `%s`@`%s` failed"
 msgstr "Entschlüsselung von `%s' @ `%s' fehlgeschlagen"
 
-#: lib/config.php:673
+#: lib/config.php:674
 #, php-format
 msgid "Encryption of `%s`@`%s` failed"
 msgstr "Verschlüsselung von `%s' @ `%s' fehlgeschlagen"
 
-#: lib/config.php:679
+#: lib/config.php:680
 #, php-format
 msgid "Unable to update table data at index %s"
 msgstr "Kann die Tabellenzeile mit Index %s nicht ändern"
 
-#: lib/config.php:896
+#: lib/config.php:897
 msgid "birthday"
 msgstr "Geburtstag"
 
-#: lib/config.php:906
+#: lib/config.php:907
 msgid "no preference"
 msgstr "Keine Präferenz"
 
-#: lib/config.php:907
+#: lib/config.php:908
 msgid "German"
 msgstr "Deutsch"
 
-#: lib/config.php:908
+#: lib/config.php:909
 msgid "English"
 msgstr "Englisch"
 
-#: lib/config.php:909
+#: lib/config.php:910
 msgid "French"
 msgstr "Französisch"
 
-#: lib/config.php:910
+#: lib/config.php:911
 msgid "Spanish"
 msgstr "Spanisch"
 
-#: lib/config.php:911
+#: lib/config.php:912
 msgid "Portuguese"
 msgstr "Portugiesisch"
 
-#: lib/config.php:912
+#: lib/config.php:913
 msgid "Polish"
 msgstr "Polnisch"
 
-#: lib/config.php:913
+#: lib/config.php:914
 msgid "Russian"
 msgstr "Russisch"
 
-#: lib/config.php:914
+#: lib/config.php:915
 msgid "Chinese"
 msgstr "Chinesisch"
 
-#: lib/config.php:915
+#: lib/config.php:916
 msgid "Japaneese"
 msgstr "Japanisch"
 
-#: lib/config.php:916
+#: lib/config.php:917
 msgid "Korean"
 msgstr "Koreanisch"
 
-#: lib/config.php:937
+#: lib/config.php:938
 #, php-format
 msgid "Unknown Tooltip for key `%s' requested."
 msgstr "Unbekannter Tooltip `%s' angefordert."
@@ -2242,7 +2275,7 @@ msgstr "Alle Instrumente"
 msgid "Member Status"
 msgstr "Status"
 
-#: lib/detailed-instrumentation.php:401 lib/musicians.php:434
+#: lib/detailed-instrumentation.php:401 lib/musicians.php:450
 msgid "Remarks"
 msgstr "Bemerkungen"
 
@@ -2254,6 +2287,14 @@ msgstr "Ohne Projekt"
 msgid "Projects"
 msgstr "Projekte"
 
+#: lib/detailed-instrumentation.php:457 lib/musicians.php:380
+msgid "Mobile Phone"
+msgstr "Mobilfunk"
+
+#: lib/detailed-instrumentation.php:465 lib/musicians.php:396
+msgid "Fixed Line Phone"
+msgstr "Festnetz"
+
 #: lib/detailed-instrumentation.php:494
 msgid "Country"
 msgstr "Land"
@@ -2262,11 +2303,11 @@ msgstr "Land"
 msgid "General Remarks"
 msgstr "Allgemeine Bemerkungen"
 
-#: lib/detailed-instrumentation.php:528 lib/musicians.php:474
+#: lib/detailed-instrumentation.php:528 lib/musicians.php:490
 msgid "Photo"
 msgstr "Foto"
 
-#: lib/detailed-instrumentation.php:543 lib/musicians.php:492
+#: lib/detailed-instrumentation.php:543 lib/musicians.php:508
 msgid "Last Updated"
 msgstr "Letzte Aktualisierung"
 
@@ -2334,7 +2375,7 @@ msgstr "Unbekannter Kalender."
 msgid "Miscellaneous Calendars"
 msgstr "Weitere Kalender"
 
-#: lib/finance.php:56 lib/finance.php:92 settings.php:117
+#: lib/finance.php:56 lib/finance.php:92 settings.php:119
 msgid "finance"
 msgstr "Kasse"
 
@@ -2442,7 +2483,9 @@ msgstr "Vermutlich falsche BIC: %s. Automatisch ermittelt: %s."
 #: lib/finance.php:755
 #, php-format
 msgid "Cannot parse `%s' Only plain number, € and $ currencies are supported."
-msgstr "Kann `%s' nicht interpretieren. Lediglich bloße Zahlen oder Währungen in € und $ erlaubt."
+msgstr ""
+"Kann `%s' nicht interpretieren. Lediglich bloße Zahlen oder Währungen in € "
+"und $ erlaubt."
 
 #: lib/finance.php:778 lib/finance.php:793
 #, php-format
@@ -2454,57 +2497,57 @@ msgstr "Kann die Zahlangabe `%s' nicht interpretieren."
 msgid "Invalid argument value: `%s'"
 msgstr "Unsinniger Paramter-Wert: `%s'"
 
-#: lib/functions.php:660
+#: lib/functions.php:664
 msgid "Supported data formats are JSON and URLENCODED"
 msgstr "Nur die Datenformate JSON und URLENCODED werden unterstützt"
 
-#: lib/functions.php:701
+#: lib/functions.php:705
 #, php-format
 msgid "Unable to post to route %s (%s)"
 msgstr "Kann die service URL %s (%s) nicht erreichen.\""
 
-#: lib/functions.php:713
+#: lib/functions.php:717
 #, php-format
 msgid "Invalid response from API call: %s"
 msgstr "Ungültige Antwort auf eine API Anfrage: %s"
 
-#: lib/functions.php:823
+#: lib/functions.php:827
 msgid "Export Table"
 msgstr "Exportieren"
 
-#: lib/functions.php:831
+#: lib/functions.php:835
 msgid "Excel Export"
 msgstr "`Excel' Export"
 
-#: lib/functions.php:834
+#: lib/functions.php:838
 msgid "HTML/Spreadsheet"
 msgstr "HTML/Excel"
 
-#: lib/functions.php:837
+#: lib/functions.php:841
 msgid "CSV Export"
 msgstr "CSV Export"
 
-#: lib/functions.php:840
+#: lib/functions.php:844
 msgid "HTML Export"
 msgstr "HTML Export"
 
-#: lib/functions.php:1055
+#: lib/functions.php:1059
 msgid "Error: Unknonwn Button Type"
 msgstr "Fehler: Unbekannter Knopf-Typ"
 
-#: lib/functions.php:1175
+#: lib/functions.php:1179
 msgid "View all Projects"
 msgstr "Alle Projekte"
 
-#: lib/functions.php:1176
+#: lib/functions.php:1180
 msgid "Overview over all known projects (start-page)."
 msgstr "Alle gespeicherten Projekte anzeigen; Startseite der `Camerata App'."
 
-#: lib/functions.php:1191
+#: lib/functions.php:1195
 msgid "Display all Musicians"
 msgstr "Alle Musiker"
 
-#: lib/functions.php:1192
+#: lib/functions.php:1196
 msgid ""
 "Display all musicians stored in the data-base, with detailed facilities for "
 "filtering and sorting."
@@ -2512,7 +2555,7 @@ msgstr ""
 "Alle Musiker anzeigen, die in der Datenbank gespeichert sind. Es gibt dabei "
 "ausführliche Such- und Auswahlfunktionalität."
 
-#: lib/functions.php:1208
+#: lib/functions.php:1212
 msgid ""
 "Mass-email form, use with care. Mass-emails will be logged. Recipients will "
 "be specified by the Bcc: field in the header, so the recipients are "
@@ -2523,17 +2566,17 @@ msgstr ""
 "außerdem wird die ganze Pracht in der Daten bank gespeichter (siehe `Email "
 "Historie')"
 
-#: lib/functions.php:1227
+#: lib/functions.php:1231
 msgid "Email History"
 msgstr "Em@il Historie"
 
-#: lib/functions.php:1228
+#: lib/functions.php:1232
 msgid "Display all emails sent by our mass-email form."
 msgstr ""
 "Zeigt alle über unser unsägliches Massen-Mail gespamten Emails an. "
 "Insebesondere werden hier auch die Bcc: Empfänger gespeichert."
 
-#: lib/functions.php:1252
+#: lib/functions.php:1256
 msgid ""
 "Display an overview page for the currently active project.\n"
 "The overview-page gives the possibility to add events, change the "
@@ -2546,11 +2589,11 @@ msgstr ""
 "Probenankündigungen auf der öffentlichen Webseite zu editieren. \"Und\n"
 "vieles mehr\"."
 
-#: lib/functions.php:1275 lib/projects.php:799
+#: lib/functions.php:1279 lib/projects.php:799
 msgid "Instrumentation"
 msgstr "Besetzung"
 
-#: lib/functions.php:1276
+#: lib/functions.php:1280
 msgid ""
 "Detailed display of all registered musicians for the selected project. The "
 "table will allow for modification of personal data like email, phone, "
@@ -2560,11 +2603,11 @@ msgstr ""
 "Daten wie Email, Adresse usw. können hier geändert werden. Projektbezogene "
 "Daten können allerdings nur in der Ansicht `Kurz-Besetzung' geändert werden."
 
-#: lib/functions.php:1295 lib/project-instruments.php:385
+#: lib/functions.php:1299 lib/project-instruments.php:385
 msgid "Add Instruments"
 msgstr "Neue Instrumente"
 
-#: lib/functions.php:1296
+#: lib/functions.php:1300
 msgid ""
 "Display the list of instruments known by the data-base, possibly add new "
 "ones as needed."
@@ -2572,12 +2615,12 @@ msgstr ""
 "Tabelle mit allen derzeit gespeicherten Instrumenten; weitere Instrumente "
 "können hier einfach hinzugefügt werden."
 
-#: lib/functions.php:1315 lib/project-instruments.php:69 lib/projects.php:804
+#: lib/functions.php:1319 lib/project-instruments.php:69 lib/projects.php:804
 #: lib/projects.php:1063
 msgid "Instrumentation Numbers"
 msgstr "Besetzungszahlen"
 
-#: lib/functions.php:1316 lib/tooltips.php:391
+#: lib/functions.php:1320 lib/tooltips.php:391
 msgid ""
 "Display the desired instrumentaion numbers, i.e. how many musicians are "
 "already registered for each instrument group and how many are finally needed."
@@ -2585,20 +2628,20 @@ msgstr ""
 "Anzeige der angestrebten Besetzungszahlen. Natürlich kann man die dann auch "
 "anpassen ..."
 
-#: lib/functions.php:1335 lib/projects.php:841
+#: lib/functions.php:1339 lib/projects.php:841
 msgid "Debit Mandates"
 msgstr "Lastschriftmandate"
 
-#: lib/functions.php:1336
+#: lib/functions.php:1340
 msgid "Display a table with the SEPA debit mandates related to the project."
 msgstr ""
 "Zeigt eine Tabelle mit den SEPA-Lastschriftmandaten für das Projekt an."
 
-#: lib/functions.php:1355
+#: lib/functions.php:1359
 msgid "Insurances"
 msgstr "Versicherungen"
 
-#: lib/functions.php:1356
+#: lib/functions.php:1360
 msgid ""
 "Display a table with an overview about the current state of the member's "
 "instrument insurances."
@@ -2606,11 +2649,11 @@ msgstr ""
 "Zeigt eine Tabelle mit einer Übersicht über die "
 "Instrumentensammelversicherungen an."
 
-#: lib/functions.php:1371
+#: lib/functions.php:1375
 msgid "Insurance Rates"
 msgstr "Versicherungs-Raten"
 
-#: lib/functions.php:1372
+#: lib/functions.php:1376
 msgid ""
 "Display a table with the insurance rates for the individual instrument "
 "insurances."
@@ -2618,21 +2661,21 @@ msgstr ""
 "Zeigt eine Tabelle mit einer Übersicht über die Versicherungsraten der\n"
 "Instrumenten-Sammelversicherungen an."
 
-#: lib/functions.php:1388
+#: lib/functions.php:1392
 msgid "Insurance Brokers"
 msgstr "Versicherungsmakler"
 
-#: lib/functions.php:1389
+#: lib/functions.php:1393
 msgid "Display a table with the insurance brokers."
 msgstr ""
 "Zeigt eine Tabelle mit einer Übersicht über die Versicherungsanbieter an."
 
-#: lib/functions.php:1481
+#: lib/functions.php:1485
 #, php-format
 msgid "Could not connect to data-base server `%s': %s"
 msgstr "Konnte den Datenbank-Server `%s' nicht erreichen: %s"
 
-#: lib/functions.php:1494
+#: lib/functions.php:1498
 #, php-format
 msgid "Unable to select %s"
 msgstr "Kann die Tabelle %s nicht auswählen"
@@ -3101,16 +3144,16 @@ msgstr "Vorname"
 msgid "Instruments"
 msgstr "Instrumente"
 
-#: lib/musicians.php:457 lib/sepa-debit-mandates.php:415
+#: lib/musicians.php:473 lib/sepa-debit-mandates.php:415
 msgid "Instrument Insurance"
 msgstr "Instrumentenversicherung"
 
-#: lib/musicians.php:599
+#: lib/musicians.php:615
 #, php-format
 msgid "Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;"
 msgstr "Gesamtsumme %02.02f &euro;, Jahresbeitrag %02.02f &euro;"
 
-#: lib/musicians.php:623
+#: lib/musicians.php:639
 msgid ""
 "Portraits or Avatars can only be added to an existing musician's profile; "
 "please add the new musician without protrait image first."
@@ -3118,28 +3161,28 @@ msgstr ""
 "Portraits oder Avatar-Bilder können nur zu existierenden Musiker-Daten "
 "hinzugefügt werden; bitte zuerst den Musiker ohne Bild hinzufügen."
 
-#: lib/musicians.php:637
+#: lib/musicians.php:653
 #, php-format
 msgid "Drop photo to upload (max %s)"
 msgstr "Foto ablegen zum Hochladen (max %s)"
 
-#: lib/musicians.php:640
+#: lib/musicians.php:656
 msgid "Delete current photo"
 msgstr "Aktuelles Foto löschen"
 
-#: lib/musicians.php:641
+#: lib/musicians.php:657
 msgid "Edit current photo"
 msgstr "Aktuelles Foto editieren"
 
-#: lib/musicians.php:642
+#: lib/musicians.php:658
 msgid "Upload new photo"
 msgstr "Neues Foto hochladen"
 
-#: lib/musicians.php:643
+#: lib/musicians.php:659
 msgid "Select photo from ownCloud"
 msgstr "Foto aus der `Cloud' auswählen"
 
-#: lib/musicians.php:651
+#: lib/musicians.php:667
 msgid ""
 "Internal error, don't know what to do concerning portrait images in the "
 "given context."
@@ -3154,6 +3197,83 @@ msgstr "Seite"
 #: lib/pdfletter.php:122 lib/pdfletter.php:123
 msgid "of"
 msgstr "von"
+
+#: lib/phonenumbers.php:70
+msgid "fixed line"
+msgstr "Festnetz"
+
+#: lib/phonenumbers.php:71
+msgid "mobile"
+msgstr "Mobilfunk"
+
+#: lib/phonenumbers.php:72
+msgid "fixed line or mobile"
+msgstr "Festnetz oder Mobilfunk"
+
+#: lib/phonenumbers.php:73
+msgid "premium rate"
+msgstr ""
+
+#: lib/phonenumbers.php:74
+msgid "shared cost"
+msgstr ""
+
+#: lib/phonenumbers.php:75
+msgid "VOIP"
+msgstr ""
+
+#: lib/phonenumbers.php:76
+msgid "personal number"
+msgstr ""
+
+#: lib/phonenumbers.php:77
+msgid "pager"
+msgstr "Pager"
+
+#: lib/phonenumbers.php:78
+msgid "UAN"
+msgstr ""
+
+#: lib/phonenumbers.php:80
+msgid "emergency"
+msgstr "Notruf"
+
+#: lib/phonenumbers.php:81
+msgid "voicemail"
+msgstr ""
+
+#: lib/phonenumbers.php:82
+msgid "short code"
+msgstr ""
+
+#: lib/phonenumbers.php:83
+msgid "standard rate"
+msgstr ""
+
+#: lib/phonenumbers.php:196
+#, php-format
+msgid "Type    : %s"
+msgstr "Typ: %s"
+
+#: lib/phonenumbers.php:197
+#, php-format
+msgid "Country : %s"
+msgstr "Land: %s"
+
+#: lib/phonenumbers.php:198
+#, php-format
+msgid "Location: %s"
+msgstr "Ort: %s"
+
+#: lib/phonenumbers.php:199
+#, php-format
+msgid "TimeZone: %s"
+msgstr "Zeitzone: %s"
+
+#: lib/phonenumbers.php:200
+#, php-format
+msgid "Provider: %s"
+msgstr "Anbieter: %s"
 
 #: lib/php-excel-functions.php:97 lib/sepa-debit-mandates.php:250
 msgid "yes"
@@ -4637,27 +4757,27 @@ msgstr ""
 "Eine Datei als Attachment hochladen. Die Datei wird vom Server gelöscht, "
 "sobald die Nachricht versendet wurde."
 
-#: settings.php:93
+#: settings.php:95
 msgid "ExecutiveBoardMembers"
 msgstr "Vorstand"
 
-#: settings.php:113
+#: settings.php:115
 msgid "concerts"
 msgstr "Konzerte"
 
-#: settings.php:114 templates/cms-settings.php:52
+#: settings.php:116 templates/cms-settings.php:52
 msgid "rehearsals"
 msgstr "Proben"
 
-#: settings.php:115
+#: settings.php:117
 msgid "other"
 msgstr "Sonstiges"
 
-#: settings.php:116
+#: settings.php:118
 msgid "management"
 msgstr "Vorstand"
 
-#: settings.php:120
+#: settings.php:122
 msgid "contacts"
 msgstr "Kontakte"
 
@@ -5051,7 +5171,7 @@ msgstr "ist nicht eingestellt"
 msgid "Edit an event"
 msgstr "Ein Ereignis bearbeiten"
 
-#: templates/devel-settings.php:29 templates/expertmode.php:86
+#: templates/devel-settings.php:29 templates/expertmode.php:90
 msgid "Links"
 msgstr "Web-Links"
 
@@ -5336,34 +5456,38 @@ msgstr ""
 "(Vorsicht: klappt derzeit nicht)."
 
 #: templates/expertmode.php:66
+msgid "Sanitize Phone Numbers"
+msgstr "Rufnummernvalidierung"
+
+#: templates/expertmode.php:70
 msgid "Example"
 msgstr "Beispiel"
 
-#: templates/expertmode.php:67
+#: templates/expertmode.php:71
 msgid "Example Do-Nothing Button"
 msgstr "Beispiel-Knopf ohne Wirkung"
 
-#: templates/expertmode.php:72
+#: templates/expertmode.php:76
 msgid "Predefined data-base operations"
 msgstr "Vordefinierte Datenbank-Operationen"
 
-#: templates/expertmode.php:74
+#: templates/expertmode.php:78
 msgid "Operation generated Response"
 msgstr "Rückmeldungen der Operationen"
 
-#: templates/expertmode.php:78
+#: templates/expertmode.php:82
 msgid "Clear Output"
 msgstr "Ausgabe Löschen"
 
-#: templates/expertmode.php:80
+#: templates/expertmode.php:84
 msgid "Remove output, if any is present."
 msgstr "Eventuell vorhande Nachrichten vorangegangener Operationen entfernen."
 
-#: templates/expertmode.php:88
+#: templates/expertmode.php:92
 msgid "Database musicians/projects"
 msgstr "Datenbank Musiker/Projekte"
 
-#: templates/expertmode.php:91
+#: templates/expertmode.php:95
 msgid ""
 "Open the login-window to the data-base back-bone. Although this is `expert "
 "mode' you will fall in love with the `export' facilities of the data-base "
@@ -5373,20 +5497,20 @@ msgstr ""
 "`Experten-Operationen' betietelt, aber Sie werden dennoch die `Export'-"
 "Funktionen des Datenbank-Backends schätzen. Versuchen Sie es doch einmal!"
 
-#: templates/expertmode.php:94
+#: templates/expertmode.php:98
 msgid "Database Owncloud"
 msgstr "Owncloud Datenbank"
 
-#: templates/expertmode.php:97
+#: templates/expertmode.php:101
 msgid ""
 "Open the login-window to the data-base back-bone for the Owncloud WebUI."
 msgstr "Datenbank-Administration für das Owncloud-WebUI."
 
-#: templates/expertmode.php:100
+#: templates/expertmode.php:104
 msgid "Source-Code Archive"
 msgstr "Quell-Code-Archiv"
 
-#: templates/expertmode.php:103
+#: templates/expertmode.php:107
 msgid ""
 "View the git-repository holding all revision of this entire mess. Mostly "
 "useful for web-developers."
@@ -5394,22 +5518,22 @@ msgstr ""
 "Anzeige des Git-Archivs für den Quellcode der Web-Applikation. Eigentlich "
 "nur für Entwickler nützlich."
 
-#: templates/expertmode.php:106
+#: templates/expertmode.php:110
 msgid "Source-Code Documentation"
 msgstr "Quell-Code Dokumentation"
 
-#: templates/expertmode.php:109
+#: templates/expertmode.php:113
 msgid ""
 "Internal documentation of the `CAFEV-App', mostly useful for web-developers."
 msgstr ""
 "Interne Dokumentation des Quell-Codes der Web-Applikation, eigentlich nur "
 "für Entwickler nützlich."
 
-#: templates/expertmode.php:112
+#: templates/expertmode.php:116
 msgid "Owncloud Developer Documentation"
 msgstr "Owncloud Entwickler-Dokumentation."
 
-#: templates/expertmode.php:115
+#: templates/expertmode.php:119
 msgid "Owncloud Developer Manual, mostly useful for web-developers."
 msgstr ""
 "Owncloud Entwickler Anleitungen, eigentlich nur für Entwickler nützlich."
@@ -5467,27 +5591,35 @@ msgstr "Land der Orchesteranschrift, optional"
 msgid "country (optional)"
 msgstr "Land (optional)"
 
-#: templates/orchestra-settings.php:76
+#: templates/orchestra-settings.php:78
+msgid "Phone number in international format, e.g. +49-761-123456."
+msgstr "Rufnummer in einem internationalen Format, z.B. +49 761 123456."
+
+#: templates/orchestra-settings.php:79
+msgid "phone"
+msgstr "Rufnummer"
+
+#: templates/orchestra-settings.php:82
 msgid "Bank Account"
 msgstr "Bankverbindung"
 
-#: templates/orchestra-settings.php:81
+#: templates/orchestra-settings.php:87
 msgid "owner of the orchestra's bank account"
 msgstr "Kontoinhaber der Orchester-Bankverbindung"
 
-#: templates/orchestra-settings.php:82 templates/sepa-debit-mandate.php:52
+#: templates/orchestra-settings.php:88 templates/sepa-debit-mandate.php:52
 msgid "owner of bank account"
 msgstr "Kontoinhaber"
 
-#: templates/orchestra-settings.php:87
+#: templates/orchestra-settings.php:93
 msgid "Optional BLZ of the orchestra's bank account"
 msgstr "Optionale Bankleitzahl des Orchesterkontos"
 
-#: templates/orchestra-settings.php:88 templates/sepa-debit-mandate.php:58
+#: templates/orchestra-settings.php:94 templates/sepa-debit-mandate.php:58
 msgid "BLZ of bank account"
 msgstr "Bankleitzahl"
 
-#: templates/orchestra-settings.php:93
+#: templates/orchestra-settings.php:99
 msgid ""
 "IBAN or number of the orchestra's bank account. If this is a account number,"
 "then please first enter the BLZ"
@@ -5495,67 +5627,67 @@ msgstr ""
 "IBAN oder Kontonummer des Orchesterkontos. Falls eine Kontonummer\n"
 "angegeben wird, muss die Bankleitzahl zuerst angegeben werden"
 
-#: templates/orchestra-settings.php:94 templates/sepa-debit-mandate.php:64
+#: templates/orchestra-settings.php:100 templates/sepa-debit-mandate.php:64
 msgid "IBAN or no. of bank account"
 msgstr "IBAN oder Kontonummer"
 
-#: templates/orchestra-settings.php:99
+#: templates/orchestra-settings.php:105
 msgid "Optional BIC of the orchestra's bank account"
 msgstr "Optional die BIC der Bankverbindung"
 
-#: templates/orchestra-settings.php:100 templates/sepa-debit-mandate.php:70
+#: templates/orchestra-settings.php:106 templates/sepa-debit-mandate.php:70
 msgid "BIC of bank account"
 msgstr "BIC der Bankverbindung"
 
-#: templates/orchestra-settings.php:105
+#: templates/orchestra-settings.php:111
 msgid "Creditor identifier of the orchestra"
 msgstr "Gläubiger Identifikationsnummer des Orchesters"
 
-#: templates/orchestra-settings.php:106
+#: templates/orchestra-settings.php:112
 msgid "orchestra's CI"
 msgstr "Orchester CI"
 
-#: templates/orchestra-settings.php:109
+#: templates/orchestra-settings.php:115
 msgid "Executive board and club members"
 msgstr "Vorstands- und Vereinsmitglieder"
 
-#: templates/orchestra-settings.php:115
+#: templates/orchestra-settings.php:121
 msgid "member-table"
 msgstr "Mitgliedstabelle"
 
-#: templates/orchestra-settings.php:118
+#: templates/orchestra-settings.php:124
 msgid "Club Member Project"
 msgstr "Vereinsmitglieder"
 
-#: templates/orchestra-settings.php:126
+#: templates/orchestra-settings.php:132
 msgid "executive board table"
 msgstr "Vorstandstabelle"
 
-#: templates/orchestra-settings.php:129
+#: templates/orchestra-settings.php:135
 msgid "Executive Board Project"
 msgstr "Vorstand"
 
-#: templates/orchestra-settings.php:133
+#: templates/orchestra-settings.php:139
 msgid "Select the President"
 msgstr "Vorsitzende(n) auswählen"
 
-#: templates/orchestra-settings.php:134
+#: templates/orchestra-settings.php:140
 msgid "President of the orchestra"
 msgstr "Vorsitzende(r) des Orchesters"
 
-#: templates/orchestra-settings.php:144
+#: templates/orchestra-settings.php:150
 msgid "Select the Secretary"
 msgstr "Schriftführer(in) auswählen"
 
-#: templates/orchestra-settings.php:145
+#: templates/orchestra-settings.php:151
 msgid "Secretary of the orchestra"
 msgstr "Schriftführer(in) des Orchesters"
 
-#: templates/orchestra-settings.php:155
+#: templates/orchestra-settings.php:161
 msgid "Select the Treasurer"
 msgstr "Schatzmeister(in) auswählen"
 
-#: templates/orchestra-settings.php:156
+#: templates/orchestra-settings.php:162
 msgid "Treasurer of the orchestra"
 msgstr "Schatzmeister des Orchesters"
 
