@@ -91,6 +91,9 @@ namespace CAFEVDB
     {
       self::init();
 
+      // convert html entities back to their character expressions
+      $number = html_entity_decode($number);
+
       // convert non-breaking unicode space to normal space
       $number = str_replace("\xc2\xa0", "\x20", $number);
 
@@ -107,9 +110,11 @@ namespace CAFEVDB
       // understood by the libphonenumber backend.
       $number = preg_replace('/^00/', '+', $number);
 
-      // add local area code
-      if (!preg_match('!^[0+]!', $number) && self::$defaultPrefix) {
-        $number = '0' . self::$defaultPrefix . $number;
+      if ($number !== '') {
+        // add local area code
+        if (!preg_match('!^[0+]!', $number) && self::$defaultPrefix) {
+          $number = '0' . self::$defaultPrefix . $number;
+        }
       }
 
       return $number;
@@ -117,15 +122,15 @@ namespace CAFEVDB
 
     static public function validate($number, $region = null)
     {
-      if ($number == '') {
-        return false;
-      }
-
       self::init();
 
       // add local area code and remove some of the usual human fuzzy
       // input ...
       $number = self::normalize($number);
+
+      if ($number === '') {
+        return false;
+      }
 
       if (!$region && self::$defaultRegion) {
         $region = self::$defaultRegion;
@@ -197,7 +202,10 @@ namespace CAFEVDB
       $meta .= L::t('Country : %s', array(self::$backend->getRegionCodeForNumber(self::$currentObject))).$nl;
       $meta .= L::t('Location: %s', array($geocoder->getDescriptionForNumber(self::$currentObject, $locale))).$nl;
       $meta .= L::t('TimeZone: %s', array($zone)).$nl;
-      $meta .= L::t('Provider: %s', array($carrierMapper->getNameForNumber(self::$currentObject, $locale))).$nl;
+      $provider = $carrierMapper->getNameForNumber(self::$currentObject, $locale);
+      if ($provider !== '') {
+        $meta .= L::t('Provider: %s', array($provider)).$nl;
+      }
 
       return $meta;
     }

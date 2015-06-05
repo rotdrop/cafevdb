@@ -170,7 +170,7 @@ class DetailedInstrumentation
     */
 
     /* Field definitions
-   
+
        Fields will be displayed left to right on the screen in the order in which they
        appear in generated list. Here are some most used field options documented.
 
@@ -331,7 +331,7 @@ class DetailedInstrumentation
     $opts['fdd']['Unkostenbeitrag']['default'] = $project['Unkostenbeitrag'];
 
     if (Projects::needDebitMandates($projectId)) {
-    
+
       $memberTableId = Config::getValue('memberTableId');
       $debitJoinCondition =
         '('.
@@ -340,7 +340,7 @@ class DetailedInstrumentation
         '$join_table.projectId = '.$memberTableId.
         ')'.
         ' AND $join_table.musicianId = $main_table.MusikerId';
-    
+
       // One virtual field in order to be able to manage SEPA debit mandates
       $mandateIdx = count($opts['fdd']);
       $opts['fdd']['SepaDebitMandate'] = array(
@@ -380,10 +380,10 @@ class DetailedInstrumentation
         'sqlw' => '`PMEjoin'.$mandateIdx.'`.`projectId`' // dummy, make the SQL data base happy
         );
     }
-    
+
     // Generate input fields for the extra columns
     foreach ($userExtraFields as $field) {
-      $name = $field['name'];    
+      $name = $field['name'];
       $opts['fdd']["$name"] = array('name'     => $name."\n(".$projectName.")",
                                     'tab' => array('id' => 'project'),
                                     'select'   => 'T',
@@ -455,6 +455,13 @@ __EOT__;
     $opts['fdd']['MobilePhone'] = array(
       'tab'      => array('id' => 'musician'),
       'name'     => L::t('Mobile Phone'),
+      'display'  => array('popup' => function($data) {
+          if (PhoneNumbers::validate($data)) {
+            return nl2br(PhoneNumbers::metaData());
+          } else {
+            return null;
+          }
+        }),
       'nowrap'   => true,
       'select'   => 'T',
       'maxlen'   => 384,
@@ -463,6 +470,13 @@ __EOT__;
     $opts['fdd']['FixedLinePhone'] = array(
       'tab'      => array('id' => 'musician'),
       'name'     => L::t('Fixed Line Phone'),
+      'display'  => array('popup' => function($data) {
+          if (PhoneNumbers::validate($data)) {
+            return nl2br(PhoneNumbers::metaData());
+          } else {
+            return null;
+          }
+        }),
       'nowrap'   => true,
       'select'   => 'T',
       'maxlen'   => 384,
@@ -592,14 +606,14 @@ __EOT__;
       echo '
 <form class="float"
       id="file_upload_form"
-      action="'.\OCP\Util::linkTo('cafevdb', 'ajax/inlineimage/uploadimage.php').'" 
+      action="'.\OCP\Util::linkTo('cafevdb', 'ajax/inlineimage/uploadimage.php').'"
       method="post"
       enctype="multipart/form-data"
       target="file_upload_target">
   <input type="hidden" name="requesttoken" value="'.\OCP\Util::callRegister().'">
   <input type="hidden" name="RecordId" value="'.Util::getCGIRecordId().'">
   <input type="hidden" name="ImagePHPClass" value="CAFEVDB\Musicians">
-  <input type="hidden" name="ImageSize" value="1200"> 
+  <input type="hidden" name="ImageSize" value="1200">
   <input type="hidden" name="MAX_FILE_SIZE" value="'.Util::maxUploadSize().'" id="max_upload">
   <input type="hidden" class="max_human_file_size" value="max '.\OCP\Util::humanFileSize(Util::maxUploadSize()).'">
   <input id="file_upload_start" type="file" accept="image/*" name="imagefile" />
@@ -615,7 +629,7 @@ __EOT__;
       echo '<PRE>';
       print_r($_POST);
       echo '</PRE>';
-    }   
+    }
 
   } // display()
 

@@ -85,6 +85,10 @@
             <title>PHP IBAN Library</title>
             <link>http://code.google.com/p/php-iban/</link>
           </item>
+          <item>
+            <title>libphonenumber for PHP</title>
+            <link>https://github.com/giggsey/libphonenumber-for-php</link>
+          </item>
         </credits>
 	<require>7</require>
 </info>
