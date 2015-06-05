@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2015 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -57,7 +57,7 @@ namespace CAFEVDB
       $calKey       = $eventKind.'calendar';
       $calendarName = Config::getSetting($calKey, L::t($eventKind));
       $calendarId   = Config::getSetting($calKey.'id', false);
-      
+
       $eventData = array('title' => $title,
                          'from' => date('d-m-Y', $timeStamp),
                          'to' => date('d-m-Y', $timeStamp),
@@ -68,7 +68,7 @@ namespace CAFEVDB
                          'repeat' => 'doesnotrepeat',
                          'calendar' => $calendarId,
                          'alarm' => $alarm);
-      
+
       return Events::newEvent($eventData);
     }
 
@@ -93,7 +93,7 @@ namespace CAFEVDB
       $calKey       = $taskKind.'calendar';
       $calendarName = Config::getSetting($calKey, L::t($taskKind));
       $calendarId   = Config::getSetting($calKey.'id', false);
-      
+
       $taskData = array('title' => $title,
                          'due' => date('d-m-Y', $timeStamp),
                          'start' => date('d-m-Y'),
@@ -103,7 +103,7 @@ namespace CAFEVDB
                          'calendar' => $calendarId,
                          'priority' => 99, // will get a star if != 0
                          'alarm' => $alarm);
-      
+
       return Events::newTask($taskData);
     }
 
@@ -126,8 +126,8 @@ namespace CAFEVDB
     {
       return !preg_match('@[^'.self::$sepaCharset.']@', $string);
     }
-    
-    
+
+
     /**The "SEPA mandat reference" must be unique per mandat, consist
      * more or less of alpha-numeric characters and has a maximum length
      * of 35 characters. We choose the format
@@ -139,10 +139,10 @@ namespace CAFEVDB
      * to make the reference a little bit more readable. YEAR is only
      * added if the project name carries a year.
      */
-    public static function generateSepaMandateReference($projectId, $musicianId, $handle = false) 
+    public static function generateSepaMandateReference($projectId, $musicianId, $handle = false)
     {
       $musicianName = Musicians::fetchName($musicianId, $handle);
-      $projectName = Projects::fetchName($projectId, $handle);    
+      $projectName = Projects::fetchName($projectId, $handle);
 
       $musicianName['firstName'] .= 'X';
       $musicianName['lastName'] .= 'X';
@@ -185,7 +185,7 @@ namespace CAFEVDB
         $row = mySQL::fetch($result);
         if ($row['mandateReference']) {
           $mandate = $row;
-        }      
+        }
       }
 
       if ($cooked) {
@@ -202,7 +202,7 @@ namespace CAFEVDB
           $mandate = false;
         }
       }
-      
+
       if ($ownConnection) {
         mySQL::close($handle);
       }
@@ -211,9 +211,9 @@ namespace CAFEVDB
     }
 
     /**Set the sequence type based on the last-used date and the
-     * recurring/non-recurring status. 
+     * recurring/non-recurring status.
      */
-    public static function sepaMandateSequenceType($mandate) 
+    public static function sepaMandateSequenceType($mandate)
     {
       if (!isset($mandate['lastUsedDate'])) {
         // Need the date to decide about the type
@@ -243,7 +243,7 @@ namespace CAFEVDB
       // error: cannot compute sequenceType.
       return false;
     }
-    
+
     /**Given a mandate with plain text columns, encrypt them. */
     public static function encryptSepaMandate(&$mandate)
     {
@@ -313,7 +313,7 @@ namespace CAFEVDB
       }
 
       $dateIssued = date('Y-m-d', $timeStamp);
-      
+
       $ownConnection = $handle === false;
       if ($ownConnection) {
         Config::init();
@@ -331,7 +331,7 @@ namespace CAFEVDB
           mySQL::logUpdate($table, 'id', $oldValues, $newValues, $handle);
         }
       }
-      
+
       if ($ownConnection) {
         mySQL::close($handle);
       }
@@ -348,8 +348,8 @@ namespace CAFEVDB
 
       return $result;
     }
-    
-    
+
+
     /**Store a SEPA-mandate, possibly with only partial
      * information. mandateReference, musicianId and projectId are
      * required.
@@ -357,7 +357,7 @@ namespace CAFEVDB
     public static function storeSepaMandate($mandate, $handle = false)
     {
       $result = false;
-    
+
       if (!is_array($mandate) ||
           !isset($mandate['mandateReference']) ||
           !isset($mandate['musicianId']) ||
@@ -370,7 +370,7 @@ namespace CAFEVDB
         $mandate['nonrecurring'] = $sequenceType == 'once';
         unset($mandate['sequenceType']);
       }
-      
+
       $ref = $mandate['mandateReference'];
       $mus = $mandate['musicianId'];
       $prj = $mandate['projectId'];
@@ -405,7 +405,7 @@ namespace CAFEVDB
         if (!is_array($oldMandate) ||
             !isset($oldMandate['mandateReference']) ||
             !isset($oldMandate['musicianId']) ||
-            !isset($oldMandate['projectId']) ||          
+            !isset($oldMandate['projectId']) ||
             $oldMandate['mandateReference'] != $ref ||
             $oldMandate['musicianId'] != $mus ||
             $oldMandate['projectId'] != $prj) {
@@ -449,14 +449,14 @@ namespace CAFEVDB
       $table = 'SepaDebitMandates';
       $where = "`projectId` = $projectId AND `musicianId` = $musicianId";
       $oldValues = mySQL::fetchRows($table, $where, $handle);
-      
+
       $query = "DELETE FROM `".$table."` WHERE ".$where;
       $result = mySQL::query($query, $handle);
 
       if ($result !== false && count($oldValues) > 0) {
         mySQL::logDelete($table, 'id', $oldValues[0], $handle);
       }
-      
+
       if ($ownConnection) {
         mySQL::close($handle);
       }
@@ -501,7 +501,7 @@ namespace CAFEVDB
       }
       //
       ////////////////////////////////////////////////////////////////
-      
+
       foreach($keys as $key) {
         if (!isset($mandate[$key])) {
           throw new \InvalidArgumentException(
@@ -538,7 +538,7 @@ namespace CAFEVDB
           $nl.
           print_r($mandate, true));
       }
-      
+
       // Verify that the dates are not in the future, and that the
       // mandateDate is set (last used maybe 0)
       //
@@ -586,7 +586,7 @@ namespace CAFEVDB
           $nl.
           print_r($mandate, true));
       }
-      
+
       // Check IBAN and BIC: extract the bank and bank account id,
       // check both with BAV, regenerate the BIC
       $IBAN = $mandate['IBAN'];
@@ -618,7 +618,7 @@ namespace CAFEVDB
             $nl.
             print_r($mandate, true));
         }
-        
+
         $bav = new \malkusch\bav\BAV;
 
         if (!$bav->isValidBank($ibanBLZ)) {
@@ -653,25 +653,25 @@ namespace CAFEVDB
         }
 
       }
-      
+
       return true;
     }
-    
+
     /********************************************************
      * Funktionen fuer die Umwandlung und Verifizierung von IBAN/BIC
      * Fragen/Kommentare bitte auf http://donauweb.at/ebusiness-blog/2013/07/25/iban-und-bic-statt-konto-und-blz/
      ********************************************************/
-  
+
     /********************************************************
      * BLZ und BIC in AT: http://www.conserio.at/bankleitzahl/
      * BLZ und BIC in DE: http://www.bundesbank.de/Redaktion/DE/Standardartikel/Kerngeschaeftsfelder/Unbarer_Zahlungsverkehr/bankleitzahlen_download.html
      ********************************************************/
-  
+
     /********************************************************
      * Funktion zur Plausibilitaetspruefung einer IBAN-Nummer, gilt fuer alle Laender
-     * Das Ganze ist deswegen etwas spannend, weil eine Modulo-Rechnung, also eine Ganzzahl-Division mit einer 
-     * bis zu 38-stelligen Ganzzahl durchgefuehrt werden muss. Wegen der meist nur zur Verfuegung stehenden 
-     * 32-Bit-CPUs koennen mit PHP aber nur maximal 9 Stellen mit allen Ziffern genutzt werden. 
+     * Das Ganze ist deswegen etwas spannend, weil eine Modulo-Rechnung, also eine Ganzzahl-Division mit einer
+     * bis zu 38-stelligen Ganzzahl durchgefuehrt werden muss. Wegen der meist nur zur Verfuegung stehenden
+     * 32-Bit-CPUs koennen mit PHP aber nur maximal 9 Stellen mit allen Ziffern genutzt werden.
      * Deshalb muss die Modulo-Rechnung in mehere Teilschritte zerlegt werden.
      * http://www.michael-schummel.de/2007/10/05/iban-prufung-mit-php
      ********************************************************/
@@ -700,7 +700,7 @@ namespace CAFEVDB
         return ($rest==1) ? true : false;
     }
 
-    public static function testCI($ci) 
+    public static function testCI($ci)
     {
       $ci = preg_replace('/\s+/', '', $ci); // eliminate space
       $country      = substr($ci, 0, 2);
@@ -731,7 +731,7 @@ namespace CAFEVDB
       return $iban;
     }
 
-    public static function validateSWIFT($swift) 
+    public static function validateSWIFT($swift)
     {
       return preg_match('/^([a-zA-Z]){4}([a-zA-Z]){2}([0-9a-zA-Z]){2}([0-9a-zA-Z]{3})?$/i', $swift);
     }

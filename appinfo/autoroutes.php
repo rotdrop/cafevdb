@@ -74,6 +74,9 @@ $this->create("cafevdb_ajax_expertmode_makewikiprojecttoc.php", "ajax/expertmode
 $this->create("cafevdb_ajax_expertmode_syncevents.php", "ajax/expertmode/syncevents.php")
   ->actionInclude("cafevdb/ajax/expertmode/syncevents.php");
 
+$this->create("cafevdb_ajax_expertmode_sanitizephones.php", "ajax/expertmode/sanitizephones.php")
+  ->actionInclude("cafevdb/ajax/expertmode/sanitizephones.php");
+
 $this->create("cafevdb_ajax_export_csv.php", "ajax/export/csv.php")
   ->actionInclude("cafevdb/ajax/export/csv.php");
 
@@ -139,6 +142,9 @@ $this->create("cafevdb_ajax_insurance_validate.php", "ajax/insurance/validate.ph
 
 $this->create("cafevdb_ajax_musicians_validate.php", "ajax/musicians/validate.php")
   ->actionInclude("cafevdb/ajax/musicians/validate.php");
+
+$this->create("cafevdb_ajax_musicians_validatephone.php", "ajax/musicians/validatephone.php")
+  ->actionInclude("cafevdb/ajax/musicians/validatephone.php");
 
 $this->create("cafevdb_ajax_page-loader.php", "ajax/page-loader.php")
   ->actionInclude("cafevdb/ajax/page-loader.php");

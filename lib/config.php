@@ -87,6 +87,7 @@ streetAddressHouseNumber
 streetAddressCity
 streetAddressZIP
 streetAddressCountry
+phoneNumber
 bankAccountOwner
 bankAccountIBAN
 bankAccountBLZ
@@ -169,7 +170,7 @@ redaxoRehearsalsModule
 
     public static function logoutListener($params)
     {
-      self::init();    
+      self::init();
 
       // OC does not destroy the session on logout, additionally, there
       // is not alway a logout event. But if there is one, we destroy
@@ -178,7 +179,7 @@ redaxoRehearsalsModule
     }
 
     public static function changePasswordListener($params) {
-      self::init();    
+      self::init();
       $group = self::getAppValue('usergroup', '');
       $user = $params['uid'];
       if ($group != '' && \OC_Group::inGroup($user, $group)) {
@@ -208,7 +209,7 @@ redaxoRehearsalsModule
       $email = \OCP\Config::getUserValue('admin', 'settings', 'email');
       return array('name' => $name,
                    'email' => $email);
-    }  
+    }
 
     /**A short-cut, redirecting to the stock functions for the
      * logged-in user.
@@ -293,7 +294,7 @@ redaxoRehearsalsModule
       // Now try to decrypt the data-base encryption key
       self::setEncryptionKey($usrdbkey);
       $sysdbkey = self::getValue('encryptionkey');
-    
+
       if ($sysdbkey != $usrdbkey) {
         // Failed
         self::setEncryptionKey('');
@@ -302,7 +303,7 @@ redaxoRehearsalsModule
       }
 
       // Otherwise store the key in the session data
-      self::setEncryptionKey($sysdbkey);    
+      self::setEncryptionKey($sysdbkey);
     }
 
     static public function recryptEncryptionKey($login, $password, $enckey = false)
@@ -347,7 +348,7 @@ redaxoRehearsalsModule
       // so there is no need to encrypt it again.
 
       self::setUserValue('publicSSLKey', $pubKey, $login);
-      self::setUserValue('privateSSLKey', $privKey, $login); 
+      self::setUserValue('privateSSLKey', $privKey, $login);
     }
 
     static public function setUserKey($user, $enckey = false)
@@ -428,7 +429,7 @@ redaxoRehearsalsModule
         // Really: DO NOT DO THIS. PERIOD.
         if (openssl_pkey_export($key, $key) === false) {
           return false;
-        }      
+        }
       }
       if ($permanent) {
         self::sessionStoreValue('privatekey', $key);
@@ -483,7 +484,7 @@ redaxoRehearsalsModule
       $size = mcrypt_module_get_algo_key_size(self::MCRYPT_CIPHER);
       return Util::generateRandomBytes($size);
     }
-    
+
     /**Store the encryption key in the session data. This cannot (i.e.:
      *must not) fail.
      *
@@ -587,7 +588,7 @@ redaxoRehearsalsModule
         $value = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_128,
                                               $enckey,
                                               $src,
-                                              MCRYPT_MODE_ECB)); 
+                                              MCRYPT_MODE_ECB));
       }
       return $value;
     }
@@ -615,7 +616,7 @@ redaxoRehearsalsModule
                                 base64_decode($value),
                                 MCRYPT_MODE_ECB);
         $cnt = intval(substr($value, 0, 4), 16);
-        $md5 = substr($value, 4, 32);      
+        $md5 = substr($value, 4, 32);
         $value = substr($value, 36, $cnt);
 
         if (strlen($md5) != 32 || strlen($value) != $cnt || $md5 != md5($value)) {
@@ -635,12 +636,12 @@ redaxoRehearsalsModule
       // or keys with supported length.
       $newKey = self::padEncryptionKey($newKey);
       $oldKey = self::padEncryptionKey($oldKey);
-      
+
       if ($ownConnection) {
         self::init();
         $handle = mySQL::connect(self::$pmeopts);
       }
-    
+
       $allTables = array();
       foreach (self::encryptedDataBaseTables() as $table) {
         $allTables[] = $table['table'];
@@ -656,7 +657,7 @@ redaxoRehearsalsModule
           $primaryKey    = $table['key'];
           $columns       = $table['encryptedColumns'];
           $queryColumns  = '`'.$primaryKey.'`,`'.implode('`,`', $columns).'`';
-        
+
           $query = "SELECT ".$queryColumns." FROM `".$tableName."` WHERE 1";
           //throw new \Exception($query);
           $result = mySQL::query($query, $handle);
@@ -686,16 +687,16 @@ redaxoRehearsalsModule
         if ($ownConnection) {
           mySQL::close($handle);
         }
-      
+
         throw $exception;
       }
-        
+
       // Unlock again
       mySQL::query("UNLOCK TABLES");
       if ($ownConnection) {
         mySQL::close($handle);
       }
-    
+
       return true;
     }
 
@@ -730,10 +731,10 @@ redaxoRehearsalsModule
       $name = Musicians::fetchName($musicianId);
       $dbName = trim($name['firstName'].' '.$name['lastName']);
       $dbName = preg_replace('/\s+/', ' ', $dbName);
-      
+
       $ocName = trim(\OC_User::getDisplayName($uid));
       $ocName = preg_replace('/\s+/', ' ', $ocName);
-      
+
       return strtolower($ocName) == strtolower($dbName);
     }
 
@@ -790,7 +791,7 @@ redaxoRehearsalsModule
     }
 
     static public function init() {
-      
+
       if (self::$initialized == true) {
         return;
       }
@@ -875,7 +876,7 @@ redaxoRehearsalsModule
                                    'sort'     => true,
                                    'nowrap'   => true,
                                    'escape'   => true);
-    
+
       self::$opts['money'] = array('name' => 'Unkostenbeitrag<BR/>(Gagen negativ)',
                                    //'phpview' => self::$prefix . 'money.inc.php',
                                    'mask'  => '%02.02f'.' &euro;',
@@ -885,7 +886,7 @@ redaxoRehearsalsModule
                                    'maxlen' => '8', // NB: +NNNN.NN = 8
                                    'escape' => false,
                                    'sort' => true);
-    
+
       self::$opts['datetime'] = array('select'   => 'T',
                                       'maxlen'   => 19,
                                       'sort'     => true,
@@ -900,7 +901,7 @@ redaxoRehearsalsModule
                                   'css'      => array('postfix' => ' birthday date'),
                                   'datemask' => 'd.m.Y');
       self::$opts['birthday'] = self::$opts['date'];
-      
+
       //  add as needed
       self::$opts['languages'] = array(
         '' => L::t('no preference'),
@@ -954,7 +955,7 @@ redaxoRehearsalsModule
       $imap->disconnect();
 
       ini_set('error_reporting', $oldReporting);
-      
+
       return $result;
     }
 
@@ -978,13 +979,13 @@ redaxoRehearsalsModule
       $mail->SMTPAuth = true;
       $mail->Username = $user;
       $mail->Password = $password;
-        
+
       try {
         $mail->SmtpConnect();
         $mail->SmtpClose();
       } catch (\Exception $exception) {
         $result = false;
-      }    
+      }
 
       return $result;
     }
@@ -1011,8 +1012,8 @@ redaxoRehearsalsModule
                      \OCP\PERMISSION_UPDATE|
                      \OCP\PERMISSION_DELETE);
 
-      $token =\OCP\Share::getItemShared($type, $id, \OCP\Share::FORMAT_NONE);    
-    
+      $token =\OCP\Share::getItemShared($type, $id, \OCP\Share::FORMAT_NONE);
+
       // Note: getItemShared() returns an array with one element, strip
       // the outer array!
       if (is_array($token) && count($token) == 1) {
@@ -1141,7 +1142,7 @@ redaxoRehearsalsModule
       }
 
       $key = 'sharedfolder';
-      try {      
+      try {
         $result[$key]['status'] = $result['shareowner']['status'] && self::sharedFolderExists();
       } catch (\Exception $e) {
         $result[$key]['message'] = $e->getMessage();
@@ -1149,10 +1150,10 @@ redaxoRehearsalsModule
 
       $summary = true;
       foreach ($result as $key => $value) {
-        $summary = $summary && $value['status'];  
+        $summary = $summary && $value['status'];
       }
       $result['summary'] = $summary;
-    
+
       return $result;
     }
 
@@ -1162,7 +1163,7 @@ redaxoRehearsalsModule
     public static function shareGroupExists()
     {
       $group = Config::getAppValue('usergroup');
-    
+
       if (!\OC_Group::groupExists($group)) {
         return false;
       }
@@ -1178,7 +1179,7 @@ redaxoRehearsalsModule
      *
      * @return bool, @c true on success.
      */
-    public static function shareOwnerExists($shareowner = '') 
+    public static function shareOwnerExists($shareowner = '')
     {
       $sharegroup = Config::getAppValue('usergroup');
       $shareowner === '' && $shareowner = Config::getValue('shareowner');
@@ -1186,7 +1187,7 @@ redaxoRehearsalsModule
       if ($shareowner === false) {
         return false;
       }
-    
+
       if (!\OC_user::isEnabled($shareowner)) {
         return false;
       }
@@ -1197,7 +1198,7 @@ redaxoRehearsalsModule
        * How paranoid should we be?
        */
       $groups = \OC_Group::getUserGroups($shareowner);
-    
+
       // well, the share-owner should in turn only be owned by the
       // group.
       if (count($groups) != 1) {
@@ -1280,7 +1281,7 @@ redaxoRehearsalsModule
 
           $rootView = new \OC\Files\View($vfsroot);
           $info = $rootView->getFileInfo($sharedfolder);
-        
+
           if ($info) {
             $id = $info['fileid'];
             return ConfigCheck::groupSharedExists($id, $sharegroup, 'folder');
@@ -1356,7 +1357,7 @@ redaxoRehearsalsModule
               !$rootView->mkdir($sharedfolder)) {
             return false;
           }
-        
+
           if (!$rootView->file_exists($sharedfolder) ||
               !$rootView->is_dir($sharedfolder)) {
             throw new \Exception('Still does not exist.');
@@ -1364,7 +1365,7 @@ redaxoRehearsalsModule
 
           // Now it should exist as directory. Share it
           // Nice ass-hole stuff. We need the id.
- 
+
           //\OC\Files\Cache\Cache::scanFile($sharedfolder, $vfsroot);
           //$id = \OC\Files\Cache\Cache::getId($sharedfolder, $vfsroot);
           $info = $rootView->getFileInfo($sharedfolder);
@@ -1378,13 +1379,13 @@ redaxoRehearsalsModule
             \OC_Log::write('CAFEVDB', 'No file info for ' . $sharedfolder, \OC_Log::ERROR);
             return false;
           }
-              
+
           return true; // seems to be ok ...
         });
 
       return self::sharedFolderExists($sharedfolder);
     }
-  
+
     /**Check for existence of the project folder and create it when not
      * found.
      *
@@ -1412,17 +1413,17 @@ redaxoRehearsalsModule
         return false;
       }
 
-      /* Ok, then there should be a folder /$sharedFolder */    
+      /* Ok, then there should be a folder /$sharedFolder */
 
       $fileView = \OC\Files\Filesystem::getView();
 
       $projectsFolder = trim(preg_replace('|[/]+|', '/', $projectsFolder), "/");
       $projectsFolder = explode('/', $projectsFolder);
-    
+
       $path = '/'.$sharedFolder;
 
       //trigger_error("Path: ".print_r($projectsFolder, true), E_USER_NOTICE);
-      
+
       foreach ($projectsFolder as $pathComponent) {
         $path .= '/'.$pathComponent;
         //trigger_error("Path: ".$path, E_USER_NOTICE);
@@ -1433,7 +1434,7 @@ redaxoRehearsalsModule
           $fileView->mkdir($path);
           if (!$fileView->is_dir($path)) {
             return false;
-          }      
+          }
         }
       }
 
@@ -1457,12 +1458,12 @@ redaxoRehearsalsModule
         if ($handle === false) {
           return false;
         }
-      
+
         if (Events::configureDatabase($handle) === false) {
           mySQL::close($handle);
           return false;
         }
-      
+
         mySQL::close($handle);
         return true;
 

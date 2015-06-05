@@ -65,14 +65,14 @@ namespace CAFEVDB {
 'Please do not add duplicates to the data-base. If you do, then others
 will have to clean up after you.
 
-Please continue if you know what you are doing. Please use the seach
+Please continue if you know what you are doing. Please use the search
 facilities before adding new musicians. Thanks.');
     }
 
     \OCP\JSON::success(
       array('data' => array('message' => nl2br($message),
                             'debugText' => $debugText)));
-    
+
     return true;
 
   } catch (\Exception $e) {
@@ -101,10 +101,10 @@ facilities before adding new musicians. Thanks.');
                             'Please copy the displayed text and send it by email to %s.',
                             array($mailto)),
           'debug' => htmlspecialchars($debugText))));
- 
+
     return false;
   }
-  
+
 }
 
 ?>

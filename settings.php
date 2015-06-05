@@ -81,6 +81,8 @@ namespace CAFEVDB {
       $tmpl->assign('streetAddressZIP', Config::getValue('streetAddressZIP'));
       $tmpl->assign('streetAddressCountry', Config::getValue('streetAddressCountry'));
 
+      $tmpl->assign('phoneNumber', Config::getValue('phoneNumber'));
+
       $tmpl->assign('bankAccountOwner', Config::getValue('bankAccountOwner'));
       $tmpl->assign('bankAccountIBAN', Config::getValue('bankAccountIBAN'));
       $tmpl->assign('bankAccountBLZ', Config::getValue('bankAccountBLZ'));
@@ -95,7 +97,7 @@ namespace CAFEVDB {
                     Config::getSetting('memberTableId', -1));
       $tmpl->assign('executiveBoardTableId',
                     Config::getSetting('executiveBoardTableId', -1));
-      
+
       $tmpl->assign('orchestra', Config::getValue('orchestra'));
 
       // musician ids of the officials

@@ -44,7 +44,7 @@ namespace CAFEVDB
     {
       if (self::$l === false) {
         self::$l = \OC_L10N::get('cafevdb');
- 
+
         // If I omit the next line then the first call to $l->t()
         // generates a spurious new-line. Why?
         //
@@ -71,7 +71,7 @@ namespace CAFEVDB
       self::debug($msg, $tracelevel, $debuglevel);
       exit();
     }
-  
+
     public static function debug($msg, $tracelevel = 0, $debuglevel = \OCP\Util::DEBUG)
     {
       if (PHP_VERSION >= "5.4") {
@@ -79,7 +79,7 @@ namespace CAFEVDB
       } else {
         $call = debug_backtrace(false);
       }
-    
+
       $call = $call[$tracelevel];
       if ($debuglevel !== false) {
         \OCP\Util::writeLog(Config::APP_NAME,
@@ -136,7 +136,7 @@ namespace CAFEVDB
         self::exceptions_error_handler($error["type"], $error["message"], $error["file"], $error["line"]);
       }
     }
-  
+
     /**Error handler which redirects some errors into the exception
      * queue. Errors not inclued in error_reporting() do not result in
      * exceptions to be thrown.
@@ -175,7 +175,7 @@ namespace CAFEVDB
     /**Add some java-script external code (e.g. Google maps). Emit it
      * with emitExternalScripts().
      */
-    public static function addExternalScript($script = '') 
+    public static function addExternalScript($script = '')
     {
       self::$externalScripts[] = $script;
     }
@@ -201,7 +201,7 @@ __EOT__;
 
     /**Add some java-script inline-code. Emit it with emitInlineScripts().
      */
-    public static function addInlineScript($script = '') 
+    public static function addInlineScript($script = '')
     {
       self::$inlineScripts[] = $script;
     }
@@ -234,7 +234,7 @@ __EOT__;
       if ($tz) {
         date_default_timezone_set($tz);
       }
-    
+
       $oldlocale = setlocale(LC_TIME, '0');
       if ($locale) {
         setlocale(LC_TIME, $locale);
@@ -246,7 +246,7 @@ __EOT__;
 
       return $result;
     }
-    
+
     /**Return the locale. */
     public static function getLocale()
     {
@@ -260,7 +260,7 @@ __EOT__;
     {
       \OC::$CLASSPATH['OC_Calendar_App'] = 'calendar/lib/app.php';
       return \OC_Calendar_App::getTimezone();
-    }  
+    }
 
     /**Return the maximum upload file size. */
     public static function maxUploadSize($target = 'temporary')
@@ -279,7 +279,7 @@ __EOT__;
 
     /**Check whether we are logged in.
      */
-    public static function authorized() 
+    public static function authorized()
     {
       \OC_Util::checkLoggedIn();
       \OC_Util::checkAppEnabled(Config::APP_NAME);
@@ -291,7 +291,7 @@ __EOT__;
     {
       Config::init();
 
-      return Config::$expertmode && Config::$debug[$key];    
+      return Config::$expertmode && Config::$debug[$key];
     }
 
     /**Emit an error message or exception. If CAFEVDB\\Error::exceptions()
@@ -348,7 +348,7 @@ __EOT__;
     public static function alert($text, $title, $cssid = false)
     {
       //$text = htmlspecialchars($text, ENT_QUOTES, 'UTF-8', false);
-      //$title = htmlspecialchars($title, ENT_QUOTES, 'UTF-8', false);    
+      //$title = htmlspecialchars($title, ENT_QUOTES, 'UTF-8', false);
       //$text  = addslashes($text);
       //$title = addslashes($title);
       $class = $cssid === false ? '' : ' '.$cssid;
@@ -358,7 +358,7 @@ __EOT__;
     }
 
     public static function redirect($page, $proto = null, $host = null, $port = null, $uri = null) {
-  
+
       /* Redirect auf eine andere Seite im aktuell angeforderten Verzeichnis */
       if (!$proto) {
         if(isset($_SERVER['HTTPS'])) {
@@ -404,13 +404,13 @@ __EOT__;
       return;
       $exp_gmt = gmdate("D, d M Y H:i:s", time() + $minutes * 60) ." GMT";
       $mod_gmt = gmdate("D, d M Y H:i:s", getlastmod()) ." GMT";
-    
+
       header("Expires: " . $exp_gmt, false);
       header("Last-Modified: " . $mod_gmt, false);
       header("Cache-Control: private, max-age=" . $minutes * 60, false);
       // Speziell für MSIE 5
       header("Cache-Control: pre-check=" . $minutes * 60, false);
-    }  
+    }
 
     /**Get the post- or get-value from the request, or from the config
      * space if a default value exists.
@@ -451,12 +451,12 @@ __EOT__;
       $source = isset($_POST) ? $_POST : (isset($_GET) ? $_GET : Config::$cgiVars);
 
       $keys = preg_grep($pattern, array_keys($source));
-    
+
       $result = array();
       foreach ($keys as $key) {
         $result[$key] = $source[$key];
       }
-    
+
       return $result;
     }
 
@@ -508,8 +508,8 @@ __EOT__;
       }
 
       return $recordId > 0 ? $recordId : -1;
-    }  
-  
+    }
+
     public static function composeURL($location)
     {
       // Assume an absolute location w.r.t. to SERVERROOT
@@ -527,14 +527,14 @@ __EOT__;
     public static function URLIsValid($location)
     {
       $location = self::composeURL($location);
-    
+
       \OCP\Util::writeLog(Config::APP_NAME, "Checking ".$location, \OC_LOG::DEBUG);
 
       // Don't try to access it if it is not a valid URL
       if (filter_var($location, FILTER_VALIDATE_URL) === false) {
         return false;
       }
-    
+
       return true;
     }
 
@@ -621,6 +621,10 @@ __EOT__;
     public static function beforeAnythingTrimAnything($pme, $op, $step, $oldvals, &$changed, &$newvals)
     {
       foreach ($newvals as $key => &$value) {
+        // Convert unicode space to ordinary space
+        $value = str_replace("\xc2\xa0", "\x20", $value);
+
+        // Then trim away ...
         $value = trim($value);
         if (array_search($key, $changed) === false && $oldvals[$key] != $value) {
           $changed[] = $key;
@@ -640,7 +644,7 @@ __EOT__;
       }
       $postData['requesttoken'] = \OC_Util::callRegister();
       $url .= '?requesttoken='.\OC_Util::callRegister();
-      
+
       switch ($type) {
       case 'json':
         if (is_array($postData)) {
@@ -706,7 +710,7 @@ __EOT__;
 
         session_start(); // restart it
       }
-      
+
       $data = json_decode($result, true);
       if (!is_array($data) || (count($data) > 0 && !isset($data['data']))) {
         throw new \RunTimeException(
@@ -719,7 +723,7 @@ __EOT__;
         return $data;
       }
     }
-    
+
   };
 
 /**Support class to generate navigation buttons and the like.
@@ -785,7 +789,7 @@ __EOT__;
       }
       return $result;
     }
-  
+
 
     /**Recursively emit hidden input elements to represent the given
      * data. $value may be a nested array.
@@ -808,7 +812,7 @@ __EOT__;
         return '<input type="hidden" name="'.$key.'" value="'.Util::htmlEscape($value).'"/>'."\n";
       }
     }
-  
+
 
     /**Acutally rather a multi-select than a button, meant as drop-down
      * menu. Generates data which can be passed to prependTableButton()
@@ -920,14 +924,14 @@ __EOT__;
      *
      * @param $capitalizeFirstCharacter self explaining.
      */
-    public static function dashesToCamelCase($string, $capitalizeFirstCharacter = false) 
-    {    
+    public static function dashesToCamelCase($string, $capitalizeFirstCharacter = false)
+    {
       $str = str_replace(' ', '', ucwords(str_replace('-', ' ', $string)));
-    
+
       if (!$capitalizeFirstCharacter) {
         $str[0] = strtolower($str[0]);
       }
-    
+
       return $str;
     }
 
@@ -943,7 +947,7 @@ __EOT__;
     {
       return self::htmlTagsFromArray($buttons);
     }
-  
+
     /**Generate some html tags. Up to now only buttons and option
      * elements.
      */
@@ -1035,7 +1039,7 @@ __EOT__;
           if (isset($tag['image'])) {
             $style = 'background:url(\''.$tag['image'].'\') no-repeat center;'.$style;
             $name  = '';
-          }                 
+          }
           $style = isset($tag['style']) ? ' style="'.$tag['style'].'"' : '';
           $name  = $name != '' ? ' name="'.Util::htmlEscape($name).'"' : '';
           $html .= ''
@@ -1092,7 +1096,7 @@ __EOT__;
     {
       return self::pageControlElement($id, false, $projectName, $projectId);
     }
-    
+
     /**Generate a couple of list item with anchors for the app-nabigation menu.
      *
      * @param[in] string $id One of
@@ -1124,7 +1128,7 @@ __EOT__;
     {
       return self::pageControlElement($id, true, $projectName, $projectId);
     }
-    
+
     /**Generate a couple of standard buttons, identified by Ids.
      *
      * @param[in] string $id One of
@@ -1415,7 +1419,7 @@ $value
 </li>
 __EOT__;
       }
-      
+
       return $form;
     }
   };
@@ -1489,7 +1493,7 @@ __EOT__;
 
       //specify database
       $dbres = @mysql_select_db($opts['db'], $handle);
-  
+
       if (!$dbres) {
         Util::error(L::t('Unable to select %s', array($opts['db'])), $die, $silent);
         return false;
@@ -1517,7 +1521,7 @@ __EOT__;
     {
       if ($handle !== false) {
         return @mysql_error($handle);
-      
+
       } else {
         return @mysql_error();
       }
@@ -1562,6 +1566,11 @@ __EOT__;
       return mysql_insert_id($handle);
     }
 
+    public static function numRows($res)
+    {
+      return mysql_num_rows($res);
+    }
+
     public static function fetch(&$res, $type = MYSQL_ASSOC)
     {
       $result = @mysql_fetch_array($res, $type);
@@ -1577,13 +1586,13 @@ __EOT__;
         return @mysql_real_escape_string($string, $handle);
       } else {
         return @mysql_real_escape_string($string);
-      }    
+      }
     }
 
     // Extract set or enum keys
     public static function multiKeys($table, $column, $handle)
     {
-      // Build SQL Query  
+      // Build SQL Query
       $query = "SHOW COLUMNS FROM $table LIKE '$column'";
 
       // Fetch the result or die
@@ -1624,7 +1633,7 @@ __EOT__;
      *  ...
      *
      * Example:
-     * 
+     *
      * $viewStructure = array(
      *   'MusikerId' => array(
      *     'table' => 'Musiker',
@@ -1641,7 +1650,7 @@ __EOT__;
      *       'condition' => ('`Musiker`.`Id` = `Besetzungen`.`MusikerId` '.
      *                     'AND '.
      *                     $projectId.' = `Besetzungen`.`ProjektId`')
-     *       ),                                  
+     *       ),
      *     ),
      *
      * The left-most join table is always the table of the first element
@@ -1671,7 +1680,7 @@ __EOT__;
           $name = $joinedColumn['column'];
           $as = ' AS '.$bt.$joinColumn.$bt;
         }
-        $select .= 
+        $select .=
           $ind.$ind.
           $bt.$joinedColumn['table'].$bt.$dot.$bt.$name.$bt.
           $as.
@@ -1721,20 +1730,20 @@ __EOT__;
       if ($ownConnection) {
         Config::init();
         $handle = self::connect(Config::$pmeopts);
-      }      
+      }
 
       $result = self::query($query, $handle);
 
       if ($ownConnection) {
         self::close($handle);
       }
-      
+
       return $result;
     }
 
     /**Update a couple of values into a table.
      */
-    public static function update($table, $where, $newValues, $handle) 
+    public static function update($table, $where, $newValues, $handle)
     {
       if (empty($newValues)) {
         return true; // don't care
@@ -1747,22 +1756,22 @@ __EOT__;
       }
       $query .= implode(", ", $setter);
       $query .= " WHERE (".$where.")";
-      
+
       $ownConnection = $handle === false;
       if ($ownConnection) {
         Config::init();
         $handle = self::connect(Config::$pmeopts);
-      }      
+      }
 
       $result = self::query($query, $handle);
 
       if ($ownConnection) {
         self::close($handle);
       }
-      
+
       return $result;
     }
-    
+
     /**Convenience function: fetch some rows of a table.
      *
      * @param[in] $where The conditions (excluding the WHERE keyword)
@@ -1780,7 +1789,7 @@ __EOT__;
     public static function fetchRows($table, $where = '1', $handle = null, $die = true, $slient = false)
     {
       $query = "SELECT * FROM `".$table."` WHERE (".$where.")";
-      
+
       $ownConnection = $handle === false;
       if ($ownConnection) {
         Config::init();
@@ -1796,14 +1805,14 @@ __EOT__;
       } else {
         $result = false;
       }
-      
+
       if ($ownConnection) {
         self::close($handle);
       }
-      
+
       return $result;
     }
-    
+
     /**Insert an "insert" entry into the changelog table. The function
      * will log the inserted data, the user name and the remote IP
      * address.
@@ -1843,10 +1852,10 @@ __EOT__;
       if ($ownConnection) {
         Config::init();
         $handle = self::connect(Config::$pmeopts);
-      }      
-        
+      }
+
       self::query($logQuery, $handle, false, true);
-      
+
       if ($ownConnection) {
         self::close($handle);
       }
@@ -1896,10 +1905,10 @@ __EOT__;
       if ($ownConnection) {
         Config::init();
         $handle = self::connect(Config::$pmeopts);
-      }      
-        
+      }
+
       self::query($logQuery, $handle, false, true);
-      
+
       if ($ownConnection) {
         self::close($handle);
       }
@@ -1951,7 +1960,7 @@ __EOT__;
       if (count($changed) == 0) {
         return true; // nothing changed
       }
-      
+
       // log the result, but ignore any errors generated by the log query
       $recId = $oldValues[$recIdColumn];
 
@@ -1959,7 +1968,7 @@ __EOT__;
       if ($ownConnection) {
         Config::init();
         $handle = self::connect(Config::$pmeopts);
-      }  
+      }
 
       foreach ($changed as $key => $value) {
         $oldValue = isset($oldValues[$key]) ? $oldValues[$key] : '';
@@ -1974,7 +1983,7 @@ __EOT__;
 
         self::query($logQuery, $handle, false, true);
       }
-      
+
       if ($ownConnection) {
         self::close($handle);
       }

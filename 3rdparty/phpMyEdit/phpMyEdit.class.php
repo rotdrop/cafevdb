@@ -154,7 +154,7 @@ class phpMyEdit
 	var $message;		// informational message to print
 	var $notify;		// change notification e-mail adresses
 	var $logtable;		// name of optional logtable
-	var $miscphp;		// callback function for multi-purpose custom misc button 
+	var $miscphp;		// callback function for multi-purpose custom misc button
 	var $misccss;       // major css class name for misc buttons
 	var $misccss2;      // minor css class name for misc buttons
 	var $navigation;	// navigation style
@@ -320,7 +320,7 @@ class phpMyEdit
 		return htmlspecialchars($string, ENT_COMPAT|ENT_HTML401, 'UTF-8', $double_encode);
 	}
 
-	function disabledTag($k) 
+	function disabledTag($k)
 	{
 		if ($this->readonly($k)) {
 			return $this->display['readonly'];
@@ -391,7 +391,7 @@ class phpMyEdit
 		}
 		return ($this->filter_operation() && stristr($options, 'F'));
 	} /* }}} */
-	
+
 	function debug_var($name, $val) /* {{{ */
 	{
 		if (is_array($val) || is_object($val)) {
@@ -421,7 +421,7 @@ class phpMyEdit
 		// Gnah.
 		$this->myquery("SET NAMES 'utf8'", $this->dbh);
 	} /* }}} */
-		
+
 
 	function sql_disconnect() /* {{{ */
 	{
@@ -496,11 +496,11 @@ class phpMyEdit
 		return $ret;
 	} /* }}} */
 
-	/* end of sql functions */ 
+	/* end of sql functions */
 
 	function make_language_labels($language) /* {{{ */
 	{
-		// Language might look like this: 
+		// Language might look like this:
 		// de-de,en-us;q=0.8,de;q=0.5,en;q=0.3
 
 		/* echo '<PRE>'; */
@@ -541,7 +541,7 @@ class phpMyEdit
 		/* echo '<PRE>'; */
 		/* print_r($langar); */
 		/* echo '</PRE>'; */
-		
+
 		foreach ($langar as $lang => $qual) {
 			// try the full language w/ variant, but prefer UTF8
 			$language = strtoupper($lang).'-UTF8';
@@ -1150,7 +1150,7 @@ class phpMyEdit
 						break;
 
 					}
-					
+
 					if (is_array($this->fdd[$k]['values2'])) {
 						$sqlKey = $this->fqn($k, true, true);
 						switch ($compare) {
@@ -1168,7 +1168,7 @@ class phpMyEdit
 									}
 								}
 								if (count($ids) > 0) {
-									$ar[$sqlKey] = array('oper'	=> 'IN', 'value' => '('.join(',', $ids).')');	
+									$ar[$sqlKey] = array('oper'	=> 'IN', 'value' => '('.join(',', $ids).')');
 								}
 							}
 							break;
@@ -1189,7 +1189,7 @@ class phpMyEdit
 									}
 								}
 								if (count($ids) > 0) {
-									$ar[$sqlKey] = array('oper'	=> 'IN', 'value' => '('.join(',', $ids).')');	
+									$ar[$sqlKey] = array('oper'	=> 'IN', 'value' => '('.join(',', $ids).')');
 								}
 							}
 							break;
@@ -1203,7 +1203,7 @@ class phpMyEdit
 								}
 							}
 							if (count($ids) > 0) {
-								$ar[$sqlKey] = array('oper'	=> 'IN', 'value' => '('.join(',', $ids).')');	
+								$ar[$sqlKey] = array('oper'	=> 'IN', 'value' => '('.join(',', $ids).')');
 							}
 							break;
 						}
@@ -1431,7 +1431,7 @@ class phpMyEdit
 				// Simple edit box required
 				$len_props = '';
 				$maxlen = intval($this->fdd[$k]['maxlen']);
-				$size	= isset($this->fdd[$k]['size']) ? $this->fdd[$k]['size'] : min($maxlen, 60); 
+				$size	= isset($this->fdd[$k]['size']) ? $this->fdd[$k]['size'] : min($maxlen, 60);
 				if ($size > 0) {
 					$len_props .= ' size="'.$size.'"';
 				}
@@ -1484,7 +1484,21 @@ class phpMyEdit
 				continue;
 			}
 			$helptip = NULL;
-			if (isset($this->fdd[$k]['tooltip']) && $this->fdd[$k]['tooltip'] != '') {
+			if (isset($this->fdd[$k]['display']['popup'])) {
+				$popup = $this->fdd[$k]['display']['popup'];
+				if ($popup === 'data') {
+					$helptip = $cell_data;
+				} else if ($popup === 'tooltip') {
+					if (isset($this->fdd[$k]['tooltip']) && $this->fdd[$k]['tooltip'] != '') {
+						$helptip = $this->fdd[$k]['tooltip'];
+					}
+				} else if (is_callable($popup)) {
+					$helptip = call_user_func($popup, $cell_data);
+				}
+				if ($helptip) {
+					$title = ' title="'.$this->enc($helptip).'"';
+				}
+			} else if (isset($this->fdd[$k]['tooltip']) && $this->fdd[$k]['tooltip'] != '') {
 				$helptip = $this->fdd[$k]['tooltip'];
 			}
 			if (isset($this->fdd[$k]['encryption'])) {
@@ -1542,7 +1556,7 @@ class phpMyEdit
 		}
 	} /* }}} */
 
-	function display_change_field($row, $k, $help = NULL) /* {{{ */ 
+	function display_change_field($row, $k, $help = NULL) /* {{{ */
 	{
 		$css_postfix	= @$this->fdd[$k]['css']['postfix'];
 		$css_class_name = $this->getCSSclass('input', null, true, $css_postfix);
@@ -1623,7 +1637,7 @@ class phpMyEdit
 			}
 			$len_props = '';
 			$maxlen = intval($this->fdd[$k]['maxlen']);
-			$size	= isset($this->fdd[$k]['size']) ? $this->fdd[$k]['size'] : min($maxlen, 60); 
+			$size	= isset($this->fdd[$k]['size']) ? $this->fdd[$k]['size'] : min($maxlen, 60);
 			if ($size > 0) {
 				$len_props .= ' size="'.$size.'"';
 			}
@@ -1661,7 +1675,7 @@ class phpMyEdit
 		}
 		$len_props = '';
 		$maxlen = intval($this->fdd[$k]['maxlen']);
-		$size	= isset($this->fdd[$k]['size']) ? $this->fdd[$k]['size'] : min($maxlen, 60); 
+		$size	= isset($this->fdd[$k]['size']) ? $this->fdd[$k]['size'] : min($maxlen, 60);
 		if ($size > 0) {
 			$len_props .= ' size="'.$size.'"';
 		}
@@ -1941,7 +1955,7 @@ class phpMyEdit
 		}
 		if (@$this->fdd[$k]['phpview']) {
 			$value = include($this->fdd[$k]['phpview']);
-		}		
+		}
 		if ($this->col_has_php($k)) {
 			$php = $this->fdd[$k]['php'];
 			if (is_array($php)) {
@@ -1982,9 +1996,9 @@ class phpMyEdit
 			return '';
 		} else {
 			return ' title="'.$this->enc($title).'" ';
-		}	
+		}
 	}
-	
+
 
 	function doFetchToolTip($css_class_name, $name, $label = false)
 	{
@@ -2006,12 +2020,12 @@ class phpMyEdit
 				}
 			}
 		}
-		
+
 		// otherwise use name, label, css in that order
 		if(isset($this->tooltips[$name])) {
 			return $this->tooltips[$name];
 		} elseif($label && isset($this->tooltips[$label])) {
-			return $this->tooltips[$label];	
+			return $this->tooltips[$label];
 		}
 		foreach ($css_classes as $css_class_name) {
 			if (isset($this->tooltips[$css_class_name])) {
@@ -2027,7 +2041,7 @@ class phpMyEdit
 				}
 			}
 		}
-		
+
 		// We got really nothing. So what.
 		return '';
 	}
@@ -2755,17 +2769,17 @@ class phpMyEdit
 			$kv_array = array();
 			$nummax = min($this->total_recs, 100);
 			$kv_array[-1] = '&infin;';
-			for ($i = 1; $i < min(5,$nummax); ++$i) {							 
+			for ($i = 1; $i < min(5,$nummax); ++$i) {
 				$kv_array[$i] = $i;
 				if ($this->inc == $i) {
 					$selected = (string)$i;
-				}			 
+				}
 			}
 			for ($i = 5; $i < $nummax; $i += 5) {
 				$kv_array[$i] = $i;
 				if ($this->inc == $i) {
 					$selected = (string)$i;
-				}			 
+				}
 			}
 			if (!isset($selected) && $this->inc >= 0) {
 				$kv_array[$this->inc] = $this->inc;
@@ -2824,7 +2838,7 @@ class phpMyEdit
 		 * Draw the filter and fill it with any data typed in last pass and stored
 		 * in the array parameter keyword 'filter'. Prepare the SQL WHERE clause.
 		 */
-	
+
 		// Filter row retrieval
 		/*$fields	  = false;
 		  $filter_row = array();//$row;
@@ -2903,7 +2917,7 @@ class phpMyEdit
 				echo '</div>';
 			} elseif (($this->fdd[$fd]['select'] == 'N' ||
 					   $this->fdd[$fd]['select'] == 'T')
-					  &&			  
+					  &&
 					  $this->filtered($k)) {
 				$len_props = '';
 				$maxlen = intval($this->fdd[$k]['maxlen']);
@@ -2943,7 +2957,7 @@ class phpMyEdit
 		echo $this->htmlSubmit('sfn', 'Clear', $this->getCSSclass('clear'), false);
 		echo "</td>\n";
 		echo '<td class="',$css_class_name,'" colspan="',$this->num_fields_displayed,'">';
-		echo $this->labels['Sorted By'],': ',join(', ', $this->sort_fields_w),'</td></tr>',"\n";	
+		echo $this->labels['Sorted By'],': ',join(', ', $this->sort_fields_w),'</td></tr>',"\n";
 	} /* }}} */
 
 	function display_current_query() /* {{{ */
@@ -2995,7 +3009,7 @@ class phpMyEdit
 			}
 			if ($lineCallback !== false) {
 				$line[] = $fdn;
-			}			
+			}
 		}
 		if ($lineCallback) {
 			call_user_func($lineCallback, $i, $line);
@@ -3039,7 +3053,7 @@ class phpMyEdit
 		}
 
 		error_reporting($error_reporting);
-	}	 
+	}
 
 	/* Quick and dirty CSV-export. Blobs will probably fail. But so
 	 * what.
@@ -3056,7 +3070,7 @@ class phpMyEdit
 			function ($i, $lineData) use ($handle, $delim, $enclosure) {
 				fputcsv($handle, $lineData, $delim, $enclosure);
 			});
-	}	 
+	}
 
 	/*
 	 * Table Page Listing @@@@
@@ -3123,7 +3137,7 @@ class phpMyEdit
 			echo $this->htmlHiddenSys('qfn', $this->qfn);
 			echo $this->htmlHiddenSys('fm', $this->fm);
 			echo $this->htmlHiddenSys('np', $this->inc);
-			echo $this->htmlHiddenSys('translations', $this->translations);	
+			echo $this->htmlHiddenSys('translations', $this->translations);
 			echo $this->htmlHiddenSys('cur_tab', $this->cur_tab);
 		}
 
@@ -3132,7 +3146,7 @@ class phpMyEdit
 		} else {
 			$tab_class = '';
 		}
-	
+
 		echo '<table class="',$this->getCSSclass('main'),$tab_class,'" summary="',$this->tb,'">',"\n";
 		echo '<thead><tr class="',$this->getCSSclass('header'),'">',"\n";
 		/*
@@ -3255,7 +3269,7 @@ class phpMyEdit
 		if ($qparts['orderby'] && $this->display['sort']) $this->display_sorting_sequence();
 		// Display the current query
 		if ($this->display['query']) $this->display_current_query();
-		
+
 		if ($this->nav_text_links() || $this->nav_graphic_links()) {
 			$qstrparts = array();
 			strlen($this->fl)			  > 0 && $qstrparts[] = $this->cgi['prefix']['sys'].'fl'.'='.$this->fl;
@@ -3265,7 +3279,7 @@ class phpMyEdit
 			strlen($this->cgi['persist']) > 0 && $qstrparts[] = $this->cgi['persist'];
 			foreach ($this->mrecs as $key => $value) {
 				$qstrparts[] = $this->cgi['prefix']['sys'].'mrecs['.$key.']='.$value;
-			}				 
+			}
 			$qpview		 = $qstrparts;
 			$qpcopy		 = $qstrparts;
 			$qpchange	 = $qstrparts;
@@ -3447,23 +3461,23 @@ class phpMyEdit
 				}
 				$cell_data = $this->cellDisplay($k, $row, $css_class_name);
 				$title = '';
+				$helptip = NULL;
 				if (isset($this->fdd[$k]['display']['popup'])) {
-					$helptip = NULL;
-					switch ($this->fdd[$k]['display']['popup']) {
-					case 'data':
+					$popup = $this->fdd[$k]['display']['popup'];
+					if ($popup === 'data') {
 						$helptip = $cell_data;
-						break;
-					case 'tooltip':
+					} else if ($popup === 'tooltip') {
 						if (isset($this->fdd[$k]['tooltip']) && $this->fdd[$k]['tooltip'] != '') {
 							$helptip = $this->fdd[$k]['tooltip'];
 						}
-						break;
-					default:
-						break;
+					} else if (is_callable($popup)) {
+						$helptip = call_user_func($popup, $cell_data);
 					}
-					if ($helptip) {	
+					if ($helptip) {
 						$title = ' title="'.$this->enc($helptip).'"';
 					}
+				} else if (isset($this->fdd[$k]['tooltip']) && $this->fdd[$k]['tooltip'] != '') {
+					$helptip = $this->fdd[$k]['tooltip'];
 				}
 				echo '<td class="',$css_class_name,'"',$this->getColAttributes($fd),' ';
 				echo $this->getColAlign($fd),$title,'>';
@@ -3940,7 +3954,7 @@ class phpMyEdit
 
 		// remove deleted record from misc selection
 		unset($this->mrecs[$this->rec]);
-		
+
 		// Notify list
 		if (@$this->notify['delete'] || @$this->notify['all']) {
 			$this->email_notify($oldvals, false);
@@ -4073,7 +4087,7 @@ class phpMyEdit
 		$oldvals = $newvals = $changed = array();
 		return $this->exec_triggers($op, $step, $oldvals, $changed, $newvals);
 	} /* }}} */
-	
+
 	/*
 	 * Recreate functions
 	 */
@@ -4309,7 +4323,7 @@ class phpMyEdit
 		}
 		return true;
 	} /* }}} */
-	
+
 	/*
 	 * The workhorse
 	 */
@@ -4336,7 +4350,7 @@ class phpMyEdit
 
 		// Let's do explicit quoting - it's safer
 		// (but 5.3 does not have this at all)
-		if (version_compare(PHP_VERSION, '5.3.0', '<')) { 
+		if (version_compare(PHP_VERSION, '5.3.0', '<')) {
 			set_magic_quotes_runtime(0);
 		}
 
@@ -4420,7 +4434,7 @@ class phpMyEdit
 			$this->recreate_displayed();
 			$this->backward_compatibility();
 		}
-		
+
 
 		/*
 		 * ======================================================================
@@ -4512,7 +4526,7 @@ class phpMyEdit
 		if (! isset($this->page_name)) {
 			$this->page_name = basename($this->get_server_var('PHP_SELF'));
 			isset($this->page_name) || $this->page_name = $this->tb;
-		} 
+		}
 		$this->display['query'] = @$opts['display']['query'];
 		$this->display['sort']	= @$opts['display']['sort'];
 		$this->display['time']	= @$opts['display']['time'];
@@ -4619,7 +4633,7 @@ class phpMyEdit
 			} elseif (($i = array_search("-$k", $this->sfn, true)) !== false) {
 				$this->sfn[$i] = "$k";
 			}
-		}								 
+		}
 
 		isset($opts['sort_field'])	  || $opts['sort_field'] = array();
 		is_array($opts['sort_field']) || $opts['sort_field'] = array($opts['sort_field']);
@@ -4680,7 +4694,7 @@ class phpMyEdit
 		 * that.
 		 */
 		if (count($opquery) > 1) {
-			die("Too many faked _GET parameters.");		   
+			die("Too many faked _GET parameters.");
 		}
 		$key = $this->cgi['prefix']['sys'].'rec';
 		if (isset($opquery[$key])) {
@@ -4721,7 +4735,7 @@ class phpMyEdit
 						foreach($val as $key2 => $val2) {
 							$this->cgi['persist'] .= '&'.rawurlencode($key)
 								.'['.rawurlencode($key2).']='.rawurlencode($val2);
-						}	
+						}
 					} else {
 						$this->cgi['persist'] .= '&'.http_build_query(array($key => $val));
 					}
@@ -4760,7 +4774,7 @@ class phpMyEdit
 			elseif($navfmup!=NULL && $navfmup != $this->fm) $this->navfm = $navfmup;
 			elseif($navpndown!=NULL && ($navpndown-1)*$this->inc != $this->fm) $this->navfm = ($navpndown-1)*$this->inc;
 			elseif($navpnup!=NULL && ($navpnup-1)*$this->inc != $this->fm) $this->navfm = ($navpnup-1)*$this->inc;
-			else $this->navfm = $this->fm; 
+			else $this->navfm = $this->fm;
 		}
 		$this->saveadd		= $this->get_sys_cgi_var('saveadd');
 		$this->moreadd		= $this->get_sys_cgi_var('moreadd');
