@@ -23,7 +23,7 @@
 
 /**CamerataDB namespace to prevent name-collisions.
  */
-namespace CAFEVDB 
+namespace CAFEVDB
 {
 
 /**Administrative support functions.
@@ -43,14 +43,14 @@ class Admin
     $query = "SELECT MAX(UPDATE_TIME)
 FROM   information_schema.tables
 WHERE  TABLE_SCHEMA = '".Config::$dbopts['db']."'";
-    
+
     $handle = mySQL::connect(Config::$dbopts);
 
     $result = mySQL::query($tzquery, $handle);
     $numrows = mysql_num_rows($result);
     if ($numrows === 1) {
       foreach (mySQL::fetch($result) as $key => $value) {
-        $tz = $value;    
+        $tz = $value;
       }
     }
 
@@ -148,9 +148,91 @@ WHERE  TABLE_SCHEMA = '".Config::$dbopts['db']."'";
 
     mySQL::close($handle);
 
-    print '<H4>Success</H4><BR/>';    
+    print '<H4>Success</H4><BR/>';
 
   }
+
+  /**Normalize all phone numbers, and move mobile numbers to their
+   * proper column.
+   */
+  public static function sanitizePhoneNumbers()
+  {
+    Config::init();
+
+    $handle = mySQL::connect(Config::$pmeopts);
+
+    // Fetch the list of projects
+    $query = 'SELECT `Id`, `MobilePhone`, `FixedLinePhone` FROM `Musiker` WHERE 1';
+    $result = mySQL::query($query, $handle);
+
+    while ($line = mySQL::fetch($result)) {
+      $id = $line['Id'];
+      $oldMobile = $mobile = trim($line['MobilePhone']);
+      $oldFixedLine = $fixedLine = trim($line['FixedLinePhone']);
+
+      $mobileIsMobile = false;
+      $fixedIsMobile = false;
+
+      $mobildeValid = false;
+      $fixedValid = false;
+
+      if (PhoneNumbers::validate($mobile)) {
+        $mobile = PhoneNumbers::format();
+        $mobileIsMobile = PhoneNumbers::isMobile();
+        $mobileValid = true;
+        //print '<H4>Phone number '.$mobile.' validated.</H4><BR/>';
+      } else if ($mobile != '') {
+        print '<H4>Phone number '.$mobile.' failed to validate.</H4><BR/>';
+      }
+
+      if (PhoneNumbers::validate($fixedLine)) {
+        $fixedLine = PhoneNumbers::format();
+        $fixedIsMobile = PhoneNumbers::isMobile();
+        $fixedValid = true;
+        //print '<H4>Phone number '.$fixedLine.' validated.</H4><BR/>';
+      } else if ($fixedLine != '') {
+        print '<H4>Phone number '.$fixedLine.' failed to validate.</H4><BR/>';
+      }
+
+      // switch columns as appropriate
+
+      if (!$fixedValid && $mobile != '' && !$mobileIsMobile) {
+        $tmp = $fixedLine;
+        $fixedLine = $mobile;
+        $mobile = $tmp;
+        print '<H4>Moving fixed line number '.$fixedLine.' to correct column.</H4><BR/>';
+      }
+
+      if (!$mobileValid && $fixedLine != '' && $fixedIsMobile) {
+        $tmp = $mobile;
+        $mobile = $fixedLine;
+        $fixedLine = $tmp;
+        $mobileIsMobile = true;
+        $fixedIsMobile = false;
+        print '<H4>Moving mobile number '.$mobile.' to correct column.</H4><BR/>';
+      }
+
+      if ($mobile != '' && $fixedLine != '' && !$mobileIsMobile && $fixedIsMobile) {
+        $tmp = $fixedLine;
+        $fixedLine = $mobile;
+        $mobile = $tmp;
+        $mobileIsMobile = true;
+        $fixedLineIsMovile = false;
+        print '<H4>Exchanging columns of '.$mobile.' and '.$fixedLine.'.</H4><BR/>';
+      }
+
+      if ($oldMobile != $mobile || $oldFixedLine != $fixedLine) {
+        $query = "UPDATE `Musiker` SET `MobilePhone` = '".$mobile."', `FixedLinePhone` = '".$fixedLine."'
+  WHERE `Id` = ".$id;
+        mySQL::query($query, $handle);
+        //print '<H4>'.$query.'</H4><BR/>';
+      }
+
+    }
+
+    mySQL::close($handle);
+  }
+
 
 };
 

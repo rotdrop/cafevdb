@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2015 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -19,7 +19,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-$(document).ready(function(){
+$(document).ready(function() {
 
   var popup = $('#appsettings_popup');
   var button = $('#expertbutton');
@@ -33,58 +33,65 @@ $(document).ready(function(){
 
   $('#appsettings_popup h2').html(t('cafevdb', 'Advanced operations, use with care'));
 
-  $('#syncevents').click(function(){
-    var post  = $( '#syncevents' ).serialize();
-    $.post( OC.filePath('cafevdb', 'ajax/expertmode', 'syncevents.php'), post, function(data){
+  $('#syncevents').click(function() {
+    var post  = $('#syncevents').serialize();
+    $.post(OC.filePath('cafevdb', 'ajax/expertmode', 'syncevents.php'), post, function(data) {
       $('#expertmode .msg').html(data.data.message);
     });
   });
 
-  $('#makeviews').click(function(){
-    var post  = $( '#makeviews' ).serialize();
-    $.post( OC.filePath('cafevdb', 'ajax/expertmode', 'makeviews.php'), post, function(data){
+  $('#makeviews').click(function() {
+    var post  = $('#makeviews').serialize();
+    $.post(OC.filePath('cafevdb', 'ajax/expertmode', 'makeviews.php'), post, function(data) {
       $('#expertmode .msg').html(data);
     });
   });
 
-  $('#makewikiprojecttoc').click(function(){
+  $('#makewikiprojecttoc').click(function() {
     var post  = $(this).serialize();
-    $.post( OC.filePath('cafevdb', 'ajax/expertmode', 'makewikiprojecttoc.php'), post, function(data){
+    $.post(OC.filePath('cafevdb', 'ajax/expertmode', 'makewikiprojecttoc.php'), post, function(data) {
       $('#expertmode .msg').html(data);
     });
   });
 
-  $('#attachwebpages').click(function(){
+  $('#attachwebpages').click(function() {
     var post  = $(this).serialize();
-    $.post( OC.filePath('cafevdb', 'ajax/expertmode', 'attachwebpages.php'), post, function(data){
+    $.post(OC.filePath('cafevdb', 'ajax/expertmode', 'attachwebpages.php'), post, function(data) {
       $('#expertmode .msg').html(data);
     });
   });
 
-  $('#checkinstruments').click(function(){
-    var post  = $( '#checkinstruments' ).serialize();
-    $.post( OC.filePath('cafevdb', 'ajax/expertmode', 'checkinstruments.php'), post, function(data){
+  $('#checkinstruments').click(function() {
+    var post  = $('#checkinstruments').serialize();
+    $.post(OC.filePath('cafevdb', 'ajax/expertmode', 'checkinstruments.php'), post, function(data) {
       $('#expertmode .msg').html(data);
     });
   });
 
-  $('#adjustinstruments').click(function(){
-    var post  = $( '#adjustinstruments' ).serialize();
-    $.post( OC.filePath('cafevdb', 'ajax/expertmode', 'adjustinstruments.php'), post, function(data){
+  $('#adjustinstruments').click(function() {
+    var post = $('#adjustinstruments').serialize();
+    $.post(OC.filePath('cafevdb', 'ajax/expertmode', 'adjustinstruments.php'), post, function(data) {
       $('#expertmode .msg').html(data);
     });
   });
 
-  $('#example').click(function(){
-    var post  = $( '#example' ).serialize();
-    $.post( OC.filePath('cafevdb', 'ajax/expertmode', 'example.php'), post, function(data){
+  $('#sanitizephones').click(function() {
+    var post = $(this).serialize();
+    $.post(OC.filePath('cafevdb', 'ajax/expertmode', 'sanitizephones.php'), post, function(data) {
       $('#expertmode .msg').html(data);
     });
   });
 
-  $('#clearoutput').click(function(){
-    var post  = $( '#clearoutput' ).serialize();
-    $.post( OC.filePath('cafevdb', 'ajax/expertmode', 'clearoutput.php'), post, function(data){
+  $('#example').click(function() {
+    var post  = $('#example').serialize();
+    $.post(OC.filePath('cafevdb', 'ajax/expertmode', 'example.php'), post, function(data) {
+      $('#expertmode .msg').html(data);
+    });
+  });
+
+  $('#clearoutput').click(function() {
+    var post  = $('#clearoutput').serialize();
+    $.post(OC.filePath('cafevdb', 'ajax/expertmode', 'clearoutput.php'), post, function(data) {
       $('#expertmode .msg').html(data);
     });
   });

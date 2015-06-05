@@ -53,6 +53,7 @@ OC::$CLASSPATH['CAFEVDB\ProgressStatus'] = 'cafevdb/lib/progress-status.php';
 OC::$CLASSPATH['CAFEVDB\PageLoader'] = 'cafevdb/lib/page-loader.php';
 OC::$CLASSPATH['CAFEVDB\Session'] = 'cafevdb/lib/session.php';
 OC::$CLASSPATH['CAFEVDB\PDFLetter'] = 'cafevdb/lib/pdfletter.php';
+OC::$CLASSPATH['CAFEVDB\PhoneNumbers'] = 'cafevdb/lib/phonenumbers.php';
 
 OC::$CLASSPATH['DWEMBED\App'] = 'dokuwikiembed/lib/dokuwikiembed.php';
 OC::$CLASSPATH['DWEMBED\L'] = 'dokuwikiembed/lib/util.php';
@@ -65,6 +66,7 @@ OC::$CLASSPATH['phpMyEdit'] = 'cafevdb/3rdparty/phpMyEdit/phpMyEdit.class.php';
 OC::$CLASSPATH['html2text'] = 'cafevdb/3rdparty/PHPMailer/extras/class.html2text.php';
 OC::$CLASSPATH['IBAN'] = 'cafevdb/3rdparty/php-iban/oophp-iban.php';
 OC::$CLASSPATH['malkusch\bav\BAV'] = 'cafevdb/3rdparty/bav/autoloader/autoloader.php';
+OC::$CLASSPATH['libphonenumber\PhoneNumberUtil'] = 'cafevdb/3rdparty/libphonenumber/autoloader/autoloader.php';
 require_once 'cafevdb/3rdparty/PHPMailer/PHPMailerAutoload.php';
 OC::$CLASSPATH['PEAR'] = '3rdparty/PEAR.php';
 OC::$CLASSPATH['Mail_RFC822'] = 'cafevdb/3rdparty/pear/php/Mail/RFC822.php';
@@ -93,7 +95,7 @@ OCP\Util::connectHook('OC_Calendar', 'editCalendar', 'CAFEVDB\Events', 'editCale
 /* Hurray! There is a config hook! */
 //OCP\Util::connectHook('\OCP\Config', 'js', 'CAFEVDB\Config', 'jsLoadHook');
 
-OCP\App::addNavigationEntry( array( 
+OCP\App::addNavigationEntry( array(
 	'id' => 'cafevdb',
 	'order' => 74,
 	'href' => OCP\Util::linkTo( 'cafevdb', 'index.php' ),

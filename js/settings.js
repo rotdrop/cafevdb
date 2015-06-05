@@ -224,7 +224,7 @@ $(document).ready(function() {
   var tmp =   $('#systemkey #key').val();
   $('#systemkey #key').showPassword();
   $('#systemkey #key').val(tmp);
-  
+
   tmp = $('#systemkey #oldkey').val();
   $('#systemkey #oldkey').showPassword();
   $('#systemkey #oldkey').val(tmp);
@@ -249,9 +249,9 @@ $(document).ready(function() {
         $('#appsettings_popup fieldset').removeAttr('disabled');
         $("#appsettings_popup").tabs("enable");
         $('#systemkey #standby').hide();
-        
+
         OC.Notification.hide();
-        
+
         if (data.status == "success") {
           $('#systemkey #changed').show();
             if ($('#systemkey #key').val() == '') {
@@ -305,7 +305,7 @@ $(document).ready(function() {
            });
 
     return false;
-  });  
+  });
 
   $('#keydistributebutton').click(function() {
     $('div.statusmessage').hide();
@@ -420,7 +420,7 @@ $(document).ready(function() {
     $('div.statusmessage').hide();
     $('span.statusmessage').hide();
     $('#eventsettings #msg').empty();
-    
+
     if (!$(this).is(':checked') &&
         $('#shareowner #user-saved').val() != '') {
       $('#shareowner #user').val($('#shareowner #user-saved').val());
@@ -548,7 +548,7 @@ $(document).ready(function() {
 
     return false;
   });
-  
+
   ///////////////////////////////////////////////////////////////////////////
   //
   // Events, calendars
@@ -590,7 +590,7 @@ $(document).ready(function() {
   // Sharing, share-folder
   //
   ///////////////////////////////////////////////////////////////////////////
-  
+
   $('#sharedfolderform').submit(function () { return false; });
 
   $('#sharedfolder-force').blur(function(event) {
@@ -602,7 +602,7 @@ $(document).ready(function() {
     $('div.statusmessage').hide();
     $('span.statusmessage').hide();
     $('#eventsettings #msg').empty();
-    
+
     if (!$(this).is(':checked') &&
         $('#sharedfolder-saved').val() != '') {
       $('#sharedfolder').val($('#sharedfolder-saved').val());
@@ -644,7 +644,7 @@ $(document).ready(function() {
   // Sharing, project-folder
   //
   ///////////////////////////////////////////////////////////////////////////
-  
+
   $('#projectsfolderform').submit(function () { return false; });
 
   $('#projectsfolder-force').blur(function(event) {
@@ -656,7 +656,7 @@ $(document).ready(function() {
     $('div.statusmessage').hide();
     $('span.statusmessage').hide();
     $('#eventsettings #msg').empty();
-    
+
     if (!$(this).is(':checked') &&
         $('#projectsfoldersaved').val() != '') {
       $('#projectsfolder').val($('#projectsfoldersaved').val());
@@ -706,7 +706,7 @@ $(document).ready(function() {
   // Sharing, project balance folder (for financial balance sheets)
   //
   ///////////////////////////////////////////////////////////////////////////
-  
+
   $('#projectsbalancefolderform').submit(function () { return false; });
 
   $('#projectsbalancefolder-force').blur(function(event) {
@@ -718,7 +718,7 @@ $(document).ready(function() {
     $('div.statusmessage').hide();
     $('span.statusmessage').hide();
     $('#eventsettings #msg').empty();
-    
+
     if (!$(this).is(':checked') &&
         $('#projectsbalancefoldersaved').val() != '') {
       $('#projectsbalancefolder').val($('#projectsbalancefoldersaved').val());
@@ -1028,14 +1028,16 @@ $(document).ready(function() {
   //
   ///////////////////////////////////////////////////////////////////////////
 
-  $('input[class^="streetAddress"]').blur(function(event) {
+  $('input[class^="streetAddress"], input.phoneNumber').blur(function(event) {
+    var self = $(this);
     event.preventDefault();
     $('div.statusmessage').hide();
     $('span.statusmessage').hide();
     $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
-           $(this),
+           self,
            function(data) {
              if (data.status == "success") {
+               self.val(data.data.value);
 	       $('#orchestra #msg').html(data.data.message);
 	       $('#orchestra #msg').show();
                return true;
@@ -1050,7 +1052,7 @@ $(document).ready(function() {
 
   ///////////////////////////////////////////////////////////////////////////
   //
-  // special members 
+  // special members
   //
   ///////////////////////////////////////////////////////////////////////////
 
@@ -1097,7 +1099,7 @@ $(document).ready(function() {
 	       $('#orchestra #msg').show();
                return false;
              }
-	   }, 'json');    
+	   }, 'json');
     return false;
   });
 
@@ -1249,7 +1251,7 @@ $(document).ready(function() {
                              clearInterval(CAFEVDB.creditsTimer);
                            }
                          }, 30000);
-  
+
 
   ///////////////////////////////////////////////////////////////////////////
   //
@@ -1258,7 +1260,7 @@ $(document).ready(function() {
   ///////////////////////////////////////////////////////////////////////////
 
   CAFEVDB.tipsy('#appsettings_popup');
- 
+
 });
 
 // Local Variables: ***

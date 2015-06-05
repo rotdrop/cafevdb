@@ -55,7 +55,7 @@ class Musicians
     } else if (!$this->projectMode) {
       return L::t('Overview over all registered musicians');
     } else {
-      return L::t("Add musicians to the project `%s'", array($this->projectName)); 
+      return L::t("Add musicians to the project `%s'", array($this->projectName));
     }
   }
 
@@ -204,7 +204,7 @@ make sure that the musicians are also automatically added to the
     }
 
     /* Field definitions
-   
+
        Fields will be displayed left to right on the screen in the order in which they
        appear in generated list. Here are some most used field options documented.
 
@@ -283,7 +283,7 @@ make sure that the musicians are also automatically added to the
     } else {
       $addCSS = '';
     }
-    
+
     $opts['fdd']['Name'] = array(
       'tab'      => array('id' => 'tab-all'),
       'name'     => L::t('Surname'),
@@ -378,6 +378,14 @@ __EOT__;
     $opts['fdd']['MobilePhone'] = array(
       'tab'      => array('id' => 'contact'),
       'name'     => L::t('Mobile Phone'),
+      'css'      => array('postfix' => ' phone-number'),
+      'display'  => array('popup' => function($data) {
+          if (PhoneNumbers::validate($data)) {
+            return nl2br(PhoneNumbers::metaData());
+          } else {
+            return null;
+          }
+        }),
       'select'   => 'T',
       'maxlen'   => 128,
       'sort'     => true
@@ -386,10 +394,19 @@ __EOT__;
     $opts['fdd']['FixedLinePhone'] = array(
       'tab'      => array('id' => 'contact'),
       'name'     => L::t('Fixed Line Phone'),
+      'css'      => array('postfix' => ' phone-number'),
+      'display'  => array('popup' => function($data) {
+          if (PhoneNumbers::validate($data)) {
+            return nl2br(PhoneNumbers::metaData());
+          } else {
+            return null;
+          }
+        }),
       'select'   => 'T',
       'maxlen'   => 128,
       'sort'     => true
       );
+
     $opts['fdd']['Email'] = Config::$opts['email'];
     $opts['fdd']['Email']['tab'] = array('id' => 'contact');
 
@@ -532,14 +549,14 @@ __EOT__;
       echo '
 <form class="float"
       id="file_upload_form"
-      action="'.\OCP\Util::linkTo('cafevdb', 'ajax/inlineimage/uploadimage.php').'" 
+      action="'.\OCP\Util::linkTo('cafevdb', 'ajax/inlineimage/uploadimage.php').'"
       method="post"
       enctype="multipart/form-data"
       target="file_upload_target">
   <input type="hidden" name="requesttoken" value="'.\OCP\Util::callRegister().'">
   <input type="hidden" name="RecordId" value="'.Util::getCGIRecordId().'">
   <input type="hidden" name="ImagePHPClass" value="CAFEVDB\Musicians">
-  <input type="hidden" name="ImageSize" value="1200"> 
+  <input type="hidden" name="ImageSize" value="1200">
   <input type="hidden" name="MAX_FILE_SIZE" value="'.Util::maxUploadSize().'" id="max_upload">
   <input type="hidden" class="max_human_file_size" value="max '.\OCP\Util::humanFileSize(Util::maxUploadSize()).'">
   <input id="file_upload_start" type="file" accept="image/*" name="imagefile" />
@@ -556,7 +573,7 @@ __EOT__;
       print_r($_POST);
       echo '</PRE>';
     }
-    
+
   } // display()
 
   /** phpMyEdit calls the trigger (callback) with the following arguments:
@@ -609,7 +626,7 @@ __EOT__;
       ."</div>";
     return $button;
   }
-  
+
   public static function portraitImageLinkPME($musicianId, $opts, $action, $k, $fds, $fdd, $row)
   {
     return self::portraitImageLink($musicianId, $action);
@@ -630,7 +647,7 @@ __EOT__;
     case 'change':
       $photoarea = ''
         .'<div id="contact_photo">
-        
+
   <iframe name="file_upload_target" id=\'file_upload_target\' src=""></iframe>
   <div class="tip portrait propertycontainer" id="cafevdb_inline_image_wrapper" title="'
       .L::t("Drop photo to upload (max %s)", array(\OCP\Util::humanFileSize(Util::maxUploadSize()))).'"'
@@ -667,7 +684,7 @@ __EOT__;
       Config::init();
       $handle = mySQL::connect(Config::$pmeopts);
     }
-      
+
     $query = "SELECT `PhotoData` FROM `MemberPortraits` WHERE `MemberId` = ".$musicianId;
 
     $result = mySQL::query($query, $handle);
@@ -678,18 +695,18 @@ __EOT__;
         $photo = $row['PhotoData'];
       }
     }
-    
+
     if ($ownConnection) {
       mySQL::close($handle);
     }
 
-    return $photo;    
+    return $photo;
   }
 
   /**Take a BASE64 encoded photo and store it in the DB.
    */
   public static function storeImage($musicianId, $photo, $handle = false)
-  { 
+  {
     if (!isset($photo) || $photo == '') {
       return;
     }
@@ -705,7 +722,7 @@ __EOT__;
   ON DUPLICATE KEY UPDATE `PhotoData` = '".$photo."';";
 
     $result = mySQL::query($query, $handle) && self::storeModified($musicianId, $handle);
-    
+
     if ($ownConnection) {
       mySQL::close($handle);
     }
@@ -722,7 +739,7 @@ __EOT__;
       Config::init();
       $handle = mySQL::connect(Config::$pmeopts);
     }
-      
+
     $query = "DELETE IGNORE FROM `MemberPortraits` WHERE `MemberId` = ".$musicianId;
 
     $result = mySQL::query($query, $handle) && self::storeModified($musicianId, $handle);
@@ -741,13 +758,13 @@ __EOT__;
       Config::init();
       $handle = mySQL::connect(Config::$pmeopts);
     }
-      
+
     $query = "UPDATE IGNORE `Musiker`
     SET `Aktualisiert` = '".date(mySQL::DATEMASK)."'
     WHERE `Id` = ".$musicianId;
 
     $result = mySQL::query($query, $handle);
-    
+
     if ($ownConnection) {
       mySQL::close($handle);
     }
@@ -764,7 +781,7 @@ __EOT__;
       Config::init();
       $handle = mySQL::connect(Config::$pmeopts);
     }
-      
+
     $query = "SELECT `Aktualisiert` FROM `Musiker` WHERE `Id` = ".$musicianId.";";
 
     $result = mySQL::query($query, $handle);
@@ -774,7 +791,7 @@ __EOT__;
         $modified = strtotime($row['Aktualisiert']);
       }
     }
-    
+
     if ($ownConnection) {
       mySQL::close($handle);
     }
@@ -800,7 +817,7 @@ __EOT__;
     } else {
       $row = false;
     }
-    
+
     if ($ownConnection) {
       mySQL::close($handle);
     }
@@ -837,7 +854,7 @@ __EOT__;
     } else {
       $rows = false;
     }
-    
+
     if ($ownConnection) {
       mySQL::close($handle);
     }
@@ -884,14 +901,14 @@ __EOT__;
     if ($result !== false && mysql_num_rows($result) == 1) {
       $row = mySQL::fetch($result);
     }
-    
+
     if ($ownConnection) {
       mySQL::close($handle);
     }
 
     return $row;
   }
-  
+
   /** Fetch the musician-name name corresponding to $musicianId.
    */
   public static function fetchName($musicianId, $handle = false)
@@ -909,7 +926,7 @@ __EOT__;
     if ($result !== false && mysql_num_rows($result) == 1) {
       $row = mySQL::fetch($result);
     }
-    
+
     if ($ownConnection) {
       mySQL::close($handle);
     }

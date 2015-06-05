@@ -48,7 +48,7 @@ var CAFEVDB = CAFEVDB || {};
              if (data.data.musicians.length == 1) {
                // open single person change dialog
                var musician = data.data.musicians[0];
-               //alert('data: '+CAFEVDB.print_r(musician, true));                       
+               //alert('data: '+CAFEVDB.print_r(musician, true));
                CAFEVDB.Instrumentation.loadDetailedInstrumentation(
                  form,
                  undefined,
@@ -80,11 +80,51 @@ var CAFEVDB = CAFEVDB || {};
       container = $('body');
     }
 
+    container.find('input.phone-number').
+      not('.pme-filter').
+      off('blur').
+      on('blur', function(event) {
+      event.stopImmediatePropagation();
+
+      var form = container.find('form.pme-form');
+      var phones = form.find('input.phone-number');
+      var post = form.serialize();
+      phones.prop('disabled', true);
+      $.post(OC.filePath('cafevdb', 'ajax/musicians', 'validatephone.php'),
+             post,
+             function (data) {
+               if (!CAFEVDB.ajaxErrorHandler(data, [ 'message',
+                                                     'mobilePhone',
+                                                     'fixedLinePhone' ],
+                                             function() {
+                      phones.prop('disabled', false);
+                    })) {
+                 return false;
+               }
+               // inject the sanitized value into their proper input fields
+               form.find('input[name$="MobilePhone"]').val(data.data.mobilePhone);
+               form.find('input[name$="FixedLinePhone"]').val(data.data.fixedLinePhone);
+               if (data.data.message != '') {
+                 OC.dialogs.alert(data.data.message,
+                                  t('cafevdb', 'Phone Number Validation'),
+                                  function() {
+                                    phones.prop('disabled', false);
+                                  }, true, true);
+                 CAFEVDB.debugPopup(data);
+               } else {
+                 phones.prop('disabled', false);
+               }
+               return false;
+             });
+
+      return false;
+    });
+
     container.find('input.musician-name.add-musician').
       off('blur').
       on('blur', function(event) {
       event.stopImmediatePropagation();
-      
+
       var form = container.find('form.pme-form');
       $.post(OC.filePath('cafevdb', 'ajax/musicians', 'validate.php'),
              form.serialize(),
@@ -144,7 +184,7 @@ $(document).ready(function(){
       CAFEVDB.Musicians.ready();
     }
   });
-  
+
 });
 
 // Local Variables: ***

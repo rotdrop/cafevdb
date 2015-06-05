@@ -49,7 +49,7 @@ namespace CAFEVDB {
       \OC_JSON::success(array("data" => array( "message" => Util::generateRandomBytes(32) )));
       return;
     }
-    
+
     if (isset($_POST['systemkey']) && isset($_POST['oldkey'])) {
 
       $oldkey   = $_POST['oldkey'];
@@ -110,7 +110,7 @@ namespace CAFEVDB {
         Config::setEncryptionKey($actkey);
         \OC_JSON::error(array("data" => array("message" => L::t("Configuration locked by somebody else, refusing to change encryption key."))));
         return false;
-      }  
+      }
       // Still: this does ___NOT___ hack the worst-case scenario, but should suffice for our purposes.
 
       try {
@@ -121,8 +121,8 @@ namespace CAFEVDB {
         Config::deleteAppKey('configlock');
 
         Config::setEncryptionKey($actkey);
-        \OC_JSON::error(array("data" => array("message" => $exception->getMessage())));    
-        return false;    
+        \OC_JSON::error(array("data" => array("message" => $exception->getMessage())));
+        return false;
       }
 
       // Store the new key in the session data
@@ -169,7 +169,7 @@ namespace CAFEVDB {
       \OC_JSON::success(
         array("data" => array(
                 "value" => $value,
-                "message" => L::t('Name of orchestra set to `%s\'', $value))));  
+                "message" => L::t('Name of orchestra set to `%s\'', $value))));
       return true;
     }
 
@@ -179,7 +179,7 @@ namespace CAFEVDB {
       \OC_JSON::success(
         array("data" => array(
                 "value" => $value,
-                "message" => L::t('DB-server set to `%s\'', $value))));  
+                "message" => L::t('DB-server set to `%s\'', $value))));
       return true;
     }
 
@@ -189,7 +189,7 @@ namespace CAFEVDB {
       \OC_JSON::success(
         array("data" => array(
                 "value" => $value,
-                "message" => L::t('DB-name set to `%s\'', $value))));  
+                "message" => L::t('DB-name set to `%s\'', $value))));
       return true;
     }
 
@@ -199,7 +199,7 @@ namespace CAFEVDB {
       \OC_JSON::success(
         array("data" => array(
                 "value" => $value,
-                "message" => L::t('DB-login set to `%s\'', $value))));  
+                "message" => L::t('DB-login set to `%s\'', $value))));
       return true;
     }
 
@@ -207,9 +207,9 @@ namespace CAFEVDB {
       $value = $_POST['cafevdb_dbpassword'];
 
       Config::init();
-    
+
       $opts = Config::$dbopts;
-    
+
       if ($value != '') {
         $opts['pw'] = $value;
         if (ConfigCheck::databaseAccessible($opts)) {
@@ -237,8 +237,8 @@ namespace CAFEVDB {
                     "message" => L::t('DB-test failed with stored password (empty input ignored).'))));
           return false;
         }
-    
-      } 
+
+      }
     }
 
     if (isset($_POST['shareowner-saved']))
@@ -256,13 +256,13 @@ namespace CAFEVDB {
                                     array($olduser, $actuser)))));
         return false;
       }
-  
+
       if ($olduser == '' || $force) {
         if (ConfigCheck::checkShareOwner($user)) {
           Config::setValue('shareowner', $user);
           \OC_JSON::success(
             array("data" => array( "message" => L::t('New share-owner `%s\'',
-                                                     array($user)))));      
+                                                     array($user)))));
           return true;
         } else {
           \OC_JSON::error(
@@ -303,7 +303,7 @@ namespace CAFEVDB {
                   "message" => L::t('Unable to share without share-holder `dummy-user\''))));
         return false;
       }
-  
+
       // If there is no old dummy, then just create one.
       $actfolder = Config::getSetting('sharedfolder', '');
       if ($oldfolder != $actfolder) {
@@ -313,7 +313,7 @@ namespace CAFEVDB {
                                     array($oldfolder, $actfolder)))));
         return false;
       }
-  
+
       // some of the functions below may throw an exception, catch it
 
       try {
@@ -336,7 +336,7 @@ namespace CAFEVDB {
             array("data" => array( "message" => $oldfolder.' != '.$folder )));
           return false;
         }
-    
+
         if (ConfigCheck::checkSharedFolder($folder)) {
           Config::setValue('sharedfolder', $folder);
           \OC_JSON::success(
@@ -354,7 +354,7 @@ namespace CAFEVDB {
           array("data" => array( "message" => L::t('Failure checking folder `%s\', caught an exception `%s\'',
                                                    array($folder, $e->getMessage())))));
         return false;
-      }  
+      }
 
       return false;
     }
@@ -373,7 +373,7 @@ namespace CAFEVDB {
                   "data" => $folder)));
         return false;
       }
-  
+
       // If there is no old dummy, then just create one.
       $actfolder = Config::getSetting('projectsfolder', '');
       if ($oldfolder != $actfolder) {
@@ -411,7 +411,7 @@ namespace CAFEVDB {
                                    "data" => $folder)));
           return false;
         }
-    
+
         if (ConfigCheck::checkProjectsFolder($folder)) {
           Config::setValue('projectsfolder', $folder);
           \OC_JSON::success(
@@ -432,7 +432,7 @@ namespace CAFEVDB {
                                                    array($absFolder, $e->getMessage())),
                                  "data" => $folder)));
         return false;
-      }  
+      }
 
       return false;
     }
@@ -463,7 +463,7 @@ namespace CAFEVDB {
 
       $realFolder = $folder.'/'.$projectsFolder;
       $absFolder = "/".$sharedfolder."/".$realFolder;
-  
+
       // If there is no old dummy, then just create one.
       $actfolder = Config::getSetting('projectsbalancefolder', '');
       if ($oldfolder != $actfolder) {
@@ -500,7 +500,7 @@ namespace CAFEVDB {
                                    "data" => $folder)));
           return false;
         }
-    
+
         if (ConfigCheck::checkProjectsFolder($folder.'/'.$projectsFolder)) {
           Config::setValue('projectsBalanceFolder', $folder);
           \OC_JSON::success(
@@ -521,7 +521,7 @@ namespace CAFEVDB {
                                                    array($absFolder, $e->getMessage())),
                                  "data" => $folder)));
         return false;
-      }  
+      }
 
       return false;
     }
@@ -540,10 +540,10 @@ namespace CAFEVDB {
               "message" => L::t("Exception: %s(%d): %s",
                                 array($exception->getFile(),
                                       $exception->getLine(),
-                                      $exception->getMessage())))));    
+                                      $exception->getMessage())))));
         return false;
       }
-  
+
       if ($newId !== false) {
         Config::setValue($key, $value);
         if ($id != $newId) {
@@ -558,7 +558,7 @@ namespace CAFEVDB {
         return false;
       }
       return true;
-    } 
+    }
 
     $calendarkeys = array('concertscalendar',
                           'rehearsalscalendar',
@@ -657,7 +657,7 @@ namespace CAFEVDB {
                 "message" => L::t('Unable to determine the IP-address for %s.',
                                   array($value)))));
         }
-    
+
         return true;
       }
 
@@ -790,7 +790,7 @@ namespace CAFEVDB {
       $host     = Config::getValue('smtpserver');
       $port     = Config::getValue('smtpport');
       $secure   = Config::getValue('smtpsecure');
-  
+
       $smtpok = false;
       if (ConfigCheck::checkSmtpServer($host, $port, $secure, $user, $password)) {
         $smtpmsg = L::t('SMTP connection seems functional.');
@@ -798,7 +798,7 @@ namespace CAFEVDB {
       } else {
         $smtpmsg = L::t('Unable to establish SMTP connection.');
       }
-  
+
       $result = array("data" => array('message' => $imapmsg.' '.$smtpmsg));
 
       if ($smtpok && $imapok) {
@@ -886,7 +886,7 @@ namespace CAFEVDB {
     foreach ($streetAddressSettings as $item) {
       if (isset($_POST[$item])) {
         $value = $_POST[$item];
-    
+
         Config::setValue($item, $value);
         \OC_JSON::success(
           array("data" => array(
@@ -896,9 +896,33 @@ namespace CAFEVDB {
       }
     }
 
+    // Phone number
+    $item = 'phoneNumber';
+    if (isset($_POST[$item])) {
+      $value = $_POST[$item];
+
+      if (!PhoneNumbers::validate($value)) {
+        \OC_JSON::error(
+          array(
+            "data" => array(
+              "message" => L::t("Telephone numbers %s does not appear to be a valid phone number in international format (e.g. +49 761 123456).",
+                                array($value)))));
+        return false;
+      } else {
+        $value = PhoneNumbers::format();
+        Config::setValue($item, $value);
+        \OC_JSON::success(
+          array("data" => array(
+                  'message' => L::t('Value for `%s\' set to `%s\'.',
+                                    array($item, $value)),
+                  'value' => $value)));
+        return true;
+      }
+    }
+
     $specialMembersSetttings = array('memberTable',
                                      'executiveBoardTable');
-  
+
     foreach ($specialMembersSetttings as $item) {
       if (isset($_POST[$item])) {
         $value = $_POST[$item];
@@ -914,7 +938,7 @@ namespace CAFEVDB {
           Config::setValue($item.'Id', $id);
           $msg2 = L::t('Table-id %d.', array($id));
         }
-      
+
         \OC_JSON::success(
           array("data" => array(
                   'message' => L::t("Value for `%s' set to `%s'. %s",
@@ -943,7 +967,7 @@ namespace CAFEVDB {
           array("data" => array(
                   'message' => L::t("Value for `%s' set to `%s'",
                                     array($official, $value)))));
-        return true;        
+        return true;
       }
     }
 
@@ -956,7 +980,7 @@ namespace CAFEVDB {
     foreach ($bankAccountSettings as $item) {
       if (isset($_POST[$item])) {
         $value = $_POST[$item];
-    
+
         // Allow erasing
         if ($value == '') {
           Config::setValue($item, $value);
@@ -1009,7 +1033,7 @@ namespace CAFEVDB {
               Config::setValue('bankAccountBLZ', $blz);
               Config::setValue('bankAccountBIC', $bav->getMainAgency($blz)->getBIC());
             }
-        
+
             \OC_JSON::success(
               array("data" => array(
                       'message' => L::t('Value for `%s\' set to `%s\'.', array($item, $value)),
@@ -1113,7 +1137,7 @@ namespace CAFEVDB {
         $value = $_POST[$link];
 
         $value = $value;
-        Config::setValue($link, $value);    
+        Config::setValue($link, $value);
         \OC_JSON::success(
           array("data" => array(
                   'message' => L::t('Link for `%s\' set to `%s\'.',
@@ -1143,7 +1167,7 @@ namespace CAFEVDB {
         }
         return true;
       }
-  
+
     }
 
     if (isset($_POST['error'])) {
@@ -1188,10 +1212,10 @@ namespace CAFEVDB {
                             'Please copy the displayed text and send it by email to %s.',
                             array($mailto)),
           'debug' => htmlspecialchars($debugText))));
- 
-    return false;    
+
+    return false;
   }
-  
+
 
 } // namespace CAFEVDB
 
