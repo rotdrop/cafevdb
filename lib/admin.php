@@ -173,7 +173,7 @@ WHERE  TABLE_SCHEMA = '".Config::$dbopts['db']."'";
       $mobileIsMobile = false;
       $fixedIsMobile = false;
 
-      $mobildeValid = false;
+      $mobileValid = false;
       $fixedValid = false;
 
       if (PhoneNumbers::validate($mobile)) {
