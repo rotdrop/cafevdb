@@ -75,7 +75,7 @@ namespace CAFEVDB {
                id="phoneNumber"
                name="phoneNumber"
                value="<?php echo $_['phoneNumber']; ?>"
-               title="<?php echo L::t('Phone number, URI as specified in RFC 3966, e.g. +49-761-123456.'); ?>"
+               title="<?php echo L::t('Phone number in international format, e.g. +49-761-123456.'); ?>"
                placeholder="<?php echo L::t('phone'); ?>"><br/>
       </fieldset>
       <fieldset <?php echo $off; ?> >
