@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2015 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -32,7 +32,7 @@ namespace CAFEVDB
     /**Make sure the data-base provides the necessary table(s).
      * This function may through an exception.
      */
-    public static function configureDatabase($_handle = false) 
+    public static function configureDatabase($_handle = false)
     {
       try {
         if ($_handle === false) {
@@ -185,7 +185,7 @@ namespace CAFEVDB
         Config::init();
         $handle = mySQL::connect(Config::$pmeopts);
       }
-    
+
       $event      = self::getEvent($eventId);
       $calId      = self::getCalendarId($event);
       $categories = self::getCategories($event);
@@ -194,7 +194,7 @@ namespace CAFEVDB
       $projects = Projects::fetchProjects($handle);
 
       $result = false;
-      // Do the sync. The categories stored in the event are 
+      // Do the sync. The categories stored in the event are
       // the criterion for this.
       foreach ($projects as $prKey => $prName) {
         if (in_array($prName, $categories)) {
@@ -282,7 +282,7 @@ namespace CAFEVDB
       }
       $id = $response['task']['id'];
 
-      if (isset($taskData['description'])) {        
+      if (isset($taskData['description'])) {
         $response = Util::postToRoute('tasks.tasks.setTaskNote',
                                       array('taskID' => $id),
                                       array('note' => $taskData['description']),
@@ -337,7 +337,7 @@ namespace CAFEVDB
         }
       }
     }
-    
+
     /**Inject a new event into the given calendar. This function calls
      * OC_Calendar_Object::createVCalendarFromRequest($request). $request
      * is a post-array. One example, in order to create a simple
@@ -369,12 +369,12 @@ namespace CAFEVDB
           "\n".
           print_r($eventData, true));
       }
-      
+
       $calendarId = $eventData['calendar'];
       $vcalendar = \OC_Calendar_Object::createVCalendarFromRequest($eventData);
 
       $alarm = isset($eventData['alarm']) ? $eventData['alarm'] : false;
-      if ($alarm !== false) {        
+      if ($alarm !== false) {
       /*
 BEGIN:VALARM
 DESCRIPTION:
@@ -485,7 +485,7 @@ END:VALARM
 
       return $vobject;
     }
-  
+
     /**Return the category list for the given event.
      *
      * @param[in] $stuff Either a VCALENDAR object, or the inner VEVENT,
@@ -501,7 +501,7 @@ END:VALARM
         $vcalendar = $stuff;
       } else {
         $vcalendar = self::getVCalendar($stuff);
-      }    
+      }
       $vobject = self::getVObject($vcalendar);
 
       $categories = $vobject->getAsArray('CATEGORIES');
@@ -549,7 +549,7 @@ END:VALARM
         $vcalendar = $stuff;
       } else {
         $vcalendar = self::getVCalendar($stuff);
-      }    
+      }
       $vobject = self::getVObject($vcalendar);
 
       $summary = $vobject->getAsString('SUMMARY');
@@ -596,7 +596,7 @@ END:VALARM
         $vcalendar = $stuff;
       } else {
         $vcalendar = self::getVCalendar($stuff);
-      }    
+      }
       $vobject = self::getVObject($vcalendar);
 
       $description = $vobject->getAsString('DESCRIPTION');
@@ -622,14 +622,14 @@ END:VALARM
         Config::init();
         $handle = mySQL::connect(Config::$pmeopts);
       }
-        
+
       $event      = self::getEvent($eventId);
       $categories = self::getCategories($event);
-      $calId      = self::getCalendarId($event);    
+      $calId      = self::getCalendarId($event);
 
       // Now fetch all projects and their names ...
       $projects = Projects::fetchProjects($handle);
-        
+
       // Search for matching project-tags. We assume that this is
       // not really timing critical, i.e. that there are only few
       // projects. Events may belong to more than one projet.
@@ -681,7 +681,7 @@ END:VALARM
         Config::init();
         $handle = mySQL::connect(Config::$pmeopts);
       }
-        
+
       // Link it in.
       $query =<<<__EOT__
 DELETE FROM `ProjectEvents`
@@ -731,8 +731,8 @@ __EOT__;
       unset($categories[$key]);
 
       $vcalendar = self::setCategories($vcalendar, $categories);
-    
-      \OC_Calendar_Object::edit($eventId, $vcalendar->serialize());    
+
+      \OC_Calendar_Object::edit($eventId, $vcalendar->serialize());
     }
 
     /**Replace an old category with a new one. As the code is taylored
@@ -773,7 +773,7 @@ __EOT__;
           $vcalendar = self::setSummary($vcalendar, $summary);
         }
       }
-      \OC_Calendar_Object::edit(self::eventId($event), $vcalendar->serialize());    
+      \OC_Calendar_Object::edit(self::eventId($event), $vcalendar->serialize());
     }
 
     /**Test if the given event is linked to the given project.
@@ -796,7 +796,7 @@ __EOT__;
       $query =<<<__EOT__
 FROM `ProjectEvents`
 WHERE `EventId` = $eventId
-      AND 
+      AND
      `ProjectId` = $projectId
 __EOT__;
       $result = mySQL::queryNumRows($query, $handle) > 0;
@@ -833,7 +833,7 @@ __EOT__;
             ($share['uid_owner'] != $owner)) {
           // Exclude shared items.
           continue;
-        }      
+        }
         if ($calendar['displayname'] == $dpyName) {
           $result = $calendar;
           break;
@@ -841,7 +841,7 @@ __EOT__;
       }
       return $result;
     }
-  
+
     /**Make sure there is a suitable shared calendar with the given
      * name and/or id. Create one if necesary.
      *
@@ -875,7 +875,7 @@ __EOT__;
           $shareCal = self::calendarByName($dpyName, $shareowner);
         }
       }
-    
+
       if (!$shareCal) {
         // Well, then we create one ...
         $calId = \OC_Calendar_Calendar::addCalendar($shareowner, $dpyName);
@@ -889,7 +889,7 @@ __EOT__;
         return false;
       }
 
-      // Check that we can edit, simply set the item as shared    
+      // Check that we can edit, simply set the item as shared
       ConfigCheck::sudo($shareowner, function() use ($calId, $sharegroup) {
           $result = ConfigCheck::groupShareObject($calId, $sharegroup);
           return $result;
@@ -939,7 +939,7 @@ __EOT__;
     public static function eventMatrix($projectEvents, $calendarIds)
     {
       $calendarNames = array();
-    
+
       $result = array();
 
       foreach ($calendarIds as $id) {
@@ -971,15 +971,15 @@ __EOT__;
     public static function eventCompare($a, $b)
     {
       if ($a['object']['startdate'] == $b['object']['startdate']) {
-        return 0;  
+        return 0;
       }
       if ($a['object']['startdate'] < $b['object']['startdate']) {
-        return -1;      
+        return -1;
       } else {
         return 1;
       }
     }
-  
+
     /**Fetch the event and convert the time-stamps to a PHP
      * DateTime-object with time-zone UTC.
      */
@@ -989,7 +989,7 @@ __EOT__;
       if ($event === false) {
         return false;
       }
-    
+
       $utc = new \DateTimeZone("UTC");
       $event['startdate'] = new \DateTime($event['startdate'], $utc);
       $event['enddate']   = new \DateTime($event['enddate'], $utc);
@@ -998,7 +998,7 @@ __EOT__;
     }
 
     /**Form start and end date and time in given timezone and locale,
-     * return is an array 
+     * return is an array
      *
      * array('start' => array('date' => ..., 'time' => ..., 'allday' => ...), 'end' => ...)
      *
@@ -1010,7 +1010,7 @@ __EOT__;
      *
      * @param $locale Explicit language setting to use, otherwise
      * fetched from user-settings.
-     * 
+     *
      */
     public static function eventTimes($eventObject, $timezone = null, $locale = null)
     {
@@ -1161,7 +1161,7 @@ __EOT__;
      * functions fetches all the data, not only the pivot-table. Time
      * stamps from the data-base are converted to PHP DateTime()-objects
      * with UTC time-zone.
-     * 
+     *
      * @param[in] $projectId The numeric id of the project.
      *
      * @param[in] $handle Data-base handle or false.
@@ -1169,7 +1169,7 @@ __EOT__;
      * @return Full event data for this project.
      */
     public static function events($projectId, $handle = false)
-    {    
+    {
       $events = array();
 
       $ownConnection = ($handle === false);
@@ -1177,7 +1177,7 @@ __EOT__;
         Config::init();
         $handle = mySQL::connect(Config::$pmeopts);
       }
-      
+
       $utc = new \DateTimeZone("UTC");
 
       $query =<<<__EOT__
@@ -1199,7 +1199,7 @@ __EOT__;
           $events[] = $event;
         }
       }
-    
+
       if ($ownConnection) {
         mySQL::close($handle);
       }
@@ -1213,7 +1213,7 @@ __EOT__;
      * data).
      */
     protected static function projectEvents($projectId, $handle = false)
-    {    
+    {
       $events = array();
 
       $ownConnection = $handle === false;
@@ -1221,7 +1221,7 @@ __EOT__;
         Config::init();
         $handle = mySQL::connect(Config::$pmeopts);
       }
-      
+
       $query =<<<__EOT__
 SELECT `CalendarId`,`EventId`
   FROM `ProjectEvents` WHERE `ProjectId` = $projectId
@@ -1232,7 +1232,7 @@ __EOT__;
       while ($line = mySQL::fetch($result)) {
         $events[] = $line['EventId'];
       }
-    
+
       if ($ownConnection) {
         mySQL::close($handle);
       }
@@ -1260,7 +1260,7 @@ __EOT__;
       while ($line = mySQL::fetch($result)) {
         $projects[] = $line['ProjectId'];
       }
-    
+
       if ($ownConnection) {
         mySQL::close($handle);
       }
@@ -1283,7 +1283,7 @@ __EOT__;
     static public function exportEvents($events, $projectName)
     {
       $result = '';
-    
+
       $eol = "\r\n";
 
       $result .= ""
