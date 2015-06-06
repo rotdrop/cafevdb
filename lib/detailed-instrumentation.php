@@ -509,6 +509,7 @@ __EOT__;
     $opts['fdd']['Land'] = array(
       'name'     => L::t('Country'),
       'tab'      => array('id' => 'musician'),
+      'css'      => array('postfix' => ' musician-country chosen-dropup'),
       'select'   => 'T',
       'maxlen'   => 384,
       'default'  => 'Deutschland',

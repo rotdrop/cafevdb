@@ -23,6 +23,14 @@
 namespace CAFEVDB {
 
   $off = $_['orchestra'] == '' ? 'disabled="disabled"' : '';
+  $countries = array();
+  foreach (Util::countryNames() as $country => $name) {
+    $option = array('name' => $name, 'value' => $country);
+    if ($country === $_['streetAddressCountry']) {
+      $option['flags'] = Navigation::SELECTED;
+    }
+    $countries[] = $option;
+  }
 
 ?>
   <div id="tabs-<?php echo $_['tabNr']; ?>" class="personalblock admin">
@@ -65,12 +73,14 @@ namespace CAFEVDB {
                value="<?php echo $_['streetAddressCity']; ?>"
                title="<?php echo L::t('city part of address of orchestra'); ?>"
                placeholder="<?php echo L::t('city'); ?>"><br/>
-        <input class="streetAddressCountry" type="text"
-               id="streetAddressCountry"
-               name="streetAddressCountry"
-               value="<?php echo $_['streetAddressCountry']; ?>"
-               title="<?php echo L::t('optional country part of address of orchestra'); ?>"
-               placeholder="<?php echo L::t('country (optional)'); ?>"><br/>
+        <select class="streetAddressCountry"
+                id="streetAddressCountry"
+                name="streetAddressCountry"
+                title="<?php echo L::t('country part of address of orchestra'); ?>"
+                placeholder="<?php echo L::t('country'); ?>">
+          <option></option>
+          <?php echo Navigation::selectOptions($countries); ?>
+        </select><br/>
         <input class="phoneNumber" type="text"
                id="phoneNumber"
                name="phoneNumber"

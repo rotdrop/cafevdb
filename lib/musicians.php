@@ -421,6 +421,7 @@ __EOT__;
     $opts['fdd']['Postleitzahl'] = array(
       'tab'      => array('id' => 'contact'),
       'name'     => 'Postleitzahl',
+      'css'      => array('postfix' => ' zip-code'),
       'select'   => 'T',
       'maxlen'   => 11,
       'sort'     => true
@@ -439,7 +440,9 @@ __EOT__;
       'name'     => 'Land',
       'select'   => 'T',
       'maxlen'   => 128,
-      'default'  => 'Deutschland',
+      'default'  => Config::getValue('streetAddressCountry'),
+      'values2'  => Util::countryNames(),
+      'css'      => array('postfix' => ' musician-country chosen-dropup'),
       'sort'     => true);
 
     $opts['fdd']['Geburtstag'] = Config::$opts['birthday'];
