@@ -671,14 +671,14 @@ input[disabled]:hover,
  *
  */
 
-.chosen-dropup .chosen-container-active.chosen-with-drop .chosen-single{
+.chosen-dropup:not(.pme-filter) .chosen-container-active.chosen-with-drop .chosen-single{
   -moz-border-radius-topright: 0 !important;
   border-top-right-radius: 0 !important;
   -moz-border-radius-topleft: 0 !important;
   border-top-left-radius: 0 !important;
 }
 
-.chosen-dropup .chosen-drop {
+.chosen-dropup:not(.pme-filter) .chosen-drop {
   top: auto !important;
   bottom: 23px;
   border: solid #aaa;
