@@ -510,7 +510,7 @@ __EOT__;
       'name'     => L::t('Country'),
       'tab'      => array('id' => 'musician'),
       'css'      => array('postfix' => ' musician-country chosen-dropup'),
-      'select'   => 'T',
+      'select'   => 'D',
       'maxlen'   => 384,
       'default'  => 'Deutschland',
       'sort'     => true,

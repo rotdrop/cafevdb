@@ -438,7 +438,7 @@ __EOT__;
     $opts['fdd']['Land'] = array(
       'tab'      => array('id' => 'contact'),
       'name'     => 'Land',
-      'select'   => 'T',
+      'select'   => 'D',
       'maxlen'   => 128,
       'default'  => Config::getValue('streetAddressCountry'),
       'values2'  => Util::countryNames(),
