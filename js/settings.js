@@ -1050,6 +1050,33 @@ $(document).ready(function() {
     return false;
   })
 
+  $('select.streetAddressCountry').
+    chosen({
+      disable_search_threshold: 10,
+      allow_single_deselect: true,
+      width: '30%'
+    }).
+    on('change', function(event) {
+    var self = $(this);
+    event.preventDefault();
+    $('div.statusmessage').hide();
+    $('span.statusmessage').hide();
+    $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
+           self,
+           function(data) {
+             if (data.status == "success") {
+	       $('#orchestra #msg').html(data.data.message);
+	       $('#orchestra #msg').show();
+               return true;
+             } else {
+	       $('#orchestra #msg').html(data.data.message);
+	       $('#orchestra #msg').show();
+               return false;
+             }
+	   }, 'json');
+    return false;
+  });
+
   ///////////////////////////////////////////////////////////////////////////
   //
   // special members

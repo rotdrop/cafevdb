@@ -132,7 +132,7 @@ div.cfgerror {
 
 input[type=checkbox],input[type=submit],input[type=radio],input[type=button] {
   cursor:pointer;
-} 
+}
 
 /*******************************************************************************
  *
@@ -198,7 +198,7 @@ div.cafevdb-page-header.collapsed #cafevdb-page-config-check-header {
   max-width:100%;
 }
 
-#cafevdb-page-body-config-check { 
+#cafevdb-page-body-config-check {
   padding-left:1ex;
 }
 
@@ -231,7 +231,7 @@ div.cafevdb-page-header.collapsed #cafevdb-page-config-check-header {
   padding-left:3ex;
 }
 
-li.cafevdb-page-config-check.missing span.value { 
+li.cafevdb-page-config-check.missing span.value {
   font-weight:bold;
   font-style:italic;
 }
@@ -242,11 +242,11 @@ li.cafevdb-page-config-check span.missing {
   color:Red;
 }
 
-li.cafevdb-page-config-check.set span.value { 
+li.cafevdb-page-config-check.set span.value {
   font-style:italic;
 }
 
-li.cafevdb-page-config-check span.set { 
+li.cafevdb-page-config-check span.set {
   font-style:italic;
   color:DarkGreen;
 }
@@ -299,7 +299,7 @@ body.snapjs-left #personalsettings {
   background-color:SteelBlue;
 }
 
-:disabled { 
+:disabled {
   opacity:0.3;
 }
 
@@ -517,7 +517,7 @@ div.cafevdb-note a:hover {
   padding:0.5em;
 }
 
-a.ui-tabs-anchor.compact span.ui-icon { 
+a.ui-tabs-anchor.compact span.ui-icon {
   margin:0;
   float:none;
 }
@@ -665,7 +665,29 @@ input[disabled]:hover,
   border-radius:.5em;
 }
 
-/***************************************************************************** 
+/*****************************************************************************
+ *
+ * Pull-up menu if desired
+ *
+ */
+
+.chosen-dropup .chosen-container-active.chosen-with-drop .chosen-single{
+  -moz-border-radius-topright: 0 !important;
+  border-top-right-radius: 0 !important;
+  -moz-border-radius-topleft: 0 !important;
+  border-top-left-radius: 0 !important;
+}
+
+.chosen-dropup .chosen-drop {
+  top: auto !important;
+  bottom: 23px;
+  border: solid #aaa;
+  border-width: 1px 1px 0 1px;
+  margin-top: -1px;
+  border-radius: 4px 4px 0px 0px !important;
+}
+
+/*****************************************************************************
  *
  * Style the popup and error message if the actual instrumentation
  * numbers do not match the required ones.
@@ -675,7 +697,7 @@ input[disabled]:hover,
 #missing-musicians-block {
   padding:1em 1em 1em 1em;
 }
-#missing-musicians-block .missing-musicians-title { 
+#missing-musicians-block .missing-musicians-title {
   color:red;
   font-weight:bold;
   font-size:120%;
@@ -708,7 +730,7 @@ input[disabled]:hover,
   overflow: initial;
 }
 
-/***************************************************************************** 
+/*****************************************************************************
  *
  * Password toggles and such.
  *

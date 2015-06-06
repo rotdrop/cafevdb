@@ -255,6 +255,25 @@ __EOT__;
       return $locale;
     }
 
+    /**Return an array of supported country-codes and names*/
+    public static function countryNames($locale = null)
+    {
+      if (!$locale) {
+        $locale = self::getLocale();
+      }
+      $language = locale_get_primary_language($locale);
+      $locales = resourcebundle_locales('');
+      $countryCodes = array();
+      foreach ($locales as $locale) {
+        $country = locale_get_region($locale);
+        if ($country) {
+          $countryCodes[$country] = locale_get_display_region($locale, $language);
+        }
+      }
+      asort($countryCodes);
+      return $countryCodes;
+    }
+
     /**Return the timezone, from the calendar app. */
     public static function getTimezone()
     {
