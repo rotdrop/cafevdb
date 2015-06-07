@@ -517,6 +517,8 @@ redaxoRehearsalsModule
       if ($sesdbkey === false) {
         // Get the supposed-to-be key from the session data
         $sesdbkey = self::getEncryptionKey();
+      } else {
+        $sesdbkey = self::padEncryptionKey($sesdbkey);
       }
 
       // Fetch the encrypted "system" key from the app-config table

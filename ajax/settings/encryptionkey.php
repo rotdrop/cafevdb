@@ -22,8 +22,6 @@
 
 namespace CAFEVDB {
 
-  use CAFEVDB\L;
-
   // Check if we are a user
   \OCP\JSON::checkLoggedIn();
   \OCP\JSON::checkAppEnabled('cafevdb');
@@ -37,29 +35,29 @@ namespace CAFEVDB {
 
     try {
       // Re-validate the user
-      if (\\OC_User::checkPassword($user, $password) !== $user) {
+      if (\OC_User::checkPassword($user, $password) !== $user) {
         \OCP\JSON::error(array('data' => array('message' => L::t('Invalid password for `%s\'',
                                                                  array($user)))));
         return false;
       }
 
       // Then check whether the key is correct
-      if (!CAFEVDB\Config::encryptionKeyValid($encryptionkey)) {
+      if (!Config::encryptionKeyValid($encryptionkey)) {
         \OCP\JSON::error(array('data' => array('message' => L::t('Invalid encryption key.'))));
         return false;
       }
 
       // So generate a new key-pair and store the key.
-      CAFEVDB\Config::recryptEncryptionKey($user, $password, $encryptionkey);
+      Config::recryptEncryptionKey($user, $password, $encryptionkey);
 
       // Then store the key in the session as it is the valid key
-      CAFEVDB\Config::setEncryptionKey($encryptionkey);
+      Config::setEncryptionKey($encryptionkey);
 
     } catch (\Exception $e) {
       \OC_JSON::error(
         array(
           "data" => array(
-            "message" => L::t("Exception:").$exception->getMessage())));
+            "message" => L::t("Exception:").$e->getMessage())));
       return false;
     }
 
