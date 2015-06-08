@@ -40,6 +40,8 @@ namespace CAFEVDB
     {
       if (!self::$backend) {
         self::$backend = \libphonenumber\PhoneNumberUtil::getInstance();
+      } else {
+        return;
       }
 
       $orgPhone = Config::getValue('phoneNumber', '');
