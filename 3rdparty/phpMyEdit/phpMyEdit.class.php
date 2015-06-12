@@ -135,6 +135,7 @@ class phpMyEdit
 	var $savechange;
 	var $morechange;
 	var $cancelchange;
+	var $reloadchange; // like cancelchange, but stay in change mode.
 	var $savecopy;
 	var $applycopy;
 	var $cancelcopy;
@@ -307,6 +308,7 @@ class phpMyEdit
 	function add_canceled()	   { return $this->label_cmp($this->canceladd	, 'Cancel'); }
 	function view_canceled()   { return $this->label_cmp($this->cancelview	, 'Cancel'); }
 	function change_canceled() { return $this->label_cmp($this->cancelchange, 'Cancel'); }
+	function change_reloaded() { return $this->label_cmp($this->reloadchange, 'Reload'); }
 	function copy_canceled()   { return $this->label_cmp($this->cancelcopy	, 'Cancel'); }
 	function delete_canceled() { return $this->label_cmp($this->canceldelete, 'Cancel'); }
 
@@ -1220,7 +1222,7 @@ class phpMyEdit
 	 * Create JavaScripts
 	 */
 
-	function form_begin() /* {{{ */
+	function form_begin($css_class = null) /* {{{ */
 	{
 		if (!$this->display['form']) {
 			return;
@@ -1314,7 +1316,7 @@ class phpMyEdit
 		}
 
 		if ($this->display['form']) {
-			echo '<form class="',$this->getCSSclass('form'),$tab_class,'" method="post"';
+			echo '<form class="'.$this->getCSSclass('form').$tab_class.' '.$css_class.'" method="post"';
 			echo ' action="',$page_name,'" name="'.$this->cgi['prefix']['sys'].'form">',"\n";
 		}
 		return true;
@@ -2540,6 +2542,7 @@ class phpMyEdit
 		echo 'savechange=',$this->savechange,'	 ';
 		echo 'morechange=',$this->morechange,'	 ';
 		echo 'cancelchange=',$this->cancelchange,'	 ';
+		echo 'reloadchange=',$this->reloadchange,'	 ';
 		echo 'savecopy=',$this->savecopy,'	 ';
 		echo 'applycopy=',$this->applycopy,'	 ';
 		echo 'cancelcopy=',$this->cancelcopy,'	 ';
@@ -3553,9 +3556,12 @@ class phpMyEdit
 
 	function display_record() /* {{{ */
 	{
+		$formCssClass = $this->getCSSclass('list');
+
 		// PRE Triggers
 		$ret = true;
 		if ($this->change_operation()) {
+			$formCssClass = $this->getCSSclass('change');
 			$ret &= $this->exec_triggers_simple('update', 'pre');
 			// if PRE update fails, then back to view operation
 			if (! $ret) {
@@ -3564,12 +3570,15 @@ class phpMyEdit
 			}
 		}
 		if ($this->add_operation() || $this->copy_operation()) {
+			$formCssClass = $this->getCSSclass('copyadd');
 			$ret &= $this->exec_triggers_simple('insert', 'pre');
 		}
 		if ($this->view_operation()) {
+			$formCssClass = $this->getCSSclass('view');
 			$ret &= $this->exec_triggers_simple('select', 'pre');
 		}
 		if ($this->delete_operation()) {
+			$formCssClass = $this->getCSSclass('delete');
 			$ret &= $this->exec_triggers_simple('delete', 'pre');
 		}
 		// if PRE insert/view/delete fail, then back to the list
@@ -3581,7 +3590,7 @@ class phpMyEdit
 		/* echo '<PRE>'; */
 		/* $this->print_vars(); */
 		/* echo '</PRE>'; */
-		$this->form_begin();
+		$this->form_begin($formCssClass);
 		if ($this->cgi['persist'] != '') {
 			echo $this->get_origvars_html($this->cgi['persist']);
 		}
@@ -4377,7 +4386,7 @@ class phpMyEdit
 		if ($this->view_canceled()) {
 			$this->exec_triggers_simple('select', 'cancel');
 		}
-		if ($this->change_canceled()) {
+		if ($this->change_canceled() || $this->change_reloaded()) {
 			$this->exec_triggers_simple('update', 'cancel');
 		}
 		if ($this->delete_canceled()) {
@@ -4430,6 +4439,12 @@ class phpMyEdit
 		elseif ($this->label_cmp($this->reloadview, 'Reload')) {
 			$this->operation = $this->labels['View']; // force view operation.
 			$this->reloadview = null;
+			$this->recreate_fdd();
+			$this->recreate_displayed();
+			$this->backward_compatibility();
+		}
+		elseif ($this->label_cmp($this->reloadchange, 'Reload')) {
+			$this->operation = $this->labels['Change']; // to force change operation
 			$this->recreate_fdd();
 			$this->recreate_displayed();
 			$this->backward_compatibility();
@@ -4783,6 +4798,7 @@ class phpMyEdit
 		$this->savechange	= $this->get_sys_cgi_var('savechange');
 		$this->morechange	= $this->get_sys_cgi_var('morechange');
 		$this->cancelchange = $this->get_sys_cgi_var('cancelchange');
+		$this->reloadchange = $this->get_sys_cgi_var('reloadchange');
 		$this->savecopy		= $this->get_sys_cgi_var('savecopy');
 		$this->applycopy	= $this->get_sys_cgi_var('applycopy');
 		$this->cancelcopy	= $this->get_sys_cgi_var('cancelcopy');

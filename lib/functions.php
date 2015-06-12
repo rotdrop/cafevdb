@@ -652,6 +652,30 @@ __EOT__;
       return true;
     }
 
+    /**Normalize spaces and commas after and before spaces. */
+    public static function normalizeSpaces($name)
+    {
+      /* Normalize name and translation */
+      $name = str_replace("\xc2\xa0", "\x20", $name);
+      $name = trim($name);
+      $name = preg_replace('/\s*,([^\s])/', ', $1', $name);
+      $name = preg_replace('/\s+/', ' ', $name);
+
+      return $name;
+    }
+
+    /**Post to an Owncloud route.
+     *
+     * @param[in] $route Route name (i.e.: not the URL)
+     *
+     * @param[in] $routeParams Parameters built in to the URL (despite
+     * the fact that we use POST)
+     *
+     * @param[in] $postData Stuff passed by the POST method.
+     *
+     * @param[in] $type How $postData is encoded. Can be 'json' or
+     * 'urlencoded'. Default is 'json'.
+     */
     public static function postToRoute($route,
                                        $routeParams = array(),
                                        $postData = array(), $type = 'json')
@@ -892,7 +916,7 @@ __EOT__;
                        '>', '>>',
                        'goto', 'rows_per_page','reload'),
           'A' => array('save', 'apply', 'more', 'cancel'),
-          'C' => array('save', 'more', 'cancel'),
+          'C' => array('save', 'more', 'cancel', 'reload'),
           'P' => array('save', 'apply', 'cancel'),
           'D' => array('save', 'cancel'),
           'V' => array('change', 'copy', 'delete', 'cancel', 'reload')
@@ -908,7 +932,7 @@ __EOT__;
                        '>','>>',
                        'goto','rows_per_page','reload'),
           'A' => array('save', 'apply', 'more', 'cancel'),
-          'C' => array('save', 'more', 'cancel'),
+          'C' => array('save', 'more', 'cancel', 'reload'),
           'P' => array('save', 'apply', 'cancel'),
           'D' => array('save', 'cancel'),
           'V' => array('change', 'copy', 'delete', 'cancel', 'reload')
@@ -1561,6 +1585,21 @@ __EOT__;
         Util::error('mysql_query() failed: "'.$err.'", query: "'.$query.'"', $die, $silent);
       }
       return $result;
+    }
+
+    /**Return a flat array with the column names for the given table.*/
+    public static function columns($table, $handle = false, $die = false, $silent = false)
+    {
+      // Build SQL Query
+      $query = "SHOW COLUMNS FROM `".$table."`";
+
+      // Fetch the result or die
+      $result = self::query($query, $handle);
+      $columns = array();
+      while ($line = mySQL::fetch($result)) {
+        $columns[] = $line['Field'];
+      }
+      return $columns;
     }
 
     public static function queryNumRows($querypart, $handle = false, $die = true, $silent = false)
