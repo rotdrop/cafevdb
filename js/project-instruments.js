@@ -24,9 +24,9 @@ var CAFEVDB = CAFEVDB || {};
 (function(window, $, CAFEVDB, undefined) {
   'use strict';
   var ProjectInstruments = function() {};
-  
+
   ProjectInstruments.actions = function(select, container) {
-  
+
     var selected = select.find('option:selected').val();
     var values = select.attr('name');
     var optionValues = selected.split('?');
@@ -80,7 +80,7 @@ var CAFEVDB = CAFEVDB || {};
     // menu, so let the text remain at its default value. Make sure to
     // also remove and re-attach the tool-tips, otherwise some of the
     // tips remain, because chosen() removes the element underneath.
-    
+
     select.children('option').each(function(i, elm) {
       $(elm).removeAttr('selected');
     });
@@ -191,7 +191,7 @@ var CAFEVDB = CAFEVDB || {};
                        // will then also reload with an up to date
                          // list of instruments
                        PHPMYEDIT.triggerSubmit('morechange', container);
-                       
+
                        setTimeout(function() {
                          OC.Notification.hide();
                        }, 5000);
@@ -218,7 +218,7 @@ var CAFEVDB = CAFEVDB || {};
         $('button').tipsy({gravity:'ne', fade:true});
         $('input').tipsy({gravity:'ne', fade:true});
         $('label').tipsy({gravity:'ne', fade:true});
-        
+
         if (CAFEVDB.toolTips) {
           $.fn.tipsy.enable();
         } else {
@@ -261,23 +261,23 @@ var CAFEVDB = CAFEVDB || {};
     container.find('#add-instruments-button').off('click');
     container.find('#add-instruments-button').click(function(event) {
       event.preventDefault();
-      
+
       self.openAddInstrumentsDialog(container);
-      
+
       return false;
     });
     this.actionMenu(container, callback);
   }
 
   CAFEVDB.ProjectInstruments = ProjectInstruments;
-  
+
 })(window, jQuery, CAFEVDB);
 
 $(document).ready(function(){
 
   PHPMYEDIT.addTableLoadCallback('ProjectInstruments',
                                  {
-                                   callback: function(selector, resizeCB) {
+                                   callback: function(selector, parameters, resizeCB) {
                                      CAFEVDB.ProjectInstruments.ready(selector, resizeCB);
                                      //resizeCB();
                                    },

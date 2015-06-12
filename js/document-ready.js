@@ -72,7 +72,13 @@ $(document).ready(function() {
     });
 
     PHPMYEDIT.addTableLoadCallback('Musicians', {
-        callback: function(selector, resizeCB) {
+        callback: function(selector, parameters, resizeCB) {
+
+            if (parameters.reason == 'tabChange') {
+                resizeCB();
+                return;
+            }
+
             var container = $(selector);
             CAFEVDB.exportMenu(selector);
 
@@ -89,9 +95,9 @@ $(document).ready(function() {
             $(':button.musician-instrument-insurance').click(function(event) {
                 event.preventDefault();
                 var values = $(this).attr('name');
-                
+
                 CAFEVDB.Page.loadPage($(this).attr('name'));
-                
+
                 return false;
             });
 
@@ -109,9 +115,9 @@ $(document).ready(function() {
         context: CAFEVDB,
         parameters: []
     });
-    
+
     PHPMYEDIT.addTableLoadCallback('Instruments', {
-        callback: function(selector, resizeCB) {
+        callback: function(selector, parameters, resizeCB) {
             resizeCB();
         },
         context: CAFEVDB,
@@ -124,7 +130,7 @@ $(document).ready(function() {
         CAFEVDB.pmeTweaks();
 
         CAFEVDB.tipsy();
-    
+
         // Prevent drag&drop outside allowed areas.
         window.addEventListener("dragover",function(e){
             e = e || event;

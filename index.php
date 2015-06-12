@@ -24,7 +24,7 @@
  * Main entry point.
  */
 
-namespace CAFEVDB 
+namespace CAFEVDB
 {
 
   // Check if we are a user
@@ -54,9 +54,9 @@ namespace CAFEVDB
   }
 
   try {
-  
+
     Error::exceptions(true);
-  
+
     Util::addExternalScript("https://maps.google.com/maps/api/js?sensor=false");
     Util::addExternalScript(\OC_Helper::linkTo('calendar/js', 'l10n.php'));
 
@@ -78,13 +78,13 @@ namespace CAFEVDB
     \OCP\Util::addStyle('cafevdb', 'projects');
     \OCP\Util::addStyle('cafevdb', 'project-instruments');
     \OCP\Util::addStyle('cafevdb', 'instrumentation');
-    \OCP\Util::addStyle('cafevdb', 'inlineimage');  
+    \OCP\Util::addStyle('cafevdb', 'inlineimage');
 //    \OCP\Util::addStyle('3rdparty/fontawesome', 'font-awesome');
     \OCP\Util::addStyle('cafevdb', 'font-awesome');
     \OCP\Util::addStyle('core', 'icons');
     \OCP\Util::addStyle('cafevdb', 'navsnapper');
     \OCP\Util::addStyle('cafevdb', 'mobile');
-    
+
     \OCP\Util::addScript('cafevdb', 'cafevdb');
     \OCP\Util::addScript('cafevdb', 'pme');
     \OCP\Util::addScript('cafevdb', 'page');
@@ -116,7 +116,7 @@ namespace CAFEVDB
     // CKEditor stuff
     \OCP\Util::addScript('cafevdb/3rdparty', 'ckeditor/ckeditor');
     \OCP\Util::addScript('cafevdb/3rdparty', 'ckeditor/adapters/jquery');
-  
+
     // Updated chosen version
     \OCP\Util::addscript("cafevdb/3rdparty/chosen", "chosen.jquery.min");
     \OCP\Util::addStyle("cafevdb/3rdparty/chosen", "chosen.min");
@@ -129,7 +129,7 @@ namespace CAFEVDB
     \OCP\Util::addstyle("cafevdb/3rdparty/bootstrap-duallistbox", "bootstrap-duallistbox-quirks");
     \OCP\Util::addstyle("cafevdb/3rdparty/bootstrap-duallistbox", "bootstrap-duallistbox.min");
     \OCP\Util::addscript("cafevdb/3rdparty/bootstrap-duallistbox", "jquery.bootstrap-duallistbox.min");
-  
+
     // Calendar event hacks ... TODO: check whether still needed ...
     \OCP\Util::addscript('calendar/3rdparty/timepicker', 'jquery.ui.timepicker');
     \OCP\Util::addStyle('calendar/3rdparty/timepicker', 'jquery.ui.timepicker');
@@ -144,7 +144,7 @@ namespace CAFEVDB
 
     // One last script to load after the other, e.g. to get the
     // tipsy stuff and so on right
-    \OCP\Util::addScript('cafevdb', 'document-ready');    
+    \OCP\Util::addScript('cafevdb', 'document-ready');
 
     // Load the requested page :)
     $pageLoader = new PageLoader();

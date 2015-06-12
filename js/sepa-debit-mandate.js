@@ -69,7 +69,7 @@ var CAFEVDB = CAFEVDB || {};
 
     var mandateForm = $('#dialog_holder').find('#sepa-debit-mandate-form');
     self.instantValidation = mandateForm.find('#sepa-validation-toggle').prop('checked');
-    
+
     var popup = $('#sepa-debit-mandate-dialog').dialog({
       position: { my: "middle top+50%",
                   at: "middle bottom",
@@ -169,7 +169,7 @@ var CAFEVDB = CAFEVDB || {};
           delete: dlg.dialog("widget").find('button.delete'),
           change: dlg.dialog("widget").find('button.change')
         };
-        
+
         if (self.mandateId > 0) {
           // If we are about to display an existing mandate, first
           // disable all inputs and leave only the "close" and
@@ -242,7 +242,7 @@ var CAFEVDB = CAFEVDB || {};
 
           self.instantValidation = $(this).prop('checked');
           // Switch off for IBAN in order not to annoy Martina
-          
+
           mandateForm.find('#bankAccountIBAN').off('blur');
           if (self.instantValidation) {
             mandateForm.find('#bankAccountIBAN').on('blur', validateInput);
@@ -269,7 +269,7 @@ var CAFEVDB = CAFEVDB || {};
     var dialogId = '#sepa-debit-mandate-dialog';
 
     $('div.statusmessage').hide();
-    $('span.statusmessage').hide();    
+    $('span.statusmessage').hide();
 
     // "submit" the entire form
     var post = $('#sepa-debit-mandate-form').serialize();
@@ -296,7 +296,7 @@ var CAFEVDB = CAFEVDB || {};
     var dialogId = '#sepa-debit-mandate-dialog';
 
     $('div.statusmessage').hide();
-    $('span.statusmessage').hide();    
+    $('span.statusmessage').hide();
 
     // "submit" the entire form
     var post = $('#sepa-debit-mandate-form').serialize();
@@ -328,15 +328,15 @@ var CAFEVDB = CAFEVDB || {};
     var validateLock = function() {
       validateLockCB(true)
     };
-    
+
     var validateUnlock = function() {
       validateLockCB(false)
-    };    
+    };
 
     event.preventDefault();
     $('div.statusmessage').hide();
-    $('span.statusmessage').hide();    
-    
+    $('span.statusmessage').hide();
+
     // we "submit" the entire form in order to do some automatic
     // fill-in in checks for the bank accounts.
     var post;
@@ -421,10 +421,10 @@ var CAFEVDB = CAFEVDB || {};
     var validateLock = function() {
       validateLockCB(true)
     };
-    
+
     var validateUnlock = function() {
       validateLockCB(false)
-    };    
+    };
 
     event.preventDefault();
 
@@ -466,7 +466,7 @@ var CAFEVDB = CAFEVDB || {};
     };
 
     // until end of validation
-    validateLock();    
+    validateLock();
 
     var post = $.param(mandateData);
     $.post(OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-settings.php'),
@@ -594,9 +594,9 @@ var CAFEVDB = CAFEVDB || {};
           var action;
           action = OC.filePath('cafevdb', 'ajax/insurance', 'instrument-insurance-export.php');
           CAFEVDB.iframeFormSubmit(action, downloadName2, values);
-          
+
           action = OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-export.php');
-          CAFEVDB.iframeFormSubmit(action, downloadName, values);  
+          CAFEVDB.iframeFormSubmit(action, downloadName, values);
         });
 
       return false;
@@ -702,7 +702,7 @@ $(document).ready(function(){
 
   PHPMYEDIT.addTableLoadCallback('SepaDebitMandates',
                                  {
-                                     callback: function(selector, resizeCB) {
+                                     callback: function(selector, parameters, resizeCB) {
                                          this.ready(selector);
                                          resizeCB();
                                          //alert("Here I am: "+selector);

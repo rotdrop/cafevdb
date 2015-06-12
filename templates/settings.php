@@ -20,9 +20,9 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace CAFEVDB 
+namespace CAFEVDB
 {
-  
+
   echo Util::emitExternalScripts();
   echo Util::emitInlineScripts();
 
@@ -50,7 +50,7 @@ namespace CAFEVDB
   }
   if ($pageRows > $maxRows) {
     $pageRows = 0;
-  }  
+  }
 
   Config::init();
   $timezone = Util::getTimezone();
@@ -60,7 +60,7 @@ namespace CAFEVDB
   $oldlocale = setlocale(LC_TIME, $locale);
   $time = strftime('%x %X');
   setlocale(LC_TIME, $oldlocale);
-  
+
 ?>
   <ul id="adminsettingstabs">
     <li><a href="#tabs-1"><?php echo L::t('Personal'); ?></a></li>
@@ -160,6 +160,6 @@ namespace CAFEVDB
     echo $this->inc("cms-settings", array('tabNr' => $tabNo++));
   }
   echo $this->inc("about", array('tabNr' => $tabNo++));
-  
+
 } // namespace CAFEVDB
 ?>

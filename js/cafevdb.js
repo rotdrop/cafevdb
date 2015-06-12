@@ -778,6 +778,9 @@ var CAFEVDB = CAFEVDB || {};
     } else {
       element = $(selector);
     }
+    // remove any pending tooltip from the document
+    $('.tipsy').remove();
+
     // fetch suitable options from the elements class attribute
     var classOptions = { fade: true,
                          html: true,

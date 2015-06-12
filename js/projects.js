@@ -45,10 +45,10 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
     /**Generate a popup-dialog with a wiki-page. Not to much project
      * related, rather general. Page and page-title are assumed to be
      * attached to the "post"-object
-     * 
+     *
      * @param post Arguments object:
      * { ProjectName: 'NAME', ProjectId: XX }
-     * 
+     *
      * @param reopen If true, close any already dialog and re-open it
      * (the default). If false, only raise an existing dialog to top.
      */
@@ -80,10 +80,10 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
 
     /**Generate a popup-dialog for the events-listing for the given
      * project.
-     * 
+     *
      * @param post Arguments object:
      * { ProjectName: 'NAME', ProjectId: XX }
-     * 
+     *
      * @param reopen If true, close any already dialog and re-open it
      * (the default). If false, only raise an existing dialog to top.
      */
@@ -104,10 +104,10 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
     };
 
     /**Generate a popup-dialog for project related email.
-     * 
+     *
      * @param post Arguments object:
      * { ProjectName: 'NAME', ProjectId: XX }
-     * 
+     *
      * @param reopen If true, close any already dialog and re-open it
      * (the default). If false, only raise an existing dialog to top.
      */
@@ -124,14 +124,14 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
             emailDlg.dialog('close').remove();
         }
         CAFEVDB.Email.emailFormPopup(post, false);
-    };    
+    };
 
     /**Generate a popup for the instrumentation numbers.
-     * 
+     *
      * @param containerSel The ambient element of the container
      * (i.e. the base page, or the div holding the dialog this one was
      * initiated from.
-     * 
+     *
      * @param past Arguments object:
      * { ProjectName: 'NAME', ProjectId: XX }
      */
@@ -143,7 +143,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
 
         var tableOptions = {
             AmbientContainerSelector: containerSel,
-            DialogHolderCSSId: 'project-instruments-dialog', 
+            DialogHolderCSSId: 'project-instruments-dialog',
             Template: 'project-instruments',
             DisplayClass: 'ProjectInstruments',
             Table: 'BesetzungsZahlen',
@@ -165,11 +165,11 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
     };
 
     /**Generate a popup for the "project (over-)view.
-     * 
+     *
      * @param containerSel The ambient element of the container
      * (i.e. the base page, or the div holding the dialog this one was
      * initiated from.
-     * 
+     *
      * @param past Arguments object:
      * { ProjectName: 'NAME', ProjectId: XX }
      */
@@ -181,7 +181,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
 
         var tableOptions = {
             AmbientContainerSelector: containerSel,
-            DialogHolderCSSId: 'project-overview', 
+            DialogHolderCSSId: 'project-overview',
             Template: 'projects',
             DisplayClass: 'Projects',
             // Now special options for the dialog popup
@@ -199,7 +199,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
     };
 
     /**Parse the user-selection from the project-actions menu.
-     * 
+     *
      * Project-id and -name are contained in data-fields of the
      * select, other potentially needed data is contained in
      * data-fields in the options.
@@ -264,12 +264,12 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
             error = true;
             break;
         }
-        
+
         // Cheating. In principle we mis-use this as a simple pull-down
         // menu, so let the text remain at its default value. Make sure to
         // also remove and re-attach the tool-tips, otherwise some of the
         // tips remain, because chosen() removes the element underneath.
-        
+
         select.find('option').removeAttr('selected');
         $('.tipsy').remove();
 
@@ -299,9 +299,9 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
         projectActions.off('change');
         projectActions.change(function(event) {
             event.preventDefault();
-            
+
             return Projects.actions($(this), containerSel);
-        });  
+        });
         projectActions.off('chosen:showing_dropdown');
         projectActions.on('chosen:showing_dropdown', function (event) {
             container.find('ul.chosen-results li.active-result').tipsy({gravity:'w', fade:true});
@@ -374,7 +374,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
                            });
                 });
             }
-        
+
             attach.off('click');
             attach.click(function(event) {
                 name.trigger('blur');
@@ -383,21 +383,21 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
             year.off('change');
             year.change(function(event) {
                 event.preventDefault();
-                
+
                 verifyYearName('year');
-                
+
                 return false;
             });
 
             name.off('blur');
             name.blur(function(event) {
                 event.preventDefault();
-                
+
                 verifyYearName('name');
-                
+
                 return false;
             });
-        
+
             // Attach a delegate handler to the form; this gives the
             // possibility to attach another delegate handler to the
             // container element.
@@ -413,9 +413,9 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
                             return true;
                         }
                     });
-            
+
         }
-        
+
     };
 
     ///Place an ajax call for public web-page management, create,
@@ -434,17 +434,17 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
     ///   ProjectId: XX,
     ///   ArticleId: XX,
     ///   ArticleData: JSON }
-    /// 
+    ///
     /// { Action: link,
     ///   ProjectId: XX,
     ///   ArticleId: XX,
     ///   ArticleData: JSON }
-    /// 
+    ///
     /// { Action: unlink,
     ///   ProjectId: XX,
     ///   ArticleId: XX,
     ///   ArticleData: JSON }
-    /// 
+    ///
     /// For Action 'add' a negative ArticleId triggers the geneation
     /// of a new article, otherwise it is the id of an existing
     /// event-announcement to attach to this project.
@@ -466,7 +466,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
                     setTimeout(function() {
                         OC.Notification.hide();
                     }, 5000);
-                    
+
                 });
         });
     };
@@ -475,11 +475,11 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
      * web-page. This is called as a beforeActive tab-event handler.
      *
      * @param event The event provided by jQuery tab widget.
-     * 
+     *
      * @param ui An object with old and new panel und tabs
-     * 
+     *
      * @param container The div which contains the current dialog.
-     * 
+     *
      */
     Projects.projectWebPageTabHandler = function(event, ui, container) {
         var tabId = ui.newTab.attr('id');
@@ -521,7 +521,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
                                                      ProjectId: projectId },
                                                    container);
                 },
-                true);          
+                true);
             return false;
           case 'cmsarticle-tab-deletepage':
             event.stopImmediatePropagation();
@@ -559,7 +559,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
 $(document).ready(function(){
 
     PHPMYEDIT.addTableLoadCallback('Projects', {
-        callback: function(selector, resizeCB) {
+        callback: function(selector, parameters, resizeCB) {
             var Projects = this;
             var container = PHPMYEDIT.container(selector);
             var containerNode = container[0];
@@ -642,7 +642,7 @@ $(document).ready(function(){
                 var scrollBarWidth = containerNode.offsetWidth - containerNode.clientWidth;
                 articleBox.css('margin-right', scrollBarWidth + 'px');
             }
-            
+
             var forceSize = function(iframe) {
                 var domFrame = iframe[0];
                 var scrollHeight = domFrame.contentWindow.document.body.scrollHeight;
@@ -685,7 +685,7 @@ $(document).ready(function(){
                         width: scrollWidth + 'px',
                         height: scrollHeight + 'px'
                     });
-                    
+
                     //alert('height: ' + iframe.height() + ' style ' + iframe.attr('style'));
 
                     --numDisplayFrames;
@@ -696,14 +696,14 @@ $(document).ready(function(){
                             active: 0,
                             heightStyle: 'auto',
                             activate: function(event, ui) {
-                                
+
                             },
                             create: function(event, ui) {
                                 articleBox.height('auto');
-                                
+
                                 var forcedWidth = articleBox.width();
                                 var forcedHeight = articleBox.height() - $('#cmsarticletabs').outerHeight();
-                                
+
                                 allDisplayFrames.width(forcedWidth);
                                 allDisplayFrames.height(forcedHeight);
 
@@ -723,7 +723,7 @@ $(document).ready(function(){
 
                     var forcedWidth = articleBox.width();
                     var forcedHeight = articleBox.height() - $('#cmsarticletabs').outerHeight();
-                    
+
                     allDisplayFrames.width(forcedWidth);
                     allDisplayFrames.height(forcedHeight);
 
@@ -792,7 +792,7 @@ $(document).ready(function(){
                         width: scrollWidth + 'px',
                         height: scrollHeight + 'px'
                     });
-                
+
                     var articleContainer = iframe.parent();
                     articleContainer.css({
                         height: 'unset',
@@ -802,14 +802,14 @@ $(document).ready(function(){
                     var editArea = rexForm.find('textarea');
                     if (editArea.length > 0) {
                         CAFEVDB.textareaResize(editArea);
-                    
+
                         rexForm.off('resize', 'textarea');
                         rexForm.on('resize', 'textarea', function() {
                             forceSize(iframe);
                             return false;
                         });
                     }
-                    
+
                     rexForm.off('resize', '.mceEditor');
                     rexForm.on('resize', '.mceEditor', function() {
                         forceSize(iframe);
@@ -870,7 +870,7 @@ $(document).ready(function(){
                     });
                 } else {
                     changeArticleLoad();
-                }    
+                }
             } else {
                 // Just execute the resize callback:
                 imagePoller(function() {
@@ -919,7 +919,7 @@ $(document).ready(function(){
                         my: 'center top',
                         at: 'center top+20px',
                         of: window
-                    });                    
+                    });
                 }
                 if ((popup = $('#project-instruments-dialog')).dialog('isOpen') === true) {
                     popup.dialog('moveToTop');
@@ -927,7 +927,7 @@ $(document).ready(function(){
                         my: 'right top',
                         at: 'right-20px top+30px',
                         of: window
-                    });                    
+                    });
                 }
 
                 var projectId = toolbox.data('projectId');

@@ -82,6 +82,14 @@ $(document).ready(function() {
     });
   });
 
+  // Update our cache of geo-data.
+  $('#geodata').click(function() {
+    var post = $(this).serialize();
+    $.post(OC.filePath('cafevdb', 'ajax/expertmode', 'geodata.php'), post, function(data) {
+      $('#expertmode .msg').html(data);
+    });
+  });
+
   $('#example').click(function() {
     var post  = $('#example').serialize();
     $.post(OC.filePath('cafevdb', 'ajax/expertmode', 'example.php'), post, function(data) {

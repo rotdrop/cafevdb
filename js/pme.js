@@ -1,3 +1,4 @@
+/*global hasClass */
 /* Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
@@ -86,7 +87,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
     this.tableLoadCallbacks[dpyClass] = cbObject;
   };
 
-  PHPMYEDIT.tableLoadCallback = function(dpyClass, selector, resizeReadyCB) {
+  PHPMYEDIT.tableLoadCallback = function(dpyClass, selector, parameters, resizeReadyCB) {
     var cbHandle;
 
     if (typeof this.tableLoadCallbacks[dpyClass] !== 'undefined') {
@@ -105,10 +106,14 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
     var callback = cbHandle.callback;
     var context  = cbHandle.context;
-    var args     = $.merge([], cbHandle.parameters);
-    args.push(selector);
-    args.push(resizeReadyCB);
-    
+    if (typeof parameters == 'undefined') {
+      parameters = {};
+    }
+    parameters = $.extend({ reason: null }, parameters);
+
+    var args = [ selector, parameters, resizeReadyCB ];
+    $.merge(args, cbHandle.parameters);
+
     return callback.apply(context, args);
   };
 
@@ -123,10 +128,11 @@ var PHPMYEDIT = PHPMYEDIT || {};
     // on.
     var outerForm = $(outerSel + ' form.pme-form');
 
-    var button = button = $(outerForm).find('input[name$="morechange"],'+
-                                            'input[name$="applyadd"],'+
-                                            'input[name$="applycopy"],'+
-                                            'input[name$="reloadview"]');
+    var button = $(outerForm).find('input[name$="morechange"],'+
+                                   'input[name$="applyadd"],'+
+                                   'input[name$="applycopy"],'+
+                                   'input[name$="reloadchange"],'+
+                                   'input[name$="reloadview"]');
     if (button.length > 0) {
       button = button.first(); // don't trigger up _and_ down buttons.
       button.trigger('click');
@@ -141,7 +147,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
    *
    * @param container jQuery object describing the dialog-holder,
    * i.e. the div which contains the html.
-   * 
+   *
    * @param options The current dialog options. In particular
    * options.ReloadName and options.ReloadValue must hold name and
    * value of the curent (pseudo-) submit input
@@ -167,7 +173,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
     var containerSel = '#'+options.DialogHolderCSSId;
     var container = $(containerSel);
     var contentsChanged = false;
-    
+
     container.dialog('widget').addClass('pme-table-dialog-blocked');
     container.find('.pme-navigation input.pme-reload').addClass('loading');
 
@@ -251,14 +257,16 @@ var PHPMYEDIT = PHPMYEDIT || {};
     if (typeof callback === 'undefined') {
       callback = function() { return false; };
     }
-    
+
     var containerSel = '#'+options.DialogHolderCSSId;
     var container = $(containerSel);
     var contentsChanged = false;
 
     container.off('click', '**');
 
-    PHPMYEDIT.installTabHandler(container, callback);
+    PHPMYEDIT.installTabHandler(container, function() {
+      callback( { reason: 'tabChange' } );
+    });
 
     // The easy one, but for changed contents
     var cancelButton = $(container).find('input.pme-cancel');
@@ -283,7 +291,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
       return false;
     });
-    
+
     // The complicated ones. This reloads new data.
     var ReloadButtonSel =
       'input.pme-change,'+
@@ -293,7 +301,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
       'input.pme-more,'+
       'input.pme-reload';
     var reloadingButton = $(container).find(ReloadButtonSel);
-    
+
     // remove non-delegate handlers and stop default actions in any case.
     reloadingButton.off('click');
 
@@ -329,7 +337,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
      * surrounding form. When not in edit mode the base form must be the same
      * as the overlay form and a simple form submit should suffice, in principle.
      * For "more add" we will have to adjust the logic.
-     * 
+     *
      * It is possible to reach the edit-form from "view-mode". In this
      * case we want that the save-button returns us to the view-mode
      * dialog. We achieve this by first simulating a "apply" event,
@@ -347,7 +355,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
       'click',
       saveButtonSel,
       function(event) {
-                   
+
         event.preventDefault();
 
         options.modified = true; // we are the save-button ...
@@ -427,7 +435,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
     });
 
     // Finally do the styling ...
-    callback();
+    callback( { reason: 'dialogOpen' } );
 
   };
 
@@ -499,12 +507,12 @@ var PHPMYEDIT = PHPMYEDIT || {};
    * way.
    *
    * @param tableOptions Option array, see above
-   * 
+   *
    * @param post Additional query parameters. In principle it is also
    * possible to store all values in tableOptions, as this is added to
    * the query-string in any case.
    *
-   * 
+   *
    */
   PHPMYEDIT.tableDialogOpen = function(tableOptions, post) {
     var pme = this;
@@ -577,7 +585,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                  // general styling
                  pme.init('pme', containerSel);
 
-                 var resizeHandler = function() {
+                 var resizeHandler = function(parameters) {
                    dialogHolder.dialog('option', 'height', 'auto');
                    dialogHolder.dialog('option', 'width', 'auto');
                    var newHeight = dialogWidget.height()
@@ -587,19 +595,19 @@ var PHPMYEDIT = PHPMYEDIT || {};
                    dialogHolder.height(newHeight);
                  };
 
-                 pme.tableDialogHandlers(tableOptions, function() {
+                 pme.tableDialogHandlers(tableOptions, function(parameters) {
                    dialogHolder.css('height', 'auto');
 
                    CAFEVDB.addEditor(dialogHolder.find('textarea.wysiwygeditor'), function() {
                      pme.transposeReady(containerSel);
-                     pme.tableLoadCallback(tableOptions.DisplayClass, containerSel, function() {
-                       resizeHandler();
+                     pme.tableLoadCallback(tableOptions.DisplayClass, containerSel, parameters, function() {
+                       resizeHandler(parameters);
                        dialogWidget.removeClass('pme-table-dialog-blocked');
                        dialogHolder.dialog('moveToTop');
                      });
                      CAFEVDB.pmeTweaks(dialogHolder);
                      CAFEVDB.tipsy(containerSel);
-                     CAFEVDB.Page.busyIcon(false);                     
+                     CAFEVDB.Page.busyIcon(false);
                    });
                  });
 
@@ -636,13 +644,13 @@ var PHPMYEDIT = PHPMYEDIT || {};
   /**Quasi-submit the pme-form.
    *
    * @param[in] form The jQuery object corresponding to the pme-form.
-   * 
+   *
    * @param[in] element The jQuery object corresponding to the element
    * causing the submit.
    *
    * @param[in] selector The CSS selector corresponding to the
    * surrounding container (div element)
-   * 
+   *
    * @param[in] pmepfx CSS prefix for the PME form elements
    */
   PHPMYEDIT.pseudoSubmit = function(form, element, selector, pmepfx) {
@@ -720,7 +728,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
              self.init(pmepfx, selector);
              CAFEVDB.addEditor(container.find('textarea.wysiwygeditor'), function() {
                self.transposeReady(selector);
-               self.tableLoadCallback(dpyClass, selector, function() {});
+               //alert('pseudo submit');
+               self.tableLoadCallback(dpyClass, selector, { reason: 'formSubmit' }, function() {});
                CAFEVDB.pmeTweaks(container);
                CAFEVDB.tipsy(selector);
                CAFEVDB.Page.busyIcon(false);
@@ -734,7 +743,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
    * not both!)
    */
   PHPMYEDIT.triggerSubmit = function(buttonName, containerSel) {
-    var container = this.container(containerSel);    
+    var container = this.container(containerSel);
     var button = container.find('input[name="PME_sys_'+buttonName+'"]').first();
 
     if (button.length > 0) {
@@ -891,7 +900,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
       container.find("select[class^='"+pmepfx+"-filter-"+tag+"']").chosen({width:pxlWidth+60+'px',
                                                                            no_results_text:noRes});
     }
-    
+
     // Then the general stuff
     container.find("select[class^='"+pmepfx+"-filter']").chosen({//width:'100%',
       no_results_text:noRes});
@@ -939,7 +948,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                                                                           disable_search_threshold: 10,
                                                                           no_results_text:noRes});
     }
-    
+
     // Then the general stuff
     container.find("select[class^='"+pmepfx+"-input']").each(function(index) {
       var self = $(this);
@@ -1031,7 +1040,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
     if (typeof pmepfx === 'undefined') {
       pmepfx = 'pme';
     }
-    
+
     containerSel = this.selector(containerSel);
     var container = this.container(containerSel);
     var form = container.find('form.'+pmepfx+'-form');
@@ -1059,7 +1068,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
     container.on('change', onChangeSel, function(event) {
       event.preventDefault();
       return PHPMYEDIT.pseudoSubmit($(this.form), $(this), containerSel, pmepfx);
-    });      
+    });
 
     // view/change/copy/delete buttons lead to a a popup
     if (form.find('input[name="DisplayClass"]').length > 0) {
@@ -1071,9 +1080,9 @@ var PHPMYEDIT = PHPMYEDIT || {};
         if (!self.hasClass('pme-custom')) {
           event.preventDefault();
           event.stopImmediatePropagation();
-          
+
           PHPMYEDIT.tableDialog($(this.form), $(this), containerSel);
-          
+
           return false;
         } else {
           return true;
@@ -1140,7 +1149,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
       }
       container.find("select."+pmepfx+"-goto").trigger('chosen:updated');
 
-      container.find("select."+pmepfx+"-pagerows").chosen({width:"auto", disable_search_threshold: 10});      
+      container.find("select."+pmepfx+"-pagerows").chosen({width:"auto", disable_search_threshold: 10});
     }
 
     var keyPressSel = 'input[class^="'+pmepfx+'-filter"]';

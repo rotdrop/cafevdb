@@ -24,6 +24,7 @@ OC::$CLASSPATH['CAFEVDB\Config'] = OC_App::getAppPath('cafevdb').'/lib/config.ph
 OC::$CLASSPATH['CAFEVDB\Projects'] = OC_App::getAppPath('cafevdb').'/lib/projects.php';
 OC::$CLASSPATH['CAFEVDB\Events'] = OC_App::getAppPath('cafevdb').'/lib/events.php';
 OC::$CLASSPATH['CAFEVDB\Util'] = OC_App::getAppPath('cafevdb').'/lib/functions.php';
+OC::$CLASSPATH['CAFEVDB\Cron'] = OC_App::getAppPath("cafevdb") . '/lib/cron.php';
 
 use \CAFEVDB\Config;
 use \CAFEVDB\Events;
@@ -37,6 +38,10 @@ $this->create('cafevdb_config', 'js/config.js')
 $this->create('cafevdb_root', '/')
   ->actionInclude('cafevdb/index.php');
 
+// Regular tasks
+$this->create('cafevdb_backgroundjobs', '/backgroundjobs')
+  ->post()->action('CAFEVDB\Cron', 'run');
+
 // include automatically generated routes
 include 'autoroutes.php';
 
@@ -46,7 +51,7 @@ include 'autoroutes.php';
   '/apps/'.Config::APP_NAME.'/projects/events/byProjectId/{projectId}/{timezone}/{locale}',
   function($params) {
     //\OCP\Util::writeLog(Config::APP_NAME, "event route: ".print_r($params, true), \OCP\Util::DEBUG);
-    
+
     $projectId = $params['projectId'];
     $timezone = $params['timezone'];
     $locale = $params['locale'];
@@ -56,7 +61,7 @@ include 'autoroutes.php';
     }
     if (!$locale) {
       $locale = Util::getLocale();
-    } 
+    }
 
     return new \OC_OCS_Result(Events::projectEventData($projectId, null, $timezone, $locale));
   },
@@ -84,16 +89,16 @@ include 'autoroutes.php';
     // implies that in order to pass a slash / we caller must
     // urlencode that thingy twice, and Symphony consequently will
     // only deliver encoded data in this case.
-    
+
     if (!$timezone) {
       $timezone = Util::getTimezone();
     }
     if (!$locale) {
       $locale = Util::getLocale();
-    } 
+    }
     $timezone = rawurldecode($timezone);
     $locale = rawurldecode($locale);
-    
+
     $projects = Projects::fetchWebPageProjects($articleId);
 
     $data = array();

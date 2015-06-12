@@ -36,7 +36,7 @@ namespace CAFEVDB
     private $execute;
     private $projectId;
     private $projectName;
-    
+
     public function __construct($execute = true)
     {
       $this->execute = $execute;
@@ -61,12 +61,12 @@ namespace CAFEVDB
       Config::init();
     }
 
-    public function deactivate() 
+    public function deactivate()
     {
       $this->execute = false;
     }
 
-    public function activate() 
+    public function activate()
     {
       $this->execute = true;
     }
@@ -188,7 +188,7 @@ namespace CAFEVDB
       */
 
       /* Field definitions
-   
+
          Fields will be displayed left to right on the screen in the order in which they
          appear in generated list. Here are some most used field options documented.
 
@@ -234,7 +234,7 @@ namespace CAFEVDB
         'default'  => '0',
         'sort'     => true,
         );
-    
+
       $currentYear = date('Y');
       $yearRange = self::fetchYearRange();
       $yearValues = array(' ');
@@ -317,7 +317,7 @@ namespace CAFEVDB
       $opts['fdd']['Tools'] = array(
         'name'     => L::t('Toolbox'),
         'input'    => 'V',
-        'options'  => 'VCD', 
+        'options'  => 'VCD',
         'select'   => 'T',
         'maxlen'   => 65535,
         'css'      => array('postfix' => ' projecttoolbox'),
@@ -351,7 +351,7 @@ namespace CAFEVDB
 <blockquote>
   SingleRoom:1:TooltipSingleRoom,Fee:2:TooltipForFee
 </blockquote>
-or simply  
+or simply
 <blockquote>
   SingleRoom,Fee
 </blockquote>
@@ -374,7 +374,7 @@ a comma.'));
       $opts['fdd']['Programm'] = array(
         'name'     => L::t('Program'),
         'input'    => 'V',
-        'options'  => 'VCD', 
+        'options'  => 'VCD',
         'select'   => 'T',
         'maxlen'   => 65535,
         'css'      => array('postfix' => ' projectprogram'),
@@ -405,7 +405,7 @@ a comma.'));
       // We could try to use 'before' triggers in order to verify the
       // data. However, at the moment the stuff does not work without JS
       // anyway, and we use Ajax calls to verify the form data.
-    
+
       $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
       $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
       $opts['triggers']['update']['after'] = 'CAFEVDB\Projects::afterUpdateTrigger';
@@ -420,14 +420,14 @@ a comma.'));
         echo '
 <form class="float"
       id="file_upload_form"
-      action="'.\OCP\Util::linkTo('cafevdb', 'ajax/inlineimage/uploadimage.php').'" 
+      action="'.\OCP\Util::linkTo('cafevdb', 'ajax/inlineimage/uploadimage.php').'"
       method="post"
       enctype="multipart/form-data"
       target="file_upload_target">
   <input type="hidden" name="requesttoken" value="'.\OCP\Util::callRegister().'">
   <input type="hidden" name="RecordId" value="'.Util::getCGIRecordId().'">
   <input type="hidden" name="ImagePHPClass" value="CAFEVDB\Projects">
-  <input type="hidden" name="ImageSize" value="1200"> 
+  <input type="hidden" name="ImageSize" value="1200">
   <input type="hidden" name="MAX_FILE_SIZE" value="'.Util::maxUploadSize().'" id="max_upload">
   <input type="hidden" class="max_human_file_size" value="max '.\OCP\Util::humanFileSize(Util::maxUploadSize()).'">
   <input id="file_upload_start" type="file" accept="image/*" name="imagefile" />
@@ -469,7 +469,7 @@ a comma.'));
       // Add also a new line to the BesetzungsZahlen table
       $sqlquery = 'INSERT IGNORE INTO `BesetzungsZahlen` (`ProjektId`) VALUES ('.$projectId.')';
       mySQL::query($sqlquery, $pme->dbh);
-    
+
       // Also create the project folders.
       $projectPaths = self::maybeCreateProjectFolder($projectId, $projectName);
 
@@ -495,7 +495,7 @@ a comma.'));
 
       return true;
     }
-  
+
     /**@copydoc Projects::afterInsertTrigger() */
     public static function afterUpdateTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
     {
@@ -510,7 +510,7 @@ a comma.'));
       // Drop the old view, which still exists with the old name
       $sqlquery = 'DROP VIEW IF EXISTS `'.$oldvals['Name'].'View`';
       mySQL::query($sqlquery, $pme->dbh);
-    
+
       // Now that we link events to projects using their short name as
       // category, we also need to update all linke events in case the
       // short-name has changed.
@@ -550,14 +550,14 @@ a comma.'));
                                                         "minor" => false));
         $dwembed->putPage($newpagename, $newpage, array("sum" => "Automatic CAFEVDB page renaming",
                                                         "minor" => false));
-      }    
+      }
 
       self::generateWikiOverview();
 
       // TODO: if the name changed, then change also the template, but
       // is not so important, OTOH, would just look better.
       self::nameProjectWebPages($pme->rec, $newvals['Name'], $pme->dbh);
-    
+
       return true;
     }
 
@@ -636,28 +636,28 @@ a comma.'));
       if ($ownConnection) {
         Config::init();
         $handle = mySQL::connect(Config::$pmeopts);
-      }      
+      }
 
       $query = 'SELECT `ExtraFelder` FROM `Projekte` WHERE `Id` = '.$projectId;
       $result = mySQL::query($query, $handle);
-    
+
       // Get the single line
       $line = mySQL::fetch($result) or Util::error("Couldn't fetch the result for '".$query."'");
 
       if ($ownConnection) {
         mySQL::close($handle);
       }
-    
+
       if (Util::debugMode()) {
         print_r($line);
       }
-    
+
       if ($line['ExtraFelder'] == '') {
         return array();
       } else {
         Util::debugMsg("Extras: ".$line['ExtraFelder']);
       }
-  
+
       // Build an array of name - size pairs
       $tmpfields = explode(',',$line['ExtraFelder']);
       if (Util::debugMode()) {
@@ -714,7 +714,7 @@ a comma.'));
         // this is cheap, there are only few articles attached to a project
         $articleIds[$article['ArticleId']] = $idx;
       }
-    
+
       $categories = array(array('id' => Config::getValue('redaxoPreview'),
                                 'name' => L::t('Preview')),
                           array('id' => Config::getValue('redaxoRehearsals'),
@@ -887,7 +887,7 @@ a comma.'));
 
       // simply fetch all participants
       $query = "SELECT `Name`,`Vorname`,`MusikerId` FROM `".$table."` WHERE 1";
-      
+
       $result = mySQL::query($query, $handle, true);
       while($row = mySQL::fetch($result)) {
         $key = $row['MusikerId'];
@@ -916,7 +916,7 @@ a comma.'));
       } else if ($projectName != $project['Name']) {
         return false;
       }
-    
+
       $sharedFolder   = Config::getSetting('sharedfolder','');
       $projectsFolder = Config::getSetting('projectsfolder','');
       $balanceFolder  = Config::getSetting('projectsbalancefolder','');
@@ -960,9 +960,9 @@ a comma.'));
       $fileView = \OC\Files\Filesystem::getView();
 
       foreach($prefixPath as $key => $prefix) {
-                        
+
         $oldPath = $prefix.$oldProject['Jahr']."/".$oldProject['Name'];
-      
+
         if ($fileView->is_dir($oldPath)) {
           if (!$fileView->deleteAll($oldPath)) {
             return false;
@@ -988,12 +988,12 @@ a comma.'));
 
       $returnPaths = array();
       foreach($prefixPath as $key => $prefix) {
-                        
+
         $oldPath = $prefix.$oldProject['Jahr']."/".$oldProject['Name'];
         $newPrefixPath = $prefix.$newProject['Jahr'];
-      
+
         $newPath = $newPrefixPath.'/'.$newProject['Name'];
-      
+
         if ($fileView->is_dir($oldPath)) {
           // If the year has changed it may be necessary to create a new
           // directory.
@@ -1110,11 +1110,11 @@ __EOT__;
         Config::init();
         $handle = mySQL::connect(Config::$pmeopts);
       }
-      
+
       $query = "SELECT *";
       $query .= " FROM `Projekte`";
       $query .= " WHERE `Id` = ".$id;
-      
+
       $result = mySQL::query($query, $handle, true);
       $project = false;
       if ($result !== false && mysql_num_rows($result) == 1) {
@@ -1140,7 +1140,7 @@ __EOT__;
         Config::init();
         $handle = mySQL::connect(Config::$pmeopts);
       }
-      
+
       $query = "SELECT `Id`,`Name`".($year === true ? ",`Jahr`" : "");
       $query .= " FROM `Projekte` WHERE 1 ORDER BY ";
       if ($year === true) {
@@ -1156,7 +1156,7 @@ __EOT__;
       } else {
         while ($line = mySQL::fetch($result)) {
           $projects[$line['Id']] = array('Name' => $line['Name'], 'Jahr' => $line['Jahr']);
-        }      
+        }
       }
 
       if ($ownConnection) {
@@ -1286,7 +1286,7 @@ __EOT__;
 
       // General page template
       $pageTemplate = Config::getValue('redaxoTemplate');
-    
+
       $redaxoLocation = \OCP\Config::GetAppValue('redaxo', 'redaxolocation', '');
       $rex = new \Redaxo\RPC($redaxoLocation);
 
@@ -1312,7 +1312,7 @@ __EOT__;
           }
         }
       }
-    
+
       $article = $rex->addArticle($pageName, $category, $pageTemplate);
 
       if ($article === false) {
@@ -1344,7 +1344,7 @@ __EOT__;
 
       return $article;
     }
-  
+
     /**Delete a web page. This is implemented by moving the page to the
      * Trashbin category, leaving the real cleanup to a human being.
      */
@@ -1376,7 +1376,7 @@ __EOT__;
         $handle = mySQL::connect(Config::$pmeopts);
       }
 
-      $query = "DELETE IGNORE FROM `ProjectWebPages` 
+      $query = "DELETE IGNORE FROM `ProjectWebPages`
  WHERE `ProjectId` = ".$projectId." AND `ArticleId` = ". $articleId;
       $result = mySQL::query($query, $handle);
       if ($result === false) {
@@ -1481,7 +1481,7 @@ __EOT__;
         }
         false;
       }
-    
+
       $redaxoLocation = \OCP\Config::GetAppValue('redaxo', 'redaxolocation', '');
       $rex = new \Redaxo\RPC($redaxoLocation);
       if (count($webPages) > 0) {
@@ -1503,7 +1503,7 @@ __EOT__;
     SET `ArticleName` = '".$newName."'
     WHERE `ArticleId` = ".$article['ArticleId'];
           $result = mySQL::query($query, $handle);
-        }  
+        }
         ++$nr;
       }
 
@@ -1513,7 +1513,7 @@ __EOT__;
 
       return true;
     }
-  
+
     /**Search through the list of all projects and attach those with a
      * matching name. Something which should go to the "expert"
      * controls.
@@ -1543,7 +1543,7 @@ __EOT__;
       $rex = new \Redaxo\RPC($redaxoLocation);
 
       $cntRe = '(?:-[0-9]+)?';
-      
+
       $preview = $rex->articlesByName($projectName.$cntRe, $previewCat);
       if (!is_array($preview)) {
         if ($ownConnection) {
@@ -1569,7 +1569,7 @@ __EOT__;
       $articles = array_merge($preview, $archive, $rehearsals);
 
       //\OCP\Util::writeLog(Config::APP_NAME, "Web pages for ".$projectName.": ".print_r($articles, true), \OC_LOG::DEBUG);
-      
+
       foreach ($articles as $article) {
         // ignore any error
         self::attachProjectWebPage($projectId, $article, $handle);
@@ -1585,7 +1585,7 @@ __EOT__;
     /**Fetch minimum and maximum project years from the Projekte table.
      */
     public static function fetchYearRange($handle = false)
-    {    
+    {
       $ownConnection = $handle === false;
       if ($ownConnection) {
         Config::init();
@@ -1615,7 +1615,7 @@ __EOT__;
         Config::init();
         $handle = mySQL::connect(Config::$pmeopts);
       }
-      
+
       $query = "SELECT * FROM `Projekte` WHERE `Id` = $projectId";
       $result = mySQL::query($query, $handle);
 
@@ -1639,7 +1639,7 @@ __EOT__;
         Config::init();
         $handle = mySQL::connect(Config::$pmeopts);
       }
-      
+
       $query = "SELECT * FROM `BesetzungsZahlen` WHERE `ProjektId` = $projectId";
       $result = mySQL::query($query, $handle);
       if ($result !== false && mysql_num_rows($result) == 0) {
@@ -1716,7 +1716,7 @@ __EOT__;
     public static function missingInstrumentationTable($projectId, $handle = false)
     {
       $numbers = self::fetchMissingInstrumentation($projectId, $handle);
-    
+
       $missing = array_filter($numbers, function ($val) { return $val > 0; });
       if (count($missing) > 0) {
         echo '
@@ -1777,7 +1777,7 @@ __EOT__;
       }
 
       $column = 'Unkostenbeitrag';
-      
+
       $query = 'SELECT `'.$column.'` FROM `Projekte` WHERE `Id` = '.$projectId;
       $result = mySQL::query($query, $handle);
 
@@ -1785,7 +1785,7 @@ __EOT__;
       if ($result !== false && mysql_num_rows($result) == 1) {
         $row = mySQL::fetch($result);
       }
-    
+
       if ($ownConnection) {
         mySQL::close($handle);
       }
@@ -1825,14 +1825,14 @@ __EOT__;
         }
         $result = $max > 0;
       }
-      
+
       if ($ownConnection) {
         mySQL::close($handle);
       }
 
       return $result;
     }
-    
+
     /** Fetch the project-name name corresponding to $projectId.
      */
     public static function fetchName($projectId, $handle = false)
@@ -1850,14 +1850,14 @@ __EOT__;
       if ($result !== false && mysql_num_rows($result) == 1) {
         $row = mySQL::fetch($result);
       }
-    
+
       if ($ownConnection) {
         mySQL::close($handle);
       }
 
       return $row && isset($row['Name']) ? $row['Name'] : false;
     }
-    
+
     /** Fetch the project-id corresponding to $projectName
      */
     public static function fetchId($projectName, $handle = false)
@@ -1875,7 +1875,7 @@ __EOT__;
       if ($result !== false && mysql_num_rows($result) == 1) {
         $row = mySQL::fetch($result);
       }
-    
+
       if ($ownConnection) {
         mySQL::close($handle);
       }
@@ -1909,7 +1909,7 @@ __EOT__;
        */
 
       foreach ($extra as $field) {
-        // forget about $name, not an issue here.  
+        // forget about $name, not an issue here.
 
         $query = sprintf(
           'ALTER TABLE `Besetzungen`
@@ -2091,7 +2091,7 @@ __EOT__;
 
       return array_merge($viewStructure1, $extraColumns, $viewStructure2);
     }
-  
+
 
     // Create a sensibly sorted view, fit for being exported via
     // phpmyadmin. Take all extra-fields into account, add them at end.
@@ -2114,7 +2114,7 @@ __EOT__;
       self::createExtraFields($projectId, $handle);
 
       // Fetch the extra-fields
-      $extra = self::extraFields($projectId, $handle);    
+      $extra = self::extraFields($projectId, $handle);
 
       $structure = self::viewStructure($projectId, $extra);
       $sqlSelect = mySQL::generateJoinSelect($structure);
@@ -2132,8 +2132,8 @@ __EOT__;
 
       $sqlQuery = "CREATE OR REPLACE VIEW `".$projectName."View` AS\n"
         .$sqlSelect
-        .$sqlSort;    
- 
+        .$sqlSort;
+
       mySQL::query($sqlQuery, $handle);
 
       if ($ownConnection) {
@@ -2164,7 +2164,7 @@ project without a flyer first.");
       case 'change':
         $imagearea = ''
           .'<div id="project_flyer">
-        
+
   <iframe name="file_upload_target" id="file_upload_target" src=""></iframe>
   <div class="tip project_flyer propertycontainer" id="cafevdb_inline_image_wrapper" title="'
         .L::t("Drop image to upload (max %s)", array(\OCP\Util::humanFileSize(Util::maxUploadSize()))).'"'
@@ -2209,7 +2209,7 @@ project without a flyer first.");
         $query = "SET GLOBAL max_allowed_packet=$pktSize";
         mySQL::query($query, $handle, false, true);
       }
-      
+
       $query = "SELECT `ImageData` FROM `ProjectFlyers` WHERE `ProjectId` = ".$projectId;
       $result = mySQL::query($query, $handle);
 
@@ -2219,19 +2219,19 @@ project without a flyer first.");
           $image = $row['ImageData'];
         }
       }
-    
+
       if ($ownConnection) {
         mySQL::close($handle);
       }
 
-      return $image;    
+      return $image;
     }
 
     /**Take a BASE64 encoded image and store it in the DB. Probably a
      * flyer or something like this.
      */
     public static function storeImage($projectId, $image, $handle = false)
-    { 
+    {
       if (!isset($image) || $image == '') {
         return true;
       }
@@ -2255,7 +2255,7 @@ project without a flyer first.");
   ON DUPLICATE KEY UPDATE `ImageData` = '".$image."';";
 
       $result = mySQL::query($query, $handle) && self::storeModified($projectId, $handle);
-    
+
       if ($ownConnection) {
         mySQL::close($handle);
       }
@@ -2276,7 +2276,7 @@ project without a flyer first.");
         Config::init();
         $handle = mySQL::connect(Config::$pmeopts);
       }
-      
+
       $query = "DELETE IGNORE FROM `ProjectFlyers` WHERE `ProjectId` = ".$projectId;
 
       $result = mySQL::query($query, $handle) && self::storeModified($projectId, $handle);
@@ -2286,7 +2286,7 @@ project without a flyer first.");
       }
 
       return $result;
-    }  
+    }
 
     /**"Touch" the last-modified time-stamp, e.g. after updating data
      * not directly stored in the projects table.
@@ -2298,13 +2298,13 @@ project without a flyer first.");
         Config::init();
         $handle = mySQL::connect(Config::$pmeopts);
       }
-      
+
       $query = "UPDATE IGNORE `Projekte`
     SET `Aktualisiert` = '".date('Y-m-d H:i:s')."'
     WHERE `Id` = ".$projectId;
 
       $result = mySQL::query($query, $handle);
-    
+
       if ($ownConnection) {
         mySQL::close($handle);
       }
@@ -2322,7 +2322,7 @@ project without a flyer first.");
         Config::init();
         $handle = mySQL::connect(Config::$pmeopts);
       }
-      
+
       $query = "SELECT `Aktualisiert` FROM `Projekte` WHERE `Id` = ".$projectId.";";
 
       $result = mySQL::query($query, $handle);
@@ -2332,7 +2332,7 @@ project without a flyer first.");
           $modified = strtotime($row['Aktualisiert']);
         }
       }
-    
+
       if ($ownConnection) {
         mySQL::close($handle);
       }
@@ -2370,10 +2370,10 @@ project without a flyer first.");
       $orchestra = Config::$opts['orchestra']; // for the name-space
 
       $projects = self::fetchProjects(false, true);
-    
+
       $page = "====== Projekte der Camerata Academica Freiburg e.V. ======\n\n";
 
-      $year = -1;    
+      $year = -1;
       foreach($projects as $id => $row) {
         if ($row['Jahr'] != $year) {
           $year = $row['Jahr'];
@@ -2447,7 +2447,7 @@ unordered list for this like so:
 ===== Location =====
 Whatever.',
                    array($projectName));
-    
+
       $pagename = self::projectWikiLink($projectName);
 
       $wikiLocation = \OCP\Config::GetAppValue("dokuwikiembed", 'wikilocation', '');

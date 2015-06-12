@@ -457,6 +457,7 @@ __EOT__;
     $opts['fdd']['MobilePhone'] = array(
       'tab'      => array('id' => 'musician'),
       'name'     => L::t('Mobile Phone'),
+      'css'      => array('postfix' => ' phone-number'),
       'display'  => array('popup' => function($data) {
           if (PhoneNumbers::validate($data)) {
             return nl2br(PhoneNumbers::metaData());
@@ -469,9 +470,11 @@ __EOT__;
       'maxlen'   => 384,
       'sort'     => true
       );
+
     $opts['fdd']['FixedLinePhone'] = array(
       'tab'      => array('id' => 'musician'),
       'name'     => L::t('Fixed Line Phone'),
+      'css'      => array('postfix' => ' phone-number'),
       'display'  => array('popup' => function($data) {
           if (PhoneNumbers::validate($data)) {
             return nl2br(PhoneNumbers::metaData());
@@ -484,37 +487,50 @@ __EOT__;
       'maxlen'   => 384,
       'sort'     => true
       );
+
     $opts['fdd']['Strasse'] = array(
       'tab'      => array('id' => 'musician'),
-      'name'     => 'Strasse',
+      'name'     => L::t('Street'),
+      'css'      => array('postfix' => ' musician-address street'),
       'nowrap'   => true,
       'select'   => 'T',
       'maxlen'   => 384,
       'sort'     => true
       );
+
     $opts['fdd']['Postleitzahl'] = array(
       'tab'      => array('id' => 'musician'),
-      'name'     => 'Postleitzahl',
+      'name'     => L::t('Postal Code'),
+      'css'      => array('postfix' => ' musician-address postal-code'),
       'select'   => 'T',
       'maxlen'   => 11,
       'sort'     => true
       );
+
     $opts['fdd']['Stadt'] = array(
       'tab'      => array('id' => 'musician'),
-      'name'     => 'Stadt',
+      'name'     => L::t('City'),
+      'css'      => array('postfix' => ' musician-address city'),
       'select'   => 'T',
       'maxlen'   => 384,
       'sort'     => true
       );
+
+    $countries = GeoCoding::countryNames();
+    $countryGroups = GeoCoding::countryContinents();
+
     $opts['fdd']['Land'] = array(
-      'name'     => L::t('Country'),
       'tab'      => array('id' => 'musician'),
-      'css'      => array('postfix' => ' musician-country chosen-dropup'),
+      'name'     => L::t('Country'),
       'select'   => 'D',
-      'maxlen'   => 384,
-      'default'  => 'Deutschland',
+      'maxlen'   => 128,
+      'default'  => Config::getValue('streetAddressCountry'),
+      'values2'     => $countries,
+      'valueGroups' => $countryGroups,
+      'css'      => array('postfix' => ' musician-address country chosen-dropup'),
       'sort'     => true,
       );
+
     $opts['fdd']['Geburtstag'] = Config::$opts['birthday'];
     $opts['fdd']['Geburtstag']['tab'] = 'musician';
 
@@ -552,6 +568,7 @@ __EOT__;
         'function' => 'CAFEVDB\Musicians::portraitImageLinkPME',
         'parameters' => array()
         ),
+      'css' => array('postfix' => ' photo'),
       'default' => '',
       'css' => array('postfix' => ' photo'),
       'sort' => false);

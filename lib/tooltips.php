@@ -36,7 +36,7 @@ namespace CAFEVDB
       }
       return self::$toolTipsData;
     }
-    static private function makeToolTips() 
+    static private function makeToolTips()
     {
       return array(
         'address-book-emails' => L::t('Opens a select-box with choices from the shared Owncloud-addressbook. You can also add new em@il-addresses to the address-book for later reusal. The addresses can also be added in the Owncloud `Contacts\'-App.'),
@@ -343,7 +343,12 @@ aktuellen Suchkriterien anzuwenden. Suchkriterien
 können in den Feldern eingegeben werden.
 Als Platzhalter verwendet man `%%\'.'),
 
-        'pme-reload' => L::t('Refreshes the current view by reloading all data from the data-base.'),
+        'pme-reload' => array(
+          'reloadview' => L::t('Refreshes the current view by reloading all data from the data-base.'),
+          'reloadchange' => L::t('Discards all unsaved data and reloads all fields form the
+data-base. Settings which already have been stored by hitting an
+"Apply" button are maintained, though.')
+          ),
 
         'pme-save' => array(
           'default' => L::t('Saves the current values and returns to the previous view.'),
@@ -521,7 +526,7 @@ configuration storage if the test can be performed successfully.'),
 
 
         );
-    
+
     }
   }; // class toolTips
 

@@ -46,67 +46,62 @@ namespace CAFEVDB {
 
     $dataPfx = Config::$pmeopts['cgi']['prefix']['data'];
 
-    $mobile    = Util::cgiValue($dataPfx.'MobilePhone', '');
-    $fixedLine = Util::cgiValue($dataPfx.'FixedLinePhone', '');
+    $numbers = array(
+      'mobile' => array('number' => Util::cgiValue($dataPfx.'MobilePhone', ''),
+                        'isMobile' => false,
+                        'valid' => false,
+                        'meta' => false),
+      'fixed' => array('number' =>  Util::cgiValue($dataPfx.'FixedLinePhone', ''),
+                       'isMobile' => false,
+                       'valid' => false,
+                       'meta' => false)
+      );
 
-    $mobileIsMobile = false;
-    $fixedIsMobile = false;
+    $fixed = &$numbers['fixed'];
+    $mobile = &$numbers['mobile'];
 
-    $mobileValid = false;
-    $fixedValid = false;
-
-    // Format and possibly switch roles; i.e.: try to compensate for
-    // the DAU.
-    if (PhoneNumbers::validate($mobile)) {
-      $mobile = PhoneNumbers::format();
-      $mobileIsMobile = PhoneNumbers::isMobile();
-      $mobileValid = true;
-    } else if ($mobile != '') {
-      $message .= L::t('The phone number %s does not appear to be a valid phone number. ',
-                       array($mobile));
+    // validata phone numbers
+    foreach ($numbers as &$number) {
+      if (PhoneNumbers::validate($number['number'])) {
+        $number['number'] = PhoneNumbers::format();
+        $number['meta'] = PhoneNumbers::metaData();
+        $number['isMobile'] = PhoneNumbers::isMobile();
+        $number['valid'] = true;
+      } else if ($number['number'] != '') {
+        $message .= L::t('The phone number %s does not appear to be a valid phone number. ',
+                         array($number['number']));
+      }
     }
 
-    if (PhoneNumbers::validate($fixedLine)) {
-      $fixedLine = PhoneNumbers::format();
-      $fixedIsMobile = PhoneNumbers::isMobile();
-      $fixedValid = true;
-    } else if ($fixedLine != '') {
-      $message .= L::t('The phone number %s does not appear to be a valid phone number. ',
-                       array($fixedLine));
-    }
-
-    if (!$fixedValid && $mobileValid && !$mobileIsMobile) {
-      $tmp = $fixedLine;
-      $fixedLine = $mobile;
+    if (!$fixed['valid'] && $mobile['valid'] && !$mobile['isMobile']) {
+      $tmp = $fixed;
+      $fixed = $mobile;
       $mobile = $tmp;
-      $fixedValid = true;
-      $mobileValid = false;
-      $fixedIsMobile = false;
       $message = L::t('This (%s) is a fixed line phone number, injecting it in the correct column.',
-                     array($fixedLine));
+                      array($fixed['number']));
     }
-    if (!$mobileValid && $fixedLine != '' && $fixedIsMobile) {
+    if (!$mobile['valid'] && $fixed['valid'] && $fixed['isMobile']) {
       $tmp = $mobile;
-      $mobile = $fixedLine;
-      $fixedLine = $tmp;
-      $mobileIsMobile = true;
-      $fixedIsMobile = false;
+      $mobile = $fixed;
+      $fixed = $tmp;
       $message = L::t('This (%s) is a mobile phone number, injecting it in the correct column.',
-                     array($mobile));
+                     array($mobile['number']));
     }
-    if ($mobile != '' && $fixedLine != '' && !$mobileIsMobile && $fixedIsMobile) {
-      $tmp = $fixedLine;
-      $fixedLine = $mobile;
+    if ($mobile['number'] != '' && $fixed['number'] != '' && !$mobile['isMobile'] && $fixed['isMobile']) {
+      $tmp = $fixed;
+      $fixed = $mobile;
       $mobile = $tmp;
-    } else if ($mobileValid && !$mobileIsMobile) {
+    } else if ($mobile['valid'] && !$mobile['isMobile']) {
       $message .= L::t('The phone number %s does not appear to be a mobile phone number. ',
-                       array($mobile));
+                       array($mobile['number']));
     }
 
     \OCP\JSON::success(
       array('data' => array('message' => nl2br($message),
-                            'mobilePhone' => $mobile,
-                            'fixedLinePhone' => $fixedLine,
+                            'mobilePhone' => $mobile['number'],
+                            'mobileMeta' => nl2br($mobile['meta']),
+                            'fixedLinePhone' => $fixed['number'],
+                            'fixedLineMeta' => nl2br($fixed['meta']),
                             'debug' => $debugText)));
 
     return true;

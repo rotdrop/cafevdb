@@ -72,9 +72,8 @@ var CAFEVDB = CAFEVDB || {};
     return false;
   };
 
-
-  Musicians.ready = function(container) {
-    var self = this;
+  Musicians.contactValidation = function(container) {
+    var self = Musicians;
 
     if (typeof container == 'undefined') {
       container = $('body');
@@ -89,21 +88,37 @@ var CAFEVDB = CAFEVDB || {};
       var form = container.find('form.pme-form');
       var phones = form.find('input.phone-number');
       var post = form.serialize();
+      var mobile = phones.filter('input[name$="MobilePhone"]');
+      var fixedLine = phones.filter('input[name$="FixedLinePhone"]');
+
       phones.prop('disabled', true);
+
       $.post(OC.filePath('cafevdb', 'ajax/musicians', 'validatephone.php'),
              post,
              function (data) {
                if (!CAFEVDB.ajaxErrorHandler(data, [ 'message',
                                                      'mobilePhone',
-                                                     'fixedLinePhone' ],
+                                                     'mobileMeta',
+                                                     'fixedLinePhone',
+                                                     'fixedLineMeta' ],
                                              function() {
                       phones.prop('disabled', false);
                     })) {
                  return false;
                }
                // inject the sanitized value into their proper input fields
-               form.find('input[name$="MobilePhone"]').val(data.data.mobilePhone);
-               form.find('input[name$="FixedLinePhone"]').val(data.data.fixedLinePhone);
+               mobile.val(data.data.mobilePhone);
+               fixedLine.val(data.data.fixedLinePhone);
+               if (data.data.mobileMeta) {
+                 mobile.removeAttr('original-title');
+                 mobile.attr('title', data.data.mobileMeta);
+                 CAFEVDB.applyTipsy(mobile);
+               }
+               if (data.data.fixedLineMeta) {
+                 fixedLine.removeAttr('original-title');
+                 fixedLine.attr('title', data.data.fixedLineMeta);
+                 CAFEVDB.applyTipsy(fixedLine);
+               }
                if (data.data.message != '') {
                  OC.dialogs.alert(data.data.message,
                                   t('cafevdb', 'Phone Number Validation'),
@@ -158,6 +173,178 @@ var CAFEVDB = CAFEVDB || {};
 
       return false;
     });
+
+    var address = container.find('form.pme-form input.musician-address').not('.pme-filter');
+    var city = address.filter('.city');
+    var street = address.filter('.street');
+    var zip = address.filter('.postal-code');
+
+    address.autocomplete(
+      {
+        source: [],
+        minLength: 0,
+        open: function(event, ui) {
+          var $input = $(event.target),
+              $results = $input.autocomplete("widget"),
+              top = $results.position().top,
+              height = $results.outerHeight(),
+              inputHeight = $input.outerHeight(),
+              newTop = top - height - inputHeight;
+
+          $results.css("top", newTop + "px");
+        }
+      }
+    ).on('focus, click', function() {
+      if (!$(this).autocomplete('widget').is(':visible')) {
+        $(this).autocomplete('search', '');
+      }
+    });
+
+    // Inject a text input element for possible suggestions for the country setting.
+    var countrySelect = container.find('select.musician-address.country');
+    var countryInput = $('<input type="text"'
+                        + ' class="musician-address country"'
+                        + ' id="country-autocomplete"'
+                        + ' placeholder="'+t('cafevdb', 'Suggestions')+'" />');
+    countryInput.hide();
+    $('tr.musician-address.country td[class|="pme-value"] select').before(countryInput);
+//    countryInput = $('#country-autocomplete');
+    countryInput.autocomplete(
+      {
+        source: [],
+        minLength: 0,
+        open: function(event, ui) {
+          var $input = $(event.target),
+              $results = $input.autocomplete("widget"),
+              top = $results.position().top,
+              height = $results.outerHeight(),
+              inputHeight = $input.outerHeight(),
+              newTop = top - height - inputHeight;
+
+          $results.css("top", newTop + "px");
+        },
+        select: function(event, ui) {
+          var country = ui.item.value;
+          countryInput.val(country);
+          countryInput.trigger('blur');
+          return true;
+        }
+      }
+    ).on('focus, click', function() {
+      if (!$(this).autocomplete('widget').is(':visible')) {
+        $(this).autocomplete('search', '');
+      }
+    }).on('blur', function(event) {
+      var self = $(this);
+
+      event.stopImmediatePropagation();
+
+      var country = self.val();
+      countrySelect.find('option[value='+country+']').prop('selected', true);
+      countrySelect.trigger('chosen:updated');
+      countrySelect.trigger('change');
+
+      return false;
+    });
+
+    var lockCountry = false;
+    countrySelect.on('change', function(event) {
+      address.filter('.city').trigger('blur');
+      lockCountry = true;
+      return false;
+    });
+
+    address.on('blur', function(event) {
+      var self = $(this);
+
+      if (self.hasClass('street')) {
+        return true;
+      }
+
+      // this is somehow needed here ...
+      event.stopImmediatePropagation();
+
+      if (!!self.autocomplete('widget').is(':visible')) {
+        // don't validate while select box is open
+        return false;
+      }
+
+      var form = container.find('form.pme-form');
+      var post = form.serialize();
+      post += '&' + $.param({'ActiveElement': self.attr('name')});
+
+      var reload = container.find('.pme-navigation input.pme-reload');
+
+      address.prop('disabled', true);
+      reload.addClass('loading');
+
+      $.post(OC.filePath('cafevdb', 'ajax/musicians', 'validateaddress.php'),
+             post,
+             function(data) {
+               if (!CAFEVDB.ajaxErrorHandler(data,
+                                             [ 'message', 'city', 'zip', 'street', 'suggestions' ],
+                                             function() {
+                                               reload.removeClass('loading');
+                                               address.prop('disabled', false);
+                                             })) {
+                 return false;
+               }
+
+               data = data.data;
+
+               city.val(data.city);
+               street.val(data.street);
+               zip.val(data.zip);
+
+               var suggestions = data.suggestions;
+
+               city.autocomplete('option', 'source', suggestions.cities);
+               zip.autocomplete('option', 'source', suggestions.postalCodes);
+               var selectedCountry = countrySelect.find('option:selected').val();
+               var countries = suggestions.countries;
+               countryInput.hide();
+               countryInput.autocomplete('option', 'source', []);
+               if (countries.length == 1 && countries[0] != selectedCountry && !lockCountry) {
+                 // if we have just one matching country, we force the
+                 // country-select to hold this value.
+                 countrySelect.find('option[value='+countries[0]+']').prop('selected', true);
+                 countrySelect.trigger('chosen:updated');
+                 //alert('selected: '+selectedCountry+' matching: '+countries[0]);
+               } else if (countries.length > 1) {
+                 // provide the user with some more choices.
+                 //alert('blah');
+                 countryInput.autocomplete('option', 'source', countries);
+                 countryInput.show();
+               }
+               lockCountry = false;
+
+               //data.message += CAFEVDB.print_r(citySuggestions, true);
+               if (data.message != '') {
+                 OC.dialogs.alert(data.message,
+                                  t('cafevdb', 'Address Validation'),
+                                  function() {
+                                    reload.removeClass('loading');
+                                    address.prop('disabled', false);
+                                  }, true, true);
+                 CAFEVDB.debugPopup(data);
+               } else {
+                 reload.removeClass('loading');
+                 address.prop('disabled', false);
+               }
+               return false;
+             });
+      return false;
+    });
+  };
+
+  Musicians.ready = function(container) {
+    var self = this;
+
+    if (typeof container == 'undefined') {
+      container = $('body');
+    }
+
+    this.contactValidation(container);
 
     container.find('input.musician-name.add-musician').
       off('blur').

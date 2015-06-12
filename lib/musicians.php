@@ -412,7 +412,8 @@ __EOT__;
 
     $opts['fdd']['Strasse'] = array(
       'tab'      => array('id' => 'contact'),
-      'name'     => 'Strasse',
+      'name'     => L::t('Street'),
+      'css'      => array('postfix' => ' musician-address street'),
       'select'   => 'T',
       'maxlen'   => 128,
       'sort'     => true
@@ -420,8 +421,8 @@ __EOT__;
 
     $opts['fdd']['Postleitzahl'] = array(
       'tab'      => array('id' => 'contact'),
-      'name'     => 'Postleitzahl',
-      'css'      => array('postfix' => ' zip-code'),
+      'name'     => L::t('Postal Code'),
+      'css'      => array('postfix' => ' musician-address postal-code'),
       'select'   => 'T',
       'maxlen'   => 11,
       'sort'     => true
@@ -429,20 +430,25 @@ __EOT__;
 
     $opts['fdd']['Stadt'] = array(
       'tab'      => array('id' => 'contact'),
-      'name'     => 'Stadt',
+      'name'     => L::t('City'),
+      'css'      => array('postfix' => ' musician-address city'),
       'select'   => 'T',
       'maxlen'   => 128,
       'sort'     => true
       );
 
+    $countries = GeoCoding::countryNames();
+    $countryGroups = GeoCoding::countryContinents();
+
     $opts['fdd']['Land'] = array(
       'tab'      => array('id' => 'contact'),
-      'name'     => 'Land',
+      'name'     => L::t('Country'),
       'select'   => 'D',
       'maxlen'   => 128,
       'default'  => Config::getValue('streetAddressCountry'),
-      'values2'  => Util::countryNames(),
-      'css'      => array('postfix' => ' musician-country chosen-dropup'),
+      'values2'     => $countries,
+      'valueGroups' => $countryGroups,
+      'css'      => array('postfix' => ' musician-address country chosen-dropup'),
       'sort'     => true);
 
     $opts['fdd']['Geburtstag'] = Config::$opts['birthday'];
