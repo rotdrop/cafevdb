@@ -34,13 +34,19 @@ use \CAFEVDB\Util;
 $this->create('cafevdb_config', 'js/config.js')
   ->actionInclude('cafevdb/js/config.php');
 
+// Regular tasks
+// OC::$CLASSPATH['CAFEVDB\Cron'] = OC_App::getAppPath("cafevdb") . '/lib/cron.php';
+
+$this->create('cafevdb_backgroundjobs', '/backgroundjobs')
+  ->post()->action('CAFEVDB\Cron', 'run');
+
 /*Return an array of project-events, given the respective project id. */
 \OCP\API::register(
   'get',
   '/apps/'.Config::APP_NAME.'/projects/events/byProjectId/{projectId}/{timezone}/{locale}',
   function($params) {
     //\OCP\Util::writeLog(Config::APP_NAME, "event route: ".print_r($params, true), \OCP\Util::DEBUG);
-    
+
     $projectId = $params['projectId'];
     $timezone = $params['timezone'];
     $locale = $params['locale'];
@@ -50,7 +56,7 @@ $this->create('cafevdb_config', 'js/config.js')
     }
     if (!$locale) {
       $locale = Util::getLocale();
-    } 
+    }
 
     return new \OC_OCS_Result(Events::projectEventData($projectId, null, $timezone, $locale));
   },
@@ -78,16 +84,16 @@ $this->create('cafevdb_config', 'js/config.js')
     // implies that in order to pass a slash / we caller must
     // urlencode that thingy twice, and Symphony consequently will
     // only deliver encoded data in this case.
-    
+
     if (!$timezone) {
       $timezone = Util::getTimezone();
     }
     if (!$locale) {
       $locale = Util::getLocale();
-    } 
+    }
     $timezone = rawurldecode($timezone);
     $locale = rawurldecode($locale);
-    
+
     $projects = Projects::fetchWebPageProjects($articleId);
 
     $data = array();

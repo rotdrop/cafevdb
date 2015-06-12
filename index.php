@@ -24,7 +24,7 @@
  * Main entry point.
  */
 
-namespace CAFEVDB 
+namespace CAFEVDB
 {
 
   // Check if we are a user
@@ -54,9 +54,9 @@ namespace CAFEVDB
   }
 
   try {
-  
+
     Error::exceptions(true);
-  
+
     Util::addExternalScript("https://maps.google.com/maps/api/js?sensor=false");
     Util::addExternalScript(\OC_Helper::linkTo('calendar/js', 'l10n.php'));
 
@@ -78,7 +78,7 @@ namespace CAFEVDB
     \OCP\Util::addStyle('cafevdb', 'projects');
     \OCP\Util::addStyle('cafevdb', 'project-instruments');
     \OCP\Util::addStyle('cafevdb', 'instrumentation');
-    \OCP\Util::addStyle('cafevdb', 'inlineimage');  
+    \OCP\Util::addStyle('cafevdb', 'inlineimage');
     \OCP\Util::addStyle('3rdparty/fontawesome', 'font-awesome');
     \OCP\Util::addStyle('cafevdb', 'font-awesome');
     \OCP\Util::addStyle('core', 'icons');
@@ -97,7 +97,7 @@ namespace CAFEVDB
     \OCP\Util::addScript('cafevdb', 'insurance');
 
     \OCP\Util::addScript('cafevdb', 'jquery.Jcrop');
-    \OCP\Util::addStyle('cafevdb', 'jquery.Jcrop');  
+    \OCP\Util::addStyle('cafevdb', 'jquery.Jcrop');
 
     \OCP\Util::addscript('files',   'jquery.iframe-transport');
     \OCP\Util::addscript('files',   'jquery.fileupload');
@@ -112,7 +112,7 @@ namespace CAFEVDB
     // CKEditor stuff
     \OCP\Util::addScript('cafevdb/3rdparty', 'ckeditor/ckeditor');
     \OCP\Util::addScript('cafevdb/3rdparty', 'ckeditor/adapters/jquery');
-  
+
     // Updated chosen version
     \OCP\Util::addscript("cafevdb/3rdparty/chosen", "chosen.jquery.min");
     \OCP\Util::addStyle("cafevdb/3rdparty/chosen", "chosen.min");
@@ -125,7 +125,7 @@ namespace CAFEVDB
     \OCP\Util::addstyle("cafevdb/3rdparty/bootstrap-duallistbox", "bootstrap-duallistbox-quirks");
     \OCP\Util::addstyle("cafevdb/3rdparty/bootstrap-duallistbox", "bootstrap-duallistbox.min");
     \OCP\Util::addscript("cafevdb/3rdparty/bootstrap-duallistbox", "jquery.bootstrap-duallistbox.min");
-  
+
     // Calendar event hacks ... TODO: check whether still needed ...
     \OCP\Util::addscript('3rdparty/timepicker', 'jquery.ui.timepicker');
     \OCP\Util::addStyle('3rdparty/timepicker', 'jquery.ui.timepicker');
@@ -140,7 +140,7 @@ namespace CAFEVDB
 
     // One last script to load after the other, e.g. to get the
     // tipsy stuff and so on right
-    \OCP\Util::addScript('cafevdb', 'document-ready');    
+    \OCP\Util::addScript('cafevdb', 'document-ready');
 
     // Load the requested page :)
     $pageLoader = new PageLoader();
@@ -152,6 +152,22 @@ namespace CAFEVDB
       $pageLoader->pushHistory($_POST);
     }
     $pageLoader->template('user')->printPage();
+
+    if (false) {
+      register_shutdown_function(function() {
+          Config::init();
+
+          $user  = \OCP\USER::getUser();
+          $locale = $locale = Util::getLocale();
+          \OCP\Util::writeLog(Config::APP_NAME,
+                              "Running Shutdown Hook, user ".$user.", locale ".$locale,
+                              \OCP\Util::DEBUG);
+
+          //GeoCoding::updateCountries();
+          GeoCoding::updatePostalCodes(0, false, 10);
+
+        });
+    }
 
   } catch (Exception $e) {
 

@@ -54,6 +54,8 @@ OC::$CLASSPATH['CAFEVDB\PageLoader'] = 'cafevdb/lib/page-loader.php';
 OC::$CLASSPATH['CAFEVDB\Session'] = 'cafevdb/lib/session.php';
 OC::$CLASSPATH['CAFEVDB\PDFLetter'] = 'cafevdb/lib/pdfletter.php';
 OC::$CLASSPATH['CAFEVDB\PhoneNumbers'] = 'cafevdb/lib/phonenumbers.php';
+OC::$CLASSPATH['CAFEVDB\GeoCoding'] = 'cafevdb/lib/geocoding.php';
+OC::$CLASSPATH['CAFEVDB\Cron'] = 'cafevdb/lib/cron.php';
 
 OC::$CLASSPATH['DWEMBED\App'] = 'dokuwikiembed/lib/dokuwikiembed.php';
 OC::$CLASSPATH['DWEMBED\L'] = 'dokuwikiembed/lib/util.php';
@@ -94,6 +96,9 @@ OCP\Util::connectHook('OC_Calendar', 'editCalendar', 'CAFEVDB\Events', 'editCale
 
 /* Hurray! There is a config hook! */
 //OCP\Util::connectHook('\OCP\Config', 'js', 'CAFEVDB\Config', 'jsLoadHook');
+
+//\OCP\Backgroundjob::addRegularTask('CAFEVDB\Cron', 'run');
+\OCP\Util::addScript('cafevdb', 'backgroundjobs');
 
 OCP\App::addNavigationEntry( array(
 	'id' => 'cafevdb',

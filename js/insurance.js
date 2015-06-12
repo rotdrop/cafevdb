@@ -25,7 +25,7 @@ CAFEVDB.Insurances = CAFEVDB.Insurances || {};
 
 (function(window, $, Insurances, undefined) {
     'use strict';
-  
+
     Insurances.pmeFormInit = function(containerSel) {
         containerSel = PHPMYEDIT.selector(containerSel);
         var container = PHPMYEDIT.container(containerSel);
@@ -67,7 +67,7 @@ CAFEVDB.Insurances = CAFEVDB.Insurances || {};
             for (key in textInputs) {
                 oldValues[key] = textInputs[key].val();
             }
-            
+
             var blurLock = function(lock) {
                 for (var key in textInputs) {
                     textInputs[key].prop('disabled', lock);
@@ -84,16 +84,16 @@ CAFEVDB.Insurances = CAFEVDB.Insurances || {};
                 var validateLock = function() {
                     lockCallback(true);
                 };
-                
+
                 var validateUnlock = function() {
                     lockCallback(false);
                 };
-                
+
                 var post = form.serialize();
                 post += '&control='+postAddOn;
 
                 // until end of validation
-                validateLock(true);      
+                validateLock(true);
 
                 OC.Notification.hide(function() {
                     $.post(OC.filePath('cafevdb', 'ajax/insurance', 'validate.php'),
@@ -171,7 +171,7 @@ CAFEVDB.Insurances = CAFEVDB.Insurances || {};
                 }
             });
 
-        }        
+        }
     };
 
 })(window, jQuery, CAFEVDB.Insurances);
@@ -179,7 +179,7 @@ CAFEVDB.Insurances = CAFEVDB.Insurances || {};
 $(document).ready(function(){
 
     PHPMYEDIT.addTableLoadCallback('InsuranceRates', {
-        callback: function(selector, resizeCB) {
+        callback: function(selector, parameters, resizeCB) {
             CAFEVDB.Insurances.pmeFormInit(selector);
             resizeCB();
         },
@@ -188,7 +188,7 @@ $(document).ready(function(){
     });
 
     PHPMYEDIT.addTableLoadCallback('InsuranceBrokers', {
-        callback: function(selector, resizeCB) {
+        callback: function(selector, parameters, resizeCB) {
             CAFEVDB.Insurances.pmeFormInit(selector);
             resizeCB();
         },
@@ -197,7 +197,7 @@ $(document).ready(function(){
     });
 
     PHPMYEDIT.addTableLoadCallback('InstrumentInsurance', {
-        callback: function(selector, resizeCB) {
+        callback: function(selector, parameters, resizeCB) {
             CAFEVDB.exportMenu(selector);
 
             CAFEVDB.SepaDebitMandate.insuranceReady(selector);
@@ -207,9 +207,9 @@ $(document).ready(function(){
             $(':button.musician-instrument-insurance').click(function(event) {
                 event.preventDefault();
                 var values = $(this).attr('name');
-                
+
                 CAFEVDB.Page.loadPage($(this).attr('name'));
-                
+
                 return false;
             });
 

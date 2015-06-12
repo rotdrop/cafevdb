@@ -27,11 +27,11 @@ var CAFEVDB = CAFEVDB || {};
 
   /**Open a dialog in order to edit the personal reccords of one
    * musician.
-   * 
+   *
    * @param record The record id. This is either the Id from the
    * Musiker table or the Id from the Besetzungen table, depending on
    * what else is passed in the second argument
-   * 
+   *
    * @param options Object. Additional option. In particular ProjectId
    * and ProjectName are honored, and the optiones IntialValue and
    * ReloadValue which should be one of 'View' or 'Change' (though
@@ -63,7 +63,7 @@ var CAFEVDB = CAFEVDB || {};
       ProjectId: -1,
       ProjectName: '',
       AmbientContainerSelector: PHPMYEDIT.selector(),
-      DialogHolderCSSId: 'personal-record-dialog', 
+      DialogHolderCSSId: 'personal-record-dialog',
       // Now special options for the dialog popup
       InitialViewOperation: options.InitialValue == 'View',
       InitialName: 'PME_sys_operation',
@@ -90,21 +90,21 @@ var CAFEVDB = CAFEVDB || {};
     }
 
     //alert('options: '+CAFEVDB.print_r(tableOptions, true));
-    
+
     PHPMYEDIT.tableDialogOpen(tableOptions);
   };
-  
+
   /**Trigger server-side validation and fetch the result.
    *
    * @param container jQuery object for the curren active
    * form-container (i.e. the div the form is wrapped into)
-   * 
+   *
    * @param selectMusicianInstrument The select box with the list of
    * the musicians arguments.
    *
    * @param ajaxURL The URL to the script that actually validates the
    * data.
-   * 
+   *
    * @param finanlizeCB Callback called at the end, before submitting
    * the current form to the servre.
    *
@@ -119,7 +119,7 @@ var CAFEVDB = CAFEVDB || {};
                                                        errorCB) {
     var projectId = container.find('input[name="ProjectId"]').val();
     var recordId = container.find('input[name="PME_sys_rec"]').val();
-    
+
     OC.Notification.hide(function () {
       $.post(ajaxScript,
              {
@@ -221,7 +221,7 @@ var CAFEVDB = CAFEVDB || {};
       Table: table,
       DisplayClass: "DetailedInstrumentation"
     };
-    
+
     if (typeof musicians != 'undefined') {
       var idx;
       for (idx = 0; idx < musicians.length; ++idx) {
@@ -239,7 +239,8 @@ var CAFEVDB = CAFEVDB || {};
     var container = PHPMYEDIT.container(selector);
 
     var self = this;
-    var Instrumentation = this;
+
+    CAFEVDB.Musicians.contactValidation(container);
 
     // Enable the controls, in order not to bloat SQL queries these PME
     // fields are flagged virtual which disables all controls initially.
@@ -249,7 +250,7 @@ var CAFEVDB = CAFEVDB || {};
                                                  'select.pme-input-1.project-instrument');
 
     $('#add-instruments-button').hide();
-    $('#add-instruments-block div.chosen-container').show();    
+    $('#add-instruments-block div.chosen-container').show();
     selectMusicianInstruments.removeProp('disabled');
     selectMusicianInstruments.trigger('chosen:updated');
 
@@ -267,7 +268,7 @@ var CAFEVDB = CAFEVDB || {};
           // Reenable, otherwise the value will not be submitted
           selectMusicianInstruments.prop('disabled', false);
           selectMusicianInstruments.trigger('chosen:updated');
-          
+
           //No need to submit, the validation-script does not alter DB
           //data.
           PHPMYEDIT.submitOuterForm(selector);
@@ -291,7 +292,7 @@ var CAFEVDB = CAFEVDB || {};
           // Reenable, otherwise the value will not be submitted
           selectProjectInstrument.prop('disabled', false);
           selectProjectInstrument.trigger('chosen:updated');
-          
+
           // submit the form with the "right" button,
           // i.e. save any possible changes already
           // entered by the user. The form-submit
@@ -321,25 +322,31 @@ var CAFEVDB = CAFEVDB || {};
 
       return false;
     });
-    
+
     container.find('form.pme-form input.pme-add').
       addClass('pme-custom').prop('disabled', false).
       off('click').on('click', function(event) {
 
       Instrumentation.loadAddMusicians($(this.form));
-      
+
       return false;
     });
   };
 
   CAFEVDB.Instrumentation = Instrumentation;
-  
+
 })(window, jQuery, CAFEVDB);
 
 $(document).ready(function(){
 
   PHPMYEDIT.addTableLoadCallback('DetailedInstrumentation', {
-    callback: function(selector, resizeCB) {
+    callback: function(selector, parameters, resizeCB) {
+
+      if (parameters.reason == 'tabChange') {
+        resizeCB();
+        return;
+      }
+
       var container = $(selector);
       CAFEVDB.exportMenu(selector);
       CAFEVDB.SepaDebitMandate.popupInit(selector);
@@ -358,9 +365,9 @@ $(document).ready(function(){
         on('click', function(event) {
         event.preventDefault();
         var values = $(this).attr('name');
-        
+
         CAFEVDB.formSubmit(OC.linkTo('cafevdb', 'index.php'), values, 'post');
-        
+
         return false;
       });
 
