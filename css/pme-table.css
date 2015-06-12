@@ -327,6 +327,7 @@ form.pme-form {
 
 form.pme-form input[type=text] {
   width:auto;
+  vertical-align:middle;
 }
 
 .pme-form tr,.pme-form tr:hover,.pme-form tr:active {
@@ -607,7 +608,7 @@ table.pme-navigation {
   border-collapse:collapse;
   border-spacing:0px;
   width:100%;
-  
+
 }
 
 td[class*='pme-header'], th[class*='pme-header'] {
@@ -698,7 +699,8 @@ td.photo {
 
 td.photo img {
   min-height:100px;
-  max-height:300px;
+  max-height:200px;
+  height:200px;
 }
 
 div#contact_photo {
@@ -808,6 +810,10 @@ table.pme-main [class^="chosen"] {
   /* border-radius: 0.5em !important; */
   /* background-color: rgb(244, 244, 244) !important; */
   border-radius: 3px;
+}
+
+table.pme-main div.chosen-container {
+  margin: 3px;
 }
 
 input.pme-filter {

@@ -75,7 +75,7 @@ div#photooverlay {
 
 div#photooverlay:hover,
 div#photooverlay .cafevdb_inline_image:hover {
-  cursor: zoom-out; 
+  cursor: zoom-out;
 }
 
 #phototools {
@@ -125,3 +125,8 @@ div#photooverlay .cafevdb_inline_image:hover {
   background:url('../../../core/img/places/picture.svg') no-repeat center;
 } */
 
+/*
+ * LocalVariables: ***
+ * css-indent-offset: 2 ***
+ * End: ***
+ */
