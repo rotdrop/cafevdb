@@ -69,7 +69,7 @@ class ProjectInstruments
       return L::t("Instrumentation Numbers");
     }
   }
-  
+
 
   public function headerText()
   {
@@ -202,7 +202,7 @@ class ProjectInstruments
       $opts['options'] = 'ACVDF';
       $sort = true; // but only for the project!!!
     }
-    
+
     /* When we got here with PME_sys_morechange, moreadd, operation
      * and if we have $projectId, then we stay on this page. The idea
      * is then to repeat the form submit (which will do no harm, as
@@ -229,7 +229,7 @@ class ProjectInstruments
     $opts['display'] = array_merge($opts['display'],
                                    array(
                                      'form'  => true,
-                                     'query' => true,
+                                     //'query' => true,
                                      'sort'  => $sort,
                                      'time'  => true,
                                      'tabs'  => false
@@ -261,9 +261,9 @@ class ProjectInstruments
                          array(L::t('Actions'), L::t('Adjust Instruments'))
                       ),
                     L::t("Instrumentation-Numbers not Found"), self::CSS_PREFIX);
-        
+
       }
-        
+
       // Check whether there are instrumentation numbers, simply create it if non-existant
       if (mySQL::queryNumRows("FROM ".$opts['tb']." WHERE `ProjektId` = $projectId", $handle) == 0) {
         // Make sure the instrumentation numbers exist
@@ -293,7 +293,7 @@ class ProjectInstruments
     mySQL::close($handle);
 
     /* Field definitions
-   
+
        Fields will be displayed left to right on the screen in the order in which they
        appear in generated list. Here are some most used field options documented.
 
@@ -339,7 +339,7 @@ class ProjectInstruments
       'maxlen'   => 11,
       'default'  => '0',
       'sort'     => true,
-      );    
+      );
 
     $idIdx = 1;
     $opts['fdd']['ProjektId'] = array(
@@ -373,13 +373,13 @@ class ProjectInstruments
         'join' => '$main_table.ProjektId = $join_table.Id',
         'filters' => "`Projekte`.`Id` IN (SELECT `ProjektId` FROM \$main_table WHERE \$main_table.`Id` = \$record_id)",
         ),
-      );    
+      );
 
     $handle = mySQL::connect(Config::$pmeopts);
     $groupedInstruments = Instruments::fetchGrouped($handle);
     $instruments        = Instruments::fetch($handle);
     mySQL::close($handle);
-    
+
     $opts['fdd']['instrumentation'] = array(
       'input' => 'V',
       'name' => L::t('Add Instruments'),
@@ -447,8 +447,8 @@ class ProjectInstruments
     if ($numMissing == 0) {
       $pme->options = str_replace("A", "", $pme->options);
     }
-    
-    return true;        
+
+    return true;
   }
 
   /**Try to update either project-id or record-id from the data-base
@@ -495,7 +495,7 @@ class ProjectInstruments
     $data = ''
       .'<span id="pme-instrumentation-actions-block" class="pme-instrumentation-actions-block">
   <label>
-    <select 
+    <select
       data-placeholder="'.L::t('Actions').'"
       class="pme-instrumentation-actions-choice"
       id="pme-instrumentation-actions-choice"

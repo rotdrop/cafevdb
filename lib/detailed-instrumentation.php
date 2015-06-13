@@ -125,7 +125,7 @@ class DetailedInstrumentation
       $opts['display'],
       array(
         'form'  => true,
-        'query' => true,
+        //'query' => true,
         'sort'  => true,
         'time'  => true,
         'tabs' => array(

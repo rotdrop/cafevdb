@@ -118,7 +118,7 @@ class Instruments
     $opts['display'] =  array_merge($opts['display'],
                                     array(
                                       'form'  => true,
-                                      'query' => true,
+                                      //'query' => true,
                                       'sort'  => true,
                                       'time'  => true,
                                       'tabs'  => false
@@ -146,7 +146,7 @@ class Instruments
     */
 
     /* Field definitions
-   
+
        Fields will be displayed left to right on the screen in the order in which they
        appear in generated list. Here are some most used field options documented.
 
@@ -323,7 +323,7 @@ class Instruments
   public static function beforeUpdateTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
   {
     // $newvals contains the new values
-    
+
     //print_r($changed);
 
     if (array_search('Instrument', $changed) === false) {
@@ -369,14 +369,14 @@ class Instruments
         $instruments = mySQL::multiKeys($table['name'], $table['field'], $pme->dbh);
 
         $comment = $table['comment'] != '' ? " COMMENT '".$table['comment']."'" : "";
-        
+
         // 1st step: inject new enum value
         $instruments[] = $instrument;
         sort($instruments, SORT_FLAG_CASE|SORT_STRING);
 
         $sqlQuery = "ALTER TABLE `".$table['name']."` CHANGE `".$table['field']."`
  `".$table['field']."` ".$table['type']."('".implode("','", $instruments)."')";
-        
+
         if (!$pme->myquery($sqlQuery)) {
           Util::error(L::t("SQL-Error ``%s''. Could not execute the query ``%s''",
                            array(mysql_error(), $sqlQuery)), true);
@@ -393,7 +393,7 @@ class Instruments
  SET `".$table['field']."` = TRIM(',' FROM CONCAT(`".$table['field']."`,',','".$instrument."'))
  WHERE `".$table['field']."` LIKE '%".$oldInstrument."%'";
         }
-        
+
         if (!$pme->myquery($sqlQuery)) {
           Util::error(L::t("SQL-Error ``%s''. Could not execute the query `` %s ''",
                            array(mysql_error(), $sqlQuery)), true);
@@ -406,7 +406,7 @@ class Instruments
         sort($instruments, SORT_FLAG_CASE|SORT_STRING);
         $sqlQuery = "ALTER TABLE `".$table['name']."` CHANGE `".$table['field']."`
  `".$table['field']."` ".$table['type']."('".implode("','", $instruments)."')";
-        
+
         if (!$pme->myquery($sqlQuery)) {
           Util::error(L::t("SQL-Error ``%s''. Could not execute the query ``%s''",
                            array(mysql_error(), $sqlQuery)), true);
@@ -435,7 +435,7 @@ class Instruments
   {
     $query = 'SELECT `Instrument`,`Sortierung` FROM `Instrumente` WHERE  1 ORDER BY `Sortierung` ASC';
     $result = mySQL::query($query, $handle);
-  
+
     $final = array();
     while ($line = mySQL::fetch($result)) {
       $tblInst = $line['Instrument'];
@@ -471,7 +471,7 @@ class Instruments
     $query = 'SELECT DISTINCT `Instrument` FROM `Besetzungen` WHERE `ProjektId` = '.$projectId;
     $result = mySQL::query($query);
 
-  
+
     $instruments = array();
     while ($line = mySQL::fetch($result)) {
       $instruments[] = $line['Instrument'];
@@ -506,7 +506,7 @@ class Instruments
 
     $query = "UPDATE `Projekte` SET `Besetzung`='".implode(',',$prjinst)."' WHERE `Id` = $projectId";
     mySQL::query($query, $handle);
-  
+
     return $prjinst;
   }
 
@@ -517,7 +517,7 @@ class Instruments
 
     $query = 'SELECT `Instrument` FROM `Instrumente` WHERE  1 ORDER BY `Sortierung` ASC';
     $result = mySQL::query($query, $handle);
-  
+
     $final = array();
     while ($line = mySQL::fetch($result)) {
       //CAFEVerror("huh".$line['Instrument'],false);
@@ -556,7 +556,7 @@ class Instruments
       L::t("Blas,Holz");
       L::t("Blas,Blech");
       L::t("Schlag");
-      L::t("Sonstiges");        
+      L::t("Sonstiges");
     }
 
     return $resultTable;
@@ -614,7 +614,7 @@ class Instruments
     }
     if (!$silent && !$result) {
       echo "<HR/><P>\n";
-    } 
+    }
     return $result;
   }
 
@@ -632,9 +632,9 @@ class Instruments
     // Now the table contains at least all instruments, now remove excess elements.
 
     if ($deleteexcess) {
-      // Build SQL Query  
+      // Build SQL Query
       $query = "SELECT `Instrument` FROM `Instrumente` WHERE 1";
-      
+
       // Fetch the result or die
       $result = mySQL::query($query, $query);
 
@@ -653,7 +653,7 @@ class Instruments
     }
   }
 
-}; // class 
+}; // class
 
 }
 
