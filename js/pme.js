@@ -906,8 +906,9 @@ var PHPMYEDIT = PHPMYEDIT || {};
       no_results_text:noRes});
 
     var dblClickSel =
-      'td[class^="'+pmepfx+'-filter"] ul.chosen-choices li.search-field input[type="text"]'+','+
-      'td[class^="'+pmepfx+'-filter"] div.chosen-container';
+      'td[class^="'+pmepfx+'-filter"] ul.chosen-choices li.search-field input[type="text"]'+','
+                     + 'td[class^="'+pmepfx+'-filter"] div.chosen-container'+','
+                     + 'td[class^="'+pmepfx+'-filter"] input[type="text"]';
     container.off('dblclick', dblClickSel);
     container.on('dblclick', dblClickSel, function(event) {
       event.preventDefault();
@@ -1042,8 +1043,11 @@ var PHPMYEDIT = PHPMYEDIT || {};
     }
 
     containerSel = this.selector(containerSel);
+    var tableSel = 'table.'+pmepfx+'-main';
+    var formSel = 'form.'+pmepfx+'-form';
     var container = this.container(containerSel);
-    var form = container.find('form.'+pmepfx+'-form');
+    var form = container.find(formSel);
+    var hiddenClass = pmepfx+'-hidden';
 
     //alert(containerSel+" "+container.length);
 
@@ -1054,6 +1058,51 @@ var PHPMYEDIT = PHPMYEDIT || {};
     });
     container.find('input.pme-goto').on('click', function(event) {
       event.stopImmediatePropagation();
+      return false;
+    });
+
+    container.on('click', tableSel+' input.'+pmepfx+'-hide', function(event) {
+      event.stopImmediatePropagation(); // don't submit, not necessary
+
+      var table = container.find(tableSel);
+      var form = container.find(formSel);
+
+      $(this).addClass(hiddenClass);
+      table.find('tr.pme-filter').addClass(hiddenClass);
+      table.find('input.'+pmepfx+'-search').removeClass(hiddenClass);
+      form.find('input[name="PME_sys_fl"]').val(0);
+
+      return false;
+    });
+
+    container.on('click', tableSel+' input.'+pmepfx+'-search', function(event) {
+      event.stopImmediatePropagation(); // don't submit, not necessary
+
+      var table = container.find(tableSel);
+      var form = container.find(formSel);
+
+      $(this).addClass(hiddenClass);
+      table.find('tr.pme-filter').removeClass(hiddenClass);
+      table.find('input.'+pmepfx+'-hide').removeClass(hiddenClass);
+      form.find('input[name="PME_sys_fl"]').val(1);
+
+      // maybe re-style chosen select-boxes
+      var tabClass = form.find('input[name="PME_sys_cur_tab"]').val();
+      //alert('tab '+tabClass);
+      var pfx = 'tbody tr td'+(!tabClass || tabClass == 'all' ? '' : '.tab-' + tabClass)+' ';
+      var reattachChosen = false;
+      //alert('pfx '+pfx);
+      table.find(pfx + 'div.chosen-container').each(function(idx) {
+        //alert('hello');
+        if ($(this).width() == 0) {
+          $(this).prev().chosen('destroy');
+          reattachChosen = true;
+        }
+      });
+      if (reattachChosen) {
+        PHPMYEDIT.installFilterChosen(container);
+      }
+
       return false;
     });
 

@@ -63,7 +63,7 @@ namespace CAFEVDB
                     array($this->projectName));
       } else {
         return L::t('Overview over all SEPA Debit Mandates');
-      }    
+      }
     }
 
     public function headerText()
@@ -122,7 +122,7 @@ namespace CAFEVDB
       $opts['misc']['css']['major'] = 'debit-note';
       $opts['misc']['css']['minor'] = 'debit-note tipsy-nw';
       $opts['labels']['Misc'] = L::t('Debit');
-      
+
       // Number of lines to display on multiple selection filters
       $opts['multiple'] = '5';
 
@@ -137,7 +137,7 @@ namespace CAFEVDB
       $opts['display'] =  array_merge($opts['display'],
                                       array(
                                         'form'  => true,
-                                        'query' => true,
+                                        //'query' => true,
                                         'sort'  => true,
                                         'time'  => true,
                                         'tabs'  => false
@@ -188,7 +188,7 @@ namespace CAFEVDB
       }
 
       /* Field definitions
-   
+
          Fields will be displayed left to right on the screen in the order in which they
          appear in generated list. Here are some most used field options documented.
 
@@ -263,7 +263,7 @@ namespace CAFEVDB
                                            'css'      => array('postfix' => ' sepadate'),
                                            'datemask' => 'd.m.Y');
 
-    
+
       $opts['fdd']['musicianId'] = array('name'     => L::t('Musician'),
                                          'input'    => 'R',
                                          'select'   => 'T',
@@ -424,7 +424,7 @@ namespace CAFEVDB
 
       return $result;
     }
-    
+
     /**Provide a very primitive direct matrix representation, filtered
      * by the given project and/or musician.
      */
@@ -462,11 +462,11 @@ namespace CAFEVDB
                                 '', '');
         $table[$row['id']] = $row;
       }
-      
+
       if ($ownConnection) {
         mySQL::close($handle);
       }
-    
+
       return $table;
     }
 
@@ -486,7 +486,7 @@ namespace CAFEVDB
       if ($timeStamp === false) {
         $timeStamp = strtotime('+ 17 days');
       }
-      
+
       $iban  = new \IBAN(Config::getValue('bankAccountIBAN'));
       $iban  = $iban->MachineFormat();
       $bic   = Config::getValue('bankAccountBIC');
@@ -498,7 +498,7 @@ namespace CAFEVDB
       foreach($debitTable as $id => $row) {
 
         $sequenceType = Finance::sepaMandateSequenceType($row);
-      
+
         $result[] = array(
           'localBic' => $bic,
           'localIBan' => $iban,

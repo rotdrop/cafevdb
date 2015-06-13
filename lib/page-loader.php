@@ -48,7 +48,7 @@ namespace CAFEVDB {
      *
      * array('size' => NUMBER_OF_HISTORY_RECORDS,
      *       'position' => CURRENT_POSITION_INTO_HISTORY_RECORDS,
-     *       'records' => array(# => clone of $_POST)); 
+     *       'records' => array(# => clone of $_POST));
      */
     private $session;
     private $historyRecords;
@@ -63,7 +63,7 @@ namespace CAFEVDB {
       $this->historyRecords = array(array('md5' => md5(serialize(array())),
                                           'data' => array()));
     }
-    
+
     /**Fetch any existing history from the session or initialize an
      * empty history if no history record is found.
      */
@@ -87,7 +87,7 @@ namespace CAFEVDB {
     public function template($renderas = "")
     {
       // Intialize the global config stuff
-      Config::init();      
+      Config::init();
 
       // The most important ...
       $encrkey = Config::getEncryptionKey();
@@ -105,8 +105,7 @@ namespace CAFEVDB {
 
       // Filter visibility is stored here:
       $pmeSysPfx = Config::$pmeopts['cgi']['prefix']['sys'];
-      Config::$pmeopts['cgi']['append'][$pmeSysPfx.'fl'] =
-        $usrFiltVis == 'off' ? 0 : 1;
+      Config::$pmeopts['cgi']['append'][$pmeSysPfx.'fl'] = $usrFiltVis == 'off' ? 0 : 1;
 
       // See if we are configured
       $config = ConfigCheck::configured();
@@ -124,7 +123,7 @@ namespace CAFEVDB {
       }
 
       $tmpl = new \OCP\Template('cafevdb', $tmplname, $renderas);
-  
+
       $tmpl->assign('configcheck', $config);
       $tmpl->assign('orchestra', Config::getValue('orchestra'));
       $tmpl->assign('groupadmin', $admin);
@@ -145,7 +144,7 @@ namespace CAFEVDB {
       $tmpl->assign('historySize', $this->historySize());
       $tmpl->assign('historyPosition', $this->historyPosition());
       $tmpl->assign('pageControls', 'listItems');
-      
+
       return $tmpl;
     }
 
@@ -183,7 +182,7 @@ namespace CAFEVDB {
           L::t('Invalid history position %d request, history size is %d',
                array($newPosition, $this->historySize)));
       }
-      
+
       $this->historyPosition = $newPosition;
 
       // Could check for valid data here, but so what
@@ -212,7 +211,7 @@ namespace CAFEVDB {
     /**Store the current state whereever. Currently the PHP session
      * data, but this is not guaranteed.
      */
-    public function storeHistory() 
+    public function storeHistory()
     {
       $storageValue = array('size' => $this->historySize,
                             'position' => $this->historyPosition,
@@ -249,7 +248,7 @@ namespace CAFEVDB {
       }
       return true;
     }
-    
+
     /**Validate one history entry */
     private function validateHistoryRecord($record) {
       if (!is_array($record)) {
@@ -260,7 +259,7 @@ namespace CAFEVDB {
       }
       return true;
     }
-    
+
     /**Validate all history records. */
     private function validateHistoryRecords($history) {
       foreach($history['records'] as $record) {
@@ -270,7 +269,7 @@ namespace CAFEVDB {
       }
       return true;
     }
-    
+
   };
 
 }

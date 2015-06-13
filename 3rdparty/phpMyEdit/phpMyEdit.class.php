@@ -272,6 +272,8 @@ class phpMyEdit
 				(isset($this->labels[$a]) && $this->labels[$a] == $b));
 	}
 
+	function default_sort() { return !isset($this->sfn) || count($this->sfn) == 0; }
+
 	function listall()		  { return $this->inc < 0; }
 	function add_enabled()	  { return stristr($this->options, 'A'); }
 	function change_enabled() { return stristr($this->options, 'C'); }
@@ -1318,7 +1320,7 @@ class phpMyEdit
 		if ($this->display['form']) {
 			echo '<form class="'.$this->getCSSclass('form').$tab_class.' '.$css_class.'" method="post"';
 			echo ' action="',$page_name,'" name="'.$this->cgi['prefix']['sys'].'form">',"\n";
-			echo '  <input type="hidden" autofocus="autofocus" />';
+			echo '  <input type="hidden" autofocus="autofocus" />'; // jquery hack.
 		}
 		return true;
 	} /* }}} */
@@ -2865,8 +2867,10 @@ class phpMyEdit
 		}
 		//if ($fields != false) {
 		$css_class_name = $this->getCSSclass('filter');
-		echo '<tr class="',$css_class_name,'">',"\n";
-		echo '<td class="',$css_class_name,'" colspan="',$this->sys_cols,'">';
+		$css_sys = $this->getCSSclass('sys');
+		$hidden = $this->filter_operation() ? '' : ' '.$this->getCSSclass('hidden');
+		echo '<tr class="',$css_class_name,$hidden,'">',"\n";
+		echo '<td class="',$css_class_name,' ',$css_sys,'" colspan="',$this->sys_cols,'">';
 		echo $this->htmlSubmit('filter', 'Query', $this->getCSSclass('query'), false);
 		echo '</td>', "\n";
 		for ($k = 0; $k < $this->num_fds; $k++) {
@@ -2956,9 +2960,15 @@ class phpMyEdit
 		 * Display sorting sequence
 		 */
 		$css_class_name = $this->getCSSclass('sortinfo');
+		$disabled = false;
+		if ($this->default_sort()) {
+			$disabled = true;
+			$css_class_name .= ' '.$this->getCSSclass('default');
+		}
+		$css_sys = $this->getCSSclass('sys');
 		echo '<tr class="',$css_class_name,'">',"\n";
-		echo '<td class="',$css_class_name,'" colspan="',$this->sys_cols,'">';
-		echo $this->htmlSubmit('sfn', 'Clear', $this->getCSSclass('clear'), false);
+		echo '<td class="',$css_class_name,' ',$css_sys,'" colspan="',$this->sys_cols,'">';
+		echo $this->htmlSubmit('sfn', 'Clear', $this->getCSSclass('clear'), false, $disabled);
 		echo "</td>\n";
 		echo '<td class="',$css_class_name,'" colspan="',$this->num_fields_displayed,'">';
 		echo $this->labels['Sorted By'],': ',join(', ', $this->sort_fields_w),'</td></tr>',"\n";
@@ -2970,14 +2980,22 @@ class phpMyEdit
 		 * Display the current query
 		 */
 		$text_query = $this->get_SQL_where_from_query_opts(null, true);
-		if ($text_query != '') {
+		if ($text_query != '' || $this->display['query'] === 'always') {
 			$css_class_name = $this->getCSSclass('queryinfo');
+			$css_sys = $this->getCSSclass('sys');
+			$disabled = false;
+			if ($text_query == '') {
+				$css_class_name .= ' '.$this->getCSSclass('empty');
+				$disabled = true;
+			}
 			echo '<tr class="',$css_class_name,'">',"\n";
-			echo '<td class="',$css_class_name,'" colspan="',$this->sys_cols,'">';
-			echo $this->htmlSubmit('sw', 'Clear', $this->getCSSclass('clear'), false);
+			echo '<td class="',$css_class_name,' ',$css_sys,'" colspan="',$this->sys_cols,'">';
+			echo $this->htmlSubmit('sw', 'Clear', $this->getCSSclass('clear'), false, $disabled);
 			echo "</td>\n";
 			echo '<td class="',$css_class_name,'" colspan="',$this->num_fields_displayed,'">';
-			echo $this->labels['Current Query'],': ',htmlspecialchars($text_query),'</td></tr>',"\n";
+			echo '<span class="',$css_class_name,' label">',$this->labels['Current Query'],': </span>';
+			echo '<span class="',$css_class_name,' info">',htmlspecialchars($text_query),'</span>';
+			echo '</td></tr>',"\n";
 		}
 	} /* }}} */
 
@@ -3168,14 +3186,31 @@ class phpMyEdit
 		 * if we have filters, Changes or Deletes enabled
 		 */
 		if ($this->sys_cols) {
-			echo '<th class="',$this->getCSSclass('header'),'" colspan="',$this->sys_cols,'">';
+			echo '<th class="',$this->getCSSclass('header'),' ',$this->getCSSclass('sys').'" colspan="',$this->sys_cols,'">';
 			if ($this->filter_enabled()) {
-				if ($this->filter_operation()) {
-					echo $this->htmlSubmit('sw', 'Hide', $this->getCSSclass('hide'), false);
-					echo '<br/>'."\n";
-					echo $this->htmlSubmit('sw', 'Clear', $this->getCSSclass('clear'), false);
+				if ($this->display['query'] === 'always') {
+					// use Javascript/CSS driven hide/show logic
+					$hiddenCSS = ' '.$this->getCSSclass('hidden');
+					$hideCSS = $this->getCSSclass('hide');
+					$searchCSS = $this->getCSSclass('search');
+					$clearCSS = $this->getCSSclass('clear');
+					if ($this->filter_operation()) {
+						$searchCSS .= $hiddenCSS;
+					} else {
+						$hideCSS .= $hiddenCSS;
+						$clearCSS .= $hiddenCSS;
+					}
+					echo $this->htmlSubmit('sw', 'Search', $searchCSS, false);
+					echo $this->htmlSubmit('sw', 'Hide', $hideCSS, false);
+					//echo $this->htmlSubmit('sw', 'Clear', $clearCSS, false);
 				} else {
-					echo $this->htmlSubmit('sw', 'Search', $this->getCSSclass('search'), false);
+					if ($this->filter_operation()) {
+						echo $this->htmlSubmit('sw', 'Hide', $this->getCSSclass('hide'), false);
+						echo '<br/>'."\n";
+						echo $this->htmlSubmit('sw', 'Clear', $this->getCSSclass('clear'), false);
+					} else {
+						echo $this->htmlSubmit('sw', 'Search', $this->getCSSclass('search'), false);
+					}
 				}
 			} else {
 				echo '&nbsp;';
@@ -3212,17 +3247,19 @@ class phpMyEdit
 			}
 			$css_postfix	= @$this->fdd[$k]['css']['postfix'];
 			$css_class_name = $this->getCSSclass('header', null, null, $css_postfix);
+			$css_sort_class = $this->getCSSclass('sortfield');
+			$css_nosort_class = $this->getCSSclass('nosort');
 			$fdn = $this->fdd[$fd]['name'];
 			if ($this->fdd[$fd]['encryption'] ||
 				! $this->fdd[$fd]['sort'] ||
 				$this->password($fd)) {
-				echo '<th class="',$css_class_name,'">',$fdn,'</th>',"\n";
+				echo '<th class="',$css_class_name,' ',$css_nosort_class,'">',$fdn,'</th>',"\n";
 			} else {
 				// Clicking on the current sort field reverses the sort order
 				// Generate a button and a check
 				// box. The check box is activated if the field is selected for sorting
 
-				echo '<th class="',$css_class_name,'">';
+				echo '<th class="',$css_class_name,' ',$css_sort_class,'">';
 				if (!$sorted) {
 					echo "\n  ".$this->htmlSubmit("sort[$k]", $fdn, $this->getCSSclass('sort'), false);
 				} else {
@@ -3268,7 +3305,7 @@ class phpMyEdit
 		$row = $this->sql_fetch($res);
 
 		// filter
-		if ($this->filter_operation()) $this->filter_heading();
+		if ($this->filter_operation() || $this->display['query'] === 'always') $this->filter_heading();
 		// Display sorting sequence
 		if ($qparts['orderby'] && $this->display['sort']) $this->display_sorting_sequence();
 		// Display the current query
@@ -3448,7 +3485,7 @@ class phpMyEdit
 						}
 						echo ' /><div class="'.$this->getCSSclass($this->misccss.'-check', null, null, $this->misccss2).'"></div></label></td>'."\n";
 					}
-				} elseif ($this->filter_enabled()) {
+				} elseif ($this->sys_cols /* $this->filter_enabled() */) {
 					echo '<td class="',$css_class_name,'" colspan="',$this->sys_cols,'">&nbsp;</td>',"\n";
 				}
 			} /* }}} */

@@ -155,7 +155,7 @@ make sure that the musicians are also automatically added to the
       $opts['display'],
       array(
         'form'  => true,
-        'query' => true,
+        //'query' => true,
         'sort'  => true,
         'time'  => true,
         'tabs'  => array(

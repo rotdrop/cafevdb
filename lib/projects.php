@@ -167,7 +167,7 @@ namespace CAFEVDB
       $opts['display'] =  array_merge($opts['display'],
                                       array(
                                         'form'  => true,
-                                        'query' => true,
+                                        //'query' => true,
                                         'sort'  => true,
                                         'time'  => true,
                                         'tabs'  => false
@@ -340,7 +340,7 @@ namespace CAFEVDB
                                           'options'  => 'FLAVCPD',
                                           'select'   => 'T',
                                           'maxlen'   => 1024,
-                                          'css'      => array('postfix' => 'projectextra'),
+                                          'css'      => array('postfix' => ' projectextra'),
                                           'textarea' => array('css' => '',
                                                               'rows' => 1,
                                                               'cols' => 80),

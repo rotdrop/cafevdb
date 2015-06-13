@@ -851,6 +851,7 @@ redaxoRehearsalsModule
 
       self::$pmeopts['display']['disabled'] = 'disabled'; // or 'readonly'
       self::$pmeopts['display']['readonly'] = 'readonly'; // or 'disabled'
+      self::$pmeopts['display']['query'] = 'always';
 
       // Initially hide the filter fields
       self::$pmeopts['cgi']['append'][self::$pmeopts['cgi']['prefix']['sys'].'fl'] = 0;

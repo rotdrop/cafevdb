@@ -53,7 +53,7 @@ namespace CAFEVDB
       foreach ($this->broker as $tag) {
         $this->brokerNames[$tag] = $tag;
       }
-    
+
       $this->scope = mySQL::multiKeys('InsuranceRates', 'GeographicalScope', $handle);
       $this->scopeNames = array();
       foreach ($this->scope as $tag) {
@@ -79,7 +79,7 @@ namespace CAFEVDB
 
       $this->projectName = Config::getValue('memberTable');
       $this->projectId = Config::getValue('memberTableId');
-    
+
       mySQL::close($handle);
     }
 
@@ -87,7 +87,7 @@ namespace CAFEVDB
     {
       return L::t('Overview over the Bulk Instrument Insurances');
     }
-  
+
     public function headerText()
     {
       return $this->shortTitle();
@@ -157,7 +157,7 @@ namespace CAFEVDB
       $opts['options'] = 'ACVDFM';
       $opts['misc']['css']['major'] = 'debit-note';
       $opts['misc']['css']['minor'] = 'debit-note insurance tipsy-nw';
-      $opts['labels']['Misc'] = L::t('Debit');    
+      $opts['labels']['Misc'] = L::t('Debit');
 
       // Number of lines to display on multiple selection filters
       $opts['multiple'] = '5';
@@ -173,7 +173,7 @@ namespace CAFEVDB
       $opts['display'] =  array_merge($opts['display'],
                                       array(
                                         'form'  => true,
-                                        'query' => true,
+                                        //'query' => true,
                                         'sort'  => true,
                                         'time'  => true,
                                         'tabs'  => false
@@ -205,7 +205,7 @@ namespace CAFEVDB
       }
 
       /* Field definitions
-   
+
          Fields will be displayed left to right on the screen in the order in which they
          appear in generated list. Here are some most used field options documented.
 
@@ -321,7 +321,7 @@ namespace CAFEVDB
         'select'   => 'T',
         'maxlen'   => 384,
         'sort'     => true);
-    
+
       $opts['fdd']['YearOfConstruction'] = array(
         'name'     => strval(L::t('Year of Construction')),
         'css'      => array('postfix' => ' construction-year'),
@@ -395,7 +395,7 @@ namespace CAFEVDB
 
       $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
       $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
-      
+
       if ($this->pme_bare) {
         // disable all navigation buttons, probably for html export
         $opts['navigation'] = 'N'; // no navigation
@@ -435,10 +435,10 @@ namespace CAFEVDB
       setlocale(LC_ALL, Util::getLocale());
       $result = floatval($value).' %';
       setlocale(LC_ALL, $oldlocale);
-    
+
       return $result;
     }
-  
+
     //!Just display the given value
     public static function displayMoneyValuePME($insuranceId, $opts, $action, $k, $fds, $fdd, $row)
     {
@@ -473,7 +473,7 @@ namespace CAFEVDB
       if (isset($result[0])) {
         $amount = $result[0];
       }
-    
+
       if ($ownConnection) {
         mySQL::close($handle);
       }
@@ -491,7 +491,7 @@ namespace CAFEVDB
 
       $insuranceTable = 'InstrumentInsurance';
       $debitTable = 'SepaDebitMandates';
-    
+
       // remap insurance ids to debit mandate ids
       $query = 'SELECT `'.$insuranceTable.'`.`Id` AS \'OrigId\',
   `'.$debitTable.'`.`id` AS \'DebitId\'
@@ -519,7 +519,7 @@ namespace CAFEVDB
       while ($line = mysql_fetch_assoc($result)) {
         $map[$line['OrigId']] = $line['DebitId'];
       }
-    
+
       if ($ownConnection) {
         mySQL::close($handle);
       }
@@ -534,7 +534,7 @@ namespace CAFEVDB
 
       return array_unique($result);
     }
-  
+
     /**Convert an array of insurance ids to a (smaller) array of the
      * related musician ids. Each insurance entry has one exactly one
      * musician-in-charge, so this should work in principle.
@@ -547,7 +547,7 @@ namespace CAFEVDB
       $insuranceTable = 'InstrumentInsurance';
       $otherTable = 'Musiker';
       $musicianId = 'Id';
-    
+
       // remap insurance ids to musician ids
       $query = 'SELECT `'.$insuranceTable.'`.`Id` AS \'OrigId\',
   `'.$otherTable.'`.`id` AS \'OtherId\'
@@ -564,7 +564,7 @@ namespace CAFEVDB
     WHERE 1';
 
       //throw new \Exception('QUERY: '.$query);
-    
+
       $ownConnection = $handle === false;
       if ($ownConnection) {
         Config::init();
@@ -577,7 +577,7 @@ namespace CAFEVDB
       while ($line = mysql_fetch_assoc($result)) {
         $map[$line['OrigId']] = $line['OtherId'];
       }
-    
+
       if ($ownConnection) {
         mySQL::close($handle);
       }
@@ -617,21 +617,21 @@ namespace CAFEVDB
       }
 
       $streetAddress = Musicians::fetchStreetAddress($musicianId, $handle);
-    
+
       $insurances = array('payer' => $streetAddress,
                           'payerId' => $musicianId,
                           'totals' => 0,
                           'musicians' => array());
 
       $rates = self::fetchRates($handle);
-    
+
       $query = "SELECT * FROM `".self::MEMBER_TABLE."` WHERE ("
         . " ( (ISNULL(`BillToParty`) OR `BillToParty` <= 0) AND `MusicianId` = ".$musicianId." ) "
         . " OR "
         . " `BillToParty` = ".$musicianId
         . " )"
         . " ORDER BY `Broker`,`GeographicalScope` ASC";
-    
+
       $result = mySQL::query($query, $handle);
       while ($row = mySQL::fetch($result)) {
         $musId = $row['MusicianId'];
@@ -664,12 +664,12 @@ namespace CAFEVDB
 
         // add fractional insurance fees
         $itemInfo['correction'] = 0.0;
-        
+
         if ($itemInfo['fraction'] != 0.0) {
           $fraction = $itemInfo['fraction'];
           $itemInfo['correction'] = round($fraction * $itemInfo['fee'], 2);
         }
-        
+
         $insurances['musicians'][$musId]['items'][] = $itemInfo;
       }
 
@@ -689,7 +689,7 @@ namespace CAFEVDB
 
         $annual += $subtotals;
         $fractional += $corrections;
-        
+
         $totals += $subtotals;
         $totals += $corrections;
 
@@ -699,7 +699,7 @@ namespace CAFEVDB
       $insurances['totals'] = $totals;
       $insurances['annual'] = $annual;
       $insurances['fractional'] = $fractional;
-    
+
       if ($ownConnection) {
         mySQL::close($handle);
       }
@@ -710,20 +710,20 @@ namespace CAFEVDB
     /**Small support function in order to generate a consistent
      * file-name for the exported PDFs.
      */
-    public static function musicianOverviewPDFName($overview) 
+    public static function musicianOverviewPDFName($overview)
     {
       // We also remove the most common special characters, is just more
       // handy in file-names.
       $firstName = Finance::sepaTranslit($overview['payer']['firstName']);
       $surName = Finance::sepaTranslit($overview['payer']['surName']);
-    
+
       $id =  $overview['payerId'];
-    
+
       $name = strftime('%Y%m%d-%H%M%S').'-'.$id.'-'.$firstName.$surName.'-'.L::t('insurance').'.pdf';
 
       return $name;
     }
-  
+
     /**Take the data provided by self::musicianOverview() to generate a
      * PDF with a DIN-letter in order to send the overview to the
      * respective musician by SnailMail. The resulting letter will be
@@ -771,10 +771,10 @@ namespace CAFEVDB
     font-weight:bold;
   }
 </style>';
-    
+
       // create a PDF object
       $pdf = new PDFLetter(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
- 
+
       // set document (meta) information
       $pdf->SetCreator(PDF_CREATOR);
       $pdf->SetAuthor($treasurer['firstName'].' '.$treasurer['surName']);
@@ -790,7 +790,7 @@ namespace CAFEVDB
 
       // folding marks for DIN-Brief
       $pdf->foldingMarks();
- 
+
       // Address record
       $pdf->frontHeader(
         'c/o '.$treasurer['firstName'].' '.$treasurer['surName'].'<br>'.
@@ -806,7 +806,7 @@ namespace CAFEVDB
         $separator = $firstNames[2][$idx];
         $initials .= $initial.'.'.(ctype_space($separator) ? ' ' : $separator);
       }
-    
+
       $pdf->addressFieldSender($initials.' '.$treasurer['surName'].', '.
                                $treasurer['street'].', '.
                                $treasurer['ZIP'].' '.
@@ -821,7 +821,7 @@ namespace CAFEVDB
 
       $pdf->subject(L::t("Annular insurance fees for %d", array($year)));
       $pdf->letterOpen(L::t('Dear %s,', array($overview['payer']['firstName'])));
-      
+
       $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
                           10,
                           PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+2*$pdf->fontSize(),
@@ -837,7 +837,7 @@ your insured items at any time. Just ask.'), '', 1);
 
       // Slightly smaller for table
       $pdf->SetFont(PDF_FONT_NAME_MAIN, '', 10);
-    
+
       foreach($overview['musicians'] as $id => $insurance) {
         $firstYearFixup = false;
         $html = '';
@@ -852,7 +852,7 @@ your insured items at any time. Just ask.'), '', 1);
     <th>'.L::t('Manufacturer').'</th>
     <th width="60">'.L::t('Amount').'</th>
     <th width="45">'.L::t('Rate').'</th>
-    <th width="50">'.L::t('Fee').'</th> 
+    <th width="50">'.L::t('Fee').'</th>
   </tr>';
         foreach($insurance['items'] as $object) {
           // regular annual fee
@@ -886,7 +886,7 @@ your insured items at any time. Just ask.'), '', 1);
         // We do not want to split the table across pages
         $pdf->startTransaction();
         $startPage = $pdf->getPage();
-      
+
         $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
                             10,
                             PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+1*$pdf->fontSize(),
@@ -900,7 +900,7 @@ your insured items at any time. Just ask.'), '', 1);
           $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
                               10,
                               PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+1*$pdf->fontSize(),
-                              $style.$html, '', 1);        
+                              $style.$html, '', 1);
         } else {
           $pdf->commitTransaction();
         }
@@ -913,7 +913,7 @@ your insured items at any time. Just ask.'), '', 1);
         $htmlTxt = '';
         $htmlTxt .= '
 <p>'.
-        L::t('Start and end of the regular insurance period is as 
+        L::t('Start and end of the regular insurance period is as
 indicated in the column "Due" in the following table. The actual start of
 the insurance for the particular item is as indicated in the column "Start".
 In the first year, we charge a fraction of the regular annual fee for the
@@ -934,9 +934,9 @@ insurance period between "Start" and "Due" as indicated in the column "Factor"')
     <th width="80">'.L::t('Object').'</th>
     <th width="60">'.L::t('Amount').'</th>
     <th width="45">'.L::t('Rate').'</th>
-    <th width="50">'.L::t('Factor').'</th> 
-    <th width="50">'.L::t('Fee').'</th> 
-  </tr>';        
+    <th width="50">'.L::t('Factor').'</th>
+    <th width="50">'.L::t('Fee').'</th>
+  </tr>';
         foreach($insurance['items'] as $object) {
           $fraction = $object['fraction'];
           if (false && $fraction == 0.0) { // regular fee
@@ -953,7 +953,7 @@ insurance period between "Start" and "Due" as indicated in the column "Factor"')
     <td class="percentage">'.($object['rate']*100.0).' %'.'</td>
     <td class="percentage">'.$fraction.' %'.'</td>
     <td class="money">'.money_format('%n', $correction).'</td>
-  </tr>';          
+  </tr>';
         }
         $html .= '
   <tr>
@@ -966,11 +966,11 @@ insurance period between "Start" and "Due" as indicated in the column "Factor"')
 </table>';
 //</div>';
 
-        
+
         // We do not want to split the table across pages
         $pdf->startTransaction();
         $startPage = $pdf->getPage();
-      
+
         $pdf->SetFont(PDF_FONT_NAME_MAIN, '', 10); // Slightly smaller for table
         $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
                             10,
@@ -986,12 +986,12 @@ insurance period between "Start" and "Due" as indicated in the column "Factor"')
           $pdf->writeHtmlCell(PDFLetter::PAGE_WIDTH-PDFLetter::LEFT_TEXT_MARGIN-PDFLetter::RIGHT_TEXT_MARGIN,
                               10,
                               PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+1*$pdf->fontSize(),
-                              $style.$html, '', 1);        
+                              $style.$html, '', 1);
         } else {
           $pdf->commitTransaction();
-        }        
+        }
       }
-      
+
       // Restore font size
       $pdf->SetFont(PDF_FONT_NAME_MAIN, '', PDFLetter::FONT_SIZE);
 
@@ -1062,7 +1062,7 @@ The actual total amount, including fees for "partial" insurance perdiods is as f
                           10,
                           PDFLetter::LEFT_TEXT_MARGIN, $pdf->GetY()+1*$pdf->fontSize(),
                           $style.$html, '', 1);
-      
+
       $html = L::t('You have granted us a debit-mandate. The total amount due will be debited from your bank-account, no further action from your side is required. We will inform you by email about the date of the debit at least 14 days in advance of the bank transaction.');
 
       if (false) {
@@ -1074,17 +1074,17 @@ The actual total amount, including fees for "partial" insurance perdiods is as f
       } else {
         $html .= '<p>'.L::t('Best wishes,');
         $closing = $html;
-      }  
+      }
 
       $signature = __DIR__.'/../img/'.'treasurer-signature.png';
       $pdf->letterClose($closing,
                         $treasurer['firstName'].' '.$treasurer['surName'].' ('.L::t('Treasurer').')',
                         $signature);
-      
+
       //Close and output PDF document
-      return $pdf->Output($name, $dest);    
+      return $pdf->Output($name, $dest);
     }
-  
+
     /**Fetch the insurance rates of the respective brokers. For the time
      * being brokers offer different rates, independent from the
      * instrument, but depending on the geographical scope (Germany,
@@ -1130,7 +1130,7 @@ The actual total amount, including fees for "partial" insurance perdiods is as f
       return $rates;
     }
 
-    public static function fetchBrokers($handle = false) 
+    public static function fetchBrokers($handle = false)
     {
       $ownConnection = $handle === false;
       if ($ownConnection) {
@@ -1154,7 +1154,7 @@ The actual total amount, including fees for "partial" insurance perdiods is as f
 
       return $brokers;
     }
-    
+
     /**Compute the closest matching due date. The insurance contracts
      * "always" last for one year, so "closest" is the within 6 month
      * in either direction, i.e. the due-date of this 12 months
@@ -1194,7 +1194,7 @@ The actual total amount, including fees for "partial" insurance perdiods is as f
       $dueDate->modify("+ ".$years." years" ." ". "+ ".$months." months");
 
       date_default_timezone_set($oldTZ);
-               
+
       return $dueDate;
     }
 
@@ -1260,7 +1260,7 @@ The actual total amount, including fees for "partial" insurance perdiods is as f
       }
 
       $rates = self::fetchRates($handle);
-      
+
       $fee = 0.0;
       $query = "SELECT * FROM `".self::MEMBER_TABLE."` WHERE ("
         . " ( (ISNULL(`BillToParty`) OR `BillToParty` <= 0) AND `MusicianId` = ".$musicianId." ) "
@@ -1283,7 +1283,7 @@ The actual total amount, including fees for "partial" insurance perdiods is as f
         $fee += $rate;
       }
       $fee += $fee * self::TAXES;
-    
+
       if ($ownConnection) {
         mySQL::close($handle);
       }
