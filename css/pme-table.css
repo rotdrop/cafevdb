@@ -906,7 +906,7 @@ table.pme-main a:not(.ui-tabs-anchor):hover {
 
 form.pme-form tr[class^="pme-row"]:hover td[class^="pme-cell"],
 form.pme-form tr[class^="pme-row"]:hover td[class^="pme-navigation"] {
-  background-color: #9BAFC8;
+/*  background-color: #9BAFC8;*/
 }
 
 table.pme-main .pme-queryinfo.pme-empty,
