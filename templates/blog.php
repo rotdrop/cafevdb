@@ -78,5 +78,5 @@ cloud-icon (top left) to reach the app-menu.',
   echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
 
 } // CAFEVDB
-  
+
 ?>
