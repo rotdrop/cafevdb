@@ -1318,6 +1318,7 @@ class phpMyEdit
 		if ($this->display['form']) {
 			echo '<form class="'.$this->getCSSclass('form').$tab_class.' '.$css_class.'" method="post"';
 			echo ' action="',$page_name,'" name="'.$this->cgi['prefix']['sys'].'form">',"\n";
+			echo '  <input type="hidden" autofocus="autofocus" />';
 		}
 		return true;
 	} /* }}} */
