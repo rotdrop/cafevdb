@@ -77,4 +77,3 @@ echo $this->inc('part.common.header',
 echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
 
 ?>
-
