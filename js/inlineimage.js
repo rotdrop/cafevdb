@@ -168,14 +168,15 @@ var CAFEVDB = CAFEVDB || {};
 	delete this.photo;
 	this.photo = new Image();
 	$(this.photo).load(function () {
-	    $('img.cafevdb_inline_image').remove()
+	    $('img.cafevdb_inline_image').remove();
 	    $(this).addClass('cafevdb_inline_image');
+	    $(this).addClass('zoomable');
 	    $(this).insertAfter($('#phototools'));
 	    wrapper.css('width', $(this).get(0).width + 10);
 	    wrapper.removeClass('loading').removeClass('wait');
             $(this).fadeIn(function() {
                 if (typeof callback == 'function') {
-                    callback();                
+                    callback();
                 }
             });
 	}).error(function () {
@@ -184,7 +185,7 @@ var CAFEVDB = CAFEVDB || {};
                              function () {
                                  if (typeof callback == 'function') {
                                      // Still the callback needs to run ...
-                                     callback();                
+                                     callback();
                                  }
                              });
 	    //self.notify({message:t('cafevdb', 'Error loading image.')});
@@ -285,7 +286,7 @@ var CAFEVDB = CAFEVDB || {};
 	}).error(function () {
 	    OC.notify({message:t('cafevdb','Error loading inline image.')});
 	}).attr('src', OC.linkTo('cafevdb', 'tmpimage.php')+'?tmpkey='+tmpkey);
-    };   
+    };
     Photo.savePhoto = function($dlg) {
         var self = CAFEVDB.Photo;
 	var form = $dlg.find('#cropform');
@@ -397,6 +398,9 @@ var CAFEVDB = CAFEVDB || {};
     Photo.uploadDragDrop = function() {
 	// Upload function for dropped contact photos files. Should go in the Contacts class/object.
 	$.fileUpload = function(files){
+            if (files.length < 1) {
+                return;
+            }
 	    var file = files[0];
 	    if(file.size > $('#max_upload').val()){
 		OC.dialogs.alert(t('cafevdb','The file you are trying to upload exceed the maximum size for file uploads on this server.'), t('cafevdb','Upload too large'));
@@ -522,7 +526,7 @@ var CAFEVDB = CAFEVDB || {};
             },
         });
     };
-    
+
     CAFEVDB.Photo = Photo;
 
 })(window, jQuery, CAFEVDB);
