@@ -98,9 +98,6 @@ namespace CAFEVDB
     \OCP\Util::addScript('cafevdb', 'musicians');
     \OCP\Util::addScript('cafevdb', 'insurance');
 
-    \OCP\Util::addScript('cafevdb', 'jquery.Jcrop');
-    \OCP\Util::addStyle('cafevdb', 'jquery.Jcrop');
-
     \OCP\Util::addScript('core', 'jquery-showpassword');
 
     \OCP\Util::addscript('files',   'jquery.iframe-transport');
@@ -108,6 +105,10 @@ namespace CAFEVDB
     \OCP\Util::addscript('cafevdb', 'file-upload');
 
     \OCP\Util::addScript('cafevdb', 'email');
+
+    // Jcrop stuff
+    \OCP\Util::addScript('cafevdb/3rdparty/jcrop', 'jquery.Jcrop');
+    \OCP\Util::addStyle('cafevdb/3rdparty/jcrop', 'jquery.Jcrop');
 
     // TinyMCE stuff
     \OCP\Util::addScript('cafevdb/3rdparty', 'tinymce/tinymce.min');
