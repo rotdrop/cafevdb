@@ -1436,7 +1436,7 @@ class phpMyEdit
 				// Simple edit box required
 				$len_props = '';
 				$maxlen = intval($this->fdd[$k]['maxlen']);
-				$size	= isset($this->fdd[$k]['size']) ? $this->fdd[$k]['size'] : min($maxlen, 60);
+				$size	= isset($this->fdd[$k]['size']) ? $this->fdd[$k]['size'] : min($maxlen, 40);
 				if ($size > 0) {
 					$len_props .= ' size="'.$size.'"';
 				}
@@ -1722,7 +1722,13 @@ class phpMyEdit
 	function getCSSclass($name, $position  = null, $divider = null, $postfix = null) /* {{{ */
 	{
 		static $div_idx = -1;
-		$elements = array($this->css['prefix'], $name);
+		$pfx = '';
+		if ($this->css['separator'] === ' ') {
+			$pfx = $this->css['prefix'].'-';
+			$elements = array($name);
+		} else {
+			$elements = array($this->css['prefix'], $name);
+		}
 		if ($this->page_type && $this->css['page_type']) {
 			if ($this->page_type != 'L' && $this->page_type != 'F') {
 				$elements[] = $this->page_types[$this->page_type];
@@ -1743,7 +1749,7 @@ class phpMyEdit
 		if ($postfix && $postfix[0] != ' ') {
 			$elements[] = $postfix;
 		}
-		$css = join($this->css['separator'], $elements);
+		$css = $pfx.join($this->css['separator'].$pfx, $elements);
 
 		if ($postfix && $postfix[0] == ' ') {
 			$css .= $postfix;
