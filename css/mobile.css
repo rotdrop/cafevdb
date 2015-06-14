@@ -23,13 +23,48 @@
 
 @media only screen and (max-width: 768px) {
 
-  table.pme-main td[class*="pme-navigation"] .graphic-links {
+  body {
+    overflow:hidden !important;
+  }
+
+  .ui-dialog.transparent,
+  .ui-dialog.transparent-titlebar {
+    border:0px;
+    background:black;
+  }
+
+  .ui-dialog.transparent .ui-widget-header,
+  .ui-dialog.transparent-titlebar .ui-widget-header {
+    display:none !important;
+  }
+
+  .ui-dialog.ui-widget.photo-zoom {
+    cursor: zoom-out;
+  }
+
+  #phototools {
+    display:block !important;
+  }
+
+  .tipsy-inner,
+  .tipsy-wide .tipsy-inner,
+  .tipsy-verywide .tipsy-inner,
+  .tipsy-mostwide .tipsy-inner {
+    max-width:200px !important;
+  }
+
+  table.pme-main td.pme-navigation .graphic-links {
     display:none;
   }
 
-  table.pme-main td[class*="pme-navigation"]:not(.pme-misc) {
+  table.pme-main td.pme-navigation:not(.pme-misc) {
     width:0px !important;
     padding:0px !important;
+  }
+
+  td.pme-sys input[type=submit],
+  th.pme-sys input[type=submit] {
+    width:auto !important;
   }
 
   .ui-dialog, .ui-dialog.pme-table-dialog {
@@ -92,19 +127,19 @@
     min-width:0 !important;
   }
 
-  /* Tabs will display in multiple lines ... */
-  div.pme-table-dialog tr.table-tabs td li.table-tabs {
-    float:right !important;
-  }
-  
-  div.pme-table-dialog tr.table-tabs td li.selected {
-    float:left !important;
+  tr.table-tabs td li.table-tabs {
+    max-width:18%;
   }
 
+  tr.table-tabs td li.selected {
+    max-width:none;
+  }
+
+  /* don't display disabled inputs on small screens */
   div.pme-table-dialog td.pme-buttons input:disabled {
     display:none;
   }
-  
+
   .bloglist li.blogentry {
     margin-right: 0.5ex !important;
   }

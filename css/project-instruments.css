@@ -54,7 +54,7 @@
   border: 1px solid rgba(190, 190, 190, 0.9);
   padding: 5px;
   line-height: 16px;
-  font-size: 13px;  
+  font-size: 13px;
 }
 
 
@@ -97,11 +97,11 @@
   margin-top: 0;
 }
 
-.ui-dialog.cafevdb-project-instruments .ui-dialog-buttonpane { 
+.ui-dialog.cafevdb-project-instruments .ui-dialog-buttonpane {
   padding: 0;
 }
 
-.ui-dialog.cafevdb-project-instruments .ui-dialog-buttonpane .ui-dialog-buttonset { 
+.ui-dialog.cafevdb-project-instruments .ui-dialog-buttonpane .ui-dialog-buttonset {
   width: 100%;
 }
 
@@ -124,46 +124,27 @@
  *
  */
 
-td[class$="-want-0"] { 
+td.pme-want-0 {
   background-color:#FFFFFF;
 }
-td[class$="-have-0"] { 
+td.pme-have-0 {
   color:#990000;
   background-color:#F0F0F0;
 }
 
-td[class$="-want-1"] { 
+td.pme-want-1 {
   background-color:#87CEFA;
 }
-td[class$="-have-1"] { 
+td.pme-have-1 {
   color:#990000;
   background-color:#7fC2eb;
 }
 
-th[class^='pme-header'], td[class^='pme-header'],
-td[class^="pme-key-0-want"], td[class^="pme-key-1-want"],
-td[class^="pme-key-0-have"], td[class^="pme-key-1-have"] {
+#project-instruments-dialog td.pme-value.project-name,
+#project-instruments-dialog th.pme-header,
+#project-instruments-dialog td.pme-header,
+#project-instruments-dialog td.pme-key {
   font-weight:bold;
-}
-
-th.pme-header-want-0, td.pme-header-want-0,
-td.pme-key-0-want-0, td.pme-key-1-want-0 { 
-  background-color:#FFFFFF;
-}
-th.pme-header-have-0, td.pme-header-have-0,
-td.pme-key-0-have-0, td.pme-key-1-have-0 {
-  color:#990000;
-  background-color:#F0F0F0;
-}
-
-th.pme-header-want-1, td.pme-header-want-1,
-td.pme-key-0-want-1, td.pme-key-1-want-1 { 
-  background-color:#87CEFA;
-}
-th.pme-header-have-1, td.pme-header-have-1,
-td.pme-key-0-have-1, td.pme-key-1-have-1 {
-  color:#990000;
-  background-color:#7fC2eb;
 }
 
 .alertblock {

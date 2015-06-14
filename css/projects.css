@@ -55,12 +55,12 @@ span.project-actions-block  ul.chosen-results li.group-result {
   border-top: 1px solid #ccc;
 }
 
-td[class$="projectextra"] textarea {
+td.pme-value.projectextra textarea {
   resize: vertical;
   width: 95%;
 }
 
-td[class$="projectinstrumentation"] div.chosen-container {
+td.pme-value.projectinstrumentation div.chosen-container {
   max-width:40em;
   min-width:20em;
   width:auto !important;

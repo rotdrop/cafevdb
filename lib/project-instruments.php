@@ -344,12 +344,13 @@ class ProjectInstruments
     $idIdx = 1;
     $opts['fdd']['ProjektId'] = array(
       'name'      => L::t('Projekt-Name'),
+      'css' => array('postfix' => ' project-name'),
       'options'   => 'FLVCDA',
       'select|FLVA' => 'D',
       'select|CD'   => 'T',
       'options|CD'  => 'FLVCDA',
       'input|CD' => 'R',
-      'maxlen'   => 11,
+      'maxlen'   => 20,
       'default'  => '-1',
       'sort'     => $sort,
       'values|LFV' => array(

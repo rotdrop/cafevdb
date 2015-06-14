@@ -707,10 +707,10 @@ input[disabled]:hover,
   border:1px solid;
   padding:3px;
 }
-#missing-musicians-block tr[class|='row-0'] td {
+#missing-musicians-block tr.row-0 td {
   background:#B7CEEC;
 }
-#missing-musicians-block tr[class|='row-1'] td {
+#missing-musicians-block tr.row-1 td {
   background:#C6DEFF;
 }
 #missing-musicians-block th {
@@ -719,7 +719,7 @@ input[disabled]:hover,
 
 /* make popups scrollable in smaller viewports */
 .ui-dialog {
-  max-height: 75%; /* !important;*/
+  max-height: 80%; /* !important;*/
   /*top: 15% !important;*/
   overflow-y: auto;
   overflow-x: hidden;

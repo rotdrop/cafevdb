@@ -92,6 +92,7 @@ tr.table-tabs ul {
   z-index:1;
 }
 
+/* Do we really need these??? */
 form.pme-form th[class*=tab-],
 form.pme-form td[class*=tab-] {
   display:none;
@@ -334,34 +335,34 @@ form.pme-form input[type=text] {
   background-color:inherit;
 }
 
-a.pme-cell-1:link, a.pme-cell-0:link {
+a.pme-cell:link {
   color:#0000ff;
   text-decoration:underline;
   font-weight:bold;
 }
-a.pme-cell-1:visited, a.pme-cell-0:visited {
+a.pme-cell:visited {
   color:#0000ff;
   text-decoration:underline;
   font-weight:bold;
 }
-a.pme-cell-1:hover, a.pme-cell-0:hover {
+a.pme-cell:hover {
   color:#0000ff;
   text-decoration:underline;
   font-style:italic;
   font-weight:bold;
 }
 
-.pme-cell-1>a:not(.ui-tabs-anchor):link, .pme-cell-0>a:not(.ui-tabs-anchor):link {
+.pme-cellg>a:not(.ui-tabs-anchor):link {
   color:#0000ff;
   text-decoration:underline;
   font-weight:bold;
 }
-.pme-cell-1>a:not(.ui-tabs-anchor):visited, .pme-cell-0>a:not(.ui-tabs-anchor):visited {
+.pme-cell>a:not(.ui-tabs-anchor):visited {
   color:#0000ff;
   text-decoration:underline;
   font-weight:bold;
 }
-.pme-cell-1>a:not(.ui-tabs-anchor):hover, .pme-cell-0>a:not(.ui-tabs-anchor):hover {
+.pme-cell>a:not(.ui-tabs-anchor):hover {
   color:#0000ff;
   text-decoration:underline;
   font-style:italic;
@@ -637,8 +638,7 @@ td.pme-header, th.pme-header, th.pme-header.pme-sys {
   vertical-align:top;
 }
 
-td.pme-navigation, th.pme-navigation,
-td.pme-navigation-0, td.pme-navigation-1 {
+td.pme-navigation, th.pme-navigation {
   white-space:nowrap;
   background:#C6DEFF;
 }
@@ -655,17 +655,14 @@ td.negative {
   color:#FF0000;
 }
 
-td.align-right,
-td.pme-cell-0.align-right, td.pme-cell-1.align-right,
-td.pme-cell-0.money, td.pme-cell-1.money,
-td.pme-cell-0-money, td.pme-cell-1-money {
+td.align-right, td.pme-cell.align-right, td.pme-cell.money {
   text-align:right;
 }
 
-td[class*='pme-key'], td[class*='pme-value'],
-td[class*='pme-help'], td[class*='pme-navigation'], th[class*='pme-navigation'],
-td[class*='pme-cell'], td[class*='pme-sortinfo'],
-td[class*='pme-filter'], th[class*='pme-filter'], td[class*='pme-queryinfo'] {
+td.pme-key, td.pme-value,
+td.pme-help, td.pme-navigation, th.pme-navigation,
+td.pme-cell, td.pme-sortinfo,
+td.pme-filter, th.pme-filter, td.pme-queryinfo {
   border:#004d9c 1px solid;
   padding:3px;
   text-align:left;
@@ -683,24 +680,11 @@ td.pme-stats   {
   padding-right:0.5em;
 }
 
-td[class^='pme-cell-0'] {
+td.pme-cell.pme-0 {
   background:#B7CEEC;
 }
-td[class^='pme-cell-1'] {
+td.pme-cell.pme-1 {
   background:#C6DEFF;
-}
-
-/* Hide everything but the first line */
-td.pme-cell-0-rcpt, td.pme-cell-1-rcpt,
-td.pme-cell-0-msg, td.pme-cell-1-msg,
-td.pme-cell-0-cc, td.pme-cell-1-cc,
-td.pme-cell-0-bcc, td.pme-cell-1-bcc {
-  font-size:25%;
-  line-height:100%;
-  max-width:20em;
-  max-height:1em;
-/*  white-space:normal;*/
-  overflow:hidden;
 }
 
 td.projectflyer {
@@ -723,22 +707,15 @@ td.photo img {
   height:200px;
 }
 
-div#contact_photo {
+div#contact_photo_upload {
   min-height:100px;
 }
 
-div#project_flyer {
+div#project_flyer_upload {
   min-height:300px;
 }
 
-td.pme-value-0-msg, td.pme-value-1-msg {
-  max-width:80ex;
-  /*font-size:25%;*/
-  white-space:normal;
-  text-wrap:normal;
-}
-
-td.pme-cell-0.musician-instruments, td.pme-cell-1.musician-instruments {
+td.pme-cell.musician-instruments {
   width:12em;
   max-width:12em;
   max-height:1em;
@@ -747,7 +724,7 @@ td.pme-cell-0.musician-instruments, td.pme-cell-1.musician-instruments {
   text-overflow:ellipsis;
 }
 
-td.pme-cell-0.projects, td.pme-cell-1.projects {
+td.pme-cell.projects {
   width:20em;
   max-width:20em;
   max-height:1em;
@@ -756,7 +733,7 @@ td.pme-cell-0.projects, td.pme-cell-1.projects {
   text-overflow:ellipsis;
 }
 
-td.pme-value-0.projects, td.pme-value-1.projects {
+td.pme-value.projects {
   width:38em;
   max-width:38em;
   max-height:1em;
@@ -765,8 +742,7 @@ td.pme-value-0.projects, td.pme-value-1.projects {
   text-overflow:ellipsis;
 }
 
-th.pme-header.mandate-project, th.pme-header.mandate-project,
-td.pme-cell-0.mandate-project, td.pme-cell-1.mandate-project {
+th.pme-header.mandate-project, td.pme-cell.mandate-project {
   width:15em;
   min-width:15em;
   max-width:15em;
@@ -776,20 +752,8 @@ td.pme-cell-0.mandate-project, td.pme-cell-1.mandate-project {
   text-overflow:ellipsis;
 }
 
-/* In view mode remarks should show up as usual */
-table.pme-main td.remarks.pme-value-0,
-table.pme-main td.remarks.pme-value-1,
-table.pme-main td.remarks.pme-value-0:first-line,
-table.pme-main td.remarks.pme-value-0 p:nth-child(1):first-line,
-table.pme-main td.remarks.pme-value-1:first-line,
-table.pme-main td.remarks.pme-value-1 p:nth-child(1):first-line {
-    font-size:100%;
-    max-height:auto;
-    white-space:normal;
-}
-
 /* Hide everything but the first line */
-table.pme-main td.remarks {
+table.pme-main td.pme-cell.remarks {
   font-size:25%;
   line-height:100%;
   max-width:20em;
@@ -800,8 +764,8 @@ table.pme-main td.remarks {
 }
 
 /* Make all remarks shorter */
-table.pme-main td.remarks:first-line,
-table.pme-main td.remarks p:nth-child(1):first-line {
+table.pme-main td.pme-cell.remarks:first-line,
+table.pme-main td.pme-cell.remarks p:nth-child(1):first-line {
   font-size:400%; /* seem to be relative to !first-line */
   line-height:100%;
   max-width:20em;
@@ -812,7 +776,7 @@ table.pme-main td.remarks p:nth-child(1):first-line {
 }
 
 /* Something special for the instrumentation. */
-td[class^="pme-cell"] div.projectinstrumentation {
+td.pme-cell div.projectinstrumentation {
   font-size:50%;
   line-height:100%;
   max-width:64ex;
@@ -822,7 +786,7 @@ td[class^="pme-cell"] div.projectinstrumentation {
   overflow:hidden;
 }
 
-td.pme-value-1.projectinstrumentation, td.pme-value-0.projectinstrumentation {
+td.pme-value.projectinstrumentation {
   white-space:normal;
 }
 
@@ -841,7 +805,7 @@ input.pme-filter {
   white-space:nowrap;
 }
 
-td[class*='pme-filter'], th[class*='pme-filter'] {
+td.pme-filter, th.pme-filter {
   vertical-align:bottom;
   background:#C6DEFF;
 }
@@ -882,7 +846,7 @@ table.pme-main label.pme-filter-negate-label input[type=checkbox] {
   display:none;
 }
 
-table.pme-main select[class^="pme-filter"] {
+table.pme-main select.pme-filter {
   width:100%;
 }
 
@@ -908,8 +872,8 @@ table.pme-main a:not(.ui-tabs-anchor):hover {
   font-weight:bold;
 }
 
-form.pme-form tr[class^="pme-row"]:hover td[class^="pme-cell"],
-form.pme-form tr[class^="pme-row"]:hover td[class^="pme-navigation"] {
+form.pme-form tr.pme-row:hover td.pme-cell,
+form.pme-form tr.pme-row:hover td.pme-navigation {
   background-color: #9BAFC8;
 }
 
@@ -933,6 +897,11 @@ table.pme-main tr.pme-header input.pme-clear {
 
 table.pme-main tr.pme-header th.pme-nosort {
   padding:1ex;
+}
+
+table.pme-main tbody td.pme-cell:not(.control),
+table.pme-main tbody td.pme-navigation {
+  cursor:pointer;
 }
 
 /*

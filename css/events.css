@@ -42,13 +42,13 @@ form.projectevents {
 /*   background-color:SteelBlue; */
 /* } */
 
-#events input:active,/*select:active,*/#events option:active,#events button:active {  
+#events input:active,/*select:active,*/#events option:active,#events button:active {
   border-radius:4px;
   background-color:SteelBlue;
 }
 
 .projectevents tr,.projectevents tr:hover,
-.projectevents tr:active { 
+.projectevents tr:active {
   background-color:inherit;
 }
 
@@ -62,7 +62,7 @@ form.projectevents {
   border-spacing:0px;
   width:100%;
 }
-.projectevents td.topbuttons { 
+.projectevents td.topbuttons {
   text-align:left;
   vertical-align:middle;
 }
@@ -181,43 +181,37 @@ label.email-check {
   border-spacing:0px;
 }
 
-/* th[class|='pme-header']	{ */
-/*   border:#004d9c 1px solid; */
-/*   padding:4px; */
-/*   background:#add8e6; */
-/* } */
-
-td[class|='eventdata'], td[class|='eventbuttons'], td[class|='eventemail'] {
+td.eventdata, td.eventbuttons, td.eventemail {
   /*vertical-align:middle;*/
   border:1px solid #004d9c;
   padding:3px;
 }
 
-td[class|='eventdata-0'] {
+tr.step-0 td.eventdata {
   /*text-align:inherit;*/
   background:#B7CEEC;
   /* vertical-align:middle; */
 }
 
-td[class|='eventdata-1'] {
+tr.step-1 td.eventdata {
   /*text-align:inherit;*/
   background:#C6DEFF;
   /* vertical-align:middle; */
 }
 
-td[class|='eventbuttons'], td[class|='eventemail'] {
+td.eventbuttons, td.eventemail {
   /*text-align:left;*/
   background:#C6DEFF;
   /*vertical-align:middle;*/
 }
 
-td.eventdata-0-date, td.eventdata-1-date {
+td.eventdata-date {
   max-height:1em;
   width:10.5em !important;
 }
 
 /* Hide everything but the first line*/
-td.eventdata-0-brief, td.eventdata-1-brief {
+td.eventdata-brief {
   max-width:18.5em;
   min-width:18.5em;
   max-height:1em;
@@ -323,7 +317,7 @@ td.eventdata-0-brief, td.eventdata-1-brief {
 	overflow: initial;
 }
 
-div.google-popup { 
+div.google-popup {
   overflow:hidden;
   max-height:none !important;
 }

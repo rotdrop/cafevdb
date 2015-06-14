@@ -1208,10 +1208,10 @@ var CAFEVDB = CAFEVDB || {};
     container.find('li.pme-navigation.table-tabs').tipsy({gravity:'nw', fade:true});
 
     // pme input stuff and tables.
-    container.find('textarea[class*="pme-input"]').tipsy(
-      {gravity:'sw', fade:true, html:true, className:'tipsy-wide'});
-    container.find('input[class*="pme-input"]').tipsy(
-      {gravity:'sw', fade:true, html:true, className:'tipsy-wide'});
+    container.find('textarea.pme-input').tipsy(
+      {gravity:'se', fade:true, html:true, className:'tipsy-wide'});
+    container.find('input.pme-input').tipsy(
+      {gravity:'se', fade:true, html:true, className:'tipsy-wide'});
     container.find('table.pme-main td').tipsy(
       {gravity:'sw', fade:true, html:true, className:'tipsy-wide'});
 
@@ -1445,7 +1445,7 @@ $(document).ready(function(){
   content.on('click', 'div#app-navigation li.nav-projectlabelcontrol a',
              function(event) {
                event.stopImmediatePropagation();
-               
+
                var data = $(this).data('json');
 
                CAFEVDB.Projects.projectViewPopup(PHPMYEDIT.selector(), data);
@@ -1475,7 +1475,7 @@ $(document).ready(function(){
 
                var data = $(this).data('json');
                CAFEVDB.Projects.instrumentationNumbersPopup(PHPMYEDIT.defaultSelector, data);
-               return false;               
+               return false;
              });
 
   CAFEVDB.addReadyCallback(function() {

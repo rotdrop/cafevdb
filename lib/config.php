@@ -864,6 +864,7 @@ redaxoRehearsalsModule
       self::$pmeopts['labels']['Misc'] = 'Em@il';
       //self::$pmeopts['labels']['Sort Field'] = 'Sortierfeld';
 
+      self::$pmeopts['css']['separator'] = ' ';
       self::$pmeopts['css']['textarea'] = '';
       //self::$pmeopts['css']['position'] = true;
       self::$opts['editor'] = self::getUserValue('wysiwygEditor', 'tinymce');
