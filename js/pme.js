@@ -968,18 +968,34 @@ var PHPMYEDIT = PHPMYEDIT || {};
     container.find("td[class^='"+pmepfx+"-input'] div.chosen-container").attr("title", this.inputSelectChosenTitle);
     container.find("td[class^='"+pmepfx+"-value'] div.chosen-container").attr("title", this.inputSelectChosenTitle);
 
-    // Copy over titles
-    container.find("td[class^='"+pmepfx+"-value']").each(function(index) {
-      var selectBox;
+    // Copy over titles and tipsy classes
+    container.find("td."+pmepfx+"-value").each(function(index) {
       var selectTitle = "";
-      selectBox = $(this).children("select[class^='"+pmepfx+"-input']").first();
+      var selectBox = $(this).children("select."+pmepfx+"-input").first();
+      var chosen = $(this).children("div.chosen-container").first();
+
+      if (chosen.length == 0 || selectBox.length == 0) {
+        return;
+      }
+
       if (typeof $(selectBox).attr("title") !== 'undefined') {
         selectTitle = selectBox.attr("title");
       } else if (typeof $(selectBox).attr("original-title") !== 'undefined') {
         selectTitle = selectBox.attr("original-title");
       }
       if (selectTitle.length != 0) {
-        $(this).children("div.chosen-container").first().attr("title", selectTitle);
+        chosen.attr("title", selectTitle);
+      }
+
+      // tipsy control classes
+      var classAttr = selectBox.attr('class');
+      if (typeof classAttr != 'undefined') {
+        var tipsyClasses = classAttr.match(/tipsy-[a-z]+/g);
+        if (tipsyClasses) {
+          for(var idx = 0; idx < tipsyClasses.length; ++idx) {
+            chosen.addClass(tipsyClasses[idx]);
+          }
+        }
       }
     });
 
