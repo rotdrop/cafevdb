@@ -633,6 +633,7 @@ OC.L10N.register(
     "Instrument Insurance" : "Instrumentenversicherung",
     "Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;" : "Gesamtsumme %02.02f &euro;, Jahresbeitrag %02.02f &euro;",
     "Portraits or Avatars can only be added to an existing musician's profile; please add the new musician without protrait image first." : "Portraits oder Avatar-Bilder können nur zu existierenden Musiker-Daten hinzugefügt werden; bitte zuerst den Musiker ohne Bild hinzufügen.",
+    "Photo, if available" : "Ein Foto, falls vorhanden.",
     "Drop photo to upload (max %s)" : "Foto ablegen zum Hochladen (max %s)",
     "Delete current photo" : "Aktuelles Foto löschen",
     "Edit current photo" : "Aktuelles Foto editieren",

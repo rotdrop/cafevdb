@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-13 16:38+0200\n"
+"POT-Creation-Date: 2015-06-14 22:36+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -267,16 +267,16 @@ msgstr ""
 msgid "%s-detailed"
 msgstr ""
 
-#: ajax/export/excel.php:260 lib/projects.php:1725 lib/projects.php:1726
+#: ajax/export/excel.php:260 lib/projects.php:1702 lib/projects.php:1703
 msgid "Missing Musicians"
 msgstr ""
 
 #: ajax/export/excel.php:285 ajax/export/insurance-export.php:157
-#: lib/projects.php:1728
+#: lib/projects.php:1705
 msgid "Instrument"
 msgstr ""
 
-#: ajax/export/excel.php:286 lib/projects.php:1728
+#: ajax/export/excel.php:286 lib/projects.php:1705
 msgid "Missing"
 msgstr ""
 
@@ -1384,20 +1384,20 @@ msgstr ""
 msgid "Setting `%s' to `%s'"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:37 lib/projects.php:719
+#: ajax/settings/redaxo-settings.php:37 lib/projects.php:696
 msgid "Preview"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:38 lib/projects.php:723
+#: ajax/settings/redaxo-settings.php:38 lib/projects.php:700
 msgid "Archive"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:39 lib/projects.php:721
-#: lib/projects.php:1274 lib/projects.php:1435 lib/projects.php:1561
+#: ajax/settings/redaxo-settings.php:39 lib/projects.php:698
+#: lib/projects.php:1251 lib/projects.php:1412 lib/projects.php:1538
 msgid "Rehearsals"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:40 lib/projects.php:725
+#: ajax/settings/redaxo-settings.php:40 lib/projects.php:702
 msgid "Trashbin"
 msgstr ""
 
@@ -1429,8 +1429,8 @@ msgstr ""
 #: js/email.js:448 js/email.js:479 js/email.js:642 js/events.js:64
 #: js/events.js:149 js/inlineimage.js:84 js/inlineimage.js:92
 #: js/inlineimage.js:102 js/inlineimage.js:131 js/inlineimage.js:155
-#: js/inlineimage.js:184 js/inlineimage.js:208 js/inlineimage.js:327
-#: js/inlineimage.js:416 js/inlineimage.js:425 js/inlineimage.js:428
+#: js/inlineimage.js:184 js/inlineimage.js:207 js/inlineimage.js:331
+#: js/inlineimage.js:420 js/inlineimage.js:429 js/inlineimage.js:432
 #: js/sepa-debit-mandate.js:560 js/sepa-debit-mandate.js:575
 #: js/sepa-debit-mandate.js:669
 msgid "Error"
@@ -1483,7 +1483,7 @@ msgid ""
 "Accept the currently selected options and return to the underlying form. "
 msgstr ""
 
-#: js/cafevdb.js:530 js/inlineimage.js:274 js/project-instruments.js:206
+#: js/cafevdb.js:530 js/inlineimage.js:278 js/project-instruments.js:206
 #: templates/blogedit.php:39 templates/part.emailform.composer.php:251
 msgid "Cancel"
 msgstr ""
@@ -1823,7 +1823,7 @@ msgstr ""
 msgid "No files selected for upload."
 msgstr ""
 
-#: js/inlineimage.js:92 js/inlineimage.js:406
+#: js/inlineimage.js:92 js/inlineimage.js:410
 msgid ""
 "The file you are trying to upload exceed the maximum size for file uploads "
 "on this server."
@@ -1833,45 +1833,45 @@ msgstr ""
 msgid "Could not open image."
 msgstr ""
 
-#: js/inlineimage.js:263
+#: js/inlineimage.js:267
 msgid "Edit inline image"
 msgstr ""
 
-#: js/inlineimage.js:268
+#: js/inlineimage.js:272
 msgid "Ok"
 msgstr ""
 
-#: js/inlineimage.js:287
+#: js/inlineimage.js:291
 msgid "Error loading inline image."
 msgstr ""
 
-#: js/inlineimage.js:304
+#: js/inlineimage.js:308
 msgid "Network or server error. Please inform administrator."
 msgstr ""
 
-#: js/inlineimage.js:359
+#: js/inlineimage.js:363
 msgid "Select image"
 msgstr ""
 
-#: js/inlineimage.js:406
+#: js/inlineimage.js:410
 msgid "Upload too large"
 msgstr ""
 
-#: js/inlineimage.js:410
+#: js/inlineimage.js:414
 msgid "Only image files can be used as profile picture."
 msgstr ""
 
-#: js/inlineimage.js:410
+#: js/inlineimage.js:414
 msgid "Wrong file type"
 msgstr ""
 
-#: js/inlineimage.js:416
+#: js/inlineimage.js:420
 msgid ""
 "Your browser doesn't support AJAX upload. Please click on the profile "
 "picture to select a photo to upload."
 msgstr ""
 
-#: js/inlineimage.js:479
+#: js/inlineimage.js:489
 msgid "Photo Zoom"
 msgstr ""
 
@@ -1987,7 +1987,7 @@ msgid ""
 msgstr ""
 
 #: js/sepa-debit-mandate.js:146 lib/detailed-instrumentation.php:349
-#: lib/detailed-instrumentation.php:718 lib/detailed-instrumentation.php:736
+#: lib/detailed-instrumentation.php:694 lib/detailed-instrumentation.php:712
 msgid "SEPA Debit Mandate"
 msgstr ""
 
@@ -2053,55 +2053,55 @@ msgstr ""
 msgid "Unable to update table data at index %s"
 msgstr ""
 
-#: lib/config.php:898
+#: lib/config.php:899
 msgid "birthday"
 msgstr ""
 
-#: lib/config.php:908
+#: lib/config.php:909
 msgid "no preference"
 msgstr ""
 
-#: lib/config.php:909
+#: lib/config.php:910
 msgid "German"
 msgstr ""
 
-#: lib/config.php:910
+#: lib/config.php:911
 msgid "English"
 msgstr ""
 
-#: lib/config.php:911
+#: lib/config.php:912
 msgid "French"
 msgstr ""
 
-#: lib/config.php:912
+#: lib/config.php:913
 msgid "Spanish"
 msgstr ""
 
-#: lib/config.php:913
+#: lib/config.php:914
 msgid "Portuguese"
 msgstr ""
 
-#: lib/config.php:914
+#: lib/config.php:915
 msgid "Polish"
 msgstr ""
 
-#: lib/config.php:915
+#: lib/config.php:916
 msgid "Russian"
 msgstr ""
 
-#: lib/config.php:916
+#: lib/config.php:917
 msgid "Chinese"
 msgstr ""
 
-#: lib/config.php:917
+#: lib/config.php:918
 msgid "Japaneese"
 msgstr ""
 
-#: lib/config.php:918
+#: lib/config.php:919
 msgid "Korean"
 msgstr ""
 
-#: lib/config.php:939
+#: lib/config.php:940
 #, php-format
 msgid "Unknown Tooltip for key `%s' requested."
 msgstr ""
@@ -2204,7 +2204,7 @@ msgstr ""
 msgid "Last Updated"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:742
+#: lib/detailed-instrumentation.php:718
 msgid "Click to enter details of a potential SEPA debit mandate"
 msgstr ""
 
@@ -2236,7 +2236,7 @@ msgstr ""
 msgid "Local Filesystem"
 msgstr ""
 
-#: lib/emailrecipientsfilter.php:340 lib/page-loader.php:182
+#: lib/emailrecipientsfilter.php:340 lib/page-loader.php:183
 #, php-format
 msgid "Invalid history position %d request, history size is %d"
 msgstr ""
@@ -2464,7 +2464,7 @@ msgid ""
 "and even edit the public web-pages for the project and other things."
 msgstr ""
 
-#: lib/functions.php:1322 lib/projects.php:799
+#: lib/functions.php:1322 lib/projects.php:776
 msgid "Instrumentation"
 msgstr ""
 
@@ -2475,7 +2475,7 @@ msgid ""
 "address etc."
 msgstr ""
 
-#: lib/functions.php:1342 lib/project-instruments.php:385
+#: lib/functions.php:1342 lib/project-instruments.php:386
 msgid "Add Instruments"
 msgstr ""
 
@@ -2485,8 +2485,8 @@ msgid ""
 "ones as needed."
 msgstr ""
 
-#: lib/functions.php:1362 lib/project-instruments.php:69 lib/projects.php:804
-#: lib/projects.php:1063
+#: lib/functions.php:1362 lib/project-instruments.php:69 lib/projects.php:781
+#: lib/projects.php:1040
 msgid "Instrumentation Numbers"
 msgstr ""
 
@@ -2496,7 +2496,7 @@ msgid ""
 "already registered for each instrument group and how many are finally needed."
 msgstr ""
 
-#: lib/functions.php:1382 lib/projects.php:841
+#: lib/functions.php:1382 lib/projects.php:818
 msgid "Debit Mandates"
 msgstr ""
 
@@ -2970,39 +2970,43 @@ msgstr ""
 msgid "Instrument Insurance"
 msgstr ""
 
-#: lib/musicians.php:624
+#: lib/musicians.php:600
 #, php-format
 msgid "Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;"
 msgstr ""
 
-#: lib/musicians.php:648
+#: lib/musicians.php:624
 msgid ""
 "Portraits or Avatars can only be added to an existing musician's profile; "
 "please add the new musician without protrait image first."
 msgstr ""
 
-#: lib/musicians.php:662
+#: lib/musicians.php:630
+msgid "Photo, if available"
+msgstr ""
+
+#: lib/musicians.php:636
 #, php-format
 msgid "Drop photo to upload (max %s)"
 msgstr ""
 
-#: lib/musicians.php:665
+#: lib/musicians.php:639
 msgid "Delete current photo"
 msgstr ""
 
-#: lib/musicians.php:666
+#: lib/musicians.php:640
 msgid "Edit current photo"
 msgstr ""
 
-#: lib/musicians.php:667
+#: lib/musicians.php:641
 msgid "Upload new photo"
 msgstr ""
 
-#: lib/musicians.php:668
+#: lib/musicians.php:642
 msgid "Select photo from ownCloud"
 msgstr ""
 
-#: lib/musicians.php:676
+#: lib/musicians.php:650
 msgid ""
 "Internal error, don't know what to do concerning portrait images in the "
 "given context."
@@ -3114,12 +3118,12 @@ msgid ""
 "this table click the `Adjust Instrument' option from the `Actions' menu."
 msgstr ""
 
-#: lib/project-instruments.php:261 lib/project-instruments.php:499
+#: lib/project-instruments.php:261 lib/project-instruments.php:500
 #: lib/projects.php:285 lib/projects.php:291
 msgid "Actions"
 msgstr ""
 
-#: lib/project-instruments.php:261 lib/project-instruments.php:518
+#: lib/project-instruments.php:261 lib/project-instruments.php:519
 #: templates/expertmode.php:61
 msgid "Adjust Instruments"
 msgstr ""
@@ -3142,23 +3146,23 @@ msgstr ""
 msgid "Projekt-Name"
 msgstr ""
 
-#: lib/project-instruments.php:389
+#: lib/project-instruments.php:390
 msgid "Change Instrumentation"
 msgstr ""
 
-#: lib/project-instruments.php:390
+#: lib/project-instruments.php:391
 msgid "Click to add instruments to the project"
 msgstr ""
 
-#: lib/project-instruments.php:407
+#: lib/project-instruments.php:408
 msgid "target"
 msgstr ""
 
-#: lib/project-instruments.php:415
+#: lib/project-instruments.php:416
 msgid "have"
 msgstr ""
 
-#: lib/project-instruments.php:511
+#: lib/project-instruments.php:512
 msgid "Transpose"
 msgstr ""
 
@@ -3225,74 +3229,74 @@ msgstr ""
 msgid "Flyer"
 msgstr ""
 
-#: lib/projects.php:709
+#: lib/projects.php:686
 #, php-format
 msgid "Unable to fetch public web pages for project id %d"
 msgstr ""
 
-#: lib/projects.php:789
+#: lib/projects.php:766
 msgid "Project Overview"
 msgstr ""
 
-#: lib/projects.php:813
+#: lib/projects.php:790
 msgid "Project Files"
 msgstr ""
 
-#: lib/projects.php:820 lib/projects.php:1041
+#: lib/projects.php:797 lib/projects.php:1018
 #, php-format
 msgid "Project Wiki for %s"
 msgstr ""
 
-#: lib/projects.php:822 lib/projects.php:1045
+#: lib/projects.php:799 lib/projects.php:1022
 msgid "Project Notes"
 msgstr ""
 
-#: lib/projects.php:827 lib/projects.php:1051 lib/projects.php:1081
+#: lib/projects.php:804 lib/projects.php:1028 lib/projects.php:1058
 msgid "Events"
 msgstr ""
 
-#: lib/projects.php:832 lib/projects.php:1057
+#: lib/projects.php:809 lib/projects.php:1034
 msgid "Em@il"
 msgstr ""
 
-#: lib/projects.php:847
+#: lib/projects.php:824
 msgid "Profit and Loss Account"
 msgstr ""
 
-#: lib/projects.php:2155
+#: lib/projects.php:2132
 msgid ""
 "Flyers can only be added to existing projects, please add the new\n"
 "project without a flyer first."
 msgstr ""
 
-#: lib/projects.php:2170
+#: lib/projects.php:2145
 #, php-format
 msgid "Drop image to upload (max %s)"
 msgstr ""
 
-#: lib/projects.php:2173
+#: lib/projects.php:2148
 msgid "Delete current flyer"
 msgstr ""
 
-#: lib/projects.php:2174
+#: lib/projects.php:2149
 msgid "Edit current flyer"
 msgstr ""
 
-#: lib/projects.php:2175
+#: lib/projects.php:2150
 msgid "Upload new flyer"
 msgstr ""
 
-#: lib/projects.php:2176
+#: lib/projects.php:2151
 msgid "Select image from ownCloud"
 msgstr ""
 
-#: lib/projects.php:2184
+#: lib/projects.php:2159
 msgid ""
 "Internal error, don't know what to do concerning project-flyers in the given "
 "context."
 msgstr ""
 
-#: lib/projects.php:2425
+#: lib/projects.php:2400
 #, php-format
 msgid ""
 "====== Project %s ======\n"
