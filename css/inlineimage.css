@@ -19,9 +19,16 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#edit_photo_dialog_img {
-  display: block; min-width: 150; min-height: 200;
+#edit_photo_dialog {
+  text-align:center;
 }
+#edit_photo_dialog form#cropform {
+  display:inline-block;
+}
+
+/* #edit_photo_dialog_img { */
+/*   display: block; min-width: 150; min-height: 200; */
+/* } */
 #musician_photo {
   float: left; margin: 1em;
 }
@@ -92,6 +99,8 @@ div#photooverlay {
   overflow:hidden;
   border-radius:4px;
   padding:0.5em;
+  vertical-align:middle;
+  display:inline-block !important;
 }
 
 div#photooverlay:hover,

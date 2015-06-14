@@ -34,8 +34,10 @@ $css_pfx = $_['css-prefix'];
 <div id="fullcalendar"></div>
 <div id="dialog_holder" class="popup topleft hidden"></div>
 <div id="appsettings" class="popup topright hidden"></div>
+<!-- fuck auto-focus attempts -->
 <form class="focusstealer"><input type="text" id="focusstealer" class="focusstealer"/></form>
-  
+
+<!-- iframes to trigger proper download action in web browser -->
 <iframe name="pmeformdownloadframe"
         class="pmeformdownloadframe"
         id="pmeformdownloadframe"
@@ -46,7 +48,30 @@ $css_pfx = $_['css-prefix'];
         id="pmeformdownloadframetwo"
         style="display:none;"
         src="about:blank"></iframe>
-  
+
+<!-- image file upload support with drag'n drop -->
+<form class="float"
+      id="file_upload_form"
+      action="<?php echo \OCP\Util::linkTo('cafevdb', 'ajax/inlineimage/uploadimage.php'); ?>"
+      method="post"
+      enctype="multipart/form-data"
+      target="file_upload_target">
+  <input type="hidden" name="RecordId" value="-1"/>
+  <input type="hidden" name="ImageClass" value=""/>
+  <input type="hidden" name="requesttoken" value="<?php echo $_['requesttoken']; ?>"/>
+  <input type="hidden" name="ImageSize" value="1200"/>
+  <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $_['uploadMaxFilesize']; ?>" id="max_upload"/>
+  <input type="hidden" class="max_human_file_size" value="<?php echo $_['uploadMaxHumanFilesize']; ?>"/>
+  <input id="file_upload_start" type="file" accept="image/*" name="imagefile" />
+</form>
+
+<!-- image upload form submit target frame -->
+<iframe name="file_upload_target"
+        id="file_upload_target"
+        style="display:none;"
+        src=""></iframe>
+
+<!-- image crop form template -->
 <script id="cropBoxTemplate" type="text/template">
 	<form id="cropform"
 		class="coords"
@@ -68,4 +93,3 @@ $css_pfx = $_['css-prefix'];
 		</fieldset>
 	</form>
 </script>
-

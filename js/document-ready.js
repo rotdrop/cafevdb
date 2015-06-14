@@ -101,13 +101,13 @@ $(document).ready(function() {
                 return false;
             });
 
-            if (container.find('#file_upload_target').length > 0) {
-                var idField = $(selector).find('input[name="PME_data_Id"]');
+            if (container.find('#contact_photo_upload').length > 0) {
+                var idField = container.find('input[name="PME_data_Id"]');
                 var recordId = -1;
                 if (idField.length > 0) {
                     recordId = idField.val();
                 }
-                CAFEVDB.Photo.ready(recordId, resizeCB);
+                CAFEVDB.Photo.ready(recordId, 'CAFEVDB\\Musicians', resizeCB);
             } else {
                 container.find('div.photo, span.photo').imagesLoaded(resizeCB);
             }

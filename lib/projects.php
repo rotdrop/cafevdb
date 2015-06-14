@@ -415,29 +415,6 @@ a comma.'));
       $opts['execute'] = $this->execute;
       $this->pme = new \phpMyEdit($opts);
 
-      if ($this->execute) {
-        // Photo upload support:
-        echo '
-<form class="float"
-      id="file_upload_form"
-      action="'.\OCP\Util::linkTo('cafevdb', 'ajax/inlineimage/uploadimage.php').'"
-      method="post"
-      enctype="multipart/form-data"
-      target="file_upload_target">
-  <input type="hidden" name="requesttoken" value="'.\OCP\Util::callRegister().'">
-  <input type="hidden" name="RecordId" value="'.Util::getCGIRecordId().'">
-  <input type="hidden" name="ImagePHPClass" value="CAFEVDB\Projects">
-  <input type="hidden" name="ImageSize" value="1200">
-  <input type="hidden" name="MAX_FILE_SIZE" value="'.Util::maxUploadSize().'" id="max_upload">
-  <input type="hidden" class="max_human_file_size" value="max '.\OCP\Util::humanFileSize(Util::maxUploadSize()).'">
-  <input id="file_upload_start" type="file" accept="image/*" name="imagefile" />
-</form>
-
-<div id="edit_photo_dialog" title="Edit photo">
-		<div id="edit_photo_dialog_img"></div>
-</div>
-';
-      }
     }
 
     /** phpMyEdit calls the trigger (callback) with the following arguments:
@@ -2163,9 +2140,7 @@ project without a flyer first.");
         return $div;
       case 'change':
         $imagearea = ''
-          .'<div id="project_flyer">
-
-  <iframe name="file_upload_target" id="file_upload_target" src=""></iframe>
+          .'<div id="project_flyer_upload">
   <div class="tip project_flyer propertycontainer" id="cafevdb_inline_image_wrapper" title="'
         .L::t("Drop image to upload (max %s)", array(\OCP\Util::humanFileSize(Util::maxUploadSize()))).'"'
            .' data-element="PHOTO">

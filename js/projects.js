@@ -580,13 +580,13 @@ $(document).ready(function(){
                 }
             };
 
-            if (container.find('#file_upload_target').length > 0) {
+            if (container.find('#project_flyer_upload').length > 0) {
                 var idField = container.find('input[name="PME_data_Id"]');
                 var recordId = -1;
                 if (idField.length > 0) {
                     recordId = idField.val();
                 }
-                CAFEVDB.Photo.ready(recordId, function() {
+                CAFEVDB.Photo.ready(recordId, 'CAFEVDB\\Projects', function() {
                     imagesReady = true;
                 });
             } else {

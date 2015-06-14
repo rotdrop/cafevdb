@@ -121,11 +121,11 @@ var CAFEVDB = CAFEVDB || {};
                   { 'path': path,
                     'RecordId': self.recordId,
                     'ImagePHPClass': self.imageClass,
-                    'ImageSize': self.imageSize,
+                    'ImageSize': self.imageSize
                   }, function(jsondata) {
 	    if (jsondata.status == 'success') {
 		//alert(jsondata.data.page);
-		self.editPhoto(jsondata.data.recordId, jsondata.data.tmp)
+		self.editPhoto(jsondata.data.recordId, jsondata.data.tmp);
 		$('#edit_photo_dialog_img').html(jsondata.data.page);
 	    } else {
 		OC.dialogs.alert(jsondata.data.message, t('cafevdb', 'Error'));
@@ -146,7 +146,7 @@ var CAFEVDB = CAFEVDB || {};
 	$.getJSON(OC.filePath('cafevdb', 'ajax', 'inlineimage/currentimage.php'),
                   { 'RecordId': self.recordId,
                     'ImagePHPClass': self.imageClass,
-                    'ImageSize': self.imageSize,
+                    'ImageSize': self.imageSize
                   }, function(jsondata) {
 	    if (jsondata.status == 'success') {
                 self.data.PHOTO = true;
@@ -197,12 +197,11 @@ var CAFEVDB = CAFEVDB || {};
 	$.getJSON(OC.filePath('cafevdb', 'ajax', 'inlineimage/currentimage.php'),
                   { 'RecordId': self.recordId,
                     'ImagePHPClass': self.imageClass,
-                    'ImageSize': self.imageSize,
+                    'ImageSize': self.imageSize
                   },function(jsondata) {
 	    if (jsondata.status == 'success') {
-		//alert(jsondata.data.page);
 		self.editPhoto(jsondata.data.recordId, jsondata.data.tmp);
-		$('#edit_photo_dialog_img').html(jsondata.data.page);
+		//$('#edit_photo_dialog_img').html(jsondata.data.page);
 	    } else {
 		wrapper.removeClass('wait');
 		OC.dialogs.alert(jsondata.data.message, t('cafevdb', 'Error'));
@@ -245,15 +244,20 @@ var CAFEVDB = CAFEVDB || {};
 	    var x = 0, y = 0, w = this.width, h = this.height;
 	    $(this).attr('id', 'cropbox');
 	    $(this).prependTo($dlg).fadeIn();
+            var photoDlg = $('#edit_photo_dialog');
+
+            var boxW = Math.min(self.imageSize, window.innerWidth*0.95);
+            var boxH = Math.min(self.imageSize, window.innerHeight*0.80);
+
 	    $(this).Jcrop({
 		onChange:	showCoords,
 		onSelect:	showCoords,
 		onRelease:	clearCoords,
-		maxSize:	[self.imageSize, self.imageSize],
+		maxSize:	[window.innerWidth, window.innerHeight],
 		bgColor:	'black',
 		bgOpacity:	.4,
-		boxWidth:	self.imageSize,
-		boxHeight:	self.imageSize,
+		boxWidth:	boxW,
+		boxHeight:	boxH,
 		setSelect:	[ x+w, y+h, x, y ]//,
 		//aspectRatio: 0.8
 	    });
@@ -315,7 +319,7 @@ var CAFEVDB = CAFEVDB || {};
 	$.getJSON(OC.filePath('cafevdb', 'ajax', 'inlineimage/deleteimage.php'),
                   {
                       'RecordId':self.recordId,
-                      'ImagePHPClass':self.imageClass,
+                      'ImagePHPClass':self.imageClass
                   },
                   function(jsondata) {
 	    if (jsondata.status == 'success') {
@@ -451,14 +455,19 @@ var CAFEVDB = CAFEVDB || {};
      * dynamically injecting html that needs the image upload
      * functionality.
      */
-    Photo.ready = function(recordId, callback) {
+    Photo.ready = function(recordId, imageClass, callback) {
         var idField = $('#file_upload_form input[name="RecordId"]');
+        var classField = $('#file_upload_form input[name="ImageClass"]');
         if (typeof recordId == 'undefined') {
             recordId = idField.val();
         } else {
             idField.val(recordId);
         }
-        var imageClass = $('#file_upload_form input[name="ImagePHPClass"]').val();
+        if (typeof imageClass == 'undefined') {
+            imageClass = classField.val();
+        } else {
+            classField.val(imageClass);
+        }
         if (typeof recordId !== 'undefined' && typeof imageClass != 'undefined' && recordId >= 0) {
             var imageSize = $('input[name="ImageSize"]').val();
             if (typeof imageSize == 'undefined') {
@@ -474,7 +483,8 @@ var CAFEVDB = CAFEVDB || {};
         var overlay = $('<div id="photooverlay" style="width:auto;height:auto;"></div>');
         var imgClone = $(image).clone();
         imgClone.removeClass('zoomable');
-        overlay.html(imgClone);
+        overlay.append(imgClone);
+	$('.tipsy').remove(); // get rid of disturbing tooltips.
         var popup = overlay.dialog({
             title: t('cafevdb', 'Photo Zoom'),
             position: { my: "middle top+5%",
@@ -488,20 +498,21 @@ var CAFEVDB = CAFEVDB || {};
             resizable: false,
             open: function() {
                 var dialogHolder = $(this);
-                dialogHolder.click(function() {
+                var dialogWidget = dialogHolder.dialog('widget');
+                dialogWidget.click(function() {
                     dialogHolder.dialog('close');
                 });
                 dialogHolder.imagesLoaded(function() {
-                    var dialogWidget = dialogHolder.dialog('widget');
-                    var titleBarHeight = dialogWidget.find('.ui-dialog-titlebar').outerHeight();
+                    var title = dialogWidget.find('.ui-dialog-titlebar');
+                    var titleBarHeight = title.is(':visible') ? title.outerHeight() : '0';
                     var newHeight = dialogWidget.height() - titleBarHeight;
                     var outerHeight = dialogHolder.outerHeight(true);
                     var newWidth = dialogWidget.width();
                     var outerWidth = dialogHolder.outerWidth(true);
+                    var imageHeight = imgClone.height();
+                    var imageWidth  = imgClone.width();
 
                     if (outerHeight > newHeight) {
-                        var imageHeight = imgClone.height();
-                        var imageWidth  = imgClone.width();
                         var imageRatio = imageWidth / imageHeight;
                         var vOffset = outerHeight - dialogHolder.height();
                         vOffset += (imgClone.outerHeight(true) - imageHeight);
@@ -514,8 +525,15 @@ var CAFEVDB = CAFEVDB || {};
                         } else {
                             imgClone.height(newHeight);
                         }
+                    } else if (outerWidth > newWidth) {
+                        var hOffset = outerWidth - dialogHolder.width();
+                        hOffset += (imgClone.outerWidth(true) - imageWidth);
+                        newWidth -= hOffset;
+                        imgClone.width(newWidth);
                     }
                     imgClone.css('margin-left', (dialogHolder.width() - imgClone.width())/2);
+                    imgClone.css('margin-top', (dialogHolder.height() - imgClone.height())/2);
+                    dialogHolder.css('margin-top', (newHeight - dialogHolder.height()) / 2);
                 });
             },
             close: function() {
@@ -530,12 +548,6 @@ var CAFEVDB = CAFEVDB || {};
     CAFEVDB.Photo = Photo;
 
 })(window, jQuery, CAFEVDB);
-
-$(document).ready(function() {
-
-    CAFEVDB.Photo.ready();
-
-});
 
 // Local Variables: ***
 // js-indent-level: 4 ***

@@ -553,30 +553,6 @@ __EOT__;
 
     $this->pme = new \phpMyEdit($opts);
 
-    if ($this->execute) {
-      // Photo upload support:
-      echo '
-<form class="float"
-      id="file_upload_form"
-      action="'.\OCP\Util::linkTo('cafevdb', 'ajax/inlineimage/uploadimage.php').'"
-      method="post"
-      enctype="multipart/form-data"
-      target="file_upload_target">
-  <input type="hidden" name="requesttoken" value="'.\OCP\Util::callRegister().'">
-  <input type="hidden" name="RecordId" value="'.Util::getCGIRecordId().'">
-  <input type="hidden" name="ImagePHPClass" value="CAFEVDB\Musicians">
-  <input type="hidden" name="ImageSize" value="1200">
-  <input type="hidden" name="MAX_FILE_SIZE" value="'.Util::maxUploadSize().'" id="max_upload">
-  <input type="hidden" class="max_human_file_size" value="max '.\OCP\Util::humanFileSize(Util::maxUploadSize()).'">
-  <input id="file_upload_start" type="file" accept="image/*" name="imagefile" />
-</form>
-
-<div id="edit_photo_dialog" title="Edit photo">
-		<div id="edit_photo_dialog_img"></div>
-</div>
-';
-    }
-
     if (Util::debugMode('request')) {
       echo '<PRE>';
       print_r($_POST);
@@ -648,17 +624,15 @@ __EOT__;
       return L::t("Portraits or Avatars can only be added to an existing musician's profile; please add the new musician without protrait image first.");
     case 'display':
       $div = ''
-        .'<div class="photo"><img class="cafevdb_inline_image portrait zoomable" src="'
+        .'<div class="photo"><img class="cafevdb_inline_image portrait zoomable tipsy-se" src="'
         .\OCP\UTIL::linkTo('cafevdb', 'inlineimage.php').'?RecordId='.$musicianId.'&ImagePHPClass=CAFEVDB\Musicians&ImageSize=1200'
         .'" '
-        .'title="Photo, if available" /></div>';
+        .'title="'.L::t("Photo, if available").'" /></div>';
       return $div;
     case 'change':
       $photoarea = ''
-        .'<div id="contact_photo">
-
-  <iframe name="file_upload_target" id=\'file_upload_target\' src=""></iframe>
-  <div class="tip portrait propertycontainer" id="cafevdb_inline_image_wrapper" title="'
+        .'<div id="contact_photo_upload">
+  <div class="tip portrait propertycontainer tipsy-se" id="cafevdb_inline_image_wrapper" title="'
       .L::t("Drop photo to upload (max %s)", array(\OCP\Util::humanFileSize(Util::maxUploadSize()))).'"'
         .' data-element="PHOTO">
     <ul id="phototools" class="transparent hidden contacts_property">

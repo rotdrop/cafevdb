@@ -55,7 +55,7 @@ if ($blog['status'] == 'error') {
     $reply    = $msg['inreplyto'];
     $avatar   = \OCP\Util::linkToRoute('core_avatar_get',
                                        array("user" => $author, "size" => 64));
-    $avatar  .= "?requesttoken=".\OCP\Util::callRegister();
+    $avatar  .= "?requesttoken=".$_['requesttoken'];
     $imgtitle = L::t("Avatar pictures can be uploaded through the personal settings page.");
     $imgtitle = 'title="'.$imgtitle.'" ';
     if ($deleted > 0) {
@@ -71,7 +71,7 @@ if ($blog['status'] == 'error') {
     $edittxt = '';
     if ($modified > 0) {
       $modified = Util::strftime('%x, %H:%M', $modified, $_['timezone'], $_['locale']);
-      $edittxt = L::t(', latest change by `%s\', %s', array($editor,$modified));  
+      $edittxt = L::t(', latest change by `%s\', %s', array($editor,$modified));
     }
 
     $text  = $msg['message'];
@@ -97,7 +97,7 @@ if ($blog['status'] == 'error') {
       <button class="blogbutton delete" id="blogdelete'.$id.'" name="blogdelete'.$id.'" value="'.$id.'" title="'.Config::toolTips('blogentry-delete').'">
         <img class="png blogbutton delete" src="'.\OCP\Util::imagePath('cafevdb', 'delete.png').'" alt="'.L::t('Delete').'"/>
       </button>
-    </span> 
+    </span>
     <span class="blogentrycenter">
       <span class="blogentrytitle">'.$author.' -- '.$created.$prioritytext.$edittxt.'</span><br/>
       <span class="blogentrytext">'.$text.'</span>
@@ -120,7 +120,7 @@ if ($blog['status'] == 'error') {
     } else while (empty($blog) && $level > 0) {
       $blog = array_pop($savedblog);
       $level --;
-    } 
+    }
   }
   echo "</ul>\n";
 }

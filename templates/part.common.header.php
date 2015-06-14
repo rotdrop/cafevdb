@@ -89,7 +89,7 @@ namespace CAFEVDB {
       ));
 
   if (!isset($_['headerblock']) && isset($_['header'])) {
-    $header = $_['header']; 
+    $header = $_['header'];
   } else {
     $header = '';
   }
@@ -102,7 +102,7 @@ namespace CAFEVDB {
 <div id="app-content">
 <div id="controls">
   <form id="personalsettings" method="post" action="?app=<?php echo Config::APP_NAME; ?>">
-    <input type="hidden" name="requesttoken" value="<?php echo \OCP\Util::callRegister(); ?>" />
+    <input type="hidden" name="requesttoken" value="<?php echo $_['requesttoken']; ?>" />
     <?php echo $navigationControls; ?>
     <div class="buttonseparator"></div>
     <?php echo $settingsControls; ?>

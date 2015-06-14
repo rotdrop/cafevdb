@@ -55,15 +55,15 @@ foreach ($_['EventMatrix'] as $key => $eventGroup) {
     $object = $event['object'];
     $brief  = htmlspecialchars(stripslashes($object['summary']));
     $description = htmlspecialchars(nl2br("\n".stripslashes(Events::getDescription($object))));
-    
+
     $datestring = Events::briefEventDate($object, $zone, $locale);
     $longDate = Events::longEventDate($object, $zone, $locale);
 
     $description = $longDate.'<br/>'.$brief.$description;
-    
+
     echo <<<__EOT__
-    <tr class="$class">
-      <td class="eventbuttons-$n">
+    <tr class="$class step-$n">
+      <td class="eventbuttons">
       <input type="hidden" id="calendarid-$evtId" name="CalendarId[$evtId]" value="$calId"/>
 __EOT__;
     foreach ($evtButtons as $btn => $values) {
@@ -78,13 +78,13 @@ __EOT__;
     $checked = isset($_['Selected'][$evtId]) ? 'checked' : '';
     echo <<<__EOT__
       </td>
-      <td class="eventemail-$n">
+      <td class="eventemail">
         <label class="email-check" for="email-check-$evtId"  title="$title" >
         <input class="email-check" title="" id="email-check-$evtId" type="checkbox" name="EventSelect[]" value="$evtId" $checked />
         <div class="email-check" /></label>
       </td>
-      <td class="eventdata-$n-brief tipsy-s tipsy-wide" id="brief-$evtId" title="$description">$brief</td>
-      <td class="eventdata-$n-date tipsy-se tipsy-wide" id="data-$evtId" title="$description">$datestring</td>
+      <td class="eventdata brief tipsy-s tipsy-wide" id="brief-$evtId" title="$description">$brief</td>
+      <td class="eventdata date tipsy-se tipsy-wide" id="data-$evtId" title="$description">$datestring</td>
     </tr>
 __EOT__;
     $n = ($n + 1) & 1;

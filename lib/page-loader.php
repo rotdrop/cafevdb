@@ -144,6 +144,7 @@ namespace CAFEVDB {
       $tmpl->assign('historySize', $this->historySize());
       $tmpl->assign('historyPosition', $this->historyPosition());
       $tmpl->assign('pageControls', 'listItems');
+      $tmpl->assign('requesttoken', \OCP\Util::callRegister());
 
       return $tmpl;
     }

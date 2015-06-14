@@ -527,7 +527,7 @@ __EOT__;
       'default'  => Config::getValue('streetAddressCountry'),
       'values2'     => $countries,
       'valueGroups' => $countryGroups,
-      'css'      => array('postfix' => ' musician-address country chosen-dropup'),
+      'css'      => array('postfix' => ' musician-address country chosen-dropup tipsy-se'),
       'sort'     => true,
       );
 
@@ -621,30 +621,6 @@ __EOT__;
     }
 
     $this->pme = new \phpMyEdit($opts); // Generate and possibly display the table
-
-    if ($this->execute) {
-      // Photo upload support:
-      echo '
-<form class="float"
-      id="file_upload_form"
-      action="'.\OCP\Util::linkTo('cafevdb', 'ajax/inlineimage/uploadimage.php').'"
-      method="post"
-      enctype="multipart/form-data"
-      target="file_upload_target">
-  <input type="hidden" name="requesttoken" value="'.\OCP\Util::callRegister().'">
-  <input type="hidden" name="RecordId" value="'.Util::getCGIRecordId().'">
-  <input type="hidden" name="ImagePHPClass" value="CAFEVDB\Musicians">
-  <input type="hidden" name="ImageSize" value="1200">
-  <input type="hidden" name="MAX_FILE_SIZE" value="'.Util::maxUploadSize().'" id="max_upload">
-  <input type="hidden" class="max_human_file_size" value="max '.\OCP\Util::humanFileSize(Util::maxUploadSize()).'">
-  <input id="file_upload_start" type="file" accept="image/*" name="imagefile" />
-</form>
-
-<div id="edit_photo_dialog" title="Edit photo">
-		<div id="edit_photo_dialog_img"></div>
-</div>
-';
-    }
 
     if (Util::debugMode('request')) {
       echo '<PRE>';
