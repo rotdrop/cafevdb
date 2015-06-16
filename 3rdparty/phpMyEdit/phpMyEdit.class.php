@@ -190,7 +190,7 @@ class phpMyEdit
 		'F' => array('<<','<','add','view','change','copy','delete','>','>>',
 					 'goto','rows_per_page','reload'),
 		'A' => array('save','apply','more','cancel'),
-		'C' => array('save','more','cancel'),
+		'C' => array('save','more','cancel','reload'),
 		'P' => array('save','apply','cancel'),
 		'D' => array('save','cancel'),
 		'V' => array('change','copy','delete','cancel','reload')
@@ -201,7 +201,7 @@ class phpMyEdit
 		'F' => array('<<','<','misc','add','view','change','copy','delete','>','>>',
 					 'goto','rows_per_page','reload'),
 		'A' => array('save','apply','more','cancel'),
-		'C' => array('save','more','cancel'),
+		'C' => array('save','more','cancel','reload'),
 		'P' => array('save','apply','cancel'),
 		'D' => array('save','cancel'),
 		'V' => array('change','copy','delete','cancel','reload')
@@ -212,7 +212,7 @@ class phpMyEdit
 		'F' => array('<<','<','add','>','>>',
 					 'goto','rows_per_page','reload'),
 		'A' => array('save','apply','more','cancel'),
-		'C' => array('save','more','cancel'),
+		'C' => array('save','more','cancel','reload'),
 		'P' => array('save','apply','cancel'),
 		'D' => array('save','cancel'),
 		'V' => array('change','copy','delete','cancel','reload')
@@ -223,7 +223,7 @@ class phpMyEdit
 		'F' => array('<<','<','misc','add','>','>>',
 					 'goto','rows_per_page','reload'),
 		'A' => array('save','apply','more','cancel'),
-		'C' => array('save','more','cancel'),
+		'C' => array('save','more','cancel','reload'),
 		'P' => array('save','apply','cancel'),
 		'D' => array('save','cancel'),
 		'V' => array('change','copy','delete','cancel','reload')
