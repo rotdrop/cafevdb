@@ -1079,11 +1079,12 @@ __EOT__;
 ';
           break;
         case 'input':
+          $style = isset($tag['style']) ? $tag['style'] : '';
           if (isset($tag['image'])) {
             $style = 'background:url(\''.$tag['image'].'\') no-repeat center;'.$style;
-            $name  = '';
+            $value  = '';
           }
-          $style = isset($tag['style']) ? ' style="'.$tag['style'].'"' : '';
+          $style = $style ? ' style="'.$style.'"' : '';
           $name  = $name != '' ? ' name="'.Util::htmlEscape($name).'"' : '';
           $html .= ''
             .'<input type="button" '.$class.$value.$title.$data.$id.$style.$name.'/>
