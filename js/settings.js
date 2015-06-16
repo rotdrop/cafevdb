@@ -21,16 +21,6 @@
 
 $(document).ready(function() {
 
-  var popup = $('#appsettings_popup');
-  var button = $('#settingsbutton');
-  var arrow = popup.find('span.arrow.up');
-
-  var offset = (popup.offset().left + popup.outerWidth()
-               - button.offset().left - button.outerWidth()/2
-               - arrow.outerWidth()/2);
-
-  arrow.css({ right: offset });
-
   var adminSettings = $('#adminsettingstabs').length > 0;
 
   if (adminSettings) {
@@ -70,9 +60,11 @@ $(document).ready(function() {
 
   $('#tooltips').change(function(event) {
     event.preventDefault();
-    var post = $("#tooltips").serialize();
-    $.post(OC.filePath('cafevdb', 'ajax/settings', 'tooltips.php') , post, function(data) {return;});
-    CAFEVDB.toolTipsOnOff($(this).attr('checked'));
+    var self = $(this);
+    var post = self.serialize();
+    CAFEVDB.toolTipsOnOff(self.attr('checked'));
+    $.post(OC.filePath('cafevdb', 'ajax/settings', 'tooltips.php'),
+           post, function(data) {});
     return false;
   });
 
@@ -81,17 +73,16 @@ $(document).ready(function() {
     var post = $("#filtervisibility").serialize();
     $.post(OC.filePath('cafevdb', 'ajax/settings', 'filtervisibility.php') , post, function(data) {return;});
     if ($('#filtervisibility').attr('checked')) {
-      // We would have to resubmit the query. That would be too much,
-      // we only set the initial value.
-//      CAFEVDB.PAGE.expandHeader();
+      $('input.pme-search').trigger('click');
     } else {
-//      CAFEVDB.PAGE.collapseHeader();
+      $('input.pme-hide').trigger('click');
     }
     return false;
   });
 
   $('select.table-pagerows').chosen({
     disable_search:true,
+    inherit_select_classes:true,
     width:'10ex'
   });
   $('select.table-pagerows').change(function(event) {
@@ -114,7 +105,10 @@ $(document).ready(function() {
     return false;
   });
 
-  $('select.debug-mode').chosen({ disable_search:true });
+  $('select.debug-mode').chosen({
+    inherit_select_classes:true,
+    disable_search:true
+  });
   $('select.debug-mode').change(function(event) {
     event.preventDefault();
     var select = $(this);

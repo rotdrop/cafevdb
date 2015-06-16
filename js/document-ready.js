@@ -64,7 +64,7 @@ $(document).ready(function() {
 
     // Intercept app-navigation events here and redirect to the page
     // loader
-    content.on('click', 'div#app-navigation li a', function(event) {
+    content.on('click', 'ul#navigation-list li a', function(event) {
         var post = $(this).data('post');
         CAFEVDB.Page.loadPage(post);
         //alert('post: '+post);
@@ -132,14 +132,15 @@ $(document).ready(function() {
         CAFEVDB.tipsy();
 
         // Prevent drag&drop outside allowed areas.
-        window.addEventListener("dragover",function(e){
+        window.addEventListener("dragover", function(e){
             e = e || event;
             e.preventDefault();
-        },false);
-        window.addEventListener("drop",function(e){
+        }, false);
+        window.addEventListener("drop", function(e){
             e = e || event;
             e.preventDefault();
-        },false);
+        }, false);
+
     });
 
     // The final callback stuff ...

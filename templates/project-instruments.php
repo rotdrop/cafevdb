@@ -21,7 +21,7 @@
  */
 
 namespace CAFEVDB {
-  
+
   $table = new ProjectInstruments($_['recordId']);
   $css_pfx = ProjectInstruments::CSS_PREFIX;
   $project = $table->projectName;
@@ -33,8 +33,8 @@ namespace CAFEVDB {
   if ($project != '') {
     $nav .= Navigation::pageControlElement('projectlabel', $navListItems, $project, $projectId);
     $nav .= Navigation::pageControlElement('projects', $navListItems);
-    $nav .= Navigation::pageControlElement('instruments', $navListItems, $project, $projectId);  
-    $nav .= Navigation::pageControlElement('add', $navListItems, $project, $projectId);  
+    $nav .= Navigation::pageControlElement('instruments', $navListItems, $project, $projectId);
+    $nav .= Navigation::pageControlElement('add', $navListItems, $project, $projectId);
     $nav .= Navigation::pageControlElement('detailed', $navListItems, $project, $projectId);
   } else {
     $nav .= Navigation::pageControlElement('projects', $navListItems);
@@ -43,7 +43,7 @@ namespace CAFEVDB {
   }
 
   if ($navListItems) {
-    $nav = '<ul>'.$nav.'</ul>';
+    $nav = '<ul id="navigation-list">'.$nav.'</ul>';
   }
 
   echo $this->inc('part.common.header',

@@ -63,11 +63,6 @@ projectevents-deselect
 projectevents-detach
 projectevents-download
 projectevents-edit
-projectevents-newconcert
-projectevents-newfinance
-projectevents-newmanagement
-projectevents-newother
-projectevents-newrehearsal
 projectevents-selectevent
 projectsbalancefolder-force
 projectsfolder-force

@@ -20,12 +20,14 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 namespace CAFEVDB {
-  
+
   $table = new Musicians(true);
   $css_pfx = Musicians::CSS_PREFIX;
   $css_class = Musicians::CSS_CLASS;
 
-  $navListItems = $_['pageControls'] == 'listItems';  
+  $missing = Projects::missingInstrumentationTable($table->projectId);
+
+  $navListItems = $_['pageControls'] == 'listItems';
 
   $nav = '';
   $nav .= Navigation::pageControlElement('projectlabel', $navListItems, $table->projectName, $table->projectId);
@@ -36,14 +38,15 @@ namespace CAFEVDB {
   //$nav .= Navigation::pageControlElement('detailed', $navListItems, $table->projectName, $table->projectId);
 
   if ($navListItems) {
-    $nav = '<ul>'.$nav.'</ul>';
+    $nav = '<ul id="navigation-list">'.$nav.'</ul>';
   }
 
   echo $this->inc('part.common.header',
                   array('css-prefix' => $css_pfx,
                         'css-class' => $css_class,
-                      'navigationcontrols' => $nav,
-                        'header' => $table->headerText()));
+                        'navigationcontrols' => $nav,
+                        'header' => $table->headerText(),
+                        'navBarInfo' => $missing));
 
   // Issue the main part. The method will echo itself
   $table->display();

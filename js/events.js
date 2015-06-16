@@ -79,15 +79,57 @@ var CAFEVDB = CAFEVDB || {};
         open  : function(){
           //$('.tipsy').remove();
 
+          var dialogHolder = $(this);
+          var eventForm = dialogHolder.find('#eventlistform');
+          var eventMenu = eventForm.find('select.event-menu');
+
+          // style the menu with chosen
+          eventMenu.chosen({
+            inherit_select_classes:true,
+            disable_search:true,
+            width:'10em'
+          });
+
+          CAFEVDB.fixupNoChosenMenu(eventMenu);
+
           CAFEVDB.dialogToBackButton($(this));
 
           $('.tipsy').remove();
           CAFEVDB.tipsy('#events');
 
-          $('#events #eventlistform :button').off('click').on('click', CAFEVDB.Events.UI.buttonClick);
+          eventMenu.on('change', function(event) {
+            event.preventDefault();
 
-          $('#events').off('cafevdb:events_changed');
-          $('#events').on('cafevdb:events_changed',function(event, events) {
+            if ($('#event').dialog('isOpen') === true) {
+              $('#event').dialog('close');
+              return false;
+            }
+
+            $('#events #debug').hide();
+            $('#events #debug').empty();
+
+            var post = eventForm.serializeArray();
+            var eventType = eventMenu.find('option:selected').val();
+            post.push({ name: 'EventKind', value: eventType });
+
+            $('#dialog_holder').load(OC.filePath('cafevdb',
+                                                 'ajax/events',
+                                                 'new.form.php'),
+                                     post, Calendar.UI.startEventDialog);
+
+            eventMenu.find('option').removeAttr('selected');
+            $('.tipsy').remove();
+
+            eventMenu.trigger('chosen:updated');
+
+            return false;
+          });
+
+          eventForm.off('click', ':button, button').
+            on('click', ':button, button', CAFEVDB.Events.UI.buttonClick);
+
+          dialogHolder.off('cafevdb:events_changed');
+          dialogHolder.on('cafevdb:events_changed',function(event, events) {
             $.post(OC.filePath('cafevdb', 'ajax/events', 'execute.php'),
                    { ProjectId: Events.projectId,
                      ProjectName: Events.projectName,
@@ -96,7 +138,7 @@ var CAFEVDB = CAFEVDB || {};
                    CAFEVDB.Events.UI.relist);
             return false;
           });
-          $('#events').off('change', 'input.email-check').
+          dialogHolder.off('change', 'input.email-check').
             on('change', 'input.email-check', function(event) {
             Events.UI.updateEmailForm();
             return false;
@@ -133,8 +175,10 @@ var CAFEVDB = CAFEVDB || {};
       }
     },
     relist: function(data) {
+      var events =$('#events');
+      var listing = events.find('div.listing');
       if (data.status == 'success') {
-        $('#events div.listing').html(data.data.contents);
+        listing.html(data.data.contents);
       } else {
 	var info = '';
 	if (typeof data.data.message != 'undefined') {
@@ -149,16 +193,13 @@ var CAFEVDB = CAFEVDB || {};
         OC.dialogs.alert(info, t('cafevdb', 'Error'));
       }
       if (typeof data.data.debug != 'undefined') {
-	$('#events #debug').html(data.data.debug);
-	$('#events #debug').show();
+	events.find('#debug').html(data.data.debug);
+	events.find('#debug').show();
       }
 
       $('.tipsy').remove();
 
-      CAFEVDB.tipsy('#events div.listing');
-
-      $('#events #eventlistform div.listing :button').off('click').
-        on('click', CAFEVDB.Events.UI.buttonClick);
+      CAFEVDB.tipsy(listing);
 
       Events.UI.updateEmailForm();
 
@@ -173,7 +214,7 @@ var CAFEVDB = CAFEVDB || {};
 
       $.post(OC.filePath('cafevdb', 'ajax/events', 'execute.php'),
              post, CAFEVDB.Events.UI.relist);
-        
+
       return true;
     },
     buttonClick: function(event) {
@@ -183,7 +224,7 @@ var CAFEVDB = CAFEVDB || {};
 
       var post = $('#eventlistform').serializeArray();
 
-      if(evntdlgopen == true){
+      if(evntdlgopen === true){
         // TODO: maybe save event
         $('#event').dialog('close');
         return false;
@@ -193,60 +234,28 @@ var CAFEVDB = CAFEVDB || {};
       $('#events #debug').empty();
 
       var name = $(this).attr('name');
-      if (name == 'concerts' ||
-          name == 'rehearsals' ||
-          name == 'other' ||
-          name == 'management' ||
-          name == 'finance') {
-        // These are the new-event buttons.
 
-        if(evntdlgopen == true){
-          return false;
-        }
-
-        var type = { name: 'EventKind',
-                     value: $(this).attr('name') };
-        post.push(type);
-
-        $('#dialog_holder').load(OC.filePath('cafevdb',
-                                             'ajax/events',
-                                             'new.form.php'),
-                                 post, Calendar.UI.startEventDialog);
-        
-        return false;
-      } else if (name == 'edit') {
-
-        if(evntdlgopen == true){
-          return false;
-        }
+      if (name == 'edit') {
 
         // Edit existing event
 
-        var type = { name: 'id',
-                     value:  $(this).val() };
-        post.push(type);
-
+        post.push({ name: 'id', value:  $(this).val()});
         $('#dialog_holder').load(OC.filePath('calendar',
                                              'ajax/event',
                                              'edit.form.php'),
                                  post, Calendar.UI.startEventDialog);
-        
+
         return false;
       } else if (name == 'delete' || name == 'detach' ||
                  name == 'select' || name == 'deselect') {
         // Execute the task and redisplay the event list.
 
-        var type = { name: 'EventId',
-                     value: $(this).val() };
-        post.push(type);
-
-        type = { name: 'Action',
-                 value: $(this).attr('name') };
-        post.push(type);
+        post.push({ name: 'EventId', value: $(this).val() });
+        post.push({ name: 'Action', value: $(this).attr('name') });
 
         var really = CAFEVDB.Events.UI.confirmText[name];
         if (really != '') {
-          
+
           // Attention: dialogs do not block, so the action needs to be
           // wrapped into the callback.
 	  OC.dialogs.confirm(really,
@@ -277,15 +286,15 @@ var CAFEVDB = CAFEVDB || {};
           // and we move the email-dialog to front
           emailFormDialog.dialog('moveToTop');
         }
-        
+
       } else if (name == 'download') {
 
         // As always, there may be a more elegant solution, but this
         // opens the "download" diaglog of my web-browser. Need to set
         // the form-method to "post" to do this.
-        
+
         var exportscript = OC.filePath('cafevdb', 'ajax/events', 'download.php');
-        $('#eventlistform').attr("method", "post");        
+        $('#eventlistform').attr("method", "post");
         $('#eventlistform').attr("action", exportscript);
 
         $('#eventlistform').submit();
@@ -305,4 +314,3 @@ var CAFEVDB = CAFEVDB || {};
 // Local Variables: ***
 // js-indent-level: 2 ***
 // End: ***
-

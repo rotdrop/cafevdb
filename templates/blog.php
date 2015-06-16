@@ -34,7 +34,7 @@ namespace CAFEVDB {
   $nav .= Navigation::pageControlElement('instruments', $navListItems);
 
   if ($navListItems) {
-    $nav = '<ul>'.$nav.'</ul>';
+    $nav = '<ul id="navigation-list">'.$nav.'</ul>';
   }
 
   $header = ''

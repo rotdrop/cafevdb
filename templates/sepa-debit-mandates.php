@@ -43,7 +43,7 @@ namespace CAFEVDB {
   }
 
   if ($navListItems) {
-    $nav = '<ul>'.$nav.'</ul>';
+    $nav = '<ul id="navigation-list">'.$nav.'</ul>';
   }
 
   echo $this->inc('part.common.header',

@@ -20,47 +20,41 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use CAFEVDB\L;
-use CAFEVDB\Util;
-use CAFEVDB\Config;
+namespace CAFEVDB {
 
-echo Util::emitExternalScripts();
+  echo Util::emitExternalScripts();
+
+  $prjId   = $_['ProjectId'];
+  $prjName = $_['ProjectName'];
+  $class   = $_['CSSClass'];
 
 ?>
 <div id="events" title="<?php echo L::t('Events for').' '.$_['ProjectName'];?>">
-<?php
-$prjId   = $_['ProjectId'];
-$prjName = $_['ProjectName'];
-$class   = $_['CSSClass'];
-?>
 <form id="eventlistform" class="<?php echo $class; ?>" >
   <input type="hidden" name="ProjectId"   value="<?php echo $prjId; ?>" />
   <input type="hidden" name="ProjectName" value="<?php echo $prjName; ?>" />
-  <div class="topbuttons"><table class="nostyle topbuttons">
-    <tr><td class="topbuttons">
-      <input id="concert"   class="submit" name="concerts"   type="button" value="<?php echo L::t('Add Concert'); ?>"    title="<?php echo Config::toolTips('projectevents-newconcert'); ?>" />
-      <input id="rehearsal" class="submit" name="rehearsals" type="button" value="<?php echo L::t('Add Rehearsal') ?>"   title="<?php echo Config::toolTips('projectevents-newrehearsal'); ?>"/>
-      <input id="other"     class="submit" name="other"      type="button" value="<?php echo L::t('Add Other Event') ?>" title="<?php echo Config::toolTips('projectevents-newother'); ?>" />
-    </td><td class="management">
-      <input id="management" class="submit management" name="management" type="button" value="<?php echo L::t('Management Event') ?>" title="<?php echo Config::toolTips('projectevents-newmanagement'); ?>" />
-    </td></tr>
-    <tr><td>
-      <span class="<?php echo $class; ?>-email">
-        <input type="button" class="<?php echo $class; ?>-sendmail" name="sendmail" value="Em@il" title="<?php echo Config::toolTips('projectevents-sendmail'); ?>" /><input type="button" class="<?php echo $class; ?>-sendmail-select" name="select" value="+" title="<?php echo Config::toolTips('projectevents-select'); ?>" /><input type="button" class="<?php echo $class; ?>-sendmail-deselect" name="deselect" value="-" title="<?php echo Config::toolTips('projectevents-deselect'); ?>" />
-      </span>
-      <span class="<?php echo $class; ?>-download">
-        <input type="button" class="<?php echo $class; ?>-download" name="download" value="<?php echo L::t('Download'); ?>" title="<?php echo Config::toolTips('projectevents-download'); ?>" />
-      </span>
-    </td><td class="management">
-      <input id="finance"
-             class="submit management"
-             name="finance"
+  <div class="eventcontrols">
+    <select class="event-menu cafevdb-menu tipsy-ne"
+            data-placeholder="<?php echo L::t('New Event'); ?>"
+            title="<?php Config::tooltips('new-project-event'); ?>">
+      <option value=""></option>
+      <option value="concerts"><?php echo L::t('Concert'); ?></option>
+      <option value="rehearsals"><?php echo L::t('Rehearsal'); ?></option>
+      <option value="other"><?php echo L::t('Miscellaneous'); ?></option>
+      <option value="management"><?php echo L::t('Management'); ?></option>
+      <option value="finance"><?php echo L::t('Finance'); ?></option>
+    </select>
+    <span class="<?php echo $class; ?>-email">
+      <input type="button" class="<?php echo $class; ?>-sendmail" name="sendmail" value="Em@il" title="<?php echo Config::toolTips('projectevents-sendmail'); ?>" /><input type="button" class="<?php echo $class; ?>-sendmail-select" name="select" value="+" title="<?php echo Config::toolTips('projectevents-select'); ?>" /><input type="button" class="<?php echo $class; ?>-sendmail-deselect" name="deselect" value="-" title="<?php echo Config::toolTips('projectevents-deselect'); ?>" />
+    </span>
+    <span class="<?php echo $class; ?>-download">
+      <input id="projectevents-download"
+             class="projectevents-download tipsy-ne"
              type="button"
-             value="<?php echo L::t('Finance Event') ?>"
-             title="<?php echo Config::toolTips('projectevents-newfinance'); ?>" />
-    </td>
-</tr>
-  </table>
+             name="download"
+             value="<?php echo L::t('Downloads'); ?>"
+             title="<?php echo Config::tooltips('projectevents-download'); ?>"/>
+    </span>
   </div>
   <div class="listing">
   <?php echo $this->inc("eventslisting"); ?>
@@ -71,6 +65,8 @@ $class   = $_['CSSClass'];
 
 <?php
 
+} // namespace CAFEVDB
+
 /*
  * Local Variables: ***
  * c-basic-offset: 2 ***
@@ -78,4 +74,3 @@ $class   = $_['CSSClass'];
  */
 
 ?>
-

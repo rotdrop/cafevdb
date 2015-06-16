@@ -30,6 +30,25 @@ namespace CAFEVDB {
 
   $redoDisabled = $_['historyPosition'] == 0;
   $undoDisabled = $_['historySize'] - $_['historyPosition'] <= 1;
+  if (!isset($_['navBarInfo'])) {
+    $_['navBarInfo'] = '';
+  }
+
+  $pageRows = floor($_['pagerows'] / 10) * 10;
+  $pageRowsOptions = array(-1 => '&infin;');
+  $maxRows = 100;
+  for ($i = 10; $i <= $maxRows; $i += 10) {
+    $pageRowsOptions[$i] = $i;
+  }
+  if ($pageRows > $maxRows) {
+    $pageRows = 0;
+  }
+
+  $debugModes = array('general' => L::t('General Information'),
+                      'query' => L::t('SQL Queries'),
+                      'request' => L::t('HTTP Request'),
+                      'tooltips' => L::t('Missing Context Help'),
+                      'emailform' => L::t('Mass Email Form'));
 
   $navigationControls = Navigation::buttonsFromArray(
     array(
@@ -67,19 +86,6 @@ namespace CAFEVDB {
 
   $settingsControls = Navigation::buttonsFromArray(
     array(
-      'expert' => array(
-        'name' => L::t('Expert Operations'),
-        'title' => L::t('Expert Operations like recreating views etc.'),
-        'image' => \OCP\Util::imagePath('core', 'actions/rename.svg'),
-        'class' => 'settings expert',
-        'style' => ($_['expertmode'] != 'on' ? 'display:none' : ''),
-        'id' => 'expertbutton'),
-      'settings' => array(
-        'name' => L::t('Settings'),
-        'title' => L::t('Personal Settings.'),
-        'image' => \OCP\Util::imagePath('core', 'actions/settings.svg'),
-        'class' => 'settings generalsettings',
-        'id' => 'settingsbutton'),
       'tooltips' => array(
         'name' => L::t('Tooltip Button'),
         'title' => L::t('Toggle Tooltips'),
@@ -94,13 +100,111 @@ namespace CAFEVDB {
     $header = '';
   }
 
+  $expertClass = 'expertmode'.($_['expertmode'] != 'on' ? ' hidden' : '');
 ?>
 
 <div id="app-navigation" class="app-navigation">
-<?php echo $_['navigationcontrols']; ?>
+  <?php echo $_['navigationcontrols']; ?>
+  <div id="app-settings">
+    <div id="cafevdb-navigation-info"><?php echo $_['navBarInfo']; ?></div>
+    <div id="app-settings-header">
+      <button class="settings-button" tabindex="0"></button>
+    </div>
+    <div id="app-settings-content">
+      <ul>
+        <li>
+          <input id="app-settings-tooltips"
+                 type="checkbox"
+                 name="tooltips" <?php echo $_['tooltips'] == 'on' ? 'checked="checked"' : ''; ?>
+                 class="tipsy-sw"
+                 title="<?php echo Config::tooltips('show-tool-tips'); ?>"/>
+          <label for="app-settings-tooltips"
+                 class="tipsy-sw"
+                 title="<?php echo Config::tooltips('show-tool-tips'); ?>">
+            <?php echo L::t('Tool-Tips') ?>
+          </label>
+        </li>
+        <li>
+          <input id="app-settings-filtervisibility"
+                 type="checkbox"
+                 name="filtervisibility" <?php echo $_['filtervisibility'] == 'on' ? 'checked="checked"' : ''; ?>
+                 class="tipsy-sw"
+                 title="<?php echo Config::tooltips('filter-visibility'); ?>"/>
+          <label for="app-settings-filtervisibility"
+                 class="tipsy-sw"
+                 title="<?php echo Config::tooltips('filter-visibility'); ?>">
+            <?php echo L::t('Filter-Controls') ?>
+          </label>
+        </li>
+        <li>
+          <input id="app-settings-expertmode"
+                 type="checkbox"
+                 name="expertmode" <?php echo $_['expertmode'] == 'on' ? 'checked="checked"' : ''; ?>
+                 class="tipsy-sw"
+                 title="<?php echo Config::tooltips('expert-mode'); ?>"/>
+          <label for="app-settings-expertmode"
+                 class="tipsy-sw"
+                 title="<?php echo Config::tooltips('expert-mode'); ?>">
+            <?php echo L::t('Expert-Mode') ?>
+          </label>
+        </li>
+        <li class="chosen-dropup">
+          <select name="pagerows"
+                  data-placeholder="<?php echo L::t('#Rows'); ?>"
+                  class="table-pagerows chosen-dropup tipsy-sw"
+                  id="app-settings-table-pagerows"
+                  title="<?php echo Config::tooltips('table-rows-per-page'); ?>">
+            <?php
+            foreach($pageRowsOptions as $value => $text) {
+              $selected = $value == $pageRows ? ' selected="selected"' : '';
+              echo '<option value="'.$value.'"'.$selected.'>'.$text.'</option>'."\n";
+            }
+            ?>
+          </select>
+          <label for="app-settings-table-pagerows"
+                 class="tipsy-sw"
+                 title="<?php echo Config::tooltips('table-rows-per-page'); ?>">
+            <?php echo L::t('#Rows/Page in Tables'); ?>
+          </label>
+        </li>
+        <li class="<?php echo $expertClass; ?>">
+          <a id="app-settings-further-settings"
+             class="settings generalsettings tipsy-sw"
+             title="<?php echo Config::tooltips('further-settings'); ?>"
+             href="#">
+            <?php echo L::t('Further Settings'); ?>
+          </a>
+        </li>
+        <li class="<?php echo $expertClass; ?>">
+          <a id="app-settings-expert-operations"
+             class="settings expertoperations tipsy-sw"
+             title="<?php echo Config::tooltips('expert-operations'); ?>"
+             href="#">
+            <?php echo L::t('Expert Operations'); ?>
+          </a>
+        </li>
+        <li class="<?php echo $expertClass; ?> chosen-dropup">
+          <select <?php echo ($_['expertmode'] != 'on' ? 'disabled="disabled"' : '') ?>
+            id="app-settings-debugmode"
+            multiple
+            name="debugmode"
+            data-placeholder="<?php echo L::t('Enable Debug Mode'); ?>"
+            class="debug-mode chosen-dropup tipsy-sw"
+            title="<?php echo Config::tooltips('debug-mode'); ?>">
+            <?php
+            foreach ($debugModes as $key => $value) {
+              echo '<option value="'.$key.'" '.(Config::$debug[$key] ? 'selected="selected"' : '').'>'.$value.'</option>'."\n";
+            }
+            ?>
+          </select>
+        </li>
+        <li><br/></li>
+      </ul>
+    </div>
+  </div>
 </div>
 <div id="app-content">
-<div id="controls">
+  <div id="controls">
   <form id="personalsettings" method="post" action="?app=<?php echo Config::APP_NAME; ?>">
     <input type="hidden" name="requesttoken" value="<?php echo $_['requesttoken']; ?>" />
     <?php echo $navigationControls; ?>

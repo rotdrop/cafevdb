@@ -18,10 +18,10 @@
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
 namespace CAFEVDB {
-  
+
   $table   = new Projects();
   $css_pfx = Projects::CSS_PREFIX;
 
@@ -33,7 +33,7 @@ namespace CAFEVDB {
   $nav .= Navigation::pageControlElement('instruments', $navListItems);
 
   if ($navListItems) {
-    $nav = '<ul>'.$nav.'</ul>';
+    $nav = '<ul id="navigation-list">'.$nav.'</ul>';
   }
 
   echo $this->inc('part.common.header',

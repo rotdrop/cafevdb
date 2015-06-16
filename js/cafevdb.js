@@ -77,7 +77,7 @@ var CAFEVDB = CAFEVDB || {};
     case 'tinymce':
       $(document).on('focusin', function(e) {
         if ($(e.target).closest(".mce-window").length) {
-	  e.stopImmediatePropagation();
+	  e.stopImmediatePropagaion();t
 	}
       });
       var plusConfig = {};
@@ -746,7 +746,10 @@ var CAFEVDB = CAFEVDB || {};
 
     // Emulate a pull-down menu with export options via the chosen
     // plugin.
-    container.find('select.pme-export-choice').chosen({ disable_search: true });
+    container.find('select.pme-export-choice').chosen({
+      disable_search:true,
+      inherit_select_classes:true
+    });
     container.find('select.pme-export-choice').
       off('change').
       on('change', function (event) {
@@ -1168,8 +1171,10 @@ var CAFEVDB = CAFEVDB || {};
     CAFEVDB.toolTips = !!onOff;
     if (CAFEVDB.toolTips) {
       $.fn.tipsy.enable();
+      $('#tooltipbutton').removeClass('tooltips-disabled').addClass('tooltips-enabled');
     } else {
       $.fn.tipsy.disable();
+      $('#tooltipbutton').removeClass('tooltips-enabled').addClass('tooltips-disabled');
       $('.tipsy').remove(); // remove any left-over items.
     }
   };
@@ -1325,17 +1330,10 @@ $(document).ready(function(){
     }
   });
 
+  // install delegate handlers ...
   var content = $('#content');
 
-  if (false)
-  content.on('click keydown',
-             '#personalsettings .navigation.home',
-             function(event) {
-               $('#personalsettings').submit();
-             });
-
-  content.on('click keydown',
-             '#personalsettings .generalsettings',
+  content.on('click keydown', '#personalsettings .generalsettings',
              function(event) {
                event.preventDefault();
 
@@ -1349,8 +1347,7 @@ $(document).ready(function(){
                });
              });
 
-  content.on('click keydown',
-             '#personalsettings .expert',
+  content.on('click keydown', '#personalsettings .expert',
              function(event) {
                event.preventDefault();
                OC.appSettings({
@@ -1361,24 +1358,18 @@ $(document).ready(function(){
                });
              });
 
-  content.on('click keydown',
-             '#personalsettings .tooltips',
+  content.on('click keydown', '#personalsettings .tooltips',
              function(event) {
                event.preventDefault();
-               CAFEVDB.toolTipsOnOff(!CAFEVDB.toolTips);
+               var self = $(this);
+               CAFEVDB.toolTipsOnOff(self.hasClass('tooltips-disabled'));
                $.post(OC.filePath('cafevdb', 'ajax/settings', 'tooltips.php'),
-                      CAFEVDB.toolTips ? { tooltips: 'on' } : {},
-                      function(data) { return; });
-               if (CAFEVDB.toolTips) {
-                 $(this).removeClass('tooltips-disabled').addClass('tooltips-enabled');
-               } else {
-                 $(this).removeClass('tooltips-enabled').addClass('tooltips-disabled');
-               }
+                      self.hasClass('tooltips-disabled') ? { tooltips: 'on' } : {},
+                      function(data) {});
                return false;
              });
 
-  content.on('click',
-             ':button.events',
+  content.on('click', ':button.events',
              function(event) {
                event.preventDefault();
                if ($('#events').dialog('isOpen') == true) {
@@ -1393,8 +1384,7 @@ $(document).ready(function(){
                return false;
              });
 
-  content.on('click',
-             ':button.instrumentation',
+  content.on('click', ':button.instrumentation',
              function(event) {
                event.preventDefault();
 
@@ -1405,20 +1395,7 @@ $(document).ready(function(){
                return false;
              });
 
-  content.on('click',
-             ':button.register-musician',
-             function(event) {
-               event.preventDefault();
-               var values = $(this).attr('name');
-
-               CAFEVDB.formSubmit('', values, 'post');
-
-               return false;
-             });
-
-  if (false) // no longer needed?
-  content.on('click',
-             ':button.musician-instrument-insurance',
+  content.on('click', ':button.register-musician',
              function(event) {
                event.preventDefault();
                var values = $(this).attr('name');
@@ -1429,20 +1406,7 @@ $(document).ready(function(){
              });
 
   // Display the overview-page for the given project.
-  content.on('click',
-             'form#projectlabelcontrol :submit',
-             function(event) {
-               event.stopImmediatePropagation();
-
-               var form = $(this.form);
-               var pseudoSubmit = form.find('input.pme-view');
-               PHPMYEDIT.tableDialog($(this.form), pseudoSubmit);
-
-               return false;
-             });
-
-  // Same as above, but with <li>-style navigation (OC standard)
-  content.on('click', 'div#app-navigation li.nav-projectlabelcontrol a',
+  content.on('click', 'ul#navigation-list li.nav-projectlabelcontrol a',
              function(event) {
                event.stopImmediatePropagation();
 
@@ -1453,23 +1417,7 @@ $(document).ready(function(){
              });
 
   // Display the instrumentation numbers in a dialog widget
-  content.on('click',
-             'form#projectinstrumentscontrol :submit',
-             function(event) {
-               event.stopImmediatePropagation();
-               var form = $(this.form);
-               var projectName = $(this.form).find('input[name="ProjectNaame"]').val();
-               var projectId =  $(this.form).find('input[name="ProjectId"]').val();
-               CAFEVDB.Projects.instrumentationNumbersPopup(
-                 PHPMYEDIT.defaultSelector, {
-                   ProjectId: projectId,
-                   ProjectName: projectName
-                 });
-               return false;
-             });
-
-  // Same as above, but with <li>-style navigation (OC standard)
-  content.on('click', 'div#app-navigation li.nav-projectinstrumentscontrol a',
+  content.on('click', 'ul#navigation-list li.nav-projectinstrumentscontrol a',
              function(event) {
                event.stopImmediatePropagation();
 
@@ -1479,28 +1427,13 @@ $(document).ready(function(){
              });
 
   CAFEVDB.addReadyCallback(function() {
+
     $('input.alertdata.cafevdb-page').each(function(index) {
       var title = $(this).attr('name');
       var text  = $(this).attr('value');
       OC.dialogs.alert(text, title, undefined, true, true);
     });
 
-    if ($('#missing-musicians-block').length > 0) {
-      $('#missing-musicians-block').dialog({
-        //dialogClass: 'no-close',
-        width:'auto',
-        height:'auto',
-        resizable: false,
-        autoResize: true,
-        position:{my:'left top',
-                  at:'left+1% bottom+10%',
-                  of:'form.pme-form'
-                 },
-        close: function() {
-          $(this).dialog('destroy').remove();
-        }
-      });
-    }
   });
 
 });

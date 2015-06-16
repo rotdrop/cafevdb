@@ -36,7 +36,7 @@ namespace CAFEVDB {
   $nav .= Navigation::pageControlElement('insurancebrokers', $navListItems);
 
   if ($navListItems) {
-    $nav = '<ul>'.$nav.'</ul>';
+    $nav = '<ul id="navigation-list">'.$nav.'</ul>';
   }
 
   echo $this->inc('part.common.header',
@@ -52,7 +52,7 @@ namespace CAFEVDB {
       L::t("Sorry, this view is only available to the %s.",
            array(L::t('treasurer'))).
       '</div>';
-  }    
+  }
 
 
   // Close some still opened divs

@@ -32,9 +32,38 @@ form.projectevents {
   /*background-color:#e6f1ff;*/
 }
 
-#events select,#events input,#events option,#events button {
+#events select, #events input, #events option, #events button {
   border-radius:4px;
   background-color:#F4F4F4;
+}
+
+#events .cafevdb-menu.chosen-container {
+  margin-right:3px;
+}
+
+#events .chosen-container .chosen-drop {
+  background-color:#F4F4F4 !important;
+}
+
+#events .cafevdb-menu.chosen-container-single.chosen-with-drop .chosen-single {
+  border-bottom-right-radius:0px;
+  border-bottom-left-radius:0px;
+  background-size:100% auto;
+}
+
+#events .chosen-container.cafevdb-menu a.chosen-single {
+  border-radius:4px;
+  background-color:#F4F4F4 !important;
+  padding-top:5px !important;
+  padding-bottom:5px !important;
+  margin-top:3px !important;
+  margin-bottom:3px !important;
+}
+
+.chosen-container.cafevdb-menu a.chosen-single:hover,
+.chosen-container.cafevdb-menu a.chosen-single:focus {
+  background-color:#F4F4F4 !important;
+  color:#333;
 }
 
 /* #events input:checked,#events select:checked,#events option:checked,#events button:checked { */
@@ -42,8 +71,7 @@ form.projectevents {
 /*   background-color:SteelBlue; */
 /* } */
 
-#events input:active,/*select:active,*/#events option:active,#events button:active {
-  border-radius:4px;
+#events input:active, /*select:active,*/#events option:active, #events button:active {
   background-color:SteelBlue;
 }
 
@@ -56,19 +84,10 @@ form.projectevents {
   padding:1em 0.3em 0 0.3em;
 }
 
-.projectevents table.topbuttons {
-  border:0px solid #004d9c;
-  border-collapse:collapse;
-  border-spacing:0px;
-  width:100%;
-}
-.projectevents td.topbuttons {
-  text-align:left;
-  vertical-align:middle;
-}
-
 .projectevents input.projectevents-sendmail,
-.projectevents input.submit {
+.projectevents input[type="submit"],
+.projectevents input[type="button"],
+.projectevents button {
   height:28px;
   vertical-align:middle;
 }
@@ -106,6 +125,16 @@ form.projectevents {
   padding-left:24px;
   min-height:28px;
   vertical-align:middle;
+}
+
+.projectevents input.projectevents-download {
+  background-image:url('../../../core/img/actions/download.svg');
+  background-repeat:no-repeat;
+  background-position:center center;
+  height:28px;
+  width:28px;
+  vertical-align:middle;
+  font-size:0pt;
 }
 
 .projectevents input.detach {
@@ -172,7 +201,12 @@ label.email-check {
 }
 
 .projectevents div.listing {
-  padding:1em 0.3em 0 0.3em;
+  padding:0.3em 0.3em 0 0.3em;
+  min-height:10em;
+}
+
+.projectevents div.eventcontrols {
+  padding:0.3em 0.3em 0 0.3em;
 }
 
 .projectevents table.listing {
@@ -347,6 +381,7 @@ div.google-popup {
 
 /*
  * LocalVariables: ***
+ * css-indent-offset: 2 ***
  * cssm-indent-function: cssm-c-style-indenter ***
  * End: ***
  */

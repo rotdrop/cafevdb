@@ -1692,11 +1692,12 @@ __EOT__;
     /**Create a HTML table with the missing musicians. */
     public static function missingInstrumentationTable($projectId, $handle = false)
     {
+      $output = '';
       $numbers = self::fetchMissingInstrumentation($projectId, $handle);
 
       $missing = array_filter($numbers, function ($val) { return $val > 0; });
       if (count($missing) > 0) {
-        echo '
+        $output .= '
 <div class="missing-musicians"
      id="missing-musicians-block"
      title="'.L::t("Missing Musicians").'">
@@ -1709,12 +1710,13 @@ __EOT__;
           if ($number <= 0) {
             continue;
           }
-          echo '    <tr class="row-'.($cnt%2).'"><td class="instrument">'.$instrument.'</td><td class="deficit">'.$number.'</td></tr>'."\n";
+          $output .= '    <tr class="row-'.($cnt%2).'"><td class="instrument">'.$instrument.'</td><td class="deficit">'.$number.'</td></tr>'."\n";
           $cnt++;
         }
-        echo '  </table>
+        $output .= '  </table>
   </div>';
       }
+      return $output;
     }
 
     /**Fetch the list of needed instruments. */

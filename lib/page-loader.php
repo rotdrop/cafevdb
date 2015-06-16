@@ -145,6 +145,8 @@ namespace CAFEVDB {
       $tmpl->assign('historyPosition', $this->historyPosition());
       $tmpl->assign('pageControls', 'listItems');
       $tmpl->assign('requesttoken', \OCP\Util::callRegister());
+      $tmpl->assign('filtervisibility', Config::getUserValue('filtervisibility', 'off', $user));
+      $tmpl->assign('pagerows', $pageRows);
 
       return $tmpl;
     }

@@ -27,7 +27,7 @@ namespace CAFEVDB {
   $css_class = Musicians::CSS_CLASS;
 
   $navListItems = $_['pageControls'] == 'listItems';
-  
+
   $nav = '';
   $nav .= Navigation::pageControlElement('projects', $navListItems);
   $nav .= Navigation::pageControlElement('instruments', $navListItems);
@@ -36,9 +36,9 @@ namespace CAFEVDB {
     $nav .= Navigation::pageControlElement('debitmandates', $navListItems);
   }
   if ($navListItems) {
-    $nav = '<ul>'.$nav.'</ul>';
+    $nav = '<ul id="navigation-list">'.$nav.'</ul>';
   }
-  
+
   echo $this->inc('part.common.header',
                   array('css-prefix' => $css_pfx,
                         'css-class' => $css_class,

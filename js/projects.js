@@ -292,7 +292,10 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
         var projectActions = container.find('select.project-actions');
 
         // emulate per-project action pull down menu via chosen
-        projectActions.chosen({ disable_search:true });
+        projectActions.chosen({
+            inherit_select_classes:true,
+            disable_search:true
+        });
 
         CAFEVDB.fixupNoChosenMenu(projectActions);
 

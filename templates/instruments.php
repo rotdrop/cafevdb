@@ -21,7 +21,7 @@
  */
 
 namespace CAFEVDB {
-  
+
   $table = new Instruments();
   $css_pfx = Instruments::CSS_PREFIX;
   $project = $table->projectName;
@@ -42,7 +42,7 @@ namespace CAFEVDB {
   }
 
   if ($navListItems) {
-    $nav = '<ul>'.$nav.'</ul>';
+    $nav = '<ul id="navigation-list">'.$nav.'</ul>';
   }
 
   echo $this->inc('part.common.header',

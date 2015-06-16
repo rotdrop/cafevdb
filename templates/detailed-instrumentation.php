@@ -26,6 +26,8 @@ namespace CAFEVDB {
   $css_pfx = DetailedInstrumentation::CSS_PREFIX;
   $css_class = DetailedInstrumentation::CSS_CLASS;
 
+  $missing = Projects::missingInstrumentationTable($table->projectId);
+
   $navListItems = $_['pageControls'] == 'listItems';
 
   $nav = '';
@@ -45,21 +47,18 @@ namespace CAFEVDB {
   $nav .= Navigation::pageControlElement('instruments', $navListItems, $table->projectName, $table->projectId);
 
   if ($navListItems) {
-    $nav = '<ul>'.$nav.'</ul>';
+    $nav = '<ul id="navigation-list">'.$nav.'</ul>';
   }
 
   echo $this->inc('part.common.header',
                   array('css-prefix' => $css_pfx,
                         'css-class' => $css_class,
                         'navigationcontrols' => $nav,
-                        'header' => $table->headerText()));
+                        'header' => $table->headerText(),
+                        'navBarInfo' => $missing));
 
   // Issue the main part. The method will echo itself
   $table->display();
-
-  if ($table->listOperation()) {
-    Projects::missingInstrumentationTable($table->projectId);
-  }
 
   // Close some still opened divs
   echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));

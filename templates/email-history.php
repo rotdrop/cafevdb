@@ -21,7 +21,7 @@
  */
 
 namespace CAFEVDB {
-  
+
   $projectName = Util::cgiValue('ProjectName');
   $projectId = Util::cgiValue('ProjectId',-1);
   $css_pfx = EmailHistory::CSS_PREFIX;
@@ -35,7 +35,7 @@ namespace CAFEVDB {
     $nav .= Navigation::pageControlElement('email', $navListItems, $projectName, $projectId);
     $nav .= Navigation::pageControlElement('detailedg', $navListItems, $projectName, $projectId);
     $nav .= Navigation::pageControlElement('projectinstruments', $navListItems, $projectName, $projectId);
-    $nav .= Navigation::pageControlElement('instruments', $navListItems, $projectName, $projectId); 
+    $nav .= Navigation::pageControlElement('instruments', $navListItems, $projectName, $projectId);
   } else {
     $nav .= Navigation::pageControlElement('projects', $navListItems);
     $nav .= Navigation::pageControlElement('email', $navListItems);
@@ -45,7 +45,7 @@ namespace CAFEVDB {
   }
 
   if ($navListItems) {
-    $nav = '<ul>'.$nav.'</ul>';
+    $nav = '<ul id="navigation-list">'.$nav.'</ul>';
   }
 
   echo $this->inc('part.common.header',

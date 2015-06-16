@@ -90,23 +90,23 @@ input.streetAddressCountry {
   width: 40em;
 }
 
-input.bankAccountOwner { 
+input.bankAccountOwner {
   width: 40em;
 }
 
-input.bankAccountIBAN { 
+input.bankAccountIBAN {
   width: 22em;
 }
 
-input.bankAccountBIC { 
+input.bankAccountBIC {
   width: 8em;
 }
 
-input.bankAccountBLZ { 
+input.bankAccountBLZ {
   width: 6em;
 }
 
-input.bankAccountCreditorIdentifier { 
+input.bankAccountCreditorIdentifier {
   width: 40em;
 }
 
@@ -148,4 +148,52 @@ input.randomkey {
 
 #appsettings_popup span.locale.thelocale {
   color:blue;
+}
+
+#app-settings-content a.settings {
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: left center;
+    border:0;
+    border-radius:0;
+    height:33px;
+    min-height:33px;
+    line-height:33px;
+    padding-left:33px;
+    padding-left:33px;
+}
+
+#app-settings-content a.generalsettings {
+    background-image: url('../../../core/img/actions/rename.svg');
+}
+
+#app-settings-content a.expertoperations {
+    background-image: url('../../../core/img/actions/settings.svg');
+}
+
+#app-settings-content li.expertmode.hidden {
+    display:none;
+}
+
+#app-settings.open #app-settings-content {
+    overflow-y: visible !important; /* for chosen drop-up */
+}
+
+#app-settings-content div.chosen-container li.search-choice {
+    width:auto;
+}
+
+#app-settings-content div.chosen-container li.search-choice a.search-choice-close {
+    width:12px;
+    display:block;
+    margin:0px;
+    padding:0px;
+    line-height:inherit;
+    min-height:inherit;
+}
+
+#appsettings_popup.popup.bottomleft {
+    bottom:1em;
+    left:250px;
+    margin-left:1em;
 }

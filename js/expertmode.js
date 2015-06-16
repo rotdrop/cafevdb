@@ -21,16 +21,6 @@
 
 $(document).ready(function() {
 
-  var popup = $('#appsettings_popup');
-  var button = $('#expertbutton');
-  var arrow = popup.find('span.arrow.up');
-
-  var offset = (popup.offset().left + popup.outerWidth()
-               - button.offset().left - button.outerWidth()/2
-               - arrow.outerWidth()/2);
-
-  arrow.css({ right: offset });
-
   $('#appsettings_popup h2').html(t('cafevdb', 'Advanced operations, use with care'));
 
   $('#syncevents').click(function() {

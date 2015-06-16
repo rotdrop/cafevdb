@@ -36,6 +36,7 @@
   margin: auto;
 }
 #file_upload_form {
+  display:none;
   width: 0;
   height: 0;
 }
@@ -46,7 +47,7 @@
   -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter:alpha(opacity=0);
   opacity:0;
-  z-index:1001;
+  /* z-index:1001; Oops????? */
   width:0;
   height:0;
 }

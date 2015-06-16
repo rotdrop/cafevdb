@@ -92,7 +92,8 @@
     width:auto !important;
   }
 
-  .popup.topright {
+  .popup.topright,
+  .popup.bottomleft {
     left: 0px !important;
     top: 0px !important;
     max-width: 100% !important;
@@ -103,6 +104,7 @@
     height: 100% !important;
     overflow: auto !important;
     padding: 0px !important;
+    margin: 0px !important;
   }
 
   #appsettings_popup div.personalblock.cafevdb.about {
@@ -128,7 +130,7 @@
   }
 
   tr.table-tabs td li.table-tabs {
-    max-width:18%;
+    max-width:15%;
   }
 
   tr.table-tabs td li.selected {

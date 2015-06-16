@@ -35,7 +35,7 @@ namespace CAFEVDB
   $nav .= Navigation::pageControlElement('debitmandates', $navListItems);
 
   if ($navListItems) {
-    $nav = '<ul>'.$nav.'</ul>';
+    $nav = '<ul id="navigation-list">'.$nav.'</ul>';
   }
 
   echo $this->inc('part.common.header',
@@ -43,7 +43,7 @@ namespace CAFEVDB
                         'navigationcontrols' => $nav,
                         'header' => $table->headerText()));
 
-  
+
   $table->display();
 
   // Close some still opened divs
