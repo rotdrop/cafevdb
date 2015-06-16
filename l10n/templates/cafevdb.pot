@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-14 22:36+0200\n"
+"POT-Creation-Date: 2015-06-16 00:57+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -267,16 +267,16 @@ msgstr ""
 msgid "%s-detailed"
 msgstr ""
 
-#: ajax/export/excel.php:260 lib/projects.php:1702 lib/projects.php:1703
+#: ajax/export/excel.php:260 lib/projects.php:1703 lib/projects.php:1704
 msgid "Missing Musicians"
 msgstr ""
 
 #: ajax/export/excel.php:285 ajax/export/insurance-export.php:157
-#: lib/projects.php:1705
+#: lib/projects.php:1706
 msgid "Instrument"
 msgstr ""
 
-#: ajax/export/excel.php:286 lib/projects.php:1705
+#: ajax/export/excel.php:286 lib/projects.php:1706
 msgid "Missing"
 msgstr ""
 
@@ -1339,7 +1339,7 @@ msgstr ""
 msgid "New window or tab with `%s'?"
 msgstr ""
 
-#: ajax/settings/debugmode.php:28
+#: ajax/settings/debugmode.php:56
 #, php-format
 msgid "Debug-modes changed to `%s'"
 msgstr ""
@@ -1425,7 +1425,7 @@ msgid "Unknown WYSIWYG-Editor: `%s'"
 msgstr ""
 
 #: js/blog.js:53 js/blog.js:156 js/blog.js:207 js/blog.js:243
-#: js/cafevdb.js:1094 js/cafevdb.js:1158 js/email.js:33 js/email.js:62
+#: js/cafevdb.js:1097 js/cafevdb.js:1161 js/email.js:33 js/email.js:62
 #: js/email.js:448 js/email.js:479 js/email.js:642 js/events.js:64
 #: js/events.js:149 js/inlineimage.js:84 js/inlineimage.js:92
 #: js/inlineimage.js:102 js/inlineimage.js:131 js/inlineimage.js:155
@@ -1502,14 +1502,14 @@ msgstr ""
 msgid "Unimplemented"
 msgstr ""
 
-#: js/cafevdb.js:887
+#: js/cafevdb.js:890
 msgid ""
 "If multiple dialogs are open, then move this one to the lowest layer and "
 "display it below the others. Clicking anywhere on the dialog will bring to "
 "the front again."
 msgstr ""
 
-#: js/cafevdb.js:937
+#: js/cafevdb.js:940
 msgid ""
 "Close the current dialog and return to the view which was active before this "
 "dialog had been opened. If the current view shows a `Back' button, then "
@@ -1517,51 +1517,51 @@ msgid ""
 "equivalent to clicking the `Back' button"
 msgstr ""
 
-#: js/cafevdb.js:1027 js/instrumentation.js:163
+#: js/cafevdb.js:1030 js/instrumentation.js:163
 msgid "Debug Information"
 msgstr ""
 
-#: js/cafevdb.js:1056
+#: js/cafevdb.js:1059
 msgid ""
 "Unrecoverable unknown internal error, no further information available, "
 "sorry."
 msgstr ""
 
-#: js/cafevdb.js:1058
+#: js/cafevdb.js:1061
 msgid "Internal Error"
 msgstr ""
 
-#: js/cafevdb.js:1065
+#: js/cafevdb.js:1068
 #, python-brace-format
 msgid "Field {RequiredField} not present in AJAX response."
 msgstr ""
 
-#: js/cafevdb.js:1074
+#: js/cafevdb.js:1077
 msgid "Missing data"
 msgstr ""
 
-#: js/cafevdb.js:1076 js/events.js:58 js/events.js:143
+#: js/cafevdb.js:1079 js/events.js:58 js/events.js:143
 msgid "Unknown error :("
 msgstr ""
 
-#: js/cafevdb.js:1114
+#: js/cafevdb.js:1117
 msgid "Something went wrong."
 msgstr ""
 
-#: js/cafevdb.js:1116
+#: js/cafevdb.js:1119
 msgid ""
 "If it should be the case that you are already logged in for a long time "
 "without interacting with the web-app, then the reason for this error is "
 "probably a simple timeout."
 msgstr ""
 
-#: js/cafevdb.js:1121
+#: js/cafevdb.js:1124
 msgid ""
 "I any case it may help to logoff and logon again, as a temporary work-"
 "around. You will be redirected to the log-in page when you close this window."
 msgstr ""
 
-#: js/cafevdb.js:1125
+#: js/cafevdb.js:1128
 #, python-brace-format
 msgid "Feedback email: {AutoReport}"
 msgstr ""
@@ -1789,7 +1789,7 @@ msgstr ""
 msgid "Really delete?"
 msgstr ""
 
-#: js/expertmode.js:34
+#: js/expertmode.js:24
 msgid "Advanced operations, use with care"
 msgstr ""
 
@@ -1932,25 +1932,25 @@ msgid ""
 "instrumentation of the project will remain unchanged."
 msgstr ""
 
-#: js/projects.js:510
+#: js/projects.js:513
 msgid "Really unlink the displayed event announcement?"
 msgstr ""
 
-#: js/projects.js:511
+#: js/projects.js:514
 #, python-brace-format
 msgid "Unlink Web-Page with Id {ArticleId}?"
 msgstr ""
 
-#: js/projects.js:536
+#: js/projects.js:539
 msgid "Really delete the displayed event announcement?"
 msgstr ""
 
-#: js/projects.js:537
+#: js/projects.js:540
 #, python-brace-format
 msgid "Delete Web-Page with Id {ArticleId}?"
 msgstr ""
 
-#: js/projects.js:614
+#: js/projects.js:617
 msgid "No values match"
 msgstr ""
 
@@ -2030,11 +2030,11 @@ msgstr ""
 msgid "ProjectDebitNoteAnnouncement"
 msgstr ""
 
-#: js/settings.js:108 js/settings.js:130 js/settings.js:152 js/settings.js:208
+#: js/settings.js:99 js/settings.js:124 js/settings.js:146 js/settings.js:202
 msgid "Error:"
 msgstr ""
 
-#: js/settings.js:246
+#: js/settings.js:240
 msgid "Please standby, the operation will take some time!"
 msgstr ""
 
@@ -2236,7 +2236,7 @@ msgstr ""
 msgid "Local Filesystem"
 msgstr ""
 
-#: lib/emailrecipientsfilter.php:340 lib/page-loader.php:183
+#: lib/emailrecipientsfilter.php:340 lib/page-loader.php:185
 #, php-format
 msgid "Invalid history position %d request, history size is %d"
 msgstr ""
@@ -3263,40 +3263,40 @@ msgstr ""
 msgid "Profit and Loss Account"
 msgstr ""
 
-#: lib/projects.php:2132
+#: lib/projects.php:2134
 msgid ""
 "Flyers can only be added to existing projects, please add the new\n"
 "project without a flyer first."
 msgstr ""
 
-#: lib/projects.php:2145
+#: lib/projects.php:2147
 #, php-format
 msgid "Drop image to upload (max %s)"
 msgstr ""
 
-#: lib/projects.php:2148
+#: lib/projects.php:2150
 msgid "Delete current flyer"
 msgstr ""
 
-#: lib/projects.php:2149
+#: lib/projects.php:2151
 msgid "Edit current flyer"
 msgstr ""
 
-#: lib/projects.php:2150
+#: lib/projects.php:2152
 msgid "Upload new flyer"
 msgstr ""
 
-#: lib/projects.php:2151
+#: lib/projects.php:2153
 msgid "Select image from ownCloud"
 msgstr ""
 
-#: lib/projects.php:2159
+#: lib/projects.php:2161
 msgid ""
 "Internal error, don't know what to do concerning project-flyers in the given "
 "context."
 msgstr ""
 
-#: lib/projects.php:2400
+#: lib/projects.php:2402
 #, php-format
 msgid ""
 "====== Project %s ======\n"
@@ -4606,7 +4606,7 @@ msgstr ""
 msgid "Owncloud developer documentation"
 msgstr ""
 
-#: templates/email-settings.php:34 templates/part.common.header.php:78
+#: templates/email-settings.php:34
 msgid "Settings"
 msgstr ""
 
@@ -4753,28 +4753,32 @@ msgstr ""
 msgid "Events for"
 msgstr ""
 
-#: templates/events.php:41
-msgid "Add Concert"
-msgstr ""
-
-#: templates/events.php:42
-msgid "Add Rehearsal"
+#: templates/events.php:40
+msgid "New Event"
 msgstr ""
 
 #: templates/events.php:43
-msgid "Add Other Event"
+msgid "Concert"
+msgstr ""
+
+#: templates/events.php:44
+msgid "Rehearsal"
 msgstr ""
 
 #: templates/events.php:45
-msgid "Management Event"
+msgid "Miscellaneous"
 msgstr ""
 
-#: templates/events.php:52
+#: templates/events.php:46
+msgid "Management"
+msgstr ""
+
+#: templates/events.php:47
+msgid "Finance"
+msgstr ""
+
+#: templates/events.php:53
 msgid "Download"
-msgstr ""
-
-#: templates/events.php:59
-msgid "Finance Event"
 msgstr ""
 
 #: templates/eventslisting.php:49
@@ -5069,56 +5073,96 @@ msgstr ""
 msgid "Treasurer of the orchestra"
 msgstr ""
 
-#: templates/part.common.header.php:37
+#: templates/part.common.header.php:47 templates/settings.php:39
+msgid "General Information"
+msgstr ""
+
+#: templates/part.common.header.php:48 templates/settings.php:40
+msgid "SQL Queries"
+msgstr ""
+
+#: templates/part.common.header.php:49 templates/settings.php:41
+msgid "HTTP Request"
+msgstr ""
+
+#: templates/part.common.header.php:50 templates/settings.php:42
+msgid "Missing Context Help"
+msgstr ""
+
+#: templates/part.common.header.php:51 templates/settings.php:43
+msgid "Mass Email Form"
+msgstr ""
+
+#: templates/part.common.header.php:56
 msgid "Back"
 msgstr ""
 
-#: templates/part.common.header.php:38
+#: templates/part.common.header.php:57
 msgid "Navigate back to the previous view in the recorded history."
 msgstr ""
 
-#: templates/part.common.header.php:45
+#: templates/part.common.header.php:64
 msgid "Reload"
 msgstr ""
 
-#: templates/part.common.header.php:46
+#: templates/part.common.header.php:65
 msgid "Reload the current view."
 msgstr ""
 
-#: templates/part.common.header.php:53
+#: templates/part.common.header.php:72
 msgid "Next"
 msgstr ""
 
-#: templates/part.common.header.php:54
+#: templates/part.common.header.php:73
 msgid "Navigate to the next view in the recorded history."
 msgstr ""
 
-#: templates/part.common.header.php:61
+#: templates/part.common.header.php:80
 msgid "Startpage"
 msgstr ""
 
-#: templates/part.common.header.php:62
+#: templates/part.common.header.php:81
 msgid "Navigate back to the start-page."
 msgstr ""
 
-#: templates/part.common.header.php:71
-msgid "Expert Operations"
-msgstr ""
-
-#: templates/part.common.header.php:72
-msgid "Expert Operations like recreating views etc."
-msgstr ""
-
-#: templates/part.common.header.php:79
-msgid "Personal Settings."
-msgstr ""
-
-#: templates/part.common.header.php:84
+#: templates/part.common.header.php:90
 msgid "Tooltip Button"
 msgstr ""
 
-#: templates/part.common.header.php:85
+#: templates/part.common.header.php:91
 msgid "Toggle Tooltips"
+msgstr ""
+
+#: templates/part.common.header.php:124 templates/settings.php:81
+msgid "Tool-Tips"
+msgstr ""
+
+#: templates/part.common.header.php:136 templates/settings.php:84
+msgid "Filter-Controls"
+msgstr ""
+
+#: templates/part.common.header.php:148 templates/settings.php:115
+msgid "Expert-Mode"
+msgstr ""
+
+#: templates/part.common.header.php:153 templates/settings.php:88
+msgid "#Rows"
+msgstr ""
+
+#: templates/part.common.header.php:167
+msgid "#Rows/Page in Tables"
+msgstr ""
+
+#: templates/part.common.header.php:175
+msgid "Further Settings"
+msgstr ""
+
+#: templates/part.common.header.php:183
+msgid "Expert Operations"
+msgstr ""
+
+#: templates/part.common.header.php:191 templates/settings.php:120
+msgid "Enable Debug Mode"
 msgstr ""
 
 #: templates/part.emailform.composer.php:40
@@ -5627,26 +5671,6 @@ msgstr ""
 msgid "Show a certain amount of debug information, normally not needed."
 msgstr ""
 
-#: templates/settings.php:39
-msgid "General Information"
-msgstr ""
-
-#: templates/settings.php:40
-msgid "SQL Queries"
-msgstr ""
-
-#: templates/settings.php:41
-msgid "HTTP Request"
-msgstr ""
-
-#: templates/settings.php:42
-msgid "Missing Context Help"
-msgstr ""
-
-#: templates/settings.php:43
-msgid "Mass Email Form"
-msgstr ""
-
 #: templates/settings.php:66
 msgid "Personal"
 msgstr ""
@@ -5679,32 +5703,12 @@ msgstr ""
 msgid "?"
 msgstr ""
 
-#: templates/settings.php:81
-msgid "Tool-Tips"
-msgstr ""
-
-#: templates/settings.php:84
-msgid "Filter-Controls"
-msgstr ""
-
-#: templates/settings.php:88
-msgid "#Rows"
-msgstr ""
-
 #: templates/settings.php:99
 msgid "Display #Rows/Page in Tables"
 msgstr ""
 
 #: templates/settings.php:103
 msgid "WYSIWYG Editor"
-msgstr ""
-
-#: templates/settings.php:115
-msgid "Expert-Mode"
-msgstr ""
-
-#: templates/settings.php:120
-msgid "Enable Debug Mode"
 msgstr ""
 
 #: templates/settings.php:130
