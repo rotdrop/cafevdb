@@ -208,6 +208,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                container.css('height', 'auto');
                $('.tipsy').remove();
                container.html(data.data.contents);
+               container.find('.pme-navigation input.pme-reload').addClass('loading');
 
                // general styling
                pme.init('pme', containerSel);
@@ -358,6 +359,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
         event.preventDefault();
 
+        container.find('.pme-navigation input.pme-reload').addClass('loading');
+
         options.modified = true; // we are the save-button ...
 
         var applySelector =
@@ -391,16 +394,14 @@ var PHPMYEDIT = PHPMYEDIT || {};
           var dialogWidget = container.dialog('widget');
 
           dialogWidget.addClass('pme-table-dialog-blocked');
-          CAFEVDB.Page.busyIcon(true);
 
           $.post(OC.filePath('cafevdb', 'ajax/pme', 'pme-table.php'),
                  post,
                  function (data) {
-                   CAFEVDB.Page.busyIcon(false);
-
                    if (!CAFEVDB.ajaxErrorHandler(data, [ 'contents' ])) {
                      dialogWidget.removeClass('pme-table-dialog-blocked');
                      container.find('.pme-navigation input.pme-reload').removeClass('loading');
+                     CAFEVDB.Page.busyIcon(false);
                      return false;
                    }
 
@@ -427,6 +428,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
                    } else {
                      container.dialog('close');
                    }
+                   container.find('.pme-navigation input.pme-reload').removeClass('loading');
+                   CAFEVDB.Page.busyIcon(false);
 
                    return false;
                  });
@@ -436,7 +439,6 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
     // Finally do the styling ...
     callback( { reason: 'dialogOpen' } );
-
   };
 
   /**Post the contents of a pme-form via AJAX into a dialog
@@ -549,6 +551,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                return true; // let it bubble upwards ...
              });
 
+             dialogHolder.find('.pme-navigation input.pme-reload').addClass('loading');
              if (tableOptions.ModalDialog) {
                CAFEVDB.modalizer(true);
              }
@@ -604,10 +607,11 @@ var PHPMYEDIT = PHPMYEDIT || {};
                        resizeHandler(parameters);
                        dialogWidget.removeClass('pme-table-dialog-blocked');
                        dialogHolder.dialog('moveToTop');
+                       CAFEVDB.tipsy(containerSel);
+                       CAFEVDB.Page.busyIcon(false);
+                       dialogHolder.find('.pme-navigation input.pme-reload').removeClass('loading');
                      });
                      CAFEVDB.pmeTweaks(dialogHolder);
-                     CAFEVDB.tipsy(containerSel);
-                     CAFEVDB.Page.busyIcon(false);
                    });
                  });
 
@@ -673,7 +677,10 @@ var PHPMYEDIT = PHPMYEDIT || {};
       }
       return form.submit();
     }
+
     CAFEVDB.Page.busyIcon(true);
+    CAFEVDB.modalizer(true);
+
     dpyClass = dpyClass.val();
     // TODO: arguments
     var post = form.serialize();
@@ -686,19 +693,15 @@ var PHPMYEDIT = PHPMYEDIT || {};
       obj[name] = value;
       post += '&' + $.param(obj);
     }
-    container.find('input').prop('disabled', true);
-    container.find('select').prop('disabled', true);
-    container.find('select').trigger('chosen:updated');
     $.post(OC.filePath('cafevdb', 'ajax/pme', 'pme-table.php'),
            post,
            function (data) {
              if (!CAFEVDB.ajaxErrorHandler(
                data, [ 'contents', 'history' ])) {
                // re-enable on error
-               container.find('input').prop('disabled', false);
-               container.find('select').prop('disabled', false);
-               container.find('select').trigger('chosen:updated');
                CAFEVDB.Page.busyIcon(false);
+               CAFEVDB.modalizer(false);
+
                return false;
              }
 
@@ -732,7 +735,10 @@ var PHPMYEDIT = PHPMYEDIT || {};
                self.tableLoadCallback(dpyClass, selector, { reason: 'formSubmit' }, function() {});
                CAFEVDB.pmeTweaks(container);
                CAFEVDB.tipsy(selector);
+
+               /* kill the modalizer */
                CAFEVDB.Page.busyIcon(false);
+               CAFEVDB.modalizer(false);
              });
              return false;
            });
@@ -883,7 +889,11 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
     var noRes = this.filterSelectNoResult;
 
-    container.find("select[class^='"+pmepfx+"-comp-filter']").chosen({width:"auto", disable_search_threshold: 10});
+    container.find("select[class^='"+pmepfx+"-comp-filter']").chosen({
+      width:"auto",
+      inherit_select_classes:true,
+      disable_search_threshold: 10
+    });
 
     // Provide a data-placeholder and also remove the match-all
     // filter, which is not needed when using chosen.
@@ -897,13 +907,19 @@ var PHPMYEDIT = PHPMYEDIT || {};
     for (k = 0; k < PHPMYEDIT.chosenPixelWidth.length; ++k) {
       var tag = PHPMYEDIT.chosenPixelWidth[k];
       var pxlWidth = Math.round(container.find("td[class^='"+pmepfx+"-filter-"+tag+"']").width());
-      container.find("select[class^='"+pmepfx+"-filter-"+tag+"']").chosen({width:pxlWidth+60+'px',
-                                                                           no_results_text:noRes});
+      container.find("select[class^='"+pmepfx+"-filter-"+tag+"']").chosen({
+        width:pxlWidth+60+'px',
+        inherit_select_classes:true,
+        no_results_text:noRes
+      });
     }
 
     // Then the general stuff
-    container.find("select[class^='"+pmepfx+"-filter']").chosen({//width:'100%',
-      no_results_text:noRes});
+    container.find("select[class^='"+pmepfx+"-filter']").chosen({
+      //width:'100%',
+      inherit_select_classes:true,
+      no_results_text:noRes
+    });
 
     var dblClickSel =
       'td[class^="'+pmepfx+'-filter"] ul.chosen-choices li.search-field input[type="text"]'+','
@@ -945,9 +961,12 @@ var PHPMYEDIT = PHPMYEDIT || {};
     for (k = 0; k < PHPMYEDIT.chosenPixelWidth.length; ++k) {
       var tag = PHPMYEDIT.chosenPixelWidth[k];
       var pxlWidth = Math.round(container.find("td[class^='"+pmepfx+"-input-"+tag+"']").width());
-      container.find("select[class^='"+pmepfx+"-input-"+tag+"']").chosen({width:pxlWidth+'px',
-                                                                          disable_search_threshold: 10,
-                                                                          no_results_text:noRes});
+      container.find("select[class^='"+pmepfx+"-input-"+tag+"']").chosen({
+        width:pxlWidth+'px',
+        inherit_select_classes:true,
+        disable_search_threshold: 10,
+        no_results_text:noRes
+      });
     }
 
     // Then the general stuff
@@ -958,6 +977,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
       }
       self.chosen({
         //width:'100%',
+        inherit_select_classes:true,
         disable_search_threshold: 10,
         no_results_text: noRes,
         allow_single_deselect: self.hasClass('allow-empty')
@@ -985,17 +1005,6 @@ var PHPMYEDIT = PHPMYEDIT || {};
       }
       if (selectTitle.length != 0) {
         chosen.attr("title", selectTitle);
-      }
-
-      // tipsy control classes
-      var classAttr = selectBox.attr('class');
-      if (typeof classAttr != 'undefined') {
-        var tipsyClasses = classAttr.match(/tipsy-[a-z]+/g);
-        if (tipsyClasses) {
-          for(var idx = 0; idx < tipsyClasses.length; ++idx) {
-            chosen.addClass(tipsyClasses[idx]);
-          }
-        }
       }
     });
 
@@ -1155,9 +1164,9 @@ var PHPMYEDIT = PHPMYEDIT || {};
       });
 
       // Trigger "view operation" when clicking on a data-row.
-      var rowSelector = 'form.'+pmepfx+'-form td[class^="'+pmepfx+'-cell"]:not(.control)'
+      var rowSelector = 'form.'+pmepfx+'-form td.'+pmepfx+'-cell:not(.control)'
                       + ','
-                      + 'form.'+pmepfx+'-form td[class^="'+pmepfx+'-navigation"]';
+                      + 'form.'+pmepfx+'-form td.'+pmepfx+'-navigation';
       container.off('click', rowSelector).
         on('click', rowSelector, function(event) {
 
@@ -1166,6 +1175,12 @@ var PHPMYEDIT = PHPMYEDIT || {};
           // divs and spans which make it up to here will be ignored,
           // everything else results in the default action.
           if (target.is('.'+pmepfx+'-email-check')) {
+            return true;
+          }
+          if (target.is('.'+pmepfx+'-debit-note-check')) {
+            return true;
+          }
+          if (target.is('.'+pmepfx+'-bulkcommit-check')) {
             return true;
           }
           if (target.is('.graphic-links')) {
@@ -1205,7 +1220,11 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
     if (this.selectChosen) {
       var gotoSelect = container.find("select."+pmepfx+"-goto");
-      gotoSelect.chosen({width:"auto", disable_search_threshold: 10});
+      gotoSelect.chosen({
+        width:"auto",
+        inherit_select_classes:true,
+        disable_search_threshold: 10
+      });
       if (gotoSelect.is(':disabled')) {
         // there is only one page
         gotoSelect.attr('data-placeholder', '1');
@@ -1214,7 +1233,11 @@ var PHPMYEDIT = PHPMYEDIT || {};
       }
       container.find("select."+pmepfx+"-goto").trigger('chosen:updated');
 
-      container.find("select."+pmepfx+"-pagerows").chosen({width:"auto", disable_search_threshold: 10});
+      container.find("select."+pmepfx+"-pagerows").chosen({
+        width:"auto",
+        inherit_select_classes:true,
+        disable_search:true
+      });
     }
 
     var keyPressSel = 'input[class^="'+pmepfx+'-filter"]';

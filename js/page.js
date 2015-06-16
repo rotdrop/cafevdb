@@ -42,9 +42,12 @@ var CAFEVDB = CAFEVDB || {};
   /**Load a page through the history-aware AJAX page loader. */
   Page.loadPage = function(post, afterLoadCallback) {
     var container = $('div#content');
-    container.find('input').prop('disabled', true);
-    container.find('select').prop('disabled', true);
-    container.find('select').trigger('chosen:updated');
+    if (false) {
+      container.find('input').prop('disabled', true);
+      container.find('select').prop('disabled', true);
+      container.find('select').trigger('chosen:updated');
+    }
+    CAFEVDB.modalizer(true),
     Page.busyIcon(true);
     $.post(OC.filePath('cafevdb', 'ajax', 'page-loader.php'),
            post,
@@ -53,9 +56,12 @@ var CAFEVDB = CAFEVDB || {};
                'contents',
                'history' ])) {
                // re-enable inputs on error
-               container.find('input').prop('disabled', false);
-               container.find('select').prop('disabled', false);
-               container.find('select').trigger('chosen:updated');
+               if (false) {
+                 container.find('input').prop('disabled', false);
+                 container.find('select').prop('disabled', false);
+                 container.find('select').trigger('chosen:updated');
+               }
+               CAFEVDB.modalizer(false),
                Page.busyIcon(false);
                return false;
              }
@@ -80,17 +86,19 @@ var CAFEVDB = CAFEVDB || {};
              var newContent = $('<div>'+data.data.contents+'</div>');
              var newAppContent = newContent.find('#app-content').children();
              var newAppNavigation = newContent.find('#app-navigation').children();
-             
+
              $('#app-navigation').empty().prepend(newAppNavigation);
              $('#app-content').empty().prepend(newAppContent);
              $('#app-content').prepend(navToggle);
 
+             CAFEVDB.modalizer(false),
              Page.busyIcon(false);
-             CAFEVDB.tipsy();
+
              CAFEVDB.runReadyCallbacks();
              if (typeof afterLoadCallback == 'function') {
                afterLoadCallback();
              }
+             CAFEVDB.tipsy();
 
              return false;
            });
