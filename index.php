@@ -105,6 +105,7 @@ namespace CAFEVDB
     \OCP\Util::addscript('cafevdb', 'file-upload');
 
     \OCP\Util::addScript('cafevdb', 'email');
+    \OCP\Util::addScript('cafevdb', 'app-settings');
 
     // Jcrop stuff
     \OCP\Util::addScript('cafevdb/3rdparty/jcrop', 'jquery.Jcrop');
