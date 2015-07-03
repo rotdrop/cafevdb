@@ -30,7 +30,12 @@ namespace CAFEVDB
   {
     public static function run()
     {
+      $group = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
       $user  = \OCP\USER::getUser();
+      if (!\OC_Group::inGroup($user, $group)) {
+        return;
+      }
+
       $locale = $locale = Util::getLocale();
       \OCP\Util::writeLog(Config::APP_NAME,
                           "Running Cron Jobs, user ".$user.", locale ".$locale,
