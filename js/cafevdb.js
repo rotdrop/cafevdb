@@ -77,7 +77,7 @@ var CAFEVDB = CAFEVDB || {};
     case 'tinymce':
       $(document).on('focusin', function(e) {
         if ($(e.target).closest(".mce-window").length) {
-	  e.stopImmediatePropagaion();t
+	  e.stopImmediatePropagaion();
 	}
       });
       var plusConfig = {};
