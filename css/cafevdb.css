@@ -555,11 +555,13 @@ div.cafevdb-note a:hover {
 .cafevdb-link-icon {
   background-image:url('../img/link36.svg') !important;
   background-repeat:no-repeat;
+  background-position:initial !important;
 }
 
 .cafevdb-unlink-icon {
   background-image:url('../img/brokenlink36.svg') !important;
   background-repeat:no-repeat;
+  background-position:initial !important;
 }
 
 .ui-tabs a.ui-tabs-anchor.compact {
