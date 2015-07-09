@@ -1456,24 +1456,28 @@ __EOT__;
         if ($ownConnection) {
           mySQL::close($handle);
         }
-        false;
+        return false;
       }
 
       $redaxoLocation = \OCP\Config::GetAppValue('redaxo', 'redaxolocation', '');
       $rex = new \Redaxo\RPC($redaxoLocation);
-      if (count($webPages) > 0) {
-        $article = array_shift($webPages);
-        $newName = $projectName;
-        if ($rex->setArticleName($article['ArticleId'], $projectName)) {
-          $query = "UPDATE IGNORE `ProjectWebPages`
-    SET `ArticleName` = '".$newName."'
-    WHERE `ArticleId` = ".$article['ArticleId'];
-          $result = mySQL::query($query, $handle);
-        }
-      }
-      $nr = 1;
+
+      $concertNr = 0;
+      $rehearsalNr = 0; // should stay at zero
       foreach ($webPages as $article) {
-        $newName = $projectName.'-'.$nr;
+        if (stristr($article['ArticleName'], L::t('Rehearsals')) !== false) {
+          $newName = L::t('Rehearsals').' '.$projectName;
+          if ($rehearsalNr > 0) {
+            $newName .= '-'.$rehearsalNr;
+          }
+          ++$rehearsalNr;
+        } else {
+          $newName = $projectName;
+          if ($concertNr > 0) {
+            $newName .= '-'.$concertNr;
+          }
+          ++$concertNr;
+        }
         if ($rex->setArticleName($article['ArticleId'], $newName)) {
           // if successful then also update the date-base entry
           $query = "UPDATE IGNORE `ProjectWebPages`
@@ -1481,7 +1485,6 @@ __EOT__;
     WHERE `ArticleId` = ".$article['ArticleId'];
           $result = mySQL::query($query, $handle);
         }
-        ++$nr;
       }
 
       if ($ownConnection) {
