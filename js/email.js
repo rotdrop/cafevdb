@@ -25,6 +25,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
 (function(window, $, Email, undefined) {
   'use strict';
   Email.enabled = true;
+  Email.active = false;
 
   Email.attachmentFromJSON = function (response, info) {
     var fileAttachHolder = $('form.cafevdb-email-form fieldset.attachments input.file-attach');
@@ -87,13 +88,13 @@ CAFEVDB.Email = CAFEVDB.Email || {};
 
   /**Add handlers to the control elements, and call the AJAX sciplets
    * for validation to update the recipients selection tab accordingly.
-   * 
+   *
    * @param fieldset The field-set enclosing the recipients selection part
-   * 
+   *
    * @param dialogHolder The div holding the jQuery dialog for everything
-   * 
+   *
    * @param panelHolder The div enclosing the fieldset
-   * 
+   *
    */
   Email.emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panelHolder, layoutCB) {
     var Email = this;
@@ -263,7 +264,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
           InitialValue: 'Change',
           AmbientContainerSelector: '#emailformdialog'
         });
-                                                   
+
       return false;
     });
 
@@ -277,13 +278,13 @@ CAFEVDB.Email = CAFEVDB.Email || {};
 
   /**Add handlers to the control elements, and call the AJAX sciplets
    * for validation to update the message composition tab accordingly.
-   * 
+   *
    * @param fieldset The field-set enclosing the recipients selection part
-   * 
+   *
    * @param dialogHolder The div holding the jQuery dialog for everything
-   * 
+   *
    * @param panelHolder The div enclosing the fieldset
-   * 
+   *
    */
   Email.emailFormCompositionHandlers = function(fieldset, form, dialogHolder, panelHolder, layoutCB) {
     var Email = this;
@@ -295,14 +296,14 @@ CAFEVDB.Email = CAFEVDB.Email || {};
     var currentTemplate = fieldset.find('#emailCurrentTemplate');
     var messageText = fieldset.find('textarea');
     var eventAttachmentsSelector = fieldset.find('select.event-attachments');
-    var fileAttachmentsSelector = fieldset.find('select.file-attachments');    
+    var fileAttachmentsSelector = fieldset.find('select.file-attachments');
     var sendButton = fieldset.find('input.submit.send');
     var dialogWidget = dialogHolder.dialog('widget');
 
     // Event dispatcher, so to say
     var applyComposerControls = function(event, request, validateLockCB) {
-      event.preventDefault();        
-      
+      event.preventDefault();
+
       if (typeof validateLockCB == 'undefined') {
         validateLockCB = function(lock) {};
       }
@@ -317,7 +318,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
 
       // until end of validation
       validateLock(true);
-      
+
       var post = '';
       if (typeof request != 'undefined' && request.SingleItem) {
         // Only serialize the request, no need to post all data around.
@@ -470,7 +471,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                  CAFEVDB.updateEditor(messageText, requestData.message);
                  templateSelector.html(requestData.templateOptions);
                  templateSelector.find('option').prop('selected', false);
-                 templateSelector.trigger("chosen:updated");               
+                 templateSelector.trigger("chosen:updated");
                  break;
                default:
                  postponeEnable = true;
@@ -503,7 +504,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                  debugText += '<pre>requestData = '+addOn+'</pre>';
                  debugOutput.html(debugText);
                }
-               
+
                if (!postponeEnable) {
                  validateUnlock();
                }
@@ -515,7 +516,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
     };
 
     /*************************************************************************
-     * 
+     *
      * Finally send the entire mess to the recipients
      */
     sendButton.off('click').on('click', function(event) {
@@ -621,7 +622,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
     });
 
     /*************************************************************************
-     * 
+     *
      * Message export to html.
      */
     fieldset.find('input.submit.message-export').off('click').
@@ -648,7 +649,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
       var oldTarget = form.attr('target');
       form.attr('action', OC.filePath('cafevdb', 'ajax/email', 'exporter.php'));
       form.attr('target', downloadName);
-      
+
       var $fakeSubmit = $('<input type="hidden" name="'+$(this).attr('name')+'" value="whatever"/>');
       form.append($fakeSubmit);
       form.submit();
@@ -669,7 +670,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
 
 
     /*************************************************************************
-     * 
+     *
      * Close the dialog
      */
 
@@ -687,7 +688,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
     });
 
     /*************************************************************************
-     * 
+     *
      * Template handling (save, delete, load)
      */
 
@@ -748,9 +749,9 @@ CAFEVDB.Email = CAFEVDB.Email || {};
       applyComposerControls.call(this, event, { 'Request': 'setTemplate' });
       return false;
     });
-    
+
     /*************************************************************************
-     * 
+     *
      * Subject and sender name. We simply trim the spaces away. Could also do this in JS.
      */
     fieldset.off('blur', 'input.email-subject, input.sender-name').
@@ -763,7 +764,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                 });
 
     /*************************************************************************
-     * 
+     *
      * Validate Cc: and Bcc: entries.
      */
     var carbonCopyBlur = function(event, header) {
@@ -800,7 +801,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
     });
 
     /*************************************************************************
-     * 
+     *
      * Project events attachments
      */
 
@@ -829,7 +830,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                           'FormElement': 'EventAttachments',
                           'SingleItem': true,
                           'ProjectId': projectId,
-                          'ProjectName': projectName, 
+                          'ProjectName': projectName,
                           'AttachedEvents': events };
       applyComposerControls.call(this, event, requestData);
       return false;
@@ -872,14 +873,14 @@ CAFEVDB.Email = CAFEVDB.Email || {};
     });
 
     /*************************************************************************
-     * 
+     *
      * File upload.
      */
 
     var updateFileAttachments = function() {
       var fileAttach = fieldset.find('input.file-attach').val();
       var selectedAttachments = fileAttachmentsSelector.val();
-      
+
       var requestData = { 'Request': 'update',
                           'FormElement': 'FileAttachments',
                           'FileAttach': fileAttach, // JSON data of all files
@@ -891,7 +892,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
       applyComposerControls.call(this, $.Event('click'), requestData);
       return false;
     };
-    
+
     // Arguably, these should only be active if the
     // composer tab is active. Mmmh.
     CAFEVDB.FileUpload.init({
@@ -903,7 +904,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
       inputSelector: '#attachment_upload_start',
       containerSelector: '#attachment_upload_wrapper'
     });
-    
+
     fieldset.find('.attachment.upload').off('click');
     fieldset.find('.attachment.upload').on('click', function() {
       $('#attachment_upload_start').trigger('click');
@@ -942,7 +943,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
     });
 
     /*************************************************************************
-     * 
+     *
      * We try to be nice with Cc: and Bcc: and even provide an
      * address-book connector
      */
@@ -1046,9 +1047,9 @@ CAFEVDB.Email = CAFEVDB.Email || {};
              });
       return false;
     });
-    
+
     /*************************************************************************
-     * 
+     *
      * The usual resize madness with dialog popups
      */
 
@@ -1063,17 +1064,23 @@ CAFEVDB.Email = CAFEVDB.Email || {};
    * @param post Necessary post data, either serialized or as
    * object. In principle post can be empty. For project emails the
    * following two fields are necessary:
-   * 
+   *
    * - ProjectId: the id
    * - ProjectName: the name of the project (obsolete: Project)
-   * 
+   *
    * Optional pre-selected ids for email recipients:
-   * 
+   *
    * - PME_sys_mrecs: array of ids of pre-selected musicians
-   * 
+   *
    * - EventSelect: array of ids of events to attach.
    */
   Email.emailFormPopup = function(post, modal, single, afterInit) {
+    if (this.active === true) {
+      return;
+    }
+
+    this.active = true;
+
     if (typeof modal == 'undefined' || modal == undefined) {
       modal = true;
     }
@@ -1256,11 +1263,11 @@ CAFEVDB.Email = CAFEVDB.Email || {};
 
                    CAFEVDB.tipsy(dialogHolder.find('div#emailformrecipients'));
                  };
-                 
+
                  var layoutMessageComposer = function() {
                    CAFEVDB.addEditor(dialogHolder.find('textarea.wysiwygeditor'), undefined, '20em');
                    $('#cafevdb-email-template-selector').chosen({ disable_search_threshold: 10 });
-                   
+
                    var composerPanel = $('#emailformcomposer');
                    var fileAttachmentsSelect = composerPanel.find('#file-attachments-selector');
                    fileAttachmentsSelect.chosen();
@@ -1276,7 +1283,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                        scrollTop: composerPanel.prop('scrollHeight')
                      }, 2000);
                    });
-                   
+
                    CAFEVDB.tipsy(dialogHolder.find('div#emailformcomposer'));
                  }
 
@@ -1302,6 +1309,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
 
                  // Also close all other open dialogs.
                  CAFEVDB.modalizer(false);
+                 Email.active = false;
                }
              });
              return false;
@@ -1329,7 +1337,7 @@ $(document).ready(function(){
         $('input[name="delete"]').attr('disabled','disabled');
         Calendar.UI.startEventDialog();
       });
-    
+
     return false;
   });
 
