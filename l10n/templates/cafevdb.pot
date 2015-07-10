@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-16 00:57+0200\n"
+"POT-Creation-Date: 2015-07-10 10:50+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -267,16 +267,16 @@ msgstr ""
 msgid "%s-detailed"
 msgstr ""
 
-#: ajax/export/excel.php:260 lib/projects.php:1703 lib/projects.php:1704
+#: ajax/export/excel.php:260 lib/projects.php:1706 lib/projects.php:1707
 msgid "Missing Musicians"
 msgstr ""
 
 #: ajax/export/excel.php:285 ajax/export/insurance-export.php:157
-#: lib/projects.php:1706
+#: lib/projects.php:1709
 msgid "Instrument"
 msgstr ""
 
-#: ajax/export/excel.php:286 lib/projects.php:1706
+#: ajax/export/excel.php:286 lib/projects.php:1709
 msgid "Missing"
 msgstr ""
 
@@ -1393,7 +1393,8 @@ msgid "Archive"
 msgstr ""
 
 #: ajax/settings/redaxo-settings.php:39 lib/projects.php:698
-#: lib/projects.php:1251 lib/projects.php:1412 lib/projects.php:1538
+#: lib/projects.php:1251 lib/projects.php:1412 lib/projects.php:1468
+#: lib/projects.php:1469 lib/projects.php:1541
 msgid "Rehearsals"
 msgstr ""
 
@@ -1425,9 +1426,9 @@ msgid "Unknown WYSIWYG-Editor: `%s'"
 msgstr ""
 
 #: js/blog.js:53 js/blog.js:156 js/blog.js:207 js/blog.js:243
-#: js/cafevdb.js:1097 js/cafevdb.js:1161 js/email.js:33 js/email.js:62
-#: js/email.js:448 js/email.js:479 js/email.js:642 js/events.js:64
-#: js/events.js:149 js/inlineimage.js:84 js/inlineimage.js:92
+#: js/cafevdb.js:1097 js/cafevdb.js:1161 js/email.js:34 js/email.js:63
+#: js/email.js:449 js/email.js:480 js/email.js:643 js/events.js:64
+#: js/events.js:193 js/inlineimage.js:84 js/inlineimage.js:92
 #: js/inlineimage.js:102 js/inlineimage.js:131 js/inlineimage.js:155
 #: js/inlineimage.js:184 js/inlineimage.js:207 js/inlineimage.js:331
 #: js/inlineimage.js:420 js/inlineimage.js:429 js/inlineimage.js:432
@@ -1484,7 +1485,7 @@ msgid ""
 msgstr ""
 
 #: js/cafevdb.js:530 js/inlineimage.js:278 js/project-instruments.js:206
-#: templates/blogedit.php:39 templates/part.emailform.composer.php:251
+#: templates/blogedit.php:39 templates/part.emailform.composer.php:255
 msgid "Cancel"
 msgstr ""
 
@@ -1540,7 +1541,7 @@ msgstr ""
 msgid "Missing data"
 msgstr ""
 
-#: js/cafevdb.js:1079 js/events.js:58 js/events.js:143
+#: js/cafevdb.js:1079 js/events.js:58 js/events.js:187
 msgid "Unknown error :("
 msgstr ""
 
@@ -1614,166 +1615,166 @@ msgid ""
 "anywhere outside the menu."
 msgstr ""
 
-#: js/email.js:32
+#: js/email.js:33
 msgid "Not called from main email-form."
 msgstr ""
 
-#: js/email.js:446
+#: js/email.js:447
 #, python-brace-format
 msgid "Unknown form element: {FormElement}"
 msgstr ""
 
-#: js/email.js:478
+#: js/email.js:479
 #, python-brace-format
 msgid "Unknown request: {Request}"
 msgstr ""
 
-#: js/email.js:551
+#: js/email.js:552
 #, python-brace-format
 msgid "Sending message {active} out of {total}"
 msgstr ""
 
-#: js/email.js:553
+#: js/email.js:554
 msgid "Message delivery in progress"
 msgstr ""
 
-#: js/email.js:578
+#: js/email.js:579
 msgid "Message Delivery Status"
 msgstr ""
 
-#: js/email.js:607
+#: js/email.js:608
 msgid ""
 "Email sending is in progress. Leaving the page now will cancel the email "
 "submission."
 msgstr ""
 
-#: js/email.js:639
+#: js/email.js:640
 msgid "Unable to export message(s):"
 msgstr ""
 
-#: js/email.js:704
+#: js/email.js:705
 #, python-brace-format
 msgid ""
 "A template with the name `{TemplateName}' already exists, do you want to "
 "overwrite it?"
 msgstr ""
 
-#: js/email.js:706
+#: js/email.js:707
 msgid "Overwrite existing template?"
 msgstr ""
 
-#: js/email.js:728
+#: js/email.js:729
 #, python-brace-format
 msgid ""
 "Do you really want to delete the template with the name `{TemplateName}'?"
 msgstr ""
 
-#: js/email.js:730
+#: js/email.js:731
 msgid "Really Delete Template?"
 msgstr ""
 
-#: js/email.js:739
+#: js/email.js:740
 #, python-brace-format
 msgid "Cannot delete non-existing template `{TemplateName}'"
 msgstr ""
 
-#: js/email.js:741
+#: js/email.js:742
 msgid "Unknown Template"
 msgstr ""
 
-#: js/email.js:844
+#: js/email.js:845
 msgid "Do you really want to delete all event attachments?"
 msgstr ""
 
-#: js/email.js:845 js/email.js:929
+#: js/email.js:846 js/email.js:930
 msgid "Really Delete Attachments?"
 msgstr ""
 
-#: js/email.js:914
+#: js/email.js:915
 msgid "Select Attachment"
 msgstr ""
 
-#: js/email.js:928
+#: js/email.js:929
 msgid "Do you really want to delete all file attachments?"
 msgstr ""
 
-#: js/email.js:973 templates/part.emailform.composer.php:109
+#: js/email.js:974 templates/part.emailform.composer.php:109
 #: templates/part.emailform.composer.php:127
 msgid "Address Book"
 msgstr ""
 
-#: js/email.js:974
+#: js/email.js:975
 msgid "Accept"
 msgstr ""
 
-#: js/email.js:976
+#: js/email.js:977
 msgid "Save Contacts"
 msgstr ""
 
-#: js/email.js:979
+#: js/email.js:980
 msgid ""
 "Save the selected supplementary emails to the address-book for later reusal."
 msgstr ""
 
-#: js/email.js:1105
+#: js/email.js:1112
 #, python-brace-format
 msgid "Em@il Form for {ProjectName}"
 msgstr ""
 
-#: js/email.js:1108
+#: js/email.js:1115
 msgid "Em@il Form"
 msgstr ""
 
-#: js/email.js:1234
+#: js/email.js:1241
 msgid "Move all"
 msgstr ""
 
-#: js/email.js:1235
+#: js/email.js:1242
 msgid "Move selected"
 msgstr ""
 
-#: js/email.js:1236
+#: js/email.js:1243
 msgid "Remove selected"
 msgstr ""
 
-#: js/email.js:1237
+#: js/email.js:1244
 msgid "Remove all"
 msgstr ""
 
-#: js/email.js:1238
+#: js/email.js:1245
 msgid "Remaining Recipients"
 msgstr ""
 
-#: js/email.js:1239
+#: js/email.js:1246
 msgid "Selected Recipients"
 msgstr ""
 
-#: js/email.js:1240
+#: js/email.js:1247
 #, python-brace-format
 msgid "Showing all {0}"
 msgstr ""
 
-#: js/email.js:1242
+#: js/email.js:1249
 msgid "Filtered"
 msgstr ""
 
-#: js/email.js:1244
+#: js/email.js:1251
 msgid "from"
 msgstr ""
 
-#: js/email.js:1246
+#: js/email.js:1253
 msgid "Empty list"
 msgstr ""
 
-#: js/email.js:1247
+#: js/email.js:1254
 msgid "Filter"
 msgstr ""
 
-#: js/email.js:1248
+#: js/email.js:1255
 msgid "show all"
 msgstr ""
 
-#: js/email.js:1254
+#: js/email.js:1261
 msgid "Click on the names to move the respective person to the other box"
 msgstr ""
 
@@ -1785,7 +1786,7 @@ msgstr ""
 msgid "Do you really want to detach this event from the current project?"
 msgstr ""
 
-#: js/events.js:253
+#: js/events.js:262
 msgid "Really delete?"
 msgstr ""
 
@@ -1903,11 +1904,11 @@ msgstr ""
 msgid "Possible Duplicate!"
 msgstr ""
 
-#: js/pme.js:837
+#: js/pme.js:843
 msgid "#columns"
 msgstr ""
 
-#: js/pme.js:846
+#: js/pme.js:852
 msgid "#rows"
 msgstr ""
 
@@ -2419,44 +2420,44 @@ msgstr ""
 msgid "HTML Export"
 msgstr ""
 
-#: lib/functions.php:1102
+#: lib/functions.php:1103
 msgid "Error: Unknonwn Button Type"
 msgstr ""
 
-#: lib/functions.php:1222
+#: lib/functions.php:1223
 msgid "View all Projects"
 msgstr ""
 
-#: lib/functions.php:1223
+#: lib/functions.php:1224
 msgid "Overview over all known projects (start-page)."
 msgstr ""
 
-#: lib/functions.php:1238
+#: lib/functions.php:1239
 msgid "Display all Musicians"
 msgstr ""
 
-#: lib/functions.php:1239
+#: lib/functions.php:1240
 msgid ""
 "Display all musicians stored in the data-base, with detailed facilities for "
 "filtering and sorting."
 msgstr ""
 
-#: lib/functions.php:1255
+#: lib/functions.php:1256
 msgid ""
 "Mass-email form, use with care. Mass-emails will be logged. Recipients will "
 "be specified by the Bcc: field in the header, so the recipients are "
 "undisclosed to each other."
 msgstr ""
 
-#: lib/functions.php:1274
+#: lib/functions.php:1275
 msgid "Email History"
 msgstr ""
 
-#: lib/functions.php:1275
+#: lib/functions.php:1276
 msgid "Display all emails sent by our mass-email form."
 msgstr ""
 
-#: lib/functions.php:1299
+#: lib/functions.php:1300
 msgid ""
 "Display an overview page for the currently active project.\n"
 "The overview-page gives the possibility to add events, change the "
@@ -2464,80 +2465,80 @@ msgid ""
 "and even edit the public web-pages for the project and other things."
 msgstr ""
 
-#: lib/functions.php:1322 lib/projects.php:776
+#: lib/functions.php:1323 lib/projects.php:776
 msgid "Instrumentation"
 msgstr ""
 
-#: lib/functions.php:1323
+#: lib/functions.php:1324
 msgid ""
 "Detailed display of all registered musicians for the selected project. The "
 "table will allow for modification of personal data like email, phone, "
 "address etc."
 msgstr ""
 
-#: lib/functions.php:1342 lib/project-instruments.php:386
+#: lib/functions.php:1343 lib/project-instruments.php:386
 msgid "Add Instruments"
 msgstr ""
 
-#: lib/functions.php:1343
+#: lib/functions.php:1344
 msgid ""
 "Display the list of instruments known by the data-base, possibly add new "
 "ones as needed."
 msgstr ""
 
-#: lib/functions.php:1362 lib/project-instruments.php:69 lib/projects.php:781
+#: lib/functions.php:1363 lib/project-instruments.php:69 lib/projects.php:781
 #: lib/projects.php:1040
 msgid "Instrumentation Numbers"
 msgstr ""
 
-#: lib/functions.php:1363 lib/tooltips.php:396
+#: lib/functions.php:1364 lib/tooltips.php:396
 msgid ""
 "Display the desired instrumentaion numbers, i.e. how many musicians are "
 "already registered for each instrument group and how many are finally needed."
 msgstr ""
 
-#: lib/functions.php:1382 lib/projects.php:818
+#: lib/functions.php:1383 lib/projects.php:818
 msgid "Debit Mandates"
 msgstr ""
 
-#: lib/functions.php:1383
+#: lib/functions.php:1384
 msgid "Display a table with the SEPA debit mandates related to the project."
 msgstr ""
 
-#: lib/functions.php:1402
+#: lib/functions.php:1403
 msgid "Insurances"
 msgstr ""
 
-#: lib/functions.php:1403
+#: lib/functions.php:1404
 msgid ""
 "Display a table with an overview about the current state of the member's "
 "instrument insurances."
 msgstr ""
 
-#: lib/functions.php:1418
+#: lib/functions.php:1419
 msgid "Insurance Rates"
 msgstr ""
 
-#: lib/functions.php:1419
+#: lib/functions.php:1420
 msgid ""
 "Display a table with the insurance rates for the individual instrument "
 "insurances."
 msgstr ""
 
-#: lib/functions.php:1435
+#: lib/functions.php:1436
 msgid "Insurance Brokers"
 msgstr ""
 
-#: lib/functions.php:1436
+#: lib/functions.php:1437
 msgid "Display a table with the insurance brokers."
 msgstr ""
 
-#: lib/functions.php:1528
+#: lib/functions.php:1529
 #, php-format
 msgid "Could not connect to data-base server `%s': %s"
 msgstr ""
 
-#: lib/functions.php:1541
+#: lib/functions.php:1542
 #, php-format
 msgid "Unable to select %s"
 msgstr ""
@@ -3263,40 +3264,40 @@ msgstr ""
 msgid "Profit and Loss Account"
 msgstr ""
 
-#: lib/projects.php:2134
+#: lib/projects.php:2137
 msgid ""
 "Flyers can only be added to existing projects, please add the new\n"
 "project without a flyer first."
 msgstr ""
 
-#: lib/projects.php:2147
+#: lib/projects.php:2150
 #, php-format
 msgid "Drop image to upload (max %s)"
 msgstr ""
 
-#: lib/projects.php:2150
+#: lib/projects.php:2153
 msgid "Delete current flyer"
 msgstr ""
 
-#: lib/projects.php:2151
+#: lib/projects.php:2154
 msgid "Edit current flyer"
 msgstr ""
 
-#: lib/projects.php:2152
+#: lib/projects.php:2155
 msgid "Upload new flyer"
 msgstr ""
 
-#: lib/projects.php:2153
+#: lib/projects.php:2156
 msgid "Select image from ownCloud"
 msgstr ""
 
-#: lib/projects.php:2161
+#: lib/projects.php:2164
 msgid ""
 "Internal error, don't know what to do concerning project-flyers in the given "
 "context."
 msgstr ""
 
-#: lib/projects.php:2402
+#: lib/projects.php:2405
 #, php-format
 msgid ""
 "====== Project %s ======\n"
@@ -4749,35 +4750,35 @@ msgstr ""
 msgid "Something is wrong, but what?"
 msgstr ""
 
-#: templates/events.php:30
+#: templates/events.php:32
 msgid "Events for"
 msgstr ""
 
-#: templates/events.php:40
+#: templates/events.php:38
 msgid "New Event"
 msgstr ""
 
-#: templates/events.php:43
+#: templates/events.php:41
 msgid "Concert"
 msgstr ""
 
-#: templates/events.php:44
+#: templates/events.php:42
 msgid "Rehearsal"
 msgstr ""
 
-#: templates/events.php:45
+#: templates/events.php:43
 msgid "Miscellaneous"
 msgstr ""
 
-#: templates/events.php:46
+#: templates/events.php:44
 msgid "Management"
 msgstr ""
 
-#: templates/events.php:47
+#: templates/events.php:45
 msgid "Finance"
 msgstr ""
 
-#: templates/events.php:53
+#: templates/events.php:55
 msgid "Download"
 msgstr ""
 
@@ -5265,7 +5266,11 @@ msgid "Send Em@il"
 msgstr ""
 
 #: templates/part.emailform.composer.php:245
-msgid "Export Messages"
+msgid "Export Message"
+msgstr ""
+
+#: templates/part.emailform.composer.php:249
+msgid "Save Message"
 msgstr ""
 
 #: templates/part.emailform.recipients.php:63
