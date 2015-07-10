@@ -52,7 +52,7 @@ namespace CAFEVDB {
              class="projectevents-download tipsy-ne"
              type="button"
              name="download"
-             value="<?php echo L::t('Downloads'); ?>"
+             value="<?php echo L::t('Download'); ?>"
              title="<?php echo Config::tooltips('projectevents-download'); ?>"/>
     </span>
   </div>
