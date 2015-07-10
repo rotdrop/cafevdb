@@ -71,7 +71,7 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
                type="submit"
                class="submit save-template tipsy-wide tipsy-ne"
                name="emailComposer[SaveTemplate]"
-               value="<?php echo L::t('Save as Template'); ?>"/> 
+               value="<?php echo L::t('Save as Template'); ?>"/>
         <input title="<?php echo Config::toolTips('delete-email-template'); ?>"
                type="submit"
                class="submit delete-template tipsy-ne"
@@ -79,7 +79,7 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
                value="<?php echo L::t('Delete Template'); ?>"/>
       </td>
     </tr>
-    
+
     <tr class="email-address">
       <td class="email-address email-recipients caption"><?php echo L::t('Recipients'); ?></td>
       <td class="email-address email-recipients display" colspan="2">
@@ -106,7 +106,7 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
                class="submit address-book-emails CC tipsy-ne"
                data-for="#carbon-copy"
                name="emailComposer[AddressBookCC]"
-               value="<?php echo L::t('Address Book'); ?>"/>        
+               value="<?php echo L::t('Address Book'); ?>"/>
       </td>
     </tr>
     <tr class="email-address">
@@ -242,7 +242,11 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
         <input title="<?php echo Config::toolTips('email-message-export'); ?>"
                class="email-composer submit message-export"
                type="submit" name="emailComposer[MessageExport]"
-               value="<?php echo L::t('Export Messages'); ?>"/>
+               value="<?php echo L::t('Export Message'); ?>"/>
+        <input title="<?php echo Config::toolTips('email-message-save'); ?>"
+               class="email-composer submit message-save"
+               type="submit" name="emailComposer[MessageSave]"
+               value="<?php echo L::t('Save Message'); ?>"/>
       </td>
       <td class="cancel">
         <input title="<?php echo Config::tooltips('cancel-email-composition'); ?>"
