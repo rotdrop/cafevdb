@@ -311,6 +311,42 @@ namespace CAFEVDB
       }
     }
 
+    /**Forcibly set the update-time-stamp for the given postal
+     * code. This is needed for the case where some data-base or
+     * remote queries fail in order to prevent starvation of the
+     * dynamic update procedure.
+     *
+     * @param[in] $postalCode Postal code to time-stamp.
+     *
+     * @param[in] $country The country the postal code belongs to.
+     *
+     * @param[in] $handle Database handle or false.
+     */
+    private static function stampPostalCode($postalCode, $country, $handle = false)
+    {
+      $ownConnection = $handle === false;
+      if ($ownConnection) {
+        Config::init();
+        $handle = mySQL::connect(Config::$pmeopts);
+      }
+
+      // Remember we tried ... note that due to typos
+      // (e.g. comma w/o following space) we may actually fail
+      // to update some of those beasts. We simply pretend to
+      // update all, e.g. for the timestamp we give a damn on
+      // the name.
+      $query = "UPDATE `".self::POSTAL_CODES_TABLE."`
+  SET `Updated` = NOW()
+  WHERE `Country` = '".$country."' AND
+        `PostalCode` = '".$postalCode."'";
+      mySQL::query($query, $handle);
+      
+      // We don't care for a failing query.
+      if ($ownConnection) {
+        mySQL::close($handle);
+      }
+    }
+
     /**Update the list of known zip-code - location relations, but
      * only for the registerted musicians.
      *
@@ -359,6 +395,7 @@ namespace CAFEVDB
 
         if (!isset($zipCodeInfo[self::POSTALCODESLOOKUP_TAG]) ||
             !is_array($zipCodeInfo[self::POSTALCODESLOOKUP_TAG])) {
+	  self::stampPostalCode($postalCode, $country, $handle);
           continue;
         }
 
@@ -406,16 +443,9 @@ namespace CAFEVDB
           if ($hasChanged > 0) {
             $numChanged += $hasChanged;
           } else {
-            // Remember we tried ... note that due to typos
-            // (e.g. comma w/o following space) we may actually fail
-            // to update some of those beasts. We simply pretend to
-            // update all, e.g. for the timestamp we give a damn on
-            // the name.
-            $query = "UPDATE `".self::POSTAL_CODES_TABLE."`
-  SET `Updated` = NOW()
-  WHERE `Country` = '".$country."' AND
-        `PostalCode` = '".$postalCode."'";
-            mySQL::query($query, $handle);
+	    // Still set the time-stamp in order to prevent starvation
+	    // of dynamic update procedures.
+	    self::stampPostalCode($postalCode, $country, $handle);
           }
           if ($limit == 1) {
             echo '<H4>'.$postalCode.'@'.$country.': '.$name.'</H4><BR/>';
