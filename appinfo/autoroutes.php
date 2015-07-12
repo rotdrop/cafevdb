@@ -65,6 +65,9 @@ $this->create("cafevdb_ajax_expertmode_clearoutput.php", "ajax/expertmode/clearo
 $this->create("cafevdb_ajax_expertmode_example.php", "ajax/expertmode/example.php")
   ->actionInclude("cafevdb/ajax/expertmode/example.php");
 
+$this->create("cafevdb_ajax_expertmode_geodata.php", "ajax/expertmode/geodata.php")
+  ->actionInclude("cafevdb/ajax/expertmode/geodata.php");
+
 $this->create("cafevdb_ajax_expertmode_makeviews.php", "ajax/expertmode/makeviews.php")
   ->actionInclude("cafevdb/ajax/expertmode/makeviews.php");
 
