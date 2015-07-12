@@ -243,10 +243,10 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
                class="email-composer submit message-export"
                type="submit" name="emailComposer[MessageExport]"
                value="<?php echo L::t('Export Message'); ?>"/>
-        <input title="<?php echo Config::toolTips('email-message-save'); ?>"
+       <!-- <input title="<?php echo Config::toolTips('email-message-save'); ?>"
                class="email-composer submit message-save"
                type="submit" name="emailComposer[MessageSave]"
-               value="<?php echo L::t('Save Message'); ?>"/>
+               value="<?php echo L::t('Save Message'); ?>"/> -->
       </td>
       <td class="cancel">
         <input title="<?php echo Config::tooltips('cancel-email-composition'); ?>"
