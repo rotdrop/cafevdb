@@ -21,8 +21,10 @@ var myTinyMCE = myTinyMCE || {};
     browser_spellcheck: true,
     gecko_spellcheck: true,
     file_picker_types: 'file image media',
-    relative_urls: false,
-    convert_urls: false,
+    //relative_urls: false,
+    //convert_urls: false,
+    relative_urls: true,
+    //document_base_url: 'https://fritz.claus-justus-heine.info:8888/owncloud8/index.php/apps/cafevdb/',
 
     setup: function(editor) {
       editor.on('PostProcess', myTinyMCE.postProcessCallback);
