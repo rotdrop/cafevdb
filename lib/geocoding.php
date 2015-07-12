@@ -340,7 +340,7 @@ namespace CAFEVDB
   WHERE `Country` = '".$country."' AND
         `PostalCode` = '".$postalCode."'";
       mySQL::query($query, $handle);
-      
+
       // We don't care for a failing query.
       if ($ownConnection) {
         mySQL::close($handle);
@@ -394,8 +394,10 @@ namespace CAFEVDB
                                            'postalcode' => $postalCode));
 
         if (!isset($zipCodeInfo[self::POSTALCODESLOOKUP_TAG]) ||
-            !is_array($zipCodeInfo[self::POSTALCODESLOOKUP_TAG])) {
+            !is_array($zipCodeInfo[self::POSTALCODESLOOKUP_TAG]) ||
+            count($zipCodeInfo[self::POSTALCODESLOOKUP_TAG]) == 0) {
 	  self::stampPostalCode($postalCode, $country, $handle);
+          echo '<H4>'.$postalCode.'@'.$country.'</H4><BR/>';
           continue;
         }
 
