@@ -367,7 +367,7 @@ div.google-popup {
   border-top:2px solid #000;
   moz-box-shadow:-3px 0 7px #777;
   webkit-box-shadow:-3px 0 7px #777;
-  box-shadow: 0 0.5ex 1ex #777;
+  box-shadow: 0 0.4ex 0.8ex #777;
 }
 
 /* Hide the category selector. We use the categories to link events to
@@ -378,6 +378,15 @@ div.google-popup {
 .cafevdb.eventdlg a#editCategories {
   display:none;
 }
+
+.cafevdb.eventdlg #event-allday {
+	display: inline-block;
+	margin: 7px 0;
+	width: 100%;
+}
+.cafevdb.eventdlg .actions {height: 33px;	min-width: 800px;}
+.cafevdb.eventdlg .actionsfloatleft {float:left;margin-left: 1.4em !important;}
+.cafevdb.eventdlg .actionsfloatright {float:right;margin-right: 1.4em !important;}
 
 /*
  * LocalVariables: ***
