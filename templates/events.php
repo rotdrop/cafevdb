@@ -53,7 +53,7 @@ namespace CAFEVDB {
              type="button"
              name="download"
              value="<?php echo L::t('Download'); ?>"
-             title="<?php echo Config::tooltips('projectevents-download'); ?>"/>
+             title="<?php echo Config::toolTips('projectevents-download'); ?>"/>
     </span>
   </div>
   <div class="listing">
