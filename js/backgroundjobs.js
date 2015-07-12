@@ -33,7 +33,7 @@ CAFEVDB.BackgroundJobs = CAFEVDB.BackgroundJobs || {};
   BackgroundJobs.runner = function(){
     self = BackgroundJobs;
     if (OC.currentUser) {
-      $.post(url, {}, function() {
+      $.post(url, {}).always(function() {
         self.timer = setTimeout(self.runner, self.interval*1000);
       });
     } else if (self.timer !== false) {
