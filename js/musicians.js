@@ -83,7 +83,10 @@ var CAFEVDB = CAFEVDB || {};
       not('.pme-filter').
       off('blur').
       on('blur', function(event) {
+
       event.stopImmediatePropagation();
+
+      var submitDefer = PHPMYEDIT.deferReload(container);
 
       var form = container.find('form.pme-form');
       var phones = form.find('input.phone-number');
@@ -96,14 +99,16 @@ var CAFEVDB = CAFEVDB || {};
       $.post(OC.filePath('cafevdb', 'ajax/musicians', 'validatephone.php'),
              post,
              function (data) {
-               if (!CAFEVDB.ajaxErrorHandler(data, [ 'message',
-                                                     'mobilePhone',
-                                                     'mobileMeta',
-                                                     'fixedLinePhone',
-                                                     'fixedLineMeta' ],
-                                             function() {
-                      phones.prop('disabled', false);
-                    })) {
+               if (!CAFEVDB.ajaxErrorHandler(
+                 data, [ 'message',
+                         'mobilePhone',
+                         'mobileMeta',
+                         'fixedLinePhone',
+                         'fixedLineMeta' ],
+                 function() {
+                   phones.prop('disabled', false);
+                   submitDefer.resolve();
+                 })) {
                  return false;
                }
                // inject the sanitized value into their proper input fields
@@ -124,10 +129,12 @@ var CAFEVDB = CAFEVDB || {};
                                   t('cafevdb', 'Phone Number Validation'),
                                   function() {
                                     phones.prop('disabled', false);
+                                    submitDefer.resolve();
                                   }, true, true);
                  CAFEVDB.debugPopup(data);
                } else {
                  phones.prop('disabled', false);
+                 submitDefer.resolve();
                }
                return false;
              });
@@ -142,6 +149,8 @@ var CAFEVDB = CAFEVDB || {};
 
       event.stopImmediatePropagation();
 
+      var submitDefer = PHPMYEDIT.deferReload(container);
+
       var form = container.find('form.pme-form');
       var email = form.find('input.email');
       var post = form.serialize();
@@ -149,11 +158,13 @@ var CAFEVDB = CAFEVDB || {};
       $.post(OC.filePath('cafevdb', 'ajax/musicians', 'validateemail.php'),
              post,
              function (data) {
-               if (!CAFEVDB.ajaxErrorHandler(data, [ 'message',
-                                                     'email' ],
-                                             function() {
-                      email.prop('disabled', false);
-                    })) {
+               if (!CAFEVDB.ajaxErrorHandler(
+                 data, [ 'message',
+                         'email' ],
+                 function() {
+                   email.prop('disabled', false);
+                   submitDefer.resolve();
+                 })) {
                  return false;
                }
                // inject the sanitized value into their proper input fields
@@ -163,10 +174,12 @@ var CAFEVDB = CAFEVDB || {};
                                   t('cafevdb', 'Email Validation'),
                                   function() {
                                     email.prop('disabled', false);
+                                    submitDefer.resolve();
                                   }, true, true);
                  CAFEVDB.debugPopup(data);
                } else {
                  email.prop('disabled', false);
+                 submitDefer.resolve();
                }
                return false;
              });
@@ -269,6 +282,8 @@ var CAFEVDB = CAFEVDB || {};
         return false;
       }
 
+      var submitDefer = PHPMYEDIT.deferReload(container);
+
       var form = container.find('form.pme-form');
       var post = form.serialize();
       post += '&' + $.param({'ActiveElement': self.attr('name')});
@@ -281,12 +296,14 @@ var CAFEVDB = CAFEVDB || {};
       $.post(OC.filePath('cafevdb', 'ajax/musicians', 'validateaddress.php'),
              post,
              function(data) {
-               if (!CAFEVDB.ajaxErrorHandler(data,
-                                             [ 'message', 'city', 'zip', 'street', 'suggestions' ],
-                                             function() {
-                                               reload.removeClass('loading');
-                                               address.prop('disabled', false);
-                                             })) {
+               if (!CAFEVDB.ajaxErrorHandler(
+                 data,
+                 [ 'message', 'city', 'zip', 'street', 'suggestions' ],
+                 function() {
+                   reload.removeClass('loading');
+                   address.prop('disabled', false);
+                   submitDefer.resolve();
+                 })) {
                  return false;
                }
 
@@ -325,11 +342,13 @@ var CAFEVDB = CAFEVDB || {};
                                   function() {
                                     reload.removeClass('loading');
                                     address.prop('disabled', false);
+                                    submitDefer.resolve();
                                   }, true, true);
                  CAFEVDB.debugPopup(data);
                } else {
                  reload.removeClass('loading');
                  address.prop('disabled', false);
+                 submitDefer.resolve();
                }
                return false;
              });

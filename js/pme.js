@@ -72,7 +72,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
       container = $(selector);
     }
     return container;
-  }
+  };
 
   PHPMYEDIT.addTableLoadCallback = function(dpyClass, cbObject) {
     if (typeof cbObject.context === 'undefined') {
@@ -143,6 +143,27 @@ var PHPMYEDIT = PHPMYEDIT || {};
     }
   }
 
+  PHPMYEDIT.cancelDeferredReload = function(container) {
+    var deferKey = this.pme_prefix + '-submitdefer';
+    container.removeData(deferKey);
+  };
+
+  PHPMYEDIT.deferReload = function(container) {
+    var deferKey = this.pme_prefix + '-submitdefer';
+    var defer = $.Deferred();
+
+    container.data(deferKey, defer.promise());
+
+    return defer;
+  };
+
+  PHPMYEDIT.reloadDeferred = function(container)
+  {
+    var deferKey = this.pme_prefix + '-submitdefer';
+
+    return $.when(container.data(deferKey));
+  };
+
   /**Reload the current PME-dialog.
    *
    * @param container jQuery object describing the dialog-holder,
@@ -159,14 +180,6 @@ var PHPMYEDIT = PHPMYEDIT || {};
   PHPMYEDIT.tableDialogReload = function(options, callback) {
     var pme  = this;
 
-/*
- * TODO: after successful delete return to base table, change the
- * title of the dialog in order to indicate the proper operation, then
- * remove the navigation buttons, at least on mobile devices.
- *
- *
- */
-
     var reloadName  = options.ReloadName;
     var reloadValue = options.ReloadValue;
 
@@ -177,56 +190,58 @@ var PHPMYEDIT = PHPMYEDIT || {};
     container.dialog('widget').addClass('pme-table-dialog-blocked');
     container.find('.pme-navigation input.pme-reload').addClass('loading');
 
-    var post = container.find('form.pme-form').serialize();
+    // Possibly delay reload until validation handlers have done their
+    // work.
+    pme.reloadDeferred(container).then(function() {
+      var post = container.find('form.pme-form').serialize();
 
-    // add the option values
-    post += '&' + $.param(options);
+      // add the option values
+      post += '&' + $.param(options);
 
-    // add name and value of the "submit" button.
-    var obj = {};
-    obj[reloadName] = reloadValue;
-    post += '&' + $.param(obj);
+      // add name and value of the "submit" button.
+      var obj = {};
+      obj[reloadName] = reloadValue;
+      post += '&' + $.param(obj);
 
-    //alert("Post: "+post);
-    $.post(OC.filePath('cafevdb', 'ajax/pme', 'pme-table.php'),
-           post,
-           function (data) {
+      //alert("Post: "+post);
+      $.post(OC.filePath('cafevdb', 'ajax/pme', 'pme-table.php'),
+             post,
+             function (data) {
 
-             if (!CAFEVDB.ajaxErrorHandler(data, [ 'contents' ])) {
-               var dialogWidget = container.dialog('widget');
+               if (!CAFEVDB.ajaxErrorHandler(data, [ 'contents' ])) {
+                 var dialogWidget = container.dialog('widget');
 
-               CAFEVDB.Page.busyIcon(false);
-               dialogWidget.removeClass('pme-table-dialog-blocked');
-               container.find('.pme-navigation input.pme-reload').removeClass('loading');
+                 CAFEVDB.Page.busyIcon(false);
+                 dialogWidget.removeClass('pme-table-dialog-blocked');
+                 container.find('.pme-navigation input.pme-reload').removeClass('loading');
+                 return false;
+               }
+
+               if (data.status == 'success') {
+                 // remove the WYSIWYG editor, if any is attached
+                 CAFEVDB.removeEditor(container.find('textarea.wysiwygeditor'));
+
+                 container.css('height', 'auto');
+                 $('.tipsy').remove();
+                 container.html(data.data.contents);
+                 container.find('.pme-navigation input.pme-reload').addClass('loading');
+
+                 // general styling
+                 pme.init('pme', containerSel);
+
+                 // attach the WYSIWYG editor, if any
+                 // editors may cause additional resizing
+                 CAFEVDB.addEditor(container.find('textarea.wysiwygeditor'), function() {
+                   container.dialog('option', 'height', 'auto');
+                   //container.dialog('option', 'position', pme.popupPosition);
+
+                   // re-attach events
+                   pme.tableDialogHandlers(options, callback);
+                 });
+               }
                return false;
-             }
-
-             if (data.status == 'success') {
-               // remove the WYSIWYG editor, if any is attached
-               CAFEVDB.removeEditor(container.find('textarea.wysiwygeditor'));
-
-               container.css('height', 'auto');
-               $('.tipsy').remove();
-               container.html(data.data.contents);
-               container.find('.pme-navigation input.pme-reload').addClass('loading');
-
-               // general styling
-               pme.init('pme', containerSel);
-
-               // attach the WYSIWYG editor, if any
-               // editors may cause additional resizing
-               CAFEVDB.addEditor(container.find('textarea.wysiwygeditor'), function() {
-                 container.dialog('option', 'height', 'auto');
-                 //container.dialog('option', 'position', pme.popupPosition);
-
-                 // re-attach events
-                 pme.tableDialogHandlers(options, callback);
-               });
-//             } else {
-//               alert('blah');
-             }
-             return false;
-           });
+             });
+    });
     return false;
   };
 
@@ -264,6 +279,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
     var contentsChanged = false;
 
     container.off('click', '**');
+
+    pme.cancelDeferredReload(container);
 
     PHPMYEDIT.installTabHandler(container, function() {
       callback( { reason: 'tabChange' } );
@@ -369,70 +386,72 @@ var PHPMYEDIT = PHPMYEDIT || {};
           'input[name$="applycopy"]';
         var deleteSelector = 'input[name$="savedelete"]';
 
-        var post = $(container).find('form.pme-form').serialize();
-        post += '&' + $.param(options);
-        var name, value;
+        pme.reloadDeferred(container).then(function() {
+          var post = $(container).find('form.pme-form').serialize();
+          post += '&' + $.param(options);
+          var name, value;
 
-        var deleteButton = container.find(deleteSelector);
-        if (deleteButton.length > 0) {
-          name  = deleteButton.attr('name');
-          value = deleteButton.val();
-        } else {
-          var applyButton = container.find(applySelector);
-          if (applyButton.length > 0) {
-            name  = applyButton.attr('name');
-            value = applyButton.val();
+          var deleteButton = container.find(deleteSelector);
+          if (deleteButton.length > 0) {
+            name  = deleteButton.attr('name');
+            value = deleteButton.val();
+          } else {
+            var applyButton = container.find(applySelector);
+            if (applyButton.length > 0) {
+              name  = applyButton.attr('name');
+              value = applyButton.val();
+            }
           }
-        }
-        var obj = {};
-        obj[name] = value;
-        post += '&' + $.param(obj);
+          var obj = {};
+          obj[name] = value;
+          post += '&' + $.param(obj);
 
-        //alert(post);
+          //alert(post);
 
-        OC.Notification.hide(function() {
-          var dialogWidget = container.dialog('widget');
+          OC.Notification.hide(function() {
+            var dialogWidget = container.dialog('widget');
 
-          dialogWidget.addClass('pme-table-dialog-blocked');
+            dialogWidget.addClass('pme-table-dialog-blocked');
 
-          $.post(OC.filePath('cafevdb', 'ajax/pme', 'pme-table.php'),
-                 post,
-                 function (data) {
-                   if (!CAFEVDB.ajaxErrorHandler(data, [ 'contents' ])) {
-                     dialogWidget.removeClass('pme-table-dialog-blocked');
+            $.post(OC.filePath('cafevdb', 'ajax/pme', 'pme-table.php'),
+                   post,
+                   function (data) {
+                     if (!CAFEVDB.ajaxErrorHandler(data, [ 'contents' ])) {
+                       dialogWidget.removeClass('pme-table-dialog-blocked');
+                       container.find('.pme-navigation input.pme-reload').removeClass('loading');
+                       CAFEVDB.Page.busyIcon(false);
+                       return false;
+                     }
+
+                     // phpMyEdit echos mySQL-errors back.
+                     if (typeof data.data.sqlerror != 'undefined' &&
+                         data.data.sqlerror.error != 0) {
+                       $('#notification').text('MySQL Error: '+
+                                               data.data.sqlerror.error+
+                                               ': '+
+                                               data.data.sqlerror.message);
+	               $('#notification').fadeIn();
+	               //hide notification after 5 sec
+	               setTimeout(function() {
+	                 $('#notification').fadeOut();
+	               }, 10000);
+                     }
+
+                     if (options.InitialViewOperation && deleteButton.length <= 0) {
+                       // return to initial view, but not after deletion
+                       dialogWidget.removeClass('pme-table-dialog-blocked');
+                       options.ReloadName = options.InitialName;
+                       options.ReloadValue = options.InitialValue;
+                       pme.tableDialogReload(options, callback);
+                     } else {
+                       container.dialog('close');
+                     }
                      container.find('.pme-navigation input.pme-reload').removeClass('loading');
                      CAFEVDB.Page.busyIcon(false);
+
                      return false;
-                   }
-
-                   // phpMyEdit echos mySQL-errors back.
-                   if (typeof data.data.sqlerror != 'undefined' &&
-                       data.data.sqlerror.error != 0) {
-                     $('#notification').text('MySQL Error: '+
-                                             data.data.sqlerror.error+
-                                             ': '+
-                                             data.data.sqlerror.message);
-	             $('#notification').fadeIn();
-	             //hide notification after 5 sec
-	             setTimeout(function() {
-	               $('#notification').fadeOut();
-	             }, 10000);
-                   }
-
-                   if (options.InitialViewOperation && deleteButton.length <= 0) {
-                     // return to initial view, but not after deletion
-                     dialogWidget.removeClass('pme-table-dialog-blocked');
-                     options.ReloadName = options.InitialName;
-                     options.ReloadValue = options.InitialValue;
-                     pme.tableDialogReload(options, callback);
-                   } else {
-                     container.dialog('close');
-                   }
-                   container.find('.pme-navigation input.pme-reload').removeClass('loading');
-                   CAFEVDB.Page.busyIcon(false);
-
-                   return false;
-                 });
+                   });
+          });
         });
       return false;
     });
