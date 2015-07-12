@@ -47,6 +47,7 @@ delete-all-file-attachments
 delete-email-template
 email-account-distribute
 email-message-export
+email-message-save
 email-recipients-freeform-BCC
 email-recipients-freeform-CC
 emailtest
