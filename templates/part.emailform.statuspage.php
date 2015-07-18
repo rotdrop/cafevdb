@@ -110,8 +110,8 @@ namespace CAFEVDB {
       echo '
     '.L::t('The message has probably not been sent.',
            array($numTotal));
-    } 
-    echo '      
+    }
+    echo '
   </span>
 </div>';
   }
@@ -142,7 +142,7 @@ namespace CAFEVDB {
     <ul>';
       foreach($failed as $failure) {
         echo '
-      <li><span class="error item contents substitutions">'.$failure.'</span></li>';    
+      <li><span class="error item contents substitutions">'.$failure.'</span></li>';
       }
       echo '
     </ul>
@@ -248,7 +248,7 @@ namespace CAFEVDB {
   <div class="error contents emptysubject">
     <div class="error caption emptysubject">'.L::t('Empty Subject').'</div>
     '.L::t('The subject must not consist of `%s\' as only part. '.
-    'Please correct that before hitting the `Send\'-button again.',
+    'Please correct that before trying send the message out, and also before trying to save the message as draft. Thanks.',
            array($subjectTag)).'
   </div>
 </div>';
@@ -291,7 +291,7 @@ namespace CAFEVDB {
    *
    */
   if (!empty($diagnostics['AttachmentValidation']['Files'])) {
-  } 
+  }
 
   /*****************************************************************************
    *
@@ -323,14 +323,14 @@ namespace CAFEVDB {
     $explanations = L::t('This is probably an internal error. Please contact %s. '.
                     'It may be possible to simply click on the red, underlined text '.
                     'in order to compose a usefull message.',
-                         array($mailto));  
+                         array($mailto));
     echo '
   <div class="error contents explanations">
     <div class="error heading">'.L::t('Explanations').'</div>
     '.$explanations.'
   </div>';
     echo '
-</div>';  
+</div>';
   }
 
   /*****************************************************************************
@@ -376,7 +376,7 @@ namespace CAFEVDB {
     '.$explanations.'
   </div>';
     echo '
-</div>';  
+</div>';
 
   }
 
@@ -424,9 +424,9 @@ namespace CAFEVDB {
     '.$explanations.'
   </div>';
     echo '
-</div>';  
+</div>';
 
-  } 
+  }
 
   /*****************************************************************************
    *
@@ -478,7 +478,7 @@ namespace CAFEVDB {
     $mailto = $admin['email'].
               '?subject='.rawurlencode('[CAFEVDB-EmailDuplicate] Probably False Positive').
               '&body='.rawurlencode($errorBody);
-    $mailto = '<span class="error email"><a href="mailto:'.$mailto.'">'.$admin['name'].'</a></span>';   
+    $mailto = '<span class="error email"><a href="mailto:'.$mailto.'">'.$admin['name'].'</a></span>';
     $explanations =
     L::t('The email-form refuses to send email twice to the same recipients. '.
 'In order to send out your email you have either to change the subject '.
@@ -496,7 +496,7 @@ namespace CAFEVDB {
     echo '
 </div>';
 
-  } 
+  }
 
   /*****************************************************************************
    *
@@ -538,7 +538,7 @@ namespace CAFEVDB {
     $mailto = $admin['email'].
               '?subject='.rawurlencode('[CAFEVDB-CopyToSent] IMAP Error').
               '&body='.rawurlencode($errorBody);
-    $mailto = '<span class="error email"><a href="mailto:'.$mailto.'">'.$admin['name'].'</a></span>';   
+    $mailto = '<span class="error email"><a href="mailto:'.$mailto.'">'.$admin['name'].'</a></span>';
     $explanations =
     L::t('If no other error messages are echoed on this page, then '.
 'the emails have probably been sent successfully. However, copying '.
@@ -583,7 +583,7 @@ namespace CAFEVDB {
   </div>
 </div>';
 
-  } 
+  }
 
   /*****************************************************************************
    *
@@ -611,7 +611,7 @@ namespace CAFEVDB {
   </div>
 </div>';
 
-  } 
+  }
 
   /*****************************************************************************
    *
@@ -631,7 +631,7 @@ namespace CAFEVDB {
     <pre>'.Util::htmlEncode($text).'</pre>
   </div>
 </div>';
-  } 
+  }
 
   /*****************************************************************************
    *
@@ -644,7 +644,7 @@ namespace CAFEVDB {
 <div class="emailform error group">
   <div class="emailform error heading">'.L::t('The most recent status messages are always saved to the status panel. Please see there for detailed diagnostics.').'</div>
 </div>
-<div class="spacer"><div class="ruler"></div></div>';  
+<div class="spacer"><div class="ruler"></div></div>';
   }
 
 } // namespace CAFEVDB

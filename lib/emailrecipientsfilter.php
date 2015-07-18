@@ -31,6 +31,7 @@ namespace CAFEVDB
    * project).
    */
   class EmailRecipientsFilter {
+    const POST_TAG = 'emailRecipients';
     const MAX_HISTORY_SIZE = 100; // the history is posted around, so ...
     const SESSION_HISTORY_KEY = 'FilterHistory';
     private $session;
@@ -46,11 +47,11 @@ namespace CAFEVDB
 
     private $instruments; // List of instruments for filtering
     private $instrumentGroups; // mapping of instruments to groups.
-  
+
     private $opts;        // Copy of global options
 
     private $brokenEMail;     // List of people without email
-    private $EMails;      // List of people with email  
+    private $EMails;      // List of people with email
     private $EMailsDpy;   // Display list with namee an email
     private $frozen;      // Only allow the preselected recipients (i.e. for debit notes)
 
@@ -61,17 +62,17 @@ namespace CAFEVDB
     private $submitted; // form has been submitted
     private $reload;    // form must be reloaded
     private $snapshot;  // lean history snapshot, only the history data is valid
-    
-    private $jsonFlags; 
+
+    private $jsonFlags;
     static private $historyKeys = array('BasicRecipientsSet',
                                         'MemberStatusFilter',
                                         'InstrumentsFilter',
                                         'SelectedRecipients');
     private $filterHistory;
     private $historyPosition;
-    private $historySize;    
+    private $historySize;
 
-    /* 
+    /*
      * constructor
      */
     public function __construct()
@@ -89,7 +90,7 @@ namespace CAFEVDB
       $this->opts = Config::$pmeopts;
 
       // Fetch all data submitted by form
-      $this->cgiData = Util::cgiValue('emailRecipients', array());
+      $this->cgiData = Util::cgiValue(self::POST_TAG, array());
 
       // Quirk: the usual checkbox issue
       $this->cgiData['BasicRecipientsSet']['FromProject'] =
@@ -121,7 +122,7 @@ namespace CAFEVDB
      * either for the initial form setup as during the interaction
      * with the user.
      */
-    private function execute() 
+    private function execute()
     {
       // Maybe should also check something else. If submitted is true,
       // then we use the form data, otherwise the defaults.
@@ -156,7 +157,7 @@ namespace CAFEVDB
       }
 
       $dbh = mySQL::connect($this->opts);
-      
+
       $this->remapEmailRecords($dbh);
       $this->getMemberStatusNames($dbh);
       $this->initMemberStatusFilter();
@@ -190,9 +191,9 @@ namespace CAFEVDB
         return $value;
       } else {
         return $default;
-      } 
+      }
     }
-    
+
     /**Compose a default history record for the initial state */
     private function setDefaultHistory()
     {
@@ -252,7 +253,7 @@ namespace CAFEVDB
       }
       return true;
     }
-    
+
     /**Validate one history entry */
     private function validateHistoryRecord($record) {
       if (!is_array($record)) {
@@ -266,7 +267,7 @@ namespace CAFEVDB
       }
       return true;
     }
-    
+
     /**Validate all history records. */
     private function validateHistoryRecords($history) {
       foreach($history['records'] as $record) {
@@ -275,7 +276,7 @@ namespace CAFEVDB
         }
       }
       return true;
-    }    
+    }
 
     /**Push the current filter selection onto the undo-history
      * stack. Do nothing for dummy commits, i.e. only a changed filter
@@ -294,7 +295,7 @@ namespace CAFEVDB
         $filter['SelectedRecipients'] =
           array_intersect($filter['SelectedRecipients'],
                           array_keys($this->EMailsDpy));
-        
+
         // tweak: sort the selected recipients by key
       }
 
@@ -332,7 +333,7 @@ namespace CAFEVDB
     private function applyHistory($offset)
     {
       $newPosition = $this->historyPosition + $offset;
-      
+
       // Check for valid position.
       if ($newPosition >= $this->historySize || $newPosition < 0) {
         if (Util::debugMode('emailform')) {
@@ -360,11 +361,11 @@ namespace CAFEVDB
     {
       $oldTable = Util::cgiValue($this->mtabKey,'');
       $remap = false;
-      
+
       if ($oldTable == 'InstrumentInsurance') {
         $this->projectName = Config::getValue('memberTable');
         $this->projectId = Config::getValue('memberTableId');
-        
+
         $this->frozen = true; // restrict to initial set of recipients
 
         $table = $this->projectName.'View';
@@ -386,10 +387,10 @@ namespace CAFEVDB
 
         $remap = true;
       }
-      
+
       if ($this->projectId >= 0 && $oldTable == 'SepaDebitMandates') {
         $this->frozen = true; // restrict to initial set of recipients
-        
+
         $table = $this->projectName.'View';
 
         // Remap all email records to the ids from the project view.
@@ -455,7 +456,7 @@ namespace CAFEVDB
      *
      * @return Associative array with the keys
      * - name (full name)
-     * - email 
+     * - email
      * - status (MemberStatus)
      * - dbdata (data as returned from the DB for variable substitution)
      */
@@ -587,7 +588,7 @@ namespace CAFEVDB
       $this->EMails = array();
       $this->EMailsDpy = array(); // display records
 
-      if ($this->projectId < 0) {        
+      if ($this->projectId < 0) {
         self::fetchMusicians($dbh, 'Musiker', 'Id', 'Instrumente', -1, true);
       } else {
         // Possibly add musicians from the project
@@ -602,7 +603,7 @@ namespace CAFEVDB
           $table =
             '(SELECT a.* FROM Musiker as a
     LEFT JOIN `'.$this->projectName.'View'.'` as b
-      ON a.Id = b.MusikerId 
+      ON a.Id = b.MusikerId
       WHERE b.MusikerId IS NULL)';
           self::fetchMusicians($dbh, $table, 'Id', 'Instrumente', -1, true);
         }
@@ -638,7 +639,7 @@ namespace CAFEVDB
        */
       $filterInstruments = $this->cgiValue('InstrumentsFilter', array());
       array_intersect($filterInstruments, $this->instruments);
-      
+
       $this->instrumentsFilter = array();
       foreach ($filterInstruments as $value) {
         $this->instrumentsFilter[] = $value;
@@ -668,31 +669,31 @@ namespace CAFEVDB
       foreach ($memberStatus as $tag) {
         $this->memberStatusNames[$tag] = strval(L::t($tag));
       }
-    }  
+    }
 
     /*Get the current filter. Default value, after form submission,
      * initial setting otherwise.
      */
-    private function initMemberStatusFilter() 
+    private function initMemberStatusFilter()
     {
       $this->memberFilter = $this->cgiValue('MemberStatusFilter',
                                             $this->defaultByStatus());
     }
-    
+
 
     /**Form a SQL filter expression for the memeber status. */
     private function memberStatusSQLFilter()
     {
       $allStatusFlags = array_keys($this->memberStatusNames);
       $statusBlackList = array_diff($allStatusFlags, $this->memberFilter);
-      
+
       // Explicitly include NULL MemberStatus (which in principle should not happen
       $filter = "AND ( `MemberStatus` IS NULL OR (1 ";
       foreach ($statusBlackList as $badStatus) {
         $filter .= " AND `MemberStatus` NOT LIKE '".$badStatus."'";
       }
       $filter .= "))";
-      
+
       return $filter;
     }
 
@@ -783,7 +784,7 @@ namespace CAFEVDB
           $value = $instrument;
           $group = $this->instrumentGroups[$value];
         }
-        
+
         $result[] = array('value' => $value,
                           'name' => $name,
                           'group' => $group,
@@ -791,7 +792,7 @@ namespace CAFEVDB
       }
       return $result;
     }
-    
+
     /**Return the values for the recipient select box */
     public function emailRecipientsChoices()
     {
@@ -801,7 +802,7 @@ namespace CAFEVDB
         $selectedRecipients = $this->EmailRecs;
       }
       $selectedRecipients = array_flip($selectedRecipients);
-      
+
       $result = array();
       foreach($this->EMailsDpy as $key => $email) {
         if ($this->frozen && array_search($key, $this->EmailRecs) === false) {
@@ -813,7 +814,7 @@ namespace CAFEVDB
       }
       return $result;
     }
-    
+
     /**Return a list of musicians without email address, if any. */
     public function missingEmailAddresses()
     {
@@ -872,7 +873,7 @@ namespace CAFEVDB
     {
       return $this->frozen;
     }
-    
+
   };
 
 } // CAFEVDB

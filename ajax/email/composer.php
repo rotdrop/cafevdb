@@ -43,6 +43,33 @@ namespace CAFEVDB {
   $messageText = ''; ///< Optional status message.
   $debugText = ''; ///< Diagnostic output, only enabled on request.
 
+  function storedEmailOptions($composer)
+  {
+    $stored = $composer->storedEmails();
+    $options = '';
+    $options .= '
+            <optgroup label="'.L::t('Drafts').'">
+';
+    foreach ($stored['drafts'] as $draft) {
+      $options .= '
+              <option value="__draft-'.$draft['value'].'">'.$draft['name'].'</option>
+';
+    }
+    $options .= '
+            </optgroup>';
+    $options .= '<optgroup label="'.L::t('Templates').'">
+';
+    foreach ($stored['templates'] as $template) {
+      $options .= '
+              <option value="'.$template.'">'.$template.'</option>
+';
+    }
+    $options .= '
+            </optgroup>';
+
+    return $options;
+  }
+
   try {
 
     // Close this session in order to enable progress feed-back
@@ -94,11 +121,17 @@ namespace CAFEVDB {
         $tmpl->assign('ProjectId', $projectId);
         $tmpl->assign('Diagnostics', $diagnostics);
         $messageText = $tmpl->fetchPage();
+
+        // Update list of drafts after sending the message (draft has
+        // been deleted)
+        $requestData['storedEmailOptions'] = storedEmailOptions($composer);
       }
       break;
     case 'cancel':
       // simply let it do the cleanup
       $composer = new EmailComposer();
+      $blah = $composer->cleanTemporaries();
+      $debugText .= "foo".print_r($blah, true);
       break;
     case 'update':
       $formElement = $requestData['FormElement'];
@@ -107,9 +140,8 @@ namespace CAFEVDB {
         $tmpl->assign('ProjectName', $projectName);
         $tmpl->assign('ProjectId', $projectId);
 
-        // Needed for the editor
         $tmpl->assign('templateName', $composer->currentEmailTemplate());
-        $tmpl->assign('templateNames', $composer->emailTemplates());
+        $tmpl->assign('storedEmails', $composer->storedEmails());
         $tmpl->assign('TO', $composer->toString());
         $tmpl->assign('BCC', $composer->blindCarbonCopy());
         $tmpl->assign('CC', $composer->carbonCopy());
@@ -123,7 +155,7 @@ namespace CAFEVDB {
         $tmpl->assign('ComposerFormData', $composer->formData());
 
         $elementData = $tmpl->fetchPage();
-      } else {    
+      } else {
         switch ($formElement) {
         case 'TO':
           $elementData = $composer->toString();
@@ -156,17 +188,91 @@ namespace CAFEVDB {
       }
     case 'saveTemplate':
       if (!$requestData['errorStatus'])  {
-        $templates = $composer->emailTemplates();
-        $options = '';
-        foreach ($templates as $template) {
-          $options .= '<option value="'.$template.'">'.$template.'</option>
-';
-        }
-        $requestData['templateOptions'] = $options;
+        $requestData['storedEmailOptions'] = storedEmailOptions($composer);
       } else {
         $requestData['diagnostics']['Caption'] =
           L::t('Template could not be saved');
       }
+      break;
+    case 'saveDraft':
+      if (!$requestData['errorStatus'])  {
+        $requestData['storedEmailOptions'] = storedEmailOptions($composer);
+        $requestData['messageDraftId'] = $composer->messageDraftId();
+      } else {
+        $requestData['diagnostics']['Caption'] = L::t('Draft could not be saved');
+      }
+      break;
+    case 'deleteDraft':
+      $debugText .= L::t("Deleted draft message with id %d",
+                         array($requestData['messageDraftId']));
+      $requestData['storedEmailOptions'] = storedEmailOptions($composer);
+      $requestData['messageDraftId'] = -1;
+      break;
+    case 'loadDraft':
+      // This seems to be somewhat tricky. The procedure here is to
+      // replace the $_POST array by the saved data, reconstruct the
+      // composer and the recipient dialogs. Better way than that???
+
+      $_POST = array_merge($_POST, $composer->loadDraft());
+      $_POST['emailComposer']['MessageDraftId'] = $composer->messageDraftId();
+
+      // Update project name and id
+      $projectId = $requestData['ProjectId'] = $_POST['ProjectId'];
+      $projectName = $requestData['ProjectName'] = $_POST['ProjectName'];
+      $requestData['messageDraftId'] = $composer->messageDraftId();
+
+      $recipientsFilter = new EmailRecipientsFilter();
+      $recipients = $recipientsFilter->selectedRecipients();
+
+      $composer = new EmailComposer($recipients);
+      $requestData['errorStatus'] = $composer->errorStatus();
+      $requestData['diagnostics'] = $composer->statusDiagnostics();
+
+      // Composer template
+      $msgTmpl = new \OCP\Template('cafevdb', 'part.emailform.composer');
+      $msgTmpl->assign('ProjectName', $projectName);
+      $msgTmpl->assign('ProjectId', $projectId);
+
+      $msgTmpl->assign('templateName', $composer->currentEmailTemplate());
+      $msgTmpl->assign('storedEmails', $composer->storedEmails());
+      $msgTmpl->assign('TO', $composer->toString());
+      $msgTmpl->assign('BCC', $composer->blindCarbonCopy());
+      $msgTmpl->assign('CC', $composer->carbonCopy());
+      $msgTmpl->assign('mailTag', $composer->subjectTag());
+      $msgTmpl->assign('subject', $composer->subject());
+      $msgTmpl->assign('message', $composer->messageText());
+      $msgTmpl->assign('sender', $composer->fromName());
+      $msgTmpl->assign('catchAllEmail', $composer->fromAddress());
+      $msgTmpl->assign('fileAttachments', $composer->fileAttachments());
+      $msgTmpl->assign('eventAttachments', $composer->eventAttachments());
+      $msgTmpl->assign('ComposerFormData', $composer->formData());
+
+      $msgData = $msgTmpl->fetchPage();
+
+      // Recipients template
+      $rcptTmpl = new \OCP\Template('cafevdb', 'part.emailform.recipients');
+      $rcptTmpl->assign('ProjectName', $projectName);
+      $rcptTmpl->assign('ProjectId', $projectId);
+
+      // Needed for the recipient selection
+      $rcptTmpl->assign('RecipientsFormData', $recipientsFilter->formData());
+      $filterHistory = $recipientsFilter->filterHistory();
+      $rcptTmpl->assign('FilterHistory', $filterHistory);
+      $rcptTmpl->assign('MemberStatusFilter', $recipientsFilter->memberStatusFilter());
+      $rcptTmpl->assign('BasicRecipientsSet', $recipientsFilter->basicRecipientsSet());
+      $rcptTmpl->assign('InstrumentsFilter', $recipientsFilter->instrumentsFilter());
+      $rcptTmpl->assign('EmailRecipientsChoices', $recipientsFilter->emailRecipientsChoices());
+      $rcptTmpl->assign('MissingEmailAddresses', $recipientsFilter->missingEmailAddresses());
+
+      $rcptData = $rcptTmpl->fetchPage();
+
+      $requestData['composerForm'] = $msgData;
+      $requestData['recipientsForm'] = $rcptData;
+
+      // $debugText .= print_r($_POST, true);
+      $debugText .= L::t("Loaded new draft message with id %d",
+                         array($requestData['messageDraftId']));
+
       break;
     case 'validateEmailRecipients':
       $composer = new EmailComposer();
@@ -176,13 +282,13 @@ namespace CAFEVDB {
       $requestData['diagnostics'] = $composer->statusDiagnostics();
       if ($requestData['errorStatus']) {
         $requestData['diagnostics']['Caption'] =
-          L::t('Email Address Validation Failed');      
+          L::t('Email Address Validation Failed');
       }
       break;
     default:
       throw new \InvalidArgumentException(L::t("Unknown request: `%s'.", $request));
     }
-  
+
     unset($composer);
     unset($recipientsFilter);
 
@@ -261,7 +367,7 @@ namespace CAFEVDB {
                             'Please copy the displayed text and send it by email to %s.',
                             array($mailto)),
           'debug' => htmlspecialchars($debugText))));
- 
+
     return false;
   }
 

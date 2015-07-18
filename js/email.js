@@ -68,7 +68,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
   Email.tabResize = function (dialogWidget, panelHolder) {
     //panelHolder.css('width', 'auto');
     //panelHolder.css('height', 'auto');
-    panelHolder.css('max-height', 'unset'); // reset in order to get auto-configuration
+    panelHolder.css('max-height', 'none'); // reset in order to get auto-configuration
     var titleOffset = (dialogWidget.find('.ui-dialog-titlebar').outerHeight(true)
                       +
                        dialogWidget.find('.ui-tabs-nav').outerHeight(true));
@@ -86,6 +86,55 @@ CAFEVDB.Email = CAFEVDB.Email || {};
     }
   };
 
+  /**Add some extra JS stuff for the select boxes. This has to be
+   * called when the tab is actually visible because the add-on
+   * libraries use the size of the original controls as base for their
+   * layout.
+   */
+  Email.emailFormRecipientsSelectControls = function(dialogHolder, fieldset) {
+
+    if (dialogHolder.tabs('option', 'active') != 0 ||
+        fieldset.find('#member_status_filter_chosen').length > 0) {
+      // alert('active: ' + dialogHolder.tabs('option', 'active') +
+      //       ' done: ' + fieldset.find('#member_status_filter_chosen').length);
+      return;
+    }
+
+    fieldset.find('#member-status-filter').chosen();
+    fieldset.find('#member-status-filter').chosen();
+    fieldset.find('#instruments-filter option[value="*"]').remove();
+    fieldset.find('#instruments-filter option[value=""]').remove();
+    fieldset.find('#instruments-filter').chosen();
+    fieldset.find('#recipients-select').bootstrapDualListbox(
+      {
+        // moveOnSelect: false,
+        // preserveSelectionOnMove : 'all',
+        moveAllLabel: t('cafevdb', 'Move all'),
+        moveSelectedLabel: t('cafevdb', 'Move selected'),
+        removeSelectedLabel: t('cafevdb', 'Remove selected'),
+        removeAllLabel: t('cafevdb', 'Remove all'),
+        nonSelectedListLabel: t('cafevdb', 'Remaining Recipients'),
+        selectedListLabel   : t('cafevdb', 'Selected Recipients'),
+        infoText            : '&nbsp;', // t('cafevdb', 'Showing all {0}'),
+        infoTextFiltered    : '<span class="label label-warning">'
+                            + t('cafevdb', 'Filtered')
+                            + '</span> {0} '
+                            + t('cafevdb', 'from')
+                            +' {1}',
+        infoTextEmpty       : t('cafevdb', 'Empty list'),
+        filterPlaceHolder   : t('cafevdb', 'Filter'),
+        filterTextClear     : t('cafevdb', 'show all')
+      }
+    );
+    var dualSelect = fieldset.find('div.bootstrap-duallistbox-container select');
+    dualSelect.attr(
+      'title',
+      t('cafevdb', 'Click on the names to move the respective person to the other box'));
+    dualSelect.addClass('tipsy-s');
+
+    CAFEVDB.tipsy(dialogHolder.find('div#emailformrecipients'));
+  };
+
   /**Add handlers to the control elements, and call the AJAX sciplets
    * for validation to update the recipients selection tab accordingly.
    *
@@ -96,10 +145,10 @@ CAFEVDB.Email = CAFEVDB.Email || {};
    * @param panelHolder The div enclosing the fieldset
    *
    */
-  Email.emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panelHolder, layoutCB) {
+  Email.emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panelHolder) {
     var Email = this;
 
-    layoutCB();
+    Email.emailFormRecipientsSelectControls(dialogHolder, fieldset);
 
     var recipientsSelect   = fieldset.find('select#recipients-select');
     var missingAddresses   = fieldset.find('.missing-email-addresses.names');
@@ -145,8 +194,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                  Email.emailFormRecipientsHandlers(fieldset,
                                                    form,
                                                    dialogHolder,
-                                                   panelHolder,
-                                                   layoutCB);
+                                                   panelHolder);
                } else {
                  // Here goes the real work
                  // We only need to update the select-element and the list
@@ -268,8 +316,9 @@ CAFEVDB.Email = CAFEVDB.Email || {};
       return false;
     });
 
-    panelHolder.off('resize');
-    panelHolder.on('resize', function() {
+    panelHolder.
+      off('resize').
+      on('resize', function() {
       Email.tabResize(dialogHolder.dialog('widget'), panelHolder);
     });
 
@@ -286,14 +335,37 @@ CAFEVDB.Email = CAFEVDB.Email || {};
    * @param panelHolder The div enclosing the fieldset
    *
    */
-  Email.emailFormCompositionHandlers = function(fieldset, form, dialogHolder, panelHolder, layoutCB) {
+  Email.emailFormCompositionHandlers = function(fieldset, form, dialogHolder, panelHolder) {
     var Email = this;
 
-    layoutCB();
+    {
+      CAFEVDB.addEditor(dialogHolder.find('textarea.wysiwygeditor'), undefined, '20em');
+
+      $('#cafevdb-stored-messages-selector').chosen({ disable_search_threshold: 10 });
+
+      var composerPanel = $('#emailformcomposer');
+      var fileAttachmentsSelect = composerPanel.find('#file-attachments-selector');
+      fileAttachmentsSelect.chosen();
+      fileAttachmentsSelect.on('chosen:showing_dropdown', function(event) {
+        composerPanel.stop().animate({
+          scrollTop: composerPanel.prop('scrollHeight')
+        }, 2000);
+      });
+      var eventAttachmentsSelect = composerPanel.find('#event-attachments-selector');
+      eventAttachmentsSelect.chosen();
+      eventAttachmentsSelect.on('chosen:showing_dropdown', function(event) {
+        composerPanel.stop().animate({
+          scrollTop: composerPanel.prop('scrollHeight')
+        }, 2000);
+      });
+
+      CAFEVDB.tipsy(dialogHolder.find('div#emailformcomposer'));
+    }
 
     var debugOutput = form.find('#emailformdebug');
-    var templateSelector = fieldset.find('select.email-template-selector');
+    var storedEmailsSelector = fieldset.find('select.stored-messages-selector');
     var currentTemplate = fieldset.find('#emailCurrentTemplate');
+    var saveAsTemplate = fieldset.find('#check-save-as-template');
     var messageText = fieldset.find('textarea');
     var eventAttachmentsSelector = fieldset.find('select.event-attachments');
     var fileAttachmentsSelector = fieldset.find('select.file-attachments');
@@ -325,7 +397,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
         post = $.param({ emailComposer: request });
       } else {
         if (typeof request != 'undefined' && request.SubmitAll) {
-          // Everthing is greedily submitted ...
+          // Everything is greedily submitted ...
           post = form.serialize();
         } else {
           // Serialize almost everything and submit it
@@ -373,6 +445,8 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                var requestData = data.data.requestData;
                switch (request) {
                case 'send':
+                 storedEmailsSelector.html(requestData.storedEmailOptions);
+                 CAFEVDB.selectMenuReset(storedEmailsSelector);
                  if (typeof data.data.message != 'undefined' &&
                      typeof data.data.caption != 'undefined') {
                    OC.dialogs.alert(data.data.message, data.data.caption,
@@ -393,8 +467,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                    Email.emailFormCompositionHandlers(fieldset,
                                                       form,
                                                       dialogHolder,
-                                                      panelHolder,
-                                                      layoutCB);
+                                                      panelHolder);
                    break;
                  case 'TO':
                    var toSpan = fieldset.find('span.email-recipients');
@@ -455,24 +528,86 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                case 'validateEmailRecipients':
                  // already reported by the general error-handling functions
                  break;
-               case 'setTemplate':
+               case 'setTemplate': {
+                 var dataItem = fieldset.find('input[name="emailComposer[MessageDraftId]"]');
+                 dataItem.val(-1);
                  currentTemplate.val(requestData.templateName);
                  CAFEVDB.updateEditor(messageText, requestData.message);
-                 templateSelector.find('option').prop('selected', false);
-                 templateSelector.trigger("chosen:updated");
+                 CAFEVDB.selectMenuReset(storedEmailsSelector);
                  break;
+               }
                case 'saveTemplate':
-                 templateSelector.html(requestData.templateOptions);
-                 templateSelector.find('option').prop('selected', false);
-                 templateSelector.trigger("chosen:updated");
+                 storedEmailsSelector.html(requestData.storedEmailOptions);
+                 CAFEVDB.selectMenuReset(storedEmailsSelector);
                  break;
                case 'deleteTemplate':
                  currentTemplate.val(requestData.templateName);
                  CAFEVDB.updateEditor(messageText, requestData.message);
-                 templateSelector.html(requestData.templateOptions);
-                 templateSelector.find('option').prop('selected', false);
-                 templateSelector.trigger("chosen:updated");
+                 storedEmailsSelector.html(requestData.storedEmailOptions);
+                 CAFEVDB.selectMenuReset(storedEmailsSelector);
                  break;
+               case 'saveDraft': {
+                 // perhaps rather use data stuff in the future ...
+                 storedEmailsSelector.html(requestData.storedEmailOptions);
+                 CAFEVDB.selectMenuReset(storedEmailsSelector);
+                 var dataItem = fieldset.find('input[name="emailComposer[MessageDraftId]"]');
+                 dataItem.val(requestData.messageDraftId);
+                 break;
+               }
+               case 'loadDraft': {
+                 $('.tipsy').remove();
+                 { // replace the entire composer tab
+                   CAFEVDB.removeEditor(panelHolder.find('textarea.wysiwygeditor'));
+                   panelHolder.html(requestData.composerForm);
+                   fieldset = panelHolder.find('fieldset.email-composition.page');
+                   Email.emailFormCompositionHandlers(fieldset,
+                                                      form,
+                                                      dialogHolder,
+                                                      panelHolder);
+                 }
+                 { // replace the recipients tab as well ...
+                   var rcptPanelHolder = dialogHolder.find('div#emailformrecipients');
+                   rcptPanelHolder.html(requestData.recipientsForm);
+                   var rcptFieldSet = form.find('fieldset.email-recipients.page');
+                   Email.emailFormRecipientsHandlers(rcptFieldSet,
+                                                     form,
+                                                     dialogHolder,
+                                                     rcptPanelHolder);
+                 }
+
+                 { // adjust the title of the dialog
+                   var dlgTitle = '';
+                   if (requestData.ProjectId >= 0) {
+                     dlgTitle = t('cafevdb', 'Em@il Form for {ProjectName}',
+                                  { ProjectName: requestData.ProjectName });
+                   } else {
+                     dlgTitle = t('cafevdb', 'Em@il Form');
+                   }
+                   dialogHolder.dialog('option', 'title', dlgTitle);
+                 }
+
+                 { // update the "global" project name and id
+                   var formData = form.find('fieldset.form-data');
+                   formData.find('input[name="ProjectId"]').val(requestData.ProjectId);
+                   formData.find('input[name="ProjectName"]').val(requestData.ProjectName)
+                 }
+
+                 // Make the debug output less verbose
+                 delete requestData.composerForm;
+                 delete requestData.recipientsForm;
+
+                 // deselect menu item
+                 CAFEVDB.selectMenuReset(storedEmailsSelector);
+
+                 break;
+               }
+               case 'deleteDraft': {
+                 var dataItem = fieldset.find('input[name="emailComposer[MessageDraftId]"]');
+                 dataItem.val(-1);
+                 storedEmailsSelector.html(requestData.storedEmailOptions);
+                 CAFEVDB.selectMenuReset(storedEmailsSelector);
+                 break;
+               }
                default:
                  postponeEnable = true;
                  data.data.message =
@@ -692,61 +827,125 @@ CAFEVDB.Email = CAFEVDB.Email || {};
      * Template handling (save, delete, load)
      */
 
-    fieldset.find('input.submit.save-template').off('click');
-    fieldset.find('input.submit.save-template').on('click', function(event) {
+    saveAsTemplate.
+      off('change').
+      on('change', function(event) {
+      event.preventDefault();
+      currentTemplate.prop('disabled', !saveAsTemplate.is(':checked'));
+      return false;
+    });
+
+    fieldset.find('input.submit.save-message').
+      off('click').
+      on('click', function(event) {
       var self = this;
 
       event.preventDefault();
-      // We do a quick client-side validation and ask the user for ok
-      // when a template with the same name is already present.
-      var current = currentTemplate.val();
-      if (templateSelector.find('option[value="'+current+'"]').length > 0) {
-        OC.dialogs.confirm(
-          t('cafevdb', 'A template with the name `{TemplateName}\' already exists, '+
-            'do you want to overwrite it?', {TemplateName: current}),
-          t('cafevdb', 'Overwrite existing template?'),
-          function(confirmed) {
-            if (confirmed) {
-              applyComposerControls.call(self, event, { 'Request': 'saveTemplate' });
-            }
-          },
-          true);
+
+      if (saveAsTemplate.is(':checked')) {
+        // We do a quick client-side validation and ask the user for ok
+        // when a template with the same name is already present.
+        var current = currentTemplate.val();
+        if (storedEmailsSelector.find('option[value="'+current+'"]').length > 0) {
+          OC.dialogs.confirm(
+            t('cafevdb', 'A template with the name `{TemplateName}\' already exists, '+
+              'do you want to overwrite it?', {TemplateName: current}),
+            t('cafevdb', 'Overwrite existing template?'),
+            function(confirmed) {
+              if (confirmed) {
+                applyComposerControls.call(self, event, { 'Request': 'saveTemplate' });
+              }
+            },
+            true);
+        } else {
+          applyComposerControls.call(self, event, { 'Request': 'saveTemplate' });
+        }
       } else {
-        applyComposerControls.call(self, event, { 'Request': 'saveTemplate' });
+        applyComposerControls.call(self, event, { 'Request': 'saveDraft',
+                                                  'SubmitAll': true
+                                                });
       }
       return false;
     });
 
-    fieldset.find('input.submit.delete-template').off('click');
-    fieldset.find('input.submit.delete-template').on('click', function(event) {
+    fieldset.find('input.submit.delete-message').
+      off('click').
+      on('click', function(event) {
       var self = this;
       event.preventDefault();
-      // We do a quick client-side validation and ask the user for ok.
-      var current = currentTemplate.val();
-      if (templateSelector.find('option[value="'+current+'"]').length > 0) {
-        OC.dialogs.confirm(
-          t('cafevdb',
-            'Do you really want to delete the template with the name `{TemplateName}\'?',
-            {TemplateName: current}),
-          t('cafevdb', 'Really Delete Template?'),
-          function(confirmed) {
-            if (confirmed) {
-              applyComposerControls.call(self, event, { 'Request': 'deleteTemplate' });
-            }
-          },
-          true);
+
+      if (saveAsTemplate.is(':checked')) {
+        // We do a quick client-side validation and ask the user for ok.
+        var current = currentTemplate.val();
+        if (storedEmailsSelector.find('option[value="'+current+'"]').length > 0) {
+          OC.dialogs.confirm(
+            t('cafevdb',
+              'Do you really want to delete the template with the name `{TemplateName}\'?',
+              {TemplateName: current}),
+            t('cafevdb', 'Really Delete Template?'),
+            function(confirmed) {
+              if (confirmed) {
+                applyComposerControls.call(self, event, { 'Request': 'deleteTemplate' });
+              }
+            },
+            true);
+        } else {
+          OC.dialogs.alert(t('cafevdb',
+                             'Cannot delete non-existing template `{TemplateName}\'',
+                             {TemplateName: current}),
+                           t('cafevdb', 'Unknown Template'));
+        }
       } else {
+        var draft = fieldset.find('input[name="emailComposer[MessageDraftId]"]').val();
+
+        if (draft >= 0) {
+          OC.dialogs.confirm(
+            t('cafevdb',
+              'Do you really want to delete the backup copy of the current message (id = {Id})?',
+              {Id: draft}),
+            t('cafevdb', 'Really Delete Draft?'),
+            function(confirmed) {
+              if (confirmed) {
+                applyComposerControls.call(self, event, {
+                  'Request': 'deleteDraft',
+	          'messageDraftId': draft
+                });
+              }
+            },
+            true);
+        }
+      }
+      return false;
+    });
+
+    storedEmailsSelector.off('change');
+    storedEmailsSelector.on('change', function(event) {
+      var self = this;
+
+      event.preventDefault();
+
+      var choice = storedEmailsSelector.val();
+      if (choice.match(/^__draft-[0-9]+$/)) {
+        applyComposerControls.call(this, event, { 'Request': 'loadDraft' },
+                                   function(lock) {
+                                     if (lock) {
+                                       dialogWidget.addClass('pme-table-dialog-blocked');
+                                     } else {
+                                       dialogWidget.removeClass('pme-table-dialog-blocked');
+                                       dialogHolder.tabs('option', 'disabled', []);
+                                     }
+                                   });
+      } else if (choice.match(/__draft--1/)) {
         OC.dialogs.alert(t('cafevdb',
-                           'Cannot delete non-existing template `{TemplateName}\'',
-                           {TemplateName: current}),
-                         t('cafevdb', 'Unknown Template'));
+                           'There are currently no stored draft messages available.'),
+                           t('cafevdb', 'No Drafts Available'),
+                         function() {
+                           CAFEVDB.selectMenuReset(storedEmailsSelector);
+                         });
+      } else {
+        applyComposerControls.call(this, event, { 'Request': 'setTemplate' });
       }
-      return false;
-    });
 
-    templateSelector.off('change');
-    templateSelector.on('change', function(event) {
-      applyComposerControls.call(this, event, { 'Request': 'setTemplate' });
       return false;
     });
 
@@ -1107,6 +1306,10 @@ CAFEVDB.Email = CAFEVDB.Email || {};
              dialogHolder.html(data.data.contents);
              $('body').append(dialogHolder);
 
+             var emailForm = $('form#cafevdb-email-form');
+             var recipientsPanel = dialogHolder.find('div#emailformrecipients');
+             var composerPanel = dialogHolder.find('div#emailformcomposer');
+
              var dlgTitle = '';
              if (data.data.projectId >= 0) {
                dlgTitle = t('cafevdb', 'Em@il Form for {ProjectName}',
@@ -1140,7 +1343,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                    return false;
                  });
                  var dialogWidget = dialogHolder.dialog('widget');
-                 if (single) {
+                 if (false && single) {
                    dialogHolder.find('li#emailformrecipients-tab').prop('disabled', true);
                    dialogHolder.find('li#emailformrecipients-tab a').prop('disabled', true);
                  }
@@ -1170,9 +1373,11 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                          $('#attachment_upload_start').fileupload('option', 'dropZone', ui.newPanel);
                        } else {
                          $('#attachment_upload_start').fileupload('option', 'dropZone', null);
+                         var recipientsFieldSet = emailForm.find('fieldset.email-recipients.page');
+                         Email.emailFormRecipientsSelectControls(dialogHolder, recipientsFieldSet);
                        }
 
-                       // At least in FF their is also a resize event,
+                       // At least in FF there is also a resize event,
                        // but only for the composition window. Don't
                        // know why.
                        Email.tabResize(dialogWidget, ui.newPanel);
@@ -1191,14 +1396,15 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                      ui.newPanel.css('max-height', '');
                      ui.newPanel.css('height', 'auto');
 
-                     if (oldTabId != 'emailformrecipients-tab' || newTabId != 'emailformcomposer-tab') {
+                     if (oldTabId != 'emailformrecipients-tab' ||
+                         newTabId != 'emailformcomposer-tab') {
                        return true;
                      }
 
                      // we better serialize the entire form here
-                     var emailForm = $('form#cafevdb-email-form');
                      var post = emailForm.serialize();
-                     post += '&emailComposer[Request]=update&emailComposer[FormElement]=TO'; // place our update request
+                     // place our update request
+                     post += '&emailComposer[Request]=update&emailComposer[FormElement]=TO';
                      $.post(OC.filePath('cafevdb', 'ajax/email', 'composer.php'),
                             post,
                             function(data) {
@@ -1225,81 +1431,20 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                    }
                  });
 
-                 var emailForm = $('form#cafevdb-email-form');
-
-                 var layoutRecipientsFilter = function() {
-                   var emailForm = $('form#cafevdb-email-form');
-                   emailForm.find('#member-status-filter').chosen();
-                   emailForm.find('#member-status-filter').chosen();
-                   emailForm.find('#instruments-filter option[value="*"]').remove();
-                   emailForm.find('#instruments-filter option[value=""]').remove();
-                   emailForm.find('#instruments-filter').chosen();
-                   emailForm.find('#recipients-select').bootstrapDualListbox(
-                     {
-                       // moveOnSelect: false,
-                       // preserveSelectionOnMove : 'all',
-                       moveAllLabel: t('cafevdb', 'Move all'),
-                       moveSelectedLabel: t('cafevdb', 'Move selected'),
-                       removeSelectedLabel: t('cafevdb', 'Remove selected'),
-                       removeAllLabel: t('cafevdb', 'Remove all'),
-                       nonSelectedListLabel: t('cafevdb', 'Remaining Recipients'),
-                       selectedListLabel   : t('cafevdb', 'Selected Recipients'),
-                       infoText            : '&nbsp;', // t('cafevdb', 'Showing all {0}'),
-                       infoTextFiltered    : '<span class="label label-warning">'
-                                           + t('cafevdb', 'Filtered')
-                                           + '</span> {0} '
-                                           + t('cafevdb', 'from')
-                                           +' {1}',
-                       infoTextEmpty       : t('cafevdb', 'Empty list'),
-                       filterPlaceHolder   : t('cafevdb', 'Filter'),
-                       filterTextClear     : t('cafevdb', 'show all')
-                     }
-                   );
-                   var dualSelect = emailForm.find('div.bootstrap-duallistbox-container select');
-                   dualSelect.attr(
-                     'title',
-                     t('cafevdb', 'Click on the names to move the respective person to the other box'));
-                   dualSelect.addClass('tipsy-s');
-
-                   CAFEVDB.tipsy(dialogHolder.find('div#emailformrecipients'));
-                 };
-
-                 var layoutMessageComposer = function() {
-                   CAFEVDB.addEditor(dialogHolder.find('textarea.wysiwygeditor'), undefined, '20em');
-                   $('#cafevdb-email-template-selector').chosen({ disable_search_threshold: 10 });
-
-                   var composerPanel = $('#emailformcomposer');
-                   var fileAttachmentsSelect = composerPanel.find('#file-attachments-selector');
-                   fileAttachmentsSelect.chosen();
-                   fileAttachmentsSelect.on('chosen:showing_dropdown', function(event) {
-                     composerPanel.stop().animate({
-                       scrollTop: composerPanel.prop('scrollHeight')
-                     }, 2000);
-                   });
-                   var eventAttachmentsSelect = composerPanel.find('#event-attachments-selector');
-                   eventAttachmentsSelect.chosen();
-                   eventAttachmentsSelect.on('chosen:showing_dropdown', function(event) {
-                     composerPanel.stop().animate({
-                       scrollTop: composerPanel.prop('scrollHeight')
-                     }, 2000);
-                   });
-
-                   CAFEVDB.tipsy(dialogHolder.find('div#emailformcomposer'));
-                 }
+                 var recipientsFieldSet = emailForm.find('fieldset.email-recipients.page');
+                 var composerFieldSet = emailForm.find('fieldset.email-composition.page');
 
                  // Fine, now add handlers and AJAX callbacks. We can
                  // probably move some of the code above to the
                  // respective tab-handler.
-                 Email.emailFormRecipientsHandlers(emailForm.find('fieldset.email-recipients.page'),
+                 Email.emailFormRecipientsHandlers(recipientsFieldSet,
                                                    emailForm,
                                                    dialogHolder,
-                                                   dialogHolder.find('div#emailformrecipients'),
-                                                   layoutRecipientsFilter);
-                 Email.emailFormCompositionHandlers(emailForm.find('fieldset.email-composition.page'),
+                                                   recipientsPanel);
+                 Email.emailFormCompositionHandlers(composerFieldSet,
                                                     emailForm,
                                                     dialogHolder,
-                                                    dialogHolder.find('div#emailformcomposer'),
-                                                    layoutMessageComposer);
+                                                    composerPanel);
                },
                close: function() {
                  $('.tipsy').remove();

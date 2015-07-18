@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2015 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -40,43 +40,73 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
   <!-- <legend id="cafevdb-email-form-legend"><?php echo L::t('Compose Em@il'); ?></legend> -->
   <?php echo Navigation::persistentCGI('emailComposer', $_['ComposerFormData']); ?>
   <table class="cafevdb-email-composition-form">
-    <tr class="email-template">
-      <td class="caption email-template"><?php echo L::t("Templates"); ?></td>
-      <td class="email-template-choose email-template">
-        <label notitle="<?php echo Config::toolTips('select-email-template'); ?>">
-          <select size="<?php echo count($_['templateNames']); ?>"
-                  class="email-template-selector"
-                  title="<?php echo Config::toolTips('select-email-template'); ?>"
-                  data-placeholder="<?php echo L::t("Select email template"); ?>"
-                  name="emailComposer[TemplateSelector]"
-                  id="cafevdb-email-template-selector">
+    <tr class="stored-messages">
+     <!-- <td class="caption stored-messages"><?php echo L::t("Drafts"); ?>, <?php echo L::t('Templates')?></td> -->
+      <td colspan="2" class="stored-messages-choose stored-messages">
+        <label notitle="<?php echo Config::toolTips('select-stored-messages'); ?>">
+          <select size="<?php echo
+                              count($_['storedEmails']['drafts']) +
+                              count($_['storedEmails']['templates']); ?>"
+                  class="stored-messages-selector"
+                  title="<?php echo Config::toolTips('select-stored-messages'); ?>"
+                  data-placeholder="<?php echo L::t("Select draft or template"); ?>"
+                  name="emailComposer[StoredMessagesSelector]"
+                  id="cafevdb-stored-messages-selector">
             <?php
-            foreach ($_['templateNames'] as $template) {
+            echo '
+            <optgroup label="'.L::t('Drafts').'">
+';
+            foreach ($_['storedEmails']['drafts'] as $draft) {
               echo '
-            <option value="'.$template.'">'.$template.'</option>';
+              <option value="__draft-'.$draft['value'].'">'.$draft['name'].'</option>
+';
             }
+            echo '
+            </optgroup>';
+            echo '<optgroup label="'.L::t('Templates').'">
+';
+            foreach ($_['storedEmails']['templates'] as $template) {
+              echo '
+              <option value="'.$template.'">'.$template.'</option>
+';
+            }
+            echo '
+            </optgroup>';
             ?>
           </select>
         </label>
       </td>
-      <td class="email-template-storage email-template">
+      <td class="stored-messages-storage stored-messages">
         <input size="20" placeholder="<?php echo L::t('New Template Name'); ?>"
         <?php echo ($_['templateName'] != '' ? 'value="'.$_['templateName'].'"' : ''); ?>
                title="<?php echo Config::toolTips('new-email-template'); ?>"
                name="emailComposer[TemplateName]"
                type="text"
                class="tipsy-n"
-               id="emailCurrentTemplate">
-        <input title="<?php echo Config::toolTips('save-email-template'); ?>"
+               id="emailCurrentTemplate"
+               disabled="disabled">
+        <span class="inner vmiddle container save-as-template">
+          <input type="checkbox"
+                 id="check-save-as-template"
+                 title="<?php echo Config::toolTips('save-as-template'); ?>"
+                 class="checkbox save-as-template tipsy-wide tipsy-ne"
+                 name="emailComposer[SaveAsTemplate]"/>
+          <label for="check-save-as-template"
+                 class="tip save-as-template"
+                 title="<?php echo Config::toolTips('save-as-template'); ?>">
+            <span class="save-as-template button"></span>
+          </label>
+        </span>
+        <input title="<?php echo Config::toolTips('save-email-message'); ?>"
                type="submit"
-               class="submit save-template tipsy-wide tipsy-ne"
-               name="emailComposer[SaveTemplate]"
-               value="<?php echo L::t('Save as Template'); ?>"/>
-        <input title="<?php echo Config::toolTips('delete-email-template'); ?>"
+               class="submit save-message tipsy-wide tipsy-ne"
+               name="emailComposer[SaveMessage]"
+               value="<?php echo L::t('Save Message'); ?>"/>
+        <input title="<?php echo Config::toolTips('delete-saved-message'); ?>"
                type="submit"
-               class="submit delete-template tipsy-ne"
-               name="emailComposer[DeleteTemplate]"
-               value="<?php echo L::t('Delete Template'); ?>"/>
+               class="submit delete-message tipsy-ne"
+               name="emailComposer[DeleteMessage]"
+               value="<?php echo L::t('Delete Message'); ?>"/>
       </td>
     </tr>
 
@@ -243,10 +273,6 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
                class="email-composer submit message-export"
                type="submit" name="emailComposer[MessageExport]"
                value="<?php echo L::t('Export Message'); ?>"/>
-       <!-- <input title="<?php echo Config::toolTips('email-message-save'); ?>"
-               class="email-composer submit message-save"
-               type="submit" name="emailComposer[MessageSave]"
-               value="<?php echo L::t('Save Message'); ?>"/> -->
       </td>
       <td class="cancel">
         <input title="<?php echo Config::tooltips('cancel-email-composition'); ?>"

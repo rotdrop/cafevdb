@@ -495,6 +495,12 @@ var CAFEVDB = CAFEVDB || {};
     return output;
   };
 
+  CAFEVDB.selectMenuReset = function(select) {
+    // deselect menu item
+    select.find('option').prop('selected', false);
+    select.trigger("chosen:updated");
+  };
+
   CAFEVDB.chosenActive = function(select) {
     return select.data('chosen') != undefined;
   };
@@ -724,12 +730,8 @@ var CAFEVDB = CAFEVDB || {};
     // menu, so let the text remain at its default value. Make sure to
     // also remove and re-attach the tool-tips, otherwise some of the
     // tips remain, because chosen() removes the element underneath.
-    select.children('option').each(function(i, elm) {
-      $(elm).removeAttr('selected');
-    });
+    CAFEVDB.selectMenuReset(select);
     $('.tipsy').remove();
-
-    select.trigger("chosen:updated");
 
     $('div.chosen-container').tipsy({gravity:'sw', fade:true});
     $('li.active-result').tipsy({gravity:'w', fade:true});

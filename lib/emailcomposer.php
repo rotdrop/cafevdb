@@ -74,6 +74,8 @@ Unkostenbeitrag
 mandateReference
 insuranceFee
 ';
+    const POST_TAG = 'emailComposer';
+
     private $opts; ///< For db connection and stuff.
     private $dbh;  ///< Data-base handle.
     private $user; ///< Owncloud user.
@@ -93,8 +95,9 @@ insuranceFee
     private $catchAllName;  ///< The default From: name.
 
     private $initialTemplate;
-    private $templateNames;
     private $templateName;
+
+    private $draftId; ///< The ID of the current message draft, or -1
 
     private $messageTag;
 
@@ -118,7 +121,7 @@ insuranceFee
       $this->constructionMode = Config::$opts['emailtestmode'] != 'off';
       $this->setCatchAll();
 
-      $this->cgiData = Util::cgiValue('emailComposer', array());
+      $this->cgiData = Util::cgiValue(self::POST_TAG, array());
 
       $this->recipients = $recipients;
 
@@ -133,9 +136,10 @@ insuranceFee
       $this->setDefaultTemplate();
 
       $this->templateName = 'Default';
-      $this->templateNames = $this->fetchTemplateNames(); // all from data-base
 
       $this->messageContents = $this->initialTemplate;
+
+      $this->draftId = $this->cgiValue('MessageDraftId', -1);
 
       // Set to false on error
       $this->executionStatus = true;
@@ -177,7 +181,7 @@ insuranceFee
       if (!$this->submitted) {
         // Leave everything at default state, except for an optional
         // initial template and subject
-        $initialTemplate = $this->cgiValue('TemplateSelector', false);
+        $initialTemplate = $this->cgiValue('StoredMessagesSelector', false);
         if ($initialTemplate !== false) {
           $template = $this->fetchTemplate($initialTemplate);
           if ($template !== false) {
@@ -189,24 +193,37 @@ insuranceFee
       }
 
       $this->messageContents = $this->cgiValue('MessageText', $this->initialTemplate);
-      if (($value = $this->cgiValue('TemplateSelector', false))) {
-        $this->templateName = $value;
-        $this->messageContents = $this->fetchTemplate($this->templateName);
-      } else if (($value = $this->cgiValue('DeleteTemplate', false))) {
-        $this->deleteTemplate($this->cgiValue('TemplateName'));
-        $this->setDefaultTemplate();
-        $this->messageContents = $this->initialTemplate;
-        $this->templateNames = $this->fetchTemplateNames(); // refresh
-      } else if (($value = $this->cgiValue('SaveTemplate', false))) {
-        if ($this->validateTemplate($this->messageContents)) {
-          $this->storeTemplate($this->cgiValue('TemplateName'), $this->messageContents);
-          $this->templateNames = $this->fetchTemplateNames(); // refresh
+
+      if (($value = $this->cgiValue('StoredMessagesSelector', false))) {
+        if (preg_match('/__draft-(-?[0-9]+)/', $value, $matches)) {
+          $this->draftId = $matches[1];
+          // TODO: actually read the message in ...
         } else {
-          $this->executionStatus = false;
+          $this->templateName = $value;
+          $this->messageContents = $this->fetchTemplate($this->templateName);
+          $this->draftId = -1; // avoid accidental overwriting
+        }
+      } else if (($value = $this->cgiValue('DeleteMessage', false))) {
+        if (($value = $this->cgiValue('SaveAsTemplate', false))) {
+          $this->deleteTemplate($this->cgiValue('TemplateName'));
+          $this->setDefaultTemplate();
+          $this->messageContents = $this->initialTemplate;
+        } else {
+          $this->deleteDraft();
+        }
+      } else if (($value = $this->cgiValue('SaveMessage', false))) {
+        if (($value = $this->cgiValue('SaveAsTemplate', false))) {
+          if ($this->validateTemplate($this->messageContents)) {
+            $this->storeTemplate($this->cgiValue('TemplateName'), $this->messageContents);
+          } else {
+            $this->executionStatus = false;
+          }
+        } else {
+          $this->storeDraft();
         }
       } else if ($this->cgiValue('Cancel', false)) {
         // do some cleanup, i.e. remove temporay storage from file attachments
-        self::cleanTemporaries();
+        $this->cleanTemporaries();
       } else if ($this->cgiValue('Send', false)) {
         if (!$this->preComposeValidation()) {
           return;
@@ -216,7 +233,11 @@ insuranceFee
         // any kind of "nasty" exceptions.
         $this->sendMessages();
         if (!$this->errorStatus()) {
+          // Hurray!!!
           $this->diagnostics['Caption'] = L::t('Message(s) sent out successfully!');
+
+          // If sending out a draft, remove the draft.
+          $this->deleteDraft();
         }
       } else if ($this->cgiValue('MessageExport', false)) {
         if (!$this->preComposeValidation()) {
@@ -729,6 +750,9 @@ insuranceFee
       // compute the MD5 stuff for the attachments
       $attachLog = array();
       foreach ($logMessage->fileAttach as $attachment) {
+        if ($attachment['status'] != 'selected') {
+          continue;
+        }
         if ($attachment['name'] != "") {
           $md5val = md5_file($attachment['tmp_name']);
           $attachLog[] = array('name' => $attachment['name'],
@@ -776,17 +800,17 @@ insuranceFee
 
       $logQuery .= ') VALUES (';
       $logQuery .= "'".$this->user."','".$_SERVER['REMOTE_ADDR']."'";
-      $logQuery .= ",'".mysql_real_escape_string($bulkRecipients, $handle)."'";
-      $logQuery .= ",'".mysql_real_escape_string($bulkMD5, $handle)."'";
-      $logQuery .= ",'".mysql_real_escape_string($logMessage->CC, $handle)."'";
-      $logQuery .= ",'".mysql_real_escape_string($logMessage->BCC, $handle)."'";
-      $logQuery .= ",'".mysql_real_escape_string($logMessage->subject, $handle)."'";
-      $logQuery .= ",'".mysql_real_escape_string($logMessage->message, $handle)."'";
-      $logQuery .= ",'".mysql_real_escape_string($textMD5, $handle)."'";
+      $logQuery .= ",'".mySQL::escape($bulkRecipients, $handle)."'";
+      $logQuery .= ",'".mySQL::escape($bulkMD5, $handle)."'";
+      $logQuery .= ",'".mySQL::escape($logMessage->CC, $handle)."'";
+      $logQuery .= ",'".mySQL::escape($logMessage->BCC, $handle)."'";
+      $logQuery .= ",'".mySQL::escape($logMessage->subject, $handle)."'";
+      $logQuery .= ",'".mySQL::escape($logMessage->message, $handle)."'";
+      $logQuery .= ",'".mySQL::escape($textMD5, $handle)."'";
       foreach ($attachLog as $pairs) {
         $logQuery .=
-          ",'".mysql_real_escape_string($pairs['name'], $handle)."'".
-          ",'".mysql_real_escape_string($pairs['md5'], $handle)."'";
+          ",'".mySQL::escape($pairs['name'], $handle)."'".
+          ",'".mySQL::escape($pairs['md5'], $handle)."'";
       }
       $logQuery .= ")";
 
@@ -1389,7 +1413,7 @@ insuranceFee
       return $text;
     }
 
-    private function dataBaseConnect()
+    public function dataBaseConnect()
     {
       if ($this->dbh === false) {
         $this->dbh = mySQL::connect($this->opts);
@@ -1413,12 +1437,12 @@ insuranceFee
     {
       $handle = $this->dataBaseConnect();
 
-      $contents = mysql_real_escape_string($contents, $handle);
+      $contents = mySQL::escape($contents, $handle);
 
       $query = "REPLACE INTO `EmailTemplates` (`Tag`,`Contents`)
   VALUES ('".$templateName."','".$contents."')";
 
-      // Ignore the result at this point.o
+      // Ignore the result at this point.
       mySQL::query($query, $handle);
     }
 
@@ -1430,7 +1454,7 @@ insuranceFee
 
       $query = "DELETE FROM `EmailTemplates` WHERE `Tag` LIKE '".$templateName."'";
 
-      // Ignore the result at this point.o
+      // Ignore the result at this point.
       mySQL::query($query, $handle);
     }
 
@@ -1457,16 +1481,141 @@ insuranceFee
       $query  = "SELECT `Tag` FROM `EmailTemplates` WHERE 1";
       $result = mySQL::query($query, $handle);
       $names  = array();
-      while ($line = mysql_fetch_assoc($result)) {
+      while ($line = mySQL::fetch($result)) {
         $names[] = $line['Tag'];
       }
 
       return $names;
     }
 
+    /**Return an associative matrix with all currently stored draft
+     * messages.  In order to load the draft we only need the id. The
+     * list of drafts is used to generate a select menu where some
+     * fancy title is displayed and the option value is the unique
+     * draft id.
+     */
+    private function fetchDraftsList()
+    {
+      $handle = $this->dataBaseConnect();
+
+      $query = "SELECT Id, Subject, Created, Updated FROM EmailDrafts WHERE 1";
+      $result = mySQL::query($query, $handle);
+      $drafts = array();
+      while ($line = mySQL::fetch($result)) {
+        $stamp = max(strtotime($line['Updated']),
+                     strtotime($line['Created']));
+        $stamp = date('Y-m-d', $stamp);
+        $drafts[] = array('value' => $line['Id'],
+                          'name' => $stamp . ": " . $line['Subject']);
+      }
+      if (count($drafts) == 0) {
+        $drafts = array(array('value' => -1,
+                              'name' => L::t('empty')));
+      }
+      return $drafts;
+    }
+
+    /**Store a draft message. The only constraint on the "operator
+     * behaviour" is that the subject must not be empty. Otherwise in
+     * any way incomplete messages may be stored as drafts.
+     */
+    private function storeDraft()
+    {
+      if ($this->subject() == '') {
+        $this->diagnostics['SubjectValidation'] = $this->messageTag;
+        $this->executionStatus = false;
+        return;
+      } else {
+        $this->diagnostics['SubjectValidation'] = true;
+      }
+
+      $draftData = array('ProjectId' => $_POST['ProjectId'],
+                         'ProjectName' => $_POST['ProjectName'],
+                         self::POST_TAG => $_POST[self::POST_TAG],
+                         EmailRecipientsFilter::POST_TAG => $_POST[EmailRecipientsFilter::POST_TAG]);
+
+      unset($draftData[self::POST_TAG]['Request']);
+      unset($draftData[self::POST_TAG]['SubmitAll']);
+      unset($draftData[self::POST_TAG]['SaveMessage']);
+
+      $dataJSON = json_encode($draftData);
+      $subject = $this->subjectTag() . ' ' . $this->subject();
+
+      $handle = $this->dataBaseConnect();
+      $dataJSON = mySQL::escape($dataJSON, $handle);
+      $subject = mySQL::escape($subject, $handle);
+
+      if ($this->draftId >= 0) {
+        $query = "INSERT INTO `EmailDrafts` (Id,Subject,Data,Created)
+  VALUES (".$this->draftId.",'".$subject."','".$dataJSON."',NOW())
+  ON DUPLICATE KEY UPDATE
+  Subject = '".$subject."', Data = '".$dataJSON."'";
+        if (mySQL::query($query, $handle, false, true) === false) {
+          $this->executionStatus = false;
+        }
+      } else {
+        $query = "INSERT INTO `EmailDrafts` (Subject,Data,Created)
+  VALUES ('".$subject."','".$dataJSON."',NOW())";
+        if (mySQL::query($query, $handle) === false) {
+          $this->executionStatus = false;
+        } else {
+          $newId = MySQL::newestIndex($handle);
+          if (!$newId) {
+            $this->executionStatus = false;
+          } else {
+            $this->draftId = $newId;
+          }
+        }
+      }
+
+      // Update the list of attachments, if any
+      foreach ($this->fileAttachments() as $attachment) {
+        self::rememberTemporaryFile($attachment['tmp_name']);
+      }
+    }
+
+    /**Preliminary draft read-back. */
+    public function loadDraft()
+    {
+      if ($this->draftId >= 0) {
+        $handle = $this->dataBaseConnect();
+
+        $data = mySQL::fetchRows('EmailDrafts', "`Id` = ".$this->draftId, $handle);
+
+        if (count($data) == 1) {
+          $draftData = json_decode($data[0]['Data'], true, 512, JSON_BIGINT_AS_STRING);
+
+          // undo request actions
+          unset($draftData[self::POST_TAG]['Request']);
+          unset($draftData[self::POST_TAG]['SubmitAll']);
+          unset($draftData[self::POST_TAG]['SaveMessage']);
+
+          return $draftData;
+        }
+      }
+      return false;
+    }
+
+    /**Delete the current message draft. */
+    private function deleteDraft()
+    {
+      if ($this->draftId >= 0 )  {
+        $handle = $this->dataBaseConnect();
+
+        $query = "DELETE FROM `EmailDrafts` WHERE `Id` = ".$this->draftId;
+
+        // Ignore the result at this point.
+        mySQL::query($query, $handle);
+
+        // detach any attachnments for later clean-up
+        $this->detachTemporaryFiles();
+
+        // Mark as gone
+        $this->draftId = -1;
+      }
+    }
 
     /**** file temporary utilities ***/
-
 
     /**Delete all temorary files not found in $fileAttach. If the file
      * is successfully removed, then it is also removed from the
@@ -1476,10 +1625,18 @@ insuranceFee
      *
      * @return Undefined.
      */
-    private static function cleanTemporaries($fileAttach = array())
+    public function cleanTemporaries($fileAttach = array())
     {
-      // Fetch the files from the config-space
-      $tmpFiles = self::fetchTemporaries();
+      $handle = $this->dataBaseConnect();
+
+      $tmpFiles = mySQL::fetchRows("EmailAttachments",
+                                   "`User` LIKE '".$this->user."' AND `MessageId` = -1",
+                                   $handle, false, true);
+
+      if ($tmpFiles === false) {
+        $this->executionStatus = false;
+        return;
+      }
 
       $toKeep = array();
       foreach ($fileAttach as $files) {
@@ -1489,34 +1646,60 @@ insuranceFee
         }
       }
 
-      foreach ($tmpFiles as $key => $tmpFile) {
-        if (array_search($tmpFile, $toKeep) !== false) {
+      foreach ($tmpFiles as $tmpFile) {
+        $fileName = $tmpFile['FileName'];
+        if (array_search($fileName, $toKeep) !== false) {
           continue;
         }
-        @unlink($tmpFile);
-        if (!@is_file($tmpFile)) {
-          unset($tmpFiles[$key]);
+        @unlink($fileName);
+        if (!@is_file($fileName)) {
+          $this->forgetTemporaryFile($fileName);
         }
       }
-      self::storeTemporaries($tmpFiles);
     }
 
-    /**Fetch the list of temporaries from the config-space.
+    /**Detach temporaries from a draft, i.e. after deleting the draft. */
+    private function detachTemporaryFiles()
+    {
+      $handle = $this->dataBaseConnect();
+
+      $query = "UPDATE `EmailAttachments` SET
+  `MessageId` = -1, `User` = '".$this->user."'
+  WHERE `MessageId` = ".$this->draftId;
+      if (mySQL::query($query, $handle, false, true) === false) {
+        $this->executionStatus = false;
+      }
+    }
+
+    /**Remember a temporary file. Files attached to message drafts are
+     * remembered across sessions, temporaries not attached to message
+     * drafts are cleaned at logout and when closing the email form.
      */
-    private static function fetchTemporaries()
+    private function rememberTemporaryFile($tmpFile)
     {
-      // Remember the file in the data-base for cleaning up later
-      $tmpFiles = Config::getUserValue('attachments','');
-      $tmpFiles = preg_split('@,@', $tmpFiles, NULL, PREG_SPLIT_NO_EMPTY);
+      $handle = $this->dataBaseConnect();
 
-      return $tmpFiles;
+      $tmpFile = mySQL::escape($tmpFile, $handle);
+      $query = "INSERT IGNORE INTO `EmailAttachments` (`MessageId`,`User`,`FileName`)
+  VALUES (".$this->draftId.",'".$this->user."','".$tmpFile."')
+  ON DUPLICATE KEY UPDATE
+    `MessageId` = ".$this->draftId.",
+    `User` = '".$this->user."'";
+      if (mySQL::query($query, $handle, false, true) === false) {
+        $this->executionStatus = false;
+      }
     }
 
-    /**Store a list of temporaries in the config-space.*/
-    private static function storeTemporaries($tmpFiles)
+    /**Forget a temporary file, i.e. purge it from the data-base. */
+    private function forgetTemporaryFile($tmpFile)
     {
-      // Remember the file in the data-base for cleaning up later
-      Config::setUserValue('attachments',implode(',',$tmpFiles));
+      $handle = $this->dataBaseConnect();
+
+      $tmpFile = mySQL::escape($tmpFile, $handle);
+      $query = "DELETE FROM `EmailAttachments` WHERE `FileName` LIKE '".$tmpFile."'";
+      if (mySQL::query($query, $handle, false, true) === false) {
+        $this->executionStatus = false;
+      }
     }
 
     /**Handle file uploads. In order for upload to survive we have to
@@ -1533,7 +1716,7 @@ insuranceFee
      * @return Copy of $fileRecord with changed temporary file which
      * survives script-reload, or @c false on error.
      */
-    public static function saveAttachment($fileRecord, $local = false)
+    public function saveAttachment($fileRecord, $local = false)
     {
       if ($fileRecord['name'] != '') {
         $tmpdir = ini_get('upload_tmp_dir');
@@ -1546,9 +1729,7 @@ insuranceFee
         }
 
         // Remember the file in the data-base for cleaning up later
-        $tmpFiles = self::fetchTemporaries();
-        $tmpFiles[] = $tmpFile;
-        self::storeTemporaries($tmpFiles);
+        $this->rememberTemporaryFile($tmpFile);
 
         if ($local) {
           // Move the uploaded file
@@ -1574,13 +1755,10 @@ insuranceFee
           }
         }
 
-        // Clean up.
+        // Clean up after error
         unlink($tmpFile);
-        $tmpFiles = self::fetchTemporaries();
-        if (($key = array_search($tmpFile, $tmpFiles)) !== false) {
-          unset($tmpFiles[$key]);
-          self::storeTemporaries($tmpFiles);
-        }
+        $this->forgetTemporaryFile($tmpFile);
+
         return false;
       }
       return false;
@@ -1591,7 +1769,8 @@ insuranceFee
     /**General form data for hidden input elements.*/
     public function formData()
     {
-      return array('FormStatus' => 'submitted');
+      return array('FormStatus' => 'submitted',
+                   'MessageDraftId' => $this->draftId);
     }
 
     /**Return the current catch-all email. */
@@ -1619,16 +1798,27 @@ insuranceFee
       return htmlspecialchars(implode(', ', $toString));
     }
 
-    /**Export the array of email templates. */
-    public function emailTemplates()
+    /***Export an option array suitable to load stored email messages,
+     * currently templates and message drafts. */
+    public function storedEmails()
     {
-      return $this->templateNames;
+      $drafts = $this->fetchDraftsList();
+      $templates = $this->fetchTemplateNames();
+
+      return array('drafts' => $drafts,
+                   'templates' => $templates);
     }
 
     /**Export the currently selected template name. */
     public function currentEmailTemplate()
     {
       return $this->templateName;
+    }
+
+    /**Export the currently selected draft id. */
+    public function messageDraftId()
+    {
+      return $this->draftId;
     }
 
     /**Export the subject tag depending on whether we ar in "project-mode" or not. */

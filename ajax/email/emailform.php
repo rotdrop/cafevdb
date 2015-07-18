@@ -24,7 +24,7 @@
  * Lead-in handler for email-form.
  */
 
-namespace CAFEVDB {  
+namespace CAFEVDB {
 
   \OCP\JSON::checkLoggedIn();
   \OCP\JSON::checkAppEnabled('cafevdb');
@@ -44,7 +44,7 @@ namespace CAFEVDB {
 
     if (Util::debugMode('request')) {
       $debugText .= '$_POST[] = '.print_r($_POST, true);
-    }  
+    }
 
     // Get some common post data, rest has to be handled by the
     // recipients and the sender class.
@@ -81,7 +81,7 @@ namespace CAFEVDB {
 
     // Needed for the editor
     $tmpl->assign('templateName', $composer->currentEmailTemplate());
-    $tmpl->assign('templateNames', $composer->emailTemplates());
+    $tmpl->assign('storedEmails', $composer->storedEmails());
     $tmpl->assign('TO', $composer->toString());
     $tmpl->assign('BCC', $composer->blindCarbonCopy());
     $tmpl->assign('CC', $composer->carbonCopy());
@@ -93,7 +93,7 @@ namespace CAFEVDB {
     $tmpl->assign('fileAttachments', $composer->fileAttachments());
     $tmpl->assign('eventAttachments', $composer->eventAttachments());
     $tmpl->assign('ComposerFormData', $composer->formData());
-  
+
     // Needed for the recipient selection
     $tmpl->assign('RecipientsFormData', $recipientsFilter->formData());
     $history = $recipientsFilter->filterHistory();
@@ -108,7 +108,7 @@ namespace CAFEVDB {
 
     $debugText .= ob_get_contents();
     @ob_end_clean();
-  
+
     unset($recipientsFilter);
     unset($composer);
 
@@ -125,7 +125,7 @@ namespace CAFEVDB {
 
     unset($recipientsFilter);
     unset($composer);
-  
+
     $debugText .= ob_get_contents();
     @ob_end_clean();
 
@@ -149,7 +149,7 @@ namespace CAFEVDB {
           'message' => L::t('Error, caught an exception. '.
                             'Please copy the displayed text and send it by email to %s.',
                             array($mailto)),
-          'debug' => htmlspecialchars($debugText)))); 
+          'debug' => htmlspecialchars($debugText))));
 
     return false;
   }

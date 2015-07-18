@@ -25,7 +25,7 @@
  */
 
 namespace CAFEVDB {
-  
+
   \OCP\JSON::checkLoggedIn();
   \OCP\JSON::checkAppEnabled(Config::APP_NAME);
   \OCP\JSON::callCheck();
@@ -53,7 +53,7 @@ namespace CAFEVDB {
       if ($error != 0) {
         $errors = array(
           UPLOAD_ERR_OK => L::t('There is no error, the file uploaded with success'),
-          UPLOAD_ERR_INI_SIZE => L::t('The uploaded file exceeds the upload_max_filesize directive in php.ini: %s', 
+          UPLOAD_ERR_INI_SIZE => L::t('The uploaded file exceeds the upload_max_filesize directive in php.ini: %s',
                                       array(ini_get('upload_max_filesize'))),
           UPLOAD_ERR_FORM_SIZE => L::t('The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form'),
           UPLOAD_ERR_PARTIAL => L::t('The uploaded file was only partially uploaded'),
@@ -94,7 +94,8 @@ namespace CAFEVDB {
         $fileRecord[$key] = $values[$i];
       }
       // Move the temporary files to locations where we can find them later.
-      $fileRecord = EmailComposer::saveAttachment($fileRecord);
+      $composer = new EmailComposer();
+      $fileRecord = $composer->saveAttachment($fileRecord);
 
       // Submit the file-record back to the java-script in order to add the
       // data to the form.
@@ -104,7 +105,7 @@ namespace CAFEVDB {
                                                             array($files['name'][$i]))));
       } else {
         $fileRecord['originalname']      = $fileRecord['name']; // clone
-        $fileRecord['uploadMaxFilesize'] = $maxUploadFileSize;    
+        $fileRecord['uploadMaxFilesize'] = $maxUploadFileSize;
         $fileRecord['maxHumanFilesize']  = $maxHumanFileSize;
         $result[] = array('status' => 'success',
                           'data'   => $fileRecord);

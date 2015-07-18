@@ -78,9 +78,9 @@ same effect as clicking the close button on top of the dialog-window. No email w
 
         'delete-all-file-attachments' => L::t('Delete all uploaded file-attachments from the server. This is also done automatically when closing the email-form. This will also empty the select box.'),
 
-        'delete-email-template' => L::t('Delete the selected email-template (you will be asked for confirmation before it is actually deleted)'),
+        'delete-saved-message' => L::t('Delete the selected email-template or draft. You will be asked for confirmation before it is actually deleted.'),
 
-        'email-account-distribute' => '',
+        'email-account-distribute' => L::t('Distribute the email account credentials to all members of the orchestra group. The credentials will be encrypted using an OpenSSL public key owned by the respective user and stored in the pre-user preferences table.'),
 
         'email-message-export' => L::t('Export the email text as HTML. In the case of per-member variable
 substitutions this will result in a multi-page document with proper page breaks after each message, with all variables substituted.'),
@@ -106,9 +106,9 @@ list.'),
 
         'email-recipients-filter-undo' => L::t('Undo the last recipient filter operation and restore the previous selection of musicians.'),
 
-        'email-recipients-freeform-BCC' => '',
+        'email-recipients-freeform-BCC' => L::t('Add arbitrary further hidden recipients.'),
 
-        'email-recipients-freeform-CC' => '',
+        'email-recipients-freeform-CC' => L::t('Add arbitrary further recipients.'),
 
         'email-recipients-from-project' => L::t('Choose among all musicians currently registered for this project.'),
 
@@ -347,7 +347,7 @@ Als Platzhalter verwendet man `%%\'.'),
           'reloadview' => L::t('Refreshes the current view by reloading all data from the data-base.'),
           'reloadchange' => L::t('Discards all unsaved data and reloads all fields form the
 data-base. Settings which already have been stored by hitting an
-"Apply" button are maintained, though.')
+"Apply" button are maintained, though.'),
           ),
 
         'pme-save' => array(
@@ -485,6 +485,26 @@ selected recipients.'),
 
         'register-musician' => L::t('Add the musician to the project. A new form will open were details like the instrument etc. can be adjustetd.'),
 
+        'save-as-template' => L::t('Activate this checkbox in order to save the current email message as
+message template. If you leave this check-box unchecked, then messages
+will be saved as draft. The difference between a draft and a template
+is the following: draft messages will be deleted when the message is
+actually sent out (and potentially "inactive" drafts will be purged
+from the data-base after some time). Templates will never be
+purged. Also, draft messages will be saved with all attachment and --
+most important -- inlcuding the set of the currently selected
+recipients. Message templates, in contrast, are saved with an empty recipient list, as should be.'),
+
+        'save-email-message' => L::t('Save the currently active email message either as draft
+(i.e. including recipients and attachments) or as message template
+(without recipients and attachments). Message drafts will be deleted
+after actually sending the message, and after some time of inactivity
+(say a month or so), message templates are remembered
+permanently. Please check the check-box to the left of this button in
+order to store the message as template. Either templates or drafts can
+also be "actively" deleted but clicking the delete button to the right
+of this button.'),
+
         'save-email-template' => L::t('Save the current email for later re-usal in the data-base.
 An email template can contain per-member substitutions with the syntax ${MEMBER::VARIABLE},
 where VARIABLE is one of VORNAME, NAME, EMAIL, TELEFON_1, TELEFON_2, STRASSE, PLZ, STADT and LAND.
@@ -492,6 +512,8 @@ There is also one global (i.e. not per-member) substitution ${GLOABL::ORGANIZER}
 by the pre-names of the organizing committe in order to compose  greetings.'),
 
         'select-email-template' => L::t('Select one of the email templates previously stored in the data-base.'),
+
+        'select-stored-messages' => L::t('Select either a message draft or template as base for the current message.'),
 
         'send-mass-email' => L::t('Attempt to send the stuff you have composed out to your selection of
 recipients. Please think thrice about it. In case of an error

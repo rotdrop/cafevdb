@@ -72,7 +72,9 @@ $fileRecord = array(
   'type' => $fileInfo['mimetype'],
   'size' => $fileInfo['size']);
 
-$fileRecord = EmailComposer::saveAttachment($fileRecord, false);
+$composer = new EmailComposer();
+
+$fileRecord = $composer->saveAttachment($fileRecord, false);
 
 if ($fileRecord === false) {
   Ajax::bailOut('Couldn\'t save temporary file for: '.$localpath);
@@ -86,7 +88,7 @@ if ($fileRecord === false) {
         'name'     => $fileRecord['name'],
         'error'    => 0,
         'tmp_name' => $fileRecord['tmp_name'])));
-  return true; 
+  return true;
 }
 
 ?>

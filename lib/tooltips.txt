@@ -44,10 +44,9 @@ club-member-project
 configrecheck
 delete-all-event-attachments
 delete-all-file-attachments
-delete-email-template
+delete-saved-message
 email-account-distribute
 email-message-export
-email-message-save
 email-recipients-freeform-BCC
 email-recipients-freeform-CC
 emailtest
@@ -77,8 +76,9 @@ redaxo-preview
 redaxo-rehearsals
 redaxo-template
 redaxo-trashbin
-save-email-template
-select-email-template
+save-as-template
+save-email-message
+select-stored-messages
 send-mass-email
 sepa-instant-validation
 sharedfolder-force
