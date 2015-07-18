@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-10 10:50+0200\n"
+"POT-Creation-Date: 2015-07-18 17:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -76,7 +76,7 @@ msgstr ""
 msgid "Cannot delete a blog-thread without id."
 msgstr ""
 
-#: ajax/blog/modifyentry.php:116 ajax/email/composer.php:183
+#: ajax/blog/modifyentry.php:116 ajax/email/composer.php:289
 #, php-format
 msgid "Unknown request: `%s'."
 msgstr ""
@@ -89,20 +89,44 @@ msgstr ""
 msgid "Form Input"
 msgstr ""
 
-#: ajax/email/composer.php:144
+#: ajax/email/composer.php:51 templates/part.emailform.composer.php:44
+#: templates/part.emailform.composer.php:57
+msgid "Drafts"
+msgstr ""
+
+#: ajax/email/composer.php:60 templates/part.emailform.composer.php:44
+#: templates/part.emailform.composer.php:66
+msgid "Templates"
+msgstr ""
+
+#: ajax/email/composer.php:176
 #, php-format
 msgid "Unknown form element: `%s'."
 msgstr ""
 
-#: ajax/email/composer.php:168
+#: ajax/email/composer.php:194
 msgid "Template could not be saved"
 msgstr ""
 
-#: ajax/email/composer.php:179
+#: ajax/email/composer.php:202
+msgid "Draft could not be saved"
+msgstr ""
+
+#: ajax/email/composer.php:206
+#, php-format
+msgid "Deleted draft message with id %d"
+msgstr ""
+
+#: ajax/email/composer.php:273
+#, php-format
+msgid "Loaded new draft message with id %d"
+msgstr ""
+
+#: ajax/email/composer.php:285
 msgid "Email Address Validation Failed"
 msgstr ""
 
-#: ajax/email/composer.php:256 ajax/email/emailform.php:145
+#: ajax/email/composer.php:362 ajax/email/emailform.php:145
 #: ajax/email/exporter.php:95 ajax/email/recipients.php:140
 #: ajax/finance/sepa-debit-export.php:332
 #: ajax/finance/sepa-debit-store.php:112
@@ -114,7 +138,7 @@ msgstr ""
 msgid "PHP Exception Caught"
 msgstr ""
 
-#: ajax/email/composer.php:260 ajax/email/emailform.php:149
+#: ajax/email/composer.php:366 ajax/email/emailform.php:149
 #: ajax/email/exporter.php:96 ajax/email/recipients.php:144
 #: ajax/finance/sepa-debit-store.php:116
 #: ajax/insurance/instrument-insurance-export.php:169
@@ -199,7 +223,7 @@ msgstr ""
 msgid "Not enough storage available"
 msgstr ""
 
-#: ajax/email/uploadattachment.php:103
+#: ajax/email/uploadattachment.php:104
 #, php-format
 msgid "Couldn't save temporary file for: %s"
 msgstr ""
@@ -223,7 +247,8 @@ msgstr ""
 msgid "Linked all matching web-pages to the respective projects."
 msgstr ""
 
-#: ajax/expertmode/clearoutput.php:11 templates/expertmode.php:93
+#: ajax/expertmode/clearoutput.php:11 lib/emailcomposer.php:1513
+#: templates/expertmode.php:93
 msgid "empty"
 msgstr ""
 
@@ -1426,8 +1451,8 @@ msgid "Unknown WYSIWYG-Editor: `%s'"
 msgstr ""
 
 #: js/blog.js:53 js/blog.js:156 js/blog.js:207 js/blog.js:243
-#: js/cafevdb.js:1097 js/cafevdb.js:1161 js/email.js:34 js/email.js:63
-#: js/email.js:449 js/email.js:480 js/email.js:643 js/events.js:64
+#: js/cafevdb.js:1099 js/cafevdb.js:1163 js/email.js:34 js/email.js:63
+#: js/email.js:522 js/email.js:615 js/email.js:778 js/events.js:64
 #: js/events.js:193 js/inlineimage.js:84 js/inlineimage.js:92
 #: js/inlineimage.js:102 js/inlineimage.js:131 js/inlineimage.js:155
 #: js/inlineimage.js:184 js/inlineimage.js:207 js/inlineimage.js:331
@@ -1470,47 +1495,47 @@ msgstr ""
 msgid "Really delete the entry?"
 msgstr ""
 
-#: js/cafevdb.js:522
+#: js/cafevdb.js:528
 msgid "Choose some Options"
 msgstr ""
 
-#: js/cafevdb.js:527 js/project-instruments.js:155
+#: js/cafevdb.js:533 js/project-instruments.js:155
 #: js/sepa-debit-mandate.js:104
 msgid "Save"
 msgstr ""
 
-#: js/cafevdb.js:529
+#: js/cafevdb.js:535
 msgid ""
 "Accept the currently selected options and return to the underlying form. "
 msgstr ""
 
-#: js/cafevdb.js:530 js/inlineimage.js:278 js/project-instruments.js:206
-#: templates/blogedit.php:39 templates/part.emailform.composer.php:255
+#: js/cafevdb.js:536 js/inlineimage.js:278 js/project-instruments.js:206
+#: templates/blogedit.php:39 templates/part.emailform.composer.php:281
 msgid "Cancel"
 msgstr ""
 
-#: js/cafevdb.js:532
+#: js/cafevdb.js:538
 msgid ""
 "Discard the current selection and close the dialog. The initial set of "
 "selected options will remain unchanged."
 msgstr ""
 
-#: js/cafevdb.js:703
+#: js/cafevdb.js:709
 msgid "Export to the following format is not yet supported:"
 msgstr ""
 
-#: js/cafevdb.js:705 js/project-instruments.js:74 js/projects.js:263
+#: js/cafevdb.js:711 js/project-instruments.js:74 js/projects.js:263
 msgid "Unimplemented"
 msgstr ""
 
-#: js/cafevdb.js:890
+#: js/cafevdb.js:892
 msgid ""
 "If multiple dialogs are open, then move this one to the lowest layer and "
 "display it below the others. Clicking anywhere on the dialog will bring to "
 "the front again."
 msgstr ""
 
-#: js/cafevdb.js:940
+#: js/cafevdb.js:942
 msgid ""
 "Close the current dialog and return to the view which was active before this "
 "dialog had been opened. If the current view shows a `Back' button, then "
@@ -1518,51 +1543,51 @@ msgid ""
 "equivalent to clicking the `Back' button"
 msgstr ""
 
-#: js/cafevdb.js:1030 js/instrumentation.js:163
+#: js/cafevdb.js:1032 js/instrumentation.js:163
 msgid "Debug Information"
 msgstr ""
 
-#: js/cafevdb.js:1059
+#: js/cafevdb.js:1061
 msgid ""
 "Unrecoverable unknown internal error, no further information available, "
 "sorry."
 msgstr ""
 
-#: js/cafevdb.js:1061
+#: js/cafevdb.js:1063
 msgid "Internal Error"
 msgstr ""
 
-#: js/cafevdb.js:1068
+#: js/cafevdb.js:1070
 #, python-brace-format
 msgid "Field {RequiredField} not present in AJAX response."
 msgstr ""
 
-#: js/cafevdb.js:1077
+#: js/cafevdb.js:1079
 msgid "Missing data"
 msgstr ""
 
-#: js/cafevdb.js:1079 js/events.js:58 js/events.js:187
+#: js/cafevdb.js:1081 js/events.js:58 js/events.js:187
 msgid "Unknown error :("
 msgstr ""
 
-#: js/cafevdb.js:1117
+#: js/cafevdb.js:1119
 msgid "Something went wrong."
 msgstr ""
 
-#: js/cafevdb.js:1119
+#: js/cafevdb.js:1121
 msgid ""
 "If it should be the case that you are already logged in for a long time "
 "without interacting with the web-app, then the reason for this error is "
 "probably a simple timeout."
 msgstr ""
 
-#: js/cafevdb.js:1124
+#: js/cafevdb.js:1126
 msgid ""
 "I any case it may help to logoff and logon again, as a temporary work-"
 "around. You will be redirected to the log-in page when you close this window."
 msgstr ""
 
-#: js/cafevdb.js:1128
+#: js/cafevdb.js:1130
 #, python-brace-format
 msgid "Feedback email: {AutoReport}"
 msgstr ""
@@ -1619,163 +1644,182 @@ msgstr ""
 msgid "Not called from main email-form."
 msgstr ""
 
-#: js/email.js:447
+#: js/email.js:112
+msgid "Move all"
+msgstr ""
+
+#: js/email.js:113
+msgid "Move selected"
+msgstr ""
+
+#: js/email.js:114
+msgid "Remove selected"
+msgstr ""
+
+#: js/email.js:115
+msgid "Remove all"
+msgstr ""
+
+#: js/email.js:116
+msgid "Remaining Recipients"
+msgstr ""
+
+#: js/email.js:117
+msgid "Selected Recipients"
+msgstr ""
+
+#: js/email.js:118
+#, python-brace-format
+msgid "Showing all {0}"
+msgstr ""
+
+#: js/email.js:120
+msgid "Filtered"
+msgstr ""
+
+#: js/email.js:122
+msgid "from"
+msgstr ""
+
+#: js/email.js:124
+msgid "Empty list"
+msgstr ""
+
+#: js/email.js:125
+msgid "Filter"
+msgstr ""
+
+#: js/email.js:126
+msgid "show all"
+msgstr ""
+
+#: js/email.js:132
+msgid "Click on the names to move the respective person to the other box"
+msgstr ""
+
+#: js/email.js:520
 #, python-brace-format
 msgid "Unknown form element: {FormElement}"
 msgstr ""
 
-#: js/email.js:479
+#: js/email.js:581 js/email.js:1315
+#, python-brace-format
+msgid "Em@il Form for {ProjectName}"
+msgstr ""
+
+#: js/email.js:584 js/email.js:1318
+msgid "Em@il Form"
+msgstr ""
+
+#: js/email.js:614
 #, python-brace-format
 msgid "Unknown request: {Request}"
 msgstr ""
 
-#: js/email.js:552
+#: js/email.js:687
 #, python-brace-format
 msgid "Sending message {active} out of {total}"
 msgstr ""
 
-#: js/email.js:554
+#: js/email.js:689
 msgid "Message delivery in progress"
 msgstr ""
 
-#: js/email.js:579
+#: js/email.js:714
 msgid "Message Delivery Status"
 msgstr ""
 
-#: js/email.js:608
+#: js/email.js:743
 msgid ""
 "Email sending is in progress. Leaving the page now will cancel the email "
 "submission."
 msgstr ""
 
-#: js/email.js:640
+#: js/email.js:775
 msgid "Unable to export message(s):"
 msgstr ""
 
-#: js/email.js:705
+#: js/email.js:851
 #, python-brace-format
 msgid ""
 "A template with the name `{TemplateName}' already exists, do you want to "
 "overwrite it?"
 msgstr ""
 
-#: js/email.js:707
+#: js/email.js:853
 msgid "Overwrite existing template?"
 msgstr ""
 
-#: js/email.js:729
+#: js/email.js:883
 #, python-brace-format
 msgid ""
 "Do you really want to delete the template with the name `{TemplateName}'?"
 msgstr ""
 
-#: js/email.js:731
+#: js/email.js:885
 msgid "Really Delete Template?"
 msgstr ""
 
-#: js/email.js:740
+#: js/email.js:894
 #, python-brace-format
 msgid "Cannot delete non-existing template `{TemplateName}'"
 msgstr ""
 
-#: js/email.js:742
+#: js/email.js:896
 msgid "Unknown Template"
 msgstr ""
 
-#: js/email.js:845
+#: js/email.js:904
+#, python-brace-format
+msgid ""
+"Do you really want to delete the backup copy of the current message (id = "
+"{Id})?"
+msgstr ""
+
+#: js/email.js:906
+msgid "Really Delete Draft?"
+msgstr ""
+
+#: js/email.js:940
+msgid "There are currently no stored draft messages available."
+msgstr ""
+
+#: js/email.js:941
+msgid "No Drafts Available"
+msgstr ""
+
+#: js/email.js:1044
 msgid "Do you really want to delete all event attachments?"
 msgstr ""
 
-#: js/email.js:846 js/email.js:930
+#: js/email.js:1045 js/email.js:1129
 msgid "Really Delete Attachments?"
 msgstr ""
 
-#: js/email.js:915
+#: js/email.js:1114
 msgid "Select Attachment"
 msgstr ""
 
-#: js/email.js:929
+#: js/email.js:1128
 msgid "Do you really want to delete all file attachments?"
 msgstr ""
 
-#: js/email.js:974 templates/part.emailform.composer.php:109
-#: templates/part.emailform.composer.php:127
+#: js/email.js:1173 templates/part.emailform.composer.php:139
+#: templates/part.emailform.composer.php:157
 msgid "Address Book"
 msgstr ""
 
-#: js/email.js:975
+#: js/email.js:1174
 msgid "Accept"
 msgstr ""
 
-#: js/email.js:977
+#: js/email.js:1176
 msgid "Save Contacts"
 msgstr ""
 
-#: js/email.js:980
+#: js/email.js:1179
 msgid ""
 "Save the selected supplementary emails to the address-book for later reusal."
-msgstr ""
-
-#: js/email.js:1112
-#, python-brace-format
-msgid "Em@il Form for {ProjectName}"
-msgstr ""
-
-#: js/email.js:1115
-msgid "Em@il Form"
-msgstr ""
-
-#: js/email.js:1241
-msgid "Move all"
-msgstr ""
-
-#: js/email.js:1242
-msgid "Move selected"
-msgstr ""
-
-#: js/email.js:1243
-msgid "Remove selected"
-msgstr ""
-
-#: js/email.js:1244
-msgid "Remove all"
-msgstr ""
-
-#: js/email.js:1245
-msgid "Remaining Recipients"
-msgstr ""
-
-#: js/email.js:1246
-msgid "Selected Recipients"
-msgstr ""
-
-#: js/email.js:1247
-#, python-brace-format
-msgid "Showing all {0}"
-msgstr ""
-
-#: js/email.js:1249
-msgid "Filtered"
-msgstr ""
-
-#: js/email.js:1251
-msgid "from"
-msgstr ""
-
-#: js/email.js:1253
-msgid "Empty list"
-msgstr ""
-
-#: js/email.js:1254
-msgid "Filter"
-msgstr ""
-
-#: js/email.js:1255
-msgid "show all"
-msgstr ""
-
-#: js/email.js:1261
-msgid "Click on the names to move the respective person to the other box"
 msgstr ""
 
 #: js/events.js:46
@@ -1884,31 +1928,31 @@ msgstr ""
 msgid "Caught a PHP Exception"
 msgstr ""
 
-#: js/musicians.js:124
+#: js/musicians.js:129
 msgid "Phone Number Validation"
 msgstr ""
 
-#: js/musicians.js:163
+#: js/musicians.js:174
 msgid "Email Validation"
 msgstr ""
 
-#: js/musicians.js:208
+#: js/musicians.js:221
 msgid "Suggestions"
 msgstr ""
 
-#: js/musicians.js:324
+#: js/musicians.js:341
 msgid "Address Validation"
 msgstr ""
 
-#: js/musicians.js:364
+#: js/musicians.js:383
 msgid "Possible Duplicate!"
 msgstr ""
 
-#: js/pme.js:843
+#: js/pme.js:862
 msgid "#columns"
 msgstr ""
 
-#: js/pme.js:852
+#: js/pme.js:871
 msgid "#rows"
 msgstr ""
 
@@ -2209,40 +2253,40 @@ msgstr ""
 msgid "Click to enter details of a potential SEPA debit mandate"
 msgstr ""
 
-#: lib/emailcomposer.php:219
+#: lib/emailcomposer.php:237
 msgid "Message(s) sent out successfully!"
 msgstr ""
 
-#: lib/emailcomposer.php:230
+#: lib/emailcomposer.php:251
 msgid "Message(s) exported successfully!"
 msgstr ""
 
-#: lib/emailcomposer.php:1129
+#: lib/emailcomposer.php:1153
 msgid "Pre-composition validation has failed!"
 msgstr ""
 
-#: lib/emailcomposer.php:1334
+#: lib/emailcomposer.php:1358
 msgid "no project involved"
 msgstr ""
 
-#: lib/emailcomposer.php:1374
+#: lib/emailcomposer.php:1398
 msgid "Unable to fetch executive board contents from data-base."
 msgstr ""
 
-#: lib/emailcomposer.php:1387
+#: lib/emailcomposer.php:1411
 msgid "and"
 msgstr ""
 
-#: lib/emailcomposer.php:1724
+#: lib/emailcomposer.php:1914
 msgid "Local Filesystem"
 msgstr ""
 
-#: lib/emailrecipientsfilter.php:340 lib/page-loader.php:185
+#: lib/emailrecipientsfilter.php:341 lib/page-loader.php:185
 #, php-format
 msgid "Invalid history position %d request, history size is %d"
 msgstr ""
 
-#: lib/emailrecipientsfilter.php:422
+#: lib/emailrecipientsfilter.php:423
 #, php-format
 msgid ""
 "Musician %d in Table, but has no Id as Musician. POST: %sMap: %sSQL-Query: %s"
@@ -3486,8 +3530,15 @@ msgstr ""
 
 #: lib/tooltips.php:81
 msgid ""
-"Delete the selected email-template (you will be asked for confirmation "
-"before it is actually deleted)"
+"Delete the selected email-template or draft. You will be asked for "
+"confirmation before it is actually deleted."
+msgstr ""
+
+#: lib/tooltips.php:83
+msgid ""
+"Distribute the email account credentials to all members of the orchestra "
+"group. The credentials will be encrypted using an OpenSSL public key owned "
+"by the respective user and stored in the pre-user preferences table."
 msgstr ""
 
 #: lib/tooltips.php:85
@@ -3540,6 +3591,14 @@ msgstr ""
 msgid ""
 "Undo the last recipient filter operation and restore the previous selection "
 "of musicians."
+msgstr ""
+
+#: lib/tooltips.php:109
+msgid "Add arbitrary further hidden recipients."
+msgstr ""
+
+#: lib/tooltips.php:111
+msgid "Add arbitrary further recipients."
 msgstr ""
 
 #: lib/tooltips.php:113
@@ -4142,6 +4201,33 @@ msgstr ""
 
 #: lib/tooltips.php:488
 msgid ""
+"Activate this checkbox in order to save the current email message as\n"
+"message template. If you leave this check-box unchecked, then messages\n"
+"will be saved as draft. The difference between a draft and a template\n"
+"is the following: draft messages will be deleted when the message is\n"
+"actually sent out (and potentially \"inactive\" drafts will be purged\n"
+"from the data-base after some time). Templates will never be\n"
+"purged. Also, draft messages will be saved with all attachment and --\n"
+"most important -- inlcuding the set of the currently selected\n"
+"recipients. Message templates, in contrast, are saved with an empty "
+"recipient list, as should be."
+msgstr ""
+
+#: lib/tooltips.php:498
+msgid ""
+"Save the currently active email message either as draft\n"
+"(i.e. including recipients and attachments) or as message template\n"
+"(without recipients and attachments). Message drafts will be deleted\n"
+"after actually sending the message, and after some time of inactivity\n"
+"(say a month or so), message templates are remembered\n"
+"permanently. Please check the check-box to the left of this button in\n"
+"order to store the message as template. Either templates or drafts can\n"
+"also be \"actively\" deleted but clicking the delete button to the right\n"
+"of this button."
+msgstr ""
+
+#: lib/tooltips.php:508
+msgid ""
 "Save the current email for later re-usal in the data-base.\n"
 "An email template can contain per-member substitutions with the syntax "
 "${MEMBER::VARIABLE},\n"
@@ -4152,11 +4238,16 @@ msgid ""
 "by the pre-names of the organizing committe in order to compose  greetings."
 msgstr ""
 
-#: lib/tooltips.php:494
+#: lib/tooltips.php:514
 msgid "Select one of the email templates previously stored in the data-base."
 msgstr ""
 
-#: lib/tooltips.php:496
+#: lib/tooltips.php:516
+msgid ""
+"Select either a message draft or template as base for the current message."
+msgstr ""
+
+#: lib/tooltips.php:518
 msgid ""
 "Attempt to send the stuff you have composed out to your selection of\n"
 "recipients. Please think thrice about it. In case of an error\n"
@@ -4164,7 +4255,7 @@ msgid ""
 "the `Debug' tab"
 msgstr ""
 
-#: lib/tooltips.php:501
+#: lib/tooltips.php:523
 msgid ""
 "Toggle instant validation and automatic computation of derived bank account "
 "data. If instant validation is disabled, the final values will still be "
@@ -4173,32 +4264,32 @@ msgid ""
 "enabled."
 msgstr ""
 
-#: lib/tooltips.php:511
+#: lib/tooltips.php:533
 msgid ""
 "Recompute the link between projects and events, using the event-categories "
 "as primary key."
 msgstr ""
 
-#: lib/tooltips.php:515
+#: lib/tooltips.php:537
 msgid ""
 "Check whether the data-base can be accessed with the given account\n"
 "information and password. The password will only be stored in the\n"
 "configuration storage if the test can be performed successfully."
 msgstr ""
 
-#: lib/tooltips.php:519
+#: lib/tooltips.php:541
 msgid ""
 "Try to connect to the specified web-address, will open the web-address in "
 "another window or tab, depending your local browser preferences."
 msgstr ""
 
-#: lib/tooltips.php:521
+#: lib/tooltips.php:543
 msgid ""
 "Add the instruments of the actually registered musicians to the instrument-"
 "table for the project."
 msgstr ""
 
-#: lib/tooltips.php:523
+#: lib/tooltips.php:545
 msgid ""
 "Upload a file from your local computer as attachment. The file will be "
 "removed from the remote-system after the message has been sent."
@@ -4687,7 +4778,7 @@ msgstr ""
 msgid "Test address"
 msgstr ""
 
-#: templates/emailform.php:35 templates/part.emailform.composer.php:84
+#: templates/emailform.php:35 templates/part.emailform.composer.php:114
 msgid "Recipients"
 msgstr ""
 
@@ -5170,107 +5261,99 @@ msgstr ""
 msgid "Compose Em@il"
 msgstr ""
 
-#: templates/part.emailform.composer.php:44
-msgid "Templates"
+#: templates/part.emailform.composer.php:52
+msgid "Select draft or template"
 msgstr ""
 
-#: templates/part.emailform.composer.php:50
-msgid "Select email template"
-msgstr ""
-
-#: templates/part.emailform.composer.php:63
+#: templates/part.emailform.composer.php:80
 msgid "New Template Name"
 msgstr ""
 
-#: templates/part.emailform.composer.php:74
-msgid "Save as Template"
+#: templates/part.emailform.composer.php:104
+msgid "Save Message"
 msgstr ""
 
-#: templates/part.emailform.composer.php:79
-msgid "Delete Template"
+#: templates/part.emailform.composer.php:109
+msgid "Delete Message"
 msgstr ""
 
-#: templates/part.emailform.composer.php:87
-#: templates/part.emailform.composer.php:90
+#: templates/part.emailform.composer.php:117
+#: templates/part.emailform.composer.php:120
 msgid "No recipients selected."
 msgstr ""
 
-#: templates/part.emailform.composer.php:95
+#: templates/part.emailform.composer.php:125
 msgid "Carbon Copy"
 msgstr ""
 
-#: templates/part.emailform.composer.php:113
+#: templates/part.emailform.composer.php:143
 msgid "Blind CC"
 msgstr ""
 
-#: templates/part.emailform.composer.php:131
+#: templates/part.emailform.composer.php:161
 msgid "Subject"
 msgstr ""
 
-#: templates/part.emailform.composer.php:147
+#: templates/part.emailform.composer.php:177
 msgid "Message-Body"
 msgstr ""
 
-#: templates/part.emailform.composer.php:151
+#: templates/part.emailform.composer.php:181
 msgid "Sender-Name"
 msgstr ""
 
-#: templates/part.emailform.composer.php:160
+#: templates/part.emailform.composer.php:190
 msgid "Sender-Email"
 msgstr ""
 
-#: templates/part.emailform.composer.php:161
+#: templates/part.emailform.composer.php:191
 msgid "Tied to"
 msgstr ""
 
-#: templates/part.emailform.composer.php:164
+#: templates/part.emailform.composer.php:194
 msgid "Add Attachment"
 msgstr ""
 
-#: templates/part.emailform.composer.php:169
-#: templates/part.emailform.composer.php:172
+#: templates/part.emailform.composer.php:199
+#: templates/part.emailform.composer.php:202
 msgid "Upload new File"
 msgstr ""
 
-#: templates/part.emailform.composer.php:177
-#: templates/part.emailform.composer.php:180
+#: templates/part.emailform.composer.php:207
+#: templates/part.emailform.composer.php:210
 msgid "Select from Owncloud"
 msgstr ""
 
-#: templates/part.emailform.composer.php:186
+#: templates/part.emailform.composer.php:216
 msgid "Project Events"
 msgstr ""
 
-#: templates/part.emailform.composer.php:189
+#: templates/part.emailform.composer.php:219
 msgid "Select Events"
 msgstr ""
 
-#: templates/part.emailform.composer.php:196
+#: templates/part.emailform.composer.php:226
 msgid "Attached Events"
 msgstr ""
 
-#: templates/part.emailform.composer.php:210
+#: templates/part.emailform.composer.php:240
 msgid "Delete Event Attachments"
 msgstr ""
 
-#: templates/part.emailform.composer.php:216
+#: templates/part.emailform.composer.php:246
 msgid "Attached Files"
 msgstr ""
 
-#: templates/part.emailform.composer.php:230
+#: templates/part.emailform.composer.php:260
 msgid "Delete All Attachments"
 msgstr ""
 
-#: templates/part.emailform.composer.php:239
+#: templates/part.emailform.composer.php:269
 msgid "Send Em@il"
 msgstr ""
 
-#: templates/part.emailform.composer.php:245
+#: templates/part.emailform.composer.php:275
 msgid "Export Message"
-msgstr ""
-
-#: templates/part.emailform.composer.php:249
-msgid "Save Message"
 msgstr ""
 
 #: templates/part.emailform.recipients.php:63
@@ -5428,7 +5511,8 @@ msgstr ""
 #, php-format
 msgid ""
 "The subject must not consist of `%s' as only part. Please correct that "
-"before hitting the `Send'-button again."
+"before trying send the message out, and also before trying to save the "
+"message as draft. Thanks."
 msgstr ""
 
 #: templates/part.emailform.statuspage.php:264
