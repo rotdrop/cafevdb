@@ -103,7 +103,7 @@ namespace CAFEVDB {
   $expertClass = 'expertmode'.($_['expertmode'] != 'on' ? ' hidden' : '');
 ?>
 
-<div id="app-navigation" class="app-navigation">
+<div id="app-navigation" class="app-navigation snapper-enabled">
   <?php echo $_['navigationcontrols']; ?>
   <div id="app-settings">
     <div id="cafevdb-navigation-info"><?php echo $_['navBarInfo']; ?></div>
