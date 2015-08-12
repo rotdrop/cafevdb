@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-18 17:52+0200\n"
+"POT-Creation-Date: 2015-08-12 02:51+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -128,8 +128,7 @@ msgstr ""
 
 #: ajax/email/composer.php:362 ajax/email/emailform.php:145
 #: ajax/email/exporter.php:95 ajax/email/recipients.php:140
-#: ajax/finance/sepa-debit-export.php:332
-#: ajax/finance/sepa-debit-store.php:112
+#: ajax/finance/sepa-debit-export.php:332 ajax/finance/sepa-debit-store.php:112
 #: ajax/insurance/instrument-insurance-export.php:168
 #: ajax/insurance/validate.php:326 ajax/musicians/validate.php:96
 #: ajax/musicians/validateaddress.php:161 ajax/musicians/validateemail.php:107
@@ -365,8 +364,7 @@ msgid "unknown"
 msgstr ""
 
 #: ajax/finance/sepa-debit-delete.php:40
-#: ajax/finance/sepa-debit-settings.php:49
-#: ajax/finance/sepa-debit-store.php:46
+#: ajax/finance/sepa-debit-settings.php:49 ajax/finance/sepa-debit-store.php:46
 #, php-format
 msgid "Required information `%s' not provided."
 msgstr ""
@@ -501,21 +499,19 @@ msgstr ""
 msgid "Invalid German(?) bank account number %s @ %s."
 msgstr ""
 
-#: ajax/finance/sepa-debit-settings.php:258
-#: ajax/settings/app-settings.php:1047
+#: ajax/finance/sepa-debit-settings.php:258 ajax/settings/app-settings.php:1047
 #, php-format
 msgid "Invalid IBAN: `%s'."
 msgstr ""
 
 #: ajax/finance/sepa-debit-settings.php:302
-#: ajax/finance/sepa-debit-settings.php:334
-#: ajax/settings/app-settings.php:1125
+#: ajax/finance/sepa-debit-settings.php:334 ajax/settings/app-settings.php:1125
 #, php-format
 msgid "Value for `%s' invalid: `%s'."
 msgstr ""
 
-#: ajax/finance/sepa-debit-settings.php:348
-#: ajax/settings/app-settings.php:1185 ajax/settings/redaxo-settings.php:71
+#: ajax/finance/sepa-debit-settings.php:348 ajax/settings/app-settings.php:1185
+#: ajax/settings/redaxo-settings.php:71
 msgid "Unhandled request:"
 msgstr ""
 
@@ -1499,8 +1495,7 @@ msgstr ""
 msgid "Choose some Options"
 msgstr ""
 
-#: js/cafevdb.js:533 js/project-instruments.js:155
-#: js/sepa-debit-mandate.js:104
+#: js/cafevdb.js:533 js/project-instruments.js:155 js/sepa-debit-mandate.js:104
 msgid "Save"
 msgstr ""
 
@@ -2302,11 +2297,11 @@ msgstr ""
 msgid "Unable to create event from given data:"
 msgstr ""
 
-#: lib/events.php:947 lib/events.php:1141
+#: lib/events.php:945 lib/events.php:1139
 msgid "Unknown Calendar"
 msgstr ""
 
-#: lib/events.php:954
+#: lib/events.php:952
 msgid "Miscellaneous Calendars"
 msgstr ""
 
