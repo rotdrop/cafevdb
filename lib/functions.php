@@ -685,8 +685,9 @@ __EOT__;
       if (!is_array($postData)) {
         $postData = array($postData);
       }
-      $postData['requesttoken'] = \OC_Util::callRegister();
-      $url .= '?requesttoken='.\OC_Util::callRegister();
+      $requestToken = \OC_Util::callRegister();
+      $postData['requesttoken'] = $requestToken;
+      $url .= '?requesttoken='.urlencode($requestToken);
 
       switch ($type) {
       case 'json':

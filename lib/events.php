@@ -276,18 +276,18 @@ namespace CAFEVDB
                                           'start' => $taskData['start']),
                                     'urlencoded');
 
-      if (!isset($response['task']['id'])) {
+      if (!is_array($response) || !isset($response['id'])) {
         throw new \RunTimeException(L::t('Unexpected response while creating new task: %s',
                                          array(print_r($response, true))));
       }
-      $id = $response['task']['id'];
+      $id = $response['id'];
 
       if (isset($taskData['description'])) {        
         $response = Util::postToRoute('tasks.tasks.setTaskNote',
                                       array('taskID' => $id),
                                       array('note' => $taskData['description']),
                                       'urlencoded');
-        if (!is_array($response) || count($response) > 0) {
+        if ($response !== true) {
           throw new \RunTimeException(L::t('Unexpected response while creating new task: %s',
                                            array(print_r($response, true))));
         }
@@ -297,7 +297,7 @@ namespace CAFEVDB
                                       array('taskID' => $id),
                                       array('location' => $taskData['location']),
                                       'urlencoded');
-        if (!is_array($response) || count($response) > 0) {
+        if ($response !== true) {
           throw new \RunTimeException(L::t('Unexpected response while creating new task: %s',
                                            array(print_r($response, true))));
         }
@@ -307,7 +307,7 @@ namespace CAFEVDB
                                       array('taskID' => $id),
                                       array('categories' => $taskData['categories']),
                                       'urlencoded');
-        if (!is_array($response) || count($response) > 0) {
+        if ($response !== true) {
           throw new \RunTimeException(L::t('Unexpected response while creating new task: %s',
                                            array(print_r($response, true))));
         }
@@ -331,7 +331,7 @@ namespace CAFEVDB
                                             'minute' => $interval->format('%i'),
                                             'second' => 0),
                                       'urlencoded');
-        if (!is_array($response) || count($response) > 0) {
+        if ($response !== true) {
           throw new \RunTimeException(L::t('Unexpected response while creating new task: %s',
                                            array(print_r($response, true))));
         }
