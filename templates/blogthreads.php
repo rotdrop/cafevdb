@@ -53,8 +53,8 @@ if ($blog['status'] == 'error') {
     }
     $deleted  = $msg['deleted'];
     $reply    = $msg['inreplyto'];
-    $avatar   = \OCP\Util::linkToRoute('core_avatar_get',
-                                       array("user" => $author, "size" => 64));
+    $avatar   = \OCP\Util::linkToRoute('core.avatar.getAvatar',
+                                       array("userId" => $author, "size" => 64));
     $avatar  .= "?requesttoken=".$_['requesttoken'];
     $imgtitle = L::t("Avatar pictures can be uploaded through the personal settings page.");
     $imgtitle = 'title="'.$imgtitle.'" ';
