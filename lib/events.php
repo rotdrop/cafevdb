@@ -372,7 +372,6 @@ namespace CAFEVDB
       
       $calendarId = $eventData['calendar'];
       $vcalendar = \OC_Calendar_Object::createVCalendarFromRequest($eventData);
-
       $alarm = isset($eventData['alarm']) ? $eventData['alarm'] : false;
       if ($alarm !== false) {        
       /*
@@ -383,9 +382,9 @@ TRIGGER;VALUE=DURATION:-P1D
 X-KDE-KCALCORE-ENABLED:TRUE
 END:VALARM
       */
-        $valarm = new \OC_VObject('VALARM');
-        $valarm->setString('DESCRIPTION', $eventData['title']);
-        $valarm->setString('ACTION', 'DISPLAY');
+        $valarm =$vcalendar->createComponent('VALARM');
+        $valarm->DESCRIPTION = $eventData['title'];
+        $valarm->ACTION = 'DISPLAY';
         $dinterval = new \DateTime();
         $dinterval->add(new \DateInterval('PT'.$alarm.'S'));
         $interval = $dinterval->diff(new \DateTime);
@@ -395,7 +394,7 @@ END:VALARM
                               ($interval->format('%h') > 0 || $interval->format('%i') > 0) ? 'T' : null,
                               $interval->format('%h') > 0 ? $interval->format('%hH') : null,
                               $interval->format('%i') > 0 ? $interval->format('%iM') : null);
-        $valarm->addProperty('TRIGGER', $alarmValue, array('VALUE' => 'DURATION'));
+        $valarm->add('TRIGGER', $alarmValue, array('VALUE' => 'DURATION'));
         $vcalendar->VEVENT->add($valarm);
       }
 
@@ -446,7 +445,7 @@ END:VALARM
     {
       if (is_array($event)) {
         if (isset($event['calendardata'])) {
-          $vcalendar = \OC_VObject::parse($event['calendardata']);
+          $vcalendar = \Sabre\VObject\Reader::read($event['calendardata']);
         } else if (isset($event['object'])) {
           $vcalendar = self::getVCalendar($event['object']);
         }
@@ -467,20 +466,16 @@ END:VALARM
      */
     protected static function &getVObject(&$vcalendar)
     {
-      if (!$vcalendar instanceof \OC_VObject) {
-        throw new \Exception('Called with non-VObject');
-      }
-      // Extract the categories as array
-      if ($vcalendar->__isset('VEVENT')) {
+      if (isset($vcalendar->VEVENT)) {
         $vobject = &$vcalendar->VEVENT;
-      } else if ($vcalendar->__isset('VTODO')) {
+      } else if (isset($vcalendar->VTODO)) {
         $vobject = &$vcalendar->VTODO;
-      } else if ($vcalendar->__isset('VJOURNAL')) {
+      } else if (isset($vcalendar->VJOURNAL)) {
         $vobject = &$vcalendar->VJOURNAL;
-      } else if ($vcalendar->__isset('VCARD')) {
+      } else if (isset($vcalendar->VCARD)) {
         $vobject = &$vcalendar->VCARD;
       } else {
-        // Pray that this was already the desired object.
+        throw new \Exception('Called with empty of no VObjecvt');
       }
 
       return $vobject;
@@ -497,14 +492,18 @@ END:VALARM
      */
     protected static function getCategories($stuff)
     {
-      if ($stuff instanceof \OC_VObject) {
+      if ($stuff instanceof \Sabre\VObject\Component\VCalendar) {
         $vcalendar = $stuff;
       } else {
         $vcalendar = self::getVCalendar($stuff);
       }    
       $vobject = self::getVObject($vcalendar);
 
-      $categories = $vobject->getAsArray('CATEGORIES');
+      if (isset($vobject->CATEGORIES)) {
+        $categories = $vobject->CATEGORIES->getParts();
+      } else {
+        $categories = array();
+      }
 
       return $categories;
     }
@@ -521,15 +520,14 @@ END:VALARM
      */
     protected static function setCategories($stuff, $categories)
     {
-      if ($stuff instanceof \OC_VObject) {
+      if ($stuff instanceof \Sabre\VObject\Component\VCalendar) {
         $vcalendar = $stuff;
       } else {
         $vcalendar = self::getVCalendar($stuff);
       }
       $vobject = self::getVObject($stuff);
 
-      $categories = implode(',', $categories);
-      $vobject->setString('CATEGORIES', $categories);
+      $vobject->CATEGORIES = $categories;
 
       return $vcalendar;
     }
@@ -545,14 +543,14 @@ END:VALARM
      */
     public static function getSummary($stuff)
     {
-      if ($stuff instanceof \OC_VObject) {
+      if ($stuff instanceof \Sabre\VObject\Component\VCalendar) {
         $vcalendar = $stuff;
       } else {
         $vcalendar = self::getVCalendar($stuff);
       }    
       $vobject = self::getVObject($vcalendar);
 
-      $summary = $vobject->getAsString('SUMMARY');
+      $summary = $vobject->SUMMARY;
 
       return $summary;
     }
@@ -569,14 +567,14 @@ END:VALARM
      */
     protected static function setSummary($stuff, $summary)
     {
-      if ($stuff instanceof \OC_VObject) {
+      if ($stuff instanceof \Sabre\VObject\Component\VCalendar) {
         $vcalendar = $stuff;
       } else {
         $vcalendar = self::getVCalendar($stuff);
       }
       $vobject = self::getVObject($stuff);
 
-      $vobject->setString('SUMMARY', $summary);
+      $vobject->SUMMARY = $summary;
 
       return $vcalendar;
     }
@@ -592,14 +590,14 @@ END:VALARM
      */
     public static function getDescription($stuff)
     {
-      if ($stuff instanceof \OC_VObject) {
+      if ($stuff instanceof \Sabre\VObject\Component\VCalendar) {
         $vcalendar = $stuff;
       } else {
         $vcalendar = self::getVCalendar($stuff);
       }    
       $vobject = self::getVObject($vcalendar);
 
-      $description = $vobject->getAsString('DESCRIPTION');
+      $description = $vobject->DESCRIPTION;
 
       return $description;
     }
@@ -625,7 +623,7 @@ END:VALARM
         
       $event      = self::getEvent($eventId);
       $categories = self::getCategories($event);
-      $calId      = self::getCalendarId($event);    
+      $calId      = self::getCalendarId($event);
 
       // Now fetch all projects and their names ...
       $projects = Projects::fetchProjects($handle);
@@ -1116,8 +1114,8 @@ __EOT__;
 
       $quoted = array('\,' => ',', '\;' => ';');
       $summary = strtr($eventObject['summary'], $quoted);
-      $location = strtr($vobject->getAsString('LOCATION'), $quoted);
-      $description = strtr($vobject->getAsString('DESCRIPTION'), $quoted);
+      $location = strtr($vobject->LOCATION, $quoted);
+      $description = strtr($vobject->DESCRIPTION, $quoted);
 
       return array('times' => $times,
                    'summary' => $summary,
