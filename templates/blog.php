@@ -57,6 +57,9 @@ cloud-icon (top left) to reach the app-menu.',
 ?>
 
   <div id="blogframe">
+    <div id="qrdecodevideo" style="width:300px;height:300px"></div>
+    <div id="qrdecodeerror"></div>
+  
   <form id="blogform" method="post">
   <input type="hidden" name="app" value="<?php echo Config::APP_NAME; ?>" />
   <input

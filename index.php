@@ -144,6 +144,10 @@ namespace CAFEVDB
 
     // end event hacks
 
+    // qrcode scanning
+    \OCP\Util::addScript('cafevdb/3rdparty/qrcode', 'html5-qrcode.min');
+    \OCP\Util::addScript('cafevdb/3rdparty/qrcode', 'jsqrcode-combined.min');
+
     // One last script to load after the other, e.g. to get the
     // tipsy stuff and so on right
     \OCP\Util::addScript('cafevdb', 'document-ready');

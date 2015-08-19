@@ -1436,8 +1436,18 @@ $(document).ready(function(){
       OC.dialogs.alert(text, title, undefined, true, true);
     });
 
+    $('#qrdecodevideo').html5_qrcode(
+      function(data) {
+        alert('QRCode: '+data);
+      },
+      function(error) {
+        $('#qrdecodeerror').html(error);
+      },
+      function(videoError) {
+        $('#qrdecodeerror').html(videoError);
+      });
   });
-
+  
 });
 
 // Local Variables: ***
