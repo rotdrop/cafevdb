@@ -30,6 +30,7 @@ OC::$CLASSPATH['CAFEVDB\ToolTips'] = 'cafevdb/lib/tooltips.php';
 OC::$CLASSPATH['CAFEVDB\L'] = 'cafevdb/lib/functions.php';
 OC::$CLASSPATH['CAFEVDB\Util'] = 'cafevdb/lib/functions.php';
 OC::$CLASSPATH['CAFEVDB\Error'] = 'cafevdb/lib/functions.php';
+OC::$CLASSPATH['CAFEVDB\FileCache'] = 'cafevdb/lib/functions.php';
 OC::$CLASSPATH['CAFEVDB\Ajax'] = 'cafevdb/lib/functions.php';
 OC::$CLASSPATH['CAFEVDB\Navigation'] = 'cafevdb/lib/functions.php';
 OC::$CLASSPATH['CAFEVDB\mySQL'] = 'cafevdb/lib/functions.php';
