@@ -2,7 +2,7 @@
 /**
  * Upload portraits (photos).
  *
- * @copyright 2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2013-2015 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
@@ -19,30 +19,28 @@
  *
  */
 
-use CAFEVDB\L;
-use CAFEVDB\Ajax;
-use CAFEVDB\Config;
-use CAFEVDB\Util;
-use CAFEVDB\Error;
+namespace CAFEVDB {
 
-// Check if we are a user
-OCP\JSON::checkLoggedIn();
-OCP\JSON::checkAppEnabled('cafevdb');
+  // Check if we are a user
+  \OCP\JSON::checkLoggedIn();
+  \OCP\JSON::checkAppEnabled('cafevdb');
 
-$recordId = Util::cgiValue('RecordId', '');
-$imageClass = Util::cgiValue('ImagePHPClass', '');
+  $recordId = Util::cgiValue('RecordId', '');
+  $imageClass = Util::cgiValue('ImagePHPClass', '');
 
-if ($recordId == '') {
-  Ajax::bailOut(L::t('No record ID was submitted.'));
-}
+  if ($recordId == '') {
+    Ajax::bailOut(L::t('No record ID was submitted.'));
+  }
 
-if (!call_user_func(array($imageClass, 'deleteImage'), $recordId)) {
-  Ajax::bailOut(L::t('Deleting the photo may have failed.'));
-}
+  if (!call_user_func(array($imageClass, 'deleteImage'), $recordId)) {
+    Ajax::bailOut(L::t('Deleting the photo may have failed.'));
+  }
 
-$tmpkey = 'cafevdb-inline-image-'.$recordId;
-\OC\Cache::remove($tmpkey);
+  $tmpkey = 'cafevdb-inline-image-'.$recordId;
+  FileCache::remove($tmpkey);
 
-OCP\JSON::success(array('data' => array('recordId'=>$recordId)));
+  \OCP\JSON::success(array('data' => array('recordId'=>$recordId)));
+
+} // namespace
 
 ?>
