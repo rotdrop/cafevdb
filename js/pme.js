@@ -125,16 +125,15 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
     // try a reload while saving data. This is in order to resolve
     // inter-table dependencies like changed instrument lists and so
-    // on.
+    // on. Be careful not to trigger top and bottom buttons.
     var outerForm = $(outerSel + ' form.pme-form');
 
     var button = $(outerForm).find('input[name$="morechange"],'+
                                    'input[name$="applyadd"],'+
                                    'input[name$="applycopy"],'+
                                    'input[name$="reloadchange"],'+
-                                   'input[name$="reloadview"]');
+                                   'input[name$="reloadview"]').first();
     if (button.length > 0) {
-      button = button.first(); // don't trigger up _and_ down buttons.
       button.trigger('click');
     } else {
       // submit the outer form
@@ -561,8 +560,6 @@ var PHPMYEDIT = PHPMYEDIT || {};
              var dialogHolder;
              dialogHolder = $('<div id="'+containerCSSId+'" class="resize-target"></div>');
              dialogHolder.html(data.data.contents);
-             $('body').append(dialogHolder);
-             dialogHolder = $(containerSel);
 
              dialogHolder.on('pmedialog:changed', function(event) {
                //alert('Changed: '+containerCSSId);
@@ -590,11 +587,11 @@ var PHPMYEDIT = PHPMYEDIT || {};
                  //tmp.dialog('close');
                  var dialogHolder = $(this);
                  var dialogWidget = dialogHolder.dialog('widget');
-
+                 
                  CAFEVDB.dialogToBackButton(dialogHolder);
                  CAFEVDB.dialogCustomCloseButton(dialogHolder, function(event, container) {
                    event.preventDefault();
-                   var cancelButton = container.find('.pme-cancel');
+                   var cancelButton = container.find('.pme-cancel').first();
                    if (cancelButton.length > 0) {
                      event.stopImmediatePropagation();
                      cancelButton.trigger('click');
@@ -639,6 +636,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
                close: function(event) {
                  $('.tipsy').remove();
                  var dialogHolder = $(this);
+
+                 dialogHolder.find('iframe').removeAttr('src');
 
                  //alert($.param(tableOptions));
                  if (tableOptions.modified === true) {
