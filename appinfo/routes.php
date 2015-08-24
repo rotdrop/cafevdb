@@ -38,6 +38,9 @@ $this->create('cafevdb_config', 'js/config.js')
 $this->create('cafevdb_root', '/')
   ->actionInclude('cafevdb/index.php');
 
+$this->create('cafevdb_index', 'index.php')
+  ->actionInclude('cafevdb/index.php');
+
 // Regular tasks
 $this->create('cafevdb_backgroundjobs', '/backgroundjobs')
   ->post()->action('CAFEVDB\Cron', 'run');

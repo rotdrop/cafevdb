@@ -104,7 +104,7 @@ OCP\Util::connectHook('OC_Calendar', 'editCalendar', 'CAFEVDB\Events', 'editCale
 OCP\App::addNavigationEntry( array(
 	'id' => 'cafevdb',
 	'order' => 74,
-	'href' => OCP\Util::linkTo( 'cafevdb', 'index.php' ),
+        'href' => OCP\Util::linkToRoute('cafevdb_root'),
 	'icon' => OCP\Util::imagePath( 'cafevdb', 'logo-greyf-icon.svg' ),
 	'name' => 'Camerata DB'
 ));
