@@ -1,9 +1,13 @@
 <?php
 /**
- * ownCloud - Addressbook
+ * Camerata Musician DB
  *
- * @author Thomas Tanghus
- * @copyright 2012 Thomas Tanghus <thomas@tanghus.net>
+ * @author Claus-Justus Heine
+ * @copyright 2012-2015 Claus-Justus HEine <himself@claus-justus-heine.de>
+ *
+ * Originally from
+ *
+ * ownCloud - Addressbook, copyright 2012 Thomas Tanghus <thomas@tanghus.net>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
@@ -20,44 +24,43 @@
  *
  */
 
-use CAFEVDB\L;
-use CAFEVDB\Ajax;
-use CAFEVDB\Config;
-use CAFEVDB\Util;
-use CAFEVDB\Error;
+namespace CAFEVDB 
+{
 
-// Firefox and Konqueror tries to download application/json for me.  --Arthur
-OCP\JSON::setContentTypeHeader('text/plain');
-OCP\JSON::checkLoggedIn();
-OCP\JSON::checkAppEnabled('cafevdb');
+  // Firefox and Konqueror tries to download application/json for me.  --Arthur
+  \OCP\JSON::setContentTypeHeader('text/plain');
+  \OCP\JSON::checkLoggedIn();
+  \OCP\JSON::checkAppEnabled('cafevdb');
 
-Config::init();
+  Config::init();
 
-$recordId = Util::cgiValue('RecordId', '');
-$imageClass = Util::cgiValue('ImagePHPClass', '');
-$imageSize = Util::cgiValue('ImageSize', 400);
+  $recordId = Util::cgiValue('RecordId', '');
+  $imageClass = Util::cgiValue('ImagePHPClass', '');
+  $imageSize = Util::cgiValue('ImageSize', 400);
 
-if ($recordId == '') {
-  Ajax::bailOut(L::t('No record ID was submitted.'));
-}
-
-$photo = call_user_func(array($imageClass, 'fetchImage'), $recordId);
-if (!$photo || $photo ==  '') {
-  Ajax::bailOut(L::t('Error reading inline image for ID = %s.', array($recordId)));
-} else {
-  $image = new OC_Image();
-  $image->loadFromBase64($photo);
-  if ($image->valid()) {
-    $tmpkey = 'cafevdb-inline-image-'.$recordId;
-    if (\OC\Cache::set($tmpkey, $image->data(), 600)) {
-      OCP\JSON::success(array('data' => array('recordId'=>$recordId, 'tmp'=>$tmpkey)));
-      exit();
-    } else {
-      Ajax::bailOut(L::t('Error saving temporary file.'));
-    }
-  } else {
-    Ajax::bailOut(L::t('The loading image is not valid.'));
+  if ($recordId == '') {
+    Ajax::bailOut(L::t('No record ID was submitted.'));
   }
-}
+
+  $photo = call_user_func(array($imageClass, 'fetchImage'), $recordId);
+  if (!$photo || $photo ==  '') {
+    Ajax::bailOut(L::t('Error reading inline image for ID = %s.', array($recordId)));
+  } else {
+    $image = new \OC_Image();
+    $image->loadFromBase64($photo);
+    if ($image->valid()) {
+      $tmpkey = 'cafevdb-inline-image-'.$recordId;
+      if (FileCache::set($tmpkey, $image->data(), 600)) {
+        \OCP\JSON::success(array('data' => array('recordId'=>$recordId, 'tmp'=>$tmpkey)));
+        exit();
+      } else {
+        Ajax::bailOut(L::t('Error saving temporary file.'));
+      }
+    } else {
+      Ajax::bailOut(L::t('The loading image is not valid.'));
+    }
+  }
+
+} // namespace
 
 ?>

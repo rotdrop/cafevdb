@@ -30,6 +30,7 @@ OC::$CLASSPATH['CAFEVDB\ToolTips'] = 'cafevdb/lib/tooltips.php';
 OC::$CLASSPATH['CAFEVDB\L'] = 'cafevdb/lib/functions.php';
 OC::$CLASSPATH['CAFEVDB\Util'] = 'cafevdb/lib/functions.php';
 OC::$CLASSPATH['CAFEVDB\Error'] = 'cafevdb/lib/functions.php';
+OC::$CLASSPATH['CAFEVDB\FileCache'] = 'cafevdb/lib/functions.php';
 OC::$CLASSPATH['CAFEVDB\Ajax'] = 'cafevdb/lib/functions.php';
 OC::$CLASSPATH['CAFEVDB\Navigation'] = 'cafevdb/lib/functions.php';
 OC::$CLASSPATH['CAFEVDB\mySQL'] = 'cafevdb/lib/functions.php';
@@ -103,7 +104,7 @@ OCP\Util::connectHook('OC_Calendar', 'editCalendar', 'CAFEVDB\Events', 'editCale
 OCP\App::addNavigationEntry( array(
 	'id' => 'cafevdb',
 	'order' => 74,
-	'href' => OCP\Util::linkTo( 'cafevdb', 'index.php' ),
+        'href' => OCP\Util::linkToRoute('cafevdb_root'),
 	'icon' => OCP\Util::imagePath( 'cafevdb', 'logo-greyf-icon.svg' ),
 	'name' => 'Camerata DB'
 ));

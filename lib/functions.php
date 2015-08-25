@@ -159,8 +159,85 @@ namespace CAFEVDB
     }
   };
 
-/**Utility class.
- */
+  /**Cache class, compat, vanished from OC 8.0 -> 8.1. We need only
+   * set/get/remove.
+   */
+  class FileCache
+  {
+    /**
+     * @var Cache $user_cache
+     */
+    static private $user_cache;
+
+    /**
+     * get the user cache
+     * @return Cache
+     */
+    static private function getUserCache() {
+      if (!self::$user_cache) {
+        self::$user_cache = new \OC\Cache\File();
+      }
+      return self::$user_cache;
+    }
+
+    /**
+     * get a value from the user cache
+     * @param string $key
+     * @return mixed
+     */
+    static public function get($key) {
+      $user_cache = self::getUserCache();
+      return $user_cache->get($key);
+    }
+
+    /**
+     * set a value in the user cache
+     * @param string $key
+     * @param mixed $value
+     * @param int $ttl
+     * @return bool
+     */
+    static public function set($key, $value, $ttl=0) {
+      if (empty($key)) {
+        return false;
+      }
+      $user_cache = self::getUserCache();
+      return $user_cache->set($key, $value, $ttl);
+    }
+
+    /**
+     * check if a value is set in the user cache
+     * @param string $key
+     * @return bool
+     */
+    static public function hasKey($key) {
+      $user_cache = self::getUserCache();
+      return $user_cache->hasKey($key);
+    }
+
+    /**
+     * remove an item from the user cache
+     * @param string $key
+     * @return bool
+     */
+    static public function remove($key) {
+      $user_cache = self::getUserCache();
+      return $user_cache->remove($key);
+    }
+
+    /**
+     * clear the user cache of all entries starting with a prefix
+     * @param string $prefix (optional)
+     * @return bool
+     */
+    static public function clear($prefix='') {
+      $user_cache = self::getUserCache();
+      return $user_cache->clear($prefix);
+    }
+  };
+  
+  /**Utility class.
+   */
   class Util
   {
     private static $inlineScripts = array();
