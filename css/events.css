@@ -225,6 +225,10 @@ td.eventdata {
   cursor:pointer;
 }
 
+form.projectevents tr.projectevents:hover td {
+  background-color: #9BAFC8;
+}
+
 tr.step-0 td.eventdata {
   /*text-align:inherit;*/
   background:#B7CEEC;
