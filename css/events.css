@@ -221,6 +221,10 @@ td.eventdata, td.eventbuttons, td.eventemail {
   padding:3px;
 }
 
+td.eventdata {
+  cursor:pointer;
+}
+
 tr.step-0 td.eventdata {
   /*text-align:inherit;*/
   background:#B7CEEC;

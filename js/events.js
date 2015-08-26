@@ -125,8 +125,14 @@ var CAFEVDB = CAFEVDB || {};
             return false;
           });
 
-          eventForm.off('click', ':button, button').
-            on('click', ':button, button', CAFEVDB.Events.UI.buttonClick);
+          eventForm.off('click', ':button').
+            on('click', ':button', CAFEVDB.Events.UI.buttonClick);
+
+	  eventForm.off('click', 'td.eventdata').
+	    on('click', 'td.eventdata', function(event) {
+            $(this).parent().find(':button.edit').trigger('click');
+            return false;
+          });
 
           dialogHolder.off('cafevdb:events_changed');
           dialogHolder.on('cafevdb:events_changed',function(event, events) {
