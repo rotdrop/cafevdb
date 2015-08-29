@@ -460,7 +460,7 @@ END:VALARM
      * object. This is a reference to allow for modification of the
      * $vCalendar object.
      *
-     * @param[in] $vcalendar \OC_VObject
+     * @param[in] $vcalendar Sabre VObject.
      *
      * @return A reference to the inner object.
      */

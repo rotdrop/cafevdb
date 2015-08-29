@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2015 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -27,227 +27,220 @@
  *
  */
 
-use CAFEVDB\L;
-use CAFEVDB\Config;
-use CAFEVDB\Util;
-use CAFEVDB\Error;
-use CAFEVDB\Projects;
-use CAFEVDB\Musicians;
-use CAFEVDB\Instruments;
-use CAFEVDB\Instrumentation;
-use CAFEVDB\mySQL;
+namespace CAFEVDB {
 
-
-\OCP\JSON::checkLoggedIn();
-\OCP\JSON::checkAppEnabled('cafevdb');
-\OCP\JSON::callCheck();
+  \OCP\JSON::checkLoggedIn();
+  \OCP\JSON::checkAppEnabled('cafevdb');
+  \OCP\JSON::callCheck();
   
-$handle = false;
+  $handle = false;
 
-Error::exceptions(true);
+  Error::exceptions(true);
 
-ob_start();
+  ob_start();
 
-try {
-  $_GET = array();
+  try {
+    $_GET = array();
 
-  Config::init();
+    Config::init();
 
-  $debugText = '';
-  $messageText = '';
-  $notice ='';
+    $debugText = '';
+    $messageText = '';
+    $notice ='';
 
-  $projectId = Util::cgiValue('ProjectId', -1);
-  $projectName = Util::cgiValue('ProjectName', -1);
-  $musicianId = Util::cgiValue('MusicianId', -1);
+    $projectId = Util::cgiValue('ProjectId', -1);
+    $projectName = Util::cgiValue('ProjectName', -1);
+    $musicianId = Util::cgiValue('MusicianId', -1);
 
-  $musiciansIds = array();
-  if ($musicianId !== -1) {
-    $musiciansIds[] = $musicianId;
-  } else {
-    $pmepfx       = Config::$pmeopts['cgi']['prefix']['sys'];
-    $musiciansKey = $pmepfx.'mrecs';
-    $musiciansIds = Util::cgiValue($musiciansKey, array());
-  }
-  $numRecords   = count($musiciansIds);
-
-  if ($numRecords == 0) {
-    $debugText .= ob_get_contents();
-    @ob_end_clean();
-
-    OCP\JSON::error(
-      array(
-        'data' => array('error' => L::t('Invalid Argument'),
-                        'message' => L::t('Missing Musician Id'),
-                        'debug' => $debugText)));
-    return false;
-  }
-  
-  if ($projectId == -1) {
-    $debugText .= ob_get_contents();
-    @ob_end_clean();
-
-    OCP\JSON::error(
-      array(
-        'data' => array('error' => L::t('Invalid Argument'),
-                        'message' => L::t('Missing Project Id'),
-                        'debug' => $debugText)));
-    return false;
-  }
-
-  Config::init();
-  $handle = mySQL::connect(Config::$pmeopts);  
-
-  $projectInstruments = Projects::fetchInstrumentation($projectId, $handle);
-  if ($projectInstruments === false) {
-    mySQL::close($handle);
-    $debugText .= ob_get_contents();
-    @ob_end_clean();
-
-    OCP\JSON::error(
-      array(
-        'data' => array('error' => L::t('Data Base Error'),
-                        'message' => L::t('Failed to fetch the project\'s instrumentation'),
-                        'debug' => $debugText)));
-    return false;
-  }
-
-  $failedMusicians = array();
-  $addedMusicians = array();
-  foreach ($musiciansIds as $musicianId) {
-    $musRow = Musicians::fetchMusicianPersonalData($musicianId, $handle);
-    if ($musRow === false) {
-      $failedMusicians[] = array('id' => $musicianId,
-                                 'caption' => L::t('Data Base error'),
-                                 'message' => L::t('Unable to fetch musician\'s personal information for id %d, data-base error: %s',
-                                                   array($musicianId, mySQL::error())));
-      continue;
+    $musiciansIds = array();
+    if ($musicianId !== -1) {
+      $musiciansIds[] = $musicianId;
+    } else {
+      $pmepfx       = Config::$pmeopts['cgi']['prefix']['sys'];
+      $musiciansKey = $pmepfx.'mrecs';
+      $musiciansIds = Util::cgiValue($musiciansKey, array());
     }
-    $musInstruments = explode(',', $musRow['Instrumente']);
+    $numRecords   = count($musiciansIds);
 
-    $fullName = $musRow['Vorname']." ".$musRow['Name'];
+    if ($numRecords == 0) {
+      $debugText .= ob_get_contents();
+      @ob_end_clean();
 
-    $musProjectData = Instrumentation::fetchByMusicianid($musicianId, $projectId, $handle);
-    if ($musRow === false) {
-      $failedMusicians[] = array('id' => $musicianId,
-                                 'caption' => L::t('Data Base error'),
-                                 'message' => L::t('Unable to fetch musician\'s project information for id %d, data-base error: %s',
-                                                   array($musicianId, mySQL::error())));
-      continue;
+      \OCP\JSON::error(
+        array(
+          'data' => array('error' => L::t('Invalid Argument'),
+                          'message' => L::t('Missing Musician Id'),
+                          'debug' => $debugText)));
+      return false;
+    }
+  
+    if ($projectId == -1) {
+      $debugText .= ob_get_contents();
+      @ob_end_clean();
+
+      \OCP\JSON::error(
+        array(
+          'data' => array('error' => L::t('Invalid Argument'),
+                          'message' => L::t('Missing Project Id'),
+                          'debug' => $debugText)));
+      return false;
     }
 
-    $musicianProjectInstruments = array();
-    if (count($musProjectData) > 0) {
-      foreach($musProjectData as $row) {
-        $musicianProjectInstruments[] = $row['ProjektInstrument'];
+    Config::init();
+    $handle = mySQL::connect(Config::$pmeopts);  
+
+    $projectInstruments = Projects::fetchInstrumentation($projectId, $handle);
+    if ($projectInstruments === false) {
+      mySQL::close($handle);
+      $debugText .= ob_get_contents();
+      @ob_end_clean();
+
+      \OCP\JSON::error(
+        array(
+          'data' => array('error' => L::t('Data Base Error'),
+                          'message' => L::t('Failed to fetch the project\'s instrumentation'),
+                          'debug' => $debugText)));
+      return false;
+    }
+
+    $failedMusicians = array();
+    $addedMusicians = array();
+    foreach ($musiciansIds as $musicianId) {
+      $musRow = Musicians::fetchMusicianPersonalData($musicianId, $handle);
+      if ($musRow === false) {
+        $failedMusicians[] = array('id' => $musicianId,
+                                   'caption' => L::t('Data Base error'),
+                                   'message' => L::t('Unable to fetch musician\'s personal information for id %d, data-base error: %s',
+                                                     array($musicianId, mySQL::error())));
+        continue;
       }
-      $notice .= L::t("The musician %s is already registered for the project with the ".
-                      "instruments %s.",
-                      array($fullName, implode(',', $musicianProjectInstruments)));
-    }
-    
-    $both = array_values(array_intersect($projectInstruments, $musInstruments));
+      $musInstruments = explode(',', $musRow['Instrumente']);
 
-    if (!empty($both)) {
-      $leftOver = array_values( array_diff($both, $musicianProjectInstruments));
-      if (!empty($leftOver)) {
-        $musInstrument = $leftOver[0];
+      $fullName = $musRow['Vorname']." ".$musRow['Name'];
+
+      $musProjectData = Instrumentation::fetchByMusicianid($musicianId, $projectId, $handle);
+      if ($musRow === false) {
+        $failedMusicians[] = array('id' => $musicianId,
+                                   'caption' => L::t('Data Base error'),
+                                   'message' => L::t('Unable to fetch musician\'s project information for id %d, data-base error: %s',
+                                                     array($musicianId, mySQL::error())));
+        continue;
+      }
+
+      $musicianProjectInstruments = array();
+      if (count($musProjectData) > 0) {
+        foreach($musProjectData as $row) {
+          $musicianProjectInstruments[] = $row['ProjektInstrument'];
+        }
+        $notice .= L::t("The musician %s is already registered for the project with the ".
+                        "instruments %s.",
+                        array($fullName, implode(',', $musicianProjectInstruments)));
+      }
+    
+      $both = array_values(array_intersect($projectInstruments, $musInstruments));
+
+      if (!empty($both)) {
+        $leftOver = array_values( array_diff($both, $musicianProjectInstruments));
+        if (!empty($leftOver)) {
+          $musInstrument = $leftOver[0];
+        } else {
+          $musInstrument = null;
+        }
+      } else if (!empty($musInstruments)) {
+        $musInstrument = $musInstruments[0];
+        $notice .= L::t("None of the instruments known by %s are mentioned in the "
+                        ."instrumentation-list for the project. "
+                        ."The musician is added nevertheless to the project with the instrument `%s'",
+                        array($fullName, $musInstrument));
       } else {
         $musInstrument = null;
+        $notice .= L::t("The musician %s doesn't seem to play any instrument ...",
+                        array($fullName));
       }
-    } else if (!empty($musInstruments)) {
-      $musInstrument = $musInstruments[0];
-      $notice .= L::t("None of the instruments known by %s are mentioned in the "
-                      ."instrumentation-list for the project. "
-                      ."The musician is added nevertheless to the project with the instrument `%s'",
-                      array($fullName, $musInstrument));
-    } else {
-      $musInstrument = null;
-      $notice .= L::t("The musician %s doesn't seem to play any instrument ...",
-                      array($fullName));
-    }
 
-    $fees = Projects::fetchFees($projectId, $handle);
-    $values = array('MusikerId' => $musicianId,
-                    'ProjektId' => $projectId,
-                    'Instrument' => $musInstrument,
-                    'Unkostenbeitrag' => $fees);
-    $instrumentationId = -1;
-    if (mySQL::insert('Besetzungen', $values, $handle) === false) {
-      $failedMusicians[] = array('id' => $musicianId,
-                                 'caption' => L::t('Adding %s (id = %d) failed.',
-                                                   array($fullName, $musicianId)),
-                                 'message' => mySQL::error());
-      continue;
-    }
-    $numRows = mySQL::changedRows($handle);
-    $instrumentationId = mySQL::newestIndex($handle);
-    if ($instrumentationId === false || $instrumentationId === 0) {
-      $failedMusicians[] = array('id' => $musicianId,
-                                 'caption' => L::t('Unable to get the new id for %s (id = %d)',
-                                                   array($fullName, $musicianId)),
-                                 'message' => mySQL::error());
-      continue;
-    }
-    mySQL::logInsert('Besetzungen', $instrumentationId, $values, $handle);
+      $fees = Projects::fetchFees($projectId, $handle);
+      $values = array('MusikerId' => $musicianId,
+                      'ProjektId' => $projectId,
+                      'Instrument' => $musInstrument,
+                      'Unkostenbeitrag' => $fees);
+      $instrumentationId = -1;
+      if (mySQL::insert('Besetzungen', $values, $handle) === false) {
+        $failedMusicians[] = array('id' => $musicianId,
+                                   'caption' => L::t('Adding %s (id = %d) failed.',
+                                                     array($fullName, $musicianId)),
+                                   'message' => mySQL::error());
+        continue;
+      }
+      $numRows = mySQL::changedRows($handle);
+      $instrumentationId = mySQL::newestIndex($handle);
+      if ($instrumentationId === false || $instrumentationId === 0) {
+        $failedMusicians[] = array('id' => $musicianId,
+                                   'caption' => L::t('Unable to get the new id for %s (id = %d)',
+                                                     array($fullName, $musicianId)),
+                                   'message' => mySQL::error());
+        continue;
+      }
+      mySQL::logInsert('Besetzungen', $instrumentationId, $values, $handle);
 
-    $addedMusicians[] = array('musicianId' => $musicianId,
-                              'rows' => $numRows,
-                              'instrumentationId' => $instrumentationId);
-  }
+      $addedMusicians[] = array('musicianId' => $musicianId,
+                                'rows' => $numRows,
+                                'instrumentationId' => $instrumentationId);
+    }
   
-  if ($numRecords == count($failedMusicians)) {
-    mySQL::close($handle);
+    if ($numRecords == count($failedMusicians)) {
+      mySQL::close($handle);
+      $debugText .= ob_get_contents();
+      @ob_end_clean();
+    
+      $message = L::t('No musician could be added to the projecti, #failures: %d.',
+                      count($failedMusicians));
+
+      foreach ($failedMusicians as $failure) {
+        $message .= ' '.$failure['caption'].' '.print_r($failure['message'], true);
+      }
+
+      \OCP\JSON::error(
+        array(
+          'data' => array('caption' => L::t('Operation failed'),
+                          'message' => $message,
+                          'debug' => $debugText)));
+      return false;
+    } else {
+      \OCP\JSON::success(
+        array(
+          'data' => array(
+            'musicians' => $addedMusicians,
+            'message' => ($notice == ''
+                          ? '' // don't annoy the user with success messages.
+                          : L::t("Operation succeeded with the following notifications:")),
+            'notice' => $notice,
+            'debug' => $debugText)));
+      return true;
+    }
+
+  } catch (\Exception $e) {
+
+    if ($handle !== false) {
+      mySQL::close($handle);
+    }
     $debugText .= ob_get_contents();
     @ob_end_clean();
-    
-    $message = L::t('No musician could be added to the projecti, #failures: %d.',
-                    count($failedMusicians));
 
-    foreach ($failedMusicians as $failure) {
-      $message .= ' '.$failure['caption'].' '.print_r($failure['message'], true);
-    }
-
-    OCP\JSON::error(
-      array(
-        'data' => array('caption' => L::t('Operation failed'),
-                        'message' => $message,
-                        'debug' => $debugText)));
-    return false;
-  } else {
-    OCP\JSON::success(
+    // For whatever reason we need to entify quotes, otherwise jquery throws an error.
+    \OCP\JSON::error(
       array(
         'data' => array(
-          'musicians' => $addedMusicians,
-          'message' => ($notice == ''
-                        ? '' // don't annoy the user with success messages.
-                        : L::t("Operation succeeded with the following notifications:")),
-          'notice' => $notice,
+          'error' => 'exception',
+          'message' => L::t('Error, caught an exception'),
+          'debug' => $debugText,
+          'exception' => $e->getFile().'('.$e->getLine().'): '.$e->getMessage(),
+          'trace' => $e->getTraceAsString(),
           'debug' => $debugText)));
-    return true;
+
+    return false;
+
   }
-
-} catch (\Exception $e) {
-
-  if ($handle !== false) {
-    mySQL::close($handle);
-  }
-  $debugText .= ob_get_contents();
-  @ob_end_clean();
-
-  // For whatever reason we need to entify quotes, otherwise jquery throws an error.
-  OCP\JSON::error(
-    array(
-      'data' => array(
-        'error' => 'exception',
-        'message' => L::t('Error, caught an exception'),
-        'debug' => $debugText,
-        'exception' => $e->getFile().'('.$e->getLine().'): '.$e->getMessage(),
-        'trace' => $e->getTraceAsString(),
-        'debug' => $debugText)));
-
-  return false;
-
-}
+  
+} // namespace
 
 ?>

@@ -29,100 +29,94 @@
  * known by the musician. Etc.
  */
 
-use CAFEVDB\L;
-use CAFEVDB\Config;
-use CAFEVDB\Util;
-use CAFEVDB\Error;
-use CAFEVDB\Projects;
-use CAFEVDB\Instruments;
-use CAFEVDB\Instrumentation;
-use CAFEVDB\mySQL;
+namespace CAFEVDB {
 
-
-\OCP\JSON::checkLoggedIn();
-\OCP\JSON::checkAppEnabled('cafevdb');
-\OCP\JSON::callCheck();
+  \OCP\JSON::checkLoggedIn();
+  \OCP\JSON::checkAppEnabled('cafevdb');
+  \OCP\JSON::callCheck();
   
-try {
+  try {
 
-  ob_start();
+    ob_start();
   
-  Error::exceptions(true);
+    Error::exceptions(true);
   
-  $_GET = array();
+    $_GET = array();
 
-  $debugText = '';
-  $messageText = '';
-  $notice ='';
+    $debugText = '';
+    $messageText = '';
+    $notice ='';
 
-  $recordId = Util::cgiValue('recordId', -1); // Index into Besetzungen
-  $projectId = Util::cgiValue('projectId', -1);
-  $projectInstrument = Util::cgiValue('instrumentValues', false);
+    $recordId = Util::cgiValue('recordId', -1); // Index into Besetzungen
+    $projectId = Util::cgiValue('projectId', -1);
+    $projectInstrument = Util::cgiValue('instrumentValues', false);
   
-  if (Util::debugMode('request')) {
-    $debugText .= '$_POST[] = '.print_r($_POST, true);
-  }
+    if (Util::debugMode('request')) {
+      $debugText .= '$_POST[] = '.print_r($_POST, true);
+    }
 
-  $musRow = Instrumentation::fetchMusicianData($recordId, $projectId);
-  if ($musRow === false) {
+    $musRow = Instrumentation::fetchMusicianData($recordId, $projectId);
+    if ($musRow === false) {
+      $debugText .= ob_get_contents();
+      @ob_end_clean();
+
+      \OCP\JSON::error(
+        array(
+          'data' => array('error' => L::t('data base error'),
+                          'message' => L::t('Failed to fetch musician\'s data'),
+                          'debug' => $debugText)));
+      return false;
+    }
+
+    $musicianId = $musRow['Id'];
+    $musicianInstruments = explode(',', $musRow['Instrumente']);
+    $oldProjectInstrument = $musRow['ProjektInstrument'];
+    $haveOld = array_search($oldProjectInstrument, $musicianInstruments) !== false;
+    $haveNew = array_search($projectInstrument, $musicianInstruments) !== false;  
+
+    if (!$haveNew) {
+      // Auto-add?
+      $notice = L::t("Please consider to add the registered project instrument `%s' to %s's ".
+                     "list of instruments (or possibly change the project instrument).",
+                     array($projectInstrument, $musRow['Vorname']));
+    }
+  
     $debugText .= ob_get_contents();
     @ob_end_clean();
 
-    OCP\JSON::error(
+    \OCP\JSON::success(
       array(
-        'data' => array('error' => L::t('data base error'),
-                        'message' => L::t('Failed to fetch musician\'s data'),
-                        'debug' => $debugText)));
+        'data' => array(
+          'message' => L::t("Instrument choice for %s seems ok.",
+                            array($musRow['Vorname'].' '.$musRow['Name'])),
+          'notice' => $notice,
+          'debug' => $debugText)));
+  
+    return true;
+
+  } catch (\Exception $e) {
+
+    if ($handle !== false) {
+      mySQL::close($handle);
+    }
+    $debugText .= ob_get_contents();
+    @ob_end_clean();
+
+    // For whatever reason we need to entify quotes, otherwise jquery throws an error.
+    \OCP\JSON::error(
+      array(
+        'data' => array(
+          'error' => 'exception',
+          'message' => L::t('Error, caught an exception'),
+          'debug' => $debugText,
+          'exception' => $e->getFile().'('.$e->getLine().'): '.$e->getMessage(),
+          'trace' => $e->getTraceAsString(),
+          'debug' => $debugText)));
+
     return false;
-  }
 
-  $musicianId = $musRow['Id'];
-  $musicianInstruments = explode(',', $musRow['Instrumente']);
-  $oldProjectInstrument = $musRow['ProjektInstrument'];
-  $haveOld = array_search($oldProjectInstrument, $musicianInstruments) !== false;
-  $haveNew = array_search($projectInstrument, $musicianInstruments) !== false;  
-
-  if (!$haveNew) {
-    // Auto-add?
-    $notice = L::t("Please consider to add the registered project instrument `%s' to %s's ".
-                   "list of instruments (or possibly change the project instrument).",
-                   array($projectInstrument, $musRow['Vorname']));
   }
   
-  $debugText .= ob_get_contents();
-  @ob_end_clean();
-
-  OCP\JSON::success(
-    array(
-      'data' => array(
-        'message' => L::t("Instrument choice for %s seems ok.",
-                          array($musRow['Vorname'].' '.$musRow['Name'])),
-        'notice' => $notice,
-        'debug' => $debugText)));
-  
-  return true;
-
-} catch (\Exception $e) {
-
-  if ($handle !== false) {
-    mySQL::close($handle);
-  }
-  $debugText .= ob_get_contents();
-  @ob_end_clean();
-
-  // For whatever reason we need to entify quotes, otherwise jquery throws an error.
-  OCP\JSON::error(
-    array(
-      'data' => array(
-        'error' => 'exception',
-        'message' => L::t('Error, caught an exception'),
-        'debug' => $debugText,
-        'exception' => $e->getFile().'('.$e->getLine().'): '.$e->getMessage(),
-        'trace' => $e->getTraceAsString(),
-        'debug' => $debugText)));
-
-  return false;
-
-}
+} // namespace
 
 ?>

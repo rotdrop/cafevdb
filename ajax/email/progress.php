@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2015 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -24,55 +24,54 @@
  * Progress bar updates.
  */
 
-\OCP\JSON::checkLoggedIn();
-\OCP\JSON::checkAppEnabled('cafevdb');
-\OCP\JSON::callCheck();
+namespace CAFEVDB {
 
-use CAFEVDB\L;
-use CAFEVDB\Error;
-use CAFEVDB\Util;
-use CAFEVDB\ProgressStatus;
+  \OCP\JSON::checkLoggedIn();
+  \OCP\JSON::checkAppEnabled('cafevdb');
+  \OCP\JSON::callCheck();
 
-try {
+  try {
 
-  ob_start();
+    ob_start();
 
-  Error::exceptions(true);
+    Error::exceptions(true);
 
-  $_GET = array();
+    $_GET = array();
 
-  $debugText = '';
-  $messageText = '';
+    $debugText = '';
+    $messageText = '';
 
-  $progressId   = Util::cgiValue('ProgressId', 0);
+    $progressId   = Util::cgiValue('ProgressId', 0);
 
-  $progress = new ProgressStatus($progressId);
-  $result = $progress->fetch();
+    $progress = new ProgressStatus($progressId);
+    $result = $progress->fetch();
 
-  if ($result === false) {
-    OCP\JSON::error(
-      array('data' => array('message' => L::t('Unable to fetch progress status with id %d',
-                                              array($progressId)))));
+    if ($result === false) {
+      \OCP\JSON::error(
+        array('data' => array('message' => L::t('Unable to fetch progress status with id %d',
+                                                array($progressId)))));
+      return false;
+    } else {
+      \OCP\JSON::success(array('progress' => $result));  
+      return true;
+    }
+
+  } catch (\Exception $e) {
+
+    $debugText .= ob_get_contents();
+    @ob_end_clean();
+
+    \OCP\JSON::error(
+      array(
+        'data' => array(
+          'error' => 'exception',
+          'exception' => $e->getFile().'('.$e->getLine().'): '.$e->getMessage(),
+          'trace' => $e->getTraceAsString(),
+          'message' => L::t('Error, caught an exception'),
+          'debug' => $debugText)));
     return false;
-  } else {
-    OCP\JSON::success(array('progress' => $result));  
-    return true;
   }
 
-} catch (\Exception $e) {
-
-  $debugText .= ob_get_contents();
-  @ob_end_clean();
-
-  OCP\JSON::error(
-    array(
-      'data' => array(
-        'error' => 'exception',
-        'exception' => $e->getFile().'('.$e->getLine().'): '.$e->getMessage(),
-        'trace' => $e->getTraceAsString(),
-        'message' => L::t('Error, caught an exception'),
-        'debug' => $debugText)));
-  return false;
-}
+} // namespace
 
 ?>

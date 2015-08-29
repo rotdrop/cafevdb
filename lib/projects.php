@@ -1228,6 +1228,8 @@ __EOT__;
      * @param $projectId Id of the project
      *
      * @param $kind One of 'concert' or 'rehearsals'
+     *
+     * @param $handle Optional active data-base handle.
      */
     public static function createProjectWebPage($projectId, $kind = 'concert', $handle = false)
     {

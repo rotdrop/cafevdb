@@ -190,6 +190,12 @@ namespace CAFEVDB
      * address book.
      *
      * @param $email Contact to be added array('name' => , 'email' => )
+     *
+     * @param $addressBookId If set, the id of the address-book to add
+     * entries to. Otherwise the @c addressbookid config-value will be
+     * used. If none is set, return @c false.
+     *
+     * @param $backend Defaults to 'shared'. Read the OC docs for more.
      * 
      */
     public static function addEmailContact($email, $addressBookId = false, $backend = 'shared')

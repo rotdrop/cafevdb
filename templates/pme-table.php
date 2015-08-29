@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2015 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -27,30 +27,34 @@
  * display() which actually echos the HTML code to show.
  */
 
-CAFEVDB\Error::exceptions(true);
+namespace CAFEVDB {
 
-try {
-  $class = $_['DisplayClass'];
-  $args = $_['ClassArguments'];
+  Error::exceptions(true);
 
-  if (isset($args['_'])) {
-    foreach($args['_'] as $key) {
-      $args[$key] = $_[$key];
+  try {
+    $class = $_['DisplayClass'];
+    $args = $_['ClassArguments'];
+    
+    if (isset($args['_'])) {
+      foreach($args['_'] as $key) {
+        $args[$key] = $_[$key];
+      }
+      unset($args['_']);
     }
-    unset($args['_']);
+    
+    $reflect = new \ReflectionClass('\\CAFEVDB\\'.$class);
+    $instance = $reflect->newInstanceArgs($args);
+
+    echo '<div id="pme-table-container" class="pme-table-container '.$class.'" style="height:auto;">';
+    $instance->display();
+    echo '</div>';
+
+    // add a hidden "short title" span
+    echo '<span id="pme-short-title" class="pme-short-title" style="display:none;">'.$instance->shortTitle().'</span>';
+  } catch (\Exception $e) {
+    throw $e;
   }
 
-  $reflect = new ReflectionClass('\\CAFEVDB\\'.$class);
-  $instance = $reflect->newInstanceArgs($args);
-
-  echo '<div id="pme-table-container" class="pme-table-container '.$class.'" style="height:auto;">';
-  $instance->display();
-  echo '</div>';
-
-  // add a hidden "short title" span
-  echo '<span id="pme-short-title" class="pme-short-title" style="display:none;">'.$instance->shortTitle().'</span>';
-} catch (\Exception $e) {
-  throw $e;
-}
+} // namespace
 
 ?>

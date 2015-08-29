@@ -403,7 +403,7 @@ insuranceFee
      * @param $lines The number of lines to return at most.
      *
      * @param $separators Regexp for preg_split. The default is just
-     * "/\n/". Note that this is enough for \n and \r\n as the text is
+     * "/\\n/". Note that this is enough for \\n and \\r\\n as the text is
      * afterwars imploded again with \n separator.
      */
     static private function head($text, $lines = 64, $separators = "/\n/")
@@ -1935,6 +1935,9 @@ insuranceFee
 
     /**A helper function to generate suitable select options for
      * Navigation::selectOptions().
+     *
+     * @param $projectId Id of the active project. If <= 0 an empty
+     * array is returned.
      *
      * @param $attachedEvents Flat array of attached events.
      */

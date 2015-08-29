@@ -39,11 +39,11 @@ namespace CAFEVDB
     /**Add an event to the finance calendar, possibly including a
      * reminder.
      *
-     * @param title
-     * @param description (may be empty)
-     * @param projectName (may be empty)
-     * @param timeStamp
-     * @param alarm (maybe <= 0 for no alarm)
+     * @param $title
+     * @param $description (may be empty)
+     * @param $projectName (may be empty)
+     * @param $timeStamp
+     * @param $alarm (maybe <= 0 for no alarm)
      */
     static public function financeEvent($title, $description, $projectName, $timeStamp, $alarm = false)
     {
@@ -75,11 +75,11 @@ namespace CAFEVDB
     /**Add a task to the finance calendar, possibly including a
      * reminder.
      *
-     * @param title
-     * @param description (may be empty)
-     * @param projectName (may be empty)
-     * @param timeStamp
-     * @param alarm (maybe <= 0 for no alarm)
+     * @param $title
+     * @param $description (may be empty)
+     * @param $projectName (may be empty)
+     * @param $timeStamp
+     * @param $alarm (maybe <= 0 for no alarm)
      */
     static public function financeTask($title, $description, $projectName, $timeStamp, $alarm = false)
     {

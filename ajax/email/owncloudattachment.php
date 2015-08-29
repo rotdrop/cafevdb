@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2015 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -24,71 +24,69 @@
  * @brief Add an attachment from the Owncloud filespace.
  */
 
-use CAFEVDB\L;
-use CAFEVDB\Util;
-use CAFEVDB\Config;
-use CAFEVDB\Ajax;
-use CAFEVDB\EmailComposer;
+namespace CAFEVDB {
 
-OCP\JSON::checkLoggedIn();
-OCP\JSON::checkAppEnabled(Config::APP_NAME);
-OCP\JSON::callCheck();
+  \OCP\JSON::checkLoggedIn();
+  \OCP\JSON::checkAppEnabled(Config::APP_NAME);
+  \OCP\JSON::callCheck();
 
-if (!isset($_GET['path'])) {
-  Ajax::bailOut(L::t('No attachment path was submitted.'));
-}
+  if (!isset($_GET['path'])) {
+    Ajax::bailOut(L::t('No attachment path was submitted.'));
+  }
 
-$localpath = $_GET['path'];
-$name      = \OC\Files\Filesystem::getLocalFile($localpath);
+  $localpath = $_GET['path'];
+  $name      = \OC\Files\Filesystem::getLocalFile($localpath);
 
-if (!file_exists($name)) {
-  Ajax::bailOut(L::t('File doesn\'t exist: ').$localpath);
-}
+  if (!file_exists($name)) {
+    Ajax::bailOut(L::t('File doesn\'t exist: ').$localpath);
+  }
 
-if (false) {
-  Ajax::bailOut(L::t('File doesn\'t exist:').'<br/>'
-                .$name.'<br/>'
-                .$localpath.'<br/>'
-                .\OC\Files\Filesystem::getLocalPath($name).'<br/>'
-                .\OC\Files\Filesystem::getLocalPath($localpath).'<br/>'
-                .print_r($fileInfo, true));
-}
+  if (false) {
+    Ajax::bailOut(L::t('File doesn\'t exist:').'<br/>'
+                  .$name.'<br/>'
+                  .$localpath.'<br/>'
+                  .\OC\Files\Filesystem::getLocalPath($name).'<br/>'
+                  .\OC\Files\Filesystem::getLocalPath($localpath).'<br/>'
+                  .print_r($fileInfo, true));
+  }
 
-// Should coincide with $localpath
-if ($localpath != \OC\Files\Filesystem::getLocalPath($localpath)) {
-  Ajax::bailOut(L::t('Inconsistency:').' '.
-                $localpath.
-                ' <=> '.
-                \OC\Files\Filesystem::getLocalPath($localpath));
-}
+  // Should coincide with $localpath
+  if ($localpath != \OC\Files\Filesystem::getLocalPath($localpath)) {
+    Ajax::bailOut(L::t('Inconsistency:').' '.
+                  $localpath.
+                  ' <=> '.
+                  \OC\Files\Filesystem::getLocalPath($localpath));
+  }
 
-$fileInfo = \OC\Files\Filesystem::getFileInfo($localpath);
+  $fileInfo = \OC\Files\Filesystem::getFileInfo($localpath);
 
-// We emulate an uploaded file here:
-$fileRecord = array(
-  'name' => $localpath,
-  'error' => 0,
-  'tmp_name' => $name,
-  'type' => $fileInfo['mimetype'],
-  'size' => $fileInfo['size']);
+  // We emulate an uploaded file here:
+  $fileRecord = array(
+    'name' => $localpath,
+    'error' => 0,
+    'tmp_name' => $name,
+    'type' => $fileInfo['mimetype'],
+    'size' => $fileInfo['size']);
 
-$composer = new EmailComposer();
+  $composer = new EmailComposer();
 
-$fileRecord = $composer->saveAttachment($fileRecord, false);
+  $fileRecord = $composer->saveAttachment($fileRecord, false);
 
-if ($fileRecord === false) {
-  Ajax::bailOut('Couldn\'t save temporary file for: '.$localpath);
-  return false;
-} else {
-  OCP\JSON::success(
-    array(
-      'data' => array(
-        'type'     => $fileRecord['type'],
-        'size'     => $fileRecord['size'],
-        'name'     => $fileRecord['name'],
-        'error'    => 0,
-        'tmp_name' => $fileRecord['tmp_name'])));
-  return true;
-}
+  if ($fileRecord === false) {
+    Ajax::bailOut('Couldn\'t save temporary file for: '.$localpath);
+    return false;
+  } else {
+    \OCP\JSON::success(
+      array(
+        'data' => array(
+          'type'     => $fileRecord['type'],
+          'size'     => $fileRecord['size'],
+          'name'     => $fileRecord['name'],
+          'error'    => 0,
+          'tmp_name' => $fileRecord['tmp_name'])));
+    return true;
+  }
+  
+} // namespace
 
 ?>

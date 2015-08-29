@@ -20,6 +20,8 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**@file*/
+
 /**CamerataDB namespace to prevent name-collisions.
  */
 namespace CAFEVDB
@@ -62,9 +64,10 @@ namespace CAFEVDB
     }
   };
 
-/**Ajax specific support class. */
+  /**Ajax specific support class. */
   class Ajax
   {
+    /**TBD. */
     public static function bailOut($msg, $tracelevel = 1, $debuglevel = \OCP\Util::ERROR)
     {
       \OCP\JSON::error(array('data' => array('message' => $msg)));
@@ -72,6 +75,7 @@ namespace CAFEVDB
       exit();
     }
 
+    /**TBD. */
     public static function debug($msg, $tracelevel = 0, $debuglevel = \OCP\Util::DEBUG)
     {
       if (PHP_VERSION >= "5.4") {
@@ -978,6 +982,8 @@ __EOT__;
      *
      * @param[in] $misc Whether or not to include the extra misc-button.
      *
+     * @param[in] $all Whether to add the button to non-list views.
+     *
      * @return Array suitable to be plugged in $opts['buttons'].
      */
     public static function prependTableButton($button, $misc = false, $all = false)
@@ -1041,7 +1047,7 @@ __EOT__;
 
     /**Take any dashed lower-case string and convert to camel-acse.
      *
-     * @param $sting the string to convert.
+     * @param $string the string to convert.
      *
      * @param $capitalizeFirstCharacter self explaining.
      */
@@ -1195,21 +1201,22 @@ __EOT__;
      *   - all Overview of all musicians.
      *   - email Mass-email dialog (obsolete).
      *   - emailhistory History of sent mass-emails (obsolete).
-     * - projectlabel A button which leads to an overview page of the
-     *      current project, parameters $projectName and $projevtId
-     *      habe to be given.
-     * - detailed Instrumentation list for the project. Formerly there
-     *      was also a "brief" instrumentation list, which is no longer
-     *      there.
-     * - instruments List of all known instruments with cross-link to WikiPedia.
-     * - projectinstrumens Page with instrumentation number for the project.
-     * - debitmandates Page with debit mandates for the project.
-     * - insurances Page with instrument insurances.
-     * - insurancerates Page with knwon insurance rates.
-     * - insurancebrokers Page with knwon brokers, including (maybe) their address.
+     *   - projectlabel A button which leads to an overview page of the
+     *     current project, parameters $projectName and $projectId
+     *     habe to be given.
+     *   - detailed Instrumentation list for the project. Formerly there
+     *     was also a "brief" instrumentation list, which is no longer
+     *     there.
+     *   - instruments List of all known instruments with cross-link to WikiPedia.
+     *   - projectinstrumens Page with instrumentation number for the project.
+     *   - debitmandates Page with debit mandates for the project.
+     *   - insurances Page with instrument insurances.
+     *   - insurancerates Page with knwon insurance rates.
+     *   - insurancebrokers Page with knwon brokers, including (maybe) their address.
      *
      * @param[in] string $projectName name of the project if needed.
-     * @param[ịn] int $projectId Id of the project if needed.
+     *
+     * @param[in] int $projectId Id of the project if needed.
      * form with submit button.
      *
      * @return string The HTML form control requested.
@@ -1241,7 +1248,7 @@ __EOT__;
      * - insurancebrokers Page with knwon brokers, including (maybe) their address.
      *
      * @param[in] string $projectName name of the project if needed.
-     * @param[ịn] int $projectId Id of the project if needed.
+     * @param[in] int $projectId Id of the project if needed.
      * form with submit button.
      *
      * @return string The HTML form control requested.
@@ -1259,22 +1266,22 @@ __EOT__;
      *   - all Overview of all musicians.
      *   - email Mass-email dialog (obsolete).
      *   - emailhistory History of sent mass-emails (obsolete).
-     * - projectlabel A button which leads to an overview page of the
+     *   - projectlabel A button which leads to an overview page of the
      *      current project, parameters $projectName and $projevtId
      *      habe to be given.
-     * - detailed Instrumentation list for the project. Formerly there
+     *   - detailed Instrumentation list for the project. Formerly there
      *      was also a "brief" instrumentation list, which is no longer
      *      there.
-     * - instruments List of all known instruments with cross-link to WikiPedia.
-     * - projectinstrumens Page with instrumentation number for the project.
-     * - debitmandates Page with debit mandates for the project.
-     * - insurances Page with instrument insurances.
-     * - insurancerates Page with knwon insurance rates.
-     * - insurancebrokers Page with knwon brokers, including (maybe) their address.
+     *   - instruments List of all known instruments with cross-link to WikiPedia.
+     *   - projectinstrumens Page with instrumentation number for the project.
+     *   - debitmandates Page with debit mandates for the project.
+     *   - insurances Page with instrument insurances.
+     *   - insurancerates Page with knwon insurance rates.
+     *   - insurancebrokers Page with knwon brokers, including (maybe) their address.
      *
      * @param[in} bool $asListItem Generate a list item instead of a
      * @param[in] string $projectName name of the project if needed.
-     * @param[ịn] int $projectId Id of the project if needed.
+     * @param[in] int $projectId Id of the project if needed.
      * form with submit button.
      *
      * @return string The HTML form control requested.
@@ -1911,6 +1918,8 @@ __EOT__;
 
     /**Convenience function: fetch some rows of a table.
      *
+     * @param[in] $table The table to fetch data from.
+     *
      * @param[in] $where The conditions (excluding the WHERE keyword)
      *
      * @param[in] $handle Data-base connection, as returned by
@@ -1923,7 +1932,7 @@ __EOT__;
      * @return An array with all matching rows. Return false in case
      * of error.
      */
-    public static function fetchRows($table, $where = '1', $handle = null, $die = true, $slient = false)
+    public static function fetchRows($table, $where = '1', $handle = null, $die = true, $silent = false)
     {
       $query = "SELECT * FROM `".$table."` WHERE (".$where.")";
 
