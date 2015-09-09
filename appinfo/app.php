@@ -57,6 +57,8 @@ OC::$CLASSPATH['CAFEVDB\PDFLetter'] = 'cafevdb/lib/pdfletter.php';
 OC::$CLASSPATH['CAFEVDB\PhoneNumbers'] = 'cafevdb/lib/phonenumbers.php';
 OC::$CLASSPATH['CAFEVDB\GeoCoding'] = 'cafevdb/lib/geocoding.php';
 OC::$CLASSPATH['CAFEVDB\Cron'] = 'cafevdb/lib/cron.php';
+OC::$CLASSPATH['CAFEVDB\VCard'] = 'cafevdb/lib/vcard.php';
+OC::$CLASSPATH['CAFEVDB\InlineImage'] = 'cafevdb/lib/inlineimage.php';
 
 OC::$CLASSPATH['DWEMBED\App'] = 'dokuwikiembed/lib/dokuwikiembed.php';
 OC::$CLASSPATH['DWEMBED\L'] = 'dokuwikiembed/lib/util.php';
@@ -75,6 +77,7 @@ OC::$CLASSPATH['PEAR'] = '3rdparty/PEAR.php';
 OC::$CLASSPATH['Mail_RFC822'] = 'cafevdb/3rdparty/pear/php/Mail/RFC822.php';
 OC::$CLASSPATH['Net_IMAP'] = 'cafevdb/3rdparty/pear/php/Net/IMAP.php';
 OC::$CLASSPATH['TCPDF'] = 'cafevdb/3rdparty/tcpdf/tcpdf.php';
+OC::$CLASSPATH['QRcode'] = 'cafevdb/3rdparty/phpqrcode/merged/phpqrcode.php';
 
 /* Script etc. used by everyone */
 OC_App::registerAdmin( 'cafevdb', 'admin-settings' );
