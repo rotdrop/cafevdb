@@ -80,6 +80,22 @@ $(document).ready(function() {
     });
   });
 
+  // Update missing UUIDs
+  $('#uuid').click(function() {
+    var post = $(this).serialize();
+    $.post(OC.filePath('cafevdb', 'ajax/expertmode', 'uuid.php'), post, function(data) {
+      $('#expertmode .msg').html(data);
+    });
+  });
+
+  // Update image meta-data (mime-type, MD5-hash)
+  $('#imagemeta').click(function() {
+    var post = $(this).serialize();
+    $.post(OC.filePath('cafevdb', 'ajax/expertmode', 'imagemeta.php'), post, function(data) {
+      $('#expertmode .msg').html(data);
+    });
+  });
+
   $('#example').click(function() {
     var post  = $('#example').serialize();
     $.post(OC.filePath('cafevdb', 'ajax/expertmode', 'example.php'), post, function(data) {

@@ -1,6 +1,6 @@
 <?php
 /**@author Claus-Justus Heine
- * @copyright 2012-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2012-2015 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -233,7 +233,50 @@ WHERE  TABLE_SCHEMA = '".Config::$dbopts['db']."'";
     mySQL::close($handle);
   }
 
+  public static function sanitizeImageData($imageTable, $handle = false)
+  {
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
 
+    // First make sure that the needed fields exist
+    
+    $columns = mySQL::columns($imageTable, $handle);
+
+    $afterColumn = $columns[1];
+
+    $query = "ALTER IGNORE TABLE `".$imageTable."`
+  ADD `MimeType` VARCHAR(128) CHARACTER SET ascii COLLATE ascii_general_ci NULL
+  AFTER `".$afterColumn."`";
+    mySQL::query($query, $handle);
+
+    $query = "ALTER IGNORE TABLE `".$imageTable."`
+  ADD `MD5` CHAR(32) CHARACTER SET ascii COLLATE ascii_general_ci NULL
+  AFTER `MimeType`";
+    mySQL::query($query, $handle);
+
+    // then recompute the stuff
+    $query = "SELECT * FROM `".$imageTable."` WHERE 1";
+    $result = mySQL::query($query, $handle);
+    while ($row = mySQL::fetch($result)) {
+      $md5 = md5($row['ImageData']);
+      $image = new \OC_Image();
+      $image->loadFromBase64($row['ImageData']);
+      $mimeType = $image->mimeType();
+
+      mySQL::update($imageTable,
+                    "Id = ".$row['Id'],
+                    array('MimeType' => $mimeType, 'MD5' => $md5),
+                    $handle);
+    }
+    
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+  }
+  
 };
 
 }
