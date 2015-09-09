@@ -68,6 +68,12 @@ $this->create("cafevdb_ajax_expertmode_example.php", "ajax/expertmode/example.ph
 $this->create("cafevdb_ajax_expertmode_geodata.php", "ajax/expertmode/geodata.php")
   ->actionInclude("cafevdb/ajax/expertmode/geodata.php");
 
+$this->create("cafevdb_ajax_expertmode_uuid.php", "ajax/expertmode/uuid.php")
+  ->actionInclude("cafevdb/ajax/expertmode/uuid.php");
+
+$this->create("cafevdb_ajax_expertmode_imagemeta.php", "ajax/expertmode/imagemeta.php")
+  ->actionInclude("cafevdb/ajax/expertmode/imagemeta.php");
+
 $this->create("cafevdb_ajax_expertmode_makeviews.php", "ajax/expertmode/makeviews.php")
   ->actionInclude("cafevdb/ajax/expertmode/makeviews.php");
 
