@@ -849,6 +849,16 @@ __EOT__;
       }
     }
 
+    public static function generateUUID()
+    {
+      $data = openssl_random_pseudo_bytes(16);
+      
+      $data[6] = chr(ord($data[6]) & 0x0f | 0x40); // set version to 0100
+      $data[8] = chr(ord($data[8]) & 0x3f | 0x80); // set bits 6-7 to 10
+
+      return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+    }
+
   };
 
 /**Support class to generate navigation buttons and the like.
@@ -1688,6 +1698,7 @@ __EOT__;
       return $columns;
     }
 
+    /**Query the number of rows in a table. */
     public static function queryNumRows($querypart, $handle = false, $die = true, $silent = false)
     {
       $query = 'SELECT COUNT(*) '.$querypart;
@@ -1959,6 +1970,58 @@ __EOT__;
       return $result;
     }
 
+    /**"Touch" the last-modified time-stamp, e.g. after updating data
+     * not directly stored in the projects table.
+     */
+    public static function storeModified($itemId, $itemTable, $handle = false)
+    {
+      $ownConnection = $handle === false;
+      if ($ownConnection) {
+        Config::init();
+        $handle = self::connect(Config::$pmeopts);
+      }
+
+      $query = "UPDATE IGNORE `".$itemTable."`
+    SET `Aktualisiert` = '".date(self::DATEMASK)."'
+    WHERE `Id` = ".$itemId;
+
+      $result = self::query($query, $handle);
+
+      if ($ownConnection) {
+        self::close($handle);
+      }
+
+      return $result;
+    }
+
+    /**Retrieve the last-modified time-stamp. */
+    public static function fetchModified($itemId, $itemTable, $handle = false)
+    {
+      $modified = 0;
+
+      $ownConnection = $handle === false;
+      if ($ownConnection) {
+        Config::init();
+        $handle = self::connect(Config::$pmeopts);
+      }
+
+      $query = "SELECT `Aktualisiert` FROM `".$itemTable."` WHERE `Id` = ".$itemId.";";
+
+      $result = self::query($query, $handle);
+      if ($result !== false && self::numRows($result) == 1) {
+        $row = self::fetch($result);
+        if (isset($row['Aktualisiert'])) {
+          $modified = strtotime($row['Aktualisiert']);
+        }
+      }
+
+      if ($ownConnection) {
+        self::close($handle);
+      }
+
+      return $modified;
+    }
+    
     /**Insert an "insert" entry into the changelog table. The function
      * will log the inserted data, the user name and the remote IP
      * address.
