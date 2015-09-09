@@ -157,7 +157,7 @@ var CAFEVDB = CAFEVDB || {};
 	    }
             self.loadPhotoHandlers();
 	});
-	var refreshstr = '&refresh='+Math.random(); // this disables browser-caching
+	var refreshstr = '&refresh='+Math.random(); // this disables browser-caching via URL change.
         var identstr = ''+
             '?ItemId='+self.itemId+
             '&ImageItemTable='+self.imageItemTable+
