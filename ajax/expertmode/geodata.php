@@ -33,7 +33,7 @@ namespace CAFEVDB {
     Config::init();
 
     GeoCoding::updateCountries();
-    GeoCoding::updatePostalCodes();
+    GeoCoding::updatePostalCodes(null, false, 100, true);
 
     echo '<H4>GeoData</H4><BR/>';
 
