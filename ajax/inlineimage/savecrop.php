@@ -46,15 +46,15 @@ namespace CAFEVDB
   $w = Util::cgiValue('w', -1, false);
   $h = Util::cgiValue('h', -1, false);
   $tmpkey = Util::cgiValue('tmpkey', '');
-  $recordId = Util::cgiValue('RecordId', '');
-  $imageClass = Util::cgiValue('ImagePHPClass', '');
+  $itemId = Util::cgiValue('ItemId', '');
+  $itemTable = Util::cgiValue('ImageItemTable', '');
   $imageSize = Util::cgiValue('ImageSize', 400);
 
   if ($tmpkey == '') {
     Ajax::bailOut('Missing key to temporary file.');
   }
 
-  if ($recordId == '') {
+  if ($itemId == '') {
     Ajax::bailOut(L::t('While trying to save cropped photo: missing record id.').print_r($_POST, true));
   }
 
@@ -74,12 +74,15 @@ namespace CAFEVDB
       if ($image->crop($x1, $y1, $w, $h)) {
         if (($image->width() <= $imageSize && $image->height() <= $imageSize)
             || $image->resize($imageSize)) {
-          if (!call_user_func(array($imageClass, 'storeImage'), $recordId, $image->__toString())) {
+          $mimeType = $image->mimeType();
+          $data = $image->__toString();
+          $inlineImage = new InlineImage($itemTable);
+          if (!$inlineImage->store($itemId, $mimeType, $data)) {
             Ajax::bailOut(L::t('Error saving image in DB'));
           }
           \OCP\JSON::success(array(
                               'data' => array(
-                                'recordId' => $recordId,
+                                'itemId' => $itemId,
                                 'width' => $image->width(),
                                 'height' => $image->height()
                                 )

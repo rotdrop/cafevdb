@@ -402,6 +402,18 @@ a comma.'));
         'default' => '',
         'sort' => false);
 
+      $opts['fdd']['Aktualisiert'] =
+        array_merge(
+          Config::$opts['datetime'],
+          array(
+            //'tab' => array('id' => 'miscinfo'),
+            "name" => L::t("Last Updated"),
+            "default" => date(Config::$opts['datetime']['datemask']),
+            "nowrap" => true,
+            "options" => 'LFAVCPDR' // Set by update trigger.
+            )
+          );
+
       // We could try to use 'before' triggers in order to verify the
       // data. However, at the moment the stuff does not work without JS
       // anyway, and we use Ajax calls to verify the form data.
@@ -2059,7 +2071,7 @@ __EOT__;
                            'column' => true,
                            'join' => array('type' => 'INNER')),
 
-        'PhotoData' => array(
+        'ImageData' => array(
           'table' => 'MemberPortraits',
           'column' => true,
           'join' => array(
@@ -2129,10 +2141,12 @@ __EOT__;
 
     public static function flyerImageLinkPME($projectId, $opts, $action, $k, $fds, $fdd, $row)
     {
-      return self::flyerImageLink($projectId, $action);
+      $stampIdx = array_search('Aktualisiert', $fds);
+      $stamp = strtotime($row['qf'.$stampIdx]);
+      return self::flyerImageLink($projectId, $action, $stamp);
     }
 
-    public static function flyerImageLink($projectId, $action = 'display')
+    public static function flyerImageLink($projectId, $action = 'display', $timeStamp = '')
     {
       switch ($action) {
       case 'add':
@@ -2141,7 +2155,7 @@ project without a flyer first.");
       case 'display':
         $div = ''
           .'<div class="photo"><img class="cafevdb_inline_image flyer zoomable" src="'
-          .\OCP\Util::linkTo('cafevdb', 'inlineimage.php').'?RecordId='.$projectId.'&ImagePHPClass=CAFEVDB\Projects&ImageSize=1200&PlaceHolder='.self::IMAGE_PLACEHOLDER
+          .\OCP\Util::linkTo('cafevdb', 'inlineimage.php').'?ItemId='.$projectId.'&ImageItemTable=Projekte&ImageSize=1200&PlaceHolder='.self::IMAGE_PLACEHOLDER.'&TimeStamp='.$timeStamp
           .'" '
           .'title="Flyer, if available" /></div>';
         return $div;
@@ -2165,161 +2179,6 @@ project without a flyer first.");
       default:
         return L::t("Internal error, don't know what to do concerning project-flyers in the given context.");
       }
-    }
-
-    public static function imagePlaceHolder()
-    {
-      // could probably also check for browser support for svg here
-      return self::IMAGE_PLACEHOLDER;
-    }
-
-    /**Fetch a previously stored image (picture) from the DB. The image
-     * may be empty.
-     */
-    public static function fetchImage($projectId, $handle = false)
-    {
-      $image = '';
-
-      $ownConnection = $handle === false;
-      if ($ownConnection) {
-        Config::init();
-        $handle = mySQL::connect(Config::$pmeopts);
-      }
-
-      if (false) {
-        $pktSize = 32*(1 << 20);
-        $query = "SET GLOBAL max_allowed_packet=$pktSize";
-        mySQL::query($query, $handle, false, true);
-      }
-
-      $query = "SELECT `ImageData` FROM `ProjectFlyers` WHERE `ProjectId` = ".$projectId;
-      $result = mySQL::query($query, $handle);
-
-      if ($result !== false && mysql_num_rows($result) == 1) {
-        $row = mySQL::fetch($result);
-        if (isset($row['ImageData'])) {
-          $image = $row['ImageData'];
-        }
-      }
-
-      if ($ownConnection) {
-        mySQL::close($handle);
-      }
-
-      return $image;
-    }
-
-    /**Take a BASE64 encoded image and store it in the DB. Probably a
-     * flyer or something like this.
-     */
-    public static function storeImage($projectId, $image, $handle = false)
-    {
-      if (!isset($image) || $image == '') {
-        return true;
-      }
-
-      Error::exceptions(true);
-
-      $ownConnection = $handle === false;
-      if ($ownConnection) {
-        Config::init();
-        $handle = mySQL::connect(Config::$pmeopts);
-      }
-
-      if (false) {
-        $pktSize = 32*(1 << 20);
-        $query = "SET GLOBAL max_allowed_packet=$pktSize";
-        mySQL::query($query, $handle, false, true);
-      }
-
-      $query = "INSERT INTO `ProjectFlyers`
-  (`ProjectId`,`ImageData`) VALUES (".$projectId.",'".$image."')
-  ON DUPLICATE KEY UPDATE `ImageData` = '".$image."';";
-
-      $result = mySQL::query($query, $handle) && self::storeModified($projectId, $handle);
-
-      if ($ownConnection) {
-        mySQL::close($handle);
-      }
-
-      return $result;
-    }
-
-    /**Delete the image (picture) associated to the project. Probably a
-     * flyer. More meta-data -- if needed -- should be added through the
-     * Wiki.
-     */
-    public static function deleteImage($projectId, $handle = false)
-    {
-      $image = '';
-
-      $ownConnection = $handle === false;
-      if ($ownConnection) {
-        Config::init();
-        $handle = mySQL::connect(Config::$pmeopts);
-      }
-
-      $query = "DELETE IGNORE FROM `ProjectFlyers` WHERE `ProjectId` = ".$projectId;
-
-      $result = mySQL::query($query, $handle) && self::storeModified($projectId, $handle);
-
-      if ($ownConnection) {
-        mySQL::close($handle);
-      }
-
-      return $result;
-    }
-
-    /**"Touch" the last-modified time-stamp, e.g. after updating data
-     * not directly stored in the projects table.
-     */
-    public static function storeModified($projectId, $handle = false)
-    {
-      $ownConnection = $handle === false;
-      if ($ownConnection) {
-        Config::init();
-        $handle = mySQL::connect(Config::$pmeopts);
-      }
-
-      $query = "UPDATE IGNORE `Projekte`
-    SET `Aktualisiert` = '".date('Y-m-d H:i:s')."'
-    WHERE `Id` = ".$projectId;
-
-      $result = mySQL::query($query, $handle);
-
-      if ($ownConnection) {
-        mySQL::close($handle);
-      }
-
-      return $result;
-    }
-
-    /**Retriever the last-modified time-stamp. */
-    public static function fetchModified($projectId, $handle = false)
-    {
-      $modified = 0;
-
-      $ownConnection = $handle === false;
-      if ($ownConnection) {
-        Config::init();
-        $handle = mySQL::connect(Config::$pmeopts);
-      }
-
-      $query = "SELECT `Aktualisiert` FROM `Projekte` WHERE `Id` = ".$projectId.";";
-
-      $result = mySQL::query($query, $handle);
-      if ($result !== false && mysql_num_rows($result) == 1) {
-        $row = mySQL::fetch($result);
-        if (isset($row['Aktualisiert'])) {
-          $modified = strtotime($row['Aktualisiert']);
-        }
-      }
-
-      if ($ownConnection) {
-        mySQL::close($handle);
-      }
-
-      return $modified;
     }
 
     public static function projectWikiLink($name)

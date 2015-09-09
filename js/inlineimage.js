@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2015 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -74,8 +74,8 @@ var CAFEVDB = CAFEVDB || {};
 (function(window, $, CAFEVDB, undefined) {
     'use strict';
     var Photo = function() {};
-    Photo.recordId   = -1;
-    Photo.imageClass = '';
+    Photo.itemId   = -1;
+    Photo.imageItemTable = '';
     Photo.imageSize  = 400;
     Photo.data = {PHOTO:false};
     Photo.uploadPhoto = function(filelist) {
@@ -96,7 +96,7 @@ var CAFEVDB = CAFEVDB || {};
 	    target.load(function() {
 		var response= jQuery.parseJSON(target.contents().text());
 		if (response != undefined && response.status == 'success') {
-		    self.editPhoto(response.data.recordId, response.data.tmp);
+		    self.editPhoto(response.data.itemId, response.data.tmp);
 		    //alert('File: ' + file.tmp + ' ' + file.name + ' ' + file.mime);
 		} else {
 		    OC.dialogs.alert(response.data.message, t('cafevdb', 'Error'));
@@ -119,33 +119,33 @@ var CAFEVDB = CAFEVDB || {};
         var self = CAFEVDB.Photo;
 	$.getJSON(OC.filePath('cafevdb', 'ajax', 'inlineimage/oc_image.php'),
                   { 'path': path,
-                    'RecordId': self.recordId,
-                    'ImagePHPClass': self.imageClass,
+                    'ItemId': self.itemId,
+                    'ImageItemTable': self.imageItemTable,
                     'ImageSize': self.imageSize
                   }, function(jsondata) {
 	    if (jsondata.status == 'success') {
 		//alert(jsondata.data.page);
-		self.editPhoto(jsondata.data.recordId, jsondata.data.tmp);
+		self.editPhoto(jsondata.data.itemId, jsondata.data.tmp);
 		$('#edit_photo_dialog_img').html(jsondata.data.page);
 	    } else {
 		OC.dialogs.alert(jsondata.data.message, t('cafevdb', 'Error'));
 	    }
 	});
     };
-    Photo.loadPhoto = function(recordId, imageClass, imageSize, callback) {
+    Photo.loadPhoto = function(itemId, imageItemTable, imageSize, callback) {
 	var self = CAFEVDB.Photo;
-        if (typeof recordId !== 'undefined') {
-            self.recordId = recordId;
+        if (typeof itemId !== 'undefined') {
+            self.itemId = itemId;
         }
-        if (typeof imageClass !== 'undefined') {
-            self.imageClass = imageClass;
+        if (typeof imageItemTable !== 'undefined') {
+            self.imageItemTable = imageItemTable;
         }
         if (typeof imageSize !== 'undefined') {
             self.imageSize = imageSize;
         }
 	$.getJSON(OC.filePath('cafevdb', 'ajax', 'inlineimage/currentimage.php'),
-                  { 'RecordId': self.recordId,
-                    'ImagePHPClass': self.imageClass,
+                  { 'ItemId': self.itemId,
+                    'ImageItemTable': self.imageItemTable,
                     'ImageSize': self.imageSize
                   }, function(jsondata) {
 	    if (jsondata.status == 'success') {
@@ -157,10 +157,10 @@ var CAFEVDB = CAFEVDB || {};
 	    }
             self.loadPhotoHandlers();
 	});
-	var refreshstr = '&refresh='+Math.random();
+	var refreshstr = '&refresh='+Math.random(); // this disables browser-caching
         var identstr = ''+
-            '?RecordId='+self.recordId+
-            '&ImagePHPClass='+self.imageClass+
+            '?ItemId='+self.itemId+
+            '&ImageItemTable='+self.imageItemTable+
             '&ImageSize='+self.imageSize;
 	$('#phototools li a').tipsy('hide');
 	var wrapper = $('#cafevdb_inline_image_wrapper');
@@ -195,12 +195,12 @@ var CAFEVDB = CAFEVDB || {};
     Photo.editCurrentPhoto = function() {
         var self = CAFEVDB.Photo;
 	$.getJSON(OC.filePath('cafevdb', 'ajax', 'inlineimage/currentimage.php'),
-                  { 'RecordId': self.recordId,
-                    'ImagePHPClass': self.imageClass,
+                  { 'ItemId': self.itemId,
+                    'ImageItemTable': self.imageItemTable,
                     'ImageSize': self.imageSize
                   },function(jsondata) {
 	    if (jsondata.status == 'success') {
-		self.editPhoto(jsondata.data.recordId, jsondata.data.tmp);
+		self.editPhoto(jsondata.data.itemId, jsondata.data.tmp);
 		//$('#edit_photo_dialog_img').html(jsondata.data.page);
 	    } else {
 		wrapper.removeClass('wait');
@@ -232,8 +232,8 @@ var CAFEVDB = CAFEVDB || {};
 	}
 	$('body').append('<div id="edit_photo_dialog"></div>');
 	var $dlg = self.$cropBoxTmpl.octemplate({
-            RecordId: id,
-            ImagePHPClass: self.imageClass,
+            ItemId: id,
+            ImageItemTable: self.imageItemTable,
             ImageSize: self.imageSize,
             tmpkey: tmpkey
         });
@@ -318,8 +318,8 @@ var CAFEVDB = CAFEVDB || {};
 	wrapper.addClass('wait');
 	$.getJSON(OC.filePath('cafevdb', 'ajax', 'inlineimage/deleteimage.php'),
                   {
-                      'RecordId':self.recordId,
-                      'ImagePHPClass':self.imageClass
+                      'ItemId':self.itemId,
+                      'ImageItemTable':self.imageItemTable
                   },
                   function(jsondata) {
 	    if (jsondata.status == 'success') {
@@ -424,7 +424,7 @@ var CAFEVDB = CAFEVDB || {};
 		    var response = $.parseJSON(xhr.responseText);
 		    if(response.status == 'success') {
 			if(xhr.status == 200) {
-			    CAFEVDB.Photo.editPhoto(response.data.recordId, response.data.tmp);
+			    CAFEVDB.Photo.editPhoto(response.data.itemId, response.data.tmp);
 			} else {
 			    OC.dialogs.alert(xhr.status + ': ' + xhr.responseText, t('cafevdb', 'Error'));
 			}
@@ -441,7 +441,7 @@ var CAFEVDB = CAFEVDB || {};
 		    //}
 		}
 	    };
-	    xhr.open('POST', OC.filePath('cafevdb', 'ajax/inlineimage', 'uploadimage.php')+'?RecordId='+CAFEVDB.Photo.recordId+'&ImageSize='+CAFEVDB.Photo.imageSize+'&requesttoken='+oc_requesttoken+'&imagefile='+encodeURIComponent(file.name), true);
+	    xhr.open('POST', OC.filePath('cafevdb', 'ajax/inlineimage', 'uploadimage.php')+'?ItemId='+CAFEVDB.Photo.itemId+'&ImageSize='+CAFEVDB.Photo.imageSize+'&requesttoken='+oc_requesttoken+'&imagefile='+encodeURIComponent(file.name), true);
 	    xhr.setRequestHeader('Cache-Control', 'no-cache');
 	    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 	    xhr.setRequestHeader('X-File-Name', encodeURIComponent(file.name));
@@ -455,26 +455,26 @@ var CAFEVDB = CAFEVDB || {};
      * dynamically injecting html that needs the image upload
      * functionality.
      */
-    Photo.ready = function(recordId, imageClass, callback) {
-        var idField = $('#file_upload_form input[name="RecordId"]');
-        var classField = $('#file_upload_form input[name="ImageClass"]');
-        if (typeof recordId == 'undefined') {
-            recordId = idField.val();
+    Photo.ready = function(itemId, imageItemTable, callback) {
+        var idField = $('#file_upload_form input[name="ItemId"]');
+        var tableField = $('#file_upload_form input[name="ImageItemTable"]');
+        if (typeof itemId == 'undefined') {
+            itemId = idField.val();
         } else {
-            idField.val(recordId);
+            idField.val(itemId);
         }
-        if (typeof imageClass == 'undefined') {
-            imageClass = classField.val();
+        if (typeof imageItemTable == 'undefined') {
+            imageItemTable = tableField.val();
         } else {
-            classField.val(imageClass);
+            tableField.val(imageItemTable);
         }
-        if (typeof recordId !== 'undefined' && typeof imageClass != 'undefined' && recordId >= 0) {
+        if (typeof itemId !== 'undefined' && typeof imageItemTable != 'undefined' && itemId >= 0) {
             var imageSize = $('input[name="ImageSize"]').val();
             if (typeof imageSize == 'undefined') {
                 imageSize = 400;
             }
             this.loadHandlers();
-            this.loadPhoto(recordId, imageClass, imageSize, callback);
+            this.loadPhoto(itemId, imageItemTable, imageSize, callback);
         }
         $(this.uploadDragDrop);
     };

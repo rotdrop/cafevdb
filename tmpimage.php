@@ -48,31 +48,35 @@
  *
  */
 
-use CAFEVDB\Util;
+namespace CAFEVDB 
+{
+  
+  header("Cache-Control: no-cache, no-store, must-revalidate");
 
-header("Cache-Control: no-cache, no-store, must-revalidate");
+  \OCP\User::checkLoggedIn();
+  \OCP\App::checkAppEnabled('cafevdb');
 
-OCP\User::checkLoggedIn();
-OCP\App::checkAppEnabled('cafevdb');
+  $group = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
+  $user  = \OCP\USER::getUser();
 
-$group = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
-$user  = OCP\USER::getUser();
+  if (!\OC_Group::inGroup($user, $group)) {
+    $tmpl = new \OCP\Template( 'cafevdb', 'errorpage', 'user' );
+    $tmpl->assign('error', 'notamember');
+    return $tmpl->printPage();
+  }
 
-if (!OC_Group::inGroup($user, $group)) {
-  $tmpl = new OCP\Template( 'cafevdb', 'errorpage', 'user' );
-  $tmpl->assign('error', 'notamember');
-  return $tmpl->printPage();
-}
+  $tmpkey = Util::cgiValue('tmpkey');
+  $maxsize = Util::cgiValue('maxsize', -1);
 
-$tmpkey = Util::cgiValue('tmpkey');
-$maxsize = Util::cgiValue('maxsize', -1);
+  \OCP\Util::writeLog('cafevdb', 'tmpimage.php: tmpkey: '.$tmpkey, \OCP\Util::DEBUG);
 
-OCP\Util::writeLog('cafevdb', 'tmpimage.php: tmpkey: '.$tmpkey, OCP\Util::DEBUG);
+  $image = new \OC_Image();
+  $image->loadFromData(FileCache::get($tmpkey));
+  if($maxsize != -1) {
+    $image->resize($maxsize);
+  }
+  $image();
 
-$image = new OC_Image();
-$image->loadFromData(\OC\Cache::get($tmpkey));
-if($maxsize != -1) {
-	$image->resize($maxsize);
-}
-$image();
+} // namespace
 
+?>
