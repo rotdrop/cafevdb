@@ -34,30 +34,34 @@ namespace CAFEVDB
 
   Config::init();
 
-  $recordId = Util::cgiValue('RecordId', '');
-  $imageClass = Util::cgiValue('ImagePHPClass', '');
+  $itemId = Util::cgiValue('ItemId', '');
+  $itemTable = Util::cgiValue('ImageItemTable', '');
   $imageSize = Util::cgiValue('ImageSize', 400);
 
-  if ($recordId == '') {
-    Ajax::bailOut(L::t('No record ID was submitted.'));
+  if ($itemId == '') {
+    Ajax::bailOut(L::t('No item ID was submitted.'));
   }
 
-  $photo = call_user_func(array($imageClass, 'fetchImage'), $recordId);
-  if (!$photo || $photo ==  '') {
-    Ajax::bailOut(L::t('Error reading inline image for ID = %s.', array($recordId)));
+  $inlineImage = new InlineImage($itemTable);
+  
+  $imageData = $inlineImage->fetch($itemId);
+  if (!isset($imageData['Data']) || !$imageData['Data']) {
+    Ajax::bailOut(L::t('Error reading inline image for ID = %s.', array($itemId)));
   } else {
     $image = new \OC_Image();
-    $image->loadFromBase64($photo);
+    $image->loadFromBase64($imageData['Data']);
     if ($image->valid()) {
-      $tmpkey = 'cafevdb-inline-image-'.$recordId;
+      // generate a unique URL based on MD5-hash of image data in order to disable browser caching.
+      $tmpkey = 'cafevdb-inline-image-'.$itemTable.'-'.$itemId.'-'.$imageData['MD5'];
       if (FileCache::set($tmpkey, $image->data(), 600)) {
-        \OCP\JSON::success(array('data' => array('recordId'=>$recordId, 'tmp'=>$tmpkey)));
+        \OCP\JSON::success(array('data' => array('itemId' => $itemId,
+                                                 'tmp' => $tmpkey)));
         exit();
       } else {
         Ajax::bailOut(L::t('Error saving temporary file.'));
       }
     } else {
-      Ajax::bailOut(L::t('The loading image is not valid.'));
+      Ajax::bailOut(L::t('The loaded image is not valid.'));
     }
   }
 

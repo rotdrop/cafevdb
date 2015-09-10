@@ -26,20 +26,20 @@
 namespace CAFEVDB
 {
 
-// Check if we are a user
+ // Check if we are a user
   \OCP\JSON::checkLoggedIn();
   \OCP\JSON::checkAppEnabled('cafevdb');
   \OCP\JSON::callCheck();
 
   Config::init();
 
-// Firefox and Konqueror tries to download application/json for me.  --Arthur
+  // Firefox and Konqueror tries to download application/json for me.  --Arthur
   \OCP\JSON::setContentTypeHeader('text/plain; charset=utf-8');
 
-  $recordId = Util::cgiValue('RecordId', false);
+  $itemId = Util::cgiValue('ItemId', false);
   $imageSize = Util::cgiValue('ImageSize', 400);
 
-// If it is a Drag'n'Drop transfer it's handled here.
+  // If it is a Drag'n'Drop transfer it's handled here.
   $fn = (isset($_SERVER['HTTP_X_FILE_NAME']) ? $_SERVER['HTTP_X_FILE_NAME'] : false);
   if ($fn) {
     if (!Util::cgiValue('RecordId')) {
@@ -59,10 +59,10 @@ namespace CAFEVDB
       if(FileCache::set($tmpkey, $image->data(), 600)) {
         \OCP\JSON::success(array(
                             'data' => array(
-                              'mime'=>$_SERVER['CONTENT_TYPE'],
-                              'name'=>$fn,
-                              'recordId'=>$recordId,
-                              'tmp'=>$tmpkey)));
+                              'mime' => $_SERVER['CONTENT_TYPE'],
+                              'name' => $fn,
+                              'itemId' => $itemId,
+                              'tmp' => $tmpkey)));
         exit();
       } else {
         Ajax::bailOut(L::t('Couldn\'t save temporary image: %s', $tmpkey));
@@ -72,8 +72,8 @@ namespace CAFEVDB
     }
   }
 
-// Uploads from file dialog are handled here.
-  if ($recordId === false) {
+  // Uploads from file dialog are handled here.
+  if ($itemId === false) {
     Ajax::bailOut(L::t('No record ID was submitted.'));
   }
   if (!isset($_FILES['imagefile'])) {
@@ -107,11 +107,11 @@ namespace CAFEVDB
       if(FileCache::set($tmpkey, $image->data(), 600)) {
         \OCP\JSON::success(array(
                             'data' => array(
-                              'mime'=>$file['type'],
-                              'size'=>$file['size'],
-                              'name'=>$file['name'],
-                              'recordId'=>$recordId,
-                              'tmp'=>$tmpkey,
+                              'mime' => $file['type'],
+                              'size' => $file['size'],
+                              'name' => $file['name'],
+                              'itemId' => $itemId,
+                              'tmp' => $tmpkey,
                               )));
         exit();
       } else {

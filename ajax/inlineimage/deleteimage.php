@@ -25,21 +25,26 @@ namespace CAFEVDB {
   \OCP\JSON::checkLoggedIn();
   \OCP\JSON::checkAppEnabled('cafevdb');
 
-  $recordId = Util::cgiValue('RecordId', '');
-  $imageClass = Util::cgiValue('ImagePHPClass', '');
+  $itemId = Util::cgiValue('ItemId', '');
+  $itemTable = Util::cgiValue('ImageItemTable', '');
 
-  if ($recordId == '') {
+  if ($itemId == '') {
     Ajax::bailOut(L::t('No record ID was submitted.'));
   }
 
-  if (!call_user_func(array($imageClass, 'deleteImage'), $recordId)) {
+  $inlineImage = new InlineImage($itemTable);
+
+  $imageMetaData = $inlineImage->fetch($itemId, InlineImage::IMAGE_META_DATA);
+  
+  if (!$imageMetaData || !$inlineImage->delete($itemId)) {
     Ajax::bailOut(L::t('Deleting the photo may have failed.'));
   }
 
-  $tmpkey = 'cafevdb-inline-image-'.$recordId;
+  // in case it exists
+  $tmpkey = 'cafevdb-inline-image-'.$itemTable.'-'.$itemId.'-'.$imageMetaData['MD5'];
   FileCache::remove($tmpkey);
 
-  \OCP\JSON::success(array('data' => array('recordId'=>$recordId)));
+  \OCP\JSON::success(array('data' => array('itemId' => $itemId)));
 
 } // namespace
 

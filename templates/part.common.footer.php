@@ -56,8 +56,8 @@ $css_pfx = $_['css-prefix'];
       method="post"
       enctype="multipart/form-data"
       target="file_upload_target">
-  <input type="hidden" name="RecordId" value="-1"/>
-  <input type="hidden" name="ImageClass" value=""/>
+  <input type="hidden" name="ItemId" value="-1"/>
+  <input type="hidden" name="ImageItemTable" value=""/>
   <input type="hidden" name="requesttoken" value="<?php echo $_['requesttoken']; ?>"/>
   <input type="hidden" name="ImageSize" value="1200"/>
   <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $_['uploadMaxFilesize']; ?>" id="max_upload"/>
@@ -79,8 +79,8 @@ $css_pfx = $_['css-prefix'];
 		enctype="multipart/form-data"
 		target="crop_target"
 		action="<?php print_unescaped(OCP\Util::linkToAbsolute('cafevdb', 'ajax/inlineimage/savecrop.php')); ?>">
-		<input type="hidden" id="RecordId" name="RecordId" value="{RecordId}" />
-		<input type="hidden" id="ImagePHPClass" name="ImagePHPClass" value="{ImagePHPClass}" />
+		<input type="hidden" id="ItemId" name="ItemId" value="{ItemId}" />
+		<input type="hidden" id="ImageItemTable" name="ImageItemTable" value="{ImageItemTable}" />
 		<input type="hidden" id="ImageSize" name="ImageSize" value="{ImageSize}" />
 		<input type="hidden" id="tmpkey" name="tmpkey" value="{tmpkey}" />
 		<fieldset id="coords">

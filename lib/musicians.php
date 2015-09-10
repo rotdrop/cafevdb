@@ -32,6 +32,7 @@ class Musicians
 {
   const CSS_PREFIX = 'cafevdb-page';
   const CSS_CLASS = 'musicians';
+  const TABLE = 'Musiker';
   private $projectMode;
 
   function __construct($mode = false, $execute = true) {
@@ -104,7 +105,7 @@ make sure that the musicians are also automatically added to the
      *              generating setup script: 1.50
      */
 
-    $opts['tb'] = 'Musiker';
+    $opts['tb'] = self::TABLE;
 
     // Number of records to display on the screen
     // Value of -1 lists all records in a table
@@ -469,7 +470,7 @@ __EOT__;
 
     $opts['fdd']['Sprachpräferenz'] = array(
       'tab'      => array('id' => 'miscinfo'),
-      'name'     => 'Spachpräferenz',
+      'name'     => L::t('Language'),
       'select'   => 'D',
       'maxlen'   => 128,
       'default'  => 'Deutschland',
@@ -509,6 +510,58 @@ __EOT__;
       'default' => '',
       'sort' => false);
 
+    ///////////////////// Test
+    
+    $opts['fdd']['VCard'] = array(
+      'tab' => array('id' => 'miscinfo'),
+      'input' => 'V',
+      'name' => 'VCard',
+      'select' => 'T',
+      'options' => 'ACPDV',
+      'sql' => 'Id',
+      'php' => array(
+        'type' => 'function',
+        'function' => function($musicianId, $opts, $action, $k, $fds, $fdd, $row) {
+          switch($action) {
+          case 'change':
+          case 'display':
+            //$data = self::fetchMusicianPersonalData($musicianId);
+            //return nl2br(print_r($fds, true).print_r($row, true));
+            $data = array();
+            foreach($fds as $idx => $label) {
+              $data[$label] = $row['qf'.$idx];
+            }
+            //return nl2br(print_r($data, true));
+            $vcard = VCard::vCard($data);
+            unset($vcard->PHOTO);
+            ob_start();
+            \QRcode::png($vcard->serialize());
+            $image = ob_get_contents();
+            ob_end_clean();
+            return '<img height="231" width="231" src="data:image/png;base64,'."\n".base64_encode($image).'"></img>'.
+              '<pre style="font-family:monospace;">'.$vcard->serialize().'</pre>';
+          default:
+            return '';
+          }
+        },
+        'parameters' => array()
+        ),
+      'default' => '',
+      'sort' => false
+      );
+    
+    /////////////////////////
+
+    $opts['fdd']['UUID'] = array(
+      'tab'      => array('id' => 'miscinfo'),
+      'name'     => 'UUID',
+      'options'  => 'AVCPDR', // auto increment
+      'css'      => array('postfix' => ' musician-uuid'.' '.$addCSS),
+      'select'   => 'T',
+      'maxlen'   => 32,
+      'sort'     => false
+      );
+    
     $opts['fdd']['Aktualisiert'] =
       array_merge(
         Config::$opts['datetime'],
@@ -528,6 +581,7 @@ __EOT__;
 
     $opts['triggers']['insert']['before'] = array();
     $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
+    $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Musicians::addUUID';
     $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Musicians::beforeTriggerSetTimestamp';
 
     if ($this->pme_bare) {
@@ -588,6 +642,13 @@ __EOT__;
     return true;
   }
 
+  public static function addUUID($pme, $op, $step, $oldvalus, &$changed, &$newvals)
+  {
+    $key = 'UUID';
+    $changed[] = $key;
+    $newvals[$key] = Util::generateUUID();
+  }
+  
   public static function instrumentInsurancePME($musicianId, $opts, $action, $k, $fds, $fdd, $row)
   {
     return self::instrumentInsurance($musicianId, $opts);
@@ -614,10 +675,12 @@ __EOT__;
 
   public static function portraitImageLinkPME($musicianId, $opts, $action, $k, $fds, $fdd, $row)
   {
-    return self::portraitImageLink($musicianId, $action);
+    $stampIdx = array_search('Aktualisiert', $fds);
+    $stamp = strtotime($row['qf'.$stampIdx]);
+    return self::portraitImageLink($musicianId, $action, $stamp);
   }
 
-  public static function portraitImageLink($musicianId, $action = 'display')
+  public static function portraitImageLink($musicianId, $action = 'display', $timeStamp = '')
   {
     switch ($action) {
     case 'add':
@@ -625,7 +688,7 @@ __EOT__;
     case 'display':
       $div = ''
         .'<div class="photo"><img class="cafevdb_inline_image portrait zoomable tipsy-se" src="'
-        .\OCP\UTIL::linkTo('cafevdb', 'inlineimage.php').'?RecordId='.$musicianId.'&ImagePHPClass=CAFEVDB\Musicians&ImageSize=1200'
+        .\OCP\UTIL::linkTo('cafevdb', 'inlineimage.php').'?ItemId='.$musicianId.'&ImageItemTable=Musiker&ImageSize=1200&TimeStamp='.$timeStamp
         .'" '
         .'title="'.L::t("Photo, if available").'" /></div>';
       return $div;
@@ -668,14 +731,14 @@ __EOT__;
       $handle = mySQL::connect(Config::$pmeopts);
     }
 
-    $query = "SELECT `PhotoData` FROM `MemberPortraits` WHERE `MemberId` = ".$musicianId;
+    $query = "SELECT `ImageData` FROM `MemberPortraits` WHERE `MemberId` = ".$musicianId;
 
     $result = mySQL::query($query, $handle);
 
     if ($result !== false && mysql_num_rows($result) == 1) {
       $row = mySQL::fetch($result);
-      if (isset($row['PhotoData'])) {
-        $photo = $row['PhotoData'];
+      if (isset($row['ImageData'])) {
+        $photo = $row['ImageData'];
       }
     }
 
@@ -684,102 +747,6 @@ __EOT__;
     }
 
     return $photo;
-  }
-
-  /**Take a BASE64 encoded photo and store it in the DB.
-   */
-  public static function storeImage($musicianId, $photo, $handle = false)
-  {
-    if (!isset($photo) || $photo == '') {
-      return;
-    }
-
-    $ownConnection = $handle === false;
-    if ($ownConnection) {
-      Config::init();
-      $handle = mySQL::connect(Config::$pmeopts);
-    }
-
-    $query = "INSERT INTO `MemberPortraits`
-  (`MemberId`,`PhotoData`) VALUES (".$musicianId.",'".$photo."')
-  ON DUPLICATE KEY UPDATE `PhotoData` = '".$photo."';";
-
-    $result = mySQL::query($query, $handle) && self::storeModified($musicianId, $handle);
-
-    if ($ownConnection) {
-      mySQL::close($handle);
-    }
-
-    return $result;
-  }
-
-  public static function deleteImage($musicianId, $handle = false)
-  {
-    $photo = '';
-
-    $ownConnection = $handle === false;
-    if ($ownConnection) {
-      Config::init();
-      $handle = mySQL::connect(Config::$pmeopts);
-    }
-
-    $query = "DELETE IGNORE FROM `MemberPortraits` WHERE `MemberId` = ".$musicianId;
-
-    $result = mySQL::query($query, $handle) && self::storeModified($musicianId, $handle);
-
-    if ($ownConnection) {
-      mySQL::close($handle);
-    }
-
-    return $result;
-  }
-
-  public static function storeModified($musicianId, $handle = false)
-  {
-    $ownConnection = $handle === false;
-    if ($ownConnection) {
-      Config::init();
-      $handle = mySQL::connect(Config::$pmeopts);
-    }
-
-    $query = "UPDATE IGNORE `Musiker`
-    SET `Aktualisiert` = '".date(mySQL::DATEMASK)."'
-    WHERE `Id` = ".$musicianId;
-
-    $result = mySQL::query($query, $handle);
-
-    if ($ownConnection) {
-      mySQL::close($handle);
-    }
-
-    return $result;
-  }
-
-  public static function fetchModified($musicianId, $handle = false)
-  {
-    $modified = 0;
-
-    $ownConnection = $handle === false;
-    if ($ownConnection) {
-      Config::init();
-      $handle = mySQL::connect(Config::$pmeopts);
-    }
-
-    $query = "SELECT `Aktualisiert` FROM `Musiker` WHERE `Id` = ".$musicianId.";";
-
-    $result = mySQL::query($query, $handle);
-    if ($result !== false && mysql_num_rows($result) == 1) {
-      $row = mySQL::fetch($result);
-      if (isset($row['Aktualisiert'])) {
-        $modified = strtotime($row['Aktualisiert']);
-      }
-    }
-
-    if ($ownConnection) {
-      mySQL::close($handle);
-    }
-
-    return $modified;
   }
 
   /**Fetch all known data from the Musiker table for the respective musician.  */
@@ -792,7 +759,7 @@ __EOT__;
       $handle = mySQL::connect(Config::$pmeopts);
     }
 
-    $query = "SELECT * FROM `Musiker` WHERE `Id` = $musicianId";
+    $query = "SELECT * FROM `".self::TABLE."` WHERE `Id` = $musicianId";
 
     $result = mySQL::query($query, $handle);
     if ($result !== false && mysql_num_rows($result) == 1) {
@@ -877,7 +844,7 @@ __EOT__;
       '`Postleitzahl` AS `ZIP`'.
       ', '.
       '`Telefon` AS `phone`';
-    $query .= ' FROM `Musiker` WHERE `Id` = '.$musicianId;
+    $query .= ' FROM `'.self::TABLE.'` WHERE `Id` = '.$musicianId;
     $result = mySQL::query($query, $handle);
 
     $row = false;
@@ -902,7 +869,7 @@ __EOT__;
       $handle = mySQL::connect(Config::$pmeopts);
     }
 
-    $query = 'SELECT `Name`,`Vorname`,`Email` FROM `Musiker` WHERE `Id` = '.$musicianId;
+    $query = 'SELECT `Name`,`Vorname`,`Email` FROM `'.self::TABLE.'` WHERE `Id` = '.$musicianId;
     $result = mySQL::query($query, $handle);
 
     $row = false;
@@ -929,7 +896,7 @@ __EOT__;
       $handle = mySQL::connect(Config::$pmeopts);
     }
 
-    $query = "SELECT * FROM `Musiker` WHERE `Name` = '".$surName."' AND `Vorname` = '".$firstName."'";
+    $query = "SELECT * FROM `".self::TABLE."` WHERE `Name` = '".$surName."' AND `Vorname` = '".$firstName."'";
     $result = mySQL::query($query, $handle);
 
     $musicians = array();
@@ -944,7 +911,37 @@ __EOT__;
     return $musicians;
   }
 
-};
+  /**Add missing UUID field */
+  public static function ensureUUIDs($handle = false)
+  {
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+    
+    $query = "SELECT `Id` FROM `".self::TABLE."` WHERE `UUID` IS NULL";
+    $result = mySQL::query($query, $handle);
+
+    $changed = 0;
+    while ($row = mySQL::fetch($result)) {
+      $query = "UPDATE `".self::TABLE."`
+ SET `UUID` = '".Util::generateUUID()."'
+ WHERE `Id` = ".$row['Id'];
+      if (mySQL::query($query, $handle)) {
+        ++$changed;
+      }
+    }
+    
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $changed;
+  }
+  
+
+}; // class
 
 } // namespace CAFEVDB
 

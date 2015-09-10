@@ -30,10 +30,10 @@ namespace CAFEVDB
   \OCP\JSON::checkLoggedIn();
   \OCP\JSON::checkAppEnabled('cafevdb');
 
-  $recordId  = Util::cgiValue('RecordId', '');
+  $itemId = Util::cgiValue('ItemId', '');
   $imageSize = Util::cgiValue('ImageSize', 400);
 
-  if ($recordId == '') {
+  if ($itemId == '') {
     Ajax::bailOut(L::t('No record ID was submitted.'));
   }
 
@@ -73,7 +73,8 @@ namespace CAFEVDB
                         \OCP\Util::DEBUG);
   }
   if (FileCache::set($tmpkey, $image->data(), 600)) {
-    \OCP\JSON::success(array('data' => array('recordId'=>$recordId, 'tmp'=>$tmpkey)));
+    \OCP\JSON::success(array('data' => array('itemId' => $itemId,
+                                             'tmp' => $tmpkey)));
     exit();
   } else {
     Ajax::bailOut(L::t('Couldn\'t save temporary image: %s', $tmpkey));

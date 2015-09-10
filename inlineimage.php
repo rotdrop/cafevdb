@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2015 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -33,125 +33,124 @@
  * See the COPYING-README file.
  */
 
-use CAFEVDB\L;
-use CAFEVDB\Config;
-use CAFEVDB\Util;
-use CAFEVDB\Error;
+namespace CAFEVDB
+{
 
-// Init owncloud
+  // Init owncloud
 
-OCP\User::checkLoggedIn();
-OCP\App::checkAppEnabled('cafevdb');
+  \OCP\User::checkLoggedIn();
+  \OCP\App::checkAppEnabled('cafevdb');
 
-Config::init();
+  Config::init();
 
-$group = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
-$user  = OCP\USER::getUser();
+  $group = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
+  $user  = \OCP\USER::getUser();
 
-if (!OC_Group::inGroup($user, $group)) {
-  $tmpl = new OCP\Template( 'cafevdb', 'errorpage', 'user' );
-  $tmpl->assign('error', 'notamember');
-  return $tmpl->printPage();
-}
+  if (!\OC_Group::inGroup($user, $group)) {
+    $tmpl = new \OCP\Template( 'cafevdb', 'errorpage', 'user' );
+    $tmpl->assign('error', 'notamember');
+    return $tmpl->printPage();
+  }
 
-function getStandardImage($placeHolder) {
-	//OCP\Response::setExpiresHeader('P10D');
-	OCP\Response::enableCaching();
-	OCP\Response::redirect(OCP\Util::imagePath('cafevdb', $placeHolder));
-	exit();
-}
+  function getStandardImage($placeHolder) {
+    //\OCP\Response::setExpiresHeader('P10D');
+    \OCP\Response::enableCaching();
+    \OCP\Response::redirect(\OCP\Util::imagePath('cafevdb', $placeHolder));
+    exit();
+  }
 
-try {
+  try {
   
-  Error::exceptions(true);
+    Error::exceptions(true);
 
-  $recordId    = Util::cgiValue('RecordId', -1);
-  $imageClass  = Util::cgiValue('ImagePHPClass', '');
-  $imageSize   = Util::cgiValue('ImageSize', 400);
+    $itemId    = Util::cgiValue('ItemId', -1);
+    $itemTable  = Util::cgiValue('ImageItemTable', '');
+    $imageSize   = Util::cgiValue('ImageSize', 400);
 
-  $defaultPlaceHolder = call_user_func(array($imageClass, 'imagePlaceHolder'));
-  if ($defaultPlaceHolder == '') {
-    $defaultPlaceHolder = 'person_large.png';
-  }
-  $placeHolder = Util::cgiValue('PlaceHolder', $defaultPlaceHolder);
-
-  $etag = null;
-  $caching = null;
-
-  if($recordId < 0) {
-    OCP\Util::writeLog('cafevdb',
-                       'inlineimage.php: record-id invalid', OCP\Util::DEBUG);
-    getStandardImage($placeHolder);
-  }
-
-  if(!extension_loaded('gd') || !function_exists('gd_info')) {
-    OCP\Util::writeLog('cafevdb',
-                       'inlineimage.php: GD module not installed', OCP\Util::DEBUG);
-    getStandardImage($placeHolder);
-  }
-
-  $imageData = call_user_func(array($imageClass, 'fetchImage'), $recordId);
-
-  if (!$imageData || $imageData == '') {
-    OCP\Util::writeLog('cafevdb',
-                       'inlineimage.php: Empty image string for recordId = '.$recordId, OCP\Util::DEBUG);
-    getStandardImage($placeHolder);
-  }
-
-  $image = new OC_Image();
-  if (!$image) {
-    OCP\Util::writeLog('cafevdb',
-                       'inlineimage.php: Image could not be created', OCP\Util::DEBUG);
-    getStandardImage($placeHolder);
-  }
-  
-
-  // Image :-), perhaps
-  if ($image->loadFromBase64($imageData)) {
-    // OK
-    $etag = md5($imageData);
-  }
-
-  if ($image->valid()) {
-    $modified = call_user_func(array($imageClass, 'fetchModified'), $recordId);
-
-    // Force refresh if modified within the last minute.
-    if ($modified > 0) {
-      $caching = (time() - $modified > 60) ? null : 0;
-    }
-
-    OCP\Util::writeLog('cafevdb',
-                       'modified: '.$modified." time: ".time()." diff: ".(time() - $modified), OCP\Util::DEBUG);
+    $inlineImage = new InlineImage($itemTable);
     
-    OCP\Response::enableCaching($caching);
-    if(!is_null($modified)) {
-      OCP\Response::setLastModifiedHeader($modified);
+    $defaultPlaceHolder = $inlineImage->placeHolder();
+    $placeHolder = Util::cgiValue('PlaceHolder', $defaultPlaceHolder);
+
+    $etag = null;
+    $caching = null;
+
+    if($itemId <= 0) {
+      \OCP\Util::writeLog('cafevdb',
+                          'inlineimage.php: item-id invalid', \OCP\Util::DEBUG);
+      getStandardImage($placeHolder);
     }
-    if($etag) {
-      OCP\Response::setETagHeader($etag);
+
+    if(!extension_loaded('gd') || !function_exists('gd_info')) {
+      \OCP\Util::writeLog('cafevdb',
+                          'inlineimage.php: GD module not installed', \OCP\Util::DEBUG);
+      getStandardImage($placeHolder);
     }
-    $max_size = $imageSize;
-    if ($image->width() > $max_size || $image->height() > $max_size) {
-      $image->resize($max_size);
+    
+    $imageData = $inlineImage->fetch($itemId);
+
+    if (!$imageData) {
+      \OCP\Util::writeLog('cafevdb',
+                          'inlineimage.php: Empty image string for recordId = '.$itemId, \OCP\Util::DEBUG);
+      getStandardImage($placeHolder);
     }
-  } else if (!$image->valid()) {
-    // Not found :-(
-    OCP\Util::writeLog('cafevdb',
-                       'inlineimage.php: no valid image found', OCP\Util::DEBUG);
-    getStandardImage($placeHolder);
+
+    $image = new \OC_Image();
+    if (!$image) {
+      \OCP\Util::writeLog('cafevdb',
+                          'inlineimage.php: Image could not be created', \OCP\Util::DEBUG);
+      getStandardImage($placeHolder);
+    }
+  
+
+    // Image :-), perhaps
+    if ($image->loadFromBase64($imageData['Data'])) {
+      // OK
+      $etag = $imageData['MD5'];
+    }
+
+    if ($image->valid()) {
+      $modified = mySQL::fetchModified($itemId, $itemTable);
+
+      // Force refresh if modified within the last minute.
+      if ($modified > 0) {
+        $caching = (time() - $modified > 60) ? null : 0;
+      }
+
+      \OCP\Util::writeLog('cafevdb',
+                          'modified: '.$modified." time: ".time()." diff: ".(time() - $modified), \OCP\Util::DEBUG);
+    
+      \OCP\Response::enableCaching($caching);
+      if(!is_null($modified)) {
+        \OCP\Response::setLastModifiedHeader($modified);
+      }
+      if($etag) {
+        \OCP\Response::setETagHeader($etag);
+      }
+      $max_size = $imageSize;
+      if ($image->width() > $max_size || $image->height() > $max_size) {
+        $image->resize($max_size);
+      }
+    } else if (!$image->valid()) {
+      // Not found :-(
+      \OCP\Util::writeLog('cafevdb',
+                          'inlineimage.php: no valid image found', \OCP\Util::DEBUG);
+      getStandardImage($placeHolder);
+    }
+
+    header('Content-Type: '.$image->mimeType());
+    $image->show();
+
+  } catch (Exception $e) {
+
+    $tmpl = new \OCP\Template( 'cafevdb', 'errorpage', 'user' );
+    $tmpl->assign('error', 'exception');
+    $tmpl->assign('exception', $e->getMessage());
+    $tmpl->assign('trace', $e->getTraceAsString());
+    $tmpl->assign('debug', true);
+    return $tmpl->printPage();
   }
 
-  header('Content-Type: '.$image->mimeType());
-  $image->show();
-
-} catch (Exception $e) {
-
-  $tmpl = new OCP\Template( 'cafevdb', 'errorpage', 'user' );
-  $tmpl->assign('error', 'exception');
-  $tmpl->assign('exception', $e->getMessage());
-  $tmpl->assign('trace', $e->getTraceAsString());
-  $tmpl->assign('debug', true);
-  return $tmpl->printPage();
-}
+} // namespace
 
 ?>

@@ -107,7 +107,7 @@ $(document).ready(function() {
                 if (idField.length > 0) {
                     recordId = idField.val();
                 }
-                CAFEVDB.Photo.ready(recordId, 'CAFEVDB\\Musicians', resizeCB);
+                CAFEVDB.Photo.ready(recordId, 'Musiker', resizeCB);
             } else {
                 container.find('div.photo, span.photo').imagesLoaded(resizeCB);
             }

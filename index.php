@@ -126,6 +126,9 @@ namespace CAFEVDB
     // Callback for waiting until images have been loaded
     \OCP\UTIL::addscript('cafevdb', '../3rdparty/js/imagesloaded/imagesloaded.pkgd.min');
 
+    // QRcode generation, maybe JS is not needed, but isn't large anyway
+    \OCP\UTIL::addscript('cafevdb', '../3rdparty/phpqrcode/js/qrcanvas.packed');
+    
     // dual-select list-box for email recipient selection
     //\OCP\Util::addstyle("cafevdb/3rdparty/bootstrap", "bootstrap.min");
     \OCP\Util::addstyle('cafevdb', '../3rdparty/bootstrap-duallistbox/css/bootstrap-duallistbox-quirks');

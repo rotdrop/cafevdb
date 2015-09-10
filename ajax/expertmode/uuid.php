@@ -19,42 +19,30 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-/**@file
- * Load a PME table without outer controls, intended usage are
- * jQuery dialogs. It is assumed that $_['DisplayClass'] can be
- * constructed from $_['ClassArguments'] and provides a method
- * display() which actually echos the HTML code to show.
- */
-
 namespace CAFEVDB {
 
-  Error::exceptions(true);
+  // Check if we are a user
+  \OCP\JSON::checkLoggedIn();
+  \OCP\JSON::checkAppEnabled('cafevdb');
+  \OCP\JSON::callCheck();
 
   try {
-    $class = $_['DisplayClass'];
-    $args = $_['ClassArguments'];
-    
-    if (isset($args['_'])) {
-      foreach($args['_'] as $key) {
-        $args[$key] = $_[$key];
-      }
-      unset($args['_']);
-    }
-    
-    $reflect = new \ReflectionClass('\\CAFEVDB\\'.$class);
-    $instance = $reflect->newInstanceArgs($args);
 
-    echo '<div id="pme-table-container" class="pme-table-container '.$class.'" style="height:auto;">';
-    $instance->display();
-    echo '</div>';
+    Error::exceptions(true);
 
-    // add a hidden "short title" span
-    echo '<span id="pme-short-title" class="pme-short-title" style="display:none;">'.$instance->shortTitle().'</span>';
+    Config::init();
+
+    $changed = Musicians::ensureUUIDs();
+
+    echo '<H4>Added '.$changed.' UUIDs</H4><BR/>';
+
   } catch (\Exception $e) {
-    throw $e;
+
+    echo '<H4>Exception</H4><BR/>';
+    echo '<H4>'.$e->getFile().'('.$e->getLine().'): '.$e->getMessage().'</H4><BR/>';
+
   }
 
-} // namespace
+} // namespace CAFEVDB
 
 ?>

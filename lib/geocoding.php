@@ -347,6 +347,25 @@ namespace CAFEVDB
       }
     }
 
+    /**Log to the "system"-log (OwnCloud) and optionally also
+     * HTML-code. The latter is a bug. Needed feed-back information
+     * rather should be passed as pure data to the "calling" piece of
+     * code.
+     *
+     * @param[in] $string The message to write to the log.
+     *
+     * @param[in] $level The message level, defaults to debug.
+     *
+     * @param[in] $echo Whether or not to output HTML-data.
+     */
+    private static function log($string, $level = \OCP\Util::DEBUG, $echo = false)
+    {
+      if ($echo) {
+        echo '<H4>'.htmlspecialchars($string).'</H4></BR>';
+      }
+      \OCP\Util::writeLog(Config::APP_NAME, 'GeoCoding: '.$string, $level);
+    }    
+    
     /**Update the list of known zip-code - location relations, but
      * only for the registerted musicians.
      *
@@ -354,7 +373,7 @@ namespace CAFEVDB
      * in order to reduce the amount queries, updating one every 3
      * months should be sufficient.
      */
-    public static function updatePostalCodes($language = null, $handle = false, $limit = 100)
+    public static function updatePostalCodes($language = null, $handle = false, $limit = 100, $echo = false)
     {
       if (!$language) {
         $locale = Util::getLocale();
@@ -397,7 +416,7 @@ namespace CAFEVDB
             !is_array($zipCodeInfo[self::POSTALCODESLOOKUP_TAG]) ||
             count($zipCodeInfo[self::POSTALCODESLOOKUP_TAG]) == 0) {
 	  self::stampPostalCode($postalCode, $country, $handle);
-          echo '<H4>'.$postalCode.'@'.$country.'</H4><BR/>';
+          self::log("No remote information for ".$postalCode.'@'.$country, \OCP\Util::ERROR, true);
           continue;
         }
 
@@ -450,12 +469,12 @@ namespace CAFEVDB
 	    self::stampPostalCode($postalCode, $country, $handle);
           }
           if ($limit == 1) {
-            echo '<H4>'.$postalCode.'@'.$country.': '.$name.'</H4><BR/>';
+            self::log($postalCode.'@'.$country.': '.$name, \OCP\Util::ERROR, true);
           }
         }
-      }
-
-      echo '<H4>Affected Postal Code records: '.$numChanged.' of '.$numTotal.'</H4><BR/>';
+      
+}
+      self::log('Affected Postal Code records: '.$numChanged.' of '.$numTotal, \OCP\Util::ERROR, true);
 
       if ($ownConnection) {
         mySQL::close($handle);

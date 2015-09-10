@@ -36,12 +36,12 @@ namespace CAFEVDB {
 
     Error::exceptions(true);
 
-//trigger_error(print_r($_POST, true).print_r($_FILES, true), E_USER_NOTICE);
+    //trigger_error(print_r($_POST, true).print_r($_FILES, true), E_USER_NOTICE);
 
-// Firefox and Konqueror tries to download application/json for me.  --Arthur
+    // Firefox and Konqueror tries to download application/json for me.  --Arthur
     \OCP\JSON::setContentTypeHeader('text/plain; charset=utf-8');
 
-//Ajax::bailOut(L::t('Test'));o
+    //Ajax::bailOut(L::t('Test'));o
 
     $fileKey = 'files';
 

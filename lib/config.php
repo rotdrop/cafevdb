@@ -907,16 +907,16 @@ redaxoRehearsalsModule
       //  add as needed
       self::$opts['languages'] = array(
         '' => L::t('no preference'),
-        'german' => L::t('German'),
-        'english' => L::t('English'),
-        'french' => L::t('French'),
-        'spanish' => L::t('Spanish'),
-        'portuguese' => L::t('Portuguese'),
-        'polish' => L::t('Polish'),
-        'russian' => L::t('Russian'),
-        'chinese' => L::t('Chinese'),
-        'japanese' => L::t('Japaneese'),
-        'korean' => L::t('Korean'));
+        'de' => L::t('German'),
+        'en' => L::t('English'),
+        'fr' => L::t('French'),
+        'es' => L::t('Spanish'),
+        'pt' => L::t('Portuguese'),
+        'pl' => L::t('Polish'),
+        'ru' => L::t('Russian'),
+        'zh' => L::t('Chinese'),
+        'ja' => L::t('Japaneese'),
+        'ko' => L::t('Korean'));
 
 
       self::$cgiVars = array('Template' => 'blog',
