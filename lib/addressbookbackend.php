@@ -29,7 +29,9 @@ namespace CAFEVDB
   {
     const NAME = 'cafevdb';
     const MAIN_ADDRESS_BOOK = 'musicians';
-    
+    const MAIN_ADDRESS_BOOK_ID = 0;
+    const MAIN_CONTACTS_TABLE = 'Musiker';
+
     /**
      * The name of the backend.
      *
@@ -48,7 +50,7 @@ namespace CAFEVDB
      * orchestra.
      */
     private $shareGroup;
-    
+
     /**Register us as backend with the contacts app. */
     static public function register()
     {
@@ -58,32 +60,26 @@ namespace CAFEVDB
     /**Generate an addressbook-id from which the numeric project-id can be recovered*/
     static private function addressBookId($projectName, $projectId)
     {
-      return strtolower(Util::translitToASCII($projectName)).'-'.str_pad($projectId, 5, '0', STR_PAD_LEFT);
+      return $projectId;
+    }
+
+    /**Generate a ASCII only URI for the given addressbook name.*/
+    static private function makeURI($name)
+    {
+      return strtolower(self::NAME.'_'.Util::translitToASCII($name));
     }
 
     /**Recover the project id*/
     static private function projectId($addressBookId)
     {
-      return (int)ltrim(substr($addressBookId, -5), '0');
+      return $addressBookId;
     }
 
     /**Recover the translit project name*/
-    static private function projectStrId($addressBookId)
+    static private function projectName($addressBookId)
     {
-      return substr($addressBookId, 0, -6);
-    }
-
-    /**Validate the given id, i.e. check for existence of the project.*/
-    static private function validateAddressBookId($addressBookId)
-    {
-      if ($addressBookId === self::MAIN_ADDRESS_BOOK) {
-        return true;
-      } else {
-        $projectId = self::projectId($addressBookId);
-        $projectName = Projects::fetchName($projectId);
-
-        return $addressBookId === self::addressBookId($projectName, $projectId);
-      }
+      $projectId = self::projectId($addressBookId);
+      return Projects::fetchName($projectId);
     }
 
     /**
@@ -129,7 +125,7 @@ namespace CAFEVDB
      *  'lastmodified',
      *  'owner',
      *  'uri']
-     * 
+     *
      * from its database table, and additionally
      *
      * ['permissions']
@@ -138,7 +134,7 @@ namespace CAFEVDB
      * getAddressBook(), but we simply set it as well and redirect
      * from this meta-function to getAddressBook($adbId) in order to
      * maintain consistency more easily.
-     * 
+     *
      */
     public function getAddressBooksForUser(array $options = array())
     {
@@ -147,7 +143,7 @@ namespace CAFEVDB
       }
 
       // For now just play around, later we will provide one address-book for each project.
-      $adb = $this->__getAddressBook(self::MAIN_ADDRESS_BOOK, $options);
+      $adb = $this->__getAddressBook(self::MAIN_ADDRESS_BOOK_ID, $options);
       $addressBooks = array($adb['id'] => $adb);
 
       //$projects[$line['Id']] = array('Name' => $line['Name'], 'Jahr' => $line['Jahr']);
@@ -163,7 +159,7 @@ namespace CAFEVDB
       \OCP\Util::writeLog(Config::APP_NAME,
                           __METHOD__.': '.
                           'Adbs: ' . print_r($addressBooks, true), \OCP\Util::DEBUG);
-      
+
       return $addressBooks;
     }
 
@@ -183,15 +179,18 @@ namespace CAFEVDB
      */
     private function __getAddressBook($addressBookId, array $options = array(), $handle = false)
     {
-      if ($addressBookId === self::MAIN_ADDRESS_BOOK) {
+      if ((string)$addressBookId === (string)self::MAIN_ADDRESS_BOOK_ID) {
+        \OCP\Util::writeLog(Config::APP_NAME,
+                            __METHOD__.': '. 'Called for global address book',
+                            \OCP\Util::DEBUG);
         return array(
           'backend' => $this->name,
-          'id' => self::MAIN_ADDRESS_BOOK,
+          'id' => self::MAIN_ADDRESS_BOOK_ID,
           'displayname' => L::t(self::MAIN_ADDRESS_BOOK),
           'description' => L::t('CAFeV DB orchestra address-book with all musicians.'),
-          'lastmodified' => mySQL::fetchLastModified('Musiker'),
+          'lastmodified' => mySQL::fetchLastModified(self::MAIN_CONTACTS_TABLE),
           'owner' => $this->userId, //  $this->shareOwner,
-          'uri' => self::NAME.'/'.self::MAIN_ADDRESS_BOOK,
+          'uri' => self::makeURI(self::MAIN_ADDRESS_BOOK),
           'permissions' => \OCP\PERMISSION_READ,
           );
       } else {
@@ -200,12 +199,26 @@ namespace CAFEVDB
           $projectName = $options['projectname'];
           $addressBookId = self::addressBookId($projectName, $projectId);
         } else {
-          $projectId = (int)ltrim(substr($addressBookId, -5), '0');
+          $projectId = self::projectId($addressBookId);
           $projectName = Projects::fetchName($projectId, $handle);
-          if (self::addressBookId($projectName, $projectId) !== $addressBookId) {
+          if (empty($projectName) ||
+              self::addressBookId($projectName, $projectId) !== $addressBookId) {
+            \OCP\Util::writeLog(Config::APP_NAME,
+                                __METHOD__.': '.
+                                'No address book for id ' .
+                                $addressBookId . ':' .
+                                $projectName . ':' .
+                                $projectId,
+                                \OCP\Util::DEBUG);
+
             return null;
           }
         }
+
+        \OCP\Util::writeLog(Config::APP_NAME,
+                            __METHOD__.': '. 'Called for project ' .
+                            $projectName . '@' . $projectId . ':' . $addressBookId,
+                            \OCP\Util::DEBUG);
 
         return array(
           'backend' => $this->name,
@@ -215,7 +228,7 @@ namespace CAFEVDB
                                 array($projectName)),
           'lastmodified' => mySQL::fetchLastModified($projectName."View"),
           'owner' => $this->userId, // $this->shareOwner,
-          'uri' => self::NAME.'/'.$addressBookId,
+          'uri' => self::makeURI($projectName),
           'permissions' => \OCP\PERMISSION_READ,
           );
       }
@@ -229,21 +242,28 @@ namespace CAFEVDB
      */
     public function numContacts($addressBookId) {
       if (!$this->accessAllowed()) {
+        \OCP\Util::writeLog(Config::APP_NAME, __METHOD__.': Access Denied', \OCP\Util::DEBUG);
         return 0;
       }
 
-      if ($addressBookId === self::MAIN_ADDRESS_BOOK) {
+      if ((string)$addressBookId === (string)self::MAIN_ADDRESS_BOOK_ID) {
         Config::init();
         $handle = mySQL::connect(Config::$pmeopts);
         $numRows = mySQL::queryNumRows("FROM `Musiker` WHERE 1");
         mySQL::close($handle);
 
+        \OCP\Util::writeLog(Config::APP_NAME, __METHOD__.': '.$numRows, \OCP\Util::DEBUG);
+
         return $numRows;
       } else {
-        $projectId = (int)ltrim(substr($addressBookId, -5), '0');
+        $projectId = self::projectId($addressBookId);
         $projectName = Projects::fetchName($projectId);
-        if (self::addressBookId($projectName, $projectId) !== $addressBookId) {
-          return 0;
+        if ($empty($projectName) ||
+            self::addressBookId($projectName, $projectId) !== $addressBookId) {
+
+          \OCP\Util::writeLog(Config::APP_NAME, __METHOD__.': address book not found.', \OCP\Util::DEBUG);
+
+        return 0;
         }
 
         Config::init();
@@ -251,12 +271,14 @@ namespace CAFEVDB
         $numRows = mySQL::queryNumRows("FROM `".$projectName."View` WHERE 1");
         mySQL::close($handle);
 
+        \OCP\Util::writeLog(Config::APP_NAME, __METHOD__.': '.$numRows, \OCP\Util::DEBUG);
+
         return $numRows;
       }
-      
+
       return 0;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -266,17 +288,17 @@ namespace CAFEVDB
         return array();
       }
 
-      if ($addressBookId === self::MAIN_ADDRESS_BOOK) {
+      if ((string)$addressBookId === (string)self::MAIN_ADDRESS_BOOK_ID) {
         return $this->getMusiciansContacts($options);
       } else {
         return $this->getProjectContacts($addressBookId, $options);
       }
     }
-    
+
     private function getMusiciansContacts(array $options = array())
     {
-      $addressBookId = self::MAIN_ADDRESS_BOOK;
-      
+      $addressBookId = self::MAIN_ADDRESS_BOOK_ID;
+
       $contacts = array();
 
       $myOptions = array('limit' => PHP_INT_MAX,
@@ -291,9 +313,9 @@ namespace CAFEVDB
 
       Config::init();
       $handle = mySQL::connect(Config::$pmeopts);
-      
-      if (false && $options['omitdata']) {
-        $query = "SELECT 
+
+      if ($options['omitdata']) {
+        $query = "SELECT
  `UUID` AS `id`, CONCAT(`UUID`, '.vcf') AS `uri`, `Aktualisiert` AS `lastmodified`,
  '".$addressBookId."' as `parent`, CONCAT(`Vorname`, ' ', `Name`) AS `displayname`
  FROM `Musiker` WHERE 1 LIMIT ".$options['offset'].", ".$options['limit'];
@@ -312,9 +334,9 @@ namespace CAFEVDB
  ) AS `Projects`
  ON `Musiker`.`Id` = `Projects`.`MusikerId`
  WHERE 1 LIMIT ".$options['offset'].", ".$options['limit'];
-        
+
         //throw new \Exception($query);
-      
+
         $result = mySQL::query($query, $handle);
         while ($row = mySQL::fetch($result)) {
           $vCard = VCard::vCard($row);
@@ -329,7 +351,7 @@ namespace CAFEVDB
             'permissions' => \OCP\PERMISSION_ALL
             );
         }
-        
+
       }
 
       mySQL::close($handle);
@@ -338,15 +360,16 @@ namespace CAFEVDB
     }
 
     private function getProjectContacts($addressBookId, array $options = array())
-    {  
-      $projectId = (int)ltrim(substr($addressBookId, -5), '0');
+    {
+      $projectId = self::projectId($addressBookId);
       $projectName = Projects::fetchName($projectId);
-      if (self::addressBookId($projectName, $projectId) !== $addressBookId) {
+      if (empty($projectName) ||
+          self::addressBookId($projectName, $projectId) !== $addressBookId) {
         return array();
       }
 
       $contacts = array();
-      
+
       $myOptions = array('limit' => PHP_INT_MAX,
                          'offset' => 0,
                          'omitdata' => false);
@@ -361,9 +384,9 @@ namespace CAFEVDB
       $handle = mySQL::connect(Config::$pmeopts);
 
       $mainTable = $projectName."View";
-      
+
       if ($options['omitdata']) {
-        $query = "SELECT 
+        $query = "SELECT
  `UUID` AS `id`, CONCAT(`UUID`, '.vcf') AS `uri`, `Aktualisiert` AS `lastmodified`,
  '".$addressBookId."' as `parent`, CONCAT(`Vorname`, ' ', `Name`) AS `displayname`
  FROM `".$mainTable."` WHERE 1 LIMIT ".$options['offset'].", ".$options['limit'];
@@ -382,9 +405,9 @@ namespace CAFEVDB
  ) AS `Projects`
  ON `".$mainTable."`.`MusikerId` = `Projects`.`MusikerId`
  WHERE 1 LIMIT ".$options['offset'].", ".$options['limit'];
-        
+
         //throw new \Exception($query);
-      
+
         $result = mySQL::query($query, $handle);
         while ($row = mySQL::fetch($result)) {
           $vCard = VCard::vCard($row);
@@ -399,7 +422,7 @@ namespace CAFEVDB
             'permissions' => \OCP\PERMISSION_ALL
             );
         }
-        
+
       }
 
       mySQL::close($handle);
@@ -408,7 +431,20 @@ namespace CAFEVDB
     }
 
     /**
-     * {@inheritdoc}
+     * Returns a specific contact.
+     *
+     * NOTE: The contact $id can be an array containing either
+     * 'id' or 'uri' to be able to play seamlessly with the
+     * CardDAV backend.
+     *
+     * NOTE: $addressbookid isn't always used in the query, so there's no access control.
+     * 	This is because the groups backend - \OCP\Tags - doesn't no about parent collections
+     * 	only object IDs. Hence a hack is made with an optional 'noCollection'.
+     *
+     * @param string $addressBookId
+     * @param string|array $id Contact ID
+     * @param array $options - Optional (backend specific options)
+     * @return array|null
      */
     public function getContact($addressBookId, $id, array $options = array())
     {
@@ -416,29 +452,39 @@ namespace CAFEVDB
         return null;
       }
 
-      if ($addressBookId === self::MAIN_ADDRESS_BOOK) {
-        return $this->getMusicianContact($id, $options);
-      } else {
-        return $this->getProjectContact($addressBookId, $id, $options);
+      if (is_array($id)) {
+        if (isset($id['id'])) {
+          $id = $id['id'];
+        } elseif (isset($id['uri'])) {
+          // the URI is the UUID.vcf, just strip the suffix
+          $id = substr($id['uri'], 0, -4);
+        } else {
+          throw new \Exception(
+            __METHOD__ . ' If second argument is an array, either \'id\' or \'uri\' has to be set.'
+            );
+        }
       }
-    }
 
-    private function getMusicianContact($id, array $options = array())
-    {
-      $addressBookId = 
-      
+      /* We simply can fetch the respective vCard from the global
+       * Musiker table as all project tables are simply views into
+       * this table. In principle, is never necessary to honour the
+       * $addressBookId.
+       */
+
       Config::init();
       $handle = mySQL::connect(Config::$pmeopts);
 
-      $query = "SELECT * FROM `Musiker`
+      $table = self::MAIN_CONTACTS_TABLE;
+
+      $query = "SELECT * FROM `".$table."`
  LEFT JOIN
  ( SELECT `MusikerId`,GROUP_CONCAT(DISTINCT `Projekte`.`Name` ORDER BY `Projekte`.`Name` ASC SEPARATOR ', ') AS `Projekte`
    FROM `Besetzungen`
    LEFT JOIN `Projekte` ON `Projekte`.`Id` = `Besetzungen`.`ProjektId`
    GROUP BY `MusikerId`
  ) AS `Projects`
- ON `Musiker`.`Id` = `Projects`.`MusikerId`
- WHERE `Musiker`.`UUID` LIKE '".$id."'";
+ ON `".$table."`.`Id` = `Projects`.`MusikerId`
+ WHERE `".$table."`.`UUID` LIKE '".$id."'";
       $result = mySQL::query($query, $handle);
       if ($result !== false && mySQL::numRows($result) == 1 && $row = mySQL::fetch($result)) {
         $vCard = VCard::vCard($row);
@@ -446,7 +492,7 @@ namespace CAFEVDB
           'id' => $row['UUID'],
           'uri' => $row['UUID'].'.vcf',
           'lastmodified' => strtotime($row['Aktualisiert']),
-          'parent' => $addressBookId,
+          'parent' => (int)$addressBookId, // can be null if groups should ever be supported.
           'displayname' => $row['Vorname'].' '.$row['Name'],
           'carddata' => $vCard->serialize(),
           //'vcard' => $vCard, // would have to be the derived class from the contacts app
@@ -455,62 +501,9 @@ namespace CAFEVDB
       } else {
         $contact = null;
       }
-      
+
       mySQL::close($handle);
-      
-      return $contact;
-    }
 
-    private function getProjectContact($addressBookId, $id, array $options = array())
-    {
-      $projectId = (int)ltrim(substr($addressBookId, -5), '0');
-      $projectName = Projects::fetchName($projectId);
-      if (self::addressBookId($projectName, $projectId) !== $addressBookId) {
-        return null;
-      }
-
-      Config::init();
-      $handle = mySQL::connect(Config::$pmeopts);
-
-      $mainTable = $projectName.'View';
-      
-      $query = "SELECT *,`AllInstruments` AS `Instrumente` FROM `".$mainTable."`
- LEFT JOIN
- ( SELECT `MusikerId`,GROUP_CONCAT(DISTINCT `Projekte`.`Name` ORDER BY `Projekte`.`Name` ASC SEPARATOR ', ') AS `Projekte`
-   FROM `Besetzungen`
-   LEFT JOIN `Projekte` ON `Projekte`.`Id` = `Besetzungen`.`ProjektId`
-   GROUP BY `MusikerId`
- ) AS `Projects`
- ON `".$mainTable."`.`MusikerId` = `Projects`.`MusikerId`
- WHERE `".$mainTable."`.`UUID` LIKE '".$id."'";
-      $result = mySQL::query($query, $handle);
-      if ($result !== false && mySQL::numRows($result) >= 1 && $row = mySQL::fetch($result)) {
-        if (mySQL::numRows($result) > 1) {
-          // this is not an error, but note in the log when
-          // debugging. In this case we can just take the first one as
-          // currently we do not export project dependent data to the
-          // address-books.
-          \OCP\Util::writeLog(Config::APP_NAME,
-                              __METHOD__.': '.
-                              'Note: two or more entries for ' . $id . '@' . $addressBookId, \OCP\Util::DEBUG);
-        }
-        $vCard = VCard::vCard($row);
-        $contact = array(
-          'id' => $row['UUID'],
-          'uri' => $row['UUID'].'.vcf',
-          'lastmodified' => strtotime($row['Aktualisiert']),
-          'parent' => $addressBookId,
-          'displayname' => $row['Vorname'].' '.$row['Name'],
-          'carddata' => $vCard->serialize(),
-          //'vcard' => $vCard, // would have to be the derived class from the contacts app
-          'permissions' => \OCP\PERMISSION_ALL
-          );
-      } else {
-        $contact = null;
-      }
-      
-      mySQL::close($handle);
-      
       return $contact;
     }
 
@@ -530,20 +523,24 @@ namespace CAFEVDB
         return null;
       }
 
+      /* as the project address-books also just use the UUIDs we
+       * simply can fetch from the global Musiker table
+       */
       $where = "WHERE `UUID` LIKE '".$id."'";
-      $table = 'Musiker';
-      
-      if ($addressBookId !== self::MAIN_ADDRESS_BOOK) {
-        $projectId = (int)ltrim(substr($addressBookId, -5), '0');
+      $table = self::MAIN_CONTACTS_TABLE;
+
+      if ($addressBookId !== self::MAIN_ADDRESS_BOOK_ID) {
+        $projectId = self::projectId($addressBookId);
         $projectName = Projects::fetchName($projectId);
-        if (self::addressBookId($projectName, $projectId) !== $addressBookId) {
+        if (empty($projectName) ||
+            self::addressBookId($projectName, $projectId) !== $addressBookId) {
           return null;
         }
       }
-      
+
       return strtotime(mySQL::selectSingleFromTable("`Aktualisiert`", $table, $where));
     }
 
   };
-  
+
 } // namespace
