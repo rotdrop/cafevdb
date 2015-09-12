@@ -511,7 +511,7 @@ __EOT__;
       'sort' => false);
 
     ///////////////////// Test
-    
+
     $opts['fdd']['VCard'] = array(
       'tab' => array('id' => 'miscinfo'),
       'input' => 'V',
@@ -549,7 +549,7 @@ __EOT__;
       'default' => '',
       'sort' => false
       );
-    
+
     /////////////////////////
 
     $opts['fdd']['UUID'] = array(
@@ -561,7 +561,7 @@ __EOT__;
       'maxlen'   => 32,
       'sort'     => false
       );
-    
+
     $opts['fdd']['Aktualisiert'] =
       array_merge(
         Config::$opts['datetime'],
@@ -646,9 +646,25 @@ __EOT__;
   {
     $key = 'UUID';
     $changed[] = $key;
-    $newvals[$key] = Util::generateUUID();
+    $uuid = Util::generateUUID();
+    $cnt = 0;
+    while (mySQL::queryNumRows("FROM `".self::TABLE."` WHERE `UUID` LIKE '".$uuid."'", $pme->dbh) > 0) {
+      ++$cnt;
+      if ($cnt > 10) {
+        // THIS JUST CANNOT BE. SOMETHING ELSE MUST BE WRONG. BAIL OUT.
+        \OCP\Util::writeLog(Config::APP_NAME,
+                            __METHOD__.': '.
+                            'Failed ' . $cnt . ' times to generate a unique UUID. ' .
+                            'Something else must be wrong. Giving up.',
+                            \OCP\Util::ERRPR);
+        return false; // refuse to add anything
+      }
+      $uuid = Util::generateUUID();
+    }
+    $newvals[$key] = $uuid;
+    return true;
   }
-  
+
   public static function instrumentInsurancePME($musicianId, $opts, $action, $k, $fds, $fdd, $row)
   {
     return self::instrumentInsurance($musicianId, $opts);
@@ -884,7 +900,7 @@ __EOT__;
       Config::init();
       $handle = mySQL::connect(Config::$pmeopts);
     }
-    
+
     $query = "SELECT `Id` FROM `".self::TABLE."` WHERE `UUID` IS NULL";
     $result = mySQL::query($query, $handle);
 
@@ -897,14 +913,14 @@ __EOT__;
         ++$changed;
       }
     }
-    
+
     if ($ownConnection) {
       mySQL::close($handle);
     }
 
     return $changed;
   }
-  
+
 
 }; // class
 
