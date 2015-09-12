@@ -573,6 +573,16 @@ __EOT__;
       'css' => array('postfix' => ' photo'),
       'sort' => false);
 
+    $opts['fdd']['UUID'] = array(
+      'tab'      => array('id' => 'miscinfo'),
+      'name'     => 'UUID',
+      'options'  => 'AVCPDR', // auto increment
+      'css'      => array('postfix' => ' musician-uuid'.' '.$addCSS),
+      'select'   => 'T',
+      'maxlen'   => 32,
+      'sort'     => false
+      );
+    
     $opts['fdd']['Aktualisiert'] = array_merge(
       Config::$opts['datetime'],
       array("name" => L::t("Last Updated"),
