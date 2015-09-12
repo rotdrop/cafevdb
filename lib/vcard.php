@@ -40,11 +40,16 @@ namespace CAFEVDB {
      */
     public static function vCard($musician)
     {
-      $textProperties = array('FN', 'N', 'CATEGORIES', 'ADR');
+      $textProperties = array('FN', 'N', 'CATEGORIES', 'ADR', 'NOTE');
       $uuid = isset($musician['UUID']) ? $musician['UUID'] : Util::generateUUID();
-      $categories = array_map('trim',
-                              array_merge(explode(',', $musician['Instrumente']),
-                                          explode(',', $musician['Projekte'])));
+      $categories = array('cafevdb');
+      if ($musician['Instrumente']) {
+        $categories =  array_merge($categories, explode(',', $musician['Instrumente']));
+      }
+      if ($musician['Projekte']) {
+        $categories =  array_merge($categories, explode(',', $musician['Projekte']));
+      }
+      $categories = array_map('trim', $categories);
       $appinfo = \OCP\App::getAppInfo('cafevdb');
       $appversion = \OCP\App::getAppVersion('cafevdb');
       $prodid = '-//CAF e.V.//NONSGML ' . $appinfo['name'] . ' ' . $appversion.'//EN';
@@ -56,7 +61,6 @@ namespace CAFEVDB {
           'UID' => $uuid,
           'FN' => $musician['Vorname'].' '.$musician['Name'],
           'N' => [ $musician['Name'], $musician['Vorname'] ],
-          'CATEGORIES' => $categories
           ]);
       if ($musician['Sprachpräferenz']) {
         $vcard->add('LANG', $musician['Sprachpräferenz']);
@@ -76,6 +80,13 @@ namespace CAFEVDB {
       if ($musician['Aktualisiert'] != 0) {
         $vcard->add('REV', (new \DateTime($musician['Aktualisiert']))->format(\DateTime::W3C));
       }
+      $countryNames = GeoCoding::countryNames('en');
+      if (!isset($countryNames[$musician['Land']])) {
+        $country = null;
+      } else {
+        $country = $countryNames[$musician['Land']];
+      }
+        
       $vcard->add('ADR',
                   [ '', // PO box
                     '', // address extension (appartment nr. and such)
@@ -83,17 +94,14 @@ namespace CAFEVDB {
                     $musician['Stadt'], // city
                     '', // province
                     $musician['Postleitzahl'], //zip code
-                    GeoCoding::countryNames('en')[$musician['Land']] // country
+                    $country
                     ],
                   [ 'TYPE' => 'home' ]);
-      foreach($textProperties as $property) {
-        if (isset($vcard->{$property})) {
-          $vcard->{$property}['CHARSET'] = 'UTF-8';
-        }
-      }
+      $vcard->add('CATEGORIES', $categories);
 
+      $musicianId = isset($musician['MusikerId']) ? $musician['MusikerId'] : $musician['Id'];
       $inlineImage = new InlineImage('Musiker');
-      $photo = $inlineImage->fetch($musician['Id']);
+      $photo = $inlineImage->fetch($musicianId);
       if (isset($photo['Data']) && $photo['Data']) {
         $ocImage = new \OCP\Image();
         $ocImage->loadFromBase64($photo['Data']);
@@ -106,6 +114,13 @@ namespace CAFEVDB {
           $type = strtoupper(array_pop($type));
         }
         $vcard->add('PHOTO', $imageData, ['ENCODING' => 'b', 'TYPE' => $type ]);
+      }
+      if (self::VERSION != '4.0') {
+        foreach($textProperties as $property) {
+          if (isset($vcard->{$property})) {
+            $vcard->{$property}['CHARSET'] = 'UTF-8';
+          }
+        }
       }
       
       return $vcard;
