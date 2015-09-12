@@ -714,41 +714,6 @@ __EOT__;
     }
   }
 
-  public static function imagePlaceHolder()
-  {
-    // could probably also check for browser support for svg here
-    return 'person_large.png';
-  }
-
-
-  public static function fetchImage($musicianId, $handle = false)
-  {
-    $photo = '';
-
-    $ownConnection = $handle === false;
-    if ($ownConnection) {
-      Config::init();
-      $handle = mySQL::connect(Config::$pmeopts);
-    }
-
-    $query = "SELECT `ImageData` FROM `MemberPortraits` WHERE `MemberId` = ".$musicianId;
-
-    $result = mySQL::query($query, $handle);
-
-    if ($result !== false && mysql_num_rows($result) == 1) {
-      $row = mySQL::fetch($result);
-      if (isset($row['ImageData'])) {
-        $photo = $row['ImageData'];
-      }
-    }
-
-    if ($ownConnection) {
-      mySQL::close($handle);
-    }
-
-    return $photo;
-  }
-
   /**Fetch all known data from the Musiker table for the respective musician.  */
   public static function fetchMusicianPersonalData($musicianId, $handle = false)
   {
