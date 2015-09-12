@@ -247,6 +247,17 @@ namespace CAFEVDB
     private static $inlineScripts = array();
     private static $externalScripts = array();
 
+    /**Translit to ASCII using iconv()*/
+    static public function translitToASCII($string)
+    {
+      $oldlocale = setlocale(LC_TIME, '0');
+      setlocale(LC_ALL, "de_DE.UTF-8");
+      $result = iconv("utf-8", "ascii//TRANSLIT", $string);      
+      setlocale(LC_ALL, $oldlocale);
+
+      return $result;
+    }
+    
     /**Generate a random byte sequence in hex notation.*/
     static public function generateRandomBytes($length)
     {
@@ -2020,6 +2031,90 @@ __EOT__;
       }
 
       return $modified;
+    }
+
+    /**Fetch the maximum of all modification time-stamps and return as
+     * Unix timestamp.
+     */
+    public static function fetchLastModified($table, $handle = false, $column = "Aktualisiert")
+    {
+      $lastModified = self::selectSingleFromTable("MAX(`".$column."`)", $table, null, $handle);
+
+      return strtotime($lastModified);
+    }
+
+    public static function fetchFirstModified($table, $handle = false, $column = "Aktualisiert")
+    {
+      $lastModified = self::selectSingleFromTable("MIN(`".$column."`)", $table, null, $handle);
+
+      return strtotime($lastModified);
+    }
+
+    public static function queryConnect($callable, $handle = false)
+    {
+      $ownConnection = $handle === false;
+      if ($ownConnection) {
+        Config::init();
+        $handle = self::connect(Config::$pmeopts);
+      }
+
+      $args = func_get_args();
+      array_shift($args);
+      $args[0] = $handle;
+      $result = call_user_func_array($callable, $args);
+      
+      if ($ownConnection) {
+        self::close($handle);
+      }
+
+      return $result;
+    }
+    
+    /**Convenience function, select something from a table.
+     *
+     * @param[in] string $select Some select statement,
+     * e.g. "MAX(`column`)" for the case that @a $table contains a
+     * field "column".
+     *
+     * @param[in] string $table The name of the table.
+     *
+     * @param[in] string $cond "WHERE" conditions, or sort modifyers,
+     * if applicable. Defaults to "WHERE 1".
+     *
+     * @param[in] mixed $handle Database handle or false.
+     *
+     * @return It is assumed that the function applied yields a single
+     * result value. In case of success, this value is the result,
+     * otherwise @c false is returned.
+     */
+    public static function selectSingleFromTable($select, $table, $cond = "WHERE 1", $handle = false)
+    {
+      $result = false;
+      
+      $ownConnection = $handle === false;
+      if ($ownConnection) {
+        Config::init();
+        $handle = self::connect(Config::$pmeopts);
+      }
+
+      if (!$cond) {
+        $cond = "WHERE 1";
+      }
+
+      $query = "SELECT ".$select." FROM `".$table."` WHERE ".$cond;
+      $queryRes = self::query($query, $handle);
+      if ($queryRes !== false &&
+          self::numRows($queryRes) == 1 &&
+          ($row = self::fetch($queryRes, MYSQL_NUM)) &&
+          count($row) == 1) {
+        $result = $row[0];
+      }
+      
+      if ($ownConnection) {
+        self::close($handle);
+      }
+
+      return $result;
     }
     
     /**Insert an "insert" entry into the changelog table. The function

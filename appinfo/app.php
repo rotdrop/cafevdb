@@ -59,6 +59,7 @@ OC::$CLASSPATH['CAFEVDB\GeoCoding'] = 'cafevdb/lib/geocoding.php';
 OC::$CLASSPATH['CAFEVDB\Cron'] = 'cafevdb/lib/cron.php';
 OC::$CLASSPATH['CAFEVDB\VCard'] = 'cafevdb/lib/vcard.php';
 OC::$CLASSPATH['CAFEVDB\InlineImage'] = 'cafevdb/lib/inlineimage.php';
+OC::$CLASSPATH['CAFEVDB\AddressbookBackend'] = 'cafevdb/lib/addressbookbackend.php';
 
 OC::$CLASSPATH['DWEMBED\App'] = 'dokuwikiembed/lib/dokuwikiembed.php';
 OC::$CLASSPATH['DWEMBED\L'] = 'dokuwikiembed/lib/util.php';
@@ -102,7 +103,10 @@ OCP\Util::connectHook('OC_Calendar', 'editCalendar', 'CAFEVDB\Events', 'editCale
 //OCP\Util::connectHook('\OCP\Config', 'js', 'CAFEVDB\Config', 'jsLoadHook');
 
 //\OCP\Backgroundjob::addRegularTask('CAFEVDB\Cron', 'run');
-\OCP\Util::addScript('cafevdb', 'backgroundjobs');
+OCP\Util::addScript('cafevdb', 'backgroundjobs');
+
+// Hook our address-book backend into the contacts app. Does this work???
+CAFEVDB\AddressbookBackend::register();
 
 OCP\App::addNavigationEntry( array(
 	'id' => 'cafevdb',
