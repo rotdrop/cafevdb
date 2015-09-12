@@ -577,7 +577,7 @@ __EOT__;
       'tab'      => array('id' => 'miscinfo'),
       'name'     => 'UUID',
       'options'  => 'AVCPDR', // auto increment
-      'css'      => array('postfix' => ' musician-uuid'.' '.$addCSS),
+      'css'      => array('postfix' => ' musician-uuid'),
       'select'   => 'T',
       'maxlen'   => 32,
       'sort'     => false
