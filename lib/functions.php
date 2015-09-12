@@ -239,7 +239,7 @@ namespace CAFEVDB
       return $user_cache->clear($prefix);
     }
   };
-  
+
   /**Utility class.
    */
   class Util
@@ -252,12 +252,12 @@ namespace CAFEVDB
     {
       $oldlocale = setlocale(LC_TIME, '0');
       setlocale(LC_ALL, "de_DE.UTF-8");
-      $result = iconv("utf-8", "ascii//TRANSLIT", $string);      
+      $result = iconv("utf-8", "ascii//TRANSLIT", $string);
       setlocale(LC_ALL, $oldlocale);
 
       return $result;
     }
-    
+
     /**Generate a random byte sequence in hex notation.*/
     static public function generateRandomBytes($length)
     {
@@ -863,7 +863,7 @@ __EOT__;
     public static function generateUUID()
     {
       $data = openssl_random_pseudo_bytes(16);
-      
+
       $data[6] = chr(ord($data[6]) & 0x0f | 0x40); // set version to 0100
       $data[8] = chr(ord($data[8]) & 0x3f | 0x80); // set bits 6-7 to 10
 
@@ -2062,14 +2062,14 @@ __EOT__;
       array_shift($args);
       $args[0] = $handle;
       $result = call_user_func_array($callable, $args);
-      
+
       if ($ownConnection) {
         self::close($handle);
       }
 
       return $result;
     }
-    
+
     /**Convenience function, select something from a table.
      *
      * @param[in] string $select Some select statement,
@@ -2090,7 +2090,7 @@ __EOT__;
     public static function selectSingleFromTable($select, $table, $cond = "WHERE 1", $handle = false)
     {
       $result = false;
-      
+
       $ownConnection = $handle === false;
       if ($ownConnection) {
         Config::init();
@@ -2101,22 +2101,40 @@ __EOT__;
         $cond = "WHERE 1";
       }
 
-      $query = "SELECT ".$select." FROM `".$table."` WHERE ".$cond;
+      $query = "SELECT ".$select." FROM `".$table."` ".$cond;
+
       $queryRes = self::query($query, $handle);
+      $row = array();
       if ($queryRes !== false &&
           self::numRows($queryRes) == 1 &&
           ($row = self::fetch($queryRes, MYSQL_NUM)) &&
           count($row) == 1) {
         $result = $row[0];
+
+        /* \OCP\Util::writeLog(Config::APP_NAME, */
+        /*                     __METHOD__.': '. 'result: ' . (string)$result, */
+        /*                     \OCP\Util::DEBUG); */
+
+      } else {
+        \OCP\Util::writeLog(Config::APP_NAME,
+                            __METHOD__.': '. 'query: ' . $query,
+                            \OCP\Util::DEBUG);
+        \OCP\Util::writeLog(Config::APP_NAME,
+                            __METHOD__ . ': ' .
+                            'query failed: ' .
+                            'result: ' . ($queryRes !== false) . ' ' .
+                            'rows: ' . ($queryRes !== false ? self::numRows($queryRes) : -1) . ' ' .
+                            'row: ' . print_r($row, true),
+                            \OCP\Util::DEBUG);
       }
-      
+
       if ($ownConnection) {
         self::close($handle);
       }
 
       return $result;
     }
-    
+
     /**Insert an "insert" entry into the changelog table. The function
      * will log the inserted data, the user name and the remote IP
      * address.
