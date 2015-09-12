@@ -1106,7 +1106,7 @@ __EOT__;
 
       $result = mySQL::query($query, $handle, true);
       $project = false;
-      if ($result !== false && mysql_num_rows($result) == 1) {
+      if ($result !== false && mySQL::numRows($result) == 1) {
         $project = mySQL::fetch($result);
       }
 
@@ -2080,6 +2080,10 @@ __EOT__;
             )
           ),
 
+        'UUID' => array('table' => 'Musiker',
+                        'column' => true,
+                        'join' => array('type' => 'INNER')),
+
         'Aktualisiert' => array('table' => 'Musiker',
                                 'column' => true,
                                 'join' => array('type' => 'INNER')),
@@ -2087,7 +2091,6 @@ __EOT__;
 
       return array_merge($viewStructure1, $extraColumns, $viewStructure2);
     }
-
 
     // Create a sensibly sorted view, fit for being exported via
     // phpmyadmin. Take all extra-fields into account, add them at end.
