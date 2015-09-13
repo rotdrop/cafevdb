@@ -30,15 +30,42 @@ namespace CAFEVDB {
 
   use \Sabre\VObject;
 
-  class VCard 
+  class VCard
   {
     const VERSION = '3.0';
-    
+
+    /**Import the given vCard into the musician data-base. This is
+     * somewhat problematic: the CAFeV DB data-base does not support
+     * fancy fields. Being a layman-orchestra, we prefer private
+     * entries for everything and just choose the first stuff
+     * available if no personal data is found.
+     *
+     * $param[in} string $vCard Serialized vCard data.
+     *
+     * @return associative data suitable for insertion into the
+     * 'Musiker' table, additionally photo data.
+     */
+    /*
+    public static function import($vCard)
+    {
+      // first step: parse the vCard into a Sabre\VObject
+      try {
+        $obj = \Sabre\VObject\Reader::read(
+          $vCard,
+          \Sabre\VObject\Reader::OPTION_IGNORE_INVALID_LINES
+    }
+    */
+
     /**Export the stored data for one musician as vCard.
      *
      * @param[in] $musician One row from the musician table.
+     *
+     * @param[in] $version vCard version -- which must be one
+     * supported by \Sabre\VObject. Defaults to 3.0 for compatibility
+     * reasons. Note that many (mobile) devices still only use the
+     * stone-age v2.1 format.
      */
-    public static function vCard($musician)
+    public static function export($musician, $version = self::VERSION)
     {
       $textProperties = array('FN', 'N', 'CATEGORIES', 'ADR', 'NOTE');
       $uuid = isset($musician['UUID']) ? $musician['UUID'] : Util::generateUUID();
@@ -86,7 +113,7 @@ namespace CAFEVDB {
       } else {
         $country = $countryNames[$musician['Land']];
       }
-        
+
       $vcard->add('ADR',
                   [ '', // PO box
                     '', // address extension (appartment nr. and such)
@@ -122,7 +149,7 @@ namespace CAFEVDB {
           }
         }
       }
-      
+
       return $vcard;
     }
   };

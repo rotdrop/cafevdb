@@ -532,7 +532,7 @@ __EOT__;
               $data[$label] = $row['qf'.$idx];
             }
             //return nl2br(print_r($data, true));
-            $vcard = VCard::vCard($data);
+            $vcard = VCard::export($data);
             unset($vcard->PHOTO);
             ob_start();
             \QRcode::png($vcard->serialize());

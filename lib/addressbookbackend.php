@@ -339,7 +339,7 @@ namespace CAFEVDB
 
         $result = mySQL::query($query, $handle);
         while ($row = mySQL::fetch($result)) {
-          $vCard = VCard::vCard($row);
+          $vCard = VCard::export($row);
           $contacts[] = array(
             'id' => $row['UUID'],
             'uri' => $row['UUID'].'.vcf',
@@ -410,7 +410,7 @@ namespace CAFEVDB
 
         $result = mySQL::query($query, $handle);
         while ($row = mySQL::fetch($result)) {
-          $vCard = VCard::vCard($row);
+          $vCard = VCard::export($row);
           $contacts[] = array(
             'id' => $row['UUID'],
             'uri' => $row['UUID'].'.vcf',
@@ -487,7 +487,7 @@ namespace CAFEVDB
  WHERE `".$table."`.`UUID` LIKE '".$id."'";
       $result = mySQL::query($query, $handle);
       if ($result !== false && mySQL::numRows($result) == 1 && $row = mySQL::fetch($result)) {
-        $vCard = VCard::vCard($row);
+        $vCard = VCard::export($row);
         $contact = array(
           'id' => $row['UUID'],
           'uri' => $row['UUID'].'.vcf',
