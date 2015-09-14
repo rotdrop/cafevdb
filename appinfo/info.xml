@@ -8,6 +8,10 @@
 	<licence>AGPL</licence>
 	<author>Claus-Justus Heine &amp;lt;himself@claus-justus-heine.de&amp;gt;</author>
 	<rememberlogin>false</rememberlogin>
+	<require>8</require>
+	<types>
+		<carddav/>
+	</types>
         <credits>
           <item>
             <title>The PHP Project</title>
@@ -90,5 +94,4 @@
             <link>https://github.com/giggsey/libphonenumber-for-php</link>
           </item>
         </credits>
-	<require>7</require>
 </info>
