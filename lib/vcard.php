@@ -40,21 +40,177 @@ namespace CAFEVDB {
      * entries for everything and just choose the first stuff
      * available if no personal data is found.
      *
+     * We import the following properties
+     *
+     * N, UID, LANG, EMAIL, TEL, REV, ADR, BDAY, CATEGORIES, PHOTO
+     *
+     * CATEGORIES are used to code instruments. PHOTO
+     *
      * $param[in} string $vCard Serialized vCard data.
+     *
+     * @param[in] boolean $preferWork Set to @c true in order to
+     * favour work over home data.
      *
      * @return associative data suitable for insertion into the
      * 'Musiker' table, additionally photo data.
+     *
+     * @bug Looks complicated like hell. Simplify?
      */
-    /*
-    public static function import($vCard)
+    public static function import($vCard, $preferWork = false)
     {
+      $row = array();
       // first step: parse the vCard into a Sabre\VObject
       try {
         $obj = \Sabre\VObject\Reader::read(
           $vCard,
-          \Sabre\VObject\Reader::OPTION_IGNORE_INVALID_LINES
+          \Sabre\VObject\Reader::OPTION_FORGIVING|\Sabre\VObject\Reader::OPTION_IGNORE_INVALID_LINES
+          );
+
+        if (isset($obj->N)) {
+          // we honour only surname and prename, and give a damn in
+          // particular on title madness.
+          $parts = $obj->N->getParts();
+          $row['Name'] = $parts[0];
+          $row['Vorname'] = $parts[1];
+        }
+
+        if (isset($obj->TEL)) {
+          foreach($obj->TEL as $tel) {
+            $work = false;
+            $cell = false;
+            $skip = false;
+            if ($param = $tel['TYPE']) {
+              foreach ($param as $type) {
+                switch($type) {
+                case 'WORK': $work = true; break;
+                case 'CELL': $cell = true; break;
+                case 'HOME': $work = false; break;
+                default: $skip = true; break;
+                }
+              }
+            }
+            if ($skip) {
+              continue; // FAX etc.
+            }
+            $key = $cell ? 'MobilePhone' : 'FixedLinePhone';
+            if ($work == $preferWork || !isset($row[$key])) {
+              $row[$key] = (string)$tel;
+            }
+          }
+        }
+
+        if (isset($obj->EMAIL)) {
+          foreach ($obj->EMAIL as $email) {
+            $work = false;
+            $skip = false;
+            if ($param = $email['TYPE']) {
+              foreach ($param as $type) {
+                switch($type) {
+                case 'WORK': $work = true; break;
+                case 'HOME': $work = false; break;
+                default: $skip = true; break;
+                }
+              }
+            }
+            if ($skip) {
+              continue; // unknown
+            }
+            $key = 'Email';
+            if ($work == $preferWork || !isset($row[$key])) {
+              $row[$key] = (string)$email;
+            }
+          }
+        }
+
+        if (isset($obj->UID)) {
+          $row['UUID'] = (string)$obj->UID;
+        }
+
+        if (isset($obj->LANG)) {
+          $row['Sprachpräferenz'] = (string)$obj->LANG;
+        }
+
+        if (isset($obj->BDAY)) {
+          $row['Geburtstag'] = date('Y-m-d H:i:s', strtotime((string)$obj->BDAY));
+        }
+
+        if (isset($obj->REV)) {
+          $row['Aktualisiert'] = date('Y-m-d H:i:s', strtotime((string)$obj->REV));
+        }
+
+        if (isset($obj->ADR)) {
+          $fields = array(false, // 'pobox', // unsupported
+                          false, // 'ext', // well ...
+                          'Strasse',
+                          'Stadt',
+                          false, // 'region', // unsupported
+                          'Postleitzahle',
+                          'Land');
+
+          foreach ($obj->ADR as $addr) {
+            $work = false;
+            $skip = false;
+            if ($param = $addr['TYPE']) {
+              foreach ($param as $type) {
+                switch($type) {
+                case 'WORK': $work = true; break;
+                case 'HOME': $work = false; break;
+                default: $skip = true; break;
+                }
+              }
+            }
+            if ($skip) {
+              continue; // unknown
+            }
+            if ($work != $preferWork && (isset($row['Land']) ||
+                                         isset($row['Strasse']) ||
+                                         isset($row['Stadt']) ||
+                                         isset($row['Postleitzahl']))) {
+              continue;
+            }
+            // we only support regular addresses, if address
+            // extensions are present they are added to the street
+            // address. If the street address contains newlines,
+            // replace them by ", ".
+            $parts = array_map('trim', $addr->getParts());
+            if (implode('', $parts) === $parts[2]) {
+              $parts[2] = str_replace("\xc2\xa0", "\x20", $parts[2]);
+              $address = array_map('trim', preg_split("/[\n,]/", $parts[2]));
+              if (count($address) == 3) {
+                // assume street, city, country, otherwise give up
+                $parts[2] = $address[0];
+                $zip = substr($address[1], 0, 5);
+                if (is_numeric($zip)) {
+                  $address[1] = substr($address[1], 6);
+                  $parts[5] = $zip;
+                }
+                $parts[3] = $address[1];
+                $parts[6] = $address[2];
+                // TODO: split the ZIP code
+              }
+            }
+            //echo is_array($parts)."\n";
+            //print_r($parts);
+            foreach ($parts as $idx => $value) {
+              if ($value && $fields[$idx]) {
+                $row[$fields[$idx]] = $value;
+              }
+            }
+          }
+        } // ADR
+
+        if (isset($obj->PHOTO)) {
+          $photo = $obj->PHOTO;
+          // Need to do more?
+          $row['Photo'] = $photo->getRawMimeDirValue();
+        }
+
+      } catch (\Exception $e) {
+        echo __METHOD__.": ". "Error parsing card-data.";
+      }
+
+      return $row;
     }
-    */
 
     /**Export the stored data for one musician as vCard.
      *
