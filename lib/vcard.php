@@ -201,7 +201,16 @@ namespace CAFEVDB {
 
         if (isset($obj->PHOTO)) {
           $photo = $obj->PHOTO;
-          // Need to do more?
+          // Need to do more? YEP: fetch the MimeType as well
+          // works different with vCard 4.0 compared to < 4.0
+          //
+          // < v4.0:
+          //echo $obj->PHOTO['ENCODING']."\n";
+          //echo $obj->PHOTO['TYPE']."\n";
+          //
+          // v4.0
+          // PHOTO property is always a data URI, like (e.g.)
+          // PHOTO:data:image/jpeg;base64\,/9j/4AA.....
           $row['Photo'] = $photo->getRawMimeDirValue();
         }
 
@@ -292,10 +301,12 @@ namespace CAFEVDB {
         $mimeType = $photo['MimeType'];
         if (self::VERSION == '4.0') {
           $type = $mimeType;
+          //$vcard->add('PHOTO', 'data:'.$type.';base64,'.$imageData);
         } else {
           $type = explode('/', $mimeType);
           $type = strtoupper(array_pop($type));
         }
+        // TODO: does not work with 4.0
         $vcard->add('PHOTO', $imageData, ['ENCODING' => 'b', 'TYPE' => $type ]);
       }
       if (self::VERSION != '4.0') {
