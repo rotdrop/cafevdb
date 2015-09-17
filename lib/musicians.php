@@ -533,13 +533,17 @@ __EOT__;
             }
             //return nl2br(print_r($data, true));
             $vcard = VCard::export($data);
-            unset($vcard->PHOTO);
-            ob_start();
-            \QRcode::png($vcard->serialize());
-            $image = ob_get_contents();
-            ob_end_clean();
-            return '<img height="231" width="231" src="data:image/png;base64,'."\n".base64_encode($image).'"></img>'.
-              '<pre style="font-family:monospace;">'.$vcard->serialize().'</pre>';
+            if (true) {
+              unset($vcard->PHOTO);
+              ob_start();
+              \QRcode::png($vcard->serialize());
+              $image = ob_get_contents();
+              ob_end_clean();
+              return '<img height="231" width="231" src="data:image/png;base64,'."\n".base64_encode($image).'"></img>'.
+                '<pre style="font-family:monospace;">'.$vcard->serialize().'</pre>';
+            } else {
+              return '<pre style="font-family:monospace;">'.$vcard->serialize().'</pre>';
+            }
           default:
             return '';
           }
