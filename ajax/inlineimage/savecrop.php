@@ -26,7 +26,7 @@
 
 namespace CAFEVDB
 {
-  
+
   // Check if we are a user
   \OCP\JSON::checkLoggedIn();
   \OCP\JSON::checkAppEnabled('cafevdb');
@@ -77,7 +77,7 @@ namespace CAFEVDB
           $mimeType = $image->mimeType();
           $data = $image->__toString();
           $inlineImage = new InlineImage($itemTable);
-          if (!$inlineImage->store($itemId, $mimeType, $data)) {
+          if (!$inlineImage->store($itemId, $data, $mimeType)) {
             Ajax::bailOut(L::t('Error saving image in DB'));
           }
           \OCP\JSON::success(array(

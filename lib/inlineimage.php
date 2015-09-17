@@ -33,12 +33,16 @@ namespace CAFEVDB {
     const TABLE = 'ImageData';
     const IMAGE_DATA = 1;
     const IMAGE_META_DATA = 2;
-    
+
     protected $itemTable;
-    
+    protected $imageData;
+    protected $itemId;
+
     function __construct($table)
     {
       $this->itemTable = $table;
+      $this->imageData = null;
+      $this->itemId = -1;
     }
 
     public function placeHolder()
@@ -51,7 +55,8 @@ namespace CAFEVDB {
      */
     public function fetch($itemId, $fieldSelector = self::IMAGE_DATA|self::IMAGE_META_DATA, $handle = false)
     {
-      $imageData = false;
+      $this->imageData = null;
+      $this->itemId = -1;
 
       $ownConnection = $handle === false;
       if ($ownConnection) {
@@ -71,30 +76,56 @@ namespace CAFEVDB {
         $imageData = array(); // not an error, but useless
       } else {
         $fields = "`".implode("`,`", $fields)."`";
-      
+
         $query = "SELECT ".$fields." FROM `".self::TABLE."`
- WHERE `ItemId` = ".$itemId." AND `ItemTable` = '".$this->itemTable."'";
+ WHERE `ItemId` = ".$itemId." AND `ItemTable` LIKE '".$this->itemTable."'";
 
         $result = mySQL::query($query, $handle);
 
         if ($result !== false && mySQL::numRows($result) == 1) {
-          $imageData = mySQL::fetch($result);
+          $this->imageData = mySQL::fetch($result);
+          $this->itemId = $itemId;
         }
       }
-      
+
       if ($ownConnection) {
         mySQL::close($handle);
       }
-      
-      return $imageData;
+
+      return $this->imageData;
     }
 
     /**Take a BASE64 encoded photo and store it in the DB.
+     *
+     * @param[in] integer $itemId Unique Id in respective DB-table.
+     *
+     * @param[in] string $imageData Raw image data or a data-uri (only
+     * base64 is supported, and only image URIs).
+     *
+     * @param[in] string $mimeType The mime-type. Will be determined
+     * from @a $imageData if not given.
+     *
+     * @param[in] resource $handle Data-base handle. A new connection
+     * will be opened (and closed) if unset.
+     *
+     * @return boolean @c true in case of success.
      */
-    public function store($itemId, $mimeType, $imageData, $handle = false)
+    public function store($itemId, $imageData, $mimeType = null, $handle = false)
     {
       if (!isset($imageData) || $imageData == '') {
         return false;
+      }
+
+      // first check whether $imageData is a data-uri.
+      if (preg_match('|^data:(image/[^;]+);base64\\\?,|', $row['Photo'], $matches)) {
+        $mimeType = $matches[1];
+        $imageData = substr($row['Photo'], strlen($matches[0]));
+      } else if (!$mimeType) {
+        $image = new \OC_Image();
+        if (!$image->loadFromBase64($imageData)) {
+          return false;
+        }
+        $mimeType = $image->mimeType();
       }
 
       $ownConnection = $handle === false;
@@ -128,7 +159,7 @@ namespace CAFEVDB {
         $handle = mySQL::connect(Config::$pmeopts);
       }
 
-      $query = "DELETE IGNORE FROM `".self::TABLE."` 
+      $query = "DELETE IGNORE FROM `".self::TABLE."`
  WHERE `ItemTable` = '".$this->itemTable."' AND `ItemId` = ".$itemId;
 
       $result = mySQL::query($query, $handle) && mySQL::storeModified($itemId, $this->itemTable, $handle);
@@ -139,7 +170,7 @@ namespace CAFEVDB {
 
       return $result;
     }
-    
+
   };
 
 } // namespace
