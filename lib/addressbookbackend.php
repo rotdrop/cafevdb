@@ -465,28 +465,7 @@ namespace CAFEVDB
         }
       }
 
-      /* We simply can fetch the respective vCard from the global
-       * Musiker table as all project tables are simply views into
-       * this table. In principle, is never necessary to honour the
-       * $addressBookId.
-       */
-
-      Config::init();
-      $handle = mySQL::connect(Config::$pmeopts);
-
-      $table = self::MAIN_CONTACTS_TABLE;
-
-      $query = "SELECT * FROM `".$table."`
- LEFT JOIN
- ( SELECT `MusikerId`,GROUP_CONCAT(DISTINCT `Projekte`.`Name` ORDER BY `Projekte`.`Name` ASC SEPARATOR ', ') AS `Projekte`
-   FROM `Besetzungen`
-   LEFT JOIN `Projekte` ON `Projekte`.`Id` = `Besetzungen`.`ProjektId`
-   GROUP BY `MusikerId`
- ) AS `Projects`
- ON `".$table."`.`Id` = `Projects`.`MusikerId`
- WHERE `".$table."`.`UUID` LIKE '".$id."'";
-      $result = mySQL::query($query, $handle);
-      if ($result !== false && mySQL::numRows($result) == 1 && $row = mySQL::fetch($result)) {
+      if ($row = $this->__getContact($id, $options)) {
         $vCard = VCard::export($row);
         $contact = array(
           'id' => $row['UUID'],
@@ -502,9 +481,98 @@ namespace CAFEVDB
         $contact = null;
       }
 
+      return $contact;
+    }
+
+    /**We simply can fetch the respective vCard from the global
+     * Musiker table as all project tables are simply views into
+     * this table. In principle, is never necessary to honour the
+     * $addressBookId.
+     */
+    private function __getContact($id, array $options = array())
+    {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+
+      $table = self::MAIN_CONTACTS_TABLE;
+
+      $query = "SELECT * FROM `".$table."`
+ LEFT JOIN
+ ( SELECT `MusikerId`,GROUP_CONCAT(DISTINCT `Projekte`.`Name` ORDER BY `Projekte`.`Name` ASC SEPARATOR ', ') AS `Projekte`
+   FROM `Besetzungen`
+   LEFT JOIN `Projekte` ON `Projekte`.`Id` = `Besetzungen`.`ProjektId`
+   GROUP BY `MusikerId`
+ ) AS `Projects`
+ ON `".$table."`.`Id` = `Projects`.`MusikerId`
+ WHERE `".$table."`.`UUID` LIKE '".$id."'";
+      $result = mySQL::query($query, $handle);
+      if ($result === false || mySQL::numRows($result) != 1 || !($row = mySQL::fetch($result))) {
+        $row = null;
+      }
+
       mySQL::close($handle);
 
-      return $contact;
+      return $row;
+    }
+
+    /**
+     * Updates a contact
+     *
+     * @param string $addressBookId
+     * @param false|string|array $id Contact ID
+     * @param string $contact
+     * @param array $options - Optional (backend specific options)
+     * @see getContact
+     * @return bool
+     * @throws \Exception if $contact is a string but can't be parsed as a VCard
+     * @throws \Exception if the Contact to update couldn't be found
+     */
+    public function updateContact($addressBookId, $id, $contact, array $options = array())
+    {
+      if (!$this->accessAllowed()) {
+        return null;
+      }
+
+      if (!$contact instanceof \Sabre\VObject\Component\VCard &&
+          !$contact instanceof \OCA\Contacts\VObject\VCard) {
+        try {
+          $contact = \Sabre\VObject\Reader::read(
+            $vCard,
+            \Sabre\VObject\Reader::OPTION_FORGIVING|\Sabre\VObject\Reader::OPTION_IGNORE_INVALID_LINES
+            );
+        } catch(\Exception $e) {
+          \OCP\Util::writeLog(Config::APP_NAME, __METHOD__.', exception: '.$e->getMessage(), \OCP\Util::ERROR);
+          return false;
+        }
+      }
+
+      if (is_array($id)) {
+        if (isset($id['id'])) {
+          $id = $id['id'];
+        } elseif (isset($id['uri'])) {
+          // the URI is the UUID.vcf, just strip the suffix
+          $id = substr($id['uri'], 0, -4);
+        } else {
+          throw new \Exception(
+            __METHOD__ . ' If second argument is an array, either \'id\' or \'uri\' has to be set.'
+            );
+        }
+      }
+
+      // FILL IN HERE. Various checks need to be implemented ...
+      $me = $this->__getContact($id);
+      $them = VCard::import($contact->serialize());
+
+      /* TODO:
+       *
+       * - check timestamps
+       * - what about categories and instruments?
+       * - discard UUID, keep our own
+       * - set timestamp to current time
+       *
+       */
+
+      return false;
     }
 
     /**
