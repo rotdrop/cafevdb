@@ -1056,6 +1056,7 @@ var CAFEVDB = CAFEVDB || {};
     }
     // error handling
     if (typeof data == 'undefined' ||
+        !data ||
         typeof data.status == 'undefined' ||
         typeof data.data == 'undefined') {
       OC.dialogs.alert(t('cafevdb', 'Unrecoverable unknown internal error, '+
