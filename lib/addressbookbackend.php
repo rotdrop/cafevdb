@@ -488,6 +488,14 @@ namespace CAFEVDB
      * Musiker table as all project tables are simply views into
      * this table. In principle, is never necessary to honour the
      * $addressBookId.
+     *
+     * This beast fetches one row from the Musiker table.
+     *
+     * @param[in] string $id Actually, the UUID of the contact, used
+     * as id for the contacts app.
+     *
+     * @return The respective row from the Musiker table, or null on
+     * error.
      */
     private function __getContact($id, array $options = array())
     {
@@ -571,6 +579,50 @@ namespace CAFEVDB
        * - set timestamp to current time
        *
        */
+
+      // At this point, $me and $them should contain a row suitable
+      // for (re-)insertion into the Musiker-table, where $them may
+      // additionally contain image data, but $me not.
+
+      // Check the timestamps. If $them contains one which is older,
+      // then refuse the update. What if $them has no REV field? ATM,
+      // we refuse to update.
+
+      if (!isset($them['Aktualisiert'])) {
+        \OCP\Util::writeLog(Config::APP_NAME,
+                            __METHOD__.
+                            ': "them" does not carry time-stamp',
+                            \OCP\Util::DEBUG);
+        return false;
+      }
+
+      $themStamp = strtotime($them['Aktualisiert']);
+      $meStamp = strtotime($me['Aktualisiert']);
+
+      \OCP\Util::writeLog(Config::APP_NAME,
+                          __METHOD__.
+                          ': them: '.$them['Aktualisiert'].' me: '.$me['Aktualisiert'],
+                          \OCP\Util::DEBUG);
+
+      if ($themStamp < $meStamp) {
+        // this means that an out-of-date record attempts its way into
+        // the data-base. Don't.
+        return false;
+      }
+
+      $common = array_intersect($me, $them);
+
+      \OCP\Util::writeLog(Config::APP_NAME,
+                          __METHOD__.
+                          ': common: '.print_r($common, true),
+                          \OCP\Util::DEBUG);
+
+      $changed = array_diff($them, $common);
+
+      \OCP\Util::writeLog(Config::APP_NAME,
+                          __METHOD__.
+                          ': changed: '.print_r($changed, true),
+                          \OCP\Util::DEBUG);
 
       return false;
     }
