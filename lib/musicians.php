@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2015 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -533,7 +533,7 @@ __EOT__;
             }
             //return nl2br(print_r($data, true));
             $vcard = VCard::export($data);
-            if (true) {
+            if (false) {
               unset($vcard->PHOTO);
               ob_start();
               \QRcode::png($vcard->serialize());
