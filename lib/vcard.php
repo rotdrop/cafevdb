@@ -1,4 +1,9 @@
 <?php
+
+// TODO: unifiy image handling etc.
+
+
+
 /* Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
@@ -65,6 +70,8 @@ namespace CAFEVDB {
           $vCard,
           \Sabre\VObject\Reader::OPTION_FORGIVING|\Sabre\VObject\Reader::OPTION_IGNORE_INVALID_LINES
           );
+
+        $version = (string)$obj->VERSION;
 
         if (isset($obj->N)) {
           // we honour only surname and prename, and give a damn in
@@ -201,17 +208,25 @@ namespace CAFEVDB {
 
         if (isset($obj->PHOTO)) {
           $photo = $obj->PHOTO;
-          // Need to do more? YEP: fetch the MimeType as well
-          // works different with vCard 4.0 compared to < 4.0
-          //
-          // < v4.0:
-          //echo $obj->PHOTO['ENCODING']."\n";
-          //echo $obj->PHOTO['TYPE']."\n";
-          //
-          // v4.0
-          // PHOTO property is always a data URI, like (e.g.)
-          // PHOTO:data:image/jpeg;base64\,/9j/4AA.....
-          $row['Photo'] = $photo->getRawMimeDirValue();
+          $havePhoto = false;
+          if ((float)$version >= 4.0) {
+            $rawData = $photo->getRawMimeDirValue();
+            if (preg_match('|^data:(image/[^;]+);base64\\\?,|', $rawData, $matches)) {
+              $mimeType = $matches[1];
+              $imageData = substr($row['Photo'], strlen($matches[0]));
+              $haveData = true;
+            }
+          } else {
+            $type = $obj->PHOTO['TYPE'];
+            $mimeType = 'image/'.strtolower($type);
+            $imageData = $photo->getRawMimeDirValue();
+            $havePhoto = true;
+          }
+
+          if ($havePhoto) {
+            $row['Photo'] = array('MimeType' => $mimeType,
+                                  'Data' => $imageData);
+          }
         }
 
       } catch (\Exception $e) {
@@ -297,17 +312,17 @@ namespace CAFEVDB {
       if (isset($photo['Data']) && $photo['Data']) {
         $ocImage = new \OCP\Image();
         $ocImage->loadFromBase64($photo['Data']);
-        $imageData = $ocImage->data(); // base64_decode($photo['Data']);
         $mimeType = $photo['MimeType'];
         if (self::VERSION == '4.0') {
           $type = $mimeType;
-          //$vcard->add('PHOTO', 'data:'.$type.';base64,'.$imageData);
+          // the OC Sabre version seeming does not auto-escape stuff ...
+          $vcard->add('PHOTO', 'data:'.$type.';base64\,'.$photo['Data']);
         } else {
           $type = explode('/', $mimeType);
           $type = strtoupper(array_pop($type));
+          $imageData = $ocImage->data();
+          $vcard->add('PHOTO', $imageData, ['ENCODING' => 'b', 'TYPE' => $type ]);
         }
-        // TODO: does not work with 4.0
-        $vcard->add('PHOTO', $imageData, ['ENCODING' => 'b', 'TYPE' => $type ]);
       }
       if (self::VERSION != '4.0') {
         foreach($textProperties as $property) {
