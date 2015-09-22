@@ -201,6 +201,18 @@ namespace CAFEVDB {
           }
         } // ADR
 
+        if (isset($obj->CATEGORIES)) {
+          $instruments = Instruments::fetch();
+          $categories = $obj->CATEGORIES->getParts();
+          $musicianInstruments = array();
+          foreach($instruments as $instrument) {
+            if (array_search($instrument, $categories)) {
+              $musicianInstruments[] = $instrument;
+            }
+          }
+          $row['Instrumente'] = implode(',', $musicianInstruments);
+        }
+
         if (isset($obj->PHOTO)) {
           $photo = $obj->PHOTO;
           $havePhoto = false;
