@@ -29,7 +29,7 @@ namespace CAFEVDB
   {
     const NAME = 'cafevdb';
     const MAIN_ADDRESS_BOOK = 'musicians';
-    const MAIN_ADDRESS_BOOK_ID = 0;
+    const MAIN_ADDRESS_BOOK_ID = 'musicians';
     const MAIN_CONTACTS_TABLE = 'Musiker';
 
     /**
@@ -92,15 +92,16 @@ namespace CAFEVDB
 
     public function __construct($userId = null)
     {
+      parent::__construct($userId);
       Config::init();
-      $this->userId = $userId ? $userId : \OCP\User::getUser();
+      $this->userid = $userId ? $userId : \OCP\User::getUser();
       $this->shareGroup = Config::getAppValue('usergroup');
       $this->shareOwner = Config::getValue('shareowner');
-      $this->orchestraUser = \OC_Group::inGroup($this->userId, $this->shareGroup);
+      $this->orchestraUser = \OC_Group::inGroup($this->userid, $this->shareGroup);
 
       \OCP\Util::writeLog(Config::APP_NAME,
                           __METHOD__.': '.
-                          $this->userId . '@' . $this->shareGroup .
+                          $this->userid . '@' . $this->shareGroup .
                           ' access ' . ($this->accessAllowed() ? 'granted' : 'denied') .
                           ', orchestra user ' . $this->shareOwner,
                           \OCP\Util::DEBUG);
@@ -189,7 +190,7 @@ namespace CAFEVDB
           'displayname' => L::t(self::MAIN_ADDRESS_BOOK),
           'description' => L::t('CAFeV DB orchestra address-book with all musicians.'),
           'lastmodified' => mySQL::fetchLastModified(self::MAIN_CONTACTS_TABLE),
-          'owner' => $this->userId, //  $this->shareOwner,
+          'owner' => $this->userid, //  $this->shareOwner,
           'uri' => self::makeURI(self::MAIN_ADDRESS_BOOK),
           'permissions' => \OCP\PERMISSION_READ,
           );
@@ -227,7 +228,7 @@ namespace CAFEVDB
           'description' => L::t('CAFeV DB project address-book with all participants for %s',
                                 array($projectName)),
           'lastmodified' => mySQL::fetchLastModified($projectName."View"),
-          'owner' => $this->userId, // $this->shareOwner,
+          'owner' => $this->userid, // $this->shareOwner,
           'uri' => self::makeURI($projectName),
           'permissions' => \OCP\PERMISSION_READ,
           );
