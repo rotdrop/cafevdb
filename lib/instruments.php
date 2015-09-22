@@ -511,7 +511,14 @@ class Instruments
   }
 
   // Fetch the instruments and sort them according to Instruments.Sortierung
-  public static function fetch($handle) {
+  public static function fetch($handle = false)
+  {
+    $ownConnection = $handle === false;
+
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
 
     $Instruments = mySQL::multiKeys('Musiker', 'Instrumente', $handle);
 
@@ -528,11 +535,22 @@ class Instruments
       $final[] = $tblInst;
     }
 
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
     return $final;
   }
 
   // Fetch all instruments, group by instrument family.
-  public static function fetchGrouped($handle) {
+  public static function fetchGrouped($handle)
+  {
+    $ownConnection = $handle === false;
+
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
 
     $Instruments = mySQL::multiKeys('Musiker', 'Instrumente', $handle);
 
@@ -557,6 +575,10 @@ class Instruments
       L::t("Blas,Blech");
       L::t("Schlag");
       L::t("Sonstiges");
+    }
+
+    if ($ownConnection) {
+      mySQL::close($handle);
     }
 
     return $resultTable;
