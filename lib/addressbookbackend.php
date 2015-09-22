@@ -608,6 +608,10 @@ namespace CAFEVDB
       if ($themStamp < $meStamp) {
         // this means that an out-of-date record attempts its way into
         // the data-base. Don't.
+        \OCP\Util::writeLog(Config::APP_NAME,
+                            __METHOD__.
+                            " vCard from ".$them['Aktualisiert']." is older than ".$me['Aktualisiert'],
+                            \OCP\Util::DEBUG);
         return false;
       }
 
