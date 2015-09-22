@@ -1,9 +1,4 @@
 <?php
-
-// TODO: unifiy image handling etc.
-
-
-
 /* Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
@@ -306,24 +301,26 @@ namespace CAFEVDB {
                   [ 'TYPE' => 'home' ]);
       $vcard->add('CATEGORIES', $categories);
 
-      $musicianId = isset($musician['MusikerId']) ? $musician['MusikerId'] : $musician['Id'];
-      $inlineImage = new InlineImage('Musiker');
-      $photo = $inlineImage->fetch($musicianId);
+      if (isset($musician['Photo']) && is_array($musician['Photo'])) {
+        $photo = $musician['Photo'];
+      } else {
+        $musicianId = isset($musician['MusikerId']) ? $musician['MusikerId'] : $musician['Id'];
+        $inlineImage = new InlineImage('Musiker');
+        $photo = $inlineImage->fetch($musicianId);
+      }
       if (isset($photo['Data']) && $photo['Data']) {
-        $ocImage = new \OCP\Image();
-        $ocImage->loadFromBase64($photo['Data']);
         $mimeType = $photo['MimeType'];
         if (self::VERSION == '4.0') {
-          $type = $mimeType;
           // the OC Sabre version seeming does not auto-escape stuff ...
-          $vcard->add('PHOTO', 'data:'.$type.';base64\,'.$photo['Data']);
+          $vcard->add('PHOTO', 'data:'.$mimeType.';base64\,'.$photo['Data']);
         } else {
           $type = explode('/', $mimeType);
           $type = strtoupper(array_pop($type));
-          $imageData = $ocImage->data();
+          $imageData = base64_decode($photo['Data']);
           $vcard->add('PHOTO', $imageData, ['ENCODING' => 'b', 'TYPE' => $type ]);
         }
       }
+
       if (self::VERSION != '4.0') {
         foreach($textProperties as $property) {
           if (isset($vcard->{$property})) {
