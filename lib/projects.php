@@ -1809,7 +1809,8 @@ __EOT__;
       }
 
       if (!$result) {
-        $query = "SELECT GREATEST(0,MAX(Unkostenbeitrag)) as MaximumFee FROM `Besetzungen` WHERE `ProjektId` = $projectId";
+        $query = "SELECT GREATEST(0,MAX(Unkostenbeitrag)) as MaximumFee
+ FROM `Besetzungen` WHERE `ProjektId` = $projectId";
         $qres = mySQL::query($query, $handle);
 
         $max = 0;
@@ -2071,14 +2072,18 @@ __EOT__;
                            'column' => true,
                            'join' => array('type' => 'INNER')),
 
-        'ImageData' => array(
-          'table' => 'MemberPortraits',
-          'column' => true,
+        /*
+        'Portrait' => array(
+          'table' => 'ImageData',
+          'column' => 'Data',
           'join' => array(
             'type' => 'LEFT',
-            'condition' => '`MemberPortraits`.`MemberId` = `Musiker`.`Id`'
-            )
-          ),
+            'condition' => (
+              '`ImageData`.`ItemId` = `Musiker`.`Id` '.
+              'AND '.
+              "`ImageData`.`ItemTable` = 'Musiker'")
+            )),
+        */
 
         'UUID' => array('table' => 'Musiker',
                         'column' => true,
@@ -2132,6 +2137,8 @@ __EOT__;
       $sqlQuery = "CREATE OR REPLACE VIEW `".$projectName."View` AS\n"
         .$sqlSelect
         .$sqlSort;
+
+      \OCP\Util::writeLog(Config::APP_NAME, __METHOD__.": ".$sqlQuery, \OC_LOG::DEBUG);
 
       mySQL::query($sqlQuery, $handle);
 
