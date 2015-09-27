@@ -108,6 +108,7 @@ class phpMyEdit
 	var $key_num;	// number of field which is the unique key
 	var $key_type;	// type of key field (int/real/string/date etc.)
 	var $key_delim;	// character used for key value quoting
+	var $groupby;   // array of fields for groupby clause, or false
 	var $rec;		// number of record selected for editing
 	var $mrecs;				// array of custom-multi records selected
 	var $inc;		// number of records to display
@@ -237,6 +238,7 @@ class phpMyEdit
 
 	function col_has_sql($k)	{ return isset($this->fdd[$k]['sql']); }
 	function col_has_sqlw($k)	{ return isset($this->fdd[$k]['sqlw']) && !$this->virtual($k); }
+	function col_needs_having($k) { return @$this->fdd[$k]['filter'] == 'having'; }
 	function col_has_values($k) { return isset($this->fdd[$k]['values']) || isset($this->fdd[$k]['values2']); }
 	function col_has_php($k)	{ return isset($this->fdd[$k]['php']); }
 	function col_has_URL($k)	{ return isset($this->fdd[$k]['URL'])
@@ -757,6 +759,17 @@ class phpMyEdit
 		return $ret;
 	} /* }}} */
 
+	function get_SQL_groupby_query_opts()
+	{
+		$fields = '';
+		if (!empty($this->groupby)) {
+			foreach($this->groupby as $field) {
+				$fields .= $this->fqn($field).',';
+			}
+		}
+		return trim($fields, ',');
+	}
+
 	function get_SQL_main_list_query_parts() /* {{{ */
 	{
 		/*
@@ -770,6 +783,8 @@ class phpMyEdit
 		}
 		$qparts['from']	 = @$this->get_SQL_join_clause();
 		$qparts['where'] = $this->get_SQL_where_from_query_opts();
+		$qparts['groupby'] = $this->get_SQL_groupby_query_opts();
+		$qparts['having'] = $this->get_SQL_having_query_opts();
 		// build up the ORDER BY clause
 		if (isset($this->sfn) || isset($this->dfltsfn)) {
 			$sfn = array_merge($this->sfn, $this->dfltsfn);
@@ -971,16 +986,67 @@ class phpMyEdit
 		return ''; /* empty string */
 	} /* }}} */
 
+	function get_SQL_having_query_opts($qp = null, $text = 0) /* {{{ */
+	{
+		if ($qp == null) {
+			$qp = $this->query_group_opts;
+		}
+		$where = array();
+		foreach ($qp as $field => $ov) {
+			if (is_numeric($field)) {
+				$tmp_where = array();
+				foreach ($ov as $field2 => $ov2) {
+					$tmp_where[] = sprintf('%s %s %s', $field2, $ov2['oper'], $ov2['value']);
+				}
+				$where[] = '('.join(' OR ', $tmp_where).')';
+			} else {
+				if (is_array($ov['value'])) {
+					$tmp_ov_val = '';
+					foreach ($ov['value'] as $ov_val) {
+						strlen($tmp_ov_val) > 0 && $tmp_ov_val .= ' OR ';
+						if ($ov_val == '') {
+							// interprete this as empty or NULL
+							$tmp_ov_val .= sprintf("(%s IS NULL OR %s LIKE '')", $field, $field);
+						} else {
+							$tmp_ov_val .= sprintf('FIND_IN_SET("%s",%s)', $ov_val, $field);
+						}
+					}
+					if (isset($ov['oper']) &&
+						strtoupper($ov['oper']) == 'NOT' || $ov['oper'] == '!') {
+						$tmp_ov_val = sprintf('(%s IS NULL OR NOT (%s))',
+											  $field, $tmp_ov_val);
+					}
+					$where[] = "($tmp_ov_val)";
+				} else {
+					$where[] = sprintf('%s %s %s', $field, $ov['oper'], $ov['value']);
+				}
+			}
+		}
+		// Add any coder specified filters
+		if (count($where) > 0) {
+			if ($text) {
+				return str_replace('%', '*', join(' AND ',$where));
+			} else {
+				return join(' AND ',$where);
+			}
+		}
+		return ''; /* empty string */
+	} /* }}} */
+
 	function gather_query_opts() /* {{{ */
 	{
 		$this->query_opts = array();
+		$this->query_group_opts = array();
 		$this->prev_qfn	  = $this->qfn;
 		$this->qfn		  = '';
 		if ($this->clear_operation()) {
 			return;
 		}
-		// gathers query options into an array, $this->query_opts
-		$qo = array();
+		// gathers query options into an array, $this->query_opts or
+		// $this->query_group_opts. The latter is needed if the field
+		// is an aggregate.
+		$query_opts = array();
+		$query_group_opts = array();
 		for ($k = 0; $k < $this->num_fds; $k++) {
 			$l	  = 'qf'.$k;
 			$lc	  = 'qf'.$k.'_comp';
@@ -991,6 +1057,13 @@ class phpMyEdit
 			if (! isset($m) && ! isset($mi)) {
 				continue;
 			}
+
+			if ($this->col_needs_having($k)) {
+				$qo = &$this->query_group_opts;
+			} else {
+				$qo = &$this->query_opts;
+			}
+
 			if (is_array($m) || is_array($mi)) {
 				if (is_array($mi)) {
 					$m = $mi;
@@ -1217,7 +1290,8 @@ class phpMyEdit
 				}
 			}
 		}
-		$this->query_opts = $qo;
+		//$this->query_opts = $query_opts;
+		//$this->query_group_opts  = $query_group_opts;
 	} /* }}} */
 
 	/*
@@ -1918,8 +1992,12 @@ class phpMyEdit
 		}
 		if ($this->col_has_datemask($k)) {
 			$value = $this->makeTimeString($k, $row);
-		} else if ($this->is_values2($k, $row["qf$k"])) {
-			$value = $row['qf'.$k.'_idx'];
+		} else if (isset($this->fdd[$k]['values2'])) {
+			if (isset($row['qf'.$k.'_idx'])) {
+				$value = $row['qf'.$k.'_idx'];
+			} else {
+				$value = $row["qf$k"];
+			}
 			if ($this->fdd[$k]['select'] == 'M') {
 				$value_ar  = explode(',', $value);
 				$value_ar2 = array();
@@ -1936,8 +2014,6 @@ class phpMyEdit
 					$escape = false;
 				}
 			}
-		} elseif (isset($this->fdd[$k]['values2'][$row["qf$k"]])) {
-			$value = $this->fdd[$k]['values2'][$row["qf$k"]];
 		} else {
 			$value = $row["qf$k"];
 		}
@@ -2837,6 +2913,7 @@ class phpMyEdit
 			'type'	 => 'SELECT',
 			'select' => 'COUNT(*)',
 			'from'	 => @$this->get_SQL_join_clause(),
+			//'groupby' => @$this->get_SQL_groupby_query_opts(), NOPE, wrong here
 			'where'	 => @$this->get_SQL_where_from_query_opts());
 		$res = $this->myquery($this->get_SQL_main_list_query($count_parts), __LINE__);
 		$row = $this->sql_fetch($res, 'n');
@@ -2985,7 +3062,14 @@ class phpMyEdit
 		/*
 		 * Display the current query
 		 */
-		$text_query = $this->get_SQL_where_from_query_opts(null, true);
+		$queries = array();
+		if ($query = $this->get_SQL_where_from_query_opts(null, true)) {
+			$queries[] = $query;
+		}
+		if ($query = $this->get_SQL_having_query_opts(null, true)) {
+			$queries[] = $query;
+		}
+		$text_query = implode(' AND ', $queries);
 		if ($text_query != '' || $this->display['query'] === 'always') {
 			$css_class_name = $this->getCSSclass('queryinfo');
 			$css_sys = $this->getCSSclass('sys');
@@ -4219,7 +4303,8 @@ class phpMyEdit
 			if ($this->displayed[$field_num] = $this->displayed($field_num)) {
 				$num_fields_displayed++;
 			}
-			if (is_array(@$this->fdd[$key]['values']) && ! isset($this->fdd[$key]['values']['table'])) {
+			if (is_array(@$this->fdd[$key]['values']) &&
+				!($this->fdd[$key]['values']['table'] || $this->fdd[$key]['values']['queryvalues'])) {
 				foreach ($this->fdd[$key]['values'] as $val) {
 					$this->fdd[$key]['values2'][$val] = $val;
 				}
@@ -4563,6 +4648,10 @@ class phpMyEdit
 		// Other variables§
 		$this->key		 = $opts['key'];
 		$this->key_type	 = $opts['key_type'];
+		$this->groupby   = @$opts['groupby_fields'];
+		if ($this->groupby && !is_array($this->groupby)) {
+			$this->groupby = array($this->groupby);
+		}
 		$this->inc		 = $opts['inc'];
 		$this->options	 = $opts['options'];
 		$this->fdd		 = $opts['fdd'];
