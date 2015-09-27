@@ -315,25 +315,33 @@ namespace CAFEVDB
       Config::init();
       $handle = mySQL::connect(Config::$pmeopts);
 
+      $table = self::MAIN_CONTACTS_TABLE;
+
       if ($options['omitdata']) {
         $query = "SELECT
  `UUID` AS `id`, CONCAT(`UUID`, '.vcf') AS `uri`, `Aktualisiert` AS `lastmodified`,
  '".$addressBookId."' as `parent`, CONCAT(`Vorname`, ' ', `Name`) AS `displayname`
- FROM `Musiker` WHERE 1 LIMIT ".$options['offset'].", ".$options['limit'];
+ FROM `".$table."` WHERE 1 LIMIT ".$options['offset'].", ".$options['limit'];
         $result = mySQL::query($query, $handle);
         while ($row = mySQL::fetch($result)) {
           $row['permissions'] = \OCP\PERMISSION_ALL;
           $contacts[] = $row;
         }
       } else {
-        $query = "SELECT * FROM `Musiker`
+        $query = "SELECT `".$table."`.*,
+ GROUP_CONCAT(DISTINCT `Projekte`.`Name` ORDER BY `Projekte`.`Name` ASC SEPARATOR ',') AS `Projects`,
+ CONCAT('data:',`ImageData`.`MimeType`,';base64,',`ImageData`.`Data`) AS `Portrait`
+ FROM `".$table."`
  LEFT JOIN
- ( SELECT `MusikerId`,GROUP_CONCAT(DISTINCT `Projekte`.`Name` ORDER BY `Projekte`.`Name` ASC SEPARATOR ', ') AS `Projekte`
-   FROM `Besetzungen`
-   LEFT JOIN `Projekte` ON `Projekte`.`Id` = `Besetzungen`.`ProjektId`
-   GROUP BY `MusikerId`
- ) AS `Projects`
- ON `Musiker`.`Id` = `Projects`.`MusikerId`
+ `ImageData`
+ ON `".$table."`.`Id` = `ImageData`.`ItemId` AND `ImageData`.`ItemTable` = 'Musiker'
+ LEFT JOIN
+ `Besetzungen` AS `ProjectsInstrumentation`
+ ON `".$table."`.`Id` = `ProjectsInstrumentation`.`MusikerId`
+ LEFT JOIN
+ `Projekte` AS `Projects`
+ ON `ProjectsInstrumentation`.`ProjektId` = `Projects`.`Id`
+ GROUP BY `".$table."`.`Id`
  WHERE 1 LIMIT ".$options['offset'].", ".$options['limit'];
 
         //throw new \Exception($query);
@@ -397,14 +405,7 @@ namespace CAFEVDB
           $contacts[] = $row;
         }
       } else {
-        $query = "SELECT *,`AllInstruments` AS `Instrumente` FROM `".$mainTable."`
- LEFT JOIN
- ( SELECT `MusikerId`,GROUP_CONCAT(DISTINCT `Projekte`.`Name` ORDER BY `Projekte`.`Name` ASC SEPARATOR ', ') AS `Projekte`
-   FROM `Besetzungen`
-   LEFT JOIN `Projekte` ON `Projekte`.`Id` = `Besetzungen`.`ProjektId`
-   GROUP BY `MusikerId`
- ) AS `Projects`
- ON `".$mainTable."`.`MusikerId` = `Projects`.`MusikerId`
+        $query = "SELECT * FROM `".$mainTable."`
  WHERE 1 LIMIT ".$options['offset'].", ".$options['limit'];
 
         //throw new \Exception($query);
@@ -505,14 +506,20 @@ namespace CAFEVDB
 
       $table = self::MAIN_CONTACTS_TABLE;
 
-      $query = "SELECT * FROM `".$table."`
+      $query = "SELECT `".$table."`.*,
+       GROUP_CONCAT(DISTINCT `Projekte`.`Name` ORDER BY `Projekte`.`Name` ASC SEPARATOR ',') AS `Projects`,
+       CONCAT('data:',`ImageData`.`MimeType`,';base64,',`ImageData`.`Data`) AS `Portrait`
+ FROM `".$table."`
  LEFT JOIN
- ( SELECT `MusikerId`,GROUP_CONCAT(DISTINCT `Projekte`.`Name` ORDER BY `Projekte`.`Name` ASC SEPARATOR ', ') AS `Projekte`
-   FROM `Besetzungen`
-   LEFT JOIN `Projekte` ON `Projekte`.`Id` = `Besetzungen`.`ProjektId`
-   GROUP BY `MusikerId`
- ) AS `Projects`
- ON `".$table."`.`Id` = `Projects`.`MusikerId`
+ `ImageData`
+ ON `".$table."`.`Id` = `ImageData`.`ItemId` AND `ImageData`.`ItemTable` = 'Musiker'
+ LEFT JOIN
+ `Besetzungen` AS `ProjectsInstrumentation`
+ ON `".$table."`.`Id` = `ProjectsInstrumentation`.`MusikerId`
+ LEFT JOIN
+ `Projekte` AS `Projects`
+ ON `ProjectsInstrumentation`.`ProjektId` = `Projects`.`Id`
+ GROUP BY `".$table."`.`Id`
  WHERE `".$table."`.`UUID` LIKE '".$id."'";
       $result = mySQL::query($query, $handle);
       if ($result === false || mySQL::numRows($result) != 1 || !($row = mySQL::fetch($result))) {

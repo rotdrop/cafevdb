@@ -1838,19 +1838,26 @@ __EOT__;
       $join = $ind.'FROM '.$bt.$firstTable.$bt.$nl;
       $select = 'SELECT'.$nl;
       foreach($joinStructure as $joinColumn => $joinedColumn) {
+        // Set default options. The default options array MUST come
+        // first, later arrays override (see manual for array_merge())
+        $joinedColumn = array_merge(array(
+                                      'column' => true,
+                                      'verbatim' => false),
+                                    $joinedColumn);
         $table = $joinedColumn['table'];
-        if (!isset($joinedColumn['column']) || $joinedColumn['column'] === true) {
+        if ($joinedColumn['column'] === true) {
           $name = $joinColumn;
           $as = '';
         } else {
           $name = $joinedColumn['column'];
           $as = ' AS '.$bt.$joinColumn.$bt;
         }
-        $select .=
-          $ind.$ind.
-          $bt.$joinedColumn['table'].$bt.$dot.$bt.$name.$bt.
-          $as.
-          ','.$nl;
+        if (!$joinedColumn['verbatim']) {
+          $column = $bt.$joinedColumn['table'].$bt.$dot.$bt.$name.$bt;
+        } else {
+          $column = $name;
+        }
+        $select .= $ind.$ind.$column.$as.','.$nl;
         if (isset($joinedColumn['join']['condition'])) {
           $table = $joinedColumn['table'];
           $type = $joinedColumn['join']['type'];

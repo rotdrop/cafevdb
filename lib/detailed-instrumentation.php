@@ -268,7 +268,7 @@ class DetailedInstrumentation
          */
         'filters' => ("FIND_IN_SET(`Instrument`,
   CONCAT_WS(',',(SELECT `Instrument` FROM \$main_table WHERE \$record_id = `\$main_table`.`Id`),
-                (SELECT `AllInstruments` FROM `\$main_table`
+                (SELECT `Instrumente` FROM `\$main_table`
                           WHERE \$record_id = `\$main_table`.`Id`)))"),
         ),
       'values|LF' => array(
@@ -296,9 +296,10 @@ class DetailedInstrumentation
     $opts['fdd']['Anmeldung'] = $this->registrationColumn;
     $opts['fdd']['Anmeldung']['tab'] = array('id' => 'project');
 
-    $opts['fdd']['AllInstruments'] = array(
+    $opts['fdd']['Instrumente'] = array(
       'name'     => L::t('All Instruments'),
-      'css'      => array('postfix' => ' musician-instruments'),
+      'css'      => array('postfix' => ' musician-instruments tipsy-se'),
+      'display|LF'  => array('popup' => 'data'),
       //'options'  => 'AVCPD',
       'select'   => 'M',
       'maxlen'   => 136,
@@ -416,40 +417,27 @@ class DetailedInstrumentation
     $allProjects = Projects::fetchProjects(false /* no db handle */, true /* include years */);
     $projectQueryValues = array('*' => '*'); // catch-all filter
     $projectQueryValues[''] = L::t('no projects yet');
+    $projects = array();
+    $groupedProjects = array();
     foreach ($allProjects as $proj) {
       $projectQueryValues[$proj['Name']] = $proj['Jahr'].': '.$proj['Name'];
+      $projects[$proj['Name']] = $proj['Name'];
+      $groupedProjects[$proj['Name']] = $proj['Jahr'];
     }
 
-    $derivedtable =<<<__EOT__
-SELECT `Besetzungen`.`MusikerId`,GROUP_CONCAT(DISTINCT Projekte.Name ORDER BY Projekte.Name ASC SEPARATOR ', ') AS Projekte FROM
-Besetzungen
-LEFT JOIN Projekte ON Projekte.Id = Besetzungen.ProjektId
-GROUP BY MusikerId
-__EOT__;
-
-    $projectsIdx = count($opts['fdd']);
-    $opts['fdd']['Projekte'] = array(
+    $opts['fdd']['Projects'] = array(
       'tab' => array('id' => array('musician')),
-      'input' => 'VR', // virtual, read perm
-      'options' => 'LFV', //just do the join, don't display anything
+      'input' => 'R',
+      'options' => 'LFV',
       'select' => 'M',
+      'display|LF'  => array('popup' => 'data'),
+      'css'      => array('postfix' => ' projects'),
       'name' => L::t('Projects'),
       'sort' => true,
-      'sql' => 'PMEjoin'.$projectsIdx.'.Projekte',
-      'sqlw' => 'PMEjoin'.$projectsIdx.'.Projekte',
-      'css'      => array('postfix' => ' projects'),
-      'display|LVF' => array('popup' => 'data'),
-      'values' => array( //API for currently making a join in PME.
-        'table' =>
-        array('sql' => $derivedtable,
-              'kind' => 'derived'),
-        'column' => 'MusikerId',
-        'join' => '$main_table.`MusikerId` = $join_table.`MusikerId`',
-        'description' => 'Projekte',
-        'queryvalues' => $projectQueryValues
-        ),
+      'values' => array('queryvalues' => $projectQueryValues),
+      'values2' => $projects,
+      'valueGroups' => $groupedProjects
       );
-
 
     $opts['fdd']['Email'] = Config::$opts['email'];
     $opts['fdd']['Email']['tab'] = array('id' => 'musician');
@@ -582,7 +570,7 @@ __EOT__;
       'maxlen'   => 32,
       'sort'     => false
       );
-    
+
     $opts['fdd']['Aktualisiert'] = array_merge(
       Config::$opts['datetime'],
       array("name" => L::t("Last Updated"),

@@ -2056,7 +2056,7 @@ __EOT__;
       }
 
       $viewStructure2 = array(
-        'AllInstruments' => array('table' => 'Musiker',
+        'Instrumente' => array('table' => 'Musiker',
                                   'column' => 'Instrumente',
                                   'join' => array('type' => 'INNER')),
         'Sprachpräferenz' => array('table' => 'Musiker',
@@ -2072,18 +2072,30 @@ __EOT__;
                            'column' => true,
                            'join' => array('type' => 'INNER')),
 
-        /*
         'Portrait' => array(
           'table' => 'ImageData',
-          'column' => 'Data',
+          'column' => "CONCAT('data:',`ImageData`.`MimeType`,';base64,',`ImageData`.`Data`)",
+          'verbatim' => true,
           'join' => array(
             'type' => 'LEFT',
             'condition' => (
-              '`ImageData`.`ItemId` = `Musiker`.`Id` '.
+              '`ImageData`.`ItemId` = `Besetzungen`.`MusikerId` '.
               'AND '.
               "`ImageData`.`ItemTable` = 'Musiker'")
             )),
-        */
+
+        'Projects' => array(
+          'table' => 'Besetzungen` AS `Besetzungen2',
+          'column' => "GROUP_CONCAT(DISTINCT `Projekte`.`Name` ORDER BY `Projekte`.`Name` ASC SEPARATOR ',')",
+          'verbatim' => true,
+          'join' => array(
+            'type' => 'LEFT',
+            'condition' => '`Musiker`.`Id` = `Besetzungen2`.`MusikerId`
+  LEFT JOIN `Projekte`
+  ON `Besetzungen2`.`ProjektId` = `Projekte`.`Id`
+  GROUP BY `Besetzungen`.`Id`'
+            ),
+          ),
 
         'UUID' => array('table' => 'Musiker',
                         'column' => true,
@@ -2092,6 +2104,8 @@ __EOT__;
         'Aktualisiert' => array('table' => 'Musiker',
                                 'column' => true,
                                 'join' => array('type' => 'INNER')),
+
+
         );
 
       return array_merge($viewStructure1, $extraColumns, $viewStructure2);

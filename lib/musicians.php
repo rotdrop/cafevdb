@@ -134,6 +134,9 @@ make sure that the musicians are also automatically added to the
     // Sorting field(s)
     $opts['sort_field'] = array('Instrumente','Name','Vorname','Id');
 
+    // GROUP BY clause, if needed.
+    $opts['groupby_fields'] = 'Id';
+
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
     // F - filter, I - initial sort suppressed
@@ -330,16 +333,13 @@ make sure that the musicians are also automatically added to the
     $allProjects = Projects::fetchProjects(false /* no db handle */, true /* include years */);
     $projectQueryValues = array('*' => '*'); // catch-all filter
     $projectQueryValues[''] = L::t('no projects yet');
+    $projects = array();
+    $groupedProjects = array();
     foreach ($allProjects as $proj) {
       $projectQueryValues[$proj['Name']] = $proj['Jahr'].': '.$proj['Name'];
+      $projects[$proj['Name']] = $proj['Name'];
+      $groupedProjects[$proj['Name']] = $proj['Jahr'];
     }
-
-    $derivedtable =<<<__EOT__
-SELECT MusikerId,GROUP_CONCAT(DISTINCT Projekte.Name ORDER BY Projekte.Name ASC SEPARATOR ', ') AS Projekte FROM
-Besetzungen
-LEFT JOIN Projekte ON Projekte.Id = Besetzungen.ProjektId
-GROUP BY MusikerId
-__EOT__;
 
     $projectsIdx = count($opts['fdd']);
     if ($this->projectMode) {
@@ -353,28 +353,46 @@ __EOT__;
       }
     }
 
-    $opts['fdd']['Projekte'] =
-      array(
-        'tab'      => array('id' => 'orchestra'),
-        'input' => 'VR', // virtual, read perm
-        'options' => 'LFV', // List View and Filter
-        'select' => 'M',
-        'name' => L::t('Projects'),
-        'sort' => true,
-        'sql' => 'PMEjoin'.$projectsIdx.'.Projekte',
-        'sqlw' => 'PMEjoin'.$projectsIdx.'.Projekte',
-        'css'      => array('postfix' => ' projects tipsy-se'),
-        'display|LVF' => array('popup' => 'data'),
-        'values' => array( //API for currently making a join in PME.
-          'table' =>
-          array('sql' => $derivedtable,
-                'kind' => 'derived'),
-          'column' => 'MusikerId',
-          'join' => '$main_table.Id = $join_table.MusikerId',
-          'description' => 'Projekte',
-          'queryvalues' => $projectQueryValues
-          ),
-        );
+    // Dummy field in order to get the Besetzungen table for the Projects field
+    $idx = count($opts['fdd']);
+    $join_table = 'PMEjoin'.$idx;
+    $opts['fdd']['MusikerId'] = array(
+      'input' => 'V',
+      'sql' => '`'.$join_table.'`.`MusikerId`',
+      'sqlw' => '`'.$join_table.'`.`MusikerId`',
+      'options' => '',
+      'values' => array(
+        'table' => 'Besetzungen',
+        'column' => 'MusikerId',
+        'description' => 'MusikerId',
+        'join' => '$main_table.`Id` = $join_table.`MusikerId`'
+        )
+      );
+
+    $idx = count($opts['fdd']);
+    $join_table = 'PMEjoin'.$idx;
+    $opts['fdd']['Projects'] = array(
+      'tab' => array('id' => 'orchestra'),
+      'input' => 'VR',
+      'options' => 'LFV',
+      'select' => 'M',
+      'name' => L::t('Projects'),
+      'sort' => true,
+      'css'      => array('postfix' => ' projects tipsy-se'),
+      'display|LVF' => array('popup' => 'data'),
+      'sql' => "GROUP_CONCAT(DISTINCT `".$join_table."`.`Name` ORDER BY `".$join_table."`.`Name` ASC SEPARATOR ',')",
+      'sqlw' => "GROUP_CONCAT(DISTINCT `".$join_table."`.`Name` ORDER BY `".$join_table."`.`Name` ASC SEPARATOR ',')",
+      'filter' => 'having', // unset: where is default
+      'values' => array(
+        'table' => 'Projekte',
+        'column' => 'Name',
+        'description' => 'Name',
+        'join' => '`PMEjoin'.($idx-1).'`.`ProjektId` = $join_table.`Id`',
+        'queryvalues' => $projectQueryValues,
+        ),
+      'values2' => $projects,
+      'valueGroups' => $groupedProjects
+      );
 
     $opts['fdd']['MobilePhone'] = array(
       'tab'      => array('id' => 'contact'),
@@ -483,7 +501,7 @@ __EOT__;
       'name' => L::t('Instrument Insurance'),
       'select' => 'T',
       'options' => 'ACPDV',
-      'sql' => "Id",
+      'sql' => "`PMEtable0`.`Id`",
       'escape' => false,
       'nowrap' => true,
       'sort' =>false,
@@ -500,7 +518,7 @@ __EOT__;
       'name' => L::t('Photo'),
       'select' => 'T',
       'options' => 'ACPDV',
-      'sql' => 'Id',
+      'sql' => '`PMEtable0`.`Id`',
       'php' => array(
         'type' => 'function',
         'function' => 'CAFEVDB\Musicians::portraitImageLinkPME',
@@ -518,7 +536,7 @@ __EOT__;
       'name' => 'VCard',
       'select' => 'T',
       'options' => 'ACPDV',
-      'sql' => 'Id',
+      'sql' => '`PMEtable0`.`Id`',
       'php' => array(
         'type' => 'function',
         'function' => function($musicianId, $opts, $action, $k, $fds, $fdd, $row) {

@@ -260,7 +260,7 @@ namespace CAFEVDB {
       if ($musician['Instrumente']) {
         $categories =  array_merge($categories, explode(',', $musician['Instrumente']));
       }
-      if ($musician['Projekte']) {
+      if (isset($musician['Projekte'])) {
         $categories =  array_merge($categories, explode(',', $musician['Projekte']));
       }
       $categories = array_map('trim', $categories);
