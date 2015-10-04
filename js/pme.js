@@ -50,6 +50,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
   PHPMYEDIT.popupPosition           = { my: "left top",
                                         at: "left+5% top+5%",
                                         of: window };
+  PHPMYEDIT.dialogOpen              = false;
 
   /**Genereate the default selector. */
   PHPMYEDIT.selector = function(selector) {
@@ -537,6 +538,12 @@ var PHPMYEDIT = PHPMYEDIT || {};
   PHPMYEDIT.tableDialogOpen = function(tableOptions, post) {
     var pme = this;
 
+    if (pme.dialogOpen) {
+      return false;
+    }
+
+    pme.dialogOpen = true;
+
     CAFEVDB.Page.busyIcon(true);
 
     if (typeof tableOptions.ModalDialog == 'undefined') {
@@ -587,7 +594,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                  //tmp.dialog('close');
                  var dialogHolder = $(this);
                  var dialogWidget = dialogHolder.dialog('widget');
-                 
+
                  CAFEVDB.dialogToBackButton(dialogHolder);
                  CAFEVDB.dialogCustomCloseButton(dialogHolder, function(event, container) {
                    event.preventDefault();
@@ -655,6 +662,9 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
                  // Remove modal plane if appropriate
                  CAFEVDB.modalizer(false);
+
+                 pme.dialogOpen = false;
+
                  return false;
                }
              });
