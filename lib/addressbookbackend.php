@@ -82,6 +82,30 @@ namespace CAFEVDB
       return Projects::fetchName($projectId);
     }
 
+    /**Construct a globally unique id, the JS-code of the contacts-id
+     * unfortunately somehow assumes globally unique id, i.e. it does
+     * not use the parent (address-book) id.
+     */
+    static private function contactId($addressBookId, $uuid)
+    {
+      return $addressBookId.';'.$uuid;
+    }
+
+    /**Extract from ADB_ID;UUID the ADB and UUID part, dual to
+     * self::contactId().
+     *
+     * @return array('addressbook' => ADB_ID, 'uuid' => UUID)
+     */
+    static private function parseContactId($contactId)
+    {
+      $split = explode(';', $contactId);
+      if (count($split) != 2) {
+        return null;
+      }
+      return array('addressbook' => $split[0],
+                   'uuid' => $split[1]);
+    }
+
     /**
      * Flag indicating whether the current user is a member of the
      * orchestra user-group.
@@ -329,7 +353,7 @@ namespace CAFEVDB
         }
       } else {
         $query = "SELECT `".$table."`.*,
- GROUP_CONCAT(DISTINCT `Projekte`.`Name` ORDER BY `Projekte`.`Name` ASC SEPARATOR ',') AS `Projects`,
+ GROUP_CONCAT(DISTINCT `Projects`.`Name` ORDER BY `Projects`.`Name` ASC SEPARATOR ',') AS `Projects`,
  CONCAT('data:',`ImageData`.`MimeType`,';base64,',`ImageData`.`Data`) AS `Portrait`
  FROM `".$table."`
  LEFT JOIN
@@ -341,17 +365,26 @@ namespace CAFEVDB
  LEFT JOIN
  `Projekte` AS `Projects`
  ON `ProjectsInstrumentation`.`ProjektId` = `Projects`.`Id`
+ WHERE 1
  GROUP BY `".$table."`.`Id`
- WHERE 1 LIMIT ".$options['offset'].", ".$options['limit'];
+ LIMIT ".$options['offset'].", ".$options['limit'];
 
         //throw new \Exception($query);
+        /*
+        \OCP\Util::writeLog(Config::APP_NAME,
+                            __METHOD__.
+                            ': query: '.
+                            $query,
+                            \OCP\Util::ERROR);
+        */
 
         $result = mySQL::query($query, $handle);
         while ($row = mySQL::fetch($result)) {
           $vCard = VCard::export($row);
+          $contactId = self::contactId($addressBookId, $row['UUID']);
           $contacts[] = array(
-            'id' => $row['UUID'],
-            'uri' => $row['UUID'].'.vcf',
+            'id' => $contactId,
+            'uri' => $contactId.'.vcf',
             'lastmodified' => $row['Aktualisiert'],
             'parent' => $addressBookId,
             'displayname' => $row['Vorname'].' '.$row['Name'],
@@ -359,6 +392,11 @@ namespace CAFEVDB
             'carddata' => $vCard->serialize(),
             'permissions' => \OCP\PERMISSION_ALL
             );
+          /* \OCP\Util::writeLog(Config::APP_NAME, */
+          /*                     __METHOD__. */
+          /*                     ': vCard: '. */
+          /*                     $vCard->serialize(), */
+          /*                     \OCP\Util::ERROR); */
         }
 
       }
@@ -394,11 +432,18 @@ namespace CAFEVDB
 
       $mainTable = $projectName."View";
 
+      // a project view may contain musicians multiple time (one
+      // musician may play more than one instrument in a given
+      // project. The GROUP BY clause eliminates duplicates.
+
       if ($options['omitdata']) {
         $query = "SELECT
- `UUID` AS `id`, CONCAT(`UUID`, '.vcf') AS `uri`, `Aktualisiert` AS `lastmodified`,
+ CONCAT('".$addressBookId.";',`UUID`) AS `id`, CONCAT('".$addressBookId.";',`UUID`, '.vcf') AS `uri`, `Aktualisiert` AS `lastmodified`,
  '".$addressBookId."' as `parent`, CONCAT(`Vorname`, ' ', `Name`) AS `displayname`
- FROM `".$mainTable."` WHERE 1 LIMIT ".$options['offset'].", ".$options['limit'];
+ FROM `".$mainTable."`
+ WHERE 1
+ GROUP BY `".$mainTable."`.`MusikerId`
+ LIMIT ".$options['offset'].", ".$options['limit'];
         $result = mySQL::query($query, $handle);
         while ($row = mySQL::fetch($result)) {
           $row['permissions'] = \OCP\PERMISSION_ALL;
@@ -406,16 +451,19 @@ namespace CAFEVDB
         }
       } else {
         $query = "SELECT * FROM `".$mainTable."`
- WHERE 1 LIMIT ".$options['offset'].", ".$options['limit'];
+ WHERE 1
+ GROUP BY `".$mainTable."`.`MusikerId`
+ LIMIT ".$options['offset'].", ".$options['limit'];
 
         //throw new \Exception($query);
 
         $result = mySQL::query($query, $handle);
         while ($row = mySQL::fetch($result)) {
           $vCard = VCard::export($row);
+          $contactId = self::contactId($addressBookId, $row['UUID']);
           $contacts[] = array(
-            'id' => $row['UUID'],
-            'uri' => $row['UUID'].'.vcf',
+            'id' => $contactId,
+            'uri' => $contactId.'.vcf',
             'lastmodified' => $row['Aktualisiert'],
             'parent' => $addressBookId,
             'displayname' => $row['Vorname'].' '.$row['Name'],
@@ -423,6 +471,11 @@ namespace CAFEVDB
             'carddata' => $vCard->serialize(),
             'permissions' => \OCP\PERMISSION_ALL
             );
+          /* \OCP\Util::writeLog(Config::APP_NAME, */
+          /*                     __METHOD__. */
+          /*                     ': vCard: '. */
+          /*                     $vCard->serialize(), */
+          /*                     \OCP\Util::ERROR); */
         }
 
       }
@@ -440,7 +493,7 @@ namespace CAFEVDB
      * CardDAV backend.
      *
      * NOTE: $addressbookid isn't always used in the query, so there's no access control.
-     * 	This is because the groups backend - \OCP\Tags - doesn't no about parent collections
+     * 	This is because the groups backend - \OCP\Tags - doesn't know about parent collections
      * 	only object IDs. Hence a hack is made with an optional 'noCollection'.
      *
      * @param string $addressBookId
@@ -462,16 +515,30 @@ namespace CAFEVDB
           $id = substr($id['uri'], 0, -4);
         } else {
           throw new \Exception(
-            __METHOD__ . ' If second argument is an array, either \'id\' or \'uri\' has to be set.'
+            __METHOD__ . ': If second argument is an array, either \'id\' or \'uri\' has to be set.'
             );
         }
       }
 
-      if ($row = $this->__getContact($id, $options)) {
+      $idParts = self::parseContactId($id);
+      if (!isset($idParts['uuid']) || !isset($idParts['addressbook']) ||
+          ($addressBookId && $idParts['addressbook'] !== $addressBookId)) {
+        throw new \Exception(
+          __METHOD__ . ': Invalid id: '.$id.' for book '.(string)$addressBookId.'.'
+          );
+      }
+
+      if (!$addressBookId) {
+        $addressBookId = $idParts['addressbook'];
+      }
+      $uuid = $idParts['uuid'];
+
+      if ($row = $this->__getContact($uuid, $options)) {
         $vCard = VCard::export($row);
+        $contactId = self::contactId($addressBookId, $row['UUID']);
         $contact = array(
-          'id' => $row['UUID'],
-          'uri' => $row['UUID'].'.vcf',
+          'id' => $contactId,
+          'uri' => $contactId.'.vcf',
           'lastmodified' => strtotime($row['Aktualisiert']),
           'parent' => (int)$addressBookId, // can be null if groups should ever be supported.
           'displayname' => $row['Vorname'].' '.$row['Name'],
@@ -479,6 +546,11 @@ namespace CAFEVDB
           //'vcard' => $vCard, // would have to be the derived class from the contacts app
           'permissions' => \OCP\PERMISSION_ALL
           );
+        /* \OCP\Util::writeLog(Config::APP_NAME, */
+        /*                     __METHOD__. */
+        /*                     ': vCard: '. */
+        /*                     $vCard->serialize(), */
+        /*                     \OCP\Util::ERROR); */
       } else {
         $contact = null;
       }
@@ -493,13 +565,13 @@ namespace CAFEVDB
      *
      * This beast fetches one row from the Musiker table.
      *
-     * @param[in] string $id Actually, the UUID of the contact, used
+     * @param[in] string $uuid Actually, the UUID of the contact, used
      * as id for the contacts app.
      *
      * @return The respective row from the Musiker table, or null on
      * error.
      */
-    private function __getContact($id, array $options = array())
+    private function __getContact($uuid, array $options = array())
     {
       Config::init();
       $handle = mySQL::connect(Config::$pmeopts);
@@ -507,7 +579,7 @@ namespace CAFEVDB
       $table = self::MAIN_CONTACTS_TABLE;
 
       $query = "SELECT `".$table."`.*,
-       GROUP_CONCAT(DISTINCT `Projekte`.`Name` ORDER BY `Projekte`.`Name` ASC SEPARATOR ',') AS `Projects`,
+       GROUP_CONCAT(DISTINCT `Projects`.`Name` ORDER BY `Projects`.`Name` ASC SEPARATOR ',') AS `Projects`,
        CONCAT('data:',`ImageData`.`MimeType`,';base64,',`ImageData`.`Data`) AS `Portrait`
  FROM `".$table."`
  LEFT JOIN
@@ -519,10 +591,15 @@ namespace CAFEVDB
  LEFT JOIN
  `Projekte` AS `Projects`
  ON `ProjectsInstrumentation`.`ProjektId` = `Projects`.`Id`
- GROUP BY `".$table."`.`Id`
- WHERE `".$table."`.`UUID` LIKE '".$id."'";
+ WHERE `".$table."`.`UUID` LIKE '".$uuid."'
+ GROUP BY `".$table."`.`Id`";
+
       $result = mySQL::query($query, $handle);
       if ($result === false || mySQL::numRows($result) != 1 || !($row = mySQL::fetch($result))) {
+        \OCP\Util::writeLog(Config::APP_NAME,
+                            __METHOD__.
+                            ': failed, query: '.$query.'.',
+                            \OCP\Util::DEBUG);
         $row = null;
       }
 
@@ -575,8 +652,21 @@ namespace CAFEVDB
         }
       }
 
+      $idParts = self::parseContactId($id);
+      if (!isset($idParts['uuid']) || !isset($idParts['addressbook']) ||
+          ($addressBookId && $idParts['addressbook'] !== $addressBookId)) {
+        throw new \Exception(
+          __METHOD__ . ': Invalid id: '.$id.' for book '.(string)$addressBookId.'.'
+          );
+      }
+
+      if (!$addressBookId) {
+        $addressBookId = $idParts['addressbook'];
+      }
+      $uuid = $idParts['uuid'];
+
       // FILL IN HERE. Various checks need to be implemented ...
-      $me = $this->__getContact($id);
+      $me = $this->__getContact($uuid);
       $them = VCard::import($contact->serialize());
 
       /* TODO:
