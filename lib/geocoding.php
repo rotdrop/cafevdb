@@ -364,8 +364,8 @@ namespace CAFEVDB
         echo '<H4>'.htmlspecialchars($string).'</H4></BR>';
       }
       \OCP\Util::writeLog(Config::APP_NAME, 'GeoCoding: '.$string, $level);
-    }    
-    
+    }
+
     /**Update the list of known zip-code - location relations, but
      * only for the registerted musicians.
      *
@@ -472,7 +472,7 @@ namespace CAFEVDB
             self::log($postalCode.'@'.$country.': '.$name, \OCP\Util::ERROR, true);
           }
         }
-      
+
 }
       self::log('Affected Postal Code records: '.$numChanged.' of '.$numTotal, \OCP\Util::ERROR, true);
 
@@ -568,7 +568,7 @@ namespace CAFEVDB
       foreach(array($currentLang, 'en') as $lang) {
         if (!array_search($lang, $languages)) {
           self::provideLanguageColumn($lang, $handle);
-          echo '<H4>Added language '.$lang.'</H4><BR/>';
+          self::log('Added language '.$lang);
         }
       }
       $languages = self::languages();
@@ -610,8 +610,8 @@ namespace CAFEVDB
         mySQL::query($query, $handle);
         $numContinent += mySQL::changedRows($handle);
       }
-      echo '<H4>Affected Rows for country setup: '.$numCountry.'</H4><BR/>';
-      echo '<H4>Affected Rows for contient setup: '.$numContinent.'</H4><BR/>';
+      self::log('Affected Rows for country setup: '.$numCountry);
+      self::log('Affected Rows for contient setup: '.$numContinent);
 
       foreach ($languages as $lang) {
         if ($lang === 'en') {
@@ -621,7 +621,7 @@ namespace CAFEVDB
         // per force update all
         $numRows = self::updateCountriesForLanguage($lang, true, $handle);
 
-        echo '<H4>Affected rows for language '.$lang.': '.$numRows.'</H4><BR/>';
+        self::log('Affected rows for language '.$lang.': '.$numRows);
       }
 
       if ($ownConnection) {
