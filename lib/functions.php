@@ -1915,6 +1915,15 @@ __EOT__;
     }
 
     /**Update a couple of values into a table.
+     *
+     * @param[in] string $table The data-base table to modify
+     *
+     * @param[in] sting $where Condition (e.g. id field etc.), "WHERE"
+     * is added by the funcion.
+     *
+     * @param[in] array $newValues Associative array where keys are
+     * the field names and the values are the values to inject into
+     * the table.
      */
     public static function update($table, $where, $newValues, $handle)
     {
