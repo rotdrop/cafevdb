@@ -213,10 +213,10 @@ namespace CAFEVDB
           'id' => self::MAIN_ADDRESS_BOOK_ID,
           'displayname' => L::t(self::MAIN_ADDRESS_BOOK),
           'description' => L::t('CAFeV DB orchestra address-book with all musicians.'),
-          'lastmodified' => mySQL::fetchLastModified(self::MAIN_CONTACTS_TABLE),
+          'lastmodified' =>  $this->lastModifiedAddressbook($addressBookId),
           'owner' => $this->userid, //  $this->shareOwner,
           'uri' => self::makeURI(self::MAIN_ADDRESS_BOOK),
-          'permissions' => \OCP\PERMISSION_READ,
+          'permissions' => \OCP\PERMISSION_READ|\OCP\PERMISSION_UPDATE,
           );
       } else {
         if (isset($options['projectid']) && isset($options['projectname'])) {
@@ -251,10 +251,10 @@ namespace CAFEVDB
           'displayname' => $projectName,
           'description' => L::t('CAFeV DB project address-book with all participants for %s',
                                 array($projectName)),
-          'lastmodified' => mySQL::fetchLastModified($projectName."View"),
+          'lastmodified' => $this->lastModifiedAddressbook($addressBookId),
           'owner' => $this->userid, // $this->shareOwner,
           'uri' => self::makeURI($projectName),
-          'permissions' => \OCP\PERMISSION_READ,
+          'permissions' => \OCP\PERMISSION_READ|\OCP\PERMISSION_UPDATE,
           );
       }
     }
@@ -622,6 +622,11 @@ namespace CAFEVDB
      */
     public function updateContact($addressBookId, $id, $contact, array $options = array())
     {
+      \OCP\Util::writeLog(Config::APP_NAME,
+                          __METHOD__.
+                          ': adb: '.$addressBookId.' id: '.print_r($id, true),
+                          \OCP\Util::DEBUG);
+
       if (!$this->accessAllowed()) {
         return null;
       }
@@ -630,7 +635,7 @@ namespace CAFEVDB
           !$contact instanceof \OCA\Contacts\VObject\VCard) {
         try {
           $contact = \Sabre\VObject\Reader::read(
-            $vCard,
+            $contact,
             \Sabre\VObject\Reader::OPTION_FORGIVING|\Sabre\VObject\Reader::OPTION_IGNORE_INVALID_LINES
             );
         } catch(\Exception $e) {
@@ -714,19 +719,77 @@ namespace CAFEVDB
 
       $common = array_intersect($me, $them);
 
-      \OCP\Util::writeLog(Config::APP_NAME,
-                          __METHOD__.
-                          ': common: '.print_r($common, true),
-                          \OCP\Util::DEBUG);
+      /* \OCP\Util::writeLog(Config::APP_NAME, */
+      /*                     __METHOD__. */
+      /*                     ': common: '.print_r($common, true), */
+      /*                     \OCP\Util::DEBUG); */
 
       $changed = array_diff($them, $common);
 
-      \OCP\Util::writeLog(Config::APP_NAME,
-                          __METHOD__.
-                          ': changed: '.print_r($changed, true),
-                          \OCP\Util::DEBUG);
+      /* \OCP\Util::writeLog(Config::APP_NAME, */
+      /*                     __METHOD__. */
+      /*                     ': changed: '.print_r($changed, true), */
+      /*                     \OCP\Util::DEBUG); */
+      foreach($changed as $key => $value) {
+        $theirValue = isset($them[$key]) ? $them[$key] : "unset";
+        $myValue = isset($me[$key]) ? $me[$key] : "unset";
 
-      return false;
+        \OCP\Util::writeLog(Config::APP_NAME,
+                            __METHOD__.
+                            ': me: "'.$myValue.'" them: "'.$theirValue.'"',
+                            \OCP\Util::DEBUG);
+      }
+
+      // In principle the $changed array should now contain all the
+      // changed values for the Musiker table. Exception are the
+      // "Projects" field, which is just ignored, and the Protrait
+      // field, which goes to a separate table.
+
+      // TODO: really insert it. Take care of the time-stamps AND the
+      // changelog entry. We will overwrite the given time-stamp with
+      // the actual one.
+
+      if (empty($changed)) {
+        return true; // don't care, could update time-stamp perhaps
+      }
+
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+
+      $result = true;
+
+      if (isset($changed['Portrait'])) {
+        $img = new InlineImage(self::MAIN_CONTACTS_TABLE);
+        $img->store($me['Id'], $change['Portrait'], $handle) || $result = false;
+        unset($changed['Portrait']);
+      }
+
+      unset($changed['Projects']);
+
+      // the remaining part should contain valid fields for the Musiker table
+
+      mySQL::update(self::MAIN_CONTACTS_TABLE, '`Id` = '.$me['Id'], $changed, $handle) || $result = false;
+      mySQL::logUpdate(self::MAIN_CONTACTS_TABLE, 'Id', $me, $changed, $handle);
+
+      mySQL::close($handle);
+
+      return $result;
+    }
+
+    /**As changing just anything potentially changes anything by
+     * changing categories we simply return the last changelog stamp
+     * for everything. This propably is just the most sane idea about
+     * it.
+     */
+    public function lastModifiedAddressBook($addressBookId)
+    {
+      if (!$this->accessAllowed()) {
+        return null;
+      }
+
+      return strtotime(mySQL::selectSingleFromTable(
+                         "`updated`", 'changelog',
+                         "ORDER BY `id` DESC LIMIT 0, 1"));
     }
 
     /**
@@ -744,6 +807,32 @@ namespace CAFEVDB
       if (!$this->accessAllowed()) {
         return null;
       }
+
+      if (is_array($id)) {
+        if (isset($id['id'])) {
+          $id = $id['id'];
+        } elseif (isset($id['uri'])) {
+          // the URI is the UUID.vcf, just strip the suffix
+          $id = substr($id['uri'], 0, -4);
+        } else {
+          throw new \Exception(
+            __METHOD__ . ' If second argument is an array, either \'id\' or \'uri\' has to be set.'
+            );
+        }
+      }
+
+      $idParts = self::parseContactId($id);
+      if (!isset($idParts['uuid']) || !isset($idParts['addressbook']) ||
+          ($addressBookId && $idParts['addressbook'] !== $addressBookId)) {
+        throw new \Exception(
+          __METHOD__ . ': Invalid id: '.$id.' for book '.(string)$addressBookId.'.'
+          );
+      }
+
+      if (!$addressBookId) {
+        $addressBookId = $idParts['addressbook'];
+      }
+      $uuid = $idParts['uuid'];
 
       /* as the project address-books also just use the UUIDs we
        * simply can fetch from the global Musiker table
