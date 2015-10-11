@@ -741,7 +741,7 @@ namespace CAFEVDB
     }
 
     /**Get the number of languages supported in the database tables. */
-    protected static function languages($force = false, $handle = false)
+    public static function languages($force = false, $handle = false)
     {
       self::init();
 
