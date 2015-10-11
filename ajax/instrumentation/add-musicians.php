@@ -32,7 +32,7 @@ namespace CAFEVDB {
   \OCP\JSON::checkLoggedIn();
   \OCP\JSON::checkAppEnabled('cafevdb');
   \OCP\JSON::callCheck();
-  
+
   $handle = false;
 
   Error::exceptions(true);
@@ -73,7 +73,7 @@ namespace CAFEVDB {
                           'debug' => $debugText)));
       return false;
     }
-  
+
     if ($projectId == -1) {
       $debugText .= ob_get_contents();
       @ob_end_clean();
@@ -87,7 +87,7 @@ namespace CAFEVDB {
     }
 
     Config::init();
-    $handle = mySQL::connect(Config::$pmeopts);  
+    $handle = mySQL::connect(Config::$pmeopts);
 
     $projectInstruments = Projects::fetchInstrumentation($projectId, $handle);
     if ($projectInstruments === false) {
@@ -136,7 +136,7 @@ namespace CAFEVDB {
                         "instruments %s.",
                         array($fullName, implode(',', $musicianProjectInstruments)));
       }
-    
+
       $both = array_values(array_intersect($projectInstruments, $musInstruments));
 
       if (!empty($both)) {
@@ -181,17 +181,18 @@ namespace CAFEVDB {
         continue;
       }
       mySQL::logInsert('Besetzungen', $instrumentationId, $values, $handle);
+      mySQL::storeModified($projectId, 'Projekte', $handle);
 
       $addedMusicians[] = array('musicianId' => $musicianId,
                                 'rows' => $numRows,
                                 'instrumentationId' => $instrumentationId);
     }
-  
+
     if ($numRecords == count($failedMusicians)) {
       mySQL::close($handle);
       $debugText .= ob_get_contents();
       @ob_end_clean();
-    
+
       $message = L::t('No musician could be added to the projecti, #failures: %d.',
                       count($failedMusicians));
 
@@ -240,7 +241,7 @@ namespace CAFEVDB {
     return false;
 
   }
-  
+
 } // namespace
 
 ?>
