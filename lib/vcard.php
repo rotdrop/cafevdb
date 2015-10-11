@@ -198,6 +198,14 @@ namespace CAFEVDB {
                 $row[$fields[$idx]] = $value;
               }
             }
+            $languages = GeoCoding::languages(true);
+            foreach($languages as $language) {
+              $countries = GeoCoding::countryNames($language);
+              $iso = array_search($row['Land'], $countries);
+              if ($iso !== false) {
+                $row['Land'] = $iso;
+              }
+            }
           }
         } // ADR
 
@@ -220,7 +228,7 @@ namespace CAFEVDB {
             $rawData = $photo->getRawMimeDirValue();
             if (preg_match('|^data:(image/[^;]+);base64\\\?,|', $rawData, $matches)) {
               $mimeType = $matches[1];
-              $imageData = substr($row['Photo'], strlen($matches[0]));
+              $imageData = substr($row['Portrait'], strlen($matches[0]));
               $haveData = true;
             }
           } else {
@@ -231,8 +239,7 @@ namespace CAFEVDB {
           }
 
           if ($havePhoto) {
-            $row['Photo'] = array('MimeType' => $mimeType,
-                                  'Data' => $imageData);
+            $row['Portrait'] = 'data:'.$mimeType.';base64,'.$imageData;
           }
         }
 
@@ -313,8 +320,17 @@ namespace CAFEVDB {
                   [ 'TYPE' => 'home' ]);
       $vcard->add('CATEGORIES', $categories);
 
-      if (isset($musician['Photo']) && is_array($musician['Photo'])) {
-        $photo = $musician['Photo'];
+      $photo = null;
+      if (isset($musician['Portrait'])) {
+        if (is_array($musician['Portrait'])) {
+          $photo = $musician['Portrait'];
+        } else if (preg_match('|^data:(image/[^;]+);base64\\\?,|', $musician['Portrait'], $matches)) {
+          // data uri
+          $mimeType = $matches[1];
+          $imageData = substr($musician['Portrait'], strlen($matches[0]));
+          $photo = array('MimeType' => $mimeType,
+                         'Data' => $imageData);
+        }
       } else {
         $musicianId = isset($musician['MusikerId']) ? $musician['MusikerId'] : $musician['Id'];
         $inlineImage = new InlineImage('Musiker');
