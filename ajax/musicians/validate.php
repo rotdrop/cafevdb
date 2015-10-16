@@ -50,16 +50,18 @@ namespace CAFEVDB {
 
     $musicians = Musicians::musiciansByName($firstName, $surName);
 
-    $duplicates = '';
+    $duplicates = array();
+    $duplicateNames = '';
     foreach ($musicians as $record) {
-      $duplicates = $record['Vorname'].' '.$record['Name']."\n";
+      $duplicateNames .= $record['Vorname'].' '.$record['Name']." (Id = ".$record['Id'].")"."\n";
+      $duplicates[$record['Id']] = $record['Vorname'].' '.$record['Name'];
     }
     $message = '';
-    if ($duplicates != '') {
+    if (count($duplicates) > 0) {
       $message =
         L::t('Musician(s) with the same first and sur-name already exist:').
         "\n".
-        $duplicates.
+        $duplicateNames.
         "\n".
         L::t(
 'Please do not add duplicates to the data-base. If you do, then others
@@ -67,10 +69,17 @@ will have to clean up after you.
 
 Please continue if you know what you are doing. Please use the search
 facilities before adding new musicians. Thanks.');
+
+      \OCP\JSON::success(
+        array('data' => array('message' => nl2br($message),
+                              'duplicates' => $duplicates,
+                              'debugText' => $debugText)));
+      return false;
     }
 
     \OCP\JSON::success(
       array('data' => array('message' => nl2br($message),
+                            'duplicates' => $duplicates,
                             'debugText' => $debugText)));
 
     return true;
