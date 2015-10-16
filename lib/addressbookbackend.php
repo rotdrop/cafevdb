@@ -609,6 +609,103 @@ namespace CAFEVDB
     }
 
     /**
+     * Creates a new contact
+     *
+     * In the Database and Shared backends contact be either a Contact object or a string
+     * with carddata to be able to play seamlessly with the CardDAV backend.
+     * If this method is called by the CardDAV backend, the carddata is already validated.
+     * NOTE: It's assumed that this method is called either from the CardDAV backend, the
+     * import script, or from the ownCloud web UI in which case either the uri parameter is
+     * set, or the contact has a UID. If neither is set, it will fail.
+     *
+     * @param string $addressBookId
+     * @param string $contact
+     * @param array $options - Optional (backend specific options)
+     * @return false|string The identifier for the new contact or false on error.
+     */
+    public function createContact($addressBookId, $contact, array $options = array())
+    {
+      \OCP\Util::writeLog(Config::APP_NAME,
+                          __METHOD__.
+                          ': adb: '.$addressBookId.' id: '.print_r($id, true),
+                          \OCP\Util::DEBUG);
+
+      if (!$this->accessAllowed()) {
+        return null;
+      }
+
+      if ((string)$addressBookId != (string)self::MAIN_ADDRESS_BOOK_ID) {
+        return false; // for now
+      }
+
+      $uri = isset($options['uri']) ? $options['uri'] : null;
+
+      if (!$contact instanceof \Sabre\VObject\Component\VCard &&
+          !$contact instanceof \OCA\Contacts\VObject\VCard) {
+        try {
+          $contact = \Sabre\VObject\Reader::read(
+            $contact,
+            \Sabre\VObject\Reader::OPTION_FORGIVING|\Sabre\VObject\Reader::OPTION_IGNORE_INVALID_LINES
+            );
+        } catch(\Exception $e) {
+          \OCP\Util::writeLog(Config::APP_NAME, __METHOD__.', exception: '.$e->getMessage(), \OCP\Util::ERROR);
+          return false;
+        }
+      }
+
+      try {
+        $contact->validate(VCard::REPAIR|VCard::UPGRADE);
+      } catch (\Exception $e) {
+        \OCP\Util::writeLog('contacts', __METHOD__ . ' ' .
+                            'Error validating vcard: ' . $e->getMessage(), \OCP\Util::ERROR);
+        return false;
+      }
+
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+
+      // always generate a UUID on our own?
+      if (!isset($contact->UID)) {
+        $uuid = Musicians::generateUUID($handle);
+        $contact->UID = $uuid;
+      }
+
+      $now = new \DateTime;
+      $contact->REV = $now->format(\DateTime::W3C);
+
+      // generate the data-line
+      $row = VCard::import($contact->serialize());
+
+      if (isset($row['Portrait'])) {
+        $img = new InlineImage(self::MAIN_CONTACTS_TABLE);
+        if (!$img->store($me['Id'], $row['Portrait'], $handle)) {
+          return false;
+        }
+        unset($row['Portrait']);
+      }
+
+      unset($changed['Projects']);
+
+      // the remaining part should contain valid fields for the Musiker table
+
+      if (!mySQL::insert(self::MAIN_CONTACTS_TABLE, $row, $handle)) {
+        return false;
+      }
+      $id = mySQL::newestIndex($handle);
+      mySQL::logInsert(self::MAIN_CONTACTS_TABLE, $id, $row, $handle);
+
+      // if this is not the main address-book, we also need to add the
+      // contact into the "Besetzungen" table.
+
+      mySQL::close($handle);
+
+      $contactId = self::contactId($addressBookId, $row['UUID']);
+
+      //return $contactId;
+      return false;
+    }
+
+    /**
      * Updates a contact
      *
      * @param string $addressBookId
@@ -760,7 +857,7 @@ namespace CAFEVDB
 
       if (isset($changed['Portrait'])) {
         $img = new InlineImage(self::MAIN_CONTACTS_TABLE);
-        $img->store($me['Id'], $change['Portrait'], $handle) || $result = false;
+        $img->store($me['Id'], $changed['Portrait'], $handle) || $result = false;
         unset($changed['Portrait']);
       }
 
