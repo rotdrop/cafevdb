@@ -363,28 +363,44 @@ var CAFEVDB = CAFEVDB || {};
       container = $('body');
     }
 
-    this.contactValidation(container);
+    self.contactValidation(container);
 
-    container.find('input.musician-name.add-musician').
+    var form = container.find('form.pme-form');
+    var nameInputs = form.find('input.musician-name');
+
+    var nameValidationActive = false;
+
+    container.find('form.pme-form input.musician-name').
       off('blur').
       on('blur', function(event) {
-      event.stopImmediatePropagation();
 
-      var form = container.find('form.pme-form');
+      if (nameValidationActive) {
+        event.stopImmediatePropagation();
+        return false;
+      }
+
+      nameValidationActive = true;
+
+      var post = form.serialize();
+
       $.post(OC.filePath('cafevdb', 'ajax/musicians', 'validate.php'),
-             form.serialize(),
+             post,
              function (data) {
-               if (!CAFEVDB.ajaxErrorHandler(data, [ 'message' ])) {
+               if (!CAFEVDB.ajaxErrorHandler(data, [ 'message' ],
+                                             function() {
+                                               nameValidationActive = false;
+                                             })) {
                  return false;
                }
                if (data.data.message != '') {
-                 container.find('input.musician-name').prop('disabled', true);
                  OC.dialogs.alert(data.data.message,
                                   t('cafevdb', 'Possible Duplicate!'),
                                   function() {
-                                    container.find('input.musician-name').prop('disabled', false);
+                                    nameValidationActive = false;
                                   }, true, true);
+                 return false;
                }
+               nameValidationActive = false;
                return false;
              });
 
