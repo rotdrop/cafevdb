@@ -614,7 +614,15 @@ class DetailedInstrumentation
     //print_r($viewStructure);
     foreach($opts['fdd'] as $name => &$data) {
       if (isset($viewStructure[$name])) {
-        $data['querygroup'] = $viewStructure[$name]['table'];
+        $joinField = $viewStructure[$name];
+        $table = $joinField['table'];
+        $key = isset($joinField['key']) ? $joinField['key'] : false;
+        $column = $joinField['column'] === true ? $name : $joinField['column'];
+        $data['querygroup'] = array(
+          'table' => $table,
+          'column' => $column,
+          'key' => $key
+          );
       }
     }
 

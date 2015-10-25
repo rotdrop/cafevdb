@@ -3082,9 +3082,11 @@ class phpMyEdit
 			echo '<td class="',$css_class_name,' ',$css_sys,'" colspan="',$this->sys_cols,'">';
 			echo $this->htmlSubmit('sw', 'Clear', $this->getCSSclass('clear'), false, $disabled);
 			echo "</td>\n";
+			$htmlQuery = htmlspecialchars($text_query);
+			//title="'.$htmlQuery.'"
 			echo '<td class="',$css_class_name,'" colspan="',$this->num_fields_displayed,'">';
 			echo '<span class="',$css_class_name,' label">',$this->labels['Current Query'],': </span>';
-			echo '<span class="',$css_class_name,' info">',htmlspecialchars($text_query),'</span>';
+			echo '<span class="',$css_class_name,' info">',$htmlQuery,'</span>';
 			echo '</td></tr>',"\n";
 		}
 	} /* }}} */
@@ -3895,7 +3897,9 @@ class phpMyEdit
 	function do_change_record() /* {{{ */
 	{
 		// Preparing queries
-		$query_groups = array('default' => '');
+		$where_part = " WHERE (".$this->sd.$this->key.$this->ed.'='.$this->key_delim.$this->rec.$this->key_delim.')';
+		$query_groups = array($this->tb => '');
+		$where_groups = array($this->tb => $where_part);
 		$query_oldrec = '';
 		$newvals	  = array();
 		$oldvals	  = array();
@@ -3931,13 +3935,27 @@ class phpMyEdit
 				}
 			}
 		}
-		$where_part = " WHERE (".$this->sd.$this->key.$this->ed.'='.$this->key_delim.$this->rec.$this->key_delim.')';
 		$query_newrec  = $query_oldrec.' FROM ' . $this->tb;
 		$query_oldrec .= ' FROM ' . $this->sd.$this->tb.$this->ed . $where_part;
 		// Additional query (must go before real query)
 		$res	 = $this->myquery($query_oldrec, __LINE__);
 		$oldvals = $this->sql_fetch($res);
 		$this->sql_free_result($res);
+		// Creatinng WHERE part for query groups
+		foreach($oldvals as $fd => $value) {
+			$fdn = $this->fdn[$fd]; // $fdn == field number
+			$fdd = $this->fdd[$fdn];
+			if (isset($fdd['querygroup'])) {
+				$queryGroup = $fdd['querygroup'];
+				if ($queryGroup['key']) {
+					$table = $queryGroup['table'];
+					$key = $queryGroup['column'];
+					$rec = $value;
+					$where_groups[$table] =
+						' WHERE ('.$this->sd.$key.$this->ed.'='.$this->key_delim.$rec.$this->key_delim.')';
+				}
+			}
+		}
 		// Creating array of changed keys ($changed)
 		foreach ($newvals as $fd => $value) {
 			echo "<!-- ".$value." ".$oldvals[$fd]." -->\n";
@@ -3967,21 +3985,23 @@ class phpMyEdit
 		}
 		echo '<!-- '.print_r($newvals, true).'-->';
 		// Build the real query respecting changes to the newvals array
-		$query_real = null;
 		foreach ($newvals as $fd => $val) {
 			if ($fd == '') continue;
 			$fdn = $this->fdn[$fd];
 			$fdd = $this->fdd[$fdn];
+			$table = '';
 			if (isset($fdd['querygroup'])) {
 				// Split update query if requested by calling app
-				$query_group = $fdd['querygroup'];
-				if (!isset($query_groups[$query_group])) {
-					$query_groups[$query_group] = '';
+				$table = $fdd['querygroup']['table'];
+				$column = $fdd['querygroup']['column'];
+				if (!isset($query_groups[$table])) {
+					$query_groups[$table] = '';
 				}
 			} else {
-				$query_group = 'default';
+				$table = $this->tb;
+				$column = $fd;
 			}
-			$query_real = &$query_groups[$query_group];
+			$query_real = &$query_groups[$table];
 			if (isset($fdd['encryption'])) {
 				// encrypt the value
 				$val = call_user_func($fdd['encryption']['encrypt'], $val);
@@ -4001,17 +4021,17 @@ class phpMyEdit
 				$value = "'".addslashes($val)."'";
 			}
 			if ($query_real == '') {
-				$query_real	  = 'UPDATE '.$this->sd.$this->tb.$this->ed.' SET '.$this->sd.$fd.$this->ed.'='.$value;
+				$query_real	  = 'UPDATE '.$this->sd.$table.$this->ed.' SET '.$this->sd.$column.$this->ed.'='.$value;
 			} else {
-				$query_real	  .= ','.$this->sd.$fd.$this->ed.'='.$value;
+				$query_real	  .= ','.$this->sd.$column.$this->ed.'='.$value;
 			}
 		}
 		$affected_rows = 0;
-		foreach ($query_groups as $group => $query) {
+		foreach ($query_groups as $table => $query) {
 			if ($query == '') {
 				continue;
 			}
-			$query .= $where_part;
+			$query .= $where_groups[$table];
 			// Real query
 			$res = $this->myquery($query, __LINE__) && $res;
 			$num_rows = $this->sql_affected_rows($this->dbh);
