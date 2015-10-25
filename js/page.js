@@ -91,6 +91,7 @@ var CAFEVDB = CAFEVDB || {};
              $('#app-content').empty().prepend(newAppContent);
              $('#app-content').prepend(navToggle);
 
+             CAFEVDB.snapperClose();
              CAFEVDB.modalizer(false),
              Page.busyIcon(false);
 
