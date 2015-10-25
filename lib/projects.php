@@ -1965,14 +1965,16 @@ __EOT__;
     {
       $viewStructure1 = array(
         // Principal key is still the key from the Besetzungen ==
-        // Instrumenation table.
+        // Instrumentation table.
         'Id' => array('table' => 'Besetzungen',
                       'column' => true,
+                      'key' => true,
                       'join' => array('type' => 'INNER')),
 
         'MusikerId' => array(
           'table' => 'Musiker',
           'column' => 'Id',
+          'key' => true,
           'join' => array(
             'type' => 'INNER',
             'condition' => (
@@ -2108,7 +2110,14 @@ __EOT__;
 
         );
 
-      return array_merge($viewStructure1, $extraColumns, $viewStructure2);
+      $viewStructure = array_merge($viewStructure1, $extraColumns, $viewStructure2);
+      foreach($viewStructure as $column => &$data) {
+        if (!isset($data['key'])) {
+          $data['key'] = false;
+        }
+      }
+
+      return $viewStructure;
     }
 
     // Create a sensibly sorted view, fit for being exported via
