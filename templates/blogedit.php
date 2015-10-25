@@ -24,49 +24,50 @@ use CAFEVDB\L;
 use CAFEVDB\Config;
 ?>
 <div id="blogedit">
-  <form id="blogeditform">
-    <textarea class="wysiwygeditor" id="blogtextarea" rows="15" cols="66"></textarea>
-    <br/>
-    <input
+  <div id="blogeditscrollframe">
+    <form id="blogeditform">
+      <textarea class="wysiwygeditor" id="blogtextarea" rows="15" cols="66"></textarea>
+      <br/>
+      <input
       type="button"
       title="<?php echo Config::toolTips('blog-acceptentry'); ?>"
       value="<?php echo L::t('Submit'); ?>"
       id="blogsubmit"
-    />
-    <input
+      />
+      <input
       type="button"
       title="<?php echo Config::toolTips('blog-cancelentry'); ?>"
       value="<?php echo L::t('Cancel'); ?>"
       id="blogcancel"
-    />
-    <?php if ($_['priority'] !== false) { ?>
-    <input
-      type="text"
-      title="<?php echo Config::toolTips('blog-priority'); ?>"
-      value="<?php echo $_['priority']; ?>"
-      name="priority"
-      id="blogpriority"
-    />
-    <?php } ?>
-    <?php if ($_['popup'] === false) { ?>
-      <label for="blogpopupset"
-             title="<?php echo Config::toolTips('blog-popup-set'); ?>">
-        <input type="checkbox"
-               name="popupset"
-               title="<?php echo Config::toolTips('blog-popup-set'); ?>"
-               id="blogpopupset"/>
-        <?php echo L::t('Set Blog Popup') ?>
-      </label>
-    <?php } else { ?>
-      <label for="blogpopupclear"
-             title="<?php echo Config::toolTips('blog-popup-clear'); ?>">
-        <input type="checkbox"
-               name="popupclear"
-               title="<?php echo Config::toolTips('blog-popup-clear'); ?>"
-               id="blogpopupclear"/>
-        <?php echo L::t('Clear Blog Popup') ?>
-      </label>
-    <?php } ?>      
+      />
+      <?php if ($_['priority'] !== false) { ?>
+        <input
+        type="text"
+        title="<?php echo Config::toolTips('blog-priority'); ?>"
+        value="<?php echo $_['priority']; ?>"
+        name="priority"
+        id="blogpriority"
+        />
+      <?php } ?>
+      <?php if ($_['popup'] === false) { ?>
+        <label for="blogpopupset"
+               title="<?php echo Config::toolTips('blog-popup-set'); ?>">
+          <input type="checkbox"
+                 name="popupset"
+                 title="<?php echo Config::toolTips('blog-popup-set'); ?>"
+                 id="blogpopupset"/>
+          <?php echo L::t('Set Blog Popup') ?>
+        </label>
+      <?php } else { ?>
+        <label for="blogpopupclear"
+               title="<?php echo Config::toolTips('blog-popup-clear'); ?>">
+          <input type="checkbox"
+                 name="popupclear"
+                 title="<?php echo Config::toolTips('blog-popup-clear'); ?>"
+                 id="blogpopupclear"/>
+          <?php echo L::t('Clear Blog Popup') ?>
+        </label>
+      <?php } ?>
       <label for="blogreaderclear"
              title="<?php echo Config::toolTips('blog-reader-clear'); ?>">
         <input type="checkbox"
@@ -75,5 +76,6 @@ use CAFEVDB\Config;
                id="blogreaderclear"/>
         <?php echo L::t('Clear Reader List') ?>
       </label>
-  </form>
+    </form>
+  </div>
 </div>

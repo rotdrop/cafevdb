@@ -61,17 +61,41 @@ CAFEVDB = CAFEVDB || {};
 
     var popup = $('#blogedit').dialog({
       title: t('cafevdb', 'Edit Blog Entry'),
+      dialogClass: 'blog-edit-dialog custom-close resize-target',
       modal: true,
       closeOnEscape: false,
       position: Blog.popupPosition,
       width: 'auto',
       height: 'auto',
       resizable: false,
-      open : function () { 
+      open : function () {
         var self = this;
 
+        var dialogHolder = $(self);
+        var dialogWidget = dialogHolder.dialog('widget');
+
+        CAFEVDB.dialogCustomCloseButton(dialogHolder, function(event, container) {
+          event.preventDefault();
+          var cancelButton = container.find('#blogcancel').first();
+          if (cancelButton.length > 0) {
+            event.stopImmediatePropagation();
+            cancelButton.trigger('click');
+          }
+          return false;
+        });
+
+        var resizeHandler = function(parameters) {
+          dialogHolder.dialog('option', 'height', 'auto');
+          dialogHolder.dialog('option', 'width', 'auto');
+          var newHeight = dialogWidget.height()
+                        - dialogWidget.find('.ui-dialog-titlebar').outerHeight();
+          newHeight -= dialogHolder.outerHeight(false) - dialogHolder.height();
+          //alert("Setting height to " + newHeight);
+          dialogHolder.height(newHeight);
+        };
+
         $(".ui-dialog-titlebar-close").hide();
-        
+
         $('button').tipsy({gravity:'ne', fade:true});
         $('input').tipsy({gravity:'ne', fade:true});
         $('label').tipsy({gravity:'ne', fade:true});
@@ -81,7 +105,7 @@ CAFEVDB = CAFEVDB || {};
         } else {
           $.fn.tipsy.disable();
         }
-        
+
         $('#blogedit #blogcancel').click(Blog.cancel);
         $('#blogedit #blogsubmit').click(Blog.submit);
 
@@ -92,6 +116,8 @@ CAFEVDB = CAFEVDB || {};
         CAFEVDB.addEditor('#blogtextarea', function() {
           $(self).dialog('option', 'position', Blog.popupPosition);
         });
+
+        dialogHolder.on('resize', resizeHandler);
       },
       close : function(event, ui) {
         //$('#blogtextarea').tinymce().remove();
@@ -169,13 +195,13 @@ CAFEVDB = CAFEVDB || {};
       var author = self.data('author');
       var size = self.data('size');
       self.avatar(author, size);
-      
+
     });
   };
 
   Blog.popupMessages = function() {
     var blogThreads = $('#blogthreads');
-    
+
     blogThreads.find('div.blogentrypopup').each(function(index) {
       var thisBlogId = $(this).find('input.blogentrypopupid').val();
       if (thisBlogId === false || thisBlogId ==='') {
@@ -213,7 +239,7 @@ CAFEVDB = CAFEVDB || {};
                    } ],
         open : function () {
           $(".ui-dialog-titlebar-close").hide();
-          
+
           $('button').tipsy({gravity:'ne', fade:true});
           $('input').tipsy({gravity:'ne', fade:true});
           $('label').tipsy({gravity:'ne', fade:true});
@@ -293,7 +319,7 @@ $(document).ready(function() {
                      return false;
                    });
 
-    
+
     blogThreads.on('click',
                    '#blogentryactions button.delete',
                    function(event) {
@@ -355,11 +381,10 @@ $(document).ready(function() {
     Blog.popupMessages(); // annoy people
     Blog.avatar(); // display avatars
 
-  });  
+  });
 
 });
 
 // Local Variables: ***
 // js-indent-level: 2 ***
 // End: ***
-
