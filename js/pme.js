@@ -38,6 +38,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
   PHPMYEDIT.inputSelectChosenTitle  = 'Select from the pull-down menu.';
   PHPMYEDIT.chosenPixelWidth        = [];
   PHPMYEDIT.pmePrefix               = 'pme';
+  PHPMYEDIT.PMEPrefix               = PHPMYEDIT.pmePrefix.toUpperCase();
 
   PHPMYEDIT.defaultSelector         = '#cafevdb-page-body';
   PHPMYEDIT.dialogCSSId             = 'pme-table-dialog';
@@ -51,6 +52,26 @@ var PHPMYEDIT = PHPMYEDIT || {};
                                         at: "left+5% top+5%",
                                         of: window };
   PHPMYEDIT.dialogOpen              = false;
+
+  /**Generate a string with PME_sys_.... prefix*/
+  PHPMYEDIT.pmeSys = function(token) {
+    return this.PMEPrefix+"_sys_"+token;
+  };
+
+  /**Generate a string with pme-.... prefix*/
+  PHPMYEDIT.pmeToken = function(token) {
+    return this.pmePrefix+"-"+token;
+  };
+
+  /**Selector for main form*/
+  PHPMYEDIT.formSelector = function() {
+    return 'form.'+this.pmeToken('form');
+  };
+
+  /**Selector for main table*/
+  PHPMYEDIT.tableSelector = function() {
+    return 'table.'+this.pmeToken('main');
+  };
 
   /**Genereate the default selector. */
   PHPMYEDIT.selector = function(selector) {
@@ -66,10 +87,10 @@ var PHPMYEDIT = PHPMYEDIT || {};
    */
   PHPMYEDIT.container = function(selector) {
     var container;
-    selector = this.selector(selector);
     if (selector instanceof jQuery) {
       container = selector;
     } else {
+      selector = this.selector(selector);
       container = $(selector);
     }
     return container;
@@ -227,7 +248,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                  container.find('.pme-navigation input.pme-reload').addClass('loading');
 
                  // general styling
-                 pme.init('pme', containerSel);
+                 pme.init(containerSel);
 
                  // attach the WYSIWYG editor, if any
                  // editors may cause additional resizing
@@ -567,6 +588,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
              var dialogHolder;
              dialogHolder = $('<div id="'+containerCSSId+'" class="resize-target"></div>');
              dialogHolder.html(data.data.contents);
+             dialogHolder.data('AmbientContainer', tableOptions.AmbientContainerSelector);
 
              dialogHolder.on('pmedialog:changed', function(event) {
                //alert('Changed: '+containerCSSId);
@@ -609,7 +631,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                  dialogWidget.addClass('pme-table-dialog-blocked');
 
                  // general styling
-                 pme.init('pme', containerSel);
+                 pme.init(containerSel);
 
                  var resizeHandler = function(parameters) {
                    dialogHolder.dialog('option', 'height', 'auto');
@@ -656,7 +678,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                  dialogHolder.dialog('destroy');
 
                  // At least konq. has the bug that removing a form
-                 // with submit inputs will submit the form. Verz strang.
+                 // with submit inputs will submit the form. Very strange.
                  dialogHolder.find('form input[type="submit"]').remove();
                  dialogHolder.remove();
 
@@ -682,15 +704,9 @@ var PHPMYEDIT = PHPMYEDIT || {};
    *
    * @param[in] selector The CSS selector corresponding to the
    * surrounding container (div element)
-   *
-   * @param[in] pmepfx CSS prefix for the PME form elements
    */
-  PHPMYEDIT.pseudoSubmit = function(form, element, selector, pmepfx) {
-    var self = this;
-
-    if (typeof pmepfx == 'undefined') {
-      pmepfx = 'pme';
-    }
+  PHPMYEDIT.pseudoSubmit = function(form, element, selector) {
+    var pme = this;
 
     selector = this.selector(selector);
     var container = this.container(selector);
@@ -756,11 +772,11 @@ var PHPMYEDIT = PHPMYEDIT || {};
              $('.tipsy').remove();
              CAFEVDB.removeEditor(container.find('textarea.wysiwygeditor'));
              container.html(data.data.contents);
-             self.init(pmepfx, selector);
+             pme.init(selector);
              CAFEVDB.addEditor(container.find('textarea.wysiwygeditor'), function() {
-               self.transposeReady(selector);
+               pme.transposeReady(selector);
                //alert('pseudo submit');
-               self.tableLoadCallback(dpyClass, selector, { reason: 'formSubmit' }, function() {});
+               pme.tableLoadCallback(dpyClass, selector, { reason: 'formSubmit' }, function() {});
                CAFEVDB.pmeTweaks(container);
                CAFEVDB.tipsy(selector);
 
@@ -778,7 +794,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
    */
   PHPMYEDIT.triggerSubmit = function(buttonName, containerSel) {
     var container = this.container(containerSel);
-    var button = container.find('input[name="PME_sys_'+buttonName+'"]').first();
+    var button = container.find('input[name="'+this.pmeSys(buttonName)+'"]').first();
 
     if (button.length > 0) {
       button.trigger('click');
@@ -907,17 +923,20 @@ var PHPMYEDIT = PHPMYEDIT || {};
   };
 
   PHPMYEDIT.installFilterChosen = function(containerSel) {
-    if (!this.selectChosen) {
+    var pme = this;
+
+    if (!pme.selectChosen) {
       return;
     }
 
-    var pmepfx = this.pmePrefix;
+    var pmeFilter = pme.pmeToken('filter');
+    var pmeCompFilter = pme.pmeToken('comp-filter');
 
-    var container = this.container(containerSel);
+    var container = pme.container(containerSel);
 
-    var noRes = this.filterSelectNoResult;
+    var noRes = pme.filterSelectNoResult;
 
-    container.find("select[class^='"+pmepfx+"-comp-filter']").chosen({
+    container.find("select."+pmeCompFilter).chosen({
       width:"auto",
       inherit_select_classes:true,
       disable_search_threshold: 10
@@ -925,17 +944,20 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
     // Provide a data-placeholder and also remove the match-all
     // filter, which is not needed when using chosen.
-    container.find("select[class^='"+pmepfx+"-filter']").attr("data-placeholder", this.filterSelectPlaceholder);
-    container.off('change', 'select[class^="'+pmepfx+'-filter"]');
-    container.find("select[class^='"+pmepfx+"-filter'] option[value='*']").remove();
+    container.find("select."+pmeFilter).attr("data-placeholder", pme.filterSelectPlaceholder);
+    container.off('change', 'select.'+pmeFilter);
+    container.find("select."+pmeFilter+" option[value='*']").remove();
 
     // Play a dirty trick in order not to pass width:auto to chosen
     // for some particalar thingies
+    //
+    // TODO: Was temporarily disabled and maybe not needed any more.
     var k;
     for (k = 0; k < PHPMYEDIT.chosenPixelWidth.length; ++k) {
       var tag = PHPMYEDIT.chosenPixelWidth[k];
-      var pxlWidth = Math.round(container.find("td[class^='"+pmepfx+"-filter-"+tag+"']").width());
-      container.find("select[class^='"+pmepfx+"-filter-"+tag+"']").chosen({
+      var pmeFilterTag = pmeFilter+"."+tag;
+      var pxlWidth = Math.round(container.find("td."+pmeFilterTag).width());
+      container.find("select."+pmeFilterTag).chosen({
         width:pxlWidth+60+'px',
         inherit_select_classes:true,
         no_results_text:noRes
@@ -943,53 +965,60 @@ var PHPMYEDIT = PHPMYEDIT || {};
     }
 
     // Then the general stuff
-    container.find("select[class^='"+pmepfx+"-filter']").chosen({
+    container.find("select."+pmeFilter).chosen({
       //width:'100%',
       inherit_select_classes:true,
       no_results_text:noRes
     });
 
     var dblClickSel =
-      'td[class^="'+pmepfx+'-filter"] ul.chosen-choices li.search-field input[type="text"]'+','
-                     + 'td[class^="'+pmepfx+'-filter"] div.chosen-container'+','
-                     + 'td[class^="'+pmepfx+'-filter"] input[type="text"]';
+      'td.'+pmeFilter+' ul.chosen-choices li.search-field input[type="text"]'+','
+                     + 'td.'+pmeFilter+' div.chosen-container'+','
+                     + 'td.'+pmeFilter+' input[type="text"]';
     container.off('dblclick', dblClickSel);
     container.on('dblclick', dblClickSel, function(event) {
       event.preventDefault();
       // There doesn't seem to be a "this" for dblclick, though
       // searching the web did not reveal similar problems. Doesn't
       // matter, we just trigger the click on the query-submit button
-      //return PHPMYEDIT.pseudoSubmit(container.find('form.pme-form'), $(event.target), containerSel, pmepfx);
-      container.find('td.pme-filter input.pme-query').trigger('click');
+      //return PHPMYEDIT.pseudoSubmit(container.find('form.pme-form'), $(event.target), containerSel);
+      container.find('td.'+pmeFilter+' input.'+pme.pmeToken('query')).trigger('click');
     });
 
-    container.find("td[class^='"+pmepfx+"-filter'] div.chosen-container").attr("title", this.filterSelectChosenTitle);
+    container.find("td."+pmeFilter+" div.chosen-container").
+      attr("title", pme.filterSelectChosenTitle);
   };
 
   PHPMYEDIT.installInputChosen = function(containerSel) {
-    if (!this.selectChosen) {
+    var pme = this;
+
+    if (!pme.selectChosen) {
       return;
     }
 
-    var pmepfx = this.pmePrefix;
+    var pmeInput = pme.pmeToken('input');
+    var pmeValue = pme.pmeToken('value');
 
-    var container = this.container(containerSel);
+    var container = pme.container(containerSel);
 
-    var noRes = this.inputSelectNoResult;
+    var noRes = pme.inputSelectNoResult;
 
     // Provide a data-placeholder and also remove the match-all
     // filter, which is not needed when using chosen.
-    container.find("select[class^='"+pmepfx+"-input']").attr("data-placeholder", this.inputSelectPlaceholder);
-    container.off('change', 'select[class^="'+pmepfx+'-input"]');
-//    container.find("select[class^='"+pmepfx+"-input'] option[value='*']").remove();
+    container.find("select."+pmeInput).attr("data-placeholder", pme.inputSelectPlaceholder);
+    container.off('change', 'select.'+pmeInput);
+//    container.find("select."+pmeInput+" option[value='*']").remove();
 
     // Play a dirty trick in order not to pass width:auto to chosen
     // for some particalar thingies
+    //
+    // TODO: was disabled due to a bug and maybe not needed any more.
     var k;
     for (k = 0; k < PHPMYEDIT.chosenPixelWidth.length; ++k) {
       var tag = PHPMYEDIT.chosenPixelWidth[k];
-      var pxlWidth = Math.round(container.find("td[class^='"+pmepfx+"-input-"+tag+"']").width());
-      container.find("select[class^='"+pmepfx+"-input-"+tag+"']").chosen({
+      var pmeInputTag = pmeInput+'.'+tag;
+      var pxlWidth = Math.round(container.find("td."+pmeInputTag).width());
+      container.find("select."+pmeInputTag).chosen({
         width:pxlWidth+'px',
         inherit_select_classes:true,
         disable_search_threshold: 10,
@@ -998,7 +1027,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
     }
 
     // Then the general stuff
-    container.find("select[class^='"+pmepfx+"-input']").each(function(index) {
+    container.find("select."+pmeInput).each(function(index) {
       var self = $(this);
       if (self.hasClass('no-chosen')) {
         return;
@@ -1013,13 +1042,13 @@ var PHPMYEDIT = PHPMYEDIT || {};
     });
 
     // Set title explicitly
-    container.find("td[class^='"+pmepfx+"-input'] div.chosen-container").attr("title", this.inputSelectChosenTitle);
-    container.find("td[class^='"+pmepfx+"-value'] div.chosen-container").attr("title", this.inputSelectChosenTitle);
+    container.find("td."+pmeInput+" div.chosen-container").attr("title", pme.inputSelectChosenTitle);
+    container.find("td."+pmeValue+" div.chosen-container").attr("title", pme.inputSelectChosenTitle);
 
     // Copy over titles and tipsy classes
-    container.find("td."+pmepfx+"-value").each(function(index) {
+    container.find("td."+pmeValue).each(function(index) {
       var selectTitle = "";
-      var selectBox = $(this).children("select."+pmepfx+"-input").first();
+      var selectBox = $(this).children("select."+pmeInput).first();
       var chosen = $(this).children("div.chosen-container").first();
 
       if (chosen.length == 0 || selectBox.length == 0) {
@@ -1039,7 +1068,9 @@ var PHPMYEDIT = PHPMYEDIT || {};
   };
 
   PHPMYEDIT.installTabHandler = function(containerSel, callback) {
-    var container = this.container(containerSel);
+    var pme = this;
+
+    var container = pme.container(containerSel);
 
     if (typeof callback != 'function') {
       callback = function() {
@@ -1061,7 +1092,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
       table.removeClass(oldTabClass).addClass(tabClass);
 
       // Record the tab in the form data
-      form.find('input[name="PME_sys_cur_tab"]').val(tabClass.substring(4));
+      form.find('input[name="'+pme.pmeSys('cur_tab')+'"]').val(tabClass.substring(4));
 
       // for styling and logic ...
       form.find('li.pme-navigation.table-tabs').removeClass('selected');
@@ -1088,59 +1119,63 @@ var PHPMYEDIT = PHPMYEDIT || {};
     });
   };
 
-  PHPMYEDIT.init = function(pmepfx, containerSel) {
-    var self = this;
+  PHPMYEDIT.init = function(containerSel) {
+    var pme = this;
 
-    if (typeof pmepfx === 'undefined') {
-      pmepfx = 'pme';
-    }
-
-    containerSel = this.selector(containerSel);
-    var tableSel = 'table.'+pmepfx+'-main';
-    var formSel = 'form.'+pmepfx+'-form';
-    var container = this.container(containerSel);
+    containerSel = pme.selector(containerSel);
+    var tableSel = 'table.'+pme.pmeToken('main');
+    var formSel = 'form.'+pme.pmeToken('form');
+    var container = pme.container(containerSel);
     var form = container.find(formSel);
-    var hiddenClass = pmepfx+'-hidden';
+    var hiddenClass = pme.pmeToken('hidden');
+    var pmeFilter = pme.pmeToken('filter');
+    var pmeSearch = pme.pmeToken('search');
+    var pmeHide = pme.pmeToken('hide');
+    var pmeSort = pme.pmeToken('sort');
+    var pmeGoto = pme.pmeToken('goto');
+    var pmePageRows = pme.pmeToken('pagerows');
 
     //alert(containerSel+" "+container.length);
 
     //Disable page-rows and goto submits, just not necessary
-    container.find('input.pme-pagerows').on('click', function(event) {
+    container.find('input.'+pmePageRows).on('click', function(event) {
       event.stopImmediatePropagation();
       return false;
     });
-    container.find('input.pme-goto').on('click', function(event) {
+    container.find('input.'+pmeGoto).on('click', function(event) {
       event.stopImmediatePropagation();
       return false;
     });
 
-    container.on('click', tableSel+' input.'+pmepfx+'-hide', function(event) {
+    // Hide search fields
+    container.on('click', tableSel+' input.'+pmeHide, function(event) {
       event.stopImmediatePropagation(); // don't submit, not necessary
 
       var table = container.find(tableSel);
       var form = container.find(formSel);
 
       $(this).addClass(hiddenClass);
-      table.find('tr.pme-filter').addClass(hiddenClass);
-      table.find('input.'+pmepfx+'-search').removeClass(hiddenClass);
-      form.find('input[name="PME_sys_fl"]').val(0);
+      table.find('tr.'+pmeFilter).addClass(hiddenClass);
+      table.find('input.'+pmeSearch).removeClass(hiddenClass);
+      form.find('input[name="'+pme.pmeSys('fl')+'"]').val(0);
 
       return false;
     });
 
-    container.on('click', tableSel+' input.'+pmepfx+'-search', function(event) {
+    // Show search fields
+    container.on('click', tableSel+' input.'+pmeSearch, function(event) {
       event.stopImmediatePropagation(); // don't submit, not necessary
 
       var table = container.find(tableSel);
       var form = container.find(formSel);
 
       $(this).addClass(hiddenClass);
-      table.find('tr.pme-filter').removeClass(hiddenClass);
-      table.find('input.'+pmepfx+'-hide').removeClass(hiddenClass);
-      form.find('input[name="PME_sys_fl"]').val(1);
+      table.find('tr.'+pmeFilter).removeClass(hiddenClass);
+      table.find('input.'+pmeHide).removeClass(hiddenClass);
+      form.find('input[name="'+pme.pmeSys('fl')+'"]').val(1);
 
       // maybe re-style chosen select-boxes
-      var tabClass = form.find('input[name="PME_sys_cur_tab"]').val();
+      var tabClass = form.find('input[name="'+pme.pmeSys('cur_tab')+'"]').val();
       //alert('tab '+tabClass);
       var pfx = 'tbody tr td'+(!tabClass || tabClass == 'all' ? '' : '.tab-' + tabClass)+' ';
       var reattachChosen = false;
@@ -1160,22 +1195,22 @@ var PHPMYEDIT = PHPMYEDIT || {};
     });
 
     var onChangeSel =
-      'input[type="checkbox"].'+pmepfx+'-sort'+','+
-      'select.'+pmepfx+'-goto'+','+
-      'select.'+pmepfx+'-pagerows';
-    if (!this.selectChosen) {
-      onChangeSel += ','+'select[class^="'+pmepfx+'-filter"]';
+      'input[type="checkbox"].'+pmeSort+','+
+      'select.'+pmeGoto+','+
+      'select.'+pmePageRows;
+    if (!pme.selectChosen) {
+      onChangeSel += ','+'select.'+pmeFilter;
     }
     container.off('change', onChangeSel);
     container.on('change', onChangeSel, function(event) {
       event.preventDefault();
-      return PHPMYEDIT.pseudoSubmit($(this.form), $(this), containerSel, pmepfx);
+      return PHPMYEDIT.pseudoSubmit($(this.form), $(this), containerSel);
     });
 
     // view/change/copy/delete buttons lead to a a popup
     if (form.find('input[name="DisplayClass"]').length > 0) {
-      var submitSel = 'form.'+pmepfx+'-form input[class$="navigation"]:submit'+','+
-        'form.'+pmepfx+'-form input.pme-add:submit';
+      var submitSel = formSel+' input[class$="navigation"]:submit'+','+
+        formSel+' input.'+pme.pmeToken('add')+':submit';
       container.off('click', submitSel).
         on('click', submitSel, function(event) {
         var self = $(this);
@@ -1192,9 +1227,9 @@ var PHPMYEDIT = PHPMYEDIT || {};
       });
 
       // Trigger "view operation" when clicking on a data-row.
-      var rowSelector = 'form.'+pmepfx+'-form td.'+pmepfx+'-cell:not(.control)'
+      var rowSelector = formSel+' td.'+pme.pmeToken('cell')+':not(.control)'
                       + ','
-                      + 'form.'+pmepfx+'-form td.'+pmepfx+'-navigation';
+                      + formSel+' td.'+pme.pmeToken('navigation');
       container.off('click', rowSelector).
         on('click', rowSelector, function(event) {
 
@@ -1202,13 +1237,13 @@ var PHPMYEDIT = PHPMYEDIT || {};
           var target = $(event.target);
           // divs and spans which make it up to here will be ignored,
           // everything else results in the default action.
-          if (target.is('.'+pmepfx+'-email-check')) {
+          if (target.is('.'+pme.pmeToken('email-check'))) {
             return true;
           }
-          if (target.is('.'+pmepfx+'-debit-note-check')) {
+          if (target.is('.'+pme.pmeToken('debit-note-check'))) {
             return true;
           }
-          if (target.is('.'+pmepfx+'-bulkcommit-check')) {
+          if (target.is('.'+pme.pmeToken('bulkcommit-check'))) {
             return true;
           }
           if (target.is('.graphic-links')) {
@@ -1221,33 +1256,34 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
         event.preventDefault();
         event.stopImmediatePropagation();
-        var recordId = $(this).parent().data(pmepfx+'_sys_rec');
-        var PMEPFX = pmepfx.toUpperCase();
-        var recordKey = PMEPFX+'_sys_rec';
-        var recordEl = '<input type="hidden" class="'+pmepfx+'-view-navigation" value="View?'+recordKey+'='+recordId+'" name="'+PMEPFX+'_sys_operation" />';
+        var recordId = $(this).parent().data(pme.pmePrefix+'_sys_rec');
+        var recordKey = pme.pmeSys('rec');
+        var recordEl = '<input type="hidden" class="'+pme.pmeToken('view-navigation')+'"'
+                     +' value="View?'+recordKey+'='+recordId+'"'
+                     +' name="'+pme.pmeSys('operation')+'" />';
 
         // "this" does not necessarily has a form attribute
-        var form = container.find('form.'+pmepfx+'-form');
+        var form = container.find(formSel);
         PHPMYEDIT.tableDialog(form, $(recordEl), containerSel);
         return false;
       });
     }
 
     // All remaining submit event result in a reload
-    var submitSel = 'form.'+pmepfx+'-form :submit';
+    var submitSel = formSel+' :submit';
     container.off('click', submitSel).
       on('click', submitSel, function(event) {
       event.preventDefault();
 
       //alert("Button: "+$(this).attr('name'));
 
-      return PHPMYEDIT.pseudoSubmit($(this.form), $(this), containerSel, pmepfx);
+      return PHPMYEDIT.pseudoSubmit($(this.form), $(this), containerSel);
     });
 
     PHPMYEDIT.installTabHandler(container);
 
-    if (this.selectChosen) {
-      var gotoSelect = container.find("select."+pmepfx+"-goto");
+    if (pme.selectChosen) {
+      var gotoSelect = container.find("select."+pmeGoto);
       gotoSelect.chosen({
         width:"auto",
         inherit_select_classes:true,
@@ -1259,16 +1295,16 @@ var PHPMYEDIT = PHPMYEDIT || {};
       } else {
         gotoSelect.attr('data-placeholder', ' ');
       }
-      container.find("select."+pmepfx+"-goto").trigger('chosen:updated');
+      container.find("select."+pmeGoto).trigger('chosen:updated');
 
-      container.find("select."+pmepfx+"-pagerows").chosen({
+      container.find("select."+pmePageRows).chosen({
         width:"auto",
         inherit_select_classes:true,
         disable_search:true
       });
     }
 
-    var keyPressSel = 'input[class^="'+pmepfx+'-filter"]';
+    var keyPressSel = 'input.'+pmeFilter;
     container.off('keypress', keyPressSel);
     container.on('keypress', keyPressSel, function(event) {
       var pressed_key;
@@ -1279,13 +1315,13 @@ var PHPMYEDIT = PHPMYEDIT || {};
       }
       if (pressed_key == 13) { // enter pressed
         event.preventDefault();
-        return PHPMYEDIT.pseudoSubmit($(this.form), $(this), containerSel, pmepfx);
+        return PHPMYEDIT.pseudoSubmit($(this.form), $(this), containerSel);
       }
       return true; // other key pressed
     });
 
-    this.installFilterChosen(container);
-    this.installInputChosen(container);
+    pme.installFilterChosen(container);
+    pme.installInputChosen(container);
 
   };
 })(window, jQuery, PHPMYEDIT);
@@ -1294,7 +1330,8 @@ $(document).ready(function(){
 
   CAFEVDB.addReadyCallback(function() {
     PHPMYEDIT.transposeReady();
-    PHPMYEDIT.init('pme');
+    PHPMYEDIT.init();
+    PHPMYEDIT.dialogOpen = false; // not clear in init on purpose
   });
 
 });
