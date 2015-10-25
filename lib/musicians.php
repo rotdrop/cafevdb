@@ -35,6 +35,11 @@ class Musicians
   const TABLE = 'Musiker';
   private $projectMode;
 
+  /**Constructor.
+   *
+   * @param[in] boolean $mode Start in "project-mode" which will mask
+   * out all musicians for the project passed as CGI-Variable ProjectId.
+   */
   function __construct($mode = false, $execute = true) {
     parent::__construct($execute);
     $this->projectMode = $mode;
@@ -341,18 +346,6 @@ make sure that the musicians are also automatically added to the
       $groupedProjects[$proj['Name']] = $proj['Jahr'];
     }
 
-    $projectsIdx = count($opts['fdd']);
-    if ($this->projectMode) {
-      $opts['cgi']['persist']['ProjectMode'] = true;
-      if (!Util::cgiValue('ProjectMode', false)) {
-        // start initially filtered, but let the user choose other things.
-        $pfx = Config::$pmeopts['cgi']['prefix']['sys'];
-        $key = 'qf'.$projectsIdx;
-        $opts['cgi']['append'][$pfx.$key.'_id'] = array($projectName);
-        $opts['cgi']['append'][$pfx.$key.'_comp'] = array('not');
-      }
-    }
-
     // Dummy field in order to get the Besetzungen table for the Projects field
     $idx = count($opts['fdd']);
     $join_table = 'PMEjoin'.$idx;
@@ -368,6 +361,18 @@ make sure that the musicians are also automatically added to the
         'join' => '$main_table.`Id` = $join_table.`MusikerId`'
         )
       );
+
+    $projectsIdx = count($opts['fdd']);
+    if ($this->projectMode) {
+      $opts['cgi']['persist']['ProjectMode'] = true;
+      if (!Util::cgiValue('ProjectMode', false)) {
+        // start initially filtered, but let the user choose other things.
+        $pfx = Config::$pmeopts['cgi']['prefix']['sys'];
+        $key = 'qf'.$projectsIdx;
+        $opts['cgi']['append'][$pfx.$key.'_id'] = array($projectName);
+        $opts['cgi']['append'][$pfx.$key.'_comp'] = array('not');
+      }
+    }
 
     $idx = count($opts['fdd']);
     $join_table = 'PMEjoin'.$idx;
@@ -664,13 +669,33 @@ make sure that the musicians are also automatically added to the
     return true;
   }
 
-  public static function addUUID($pme, $op, $step, $oldvalus, &$changed, &$newvals)
+  public static function addUUIDTrigger($pme, $op, $step, $oldvalus, &$changed, &$newvals)
   {
+    $uuid = self::generateUUID($pme->dbh);
+
+    if ($uuid === false) {
+      return false;
+    }
+
     $key = 'UUID';
     $changed[] = $key;
+    $newvals[$key] = $uuid;
+
+    return true;
+  }
+
+  public static function generateUUID($handle = false)
+  {
+    $ownConnection = $handle === false;
+
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
     $uuid = Util::generateUUID();
     $cnt = 0;
-    while (mySQL::queryNumRows("FROM `".self::TABLE."` WHERE `UUID` LIKE '".$uuid."'", $pme->dbh) > 0) {
+    while (mySQL::queryNumRows("FROM `".self::TABLE."` WHERE `UUID` LIKE '".$uuid."'", $handle) > 0) {
       ++$cnt;
       if ($cnt > 10) {
         // THIS JUST CANNOT BE. SOMETHING ELSE MUST BE WRONG. BAIL OUT.
@@ -683,8 +708,12 @@ make sure that the musicians are also automatically added to the
       }
       $uuid = Util::generateUUID();
     }
-    $newvals[$key] = $uuid;
-    return true;
+
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $uuid;
   }
 
   public static function instrumentInsurancePME($musicianId, $opts, $action, $k, $fds, $fdd, $row)
@@ -887,6 +916,45 @@ make sure that the musicians are also automatically added to the
     return array('firstName' => (isset($row['Vorname']) && $row['Vorname'] != '') ? $row['Vorname'] : 'X',
                  'lastName' => (isset($row['Name']) && $row['Name'] != '') ? $row['Name'] : 'X',
                  'email' => (isset($row['Email']) && $row['Email'] != '') ? $row['Email'] : 'X');
+  }
+
+  /** Check for duplicate records by Id, UUID, firstName, surName.
+   *
+   * @param[in] array $records Associate array with records to check
+   * for. Supported fields ar Id, UUID, Name and Vorname. Name and
+   * Vorname will be combined with an AND junctor, Id and UUID, if
+   * present, are added with an OR junctor.
+   *
+   * @param[in] mixed $handle Data-base handle or false.
+   *
+   * @return @c true if duplicates are found, @c false otherwise.
+   */
+  public static function findDuplicates($records, $handle = false)
+  {
+    $ownConnection = $handle === false;
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
+    $where = '0';
+    if (isset($records['Name']) && isset($records['Vorname'])) {
+      $where .= " OR (`Name` = '".$records['Name']."' AND `Vorname` = '".$records['Vorname']."')";
+    }
+    if (isset($records['UUID'])) {
+      $where .= " OR `UUID` = '".$records['UUID']."'";
+    }
+    if (isset($records['Id'])) {
+      $where .= " OR `Id` = '".$records['Id']."'";
+    }
+
+    $count = mySQL::queryNumRows("FROM `".self::TABLE."` WHERE ".$where, $handle);
+
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $count > 0;
   }
 
   /** Fetch the entire mess of duplicate musicians by name.

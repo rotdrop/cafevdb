@@ -59,27 +59,37 @@ var CAFEVDB = CAFEVDB || {};
       options.Project = options.ProjectName;
     }
 
+    var pme = PHPMYEDIT;
+    var pmeOperation = pme.pmeSys('operation');
+    var pmeRecord = pme.pmeSys('rec');
+
     var tableOptions = {
       ProjectId: -1,
       ProjectName: '',
-      AmbientContainerSelector: PHPMYEDIT.selector(),
+      AmbientContainerSelector: pme.selector(),
       DialogHolderCSSId: 'personal-record-dialog',
       // Now special options for the dialog popup
       InitialViewOperation: options.InitialValue == 'View',
-      InitialName: 'PME_sys_operation',
+      InitialName: pmeOperation,
       InitialValue: 'View',
-      ReloadName: 'PME_sys_operation',
+      ReloadName: pmeOperation,
       ReloadValue: 'View',
-      PME_sys_operation: options.ReloadValue + '?PME_sys_rec='+record,
-      PME_sys_rec: record,
       ModalDialog: true,
       modified: false
     };
 
+    tableOptions[pmeOperation] = options.ReloadValue + '?'+pmeRecord+'='+record;
+    tableOptions[pmeRecord] = record;
+
     // Merge remaining options in.
     tableOptions = $.extend(tableOptions, options);
 
-    if (options.ProjectId >= 0) {
+    if (tableOptions.Table == 'Musiker') {
+      var projectMode = options.ProjectId > 0;
+      tableOptions.Template =  projectMode ? 'add-musicians' : 'all-musicians';
+      tableOptions.DisplayClass = 'Musicians';
+      tableOptions["ClassArguments[0]"] = projectMode ? "1" : "0";
+    } else if (options.ProjectId > 0) {
       tableOptions.Table = options.projectName+'View';
       tableOptions.Template = 'detailed-instrumenation'
       tableOptions.DisplayClass = 'DetailedInstrumentation';
@@ -177,6 +187,9 @@ var CAFEVDB = CAFEVDB || {};
 
   /**Pseudo-submit an underlying PME-form with tweaked form data.
    *
+   * @param[in] form A form with additional input data which is
+   * submitted as well. Submit buttons are omitted.
+   *
    * @param formData Data for hidden input elements which replace the
    * form's "native" data. Example:
    *
@@ -188,9 +201,13 @@ var CAFEVDB = CAFEVDB || {};
    * };
    *
    * The form is submitted with an empty pseudo-submit button.
+   *
+   * @param[in] afterLoadCallback Optional. A function called after the
+   * table-view has been loaded.
    */
   Instrumentation.loadPMETable = function(form, formData, afterLoadCallback) {
-    form.find('input').not('[name*="PME_sys"]').each(function(idx) {
+    var pmeSys = PHPMYEDIT.pmeSys('');
+    form.find('input').not('[name^="'+pmeSys+'"]').each(function(idx) {
       var self = $(this);
       var name = self.attr('name');
       if (name) {
@@ -202,16 +219,111 @@ var CAFEVDB = CAFEVDB || {};
     CAFEVDB.Page.loadPage(formData, afterLoadCallback);
   };
 
-  Instrumentation.loadAddMusicians = function(form, afterLoadCallback) {
-    var inputTweak = {
-      Template: "add-musicians",
-      Table: "Musiker",
-      DisplayClass: "Musicians",
-      "ClassArguments[0]": "1"
-    };
-    Instrumentation.loadPMETable(form, inputTweak, afterLoadCallback);
+  /**Pseudo-submit an underlying PME-form with tweaked form data, like
+   * loadPMETable(), but restrict the display to the ids passed in the
+   * flat array @a ids.
+   *
+   * @param formData Data for hidden input elements which replace the
+   * form's "native" data. Example:
+   *
+   * formData = {
+   *   Template: "detailed-instrumentation",
+   *   Table: "Musiker",
+   *   DisplayClass: "Musicians",
+   *   'ClassArguments[0]': "1"
+   * };
+   *
+   * The form is submitted with an empty pseudo-submit button.
+   *
+   * @param[in] ids An array containing the ids that will be
+   * displayed. If ids is empty or contains an entry @c -1 then no filtering will
+   * take place.
+   *
+   * @param[in] afterLoadCallback Optional. A function called after the
+   * table-view has been loaded.
+   */
+  Instrumentation.loadPMETableFiltered = function(form, formData, ids, afterLoadCallback) {
+    if (typeof ids === 'undefined' || !ids) {
+      ids = [];
+    }
+
+    var pmeSys = PHPMYEDIT.pmeSys('');
+    var filterData = {};
+    for (var idx = 0; idx < ids.length; ++idx) {
+      var name = pmeSys+'qf0_id['+idx+']';
+      var value = ids[idx];
+      if (value == -1) {
+        filterData = {};
+        break;
+      }
+      filterData[name] = value;
+    }
+    $.extend(formData, filterData);
+
+    Instrumentation.loadPMETable(form, formData, afterLoadCallback);
   };
 
+  /**Load the table of all musicians, possibly in "project" mode and
+   * possibly restricted to subset of the musicians by providing an
+   * array with selected ids.
+   *
+   * @param form The current PME form.
+   *
+   * @param[in] ids An array containing the ids that will be
+   * displayed. If ids is empty or contains an entry -1 then no filtering will
+   * take place.
+   *
+   * @param[in] projectMode @c true, @c false, @c null or omitted.
+   * If @c null or not present, then @a form will be searched for an input element with
+   * name @c ProjectId, if present and its value is positive, the main musisians table is
+   * loaded in project mode, allowing for adding new participants to the respective project.
+   *
+   * @param[in] afterLoadCallback Optional. A function called after the
+   * table-view has been loaded.
+   */
+  Instrumentation.loadMusicians = function(form, ids, projectMode, afterLoadCallback) {
+    if (typeof projectMode == 'undefined' || projectMode === null) {
+      // Check whether form contains an input element for a
+      // ProjectId. If its value is positive, switch to project mode,
+      // otherwise assume all-musicians mode.
+      var projectId = form.find('input[name="ProjectId"]').val();
+      projectMode = projectId > 0;
+    }
+    var inputTweak = {
+      Template: projectMode ? "add-musicians" : "all-musicians",
+      Table: "Musiker",
+      DisplayClass: "Musicians",
+      "ClassArguments[0]": projectMode ? "1" : "0"
+    };
+
+    Instrumentation.loadPMETableFiltered(form, inputTweak, ids, afterLoadCallback);
+  };
+
+  /**Load the table of all musicians in the "add musician to project"
+   * perspective. The underlying Musicians PHP class will take care of
+   * constructing a suitable filter restricting the initial view to
+   * all musicians @b not yet registered for the project.
+   *
+   * @param[in] form The current PME form.
+   *
+   * @param[in] afterLoadCallback An optional callback executed after
+   * the PME table has been loaded.
+   */
+  Instrumentation.loadAddMusicians = function(form, afterLoadCallback) {
+    Instrumentation.loadMusicians(form, [], true, afterLoadCallback);
+  };
+
+  /**Load the detailed instrumentation view.
+   *
+   * @param[in] form The current PME form.
+   *
+   * @param[in] musicians Optional. An array of musician ids. The
+   * table view will be restricted to these ids by constructing a
+   * suitable filter expression.
+   *
+   * @param[in] afterLoadCallback An optional callback executed after
+   * the PME table has been loaded.
+   */
   Instrumentation.loadDetailedInstrumentation = function(form, musicians, afterLoadCallback) {
     var projectName = form.find('input[name="ProjectName"]').val();
     var table = projectName+'View';
@@ -222,16 +334,12 @@ var CAFEVDB = CAFEVDB || {};
       DisplayClass: "DetailedInstrumentation"
     };
 
+    var ids = [ -1 ];
     if (typeof musicians != 'undefined') {
-      var idx;
-      for (idx = 0; idx < musicians.length; ++idx) {
-        var name = 'PME_sys_qf0_id['+idx+']';
-        var value = musicians[idx].instrumentationId;
-        inputTweak[name] = value;
-      }
+      ids = musicians.map(function(musician) { return musician.instrumentationId; });
     }
 
-    Instrumentation.loadPMETable(form, inputTweak, afterLoadCallback);
+    Instrumentation.loadPMETableFiltered(form, inputTweak, ids, afterLoadCallback);
   };
 
   Instrumentation.ready = function(selector) {

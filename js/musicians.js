@@ -359,9 +359,8 @@ var CAFEVDB = CAFEVDB || {};
   Musicians.ready = function(container) {
     var self = this;
 
-    if (typeof container == 'undefined') {
-      container = $('body');
-    }
+    // sanitize
+    container = PHPMYEDIT.container(container);
 
     self.contactValidation(container);
 
@@ -370,7 +369,9 @@ var CAFEVDB = CAFEVDB || {};
 
     var nameValidationActive = false;
 
-    container.find('form.pme-form input.musician-name').
+    // avoid duplicate entries in the DB, but only when adding new
+    // musicians.
+    container.find('form.pme-form input.musician-name.add-musician').
       off('blur').
       on('blur', function(event) {
 
@@ -390,6 +391,50 @@ var CAFEVDB = CAFEVDB || {};
                                              function() {
                                                nameValidationActive = false;
                                              })) {
+                 return false;
+               }
+               if (!$.isEmptyObject(data.data.duplicates)) {
+                 var numDuplicates = 0;
+                 var ids = [];
+                 for (var id in data.data.duplicates) {
+                   ++numDuplicates;
+                   ids.push(id);
+                 }
+                 if (numDuplicates > 0) {
+                   OC.dialogs.confirm(
+                     t('cafevdb',
+                       'You definitely do not want to add duplicates to the database.'+"\n"
+                                 + 'Please answer "no" in order to add a new musician,'+"\n"
+                                 + 'otherwise answer "yes". If you react in a positive manner'+"\n"
+                                 + 'you will be redirected to a web form in order to bring'+"\n"
+                                 + 'the personal data of the respective musician up-to-date.')
+                     .replace(/(?:\r\n|\r|\n)/g, '<br/>'),
+                     t('cafevdb', 'Avoid Possible Duplicate?'),
+                     function(answer) {
+                       nameValidationActive = false;
+                       if (!answer) {
+                         return;
+                       }
+                       var mainContainer = $(container.data('AmbientContainer'));
+                       var form = mainContainer.find(PHPMYEDIT.formSelector());
+                       container.dialog('close');
+                       if (numDuplicates == 1) {
+                         var projectId = form.find('input[name="ProjectId"]').val();
+                         var projectName = form.find('input[name="ProjectName"]').val();
+                         CAFEVDB.Instrumentation.personalRecordDialog(
+                           ids[0],
+                           {
+                             Table: 'Musiker',
+                             InitialValue: 'View',
+                             ProjectId: projectId ? projectId : -1,
+                             ProjectName: projectName
+                           }
+                         );
+                       } else {
+                         CAFEVDB.Instrumentation.loadMusicians(form, ids, null);
+                       }
+                     }, true, true);
+                 }
                  return false;
                }
                if (data.data.message != '') {

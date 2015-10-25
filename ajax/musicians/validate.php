@@ -69,12 +69,6 @@ will have to clean up after you.
 
 Please continue if you know what you are doing. Please use the search
 facilities before adding new musicians. Thanks.');
-
-      \OCP\JSON::success(
-        array('data' => array('message' => nl2br($message),
-                              'duplicates' => $duplicates,
-                              'debugText' => $debugText)));
-      return false;
     }
 
     \OCP\JSON::success(
