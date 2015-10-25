@@ -49,12 +49,12 @@ class Instrumentation
   protected $secionLeaderColumn;
   protected $registrationColumn;
 
-  public function deactivate() 
+  public function deactivate()
   {
     $this->execute = false;
   }
 
-  public function activate() 
+  public function activate()
   {
     $this->execute = true;
   }
@@ -105,8 +105,8 @@ class Instrumentation
     }
     $this->pme->export($cellFilter, $lineCallback, $css);
     $this->pme->sql_disconnect();
-  }        
-  
+  }
+
   protected function pmeCompareButtonValue($a, $b)
   {
     return ($a == $b ||
@@ -114,7 +114,7 @@ class Instrumentation
             (isset($this->pmeTranslations[$b]) && $this->pmeTranslations[$b] == $a));
   }
 
-  /**Are we in change mode? */
+  /**Are we in add mode? */
   public function addOperation()
   {
     if (!isset($this->pme)) {
@@ -160,7 +160,7 @@ class Instrumentation
     if (!isset($this->pme)) {
       return $this->pmeCompareButtonValue($this->operation, 'Delete');
     } else {
-      return $this->pme->delete_operation(); 
+      return $this->pme->delete_operation();
     }
   }
 
@@ -179,10 +179,10 @@ class Instrumentation
   public function pmeSysValue($key)
   {
     return Util::cgiValue($this->pmeSysPfx.$key, false);
-  }  
+  }
 
   /**Determine if we have the default ordering of rows. */
-  public function defaultOrdering() 
+  public function defaultOrdering()
   {
     if (!isset($this->pme)) {
       return false;
@@ -201,7 +201,7 @@ class Instrumentation
     global $debug_query;
     $debug_query = Util::debugMode('query');
 
-    if (Util::debugMode('request')) {        
+    if (Util::debugMode('request')) {
       echo "<PRE>\n";
       print_r($_POST);
       print_r($_GET);
@@ -248,8 +248,8 @@ class Instrumentation
       'escape' => false,
       'values2' => array('0' => '&nbsp;', '1' => '&#10004;'),
       'tooltip' => L::t("Set to `%s' in order to mark participants who passed a personally signed registration form to us.",
-                        array("&#10004;")),      
-      );      
+                        array("&#10004;")),
+      );
 
     $this->opts = Config::$pmeopts;
     foreach (Config::$cgiVars as $key => $value) {
@@ -328,16 +328,16 @@ class Instrumentation
     if ($projectId >= 0) {
       $query .= " AND `Besetzungen`.`ProjektId` = $projectId";
     }
-   
+
     //throw new \Exception($query);
- 
+
     $result = mySQL::query($query, $handle);
     if ($result !== false && mysql_num_rows($result) == 1) {
       $row = mySQL::fetch($result);
     } else {
       $row = false;
     }
-    
+
     if ($ownConnection) {
       mySQL::close($handle);
     }
@@ -368,7 +368,7 @@ class Instrumentation
     if ($projectId >= 0) {
       $query .= " AND `Besetzungen`.`ProjektId` = $projectId";
     }
-   
+
     //throw new \Exception($query);
 
     $result = mySQL::query($query, $handle);
@@ -380,7 +380,7 @@ class Instrumentation
     } else {
       $data = false;
     }
-    
+
     if ($ownConnection) {
       mySQL::close($handle);
     }
@@ -388,7 +388,7 @@ class Instrumentation
     return $data;
   }
 
-  
+
 };
 
 }
