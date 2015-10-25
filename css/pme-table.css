@@ -645,6 +645,9 @@ td.pme-navigation, th.pme-navigation {
 
 td.pme-sortinfo, td.pme-queryinfo {
   background:#C6DEFF;
+  max-width: 60em;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
 form.pme-form .tab-all {
