@@ -76,8 +76,10 @@ var CAFEVDB = CAFEVDB || {};
       break;
     case 'tinymce':
       $(document).on('focusin', function(e) {
-        if ($(e.target).closest(".mce-window").length) {
-	  e.stopImmediatePropagaion();
+	//e.stopImmediatePropagaion();
+        //alert(CAFEVDB.print_r(e.target, true));
+        if ($(e.target).closest(".mce-container").length) {
+	  e.stopImmediatePropagation();
 	}
       });
       var plusConfig = {};
@@ -1306,31 +1308,28 @@ $(document).ready(function(){
 
   document.onkeypress = CAFEVDB.stopRKey;
 
+  var resizeCount = 0;
+
+  window.oldWidth = -1;
+  window.oldHeight = -1;
   $(window).on('resize', function(event) {
-    var delay = 50;
-    var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
-    var height = (window.innerHeight > 0) ? window.innerHeight : screen.height;
-    if (window.oldWidth === null) {
-      window.oldWidth = -1;
-    }
-    if (window.oldHeight === null) {
-      window.oldHeight = -1;
-    }
-    if (window.oldWidth != width || window.oldHeight != height) {
-      if (delay > 0) {
-        if (window.resizeTimeout) {
-          clearTimeout(window.resizeTimeout);
-        }
-        window.resizeTimeout = setTimeout(
+    var win = this;
+    if (!win.resizeTimeout) {
+      var delay = 50;
+      var width = (win.innerWidth > 0) ? win.innerWidth : screen.width;
+      var height = (win.innerHeight > 0) ? win.innerHeight : screen.height;
+      if (win.oldWidth != width || win.oldHeight != height) {
+        console.log('cafevdb size change', width, win.oldWidth, height, win.oldHeight);
+        win.resizeTimeout = setTimeout(
           function() {
+            win.resizeTimeout = null;
             $('.resize-target, .ui-dialog-content').trigger('resize');
           }, delay);
-      } else {
-        $('.resize-target, .ui-dialog-content').trigger('resize');
+        win.oldHeight = height;
+        win.oldWidth = width;
       }
-      window.oldHeight = height;
-      window.oldWidth = width;
     }
+    return false;
   });
 
   // install delegate handlers ...

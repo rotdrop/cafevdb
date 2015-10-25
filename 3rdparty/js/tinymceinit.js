@@ -9,6 +9,7 @@ var myTinyMCE = myTinyMCE || {};
     e.content = e.content.replace(/^<p>(((?!<p>)[\s\S])*)<\/p>$/g, '$1');
   };
   myTinyMCE.config = {
+    //auto_focus: 'mce_0',
     //theme_advanced_resizing: true,
     //theme_advanced_resizing_use_cookie : false,
     theme: "modern",
@@ -28,11 +29,42 @@ var myTinyMCE = myTinyMCE || {};
 
     setup: function(editor) {
       editor.on('PostProcess', myTinyMCE.postProcessCallback);
+      // editor.on('init', function(event) {
+      //   alert('editor is shown');
+      // });
     },
     init_instance_callback: function(inst) {
-      inst.getWin().onresize = function(e) {
-        var event = new Event('resize', { bubbles: true, cancelable: true });
-        inst.getContainer().dispatchEvent(event);
+
+      // Propagate the resize event to the enclosing div in order to
+      // be able to resize dialog windows. As this potentially yields
+      // an infinite recursion -- the resize of the enclosing
+      // container will again fire a new resize event to the MCE
+      // instance -- we try to be clever and only forward if the size
+      // actually has changed.
+      var mceWindow = inst.getWin();
+      var mceContainer = inst.getContainer();
+      var ambientContainer = $(mceContainer).closest('.resize-target, .ui-dialog-content');
+      mceWindow.oldWidth = [ -1, -1 ];
+      mceWindow.oldHeight = [ -1, -1 ];
+      mceWindow.onresize = function(e) {
+        var win = this;
+        if (!win.resizeTimeout) {
+          var width = (win.innerWidth > 0) ? win.innerWidth : win.width;
+          var height = (win.innerHeight > 0) ? win.innerHeight : win.height;
+          if ((win.oldWidth[0] != width && win.oldWidth[1] != width) ||
+              (win.oldHeight[0] != height && win.oldHeight[1] != height)) {
+            console.log('tinymce size change', width, win.oldWidth, height, win.oldHeight);
+            win.resizeTimeout = setTimeout(
+              function() {
+                win.resizeTimeout = null;
+                ambientContainer.trigger('resize');
+              }, 50);
+            win.oldWidth[1] = win.oldWidth[0];
+            win.oldHeight[1] = win.oldHeight[0];
+            win.oldWidth[0] = width;
+            win.oldHeight[0] = height;
+          }
+        }
       };
     },
 
