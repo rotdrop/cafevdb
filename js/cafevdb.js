@@ -1185,12 +1185,8 @@ var CAFEVDB = CAFEVDB || {};
   };
 
   CAFEVDB.snapperClose = function() {
-    if ($('body').hasClass('snapjs-left')) {
-      //alert('snapper open');
-      $('#app-navigation-toggle').trigger('click');
-    }
+    $('#app-navigation-toggle').trigger('snapjs:close');
   };
-
 
   /**Initialize our tipsy stuff. Only exchange for our own thingies, of course.
    */
