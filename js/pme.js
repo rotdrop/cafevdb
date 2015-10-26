@@ -51,7 +51,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
   PHPMYEDIT.popupPosition           = { my: "left top",
                                         at: "left+5% top+5%",
                                         of: window };
-  PHPMYEDIT.dialogOpen              = false;
+  PHPMYEDIT.dialogOpen              = {};
 
   /**Generate a string with PME_sys_.... prefix*/
   PHPMYEDIT.pmeSys = function(token) {
@@ -559,11 +559,13 @@ var PHPMYEDIT = PHPMYEDIT || {};
   PHPMYEDIT.tableDialogOpen = function(tableOptions, post) {
     var pme = this;
 
-    if (pme.dialogOpen) {
+    var containerCSSId = tableOptions.DialogHolderCSSId;
+
+    if (pme.dialogOpen[containerCSSId]) {
       return false;
     }
 
-    pme.dialogOpen = true;
+    pme.dialogOpen[containerCSSId] = true;
 
     CAFEVDB.Page.busyIcon(true);
 
@@ -575,7 +577,6 @@ var PHPMYEDIT = PHPMYEDIT || {};
     } else {
       post += '&' + $.param(tableOptions);
     }
-    var containerCSSId = tableOptions.DialogHolderCSSId;
     $.post(OC.filePath('cafevdb', 'ajax/pme', 'pme-table.php'),
            post,
            function (data) {
@@ -685,7 +686,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                  // Remove modal plane if appropriate
                  CAFEVDB.modalizer(false);
 
-                 pme.dialogOpen = false;
+                 pme.dialogOpen[containerCSSId] = false;
 
                  return false;
                }
@@ -1331,7 +1332,7 @@ $(document).ready(function(){
   CAFEVDB.addReadyCallback(function() {
     PHPMYEDIT.transposeReady();
     PHPMYEDIT.init();
-    PHPMYEDIT.dialogOpen = false; // not clear in init on purpose
+    PHPMYEDIT.dialogOpen = {}; // not clear in init on purpose
   });
 
 });

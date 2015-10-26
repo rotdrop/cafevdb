@@ -249,17 +249,17 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
           case 'project-email':
             Projects.emailPopup(post);
             break;
-        case 'project-instruments':
+          case 'project-instruments':
             Projects.instrumentationNumbersPopup(containerSel, post);
             break;
-        case 'project-wiki':
+          case 'project-wiki':
             post.wikiPage = selected.data('wikiPage');
             post.popupTitle = selected.data('wikiTitle');
             Projects.wikiPopup(post);
             break;
-        default:
+          default:
             OC.dialogs.alert(t('cafevdb', 'Unknown operation:')
-                             +' "'+selectedValue+'"',
+                            +' "'+selectedValue+'"',
                              t('cafevdb', 'Unimplemented'));
             error = true;
             break;
