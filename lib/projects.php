@@ -246,7 +246,7 @@ namespace CAFEVDB
         'name'     => 'Jahr',
         'select'   => 'N',
         //'options'  => 'LAVCPDF'
-        'maxlen'   => 11,
+        'maxlen'   => 5,
         'default'  => $currentYear,
         'sort'     => true,
         'values'   => $yearValues,
@@ -332,6 +332,7 @@ namespace CAFEVDB
 
       $opts['fdd']['Unkostenbeitrag'] = Config::$opts['money'];
       $opts['fdd']['Unkostenbeitrag']['name'] = "Teilnehmerbeitrag";
+      $opts['fdd']['Unkostenbeitrag']['maxlen'] = 8;
       $opts['fdd']['Unkostenbeitrag']['tooltip'] = L::t('Default project fee for ordinary participants. This should NOT include reductions of any kind. The value displayed here is the default value inserted into the instrumentation table for the project.');
       $opts['fdd']['Unkostenbeitrag']['display|LF'] = array('popup' => 'tooltip');
       $opts['fdd']['Unkostenbeitrag']['css']['postfix'] .= ' tipsy-se';
