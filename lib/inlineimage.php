@@ -33,6 +33,7 @@ namespace CAFEVDB {
     const TABLE = 'ImageData';
     const IMAGE_DATA = 1;
     const IMAGE_META_DATA = 2;
+    const IMAGE_DATA_MASK = 3;
 
     protected $itemTable;
     protected $imageData;
@@ -53,7 +54,7 @@ namespace CAFEVDB {
     /**Fetch the corresponding row from the image-data table. If none
      * is found false is returned.
      */
-    public function fetch($itemId, $fieldSelector = self::IMAGE_DATA|self::IMAGE_META_DATA, $handle = false)
+    public function fetch($itemId, $fieldSelector = self::IMAGE_DATA_MASK, $handle = false)
     {
       $this->imageData = null;
       $this->itemId = -1;
