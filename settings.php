@@ -29,7 +29,7 @@ namespace CAFEVDB {
 
   Config::init();
 
-  $group = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
+  $group = Config::getAppValue('usergroup', '');
   $user  = \OCP\USER::getUser();
 
   if (!\OC_Group::inGroup($user, $group)) {
@@ -67,7 +67,7 @@ namespace CAFEVDB {
     \OCP\Util::addStyle("cafevdb/3rdparty", "chosen/chosen");
 
     if (Config::encryptionKeyValid() &&
-        ($cafevgroup = \OC_AppConfig::getValue('cafevdb', 'usergroup', '')) != '' &&
+        ($cafevgroup = Config::getAppValue('usergroup', '')) != '' &&
         \OC_SubAdmin::isGroupAccessible($user, $cafevgroup)) {
 
       $admin = true;

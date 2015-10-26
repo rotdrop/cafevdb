@@ -93,8 +93,8 @@ namespace CAFEVDB {
       $encrkey = Config::getEncryptionKey();
 
       // Get user and group
+      $group = Config::getAppValue('usergroup', '');
       $user  = \OCP\USER::getUser();
-      $group = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
 
       // Are we a group-admin?
       $admin = \OC_SubAdmin::isGroupAccessible($user, $group);

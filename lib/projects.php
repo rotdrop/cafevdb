@@ -582,7 +582,7 @@ a comma.'));
       $webPages = self::fetchProjectWebPages($pme->rec, $pme->dbh);
       foreach ($webPages as $page) {
         // ignore errors
-        \OCP\Util::writeLog(Config::APP_NAME, "Attempt to delete for ".$pme->rec.": ".$page['ArticleId']." all ".print_r($page, true), \OC_LOG::DEBUG);
+        \OCP\Util::writeLog(Config::APP_NAME, "Attempt to delete for ".$pme->rec.": ".$page['ArticleId']." all ".print_r($page, true), \OCP\Util::DEBUG);
 
         self::deleteProjectWebPage($pme->rec, $page['ArticleId'], $handle);
       }
@@ -717,13 +717,13 @@ a comma.'));
       foreach ($categories as $category) {
         // Fetch all articles and remove those already registered
         $pages = $rex->articlesByName('.*', $category['id']);
-        \OCP\Util::writeLog(Config::APP_NAME, "Projects: ".$category['id'], \OC_LOG::DEBUG);
+        \OCP\Util::writeLog(Config::APP_NAME, "Projects: ".$category['id'], \OCP\Util::DEBUG);
         if (is_array($pages)) {
           foreach ($pages as $idx => $article) {
             $article['CategoryName'] = $category['name'];
             $article['Linked'] = isset($articleIds[$article['ArticleId']]);
             $detachedPages[] = $article;
-            \OCP\Util::writeLog(Config::APP_NAME, "Projects: ".print_r($article, true), \OC_LOG::DEBUG);
+            \OCP\Util::writeLog(Config::APP_NAME, "Projects: ".print_r($article, true), \OCP\Util::DEBUG);
           }
         }
       }
@@ -1174,12 +1174,12 @@ __EOT__;
       $query .= " `ArticleId` = ".$articleId;
       $query .= " ORDER BY `ProjectId` ASC, `ArticleId` ASC";
 
-      \OCP\Util::writeLog(Config::APP_NAME, "Query ".$query, \OC_LOG::DEBUG);
+      \OCP\Util::writeLog(Config::APP_NAME, "Query ".$query, \OCP\Util::DEBUG);
 
       $webPages = array();
       $result = mySQL::query($query, $handle, true);
       if ($result === false) {
-        \OCP\Util::writeLog(Config::APP_NAME, "Query ".$query." failed", \OC_LOG::DEBUG);
+        \OCP\Util::writeLog(Config::APP_NAME, "Query ".$query." failed", \OCP\Util::DEBUG);
         return false;
       }
       while ($line = mySQL::fetch($result)) {
@@ -1213,12 +1213,12 @@ __EOT__;
       }
       $query .= " ORDER BY `ProjectId` ASC, `ArticleId` ASC";
 
-      \OCP\Util::writeLog(Config::APP_NAME, "Query ".$query, \OC_LOG::DEBUG);
+      \OCP\Util::writeLog(Config::APP_NAME, "Query ".$query, \OCP\Util::DEBUG);
 
       $webPages = array();
       $result = mySQL::query($query, $handle, true);
       if ($result === false) {
-        \OCP\Util::writeLog(Config::APP_NAME, "Query ".$query." failed", \OC_LOG::DEBUG);
+        \OCP\Util::writeLog(Config::APP_NAME, "Query ".$query." failed", \OCP\Util::DEBUG);
         return false;
       }
       while ($line = mySQL::fetch($result)) {
@@ -1229,7 +1229,7 @@ __EOT__;
         mySQL::close($handle);
       }
 
-      \OCP\Util::writeLog(Config::APP_NAME, "WebPages for ".$projectId." ".print_r($webPages, true), \OC_LOG::DEBUG);
+      \OCP\Util::writeLog(Config::APP_NAME, "WebPages for ".$projectId." ".print_r($webPages, true), \OCP\Util::DEBUG);
 
       return $webPages;
     }
@@ -1308,7 +1308,7 @@ __EOT__;
       $article = $rex->addArticle($pageName, $category, $pageTemplate);
 
       if ($article === false) {
-        \OCP\Util::writeLog(Config::APP_NAME, "Error generating web page template", \OC_LOG::DEBUG);
+        \OCP\Util::writeLog(Config::APP_NAME, "Error generating web page template", \OCP\Util::DEBUG);
         if ($ownConnection) {
           mySQL::close($handle);
         }
@@ -1321,7 +1321,7 @@ __EOT__;
 
       // insert into the db table to form the link
       if (self::attachProjectWebPage($projectId, $article, $handle) === false) {
-        \OCP\Util::writeLog(Config::APP_NAME, "Error attaching web page template", \OC_LOG::DEBUG);
+        \OCP\Util::writeLog(Config::APP_NAME, "Error attaching web page template", \OCP\Util::DEBUG);
         if ($ownConnection) {
           mySQL::close($handle);
         }
@@ -1351,7 +1351,7 @@ __EOT__;
       $trashCategory = Config::getValue('redaxoTrashbin');
       $result = $rex->moveArticle($articleId, $trashCategory);
       if ($result === false) {
-        \OCP\Util::writeLog(Config::APP_NAME, "Failed moving ".$articleId." to ".$trashCategory, \OC_LOG::DEBUG);
+        \OCP\Util::writeLog(Config::APP_NAME, "Failed moving ".$articleId." to ".$trashCategory, \OCP\Util::DEBUG);
       }
       return $result;
     }
@@ -1372,7 +1372,7 @@ __EOT__;
  WHERE `ProjectId` = ".$projectId." AND `ArticleId` = ". $articleId;
       $result = mySQL::query($query, $handle);
       if ($result === false) {
-        \OCP\Util::writeLog(Config::APP_NAME, "Query ".$query." failed", \OC_LOG::DEBUG);
+        \OCP\Util::writeLog(Config::APP_NAME, "Query ".$query." failed", \OCP\Util::DEBUG);
       }
 
       if ($ownConnection) {
@@ -1419,7 +1419,7 @@ __EOT__;
       }
 
       if ($result === false) {
-        \OCP\Util::writeLog(Config::APP_NAME, "Query ".$query." failed", \OC_LOG::DEBUG);
+        \OCP\Util::writeLog(Config::APP_NAME, "Query ".$query." failed", \OCP\Util::DEBUG);
       } else {
         // Try to remove from trashbin, if appropriate.
         $trashCategory = Config::getValue('redaxoTrashbin');
@@ -1434,7 +1434,7 @@ __EOT__;
           $articleId = $article['ArticleId'];
           $result = $rex->moveArticle($articleId, $destinationCategory);
           if ($result === false) {
-            \OCP\Util::writeLog(Config::APP_NAME, "Failed moving ".$articleId." to ".$destinationCategory, \OC_LOG::DEBUG);
+            \OCP\Util::writeLog(Config::APP_NAME, "Failed moving ".$articleId." to ".$destinationCategory, \OCP\Util::DEBUG);
           }
         }
       }
@@ -1563,7 +1563,7 @@ __EOT__;
 
       $articles = array_merge($preview, $archive, $rehearsals);
 
-      //\OCP\Util::writeLog(Config::APP_NAME, "Web pages for ".$projectName.": ".print_r($articles, true), \OC_LOG::DEBUG);
+      //\OCP\Util::writeLog(Config::APP_NAME, "Web pages for ".$projectName.": ".print_r($articles, true), \OCP\Util::DEBUG);
 
       foreach ($articles as $article) {
         // ignore any error
@@ -2162,7 +2162,7 @@ __EOT__;
         .$sqlSelect
         .$sqlSort;
 
-      \OCP\Util::writeLog(Config::APP_NAME, __METHOD__.": ".$sqlQuery, \OC_LOG::DEBUG);
+      \OCP\Util::writeLog(Config::APP_NAME, __METHOD__.": ".$sqlQuery, \OCP\Util::DEBUG);
 
       mySQL::query($sqlQuery, $handle);
 

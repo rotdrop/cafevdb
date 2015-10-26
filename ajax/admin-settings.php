@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2015 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -24,22 +24,27 @@
  * @brief Admin settings.
  */
 
-\OCP\User::checkAdminUser();
-\OCP\JSON::callCheck();
-  
-if (isset($_POST['CAFEVgroup'])) {
-  $value = $_POST['CAFEVgroup'];
-  \OC_AppConfig::setValue('cafevdb', 'usergroup', $value);
-  
-  \OC_JSON::success(
-    array("data" => array( "message" => L::t('Setting orchestra group to `%s\'. Please login as group administrator and configure the Camerata DB application.',
-                                             array($value)))));
-  return true;
-}
+namespace CAFEVDB
+{
 
-\OC_JSON::error(
-  array("data" => array( "message" => L::t('Unknown request.'))));
-  
-return false; ///< error return
+  \OCP\User::checkAdminUser();
+  \OCP\JSON::callCheck();
+
+  if (isset($_POST['CAFEVgroup'])) {
+    $value = $_POST['CAFEVgroup'];
+    Config::setAppValue('usergroup', $value);
+
+    \OC_JSON::success(
+      array("data" => array( "message" => L::t('Setting orchestra group to `%s\'. Please login as group administrator and configure the Camerata DB application.',
+                                             array($value)))));
+    return true;
+  }
+
+  \OC_JSON::error(
+    array("data" => array( "message" => L::t('Unknown request.'))));
+
+  return false; ///< error return
+
+} // namespace
 
 ?>

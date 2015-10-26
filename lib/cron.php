@@ -30,7 +30,7 @@ namespace CAFEVDB
   {
     public static function run()
     {
-      $group = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
+      $group = Config::getAppValue('usergroup', '');
       $user  = \OCP\USER::getUser();
       if (!\OC_Group::inGroup($user, $group)) {
         return;

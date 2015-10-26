@@ -33,7 +33,7 @@ namespace CAFEVDB
 
   Config::init();
 
-  $group = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
+  $group = Config::getAppValue('usergroup', '');
   $user  = \OCP\USER::getUser();
 
   \OCP\Util::addStyle('cafevdb', 'cafevdb');
@@ -128,7 +128,7 @@ namespace CAFEVDB
 
     // QRcode generation, maybe JS is not needed, but isn't large anyway
     \OCP\UTIL::addscript('cafevdb', '../3rdparty/phpqrcode/js/qrcanvas.packed');
-    
+
     // dual-select list-box for email recipient selection
     //\OCP\Util::addstyle("cafevdb/3rdparty/bootstrap", "bootstrap.min");
     \OCP\Util::addstyle('cafevdb', '../3rdparty/bootstrap-duallistbox/css/bootstrap-duallistbox-quirks');

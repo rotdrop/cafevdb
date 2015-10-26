@@ -50,8 +50,8 @@ namespace CAFEVDB {
     // recipients and the sender class.
     $addressBookCandidates = Util::cgiValue('AddressBookCandidates', array());
 
-    \OCP\Util::writeLog(Config::APP_NAME, 'SAVE: '.print_r($_POST, true), \OC_LOG::DEBUG);
-    \OCP\Util::writeLog(Config::APP_NAME, 'SAVE: '.print_r($addressBookCandidates, true), \OC_LOG::DEBUG);
+    \OCP\Util::writeLog(Config::APP_NAME, 'SAVE: '.print_r($_POST, true), \OCP\Util::DEBUG);
+    \OCP\Util::writeLog(Config::APP_NAME, 'SAVE: '.print_r($addressBookCandidates, true), \OCP\Util::DEBUG);
 
     $formContacts = array();  
     foreach($addressBookCandidates as $record) {

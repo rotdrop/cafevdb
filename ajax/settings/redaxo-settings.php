@@ -17,8 +17,9 @@ use \CAFEVDB\Config;
 use \CAFEVDB\ConfigCheck;
 
 // Check if we are a group-admin, otherwise bail out.
+$group = Config::getAppValue('usergroup', '');
 $user  = OCP\USER::getUser();
-$group = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
+
 if (!OC_SubAdmin::isGroupAccessible($user, $group)) {
     OC_JSON::error(array("data" => array("message" => "Unsufficient privileges.")));
     return;
@@ -62,7 +63,7 @@ foreach ($redaxoKeys as $key) {
                 "message" => L::t("Category id must be integer and positive, got `%s'.",
                                   array($value)))));
       return false;
-    }     
+    }
   }
 }
 

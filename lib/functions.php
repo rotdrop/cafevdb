@@ -639,7 +639,7 @@ __EOT__;
     {
       $location = self::composeURL($location);
 
-      \OCP\Util::writeLog(Config::APP_NAME, "Checking ".$location, \OC_LOG::DEBUG);
+      \OCP\Util::writeLog(Config::APP_NAME, "Checking ".$location, \OCP\Util::DEBUG);
 
       // Don't try to access it if it is not a valid URL
       if (filter_var($location, FILTER_VALIDATE_URL) === false) {
@@ -2237,7 +2237,7 @@ __EOT__;
                           addslashes($_SERVER['REMOTE_ADDR']), addslashes($table),
                           addslashes($recId), addslashes($recIdColumn), addslashes(serialize($oldValues)));
 
-      //\OCP\Util::writeLog(Config::APP_NAME, "QUERY: ".$logQuery, \OC_LOG::DEBUG);
+      //\OCP\Util::writeLog(Config::APP_NAME, "QUERY: ".$logQuery, \OCP\Util::DEBUG);
 
       $ownConnection = $handle === false;
       if ($ownConnection) {
@@ -2317,7 +2317,7 @@ __EOT__;
                             addslashes($_SERVER['REMOTE_ADDR']), addslashes($table),
                             addslashes($recId), addslashes($key),
                             addslashes($oldValue), addslashes($value));
-        //\OCP\Util::writeLog(Config::APP_NAME, "QUERY: ".$logQuery, \OC_LOG::DEBUG);
+        //\OCP\Util::writeLog(Config::APP_NAME, "QUERY: ".$logQuery, \OCP\Util::DEBUG);
 
         self::query($logQuery, $handle, false, true);
       }

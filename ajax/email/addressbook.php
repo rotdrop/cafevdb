@@ -73,8 +73,8 @@ namespace CAFEVDB {
     // Fetch all known address-book contacts with email
     $bookContacts = Contacts::emailContacts(); //<
 
-    //\OCP\Util::writeLog(Config::APP_NAME, 'ADDRBOOK: '.print_r($bookContacts, true), \OC_LOG::DEBUG);
-    //\OCP\Util::writeLog(Config::APP_NAME, 'ADDRBOOK: '.print_r($freeForm, true), \OC_LOG::DEBUG);
+    //\OCP\Util::writeLog(Config::APP_NAME, 'ADDRBOOK: '.print_r($bookContacts, true), \OCP\Util::DEBUG);
+    //\OCP\Util::writeLog(Config::APP_NAME, 'ADDRBOOK: '.print_r($freeForm, true), \OCP\Util::DEBUG);
 
     $addressBookEmails = array();
     foreach($bookContacts as $entry) {
@@ -121,7 +121,7 @@ namespace CAFEVDB {
       $selectOptions[] = $option;
     }
 
-    \OCP\Util::writeLog(Config::APP_NAME, 'ADDRBOOK: '.print_r($selectOptions, true), \OC_LOG::DEBUG);
+    \OCP\Util::writeLog(Config::APP_NAME, 'ADDRBOOK: '.print_r($selectOptions, true), \OCP\Util::DEBUG);
 
     //$phpMailer = new \PHPMailer(true); could validate addresses here
 

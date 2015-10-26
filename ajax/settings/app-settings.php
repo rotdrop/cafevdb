@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2015 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -28,7 +28,7 @@ namespace CAFEVDB {
 
   // Check if we are a group-admin, otherwise bail out.
   $user  = \OCP\USER::getUser();
-  $group = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
+  $group = Config::getAppValue('usergroup', '');
   if (!\OC_SubAdmin::isGroupAccessible($user, $group)) {
     \OC_JSON::error(array("data" => array("message" => "Unsufficient privileges.")));
     return;
@@ -134,7 +134,7 @@ namespace CAFEVDB {
       // Encode the new key with itself ;)
       $encdbkey = Config::encrypt($newkey, $newkey);
 
-      \OC_AppConfig::setValue('cafevdb', 'encryptionkey', $encdbkey);
+      Config::setAppValue('encryptionkey', $encdbkey);
 
       \OC_JSON::success(array("data" => array( "encryptionkey" => $encdbkey)));
 
@@ -145,7 +145,7 @@ namespace CAFEVDB {
     }
 
     if (isset($_POST['keydistribute'])) {
-      $group = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
+      $group = Config::getAppValue('usergroup', '');
       $users = \OC_Group::usersInGroup($group);
       $error = '';
       foreach ($users as $user) {
@@ -744,7 +744,7 @@ namespace CAFEVDB {
     /* Try to distribute the email credentials to all registered users.
      */
     if (isset($_POST['emaildistribute'])) {
-      $group         = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
+      $group         = Config::getAppValue('usergroup', '');
       $users         = \OC_Group::usersInGroup($group);
       $emailUser     = Config::getValue('emailuser'); // CAFEVDB encKey
       $emailPassword = Config::getValue('emailpassword'); // CAFEVDB encKey

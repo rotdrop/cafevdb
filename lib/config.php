@@ -233,21 +233,21 @@ redaxoRehearsalsModule
      */
     static public function getAppValue($key, $default = false)
     {
-      return \OC_AppConfig::getValue(self::APP_NAME, $key, $default);
+      return \OC::$server->getAppConfig()->getValue(self::APP_NAME, $key, $default);
     }
 
     /**A short-cut, redirecting to the stock functions for the app.
      */
     static public function setAppValue($key, $value)
     {
-      return \OC_AppConfig::setValue(self::APP_NAME, $key, $value);
+      return \OC::$server->getAppConfig()->setValue(self::APP_NAME, $key, $value);
     }
 
     /**A short-cut, redirecting to the stock functions for the app.
      */
     static public function deleteAppKey($key)
     {
-      return \OC_AppConfig::deleteKey(self::APP_NAME, $key);
+      return \OC::$server->getAppConfig()->deleteKey(self::APP_NAME, $key);
     }
 
     static public function initPrivateKey($login, $password)
@@ -1288,7 +1288,7 @@ redaxoRehearsalsModule
             $id = $info['fileid'];
             return ConfigCheck::groupSharedExists($id, $sharegroup, 'folder');
           } else {
-            \OC_Log::write('CAFEVDB', 'No file info for  ' . $sharedfolder, \OC_Log::ERROR);
+            \OCP\Util::write('CAFEVDB', 'No file info for  ' . $sharedfolder, \OCP\Util::ERROR);
             return false;
           }
         });
@@ -1323,9 +1323,9 @@ redaxoRehearsalsModule
       $groupadmin = \OCP\USER::getUser();
 
       if (!\OC_SubAdmin::isSubAdminofGroup($groupadmin, $sharegroup)) {
-        \OC_Log::write(Config::APP_NAME,
+        \OCP\Util::write(Config::APP_NAME,
                        "Permission denied: ".$groupadmin." is not a group admin of ".$sharegroup.".",
-                       \OC_Log::ERROR);
+                       \OCP\Util::ERROR);
         return false;
       }
 
@@ -1378,7 +1378,7 @@ redaxoRehearsalsModule
               return false;
             }
           } else {
-            \OC_Log::write('CAFEVDB', 'No file info for ' . $sharedfolder, \OC_Log::ERROR);
+            \OCP\Util::write('CAFEVDB', 'No file info for ' . $sharedfolder, \OCP\Util::ERROR);
             return false;
           }
 
@@ -1409,9 +1409,9 @@ redaxoRehearsalsModule
       $user       = \OCP\USER::getUser();
 
       if (!\OC_SubAdmin::isSubAdminofGroup($user, $sharegroup)) {
-        \OC_Log::write(Config::APP_NAME,
+        \OCP\Util::write(Config::APP_NAME,
                        "Permission denied: ".$user." is not a group admin of ".$sharegroup.".",
-                       \OC_Log::ERROR);
+                       \OCP\Util::ERROR);
         return false;
       }
 

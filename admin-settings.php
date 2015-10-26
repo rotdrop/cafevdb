@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2015 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -34,8 +34,10 @@ namespace CAFEVDB {
   Config::init();
   $strict = !Config::encryptionKeyValid();
 
-  $tmpl->assign('usergroup', \OC_AppConfig::getValue('cafevdb', 'usergroup', ''));
+  $tmpl->assign('usergroup', Config::getAppValue('usergroup', ''));
 
   return $tmpl->fetchPage();
 
 } // namespace CAFEVDB
+
+?>

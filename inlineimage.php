@@ -43,7 +43,7 @@ namespace CAFEVDB
 
   Config::init();
 
-  $group = \OC_AppConfig::getValue('cafevdb', 'usergroup', '');
+  $group = Config::getAppValue('usergroup', '');
   $user  = \OCP\USER::getUser();
 
   if (!\OC_Group::inGroup($user, $group)) {
@@ -60,7 +60,7 @@ namespace CAFEVDB
   }
 
   try {
-  
+
     Error::exceptions(true);
 
     $itemId    = Util::cgiValue('ItemId', -1);
@@ -68,7 +68,7 @@ namespace CAFEVDB
     $imageSize   = Util::cgiValue('ImageSize', 400);
 
     $inlineImage = new InlineImage($itemTable);
-    
+
     $defaultPlaceHolder = $inlineImage->placeHolder();
     $placeHolder = Util::cgiValue('PlaceHolder', $defaultPlaceHolder);
 
@@ -86,7 +86,7 @@ namespace CAFEVDB
                           'inlineimage.php: GD module not installed', \OCP\Util::DEBUG);
       getStandardImage($placeHolder);
     }
-    
+
     $imageData = $inlineImage->fetch($itemId);
 
     if (!$imageData) {
@@ -101,7 +101,7 @@ namespace CAFEVDB
                           'inlineimage.php: Image could not be created', \OCP\Util::DEBUG);
       getStandardImage($placeHolder);
     }
-  
+
 
     // Image :-), perhaps
     if ($image->loadFromBase64($imageData['Data'])) {
@@ -119,7 +119,7 @@ namespace CAFEVDB
 
       \OCP\Util::writeLog('cafevdb',
                           'modified: '.$modified." time: ".time()." diff: ".(time() - $modified), \OCP\Util::DEBUG);
-    
+
       \OCP\Response::enableCaching($caching);
       if(!is_null($modified)) {
         \OCP\Response::setLastModifiedHeader($modified);
