@@ -32,7 +32,7 @@ namespace CAFEVDB {
   try {
 
     Error::exceptions(true);
-  
+
     Config::init();
 
     $debugText = '';
@@ -78,8 +78,8 @@ namespace CAFEVDB {
 
     $locale = Util::getLocale();
 
-    Util::addExternalScript(OC_Helper::linkToRoute('cafevdb_config'));
-    Util::addExternalScript(OC_Helper::linkTo('calendar', 'js/l10n.php'));
+    Util::addExternalScript(\OC_Helper::linkToRoute('cafevdb_config'));
+    Util::addExternalScript(\OC_Helper::linkTo('calendar', 'js/l10n.php'));
 
     $tmpl = new \OCP\Template('cafevdb', 'events');
 

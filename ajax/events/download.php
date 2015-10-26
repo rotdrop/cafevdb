@@ -31,7 +31,7 @@ namespace CAFEVDB {
   if(!\OCP\User::isLoggedIn()) {
     die('<script type="text/javascript">document.location = oc_webroot;</script>');
   }
-  \OCP\App::checkAppEnabled(CAFEVDB\Config::APP_NAME);
+  \OCP\App::checkAppEnabled(Config::APP_NAME);
 
   $projectId   = $_POST['ProjectId'];
   $projectName = $_POST['ProjectName'];
@@ -59,5 +59,5 @@ namespace CAFEVDB {
   echo Events::exportEvents($events, $projectName);
 
 } // namespace
-  
+
 ?>

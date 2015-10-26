@@ -56,7 +56,7 @@ namespace CAFEVDB {
     //!@cond
     if ($projectId < 0 ||
         ($projectName == '' &&
-         ($projectName = CAFEVDB\Projects::fetchName($projectId)) == '')) {
+         ($projectName = Projects::fetchName($projectId)) == '')) {
       \OCP\JSON::error(
         array(
           'data' => array('error' => 'arguments',
@@ -101,20 +101,20 @@ namespace CAFEVDB {
     }
 
     if (!$start) {
-      $start = new DateTime('now');
+      $start = new \DateTime('now');
       $start = $start->getTimeStamp();
     }
 
     if (!$end) {
-      $duration = CAFEVDB\Config::getSetting('eventduration', 180);
+      $duration = Config::getSetting('eventduration', 180);
       $end = $start + ($duration * 60);
     }
 
-    $start = new DateTime('@'.$start);
-    $end = new DateTime('@'.$end);
+    $start = new \DateTime('@'.$start);
+    $end = new \DateTime('@'.$end);
     $timezone = Util::getTimezone();
-    $start->setTimezone(new DateTimeZone($timezone));
-    $end->setTimezone(new DateTimeZone($timezone));
+    $start->setTimezone(new \DateTimeZone($timezone));
+    $end->setTimezone(new \DateTimeZone($timezone));
 
     $defaultCal    = \OC_Calendar_App::getCalendar($calendarId, true, true);
 
