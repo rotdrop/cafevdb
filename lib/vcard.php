@@ -28,8 +28,6 @@
  */
 namespace CAFEVDB {
 
-  use \Sabre\VObject;
-
   class VCard
   {
     const VERSION = '3.0';
@@ -275,7 +273,7 @@ namespace CAFEVDB {
       $appversion = \OCP\App::getAppVersion('cafevdb');
       $prodid = '-//CAF e.V.//NONSGML ' . $appinfo['name'] . ' ' . $appversion.'//EN';
 
-      $vcard = new VObject\Component\VCard(
+      $vcard = new \OCA\Contacts\VObject\VCard(
         [
           'VERSION' => self::VERSION,
           'PRODID' => $prodid,

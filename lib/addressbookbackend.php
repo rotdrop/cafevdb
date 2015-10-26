@@ -313,6 +313,20 @@ namespace CAFEVDB
         return array();
       }
 
+      $myOptions = array('limit' => PHP_INT_MAX,
+                         'offset' => 0,
+                         'omitdata' => false);
+      foreach ($options as $key => $value) {
+        if ($value) {
+          $myOptions[$key] = $value;
+        }
+      }
+      $options = $myOptions;
+
+      \OCP\Util::writeLog(Config::APP_NAME,
+                          __METHOD__.': '.($options['omitdata'] ? 'without data' : 'with data'),
+                          \OCP\Util::DEBUG);
+
       if ((string)$addressBookId === (string)self::MAIN_ADDRESS_BOOK_ID) {
         return $this->getMusiciansContacts($options);
       } else {
@@ -325,16 +339,6 @@ namespace CAFEVDB
       $addressBookId = self::MAIN_ADDRESS_BOOK_ID;
 
       $contacts = array();
-
-      $myOptions = array('limit' => PHP_INT_MAX,
-                         'offset' => 0,
-                         'omitdata' => false);
-      foreach ($options as $key => $value) {
-        if ($value) {
-          $myOptions[$key] = $value;
-        }
-      }
-      $options = $myOptions;
 
       Config::init();
       $handle = mySQL::connect(Config::$pmeopts);
@@ -385,11 +389,11 @@ namespace CAFEVDB
           $contacts[] = array(
             'id' => $contactId,
             'uri' => $contactId.'.vcf',
-            'lastmodified' => $row['Aktualisiert'],
+            'lastmodified' => strtotime($row['Aktualisiert']),
             'parent' => $addressBookId,
             'displayname' => $row['Vorname'].' '.$row['Name'],
-            //'vcard' => $vCard,
-            'carddata' => $vCard->serialize(),
+            'vcard' => $vCard,
+            //'carddata' => $vCard->serialize(),
             'permissions' => \OCP\PERMISSION_ALL
             );
           /* \OCP\Util::writeLog(Config::APP_NAME, */
@@ -408,6 +412,7 @@ namespace CAFEVDB
 
     private function getProjectContacts($addressBookId, array $options = array())
     {
+      $start = microtime(true);
       $projectId = self::projectId($addressBookId);
       $projectName = Projects::fetchName($projectId);
       if (empty($projectName) ||
@@ -416,16 +421,6 @@ namespace CAFEVDB
       }
 
       $contacts = array();
-
-      $myOptions = array('limit' => PHP_INT_MAX,
-                         'offset' => 0,
-                         'omitdata' => false);
-      foreach ($options as $key => $value) {
-        if ($value) {
-          $myOptions[$key] = $value;
-        }
-      }
-      $options = $myOptions;
 
       Config::init();
       $handle = mySQL::connect(Config::$pmeopts);
@@ -458,17 +453,27 @@ namespace CAFEVDB
         //throw new \Exception($query);
 
         $result = mySQL::query($query, $handle);
+        $max = 0;
+        $total = 0;
         while ($row = mySQL::fetch($result)) {
           $vCard = VCard::export($row);
+          if (false) {
+          $data = $vCard->serialize();
+          $len = strlen($data);
+          $total += $len;
+          if ($len > $max) {
+            $max = $len;
+          }
+          }
           $contactId = self::contactId($addressBookId, $row['UUID']);
           $contacts[] = array(
             'id' => $contactId,
             'uri' => $contactId.'.vcf',
-            'lastmodified' => $row['Aktualisiert'],
+            'lastmodified' => strtotime($row['Aktualisiert']),
             'parent' => $addressBookId,
             'displayname' => $row['Vorname'].' '.$row['Name'],
-            //'vcard' => $vCard,
-            'carddata' => $vCard->serialize(),
+            'vcard' => $vCard,
+            //'carddata' => $data, //vCard->serialize(),
             'permissions' => \OCP\PERMISSION_ALL
             );
           /* \OCP\Util::writeLog(Config::APP_NAME, */
@@ -481,6 +486,12 @@ namespace CAFEVDB
       }
 
       mySQL::close($handle);
+
+      $elapsed = microtime(true) - $start;
+
+      \OCP\Util::writeLog(Config::APP_NAME,
+                          __METHOD__.': elapsed: '.$elapsed.', max: '.$max.', total: '.$total,
+                          \OCP\Util::ERROR);
 
       return $contacts;
     }
@@ -520,6 +531,10 @@ namespace CAFEVDB
         }
       }
 
+      \OCP\Util::writeLog(Config::APP_NAME,
+                          __METHOD__.': '. 'Called for '.$id,
+                          \OCP\Util::DEBUG);
+
       $idParts = self::parseContactId($id);
       if (!isset($idParts['uuid']) || !isset($idParts['addressbook']) ||
           ($addressBookId && $idParts['addressbook'] !== $addressBookId)) {
@@ -542,8 +557,8 @@ namespace CAFEVDB
           'lastmodified' => strtotime($row['Aktualisiert']),
           'parent' => (int)$addressBookId, // can be null if groups should ever be supported.
           'displayname' => $row['Vorname'].' '.$row['Name'],
-          'carddata' => $vCard->serialize(),
-          //'vcard' => $vCard, // would have to be the derived class from the contacts app
+          //'carddata' => $vCard->serialize(),
+          'vcard' => $vCard, // would have to be the derived class from the contacts app
           'permissions' => \OCP\PERMISSION_ALL
           );
         /* \OCP\Util::writeLog(Config::APP_NAME, */
