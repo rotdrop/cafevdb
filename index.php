@@ -37,7 +37,7 @@ namespace CAFEVDB
   $user  = \OCP\USER::getUser();
 
   \OCP\Util::addStyle('cafevdb', 'cafevdb');
-  \OCP\Util::addStyle('cafevdb', 'tipsy');
+  \OCP\Util::addStyle('cafevdb', 'tooltips');
 
   if (!\OC_Group::inGroup($user, $group)) {
     $tmpl = new \OCP\Template( 'cafevdb', 'errorpage', 'user' );
@@ -148,7 +148,6 @@ namespace CAFEVDB
     // end event hacks
 
     // One last script to load after the other, e.g. to get the
-    // tipsy stuff and so on right
     \OCP\Util::addScript('cafevdb', 'document-ready');
 
     // Load the requested page :)

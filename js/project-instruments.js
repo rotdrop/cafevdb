@@ -84,18 +84,18 @@ var CAFEVDB = CAFEVDB || {};
     select.children('option').each(function(i, elm) {
       $(elm).removeAttr('selected');
     });
-    $('.tipsy').remove();
+    $.fn.cafevTooltip.remove();
 
     select.trigger("chosen:updated");
 
-    $('div.chosen-container').tipsy({gravity:'sw', fade:true});
-    $('li.active-result').tipsy({gravity:'w', fade:true});
+    $('div.chosen-container').cafevTooltip({placement:'auto top'});
+    $('li.active-result').cafevTooltip({placement:'auto right'});
 
-    // Seemingly, this needs to be adjusted again after tweaking tipsy.
+    // Seemingly, this needs to be adjusted again after tweaking tooltips.
     if (CAFEVDB.toolTips) {
-      $.fn.tipsy.enable();
+      $.fn.cafevTooltip.enable();
     } else {
-      $.fn.tipsy.disable();
+      $.fn.cafevTooltip.disable();
     }
 
     return false;
@@ -108,7 +108,7 @@ var CAFEVDB = CAFEVDB || {};
 
     actions.off('chosen:showing_dropdown');
     actions.on('chosen:showing_dropdown', function (event) {
-      container.find('ul.chosen-results li.active-result').tipsy({gravity:'w', fade:true});
+      container.find('ul.chosen-results li.active-result').cafevTooltip({placement:'auto right'});
     });
 
     actions.off('change'); // safeguard
@@ -215,14 +215,14 @@ var CAFEVDB = CAFEVDB || {};
       ],
       open: function () {
 
-        $('button').tipsy({gravity:'ne', fade:true});
-        $('input').tipsy({gravity:'ne', fade:true});
-        $('label').tipsy({gravity:'ne', fade:true});
+        $('button').cafevTooltip({placement:'auto bottom'});
+        $('input').cafevTooltip({placement:'auto bottom'});
+        $('label').cafevTooltip({placement:'auto bottom'});
 
         if (CAFEVDB.toolTips) {
-          $.fn.tipsy.enable();
+          $.fn.cafevTooltip.enable();
         } else {
-          $.fn.tipsy.disable();
+          $.fn.cafevTooltip.disable();
         }
 
         var dialogHolder = $(this);
@@ -235,10 +235,10 @@ var CAFEVDB = CAFEVDB || {};
 
         var chosenContainer = dialogHolder.find('div.chosen-container');
         chosenContainer.attr('title', PHPMYEDIT.inputSelectChosenTitle);
-        chosenContainer.tipsy({gravity:'sw', fade:true});
+        chosenContainer.cafevTooltip({placement:'auto top'});
       },
       close: function () {
-        $('.tipsy').remove(); // avoid orphan tooltips
+        $.fn.cafevTooltip.remove(); // avoid orphan tooltips
         $(this).dialog('destroy'); //.remove();
       }
     });

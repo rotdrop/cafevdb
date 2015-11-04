@@ -130,9 +130,9 @@ CAFEVDB.Email = CAFEVDB.Email || {};
     dualSelect.attr(
       'title',
       t('cafevdb', 'Click on the names to move the respective person to the other box'));
-    dualSelect.addClass('tipsy-s');
+    dualSelect.addClass('tooltip-top');
 
-    CAFEVDB.tipsy(dialogHolder.find('div#emailformrecipients'));
+    CAFEVDB.toolTipsInit(dialogHolder.find('div#emailformrecipients'));
   };
 
   /**Add handlers to the control elements, and call the AJAX sciplets
@@ -188,7 +188,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                  filterHistoryInput.val(data.data.filterHistory);
                } else if (typeof data.data.contents != 'undefined' && data.data.contents.length > 0) {
                  // replace the entire tab.
-                 $('.tipsy').remove();
+                 $.fn.cafevTooltip.remove();
                  panelHolder.html(data.data.contents);
                  fieldset = panelHolder.find('fieldset.email-recipients.page');
                  Email.emailFormRecipientsHandlers(fieldset,
@@ -359,7 +359,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
         }, 2000);
       });
 
-      CAFEVDB.tipsy(dialogHolder.find('div#emailformcomposer'));
+      CAFEVDB.toolTipsInit(dialogHolder.find('div#emailformcomposer'));
     }
 
     var debugOutput = form.find('#emailformdebug');
@@ -421,7 +421,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                async: true,
                success: function(data) {
                var postponeEnable = false;
-               $('.tipsy').remove();
+               $.fn.cafevTooltip.remove();
                if (!CAFEVDB.ajaxErrorHandler(
                  data,
                  [ 'projectId', 'projectName', 'request', 'requestData' ],
@@ -460,7 +460,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                  switch (requestData.formElement) {
                  case 'everything':
                    // replace the entire tab.
-                   $('.tipsy').remove();
+                   $.fn.cafevTooltip.remove();
                    CAFEVDB.removeEditor(panelHolder.find('textarea.wysiwygeditor'));
                    panelHolder.html(requestData.elementData);
                    fieldset = panelHolder.find('fieldset.email-composition.page');
@@ -555,7 +555,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                  break;
                }
                case 'loadDraft': {
-                 $('.tipsy').remove();
+                 $.fn.cafevTooltip.remove();
                  { // replace the entire composer tab
                    CAFEVDB.removeEditor(panelHolder.find('textarea.wysiwygeditor'));
                    panelHolder.html(requestData.composerForm);
@@ -1334,7 +1334,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                dialogClass: 'emailform custom-close',
                resizable: false,
                open: function() {
-                 $('.tipsy').remove();
+                 $.fn.cafevTooltip.remove();
                  CAFEVDB.dialogToBackButton(dialogHolder);
                  CAFEVDB.dialogCustomCloseButton(dialogHolder, function(event, container) {
                    event.stopImmediatePropagation();
@@ -1447,7 +1447,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                                                     composerPanel);
                },
                close: function() {
-                 $('.tipsy').remove();
+                 $.fn.cafevTooltip.remove();
                  CAFEVDB.removeEditor(dialogHolder.find('textarea.wysiwygeditor'));
                  dialogHolder.dialog('close');
                  dialogHolder.dialog('destroy').remove();

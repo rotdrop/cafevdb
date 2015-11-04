@@ -27,7 +27,7 @@ use CAFEVDB\L;
 /* The form expects the following data in $_[key] for key equal to:
  *
  * ProjectId:   project Id if in project mode, otherwise -1
- * 
+ *
  * EmailRecipientsChoices, MemberStatusFilter, InstrumentsFilter
  * array suitable to be fed int o Navigation::selectOptions()
  *
@@ -92,7 +92,7 @@ $missingText = L::t('Musicians without or obviously broken email-address');
               <span class="basic-recipients-set from-project button">&isin; <?php echo $projectName; ?></span>
             </label>
           </span>
-        </span> 
+        </span>
         <span class="basic-recipients-set except-project inner vmiddle container">
           <input type="checkbox"
                  id="basic-recipients-set-except-project"
@@ -150,11 +150,11 @@ $missingText = L::t('Musicians without or obviously broken email-address');
         <?php echo Navigation::selectOptions($_['EmailRecipientsChoices']); ?>
       </select>
     </span>
-    <span class="instruments-filter container right tipsy-se"
+    <span class="instruments-filter container right tooltip-top"
           title="<?php echo Config::tooltips('email-recipients-instruments-filter-container'); ?>">
       <span class="label top">
         <label for="instruments-filter"
-               class="tipsy-off"
+               class="tooltip-off"
                title="<?php echo Config::tooltips('email-recipients-instruments-filter-label'); ?>">
           <?php echo L::t('Instruments Filter'); ?>
         </label>
@@ -176,7 +176,7 @@ $missingText = L::t('Musicians without or obviously broken email-address');
     <div class="ruler"></div>
   </div>
   <div class="row">
-    <span class="container left missing-email-addresses tipsy-sw"
+    <span class="container left missing-email-addresses tooltip-top"
           title="<?php echo Config::tooltips('email-recipients-broken-emails'); ?>">
       <span class="label top missing-email-addresses<?php echo $missingClass; ?>">
         <?php echo $missingText; ?>
@@ -225,4 +225,3 @@ $missingText = L::t('Musicians without or obviously broken email-address');
     </span>
   </div>
 </fieldset>
-

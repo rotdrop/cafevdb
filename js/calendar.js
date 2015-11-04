@@ -30,16 +30,16 @@ Calendar={
 		dateTimeToTimestamp:function(dateString, timeString){
 			dateTuple = dateString.split('-');
 			timeTuple = timeString.split(':');
-			
+
 			var day, month, year, minute, hour;
 			day = parseInt(dateTuple[0], 10);
 			month = parseInt(dateTuple[1], 10);
 			year = parseInt(dateTuple[2], 10);
 			hour = parseInt(timeTuple[0], 10);
 			minute = parseInt(timeTuple[1], 10);
-			
+
 			var date = new Date(year, month-1, day, hour, minute);
-			
+
 			return parseInt(date.getTime(), 10);
 		},
 		formatDate:function(year, month, day){
@@ -59,7 +59,7 @@ Calendar={
 				minute = '0' + minute;
 			}
 			return hour + ':' + minute;
-		}, 
+		},
 		adjustDate:function(){
 			var fromTime = $('#fromtime').val();
 			var fromDate = $('#from').val();
@@ -71,7 +71,7 @@ Calendar={
 
 			if(fromTimestamp >= toTimestamp){
 				fromTimestamp += 30*60*1000;
-				
+
 				var date = new Date(fromTimestamp);
 				movedTime = Calendar.Util.formatTime(date.getHours(), date.getMinutes());
 				movedDate = Calendar.Util.formatDate(date.getFullYear(),
@@ -131,7 +131,7 @@ Calendar={
 		},
 		startEventDialog:function(){
 			Calendar.UI.loading(false);
-			$('.tipsy').remove();
+			$.fn.cafevTooltip.remove();
 //			$('#fullcalendar').fullCalendar('unselect');
 			Calendar.UI.lockTime();
 			$( "#from" ).datepicker({
@@ -296,7 +296,7 @@ Calendar={
 				},"json");
 		},
 		moveEvent:function(event, dayDelta, minuteDelta, allDay, revertFunc){
-                        $('.tipsy').remove();
+                        $.fn.cafevTooltip.remove();
 			if ($('#event').length != 0) {
 				revertFunc();
 				return;
@@ -316,7 +316,7 @@ Calendar={
 			});
 		},
 		resizeEvent:function(event, dayDelta, minuteDelta, revertFunc){
-			$('.tipsy').remove();
+			$.fn.cafevTooltip.remove();
 			Calendar.UI.loading(true);
 			$.post(OC.filePath('calendar', 'ajax/event', 'resize.php'), { id: event.id, dayDelta: dayDelta, minuteDelta: minuteDelta, lastmodified: event.lastmodified},
 			function(data) {
@@ -386,7 +386,7 @@ Calendar={
 					map.setCenter(center);
 				}
 			});
-			
+
 		},
 		googlelocation:function() {
 			if ($('#event_googlemap').dialog('isOpen') == true){
@@ -452,7 +452,7 @@ Calendar={
 		},
 		repeat:function(task){
 			if(task=='init'){
-				
+
 				var byWeekNoTitle = $('#advanced_byweekno').attr('title');
 				$('#byweekno').multiselect({
 					header: false,
@@ -460,7 +460,7 @@ Calendar={
 					selectedList: 2,
 					minWidth : 60
 				});
-				
+
 				var weeklyoptionsTitle = $('#weeklyoptions').attr('title');
 				$('#weeklyoptions').multiselect({
 					header: false,
@@ -471,7 +471,7 @@ Calendar={
 				$('input[name="bydate"]').datepicker({
 					dateFormat : 'dd-mm-yy'
 				});
-				
+
 				var byyeardayTitle = $('#byyearday').attr('title');
 				$('#byyearday').multiselect({
 					header: false,
@@ -479,7 +479,7 @@ Calendar={
 					selectedList: 2,
 					minWidth : 60
 				});
-				
+
 				var bymonthTitle = $('#bymonth').attr('title');
 				$('#bymonth').multiselect({
 					header: false,
@@ -487,7 +487,7 @@ Calendar={
 					selectedList: 2,
 					minWidth : 110
 				});
-				
+
 				var bymonthdayTitle = $('#bymonthday').attr('title');
 				$('#bymonthday').multiselect({
 					header: false,
@@ -639,4 +639,3 @@ Calendar={
 // js3-indent-level: 8 ***
 // js3-indent-tabs-mode: t ***
 // End: ***
-

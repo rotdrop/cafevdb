@@ -310,7 +310,7 @@ namespace CAFEVDB
                                         'display|LF' => array("popup" => 'data',
                                                               "prefix" => '<div class="projectinstrumentation">',
                                                               "postfix" => '</div>'),
-                                        'css'      => array('postfix' => ' projectinstrumentation tipsy-se'),
+                                        'css'      => array('postfix' => ' projectinstrumentation tooltip-top'),
                                         'values'   => $instruments,
                                         'valueGroups' => $groupedInstruments);
 
@@ -335,7 +335,7 @@ namespace CAFEVDB
       $opts['fdd']['Unkostenbeitrag']['maxlen'] = 8;
       $opts['fdd']['Unkostenbeitrag']['tooltip'] = L::t('Default project fee for ordinary participants. This should NOT include reductions of any kind. The value displayed here is the default value inserted into the instrumentation table for the project.');
       $opts['fdd']['Unkostenbeitrag']['display|LF'] = array('popup' => 'tooltip');
-      $opts['fdd']['Unkostenbeitrag']['css']['postfix'] .= ' tipsy-se';
+      $opts['fdd']['Unkostenbeitrag']['css']['postfix'] .= ' tooltip-top';
 
       $opts['fdd']['ExtraFelder'] = array('name'     => 'Extra Felder für Teilnehmer',
                                           'options'  => 'FLAVCPD',
@@ -532,7 +532,7 @@ a comma.'));
       $dwembed = new \DWEMBED\App($wikiLocation);
 
       $oldpage =
-        " *  ".$oldvals['Name']." wurde zu [[".$orchestra.":projekte:".$newname.")]] umbenant\n";
+        " *  ".$oldvals['Name']." wurde zu [[".$orchestra.":projekte:".$newname."]] umbenant\n";
       $newpage = $dwembed->getPage($oldpagename);
       if ($newpage) {
         // Geneate stuff if there is an old page
@@ -1030,25 +1030,25 @@ a comma.'));
                   'wikiPage' => self::projectWikiLink($projectName),
                   'wikiTitle' => L::t('Project Wiki for %s', array($projectName))
                   ),
-                'class' => 'project-wiki tipsy-se',
+                'class' => 'project-wiki tooltip-top',
                 'value' => 'project-wiki',
                 'name' => L::t('Project Notes')
             ),
           array('type' => 'button',
                 'title' => Config::toolTips('project-action-events'),
-                'class' => 'events tipsy-se',
+                'class' => 'events tooltip-top',
                 'value' => 'events',
                 'name' => L::t('Events')
             ),
           array('type' => 'button',
                 'title' => Config::toolTips('project-action-email'),
-                'class' => 'project-email tipsy-se',
+                'class' => 'project-email tooltip-top',
                 'value' => 'project-email',
                 'name' => L::t('Em@il')
             ),
           array('type' => 'button',
                 'title' => Config::toolTips('project-action-instrumentation-numbers'),
-                'class' => 'project-instruments tipsy-se',
+                'class' => 'project-instruments tooltip-top',
                 'value' => 'project-instruments',
                 'name' => L::t('Instrumentation Numbers')
             )

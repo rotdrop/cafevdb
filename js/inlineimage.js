@@ -162,7 +162,7 @@ var CAFEVDB = CAFEVDB || {};
             '?ItemId='+self.itemId+
             '&ImageItemTable='+self.imageItemTable+
             '&ImageSize='+self.imageSize;
-	$('#phototools li a').tipsy('hide');
+	$('#phototools li a').cafevTooltip('hide');
 	var wrapper = $('#cafevdb_inline_image_wrapper');
 	wrapper.addClass('loading').addClass('wait');
 	delete this.photo;
@@ -210,7 +210,7 @@ var CAFEVDB = CAFEVDB || {};
     };
     Photo.editPhoto = function(id, tmpkey) {
 	console.log('editPhoto', id, tmpkey);
-	$('.tipsy').remove();
+	$.fn.cafevTooltip.remove();
 	// Simple event handler, called from onChange and onSelect
 	// event handlers, as per the Jcrop invocation above
 	var showCoords = function(c) {
@@ -336,7 +336,7 @@ var CAFEVDB = CAFEVDB || {};
         var self = CAFEVDB.Photo;
 	var phototools = $('#phototools');
 	$('#phototools li a').click(function() {
-	    $(this).tipsy('hide');
+	    $(this).cafevTooltip('hide');
 	});
 	$('#cafevdb_inline_image_wrapper').hover(
 	    function () {
@@ -365,19 +365,19 @@ var CAFEVDB = CAFEVDB || {};
             return false;
 	});
 	phototools.find('.delete').click(function(event) {
-	    $(this).tipsy('hide');
+	    $(this).cafevTooltip('hide');
 	    self.deletePhoto();
 	    $(this).hide();
             event.stopImmediatePropagation();
             return false;
 	});
 	phototools.find('.edit').click(function(event) {
-	    $(this).tipsy('hide');
+	    $(this).cafevTooltip('hide');
 	    self.editCurrentPhoto();
             event.stopImmediatePropagation();
             return false;
 	});
-	phototools.find('li a').tipsy();
+	phototools.find('li a').cafevTooltip();
 
 	// Profile image upload handling
 	// New profile image selected
@@ -484,7 +484,7 @@ var CAFEVDB = CAFEVDB || {};
         var imgClone = $(image).clone();
         imgClone.removeClass('zoomable');
         overlay.append(imgClone);
-	$('.tipsy').remove(); // get rid of disturbing tooltips.
+	$.fn.cafevTooltip.remove(); // get rid of disturbing tooltips.
         var popup = overlay.dialog({
             title: t('cafevdb', 'Photo Zoom'),
             position: { my: "middle top+5%",

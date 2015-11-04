@@ -34,7 +34,7 @@ namespace CAFEVDB {
   <input type="hidden" name="ProjectId"   value="<?php echo $prjId; ?>" />
   <input type="hidden" name="ProjectName" value="<?php echo $prjName; ?>" />
   <div class="eventcontrols">
-    <select class="event-menu cafevdb-menu tipsy-ne"
+    <select class="event-menu cafevdb-menu tooltip-bottom"
             data-placeholder="<?php echo L::t('New Event'); ?>"
             title="<?php Config::tooltips('new-project-event'); ?>">
       <option value=""></option>
@@ -49,7 +49,7 @@ namespace CAFEVDB {
     </span>
     <span class="<?php echo $class; ?>-download">
       <input id="projectevents-download"
-             class="projectevents-download tipsy-ne"
+             class="projectevents-download tooltip-bottom"
              type="button"
              name="download"
              value="<?php echo L::t('Download'); ?>"

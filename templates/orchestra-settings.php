@@ -149,7 +149,7 @@ namespace CAFEVDB {
               data-placeholder="<?php echo L::t('Select the President'); ?>"
               title="<?php echo L::t('President of the orchestra'); ?>"
               name="presidentId"
-              class="executive-board-ids tipsy-sw">
+              class="executive-board-ids tooltip-top">
         <option></option>
         <?php
         echo Navigation::selectOptions(
@@ -160,7 +160,7 @@ namespace CAFEVDB {
               data-placeholder="<?php echo L::t('Select the Secretary'); ?>"
               title="<?php echo L::t('Secretary of the orchestra'); ?>"
               name="secretaryId"
-              class="executive-board-ids tipsy-sw">
+              class="executive-board-ids tooltip-top">
         <option></option>
         <?php
         echo Navigation::selectOptions(
@@ -171,7 +171,7 @@ namespace CAFEVDB {
               data-placeholder="<?php echo L::t('Select the Treasurer'); ?>"
               title="<?php echo L::t('Treasurer of the orchestra'); ?>"
               name="treasurerId"
-              class="executive-board-ids tipsy-sw">
+              class="executive-board-ids tooltip-top">
         <option></option>
         <?php
         echo Navigation::selectOptions(

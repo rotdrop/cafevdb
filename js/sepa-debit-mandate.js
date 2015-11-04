@@ -95,7 +95,7 @@ var CAFEVDB = CAFEVDB || {};
             mandateForm.find('input[class^="bankAccount"]').attr("disabled", false);
             mandateForm.find('input.mandateDate').attr("disabled", false);
             mandateForm.find('input.lastUsedDate').attr("disabled", false);
-            $('.tipsy').remove(); // clean up left-over balloons
+            $.fn.cafevTooltip.remove(); // clean up left-over balloons
           }
         },
         {
@@ -131,7 +131,7 @@ var CAFEVDB = CAFEVDB || {};
               mandateForm.find('input[class^="bankAccount"]').attr("disabled", true);
               mandateForm.find('input.mandateDate').attr("disabled", true);
               mandateForm.find('input.lastUsedDate').attr("disabled", true);
-              $('.tipsy').remove(); // clean up left-over balloons
+              $.fn.cafevTooltip.remove(); // clean up left-over balloons
               reloadCB();
             });
           }
@@ -161,7 +161,7 @@ var CAFEVDB = CAFEVDB || {};
       ],
       open: function(){
         var dlg = $(this);
-        //$('.tipsy').remove();
+        //$.fn.cafevTooltip.remove();
 
         var buttons = {
           save: dlg.dialog("widget").find('button.save'),
@@ -186,14 +186,14 @@ var CAFEVDB = CAFEVDB || {};
           buttons.change.attr("disabled", true);
         }
 
-        $('button').tipsy({gravity:'ne', fade:true});
-        $('input').tipsy({gravity:'ne', fade:true});
-        $('label').tipsy({gravity:'ne', fade:true});
+        $('button').cafevTooltip({placement:'auto bottom'});
+        $('input').cafevTooltip({placement:'auto bottom'});
+        $('label').cafevTooltip({placement:'auto bottom'});
 
         if (CAFEVDB.toolTips) {
-          $.fn.tipsy.enable();
+          $.fn.cafevTooltip.enable();
         } else {
-          $.fn.tipsy.disable();
+          $.fn.cafevTooltip.disable();
         }
 
         $('#sepa-debit-mandate-form input[class$="Date"]').datepicker({
@@ -255,7 +255,7 @@ var CAFEVDB = CAFEVDB || {};
         });
       },
       close: function(event, ui) {
-        $('.tipsy').remove();
+        $.fn.cafevTooltip.remove();
         $('#sepa-debit-mandate-dialog').dialog('close');
         $(this).dialog('destroy').remove();
       }

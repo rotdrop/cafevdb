@@ -116,6 +116,6 @@ $(document).ready(function() {
   //
   ///////////////////////////////////////////////////////////////////////////
 
-  CAFEVDB.tipsy('#appsettings_popup');
+  CAFEVDB.toolTipsInit('#appsettings_popup');
 
 });

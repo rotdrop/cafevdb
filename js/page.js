@@ -72,8 +72,8 @@ var CAFEVDB = CAFEVDB || {};
              CAFEVDB.Page.historyPosition = data.data.history.position;
              CAFEVDB.Page.historySize = data.data.history.size;
 
-             // remove left-over tipsy
-             $('.tipsy').remove();
+             // remove left-over tool-tips
+             $.fn.cafevTooltip.remove();
 
              // This is a "complete" page reload, so inject the
              // contents into #contents.
@@ -99,7 +99,7 @@ var CAFEVDB = CAFEVDB || {};
              if (typeof afterLoadCallback == 'function') {
                afterLoadCallback();
              }
-             CAFEVDB.tipsy();
+             CAFEVDB.toolTipsInit();
 
              return false;
            });

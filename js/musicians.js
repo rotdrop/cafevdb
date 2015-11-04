@@ -115,12 +115,12 @@ var CAFEVDB = CAFEVDB || {};
                mobile.val(data.data.mobilePhone);
                fixedLine.val(data.data.fixedLinePhone);
                if (data.data.mobileMeta) {
-                 mobile.removeAttr('original-title');
+                 mobile.removeAttr('data-original-title');
                  mobile.attr('title', data.data.mobileMeta);
                  CAFEVDB.applyTipsy(mobile);
                }
                if (data.data.fixedLineMeta) {
-                 fixedLine.removeAttr('original-title');
+                 fixedLine.removeAttr('data-original-title');
                  fixedLine.attr('title', data.data.fixedLineMeta);
                  CAFEVDB.applyTipsy(fixedLine);
                }

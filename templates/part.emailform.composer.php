@@ -82,14 +82,14 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
                title="<?php echo Config::toolTips('new-email-template'); ?>"
                name="emailComposer[TemplateName]"
                type="text"
-               class="tipsy-n"
+               class="tooltip-bottom"
                id="emailCurrentTemplate"
                disabled="disabled">
         <span class="inner vmiddle container save-as-template">
           <input type="checkbox"
                  id="check-save-as-template"
                  title="<?php echo Config::toolTips('save-as-template'); ?>"
-                 class="checkbox save-as-template tipsy-wide tipsy-ne"
+                 class="checkbox save-as-template tooltip-wide tooltip-bottomo"
                  name="emailComposer[SaveAsTemplate]"/>
           <label for="check-save-as-template"
                  class="tip save-as-template"
@@ -99,12 +99,12 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
         </span>
         <input title="<?php echo Config::toolTips('save-email-message'); ?>"
                type="submit"
-               class="submit save-message tipsy-wide tipsy-ne"
+               class="submit save-message tooltip-wide tooltip-bottom"
                name="emailComposer[SaveMessage]"
                value="<?php echo L::t('Save Message'); ?>"/>
         <input title="<?php echo Config::toolTips('delete-saved-message'); ?>"
                type="submit"
-               class="submit delete-message tipsy-ne"
+               class="submit delete-message tooltip-bottom"
                name="emailComposer[DeleteMessage]"
                value="<?php echo L::t('Delete Message'); ?>"/>
       </td>
@@ -116,7 +116,7 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
         <span title="<?php echo Config::tooltips('email-recipients-listing').'</br>'.htmlspecialchars($_['TO']); ?>"
               data-placeholder="<?php echo L::t('No recipients selected.'); ?>"
               data-title-intro="<?php echo Config::tooltips('email-recipients-listing'); ?>"
-              class="email-recipients tipsy-n tipsy-mostwide">
+              class="email-recipients tooltip-bottom tooltip-mostwide">
           <?php echo $_['TO'] == '' ? L::t('No recipients selected.') :  $_['TO']; ?>
         </span>
       </td>
@@ -126,14 +126,14 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
       <td class="email-address input" colspan="2">
         <input size="40"
                title="<?php echo Config::toolTips('email-recipients-freeform-CC'); ?>"
-               class="tipsy-s"
+               class="tooltip-top"
                value="<?php echo htmlspecialchars($_['CC']); ?>"
                name="emailComposer[CC]"
                type="text"
                id="carbon-copy" />
         <input title="<?php echo Config::toolTips('address-book-emails'); ?>"
                type="submit"
-               class="submit address-book-emails CC tipsy-ne"
+               class="submit address-book-emails CC tooltip-bottom"
                data-for="#carbon-copy"
                name="emailComposer[AddressBookCC]"
                value="<?php echo L::t('Address Book'); ?>"/>
@@ -144,14 +144,14 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
       <td colspan="2" class="email-address input">
         <input size="40"
                title="<?php echo Config::toolTips('email-recipients-freeform-BCC'); ?>"
-               class="tipsy-s"
+               class="tooltip-top"
                value="<?php echo htmlspecialchars($_['BCC']); ?>"
                name="emailComposer[BCC]"
                type="text"
                id="blind-carbon-copy"/>
         <input title="<?php echo Config::toolTips('address-book-emails'); ?>"
                type="submit"
-               class="submit address-book-emails BCC tipsy-ne"
+               class="submit address-book-emails BCC tooltip-bottom"
                data-for="#blind-carbon-copy"
                name="emailComposer[AddressBookBCC]"
                value="<?php echo L::t('Address Book'); ?>"/>
@@ -235,7 +235,7 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
         </select>
         <input title="<?php echo Config::toolTips('delete-all-event-attachments'); ?>"
                type="submit"
-               class="submit delete-all-event-attachments tipsy-se"
+               class="submit delete-all-event-attachments tooltip-top"
                name="emailComposer[DeleteAllAttachments]"
                value="<?php echo L::t('Delete Event Attachments'); ?>"/>
       </td>
@@ -255,7 +255,7 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
         </select>
         <input title="<?php echo Config::toolTips('delete-all-file-attachments'); ?>"
                type="submit"
-               class="submit delete-all-file-attachments tipsy-se"
+               class="submit delete-all-file-attachments tooltip-top"
                name="emailComposer[DeleteAllAttachments]"
                value="<?php echo L::t('Delete All Attachments'); ?>"/>
       </td>
@@ -276,7 +276,7 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
       </td>
       <td class="cancel">
         <input title="<?php echo Config::tooltips('cancel-email-composition'); ?>"
-               class="email-composer submit cancel tipsy-se"
+               class="email-composer submit cancel tooltip-top"
                type="submit" name="emailComposer[Cancel]"
                value="<?php echo L::t('Cancel'); ?>" />
       </td>

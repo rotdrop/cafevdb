@@ -267,7 +267,7 @@ class DetailedInstrumentation
          * for the currently active instrument.
          */
         'filters' => ("FIND_IN_SET(`Instrument`,
-  CONCAT_WS(',',(SELECT `Instrument` FROM \$main_table WHERE \$record_id = `\$main_table`.`Id`),
+  CONCAT_WS(',',(SELECT `Instrument` FROM `\$main_table` WHERE \$record_id = `\$main_table`.`Id`),
                 (SELECT `Instrumente` FROM `\$main_table`
                           WHERE \$record_id = `\$main_table`.`Id`)))"),
         ),
@@ -277,7 +277,7 @@ class DetailedInstrumentation
         'orderby' => '$table.Sortierung',
         'description' => array('columns' => array('Instrument')),
         'filters' => ("`Instrument` IN ".
-                      "(SELECT `Instrument` FROM \$main_table WHERE 1)"),
+                      "(SELECT `Instrument` FROM `\$main_table` WHERE 1)"),
         ),
       'valueGroups' => $this->groupedInstruments,
       'tab' => array('id' => 'instrumentation')
@@ -298,7 +298,7 @@ class DetailedInstrumentation
 
     $opts['fdd']['Instrumente'] = array(
       'name'     => L::t('All Instruments'),
-      'css'      => array('postfix' => ' musician-instruments tipsy-se'),
+      'css'      => array('postfix' => ' musician-instruments tooltip-top'),
       'display|LF'  => array('popup' => 'data'),
       //'options'  => 'AVCPD',
       'select'   => 'M',
@@ -402,7 +402,7 @@ class DetailedInstrumentation
       array('name' => L::t("Remarks")."\n(".$projectName.")",
             'select'   => 'T',
             'maxlen'   => 65535,
-            'css'      => array('postfix' => ' remarks tipsy-e'),
+            'css'      => array('postfix' => ' remarks tooltip-left'),
             'display|LF' => array('popup' => 'data'),
             'textarea' => array('css' => 'wysiwygeditor',
                                 'rows' => 5,
@@ -515,7 +515,7 @@ class DetailedInstrumentation
       'default'  => Config::getValue('streetAddressCountry'),
       'values2'     => $countries,
       'valueGroups' => $countryGroups,
-      'css'      => array('postfix' => ' musician-address country chosen-dropup tipsy-se'),
+      'css'      => array('postfix' => ' musician-address country chosen-dropup tooltip-top'),
       'sort'     => true,
       );
 
@@ -527,7 +527,7 @@ class DetailedInstrumentation
       'tab'      => array('id' => 'musician'),
       'select'   => 'T',
       'maxlen'   => 65535,
-      'css'      => array('postfix' => ' remarks tipsy-e'),
+      'css'      => array('postfix' => ' remarks tooltip-left'),
       'display|LF' => array('popup' => 'data'),
       'textarea' => array('css' => 'wysiwygeditor',
                           'rows' => 5,

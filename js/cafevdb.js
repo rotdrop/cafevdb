@@ -23,7 +23,7 @@ var CAFEVDB = CAFEVDB || {};
 
 (function(window, $, CAFEVDB, undefined) {
   CAFEVDB.name             = 'cafevdb';
-  CAFEVDB.toolTips         = true;
+  CAFEVDB.toolTipsEnabled  = true;
   CAFEVDB.wysiwygEditor    = 'tinymce';
   CAFEVDB.language         = 'en';
   CAFEVDB.readyCallbacks   = []; ///< quasi-document-ready-callbacks
@@ -599,7 +599,7 @@ var CAFEVDB = CAFEVDB || {};
       open:function() {
         selectElement.chosen(); //{disable_search_threshold: 10});
         var dialogWidget = dialogHolder.dialog('widget');
-        CAFEVDB.tipsy(dialogWidget);
+        CAFEVDB.toolTipsInit(dialogWidget);
         dialogHolder.find('.chosen-container').off('dblclick').
           on('dblclick', function(event) {
             dialogWidget.find('.ui-dialog-buttonset .ui-button.save').trigger('click');
@@ -615,7 +615,7 @@ var CAFEVDB = CAFEVDB || {};
           options.closeCallback.call(this, selectElement);
         }
 
-        $('.tipsy').remove();
+        $.fn.cafevTooltip.remove();
         dialogHolder.dialog('close');
         dialogHolder.dialog('destroy').remove();
       }
@@ -733,10 +733,10 @@ var CAFEVDB = CAFEVDB || {};
     // also remove and re-attach the tool-tips, otherwise some of the
     // tips remain, because chosen() removes the element underneath.
     CAFEVDB.selectMenuReset(select);
-    $('.tipsy').remove();
+    $.fn.cafevTooltip.remove();
 
-    $('div.chosen-container').tipsy({gravity:'sw', fade:true});
-    $('li.active-result').tipsy({gravity:'w', fade:true});
+    $('div.chosen-container').cafevTooltip({placement:'auto top'});
+    $('li.active-result').cafevTooltip({placement:'auto right'});
 
     return false;
 
@@ -763,65 +763,9 @@ var CAFEVDB = CAFEVDB || {};
     });
 
     container.find('select.pme-export-choice').on('chosen:showing_dropdown', function (chosen) {
-      container.find('ul.chosen-results li.active-result').tipsy({gravity:'w', fade:true});
+      container.find('ul.chosen-results li.active-result').cafevTooltip({placement:'auto right'});
     });
   }
-
-  /**Exchange "tipsy" tooltips already attached to an element by
-   * something different. This has to be done the "hard" way: first
-   * unset data('tipsy') by setting it to null, then call the
-   * tipsy-constructor with the new values.
-   *
-   * @param[in] selector jQuery element selector
-   *
-   * @param[in] options Tipsy options
-   */
-  CAFEVDB.applyTipsy = function(selector, options, container) {
-    var element;
-    if (selector instanceof jQuery) {
-      element = selector;
-    } else if (typeof container != 'undefined') {
-      element = container.find(selector);
-    } else {
-      element = $(selector);
-    }
-    // remove any pending tooltip from the document
-    $('.tipsy').remove();
-
-    // fetch suitable options from the elements class attribute
-    var classOptions = { fade: true,
-                         html: true,
-                         gravity: 'se' };
-    var classAttr = element.attr('class');
-    if (typeof classAttr != 'undefined') {
-      if (classAttr.match(/tipsy-off/) !== null) {
-        $(this).tipsy('disable');
-        return;
-      }
-      var tipsyClasses = classAttr.match(/tipsy-[a-z]+/g);
-      if (tipsyClasses) {
-        var idx;
-        for(idx = 0; idx < tipsyClasses.length; ++idx) {
-          var tipsyClass = tipsyClasses[idx];
-          var gravity = tipsyClass.match(/^tipsy-([senw]{1,2})$/);
-          if (gravity && gravity.length == 2 && gravity[1].length > 0) {
-            classOptions.gravity = gravity[1];
-            continue;
-          }
-          classOptions.className = tipsyClass;
-        }
-      }
-    }
-    if (typeof options == 'undefined') {
-      options = classOptions;
-    } else {
-      // supplied options override class options
-      options = $.extend({}, classOptions, options);
-    }
-    element.data('tipsy', null); // remove any already installed stuff
-    element.tipsy(options);      // make it new
-  };
-
 
   /**Open one invisible modal dialog in order to have a persistent
    * overlay for a group of dialogs.
@@ -900,7 +844,7 @@ var CAFEVDB = CAFEVDB || {};
                          icons: { primary: 'ui-icon-minusthick', secondary: null },
                          text: false});
     dialogWidget.find('.ui-dialog-titlebar').append(toBackButton);
-    toBackButton.tipsy({gravity: 'ne', fade: true });
+    toBackButton.cafevTooltip({placement:'auto bottom' });
 
     toBackButton.off('click');
     toBackButton.on('click', function() {
@@ -951,7 +895,7 @@ var CAFEVDB = CAFEVDB || {};
                               icons: { primary: 'ui-icon-closethick', secondary: null },
                               text: false});
     dialogWidget.find('.ui-dialog-titlebar').append(customCloseButton);
-    customCloseButton.tipsy({gravity: 'ne', fade: true });
+    customCloseButton.cafevTooltip({placement:'auto bottom' });
 
     customCloseButton.off('click');
     customCloseButton.on('click', function(event) {
@@ -1172,15 +1116,99 @@ var CAFEVDB = CAFEVDB || {};
     return true;
   };
 
+  CAFEVDB.attachToolTip = function(selector, options) {
+    var defaultOptions = {
+        container:'body',
+        html:true,
+        placement:'auto top'
+    };
+    options = $.extend({}, defaultOptions, options);
+    if (typeof options.placement == 'string' && !options.placement.match(/auto/)) {
+      options.placement = 'auto '+options.placement;
+    }
+    return $(selector).cafevTooltip(options);
+  };
+
+  /**Exchange "tipsy" tooltips already attached to an element by
+   * something different. This has to be done the "hard" way: first
+   * unset data('tipsy') by setting it to null, then call the
+   * tipsy-constructor with the new values.
+   *
+   * @param[in] selector jQuery element selector
+   *
+   * @param[in] options Tool-tip options
+   *
+   * @param[in] container Optional container containing selected
+   * elements, i.e. tool-tip stuff will be applied to all elements
+   * inside @a container matching @a selector.
+   */
+  CAFEVDB.applyToolTips = function(selector, options, container) {
+    var element;
+    if (selector instanceof jQuery) {
+      element = selector;
+    } else if (typeof container != 'undefined') {
+      element = container.find(selector);
+    } else {
+      element = $(selector);
+    }
+    // remove any pending tooltip from the document
+    $.fn.cafevTooltip.remove();
+
+    // fetch suitable options from the elements class attribute
+    var classOptions = { placement:'auto top',
+                         html: true };
+    var classAttr = element.attr('class');
+    var extraClass = false;
+    if (options.hasOwnProperty('cssclass')) {
+      extraClass = options.cssclass;
+    }
+    if (typeof classAttr != 'undefined') {
+      if (classAttr.match(/tooltip-off/) !== null) {
+        $(this).cafevTooltip('disable');
+        return;
+      }
+      var tooltipClasses = classAttr.match(/tooltip-[a-z-]+/g);
+      if (tooltipClasses) {
+        var idx;
+        for(idx = 0; idx < tooltipClasses.length; ++idx) {
+          var tooltipClass = tooltipClasses[idx];
+          var placement = tooltipClass.match(/^tooltip-(bottom|top|right|left)$/);
+          if (placement && placement.length == 2 && placement[1].length > 0) {
+            classOptions.placement = 'auto '+placement[1];
+            continue;
+          }
+          extraClass = tooltipClass;
+        }
+      }
+    }
+    if (typeof options == 'undefined') {
+      options = classOptions;
+    } else {
+      // supplied options override class options
+      options = $.extend({}, classOptions, options);
+    }
+
+    if (extraClass) {
+      options.template = '<div class="tooltip '
+                       + extraClass
+                       + '" role="tooltip">'
+                       + '<div class="tooltip-arrow"></div>'
+                       + '<div class="tooltip-inner"></div>'
+                       + '</div>';
+    }
+    element.cafevTooltip('destroy'); // remove any already installed stuff
+    element.cafevTooltip(options);   // make it new
+  };
+
   CAFEVDB.toolTipsOnOff = function(onOff) {
-    CAFEVDB.toolTips = !!onOff;
-    if (CAFEVDB.toolTips) {
-      $.fn.tipsy.enable();
+    CAFEVDB.toolTipsEnabled = !!onOff;
+    if (CAFEVDB.toolTipsEnabled) {
+      $.fn.cafevTooltip.enable();
       $('#tooltipbutton').removeClass('tooltips-disabled').addClass('tooltips-enabled');
     } else {
-      $.fn.tipsy.disable();
+      $.fn.cafevTooltip.disable();
       $('#tooltipbutton').removeClass('tooltips-enabled').addClass('tooltips-disabled');
-      $('.tipsy').remove(); // remove any left-over items.
+      $.fn.cafevTooltip.remove(); // remove any left-over items.
     }
   };
 
@@ -1190,97 +1218,131 @@ var CAFEVDB = CAFEVDB || {};
 
   /**Initialize our tipsy stuff. Only exchange for our own thingies, of course.
    */
-  CAFEVDB.tipsy = function(containerSel) {
+  CAFEVDB.toolTipsInit = function(containerSel) {
     if (typeof containerSel === 'undefined') {
       containerSel = '#content.app-cafevdb';
     }
     var container = $(containerSel);
 
-    // container.find('button.settings').tipsy({gravity:'ne', fade:true});
-    container.find('button.viewtoggle').tipsy({gravity:'ne', fade:true});
+    // container.find('button.settings').cafevTooltip({placement:'bottom'});
+    container.find('button.viewtoggle').cafevTooltip({placement:'bottom'});
 
-    container.find('div.viewtoggle').tipsy({gravity:'se', fade:true});
-    container.find('select').tipsy({gravity:'w', fade:true});
-    container.find('div.chosen-container').tipsy({gravity:'sw', fade:true});
-    container.find('li.active-result').tipsy({gravity:'w', fade:true});
-    container.find('form.cafevdb-control input').tipsy({gravity:'nw', fade:true});
-    container.find('button.settings').tipsy({gravity:'ne', fade:true});
-    container.find('.pme-sort').tipsy({gravity: 'n', fade:true});
-    container.find('.pme-misc-check').tipsy({gravity: 'nw', fade:true});
-    container.find('label').tipsy({gravity:'se', fade:true});
-    container.find('.header-right img').tipsy({gravity:'ne', fade:true});
-    container.find('img').tipsy({gravity:'nw', fade:true});
-    container.find('button').tipsy({gravity:'w', fade:true});
-    container.find('li.pme-navigation.table-tabs').tipsy({gravity:'nw', fade:true});
+    container.find('div.viewtoggle').cafevTooltip({placement:'top'});
+    container.find('select').cafevTooltip({placement:'right'});
+    container.find('div.chosen-container').cafevTooltip({placement:'top'});
+    container.find('li.active-result').cafevTooltip({placement:'right'});
+    container.find('form.cafevdb-control input').cafevTooltip({placement:'bottom'});
+    container.find('button.settings').cafevTooltip({placement:'bottom'});
+    container.find('.pme-sort').cafevTooltip({placement:'bottom'});
+    container.find('.pme-misc-check').cafevTooltip({placement:'bottom'});
+    container.find('label').cafevTooltip({placement:'top'});
+    container.find('.header-right img').cafevTooltip({placement:'bottom'});
+    container.find('img').cafevTooltip({placement:'bottom'});
+    container.find('button').cafevTooltip({placement:'right'});
+    container.find('li.pme-navigation.table-tabs').cafevTooltip({placement:'bottom'});
 
     // pme input stuff and tables.
-    container.find('textarea.pme-input').tipsy(
-      {gravity:'se', fade:true, html:true, className:'tipsy-wide'});
-    container.find('input.pme-input').tipsy(
-      {gravity:'se', fade:true, html:true, className:'tipsy-wide'});
-    container.find('table.pme-main td').tipsy(
-      {gravity:'sw', fade:true, html:true, className:'tipsy-wide'});
+    container.find('textarea.pme-input').cafevTooltip(
+      {placement:'top', cssclass:'tooltip-wide'});
+    container.find('input.pme-input').cafevTooltip(
+      {placement:'top', cssclass:'tooltip-wide'});
+    container.find('table.pme-main td').cafevTooltip(
+      {placement:'top', cssclass:'tooltip-wide'});
 
     // original tipsy stuff
-    container.find('.displayName .action').tipsy({gravity:'se', fade:true, live:true});
-    container.find('.password .action').tipsy({gravity:'se', fade:true, live:true});
-    container.find('#upload').tipsy({gravity:'w', fade:true});
-    container.find('.selectedActions a').tipsy({gravity:'s', fade:true, live:true});
-    container.find('a.action.delete').tipsy({gravity:'e', fade:true, live:true});
-    container.find('a.action').tipsy({gravity:'s', fade:true, live:true});
-    container.find('td .modified').tipsy({gravity:'s', fade:true, live:true});
-    container.find('td.lastLogin').tipsy({gravity:'s', fade:true, html:true});
-    container.find('input:not([type=hidden])').tipsy({gravity:'w', fade:true});
+    container.find('.displayName .action').cafevTooltip({placement:'top'});
+    container.find('.password .action').cafevTooltip({placement:'top'});
+    container.find('#upload').cafevTooltip({placement:'right'});
+    container.find('.selectedActions a').cafevTooltip({placement:'top'});
+    container.find('a.action.delete').cafevTooltip({placement:'left'});
+    container.find('a.action').cafevTooltip({placement:'top'});
+    container.find('td .modified').cafevTooltip({placement:'top'});
+    container.find('td.lastLogin').cafevTooltip({placement:'top', html:true});
+    container.find('input:not([type=hidden])').cafevTooltip({placement:'right'});
 
     // everything else.
-    container.find('.tip').tipsy({gravity:'w', fade:true});
+    container.find('.tip').cafevTooltip({placement:'right'});
 
-    CAFEVDB.applyTipsy('select[class*="pme-filter"]',
-                       {gravity:'n', fade:true, html:true, className:'tipsy-wide'},
-                       container);
+    container.find('select[class*="pme-filter"]').cafevTooltip(
+      { placement:'bottom', cssclass:'tooltip-wide' }
+    );
+    container.find('input[class*="pme-filter"]').cafevTooltip(
+      { placement:'bottom', cssclass:'tooltip-wide' }
+    );
 
-    CAFEVDB.applyTipsy('input[class*="pme-filter"]',
-                       {gravity:'n', fade:true, html:true, className:'tipsy-wide'},
-                       container);
-
-    if (false)
-    CAFEVDB.applyTipsy('label.memberstatus-label',
-                       {gravity:'n', fade:true, html:true, className:'tipsy-wide'},
-                       container);
-
-    container.find('[class*="tipsy-"]').each(function(index) {
-      var options = { fade: true,
-                      html: true };
-      var element = $(this);
-      var classAttr = element.attr('class');
-      if (classAttr.match(/tipsy-off/) !== null) {
-        $(this).tipsy('disable');
-        return;
-      }
-      var tipsyClasses = classAttr.match(/tipsy-[a-z]+/g);
-      var idx;
-      for(idx = 0; idx < tipsyClasses.length; ++idx) {
-        var tipsyClass = tipsyClasses[idx];
-        var gravity = tipsyClass.match(/^tipsy-([senw]{1,2})$/);
-        if (gravity && gravity.length == 2 && gravity[1].length > 0) {
-          options.gravity = gravity[1];
-          continue;
-        }
-        options.className = tipsyClass;
-      }
-      var oldTipsy = $(this).data('tipsy');
-      $(this).data('tipsy', null); // remove any already installed stuff
-      $(this).tipsy($.extend({}, oldTipsy, options));
-    });
+    container.find('[class*="tooltip-"]').cafevTooltip({});
 
     // Tipsy greedily enables itself when attaching it to elements, so
     // ...
-    if (CAFEVDB.toolTips) {
-      $.fn.tipsy.enable();
+    if (CAFEVDB.toolTipsEnabled) {
+      $.fn.cafevTooltip.enable();
     } else {
-      $.fn.tipsy.disable();
+      $.fn.cafevTooltip.enable();
     }
+  };
+
+  // special cafevdb tool-tips
+  $.fn.cafevTooltip = function(argument) {
+    if (typeof argument == 'object' && argument != null) {
+      var options = {
+        container:'body',
+        html:true,
+        placement:'auto top',
+        cssclass:[]
+      }
+      argument = $.extend(options, argument);
+      if (typeof argument.placement == 'string' && !argument.placement.match(/auto/)) {
+        argument.placement = 'auto '+argument.placement;
+      }
+      if (argument.cssclass && typeof argument.cssclass == 'string') {
+        argument.cssclass = [ argument.cssclass ];
+      }
+      argument.cssclass.push('cafevdb');
+      var classAttr = this.attr('class');
+      if (classAttr) {
+        if (classAttr.match(/tooltip-off/) !== null) {
+          this.cafevTooltip('disable');
+          return this;
+        }
+        var tooltipClasses = classAttr.match(/tooltip-[a-z-]+/g);
+        if (tooltipClasses) {
+          var idx;
+          for(idx = 0; idx < tooltipClasses.length; ++idx) {
+            var tooltipClass = tooltipClasses[idx];
+            var placement = tooltipClass.match(/^tooltip-(bottom|top|right|left)$/);
+            if (placement && placement.length == 2 && placement[1].length > 0) {
+              argument.placement = 'auto '+placement[1];
+              continue;
+            }
+            argument.cssclass.push(tooltipClass);
+          }
+        }
+      }
+      if (!argument.template) {
+        argument.template = '<div class="tooltip '
+                       + argument.cssclass.join(' ')
+                       + '" role="tooltip">'
+                       + '<div class="tooltip-arrow"></div>'
+                       + '<div class="tooltip-inner"></div>'
+                       + '</div>';
+      }
+      $.fn.tooltip.call(this, 'destroy');
+    }
+    $.fn.tooltip.call(this, argument);
+    return this;
+  };
+
+  $.fn.cafevTooltip.enable = function() {
+    $('[data-original-title]').cafevTooltip('enable');
   }
+
+  $.fn.cafevTooltip.disable = function() {
+    $('[data-original-title]').cafevTooltip('disable');
+  }
+
+  $.fn.cafevTooltip.remove = function() {
+    $('div.tooltip[role=tooltip]').remove();
+  };
 
 })(window, jQuery, CAFEVDB);
 

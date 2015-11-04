@@ -96,14 +96,14 @@ CAFEVDB = CAFEVDB || {};
 
         $(".ui-dialog-titlebar-close").hide();
 
-        $('button').tipsy({gravity:'ne', fade:true});
-        $('input').tipsy({gravity:'ne', fade:true});
-        $('label').tipsy({gravity:'ne', fade:true});
+        $('button').cafevTooltip({position:'auto bottom'});
+        $('input').cafevTooltip({position:'auto bottom'});
+        $('label').cafevTooltip({position:'auto bottom'});
 
-        if (CAFEVDB.toolTips) {
-          $.fn.tipsy.enable();
+        if (CAFEVDB.toolTipsEnabled) {
+          $.fn.cafevTooltip.enable();
         } else {
-          $.fn.tipsy.disable();
+          $.fn.cafevTooltip.disable();
         }
 
         $('#blogedit #blogcancel').click(Blog.cancel);
@@ -122,7 +122,7 @@ CAFEVDB = CAFEVDB || {};
       close : function(event, ui) {
         //$('#blogtextarea').tinymce().remove();
         //$('#blogtextarea').ckeditor().remove();
-        $('.tipsy').remove();
+        $.fn.cafevTooltip.remove();
         CAFEVDB.removeEditor('#blogtextarea');
         $(this).dialog('destroy').remove();
       }
@@ -240,18 +240,18 @@ CAFEVDB = CAFEVDB || {};
         open : function () {
           $(".ui-dialog-titlebar-close").hide();
 
-          $('button').tipsy({gravity:'ne', fade:true});
-          $('input').tipsy({gravity:'ne', fade:true});
-          $('label').tipsy({gravity:'ne', fade:true});
+          $('button').cafevTooltip({position:'auto bottom'});
+          $('input').cafevTooltip({position:'auto bottom'});
+          $('label').cafevTooltip({position:'auto bottom'});
 
           if (CAFEVDB.toolTips) {
-            $.fn.tipsy.enable();
+            $.fn.cafevTooltip.enable();
           } else {
-            $.fn.tipsy.disable();
+            $.fn.cafevTooltip.disable();
           }
         },
         close : function(event, ui) {
-          $('.tipsy').remove();
+          $.fn.cafevTooltip.remove();
           $(this).dialog('destroy').remove();
         },
       });

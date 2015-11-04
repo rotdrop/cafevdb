@@ -77,7 +77,7 @@ var CAFEVDB = CAFEVDB || {};
         height: "auto",
 	resizable: false,
         open  : function(){
-          //$('.tipsy').remove();
+          //$.fn.cafevTooltip.remove();
 
           var dialogHolder = $(this);
           var eventForm = dialogHolder.find('#eventlistform');
@@ -94,8 +94,8 @@ var CAFEVDB = CAFEVDB || {};
 
           CAFEVDB.dialogToBackButton($(this));
 
-          $('.tipsy').remove();
-          CAFEVDB.tipsy('#events');
+          $.fn.cafevTooltip.remove();
+          CAFEVDB.toolTipsInit('#events');
 
           eventMenu.on('change', function(event) {
             event.preventDefault();
@@ -118,7 +118,7 @@ var CAFEVDB = CAFEVDB || {};
                                      post, Calendar.UI.startEventDialog);
 
             eventMenu.find('option').removeAttr('selected');
-            $('.tipsy').remove();
+            $.fn.cafevTooltip.remove();
 
             eventMenu.trigger('chosen:updated');
 
@@ -151,7 +151,7 @@ var CAFEVDB = CAFEVDB || {};
           });
         },
         close : function(event, ui) {
-          $('.tipsy').remove();
+          $.fn.cafevTooltip.remove();
           $('#event').dialog('close');
           $(this).dialog('destroy').remove();
 
@@ -203,9 +203,9 @@ var CAFEVDB = CAFEVDB || {};
 	events.find('#debug').show();
       }
 
-      $('.tipsy').remove();
+      $.fn.cafevTooltip.remove();
 
-      CAFEVDB.tipsy(listing);
+      CAFEVDB.toolTipsInit(listing);
 
       Events.UI.updateEmailForm();
 

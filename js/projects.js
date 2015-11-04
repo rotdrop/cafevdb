@@ -271,12 +271,12 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
         // tips remain, because chosen() removes the element underneath.
 
         select.find('option').removeAttr('selected');
-        $('.tipsy').remove();
+        $.fn.cafevTooltip.remove();
 
         select.trigger("chosen:updated");
 
-        $('div.chosen-container').tipsy({gravity:'sw', fade:true});
-        $('li.active-result').tipsy({gravity:'w', fade:true});
+        $('div.chosen-container').cafevTooltip({placement:'auto top'});
+        $('li.active-result').cafevTooltip({placement:'auto right'});
 
         if (!error) {
             //alert('try to close snapper');
@@ -314,7 +314,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
         });
         projectActions.off('chosen:showing_dropdown');
         projectActions.on('chosen:showing_dropdown', function (event) {
-            container.find('ul.chosen-results li.active-result').tipsy({gravity:'w', fade:true});
+            container.find('ul.chosen-results li.active-result').cafevTooltip({placement:'auto left'});
         });
     };
 

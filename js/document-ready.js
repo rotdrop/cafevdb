@@ -129,7 +129,7 @@ $(document).ready(function() {
 
         CAFEVDB.pmeTweaks();
 
-        CAFEVDB.tipsy();
+        CAFEVDB.toolTipsInit();
 
         // Prevent drag&drop outside allowed areas.
         window.addEventListener("dragover", function(e){

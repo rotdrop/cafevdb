@@ -120,7 +120,7 @@ namespace CAFEVDB
         $opts['options'] .= 'M';
       }
       $opts['misc']['css']['major'] = 'debit-note';
-      $opts['misc']['css']['minor'] = 'debit-note tipsy-nw';
+      $opts['misc']['css']['minor'] = 'debit-note tooltip-bottom';
       $opts['labels']['Misc'] = L::t('Debit');
 
       // Number of lines to display on multiple selection filters

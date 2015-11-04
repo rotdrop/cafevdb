@@ -83,8 +83,8 @@ __EOT__;
         <input class="email-check" title="" id="email-check-$evtId" type="checkbox" name="EventSelect[]" value="$evtId" $checked />
         <div class="email-check" /></label>
       </td>
-      <td class="eventdata brief tipsy-s tipsy-wide" id="brief-$evtId" title="$description">$brief</td>
-      <td class="eventdata date tipsy-se tipsy-wide" id="data-$evtId" title="$description">$datestring</td>
+      <td class="eventdata brief tooltip-top tooltip-wide" id="brief-$evtId" title="$description">$brief</td>
+      <td class="eventdata date tooltip-top tooltip-wide" id="data-$evtId" title="$description">$datestring</td>
     </tr>
 __EOT__;
     $n = ($n + 1) & 1;

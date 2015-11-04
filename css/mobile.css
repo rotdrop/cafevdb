@@ -46,10 +46,10 @@
     display:block !important;
   }
 
-  .tipsy-inner,
-  .tipsy-wide .tipsy-inner,
-  .tipsy-verywide .tipsy-inner,
-  .tipsy-mostwide .tipsy-inner {
+  .tooltip-inner,
+  .tooltip-wide .tooltip-inner,
+  .tooltip-verywide .tooltip-inner,
+  .tooltip-mostwide .tooltip-inner {
     max-width:200px !important;
   }
 

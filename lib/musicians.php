@@ -314,7 +314,7 @@ make sure that the musicians are also automatically added to the
     $opts['fdd']['Instrumente'] = array(
       'tab'         => array('id' => 'orchestra'),
       'name'        => L::t('Instruments'),
-      'css'         => array('postfix' => ' musician-instruments tipsy-se'),
+      'css'         => array('postfix' => ' musician-instruments tooltip-top'),
       'display|LF'  => array('popup' => 'data'),
       'select'      => 'M',
       'maxlen'      => 137,
@@ -383,7 +383,7 @@ make sure that the musicians are also automatically added to the
       'select' => 'M',
       'name' => L::t('Projects'),
       'sort' => true,
-      'css'      => array('postfix' => ' projects tipsy-se'),
+      'css'      => array('postfix' => ' projects tooltip-top'),
       'display|LVF' => array('popup' => 'data'),
       'sql' => "GROUP_CONCAT(DISTINCT `".$join_table."`.`Name` ORDER BY `".$join_table."`.`Name` ASC SEPARATOR ',')",
       'sqlw' => "GROUP_CONCAT(DISTINCT `".$join_table."`.`Name` ORDER BY `".$join_table."`.`Name` ASC SEPARATOR ',')",
@@ -483,7 +483,7 @@ make sure that the musicians are also automatically added to the
       'name'     => strval(L::t('Remarks')),
       'select'   => 'T',
       'maxlen'   => 65535,
-      'css'      => array('postfix' => ' remarks tipsy-se'),
+      'css'      => array('postfix' => ' remarks tooltip-top'),
       'textarea' => array('css' => 'wysiwygeditor',
                           'rows' => 5,
                           'cols' => 50),
@@ -754,7 +754,7 @@ make sure that the musicians are also automatically added to the
       return L::t("Portraits or Avatars can only be added to an existing musician's profile; please add the new musician without protrait image first.");
     case 'display':
       $div = ''
-        .'<div class="photo"><img class="cafevdb_inline_image portrait zoomable tipsy-se" src="'
+        .'<div class="photo"><img class="cafevdb_inline_image portrait zoomable tooltip-top" src="'
         .\OCP\UTIL::linkTo('cafevdb', 'inlineimage.php').'?ItemId='.$musicianId.'&ImageItemTable=Musiker&ImageSize=1200&TimeStamp='.$timeStamp
         .'" '
         .'title="'.L::t("Photo, if available").'" /></div>';
@@ -762,7 +762,7 @@ make sure that the musicians are also automatically added to the
     case 'change':
       $photoarea = ''
         .'<div id="contact_photo_upload">
-  <div class="tip portrait propertycontainer tipsy-se" id="cafevdb_inline_image_wrapper" title="'
+  <div class="tip portrait propertycontainer tooltip-top" id="cafevdb_inline_image_wrapper" title="'
       .L::t("Drop photo to upload (max %s)", array(\OCP\Util::humanFileSize(Util::maxUploadSize()))).'"'
         .' data-element="PHOTO">
     <ul id="phototools" class="transparent hidden contacts_property">

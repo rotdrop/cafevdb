@@ -90,7 +90,7 @@ namespace CAFEVDB {
         'name' => L::t('Tooltip Button'),
         'title' => L::t('Toggle Tooltips'),
         'image' => \OCP\Util::imagePath('core', 'actions/info.svg'),
-        'class' => 'help tooltips tipsy-ne tooltips-'.($_['tooltips'] == 'on' ? 'en' : 'dis').'abled',
+        'class' => 'help tooltips tooltip-bottom tooltips-'.($_['tooltips'] == 'on' ? 'en' : 'dis').'abled',
         'id' => 'tooltipbutton')
       ));
 
@@ -116,10 +116,10 @@ namespace CAFEVDB {
           <input id="app-settings-tooltips"
                  type="checkbox"
                  name="tooltips" <?php echo $_['tooltips'] == 'on' ? 'checked="checked"' : ''; ?>
-                 class="tipsy-sw"
+                 class="tooltip-top"
                  title="<?php echo Config::tooltips('show-tool-tips'); ?>"/>
           <label for="app-settings-tooltips"
-                 class="tipsy-sw"
+                 class="tooltip-top"
                  title="<?php echo Config::tooltips('show-tool-tips'); ?>">
             <?php echo L::t('Tool-Tips') ?>
           </label>
@@ -128,10 +128,10 @@ namespace CAFEVDB {
           <input id="app-settings-filtervisibility"
                  type="checkbox"
                  name="filtervisibility" <?php echo $_['filtervisibility'] == 'on' ? 'checked="checked"' : ''; ?>
-                 class="tipsy-sw"
+                 class="tooltip-top"
                  title="<?php echo Config::tooltips('filter-visibility'); ?>"/>
           <label for="app-settings-filtervisibility"
-                 class="tipsy-sw"
+                 class="tooltip-top"
                  title="<?php echo Config::tooltips('filter-visibility'); ?>">
             <?php echo L::t('Filter-Controls') ?>
           </label>
@@ -140,10 +140,10 @@ namespace CAFEVDB {
           <input id="app-settings-expertmode"
                  type="checkbox"
                  name="expertmode" <?php echo $_['expertmode'] == 'on' ? 'checked="checked"' : ''; ?>
-                 class="tipsy-sw"
+                 class="tooltip-top"
                  title="<?php echo Config::tooltips('expert-mode'); ?>"/>
           <label for="app-settings-expertmode"
-                 class="tipsy-sw"
+                 class="tooltip-top"
                  title="<?php echo Config::tooltips('expert-mode'); ?>">
             <?php echo L::t('Expert-Mode') ?>
           </label>
@@ -151,7 +151,7 @@ namespace CAFEVDB {
         <li class="chosen-dropup">
           <select name="pagerows"
                   data-placeholder="<?php echo L::t('#Rows'); ?>"
-                  class="table-pagerows chosen-dropup tipsy-sw"
+                  class="table-pagerows chosen-dropup tooltip-top"
                   id="app-settings-table-pagerows"
                   title="<?php echo Config::tooltips('table-rows-per-page'); ?>">
             <?php
@@ -162,14 +162,14 @@ namespace CAFEVDB {
             ?>
           </select>
           <label for="app-settings-table-pagerows"
-                 class="tipsy-sw"
+                 class="tooltip-top"
                  title="<?php echo Config::tooltips('table-rows-per-page'); ?>">
             <?php echo L::t('#Rows/Page in Tables'); ?>
           </label>
         </li>
         <li class="<?php echo $expertClass; ?>">
           <a id="app-settings-further-settings"
-             class="settings generalsettings tipsy-sw"
+             class="settings generalsettings tooltip-top"
              title="<?php echo Config::tooltips('further-settings'); ?>"
              href="#">
             <?php echo L::t('Further Settings'); ?>
@@ -177,7 +177,7 @@ namespace CAFEVDB {
         </li>
         <li class="<?php echo $expertClass; ?>">
           <a id="app-settings-expert-operations"
-             class="settings expertoperations tipsy-sw"
+             class="settings expertoperations tooltip-top"
              title="<?php echo Config::tooltips('expert-operations'); ?>"
              href="#">
             <?php echo L::t('Expert Operations'); ?>
@@ -189,7 +189,7 @@ namespace CAFEVDB {
             multiple
             name="debugmode"
             data-placeholder="<?php echo L::t('Enable Debug Mode'); ?>"
-            class="debug-mode chosen-dropup tipsy-sw"
+            class="debug-mode chosen-dropup tooltip-top"
             title="<?php echo Config::tooltips('debug-mode'); ?>">
             <?php
             foreach ($debugModes as $key => $value) {

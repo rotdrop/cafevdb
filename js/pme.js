@@ -243,7 +243,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                  CAFEVDB.removeEditor(container.find('textarea.wysiwygeditor'));
 
                  container.css('height', 'auto');
-                 $('.tipsy').remove();
+                 $.fn.cafevTooltip.remove();
                  container.html(data.data.contents);
                  container.find('.pme-navigation input.pme-reload').addClass('loading');
 
@@ -653,7 +653,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                        resizeHandler(parameters);
                        dialogWidget.removeClass('pme-table-dialog-blocked');
                        dialogHolder.dialog('moveToTop');
-                       CAFEVDB.tipsy(containerSel);
+                       CAFEVDB.toolTipsInit(containerSel);
                        CAFEVDB.Page.busyIcon(false);
                        dialogHolder.find('.pme-navigation input.pme-reload').removeClass('loading');
                      });
@@ -664,7 +664,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                  dialogHolder.on('resize', resizeHandler);
                },
                close: function(event) {
-                 $('.tipsy').remove();
+                 $.fn.cafevTooltip.remove();
                  var dialogHolder = $(this);
 
                  dialogHolder.find('iframe').removeAttr('src');
@@ -770,7 +770,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                CAFEVDB.Page.updateHistoryControls();
              }
 
-             $('.tipsy').remove();
+             $.fn.cafevTooltip.remove();
              CAFEVDB.removeEditor(container.find('textarea.wysiwygeditor'));
              container.html(data.data.contents);
              pme.init(selector);
@@ -779,7 +779,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                //alert('pseudo submit');
                pme.tableLoadCallback(dpyClass, selector, { reason: 'formSubmit' }, function() {});
                CAFEVDB.pmeTweaks(container);
-               CAFEVDB.tipsy(selector);
+               CAFEVDB.toolTipsInit(selector);
 
                /* kill the modalizer */
                CAFEVDB.Page.busyIcon(false);
@@ -879,11 +879,11 @@ var PHPMYEDIT = PHPMYEDIT || {};
   PHPMYEDIT.maybeTranspose = function(transpose, containerSel) {
     var container = this.container(containerSel);
     var pageitems;
-    var tipsy = container.find('.tipsy');
-    var doTipsy = tipsy.length > 0;
+    var tooltip = container.find('.tooltip');
+    var doTooltip = tooltip.length > 0;
 
     if (transpose) {
-      tipsy.remove();
+      tooltip.remove();
       this.transposeMainTable('table.pme-main', container);
       pageitems = t('cafevdb', '#columns');
 
@@ -892,7 +892,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
       container.find('#pme-transpose-down').removeClass('pme-untransposed').addClass('pme-transposed');
       container.find('#pme-transpose').removeClass('pme-untransposed').addClass('pme-transposed');
     } else {
-      tipsy.remove();
+      tooltip.remove();
       this.transposeMainTable('table.pme-main', container);
       pageitems = t('cafevdb', '#rows');
 
@@ -1046,7 +1046,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
     container.find("td."+pmeInput+" div.chosen-container").attr("title", pme.inputSelectChosenTitle);
     container.find("td."+pmeValue+" div.chosen-container").attr("title", pme.inputSelectChosenTitle);
 
-    // Copy over titles and tipsy classes
+    // Copy over titles and tooltip classes
     container.find("td."+pmeValue).each(function(index) {
       var selectTitle = "";
       var selectBox = $(this).children("select."+pmeInput).first();
@@ -1058,8 +1058,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
       if (typeof $(selectBox).attr("title") !== 'undefined') {
         selectTitle = selectBox.attr("title");
-      } else if (typeof $(selectBox).attr("original-title") !== 'undefined') {
-        selectTitle = selectBox.attr("original-title");
+      } else if (typeof $(selectBox).attr("data-original-title") !== 'undefined') {
+        selectTitle = selectBox.attr("data-original-title");
       }
       if (selectTitle.length != 0) {
         chosen.attr("title", selectTitle);
@@ -1075,7 +1075,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
     if (typeof callback != 'function') {
       callback = function() {
-        CAFEVDB.tipsy(container);
+        CAFEVDB.toolTipsInit(container);
       }
     }
 
@@ -1113,7 +1113,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
         PHPMYEDIT.installInputChosen(container);
       }
 
-      $('.tipsy').remove();
+      $.fn.cafevTooltip.remove();
       callback();
 
       return false;

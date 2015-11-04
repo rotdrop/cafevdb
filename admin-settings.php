@@ -25,7 +25,7 @@ namespace CAFEVDB {
   \OCP\User::checkAdminUser();
 
   //OCP\Util::addStyle('cafevdb', 'cafevdb');
-  //OCP\Util::addStyle('cafevdb', 'tipsy');
+  //OCP\Util::addStyle('cafevdb', 'tooltips');
   \OCP\Util::addStyle( "cafevdb", "admin-settings" );
   \OCP\Util::addScript( "cafevdb", "admin-settings" );
 

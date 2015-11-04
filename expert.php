@@ -34,7 +34,7 @@ namespace CAFEVDB
   $user  = \OCP\USER::getUser();
 
   \OCP\Util::addStyle('cafevdb', 'cafevdb');
-  \OCP\Util::addStyle('cafevdb', 'tipsy');
+  \OCP\Util::addStyle('cafevdb', 'tooltips');
 
   if (!\OC_Group::inGroup($user, $group)) {
     $tmpl = new \OCP\Template( 'cafevdb', 'errorpage', 'user' );

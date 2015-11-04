@@ -13,8 +13,8 @@ namespace CAFEVDB {
   \OCP\JSON::setContentTypeHeader('text/javascript');
 
   // Disallow caching
-  header("Cache-Control: no-cache, must-revalidate"); 
-  header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); 
+  header("Cache-Control: no-cache, must-revalidate");
+  header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
 
   Config::init();
 
@@ -31,7 +31,7 @@ namespace CAFEVDB {
   $pageLoader = new PageLoader();
 
   $array = array(
-    "CAFEVDB.toolTips" => ($tooltips == "off" ? 'false' : 'true'),
+    "CAFEVDB.toolTipsEnabled" => ($tooltips == "off" ? 'false' : 'true'),
     "CAFEVDB.wysiwygEditor" => "'".$editor."'",
     "CAFEVDB.language" => "'".$language."'",
     "CAFEVDB.Page.historySize" => $pageLoader->historySize(),

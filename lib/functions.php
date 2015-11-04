@@ -1559,7 +1559,7 @@ __EOT__;
         $post = http_build_query($post, '', '&');
         $json = htmlspecialchars(json_encode($json));
         $form =<<<__EOT__
-<li class="nav-$controlid tipsy-nw" title="$title">
+<li class="nav-$controlid tooltip-bottom" title="$title">
   <a href="#"
      data-id="$controlid"
      data-post="$post"
