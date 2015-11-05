@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-26 03:08+0100\n"
+"POT-Creation-Date: 2015-11-06 00:46+0100\n"
 "PO-Revision-Date: 2015-10-26 03:15+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
-#: ajax/admin-settings.php:35
+#: ajax/admin-settings.php:38
 #, php-format
 msgid ""
 "Setting orchestra group to `%s'. Please login as group administrator and "
@@ -25,7 +25,7 @@ msgstr ""
 "Orchester-Gruppe als `%s' eingestellt. Bitte mit einem Gruppenadministrator-"
 "Account einloggen und die `Camerata DB'-Anwendung konfigurieren."
 
-#: ajax/admin-settings.php:41
+#: ajax/admin-settings.php:44
 msgid "Unknown request."
 msgstr "Unbekannte Anfrage."
 
@@ -268,7 +268,7 @@ msgstr "Also, `Hello World!' muss man nun wirklich nicht übersetzen ..."
 msgid "Recreated the project list in the wiki."
 msgstr "Wiki-Projekt-Übersicht wurde aktualisiert."
 
-#: ajax/expertmode/syncevents.php:70
+#: ajax/expertmode/syncevents.php:85
 #, php-format
 msgid "Done. %d events synchronized, %d new."
 msgstr "Fertig. %d Ereignisse synchronisiert, %d neue."
@@ -523,7 +523,7 @@ msgid "Value for `%s' invalid: `%s'."
 msgstr "Der Wert für `%s' ist ungültig: `%s'."
 
 #: ajax/finance/sepa-debit-settings.php:348 ajax/settings/app-settings.php:1185
-#: ajax/settings/redaxo-settings.php:71
+#: ajax/settings/redaxo-settings.php:72
 msgid "Unhandled request:"
 msgstr "Unbekannte Anfrage:"
 
@@ -1490,34 +1490,34 @@ msgstr "Die Filter-Sichtbarkeit wurde geändert"
 msgid "Setting `%s' to `%s'"
 msgstr "Setze `%s' auf `%s'"
 
-#: ajax/settings/redaxo-settings.php:37 lib/projects.php:709
+#: ajax/settings/redaxo-settings.php:38 lib/projects.php:709
 msgid "Preview"
 msgstr "Vorschau"
 
-#: ajax/settings/redaxo-settings.php:38 lib/projects.php:713
+#: ajax/settings/redaxo-settings.php:39 lib/projects.php:713
 msgid "Archive"
 msgstr "Archiv"
 
-#: ajax/settings/redaxo-settings.php:39 lib/projects.php:711
+#: ajax/settings/redaxo-settings.php:40 lib/projects.php:711
 #: lib/projects.php:1266 lib/projects.php:1427 lib/projects.php:1483
 #: lib/projects.php:1484 lib/projects.php:1556
 msgid "Rehearsals"
 msgstr "Proben"
 
-#: ajax/settings/redaxo-settings.php:40 lib/projects.php:715
+#: ajax/settings/redaxo-settings.php:41 lib/projects.php:715
 msgid "Trashbin"
 msgstr "Mülltonne"
 
-#: ajax/settings/redaxo-settings.php:41
+#: ajax/settings/redaxo-settings.php:42
 msgid "Template"
 msgstr "Vorlage"
 
-#: ajax/settings/redaxo-settings.php:56
+#: ajax/settings/redaxo-settings.php:57
 #, php-format
 msgid "Redaxo categorie Id for `%s' set to %s"
 msgstr "Die Redaxo Kategorie Id für `%s' wurde auf `%s' gesetzt."
 
-#: ajax/settings/redaxo-settings.php:62
+#: ajax/settings/redaxo-settings.php:63
 #, php-format
 msgid "Category id must be integer and positive, got `%s'."
 msgstr ""
@@ -1534,7 +1534,7 @@ msgid "Unknown WYSIWYG-Editor: `%s'"
 msgstr "Unbekannter WYSIWYG-Edtior: `%s'"
 
 #: js/blog.js:53 js/blog.js:182 js/blog.js:233 js/blog.js:269
-#: js/cafevdb.js:1102 js/cafevdb.js:1166 js/email.js:34 js/email.js:63
+#: js/cafevdb.js:1046 js/cafevdb.js:1110 js/email.js:34 js/email.js:63
 #: js/email.js:522 js/email.js:615 js/email.js:778 js/events.js:64
 #: js/events.js:199 js/inlineimage.js:84 js/inlineimage.js:92
 #: js/inlineimage.js:102 js/inlineimage.js:131 js/inlineimage.js:155
@@ -1618,7 +1618,7 @@ msgstr "Export in das folgende Dateiformat wird nicht unterstützt:"
 msgid "Unimplemented"
 msgstr "Nicht implementiert"
 
-#: js/cafevdb.js:894
+#: js/cafevdb.js:838
 msgid ""
 "If multiple dialogs are open, then move this one to the lowest layer and "
 "display it below the others. Clicking anywhere on the dialog will bring to "
@@ -1629,7 +1629,7 @@ msgstr ""
 "angezeigt. Anklicken irgendeines Bereiches dieses Fensters bringt es\n"
 "dann wieder nach vorne."
 
-#: js/cafevdb.js:944
+#: js/cafevdb.js:888
 msgid ""
 "Close the current dialog and return to the view which was active before this "
 "dialog had been opened. If the current view shows a `Back' button, then "
@@ -1640,11 +1640,11 @@ msgstr ""
 "es in diesem Fenster außerdem noch einen `Zurück'-Knopf gibt, dann\n"
 "sollte der eigentlich das gleiche bewirken."
 
-#: js/cafevdb.js:1034 js/instrumentation.js:173
+#: js/cafevdb.js:978 js/instrumentation.js:173
 msgid "Debug Information"
 msgstr "Debug Informationen"
 
-#: js/cafevdb.js:1064
+#: js/cafevdb.js:1008
 msgid ""
 "Unrecoverable unknown internal error, no further information available, "
 "sorry."
@@ -1652,28 +1652,28 @@ msgstr ""
 "Tut uns leid, unbekannte interner Fehler, weitere Informationen sind\n"
 "leider nicht verfügbar."
 
-#: js/cafevdb.js:1066
+#: js/cafevdb.js:1010
 msgid "Internal Error"
 msgstr "Irgendein Fehler"
 
-#: js/cafevdb.js:1073
+#: js/cafevdb.js:1017
 #, python-brace-format
 msgid "Field {RequiredField} not present in AJAX response."
 msgstr "In der AJAX-Antwort fehlt das Feld {RequiredField}."
 
-#: js/cafevdb.js:1082
+#: js/cafevdb.js:1026
 msgid "Missing data"
 msgstr "Fehlende Daten"
 
-#: js/cafevdb.js:1084 js/events.js:58 js/events.js:193
+#: js/cafevdb.js:1028 js/events.js:58 js/events.js:193
 msgid "Unknown error :("
 msgstr "Irgendein Fehler :("
 
-#: js/cafevdb.js:1122
+#: js/cafevdb.js:1066
 msgid "Something went wrong."
 msgstr "Irgendetwas ist schief gelaufen."
 
-#: js/cafevdb.js:1124
+#: js/cafevdb.js:1068
 msgid ""
 "If it should be the case that you are already logged in for a long time "
 "without interacting with the web-app, then the reason for this error is "
@@ -1682,7 +1682,7 @@ msgstr ""
 "Falls Du bereits längere Zeit angemeldet bist, ohne mit der Web-App zu\n"
 "interagieren, dann ist das der Grund für den Fehler."
 
-#: js/cafevdb.js:1129
+#: js/cafevdb.js:1073
 msgid ""
 "I any case it may help to logoff and logon again, as a temporary work-"
 "around. You will be redirected to the log-in page when you close this window."
@@ -1691,7 +1691,7 @@ msgstr ""
 "ab- und wieder an zu melden und den Vorgang zu wiederholen. Wenn Du\n"
 "dieses Fenster schließt, wirst Du zur Login-Seite weiter geleitet."
 
-#: js/cafevdb.js:1133
+#: js/cafevdb.js:1077
 #, python-brace-format
 msgid "Feedback email: {AutoReport}"
 msgstr "Rückmeldung per Email: {AutoReport}"
@@ -5688,7 +5688,9 @@ msgstr "Ergänze fehlende UUIDs"
 msgid ""
 "Ensure that each musicians is assigned a UUID for vCard export and similar "
 "stuff."
-msgstr "Stellt sicher, dass jeder Musiker eine UUID besitzt; für vCard-Export und Ähnliches."
+msgstr ""
+"Stellt sicher, dass jeder Musiker eine UUID besitzt; für vCard-Export und "
+"Ähnliches."
 
 #: templates/expertmode.php:81
 msgid "Update Image Meta-Data"
@@ -6775,108 +6777,3 @@ msgstr "PROJEKT"
 #: templates/share-settings.php:124
 msgid "Financial balance folder"
 msgstr "Finanz-Ordner"
-
-#~ msgid "Save as Template"
-#~ msgstr "Vorlage speichern"
-
-#~ msgid "Delete Template"
-#~ msgstr "Vorlage löschen"
-
-#~ msgid "Add Concert"
-#~ msgstr "Neues Konzert"
-
-#~ msgid "Add Rehearsal"
-#~ msgstr "Neue Probe"
-
-#~ msgid "Add Other Event"
-#~ msgstr "Sonst. Termin"
-
-#~ msgid "Management Event"
-#~ msgstr "Vorstands-Termin"
-
-#~ msgid "Finance Event"
-#~ msgstr "Kassen-Termin"
-
-#~ msgid "Expert Operations like recreating views etc."
-#~ msgstr ""
-#~ "A C H T U N G !\n"
-#~ "\tK O M B J U D E R - R A U M\n"
-#~ "Dieser Raum is voll bis unner de Deck\n"
-#~ "mit de dollste elekdrische\n"
-#~ "un vollelekdronische Anlaache.\n"
-#~ "Staune und gugge derf jeder, awwer\n"
-#~ "rummworschdele un Gnöbbsche drücke\n"
-#~ "uff de Kombjuder dörffe nur mir,\n"
-#~ "die Exberde.\n"
-#~ "Aber bitte einfach nicht abschrecken lassen ..."
-
-#~ msgid "Personal Settings."
-#~ msgstr "Individuelle Einstellungen."
-
-#~ msgid "optional country part of address of orchestra"
-#~ msgstr "Land der Orchesteranschrift, optional"
-
-#~ msgid "country (optional)"
-#~ msgstr "Land (optional)"
-
-#~ msgid "The currently active project."
-#~ msgstr "Das gerade ausgewählte Projekt."
-
-#~ msgid "Display a table with an overview over all SEPA debit mandates."
-#~ msgstr ""
-#~ "Zeigt eine Tabelle mit einer Übersicht über alle SEPA Lastschriftmandate "
-#~ "an."
-
-#~ msgid "Em@il Recipients"
-#~ msgstr "Em@il-Empfänger"
-
-#~ msgid "Em@il Message"
-#~ msgstr "Em@il-Nachricht"
-
-#~ msgid "Corrections for partial insurance periods."
-#~ msgstr "Korrekturen für nicht-volle Versicherungsjahre."
-
-#~ msgid ""
-#~ "Insurances starting after the due-date will be charged in the following "
-#~ "year."
-#~ msgstr ""
-#~ "Versicherungen, die nach dem Fälligkeitstermin beginnen, werden erst im "
-#~ "Folgejahr berechnet."
-
-#~ msgid "Full data record: %s"
-#~ msgstr "Ungültige IBAN: %s."
-
-#~ msgid "non recurring"
-#~ msgstr "einmalig"
-
-#~ msgid "nonrecurring"
-#~ msgstr "einmalig"
-
-#~ msgid "Optional BIC of the account"
-#~ msgstr "Optional die BIC der Bankverbindung"
-
-#~ msgid "Please play fair!"
-#~ msgstr "Bitte um Fair-Play!"
-
-#~ msgid "bank id"
-#~ msgstr "BLZ"
-
-#~ msgid "Unable to decrypt debit mandate. Full debit record: %s"
-#~ msgstr "Kann das SEPA-Lastschriftmandat nicht entschlüsseln. Datensatz: %s"
-
-#~ msgid "Missing mandate date. Full data record: %s"
-#~ msgstr "Fehlendes Mandatsdatum. Datensatz: %s"
-
-#~ msgid "Invalid German BLZ: %s. Full data record: %s"
-#~ msgstr "Ungültige Deutsche Bankleitzahl: %s. Datensatz: %s"
-
-#~ msgid "Invalid German bank account: %s @ %s. Full data record: %s"
-#~ msgstr "Ungültige Deutsche(?) Kontonummer %s @ %s. Datensatz: %s"
-
-#~ msgid ""
-#~ "Remarks\n"
-#~ "(%s)"
-#~ msgstr "Bemerkungen\\n(%s)"
-
-#~ msgid "Fees for %s"
-#~ msgstr "Unkostenbeitrag für %s"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-26 03:16+0100\n"
+"POT-Creation-Date: 2015-11-06 00:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,14 +17,14 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ajax/admin-settings.php:35
+#: ajax/admin-settings.php:38
 #, php-format
 msgid ""
 "Setting orchestra group to `%s'. Please login as group administrator and "
 "configure the Camerata DB application."
 msgstr ""
 
-#: ajax/admin-settings.php:41
+#: ajax/admin-settings.php:44
 msgid "Unknown request."
 msgstr ""
 
@@ -259,7 +259,7 @@ msgstr ""
 msgid "Recreated the project list in the wiki."
 msgstr ""
 
-#: ajax/expertmode/syncevents.php:70
+#: ajax/expertmode/syncevents.php:85
 #, php-format
 msgid "Done. %d events synchronized, %d new."
 msgstr ""
@@ -511,7 +511,7 @@ msgid "Value for `%s' invalid: `%s'."
 msgstr ""
 
 #: ajax/finance/sepa-debit-settings.php:348 ajax/settings/app-settings.php:1185
-#: ajax/settings/redaxo-settings.php:71
+#: ajax/settings/redaxo-settings.php:72
 msgid "Unhandled request:"
 msgstr ""
 
@@ -1408,34 +1408,34 @@ msgstr ""
 msgid "Setting `%s' to `%s'"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:37 lib/projects.php:709
+#: ajax/settings/redaxo-settings.php:38 lib/projects.php:709
 msgid "Preview"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:38 lib/projects.php:713
+#: ajax/settings/redaxo-settings.php:39 lib/projects.php:713
 msgid "Archive"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:39 lib/projects.php:711
+#: ajax/settings/redaxo-settings.php:40 lib/projects.php:711
 #: lib/projects.php:1266 lib/projects.php:1427 lib/projects.php:1483
 #: lib/projects.php:1484 lib/projects.php:1556
 msgid "Rehearsals"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:40 lib/projects.php:715
+#: ajax/settings/redaxo-settings.php:41 lib/projects.php:715
 msgid "Trashbin"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:41
+#: ajax/settings/redaxo-settings.php:42
 msgid "Template"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:56
+#: ajax/settings/redaxo-settings.php:57
 #, php-format
 msgid "Redaxo categorie Id for `%s' set to %s"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:62
+#: ajax/settings/redaxo-settings.php:63
 #, php-format
 msgid "Category id must be integer and positive, got `%s'."
 msgstr ""
@@ -1450,7 +1450,7 @@ msgid "Unknown WYSIWYG-Editor: `%s'"
 msgstr ""
 
 #: js/blog.js:53 js/blog.js:182 js/blog.js:233 js/blog.js:269
-#: js/cafevdb.js:1102 js/cafevdb.js:1166 js/email.js:34 js/email.js:63
+#: js/cafevdb.js:1046 js/cafevdb.js:1110 js/email.js:34 js/email.js:63
 #: js/email.js:522 js/email.js:615 js/email.js:778 js/events.js:64
 #: js/events.js:199 js/inlineimage.js:84 js/inlineimage.js:92
 #: js/inlineimage.js:102 js/inlineimage.js:131 js/inlineimage.js:155
@@ -1526,14 +1526,14 @@ msgstr ""
 msgid "Unimplemented"
 msgstr ""
 
-#: js/cafevdb.js:894
+#: js/cafevdb.js:838
 msgid ""
 "If multiple dialogs are open, then move this one to the lowest layer and "
 "display it below the others. Clicking anywhere on the dialog will bring to "
 "the front again."
 msgstr ""
 
-#: js/cafevdb.js:944
+#: js/cafevdb.js:888
 msgid ""
 "Close the current dialog and return to the view which was active before this "
 "dialog had been opened. If the current view shows a `Back' button, then "
@@ -1541,51 +1541,51 @@ msgid ""
 "equivalent to clicking the `Back' button"
 msgstr ""
 
-#: js/cafevdb.js:1034 js/instrumentation.js:173
+#: js/cafevdb.js:978 js/instrumentation.js:173
 msgid "Debug Information"
 msgstr ""
 
-#: js/cafevdb.js:1064
+#: js/cafevdb.js:1008
 msgid ""
 "Unrecoverable unknown internal error, no further information available, "
 "sorry."
 msgstr ""
 
-#: js/cafevdb.js:1066
+#: js/cafevdb.js:1010
 msgid "Internal Error"
 msgstr ""
 
-#: js/cafevdb.js:1073
+#: js/cafevdb.js:1017
 #, python-brace-format
 msgid "Field {RequiredField} not present in AJAX response."
 msgstr ""
 
-#: js/cafevdb.js:1082
+#: js/cafevdb.js:1026
 msgid "Missing data"
 msgstr ""
 
-#: js/cafevdb.js:1084 js/events.js:58 js/events.js:193
+#: js/cafevdb.js:1028 js/events.js:58 js/events.js:193
 msgid "Unknown error :("
 msgstr ""
 
-#: js/cafevdb.js:1122
+#: js/cafevdb.js:1066
 msgid "Something went wrong."
 msgstr ""
 
-#: js/cafevdb.js:1124
+#: js/cafevdb.js:1068
 msgid ""
 "If it should be the case that you are already logged in for a long time "
 "without interacting with the web-app, then the reason for this error is "
 "probably a simple timeout."
 msgstr ""
 
-#: js/cafevdb.js:1129
+#: js/cafevdb.js:1073
 msgid ""
 "I any case it may help to logoff and logon again, as a temporary work-"
 "around. You will be redirected to the log-in page when you close this window."
 msgstr ""
 
-#: js/cafevdb.js:1133
+#: js/cafevdb.js:1077
 #, python-brace-format
 msgid "Feedback email: {AutoReport}"
 msgstr ""
