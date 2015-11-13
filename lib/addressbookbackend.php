@@ -336,6 +336,8 @@ namespace CAFEVDB
 
     private function getMusiciansContacts(array $options = array())
     {
+      \OCP\Util::writeLog(Config::APP_NAME, __METHOD__, \OCP\Util::DEBUG);
+
       $addressBookId = self::MAIN_ADDRESS_BOOK_ID;
 
       $contacts = array();
@@ -520,9 +522,15 @@ namespace CAFEVDB
 
       if (is_array($id)) {
         if (isset($id['id'])) {
+          \OCP\Util::writeLog(Config::APP_NAME,
+                              __METHOD__.': '. 'Called for id '.$id['id'],
+                              \OCP\Util::DEBUG);
           $id = $id['id'];
         } elseif (isset($id['uri'])) {
           // the URI is the UUID.vcf, just strip the suffix
+          \OCP\Util::writeLog(Config::APP_NAME,
+                              __METHOD__.': '. 'Called for uri '.$id['uri'],
+                              \OCP\Util::DEBUG);
           $id = substr($id['uri'], 0, -4);
         } else {
           throw new \Exception(
@@ -531,9 +539,9 @@ namespace CAFEVDB
         }
       }
 
-      \OCP\Util::writeLog(Config::APP_NAME,
-                          __METHOD__.': '. 'Called for '.$id,
-                          \OCP\Util::DEBUG);
+      /* \OCP\Util::writeLog(Config::APP_NAME, */
+      /*                     __METHOD__.': '. 'Called for '.$id, */
+      /*                     \OCP\Util::DEBUG); */
 
       $idParts = self::parseContactId($id);
       if (!isset($idParts['uuid']) || !isset($idParts['addressbook']) ||
@@ -642,7 +650,7 @@ namespace CAFEVDB
     {
       \OCP\Util::writeLog(Config::APP_NAME,
                           __METHOD__.
-                          ': adb: '.$addressBookId.' id: '.print_r($id, true),
+                          ': adb: '.$addressBookId.' id: '.print_r($addressBookId, true),
                           \OCP\Util::DEBUG);
 
       if (!$this->accessAllowed()) {
@@ -669,7 +677,7 @@ namespace CAFEVDB
       }
 
       try {
-        $contact->validate(VCard::REPAIR|VCard::UPGRADE);
+        $contact->validate(\OCA\Contacts\VObject\VCard::REPAIR|\OCA\Contacts\VObject\VCard::UPGRADE);
       } catch (\Exception $e) {
         \OCP\Util::writeLog('contacts', __METHOD__ . ' ' .
                             'Error validating vcard: ' . $e->getMessage(), \OCP\Util::ERROR);
@@ -699,7 +707,7 @@ namespace CAFEVDB
         unset($row['Portrait']);
       }
 
-      unset($changed['Projects']);
+      unset($row['Projects']);
 
       // the remaining part should contain valid fields for the Musiker table
 
@@ -716,8 +724,8 @@ namespace CAFEVDB
 
       $contactId = self::contactId($addressBookId, $row['UUID']);
 
-      //return $contactId;
-      return false;
+      return $contactId;
+      //return false;
     }
 
     /**
@@ -806,7 +814,8 @@ namespace CAFEVDB
       if (!isset($them['Aktualisiert'])) {
         \OCP\Util::writeLog(Config::APP_NAME,
                             __METHOD__.
-                            ': "them" does not carry time-stamp',
+                            ': "them" does not carry time-stamp: '.
+                            $contact->serialize(),
                             \OCP\Util::DEBUG);
         return false;
       }
@@ -828,6 +837,15 @@ namespace CAFEVDB
                             \OCP\Util::DEBUG);
         return false;
       }
+
+      $noPhoto = $them;
+      if (isset($noPhoto['Portrait'])) {
+        unset($noPhoto['Portrait']);
+      }
+      \OCP\Util::writeLog(Config::APP_NAME,
+                          __METHOD__.
+                          ': their vcard: '.print_r($noPhoto, true),
+                          \OCP\Util::DEBUG);
 
       $common = array_intersect($me, $them);
 
@@ -899,9 +917,16 @@ namespace CAFEVDB
         return null;
       }
 
-      return strtotime(mySQL::selectSingleFromTable(
-                         "`updated`", 'changelog',
-                         "ORDER BY `id` DESC LIMIT 0, 1"));
+      $date = mySQL::selectSingleFromTable(
+        "`updated`", 'changelog',
+        "ORDER BY `id` DESC LIMIT 0, 1");
+
+      \OCP\Util::writeLog(Config::APP_NAME,
+                          __METHOD__.
+                          ' last modified '.$date,
+                          \OCP\Util::DEBUG);
+
+      return strtotime($date);
     }
 
     /**
@@ -961,7 +986,14 @@ namespace CAFEVDB
         }
       }
 
-      return strtotime(mySQL::selectSingleFromTable("`Aktualisiert`", $table, $where));
+      $date = mySQL::selectSingleFromTable("`Aktualisiert`", $table, $where);
+
+      \OCP\Util::writeLog(Config::APP_NAME,
+                          __METHOD__.
+                          ' last modified '.$date,
+                          \OCP\Util::DEBUG);
+
+      return strtotime($date);
     }
 
   };

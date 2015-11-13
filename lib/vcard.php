@@ -80,12 +80,13 @@ namespace CAFEVDB {
             $cell = false;
             $skip = false;
             if ($param = $tel['TYPE']) {
+              $skip = true;
               foreach ($param as $type) {
                 switch($type) {
-                case 'WORK': $work = true; break;
-                case 'CELL': $cell = true; break;
-                case 'HOME': $work = false; break;
-                default: $skip = true; break;
+                case 'WORK': $work = true; $skip = false; break;
+                case 'CELL': $cell = true; $skip = false; break;
+                case 'HOME': $work = false; $skip = false; break;
+                default: break;
                 }
               }
             }
@@ -104,11 +105,12 @@ namespace CAFEVDB {
             $work = false;
             $skip = false;
             if ($param = $email['TYPE']) {
+              $skip = true;
               foreach ($param as $type) {
                 switch($type) {
-                case 'WORK': $work = true; break;
-                case 'HOME': $work = false; break;
-                default: $skip = true; break;
+                case 'WORK': $work = true; $skip = false; break;
+                case 'HOME': $work = false; $skip = false; break;
+                default: break;
                 }
               }
             }
@@ -151,11 +153,12 @@ namespace CAFEVDB {
             $work = false;
             $skip = false;
             if ($param = $addr['TYPE']) {
+              $skip = true;
               foreach ($param as $type) {
                 switch($type) {
-                case 'WORK': $work = true; break;
-                case 'HOME': $work = false; break;
-                default: $skip = true; break;
+                case 'WORK': $work = true; $skip = false; break;
+                case 'HOME': $work = false; $skip = false;  break;
+                default: break;
                 }
               }
             }
