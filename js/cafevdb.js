@@ -1283,6 +1283,9 @@ var CAFEVDB = CAFEVDB || {};
 
   // special cafevdb tool-tips
   $.fn.cafevTooltip = function(argument) {
+    if (typeof argument == 'undefined') {
+      argument = {};
+    }
     if (typeof argument == 'object' && argument != null) {
       var options = {
         container:'body',

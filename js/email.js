@@ -479,7 +479,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
 
                    toSpan.html(rcpts);
                    toSpan.attr('title', title);
-                   CAFEVDB.applyTipsy(toSpan);
+                   toSpan.cafevTooltip();
                    break;
                  case 'FileAttachments': {
                    var options = requestData.elementData.options;
@@ -1424,7 +1424,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
 
                               toSpan.html(rcpts);
                               toSpan.attr('title', title);
-                              CAFEVDB.applyTipsy(toSpan);
+                              toSpan.cafevTooltip();
                               return false;
                             });
                      return true;

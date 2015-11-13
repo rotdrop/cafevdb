@@ -117,12 +117,12 @@ var CAFEVDB = CAFEVDB || {};
                if (data.data.mobileMeta) {
                  mobile.removeAttr('data-original-title');
                  mobile.attr('title', data.data.mobileMeta);
-                 CAFEVDB.applyTipsy(mobile);
+                 mobile.cafevTooltip();
                }
                if (data.data.fixedLineMeta) {
                  fixedLine.removeAttr('data-original-title');
                  fixedLine.attr('title', data.data.fixedLineMeta);
-                 CAFEVDB.applyTipsy(fixedLine);
+                 fixedLine.cafevTooltip();
                }
                if (data.data.message != '') {
                  OC.dialogs.alert(data.data.message,
