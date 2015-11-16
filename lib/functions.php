@@ -804,7 +804,7 @@ __EOT__;
       if (function_exists('curl_version')) {
         $cookies = array();
         foreach($_COOKIE as $name => $value) {
-          $cookies[] = "$name=$value";
+          $cookies[] = "$name=".urlencode($value);
         }
         session_write_close(); // avoid deadlock
         $c = curl_init($url);
@@ -812,6 +812,9 @@ __EOT__;
         curl_setopt($c, CURLOPT_POST, 1);
         curl_setopt($c, CURLOPT_POSTFIELDS, $postData);
         if (count($cookies) > 0) {
+          \OCP\Util::writeLog(Config::APP_NAME,
+                              __METHOD__.' curl cookies: '.join("; ", $cookies),
+                              \OCP\Util::DEBUG);
           curl_setopt($c, CURLOPT_COOKIE, join("; ", $cookies));
         }
         curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
@@ -821,9 +824,12 @@ __EOT__;
       } else {
         $cookies = array();
         foreach($_COOKIE as $name => $value) {
-          $cookies[] = "$name=$value";
+          $cookies[] = "$name=".urlencode($value);
         }
         $cookies = (count($cookies) > 0) ? "Cookie: " . join("; ", $cookies) . "\r\n" : '';
+        \OCP\Util::writeLog(Config::APP_NAME,
+                            __METHOD__.' '.$cookies,
+                            \OCP\Util::DEBUG);
 
         $context = stream_context_create(array('http' => array(
                                                  'method' => 'post',
