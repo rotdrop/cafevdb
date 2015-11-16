@@ -31,12 +31,18 @@ namespace CAFEVDB {
   \OCP\JSON::callCheck();
 
   $tmpFile = false;
-  
+
+  date_default_timezone_set(Util::getTimezone());
+  $date = strftime('%Y%m%d-%H%M%S');
+
+  Error::exceptions(true);
+
+  ob_start();
+
   try {
 
-    Error::exceptions(true);
     Config::init();
-    
+
     $_GET = array();
 
     setlocale(LC_ALL, Util::getLocale());
@@ -58,36 +64,42 @@ namespace CAFEVDB {
     foreach($selectedMusicians as $idx => $musicianId) {
       $insurances[] = InstrumentInsurance::musicianOverview($musicianId, $handle);
     }
-    
+
     mySQL::close($handle);
+
+    if (count($insurances) == 0) {
+      throw new \Exception(L::t("No Debit-Mandates to export?"));
+    }
 
     if (count($insurances) == 1) {
       // export a single PFF
       $firstName = $insurances[0]['payer']['firstName'];
       $surName = $insurances[0]['payer']['surName'];
       $id =  $insurances[0]['payerId'];
-      
+
       $name = InstrumentInsurance::musicianOverviewPDFName($insurances[0]);
 
       //$letter = PDFLetter::testLetter($name, 'D');
 
       $letter = InstrumentInsurance::musicianOverviewLetter($insurances[0]);
-      
+
       header('Content-type: application/pdf');
       header('Content-disposition: attachment;filename='.$name);
       header('Cache-Control: no-cache, no-store, must-revalidate'); // HTTP 1.1.
       header('Pragma: no-cache'); // HTTP 1.0.
       header('Expires: 0'); // Proxies.
-      
+
+      @ob_end_clean();
+
       $outstream = fopen("php://output",'w');
 
       fwrite($outstream, $letter);
-      
+
       fclose($outstream);
     } else {
       // export a zip-archive in order to avoid tons of download dialogs
 
-      $tmpdir = get_temp_dir();
+      $tmpdir = \OC::$server->getTempManager()->getTempBaseDir();
       $tmpFile = tempnam($tmpdir, Config::APP_NAME.'.zip');
       if ($tmpFile === false) {
         throw new \RuntimeException(L::t('Unable to create temporay file for zip-archive.'));
@@ -119,7 +131,7 @@ namespace CAFEVDB {
       }
 
       unlink($tmpFile);
-      
+
       $name = strftime('%Y%m%d-%H%M%S').'-'.strtolower(L::t('instrument-insurance')).'.zip';
 
       header('Content-type: application/zip');
@@ -127,29 +139,36 @@ namespace CAFEVDB {
       header('Cache-Control: no-cache, no-store, must-revalidate'); // HTTP 1.1.
       header('Pragma: no-cache'); // HTTP 1.0.
       header('Expires: 0'); // Proxies.
-      
+
+      @ob_end_clean();
+
       $outstream = fopen("php://output",'w');
 
       fwrite($outstream, $zipData);
-      
+
       fclose($outstream);
-      
+
     }
-    
+
+    return true;
+
   } catch (\Exception $e) {
 
     if ($tmpFile !== false) {
       unlink($tmpFile);
     }
-    
+
+    $name = $date.'-CAFEVDB-exception.html';
+
     header('Content-type: text/html');
+    header('Content-disposition: inline;filename='.$name);
     header('Cache-Control: max-age=0');
 
-  echo <<<__EOT__
+    echo <<<__EOT__
 <!DOCTYPE HTML>
   <html>
     <head>
-      <title>CAFEVDB Exception Error Page</title>
+      <title>Exception Debug Output</title>
       <meta charset="utf-8">
     </head>
     <body>
@@ -161,23 +180,23 @@ __EOT__;
     $admin = Config::adminContact();
 
     $mailto = $admin['email'].
-      '?subject='.rawurlencode('[CAFEVDB-Exception] Exceptions from Instrument-Insurance Export').
+      '?subject='.rawurlencode('[CAFEVDB-Exception] Exceptions from Email-Form').
       '&body='.rawurlencode($exceptionText."\r\n".$trace);
     $mailto = '<span class="error email"><a href="mailto:'.$mailto.'">'.$admin['name'].'</a></span>';
 
-    echo '<h1>'.L::t('PHP Exception Caught').'</h1>
-<blockquote>'.L::t('Error, caught an exception. '.
-                   'Please copy the displayed text and send it by email to %s.',
-                   array($mailto)).'</blockquote>
-<pre>'.$exceptionText.'</pre>
-<h2>'.L::t('Trace').'</h2>
-<pre>'.$trace.'</pre>';
+    echo '<h1>'.
+      L::t('PHP Exception Caught').
+      '</h1>
+<blockquote>'.
+      L::t('Please copy the displayed text and send it by email to %s.', array($mailto)).
+'</blockquote>
+<div class="exception error name"><pre>'.$exceptionText.'</pre></div>
+<div class="exception error trace"><pre>'.$trace.'</pre></div>';
 
     echo <<<__EOT__
   </body>
 </html>
 __EOT__;
-
   }
 
 } // namespace

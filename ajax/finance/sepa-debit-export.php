@@ -31,11 +31,11 @@ namespace CAFEVDB {
 
   date_default_timezone_set(Util::getTimezone());
   $date = strftime('%Y%m%d-%H%M%S');
-  
+
   Error::exceptions(true);
   $output = '';
   $nl = "\n";
-  
+
   ob_start();
 
   try {
@@ -50,7 +50,7 @@ namespace CAFEVDB {
     $projectName = Util::cgiValue('ProjectName', 'X');
     $table       = Util::cgiValue('Table', '');
     $selectedMandates = array_unique(Util::cgiValue($recordsKey, array()));
-    
+
     if ($projectId < 0 || $projectName == 'X') {
       throw new \InvalidArgumentException($nl.L::t('Project name and/or id are missing'));
     }
@@ -62,13 +62,13 @@ namespace CAFEVDB {
       // $oldIds = $selectedMandates;
       $selectedMandates = InstrumentInsurance::remapToDebitIds($selectedMandates);
       $debitTable = SepaDebitMandates::insuranceTableExport();
-      // throw new \Exception('ID: '.print_r($selectedMandates, true).' old ID '.print_r($oldIds, true).' table '.print_r($debitTable, true));          
+      // throw new \Exception('ID: '.print_r($selectedMandates, true).' old ID '.print_r($oldIds, true).' table '.print_r($debitTable, true));
       $name = $date.'-aqbanking-debit-notes-insurance';
       $calendarProject = Config::getValue('memberTable');
       $calendarTitlePart = L::t('instrument insurances');
       break;
     default:
-      $debitTable = SepaDebitMandates::projectTableExport($projectId);    
+      $debitTable = SepaDebitMandates::projectTableExport($projectId);
       $name = $date.'-aqbanking-debit-notes-'.$projectName;
       $calendarProject = $projectName;
       $calendarTitlePart = $projectName;
@@ -139,10 +139,14 @@ namespace CAFEVDB {
       $sequenceType = $row['sequenceType'];
       if (!isset($acSequenceTables[$sequenceType])) {
         $acSequenceTables[$sequenceType] = array();
-      } 
+      }
       $aqSequenceTables[$sequenceType][] = $row;
     }
-    
+
+    if (count($aqSequenceTables) == 0) {
+      throw new \Exception(L::t("No Debit-Mandates to export?"));
+    }
+
     // Actually export the data.
 
     // The rows of the aqDebitTable must have the following fields:
@@ -173,7 +177,7 @@ namespace CAFEVDB {
 
         // fputcsv() is locale sensitive.
         setlocale(LC_ALL, 'C');
-    
+
         fputcsv($outstream, $aqColumns, ";", '"');
         foreach($aqDebitTable as $row) {
           fputcsv($outstream, array_values($row), ";", '"');
@@ -186,7 +190,7 @@ namespace CAFEVDB {
     } else {
       // export a ZIP-archive
 
-      $tmpdir = get_temp_dir();
+      $tmpdir = \OC::$server->getTempManager()->getTempBaseDir();
       $tmpFile = tempnam($tmpdir, Config::APP_NAME.'.zip');
       if ($tmpFile === false) {
         throw new \RuntimeException(L::t('Unable to create temporay file for zip-archive.'));
@@ -197,15 +201,15 @@ namespace CAFEVDB {
       if ($opened !== true) {
         throw new \RuntimeException(L::t('Unable to open temporary file for zip-archive.'));
       }
-      
+
       foreach($aqSequenceTables as $sequenceType => $debitTable) {
         $sequenceName = $name.'-'.$sequenceType.'.csv';
 
         $outstream = fopen("php://memory", 'w');
-        
+
         // fputcsv() is locale sensitive.
         $oldLocale = setlocale(LC_ALL, 'C');
-    
+
         fputcsv($outstream, $aqColumns, ";", '"');
         foreach($debitTable as $row) {
           fputcsv($outstream, array_values($row), ";", '"');
@@ -230,7 +234,7 @@ namespace CAFEVDB {
 
       unlink($tmpFile);
     }
-    
+
     // It worked out until now. Update the "last issued" stamp and
     // inject proper events into the finance calendar.
 
@@ -246,6 +250,7 @@ namespace CAFEVDB {
                           $calendarProject,
                           $submissionStamp,
                           24*60*60 /* alert one day in advance */);
+
     Finance::financeTask(L::t('Debit notes submission deadline').
                          ', '.
                          $calendarTitlePart,
@@ -279,7 +284,7 @@ namespace CAFEVDB {
       $name .= '-'.$sequenceType.'.csv';
       header('Content-type: text/csv');
     } else {
-      $name .= '.zip';      
+      $name .= '.zip';
       header('Content-type: application/zip');
     }
     header('Content-disposition: attachment;filename='.$name);
@@ -288,13 +293,13 @@ namespace CAFEVDB {
     header('Expires: 0'); // Proxies.
 
     @ob_end_clean();
-      
+
     $outstream = fopen("php://output",'w');
 
     fwrite($outstream, $exportData);
-      
-    fclose($outstream);      
-    
+
+    fclose($outstream);
+
     return true;
 
   } catch (\Exception $e) {
@@ -303,7 +308,7 @@ namespace CAFEVDB {
     @ob_end_clean();
 
     $name = $date.'-CAFEVDB-exception.html';
-    
+
     header('Content-type: text/html');
     header('Content-disposition: inline;filename='.$name);
     header('Cache-Control: max-age=0');
@@ -327,7 +332,7 @@ __EOT__;
       '?subject='.rawurlencode('[CAFEVDB-Exception] Exceptions from Email-Form').
       '&body='.rawurlencode($exceptionText."\r\n".$trace);
     $mailto = '<span class="error email"><a href="mailto:'.$mailto.'">'.$admin['name'].'</a></span>';
-    
+
     echo '<h1>'.
       L::t('PHP Exception Caught').
       '</h1>
