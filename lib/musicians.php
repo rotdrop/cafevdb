@@ -875,9 +875,16 @@ make sure that the musicians are also automatically added to the
       ', '.
       '`Postleitzahl` AS `ZIP`'.
       ', '.
-      '`Telefon` AS `phone`';
+      '`FixedLinePhone` AS `phone`'.
+      ', '.
+      '`MobilePhone` AS `cellphone`';
     $query .= ' FROM `'.self::TABLE.'` WHERE `Id` = '.$musicianId;
-    $result = mySQL::query($query, $handle);
+
+    \OCP\Util::writeLog(Config::APP_NAME,
+                        __METHOD__.' Query: '.$query,
+                        \OCP\Util::DEBUG);
+
+      $result = mySQL::query($query, $handle);
 
     $row = false;
     if ($result !== false && mysql_num_rows($result) == 1) {
