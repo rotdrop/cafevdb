@@ -658,6 +658,10 @@ namespace CAFEVDB
       }
 
       if ((string)$addressBookId != (string)self::MAIN_ADDRESS_BOOK_ID) {
+        // Search for existing contact in main address book?
+        //
+        // Any case: add/update in main address book, then inject the
+        // musician into the instrumentation table
         return false; // for now
       }
 
