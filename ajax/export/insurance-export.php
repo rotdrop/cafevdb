@@ -197,10 +197,12 @@ $table->export(
 
     if ($brokerScope === false) { // setup
       $musician    = $lineData[0];
-      $brokerScope = $lineData[2].' '.$lineData[3];
+      $broker      = $lineData[2];
+      $scope       = $lineData[3];
+      $brokerScope = $broker.$scope;
       $newMusician = true;
 
-      $sheet->setTitle($brokerScope);
+      $sheet->setTitle($broker.' '.$scope);
 
       $sheet->setCellValue("A1", $name.", ".$brokerNames[$lineData[2]]['name']);
       $sheet->setCellValue("A2", $creator." &lt;".$email."&gt;");
@@ -208,7 +210,9 @@ $table->export(
       $sheet->setCellValue("A4", L::t('Geographical Scope').": ".$lineData[3]);
       $sheet->setCellValue("A5", L::t('Date').": ".$humanDate);
     } else {
-      $newScope = $lineData[2].' '.$lineData[3];
+      $broker   = $lineData[2];
+      $scope    = $lineData[3];
+      $newScope = $broker.$scope;
 
       if ($musician != $lineData[0] || $newScope != $brokerScope) {
         dumpMusicianTotal($sheet, $i, $offset++, $rowCnt, $musicianTotal);
@@ -224,7 +228,7 @@ $table->export(
         $objPHPExcel->createSheet();
         $objPHPExcel->setActiveSheetIndex($objPHPExcel->getSheetCount() - 1);
         $sheet = $objPHPExcel->getActiveSheet();
-        $sheet->setTitle($newScope);
+        $sheet->setTitle($broker.' '.$scope);
         $brokerScope = $newScope;
         $offset = $headerOffset - $i + 2;
         $rowCnt = 0;
@@ -340,7 +344,7 @@ for ($sheetIdx = 0; $sheetIdx < $objPHPExcel->getSheetCount(); $sheetIdx++) {
   for($i = 1; $i < $headerOffset; ++$i) {
     $sheet->mergeCells("A".$i.":".$highCol.$i);
   }
-  
+
   // Format the mess a little bit
   $sheet->getStyle("A1:".$highCol.($headerOffset-1))->applyFromArray(
     array(
@@ -366,7 +370,7 @@ for ($sheetIdx = 0; $sheetIdx < $objPHPExcel->getSheetCount(); $sheetIdx++) {
         'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
         'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
         ),
-      
+
       )
     );
 }
@@ -374,18 +378,18 @@ for ($sheetIdx = 0; $sheetIdx < $objPHPExcel->getSheetCount(); $sheetIdx++) {
 /*
  *
  ***************************************************************************/
-  
+
 //setlocale(LC_ALL, $oldlocale);
 
 $tmpdir = ini_get('upload_tmp_dir');
 if ($tmpdir == '') {
-  $tmpdir = sys_get_temp_dir();
+  $tmpdir = \OC::$server->getTempManager()->getTempBaseDir();
 }
 $tmpFile = tempnam($tmpdir, Config::APP_NAME);
 if ($tmpFile === false) {
   return false;
 }
-  
+
 register_shutdown_function(function($file) {
     if (is_file($file)) {
       unlink($file);

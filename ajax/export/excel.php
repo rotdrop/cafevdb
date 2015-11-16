@@ -30,7 +30,7 @@ case 'all-musicians':
   $name  = L::t('musicians');
   break;
 case 'brief-instrumentation':
-  $table = new CAFEVDB\BriefInstrumentation(false);  
+  $table = new CAFEVDB\BriefInstrumentation(false);
   $projectId   = $table->projectId;
   $projectName = $table->projectName;
   $name = L::t("%s-brief", array($projectName));
@@ -313,7 +313,7 @@ if ($table) {
         ++$rowNumber;
         ++$cnt;
         $sheet->setCellValue("A$rowNumber", $instrument);
-        $sheet->setCellValue("B$rowNumber", $number);        
+        $sheet->setCellValue("B$rowNumber", $number);
 
         $sheet->getStyle("A$rowNumber:B$rowNumber")->applyFromArray(
           array(
@@ -348,7 +348,7 @@ if ($table) {
 
   $highCol = $sheet->getHighestColumn();
   $sheet->mergeCells("A1:".$highCol."1");
-  $sheet->mergeCells("A2:".$highCol."2");  
+  $sheet->mergeCells("A2:".$highCol."2");
 
   $sheet->setCellValue("A1", $name.", ".$humanDate);
   $sheet->setCellValue("A2", $creator." &lt;".$email."&gt;");
@@ -378,25 +378,25 @@ if ($table) {
         'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
         'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
             ),
-      
+
       )
     );
 
   /*
    *
    ***************************************************************************/
-  
+
   //setlocale(LC_ALL, $oldlocale);
 
   $tmpdir = ini_get('upload_tmp_dir');
   if ($tmpdir == '') {
-    $tmpdir = sys_get_temp_dir();
+    $tmpdir = \OC::$server->getTempManager()->getTempBaseDir();
   }
   $tmpFile = tempnam($tmpdir, Config::APP_NAME);
   if ($tmpFile === false) {
     return false;
   }
-  
+
   register_shutdown_function(function($file) {
       if (is_file($file)) {
         unlink($file);
