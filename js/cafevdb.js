@@ -1347,6 +1347,10 @@ var CAFEVDB = CAFEVDB || {};
     $('div.tooltip[role=tooltip]').remove();
   };
 
+  $.fn.cafevTooltip.hide = function() {
+    $('[data-original-title]').cafevTooltip('hide');
+  };
+
 })(window, jQuery, CAFEVDB);
 
 $.extend({ alert: function (message, title) {

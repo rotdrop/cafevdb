@@ -32,6 +32,8 @@ var CAFEVDB = CAFEVDB || {};
   SepaDebitMandate.mandateReference = '';
   SepaDebitMandate.instantValidation = true;
 
+  SepaDebitMandate.validationRunning = false;
+
   /**Initialize the mess with contents. The "mess" is a dialog window
    *with the input form element for the bank account data.
    *
@@ -206,7 +208,7 @@ var CAFEVDB = CAFEVDB || {};
             var input = $(this);
             input.on('blur', function(event) {
               self.validate.call(this, event, function(lock) {
-                input.prop('disabled', lock);
+                input.prop('readonly', lock);
               });
             });
             input.focus();
@@ -216,9 +218,12 @@ var CAFEVDB = CAFEVDB || {};
 
         var validateInput = function(event) {
           var input = $(this);
+          if (input.prop('readonly')) {
+            return;
+          }
           self.validate.call(this, event, function(lock) {
             // disable the text field during validation
-            input.prop('disabled', lock);
+            input.prop('readonly', lock);
             // disable save and apply during validation
             if (lock) {
               buttons.save.attr('disabled', true);
@@ -412,19 +417,34 @@ var CAFEVDB = CAFEVDB || {};
 
   /**Validate version for the PME dialog. */
   SepaDebitMandate.validatePME = function(event, validateLockCB) {
-    var element = this;
+    var $element = $(this);
+
+    if ($element.prop('readonly')) {
+      return false;
+    }
 
     if (typeof validateLockCB == 'undefined') {
-      validateLockCB = function(lock) {};
+      validateLockCB = function(lock, validateOk) {};
     }
 
     var validateLock = function() {
-      validateLockCB(true)
+      SepaDebitMandate.validationRunning = true;
+      validateLockCB(true, null)
     };
 
     var validateUnlock = function() {
-      validateLockCB(false)
+      validateLockCB(false, true)
+      SepaDebitMandate.validationRunning = false;
     };
+
+    var validateErrorUnlock = function() {
+      validateLockCB(false, false)
+      SepaDebitMandate.validationRunning = false;
+      $('div.oc-dialog-content').ocdialog('close');
+      $('div.oc-dialog-content').ocdialog('destroy').remove();
+      $.fn.cafevTooltip.hide();
+    };
+
 
     event.preventDefault();
 
@@ -449,7 +469,7 @@ var CAFEVDB = CAFEVDB || {};
         PME_data_BIC: 'bankAccountBIC',
         PME_data_BLZ: 'bankAccountBLZ'
     };
-    var changed = $(this).attr('name');
+    var changed = $element.attr('name');
     changed = inputMapping[changed];
 
     var mandateData = {
@@ -472,9 +492,19 @@ var CAFEVDB = CAFEVDB || {};
     $.post(OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-settings.php'),
            post,
            function (data) {
+             // hack ...
+             if (typeof data.data != 'undefined' &&
+                 data.data.message && data.data.suggestions  && data.data.suggestions !== '') {
+                 var hints = t('cafevdb', 'Suggested alternatives based on common human mis-transcriptions:')
+                           + ' '
+                           + data.data.suggestions
+                           + '. '
+                           + t('cafevdb', 'Please do not accept these alternatives lightly!');
+               data.data.message += hints;
+             }
              if (!CAFEVDB.ajaxErrorHandler(data,
                                            [ 'suggestions', 'message' ],
-                                           validateUnlock)) {
+                                           validateErrorUnlock)) {
                if (data.data.blz) {
                  $('input.bankAccountBLZ').val(data.data.blz);
                }
@@ -484,7 +514,7 @@ var CAFEVDB = CAFEVDB || {};
              $('#cafevdb-page-debug').html(data.data.message);
              $('#cafevdb-page-debug').show();
              if (data.data.value) {
-               $(element).val(data.data.value);
+               $element.val(data.data.value);
              }
              if (data.data.iban) {
                $('input[name="PME_data_IBAN"]').val(data.data.iban);
@@ -611,7 +641,7 @@ var CAFEVDB = CAFEVDB || {};
     var container = PHPMYEDIT.container(containerSel);
 
     // bail out if not for us.
-    var form = container.find('form[class^="pme-form"]');
+    var form = container.find('form.pme-form');
     var dbTable;
     dbTable = form.find('input[value="InstrumentInsurance"]');
     if (dbTable.length > 0) {
@@ -627,13 +657,50 @@ var CAFEVDB = CAFEVDB || {};
     var validateInput = function(event) {
       var input = $(this);
       self.validatePME.call(this, event, function(lock) {
-        input.prop('disabled', lock);
+        input.prop('readonly', lock);
       });
     };
 
     table.find('input[type="text"]').not('tr.pme-filter input').
       off('blur').
       on('blur', validateInput);
+
+    var submitSel = 'input.pme-save,input.pme-apply,input.pme-more';
+    var submitActive = false;
+    form.
+      off('click', submitSel).
+      on('click', submitSel, function(event) {
+      var button = $(this);
+
+      if (submitActive) {
+        button.blur();
+        return false;
+      }
+      submitActive = true;
+
+      var inputs = table.find('input[type="text"]');
+
+      $.fn.cafevTooltip.hide();
+      inputs.prop('readonly', true);
+      button.blur();
+
+      self.validatePME.call({ name: 'PME_data_IBAN' }, event, function(lock, validateOk) {
+        if (lock) {
+          inputs.prop('readonly', true);
+        } else {
+          submitActive = false;
+          button.blur();
+          inputs.prop('readonly', false);
+          if (validateOk) {
+            // submit the form ...
+            form.off('click', submitSel);
+            button.trigger('click');
+          }
+        }
+      });
+
+      return false;
+    });
 
     CAFEVDB.exportMenu(containerSel);
 

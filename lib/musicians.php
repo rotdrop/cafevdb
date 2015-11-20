@@ -928,7 +928,7 @@ make sure that the musicians are also automatically added to the
   /** Check for duplicate records by Id, UUID, firstName, surName.
    *
    * @param[in] array $records Associate array with records to check
-   * for. Supported fields ar Id, UUID, Name and Vorname. Name and
+   * for. Supported fields are Id, UUID, Name and Vorname. Name and
    * Vorname will be combined with an AND junctor, Id and UUID, if
    * present, are added with an OR junctor.
    *
