@@ -25,8 +25,8 @@
 namespace CAFEVDB
 {
 
-/** Helper class for displaying projects.
- */
+  /** Helper class for displaying projects.
+   */
   class Projects
   {
     const CSS_PREFIX = 'cafevdb-page';
