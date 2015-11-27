@@ -118,9 +118,9 @@ namespace CAFEVDB {
       }
 
       // first check whether $imageData is a data-uri.
-      if (preg_match('|^data:(image/[^;]+);base64\\\?,|', $row['Photo'], $matches)) {
+      if (preg_match('|^data:(image/[^;]+);base64\\\?,|', $imageData, $matches)) {
         $mimeType = $matches[1];
-        $imageData = substr($row['Photo'], strlen($matches[0]));
+        $imageData = substr($imageData, strlen($matches[0]));
       } else if (!$mimeType) {
         $image = new \OC_Image();
         if (!$image->loadFromBase64($imageData)) {
