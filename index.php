@@ -116,7 +116,7 @@ namespace CAFEVDB
     \OCP\Util::addScript('cafevdb', '../3rdparty/js/tinymce/jquery.tinymce.min');
     \OCP\Util::addScript('cafevdb', '../3rdparty/js/tinymceinit');
     // CKEditor stuff
-    \OCP\Util::addScript('cafevdb', '../3rdparty/js/ckeditor/ckeditor');
+    \OCP\Util::addScript('cafevdb', '../3rdparty/js/ckeditor/ckeditor.min');
     \OCP\Util::addScript('cafevdb', '../3rdparty/js/ckeditor/adapters/jquery');
 
     // Updated chosen version
