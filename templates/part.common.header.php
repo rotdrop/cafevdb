@@ -167,7 +167,7 @@ namespace CAFEVDB {
             <?php echo L::t('#Rows/Page in Tables'); ?>
           </label>
         </li>
-        <li class="<?php echo $expertClass; ?>">
+        <li>
           <a id="app-settings-further-settings"
              class="settings generalsettings tooltip-top"
              title="<?php echo Config::tooltips('further-settings'); ?>"
