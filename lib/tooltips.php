@@ -74,6 +74,8 @@ same effect as clicking the close button on top of the dialog-window. No email w
 
         'configrecheck' => L::t('Perform the configuration checks again. If all checks have been passed then you are led on to the ordinary entry page of the application.'),
 
+        'debug-mode' => '',
+
         'delete-all-event-attachments' => L::t('Clear the list of selected event-attachments. Of course, this does not delete the events from their respective calendar, it just de-selects all events such that no event will be attached to the email.'),
 
         'delete-all-file-attachments' => L::t('Delete all uploaded file-attachments from the server. This is also done automatically when closing the email-form. This will also empty the select box.'),
@@ -90,6 +92,8 @@ or from the complement set. Obviously, selecting both options will
 give you the choice to select any musician as recipient.'),
 
         'email-recipients-broken-emails' => L::t('List of musicians without or with ill-formed email-addresses. You can click on the names in order to open a dialog with the personal data of the respective musician and correct the email addresses there.'),
+
+        'email-recipients-choices' => '',
 
         'email-recipients-except-project' => L::t('Choose among all musicians currently <b>NOT</b> registered for this project.'),
 
@@ -133,7 +137,15 @@ are excluded from receiving mass-email. Please be careful when modifying the def
 
         'executive-board-project' => L::t('Name of the pseudo-project listing the members of the executive board.'),
 
+        'expert-mode' => '',
+
+        'expert-operations' => '',
+
         'file-attachments-select' => L::t('Select-box with all currently uploaded attachments. Note that a file will only be attached to a message if it is also checked in this select box.'),
+
+        'filter-visibility' => '',
+
+        'further-settings' => '',
 
         'member-status' => L::t('A flag which indicates not so much social or functional status, but
 default behaviour for mass-emails as follows
@@ -163,6 +175,8 @@ in the email form.'),
         'musician-orchestra-tab' => '',
 
         'new-email-template' => L::t('Enter a short, no-nonsense name for the new template. Please omit spaces.'),
+
+        'new-project-event' => '',
 
         'nothing' => L::t('nothing'),
 
@@ -526,11 +540,15 @@ the `Debug\' tab'),
 
         'shareowner-force' => '',
 
+        'show-tool-tips' => '',
+
         'sourcecode-link' => '',
 
         'sourcedocs-link' => '',
 
         'syncevents' => L::t('Recompute the link between projects and events, using the event-categories as primary key.'),
+
+        'table-rows-per-page' => '',
 
         'test-cafevdb_dbpassword' => '',
 

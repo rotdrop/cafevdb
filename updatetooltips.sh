@@ -1,10 +1,12 @@
 #! /bin/bash
 DIRS="lib ajax templates js"
 FUNC=Config::toolTips
-RE="s/.*"${FUNC}"(['\"]\([^'\"]\\+\)['\"]).*/\\1/g"
+RE="s/.*"${FUNC}"(['\"]\([^'\"]\\+\)['\"]).*/\\1/gI"
 OUTPUT=lib/tooltips.txt
 for dir in $DIRS; do
-    find $dir -name "*.php" -exec fgrep -h ${FUNC} {} \;|sed $RE|sort -u
+    find $dir -name "*.php" -exec fgrep -ih ${FUNC} {} \;|\
+        sed -e $RE |\
+        sort -u
 done > $OUTPUT
 
 php lib/tooltipsort.php

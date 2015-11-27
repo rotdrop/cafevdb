@@ -61,7 +61,7 @@ namespace CAFEVDB
       }
       return self::\$toolTipsData;
     }
-    static private function makeToolTips() 
+    static private function makeToolTips()
     {
       return array(
 ";
@@ -69,7 +69,7 @@ namespace CAFEVDB
   // Footer part
   $footer = "
         );
-    
+
     }
   }; // class toolTips
 
@@ -86,13 +86,13 @@ namespace CAFEVDB
   // Basic indent
   $indent = "        ";
   $subIndent = "  ";
-  
-  class L 
+
+  class L
   {
     public static function t($text) {
       return "L::t('".str_replace("'","\'",$text)."')";
     }
-  
+
   };
 
   function arrayRecursiveDiff($aArray1, $aArray2) {
@@ -152,7 +152,7 @@ namespace CAFEVDB
     }
     $output .= $indent."'$key' => $strValue\n";
   }
-  $output .= $footer;  
+  $output .= $footer;
 
   file_put_contents(__DIR__.'/tooltips.php.new', $output);
 
