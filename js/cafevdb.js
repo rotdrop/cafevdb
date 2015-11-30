@@ -1277,7 +1277,7 @@ var CAFEVDB = CAFEVDB || {};
     if (CAFEVDB.toolTipsEnabled) {
       $.fn.cafevTooltip.enable();
     } else {
-      $.fn.cafevTooltip.enable();
+      $.fn.cafevTooltip.disable();
     }
   };
 
