@@ -33,8 +33,6 @@ namespace CAFEVDB {
   \OCP\JSON::checkAppEnabled('cafevdb');
   \OCP\JSON::callCheck();
 
-  $handle = false;
-
   Error::exceptions(true);
 
   ob_start();
@@ -52,15 +50,15 @@ namespace CAFEVDB {
     $projectName = Util::cgiValue('ProjectName', -1);
     $musicianId = Util::cgiValue('MusicianId', -1);
 
-    $musiciansIds = array();
+    $musicianIds = array();
     if ($musicianId !== -1) {
-      $musiciansIds[] = $musicianId;
+      $musicianIds[] = $musicianId;
     } else {
       $pmepfx       = Config::$pmeopts['cgi']['prefix']['sys'];
-      $musiciansKey = $pmepfx.'mrecs';
-      $musiciansIds = Util::cgiValue($musiciansKey, array());
+      $musicianKeys = $pmepfx.'mrecs';
+      $musicianIds  = Util::cgiValue($musicianKeys, array());
     }
-    $numRecords   = count($musiciansIds);
+    $numRecords   = count($musicianIds);
 
     if ($numRecords == 0) {
       $debugText .= ob_get_contents();
@@ -86,110 +84,23 @@ namespace CAFEVDB {
       return false;
     }
 
-    Config::init();
-    $handle = mySQL::connect(Config::$pmeopts);
-
-    $projectInstruments = Projects::fetchInstrumentation($projectId, $handle);
-    if ($projectInstruments === false) {
-      mySQL::close($handle);
+    $result = Instrumentation::addMusicians($musicianIds, $projectId);
+    if ($result === false) {
       $debugText .= ob_get_contents();
       @ob_end_clean();
 
       \OCP\JSON::error(
         array(
           'data' => array('error' => L::t('Data Base Error'),
-                          'message' => L::t('Failed to fetch the project\'s instrumentation'),
+                          'message' => L::t('Early setup error.'),
                           'debug' => $debugText)));
       return false;
     }
 
-    $failedMusicians = array();
-    $addedMusicians = array();
-    foreach ($musiciansIds as $musicianId) {
-      $musRow = Musicians::fetchMusicianPersonalData($musicianId, $handle);
-      if ($musRow === false) {
-        $failedMusicians[] = array('id' => $musicianId,
-                                   'caption' => L::t('Data Base error'),
-                                   'message' => L::t('Unable to fetch musician\'s personal information for id %d, data-base error: %s',
-                                                     array($musicianId, mySQL::error())));
-        continue;
-      }
-      $musInstruments = explode(',', $musRow['Instrumente']);
-
-      $fullName = $musRow['Vorname']." ".$musRow['Name'];
-
-      $musProjectData = Instrumentation::fetchByMusicianid($musicianId, $projectId, $handle);
-      if ($musRow === false) {
-        $failedMusicians[] = array('id' => $musicianId,
-                                   'caption' => L::t('Data Base error'),
-                                   'message' => L::t('Unable to fetch musician\'s project information for id %d, data-base error: %s',
-                                                     array($musicianId, mySQL::error())));
-        continue;
-      }
-
-      $musicianProjectInstruments = array();
-      if (count($musProjectData) > 0) {
-        foreach($musProjectData as $row) {
-          $musicianProjectInstruments[] = $row['ProjektInstrument'];
-        }
-        $notice .= L::t("The musician %s is already registered for the project with the ".
-                        "instruments %s.",
-                        array($fullName, implode(',', $musicianProjectInstruments)));
-      }
-
-      $both = array_values(array_intersect($projectInstruments, $musInstruments));
-
-      if (!empty($both)) {
-        $leftOver = array_values( array_diff($both, $musicianProjectInstruments));
-        if (!empty($leftOver)) {
-          $musInstrument = $leftOver[0];
-        } else {
-          $musInstrument = null;
-        }
-      } else if (!empty($musInstruments)) {
-        $musInstrument = $musInstruments[0];
-        $notice .= L::t("None of the instruments known by %s are mentioned in the "
-                        ."instrumentation-list for the project. "
-                        ."The musician is added nevertheless to the project with the instrument `%s'",
-                        array($fullName, $musInstrument));
-      } else {
-        $musInstrument = null;
-        $notice .= L::t("The musician %s doesn't seem to play any instrument ...",
-                        array($fullName));
-      }
-
-      $fees = Projects::fetchFees($projectId, $handle);
-      $values = array('MusikerId' => $musicianId,
-                      'ProjektId' => $projectId,
-                      'Instrument' => $musInstrument,
-                      'Unkostenbeitrag' => $fees);
-      $instrumentationId = -1;
-      if (mySQL::insert('Besetzungen', $values, $handle) === false) {
-        $failedMusicians[] = array('id' => $musicianId,
-                                   'caption' => L::t('Adding %s (id = %d) failed.',
-                                                     array($fullName, $musicianId)),
-                                   'message' => mySQL::error());
-        continue;
-      }
-      $numRows = mySQL::changedRows($handle);
-      $instrumentationId = mySQL::newestIndex($handle);
-      if ($instrumentationId === false || $instrumentationId === 0) {
-        $failedMusicians[] = array('id' => $musicianId,
-                                   'caption' => L::t('Unable to get the new id for %s (id = %d)',
-                                                     array($fullName, $musicianId)),
-                                   'message' => mySQL::error());
-        continue;
-      }
-      mySQL::logInsert('Besetzungen', $instrumentationId, $values, $handle);
-      mySQL::storeModified($projectId, 'Projekte', $handle);
-
-      $addedMusicians[] = array('musicianId' => $musicianId,
-                                'rows' => $numRows,
-                                'instrumentationId' => $instrumentationId);
-    }
+    $failedMusicians = $result['failed'];
+    $addedMusicians  = $result['added'];
 
     if ($numRecords == count($failedMusicians)) {
-      mySQL::close($handle);
       $debugText .= ob_get_contents();
       @ob_end_clean();
 
@@ -197,7 +108,7 @@ namespace CAFEVDB {
                       count($failedMusicians));
 
       foreach ($failedMusicians as $failure) {
-        $message .= ' '.$failure['caption'].' '.print_r($failure['message'], true);
+        $message .= ' '.$failure['notice'].' '.'SQL-error: '.$faliure['sqlerror'];
       }
 
       \OCP\JSON::error(
@@ -207,6 +118,14 @@ namespace CAFEVDB {
                           'debug' => $debugText)));
       return false;
     } else {
+      $debugText .= ob_get_contents();
+      @ob_end_clean();
+
+      $notice = '';
+      foreach ($addedMusicians as $newItem) {
+        $notice .= $newItem['notice'];
+      }
+
       \OCP\JSON::success(
         array(
           'data' => array(
@@ -221,22 +140,30 @@ namespace CAFEVDB {
 
   } catch (\Exception $e) {
 
-    if ($handle !== false) {
-      mySQL::close($handle);
-    }
     $debugText .= ob_get_contents();
     @ob_end_clean();
 
-    // For whatever reason we need to entify quotes, otherwise jquery throws an error.
+    $exceptionText = $e->getFile().'('.$e->getLine().'): '.$e->getMessage();
+    $trace = $e->getTraceAsString();
+
+    $admin = Config::adminContact();
+
+    $mailto = $admin['email'].
+      '?subject='.rawurlencode('[CAFEVDB-Exception] Exception while adding musicians').
+      '&body='.rawurlencode($exceptionText."\r\n".$trace);
+    $mailto = '<span class="error email"><a href="mailto:'.$mailto.'">'.$admin['name'].'</a></span>';
+
     \OCP\JSON::error(
       array(
         'data' => array(
+          'caption' => L::t('PHP Exception Caught'),
           'error' => 'exception',
-          'message' => L::t('Error, caught an exception'),
-          'debug' => $debugText,
-          'exception' => $e->getFile().'('.$e->getLine().'): '.$e->getMessage(),
-          'trace' => $e->getTraceAsString(),
-          'debug' => $debugText)));
+          'exception' => $exceptionText,
+          'trace' => $trace,
+          'message' => L::t('Error, caught an exception. '.
+                            'Please copy the displayed text and send it by email to %s.',
+                            array($mailto)),
+          'debug' => htmlspecialchars($debugText))));
 
     return false;
 

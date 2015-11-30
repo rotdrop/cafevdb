@@ -216,7 +216,7 @@ namespace CAFEVDB
           'lastmodified' =>  $this->lastModifiedAddressbook($addressBookId),
           'owner' => $this->userid, //  $this->shareOwner,
           'uri' => self::makeURI(self::MAIN_ADDRESS_BOOK),
-          'permissions' => \OCP\PERMISSION_READ|\OCP\PERMISSION_UPDATE,
+          'permissions' => \OCP\PERMISSION_ALL, // \OCP\PERMISSION_READ|\OCP\PERMISSION_UPDATE,
           );
       } else {
         if (isset($options['projectid']) && isset($options['projectname'])) {
@@ -254,7 +254,7 @@ namespace CAFEVDB
           'lastmodified' => $this->lastModifiedAddressbook($addressBookId),
           'owner' => $this->userid, // $this->shareOwner,
           'uri' => self::makeURI($projectName),
-          'permissions' => \OCP\PERMISSION_READ|\OCP\PERMISSION_UPDATE,
+          'permissions' => \OCP\PERMISSION_ALL, // \OCP\PERMISSION_READ|\OCP\PERMISSION_UPDATE,
           );
       }
     }
@@ -657,14 +657,6 @@ namespace CAFEVDB
         return null;
       }
 
-      if ((string)$addressBookId != (string)self::MAIN_ADDRESS_BOOK_ID) {
-        // Search for existing contact in main address book?
-        //
-        // Any case: add/update in main address book, then inject the
-        // musician into the instrumentation table
-        return false; // for now
-      }
-
       $uri = isset($options['uri']) ? $options['uri'] : null;
 
       if (!$contact instanceof \Sabre\VObject\Component\VCard &&
@@ -696,40 +688,82 @@ namespace CAFEVDB
         $uuid = Musicians::generateUUID($handle);
         $contact->UID = $uuid;
       }
+      $uuid = (string)$contact->UID;
 
-      $now = new \DateTime;
-      $contact->REV = $now->format(\DateTime::W3C);
+      // check if an entry with this uid already exists.
+      //
+      // musicians address-book -> error
+      //
+      // project address-book -> ok, but don't add a new musician to
+      // the global musicians table
+      if (!Musicians::findDuplicates(array('UUID' => $uuid), $handle)) {
+        $now = new \DateTime;
+        $contact->REV = $now->format(\DateTime::W3C);
 
-      // generate the data-line
-      $row = VCard::import($contact->serialize());
+        // generate the data-line
+        $row = VCard::import($contact->serialize());
 
-      if (isset($row['Portrait'])) {
-        $img = new InlineImage(self::MAIN_CONTACTS_TABLE);
-        if (!$img->store($me['Id'], $row['Portrait'], $handle)) {
+        if (isset($row['Portrait'])) {
+          $img = new InlineImage(self::MAIN_CONTACTS_TABLE);
+          if (!$img->store($me['Id'], $row['Portrait'], $handle)) {
+            mySQL::close($handle);
+            return false;
+          }
+          unset($row['Portrait']);
+        }
+
+        unset($row['Projects']);
+
+        // the remaining part should contain valid fields for the Musiker table
+
+        if (!mySQL::insert(self::MAIN_CONTACTS_TABLE, $row, $handle)) {
+          mySQL::close($handle);
           return false;
         }
-        unset($row['Portrait']);
-      }
-
-      unset($row['Projects']);
-
-      // the remaining part should contain valid fields for the Musiker table
-
-      if (!mySQL::insert(self::MAIN_CONTACTS_TABLE, $row, $handle)) {
+        $id = mySQL::newestIndex($handle);
+        mySQL::logInsert(self::MAIN_CONTACTS_TABLE, $id, $row, $handle);
+      } else if ((string)$addressBookId == (string)self::MAIN_ADDRESS_BOOK_ID) {
+        // don't add duplicates
+        mySQL::close($handle);
         return false;
       }
-      $id = mySQL::newestIndex($handle);
-      mySQL::logInsert(self::MAIN_CONTACTS_TABLE, $id, $row, $handle);
 
-      // if this is not the main address-book, we also need to add the
-      // contact into the "Besetzungen" table.
+      if ((string)$addressBookId != (string)self::MAIN_ADDRESS_BOOK_ID) {
+        // if this is not the main address-book, we also need to add the
+        // contact into the "Besetzungen" table.
+
+        $projectId = self::projectId($addressBookId);
+        $result = Instrumentation::addMusicians($uuid, $projectId, $handle);
+        if ($result === false ||
+            !is_array($result) ||
+            !isset($result['added']) || !isset($result['failed'])) {
+          \OCP\Util::writeLog(Config::APP_NAME,
+                              __METHOD__.
+                              ': failed to add musician '.$uuid.' to project '.$projectId,
+                              \OCP\Util::ERROR);
+        }
+        if (count($result['added']) != 1) {
+          \OCP\Util::writeLog(Config::APP_NAME,
+                              __METHOD__.
+                              ': failed to add musician '.$uuid.' to project '.$projectId.
+                              ' Reported error: '.print_r($result, true),
+                              \OCP\Util::ERROR);
+          mySQL::close($handle);
+          return false;
+        } else {
+          \OCP\Util::writeLog(Config::APP_NAME,
+                              __METHOD__.
+                              ': added musician '.$uuid.' to project '.$projectId.
+                              ' Reported result: '.print_r($result['added'][0], true),
+                              \OCP\Util::DEBUG);
+        }
+      }
 
       mySQL::close($handle);
 
-      $contactId = self::contactId($addressBookId, $row['UUID']);
+      $contactId = self::contactId($addressBookId, $uuid);
 
       return $contactId;
-      //return false;
     }
 
     /**
@@ -908,6 +942,117 @@ namespace CAFEVDB
       mySQL::close($handle);
 
       return $result;
+    }
+
+    /**
+     * Deletes a contact. Note: we do not allow to remove something
+     * from the Musiker table. We simply pretend it worked, but do
+     * nothing. We support removing musicians from specific projects.
+     *
+     * @param string $addressBookId
+     * @param false|string $id
+     * @param array $options - Optional (backend specific options)
+     * @see getContact
+     * @return bool
+     */
+    public function deleteContact($addressBookId, $id, array $options = array())
+    {
+      if (!$this->accessAllowed()) {
+        return null;
+      }
+
+      if (is_array($id)) {
+        if (isset($id['id'])) {
+          \OCP\Util::writeLog(Config::APP_NAME,
+                              __METHOD__.': '. 'Called for id '.$id['id'],
+                              \OCP\Util::DEBUG);
+          $id = $id['id'];
+        } elseif (isset($id['uri'])) {
+          // the URI is the UUID.vcf, just strip the suffix
+          \OCP\Util::writeLog(Config::APP_NAME,
+                              __METHOD__.': '. 'Called for uri '.$id['uri'],
+                              \OCP\Util::DEBUG);
+          $id = substr($id['uri'], 0, -4);
+        } else {
+          throw new \Exception(
+            __METHOD__ . ': If second argument is an array, either \'id\' or \'uri\' has to be set.'
+            );
+        }
+      }
+
+      /* \OCP\Util::writeLog(Config::APP_NAME, */
+      /*                     __METHOD__.': '. 'Called for '.$id, */
+      /*                     \OCP\Util::DEBUG); */
+
+      $idParts = self::parseContactId($id);
+      if (!isset($idParts['uuid']) || !isset($idParts['addressbook']) ||
+          ($addressBookId && $idParts['addressbook'] !== $addressBookId)) {
+        throw new \Exception(
+          __METHOD__ . ': Invalid id: '.$id.' for book '.(string)$addressBookId.'.'
+          );
+      }
+
+      if (!$addressBookId) {
+        $addressBookId = $idParts['addressbook'];
+      }
+      $uuid = $idParts['uuid'];
+
+      if ((string)$addressBookId == (string)self::MAIN_ADDRESS_BOOK_ID) {
+        \OCP\Util::writeLog(Config::APP_NAME,
+                            __METHOD__.': deleting of '.$uuid.' from '.$addressBookId.' denied.',
+                            \OCP\Util::DEBUG);
+        return true; // cheat
+      }
+
+      /**Then $addressBookId must correspond to a project. Deleting
+       * the contact may indeed more than one entry from the
+       * Besetzungen table in case the musician plays more than one
+       * instrument in the same project.
+       */
+
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+
+      $projectId = self::projectId($addressBookId);
+      $projectName = Projects::fetchName($projectId, $handle);
+      if (empty($projectName) ||
+          self::addressBookId($projectName, $projectId) !== $addressBookId) {
+        mySQL::close($handle);
+        return false;
+      }
+
+      /* as the project address-books also just use the UUIDs we
+       * simply can fetch from the global Musiker table
+       */
+      $table = self::MAIN_CONTACTS_TABLE;
+      $where = "WHERE `UUID` LIKE '".$uuid."'";
+      $id = mySQL::selectSingleFromTable("`Id`", $table, $where, $handle);
+      if ($id === false) {
+        mySQL::close($handle);
+        return false;
+      }
+
+      $old = Instrumentation::fetchByMusicianId($id, $projectId, $handle);
+      if (!is_array($old)) {
+        mySQL::close($handle);
+        return false;
+      }
+
+      $query = "DELETE FROM `Besetzungen`
+  WHERE `MusikerId` = ".$id." AND `ProjektId` = ".$projectId;
+      $result = mySQL::query($query, $handle);
+      if (!$result) {
+        mySQL::close($handle);
+        return false;
+      }
+
+      foreach ($old as $row) {
+        mySQL::logDelete('Besetzungen', 'Id', $row, $handle);
+      }
+
+      mySQL::close($handle);
+
+      return true;
     }
 
     /**As changing just anything potentially changes anything by

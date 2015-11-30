@@ -782,7 +782,7 @@ make sure that the musicians are also automatically added to the
   }
 
   /**Fetch all known data from the Musiker table for the respective musician.  */
-  public static function fetchMusicianPersonalData($musicianId, $handle = false)
+  public static function fetchMusicianById($musicianId, $handle = false)
   {
     $ownConnection = $handle === false;
 
@@ -792,6 +792,32 @@ make sure that the musicians are also automatically added to the
     }
 
     $query = "SELECT * FROM `".self::TABLE."` WHERE `Id` = $musicianId";
+
+    $result = mySQL::query($query, $handle);
+    if ($result !== false && mysql_num_rows($result) == 1) {
+      $row = mySQL::fetch($result);
+    } else {
+      $row = false;
+    }
+
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $row;
+  }
+
+  /**Fetch all known data from the Musiker table for the respective musician.  */
+  public static function fetchMusicianByUUID($musicianUUID, $handle = false)
+  {
+    $ownConnection = $handle === false;
+
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
+    $query = "SELECT * FROM `".self::TABLE."` WHERE `UUID` = '$musicianUUID'";
 
     $result = mySQL::query($query, $handle);
     if ($result !== false && mysql_num_rows($result) == 1) {

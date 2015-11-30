@@ -388,6 +388,179 @@ class Instrumentation
     return $data;
   }
 
+  /**Add musicians to a given project. The functions tries to make
+   * some not-absurd choice for the project instrument, given the
+   * instrument the musician is playing and the instruments needed by
+   * the project.
+   *
+   * @param[in] mixed $musicians
+   * - integer: single id
+   * - string: single UUID
+   * - array: flat array of integers meaning ids and/or strings meaning UUIDs.
+   *
+   * @param[in] $projectId Project id.
+   *
+   * @param[in] $handle Database handle, optional.
+   *
+   * @return array('added' => array('id' => MUSID, 'instrumentationId' => BESETZUNGENID,
+   *                                'notice' => STR),
+   *               'failed' => array('id' => MUSID,
+   *                                 'notice' => STR,
+   *                                 'sqlerror' => STR))
+   *
+   * Or === false, if operation failed early.
+   */
+  public static function addMusicians($musicians, $projectId, $handle = false)
+  {
+    $ownConnection = $handle === false;
+
+    $failed = array();
+    $added = array();
+
+    if (is_scalar($musicians)) {
+      $musicians = array($musicians);
+    }
+    if (!is_array($musicians)) {
+      return false;
+    }
+
+    foreach ($musicians as $ident) {
+      if (!is_numeric($ident) && !is_string($ident)) {
+        return false;
+      }
+      if (!is_numeric($ident) && strlen($ident) != 36) {
+        return false;
+      }
+    }
+
+    $numRecords = count($musicians);
+    if ($numRecords == 0) {
+      return array('added' => $added,
+                   'failed' => $failed);
+    }
+
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
+    $projectInstruments = Projects::fetchInstrumentation($projectId, $handle);
+    if ($projectInstruments === false) {
+      if ($ownConnection) {
+        mySQL::close($handle);
+      }
+      return false;
+    }
+
+    foreach ($musicians as $ident) {
+      $notice = '';
+
+      if (is_numeric($ident)) {
+        $musRow = Musicians::fetchMusicianById($ident, $handle);
+      } else {
+        $musRow = Musicians::fetchMusicianByUUID($ident, $handle);
+      }
+      if ($musRow === false) {
+        $failed = array(
+          'id' => $ident,
+          'notice' => L::t('Unable to fetch musician\'s personal information for id %d',
+                           array($ident)),
+          'sqlerror' => mySQL::error());
+        continue;
+      }
+
+      $musicianId = $musRow['Id'];
+      $musInstruments = explode(',', $musRow['Instrumente']);
+      $fullName = $musRow['Vorname']." ".$musRow['Name'];
+
+      $musProjectData = Instrumentation::fetchByMusicianId($musicianId, $projectId, $handle);
+      if ($musProjectData === false) {
+        $failed[] = array(
+          'id' => $musicianId,
+          'notice' => L::t('Unable to fetch musician\'s project information for id %d.',
+                           array($musicianId)),
+          'sqlerror' => mySQL::error());
+        continue;
+      }
+
+      // Try to make likely default choice for the project instrument
+      $musicianProjectInstruments = array();
+      if (count($musProjectData) > 0) {
+        foreach($musProjectData as $row) {
+          $musicianProjectInstruments[] = $row['ProjektInstrument'];
+        }
+        $notice .= L::t("The musician %s is already registered for the project with the ".
+                        "instruments %s.",
+                        array($fullName, implode(',', $musicianProjectInstruments)));
+      }
+
+      $both = array_values(array_intersect($projectInstruments, $musInstruments));
+
+      if (!empty($both)) {
+        $leftOver = array_values( array_diff($both, $musicianProjectInstruments));
+        if (!empty($leftOver)) {
+          $musInstrument = $leftOver[0];
+        } else {
+          $musInstrument = null;
+        }
+      } else if (!empty($musInstruments)) {
+        $musInstrument = $musInstruments[0];
+        $notice .= L::t("None of the instruments known by %s are mentioned in the "
+                        ."instrumentation-list for the project. "
+                        ."The musician is added nevertheless to the project with the instrument `%s'",
+                        array($fullName, $musInstrument));
+      } else {
+        $musInstrument = null;
+        $notice .= L::t("The musician %s doesn't seem to play any instrument ...",
+                        array($fullName));
+      }
+
+      // Default project fees
+      $fees = Projects::fetchFees($projectId, $handle);
+
+      // Values to insert
+      $values = array('MusikerId' => $musicianId,
+                      'ProjektId' => $projectId,
+                      'Instrument' => $musInstrument,
+                      'Unkostenbeitrag' => $fees);
+
+      // do it ...
+      $instrumentationId = -1;
+      if (mySQL::insert('Besetzungen', $values, $handle) === false) {
+        $failed[] = array('id' => $musicianId,
+                          'notice' => L::t('Adding %s (id = %d) failed.',
+                                           array($fullName, $musicianId)),
+                          'sqlerror' => mySQL::error());
+        continue;
+      }
+      $instrumentationId = mySQL::newestIndex($handle);
+      if ($instrumentationId === false || $instrumentationId === 0) {
+        $failed[] = array('id' => $musicianId,
+                          'notice' => L::t('Unable to get the new id for %s (id = %d)',
+                                           array($fullName, $musicianId)),
+                          'sqlerror' => mySQL::error());
+        continue;
+      }
+
+      // update the log
+      mySQL::logInsert('Besetzungen', $instrumentationId, $values, $handle);
+      mySQL::storeModified($projectId, 'Projekte', $handle);
+
+      $added[] = array(
+        'musicianId' => $musicianId, // keep for debugging
+        'instrumentationId' => $instrumentationId, // <- required
+        'notice' => $notice
+        );
+    }
+
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return array('added' => $added, 'failed' => $failed);
+  }
+
+
 
 };
 
