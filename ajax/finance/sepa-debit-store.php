@@ -92,7 +92,7 @@ namespace CAFEVDB {
           'debug' => htmlspecialchars($debugText))));
     return false;
   } catch (\Exception $e) {
-    
+
     $debugText .= ob_get_contents();
     @ob_end_clean();
 
@@ -102,7 +102,7 @@ namespace CAFEVDB {
     $admin = Config::adminContact();
 
     $mailto = $admin['email'].
-      '?subject='.rawurlencode('[CAFEVDB-Exception] Exceptions from Email-Form').
+      '?subject='.rawurlencode('[CAFEVDB-Exception] Exception while storing debit mandate').
       '&body='.rawurlencode($exceptionText."\r\n".$trace);
     $mailto = '<span class="error email"><a href="mailto:'.$mailto.'">'.$admin['name'].'</a></span>';
 
