@@ -1169,12 +1169,14 @@ var CAFEVDB = CAFEVDB || {};
       }
       var tooltipClasses = classAttr.match(/tooltip-[a-z-]+/g);
       if (tooltipClasses) {
+alert('Tooltip Options: '+tooltipClasses.length);
         var idx;
         for(idx = 0; idx < tooltipClasses.length; ++idx) {
           var tooltipClass = tooltipClasses[idx];
           var placement = tooltipClass.match(/^tooltip-(bottom|top|right|left)$/);
           if (placement && placement.length == 2 && placement[1].length > 0) {
             classOptions.placement = 'auto '+placement[1];
+alert('Tooltip Options: '+CAFEVDB.print_r(classOptions, true));
             continue;
           }
           extraClass = tooltipClass;
@@ -1270,7 +1272,9 @@ var CAFEVDB = CAFEVDB || {};
       { placement:'bottom', cssclass:'tooltip-wide' }
     );
 
-    container.find('[class*="tooltip-"]').cafevTooltip({});
+    container.find('[class*="tooltip-"]').each(function(indx) {
+      $(this).cafevTooltip({});
+    });
 
     // Tipsy greedily enables itself when attaching it to elements, so
     // ...
@@ -1293,7 +1297,7 @@ var CAFEVDB = CAFEVDB || {};
         placement:'auto top',
         cssclass:[]
       }
-      argument = $.extend(options, argument);
+      argument = $.extend({}, options, argument);
       if (typeof argument.placement == 'string' && !argument.placement.match(/auto/)) {
         argument.placement = 'auto '+argument.placement;
       }
@@ -1301,26 +1305,6 @@ var CAFEVDB = CAFEVDB || {};
         argument.cssclass = [ argument.cssclass ];
       }
       argument.cssclass.push('cafevdb');
-      var classAttr = this.attr('class');
-      if (classAttr) {
-        if (classAttr.match(/tooltip-off/) !== null) {
-          this.cafevTooltip('disable');
-          return this;
-        }
-        var tooltipClasses = classAttr.match(/tooltip-[a-z-]+/g);
-        if (tooltipClasses) {
-          var idx;
-          for(idx = 0; idx < tooltipClasses.length; ++idx) {
-            var tooltipClass = tooltipClasses[idx];
-            var placement = tooltipClass.match(/^tooltip-(bottom|top|right|left)$/);
-            if (placement && placement.length == 2 && placement[1].length > 0) {
-              argument.placement = 'auto '+placement[1];
-              continue;
-            }
-            argument.cssclass.push(tooltipClass);
-          }
-        }
-      }
       if (!argument.template) {
         argument.template = '<div class="tooltip '
                        + argument.cssclass.join(' ')
@@ -1329,9 +1313,43 @@ var CAFEVDB = CAFEVDB || {};
                        + '<div class="tooltip-inner"></div>'
                        + '</div>';
       }
-      $.fn.tooltip.call(this, 'destroy');
+      // iterator over individual element in order to pick up the
+      // correct class-arguments.
+      this.each(function(index) {
+        var self = $(this);
+        var selfOptions = $.extend({}, argument);
+        var classAttr = self.attr('class');
+        if (classAttr) {
+          if (classAttr.match(/tooltip-off/) !== null) {
+            self.cafevTooltip('disable');
+            return;
+          }
+          var tooltipClasses = classAttr.match(/tooltip-[a-z-]+/g);
+          if (tooltipClasses) {
+            var idx;
+            for(idx = 0; idx < tooltipClasses.length; ++idx) {
+              var tooltipClass = tooltipClasses[idx];
+              var placement = tooltipClass.match(/^tooltip-(bottom|top|right|left)$/);
+              if (placement && placement.length == 2 && placement[1].length > 0) {
+                selfOptions.placement = 'auto '+placement[1];
+                continue;
+              }
+              selfOptions.cssclass.push(tooltipClass);
+            }
+          }
+        }
+        $.fn.tooltip.call(self, 'destroy');
+        var originalTitle = self.data('original-title');
+        if (originalTitle && !self.attr('title')) {
+          self.attr('title', originalTitle);
+        }
+        self.removeAttr('data-original-title');
+        self.removeData('original-title');
+        $.fn.tooltip.call(self, selfOptions);
+      });
+    } else {
+      $.fn.tooltip.call(this, argument);
     }
-    $.fn.tooltip.call(this, argument);
     return this;
   };
 
