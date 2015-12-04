@@ -1329,7 +1329,11 @@ __EOT__;
         $value = L::t("View all Projects");
         $title = L::t("Overview over all known projects (start-page).");
         if ($asListItem) {
-          $post = array('Projects' => $value, 'Template' => 'projects');
+          $year = date("Y");
+          $post = array('Projects' => $value,
+                        'Template' => 'projects',
+                        'PME_sys_qf1_comp' => '>=',
+                        'PME_sys_qf1' => $year);
         } else {
           $form =<<<__EOT__
 <form class="cafevdb-control" id="$controlid" method="post" action="">
