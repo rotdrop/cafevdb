@@ -74,7 +74,7 @@ same effect as clicking the close button on top of the dialog-window. No email w
 
         'configrecheck' => L::t('Perform the configuration checks again. If all checks have been passed then you are led on to the ordinary entry page of the application.'),
 
-        'debug-mode' => '',
+        'debug-mode' => L::t("Amount of debug output. Keep this disabled for normal use."),
 
         'delete-all-event-attachments' => L::t('Clear the list of selected event-attachments. Of course, this does not delete the events from their respective calendar, it just de-selects all events such that no event will be attached to the email.'),
 
@@ -137,15 +137,16 @@ are excluded from receiving mass-email. Please be careful when modifying the def
 
         'executive-board-project' => L::t('Name of the pseudo-project listing the members of the executive board.'),
 
-        'expert-mode' => '',
+        'expert-mode' => L::t("Display additional ``exper'' settings. Despite the name you are
+invited to have a look, but please do not change anything unless you know what your are doing. Thanks!"),
 
-        'expert-operations' => '',
+        'expert-operations' => L::t("For those who know what they are doing, which essentially means: don't."),
 
         'file-attachments-select' => L::t('Select-box with all currently uploaded attachments. Note that a file will only be attached to a message if it is also checked in this select box.'),
 
-        'filter-visibility' => '',
+        'filter-visibility' => L::t("Toggle this initial display of the search-filters for data-base tables in order to make the table view a little less crowded. Search-filters can be reenabled at any time by clicking the ``Search'' button in each individual table view"),
 
-        'further-settings' => '',
+        'further-settings' => L::t('Further personal settings, normally not needed use with care.'),
 
         'member-status' => L::t('A flag which indicates not so much social or functional status, but
 default behaviour for mass-emails as follows
@@ -540,7 +541,7 @@ the `Debug\' tab'),
 
         'shareowner-force' => '',
 
-        'show-tool-tips' => '',
+        'show-tool-tips' => L::t('Toggle Tooltips'),
 
         'sourcecode-link' => '',
 
