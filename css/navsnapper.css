@@ -57,10 +57,10 @@
 }
 
 #app-navigation-toggle {
-	position: fixed;
+	position: absolute;
 	display: inline-block !important;
-	top: 45px;
-	left: 0;
+	top: 0px;
+	left: 0px;
 	width: 44px;
 	height: 44px;
 	z-index: 149;
@@ -79,6 +79,8 @@
 
 /* controls bar for mobile */
 #controls {
+	position: absolute;
+	top: 0px;
 	min-width: initial !important;
 	width: auto !important;
 	left: 0 !important;
@@ -86,7 +88,7 @@
 }
 /* position controls for apps with app-navigation */
 #app-navigation+#app-content #controls {
-	padding-left: 44px;
+    padding-left: 44px;
 }
 
 /* fix controls bar jumping when navigation is slid out */
@@ -100,4 +102,3 @@
 
 /* end of media query */
 }
-
