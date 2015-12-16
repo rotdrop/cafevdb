@@ -21,12 +21,27 @@
 
 /*******************************************************************************
  *
- * Export select via chosen
+ * no padding
  *
  */
 
 #pme-table-dialog form.pme-form {
   padding: 0;
+}
+
+/*******************************************************************************
+ *
+ * no padding
+ *
+ */
+
+@keyframes busyfading {
+  from {
+    opacity:1;
+  }
+  to {
+    opacity:0.1;
+  }
 }
 
 /*******************************************************************************
@@ -188,6 +203,10 @@ form.pme-form table.pme-main.tab-9 td.tab-9 {
  */
 .pme-table-dialog-blocked {
   z-index: 90 !important;
+}
+
+.pme-table-dialog-blocked .ui-dialog-titlebar {
+  animation: busyfading 3s ease infinite alternate;
 }
 
 #pme-table-container tr.pme-navigation a.chosen-single {

@@ -815,6 +815,19 @@ input[type=checkbox].cafevdb-password-show + label.cafevdb-password-show {
   display:none !important;
 }
 
+@keyframes busyfading {
+  from {
+    opacity:1;
+  }
+  to {
+    opacity:0.1;
+  }
+}
+
+.cafevdb-busy {
+  animation: busyfading 3s ease infinite alternate;
+}
+
 /*
  * Local Variables: ***
  * css-indent-offset: 2 ***
