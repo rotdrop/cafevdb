@@ -421,6 +421,8 @@ a comma.'));
 
       $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
       $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
+      $opts['triggers']['update']['before'][]  = 'CAFEVDB\Projects::beforeUpdateTrigger';
+      $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Projects::beforeInsertTrigger';
       $opts['triggers']['update']['after'] = 'CAFEVDB\Projects::afterUpdateTrigger';
       $opts['triggers']['insert']['after'] = 'CAFEVDB\Projects::afterInsertTrigger';
       $opts['triggers']['delete']['after'] = 'CAFEVDB\Projects::afterDeleteTrigger';
@@ -429,6 +431,96 @@ a comma.'));
       $this->pme = new \phpMyEdit($opts);
 
     }
+
+    /**Validate the name, no spaces, camel case, last four characters
+     * are either digits of the form 20XX.
+     *
+     * @param[in] string $projectName The name to validate.
+     *
+     * @param[in] boolean $requireYear Year in last four characters is
+     * mandatory.
+     */
+    public static function sanitizeName($projectName, $requireYear = false)
+    {
+      $projectYear = substr($projectName, -4);
+      if (preg_match('/^\d{4}$/', $projectYear) !== 1) {
+        $projectYear = null;
+      } else {
+        $projectName = substr($projectName, 0, -4);
+      }
+      if ($requireYear && !$projectYear) {
+        return false;
+      }
+
+      $projectName = ucwords($projectName);
+      $projectName = preg_replace("/[^[:alnum:][:space:]]/u", '', $projectName);
+
+      if ($projectYear) {
+        $projectName .= $projectYear;
+      }
+      return $projectName;
+    }
+
+    /** phpMyEdit calls the trigger (callback) with the following arguments:
+     *
+     * @param[in] $pme The phpMyEdit instance
+     *
+     * @param[in] $op The operation, 'insert', 'update' etc.
+     *
+     * @param[in] $step 'before' or 'after'
+     *
+     * @param[in] $oldvals Self-explanatory.
+     *
+     * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
+     *
+     * @param[in,out] &$newvals Set of new values, which may also be modified.
+     *
+     * @return boolean. If returning @c false the operation will be terminated
+     */
+    public static function beforeInsertTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
+    {
+      if (isset($newvals['Name']) && $newvals['Name']) {
+        $newvals['Name'] = self::sanitizeName($newvals['Name']);
+        if ($newvals['Name'] === false) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    /** phpMyEdit calls the trigger (callback) with the following arguments:
+     *
+     * @param[in] $pme The phpMyEdit instance
+     *
+     * @param[in] $op The operation, 'insert', 'update' etc.
+     *
+     * @param[in] $step 'before' or 'after'
+     *
+     * @param[in] $oldvals Self-explanatory.
+     *
+     * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
+     *
+     * @param[in,out] &$newvals Set of new values, which may also be modified.
+     *
+     * @return boolean. If returning @c false the operation will be terminated
+     *
+     * @bug Convert this to a function triggering a "user-friendly" error message.
+     */
+    public static function beforeUpdateTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
+    {
+      if (array_search('Name', $changed) === false) {
+        return true;
+      }
+      if (isset($newvals['Name']) && $newvals['Name']) {
+        $newvals['Name'] = self::sanitizeName($newvals['Name']);
+        if ($newvals['Name'] === false) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    // $newvals contains the new values
 
     /** phpMyEdit calls the trigger (callback) with the following arguments:
      *
