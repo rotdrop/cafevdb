@@ -35,14 +35,14 @@ namespace CAFEVDB {
     ob_start();
 
     Error::exceptions(true);
-  
+
     Config::init();
 
     // We simply expect to get the entire project form here.
     $projectValues = Util::getPrefixCGIData();
 
     $required = array('Jahr' => L::t("project-year"), 'Name' => L::t("project-name"));
-  
+
     $message = "";
     foreach ($required as $key => $subject) {
       if (!isset($projectValues[$key]) || $projectValues[$key] == "") {
@@ -62,12 +62,13 @@ namespace CAFEVDB {
     $infoMessage = "";
     switch ($control) {
     case "submit":
-      
+
     case "name":
       // No whitespace, s.v.p., and CamelCase
       $origName = $projectName;
       $projectName = ucwords($projectName);
-      $projectName = preg_replace('/\s+/', '', $projectName);
+      $projectName = preg_replace("/[^[:alnum:][:space:]]/u", '', $projectName);
+      //$projectName = preg_replace('/\s+/', '', $projectName);
       if ($origName != $projectName) {
         $infoMessage .= L::t("The project name has been simplified.");
       }
@@ -84,6 +85,11 @@ namespace CAFEVDB {
         }
       } else if ($projectName == "") {
         $errorMessage .= L::t("No project-name given.");
+      }
+      if (mb_strlen($projectName) > 20) {
+        $errorMessage .= L::t("The project-name is too long, ".
+                              "please use something less than 20 characters ".
+                              "(excluding the attached year). Thanks");
       }
     case "year":
       if ($projectYear == "") {
