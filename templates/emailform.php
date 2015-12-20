@@ -54,7 +54,7 @@ CAFEVDB\Error::exceptions(true);
   </form>
 
   <!-- Download support via iframe -->
-  <iframe name="emailformdownloadframe" id="emailformdownloadframe" style="display:none;" src="about:blank"></iframe> 
+  <iframe name="emailformdownloadframe" id="emailformdownloadframe" style="display:none;" src="about:blank"></iframe>
 
   <!-- Upload support via blueimp. FIXME: is this still up-to-date? Probably got this from OC4 -->
   <div id="attachment_upload_wrapper" class="data_upload_wrapper">
@@ -65,8 +65,9 @@ CAFEVDB\Error::exceptions(true);
           method="post"
           enctype="multipart/form-data"
           target="attachment_upload_target_1">
-      <input type="hidden" name="MAX_FILE_SIZE" id="max_upload"
-	     value="<?php p($_['uploadMaxFilesize']) ?>">
+      <!-- at least some php-flavours (even 5.6, on Ubuntu) seem to have a 32bit bug with MAX_FILE_SIZE -->
+      <!-- <input type="hidden" name="MAX_FILE_SIZE" id="max_upload"
+	     value="<?php p($_['uploadMaxFilesize']) ?>"> -->
       <!-- Send the requesttoken, this is needed for older IE versions
       because they don't send the CSRF token via HTTP header in this case -->
       <input type="hidden" name="requesttoken" value="<?php p($_['requesttoken']) ?>" id="requesttoken">
@@ -93,4 +94,3 @@ CAFEVDB\Error::exceptions(true);
     </div>
   </div>
 </div>
-
