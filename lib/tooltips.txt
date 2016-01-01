@@ -48,6 +48,7 @@ debug-mode
 delete-all-event-attachments
 delete-all-file-attachments
 delete-saved-message
+direct-change
 email-account-distribute
 email-message-export
 email-recipients-basic-set
@@ -86,7 +87,9 @@ projectevents-deselect
 projectevents-detach
 projectevents-download
 projectevents-edit
+projectevents-select
 projectevents-selectevent
+projectevents-sendmail
 projectsbalancefolder-force
 projectsfolder-force
 project-web-article-add
@@ -104,6 +107,7 @@ save-email-message
 select-stored-messages
 send-mass-email
 sepa-instant-validation
+settings-button
 sharedfolder-force
 shareowner-force
 show-tool-tips

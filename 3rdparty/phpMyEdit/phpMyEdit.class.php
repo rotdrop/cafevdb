@@ -3371,7 +3371,7 @@ class phpMyEdit
 					echo ' checked';
 				}
 				echo ' />'."\n	  ".'<div class="'.$this->getCSSclass('sort').'"'
-					.$this->fetchToolTip($this->getCSSclass('sort'), $this->labels['Sort Field'])
+					/*.$this->fetchToolTip($this->getCSSclass('sort'), $this->labels['Sort Field'])*/
 					.'>'
 					.$this->labels['Sort Field'].'</div>'."\n	 ".'</label>';
 				echo '</th>'."\n";

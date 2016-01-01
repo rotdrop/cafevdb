@@ -317,13 +317,16 @@ class DetailedInstrumentation
       'default'  => '0',
       'sort'     => true
       );
+
     $opts['fdd']['MemberStatus'] = array(
       'name'     => strval(L::t('Member Status')),
       'tab'      => array('id' => array('musician')), // multiple tabs are legal
-      'select'   => 'M',
-      'maxlen'   => 384,
+      'select'   => 'D',
+      'maxlen'   => 128,
       'sort'     => true,
-      'values2'  => $this->memberStatusNames
+      'css'     => array('postfix' => ' memberstatus tooltip-wide'),
+      'values2'  => $this->memberStatusNames,
+      'tooltip' => config::toolTips('member-status')
       );
 
     $opts['fdd']['Unkostenbeitrag'] = Config::$opts['money'];

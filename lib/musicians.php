@@ -322,16 +322,19 @@ make sure that the musicians are also automatically added to the
       'values'      => $this->instruments,
       'valueGroups' => $this->groupedInstruments,
       );
+
     /* Make "Status" a set, 'soloist','conductor','noemail', where in
      * general the first two imply the last.
      */
-    $opts['fdd']['MemberStatus'] = array('name'    => strval(L::t('Member Status')),
-                                         'select'  => 'D',
-                                         'maxlen'  => 128,
-                                         'sort'    => true,
-                                         'css'     => array('postfix' => ' memberstatus'),
-                                         'values2' => $this->memberStatusNames,
-                                         'tooltip' => config::toolTips('member-status'));
+    $opts['fdd']['MemberStatus'] = array(
+      'name'    => strval(L::t('Member Status')),
+      'select'  => 'D',
+      'maxlen'  => 128,
+      'sort'    => true,
+      'css'     => array('postfix' => ' memberstatus tooltip-wide'),
+      'values2' => $this->memberStatusNames,
+      'tooltip' => config::toolTips('member-status')
+      );
 
     // fetch the list of all projects in order to provide a somewhat
     // cooked filter list

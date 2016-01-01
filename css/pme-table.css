@@ -249,6 +249,14 @@ tr.pme-navigation .listall {
   font-weight:bold;
 }
 
+.pme-goto .chosen-container {
+  min-width:4em;
+}
+
+.pme-pagerows .chosen-container {
+  min-width:4em;
+}
+
 .pme-export-block a.chosen-default span {
   /*font-weight:bold;*/
   color:#555;
@@ -273,7 +281,7 @@ tr.pme-navigation .listall {
   color: #555;
   border: 1px solid rgba(190, 190, 190, 0.9);
   padding: 4px 4px 5px 4px;
-  line-height: 16px;
+  line-height: 19px;
   font-size: 13px;
 }
 

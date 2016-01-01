@@ -41,9 +41,9 @@ namespace CAFEVDB
       return array(
         'address-book-emails' => L::t('Opens a select-box with choices from the shared Owncloud-addressbook. You can also add new em@il-addresses to the address-book for later reusal. The addresses can also be added in the Owncloud `Contacts\'-App.'),
 
-        'blog-acceptentry' => '',
+        'blog-acceptentry' => L::t('Save the changes for this blog-entry.'),
 
-        'blog-cancelentry' => '',
+        'blog-cancelentry' => L::t('Discard the changes for this blog-entry.'),
 
         'blog-newentry' => L::t('Write a new bulletin entry.'),
 
@@ -51,7 +51,8 @@ namespace CAFEVDB
 
         'blog-popup-set' => L::t('Place this note in a pop-up window after login. The window will only pop-up once, the list of readers is remembered.'),
 
-        'blog-priority' => '',
+        'blog-priority' => L::t('Change the display-priority. Entries with higher priority are
+displayed closer to the top of the page.'),
 
         'blog-reader-clear' => L::t('Clear the list of readers of this note. Consequently, if this note is marked as popup, then it will pop-up again after clearing the list of readers.'),
 
@@ -74,13 +75,16 @@ same effect as clicking the close button on top of the dialog-window. No email w
 
         'configrecheck' => L::t('Perform the configuration checks again. If all checks have been passed then you are led on to the ordinary entry page of the application.'),
 
-        'debug-mode' => L::t("Amount of debug output. Keep this disabled for normal use."),
+        'debug-mode' => L::t('Amount of debug output. Keep this disabled for normal use.'),
 
         'delete-all-event-attachments' => L::t('Clear the list of selected event-attachments. Of course, this does not delete the events from their respective calendar, it just de-selects all events such that no event will be attached to the email.'),
 
         'delete-all-file-attachments' => L::t('Delete all uploaded file-attachments from the server. This is also done automatically when closing the email-form. This will also empty the select box.'),
 
         'delete-saved-message' => L::t('Delete the selected email-template or draft. You will be asked for confirmation before it is actually deleted.'),
+
+        'direct-change' => L::t('If enabled, clicking on a data-row in a table view opens the "change
+dialog" for the respective record. If disabled, clicking on a data-row will open the "view dialog".'),
 
         'email-account-distribute' => L::t('Distribute the email account credentials to all members of the orchestra group. The credentials will be encrypted using an OpenSSL public key owned by the respective user and stored in the pre-user preferences table.'),
 
@@ -93,7 +97,7 @@ give you the choice to select any musician as recipient.'),
 
         'email-recipients-broken-emails' => L::t('List of musicians without or with ill-formed email-addresses. You can click on the names in order to open a dialog with the personal data of the respective musician and correct the email addresses there.'),
 
-        'email-recipients-choices' => '',
+        'email-recipients-choices' => L::t('Select the recipients for your email!'),
 
         'email-recipients-except-project' => L::t('Choose among all musicians currently <b>NOT</b> registered for this project.'),
 
@@ -137,14 +141,17 @@ are excluded from receiving mass-email. Please be careful when modifying the def
 
         'executive-board-project' => L::t('Name of the pseudo-project listing the members of the executive board.'),
 
-        'expert-mode' => L::t("Display additional ``exper'' settings. Despite the name you are
-invited to have a look, but please do not change anything unless you know what your are doing. Thanks!"),
+        'expert-mode' => L::t('Display additional ``expert\'\' settings. Despite the name you are
+invited to have a look, but please do not change anything unless you know what your are doing. Thanks!'),
 
-        'expert-operations' => L::t("For those who know what they are doing, which essentially means: don't."),
+        'expert-operations' => L::t('For those who know what they are doing, which essentially means: don\'t.'),
 
         'file-attachments-select' => L::t('Select-box with all currently uploaded attachments. Note that a file will only be attached to a message if it is also checked in this select box.'),
 
-        'filter-visibility' => L::t("Toggle this initial display of the search-filters for data-base tables in order to make the table view a little less crowded. Search-filters can be reenabled at any time by clicking the ``Search'' button in each individual table view"),
+        'filter-visibility' => L::t('Toggle the initial display of the search-filters for data-base tables
+in order to make the table view a little less crowded. Search-filters
+can be reenabled at any time by clicking the ``Search\'\' button in
+each individual table view.'),
 
         'further-settings' => L::t('Further personal settings, normally not needed use with care.'),
 
@@ -167,17 +174,23 @@ default behaviour for mass-emails as follows
 All classes of members can be explicitly added to a specific mass-emails through the controls
 in the email form.'),
 
-        'musican-contact-tab' =>  L::t('Display name, pre-name, phone number, email, street-address'),
+        'musican-contact-tab' => L::t('Display name, pre-name, phone number, email, street-address.'),
 
-        'musician-instrument-insurance' => '',
+        'musician-instrument-insurance' => L::t('Opens a new table view with the insured items for the respective musician.'),
 
         'musician-miscinfo-tab' => L::t('Further information like birthday, a photo, date of last change.'),
 
-        'musician-orchestra-tab' => L::t('Display name, pre-name, instruments, status, general remarks'),
+        'musician-orchestra-tab' => L::t('Display name, pre-name, instruments, status, general remarks.'),
 
         'new-email-template' => L::t('Enter a short, no-nonsense name for the new template. Please omit spaces.'),
 
-        'new-project-event' => '',
+        'new-project-event' => L::t('Add a new event for the project. The event is added to the respective
+calendar and will also be visible and editable through the calendar
+app. It is also possible to subscribe to the calendars using a
+suitable CalDAV client from your smartphone, tablet or desktop
+computer. The link between an "ordinary" event in the web-calendar and
+a project is maintained by attching the project name as "category" to
+the event.'),
 
         'nothing' => L::t('nothing'),
 
@@ -343,7 +356,7 @@ It is also possible to match empty fields, in particular:
 Suchkriterien zu verstecken.'),
           ),
 
-        'pme-instrumentation-actions' => '',
+        'pme-instrumentation-actions' => L::t('Some usefull convenience actions (click me for details!)'),
 
         'pme-more' => array(
           'moreadd' => L::t('Saves the current values and start to generate another new data-set.'),
@@ -456,13 +469,13 @@ The event can be reattached by
 adding the project-name to its
 categories.'),
 
-        'projectevents-download' => '',
+        'projectevents-download' => L::t('Download the events as ICS file. In principle it is possible to import
+the ICS file into the respective calendar apps of your smartphone,
+tablet or desktop computer.'),
 
         'projectevents-edit' => L::t('Modify the event.'),
 
         'projectevents-newconcert' => L::t('Add a new concert-event to the project.'),
-
-        'projectevents-newfinance' => '',
 
         'projectevents-newmanagement' => L::t('Add a private management event which is not exposed to the rest of the world.'),
 
@@ -537,6 +550,8 @@ the `Debug\' tab'),
 
         'sepa-instant-validation' => L::t('Toggle instant validation and automatic computation of derived bank account data. If instant validation is disabled, the final values will still be validated and an error message will appear if an error is detected. It is only possible to save of store the debit-mandate if instant validation is enabled.'),
 
+        'settings-button' => L::t('Personal application settings.'),
+
         'sharedfolder-force' => '',
 
         'shareowner-force' => '',
@@ -565,8 +580,7 @@ configuration storage if the test can be performed successfully.'),
 
         'upload-attachment' => L::t('Upload a file from your local computer as attachment. The file will be removed from the remote-system after the message has been sent.'),
 
-        'wysiwyg-edtior' => '',
-
+        'wysiwyg-edtior' => L::t('Change to another WYSIWYG editor.'),
 
         );
 
