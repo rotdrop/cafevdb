@@ -167,13 +167,13 @@ default behaviour for mass-emails as follows
 All classes of members can be explicitly added to a specific mass-emails through the controls
 in the email form.'),
 
-        'musican-contact-tab' => '',
+        'musican-contact-tab' =>  L::t('Display name, pre-name, phone number, email, street-address'),
 
         'musician-instrument-insurance' => '',
 
-        'musician-miscinfo-tab' => '',
+        'musician-miscinfo-tab' => L::t('Further information like birthday, a photo, date of last change.'),
 
-        'musician-orchestra-tab' => '',
+        'musician-orchestra-tab' => L::t('Display name, pre-name, instruments, status, general remarks'),
 
         'new-email-template' => L::t('Enter a short, no-nonsense name for the new template. Please omit spaces.'),
 
@@ -549,7 +549,9 @@ the `Debug\' tab'),
 
         'syncevents' => L::t('Recompute the link between projects and events, using the event-categories as primary key.'),
 
-        'table-rows-per-page' => '',
+        'table-rows-per-page' => L::t('The initial number of rows per page when displaying data-base
+tables. The actual number of rows per page can also changed later in
+the individual table views.'),
 
         'test-cafevdb_dbpassword' => '',
 
