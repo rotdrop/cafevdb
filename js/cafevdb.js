@@ -1301,14 +1301,6 @@ alert('Tooltip Options: '+CAFEVDB.print_r(classOptions, true));
         argument.cssclass = [ argument.cssclass ];
       }
       argument.cssclass.push('cafevdb');
-      if (!argument.template) {
-        argument.template = '<div class="tooltip '
-                       + argument.cssclass.join(' ')
-                       + '" role="tooltip">'
-                       + '<div class="tooltip-arrow"></div>'
-                       + '<div class="tooltip-inner"></div>'
-                       + '</div>';
-      }
       // iterator over individual element in order to pick up the
       // correct class-arguments.
       this.each(function(index) {
@@ -1341,6 +1333,20 @@ alert('Tooltip Options: '+CAFEVDB.print_r(classOptions, true));
         }
         self.removeAttr('data-original-title');
         self.removeData('original-title');
+        var title = self.attr('title');
+        if (title == undefined || title.trim() == '') {
+          self.removeAttr('title');
+          self.cafevTooltip('disable');
+          return;
+        }
+        if (!selfOptions.template) {
+          selfOptions.template = '<div class="tooltip '
+                               + selfOptions.cssclass.join(' ')
+                               + '" role="tooltip">'
+                               + '<div class="tooltip-arrow"></div>'
+                               + '<div class="tooltip-inner"></div>'
+                               + '</div>';
+        }
         $.fn.tooltip.call(self, selfOptions);
       });
     } else {
