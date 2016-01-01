@@ -99,7 +99,6 @@ var CAFEVDB = CAFEVDB || {};
              if (typeof afterLoadCallback == 'function') {
                afterLoadCallback();
              }
-             CAFEVDB.toolTipsInit();
 
              return false;
            });
@@ -158,21 +157,14 @@ $(document).ready(function(){
              });
 
   CAFEVDB.addReadyCallback(function() {
-
     //content.find('form.pme-form input.pme-reload').hide();
-
+    $('#app-navigation-toggle').
+      attr('title', t('cafevdb', 'Display the application menu and settings side-bar')).
+      cafevTooltip({
+        placement: 'bottom auto',
+        container: '#app-content'
+      });
     CAFEVDB.Page.updateHistoryControls();
-
-    $('#cafevdb-page-header-box .viewtoggle').click(function(event) {
-      event.preventDefault();
-
-      var pfx    = 'div.'+CAFEVDB.name+'-page-';
-      var box    = $(pfx+'header-box');
-      var header = $(pfx+'page-header');
-      var body   = $(pfx+'body');
-
-      return false;
-    });
   });
 
 });

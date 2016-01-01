@@ -769,8 +769,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
                CAFEVDB.Page.historyPosition = data.data.history.position;
                CAFEVDB.Page.updateHistoryControls();
              }
-
              $.fn.cafevTooltip.remove();
+
              CAFEVDB.removeEditor(container.find('textarea.wysiwygeditor'));
              container.html(data.data.contents);
              pme.init(selector);
@@ -784,6 +784,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                /* kill the modalizer */
                CAFEVDB.Page.busyIcon(false);
                CAFEVDB.modalizer(false);
+               $('#focusstealer').focus(); // move focus away from submit button
              });
              return false;
            });

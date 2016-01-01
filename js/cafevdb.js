@@ -1226,9 +1226,6 @@ alert('Tooltip Options: '+CAFEVDB.print_r(classOptions, true));
     var container = $(containerSel);
 
     // container.find('button.settings').cafevTooltip({placement:'bottom'});
-    container.find('button.viewtoggle').cafevTooltip({placement:'bottom'});
-
-    container.find('div.viewtoggle').cafevTooltip({placement:'top'});
     container.find('select').cafevTooltip({placement:'right'});
     container.find('div.chosen-container').cafevTooltip({placement:'top'});
     container.find('li.active-result').cafevTooltip({placement:'right'});
