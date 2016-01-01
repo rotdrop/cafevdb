@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2015 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -31,6 +31,7 @@ namespace CAFEVDB
   {
     const CSS_PREFIX = 'cafevdb-page';
     const IMAGE_PLACEHOLDER = 'flyerdummy.svg';
+    const NAME_LENGTH_MAX = 20;
     private $pme;
     private $pme_bare;
     private $execute;
@@ -185,7 +186,13 @@ namespace CAFEVDB
          $opts['filters'] = "column1 like '%11%' AND column2<17";
          $opts['filters'] = "section_id = 9";
          $opts['filters'] = "PMEtable0.sessions_count > 200";
+
+         $opts['filters']['OR'] = expression or array;
+         $opts['filters']['AND'] = expression or array;
+
+         $opts['filters'] = andexpression or array(andexpression1, andexpression2);
       */
+      $opts['filters'] = array('OR' => "`Art` = 'permanent'");
 
       /* Field definitions
 
@@ -276,9 +283,20 @@ namespace CAFEVDB
 '.L::t("Append the year to the name").'
 </label>'),
         'select'   => 'D',
-        'maxlen'   => 64,
+        'maxlen'   => self::NAME_LENGTH_MAX + 6,
         'css'      => array('postfix' => ' projectname control'),
         'sort'     => true,
+        );
+
+      $opts['fdd']['Art'] = array(
+        'name'     => L::t('Kind'),
+        'select'   => 'D',
+        'options'  => 'AVCPD', // auto increment
+        'maxlen'   => 11,
+        'values2'  => array('temporary' => L::t('temporary'),
+                            'permanent' => L::t('permanent')),
+        'default'  => 'temporary',
+        'sort'     => false
         );
 
       $opts['fdd']['Actions'] = array(
