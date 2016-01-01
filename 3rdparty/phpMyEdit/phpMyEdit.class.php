@@ -6,6 +6,7 @@
  * phpMyEdit.class.php - main table editor class definition file
  * ____________________________________________________________
  *
+ * Copyritht (c) 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  * Copyright (c) 1999-2002 John McCreesh <jpmcc@users.sourceforge.net>
  * Copyright (c) 2001-2002 Jim Kraai <jkraai@users.sourceforge.net>
  * Versions 5.0 and higher developed by Ondrej Jombik <nepto@php.net>
@@ -972,18 +973,28 @@ class phpMyEdit
 				}
 			}
 		}
-		// Add any coder specified filters
-		if (! $text && $this->filters) {
-			$where[] = '('.$this->filters.')';
+
+		// Add any coder specified 'AND' filters
+		if (!$text && ($filter = $this->filters['AND'])) {
+			$where[] = $filter;
 		}
-		if (count($where) > 0) {
-			if ($text) {
-				return str_replace('%', '*', join(' AND ',$where));
-			} else {
-				return join(' AND ',$where);
-			}
+
+		/* Join WHERE parts by AND */
+		$where = join(' AND ', $where);
+
+		if ($text) {
+			return str_replace('%', '*', $where);
 		}
-		return ''; /* empty string */
+
+		/* Add any coder specified 'OR' filters. If where is still
+		 * empty at this point, then it is implicitly "true", hence
+		 * adding further "OR" filters does not make sense.
+		 */
+		if ($where !== '' && ($filter = $this->filters['OR'])) {
+			$where = '('.$where.') OR ('.$filter.')';
+		}
+
+		return $where;
 	} /* }}} */
 
 	function get_SQL_having_query_opts($qp = null, $text = 0) /* {{{ */
@@ -991,14 +1002,14 @@ class phpMyEdit
 		if ($qp == null) {
 			$qp = $this->query_group_opts;
 		}
-		$where = array();
+		$having = array();
 		foreach ($qp as $field => $ov) {
 			if (is_numeric($field)) {
 				$tmp_where = array();
 				foreach ($ov as $field2 => $ov2) {
 					$tmp_where[] = sprintf('%s %s %s', $field2, $ov2['oper'], $ov2['value']);
 				}
-				$where[] = '('.join(' OR ', $tmp_where).')';
+				$having[] = '('.join(' OR ', $tmp_where).')';
 			} else {
 				if (is_array($ov['value'])) {
 					$tmp_ov_val = '';
@@ -1016,18 +1027,19 @@ class phpMyEdit
 						$tmp_ov_val = sprintf('(%s IS NULL OR NOT (%s))',
 											  $field, $tmp_ov_val);
 					}
-					$where[] = "($tmp_ov_val)";
+					$having[] = "($tmp_ov_val)";
 				} else {
-					$where[] = sprintf('%s %s %s', $field, $ov['oper'], $ov['value']);
+					$having[] = sprintf('%s %s %s', $field, $ov['oper'], $ov['value']);
 				}
 			}
 		}
-		// Add any coder specified filters
-		if (count($where) > 0) {
+
+		/* Join HAVING parts by AND */
+		if (count($having) > 0) {
 			if ($text) {
-				return str_replace('%', '*', join(' AND ',$where));
+				return str_replace('%', '*', join(' AND ',$having));
 			} else {
-				return join(' AND ',$where);
+				return join(' AND ',$having);
 			}
 		}
 		return ''; /* empty string */
@@ -4677,7 +4689,31 @@ class phpMyEdit
 		$this->fdd		 = $opts['fdd'];
 		$this->multiple	 = intval($opts['multiple']);
 		$this->multiple <= 0 && $this->multiple = 2;
-		$this->filters	 = is_array(@$opts['filters']) ? join(' AND ', $opts['filters']) : @$opts['filters'];
+		$this->filters   = array('AND' => false, 'OR' => false);
+		if (isset($opts['filters'])) {
+			$filters = $opts['filters'];
+			if (!is_array($filters)) {
+				$filters = array('AND' => array($filters), 'OR' => false);
+			}
+			if (!isset($filters['AND']) && !isset($filters['OR'])) {
+				$filters = array('AND' => $filters, 'OR' => false);
+			}
+			if (!isset($filters['AND'])) {
+				$filters['AND'] = false;
+			}
+			if (!isset($filters['OR'])) {
+				$filters['OR'] = false;
+			}
+			foreach ($filters as $junctor => $filter) {
+				if (is_array($filter)) {
+					$this->filters[$junctor] = join($junctor, $filter);
+				} else {
+					$this->filters[$junctor] = $filter;
+				}
+			}
+		}
+		// at this point $this->filters is a normalized array
+
 		$this->triggers	 = @$opts['triggers'];
 		$this->notify	 = @$opts['notify'];
 		$this->logtable	 = @$opts['logtable'];
