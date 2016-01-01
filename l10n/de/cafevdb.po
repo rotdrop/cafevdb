@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-01 23:51+0100\n"
-"PO-Revision-Date: 2016-01-01 23:53+0100\n"
+"POT-Creation-Date: 2016-01-01 23:59+0100\n"
+"PO-Revision-Date: 2016-01-02 00:01+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -4721,7 +4721,7 @@ msgstr ""
 msgid "Opens the email-form for the project inside a dialog window."
 msgstr "Öffnet das Em@il-Formular für das Projekt in einem Dialog-Fenster."
 
-#: lib/tooltips.php:413 lib/tooltips.php:466
+#: lib/tooltips.php:413 lib/tooltips.php:470
 msgid ""
 "Open a dialog with all known\n"
 "events associated to the project.\n"
@@ -4777,18 +4777,26 @@ msgstr ""
 "Instrument, Stimme, Stimmführer."
 
 #: lib/tooltips.php:435
+#, fuzzy
 msgid ""
 "Either \"temporary\" -- the regular case -- or \"permanent\" -- the\n"
-"          exceptional case for \"virtual pseudo projects\". The latter in "
-"particular includes the pseudo-project for the administative board and the "
-"members of the registered orchestra association."
+"exceptional case for \"virtual pseudo projects\". The latter in\n"
+"particular includes the pseudo-project for the administative board and\n"
+"the members of the registered orchestra association. Non-permanents\n"
+"always have per-force the project-year attached to their name,\n"
+"permanent \"pseudo-projects\" don't, as it does not make any sense."
 msgstr ""
 "Entweder \"zeitweilig\" -- der Normalfall für \"normale\" Projekte -- oder\n"
 "\"permanent\" -- der Ausnahmefall für \"virtuelle\n"
 "Pseudo-Projekte\". Letzteres betrifft insbesondere das Pseudo-Projekt\n"
-"\"Vorstand\" und das Pseudo-Projekt \"Vereinsmitglieder\"."
+"\"Vorstand\" und das Pseudo-Projekt\n"
+"\"Vereinsmitglieder\". Nicht-permanente -- also normale -- Projekte\n"
+"enthalten zwangsweise die Jahreszahl als letzte vier Ziffern ihres\n"
+"Namens. Bei nicht-permanente \"Pseudo-Projekten\" wird das nicht\n"
+"erzwungen, bzw. sogar zwangsweise verboten, weil es keinen Sinn\n"
+"macht."
 
-#: lib/tooltips.php:438
+#: lib/tooltips.php:442
 msgid ""
 "Displays `meta-data' like project fees, single/double room preferences, "
 "debit-mandates and the like."
@@ -4796,7 +4804,7 @@ msgstr ""
 "Zeigt `Meta-Daten' für das Projekt an, wie Unkostenbeitrag,\n"
 "Einzel-/Doppelzimmerzuschlag, Einzugsermächtigungen, Eingang der Anmeldung."
 
-#: lib/tooltips.php:440
+#: lib/tooltips.php:444
 msgid ""
 "Please enter here a <b>SHORT</b> project name, rather a project tag. The "
 "software will try very hard to confine you to the following rules:\n"
@@ -4824,7 +4832,7 @@ msgstr ""
 "bitte einfach <b>NICHT</b>. Danke.\n"
 "\n"
 
-#: lib/tooltips.php:449
+#: lib/tooltips.php:453
 msgid ""
 "Append the year to the name if checked.\n"
 "Regardless of this checkbox any decimal digit will first be stripped from "
@@ -4836,7 +4844,7 @@ msgstr ""
 "entfernt,\n"
 "bevor möglicherweise die Jahreszahl angehängt wird."
 
-#: lib/tooltips.php:453
+#: lib/tooltips.php:457
 msgid ""
 "Displays the personal data of the respective musicians, like address, email, "
 "date of birth if known, phone numbers."
@@ -4844,7 +4852,7 @@ msgstr ""
 "Zeigt die persönlichen Daten der Musiker, wie Adresse, Telefonnummern,\n"
 "Em@il, Geburtstag, gespielte Instrumente."
 
-#: lib/tooltips.php:455
+#: lib/tooltips.php:459
 msgid ""
 "Add a new public web-page to the project by generating a new, empty concert "
 "announcement."
@@ -4853,7 +4861,7 @@ msgstr ""
 "hinzufügen, indem eine neue leere Veranstaltungsankündigung\n"
 "erstellt wird."
 
-#: lib/tooltips.php:457
+#: lib/tooltips.php:461
 msgid ""
 "Delete the currently displayed web-page fromthe project. The web page will "
 "be \"detached\" from the project and moved to the trash-bin\n"
@@ -4863,7 +4871,7 @@ msgstr ""
 "Web-Seite wird vom Projekt gelöst und im CMS in die\n"
 "Mülleimer-Kategorie (Ordner) verschoben."
 
-#: lib/tooltips.php:460
+#: lib/tooltips.php:464
 msgid ""
 "Link existing pages to the project. This can be used, for instance, in order "
 "to add a page to the project which has not been created by hitting the `+'-"
@@ -4880,7 +4888,7 @@ msgstr ""
 "herausfischen und zur `Vorschau' hinzufügen, indem man ihn hier wieder\n"
 "mit diesem Projekt verkn[pft."
 
-#: lib/tooltips.php:462
+#: lib/tooltips.php:466
 msgid ""
 "Please select articles to link to the current project. The articles will be "
 "immediately added to the project if you select them. In order to remove the "
@@ -4888,7 +4896,7 @@ msgid ""
 msgstr ""
 "Bitte Artiekel auswählen, die mit diesem Projekt verknüpft werden sollen."
 
-#: lib/tooltips.php:464
+#: lib/tooltips.php:468
 msgid ""
 "Detach the currently displayed event announcement from the project. "
 "Primarily meant to provide means to undo erroneous linking of articles."
@@ -4897,7 +4905,7 @@ msgstr ""
 "Veranstaltungsankündigung und diesem Projekt. Primär als\n"
 "\"Undo\"-Funktion nach versehentlichem Verknüpfen gemeint."
 
-#: lib/tooltips.php:471
+#: lib/tooltips.php:475
 msgid ""
 "Delete the event from the system\n"
 "(no undo possible)."
@@ -4905,13 +4913,13 @@ msgstr ""
 "Termin komplett aus dem Kalender löschen, kann nicht rückgängig gemacht "
 "werden."
 
-#: lib/tooltips.php:474
+#: lib/tooltips.php:478
 msgid ""
 "Exclude all events from\n"
 "email-submission"
 msgstr "Auswahl zum Download bzw. Email-Versand bei allen Terminen entfernen."
 
-#: lib/tooltips.php:477
+#: lib/tooltips.php:481
 msgid ""
 "Detach the respective event\n"
 "from the project, but do not\n"
@@ -4924,7 +4932,7 @@ msgstr ""
 "Es ist möglich, den Termin wieder zum Projekt hinzuzufügen, indem man den "
 "Projekt-Namen zu der Katergorien-Liste des Termins hinzufügt."
 
-#: lib/tooltips.php:484
+#: lib/tooltips.php:488
 msgid ""
 "Download the events as ICS file. In principle it is possible to import\n"
 "the ICS file into the respective calendar apps of your smartphone,\n"
@@ -4934,37 +4942,37 @@ msgstr ""
 "Prinzip in eine geeignete Kalender App Deines SmartPhones, Tables oder\n"
 "Desktop-PCs importiert werden."
 
-#: lib/tooltips.php:488
+#: lib/tooltips.php:492
 msgid "Modify the event."
 msgstr "Termin ändern."
 
-#: lib/tooltips.php:490
+#: lib/tooltips.php:494
 msgid "Add a new concert-event to the project."
 msgstr ""
 "Neuen Konzert-Termin für das Projekt in den Konzerte-Kalender eintragen."
 
-#: lib/tooltips.php:492
+#: lib/tooltips.php:496
 msgid ""
 "Add a private management event which is not exposed to the rest of the world."
 msgstr ""
 "Vorstands-Termin hinzufügen. Die Vorstandstermine sind nicht öffentlich "
 "sichtbar."
 
-#: lib/tooltips.php:494
+#: lib/tooltips.php:498
 msgid "Add some other event to the project."
 msgstr "Sonstigen Termin für das Projekt eintragen."
 
-#: lib/tooltips.php:496
+#: lib/tooltips.php:500
 msgid "Add a new rehearsal-event to the project."
 msgstr "Neuen Proben-Termin für das Projekt in den Proben-Kalender eintragen."
 
-#: lib/tooltips.php:498
+#: lib/tooltips.php:502
 msgid ""
 "Select all events for\n"
 "email-submission"
 msgstr "Alle Termin für Download bzw. Email-Attachment auswählen."
 
-#: lib/tooltips.php:501
+#: lib/tooltips.php:505
 msgid ""
 "Mark the respective event for being\n"
 "sent by email as ICS-attachment per email.\n"
@@ -4978,7 +4986,7 @@ msgstr ""
 "Versand an ausgewählte Empfänger vorgenommen werden kann. Alternativ können "
 "die ausgwählten Termine auch einfach herunter-geladen werden."
 
-#: lib/tooltips.php:508
+#: lib/tooltips.php:512
 msgid ""
 "Click to open an email-form\n"
 "and send the selected events to\n"
@@ -4987,7 +4995,7 @@ msgstr ""
 "Ausgewählte Termine als ICS-Attachment per Email veschicken; öffnet ein "
 "Email-Formular."
 
-#: lib/tooltips.php:526
+#: lib/tooltips.php:530
 msgid ""
 "Add the musician to the project. A new form will open were details like the "
 "instrument etc. can be adjustetd."
@@ -4995,7 +5003,7 @@ msgstr ""
 "Fügt den Musiker zum Projekt hinzu. Auf der Folgeseite können dann Details "
 "eingetragen werden."
 
-#: lib/tooltips.php:528
+#: lib/tooltips.php:532
 msgid ""
 "Activate this checkbox in order to save the current email message as\n"
 "message template. If you leave this check-box unchecked, then messages\n"
@@ -5018,7 +5026,7 @@ msgstr ""
 "die Email versendet wurde. Vorlagen werden ohne Empfänger und Anhänge\n"
 "gespeichert und nicht automatisch gelöscht."
 
-#: lib/tooltips.php:538
+#: lib/tooltips.php:542
 msgid ""
 "Save the currently active email message either as draft\n"
 "(i.e. including recipients and attachments) or as message template\n"
@@ -5033,7 +5041,7 @@ msgstr ""
 "Speichere die aktuelle Nachricht entweder als Entwurf oder Vorlage, je\n"
 "nachdem, ob die Check-Box zur Linken aktiviert ist oder nicht."
 
-#: lib/tooltips.php:548
+#: lib/tooltips.php:552
 msgid ""
 "Save the current email for later re-usal in the data-base.\n"
 "An email template can contain per-member substitutions with the syntax "
@@ -5053,18 +5061,18 @@ msgstr ""
 "die mit den Vornamen der Vorstandsmitglieder ersetzt wird, um Grußformeln zu "
 "erzeugen."
 
-#: lib/tooltips.php:554
+#: lib/tooltips.php:558
 msgid "Select one of the email templates previously stored in the data-base."
 msgstr ""
 "Vorlage aus dem Vorlagen-Pool auswählen; neue Vorlagen können mittels "
 "``Vorlage speichern'' erzeugt werden."
 
-#: lib/tooltips.php:556
+#: lib/tooltips.php:560
 msgid ""
 "Select either a message draft or template as base for the current message."
 msgstr "Entwurf oder Vorlage as Basis für die aktuelle Nachricht auswählen."
 
-#: lib/tooltips.php:558
+#: lib/tooltips.php:562
 msgid ""
 "Attempt to send the stuff you have composed out to your selection of\n"
 "recipients. Please think thrice about it. In case of an error\n"
@@ -5076,7 +5084,7 @@ msgstr ""
 "Erfolgsmeldungen eingesehen werden. In jedem Falle sollte am Ende eine\n"
 "kurze Erfolgs- oder Fehlermeldung in einem Popup-Fenster angezeigt."
 
-#: lib/tooltips.php:563
+#: lib/tooltips.php:567
 msgid ""
 "Toggle instant validation and automatic computation of derived bank account "
 "data. If instant validation is disabled, the final values will still be "
@@ -5093,15 +5101,15 @@ msgstr ""
 "muss der Haken zunächst wieder gesetzt werden, dann wird die IBAN auf\n"
 "Korrektheit überprüft und man kann dann anschließend speichern."
 
-#: lib/tooltips.php:565
+#: lib/tooltips.php:569
 msgid "Personal application settings."
 msgstr "Persönliche Einstellung für die Musiker-DB Anwendung."
 
-#: lib/tooltips.php:571 templates/part.common.header.php:91
+#: lib/tooltips.php:575 templates/part.common.header.php:91
 msgid "Toggle Tooltips"
 msgstr "Ballon-Hilfe ein- und ausschalten"
 
-#: lib/tooltips.php:577
+#: lib/tooltips.php:581
 msgid ""
 "Recompute the link between projects and events, using the event-categories "
 "as primary key."
@@ -5109,7 +5117,7 @@ msgstr ""
 "Zuordnung der Termine zu den Projekten neu berechnen. Dabei dienen die "
 "Projekt-Kategorien als Kriterium."
 
-#: lib/tooltips.php:579
+#: lib/tooltips.php:583
 msgid ""
 "The initial number of rows per page when displaying data-base\n"
 "tables. The actual number of rows per page can also changed later in\n"
@@ -5118,7 +5126,7 @@ msgstr ""
 "Anfängliche Anzahl von Tabellenzeilen pro Seite. Kann bei den\n"
 "indivuduellen Tabellen später noch einzeln angepasst werden."
 
-#: lib/tooltips.php:585
+#: lib/tooltips.php:589
 msgid ""
 "Check whether the data-base can be accessed with the given account\n"
 "information and password. The password will only be stored in the\n"
@@ -5128,7 +5136,7 @@ msgstr ""
 "Zugriffsinformationen. Das neue Passwort wird nur dann gespeichert, wenn der "
 "Test erfolgreich absolviert wurde."
 
-#: lib/tooltips.php:589
+#: lib/tooltips.php:593
 msgid ""
 "Try to connect to the specified web-address, will open the web-address in "
 "another window or tab, depending your local browser preferences."
@@ -5136,7 +5144,7 @@ msgstr ""
 "Versuche, die eingestellte Web-Adresse in einen anderen Fenster oder Tab zu "
 "öffnen (abhängig von den Einstellungen des Web-Browsers)."
 
-#: lib/tooltips.php:591
+#: lib/tooltips.php:595
 msgid ""
 "Add the instruments of the actually registered musicians to the instrument-"
 "table for the project."
@@ -5144,7 +5152,7 @@ msgstr ""
 "Die Instrumente der bereits registrierten Musiker in die Besetzungstabelle "
 "eintragen; die Soll-Besetzungszahlen werden allerdings nicht angepasst."
 
-#: lib/tooltips.php:593
+#: lib/tooltips.php:597
 msgid ""
 "Upload a file from your local computer as attachment. The file will be "
 "removed from the remote-system after the message has been sent."
@@ -5152,7 +5160,7 @@ msgstr ""
 "Eine Datei als Attachment hochladen. Die Datei wird vom Server gelöscht, "
 "sobald die Nachricht versendet wurde."
 
-#: lib/tooltips.php:595
+#: lib/tooltips.php:599
 msgid "Change to another WYSIWYG editor."
 msgstr "Einen alternativen WYSIWYG-Editor auswählen."
 
