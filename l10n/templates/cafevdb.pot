@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-01 16:42+0100\n"
+"POT-Creation-Date: 2016-01-01 19:50+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -290,16 +290,16 @@ msgstr ""
 msgid "%s-detailed"
 msgstr ""
 
-#: ajax/export/excel.php:260 lib/projects.php:1813 lib/projects.php:1814
+#: ajax/export/excel.php:260 lib/projects.php:1830 lib/projects.php:1831
 msgid "Missing Musicians"
 msgstr ""
 
 #: ajax/export/excel.php:285 ajax/export/insurance-export.php:157
-#: lib/projects.php:1816
+#: lib/projects.php:1833
 msgid "Instrument"
 msgstr ""
 
-#: ajax/export/excel.php:286 lib/projects.php:1816
+#: ajax/export/excel.php:286 lib/projects.php:1833
 msgid "Missing"
 msgstr ""
 
@@ -1375,21 +1375,21 @@ msgstr ""
 msgid "Setting `%s' to `%s'"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:38 lib/projects.php:801
+#: ajax/settings/redaxo-settings.php:38 lib/projects.php:818
 msgid "Preview"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:39 lib/projects.php:805
+#: ajax/settings/redaxo-settings.php:39 lib/projects.php:822
 msgid "Archive"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:40 lib/projects.php:803
-#: lib/projects.php:1358 lib/projects.php:1519 lib/projects.php:1575
-#: lib/projects.php:1576 lib/projects.php:1648
+#: ajax/settings/redaxo-settings.php:40 lib/projects.php:820
+#: lib/projects.php:1375 lib/projects.php:1536 lib/projects.php:1592
+#: lib/projects.php:1593 lib/projects.php:1665
 msgid "Rehearsals"
 msgstr ""
 
-#: ajax/settings/redaxo-settings.php:41 lib/projects.php:807
+#: ajax/settings/redaxo-settings.php:41 lib/projects.php:824
 msgid "Trashbin"
 msgstr ""
 
@@ -1930,11 +1930,11 @@ msgstr ""
 msgid "Display the application menu and settings side-bar"
 msgstr ""
 
-#: js/pme.js:890
+#: js/pme.js:889
 msgid "#columns"
 msgstr ""
 
-#: js/pme.js:899
+#: js/pme.js:898
 msgid "#rows"
 msgstr ""
 
@@ -2067,11 +2067,11 @@ msgstr ""
 msgid "Please standby, the operation will take some time!"
 msgstr ""
 
-#: lib/addressbookbackend.php:215
+#: lib/addressbookbackend.php:211
 msgid "CAFeV DB orchestra address-book with all musicians."
 msgstr ""
 
-#: lib/addressbookbackend.php:252
+#: lib/addressbookbackend.php:248
 #, php-format
 msgid "CAFeV DB project address-book with all participants for %s"
 msgstr ""
@@ -2174,7 +2174,7 @@ msgstr ""
 msgid "Personal data"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:144 lib/musicians.php:183
+#: lib/detailed-instrumentation.php:144 lib/musicians.php:187
 msgid "Display all columns"
 msgstr ""
 
@@ -2190,43 +2190,43 @@ msgstr ""
 msgid "All Instruments"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:322 lib/musicians.php:330
+#: lib/detailed-instrumentation.php:322 lib/musicians.php:334
 msgid "Member Status"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:405 lib/musicians.php:486
+#: lib/detailed-instrumentation.php:405 lib/musicians.php:490
 msgid "Remarks"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:422 lib/musicians.php:343
+#: lib/detailed-instrumentation.php:422 lib/musicians.php:347
 msgid "no projects yet"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:438 lib/musicians.php:387
+#: lib/detailed-instrumentation.php:438 lib/musicians.php:391
 msgid "Projects"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:450 lib/musicians.php:407
+#: lib/detailed-instrumentation.php:450 lib/musicians.php:411
 msgid "Mobile Phone"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:467 lib/musicians.php:423
+#: lib/detailed-instrumentation.php:467 lib/musicians.php:427
 msgid "Fixed Line Phone"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:484 lib/musicians.php:442
+#: lib/detailed-instrumentation.php:484 lib/musicians.php:446
 msgid "Street"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:494 lib/musicians.php:451
+#: lib/detailed-instrumentation.php:494 lib/musicians.php:455
 msgid "Postal Code"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:503 lib/musicians.php:460
+#: lib/detailed-instrumentation.php:503 lib/musicians.php:464
 msgid "City"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:515 lib/musicians.php:472
+#: lib/detailed-instrumentation.php:515 lib/musicians.php:476
 msgid "Country"
 msgstr ""
 
@@ -2234,12 +2234,12 @@ msgstr ""
 msgid "General Remarks"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:553 lib/musicians.php:526
+#: lib/detailed-instrumentation.php:553 lib/musicians.php:530
 msgid "Photo"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:579 lib/musicians.php:600
-#: lib/projects.php:411
+#: lib/detailed-instrumentation.php:579 lib/musicians.php:604
+#: lib/projects.php:428
 msgid "Last Updated"
 msgstr ""
 
@@ -2503,7 +2503,7 @@ msgid ""
 "and even edit the public web-pages for the project and other things."
 msgstr ""
 
-#: lib/functions.php:1433 lib/projects.php:881
+#: lib/functions.php:1433 lib/projects.php:898
 msgid "Instrumentation"
 msgstr ""
 
@@ -2524,8 +2524,8 @@ msgid ""
 "ones as needed."
 msgstr ""
 
-#: lib/functions.php:1473 lib/project-instruments.php:69 lib/projects.php:886
-#: lib/projects.php:1145
+#: lib/functions.php:1473 lib/project-instruments.php:69 lib/projects.php:903
+#: lib/projects.php:1162
 msgid "Instrumentation Numbers"
 msgstr ""
 
@@ -2535,7 +2535,7 @@ msgid ""
 "already registered for each instrument group and how many are finally needed."
 msgstr ""
 
-#: lib/functions.php:1493 lib/projects.php:923
+#: lib/functions.php:1493 lib/projects.php:940
 msgid "Debit Mandates"
 msgstr ""
 
@@ -2821,44 +2821,56 @@ msgid ""
 "registration form to us."
 msgstr ""
 
-#: lib/instrumentation.php:281
-msgid "regular"
+#: lib/instrumentation.php:276
+msgid "regular musician"
 msgstr ""
 
-#: lib/instrumentation.php:282
-msgid "passive"
+#: lib/instrumentation.php:277
+msgid "passive member"
 msgstr ""
 
-#: lib/instrumentation.php:283
+#: lib/instrumentation.php:278 lib/instrumentation.php:291
 msgid "soloist"
 msgstr ""
 
-#: lib/instrumentation.php:284
+#: lib/instrumentation.php:279 lib/instrumentation.php:292
 msgid "conductor"
 msgstr ""
 
-#: lib/instrumentation.php:285
+#: lib/instrumentation.php:280
+msgid "temporary musician"
+msgstr ""
+
+#: lib/instrumentation.php:289
+msgid "regular"
+msgstr ""
+
+#: lib/instrumentation.php:290
+msgid "passive"
+msgstr ""
+
+#: lib/instrumentation.php:293 lib/projects.php:295
 msgid "temporary"
 msgstr ""
 
-#: lib/instrumentation.php:466
+#: lib/instrumentation.php:474
 #, php-format
 msgid "Unable to fetch musician's personal information for id %d"
 msgstr ""
 
-#: lib/instrumentation.php:480
+#: lib/instrumentation.php:488
 #, php-format
 msgid "Unable to fetch musician's project information for id %d."
 msgstr ""
 
-#: lib/instrumentation.php:492
+#: lib/instrumentation.php:500
 #, php-format
 msgid ""
 "The musician %s is already registered for the project with the instruments "
 "%s."
 msgstr ""
 
-#: lib/instrumentation.php:508
+#: lib/instrumentation.php:516
 #, php-format
 msgid ""
 "None of the instruments known by %s are mentioned in the instrumentation-"
@@ -2866,17 +2878,17 @@ msgid ""
 "the instrument `%s'"
 msgstr ""
 
-#: lib/instrumentation.php:514
+#: lib/instrumentation.php:522
 #, php-format
 msgid "The musician %s doesn't seem to play any instrument ..."
 msgstr ""
 
-#: lib/instrumentation.php:531
+#: lib/instrumentation.php:539
 #, php-format
 msgid "Adding %s (id = %d) failed."
 msgstr ""
 
-#: lib/instrumentation.php:539
+#: lib/instrumentation.php:547
 #, php-format
 msgid "Unable to get the new id for %s (id = %d)"
 msgstr ""
@@ -2978,118 +2990,118 @@ msgstr ""
 msgid "Due Date"
 msgstr ""
 
-#: lib/musicians.php:52
+#: lib/musicians.php:56
 msgid "Remove all data of the displayed musician?"
 msgstr ""
 
-#: lib/musicians.php:54
+#: lib/musicians.php:58
 msgid "Copy the displayed musician?"
 msgstr ""
 
-#: lib/musicians.php:56
+#: lib/musicians.php:60
 msgid "Display of all stored personal data for the shown musician."
 msgstr ""
 
-#: lib/musicians.php:58
+#: lib/musicians.php:62
 msgid "Edit the personal data of the displayed musician."
 msgstr ""
 
-#: lib/musicians.php:60
+#: lib/musicians.php:64
 msgid "Add a new musician to the data-base."
 msgstr ""
 
-#: lib/musicians.php:62
+#: lib/musicians.php:66
 msgid "Overview over all registered musicians"
 msgstr ""
 
-#: lib/musicians.php:64
+#: lib/musicians.php:68
 #, php-format
 msgid "Add musicians to the project `%s'"
 msgstr ""
 
-#: lib/musicians.php:174
+#: lib/musicians.php:178
 msgid "Instruments and Status"
 msgstr ""
 
-#: lib/musicians.php:177
+#: lib/musicians.php:181
 msgid "Contact Information"
 msgstr ""
 
-#: lib/musicians.php:180
+#: lib/musicians.php:184
 msgid "Miscellaneous Data"
 msgstr ""
 
-#: lib/musicians.php:212
+#: lib/musicians.php:216
 #, php-format
 msgid "Add all to %s"
 msgstr ""
 
-#: lib/musicians.php:264
+#: lib/musicians.php:268
 #, php-format
 msgid "Add to %s"
 msgstr ""
 
-#: lib/musicians.php:269
+#: lib/musicians.php:273
 msgid "Add Musicians"
 msgstr ""
 
-#: lib/musicians.php:298
+#: lib/musicians.php:302
 msgid "Surname"
 msgstr ""
 
-#: lib/musicians.php:307
+#: lib/musicians.php:311
 msgid "Forename"
 msgstr ""
 
-#: lib/musicians.php:316
+#: lib/musicians.php:320
 msgid "Instruments"
 msgstr ""
 
-#: lib/musicians.php:499
+#: lib/musicians.php:503
 msgid "Language"
 msgstr ""
 
-#: lib/musicians.php:509 lib/sepa-debit-mandates.php:415
+#: lib/musicians.php:513 lib/sepa-debit-mandates.php:415
 msgid "Instrument Insurance"
 msgstr ""
 
-#: lib/musicians.php:731
+#: lib/musicians.php:735
 #, php-format
 msgid "Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;"
 msgstr ""
 
-#: lib/musicians.php:757
+#: lib/musicians.php:761
 msgid ""
 "Portraits or Avatars can only be added to an existing musician's profile; "
 "please add the new musician without protrait image first."
 msgstr ""
 
-#: lib/musicians.php:763
+#: lib/musicians.php:767
 msgid "Photo, if available"
 msgstr ""
 
-#: lib/musicians.php:769
+#: lib/musicians.php:773
 #, php-format
 msgid "Drop photo to upload (max %s)"
 msgstr ""
 
-#: lib/musicians.php:772
+#: lib/musicians.php:776
 msgid "Delete current photo"
 msgstr ""
 
-#: lib/musicians.php:773
+#: lib/musicians.php:777
 msgid "Edit current photo"
 msgstr ""
 
-#: lib/musicians.php:774
+#: lib/musicians.php:778
 msgid "Upload new photo"
 msgstr ""
 
-#: lib/musicians.php:775
+#: lib/musicians.php:779
 msgid "Select photo from ownCloud"
 msgstr ""
 
-#: lib/musicians.php:783
+#: lib/musicians.php:787
 msgid ""
 "Internal error, don't know what to do concerning portrait images in the "
 "given context."
@@ -3202,7 +3214,7 @@ msgid ""
 msgstr ""
 
 #: lib/project-instruments.php:261 lib/project-instruments.php:500
-#: lib/projects.php:285 lib/projects.php:291
+#: lib/projects.php:302 lib/projects.php:308
 msgid "Actions"
 msgstr ""
 
@@ -3225,7 +3237,7 @@ msgstr ""
 msgid "Instrumentation-Numbers not Found"
 msgstr ""
 
-#: lib/project-instruments.php:346 lib/projects.php:263
+#: lib/project-instruments.php:346 lib/projects.php:269
 msgid "Projekt-Name"
 msgstr ""
 
@@ -3259,22 +3271,30 @@ msgstr ""
 msgid "%s Projects"
 msgstr ""
 
-#: lib/projects.php:276
+#: lib/projects.php:282
 msgid "Append the year to the name"
 msgstr ""
 
-#: lib/projects.php:318
+#: lib/projects.php:291
+msgid "Kind"
+msgstr ""
+
+#: lib/projects.php:296 templates/sepa-debit-mandate.php:34
+msgid "permanent"
+msgstr ""
+
+#: lib/projects.php:335
 msgid "Toolbox"
 msgstr ""
 
-#: lib/projects.php:336
+#: lib/projects.php:353
 msgid ""
 "Default project fee for ordinary participants. This should NOT include "
 "reductions of any kind. The value displayed here is the default value "
 "inserted into the instrumentation table for the project."
 msgstr ""
 
-#: lib/projects.php:351
+#: lib/projects.php:368
 msgid ""
 "Comma separated list of extra-fields, e.g.\n"
 "<blockquote>\n"
@@ -3304,82 +3324,82 @@ msgid ""
 "a comma."
 msgstr ""
 
-#: lib/projects.php:376
+#: lib/projects.php:393
 msgid "Program"
 msgstr ""
 
-#: lib/projects.php:393
+#: lib/projects.php:410
 msgid "Flyer"
 msgstr ""
 
-#: lib/projects.php:791
+#: lib/projects.php:808
 #, php-format
 msgid "Unable to fetch public web pages for project id %d"
 msgstr ""
 
-#: lib/projects.php:871
+#: lib/projects.php:888
 msgid "Project Overview"
 msgstr ""
 
-#: lib/projects.php:895
+#: lib/projects.php:912
 msgid "Project Files"
 msgstr ""
 
-#: lib/projects.php:902 lib/projects.php:1123
+#: lib/projects.php:919 lib/projects.php:1140
 #, php-format
 msgid "Project Wiki for %s"
 msgstr ""
 
-#: lib/projects.php:904 lib/projects.php:1127
+#: lib/projects.php:921 lib/projects.php:1144
 msgid "Project Notes"
 msgstr ""
 
-#: lib/projects.php:909 lib/projects.php:1133 lib/projects.php:1163
+#: lib/projects.php:926 lib/projects.php:1150 lib/projects.php:1180
 msgid "Events"
 msgstr ""
 
-#: lib/projects.php:914 lib/projects.php:1139
+#: lib/projects.php:931 lib/projects.php:1156
 msgid "Em@il"
 msgstr ""
 
-#: lib/projects.php:929
+#: lib/projects.php:946
 msgid "Profit and Loss Account"
 msgstr ""
 
-#: lib/projects.php:2279
+#: lib/projects.php:2296
 msgid ""
 "Flyers can only be added to existing projects, please add the new\n"
 "project without a flyer first."
 msgstr ""
 
-#: lib/projects.php:2292
+#: lib/projects.php:2309
 #, php-format
 msgid "Drop image to upload (max %s)"
 msgstr ""
 
-#: lib/projects.php:2295
+#: lib/projects.php:2312
 msgid "Delete current flyer"
 msgstr ""
 
-#: lib/projects.php:2296
+#: lib/projects.php:2313
 msgid "Edit current flyer"
 msgstr ""
 
-#: lib/projects.php:2297
+#: lib/projects.php:2314
 msgid "Upload new flyer"
 msgstr ""
 
-#: lib/projects.php:2298
+#: lib/projects.php:2315
 msgid "Select image from ownCloud"
 msgstr ""
 
-#: lib/projects.php:2306
+#: lib/projects.php:2323
 msgid ""
 "Internal error, don't know what to do concerning project-flyers in the given "
 "context."
 msgstr ""
 
-#: lib/projects.php:2392
+#: lib/projects.php:2409
 #, php-format
 msgid ""
 "====== Project %s ======\n"
@@ -5840,10 +5860,6 @@ msgstr ""
 
 #: templates/sepa-debit-mandate.php:34
 msgid "once"
-msgstr ""
-
-#: templates/sepa-debit-mandate.php:34
-msgid "permanent"
 msgstr ""
 
 #: templates/sepa-debit-mandate.php:39
