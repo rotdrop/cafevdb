@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -272,9 +272,17 @@ class Instrumentation
     $this->groupedInstruments = Instruments::fetchGrouped($handle);
     $this->instrumentFamilies = mySQL::multiKeys('Instrumente', 'Familie', $handle);
     $this->memberStatus = mySQL::multiKeys('Musiker', 'MemberStatus', $handle);
-    $this->memberStatusNames = array();
+    $this->memberStatusNames = array(
+      'regular' => strval(L::t('regular musician')),
+      'passive' => strval(L::t('passive member')),
+      'soloist' => strval(L::t('soloist')),
+      'conductor' => strval(L::t('conductor')),
+      'temporary' => strval(L::t('temporary musician'))
+      );
     foreach ($this->memberStatus as $tag) {
-      $this->memberStatusNames[$tag] = strval(L::t($tag));
+      if (!isset($this->memberStatusNames[$tag])) {
+        $this->memberStatusNames[$tag] = strval(L::t($tag));
+      }
     }
     if (false) {
       // Dummies to keep the translation right.
