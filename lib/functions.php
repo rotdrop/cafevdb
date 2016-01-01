@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -1329,7 +1329,7 @@ __EOT__;
         $value = L::t("View all Projects");
         $title = L::t("Overview over all known projects (start-page).");
         if ($asListItem) {
-          $year = date("Y");
+          $year = date("Y") - 1;
           $post = array('Projects' => $value,
                         'Template' => 'projects',
                         'PME_sys_qf1_comp' => '>=',
