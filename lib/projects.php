@@ -289,7 +289,8 @@ namespace CAFEVDB
         'values2'  => array('temporary' => L::t('temporary'),
                             'permanent' => L::t('permanent')),
         'default'  => 'temporary',
-        'sort'     => false
+        'sort'     => false,
+        'tooltip' => Config::toolTips('project-kind')
         );
 
       $opts['fdd']['Actions'] = array(

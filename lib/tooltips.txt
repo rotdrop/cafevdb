@@ -23,6 +23,7 @@ project-action-wiki
 projectevents-button
 project-infopage
 project-instrumentation-tab
+project-kind
 project-metadata-tab
 project-name
 project-personaldata-tab
