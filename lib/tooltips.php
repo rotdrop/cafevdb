@@ -433,7 +433,11 @@ to pages with the instrumentation, events, instrumentation numbers etc.'),
         'project-instrumentation-tab' => L::t('Displays the columns directly related to the instrumentation for the project.'),
 
         'project-kind' => L::t('Either "temporary" -- the regular case -- or "permanent" -- the
-          exceptional case for "virtual pseudo projects". The latter in particular includes the pseudo-project for the administative board and the members of the registered orchestra association.'),
+exceptional case for "virtual pseudo projects". The latter in
+particular includes the pseudo-project for the administative board and
+the members of the registered orchestra association. Non-permanents
+always have per-force the project-year attached to their name,
+permanent "pseudo-projects" don\'t, as it does not make any sense.'),
 
         'project-metadata-tab' => L::t('Displays `meta-data\' like project fees, single/double room preferences, debit-mandates and the like.'),
 
