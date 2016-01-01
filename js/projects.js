@@ -700,6 +700,8 @@ $(document).ready(function(){
 
                     --numDisplayFrames;
                 }
+
+                //alert('Display Frames: ' + numDisplayFrames);
                 if (numDisplayFrames == 0) {
                     $('#cmsFrameLoader').fadeOut(function() {
                         articleBox.tabs({
@@ -866,9 +868,12 @@ $(document).ready(function(){
             };
 
             if (allDisplayFrames.length > 0) {
+                //alert('all dpy frames: '+allDisplayFrames.length);
                 if (displayFrames.length > 0) {
+                    //alert('dpy frames: '+displayFrames.length);
                     displayFrames.on('load', function(event) {
                         displayArticleLoad(this);
+                        //alert('Load');
                     });
                 } else {
                     displayArticleLoad();

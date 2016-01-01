@@ -787,11 +787,10 @@ var CAFEVDB = CAFEVDB || {};
         height: '0px',
         modal: true,
         closeOnEscape: false,
-        dialogClass: 'transparent no-close zero-size',
+        dialogClass: 'transparent no-close zero-size cafevdb-modalizer',
         resizable: false,
         open: function() {
           // This one must be ours.
-
           CAFEVDB.dialogOverlay = $('.ui-widget-overlay:last');
         },
         close: function() {
@@ -848,14 +847,14 @@ var CAFEVDB = CAFEVDB || {};
 
     toBackButton.off('click');
     toBackButton.on('click', function() {
-      var overlay = $('div.ui-widget-overlay');
+      var overlay = $('.ui-widget-overlay:last');
       var overlayIndex = 100; // OwnCloud header resides at 50.
       if (overlay.length > 0) {
         overlayIndex = parseInt(overlay.css('z-index'));
       }
       // will be only few, so what
       var needShuffle = false;
-      $('.ui-dialog.ui-widget').each(function(index) {
+      $('.ui-dialog.ui-widget').not('.cafevdb-modalizer').each(function(index) {
         var thisIndex = parseInt($(this).css('z-index'));
         if (thisIndex == overlayIndex + 1) {
           needShuffle = true;

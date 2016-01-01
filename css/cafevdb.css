@@ -768,6 +768,19 @@ input[disabled]:hover,
   background:#CCC;
 }
 
+/* Avoid hiding the OC top-level menu bar by the "modalizer", but
+ * allow top-level dialogs to float on top of the menu bar. Note that
+ * the magic number "2000" is the z-index of the #header div and needs to be
+ * adjusted if ever that number should be changed "in-core".
+ */
+body > .ui-widget-overlay.ui-front {
+  z-index:1999;
+}
+
+body > .ui-front.ui-draggable {
+  z-index:2000;
+}
+
 /* make popups scrollable in smaller viewports */
 .ui-dialog {
   max-height: 80%; /* !important;*/
