@@ -45,6 +45,7 @@ $(document).ready(function() {
     } else {
       $('#app-settings').switchClass('', 'open');
     }
+    $('#app-settings-header').cafevTooltip('hide');
     return false;
   });
 
@@ -52,7 +53,8 @@ $(document).ready(function() {
     event.preventDefault();
     var self = $(this);
     var post = self.serialize();
-    CAFEVDB.toolTipsOnOff(self.attr('checked'));
+    CAFEVDB.toolTipsOnOff(self.prop('checked'));
+    $('#tooltips').prop('checked', CAFEVDB.toolTipsEnabled);
     $.post(OC.filePath('cafevdb', 'ajax/settings', 'tooltips.php'),
            post, function(data) {});
     return false;
@@ -63,27 +65,50 @@ $(document).ready(function() {
     var self = $(this);
     var post = self.serialize();
     $.post(OC.filePath('cafevdb', 'ajax/settings', 'filtervisibility.php'),
-           post, function(data) {});
-    if (self.attr('checked')) {
+           post,
+           function(data) {
+             return;
+           });
+    var checked = self.prop('checked');
+    if (checked) {
       $('input.pme-search').trigger('click');
     } else {
       $('input.pme-hide').trigger('click');
     }
+    $('#filtervisibility').prop('checked', checked)
+    return false;
+  });
+
+  appNav.on('change', '#app-settings-directchange', function(event) {
+    event.preventDefault();
+    var self = $(this);
+    var post = self.serialize();
+    $.post(OC.filePath('cafevdb', 'ajax/settings', 'directchange.php'),
+           post,
+           function(data) {
+             return;
+           });
+    var checked = self.prop('checked')
+    PHPMYEDIT.directChange = checked;
+    $('#directchange').prop('checked', checked);
     return false;
   });
 
   appNav.on('change', '#app-settings-expertmode', function(event) {
     event.preventDefault();
-    var post = $(this).serialize();
+    var self = $(this);
+    var post = self.serialize();
     $.post(OC.filePath('cafevdb', 'ajax/settings', 'expertmode.php'),
            post, function(data) {});
-    if ($('#app-settings-expertmode').attr('checked')) {
+    var checked = self.prop('checked');
+    if (checked) {
       $('#app-settings-content li.expertmode').removeClass('hidden');
       $('#app-settings-content select.debug-mode').trigger('chosen:updated');
     } else {
       $('#app-settings-content li.expertmode').addClass('hidden');
     }
-
+    $('#expertmode').prop('checked', checked);
+    $('select.debug-mode').trigger('chosen:updated');
     return false;
   });
 

@@ -52,6 +52,7 @@ ajax/projects/web-articles.php
 ajax/settings/app-settings.php
 ajax/settings/creditslist.php
 ajax/settings/debugmode.php
+ajax/settings/directchange.php
 ajax/settings/encryptionkey.php
 ajax/settings/exampletext.php
 ajax/settings/expertmode.php

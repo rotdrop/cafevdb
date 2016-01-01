@@ -44,9 +44,11 @@ $(document).ready(function() {
 
   $('#expertmode').change(function(event) {
     event.preventDefault();
-    var post = $("#expertmode").serialize();
+    var self = $(this);
+    var post = self.serialize();
     $.post(OC.filePath('cafevdb', 'ajax/settings', 'expertmode.php') , post, function(data) {return;});
-    if ($('#expertmode').attr('checked')) {
+    var checked = self.prop('checked');
+    if (checked) {
       $('#expertbutton').show();
       $('#expertbutton').css('float', 'left');
       $('select.debug-mode').prop('disabled', false);
@@ -54,6 +56,7 @@ $(document).ready(function() {
       $('#expertbutton').hide();
       $('select.debug-mode').prop('disabled', true);
     }
+    $('#app-settings-expertmode').prop('checked', checked);
     $('select.debug-mode').trigger('chosen:updated');
     return false;
   });
@@ -62,7 +65,8 @@ $(document).ready(function() {
     event.preventDefault();
     var self = $(this);
     var post = self.serialize();
-    CAFEVDB.toolTipsOnOff(self.attr('checked'));
+    CAFEVDB.toolTipsOnOff(self.prop('checked'));
+    $('#app-settings-tooltips').prop('checked', CAFEVDB.toolTipsEnabled);
     $.post(OC.filePath('cafevdb', 'ajax/settings', 'tooltips.php'),
            post, function(data) {});
     return false;
@@ -70,13 +74,35 @@ $(document).ready(function() {
 
   $('#filtervisibility').change(function(event) {
     event.preventDefault();
-    var post = $("#filtervisibility").serialize();
-    $.post(OC.filePath('cafevdb', 'ajax/settings', 'filtervisibility.php') , post, function(data) {return;});
-    if ($('#filtervisibility').attr('checked')) {
+    var self = $(this);
+    var post = self.serialize();
+    $.post(OC.filePath('cafevdb', 'ajax/settings', 'filtervisibility.php'),
+           post,
+           function(data) {
+             return;
+           });
+    var checked = self.prop('checked');
+    if (checked) {
       $('input.pme-search').trigger('click');
     } else {
       $('input.pme-hide').trigger('click');
     }
+    $('#app-settings-filtervisibility').prop('checked', checked);
+    return false;
+  });
+
+  $('#directchange').change(function(event) {
+    event.preventDefault();
+    var self = $(this);
+    var post = self.serialize();
+    $.post(OC.filePath('cafevdb', 'ajax/settings', 'directchange.php'),
+           post,
+           function(data) {
+             return;
+           });
+    var checked = self.prop('checked');
+    PHPMYEDIT.directChange = checked;
+    $('#app-settings-directchange').prop('checked', checked);
     return false;
   });
 

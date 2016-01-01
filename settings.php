@@ -46,6 +46,7 @@ namespace CAFEVDB {
 
     $tooltips         = Config::getUserValue('tooltips', 'on', $user);
     $filtervisibility = Config::getUserValue('filtervisibility', 'off', $user);
+    $directchange     = Config::getUserValue('directchange', 'off', $user);
 
     $pagerows    = Config::getUserValue('pagerows', 20, $user);
     $editor      = Config::getUserValue('wysiwygEditor', 'tinymce', $user);
@@ -57,6 +58,7 @@ namespace CAFEVDB {
     $tmpl->assign('tooltips', $tooltips);
     $tmpl->assign('editor', $editor);
     $tmpl->assign('filtervisibility', $filtervisibility);
+    $tmpl->assign('directchange', $directchange);
     $tmpl->assign('encryptionkey', $encrkey);
     $tmpl->assign('adminsettings', false);
 

@@ -29,6 +29,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
 (function(window, $, PHPMYEDIT, undefined) {
   'use strict';
 
+  PHPMYEDIT.directChange            = false;
   PHPMYEDIT.filterSelectPlaceholder = 'Select a filter Option';
   PHPMYEDIT.filterSelectNoResult    = 'No values match';
   PHPMYEDIT.selectChosen            =  true;
@@ -1057,13 +1058,13 @@ var PHPMYEDIT = PHPMYEDIT || {};
         return;
       }
 
-      if (typeof $(selectBox).attr("title") !== 'undefined') {
-        selectTitle = selectBox.attr("title");
-      } else if (typeof $(selectBox).attr("data-original-title") !== 'undefined') {
+      selectTitle = $(selectBox).attr("title");
+      if (selectTitle === undefined || selectTitle.trim().length <= 0) {
         selectTitle = selectBox.attr("data-original-title");
       }
-      if (selectTitle.length != 0) {
+      if (selectTitle !== undefined && selectTitle.length > 0) {
         chosen.attr("title", selectTitle);
+        chosen.addClass('tooltip-right tooltip-wide');
       }
     });
 
@@ -1228,7 +1229,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
         }
       });
 
-      // Trigger "view operation" when clicking on a data-row.
+      // Trigger view or change "operation" when clicking on a data-row.
       var rowSelector = formSel+' td.'+pme.pmeToken('cell')+':not(.control)'
                       + ','
                       + formSel+' td.'+pme.pmeToken('navigation');
@@ -1260,9 +1261,16 @@ var PHPMYEDIT = PHPMYEDIT || {};
         event.stopImmediatePropagation();
         var recordId = $(this).parent().data(pme.pmePrefix+'_sys_rec');
         var recordKey = pme.pmeSys('rec');
-        var recordEl = '<input type="hidden" class="'+pme.pmeToken('view-navigation')+'"'
-                     +' value="View?'+recordKey+'='+recordId+'"'
-                     +' name="'+pme.pmeSys('operation')+'" />';
+        var recordEl;
+        if (PHPMYEDIT.directChange) {
+          recordEl = '<input type="hidden" class="'+pme.pmeToken('change-navigation')+'"'
+                   +' value="Change?'+recordKey+'='+recordId+'"'
+                   +' name="'+pme.pmeSys('operation')+'" />';
+        } else {
+          recordEl = '<input type="hidden" class="'+pme.pmeToken('view-navigation')+'"'
+                   +' value="View?'+recordKey+'='+recordId+'"'
+                   +' name="'+pme.pmeSys('operation')+'" />';
+        }
 
         // "this" does not necessarily has a form attribute
         var form = container.find(formSel);

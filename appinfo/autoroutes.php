@@ -182,6 +182,9 @@ $this->create("cafevdb_ajax_settings_creditslist.php", "ajax/settings/creditslis
 $this->create("cafevdb_ajax_settings_debugmode.php", "ajax/settings/debugmode.php")
   ->actionInclude("cafevdb/ajax/settings/debugmode.php");
 
+$this->create("cafevdb_ajax_settings_directchange.php", "ajax/settings/directchange.php")
+  ->actionInclude("cafevdb/ajax/settings/directchange.php");
+
 $this->create("cafevdb_ajax_settings_encryptionkey.php", "ajax/settings/encryptionkey.php")
   ->actionInclude("cafevdb/ajax/settings/encryptionkey.php");
 

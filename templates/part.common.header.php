@@ -107,7 +107,9 @@ namespace CAFEVDB {
   <?php echo $_['navigationcontrols']; ?>
   <div id="app-settings">
     <div id="cafevdb-navigation-info"><?php echo $_['navBarInfo']; ?></div>
-    <div id="app-settings-header">
+    <div id="app-settings-header"
+         class="tooltip-top"
+         title="<?php echo Config::tooltips('settings-button'); ?>">
       <button class="settings-button" tabindex="0"></button>
     </div>
     <div id="app-settings-content">
@@ -121,7 +123,7 @@ namespace CAFEVDB {
           <label for="app-settings-tooltips"
                  class="tooltip-top"
                  title="<?php echo Config::tooltips('show-tool-tips'); ?>">
-            <?php echo L::t('Tool-Tips') ?>
+            <?php echo L::t('Tool-Tips'); ?>
           </label>
         </li>
         <li>
@@ -133,7 +135,19 @@ namespace CAFEVDB {
           <label for="app-settings-filtervisibility"
                  class="tooltip-top"
                  title="<?php echo Config::tooltips('filter-visibility'); ?>">
-            <?php echo L::t('Filter-Controls') ?>
+            <?php echo L::t('Filter-Controls'); ?>
+          </label>
+        </li>
+        <li>
+          <input id="app-settings-directchange"
+                 type="checkbox"
+                 name="directchange" <?php echo $_['directchange'] == 'on' ? 'checked="checked"' : ''; ?>
+                 class="tooltip-top"
+                 title="<?php echo Config::tooltips('direct-change'); ?>"/>
+          <label for="app-settings-directchange"
+                 class="tooltip-top"
+                 title="<?php echo Config::tooltips('direct-change'); ?>">
+            <?php echo L::t('Quick Change-Dialog'); ?>
           </label>
         </li>
         <li>
@@ -145,7 +159,7 @@ namespace CAFEVDB {
           <label for="app-settings-expertmode"
                  class="tooltip-top"
                  title="<?php echo Config::tooltips('expert-mode'); ?>">
-            <?php echo L::t('Expert-Mode') ?>
+            <?php echo L::t('Expert-Mode'); ?>
           </label>
         </li>
         <li class="chosen-dropup">

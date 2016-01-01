@@ -101,6 +101,7 @@ namespace CAFEVDB {
 
       $tooltips   = Config::getUserValue('tooltips', 'on', $user);
       $usrFiltVis = Config::getUserValue('filtervisibility', 'off', $user);
+      $directChg  = Config::getUserValue('directchange', 'off', $user);
       $pageRows   = Config::getUserValue('pagerows', 20, $user);
 
       // Filter visibility is stored here:
@@ -145,7 +146,8 @@ namespace CAFEVDB {
       $tmpl->assign('historyPosition', $this->historyPosition());
       $tmpl->assign('pageControls', 'listItems');
       $tmpl->assign('requesttoken', \OCP\Util::callRegister());
-      $tmpl->assign('filtervisibility', Config::getUserValue('filtervisibility', 'off', $user));
+      $tmpl->assign('filtervisibility', $usrFiltVis);
+      $tmpl->assign('directchange', $directChg);
       $tmpl->assign('pagerows', $pageRows);
 
       return $tmpl;

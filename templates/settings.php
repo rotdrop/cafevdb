@@ -26,15 +26,12 @@ namespace CAFEVDB
   echo Util::emitExternalScripts();
   echo Util::emitInlineScripts();
 
-  $tooltipstitle  = L::t("Control the display of tooltips. ".
-                    "Warning: this works globally for all OwnCloud applications.");
-  $filtervistitle = L::t("Initially display the filter-controls on all atable. This affects only ".
-                    "the initial visibility of the filter-buttons and -inputs.");
-  $pagerowstitle  = L::t("Initial rows-per-page value for the display of various tables. ".
-                    "Most tables allow adjusting this value by individual controls. ".
-  "This setting affects only the initial setting; changes will only be visible after reloading the pages.");
-  $experttitle    = L::t("Show a second button which leads to a dialog with `advanced' settings");
-  $debugtitle     = L::t("Show a certain amount of debug information, normally not needed.");
+  $tooltipstitle  = Config::tooltips('show-tool-tips');
+  $filtervistitle = Config::tooltips('filter-visibility');
+  $directchgtitle = Config::tooltips('direct-change');
+  $pagerowstitle  = Config::tooltips('table-rows-per-page');
+  $experttitle    = Config::tooltips('expert-operations');
+  $debugtitle     = Config::tooltips('debug-mode');
 
   $debugModes = array('general' => L::t('General Information'),
                       'query' => L::t('SQL Queries'),
@@ -77,11 +74,16 @@ namespace CAFEVDB
 
   <div id="tabs-1" class="personalblock <?php if ($_['adminsettings']) echo 'admin'; ?>">
     <form id="cafevdb">
-      <input id="tooltips" type="checkbox" name="tooltips" <?php echo $_['tooltips'] == 'on' ? 'checked="checked"' : ''; ?> id="tooltips" title="<?php echo $tooltipstitle ?>"/>
+      <input id="tooltips" type="checkbox" name="tooltips" <?php echo $_['tooltips'] == 'on' ? 'checked="checked"' : ''; ?> id="tooltips" title="<?php echo Config::tooltips('show-tool-tips'); ?>"/>
       <label for="tooltips" title="<?php echo $tooltipstitle; ?>"><?php echo L::t('Tool-Tips') ?></label>
       <br />
       <input id="filtervisibility" type="checkbox" name="filtervisibility" <?php echo $_['filtervisibility'] == 'on' ? 'checked="checked"' : ''; ?> title="<?php echo $filtervistitle ?>"/>
       <label for="filtervisibility" title="<?php echo $filtervistitle; ?>"><?php echo L::t('Filter-Controls') ?></label>
+      <br />
+      <input id="directchange" type="checkbox" name="directchange" <?php echo $_['directchange'] == 'on' ? 'checked="checked"' : ''; ?> title="<?php echo $directchgtitle ?>"/>
+      <label for="directchange" title="<?php echo $directchgtitle; ?>">
+        <?php echo L::t('Quick Change-Dialog') ?>
+      </label>
       <br />
       <div class="table-pagerows settings-control">
         <select name="pagerows"
@@ -96,7 +98,9 @@ namespace CAFEVDB
           }
           ?>
         </select>
-        <label for="table-pagerows"><?php echo L::t('Display #Rows/Page in Tables'); ?></label>
+        <label for="table-pagerows" title="<?php echo $pagerowstitle; ?>">
+          <?php echo L::t('Display #Rows/Page in Tables'); ?>
+        </label>
       </div>
       <div class="wysiwygeditor settings-control">
         <select name="wysiwygEditor"

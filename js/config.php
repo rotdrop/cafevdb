@@ -21,6 +21,7 @@ namespace CAFEVDB {
   $user = \OCP\USER::getUser();
 
   $tooltips  = \OCP\Config::getUserValue($user, 'cafevdb', 'tooltips', '');
+  $directChg = \OCP\Config::getUserValue($user, 'cafevdb', 'directchange', '');
   $language  = \OCP\Config::getUserValue($user, 'core', 'lang', 'en');
   $editor    = \OCP\Config::getUserValue($user, 'cafevdb', 'wysiwygEditor', 'tinymce');
 
@@ -39,6 +40,7 @@ namespace CAFEVDB {
     "CAFEVDB.adminEmail" => "'".$adminEmail."'",
     "CAFEVDB.adminName" => "'".$adminName."'",
     "CAFEVDB.phpUserAgent" => "'".$_SERVER['HTTP_USER_AGENT']."'",
+    "PHPMYEDIT.directChange" => ($directChg == "on" ? 'true' : 'false'),
     "PHPMYEDIT.selectChosen" => "true",
     "PHPMYEDIT.filterSelectPlaceholder" => "'".L::t("Select a filter option.")."'",
     "PHPMYEDIT.filterSelectNoResult" => "'".L::t("No values match.")."'",
