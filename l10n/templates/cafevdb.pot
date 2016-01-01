@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-20 10:31+0100\n"
+"POT-Creation-Date: 2016-01-01 03:04+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1413,7 +1413,7 @@ msgid "Unknown WYSIWYG-Editor: `%s'"
 msgstr ""
 
 #: js/blog.js:53 js/blog.js:182 js/blog.js:233 js/blog.js:269
-#: js/cafevdb.js:1046 js/cafevdb.js:1110 js/email.js:34 js/email.js:63
+#: js/cafevdb.js:1045 js/cafevdb.js:1109 js/email.js:34 js/email.js:63
 #: js/email.js:522 js/email.js:615 js/email.js:778 js/events.js:64
 #: js/events.js:199 js/inlineimage.js:84 js/inlineimage.js:92
 #: js/inlineimage.js:102 js/inlineimage.js:131 js/inlineimage.js:155
@@ -1489,14 +1489,14 @@ msgstr ""
 msgid "Unimplemented"
 msgstr ""
 
-#: js/cafevdb.js:838
+#: js/cafevdb.js:837
 msgid ""
 "If multiple dialogs are open, then move this one to the lowest layer and "
 "display it below the others. Clicking anywhere on the dialog will bring to "
 "the front again."
 msgstr ""
 
-#: js/cafevdb.js:888
+#: js/cafevdb.js:887
 msgid ""
 "Close the current dialog and return to the view which was active before this "
 "dialog had been opened. If the current view shows a `Back' button, then "
@@ -1504,51 +1504,51 @@ msgid ""
 "equivalent to clicking the `Back' button"
 msgstr ""
 
-#: js/cafevdb.js:978 js/instrumentation.js:173
+#: js/cafevdb.js:977 js/instrumentation.js:173
 msgid "Debug Information"
 msgstr ""
 
-#: js/cafevdb.js:1008
+#: js/cafevdb.js:1007
 msgid ""
 "Unrecoverable unknown internal error, no further information available, "
 "sorry."
 msgstr ""
 
-#: js/cafevdb.js:1010
+#: js/cafevdb.js:1009
 msgid "Internal Error"
 msgstr ""
 
-#: js/cafevdb.js:1017
+#: js/cafevdb.js:1016
 #, python-brace-format
 msgid "Field {RequiredField} not present in AJAX response."
 msgstr ""
 
-#: js/cafevdb.js:1026
+#: js/cafevdb.js:1025
 msgid "Missing data"
 msgstr ""
 
-#: js/cafevdb.js:1028 js/events.js:58 js/events.js:193
+#: js/cafevdb.js:1027 js/events.js:58 js/events.js:193
 msgid "Unknown error :("
 msgstr ""
 
-#: js/cafevdb.js:1066
+#: js/cafevdb.js:1065
 msgid "Something went wrong."
 msgstr ""
 
-#: js/cafevdb.js:1068
+#: js/cafevdb.js:1067
 msgid ""
 "If it should be the case that you are already logged in for a long time "
 "without interacting with the web-app, then the reason for this error is "
 "probably a simple timeout."
 msgstr ""
 
-#: js/cafevdb.js:1073
+#: js/cafevdb.js:1072
 msgid ""
 "I any case it may help to logoff and logon again, as a temporary work-"
 "around. You will be redirected to the log-in page when you close this window."
 msgstr ""
 
-#: js/cafevdb.js:1077
+#: js/cafevdb.js:1076
 #, python-brace-format
 msgid "Feedback email: {AutoReport}"
 msgstr ""
@@ -3739,6 +3739,18 @@ msgid ""
 "in the email form."
 msgstr ""
 
+#: lib/tooltips.php:170
+msgid "Display name, pre-name, phone number, email, street-address"
+msgstr ""
+
+#: lib/tooltips.php:174
+msgid "Further information like birthday, a photo, date of last change."
+msgstr ""
+
+#: lib/tooltips.php:176
+msgid "Display name, pre-name, instruments, status, general remarks"
+msgstr ""
+
 #: lib/tooltips.php:178
 msgid ""
 "Enter a short, no-nonsense name for the new template. Please omit spaces."
@@ -4331,26 +4343,33 @@ msgid ""
 "as primary key."
 msgstr ""
 
-#: lib/tooltips.php:556
+#: lib/tooltips.php:552
+msgid ""
+"The initial number of rows per page when displaying data-base\n"
+"tables. The actual number of rows per page can also changed later in\n"
+"the individual table views."
+msgstr ""
+
+#: lib/tooltips.php:558
 msgid ""
 "Check whether the data-base can be accessed with the given account\n"
 "information and password. The password will only be stored in the\n"
 "configuration storage if the test can be performed successfully."
 msgstr ""
 
-#: lib/tooltips.php:560
+#: lib/tooltips.php:562
 msgid ""
 "Try to connect to the specified web-address, will open the web-address in "
 "another window or tab, depending your local browser preferences."
 msgstr ""
 
-#: lib/tooltips.php:562
+#: lib/tooltips.php:564
 msgid ""
 "Add the instruments of the actually registered musicians to the instrument-"
 "table for the project."
 msgstr ""
 
-#: lib/tooltips.php:564
+#: lib/tooltips.php:566
 msgid ""
 "Upload a file from your local computer as attachment. The file will be "
 "removed from the remote-system after the message has been sent."
