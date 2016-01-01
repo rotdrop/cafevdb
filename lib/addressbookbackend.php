@@ -34,8 +34,6 @@ namespace CAFEVDB
 
     /**
      * The name of the backend.
-     *
-     * @var string
      */
     public $name = self::NAME;
 
@@ -109,8 +107,6 @@ namespace CAFEVDB
     /**
      * Flag indicating whether the current user is a member of the
      * orchestra user-group.
-     *
-     * @var boolean
      */
     private $orchestraUser;
 
@@ -142,7 +138,7 @@ namespace CAFEVDB
 
     /**Get all addressbooks for the given user. Regardless of the
      * "read-the-source-code" documentation of the base-class
-     * \OCA\Contacts\Backend\AbstractBackend we need some more
+     * OCA::Contacts::Backend::AbstractBackend we need some more
      * fields. Specifically, the local "database" backend provides the
      * following fields:
      *
@@ -506,12 +502,12 @@ namespace CAFEVDB
      * CardDAV backend.
      *
      * NOTE: $addressbookid isn't always used in the query, so there's no access control.
-     * 	This is because the groups backend - \OCP\Tags - doesn't know about parent collections
+     * 	This is because the groups backend - \\OCP\\Tags - doesn't know about parent collections
      * 	only object IDs. Hence a hack is made with an optional 'noCollection'.
      *
      * @param string $addressBookId
      * @param string|array $id Contact ID
-     * @param array $options - Optional (backend specific options)
+     * @param array $options Optional (backend specific options)
      * @return array|null
      */
     public function getContact($addressBookId, $id, array $options = array())
@@ -590,6 +586,8 @@ namespace CAFEVDB
      *
      * @param[in] string $uuid Actually, the UUID of the contact, used
      * as id for the contacts app.
+     *
+     * @param[in] array $options Optional (backend specific options).
      *
      * @return The respective row from the Musiker table, or null on
      * error.
@@ -770,13 +768,13 @@ namespace CAFEVDB
      * Updates a contact
      *
      * @param string $addressBookId
-     * @param false|string|array $id Contact ID
+     * @param mixed $id Contact ID
      * @param string $contact
      * @param array $options - Optional (backend specific options)
      * @see getContact
      * @return bool
-     * @throws \Exception if $contact is a string but can't be parsed as a VCard
-     * @throws \Exception if the Contact to update couldn't be found
+     * @throws Exception if $contact is a string but can't be parsed as a VCard
+     * @throws Exception if the Contact to update couldn't be found
      */
     public function updateContact($addressBookId, $id, $contact, array $options = array())
     {

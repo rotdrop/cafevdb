@@ -39,6 +39,10 @@ class Musicians
    *
    * @param[in] boolean $mode Start in "project-mode" which will mask
    * out all musicians for the project passed as CGI-Variable ProjectId.
+   *
+   * @param[in] boolean $execute If @c true, emit HTML code, with
+   * data-base-query side-effect. Otherwise self::execute() has to be
+   * called explicitly.
    */
   function __construct($mode = false, $execute = true) {
     parent::__construct($execute);

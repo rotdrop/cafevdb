@@ -1288,11 +1288,11 @@ __EOT__;
      *   - email Mass-email dialog (obsolete).
      *   - emailhistory History of sent mass-emails (obsolete).
      *   - projectlabel A button which leads to an overview page of the
-     *      current project, parameters $projectName and $projevtId
-     *      habe to be given.
+     *     current project, parameters $projectName and $projectId
+     *     habe to be given.
      *   - detailed Instrumentation list for the project. Formerly there
-     *      was also a "brief" instrumentation list, which is no longer
-     *      there.
+     *     was also a "brief" instrumentation list, which is no longer
+     *     there.
      *   - instruments List of all known instruments with cross-link to WikiPedia.
      *   - projectinstrumens Page with instrumentation number for the project.
      *   - debitmandates Page with debit mandates for the project.
@@ -1300,7 +1300,7 @@ __EOT__;
      *   - insurancerates Page with knwon insurance rates.
      *   - insurancebrokers Page with knwon brokers, including (maybe) their address.
      *
-     * @param[in} bool $asListItem Generate a list item instead of a
+     * @param[in] bool $asListItem Generate a list item instead of a
      * @param[in] string $projectName name of the project if needed.
      * @param[in] int $projectId Id of the project if needed.
      * form with submit button.
@@ -1928,6 +1928,8 @@ __EOT__;
      * @param[in] array $newValues Associative array where keys are
      * the field names and the values are the values to inject into
      * the table.
+     *
+     * @param[in] resource $handle Database handle.
      */
     public static function update($table, $where, $newValues, $handle)
     {
