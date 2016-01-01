@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2015 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -41,7 +41,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
   PHPMYEDIT.PMEPrefix               = PHPMYEDIT.pmePrefix.toUpperCase();
 
   PHPMYEDIT.defaultSelector         = '#cafevdb-page-body';
-  PHPMYEDIT.dialogCSSId             = 'pme-table-dialog';
+  PHPMYEDIT.dialogCSSId             = PHPMYEDIT.pmePrefix+'-table-dialog';
   PHPMYEDIT.tableLoadCallbacks      = [];
 
   // PHPMYEDIT.popupPosition           = { my: "middle top",
@@ -53,14 +53,59 @@ var PHPMYEDIT = PHPMYEDIT || {};
                                         of: window };
   PHPMYEDIT.dialogOpen              = {};
 
-  /**Generate a string with PME_sys_.... prefix*/
+  /**Generate a string with PME_sys_.... prefix.*/
   PHPMYEDIT.pmeSys = function(token) {
     return this.PMEPrefix+"_sys_"+token;
   };
 
-  /**Generate a string with pme-.... prefix*/
+  /**Generate a string with PME_data_.... prefix.*/
+  PHPMYEDIT.pmeData = function(token) {
+    return this.PMEPrefix+"_data_"+token;
+  };
+
+  /**Generate a string with pme-.... prefix.*/
   PHPMYEDIT.pmeToken = function(token) {
     return this.pmePrefix+"-"+token;
+  };
+
+  /**Generate an id selector with pme-.... prefix.*/
+  PHPMYEDIT.pmeIdSelector = function(token) {
+    return '#'+this.pmeToken(token);
+  };
+
+  /**Generate a class selector with pme-.... prefix.*/
+  PHPMYEDIT.pmeClassSelector = function(element, token) {
+    return element+'.'+this.pmeToken(token);
+  };
+
+  /**Generate a compound class selector with pme-.... prefix.*/
+  PHPMYEDIT.pmeClassSelectors = function(element, tokens) {
+    var pme = this;
+    var elements = tokens.map(function(token) {
+                     return pme.pmeClassSelector(element, token);
+                   });
+    return elements.join(',');
+  };
+
+  /**Generate a name selector with PME_sys_.... prefix.*/
+  PHPMYEDIT.pmeSysNameSelector = function(element, token) {
+    var pme = this;
+    return element+'[name="'+pme.pmeSys(token)+'"]';
+  };
+
+  /**Generate a compound name selector with PME_sys_.... prefix.*/
+  PHPMYEDIT.pmeSysNameSelectors = function(element, tokens) {
+    var pme = this;
+    var elements = token.map(function(token) {
+                     return pme.pmeSysNameSelector(element, token);
+                   });
+    return elements.join(',');
+  };
+
+  /**Generate a navigation selector with pme-.... prefix.*/
+  PHPMYEDIT.navigationSelector = function(token) {
+    var pme = this;
+    return '.'+pme.pmeToken('navigation')+' '+pme.pmeClassSelector('input', token);
   };
 
   /**Selector for main form*/
@@ -143,12 +188,13 @@ var PHPMYEDIT = PHPMYEDIT || {};
    * by the dialog form.
    */
   PHPMYEDIT.submitOuterForm = function(selector) {
+    var pme = this;
     var outerSel = this.selector(selector);
 
     // try a reload while saving data. This is in order to resolve
     // inter-table dependencies like changed instrument lists and so
     // on. Be careful not to trigger top and bottom buttons.
-    var outerForm = $(outerSel + ' form.pme-form');
+    var outerForm = $(outerSel + ' ' + pme.formSelector());
 
     var button = $(outerForm).find('input[name$="morechange"],'+
                                    'input[name$="applyadd"],'+
@@ -208,13 +254,13 @@ var PHPMYEDIT = PHPMYEDIT || {};
     var container = $(containerSel);
     var contentsChanged = false;
 
-    container.dialog('widget').addClass('pme-table-dialog-blocked');
-    container.find('.pme-navigation input.pme-reload').addClass('loading');
+    container.dialog('widget').addClass(pme.pmeToken('table-dialog-blocked'));
+    container.find(pme.navigationSelector('reload')).addClass('loading');
 
     // Possibly delay reload until validation handlers have done their
     // work.
     pme.reloadDeferred(container).then(function() {
-      var post = container.find('form.pme-form').serialize();
+      var post = container.find(pme.formSelector()).serialize();
 
       // add the option values
       post += '&' + $.param(options);
@@ -233,8 +279,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
                  var dialogWidget = container.dialog('widget');
 
                  CAFEVDB.Page.busyIcon(false);
-                 dialogWidget.removeClass('pme-table-dialog-blocked');
-                 container.find('.pme-navigation input.pme-reload').removeClass('loading');
+                 dialogWidget.removeClass(pme.pmeToken('table-dialog-blocked'));
+                 container.find(pme.navigationSelector('reload')).removeClass('loading');
                  return false;
                }
 
@@ -245,7 +291,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                  container.css('height', 'auto');
                  $.fn.cafevTooltip.remove();
                  container.html(data.data.contents);
-                 container.find('.pme-navigation input.pme-reload').addClass('loading');
+                 container.find(pme.navigationSelector('reload')).addClass('loading');
 
                  // general styling
                  pme.init(containerSel);
@@ -308,7 +354,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
     });
 
     // The easy one, but for changed contents
-    var cancelButton = $(container).find('input.pme-cancel');
+    var cancelButton = $(container).find(pme.pmeClassSelector('input', 'cancel'));
     cancelButton.off('click');
     cancelButton.on('click', function(event) {
       event.preventDefault();
@@ -332,13 +378,9 @@ var PHPMYEDIT = PHPMYEDIT || {};
     });
 
     // The complicated ones. This reloads new data.
-    var ReloadButtonSel =
-      'input.pme-change,'+
-      'input.pme-delete,'+
-      'input.pme-copy,'+
-      'input.pme-apply,'+
-      'input.pme-more,'+
-      'input.pme-reload';
+    var ReloadButtonSel = pme.pmeClassSelectors(
+      'input',
+      [ 'change', 'delete', 'copy', 'apply', 'more', 'reload' ]);
     var reloadingButton = $(container).find(ReloadButtonSel);
 
     // remove non-delegate handlers and stop default actions in any case.
@@ -359,10 +401,10 @@ var PHPMYEDIT = PHPMYEDIT || {};
         var reloadValue = submitButton.val();
         options.ReloadName = reloadName;
         options.ReloadValue = reloadValue;
-        if (!submitButton.hasClass('pme-change') &&
-            !submitButton.hasClass('pme-delete') &&
-            !submitButton.hasClass('pme-copy') &&
-            !submitButton.hasClass('pme-reload')) {
+        if (!submitButton.hasClass(pme.pmeToken('change')) &&
+            !submitButton.hasClass(pme.pmeToken('delete')) &&
+            !submitButton.hasClass(pme.pmeToken('copy')) &&
+            !submitButton.hasClass(pme.pmeToken('reload'))) {
           options.modified = true;
         }
         pme.tableDialogReload(options, callback);
@@ -384,7 +426,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
      * view-mode.
      *
      */
-    var saveButtonSel = 'input.pme-save';
+    var saveButtonSel = 'input.'+pme.pmeToken('save');
     var saveButton = $(container).find(saveButtonSel);
     saveButton.off('click');
 
@@ -397,18 +439,17 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
         event.preventDefault();
 
-        container.find('.pme-navigation input.pme-reload').addClass('loading');
+        container.find(pme.navigationSelector('reload')).addClass('loading');
 
         options.modified = true; // we are the save-button ...
 
-        var applySelector =
-          'input[name$="morechange"],'+
-          'input[name$="applyadd"],'+
-          'input[name$="applycopy"]';
-        var deleteSelector = 'input[name$="savedelete"]';
+        var applySelector = pme.pmeSysNameSelectors(
+          'input',
+          ['morechange', 'applyadd', 'applycopy']);
+        var deleteSelector = pme.pmeSysNameSelector('savedelete');
 
         pme.reloadDeferred(container).then(function() {
-          var post = $(container).find('form.pme-form').serialize();
+          var post = $(container).find(pme.formSelector()).serialize();
           post += '&' + $.param(options);
           var name, value;
 
@@ -432,14 +473,14 @@ var PHPMYEDIT = PHPMYEDIT || {};
           OC.Notification.hide(function() {
             var dialogWidget = container.dialog('widget');
 
-            dialogWidget.addClass('pme-table-dialog-blocked');
+            dialogWidget.addClass(pme.pmeToken('table-dialog-blocked'));
 
             $.post(OC.filePath('cafevdb', 'ajax/pme', 'pme-table.php'),
                    post,
                    function (data) {
                      if (!CAFEVDB.ajaxErrorHandler(data, [ 'contents' ])) {
-                       dialogWidget.removeClass('pme-table-dialog-blocked');
-                       container.find('.pme-navigation input.pme-reload').removeClass('loading');
+                       dialogWidget.removeClass(pme.pmeToken('table-dialog-blocked'));
+                       container.find(pme.navigationSelector('reload')).removeClass('loading');
                        CAFEVDB.Page.busyIcon(false);
                        return false;
                      }
@@ -460,14 +501,14 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
                      if (options.InitialViewOperation && deleteButton.length <= 0) {
                        // return to initial view, but not after deletion
-                       dialogWidget.removeClass('pme-table-dialog-blocked');
+                       dialogWidget.removeClass(pme.pmeToken('table-dialog-blocked'));
                        options.ReloadName = options.InitialName;
                        options.ReloadValue = options.InitialValue;
                        pme.tableDialogReload(options, callback);
                      } else {
                        container.dialog('close');
                      }
-                     container.find('.pme-navigation input.pme-reload').removeClass('loading');
+                     container.find(pme.navigationSelector('reload')).removeClass('loading');
                      CAFEVDB.Page.busyIcon(false);
 
                      return false;
@@ -519,8 +560,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
       var cssClass = element.attr('class');
       if (cssClass) {
-        var viewClass = 'pme-view';
-        viewOperation = cssClass.indexOf(viewClass) > -1;
+        viewOperation = cssClass.indexOf(pme.pmeToken('view')) > -1;
       }
     }
 
@@ -597,19 +637,19 @@ var PHPMYEDIT = PHPMYEDIT || {};
                return true; // let it bubble upwards ...
              });
 
-             dialogHolder.find('.pme-navigation input.pme-reload').addClass('loading');
+             dialogHolder.find(pme.navigationSelector('reload')).addClass('loading');
              if (tableOptions.ModalDialog) {
                CAFEVDB.modalizer(true);
              }
 
              var popup = dialogHolder.dialog({
-               title: dialogHolder.find('span.pme-short-title').html(),
+               title: dialogHolder.find(pme.pmeClassSelector('span', 'short-title')).html(),
                position: pme.popupPosition,
                width: 'auto',
                height: 'auto',
                modal: false, //tableOptions.ModalDialog,
                closeOnEscape: false,
-               dialogClass: 'pme-table-dialog custom-close resize-target',
+               dialogClass: pme.pmeToken('table-dialog')+' custom-close resize-target',
                resizable: false,
                open: function() {
 
@@ -621,7 +661,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                  CAFEVDB.dialogToBackButton(dialogHolder);
                  CAFEVDB.dialogCustomCloseButton(dialogHolder, function(event, container) {
                    event.preventDefault();
-                   var cancelButton = container.find('.pme-cancel').first();
+                   var cancelButton = container.find(pme.pmeClassSelector('input', 'cancel')).first();
                    if (cancelButton.length > 0) {
                      event.stopImmediatePropagation();
                      cancelButton.trigger('click');
@@ -629,7 +669,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                    return false;
                  });
 
-                 dialogWidget.addClass('pme-table-dialog-blocked');
+                 dialogWidget.addClass(pme.pmeToken('table-dialog-blocked'));
 
                  // general styling
                  pme.init(containerSel);
@@ -651,11 +691,11 @@ var PHPMYEDIT = PHPMYEDIT || {};
                      pme.transposeReady(containerSel);
                      pme.tableLoadCallback(tableOptions.DisplayClass, containerSel, parameters, function() {
                        resizeHandler(parameters);
-                       dialogWidget.removeClass('pme-table-dialog-blocked');
+                       dialogWidget.removeClass(pme.pmeToken('table-dialog-blocked'));
                        dialogHolder.dialog('moveToTop');
                        CAFEVDB.toolTipsInit(containerSel);
                        CAFEVDB.Page.busyIcon(false);
-                       dialogHolder.find('.pme-navigation input.pme-reload').removeClass('loading');
+                       dialogHolder.find(pme.navigationSelector('reload')).removeClass('loading');
                      });
                      CAFEVDB.pmeTweaks(dialogHolder);
                    });
@@ -808,6 +848,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
   /**Transpose the main tabel if desired. */
   PHPMYEDIT.transposeMainTable = function(selector, containerSel) {
+    var pme = this;
     var container = this.container(containerSel);
     var table = container.find(selector);
 
@@ -817,8 +858,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
       headerRow.prependTo( table.find('tbody') );
     }
     var t = table.find('tbody').eq(0);
-    var sortinfo  = t.find('tr.pme-sortinfo');
-    var queryinfo = t.find('tr.pme-queryinfo');
+    var sortinfo  = t.find(pme.pmeClassSelector('tr', 'sortinfo'));
+    var queryinfo = t.find(pme.pmeClassSelector('tr', 'queryinfo'));
     // These are huge cells spanning the entire table, move them on
     // top of the transposed table afterwards.
     sortinfo.detach();
@@ -878,41 +919,58 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
   /**Transpose the main table based on boolean value of transpose. */
   PHPMYEDIT.maybeTranspose = function(transpose, containerSel) {
+    var pme = this;
     var container = this.container(containerSel);
     var pageitems;
     var tooltip = container.find('.tooltip');
     var doTooltip = tooltip.length > 0;
 
+    var trUp      = pme.pmeIdSelector('transpose-up');
+    var trDown    = pme.pmeIdSelector('transpose-down');
+    var tr        = pme.pmeIdSelector('transpose');
+    var trClass   = pme.pmeToken('transposed');
+    var unTrClass = pme.pmeToken('untransposed');
+
     if (transpose) {
       tooltip.remove();
-      this.transposeMainTable('table.pme-main', container);
+      this.transposeMainTable(pme.tableSelector(), container);
       pageitems = t('cafevdb', '#columns');
 
       container.find('input[name="Transpose"]').val('transposed');
-      container.find('#pme-transpose-up').removeClass('pme-untransposed').addClass('pme-transposed');
-      container.find('#pme-transpose-down').removeClass('pme-untransposed').addClass('pme-transposed');
-      container.find('#pme-transpose').removeClass('pme-untransposed').addClass('pme-transposed');
+      container.find(trUp).removeClass(unTrClass).addClass(trClass);
+      container.find(trDown).removeClass(unTrClass).addClass(trClass);
+      container.find(tr).removeClass(unTrClass).addClass(trClass);
     } else {
       tooltip.remove();
-      this.transposeMainTable('table.pme-main', container);
+      this.transposeMainTable(pme.tableSelector(), container);
       pageitems = t('cafevdb', '#rows');
 
       container.find('input[name="Transpose"]').val('untransposed');
-      container.find('#pme-transpose-up').removeClass('pme-transposed').addClass('pme-untransposed');
-      container.find('#pme-transpose-down').removeClass('pme-transposed').addClass('pme-untransposed');
-      container.find('#pme-transpose').removeClass('pme-transposed').addClass('pme-untransposed');
+      container.find(trUp).removeClass(trClass).addClass(unTrClass);
+      container.find(trDown).removeClass(trClass).addClass(unTrClass);
+      container.find(tr).removeClass(trClass).addClass(unTrClass);
     }
-    container.find('input.pme-pagerows').val(pageitems);
+    container.find(pme.pmeClassSelector('input', 'pagerows')).val(pageitems);
   };
+
+  /**Ready callback.*/
   PHPMYEDIT.transposeReady = function(containerSel)  {
+    var pme = this;
+
     var container = PHPMYEDIT.container(containerSel);
+
+    var trUp      = pme.pmeIdSelector('transpose-up');
+    var trDown    = pme.pmeIdSelector('transpose-down');
+    var tr        = pme.pmeIdSelector('transpose');
+    var trClass   = pme.pmeToken('transposed');
+    var unTrClass = pme.pmeToken('untransposed');
 
     // Transpose or not: if there is a transpose button
     var inhibitTranspose = container.find('input[name="InhibitTranspose"]').val() == 'true';
     var controlTranspose = (container.find('input[name="Transpose"]').val() == 'transposed' ||
-                            container.find('#pme-transpose-up').hasClass('pme-transposed') ||
-                            container.find('#pme-transpose-down').hasClass('pme-transposed') ||
-                            container.find('#pme-transpose').hasClass('pme-transposed'));
+                            container.find(trUp).hasClass(trClass) ||
+                            container.find(trDown).hasClass(trClass) ||
+                            container.find(tr).hasClass(trClass));
 
     //alert('Inhibit: '+inhibitTranspose+' control: '+controlTranspose);
 
@@ -1080,10 +1138,12 @@ var PHPMYEDIT = PHPMYEDIT || {};
       }
     }
 
-    container.off('click', 'li.pme-navigation.table-tabs');
-    container.on('click', 'li.pme-navigation.table-tabs', function(event) {
-      var form  = container.find('form.pme-form');
-      var table = form.find('table.pme-main');
+    var tabsSelector = pme.pmeClassSelector('li', 'navigation')+'.table-tabs';
+
+    container.off('click', tabsSelector);
+    container.on('click', tabsSelector, function(event) {
+      var form  = container.find(pme.formSelector());
+      var table = form.find(pme.tableSelector());
 
       var oldTabClass = form.find('li.table-tabs.selected a').attr('href').substring(1);
       var tabClass = $(this).find('a').attr('href').substring(1);
@@ -1097,7 +1157,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
       form.find('input[name="'+pme.pmeSys('cur_tab')+'"]').val(tabClass.substring(4));
 
       // for styling and logic ...
-      form.find('li.pme-navigation.table-tabs').removeClass('selected');
+      form.find(tabsSelector).removeClass('selected');
       $(this).addClass('selected');
 
       // account for unstyled chosen selected
@@ -1216,7 +1276,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
       container.off('click', submitSel).
         on('click', submitSel, function(event) {
         var self = $(this);
-        if (!self.hasClass('pme-custom')) {
+        if (!self.hasClass(pme.pmeToken('custom'))) {
           event.preventDefault();
           event.stopImmediatePropagation();
 
