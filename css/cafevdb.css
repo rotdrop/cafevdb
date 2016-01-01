@@ -781,6 +781,10 @@ body > .ui-front.ui-draggable {
   z-index:2000;
 }
 
+body > .tooltip {
+  z-index:2500;
+}
+
 /* make popups scrollable in smaller viewports */
 .ui-dialog {
   max-height: 80%; /* !important;*/
