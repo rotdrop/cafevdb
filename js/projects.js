@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -322,13 +322,14 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
         containerSel = PHPMYEDIT.selector(containerSel);
         var container = PHPMYEDIT.container(containerSel);
         var form = container.find('form[class^="pme-form"]');
-        var submitSel = 'input.pme-save,input.pme-apply,input.pme-more';
+        var submitSel = PHPMYEDIT.pmeClassSelectors('input',
+                                                    ['save', 'apply', 'more']);
 
         if (form.find(submitSel).length > 0) {
 
             var nameSelector = 'input.projectname';
             var yearSelector = 'select[name="PME_data_Jahr"]';
-            var attachSelector = '#project-name-yearattach';
+            var attachSelector = 'select[name="PME_data_Art"]';
 
             var name = container.find(nameSelector);
             var year = container.find(yearSelector);
@@ -385,44 +386,39 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
                 });
             }
 
-            attach.off('click');
-            attach.click(function(event) {
-                name.trigger('blur');
-            });
-
-            year.off('change');
-            year.change(function(event) {
+            attach.off('change').change(function(event) {
                 event.preventDefault();
-
-                verifyYearName('year');
-
+                name.trigger('blur');
                 return false;
             });
 
-            name.off('blur');
-            name.blur(function(event) {
+            year.off('change').change(function(event) {
                 event.preventDefault();
+                verifyYearName('year');
+                return false;
+            });
 
+            name.off('blur').blur(function(event) {
+                event.preventDefault();
                 verifyYearName('name');
-
                 return false;
             });
 
             // Attach a delegate handler to the form; this gives the
             // possibility to attach another delegate handler to the
             // container element.
-            form.off('click', submitSel);
-            form.on('click',
-                    submitSel,
-                    function(event) {
-                        if ($(this).attr('name').indexOf('savedelete') < 0) {
-                            event.preventDefault();
+            form.off('click', submitSel).
+                on('click',
+                   submitSel,
+                   function(event) {
+                       if ($(this).attr('name').indexOf('savedelete') < 0) {
+                           event.preventDefault();
                             verifyYearName('submit', $(this));
-                            return false;
-                        } else {
-                            return true;
-                        }
-                    });
+                           return false;
+                       } else {
+                           return true;
+                       }
+                   });
 
         }
 

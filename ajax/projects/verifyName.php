@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -41,6 +41,10 @@ namespace CAFEVDB {
     // We simply expect to get the entire project form here.
     $projectValues = Util::getPrefixCGIData();
 
+    \OCP\Util::writeLog(Config::APP_NAME,
+                        __FILE__.': '.print_r($projectValues, true),
+                        \OCP\Util::DEBUG);
+
     $required = array('Jahr' => L::t("project-year"), 'Name' => L::t("project-name"));
 
     $message = "";
@@ -56,7 +60,7 @@ namespace CAFEVDB {
     $projectId   = Util::cgiValue(Config::$pmeopts['cgi']['prefix']['sys']."rec");
     $projectName = isset($projectValues['Name']) ? $projectValues['Name'] : "";
     $projectYear = isset($projectValues['Jahr']) ? $projectValues['Jahr'] : "";
-    $attachYear  = Util::cgiValue("yearattach") === "on" ? true : false;
+    $attachYear  = isset($projectValues['Art']) ? $projectValues['Art'] == 'temporary' : false;
 
     $errorMessage = "";
     $infoMessage = "";
@@ -86,10 +90,11 @@ namespace CAFEVDB {
       } else if ($projectName == "") {
         $errorMessage .= L::t("No project-name given.");
       }
-      if (mb_strlen($projectName) > 20) {
+      if (mb_strlen($projectName) > Projects::NAME_LENGTH_MAX) {
         $errorMessage .= L::t("The project-name is too long, ".
-                              "please use something less than 20 characters ".
-                              "(excluding the attached year). Thanks");
+                              "please use something less than %d characters ".
+                              "(excluding the attached year). Thanks",
+                              array(Projects::NAME_LENGTH_MAX));
       }
     case "year":
       if ($projectYear == "") {

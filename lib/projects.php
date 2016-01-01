@@ -265,6 +265,7 @@ namespace CAFEVDB
       } else {
         $checked = 'checked';
       }
+
       $nameIdx = count($opts['fdd']);
       $opts['fdd']['Name'] = array(
         'name'     => L::t('Projekt-Name'),
@@ -272,20 +273,11 @@ namespace CAFEVDB
                            'function' => 'CAFEVDB\Projects::projectActionsPME',
                            'parameters' => array("idIndex" => $idIdx,
                                                  "overview" => true)),
-        'display|APC' => array(//"prefix" => "prefix",
-          "postfix" => '<label
-  title="'.Config::toolTips("project-name-yearattach").'">
-  <input type="checkbox"
-         name="yearattach"
-         id="project-name-yearattach"
-         '.$checked.'
-  />
-'.L::t("Append the year to the name").'
-</label>'),
         'select'   => 'D',
         'maxlen'   => self::NAME_LENGTH_MAX + 6,
         'css'      => array('postfix' => ' projectname control'),
         'sort'     => true,
+        'tooltip'  => Config::toolTips('project-name')
         );
 
       $opts['fdd']['Art'] = array(
@@ -293,6 +285,7 @@ namespace CAFEVDB
         'select'   => 'D',
         'options'  => 'AVCPD', // auto increment
         'maxlen'   => 11,
+        'css'      => array('postfix' => ' tooltip-right'),
         'values2'  => array('temporary' => L::t('temporary'),
                             'permanent' => L::t('permanent')),
         'default'  => 'temporary',
