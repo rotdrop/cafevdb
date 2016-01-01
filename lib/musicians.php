@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2015 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -337,7 +337,7 @@ make sure that the musicians are also automatically added to the
       'sort'    => true,
       'css'     => array('postfix' => ' memberstatus tooltip-wide'),
       'values2' => $this->memberStatusNames,
-      'tooltip' => config::toolTips('member-status')
+      'tooltip' => Config::toolTips('member-status')
       );
 
     // fetch the list of all projects in order to provide a somewhat
