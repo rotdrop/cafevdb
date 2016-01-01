@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2015 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -434,6 +434,15 @@ to pages with the instrumentation, events, instrumentation numbers etc.'),
 
         'project-metadata-tab' => L::t('Displays `meta-data\' like project fees, single/double room preferences, debit-mandates and the like.'),
 
+        'project-name' => L::t('Please enter here a <b>SHORT</b> project name, rather a project tag. The software will try very hard to confine you to the following rules:
+<dl>
+<dt>BE SHORT, PLEASE</dt>
+<dd>No more than 20 characters, s.v.p. Please: rather <b>MUCH</b> shorter.</dd>
+<dt>NO SPACES, PLEASE</dt>
+<dd>Please use "camel case" instead.</dd>
+</dl>
+Please <b>DO NOT TRY</b> to "work around" those "limitations. Just don\'t. Thanks.'),
+
         'project-name-yearattach' => L::t('Append the year to the name if checked.
 Regardless of this checkbox any decimal digit will first be stripped from the end
 of the project name before the year is added.'),
@@ -581,6 +590,7 @@ configuration storage if the test can be performed successfully.'),
         'upload-attachment' => L::t('Upload a file from your local computer as attachment. The file will be removed from the remote-system after the message has been sent.'),
 
         'wysiwyg-edtior' => L::t('Change to another WYSIWYG editor.'),
+
 
         );
 

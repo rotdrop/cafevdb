@@ -24,7 +24,7 @@ projectevents-button
 project-infopage
 project-instrumentation-tab
 project-metadata-tab
-project-name-yearattach
+project-name
 project-personaldata-tab
 register-musician
 transfer-instruments
