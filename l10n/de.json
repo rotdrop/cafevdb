@@ -183,7 +183,7 @@
     "The project name has been simplified." : "Der Projekt-Name wurde vereinfacht.",
     "The project-name must not only consist of the year-number." : "Der Projekt-Name darf nicht nur aus der Jahreszahl bestehen.",
     "No project-name given." : "Kein Projekt-Name angegeben.",
-    "The project-name is too long, please use something less than 20 characters (excluding the attached year). Thanks" : "Der Projekt-Name ist zu lang. Bitte höchstens 20 Buchstaben verwenden\n(ausschließlich der angehängten Jahreszahl).",
+    "The project-name is too long, please use something less than %d characters (excluding the attached year). Thanks" : "Der Projekt-Name ist zu lang. Bitte höchstens %d Buchstaben verwenden\n(ausschließlich der angehängten Jahreszahl).",
     "No project-year given." : "Kein Projekt-Jahr angegeben.",
     "The project-year has to consist of four digits, e.g. ``1984''." : "Das Projekt-Jahr muss aus vier Ziffern bestehen.",
     "already existent" : "bereits vorhanden",
@@ -695,7 +695,6 @@
     "Transpose" : "Transponieren",
     "%s Project %s" : "%s Projekt %s",
     "%s Projects" : "%s Projekte",
-    "Append the year to the name" : "Jahreszahl anhängen",
     "Kind" : "Art",
     "permanent" : "permanent",
     "Toolbox" : "Werkzeuge",
@@ -849,6 +848,7 @@
     "Opens a dialog-window which gives access to all stored informations for the project." : "Öffnet ein Fenster mit allen zu diesem Projekt gespeicherten\nInformationen. Hier können z.B. Termine hinzu gefügt werden, die\nöffentlichen Konzertankündigungen auf unserer Web-Seite bearbeitet\nwerden und vieles andere mehr.",
     "Displays the columns directly related to the instrumentation for the project." : "Zeigt die Spalten an, die direkt mit der Besetzung zu tun haben wie Instrument, Stimme, Stimmführer.",
     "Displays `meta-data' like project fees, single/double room preferences, debit-mandates and the like." : "Zeigt `Meta-Daten' für das Projekt an, wie Unkostenbeitrag,\nEinzel-/Doppelzimmerzuschlag, Einzugsermächtigungen, Eingang der Anmeldung.",
+    "Please enter here a <b>SHORT</b> project name, rather a project tag. The software will try very hard to confine you to the following rules:\n<dl>\n<dt>BE SHORT, PLEASE</dt>\n<dd>No more than 20 characters, s.v.p. Please: rather <b>MUCH</b> shorter.</dd>\n<dt>NO SPACES, PLEASE</dt>\n<dd>Please use \"camel case\" instead.</dd>\n</dl>\nPlease <b>DO NOT TRY</b> to \"work around\" those \"limitations. Just don't. Thanks." : "Bitte einen <b>SEHR KURZEN</b> Projekt-Namen eingeben. Eher einen\nProjekt-Marker. Die DB-Software wird <b>VEHEMENT</b> versuchen, Dich\nauf das Folgende fest zu nageln:\n<dl>\n<dt>KURZ, SEHR KURZ, WIRKLICH KURZ, BITTE!!!</dt>\n<dd>Nicht mehr als 20 Buchstaben, s.v.p. <b>Bitte, bitte, bitte</b>: viel lieber <b>VIEL KÜRZER</b>.</dd>\n<dt>KEINE LEERZEICHEN; BITTE!!!</dt>\n<dd>Bitte stattdessen \"Camel Case\" verwenden. Danke.</dd>\n</dl>\nBitte <b>NICHT</b> versuchen, diese \"Beschränkungen\" zu umgehen. Macht das bitte einfach <b>NICHT</b>. Danke.\n\n",
     "Append the year to the name if checked.\nRegardless of this checkbox any decimal digit will first be stripped from the end\nof the project name before the year is added." : "Wenn das Häkchen gesetzt ist, wird das Projekt-Jahr an den Namen angehängt.\nUnabhängig davon werden Ziffern am Ende des Namens zunächst einmal entfernt,\nbevor möglicherweise die Jahreszahl angehängt wird.",
     "Displays the personal data of the respective musicians, like address, email, date of birth if known, phone numbers." : "Zeigt die persönlichen Daten der Musiker, wie Adresse, Telefonnummern,\nEm@il, Geburtstag, gespielte Instrumente.",
     "Add a new public web-page to the project by generating a new, empty concert announcement." : "Eine neue Veranstaltungsankündigung (Web-Seite) zum Projekt\nhinzufügen, indem eine neue leere Veranstaltungsankündigung\nerstellt wird.",
@@ -1240,6 +1240,7 @@
     "Project folder" : "Projekt-Dateien",
     "YEAR" : "JAHR",
     "PROJECT" : "PROJEKT",
-    "Financial balance folder" : "Finanz-Ordner"
+    "Financial balance folder" : "Finanz-Ordner",
+    "Append the year to the name" : "Jahreszahl anhängen"
 },"pluralForm" :"nplurals=2; plural=(n != 1)"
 }
