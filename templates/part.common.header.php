@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -118,7 +118,7 @@ namespace CAFEVDB {
           <input id="app-settings-tooltips"
                  type="checkbox"
                  name="tooltips" <?php echo $_['tooltips'] == 'on' ? 'checked="checked"' : ''; ?>
-                 class="tooltip-top"
+                 class="checkbox tooltip-top"
                  title="<?php echo Config::tooltips('show-tool-tips'); ?>"/>
           <label for="app-settings-tooltips"
                  class="tooltip-top"
@@ -130,7 +130,7 @@ namespace CAFEVDB {
           <input id="app-settings-filtervisibility"
                  type="checkbox"
                  name="filtervisibility" <?php echo $_['filtervisibility'] == 'on' ? 'checked="checked"' : ''; ?>
-                 class="tooltip-top"
+                 class="checkbox tooltip-top"
                  title="<?php echo Config::tooltips('filter-visibility'); ?>"/>
           <label for="app-settings-filtervisibility"
                  class="tooltip-top"
@@ -142,7 +142,7 @@ namespace CAFEVDB {
           <input id="app-settings-directchange"
                  type="checkbox"
                  name="directchange" <?php echo $_['directchange'] == 'on' ? 'checked="checked"' : ''; ?>
-                 class="tooltip-top"
+                 class="checkbox tooltip-top"
                  title="<?php echo Config::tooltips('direct-change'); ?>"/>
           <label for="app-settings-directchange"
                  class="tooltip-top"
@@ -154,7 +154,7 @@ namespace CAFEVDB {
           <input id="app-settings-expertmode"
                  type="checkbox"
                  name="expertmode" <?php echo $_['expertmode'] == 'on' ? 'checked="checked"' : ''; ?>
-                 class="tooltip-top"
+                 class="checkbox tooltip-top"
                  title="<?php echo Config::tooltips('expert-mode'); ?>"/>
           <label for="app-settings-expertmode"
                  class="tooltip-top"

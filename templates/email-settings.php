@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -25,7 +25,7 @@ use CAFEVDB\Config;
 ?>
 <div id="tabs-<?php echo $_['tabNr']; ?>" class="personalblock admin email">
   <form id="emailsettings">
-<!-- SMTP and IMAP settings -->  
+<!-- SMTP and IMAP settings -->
 <?php
 foreach (array('smtp', 'imap') as $proto) {
   $upproto = strtoupper($proto);
@@ -68,31 +68,87 @@ foreach (array('smtp', 'imap') as $proto) {
       <br/>
 <!-- EMAIL password -->
       <fieldset class="emailpassword">
-        <input class="cafevdb-password" type="password" value="<?php echo $_['emailpassword']; ?>" id="emailpassword" name="emailpassword" placeholder="<?php echo L::t('New Password');?>" data-typetoggle="#emailpassword-show" />
-        <input class="cafevdb-password-show" type="checkbox" id="emailpassword-show" name="emailpassword-show" />
-        <label class="cafevdb-password-show" for="emailpassword-show"><?php echo L::t('show');?></label>
-        <input id="button" type="button" value="<?php echo L::t('Change email password');?>" />
-        <div class="statusmessage" id="changed"><?php echo L::t('The email password was changed');?></div>
-        <div class="statusmessage" id="error"><?php echo L::t('Unable to change the email password');?></div>
+        <input class="cafevdb-password"
+               type="password"
+               value="<?php echo $_['emailpassword']; ?>"
+               id="emailpassword"
+               name="emailpassword"
+               placeholder="<?php echo L::t('New Password');?>"
+               data-typetoggle="#emailpassword-show"
+               />
+        <input class="cafevdb-password-show"
+               type="checkbox"
+               id="emailpassword-show"
+               name="emailpassword-show"
+               />
+        <label class="cafevdb-password-show"
+               for="emailpassword-show">
+          <?php echo L::t('show');?>
+        </label>
+        <input id="button"
+               type="button"
+               value="<?php echo L::t('Change email password');?>"
+               />
+        <div class="statusmessage" id="changed">
+          <?php echo L::t('The email password was changed');?>
+        </div>
+        <div class="statusmessage" id="error">
+          <?php echo L::t('Unable to change the email password');?>
+        </div>
       </fieldset>
       <fieldset id="emaildistribute">
-        <input id="emaildistributebutton" type="button" name="emaildistribute" value="<?php echo L::t('Distribute Email Account');?>" title="<?php echo  Config::toolTips('email-account-distribute');?>" />
+        <input id="emaildistributebutton"
+               type="button"
+               name="emaildistribute"
+               value="<?php echo L::t('Distribute Email Account');?>"
+               title="<?php echo  Config::toolTips('email-account-distribute');?>"
+               />
         <span class="statusmessage" id="email-account-distribute-message"></span>
       </fieldset>
     </fieldset>
-    <fieldset id="emailidentity"><legend><?php echo L::t('Bulk Sender Identity'); ?></legend>
-      <input type="text" name="emailfromname" id="emailfromname" value="<?php echo $_['emailfromname']; ?>" placeholder="<?php echo L::t('Real Sender Name');?>" />
+    <fieldset id="emailidentity">
+      <legend><?php echo L::t('Bulk Sender Identity'); ?></legend>
+      <input type="text"
+             name="emailfromname"
+             id="emailfromname"
+             value="<?php echo $_['emailfromname']; ?>"
+             placeholder="<?php echo L::t('Real Sender Name');?>"
+             />
       <label for="emailfromname"><?php echo L::t('From: name');?></label>
-      <input type="text" name="emailfromaddress" id="emailfromaddress" value="<?php echo $_['emailfromaddress']; ?>" placeholder="<?php echo L::t('Email From Adress');?>" />
+      <input type="text"
+             name="emailfromaddress"
+             id="emailfromaddress"
+             value="<?php echo $_['emailfromaddress']; ?>"
+             placeholder="<?php echo L::t('Email From Adress');?>"
+             />
       <label for="emailfromaddress"><?php echo L::t('From: address');?></label>
     </fieldset>
-    <fieldset id="emailtest"><legend><?php echo L::t('Test Settings'); ?></legend>
-      <input type="button" name="emailtest" id="emailtestbutton" value="<?php echo L::t('Test Email Setup'); ?>" title="<?php echo Config::toolTips('emailtest'); ?>" />
-      <input id="emailtestmode" type="checkbox" name="emailtestmode" <?php echo $_['emailtestmode'] == 'on' ? 'checked="checked"' : ''; ?> id="emailtestmode" title="<?php echo L::t('Email test-mode; send emails only to the email test-address.') ?>"/>
-      <label for="emailtestmode" title="<?php echo L::t('Email test-mode; send emails only to the email test-address.') ?>"><?php echo L::t('Test-Mode'); ?></label>
-      <input <?php echo $_['emailtestmode'] == 'on' ? '' : 'disabled' ?> type="text" name="emailtestaddress" id="emailtestaddress" value="<?php echo $_['emailtestaddress']; ?>" placeholder="<?php echo L::t('Test Email Adress');?>" />
+    <fieldset id="emailtest">
+      <legend><?php echo L::t('Test Settings'); ?></legend>
+      <input type="button"
+             name="emailtest"
+             id="emailtestbutton"
+             value="<?php echo L::t('Test Email Setup'); ?>"
+             title="<?php echo Config::toolTips('emailtest'); ?>"
+             />
+      <input id="emailtestmode"
+             type="checkbox"
+             class="checkbox"
+             name="emailtestmode" <?php echo $_['emailtestmode'] == 'on' ? 'checked="checked"' : ''; ?>
+             id="emailtestmode"
+             title="<?php echo L::t('Email test-mode; send emails only to the email test-address.') ?>"
+             />
+      <label for="emailtestmode"
+             title="<?php echo L::t('Email test-mode; send emails only to the email test-address.') ?>">
+        <?php echo L::t('Test-Mode'); ?>
+      </label>
+      <input type="text" name="emailtestaddress" id="emailtestaddress"
+      <?php echo $_['emailtestmode'] == 'on' ? '' : 'disabled="disabled"' ?>
+             value="<?php echo $_['emailtestaddress']; ?>"
+             placeholder="<?php echo L::t('Test Email Adress');?>"
+             />
       <label for="emailtestaddress"><?php echo L::t('Test address');?></label>
     </fieldset>
-    <span class="statusmessage" id="msg"></span>  
+    <span class="statusmessage" id="msg"></span>
   </form>
 </div>

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -74,13 +74,33 @@ namespace CAFEVDB
 
   <div id="tabs-1" class="personalblock <?php if ($_['adminsettings']) echo 'admin'; ?>">
     <form id="cafevdb">
-      <input id="tooltips" type="checkbox" name="tooltips" <?php echo $_['tooltips'] == 'on' ? 'checked="checked"' : ''; ?> id="tooltips" title="<?php echo Config::tooltips('show-tool-tips'); ?>"/>
-      <label for="tooltips" title="<?php echo $tooltipstitle; ?>"><?php echo L::t('Tool-Tips') ?></label>
+      <input id="tooltips"
+             type="checkbox"
+             class="checkbox"
+             name="tooltips" <?php echo $_['tooltips'] == 'on' ? 'checked="checked"' : ''; ?>
+             id="tooltips"
+             title="<?php echo Config::tooltips('show-tool-tips'); ?>"
+             />
+      <label for="tooltips" title="<?php echo $tooltipstitle; ?>">
+        <?php echo L::t('Tool-Tips') ?>
+      </label>
       <br />
-      <input id="filtervisibility" type="checkbox" name="filtervisibility" <?php echo $_['filtervisibility'] == 'on' ? 'checked="checked"' : ''; ?> title="<?php echo $filtervistitle ?>"/>
-      <label for="filtervisibility" title="<?php echo $filtervistitle; ?>"><?php echo L::t('Filter-Controls') ?></label>
+      <input id="filtervisibility"
+             type="checkbox"
+             class="checkbox"
+             name="filtervisibility" <?php echo $_['filtervisibility'] == 'on' ? 'checked="checked"' : ''; ?>
+             title="<?php echo $filtervistitle ?>"
+             />
+      <label for="filtervisibility" title="<?php echo $filtervistitle; ?>">
+        <?php echo L::t('Filter-Controls') ?>
+      </label>
       <br />
-      <input id="directchange" type="checkbox" name="directchange" <?php echo $_['directchange'] == 'on' ? 'checked="checked"' : ''; ?> title="<?php echo $directchgtitle ?>"/>
+      <input id="directchange"
+             type="checkbox"
+             class="checkbox"
+             name="directchange" <?php echo $_['directchange'] == 'on' ? 'checked="checked"' : ''; ?>
+             title="<?php echo $directchgtitle ?>"
+             />
       <label for="directchange" title="<?php echo $directchgtitle; ?>">
         <?php echo L::t('Quick Change-Dialog') ?>
       </label>
@@ -115,8 +135,15 @@ namespace CAFEVDB
           ?>
         </select>
       </div>
-      <input id="expertmode" type="checkbox" name="expertmode" <?php echo $_['expertmode'] == 'on' ? 'checked="checked"' : ''; ?> id="expertmode" title="<?php echo $experttitle ?>"/>
-      <label for="expertmode" title="<?php echo $experttitle; ?>"><?php echo L::t('Expert-Mode') ?></label>
+      <input id="expertmode"
+             type="checkbox"
+             class="checkbox"
+             name="expertmode" <?php echo $_['expertmode'] == 'on' ? 'checked="checked"' : ''; ?>
+             id="expertmode" title="<?php echo $experttitle ?>"
+             />
+      <label for="expertmode" title="<?php echo $experttitle; ?>">
+        <?php echo L::t('Expert-Mode') ?>
+      </label>
       <br />
       <select <?php echo ($_['expertmode'] != 'on' ? 'disabled="disabled"' : '') ?>
         multiple
