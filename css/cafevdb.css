@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -774,11 +774,19 @@ input[disabled]:hover,
  * adjusted if ever that number should be changed "in-core".
  */
 body > .ui-widget-overlay.ui-front {
-  z-index:1999;
+  z-index:99;
 }
 
 body > .ui-front.ui-draggable {
-  z-index:2000;
+  z-index:100;
+}
+
+.ui-widget-overlay.ui-front {
+  z-index:99;
+}
+
+.ui-front.ui-draggable {
+  z-index:100;
 }
 
 body > .tooltip {

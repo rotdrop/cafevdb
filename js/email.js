@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -710,7 +710,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                        //alert('count: '+progressWrapper.length);
                        progressWrapper.show();
                        progressWrapper.find('span.progressbar').progressbar({value:0, max:100});
-                       progressWrapper.dialog({
+                       progressWrapper.cafevDialog({
                          title: t('cafevdb', 'Message Delivery Status'),
                          width: 'auto',
                          height: 'auto',
@@ -1322,7 +1322,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                CAFEVDB.modalizer(true);
              }
 
-             var popup = dialogHolder.dialog({
+             var popup = dialogHolder.cafevDialog({
                title: dlgTitle,
                position: { my: "middle top",
                            at: "middle bottom+50px",

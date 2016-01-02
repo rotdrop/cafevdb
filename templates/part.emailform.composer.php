@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2015 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -89,7 +89,7 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
           <input type="checkbox"
                  id="check-save-as-template"
                  title="<?php echo Config::toolTips('save-as-template'); ?>"
-                 class="checkbox save-as-template tooltip-wide tooltip-bottomo"
+                 class="save-as-template tooltip-wide tooltip-bottomo"
                  name="emailComposer[SaveAsTemplate]"/>
           <label for="check-save-as-template"
                  class="tip save-as-template"

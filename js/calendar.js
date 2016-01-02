@@ -1,4 +1,7 @@
 /**
+ * Original copyright below, slight changes for cafevdb by
+ * Copyright (c) 2013-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
+ *
  * Copyright (c) 2012 Georg Ehrke <ownclouddev at georgswebsite dot de>
  * Copyright (c) 2011 Bart Visscher <bartv@thisnet.nl>
  * This file is licensed under the Affero General Public License version 3 or
@@ -179,7 +182,7 @@ Calendar={
                         var calId = cal.val();
 			calSelect.prop('disabled', true);
                         eventForm.append('<input type="hidden" name="calendar" value="'+calId+'"/>');
-			$('#event').dialog({
+			$('#event').cafevDialog({
                                 position: {
                                         my: "left-40% top+50%",
                                         at: "left top",
@@ -189,7 +192,7 @@ Calendar={
 				height: 600,
 				resizable: false,
                                 dialogClass: 'cafevdb eventdlg',
-//				draggable: false,
+                                //draggable: false,
                                 open  : function() {
                                         CAFEVDB.dialogToBackButton($(this));
                                 },
@@ -342,7 +345,7 @@ Calendar={
 				mapTypeId: google.maps.MapTypeId.ROADMAP
 			};
 			var map = new google.maps.Map(document.getElementById("event_googlemap"), mapOptions);
-			$('#event_googlemap').dialog({
+			$('#event_googlemap').cafevDialog({
 				title : 'Google Maps',
                                 dialogClass: 'google-popup',
 				position : { my: "left top",

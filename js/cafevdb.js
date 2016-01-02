@@ -206,8 +206,14 @@ var CAFEVDB = CAFEVDB || {};
     };
   };
 
-  /**Display a transparent modal dialog which blocks the UI
-   *
+  /**Steal the focus by moving it to a hidden element. Is there a
+   * better way? The blur() method just does not work.
+   */
+  CAFEVDB.unfocus = function(element) {
+    $('#focusstealer').focus();
+  };
+
+  /**Display a transparent modal dialog which blocks the UI.
    */
   CAFEVDB.modalWaitNotification = function(message) {
     var dialogHolder = $('<div class="cafevdb modal-wait-notification"></div>');
@@ -215,7 +221,7 @@ var CAFEVDB = CAFEVDB || {};
                       '<div class="cafevdb modal-wait-animation"></div>');
     $('body').append(dialogHolder);
     dialogHolder.find('div.modal-wait-animation').progressbar({ value: false });
-    dialogHolder.dialog({
+    dialogHolder.cafevDialog({
       title: '',
       position: { my: "center",
                   at: "center center-20%",
@@ -585,7 +591,7 @@ var CAFEVDB = CAFEVDB || {};
     ];
     buttons = buttons.concat(options.buttons);
 
-    dialogHolder.dialog({
+    dialogHolder.cafevDialog({
       title: options.title,
       position: options.position,
       dialogClass: cssClass,
@@ -778,7 +784,7 @@ var CAFEVDB = CAFEVDB || {};
       }
       var dialogHolder = $('<div id="cafevdb-modalizer" class="cafevdb-modalizer"></div>');
       $('body').append(dialogHolder);
-      dialogHolder.dialog({
+      dialogHolder.cafevDialog({
         title: '',
         position: { my: "top left",
                     at: "top-100% left-100%",
@@ -1281,113 +1287,7 @@ alert('Tooltip Options: '+CAFEVDB.print_r(classOptions, true));
     }
   };
 
-  // special cafevdb tool-tips
-  $.fn.cafevTooltip = function(argument) {
-    if (typeof argument == 'undefined') {
-      argument = {};
-    }
-    if (typeof argument == 'object' && argument != null) {
-      var options = {
-        container:'body',
-        html:true,
-        placement:'auto top',
-        cssclass:[]
-      }
-      argument = $.extend({}, options, argument);
-      if (typeof argument.placement == 'string' && !argument.placement.match(/auto/)) {
-        argument.placement = 'auto '+argument.placement;
-      }
-      if (argument.cssclass && typeof argument.cssclass == 'string') {
-        argument.cssclass = [ argument.cssclass ];
-      }
-      argument.cssclass.push('cafevdb');
-      // iterator over individual element in order to pick up the
-      // correct class-arguments.
-      this.each(function(index) {
-        var self = $(this);
-        var selfOptions = $.extend({}, argument);
-        var classAttr = self.attr('class');
-        if (classAttr) {
-          if (classAttr.match(/tooltip-off/) !== null) {
-            self.cafevTooltip('disable');
-            return;
-          }
-          var tooltipClasses = classAttr.match(/tooltip-[a-z-]+/g);
-          if (tooltipClasses) {
-            var idx;
-            for(idx = 0; idx < tooltipClasses.length; ++idx) {
-              var tooltipClass = tooltipClasses[idx];
-              var placement = tooltipClass.match(/^tooltip-(bottom|top|right|left)$/);
-              if (placement && placement.length == 2 && placement[1].length > 0) {
-                selfOptions.placement = 'auto '+placement[1];
-                continue;
-              }
-              selfOptions.cssclass.push(tooltipClass);
-            }
-          }
-        }
-        $.fn.tooltip.call(self, 'destroy');
-        var originalTitle = self.data('original-title');
-        if (originalTitle && !self.attr('title')) {
-          self.attr('title', originalTitle);
-        }
-        self.removeAttr('data-original-title');
-        self.removeData('original-title');
-        var title = self.attr('title');
-        if (title == undefined || title.trim() == '') {
-          self.removeAttr('title');
-          self.cafevTooltip('disable');
-          return;
-        }
-        if (!selfOptions.template) {
-          selfOptions.template = '<div class="tooltip '
-                               + selfOptions.cssclass.join(' ')
-                               + '" role="tooltip">'
-                               + '<div class="tooltip-arrow"></div>'
-                               + '<div class="tooltip-inner"></div>'
-                               + '</div>';
-        }
-        $.fn.tooltip.call(self, selfOptions);
-      });
-    } else {
-      $.fn.tooltip.call(this, argument);
-    }
-    return this;
-  };
-
-  $.fn.cafevTooltip.enable = function() {
-    $('[data-original-title]').cafevTooltip('enable');
-  }
-
-  $.fn.cafevTooltip.disable = function() {
-    $('[data-original-title]').cafevTooltip('disable');
-  }
-
-  $.fn.cafevTooltip.remove = function() {
-    $('div.tooltip[role=tooltip]').remove();
-  };
-
-  $.fn.cafevTooltip.hide = function() {
-    $('[data-original-title]').cafevTooltip('hide');
-  };
-
 })(window, jQuery, CAFEVDB);
-
-$.extend({ alert: function (message, title) {
-  $("<div></div>").dialog( {
-    buttons: { "Ok": function () { $(this).dialog("close"); } },
-    open: function(event, ui) {
-      $(this).css({'max-height': 800, 'overflow-y': 'auto', 'height': 'auto'});
-      $(this).dialog( "option", "resizable", false );
-    },
-    close: function (event, ui) { $(this).remove(); },
-    resizable: false,
-    title: title,
-    modal: true,
-    height: "auto"
-  }).html(message);
-}
-});
 
 $(document).ready(function(){
 

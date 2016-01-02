@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -286,28 +286,6 @@ form#cafevdb-email-form td.stored-messages-storage input.submit {
   vertical-align:middle;
 }
 
-.ui-dialog.chosen-popup-dialog.address-book-emails .ui-dialog-buttonpane button.save-contacts {
-  text-indent: -99999px;
-  background-image: url('../img/save.svg');
-  background-repeat:no-repeat;
-  background-size: 25px 25px;
-  background-position: center;
-  width:27px;
-  height:27px;
-  vertical-align:middle;
-}
-
-.ui-dialog.chosen-popup-dialog.address-book-emails .ui-dialog-buttonpane button.save {
-  text-indent: -99999px;
-  background-image: url('../../../core/img/actions/checkmark.svg');
-  background-repeat:no-repeat;
-  background-size: 25px 25px;
-  background-position: center;
-  width:27px;
-  height:27px;
-  vertical-align:middle;
-}
-
 form#cafevdb-email-form td.stored-messages-storage span.save-as-template.container {
   position:relative;
   vertical-align:middle;
@@ -315,7 +293,9 @@ form#cafevdb-email-form td.stored-messages-storage span.save-as-template.contain
 
 form#cafevdb-email-form td.stored-messages-storage span.save-as-template.button {
   background-image: url('../img/template.svg');
-  background-size:24px 24px;
+  background-repeat:no-repeat;
+  background-position:center;
+  background-size:22px 22px;
   display:inline-block;
   width:15px;
   height:15px;
@@ -323,17 +303,22 @@ form#cafevdb-email-form td.stored-messages-storage span.save-as-template.button 
   max-height:15px;
   min-width:15px;
   mim-height:15px;
+  box-shadow:2px 2px 2px #080808;/*, 2px 2px 2px #cfc;*/
 }
 
 form#cafevdb-email-form input[type=checkbox]:checked + label span.save-as-template.button {
   background-color:red !important;
+  /*background-color:LightSteelBlue !important;*/
+  box-shadow:2px 2px 2px #080808 inset; /*, 1px 1px 1px #cfc inset;*/
 }
 
-form#cafevdb-email-form td.stored-messages-storage input.save-as-template {
-  vertical-align:middle;
-  position:absolute;
-  left:0px;
-  top:0px;
+form#cafevdb-email-form td.stored-messages-storage input[type="checkbox"].save-as-template {
+  position: absolute;
+  left:-10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
 }
 
 form#cafevdb-email-form td.stored-messages-storage input.save-message {
@@ -598,7 +583,12 @@ form#cafevdb-email-form .basic-recipients-set.container.inner {
 }
 
 form#cafevdb-email-form input[type=checkbox].basic-recipients-set {
-  position:absolute;
+  position: absolute;
+  left:-10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
 }
 form#cafevdb-email-form span.basic-recipients-set.container.outer {
   max-width:100%;

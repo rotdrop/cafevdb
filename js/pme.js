@@ -642,7 +642,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                CAFEVDB.modalizer(true);
              }
 
-             var popup = dialogHolder.dialog({
+             var popup = dialogHolder.cafevDialog({
                title: dialogHolder.find(pme.pmeClassSelector('span', 'short-title')).html(),
                position: pme.popupPosition,
                width: 'auto',
@@ -657,6 +657,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
                  //tmp.dialog('close');
                  var dialogHolder = $(this);
                  var dialogWidget = dialogHolder.dialog('widget');
+
+                 //dialogWidget.draggable('option', 'containment', '#content');
 
                  CAFEVDB.dialogToBackButton(dialogHolder);
                  CAFEVDB.dialogCustomCloseButton(dialogHolder, function(event, container) {
@@ -824,7 +826,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                /* kill the modalizer */
                CAFEVDB.Page.busyIcon(false);
                CAFEVDB.modalizer(false);
-               $('#focusstealer').focus(); // move focus away from submit button
+               CAFEVDB.unfocus(); // move focus away from submit button
              });
              return false;
            });

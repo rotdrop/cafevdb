@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2015 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -261,7 +261,7 @@ var CAFEVDB = CAFEVDB || {};
 		setSelect:	[ x+w, y+h, x, y ]//,
 		//aspectRatio: 0.8
 	    });
-	    $('#edit_photo_dialog').html($dlg).dialog({
+	    $('#edit_photo_dialog').html($dlg).cafevDialog({
 		modal: true,
 		closeOnEscape: true,
 		title:  t('cafevdb', 'Edit inline image'),
@@ -485,7 +485,7 @@ var CAFEVDB = CAFEVDB || {};
         imgClone.removeClass('zoomable');
         overlay.append(imgClone);
 	$.fn.cafevTooltip.remove(); // get rid of disturbing tooltips.
-        var popup = overlay.dialog({
+        var popup = overlay.cafevDialog({
             title: t('cafevdb', 'Photo Zoom'),
             position: { my: "middle top+5%",
                         at: "middle bottom",

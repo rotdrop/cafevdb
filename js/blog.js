@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -59,7 +59,7 @@ CAFEVDB = CAFEVDB || {};
     $('div.debug').html(data.data.debug);
     $('div.debug').show();
 
-    var popup = $('#blogedit').dialog({
+    var popup = $('#blogedit').cafevDialog({
       title: t('cafevdb', 'Edit Blog Entry'),
       dialogClass: 'blog-edit-dialog custom-close resize-target',
       modal: true,
@@ -207,7 +207,7 @@ CAFEVDB = CAFEVDB || {};
       if (thisBlogId === false || thisBlogId ==='') {
         thisBlogId = -1;
       }
-      $(this).dialog({
+      $(this).cafevDialog({
         dialogClass: 'no-close',
         title: t('cafevdb', 'One-time Blog Popup'),
         modal: true,
