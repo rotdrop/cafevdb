@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -193,24 +193,27 @@ class Instruments
       );
 
     $opts['fdd']['Instrument'] = array(
-                                       'name'     => 'Instrument',
-                                       'select'   => 'T',
-                                       'options'  => 'ACLFPV',
-                                       'maxlen'   => 64,
-                                       'sort'     => true
-                                       );
-    $opts['fdd']['Familie'] = array('name' => 'Familie',
-                                    'nowrap' => true,
-                                    'select'   => 'M',
-                                    'maxlen'   => 12,
-                                    'sort'     => true);
+      'name'     => 'Instrument',
+      'select'   => 'T',
+      'options'  => 'ACLFPV',
+      'maxlen'   => 64,
+      'sort'     => true
+      );
+    $opts['fdd']['Familie'] = array(
+      'name' => 'Familie',
+      'nowrap' => true,
+      'select'   => 'M',
+      'maxlen'   => 12,
+      'sort'     => true
+      );
     $opts['fdd']['Familie']['values'] = $this->instrumentFamilies;
     // Provide a link to Wikipedia for fun ...
+
     $opts['fdd']['Sortierung'] = array(
-                                       'name'     => 'Orchester Sortierung',
-                                       'select'   => 'T',
-                                       'maxlen'   => 8,
-                                       'sort'     => true
+      'name'     => L::t('sort order'),
+      'select'   => 'T',
+      'maxlen'   => 8,
+      'sort'     => true
                                        );
     $opts['fdd']['Lexikon'] = array(
       'name' => 'Wikipedia',

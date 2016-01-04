@@ -1,0 +1,98 @@
+/**Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ */
+/**@file
+ * Some tweaks for jQuery dialogs in order to fix scrollbar issues etc.
+ */
+
+.ui-widget.no-scroll {
+  overflow:hidden !important;
+}
+
+.ui-widget.cafev {
+  /*box-sizing: border-box !important;*/
+}
+
+.cafev .fixed-container,
+.cafev.fixed-container.ui-widget-content {
+  z-index:-1;
+  position:absolute !important;
+  box-sizing:border-box !important;
+  padding-top:2.6em !important; /* has to mach global jQuery and OC layout */
+  top:0px !important;
+  left:0px !important;
+  height:100% !important;
+  width:100% !important;
+  overflow:hidden !important;
+}
+
+.cafev.fixed-container .container {
+  position:absolute;
+  top:0px;
+  left:0px;
+  box-sizing:border-box;
+  height:100%;
+  width:100%;
+  overflow:hidden;
+  /* padding has to be specified else where to do the actual positioning */
+}
+
+/*The following is quite quere .... */
+.cafev .fixed-container .content-controls {
+  z-index:1;
+  position:relative;
+}
+
+.cafev .container.scroller {
+  position:relative;
+  overflow:auto;
+}
+
+.cafev .container.x-scroller {
+  position:relative;
+  overflow-x:auto;
+}
+
+.cafev .container.y-scroller {
+  position:relative;
+  overflow-y:auto;
+}
+
+.cafev .inhibit-overflow {
+  overflow:hidden!important;
+}
+
+.cafev .inhibit-overflow-x {
+  overflow-x:hidden!important;
+}
+
+.cafev .inhibit-overflow-y {
+  overflow-y:hidden!important;
+}
+
+.cafev .fixed-container * {
+  box-sizing:border-box;
+}
+
+/*
+ * Local Variables: ***
+ * css-indent-offset: 2 ***
+ * End: ***
+ */

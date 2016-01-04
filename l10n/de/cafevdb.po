@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-01 23:59+0100\n"
-"PO-Revision-Date: 2016-01-02 00:01+0100\n"
+"PO-Revision-Date: 2016-01-04 00:15+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -3108,7 +3108,7 @@ msgstr "Kann die neue Id für %s (Id = %d) nicht ermitteln."
 
 #: lib/instruments.php:42
 msgid "Add new Instruments"
-msgstr "Neue Instrumente"
+msgstr "Instrumente hinzufügenm"
 
 #: lib/instruments.php:270
 #, php-format

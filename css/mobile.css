@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -25,6 +25,22 @@
 
   body {
     overflow:hidden !important;
+  }
+
+  /*Reduce z-index of header in order to allow for full-screen dialogs.*/
+  #body-user #header,
+  #body-settings #header,
+  #body-public #header {
+    z-index:1000;
+  }
+
+  #appsettings_popup {
+    z-index:1001;
+  }
+
+  /* Display in full-screen, unless the nav-snapper is activated */
+  body:not(.snapjs-left) #content-wrapper {
+    padding-top:0px;
   }
 
   .ui-dialog.transparent,
@@ -65,6 +81,17 @@
   td.pme-sys input[type=submit],
   th.pme-sys input[type=submit] {
     width:auto !important;
+  }
+
+  /* Make room for the nav-snapper toggle in full-screen mode */
+  .mce-fullscreen .mce-toolbar-grp,
+  .ui-dialog .ui-dialog-titlebar {
+    margin-left:44px; /* has to match width of nav-snapper menu button */
+  }
+
+  .cafevdb-page-container.instruments .pme-sys,
+  .cafevdb-page-container.instruments .pme-main .pme-navigation  {
+    display:none;
   }
 
   .ui-dialog, .ui-dialog.pme-table-dialog {
@@ -167,9 +194,5 @@
 /*
  * Local Variables: ***
  * css-indent-offset: 2 ***
- * cssm-indent-level: 2 ***
- * cssm-indent-mirror-mode: t ***
- * cssm-newline-before-closing-bracket: t ***
- * cssm-indent-function: cssm-c-style-indenter ***
  * End: ***
  */

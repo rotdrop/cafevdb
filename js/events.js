@@ -47,7 +47,7 @@ var CAFEVDB = CAFEVDB || {};
       CAFEVDB.Events.UI.confirmText['detach'] =
         t('cafevdb', 'Do you really want to detach this event from the current project?');
       if (data.status == 'success') {
-        $('#dialog_holder').html(data.data.contents);
+        //$('#dialog_holder').html(data.data.contents);
         CAFEVDB.Events.projectId = data.data.projectId;
         CAFEVDB.Events.projectName = data.data.projectName;
       } else {
@@ -68,8 +68,10 @@ var CAFEVDB = CAFEVDB || {};
 	$('div.debug').show();
       }
 
-      var popup = $('#events').cafevDialog({
-        dialogClass: 'cafevdb-project-events',
+      //var popup = $('#events').cafevDialog({
+      var dialogContent = $(data.data.contents);
+      var popup = dialogContent.cafevDialog({
+        dialogClass: 'cafevdb-project-events no-scroll',
         position: { my: "middle top+50%",
                     at: "middle bottom",
                     of: "#controls" },
@@ -80,6 +82,36 @@ var CAFEVDB = CAFEVDB || {};
           //$.fn.cafevTooltip.remove();
 
           var dialogHolder = $(this);
+          var dialogWidget = dialogHolder.dialog('widget');
+
+          /* Adjust dimensions to do proper scrolling. */
+          var dimensionElement = dialogHolder.find('.size-holder');
+          var scrollElement = dialogHolder.find('.scroller');
+          var top    = scrollElement.position().top;
+          var width  = dimensionElement.outerWidth(true);
+          var height = dimensionElement.outerHeight(true);
+          dialogWidget.innerHeight(top+height);
+          dialogWidget.innerWidth(width);
+
+          var needScroll = scrollElement.needScrollbars();
+          if (!needScroll.horizontal) {
+            scrollElement.addClass('inhibit-overflow-x');
+          }
+          if (!needScroll.vertical) {
+            scrollElement.addClass('inhibit-overflow-y');
+          }
+
+          var scroll;
+          scroll = scrollElement.horizontalScrollbarHeight();
+          if (scroll > 0) {
+            dialogWidget.innerHeight(top+height+scroll);
+          }
+          scroll = scrollElement.verticalScrollbarWidth();
+          if (scroll > 0) {
+            dialogWidget.innerWidth(width+scroll);
+          }
+          /*********************************************/
+
           var eventForm = dialogHolder.find('#eventlistform');
           var eventMenu = eventForm.find('select.event-menu');
 
@@ -125,17 +157,20 @@ var CAFEVDB = CAFEVDB || {};
             return false;
           });
 
-          eventForm.off('click', ':button').
+          eventForm.
+            off('click', ':button').
             on('click', ':button', CAFEVDB.Events.UI.buttonClick);
 
-	  eventForm.off('click', 'td.eventdata').
+	  eventForm.
+            off('click', 'td.eventdata').
 	    on('click', 'td.eventdata', function(event) {
             $(this).parent().find(':button.edit').trigger('click');
             return false;
           });
 
-          dialogHolder.off('cafevdb:events_changed');
-          dialogHolder.on('cafevdb:events_changed',function(event, events) {
+          dialogHolder.
+            off('cafevdb:events_changed').
+            on('cafevdb:events_changed', function(event, events) {
             $.post(OC.filePath('cafevdb', 'ajax/events', 'execute.php'),
                    { ProjectId: Events.projectId,
                      ProjectName: Events.projectName,
@@ -144,7 +179,8 @@ var CAFEVDB = CAFEVDB || {};
                    CAFEVDB.Events.UI.relist);
             return false;
           });
-          dialogHolder.off('change', 'input.email-check').
+          dialogHolder.
+            off('change', 'input.email-check').
             on('change', 'input.email-check', function(event) {
             Events.UI.updateEmailForm();
             return false;
@@ -182,7 +218,7 @@ var CAFEVDB = CAFEVDB || {};
     },
     relist: function(data) {
       var events =$('#events');
-      var listing = events.find('div.listing');
+      var listing = events.find('#eventlistholder');
       if (data.status == 'success') {
         listing.html(data.data.contents);
       } else {

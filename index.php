@@ -38,6 +38,8 @@ namespace CAFEVDB
 
   \OCP\Util::addStyle('cafevdb', 'cafevdb');
   \OCP\Util::addStyle('cafevdb', 'tooltips');
+  \OCP\Util::addStyle('cafevdb', 'dialogs');
+
 
   if (!\OC_Group::inGroup($user, $group)) {
     $tmpl = new \OCP\Template( 'cafevdb', 'errorpage', 'user' );

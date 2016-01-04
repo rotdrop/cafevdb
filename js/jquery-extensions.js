@@ -33,10 +33,28 @@ var CAFEVDB = CAFEVDB || {};
    */
   $.fn.cafevDialog = function(argument) {
     if (arguments.length == 1 && typeof argument == 'object' && argument != null) {
+      var openCallback = argument.open;
+      var closeCallback = argument.close;
       var options = {
         appendTo: '#cafevdb-general',
+        //appendTop: 'body'
+        open: function() {
+          if (typeof openCallback == 'function') {
+            openCallback.call(this);
+          }
+        },
+        close: function() {
+          if (typeof closeCallback == 'function') {
+            closeCallback.call(this);
+          }
+        }
       };
       argument = $.extend({}, options, argument);
+      if (argument.dialogClass) {
+        argument.dialogClass += ' cafev';
+      } else {
+        argument.dialogClass = 'cafev';
+      }
       CAFEVDB.snapperClose();
       $.fn.dialog.call(this, argument);
       $.fn.dialog.call(this, 'widget').draggable('option', 'containment', '#content');
@@ -50,6 +68,57 @@ var CAFEVDB = CAFEVDB || {};
   //   appendTo: '#content',
   //   containment: '#content'
   // });
+
+  /**Determine whether scrollbars would be needed. */
+  $.fn.needScrollbars = function() {
+    var node = this.get(0);
+    return {
+      vertical: node.scrollHeight > node.offsetHeight,
+      horizontal: node.scrollWidth > node.offsetWidth
+    };
+  }
+
+  /**Determine whether scrollbars are actually present. */
+  $.fn.hasScrollbars = function() {
+    var node = this.get(0);
+    return {
+      vertical: node.scrollHeight > node.clientHeight,
+      horizontal: node.scrollWidth > node.clientWidth
+    };
+  };
+
+  /**Determine dimensions of scrollbars. */
+  $.fn.scrollbarDimensions = function() {
+    var node = this.get(0);
+    return {
+      height: node.offsetHeight - node.clientHeight,
+      width: node.offsetWidth - node.clientWidth
+    };
+  };
+
+  /**Determine whether we have a horizontal scrollbar. */
+  $.fn.hasHorizontalScrollbar = function() {
+    var node = this.get(0);
+    return node.scrollWidth > node.clientWidth;
+  };
+
+  /**Determine whether we have a vertical scrollbar. */
+  $.fn.hasVerticalScrollbar = function() {
+    var node = this.get(0);
+    return node.scrollHeight > node.clientHeight;
+  };
+
+  /**Determine vertical scrollbar width. */
+  $.fn.verticalScrollbarWidth = function() {
+    var node = this.get(0);
+    return node.offsetWidth - node.clientWidth;
+  }
+
+  /**Determine horizonatl scrollbar height. */
+  $.fn.horizontalScrollbarHeight = function() {
+    var node = this.get(0);
+    return node.offsetHeight - node.clientHeight;
+  }
 
   /**Extend the tooltips to honour some special class elements, and
    * attach user specified tooltip-... classes to the actual tooltip

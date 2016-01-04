@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -19,18 +19,42 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#events {padding: 0;margin: 0;margin-top:0px}
+#events {
+  padding: 0;
+  margin: 0;
+}
 
 #events {
   background-color:#d0dcec;
 }
 
-form.projectevents {
-  position:relative;
-  padding-top:1ex;
-  padding-left:0ex;
-  /*background-color:#e6f1ff;*/
+/******************************************************************************
+ *
+ * Global layout in order to force the scrollbar to
+ * #eventlistscroller. Have also have to have a look at dialogs.css to
+ * understand the issues.
+ */
+.projectevents div.eventcontrols {
+  padding:0.3em 0.3em 0 0.3em;
 }
+
+#eventlist {
+  padding:5.6em 0 0 0;
+}
+
+.projectevents table.listing {
+  border:0px solid #004d9c;
+  border-collapse:collapse;
+  border-spacing:0px;
+  margin:1px; /* otherwise the cell-borders are hidden.*/
+  display:inline-block; /* otherwise no padding */
+  padding:0.3em 0.3em 0.3em 0.3em; /* should match padding of controls */
+}
+
+/*
+ * End global layout.
+ *
+ *****************************************************************************/
 
 #events select, #events input, #events option, #events button {
   border-radius:4px;
@@ -198,21 +222,6 @@ form.projectevents {
 
 label.email-check {
   /*vertical-align:middle;*/
-}
-
-.projectevents div.listing {
-  padding:0.3em 0.3em 0 0.3em;
-  min-height:10em;
-}
-
-.projectevents div.eventcontrols {
-  padding:0.3em 0.3em 0 0.3em;
-}
-
-.projectevents table.listing {
-  border:0px solid #004d9c;
-  border-collapse:collapse;
-  border-spacing:0px;
 }
 
 td.eventdata, td.eventbuttons, td.eventemail {
@@ -399,6 +408,5 @@ div.google-popup {
 /*
  * LocalVariables: ***
  * css-indent-offset: 2 ***
- * cssm-indent-function: cssm-c-style-indenter ***
  * End: ***
  */

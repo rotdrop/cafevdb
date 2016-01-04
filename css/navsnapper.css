@@ -63,7 +63,7 @@
 	left: 0px;
 	width: 44px;
 	height: 44px;
-	z-index: 101;
+	z-index: 200;
 	background-color: rgba(255, 255, 255, .7);
 	cursor: pointer;
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)";
@@ -85,7 +85,7 @@
 	width: auto !important;
 	left: 0 !important;
 	padding-left: 0;
-        z-index: 100;
+        z-index: 99;
 }
 /* position controls for apps with app-navigation */
 #app-navigation+#app-content #controls {

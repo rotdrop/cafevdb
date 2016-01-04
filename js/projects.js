@@ -69,6 +69,8 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
                             modal: false },
                           function(dwDialog, dwDialogWidget) {
                               // open callback
+                              dwDialog.dialog('option', 'appendTo', '#cafevdb-general');
+                              // Custom shuffle button
                               CAFEVDB.dialogToBackButton(dwDialog);
                           },
                           function() {
