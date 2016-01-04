@@ -37,7 +37,7 @@ var CAFEVDB = CAFEVDB || {};
       var closeCallback = argument.close;
       var options = {
         appendTo: '#cafevdb-general',
-        //appendTop: 'body'
+        //appendTop: 'body',
         open: function() {
           if (typeof openCallback == 'function') {
             openCallback.call(this);
