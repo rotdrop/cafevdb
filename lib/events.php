@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -32,7 +32,7 @@ namespace CAFEVDB
     /**Make sure the data-base provides the necessary table(s).
      * This function may through an exception.
      */
-    public static function configureDatabase($_handle = false) 
+    public static function configureDatabase($_handle = false)
     {
       try {
         if ($_handle === false) {
@@ -185,7 +185,7 @@ namespace CAFEVDB
         Config::init();
         $handle = mySQL::connect(Config::$pmeopts);
       }
-    
+
       $event      = self::getEvent($eventId);
       $calId      = self::getCalendarId($event);
       $categories = self::getCategories($event);
@@ -194,16 +194,16 @@ namespace CAFEVDB
       $projects = Projects::fetchProjects($handle);
 
       $result = false;
-      // Do the sync. The categories stored in the event are 
+      // Do the sync. The categories stored in the event are
       // the criterion for this.
       foreach ($projects as $prKey => $prName) {
+        $registered = self::isRegistered($prKey, $eventId, $handle);
         if (in_array($prName, $categories)) {
-          if (!self::isRegistered($prKey, $eventId, $handle)) {
-            // register the event
-            self::register($prKey, $eventId, $calId, $handle);
-            $result = true;
-          }
-        } else if (self::isRegistered($prKey, $eventId, $handle)) {
+          // register or update the event
+          $type = self::getEventType($event);
+          self::register($prKey, $calId, $eventId, $type, $handle);
+          $result = !$registered;
+        } else if ($registered) {
           // unregister the event
           self::unregister($prKey, $eventId, $handle);
         }
@@ -239,14 +239,15 @@ namespace CAFEVDB
      *
      * @param[in] $eventId OC event-ID.
      *
-     * @return An array, the row from the OC-database.
+     * @return An array, the row from the OC-database. BIG FAT NOTE:
+     * this is NOT the VObject.
      */
     protected static function getEvent($eventId)
     {
       return \OC_Calendar_App::getEventObject($eventId, false, false);
     }
 
-    /**Inject a new event into the given calendar. This function calls
+    /**Inject a new task into the given calendar. This function calls
      * OC_Calendar_Object::createVCalendarFromRequest($request). $request
      * is a post-array. One example, in order to create a simple
      * non-repeating event:
@@ -282,7 +283,7 @@ namespace CAFEVDB
       }
       $id = $response['id'];
 
-      if (isset($taskData['description'])) {        
+      if (isset($taskData['description'])) {
         $response = Util::postToRoute('tasks.tasks.setTaskNote',
                                       array('taskID' => $id),
                                       array('note' => $taskData['description']),
@@ -337,7 +338,7 @@ namespace CAFEVDB
         }
       }
     }
-    
+
     /**Inject a new event into the given calendar. This function calls
      * OC_Calendar_Object::createVCalendarFromRequest($request). $request
      * is a post-array. One example, in order to create a simple
@@ -369,11 +370,11 @@ namespace CAFEVDB
           "\n".
           print_r($eventData, true));
       }
-      
+
       $calendarId = $eventData['calendar'];
       $vcalendar = \OC_Calendar_Object::createVCalendarFromRequest($eventData);
       $alarm = isset($eventData['alarm']) ? $eventData['alarm'] : false;
-      if ($alarm !== false) {        
+      if ($alarm !== false) {
       /*
 BEGIN:VALARM
 DESCRIPTION:
@@ -436,19 +437,27 @@ END:VALARM
 
     /**Return the VCALENDAR object corresponding to $event.
      *
-     * @param[in] $event Mixed, either an ID are the corresponding row
-     * from the OC database.
+     * @param[in] $event Mixed, either an ID, or the corresponding row
+     * from the OC database, or an array where the 'object' field
+     * contains the row from the OC database, or even already a
+     * \\Sabre\\VObject\\Component\\VCalendar object, which then simply is returned.
      *
      * @return The VCALENDAR object or @c false if an error occurs.
      */
-    protected static function getVCalendar($event)
+    protected static function &getVCalendar(&$event)
     {
+      if ($event instanceof \Sabre\VObject\Component\VCalendar) {
+        return $event;
+      }
+
       if (is_array($event)) {
-        if (isset($event['calendardata'])) {
-          $vcalendar = \Sabre\VObject\Reader::read($event['calendardata']);
-        } else if (isset($event['object'])) {
-          $vcalendar = self::getVCalendar($event['object']);
+        if (!isset($event['calendardata']) && isset($event['object'])) {
+          $event = $event['object'];
         }
+        if (!isset($event['calendardata'])) {
+          throw new \InvalidArgumentException('Passed argument does not contain calendar-data');
+        }
+        $vcalendar = \Sabre\VObject\Reader::read($event['calendardata']);
       } else {
         $vcalendar = \OC_Calendar_App::getVCalendar($event, false, false);
       }
@@ -460,12 +469,14 @@ END:VALARM
      * object. This is a reference to allow for modification of the
      * $vCalendar object.
      *
-     * @param[in] $vcalendar Sabre VObject.
+     * @param[in] $stuff Something understood by getVCalendar().
      *
      * @return A reference to the inner object.
      */
-    protected static function &getVObject(&$vcalendar)
+    protected static function &getVObject(&$stuff)
     {
+      $vcalendar = self::getVCalendar($stuff);
+
       if (isset($vcalendar->VEVENT)) {
         $vobject = &$vcalendar->VEVENT;
       } else if (isset($vcalendar->VTODO)) {
@@ -475,29 +486,46 @@ END:VALARM
       } else if (isset($vcalendar->VCARD)) {
         $vobject = &$vcalendar->VCARD;
       } else {
-        throw new \Exception('Called with empty of no VObjecvt');
+        throw new \Exception('Called with empty of no VObject');
       }
 
       return $vobject;
     }
-  
+
+    /**Return the type of the respective calendar object.
+     *
+     * @param[in] $stuff Something understood by getVCalendar().
+     *
+     * @return string Either VEVENT, VTODO, VJOURNAL or VCARD.
+     */
+    protected static function getEventType($stuff)
+    {
+      $vcalendar = self::getVCalendar($stuff);
+
+      if (isset($vcalendar->VEVENT)) {
+        return 'VEVENT';
+      } else if (isset($vcalendar->VTODO)) {
+        return 'VTODO';
+      } else if (isset($vcalendar->VJOURNAL)) {
+        return 'JVOURNAL';
+      } else if (isset($vcalendar->VCARD)) {
+        return 'VCARD';
+      } else {
+        throw new \InvalidArgumentException('Called with empty of no VObject');
+      }
+      return '';
+    }
+
     /**Return the category list for the given event.
      *
-     * @param[in] $stuff Either a VCALENDAR object, or the inner VEVENT,
-     * VTODO etc. or an OC-event (array, row from the data-base) or just
-     * an event Id (in which case the row from the data-base will be
-     * fetched).
+     * @param[in] $stuff Something understoood by getVCalendar()
      *
      * @return An array with the categories for the event.
      */
     protected static function getCategories($stuff)
     {
-      if ($stuff instanceof \Sabre\VObject\Component\VCalendar) {
-        $vcalendar = $stuff;
-      } else {
-        $vcalendar = self::getVCalendar($stuff);
-      }    
-      $vobject = self::getVObject($vcalendar);
+      // get the inner object
+      $vobject = self::getVObject($stuff);
 
       if (isset($vobject->CATEGORIES)) {
         $categories = $vobject->CATEGORIES->getParts();
@@ -510,9 +538,7 @@ END:VALARM
 
     /**Set the category list for the given event.
      *
-     * @param[in] $stuff Either a VCALENDAR object or an OC-event
-     * (array, row from the data-base) or just an event Id (in which
-     * case the row from the data-base will be fetched).
+     * @param[in] $stuff Something understood by getVCalendar().
      *
      * @param[in] $categories A string-array with the new categories.
      *
@@ -520,11 +546,6 @@ END:VALARM
      */
     protected static function setCategories($stuff, $categories)
     {
-      if ($stuff instanceof \Sabre\VObject\Component\VCalendar) {
-        $vcalendar = $stuff;
-      } else {
-        $vcalendar = self::getVCalendar($stuff);
-      }
       $vobject = self::getVObject($stuff);
 
       $vobject->CATEGORIES = $categories;
@@ -534,21 +555,13 @@ END:VALARM
 
     /**Return the summary for the given event.
      *
-     * @param[in] $stuff Either a VCALENDAR object, or the inner VEVENT,
-     * VTODO etc. or an OC-event (array, row from the data-base) or just
-     * an event Id (in which case the row from the data-base will be
-     * fetched).
+     * @param[in] $stuff Something understood by getVCalendar().
      *
      * @return A string with the event's brief title
      */
     public static function getSummary($stuff)
     {
-      if ($stuff instanceof \Sabre\VObject\Component\VCalendar) {
-        $vcalendar = $stuff;
-      } else {
-        $vcalendar = self::getVCalendar($stuff);
-      }    
-      $vobject = self::getVObject($vcalendar);
+      $vobject = self::getVObject($stuff);
 
       $summary = $vobject->SUMMARY;
 
@@ -557,9 +570,7 @@ END:VALARM
 
     /**Set the summary (brief title) for the given event.
      *
-     * @param[in] $stuff Either a VCALENDAR object or an OC-event
-     * (array, row from the data-base) or just an event Id (in which
-     * case the row from the data-base will be fetched).
+     * @param[in] $stuff Something understodd by getVCalendar().
      *
      * @param[in] $summary A string with the new summary.
      *
@@ -567,11 +578,6 @@ END:VALARM
      */
     protected static function setSummary($stuff, $summary)
     {
-      if ($stuff instanceof \Sabre\VObject\Component\VCalendar) {
-        $vcalendar = $stuff;
-      } else {
-        $vcalendar = self::getVCalendar($stuff);
-      }
       $vobject = self::getVObject($stuff);
 
       $vobject->SUMMARY = $summary;
@@ -581,21 +587,13 @@ END:VALARM
 
     /**Return the description for the given event.
      *
-     * @param[in] $stuff Either a VCALENDAR object, or the inner VEVENT,
-     * VTODO etc. or an OC-event (array, row from the data-base) or just
-     * an event Id (in which case the row from the data-base will be
-     * fetched).
+     * @param[in] $stuff Something understood by getVCalendar().
      *
      * @return A string with the event's brief title
      */
     public static function getDescription($stuff)
     {
-      if ($stuff instanceof \Sabre\VObject\Component\VCalendar) {
-        $vcalendar = $stuff;
-      } else {
-        $vcalendar = self::getVCalendar($stuff);
-      }    
-      $vobject = self::getVObject($vcalendar);
+      $vobject = self::getVObject($stuff);
 
       $description = $vobject->DESCRIPTION;
 
@@ -620,21 +618,22 @@ END:VALARM
         Config::init();
         $handle = mySQL::connect(Config::$pmeopts);
       }
-        
+
       $event      = self::getEvent($eventId);
       $categories = self::getCategories($event);
       $calId      = self::getCalendarId($event);
 
       // Now fetch all projects and their names ...
       $projects = Projects::fetchProjects($handle);
-        
+
       // Search for matching project-tags. We assume that this is
       // not really timing critical, i.e. that there are only few
       // projects. Events may belong to more than one projet.
       foreach ($projects as $prKey => $prName) {
         if (in_array($prName, $categories)) {
           // Ok. Link it in.
-          self::register($prKey, $eventId, $calId, $handle);
+          $type = self::getEventType($event);
+          self::register($prKey, $calId, $eventId, $type, $handle);
         }
       }
 
@@ -648,19 +647,24 @@ END:VALARM
     /**Unconditionally register the given event with the given project.
      *
      * @param[in] $projectId The project key.
-     * @param[in] $eventId The event key (external key).
      * @param[in] $calendarId The id of the calender the vent belongs to.
+     * @param[in] $eventId The event key (external key).
+     * @param[in] $type The event type (VEVENT, VTODO, VJOURNAL, VCARD).
      * @param[in] $handle mySQL handle or false.
      *
      * @return Undefined.
      */
-    protected static function register($projectId, $eventId, $calendarId,
+    protected static function register($projectId,
+                                       $calendarId,
+                                       $eventId,
+                                       $type,
                                        $handle = false)
     {
       $values = array('ProjectId' => $projectId,
+                      'CalendarID' => $calendarId,
                       'EventId' => $eventId,
-                      'CalendarID' => $calendarId);
-      $result = mySQL::insert('ProjectEvents', $values, $handle);
+                      'Type' => $type);
+      $result = mySQL::insert('ProjectEvents', $values, $handle, mySQL::UPDATE);
     }
 
     /**Unconditionally unregister the given event with the given project.
@@ -679,7 +683,7 @@ END:VALARM
         Config::init();
         $handle = mySQL::connect(Config::$pmeopts);
       }
-        
+
       // Link it in.
       $query =<<<__EOT__
 DELETE FROM `ProjectEvents`
@@ -729,8 +733,8 @@ __EOT__;
       unset($categories[$key]);
 
       $vcalendar = self::setCategories($vcalendar, $categories);
-    
-      \OC_Calendar_Object::edit($eventId, $vcalendar->serialize());    
+
+      \OC_Calendar_Object::edit($eventId, $vcalendar->serialize());
     }
 
     /**Replace an old category with a new one. As the code is taylored
@@ -771,7 +775,7 @@ __EOT__;
           $vcalendar = self::setSummary($vcalendar, $summary);
         }
       }
-      \OC_Calendar_Object::edit(self::eventId($event), $vcalendar->serialize());    
+      \OC_Calendar_Object::edit(self::eventId($event), $vcalendar->serialize());
     }
 
     /**Test if the given event is linked to the given project.
@@ -794,7 +798,7 @@ __EOT__;
       $query =<<<__EOT__
 FROM `ProjectEvents`
 WHERE `EventId` = $eventId
-      AND 
+      AND
      `ProjectId` = $projectId
 __EOT__;
       $result = mySQL::queryNumRows($query, $handle) > 0;
@@ -831,7 +835,7 @@ __EOT__;
             ($share['uid_owner'] != $owner)) {
           // Exclude shared items.
           continue;
-        }      
+        }
         if ($calendar['displayname'] == $dpyName) {
           $result = $calendar;
           break;
@@ -839,7 +843,7 @@ __EOT__;
       }
       return $result;
     }
-  
+
     /**Make sure there is a suitable shared calendar with the given
      * name and/or id. Create one if necesary.
      *
@@ -873,7 +877,7 @@ __EOT__;
           $shareCal = self::calendarByName($dpyName, $shareowner);
         }
       }
-    
+
       if (!$shareCal) {
         // Well, then we create one ...
         $calId = \OC_Calendar_Calendar::addCalendar($shareowner, $dpyName);
@@ -887,7 +891,7 @@ __EOT__;
         return false;
       }
 
-      // Check that we can edit, simply set the item as shared    
+      // Check that we can edit, simply set the item as shared
       ConfigCheck::sudo($shareowner, function() use ($calId, $sharegroup) {
           $result = ConfigCheck::groupShareObject($calId, $sharegroup);
           return $result;
@@ -937,7 +941,7 @@ __EOT__;
     public static function eventMatrix($projectEvents, $calendarIds)
     {
       $calendarNames = array();
-    
+
       $result = array();
 
       foreach ($calendarIds as $id) {
@@ -969,15 +973,15 @@ __EOT__;
     public static function eventCompare($a, $b)
     {
       if ($a['object']['startdate'] == $b['object']['startdate']) {
-        return 0;  
+        return 0;
       }
       if ($a['object']['startdate'] < $b['object']['startdate']) {
-        return -1;      
+        return -1;
       } else {
         return 1;
       }
     }
-  
+
     /**Fetch the event and convert the time-stamps to a PHP
      * DateTime-object with time-zone UTC.
      */
@@ -987,7 +991,7 @@ __EOT__;
       if ($event === false) {
         return false;
       }
-    
+
       $utc = new \DateTimeZone("UTC");
       $event['startdate'] = new \DateTime($event['startdate'], $utc);
       $event['enddate']   = new \DateTime($event['enddate'], $utc);
@@ -996,7 +1000,7 @@ __EOT__;
     }
 
     /**Form start and end date and time in given timezone and locale,
-     * return is an array 
+     * return is an array
      *
      * array('start' => array('date' => ..., 'time' => ..., 'allday' => ...), 'end' => ...)
      *
@@ -1008,7 +1012,7 @@ __EOT__;
      *
      * @param $locale Explicit language setting to use, otherwise
      * fetched from user-settings.
-     * 
+     *
      */
     public static function eventTimes($eventObject, $timezone = null, $locale = null)
     {
@@ -1159,7 +1163,7 @@ __EOT__;
      * functions fetches all the data, not only the pivot-table. Time
      * stamps from the data-base are converted to PHP DateTime()-objects
      * with UTC time-zone.
-     * 
+     *
      * @param[in] $projectId The numeric id of the project.
      *
      * @param[in] $handle Data-base handle or false.
@@ -1167,7 +1171,7 @@ __EOT__;
      * @return Full event data for this project.
      */
     public static function events($projectId, $handle = false)
-    {    
+    {
       $events = array();
 
       $ownConnection = ($handle === false);
@@ -1175,12 +1179,13 @@ __EOT__;
         Config::init();
         $handle = mySQL::connect(Config::$pmeopts);
       }
-      
+
       $utc = new \DateTimeZone("UTC");
 
       $query =<<<__EOT__
 SELECT `Id`,`EventId`,`CalendarId`
-  FROM `ProjectEvents` WHERE `ProjectId` = $projectId
+  FROM `ProjectEvents`
+  WHERE `ProjectId` = $projectId AND `Type` = 'VEVENT'
   ORDER BY `Id` ASC
 __EOT__;
 
@@ -1197,7 +1202,7 @@ __EOT__;
           $events[] = $event;
         }
       }
-    
+
       if ($ownConnection) {
         mySQL::close($handle);
       }
@@ -1211,7 +1216,7 @@ __EOT__;
      * data).
      */
     protected static function projectEvents($projectId, $handle = false)
-    {    
+    {
       $events = array();
 
       $ownConnection = $handle === false;
@@ -1219,10 +1224,11 @@ __EOT__;
         Config::init();
         $handle = mySQL::connect(Config::$pmeopts);
       }
-      
+
       $query =<<<__EOT__
 SELECT `CalendarId`,`EventId`
-  FROM `ProjectEvents` WHERE `ProjectId` = $projectId
+  FROM `ProjectEvents`
+  WHERE `ProjectId` = $projectId AND `Type` = 'VEVENT'
   ORDER BY `Id` ASC
 __EOT__;
 
@@ -1230,7 +1236,7 @@ __EOT__;
       while ($line = mySQL::fetch($result)) {
         $events[] = $line['EventId'];
       }
-    
+
       if ($ownConnection) {
         mySQL::close($handle);
       }
@@ -1258,7 +1264,7 @@ __EOT__;
       while ($line = mySQL::fetch($result)) {
         $projects[] = $line['ProjectId'];
       }
-    
+
       if ($ownConnection) {
         mySQL::close($handle);
       }
@@ -1281,7 +1287,7 @@ __EOT__;
     static public function exportEvents($events, $projectName)
     {
       $result = '';
-    
+
       $eol = "\r\n";
 
       $result .= ""

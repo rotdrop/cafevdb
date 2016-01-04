@@ -1610,6 +1610,9 @@ __EOT__;
   class mySQL
   {
     const DATEMASK = "Y-m-d H:i:s"; /**< Something understood by mySQL. */
+    const REGULAR = 0; ///< Default action, no update on duplicate etc.
+    const IGNORE  = 1; ///< Ignore errors on insert, update
+    const UPDATE  = 2; ///< Update on duplicate key
 
     /**Connect to the server specified by @a $opts.
      *
@@ -1886,11 +1889,11 @@ __EOT__;
      * @param[in] $handle Data-base connection, as returned by
      * mySQL::open(). If null, then a new connection is opened.
      *
-     * @param[in] $ignore If true, use "INSERT IGNORE".
+     * @param[in] $modifier One of self::REGULAR, self::UPDATE, self::IGNORE
      *
      * @return The result returned by the SQL query statement.
      */
-    public static function insert($table, $newValues, $handle = null, $ignore = false)
+    public static function insert($table, $newValues, $handle = false, $flags = self::REGULAR)
     {
       if (empty($newValues)) {
         return true; // don't care
@@ -1898,10 +1901,29 @@ __EOT__;
       $keys = array_keys($newValues);
       $values = array_values($newValues);
 
-      $query = ($ignore ? "INSERT IGNORE INTO " : "INSERT INTO `").$table."`
+      // build the query ...
+      switch ($flags) {
+      default:
+      case self::REGULAR:
+        $query = "INSERT INTO `".$table."`
   (`".implode("`,`", $keys)."`)
   VALUES ('".implode("','", $values)."')";
-      //throw new \Exception($query);
+        break;
+      case self::IGNORE:
+        $query = "INSERT IGNORE INTO `".$table."`
+  (`".implode("`,`", $keys)."`)
+  VALUES ('".implode("','", $values)."')";
+        break;
+      case self::UPDATE:
+        $updates = array_map(function($key) {
+            return "`".$key."` = VALUES($key)";
+          }, $keys);
+        $query = "INSERT INTO `".$table."`
+  (`".implode("`,`", $keys)."`)
+  VALUES ('".implode("','", $values)."')
+  ON DUPLICATE KEY UPDATE ".implode(",", $updates);
+        break;
+      }
 
       $ownConnection = $handle === false;
       if ($ownConnection) {

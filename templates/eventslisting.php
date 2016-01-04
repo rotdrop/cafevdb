@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -24,7 +24,7 @@ use CAFEVDB\L;
 use CAFEVDB\Config;
 use CAFEVDB\Events;
 ?>
-<table id="table" class="nostyle listing">
+<table id="table" class="nostyle listing size-holder">
 <?php
 $prjId   = $_['ProjectId'];
 $prjName = $_['ProjectName'];
@@ -75,7 +75,7 @@ __EOT__;
 __EOT__;
     }
     $title = Config::toolTips('projectevents-selectevent');
-    $checked = isset($_['Selected'][$evtId]) ? 'checked' : '';
+    $checked = isset($_['Selected'][$evtId]) ? 'checked="checked"' : '';
     echo <<<__EOT__
       </td>
       <td class="eventemail">

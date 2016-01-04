@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2015 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -24,7 +24,7 @@
  */
 
 namespace CAFEVDB {
-  
+
  /**@addtogroup AJAX
   * AJAX related scripts.
   * @{
@@ -38,9 +38,9 @@ namespace CAFEVDB {
   \OCP\JSON::checkAppEnabled('calendar');
 
   try {
-  
+
     Error::exceptions(true);
-  
+
     $debugmode = Config::getUserValue('debugmode','') == 'on';
     $debugtext = $debugmode ? '<PRE>'.print_r($_POST, true).'</PRE>' : '';
 
@@ -119,7 +119,7 @@ namespace CAFEVDB {
     $dfltIds     = Events::defaultCalendars();
     $eventMatrix = Events::eventMatrix($events, $dfltIds);
 
-// Now generate the html-fragment
+    // Now generate the html-fragment
 
     $tmpl = new \OCP\Template('cafevdb', 'eventslisting');
 
@@ -135,7 +135,7 @@ namespace CAFEVDB {
     $html = $tmpl->fetchPage();
 
     \OCP\JSON::success(array('data' => array('contents' => $html,
-                                            'debug' => $debugtext)));
+                                             'debug' => $debugtext)));
 
     return true;
 
@@ -159,5 +159,5 @@ namespace CAFEVDB {
  * c-basic-offset: 2 ***
  * End: ***
  */
-  
+
 ?>
