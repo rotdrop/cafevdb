@@ -89,6 +89,10 @@
     margin-left:44px; /* has to match width of nav-snapper menu button */
   }
 
+  .mce-fullscreen {
+    padding-top:0px!important;
+  }
+
   .cafevdb-page-container.instruments .pme-sys,
   .cafevdb-page-container.instruments .pme-main .pme-navigation  {
     display:none;

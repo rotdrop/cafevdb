@@ -234,14 +234,6 @@ input[type=checkbox],input[type=submit],input[type=radio],input[type=button] {
   font-weight:bold;
 }
 
-div.cafevdb-page-header.collapsed #cafevdb-page-config-check-header {
-  height:3ex;
-  padding-left:4ex;
-  margin-top:0ex;
-  width:100%;
-  max-width:100%;
-}
-
 #cafevdb-page-body-config-check {
   padding-left:1ex;
 }
@@ -851,6 +843,29 @@ input[type=checkbox].cafevdb-password-show + label.cafevdb-password-show {
 
 .cafevdb-busy {
   animation: busyfading 3s ease infinite alternate;
+}
+
+/*****************************************************************************
+ *
+ * Fix some full-screen stuff.
+ *
+ */
+.mce-fullscreen {
+  padding-top:45px!important; /* must match size of OC header bar. */
+  box-sizing:border-box!important;
+}
+
+.snapjs-left .mce-fullscreen {
+  padding-top:0px!important;
+}
+
+/* Make room for the nav-snapper toggle in full-screen mode */
+.mce-fullscreen .mce-menubar {
+  margin-left:44px; /* has to match width of nav-snapper menu button */
+}
+
+#content-wrapper {
+  top:0px;
 }
 
 /*
