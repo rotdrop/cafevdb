@@ -33,21 +33,9 @@ var CAFEVDB = CAFEVDB || {};
    */
   $.fn.cafevDialog = function(argument) {
     if (arguments.length == 1 && typeof argument == 'object' && argument != null) {
-      var openCallback = argument.open;
-      var closeCallback = argument.close;
       var options = {
         appendTo: '#cafevdb-general',
         //appendTop: 'body',
-        open: function() {
-          if (typeof openCallback == 'function') {
-            openCallback.call(this);
-          }
-        },
-        close: function() {
-          if (typeof closeCallback == 'function') {
-            closeCallback.call(this);
-          }
-        }
       };
       argument = $.extend({}, options, argument);
       if (argument.dialogClass) {
