@@ -499,41 +499,70 @@ var CAFEVDB = CAFEVDB || {};
             open: function() {
                 var dialogHolder = $(this);
                 var dialogWidget = dialogHolder.dialog('widget');
-                dialogWidget.click(function() {
+                dialogHolder.click(function() {
                     dialogHolder.dialog('close');
                 });
                 dialogHolder.imagesLoaded(function() {
                     var title = dialogWidget.find('.ui-dialog-titlebar');
                     var titleBarHeight = title.is(':visible') ? title.outerHeight() : '0';
                     var newHeight = dialogWidget.height() - titleBarHeight;
-                    var outerHeight = dialogHolder.outerHeight(true);
                     var newWidth = dialogWidget.width();
+
+                    var height = dialogHolder.height();
+                    var width = dialogHolder.width();
+                    var outerHeight = dialogHolder.outerHeight(true);
                     var outerWidth = dialogHolder.outerWidth(true);
+
                     var imageHeight = imgClone.height();
                     var imageWidth  = imgClone.width();
+                    var imageOuterHeight = imgClone.outerHeight(true);
+                    var imageOuterWidth  = imgClone.outerWidth(true);
 
-                    if (outerHeight > newHeight) {
-                        var imageRatio = imageWidth / imageHeight;
-                        var vOffset = outerHeight - dialogHolder.height();
-                        vOffset += (imgClone.outerHeight(true) - imageHeight);
-                        newHeight -= vOffset;
-                        var hOffset = outerWidth - dialogHolder.width();
-                        hOffset += (imgClone.outerWidth(true) - imageWidth);
-                        newWidth -= hOffset;
-                        if (newHeight * imageRatio > newWidth) {
-                            imgClone.width(newWidth);
+                    console.log('inner w/h', width, height);
+                    console.log('outer w/h', outerWidth, outerHeight);
+                    console.log('new w/h', newWidth, newHeight);
+                    console.log('img w/h', imageWidth, imageHeight);
+                    console.log('img o w/h', imageOuterWidth, imageOuterHeight);
+
+                    /* newHeight and newWidth are the relevant sizes
+                     * which must hold the entire stuff.
+                     */
+                    var vOffset    = outerHeight - height;
+                    var hOffset    = outerWidth - width;
+                    var imgVOffset = imageOuterHeight - imageHeight;
+                    var imgHOffset = imageOuterWidth - imageWidth;
+                    var imageMaxHeight = Math.round(newHeight - vOffset - imgVOffset);
+                    var imageMaxWidth  = Math.round(newWidth - hOffset - imgHOffset);
+                    var imageRatio = imageWidth / imageHeight;
+
+                    console.log('off h/v', hOffset, vOffset);
+                    console.log('imgoff h/v', imgHOffset, imgVOffset);
+                    console.log('img max w/h', imageMaxWidth, imageMaxHeight);
+
+                    if (imageHeight > imageMaxHeight) {
+                        if (imageMaxHeight * imageRatio > imageMaxWidth) {
+                            // scale width
+                            console.log('scale width to', imageMaxWidth);
+                            imgClone.width(imageMaxWidth);
                         } else {
-                            imgClone.height(newHeight);
+                            // scale height
+                            console.log('scale height to', imageMaxHeight);
+                            imgClone.height(imageMaxHeight);
                         }
-                    } else if (outerWidth > newWidth) {
-                        var hOffset = outerWidth - dialogHolder.width();
-                        hOffset += (imgClone.outerWidth(true) - imageWidth);
-                        newWidth -= hOffset;
-                        imgClone.width(newWidth);
+                    } else if (imageWidth > imageMaxWidth) {
+                        console.log('scale width to', imageMaxWidth);
+                        imgClone.width(imageMaxWidth);
                     }
-                    imgClone.css('margin-left', (dialogHolder.width() - imgClone.width())/2);
-                    imgClone.css('margin-top', (dialogHolder.height() - imgClone.height())/2);
-                    dialogHolder.css('margin-top', (newHeight - dialogHolder.height()) / 2);
+
+                    console.log('new image w/h', imgClone.width(), imgClone.height());
+
+                    imageHeight = imgClone.height();
+                    if (imageHeight < imageMaxHeight) {
+                        console.log('shift image down by', (imageMaxHeight - imageHeight) / 2);
+                        imgClone.css('margin-top', "+="+((imageMaxHeight - imageHeight) / 2));
+                    }
+                    dialogWidget.css('width', imgClone.width() + imgHOffset + hOffset);
+                    //dialogWidget.css('width', 'auto');
                 });
             },
             close: function() {

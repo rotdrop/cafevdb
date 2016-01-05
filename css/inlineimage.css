@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -90,7 +90,7 @@
 }
 
 .ui-dialog.ui-widget.photo-zoom {
-  overflow:hidden;
+  overflow:hidden !important;
   max-height:100% !important;
   max-width:100% !important;
 }
@@ -107,6 +107,24 @@ div#photooverlay {
 div#photooverlay:hover,
 div#photooverlay .cafevdb_inline_image:hover {
   cursor: zoom-out;
+}
+
+div.photo-zoom.ui-dialog {
+  text-align:center;
+  overflow:auto!important;
+}
+
+div#photooverlay.ui-dialog-content {
+  display:block!important;
+  overflow:hidden!important;
+  box-sizing:content-box;
+  text-align:center;
+}
+
+div#photooverlay.ui-dialog-content .cafevdb_inline_image {
+  display:inline-block;
+  box-sizing:content-box;
+  position:relative;
 }
 
 #phototools {
