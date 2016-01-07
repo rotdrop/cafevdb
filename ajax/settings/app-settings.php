@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2015 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -52,8 +52,8 @@ namespace CAFEVDB {
 
     if (isset($_POST['systemkey']) && isset($_POST['oldkey'])) {
 
-      $oldkey   = $_POST['oldkey'];
-      $newkey   = $_POST['systemkey'];
+      $oldkey   = Config::padEncryptionKey($_POST['oldkey']);
+      $newkey   = Config::padEncryptionKey($_POST['systemkey']);
 
       // Remember the old session-key, needs to be restored in case of error
       $actkey = Config::getEncryptionKey();
@@ -62,7 +62,7 @@ namespace CAFEVDB {
       Config::setEncryptionKey($oldkey);
 
       // Now fetch the key itself
-      $storedkey = Config::getValue('encryptionkey');
+      $storedkey = Config::padEncryptionKey(Config::getValue('encryptionkey'));
       if ($storedkey !== $oldkey) {
         Config::setEncryptionKey($actkey);
         \OC_JSON::error(array("data" => array("message" => L::t("Wrong old key."))));

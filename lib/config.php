@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -292,8 +292,9 @@ redaxoRehearsalsModule
       }
 
       // Now try to decrypt the data-base encryption key
+      $usrdbkey = self::padEncryptionKey($usrdbkey);
       self::setEncryptionKey($usrdbkey);
-      $sysdbkey = self::getValue('encryptionkey');
+      $sysdbkey = self::padEncryptionKey(self::getValue('encryptionkey'));
 
       if ($sysdbkey != $usrdbkey) {
         // Failed
@@ -358,6 +359,7 @@ redaxoRehearsalsModule
       }
 
       if ($enckey != '') {
+        $enckey = self::padEncryptionKey($enckey);
         $pubKey = self::getUserValue('publicSSLKey', '', $user);
         $usrdbkey = '';
         if ($pubKey == '' ||
@@ -517,6 +519,8 @@ redaxoRehearsalsModule
       if ($sesdbkey === false) {
         // Get the supposed-to-be key from the session data
         $sesdbkey = self::getEncryptionKey();
+      } else {
+	$sesdbkey = self::padEncryptionKey($sesdbkey);
       }
 
       // Fetch the encrypted "system" key from the app-config table
