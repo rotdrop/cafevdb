@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2015 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -32,10 +32,9 @@ namespace CAFEVDB {
 
     Config::init();
 
-    foreach (array('MemberPortraits', 'ProjectFlyers') as $imageTable) {
-      echo '<H4>Processing '.$imageTable.'</H4><BR/>';
-      Admin::sanitizeImageData($imageTable);
-    }
+    echo '<H4>Recomputing Image Meta-Data</H4><BR/>';
+    $coun = InlineImage::rebuildMetaData();
+    echo '<H4>Processed ".$count." Images</H4><BR/>';
 
   } catch (\Exception $e) {
 

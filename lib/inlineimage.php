@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2015 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -111,7 +111,7 @@ namespace CAFEVDB {
      *
      * @return boolean @c true in case of success.
      */
-    public function store($itemId, $imageData, $mimeType = null, $handle = false)
+    public function store($itemId, $imageData = null, $mimeType = null, $handle = false)
     {
       if (!isset($imageData) || $imageData == '') {
         return false;
@@ -172,6 +172,41 @@ namespace CAFEVDB {
       return $result;
     }
 
+    /**Recompute Mime-type and MD5-sum for all entries
+     */
+    static public function rebuildMetaData($handle = false)
+    {
+      $ownConnection = $handle === false;
+      if ($ownConnection) {
+        Config::init();
+        $handle = mySQL::connect(Config::$pmeopts);
+      }
+
+      $query = "SELECT * FROM `".self::TABLE."` WHERE 1";
+      $result = mySQL::query($query, $handle);
+
+      $image = new \OC_Image();
+      $count = 0;
+      while ($line = mySQL::fetch($result)) {
+        $image->loadFromBase64($line['Data']);
+        $mimeType = $image->mimeType();
+        $md5 = md5($line['Data']);
+        $query = "UPDATE `".self::TABLE."`
+ SET `MimeType` = '".$mimeType."' `MD5` = '".$md5."'
+ WHERE `Id` = ".$line['Id'];
+        $update = mySQL::query($query, $handle);
+        if ($update !== false) {
+          ++$count;
+          mySQL::storeModified($line['ItemId'], $line['ItemTable'], $handle);
+        }
+      }
+
+      if ($ownConnection) {
+        mySQL::close($handle);
+      }
+    }
+
+    return $count;
   };
 
 } // namespace
