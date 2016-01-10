@@ -192,7 +192,7 @@ namespace CAFEVDB {
         $mimeType = $image->mimeType();
         $md5 = md5($line['Data']);
         $query = "UPDATE `".self::TABLE."`
- SET `MimeType` = '".$mimeType."' `MD5` = '".$md5."'
+ SET `MimeType` = '".$mimeType."', `MD5` = '".$md5."'
  WHERE `Id` = ".$line['Id'];
         $update = mySQL::query($query, $handle);
         if ($update !== false) {
@@ -204,9 +204,9 @@ namespace CAFEVDB {
       if ($ownConnection) {
         mySQL::close($handle);
       }
+      return $count;
     }
 
-    return $count;
   };
 
 } // namespace
