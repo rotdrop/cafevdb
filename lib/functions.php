@@ -808,7 +808,7 @@ __EOT__;
         }
         session_write_close(); // avoid deadlock
         $c = curl_init($url);
-        curl_setopt($c, CURLOPT_VERBOSE, 1);
+        curl_setopt($c, CURLOPT_VERBOSE, 0);
         curl_setopt($c, CURLOPT_POST, 1);
         curl_setopt($c, CURLOPT_POSTFIELDS, $postData);
         if (count($cookies) > 0) {
@@ -1563,7 +1563,7 @@ __EOT__;
         $post = http_build_query($post, '', '&');
         $json = htmlspecialchars(json_encode($json));
         $form =<<<__EOT__
-<li class="nav-$controlid tooltip-bottom" title="$title">
+<li class="nav-$controlid tooltip-right" title="$title">
   <a href="#"
      data-id="$controlid"
      data-post="$post"
