@@ -1132,8 +1132,10 @@ __EOT__;
     {
       $events = self::events($projectId);
 
-      if (!$calendarIds) {
+      if ($calendarIds === null || $calendarIds === false) {
         $calendarIds = self::defaultCalendars(true);
+      } else if (!is_array($calendarIds)) {
+        $calendarIds = array($calendarIds);
       }
 
       $result = array();

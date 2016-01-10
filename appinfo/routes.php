@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -51,7 +51,7 @@ include 'autoroutes.php';
 /*Return an array of project-events, given the respective project id. */
 \OCP\API::register(
   'get',
-  '/apps/'.Config::APP_NAME.'/projects/events/byProjectId/{projectId}/{timezone}/{locale}',
+  '/apps/'.Config::APP_NAME.'/projects/events/byProjectId/{projectId}/{calendar}/{timezone}/{locale}',
   function($params) {
     //\OCP\Util::writeLog(Config::APP_NAME, "event route: ".print_r($params, true), \OCP\Util::DEBUG);
 
@@ -71,22 +71,43 @@ include 'autoroutes.php';
   Config::APP_NAME,
   \OC_API::USER_AUTH,
   // defaults
-  array('timezone' => false,
+  array('calendar' => 'all',
+        'timezone' => false,
         'locale' => false),
   // requirements
   array('projectId')
   );
 
-/*Return an array of project-events, given the respective web-article id. */
+/*Return an array of project-events, given the respective web-article
+ * id. 'calendar' can be any of 'all', 'concerts', 'rehearsals',
+ * 'other'. 'management' and 'finance' calendars are not exported by
+ * the API.
+ */
 \OCP\API::register(
   'get',
-  '/apps/'.Config::APP_NAME.'/projects/events/byWebPageId/{articleId}/{timezone}/{locale}',
+  '/apps/'.Config::APP_NAME.'/projects/events/byWebPageId/{articleId}/{calendar}/{timezone}/{locale}',
   function($params) {
     //\OCP\Util::writeLog(Config::APP_NAME, "event route: ".print_r($params, true), \OCP\Util::DEBUG);
 
     $articleId = $params['articleId'];
+    $calendar = $params['calendar'];
     $timezone = $params['timezone'];
     $locale = $params['locale'];
+
+    switch ($calendar) {
+    case 'all':
+      $calendar = null;
+      break;
+    case 'concerts':
+    case 'rehearsals':
+    case 'other':
+      $calendar = Config::getValue($calendar.'calendar'.'id');
+      break;
+    default:
+      return new \OC_OCS_Result(null,
+                                \OCP\API::RESPOND_NOT_FOUND,
+                                "Invalid calendar type: ".$calendar);
+    }
 
     // OC uses symphony which rawurldecodes the request URL. This
     // implies that in order to pass a slash / we caller must
@@ -104,13 +125,15 @@ include 'autoroutes.php';
 
     $projects = Projects::fetchWebPageProjects($articleId);
 
+
+
     $data = array();
     foreach ($projects as $projectId) {
       $name = Projects::fetchName($projectId);
       if ($name === false) {
         continue;
       }
-      $data[$name] = Events::projectEventData($projectId, null, $timezone, $locale);
+      $data[$name] = Events::projectEventData($projectId, $calendar, $timezone, $locale);
     }
 
     return new \OC_OCS_Result($data);
@@ -118,7 +141,8 @@ include 'autoroutes.php';
   Config::APP_NAME,
   \OC_API::USER_AUTH,
   // defaults
-  array('timezone' => false,
+  array('calendar' => 'all',
+        'timezone' => false,
         'locale' => false),
   // requirements
   array('articleId')
