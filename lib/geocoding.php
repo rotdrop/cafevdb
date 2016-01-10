@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2015 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -393,11 +393,13 @@ namespace CAFEVDB
 
       $zipCodes = array();
 
-      $query = "SELECT DISTINCT t1.PostalCode, t1.Country FROM
+      $query = "SELECT DISTINCT t1.PostalCode, t1.Country, t1.Updated FROM
   `".self::POSTAL_CODES_TABLE."` as t1
     LEFT JOIN `Musiker` as t2
       ON t1.PostalCode = t2.Postleitzahl AND t1.Country = t2.Land
-  WHERE TIMESTAMPDIFF(MONTH,Updated,NOW()) > 1 LIMIT ".$limit;
+  WHERE TIMESTAMPDIFF(MONTH,Updated,NOW()) > 1
+  ORDER BY `Updated` ASC
+  LIMIT ".$limit;
       $result = mySQL::query($query, $handle);
       while ($line = mySQL::fetch($result)) {
         $zipCodes[$line['PostalCode']] = $line['Country'];
