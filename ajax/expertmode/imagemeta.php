@@ -33,7 +33,7 @@ namespace CAFEVDB {
     Config::init();
 
     echo '<H4>Recomputing Image Meta-Data</H4><BR/>';
-    $coun = InlineImage::rebuildMetaData();
+    $count = InlineImage::rebuildMetaData();
     echo '<H4>Processed ".$count." Images</H4><BR/>';
 
   } catch (\Exception $e) {
