@@ -85,32 +85,7 @@ var CAFEVDB = CAFEVDB || {};
           var dialogWidget = dialogHolder.dialog('widget');
 
           /* Adjust dimensions to do proper scrolling. */
-          var dimensionElement = dialogHolder.find('.size-holder');
-          var scrollElement = dialogHolder.find('.scroller');
-          var top    = scrollElement.position().top;
-          var width  = dimensionElement.outerWidth(true);
-          var height = dimensionElement.outerHeight(true);
-          dialogWidget.innerHeight(top+height);
-          dialogWidget.innerWidth(width);
-
-          var needScroll = scrollElement.needScrollbars();
-          if (!needScroll.horizontal) {
-            scrollElement.addClass('inhibit-overflow-x');
-          }
-          if (!needScroll.vertical) {
-            scrollElement.addClass('inhibit-overflow-y');
-          }
-
-          var scroll;
-          scroll = scrollElement.horizontalScrollbarHeight();
-          if (scroll > 0) {
-            dialogWidget.innerHeight(top+height+scroll);
-          }
-          scroll = scrollElement.verticalScrollbarWidth();
-          if (scroll > 0) {
-            dialogWidget.innerWidth(width+scroll);
-          }
-          /*********************************************/
+	  Events.UI.adjustSize(dialogHolder, dialogWidget);
 
           var eventForm = dialogHolder.find('#eventlistform');
           var eventMenu = eventForm.find('select.event-menu');
@@ -216,11 +191,42 @@ var CAFEVDB = CAFEVDB || {};
         emailFormDialog.trigger('cafevdb:events_changed', [ events ]);
       }
     },
+    adjustSize: function(dialogHolder, dialogWidget) {
+      var dimensionElement = dialogHolder.find('.size-holder');
+      var scrollElement = dialogHolder.find('.scroller');
+      var top    = scrollElement.position().top;
+      var width  = dimensionElement.outerWidth(true);
+      var height = dimensionElement.outerHeight(true);
+      dialogWidget.innerHeight(top+height);
+      dialogWidget.innerWidth(width);
+      
+      var needScroll = scrollElement.needScrollbars();
+      if (!needScroll.horizontal) {
+        scrollElement.addClass('inhibit-overflow-x');
+      }
+      if (!needScroll.vertical) {
+        scrollElement.addClass('inhibit-overflow-y');
+      }
+      
+      var scroll;
+      scroll = scrollElement.horizontalScrollbarHeight();
+      if (scroll > 0) {
+        dialogWidget.innerHeight(top+height+scroll);
+      }
+      scroll = scrollElement.verticalScrollbarWidth();
+      if (scroll > 0) {
+        dialogWidget.innerWidth(width+scroll);
+      }
+    },
     relist: function(data) {
       var events =$('#events');
       var listing = events.find('#eventlistholder');
       if (data.status == 'success') {
         listing.html(data.data.contents);
+
+        /* Adjust dimensions to do proper scrolling. */
+        var dialogWidget = events.dialog('widget');
+	Events.UI.adjustSize(events, dialogWidget);
       } else {
 	var info = '';
 	if (typeof data.data.message != 'undefined') {
