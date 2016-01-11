@@ -319,7 +319,7 @@ td.eventdata-brief {
 }
 /* location input field leaves room for google button */
 #event-location {
-	width: 90%;
+	width: 85%;
 }
 #google-location {
 	display: inline-block;
@@ -362,6 +362,7 @@ td.eventdata-brief {
 	overflow-y: auto;
 	overflow-x: hidden;
 	padding: 0;
+        min-width:30em;
 }
 
 .ui-dialog.cafevdb-project-events .ui-dialog-content {
