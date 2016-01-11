@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -1141,6 +1141,11 @@ namespace CAFEVDB
                           \OCP\Util::DEBUG);
 
       return strtotime($date);
+    }
+
+    // Mmmh. Nun ja.
+    public function getSearchProvider($addressbook) {
+      return new \OCA\Contacts\AddressbookProvider($addressbook);
     }
 
   };
