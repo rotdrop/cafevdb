@@ -96,7 +96,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
   /**Generate a compound name selector with PME_sys_.... prefix.*/
   PHPMYEDIT.pmeSysNameSelectors = function(element, tokens) {
     var pme = this;
-    var elements = token.map(function(token) {
+    var elements = tokens.map(function(token) {
                      return pme.pmeSysNameSelector(element, token);
                    });
     return elements.join(',');
