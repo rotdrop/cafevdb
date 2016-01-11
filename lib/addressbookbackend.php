@@ -451,18 +451,8 @@ namespace CAFEVDB
         //throw new \Exception($query);
 
         $result = mySQL::query($query, $handle);
-        $max = 0;
-        $total = 0;
         while ($row = mySQL::fetch($result)) {
           $vCard = VCard::export($row);
-          if (false) {
-          $data = $vCard->serialize();
-          $len = strlen($data);
-          $total += $len;
-          if ($len > $max) {
-            $max = $len;
-          }
-          }
           $contactId = self::contactId($addressBookId, $row['UUID']);
           $contacts[] = array(
             'id' => $contactId,
@@ -488,8 +478,8 @@ namespace CAFEVDB
       $elapsed = microtime(true) - $start;
 
       \OCP\Util::writeLog(Config::APP_NAME,
-                          __METHOD__.': elapsed: '.$elapsed.', max: '.$max.', total: '.$total,
-                          \OCP\Util::ERROR);
+                          __METHOD__.': elapsed: '.$elapsed,
+                          \OCP\Util::DEBUG);
 
       return $contacts;
     }
