@@ -46,8 +46,6 @@ class Instrumentation
   protected $pme_bare;
   protected $pmeSysPfx;
   protected $pmeTranslations;
-  protected $secionLeaderColumn;
-  protected $registrationColumn;
 
   public function deactivate()
   {
@@ -226,30 +224,6 @@ class Instrumentation
       $this->operation = 'View';
     }
     $this->cancelSave = Util::cgiKeySearch('/'.Config::$pmeopts['cgi']['prefix']['sys'].'(save|cancel)/');
-
-    $this->sectionLeaderColumn = array(
-      'name' => $this->operation ? L::t("Section Leader") : ' &alpha;',
-      'options'  => 'LAVCPDF',
-      'select' => 'D',
-      'maxlen' => '1',
-      'sort' => true,
-      'escape' => false,
-      'values2' => array('0' => '&nbsp;', '1' => '&alpha;'),
-      'tooltip' => L::t("Set to `%s' in order to mark the section leader",
-                        array("&alpha;")),
-      );
-
-    $this->registrationColumn = array(
-      'name' => $this->operation ? L::t("Registration") : ' &#10004;',
-      'options'  => 'LAVCPDF',
-      'select' => 'D',
-      'maxlen' => '1',
-      'sort' => true,
-      'escape' => false,
-      'values2' => array('0' => '&nbsp;', '1' => '&#10004;'),
-      'tooltip' => L::t("Set to `%s' in order to mark participants who passed a personally signed registration form to us.",
-                        array("&#10004;")),
-      );
 
     $this->opts = Config::$pmeopts;
     foreach (Config::$cgiVars as $key => $value) {

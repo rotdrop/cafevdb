@@ -290,11 +290,37 @@ class DetailedInstrumentation
       'sort' => true,
       'tab' => array('id' => 'instrumentation'));
 
-    $opts['fdd']['Stimmführer'] = $this->sectionLeaderColumn;
-    $opts['fdd']['Stimmführer']['tab'] = array('id' => 'instrumentation');
+    $opts['fdd']['Stimmführer'] = array(
+      'name' => $this->operation ? L::t("Section Leader") : ' &alpha;',
+      'tab' => array('id' => 'instrumentation'),
+      'display|LF' => array('popup' => function($data) {
+          return Config::ToolTips('section-leader-mark');
+        }),
+      'options'  => 'LAVCPDF',
+      'select' => 'D',
+      'maxlen' => '1',
+      'sort' => true,
+      'escape' => false,
+      'values2' => array('0' => '&nbsp;', '1' => '&alpha;'),
+      'tooltip' => L::t("Set to `%s' in order to mark the section leader",
+                        array("&alpha;")),
+      );
 
-    $opts['fdd']['Anmeldung'] = $this->registrationColumn;
-    $opts['fdd']['Anmeldung']['tab'] = array('id' => array('project', 'instrumentation'));
+    $opts['fdd']['Anmeldung'] = array(
+      'name' => $this->operation ? L::t("Registration") : ' &#10004;',
+      'tab' => array('id' => array('project', 'instrumentation')),
+      'display|LF' => array('popup' => function($data) {
+          return Config::ToolTips('registration-mark');
+        }),
+      'options'  => 'LAVCPDF',
+      'select' => 'D',
+      'maxlen' => '1',
+      'sort' => true,
+      'escape' => false,
+      'values2' => array('0' => '&nbsp;', '1' => '&#10004;'),
+      'tooltip' => L::t("Set to `%s' in order to mark participants who passed a personally signed registration form to us.",
+                        array("&#10004;")),
+      );
 
     $opts['fdd']['Instrumente'] = array(
       'name'     => L::t('All Instruments'),
