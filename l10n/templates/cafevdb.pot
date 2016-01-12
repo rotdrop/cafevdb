@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-12 01:14+0100\n"
+"POT-Creation-Date: 2016-01-12 20:02+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -295,7 +295,7 @@ msgid "Missing Musicians"
 msgstr ""
 
 #: ajax/export/excel.php:285 ajax/export/insurance-export.php:157
-#: lib/projects.php:1828
+#: lib/detailed-instrumentation.php:255 lib/projects.php:1828
 msgid "Instrument"
 msgstr ""
 
@@ -2014,7 +2014,7 @@ msgid ""
 "in case of desinformation or misunderstanding. Use with care."
 msgstr ""
 
-#: js/sepa-debit-mandate.js:148 lib/detailed-instrumentation.php:353
+#: js/sepa-debit-mandate.js:148 lib/detailed-instrumentation.php:351
 #: lib/detailed-instrumentation.php:703 lib/detailed-instrumentation.php:721
 msgid "SEPA Debit Mandate"
 msgstr ""
@@ -2203,31 +2203,31 @@ msgstr ""
 msgid "no projects yet"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:438 lib/musicians.php:391
+#: lib/detailed-instrumentation.php:432 lib/musicians.php:391
 msgid "Projects"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:450 lib/musicians.php:411
+#: lib/detailed-instrumentation.php:449 lib/musicians.php:411
 msgid "Mobile Phone"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:467 lib/musicians.php:427
+#: lib/detailed-instrumentation.php:466 lib/musicians.php:427
 msgid "Fixed Line Phone"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:484 lib/musicians.php:446
+#: lib/detailed-instrumentation.php:483 lib/musicians.php:446
 msgid "Street"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:494 lib/musicians.php:455
+#: lib/detailed-instrumentation.php:493 lib/musicians.php:455
 msgid "Postal Code"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:503 lib/musicians.php:464
+#: lib/detailed-instrumentation.php:502 lib/musicians.php:464
 msgid "City"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:515 lib/musicians.php:476
+#: lib/detailed-instrumentation.php:514 lib/musicians.php:476
 msgid "Country"
 msgstr ""
 
@@ -2235,7 +2235,11 @@ msgstr ""
 msgid "General Remarks"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:553 lib/musicians.php:530
+#: lib/detailed-instrumentation.php:542
+msgid "Preferred Language"
+msgstr ""
+
+#: lib/detailed-instrumentation.php:551 lib/musicians.php:530
 msgid "Photo"
 msgstr ""
 

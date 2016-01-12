@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -252,7 +252,7 @@ class DetailedInstrumentation
       );
 
     $opts['fdd']['Instrument'] = array(
-      'name'     => 'Instrument',
+      'name'     => L::t('Instrument'),
       'select'   => 'D',
       'maxlen'   => 36,
       'css'      => array('postfix' => ' project-instrument'),
@@ -280,7 +280,7 @@ class DetailedInstrumentation
                       "(SELECT `Instrument` FROM `\$main_table` WHERE 1)"),
         ),
       'valueGroups' => $this->groupedInstruments,
-      'tab' => array('id' => 'instrumentation')
+      'tab' => array('id' => array('instrumentation', 'project'))
       );
 
     $opts['fdd']['Reihung'] = array(
@@ -294,7 +294,7 @@ class DetailedInstrumentation
     $opts['fdd']['Stimmführer']['tab'] = array('id' => 'instrumentation');
 
     $opts['fdd']['Anmeldung'] = $this->registrationColumn;
-    $opts['fdd']['Anmeldung']['tab'] = array('id' => 'project');
+    $opts['fdd']['Anmeldung']['tab'] = array('id' => array('project', 'instrumentation'));
 
     $opts['fdd']['Instrumente'] = array(
       'name'     => L::t('All Instruments'),
@@ -348,9 +348,9 @@ class DetailedInstrumentation
       // One virtual field in order to be able to manage SEPA debit mandates
       $mandateIdx = count($opts['fdd']);
       $opts['fdd']['SepaDebitMandate'] = array(
+        'name' => L::t('SEPA Debit Mandate'),
         'input' => 'V',
         'tab' => array('id' => 'project'),
-        'name' => L::t('SEPA Debit Mandate'),
         'select' => 'T',
         'options' => 'LFACPDV',
         'sql' => '`PMEjoin'.$mandateIdx.'`.`mandateReference`', // dummy, make the SQL data base happy
@@ -429,13 +429,13 @@ class DetailedInstrumentation
     }
 
     $opts['fdd']['Projects'] = array(
+      'name' => L::t('Projects'),
       'tab' => array('id' => array('musician')),
       'input' => 'R',
       'options' => 'LFV',
       'select' => 'M',
       'display|LF'  => array('popup' => 'data'),
       'css'      => array('postfix' => ' projects'),
-      'name' => L::t('Projects'),
       'sort' => true,
       'values' => array('queryvalues' => $projectQueryValues),
       'values2' => $projects,
@@ -446,8 +446,8 @@ class DetailedInstrumentation
     $opts['fdd']['Email']['tab'] = array('id' => 'musician');
 
     $opts['fdd']['MobilePhone'] = array(
-      'tab'      => array('id' => 'musician'),
       'name'     => L::t('Mobile Phone'),
+      'tab'      => array('id' => 'musician'),
       'css'      => array('postfix' => ' phone-number'),
       'display'  => array('popup' => function($data) {
           if (PhoneNumbers::validate($data)) {
@@ -463,8 +463,8 @@ class DetailedInstrumentation
       );
 
     $opts['fdd']['FixedLinePhone'] = array(
-      'tab'      => array('id' => 'musician'),
       'name'     => L::t('Fixed Line Phone'),
+      'tab'      => array('id' => 'musician'),
       'css'      => array('postfix' => ' phone-number'),
       'display'  => array('popup' => function($data) {
           if (PhoneNumbers::validate($data)) {
@@ -480,8 +480,8 @@ class DetailedInstrumentation
       );
 
     $opts['fdd']['Strasse'] = array(
-      'tab'      => array('id' => 'musician'),
       'name'     => L::t('Street'),
+      'tab'      => array('id' => 'musician'),
       'css'      => array('postfix' => ' musician-address street'),
       'nowrap'   => true,
       'select'   => 'T',
@@ -490,8 +490,8 @@ class DetailedInstrumentation
       );
 
     $opts['fdd']['Postleitzahl'] = array(
-      'tab'      => array('id' => 'musician'),
       'name'     => L::t('Postal Code'),
+      'tab'      => array('id' => 'musician'),
       'css'      => array('postfix' => ' musician-address postal-code'),
       'select'   => 'T',
       'maxlen'   => 11,
@@ -499,8 +499,8 @@ class DetailedInstrumentation
       );
 
     $opts['fdd']['Stadt'] = array(
-      'tab'      => array('id' => 'musician'),
       'name'     => L::t('City'),
+      'tab'      => array('id' => 'musician'),
       'css'      => array('postfix' => ' musician-address city'),
       'select'   => 'T',
       'maxlen'   => 384,
@@ -511,8 +511,8 @@ class DetailedInstrumentation
     $countryGroups = GeoCoding::countryContinents();
 
     $opts['fdd']['Land'] = array(
-      'tab'      => array('id' => 'musician'),
       'name'     => L::t('Country'),
+      'tab'      => array('id' => 'musician'),
       'select'   => 'D',
       'maxlen'   => 128,
       'default'  => Config::getValue('streetAddressCountry'),
@@ -539,8 +539,8 @@ class DetailedInstrumentation
       'sort'     => true);
 
     $opts['fdd']['Sprachpräferenz'] = array(
+      'name'     => L::t('Preferred Language'),
       'tab'      => array('id' => 'musician'),
-      'name'     => 'Spachpräferenz',
       'select'   => 'D',
       'maxlen'   => 128,
       'default'  => 'Deutsch',
@@ -548,9 +548,9 @@ class DetailedInstrumentation
       'values'   => Config::$opts['languages']);
 
     $opts['fdd']['Portrait'] = array(
+      'name'    => L::t('Photo'),
       'tab'     => array('id' => 'musician'),
       'input'   => 'V',
-      'name'    => L::t('Photo'),
       'select'  => 'T',
       'options' => 'ACPDV',
       'sql'     => '`PMEtable0`.`MusikerId`',
@@ -565,8 +565,8 @@ class DetailedInstrumentation
       'sort' => false);
 
     $opts['fdd']['UUID'] = array(
+      'name'     => 'UUID', // no translation
       'tab'      => array('id' => 'miscinfo'),
-      'name'     => 'UUID',
       'options'  => 'AVCPDR', // auto increment
       'css'      => array('postfix' => ' musician-uuid'),
       'select'   => 'T',
