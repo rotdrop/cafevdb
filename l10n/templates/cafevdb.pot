@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-12 20:02+0100\n"
+"POT-Creation-Date: 2016-01-12 20:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2014,8 +2014,8 @@ msgid ""
 "in case of desinformation or misunderstanding. Use with care."
 msgstr ""
 
-#: js/sepa-debit-mandate.js:148 lib/detailed-instrumentation.php:351
-#: lib/detailed-instrumentation.php:703 lib/detailed-instrumentation.php:721
+#: js/sepa-debit-mandate.js:148 lib/detailed-instrumentation.php:377
+#: lib/detailed-instrumentation.php:729 lib/detailed-instrumentation.php:747
 msgid "SEPA Debit Mandate"
 msgstr ""
 
@@ -2187,68 +2187,88 @@ msgstr ""
 msgid "Musician Id"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:300
+#: lib/detailed-instrumentation.php:294
+msgid "Section Leader"
+msgstr ""
+
+#: lib/detailed-instrumentation.php:305
+#, php-format
+msgid "Set to `%s' in order to mark the section leader"
+msgstr ""
+
+#: lib/detailed-instrumentation.php:310
+msgid "Registration"
+msgstr ""
+
+#: lib/detailed-instrumentation.php:321
+#, php-format
+msgid ""
+"Set to `%s' in order to mark participants who passed a personally signed "
+"registration form to us."
+msgstr ""
+
+#: lib/detailed-instrumentation.php:326
 msgid "All Instruments"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:322 lib/musicians.php:334
+#: lib/detailed-instrumentation.php:348 lib/musicians.php:334
 msgid "Member Status"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:405 lib/musicians.php:490
+#: lib/detailed-instrumentation.php:431 lib/musicians.php:490
 msgid "Remarks"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:422 lib/musicians.php:347
+#: lib/detailed-instrumentation.php:448 lib/musicians.php:347
 msgid "no projects yet"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:432 lib/musicians.php:391
+#: lib/detailed-instrumentation.php:458 lib/musicians.php:391
 msgid "Projects"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:449 lib/musicians.php:411
+#: lib/detailed-instrumentation.php:475 lib/musicians.php:411
 msgid "Mobile Phone"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:466 lib/musicians.php:427
+#: lib/detailed-instrumentation.php:492 lib/musicians.php:427
 msgid "Fixed Line Phone"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:483 lib/musicians.php:446
+#: lib/detailed-instrumentation.php:509 lib/musicians.php:446
 msgid "Street"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:493 lib/musicians.php:455
+#: lib/detailed-instrumentation.php:519 lib/musicians.php:455
 msgid "Postal Code"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:502 lib/musicians.php:464
+#: lib/detailed-instrumentation.php:528 lib/musicians.php:464
 msgid "City"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:514 lib/musicians.php:476
+#: lib/detailed-instrumentation.php:540 lib/musicians.php:476
 msgid "Country"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:529
+#: lib/detailed-instrumentation.php:555
 msgid "General Remarks"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:542
+#: lib/detailed-instrumentation.php:568
 msgid "Preferred Language"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:551 lib/musicians.php:530
+#: lib/detailed-instrumentation.php:577 lib/musicians.php:530
 msgid "Photo"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:579 lib/musicians.php:604
+#: lib/detailed-instrumentation.php:605 lib/musicians.php:604
 #: lib/projects.php:423
 msgid "Last Updated"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:727
+#: lib/detailed-instrumentation.php:753
 msgid "Click to enter details of a potential SEPA debit mandate"
 msgstr ""
 
@@ -2806,76 +2826,56 @@ msgstr ""
 msgid "Invalid broker/geographical-scope combination: %s - %s"
 msgstr ""
 
-#: lib/instrumentation.php:231
-msgid "Section Leader"
-msgstr ""
-
-#: lib/instrumentation.php:238
-#, php-format
-msgid "Set to `%s' in order to mark the section leader"
-msgstr ""
-
-#: lib/instrumentation.php:243
-msgid "Registration"
-msgstr ""
-
 #: lib/instrumentation.php:250
-#, php-format
-msgid ""
-"Set to `%s' in order to mark participants who passed a personally signed "
-"registration form to us."
-msgstr ""
-
-#: lib/instrumentation.php:276
 msgid "regular musician"
 msgstr ""
 
-#: lib/instrumentation.php:277
+#: lib/instrumentation.php:251
 msgid "passive member"
 msgstr ""
 
-#: lib/instrumentation.php:278 lib/instrumentation.php:291
+#: lib/instrumentation.php:252 lib/instrumentation.php:265
 msgid "soloist"
 msgstr ""
 
-#: lib/instrumentation.php:279 lib/instrumentation.php:292
+#: lib/instrumentation.php:253 lib/instrumentation.php:266
 msgid "conductor"
 msgstr ""
 
-#: lib/instrumentation.php:280
+#: lib/instrumentation.php:254
 msgid "temporary musician"
 msgstr ""
 
-#: lib/instrumentation.php:289
+#: lib/instrumentation.php:263
 msgid "regular"
 msgstr ""
 
-#: lib/instrumentation.php:290
+#: lib/instrumentation.php:264
 msgid "passive"
 msgstr ""
 
-#: lib/instrumentation.php:293 lib/projects.php:289
+#: lib/instrumentation.php:267 lib/projects.php:289
 msgid "temporary"
 msgstr ""
 
-#: lib/instrumentation.php:474
+#: lib/instrumentation.php:448
 #, php-format
 msgid "Unable to fetch musician's personal information for id %d"
 msgstr ""
 
-#: lib/instrumentation.php:488
+#: lib/instrumentation.php:462
 #, php-format
 msgid "Unable to fetch musician's project information for id %d."
 msgstr ""
 
-#: lib/instrumentation.php:500
+#: lib/instrumentation.php:474
 #, php-format
 msgid ""
 "The musician %s is already registered for the project with the instruments "
 "%s."
 msgstr ""
 
-#: lib/instrumentation.php:516
+#: lib/instrumentation.php:490
 #, php-format
 msgid ""
 "None of the instruments known by %s are mentioned in the instrumentation-"
@@ -2883,17 +2883,17 @@ msgid ""
 "the instrument `%s'"
 msgstr ""
 
-#: lib/instrumentation.php:522
+#: lib/instrumentation.php:496
 #, php-format
 msgid "The musician %s doesn't seem to play any instrument ..."
 msgstr ""
 
-#: lib/instrumentation.php:539
+#: lib/instrumentation.php:513
 #, php-format
 msgid "Adding %s (id = %d) failed."
 msgstr ""
 
-#: lib/instrumentation.php:547
+#: lib/instrumentation.php:521
 #, php-format
 msgid "Unable to get the new id for %s (id = %d)"
 msgstr ""
@@ -4380,6 +4380,12 @@ msgstr ""
 
 #: lib/tooltips.php:532
 msgid ""
+"This is checked for officially registered musicians, those, who have\n"
+"sent us a signed registration form. It is left blannk otherwise."
+msgstr ""
+
+#: lib/tooltips.php:535
+msgid ""
 "Activate this checkbox in order to save the current email message as\n"
 "message template. If you leave this check-box unchecked, then messages\n"
 "will be saved as draft. The difference between a draft and a template\n"
@@ -4392,7 +4398,7 @@ msgid ""
 "recipient list, as should be."
 msgstr ""
 
-#: lib/tooltips.php:542
+#: lib/tooltips.php:545
 msgid ""
 "Save the currently active email message either as draft\n"
 "(i.e. including recipients and attachments) or as message template\n"
@@ -4405,7 +4411,7 @@ msgid ""
 "of this button."
 msgstr ""
 
-#: lib/tooltips.php:552
+#: lib/tooltips.php:555
 msgid ""
 "Save the current email for later re-usal in the data-base.\n"
 "An email template can contain per-member substitutions with the syntax "
@@ -4417,16 +4423,20 @@ msgid ""
 "by the pre-names of the organizing committe in order to compose  greetings."
 msgstr ""
 
-#: lib/tooltips.php:558
+#: lib/tooltips.php:561
+msgid "This is checked for section-leaders and left blank otherwise."
+msgstr ""
+
+#: lib/tooltips.php:563
 msgid "Select one of the email templates previously stored in the data-base."
 msgstr ""
 
-#: lib/tooltips.php:560
+#: lib/tooltips.php:565
 msgid ""
 "Select either a message draft or template as base for the current message."
 msgstr ""
 
-#: lib/tooltips.php:562
+#: lib/tooltips.php:567
 msgid ""
 "Attempt to send the stuff you have composed out to your selection of\n"
 "recipients. Please think thrice about it. In case of an error\n"
@@ -4434,7 +4444,7 @@ msgid ""
 "the `Debug' tab"
 msgstr ""
 
-#: lib/tooltips.php:567
+#: lib/tooltips.php:572
 msgid ""
 "Toggle instant validation and automatic computation of derived bank account "
 "data. If instant validation is disabled, the final values will still be "
@@ -4443,53 +4453,53 @@ msgid ""
 "enabled."
 msgstr ""
 
-#: lib/tooltips.php:569
+#: lib/tooltips.php:574
 msgid "Personal application settings."
 msgstr ""
 
-#: lib/tooltips.php:575 templates/part.common.header.php:95
+#: lib/tooltips.php:580 templates/part.common.header.php:95
 msgid "Toggle Tooltips"
 msgstr ""
 
-#: lib/tooltips.php:581
+#: lib/tooltips.php:586
 msgid ""
 "Recompute the link between projects and events, using the event-categories "
 "as primary key."
 msgstr ""
 
-#: lib/tooltips.php:583
+#: lib/tooltips.php:588
 msgid ""
 "The initial number of rows per page when displaying data-base\n"
 "tables. The actual number of rows per page can also changed later in\n"
 "the individual table views."
 msgstr ""
 
-#: lib/tooltips.php:589
+#: lib/tooltips.php:594
 msgid ""
 "Check whether the data-base can be accessed with the given account\n"
 "information and password. The password will only be stored in the\n"
 "configuration storage if the test can be performed successfully."
 msgstr ""
 
-#: lib/tooltips.php:593
+#: lib/tooltips.php:598
 msgid ""
 "Try to connect to the specified web-address, will open the web-address in "
 "another window or tab, depending your local browser preferences."
 msgstr ""
 
-#: lib/tooltips.php:595
+#: lib/tooltips.php:600
 msgid ""
 "Add the instruments of the actually registered musicians to the instrument-"
 "table for the project."
 msgstr ""
 
-#: lib/tooltips.php:597
+#: lib/tooltips.php:602
 msgid ""
 "Upload a file from your local computer as attachment. The file will be "
 "removed from the remote-system after the message has been sent."
 msgstr ""
 
-#: lib/tooltips.php:599
+#: lib/tooltips.php:604
 msgid "Change to another WYSIWYG editor."
 msgstr ""
 
