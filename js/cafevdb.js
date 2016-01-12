@@ -1371,27 +1371,6 @@ $(document).ready(function(){
                return false;
              });
 
-  content.on('click', ':button.instrumentation',
-             function(event) {
-               event.preventDefault();
-
-               var values = $(this).attr('name');
-
-               CAFEVDB.formSubmit('', values, 'post');
-
-               return false;
-             });
-
-  content.on('click', ':button.register-musician',
-             function(event) {
-               event.preventDefault();
-               var values = $(this).attr('name');
-
-               CAFEVDB.formSubmit('', values, 'post');
-
-               return false;
-             });
-
   // Display the overview-page for the given project.
   content.on('click', 'ul#navigation-list li.nav-projectlabelcontrol a',
              function(event) {
@@ -1414,7 +1393,6 @@ $(document).ready(function(){
              });
 
   CAFEVDB.addReadyCallback(function() {
-
     $('input.alertdata.cafevdb-page').each(function(index) {
       var title = $(this).attr('name');
       var text  = $(this).attr('value');

@@ -449,7 +449,6 @@ $(document).ready(function(){
 
   PHPMYEDIT.addTableLoadCallback('DetailedInstrumentation', {
     callback: function(selector, parameters, resizeCB) {
-alert('hello');
 
       if (parameters.reason == 'tabChange') {
         resizeCB();

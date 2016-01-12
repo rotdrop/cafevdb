@@ -297,11 +297,6 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
             inherit_select_classes:true,
             disable_search:true
         };
-        var pmeFilter = container.find("td."+PHPMYEDIT.pmeToken('filter')+".projectname .chosen-container");
-        if (pmeFilter.length > 0) {
-            var chosenWidth = Math.round(pmeFilter.width())+'px';
-            chosenOptions.width = chosenWidth;
-        }
 
         // emulate per-project action pull down menu via chosen
         projectActions.chosen(chosenOptions);

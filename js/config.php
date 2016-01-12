@@ -53,7 +53,6 @@ namespace CAFEVDB {
     "PHPMYEDIT.inputSelectChosenTitle" => "'".L::t("Select from the pull-down menu. ".
                                                    "The pull-down can be closed by clicking ".
                                                    "anywhere outside the menu.")."'",
-    "PHPMYEDIT.chosenPixelWidth" => "['projectname', 'add-instruments']",
     );
 
 // Echo it

@@ -160,7 +160,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
     if (typeof this.tableLoadCallbacks[dpyClass] !== 'undefined') {
       cbHandle = this.tableLoadCallbacks[dpyClass];
     } else {
-      alert("No Callback for "+dpyClass);
+//      alert("No Callback for "+dpyClass);
       return false;
     }
 
@@ -430,9 +430,9 @@ var PHPMYEDIT = PHPMYEDIT || {};
     var saveButton = $(container).find(saveButtonSel);
     saveButton.off('click');
 
-    container.off('click', saveButtonSel);
-    //if (false)
-    container.on(
+    container
+    .off('click', saveButtonSel)
+    .on(
       'click',
       saveButtonSel,
       function(event) {
@@ -446,7 +446,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
         var applySelector = pme.pmeSysNameSelectors(
           'input',
           ['morechange', 'applyadd', 'applycopy']);
-        var deleteSelector = pme.pmeSysNameSelector('savedelete');
+        var deleteSelector = pme.pmeSysNameSelector('input', 'savedelete');
 
         pme.reloadDeferred(container).then(function() {
           var post = $(container).find(pme.formSelector()).serialize();
@@ -1010,22 +1010,6 @@ var PHPMYEDIT = PHPMYEDIT || {};
     container.off('change', 'select.'+pmeFilter);
     container.find("select."+pmeFilter+" option[value='*']").remove();
 
-    // Play a dirty trick in order not to pass width:auto to chosen
-    // for some particalar thingies
-    //
-    // TODO: Was temporarily disabled and maybe not needed any more.
-    var k;
-    for (k = 0; k < PHPMYEDIT.chosenPixelWidth.length; ++k) {
-      var tag = PHPMYEDIT.chosenPixelWidth[k];
-      var pmeFilterTag = pmeFilter+"."+tag;
-      var pxlWidth = Math.round(container.find("td."+pmeFilterTag).width());
-      container.find("select."+pmeFilterTag).chosen({
-        width:pxlWidth+60+'px',
-        inherit_select_classes:true,
-        no_results_text:noRes
-      });
-    }
-
     // Then the general stuff
     container.find("select."+pmeFilter).chosen({
       //width:'100%',
@@ -1070,23 +1054,6 @@ var PHPMYEDIT = PHPMYEDIT || {};
     container.find("select."+pmeInput).attr("data-placeholder", pme.inputSelectPlaceholder);
     container.off('change', 'select.'+pmeInput);
 //    container.find("select."+pmeInput+" option[value='*']").remove();
-
-    // Play a dirty trick in order not to pass width:auto to chosen
-    // for some particalar thingies
-    //
-    // TODO: was disabled due to a bug and maybe not needed any more.
-    var k;
-    for (k = 0; k < PHPMYEDIT.chosenPixelWidth.length; ++k) {
-      var tag = PHPMYEDIT.chosenPixelWidth[k];
-      var pmeInputTag = pmeInput+'.'+tag;
-      var pxlWidth = Math.round(container.find("td."+pmeInputTag).width());
-      container.find("select."+pmeInputTag).chosen({
-        width:pxlWidth+'px',
-        inherit_select_classes:true,
-        disable_search_threshold: 10,
-        no_results_text:noRes
-      });
-    }
 
     // Then the general stuff
     container.find("select."+pmeInput).each(function(index) {
@@ -1142,8 +1109,9 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
     var tabsSelector = pme.pmeClassSelector('li', 'navigation')+'.table-tabs';
 
-    container.off('click', tabsSelector);
-    container.on('click', tabsSelector, function(event) {
+    container.
+      off('click', tabsSelector).
+      on('click', tabsSelector, function(event) {
       var form  = container.find(pme.formSelector());
       var table = form.find(pme.tableSelector());
 
@@ -1163,17 +1131,20 @@ var PHPMYEDIT = PHPMYEDIT || {};
       $(this).addClass('selected');
 
       // account for unstyled chosen selected
-      var pfx = (tabClass == 'tab-all') ? '' : 'td.' + tabClass + ' ';
       var reattachChosen = false;
-      form.find(pfx + 'div.chosen-container').each(function(idx) {
+      var pfx = (tabClass == 'tab-all') ? '' : 'td.' + tabClass;
+      var selector = pme.pmeClassSelectors(pfx+' '+'div.chosen-container',
+                                           [ 'input', 'filter', 'comp-filter' ]);
+      //alert('selector: '+selector);
+      form.find(selector).each(function(idx) {
         if ($(this).width() == 0) {
           $(this).prev().chosen('destroy');
           reattachChosen = true;
         }
       });
       if (reattachChosen) {
-        PHPMYEDIT.installFilterChosen(container);
-        PHPMYEDIT.installInputChosen(container);
+        pme.installFilterChosen(container);
+        pme.installInputChosen(container);
       }
 
       $.fn.cafevTooltip.remove();
@@ -1239,20 +1210,20 @@ var PHPMYEDIT = PHPMYEDIT || {};
       form.find('input[name="'+pme.pmeSys('fl')+'"]').val(1);
 
       // maybe re-style chosen select-boxes
-      var tabClass = form.find('input[name="'+pme.pmeSys('cur_tab')+'"]').val();
-      //alert('tab '+tabClass);
-      var pfx = 'tbody tr td'+(!tabClass || tabClass == 'all' ? '' : '.tab-' + tabClass)+' ';
       var reattachChosen = false;
-      //alert('pfx '+pfx);
-      table.find(pfx + 'div.chosen-container').each(function(idx) {
-        //alert('hello');
-        if ($(this).width() == 0) {
+      var tabClass = form.find('input[name="'+pme.pmeSys('cur_tab')+'"]').val();
+      var pfx = 'tbody tr td'+(!tabClass || tabClass == 'all' ? '' : '.tab-' + tabClass);
+      var selector = pme.pmeClassSelectors(pfx+' '+'div.chosen-container',
+                                           ['filter', 'comp-filter']);
+      //alert('selector: '+selector);
+      table.find(selector).each(function(idx) {
+        if ($(this).width() == 0 || $(this).width() == 60) {
           $(this).prev().chosen('destroy');
           reattachChosen = true;
         }
       });
       if (reattachChosen) {
-        PHPMYEDIT.installFilterChosen(container);
+        pme.installFilterChosen(container);
       }
 
       return false;

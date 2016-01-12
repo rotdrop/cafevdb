@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -452,9 +452,9 @@ var CAFEVDB = CAFEVDB || {};
       return false;
     });
 
-    container.find('input.register-musician').off('click').
+    container.find('input.register-musician').
+      off('click').
       on('click', function(event) {
-
       var form = container.find('form.pme-form');
       var projectId = form.find('input[name="ProjectId"]').val();
       var projectName = form.find('input[name="ProjectName"]').val();
