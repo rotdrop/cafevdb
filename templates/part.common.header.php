@@ -25,8 +25,12 @@ namespace CAFEVDB {
   echo Util::emitExternalScripts();
   echo Util::emitInlineScripts();
 
+  $template  = $_['template'];
   $css_pfx   = $_['css-prefix'];
-  $css_class = isset($_['css-class']) ? ' '.$_['css-class'] : '';
+  $css_class = $template;
+  if (isset($_['css-class'])) {
+    $css_class .= ' '.$_['css-class'];
+  }
 
   $redoDisabled = $_['historyPosition'] == 0;
   $undoDisabled = $_['historySize'] - $_['historyPosition'] <= 1;
@@ -101,6 +105,8 @@ namespace CAFEVDB {
   }
 
   $expertClass = 'expertmode'.($_['expertmode'] != 'on' ? ' hidden' : '');
+
+  $sideBarToolTipPos = 'right';
 ?>
 
 <div id="app-navigation" class="app-navigation snapper-enabled">
@@ -108,7 +114,7 @@ namespace CAFEVDB {
   <div id="app-settings">
     <div id="cafevdb-navigation-info"><?php echo $_['navBarInfo']; ?></div>
     <div id="app-settings-header"
-         class="tooltip-top"
+         class="tooltip-<?php echo $sideBarToolTipPos; ?>"
          title="<?php echo Config::tooltips('settings-button'); ?>">
       <button class="settings-button" tabindex="0"></button>
     </div>
@@ -118,10 +124,10 @@ namespace CAFEVDB {
           <input id="app-settings-tooltips"
                  type="checkbox"
                  name="tooltips" <?php echo $_['tooltips'] == 'on' ? 'checked="checked"' : ''; ?>
-                 class="checkbox tooltip-top"
+                 class="checkbox tooltip-<?php echo $sideBarToolTipPos; ?>"
                  title="<?php echo Config::tooltips('show-tool-tips'); ?>"/>
           <label for="app-settings-tooltips"
-                 class="tooltip-top"
+                 class="tooltip-<?php echo $sideBarToolTipPos; ?>"
                  title="<?php echo Config::tooltips('show-tool-tips'); ?>">
             <?php echo L::t('Tool-Tips'); ?>
           </label>
@@ -130,10 +136,10 @@ namespace CAFEVDB {
           <input id="app-settings-filtervisibility"
                  type="checkbox"
                  name="filtervisibility" <?php echo $_['filtervisibility'] == 'on' ? 'checked="checked"' : ''; ?>
-                 class="checkbox tooltip-top"
+                 class="checkbox tooltip-<?php echo $sideBarToolTipPos; ?>"
                  title="<?php echo Config::tooltips('filter-visibility'); ?>"/>
           <label for="app-settings-filtervisibility"
-                 class="tooltip-top"
+                 class="tooltip-<?php echo $sideBarToolTipPos; ?>"
                  title="<?php echo Config::tooltips('filter-visibility'); ?>">
             <?php echo L::t('Filter-Controls'); ?>
           </label>
@@ -142,10 +148,10 @@ namespace CAFEVDB {
           <input id="app-settings-directchange"
                  type="checkbox"
                  name="directchange" <?php echo $_['directchange'] == 'on' ? 'checked="checked"' : ''; ?>
-                 class="checkbox tooltip-top"
+                 class="checkbox tooltip-<?php echo $sideBarToolTipPos; ?>"
                  title="<?php echo Config::tooltips('direct-change'); ?>"/>
           <label for="app-settings-directchange"
-                 class="tooltip-top"
+                 class="tooltip-<?php echo $sideBarToolTipPos; ?>"
                  title="<?php echo Config::tooltips('direct-change'); ?>">
             <?php echo L::t('Quick Change-Dialog'); ?>
           </label>
@@ -154,10 +160,10 @@ namespace CAFEVDB {
           <input id="app-settings-expertmode"
                  type="checkbox"
                  name="expertmode" <?php echo $_['expertmode'] == 'on' ? 'checked="checked"' : ''; ?>
-                 class="checkbox tooltip-top"
+                 class="checkbox tooltip-<?php echo $sideBarToolTipPos; ?>"
                  title="<?php echo Config::tooltips('expert-mode'); ?>"/>
           <label for="app-settings-expertmode"
-                 class="tooltip-top"
+                 class="tooltip-<?php echo $sideBarToolTipPos; ?>"
                  title="<?php echo Config::tooltips('expert-mode'); ?>">
             <?php echo L::t('Expert-Mode'); ?>
           </label>
@@ -165,7 +171,7 @@ namespace CAFEVDB {
         <li class="chosen-dropup">
           <select name="pagerows"
                   data-placeholder="<?php echo L::t('#Rows'); ?>"
-                  class="table-pagerows chosen-dropup tooltip-top"
+                  class="table-pagerows chosen-dropup tooltip-<?php echo $sideBarToolTipPos; ?>"
                   id="app-settings-table-pagerows"
                   title="<?php echo Config::tooltips('table-rows-per-page'); ?>">
             <?php
@@ -176,14 +182,14 @@ namespace CAFEVDB {
             ?>
           </select>
           <label for="app-settings-table-pagerows"
-                 class="tooltip-top"
+                 class="tooltip-<?php echo $sideBarToolTipPos; ?>"
                  title="<?php echo Config::tooltips('table-rows-per-page'); ?>">
             <?php echo L::t('#Rows/Page in Tables'); ?>
           </label>
         </li>
         <li>
           <a id="app-settings-further-settings"
-             class="settings generalsettings tooltip-top"
+             class="settings generalsettings tooltip-<?php echo $sideBarToolTipPos; ?>"
              title="<?php echo Config::tooltips('further-settings'); ?>"
              href="#">
             <?php echo L::t('Further Settings'); ?>
@@ -191,7 +197,7 @@ namespace CAFEVDB {
         </li>
         <li class="<?php echo $expertClass; ?>">
           <a id="app-settings-expert-operations"
-             class="settings expertoperations tooltip-top"
+             class="settings expertoperations tooltip-<?php echo $sideBarToolTipPos; ?>"
              title="<?php echo Config::tooltips('expert-operations'); ?>"
              href="#">
             <?php echo L::t('Expert Operations'); ?>
@@ -203,7 +209,7 @@ namespace CAFEVDB {
             multiple
             name="debugmode"
             data-placeholder="<?php echo L::t('Enable Debug Mode'); ?>"
-            class="debug-mode chosen-dropup tooltip-top"
+            class="debug-mode chosen-dropup tooltip-<?php echo $sideBarToolTipPos; ?>"
             title="<?php echo Config::tooltips('debug-mode'); ?>">
             <?php
             foreach ($debugModes as $key => $value) {
@@ -228,14 +234,14 @@ namespace CAFEVDB {
 </div>
 <div class="cafevdb-general" data-snap-ignore="true" id="cafevdb-general"> <!-- used to eliminate the pixel-size of the control bar -->
   <?php echo isset($_['headerblock']) ? '<!-- ' : ''; ?>
-  <div id="<?php echo $css_pfx; ?>-header-box" class="<?php echo $css_pfx; ?>-header-box<?php echo $css_class; ?>">
-    <div id="<?php echo $css_pfx; ?>-header" class="<?php echo $css_pfx; ?>-header<?php echo $css_class; ?>">
+  <div id="<?php echo $css_pfx; ?>-header-box" class="<?php echo $css_pfx; ?>-header-box <?php echo $css_class; ?>">
+    <div id="<?php echo $css_pfx; ?>-header" class="<?php echo $css_pfx; ?>-header <?php echo $css_class; ?>">
       <?php echo $header; ?>
     </div>
   </div>
   <?php echo isset($_['headerblock']) ? ' -->' : ''; ?>
   <?php echo isset($_['headerblock']) ? $_['headerblock'] : ''; ?>
-  <div id="<?php echo $css_pfx; ?>-container" class="<?php echo $css_pfx; ?>-container<?php echo $css_class; ?>"> <!-- used to have something with 100 height for scrollbars -->
-    <div id="<?php echo $css_pfx; ?>-body" class="<?php echo $css_pfx; ?>-body<?php echo $css_class; ?>">
+  <div id="<?php echo $css_pfx; ?>-container" class="<?php echo $css_pfx; ?>-container <?php echo $css_class; ?>"> <!-- used to have something with 100 height for scrollbars -->
+    <div id="<?php echo $css_pfx; ?>-body" class="<?php echo $css_pfx; ?>-body <?php echo $css_class; ?>">
 
 <?php } // namespace CAFEVDB ?>

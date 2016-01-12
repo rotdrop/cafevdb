@@ -125,7 +125,7 @@ namespace CAFEVDB {
 
       $tmpl = new \OCP\Template('cafevdb', $tmplname, $renderas);
 
-      $tmpl->assign('css-class', $tmplname);
+      $tmpl->assign('template', $tmplname);
 
       $tmpl->assign('configcheck', $config);
       $tmpl->assign('orchestra', Config::getValue('orchestra'));
