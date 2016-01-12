@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-02 00:01+0100\n"
+"POT-Creation-Date: 2016-01-12 01:14+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -44,7 +44,7 @@ msgstr ""
 
 #: ajax/blog/editentry.php:101 ajax/blog/modifyentry.php:162
 #: ajax/email/addressbook.php:158 ajax/email/progress.php:70
-#: ajax/email/savecontacts.php:107 ajax/events/events.php:112
+#: ajax/email/savecontacts.php:107 ajax/events/events.php:109
 #: ajax/events/execute.php:149 ajax/events/new.form.php:205
 #: ajax/events/sendmail.php:99 ajax/finance/sepa-debit-mandate.php:161
 #: ajax/finance/sepa-debit-settings.php:375
@@ -1418,9 +1418,9 @@ msgid "Unknown WYSIWYG-Editor: `%s'"
 msgstr ""
 
 #: js/blog.js:53 js/blog.js:182 js/blog.js:233 js/blog.js:269
-#: js/cafevdb.js:1045 js/cafevdb.js:1109 js/email.js:34 js/email.js:63
+#: js/cafevdb.js:1051 js/cafevdb.js:1115 js/email.js:34 js/email.js:63
 #: js/email.js:522 js/email.js:615 js/email.js:778 js/events.js:64
-#: js/events.js:199 js/inlineimage.js:84 js/inlineimage.js:92
+#: js/events.js:241 js/inlineimage.js:84 js/inlineimage.js:92
 #: js/inlineimage.js:102 js/inlineimage.js:131 js/inlineimage.js:155
 #: js/inlineimage.js:184 js/inlineimage.js:207 js/inlineimage.js:331
 #: js/inlineimage.js:420 js/inlineimage.js:429 js/inlineimage.js:432
@@ -1462,46 +1462,46 @@ msgstr ""
 msgid "Really delete the entry?"
 msgstr ""
 
-#: js/cafevdb.js:530
+#: js/cafevdb.js:536
 msgid "Choose some Options"
 msgstr ""
 
-#: js/cafevdb.js:535 js/project-instruments.js:155 js/sepa-debit-mandate.js:106
+#: js/cafevdb.js:541 js/project-instruments.js:155 js/sepa-debit-mandate.js:106
 msgid "Save"
 msgstr ""
 
-#: js/cafevdb.js:537
+#: js/cafevdb.js:543
 msgid ""
 "Accept the currently selected options and return to the underlying form. "
 msgstr ""
 
-#: js/cafevdb.js:538 js/inlineimage.js:278 js/project-instruments.js:206
+#: js/cafevdb.js:544 js/inlineimage.js:278 js/project-instruments.js:206
 #: templates/blogedit.php:40 templates/part.emailform.composer.php:281
 msgid "Cancel"
 msgstr ""
 
-#: js/cafevdb.js:540
+#: js/cafevdb.js:546
 msgid ""
 "Discard the current selection and close the dialog. The initial set of "
 "selected options will remain unchanged."
 msgstr ""
 
-#: js/cafevdb.js:711
+#: js/cafevdb.js:717
 msgid "Export to the following format is not yet supported:"
 msgstr ""
 
-#: js/cafevdb.js:713 js/project-instruments.js:74 js/projects.js:263
+#: js/cafevdb.js:719 js/project-instruments.js:74 js/projects.js:265
 msgid "Unimplemented"
 msgstr ""
 
-#: js/cafevdb.js:837
+#: js/cafevdb.js:843
 msgid ""
 "If multiple dialogs are open, then move this one to the lowest layer and "
 "display it below the others. Clicking anywhere on the dialog will bring to "
 "the front again."
 msgstr ""
 
-#: js/cafevdb.js:887
+#: js/cafevdb.js:893
 msgid ""
 "Close the current dialog and return to the view which was active before this "
 "dialog had been opened. If the current view shows a `Back' button, then "
@@ -1509,76 +1509,76 @@ msgid ""
 "equivalent to clicking the `Back' button"
 msgstr ""
 
-#: js/cafevdb.js:977 js/instrumentation.js:173
+#: js/cafevdb.js:983 js/instrumentation.js:173
 msgid "Debug Information"
 msgstr ""
 
-#: js/cafevdb.js:1007
+#: js/cafevdb.js:1013
 msgid ""
 "Unrecoverable unknown internal error, no further information available, "
 "sorry."
 msgstr ""
 
-#: js/cafevdb.js:1009
+#: js/cafevdb.js:1015
 msgid "Internal Error"
 msgstr ""
 
-#: js/cafevdb.js:1016
+#: js/cafevdb.js:1022
 #, python-brace-format
 msgid "Field {RequiredField} not present in AJAX response."
 msgstr ""
 
-#: js/cafevdb.js:1025
+#: js/cafevdb.js:1031
 msgid "Missing data"
 msgstr ""
 
-#: js/cafevdb.js:1027 js/events.js:58 js/events.js:193
+#: js/cafevdb.js:1033 js/events.js:58 js/events.js:235
 msgid "Unknown error :("
 msgstr ""
 
-#: js/cafevdb.js:1065
+#: js/cafevdb.js:1071
 msgid "Something went wrong."
 msgstr ""
 
-#: js/cafevdb.js:1067
+#: js/cafevdb.js:1073
 msgid ""
 "If it should be the case that you are already logged in for a long time "
 "without interacting with the web-app, then the reason for this error is "
 "probably a simple timeout."
 msgstr ""
 
-#: js/cafevdb.js:1072
+#: js/cafevdb.js:1078
 msgid ""
 "I any case it may help to logoff and logon again, as a temporary work-"
 "around. You will be redirected to the log-in page when you close this window."
 msgstr ""
 
-#: js/cafevdb.js:1076
+#: js/cafevdb.js:1082
 #, python-brace-format
 msgid "Feedback email: {AutoReport}"
 msgstr ""
 
-#: js/calendar.js:248
+#: js/calendar.js:257
 msgid "Deletion failed"
 msgstr ""
 
-#: js/calendar.js:364
+#: js/calendar.js:373
 msgid "Browser determined position"
 msgstr ""
 
-#: js/calendar.js:377
+#: js/calendar.js:386
 msgid "Detailed search at Google-Maps"
 msgstr ""
 
-#: js/calendar.js:405
+#: js/calendar.js:414
 msgid "Location not found:"
 msgstr ""
 
-#: js/calendar.js:407
+#: js/calendar.js:416
 msgid "No location specified."
 msgstr ""
 
-#: js/calendar.js:409
+#: js/calendar.js:418
 msgid "Unknown location"
 msgstr ""
 
@@ -1796,7 +1796,7 @@ msgstr ""
 msgid "Do you really want to detach this event from the current project?"
 msgstr ""
 
-#: js/events.js:268
+#: js/events.js:310
 msgid "Really delete?"
 msgstr ""
 
@@ -1931,15 +1931,15 @@ msgstr ""
 msgid "Display the application menu and settings side-bar"
 msgstr ""
 
-#: js/pme.js:937
+#: js/pme.js:939
 msgid "#columns"
 msgstr ""
 
-#: js/pme.js:946
+#: js/pme.js:948
 msgid "#rows"
 msgstr ""
 
-#: js/project-instruments.js:72 js/projects.js:261
+#: js/project-instruments.js:72 js/projects.js:263
 msgid "Unknown operation:"
 msgstr ""
 
@@ -1960,25 +1960,25 @@ msgid ""
 "instrumentation of the project will remain unchanged."
 msgstr ""
 
-#: js/projects.js:516
+#: js/projects.js:513
 msgid "Really unlink the displayed event announcement?"
 msgstr ""
 
-#: js/projects.js:517
+#: js/projects.js:514
 #, python-brace-format
 msgid "Unlink Web-Page with Id {ArticleId}?"
 msgstr ""
 
-#: js/projects.js:542
+#: js/projects.js:539
 msgid "Really delete the displayed event announcement?"
 msgstr ""
 
-#: js/projects.js:543
+#: js/projects.js:540
 #, python-brace-format
 msgid "Delete Web-Page with Id {ArticleId}?"
 msgstr ""
 
-#: js/projects.js:620
+#: js/projects.js:617
 msgid "No values match"
 msgstr ""
 
@@ -2077,70 +2077,70 @@ msgstr ""
 msgid "CAFeV DB project address-book with all participants for %s"
 msgstr ""
 
-#: lib/config.php:670
+#: lib/config.php:674
 #, php-format
 msgid "Decryption of `%s`@`%s` failed"
 msgstr ""
 
-#: lib/config.php:674
+#: lib/config.php:678
 #, php-format
 msgid "Encryption of `%s`@`%s` failed"
 msgstr ""
 
-#: lib/config.php:680
+#: lib/config.php:684
 #, php-format
 msgid "Unable to update table data at index %s"
 msgstr ""
 
-#: lib/config.php:899
+#: lib/config.php:903
 msgid "birthday"
 msgstr ""
 
-#: lib/config.php:909
+#: lib/config.php:913
 msgid "no preference"
 msgstr ""
 
-#: lib/config.php:910
+#: lib/config.php:914
 msgid "German"
 msgstr ""
 
-#: lib/config.php:911
+#: lib/config.php:915
 msgid "English"
 msgstr ""
 
-#: lib/config.php:912
+#: lib/config.php:916
 msgid "French"
 msgstr ""
 
-#: lib/config.php:913
+#: lib/config.php:917
 msgid "Spanish"
 msgstr ""
 
-#: lib/config.php:914
+#: lib/config.php:918
 msgid "Portuguese"
 msgstr ""
 
-#: lib/config.php:915
+#: lib/config.php:919
 msgid "Polish"
 msgstr ""
 
-#: lib/config.php:916
+#: lib/config.php:920
 msgid "Russian"
 msgstr ""
 
-#: lib/config.php:917
+#: lib/config.php:921
 msgid "Chinese"
 msgstr ""
 
-#: lib/config.php:918
+#: lib/config.php:922
 msgid "Japaneese"
 msgstr ""
 
-#: lib/config.php:919
+#: lib/config.php:923
 msgid "Korean"
 msgstr ""
 
-#: lib/config.php:940
+#: lib/config.php:944
 #, php-format
 msgid "Unknown Tooltip for key `%s' requested."
 msgstr ""
@@ -2276,7 +2276,7 @@ msgstr ""
 msgid "Local Filesystem"
 msgstr ""
 
-#: lib/emailrecipientsfilter.php:341 lib/page-loader.php:187
+#: lib/emailrecipientsfilter.php:341 lib/page-loader.php:189
 #, php-format
 msgid "Invalid history position %d request, history size is %d"
 msgstr ""
@@ -2287,21 +2287,21 @@ msgid ""
 "Musician %d in Table, but has no Id as Musician. POST: %sMap: %sSQL-Query: %s"
 msgstr ""
 
-#: lib/events.php:280 lib/events.php:291 lib/events.php:301 lib/events.php:311
-#: lib/events.php:335
+#: lib/events.php:281 lib/events.php:292 lib/events.php:302 lib/events.php:312
+#: lib/events.php:336
 #, php-format
 msgid "Unexpected response while creating new task: %s"
 msgstr ""
 
-#: lib/events.php:368
+#: lib/events.php:369
 msgid "Unable to create event from given data:"
 msgstr ""
 
-#: lib/events.php:945 lib/events.php:1139
+#: lib/events.php:949 lib/events.php:1145
 msgid "Unknown Calendar"
 msgstr ""
 
-#: lib/events.php:952
+#: lib/events.php:956
 msgid "Miscellaneous Calendars"
 msgstr ""
 
@@ -2572,12 +2572,12 @@ msgstr ""
 msgid "Display a table with the insurance brokers."
 msgstr ""
 
-#: lib/functions.php:1639
+#: lib/functions.php:1642
 #, php-format
 msgid "Could not connect to data-base server `%s': %s"
 msgstr ""
 
-#: lib/functions.php:1652
+#: lib/functions.php:1655
 #, php-format
 msgid "Unable to select %s"
 msgstr ""
@@ -2898,7 +2898,11 @@ msgstr ""
 msgid "Add new Instruments"
 msgstr ""
 
-#: lib/instruments.php:270
+#: lib/instruments.php:213
+msgid "sort order"
+msgstr ""
+
+#: lib/instruments.php:273
 #, php-format
 msgid ""
 "Could not execute the query\n"
@@ -2906,60 +2910,60 @@ msgid ""
 "SQL-Error: %s"
 msgstr ""
 
-#: lib/instruments.php:353
+#: lib/instruments.php:356
 msgid "Needed Instruments"
 msgstr ""
 
-#: lib/instruments.php:358
+#: lib/instruments.php:361
 #, php-format
 msgid ""
 "Instrument `%s' does not yet exist in table `%s', cannot change its name to `"
 "%s'"
 msgstr ""
 
-#: lib/instruments.php:362
+#: lib/instruments.php:365
 #, php-format
 msgid ""
 "Instrument `%s' already exists in table `%s', cannot change its name from `"
 "%s'"
 msgstr ""
 
-#: lib/instruments.php:381 lib/instruments.php:411 lib/instruments.php:421
+#: lib/instruments.php:384 lib/instruments.php:414 lib/instruments.php:424
 #, php-format
 msgid "SQL-Error ``%s''. Could not execute the query ``%s''"
 msgstr ""
 
-#: lib/instruments.php:398
+#: lib/instruments.php:401
 #, php-format
 msgid "SQL-Error ``%s''. Could not execute the query `` %s ''"
 msgstr ""
 
-#: lib/instruments.php:458
+#: lib/instruments.php:461
 #, php-format
 msgid "Could not fetch instruments for project-id %s"
 msgstr ""
 
-#: lib/instruments.php:572
+#: lib/instruments.php:575
 msgid "Streich,Saiten"
 msgstr ""
 
-#: lib/instruments.php:573
+#: lib/instruments.php:576
 msgid "Streich,Zupf"
 msgstr ""
 
-#: lib/instruments.php:574
+#: lib/instruments.php:577
 msgid "Blas,Holz"
 msgstr ""
 
-#: lib/instruments.php:575
+#: lib/instruments.php:578
 msgid "Blas,Blech"
 msgstr ""
 
-#: lib/instruments.php:576
+#: lib/instruments.php:579
 msgid "Schlag"
 msgstr ""
 
-#: lib/instruments.php:577
+#: lib/instruments.php:580
 msgid "Sonstiges"
 msgstr ""
 
@@ -4439,7 +4443,7 @@ msgstr ""
 msgid "Personal application settings."
 msgstr ""
 
-#: lib/tooltips.php:575 templates/part.common.header.php:91
+#: lib/tooltips.php:575 templates/part.common.header.php:95
 msgid "Toggle Tooltips"
 msgstr ""
 
@@ -4539,8 +4543,8 @@ msgid "Current Key"
 msgstr ""
 
 #: templates/app-settings.php:47 templates/app-settings.php:50
-#: templates/app-settings.php:83 templates/email-settings.php:73
-#: templates/settings.php:140 templates/settings.php:143
+#: templates/app-settings.php:83 templates/email-settings.php:86
+#: templates/settings.php:167 templates/settings.php:170
 #: templates/share-settings.php:46
 msgid "show"
 msgstr ""
@@ -4620,7 +4624,7 @@ msgstr ""
 msgid "Database User"
 msgstr ""
 
-#: templates/app-settings.php:81 templates/email-settings.php:71
+#: templates/app-settings.php:81 templates/email-settings.php:76
 msgid "New Password"
 msgstr ""
 
@@ -4628,7 +4632,7 @@ msgstr ""
 msgid "Test Database Password"
 msgstr ""
 
-#: templates/blog.php:42
+#: templates/blog.php:43
 #, php-format
 msgid ""
 "Camerata DB start page - the data-base operations can be accessed\n"
@@ -4637,7 +4641,7 @@ msgid ""
 "cloud-icon (top left) to reach the app-menu."
 msgstr ""
 
-#: templates/blog.php:65
+#: templates/blog.php:66
 msgid "New note"
 msgstr ""
 
@@ -4908,63 +4912,63 @@ msgstr ""
 msgid "Login for email account."
 msgstr ""
 
-#: templates/email-settings.php:74
+#: templates/email-settings.php:90
 msgid "Change email password"
 msgstr ""
 
-#: templates/email-settings.php:75
+#: templates/email-settings.php:93
 msgid "The email password was changed"
 msgstr ""
 
-#: templates/email-settings.php:76
+#: templates/email-settings.php:96
 msgid "Unable to change the email password"
 msgstr ""
 
-#: templates/email-settings.php:79
+#: templates/email-settings.php:103
 msgid "Distribute Email Account"
 msgstr ""
 
-#: templates/email-settings.php:83
+#: templates/email-settings.php:110
 msgid "Bulk Sender Identity"
 msgstr ""
 
-#: templates/email-settings.php:84
+#: templates/email-settings.php:115
 msgid "Real Sender Name"
 msgstr ""
 
-#: templates/email-settings.php:85
+#: templates/email-settings.php:117
 msgid "From: name"
 msgstr ""
 
-#: templates/email-settings.php:86
+#: templates/email-settings.php:122
 msgid "Email From Adress"
 msgstr ""
 
-#: templates/email-settings.php:87
+#: templates/email-settings.php:124
 msgid "From: address"
 msgstr ""
 
-#: templates/email-settings.php:89
+#: templates/email-settings.php:127
 msgid "Test Settings"
 msgstr ""
 
-#: templates/email-settings.php:90
+#: templates/email-settings.php:131
 msgid "Test Email Setup"
 msgstr ""
 
-#: templates/email-settings.php:91 templates/email-settings.php:92
+#: templates/email-settings.php:139 templates/email-settings.php:142
 msgid "Email test-mode; send emails only to the email test-address."
 msgstr ""
 
-#: templates/email-settings.php:92
+#: templates/email-settings.php:143
 msgid "Test-Mode"
 msgstr ""
 
-#: templates/email-settings.php:93
+#: templates/email-settings.php:148
 msgid "Test Email Adress"
 msgstr ""
 
-#: templates/email-settings.php:94
+#: templates/email-settings.php:150
 msgid "Test address"
 msgstr ""
 
@@ -5031,35 +5035,35 @@ msgstr ""
 msgid "Something is wrong, but what?"
 msgstr ""
 
-#: templates/events.php:32
+#: templates/events.php:31
 msgid "Events for"
 msgstr ""
 
-#: templates/events.php:38
+#: templates/events.php:37
 msgid "New Event"
 msgstr ""
 
-#: templates/events.php:41
+#: templates/events.php:40
 msgid "Concert"
 msgstr ""
 
-#: templates/events.php:42
+#: templates/events.php:41
 msgid "Rehearsal"
 msgstr ""
 
-#: templates/events.php:43
+#: templates/events.php:42
 msgid "Miscellaneous"
 msgstr ""
 
-#: templates/events.php:44
+#: templates/events.php:43
 msgid "Management"
 msgstr ""
 
-#: templates/events.php:45
+#: templates/events.php:44
 msgid "Finance"
 msgstr ""
 
-#: templates/events.php:72
+#: templates/events.php:71
 msgid "Download"
 msgstr ""
 
@@ -5373,95 +5377,95 @@ msgstr ""
 msgid "Treasurer of the orchestra"
 msgstr ""
 
-#: templates/part.common.header.php:47 templates/settings.php:36
+#: templates/part.common.header.php:51 templates/settings.php:36
 msgid "General Information"
 msgstr ""
 
-#: templates/part.common.header.php:48 templates/settings.php:37
+#: templates/part.common.header.php:52 templates/settings.php:37
 msgid "SQL Queries"
 msgstr ""
 
-#: templates/part.common.header.php:49 templates/settings.php:38
+#: templates/part.common.header.php:53 templates/settings.php:38
 msgid "HTTP Request"
 msgstr ""
 
-#: templates/part.common.header.php:50 templates/settings.php:39
+#: templates/part.common.header.php:54 templates/settings.php:39
 msgid "Missing Context Help"
 msgstr ""
 
-#: templates/part.common.header.php:51 templates/settings.php:40
+#: templates/part.common.header.php:55 templates/settings.php:40
 msgid "Mass Email Form"
 msgstr ""
 
-#: templates/part.common.header.php:56
+#: templates/part.common.header.php:60
 msgid "Back"
 msgstr ""
 
-#: templates/part.common.header.php:57
+#: templates/part.common.header.php:61
 msgid "Navigate back to the previous view in the recorded history."
 msgstr ""
 
-#: templates/part.common.header.php:64
+#: templates/part.common.header.php:68
 msgid "Reload"
 msgstr ""
 
-#: templates/part.common.header.php:65
+#: templates/part.common.header.php:69
 msgid "Reload the current view."
 msgstr ""
 
-#: templates/part.common.header.php:72
+#: templates/part.common.header.php:76
 msgid "Next"
 msgstr ""
 
-#: templates/part.common.header.php:73
+#: templates/part.common.header.php:77
 msgid "Navigate to the next view in the recorded history."
 msgstr ""
 
-#: templates/part.common.header.php:80
+#: templates/part.common.header.php:84
 msgid "Startpage"
 msgstr ""
 
-#: templates/part.common.header.php:81
+#: templates/part.common.header.php:85
 msgid "Navigate back to the start-page."
 msgstr ""
 
-#: templates/part.common.header.php:90
+#: templates/part.common.header.php:94
 msgid "Tooltip Button"
 msgstr ""
 
-#: templates/part.common.header.php:126 templates/settings.php:78
+#: templates/part.common.header.php:132 templates/settings.php:85
 msgid "Tool-Tips"
 msgstr ""
 
-#: templates/part.common.header.php:138 templates/settings.php:81
+#: templates/part.common.header.php:144 templates/settings.php:95
 msgid "Filter-Controls"
 msgstr ""
 
-#: templates/part.common.header.php:150 templates/settings.php:85
+#: templates/part.common.header.php:156 templates/settings.php:105
 msgid "Quick Change-Dialog"
 msgstr ""
 
-#: templates/part.common.header.php:162 templates/settings.php:119
+#: templates/part.common.header.php:168 templates/settings.php:145
 msgid "Expert-Mode"
 msgstr ""
 
-#: templates/part.common.header.php:167 templates/settings.php:90
+#: templates/part.common.header.php:173 templates/settings.php:110
 msgid "#Rows"
 msgstr ""
 
-#: templates/part.common.header.php:181
+#: templates/part.common.header.php:187
 msgid "#Rows/Page in Tables"
 msgstr ""
 
-#: templates/part.common.header.php:189
+#: templates/part.common.header.php:195
 msgid "Further Settings"
 msgstr ""
 
-#: templates/part.common.header.php:197
+#: templates/part.common.header.php:203
 msgid "Expert Operations"
 msgstr ""
 
-#: templates/part.common.header.php:205 templates/settings.php:124
+#: templates/part.common.header.php:211 templates/settings.php:151
 msgid "Enable Debug Mode"
 msgstr ""
 
@@ -5969,39 +5973,39 @@ msgstr ""
 msgid "?"
 msgstr ""
 
-#: templates/settings.php:102
+#: templates/settings.php:122
 msgid "Display #Rows/Page in Tables"
 msgstr ""
 
-#: templates/settings.php:107
+#: templates/settings.php:127
 msgid "WYSIWYG Editor"
 msgstr ""
 
-#: templates/settings.php:134
+#: templates/settings.php:161
 msgid "Dummy"
 msgstr ""
 
-#: templates/settings.php:138
+#: templates/settings.php:165
 msgid "Own Password"
 msgstr ""
 
-#: templates/settings.php:141
+#: templates/settings.php:168
 msgid "DB Encryption Key"
 msgstr ""
 
-#: templates/settings.php:144
+#: templates/settings.php:171
 msgid "Set Encryption Key"
 msgstr ""
 
-#: templates/settings.php:145
+#: templates/settings.php:172
 msgid "The encryption key has been set successfully."
 msgstr ""
 
-#: templates/settings.php:146
+#: templates/settings.php:173
 msgid "Unable to set the encryption key."
 msgstr ""
 
-#: templates/settings.php:149
+#: templates/settings.php:176
 msgid "Locale Information:"
 msgstr ""
 
