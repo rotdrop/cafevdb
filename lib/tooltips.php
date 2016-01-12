@@ -529,6 +529,9 @@ selected recipients.'),
 
         'register-musician' => L::t('Add the musician to the project. A new form will open were details like the instrument etc. can be adjustetd.'),
 
+        'registration-mark' => L::t('This is checked for officially registered musicians, those, who have
+sent us a signed registration form. It is left blannk otherwise.'),
+
         'save-as-template' => L::t('Activate this checkbox in order to save the current email message as
 message template. If you leave this check-box unchecked, then messages
 will be saved as draft. The difference between a draft and a template
@@ -554,6 +557,8 @@ An email template can contain per-member substitutions with the syntax ${MEMBER:
 where VARIABLE is one of VORNAME, NAME, EMAIL, TELEFON_1, TELEFON_2, STRASSE, PLZ, STADT and LAND.
 There is also one global (i.e. not per-member) substitution ${GLOABL::ORGANIZER} which is substituted
 by the pre-names of the organizing committe in order to compose  greetings.'),
+
+        'section-leader-mark' => L::t('This is checked for section-leaders and left blank otherwise.'),
 
         'select-email-template' => L::t('Select one of the email templates previously stored in the data-base.'),
 

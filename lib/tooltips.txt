@@ -28,6 +28,8 @@ project-metadata-tab
 project-name
 project-personaldata-tab
 register-musician
+registration-mark
+section-leader-mar
 transfer-instruments
 address-book-emails
 blog-acceptentry
