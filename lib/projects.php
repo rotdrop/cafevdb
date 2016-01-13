@@ -259,11 +259,17 @@ namespace CAFEVDB
         'values'   => $yearValues,
         );
 
-      if ($this->projectName != '' &&
-          self::yearFromName($this->projectName) === false) {
-        $checked = '';
-      } else {
-        $checked = 'checked';
+      // fetch the list of all projects in order to provide a somewhat
+      // cooked filter list
+      $allProjects = Projects::fetchProjects(false /* no db handle */, true /* include years */);
+      $projectQueryValues = array('*' => '*'); // catch-all filter
+      $projectQueryValues[''] = L::t('no projects yet');
+      $projects = array();
+      $groupedProjects = array();
+      foreach ($allProjects as $proj) {
+        $projectQueryValues[$proj['Name']] = $proj['Jahr'].': '.$proj['Name'];
+        $projects[$proj['Name']] = $proj['Name'];
+        $groupedProjects[$proj['Name']] = $proj['Jahr'];
       }
 
       $nameIdx = count($opts['fdd']);
@@ -277,6 +283,8 @@ namespace CAFEVDB
         'maxlen'   => self::NAME_LENGTH_MAX + 6,
         'css'      => array('postfix' => ' projectname control'),
         'sort'     => true,
+        'values2|LF' => $projects,
+        'valueGroups|LF' => $groupedProjects,
         'tooltip'  => Config::toolTips('project-name')
         );
 
