@@ -481,7 +481,7 @@ a comma.'));
       }
 
       $projectName = ucwords($projectName);
-      $projectName = preg_replace("/[^[:alnum:][:space:]]/u", '', $projectName);
+      $projectName = preg_replace("/[^[:alnum:]]?[[:space:]]?/u", '', $projectName);
 
       if ($projectYear) {
         $projectName .= $projectYear;
