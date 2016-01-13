@@ -179,21 +179,6 @@ namespace CAFEVDB
          for list of available languages. */
       //$opts['language'] = $_SERVER['HTTP_ACCEPT_LANGUAGE']; // . '-UTF8';
 
-      /* Table-level filter capability. If set, it is included in the WHERE clause
-         of any generated SELECT statement in SQL query. This gives you ability to
-         work only with subset of data from table.
-
-         $opts['filters'] = "column1 like '%11%' AND column2<17";
-         $opts['filters'] = "section_id = 9";
-         $opts['filters'] = "PMEtable0.sessions_count > 200";
-
-         $opts['filters']['OR'] = expression or array;
-         $opts['filters']['AND'] = expression or array;
-
-         $opts['filters'] = andexpression or array(andexpression1, andexpression2);
-      */
-      $opts['filters'] = array('OR' => "`Art` = 'permanent'");
-
       /* Field definitions
 
          Fields will be displayed left to right on the screen in the order in which they
@@ -249,6 +234,7 @@ namespace CAFEVDB
         $yearValues[] = $year;
       }
 
+      $yearIdx = count($opts['fdd']);
       $opts['fdd']['Jahr'] = array(
         'name'     => 'Jahr',
         'select'   => 'N',
@@ -434,6 +420,28 @@ a comma.'));
             "options" => 'LFAVCPDR' // Set by update trigger.
             )
           );
+
+      /* Table-level filter capability. If set, it is included in the WHERE clause
+         of any generated SELECT statement in SQL query. This gives you ability to
+         work only with subset of data from table.
+
+         $opts['filters'] = "column1 like '%11%' AND column2<17";
+         $opts['filters'] = "section_id = 9";
+         $opts['filters'] = "PMEtable0.sessions_count > 200";
+
+         $opts['filters']['OR'] = expression or array;
+         $opts['filters']['AND'] = expression or array;
+
+         $opts['filters'] = andexpression or array(andexpression1, andexpression2);
+      */
+      $sysPfx = Config::$pmeopts['cgi']['prefix']['sys'];
+      if (!empty(Util::cgiValue($sysPfx.'qf'.$nameIdx.'_id', false))) {
+        // unset the year filter, as it does not make sense
+        unset($_POST[$sysPfx.'qf'.$yearIdx]);
+        unset($_GET[$sysPfx.'qf'.$yearIdx]);
+      } else {
+        $opts['filters'] = array('OR' => "`Art` = 'permanent'");
+      }
 
       // We could try to use 'before' triggers in order to verify the
       // data. However, at the moment the stuff does not work without JS
