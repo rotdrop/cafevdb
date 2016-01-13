@@ -6,9 +6,10 @@
  * phpMyEdit.class.php - main table editor class definition file
  * ____________________________________________________________
  *
- * Copyritht (c) 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
- * Copyright (c) 1999-2002 John McCreesh <jpmcc@users.sourceforge.net>
- * Copyright (c) 2001-2002 Jim Kraai <jkraai@users.sourceforge.net>
+ * Copyright (c) 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
+ *
+ * C opyright (c) 1999-2002 John McCreesh <jpmcc@users.sourceforge.net>
+ * C opyright (c) 2001-2002 Jim Kraai <jkraai@users.sourceforge.net>
  * Versions 5.0 and higher developed by Ondrej Jombik <nepto@php.net>
  * Copyright (c) 2002-2006 Platon Group, http://platon.sk/
  * All rights reserved.
@@ -2165,9 +2166,6 @@ class phpMyEdit
 		$ret = '<input'.$markdisabled.' type="submit" class="'.$css_class_name
 			.'" name="'.$this->cgi['prefix']['sys'].ltrim($markdisabled).$name
 			.'" value="'.(isset($this->labels[$label]) ? $this->labels[$label] : $label);
-		if ($js_validation) {
-			$ret .= '" disabledonclick="return '.$this->js['prefix'].'form_control(this.form);';
-		}
 		$ret .='"';
 		if(isset($js)) $ret .= ' '.$js;
 		if(isset($style)) $ret .= ' style="'.$style.'"';
@@ -2803,7 +2801,7 @@ class phpMyEdit
 		}
 		if ($name == 'savedelete') {
 			$enabled	 = $this->delete_enabled();
-			$js = 'disabledonclick="return confirm(\''.$this->labels['Delete'].' ?\');"';
+			$js = '';
 			return $this->htmlSubmit('savedelete', 'Delete',
 									 $this->getCSSclass('save', $position), false, $enabled ? 0 : $disabled, $js);
 		}
@@ -3040,7 +3038,7 @@ class phpMyEdit
 				echo '<input class="',$css_class_name,'" value="',htmlspecialchars(@$m);
 				echo '" type="text" name="'.$this->cgi['prefix']['sys'].'qf'.$k.'"',$len_props;
 				echo ' '.$this->fetchToolTip($css_class_name, $name, $css_class_name.'text');
-				echo ' disabledonkeypress="return '.$this->js['prefix'].'filter_handler(this.form, event);" />';
+				echo ' />';
 			} else {
 				echo '&nbsp;';
 			}
@@ -3377,8 +3375,7 @@ class phpMyEdit
 					.'" id="'.$this->cgi['prefix']['sys'].'srt-'.$k
 					.'" type="checkbox"  name="'.$this->cgi['prefix']['sys'].'sfn['.$sfnidx.']"'
 					.$this->fetchToolTip($this->getCSSclass('sort'), $this->cgi['prefix']['sys'].'sfn[]')
-					.' value="'.($backward ? "-$k" : $k)
-					.'" disabledonchange="return this.form.submit();"';
+					.' value="'.($backward ? "-$k" : $k).'"';
 				if ($forward || $backward) {
 					echo ' checked';
 				}
