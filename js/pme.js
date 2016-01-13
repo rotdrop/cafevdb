@@ -1236,8 +1236,9 @@ var PHPMYEDIT = PHPMYEDIT || {};
     if (!pme.selectChosen) {
       onChangeSel += ','+'select.'+pmeFilter;
     }
-    container.off('change', onChangeSel);
-    container.on('change', onChangeSel, function(event) {
+    container.
+      off('change', onChangeSel).
+      on('change', onChangeSel, function(event) {
       event.preventDefault();
       return PHPMYEDIT.pseudoSubmit($(this.form), $(this), containerSel);
     });
