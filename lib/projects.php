@@ -337,11 +337,18 @@ namespace CAFEVDB
         );
 
       $opts['fdd']['Unkostenbeitrag'] = Config::$opts['money'];
-      $opts['fdd']['Unkostenbeitrag']['name'] = "Teilnehmerbeitrag";
+      $opts['fdd']['Unkostenbeitrag']['name'] = L::t("Project Fee");
       $opts['fdd']['Unkostenbeitrag']['maxlen'] = 8;
       $opts['fdd']['Unkostenbeitrag']['tooltip'] = L::t('Default project fee for ordinary participants. This should NOT include reductions of any kind. The value displayed here is the default value inserted into the instrumentation table for the project.');
       $opts['fdd']['Unkostenbeitrag']['display|LF'] = array('popup' => 'tooltip');
       $opts['fdd']['Unkostenbeitrag']['css']['postfix'] .= ' tooltip-top';
+
+      $opts['fdd']['Anzahlung'] = Config::$opts['money'];
+      $opts['fdd']['Anzahlung']['name'] = L::t("Deposit");
+      $opts['fdd']['Anzahlung']['maxlen'] = 8;
+      $opts['fdd']['Anzahlung']['tooltip'] = L::t('Default project deposit for ordinary participants. This should NOT include reductions of any kind. The value displayed here is the default value inserted into the instrumentation table for the project.');
+      $opts['fdd']['Anzahlung']['display|LF'] = array('popup' => 'tooltip');
+      $opts['fdd']['Anzahlung']['css']['postfix'] .= ' tooltip-top';
 
       $opts['fdd']['ExtraFelder'] = array('name'     => 'Extra Felder für Teilnehmer',
                                           'options'  => 'FLAVCPD',
@@ -1893,9 +1900,10 @@ __EOT__;
         $handle = mySQL::connect(Config::$pmeopts);
       }
 
-      $column = 'Unkostenbeitrag';
+      $columns = array('Unkostenbeitrag',
+                       'Anzahlung');
 
-      $query = 'SELECT `'.$column.'` FROM `Projekte` WHERE `Id` = '.$projectId;
+      $query = 'SELECT `'.implode('`,`', $columns).'` FROM `Projekte` WHERE `Id` = '.$projectId;
       $result = mySQL::query($query, $handle);
 
       $row = false;
@@ -1907,7 +1915,12 @@ __EOT__;
         mySQL::close($handle);
       }
 
-      return $row && isset($row[$column]) ? floatval($row[$column]) : false;
+      if ($row) {
+        return array('fee' => floatval($row['Unkostenbeitrag']),
+                     'deposit' => floatval($row['Anzahlung']));
+      } else {
+        return false;
+      }
     }
 
     /**Return true if this project has a potential need for debit
@@ -1926,7 +1939,7 @@ __EOT__;
 
       if (!$result) {
         $fees = self::fetchFees($projectId, $handle);
-        $result = $fees != 0;
+        $result = $fees !== false;
       }
 
       if (!$result) {
@@ -2163,6 +2176,12 @@ __EOT__;
         'Unkostenbeitrag' => array('table' => 'Besetzungen',
                                    'column' => true,
                                    'join' => array('type' => 'INNER')),
+        'Anzahlung' => array('table' => 'Besetzungen',
+                             'column' => true,
+                             'join' => array('type' => 'INNER')),
+        'BezahlStatus' => array('table' => 'Besetzungen',
+                                'column' => true,
+                                'join' => array('type' => 'INNER')),
         'ProjectRemarks' => array('table' => 'Besetzungen',
                                   'column' => 'Bemerkungen',
                                   'join' => array('type' => 'INNER'))

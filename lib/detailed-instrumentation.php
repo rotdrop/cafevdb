@@ -361,6 +361,43 @@ class DetailedInstrumentation
     $opts['fdd']['Unkostenbeitrag']['name'] = "Unkostenbeitrag\n(Gagen negativ)";
     $opts['fdd']['Unkostenbeitrag']['tab'] = array('id' => 'project');
     $opts['fdd']['Unkostenbeitrag']['default'] = $project['Unkostenbeitrag'];
+    $opts['fdd']['Unkostenbeitrag']['css']['postfix'] .= ' fee';
+
+    if ($project['Anzahlung'] > 0) {
+      // only include if conifgured in project
+      $opts['fdd']['Anzahlung'] = Config::$opts['money'];
+      $opts['fdd']['Anzahlung']['name'] = "Anzahlung";
+      $opts['fdd']['Anzahlung']['maxlen'] = 6; // 3 digits, no sign
+      $opts['fdd']['Anzahlung']['tab'] = array('id' => 'project');
+      $opts['fdd']['Anzahlung']['default'] = $project['Anzahlung'];
+      $opts['fdd']['Anzahlung']['css']['postfix'] .= ' deposit';
+    }
+
+    $needDebitMandates = Projects::needDebitMandates($projectId);
+    $paymentStatusValues2 = array(
+      'outstanding' => '&empty;',
+      'awaitingdebit' => '&#9972;',
+      'deposited' => '&#9684;',
+      'payed' => '&#10004;'
+      );
+    if (!$needDebitMandates) {
+      unset($paymentStatusValues2['awaitingdebit']);
+    }
+    if ($project['Anzahlung'] <= 0) {
+      unset($paymentStatusValues2['deposited']);
+    }
+
+    $opts['fdd']['BezahlStatus'] = array(
+      'name'    => $this->operation ? L::t("Payment Status") : '&euro; ??',
+      'tab'     => array('id' => array('project')),
+      'options' => 'LAVCPDF',
+      'select'  => 'M',
+      'values2' => $paymentStatusValues2,
+      'maxlen'  => '1',
+      'sort'    => true,
+      'escape'  => false,
+      'css'     => array('postfix' => ' payment-status align-center tooltip-top'),
+      );
 
     if (Projects::needDebitMandates($projectId)) {
 

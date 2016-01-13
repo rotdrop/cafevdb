@@ -504,7 +504,9 @@ class Instrumentation
       $values = array('MusikerId' => $musicianId,
                       'ProjektId' => $projectId,
                       'Instrument' => $musInstrument,
-                      'Unkostenbeitrag' => $fees);
+                      'Unkostenbeitrag' => $fees['fee'],
+                      'Anzahlung' => $fees['deposit'],
+                      'BezahlStatus' => 'outstanding');
 
       // do it ...
       $instrumentationId = -1;
