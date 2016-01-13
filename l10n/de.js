@@ -182,7 +182,7 @@ OC.L10N.register(
     "project-year" : "Projekt-Jahr",
     "project-name" : "Projekt-Name",
     "The %s must not be empty.\n" : "%s darf nicht leer sein.\\n",
-    "The project name has been simplified." : "Der Projekt-Name wurde vereinfacht.",
+    "The project name has been simplified from \"%s\" to \"%s\"." : "Der Projekt-Name wurde von \"%s\" zu \"%s\" vereinfacht.",
     "The project-name must not only consist of the year-number." : "Der Projekt-Name darf nicht nur aus der Jahreszahl bestehen.",
     "No project-name given." : "Kein Projekt-Name angegeben.",
     "The project-name is too long, please use something less than %d characters (excluding the attached year). Thanks" : "Der Projekt-Name ist zu lang. Bitte höchstens %d Buchstaben verwenden\n(ausschließlich der angehängten Jahreszahl).",

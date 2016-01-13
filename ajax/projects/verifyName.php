@@ -74,7 +74,8 @@ namespace CAFEVDB {
       $projectName = preg_replace("/[^[:alnum:]]?[[:space:]]?/u", '', $projectName);
       //$projectName = preg_replace('/\s+/', '', $projectName);
       if ($origName != $projectName) {
-        $infoMessage .= L::t("The project name has been simplified.");
+        $infoMessage .= L::t('The project name has been simplified from "%s" to "%s".',
+                             array($origName, $projectName));
       }
       $matches = array();
       // Get the year from the name, if set

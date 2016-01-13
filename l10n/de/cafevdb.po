@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-13 09:45+0100\n"
-"PO-Revision-Date: 2016-01-13 09:45+0100\n"
+"POT-Creation-Date: 2016-01-13 12:46+0100\n"
+"PO-Revision-Date: 2016-01-13 12:47+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -53,7 +53,7 @@ msgstr "Die Notiz mit Id `%s' konnte nicht geladen werden."
 #: ajax/instrumentation/change-project-instrument.php:110
 #: ajax/instruments/adjustInstrumentation.php:104
 #: ajax/instruments/changeInstrumentation.php:159 ajax/pme/pme-table.php:145
-#: ajax/projects/verifyName.php:169 ajax/settings/creditslist.php:68
+#: ajax/projects/verifyName.php:170 ajax/settings/creditslist.php:68
 msgid "Error, caught an exception"
 msgstr "Interner Fehler, Ausnahme ``aufgefangen''"
 
@@ -301,16 +301,16 @@ msgstr "%s-uebersicht"
 msgid "%s-detailed"
 msgstr "%s-detailliert"
 
-#: ajax/export/excel.php:260 lib/projects.php:1825 lib/projects.php:1826
+#: ajax/export/excel.php:260 lib/projects.php:1841 lib/projects.php:1842
 msgid "Missing Musicians"
 msgstr "Fehlende Musiker"
 
 #: ajax/export/excel.php:285 ajax/export/insurance-export.php:157
-#: lib/detailed-instrumentation.php:255 lib/projects.php:1828
+#: lib/detailed-instrumentation.php:255 lib/projects.php:1844
 msgid "Instrument"
 msgstr "Instrument"
 
-#: ajax/export/excel.php:286 lib/projects.php:1828
+#: ajax/export/excel.php:286 lib/projects.php:1844
 msgid "Missing"
 msgstr "Defizit"
 
@@ -734,7 +734,7 @@ msgstr "Die Instrumenten-Auswahl für %s ist wohl in Ordnung."
 
 #: ajax/instruments/adjustInstrumentation.php:50
 #: ajax/instruments/changeInstrumentation.php:64 ajax/pme/pme-table.php:79
-#: ajax/projects/verifyName.php:123
+#: ajax/projects/verifyName.php:124
 msgid "missing arguments"
 msgstr "fehlende Parameter"
 
@@ -857,7 +857,7 @@ msgstr "Die Versicherungssumme sollte eine ganze Zahl sein."
 msgid "Internal error: unknown request."
 msgstr "Interner Fehler: unbekannte Anfrage."
 
-#: ajax/insurance/validate.php:291 ajax/projects/verifyName.php:114
+#: ajax/insurance/validate.php:291 ajax/projects/verifyName.php:115
 msgid "Internal error: unknown request"
 msgstr "Interner Fehler: unbekannte Anfrage."
 
@@ -939,18 +939,19 @@ msgid "The %s must not be empty.\n"
 msgstr "%s darf nicht leer sein.\\n"
 
 #: ajax/projects/verifyName.php:77
-msgid "The project name has been simplified."
-msgstr "Der Projekt-Name wurde vereinfacht."
+#, fuzzy, php-format
+msgid "The project name has been simplified from \"%s\" to \"%s\"."
+msgstr "Der Projekt-Name wurde von \"%s\" zu \"%s\" vereinfacht."
 
-#: ajax/projects/verifyName.php:88
+#: ajax/projects/verifyName.php:89
 msgid "The project-name must not only consist of the year-number."
 msgstr "Der Projekt-Name darf nicht nur aus der Jahreszahl bestehen."
 
-#: ajax/projects/verifyName.php:91
+#: ajax/projects/verifyName.php:92
 msgid "No project-name given."
 msgstr "Kein Projekt-Name angegeben."
 
-#: ajax/projects/verifyName.php:94
+#: ajax/projects/verifyName.php:95
 #, php-format
 msgid ""
 "The project-name is too long, please use something less than %d characters "
@@ -959,19 +960,19 @@ msgstr ""
 "Der Projekt-Name ist zu lang. Bitte höchstens %d Buchstaben verwenden\n"
 "(ausschließlich der angehängten Jahreszahl)."
 
-#: ajax/projects/verifyName.php:101
+#: ajax/projects/verifyName.php:102
 msgid "No project-year given."
 msgstr "Kein Projekt-Jahr angegeben."
 
-#: ajax/projects/verifyName.php:103
+#: ajax/projects/verifyName.php:104
 msgid "The project-year has to consist of four digits, e.g. ``1984''."
 msgstr "Das Projekt-Jahr muss aus vier Ziffern bestehen."
 
-#: ajax/projects/verifyName.php:137
+#: ajax/projects/verifyName.php:138
 msgid "already existent"
 msgstr "bereits vorhanden"
 
-#: ajax/projects/verifyName.php:138
+#: ajax/projects/verifyName.php:139
 #, php-format
 msgid ""
 "A project with the name ``%s'' already exists in the year %s.\n"
@@ -1452,21 +1453,21 @@ msgstr "Die Filter-Sichtbarkeit wurde geändert"
 msgid "Setting `%s' to `%s'"
 msgstr "Setze `%s' auf `%s'"
 
-#: ajax/settings/redaxo-settings.php:38 lib/projects.php:813
+#: ajax/settings/redaxo-settings.php:38 lib/projects.php:829
 msgid "Preview"
 msgstr "Vorschau"
 
-#: ajax/settings/redaxo-settings.php:39 lib/projects.php:817
+#: ajax/settings/redaxo-settings.php:39 lib/projects.php:833
 msgid "Archive"
 msgstr "Archiv"
 
-#: ajax/settings/redaxo-settings.php:40 lib/projects.php:815
-#: lib/projects.php:1370 lib/projects.php:1531 lib/projects.php:1587
-#: lib/projects.php:1588 lib/projects.php:1660
+#: ajax/settings/redaxo-settings.php:40 lib/projects.php:831
+#: lib/projects.php:1386 lib/projects.php:1547 lib/projects.php:1603
+#: lib/projects.php:1604 lib/projects.php:1676
 msgid "Rehearsals"
 msgstr "Proben"
 
-#: ajax/settings/redaxo-settings.php:41 lib/projects.php:819
+#: ajax/settings/redaxo-settings.php:41 lib/projects.php:835
 msgid "Trashbin"
 msgstr "Mülltonne"
 
@@ -1495,7 +1496,7 @@ msgstr "Tool-Tip Einstellung geändert"
 msgid "Unknown WYSIWYG-Editor: `%s'"
 msgstr "Unbekannter WYSIWYG-Edtior: `%s'"
 
-#: js/blog.js:53 js/blog.js:182 js/blog.js:233 js/blog.js:269
+#: js/blog.js:53 js/blog.js:180 js/blog.js:231 js/blog.js:267
 #: js/cafevdb.js:1051 js/cafevdb.js:1115 js/email.js:34 js/email.js:63
 #: js/email.js:522 js/email.js:615 js/email.js:778 js/events.js:64
 #: js/events.js:241 js/inlineimage.js:84 js/inlineimage.js:92
@@ -1511,38 +1512,38 @@ msgstr "Fehler"
 msgid "Edit Blog Entry"
 msgstr "Pinnwand-Eintrag bearbeiten."
 
-#: js/blog.js:138
+#: js/blog.js:136
 msgid ""
 "The message content has been changed and will be lost if you press `Yes'"
 msgstr ""
 "Der Text der Notiz wurde verändert. Die Änderungen gehen verloren, wenn Sie "
 "`Ja' anklicken."
 
-#: js/blog.js:139
+#: js/blog.js:137
 msgid "Really cancel current entry?"
 msgstr "Wirklich abbrechen?"
 
-#: js/blog.js:212
+#: js/blog.js:210
 msgid "One-time Blog Popup"
 msgstr "Einmalige Popup-Notiz"
 
-#: js/blog.js:219
+#: js/blog.js:217
 msgid "I have read this popup, please bother me no more!"
 msgstr "Ich hab's gelesen, bitte nicht wieder anzeigen!"
 
-#: js/blog.js:220
+#: js/blog.js:218
 msgid "Mark this popup as read; the popup will not show up again."
 msgstr ""
 "Die Nachricht als gelesen markieren; das Popup-Fenster wird nicht wieder "
 "erscheinen."
 
-#: js/blog.js:328
+#: js/blog.js:326
 msgid "The entire message thread will be deleted if you press `Yes'"
 msgstr ""
 "Die Nachricht und alle `Follow-Ups' werden gelöscht, wenn Sie auf `Ja' "
 "klicken."
 
-#: js/blog.js:329
+#: js/blog.js:327
 msgid "Really delete the entry?"
 msgstr "Den Beitrag wirklich löschen?"
 
@@ -2059,7 +2060,7 @@ msgstr "Doppelten Datenbankeintrag lieber vermeiden?"
 msgid "Possible Duplicate!"
 msgstr "Doppelter Datenbankeintag?"
 
-#: js/page.js:162
+#: js/page.js:167
 msgid "Display the application menu and settings side-bar"
 msgstr "Randleiste mit Anwendungs- und Einstellungs-Menü einblenden."
 
@@ -2096,28 +2097,28 @@ msgid ""
 "instrumentation of the project will remain unchanged."
 msgstr "Abbrechen. Die Instrumentierung des Projekts wird nicht geändert."
 
-#: js/projects.js:513
+#: js/projects.js:519
 msgid "Really unlink the displayed event announcement?"
 msgstr ""
 "Soll die Verknüpfung mit der angezeigten Veranstaltungsankündigung wirklich "
 "gelöst werden?"
 
-#: js/projects.js:514
+#: js/projects.js:520
 #, python-brace-format
 msgid "Unlink Web-Page with Id {ArticleId}?"
 msgstr "Web-Seite mit Id {ArticleId} löschen?"
 
-#: js/projects.js:539
+#: js/projects.js:545
 msgid "Really delete the displayed event announcement?"
 msgstr ""
 "Soll die angezeigte Veranstaltungsankündigung wirklich entfernt werden?"
 
-#: js/projects.js:540
+#: js/projects.js:546
 #, python-brace-format
 msgid "Delete Web-Page with Id {ArticleId}?"
 msgstr "Web-Seite mit Id {ArticleId} löschen?"
 
-#: js/projects.js:617
+#: js/projects.js:623
 msgid "No values match"
 msgstr "Kein Wert passt."
 
@@ -2369,6 +2370,7 @@ msgid "Remarks"
 msgstr "Bemerkungen"
 
 #: lib/detailed-instrumentation.php:450 lib/musicians.php:347
+#: lib/projects.php:252
 msgid "no projects yet"
 msgstr "Ohne Projekt"
 
@@ -2413,7 +2415,7 @@ msgid "Photo"
 msgstr "Foto"
 
 #: lib/detailed-instrumentation.php:607 lib/musicians.php:604
-#: lib/projects.php:423
+#: lib/projects.php:417
 msgid "Last Updated"
 msgstr "Letzte Aktualisierung"
 
@@ -2485,115 +2487,115 @@ msgstr "Weitere Kalender"
 msgid "finance"
 msgstr "Kasse"
 
-#: lib/finance.php:342
+#: lib/finance.php:347
 #, php-format
 msgid "Unable to update the last-used date to %s"
 msgstr "Kann das Datum der letzten Verwendung nicht auf %s setzen."
 
-#: lib/finance.php:344
+#: lib/finance.php:349
 msgid "Data-base query:"
 msgstr "Datenbank-Abfrage:"
 
-#: lib/finance.php:484
+#: lib/finance.php:489
 msgid "mandate reference"
 msgstr "Mandatsreferenz"
 
-#: lib/finance.php:485
+#: lib/finance.php:490
 msgid "date of issue"
 msgstr "Ausstellungsdatum:"
 
-#: lib/finance.php:486
+#: lib/finance.php:491
 msgid "date of last usage"
 msgstr "Letztes Einzugsdatum:"
 
-#: lib/finance.php:487
+#: lib/finance.php:492
 msgid "musician id"
 msgstr "Musiker-Id"
 
-#: lib/finance.php:488
+#: lib/finance.php:493
 msgid "project id"
 msgstr "Projekt-Id"
 
-#: lib/finance.php:489
+#: lib/finance.php:494
 msgid "sequence type"
 msgstr "Wiederholungsart"
 
-#: lib/finance.php:491
+#: lib/finance.php:496
 msgid "bank code"
 msgstr "BLZ"
 
-#: lib/finance.php:492
+#: lib/finance.php:497
 msgid "bank account owner"
 msgstr "Kontoinhaber"
 
-#: lib/finance.php:509
+#: lib/finance.php:514
 #, php-format
 msgid "Missing fields in debit mandate: %s (%s)."
 msgstr "Fehlende Felder im Lastschrifteinzug: %s (%s)."
 
-#: lib/finance.php:511 lib/finance.php:523 lib/finance.php:537
-#: lib/finance.php:559 lib/finance.php:571 lib/finance.php:585
-#: lib/finance.php:602 lib/finance.php:617 lib/finance.php:629
-#: lib/finance.php:639 lib/finance.php:650
+#: lib/finance.php:516 lib/finance.php:528 lib/finance.php:542
+#: lib/finance.php:564 lib/finance.php:576 lib/finance.php:590
+#: lib/finance.php:607 lib/finance.php:622 lib/finance.php:634
+#: lib/finance.php:644 lib/finance.php:655
 msgid "Full data record:"
 msgstr "Betroffener Datensatz:"
 
-#: lib/finance.php:521
+#: lib/finance.php:526
 #, php-format
 msgid "Empty fields in debit mandate: %s (%s)."
 msgstr "Leere Felder im Lastschrifteinzug: %s %s)."
 
-#: lib/finance.php:535
+#: lib/finance.php:540
 msgid "Illegal characters in bank account owner field"
 msgstr "Ungültige Buchstaben im Kontoinhaberfeld."
 
-#: lib/finance.php:557
+#: lib/finance.php:562
 #, php-format
 msgid "Mandate issued in the future: %s????"
 msgstr "Lastschriftmandat in der Zukunft ausgestellt: %s????."
 
-#: lib/finance.php:568
+#: lib/finance.php:573
 msgid "Missing mandate date"
 msgstr "Fehlendes Mandatsdatum"
 
-#: lib/finance.php:581
+#: lib/finance.php:586
 #, php-format
 msgid "Invalid sequence type `%s', should be one of %s"
 msgstr "Ungültige Wiederholungsart `%s', zulässig sind %s"
 
-#: lib/finance.php:600
+#: lib/finance.php:605
 #, php-format
 msgid "Invalid IBAN: %s"
 msgstr "Ungültige IBAN: %s."
 
-#: lib/finance.php:615
+#: lib/finance.php:620
 #, php-format
 msgid "BLZ and IBAN do not match: %s != %s"
 msgstr "BLZ und IBAN passen nicht zusammen: %s != %s."
 
-#: lib/finance.php:627
+#: lib/finance.php:632
 #, php-format
 msgid "Invalid German BLZ: %s."
 msgstr "Ungültige Deutsche(?) Bankleitzahl %s."
 
-#: lib/finance.php:637
+#: lib/finance.php:642
 #, php-format
 msgid "Invalid German bank account: %s @ %s."
 msgstr "Ungültige Deutsche(?) Kontonummer %s @ %s."
 
-#: lib/finance.php:648
+#: lib/finance.php:653
 #, php-format
 msgid "Probably invalid BIC: %s. Computed: %s. "
 msgstr "Vermutlich falsche BIC: %s. Automatisch ermittelt: %s."
 
-#: lib/finance.php:755
+#: lib/finance.php:760
 #, php-format
 msgid "Cannot parse `%s' Only plain number, € and $ currencies are supported."
 msgstr ""
 "Kann `%s' nicht interpretieren. Lediglich bloße Zahlen oder Währungen in € "
 "und $ erlaubt."
 
-#: lib/finance.php:778 lib/finance.php:793
+#: lib/finance.php:783 lib/finance.php:798
 #, php-format
 msgid "Cannot parse number string `%s'"
 msgstr "Kann die Zahlangabe `%s' nicht interpretieren."
@@ -2695,7 +2697,7 @@ msgstr ""
 "Probenankündigungen auf der öffentlichen Webseite zu editieren. \"Und\n"
 "vieles mehr\"."
 
-#: lib/functions.php:1433 lib/projects.php:893
+#: lib/functions.php:1433 lib/projects.php:909
 msgid "Instrumentation"
 msgstr "Besetzung"
 
@@ -2721,8 +2723,8 @@ msgstr ""
 "Tabelle mit allen derzeit gespeicherten Instrumenten; weitere Instrumente "
 "können hier einfach hinzugefügt werden."
 
-#: lib/functions.php:1473 lib/project-instruments.php:69 lib/projects.php:898
-#: lib/projects.php:1157
+#: lib/functions.php:1473 lib/project-instruments.php:69 lib/projects.php:914
+#: lib/projects.php:1173
 msgid "Instrumentation Numbers"
 msgstr "Besetzungszahlen"
 
@@ -2734,7 +2736,7 @@ msgstr ""
 "Anzeige der angestrebten Besetzungszahlen. Natürlich kann man die dann auch "
 "anpassen ..."
 
-#: lib/functions.php:1493 lib/projects.php:935
+#: lib/functions.php:1493 lib/projects.php:951
 msgid "Debit Mandates"
 msgstr "Lastschriftmandate"
 
@@ -3061,7 +3063,7 @@ msgstr "Mitspieler"
 msgid "passive"
 msgstr "passiv"
 
-#: lib/instrumentation.php:267 lib/projects.php:289
+#: lib/instrumentation.php:267 lib/projects.php:283
 msgid "temporary"
 msgstr "zeitweilig"
 
@@ -3456,7 +3458,7 @@ msgstr ""
 "anwählen."
 
 #: lib/project-instruments.php:261 lib/project-instruments.php:500
-#: lib/projects.php:297 lib/projects.php:303
+#: lib/projects.php:291 lib/projects.php:297
 msgid "Actions"
 msgstr "Aktionen"
 
@@ -3483,7 +3485,7 @@ msgstr ""
 msgid "Instrumentation-Numbers not Found"
 msgstr "Besetzungszahlen nicht gefunden"
 
-#: lib/project-instruments.php:346 lib/projects.php:271
+#: lib/project-instruments.php:346 lib/projects.php:263
 msgid "Projekt-Name"
 msgstr "Projekt-Name"
 
@@ -3517,19 +3519,19 @@ msgstr "%s Projekt %s"
 msgid "%s Projects"
 msgstr "%s Projekte"
 
-#: lib/projects.php:284
+#: lib/projects.php:278
 msgid "Kind"
 msgstr "Art"
 
-#: lib/projects.php:290 templates/sepa-debit-mandate.php:34
+#: lib/projects.php:284 templates/sepa-debit-mandate.php:34
 msgid "permanent"
 msgstr "permanent"
 
-#: lib/projects.php:330
+#: lib/projects.php:324
 msgid "Toolbox"
 msgstr "Werkzeuge"
 
-#: lib/projects.php:348
+#: lib/projects.php:342
 msgid ""
 "Default project fee for ordinary participants. This should NOT include "
 "reductions of any kind. The value displayed here is the default value "
@@ -3539,7 +3541,7 @@ msgstr ""
 "Rabatte enthalten. Der hier angezeigt Betrag wird auch als\n"
 "Voreinstellung bei neuen Projekt-Mitspielern eingetragen."
 
-#: lib/projects.php:363
+#: lib/projects.php:357
 msgid ""
 "Comma separated list of extra-fields, e.g.\n"
 "<blockquote>\n"
@@ -3591,50 +3593,50 @@ msgstr ""
 "kann man nach einem 2. Doppelpunkt noch einen Kommentar für die\n"
 "\"Ballon-Hilfe\" angeben; der darf allerdings kein Komma enthalten."
 
-#: lib/projects.php:388
+#: lib/projects.php:382
 msgid "Program"
 msgstr "Programm"
 
-#: lib/projects.php:405
+#: lib/projects.php:399
 msgid "Flyer"
 msgstr "Flyer"
 
-#: lib/projects.php:803
+#: lib/projects.php:819
 #, php-format
 msgid "Unable to fetch public web pages for project id %d"
 msgstr ""
 "Konnte leider die Liste der öffentlichen Web-Seiten für %s nicht ermitteln."
 
-#: lib/projects.php:883
+#: lib/projects.php:899
 msgid "Project Overview"
 msgstr "Projekt-Übersicht"
 
-#: lib/projects.php:907
+#: lib/projects.php:923
 msgid "Project Files"
 msgstr "Projekt-Dateien"
 
-#: lib/projects.php:914 lib/projects.php:1135
+#: lib/projects.php:930 lib/projects.php:1151
 #, php-format
 msgid "Project Wiki for %s"
 msgstr "Wiki Projekt-Seite für %s"
 
-#: lib/projects.php:916 lib/projects.php:1139
+#: lib/projects.php:932 lib/projects.php:1155
 msgid "Project Notes"
 msgstr "Projekt-Notizen"
 
-#: lib/projects.php:921 lib/projects.php:1145 lib/projects.php:1175
+#: lib/projects.php:937 lib/projects.php:1161 lib/projects.php:1191
 msgid "Events"
 msgstr "Termine"
 
-#: lib/projects.php:926 lib/projects.php:1151
+#: lib/projects.php:942 lib/projects.php:1167
 msgid "Em@il"
 msgstr "Em@il"
 
-#: lib/projects.php:941
+#: lib/projects.php:957
 msgid "Profit and Loss Account"
 msgstr "Verlustrechnung"
 
-#: lib/projects.php:2291
+#: lib/projects.php:2307
 msgid ""
 "Flyers can only be added to existing projects, please add the new\n"
 "project without a flyer first."
@@ -3642,28 +3644,28 @@ msgstr ""
 "Flyer könner leider nur zu existierenden Projekten hinzugefügt werden; bitte "
 "zuerst das Projekt ohne Flyer anlegen."
 
-#: lib/projects.php:2304
+#: lib/projects.php:2320
 #, php-format
 msgid "Drop image to upload (max %s)"
 msgstr "Bild ablegen zum Hochladen (max %s)"
 
-#: lib/projects.php:2307
+#: lib/projects.php:2323
 msgid "Delete current flyer"
 msgstr "Aktuellen Flyer löschen"
 
-#: lib/projects.php:2308
+#: lib/projects.php:2324
 msgid "Edit current flyer"
 msgstr "Aktuellen Flyer zuschneiden"
 
-#: lib/projects.php:2309
+#: lib/projects.php:2325
 msgid "Upload new flyer"
 msgstr "Neuen Flyer hochladen"
 
-#: lib/projects.php:2310
+#: lib/projects.php:2326
 msgid "Select image from ownCloud"
 msgstr "Bild aus der `Cloud' auswählen"
 
-#: lib/projects.php:2318
+#: lib/projects.php:2334
 msgid ""
 "Internal error, don't know what to do concerning project-flyers in the given "
 "context."
@@ -3671,7 +3673,7 @@ msgstr ""
 "Interner Fehler; keine Ahnung, wie in diesem Kontext mit Projekt-Flyern "
 "umgegangen werden sollte."
 
-#: lib/projects.php:2404
+#: lib/projects.php:2420
 #, php-format
 msgid ""
 "====== Project %s ======\n"
