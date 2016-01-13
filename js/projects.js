@@ -363,7 +363,13 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
                                } else {
                                    var rqData = data.data;
                                    if (rqData.message != '') {
-                                       OC.Notification.showHtml(rqData.message);
+                                       OC.Notification.showTemporary(
+                                           rqData.message,
+                                           {
+                                               'isHTML': true,
+                                               'timeout': 30
+                                           }
+                                       );
                                    }
                                    name.val(rqData.projectName);
                                    year.val(rqData.projectYear);
