@@ -1351,7 +1351,7 @@ $(document).ready(function(){
                var self = $(this);
                CAFEVDB.toolTipsOnOff(self.hasClass('tooltips-disabled'));
                $.post(OC.filePath('cafevdb', 'ajax/settings', 'tooltips.php'),
-                      self.hasClass('tooltips-disabled') ? { tooltips: 'on' } : {},
+                      self.hasClass('tooltips-disabled') ? { tooltips: 'off' } : { tooltips: 'on' },
                       function(data) {});
                return false;
              });
