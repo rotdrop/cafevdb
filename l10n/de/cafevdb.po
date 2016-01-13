@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-12 21:11+0100\n"
-"PO-Revision-Date: 2016-01-12 20:33+0100\n"
+"POT-Creation-Date: 2016-01-13 09:45+0100\n"
+"PO-Revision-Date: 2016-01-13 09:45+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -1502,8 +1502,8 @@ msgstr "Unbekannter WYSIWYG-Edtior: `%s'"
 #: js/inlineimage.js:102 js/inlineimage.js:131 js/inlineimage.js:155
 #: js/inlineimage.js:184 js/inlineimage.js:207 js/inlineimage.js:331
 #: js/inlineimage.js:420 js/inlineimage.js:429 js/inlineimage.js:432
-#: js/sepa-debit-mandate.js:590 js/sepa-debit-mandate.js:605
-#: js/sepa-debit-mandate.js:736
+#: js/sepa-debit-mandate.js:589 js/sepa-debit-mandate.js:604
+#: js/sepa-debit-mandate.js:735
 msgid "Error"
 msgstr "Fehler"
 
@@ -2187,23 +2187,23 @@ msgstr "Mögliche Alternativen ausgehend von den üblichen Übertragungsfehlern:
 msgid "Please do not accept these alternatives lightly!"
 msgstr "Bitte die Alternativen nicht leichtsinnig übernehmen!"
 
-#: js/sepa-debit-mandate.js:587 js/sepa-debit-mandate.js:733
+#: js/sepa-debit-mandate.js:586 js/sepa-debit-mandate.js:732
 msgid "Unable to export debit notes:"
 msgstr "Kann die Lastschrifteinzüge nicht exportieren:"
 
-#: js/sepa-debit-mandate.js:602
+#: js/sepa-debit-mandate.js:601
 msgid "Unable to export insurance overviews:"
 msgstr "Kann die Versicherungs-Übersichten nicht exportieren:"
 
-#: js/sepa-debit-mandate.js:616
+#: js/sepa-debit-mandate.js:615
 msgid "InsuranceDebitNoteAnnouncement"
 msgstr "VersicherungsLastschriftAnkuendigung"
 
-#: js/sepa-debit-mandate.js:617 js/sepa-debit-mandate.js:750
+#: js/sepa-debit-mandate.js:616 js/sepa-debit-mandate.js:749
 msgid "Debit notes due in 17 days"
 msgstr "Lastschrifteinzug in 17 Tagen"
 
-#: js/sepa-debit-mandate.js:749
+#: js/sepa-debit-mandate.js:748
 msgid "ProjectDebitNoteAnnouncement"
 msgstr "ProjektLastschriftAnkuendigung"
 
@@ -5016,7 +5016,8 @@ msgid ""
 "sent us a signed registration form. It is left blannk otherwise."
 msgstr ""
 "Der Haken ist bei offiziell angemeldeten Musikern gesetzt: solche, die\n"
-"uns eine unterschriebene Anmeldung geschickt haben. Ansonsten ist es leer."
+"uns eine unterschriebene Anmeldung geschickt haben. Ansonsten ist das\n"
+"Feld leer."
 
 #: lib/tooltips.php:535
 msgid ""
@@ -5115,7 +5116,7 @@ msgstr ""
 "Direkte Validierung der IBAN ein- und ausschalten. Falls\n"
 "eingeschaltet, werden die Daten immer dann überprüft, wenn das\n"
 "Eingabefeld inaktiv wird (wenn man also mit der Maus irgendwo anders\n"
-"hinklickt oder mit der <TAB>-Taste in ein anderes Feld wechselt. Falls\n"
+"hinklickt oder mit der Tabularto-Taste in ein anderes Feld wechselt. Falls\n"
 "ausgeschaltet, wird das IBAN-Feld zunächst gar nicht überprüft,\n"
 "allerdings kann man dann auch nicht abspeichern: wenn man fertig ist,\n"
 "muss der Haken zunächst wieder gesetzt werden, dann wird die IBAN auf\n"

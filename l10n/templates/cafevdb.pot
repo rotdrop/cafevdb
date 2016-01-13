@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-12 21:11+0100\n"
+"POT-Creation-Date: 2016-01-13 09:45+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1424,8 +1424,8 @@ msgstr ""
 #: js/inlineimage.js:102 js/inlineimage.js:131 js/inlineimage.js:155
 #: js/inlineimage.js:184 js/inlineimage.js:207 js/inlineimage.js:331
 #: js/inlineimage.js:420 js/inlineimage.js:429 js/inlineimage.js:432
-#: js/sepa-debit-mandate.js:590 js/sepa-debit-mandate.js:605
-#: js/sepa-debit-mandate.js:736
+#: js/sepa-debit-mandate.js:589 js/sepa-debit-mandate.js:604
+#: js/sepa-debit-mandate.js:735
 msgid "Error"
 msgstr ""
 
@@ -2040,23 +2040,23 @@ msgstr ""
 msgid "Please do not accept these alternatives lightly!"
 msgstr ""
 
-#: js/sepa-debit-mandate.js:587 js/sepa-debit-mandate.js:733
+#: js/sepa-debit-mandate.js:586 js/sepa-debit-mandate.js:732
 msgid "Unable to export debit notes:"
 msgstr ""
 
-#: js/sepa-debit-mandate.js:602
+#: js/sepa-debit-mandate.js:601
 msgid "Unable to export insurance overviews:"
 msgstr ""
 
-#: js/sepa-debit-mandate.js:616
+#: js/sepa-debit-mandate.js:615
 msgid "InsuranceDebitNoteAnnouncement"
 msgstr ""
 
-#: js/sepa-debit-mandate.js:617 js/sepa-debit-mandate.js:750
+#: js/sepa-debit-mandate.js:616 js/sepa-debit-mandate.js:749
 msgid "Debit notes due in 17 days"
 msgstr ""
 
-#: js/sepa-debit-mandate.js:749
+#: js/sepa-debit-mandate.js:748
 msgid "ProjectDebitNoteAnnouncement"
 msgstr ""
 
