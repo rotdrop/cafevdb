@@ -746,11 +746,11 @@ class DetailedInstrumentation
                   'ProjectName' => $projectName);
     $data = htmlspecialchars(json_encode($data));
 
-    $css= ($value == L::t("SEPA Debit Mandate")) ? "no-sepa-debit-mandate" : "sepa-debit-mandate";
-    $button = '<div class="sepa-debit-mandate">'
+    $css= ($value == (L::t("SEPA Debit Mandate")) ? "missing-data " : "")."sepa-debit-mandate";
+    $button = '<div class="sepa-debit-mandate tooltip-left">'
       .'<input type="button" '
       .'       id="sepa-debit-mandate-'.$musicianId.'-'.$projectId.'"'
-      .'       class="'.$css.'" '
+      .'       class="'.$css.' tooltip-left" '
       .'       value="'.$value.'" '
       .'       title="'.L::t("Click to enter details of a potential SEPA debit mandate").' " '
       .'       name="SepaDebitMandate" '

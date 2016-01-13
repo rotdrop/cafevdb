@@ -59,7 +59,6 @@ var CAFEVDB = CAFEVDB || {};
       reloadCB = function() {};
     }
 
-    $('#dialog_holder').html(data.data.contents);
     self.projectId = data.data.projectId;
     self.projectName = data.data.projectName;
     self.musicianId = data.data.musicianId;
@@ -69,10 +68,11 @@ var CAFEVDB = CAFEVDB || {};
 
     CAFEVDB.debugPopup(data);
 
-    var mandateForm = $('#dialog_holder').find('#sepa-debit-mandate-form');
+    var popup = $(data.data.contents)
+    var mandateForm = popup.find('#sepa-debit-mandate-form');
     self.instantValidation = mandateForm.find('#sepa-validation-toggle').prop('checked');
 
-    var popup = $('#sepa-debit-mandate-dialog').cafevDialog({
+    popup.cafevDialog({
       position: { my: "middle top+50%",
                   at: "middle bottom",
                   of: "#controls" },
@@ -163,13 +163,15 @@ var CAFEVDB = CAFEVDB || {};
       ],
       open: function(){
         var dlg = $(this);
-        //$.fn.cafevTooltip.remove();
+        var widget = dlg.dialog('widget');
+        //$.fn.cafevTooltip.remove(); // remove tooltip form "open-button"
+        widget.find('button.close').focus();
 
         var buttons = {
-          save: dlg.dialog("widget").find('button.save'),
-          apply: dlg.dialog("widget").find('button.apply'),
-          delete: dlg.dialog("widget").find('button.delete'),
-          change: dlg.dialog("widget").find('button.change')
+          save: widget.find('button.save'),
+          apply: widget.find('button.apply'),
+          delete: widget.find('button.delete'),
+          change: widget.find('button.change')
         };
 
         if (self.mandateId > 0) {
@@ -188,11 +190,9 @@ var CAFEVDB = CAFEVDB || {};
           buttons.change.attr("disabled", true);
         }
 
-        $('button').cafevTooltip({placement:'auto bottom'});
-        $('input').cafevTooltip({placement:'auto bottom'});
-        $('label').cafevTooltip({placement:'auto bottom'});
+        widget.find('button, input, label').cafevTooltip({placement:'auto bottom'});
 
-        if (CAFEVDB.toolTips) {
+        if (CAFEVDB.toolTipsEnabled) {
           $.fn.cafevTooltip.enable();
         } else {
           $.fn.cafevTooltip.disable();
@@ -539,8 +539,7 @@ var CAFEVDB = CAFEVDB || {};
     var containerSel = PHPMYEDIT.selector(selector);
     var container = PHPMYEDIT.container(containerSel);
     var pmeReload = container.find('form.pme-form input.pme-reload').first();
-
-    container.find(':button[class$="sepa-debit-mandate"]').
+    container.find(':button.sepa-debit-mandate').
       off('click').
       on('click', function(event) {
       event.preventDefault();

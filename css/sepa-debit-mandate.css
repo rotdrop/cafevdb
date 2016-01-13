@@ -1,9 +1,30 @@
+/**Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 div.sepastatusblock {
   min-height: 4ex;
 }
 
 #sepa-debit-mandate-dialog input.mandateDate,
-#sepa-debit-mandate-dialog input.lastUsedDate { 
+#sepa-debit-mandate-dialog input.lastUsedDate {
   width: 6em;
 }
 
@@ -11,10 +32,10 @@ div.sepastatusblock {
   display:inline-block;
 }
 
-input.no-sepa-debit-mandate {
+input.sepa-debit-mandate.missing-data {
   ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
   filter: alpha(opacity=30);
-  opacity: .3;  
+  opacity: .3;
 }
 
 form#sepa-debit-mandate-form :disabled {
@@ -96,9 +117,5 @@ input.pme-debit-note[type=submit] {
 /*
  * Local Variables: ***
  * css-indent-offset: 2 ***
- * cssm-indent-level: 2 ***
- * cssm-indent-mirror-mode: t ***
- * cssm-newline-before-closing-bracket: t ***
- * cssm-indent-function: cssm-c-style-indenter ***
  * End: ***
  */
