@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2015 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -144,9 +144,14 @@ namespace CAFEVDB
       $musicianName = Musicians::fetchName($musicianId, $handle);
       $projectName = Projects::fetchName($projectId, $handle);
 
-      $musicianName['firstName'] .= 'X';
-      $musicianName['lastName'] .= 'X';
-      $initials = $musicianName['firstName'][0].$musicianName['lastName'][0];
+      $projectName = self::sepaTranslit($projectName);
+      $firstName = self::sepaTranslit($musicianName['firstName']);
+      $lastName = self::sepaTranslit($musicianName['lastName']);
+
+      $firstName .= 'X';
+      $lastName .= 'X';
+      $initials = $firstName[0].$lastName[0];
+
       $prjId = substr("0000".$projectId, -4);
       $musId = substr("0000".$musicianId, -4);
 
