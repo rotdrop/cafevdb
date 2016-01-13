@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-12 20:33+0100\n"
+"POT-Creation-Date: 2016-01-12 21:11+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2014,8 +2014,8 @@ msgid ""
 "in case of desinformation or misunderstanding. Use with care."
 msgstr ""
 
-#: js/sepa-debit-mandate.js:148 lib/detailed-instrumentation.php:377
-#: lib/detailed-instrumentation.php:729 lib/detailed-instrumentation.php:747
+#: js/sepa-debit-mandate.js:148 lib/detailed-instrumentation.php:379
+#: lib/detailed-instrumentation.php:731 lib/detailed-instrumentation.php:749
 msgid "SEPA Debit Mandate"
 msgstr ""
 
@@ -2191,84 +2191,84 @@ msgstr ""
 msgid "Section Leader"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:305
+#: lib/detailed-instrumentation.php:302
 #, php-format
 msgid "Set to `%s' in order to mark the section leader"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:310
+#: lib/detailed-instrumentation.php:311
 msgid "Registration"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:321
+#: lib/detailed-instrumentation.php:319
 #, php-format
 msgid ""
 "Set to `%s' in order to mark participants who passed a personally signed "
 "registration form to us."
 msgstr ""
 
-#: lib/detailed-instrumentation.php:326
+#: lib/detailed-instrumentation.php:328
 msgid "All Instruments"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:348 lib/musicians.php:334
+#: lib/detailed-instrumentation.php:350 lib/musicians.php:334
 msgid "Member Status"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:431 lib/musicians.php:490
+#: lib/detailed-instrumentation.php:433 lib/musicians.php:490
 msgid "Remarks"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:448 lib/musicians.php:347
+#: lib/detailed-instrumentation.php:450 lib/musicians.php:347
 msgid "no projects yet"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:458 lib/musicians.php:391
+#: lib/detailed-instrumentation.php:460 lib/musicians.php:391
 msgid "Projects"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:475 lib/musicians.php:411
+#: lib/detailed-instrumentation.php:477 lib/musicians.php:411
 msgid "Mobile Phone"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:492 lib/musicians.php:427
+#: lib/detailed-instrumentation.php:494 lib/musicians.php:427
 msgid "Fixed Line Phone"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:509 lib/musicians.php:446
+#: lib/detailed-instrumentation.php:511 lib/musicians.php:446
 msgid "Street"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:519 lib/musicians.php:455
+#: lib/detailed-instrumentation.php:521 lib/musicians.php:455
 msgid "Postal Code"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:528 lib/musicians.php:464
+#: lib/detailed-instrumentation.php:530 lib/musicians.php:464
 msgid "City"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:540 lib/musicians.php:476
+#: lib/detailed-instrumentation.php:542 lib/musicians.php:476
 msgid "Country"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:555
+#: lib/detailed-instrumentation.php:557
 msgid "General Remarks"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:568
+#: lib/detailed-instrumentation.php:570
 msgid "Preferred Language"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:577 lib/musicians.php:530
+#: lib/detailed-instrumentation.php:579 lib/musicians.php:530
 msgid "Photo"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:605 lib/musicians.php:604
+#: lib/detailed-instrumentation.php:607 lib/musicians.php:604
 #: lib/projects.php:423
 msgid "Last Updated"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:753
+#: lib/detailed-instrumentation.php:755
 msgid "Click to enter details of a potential SEPA debit mandate"
 msgstr ""
 
