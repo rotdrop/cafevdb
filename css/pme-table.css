@@ -689,6 +689,10 @@ td.align-right, td.pme-cell.align-right, td.pme-cell.money {
   text-align:right;
 }
 
+.align-center, td.align-center, td.pme-cell.align-center {
+  text-align:center;
+}
+
 td.pme-key, td.pme-value,
 td.pme-help, td.pme-navigation, th.pme-navigation,
 td.pme-cell, td.pme-sortinfo,
