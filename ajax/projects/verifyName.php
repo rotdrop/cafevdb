@@ -71,7 +71,7 @@ namespace CAFEVDB {
       // No whitespace, s.v.p., and CamelCase
       $origName = $projectName;
       $projectName = ucwords($projectName);
-      $projectName = preg_replace("/[^[:alnum:][:space:]]/u", '', $projectName);
+      $projectName = preg_replace("/[^[:alnum:]]?[[:space:]]?/u", '', $projectName);
       //$projectName = preg_replace('/\s+/', '', $projectName);
       if ($origName != $projectName) {
         $infoMessage .= L::t("The project name has been simplified.");
