@@ -298,19 +298,27 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
             disable_search:true
         };
 
-        // emulate per-project action pull down menu via chosen
-        projectActions.chosen(chosenOptions);
-
+        // Install placeholder for proper sizing
         CAFEVDB.fixupNoChosenMenu(projectActions);
+        var maxWidth = projectActions.maxOuterWidth(true);
+        chosenOptions.width = maxWidth+'px';
 
-        projectActions.off('change');
-        projectActions.change(function(event) {
+        //alert('max: '+projectActions.maxOuterWidth(true));
+        //alert('max: '+projectActions.maxWidth());
+        projectActions.chosen(chosenOptions);
+        projectActions.find('option:first').html('');
+        projectActions.trigger("chosen:updated");
+
+        projectActions.
+            off('change').
+            on('change', function(event) {
             event.preventDefault();
 
             return Projects.actions($(this), containerSel);
         });
-        projectActions.off('chosen:showing_dropdown');
-        projectActions.on('chosen:showing_dropdown', function (event) {
+        projectActions.
+            off('chosen:showing_dropdown').
+            on('chosen:showing_dropdown', function (event) {
             container.find('ul.chosen-results li.active-result').cafevTooltip({placement:'auto left'});
         });
     };

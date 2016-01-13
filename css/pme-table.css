@@ -826,8 +826,8 @@ table.pme-main [class^="chosen"] {
   border-radius: 3px;
 }
 
-table.pme-main div.chosen-container {
-  margin: 3px;
+table.pme-main div.pme-filter div.chosen-container {
+  box-sizing: border-box;
 }
 
 input.pme-filter {

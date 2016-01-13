@@ -1012,7 +1012,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
     // Then the general stuff
     container.find("select."+pmeFilter).chosen({
-      //width:'100%',
+      width:'100%', // This needs margin:0 and box-sizing:border-box to be useful.
       inherit_select_classes:true,
       no_results_text:noRes
     });
