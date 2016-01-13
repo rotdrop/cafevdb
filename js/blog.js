@@ -96,9 +96,7 @@ CAFEVDB = CAFEVDB || {};
 
         $(".ui-dialog-titlebar-close").hide();
 
-        $('button').cafevTooltip({position:'auto bottom'});
-        $('input').cafevTooltip({position:'auto bottom'});
-        $('label').cafevTooltip({position:'auto bottom'});
+        dialogWidget.find('button, input, label').cafevTooltip({position:'auto bottom'});
 
         if (CAFEVDB.toolTipsEnabled) {
           $.fn.cafevTooltip.enable();
