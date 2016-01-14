@@ -376,14 +376,17 @@ class DetailedInstrumentation
     $needDebitMandates = Projects::needDebitMandates($projectId);
     $paymentStatusValues2 = array(
       'outstanding' => '&empty;',
-      'awaitingdebit' => '&#9972;',
+      'awaitingdepositdebit' => '&#9972;',
       'deposited' => '&#9684;',
+      'awaitingdebit' => '&#9951;',
       'payed' => '&#10004;'
       );
     if (!$needDebitMandates) {
+      unset($paymentStatusValues2['awaitingdepositdebit']);
       unset($paymentStatusValues2['awaitingdebit']);
     }
     if ($project['Anzahlung'] <= 0) {
+      unset($paymentStatusValues2['awaitingdepositdebit']);
       unset($paymentStatusValues2['deposited']);
     }
 
@@ -391,12 +394,22 @@ class DetailedInstrumentation
       'name'    => $this->operation ? L::t("Payment Status") : '&euro; ??',
       'tab'     => array('id' => array('project')),
       'options' => 'LAVCPDF',
-      'select'  => 'M',
+      'select'  => 'D',
       'values2' => $paymentStatusValues2,
       'maxlen'  => '1',
       'sort'    => true,
       'escape'  => false,
-      'css'     => array('postfix' => ' payment-status align-center tooltip-top'),
+      'css'     => array(
+        'postfix' => ' '.implode(' ',
+                                 array('payment-status',
+                                       'align-center',
+                                       'tooltip-top',
+                                       'chosen-width-auto'))
+        ),
+      'tooltip' => Config::toolTips('payment-status'),
+      'display|LF' => array('popup' => function($data) {
+          return Config::ToolTips('payment-status');
+        }),
       );
 
     if (Projects::needDebitMandates($projectId)) {
