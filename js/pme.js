@@ -1061,13 +1061,17 @@ var PHPMYEDIT = PHPMYEDIT || {};
       if (self.hasClass('no-chosen')) {
         return;
       }
-      self.chosen({
+      var chosenOptions = {
         //width:'100%',
         inherit_select_classes:true,
         disable_search_threshold: 10,
         no_results_text: noRes,
         allow_single_deselect: self.hasClass('allow-empty')
-      });
+      };
+      if (self.hasClass('chosen-width-auto')) {
+        chosenOptions.width = 'auto';
+      }
+      self.chosen(chosenOptions);
     });
 
     // Set title explicitly
