@@ -198,6 +198,23 @@ the event.'),
 
         'ownclouddev-link' => '',
 
+        'payment-status' => L::t(
+          'Status of outstanding project fees:
+<dl>
+<dt>%s</dt>
+<dd>Project-fees are just entirely outstanding yet.</dd>
+<dt>%s</dt>
+<dd>Awaiting execution of direct debit transfer for deposit.</dd>
+<dt>%s</dt>
+<dd>Depsosit payment has been received.</dd>
+<dt>%s</dt>
+<dd>Awaiting execution of direct debit for final payment.</dd>
+<dt>%s</dt>
+<dd>Final payment has been received.</dd>
+</dl>',
+          array('&empty;', '&#9972;', '&#9684;', '&#9951;', '&#10004;')
+          ),
+
         'phpmyadmin-link' => '',
 
         'phpmyadminoc-link' => '',

@@ -3,6 +3,7 @@ musican-contact-tab
 musician-instrument-insurance
 musician-miscinfo-tab
 musician-orchestra-tab
+payment-status
 pme-export-choice
 pme-export-csv
 pme-export-excel
@@ -29,7 +30,7 @@ project-name
 project-personaldata-tab
 register-musician
 registration-mark
-section-leader-mar
+section-leader-mark
 transfer-instruments
 address-book-emails
 blog-acceptentry
