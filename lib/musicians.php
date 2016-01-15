@@ -400,7 +400,7 @@ make sure that the musicians are also automatically added to the
         'column' => 'Name',
         'description' => 'Name',
         'join' => '`PMEjoin'.($idx-1).'`.`ProjektId` = $join_table.`Id`',
-        'queryvalues' => $projectQueryValues,
+        'queryValues' => $projectQueryValues,
         ),
       'values2' => $projects,
       'valueGroups' => $groupedProjects

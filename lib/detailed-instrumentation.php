@@ -390,7 +390,7 @@ class DetailedInstrumentation
       unset($paymentStatusValues2['deposited']);
     }
 
-    $opts['fdd']['BezahlStatus'] = array(
+    $opts['fdd']['PaymentStatus'] = array(
       'name'    => $this->operation ? L::t("Payment Status") : '&euro; ??',
       'tab'     => array('id' => array('project')),
       'options' => 'LAVCPDF',
@@ -515,7 +515,7 @@ class DetailedInstrumentation
       'display|LF'  => array('popup' => 'data'),
       'css'      => array('postfix' => ' projects'),
       'sort' => true,
-      'values' => array('queryvalues' => $projectQueryValues),
+      'values' => array('queryValues' => $projectQueryValues),
       'values2' => $projects,
       'valueGroups' => $groupedProjects
       );
