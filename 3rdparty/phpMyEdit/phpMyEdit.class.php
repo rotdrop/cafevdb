@@ -285,7 +285,7 @@ class phpMyEdit
 	function misc_enabled()	  { return (stristr($this->options, 'M') &&
 										isset($this->miscphp) &&
 										$this->miscphp != '') ; }
-	function filter_enabled() { return stristr($this->options, 'F'); }
+	function filter_enabled() { return stristr($this->options, 'F') && $this->list_operation(); }
 	function view_enabled()	  { return stristr($this->options, 'V'); }
 	function copy_enabled()	  { return stristr($this->options, 'P') && $this->add_enabled(); }
 	function tabs_enabled()	  { return $this->display['tabs'] && count($this->tabs) > 0; }
@@ -301,7 +301,7 @@ class phpMyEdit
 	function delete_operation() { return $this->label_cmp($this->operation, 'Delete') && $this->delete_enabled(); }
 	function misc_operation()	{ return $this->label_cmp($this->operation, 'Misc')	  && $this->misc_enabled();	 }
 	function view_operation()	{ return $this->label_cmp($this->operation, 'View')	  && $this->view_enabled();	  }
-	function filter_operation() { return $this->fl && $this->filter_enabled() && $this->list_operation(); }
+	function filter_operation() { return $this->fl && $this->filter_enabled(); }
 	function list_operation()	{ /* covers also filtering page */ return ! $this->change_operation()
 			&& ! $this->add_operation()	   && ! $this->copy_operation()
 			&& ! $this->delete_operation() && ! $this->view_operation(); }
@@ -387,6 +387,9 @@ class phpMyEdit
 
 	function filtered($k) /* {{{ */
 	{
+		if (!$this->filter_enabled()) {
+			return false;
+		}
 		if (is_numeric($k)) {
 			$k = $this->fds[$k];
 		}
@@ -397,7 +400,7 @@ class phpMyEdit
 		if (! isset($options)) {
 			return true;
 		}
-		return ($this->filter_operation() && stristr($options, 'F'));
+		return stristr($options, 'F') !== false;
 	} /* }}} */
 
 	function debug_var($name, $val) /* {{{ */
@@ -616,103 +619,108 @@ class phpMyEdit
 
 	function set_values($field_num, $prepend = null, $append = null, $strict = false) /* {{{ */
 	{
+		$values = array();
+		$groups = null;
+
 		// allow for unconditional override
-		if (isset($this->fdd[$field_num]['values']['queryvalues'])) {
-			return (array) $prepend + (array) $this->fdd[$field_num]['values']['queryvalues'] + (array) $append;
-		} else {
-			return (array) $prepend + (array) $this->fdd[$field_num]['values2']
-				+ (isset($this->fdd[$field_num]['values']['table']) || $strict
-				   ? $this->set_values_from_table($field_num, $strict)
-				   : array())
-				+ (array) $append;
+		if (isset($this->fdd[$field_num]['values']['valueGroups'])) {
+			$groups = $this->fdd[$field_num]['values']['valueGroups'];
+		} else if (isset($this->fdd[$field_num]['valueGroups'])) {
+			$groups = $this->fdd[$field_num]['valueGroups'];
 		}
+		if (isset($this->fdd[$field_num]['values']['queryValues'])) {
+			$values = $this->fdd[$field_num]['values']['queryValues'];
+		} else if (isset($this->fdd[$field_num]['values']['table']) || $strict) {
+			$value_groups = $this->set_values_from_table($field_num, $strict);
+			if (empty($groups)) {
+				$groups = $value_groups['groups'];
+			}
+			$values = (array)$this->fdd[$field_num]['values2'] + (array)$value_groups['values'];
+		} else {
+			$values = (array)$this->fdd[$field_num]['values2'];
+		}
+
+		$values = (array)$prepend + (array)$values + (array)$append;
+
+		error_log('groups: '.print_r($groups, true));
+
+		return array('values' => $values, 'groups' => $groups);
 	} /* }}} */
 
 	function set_values_from_table($field_num, $strict = false) /* {{{ */
 	{
 		$db	   = &$this->fdd[$field_num]['values']['db'];
-		$table = $this->sd.$this->fdd[$field_num]['values']['table'].$this->ed;
-		$key   = &$this->fdd[$field_num]['values']['column'];
-		$desc  = &$this->fdd[$field_num]['values']['description'];
-		$dbp   = isset($db) ? $this->sd.$db.$this->ed.'.' : $this->dbp;
+		$table = $this->fdd[$field_num]['values']['table'];
+		if (empty($table)) {
+			$table = $this->tb;
+		}
+		$table   = $this->sd.$table.$this->ed;
+		$key     = &$this->fdd[$field_num]['values']['column'];
+		$desc    = &$this->fdd[$field_num]['values']['description'];
+		$filters = &$this->fdd[$field_num]['values']['filters'];
+		$orderby = &$this->fdd[$field_num]['values']['orderby'];
+		$groups  = &$this->fdd[$field_num]['values']['groups'];
+		$dbp     = isset($db) ? $this->sd.$db.$this->ed.'.' : $this->dbp;
+
 		$qparts['type'] = 'select';
 
-		$derived = false;
-		if (is_array($this->fdd[$field_num]['values']['table'])) {
-			if ($this->fdd[$field_num]['values']['table']['kind'] == 'derived') {
-				$derived = true;
+		$subs = array(
+			'main_table'  => $this->tb,
+			'record_id'   => $this->rec, // may be useful for change oggp.
+			'table'		  => $table,
+			'column'	  => $key,
+			'description' => $desc);
+
+		$qparts['select'] = 'DISTINCT '.$table.'.'.$this->sd.$key.$this->ed;
+		if ($desc && is_array($desc) && is_array($desc['columns'])) {
+			$qparts['select'] .= ',CONCAT('; // )
+			$num_cols = sizeof($desc['columns']);
+			if (isset($desc['divs'][-1])) {
+				$qparts['select'] .= '"'.addslashes($desc['divs'][-1]).'",';
 			}
+			foreach ($desc['columns'] as $key => $val) {
+				if ($val) {
+					$qparts['select'] .= 'IFNULL(CAST('.$this->sd.$val.$this->ed.' AS CHAR),"")';
+					if ($desc['divs'][$key]) {
+						$qparts['select'] .= ',"'.addslashes($desc['divs'][$key]).'"';
+					}
+					$qparts['select'] .= ',';
+				}
+			}
+			$qparts['select']{strlen($qparts['select']) - 1} = ')';
+			$qparts['select'] .= ' AS '.$this->sd.'PMEalias'.$field_num.$this->ed;
+			$qparts['orderby'] = $this->sd.'PMEalias'.$field_num.$this->ed;
+		} else if ($desc && is_array($desc)) {
+			// TODO
+		} else if ($desc) {
+			$qparts['select'] .= ','.$table.'.'.$this->sd.$desc.$this->ed;
+			$qparts['orderby'] = $this->sd.$desc.$this->ed;
+		} else if ($key) {
+			$qparts['orderby'] = $this->sd.$key.$this->ed;
+		}
+		$qparts['from'] = $dbp.$table;
+		if (!empty($filters)) {
+			$qparts['where'] = $this->substituteVars($filters, $subs);
+		}
+		if (!empty($orderby)) {
+			$qparts['orderby'] = $this->substituteVars($orderby, $subs);
+		} else if (!empty($groups)) {
+			$qparts['orderby'] = $table.'.'.$this->sd.$groups.$this->ed.' ASC';
+		}
+		if (!empty($groups)) {
+			$qparts['select'] .= ','.$table.'.'.$this->sd.$groups.$this->ed;
 		}
 
-		if ($derived && false) {
-			// Howto handle that ... work around for me has been hacked.
-			$table = '(' .$this->fdd[$field_num]['values']['table']['sql'].' )';
-			$alias = $this->sd.'derived'.$field_num.$this->ed;
-			$qparts['select'] = 'DISTINCT '.$alias.'.'.$this->sd.$key.$this->ed;
-			if ($desc && is_array($desc) && is_array($desc['columns'])) {
-				// ????
-			} else if ($desc && is_array($desc)) {
-				// ????
-			} else if ($desc) {
-				$qparts['select'] .= ','.$alias.'.'.$this->sd.$desc.$this->ed;
-				$qparts['orderby'] = $this->sd.$desc.$this->ed;
-			} else if ($key) {
-				$qparts['orderby'] = $this->sd.$key.$this->ed;
-			}
-			$qparts['from'] = $table.' AS '.$alias;
-		} else if ($table != $this->sd.$this->ed) {
-			$qparts['select'] = 'DISTINCT '.$table.'.'.$this->sd.$key.$this->ed;
-			if ($desc && is_array($desc) && is_array($desc['columns'])) {
-				$qparts['select'] .= ',CONCAT('; // )
-				$num_cols = sizeof($desc['columns']);
-				if (isset($desc['divs'][-1])) {
-					$qparts['select'] .= '"'.addslashes($desc['divs'][-1]).'",';
-				}
-				foreach ($desc['columns'] as $key => $val) {
-					if ($val) {
-						$qparts['select'] .= 'IFNULL(CAST('.$this->sd.$val.$this->ed.' AS CHAR),"")';
-						if ($desc['divs'][$key]) {
-							$qparts['select'] .= ',"'.addslashes($desc['divs'][$key]).'"';
-						}
-						$qparts['select'] .= ',';
-					}
-				}
-				$qparts['select']{strlen($qparts['select']) - 1} = ')';
-				$qparts['select'] .= ' AS '.$this->sd.'PMEalias'.$field_num.$this->ed;
-				$qparts['orderby'] = $this->sd.'PMEalias'.$field_num.$this->ed;
-			} else if ($desc && is_array($desc)) {
-				// TODO
-			} else if ($desc) {
-				$qparts['select'] .= ','.$table.'.'.$this->sd.$desc.$this->ed;
-				$qparts['orderby'] = $this->sd.$desc.$this->ed;
-			} else if ($key) {
-				$qparts['orderby'] = $this->sd.$key.$this->ed;
-			}
-			$qparts['from'] = $dbp.$table;
-			$ar = array(
-				'main_table'  => $this->tb,
-				'record_id'   => $this->rec, // may be useful for change op.
-				'table'		  => $table,
-				'column'	  => $key,
-				'description' => $desc);
-			$filters = $this->fdd[$field_num]['values']['filters'];
-			$qparts['where'] = $this->substituteVars($filters, $ar);
-			if ($this->fdd[$field_num]['values']['orderby']) {
-				$qparts['orderby'] = $this->substituteVars($this->fdd[$field_num]['values']['orderby'], $ar);
-			}
-		} else { /* simple value extraction */
-			$key = &$this->fds[$field_num];
-			$this->virtual($field_num) && $key = $this->fqn($field_num);
-			$qparts['select']  = 'DISTINCT '.$this->sd.$key.$this->ed.' AS PMEkey';
-			$qparts['orderby'] = 'PMEkey';
-			$qparts['from']	   = $this->dbp.$this->sd.$this->tb.$this->ed;
-		}
-		$values = array();
 		$res	= $this->myquery($this->get_SQL_query($qparts), __LINE__);
+		$values = array();
+		$grps   = array();
 		while ($row = $this->sql_fetch($res, 'n')) {
 			$values[$row[0]] = $desc ? $row[1] : $row[0];
+			if (!empty($groups)) {
+				$grps[$row[0]] = $row[2];
+			}
 		}
-		return $values;
+		return array('values' => $values, 'groups' => $grps);
 	} /* }}} */
 
 	function fqn($field, $dont_desc = false, $dont_cols = false) /* {{{ */
@@ -1115,7 +1123,7 @@ class phpMyEdit
 					// XXX: $dont_desc and $dont_cols hack
 					// cH: what is this???
 					$dont_desc = isset($this->fdd[$k]['values']['description']);
-					if (isset($this->fdd[$k]['values']['queryvalues']) ||
+					if (isset($this->fdd[$k]['values']['queryValues']) ||
 						(isset($this->fdd[$k]['values']['forcedesc']) &&
 						 $this->fdd[$k]['values']['forcedesc'])) {
 						// override dont_desc hack, whatever that might be.
@@ -1497,8 +1505,9 @@ class phpMyEdit
 					echo include($php);
 				}
 			} elseif ($this->col_has_values($k)) {
-				$vals		= $this->set_values($k);
-				$groups     = $this->fdd[$k]['valueGroups'] ? $this->fdd[$k]['valueGroups'] : null;
+				$valgrp     = $this->set_values($k);
+				$vals		= $valgrp['values'];
+				$groups     = $valgrp['groups'];
 				$selected	= @$this->fdd[$k]['default'];
 				$multiple	= $this->col_has_multiple($k);
 				$readonly	= $this->disabledTag($k);
@@ -1664,8 +1673,12 @@ class phpMyEdit
 		 */
 		$multiValues = false;
 		$vals        = false;
+		$groups      = false;
+		$valgrp      = false;
 		if ($this->col_has_values($k)) {
-			$vals = $this->set_values($k);
+			$valgrp = $this->set_values($k);
+			$vals   = $valgrp['values'];
+			$groups = $valgrp['groups'];
 			$multiValues = count($vals) > 1;
 		}
 
@@ -1696,7 +1709,6 @@ class phpMyEdit
 			}
 		} elseif ($vals !== false &&
 			(stristr("MCOD", $this->fdd[$k]['select']) !== false || $multiValues)) {
-			$groups     = $this->fdd[$k]['valueGroups'] ? $this->fdd[$k]['valueGroups'] : null;
 			$multiple	= $this->col_has_multiple($k);
 			$readonly	= $this->disabledTag($k) || count($vals) == 0;
 			$strip_tags = true;
@@ -2988,7 +3000,7 @@ class phpMyEdit
 				$mi = $this->get_sys_cgi_var($li);
 			}
 			echo '<td class="',$css_class_name,'">';
-			if ($this->password($k)) {
+			if ($this->password($k) || !$this->filtered($k)) {
 				echo '&nbsp;';
 			} else if ($this->fdd[$fd]['select'] == 'D' ||
 					   $this->fdd[$fd]['select'] == 'M' ||
@@ -2997,8 +3009,9 @@ class phpMyEdit
 				// Multiple fields processing
 				// Default size is 2 and array required for values.
 				$from_table = ! $this->col_has_values($k) || isset($this->fdd[$k]['values']['table']);
-				$vals		= $this->set_values($k, array('*' => '*'), null, $from_table);
-				$groups     = $this->fdd[$fd]['valueGroups'] ? $this->fdd[$k]['valueGroups'] : null;
+				$valgrp		= $this->set_values($k, array('*' => '*'), null, $from_table);
+				$vals		= $valgrp['values'];
+				$groups     = $valgrp['groups'];
 				$selected	= $mi;
 				$negate     = count($selected) == 0 ? null : $mc; // reset if none selected
 				$negate_css_class_name = $this->getCSSclass('filter-negate', null, null, $css_postfix);
@@ -3017,9 +3030,7 @@ class phpMyEdit
 									   $selected, $multiple || true, $readonly, $strip_tags, $escape);
 				echo '</div>';
 			} elseif (($this->fdd[$fd]['select'] == 'N' ||
-					   $this->fdd[$fd]['select'] == 'T')
-					  &&
-					  $this->filtered($k)) {
+					   $this->fdd[$fd]['select'] == 'T')) {
 				$len_props = '';
 				$maxlen = intval($this->fdd[$k]['maxlen']);
 				//$maxlen > 0 || $maxlen = intval($this->sql_field_len($res, $fields["qf$k"]));
@@ -4333,7 +4344,7 @@ class phpMyEdit
 				$num_fields_displayed++;
 			}
 			if (is_array(@$this->fdd[$key]['values']) &&
-				!($this->fdd[$key]['values']['table'] || $this->fdd[$key]['values']['queryvalues'])) {
+				!($this->fdd[$key]['values']['table'] || $this->fdd[$key]['values']['queryValues'])) {
 				foreach ($this->fdd[$key]['values'] as $val) {
 					$this->fdd[$key]['values2'][$val] = $val;
 				}
