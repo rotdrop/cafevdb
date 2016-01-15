@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -99,13 +99,22 @@ namespace CAFEVDB {
                     Config::getSetting('memberTableId', -1));
       $tmpl->assign('executiveBoardTableId',
                     Config::getSetting('executiveBoardTableId', -1));
+      $tmpl->assign('userGroupMembers',
+                    \OC_Group::usersInGroup($group),
+                    array());
+      $tmpl->assign('userGroups',
+                    \OC_Group::getGroups(),
+                    array());
 
       $tmpl->assign('orchestra', Config::getValue('orchestra'));
 
       // musician ids of the officials
-      $tmpl->assign('presidentId', Config::getSetting('presidentId', -1));
-      $tmpl->assign('secretaryId', Config::getSetting('secretaryId', -1));
-      $tmpl->assign('treasurerId', Config::getSetting('treasurerId', -1));
+      foreach (array('president', 'secretary', 'treasurer') as $prefix) {
+        foreach (array('Id', 'UserId', 'GroupId') as $postfix) {
+          $official = $prefix.$postfix;
+          $tmpl->assign($official, Config::getSetting($official, -1));
+        }
+      }
 
       $tmpl->assign('dbserver', Config::getValue('dbserver'));
       $tmpl->assign('dbname', Config::getValue('dbname'));
