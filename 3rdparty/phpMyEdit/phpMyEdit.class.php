@@ -642,7 +642,7 @@ class phpMyEdit
 
 		$values = (array)$prepend + (array)$values + (array)$append;
 
-		error_log('groups: '.print_r($groups, true));
+		//error_log('groups: '.print_r($groups, true));
 
 		return array('values' => $values, 'groups' => $groups);
 	} /* }}} */
