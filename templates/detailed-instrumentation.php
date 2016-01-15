@@ -34,6 +34,7 @@ namespace CAFEVDB {
   $nav .= Navigation::pageControlElement('projectlabel', $navListItems, $table->projectName, $table->projectId);
   //$nav .= Navigation::pageControlElement('detailed', $navListItems, $table->projectName, $table->projectId);
   $nav .= Navigation::pageControlElement('projectinstruments', $navListItems, $table->projectName, $table->projectId);
+  $nav .= Navigation::pageControlElement('project-extra', $navListItems, $table->projectName, $table->projectId);
   if (Config::isTreasurer()) {
     $nav .= Navigation::pageControlElement('debitmandates', $navListItems, $table->projectName, $table->projectId);
   }
@@ -45,7 +46,6 @@ namespace CAFEVDB {
   $nav .= Navigation::pageControlElement('projects', $navListItems);
   $nav .= Navigation::pageControlElement('all', $navListItems);
   $nav .= Navigation::pageControlElement('instruments', $navListItems, $table->projectName, $table->projectId);
-  $nav .= Navigation::pageControlElement('project-extra', $navListItems, $table->projectName, $table->projectId);
 
   if ($navListItems) {
     $nav = '<ul id="navigation-list">'.$nav.'</ul>';
