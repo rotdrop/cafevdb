@@ -290,6 +290,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
                  container.css('height', 'auto');
                  $.fn.cafevTooltip.remove();
+                 container.off(); // remove ALL delegate handlers
                  container.html(data.data.contents);
                  container.find(pme.navigationSelector('reload')).addClass('loading');
 
@@ -631,12 +632,6 @@ var PHPMYEDIT = PHPMYEDIT || {};
              dialogHolder.html(data.data.contents);
              dialogHolder.data('AmbientContainer', tableOptions.AmbientContainerSelector);
 
-             dialogHolder.on('pmedialog:changed', function(event) {
-               //alert('Changed: '+containerCSSId);
-               tableOptions.modified = true;
-               return true; // let it bubble upwards ...
-             });
-
              dialogHolder.find(pme.navigationSelector('reload')).addClass('loading');
              if (tableOptions.ModalDialog) {
                CAFEVDB.modalizer(true);
@@ -700,10 +695,17 @@ var PHPMYEDIT = PHPMYEDIT || {};
                        dialogHolder.find(pme.navigationSelector('reload')).removeClass('loading');
                      });
                      CAFEVDB.pmeTweaks(dialogHolder);
+                     $.fn.cafevTooltip.remove();
                    });
                  });
 
-                 dialogHolder.on('resize', resizeHandler);
+                 // install delegate handlers on the widget s.t. we
+                 // can call .off() on the container
+                 dialogWidget.on('resize', containerSel, resizeHandler);
+                 dialogWidget.on('pmedialog:changed', containerSel, function(event) {
+                   tableOptions.modified = true;
+                   return true; // let it bubble upwards ... actually: only the widget and body ;)
+                 });
                },
                close: function(event) {
                  $.fn.cafevTooltip.remove();
