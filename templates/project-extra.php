@@ -22,17 +22,24 @@
 
 namespace CAFEVDB {
 
-  $table   = new Projects();
-  $css_pfx = Projects::CSS_PREFIX;
+  $table   = new ProjectExtra();
+  $css_pfx = ProjectExtra::CSS_PREFIX;
+  $project = $table->projectName;
+  $projectId = $table->projectId;
 
   $navListItems = $_['pageControls'] == 'listItems';
 
   $nav = '';
-  //$nav .= Navigation::pageControlElement('projectinstruments', $navListItems);
-  $nav .= Navigation::pageControlElement('all', $navListItems);
-  $nav .= Navigation::pageControlElement('projects', $navListItems);
-  $nav .= Navigation::pageControlElement('instruments', $navListItems);
-  $nav .= Navigation::pageControlElement('project-extra', $navListItems);
+  if ($project != '') {
+    $nav .= Navigation::pageControlElement('projectlabel', $navListItems, $project, $projectId);
+    $nav .= Navigation::pageControlElement('projects', $navListItems);
+    $nav .= Navigation::pageControlElement('instruments', $navListItems, $project, $projectId);
+    $nav .= Navigation::pageControlElement('detailed', $navListItems, $project, $projectId);
+  } else {
+    $nav .= Navigation::pageControlElement('projects', $navListItems);
+    $nav .= Navigation::pageControlElement('instruments', $navListItems);
+    $nav .= Navigation::pageControlElement('all', $navListItems);
+  }
 
   if ($navListItems) {
     $nav = '<ul id="navigation-list">'.$nav.'</ul>';

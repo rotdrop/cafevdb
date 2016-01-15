@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -759,8 +759,8 @@ td.pme-cell.musician-instruments {
 }
 
 td.pme-cell.projects {
-  width:20em;
-  max-width:20em;
+  width:15em;
+  max-width:15em;
   max-height:1em;
   white-space:nowrap;
   overflow:hidden;
@@ -768,6 +768,42 @@ td.pme-cell.projects {
 }
 
 td.pme-value.projects {
+  width:38em;
+  max-width:38em;
+  max-height:1em;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+td.pme-cell.user-groups {
+  width:12em;
+  max-width:12em;
+  max-height:1em;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+td.pme-value.user-groups {
+  width:38em;
+  max-width:38em;
+  max-height:1em;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+td.pme-cell.projectextra {
+  width:15em;
+  max-width:15em;
+  max-height:1em;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+td.pme-value.projectextra {
   width:38em;
   max-width:38em;
   max-height:1em;
@@ -836,6 +872,19 @@ table.pme-main div.pme-filter div.chosen-container {
 
 input.pme-filter {
   width:auto;
+  white-space:nowrap;
+}
+
+form.pme-form select.pme-comp-filter ~ input[type="text"].pme-filter {
+  width:auto;
+  white-space:nowrap;
+}
+
+form.pme-form input[type="text"].pme-filter {
+  box-sizing:border-box;
+  margin-left:0px;
+  margin-right:0px;
+  width:100%;
   white-space:nowrap;
 }
 

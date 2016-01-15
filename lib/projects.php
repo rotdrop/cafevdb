@@ -50,7 +50,7 @@ namespace CAFEVDB
       $projectName = Util::cgiValue('ProjectName', false);
       if ($projectId === false  || !$projectName) {
         $projectId = Util::getCGIRecordId();
-        $proejctName = false;
+        $projectName = false;
         if ($projectId >= 0) {
           $projectName = self::fetchName($projectId);
         }
@@ -360,7 +360,7 @@ namespace CAFEVDB
                                                               'cols' => 80),
                                           'sort'     => false,
                                           'escape'   => false,
-                                          //'display|LF' => array('popup' => 'tooltip'),
+                                          'display|LF' => array('popup' => 'data'),
                                           'tooltip'  => L::t('Comma separated list of extra-fields, e.g.
 <blockquote>
   SingleRoom:1:TooltipSingleRoom,Fee:2:TooltipForFee
@@ -1247,8 +1247,18 @@ __EOT__;
 
     /**Fetch the list of projects from the data base as a short id=>name
      * field.
+     *
+     * @param[in] mixed $handle Database handle, maybe false
+     *
+     * @param[in] bool $year Whether to include the year.
+     *
+     * @param[in] bool $newestFirst Whether to sort for most recent
+     * years first.
+     *
+     * @return array('Id', 'Name', 'Jahr');
+     *
      */
-    public static function fetchProjects($handle = false, $year = false)
+    public static function fetchProjects($handle = false, $year = false, $newestFirst = false)
     {
       $projects = array();
 
@@ -1261,7 +1271,11 @@ __EOT__;
       $query = "SELECT `Id`,`Name`".($year === true ? ",`Jahr`" : "");
       $query .= " FROM `Projekte` WHERE 1 ORDER BY ";
       if ($year === true) {
-        $query .= "`Jahr` ASC, `Name` ASC";
+        if ($newestFirst) {
+          $query .= "`Jahr` DESC, `Name` ASC";
+        } else {
+          $query .= "`Jahr` ASC, `Name` ASC";
+        }
       } else {
         $query .= "`Name` ASC";
       }
@@ -2179,9 +2193,9 @@ __EOT__;
         'Anzahlung' => array('table' => 'Besetzungen',
                              'column' => true,
                              'join' => array('type' => 'INNER')),
-        'BezahlStatus' => array('table' => 'Besetzungen',
-                                'column' => true,
-                                'join' => array('type' => 'INNER')),
+        'PaymentStatus' => array('table' => 'Besetzungen',
+                                 'column' => 'BezahlStatus',
+                                 'join' => array('type' => 'INNER')),
         'ProjectRemarks' => array('table' => 'Besetzungen',
                                   'column' => 'Bemerkungen',
                                   'join' => array('type' => 'INNER'))

@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -118,6 +118,68 @@ $(document).ready(function() {
 
     PHPMYEDIT.addTableLoadCallback('Instruments', {
         callback: function(selector, parameters, resizeCB) {
+            resizeCB();
+        },
+        context: CAFEVDB,
+        parameters: []
+    });
+
+    PHPMYEDIT.addTableLoadCallback('ProjectExtra', {
+        callback: function(selector, parameters, resizeCB) {
+
+            if (parameters.reason != 'dialogOpen') {
+                resizeCB();
+                return;
+            }
+
+            var container = $(selector);
+
+            // When a reader-group is removed, we also deselect it from the
+            // writers. This -- of course -- only works if initially
+            // the readers and writers list is in a sane state ;)
+            container.on('change', 'select.readers', function(event) {
+                var self = $(this);
+
+                var changed = false;
+                var writers = container.find('select.writers');
+                self.find('option').not(':selected').each(function() {
+                    var writer = writers.find('option[value="'+this.value+'"]');
+                    if (writer.prop('selected')) {
+                        writer.prop('selected', false);
+                        changed = true;
+                    }
+                });
+                if (changed) {
+                    writers.trigger('chosen:updated');
+                }
+                return false;
+            });
+
+            // When a writer-group is added, then add it to the
+            // readers as well ;)
+            container.on('change', 'select.writers', function(event) {
+                var self = $(this);
+
+                var changed = false;
+                var readers = container.find('select.readers');
+                self.find('option:selected').each(function() {
+                    var reader = readers.find('option[value="'+this.value+'"]');
+                    if (!reader.prop('selected')) {
+                        reader.prop('selected', true);
+                        changed = true;
+                    }
+                });
+                if (changed) {
+                    readers.trigger('chosen:updated');
+                }
+                return false;
+            });
+
+            container.on('chosen:update', 'select.writers, select.readers', function(event) {
+                resizeCB();
+                return false;
+            });
+
             resizeCB();
         },
         context: CAFEVDB,
