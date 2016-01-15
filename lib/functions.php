@@ -936,6 +936,17 @@ __EOT__;
       return $result;
     }
 
+    /**Simple select option array from flat value array. */
+    public static function simpleSelectOptions($options, $selected = null)
+    {
+      $optionDescription = array();
+      foreach ($options as $option) {
+        $optionDescription[] = array('name'  => $option,
+                                     'value' => $option,
+                                     'flags' => ($selected === $option ? self::SELECTED : 0));
+      }
+      return self::selectOptions($optionDescription);
+    }
 
     /**Recursively emit hidden input elements to represent the given
      * data. $value may be a nested array.
@@ -1342,6 +1353,18 @@ __EOT__;
 </form>
 
 __EOT__;
+        }
+        break;
+
+      case 'project-extra':
+        $value = L::t("Project Extra-Fields");
+        $title = L::t("Add additional data-fields to the instrumenation table for the project.");
+        if ($asListItem) {
+          $year = date("Y") - 1;
+          $post = array('ProjectExtraFields' => $value,
+                        'Template' => 'project-extra',
+                        'ProjectName' => $projectName,
+                        'ProjectId' => $projectId);
         }
         break;
 
@@ -1763,8 +1786,14 @@ __EOT__;
     }
 
     // Extract set or enum keys
-    public static function multiKeys($table, $column, $handle)
+    public static function multiKeys($table, $column, $handle = false)
     {
+      $ownConnection = $handle === false;
+      if ($ownConnection) {
+        Config::init();
+        $handle = self::connect(Config::$pmeopts);
+      }
+
       // Build SQL Query
       $query = "SHOW COLUMNS FROM $table LIKE '$column'";
 
@@ -1779,6 +1808,10 @@ __EOT__;
       } elseif (strcasecmp(substr($set,0,4),'enum') == 0) {
         $settype = 'enum';
       } else {
+        $settype = 'column';
+      }
+
+      if ($settype === 'column') {
         // fetch all values
         $query = "SELECT DISTINCT `".$column."` FROM `".$table."` WHERE 1";
         $result = mySQL::query($query, $handle) or die("Couldn't execute query");
@@ -1786,11 +1819,17 @@ __EOT__;
         while ($line = mySQL::fetch($result)) {
           $values[] = $line[$column];
         }
-        return $values;
+      } else {
+        // enum of set
+        $set = substr($set,strlen($settype)+2,strlen($set)-strlen($settype)-strlen("();")-1); // Remove "set(" at start and ");" at end
+        $values = preg_split("/','/",$set); // Split into an array
       }
-      $set = substr($set,strlen($settype)+2,strlen($set)-strlen($settype)-strlen("();")-1); // Remove "set(" at start and ");" at end
 
-      return preg_split("/','/",$set); // Split into an array
+      if ($ownConnection) {
+        self::close($handle);
+      }
+
+      return $values;
     }
 
     /**Generate a select for a join from a descriptive array structure.
@@ -2025,6 +2064,52 @@ __EOT__;
       return $result;
     }
 
+    /**Convenience function: fetch one row of a table.
+     *
+     * @param[in] $table The table to fetch data from.
+     *
+     * @param[in] $row The row name.
+     *
+     * @param[in] $where The conditions (excluding the WHERE keyword)
+     *
+     * @param[in] $handle Data-base connection, as returned by
+     * mySQL::open(). If null, then a new connection is opened.
+     *
+     * @param[in] $die Die or not on error.
+     *
+     * @param[in] $silent Suppress some diagnostic messages on error.
+     *
+     * @return An array with all matching rows. Return false in case
+     * of error.
+     */
+    public static function fetchRow($table, $row, $where = '1', $handle = null,
+                                    $die = true, $silent = false)
+    {
+      $query = "SELECT `".$row."` FROM `".$table."` WHERE (".$where.")";
+
+      $ownConnection = $handle === false;
+      if ($ownConnection) {
+        Config::init();
+        $handle = self::connect(Config::$pmeopts);
+      }
+
+      $qResult = self::query($query, $handle);
+      if ($qResult !== false) {
+        $result = array();
+        while ($qRow = self::fetch($qResult)) {
+          $result[] = $qRow[$row];
+        }
+      } else {
+        $result = false;
+      }
+
+      if ($ownConnection) {
+        self::close($handle);
+      }
+
+      return $result;
+    }
+
     /**"Touch" the last-modified time-stamp, e.g. after updating data
      * not directly stored in the projects table.
      */
@@ -2146,6 +2231,77 @@ __EOT__;
       }
 
       $query = "SELECT ".$select." FROM `".$table."` ".$cond;
+
+      $queryRes = self::query($query, $handle);
+      $row = array();
+      if ($queryRes !== false &&
+          self::numRows($queryRes) == 1 &&
+          ($row = self::fetch($queryRes, MYSQL_NUM)) &&
+          count($row) == 1) {
+        $result = $row[0];
+
+        /* \OCP\Util::writeLog(Config::APP_NAME, */
+        /*                     __METHOD__.': '. 'result: ' . (string)$result, */
+        /*                     \OCP\Util::DEBUG); */
+
+      } else {
+        \OCP\Util::writeLog(Config::APP_NAME,
+                            __METHOD__.': '. 'query: ' . $query,
+                            \OCP\Util::DEBUG);
+        \OCP\Util::writeLog(Config::APP_NAME,
+                            __METHOD__ . ': ' .
+                            'query failed: ' .
+                            'result: ' . ($queryRes !== false) . ' ' .
+                            'rows: ' . ($queryRes !== false ? self::numRows($queryRes) : -1) . ' ' .
+                            'row: ' . print_r($row, true),
+                            \OCP\Util::DEBUG);
+      }
+
+      if ($ownConnection) {
+        self::close($handle);
+      }
+
+      return $result;
+    }
+
+    /**Convenience function, select the next free hole from an integral column.
+     *
+     * @param[in] string $table The name of the table.
+     *
+     * @param[in] string $col The name of the integer column.
+     *
+     * @param[in] string $cond "WHERE" conditions, or sort modifyers,
+     * if applicable. Defaults to "WHERE 1".
+     *
+     * @param[in] mixed $handle Database handle or false.
+     *
+     * @return It is assumed that the function applied yields a single
+     * result value. In case of success, this value is the result,
+     * otherwise @c false is returned.
+     */
+    public static function selectFirstHoleFromTable($table, $col, $cond = "WHERE 1", $handle = false)
+    {
+      $result = false;
+
+      $ownConnection = $handle === false;
+      if ($ownConnection) {
+        Config::init();
+        $handle = self::connect(Config::$pmeopts);
+      }
+
+      if (!$cond) {
+        $cond = "WHERE 1";
+      }
+
+      $cond1 = str_replace($table, 't1', $cond);
+      $cond2 = str_replace($table, 't2', $cond);
+
+      $query = "SELECT MIN(t1.`".$col."`)+1 FROM `".$table."` t1
+  WHERE
+   (".$cond1.")
+   AND
+   NOT EXISTS (SELECT t2.`".$col."` FROM `".$table."` t2
+                 WHERE (".$cond2.") AND t2.`".$col."` = t1.`".$col."`+1)";
 
       $queryRes = self::query($query, $handle);
       $row = array();
