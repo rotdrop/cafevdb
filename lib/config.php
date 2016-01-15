@@ -78,8 +78,14 @@ sourcecode
 sourcedocs
 ownclouddev
 presidentId
+presidentUserId
+presidentUserGroup
 secretaryId
+secretaryUserId
+secretaryUserGroup
 treasurerId
+treasurerUserId
+treasurerUserGroup
 streetAddressName01
 streetAddressName02
 streetAddressStreet
@@ -147,13 +153,15 @@ redaxoRehearsalsModule
       return preg_split('/\s+/', trim(self::CFG_KEYS));
     }
 
-    public static function inGroup($user = null)
+    public static function inGroup($user = null, $group = null)
     {
       if (!$user) {
         $user = \OC_User::getUser();
       }
-      $group = self::getAppValue('usergroup', '');
-      return $group != '' && \OC_Group::inGroup($user, $group);
+      if (empty($group)) {
+        $group = self::getAppValue('usergroup', '');
+      }
+      return !empty($group) && \OC_Group::inGroup($user, $group);
     }
 
     public static function loginListener($params)
@@ -742,40 +750,76 @@ redaxoRehearsalsModule
       return strtolower($ocName) == strtolower($dbName);
     }
 
-    /**Return true if the logged in user is the treasurer. We do this
-     * by matching the real name of the logged in user.
-     */
+    /**Return true if the logged in user is the treasurer.*/
     static public function isTreasurer($uid = null)
     {
       $musicianId = Config::getSetting('treasurerId', -1);
       if ($musicianId == -1) {
         return false;
       }
-      return self::matchDisplayName($musicianId);
+      $userId = Config::getSetting('treasurerUserId', null);
+      return self::inGroup($userId);
     }
 
-    /**Return true if the logged in user is the secretary. We do this
-     * by matching the real name of the logged in user.
-     */
+    /**Return true if the logged in user is the secretary.*/
     static public function isSecretary($uid = null)
     {
       $musicianId = Config::getSetting('secretaryId', -1);
       if ($musicianId == -1) {
         return false;
       }
-      return self::matchDisplayName($musicianId);
+      $userId = Config::getSetting('secretaryUserId', null);
+      return self::inGroup($userId);
     }
 
-    /**Return true if the logged in user is the president. We do this
-     * by matching the real name of the logged in user.
-     */
+    /**Return true if the logged in user is the president.*/
     static public function isPresident($uid = null)
     {
       $musicianId = Config::getSetting('presidentId', -1);
       if ($musicianId == -1) {
         return false;
       }
-      return self::matchDisplayName($musicianId);
+      $userId = Config::getSetting('presidentUserId', null);
+      return self::inGroup($userId);
+    }
+
+    /**Return true if the logged in user is in the treasurer group. */
+    static public function inTreasurerGroup($uid = null)
+    {
+      if (self::isTreasurer($uid)) {
+        return true; // ;)
+      }
+      $gid = Config::getSetting('treasurerGroupId', null);
+      if (empty($gid)) {
+        return false;
+      }
+      return self::inGroup($uid, $gid);
+    }
+
+    /**Return true if the logged in user is in the secretary group. */
+    static public function inSecretaryGroup($uid = null)
+    {
+      if (self::isSecretary($uid)) {
+        return true; // ;)
+      }
+      $gid = Config::getSetting('secretaryGroupId', null);
+      if (empty($gid)) {
+        return false;
+      }
+      return self::inGroup($uid, $gid);
+    }
+
+    /**Return true if the logged in user is in the president group. */
+    static public function inPresidentGroup($uid = null)
+    {
+      if (self::isPresident($uid)) {
+        return true; // ;)
+      }
+      $gid = Config::getSetting('presidentGroupId', null);
+      if (empty($gid)) {
+        return false;
+      }
+      return self::inGroup($uid, $gid);
     }
 
     static public function getValue($key, $strict = false)

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2015 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -121,7 +121,7 @@ namespace CAFEVDB {
                title="<?php echo L::t('Creditor identifier of the orchestra'); ?>"
                placeholder="<?php echo L::t('orchestra\'s CI'); ?>"/><br/>
       </fieldset>
-    <fieldset <?php echo $off; ?> >
+    <fieldset <?php echo $off; ?> class="chosen-dropup">
       <legend><?php echo L::t('Executive board and club members'); ?></legend>
       <input class="specialMemberTables" type="text"
              id="memberTable"
@@ -148,19 +148,19 @@ namespace CAFEVDB {
       <select id="presidentSelect"
               data-placeholder="<?php echo L::t('Select the President'); ?>"
               title="<?php echo L::t('President of the orchestra'); ?>"
-              name="presidentId"
-              class="executive-board-ids tooltip-top">
-        <option></option>
-        <?php
-        echo Navigation::selectOptions(
-          Projects::participantOptions($_['executiveBoardTableId'], $_['executiveBoardTable'], $_['presidentId']));
-        ?>
+                name="presidentId"
+              class="executive-board-ids tooltip-left">
+          <option></option>
+          <?php
+          echo Navigation::selectOptions(
+            Projects::participantOptions($_['executiveBoardTableId'], $_['executiveBoardTable'], $_['presidentId']));
+          ?>
       </select>
       <select id="secretarySelect"
               data-placeholder="<?php echo L::t('Select the Secretary'); ?>"
               title="<?php echo L::t('Secretary of the orchestra'); ?>"
               name="secretaryId"
-              class="executive-board-ids tooltip-top">
+              class="executive-board-ids tooltip-left">
         <option></option>
         <?php
         echo Navigation::selectOptions(
@@ -171,18 +171,84 @@ namespace CAFEVDB {
               data-placeholder="<?php echo L::t('Select the Treasurer'); ?>"
               title="<?php echo L::t('Treasurer of the orchestra'); ?>"
               name="treasurerId"
-              class="executive-board-ids tooltip-top">
+              class="executive-board-ids tooltip-left">
         <option></option>
         <?php
         echo Navigation::selectOptions(
           Projects::participantOptions($_['executiveBoardTableId'], $_['executiveBoardTable'], $_['treasurerId']));
         ?>
       </select>
+      <br/>
+      <select id="presidentUserSelect"
+              data-placeholder="<?php echo L::t('OwnCloud President-User'); ?>"
+              title="<?php echo L::t('OwnCloud user-id of the president of the orchestra'); ?>"
+              name="presidentUserId"
+              class="executive-board-ids tooltip-left">
+        <option></option>
+        <?php
+        echo Navigation::simpleSelectOptions($_['userGroupMembers'], $_['presidentUserId']);
+        ?>
+      </select>
+      <select id="secretaryUserSelect"
+              data-placeholder="<?php echo L::t('OwnCloud Secretary-User'); ?>"
+              title="<?php echo L::t('OwnCloud user-id of the secretary of the orchestra'); ?>"
+              name="secretaryUserId"
+              class="executive-board-ids tooltip-left">
+        <option></option>
+        <?php
+        echo Navigation::simpleSelectOptions($_['userGroupMembers'], $_['secretaryUserId']);
+        ?>
+      </select>
+      <select id="treasurerUserSelect"
+              data-placeholder="<?php echo L::t('OwnCloud Treasurer-User'); ?>"
+              title="<?php echo L::t('OwnCloud user-id of the treasurer of the orchestra'); ?>"
+              name="treasurerUserId"
+              class="executive-board-ids tooltip-left">
+        <option></option>
+        <?php
+        echo Navigation::simpleSelectOptions($_['userGroupMembers'], $_['treasurerUserId']);
+        ?>
+      </select>
+      <br/>
+      <select id="presidentGroupSelect"
+              data-placeholder="<?php echo L::t('OwnCloud President-Group'); ?>"
+              title="<?php echo L::t('OwnCloud group-id of the president of the orchestra'); ?>"
+              name="presidentGroupId"
+              class="executive-board-ids tooltip-left">
+        <option></option>
+        <?php
+        echo Navigation::simpleSelectOptions($_['userGroups'], $_['presidentGroupId']);
+        ?>
+      </select>
+      <select id="secretaryGroupSelect"
+              data-placeholder="<?php echo L::t('OwnCloud Secretary-Group'); ?>"
+              title="<?php echo L::t('OwnCloud group-id of the secretary of the orchestra'); ?>"
+              name="secretaryGroupId"
+              class="executive-board-ids tooltip-left">
+        <option></option>
+        <?php
+        echo Navigation::simpleSelectOptions($_['userGroups'], $_['secretaryGroupId']);
+        ?>
+      </select>
+      <select id="treasurerGroupSelect"
+              data-placeholder="<?php echo L::t('OwnCloud Treasurer-Group'); ?>"
+              title="<?php echo L::t('OwnCloud user-id of the treasurer of the orchestra'); ?>"
+              name="treasurerGroupId"
+              class="executive-board-ids tooltip-left">
+        <option></option>
+        <?php
+        echo Navigation::simpleSelectOptions($_['userGroups'], $_['treasurerGroupId']);
+        ?>
+      </select>
+      <br/>
     </fieldset>
-    <span class="statusmessage" id="msg"></span>
-    <span class="statusmessage" id="suggestion"></span>
+    <div class="statuscontainer">
+      <span class="statusmessage" id="msg"></span>
+      <span class="statusmessage" id="suggestion"></span>
+      &nbsp;
+    </div>
   </form>
-</div>
+  </div>
 <?php
 } // namespace CAFEVDB
 ?>

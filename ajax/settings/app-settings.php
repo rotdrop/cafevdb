@@ -947,27 +947,30 @@ namespace CAFEVDB {
       }
     }
 
-    $executiveBoardMembers = array('presidentId', 'secretaryId', 'treasurerId');
-    foreach ($executiveBoardMembers as $official) {
-      if (isset($_POST[$official])) {
-        $value = $_POST[$official];
+    $executiveBoardMembers = array('president', 'secretary', 'treasurer');
+    foreach ($executiveBoardMembers as $prefix) {
+      foreach(array('Id', 'UserId', 'GroupId') as $postfix) {
+        $official = $prefix.$postfix;
+        if (isset($_POST[$official])) {
+          $value = $_POST[$official];
 
-        if (Musicians::fetchName($value) === false) {
-          \OC_JSON::error(
-            array(
-              "data" => array(
-                "message" => L::t("Musician with id %d does not seem to exist",
-                                  array($value)))));
-          return;
+          if (Musicians::fetchName($value) === false) {
+            \OC_JSON::error(
+              array(
+                "data" => array(
+                  "message" => L::t("Musician with id %d does not seem to exist",
+                                    array($value)))));
+            return;
+          }
+
+          Config::setValue($official, $value);
+
+          \OC_JSON::success(
+            array("data" => array(
+                    'message' => L::t("Value for `%s' set to `%s'",
+                                      array($official, $value)))));
+          return true;
         }
-
-        Config::setValue($official, $value);
-
-        \OC_JSON::success(
-          array("data" => array(
-                  'message' => L::t("Value for `%s' set to `%s'",
-                                    array($official, $value)))));
-        return true;
       }
     }
 
