@@ -167,14 +167,32 @@ namespace CAFEVDB
       //$opts['navigation'] = 'DB';
 
       // Display special page elements
-      $opts['display'] =  array_merge($opts['display'],
-                                      array(
-                                        'form'  => true,
-                                        //'query' => true,
-                                        'sort'  => true,
-                                        'time'  => true,
-                                        'tabs'  => false
-                                        ));
+      $opts['display'] =  array_merge(
+        $opts['display'],
+        array(
+          'form'  => true,
+          //'query' => true,
+          'sort'  => true,
+          'time'  => true,
+          'tabs'  => array(
+            array('id' => 'definition',
+                  'default' => true,
+                  'tooltip' => L::t('Definition of name, type, allowed values, default values.'),
+                  'name' => L::t('Defintion')),
+            array('id' => 'display',
+                  'tooltip' => L::t('Ordering, linking to and defining newe tabs, '.
+                                    'definition of tooltips (help text).'),
+                  'name' => L::t('Display')),
+            array('id' => 'advanced',
+                  'toolttip' => L::t('Advanced settings and information, restricted access, '.
+                                     'encryption, information about internal indexing.'),
+                  'name' => L::t('Advanced')),
+            array('id' => 'tab-all',
+                  'tooltip' => Config::toolTips('pme-showall-tab'),
+                  'name' => L::t('Display all columns'))
+            )
+          )
+        );
 
       /* Field definitions
 
@@ -216,15 +234,6 @@ namespace CAFEVDB
          descriptions fields are also possible. Check documentation for this.
       */
 
-      $opts['fdd']['Id'] = array(
-        'name'     => 'Id',
-        'select'   => 'T',
-        'options'  => '', // auto increment
-        'maxlen'   => 11,
-        'default'  => '0',
-        'sort'     => true,
-        );
-
       /************************************************************************
        *
        * Bug: the following is just too complicated.
@@ -250,6 +259,7 @@ namespace CAFEVDB
       }
 
       $opts['fdd']['ProjectId'] = array(
+        'tab'      => array('id' => 'tab-all'),
         'name'      => L::t('Project-Name'),
         'css' => array('postfix' => ' project-extra-project-name'),
         'options'   => ($projectMode ? 'VCDAPR' : 'FLVCDAP'),
@@ -278,19 +288,8 @@ namespace CAFEVDB
           ),
         );
 
-      // will hide this later
-      $opts['fdd']['FieldIndex'] = array(
-        'name' => L::t('Field-Index'),
-        'css' => array('postfix' => ' field-index'),
-        // 'options' => 'VCDAPR',
-        'selet' => 'N',
-        'maxlen' => 5,
-        'sort' => true,
-        'input' => 'R',
-        'tooltip' => Config::toolTips('extra-fields-field-index'),
-        );
-
       $opts['fdd']['Name'] = array(
+        'tab'      => array('id' => 'tab-all'),
         'name' => L::t('Field-Name'),
         'css' => array('postfix' => ' field-name'),
         'select' => 'T',
@@ -298,15 +297,6 @@ namespace CAFEVDB
         'size' => 30,
         'sort' => true,
         'tooltip' => Config::toolTips('extra-fields-field-name'),
-        );
-
-      $opts['fdd']['DisplayOrder'] = array(
-        'name' => L::t('Display-Order'),
-        'css' => array('postfix' => ' display-order'),
-        'select' => 'N',
-        'maxlen' => 5,
-        'sort' => true,
-        'tooltip' => Config::toolTips('extra-fields-display-order'),
         );
 
       // TODO: maybe get rid of enums and sets alltogether
@@ -323,12 +313,13 @@ namespace CAFEVDB
       }
 
       $opts['fdd']['Type'] = array(
+        'tab'      => array('id' => 'definition'),
         'name' => L::t('Type'),
         'css' => array('postfix' => ' field-type'),
         'size' => 30,
         'maxlen' => 24,
         'select' => 'D',
-        'sort' => false,
+        'sort' => true,
         'values2' => $typeValues,
         'valueGroups' => $typeGroups,
         'tooltip' => Config::toolTips('extra-fields-type'),
@@ -397,6 +388,30 @@ namespace CAFEVDB
         'tooltip' => Config::toolTips('extra-fields-default-single-value'),
         );
 
+      $opts['fdd']['ToolTip'] = array(
+        'tab'      => array('id' => 'display'),
+        'name' => L::t('Tooltip'),
+        'css' => array('postfix' => ' extra-field-tooltip hide-subsequent-lines'),
+        'select' => 'T',
+        'textarea' => array('rows' => 5,
+                            'cols' => 30),
+        'maxlen' => 1024,
+        'size' => 30,
+        'sort' => true,
+        'display|LF' => array('popup' => 'data'),
+        'tooltip' => Config::toolTips('extra-fields-tooltip'),
+        );
+
+      $opts['fdd']['DisplayOrder'] = array(
+        'name' => L::t('Display-Order'),
+        'css' => array('postfix' => ' display-order'),
+        'select' => 'N',
+        'maxlen' => 5,
+        'sort' => true,
+        'align' => 'right',
+        'tooltip' => Config::toolTips('extra-fields-display-order'),
+        );
+
       $opts['fdd']['Tab'] = array(
         'name' => L::t('Table Tab'),
         'css' => array('postfix' => ' tab allow-empty'),
@@ -429,13 +444,40 @@ namespace CAFEVDB
           );
       }
 
+      // outside the expermode "if", this is the index!
+      $opts['fdd']['Id'] = array(
+        'tab'      => array('id' => 'advanced'),
+        'name'     => 'Id',
+        'select'   => 'T',
+        'options'  => 'LFAVCPDR', // auto increment
+        'maxlen'   => 11,
+        'align'    => 'right',
+        'default'  => '0',
+        'sort'     => true,
+        );
+
       if (Config::$expertmode) {
+
+        // will hide this later
+        $opts['fdd']['FieldIndex'] = array(
+          'tab' => array('id' => 'advanced'),
+          'name' => L::t('Field-Index'),
+          'css' => array('postfix' => ' field-index'),
+          // 'options' => 'VCDAPR',
+          'align'    => 'right',
+          'select' => 'N',
+          'maxlen' => 5,
+          'sort' => true,
+          'input' => 'R',
+          'tooltip' => Config::toolTips('extra-fields-field-index'),
+          );
 
         $opts['fdd']['Encrypted'] = array(
           'name' => L::t('Encrypted'),
           'css' => array('postfix' => ' encrypted'),
           'values2|CAP' => array(1 => ''), // empty label for simple checkbox
-          'values2|LVFD' => array(1 => L::t('true')),
+          'values2|LVFD' => array(1 => L::t('true'),
+                                  0 => L::t('false')),
           'default' => '',
           'select' => 'O',
           'maxlen' => 5,
@@ -506,7 +548,7 @@ namespace CAFEVDB
 
     public static function generateNumbers($handle = false)
     {
-      $start = microtime(true);
+      //$start = microtime(true);
       $result = false;
 
       $ownConnection = $handle === false;
@@ -541,12 +583,12 @@ namespace CAFEVDB
         mySQL::close($handle);
       }
 
-      $elapsed = microtime(true) - $start;
+      /* $elapsed = microtime(true) - $start; */
 
-      error_log('elapsed: '.$elapsed);
-      \OCP\Util::writeLog(Config::APP_NAME,
-                          __METHOD__.': elapsed: '.$elapsed,
-                          \OCP\Util::DEBUG);
+      /* error_log('elapsed: '.$elapsed); */
+      /* \OCP\Util::writeLog(Config::APP_NAME, */
+      /*                     __METHOD__.': elapsed: '.$elapsed, */
+      /*                     \OCP\Util::DEBUG); */
 
       return $result;
     }
