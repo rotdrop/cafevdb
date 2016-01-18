@@ -32,6 +32,7 @@ namespace CAFEVDB
     const CSS_PREFIX = 'cafevdb-page';
     const IMAGE_PLACEHOLDER = 'flyerdummy.svg';
     const NAME_LENGTH_MAX = 20;
+    const TABLE_NAME = 'Projekte';
     private $pme;
     private $pme_bare;
     private $execute;
