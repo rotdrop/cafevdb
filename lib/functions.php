@@ -1432,7 +1432,6 @@ __EOT__;
         $value = L::t("Project Extra-Fields");
         $title = L::t("Add additional data-fields to the instrumenation table for the project.");
         if ($asListItem) {
-          $year = date("Y") - 1;
           $post = array('ProjectExtraFields' => $value,
                         'Template' => 'project-extra',
                         'ProjectName' => $projectName,
