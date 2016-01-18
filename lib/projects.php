@@ -149,7 +149,10 @@ namespace CAFEVDB
       // Sorting field(s)
       $opts['sort_field'] = array('-Jahr', 'Name');
 
-      // Number of records to display on the screen
+      // GROUP BY clause, if needed.
+      $opts['groupby_fields'] = 'Id';
+
+          // Number of records to display on the screen
       // Value of -1 lists all records in a table
       // $opts['inc'] = -1;
 
@@ -290,7 +293,7 @@ namespace CAFEVDB
 
       $opts['fdd']['Actions'] = array(
         'name'     => L::t('Actions'),
-        'sql'      => 'Name',
+        'sql'      => '`PMEtable0`.`Name`',
         'php|VCLDF'    => array('type' => 'function',
                                 'function' => 'CAFEVDB\Projects::projectActionsPME',
                                 'parameters' => array("idIndex" => $idIdx,
@@ -328,8 +331,8 @@ namespace CAFEVDB
         'select'   => 'T',
         'maxlen'   => 65535,
         'css'      => array('postfix' => ' projecttoolbox'),
-        'sql'      => 'Id',
-        'sqlw'     => 'Id',
+        'sql'      => '`PMEtable0`.`Id`',
+//        'sqlw'     => 'Id',
         'php|CV'    => array('type' => 'function',
                              'function' => 'CAFEVDB\Projects::projectToolboxPME',
                              'parameters' => $nameIdx),
@@ -351,40 +354,54 @@ namespace CAFEVDB
       $opts['fdd']['Anzahlung']['display|LF'] = array('popup' => 'tooltip');
       $opts['fdd']['Anzahlung']['css']['postfix'] .= ' tooltip-top';
 
-      $opts['fdd']['ExtraFelder'] = array('name'     => 'Extra Felder für Teilnehmer',
-                                          'options'  => 'FLAVCPD',
-                                          'select'   => 'T',
-                                          'maxlen'   => 1024,
-                                          'css'      => array('postfix' => ' projectextra'),
-                                          'textarea' => array('css' => '',
-                                                              'rows' => 1,
-                                                              'cols' => 80),
-                                          'sort'     => false,
-                                          'escape'   => false,
-                                          'display|LF' => array('popup' => 'data'),
-                                          'tooltip'  => L::t('Comma separated list of extra-fields, e.g.
-<blockquote>
-  SingleRoom:1:TooltipSingleRoom,Fee:2:TooltipForFee
-</blockquote>
-or simply
-<blockquote>
-  SingleRoom,Fee
-</blockquote>
+      $idx = count($opts['fdd']);
+      $join_table = 'PMEjoin'.$idx;
+      $opts['fdd']['ExtraFelderJoin'] = array(
+        'options'  => 'FLCVD',
+        'input'    => 'VRH',
+        'sql'      => '`PMEtable0`.`Id`',
+        'filter'   => 'having',
+        'values'   => array(
+          'table'  => 'ProjectExtraFields',
+          'column' => 'Name',
+          'description' => 'Name',
+          'join'   => '$main_table.`Id` = $join_table.`ProjectId`'
+          ),
+        );
 
-The number after the colon (and the colon) are optional, if present, the
-number determines the mapping of the extra columns to columns of the
-underlying data-base table. Internally the extra columns are simply named
-"ExtraField01" etc. The display ordering of the extra columns corresponds
-to the order of the fields given here (i.e. "SingleRoom" would be the displayed
-left of "Fee"). If this ordering is changed, one should specify the mapping
-of the fields to the data-base columns, e.g. like so:
-<blockquote>
-  Fee:2,SingleRoom:1
-</blockquote>
-This changes the displayed ordering of the columns but the mapping
-to the data-base table remains consistetnt. Optionally, the string after an
-optional second colon is displayed as a "tool-tip". The tool-tip must not contain
-a comma.'));
+      $opts['fdd']['ExtraFelder'] = array(
+        'name' => L::t('Extra Member Data'),
+        'options'  => 'FLCVD',
+        'input'    => 'VR',
+        'sql'      => ("GROUP_CONCAT(DISTINCT NULLIF(`".$join_table."`.`Name`,'') ".
+                       "ORDER BY `".$join_table."`.`Name` ASC SEPARATOR ', ')"),
+        'php|VCP'  => array(
+          'type' => 'function',
+          'function' => function($value, $opts, $act, $k, $fds, $fdd, $row) use ($idIdx, $nameIdx) {
+          $post = array('ProjectExtraFields' => $value,
+                        'Template' => 'project-extra',
+                        'ProjectName' => $row['qf'.$nameIdx],
+                        'ProjectId' => $row['qf'.$idIdx]);
+          $post = http_build_query($post, '', '&');
+          $title = Config::toolTips('project-action-extra-fields');
+          $link =<<<__EOT__
+<li class="nav tooltip-top" title="$title">
+  <a class="nav" href="#" data-post="$post">
+$value
+  </a>
+</li>
+__EOT__;
+          return $link;
+          },
+          'parameters' => array()
+          ),
+        'select'   => 'T',
+        'maxlen'   => 30,
+        'css'      => array('postfix' => ' projectextra'),
+        'sort'     => false,
+        'escape'   => false,
+        'display|LF' => array('popup' => 'data'),
+        );
 
       $opts['fdd']['Programm'] = array(
         'name'     => L::t('Program'),
@@ -393,8 +410,8 @@ a comma.'));
         'select'   => 'T',
         'maxlen'   => 65535,
         'css'      => array('postfix' => ' projectprogram'),
-        'sql'      => 'Id',
-        'sqlw'     => 'Id',
+        'sql'      => '`PMEtable0`.`Id`',
+//        'sqlw'     => 'Id',
         'php|CV'    => array('type' => 'function',
                              'function' => 'CAFEVDB\Projects::projectProgramPME',
                              'parameters' => array()),
@@ -407,7 +424,7 @@ a comma.'));
         'name' => L::t('Flyer'),
         'select' => 'T',
         'options' => 'CPDV',
-        'sql' => 'Id',
+        'sql'      => '`PMEtable0`.`Id`',
         'php' => array(
           'type' => 'function',
           'function' => 'CAFEVDB\Projects::flyerImageLinkPME',
@@ -919,6 +936,11 @@ a comma.'));
                                    'title' => Config::toolTips('project-action-instrumentation-numbers'),
                                    'value' => 'project-instruments',
                                    'name' => L::t('Instrumentation Numbers')
+                               ),
+                             array('type' => 'option',
+                                   'title' => Config::toolTips('project-action-extra-fields'),
+                                   'value' => 'project-extra',
+                                   'name' => L::t('Extra Member Data')
                                )
                          ))
                      .Navigation::htmlTagsFromArray(
@@ -972,7 +994,7 @@ a comma.'));
     }
 
     /**Generate an option table with all participants, suitable to be
-     * staffed into Navigation::selectOtions(). This is a single
+     * staffed into Navigation::selectOptions(). This is a single
      * select, only one musician may be preselected. The key is the
      * musician id. The options are meant for a single-choice select box.
      *
@@ -2197,6 +2219,9 @@ __EOT__;
         'Anzahlung' => array('table' => 'b',
                              'column' => true,
                              'join' => array('type' => 'INNER')),
+        'Gesamtbetrag' => array('table' => 'b',
+                                'column' => true,
+                                'join' => array('type' => 'INNER')),
         'PaymentStatus' => array('table' => 'b',
                                  'column' => 'BezahlStatus',
                                  'join' => array('type' => 'INNER')),

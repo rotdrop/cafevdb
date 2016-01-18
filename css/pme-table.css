@@ -949,6 +949,37 @@ table.pme-main a:not(.ui-tabs-anchor):hover {
   font-weight:bold;
 }
 
+table.pme-main li.nav > a.nav:visited,
+table.pme-main li.nav > a.nav:link {
+  color:#000;
+  text-decoration:none;
+  font-weight:inherit;
+}
+
+table.pme-main li.nav:hover > a.nav,
+table.pme-main li.nav:focus > a.nav {
+  background-color:#DDD;
+  color:#000;
+  opacity:1;
+  text-decoration:none;
+  font-weight:inherit;
+  font-style:normal;
+}
+
+table.pme-main li.nav > a.nav {
+  display: block;
+  width: 100%;
+  line-height: 44px;
+  min-height: 44px;
+  padding: 0px 12px;
+  overflow: hidden;
+  box-sizing: border-box;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: #000;
+  opacity: 0.57;
+}
+
 form.pme-form tr.pme-row:hover td.pme-cell,
 form.pme-form tr.pme-row:hover td.pme-navigation {
   background-color: #9BAFC8;

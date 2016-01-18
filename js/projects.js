@@ -232,6 +232,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
             // popup-box.
           case 'detailed-instrumentation':
           case 'sepa-debit-mandates':
+          case 'project-extra':
             post.Template = selectedValue;
             CAFEVDB.formSubmit('', $.param(post), 'post');
             break;
@@ -611,6 +612,15 @@ $(document).ready(function(){
                     imagesReady = true;
                 });
             }
+
+            // Intercept app-navigation events here and redirect to the page
+            // loader
+            container.on('click', 'li.nav > a.nav', function(event) {
+                var post = $(this).data('post');
+                CAFEVDB.Page.loadPage(post);
+                //alert('post: '+post);
+                return false;
+            });
 
             var articleBox = container.find('#projectWebArticles');
 
