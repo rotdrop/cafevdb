@@ -125,7 +125,7 @@ table.pme-main tr.field-type.multi-value-field ~ tr.pme-row.default-value {
     display:none;
 }
 
-.ProjectExtra table.pme-main .chosen-container {
+.ProjectExtra table.pme-main tr:not(.pme-filter) .chosen-container {
     box-sizing:border-box;
     min-width:50%;
 }

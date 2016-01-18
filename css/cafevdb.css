@@ -289,16 +289,21 @@ li.cafevdb-page-config-check span.set {
 
 /******************************************************************************/
 
-#personalsettings {
+#personalsettings,
+#old-personalsettings {
   /*margin-right: 10px;*/
   font-size: 12px;
 }
 
-body.snapjs-left #personalsettings {
+body.snapjs-left #old-personalsettings {
   float: left;
 }
 
-#personalsettings {
+body.snapjs-left form#personalsettings {
+  left:44px;
+}
+
+#old-personalsettings {
   float: right;
 }
 
@@ -311,13 +316,6 @@ body.snapjs-left #personalsettings {
 }
 .controls {
   min-width: 800px;
-}
-#controls form button, #controls form input {
-  margin-top: 4px;
-  margin-left: 4px;
-/*  max-height: 26px;*/
-  vertical-align:middle;
-  padding: 5px;
 }
 
 #projectlabelcontrol>input[type=submit] {
@@ -367,13 +365,17 @@ select,input,option,button {
   /* background-color:#F4F4F4; */
 }
 
-#content input:active,#content select:active,#content option:active,#content button:active {
+#content input:active:not(:disabled),
+#content select:active:not(:disabled),
+#content option:active:not(:disabled),
+#content button:active:not(:disabled) {
   border-radius:.5em;
   /*border-radius:4px;*/
   background-color:SteelBlue;
 }
 
-input[type=button]:active, input[type=submit]:active {
+input[type=button]:active:not(:disabled),
+input[type=submit]:active:not(:disabled) {
   background-color:SteelBlue;
 }
 
@@ -394,8 +396,18 @@ div[class|='cafevdb-nav']>div {
   opacity:0.98;
 }
 
+/************ old controls stuff *****/
+
 #controls button.navigation.history {
   padding: 5px 2px 5px 2px;
+}
+
+#controls form button, #controls form input {
+  margin-top: 4px;
+  margin-left: 4px;
+/*  max-height: 26px;*/
+  vertical-align:middle;
+  padding: 5px;
 }
 
 div#controls div.buttonseparator {
@@ -406,6 +418,72 @@ div#controls div.buttonseparator {
   vertical-align:middle;
   opacity:0.5;
 }
+
+/************ new controls stuff *****/
+
+form.invisible#personalsettings *,
+form.invisible#old-personalsettings *,
+form.invisible#new-personalsettings * {
+  display:none!important;
+}
+
+form#personalsettings {
+  position:absolute;
+  right:0px;
+  top:0px;
+  z-index:200;
+  box-sizing:border-box;
+  height:44px;
+}
+
+form#personalsettings .button,
+form#personalsettings button,
+form#personalsettings input[type="submit"] {
+  box-sizing:border-box;
+  display:inline-block;
+  height:44px;
+  width:44px;
+  margin:0px;
+  padding:0px;
+  border:0px;
+  vertical-align:middle;
+  border-radius:0px;
+  opacity:0.6;
+  background-color: rga(255,255,255,0.7);
+}
+
+form#personalsettings .button:hover,
+form#personalsettings button:hover,
+form#personalsettings input[type="submit"]:hover {
+  opacity:0.8;
+}
+
+form#personalsettings .button:active:not(:disabled),
+form#personalsettings button:active:not(:disabled),
+form#personalsettings input[type="submit"]:active:not(:disabled) {
+  border-radius:0px;
+  background-color:SteelBlue;
+}
+
+form#personalsettings .button:disabled,
+form#personalsettings button:disabled,
+form#personalsettings input[type="submit"]:disabled,
+form#personalsettings :disabled {
+  border-radius:0px;
+  background-color: rgba(255,255,255,0.7);
+  opacity:0.3;
+}
+
+form#personalsettings div.buttonseparator {
+  display:inline-block;
+  background:#000;
+  height:30px;
+  width:2px;
+  vertical-align:middle;
+  opacity:0.5;
+}
+
+/*************************************/
 
 #tooltipbutton {
   margin-right:0.3em;

@@ -63,7 +63,7 @@ namespace CAFEVDB {
       'undo' => array(
         'name' => L::t('Back'),
         'title' => L::t('Navigate back to the previous view in the recorded history.'),
-        'image' => \OCP\Util::imagePath('cafevdb', 'undo.svg'),
+        'image' => \OCP\Util::imagePath('cafevdb', 'undo-solid.svg'),
         'class' => 'undo navigation history',
         'id' => 'undobutton',
         'disabled' => $undoDisabled,
@@ -71,7 +71,7 @@ namespace CAFEVDB {
       'reload' => array(
         'name' => L::t('Reload'),
         'title' => L::t('Reload the current view.'),
-        'image' => array(\OCP\Util::imagePath('cafevdb', 'reload.svg'),
+        'image' => array(\OCP\Util::imagePath('cafevdb', 'reload-solid.svg'),
                          \OCP\Util::imagePath('core', 'loading.gif')),
         'class' => 'reload navigation history',
         'id' => 'reloadbutton',
@@ -79,7 +79,7 @@ namespace CAFEVDB {
       'redo' => array(
         'name' => L::t('Next'),
         'title' => L::t('Navigate to the next view in the recorded history.'),
-        'image' => \OCP\Util::imagePath('cafevdb', 'redo.svg'),
+        'image' => \OCP\Util::imagePath('cafevdb', 'redo-solid.svg'),
         'class' => 'redo navigation history',
         'id' => 'redobutton',
         'disabled' => $redoDisabled,
@@ -87,7 +87,7 @@ namespace CAFEVDB {
       'home' => array(
         'name' => L::t('Startpage'),
         'title' => L::t('Navigate back to the start-page.'),
-        'image' => \OCP\Util::imagePath('core', 'places/home.svg'),
+        'image' => \OCP\Util::imagePath('cafevdb', 'home-solid.svg'),
         'class' => 'settings navigation home',
         'id' => 'homebutton',
         'type' => 'submitbutton')));
@@ -97,7 +97,7 @@ namespace CAFEVDB {
       'tooltips' => array(
         'name' => L::t('Tooltip Button'),
         'title' => L::t('Toggle Tooltips'),
-        'image' => \OCP\Util::imagePath('core', 'actions/info.svg'),
+        'image' => \OCP\Util::imagePath('cafevdb', 'info-solid.svg'),
         'class' => 'help tooltips tooltip-bottom tooltips-'.($_['tooltips'] == 'on' ? 'en' : 'dis').'abled',
         'id' => 'tooltipbutton')
       ));
@@ -228,14 +228,20 @@ namespace CAFEVDB {
   </div>
 </div>
 <div id="app-content">
-<div id="controls">
-  <form id="personalsettings" method="post" action="?app=<?php echo Config::APP_NAME; ?>">
+  <form id="personalsettings" class="visible" method="post" action="?app=<?php echo Config::APP_NAME; ?>">
     <input type="hidden" name="requesttoken" value="<?php echo $_['requesttoken']; ?>" />
     <?php echo $navigationControls; ?>
     <div class="buttonseparator"></div>
     <?php echo $settingsControls; ?>
   </form>
-</div>
+  <div id="controls">
+<form id="old-personalsettings" class="invisible" method="post" action="?app=<?php echo Config::APP_NAME; ?>">
+    <input type="hidden" name="requesttoken" value="<?php echo $_['requesttoken']; ?>" />
+    <?php echo $navigationControls; ?>
+    <div class="buttonseparator"></div>
+    <?php echo $settingsControls; ?>
+  </form>
+  </div>
 <div class="cafevdb-general" data-snap-ignore="true" id="cafevdb-general"> <!-- used to eliminate the pixel-size of the control bar -->
   <?php echo isset($_['headerblock']) ? '<!-- ' : ''; ?>
   <div id="<?php echo $css_pfx; ?>-header-box" class="<?php echo $css_pfx; ?>-header-box <?php echo $css_class; ?>">
