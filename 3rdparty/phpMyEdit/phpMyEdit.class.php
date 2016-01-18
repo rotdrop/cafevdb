@@ -248,11 +248,11 @@ class phpMyEdit
 	function col_has_multiple($k)
 	{ return $this->col_has_multiple_select($k) || $this->col_has_checkboxes($k); }
 	function col_has_multiple_select($k)
-	{ return $this->fdd[$k]['select'] == 'M' && (! @$this->fdd[$k]['values']['table'] || @$this->fdd[$k]['values']['queryvalues']); }
+	{ return $this->fdd[$k]['select'] == 'M' /*&& (! @$this->fdd[$k]['values']['table'] || @$this->fdd[$k]['values']['queryvalues'])*/; }
 	function col_has_checkboxes($k)
-	{ return $this->fdd[$k]['select'] == 'C' && (! @$this->fdd[$k]['values']['table'] || @$this->fdd[$k]['values']['queryvalues']); }
+	{ return $this->fdd[$k]['select'] == 'C' /*&& (! @$this->fdd[$k]['values']['table'] || @$this->fdd[$k]['values']['queryvalues'])*/; }
 	function col_has_radio_buttons($k)
-	{ return $this->fdd[$k]['select'] == 'O' && (! @$this->fdd[$k]['values']['table'] || @$this->fdd[$k]['values']['queryvalues']); }
+	{ return $this->fdd[$k]['select'] == 'O' /*&& (! @$this->fdd[$k]['values']['table'] || @$this->fdd[$k]['values']['queryvalues'])*/; }
 	function col_has_datemask($k)
 	{ return isset($this->fdd[$k]['datemask']) || isset($this->fdd[$k]['strftimemask']); }
 
@@ -1650,6 +1650,9 @@ class phpMyEdit
 				}
 				echo '</tr>',"\n";
 			} elseif ($this->delete_operation() || $this->view_operation()) {
+				if ($this->hidden($k)) {
+					continue;
+				}
 				$css_postfix = @$this->fdd[$k]['css']['postfix'];
 				echo '<tr class="',$this->getCSSclass('row', null, 'next', $css_postfix),'">',"\n";
 				echo '<td class="',$this->getCSSclass('key', null, true, $css_postfix),'">';
@@ -2999,7 +3002,7 @@ class phpMyEdit
 		echo $this->htmlSubmit('filter', 'Query', $this->getCSSclass('query'), false);
 		echo '</td>', "\n";
 		for ($k = 0; $k < $this->num_fds; $k++) {
-			if (! $this->displayed[$k]) {
+			if (! $this->displayed[$k] || $this->hidden($k)) {
 				continue;
 			}
 			$css_postfix	  = @$this->fdd[$k]['css']['postfix'];
@@ -3376,7 +3379,7 @@ class phpMyEdit
 				 */
 				$sfnidx = count($this->sfn);
 			}
-			if (! $this->displayed[$k]) {
+			if (! $this->displayed[$k] || $this->hidden($k)) {
 				continue;
 			}
 			$css_postfix	= @$this->fdd[$k]['css']['postfix'];
@@ -3624,7 +3627,7 @@ class phpMyEdit
 			} /* }}} */
 			for ($k = 0; $k < $this->num_fds; $k++) { /* {{{ */
 				$fd = $this->fds[$k];
-				if (! $this->displayed[$k]) {
+				if (! $this->displayed[$k] || $this->hidden($k)) {
 					continue;
 				}
 				$css_postfix	= @$this->fdd[$k]['css']['postfix'];
@@ -3988,21 +3991,7 @@ class phpMyEdit
 		$res	 = $this->myquery($query_oldrec, __LINE__);
 		$oldvals = $this->sql_fetch($res);
 		$this->sql_free_result($res);
-		// Creatinng WHERE part for query groups
-		foreach($oldvals as $fd => $value) {
-			$fdn = $this->fdn[$fd]; // $fdn == field number
-			$fdd = $this->fdd[$fdn];
-			if (isset($fdd['querygroup'])) {
-				$queryGroup = $fdd['querygroup'];
-				if ($queryGroup['key']) {
-					$table = $queryGroup['table'];
-					$key = $queryGroup['column'];
-					$rec = $value;
-					$where_groups[$table] =
-						' WHERE ('.$this->sd.$key.$this->ed.'='.$this->key_delim.$rec.$this->key_delim.')';
-				}
-			}
-		}
+
 		// Creating array of changed keys ($changed)
 		foreach ($newvals as $fd => $value) {
 			echo "<!-- ".$value." ".$oldvals[$fd]." -->\n";
@@ -4032,6 +4021,25 @@ class phpMyEdit
 		if ($this->exec_triggers('update', 'before', $oldvals, $changed, $newvals) === false) {
 			return false;
 		}
+
+		// Creatinng WHERE part for query groups, after the trigger as
+		// it may even have added things.
+		foreach($oldvals as $fd => $value) {
+			$fdn = $this->fdn[$fd]; // $fdn == field number
+			$fdd = $this->fdd[$fdn];
+			if (isset($fdd['querygroup'])) {
+				$queryGroup = $fdd['querygroup'];
+				if ($queryGroup['key']) {
+					$table = $queryGroup['table'];
+					$tablename = $queryGroup['tablename'];
+					$key = $queryGroup['column'];
+					$rec = $value;
+					$where_groups[$tablename] =
+						' WHERE ('.$this->sd.$key.$this->ed.'='.$this->key_delim.$rec.$this->key_delim.')';
+				}
+			}
+		}
+
 		echo '<!-- '.print_r($newvals, true).'-->';
 		// Build the real query respecting changes to the newvals array
 		foreach ($newvals as $fd => $val) {
@@ -4039,18 +4047,20 @@ class phpMyEdit
 			$fdn = $this->fdn[$fd];
 			$fdd = $this->fdd[$fdn];
 			$table = '';
+			$tablename = '';
 			if (isset($fdd['querygroup'])) {
 				// Split update query if requested by calling app
 				$table = $fdd['querygroup']['table'];
+				$tablename = $fdd['querygroup']['tablename'];
 				$column = $fdd['querygroup']['column'];
-				if (!isset($query_groups[$table])) {
-					$query_groups[$table] = '';
+				if (!isset($query_groups[$tablename])) {
+					$query_groups[$tablename] = '';
 				}
 			} else {
-				$table = $this->tb;
+				$tablename = $table = $this->tb;
 				$column = $fd;
 			}
-			$query_real = &$query_groups[$table];
+			$query_real = &$query_groups[$tablename];
 			if (isset($fdd['encryption'])) {
 				// encrypt the value
 				$val = call_user_func($fdd['encryption']['encrypt'], $val);
@@ -4076,11 +4086,12 @@ class phpMyEdit
 			}
 		}
 		$affected_rows = 0;
-		foreach ($query_groups as $table => $query) {
+		foreach ($query_groups as $tablename => $query) {
 			if ($query == '') {
 				continue;
 			}
-			$query .= $where_groups[$table];
+			//error_log('name: '.$tablename.' query '.$query);
+			$query .= $where_groups[$tablename];
 			// Real query
 			$res = $this->myquery($query, __LINE__) && $res;
 			$num_rows = $this->sql_affected_rows($this->dbh);
@@ -4253,7 +4264,7 @@ class phpMyEdit
 	 * Break and return false as soon as a trigger return false
 	 * we need a reference on $newvals to be able to change value before insert/update
 	 */
-	function exec_triggers($op, $step, $oldvals, &$changed, &$newvals) /* {{{ */
+	function exec_triggers($op, $step, &$oldvals, &$changed, &$newvals) /* {{{ */
 	{
 		if (! isset($this->triggers[$op][$step])) {
 			return true;
@@ -4266,7 +4277,7 @@ class phpMyEdit
 				if (is_callable($t)) {
 					$ret = call_user_func_array($t,
 												array(&$this,
-													  $op, $step, $oldvals,
+													  $op, $step, &$oldvals,
 													  &$changed, &$newvals));
 				} else {
 					$ret = include($t);
@@ -4276,7 +4287,7 @@ class phpMyEdit
 			if (is_callable($trig)) {
 				$ret = call_user_func_array($trig,
 											array(&$this,
-												  $op, $step, $oldvals,
+												  $op, $step, &$oldvals,
 												  &$changed, &$newvals));
 			} else {
 				$ret = include($trig);
@@ -4488,10 +4499,16 @@ class phpMyEdit
 			}
 			// move 'HWR0' flags from ['options'] into ['input']
 			if (isset($this->fdd[$column]['options'])) {
-				stristr($this->fdd[$column]['options'], 'H') !== false && $this->fdd[$column]['input'] .= 'H';
-				stristr($this->fdd[$column]['options'], 'W') !== false && $this->fdd[$column]['input'] .= 'W';
-				stristr($this->fdd[$column]['options'], 'R') !== false && $this->fdd[$column]['input'] .= 'R';
-				stristr($this->fdd[$column]['options'], '0') !== false && $this->fdd[$column]['input'] .= 'D';
+				$this->fdd[$column]['options'] = strtoupper($this->fdd[$column]['options']);
+				strstr($this->fdd[$column]['options'], 'H') !== false && $this->fdd[$column]['input'] .= 'H';
+				strstr($this->fdd[$column]['options'], 'W') !== false && $this->fdd[$column]['input'] .= 'W';
+				strstr($this->fdd[$column]['options'], 'R') !== false && $this->fdd[$column]['input'] .= 'R';
+				strstr($this->fdd[$column]['options'], '0') !== false && $this->fdd[$column]['input'] .= 'D';
+				$this->fdd[$column]['options'] = preg_replace('/[HWR0]/', '', $this->fdd[$column]['options']);
+				// if options otherwise is empty, unset it
+				if (empty($this->fdd[$column]['options'])) {
+					unset($this->fdd[$column]['options']);
+				}
 			}
 		}
 	} /* }}} */
@@ -4608,15 +4625,15 @@ class phpMyEdit
 			$this->applycopy = null; // unset($this->applycopy)
 			$this->operation = $this->labels['Change']; // to force change operation
 			$this->recreate_fdd();
-			$this->recreate_displayed();
 			$this->backward_compatibility();
+			$this->recreate_displayed();
 		}
 		elseif ($this->label_cmp($this->moreadd, 'More')) {
 			$this->add_enabled() && $this->do_add_record();
 			$this->operation = $this->labels['Add']; // to force add operation
 			$this->recreate_fdd();
-			$this->recreate_displayed();
 			$this->backward_compatibility();
+			$this->recreate_displayed();
 		}
 		elseif ($this->label_cmp($this->savechange, 'Save')) {
 			$this->change_enabled() && $this->do_change_record();
@@ -4627,8 +4644,8 @@ class phpMyEdit
 			$this->change_enabled() && $this->do_change_record();
 			$this->operation = $this->labels['Change']; // to force change operation
 			$this->recreate_fdd();
-			$this->recreate_displayed();
 			$this->backward_compatibility();
+			$this->recreate_displayed();
 		}
 		elseif ($this->label_cmp($this->savedelete, 'Delete')) {
 			$this->delete_enabled() && $this->do_delete_record();
@@ -4639,14 +4656,14 @@ class phpMyEdit
 			$this->operation = $this->labels['View']; // force view operation.
 			$this->reloadview = null;
 			$this->recreate_fdd();
-			$this->recreate_displayed();
 			$this->backward_compatibility();
+			$this->recreate_displayed();
 		}
 		elseif ($this->label_cmp($this->reloadchange, 'Reload')) {
 			$this->operation = $this->labels['Change']; // to force change operation
 			$this->recreate_fdd();
-			$this->recreate_displayed();
 			$this->backward_compatibility();
+			$this->recreate_displayed();
 		}
 
 
@@ -5057,10 +5074,10 @@ class phpMyEdit
 		}
 		// Specific $fdd modifications depending on performed action
 		$this->recreate_fdd();
-		// Extract SQL Field Names and number of fields
-		$this->recreate_displayed();
 		// Issue backward compatibility
 		$this->backward_compatibility();
+		// Extract SQL Field Names and number of fields
+		$this->recreate_displayed();
 		// Gathering query options
 		$this->gather_query_opts();
 		// Call to action
