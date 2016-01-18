@@ -31,13 +31,16 @@ namespace CAFEVDB
   {
     const CSS_PREFIX = 'cafevdb-page';
     const TABLE_NAME = 'ProjectExtraFields';
+    const TYPE_TABLE = 'ProjectExtraFieldTypes';
+    const DATA_TABLE = 'ProjectExtraFieldsData';
     private $pme;
     private $pme_bare;
     private $execute;
     public $projectId;
     public $projectName;
+    public $recordId;
 
-    public function __construct($execute = true)
+    public function __construct($recordId = -1, $execute = true)
     {
       $this->execute = $execute;
       $this->pme = false;
@@ -45,6 +48,7 @@ namespace CAFEVDB
 
       $this->projectId = Util::cgiValue('ProjectId', false);
       $this->projectName = Util::cgiValue('ProjectName', false);
+      $this->recordId = $recordId > 0 ? $recordId : Util::getCGIRecordId();
 
       Config::init();
     }
@@ -73,7 +77,7 @@ namespace CAFEVDB
 
     public function shortTitle()
     {
-      if ($this->projectName !== false) {
+      if ($this->projectId > 0) {
         return L::t("Extra-Fields for Project %s",
                     array($this->projectName));
       } else {
@@ -98,9 +102,22 @@ namespace CAFEVDB
         echo '</PRE>';
       }
 
+      $recordId    = $this->recordId;
+      $recordMode  = $recordId > 0;
+      $pmeSysPfx = Config::$pmeopts['cgi']['prefix']['sys'];
+      if (!empty(Util::cgiValue($pmeSysPfx.'operation', false))) {
+        // only table listings have no operation
+        $recordMode = true;
+      }
+
       $projectId   = $this->projectId;
       $projectName = $this->projectName;
       $projectMode = $projectId > 0;
+      $tableTabs   = DetailedInstrumentation::tableTabs();
+      $tableTabValues2 = array();
+      foreach($tableTabs as $tabInfo) {
+        $tableTabValues2[$tabInfo['id']] = $tabInfo['name'];
+      }
 
       // Inherit a bunch of default options
       $opts = Config::$pmeopts;
@@ -115,7 +132,7 @@ namespace CAFEVDB
         $opts['cgi']['persist']['ProjectId']   = $projectId;
       }
 
-      $opts['tb'] = 'ProjectExtraFields';
+      $opts['tb'] = self::TABLE_NAME;
 
       // Name of field which is the unique key
       $opts['key'] = 'Id';
@@ -235,12 +252,12 @@ namespace CAFEVDB
       $opts['fdd']['ProjectId'] = array(
         'name'      => L::t('Project-Name'),
         'css' => array('postfix' => ' project-extra-project-name'),
-        'options'   => ($projectMode ? 'VCDAP' : 'FLVCDAP'),
+        'options'   => ($projectMode ? 'VCDAPR' : 'FLVCDAP'),
         'select|DV' => 'T', // delete, filter, list, view
         'select|ACPFL' => 'D',  // add, change, copy
         'maxlen'   => 20,
         'size'     => 16,
-        'default'  => '-1',
+        'default'  => ($projectMode ? $projectId : -1),
         'sort'     => true,
         'values|ACP' => array(
           'table' => 'Projekte',
@@ -265,7 +282,7 @@ namespace CAFEVDB
       $opts['fdd']['FieldIndex'] = array(
         'name' => L::t('Field-Index'),
         'css' => array('postfix' => ' field-index'),
-        //'options' => '',
+        // 'options' => 'VCDAPR',
         'selet' => 'N',
         'maxlen' => 5,
         'sort' => true,
@@ -277,7 +294,8 @@ namespace CAFEVDB
         'name' => L::t('Field-Name'),
         'css' => array('postfix' => ' field-name'),
         'select' => 'T',
-        'maxlen' => 20,
+        'maxlen' => 29,
+        'size' => 30,
         'sort' => true,
         'tooltip' => Config::toolTips('extra-fields-field-name'),
         );
@@ -292,23 +310,39 @@ namespace CAFEVDB
         );
 
       // TODO: maybe get rid of enums and sets alltogether
-      $typeValues = mySQL::multiKeys(self::TABLE_NAME, 'Type');
+      $typeValues = array();
+      $typeGroups = array();
+      $types = mySQL::fetchRows(self::TYPE_TABLE);
+      if (!empty($types)) {
+        foreach($types as $typeInfo) {
+          $id = $typeInfo['Id'];
+          $name = $typeInfo['Name'];
+          $group = $typeInfo['Kind'];
+          $typeValues[$id] = L::t($name);
+          $typeGroups[$id] = L::t($group);
+        }
+      }
+
       $opts['fdd']['Type'] = array(
         'name' => L::t('Type'),
         'css' => array('postfix' => ' field-type'),
-        'size' => 20,
-        'maxlen' => 20,
+        'size' => 30,
+        'maxlen' => 24,
         'select' => 'D',
         'sort' => false,
-        'values' => $typeValues,
+        'values2' => $typeValues,
+        'valueGroups' => $typeGroups,
         'tooltip' => Config::toolTips('extra-fields-type'),
         );
 
       $opts['fdd']['AllowedValues'] = array(
         'name' => L::t('Allowed Values'),
-        'css' => array('postfix' => ' allowed-values'),
+        'css' => array('postfix' => ' allowed-values hide-subsequent-lines'),
         'select' => 'T',
-        'maxlen' => 20,
+        'textarea' => array('rows' => 5,
+                            'cols' => 30),
+        'maxlen' => 1024,
+        'size' => 30,
         'sort' => true,
         'display|LF' => array('popup' => 'data'),
         'tooltip' => Config::toolTips('extra-fields-allowed-values'),
@@ -318,27 +352,100 @@ namespace CAFEVDB
         'name' => L::t('Default Value'),
         'css' => array('postfix' => ' default-value'),
         'select' => 'T',
-        'maxlen' => 20,
+        'maxlen' => 29,
+        'size' => 30,
         'sort' => true,
         'display|LF' => array('popup' => 'data'),
         'tooltip' => Config::toolTips('extra-fields-default-value'),
         );
 
-      if (Config::$expertmode) {
+      $opts['fdd']['DefaultMultiValue'] = array(
+        'name' => L::t('Default Value'),
+        // 'input' => 'V', // not virtual, update handled by trigger
+        'options' => 'CPA',
+        'sql' => '`DefaultValue`',
+        'css' => array('postfix' => ' default-multi-value allow-empty'),
+        'select' => 'D',
+        'values' => array(
+          'table' => "SELECT Id, splitString(AllowedValues, '\\n', N) AS Item
+ FROM
+   ProjectExtraFields
+   JOIN numbers
+   ON tokenCount(AllowedValues, '\\n') >= N",
+          'column' => 'Item',
+          'subquery' => true,
+          'filters' => '$table.`Id` = $record_id'
+          ),
+        'maxlen' => 29,
+        'size' => 30,
+        'sort' => false,
+        'tooltip' => Config::toolTips('extra-fields-default-multi-value'),
+        );
 
-        $opts['fdd']['Tab'] = array(
-          'name' => L::t('Tab'),
-          'css' => array('postfix' => ' extra-fields-tab'),
+      $opts['fdd']['DefaultSingleValue'] = array(
+        'name' => L::t('Default Value'),
+        // 'input' => 'V', // not virtual, update handled by trigger
+        'options' => 'CPA',
+        'sql' => '`DefaultValue`',
+        'css' => array('postfix' => ' default-single-value'),
+        'select' => 'O',
+        'values2' => array('0' => L::t('false'),
+                           '1' => L::t('true')),
+        'default' => '0',
+        'maxlen' => 29,
+        'size' => 30,
+        'sort' => false,
+        'tooltip' => Config::toolTips('extra-fields-default-single-value'),
+        );
+
+      $opts['fdd']['Tab'] = array(
+        'name' => L::t('Table Tab'),
+        'css' => array('postfix' => ' tab allow-empty'),
+        'select' => 'D',
+        'table' => array(
+
+          ),
+        'values2' => $tableTabValues2,
+        'default' => -1,
+        'maxlen' => 20,
+        'size' => 30,
+        'sort' => true,
+        'tooltip' => Config::toolTips('extra-fields-tab'),
+        );
+
+      if ($recordMode) {
+        // In order to be able to add a new tab, the select box first
+        // has to be emptied (in order to avoid conflicts).
+        $opts['fdd']['NewTab'] = array(
+          'name' => L::t('New Tab Name'),
+          'options' => 'CPA',
+          'sql' => "''",
+          'css' => array('postfix' => ' new-tab'),
           'select' => 'T',
           'maxlen' => 20,
+          'size' => 30,
+          'sort' => false,
+          'tooltip' => Config::toolTips('extra-fields-new-tab'),
+          );
+      }
+
+      if (Config::$expertmode) {
+
+        $opts['fdd']['Encrypted'] = array(
+          'name' => L::t('Encrypted'),
+          'css' => array('postfix' => ' encrypted'),
+          'values2' => array(1 => ''),
+          'default' => 0,
+          'select' => 'O',
+          'maxlen' => 5,
           'sort' => true,
-          'tooltip' => Config::toolTips('extra-fields-tab'),
+          'tooltip' => Config::toolTips('extra-fields-encrypted'),
           );
 
         $ownCloudGroups = \OC_Group::getGroups();
         $opts['fdd']['Readers'] = array(
           'name' => L::t('Readers'),
-          'css' => array('postfix' => ' readers chosen-dropup user-groups'),
+          'css' => array('postfix' => ' readers user-groups'),
           'select' => 'M',
           'values' => $ownCloudGroups,
           'maxlen' => 10,
@@ -349,7 +456,7 @@ namespace CAFEVDB
 
         $opts['fdd']['Writers'] = array(
           'name' => L::t('Writers'),
-          'css' => array('postfix' => ' writers chosen-dropup user-groups'),
+          'css' => array('postfix' => ' writers chosen-dropup_ user-groups'),
           'select' => 'M',
           'values' => $ownCloudGroups,
           'maxlen' => 10,
@@ -360,17 +467,66 @@ namespace CAFEVDB
       }
 
       $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
-      $opts['triggers']['update']['before'][]  = 'CAFEVDB\ProjectExtra::beforeUpdateTrigger';
+      $opts['triggers']['update']['before'][]  = 'CAFEVDB\ProjectExtra::beforeUpdateOrInsertTrigger';
       $opts['triggers']['update']['before'][] =  'CAFEVDB\Util::beforeUpdateRemoveUnchanged';
+
       $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
       $opts['triggers']['insert']['before'][]  = 'CAFEVDB\ProjectExtra::beforeInsertTrigger';
+      $opts['triggers']['insert']['before'][]  = 'CAFEVDB\ProjectExtra::beforeUpdateOrInsertTrigger';
+
+      $opts['triggers']['update']['pre'][]  =
+        $opts['triggers']['insert']['pre'][]  = 'CAFEVDB\ProjectExtra::preTrigger';
 
       $opts['execute'] = $this->execute;
 
-      $pmeSysPfx = Config::$pmeopts['cgi']['prefix']['sys'];
-      $opts['cgi']['append'][$pmeSysPfx.'fl'] = 0;
-
       $pme = new \phpMyEdit($opts);
+    }
+
+    /** phpMyEdit calls the trigger (callback) with the following arguments:
+     *
+     * @param[in] $pme The phpMyEdit instance
+     *
+     * @param[in] $op The operation, 'insert', 'update' etc.
+     *
+     * @param[in] $step 'before' or 'after' or 'pre'
+     *
+     * @return boolean. If returning @c false the operation will be terminated
+     */
+    public static function preTrigger(&$pme, $op, $step)
+    {
+      self::generateNumbers($pme->dbh);
+      return true;
+    }
+
+    public static function generateNumbers($handle = false)
+    {
+      $result = false;
+
+      $ownConnection = $handle === false;
+      if ($ownConnection) {
+        Config::init();
+        $handle = self::connect(Config::$pmeopts);
+      }
+
+      $query = 'SELECT MAX(tokenCount(AllowedValues, \'\n\'))
+  FROM '.self::TABLE_NAME.' INTO @max';
+
+      $result = mySQL::query($query, $handle);
+      if ($result === false) {
+        error_log('Error: '.$query.' '.mySQL::error());
+      }
+
+      $query = 'CALL generateNumbers(@max)';
+      $result = mySQL::query($query, $handle);
+      if ($result === false) {
+        error_log('Error: '.$query.' '.mySQL::error());
+      }
+
+      if ($ownConnection) {
+        mySQL::close($handle);
+      }
+
+      return $result;
     }
 
     /** phpMyEdit calls the trigger (callback) with the following arguments:
@@ -392,9 +548,19 @@ namespace CAFEVDB
     public static function beforeInsertTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
     {
       $projectId = $newvals['ProjectId'];
+      if ($projectId <= 0) {
+        $projectId = $newvals['ProjectId'] = Util::cgiValue('ProjectId', false);
+      }
+
+      /* error_log('******* before ******************'); */
+      /* error_log(print_r($oldvals, true)); */
+      /* error_log(print_r($newvals, true)); */
+      /* error_log(print_r($changed, true)); */
+
       if (empty($projectId)) {
         return false;
       }
+
       // insert the beast with the next available field id
       $index = mySQL::selectFirstHoleFromTable(self::TABLE_NAME, 'FieldIndex',
                                                "`ProjectId` = ".$projectId,
@@ -406,19 +572,10 @@ namespace CAFEVDB
 
       $newvals['FieldIndex'] = $index;
 
-      // make sure writer-acls are a subset of reader-acls
-      $writers = preg_split('/\s*,\s*/', $newvals['Writers']);
-      $readers = preg_split('/\s*,\s*/', $newvals['Readers']);
-      $missing = array_diff($writers, $readers);
-      if (!empty($missing)) {
-        $readers = array_merge($readers, $missing);
-        $newvals['Readers'] = implode(',', $readers);
-      }
-
       return true;
     }
 
-        /** phpMyEdit calls the trigger (callback) with the following arguments:
+    /** phpMyEdit calls the trigger (callback) with the following arguments:
      *
      * @param[in] $pme The phpMyEdit instance
      *
@@ -434,23 +591,220 @@ namespace CAFEVDB
      *
      * @return boolean. If returning @c false the operation will be terminated
      */
-    public static function beforeUpdateTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
+    public static function beforeUpdateOrInsertTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
     {
-      $projectId = $newvals['ProjectId'];
-      if (empty($projectId)) {
-        return false;
+      /* error_log('******* before ******************'); */
+      /* error_log(print_r($oldvals, true)); */
+      /* error_log(print_r($newvals, true)); */
+      /* error_log(print_r($changed, true)); */
+
+      if ($op === 'update') {
+        /************************************************************************
+         *
+         * The field-index should not change, but the input field is
+         * disabled. Make sure it does not change.
+         *
+         */
+        if (isset($newvals['FieldIndex']) &&
+            $oldvals['FieldIndex'] != $newvals['FieldIndex']) {
+          return false;
+        }
       }
 
       // make sure writer-acls are a subset of reader-acls
-      $writers = preg_split('/\s*,\s*/', $newvals['Writers']);
-      $readers = preg_split('/\s*,\s*/', $newvals['Readers']);
+      $writers = preg_split('/\s*,\s*/', $newvals['Writers'], -1, PREG_SPLIT_NO_EMPTY);
+      $readers = preg_split('/\s*,\s*/', $newvals['Readers'], -1, PREG_SPLIT_NO_EMPTY);
       $missing = array_diff($writers, $readers);
       if (!empty($missing)) {
         $readers = array_merge($readers, $missing);
         $newvals['Readers'] = implode(',', $readers);
-        if (!in_array('Readers', $changed)) {
-          $changed[] = 'Readers';
+      }
+
+      /************************************************************************
+       *
+       * Move the data from DefaultMultiValue to DefaultValue s.t. PME
+       * can do its work.
+       *
+       */
+      $key = array_search('DefaultMultiValue', $changed);
+      if (self::multiValueField($newvals['Type'])) {
+        $newvals['DefaultValue'] = $newvals['DefaultMultiValue'];
+        if ($key !== false) {
+          $changed[] = 'DefaultValue';
         }
+      }
+      unset($newvals['DefaultMultiValue']);
+      unset($oldvals['DefaultMultiValue']);
+      if ($key !== false) {
+        unset($changed[$key]);
+      }
+
+      $allowed = self::explodeAllowedValues($newvals['AllowedValues']);
+      $newvals['AllowedValues'] = implode("\n", $allowed);
+      if ($oldvals['AllowedValues'] != $newvals['AllowedValues']) {
+        $changed[] = 'AllowedValues';
+      }
+
+      /************************************************************************
+       *
+       * Move the data from DefaultMultiValue to DefaultValue s.t. PME
+       * can do its work.
+       *
+       */
+      $key = array_search('DefaultSingleValue', $changed);
+      if ($newvals['Type'] === '1') {
+        $newvals['DefaultValue'] = $newvals['DefaultSingleValue'];
+        if ($key !== false) {
+          $changed[] = 'DefaultValue';
+        }
+      }
+      unset($newvals['DefaultSingleValue']);
+      unset($oldvals['DefaultSingleValue']);
+      if ($key !== false) {
+        unset($changed[$key]);
+      }
+
+      /************************************************************************
+       *
+       * Add the data from NewTab to Tab s.t. PME can do its work.
+       *
+       */
+      $key = array_search('NewTab', $changed);
+      if (!empty($newvals['NewTab']) && empty($newvals['Tab'])) {
+        $newvals['Tab'] = $newvals['NewTab'];
+        $changed[] = 'Tab';
+      }
+      unset($newvals['NewTab']);
+      unset($oldvals['NewTab']);
+      if ($key !== false) {
+        unset($changed[$key]);
+      }
+
+      /* error_log('*************************'); */
+      /* error_log(print_r($oldvals, true)); */
+      /* error_log(print_r($newvals, true)); */
+      /* error_log(print_r($changed, true)); */
+
+      return true;
+    }
+
+    /**Fetch the data-set for the given record id.*/
+    public static function fetch($recordId, $handle = false)
+    {
+      $data = mySQL::fetchRows(self::TABLE_NAME, '`Id` = '.$recordId, $handle);
+      if (is_array($data) && count($data) == 1) {
+        return $data[0];
+      } else {
+        return false;
+      }
+    }
+
+    /**Decide whether the given field type corresponds to a multe-value field. */
+    public static function multiValueField($type)
+    {
+      // maybe also GroupOfPeople, but that one is special anyway.
+      return $type === 'Set' || $type === 'Enumeration';
+    }
+
+    /**Sanitize and explode allowed values. We allow either "whatever", where
+     * fields are separated by newlines, or a fancy CSV line with ;,:
+     * as delimiters and qutoes and escaped quotes and delimiters. The
+     * function converts everything to a "text" with newline separator.
+     */
+    public static function explodeAllowedValues($values)
+    {
+      if (strstr($values, "\n")) {
+        $values = explode("\n", $values);
+      } else {
+        $values = Util::quasiCSVSplit($values);
+      }
+      return array_map('trim', $values);
+    }
+
+    /**Copy any extra-field definitions from the old "string"
+     * description to the new table representation.
+     */
+    public static function moveExtraFieldDefinitions($handle = false)
+    {
+      $ownConnection = $handle === false;
+      if ($ownConnection) {
+        Config::init();
+        $handle = mySQL::connect(Config::$pmeopts);
+      }
+
+      $projects = Projects::fetchProjects($handle, false);
+      foreach($projects as $projectId => $projectName) {
+        $oldExtra  = Projects::extraFields($projectId);
+
+        /* if (!empty($oldExtra)) { */
+        /*   error_log(print_r($oldExtra, true)); */
+        /* } */
+
+        $newVals = array(
+          'ProjectId' => $projectId,
+          'Type' => 4, // text
+          );
+        $cnt = 1;
+        foreach($oldExtra as $extraField) {
+          $newVals['FieldIndex'] = $extraField['pos'];
+          $newVals['DisplayOrder'] = $cnt++;
+          $newVals['Name'] = $extraField['name'];
+          $newVals['ToolTip'] = $extraField['tooltip'];
+          $newVals['Tab'] = 'project';
+          $result = mySQL::insert(self::TABLE_NAME, $newVals, $handle, mySQL::UPDATE);
+
+          if ($result === false) {
+            error_log('Error: '.mySQL::error());
+          }
+        }
+      }
+
+      if ($ownConnection) {
+        mySQL::close($handle);
+      }
+
+      return true;
+    }
+
+    /**Copy any extra-field data from the old "string"
+     * description to the new table representation.
+     */
+    public static function moveExtraFieldData($handle = false)
+    {
+      $ownConnection = $handle === false;
+      if ($ownConnection) {
+        Config::init();
+        $handle = mySQL::connect(Config::$pmeopts);
+      }
+
+      $projects = Projects::fetchProjects($handle, false);
+      foreach($projects as $projectId => $projectName) {
+        $oldExtra  = Projects::extraFields($projectId);
+
+        /* if (!empty($oldExtra)) { */
+        /*   error_log(print_r($oldExtra, true)); */
+        /* } */
+
+        foreach($oldExtra as $extraField) {
+          $fieldIndex = $extraField['pos'];
+          $oldExtra = sprintf('ExtraFeld%02d', $fieldIndex);
+          $query = "INSERT INTO ".self::DATA_TABLE."
+  (BesetzungenId, ExtraFieldId, FieldValue)
+  SELECT b.Id, f.Id as FieldId, b.".$oldExtra."
+  FROM Besetzungen b
+  LEFT JOIN ".self::TABLE_NAME." f
+    ON b.ProjektId = f.ProjectId AND ".$fieldIndex. " = f.FieldIndex
+  WHERE f.ProjectId = ".$projectId." AND ".$fieldIndex. " = f.FieldIndex";
+
+          $result = mySQL::query($query, $handle);
+          if ($result === false) {
+            error_log('Error: '.$query.' '.mySQL::error());
+          }
+        }
+      }
+
+      if ($ownConnection) {
+        mySQL::close($handle);
       }
 
       return true;

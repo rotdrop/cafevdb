@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -32,15 +32,20 @@ $buttons = array();
 $buttons['pre'] = '<div>';
 $buttons['post'] = '</div>';
 $buttons['between'] = '</div><div>';
-$buttons['syncevents'] =
-  array('name' => L::t('Synchronize Events'),
-        'title' => Config::toolTips('syncevents'),
-        'id' => 'syncevents',
+$buttons['setupdb'] =
+  array('name' => L::t('Provide Basic DB Layout'),
+        'title' => L::t('Make sure the data-base layout corresponds to the state of the software.'),
+        'id' => 'setupdb',
         'class' => 'operations expert button');
 $buttons['makeviews'] =
   array('name' => L::t('Recreate all Views'),
         'title' => L::t('Recreate the `Instrumentation\' hybrid-table for each project'),
         'id' => 'makeviews',
+        'class' => 'operations expert button');
+$buttons['syncevents'] =
+  array('name' => L::t('Synchronize Events'),
+        'title' => Config::toolTips('syncevents'),
+        'id' => 'syncevents',
         'class' => 'operations expert button');
 $buttons['wikicontents'] =
   array('name' => L::t('Recreate Wiki Project TOC'),

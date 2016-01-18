@@ -785,15 +785,6 @@ td.pme-cell.user-groups {
   text-overflow:ellipsis;
 }
 
-td.pme-value.user-groups {
-  width:38em;
-  max-width:38em;
-  max-height:1em;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
 td.pme-cell.projectextra {
   width:15em;
   max-width:15em;
@@ -823,7 +814,8 @@ th.pme-header.mandate-project, td.pme-cell.mandate-project {
 }
 
 /* Hide everything but the first line */
-table.pme-main td.pme-cell.remarks {
+table.pme-main td.pme-cell.remarks,
+table.pme-main td.pme-cell.hide-subsequent-lines {
   font-size:25%;
   line-height:100%;
   max-width:20em;
@@ -835,8 +827,10 @@ table.pme-main td.pme-cell.remarks {
 
 /* Make all remarks shorter */
 table.pme-main td.pme-cell.remarks:first-line,
-table.pme-main td.pme-cell.remarks p:nth-child(1):first-line {
-  font-size:400%; /* seem to be relative to !first-line */
+table.pme-main td.pme-cell.remarks p:nth-child(1):first-line,
+table.pme-main td.pme-cell.hide-subsequent-lines:first-line,
+table.pme-main td.pme-cell.hide-subsequent-lines p:nth-child(1):first-line {
+  font-size:400%; /* seems to be relative to !first-line */
   line-height:100%;
   max-width:20em;
   max-height:1em;

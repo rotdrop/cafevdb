@@ -22,7 +22,7 @@
 
 namespace CAFEVDB {
 
-  $table   = new ProjectExtra();
+  $table   = new ProjectExtra($_['recordId']);
   $css_pfx = ProjectExtra::CSS_PREFIX;
   $project = $table->projectName;
   $projectId = $table->projectId;

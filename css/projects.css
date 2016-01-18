@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -103,4 +103,29 @@ div.cmsarticlecontainer {
 #cmsarticleselect_chosen {
   min-width:20em !important;
   width:auto;
+}
+
+/******************************************************************************
+ *
+ * extra-field stuff
+ *
+ */
+
+table.pme-main tr.field-type:not(.multi-value-field) ~ tr.pme-row.allowed-values,
+table.pme-main tr.field-type:not(.multi-value-field) ~ tr.pme-row.default-multi-value {
+    display:none;
+}
+
+table.pme-main tr.field-type:not(.single-value-field) ~ tr.pme-row.default-single-value {
+    display:none;
+}
+
+table.pme-main tr.field-type.single-value-field ~ tr.pme-row.default-value,
+table.pme-main tr.field-type.multi-value-field ~ tr.pme-row.default-value {
+    display:none;
+}
+
+.ProjectExtra table.pme-main .chosen-container {
+    box-sizing:border-box;
+    min-width:50%;
 }

@@ -503,6 +503,7 @@ class phpMyEdit
 		if (! $ret) {
 			echo '<h4>MySQL error ',mysql_errno($this->dbh),'</h4>';
 			echo htmlspecialchars(mysql_error($this->dbh)),'<hr size="1" />',"\n";
+			//error_log($qry);
 		}
 		return $ret;
 	} /* }}} */
@@ -654,24 +655,33 @@ class phpMyEdit
 		if (empty($table)) {
 			$table = $this->tb;
 		}
-		$table   = $this->sd.$table.$this->ed;
-		$key     = &$this->fdd[$field_num]['values']['column'];
-		$desc    = &$this->fdd[$field_num]['values']['description'];
-		$filters = &$this->fdd[$field_num]['values']['filters'];
-		$orderby = &$this->fdd[$field_num]['values']['orderby'];
-		$groups  = &$this->fdd[$field_num]['values']['groups'];
-		$dbp     = isset($db) ? $this->sd.$db.$this->ed.'.' : $this->dbp;
+		$subquery = &$this->fdd[$field_num]['values']['subquery'];
+		$key      = &$this->fdd[$field_num]['values']['column'];
+		$desc     = &$this->fdd[$field_num]['values']['description'];
+		$filters  = &$this->fdd[$field_num]['values']['filters'];
+		$orderby  = &$this->fdd[$field_num]['values']['orderby'];
+		$groups   = &$this->fdd[$field_num]['values']['groups'];
+		$dbp      = isset($db) ? $this->sd.$db.$this->ed.'.' : $this->dbp;
 
 		$qparts['type'] = 'select';
+
+		$table_name = $table;
+		if ($subquery) {
+			$table_name = 'PMEtablealias'.$field_num;
+			$from_table = '('.$table.') '.$table_name;
+		} else {
+			$table      = $this->sd.$table.$this->ed;
+			$from_table = $dbp.$table;
+		}
 
 		$subs = array(
 			'main_table'  => $this->tb,
 			'record_id'   => $this->rec, // may be useful for change oggp.
-			'table'		  => $table,
+			'table'		  => $table_name,
 			'column'	  => $key,
 			'description' => $desc);
 
-		$qparts['select'] = 'DISTINCT '.$table.'.'.$this->sd.$key.$this->ed;
+		$qparts['select'] = 'DISTINCT '.$table_name.'.'.$this->sd.$key.$this->ed;
 		if ($desc && is_array($desc) && is_array($desc['columns'])) {
 			$qparts['select'] .= ',CONCAT('; // )
 			$num_cols = sizeof($desc['columns']);
@@ -693,22 +703,22 @@ class phpMyEdit
 		} else if ($desc && is_array($desc)) {
 			// TODO
 		} else if ($desc) {
-			$qparts['select'] .= ','.$table.'.'.$this->sd.$desc.$this->ed;
+			$qparts['select'] .= ','.$table_name.'.'.$this->sd.$desc.$this->ed;
 			$qparts['orderby'] = $this->sd.$desc.$this->ed;
 		} else if ($key) {
 			$qparts['orderby'] = $this->sd.$key.$this->ed;
 		}
-		$qparts['from'] = $dbp.$table;
+		$qparts['from'] = $from_table;
 		if (!empty($filters)) {
 			$qparts['where'] = $this->substituteVars($filters, $subs);
 		}
 		if (!empty($orderby)) {
 			$qparts['orderby'] = $this->substituteVars($orderby, $subs);
 		} else if (!empty($groups)) {
-			$qparts['orderby'] = $table.'.'.$this->sd.$groups.$this->ed.' ASC';
+			$qparts['orderby'] = $table_name.'.'.$this->sd.$groups.$this->ed.' ASC';
 		}
 		if (!empty($groups)) {
-			$qparts['select'] .= ','.$table.'.'.$this->sd.$groups.$this->ed;
+			$qparts['select'] .= ','.$table_name.'.'.$this->sd.$groups.$this->ed;
 		}
 
 		$res	= $this->myquery($this->get_SQL_query($qparts), __LINE__);
@@ -889,7 +899,7 @@ class phpMyEdit
 	{
 		$fields = array();
 		for ($k = 0; $k < $this->num_fds; $k++) {
-			if (false/*! $this->displayed[$k] && $k != $this->key_num*/) {
+			if (/*false*/! $this->displayed[$k] && $k != $this->key_num) {
 				continue;
 			}
 			$fields[] = $this->fqn($k).' AS '.$this->sd.'qf'.$k.$this->ed; // no delimiters here, or maybe some yes
@@ -1371,6 +1381,8 @@ class phpMyEdit
 			}
 			$this->cur_tab = $this->get_sys_cgi_var('cur_tab', $this->cur_tab);
 
+			//error_log(print_r($this->tabs, true));
+
 			// Transfer tab definitions to the CSS which will be
 			// emitted automatically. Columns without tab definitions
 			// will got the last mentioned tab. The first columns
@@ -1515,7 +1527,7 @@ class phpMyEdit
 				//$escape	    = true;
 				if ($this->col_has_checkboxes($k) || $this->col_has_radio_buttons($k)) {
 					echo $this->htmlRadioCheck($this->cgi['prefix']['data'].$this->fds[$k],
-											   $css_class_name, $vals, $groups, $selected,
+											   $css_class_name, $vals, $selected,
 											   $multiple, $readonly,
 											   $strip_tags, $escape, NULL, $helptip);
 				} else {
@@ -1564,6 +1576,7 @@ class phpMyEdit
 		}
 	} /* }}} */
 
+	// Actually: copy, change, delete AND view
 	function display_copy_change_delete_record() /* {{{ */
 	{
 		/*
@@ -1687,8 +1700,11 @@ class phpMyEdit
 		 * not been requested.
 		 */
 
+
+		//error_log('vals '.print_r($vals, true));
+
 		if ($this->col_has_php($k)) {
-			$value = $vals ? $vals[$row["qf$k"]] : $row["qf$k"];
+			$value = !empty($vals) ? $vals[$row["qf$k"]] : $row["qf$k"];
 			$php = $this->fdd[$k]['php'];
 			if (is_array($php)) {
 				switch ($php['type']) {
@@ -1719,7 +1735,7 @@ class phpMyEdit
 			//$escape	    = true;
 			if ($this->col_has_checkboxes($k) || $this->col_has_radio_buttons($k)) {
 				echo $this->htmlRadioCheck($this->cgi['prefix']['data'].$this->fds[$k],
-										   $css_class_name, $vals, $groups,
+										   $css_class_name, $vals,
 										   $selected, $multiple, $readonly,
 										   $strip_tags, $escape, NULL, $help);
 			} else {
@@ -2215,7 +2231,6 @@ class phpMyEdit
 	 * @param	name		element name
 	 * @param	css			CSS class name
 	 * @param	kv_array	key => value array
-	 * @param   kg_array    value => group array
 	 * @param	selected	selected key (it can be single string, array of
 	 *						keys or multiple values separated by comma)
 	 * @param	multiple	bool for multiple selection
@@ -2253,20 +2268,25 @@ class phpMyEdit
 		}
 		$found = false;
 		$lastGroup = null;
+		$groupId = 0;
 		$ret .= $multiple ? '' : '<option value=""></option>'."\n";
 		foreach ($kv_array as $key => $value) {
 			if (is_array($kg_array) && $kg_array[$key] != $lastGroup) {
 				if (isset($lastGroup)) {
 					$ret .= "</optgroup>\n";
+					$groupId++;
 				}
 				$lastGroup = $kg_array[$key];
-				$ret .= '<optgroup label="'.$lastGroup.'">'."\n";
+				$ret .= '<optgroup data-group-id="'.$groupId.'" label="'.$lastGroup.'">'."\n";
 			}
 			$ret .= '<option value="'.htmlspecialchars($key).'"';
 			if ((! $found || $multiple) && in_array((string)$key, $selected, 1)
 				|| (count($selected) == 0 && ! $found && ! $multiple)) {
 				$ret  .= ' selected="selected"';
 				$found = true;
+			}
+			if ($lastGroup) {
+				$ret .= ' data-group-id="'.$groupId.'"';
 			}
 			$strip_tags && $value = strip_tags($value);
 			$escape		&& $value = htmlspecialchars($value);
@@ -2285,7 +2305,6 @@ class phpMyEdit
 	 * @param	name		element name
 	 * @param	css			CSS class name
 	 * @param	kv_array	key => value array
-	 * @param   kg_array    key => group array
 	 * @param	selected	selected key (it can be single string, array of
 	 *						keys or multiple values separated by comma)
 	 * @param	multiple	bool for multiple selection (checkboxes)
@@ -2307,6 +2326,7 @@ class phpMyEdit
 		if (! is_array($selected)) {
 			$selected = $selected === null ? array() : array($selected);
 		}
+
 		if (count($kv_array) == 1 || $multiple) {
 			$type = 'checkbox';
 		} else {
@@ -3058,6 +3078,7 @@ class phpMyEdit
 		echo '</tr>',"\n";
 		//}
 	} /* }}} */
+
 	function display_sorting_sequence() /* {{{ */
 	{
 		/*
@@ -3945,10 +3966,15 @@ class phpMyEdit
 					// keep for reference in oldvals
 					$newvals[$fd] = is_array($fn) ? join(',',$fn) : $fn;
 				}
-				if ($query_oldrec == '') {
-					$query_oldrec = 'SELECT '.$this->sd.$fd.$this->ed;
+				if ($this->col_has_sql($k)) {
+					$query_part = $this->fdd[$k]['sql']." AS '".$fd."'";
 				} else {
-					$query_oldrec .= ','.$this->sd.$fd.$this->ed;
+					$query_part = $this->sd.$fd.$this->ed;
+				}
+				if ($query_oldrec == '') {
+					$query_oldrec = 'SELECT '.$query_part;
+				} else {
+					$query_oldrec .= ','.$query_part;
 				}
 				if ($this->col_has_multiple($k)) {
 					$multiple[$fd] = true;
@@ -3958,6 +3984,7 @@ class phpMyEdit
 		$query_newrec  = $query_oldrec.' FROM ' . $this->tb;
 		$query_oldrec .= ' FROM ' . $this->sd.$this->tb.$this->ed . $where_part;
 		// Additional query (must go before real query)
+		// error_log('old query '.$query_oldrec);
 		$res	 = $this->myquery($query_oldrec, __LINE__);
 		$oldvals = $this->sql_fetch($res);
 		$this->sql_free_result($res);
@@ -3999,8 +4026,10 @@ class phpMyEdit
 				}
 			}
 		}
+		//error_log('changed: '.print_r($changed, true));
+
 		// Before trigger
-		if ($this->exec_triggers('update', 'before', $oldvals, $changed, $newvals) == false) {
+		if ($this->exec_triggers('update', 'before', $oldvals, $changed, $newvals) === false) {
 			return false;
 		}
 		echo '<!-- '.print_r($newvals, true).'-->';
@@ -4254,6 +4283,7 @@ class phpMyEdit
 			}
 		}
 
+		$changed = array_unique($changed);
 		//echo "<PRE>".$this->options."</PRE>";
 
 		return $ret;

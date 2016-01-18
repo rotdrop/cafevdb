@@ -50,6 +50,9 @@ $this->create("cafevdb_ajax_events_new.form.php", "ajax/events/new.form.php")
 $this->create("cafevdb_ajax_events_sendmail.php", "ajax/events/sendmail.php")
   ->actionInclude("cafevdb/ajax/events/sendmail.php");
 
+$this->create("cafevdb_ajax_expertmode_setupdb.php", "ajax/expertmode/setupdb.php")
+  ->actionInclude("cafevdb/ajax/expertmode/setupdb.php");
+
 $this->create("cafevdb_ajax_expertmode_adjustinstruments.php", "ajax/expertmode/adjustinstruments.php")
   ->actionInclude("cafevdb/ajax/expertmode/adjustinstruments.php");
 
@@ -172,6 +175,9 @@ $this->create("cafevdb_ajax_projects_verifyName.php", "ajax/projects/verifyName.
 
 $this->create("cafevdb_ajax_projects_web-articles.php", "ajax/projects/web-articles.php")
   ->actionInclude("cafevdb/ajax/projects/web-articles.php");
+
+$this->create("cafevdb_ajax_projects_web-articles.php", "ajax/projects/extra-fields.php")
+  ->actionInclude("cafevdb/ajax/projects/extra-fields.php");
 
 $this->create("cafevdb_ajax_settings_app-settings.php", "ajax/settings/app-settings.php")
   ->actionInclude("cafevdb/ajax/settings/app-settings.php");

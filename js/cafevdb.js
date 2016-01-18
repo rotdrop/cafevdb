@@ -1174,14 +1174,12 @@ var CAFEVDB = CAFEVDB || {};
       }
       var tooltipClasses = classAttr.match(/tooltip-[a-z-]+/g);
       if (tooltipClasses) {
-alert('Tooltip Options: '+tooltipClasses.length);
         var idx;
         for(idx = 0; idx < tooltipClasses.length; ++idx) {
           var tooltipClass = tooltipClasses[idx];
           var placement = tooltipClass.match(/^tooltip-(bottom|top|right|left)$/);
           if (placement && placement.length == 2 && placement[1].length > 0) {
             classOptions.placement = 'auto '+placement[1];
-alert('Tooltip Options: '+CAFEVDB.print_r(classOptions, true));
             continue;
           }
           extraClass = tooltipClass;
