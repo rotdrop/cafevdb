@@ -475,7 +475,8 @@ namespace CAFEVDB
       $opts['triggers']['insert']['before'][]  = 'CAFEVDB\ProjectExtra::beforeInsertTrigger';
       $opts['triggers']['insert']['before'][]  = 'CAFEVDB\ProjectExtra::beforeUpdateOrInsertTrigger';
 
-      $opts['triggers']['update']['pre'][]  =
+      $opts['triggers']['filter']['pre'][]  =
+        $opts['triggers']['update']['pre'][]  =
         $opts['triggers']['insert']['pre'][]  = 'CAFEVDB\ProjectExtra::preTrigger';
 
       $opts['triggers']['insert']['after'][]  = 'CAFEVDB\ProjectExtra::afterTrigger';
@@ -505,6 +506,7 @@ namespace CAFEVDB
 
     public static function generateNumbers($handle = false)
     {
+      $start = microtime(true);
       $result = false;
 
       $ownConnection = $handle === false;
@@ -533,9 +535,18 @@ namespace CAFEVDB
                             \OCP\Util::ERROR);
       }
 
+      $numRows = mySQL::queryNumRows('FROM numbers', $handle);
+
       if ($ownConnection) {
         mySQL::close($handle);
       }
+
+      $elapsed = microtime(true) - $start;
+
+      error_log('elapsed: '.$elapsed);
+      \OCP\Util::writeLog(Config::APP_NAME,
+                          __METHOD__.': elapsed: '.$elapsed,
+                          \OCP\Util::DEBUG);
 
       return $result;
     }
@@ -757,8 +768,8 @@ namespace CAFEVDB
       return $result;
     }
 
-    /**Fetch only the relevant pivot cells in order to build the link
-     * between data-table and instrumentation table.
+    /**Fetch the field definitions in order to generate SQL code to do
+     * all the joining and linking.
      */
     public static function projectExtraFields($projectId, $full = false, $handle = false)
     {

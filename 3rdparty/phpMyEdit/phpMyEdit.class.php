@@ -2967,6 +2967,10 @@ class phpMyEdit
 
 	function filter_heading() /* {{{ */
 	{
+		// in case the filters need some setup, but ignore the return
+		// value.
+		$this->exec_triggers_simple('filter', 'pre');
+
 		/* FILTER {{{
 		 *
 		 * Draw the filter and fill it with any data typed in last pass and stored

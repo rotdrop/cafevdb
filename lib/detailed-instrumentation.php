@@ -755,6 +755,11 @@ class DetailedInstrumentation
     $opts['triggers']['update']['before'][]  = 'CAFEVDB\DetailedInstrumentation::beforeUpdateTrigger';
     $opts['triggers']['delete']['before'][]  = 'CAFEVDB\DetailedInstrumentation::beforeDeleteTrigger';
 
+    // fill the numbers table
+    $opts['triggers']['filter']['pre'][]  =
+      $opts['triggers']['update']['pre'][]  =
+      $opts['triggers']['insert']['pre'][]  = 'CAFEVDB\ProjectExtra::preTrigger';
+
     if ($this->pme_bare) {
       // disable all navigation buttons, probably for html export
       $opts['navigation'] = 'N'; // no navigation
