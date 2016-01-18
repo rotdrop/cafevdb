@@ -22,6 +22,10 @@
 
 namespace CAFEVDB {
 
+  // control buttons could live outside control bar and thus overlay
+  // the modal overlay. Would be nice, especially when including
+  // restoration of dialogs into the history management.
+
   echo Util::emitExternalScripts();
   echo Util::emitInlineScripts();
 
@@ -224,7 +228,7 @@ namespace CAFEVDB {
   </div>
 </div>
 <div id="app-content">
-  <div id="controls">
+<div id="controls">
   <form id="personalsettings" method="post" action="?app=<?php echo Config::APP_NAME; ?>">
     <input type="hidden" name="requesttoken" value="<?php echo $_['requesttoken']; ?>" />
     <?php echo $navigationControls; ?>
