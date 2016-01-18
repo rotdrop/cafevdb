@@ -758,7 +758,6 @@ a comma.'));
 
       $query = 'SELECT `ExtraFelder` FROM `Projekte` WHERE `Id` = '.$projectId;
       $result = mySQL::query($query, $handle);
-
       // Get the single line
       $line = mySQL::fetch($result) or Util::error("Couldn't fetch the result for '".$query."'");
 
@@ -2116,149 +2115,172 @@ __EOT__;
         // Principal key is still the key from the Besetzungen ==
         // Instrumentation table.
         'Id' => array('table' => 'Besetzungen',
+                      'tablename' => 'b',
                       'column' => true,
                       'key' => true,
                       'join' => array('type' => 'INNER')),
 
         'MusikerId' => array(
           'table' => 'Musiker',
+          'tablename' => 'm',
           'column' => 'Id',
           'key' => true,
           'join' => array(
             'type' => 'INNER',
             'condition' => (
-              '`Musiker`.`Id` = `Besetzungen`.`MusikerId` '.
+              'm.`Id` = b.`MusikerId` '.
               'AND '.
-              $projectId.' = `Besetzungen`.`ProjektId`')
+              $projectId.' = b.`ProjektId`')
             )),
 
-        'Instrument' => array('table' => 'Besetzungen',
+        'Instrument' => array('table' => 'b',
+                              'tablename' => 'b',
                               'column' => true,
                               'join' => array('type' => 'INNER')),
 
-        'Reihung' => array('table' => 'Besetzungen',
+        'Reihung' => array('table' => 'b',
                            'column' => true,
                            'join' => array('type' => 'INNER')),
 
-        'Stimmführer' => array('table' => 'Besetzungen',
+        'Stimmführer' => array('table' => 'b',
                                'column' => true,
                                'join' => array('type' => 'INNER')),
 
         'Familie' => array(
           'table' => 'Instrumente',
+          'tablename' => 'i',
           'column' => true,
           'join' => array(
             'type' => 'LEFT',
-            'condition' => ('`Besetzungen`.`Instrument` = `Instrumente`.`Instrument`')
+            'condition' => ('b.`Instrument` = i.`Instrument`')
             )
           ),
-        'Sortierung' => array('table' => 'Instrumente',
+        'Sortierung' => array('table' => 'i',
                               'column' => true,
                               'join' => array('type' => 'LEFT')),
 
-        'Anmeldung' => array('table' => 'Besetzungen',
+        'Anmeldung' => array('table' => 'b',
                              'column' => true,
                              'join' => array('type' => 'INNER')),
 
-        'Name' => array('table' => 'Musiker',
+        'Name' => array('table' => 'm',
                         'column' => true,
                         'join' => array('type' => 'INNER')),
-        'Vorname' => array('table' => 'Musiker',
+        'Vorname' => array('table' => 'm',
                            'column' => true,
                            'join' => array('type' => 'INNER')),
-        'Email' => array('table' => 'Musiker',
+        'Email' => array('table' => 'm',
                          'column' => true,
                          'join' => array('type' => 'INNER')),
-        'MobilePhone' => array('table' => 'Musiker',
+        'MobilePhone' => array('table' => 'm',
                                'column' => true,
                                'join' => array('type' => 'INNER')),
-        'FixedLinePhone' => array('table' => 'Musiker',
+        'FixedLinePhone' => array('table' => 'm',
                                   'column' => true,
                                   'join' => array('type' => 'INNER')),
-        'Strasse' => array('table' => 'Musiker',
+        'Strasse' => array('table' => 'm',
                            'column' => true,
                            'join' => array('type' => 'INNER')),
-        'Postleitzahl' => array('table' => 'Musiker',
+        'Postleitzahl' => array('table' => 'm',
                                 'column' => true,
                                 'join' => array('type' => 'INNER')),
-        'Stadt' => array('table' => 'Musiker',
+        'Stadt' => array('table' => 'm',
                          'column' => true,
                          'join' => array('type' => 'INNER')),
-        'Land' => array('table' => 'Musiker',
+        'Land' => array('table' => 'm',
                         'column' => true,
                         'join' => array('type' => 'INNER')),
 
-        'Unkostenbeitrag' => array('table' => 'Besetzungen',
+        'Unkostenbeitrag' => array('table' => 'b',
                                    'column' => true,
                                    'join' => array('type' => 'INNER')),
-        'Anzahlung' => array('table' => 'Besetzungen',
+        'Anzahlung' => array('table' => 'b',
                              'column' => true,
                              'join' => array('type' => 'INNER')),
-        'PaymentStatus' => array('table' => 'Besetzungen',
+        'PaymentStatus' => array('table' => 'b',
                                  'column' => 'BezahlStatus',
                                  'join' => array('type' => 'INNER')),
-        'ProjectRemarks' => array('table' => 'Besetzungen',
+        'ProjectRemarks' => array('table' => 'b',
                                   'column' => 'Bemerkungen',
                                   'join' => array('type' => 'INNER'))
         );
 
-      // "Extra"'s will be added at end. Generate a suitable "SELECT"
-      // string for that. Ordering of field in the table is just the
-      // ordering in the "$extra" table.
       $extraColumns = array();
-      foreach ($extraFields as $field) {
-        $extraColumns[$field['name']] = array('table' => 'Besetzungen',
-                                              'column' => sprintf('ExtraFeld%02d', $field['pos']),
-                                              'join' => array('type' => 'INNER'));
+      // new code
+      $idx = 0;
+      foreach($extraFields as $field) {
+        $name = $field['Name'];
+        $extraColumns[$name.'Id'] = array('table' => 'fd'.$idx, // field-data
+                                          'column' => 'Id',
+                                          'key' => true,
+                                          'join' => array('type' => 'INNER'));
+        $short = 'fd'.$idx;
+        $extraColumns[$name] = array(
+          'table' => 'ProjectExtraFieldsData',
+          'tablename' => $short,
+          'column' => 'FieldValue',
+          'join' => array(
+            'type' => 'LEFT',
+            'condition' =>
+            $short.'.`BesetzungenId` = b.`Id`'.
+            ' AND '.
+            $short.'.`FieldId` = '.$field['Id']
+            )
+          );
+
+        // and don't forget:
+        ++$idx;
       }
 
       $viewStructure2 = array(
-        'Instrumente' => array('table' => 'Musiker',
+        'Instrumente' => array('table' => 'm',
                                   'column' => 'Instrumente',
                                   'join' => array('type' => 'INNER')),
-        'Sprachpräferenz' => array('table' => 'Musiker',
+        'Sprachpräferenz' => array('table' => 'm',
                                    'column' => true,
                                    'join' => array('type' => 'INNER')),
-        'Geburtstag' => array('table' => 'Musiker',
+        'Geburtstag' => array('table' => 'm',
                               'column' => true,
                               'join' => array('type' => 'INNER')),
-        'MemberStatus' => array('table' => 'Musiker',
+        'MemberStatus' => array('table' => 'm',
                                 'column' => true,
                                 'join' => array('type' => 'INNER')),
-        'Remarks' => array('table' => 'Musiker',
+        'Remarks' => array('table' => 'm',
                            'column' => true,
                            'join' => array('type' => 'INNER')),
 
         'Portrait' => array(
           'table' => 'ImageData',
-          'column' => "CONCAT('data:',`ImageData`.`MimeType`,';base64,',`ImageData`.`Data`)",
+          'tablename' => 'img',
+          'column' => "CONCAT('data:',img.`MimeType`,';base64,',img.`Data`)",
           'verbatim' => true,
           'join' => array(
             'type' => 'LEFT',
             'condition' => (
-              '`ImageData`.`ItemId` = `Besetzungen`.`MusikerId` '.
+              'img.`ItemId` = b.`MusikerId` '.
               'AND '.
-              "`ImageData`.`ItemTable` = 'Musiker'")
+              "img.`ItemTable` = 'Musiker'")
             )),
 
         'Projects' => array(
-          'table' => 'Besetzungen` AS `Besetzungen2',
-          'column' => "GROUP_CONCAT(DISTINCT `Projekte`.`Name` ORDER BY `Projekte`.`Name` ASC SEPARATOR ',')",
+          'table' => 'Besetzungen',
+          'tablename' => 'b2',
+          'column' => "GROUP_CONCAT(DISTINCT p.`Name` ORDER BY p.`Name` ASC SEPARATOR ',')",
           'verbatim' => true,
           'join' => array(
             'type' => 'LEFT',
-            'condition' => '`Musiker`.`Id` = `Besetzungen2`.`MusikerId`
-  LEFT JOIN `Projekte`
-  ON `Besetzungen2`.`ProjektId` = `Projekte`.`Id`
-  GROUP BY `Besetzungen`.`Id`'
+            'condition' => 'm.`Id` = b2.`MusikerId`
+  LEFT JOIN `Projekte` p
+  ON b2.`ProjektId` = p.`Id`
+  GROUP BY b.`Id`'
             ),
           ),
 
-        'UUID' => array('table' => 'Musiker',
+        'UUID' => array('table' => 'm',
                         'column' => true,
                         'join' => array('type' => 'INNER')),
 
-        'Aktualisiert' => array('table' => 'Musiker',
+        'Aktualisiert' => array('table' => 'm',
                                 'column' => true,
                                 'join' => array('type' => 'INNER')),
 
@@ -2266,11 +2288,32 @@ __EOT__;
         );
 
       $viewStructure = array_merge($viewStructure1, $extraColumns, $viewStructure2);
+      $tableAlias = array();
+      foreach($viewStructure as $column => $data) {
+        if (isset($data['join']['condition'])) {
+          // here table and tablename neeed to defined correctly,
+          // where tablename is the alias, if any.
+          if (isset($data['table']) && isset($data['tablename'])) {
+            $tableAlias[$data['tablename']] = $data['table'];
+          }
+        }
+      }
       foreach($viewStructure as $column => &$data) {
         if (!isset($data['key'])) {
           $data['key'] = false;
         }
+        isset($data['table']) || $data['table'] = $data['tablename'];
+        $table = $data['table'];
+        if (isset($tableAlias[$table])) {
+          // switch, this is the alias
+          $data['table'] = $tableAlias[$table];
+          $data['tablename'] = $table;
+        }
+        isset($data['tablename']) || $data['tablename'] = $data['table'];
       }
+
+      /* error_log(print_r($tableAlias, true)); */
+      /* error_log(print_r($viewStructure, true)); */
 
       return $viewStructure;
     }
@@ -2296,7 +2339,10 @@ __EOT__;
       self::createExtraFields($projectId, $handle);
 
       // Fetch the extra-fields
-      $extra = self::extraFields($projectId, $handle);
+      //$extra = self::extraFields($projectId, $handle);
+      $extra = ProjectExtra::projectExtraFields($projectId, true, $handle);
+
+      //error_log(print_r($extra, true));
 
       $structure = self::viewStructure($projectId, $extra);
       $sqlSelect = mySQL::generateJoinSelect($structure);
@@ -2306,11 +2352,11 @@ __EOT__;
       // 2: sort (reverse) on the Stimmfuehrer attribute
       // 3: sort on the sur-name
       // 4: sort on the pre-name
-      $sqlSort = 'ORDER BY `Instrumente`.`Sortierung` ASC,
- `Besetzungen`.`Reihung` ASC,
- `Besetzungen`.`Stimmführer` DESC,
- `Musiker`.`Name` ASC,
- `Musiker`.`Vorname` ASC';
+      $sqlSort = 'ORDER BY i.`Sortierung` ASC,
+ b.`Reihung` ASC,
+ b.`Stimmführer` DESC,
+ m.`Name` ASC,
+ m.`Vorname` ASC';
 
       $sqlQuery = "CREATE OR REPLACE VIEW `".$projectName."View` AS\n"
         .$sqlSelect
@@ -2318,7 +2364,14 @@ __EOT__;
 
       \OCP\Util::writeLog(Config::APP_NAME, __METHOD__.": ".$sqlQuery, \OCP\Util::DEBUG);
 
-      mySQL::query($sqlQuery, $handle);
+      $result = mySQL::query($sqlQuery, $handle);
+      if ($result === false) {
+        \OCP\Util::writeLog(Config::APP_NAME,
+                            __METHOD__.
+                            ': mySQL error: '.mySQL::error().' query '.$sqlQuery,
+                            \OCP\Util::ERROR);
+      }
+      //error_log($sqlQuery);
 
       if ($ownConnection) {
         mySQL::close($handle);

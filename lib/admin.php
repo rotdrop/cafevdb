@@ -100,7 +100,7 @@ RETURN CHAR_LENGTH(x) - CHAR_LENGTH(REPLACE(x, delim, '')) + 1",
       foreach(self::$dataBaseRoutines AS $name => $routine) {
         $query = 'CREATE OR REPLACE '.$routine;
 
-        error_log($name.': '.$query);
+        //error_log($name.': '.$query);
 
         $result = mySQL::query($query, $handle, false, true);
         if ($result === false) {
@@ -210,7 +210,7 @@ WHERE  TABLE_SCHEMA = '".Config::$dbopts['db']."'";
     }
 
     /**TBD*/
-    public static function ßrecreateAllViews()
+    public static function recreateAllViews()
     {
       Config::init();
 

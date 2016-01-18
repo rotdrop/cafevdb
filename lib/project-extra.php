@@ -312,10 +312,9 @@ namespace CAFEVDB
       // TODO: maybe get rid of enums and sets alltogether
       $typeValues = array();
       $typeGroups = array();
-      $types = mySQL::fetchRows(self::TYPE_TABLE);
+      $types = self::fieldTypes();
       if (!empty($types)) {
-        foreach($types as $typeInfo) {
-          $id = $typeInfo['Id'];
+        foreach($types as $id => $typeInfo) {
           $name = $typeInfo['Name'];
           $group = $typeInfo['Kind'];
           $typeValues[$id] = L::t($name);
@@ -402,8 +401,9 @@ namespace CAFEVDB
         'name' => L::t('Table Tab'),
         'css' => array('postfix' => ' tab allow-empty'),
         'select' => 'D',
-        'table' => array(
-
+        'values' => array(
+          'table' => self::TABLE_NAME,
+          'column' => 'Tab',
           ),
         'values2' => $tableTabValues2,
         'default' => -1,
@@ -434,8 +434,9 @@ namespace CAFEVDB
         $opts['fdd']['Encrypted'] = array(
           'name' => L::t('Encrypted'),
           'css' => array('postfix' => ' encrypted'),
-          'values2' => array(1 => ''),
-          'default' => 0,
+          'values2|CAP' => array(1 => ''), // empty label for simple checkbox
+          'values2|LVFD' => array(1 => L::t('true')),
+          'default' => '',
           'select' => 'O',
           'maxlen' => 5,
           'sort' => true,
@@ -477,6 +478,10 @@ namespace CAFEVDB
       $opts['triggers']['update']['pre'][]  =
         $opts['triggers']['insert']['pre'][]  = 'CAFEVDB\ProjectExtra::preTrigger';
 
+      $opts['triggers']['insert']['after'][]  = 'CAFEVDB\ProjectExtra::afterTrigger';
+      $opts['triggers']['update']['after'][]  = 'CAFEVDB\ProjectExtra::afterTrigger';
+      $opts['triggers']['delete']['after'][]  = 'CAFEVDB\ProjectExtra::afterTrigger';
+
       $opts['execute'] = $this->execute;
 
       $pme = new \phpMyEdit($opts);
@@ -505,7 +510,7 @@ namespace CAFEVDB
       $ownConnection = $handle === false;
       if ($ownConnection) {
         Config::init();
-        $handle = self::connect(Config::$pmeopts);
+        $handle = mySQL::connect(Config::$pmeopts);
       }
 
       $query = 'SELECT MAX(tokenCount(AllowedValues, \'\n\'))
@@ -513,13 +518,19 @@ namespace CAFEVDB
 
       $result = mySQL::query($query, $handle);
       if ($result === false) {
-        error_log('Error: '.$query.' '.mySQL::error());
+        \OCP\Util::writeLog(Config::APP_NAME,
+                            __METHOD__.
+                            ': mySQL error: '.mySQL::error().' query '.$query,
+                            \OCP\Util::ERROR);
       }
 
       $query = 'CALL generateNumbers(@max)';
       $result = mySQL::query($query, $handle);
       if ($result === false) {
-        error_log('Error: '.$query.' '.mySQL::error());
+        \OCP\Util::writeLog(Config::APP_NAME,
+                            __METHOD__.
+                            ': mySQL error: '.mySQL::error().' query '.$query,
+                            \OCP\Util::ERROR);
       }
 
       if ($ownConnection) {
@@ -528,6 +539,50 @@ namespace CAFEVDB
 
       return $result;
     }
+
+    /** phpMyEdit calls the trigger (callback) with the following arguments:
+     *
+     * @param[in] $pme The phpMyEdit instance
+     *
+     * @param[in] $op The operation, 'insert', 'update' etc.
+     *
+     * @param[in] $step 'before' or 'after'
+     *
+     * @param[in] $oldvals Self-explanatory.
+     *
+     * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
+     *
+     * @param[in,out] &$newvals Set of new values, which may also be modified.
+     *
+     * @return boolean. If returning @c false the operation will be terminated
+     */
+    public static function afterTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
+    {
+      if ($op === 'update') {
+        // only need to rebuild the view if the name or display-order
+        // has changed (index must not changed)
+        if (array_search('Name', $changed) === false &&
+            array_search('DisplayOrder', $changed) === false) {
+
+          //error_log('bail out'.print_r($changed, true));
+
+          return true;
+        }
+      }
+
+      error_log(print_r($newvals, true));
+      error_log(print_r($changed, true));
+
+      $projectId = $newvals['ProjectId'];
+      if ($projectId <= 0) {
+        $projectId = $newvals['ProjectId'] = Util::cgiValue('ProjectId', false);
+      }
+
+      error_log('prid '.$projectId);
+
+      return Projects::createView($projectId, false, $pme->dbh);
+    }
+
 
     /** phpMyEdit calls the trigger (callback) with the following arguments:
      *
@@ -627,7 +682,8 @@ namespace CAFEVDB
        *
        */
       $key = array_search('DefaultMultiValue', $changed);
-      if (self::multiValueField($newvals['Type'])) {
+      $types = self::fieldTypes($pme->dbh);
+      if ($types[$newvals['Type']]['Kind'] === 'multiple') {
         $newvals['DefaultValue'] = $newvals['DefaultMultiValue'];
         if ($key !== false) {
           $changed[] = 'DefaultValue';
@@ -686,6 +742,58 @@ namespace CAFEVDB
       /* error_log(print_r($changed, true)); */
 
       return true;
+    }
+
+    /**Fetch all registered data-types. */
+    public static function fieldTypes($handle = false)
+    {
+      $types = mySQL::fetchRows(self::TYPE_TABLE);
+
+      $result = array();
+      foreach($types as $typeInfo) {
+        $id = $typeInfo['Id'];
+        $result[$id] = $typeInfo;
+      }
+      return $result;
+    }
+
+    /**Fetch only the relevant pivot cells in order to build the link
+     * between data-table and instrumentation table.
+     */
+    public static function projectExtraFields($projectId, $full = false, $handle = false)
+    {
+      $ownConnection = $handle === false;
+      if ($ownConnection) {
+        Config::init();
+        $handle = mySQL::connect(Config::$pmeopts);
+      }
+
+      if ($full) {
+        $query = "SELECT *";
+      } else {
+        $query = "SELECT `Id`, `ProcjectId`, `FieldIndex, `DisplayOrder`";
+      }
+      $query .= "
+  FROM `".self::TABLE_NAME."` WHERE `ProjectId` = ".$projectId."
+  ORDER BY `DisplayOrder` ASC";
+
+      $result = false;
+      $qResult = mySQL::query($query, $handle);
+      if ($qResult !== false) {
+        $result = array();
+        while ($row = mySQL::fetch($qResult)) {
+          if ($full && empty($row['Name'])) {
+            $row['Name'] = sprintf('Extra%04d', $row['Id']);
+          }
+          $result[] = $row;
+        }
+      }
+
+      if ($ownConnection) {
+        mySQL::close($handle);
+      }
+
+      return $result;
     }
 
     /**Fetch the data-set for the given record id.*/
@@ -754,7 +862,10 @@ namespace CAFEVDB
           $result = mySQL::insert(self::TABLE_NAME, $newVals, $handle, mySQL::UPDATE);
 
           if ($result === false) {
-            error_log('Error: '.mySQL::error());
+            \OCP\Util::writeLog(Config::APP_NAME,
+                                __METHOD__.
+                                ': mySQL error: '.mySQL::error(),
+                                \OCP\Util::ERROR);
           }
         }
       }
@@ -789,7 +900,7 @@ namespace CAFEVDB
           $fieldIndex = $extraField['pos'];
           $oldExtra = sprintf('ExtraFeld%02d', $fieldIndex);
           $query = "INSERT INTO ".self::DATA_TABLE."
-  (BesetzungenId, ExtraFieldId, FieldValue)
+  (BesetzungenId, FieldId, FieldValue)
   SELECT b.Id, f.Id as FieldId, b.".$oldExtra."
   FROM Besetzungen b
   LEFT JOIN ".self::TABLE_NAME." f
@@ -798,7 +909,10 @@ namespace CAFEVDB
 
           $result = mySQL::query($query, $handle);
           if ($result === false) {
-            error_log('Error: '.$query.' '.mySQL::error());
+            \OCP\Util::writeLog(Config::APP_NAME,
+                                __METHOD__.
+                                ': mySQL error: '.mySQL::error().' query '.$query,
+                                \OCP\Util::ERROR);
           }
         }
       }

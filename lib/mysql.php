@@ -277,19 +277,33 @@ namespace CAFEVDB
       $firstTable = reset($joinStructure);
       if ($firstTable == false) {
         return false;
-      } else {
-        $firstTable = $firstTable['table'];
       }
-      $join = $ind.'FROM '.$bt.$firstTable.$bt.$nl;
+
+      $joinDflt = array('table' => false,
+                        'tablename' => false,
+                        'column' => true,
+                        'verbatim' => false);
+
+      $firstTable = array_merge($joinDflt, $firstTable);
+      $table = $firstTable['table'];
+      $tablename = $firstTable['tablename'];
+      !empty($table) || $table = $tablename;
+      !empty($tablename) || $tablename = $table;
+
+      $join = $ind.'FROM '.$bt.$table.$bt;
+      if ($tablename !== $table) {
+        $join .= ' '.$tablename.' ';
+      }
+      $join .= $nl;
       $select = 'SELECT'.$nl;
       foreach($joinStructure as $joinColumn => $joinedColumn) {
         // Set default options. The default options array MUST come
         // first, later arrays override (see manual for array_merge())
-        $joinedColumn = array_merge(array(
-                                      'column' => true,
-                                      'verbatim' => false),
-                                    $joinedColumn);
+        $joinedColumn = array_merge($joinDflt, $joinedColumn);
         $table = $joinedColumn['table'];
+        $tablename = $joinedColumn['tablename'];
+        !empty($table) || $table = $tablename;
+        !empty($tablename) || $tablename = $table;
         if ($joinedColumn['column'] === true) {
           $name = $joinColumn;
           $as = '';
@@ -298,18 +312,21 @@ namespace CAFEVDB
           $as = ' AS '.$bt.$joinColumn.$bt;
         }
         if (!$joinedColumn['verbatim']) {
-          $column = $bt.$joinedColumn['table'].$bt.$dot.$bt.$name.$bt;
+          $column = $bt.$tablename.$bt.$dot.$bt.$name.$bt;
         } else {
           $column = $name;
         }
         $select .= $ind.$ind.$column.$as.','.$nl;
         if (isset($joinedColumn['join']['condition'])) {
-          $table = $joinedColumn['table'];
           $type = $joinedColumn['join']['type'];
           $cond = $joinedColumn['join']['condition'];
           $join .=
             $ind.$ind.
-            $type.' JOIN '.$bt.$table.$bt.$nl.
+            $type.' JOIN '.$bt.$table.$bt;
+          if ($tablename != $table) {
+            $join .= ' '.$tablename.' ';
+          }
+          $join .= $nl.
             $ind.$ind.$ind.'ON '.$cond.$nl;
         }
       }
@@ -371,9 +388,9 @@ namespace CAFEVDB
 
       $result = self::query($query, $handle);
 
-      if ($result === false) {
-        error_log('Error: '.$query.' '.mySQL::error());
-      }
+      /* if ($result === false) { */
+      /*   error_log('Error: '.$query.' '.mySQL::error()); */
+      /* } */
 
       if ($ownConnection) {
         self::close($handle);

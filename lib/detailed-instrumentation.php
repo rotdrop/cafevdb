@@ -55,28 +55,6 @@ class DetailedInstrumentation
     return $this->shortTitle();
   }
 
-  /**Export the description for the table tabs. */
-  static function tableTabs()
-  {
-    return array(
-      array('id' => 'instrumentation',
-            'default' => true,
-            'tooltip' => Config::toolTips('project-instrumentation-tab'),
-            'name' => L::t('Instrumentation related data')),
-      array('id' => 'project',
-            'tooltip' => Config::toolTips('project-metadata-tab'),
-            'name' => L::t('Project related data')),
-      array('id' => 'musician',
-            'tooltip' => Config::toolTips('project-personaldata-tab'),
-            'name' => L::t('Personal data')),
-      array('id' => 'tab-all',
-            'tooltip' => Config::toolTips('pme-showall-tab'),
-            'name' => L::t('Display all columns'))
-      );
-  }
-
-
-
   function display()
   {
     global $debug_query;
@@ -87,6 +65,7 @@ class DetailedInstrumentation
     $opts            = $this->opts;
     $recordsPerPage  = $this->recordsPerPage;
     $userExtraFields = $this->userExtraFields;
+    $fieldTypes      = $this->extraFieldTypes;
 
     $project = Projects::fetchById($projectId);
 
@@ -150,7 +129,7 @@ class DetailedInstrumentation
         //'query' => true,
         'sort'  => true,
         'time'  => true,
-        'tabs' => self::tableTabs()
+        'tabs' => self::tableTabs($userExtraFields)
         ));
 
     // Set default prefixes for variables
@@ -463,8 +442,9 @@ class DetailedInstrumentation
       $opts['fdd']['DebitMandateProject'] = array(
         'input' => 'V',
         'name' => 'internal data',
-        'select' => 'T',
         'options' => 'H',
+        //'input'    => 'H',
+        'select' => 'T',
         'sql' => '`PMEjoin'.$mandateIdx.'`.`projectId`', // dummy, make the SQL data base happy
         'sqlw' => '`PMEjoin'.$mandateIdx.'`.`projectId`' // dummy, make the SQL data base happy
         );
@@ -472,20 +452,120 @@ class DetailedInstrumentation
 
     // Generate input fields for the extra columns
     foreach ($userExtraFields as $field) {
-      $name = $field['name'];
-      $opts['fdd']["$name"] = array('name'     => $name."\n(".$projectName.")",
-                                    'tab' => array('id' => 'project'),
-                                    'select'   => 'T',
-                                    'maxlen'   => 65535,
-                                    'textarea' => array('css' => '',
-                                                        'rows' => 2,
-                                                        'cols' => 32),
-                                    'escape'   => false,
-                                    'sort'     => true);
-      if ($field['tooltip'] !== false) {
-        $opts['fdd']["$name"]['tooltip'] = $field['tooltip'];
+      $name = $field['Name'];
+
+      $tab = array('id' => 'project');
+      if (!empty($field['Tab'])) {
+        $tabId = self::tableTabId($field['Tab']);
+        $tab = array('id' => $tabId);
       }
+
+      $opts['fdd'][$name] = array(
+        'name'     => $name."\n(".$projectName.")",
+        'css'      => array('postfix' => ' extra-field'),
+        'tab'      => $tab,
+        'select'   => 'T',
+        'maxlen'   => 65535,
+        'textarea' => array('css' => '',
+                            'rows' => 2,
+                            'cols' => 32),
+        'display|LF' => array('popup' => 'data'),
+        'default'  => $field['DefaultValue'],
+        'escape'   => false,
+        'sort'     => true
+        );
+
+      $fdd = &$opts['fdd'][$name];
+      if (!empty($field['ToolTip'])) {
+        $opts['fdd'][$name]['tooltip'] = $field['ToolTip'];
+      }
+
+      $type = $fieldTypes[$field['Type']];
+      switch ($type['Name']) {
+      case 'Boolean':
+        $fdd['values2|CAP'] = array(1 => ''); // empty label for simple checkbox
+        $fdd['values2|LVDF'] = array(1 => L::t('true'));
+        $fdd['select'] = 'O';
+        $fdd['default'] = (string)!!(int)$field['DefaultValue'];
+        $fdd['css']['postfix'] .= ' boolean';
+        unset($fdd['textarea']);
+        break;
+      case 'Date':
+        $fdd['maxlen'] = 10;
+        $fdd['datemask'] = 'd.m.Y';
+        $fdd['css']['postfix'] .= ' date';
+        $fdd['maxlen'] = 10;
+        unset($fdd['textarea']);
+        break;
+      case 'HTML':
+        $fdd['textarea'] = array('css' => 'wysiwygeditor',
+                                 'rows' => 5,
+                                 'cols' => 50);
+        $fdd['css']['postfix'] .= ' hide-subsequent-lines';
+        $fdd['display|LF'] = array('popup' => 'data');
+        $fdd['escape'] = false;
+        break;
+      case 'Money':
+        $fdd = Config::$opts['money'];
+        $fdd['tab'] = $tab;
+        $fdd['name'] = $name."\n(".$projectName.")";
+        $fdd['css']['postfix'] .= ' extra-field';
+        $fdd['default'] = $field['DefaultValue'];
+        break;
+      case 'Integer':
+        $fdd['select'] = 'N';
+        $fdd['mask'] = '%d';
+        unset($fdd['textarea']);
+        break;
+      case 'Float':
+        $fdd['select'] = 'N';
+        $fdd['mask'] = '%g';
+        unset($fdd['textarea']);
+        break;
+      case 'Set':
+        $fdd['css']['postfix'] .= ' set';
+        $fdd['select'] = 'M';
+        $fdd['values'] = array(
+          'table' => "SELECT Id, splitString(AllowedValues, '\\n', N) AS Item
+ FROM
+   ProjectExtraFields
+   JOIN numbers
+   ON tokenCount(AllowedValues, '\\n') >= N",
+          'column' => 'Item',
+          'subquery' => true,
+          'filters' => '$table.`Id` = '.$field['Id']
+          );
+        unset($fdd['textarea']);
+        break;
+      case 'Enumeration':
+        $fdd['css']['postfix'] .= ' enumeration allow-empty';
+        $fdd['select'] = 'D';
+        $fdd['values'] = array(
+          'table' => "SELECT Id, splitString(AllowedValues, '\\n', N) AS Item
+ FROM
+   ProjectExtraFields
+   JOIN numbers
+   ON tokenCount(AllowedValues, '\\n') >= N",
+          'column' => 'Item',
+          'subquery' => true,
+          'filters' => '$table.`Id` = '.$field['Id']
+          );
+        unset($fdd['textarea']);
+        break;
+      default:
+        break;
+      }
+
+      // Need also a hidden Id-field
+      $opts['fdd'][$name.'Id'] = array(
+        'name'     => $name.'Id',
+        'tab'      => array('id' => 'project'),
+        'input'    => 'H',
+        'select'   => 'N',
+        'escape'   => false,
+        'sort'     => false);
     }
+
     $opts['fdd']['ProjectRemarks'] =
       array('name' => L::t("Remarks")."\n(".$projectName.")",
             'select'   => 'T',
@@ -672,6 +752,7 @@ class DetailedInstrumentation
     $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
     $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeUpdateRemoveUnchanged';
     $opts['triggers']['update']['before'][]  = 'CAFEVDB\Musicians::beforeTriggerSetTimestamp';
+    $opts['triggers']['update']['before'][]  = 'CAFEVDB\DetailedInstrumentation::beforeUpdateTrigger';
     $opts['triggers']['delete']['before'][]  = 'CAFEVDB\DetailedInstrumentation::beforeDeleteTrigger';
 
     if ($this->pme_bare) {
@@ -704,10 +785,12 @@ class DetailedInstrumentation
       if (isset($viewStructure[$name])) {
         $joinField = $viewStructure[$name];
         $table = $joinField['table'];
+        $tablename = $joinField['tablename'];
         $key = isset($joinField['key']) ? $joinField['key'] : false;
         $column = $joinField['column'] === true ? $name : $joinField['column'];
         $data['querygroup'] = array(
           'table' => $table,
+          'tablename' => $tablename,
           'column' => $column,
           'key' => $key
           );
@@ -723,6 +806,106 @@ class DetailedInstrumentation
     }
 
   } // display()
+
+  /**This is the phpMyEdit before-delete trigger. We cannot delete
+   * lines from the view directly, we have to resort to the underlying
+   * 'Besetzungen' table (which obviously is also what we want here!).
+   *
+   * phpMyEdit calls the trigger (callback) with
+   * the following arguments:
+   *
+   * @param[in] $pme The phpMyEdit instance
+   *
+   * @param[in] $op The operation, 'insert', 'update' etc.
+   *
+   * @param[in] $step 'before' or 'after'
+   *
+   * @param[in] $oldvals Self-explanatory.
+   *
+   * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
+   *
+   * @param[in,out] &$newvals Set of new values, which may also be modified.
+   *
+   * @return boolean. If returning @c false the operation will be terminated
+   */
+  public static function beforeUpdateTrigger(&$pme, $op, $step, &$oldvals, &$changed, &$newvals)
+  {
+    // Perform a lazy create-on-write philosophy: if the field does
+    // not yet exist, inject a new one.
+
+    $projectId = Util::cgiValue('ProjectId', false);
+    if ($projectId === false) {
+      return true;
+    }
+
+    $types = ProjectExtra::fieldTypes($pme->dbh);
+    $extraFields = ProjectExtra::projectExtraFields($projectId, true, $pme->dbh);
+    foreach ($extraFields as $field) {
+      $name = $field['Name'];
+      $nameId = $name.'Id';
+      if (empty($oldvals[$nameId])) {
+        $values = array('BesetzungenId' => $oldvals['Id'],
+                        'FieldId' => $field['Id']);
+        $result = mySQL::insert(ProjectExtra::DATA_TABLE,
+                                $values,
+                                $pme->dbh,
+                                mySQL::IGNORE);
+        if ($result === false) {
+          return false;
+        }
+        $idx = mySQL::newestIndex($pme->dbh);
+        if ($idx === false) {
+          $idData = mySQL::fetchColumn(ProjectExtra::DATA_TABLE,
+                                       'Id',
+                                       '`BesetzungenId` = '.$oldvals['Id'].
+                                       ' AND '.
+                                       '`FieldId` = '.$field['Id'],
+                                       $pme->handle);
+          if ($idData !== false && count($idData) == 1) {
+            $idx = $idData[0];
+          }
+        }
+        if ($idx === false) {
+          return false;
+        }
+        $oldvals[$nameId] = $idx;
+      }
+      if ($types[$field['Type']]['Name'] === 'Integer') {
+        // as we only store texts internally, force to int now ...
+        if (isset($newvals[$name])) {
+          $newvals[$name] = (string)intval($newvals[$name]);
+          if ($newvals[$name] !== $oldvals[$name]) {
+            $changed[] = $name;
+          }
+        }
+      }
+      if ($types[$field['Type']]['Name'] === 'Float') {
+        // as we only store texts internally, force to float now ...
+        if (isset($newvals[$name])) {
+          $newvals[$name] = (string)floatval($newvals[$name]);
+          if ($newvals[$name] !== $oldvals[$name]) {
+            $changed[] = $name;
+          }
+        }
+      }
+      if ($types[$field['Type']]['Name'] === 'Boolean') {
+        // as we only store texts internally, force to float now ...
+        if (isset($newvals[$name])) {
+          $newvals[$name] = (string)(int)!!$newvals[$name];
+          if ($newvals[$name] !== $oldvals[$name]) {
+            $changed[] = $name;
+          }
+        }
+      }
+    }
+
+    /* error_log('******* after ******************'); */
+    /* error_log(print_r($oldvals, true)); */
+    /* error_log(print_r($newvals, true)); */
+    /* error_log(print_r($changed, true)); */
+
+    return true;
+  }
 
   /**This is the phpMyEdit before-delete trigger. We cannot delete
    * lines from the view directly, we have to resort to the underlying
@@ -815,6 +998,71 @@ class DetailedInstrumentation
       .'/>'
       .'</div>';
     return $button;
+  }
+
+
+  public static function tableTabId($idOrName)
+  {
+    $dflt = self::defaultTableTabs();
+    foreach($dflt as $tab) {
+      if ($idOrName === $tab['name']) {
+        return $idOrName;
+      }
+    }
+    return $idOrName;
+  }
+
+  /**Export the default tabs family. */
+  public static function defaultTableTabs()
+  {
+    return array(
+      array('id' => 'instrumentation',
+            'default' => true,
+            'tooltip' => Config::toolTips('project-instrumentation-tab'),
+            'name' => L::t('Instrumentation related data')),
+      array('id' => 'project',
+            'tooltip' => Config::toolTips('project-metadata-tab'),
+            'name' => L::t('Project related data')),
+      array('id' => 'musician',
+            'tooltip' => Config::toolTips('project-personaldata-tab'),
+            'name' => L::t('Personal data')),
+      array('id' => 'tab-all',
+            'tooltip' => Config::toolTips('pme-showall-tab'),
+            'name' => L::t('Display all columns'))
+      );
+  }
+
+  /**Export the description for the table tabs. */
+  public static function tableTabs($extraFields = array())
+  {
+    $dfltTabs = self::defaultTableTabs();
+
+    if (!is_array($extraFields)) {
+      return $dfltTabs;
+    }
+
+    $extraTabs = array();
+    foreach($extraFields as $field) {
+      if (empty($field['Tab'])) {
+        continue;
+      }
+
+      $extraTab = $field['Tab'];
+      foreach($dfltTabs as $tab) {
+        if ($extraTab === $tab['id'] ||
+            $extraTab === (string)$tab['name']) {
+          $extraTab = false;
+          break;
+        }
+      }
+      if ($extraTab !== false) {
+        $extraTabs[] = array('id' => $extraTab,
+                             'name' => L::t($extraTab),
+                             'tooltip' => Config::toolTips('extra-fields-extra-tab'));
+      }
+    }
+
+    return array_merge($dfltTabs, $extraTabs);
   }
 
 }; // class DetailedInstrumentation

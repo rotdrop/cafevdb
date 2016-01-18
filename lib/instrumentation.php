@@ -36,6 +36,7 @@ class Instrumentation
   protected $operation;
   protected $recordsPerPage;
   protected $userExtraFields;
+  protected $extraFieldTypes;
   protected $instruments;
   protected $instrumentFamilies;
   protected $memberStatus;
@@ -270,8 +271,9 @@ class Instrumentation
     // Fetch project specific user fields
     if ($this->projectId >= 0) {
       //  echo "Id: $this->projectId <BR/>";
-      $this->userExtraFields = Projects::extraFields($this->projectId, $handle);
+      $this->userExtraFields = ProjectExtra::projectExtraFields($this->projectId, true, $handle);
     }
+    $this->extraFieldTypes = ProjectExtra::fieldTypes($handle);
 
     /* echo "<PRE>\n"; */
     /* print_r($this->instruments); */

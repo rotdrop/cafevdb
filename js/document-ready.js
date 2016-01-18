@@ -27,16 +27,19 @@ $(document).ready(function() {
         }
     });
 
-    $(document).on('ajaxError', function(event, xhr, settings, error) {
-        OC.dialogs.alert(t('cafevdb', 'Unhandled internal AJAX error:')+
-                         '<br/>'+
-                         t('cafevdb', 'Error')+': '+error+
-                         '<br/>'+
-                         t('cafevdb', 'URL')+': '+settings.url,
-                         t('cafevdb', 'Error'),
-                         undefined, true, true);
-        return false;
-    });
+    if (false) {
+        // should somehow depend on debug mode.
+        $(document).on('ajaxError', function(event, xhr, settings, error) {
+            OC.dialogs.alert(t('cafevdb', 'Unhandled internal AJAX error:')+
+                             '<br/>'+
+                             t('cafevdb', 'Error')+': '+error+
+                             '<br/>'+
+                             t('cafevdb', 'URL')+': '+settings.url,
+                             t('cafevdb', 'Error'),
+                             undefined, true, true);
+            return false;
+        });
+    }
 
     var content = $('#content');
 
@@ -135,6 +138,7 @@ $(document).ready(function() {
         parameters: []
     });
 
+    // too long, should probably go to another file.
     PHPMYEDIT.addTableLoadCallback('ProjectExtra', {
         callback: function(selector, parameters, _resizeCB) {
 

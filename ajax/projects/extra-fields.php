@@ -45,7 +45,8 @@ namespace CAFEVDB {
     if (!empty($value)) {
     switch ($request) {
     case 'TypeInfo':
-      $multi = ProjectExtra::multiValueField($value);
+      $types = self::fieldTypes($pme->dbh);
+      $multi = $types[$value]['Kind'] === 'multiple';
       \OC_JSON::success(
         array('data' => array(
                 'message' => L::t("Request \"%s\" successful", array($request)),
