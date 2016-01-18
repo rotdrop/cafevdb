@@ -357,6 +357,13 @@ class DetailedInstrumentation
       $opts['fdd']['Anzahlung']['tab'] = array('id' => 'project');
       $opts['fdd']['Anzahlung']['default'] = $project['Anzahlung'];
       $opts['fdd']['Anzahlung']['css']['postfix'] .= ' deposit';
+
+      $opts['fdd']['Gesamtbetrag'] = Config::$opts['money'];
+      $opts['fdd']['Gesamtbetrag']['name'] = "Gesamtbetrag";
+      $opts['fdd']['Gesamtbetrag']['maxlen'] = 6; // 3 digits, no sign
+      $opts['fdd']['Gesamtbetrag']['tab'] = array('id' => 'project');
+      $opts['fdd']['Gesamtbetrag']['default'] = $project['Unkostenbeitrag'];
+      $opts['fdd']['Gesamtbetrag']['css']['postfix'] .= ' totals';
     }
 
     $needDebitMandates = Projects::needDebitMandates($projectId);
