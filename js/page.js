@@ -86,6 +86,7 @@ var CAFEVDB = CAFEVDB || {};
 
              // remember the navigation toggle
              var navToggle = $('#app-navigation-toggle').clone(true);
+             navToggle.addClass('tooltip-right');
              var newContent = $('<div>'+data.data.contents+'</div>');
              var newAppContent = newContent.find('#app-content').children();
              var newAppNavigation = newContent.find('#app-navigation').children();
