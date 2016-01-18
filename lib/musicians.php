@@ -357,9 +357,9 @@ make sure that the musicians are also automatically added to the
     $idx = count($opts['fdd']);
     $join_table = 'PMEjoin'.$idx;
     $opts['fdd']['MusikerId'] = array(
-      'input' => 'V',
+      'input' => 'VH',
       'sql' => '`'.$join_table.'`.`MusikerId`',
-      'sqlw' => '`'.$join_table.'`.`MusikerId`',
+//    'sqlw' => '`'.$join_table.'`.`MusikerId`',
       'options' => '',
       'values' => array(
         'table' => 'Besetzungen',
@@ -393,7 +393,7 @@ make sure that the musicians are also automatically added to the
       'css'      => array('postfix' => ' projects tooltip-top'),
       'display|LVF' => array('popup' => 'data'),
       'sql' => "GROUP_CONCAT(DISTINCT `".$join_table."`.`Name` ORDER BY `".$join_table."`.`Name` ASC SEPARATOR ',')",
-      'sqlw' => "GROUP_CONCAT(DISTINCT `".$join_table."`.`Name` ORDER BY `".$join_table."`.`Name` ASC SEPARATOR ',')",
+      //'sqlw' => "GROUP_CONCAT(DISTINCT `".$join_table."`.`Name` ORDER BY `".$join_table."`.`Name` ASC SEPARATOR ',')",
       'filter' => 'having', // unset: where is default
       'values' => array(
         'table' => 'Projekte',
