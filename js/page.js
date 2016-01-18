@@ -84,12 +84,13 @@ var CAFEVDB = CAFEVDB || {};
              // avoid overriding event handler, although this should
              // be somewhat slower than replacing everything in one run.
 
-             // remember the navigation toggle
-             var navToggle = $('#app-navigation-toggle').clone(true);
-             navToggle.addClass('tooltip-right');
              var newContent = $('<div>'+data.data.contents+'</div>');
              var newAppContent = newContent.find('#app-content').children();
              var newAppNavigation = newContent.find('#app-navigation').children();
+
+             // remember the navigation toggle
+             var navToggle = $('#app-navigation-toggle').detach();
+             navToggle.addClass('tooltip-right');
 
              $('#app-navigation').empty().prepend(newAppNavigation);
              $('#app-content').empty().prepend(newAppContent);
@@ -98,6 +99,8 @@ var CAFEVDB = CAFEVDB || {};
              CAFEVDB.snapperClose();
              CAFEVDB.modalizer(false),
              Page.busyIcon(false);
+
+             console.log('after snapper clone.');
 
              CAFEVDB.runReadyCallbacks();
              if (typeof afterLoadCallback == 'function') {
