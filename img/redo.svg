@@ -14,10 +14,10 @@
    height="24"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.5 r10040"
+   inkscape:version="0.91 r13725"
    style="enable-background:new"
    sodipodi:docname="redo.svg"
-   inkscape:export-filename="/var/www/localhost/htdocs/owncloud7/apps/cafevdb/img/redo.png"
+   inkscape:export-filename="/var/www/localhost/htdocs/owncloud8.2/apps/cafevdb/img/redo-solid.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
   <defs
@@ -480,8 +480,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="33.333333"
-     inkscape:cx="6.6449999"
-     inkscape:cy="8.4"
+     inkscape:cx="-0.60000017"
+     inkscape:cy="8.16"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -489,11 +489,11 @@
      fit-margin-left="0"
      fit-margin-right="0"
      fit-margin-bottom="0"
-     inkscape:window-width="1631"
-     inkscape:window-height="985"
-     inkscape:window-x="253"
+     inkscape:window-width="2560"
+     inkscape:window-height="1337"
+     inkscape:window-x="-484"
      inkscape:window-y="0"
-     inkscape:window-maximized="0" />
+     inkscape:window-maximized="1" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -542,7 +542,7 @@
      style="display:inline"
      transform="translate(-388,-382.37539)">
     <path
-       style="enable-background:new;fill:#1e1e1e;fill-opacity:1;opacity:0.7"
+       style="enable-background:new;fill:#1e1e1e;fill-opacity:1;opacity:1"
        d="m 399.24993,388 c 3.68136,0 6.93937,1.7755 8.99178,4.50909 L 412,388.75005 v 12.00073 h -12.00073 l 4.08278,-4.08278 c -1.0848,-3.29026 -4.17874,-5.66781 -7.83155,-5.66781 -4.55887,0 -8.2505,3.69458 -8.2505,8.2505 C 388,393.03642 393.03641,388 399.24993,388 z"
        id="path3"
        inkscape:connector-curvature="0" />
