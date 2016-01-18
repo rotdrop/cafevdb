@@ -55,6 +55,28 @@ class DetailedInstrumentation
     return $this->shortTitle();
   }
 
+  /**Export the description for the table tabs. */
+  static function tableTabs()
+  {
+    return array(
+      array('id' => 'instrumentation',
+            'default' => true,
+            'tooltip' => Config::toolTips('project-instrumentation-tab'),
+            'name' => L::t('Instrumentation related data')),
+      array('id' => 'project',
+            'tooltip' => Config::toolTips('project-metadata-tab'),
+            'name' => L::t('Project related data')),
+      array('id' => 'musician',
+            'tooltip' => Config::toolTips('project-personaldata-tab'),
+            'name' => L::t('Personal data')),
+      array('id' => 'tab-all',
+            'tooltip' => Config::toolTips('pme-showall-tab'),
+            'name' => L::t('Display all columns'))
+      );
+  }
+
+
+
   function display()
   {
     global $debug_query;
@@ -128,23 +150,8 @@ class DetailedInstrumentation
         //'query' => true,
         'sort'  => true,
         'time'  => true,
-        'tabs' => array(
-          array('id' => 'instrumentation',
-                'default' => true,
-                'tooltip' => Config::toolTips('project-instrumentation-tab'),
-                'name' => L::t('Instrumentation related data')),
-          array('id' => 'project',
-                'tooltip' => Config::toolTips('project-metadata-tab'),
-                'name' => L::t('Project related data')),
-          array('id' => 'musician',
-                'tooltip' => Config::toolTips('project-personaldata-tab'),
-                'name' => L::t('Personal data')),
-          array('id' => 'tab-all',
-                'tooltip' => Config::toolTips('pme-showall-tab'),
-                'name' => L::t('Display all columns'))
-          )
-        )
-      );
+        'tabs' => self::tableTabs()
+        ));
 
     // Set default prefixes for variables
     $opts['js']['prefix']               = 'PME_js_';
