@@ -646,6 +646,22 @@ var PHPMYEDIT = PHPMYEDIT || {};
                closeOnEscape: false,
                dialogClass: pme.pmeToken('table-dialog')+' custom-close resize-target',
                resizable: false,
+               dragStart: function(event) {
+                 dialogHolder.data('drag-start', true);
+               },
+               drag: function() {
+                 if (dialogHolder.data('drag-start')) {
+                   dialogHolder.data('drag-start', false);
+                   dialogHolder.dialog('option', 'width', 'auto');
+                 }
+               },
+               dragStop_: function() {
+                 console.log('jq drag stop');
+                 dialogHolder.dialog('option', 'width', 'auto');
+               },
+               resize: function() {
+                 console.log('jq resize');
+               },
                open: function() {
 
                  //var tmp = CAFEVDB.modalWaitNotification("BlahBlah");
@@ -679,6 +695,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
                    newHeight -= dialogHolder.outerHeight(true) - dialogHolder.height();
                    //alert("Setting height to " + newHeight);
                    dialogHolder.height(newHeight);
+                   console.log('pme-resize');
                  };
 
                  pme.tableDialogHandlers(tableOptions, function(parameters) {
