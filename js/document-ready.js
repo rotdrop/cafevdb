@@ -260,20 +260,21 @@ $(document).ready(function() {
                 return false;
             });
 
-            container.on('chosen:showing_dropdown', 'select.writers, select.readers', function(event) {
+            var tableContainerId = PHPMYEDIT.pmeIdSelector('table-container');
+            container.on('chosen:showing_dropdown', tableContainerId+' select', function(event) {
                 console.log('chosen:showing_dropdown');
                 var widget = container.cafevDialog('widget');
-                var tableContainer = container.find(PHPMYEDIT.pmeIdSelector('table-container'));
+                var tableContainer = container.find(tableContainerId);
                 widget.css('overflow', 'visible');
                 container.css('overflow', 'visible');
                 tableContainer.css('overflow', 'visible');
                 return false;
             });
 
-            container.on('chosen:hiding_dropdown', 'select.writers, select.readers', function(event) {
+            container.on('chosen:hiding_dropdown', tableContainerId+' select', function(event) {
                 console.log('chosen:hiding_dropdown');
                 var widget = container.cafevDialog('widget');
-                var tableContainer = container.find(PHPMYEDIT.pmeIdSelector('table-container'));
+                var tableContainer = container.find(tableContainerId);
                 tableContainer.css('overflow', '');
                 container.css('overflow', '');
                 widget.css('overflow', '');
