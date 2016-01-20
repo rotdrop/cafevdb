@@ -491,7 +491,8 @@ class DetailedInstrumentation
       switch ($type['Name']) {
       case 'Boolean':
         $fdd['values2|CAP'] = array(1 => ''); // empty label for simple checkbox
-        $fdd['values2|LVDF'] = array(1 => L::t('true'));
+        $fdd['values2|LVDF'] = array(0 => L::t('false'),
+                                     1 => L::t('true'));
         $fdd['select'] = 'O';
         $fdd['default'] = (string)!!(int)$field['DefaultValue'];
         $fdd['css']['postfix'] .= ' boolean';
