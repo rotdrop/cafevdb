@@ -232,7 +232,7 @@ namespace CAFEVDB {
       </select>
       <select id="treasurerGroupSelect"
               data-placeholder="<?php echo L::t('OwnCloud Treasurer-Group'); ?>"
-              title="<?php echo L::t('OwnCloud user-id of the treasurer of the orchestra'); ?>"
+              title="<?php echo L::t('OwnCloud group-id of the treasurer of the orchestra'); ?>"
               name="treasurerGroupId"
               class="executive-board-ids tooltip-left">
         <option></option>
