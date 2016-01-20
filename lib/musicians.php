@@ -615,7 +615,7 @@ make sure that the musicians are also automatically added to the
 
     $opts['triggers']['insert']['before'] = array();
     $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
-    $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Musicians::addUUID';
+    $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Musicians::addUUIDTrigger';
     $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Musicians::beforeTriggerSetTimestamp';
 
     if ($this->pme_bare) {
