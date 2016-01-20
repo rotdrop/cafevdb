@@ -45,6 +45,7 @@
 
   form#personalsettings {
     left:47px;
+    right:unset;
     z-index:200;
     opacity:0;
   }
@@ -172,7 +173,15 @@
   }
 
   tr.table-tabs td li.table-tabs {
-    max-width:15%;
+    box-sizing:border-box;
+    max-width:18%; // 5 tabs
+  }
+
+  tr.table-tabs td li.table-tabs a {
+    box-sizing:border-box;
+    max-width:100%;
+    overflow:hidden;
+    text-overflow:ellipsis;
   }
 
   tr.table-tabs td li.selected {
@@ -187,7 +196,7 @@
   .bloglist li.blogentry {
     margin-right: 0.5ex !important;
   }
-
+g
   .bloglist .blogentrytitle {
     margin-top: 20px;
   }

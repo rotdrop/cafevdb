@@ -105,6 +105,22 @@ div.cmsarticlecontainer {
   width:auto;
 }
 
+ul#cmsarticletabs li {
+    box-sizing:border-box;
+    max-width:25%; // concert and rehearsals
+}
+
+ul#cmsarticletabs li.ui-tabs-active.ui-state-active {
+    max-width:30%;
+}
+
+ul#cmsarticletabs li a {
+    box-sizing:border-box;
+    max-width:100%;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
 /******************************************************************************
  *
  * extra-field stuff
