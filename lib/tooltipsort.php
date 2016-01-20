@@ -90,10 +90,20 @@ namespace CAFEVDB
 
   class L
   {
-    public static function t($text) {
-      return "L::t('".str_replace("'","\'",$text)."')";
+    public static function t($text, $values = null) {
+      global $indent, $subIndent;
+      $result  = "L::t(";
+      $result .= "'".str_replace("'","\'",$text)."'";
+      if (!empty($values)) {
+        is_array($values) || $values = array($values);
+        $result .= ",
+".$indent.$subIndent.$subIndent."array('".implode("', '", $values)."')
+".$indent.$subIndent.")";
+      } else {
+        $result .= ")";
+      }
+      return $result;
     }
-
   };
 
   function arrayRecursiveDiff($aArray1, $aArray2) {

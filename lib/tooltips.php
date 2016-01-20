@@ -146,6 +146,36 @@ invited to have a look, but please do not change anything unless you know what y
 
         'expert-operations' => L::t('For those who know what they are doing, which essentially means: don\'t.'),
 
+        'extra-fields-allowed-values' => '',
+
+        'extra-fields-default-multi-value' => '',
+
+        'extra-fields-default-single-value' => '',
+
+        'extra-fields-default-value' => '',
+
+        'extra-fields-display-order' => '',
+
+        'extra-fields-encrypted' => '',
+
+        'extra-fields-extra-tab' => '',
+
+        'extra-fields-field-index' => '',
+
+        'extra-fields-field-name' => '',
+
+        'extra-fields-new-tab' => '',
+
+        'extra-fields-readers' => '',
+
+        'extra-fields-tab' => '',
+
+        'extra-fields-tooltip' => '',
+
+        'extra-fields-type' => '',
+
+        'extra-fields-writers' => '',
+
         'file-attachments-select' => L::t('Select-box with all currently uploaded attachments. Note that a file will only be attached to a message if it is also checked in this select box.'),
 
         'filter-visibility' => L::t('Toggle the initial display of the search-filters for data-base tables
@@ -198,8 +228,7 @@ the event.'),
 
         'ownclouddev-link' => '',
 
-        'payment-status' => L::t(
-          'Status of outstanding project fees:
+        'payment-status' => L::t('Status of outstanding project fees:
 <dl>
 <dt>%s</dt>
 <dd>Project-fees are just entirely outstanding yet.</dd>
@@ -212,7 +241,7 @@ the event.'),
 <dt>%s</dt>
 <dd>Final payment has been received.</dd>
 </dl>',
-          array('&empty;', '&#9972;', '&#9684;', '&#9951;', '&#10004;')
+            array('&empty;', '&#9972;', '&#9684;', '&#9951;', '&#10004;')
           ),
 
         'phpmyadmin-link' => '',
@@ -431,6 +460,8 @@ oder auszuschalten!'),
 events associated to the project.
 Events can be added and modified
 as needed.'),
+
+        'project-action-extra-fields' => '',
 
         'project-action-files' => L::t('Change to the folder with project related files.'),
 

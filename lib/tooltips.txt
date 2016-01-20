@@ -1,3 +1,18 @@
+extra-fields-allowed-values
+extra-fields-default-multi-value
+extra-fields-default-single-value
+extra-fields-default-value
+extra-fields-display-order
+extra-fields-encrypted
+extra-fields-extra-tab
+extra-fields-field-index
+extra-fields-field-name
+extra-fields-new-tab
+extra-fields-readers
+extra-fields-tab
+extra-fields-tooltip
+extra-fields-type
+extra-fields-writers
 member-status
 musican-contact-tab
 musician-instrument-insurance
@@ -16,6 +31,7 @@ project-action-debit-mandates
 project-action-detailed-instrumentation
 project-action-email
 project-action-events
+project-action-extra-fields
 project-action-files
 project-action-financial-balance
 project-action-instrumentation-numbers
