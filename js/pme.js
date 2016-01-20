@@ -647,19 +647,15 @@ var PHPMYEDIT = PHPMYEDIT || {};
                dialogClass: pme.pmeToken('table-dialog')+' custom-close resize-target',
                resizable: false,
                dragStart: function(event) {
-                 dialogHolder.data('drag-start', true);
-               },
-               drag: function() {
-                 if (dialogHolder.data('drag-start')) {
-                   dialogHolder.data('drag-start', false);
-                   dialogHolder.dialog('option', 'width', 'auto');
+                 var self = $(this);
+                 var widget = self.dialog('widget');
+                 var cssWidth = widget.prop('style').width;
+                 if (cssWidth === 'auto') {
+                   self.data('drag-width-tweak', true);
+                   widget.width(widget.width()+1); // copy with jquery-ui + ff drag bug
                  }
                },
-               dragStop_: function() {
-                 console.log('jq drag stop');
-                 dialogHolder.dialog('option', 'width', 'auto');
-               },
-               resize: function() {
+               resize_: function() {
                  console.log('jq resize');
                },
                open: function() {
