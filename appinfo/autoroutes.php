@@ -176,7 +176,7 @@ $this->create("cafevdb_ajax_projects_verifyName.php", "ajax/projects/verifyName.
 $this->create("cafevdb_ajax_projects_web-articles.php", "ajax/projects/web-articles.php")
   ->actionInclude("cafevdb/ajax/projects/web-articles.php");
 
-$this->create("cafevdb_ajax_projects_web-articles.php", "ajax/projects/extra-fields.php")
+$this->create("cafevdb_ajax_projects_extra-fields.php", "ajax/projects/extra-fields.php")
   ->actionInclude("cafevdb/ajax/projects/extra-fields.php");
 
 $this->create("cafevdb_ajax_settings_app-settings.php", "ajax/settings/app-settings.php")
