@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-20 09:00+0100\n"
-"PO-Revision-Date: 2016-01-20 09:52+0100\n"
+"POT-Creation-Date: 2016-01-20 09:57+0100\n"
+"PO-Revision-Date: 2016-01-20 09:58+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -2705,7 +2705,8 @@ msgstr "Extra Mitspieler-Felder"
 
 #: lib/functions.php:1433
 msgid "Add additional data-fields to the instrumenation table for the project."
-msgstr "Fügt zusätzliche Daten-Felder zur Besetzungstabelle für das Projekt hinzu."
+msgstr ""
+"Fügt zusätzliche Daten-Felder zur Besetzungstabelle für das Projekt hinzu."
 
 #: lib/functions.php:1443
 msgid "Display all Musicians"
@@ -3501,7 +3502,8 @@ msgstr "Extra-Felder für alle Projekte"
 
 #: lib/project-extra.php:180
 msgid "Definition of name, type, allowed values, default values."
-msgstr "Definition von Name, Daten-Typ, zulässigen Werten, voreingestellten Werten."
+msgstr ""
+"Definition von Name, Daten-Typ, zulässigen Werten, voreingestellten Werten."
 
 #: lib/project-extra.php:181
 msgid "Defintion"
@@ -3511,7 +3513,8 @@ msgstr "Defintion"
 msgid ""
 "Ordering, linking to and defining newe tabs, definition of tooltips (help "
 "text)."
-msgstr "Anordnung, Verknüpfung zu Daten-Reitern, neue Daten-REiter, Kontext-Hilfe."
+msgstr ""
+"Anordnung, Verknüpfung zu Daten-Reitern, neue Daten-REiter, Kontext-Hilfe."
 
 #: lib/project-extra.php:185
 msgid "Display"
@@ -6343,7 +6346,7 @@ msgstr "OwnCloud-Benutzername für den/die Schriftführer(in) des Orchesters"
 msgid "OwnCloud Treasurer-User"
 msgstr "OwnCloud-Benutzer für Schatzmeister"
 
-#: templates/orchestra-settings.php:204 templates/orchestra-settings.php:235
+#: templates/orchestra-settings.php:204
 msgid "OwnCloud user-id of the treasurer of the orchestra"
 msgstr "OwnCloud-Benutzername für den/die Schatzmeister/in des Orchesters"
 
@@ -6365,6 +6368,10 @@ msgstr "OwnCloud-Gruppe für den/die Schriftführer(in) des Orchesters"
 
 #: templates/orchestra-settings.php:234
 msgid "OwnCloud Treasurer-Group"
+msgstr "OwnCloud Schatzmeister-Gruppe"
+
+#: templates/orchestra-settings.php:235
+msgid "OwnCloud group-id of the treasurer of the orchestra"
 msgstr "OwnCloud-Gruppe für den/die Schatzmeister/in des Orchesters"
 
 #: templates/part.common.header.php:55 templates/settings.php:36

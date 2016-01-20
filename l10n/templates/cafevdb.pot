@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-20 09:52+0100\n"
+"POT-Creation-Date: 2016-01-20 09:58+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -5567,7 +5567,7 @@ msgstr ""
 msgid "OwnCloud Treasurer-User"
 msgstr ""
 
-#: templates/orchestra-settings.php:204 templates/orchestra-settings.php:235
+#: templates/orchestra-settings.php:204
 msgid "OwnCloud user-id of the treasurer of the orchestra"
 msgstr ""
 
@@ -5589,6 +5589,10 @@ msgstr ""
 
 #: templates/orchestra-settings.php:234
 msgid "OwnCloud Treasurer-Group"
+msgstr ""
+
+#: templates/orchestra-settings.php:235
+msgid "OwnCloud group-id of the treasurer of the orchestra"
 msgstr ""
 
 #: templates/part.common.header.php:55 templates/settings.php:36
