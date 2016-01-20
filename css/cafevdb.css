@@ -299,10 +299,6 @@ body.snapjs-left #old-personalsettings {
   float: left;
 }
 
-body.snapjs-left form#personalsettings {
-  left:44px;
-}
-
 #old-personalsettings {
   float: right;
 }
@@ -427,11 +423,17 @@ form.invisible#new-personalsettings * {
   display:none!important;
 }
 
+body.snapjs-left form#personalsettings {
+  left:47px;
+  z-index:200;
+}
+
 form#personalsettings {
   position:absolute;
+  /*left:47px;*/
   right:0px;
   top:0px;
-  z-index:200;
+  z-index:100;
   box-sizing:border-box;
   height:44px;
 }

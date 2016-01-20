@@ -43,6 +43,17 @@
     padding-top:0px;
   }
 
+  form#personalsettings {
+    left:47px;
+    z-index:200;
+    opacity:0;
+  }
+
+  body.snapjs-left form#personalsettings,
+  form#personalsettings:hover {
+    opacity:1;
+  }
+
   .ui-dialog.transparent,
   .ui-dialog.transparent-titlebar {
     border:0px;
