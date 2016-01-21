@@ -622,6 +622,8 @@ class phpMyEdit
 	{
 		$values = array();
 		$groups = null;
+		$data = null;
+		$titles = null;
 
 		// allow for unconditional override
 		if (isset($this->fdd[$field_num]['values']['valueGroups'])) {
@@ -629,14 +631,27 @@ class phpMyEdit
 		} else if (isset($this->fdd[$field_num]['valueGroups'])) {
 			$groups = $this->fdd[$field_num]['valueGroups'];
 		}
+		if (isset($this->fdd[$field_num]['values']['valueData'])) {
+			$data = $this->fdd[$field_num]['values']['valueData'];
+		} else if (isset($this->fdd[$field_num]['valueData'])) {
+			$data = $this->fdd[$field_num]['valueData'];
+		}
+		if (isset($this->fdd[$field_num]['values']['valueTitles'])) {
+			$titles = $this->fdd[$field_num]['values']['valueTitles'];
+		} else if (isset($this->fdd[$field_num]['valueTitles'])) {
+			$titles = $this->fdd[$field_num]['valueTitles'];
+		}
 		if (isset($this->fdd[$field_num]['values']['queryValues'])) {
 			$values = $this->fdd[$field_num]['values']['queryValues'];
 		} else if (isset($this->fdd[$field_num]['values']['table']) || $strict) {
-			$value_groups = $this->set_values_from_table($field_num, $strict);
+			$value_group_data = $this->set_values_from_table($field_num, $strict);
 			if (empty($groups)) {
-				$groups = $value_groups['groups'];
+				$groups = $value_group_data['groups'];
 			}
-			$values = (array)$this->fdd[$field_num]['values2'] + (array)$value_groups['values'];
+			if (empty($data)) {
+				$data = $value_group_data['data'];
+			}
+			$values = (array)$this->fdd[$field_num]['values2'] + (array)$value_group_data['values'];
 		} else {
 			$values = (array)$this->fdd[$field_num]['values2'];
 		}
@@ -644,8 +659,13 @@ class phpMyEdit
 		$values = (array)$prepend + (array)$values + (array)$append;
 
 		//error_log('groups: '.print_r($groups, true));
+		//error_log('data: '.print_r($data, true));
+		//error_log('values: '.print_r($values, true));
 
-		return array('values' => $values, 'groups' => $groups);
+		return array('values' => $values,
+					 'groups' => $groups,
+					 'titles' => $titles,
+					 'data' => $data);
 	} /* }}} */
 
 	function set_values_from_table($field_num, $strict = false) /* {{{ */
@@ -661,6 +681,7 @@ class phpMyEdit
 		$filters  = &$this->fdd[$field_num]['values']['filters'];
 		$orderby  = &$this->fdd[$field_num]['values']['orderby'];
 		$groups   = &$this->fdd[$field_num]['values']['groups'];
+		$data     = &$this->fdd[$field_num]['values']['data'];
 		$dbp      = isset($db) ? $this->sd.$db.$this->ed.'.' : $this->dbp;
 
 		$qparts['type'] = 'select';
@@ -720,17 +741,42 @@ class phpMyEdit
 		if (!empty($groups)) {
 			$qparts['select'] .= ','.$table_name.'.'.$this->sd.$groups.$this->ed;
 		}
-
+		/* if (!empty($data)) { */
+		/* 	if ($desc && is_array($data) && is_array($data['columns'])) { */
+		/* 		$qparts['select'] .= ",CONCAT('{',"; */
+		/* 		$num_cols = sizeof($data['columns']); */
+		/* 		foreach ($data['columns'] as $key => $val) { */
+		/* 			if ($val) { */
+		/* 				$qparts['select'] .= "'\"".addslashes($key)."\":\"',"; */
+		/* 				$qparts['select'] .= "'\"',"; */
+		/* 				$qparts['select'] .= 'IFNULL(CAST('.$this->sd.$val.$this->ed.' AS CHAR),"")'; */
+		/* 				$qparts['select'] .= "'\"',"; */
+		/* 			} */
+		/* 		} */
+		/* 		$qparts['select'] .= '})'; */
+		/* 		$qparts['select'] .= ' AS '.$this->sd.'PMEdata'.$field_num.$this->ed; */
+		/* 	} else if ($data && is_array($data)) { */
+		/* 		// nope */
+		/* 	} else if ($data) { */
+		/* 		$qparts['select'] .= ','.$table_name.'.'.$this->sd.$data.$this->ed; */
+		/* 	} */
+		/* } */
 		$res	= $this->myquery($this->get_SQL_query($qparts), __LINE__);
 		$values = array();
 		$grps   = array();
+		$data   = array();
+		$titles = array();
+		$idx    = $desc ? 1 : 0;
 		while ($row = $this->sql_fetch($res, 'n')) {
-			$values[$row[0]] = $desc ? $row[1] : $row[0];
+			$values[$row[0]] = $row[$idx];
 			if (!empty($groups)) {
-				$grps[$row[0]] = $row[2];
+				$grps[$row[0]] = $row[$idx+1];
+			}
+			if (!empty($data)) {
+				$data[$row[0]] = $row[$idx+2];
 			}
 		}
-		return array('values' => $values, 'groups' => $grps);
+		return array('values' => $values, 'groups' => $grps, 'data' => $data, 'titles' => $titles);
 	} /* }}} */
 
 	function fqn($field, $dont_desc = false, $dont_cols = false) /* {{{ */
@@ -1520,6 +1566,8 @@ class phpMyEdit
 				$valgrp     = $this->set_values($k);
 				$vals		= $valgrp['values'];
 				$groups     = $valgrp['groups'];
+				$data       = $valgrp['data'];
+				$titles     = $valgrp['titles'];
 				$selected	= @$this->fdd[$k]['default'];
 				$multiple	= $this->col_has_multiple($k);
 				$readonly	= $this->disabledTag($k);
@@ -1527,12 +1575,13 @@ class phpMyEdit
 				//$escape	    = true;
 				if ($this->col_has_checkboxes($k) || $this->col_has_radio_buttons($k)) {
 					echo $this->htmlRadioCheck($this->cgi['prefix']['data'].$this->fds[$k],
-											   $css_class_name, $vals, $selected,
+											   $css_class_name, $vals, $groups, $data,
+											   $selected,
 											   $multiple, $readonly,
 											   $strip_tags, $escape, NULL, $helptip);
 				} else {
 					echo $this->htmlSelect($this->cgi['prefix']['data'].$this->fds[$k],
-										   $css_class_name, $vals, $groups,
+										   $css_class_name, $vals, $groups, $titles, $data,
 										   $selected, $multiple, $readonly,
 										   $strip_tags, $escape, NULL, $helptip);
 				}
@@ -1683,6 +1732,7 @@ class phpMyEdit
 		if (isset($this->fdd[$k]['display']['prefix'])) {
 			echo $this->fdd[$k]['display']['prefix'];
 		}
+
 		/* If $vals only contains one "multiple" value, then the
 		 * multi-select stuff is at least confusing. Also, if there is
 		 * only one possible value, then this value must not be changed.
@@ -1690,11 +1740,15 @@ class phpMyEdit
 		$multiValues = false;
 		$vals        = false;
 		$groups      = false;
+		$data        = false;
+		$titles      = false;
 		$valgrp      = false;
 		if ($this->col_has_values($k)) {
 			$valgrp = $this->set_values($k);
 			$vals   = $valgrp['values'];
 			$groups = $valgrp['groups'];
+			$titles = $valgrp['titles'];
+			$data   = $valgrp['data'];
 			$multiValues = count($vals) > 1;
 		}
 
@@ -1702,9 +1756,6 @@ class phpMyEdit
 		 * element, then do not emit multi-controls, because this has
 		 * not been requested.
 		 */
-
-
-		//error_log('vals '.print_r($vals, true));
 
 		if ($this->col_has_php($k)) {
 			$value = !empty($vals) ? $vals[$row["qf$k"]] : $row["qf$k"];
@@ -1738,12 +1789,12 @@ class phpMyEdit
 			//$escape	    = true;
 			if ($this->col_has_checkboxes($k) || $this->col_has_radio_buttons($k)) {
 				echo $this->htmlRadioCheck($this->cgi['prefix']['data'].$this->fds[$k],
-										   $css_class_name, $vals,
+										   $css_class_name, $vals, $groups, $data,
 										   $selected, $multiple, $readonly,
 										   $strip_tags, $escape, NULL, $help);
 			} else {
 				echo $this->htmlSelect($this->cgi['prefix']['data'].$this->fds[$k],
-									   $css_class_name, $vals, $groups,
+									   $css_class_name, $vals, $groups, $titles, $data,
 									   $selected, $multiple, $readonly,
 									   $strip_tags, $escape, NULL, $help);
 			}
@@ -2234,6 +2285,9 @@ class phpMyEdit
 	 * @param	name		element name
 	 * @param	css			CSS class name
 	 * @param	kv_array	key => value array
+	 * @param	kg_array	key => group array
+	 * @param	kt_array	key => title array for title attributes
+	 * @param	kd_array	key => data array for data attributes
 	 * @param	selected	selected key (it can be single string, array of
 	 *						keys or multiple values separated by comma)
 	 * @param	multiple	bool for multiple selection
@@ -2242,7 +2296,12 @@ class phpMyEdit
 	 * @param	escape		bool for HTML escaping values
 	 * @param	js		string to be in the <select >, ususally onchange='..';
 	 */
-	function htmlSelect($name, $css, $kv_array, $kg_array = null, $selected = null, /* ...) {{{ */
+	function htmlSelect($name, $css,
+						$kv_array,
+						$kg_array = null,
+						$kt_array = null,
+						$kd_array = null,
+						$selected = null, /* ...) {{{ */
 						/* booleans: */ $multiple = false,
 						$readonly = false,
 						$strip_tags = false, $escape = true, $js = NULL, $help = NULL)
@@ -2269,6 +2328,7 @@ class phpMyEdit
 			foreach($selected as $val) $selected2[]=(string)$val;
 			$selected = $selected2;
 		}
+		is_array($kd_array) || $kd_array = array();
 		$found = false;
 		$lastGroup = null;
 		$groupId = 0;
@@ -2287,6 +2347,14 @@ class phpMyEdit
 				|| (count($selected) == 0 && ! $found && ! $multiple)) {
 				$ret  .= ' selected="selected"';
 				$found = true;
+			}
+			if (!empty($kt_array[$key])) {
+				$title = htmlspecialchars($kt_array[$key]);
+				$ret .= ' title="'.$title.'"';
+			}
+			if (!empty($kd_array[$key])) {
+				$data = htmlspecialchars($kd_array[$key]);
+				$ret .= " data-data='".$data."'";
 			}
 			if ($lastGroup) {
 				$ret .= ' data-group-id="'.$groupId.'"';
@@ -2308,6 +2376,8 @@ class phpMyEdit
 	 * @param	name		element name
 	 * @param	css			CSS class name
 	 * @param	kv_array	key => value array
+	 * @param	kg_array	key => group array
+	 * @param	kd_array	key => data array
 	 * @param	selected	selected key (it can be single string, array of
 	 *						keys or multiple values separated by comma)
 	 * @param	multiple	bool for multiple selection (checkboxes)
@@ -2316,7 +2386,10 @@ class phpMyEdit
 	 * @param	escape		bool for HTML escaping values
 	 * @param	js		string to be in the <select >, ususally onchange='..';
 	 */
-	function htmlRadioCheck($name, $css, $kv_array, $selected = null, /* ...) {{{ */
+	function htmlRadioCheck($name, $css, $kv_array,
+							$kg_array = null,
+							$kd_array = null,
+							$selected = null, /* ...) {{{ */
 							/* booleans: */ $multiple = false, $readonly = false,
 							$strip_tags = false, $escape = true, $js = NULL, $help = NULL)
 	{
@@ -2885,7 +2958,7 @@ class phpMyEdit
 			}
 			return $this->htmlSelect($this->cgi['prefix']['sys'].ltrim($disabledgoto).'navfm'.$position,
 									 $this->getCSSclass('goto', $position).$listAllClass,
-									 $kv_array, null,
+									 $kv_array, null, null, null,
 									 (string)$this->fm, false, $disabledgoto,
 									 false, true);
 		}
@@ -2922,7 +2995,8 @@ class phpMyEdit
 			}
 			$disabled = $this->total_recs <= 1;
 			return $this->htmlSelect($this->cgi['prefix']['sys'].'navnp'.$position,
-									 $this->getCSSclass('pagerows', $position), $kv_array, null,
+									 $this->getCSSclass('pagerows', $position),
+									 $kv_array, null, null, null,
 									 $selected, false, $disabled,
 									 false, false);
 		}
@@ -3039,6 +3113,8 @@ class phpMyEdit
 				$valgrp		= $this->set_values($k, array('*' => '*'), null, $from_table);
 				$vals		= $valgrp['values'];
 				$groups     = $valgrp['groups'];
+				$titles     = $valgrp['titles'];
+				$data       = $valgrp['data'];
 				$selected	= $mi;
 				$negate     = count($selected) == 0 ? null : $mc; // reset if none selected
 				$negate_css_class_name = $this->getCSSclass('filter-negate', null, null, $css_postfix);
@@ -3048,12 +3124,14 @@ class phpMyEdit
 				$strip_tags = true;
 				//$escape	  = true;
 				echo '<div class="'.$negate_css_class_name.'">';
-				echo $this->htmlRadioCheck($this->cgi['prefix']['sys'].$l.'_comp', $negate_css_class_name,
-										   array('not' => $this->labels['Not']), $negate,
+				echo $this->htmlRadioCheck($this->cgi['prefix']['sys'].$l.'_comp',
+										   $negate_css_class_name,
+										   array('not' => $this->labels['Not']), null, null,
+										   $negate,
 										   true /* checkbox */);
 				echo '</div><div class="'.$css_class_name.'">';
 				echo $this->htmlSelect($this->cgi['prefix']['sys'].$l.'_id', $css_class_name,
-									   $vals, $groups,
+									   $vals, $groups, $titles, $data,
 									   $selected, $multiple || true, $readonly, $strip_tags, $escape);
 				echo '</div>';
 			} elseif (($this->fdd[$fd]['select'] == 'N' ||
@@ -3071,7 +3149,9 @@ class phpMyEdit
 
 					$mc = in_array($mc, $this->comp_ops) ? $mc : '=';
 					echo $this->htmlSelect($this->cgi['prefix']['sys'].$l.'_comp',
-										   $css_comp_class_name, $this->comp_ops, null, $mc);
+										   $css_comp_class_name,
+										   $this->comp_ops, null, null, null,
+										   $mc);
 				}
 				echo '<input class="',$css_class_name,'" value="',htmlspecialchars(@$m);
 				echo '" type="text" name="'.$this->cgi['prefix']['sys'].'qf'.$k.'"',$len_props;
