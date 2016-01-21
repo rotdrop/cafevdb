@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -1580,7 +1580,7 @@ insuranceFee
       if ($this->draftId >= 0) {
         $handle = $this->dataBaseConnect();
 
-        $data = mySQL::fetchRows('EmailDrafts', "`Id` = ".$this->draftId, $handle);
+        $data = mySQL::fetchRows('EmailDrafts', "`Id` = ".$this->draftId, null, null, $handle);
 
         if (count($data) == 1) {
           $draftData = json_decode($data[0]['Data'], true, 512, JSON_BIGINT_AS_STRING);
@@ -1631,6 +1631,7 @@ insuranceFee
 
       $tmpFiles = mySQL::fetchRows("EmailAttachments",
                                    "`User` LIKE '".$this->user."' AND `MessageId` = -1",
+                                   null,
                                    $handle, false, true);
 
       if ($tmpFiles === false) {

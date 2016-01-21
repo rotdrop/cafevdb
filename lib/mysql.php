@@ -457,9 +457,15 @@ namespace CAFEVDB
      * @return An array with all matching rows. Return false in case
      * of error.
      */
-    public static function fetchRows($table, $where = '1', $handle = false, $die = true, $silent = false)
+    public static function fetchRows($table, $where = '1', $sort = null,
+                                     $handle = false, $die = true, $silent = false)
     {
+      empty($where) && $where = '1';
+
       $query = "SELECT * FROM `".$table."` WHERE (".$where.")";
+      if (!empty($sort)) {
+        $query .= " ORDER BY ".$sort;
+      }
 
       $ownConnection = $handle === false;
       if ($ownConnection) {

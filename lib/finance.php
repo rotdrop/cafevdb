@@ -453,7 +453,7 @@ namespace CAFEVDB
 
       $table = 'SepaDebitMandates';
       $where = "`projectId` = $projectId AND `musicianId` = $musicianId";
-      $oldValues = mySQL::fetchRows($table, $where, $handle);
+      $oldValues = mySQL::fetchRows($table, $where, null, $handle);
 
       $query = "DELETE FROM `".$table."` WHERE ".$where;
       $result = mySQL::query($query, $handle);
