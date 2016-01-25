@@ -977,17 +977,17 @@ table.pme-main select.pme-filter.projects {
 }
 
 /*Style links in a more ordinary fashion */
-table.pme-main a:not(.ui-tabs-anchor):link {
+table.pme-main a:not(.ui-tabs-anchor, .chosen-single):link {
   color:CornFlowerBlue;
   text-decoration:underline;
   font-weight:bold;
 }
-table.pme-main a:not(.ui-tabs-anchor):visited {
+table.pme-main a:not(.ui-tabs-anchor, .chosen-single):visited {
   color:CornFlowerBlue;
   text-decoration:underline;
   font-weight:bold;
 }
-table.pme-main a:not(.ui-tabs-anchor):hover {
+table.pme-main a:not(.ui-tabs-anchor, .chosen-single):hover {
   color:CornFlowerBlue;
   text-decoration:underline;
   font-style:italic;
