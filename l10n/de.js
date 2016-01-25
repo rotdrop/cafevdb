@@ -475,6 +475,7 @@ OC.L10N.register(
     "All Instruments" : "Alle Instrumente",
     "Member Status" : "Status",
     "Payment Status" : "Bezahlstatus",
+    "Total Charges" : "Gesamtkosten",
     "Direct Debit" : "Lastschrift",
     "true" : "wahr",
     "Remarks" : "Bemerkungen",

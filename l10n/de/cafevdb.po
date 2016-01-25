@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-25 09:53+0100\n"
-"PO-Revision-Date: 2016-01-25 09:56+0100\n"
+"POT-Creation-Date: 2016-01-25 14:54+0100\n"
+"PO-Revision-Date: 2016-01-25 14:56+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -312,7 +312,7 @@ msgid "Missing Musicians"
 msgstr "Fehlende Musiker"
 
 #: ajax/export/excel.php:285 ajax/export/insurance-export.php:157
-#: lib/detailed-instrumentation.php:254 lib/projects.php:1887
+#: lib/detailed-instrumentation.php:263 lib/projects.php:1887
 msgid "Instrument"
 msgstr "Instrument"
 
@@ -369,8 +369,8 @@ msgstr "Geltungsbereich"
 msgid "Date"
 msgstr "Datum"
 
-#: ajax/export/insurance-export.php:246 lib/detailed-instrumentation.php:426
-#: lib/detailed-instrumentation.php:571 lib/instrument-insurance.php:76
+#: ajax/export/insurance-export.php:246 lib/detailed-instrumentation.php:475
+#: lib/detailed-instrumentation.php:621 lib/instrument-insurance.php:76
 #: lib/php-excel-functions.php:102 lib/project-extra.php:392
 #: lib/project-extra.php:504 lib/project-extra.php:604
 msgid "false"
@@ -2114,11 +2114,11 @@ msgid "Display the application menu and settings side-bar"
 msgstr "Randleiste mit Anwendungs- und Einstellungs-Menü einblenden."
 
 # #Spalten
-#: js/pme.js:969
+#: js/pme.js:966
 msgid "#columns"
 msgstr "#Spalten"
 
-#: js/pme.js:978
+#: js/pme.js:975
 msgid "#rows"
 msgstr "#Zeilen"
 
@@ -2208,8 +2208,8 @@ msgstr ""
 "sollte das aufgrund falscher Eintragungen oder Mißverständnissen mit\n"
 "den Musikern nötig sein."
 
-#: js/sepa-debit-mandate.js:148 lib/detailed-instrumentation.php:446
-#: lib/detailed-instrumentation.php:1055 lib/detailed-instrumentation.php:1073
+#: js/sepa-debit-mandate.js:148 lib/detailed-instrumentation.php:495
+#: lib/detailed-instrumentation.php:1106 lib/detailed-instrumentation.php:1124
 msgid "SEPA Debit Mandate"
 msgstr "SEPA Lastschriftmandat"
 
@@ -2365,28 +2365,28 @@ msgstr "Bearbeiten der Daten des angezeigten Musikers."
 msgid "Instrumentation for Project `%s'"
 msgstr "Besetzung für das Projekt `%s'"
 
-#: lib/detailed-instrumentation.php:212
+#: lib/detailed-instrumentation.php:221
 msgid "Instrumentation Id"
 msgstr "Besetzungs-Id"
 
-#: lib/detailed-instrumentation.php:224
+#: lib/detailed-instrumentation.php:233
 msgid "Musician Id"
 msgstr "Musiker-Id"
 
-#: lib/detailed-instrumentation.php:294
+#: lib/detailed-instrumentation.php:303
 msgid "Section Leader"
 msgstr "Stimmführer"
 
-#: lib/detailed-instrumentation.php:303
+#: lib/detailed-instrumentation.php:312
 #, php-format
 msgid "Set to `%s' in order to mark the section leader"
 msgstr "Auf `%s' setzen um als Stimmführer zu markieren"
 
-#: lib/detailed-instrumentation.php:313
+#: lib/detailed-instrumentation.php:322
 msgid "Registration"
 msgstr "Anmeldung"
 
-#: lib/detailed-instrumentation.php:322
+#: lib/detailed-instrumentation.php:331
 #, php-format
 msgid ""
 "Set to `%s' in order to mark participants who passed a personally signed "
@@ -2395,105 +2395,109 @@ msgstr ""
 "Auf `%s' setzen um offiziell angemeldete Teilnehmer zu markieren "
 "(unterschriebene Anmeldung liegt vor)"
 
-#: lib/detailed-instrumentation.php:331
+#: lib/detailed-instrumentation.php:340
 msgid "All Instruments"
 msgstr "Alle Instrumente"
 
-#: lib/detailed-instrumentation.php:353 lib/musicians.php:334
+#: lib/detailed-instrumentation.php:362 lib/musicians.php:334
 msgid "Member Status"
 msgstr "Status"
 
-#: lib/detailed-instrumentation.php:397
+#: lib/detailed-instrumentation.php:407
 msgid "Payment Status"
 msgstr "Bezahlstatus"
 
-#: lib/detailed-instrumentation.php:422
+#: lib/detailed-instrumentation.php:443
+msgid "Total Charges"
+msgstr "Gesamtkosten"
+
+#: lib/detailed-instrumentation.php:471
 msgid "Direct Debit"
 msgstr "Lastschrift"
 
-#: lib/detailed-instrumentation.php:425 lib/detailed-instrumentation.php:572
+#: lib/detailed-instrumentation.php:474 lib/detailed-instrumentation.php:622
 #: lib/instrument-insurance.php:77 lib/php-excel-functions.php:98
 #: lib/project-extra.php:391 lib/project-extra.php:505
 #: lib/project-extra.php:603
 msgid "true"
 msgstr "wahr"
 
-#: lib/detailed-instrumentation.php:649 lib/musicians.php:490
+#: lib/detailed-instrumentation.php:700 lib/musicians.php:490
 msgid "Remarks"
 msgstr "Bemerkungen"
 
-#: lib/detailed-instrumentation.php:666 lib/musicians.php:347
+#: lib/detailed-instrumentation.php:717 lib/musicians.php:347
 #: lib/project-extra.php:313 lib/projects.php:256
 msgid "no projects yet"
 msgstr "Ohne Projekt"
 
-#: lib/detailed-instrumentation.php:676 lib/musicians.php:391
+#: lib/detailed-instrumentation.php:727 lib/musicians.php:391
 msgid "Projects"
 msgstr "Projekte"
 
-#: lib/detailed-instrumentation.php:693 lib/musicians.php:411
+#: lib/detailed-instrumentation.php:744 lib/musicians.php:411
 msgid "Mobile Phone"
 msgstr "Mobilfunk"
 
-#: lib/detailed-instrumentation.php:710 lib/musicians.php:427
+#: lib/detailed-instrumentation.php:761 lib/musicians.php:427
 msgid "Fixed Line Phone"
 msgstr "Festnetz"
 
-#: lib/detailed-instrumentation.php:727 lib/musicians.php:446
+#: lib/detailed-instrumentation.php:778 lib/musicians.php:446
 msgid "Street"
 msgstr "Straße"
 
-#: lib/detailed-instrumentation.php:737 lib/musicians.php:455
+#: lib/detailed-instrumentation.php:788 lib/musicians.php:455
 msgid "Postal Code"
 msgstr "Postleitzahl"
 
-#: lib/detailed-instrumentation.php:746 lib/musicians.php:464
+#: lib/detailed-instrumentation.php:797 lib/musicians.php:464
 msgid "City"
 msgstr "Stadt"
 
-#: lib/detailed-instrumentation.php:758 lib/musicians.php:476
+#: lib/detailed-instrumentation.php:809 lib/musicians.php:476
 msgid "Country"
 msgstr "Land"
 
-#: lib/detailed-instrumentation.php:773
+#: lib/detailed-instrumentation.php:824
 msgid "General Remarks"
 msgstr "Allgemeine Bemerkungen"
 
-#: lib/detailed-instrumentation.php:786
+#: lib/detailed-instrumentation.php:837
 msgid "Preferred Language"
 msgstr "Sprachpräferenz"
 
-#: lib/detailed-instrumentation.php:795 lib/musicians.php:530
+#: lib/detailed-instrumentation.php:846 lib/musicians.php:530
 msgid "Photo"
 msgstr "Foto"
 
-#: lib/detailed-instrumentation.php:823 lib/musicians.php:604
+#: lib/detailed-instrumentation.php:874 lib/musicians.php:604
 #: lib/projects.php:442
 msgid "Last Updated"
 msgstr "Letzte Aktualisierung"
 
-#: lib/detailed-instrumentation.php:1079
+#: lib/detailed-instrumentation.php:1130
 msgid "Click to enter details of a potential SEPA debit mandate"
 msgstr ""
 "Anklicken um ggf. Informationen über ein SEPA-Lastschriftmandat einzutragen"
 
-#: lib/detailed-instrumentation.php:1106
+#: lib/detailed-instrumentation.php:1157
 msgid "Instrumentation related data"
 msgstr "Besetzung"
 
-#: lib/detailed-instrumentation.php:1109
+#: lib/detailed-instrumentation.php:1160
 msgid "Project related data"
 msgstr "Projekt-Daten"
 
-#: lib/detailed-instrumentation.php:1114
+#: lib/detailed-instrumentation.php:1165
 msgid "Finance related data"
 msgstr "Finanz-Daten"
 
-#: lib/detailed-instrumentation.php:1119
+#: lib/detailed-instrumentation.php:1170
 msgid "Personal data"
 msgstr "Persönliche Daten"
 
-#: lib/detailed-instrumentation.php:1122 lib/musicians.php:187
+#: lib/detailed-instrumentation.php:1173 lib/musicians.php:187
 #: lib/project-extra.php:253
 msgid "Display all columns"
 msgstr "Alles anzeigen"
@@ -2987,7 +2991,7 @@ msgid "Object"
 msgstr "Gegenstand"
 
 #: lib/instrument-insurance.php:853 lib/instrument-insurance.php:935
-#: lib/project-extra.php:1436
+#: lib/project-extra.php:1440
 msgid "Amount"
 msgstr "Betrag"
 
@@ -3105,50 +3109,50 @@ msgstr "Schatzmeister"
 msgid "Invalid broker/geographical-scope combination: %s - %s"
 msgstr "Der Makler %s bietet keine Versicherung für den Geltungsberich %s an"
 
-#: lib/instrumentation.php:251
+#: lib/instrumentation.php:249
 msgid "regular musician"
 msgstr "Mitspieler"
 
-#: lib/instrumentation.php:252
+#: lib/instrumentation.php:250
 msgid "passive member"
 msgstr "passiver Teilnehmer"
 
-#: lib/instrumentation.php:253 lib/instrumentation.php:266
+#: lib/instrumentation.php:251 lib/instrumentation.php:264
 msgid "soloist"
 msgstr "Solist"
 
-#: lib/instrumentation.php:254 lib/instrumentation.php:267
+#: lib/instrumentation.php:252 lib/instrumentation.php:265
 msgid "conductor"
 msgstr "Dirigent"
 
-#: lib/instrumentation.php:255
+#: lib/instrumentation.php:253
 msgid "temporary musician"
 msgstr "Aushilfe"
 
-#: lib/instrumentation.php:264
+#: lib/instrumentation.php:262
 msgid "regular"
 msgstr "Mitspieler"
 
-#: lib/instrumentation.php:265
+#: lib/instrumentation.php:263
 msgid "passive"
 msgstr "passiv"
 
-#: lib/instrumentation.php:268 lib/projects.php:287
+#: lib/instrumentation.php:266 lib/projects.php:287
 msgid "temporary"
 msgstr "zeitweilig"
 
-#: lib/instrumentation.php:450
+#: lib/instrumentation.php:455
 #, php-format
 msgid "Unable to fetch musician's personal information for id %d"
 msgstr "Kann die persönlichen Daten des Musiker zur Id %d nicht ermitteln."
 
-#: lib/instrumentation.php:464
+#: lib/instrumentation.php:469
 #, php-format
 msgid "Unable to fetch musician's project information for id %d."
 msgstr ""
 "Kann die Projekt-bezogenen Daten des Musikers zur Id %d nicht ermitteln."
 
-#: lib/instrumentation.php:476
+#: lib/instrumentation.php:481
 #, php-format
 msgid ""
 "The musician %s is already registered for the project with the instruments "
@@ -3156,7 +3160,7 @@ msgid ""
 msgstr ""
 "Der Musiker %s ist bereits mit Instrument %s für das Projekt registriert."
 
-#: lib/instrumentation.php:492
+#: lib/instrumentation.php:497
 #, php-format
 msgid ""
 "None of the instruments known by %s are mentioned in the instrumentation-"
@@ -3167,17 +3171,17 @@ msgstr ""
 "Besetzungliste für das Projekt aufgeführt.  Der Musiker wird dennoch\n"
 "zum Projekt mit dem Instrument ``%s'' hinzugefügt."
 
-#: lib/instrumentation.php:498
+#: lib/instrumentation.php:503
 #, php-format
 msgid "The musician %s doesn't seem to play any instrument ..."
 msgstr "Der Musiker %s scheint kein einziges Instrument zu spielen ..."
 
-#: lib/instrumentation.php:517
+#: lib/instrumentation.php:522
 #, php-format
 msgid "Adding %s (id = %d) failed."
 msgstr "Hinzufügen von %s (Id = %d) fehlgeschlagen."
 
-#: lib/instrumentation.php:525
+#: lib/instrumentation.php:530
 #, php-format
 msgid "Unable to get the new id for %s (id = %d)"
 msgstr "Kann die neue Id für %s (Id = %d) nicht ermitteln."
@@ -3664,7 +3668,7 @@ msgstr "Art"
 msgid "Allowed Values"
 msgstr "Zulässige Werte"
 
-#: lib/project-extra.php:435 lib/project-extra.php:1357
+#: lib/project-extra.php:435 lib/project-extra.php:1361
 msgid "Data"
 msgstr "Daten"
 
@@ -3673,7 +3677,7 @@ msgstr "Daten"
 msgid "Default Value"
 msgstr "Voreinstellung"
 
-#: lib/project-extra.php:516 lib/project-extra.php:1358
+#: lib/project-extra.php:516 lib/project-extra.php:1362
 msgid "Tooltip"
 msgstr "Kontext-Hilfe"
 
@@ -3705,23 +3709,23 @@ msgstr "Nur-Lesen"
 msgid "Writers"
 msgstr "Schreiben"
 
-#: lib/project-extra.php:1229
+#: lib/project-extra.php:1233
 msgid "new option"
 msgstr "neue Auswahloption"
 
-#: lib/project-extra.php:1313
+#: lib/project-extra.php:1317
 msgid "Show deleted items."
 msgstr "Gelöschte Einträge anzeigen."
 
-#: lib/project-extra.php:1315
+#: lib/project-extra.php:1319
 msgid "Show data-fields."
 msgstr "Daten-Feld anzeigen."
 
-#: lib/project-extra.php:1355
+#: lib/project-extra.php:1359
 msgid "Key"
 msgstr "Schlüssel"
 
-#: lib/project-extra.php:1356
+#: lib/project-extra.php:1360
 msgid "Label"
 msgstr "Bezeichnung"
 
