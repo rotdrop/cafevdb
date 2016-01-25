@@ -1,7 +1,7 @@
 #! /bin/bash
 DIRS="lib ajax templates js"
 FUNC=Config::toolTips
-RE="s/.*"${FUNC}"(['\"]\([^'\"]\\+\)['\"]).*/\\1/gI"
+RE="s/.*"${FUNC}"\s*(['\"]\([^'\"]\\+\)['\"].*/\\1/gI"
 OUTPUT=lib/tooltips.txt
 for dir in $DIRS; do
     find $dir -name "*.php" -exec fgrep -ih ${FUNC} {} \;|\

@@ -146,35 +146,91 @@ invited to have a look, but please do not change anything unless you know what y
 
         'expert-operations' => L::t('For those who know what they are doing, which essentially means: don\'t.'),
 
-        'extra-fields-allowed-values' => '',
+        'extra-fields-allowed-values' => array(
+          'default' => L::t('Table with all admissible values for this multiple choice option.'),
+          'placeholder' => L::t('In order to add a new option just enter its name here and hit enter or
+just click somewhere else. Further attributes can be changed later (data-base key, label, data, context help)'),
+          'key' => L::t('Please enter here a unique short non-nonsense key. You will no longer
+be able to change this db-key once this option has be attached to a
+musician. However, changing the display-label (just the field to the right) is always possible.'),
+          'label' => L::t('Just the display-label shown in the select-boxes in the instrumentation table.'),
+          'data' => L::t('For surcharge-items this is just the surcharge-amount associated with
+the option. For other multi-choice items this is just one arbitrary
+string. Please entry the surcharge amount for surcharge items here.'),
+          'tooltip' => L::t('An extra-tooltip which can be associated to this specific option. A
+help text in order to inform others what this option is about.'),
+          ),
 
-        'extra-fields-default-multi-value' => '',
+        'extra-fields-allowed-values-single' => L::t('For a surcharge option, please enter here the surcharge amount
+associated with this option.'),
 
-        'extra-fields-default-single-value' => '',
+        'extra-fields-default-multi-value' => L::t('Specify a default value for the custom field here. Leave blank if unsure.'),
 
-        'extra-fields-default-value' => '',
+        'extra-fields-default-single-value' => L::t('Specify a default value for the custom field here. Leave blank if unsure.'),
 
-        'extra-fields-display-order' => '',
+        'extra-fields-default-value' => L::t('Specify a default value for the custom field here. Leave blank if unsure.'),
 
-        'extra-fields-encrypted' => '',
+        'extra-fields-delete-undelete' => L::t('Hit this button to delete or undelete each item. Note that items that
+already have been associated with musicians in the data-base can no
+longer be "really" deleted. Instead, an attempt to delete them will
+just result in marking them as "inactive". Inactive items will be kept
+until the end of the world (or this data-base application, whatever
+happens to come earlier). Inactive buttons will no longer show up in
+the instrumentation table, but inactive items can be "undeleted", just
+but clicking this button again.'),
 
-        'extra-fields-extra-tab' => '',
+        'extra-fields-disabled' => L::t('Disable this extra field. This will not erase any data in the
+data-base, but simply mark the field as unused and hide it from sight.'),
 
-        'extra-fields-field-index' => '',
+        'extra-fields-display-order' => L::t('Define the display priority. Larger values will move the item more to
+the left or the top inside its table-tab.'),
 
-        'extra-fields-field-name' => '',
+        'extra-fields-encrypted' => L::t('Expert use: store encrypted values in the data-base. If unsure: <em>DON\'T</em>'),
 
-        'extra-fields-new-tab' => '',
+        'extra-fields-extra-tab' => L::t('Extra-tab to group project-specific data which just didn\'t fit
+somewhere else.'),
 
-        'extra-fields-readers' => '',
+        'extra-fields-field-index' => L::t('Backwards-compatibility link into extra-data stored together with old
+projects.'),
 
-        'extra-fields-tab' => '',
+        'extra-fields-field-name' => L::t('Just the name for this option. Please keep the name as <em>short</em> as
+possible, but try to be descriptive. If further explanations are
+needed, then please enter those in the <strong>Tooltip</strong> field in the
+<strong>Display</strong> tab.'),
 
-        'extra-fields-tooltip' => '',
+        'extra-fields-new-tab' => L::t('Define a new table-tab. In order to do so, first deselect any
+predefined tab in the select box above, then enter the new name. The
+new tab-name will also be available as tab-option for other fields.'),
 
-        'extra-fields-type' => '',
+        'extra-fields-readers' => L::t('Members of these OwnCloud user-groups are allowed to view the
+field. If left blank, every logged in user is allowed to view the
+field.'),
 
-        'extra-fields-writers' => '',
+        'extra-fields-show-data' => L::t('Each option has an optional data-entry attached to it. Normally, this
+is only useful for surcharge options, where the "data-entry" just is
+the extra-charge amount associated to the option. Still, if you feel a
+need to view the data-items also for non-surcharge options, then just
+click here.'),
+
+        'extra-fields-show-deleted' => L::t('Options already attached to musicians can no longer be deleted in
+order to prevent data-loss in the underlying data-base. It is even
+possible to recover those options by checking this checkbox in order to make them visible and
+clicking the "recover" button to the left of each deleted entry.'),
+
+        'extra-fields-tab' => L::t('Define the table-tab this entry should be grouped with. It is also
+possible to define new table-tabs. In order to do so, first deselect
+any possible selected tab, and then enter the name of a new tab in the
+input box below.'),
+
+        'extra-fields-tooltip' => L::t('Optionally define a tool-tip (context-help) for the field. The tooltip
+may contain HTML formatting.'),
+
+        'extra-fields-type' => L::t('Data-type for the custom field. The most practical types are probably
+yes-no and multiple-choice options. Extra-charge options can also be
+defined, with the respective extra-charge amount tied to the option.'),
+
+        'extra-fields-writers' => L::t('Members of these OwnCloud user-groups are allowed to change the
+field. If left blank, every logged in user is allowed to change this field.'),
 
         'file-attachments-select' => L::t('Select-box with all currently uploaded attachments. Note that a file will only be attached to a message if it is also checked in this select box.'),
 
@@ -226,7 +282,7 @@ the event.'),
 
         'owncloud-attachment' => L::t('Choose a file to attach from the files stored remotely on in the OwnCloud storage area.'),
 
-        'ownclouddev-link' => '',
+        'ownclouddev-link' => L::t('Web-link to the current OwnCloud developer documentation.'),
 
         'payment-status' => L::t('Status of outstanding project fees:
 <dl>
@@ -244,9 +300,9 @@ the event.'),
             array('&empty;', '&#9972;', '&#9684;', '&#9951;', '&#10004;')
           ),
 
-        'phpmyadmin-link' => '',
+        'phpmyadmin-link' => L::t('Link to the data-base administration tool for the underlying data-base. Swiss-army-knife-like.'),
 
-        'phpmyadminoc-link' => '',
+        'phpmyadminoc-link' => L::t('Link to the documentation for the database-management tool.'),
 
         'pme-add' => L::t('  Click me to add a new
 row to the current table.'),
@@ -461,7 +517,8 @@ events associated to the project.
 Events can be added and modified
 as needed.'),
 
-        'project-action-extra-fields' => '',
+        'project-action-extra-fields' => L::t('Define extra-fields for the instrumentation table. E.g.: surcharge
+fields for double-/single-room preference, room-mates and such.'),
 
         'project-action-files' => L::t('Change to the folder with project related files.'),
 
@@ -475,6 +532,11 @@ has been ``closed\'\'.'),
 
         'project-actions' => L::t('Pull-down menu with entries to move on
 to pages with the instrumentation, events, instrumentation numbers etc.'),
+
+        'project-direct-debit-allowed' => L::t('Some people gave us debit mandates but still want to pay by bank-transfer. Uncheck in order to exclude the person from direct debits transfers.'),
+
+        'project-finance-tab' => L::t('Everything related to project fees, surcharges, bank transfers, debit
+mandates.'),
 
         'project-infopage' => L::t('Opens a dialog-window which gives access to all stored informations for the project.'),
 
@@ -561,19 +623,21 @@ recipients.'),
 and send the selected events to
 selected recipients.'),
 
-        'projectsbalancefolder-force' => '',
+        'projectsbalancefolder-force' => L::t('Force the re-creation of the folder where project balanaces are
+stored.'),
 
-        'projectsfolder-force' => '',
+        'projectsfolder-force' => L::t('Force the re-creation of the folder where project data is stored.'),
 
-        'redaxo-archive' => '',
+        'redaxo-archive' => L::t('Article category of the concert-archive inside the Redaxo CMS.'),
 
-        'redaxo-preview' => '',
+        'redaxo-preview' => L::t('Article category of the concert-previews inside the Redaxo CMS.'),
 
-        'redaxo-rehearsals' => '',
+        'redaxo-rehearsals' => L::t('Article category of the rehearsals inside the Redaxo CMS.'),
 
-        'redaxo-template' => '',
+        'redaxo-template' => L::t('Article category for templates inside the Redaxo CMS.'),
 
-        'redaxo-trashbin' => '',
+        'redaxo-trashbin' => L::t('Trashbin pseudo-category, articles deleted from within the
+project-views are moved here.'),
 
         'register-musician' => L::t('Add the musician to the project. A new form will open were details like the instrument etc. can be adjustetd.'),
 
@@ -621,15 +685,15 @@ the `Debug\' tab'),
 
         'settings-button' => L::t('Personal application settings.'),
 
-        'sharedfolder-force' => '',
+        'sharedfolder-force' => L::t('Force the re-creation of the root of the shared-folder hierarchy.'),
 
-        'shareowner-force' => '',
+        'shareowner-force' => L::t('Re-create the share-owner.'),
 
         'show-tool-tips' => L::t('Toggle Tooltips'),
 
-        'sourcecode-link' => '',
+        'sourcecode-link' => L::t('Link to the source-code archives for the DB app.'),
 
-        'sourcedocs-link' => '',
+        'sourcedocs-link' => L::t('Link to the source-code documentation for the DB app.'),
 
         'syncevents' => L::t('Recompute the link between projects and events, using the event-categories as primary key.'),
 
@@ -637,7 +701,7 @@ the `Debug\' tab'),
 tables. The actual number of rows per page can also changed later in
 the individual table views.'),
 
-        'test-cafevdb_dbpassword' => '',
+        'test-cafevdb_dbpassword' => L::t('Test data-base passphrase.'),
 
         'test-dbpassword' => L::t('Check whether the data-base can be accessed with the given account
 information and password. The password will only be stored in the
