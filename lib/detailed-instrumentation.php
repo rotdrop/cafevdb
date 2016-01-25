@@ -394,36 +394,6 @@ class DetailedInstrumentation
       'awaitingdebit' => '&#9951;',
       'payed' => '&#10004;'
       );
-    if (!$needDebitMandates) {
-      unset($paymentStatusValues2['awaitingdepositdebit']);
-      unset($paymentStatusValues2['awaitingdebit']);
-    }
-    if ($project['Anzahlung'] <= 0) {
-      unset($paymentStatusValues2['awaitingdepositdebit']);
-      unset($paymentStatusValues2['deposited']);
-    }
-
-    $opts['fdd']['PaymentStatus'] = array(
-      'name'    => $this->operation ? L::t("Payment Status") : '&euro; ??',
-      'tab'     => array('id' => $financeTab),
-      'options' => 'LAVCPDF',
-      'select'  => 'D',
-      'values2' => $paymentStatusValues2,
-      'maxlen'  => '1',
-      'sort'    => true,
-      'escape'  => false,
-      'css'     => array(
-        'postfix' => ' '.implode(' ',
-                                 array('payment-status',
-                                       'align-center',
-                                       'tooltip-top',
-                                       'chosen-width-auto'))
-        ),
-      'tooltip' => Config::toolTips('payment-status'),
-      'display|LF' => array('popup' => function($data) {
-          return Config::ToolTips('payment-status');
-        }),
-      );
 
     if (Projects::needDebitMandates($projectId)) {
 
@@ -438,17 +408,23 @@ class DetailedInstrumentation
         }
       }
 
+      $amountPaidIdx = count($opts['fdd']);
+      $opts['fdd']['AmountPaid'] = array(
+        'input' => 'HR',
+        );
+
       $opts['fdd']['TotalProjectFees'] = array(
         'tab'      => array('id' => $financeTab),
         'name'     => L::t('Total Charges'),
         'css'      => array('postfix' => ' total-project-fees money'),
-        'sort'    => true,
+        'sort'    => false,
         'options' => 'VDLF', // wrong in change mode
         'input' => 'VR',
         'sql' => '`PMEtable0`.`Unkostenbeitrag`',
         'php' => function($amount, $op, $field, $fds, $fdd, $row, $recordId)
-        use ($monetary)
+        use ($monetary, $amountPaidIdx)
         {
+          $paid = $row['qf'.$amountPaidIdx];
           foreach($fds as $key => $label) {
             if (!isset($monetary[$label])) {
               continue;
@@ -462,8 +438,18 @@ class DetailedInstrumentation
             $type    = $field['Type'];
             $amount += self::extraFieldSurcharge($value, $allowed, $type['Multiplicity']);
           }
-          return Util::moneyValue($amount);
+          // display as TOTAL/PAID/REMAINDER
+          $rest = $amount - $paid;
+
+          $amount = Util::moneyValue($amount);
+          $paid = Util::moneyValue($paid);
+          $rest = Util::moneyValue($rest);
+          return ('<span class="totals finance-state">'.$amount.'</span>'
+                  .'<span class="received finance-state">'.$paid.'</span>'
+                  .'<span class="outstanding finance-state">'.$rest.'</span>');
         },
+        'tooltip'  => Config::toolTips('project-total-fee-summary'),
+        'display|LFVD' => array('popup' => 'tooltip'),
         );
 
       $opts['fdd']['Lastschrift'] = array(
@@ -1223,8 +1209,12 @@ class DetailedInstrumentation
     switch ($multiplicity) {
     case 'single':
       // Non empty value means "yes".
-      if ($allowedValues[0]['key'] !== $value) {
-        error_log('************ '.$value.' key '.$allowedValues[0]['key']);
+      $key = $allowedValues[0]['key'];
+      if ($key !== $value) {
+        \OCP\Util::writeLog(Config::APP_NAME,
+                            __METHOD__.': '.
+                            'Stored value "'.$value.'" unequal to stored key "'.$key.'"',
+                            \OCP\Util::WARNING);
       }
       return (float)$allowedValues[0]['data'];
     case 'multiple':
@@ -1233,7 +1223,10 @@ class DetailedInstrumentation
           return (float)$item['data'];
         }
       }
-      error_log('***************** key could no be found');
+      \OCP\Util::writeLog(Config::APP_NAME,
+                          __METHOD__.': '.
+                          'No data item for key "'.$value.'"',
+                          \OCP\Util::ERROR);
       return 0.0;
     case 'parallel':
       $keys = explode(',',$value);
@@ -1245,9 +1238,10 @@ class DetailedInstrumentation
           $found = true;
         }
       }
-      if (!$found) {
-        error_log('***************** key could no be found');
-      }
+      \OCP\Util::writeLog(Config::APP_NAME,
+                          __METHOD__.': '.
+                          'No data item for keys "'.$value.'"',
+                          \OCP\Util::ERROR);
       return $amount;
     }
     return 0.0;
