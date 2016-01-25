@@ -67,7 +67,7 @@ namespace CAFEVDB {
           if ($parsed === false) {
             \OC_JSON::error(
               array("data" => array(
-                      "message" => L::t('Could not parse number: "%s"', array($number)),
+                      "message" => L::t('Could not parse number: "%s"', array($amount)),
                       'Amount' => false
                       )
                 )
