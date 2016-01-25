@@ -78,6 +78,7 @@ namespace CAFEVDB
     \OCP\Util::addStyle('cafevdb', 'emailform');
     \OCP\Util::addStyle('cafevdb', 'blog');
     \OCP\Util::addStyle('cafevdb', 'projects');
+    \OCP\Util::addStyle('cafevdb', 'project-extra');
     \OCP\Util::addStyle('cafevdb', 'project-instruments');
     \OCP\Util::addStyle('cafevdb', 'instrumentation');
     \OCP\Util::addStyle('cafevdb', 'inlineimage');
@@ -95,6 +96,7 @@ namespace CAFEVDB
     \OCP\Util::addScript('cafevdb', 'events');
     \OCP\Util::addScript('cafevdb', 'blog');
     \OCP\Util::addScript('cafevdb', 'projects');
+    \OCP\Util::addScript('cafevdb', 'project-extra');
     \OCP\Util::addScript('cafevdb', 'project-instruments');
     \OCP\Util::addScript('cafevdb', 'sepa-debit-mandate');
     \OCP\Util::addScript('cafevdb', 'instrumentation');

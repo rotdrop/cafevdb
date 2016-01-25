@@ -74,6 +74,7 @@ OC::$CLASSPATH['html2text'] = 'cafevdb/3rdparty/PHPMailer/extras/class.html2text
 OC::$CLASSPATH['IBAN'] = 'cafevdb/3rdparty/php-iban/oophp-iban.php';
 OC::$CLASSPATH['malkusch\bav\BAV'] = 'cafevdb/3rdparty/bav/autoloader/autoloader.php';
 OC::$CLASSPATH['libphonenumber\PhoneNumberUtil'] = 'cafevdb/3rdparty/libphonenumber/autoloader/autoloader.php';
+require_once 'cafevdb/3rdparty/htmlpurifier/library/HTMLPurifier.auto.php';
 require_once 'cafevdb/3rdparty/PHPMailer/PHPMailerAutoload.php';
 OC::$CLASSPATH['PEAR'] = '3rdparty/PEAR.php';
 OC::$CLASSPATH['Mail_RFC822'] = 'cafevdb/3rdparty/pear/php/Mail/RFC822.php';

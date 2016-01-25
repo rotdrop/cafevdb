@@ -265,19 +265,23 @@ namespace CAFEVDB
      * @param[in] string $delimiters The set of delimiters. Must not
      * contain a backslash and no quotes, s.v.p..
      *
+     * @param[in] bool $omitEmptyFields Whether to exclude empty
+     * fields from the output.
+     *
      * @return array An array of the fields. Note: empty fields are
      * removed, this function is not suitable for data-base
      * manipulation.
      */
-    static public function quasiCSVSplit($values, $delimiters = ':,;')
+    static public function quasiCSVSplit($values, $delimiters = ':,;', $omitEmptyFields = false)
     {
+      $emptyGroup = $omitEmptyFields ? '' : '|';
       $re = '/(?<=^|['.$delimiters.'])'.
         '\s*(?|'.
-        '("|\')\s*((?!\s)(?:(?!\g{-2})(?:\\\\.|[^\\\\]))+(?<!\s))\s*\g{-2}'.
+        '("|\')\s*((?!\s)(?:(?!\g{-2})(?:\\\\.|[^\\\\]))+(?<!\s)'.$emptyGroup.')\s*\g{-2}'.
         '|'.
-        '(?!"\s*"|\'\s*\')(((?!\s)(?:\\\\.|[^,;:])+(?<!\s)))'.
+        '(?!"\s*"|\'\s*\')(((?!\s)(?:\\\\.|[^'.$delimiters.'])+(?<!\s)'.$emptyGroup.'))'.
         ')\s*'.
-        '(?=['.$delimiters.']|$)/';
+        '(?=['.$delimiters.']|$)/u';
 
       preg_match_all($re, $values, $matches);
       if (!isset($matches[2])) {
@@ -309,7 +313,7 @@ namespace CAFEVDB
       foreach ($values as &$value) {
         $doubleQuotes = substr_count($value, '"');
         $singleQuotes = substr_count($value, "'");
-        $limiters = preg_match_all('/[,:;]/', $value);
+        $limiters = preg_match_all('/['.$delimiters.']/', $value);
 
         str_replace('//', '////', $value);
         if ($doubleQuotes > 0 && $doubleQuotes > $singleQuotes) {
@@ -328,6 +332,33 @@ namespace CAFEVDB
 
       $values = implode($delimiters[0], $values);
       return $values;
+    }
+
+    /**Kind of transpose a given nested array.
+     *
+     * array(0 => array(a => A, b => B),
+     *       1 => array(a => AA, b => BB))
+     *
+     * is converted to
+     *
+     * array(a => array(0 => A, 1 => AA),
+     *       b => array(0 => B, 1 => BB))
+     *
+     *
+     */
+    static public function transposeMatrix($dblar)
+    {
+      $result = array();
+      foreach ($dblar as $rowKey => $row) {
+        if (!is_array($row)) {
+          return false;
+        }
+        foreach ($row as $colKey => $cell) {
+          isset($result[$colKey]) || $result[$colKey] = array();
+          $result[$colKey][$rowKey] = $cell;
+        }
+      }
+      return $result;
     }
 
     /**Generate a random byte sequence in hex notation.*/
@@ -412,11 +443,34 @@ __EOT__;
     }
 
     /**Return the locale. */
-    public static function getLocale()
+    public static function getLocale($lang = null)
     {
-      $lang = \OC_L10N::findLanguage(Config::APP_NAME);
+      if (empty($countryCode)) {
+        $lang = \OC_L10N::findLanguage(Config::APP_NAME);
+      }
       $locale = $lang.'_'.strtoupper($lang).'.UTF-8';
       return $locale;
+    }
+
+    /**Return the currency symbol for the locale. */
+    public static function currencySymbol($locale = null)
+    {
+      if (empty($locale)) {
+        $locale = Util::getLocale();
+      }
+      $fmt = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
+      return $fmt->getSymbol(\NumberFormatter::CURRENCY_SYMBOL);
+    }
+
+    //!Just display the given value
+    public static function moneyValue($value, $locale = null)
+    {
+      $oldlocale = setlocale(LC_MONETARY, '0');
+      empty($locale) && $locale = Util::getLocale();
+      setlocale(LC_MONETARY, $locale);
+      $result = money_format('%n', (float)$value);
+      setlocale(LC_MONETARY, $oldlocale);
+      return $result;
     }
 
     /**Return an array of supported country-codes and names*/
@@ -804,6 +858,9 @@ __EOT__;
     public static function beforeAnythingTrimAnything($pme, $op, $step, $oldvals, &$changed, &$newvals)
     {
       foreach ($newvals as $key => &$value) {
+        if (!is_scalar($value)) {
+          continue;
+        }
         // Convert unicode space to ordinary space
         $value = str_replace("\xc2\xa0", "\x20", $value);
 
@@ -1078,9 +1135,9 @@ __EOT__;
       return $button;
     }
 
-    /**Add a new button to the left of already registered phpMyEdit
-     * buttons. This is a dirty hack. But so what. Only the L and F
-     * (list and filter) views are augmented.
+    /**Add a new button to the left of the already registered
+     * phpMyEdit buttons. This is a dirty hack. But so what. Only the
+     * L and F (list and filter) views are augmented.
      *
      * @param[in] $button The new button.
      *
@@ -1434,6 +1491,7 @@ __EOT__;
         if ($asListItem) {
           $post = array('ProjectExtraFields' => $value,
                         'Template' => 'project-extra',
+                        'ShowDisabledFields' => false,
                         'ProjectName' => $projectName,
                         'ProjectId' => $projectId);
         }
@@ -1672,9 +1730,14 @@ __EOT__;
     }
   };
 
-/**Try to correct common human input errors. Not much, ATM. */
+  /**Try to correct common human input "errors", respectively
+   * sloppiness. Not much, ATM. */
   class FuzzyInput
   {
+    const HTML_TIDY = 1;
+    const HTML_PURIFY = 2;
+    const HTML_ALL = ~0;
+
     /**Check $input for "transposition error". Interchange each
      * consecutive pair of letters, try to validate by $callback, return
      * an array of transposed input strings, for which $callback
@@ -1697,6 +1760,70 @@ __EOT__;
       }
       return $result;
     }
+
+    /**Try to get the number of bugs from a currency value. We act
+     * quite simple: Strip the currency symbols from the users locale
+     * and then try to parse the number, first with the users locale,
+     * then with the C locale.
+     *
+     * @return mixed Either @c false or the floating point value
+     * extracted from the input string.
+     */
+    public static function currencyValue($value)
+    {
+      $amount = preg_replace('/\s+/u', '', $value);
+      $fmt = new \NumberFormatter(Util::getLocale(), \NumberFormatter::CURRENCY);
+      $cur = $fmt->getSymbol(\NumberFormatter::CURRENCY_SYMBOL);
+      $amount = str_replace($cur, '', $amount);
+      $cur = $fmt->getSymbol(\NumberFormatter::INTL_CURRENCY_SYMBOL);
+      $amount = str_replace($cur, '', $amount);
+      $fmt = new \NumberFormatter(Util::getLocale(), \NumberFormatter::DECIMAL);
+      $parsed = $fmt->parse($amount);
+      if ($parsed === false) {
+        $fmt = new \NumberFormatter('en_US_POSIX', \NumberFormatter::DECIMAL);
+        $parsed = $fmt->parse($amount);
+      }
+      return $parsed !== false ? sprintf('%.02f', $parsed) : $parsed;
+    }
+
+    /**Try to correct HTML code.*/
+    public static function purifyHTML($dirtyHTML, $method = self::HTML_PURIFY)
+    {
+      $purifier = null;
+      if ($method & self::HTML_PURIFY) {
+        $cacheDir = Config::userCacheDirectory('HTMLPurifier');
+        $config = \HTMLPurifier_Config::createDefault();
+        $config->set('Cache.SerializerPath', $cacheDir);
+        $config->set('HTML.TargetBlank', true);
+        // TODO: maybe add further options
+        $purifier = new \HTMLPurifier($config);
+      }
+
+      $tidy = null;
+      $tidyConfig = null;
+      if ($method & self::HTML_TIDY) {
+        $tidyConfig = array(
+          'indent'         => true,
+          'output-xhtml'   => true,
+          'show-body-only' => true,
+          'wrap'           => 200
+          );
+        $tidy = new \tidy;
+      }
+
+      if (!empty($tidy)) {
+        $tidy->parseString($dirtyHTML, $tidyConfig, 'utf8');
+        $tidy->cleanRepair();
+        $dirtyHTML = (string)$tidy;
+      }
+
+      if (!empty($purifier)) {
+        $dirtyHTML = $purifier->purify($dirtyHTML);
+      }
+
+      return $dirtyHTML;
+    }
+
   };
 
 } // namespace
