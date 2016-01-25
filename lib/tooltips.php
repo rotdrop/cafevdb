@@ -566,6 +566,8 @@ of the project name before the year is added.'),
 
         'project-personaldata-tab' => L::t('Displays the personal data of the respective musicians, like address, email, date of birth if known, phone numbers.'),
 
+        'project-total-fee-summary' => L::t('The accumulated total of all charges the participant has to pay.'),
+
         'project-web-article-add' => L::t('Add a new public web-page to the project by generating a new, empty concert announcement.'),
 
         'project-web-article-delete' => L::t('Delete the currently displayed web-page fromthe project. The web page will be "detached" from the project and moved to the trash-bin
@@ -708,6 +710,8 @@ information and password. The password will only be stored in the
 configuration storage if the test can be performed successfully.'),
 
         'test-linktarget' => L::t('Try to connect to the specified web-address, will open the web-address in another window or tab, depending your local browser preferences.'),
+
+        'total-fee-summary' => L::t('Total amount the participant has to pay, perhaps followed by total amount paid, followed by the outstanding amount.'),
 
         'transfer-instruments' => L::t('Add the instruments of the actually registered musicians to the instrument-table for the project.'),
 
