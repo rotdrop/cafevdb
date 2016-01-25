@@ -321,6 +321,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
             off('chosen:showing_dropdown').
             on('chosen:showing_dropdown', function (event) {
             container.find('ul.chosen-results li.active-result').cafevTooltip({placement:'auto left'});
+            return true;
         });
     };
 
@@ -641,11 +642,11 @@ $(document).ready(function(){
                                   no_result_text: t('cafevdb','No values match')});
             articleSelect.on('chosen:showing_dropdown', function() {
                 articleBox.css('overflow', 'visible');
-                return false;
+                return true;
             });
             articleSelect.on('chosen:hiding_dropdown', function() {
                 articleBox.css('overflow', 'hidden');
-                return false;
+                return true;
             });
 
             articleSelect.on('change', function(event) {
@@ -832,8 +833,9 @@ $(document).ready(function(){
                     if (editArea.length > 0) {
                         CAFEVDB.textareaResize(editArea);
 
-                        rexForm.off('resize', 'textarea');
-                        rexForm.on('resize', 'textarea', function() {
+                        rexForm.
+                            off('resize', 'textarea').
+                            on('resize', 'textarea', function() {
                             forceSize(iframe);
                             return false;
                         });
