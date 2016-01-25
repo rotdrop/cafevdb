@@ -1388,6 +1388,9 @@ var PHPMYEDIT = PHPMYEDIT || {};
     var tableContainerId = PHPMYEDIT.pmeIdSelector('table-container');
     container.on('chosen:showing_dropdown', tableContainerId+' select', function(event) {
       console.log('chosen:showing_dropdown');
+      if (!container.hasClass('ui-widget-content')) {
+      	return true;
+      }
       var widget = container.cafevDialog('widget');
       var tableContainer = container.find(tableContainerId);
       widget.css('overflow', 'visible');
@@ -1398,6 +1401,9 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
     container.on('chosen:hiding_dropdown', tableContainerId+' select', function(event) {
       console.log('chosen:hiding_dropdown');
+      if (!container.hasClass('ui-widget-content')) {
+      	return true;
+      }
       var widget = container.cafevDialog('widget');
       var tableContainer = container.find(tableContainerId);
       tableContainer.css('overflow', '');
