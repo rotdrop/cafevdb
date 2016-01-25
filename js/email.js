@@ -350,6 +350,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
         composerPanel.stop().animate({
           scrollTop: composerPanel.prop('scrollHeight')
         }, 2000);
+        return true;
       });
       var eventAttachmentsSelect = composerPanel.find('#event-attachments-selector');
       eventAttachmentsSelect.chosen();
@@ -357,6 +358,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
         composerPanel.stop().animate({
           scrollTop: composerPanel.prop('scrollHeight')
         }, 2000);
+        return true;
       });
 
       CAFEVDB.toolTipsInit(dialogHolder.find('div#emailformcomposer'));
