@@ -425,6 +425,7 @@ form.invisible#new-personalsettings * {
 
 body.snapjs-left form#personalsettings {
   left:47px;
+  right:unset;
   z-index:200;
 }
 
@@ -743,6 +744,9 @@ div.cafevdb-error {
   font-weight:bold;
 }
 
+textarea[readonly],
+textarea[readonly]:hover,
+textarea[readonly]:active,
 input[readonly],
 input[readonly]:hover,
 input[readonly]:active {
@@ -761,6 +765,8 @@ input[readonly]:active {
  * an ordinary r/w element.
  *
  */
+textarea[readonly]:hover,
+textarea[disabled]:hover,
 input[readonly]:hover,
 input[disabled]:hover,
 .chosen-disabled.chosen-container a:hover,
