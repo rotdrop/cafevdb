@@ -245,19 +245,35 @@ var CAFEVDB = CAFEVDB || {};
   /**Unfortunately, the textare element does not fire a resize
    * event. This function emulates one.
    *
-   * @param textarea jQuery descriptor for the textarea element
+   * @param container selector or jQuery of container for event
+   * delegation.
+   *
+   * @param textarea selector or jQuery
    *
    * @param delay Optional, defaults to 50. If true, fire the event
    * immediately, if set, then this is a delay in ms.
    *
    *
    */
-  CAFEVDB.textareaResize = function(textarea, delay) {
+  CAFEVDB.textareaResize = function(container, textarea, delay)
+  {
+    if (typeof textarea === 'undefined' && typeof delay === 'undefined') {
+      // Variant with one argument, argument must be textarea.
+      textarea = container;
+      delay = textarea;
+      container = null;
+    } else if (delay === 'undefined' && $.isNumeric(textarea)) {
+      // Variant with two argument, argument must be textarea.
+      textarea = container;
+      delay = textarea;
+      container = null;
+    }
+    // otherwise first two arguments are container and textarea.
     if (typeof delay == 'undefined') {
       delay = 50; // ms
     }
-    textarea.off('mouseup mousemove');
-    textarea.on('mouseup mousemove', function() {
+
+    var handler = function(event) {
       if (this.oldwidth  === null) {
         this.oldwidth  = this.style.width;
       }
@@ -280,7 +296,13 @@ var CAFEVDB = CAFEVDB || {};
         this.oldheight = this.style.height;
       }
       return true;
-    });
+    };
+    var events = 'mouseup mousemove';
+    if (container) {
+      $(container).off(events, textarea).on(events, textarea, handler);
+    } else {
+      $(textarea).off(events).on(events, handler);
+    }
   };
 
   CAFEVDB.stopRKey = function(evt) {
@@ -1231,8 +1253,8 @@ var CAFEVDB = CAFEVDB || {};
 
     // container.find('button.settings').cafevTooltip({placement:'bottom'});
     container.find('select').cafevTooltip({placement:'right'});
+    container.find('option').cafevTooltip({placement:'right'});
     container.find('div.chosen-container').cafevTooltip({placement:'top'});
-    container.find('li.active-result').cafevTooltip({placement:'right'});
     container.find('form.cafevdb-control input').cafevTooltip({placement:'bottom'});
     container.find('button.settings').cafevTooltip({placement:'bottom'});
     container.find('.pme-sort').cafevTooltip({placement:'bottom'});
@@ -1250,6 +1272,8 @@ var CAFEVDB = CAFEVDB || {};
       {placement:'top', cssclass:'tooltip-wide'});
     container.find('table.pme-main td').cafevTooltip(
       {placement:'top', cssclass:'tooltip-wide'});
+    container.find('table.pme-main th').cafevTooltip(
+      {placement:'bottom'});
 
     // original tipsy stuff
     container.find('.displayName .action').cafevTooltip({placement:'top'});
@@ -1261,6 +1285,7 @@ var CAFEVDB = CAFEVDB || {};
     container.find('td .modified').cafevTooltip({placement:'top'});
     container.find('td.lastLogin').cafevTooltip({placement:'top', html:true});
     container.find('input:not([type=hidden])').cafevTooltip({placement:'right'});
+    container.find('textarea').cafevTooltip({placement:'right'});
 
     // everything else.
     container.find('.tip').cafevTooltip({placement:'right'});
