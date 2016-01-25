@@ -28,6 +28,16 @@ var CAFEVDB = CAFEVDB || {};
 
 (function(window, $, CAFEVDB, undefined) {
 
+  /**We leave it to the z-index-plane to disallow interaction. Every
+   * input element above any modal dialog is allowed to interact with
+   * the user.
+   */
+  $.widget('ui.dialog', $.ui.dialog, {
+    _allowInteraction: function(event) {
+      return true;
+    }
+  });
+
   /**Special dialog version which attaches the dialog to the
    * #content-wrapper div.
    */
@@ -166,7 +176,7 @@ var CAFEVDB = CAFEVDB || {};
         var title = self.attr('title');
         if (title == undefined || title.trim() == '') {
           self.removeAttr('title');
-          self.cafevTooltip('disable');
+          self.cafevTooltip('destroy');
           return;
         }
         if (!selfOptions.template) {
