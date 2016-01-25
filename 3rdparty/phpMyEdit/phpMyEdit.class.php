@@ -112,7 +112,7 @@ class phpMyEdit
 	var $key_delim;	// character used for key value quoting
 	var $groupby;   // array of fields for groupby clause, or false
 	var $rec;		// number of record selected for editing
-	var $mrecs;				// array of custom-multi records selected
+	var $mrecs;     // array of custom-multi records selected
 	var $inc;		// number of records to display
 	var $fm;		// first record to display
 	var $fl;		// is the filter row displayed (boolean)
@@ -266,6 +266,25 @@ class phpMyEdit
 	function nav_custom_multi()	 { return stristr($this->navigation, 'M') && $this->misc_enabled(); }
 	function nav_up()			 { return (stristr($this->navigation, 'U') && !($this->buttons[$this->page_type]['up'] === false)); }
 	function nav_down()			 { return (stristr($this->navigation, 'D') && !($this->buttons[$this->page_type]['down'] === false)); }
+
+	/*
+	 * helper functions.
+	 */
+	static function is_flat($array)
+	{
+		if (is_scalar($array)) {
+			return true;
+		}
+		if (!is_array($array)) {
+			return false;
+		}
+		foreach ($array as $key => $value) {
+			if (!is_scalar($value)) {
+				return false;
+			}
+		}
+		return true;
+	}
 
 	/*
 	 * functions for indicating whether operations are enabled
@@ -675,7 +694,6 @@ class phpMyEdit
 		if (empty($table)) {
 			$table = $this->tb;
 		}
-		$subquery = &$this->fdd[$field_num]['values']['subquery'];
 		$key      = &$this->fdd[$field_num]['values']['column'];
 		$desc     = &$this->fdd[$field_num]['values']['description'];
 		$filters  = &$this->fdd[$field_num]['values']['filters'];
@@ -686,6 +704,7 @@ class phpMyEdit
 
 		$qparts['type'] = 'select';
 
+		$subquery = stripos($table, 'SELECT') !== false;
 		$table_name = $table;
 		if ($subquery) {
 			$table_name = 'PMEtablealias'.$field_num;
@@ -796,6 +815,9 @@ class phpMyEdit
 				: $this->sd.'PMEtable0'.$this->ed.'.'.$this->sd.$this->fds[$field].$this->ed;
 		} else {
 			if (isset($this->fdd[$this->fds[$field]]['values']['description']) && ! $dont_desc) {
+
+				$join_table = 'PMEjoin'.$field;
+
 				$desc = &$this->fdd[$this->fds[$field]]['values']['description'];
 				if (is_array($desc) && is_array($desc['columns'])) {
 					$ret	  = 'CONCAT('; // )
@@ -805,7 +827,7 @@ class phpMyEdit
 					}
 					foreach ($desc['columns'] as $key => $val) {
 						if ($val) {
-							$ret .= 'IFNULL(CAST('.$this->sd.'PMEjoin'.$field.$this->ed.'.'.$this->sd.$val.$this->ed.' AS CHAR),"")';
+							$ret .= 'IFNULL(CAST('.$this->sd.$join_table.$this->ed.'.'.$this->sd.$val.$this->ed.' AS CHAR),"")';
 							if ($desc['divs'][$key]) {
 								$ret .= ',"'.addslashes($desc['divs'][$key]).'"';
 							}
@@ -816,7 +838,7 @@ class phpMyEdit
 				} else if (is_array($desc)) {
 					// TODO
 				} else {
-					$ret = $this->sd.'PMEjoin'.$field.$this->ed.'.'.$this->sd.$this->fdd[$this->fds[$field]]['values']['description'].$this->ed;
+					$ret = $this->sd.$join_table.$this->ed.'.'.$this->sd.$this->fdd[$this->fds[$field]]['values']['description'].$this->ed;
 				}
 			} else {
 				$ret = $this->sd.'PMEtable0'.$this->ed.'.'.$this->sd.$this->fds[$field].$this->ed;
@@ -971,28 +993,29 @@ class phpMyEdit
 			if (isset($this->fdd[$main_column]['values']['db'])) {
 				$dbp = $this->sd.$this->fdd[$main_column]['values']['db'].$this->ed.'.';
 			} else {
-				//$dbp = $this->dbp;
+				//$dbp = $this->dbp; not needed
 			}
-			if (is_array($this->fdd[$main_column]['values']['table'])) {
-				if ($this->fdd[$main_column]['values']['table']['kind'] == 'derived') {
-					$table		 = '(' .$this->fdd[$main_column]['values']['table']['sql'].' )';
-				} else {
-					$table		 = $this->sd.$this->fdd[$main_column]['values']['table']['sql'].$this->ed;
-				}
-			} else {
-				$table	   = $this->sd.$this->fdd[$main_column]['values']['table'].$this->ed;
-			}
+
 			$join_column = $this->sd.$this->fdd[$main_column]['values']['column'].$this->ed;
 			$join_desc	 = $this->sd.$this->fdd[$main_column]['values']['description'].$this->ed;
 			if ($join_desc != $this->sd.$this->ed && $join_column != $this->sd.$this->ed) {
+
+				$table = trim($this->fdd[$main_column]['values']['table']);
+				$subquery = stripos($table, 'SELECT') !== false;
+				if ($subquery) {
+					$table = '('.$table.')';
+				} else {
+					$table = $dbp.$this->sd.$table.$this->ed;
+				}
 				$join_table = $this->sd.'PMEjoin'.$k.$this->ed;
 				$ar = array(
+					'data_base'        => $dbp,
 					'main_table'	   => $main_table,
 					'main_column'	   => $this->sd.$main_column.$this->ed,
 					'join_table'	   => $join_table,
 					'join_column'	   => $join_column,
 					'join_description' => $join_desc);
-				$join_clause .= " LEFT OUTER JOIN $dbp".$table." AS $join_table ON (";
+				$join_clause .= " LEFT OUTER JOIN ".$table." AS $join_table ON (";
 				$join_clause .= isset($this->fdd[$main_column]['values']['join'])
 					? $this->substituteVars($this->fdd[$main_column]['values']['join'], $ar)
 					: "$join_table.$join_column = $main_table.".$this->sd.$main_column.$this->ed;
@@ -1545,21 +1568,15 @@ class phpMyEdit
 			}
 			if ($this->col_has_php($k)) {
 				$php = $this->fdd[$k]['php'];
-				if (is_array($php)) {
-					switch ($php['type']) {
-					case 'function':
-						$opts = isset($php['parameters']) ? $php['parameters'] : '';
-						echo call_user_func($php['function'], false, $opts,
-											'add', // action to be performed
-											$k, $this->fds, $this->fdd, false);
-						break;
-					case 'file':
-						echo include($php);
-						break;
-					default:
-						break;
-					}
-				} else {
+				if (is_callable($php)) {
+					echo call_user_func($php, false, 'add', // action to be performed
+										$k, $this->fds, $this->fdd, false, -1);
+				} else if (is_array($php)) {
+					$opts = isset($php['parameters']) ? $php['parameters'] : '';
+					echo call_user_func($php['function'], false, $opts,
+										'add', // action to be performed
+										$k, $this->fds, $this->fdd, false, -1);
+				} else if (file_exists($php)) {
 					echo include($php);
 				}
 			} elseif ($this->col_has_values($k)) {
@@ -1575,7 +1592,7 @@ class phpMyEdit
 				//$escape	    = true;
 				if ($this->col_has_checkboxes($k) || $this->col_has_radio_buttons($k)) {
 					echo $this->htmlRadioCheck($this->cgi['prefix']['data'].$this->fds[$k],
-											   $css_class_name, $vals, $groups, $data,
+											   $css_class_name, $vals, $groups, $titles, $data,
 											   $selected,
 											   $multiple, $readonly,
 											   $strip_tags, $escape, NULL, $helptip);
@@ -1760,43 +1777,40 @@ class phpMyEdit
 		if ($this->col_has_php($k)) {
 			$value = !empty($vals) ? $vals[$row["qf$k"]] : $row["qf$k"];
 			$php = $this->fdd[$k]['php'];
-			if (is_array($php)) {
-				switch ($php['type']) {
-				case 'function':
-					$opts = isset($php['parameters']) ? $php['parameters'] : '';
-					echo call_user_func($php['function'], $value, $opts,
-										'change', // action to be performed
-										$k, $this->fds, $this->fdd, $row);
-					break;
-				case 'file':
-					echo include($php);
-					break;
-				default:
-					break;
-				}
-			} else {
+			if (is_callable($php)) {
+				echo call_user_func($php, $value,
+									'change', // action to be performed
+									$k, $this->fds, $this->fdd, $row,
+									$this->rec);
+			} else if (is_array($php)) {
+				$opts = isset($php['parameters']) ? $php['parameters'] : '';
+				echo call_user_func($php['function'], $value, $opts,
+									'change', // action to be performed
+									$k, $this->fds, $this->fdd, $row,
+									$this->rec);
+			} else if (file_exists($php)) {
 				echo include($php);
 			}
 		} elseif ($vals !== false &&
 			(stristr("MCOD", $this->fdd[$k]['select']) !== false || $multiValues)) {
 			$multiple	= $this->col_has_multiple($k);
 			$readonly	= $this->disabledTag($k) || count($vals) == 0;
-			$strip_tags = true;
 			$selected = @$row["qf$k"];
 			if ($selected === null) {
 				$selected = @$this->fdd[$k]['default'];
 			}
+			$strip_tags = true;
 			//$escape	    = true;
 			if ($this->col_has_checkboxes($k) || $this->col_has_radio_buttons($k)) {
 				echo $this->htmlRadioCheck($this->cgi['prefix']['data'].$this->fds[$k],
-										   $css_class_name, $vals, $groups, $data,
+										   $css_class_name, $vals, $groups, $titles, $data,
 										   $selected, $multiple, $readonly,
 										   $strip_tags, $escape, NULL, $help);
 			} else {
 				echo $this->htmlSelect($this->cgi['prefix']['data'].$this->fds[$k],
 									   $css_class_name, $vals, $groups, $titles, $data,
 									   $selected, $multiple, $readonly,
-									   $strip_tags, $escape, NULL, $help);
+										 $strip_tags, $escape, NULL, $help);
 			}
 		} elseif (!$vals && isset($this->fdd[$k]['textarea'])) {
 			echo $this->htmlTextarea($this->cgi['prefix']['data'].$this->fds[$k],
@@ -2102,7 +2116,12 @@ class phpMyEdit
 						$escape = false;
 					}
 				}
-				$value = join(', ', $value_ar2);
+				if (!empty($this->fdd[$k]['values2glue'])) {
+					$glue = $this->fdd[$k]['values2glue'];
+				} else {
+					$glue = ', ';
+				}
+				$value = join($glue, $value_ar2);
 			} else {
 				if (isset($this->fdd[$k]['values2'][$value])) {
 					$value	= $this->fdd[$k]['values2'][$value];
@@ -2140,21 +2159,17 @@ class phpMyEdit
 		}
 		if ($this->col_has_php($k)) {
 			$php = $this->fdd[$k]['php'];
-			if (is_array($php)) {
-				switch ($php['type']) {
-				case 'function':
-					$opts = isset($php['parameters']) ? $php['parameters'] : '';
-					return call_user_func($php['function'], $value, $opts,
-										  'display', // action to be performed
-										  $k, $this->fds, $this->fdd, $row);
-					break;
-				case 'file':
-					return include($php);
-					break;
-				default:
-					break;
-				}
-			} else {
+			if (is_callable($php)) {
+				return call_user_func($php, $value, 'display', // action to be performed
+									  $k, $this->fds, $this->fdd,
+									  $row, $this->rec);
+			} else if (is_array($php)) {
+				$opts = isset($php['parameters']) ? $php['parameters'] : '';
+				return call_user_func($php['function'], $value, $opts,
+									  'display', // action to be performed
+									  $k, $this->fds, $this->fdd,
+									  $row, $this->rec);
+			} else if (file_exists($php)) {
 				return include($php);
 			}
 		}
@@ -2234,13 +2249,11 @@ class phpMyEdit
 	 * @param	name			element name
 	 * @param	label			key in the language hash used as label
 	 * @param	css_class_name	CSS class name
-	 * @param	js_validation	if add JavaScript validation subroutine to button
 	 * @param	disabled		if mark the button as disabled
-	 * @param	js		any extra text in tags
+	 * @param   style           inline style
 	 */
 	function htmlSubmit($name, $label, $css_class_name,
-						$js_validation = true, $disabled = false,
-						$js = NULL, $style = NULL) /* {{{ */
+						$disabled = false, $style = NULL) /* {{{ */
 	{
 		// Note that <input disabled> isn't valid HTML, but most browsers support it
 		if($disabled === -1) return;
@@ -2249,7 +2262,6 @@ class phpMyEdit
 			.'" name="'.$this->cgi['prefix']['sys'].ltrim($markdisabled).$name
 			.'" value="'.(isset($this->labels[$label]) ? $this->labels[$label] : $label);
 		$ret .='"';
-		if(isset($js)) $ret .= ' '.$js;
 		if(isset($style)) $ret .= ' style="'.$style.'"';
 		$ret .= $this->fetchToolTip($css_class_name, $name, $label);
 		$ret .= ' />';
@@ -2302,7 +2314,8 @@ class phpMyEdit
 						$kt_array = null,
 						$kd_array = null,
 						$selected = null, /* ...) {{{ */
-						/* booleans: */ $multiple = false,
+						/* booleans: */
+						$multiple = false,
 						$readonly = false,
 						$strip_tags = false, $escape = true, $js = NULL, $help = NULL)
 	{
@@ -2376,7 +2389,8 @@ class phpMyEdit
 	 * @param	name		element name
 	 * @param	css			CSS class name
 	 * @param	kv_array	key => value array
-	 * @param	kg_array	key => group array
+	 * @param	kg_array	key => group array, unused
+	 * @param   kt_array    key => titles
 	 * @param	kd_array	key => data array
 	 * @param	selected	selected key (it can be single string, array of
 	 *						keys or multiple values separated by comma)
@@ -2386,8 +2400,10 @@ class phpMyEdit
 	 * @param	escape		bool for HTML escaping values
 	 * @param	js		string to be in the <select >, ususally onchange='..';
 	 */
-	function htmlRadioCheck($name, $css, $kv_array,
+	function htmlRadioCheck($name, $css,
+							$kv_array,
 							$kg_array = null,
+							$kt_array = null,
 							$kd_array = null,
 							$selected = null, /* ...) {{{ */
 							/* booleans: */ $multiple = false, $readonly = false,
@@ -2411,24 +2427,30 @@ class phpMyEdit
 		$br = count($kv_array) == 1 ? '' : '<br>';
 		$found = false;
 		foreach ($kv_array as $key => $value) {
-			$labelhelp = $help
-				? ' title="'.$this->enc($help).'" '
+			$tip = empty($kt_array[$key]) ? $help : $kt_array[$key];
+			$labelhelp = !empty($tip)
+				? ' title="'.$this->enc($tip).'" '
 				: $this->fetchToolTip($css, $name, $css.'radiolabel');
-			$inputhelp = $help
-				? ' title="'.$this->enc($help).'" '
+			$inputhelp = !empty($tip)
+				? ' title="'.$this->enc($tip).'" '
 				: $this->fetchToolTip($css, $name, $css.'radio');
 			$ret .= '<label'.$labelhelp.' class="'.htmlspecialchars($css).'-label">';
-			$ret .= '<input type="'.$type.'" name="';
-			$ret .= htmlspecialchars($name).'[]" value="'.htmlspecialchars($key).'"';
-			$ret .= ' class="'.htmlspecialchars($css).'"';
-			//$ret .= $inputhelp; // not need if labelhelp
+			$ret .= '<input type="'.$type.'"'
+				.' name="'.htmlspecialchars($name).'[]"'
+				.' value="'.htmlspecialchars($key).'"'
+				.' class="'.htmlspecialchars($css).'"';
+			if (!empty($kd_array[$key])) {
+				$data = htmlspecialchars($kd_array[$key]);
+				$ret .= " data-data='".$data."'";
+			}
+			// $ret .= $inputhelp;
 			if ((! $found || $multiple) && in_array((string) $key, $selected, 1)
 				|| (count($selected) == 0 && ! $found && ! $multiple)) {
 				$ret  .= ' checked';
 				$found = true;
 			}
-			if ($readonly !== false) {
-				$ret .= ' disabled'; // readonly does not make sense
+			if (!empty($readonly)) {
+				$ret .= ' disabled'; // readonly attribute not supported
 			}
 			$strip_tags && $value = strip_tags($value);
 			$escape		&& $value = htmlspecialchars($value);
@@ -2871,7 +2893,17 @@ class phpMyEdit
 	{
 		if (is_array($name)) {
 			if (isset($name['code'])) return $name['code'];
-			return $this->htmlSubmit($name['name'], $name['value'], $name['css'], $name['js_validation'], $name['disabled'], $name['js']);
+			$proto = array('name' => null,
+						   'value' => null,
+						   'css' => null,
+						   'disabled' => false,
+						   'style' => null);
+			$name = array_merge($proto, $name);
+			return $this->htmlSubmit($name['name'],
+									 $name['value'],
+									 $name['css'],
+									 $name['disabled'],
+									 $name['style']);
 		}
 		$disabled = 1; // show disabled by default
 		$listAllClass = $this->listall() ? ' listall' : '';
@@ -2879,7 +2911,7 @@ class phpMyEdit
 		if ($name[0] == '-') { $name = substr($name, 1); $disabled = -1; } // don't show disabled
 		if ($name == 'cancel') {
 			return $this->htmlSubmit('cancel'.$this->page_types[$this->page_type], 'Cancel',
-									 $this->getCSSclass('cancel', $position), false);
+									 $this->getCSSclass('cancel', $position));
 		}
 		if (in_array($name, array('add','view','change','copy','delete'))) {
 			$enabled_fnc = $name.'_enabled';
@@ -2887,7 +2919,7 @@ class phpMyEdit
 			if ($name != 'add' && ! $this->total_recs && strstr('LF', $this->page_type))
 				$enabled = false;
 			return $this->htmlSubmit('operation', ucfirst($name),
-									 $this->getCSSclass($name, $position), false, $enabled ? 0 : $disabled);
+									 $this->getCSSclass($name, $position), $enabled ? 0 : $disabled);
 		}
 		if ($name == 'misc') {
 			$enabled	 = $this->misc_enabled();
@@ -2895,32 +2927,30 @@ class phpMyEdit
 			$nav = '<span class="'.$this->getCSSclass($cssname, $position, null, $this->misccss2).'">';
 			$nav .= $this->htmlSubmit(
 				'operation', ucfirst($name),
-				$this->getCSSclass($cssname, $position, null, $this->misccss2), false, $enabled ? 0 : $disabled);
+				$this->getCSSclass($cssname, $position, null, $this->misccss2), $enabled ? 0 : $disabled);
 			// One button to select the result of the current query
 			$nav .= $this->htmlSubmit(
 				'operation', '+',
-				$this->getCSSclass($cssname.'+', $position, null, $this->misccss2), false, $enabled ? 0 : $disabled);
+				$this->getCSSclass($cssname.'+', $position, null, $this->misccss2), $enabled ? 0 : $disabled);
 			// One button to deselect the result of the current query
 			$nav .= $this->htmlSubmit(
 				'operation', '-',
-				$this->getCSSclass($cssname.'-', $position, null, $this->misccss2), false, $enabled ? 0 : $disabled);
+				$this->getCSSclass($cssname.'-', $position, null, $this->misccss2), $enabled ? 0 : $disabled);
 			$nav .= '</span>';
 			return $nav;
 		}
 		if ($name == 'savedelete') {
 			$enabled	 = $this->delete_enabled();
-			$js = '';
 			return $this->htmlSubmit('savedelete', 'Delete',
-									 $this->getCSSclass('save', $position), false, $enabled ? 0 : $disabled, $js);
+									 $this->getCSSclass('save', $position), $enabled ? 0 : $disabled);
 		}
 		if (in_array($name, array('save','apply','more','reload'))) {
-			$validation = true; // if js validation
-			if	   ($this->page_type == 'D' && $name == 'save' ) { $value = 'Delete'; $validation = false; }
+			if	   ($this->page_type == 'D' && $name == 'save' ) { $value = 'Delete'; }
 			elseif ($this->page_type == 'C' && $name == 'more' ) { $value = 'Apply'; }
-			elseif ($name == 'reload') { $value = ucfirst($name); $validation = false; }
+			elseif ($name == 'reload') { $value = ucfirst($name); }
 			else $value = ucfirst($name);
 			return $this->htmlSubmit($name.$this->page_types[$this->page_type], $value,
-									 $this->getCSSclass($name, $position), $validation);
+									 $this->getCSSclass($name, $position));
 		}
 		if ($this->listall()) {
 			$disabledprev = true;
@@ -2966,7 +2996,7 @@ class phpMyEdit
 			$ret = '<span class="'.$this->getCSSclass('goto', $position).$listAllClass.'">';
 			$ret .= $this->htmlSubmit('navop', 'Go to',
 									  $this->getCSSclass('goto', $position),
-									  false, ($this->listall() || ($disablednext && $disabledprev)) ? $disabled : 0);
+									  ($this->listall() || ($disablednext && $disabledprev)) ? $disabled : 0);
 			$ret .= $this->display_button('goto_combo',$position);
 			$ret .= '</span>';
 			return $ret;
@@ -3005,7 +3035,7 @@ class phpMyEdit
 			$ret = '<span class="'.$this->getCSSclass('pagerows', $position).'">';
 			$ret .= $this->htmlSubmit('navop', 'Rows/Page',
 									  $this->getCSSclass('pagerows', $position),
-									  false,  $disabled);
+									  $disabled);
 			$ret .= $this->display_button('rows_per_page_combo',$position);
 			$ret .= '</span>';
 			return $ret;
@@ -3020,7 +3050,7 @@ class phpMyEdit
 			}
 			return $this->htmlSubmit('navop', ucfirst($name),
 									 $this->getCSSclass($name2, $position).$listAllClass,
-									 false, $$disabled_var ? $disabled : 0);
+									 $$disabled_var ? $disabled : 0);
 		}
 		if(isset($this->labels[$name])) return $this->labels[$name];
 		return $name;
@@ -3077,7 +3107,7 @@ class phpMyEdit
 		$hidden = $this->filter_operation() ? '' : ' '.$this->getCSSclass('hidden');
 		echo '<tr class="',$css_class_name,$hidden,'">',"\n";
 		echo '<td class="',$css_class_name,' ',$css_sys,'" colspan="',$this->sys_cols,'">';
-		echo $this->htmlSubmit('filter', 'Query', $this->getCSSclass('query'), false);
+		echo $this->htmlSubmit('filter', 'Query', $this->getCSSclass('query'));
 		echo '</td>', "\n";
 		for ($k = 0; $k < $this->num_fds; $k++) {
 			if (! $this->displayed[$k] || $this->hidden($k)) {
@@ -3126,7 +3156,7 @@ class phpMyEdit
 				echo '<div class="'.$negate_css_class_name.'">';
 				echo $this->htmlRadioCheck($this->cgi['prefix']['sys'].$l.'_comp',
 										   $negate_css_class_name,
-										   array('not' => $this->labels['Not']), null, null,
+										   array('not' => $this->labels['Not']), null, null, null,
 										   $negate,
 										   true /* checkbox */);
 				echo '</div><div class="'.$css_class_name.'">';
@@ -3180,7 +3210,7 @@ class phpMyEdit
 		$css_sys = $this->getCSSclass('sys');
 		echo '<tr class="',$css_class_name,'">',"\n";
 		echo '<td class="',$css_class_name,' ',$css_sys,'" colspan="',$this->sys_cols,'">';
-		echo $this->htmlSubmit('sfn', 'Clear', $this->getCSSclass('clear'), false, $disabled);
+		echo $this->htmlSubmit('sfn', 'Clear', $this->getCSSclass('clear'), $disabled);
 		echo "</td>\n";
 		echo '<td class="',$css_class_name,'" colspan="',$this->num_fields_displayed,'">';
 		echo $this->labels['Sorted By'],': ',join(', ', $this->sort_fields_w),'</td></tr>',"\n";
@@ -3209,7 +3239,7 @@ class phpMyEdit
 			}
 			echo '<tr class="',$css_class_name,'">',"\n";
 			echo '<td class="',$css_class_name,' ',$css_sys,'" colspan="',$this->sys_cols,'">';
-			echo $this->htmlSubmit('sw', 'Clear', $this->getCSSclass('clear'), false, $disabled);
+			echo $this->htmlSubmit('sw', 'Clear', $this->getCSSclass('clear'), $disabled);
 			echo "</td>\n";
 			$htmlQuery = htmlspecialchars($text_query);
 			//title="'.$htmlQuery.'"
@@ -3421,16 +3451,16 @@ class phpMyEdit
 						$hideCSS .= $hiddenCSS;
 						$clearCSS .= $hiddenCSS;
 					}
-					echo $this->htmlSubmit('sw', 'Search', $searchCSS, false);
-					echo $this->htmlSubmit('sw', 'Hide', $hideCSS, false);
-					//echo $this->htmlSubmit('sw', 'Clear', $clearCSS, false);
+					echo $this->htmlSubmit('sw', 'Search', $searchCSS);
+					echo $this->htmlSubmit('sw', 'Hide', $hideCSS);
+					//echo $this->htmlSubmit('sw', 'Clear', $clearCSS);
 				} else {
 					if ($this->filter_operation()) {
-						echo $this->htmlSubmit('sw', 'Hide', $this->getCSSclass('hide'), false);
+						echo $this->htmlSubmit('sw', 'Hide', $this->getCSSclass('hide'));
 						echo '<br/>'."\n";
-						echo $this->htmlSubmit('sw', 'Clear', $this->getCSSclass('clear'), false);
+						echo $this->htmlSubmit('sw', 'Clear', $this->getCSSclass('clear'));
 					} else {
-						echo $this->htmlSubmit('sw', 'Search', $this->getCSSclass('search'), false);
+						echo $this->htmlSubmit('sw', 'Search', $this->getCSSclass('search'));
 					}
 				}
 			} else {
@@ -3482,9 +3512,9 @@ class phpMyEdit
 
 				echo '<th class="',$css_class_name,' ',$css_sort_class,'">';
 				if (!$sorted) {
-					echo "\n  ".$this->htmlSubmit("sort[$k]", $fdn, $this->getCSSclass('sort'), false);
+					echo "\n  ".$this->htmlSubmit("sort[$k]", $fdn, $this->getCSSclass('sort'));
 				} else {
-					echo "\n  ".$this->htmlSubmit("rvrt[$k]", $fdn, $this->getCSSclass('sort-rvrt'), false);
+					echo "\n  ".$this->htmlSubmit("rvrt[$k]", $fdn, $this->getCSSclass('sort-rvrt'));
 				}
 				echo '<BR/>'."\n";
 				echo '	<label class="'.$this->getCSSclass('sort')
@@ -3603,27 +3633,21 @@ class phpMyEdit
 							'operation',
 							$viewTitle.'?'.$record,
 							$this->getCSSclass('view-navigation'),
-							false,
 							$this->view_enabled() == false,
-							NULL,
 							sprintf($imgstyle, 'pme-view.png'));
 						print('&nbsp;');
 						echo $this->htmlSubmit(
 							'operation',
 							$changeTitle.'?'.$record,
 							$this->getCSSclass('change-navigation'),
-							false,
 							$this->change_enabled() == false,
-							NULL,
 							sprintf($imgstyle, 'pme-change.png'));
 						print('&nbsp;');
 						echo $this->htmlSubmit(
 							'operation',
 							$copyTitle.'?'.$record,
 							$this->getCSSclass('copy-navigation'),
-							false,
 							$this->copy_enabled() == false,
-							NULL,
 							sprintf($imgstyle, 'pme-copy.png'));
 						print('&nbsp;');
 						$printed = true;
@@ -3631,9 +3655,7 @@ class phpMyEdit
 							'operation',
 							$deleteTitle.'?'.$record,
 							$this->getCSSclass('delete-navigation'),
-							false,
 							$this->delete_enabled() == false,
-							NULL,
 							sprintf($imgstyle, 'pme-delete.png'));
 						echo '</div>';
 					}
@@ -3939,7 +3961,11 @@ class phpMyEdit
 				if ($fd == $this->key) {
 					$key_col_val = $fn;
 				}
-				$newvals[$fd] = is_array($fn) ? join(',',$fn) : $fn;
+				if (is_array($fn) && self::is_flat($fn)) {
+					$newvals[$fd] = join(',',$fn);
+				} else {
+					$newvals[$fd] = $fn;
+				}
 			}
 		}
 		// Creating array of changed keys ($changed)
@@ -3951,6 +3977,10 @@ class phpMyEdit
 		// Real query (no additional query in this method)
 		foreach ($newvals as $fd => $val) {
 			if ($fd == '') continue;
+			if (is_array($val)) {
+				// if the triggers still left the stuff as array, try to do something useful.
+				$val = self::is_flat($val) ? join(',', $val) : json_encode($val);
+			}
 			$fdn = $this->fdn[$fd];
 			$fdd = $this->fdd[$fdn];
 			if (false) {
@@ -4048,10 +4078,15 @@ class phpMyEdit
 						echo "<!-- ".$fn." -->\n";
 					}
 				}
+				// Don't include disabled fields into newvals, but
+				// keep for reference in oldvals
 				if (!$this->disabled($k)) {
-					// Don't include disabled fields into newvals, but
-					// keep for reference in oldvals
-					$newvals[$fd] = is_array($fn) ? join(',',$fn) : $fn;
+					// leave complictated arrays to the trigger hooks.
+					if (is_array($fn) && self::is_flat($fn)) {
+						$newvals[$fd] = join(',',$fn);
+					} else {
+						$newvals[$fd] = $fn;
+					}
 				}
 				if ($this->col_has_sql($k)) {
 					$query_part = $this->fdd[$k]['sql']." AS '".$fd."'";
@@ -4128,6 +4163,10 @@ class phpMyEdit
 		// Build the real query respecting changes to the newvals array
 		foreach ($newvals as $fd => $val) {
 			if ($fd == '') continue;
+			if (is_array($val)) {
+				// if the triggers still left the stuff as array, try to do something useful.
+				$val = self::is_flat($val) ? join(',', $val) : json_encode($val);
+			}
 			$fdn = $this->fdn[$fd];
 			$fdd = $this->fdd[$fdn];
 			$table = '';
@@ -4232,7 +4271,8 @@ class phpMyEdit
 	function do_delete_record() /* {{{ */
 	{
 		// Additional query
-		$query	 = 'SELECT * FROM '.$this->sd.$this->tb.$this->ed.' WHERE ('.$this->sd.$this->key.$this->ed.' = '
+		$query	 = 'SELECT * FROM '.$this->sd.$this->tb.$this->ed
+			.' WHERE ('.$this->sd.$this->key.$this->ed.' = '
 			.$this->key_delim.$this->rec.$this->key_delim.')'; // )
 		$res	 = $this->myquery($query, __LINE__);
 		$oldvals = $this->sql_fetch($res);
@@ -4845,7 +4885,7 @@ class phpMyEdit
 			}
 			foreach ($filters as $junctor => $filter) {
 				if (is_array($filter)) {
-					$this->filters[$junctor] = join($junctor, $filter);
+					$this->filters[$junctor] = join(' '.$junctor.' ', $filter);
 				} else {
 					$this->filters[$junctor] = $filter;
 				}
