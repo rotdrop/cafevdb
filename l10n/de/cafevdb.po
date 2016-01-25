@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-25 14:54+0100\n"
-"PO-Revision-Date: 2016-01-25 14:56+0100\n"
+"POT-Creation-Date: 2016-01-25 22:54+0100\n"
+"PO-Revision-Date: 2016-01-25 22:59+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -325,7 +325,7 @@ msgid "Total Insurance Amount: "
 msgstr "Gesamtversicherungssumme: "
 
 #: ajax/export/insurance-export.php:156 lib/instrument-insurance.php:256
-#: lib/sepa-debit-mandates.php:267
+#: lib/project-payments.php:223 lib/sepa-debit-mandates.php:267
 msgid "Musician"
 msgstr "Musiker"
 
@@ -369,10 +369,10 @@ msgstr "Geltungsbereich"
 msgid "Date"
 msgstr "Datum"
 
-#: ajax/export/insurance-export.php:246 lib/detailed-instrumentation.php:475
-#: lib/detailed-instrumentation.php:621 lib/instrument-insurance.php:76
-#: lib/php-excel-functions.php:102 lib/project-extra.php:392
-#: lib/project-extra.php:504 lib/project-extra.php:604
+#: ajax/export/insurance-export.php:246 lib/detailed-instrumentation.php:610
+#: lib/instrument-insurance.php:76 lib/php-excel-functions.php:102
+#: lib/project-extra.php:392 lib/project-extra.php:504
+#: lib/project-extra.php:604
 msgid "false"
 msgstr "falsch"
 
@@ -2208,8 +2208,8 @@ msgstr ""
 "sollte das aufgrund falscher Eintragungen oder Mißverständnissen mit\n"
 "den Musikern nötig sein."
 
-#: js/sepa-debit-mandate.js:148 lib/detailed-instrumentation.php:495
-#: lib/detailed-instrumentation.php:1106 lib/detailed-instrumentation.php:1124
+#: js/sepa-debit-mandate.js:148 lib/detailed-instrumentation.php:484
+#: lib/detailed-instrumentation.php:1095 lib/detailed-instrumentation.php:1113
 msgid "SEPA Debit Mandate"
 msgstr "SEPA Lastschriftmandat"
 
@@ -2403,101 +2403,96 @@ msgstr "Alle Instrumente"
 msgid "Member Status"
 msgstr "Status"
 
-#: lib/detailed-instrumentation.php:407
-msgid "Payment Status"
-msgstr "Bezahlstatus"
-
-#: lib/detailed-instrumentation.php:443
+#: lib/detailed-instrumentation.php:418
 msgid "Total Charges"
 msgstr "Gesamtkosten"
 
-#: lib/detailed-instrumentation.php:471
+#: lib/detailed-instrumentation.php:457
 msgid "Direct Debit"
 msgstr "Lastschrift"
 
-#: lib/detailed-instrumentation.php:474 lib/detailed-instrumentation.php:622
-#: lib/instrument-insurance.php:77 lib/php-excel-functions.php:98
-#: lib/project-extra.php:391 lib/project-extra.php:505
-#: lib/project-extra.php:603
+#: lib/detailed-instrumentation.php:611 lib/instrument-insurance.php:77
+#: lib/php-excel-functions.php:98 lib/project-extra.php:391
+#: lib/project-extra.php:505 lib/project-extra.php:603
 msgid "true"
 msgstr "wahr"
 
-#: lib/detailed-instrumentation.php:700 lib/musicians.php:490
+#: lib/detailed-instrumentation.php:689 lib/musicians.php:490
 msgid "Remarks"
 msgstr "Bemerkungen"
 
-#: lib/detailed-instrumentation.php:717 lib/musicians.php:347
+#: lib/detailed-instrumentation.php:706 lib/musicians.php:347
 #: lib/project-extra.php:313 lib/projects.php:256
 msgid "no projects yet"
 msgstr "Ohne Projekt"
 
-#: lib/detailed-instrumentation.php:727 lib/musicians.php:391
+#: lib/detailed-instrumentation.php:716 lib/musicians.php:391
 msgid "Projects"
 msgstr "Projekte"
 
-#: lib/detailed-instrumentation.php:744 lib/musicians.php:411
+#: lib/detailed-instrumentation.php:733 lib/musicians.php:411
 msgid "Mobile Phone"
 msgstr "Mobilfunk"
 
-#: lib/detailed-instrumentation.php:761 lib/musicians.php:427
+#: lib/detailed-instrumentation.php:750 lib/musicians.php:427
 msgid "Fixed Line Phone"
 msgstr "Festnetz"
 
-#: lib/detailed-instrumentation.php:778 lib/musicians.php:446
+#: lib/detailed-instrumentation.php:767 lib/musicians.php:446
 msgid "Street"
 msgstr "Straße"
 
-#: lib/detailed-instrumentation.php:788 lib/musicians.php:455
+#: lib/detailed-instrumentation.php:777 lib/musicians.php:455
 msgid "Postal Code"
 msgstr "Postleitzahl"
 
-#: lib/detailed-instrumentation.php:797 lib/musicians.php:464
+#: lib/detailed-instrumentation.php:786 lib/musicians.php:464
 msgid "City"
 msgstr "Stadt"
 
-#: lib/detailed-instrumentation.php:809 lib/musicians.php:476
+#: lib/detailed-instrumentation.php:798 lib/musicians.php:476
 msgid "Country"
 msgstr "Land"
 
-#: lib/detailed-instrumentation.php:824
+#: lib/detailed-instrumentation.php:813
 msgid "General Remarks"
 msgstr "Allgemeine Bemerkungen"
 
-#: lib/detailed-instrumentation.php:837
+#: lib/detailed-instrumentation.php:826
 msgid "Preferred Language"
 msgstr "Sprachpräferenz"
 
-#: lib/detailed-instrumentation.php:846 lib/musicians.php:530
+#: lib/detailed-instrumentation.php:835 lib/musicians.php:530
 msgid "Photo"
 msgstr "Foto"
 
-#: lib/detailed-instrumentation.php:874 lib/musicians.php:604
+#: lib/detailed-instrumentation.php:863 lib/musicians.php:604
 #: lib/projects.php:442
 msgid "Last Updated"
 msgstr "Letzte Aktualisierung"
 
-#: lib/detailed-instrumentation.php:1130
+#: lib/detailed-instrumentation.php:1119
 msgid "Click to enter details of a potential SEPA debit mandate"
 msgstr ""
 "Anklicken um ggf. Informationen über ein SEPA-Lastschriftmandat einzutragen"
 
-#: lib/detailed-instrumentation.php:1157
+#: lib/detailed-instrumentation.php:1146
 msgid "Instrumentation related data"
 msgstr "Besetzung"
 
-#: lib/detailed-instrumentation.php:1160
+#: lib/detailed-instrumentation.php:1149
 msgid "Project related data"
 msgstr "Projekt-Daten"
 
-#: lib/detailed-instrumentation.php:1165
+#: lib/detailed-instrumentation.php:1154
 msgid "Finance related data"
 msgstr "Finanz-Daten"
 
-#: lib/detailed-instrumentation.php:1170
+#: lib/detailed-instrumentation.php:1159
 msgid "Personal data"
 msgstr "Persönliche Daten"
 
-#: lib/detailed-instrumentation.php:1173 lib/musicians.php:187
+#: lib/detailed-instrumentation.php:1162 lib/musicians.php:187
 #: lib/project-extra.php:253
 msgid "Display all columns"
 msgstr "Alles anzeigen"
@@ -2739,10 +2734,18 @@ msgstr ""
 "Fügt zusätzliche Daten-Felder zur Besetzungstabelle für das Projekt hinzu."
 
 #: lib/functions.php:1501
+msgid "Received Payments"
+msgstr "Eingegangene Zahlungen"
+
+#: lib/functions.php:1502
+msgid "A table holding the various payments of participants."
+msgstr "Daten-Tabelle mit allen Zahlungen der Teilnehmer."
+
+#: lib/functions.php:1512
 msgid "Display all Musicians"
 msgstr "Alle Musiker"
 
-#: lib/functions.php:1502
+#: lib/functions.php:1513
 msgid ""
 "Display all musicians stored in the data-base, with detailed facilities for "
 "filtering and sorting."
@@ -2750,7 +2753,7 @@ msgstr ""
 "Alle Musiker anzeigen, die in der Datenbank gespeichert sind. Es gibt dabei "
 "ausführliche Such- und Auswahlfunktionalität."
 
-#: lib/functions.php:1518
+#: lib/functions.php:1529
 msgid ""
 "Mass-email form, use with care. Mass-emails will be logged. Recipients will "
 "be specified by the Bcc: field in the header, so the recipients are "
@@ -2761,17 +2764,17 @@ msgstr ""
 "außerdem wird die ganze Pracht in der Daten bank gespeichter (siehe `Email "
 "Historie')"
 
-#: lib/functions.php:1537
+#: lib/functions.php:1548
 msgid "Email History"
 msgstr "Em@il Historie"
 
-#: lib/functions.php:1538
+#: lib/functions.php:1549
 msgid "Display all emails sent by our mass-email form."
 msgstr ""
 "Zeigt alle über unser unsägliches Massen-Mail gespamten Emails an. "
 "Insebesondere werden hier auch die Bcc: Empfänger gespeichert."
 
-#: lib/functions.php:1562
+#: lib/functions.php:1573
 msgid ""
 "Display an overview page for the currently active project.\n"
 "The overview-page gives the possibility to add events, change the "
@@ -2784,11 +2787,11 @@ msgstr ""
 "Probenankündigungen auf der öffentlichen Webseite zu editieren. \"Und\n"
 "vieles mehr\"."
 
-#: lib/functions.php:1585 lib/projects.php:933
+#: lib/functions.php:1596 lib/projects.php:933
 msgid "Instrumentation"
 msgstr "Besetzung"
 
-#: lib/functions.php:1586
+#: lib/functions.php:1597
 msgid ""
 "Detailed display of all registered musicians for the selected project. The "
 "table will allow for modification of personal data like email, phone, "
@@ -2798,11 +2801,11 @@ msgstr ""
 "Daten wie Email, Adresse usw. können hier geändert werden. Projektbezogene "
 "Daten können allerdings nur in der Ansicht `Kurz-Besetzung' geändert werden."
 
-#: lib/functions.php:1605 lib/project-instruments.php:386
+#: lib/functions.php:1616 lib/project-instruments.php:385
 msgid "Add Instruments"
 msgstr "Neue Instrumente"
 
-#: lib/functions.php:1606
+#: lib/functions.php:1617
 msgid ""
 "Display the list of instruments known by the data-base, possibly add new "
 "ones as needed."
@@ -2810,12 +2813,12 @@ msgstr ""
 "Tabelle mit allen derzeit gespeicherten Instrumenten; weitere Instrumente "
 "können hier einfach hinzugefügt werden."
 
-#: lib/functions.php:1625 lib/project-instruments.php:69 lib/projects.php:938
+#: lib/functions.php:1636 lib/project-instruments.php:69 lib/projects.php:938
 #: lib/projects.php:1202
 msgid "Instrumentation Numbers"
 msgstr "Besetzungszahlen"
 
-#: lib/functions.php:1626 lib/tooltips.php:529
+#: lib/functions.php:1637 lib/tooltips.php:529
 msgid ""
 "Display the desired instrumentaion numbers, i.e. how many musicians are "
 "already registered for each instrument group and how many are finally needed."
@@ -2823,20 +2826,20 @@ msgstr ""
 "Anzeige der angestrebten Besetzungszahlen. Natürlich kann man die dann auch "
 "anpassen ..."
 
-#: lib/functions.php:1645 lib/projects.php:980
+#: lib/functions.php:1656 lib/projects.php:980
 msgid "Debit Mandates"
 msgstr "Lastschriftmandate"
 
-#: lib/functions.php:1646
+#: lib/functions.php:1657
 msgid "Display a table with the SEPA debit mandates related to the project."
 msgstr ""
 "Zeigt eine Tabelle mit den SEPA-Lastschriftmandaten für das Projekt an."
 
-#: lib/functions.php:1665
+#: lib/functions.php:1676
 msgid "Insurances"
 msgstr "Versicherungen"
 
-#: lib/functions.php:1666
+#: lib/functions.php:1677
 msgid ""
 "Display a table with an overview about the current state of the member's "
 "instrument insurances."
@@ -2844,11 +2847,11 @@ msgstr ""
 "Zeigt eine Tabelle mit einer Übersicht über die "
 "Instrumentensammelversicherungen an."
 
-#: lib/functions.php:1681
+#: lib/functions.php:1692
 msgid "Insurance Rates"
 msgstr "Versicherungs-Raten"
 
-#: lib/functions.php:1682
+#: lib/functions.php:1693
 msgid ""
 "Display a table with the insurance rates for the individual instrument "
 "insurances."
@@ -2856,11 +2859,11 @@ msgstr ""
 "Zeigt eine Tabelle mit einer Übersicht über die Versicherungsraten der\n"
 "Instrumenten-Sammelversicherungen an."
 
-#: lib/functions.php:1698
+#: lib/functions.php:1709
 msgid "Insurance Brokers"
 msgstr "Versicherungsmakler"
 
-#: lib/functions.php:1699
+#: lib/functions.php:1710
 msgid "Display a table with the insurance brokers."
 msgstr ""
 "Zeigt eine Tabelle mit einer Übersicht über die Versicherungsanbieter an."
@@ -2935,7 +2938,7 @@ msgid "Overview over insured instruments and insurance fee details and summary"
 msgstr "Übersicht über die versicherten Instrumente und Versicherungsbeiträge"
 
 #: lib/instrument-insurance.php:800 templates/instrument-insurance.php:53
-#: templates/sepa-debit-mandates.php:59
+#: templates/sepa-debit-mandates.php:61
 msgid "treasurer"
 msgstr "Schatzmeister"
 
@@ -2991,7 +2994,7 @@ msgid "Object"
 msgstr "Gegenstand"
 
 #: lib/instrument-insurance.php:853 lib/instrument-insurance.php:935
-#: lib/project-extra.php:1440
+#: lib/project-extra.php:1440 lib/project-payments.php:271
 msgid "Amount"
 msgstr "Betrag"
 
@@ -3190,11 +3193,11 @@ msgstr "Kann die neue Id für %s (Id = %d) nicht ermitteln."
 msgid "Add new Instruments"
 msgstr "Instrumente hinzufügenm"
 
-#: lib/instruments.php:213
+#: lib/instruments.php:212
 msgid "sort order"
 msgstr "Sortierfeld"
 
-#: lib/instruments.php:273
+#: lib/instruments.php:272
 #, php-format
 msgid ""
 "Could not execute the query\n"
@@ -3205,11 +3208,11 @@ msgstr ""
 "%s\n"
 "SQL-Fehler: %s"
 
-#: lib/instruments.php:356
+#: lib/instruments.php:355
 msgid "Needed Instruments"
 msgstr "Benötigte Instrumente"
 
-#: lib/instruments.php:361
+#: lib/instruments.php:360
 #, php-format
 msgid ""
 "Instrument `%s' does not yet exist in table `%s', cannot change its name to `"
@@ -3218,7 +3221,7 @@ msgstr ""
 "Das Instrument `%s' gibt es aber leider gar nicht, wie soll ich das dann zu `"
 "%s' umbenenen?"
 
-#: lib/instruments.php:365
+#: lib/instruments.php:364
 #, php-format
 msgid ""
 "Instrument `%s' already exists in table `%s', cannot change its name from `"
@@ -3227,46 +3230,46 @@ msgstr ""
 "Das Instrument `%s' gibt es bereits in der Tabelle `%s', kann den\n"
 "ursprünglichen Namen `%s' nicht ändern."
 
-#: lib/instruments.php:384 lib/instruments.php:414 lib/instruments.php:424
+#: lib/instruments.php:383 lib/instruments.php:413 lib/instruments.php:423
 #, php-format
 msgid "SQL-Error ``%s''. Could not execute the query ``%s''"
 msgstr ""
 "SQL-Fehler ``%s''. Die folgende Abfrage konnte nicht ausgeführt werden: ``"
 "%s''"
 
-#: lib/instruments.php:401
+#: lib/instruments.php:400
 #, php-format
 msgid "SQL-Error ``%s''. Could not execute the query `` %s ''"
 msgstr ""
 "SQL-Fehler ``%s''. Die folgende Abfrage konnte nicht ausgeführt werden: ``"
 "%s''"
 
-#: lib/instruments.php:461
+#: lib/instruments.php:460
 #, php-format
 msgid "Could not fetch instruments for project-id %s"
 msgstr "Konnte die Instrumente des Musikers mit der Id %s nicht ermitteln."
 
-#: lib/instruments.php:575
+#: lib/instruments.php:574
 msgid "Streich,Saiten"
 msgstr "Streicher"
 
-#: lib/instruments.php:576
+#: lib/instruments.php:575
 msgid "Streich,Zupf"
 msgstr "Zupfinstrumente"
 
-#: lib/instruments.php:577
+#: lib/instruments.php:576
 msgid "Blas,Holz"
 msgstr "Holzbläser"
 
-#: lib/instruments.php:578
+#: lib/instruments.php:577
 msgid "Blas,Blech"
 msgstr "Bechbläser"
 
-#: lib/instruments.php:579
+#: lib/instruments.php:578
 msgid "Schlag"
 msgstr "Schlagwerk"
 
-#: lib/instruments.php:580
+#: lib/instruments.php:579
 msgid "Sonstiges"
 msgstr "Sonstiges"
 
@@ -3748,17 +3751,17 @@ msgstr ""
 "bitte den \"Instrumente abgleichen\" Punkt aus dem \"Aktionen\" Menü "
 "anwählen."
 
-#: lib/project-instruments.php:261 lib/project-instruments.php:500
+#: lib/project-instruments.php:260 lib/project-instruments.php:499
 #: lib/projects.php:295 lib/projects.php:301
 msgid "Actions"
 msgstr "Aktionen"
 
-#: lib/project-instruments.php:261 lib/project-instruments.php:519
+#: lib/project-instruments.php:260 lib/project-instruments.php:518
 #: templates/expertmode.php:66
 msgid "Adjust Instruments"
 msgstr "Instrumente abgleichen"
 
-#: lib/project-instruments.php:258
+#: lib/project-instruments.php:257
 #, php-format
 msgid ""
 "Keine Besetzung für das Projekt gefunden, bitte bei den Projekteigenschaften "
@@ -3772,33 +3775,50 @@ msgstr ""
 "``%s''-Eintrag auswählen</u>, um die Instrumente der bereits\n"
 "``registrierten'' Musiker automatisch eintragen lassen."
 
-#: lib/project-instruments.php:263
+#: lib/project-instruments.php:262
 msgid "Instrumentation-Numbers not Found"
 msgstr "Besetzungszahlen nicht gefunden"
 
-#: lib/project-instruments.php:346 lib/projects.php:267
+#: lib/project-instruments.php:345 lib/projects.php:267
 msgid "Projekt-Name"
 msgstr "Projekt-Name"
 
-#: lib/project-instruments.php:390
+#: lib/project-instruments.php:389
 msgid "Change Instrumentation"
 msgstr "Instrumentierung ändern"
 
-#: lib/project-instruments.php:391
+#: lib/project-instruments.php:390
 msgid "Click to add instruments to the project"
 msgstr "Anklicken um Instrumente zum Projekt hinzuzufügen"
 
-#: lib/project-instruments.php:408
+#: lib/project-instruments.php:407
 msgid "target"
 msgstr "soll"
 
-#: lib/project-instruments.php:416
+#: lib/project-instruments.php:415
 msgid "have"
 msgstr "haben"
 
-#: lib/project-instruments.php:512
+#: lib/project-instruments.php:511
 msgid "Transpose"
 msgstr "Transponieren"
+
+#: lib/project-payments.php:72
+msgid "Project Incoming Payments"
+msgstr "Zahlungseingänge für das aktuelle Projekt"
+
+#: lib/project-payments.php:242 lib/project-payments.php:255
+#: lib/sepa-debit-mandates.php:306
+msgid "Project"
+msgstr "Projekt"
+
+#: lib/project-payments.php:274 lib/sepa-debit-mandates.php:252
+msgid "Date Issued"
+msgstr "Ausstellungsdatum"
+
+#: lib/project-payments.php:277
+msgid "Date of Receipt"
+msgstr "Eingangsdatum"
 
 #: lib/projects.php:91
 #, php-format
@@ -3897,7 +3917,7 @@ msgstr "Em@il"
 msgid "Profit and Loss Account"
 msgstr "Verlustrechnung"
 
-#: lib/projects.php:2416
+#: lib/projects.php:2424
 msgid ""
 "Flyers can only be added to existing projects, please add the new\n"
 "project without a flyer first."
@@ -3905,28 +3925,28 @@ msgstr ""
 "Flyer könner leider nur zu existierenden Projekten hinzugefügt werden; bitte "
 "zuerst das Projekt ohne Flyer anlegen."
 
-#: lib/projects.php:2429
+#: lib/projects.php:2437
 #, php-format
 msgid "Drop image to upload (max %s)"
 msgstr "Bild ablegen zum Hochladen (max %s)"
 
-#: lib/projects.php:2432
+#: lib/projects.php:2440
 msgid "Delete current flyer"
 msgstr "Aktuellen Flyer löschen"
 
-#: lib/projects.php:2433
+#: lib/projects.php:2441
 msgid "Edit current flyer"
 msgstr "Aktuellen Flyer zuschneiden"
 
-#: lib/projects.php:2434
+#: lib/projects.php:2442
 msgid "Upload new flyer"
 msgstr "Neuen Flyer hochladen"
 
-#: lib/projects.php:2435
+#: lib/projects.php:2443
 msgid "Select image from ownCloud"
 msgstr "Bild aus der `Cloud' auswählen"
 
-#: lib/projects.php:2443
+#: lib/projects.php:2451
 msgid ""
 "Internal error, don't know what to do concerning project-flyers in the given "
 "context."
@@ -3934,7 +3954,7 @@ msgstr ""
 "Interner Fehler; keine Ahnung, wie in diesem Kontext mit Projekt-Flyern "
 "umgegangen werden sollte."
 
-#: lib/projects.php:2529
+#: lib/projects.php:2537
 #, php-format
 msgid ""
 "====== Project %s ======\n"
@@ -4027,17 +4047,9 @@ msgstr "Mandatsreferenz"
 msgid "One Time"
 msgstr "Einmalig"
 
-#: lib/sepa-debit-mandates.php:252
-msgid "Date Issued"
-msgstr "Ausstellungsdatum"
-
 #: lib/sepa-debit-mandates.php:259
 msgid "Last-Used Date"
 msgstr "Letzte Verwendung"
-
-#: lib/sepa-debit-mandates.php:306
-msgid "Project"
-msgstr "Projekt"
 
 #: lib/sepa-debit-mandates.php:341
 msgid "Bank Code"
@@ -5255,7 +5267,7 @@ msgstr ""
 msgid "Opens the email-form for the project inside a dialog window."
 msgstr "Öffnet das Em@il-Formular für das Projekt in einem Dialog-Fenster."
 
-#: lib/tooltips.php:515 lib/tooltips.php:580
+#: lib/tooltips.php:515 lib/tooltips.php:582
 msgid ""
 "Open a dialog with all known\n"
 "events associated to the project.\n"
@@ -5412,6 +5424,10 @@ msgstr ""
 "Em@il, Geburtstag, gespielte Instrumente."
 
 #: lib/tooltips.php:569
+msgid "The accumulated total of all charges the participant has to pay."
+msgstr "Summe aller Verbindlichkeiten des Teilnehmers."
+
+#: lib/tooltips.php:571
 msgid ""
 "Add a new public web-page to the project by generating a new, empty concert "
 "announcement."
@@ -5420,7 +5436,7 @@ msgstr ""
 "hinzufügen, indem eine neue leere Veranstaltungsankündigung\n"
 "erstellt wird."
 
-#: lib/tooltips.php:571
+#: lib/tooltips.php:573
 msgid ""
 "Delete the currently displayed web-page fromthe project. The web page will "
 "be \"detached\" from the project and moved to the trash-bin\n"
@@ -5430,7 +5446,7 @@ msgstr ""
 "Web-Seite wird vom Projekt gelöst und im CMS in die\n"
 "Mülleimer-Kategorie (Ordner) verschoben."
 
-#: lib/tooltips.php:574
+#: lib/tooltips.php:576
 msgid ""
 "Link existing pages to the project. This can be used, for instance, in order "
 "to add a page to the project which has not been created by hitting the `+'-"
@@ -5447,7 +5463,7 @@ msgstr ""
 "herausfischen und zur `Vorschau' hinzufügen, indem man ihn hier wieder\n"
 "mit diesem Projekt verkn[pft."
 
-#: lib/tooltips.php:576
+#: lib/tooltips.php:578
 msgid ""
 "Please select articles to link to the current project. The articles will be "
 "immediately added to the project if you select them. In order to remove the "
@@ -5455,7 +5471,7 @@ msgid ""
 msgstr ""
 "Bitte Artiekel auswählen, die mit diesem Projekt verknüpft werden sollen."
 
-#: lib/tooltips.php:578
+#: lib/tooltips.php:580
 msgid ""
 "Detach the currently displayed event announcement from the project. "
 "Primarily meant to provide means to undo erroneous linking of articles."
@@ -5464,7 +5480,7 @@ msgstr ""
 "Veranstaltungsankündigung und diesem Projekt. Primär als\n"
 "\"Undo\"-Funktion nach versehentlichem Verknüpfen gemeint."
 
-#: lib/tooltips.php:585
+#: lib/tooltips.php:587
 msgid ""
 "Delete the event from the system\n"
 "(no undo possible)."
@@ -5472,13 +5488,13 @@ msgstr ""
 "Termin komplett aus dem Kalender löschen, kann nicht rückgängig gemacht "
 "werden."
 
-#: lib/tooltips.php:588
+#: lib/tooltips.php:590
 msgid ""
 "Exclude all events from\n"
 "email-submission"
 msgstr "Auswahl zum Download bzw. Email-Versand bei allen Terminen entfernen."
 
-#: lib/tooltips.php:591
+#: lib/tooltips.php:593
 msgid ""
 "Detach the respective event\n"
 "from the project, but do not\n"
@@ -5491,7 +5507,7 @@ msgstr ""
 "Es ist möglich, den Termin wieder zum Projekt hinzuzufügen, indem man den "
 "Projekt-Namen zu der Katergorien-Liste des Termins hinzufügt."
 
-#: lib/tooltips.php:598
+#: lib/tooltips.php:600
 msgid ""
 "Download the events as ICS file. In principle it is possible to import\n"
 "the ICS file into the respective calendar apps of your smartphone,\n"
@@ -5501,37 +5517,37 @@ msgstr ""
 "Prinzip in eine geeignete Kalender App Deines SmartPhones, Tables oder\n"
 "Desktop-PCs importiert werden."
 
-#: lib/tooltips.php:602
+#: lib/tooltips.php:604
 msgid "Modify the event."
 msgstr "Termin ändern."
 
-#: lib/tooltips.php:604
+#: lib/tooltips.php:606
 msgid "Add a new concert-event to the project."
 msgstr ""
 "Neuen Konzert-Termin für das Projekt in den Konzerte-Kalender eintragen."
 
-#: lib/tooltips.php:606
+#: lib/tooltips.php:608
 msgid ""
 "Add a private management event which is not exposed to the rest of the world."
 msgstr ""
 "Vorstands-Termin hinzufügen. Die Vorstandstermine sind nicht öffentlich "
 "sichtbar."
 
-#: lib/tooltips.php:608
+#: lib/tooltips.php:610
 msgid "Add some other event to the project."
 msgstr "Sonstigen Termin für das Projekt eintragen."
 
-#: lib/tooltips.php:610
+#: lib/tooltips.php:612
 msgid "Add a new rehearsal-event to the project."
 msgstr "Neuen Proben-Termin für das Projekt in den Proben-Kalender eintragen."
 
-#: lib/tooltips.php:612
+#: lib/tooltips.php:614
 msgid ""
 "Select all events for\n"
 "email-submission"
 msgstr "Alle Termin für Download bzw. Email-Attachment auswählen."
 
-#: lib/tooltips.php:615
+#: lib/tooltips.php:617
 msgid ""
 "Mark the respective event for being\n"
 "sent by email as ICS-attachment per email.\n"
@@ -5545,7 +5561,7 @@ msgstr ""
 "Versand an ausgewählte Empfänger vorgenommen werden kann. Alternativ können "
 "die ausgwählten Termine auch einfach herunter-geladen werden."
 
-#: lib/tooltips.php:622
+#: lib/tooltips.php:624
 msgid ""
 "Click to open an email-form\n"
 "and send the selected events to\n"
@@ -5554,33 +5570,33 @@ msgstr ""
 "Ausgewählte Termine als ICS-Attachment per Email veschicken; öffnet ein "
 "Email-Formular."
 
-#: lib/tooltips.php:626
+#: lib/tooltips.php:628
 msgid ""
 "Force the re-creation of the folder where project balanaces are\n"
 "stored."
 msgstr "Erzwinge die Neu-Erstellung des Abrechnungs-Datei-Ordners."
 
-#: lib/tooltips.php:629
+#: lib/tooltips.php:631
 msgid "Force the re-creation of the folder where project data is stored."
 msgstr "Erstellen des gemeinsamen Ordners erzwingen."
 
-#: lib/tooltips.php:631
+#: lib/tooltips.php:633
 msgid "Article category of the concert-archive inside the Redaxo CMS."
 msgstr "Redaxo Artikel Kategorie für archivierte Konzerte."
 
-#: lib/tooltips.php:633
+#: lib/tooltips.php:635
 msgid "Article category of the concert-previews inside the Redaxo CMS."
 msgstr "Artikel-Kategorie für Konzertankündigungen."
 
-#: lib/tooltips.php:635
+#: lib/tooltips.php:637
 msgid "Article category of the rehearsals inside the Redaxo CMS."
 msgstr "Artikel-Kategorier für Probenpläne."
 
-#: lib/tooltips.php:637
+#: lib/tooltips.php:639
 msgid "Article category for templates inside the Redaxo CMS."
 msgstr "Artikel-Kategorie für Templates."
 
-#: lib/tooltips.php:639
+#: lib/tooltips.php:641
 msgid ""
 "Trashbin pseudo-category, articles deleted from within the\n"
 "project-views are moved here."
@@ -5588,7 +5604,7 @@ msgstr ""
 "Papierkorb Pseudo-Kategorie. Wird ein Artikel über das DB-Interface\n"
 "gelöscht, landet der in diesem Unterordner."
 
-#: lib/tooltips.php:642
+#: lib/tooltips.php:644
 msgid ""
 "Add the musician to the project. A new form will open were details like the "
 "instrument etc. can be adjustetd."
@@ -5596,7 +5612,7 @@ msgstr ""
 "Fügt den Musiker zum Projekt hinzu. Auf der Folgeseite können dann Details "
 "eingetragen werden."
 
-#: lib/tooltips.php:644
+#: lib/tooltips.php:646
 msgid ""
 "This is checked for officially registered musicians, those, who have\n"
 "sent us a signed registration form. It is left blannk otherwise."
@@ -5605,7 +5621,7 @@ msgstr ""
 "uns eine unterschriebene Anmeldung geschickt haben. Ansonsten ist das\n"
 "Feld leer."
 
-#: lib/tooltips.php:647
+#: lib/tooltips.php:649
 msgid ""
 "Activate this checkbox in order to save the current email message as\n"
 "message template. If you leave this check-box unchecked, then messages\n"
@@ -5628,7 +5644,7 @@ msgstr ""
 "die Email versendet wurde. Vorlagen werden ohne Empfänger und Anhänge\n"
 "gespeichert und nicht automatisch gelöscht."
 
-#: lib/tooltips.php:657
+#: lib/tooltips.php:659
 msgid ""
 "Save the currently active email message either as draft\n"
 "(i.e. including recipients and attachments) or as message template\n"
@@ -5643,7 +5659,7 @@ msgstr ""
 "Speichere die aktuelle Nachricht entweder als Entwurf oder Vorlage, je\n"
 "nachdem, ob die Check-Box zur Linken aktiviert ist oder nicht."
 
-#: lib/tooltips.php:667
+#: lib/tooltips.php:669
 msgid ""
 "Save the current email for later re-usal in the data-base.\n"
 "An email template can contain per-member substitutions with the syntax "
@@ -5663,23 +5679,23 @@ msgstr ""
 "die mit den Vornamen der Vorstandsmitglieder ersetzt wird, um Grußformeln zu "
 "erzeugen."
 
-#: lib/tooltips.php:673
+#: lib/tooltips.php:675
 msgid "This is checked for section-leaders and left blank otherwise."
 msgstr ""
 "Die Markierung ist bei Stimmführern gesetzt, ansonsten bleibt das Feld leer."
 
-#: lib/tooltips.php:675
+#: lib/tooltips.php:677
 msgid "Select one of the email templates previously stored in the data-base."
 msgstr ""
 "Vorlage aus dem Vorlagen-Pool auswählen; neue Vorlagen können mittels "
 "``Vorlage speichern'' erzeugt werden."
 
-#: lib/tooltips.php:677
+#: lib/tooltips.php:679
 msgid ""
 "Select either a message draft or template as base for the current message."
 msgstr "Entwurf oder Vorlage as Basis für die aktuelle Nachricht auswählen."
 
-#: lib/tooltips.php:679
+#: lib/tooltips.php:681
 msgid ""
 "Attempt to send the stuff you have composed out to your selection of\n"
 "recipients. Please think thrice about it. In case of an error\n"
@@ -5691,7 +5707,7 @@ msgstr ""
 "Erfolgsmeldungen eingesehen werden. In jedem Falle sollte am Ende eine\n"
 "kurze Erfolgs- oder Fehlermeldung in einem Popup-Fenster angezeigt."
 
-#: lib/tooltips.php:684
+#: lib/tooltips.php:686
 msgid ""
 "Toggle instant validation and automatic computation of derived bank account "
 "data. If instant validation is disabled, the final values will still be "
@@ -5708,31 +5724,31 @@ msgstr ""
 "muss der Haken zunächst wieder gesetzt werden, dann wird die IBAN auf\n"
 "Korrektheit überprüft und man kann dann anschließend speichern."
 
-#: lib/tooltips.php:686
+#: lib/tooltips.php:688
 msgid "Personal application settings."
 msgstr "Persönliche Einstellung für die Musiker-DB Anwendung."
 
-#: lib/tooltips.php:688
+#: lib/tooltips.php:690
 msgid "Force the re-creation of the root of the shared-folder hierarchy."
 msgstr "Erzwinge die Neuerstellung des gemeinsamen Ordners."
 
-#: lib/tooltips.php:690
+#: lib/tooltips.php:692
 msgid "Re-create the share-owner."
 msgstr "Erzeuge eine neue Share-Strohpuppe."
 
-#: lib/tooltips.php:692 templates/part.common.header.php:99
+#: lib/tooltips.php:694 templates/part.common.header.php:99
 msgid "Toggle Tooltips"
 msgstr "Ballon-Hilfe ein- und ausschalten"
 
-#: lib/tooltips.php:694
+#: lib/tooltips.php:696
 msgid "Link to the source-code archives for the DB app."
 msgstr "Web-Verweis zur Quell-Code-Dokumentation. "
 
-#: lib/tooltips.php:696
+#: lib/tooltips.php:698
 msgid "Link to the source-code documentation for the DB app."
 msgstr "Web-Verweis zur Quell-Code-Dokumentation. "
 
-#: lib/tooltips.php:698
+#: lib/tooltips.php:700
 msgid ""
 "Recompute the link between projects and events, using the event-categories "
 "as primary key."
@@ -5740,7 +5756,7 @@ msgstr ""
 "Zuordnung der Termine zu den Projekten neu berechnen. Dabei dienen die "
 "Projekt-Kategorien als Kriterium."
 
-#: lib/tooltips.php:700
+#: lib/tooltips.php:702
 msgid ""
 "The initial number of rows per page when displaying data-base\n"
 "tables. The actual number of rows per page can also changed later in\n"
@@ -5749,11 +5765,11 @@ msgstr ""
 "Anfängliche Anzahl von Tabellenzeilen pro Seite. Kann bei den\n"
 "indivuduellen Tabellen später noch einzeln angepasst werden."
 
-#: lib/tooltips.php:704
+#: lib/tooltips.php:706
 msgid "Test data-base passphrase."
 msgstr "Datenbank-Passwort testen"
 
-#: lib/tooltips.php:706
+#: lib/tooltips.php:708
 msgid ""
 "Check whether the data-base can be accessed with the given account\n"
 "information and password. The password will only be stored in the\n"
@@ -5763,7 +5779,7 @@ msgstr ""
 "Zugriffsinformationen. Das neue Passwort wird nur dann gespeichert, wenn der "
 "Test erfolgreich absolviert wurde."
 
-#: lib/tooltips.php:710
+#: lib/tooltips.php:712
 msgid ""
 "Try to connect to the specified web-address, will open the web-address in "
 "another window or tab, depending your local browser preferences."
@@ -5771,7 +5787,15 @@ msgstr ""
 "Versuche, die eingestellte Web-Adresse in einen anderen Fenster oder Tab zu "
 "öffnen (abhängig von den Einstellungen des Web-Browsers)."
 
-#: lib/tooltips.php:712
+#: lib/tooltips.php:714
+msgid ""
+"Total amount the participant has to pay, perhaps followed by total amount "
+"paid, followed by the outstanding amount."
+msgstr ""
+"Gesamtsumme, die der Teilnehmer zahlen muss.. Ggf. wird außerdem noch\n"
+"die Höhe der Außenstände angegeben."
+
+#: lib/tooltips.php:716
 msgid ""
 "Add the instruments of the actually registered musicians to the instrument-"
 "table for the project."
@@ -5779,7 +5803,7 @@ msgstr ""
 "Die Instrumente der bereits registrierten Musiker in die Besetzungstabelle "
 "eintragen; die Soll-Besetzungszahlen werden allerdings nicht angepasst."
 
-#: lib/tooltips.php:714
+#: lib/tooltips.php:718
 msgid ""
 "Upload a file from your local computer as attachment. The file will be "
 "removed from the remote-system after the message has been sent."
@@ -5787,7 +5811,7 @@ msgstr ""
 "Eine Datei als Attachment hochladen. Die Datei wird vom Server gelöscht, "
 "sobald die Nachricht versendet wurde."
 
-#: lib/tooltips.php:716
+#: lib/tooltips.php:720
 msgid "Change to another WYSIWYG editor."
 msgstr "Einen alternativen WYSIWYG-Editor auswählen."
 
@@ -6630,7 +6654,7 @@ msgid "Owncloud Developer Manual, mostly useful for web-developers."
 msgstr ""
 "Owncloud Entwickler Anleitungen, eigentlich nur für Entwickler nützlich."
 
-#: templates/instrument-insurance.php:52 templates/sepa-debit-mandates.php:58
+#: templates/instrument-insurance.php:52 templates/sepa-debit-mandates.php:60
 #, php-format
 msgid "Sorry, this view is only available to the %s."
 msgstr "Tut mir leid, aber diese Ansicht steht nur dem %s zur Verfügung."
@@ -7634,68 +7658,3 @@ msgstr "PROJEKT"
 #: templates/share-settings.php:124
 msgid "Financial balance folder"
 msgstr "Finanz-Ordner"
-
-#~ msgid "Value"
-#~ msgstr "Wert"
-
-#~ msgid "new value"
-#~ msgstr "neuer Wert"
-
-#~ msgid ""
-#~ "Comma separated list of extra-fields, e.g.\n"
-#~ "<blockquote>\n"
-#~ "  SingleRoom:1:TooltipSingleRoom,Fee:2:TooltipForFee\n"
-#~ "</blockquote>\n"
-#~ "or simply\n"
-#~ "<blockquote>\n"
-#~ "  SingleRoom,Fee\n"
-#~ "</blockquote>\n"
-#~ "\n"
-#~ "The number after the colon (and the colon) are optional, if present, the\n"
-#~ "number determines the mapping of the extra columns to columns of the\n"
-#~ "underlying data-base table. Internally the extra columns are simply "
-#~ "named\n"
-#~ "\"ExtraField01\" etc. The display ordering of the extra columns "
-#~ "corresponds\n"
-#~ "to the order of the fields given here (i.e. \"SingleRoom\" would be the "
-#~ "displayed\n"
-#~ "left of \"Fee\"). If this ordering is changed, one should specify the "
-#~ "mapping\n"
-#~ "of the fields to the data-base columns, e.g. like so:\n"
-#~ "<blockquote>\n"
-#~ "  Fee:2,SingleRoom:1\n"
-#~ "</blockquote>\n"
-#~ "This changes the displayed ordering of the columns but the mapping\n"
-#~ "to the data-base table remains consistetnt. Optionally, the string after "
-#~ "an\n"
-#~ "optional second colon is displayed as a \"tool-tip\". The tool-tip must "
-#~ "not contain\n"
-#~ "a comma."
-#~ msgstr ""
-#~ "Komma-separierte Liste von Extra-Feldern, z.B.:\n"
-#~ "<blockquote>\n"
-#~ "  DZ:1:KommentarDZ,Beitrag:2:KommentarBeitrag\n"
-#~ "</blockquote>\n"
-#~ "oder einfach\n"
-#~ "<blockquote>\n"
-#~ "  DZ,Beitrag\n"
-#~ "</blockquote>\n"
-#~ "\n"
-#~ "Die Zahl nach dem Doppelpunkt (und der Doppelpunkt) ist optional,\n"
-#~ "falls vorhanden, gibt das die Zuordnung zu den Spalten in der\n"
-#~ "\"Besetzungen\"-Tabelle in der Datenbank. Dort heißen die Felder einfach\n"
-#~ "\"ExtraFeld01\" etc. Die Reihenfolge bei Anzeige der Tabelle entspricht\n"
-#~ "der angegebenen Reihenfolge. Falls man die ändert, sollte man die "
-#~ "Zuordnung\n"
-#~ "zur Extra-Spalte in der Datenbank angeben, z.B. so:\n"
-#~ "<blockquote>\n"
-#~ "  Beitrag:2,DZ:1\n"
-#~ "</blockquote>\n"
-#~ "Dann wird die Reihenfolge bei der Anzeige der Tabelle geändert, aber die\n"
-#~ "Zuordnung zu den Informationen in der Datenbank bleibt erhalten. "
-#~ "Optional\n"
-#~ "kann man nach einem 2. Doppelpunkt noch einen Kommentar für die\n"
-#~ "\"Ballon-Hilfe\" angeben; der darf allerdings kein Komma enthalten."
-
-#~ msgid "Append the year to the name"
-#~ msgstr "Jahreszahl anhängen"
