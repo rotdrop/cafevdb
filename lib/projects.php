@@ -152,7 +152,7 @@ namespace CAFEVDB
       // GROUP BY clause, if needed.
       $opts['groupby_fields'] = 'Id';
 
-          // Number of records to display on the screen
+      // Number of records to display on the screen
       // Value of -1 lists all records in a table
       // $opts['inc'] = -1;
 
@@ -2156,7 +2156,6 @@ __EOT__;
             )),
 
         'Instrument' => array('table' => 'b',
-                              'tablename' => 'b',
                               'column' => true,
                               'join' => array('type' => 'INNER')),
 
@@ -2219,9 +2218,9 @@ __EOT__;
         'Anzahlung' => array('table' => 'b',
                              'column' => true,
                              'join' => array('type' => 'INNER')),
-        'Gesamtbetrag' => array('table' => 'b',
-                                'column' => true,
-                                'join' => array('type' => 'INNER')),
+        'Lastschrift' => array('table' => 'b',
+                               'column' => true,
+                               'join' => array('type' => 'INNER')),
         'PaymentStatus' => array('table' => 'b',
                                  'column' => 'BezahlStatus',
                                  'join' => array('type' => 'INNER')),
@@ -2315,12 +2314,10 @@ __EOT__;
       $viewStructure = array_merge($viewStructure1, $extraColumns, $viewStructure2);
       $tableAlias = array();
       foreach($viewStructure as $column => $data) {
-        if (isset($data['join']['condition'])) {
-          // here table and tablename neeed to defined correctly,
-          // where tablename is the alias, if any.
-          if (isset($data['table']) && isset($data['tablename'])) {
-            $tableAlias[$data['tablename']] = $data['table'];
-          }
+        // here table and tablename neeed to be defined correctly, if
+        // both are given.
+        if (isset($data['table']) && isset($data['tablename'])) {
+          $tableAlias[$data['tablename']] = $data['table'];
         }
       }
       foreach($viewStructure as $column => &$data) {
@@ -2337,8 +2334,8 @@ __EOT__;
         isset($data['tablename']) || $data['tablename'] = $data['table'];
       }
 
-      /* error_log(print_r($tableAlias, true)); */
-      /* error_log(print_r($viewStructure, true)); */
+      //error_log(print_r($tableAlias, true));
+      //error_log(print_r($viewStructure, true));
 
       return $viewStructure;
     }
