@@ -33,8 +33,8 @@ namespace CAFEVDB {
   $nav = '';
   $nav .= Navigation::pageControlElement('projectlabel', $navListItems, $table->projectName, $table->projectId);
   //$nav .= Navigation::pageControlElement('detailed', $navListItems, $table->projectName, $table->projectId);
-  $nav .= Navigation::pageControlElement('projectinstruments', $navListItems, $table->projectName, $table->projectId);
   $nav .= Navigation::pageControlElement('project-extra', $navListItems, $table->projectName, $table->projectId);
+  $nav .= Navigation::pageControlElement('projectinstruments', $navListItems, $table->projectName, $table->projectId);
   if (Config::isTreasurer()) {
     $nav .= Navigation::pageControlElement('debitmandates', $navListItems, $table->projectName, $table->projectId);
   }
