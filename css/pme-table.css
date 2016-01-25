@@ -19,6 +19,30 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+html:not(.ie8) input[type="checkbox"].pme-input + span.pme-label::before {
+	content: "";
+	display: inline-block;
+	height: 20px;
+	width: 20px;
+	vertical-align: middle;
+	background: url('../../../core/img/actions/checkbox.svg') left top no-repeat;
+	opacity: 0.7;
+}
+
+/* ie8 doesn't support :checked */
+html:not(.ie8) input[type="checkbox"].pme-input {
+	position: absolute;
+	left:-10000px;
+	top: auto;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+}
+
+html:not(.ie8) input[type="checkbox"].pme-input:checked + span.pme-label::before {
+  background-image: url('../../../core/img/actions/checkbox-checked.svg');
+}
+
 /*******************************************************************************
  *
  * no padding
@@ -346,6 +370,11 @@ td.select-hidden select {
  * PME general stuff
  *
  */
+
+form.pme-form textarea:not(.wysiwygeditor) {
+  overflow-x:hidden; /* fix FF extra-line bug */
+  width:unset;
+}
 
 form.pme-form {
   padding-left:1ex;
@@ -837,6 +866,22 @@ table.pme-main td.pme-cell.hide-subsequent-lines p:nth-child(1):first-line {
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
+}
+
+table.pme-main td.pme-cell.hide-subsequent-lines .pme-cell-wrapper {
+  line-height:100%;
+  display:inline-block;
+  max-height:2em;
+}
+
+table.pme-main td.pme-cell.hide-subsequent-lines .pme-cell-wrapper.halfed-sized {
+  max-height:4em;
+  font-size:50%;
+}
+
+table.pme-main td.pme-cell.hide-subsequent-lines .pme-cell-wrapper.quarter-sized {
+  max-height:8em;
+  font-size:25%;
 }
 
 /* Something special for the instrumentation. */
