@@ -64,8 +64,8 @@ class DetailedInstrumentation
     $projectId       = $this->projectId;
     $opts            = $this->opts;
     $recordsPerPage  = $this->recordsPerPage;
-    $userExtraFields = $this->userExtraFields;
-    $fieldTypes      = $this->extraFieldTypes;
+    $userExtraFields = self::getExtraFields($projectId);
+    $fieldTypes      = ProjectExtra::fieldTypes();
 
     $project = Projects::fetchById($projectId);
 
@@ -88,6 +88,15 @@ class DetailedInstrumentation
     $opts['inc'] = $recordsPerPage;
 
     $opts['tb'] = $projectName . 'View';
+
+    if (false) {
+      Config::init();
+      $rows = mySQL::fetchRows($opts['tb']);
+      foreach($rows as $row) {
+        //error_log(print_r($row, true));
+        self::projectFeeTotals($projectId, $row['Id'], $row);
+      }
+    }
 
     $opts['cgi']['persist'] = array(
       'ProjectName' => $projectName,
@@ -360,6 +369,7 @@ class DetailedInstrumentation
       'tooltip' => config::toolTips('member-status')
       );
 
+    $feeIdx = count($opts['fdd']);
     $opts['fdd']['Unkostenbeitrag'] = Config::$opts['money'];
     $opts['fdd']['Unkostenbeitrag']['name'] = "Unkostenbeitrag\n(Gagen negativ)";
     $opts['fdd']['Unkostenbeitrag']['default'] = $project['Unkostenbeitrag'];
@@ -417,6 +427,45 @@ class DetailedInstrumentation
 
     if (Projects::needDebitMandates($projectId)) {
 
+      $monetary = array(); // Labels for moneary fields
+      foreach($userExtraFields as $field) {
+        $type = $fieldTypes[$field['Type']];
+        if ($type['Kind'] === 'surcharge') {
+          $field['Type'] = $type;
+          $field['AllowedValues'] =
+            ProjectExtra::explodeAllowedValues($field['AllowedValues'], false, true);
+          $monetary[$field['Name']] = $field;
+        }
+      }
+
+      $opts['fdd']['TotalProjectFees'] = array(
+        'tab'      => array('id' => $financeTab),
+        'name'     => L::t('Total Charges'),
+        'css'      => array('postfix' => ' total-project-fees money'),
+        'sort'    => true,
+        'options' => 'VDLF', // wrong in change mode
+        'input' => 'VR',
+        'sql' => '`PMEtable0`.`Unkostenbeitrag`',
+        'php' => function($amount, $op, $field, $fds, $fdd, $row, $recordId)
+        use ($monetary)
+        {
+          foreach($fds as $key => $label) {
+            if (!isset($monetary[$label])) {
+              continue;
+            }
+            $value = $row['qf'.$key];
+            if (empty($value)) {
+              continue;
+            }
+            $field   = $monetary[$label];
+            $allowed = $field['AllowedValues'];
+            $type    = $field['Type'];
+            $amount += self::extraFieldSurcharge($value, $allowed, $type['Multiplicity']);
+          }
+          return Util::moneyValue($amount);
+        },
+        );
+
       $opts['fdd']['Lastschrift'] = array(
         'tab'      => array('id' => $financeTab),
         'name'     => L::t('Direct Debit'),
@@ -449,7 +498,7 @@ class DetailedInstrumentation
         'select' => 'T',
         'options' => 'LFACPDV',
         'sql' => '`PMEjoin'.$mandateIdx.'`.`mandateReference`', // dummy, make the SQL data base happy
-        'sqlw' => '`PMEjoin'.$mandateIdx.'`.`mandateReference`', // dummy, make the SQL data base happy
+//        'sqlw' => '`PMEjoin'.$mandateIdx.'`.`mandateReference`', // dummy, make the SQL data base happy
         'values' => array(
           'table' => 'SepaDebitMandates',
           'column' => 'id',
@@ -516,7 +565,7 @@ class DetailedInstrumentation
         $opts['fdd'][$name]['tooltip'] = $field['ToolTip'];
       }
 
-      $allowed = ProjectExtra::explodeAllowedValues($field['AllowedValues']);
+      $allowed = ProjectExtra::explodeAllowedValues($field['AllowedValues'], false, true);
       $values2     = array();
       $valueTitles = array();
       $valueData   = array();
@@ -567,9 +616,10 @@ class DetailedInstrumentation
         unset($fdd['textarea']);
         break;
       case 'Boolean':
-        $fdd['values2|CAP'] = array(1 => ''); // empty label for simple checkbox
+        reset($values2); $key = key($values2);
+        $fdd['values2|CAP'] = array($key => ''); // empty label for simple checkbox
         $fdd['values2|LVDF'] = array(0 => L::t('false'),
-                                     1 => L::t('true'));
+                                     $key => L::t('true'));
         $fdd['select'] = 'O';
         $fdd['default'] = (string)!!(int)$field['DefaultValue'];
         $fdd['css']['postfix'] .= ' boolean';
@@ -591,10 +641,11 @@ class DetailedInstrumentation
         break;
       case 'SurchargeOption':
         // just use the amount to pay as label
+        reset($values2); $key = key($values2);
         $money = Util::moneyValue(reset($valueData));
-        $fdd['values2|CAP'] = array(1 => $money); // empty label for simple checkbox
+        $fdd['values2|CAP'] = array($key => $money); // empty label for simple checkbox
         $fdd['values2|LVDF'] = array(0 => '-,--',
-                                     1 => $money);
+                                     $key => $money);
         $fdd['select'] = 'O';
         $fdd['default'] = (string)!!(int)$field['DefaultValue'];
         $fdd['css']['postfix'] .= ' boolean money surcharge';
@@ -1161,11 +1212,78 @@ class DetailedInstrumentation
     return array_merge($dfltTabs, $extraTabs);
   }
 
-  /**Sum up the total amount of all project fees for the given project
-   * and musician.
+  /**Internal function: given a (multi-select) surcharge choice
+   * compute the associated amount of money and return that as float.
    */
-  public static function projectFeeTotals($projectId, $besetzungenId, $extraFields = null, $typeInfo = null)
-  {}
+  protected static function extraFieldSurcharge($value, $allowedValues, $multiplicity)
+  {
+    switch ($multiplicity) {
+    case 'single':
+      // Non empty value means "yes".
+      if ($allowedValues[0]['key'] !== $value) {
+        error_log('************ '.$value.' key '.$allowedValues[0]['key']);
+      }
+      return (float)$allowedValues[0]['data'];
+    case 'multiple':
+      foreach($allowedValues as $item) {
+        if ($item['key'] === $value) {
+          return (float)$item['data'];
+        }
+      }
+      error_log('***************** key could no be found');
+      return 0.0;
+    case 'parallel':
+      $keys = explode(',',$value);
+      $found = false;
+      $amount = 0.0;
+      foreach($allowedValues as $item) {
+        if (array_search($item['key'], $keys) !== false) {
+          $amount += (float)$item['data'];
+          $found = true;
+        }
+      }
+      if (!$found) {
+        error_log('***************** key could no be found');
+      }
+      return $amount;
+    }
+    return 0.0;
+  }
+
+
+  /**Sum up the total amount of all project fees for the given project
+   * and musician. $row should be the corresponding row from the project-view.
+   */
+  public static function projectFeeTotals($projectId, $recordId, $row, $handle = false)
+  {
+    $extraFields = self::getExtraFields($projectId, $handle);
+    $fieldTypes = ProjectExtra::fieldTypes($handle);
+    $monetary = array(); // Labels for moneary fields
+    foreach($extraFields as $field) {
+      $type = $fieldTypes[$field['Type']];
+      if ($type['Kind'] === 'surcharge') {
+        $field['Type'] = $type;
+        $field['AllowedValues'] =
+          ProjectExtra::explodeAllowedValues($field['AllowedValues'], false, true);
+        $monetary[$field['Name']] = $field;
+      }
+    }
+    $amount = 0.0;
+    foreach($row as $columnLabel => $value) {
+      if (empty($value)) {
+        continue;
+      }
+      if (isset($monetary[$columnLabel])) {
+
+
+        $field   = $monetary[$columnLabel];
+        $allowed = $field['AllowedValues'];
+        $type    = $field['Type'];
+        $amount += self::extraFieldSurcharge($value, $allowed, $type['Multiplicity']);
+      }
+    }
+    return $amount;
+  }
 
 
 }; // class DetailedInstrumentation
