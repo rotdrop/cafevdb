@@ -216,6 +216,7 @@ table.pme-main td.pme-value.surcharge.set,
 table.pme-main td.pme-cell.surcharge.enum,
 table.pme-main td.pme-value.surcharge.enum {
     font-family:monospace;
+    max-width:unset;
 }
 
 table.pme-main td.pme-value.surcharge.set,

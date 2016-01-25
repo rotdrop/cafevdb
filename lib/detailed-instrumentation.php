@@ -299,15 +299,15 @@ class DetailedInstrumentation
       'tab' => array('id' => 'instrumentation'));
 
     $opts['fdd']['Stimmführer'] = array(
-      'name|LVDF' => ' &alpha;',
-      'name|CAP' => L::t("Section Leader"),
+      'name|LF' => ' &alpha;',
+      'name|CAPVD' => L::t("Section Leader"),
       'tab' => array('id' => 'instrumentation'),
       'options'  => 'LAVCPDF',
       'select' => 'O',
       'maxlen' => '1',
       'sort' => true,
       'escape' => false,
-      'values2|CAP' => array('1' => '&alpha;'),
+      'values2|CAP' => array('1' => '&nbsp;&nbsp;&nbsp;&nbsp;' /* '&alpha;' */),
       'values2|LVDF' => array('0' => '&nbsp;', '1' => '&alpha;'),
       'tooltip' => L::t("Set to `%s' in order to mark the section leader",
                         array("&alpha;")),
@@ -318,15 +318,15 @@ class DetailedInstrumentation
       );
 
     $opts['fdd']['Anmeldung'] = array(
-      'name|LVDF' => ' &#10004;',
-      'name|CAP' => L::t("Registration"),
+      'name|LF' => ' &#10004;',
+      'name|CAPDV' => L::t("Registration"),
       'tab' => array('id' => array('project', 'instrumentation')),
       'options'  => 'LAVCPDF',
       'select' => 'O',
       'maxlen' => '1',
       'sort' => true,
       'escape' => false,
-      'values2|CAP' => array('1' => '&#10004;'),
+      'values2|CAP' => array('1' => '&nbsp;&nbsp;&nbsp;&nbsp;' /* '&#10004;' */),
       'values2|LVDF' => array('0' => '&nbsp;', '1' => '&#10004;'),
       'tooltip' => L::t("Set to `%s' in order to mark participants who passed a personally signed registration form to us.",
                         array("&#10004;")),
@@ -470,9 +470,12 @@ class DetailedInstrumentation
         'tab'      => array('id' => $financeTab),
         'name'     => L::t('Direct Debit'),
         'css'      => array('postfix' => ' direct-debit-allowed'),
-        'values2|CAP' => array(1 => ''),
-        'values2|LVFD' => array(1 => L::t('true'),
-                                0 => L::t('false')),
+        'values2|CAP' => array('1' => '&nbsp;&nbsp;&nbsp;&nbsp;' /*'&#10004;'*/),
+        'values2|LVDF' => array('0' => '&nbsp;',
+                                '1' => '&#10004;'),
+        'escape' => false,
+        //'values2|CAP' => array(1 => ''),
+        //'values2|LVFD' => array(1 => L::t('true'), 0 => L::t('false')),
         'default'  => '',
         'select'   => 'O',
         'sort'     => true,
@@ -546,7 +549,7 @@ class DetailedInstrumentation
       }
 
       $opts['fdd'][$name] = array(
-        'name'     => $name."\n(".$projectName.")",
+        'name'     => $name, // ."\n(".$projectName.")",
         'css'      => array('postfix' => ' extra-field'),
         'tab'      => $tab,
         'select'   => 'T',
