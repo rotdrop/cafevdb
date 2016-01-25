@@ -890,8 +890,8 @@ namespace CAFEVDB {
         Config::setValue($item, $value);
         \OC_JSON::success(
           array("data" => array(
-                  'message' => L::t('Value for `%s\' set to `%s\'.',
-                                    array($item, $value)))));
+                  'message' => L::t('Value for `%s\' set to `%s\'.', array($item, $value)),
+                  'value' => $value)));
         return true;
       }
     }
