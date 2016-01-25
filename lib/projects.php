@@ -2218,6 +2218,14 @@ __EOT__;
         'Anzahlung' => array('table' => 'b',
                              'column' => true,
                              'join' => array('type' => 'INNER')),
+        'AmountPaid' => array('table' => 'ProjectIncomingPayments',
+                              'tablename' => 'f',
+                              'column' => 'IFNULL(SUM(f.Amount),0)',
+                              'verbatim' => true,
+                              'join' => array(
+                                'type' =>'LEFT',
+                                'condition' => 'f.`InstrumentationId` = b.`Id`'
+                                )),
         'Lastschrift' => array('table' => 'b',
                                'column' => true,
                                'join' => array('type' => 'INNER')),
@@ -2393,7 +2401,6 @@ __EOT__;
                             ': mySQL error: '.mySQL::error().' query '.$sqlQuery,
                             \OCP\Util::ERROR);
       }
-      //error_log($sqlQuery);
 
       if ($ownConnection) {
         mySQL::close($handle);
