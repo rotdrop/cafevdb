@@ -120,3 +120,23 @@ ul#cmsarticletabs li a {
     overflow:hidden;
     text-overflow:ellipsis;
 }
+
+/*******************************************************************************
+ *
+ * Some styling for the instrumentation table
+ *
+ */
+.total-project-fees.money span.finance-state {
+    font-weight:bold;
+    padding:0.2em;
+}
+
+.total-project-fees.money span.totals {
+    color:black;
+}
+.total-project-fees.money span.received {
+    color:blue;
+}
+.total-project-fees.money span.outstanding {
+    color:red;
+}
