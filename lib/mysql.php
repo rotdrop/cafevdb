@@ -184,6 +184,35 @@ namespace CAFEVDB
       }
     }
 
+    // Extract keys from table, splitting "multi-value" fields
+    public static function valuesFromColumn($table, $column, $handle = false, $where = 1, $sep = ',')
+    {
+      $ownConnection = $handle === false;
+      if ($ownConnection) {
+        Config::init();
+        $handle = self::connect(Config::$pmeopts);
+      }
+
+      $query = "SELECT DISTINCT `".$column."`
+  FROM `".$table."`
+  WHERE (".$where.")";
+
+      // Fetch all values
+      $result = self::query($query, $handle);
+      $result = self::query($query, $handle) or die("Couldn't execute query");
+      $values = array();
+      while ($line = self::fetch($result)) {
+        $values = array_merge($values, explode($sep, $line[$column]));
+      }
+      $values = array_unique($values);
+
+      if ($ownConnection) {
+        self::close($handle);
+      }
+
+      return $values;
+    }
+
     // Extract set or enum keys
     public static function multiKeys($table, $column, $handle = false)
     {
