@@ -121,6 +121,19 @@ class DetailedInstrumentation
     $export = Navigation::tableExportButton();
     $opts['buttons'] = Navigation::prependTableButton($export, true);
 
+    // count number of finance fields
+    $extraFinancial = 0;
+    foreach ($userExtraFields as $field) {
+      $extraFinancial += $fieldTypes[$field['Type']]['Kind'] === 'surcharge';
+    }
+    if ($extraFinancial > 0 || $project['Anzahlung'] > 0) {
+      $useFinanceTab = true;
+      $financeTab = 'finance';
+    } else {
+      $useFinanceTab = false;
+      $financeTab = 'project';
+    }
+
     // Display special page elements
     $opts['display'] = array_merge(
       $opts['display'],
@@ -129,7 +142,7 @@ class DetailedInstrumentation
         //'query' => true,
         'sort'  => true,
         'time'  => true,
-        'tabs' => self::tableTabs($userExtraFields)
+        'tabs' => self::tableTabs($userExtraFields, $useFinanceTab)
         ));
 
     // Set default prefixes for variables
@@ -277,14 +290,16 @@ class DetailedInstrumentation
       'tab' => array('id' => 'instrumentation'));
 
     $opts['fdd']['Stimmführer'] = array(
-      'name' => $this->operation ? L::t("Section Leader") : ' &alpha;',
+      'name|LVDF' => ' &alpha;',
+      'name|CAP' => L::t("Section Leader"),
       'tab' => array('id' => 'instrumentation'),
       'options'  => 'LAVCPDF',
-      'select' => 'D',
+      'select' => 'O',
       'maxlen' => '1',
       'sort' => true,
       'escape' => false,
-      'values2' => array('0' => '&nbsp;', '1' => '&alpha;'),
+      'values2|CAP' => array('1' => '&alpha;'),
+      'values2|LVDF' => array('0' => '&nbsp;', '1' => '&alpha;'),
       'tooltip' => L::t("Set to `%s' in order to mark the section leader",
                         array("&alpha;")),
       'display|LF' => array('popup' => function($data) {
@@ -294,14 +309,16 @@ class DetailedInstrumentation
       );
 
     $opts['fdd']['Anmeldung'] = array(
-      'name' => $this->operation ? L::t("Registration") : ' &#10004;',
+      'name|LVDF' => ' &#10004;',
+      'name|CAP' => L::t("Registration"),
       'tab' => array('id' => array('project', 'instrumentation')),
       'options'  => 'LAVCPDF',
-      'select' => 'D',
+      'select' => 'O',
       'maxlen' => '1',
       'sort' => true,
       'escape' => false,
-      'values2' => array('0' => '&nbsp;', '1' => '&#10004;'),
+      'values2|CAP' => array('1' => '&#10004;'),
+      'values2|LVDF' => array('0' => '&nbsp;', '1' => '&#10004;'),
       'tooltip' => L::t("Set to `%s' in order to mark participants who passed a personally signed registration form to us.",
                         array("&#10004;")),
       'display|LF' => array('popup' => function($data) {
@@ -325,8 +342,8 @@ class DetailedInstrumentation
 
     $opts['fdd']['Sortierung'] = array(
       'name'     => 'Orchester Sortierung',
-      'select'   => 'T',
-      'options'  => 'R',
+      'select'   => 'N',
+      'input'    => 'HR',
       'maxlen'   => 8,
       'default'  => '0',
       'sort'     => true
@@ -345,25 +362,18 @@ class DetailedInstrumentation
 
     $opts['fdd']['Unkostenbeitrag'] = Config::$opts['money'];
     $opts['fdd']['Unkostenbeitrag']['name'] = "Unkostenbeitrag\n(Gagen negativ)";
-    $opts['fdd']['Unkostenbeitrag']['tab'] = array('id' => 'project');
     $opts['fdd']['Unkostenbeitrag']['default'] = $project['Unkostenbeitrag'];
     $opts['fdd']['Unkostenbeitrag']['css']['postfix'] .= ' fee';
+    $opts['fdd']['Unkostenbeitrag']['tab'] = array('id' => $financeTab);
 
     if ($project['Anzahlung'] > 0) {
-      // only include if conifgured in project
+      // only include if configured in project
       $opts['fdd']['Anzahlung'] = Config::$opts['money'];
       $opts['fdd']['Anzahlung']['name'] = "Anzahlung";
       $opts['fdd']['Anzahlung']['maxlen'] = 6; // 3 digits, no sign
-      $opts['fdd']['Anzahlung']['tab'] = array('id' => 'project');
       $opts['fdd']['Anzahlung']['default'] = $project['Anzahlung'];
       $opts['fdd']['Anzahlung']['css']['postfix'] .= ' deposit';
-
-      $opts['fdd']['Gesamtbetrag'] = Config::$opts['money'];
-      $opts['fdd']['Gesamtbetrag']['name'] = "Gesamtbetrag";
-      $opts['fdd']['Gesamtbetrag']['maxlen'] = 6; // 3 digits, no sign
-      $opts['fdd']['Gesamtbetrag']['tab'] = array('id' => 'project');
-      $opts['fdd']['Gesamtbetrag']['default'] = $project['Unkostenbeitrag'];
-      $opts['fdd']['Gesamtbetrag']['css']['postfix'] .= ' totals';
+      $opts['fdd']['Anzahlung']['tab'] = array('id' => $financeTab);
     }
 
     $needDebitMandates = Projects::needDebitMandates($projectId);
@@ -385,7 +395,7 @@ class DetailedInstrumentation
 
     $opts['fdd']['PaymentStatus'] = array(
       'name'    => $this->operation ? L::t("Payment Status") : '&euro; ??',
-      'tab'     => array('id' => array('project')),
+      'tab'     => array('id' => $financeTab),
       'options' => 'LAVCPDF',
       'select'  => 'D',
       'values2' => $paymentStatusValues2,
@@ -407,6 +417,20 @@ class DetailedInstrumentation
 
     if (Projects::needDebitMandates($projectId)) {
 
+      $opts['fdd']['Lastschrift'] = array(
+        'tab'      => array('id' => $financeTab),
+        'name'     => L::t('Direct Debit'),
+        'css'      => array('postfix' => ' direct-debit-allowed'),
+        'values2|CAP' => array(1 => ''),
+        'values2|LVFD' => array(1 => L::t('true'),
+                                0 => L::t('false')),
+        'default'  => '',
+        'select'   => 'O',
+        'sort'     => true,
+        'tooltip'  => Config::toolTips('project-direct-debit-allowed'),
+        'display|LF' => array('popup' => 'tooltip'),
+        );
+
       $memberTableId = Config::getValue('memberTableId');
       $debitJoinCondition =
         '('.
@@ -421,7 +445,7 @@ class DetailedInstrumentation
       $opts['fdd']['SepaDebitMandate'] = array(
         'name' => L::t('SEPA Debit Mandate'),
         'input' => 'V',
-        'tab' => array('id' => 'project'),
+        'tab' => array('id' => $financeTab),
         'select' => 'T',
         'options' => 'LFACPDV',
         'sql' => '`PMEjoin'.$mandateIdx.'`.`mandateReference`', // dummy, make the SQL data base happy
@@ -460,8 +484,13 @@ class DetailedInstrumentation
     // Generate input fields for the extra columns
     foreach ($userExtraFields as $field) {
       $name = $field['Name'];
+      $type = $fieldTypes[$field['Type']];
 
-      $tab = array('id' => 'project');
+      if ($type['Kind'] === 'surcharge') {
+        $tab = array('id' => $financeTab);
+      } else {
+        $tab = array('id' => 'project');
+      }
       if (!empty($field['Tab'])) {
         $tabId = self::tableTabId($field['Tab']);
         $tab = array('id' => $tabId);
@@ -487,17 +516,24 @@ class DetailedInstrumentation
         $opts['fdd'][$name]['tooltip'] = $field['ToolTip'];
       }
 
-      $type = $fieldTypes[$field['Type']];
+      $allowed = ProjectExtra::explodeAllowedValues($field['AllowedValues']);
+      $values2     = array();
+      $valueTitles = array();
+      $valueData   = array();
+      foreach($allowed as $idx => $value) {
+        $key = $value['key'];
+        if (empty($key)) {
+          continue;
+        }
+        if ($value['flags'] === 'deleted') {
+          continue;
+        }
+        $values2[$key] = $value['label'];
+        $valueTitles[$key] = $value['tooltip'];
+        $valueData[$key] = $value['data'];
+      }
+
       switch ($type['Name']) {
-      case 'Boolean':
-        $fdd['values2|CAP'] = array(1 => ''); // empty label for simple checkbox
-        $fdd['values2|LVDF'] = array(0 => L::t('false'),
-                                     1 => L::t('true'));
-        $fdd['select'] = 'O';
-        $fdd['default'] = (string)!!(int)$field['DefaultValue'];
-        $fdd['css']['postfix'] .= ' boolean';
-        unset($fdd['textarea']);
-        break;
       case 'Date':
         $fdd['maxlen'] = 10;
         $fdd['datemask'] = 'd.m.Y';
@@ -530,35 +566,70 @@ class DetailedInstrumentation
         $fdd['mask'] = '%g';
         unset($fdd['textarea']);
         break;
-      case 'Set':
-        $fdd['css']['postfix'] .= ' set';
-        $fdd['select'] = 'M';
-        $fdd['values'] = array(
-          'table' => "SELECT Id, splitString(AllowedValues, '\\n', N) AS Item
- FROM
-   ProjectExtraFields
-   JOIN numbers
-   ON tokenCount(AllowedValues, '\\n') >= N",
-          'column' => 'Item',
-          'subquery' => true,
-          'filters' => '$table.`Id` = '.$field['Id']
-          );
+      case 'Boolean':
+        $fdd['values2|CAP'] = array(1 => ''); // empty label for simple checkbox
+        $fdd['values2|LVDF'] = array(0 => L::t('false'),
+                                     1 => L::t('true'));
+        $fdd['select'] = 'O';
+        $fdd['default'] = (string)!!(int)$field['DefaultValue'];
+        $fdd['css']['postfix'] .= ' boolean';
         unset($fdd['textarea']);
         break;
-      case 'Enumeration':
-        $fdd['css']['postfix'] .= ' enumeration allow-empty';
-        $fdd['select'] = 'D';
-        $fdd['values'] = array(
-          'table' => "SELECT Id, splitString(AllowedValues, '\\n', N) AS Item
- FROM
-   ProjectExtraFields
-   JOIN numbers
-   ON tokenCount(AllowedValues, '\\n') >= N",
-          'column' => 'Item',
-          'subquery' => true,
-          'filters' => '$table.`Id` = '.$field['Id']
-          );
+      case 'Enum':
+      case 'Set':
+        $fdd['values2'] = $values2;
+        $fdd['valueTitles'] = $valueTitles;
+        $fdd['valueData'] = $valueData;
+        if ($type['Multiplicity'] == 'parallel') {
+          $fdd['css']['postfix'] .= ' set';
+          $fdd['select'] = 'M';
+        } else {
+          $fdd['css']['postfix'] .= ' enumeration allow-empty';
+          $fdd['select'] = 'D';
+        }
         unset($fdd['textarea']);
+        break;
+      case 'SurchargeOption':
+        // just use the amount to pay as label
+        $money = Util::moneyValue(reset($valueData));
+        $fdd['values2|CAP'] = array(1 => $money); // empty label for simple checkbox
+        $fdd['values2|LVDF'] = array(0 => '-,--',
+                                     1 => $money);
+        $fdd['select'] = 'O';
+        $fdd['default'] = (string)!!(int)$field['DefaultValue'];
+        $fdd['css']['postfix'] .= ' boolean money surcharge';
+        unset($fdd['textarea']);
+        break;
+      case 'SurchargeEnum':
+      case 'SurchargeSet':
+        foreach($values2 as $key => $value) {
+          $money = Util::moneyValue($valueData[$key], Config::$locale);
+          $mlen = mb_strlen($money);
+          $vlen = mb_strlen($value);
+          $padr = 10;
+          $padl = 10;
+          while ($vlen++ < $padr) {
+            $value .= '&nbsp;';
+          }
+          while ($mlen++ < $padl) {
+            $money = '&nbsp;'.$money;
+          }
+          $values2[$key] = $value.'&nbsp;&nbsp;&nbsp;'.$money;
+        }
+        $fdd['values2'] = $values2;
+        $fdd['values2glue'] = "<br/>";
+        $fdd['valueTitles'] = $valueTitles;
+        $fdd['valueData'] = $valueData;
+        $fdd['escape'] = false;
+        $fdd['display|LF'] = array('popup' => 'data');
+        unset($fdd['textarea']);
+        if ($type['Multiplicity'] == 'parallel') {
+          $fdd['css']['postfix'] .= ' surcharge set hide-subsequent-lines';
+          $fdd['select'] = 'M';
+        } else {
+          $fdd['css']['postfix'] .= ' surcharge enum money allow-empty';
+          $fdd['select'] = 'D';
+        }
         break;
       default:
         break;
@@ -945,7 +1016,7 @@ class DetailedInstrumentation
   {//DELETE FROM Spielwiese2013View WHERE (Id = 146)
     $id = $oldvals['Id'];
     $where = "`Id` = ".$id;
-    $realOldVals = mySQL::fetchRows('Besetzungen', $where, $pme->dbh);
+    $realOldVals = mySQL::fetchRows('Besetzungen', $where, null, $pme->dbh);
     $query = "DELETE FROM `Besetzungen` WHERE ".$where;
     $result = mySQL::query($query, $pme->dbh);
     if ($result !== false && count($realOldVals) == 1) {
@@ -1026,16 +1097,23 @@ class DetailedInstrumentation
   }
 
   /**Export the default tabs family. */
-  public static function defaultTableTabs()
+  public static function defaultTableTabs($useFinanceTab = false)
   {
-    return array(
+    $pre = array(
       array('id' => 'instrumentation',
             'default' => true,
             'tooltip' => Config::toolTips('project-instrumentation-tab'),
             'name' => L::t('Instrumentation related data')),
       array('id' => 'project',
             'tooltip' => Config::toolTips('project-metadata-tab'),
-            'name' => L::t('Project related data')),
+            'name' => L::t('Project related data'))
+      );
+    $finance = array(
+      array('id' => 'finance',
+            'tooltip' => Config::toolTips('project-finance-tab'),
+            'name' => L::t('Finance related data'))
+      );
+    $post = array(
       array('id' => 'musician',
             'tooltip' => Config::toolTips('project-personaldata-tab'),
             'name' => L::t('Personal data')),
@@ -1043,12 +1121,17 @@ class DetailedInstrumentation
             'tooltip' => Config::toolTips('pme-showall-tab'),
             'name' => L::t('Display all columns'))
       );
+    if ($useFinanceTab) {
+      return array_merge($pre, $finance, $post);
+    } else {
+      return array_merge($pre, $post);
+    }
   }
 
   /**Export the description for the table tabs. */
-  public static function tableTabs($extraFields = array())
+  public static function tableTabs($extraFields = false, $useFinanceTab = false)
   {
-    $dfltTabs = self::defaultTableTabs();
+    $dfltTabs = self::defaultTableTabs($useFinanceTab);
 
     if (!is_array($extraFields)) {
       return $dfltTabs;
@@ -1077,6 +1160,13 @@ class DetailedInstrumentation
 
     return array_merge($dfltTabs, $extraTabs);
   }
+
+  /**Sum up the total amount of all project fees for the given project
+   * and musician.
+   */
+  public static function projectFeeTotals($projectId, $besetzungenId, $extraFields = null, $typeInfo = null)
+  {}
+
 
 }; // class DetailedInstrumentation
 
