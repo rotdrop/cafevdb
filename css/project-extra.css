@@ -206,6 +206,10 @@ td.pme-cell.extra-field-tooltip b {
  * extra-field stuff in project instrumentation table
  *
  */
+table.pme-main td.pme-cell.surcharge.boolean,
+table.pme-main td.pme-value.surcharge.boolean {
+    /*text-align:right; rather don't */
+}
 
 table.pme-main td.pme-cell.surcharge.set,
 table.pme-main td.pme-value.surcharge.set,
@@ -214,8 +218,13 @@ table.pme-main td.pme-value.surcharge.enum {
     font-family:monospace;
 }
 
+table.pme-main td.pme-value.surcharge.set,
+table.pme-main td.pme-value.surcharge.enum {
+    font-size:140%;
+}
+
 table.pme-main td.pme-value.surcharge.enum select,
 table.pme-main td.pme-value.surcharge.set select {
-    font-size:160%;
+    /*font-size:160%;*/
     font-family:inherit;
 }
