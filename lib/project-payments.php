@@ -25,8 +25,8 @@
 namespace CAFEVDB
 {
 
-/** Helper class for displaying projects.
- */
+  /** Helper class for displaying projects.
+   */
   class ProjectPayments
   {
     const CSS_PREFIX = 'cafevdb-page';
@@ -89,6 +89,9 @@ namespace CAFEVDB
         echo '</PRE>';
       }
 
+      $projectId = Util::cgiValue('ProjectId', false);
+      $projectName = Util::cgiValue('ProjectName', false);
+
       /*
        * IMPORTANT NOTE: This generated file contains only a subset of huge amount
        * of options that can be used with phpMyEdit. To get information about all
@@ -113,6 +116,9 @@ namespace CAFEVDB
         'DisplayClass' => 'ProjectPayments',
         'ClassArguments' => array());
 
+      $opts['cgi']['persist']['ProjectName'] = $projectName;
+      $opts['cgi']['persist']['ProjectId']   = $projectId;
+
       $opts['tb'] = self::TABLE;
 
       // Name of field which is the unique key
@@ -131,7 +137,7 @@ namespace CAFEVDB
       // Options you wish to give the users
       // A - add,  C - change, P - copy, V - view, D - delete,
       // F - filter, I - initial sort suppressed
-      $opts['options'] = 'ACPVD';
+      $opts['options'] = 'ACPVDF';
       $sort = false;
 
       // Number of lines to display on multiple selection filters
@@ -139,7 +145,7 @@ namespace CAFEVDB
 
       // Navigation style: B - buttons (default), T - text links, G - graphic links
       // Buttons position: U - up, D - down (default)
-      $opts['navigation'] = 'UG';
+      // $opts['navigation'] = 'UG';
 
       // Display special page elements
       $opts['display'] =  array_merge($opts['display'],
@@ -214,21 +220,61 @@ namespace CAFEVDB
         );
 
       $opts['fdd']['InstrumentationId'] = array(
-        'name'     => L::t('InstrumentationId'),
-        'css'      => array('postfix' => ' broker'),
+        'name'     => L::t('Musician'),
+        'css'      => array('postfix' => ' instrumentation-id'),
+        'values'   => array(
+          'table'  => "SELECT b.Id, CONCAT(m.Vorname,' ',m.Name) AS Name
+  FROM Besetzungen b
+  LEFT JOIN Musiker m
+  ON b.MusikerId = m.Id
+  WHERE b.ProjektId = ".$projectId."
+  ORDER BY m.Vorname ASC, m.Name ASC",
+          'column' => 'Id',
+          'description' => 'Name',
+          'join'   => '$join_table.Id = $main_table.InstrumentationId'
+          ),
         'select'   => 'T',
         'maxlen'   => 40,
-        'sort'     => $sort,
+        'sort'     => true,
+        );
+
+      $opts['fdd']['ProjectId'] = array(
+        'name'     => L::t('Project'),
+        'css'      => array('postfix' => ' project-id'),
+        'sql'      => 'PMEjoin2.ProjektId',
+        'input'    => 'VH',
+        'values'   => array(
+          'table'  => 'Besetzungen',
+          'column' => 'Id',
+          'description' => 'ProjektId',
+          'join'   => '$join_table.Id = $main_table.InstrumentationId'
+          ),
+        );
+
+      $opts['fdd']['ProjectName'] = array(
+        'name'     => L::t('Project'),
+        'css'      => array('postfix' => ' project-id'),
+        'sql'      => 'PMEjoin3.Name',
+        'input'    => 'V',
+        'values'   => array(
+          'table'  => 'Projekte',
+          'column' => 'Id',
+          'description' => 'Name',
+          'join'   => '$join_table.Id = PMEjoin2.ProjektId'
+          ),
+        'select'   => 'T',
+        'maxlen'   => 40,
+        'sort'     => true,
         );
 
       $opts['fdd']['Amount'] = Config::$opts['money'];
       $opts['fdd']['Amount']['name'] = L::t('Amount');
 
       $opts['fdd']['DateInitiated'] = Config::$opts['date'];
-      $opts['fdd']['DateInitiated']['name'] = L::t('DateIniated');
+      $opts['fdd']['DateInitiated']['name'] = L::t('Date Issued');
 
       $opts['fdd']['DateOfReceipt'] = Config::$opts['date'];
-      $opts['fdd']['DateOfReceipt']['name'] = L::t('DateOfReceipt');
+      $opts['fdd']['DateOfReceipt']['name'] = L::t('Date of Receipt');
 
       $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
       $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
