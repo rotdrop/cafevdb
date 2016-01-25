@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -33,4 +33,62 @@
 .tooltip-mostwide .tooltip-inner {
   max-width:80em;
   text-align:left;
+}
+
+div.tooltip[role="tooltip"] ul,
+div.tooltip[role="tooltip"] ol {
+    list-style-position:inside!important;
+    list-style-type:unset;
+}
+
+div.tooltip[role="tooltip"] dd {
+   display: block;
+   margin-left:1em;
+}
+
+div.tooltip[role="tooltip"] h1,
+div.tooltip[role="tooltip"] h2,
+div.tooltip[role="tooltip"] h3,
+div.tooltip[role="tooltip"] h4,
+div.tooltip[role="tooltip"] h5 {
+    font-weight:bold;
+}
+
+div.tooltip[role="tooltip"] var,
+div.tooltip[role="tooltip"] em {
+    font-style:italic;
+}
+
+div.tooltip[role="tooltip"] code {
+    font-family:monospace;
+}
+
+div.tooltip[role="tooltip"] samp,
+div.tooltip[role="tooltip"] kbd,
+div.tooltip[role="tooltip"] code {
+    font-family:monospace;
+}
+
+div.tooltip[role="tooltip"] n,
+div.tooltip[role="tooltip"] strong {
+    font-weight:bold;
+}
+
+div.tooltip[role="tooltip"] a:link {
+  color:CornFlowerBlue;
+  text-decoration:underline;
+  font-weight:bold;
+}
+
+div.tooltip[role="tooltip"] a:visited {
+  color:CornFlowerBlue;
+  text-decoration:underline;
+  font-weight:bold;
+}
+
+div.tooltip[role="tooltip"] a:visited {
+  color:CornFlowerBlue;
+  text-decoration:underline;
+  font-style:italic;
+  font-weight:bold;
 }
