@@ -1,0 +1,221 @@
+/**Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/******************************************************************************
+ *
+ * extra-field stuff
+ *
+ */
+
+table.pme-main tr.field-type ~ tr.pme-row.allowed-values,
+table.pme-main tr.field-type ~ tr.pme-row.allowed-values-single,
+table.pme-main tr.field-type ~ tr.pme-row.default-value,
+table.pme-main tr.field-type ~ tr.pme-row.default-single-value,
+table.pme-main tr.field-type ~ tr.pme-row.default-multi-value {
+    display:none;
+}
+
+table.pme-main tr.field-type.simple-value-field ~ tr.pme-row.default-value,
+table.pme-main tr.field-type.single-value-field ~ tr.pme-row.default-single-value,
+table.pme-main tr.field-type.single-value-field.surcharge-field ~ tr.pme-row.allowed-values-single,
+table.pme-main tr.field-type.multi-value-field ~ tr.pme-row.allowed-values,
+table.pme-main tr.field-type.multi-value-field ~ tr.pme-row.default-multi-value,
+table.pme-main tr.field-type.parallel-value-field ~ tr.pme-row.allowed-values,
+table.pme-main tr.field-type.parallel-value-field ~ tr.pme-row.default-multi-value {
+    display:table-row;
+}
+
+.ProjectExtra table.pme-main tr:not(.pme-filter) .chosen-container {
+    box-sizing:border-box;
+    min-width:50%;
+}
+
+.ProjectExtra table.pme-main tr.allowed-values input.delete-undelete {
+    background-repeat:no-repeat;
+    background-size: 28px 28px;
+    background-position: center;
+    width:28px;
+    height:28px;
+    vertical-align:middle;
+    margin-right:1em;
+}
+
+.ProjectExtra table.pme-main tr.allowed-values.active input.delete-undelete {
+    background-image:url('../img/delete.svg');
+}
+
+.ProjectExtra table.pme-main tr.allowed-values.deleted input.delete-undelete {
+    background-image:url('../img/history.svg');
+}
+
+tr.allowed-values.deleted {
+    display:none;
+}
+
+table.allowed-values.show-deleted tr.allowed-values.deleted {
+    display:table-row;
+}
+
+/* Field-data is normally only useful for surcharge fields. */
+td.field-data,
+th.field-data {
+    display:none!important;
+}
+
+table.allowed-values.operation-display td.field-data,
+table.allowed-values.operation-display th.field-data,
+table.allowed-values.show-data td.field-data,
+table.allowed-values.show-data th.field-data {
+    display:table-cell!important;
+}
+
+/* Show field-data for surcharge fields, because it holds the amount to pay. */
+table.pme-main tr.field-type.surcharge-field ~ tr.pme-row td.pme-value td.field-data,
+table.pme-main tr.field-type.surcharge-field ~ tr.pme-row td.pme-value th.field-data {
+    display:table-cell!important;
+}
+
+table.pme-main tr.field-type ~ tr.pme-row span.surcharge,
+table.pme-main tr.field-type.surcharge-field ~ tr.pme-row span.general {
+    display:none;
+}
+
+table.pme-main tr.field-type ~ tr.pme-row span.general,
+table.pme-main tr.field-type.surcharge-field ~ tr.pme-row span.surcharge {
+    display:inline-block;
+}
+
+table.pme-main tr.field-type.surcharge-field ~ tr.pme-row.allowed-values td.pme-value div.show-data {
+    display:none;
+}
+
+table.pme-main tr.field-type.surcharge-field ~ tr.pme-row input.field-data,
+table.pme-main tr.field-type.surcharge-field ~ tr.pme-row input.allowed-values-single {
+    text-align:right;
+}
+
+table.pme-main span.surcharge.currency-amount {
+    text-align:right;
+    display:inline-block;
+    width:100%;
+}
+
+.ProjectExtra table.pme-main textarea.field-tooltip,
+.ProjectExtra table.pme-main textarea.extra-field-tooltip {
+    overflow-x:hidden; /* fix FF extra-line bug */
+}
+
+.tooltip span.surcharge {
+    display:none;
+}
+
+.ProjectExtra table.pme-main td.allowed-values {
+    position:relative;
+    background-clip:padding-box;
+}
+
+.ProjectExtra table.pme-main td.allowed-values div.field-display-options {
+    position:absolute;
+    bottom:0px;
+    right:0px;
+}
+
+.ProjectExtra table.pme-main td.allowed-values td.placeholder {
+    min-width:35em;
+}
+
+table.allowed-values.operation-display th.operations,
+table.allowed-values.operation-display th.field-key,
+table.allowed-values.operation-display td.operations,
+table.allowed-values.operation-display td.field-key {
+    display:none!important;
+}
+
+table.allowed-values {
+    border-collapse:collapse;
+    border-spacing:1px;
+}
+
+table.allowed-values th {
+    font-style:italic;
+}
+
+table.allowed-values.operation-display th,
+table.allowed-values.operation-display td {
+    text-align:left;
+    border:1px solid #004D9C;
+}
+
+td.pme-value table.allowed-values.operation-display th,
+td.pme-value table.allowed-values.operation-display td {
+    padding:3px;
+}
+
+td.pme-cell table.allowed-values.operation-display th,
+td.pme-cell table.allowed-values.operation-display td {
+    padding:1px;
+}
+
+td.pme-cell.extra-field-tooltip ul,
+td.pme-cell.extra-field-tooltip ol {
+    list-style-position:inside!important;
+    list-style-type:unset;
+}
+
+td.pme-cell.extra-field-tooltip dd {
+    display: block;
+    margin-left:1em;
+}
+
+td.pme-cell.extra-field-tooltip h1,
+td.pme-cell.extra-field-tooltip h2,
+td.pme-cell.extra-field-tooltip h3,
+td.pme-cell.extra-field-tooltip h4,
+td.pme-cell.extra-field-tooltip h5 {
+    font-weight:bold;
+}
+
+td.pme-cell.extra-field-tooltip em {
+    font-style:italic;
+}
+
+td.pme-cell.extra-field-tooltip b {
+    font-style:bold;
+}
+
+/******************************************************************************
+ *
+ * extra-field stuff in project instrumentation table
+ *
+ */
+
+table.pme-main td.pme-cell.surcharge.set,
+table.pme-main td.pme-value.surcharge.set,
+table.pme-main td.pme-cell.surcharge.enum,
+table.pme-main td.pme-value.surcharge.enum {
+    font-family:monospace;
+}
+
+table.pme-main td.pme-value.surcharge.enum select,
+table.pme-main td.pme-value.surcharge.set select {
+    font-size:160%;
+    font-family:inherit;
+}

@@ -21,6 +21,7 @@
 
 $(document).ready(function() {
 
+    // ???? needed ????
     $.widget("ui.dialog", $.ui.dialog, {
         _allowInteraction: function(event) {
             return !!$(event.target).closest(".mce-container").length || this._super( event );
@@ -42,6 +43,12 @@ $(document).ready(function() {
     }
 
     var content = $('#content');
+
+    content.on('chosen:showing_dropdown', 'select', function(event, params)   {
+        var results = params.chosen.search_results;
+        results.find('li').cafevTooltip({placement:'right'});
+        return true;
+    });
 
     // Any pending form-submit which has not been caught otherwise is
     // here intercepted and redirected to the page-loader in order to
@@ -130,162 +137,23 @@ $(document).ready(function() {
         parameters: []
     });
 
-    PHPMYEDIT.addTableLoadCallback('Instruments', {
-        callback: function(selector, parameters, resizeCB) {
-            resizeCB();
-        },
-        context: CAFEVDB,
-        parameters: []
-    });
-
-    // too long, should probably go to another file.
     PHPMYEDIT.addTableLoadCallback('ProjectExtra', {
-        callback: function(selector, parameters, _resizeCB) {
-
-            var resizeCB = function() {
-                console.log('resize');
-                _resizeCB();
-            };
+        callback: function(selector, parameters, resizeCB) {
 
             if (parameters.reason != 'dialogOpen') {
                 resizeCB();
                 return;
             }
 
-            var container = $(selector);
+            CAFEVDB.ProjectExtra.ready(selector, resizeCB);
+        },
+        context: CAFEVDB,
+        parameters: []
+    });
 
-            var tableTab = container.find('select.tab');
-            var newTab = container.find('input.new-tab');
-            newTab.prop('disabled', !!tableTab.find(':selected').val());
-            container.on('change', 'select.tab', function(event) {
-                newTab.prop('disabled', !!tableTab.find(':selected').val());
-                return false;
-            });
 
-            var typeSelect = container.find('select.field-type');
-            var handleFieldType = function(select) {
-                var singleClass = 'single-value-field';
-                var multiClass = 'multi-value-field';
-                var typeOption = select.find(':selected');
-                var group = typeOption.data('groupId');
-                console.log('group: '+group);
-                if (group === 2) {
-                    container.find('tr.field-type').addClass(multiClass);
-                } else {
-                    container.find('tr.field-type').removeClass(multiClass);
-                }
-                if (group === 0) {
-                    container.find('tr.field-type').addClass(singleClass);
-                } else {
-                    container.find('tr.field-type').removeClass(singleClass);
-                }
-            };
-            handleFieldType(typeSelect);
-
-            container.on('change', 'select.field-type', function(event) {
-                handleFieldType($(this));
-                resizeCB();
-                return false;
-            });
-
-            container.on('change', '.allowed-values', function(event) {
-                var self = $(this);
-                var allowed = self.val();
-                var dflt = container.find('select.default-multi-value');
-                var oldDflt = dflt.find(':selected').val();
-                var postData = {
-                    request: 'AllowedValuesOptions',
-                    value: {
-                        values: allowed,
-                        selected: oldDflt
-                    }
-                };
-                $.post(OC.filePath('cafevdb', 'ajax/projects', 'extra-fields.php'),
-                       postData,
-                       function (data) {
-                           if (!CAFEVDB.ajaxErrorHandler(data, [ 'AllowedValuesOptions' ])) {
-                               return;
-                           }
-                           var options = data.data.AllowedValuesOptions;
-                           var value   = data.data.AllowedValues; // sanitized
-                           console.log('typeInfo: '+CAFEVDB.print_r(options, true));
-                           self.val(value);
-                           dflt.html(options);
-                           dflt.trigger('chosen:updated');
-                           //resizeCB();
-                       });
-                return false;
-            });
-
-            // When a reader-group is removed, we also deselect it from the
-            // writers. This -- of course -- only works if initially
-            // the readers and writers list is in a sane state ;)
-            container.on('change', 'select.readers', function(event) {
-                console.log('readers change');
-                var self = $(this);
-
-                var changed = false;
-                var writers = container.find('select.writers');
-                self.find('option').not(':selected').each(function() {
-                    var writer = writers.find('option[value="'+this.value+'"]');
-                    if (writer.prop('selected')) {
-                        writer.prop('selected', false);
-                        changed = true;
-                    }
-                });
-                if (changed) {
-                    writers.trigger('chosen:updated');
-                }
-                return false;
-            });
-
-            // When a writer-group is added, then add it to the
-            // readers as well ;)
-            container.on('change', 'select.writers', function(event) {
-                console.log('writers change');
-                var self = $(this);
-
-                var changed = false;
-                var readers = container.find('select.readers');
-                self.find('option:selected').each(function() {
-                    var reader = readers.find('option[value="'+this.value+'"]');
-                    if (!reader.prop('selected')) {
-                        reader.prop('selected', true);
-                        changed = true;
-                    }
-                });
-                if (changed) {
-                    readers.trigger('chosen:updated');
-                }
-                return false;
-            });
-
-            var tableContainerId = PHPMYEDIT.pmeIdSelector('table-container');
-            container.on('chosen:showing_dropdown', tableContainerId+' select', function(event) {
-                console.log('chosen:showing_dropdown');
-                var widget = container.cafevDialog('widget');
-                var tableContainer = container.find(tableContainerId);
-                widget.css('overflow', 'visible');
-                container.css('overflow', 'visible');
-                tableContainer.css('overflow', 'visible');
-                return false;
-            });
-
-            container.on('chosen:hiding_dropdown', tableContainerId+' select', function(event) {
-                console.log('chosen:hiding_dropdown');
-                var widget = container.cafevDialog('widget');
-                var tableContainer = container.find(tableContainerId);
-                tableContainer.css('overflow', '');
-                container.css('overflow', '');
-                widget.css('overflow', '');
-                return false;
-            });
-
-            container.on('chosen:update', 'select.writers, select.readers', function(event) {
-                resizeCB();
-                return false;
-            });
-
+    PHPMYEDIT.addTableLoadCallback('Instruments', {
+        callback: function(selector, parameters, resizeCB) {
             resizeCB();
         },
         context: CAFEVDB,

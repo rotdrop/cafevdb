@@ -120,28 +120,3 @@ ul#cmsarticletabs li a {
     overflow:hidden;
     text-overflow:ellipsis;
 }
-
-/******************************************************************************
- *
- * extra-field stuff
- *
- */
-
-table.pme-main tr.field-type:not(.multi-value-field) ~ tr.pme-row.allowed-values,
-table.pme-main tr.field-type:not(.multi-value-field) ~ tr.pme-row.default-multi-value {
-    display:none;
-}
-
-table.pme-main tr.field-type:not(.single-value-field) ~ tr.pme-row.default-single-value {
-    display:none;
-}
-
-table.pme-main tr.field-type.single-value-field ~ tr.pme-row.default-value,
-table.pme-main tr.field-type.multi-value-field ~ tr.pme-row.default-value {
-    display:none;
-}
-
-.ProjectExtra table.pme-main tr:not(.pme-filter) .chosen-container {
-    box-sizing:border-box;
-    min-width:50%;
-}

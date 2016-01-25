@@ -32,6 +32,8 @@ namespace CAFEVDB {
     return;
   }
 
+  $debugText = '';
+
   try {
 
     ob_start();
@@ -42,32 +44,118 @@ namespace CAFEVDB {
     $request = Util::cgiValue('request', '');
     $value   = Util::cgiValue('value', '');
 
-    if (!empty($value)) {
-    switch ($request) {
-    case 'TypeInfo':
-      $types = self::fieldTypes($pme->dbh);
-      $multi = $types[$value]['Kind'] === 'multiple';
-      \OC_JSON::success(
-        array('data' => array(
-                'message' => L::t("Request \"%s\" successful", array($request)),
-                'TypeInfo' => $multi ? 'multiple' : 'single'
-                )));
-      return true;
-    case 'AllowedValuesOptions':
-      if (!isset($value['values']) || !isset($value['selected'])) {
-        break;
+    if ($value !== '') {
+      switch ($request) {
+      case 'TypeInfo':
+        $types = self::fieldTypes($pme->dbh);
+        $multi = $types[$value]['Multiplicity'] === 'multiple';
+        \OC_JSON::success(
+          array('data' => array(
+                  'message' => L::t("Request \"%s\" successful", array($request)),
+                  'TypeInfo' => $multi ? 'multiple' : 'single'
+                  )));
+        return true;
+      case 'ValidateAmount':
+        if (!isset($value['amount'])) {
+          break;
+        }
+        $amount = $value['amount'];
+        if (empty($amount)) {
+          $amount = 0;
+        } else {
+          $parsed = FuzzyInput::currencyValue($amount);
+          if ($parsed === false) {
+            \OC_JSON::error(
+              array("data" => array(
+                      "message" => L::t('Could not parse number: "%s"', array($number)),
+                      'Amount' => false
+                      )
+                )
+              );
+            return false;
+          }
+          $amount = $parsed;
+        }
+        \OC_JSON::success(
+          array('data' => array(
+                  'message' => L::t("Request \"%s\" successful", array($request)),
+                  'Amount' => $amount
+                  )));
+        return true;
+      case 'AllowedValuesOption':
+        // This is as well for changing as for adding new options.
+        if (!isset($value['selected']) ||
+            !isset($value['data']) ||
+            !isset($value['keys'])) {
+          break;
+        }
+        $selected = $value['selected'];
+        $data  = $value['data'];
+        $keys  = $value['keys'];
+        $index = $data['index'];
+        $used  = $data['used'] === 'used';
+
+        $pfx = Config::$pmeopts['cgi']['prefix']['data'];
+        $allowed = Util::cgiValue($pfx.'AllowedValues');
+        $allowed = ProjectExtra::explodeAllowedValues(ProjectExtra::implodeAllowedValues($allowed), false);
+        if (count($allowed) !== 1) {
+          throw new \InvalidArgumentException(L::t('No or too many items available: ').print_r($allowed, true));
+        }
+
+        // Our data row
+        $item = reset($allowed);
+
+        // potentially tweak key to be unique (and simpler) if not already in use.
+        if (!$used) {
+          $item['key'] = ProjectExtra::allowedValuesUniqueKey($item['key'], $keys);
+        }
+
+        // remove dangerous html
+        $item['tooltip'] = FuzzyInput::purifyHTML($item['tooltip']);
+
+        switch ($data['Group']) {
+        case 'surcharge':
+          // see that it is a valid decimal number ...
+          if (!empty($item['data'])) {
+            $parsed = FuzzyInput::currencyValue($item['data']);
+            if ($parsed === false) {
+              \OC_JSON::error(
+                array("data" => array(
+                        "message" => L::t('Could not parse number: "%s"', array($item['data'])),
+                        'AllowedValue' => false,
+                        'AllowedValueInput' => false,
+                        'AllowedValueOption' => false
+                        )
+                  )
+                );
+              return false;
+            }
+            $item['data'] = $parsed;
+          }
+          break;
+        default:
+          break;
+        }
+
+        $input = '';
+        $options = array();
+        if (!empty($item['key'])) {
+          $key = $item['key'];
+          $options[] = array('name' => $item['label'],
+                             'value' => $key,
+                             'flags' => ($selected === $key ? Navigation::SELECTED : 0));
+          $input = ProjectExtra::allowedValueInputRow($item, $index, $used);
+        }
+        $options = Navigation::selectOptions($options);
+        \OC_JSON::success(
+          array('data' => array(
+                  'message' => L::t("Request \"%s\" successful", array($request)),
+                  'AllowedValue' => $allowed,
+                  'AllowedValueInput' => $input,
+                  'AllowedValueOption' => $options
+                  )));
+        return true;
       }
-      $values = ProjectExtra::explodeAllowedValues($value['values']);
-      $valueString = implode("\n", $values);
-      $options = Navigation::simpleSelectOptions($values, $value['selected']);
-      \OC_JSON::success(
-        array('data' => array(
-                'message' => L::t("Request \"%s\" successful", array($request)),
-                'AllowedValues' => $valueString,
-                'AllowedValuesOptions' => $options
-                )));
-      return true;
-    }
     }
 
     \OC_JSON::error(

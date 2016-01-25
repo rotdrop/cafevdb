@@ -39,6 +39,7 @@ namespace CAFEVDB
     public $projectId;
     public $projectName;
     public $recordId;
+    public $showDisabledField;
 
     public function __construct($recordId = -1, $execute = true)
     {
@@ -49,6 +50,14 @@ namespace CAFEVDB
       $this->projectId = Util::cgiValue('ProjectId', false);
       $this->projectName = Util::cgiValue('ProjectName', false);
       $this->recordId = $recordId > 0 ? $recordId : Util::getCGIRecordId();
+
+      $this->showDisabledFields = Util::cgiValue('ShowDisabledFields', false);
+      $pmeSysPfx = Config::$pmeopts['cgi']['prefix']['sys'];
+      if (Util::cgiValue($pmeSysPfx.'showdisabled', false) !== false) {
+        $this->showDisabledFields = true;
+      } else if (Util::cgiValue($pmeSysPfx.'hidedisabled', false) !== false) {
+        $this->showDisabledFields = false;
+      }
 
       Config::init();
     }
@@ -90,6 +99,33 @@ namespace CAFEVDB
       return $this->shortTitle();
     }
 
+    private static function translationPlaceholder()
+    {
+      L::t('Boolean');
+      L::t('Integer');
+      L::t('Float');
+      L::t('Text');
+      L::t('HTML');
+      L::t('Money');
+      L::t('Set');
+      L::t('Enum');
+      L::t('Date');
+      L::t('SurchargeOption');
+      L::t('SurchargeEnum');
+      L::t('SurchargeSet');
+
+      L::t('single');
+      L::t('simple');
+      L::t('special');
+      L::t('multiple');
+      L::t('parallel');
+
+      L::t('choices');
+      L::t('general');
+      L::t('surcharge');
+    }
+
+
     function display()
     {
       global $debug_query;
@@ -110,10 +146,12 @@ namespace CAFEVDB
         $recordMode = true;
       }
 
-      $projectId   = $this->projectId;
-      $projectName = $this->projectName;
-      $projectMode = $projectId > 0;
-      $tableTabs   = DetailedInstrumentation::tableTabs();
+      $projectId    = $this->projectId;
+      $projectName  = $this->projectName;
+      $projectMode  = $projectId > 0;
+      $showDisabled = $this->showDisabledFields;
+
+      $tableTabs   = DetailedInstrumentation::tableTabs(null, true);
       $tableTabValues2 = array();
       foreach($tableTabs as $tabInfo) {
         $tableTabValues2[$tabInfo['id']] = $tabInfo['name'];
@@ -125,6 +163,7 @@ namespace CAFEVDB
       $opts['cgi']['persist'] = array(
         'Template' => 'project-extra',
         'DisplayClass' => 'ProjectExtra',
+        'ShowDisabledFields' => $this->showDisabledFields,
         'ClassArguments' => array());
 
       if ($projectMode || true) {
@@ -146,8 +185,14 @@ namespace CAFEVDB
         'DisplayOrder',
         'Name');
 
+      // GROUP BY clause, if needed.
+      $opts['groupby_fields'] = 'Id';
+
+      if (!$showDisabled) {
+        $opts['filters'] = array('NOT Disabled = 1');
+      }
       if ($projectMode !== false) {
-        $opts['filters'] = 'ProjectId = '.$this->projectId;
+        $opts['filters'][] = 'ProjectId = '.$this->projectId;
       }
 
       // Number of records to display on the screen
@@ -161,6 +206,22 @@ namespace CAFEVDB
 
       // Number of lines to display on multiple selection filters
       $opts['multiple'] = '6';
+
+      $showButton = array(
+        'name' => 'showdisabled',
+        'value' => L::t('Show Disabled'),
+        'css' => 'show-disabled'
+        );
+      $hideButton = array(
+        'name' => 'hidedisabled',
+        'value' => L::t('Hide Disabled'),
+        'css' => 'show-disabled'
+        );
+      if ($this->showDisabledFields) {
+        $opts['buttons'] = Navigation::prependTableButton($hideButton, false, false);
+      } else {
+        $opts['buttons'] = Navigation::prependTableButton($showButton, false, false);
+      }
 
       // Navigation style: B - buttons (default), T - text links, G - graphic links
       // Buttons position: U - up, D - down (default)
@@ -288,6 +349,8 @@ namespace CAFEVDB
           ),
         );
 
+      $tooltipIdx = -1;
+      $nameIdx = count($opts['fdd']);
       $opts['fdd']['Name'] = array(
         'tab'      => array('id' => 'tab-all'),
         'name' => L::t('Field-Name'),
@@ -302,40 +365,94 @@ namespace CAFEVDB
       // TODO: maybe get rid of enums and sets alltogether
       $typeValues = array();
       $typeGroups = array();
+      $typeData = array();
       $types = self::fieldTypes();
       if (!empty($types)) {
         foreach($types as $id => $typeInfo) {
           $name = $typeInfo['Name'];
+          $multiplicity = $typeInfo['Multiplicity'];
           $group = $typeInfo['Kind'];
           $typeValues[$id] = L::t($name);
           $typeGroups[$id] = L::t($group);
+          $typeData[$id] = json_encode(
+            array(
+              'Multiplicity' => $multiplicity,
+              'Group' => $group)
+            );
         }
+      }
+
+      if ($showDisabled) {
+        $opts['fdd']['Disabled'] = array(
+          'tab'      => array('id' => 'definition'),
+          'name'     => L::t('Disabled'),
+          'css'      => array('postfix' => ' extra-field-disabled'),
+          'values2|CAP' => array(1 => ''),
+          'values2|LVFD' => array(1 => L::t('true'),
+                                  0 => L::t('false')),
+          'default'  => '',
+          'select'   => 'O',
+          'sort'     => true,
+          'tooltip'  => Config::toolTips('extra-fields-disabled')
+          );
       }
 
       $opts['fdd']['Type'] = array(
         'tab'      => array('id' => 'definition'),
         'name' => L::t('Type'),
         'css' => array('postfix' => ' field-type'),
+        'php|VD' => function($value, $op, $field, $fds, $fdd, $row, $recordId) use ($typeData) {
+          $key = $row['qf'.$field];
+          return '<span class="data" data-data=\''.$typeData[$key].'\'></span>'.$value;
+        },
         'size' => 30,
         'maxlen' => 24,
         'select' => 'D',
         'sort' => true,
+        'tooltip' => Config::toolTips('extra-fields-type'),
         'values2' => $typeValues,
         'valueGroups' => $typeGroups,
-        'tooltip' => Config::toolTips('extra-fields-type'),
+        'valueData' => $typeData,
         );
 
       $opts['fdd']['AllowedValues'] = array(
         'name' => L::t('Allowed Values'),
-        'css' => array('postfix' => ' allowed-values hide-subsequent-lines'),
+        'css|LF' => array('postfix' => ' allowed-values hide-subsequent-lines'),
+        'css' => array('postfix' => ' allowed-values'),
         'select' => 'T',
-        'textarea' => array('rows' => 5,
-                            'cols' => 30),
+        'php' => function($value, $op, $field, $fds, $fdd, $row, $recordId)
+        {
+          return self::showAllowedValues($value, $op, $recordId);
+        },
         'maxlen' => 1024,
         'size' => 30,
         'sort' => true,
         'display|LF' => array('popup' => 'data'),
         'tooltip' => Config::toolTips('extra-fields-allowed-values'),
+        );
+
+      $opts['fdd']['AllowedValuesSingle'] = array(
+        'name' => self::currencyLabel(L::t('Data')),
+        'css' => array('postfix' => ' allowed-values-single'),
+        'sql' => 'AllowedValues',
+        'php' => function($value, $op, $field, $fds, $fdd, $row, $recordId) use ($nameIdx, $tooltipIdx)
+        {
+          // provide defaults
+          $protoRecord = array(
+            'key' => $recordId,
+            'label' => $row['qf'.$nameIdx],
+            'data' => false,
+            'tooltip' => $row['qf'.$tooltipIdx],
+            'flags' => 'active'
+            );
+          return self::showAllowedSingleValue($value, $op, $fdd[$field]['tooltip'], $protoRecord);
+        },
+        'options' => 'ACDPV',
+        'select' => 'T',
+        'maxlen' => 29,
+        'size' => 30,
+        'sort' => true,
+        'tooltip' => Config::toolTips('extra-fields-allowed-values-single'),
         );
 
       $opts['fdd']['DefaultValue'] = array(
@@ -357,14 +474,19 @@ namespace CAFEVDB
         'css' => array('postfix' => ' default-multi-value allow-empty'),
         'select' => 'D',
         'values' => array(
-          'table' => "SELECT Id, splitString(AllowedValues, '\\n', N) AS Item
+          'table' => "SELECT Id,
+ splitString(splitString(AllowedValues, '\\n', N), ':', 1) AS Value,
+ splitString(splitString(AllowedValues, '\\n', N), ':', 2) AS Label,
+ splitString(splitString(AllowedValues, '\\n', N), ':', 5) AS Flags
  FROM
-   ProjectExtraFields
-   JOIN numbers
-   ON tokenCount(AllowedValues, '\\n') >= N",
-          'column' => 'Item',
+   `ProjectExtraFields`
+   JOIN `numbers`
+   ON tokenCount(AllowedValues, '\\n') >= `numbers`.N",
+          'column' => 'Value',
+          'description' => 'Label',
           'subquery' => true,
-          'filters' => '$table.`Id` = $record_id'
+          'filters' => '$table.`Id` = $record_id AND NOT $table.`Flags` = \'deleted\'',
+          'join' => '$join_table.$join_column = $main_table.`DefaultValue`'
           ),
         'maxlen' => 29,
         'size' => 30,
@@ -388,16 +510,18 @@ namespace CAFEVDB
         'tooltip' => Config::toolTips('extra-fields-default-single-value'),
         );
 
+      $tooltipIdx = count($opts['fdd']);
       $opts['fdd']['ToolTip'] = array(
         'tab'      => array('id' => 'display'),
         'name' => L::t('Tooltip'),
         'css' => array('postfix' => ' extra-field-tooltip hide-subsequent-lines'),
         'select' => 'T',
         'textarea' => array('rows' => 5,
-                            'cols' => 30),
+                            'cols' => 28),
         'maxlen' => 1024,
         'size' => 30,
         'sort' => true,
+        'escape' => false,
         'display|LF' => array('popup' => 'data'),
         'tooltip' => Config::toolTips('extra-fields-tooltip'),
         );
@@ -422,7 +546,7 @@ namespace CAFEVDB
           ),
         'values2' => $tableTabValues2,
         'default' => -1,
-        'maxlen' => 20,
+        'maxlen' => 128,
         'size' => 30,
         'sort' => true,
         'tooltip' => Config::toolTips('extra-fields-tab'),
@@ -517,6 +641,8 @@ namespace CAFEVDB
       $opts['triggers']['insert']['before'][]  = 'CAFEVDB\ProjectExtra::beforeInsertTrigger';
       $opts['triggers']['insert']['before'][]  = 'CAFEVDB\ProjectExtra::beforeUpdateOrInsertTrigger';
 
+      $opts['triggers']['delete']['before'][]  = 'CAFEVDB\ProjectExtra::beforeDeleteTrigger';
+
       $opts['triggers']['filter']['pre'][]  =
         $opts['triggers']['update']['pre'][]  =
         $opts['triggers']['insert']['pre'][]  = 'CAFEVDB\ProjectExtra::preTrigger';
@@ -593,6 +719,61 @@ namespace CAFEVDB
       return $result;
     }
 
+    /**Make keys unique for multi-choice fields.
+     *
+     * @param[in] string $key Input key.
+     *
+     * @param[in] array $keys Existing keys.
+     *
+     * @return Something "close" to $key, but not contained in $keys.
+     *
+     * @bug Potentially, this could fail. But will not in real life.
+     */
+    public static function allowedValuesUniqueKey($key, $keys)
+    {
+      $key = ucwords($key);
+      $key = lcfirst($key);
+      $key = preg_replace("/[^[:alnum:]]?[[:space:]]?/u", '', $key);
+      $key = substr($key, 0, 8);
+      $cnt = 1;
+      while (($idx = array_search($key, $keys)) !== false && $cnt < 1000) {
+        $key = substr($key, 0, 8 - strlen($cnt)).$cnt;
+        ++$cnt;
+      }
+      return $key;
+    }
+
+    /**Given an array of multiple choices make its keys unique with
+     * respect to itself. Used keys remain fixed (unique or not).
+     *
+     * @param[in,out] array &$allowed Array of admissible options.
+     *
+     * @param[in] integer $recordId The record Id for the field.
+     */
+    private static function allowedValuesUniqueKeys(&$allowed, $recordId)
+    {
+      if (!empty($recordid)) {
+        $usedKeys = self::fieldValuesFromDB($recordId);
+      } else {
+        $usedKeys = array();
+      }
+      $keys = array();
+      foreach($allowed as $idx => $item) {
+        $keys[$idx] = $item['key'];
+      }
+      foreach($allowed as $idx => &$item) {
+        $key = $item['key'];
+        if (array_search($key, $usedKeys) !== false) {
+          continue; // don't change used keys
+        }
+        $otherKeys = $keys;
+        unset($otherKeys[$idx]);
+        $key = self::allowedValuesUniqueKey($key, $otherKeys);
+        $item['key'] = $key;
+        $keys[$idx] = $key;
+      }
+    }
+
     /** phpMyEdit calls the trigger (callback) with the following arguments:
      *
      * @param[in] $pme The phpMyEdit instance
@@ -623,19 +804,44 @@ namespace CAFEVDB
         }
       }
 
-      error_log(print_r($newvals, true));
-      error_log(print_r($changed, true));
-
       $projectId = $newvals['ProjectId'];
       if ($projectId <= 0) {
         $projectId = $newvals['ProjectId'] = Util::cgiValue('ProjectId', false);
       }
 
-      error_log('prid '.$projectId);
-
       return Projects::createView($projectId, false, $pme->dbh);
     }
 
+
+    /** phpMyEdit calls the trigger (callback) with the following arguments:
+     *
+     * @param[in] $pme The phpMyEdit instance
+     *
+     * @param[in] $op The operation, 'insert', 'update' etc.
+     *
+     * @param[in] $step 'before' or 'after'
+     *
+     * @param[in] $oldvals Self-explanatory.
+     *
+     * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
+     *
+     * @param[in,out] &$newvals Set of new values, which may also be modified.
+     *
+     * @return boolean. If returning @c false the operation will be terminated
+     */
+    public static function beforeDeleteTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
+    {
+      $used = self::fieldsFromDB(-1, $pme->rec, $pme->dbh);
+
+      if (is_array($used) && $used[0] == $pme->rec) {
+        // Already used. Just mark the beast as inactive
+        mySQL::update(self::TABLE_NAME, '`Id` = '.$pme->rec,
+                      array('Disabled' => 1), $pme->dbh);
+        return false;
+      }
+
+      return true;
+    }
 
     /** phpMyEdit calls the trigger (callback) with the following arguments:
      *
@@ -734,9 +940,11 @@ namespace CAFEVDB
        * can do its work.
        *
        */
+
       $key = array_search('DefaultMultiValue', $changed);
       $types = self::fieldTypes($pme->dbh);
-      if ($types[$newvals['Type']]['Kind'] === 'multiple') {
+      if ($types[$newvals['Type']]['Multiplicity'] === 'multiple' ||
+          $types[$newvals['Type']]['Multiplicity'] === 'parallel') {
         $newvals['DefaultValue'] = $newvals['DefaultMultiValue'];
         if ($key !== false) {
           $changed[] = 'DefaultValue';
@@ -748,20 +956,55 @@ namespace CAFEVDB
         unset($changed[$key]);
       }
 
-      $allowed = self::explodeAllowedValues($newvals['AllowedValues']);
-      $newvals['AllowedValues'] = implode("\n", $allowed);
-      if ($oldvals['AllowedValues'] != $newvals['AllowedValues']) {
+      /************************************************************************
+       *
+       * Move the data from AllowedValuesSingle to
+       * AllowedValues. Plural is "misleading" here, of course ;)
+       *
+       */
+      $key = array_search('AllowedValuesSingle', $changed);
+      if ($types[$newvals['Type']]['Multiplicity'] === 'single') {
+        $newvals['AllowedValues'] = $newvals['AllowedValuesSingle'];
+        if ($key !== false) {
+          $changed[] = 'AllowedValuesSingle';
+        }
+      }
+      unset($newvals['AllowedValuesSingle']);
+      unset($oldvals['AllowedValuesSingle']);
+      if ($key !== false) {
+        unset($changed[$key]);
+      }
+
+      /************************************************************************
+       *
+       * Sanitize AllowedValues
+       *
+       */
+
+      if (!is_array($newvals['AllowedValues'])) {
+        // textfield
+        $allowed = self::explodeAllowedValues($newvals['AllowedValues']);
+      } else {
+        $allowed = $newvals['AllowedValues'];
+      }
+
+      // make unused keys unique
+      self::allowedValuesUniqueKeys($allowed, $pme->rec);
+
+      //error_log('trigger '.print_r($allowed, true));
+      $newvals['AllowedValues'] = self::implodeAllowedValues($allowed);
+      if ($oldvals['AllowedValues'] !== $newvals['AllowedValues']) {
         $changed[] = 'AllowedValues';
       }
 
       /************************************************************************
        *
-       * Move the data from DefaultMultiValue to DefaultValue s.t. PME
+       * Move the data from DefaultSingleValue to DefaultValue s.t. PME
        * can do its work.
        *
        */
       $key = array_search('DefaultSingleValue', $changed);
-      if ($newvals['Type'] === '1') {
+      if ($types[$newvals['Type']]['Multiplicity'] === 'single') {
         $newvals['DefaultValue'] = $newvals['DefaultSingleValue'];
         if ($key !== false) {
           $changed[] = 'DefaultValue';
@@ -789,6 +1032,18 @@ namespace CAFEVDB
         unset($changed[$key]);
       }
 
+      if (!empty($newvals['ToolTip'])) {
+        $newvals['ToolTip'] = FuzzyInput::purifyHTML($newvals['ToolTip']);
+        if ($newvals['ToolTip'] !== $oldvals['ToolTip']) {
+          $changed[] = 'ToolTip';
+        } else {
+          $key = array_search('NewTab', $changed);
+          if ($key !== false) {
+            unset($changed[$key]);
+          }
+        }
+      }
+
       /* error_log('*************************'); */
       /* error_log(print_r($oldvals, true)); */
       /* error_log(print_r($newvals, true)); */
@@ -800,7 +1055,7 @@ namespace CAFEVDB
     /**Fetch all registered data-types. */
     public static function fieldTypes($handle = false)
     {
-      $types = mySQL::fetchRows(self::TYPE_TABLE);
+      $types = mySQL::fetchRows(self::TYPE_TABLE, null, '`Kind` ASC, `Multiplicity` ASC, `Name` ASC', $handle);
 
       $result = array();
       foreach($types as $typeInfo) {
@@ -827,7 +1082,11 @@ namespace CAFEVDB
         $query = "SELECT `Id`, `ProcjectId`, `FieldIndex, `DisplayOrder`";
       }
       $query .= "
-  FROM `".self::TABLE_NAME."` WHERE `ProjectId` = ".$projectId."
+  FROM `".self::TABLE_NAME."`
+  WHERE
+    `ProjectId` = ".$projectId."
+     AND
+     NOT `Disabled` = 1
   ORDER BY `DisplayOrder` ASC";
 
       $result = false;
@@ -852,7 +1111,7 @@ namespace CAFEVDB
     /**Fetch the data-set for the given record id.*/
     public static function fetch($recordId, $handle = false)
     {
-      $data = mySQL::fetchRows(self::TABLE_NAME, '`Id` = '.$recordId, $handle);
+      $data = mySQL::fetchRows(self::TABLE_NAME, '`Id` = '.$recordId, null, $handle);
       if (is_array($data) && count($data) == 1) {
         return $data[0];
       } else {
@@ -860,26 +1119,487 @@ namespace CAFEVDB
       }
     }
 
-    /**Decide whether the given field type corresponds to a multe-value field. */
-    public static function multiValueField($type)
+    /**Fetch all values stored for the given extra-field, e.g. in
+     * order to recover or generate select boxes.
+     */
+    public static function fieldValuesFromDB($recordId, $handle = false)
     {
-      // maybe also GroupOfPeople, but that one is special anyway.
-      return $type === 'Set' || $type === 'Enumeration';
+      $values = mySQL::valuesFromColumn(self::DATA_TABLE, 'FieldValue', $handle,
+                                        "`FieldId` = ".$recordId, ',');
+      return $values;
     }
 
-    /**Sanitize and explode allowed values. We allow either "whatever", where
-     * fields are separated by newlines, or a fancy CSV line with ;,:
-     * as delimiters and qutoes and escaped quotes and delimiters. The
-     * function converts everything to a "text" with newline separator.
+    /**Fetch all fields with associated data (and this data) from the
+     * DB.
      */
-    public static function explodeAllowedValues($values)
+    public static function fieldsFromDB($projectId = -1, $fieldId = -1, $handle = false)
     {
-      if (strstr($values, "\n")) {
-        $values = explode("\n", $values);
-      } else {
-        $values = Util::quasiCSVSplit($values);
+      $ownConnection = $handle === false;
+      if ($ownConnection) {
+        Config::init();
+        $handle = mySQL::connect(Config::$pmeopts);
       }
-      return array_map('trim', $values);
+
+      $query = "SELECT DISTINCT d.`FieldId`
+  FROM `".self::DATA_TABLE."` d
+  LEFT JOIN `Besetzungen` b
+  ON d.`BesetzungenId` = b.`Id`
+  WHERE
+    d.`FieldValue` > ''";
+      if ($projectId > 0) {
+        $query .= "AND b.`ProjektId` = ".$projectId;
+      }
+      if ($fieldId > 0) {
+        $query .= "AND d.`FieldId` = ".$fieldId;
+      }
+
+      error_log($query);
+
+      $result = false;
+      $qResult = mySQL::query($query, $handle);
+      if ($qResult !== false) {
+        $result = array();
+        while ($row = mySQL::fetch($qResult)) {
+          $result[] = $row['FieldId'];
+        }
+      }
+
+      if ($ownConnection) {
+        mySQL::close($handle);
+      }
+
+      return $result;
+    }
+
+    /**Generate a row given values and index for the "change" view
+     * corresponding to the multi-choice fields.
+     *
+     * @param[in] array $value One row of the form as returned form
+     * self::explodeAllowedValues()
+     *
+     * @param[in] integer $index A unique row number.
+     *
+     * @param[in] boolean $used Whether the DB already contains data
+     * records referring to this item.
+     *
+     * @return sting HTML data for one row.
+     */
+    public static function allowedValueInputRow($value, $index = -1, $used = false)
+    {
+      $pfx = Config::$pmeopts['cgi']['prefix']['data'];
+      $pfx .= 'AllowedValues';
+      $key = $value['key'];
+      $placeHolder = empty($key);
+      $deleted = $value['flags'] === 'deleted';
+      empty($value['flags']) && $value['flags'] = 'active';
+      $data = ''
+        .' data-index="'.$index.'"' // real index
+        .' data-used="'.($used ? 'used' : 'unused').'"'
+        .' data-flags="'.$value['flags'].'"';
+      $html = '';
+      $html .= '
+    <tr'
+      .' class="data-line'
+         .' allowed-values'
+         .($placeHolder ? ' placeholder' : '')
+         .' '.$value['flags']
+         .'"'
+         .' '.$data.'>';
+      if (!$placeHolder) {
+        $html .= '<td class="delete-undelete">'
+          .'<input'
+          .' class="delete-undelete"'
+          .' title="'.Config::toolTips('extra-fields-delete-undelete').'"'
+          .' type="button"/>'
+          .'</td>';
+      } else {
+        $index = -1; // move out of the way
+      }
+      // label
+      $prop = 'label';
+      $label = ''
+        .'<input'
+        .($deleted ? ' readonly="readonly"' : '')
+        .' class="field-'.$prop.'"'
+        .' spellcheck="true"'
+        .' type="text"'
+        .' name="'.$pfx.'['.$index.']['.$prop.']"'
+        .' value="'.$value[$prop].'"'
+        .' title="'.Config::toolTips('extra-fields-allowed-values', $placeHolder ? 'placeholder' : $prop).'"'
+        .' placeholder="'.($placeHolder ? L::t('new option') : '').'"'
+        .' size="33"'
+        .' maxlength="32"'
+        .'/>';
+      if (!$placeHolder) {
+        // key
+        $prop = 'key';
+        $html .= '<td class="field-'.$prop.'">'
+          .'<input'
+          .($used || $deleted ? ' readonly="readonly"' : '')
+          .' type="text"'
+          .' class="field-key"'
+          .' name="'.$pfx.'['.$index.']['.$prop.']"'
+          .' value="'.$value[$prop].'"'
+          .' title="'.Config::toolTips('extra-fields-allowed-values', $prop).'"'
+          .' size="9"'
+          .' maxlength="8"'
+          .'/>'
+          .'<input'
+          .' type="hidden"'
+          .' class="field-flags"'
+          .' name="'.$pfx.'['.$index.'][flags]"'
+          .' value="'.$value['flags'].'"'
+          .'/>'
+          .'</td>';
+        // label
+        $prop = 'label';
+        $html .= '<td class="field-'.$prop.'">'.$label.'</td>';
+        // data
+        $prop = 'data';
+        $html .= '<td class="field-'.$prop.'"><input'
+          .($deleted ? ' readonly="readonly"' : '')
+          .' class="field-'.$prop.'"'
+          .' type="text"'
+          .' name="'.$pfx.'['.$index.']['.$prop.']"'
+          .' value="'.$value[$prop].'"'
+          .' title="'.Config::toolTips('extra-fields-allowed-values', $prop).'"'
+          .' maxlength="8"'
+          .' size="9"'
+          .'/></td>';
+        // data
+        $prop = 'tooltip';
+        $html .= '<td class="field-'.$prop.'">'
+          .'<textarea'
+          .($deleted ? ' readonly="readonly"' : '')
+          .' class="field-'.$prop.'"'
+          .' name="'.$pfx.'['.$index.']['.$prop.']"'
+          .' title="'.Config::toolTips('extra-fields-allowed-values', $prop).'"'
+          .' cols="32"'
+          .' rows="1"'
+          .'>'
+          .$value[$prop]
+          .'</textarea>'
+          .'</td>';
+      } else {
+        $html .= '<td class="placeholder" colspan="5">'
+          .$label;
+        foreach(['key', 'data', 'tooltip'] as $prop) {
+          $html .= '<input'
+            .' class="field-'.$prop.'"'
+            .' type="hidden"'
+            .' name="'.$pfx.'['.$index.']['.$prop.']"'
+            .' value=""'
+            .'/>';
+        }
+        $html .= '</td>';
+      }
+      // finis
+      $html .= '
+    </tr>';
+      return $html;
+    }
+
+    /**Generate a table in order to define field-valus for
+     * multi-select stuff.
+     */
+    static private function showAllowedValues($value, $op, $recordId)
+    {
+      $allowed = self::explodeAllowedValues($value);
+      if ($op === 'display' && count($allowed) == 1) {
+        return '';
+      }
+      $html = '<div class="pme-cell-wrapper quarter-sized">';
+      if ($op === 'add' || $op === 'change') {
+        $showDeletedLabel = L::t("Show deleted items.");
+        $showDeletedTip = Config::toolTips('extra-fields-show-deleted');
+        $showDataLabel = L::t("Show data-fields.");
+        $showDataTip = Config::toolTips('extra-fields-show-data');
+        $html .=<<<__EOT__
+<div class="field-display-options">
+  <div class="show-deleted">
+    <input type="checkbox"
+           name="show-deleted"
+           class="show-deleted checkbox"
+           value="show"
+           id="allowed-values-show-deleted"
+           />
+    <label class="show-deleted"
+           for="allowed-values-show-deleted"
+           title="$showDeletedTip"
+           >
+      $showDeletedLabel
+    </label>
+  </div>
+  <div class="show-data">
+    <input type="checkbox"
+           name="show-data"
+           class="show-data checkbox"
+           value="show"
+           id="allowed-values-show-data"
+           />
+    <label class="show-data"
+           for="allowed-values-show-data"
+           title="$showDataTip"
+           >
+      $showDataLabel
+    </label>
+  </div>
+</div>
+__EOT__;
+      }
+
+      $html .= '<table class="operation-'.$op.' allowed-values">
+  <thead>
+     <tr>';
+        $html .= '<th class="operations"></th>';
+        $headers = array('key' => L::t('Key'),
+                         'label' => L::t('Label'),
+                         'data' => self::currencyLabel(L::t('Data')),
+                         'tooltip' => L::t('Tooltip'));
+
+        foreach($headers as $key => $value) {
+          $html .=
+            '<th'
+            .' class="field-'.$key.'"'
+            .' title="'.Config::toolTips('extra-fields-allowed-values', $key).'"'
+            .'>'
+            .$value
+            .'</th>';
+        }
+        $html .= '
+     </tr>
+  </thead>
+  <tbody>';
+          switch ($op) {
+          case 'display':
+            foreach ($allowed as $idx => $value) {
+              if (empty($value['key']) || $value['flags'] === 'deleted') {
+                continue;
+              }
+              $html .= '
+    <tr>
+      <td class="operations"></td>';
+                foreach(['key', 'label', 'data', 'tooltip'] as $field) {
+                  $html .= '<td class="field-'.$field.'">'
+                    .($field === 'data'
+                      ? self::currencyValue($value[$field])
+                      : $value[$field])
+                    .'</td>';
+                }
+                $html .= '
+    </tr>';
+            }
+            break;
+          case 'add':
+          case 'change':
+            $usedKeys = self::fieldValuesFromDB($recordId);
+            //error_log(print_r($usedKeys, true));
+            $pfx = Config::$pmeopts['cgi']['prefix']['data'];
+            $pfx .= 'AllowedValues';
+            $css = 'class="allowed-values"';
+            foreach ($allowed as $idx => $value) {
+              if (!empty($value['key'])) {
+                $key = $value['key'];
+                $used = array_search($key, $usedKeys) !== false;
+              } else {
+                $used = false;
+              }
+              $html .= self::allowedValueInputRow($value, $idx, $used);
+            }
+            break;
+          }
+          $html .= '
+  </tbody>
+</table></div>';
+          return $html;
+    }
+
+    /**Return a currency value where the number symbol can be hidden
+     * by CSS.
+     */
+    private static function currencyValue($value)
+    {
+      $money = Util::moneyValue($value, Config::$locale);
+      return
+        '<span class="surcharge currency-amount">'.$money.'</span>'.
+        '<span class="general">'.$value.'</span>';
+    }
+
+    /**Return an alternate "Amount [CUR]" label which can be hidden by
+     * CSS.
+     */
+    private static function currencyLabel($label = 'Data')
+    {
+      return
+        '<span class="general">'.$label.'</span>'.
+        '<span class="surcharge currencylabel">'
+        .L::t('Amount').' ['.Config::$currency.']'
+        .'</span>';
+    }
+
+    /**Display the input stuff for a single-value choice, probably
+     * only for surcharge fields.
+     */
+    private static function showAllowedSingleValue($value, $op, $toolTip, $protoRecord)
+    {
+      $allowed = self::explodeAllowedValues($value, false);
+      // if there are multiple options available (after a type
+      // change) we just pick the first non-deleted.
+      $entry = false;
+      foreach($allowed as $idx => $item) {
+        if (empty($item['key']) || $item['flags'] === 'deleted') {
+          continue;
+        } else {
+          $entry = $item;
+          unset($allowed[$idx]);
+          break;
+        }
+      }
+      $allowed = array_values($allowed); // compress index range
+      $value = empty($entry) ? '' : $entry['data'];
+      if ($op === 'display') {
+        return self::currencyValue($value);
+      }
+      empty($entry) && $entry = $protoRecord;
+      $name  = Config::$pmeopts['cgi']['prefix']['data'];
+      $name .= 'AllowedValuesSingle';
+      $value = htmlspecialchars($entry['data']);
+      $tip   = $toolTip;
+      $html  = '<div class="active-value">';
+      $html  .=<<<__EOT__
+<input class="pme-input allowed-values-single"
+       type="text"
+       maxlength="29"
+       size="30"
+       value="{$value}"
+       name="{$name}[0][data]"
+       title="{$tip}"
+/>
+__EOT__;
+      foreach(['key', 'label', 'tooltip', 'flags'] as $field) {
+        $value = htmlspecialchars($entry[$field]);
+        $html .=<<<__EOT__
+<input class="pme-input allowed-values-single"
+       type="hidden"
+       value="{$value}"
+       name="{$name}[0][{$field}]"
+/>
+__EOT__;
+      }
+      $html .= '</div>';
+      $html .= '<div class="inactive-values">';
+      // Now emit all left-over values. Flag all items as deleted.
+      foreach($allowed as $idx => $item) {
+        ++$idx; // shift ...
+        $item['flags'] = 'deleted';
+        foreach(['key', 'label', 'data', 'tooltip', 'flags'] as $field) {
+          $value = htmlspecialchars($item[$field]);
+          $html .=<<<__EOT__
+<input class="pme-input allowed-values-single"
+       type="hidden"
+       value="{$value}"
+       name="{$name}[{$idx}][{$field}]"
+/>
+__EOT__;
+        }
+      }
+      $html .= '</div>';
+      return $html;
+    }
+
+    /**Sanitize and explode allowed values. Multiple choice items are
+     * internally stored as text, items separated by \n, each line may consist of a triple
+     *
+     * key:display:data:descsription
+     *
+     * key and display are initiallly just identical. DATA is the
+     * amount to pay for "surcharge" fields. The per-user data stored
+     * is KEY. KEY should not be changed.
+     *
+     */
+    public static function explodeAllowedValues($values, $addProto = true)
+    {
+      //error_log('explode: '.$values);
+      $proto = array('key' => false,
+                     'label' => false,
+                     'data' => false,
+                     'tooltip' => false,
+                     'flags' => 'active');
+      $values = explode("\n", $values);
+      $allowed = array();
+      foreach($values as $value) {
+        if (empty($value)) {
+          continue;
+        }
+        $parts = Util::quasiCSVSplit($value, ':', false /* keep empty fields*/);
+        //error_log('parts: '.print_r($parts, true));
+        $parts[] = '';
+        $parts[] = '';
+        $parts[] = '';
+        $parts[] = '';
+        foreach($parts as &$part) {
+          $part = trim($part);
+        }
+        if (empty($parts[0]) && empty($parts[1])) {
+          continue;
+        }
+        if (empty($parts[0])) {
+          $parts[0] = $parts[1];
+        }
+        if (empty($parts[1])) {
+          $parts[1] = $parts[0];
+        }
+        if (empty($parts[4])) {
+          $parts[4] = 'active';
+        }
+        $allowed[] = array('key' => $parts[0],
+                           'label' => $parts[1],
+                           'data' => $parts[2],
+                           'tooltip' => $parts[3],
+                           'flags' => $parts[4]);
+      }
+      if ($addProto) {
+        $allowed[] = $proto;
+      }
+      return $allowed;
+    }
+
+    /**Implode a list of allowed values in the form
+     *
+     * array(0 => array('key' => ....))
+     *
+     * into a compact textual CSV description.
+     */
+    public static function implodeAllowedValues($values)
+    {
+      $proto = array('key' => false,
+                     'label' => false,
+                     'data' => false,
+                     'tooltip' => false,
+                     'flags' => 'active');
+      $result = '';
+      foreach ($values as $value) {
+        $value = array_merge($proto, $value);
+
+        $key = empty($value['key']) ? $value['label'] : trim($value['key']);
+
+        //error_log('implode: '.$key.' all '.print_r($value, true));
+
+        if (empty($key)) {
+          continue;
+        }
+
+        $label = empty($value['label']) ? $key : trim($value['label']);
+        $data  = trim($value['data']);
+        $tip   = trim($value['tooltip']);
+        $flags = trim($value['flags']);
+        $text = Util::quasiCSVJoin(array($key, $label, $data, $tip, $flags), ':');
+        if ($text === '::::') {
+          continue;
+        }
+        $result .= "\n".$text;
+      }
+      return substr($result, 1); // strip leading "\n"
     }
 
     /**Copy any extra-field definitions from the old "string"
