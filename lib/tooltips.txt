@@ -1,7 +1,10 @@
 extra-fields-allowed-values
+extra-fields-allowed-values-single
 extra-fields-default-multi-value
 extra-fields-default-single-value
 extra-fields-default-value
+extra-fields-delete-undelete
+extra-fields-disabled
 extra-fields-display-order
 extra-fields-encrypted
 extra-fields-extra-tab
@@ -9,6 +12,8 @@ extra-fields-field-index
 extra-fields-field-name
 extra-fields-new-tab
 extra-fields-readers
+extra-fields-show-data
+extra-fields-show-deleted
 extra-fields-tab
 extra-fields-tooltip
 extra-fields-type
@@ -37,7 +42,9 @@ project-action-financial-balance
 project-action-instrumentation-numbers
 project-actions
 project-action-wiki
+project-direct-debit-allowed
 projectevents-button
+project-finance-tab
 project-infopage
 project-instrumentation-tab
 project-kind
