@@ -62,7 +62,6 @@ class Instruments
     $opts            = $this->opts;
     $instruments     = $this->instruments;
     $recordsPerPage  = $this->recordsPerPage;
-    $userExtraFields = $this->userExtraFields;
 
     /*
      * IMPORTANT NOTE: This generated file contains only a subset of huge amount
