@@ -106,9 +106,11 @@ var CAFEVDB = CAFEVDB || {};
     var container = PHPMYEDIT.container(containerSel);
     var actions = container.find('select.pme-instrumentation-actions-choice');
 
-    actions.off('chosen:showing_dropdown');
-    actions.on('chosen:showing_dropdown', function (event) {
+    actions.
+      off('chosen:showing_dropdown').
+      on('chosen:showing_dropdown', function (event) {
       container.find('ul.chosen-results li.active-result').cafevTooltip({placement:'auto right'});
+      return true;
     });
 
     actions.off('change'); // safeguard
