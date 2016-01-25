@@ -745,6 +745,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
                  pme.dialogOpen[containerCSSId] = false;
 
+                 CAFEVDB.unfocus();
+
                  return false;
                }
              });
@@ -762,9 +764,18 @@ var PHPMYEDIT = PHPMYEDIT || {};
    *
    * @param[in] selector The CSS selector corresponding to the
    * surrounding container (div element)
+   *
+   * @param[in] resetFilter Bool, post a sw=Clear sting in addition, causing
+   * phpMyEdit to reset the filter.
    */
-  PHPMYEDIT.pseudoSubmit = function(form, element, selector) {
+  PHPMYEDIT.pseudoSubmit = function(form, element, selector, resetFilter) {
     var pme = this;
+
+    if (typeof resetFilter !== 'undefined') {
+      form.append('<input type="hidden"'
+                 + ' name="'+pme.pmeSys('sw')+'"'
+                 + ' value="Clear"/>');
+    }
 
     selector = this.selector(selector);
     var container = this.container(selector);
@@ -795,6 +806,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
       obj[name] = value;
       post += '&' + $.param(obj);
     }
+
     $.post(OC.filePath('cafevdb', 'ajax/pme', 'pme-table.php'),
            post,
            function (data) {
@@ -1090,27 +1102,10 @@ var PHPMYEDIT = PHPMYEDIT || {};
     });
 
     // Set title explicitly
-    container.find("td."+pmeInput+" div.chosen-container").attr("title", pme.inputSelectChosenTitle);
-    container.find("td."+pmeValue+" div.chosen-container").attr("title", pme.inputSelectChosenTitle);
-
-    // Copy over titles and tooltip classes
-    container.find("td."+pmeValue).each(function(index) {
-      var selectTitle = "";
-      var selectBox = $(this).children("select."+pmeInput).first();
-      var chosen = $(this).children("div.chosen-container").first();
-
-      if (chosen.length == 0 || selectBox.length == 0) {
-        return;
-      }
-
-      selectTitle = $(selectBox).attr("title");
-      if (selectTitle === undefined || selectTitle.trim().length <= 0) {
-        selectTitle = selectBox.attr("data-original-title");
-      }
-      if (selectTitle !== undefined && selectTitle.length > 0) {
-        chosen.attr("title", selectTitle);
-        chosen.addClass('tooltip-right tooltip-wide');
-      }
+    container.find("td."+pmeInput+" div.chosen-container, td."+pmeValue+" div.chosen-container").
+      not('[title][title!=""]').
+      each(function(index) {
+      $(this).attr("title", pme.inputSelectChosenTitle);
     });
 
   };
@@ -1137,6 +1132,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
       var oldTabClass = form.find('li.table-tabs.selected a').attr('href').substring(1);
       var tabClass = $(this).find('a').attr('href').substring(1);
 
+      console.log('old tab: ' + oldTabClass + ' new tab: ' + tabClass);
+
       //alert('old tab: ' + oldTabClass + ' new tab: ' + tabClass);
 
       // Inject the display triggers ...
@@ -1162,11 +1159,13 @@ var PHPMYEDIT = PHPMYEDIT || {};
         }
       });
       if (reattachChosen) {
+        console.log('reattach chosen');
         pme.installFilterChosen(container);
         pme.installInputChosen(container);
       }
 
       $.fn.cafevTooltip.remove();
+
       callback();
 
       return false;
@@ -1338,6 +1337,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
       event.preventDefault();
 
       //alert("Button: "+$(this).attr('name'));
+      console.log('submit');
 
       return PHPMYEDIT.pseudoSubmit($(this.form), $(this), containerSel);
     });
@@ -1385,6 +1385,27 @@ var PHPMYEDIT = PHPMYEDIT || {};
     pme.installFilterChosen(container);
     pme.installInputChosen(container);
 
+    var tableContainerId = PHPMYEDIT.pmeIdSelector('table-container');
+    container.on('chosen:showing_dropdown', tableContainerId+' select', function(event) {
+      console.log('chosen:showing_dropdown');
+      var widget = container.cafevDialog('widget');
+      var tableContainer = container.find(tableContainerId);
+      widget.css('overflow', 'visible');
+      container.css('overflow', 'visible');
+      tableContainer.css('overflow', 'visible');
+      return true;
+    });
+
+    container.on('chosen:hiding_dropdown', tableContainerId+' select', function(event) {
+      console.log('chosen:hiding_dropdown');
+      var widget = container.cafevDialog('widget');
+      var tableContainer = container.find(tableContainerId);
+      tableContainer.css('overflow', '');
+      container.css('overflow', '');
+      widget.css('overflow', '');
+      return true;
+    });
+
   };
 })(window, jQuery, PHPMYEDIT);
 
@@ -1393,7 +1414,7 @@ $(document).ready(function(){
   CAFEVDB.addReadyCallback(function() {
     PHPMYEDIT.transposeReady();
     PHPMYEDIT.init();
-    PHPMYEDIT.dialogOpen = {}; // not clear in init on purpose
+    PHPMYEDIT.dialogOpen = {}; // not cleared in init on purpose
   });
 
 });
