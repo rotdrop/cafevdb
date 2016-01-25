@@ -1055,14 +1055,18 @@ namespace CAFEVDB
     /**Fetch all registered data-types. */
     public static function fieldTypes($handle = false)
     {
-      $types = mySQL::fetchRows(self::TYPE_TABLE, null, '`Kind` ASC, `Multiplicity` ASC, `Name` ASC', $handle);
+      static $fieldTypes = null; // cache for the life-time of the request.
 
-      $result = array();
-      foreach($types as $typeInfo) {
-        $id = $typeInfo['Id'];
-        $result[$id] = $typeInfo;
+      if (empty($fieldTypes)) {
+        $types = mySQL::fetchRows(self::TYPE_TABLE, null, '`Kind` ASC, `Multiplicity` ASC, `Name` ASC', $handle);
+        $fieldTypes = array();
+        foreach($types as $typeInfo) {
+          $id = $typeInfo['Id'];
+          $fieldTypes[$id] = $typeInfo;
+        }
       }
-      return $result;
+
+      return $fieldTypes;
     }
 
     /**Fetch the field definitions in order to generate SQL code to do
@@ -1517,7 +1521,7 @@ __EOT__;
      * is KEY. KEY should not be changed.
      *
      */
-    public static function explodeAllowedValues($values, $addProto = true)
+    public static function explodeAllowedValues($values, $addProto = true, $trimInactive = false)
     {
       //error_log('explode: '.$values);
       $proto = array('key' => false,
@@ -1551,6 +1555,9 @@ __EOT__;
         }
         if (empty($parts[4])) {
           $parts[4] = 'active';
+        }
+        if ($trimInactive && $parts[4] === 'deleted') {
+          continue;
         }
         $allowed[] = array('key' => $parts[0],
                            'label' => $parts[1],

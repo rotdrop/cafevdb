@@ -35,8 +35,6 @@ class Instrumentation
   public $template;
   protected $operation;
   protected $recordsPerPage;
-  protected $userExtraFields;
-  protected $extraFieldTypes;
   protected $instruments;
   protected $instrumentFamilies;
   protected $memberStatus;
@@ -268,13 +266,6 @@ class Instrumentation
       L::t('temporary');
     }
 
-    // Fetch project specific user fields
-    if ($this->projectId >= 0) {
-      //  echo "Id: $this->projectId <BR/>";
-      $this->userExtraFields = ProjectExtra::projectExtraFields($this->projectId, true, $handle);
-    }
-    $this->extraFieldTypes = ProjectExtra::fieldTypes($handle);
-
     /* echo "<PRE>\n"; */
     /* print_r($this->instruments); */
     /* /\*print_r($this->instruments);*\/ */
@@ -285,6 +276,20 @@ class Instrumentation
 
     mySQL::close($handle);
   }
+
+  public static function getExtraFields($projectId, $handle = false)
+  {
+    static $usedProject = -1;
+    static $extraFields = null;
+
+    if (empty($extraFields) || $usedProject !== $projectId) {
+      $extraFields = ProjectExtra::projectExtraFields($projectId, true, $handle);
+      $usedProject = $projectId;
+    }
+
+    return $extraFields;
+  }
+
 
   /**Look up the musician Id in the Besetzungen table and fetch the
    * musician's data from the Musiker table. We return all data from
