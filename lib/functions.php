@@ -1497,6 +1497,17 @@ __EOT__;
         }
         break;
 
+      case 'project-payments':
+        $value = L::t("Received Payments");
+        $title = L::t("A table holding the various payments of participants.");
+        if ($asListItem) {
+          $post = array('ProjectPayments' => $value,
+                        'Template' => 'project-payments',
+                        'ProjectName' => $projectName,
+                        'ProjectId' => $projectId);
+        }
+        break;
+
       case 'all':
         $value = L::t("Display all Musicians");
         $title = L::t("Display all musicians stored in the data-base, with detailed facilities for filtering and sorting.");

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -33,8 +33,10 @@ namespace CAFEVDB {
   $nav = '';
   if ($projectId >= 0) {
     $nav .= Navigation::pageControlElement('projectlabel', $navListItems, $projectName, $projectId);
-    $nav .= Navigation::pageControlElement('projects', $navListItems);
     $nav .= Navigation::pageControlElement('detailed', $navListItems, $projectName, $projectId);
+    $nav .= Navigation::pageControlElement('project-extra', $navListItems, $projectName, $projectId);
+    $nav .= Navigation::pageControlElement('project-payments', $navListItems, $projectName, $projectId);
+    $nav .= Navigation::pageControlElement('projects', $navListItems);
     $nav .= Navigation::pageControlElement('projectinstruments', $navListItems, $projectName, $projectId);
   } else {
     $nav .= Navigation::pageControlElement('projects', $navListItems);

@@ -160,6 +160,14 @@ $(document).ready(function() {
         parameters: []
     });
 
+    PHPMYEDIT.addTableLoadCallback('ProjectPayments', {
+        callback: function(selector, parameters, resizeCB) {
+            resizeCB();
+        },
+        context: CAFEVDB,
+        parameters: []
+    });
+
     CAFEVDB.addReadyCallback(function() {
         CAFEVDB.exportMenu();
 

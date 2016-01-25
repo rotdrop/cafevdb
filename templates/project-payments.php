@@ -22,24 +22,25 @@
 
 namespace CAFEVDB {
 
-  $table   = new ProjectExtra($_['recordId']);
-  $css_pfx = ProjectExtra::CSS_PREFIX;
-  $project = $table->projectName;
-  $projectId = $table->projectId;
+  $table = new ProjectPayments();
+
+  $projectName = $_['projectName'];
+  $projectId = $_['projectId'];
+  $css_pfx = ProjectPayments::CSS_PREFIX;
 
   $navListItems = $_['pageControls'] == 'listItems';
 
   $nav = '';
-  if (!empty($project)) {
-    $nav .= Navigation::pageControlElement('projectlabel', $navListItems, $project, $projectId);
-    $nav .= Navigation::pageControlElement('detailed', $navListItems, $project, $projectId);
-    $nav .= Navigation::pageControlElement('project-payments', $navListItems, $project, $projectId);
+  if ($projectId >= 0) {
+    $nav .= Navigation::pageControlElement('projectlabel', $navListItems, $projectName, $projectId);
+    $nav .= Navigation::pageControlElement('detailed', $navListItems, $projectName, $projectId);
+    $nav .= Navigation::pageControlElement('project-extra', $navListItems, $projectName, $projectId);
+    $nav .= Navigation::pageControlElement('projectinstruments', $navListItems, $projectName, $projectId);
     $nav .= Navigation::pageControlElement('projects', $navListItems);
-    $nav .= Navigation::pageControlElement('instruments', $navListItems, $project, $projectId);
   } else {
     $nav .= Navigation::pageControlElement('projects', $navListItems);
-    $nav .= Navigation::pageControlElement('instruments', $navListItems);
     $nav .= Navigation::pageControlElement('all', $navListItems);
+    $nav .= Navigation::pageControlElement('instruments', $navListItems);
   }
 
   if ($navListItems) {
@@ -51,12 +52,11 @@ namespace CAFEVDB {
                         'navigationcontrols' => $nav,
                         'header' => $table->headerText()));
 
-  // Issue the main part. The method will echo itself
   $table->display();
 
   // Close some still opened divs
   echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
 
-} // CAFEVDB
+} // namespace CAFEVDB
 
 ?>
