@@ -117,12 +117,13 @@ redaxoRehearsalsModule
 // L::t('concerts') L::t('rehearsals') L::t('other') L::t('management') L::t('finance')
     const APP_BASE  = 'apps/cafevdb/';
     public static $privateKey = false; ///< Storage
-    public static $prefix = false;
     public static $pmeopts = array();
     public static $dbopts = array();
     public static $opts = array();
     public static $cgiVars = array();
     public static $Languages = array();
+    public static $locale = '';
+    public static $currency = '';
     public static $wysiwygEditors = array('tinymce' => array('name' => 'TinyMCE',
                                                              'enabled' => true),
                                           // ckeditor still uses excessive inline js-code. NOGO.
@@ -838,6 +839,49 @@ redaxoRehearsalsModule
       return $value;
     }
 
+    /**Return the name and generate a per-user cache-directory
+     */
+    static public function userCacheDirectory($path = '', $user = null)
+    {
+      empty($user) && $user = \OCP\USER::getUser();
+      if (empty($user)) {
+        return false;
+      }
+
+      $view = new \OC\Files\View('/' . $user);
+      $subDir = self::APP_NAME.'/cache/'.$path;
+      if (!$view->is_dir($subDir)) {
+        $subDir = self::APP_NAME;
+        if (!$view->is_dir($subDir)) {
+          $view->mkdir($subDir);
+        }
+        $subDir .= '/cache';
+        if (!$view->is_dir($subDir)) {
+          $view->mkdir($subDir);
+        }
+        if (!empty($path)) {
+          $subDir .= '/'.$path;
+          if (!$view->is_dir($subDir)) {
+            $view->mkdir($subDir);
+          }
+        }
+      }
+
+      return $view->getLocalFolder($subDir);
+    }
+
+    /**Return the locale according to the street-address country.
+     */
+    public static function getOrchestraLocale()
+    {
+      Config::init();
+      $countryCode = Config::getValue('streetAddressCountry');
+      return Util::getLocale($countryCode);
+    }
+
+    /**Initialize all this stuff. This fetches all config values and
+     * keeps a cache of them in memory.
+     */
     static public function init() {
 
       if (self::$initialized == true) {
@@ -853,10 +897,6 @@ redaxoRehearsalsModule
 
       // Fetch possibly encrypted config values from the OC data-base
       self::decryptConfigValues();
-
-      if (!self::$prefix) {
-        self::$prefix = self::APP_BASE . "lib/";
-      }
 
       // Oh well. This is just a hack to pass the OC-user to the
       // changelog table of PME.
@@ -881,6 +921,9 @@ redaxoRehearsalsModule
           $value['enabled'] = true;
         }
       }
+
+      self::$locale = self::getOrchestraLocale();
+      self::$currency = Util::currencySymbol(self::$locale);
 
       self::$pmeopts['url']['images'] = self::APP_BASE . 'img/';
       global $HTTP_SERVER_VARS;
@@ -928,7 +971,6 @@ redaxoRehearsalsModule
                                    'escape'   => true);
 
       self::$opts['money'] = array('name' => 'Unkostenbeitrag<BR/>(Gagen negativ)',
-                                   //'phpview' => self::$prefix . 'money.inc.php',
                                    'mask'  => '%02.02f'.' &euro;',
                                    'css'   => array('postfix' => ' money'),
                                    //'align' => 'right',
@@ -979,20 +1021,42 @@ redaxoRehearsalsModule
 
     /**Return a translated tool-tip for the given key.
      */
-    public static function toolTips($key)
+    public static function toolTips($key, $subKey = null)
     {
       $tip = '';
-      if (isset(self::$toolTipsArray[$key]) && !empty(self::$toolTipsArray[$key])) {
+      if (!empty($subKey)) {
+        if (isset(self::$toolTipsArray[$key][$subKey])) {
+          $tip = self::$toolTipsArray[$key][$subKey];
+        } else if (isset(self::$toolTipsArray[$key]['default'])) {
+          $tip = self::$toolTipsArray[$key]['default'];
+        } else if (is_scalar(self::$toolTipsArray[$key])) {
+          $tip = self::$toolTipsArray[$key];
+        }
+      } else if (isset(self::$toolTipsArray[$key])) {
         $tip = self::$toolTipsArray[$key];
-      } else if (self::$debug['tooltips']) {
-        $tip = L::t("Unknown Tooltip for key `%s' requested.", array($key));
+        !empty($tip['default']) && $tip = $tip['default'];
       }
+
+      if (!is_scalar($tip)) {
+        $tip = '';
+      }
+
+      if (self::$debug['tooltips'] && empty($tip)) {
+        if (!empty($subKey)) {
+          $tip = L::t('Unknown Tooltip for key "%s-%s" requested.',
+                      array($key, $subKey));
+        } else {
+          $tip = L::t('Unknown Tooltip for key "%s" requested.',
+                      array($key));
+        }
+      }
+
       return htmlspecialchars($tip);
     }
   };
 
-/**Check for a usable configuration.
- */
+  /**Check for a usable configuration.
+   */
   class ConfigCheck
   {
     public static function checkImapServer($host, $port, $secure, $user, $password)
