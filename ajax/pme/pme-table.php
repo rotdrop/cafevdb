@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -26,7 +26,7 @@
  * template with "pme-table" which actually echos the HTML.
  */
 
-namespace CAFEVDB 
+namespace CAFEVDB
 {
 
   \OCP\JSON::checkLoggedIn();
@@ -50,7 +50,7 @@ namespace CAFEVDB
 
     if (Util::debugMode('request')) {
       $debugText .= '$_POST[] = '.print_r($_POST, true);
-    }  
+    }
 
     $displayClass = Util::cgiValue('DisplayClass', false);
     $classArguments = Util::cgiValue('ClassArguments', array());
@@ -97,7 +97,7 @@ namespace CAFEVDB
     $tmpl = new \OCP\Template('cafevdb', 'pme-table');
     $tmpl->assign('DisplayClass', $displayClass);
     $tmpl->assign('ClassArguments', $classArguments);
-  
+
     $tmpl->assign('recordId', Util::getCGIRecordId());
 
     $html = $tmpl->fetchPage();
@@ -116,7 +116,7 @@ namespace CAFEVDB
 
     $debugText .= ob_get_contents();
     @ob_end_clean();
-  
+
     \OCP\JSON::success(
       array('data' => array(
               'contents' => $html,
@@ -130,6 +130,31 @@ namespace CAFEVDB
     }
 
     return true;
+
+  } catch (\BadFunctionCallException $e) {
+
+    $debugText .= ob_get_contents();
+    @ob_end_clean();
+
+    $code = $e->getCode();
+    $message = $e->getMessage();
+
+    $codes = array(
+      PageLoader::PME_ERROR_READONLY => L::t('The operation would attempt to modify the data which just does not
+make sense here.'),
+      );
+
+    \OCP\JSON::error(
+      array(
+        'data' => array(
+          'error' => 'exception',
+          'exception' => $message,
+          'message' => $codes[$code],
+          'trace' => ''
+          )
+        )
+      );
+    return false;
 
   } catch (\Exception $e) {
 

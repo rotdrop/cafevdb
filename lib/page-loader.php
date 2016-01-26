@@ -42,6 +42,7 @@ namespace CAFEVDB {
   {
     const MAX_HISTORY_SIZE = 100;
     const SESSION_HISTORY_KEY = 'PageHistory';
+    const PME_ERROR_READONLY = 1;
 
     /**The data-contents. A "cooked" array structure with the
      * following components:
