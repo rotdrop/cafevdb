@@ -134,14 +134,32 @@ namespace CAFEVDB
       $opts['buttons'] = Navigation::prependTableButton($export, true);
 
       // Display special page elements
-      $opts['display'] =  array_merge($opts['display'],
-                                      array(
-                                        'form'  => true,
-                                        //'query' => true,
-                                        'sort'  => true,
-                                        'time'  => true,
-                                        'tabs'  => false
-                                        ));
+      $opts['display'] =  array_merge(
+        $opts['display'],
+        array(
+          'form'  => true,
+          //'query' => true,
+          'sort'  => true,
+          'time'  => true,
+          'tabs'  => array(
+            array('id' => 'mandate',
+                  'tooltip' => L::t('Debit mandate, mandate-id, last used date, recurrence'),
+                  'name' => L::t('Mandate')
+              ),
+            array('id' => 'amount',
+                  'tooltip' => L::t('Show the amounts to dray by debit transfer, including sum of payments
+received so far'),
+                  'name' => L::t('Amount')
+              ),
+            array('id' => 'account',
+                  'tooltip' => L::t('Bank account associated to this debit mandate.'),
+                  'name' => L::t('Bank Account')
+              ),
+            array('id' => 'tab-all',
+                  'tooltip' => Config::toolTips('pme-showall-tab'),
+                  'name' => L::t('Display all columns'))
+            )
+          ));
 
       // Set default prefixes for variables
       $opts['js']['prefix']               = 'PME_js_';
@@ -235,48 +253,55 @@ namespace CAFEVDB
         'sort'     => true
         );
 
-      $opts['fdd']['mandateReference'] = array('name'   => L::t('Mandate Reference'),
-                                               'input'  => 'R',
-                                               'select' => 'T',
-                                               'maxlen' => 35,
-                                               'sort'   => true);
-
-      $opts['fdd']['nonrecurring'] = array('name'   => L::t('One Time'),
-                                           'input'  => 'R',
-                                           'select' => 'T',
-                                           'maxlen' => 35,
-                                           'sort'   => true,
-                                           'values2' => array('0' => L::t('no'),
-                                                              '1' => L::t('yes')));
-
-      $opts['fdd']['mandateDate'] = array('name'     => L::t('Date Issued'),
-                                          'select'   => 'T',
-                                          'maxlen'   => 10,
-                                          'sort'     => true,
-                                          'css'      => array('postfix' => ' sepadate'),
-                                          'datemask' => 'd.m.Y');
-
-      $opts['fdd']['lastUsedDate'] = array('name'     => L::t('Last-Used Date'),
-                                           'select'   => 'T',
-                                           'maxlen'   => 10,
-                                           'sort'     => true,
-                                           'css'      => array('postfix' => ' sepadate'),
-                                           'datemask' => 'd.m.Y');
-
-
-      $opts['fdd']['musicianId'] = array('name'     => L::t('Musician'),
-                                         'input'    => 'R',
-                                         'select'   => 'T',
-                                         'maxlen'   => 11,
-                                         'sort'     => true,
-                                         //'options'  => 'LFADV', // no change allowed
-                                         'default' => 0,
-                                         'values' => array('table' => 'Musiker',
-                                                           'column' => 'Id',
-                                                           'description' => array('columns' => array('Name', 'Vorname'),
-                                                                                  'divs' => array(', ')
-                                                             ))
+      $opts['fdd']['musicianId'] = array(
+        'tab'      => array('id' => 'tab-all'),
+        'name'     => L::t('Musician'),
+        'input'    => 'R',
+        'select'   => 'T',
+        'maxlen'   => 11,
+        'sort'     => true,
+        //'options'  => 'LFADV', // no change allowed
+        'default' => 0,
+        'values' => array('table' => 'Musiker',
+                          'column' => 'Id',
+                          'description' => array('columns' => array('Name', 'Vorname'),
+                                                 'divs' => array(', ')
+                            ))
         );
+
+      $opts['fdd']['mandateReference'] = array(
+        'tab'    => array('id' => 'mandate'),
+        'name'   => L::t('Mandate Reference'),
+        'input'  => 'R',
+        'select' => 'T',
+        'maxlen' => 35,
+        'sort'   => true);
+
+      $opts['fdd']['nonrecurring'] = array(
+        'name'   => L::t('One Time'),
+        'input'  => 'R',
+        'select' => 'T',
+        'maxlen' => 35,
+        'sort'   => true,
+        'values2' => array('0' => L::t('no'),
+                           '1' => L::t('yes')));
+
+      $opts['fdd']['mandateDate'] = array(
+        'name'     => L::t('Date Issued'),
+        'select'   => 'T',
+        'maxlen'   => 10,
+        'sort'     => true,
+        'css'      => array('postfix' => ' sepadate'),
+        'datemask' => 'd.m.Y');
+
+      $opts['fdd']['lastUsedDate'] = array(
+        'name'     => L::t('Last-Used Date'),
+        'select'   => 'T',
+        'maxlen'   => 10,
+        'sort'     => true,
+        'css'      => array('postfix' => ' sepadate'),
+        'datemask' => 'd.m.Y');
+
 
       if ($projectId >= 0) {
         // Add the amount to debit
@@ -286,17 +311,36 @@ namespace CAFEVDB
         $opts['fdd']['projectFee'] = array_merge(
           Config::$opts['money'],
           array(
+            'tab'   => array('id' => 'amount'),
             'input' => 'V',
             'options' => 'LFACPDV',
             'name' => L::t('Project Fee'),
             'sql' => '`PMEjoin'.$feeIdx.'`.`Unkostenbeitrag`',
-            'sqlw' => '`PMEjoin'.$feeIdx.'`.`Unkostenbeitrag`',
             'values' => array('table' => 'Besetzungen',
                               'column' => 'Unkostenbeitrag',
                               'join' => ('$main_table.musicianId = $join_table.MusikerId'.
                                          ' AND '.
                                          $projectId.' = $join_table.ProjektId'),
                               'description' => 'Unkostenbeitrag'
+              )
+            )
+          );
+
+        $depositIdx = count($opts['fdd']);
+        $opts['fdd']['projectDeposit'] = Config::$opts['money'];
+        $opts['fdd']['projectDeposit'] = array_merge(
+          Config::$opts['money'],
+          array(
+            'input' => 'V',
+            'options' => 'LFACPDV',
+            'name' => L::t('Project Deposit'),
+            'sql' => '`PMEjoin'.$depositIdx.'`.`Anzahlung`',
+            'values' => array('table' => 'Besetzungen',
+                              'column' => 'Anzahlung',
+                              'join' => ('$main_table.musicianId = $join_table.MusikerId'.
+                                         ' AND '.
+                                         $projectId.' = $join_table.ProjektId'),
+                              'description' => 'Anzahlung'
               )
             )
           );
@@ -321,38 +365,43 @@ namespace CAFEVDB
           )
         );
 
-      $opts['fdd']['IBAN'] = array('name'   => 'IBAN',
-                                   'options' => 'LACPDV',
-                                   'select' => 'T',
-                                   'maxlen' => 35,
-                                   'encryption' => array(
-                                     'encrypt' => '\CAFEVDB\Config::encrypt',
-                                     'decrypt' => '\CAFEVDB\Config::decrypt',
-                                     ));
+      $opts['fdd']['IBAN'] = array(
+        'tab' => array('id' => 'account'),
+        'name'   => 'IBAN',
+        'options' => 'LACPDV',
+        'select' => 'T',
+        'maxlen' => 35,
+        'encryption' => array(
+          'encrypt' => '\CAFEVDB\Config::encrypt',
+          'decrypt' => '\CAFEVDB\Config::decrypt',
+          ));
 
-      $opts['fdd']['BIC'] = array('name'   => 'BIC',
-                                  'select' => 'T',
-                                  'maxlen' => 35,
-                                  'encryption' => array(
-                                    'encrypt' => '\CAFEVDB\Config::encrypt',
-                                    'decrypt' => '\CAFEVDB\Config::decrypt',
-                                    ));
+      $opts['fdd']['BIC'] = array(
+        'name'   => 'BIC',
+        'select' => 'T',
+        'maxlen' => 35,
+        'encryption' => array(
+          'encrypt' => '\CAFEVDB\Config::encrypt',
+          'decrypt' => '\CAFEVDB\Config::decrypt',
+          ));
 
-      $opts['fdd']['BLZ'] = array('name'   => L::t('Bank Code'),
-                                  'select' => 'T',
-                                  'maxlen' => 12,
-                                  'encryption' => array(
-                                    'encrypt' => '\CAFEVDB\Config::encrypt',
-                                    'decrypt' => '\CAFEVDB\Config::decrypt',
-                                    ));
+      $opts['fdd']['BLZ'] = array(
+        'name'   => L::t('Bank Code'),
+        'select' => 'T',
+        'maxlen' => 12,
+        'encryption' => array(
+          'encrypt' => '\CAFEVDB\Config::encrypt',
+          'decrypt' => '\CAFEVDB\Config::decrypt',
+          ));
 
-      $opts['fdd']['bankAccountOwner'] = array('name'   => L::t('Bank Account Owner'),
-                                               'select' => 'T',
-                                               'maxlen' => 80,
-                                               'encryption' => array(
-                                                 'encrypt' => '\CAFEVDB\Config::encrypt',
-                                                 'decrypt' => '\CAFEVDB\Config::decrypt',
-                                                 ));
+      $opts['fdd']['bankAccountOwner'] = array(
+        'name'   => L::t('Bank Account Owner'),
+        'select' => 'T',
+        'maxlen' => 80,
+        'encryption' => array(
+          'encrypt' => '\CAFEVDB\Config::encrypt',
+          'decrypt' => '\CAFEVDB\Config::decrypt',
+          ));
 
 
       if ($this->pme_bare) {
