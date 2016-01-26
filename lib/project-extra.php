@@ -1112,6 +1112,49 @@ namespace CAFEVDB
       return $result;
     }
 
+    /**Data-base queries from the project view will rather use the
+     * field labels. In particular, monetary fields are of interest,
+     * so filter those out, grouped in an array label =>
+     * field-info. Also, the function resolves links into the type
+     * info table and explodes the allowed value field.
+     *
+     * @param[in] mixed $idOrFields $projectId or pre-fetched extra-fields
+     * array.
+     *
+     * @param[in] mixed $typeInfoOrHandle If $idOrFields is an array
+     * (i.e. the field descriptions, then $typeInfoOrHandle must be
+     * the type-info array as obtained by
+     * self::fieldTypes(). Otherwise it may be an existing data-base
+     * handle or null.
+     */
+    public static function monetaryFields($idOrFields, $typeInfoOrHandle = null)
+    {
+      if (is_array($idOrFields) && !is_array($typeInfoOrHandle)) {
+        throw new \InvalidArgumentException('If my first argument is an array of field descriptions, then my second
+argument must be an array of type descriptions.');
+      }
+      if (is_scalar($idOrFields)) {
+        $projectId = $idOrFields;
+        $handle = $typeInfoOrHandle;
+        $extraFields = self::getExtraFields($projectId, $handle);
+        $fieldTypes = ProjectExtra::fieldTypes($handle);
+      } else {
+        $extraFields = $idOrFields;
+        $fieldTypes = $typeInfoOrHandle;
+      }
+      $monetary = array(); // Labels for moneary fields
+      foreach($extraFields as $field) {
+        $type = $fieldTypes[$field['Type']];
+        if ($type['Kind'] === 'surcharge') {
+          $field['Type'] = $type;
+          $field['AllowedValues'] =
+            ProjectExtra::explodeAllowedValues($field['AllowedValues'], false, true);
+          $monetary[$field['Name']] = $field;
+        }
+      }
+      return $monetary;
+    }
+
     /**Fetch the data-set for the given record id.*/
     public static function fetch($recordId, $handle = false)
     {

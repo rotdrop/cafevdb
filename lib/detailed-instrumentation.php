@@ -397,16 +397,7 @@ class DetailedInstrumentation
 
     if (Projects::needDebitMandates($projectId)) {
 
-      $monetary = array(); // Labels for moneary fields
-      foreach($userExtraFields as $field) {
-        $type = $fieldTypes[$field['Type']];
-        if ($type['Kind'] === 'surcharge') {
-          $field['Type'] = $type;
-          $field['AllowedValues'] =
-            ProjectExtra::explodeAllowedValues($field['AllowedValues'], false, true);
-          $monetary[$field['Name']] = $field;
-        }
-      }
+      $monetary = ProjectExtra::monetaryFields($userExtraFields, $fieldTypes);
 
       $amountPaidIdx = count($opts['fdd']);
       $opts['fdd']['AmountPaid'] = array(
@@ -1247,32 +1238,18 @@ class DetailedInstrumentation
     return 0.0;
   }
 
-
   /**Sum up the total amount of all project fees for the given project
    * and musician. $row should be the corresponding row from the project-view.
    */
   public static function projectFeeTotals($projectId, $recordId, $row, $handle = false)
   {
-    $extraFields = self::getExtraFields($projectId, $handle);
-    $fieldTypes = ProjectExtra::fieldTypes($handle);
-    $monetary = array(); // Labels for moneary fields
-    foreach($extraFields as $field) {
-      $type = $fieldTypes[$field['Type']];
-      if ($type['Kind'] === 'surcharge') {
-        $field['Type'] = $type;
-        $field['AllowedValues'] =
-          ProjectExtra::explodeAllowedValues($field['AllowedValues'], false, true);
-        $monetary[$field['Name']] = $field;
-      }
-    }
+    $monetary = ProjectExtra::monetaryFields($projectId, $handle);
     $amount = 0.0;
     foreach($row as $columnLabel => $value) {
       if (empty($value)) {
         continue;
       }
       if (isset($monetary[$columnLabel])) {
-
-
         $field   = $monetary[$columnLabel];
         $allowed = $field['AllowedValues'];
         $type    = $field['Type'];
