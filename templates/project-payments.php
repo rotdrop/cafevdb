@@ -34,6 +34,7 @@ namespace CAFEVDB {
   if ($projectId >= 0) {
     $nav .= Navigation::pageControlElement('projectlabel', $navListItems, $projectName, $projectId);
     $nav .= Navigation::pageControlElement('detailed', $navListItems, $projectName, $projectId);
+    $nav .= Navigation::pageControlElement('debitmandates', $navListItems, $projectName, $projectId);
     $nav .= Navigation::pageControlElement('project-extra', $navListItems, $projectName, $projectId);
     $nav .= Navigation::pageControlElement('projectinstruments', $navListItems, $projectName, $projectId);
     $nav .= Navigation::pageControlElement('projects', $navListItems);
@@ -52,7 +53,14 @@ namespace CAFEVDB {
                         'navigationcontrols' => $nav,
                         'header' => $table->headerText()));
 
-  $table->display();
+  if (Config::isTreasurer()) {
+    $table->display();
+  } else {
+    echo '<div class="specialrole error">'.
+      L::t("Sorry, this view is only available to the %s.",
+           array(L::t('treasurer'))).
+      '</div>';
+  }
 
   // Close some still opened divs
   echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
