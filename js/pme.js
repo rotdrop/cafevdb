@@ -542,6 +542,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
     var dpyClass = form.find('input[name="DisplayClass"]');
 
     if (dpyClass.length == 0) {
+      console.log('no display class');
       // This just does not work.
       return false;
     }
@@ -623,6 +624,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
            function (data) {
              if (!CAFEVDB.ajaxErrorHandler(data, [ 'contents' ])) {
                CAFEVDB.Page.busyIcon(false);
+               pme.dialogOpen[containerCSSId] = false;
                return false;
              }
 
@@ -1287,6 +1289,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
       container.off('click', rowSelector).
         on('click', rowSelector, function(event) {
 
+        console.log('row click');
+
         if (event.target != this) {
           var target = $(event.target);
           // divs and spans which make it up to here will be ignored,
@@ -1325,6 +1329,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
         // "this" does not necessarily has a form attribute
         var form = container.find(formSel);
+        console.log('about to open dialog');
         PHPMYEDIT.tableDialog(form, $(recordEl), containerSel);
         return false;
       });
