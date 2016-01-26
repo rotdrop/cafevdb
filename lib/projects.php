@@ -2218,7 +2218,7 @@ __EOT__;
         'Anzahlung' => array('table' => 'b',
                              'column' => true,
                              'join' => array('type' => 'INNER')),
-        'AmountPaid' => array('table' => 'ProjectIncomingPayments',
+        'AmountPaid' => array('table' => 'ProjectPayments',
                               'tablename' => 'f',
                               'column' => 'IFNULL(SUM(f.Amount),0)',
                               'verbatim' => true,
