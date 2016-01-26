@@ -1643,21 +1643,27 @@ class phpMyEdit
 	} /* }}} */
 
 	// Actually: copy, change, delete AND view
-	function display_copy_change_delete_record() /* {{{ */
+	function display_copy_change_delete_record($row) /* {{{ */
 	{
 		/*
 		 * For delete or change: SQL SELECT to retrieve the selected record
 		 */
 
-		$qparts['type']	  = 'select';
-		$qparts['select'] = @$this->get_SQL_column_list();
-		$qparts['from']	  = @$this->get_SQL_join_clause();
-		$qparts['where']  = '('.$this->fqn($this->key, true).'='
-			.$this->key_delim.$this->rec.$this->key_delim.')';
-		//echo htmlspecialchars($this->rec.' '.$this->key);
-		$res = $this->myquery($this->get_SQL_query($qparts),__LINE__);
-		if (! ($row = $this->sql_fetch($res))) {
-			return false;
+		if (true) {
+			if (empty($row)) {
+				return;
+			}
+		} else {
+			$qparts['type']	  = 'select';
+			$qparts['select'] = @$this->get_SQL_column_list();
+			$qparts['from']	  = @$this->get_SQL_join_clause();
+			$qparts['where']  = '('.$this->fqn($this->key, true).'='
+				.$this->key_delim.$this->rec.$this->key_delim.')';
+			//echo htmlspecialchars($this->rec.' '.$this->key);
+			$res = $this->myquery($this->get_SQL_query($qparts),__LINE__);
+			if (! ($row = $this->sql_fetch($res))) {
+				return false;
+			}
 		}
 		for ($k = 0; $k < $this->num_fds; $k++) {
 			if (! $this->displayed[$k]) {
@@ -3599,6 +3605,8 @@ class phpMyEdit
 			}
 			//$key_rec	   = $row['qf'.$this->key_num];
 
+			$this->exec_data_triggers('select', $row);
+
 			echo
 				'<tr class="'.$this->getCSSclass('row', null, 'next').'"'.
 				'    data-'./*$this->cgi['prefix']['sys']*/'PME_sys_'.'rec="'.$key_rec.'">'."\n";
@@ -3839,34 +3847,49 @@ class phpMyEdit
 		$formCssClass = $this->getCSSclass('list');
 
 		// PRE Triggers
-		$ret = true;
+		$trigger = '';
 		if ($this->change_operation()) {
+			$trigger = 'update';
 			$formCssClass = $this->getCSSclass('change');
-			$ret &= $this->exec_triggers_simple('update', 'pre');
-			// if PRE update fails, then back to view operation
-			if (! $ret) {
+			if (!$this->exec_triggers_simple($trigger, 'pre')) {
+				// if PRE update fails, then back to view operation
 				$this->operation = $this->labels['View'];
-				$ret = true;
 			}
 		}
 		if ($this->add_operation() || $this->copy_operation()) {
 			$formCssClass = $this->getCSSclass('copyadd');
-			$ret &= $this->exec_triggers_simple('insert', 'pre');
+			$trigger = 'insert';
 		}
 		if ($this->view_operation()) {
 			$formCssClass = $this->getCSSclass('view');
-			$ret &= $this->exec_triggers_simple('select', 'pre');
+			$trigger = 'select';
 		}
 		if ($this->delete_operation()) {
 			$formCssClass = $this->getCSSclass('delete');
-			$ret &= $this->exec_triggers_simple('delete', 'pre');
+			$trigger = 'delete';
 		}
+		$ret = $this->exec_triggers_simple($trigger, 'pre');
 		// if PRE insert/view/delete fail, then back to the list
 		if ($ret == false) {
 			$this->operation = '';
 			$this->list_table();
 			return;
 		}
+
+		$row = false;
+		if (!$this->add_operation()) {
+			$qparts['type']	  = 'select';
+			$qparts['select'] = @$this->get_SQL_column_list();
+			$qparts['from']	  = @$this->get_SQL_join_clause();
+			$qparts['where']  = '('.$this->fqn($this->key, true).'='
+				.$this->key_delim.$this->rec.$this->key_delim.')';
+			$res = $this->myquery($this->get_SQL_query($qparts),__LINE__);
+			if (! ($row = $this->sql_fetch($res))) {
+				$row = false;
+			}
+			$this->exec_data_triggers($trigger, $row);
+		}
+
 		/* echo '<PRE>'; */
 		/* $this->print_vars(); */
 		/* echo '</PRE>'; */
@@ -3923,7 +3946,7 @@ class phpMyEdit
 		if ($this->add_operation()) {
 			$this->display_add_record();
 		} else {
-			$this->display_copy_change_delete_record();
+			$this->display_copy_change_delete_record($row);
 		}
 		echo '</tbody></table>',"\n";
 		$this->display_record_buttons('down');
@@ -4380,6 +4403,38 @@ class phpMyEdit
 			}
 		}
 		return true;
+	} /* }}} */
+
+	/*
+	 * A callback called after date has been fetched, but before any
+	 * HTML has been generated.
+	 */
+	function exec_data_triggers($op, &$row)
+	{
+		$step = 'data';
+		if (!isset($this->triggers[$op][$step])) {
+			return true;
+		}
+		$ret  = true;
+		$trig = $this->triggers[$op][$step];
+		if (is_array($trig)) {
+			ksort($trig);
+			for ($t = reset($trig); $t !== false && $ret != false; $t = next($trig)) {
+				if (is_callable($t)) {
+					$ret = call_user_func_array($t,
+												array(&$this, $op, $step, &$row));
+				} else {
+					$ret = include($t);
+				}
+			}
+		} else {
+			if (is_callable($trig)) {
+				$ret = call_user_func_array($trig,
+											array(&$this, $op, $step, &$row));
+			} else {
+				$ret = include($trig);
+			}
+		}
 	} /* }}} */
 
 	/*
