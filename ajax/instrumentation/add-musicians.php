@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2015 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -108,7 +108,7 @@ namespace CAFEVDB {
                       count($failedMusicians));
 
       foreach ($failedMusicians as $failure) {
-        $message .= ' '.$failure['notice'].' '.'SQL-error: '.$faliure['sqlerror'];
+        $message .= ' '.$failure['notice'].' '.'SQL-error: '.$failure['sqlerror'];
       }
 
       \OCP\JSON::error(
