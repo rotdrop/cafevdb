@@ -87,6 +87,8 @@ namespace CAFEVDB
       $opts            = $this->opts;
       $musicianId      = $this->musicianId;
 
+      $projectMode = $projectId > 0 && !empty($projectName);
+
       $opts['tb'] = 'SepaDebitMandates';
 
       // Number of records to display on the screen
@@ -112,14 +114,11 @@ namespace CAFEVDB
       // Sorting field(s)
       $opts['sort_field'] = array('Broker','GeographicalScope','MusicianId','Accessory');
 
-      // GROUP BY clause, if needed.
-      $opts['groupby_fields'] = 'musicianId';
-
       // Options you wish to give the users
       // A - add,  C - change, P - copy, V - view, D - delete,
       // F - filter, I - initial sort suppressed
       $opts['options'] = 'CVDF';
-      if ($projectId > 0 && $projectName != '') {
+      if ($projectMode) {
         $opts['options'] .= 'M';
       }
       $opts['misc']['css']['major'] = 'debit-note';
@@ -149,20 +148,27 @@ namespace CAFEVDB
                   'tooltip' => L::t('Debit mandate, mandate-id, last used date, recurrence'),
                   'name' => L::t('Mandate')
               ),
-            array('id' => 'amount',
-                  'tooltip' => L::t('Show the amounts to dray by debit transfer, including sum of payments
-received so far'),
-                  'name' => L::t('Amount')
-              ),
             array('id' => 'account',
                   'tooltip' => L::t('Bank account associated to this debit mandate.'),
                   'name' => L::t('Bank Account')
               ),
-            array('id' => 'tab-all',
-                  'tooltip' => Config::toolTips('pme-showall-tab'),
-                  'name' => L::t('Display all columns'))
             )
-          ));
+          )
+        );
+      $amountTab = array(
+        'id' => 'amount',
+        'tooltip' => L::t('Show the amounts to dray by debit transfer, including sum of payments
+received so far'),
+        'name' => L::t('Amount')
+        );
+      $allTab = array('id' => 'tab-all',
+                      'tooltip' => Config::toolTips('pme-showall-tab'),
+                      'name' => L::t('Display all columns')
+        );
+      if ($projectMode) {
+        $opts['display']['tabs'][] = $amountTab;
+      }
+      $opts['display']['tabs'][] = $allTab;
 
       // Set default prefixes for variables
       $opts['js']['prefix']               = 'PME_js_';
@@ -190,7 +196,7 @@ received so far'),
         $opts['filters'] = $junctor."`PMEtable0`.`musicianId` = ".$musicianId;
         $junctor = " AND ";
       }
-      if ($projectId > 0) {
+      if ($projectMode) {
         $opts['filters'] =
           $junctor.
           "(".
@@ -217,6 +223,31 @@ received so far'),
         'default'  => '0',
         'sort'     => true
         );
+
+      if ($projectMode) {
+        $instrumentationIdx = count($opts['fdd']);
+        $projectView = $projectName.'View';
+        $projectAlias = 'PMEjoin'.$instrumentationIdx;
+        $opts['fdd']['InstrumentationId'] = array(
+          'input' => 'VHR',
+          'sql' => $projectAlias.'.Id',
+          'values' => array(
+            'table' => $projectView,
+            'column' => 'Id',
+            'join' => '$main_table.musicianId = $join_table.MusikerId',
+            'description' => 'InstrumentationId',
+            )
+          );
+
+        $opts['fdd']['instrumentationId'] = array(
+          'name' => L::t('Instrumentation Id'),
+          'input' => 'VR',
+          'options' => 'LFACPDV',
+          'select' => 'N',
+          'sql' => $projectAlias.'.Id',
+          'sort' => true
+          );
+      }
 
       $opts['fdd']['musicianId'] = array(
         'tab'      => array('id' => 'tab-all'),
@@ -268,8 +299,19 @@ received so far'),
         'datemask' => 'd.m.Y');
 
 
-      if ($projectId >= 0) {
+      if ($projectMode) {
         // Add the amount to debit
+
+        $extraFields = Instrumentation::getExtraFields($projectId);
+        $fieldTypes = ProjectExtra::fieldTypes();
+        $monetary = ProjectExtra::monetaryFields($extraFields, $fieldTypes);
+        foreach(array_keys($monetary) as $field) {
+          $idx = count($opts['fdd']);
+          $opts['fdd'][$field] = array(
+            'input' => 'VHR',
+            'sql' => $projectAlias.'.'.$field,
+            );
+        }
 
         $feeIdx = count($opts['fdd']);
         $opts['fdd']['projectFee'] = Config::$opts['money'];
@@ -277,17 +319,46 @@ received so far'),
           Config::$opts['money'],
           array(
             'tab'   => array('id' => 'amount'),
-            'input' => 'V',
+            'input' => 'VR',
             'options' => 'LFACPDV',
             'name' => L::t('Project Fee'),
-            'sql' => '`PMEjoin'.$feeIdx.'`.`Unkostenbeitrag`',
-            'values' => array('table' => 'Besetzungen',
-                              'column' => 'Unkostenbeitrag',
-                              'join' => ('$main_table.musicianId = $join_table.MusikerId'.
-                                         ' AND '.
-                                         $projectId.' = $join_table.ProjektId'),
-                              'description' => 'Unkostenbeitrag'
-              )
+            'sql' => $projectAlias.'.Unkostenbeitrag',
+            )
+          );
+
+        $extraIdx = count($opts['fdd']);
+        $opts['fdd']['ExtraProjectFees'] = array_merge(
+          Config::$opts['money'],
+          array(
+            //'tab'      => array('id' => $financeTab),
+            'name'     => L::t('Extra Charges'),
+            'css'      => array('postfix' => ' extra-project-fees money'),
+            'sort'    => false,
+            'options' => 'VDL', // wrong in change mode
+            'input' => 'VR',
+            'sql' => $projectAlias.'.Unkostenbeitrag',
+            'php' => function($amount, $op, $field, $fds, $fdd, $row, $recordId)
+            use ($monetary)
+            {
+              $amount = 0.0;
+              foreach($fds as $key => $label) {
+                if (!isset($monetary[$label])) {
+                  continue;
+                }
+                $value = $row['qf'.$key];
+                if (empty($value)) {
+                  continue;
+                }
+                $field   = $monetary[$label];
+                $allowed = $field['AllowedValues'];
+                $type    = $field['Type'];
+                $amount += DetailedInstrumentation::extraFieldSurcharge($value, $allowed, $type['Multiplicity']);
+              }
+              return Util::moneyValue($amount);
+            },
+            'sort' => true,
+            'tooltip'  => Config::toolTips('project-extra-fee-summary'),
+            'display|LFVD' => array('popup' => 'tooltip'),
             )
           );
 
@@ -299,19 +370,66 @@ received so far'),
             'input' => 'V',
             'options' => 'LFACPDV',
             'name' => L::t('Project Deposit'),
-            'sql' => '`PMEjoin'.$depositIdx.'`.`Anzahlung`',
-            'values' => array('table' => 'Besetzungen',
-                              'column' => 'Anzahlung',
-                              'join' => ('$main_table.musicianId = $join_table.MusikerId'.
-                                         ' AND '.
-                                         $projectId.' = $join_table.ProjektId'),
-                              'description' => 'Anzahlung'
-              )
+            'sql' => $projectAlias.'.Anzahlung',
             )
           );
+
+
+        $amountPaidIdx = count($opts['fdd']);
+        $opts['fdd']['AmountPaid'] = array_merge(
+          Config::$opts['money'],
+          array(
+            'name' => L::t('Amount Pid'),
+            'input' => 'VR',
+            'sql' => $projectAlias.'.AmountPaid',
+            'sort' => 1
+            )
+          );
+
+        $totalsIdx = count($opts['fdd']);
+        $opts['fdd']['TotalProjectFees'] = array(
+          //'tab'      => array('id' => $financeTab),
+          'name'     => L::t('Total Charges'),
+          'css'      => array('postfix' => ' total-project-fees money'),
+          'sort'    => false,
+          'options' => 'VDLF', // wrong in change mode
+          'input' => 'VR',
+          'sql' => $projectAlias.'.Unkostenbeitrag',
+          'php' => function($amount, $op, $field, $fds, $fdd, $row, $recordId)
+          use ($monetary, $amountPaidIdx)
+          {
+            $paid = $row['qf'.$amountPaidIdx];
+            foreach($fds as $key => $label) {
+              if (!isset($monetary[$label])) {
+                continue;
+              }
+              $value = $row['qf'.$key];
+              if (empty($value)) {
+                continue;
+              }
+              $field   = $monetary[$label];
+              $allowed = $field['AllowedValues'];
+              $type    = $field['Type'];
+              $amount += DetailedInstrumentation::extraFieldSurcharge($value, $allowed, $type['Multiplicity']);
+            }
+            // display as TOTAL/PAID/REMAINDER
+            $rest = $amount - $paid;
+
+            $amount = Util::moneyValue($amount);
+            $paid = Util::moneyValue($paid);
+            $rest = Util::moneyValue($rest);
+            return ('<span class="totals finance-state">'.$amount.'</span>'
+                    .'<span class="received finance-state">'.$paid.'</span>'
+                    .'<span class="outstanding finance-state">'.$rest.'</span>');
+          },
+          'tooltip'  => Config::toolTips('project-total-fee-summary'),
+          'display|LFVD' => array('popup' => 'tooltip'),
+          );
+
       }
 
       $opts['fdd']['projectId'] = array(
+        'tab' => array('id' => 'mandate'),
         'name'     => L::t('Project'),
         'input'    => 'R',
         'select'   => 'D',
@@ -394,6 +512,13 @@ received so far'),
       $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
       $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeUpdateRemoveUnchanged';
       $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
+
+      // GROUP BY clause, if needed.
+      if (!$projectMode) {
+        $opts['groupby_fields'] = 'musicianId';
+      } else {
+        $opts['groupby_fields'] = 'InstrumentationId';
+      }
 
       $this->pme = new \phpMyEdit($opts);
 

@@ -1195,7 +1195,7 @@ class DetailedInstrumentation
   /**Internal function: given a (multi-select) surcharge choice
    * compute the associated amount of money and return that as float.
    */
-  protected static function extraFieldSurcharge($value, $allowedValues, $multiplicity)
+  public static function extraFieldSurcharge($value, $allowedValues, $multiplicity)
   {
     switch ($multiplicity) {
     case 'single':
