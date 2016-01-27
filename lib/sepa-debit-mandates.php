@@ -157,7 +157,7 @@ namespace CAFEVDB
         );
       $amountTab = array(
         'id' => 'amount',
-        'tooltip' => L::t('Show the amounts to dray by debit transfer, including sum of payments
+        'tooltip' => L::t('Show the amounts to draw by debit transfer, including sum of payments
 received so far'),
         'name' => L::t('Amount')
         );
@@ -379,7 +379,7 @@ received so far'),
         $opts['fdd']['AmountPaid'] = array_merge(
           Config::$opts['money'],
           array(
-            'name' => L::t('Amount Pid'),
+            'name' => L::t('Amount Paid'),
             'input' => 'VR',
             'sql' => $projectAlias.'.AmountPaid',
             'sort' => 1

@@ -43,6 +43,7 @@ project-actions
 project-action-wiki
 project-direct-debit-allowed
 projectevents-button
+project-extra-fee-summary
 project-finance-tab
 project-infopage
 project-instrumentation-tab

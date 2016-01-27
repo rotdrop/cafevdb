@@ -535,6 +535,8 @@ to pages with the instrumentation, events, instrumentation numbers etc.'),
 
         'project-direct-debit-allowed' => L::t('Some people gave us debit mandates but still want to pay by bank-transfer. Uncheck in order to exclude the person from direct debits transfers.'),
 
+        'project-extra-fee-summary' => L::t('Sum of the fees for all booked etra items.'),
+
         'project-finance-tab' => L::t('Everything related to project fees, surcharges, bank transfers, debit
 mandates.'),
 
