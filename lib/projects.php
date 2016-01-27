@@ -2155,6 +2155,29 @@ __EOT__;
               $projectId.' = b.`ProjektId`')
             )),
 
+        'Projects' => array(
+          'table' => 'Besetzungen',
+          'tablename' => 'b2',
+          'column' => "GROUP_CONCAT(DISTINCT p.`Name` ORDER BY p.`Name` ASC SEPARATOR ',')",
+          'verbatim' => true,
+          'join' => array(
+            'type' => 'INNER',
+            'condition' => 'm.`Id` = b2.`MusikerId`
+  LEFT JOIN `Projekte` p
+  ON b2.`ProjektId` = p.`Id`'
+            ),
+          ),
+
+        'ProjectCount' => array(
+          'tablename' => 'b2',
+          'column' => 'COUNT(DISTINCT p.Id)',
+          'verbatim' => true),
+
+        'MusicianMultiplicity' => array(
+          'tablename' => 'b2',
+          'column' => 'COUNT(DISTINCT b.MusikerId)',
+          'verbatim' => true),
+
         'Instrument' => array('table' => 'b',
                               'column' => true,
                               'join' => array('type' => 'INNER')),
@@ -2220,7 +2243,8 @@ __EOT__;
                              'join' => array('type' => 'INNER')),
         'AmountPaid' => array('table' => 'ProjectPayments',
                               'tablename' => 'f',
-                              'column' => 'IFNULL(SUM(f.Amount),0)',
+                              'column' => 'IFNULL(SUM(IF(b.Id = b2.Id, f.Amount, 0)),0)',
+                              //'column' => 'GROUP_CONCAT(IF(b.Id = b2.Id, f.Amount, NULL) SEPARATOR \',\')',
                               'verbatim' => true,
                               'join' => array(
                                 'type' =>'LEFT',
@@ -2294,20 +2318,6 @@ __EOT__;
               "img.`ItemTable` = 'Musiker'")
             )),
 
-        'Projects' => array(
-          'table' => 'Besetzungen',
-          'tablename' => 'b2',
-          'column' => "GROUP_CONCAT(DISTINCT p.`Name` ORDER BY p.`Name` ASC SEPARATOR ',')",
-          'verbatim' => true,
-          'join' => array(
-            'type' => 'LEFT',
-            'condition' => 'm.`Id` = b2.`MusikerId`
-  LEFT JOIN `Projekte` p
-  ON b2.`ProjektId` = p.`Id`
-  GROUP BY b.`Id`'
-            ),
-          ),
-
         'UUID' => array('table' => 'm',
                         'column' => true,
                         'join' => array('type' => 'INNER')),
@@ -2377,6 +2387,9 @@ __EOT__;
       $structure = self::viewStructure($projectId, $extra);
       $sqlSelect = mySQL::generateJoinSelect($structure);
 
+      $groupBy = 'GROUP BY b.`Id`
+';
+
       // Force a sensible default sorting:
       // 1: sort on the natural orchestral ordering defined in Instrumente
       // 2: sort (reverse) on the Stimmfuehrer attribute
@@ -2390,9 +2403,10 @@ __EOT__;
 
       $sqlQuery = "CREATE OR REPLACE VIEW `".$projectName."View` AS\n"
         .$sqlSelect
+        .$groupBy
         .$sqlSort;
 
-      \OCP\Util::writeLog(Config::APP_NAME, __METHOD__.": ".$sqlQuery, \OCP\Util::DEBUG);
+      //\OCP\Util::writeLog(Config::APP_NAME, __METHOD__.": ".$sqlQuery, \OCP\Util::DEBUG);
 
       $result = mySQL::query($sqlQuery, $handle);
       if ($result === false) {
