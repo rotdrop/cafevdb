@@ -173,7 +173,7 @@ namespace CAFEVDB
         'name'     => L::t('Musician'),
         'css'      => array('postfix' => ' instrumentation-id'),
         'values'   => array(
-          'table'  => "SELECT b.Id, CONCAT(m.Vorname,' ',m.Name) AS Name
+          'table'  => "SELECT b.Id, CONCAT(b.Id,': ',m.Vorname,' ',m.Name) AS Name
   FROM Besetzungen b
   LEFT JOIN Musiker m
   ON b.MusikerId = m.Id
@@ -240,8 +240,8 @@ namespace CAFEVDB
         );
 
       $opts['triggers']['select']['data'] = function(&$pme, $op, $step, &$row) use ($debitIdIdx, $opts) {
-        error_log('called '.$op.' '.$debitIdIdx);
-        error_log('called '.print_r($row, true));
+        //error_log('called '.$op.' '.$debitIdIdx);
+        //error_log('called '.print_r($row, true));
         if (!empty($row['qf'.$debitIdIdx])) {
           $pme->options = 'LVF';
           if ($op !== 'select' ) {
