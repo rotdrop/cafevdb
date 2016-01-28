@@ -89,15 +89,6 @@ class DetailedInstrumentation
 
     $opts['tb'] = $projectName . 'View';
 
-    if (false) {
-      Config::init();
-      $rows = mySQL::fetchRows($opts['tb']);
-      foreach($rows as $row) {
-        //error_log(print_r($row, true));
-        self::projectFeeTotals($projectId, $row['Id'], $row);
-      }
-    }
-
     $opts['cgi']['persist'] = array(
       'ProjectName' => $projectName,
       'ProjectId' => $projectId,
@@ -230,15 +221,15 @@ class DetailedInstrumentation
 
     $musIdIdx = count($opts['fdd']);
     $opts['fdd']['MusikerId'] = array(
+      'tab'      => array('id' => 'musician'),
       'name'     => L::t('Musician Id'),
-      //'input'    => 'H',
+      'input'    => 'H',
       'select'   => 'T',
-      'options'  => 'AVCPDR', // auto increment
+      'options'  => 'LAVCPD', // auto increment
       'maxlen'   => 5,
       'align'    => 'right',
       'default'  => '0',
       'sort'     => true,
-      'tab'      => array('id' => 'musician')
       );
 
     $musFirstNameIdx = count($opts['fdd']);
@@ -1241,7 +1232,7 @@ class DetailedInstrumentation
   /**Sum up the total amount of all project fees for the given project
    * and musician. $row should be the corresponding row from the project-view.
    */
-  public static function projectFeeTotals($projectId, $recordId, $row, $handle = false)
+  public static function projectExtraFees($projectId, $recordId, $row, $handle = false)
   {
     $monetary = ProjectExtra::monetaryFields($projectId, $handle);
     $amount = 0.0;
