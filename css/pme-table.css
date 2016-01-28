@@ -268,9 +268,19 @@ tr.pme-navigation .listall {
 
 .pme-goto div,
 .pme-pagerows div,
+.pme-menu-block div,
 .pme-export-block div {
   vertical-align:middle;
   font-weight:bold;
+}
+
+.pme-export-block select,
+.pme-export-block select option,
+.pme-menu-block select,
+.pme-menu-block select option {
+  vertical-align:middle;
+  font-weight:bold;
+  padding-right:1.5em!important;
 }
 
 .pme-goto .chosen-container {
@@ -281,11 +291,15 @@ tr.pme-navigation .listall {
   min-width:4em;
 }
 
-.pme-export-block a.chosen-default span {
+.pme-export-block a.chosen-default span,
+.pme-menu-block a.chosen-default span {
   /*font-weight:bold;*/
   color:#555;
 }
 
+.pme-menu-block a.chosen-default span:hover,
+.pme-menu-block a.chosen-default span:focus,
+.pme-menu-block a.chosen-default span:active,
 .pme-export-block a.chosen-default span:hover,
 .pme-export-block a.chosen-default span:focus,
 .pme-export-block a.chosen-default span:active {
@@ -295,6 +309,7 @@ tr.pme-navigation .listall {
 
 .pme-goto a.chosen-single,
 .pme-pagerows a.chosen-single,
+.pme-menu-block a.chosen-single,
 .pme-export-block a.chosen-single {
   height: auto;
   background: transparent;
@@ -311,11 +326,13 @@ tr.pme-navigation .listall {
 
 .pme-goto a.chosen-single:hover, .pme-goto a.chosen-single:focus,
 .pme-pagerows a.chosen-single:hover, .pme-pagerows a.chosen-single:focus,
-.pme-export-block a.chosen-single:hover, .pme-export-block a.chosen-single:focus {
+.pme-export-block a.chosen-single:hover, .pme-export-block a.chosen-single:focus,
+.pme-menu-block a.chosen-single:hover, .pme-menu-block a.chosen-single:focus {
   background-color:rgba(250,250,250,.9);
   color:#333;
 }
 
+.pme-menu-block a.chosen-single,
 .pme-export-block a.chosen-single {
   border-radius: 3px;
 }

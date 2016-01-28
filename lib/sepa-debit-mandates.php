@@ -132,8 +132,68 @@ namespace CAFEVDB
       // Buttons position: U - up, D - down (default)
       //$opts['navigation'] = 'DB';
 
-      $export = Navigation::tableExportButton();
-      $opts['buttons'] = Navigation::prependTableButton($export, true);
+      $buttons = array();
+      if ($projectMode) {
+          $debitJobs = '
+<span id="pme-debit-note-job" class="pme-debit-note-job pme-menu-block">
+  <select data-placeholder="'.L::t('Debit Job').'"
+          class="pme-debit-note-job"
+          title="'.Config::toolTips('debit-note-job-choice').'"
+          name="debit-job">
+    <option value=""></option>';
+        if ($projectName === Config::getValue('memberTable', false)) {
+          $debitJobs .= '
+    <option value="remaining"
+            class="debit-job-remaining"
+            title="'.Config::toolTips('debit-note-job-option-membership-fee').'">
+  '.L::t('Membership Fee').'
+    </option>
+    <option value="insurance"
+            class="debit-job-insurance"
+            title="'.Config::toolTips('debit-note-job-option-insurance').'">
+  '.L::t('Insurance').'
+    </option>
+    <option value="amount"
+            class="debit-job-amount"
+            title="'.Config::toolTips('debit-note-job-option-amount').'">
+  '.L::t('Amount').'
+    </option>';
+        } else {
+          $debitJobs .= '
+    <option value="deposit"
+            class="debit-job-deposit"
+            title="'.Config::toolTips('debit-note-job-option-deposit').'">
+  '.L::t('Deposit').'
+    </option>
+    <option value="remaining"
+            class="debit-job-remaining"
+            title="'.Config::toolTips('debit-note-job-option-remaining').'">
+  '.L::t('Remaining').'
+    </option>
+    <option value="amount"
+            class="debit-job-amount"
+            title="'.Config::toolTips('debit-note-job-option-amount').'">
+  '.L::t('Amount').'
+    </option>';
+        }
+        $debitJobs .= '
+  </select>
+  <input type="text"
+         class="debit-note-amount"
+         value=""
+         name="debit-note-amount[]"
+         placeholder="'.L::t('amount').'"/>
+  <input type="text"
+         class="debit-note-subject"
+         value=""
+         name="debit-note-subject[]"
+         placeholder="'.L::t('subject').'"/>
+</span>';
+        $buttons[] = array('code' =>  $debitJobs);
+      }
+      $buttons[] = Navigation::tableExportButton();
+
+      $opts['buttons'] = Navigation::prependTableButtons($buttons, true);
 
       // Display special page elements
       $opts['display'] =  array_merge(
@@ -562,6 +622,75 @@ received so far'),
       }
 
       return $result;
+    }
+
+    /**Fetch all relevant finance information from the given
+     * project.
+     */
+    static public function projectFinanceExport($projectId, $musicianId = -1, $handle = false)
+    {
+      $ownConnection = $handle === false;
+
+      if ($ownConnection) {
+        Config::init();
+        $handle = mySQL::connect(Config::$pmeopts);
+      }
+
+      $memberProjectId = Config::getValue('memberTableId');
+      $projectName = Projects::fetchName($projectId, $handle);
+      $monetary = ProjectExtra::monetaryFields($projectId, $handle);
+
+      $projectTable = $projectName.'View';
+      $mandateTable = 'SepaDebitMandates';
+
+      //build a query with all relevant finance fields
+      $query = "SELECT ";
+      $query .= $projectId.' AS ProjectId'
+        .', p.Id AS InstrumentationId'
+        .', MusikerId AS MucisianId'
+        .", '".$projectName."' AS ProjectName"
+        .', Name AS SurName'
+        .', Vorname AS FirstName'
+        .', UnkostenBeitrag AS RegularFee'
+        .', Anzahlung AS Deposit'
+        .', AmountPaid AS AmountPaid'
+        .', LastSchrift AS DebitNote';
+
+      foreach(array_keys($monetary) AS $extraLabel) {
+        $query .= ', `'.$extraLabel.'`';
+      }
+      $query .= ', `m`.*';
+      $query .= ' FROM '.$projectTable.' p';
+      $query .= ' LEFT JOIN `'.self::MEMBER_TABLE.'` m';
+      $query .= ' ON m.musicianId = p.MusikerId';
+      $query .= ' WHERE (m.projectId = '.$projectId.' OR m.projectId = '.$memberProjectId.')';
+      $query .= '   AND (p.Lastschrift = 1)';
+
+      error_log($query);
+
+      $result = mySQL::query($query, $handle);
+      $table = array();
+      while ($row = mySQL::fetch($result)) {
+        $amount = 0.0;
+        foreach($monetary as $label => $fieldInfo) {
+          $value = $row[$label];
+          unset($row[$label]);
+          if (empty($value)) {
+            continue;
+          }
+          $allowed  = $fieldInfo['AllowedValues'];
+          $type     = $fieldInfo['Type']['Multiplicity'];
+          $amount  += DetailedInstrumentation::extraFieldSurcharge($value, $allowed, $type);
+        }
+        $row['SurchargeFees'] = $amount;
+        $table[] = $row;
+      }
+
+      error_log(print_r($table, true));
+
+      if ($ownConnection) {
+        mySQL::close($handle);
+      }
     }
 
     /**Provide a very primitive direct matrix representation, filtered

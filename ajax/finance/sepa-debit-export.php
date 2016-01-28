@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -49,11 +49,34 @@ namespace CAFEVDB {
     $projectId   = Util::cgiValue('ProjectId', -1);
     $projectName = Util::cgiValue('ProjectName', 'X');
     $table       = Util::cgiValue('Table', '');
-    $selectedMandates = array_unique(Util::cgiValue($recordsKey, array()));
+    $selectedMandates = Util::cgiValue($recordsKey, array());
 
-    if ($projectId < 0 || $projectName == 'X') {
-      throw new \InvalidArgumentException($nl.L::t('Project name and/or id are missing'));
+    $debitJob = trim(Util::cgiValue('debit-job', ''));
+    $debitAmountMax = Util::cgiValue('debit-note-amount', 1e12); // infinity
+    $debitNoteSubject = Util::cgiValue('debit-note-subject', false);
+
+    switch ($debitJob) {
+    default:
+    case '':
+      throw new \InvalidArgumentException(L::t('You did not tell what kind of debit-note you would like to draw.'));
+    case 'deposit':
+    case 'remaining':
+    case 'insurance':
+      break;
+    case 'amount':
+      if (empty(implode('', $debitNoteSubject))) {
+        throw new \InvalidArgumentException(L::t('Please specify a subject for this debit note.'));
+      }
+      $amount = implode('', $debitAmountMax);
+      $amount = FuzzyInput::currencyValue($amount);
+      if (empty($amount)) {
+        throw new \InvalidArgumentException(L::t('Please tell me about the amount you would like to draw.'));
+      }
     }
+
+    $table = SepaDebitMandates::projectFinanceExport($projectId);
+
+    throw new \Exception('stop');
 
     $encKey = Config::getEncryptionKey();
 
@@ -337,7 +360,7 @@ __EOT__;
       L::t('PHP Exception Caught').
       '</h1>
 <blockquote>'.
-      L::t('Please copy the displayed text and send it by email to %s.', array($mailto)).
+    L::t('Please copy the displayed text and send it by email to %s.', array($mailto)).
 '</blockquote>
 <div class="exception error name"><pre>'.$exceptionText.'</pre></div>
 <div class="exception error trace"><pre>'.$trace.'</pre></div>';

@@ -114,6 +114,29 @@ input.pme-debit-note[type=submit] {
   vertical-align:middle;
 }
 
+/******************************************************************************
+ *
+ * debit job choices.
+ *
+ */
+
+/* blend out amount and subject for predefined debit transfers. */
+.pme-debit-note-job input.debit-note-amount,
+.pme-debit-note-job input.debit-note-subject {
+  display:none;
+}
+
+/* blend out amount and subject for predefined debit transfers. */
+.pme-debit-note-job.custom ~ input.debit-note-amount,
+.pme-debit-note-job.custom ~ input.debit-note-subject {
+  display:inline-block;
+}
+
+.pme-debit-note-job input.debit-note-amount,
+.pme-debit-note-job input.debit-note-subject {
+  margin-top:0;
+}
+
 /*
  * Local Variables: ***
  * css-indent-offset: 2 ***

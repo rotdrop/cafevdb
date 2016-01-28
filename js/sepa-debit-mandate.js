@@ -415,7 +415,11 @@ var CAFEVDB = CAFEVDB || {};
            }, 'json');
   };
 
-  /**Validate version for the PME dialog. */
+  /**Validate version for the PME dialog.
+   *
+   * Note: the pme-dialog is disabled, but for the date, for the time
+   * being.
+   */
   SepaDebitMandate.validatePME = function(event, validateLockCB) {
     var $element = $(this);
 
@@ -646,6 +650,29 @@ var CAFEVDB = CAFEVDB || {};
     if (dbTable.length > 0) {
       return self.insuranceReady(selector);
     }
+
+    var directDebitChooser = container.find('select.pme-debit-note-job');
+    directDebitChooser.chosen({
+      disable_search: true,
+      inherit_select_classes:true,
+      allow_single_deselect:true
+    });
+    directDebitChooser.
+      off('change').
+      on('change', function(event) {
+      var self = $(this);
+      // not much to be done ...
+      var selected = self.find(':selected').val();
+      directDebitChooser.find('option[value="'+selected+'"]').prop('selected', true);
+      directDebitChooser.trigger('chosen:updated');
+      if (selected === 'amount') {
+        directDebitChooser.switchClass('predefined', 'custom');
+      } else {
+        directDebitChooser.switchClass('custom', 'predefined');
+      }
+      $.fn.cafevTooltip.remove();
+      return false;
+    });
 
     dbTable = form.find('input[value="SepaDebitMandates"]');
     if (dbTable.length == 0) {
