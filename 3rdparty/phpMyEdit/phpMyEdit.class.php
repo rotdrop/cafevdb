@@ -3277,7 +3277,7 @@ class phpMyEdit
 		$j = 1;
 		$line = array();
 		for ($k = 0; $k < $this->num_fds; $k++) {
-			if (!$this->displayed[$k]) {
+			if (!$this->displayed[$k] || $this->hidden($k)) {
 				continue;
 			}
 			$fd = $this->fds[$k];
@@ -3315,7 +3315,7 @@ class phpMyEdit
 			$line = array();
 			for ($k = 0; $k < $this->num_fds; $k++) {
 				$fd = $this->fds[$k];
-				if (!$this->displayed[$k]) {
+				if (!$this->displayed[$k] || $this->hidden($k)) {
 					continue;
 				}
 				$cell = $this->cellDisplay($k, $row, $css);
