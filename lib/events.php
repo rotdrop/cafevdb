@@ -337,6 +337,8 @@ namespace CAFEVDB
                                            array(print_r($response, true))));
         }
       }
+
+      return $id;
     }
 
     /**Inject a new event into the given calendar. This function calls
@@ -400,6 +402,8 @@ END:VALARM
       }
 
       $eventId = \OC_Calendar_Object::add($calendarId, $vcalendar->serialize());
+
+      return $eventId;
     }
 
     /**Return the OC calendar-id
