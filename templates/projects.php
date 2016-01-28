@@ -25,18 +25,14 @@ namespace CAFEVDB {
   $table   = new Projects();
   $css_pfx = Projects::CSS_PREFIX;
 
-  $navListItems = $_['pageControls'] == 'listItems';
-
   $nav = '';
-  //$nav .= Navigation::pageControlElement('projectinstruments', $navListItems);
-  $nav .= Navigation::pageControlElement('all', $navListItems);
-  $nav .= Navigation::pageControlElement('projects', $navListItems);
-  $nav .= Navigation::pageControlElement('instruments', $navListItems);
-  $nav .= Navigation::pageControlElement('project-extra', $navListItems);
+  //$nav .= Navigation::pageControlElement('projectinstruments');
+  $nav .= Navigation::pageControlElement('all');
+  $nav .= Navigation::pageControlElement('projects');
+  $nav .= Navigation::pageControlElement('instruments');
+  $nav .= Navigation::pageControlElement('project-extra');
 
-  if ($navListItems) {
-    $nav = '<ul id="navigation-list">'.$nav.'</ul>';
-  }
+  $nav = '<ul id="navigation-list">'.$nav.'</ul>';
 
   echo $this->inc('part.common.header',
                   array('css-prefix' => $css_pfx,

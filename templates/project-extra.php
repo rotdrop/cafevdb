@@ -27,27 +27,23 @@ namespace CAFEVDB {
   $project = $table->projectName;
   $projectId = $table->projectId;
 
-  $navListItems = $_['pageControls'] == 'listItems';
-
   $nav = '';
   if (!empty($project)) {
-    $nav .= Navigation::pageControlElement('projectlabel', $navListItems, $project, $projectId);
-    $nav .= Navigation::pageControlElement('detailed', $navListItems, $project, $projectId);
+    $nav .= Navigation::pageControlElement('projectlabel', $project, $projectId);
+    $nav .= Navigation::pageControlElement('detailed', $project, $projectId);
     if (Config::isTreasurer()) {
-      $nav .= Navigation::pageControlElement('project-payments', $navListItems, $project, $projectId);
-      $nav .= Navigation::pageControlElement('debitmandates', $navListItems, $table->projectName, $table->projectId);
+      $nav .= Navigation::pageControlElement('project-payments', $project, $projectId);
+      $nav .= Navigation::pageControlElement('debitmandates', $table->projectName, $table->projectId);
     }
-    $nav .= Navigation::pageControlElement('projects', $navListItems);
-    $nav .= Navigation::pageControlElement('instruments', $navListItems, $project, $projectId);
+    $nav .= Navigation::pageControlElement('projects');
+    $nav .= Navigation::pageControlElement('instruments', $project, $projectId);
   } else {
-    $nav .= Navigation::pageControlElement('projects', $navListItems);
-    $nav .= Navigation::pageControlElement('instruments', $navListItems);
-    $nav .= Navigation::pageControlElement('all', $navListItems);
+    $nav .= Navigation::pageControlElement('projects');
+    $nav .= Navigation::pageControlElement('instruments');
+    $nav .= Navigation::pageControlElement('all');
   }
 
-  if ($navListItems) {
-    $nav = '<ul id="navigation-list">'.$nav.'</ul>';
-  }
+  $nav = '<ul id="navigation-list">'.$nav.'</ul>';
 
   echo $this->inc('part.common.header',
                   array('css-prefix' => $css_pfx,

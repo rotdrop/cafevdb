@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -27,19 +27,15 @@ namespace CAFEVDB {
 
   $missing = Projects::missingInstrumentationTable($table->projectId);
 
-  $navListItems = $_['pageControls'] == 'listItems';
-
   $nav = '';
-  $nav .= Navigation::pageControlElement('projectlabel', $navListItems, $table->projectName, $table->projectId);
-  $nav .= Navigation::pageControlElement('projects', $navListItems);
-  $nav .= Navigation::pageControlElement('detailed', $navListItems, $table->projectName, $table->projectId);
-  $nav .= Navigation::pageControlElement('projectinstruments', $navListItems, $table->projectName, $table->projectId);
-  $nav .= Navigation::pageControlElement('instruments', $navListItems, $table->projectName, $table->projectId);
-  //$nav .= Navigation::pageControlElement('detailed', $navListItems, $table->projectName, $table->projectId);
+  $nav .= Navigation::pageControlElement('projectlabel', $table->projectName, $table->projectId);
+  $nav .= Navigation::pageControlElement('projects');
+  $nav .= Navigation::pageControlElement('detailed', $table->projectName, $table->projectId);
+  $nav .= Navigation::pageControlElement('projectinstruments', $table->projectName, $table->projectId);
+  $nav .= Navigation::pageControlElement('instruments', $table->projectName, $table->projectId);
+  //$nav .= Navigation::pageControlElement('detailed', $table->projectName, $table->projectId);
 
-  if ($navListItems) {
-    $nav = '<ul id="navigation-list">'.$nav.'</ul>';
-  }
+  $nav = '<ul id="navigation-list">'.$nav.'</ul>';
 
   echo $this->inc('part.common.header',
                   array('css-prefix' => $css_pfx,

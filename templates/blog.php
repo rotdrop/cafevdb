@@ -26,17 +26,13 @@ namespace CAFEVDB {
   $css_class = 'blog-page';
   unset($this->vars['css-class']);
 
-  $navListItems = $_['pageControls'] == 'listItems';
-
   $nav = '';
-  $nav .= Navigation::pageControlElement('projects', $navListItems);
-  $nav .= Navigation::pageControlElement('all', $navListItems);
-//$nav .= Navigation::pageControlElement('projectinstruments', $navListItems);
-  $nav .= Navigation::pageControlElement('instruments', $navListItems);
+  $nav .= Navigation::pageControlElement('projects');
+  $nav .= Navigation::pageControlElement('all');
+//$nav .= Navigation::pageControlElement('projectinstruments');
+  $nav .= Navigation::pageControlElement('instruments');
 
-  if ($navListItems) {
-    $nav = '<ul id="navigation-list">'.$nav.'</ul>';
-  }
+  $nav = '<ul id="navigation-list">'.$nav.'</ul>';
 
   $header = ''
     .'<div class="'.$css_pfx.'-blog" id="'.$css_pfx.'-blog-header">

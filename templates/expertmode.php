@@ -95,10 +95,10 @@ $buttons['example'] =
 ?>
 <div id="expertmode">
   <fieldset id="expertmode" class="operations expert"><legend><?php echo L::t('Predefined data-base operations'); ?></legend>
-  <?php echo Navigation::button($buttons); ?>
+  <?php echo Navigation::buttonsFromArray($buttons); ?>
   <label for="" class="bold"><?php echo L::t('Operation generated Response');?></label>
 <?php
-  echo Navigation::button(
+  echo Navigation::buttonsFromArray(
     array('only' =>
           array('name' => L::t('Clear Output'),
                 'id' => 'clearoutput',

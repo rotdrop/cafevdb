@@ -26,19 +26,15 @@ namespace CAFEVDB {
   $css_pfx = Musicians::CSS_PREFIX;
   $css_class = Musicians::CSS_CLASS;
 
-  $navListItems = $_['pageControls'] == 'listItems';
-
   $nav = '';
-  $nav .= Navigation::pageControlElement('all', $navListItems);
-  $nav .= Navigation::pageControlElement('projects', $navListItems);
-  $nav .= Navigation::pageControlElement('instruments', $navListItems);
+  $nav .= Navigation::pageControlElement('all');
+  $nav .= Navigation::pageControlElement('projects');
+  $nav .= Navigation::pageControlElement('instruments');
   if (Config::isTreasurer()) {
-    $nav .= Navigation::pageControlElement('insurances', $navListItems);
-    $nav .= Navigation::pageControlElement('debitmandates', $navListItems);
+    $nav .= Navigation::pageControlElement('insurances');
+    $nav .= Navigation::pageControlElement('debitmandates');
   }
-  if ($navListItems) {
-    $nav = '<ul id="navigation-list">'.$nav.'</ul>';
-  }
+  $nav = '<ul id="navigation-list">'.$nav.'</ul>';
 
   echo $this->inc('part.common.header',
                   array('css-prefix' => $css_pfx,

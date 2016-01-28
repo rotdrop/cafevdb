@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -26,27 +26,23 @@ namespace CAFEVDB {
   $projectId = Util::cgiValue('ProjectId',-1);
   $css_pfx = EmailHistory::CSS_PREFIX;
 
-  $navListItems = $_['pageControls'] == 'listItems';
-
   $nav = '';
   if ($projectId >= 0) {
-    $nav .= Navigation::pageControlElement('projectlabel', $navListItems, $projectName, $projectId);
-    $nav .= Navigation::pageControlElement('projects', $navListItems);
-    $nav .= Navigation::pageControlElement('email', $navListItems, $projectName, $projectId);
-    $nav .= Navigation::pageControlElement('detailedg', $navListItems, $projectName, $projectId);
-    $nav .= Navigation::pageControlElement('projectinstruments', $navListItems, $projectName, $projectId);
-    $nav .= Navigation::pageControlElement('instruments', $navListItems, $projectName, $projectId);
+    $nav .= Navigation::pageControlElement('projectlabel', $projectName, $projectId);
+    $nav .= Navigation::pageControlElement('projects');
+    $nav .= Navigation::pageControlElement('email', $projectName, $projectId);
+    $nav .= Navigation::pageControlElement('detailedg', $projectName, $projectId);
+    $nav .= Navigation::pageControlElement('projectinstruments', $projectName, $projectId);
+    $nav .= Navigation::pageControlElement('instruments', $projectName, $projectId);
   } else {
-    $nav .= Navigation::pageControlElement('projects', $navListItems);
-    $nav .= Navigation::pageControlElement('email', $navListItems);
-    $nav .= Navigation::pageControlElement('all', $navListItems);
-    $nav .= Navigation::pageControlElement('projectinstruments', $navListItems);
-    $nav .= Navigation::pageControlElement('instruments', $navListItems);
+    $nav .= Navigation::pageControlElement('projects');
+    $nav .= Navigation::pageControlElement('email');
+    $nav .= Navigation::pageControlElement('all');
+    $nav .= Navigation::pageControlElement('projectinstruments');
+    $nav .= Navigation::pageControlElement('instruments');
   }
 
-  if ($navListItems) {
-    $nav = '<ul id="navigation-list">'.$nav.'</ul>';
-  }
+  $nav = '<ul id="navigation-list">'.$nav.'</ul>';
 
   echo $this->inc('part.common.header',
                   array('css-prefix' => $css_pfx,

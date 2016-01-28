@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -27,23 +27,19 @@ namespace CAFEVDB {
   $project = $table->projectName;
   $projectId = $table->projectId;
 
-  $navListItems = $_['pageControls'] == 'listItems';
-
   $nav = '';
   if ($projectId >= 0) {
-    $nav .= Navigation::pageControlElement('projectlabel', $navListItems, $project, $projectId);
-    $nav .= Navigation::pageControlElement('projects', $navListItems);
-    $nav .= Navigation::pageControlElement('projectinstruments', $navListItems, $project, $projectId);
-    $nav .= Navigation::pageControlElement('detailed', $navListItems, $project, $projectId);
+    $nav .= Navigation::pageControlElement('projectlabel', $project, $projectId);
+    $nav .= Navigation::pageControlElement('projects');
+    $nav .= Navigation::pageControlElement('projectinstruments', $project, $projectId);
+    $nav .= Navigation::pageControlElement('detailed', $project, $projectId);
   } else {
-    $nav .= Navigation::pageControlElement('projects', $navListItems);
-    //  $nav .= Navigation::pageControlElement('projectinstruments', $navListItems);
-    $nav .= Navigation::pageControlElement('all', $navListItems);
+    $nav .= Navigation::pageControlElement('projects');
+    //  $nav .= Navigation::pageControlElement('projectinstruments');
+    $nav .= Navigation::pageControlElement('all');
   }
 
-  if ($navListItems) {
-    $nav = '<ul id="navigation-list">'.$nav.'</ul>';
-  }
+  $nav = '<ul id="navigation-list">'.$nav.'</ul>';
 
   echo $this->inc('part.common.header',
                   array('css-prefix' => $css_pfx,

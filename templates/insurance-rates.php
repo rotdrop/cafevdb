@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -26,18 +26,14 @@ namespace CAFEVDB
   $table = new InsuranceRates();
   $css_pfx = InsuranceRates::CSS_PREFIX;
 
-  $navListItems = $_['pageControls'] == 'listItems';
-
   $nav = '';
-  $nav .= Navigation::pageControlElement('projects', $navListItems);
-  $nav .= Navigation::pageControlElement('all', $navListItems);
-  $nav .= Navigation::pageControlElement('insurances', $navListItems);
-  $nav .= Navigation::pageControlElement('insurancebrokers', $navListItems);
-  $nav .= Navigation::pageControlElement('debitmandates', $navListItems);
+  $nav .= Navigation::pageControlElement('projects');
+  $nav .= Navigation::pageControlElement('all');
+  $nav .= Navigation::pageControlElement('insurances');
+  $nav .= Navigation::pageControlElement('insurancebrokers');
+  $nav .= Navigation::pageControlElement('debitmandates');
 
-  if ($navListItems) {
-    $nav = '<ul id="navigation-list">'.$nav.'</ul>';
-  }
+  $nav = '<ul id="navigation-list">'.$nav.'</ul>';
 
   echo $this->inc('part.common.header',
                   array('css-prefix' => $css_pfx,

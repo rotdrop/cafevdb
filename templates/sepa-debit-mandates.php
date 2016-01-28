@@ -28,25 +28,21 @@ namespace CAFEVDB {
   $projectId = $_['projectId'];
   $css_pfx = SepaDebitMandates::CSS_PREFIX;
 
-  $navListItems = $_['pageControls'] == 'listItems';
-
   $nav = '';
   if ($projectId >= 0) {
-    $nav .= Navigation::pageControlElement('projectlabel', $navListItems, $projectName, $projectId);
-    $nav .= Navigation::pageControlElement('detailed', $navListItems, $projectName, $projectId);
-    $nav .= Navigation::pageControlElement('project-extra', $navListItems, $projectName, $projectId);
-    $nav .= Navigation::pageControlElement('project-payments', $navListItems, $projectName, $projectId);
-    $nav .= Navigation::pageControlElement('projects', $navListItems);
-    $nav .= Navigation::pageControlElement('projectinstruments', $navListItems, $projectName, $projectId);
+    $nav .= Navigation::pageControlElement('projectlabel', $projectName, $projectId);
+    $nav .= Navigation::pageControlElement('detailed', $projectName, $projectId);
+    $nav .= Navigation::pageControlElement('project-extra', $projectName, $projectId);
+    $nav .= Navigation::pageControlElement('project-payments', $projectName, $projectId);
+    $nav .= Navigation::pageControlElement('projects');
+    $nav .= Navigation::pageControlElement('projectinstruments', $projectName, $projectId);
   } else {
-    $nav .= Navigation::pageControlElement('projects', $navListItems);
-    $nav .= Navigation::pageControlElement('all', $navListItems);
-    $nav .= Navigation::pageControlElement('instruments', $navListItems);
+    $nav .= Navigation::pageControlElement('projects');
+    $nav .= Navigation::pageControlElement('all');
+    $nav .= Navigation::pageControlElement('instruments');
   }
 
-  if ($navListItems) {
-    $nav = '<ul id="navigation-list">'.$nav.'</ul>';
-  }
+  $nav = '<ul id="navigation-list">'.$nav.'</ul>';
 
   echo $this->inc('part.common.header',
                   array('css-prefix' => $css_pfx,
