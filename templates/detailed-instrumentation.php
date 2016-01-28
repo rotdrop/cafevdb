@@ -39,7 +39,7 @@ namespace CAFEVDB {
     $nav .= Navigation::pageControlElement('project-payments', $navListItems, $table->projectName, $table->projectId);
     $nav .= Navigation::pageControlElement('debitmandates', $navListItems, $table->projectName, $table->projectId);
   }
-  if ($table->projectName == Config::getValue('memberTable', $navListItems)) {
+  if ($table->projectName === Config::getValue('memberTable', false)) {
     if (Config::isTreasurer()) {
       $nav .= Navigation::pageControlElement('insurances', $navListItems);
     }
