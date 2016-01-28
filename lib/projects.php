@@ -265,10 +265,13 @@ namespace CAFEVDB
       $nameIdx = count($opts['fdd']);
       $opts['fdd']['Name'] = array(
         'name'     => L::t('Projekt-Name'),
-        'php|LF'  => array('type' => 'function',
-                           'function' => 'CAFEVDB\Projects::projectActionsPME',
-                           'parameters' => array("idIndex" => $idIdx,
-                                                 "overview" => true)),
+        'php|LF'  => function($value, $op, $field, $fds, $fdd, $row, $recordId) {
+          $projectId = $recordId;
+          $projectName = $value;
+          $placeholder = false;
+          $overview = true;
+          return self::projectActions($projectId, $projectName, $placeholder, $overview);
+        },
         'select'   => 'D',
         'maxlen'   => self::NAME_LENGTH_MAX + 6,
         'css'      => array('postfix' => ' projectname control'),
@@ -293,14 +296,17 @@ namespace CAFEVDB
 
       $opts['fdd']['Actions'] = array(
         'name'     => L::t('Actions'),
+        'input'    => 'RV',
         'sql'      => '`PMEtable0`.`Name`',
-        'php|VCLDF'    => array('type' => 'function',
-                                'function' => 'CAFEVDB\Projects::projectActionsPME',
-                                'parameters' => array("idIndex" => $idIdx,
-                                                      "overview" => false,
-                                                      "placeHolder" => L::t("Actions"))),
+        'php|VCLDF'    => function($value, $op, $field, $fds, $fdd, $row, $recordId) {
+          $projectId = $recordId;
+          $projectName = $value;
+          $overview = false;
+          $placeholder = L::t("Actions");
+          return self::projectActions($projectId, $projectName, $placeHolder, $overview);
+        },
         'select'   => 'T',
-        'options'  => 'VDR',
+        'options'  => 'VD',
         'maxlen'   => 11,
         'default'  => '0',
         'css'      => array('postfix' => ' control'),
@@ -312,17 +318,19 @@ namespace CAFEVDB
       $instruments        = Instruments::fetch($handle);
       mySQL::close($handle);
 
-      $opts['fdd']['Besetzung'] = array('name'     => 'Besetzung',
-                                        'options'  => 'LAVCPD',
-                                        'select'   => 'M',
-                                        'maxlen'   => 11,
-                                        'sort'     => true,
-                                        'display|LF' => array("popup" => 'data',
-                                                              "prefix" => '<div class="projectinstrumentation">',
-                                                              "postfix" => '</div>'),
-                                        'css'      => array('postfix' => ' projectinstrumentation tooltip-top'),
-                                        'values'   => $instruments,
-                                        'valueGroups' => $groupedInstruments);
+      $opts['fdd']['Besetzung'] = array(
+        'name'     => 'Besetzung',
+        'options'  => 'LAVCPD',
+        'select'   => 'M',
+        'maxlen'   => 11,
+        'sort'     => true,
+        'display|LF' => array("popup" => 'data',
+                              "prefix" => '<div class="projectinstrumentation">',
+                              "postfix" => '</div>'),
+        'css'      => array('postfix' => ' projectinstrumentation tooltip-top'),
+        'values'   => $instruments,
+        'valueGroups' => $groupedInstruments,
+        );
 
       $opts['fdd']['Tools'] = array(
         'name'     => L::t('Toolbox'),
@@ -331,13 +339,14 @@ namespace CAFEVDB
         'select'   => 'T',
         'maxlen'   => 65535,
         'css'      => array('postfix' => ' projecttoolbox'),
-        'sql'      => '`PMEtable0`.`Id`',
-//        'sqlw'     => 'Id',
-        'php|CV'    => array('type' => 'function',
-                             'function' => 'CAFEVDB\Projects::projectToolboxPME',
-                             'parameters' => $nameIdx),
+        'sql'      => '`PMEtable0`.`Name`',
+        'php|CV'   =>  function($value, $op, $field, $fds, $fdd, $row, $recordId) {
+          $projectName = $value;
+          $projectId = $recordId;
+          return self::projectToolbox($projectId, $projectName);
+        },
         'sort'     => true,
-        'escape' => false
+        'escape'   => false
         );
 
       $opts['fdd']['Unkostenbeitrag'] = Config::$opts['money'];
@@ -375,16 +384,14 @@ namespace CAFEVDB
         'input'    => 'VR',
         'sql'      => ("GROUP_CONCAT(DISTINCT NULLIF(`".$join_table."`.`Name`,'') ".
                        "ORDER BY `".$join_table."`.`Name` ASC SEPARATOR ', ')"),
-        'php|VCP'  => array(
-          'type' => 'function',
-          'function' => function($value, $opts, $act, $k, $fds, $fdd, $row) use ($idIdx, $nameIdx) {
-          $post = array('ProjectExtraFields' => $value,
-                        'Template' => 'project-extra',
-                        'ProjectName' => $row['qf'.$nameIdx],
-                        'ProjectId' => $row['qf'.$idIdx]);
-          $post = http_build_query($post, '', '&');
-          $title = Config::toolTips('project-action-extra-fields');
-          $link =<<<__EOT__
+        'php|VCP'  => function($value, $op, $field, $fds, $fdd, $row, $recordId) use ($nameIdx) {
+            $post = array('ProjectExtraFields' => $value,
+                          'Template' => 'project-extra',
+                          'ProjectName' => $row['qf'.$nameIdx],
+                          'ProjectId' => $recordId);
+            $post = http_build_query($post, '', '&');
+            $title = Config::toolTips('project-action-extra-fields');
+            $link =<<<__EOT__
 <li class="nav tooltip-top" title="$title">
   <a class="nav" href="#" data-post="$post">
 $value
@@ -392,9 +399,7 @@ $value
 </li>
 __EOT__;
           return $link;
-          },
-          'parameters' => array()
-          ),
+        },
         'select'   => 'T',
         'maxlen'   => 30,
         'css'      => array('postfix' => ' projectextra'),
@@ -411,10 +416,10 @@ __EOT__;
         'maxlen'   => 65535,
         'css'      => array('postfix' => ' projectprogram'),
         'sql'      => '`PMEtable0`.`Id`',
-//        'sqlw'     => 'Id',
-        'php|CV'    => array('type' => 'function',
-                             'function' => 'CAFEVDB\Projects::projectProgramPME',
-                             'parameters' => array()),
+        'php|CV'    => function($value, $op, $field, $fds, $fdd, $row, $recordId) {
+          $projectId = $recordId; // and also $value
+          return self::projectProgram($projectId, $op);
+        },
         'sort'     => true,
         'escape' => false
         );
@@ -424,12 +429,12 @@ __EOT__;
         'name' => L::t('Flyer'),
         'select' => 'T',
         'options' => 'CPDV',
-        'sql'      => '`PMEtable0`.`Id`',
-        'php' => array(
-          'type' => 'function',
-          'function' => 'CAFEVDB\Projects::flyerImageLinkPME',
-          'parameters' => array()
-          ),
+        'sql'      => '`PMEtable0`.`Aktualisiert`',
+        'php' => function($value, $op, $field, $fds, $fdd, $row, $recordId) {
+          $projectId = $recordId;
+          $stamp = $value;
+          return self::flyerImageLink($projectId, $op, $stamp);
+        },
         'css' => array('postfix' => ' projectflyer'),
         'default' => '',
         'sort' => false);
@@ -832,7 +837,7 @@ __EOT__;
      * @todo Do something more useful in the case of an error (database
      * or CMS unavailable)
      */
-    public static function projectProgramPME($projectId, $opts, $action, $k, $fds, $fdd, $row)
+    public static function projectProgram($projectId, $action)
     {
       $redaxoLocation = \OCP\Config::GetAppValue('redaxo', 'redaxolocation', '');
       $rex = new \Redaxo\RPC($redaxoLocation);
@@ -885,14 +890,6 @@ __EOT__;
       $tmpl->assign('app', Config::APP_NAME);
       $html = $tmpl->fetchPage();
       return $html;
-    }
-
-    public static function projectActionsPME($projectName, $opts, $action, $k, $fds, $fdd, $row)
-    {
-      $projectId   = $row["qf".$opts["idIndex"]];
-      $placeHolder = isset($opts['placeHolder']) ? $opts['placeHolder'] : false;
-      $overview = isset($opts['overview']) ? $opts['overview'] : false;
-      return self::projectActions($projectId, $projectName, $placeHolder, $overview);
     }
 
     public static function projectActions($projectId, $projectName, $placeHolder = false, $overview = false)
@@ -1155,13 +1152,6 @@ __EOT__;
       return $returnPaths;
     }
 
-    /**PME-interface to projectToolBox(), see there. */
-    public static function projectToolboxPME($projectId, $nameIdx, $modify, $k, $fds, $fdd, $row)
-    {
-      $projectName = $row["qf$nameIdx"];
-      return self::projectToolbox($projectId, $projectName);
-    }
-
     /**Gather events, instrumentation numbers and the wiki-page in a
      * form-set for inclusion into some popups etc.
      */
@@ -1206,36 +1196,6 @@ __EOT__;
 '.$toolbox.'
 </div>
 ';
-    }
-
-    public static function eventButtonPME($projectId, $opts, $modify, $k, $fds, $fdd, $row)
-    {
-      $projectName = $row["qf$opts"];
-      return self::eventButton($projectId, $projectName);
-    }
-
-    public static function eventButton($projectId, $projectName, $value = false, $eventSelect = array())
-    {
-      if ($value === false) {
-        $value = L::t('Events');
-      }
-      $bvalue      = $value;
-      // Code the value in the name attribute (for java-script)
-      $bname       = "ProjectId=$projectId&ProjectName=".$projectName;
-      foreach ($eventSelect as $event) {
-        $bname .= '&EventSelect[]='.$event;
-      }
-      $bname       = Util::htmlEncode($bname);
-      $title       = Config::toolTips('projectevents-button');
-      $image = \OCP\Util::imagePath('calendar', 'calendar.svg');
-      $button =<<<__EOT__
-<span class="events">
-  <button type="button" class="events" title="$title" name="$bname" value="$bvalue">
-    <img class="svg events" src="$image" alt="$bvalue" />
-  </button>
-</span>
-__EOT__;
-      return $button;
     }
 
     /**Fetch all project data for the given id or name.
@@ -2155,6 +2115,10 @@ __EOT__;
               $projectId.' = b.`ProjektId`')
             )),
 
+        'ProjectId' => array('table' => 'b',
+                             'column' => 'ProjektId',
+                             'join' => array('type' => 'INNER')),
+
         'Projects' => array(
           'table' => 'Besetzungen',
           'tablename' => 'b2',
@@ -2421,13 +2385,6 @@ __EOT__;
       }
 
       return true;
-    }
-
-    public static function flyerImageLinkPME($projectId, $opts, $action, $k, $fds, $fdd, $row)
-    {
-      $stampIdx = array_search('Aktualisiert', $fds);
-      $stamp = strtotime($row['qf'.$stampIdx]);
-      return self::flyerImageLink($projectId, $action, $stamp);
     }
 
     public static function flyerImageLink($projectId, $action = 'display', $timeStamp = '')
