@@ -1136,8 +1136,8 @@ argument must be an array of type descriptions.');
       if (is_scalar($idOrFields)) {
         $projectId = $idOrFields;
         $handle = $typeInfoOrHandle;
-        $extraFields = self::getExtraFields($projectId, $handle);
-        $fieldTypes = ProjectExtra::fieldTypes($handle);
+        $extraFields = Instrumentation::getExtraFields($projectId, $handle);
+        $fieldTypes = self::fieldTypes($handle);
       } else {
         $extraFields = $idOrFields;
         $fieldTypes = $typeInfoOrHandle;
