@@ -1139,7 +1139,7 @@ __EOT__;
      * phpMyEdit buttons. This is a dirty hack. But so what. Only the
      * L and F (list and filter) views are augmented.
      *
-     * @param[in] $button The new button.
+     * @param[in] $button The new buttons.
      *
      * @param[in] $misc Whether or not to include the extra misc-button.
      *
@@ -1149,15 +1149,32 @@ __EOT__;
      */
     public static function prependTableButton($button, $misc = false, $all = false)
     {
+      return self::prependTableButtons(array($button), $misc, $all);
+    }
+
+    /**Add a new button to the left of the already registered
+     * phpMyEdit buttons. This is a dirty hack. But so what. Only the
+     * L and F (list and filter) views are augmented.
+     *
+     * @param[in] $buttons The new buttons.
+     *
+     * @param[in] $misc Whether or not to include the extra misc-button.
+     *
+     * @param[in] $all Whether to add the button to non-list views.
+     *
+     * @return Array suitable to be plugged in $opts['buttons'].
+     */
+    public static function prependTableButtons($buttons, $misc = false, $all = false)
+    {
       // Cloned from phpMyEdit class:
       if (!$misc) {
         $default_buttons_no_B = array(
           'L' => array('<<', '<',
-                       $button, 'add',
+                       'placeholder', 'add',
                        '>', '>>',
                        'goto', 'rows_per_page','reload'),
           'F' => array('<<', '<',
-                       $button, 'add',
+                       'placeholder', 'add',
                        '>', '>>',
                        'goto', 'rows_per_page','reload'),
           'A' => array('save', 'apply', 'more', 'cancel'),
@@ -1169,11 +1186,11 @@ __EOT__;
       } else {
         $default_buttons_no_B = array(
           'L' => array('<<','<',
-                       'misc', $button, 'add',
+                       'misc', 'placeholder', 'add',
                        '>','>>',
                        'goto','rows_per_page','reload'),
           'F' => array('<<','<',
-                       'misc', $button, 'add',
+                       'misc', 'placeholder', 'add',
                        '>','>>',
                        'goto','rows_per_page','reload'),
           'A' => array('save', 'apply', 'more', 'cancel'),
@@ -1192,9 +1209,16 @@ __EOT__;
         $upValue = array();
         $downValue = array();
         foreach ($value as $oneButton) {
-          if (isset($button['code'])) {
-            $upValue[] = preg_replace('/id="([^"]*)"/', 'id="$1-up"', $oneButton);
-            $downValue[] = preg_replace('/id="([^"]*)"/', 'id="$1-down"', $oneButton);
+          if ($oneButton === 'placeholder') {
+            foreach ($buttons as $button) {
+              if (isset($button['code'])) {
+                $upValue[] = preg_replace('/id="([^"]*)"/', 'id="$1-up"', $button);
+                $downValue[] = preg_replace('/id="([^"]*)"/', 'id="$1-down"', $button);
+              } else {
+                $upValue[]   = $button;
+                $downValue[] = $button;
+              }
+            }
           } else {
             $upValue[]   = $oneButton;
             $downValue[] = $oneButton;
