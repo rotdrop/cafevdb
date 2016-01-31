@@ -75,6 +75,45 @@ same effect as clicking the close button on top of the dialog-window. No email w
 
         'configrecheck' => L::t('Perform the configuration checks again. If all checks have been passed then you are led on to the ordinary entry page of the application.'),
 
+        'debit-note-creation-time' => L::t('The time when the debit note data was created.'),
+
+        'debit-note-date-of-submission' => L::t('The date when the debit note records were actually transferred to the
+bank.'),
+
+        'debit-note-due-date' => L::t('The date when (hopefully) the amount debited will reach our own bank
+account.'),
+
+        'debit-note-job-choice' => L::t('Select here which kind of debit note you would like to
+issue. Basically, besides the special instrument insureance and
+member-fee debits there are the choices of an arbitrary amount, the
+project fee deposit are the remaining (are all, if there was no
+deposit) project fees. In any case the data-base application will take
+care not to draw to much money, based on the payments stored in the
+data-base.'),
+
+        'debit-note-job-option-amount' => L::t('Draw an arbitrary amount from the debitor. However, the amount is
+automatically limited not to exceed the outstanding debts of the
+musician.'),
+
+        'debit-note-job-option-deposit' => L::t('Just draw an amount up to the deposit for the project. If there are
+already payments for the project which sum up to the deposit amount,
+then nothing is debited.'),
+
+        'debit-note-job-option-insurance' => L::t('Issue the yearly debit-note for the instrument insurance.'),
+
+        'debit-note-job-option-membership-fee' => L::t('Issue the yearly debit-note for the member-ship fee.'),
+
+        'debit-note-job-option-remaining' => L::t('Issue a debit-note over the remaining debts of the musician, taking
+into account how much already has been paid.'),
+
+        'debit-note-submission-deadline' => L::t('Date of latest submission of the debit note to our own bank.'),
+
+        'debit-notes-announce' => L::t('Inform all debitors of this debit-note by email; an email dialog is
+opened.'),
+
+        'debit-notes-download' => L::t('Download the data-set of this debit-note for transferal to our bank
+institute.'),
+
         'debug-mode' => L::t('Amount of debug output. Keep this disabled for normal use.'),
 
         'delete-all-event-attachments' => L::t('Clear the list of selected event-attachments. Of course, this does not delete the events from their respective calendar, it just de-selects all events such that no event will be attached to the email.'),
@@ -240,6 +279,9 @@ can be reenabled at any time by clicking the ``Search\'\' button in
 each individual table view.'),
 
         'further-settings' => L::t('Further personal settings, normally not needed use with care.'),
+
+        'instrument-insurance-bill' => L::t('Generate a PDF with detailed records of the insured items and the
+resulting insurance fee.'),
 
         'member-status' => L::t('A flag which indicates not so much social or functional status, but
 default behaviour for mass-emails as follows
