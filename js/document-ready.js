@@ -168,6 +168,20 @@ $(document).ready(function() {
         parameters: []
     });
 
+    PHPMYEDIT.addTableLoadCallback('DebitNotes', {
+        callback: function(selector, parameters, resizeCB) {
+
+            if (parameters.reason != 'dialogOpen') {
+                resizeCB();
+                return;
+            }
+
+            CAFEVDB.DebitNotes.ready(selector, resizeCB);
+        },
+        context: CAFEVDB,
+        parameters: []
+    });
+
     CAFEVDB.addReadyCallback(function() {
         CAFEVDB.exportMenu();
 
