@@ -730,7 +730,9 @@ class phpMyEdit
 			}
 			foreach ($desc['columns'] as $key => $val) {
 				if ($val) {
-					$qparts['select'] .= 'IFNULL(CAST('.$this->sd.$val.$this->ed.' AS CHAR),"")';
+					$qparts['select'] .= 'IFNULL(CAST('.$this->sd.$val.$this->ed.' AS CHAR),';
+					$null = empty($desc['ifnull'][$key]) ? '""' : $desc['ifnull'][$key];
+					$qparts['select'] .= $null.')';
 					if ($desc['divs'][$key]) {
 						$qparts['select'] .= ',"'.addslashes($desc['divs'][$key]).'"';
 					}
@@ -827,7 +829,9 @@ class phpMyEdit
 					}
 					foreach ($desc['columns'] as $key => $val) {
 						if ($val) {
-							$ret .= 'IFNULL(CAST('.$this->sd.$join_table.$this->ed.'.'.$this->sd.$val.$this->ed.' AS CHAR),"")';
+							$ret .= 'IFNULL(CAST('.$this->sd.$join_table.$this->ed.'.'.$this->sd.$val.$this->ed.' AS CHAR),';
+							$null = empty($desc['ifnull'][$key]) ? '""' : $desc['ifnull'][$key];
+							$ret .= $null.')';
 							if ($desc['divs'][$key]) {
 								$ret .= ',"'.addslashes($desc['divs'][$key]).'"';
 							}
@@ -1454,7 +1458,7 @@ class phpMyEdit
 
 			// Transfer tab definitions to the CSS which will be
 			// emitted automatically. Columns without tab definitions
-			// will got the last mentioned tab. The first columns
+			// will get the last mentioned tab. The first columns
 			// without tab definitions will go to the default tab.
 			$tab_idx = $this->tabs_by_name[$this->tabs[$this->cur_tab]];
 			$tab_postfix = ' tab-'.$tab_idx;
@@ -2168,13 +2172,13 @@ class phpMyEdit
 			if (is_callable($php)) {
 				return call_user_func($php, $value, 'display', // action to be performed
 									  $k, $this->fds, $this->fdd,
-									  $row, $this->rec);
+									  $row, $key_rec);
 			} else if (is_array($php)) {
 				$opts = isset($php['parameters']) ? $php['parameters'] : '';
 				return call_user_func($php['function'], $value, $opts,
 									  'display', // action to be performed
 									  $k, $this->fds, $this->fdd,
-									  $row, $this->rec);
+									  $row, $key_rec);
 			} else if (file_exists($php)) {
 				return include($php);
 			}
