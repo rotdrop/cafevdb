@@ -1200,7 +1200,7 @@ argument must be an array of type descriptions.');
         $query .= "AND d.`FieldId` = ".$fieldId;
       }
 
-      error_log($query);
+      //error_log($query);
 
       $result = false;
       $qResult = mySQL::query($query, $handle);
