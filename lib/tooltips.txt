@@ -1,6 +1,7 @@
 debit-note-creation-time
 debit-note-date-of-submission
 debit-note-due-date
+debit-note-email-message-id
 debit-note-job-choice
 debit-note-job-option-amount
 debit-note-job-option-deposit

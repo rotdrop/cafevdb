@@ -83,6 +83,8 @@ bank.'),
         'debit-note-due-date' => L::t('The date when (hopefully) the amount debited will reach our own bank
 account.'),
 
+        'debit-note-email-message-id' => L::t('Email message-id header of the notification email for this debit-note.'),
+
         'debit-note-job-choice' => L::t('Select here which kind of debit note you would like to
 issue. Basically, besides the special instrument insureance and
 member-fee debits there are the choices of an arbitrary amount, the
