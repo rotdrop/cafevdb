@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -28,7 +28,7 @@ namespace CAFEVDB {
 
   Error::exceptions(true);
   $debugText = '';
-  
+
   ob_start();
 
   try {
@@ -47,7 +47,7 @@ namespace CAFEVDB {
     if ($projectId < 0 ||
         ($projectName == '' &&
          ($projectName = Projects::fetchName($projectId)) == '')) {
-      
+
       $debugText .= ob_get_contents();
       @ob_end_clean();
 
@@ -62,7 +62,7 @@ namespace CAFEVDB {
     if ($musicianId < 0 ||
         ($musicianName == '' &&
          ($musicianName = Musicians::fetchName($musicianId)) === false)) {
-      
+
       $debugText .= ob_get_contents();
       @ob_end_clean();
 
@@ -82,7 +82,7 @@ namespace CAFEVDB {
     if ($mandate === false) {
       $ref = Finance::generateSepaMandateReference($projectId, $musicianId);
       $members = Config::getSetting('memberTable', L::t('ClubMembers'));
-      $sequenceType = $projectName !== $members ? 'once' : 'permanent';
+      $sequenceType = 'permanent'; //$projectName !== $members ? 'once' : 'permanent';
       $mandate = array('id' => -1,
                        'mandateReference' => $ref,
                        'mandateDate' => '01-'.date('m-Y'),
@@ -97,7 +97,7 @@ namespace CAFEVDB {
     }
 
     $tmpl = new \OCP\Template('cafevdb', 'sepa-debit-mandate');
-  
+
     $tmpl->assign('ProjectName', $projectName);
     $tmpl->assign('ProjectId', $projectId);
     $tmpl->assign('MusicianName', $musicianName);
@@ -148,7 +148,7 @@ namespace CAFEVDB {
     return true;
 
   } catch (\Exception $e) {
-      
+
     $debugText .= ob_get_contents();
     @ob_end_clean();
 
