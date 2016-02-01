@@ -568,76 +568,119 @@ var CAFEVDB = CAFEVDB || {};
   };
 
   SepaDebitMandate.insuranceReady = function(selector) {
-    var self = this;
+    var sdm = this;
 
     var containerSel = PHPMYEDIT.selector(selector);
     var container = PHPMYEDIT.container(containerSel);
-    var form = container.find('form[class^="pme-form"]');
 
     container.find('input.pme-debit-note').
       off('click').
-      on('click', function(event) {
+      on('click', sdm.exportHandler);
 
-      event.preventDefault();
-
-      var downloadName = 'pmeformdownloadframe';
-      var downloadFrame = $('iframe#'+downloadName);
-      downloadFrame.contents().find('body').html('');
-
-      downloadFrame.off('load').on('load', function() {
-        var frameBody = downloadFrame.contents().find('body').html();
-        if (frameBody != '') {
-          OC.dialogs.alert(t('cafevdb', 'Unable to export debit notes:')+
-                           ' '+
-                           frameBody,
-                           t('cafevdb', 'Error'),
-                           undefined, true, true);
-        }
-      });
-
-      var downloadName2 = 'pmeformdownloadframetwo';
-      var downloadFrame2 = $('iframe#'+downloadName2);
-      downloadFrame2.contents().find('body').html('');
-
-      downloadFrame2.off('load').on('load', function() {
-        var frameBody = downloadFrame2.contents().find('body').html();
-        if (frameBody != '') {
-          OC.dialogs.alert(t('cafevdb', 'Unable to export insurance overviews:')+
-                           ' '+
-                           frameBody,
-                           t('cafevdb', 'Error'),
-                           undefined, true, true);
-        }
-      });
-
-      var values = $(this.form).serializeArray();
-
-      values.push({name: $(this).attr('name'), value: $(this).val()});
-
-      var post = $(this.form).serialize();
-      post += '&'+$.param({
-        'emailComposer[StoredMessagesSelector]': t('cafevdb', 'InsuranceDebitNoteAnnouncement'),
-        'emailComposer[Subject]': t('cafevdb', 'Debit notes due in 17 days')
-      });
-      CAFEVDB.Email.emailFormPopup(
-        post,
-        undefined,
-        undefined,
-        function() {
-          var action;
-          action = OC.filePath('cafevdb', 'ajax/insurance', 'instrument-insurance-export.php');
-          CAFEVDB.iframeFormSubmit(action, downloadName2, values);
-
-          action = OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-export.php');
-          CAFEVDB.iframeFormSubmit(action, downloadName, values);
-        });
-
-      return false;
-    });
     return true;
   };
 
+  SepaDebitMandate.exportHandler = function(event) {
+    var self = $(this);
+    var form = $(this.form);
+
+    event.stopImmediatePropagation(); // why?
+
+    CAFEVDB.modalizer(true);
+    CAFEVDB.Page.busyIcon(true);
+
+    var clearBusyState = function() {
+      CAFEVDB.modalizer(false);
+      CAFEVDB.Page.busyIcon(false);
+      console.log('after init');
+      return true;
+    };
+
+    var formPost = form.serialize();
+    $.post(OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-export.php'),
+           formPost,
+           function (data) {
+             if (!CAFEVDB.ajaxErrorHandler(data, [ 'message', 'debitnote' ],
+                                           clearBusyState)) {
+               return false;
+             }
+
+             // Everything worked out, from here we now trigger the
+             // download and the mail dialog
+
+             console.log('debitnote', data.data.debitnote);
+
+             var debitNote = data.data.debitnote;
+
+             // custom post
+             var postItems = [
+               'requesttoken',
+               'ProjectId',
+               'ProjectName',
+               'Table',
+               'MusicianId'
+             ];
+             var post = {};
+             for(var i = 0; i < postItems.length; ++i) {
+               post[postItems[i]] = form.find('input[name="'+postItems[i]+'"]').val();
+             };
+             post['DebitNoteId']    = debitNote.Id;
+             post['DownloadCookie'] = CAFEVDB.makeId();
+             post['EmailTemplate']  = data.data.emailtemplate;
+
+             var action = OC.filePath('cafevdb', 'ajax/finance', 'debit-note-download.php');
+
+             $.fileDownload(action, {
+               httpMethod: 'POST',
+               data: post,
+               cookieName: 'debit_note_download',
+               cookieValue: post['DownloadCookie'],
+               cookiePath: oc_webroot,
+               successCallback: function() {
+                 // if insurance, then also epxort the invoice PDFs
+                 if (debitNote.Job === 'insurance') {
+                   var action = OC.filePath('cafevdb', 'ajax/insurance', 'instrument-insurance-export.php');
+                   $.fileDownload(action, {
+                     httpMethod: 'POST',
+                     data: formPost+'&'+'DownloadCookie='+post['DownloadCookie'],
+                     cookieName: 'insurance_invoice_download',
+                     cookieValue: post['DownloadCookie'],
+                     cookiePath: oc_webroot,
+                     successCallback: function() {
+                       // call email dialog
+                       CAFEVDB.Email.emailFormPopup($.param(post), true, false, clearBusyState);
+                     },
+                     failCallback: function(responseHtml, url, error) {
+                       OC.dialogs.alert(t('cafevdb', 'Unable to export insurance overviews:')+
+                                        ' '+
+                                        responseHtml,
+                                        t('cafevdb', 'Error'),
+                                        clearBusyState,
+                                        true, true);
+                     }
+                   });
+                 } else {
+                   // call email dialog
+                   CAFEVDB.Email.emailFormPopup($.param(post), true, false, clearBusyState);
+                 }
+               },
+               failCallback: function(responseHtml, url, error) {
+                 OC.dialogs.alert(t('cafevdb', 'Unable to export debit notes:')+
+                                  ' '+
+                                  responseHtml,
+                                  t('cafevdb', 'Error'),
+                                  clearBusyState, true, true);
+               }
+             });
+
+             return true;
+           });
+
+    return false;
+  };
+
   SepaDebitMandate.ready = function(selector) {
+    var sdm = this;
     var self = this;
 
     var containerSel = PHPMYEDIT.selector(selector);
@@ -671,6 +714,22 @@ var CAFEVDB = CAFEVDB || {};
         directDebitChooser.switchClass('custom', 'predefined');
       }
       $.fn.cafevTooltip.remove();
+      return false;
+    });
+
+    container.find('#pme-debit-note-job-up input[type="text"]').
+      off('blur').
+      on('blur', function(event) {
+      var self = $(this);
+      container.find('#pme-debit-note-job-down input.'+self.attr('class')).val(self.val());
+      return false;
+    });
+
+    container.find('#pme-debit-note-job-down input[type="text"]').
+      off('blur').
+      on('blur', function(event) {
+      var self = $(this);
+      container.find('#pme-debit-note-job-up input.'+self.attr('class')).val(self.val());
       return false;
     });
 
@@ -745,45 +804,7 @@ var CAFEVDB = CAFEVDB || {};
 
     container.find('input.pme-debit-note').
       off('click').
-      on('click', function(event) {
-
-      event.stopImmediatePropagation();
-
-      var downloadName = 'pmeformdownloadframe';
-      var downloadFrame = $('iframe#'+downloadName);
-      downloadFrame.contents().find('body').html('');
-
-      downloadFrame.off('load').on('load', function() {
-        var frameBody = downloadFrame.contents().find('body').html();
-        if (frameBody != '') {
-          OC.dialogs.alert(t('cafevdb', 'Unable to export debit notes:')+
-                           ' '+
-                           frameBody,
-                           t('cafevdb', 'Error'),
-                           undefined, true, true);
-        }
-      });
-
-      var values = $(this.form).serializeArray();
-      var action = OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-export.php');
-      var target = downloadName;
-
-      values.push({name: $(this).attr('name'), value: $(this).val()});
-
-      var post = $(this.form).serialize();
-      post += '&'+$.param({
-        'emailComposer[StoredMessagesSelector]': t('cafevdb', 'ProjectDebitNoteAnnouncement'),
-        'emailComposer[Subject]': t('cafevdb', 'Debit notes due in 17 days')
-      });
-      CAFEVDB.Email.emailFormPopup(post,
-                                   undefined,
-                                   undefined,
-                                   function() {
-                                     CAFEVDB.iframeFormSubmit(action, target, values);
-                                   });
-
-      return false;
-    });
+      on('click', sdm.exportHandler);
 
     return true;
   };

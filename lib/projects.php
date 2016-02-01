@@ -249,23 +249,11 @@ namespace CAFEVDB
         'values'   => $yearValues,
         );
 
-      // fetch the list of all projects in order to provide a somewhat
-      // cooked filter list
-      $allProjects = Projects::fetchProjects(false /* no db handle */, true /* include years */);
-      $projectQueryValues = array('*' => '*'); // catch-all filter
-      $projectQueryValues[''] = L::t('no projects yet');
-      $projects = array();
-      $groupedProjects = array();
-      foreach ($allProjects as $proj) {
-        $projectQueryValues[$proj['Name']] = $proj['Jahr'].': '.$proj['Name'];
-        $projects[$proj['Name']] = $proj['Name'];
-        $groupedProjects[$proj['Name']] = $proj['Jahr'];
-      }
-
       $nameIdx = count($opts['fdd']);
       $opts['fdd']['Name'] = array(
         'name'     => L::t('Projekt-Name'),
         'php|LF'  => function($value, $op, $field, $fds, $fdd, $row, $recordId) {
+          //error_log('project-id: '.$recordId);
           $projectId = $recordId;
           $projectName = $value;
           $placeholder = false;
@@ -276,9 +264,13 @@ namespace CAFEVDB
         'maxlen'   => self::NAME_LENGTH_MAX + 6,
         'css'      => array('postfix' => ' projectname control'),
         'sort'     => true,
-        'values2|LF' => $projects,
-        'valueGroups|LF' => $groupedProjects,
-        'tooltip'  => Config::toolTips('project-name')
+        'values'   => array(
+          'table' => 'Projekte',
+          'column' => 'Name',
+          'description' => 'Name',
+          'groups' => 'Jahr',
+          'orderby' => '$table.`Jahr` DESC',
+          ),
         );
 
       $opts['fdd']['Art'] = array(
@@ -470,7 +462,7 @@ __EOT__;
         unset($_POST[$sysPfx.'qf'.$yearIdx]);
         unset($_GET[$sysPfx.'qf'.$yearIdx]);
       } else {
-        $opts['filters'] = array('OR' => "`Art` = 'permanent'");
+        $opts['filters'] = array('OR' => "`PMEtable0`.`Art` = 'permanent'");
       }
 
       // We could try to use 'before' triggers in order to verify the
@@ -1713,7 +1705,7 @@ __EOT__;
       $yearCol = "Jahr";
       $query = "SELECT MIN(`$yearCol`),MAX(`$yearCol`) FROM `Projekte` WHERE 1";
       $result = mySQL::query($query, $handle);
-      if ($result !== false && mysql_num_rows($result) == 1) {
+      if ($result !== false && mySQL::numRows($result) == 1) {
         $row = mySQL::fetch($result);
         $yearRange = array();
         foreach ($row as $key => $value) {
@@ -1738,7 +1730,7 @@ __EOT__;
       $result = mySQL::query($query, $handle);
 
       $row = false;
-      if ($result !== false && mysql_num_rows($result) == 1) {
+      if ($result !== false && mySQL::numRows($result) == 1) {
         $row = mySQL::fetch($result);
       }
 
@@ -1760,10 +1752,10 @@ __EOT__;
 
       $query = "SELECT * FROM `BesetzungsZahlen` WHERE `ProjektId` = $projectId";
       $result = mySQL::query($query, $handle);
-      if ($result !== false && mysql_num_rows($result) == 0) {
+      if ($result !== false && mySQL::numRows($result) == 0) {
         return array(); // can possibly happen
       }
-      if ($result !== false && mysql_num_rows($result) == 1) {
+      if ($result !== false && mySQL::numRows($result) == 1) {
         $row = mySQL::fetch($result);
       } else {
         return false;
@@ -1874,7 +1866,7 @@ __EOT__;
 
       $instrumentation = false;
       $row = false;
-      if ($result !== false && mysql_num_rows($result) == 1) {
+      if ($result !== false && mySQL::numRows($result) == 1) {
         $row = mySQL::fetch($result);
         $instrumentation = explode(',', $row['Besetzung']);
       }
@@ -1903,7 +1895,7 @@ __EOT__;
       $result = mySQL::query($query, $handle);
 
       $row = false;
-      if ($result !== false && mysql_num_rows($result) == 1) {
+      if ($result !== false && mySQL::numRows($result) == 1) {
         $row = mySQL::fetch($result);
       }
 
@@ -1944,7 +1936,7 @@ __EOT__;
         $qres = mySQL::query($query, $handle);
 
         $max = 0;
-        if ($qres !== false && mysql_num_rows($qres) == 1) {
+        if ($qres !== false && mySQL::numRows($qres) == 1) {
           $row = mySQL::fetch($qres);
           if (isset($row['MaximumFee'])) {
             $max = floatval($row['MaximumFee']);
@@ -1974,7 +1966,7 @@ __EOT__;
       $result = mySQL::query($query, $handle);
 
       $row = false;
-      if ($result !== false && mysql_num_rows($result) == 1) {
+      if ($result !== false && mySQL::numRows($result) == 1) {
         $row = mySQL::fetch($result);
       }
 
@@ -1999,7 +1991,7 @@ __EOT__;
       $result = mySQL::query($query, $handle);
 
       $row = false;
-      if ($result !== false && mysql_num_rows($result) == 1) {
+      if ($result !== false && mySQL::numRows($result) == 1) {
         $row = mySQL::fetch($result);
       }
 
@@ -2214,6 +2206,12 @@ __EOT__;
                                 'type' =>'LEFT',
                                 'condition' => 'f.`InstrumentationId` = b.`Id`'
                                 )),
+        'PaidCurrentYear' => array(
+          'tablename' => 'f',
+          'column' => 'IFNULL(SUM(IF(b.Id = b2.Id AND YEAR(NOW()) = YEAR(f.DateOfReceipt), f.Amount, 0)),0)',
+          'verbatim' => true,
+          'join' => array('type' => 'INNER')
+          ),
         'Lastschrift' => array('table' => 'b',
                                'column' => true,
                                'join' => array('type' => 'INNER')),

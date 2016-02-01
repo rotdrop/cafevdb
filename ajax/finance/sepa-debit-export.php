@@ -30,11 +30,14 @@ namespace CAFEVDB {
   \OCP\JSON::callCheck();
 
   date_default_timezone_set(Util::getTimezone());
-  $date = strftime('%Y%m%d-%H%M%S');
+  $timeStamp = time();
+  $date = strftime('%Y%m%d-%H%M%S', $timeStamp);
 
   Error::exceptions(true);
   $output = '';
   $nl = "\n";
+
+  $debugText = '';
 
   ob_start();
 
@@ -51,56 +54,51 @@ namespace CAFEVDB {
     $table       = Util::cgiValue('Table', '');
     $selectedMandates = Util::cgiValue($recordsKey, array());
 
-    $debitJob = trim(Util::cgiValue('debit-job', ''));
-    $debitAmountMax = Util::cgiValue('debit-note-amount', 1e12); // infinity
-    $debitNoteSubject = Util::cgiValue('debit-note-subject', false);
-
-    switch ($debitJob) {
-    default:
-    case '':
-      throw new \InvalidArgumentException(L::t('You did not tell what kind of debit-note you would like to draw.'));
-    case 'deposit':
-    case 'remaining':
-    case 'insurance':
-      break;
-    case 'amount':
-      if (empty(implode('', $debitNoteSubject))) {
-        throw new \InvalidArgumentException(L::t('Please specify a subject for this debit note.'));
-      }
-      $amount = implode('', $debitAmountMax);
-      $amount = FuzzyInput::currencyValue($amount);
-      if (empty($amount)) {
-        throw new \InvalidArgumentException(L::t('Please tell me about the amount you would like to draw.'));
-      }
-    }
-
-    $table = SepaDebitMandates::projectFinanceExport($projectId);
-
-    throw new \Exception('stop');
-
-    $encKey = Config::getEncryptionKey();
-
     switch ($table) {
     case 'InstrumentInsurance':
-      // $oldIds = $selectedMandates;
+      $debitJob = 'insurance';
       $selectedMandates = InstrumentInsurance::remapToDebitIds($selectedMandates);
       $debitTable = SepaDebitMandates::insuranceTableExport();
-      // throw new \Exception('ID: '.print_r($selectedMandates, true).' old ID '.print_r($oldIds, true).' table '.print_r($debitTable, true));
-      $name = $date.'-aqbanking-debit-notes-insurance';
+      $fileName = $date.'-aqbanking-debit-notes-insurance';
       $calendarProject = Config::getValue('memberTable');
       $calendarTitlePart = L::t('instrument insurances');
       break;
     default:
-      $debitTable = SepaDebitMandates::projectTableExport($projectId);
-      $name = $date.'-aqbanking-debit-notes-'.$projectName;
+      $debitJob = trim(Util::cgiValue('debit-job', ''));
+      $debitAmountMax = Util::cgiValue('debit-note-amount', 1e12); // infinity
+      $debitNoteSubject = Util::cgiValue('debit-note-subject', false);
+
+      $subject = null;
+      $targetAmount = 0.0;
+      if (empty($debitJob)) {
+        throw new \InvalidArgumentException(L::t('You did not tell what kind of debit-note you would like to draw.'));
+      } else if ($debitJob === 'amount') {
+        $subject = $debitNoteSubject;
+        if (empty($subject)) {
+          throw new \InvalidArgumentException(L::t('Please specify a subject for this debit note.'));
+        }
+        $targetAmount = $debitAmountMax;
+        $targetAmount = FuzzyInput::currencyValue($targetAmount);
+        if (empty($targetAmount)) {
+          throw new \InvalidArgumentException(L::t('Please tell me about the amount you would like to draw.'));
+        }
+      }
+      $debitTable =  SepaDebitMandates::projectTableExport(
+        $projectId, $debitJob, $targetAmount, $subject);
+      $fileName = $date.'-aqbanking-debit-notes-'.$projectName;
       $calendarProject = $projectName;
       $calendarTitlePart = $projectName;
       break;
     }
 
+    $encKey = Config::getEncryptionKey();
+
     $filteredTable = array();
-    foreach($selectedMandates as $id) {
-      $row = $debitTable[$id];
+    foreach($debitTable as $row) {
+      $id = $row['id'];
+      if (array_search($id, $selectedMandates) === false) {
+        continue;
+      }
       if (!Finance::decryptSepaMandate($row)) {
         throw new \InvalidArgumentException(
           $nl.
@@ -151,8 +149,8 @@ namespace CAFEVDB {
     // the debit notes up to 6 "working days" in advance. Worst case
     // would be Saturday to Monday which is then "hacked" by the 10
     // day limit
-    $timeStamp = strtotime('+ 17 days');
-    $aqDebitTable = SepaDebitMandates::aqBankingDebitNotes($filteredTable, $timeStamp);
+    $dueStamp = strtotime('+ 17 days');
+    $aqDebitTable = SepaDebitMandates::aqBankingDebitNotes($filteredTable, $dueStamp);
 
     // We must not mix once, first, following debit notes. So extract
     // into single tables and provide one CSV file for each of the
@@ -226,7 +224,7 @@ namespace CAFEVDB {
       }
 
       foreach($aqSequenceTables as $sequenceType => $debitTable) {
-        $sequenceName = $name.'-'.$sequenceType.'.csv';
+        $sequenceName = $fileName.'-'.$sequenceType.'.csv';
 
         $outstream = fopen("php://memory", 'w');
 
@@ -262,89 +260,95 @@ namespace CAFEVDB {
     // inject proper events into the finance calendar.
 
     $submissionStamp = strtotime('+ 7 days');
-    Finance::financeEvent(L::t('Debit notes submission deadline').
-                          ', '.
-                          $calendarTitlePart,
-                          L::t('Exported CSV file name:').
-                          "\n\n".
-                          $name.
-                          "\n\n".
-                          L::t('Due date:').' '.date('d.m.Y', $timeStamp),
-                          $calendarProject,
-                          $submissionStamp,
-                          24*60*60 /* alert one day in advance */);
+    $calObjIds = array();
+    $calObjIds[] =
+      Finance::financeEvent(L::t('Debit notes submission deadline').
+                            ', '.
+                            $calendarTitlePart,
+                            L::t('Exported CSV file name:').
+                            "\n\n".
+                            $fileName.
+                            "\n\n".
+                            L::t('Due date:').' '.date('d.m.Y', $dueStamp),
+                            $calendarProject,
+                            $submissionStamp,
+                            24*60*60 /* alert one day in advance */);
 
-    Finance::financeTask(L::t('Debit notes submission deadline').
-                         ', '.
-                         $calendarTitlePart,
-                         L::t('Exported CSV file name:').
-                         "\n\n".
-                         $name.
-                         "\n\n".
-                         L::t('Due date:').' '.date('d.m.Y', $timeStamp),
-                         $calendarProject,
-                         $submissionStamp,
-                         24*60*60 /* alert one day in advance */);
+    $calObjIds[] =
+      Finance::financeTask(L::t('Debit notes submission deadline').
+                           ', '.
+                           $calendarTitlePart,
+                           L::t('Exported CSV file name:').
+                           "\n\n".
+                           $fileName.
+                           "\n\n".
+                           L::t('Due date:').' '.date('d.m.Y', $dueStamp),
+                           $calendarProject,
+                           $submissionStamp,
+                           24*60*60 /* alert one day in advance */);
 
-    Finance::financeEvent(L::t('Debit notes due').
-                          ', '.
-                          $calendarTitlePart,
-                          L::t('Exported CSV file name:').
-                          "\n\n".
-                          $name.
-                          "\n\n".
-                          L::t('Due date:').' '.date('d.m.Y', $timeStamp),
-                          $calendarProject,
-                          $timeStamp);
+    $calObjIds[] =
+      Finance::financeEvent(L::t('Debit notes due').
+                            ', '.
+                            $calendarTitlePart,
+                            L::t('Exported CSV file name:').
+                            "\n\n".
+                            $fileName.
+                            "\n\n".
+                            L::t('Due date:').' '.date('d.m.Y', $dueStamp),
+                            $calendarProject,
+                            $dueStamp);
 
-    Finance::stampSepaMandates($filteredTable, $timeStamp);
-
-    // finally present the download data to the browser. The idea is
-    // that the following code is unlikely to throw an error. So: if
-    // it worked out until here, it should be ok
 
     if (count($aqSequenceTables) <= 1) {
-      $name .= '-'.$sequenceType.'.csv';
-      header('Content-type: text/csv');
+      $fileName .= '-'.$sequenceType.'.csv';
+      $mimeType = 'text/csv';
     } else {
-      $name .= '.zip';
-      header('Content-type: application/zip');
+      $fileName .= '.zip';
+      $mimeType = 'application/zip';
     }
-    header('Content-disposition: attachment;filename='.$name);
-    header('Cache-Control: max-age=0, no-cache, no-store, must-revalidate'); // HTTP 1.1.
-    header('Pragma: no-cache'); // HTTP 1.0.
-    header('Expires: 0'); // Proxies.
 
-    @ob_end_clean();
+    // Email notification ids cannot fetched from here
+    $debitNoteId = ProjectPayments::recordDebitNotes(
+      $projectId, $debitJob,
+      $timeStamp, $submissionStamp, $dueStamp,
+      $calObjIds);
+    if ($debitNoteId === false) {
+      throw new \Exception(L::t("Unable to store debit notes."));
+    }
 
-    $outstream = fopen("php://output",'w');
+    $dataId = ProjectPayments::recordDebitNoteData($debitNoteId, $fileName, $mimeType, $exportData);
+    if ($dataId === false) {
+      throw new \Exception(L::t("Unable to store debit note data."));
+    }
 
-    fwrite($outstream, $exportData);
+    $paymentIds = ProjectPayments::recordDebitNotePayments($debitNoteId, $filteredTable, $dueStamp);
+    if ($paymentIds === false) {
+      throw new \Exception(L::t("Unable to store debit note payments."));
+    }
 
-    fclose($outstream);
+    // Fine. All went well. Finally report back success, the calling
+    // JS snippet then may trigger download via debit-note-download
+    // and open the email dialog.
+
+    \OCP\JSON::success(
+      array('data' => array(
+              'message' => L::t('Request successful'),
+              'debitnote' => array('Id' => $debitNoteId,
+                                   'Job' => $debitJob,
+                                   'DataId' => $dataId,
+                                   'PaymentIds' => $paymentIds),
+              'emailtemplate' => DebitNotes::emailTemplate($debitJob)
+              )
+        )
+      );
 
     return true;
 
   } catch (\Exception $e) {
 
-    $debugText = ob_get_contents();
+    $debugText .= ob_get_contents();
     @ob_end_clean();
-
-    $name = $date.'-CAFEVDB-exception.html';
-
-    header('Content-type: text/html');
-    header('Content-disposition: inline;filename='.$name);
-    header('Cache-Control: max-age=0');
-
-    echo <<<__EOT__
-<!DOCTYPE HTML>
-  <html>
-    <head>
-      <title>Exception Debug Output</title>
-      <meta charset="utf-8">
-    </head>
-    <body>
-__EOT__;
 
     $exceptionText = $e->getFile().'('.$e->getLine().'): '.$e->getMessage();
     $trace = $e->getTraceAsString();
@@ -352,24 +356,25 @@ __EOT__;
     $admin = Config::adminContact();
 
     $mailto = $admin['email'].
-      '?subject='.rawurlencode('[CAFEVDB-Exception] Exceptions from Email-Form').
+      '?subject='.rawurlencode('[CAFEVDB-Exception] Exceptions from Debit-Note Export').
       '&body='.rawurlencode($exceptionText."\r\n".$trace);
     $mailto = '<span class="error email"><a href="mailto:'.$mailto.'">'.$admin['name'].'</a></span>';
 
-    echo '<h1>'.
-      L::t('PHP Exception Caught').
-      '</h1>
-<blockquote>'.
-    L::t('Please copy the displayed text and send it by email to %s.', array($mailto)).
-'</blockquote>
-<div class="exception error name"><pre>'.$exceptionText.'</pre></div>
-<div class="exception error trace"><pre>'.$trace.'</pre></div>';
+    \OCP\JSON::error(
+      array(
+        'data' => array(
+          'caption' => L::t('PHP Exception Caught'),
+          'error' => 'exception',
+          'exception' => $exceptionText,
+          'trace' => $trace,
+          'message' => L::t('Error, caught an exception. '.
+                            'Please copy the displayed text and send it by email to %s.',
+                            array($mailto)),
+          'debug' => htmlspecialchars($debugText))));
 
-    echo <<<__EOT__
-  </body>
-</html>
-__EOT__;
-}
+    return false;
+
+  }
 
 
 } //namespace CAFVDB

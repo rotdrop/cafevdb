@@ -86,6 +86,7 @@ namespace CAFEVDB
       $recordsPerPage  = $this->recordsPerPage;
       $opts            = $this->opts;
       $musicianId      = $this->musicianId;
+      $memberProjectId = Config::getValue('memberTableId');
 
       $projectMode = $projectId > 0 && !empty($projectName);
 
@@ -134,59 +135,61 @@ namespace CAFEVDB
 
       $buttons = array();
       if ($projectMode) {
-          $debitJobs = '
+        $debitJob = Util::cgiValue('debit-job', '');
+        $debitAmount = Util::cgiValue('debit-note-amount', 0);
+        $debitSubject = Util::cgiValue('debit-note-subject', '');
+
+        $debitJobs = '
 <span id="pme-debit-note-job" class="pme-debit-note-job pme-menu-block">
   <select data-placeholder="'.L::t('Debit Job').'"
-          class="pme-debit-note-job"
+          class="pme-debit-note-job'.' '.($debitJob === 'amount' ? 'custom' : 'predefined').'"
           title="'.Config::toolTips('debit-note-job-choice').'"
           name="debit-job">
     <option value=""></option>';
-        if ($projectName === Config::getValue('memberTable', false)) {
-          $debitJobs .= '
-    <option value="remaining"
-            class="debit-job-remaining"
-            title="'.Config::toolTips('debit-note-job-option-membership-fee').'">
-  '.L::t('Membership Fee').'
-    </option>
-    <option value="insurance"
-            class="debit-job-insurance"
-            title="'.Config::toolTips('debit-note-job-option-insurance').'">
-  '.L::t('Insurance').'
-    </option>
-    <option value="amount"
-            class="debit-job-amount"
-            title="'.Config::toolTips('debit-note-job-option-amount').'">
-  '.L::t('Amount').'
-    </option>';
+
+        if ($projectId === $memberProjectId) {
+          $jobOptions = array(
+            array('value' => 'membership-fee',
+                  'name' => L::t('Membership Fee'),
+                  'titile' => Config::toolTips('debit-note-job-option-membership-fee'),
+                  'flags' => ($debitJob === 'membership-fee' ? Navigation::SELECTED : 0)),
+            array('value' => 'insurance',
+                  'name' => L::t('Insurance'),
+                  'titile' => Config::toolTips('debit-note-job-option-insurance'),
+                  'flags' => ($debitJob === 'insurance' ? Navigation::SELECTED : 0)),
+            array('value' => 'amount',
+                  'name' => L::t('Amount'),
+                  'titile' => Config::toolTips('debit-note-job-option-amount'),
+                  'flags' => ($debitJob === 'amount' ? Navigation::SELECTED : 0))
+            );
         } else {
-          $debitJobs .= '
-    <option value="deposit"
-            class="debit-job-deposit"
-            title="'.Config::toolTips('debit-note-job-option-deposit').'">
-  '.L::t('Deposit').'
-    </option>
-    <option value="remaining"
-            class="debit-job-remaining"
-            title="'.Config::toolTips('debit-note-job-option-remaining').'">
-  '.L::t('Remaining').'
-    </option>
-    <option value="amount"
-            class="debit-job-amount"
-            title="'.Config::toolTips('debit-note-job-option-amount').'">
-  '.L::t('Amount').'
-    </option>';
+          $jobOptions = array(
+            array('value' => 'deposit',
+                  'name' => L::t('Deposit'),
+                  'titile' => Config::toolTips('debit-note-job-option-deposit'),
+                  'flags' => ($debitJob === 'deposit' ? Navigation::SELECTED : 0)),
+            array('value' => 'remaining',
+                  'name' => L::t('Remaining'),
+                  'titile' => Config::toolTips('debit-note-job-option-remaining'),
+                  'flags' => ($debitJob === 'remaining' ? Navigation::SELECTED : 0)),
+            array('value' => 'amount',
+                  'name' => L::t('Amount'),
+                  'titile' => Config::toolTips('debit-note-job-option-amount'),
+                  'flags' => ($debitJob === 'amount' ? Navigation::SELECTED : 0))
+            );
         }
+        $debitJobs .= Navigation::selectOptions($jobOptions);
         $debitJobs .= '
   </select>
   <input type="text"
          class="debit-note-amount"
-         value=""
-         name="debit-note-amount[]"
+         value="'.$debitAmount.'"
+         name="debit-note-amount"
          placeholder="'.L::t('amount').'"/>
   <input type="text"
          class="debit-note-subject"
-         value=""
-         name="debit-note-subject[]"
+         value="'.$debitSubject.'"
+         name="debit-note-subject"
          placeholder="'.L::t('subject').'"/>
 </span>';
         $buttons[] = array('code' =>  $debitJobs);
@@ -221,11 +224,17 @@ namespace CAFEVDB
 received so far'),
         'name' => L::t('Amount')
         );
+      $projectTab = array(
+        'id' => 'project',
+        'tooltip' => L::t('Show project specific data'),
+        'name' => L::t('Project')
+        );
       $allTab = array('id' => 'tab-all',
                       'tooltip' => Config::toolTips('pme-showall-tab'),
                       'name' => L::t('Display all columns')
         );
-      if ($projectMode) {
+      if ($projectMode && $projectId !== $memberProjectId) {
+        $opts['display']['tabs'][] = $projectTab;
         $opts['display']['tabs'][] = $amountTab;
       }
       $opts['display']['tabs'][] = $allTab;
@@ -284,31 +293,6 @@ received so far'),
         'sort'     => true
         );
 
-      if ($projectMode) {
-        $instrumentationIdx = count($opts['fdd']);
-        $projectView = $projectName.'View';
-        $projectAlias = 'PMEjoin'.$instrumentationIdx;
-        $opts['fdd']['InstrumentationId'] = array(
-          'input' => 'VHR',
-          'sql' => $projectAlias.'.Id',
-          'values' => array(
-            'table' => $projectView,
-            'column' => 'Id',
-            'join' => '$main_table.musicianId = $join_table.MusikerId',
-            'description' => 'InstrumentationId',
-            )
-          );
-
-        $opts['fdd']['instrumentationId'] = array(
-          'name' => L::t('Instrumentation Id'),
-          'input' => 'VR',
-          'options' => 'LFACPDV',
-          'select' => 'N',
-          'sql' => $projectAlias.'.Id',
-          'sort' => true
-          );
-      }
-
       $opts['fdd']['musicianId'] = array(
         'tab'      => array('id' => 'tab-all'),
         'name'     => L::t('Musician'),
@@ -325,6 +309,46 @@ received so far'),
                             ))
         );
 
+      if ($projectMode) {
+        $instrumentationIdx = count($opts['fdd']);
+        $projectView = $projectName.'View';
+        $projectAlias = 'PMEjoin'.$instrumentationIdx;
+        $opts['fdd']['InstrumentationId'] = array(
+          'input' => 'VHR',
+          'sql' => $projectAlias.'.Id',
+          'values' => array(
+            'table' => $projectView,
+            'column' => 'Id',
+            'join' => '$main_table.musicianId = $join_table.MusikerId',
+            'description' => 'InstrumentationId',
+            )
+          );
+
+        $opts['fdd']['instrumentationId'] = array(
+          'tab'      => array('id' => 'project'),
+          'name' => L::t('Instrumentation Id'),
+          'input' => 'VR',
+          'options' => 'LFACPDV',
+          'select' => 'N',
+          'sql' => $projectAlias.'.Id',
+          'sort' => true
+          );
+
+        $opts['fdd']['debitNoteAllowed'] = array(
+          'name' => L::t('Debit Allowed'),
+          'input' => 'VR',
+          'options' => 'LFACPDV',
+          'sql' => $projectAlias.'.Lastschrift',
+          'values2|CAP' => array('1' => '&nbsp;&nbsp;&nbsp;&nbsp;' /*'&#10004;'*/),
+          'values2|LVDF' => array('0' => '&nbsp;',
+                                  '1' => '&#10004;'),
+          'escape' => false,
+          'default'  => '',
+          'select'   => 'O',
+          'sort'     => true,
+          );
+      }
+
       $opts['fdd']['mandateReference'] = array(
         'tab'    => array('id' => 'mandate'),
         'name'   => L::t('Mandate Reference'),
@@ -335,7 +359,7 @@ received so far'),
 
       $opts['fdd']['nonrecurring'] = array(
         'name'   => L::t('One Time'),
-        'input'  => 'R',
+        //'input'  => 'R',
         'select' => 'T',
         'maxlen' => 35,
         'sort'   => true,
@@ -593,7 +617,7 @@ received so far'),
     /**Provide a very primitive direct matrix representation,
      * optionally only for the given musician.
      */
-    static public function insuranceTableExport($musicianId = -1, $handle = false)
+    static public function insuranceTableExport($handle = false)
     {
       $ownConnection = $handle === false;
 
@@ -602,18 +626,55 @@ received so far'),
         $handle = mySQL::connect(Config::$pmeopts);
       }
 
-      $table = self::projectTableExport(Config::getValue('memberTableId'), $musicianId, $handle);
+      $table = self::projectFinanceExport(Config::getValue('memberTableId'),
+                                          Config::getValue('memberTableName'),
+                                          $handle);
 
+      // As limiting amount we use the total sum of debit note
+      // payments for instrumentation insurances from the current year
+      $paidAlready = ProjectPayments::totalsByDebitType('insurance', strftime('%Y').'-01-01', null, $handle);
+
+      $limit = Finance::$sepaPurposeLength;
       // We want to debit the annual insurance fees. Hence replace the
       // amount with the insurance fee and the purpose with something useful
       $result = array();
       foreach($table as $key => $record) {
-        $musicianId = $record['musicianId'];
+        $musicianId = $record['MusicianId'];
         $fee = InstrumentInsurance::annualFee($musicianId, $handle);
+
+        $instrumentationId = $record['InstrumentationId'];
+        if (!empty($paidAlready[$instrumentationId])) {
+          $insurancePaid = $paidAlready[$instrumentationId]['TotalAmountPaid'];
+        } else {
+          $insurancePaid = 0.0;
+        }
+
+        // Do not draw more than the registered total obligations, and
+        // no more that the insurance fees.
+
+        $amountRem = $fee - $insurancePaid;
+        $paidTotal = (float)$record['PaidCurrentYear'];
+        $amountMax = (float)($record['RegularFee'] + $record['SurchargeFees'] + $fee);
+
+        if ($amountRem > $amountMax - $paidTotal) {
+          $amountRem = $amountMax - $paidTotal;
+        }
+
+        if ($fee > $amountRem) {
+          $subject = L::t('Remaining Amount Year %s', array(date('Y', time())));
+          $fee = $amountRem;
+        } else {
+          $subject = L::t('Annual Fee Year %s', array(date('Y', time())));
+        }
+        if ($fee <= 0) {
+          continue; // skip empty amounts
+        }
+
         $record['amount'] = $fee;
-        $record['purpose'] = array(L::t('Instrument Insurance'),
-                                   L::t('Annual Fee Year %s', array(date('Y', time()))),
+        $record['purpose'] = array(substr(Finance::sepaTranslit(L::t('Instrument Insurance')), 0, $limit),
+                                   substr(Finance::sepaTranslit($subject), 0, $limit),
                                    '', '');
+
         $result[$key] = $record;
       }
 
@@ -627,7 +688,7 @@ received so far'),
     /**Fetch all relevant finance information from the given
      * project.
      */
-    static public function projectFinanceExport($projectId, $musicianId = -1, $handle = false)
+    static protected function projectFinanceExport($projectId, $projectName = null, $handle = false)
     {
       $ownConnection = $handle === false;
 
@@ -637,7 +698,7 @@ received so far'),
       }
 
       $memberProjectId = Config::getValue('memberTableId');
-      $projectName = Projects::fetchName($projectId, $handle);
+      empty($projectName) && $projectName = Projects::fetchName($projectId, $handle);
       $monetary = ProjectExtra::monetaryFields($projectId, $handle);
 
       $projectTable = $projectName.'View';
@@ -647,29 +708,36 @@ received so far'),
       $query = "SELECT ";
       $query .= $projectId.' AS ProjectId'
         .', p.Id AS InstrumentationId'
-        .', MusikerId AS MucisianId'
+        .', MusikerId AS MusicianId'
         .", '".$projectName."' AS ProjectName"
         .', Name AS SurName'
         .', Vorname AS FirstName'
         .', UnkostenBeitrag AS RegularFee'
         .', Anzahlung AS Deposit'
         .', AmountPaid AS AmountPaid'
+        .', PaidCurrentYear AS PaidCurrentYear'
         .', LastSchrift AS DebitNote';
 
       foreach(array_keys($monetary) AS $extraLabel) {
         $query .= ', `'.$extraLabel.'`';
       }
       $query .= ', `m`.*';
-      $query .= ' FROM '.$projectTable.' p';
-      $query .= ' LEFT JOIN `'.self::MEMBER_TABLE.'` m';
-      $query .= ' ON m.musicianId = p.MusikerId';
-      $query .= ' WHERE (m.projectId = '.$projectId.' OR m.projectId = '.$memberProjectId.')';
-      $query .= '   AND (p.Lastschrift = 1)';
 
-      error_log($query);
+      $query .= ' FROM '.$projectTable.' p
+ LEFT JOIN `'.self::MEMBER_TABLE.'` m
+   ON m.musicianId = p.MusikerId
+   WHERE
+     (m.projectId = '.$projectId.' OR m.projectId = '.$memberProjectId.')
+     AND
+     (p.Lastschrift = 1)';
 
       $result = mySQL::query($query, $handle);
       $table = array();
+
+      if ($result === false) {
+        throw new \Exception(mySQL::error($handle).' '.$query);
+      }
+
       while ($row = mySQL::fetch($result)) {
         $amount = 0.0;
         foreach($monetary as $label => $fieldInfo) {
@@ -686,55 +754,69 @@ received so far'),
         $table[] = $row;
       }
 
-      error_log(print_r($table, true));
-
       if ($ownConnection) {
         mySQL::close($handle);
       }
+
+      return $table;
     }
 
     /**Provide a very primitive direct matrix representation, filtered
      * by the given project and/or musician.
      */
-    static public function projectTableExport($projectId, $musicianId = -1, $handle = false)
+    static public function projectTableExport($projectId, $debitJob,
+                                              $targetAmount = 0.0, $purpose = '',
+                                              $handle = false)
     {
-      $where = "( `projectId` = ".$projectId.
-        " OR ".
-        "`projectId` = ".Config::getValue('memberTableId')." )";
-      if ($musicianId > 0) {
-        $query .= " AND `musicianId = ".$musicianId;
-      }
-
-      $ownConnection = $handle === false;
-
-      if ($ownConnection) {
-        Config::init();
-        $handle = mySQL::connect(Config::$pmeopts);
-      }
-
       $projectName = Projects::fetchName($projectId, $handle);
+      $financeData = self::projectFinanceExport($projectId, $projectName, $handle);
+      $translitProjectName = substr(Finance::sepaTranslit($projectName), 0, Finance::$sepaPurposeLength);
+      if ($debitJob === 'amount') {
+        $purpose = Finance::sepaTranslit($purpose);
+        $subject = explode("\n", wordwrap($purpose, Finance::$sepaPurposeLength, "\n", true));
+        array_unshift($subject, $translitProjectName);
+      } else {
+        $subject = array($translitProjectName, '', '', '');
+      }
 
-      $query = "SELECT `Musiker`.`Name`,`Musiker`.`Vorname`,`Projekte`.`Name` as 'projectName',`".self::MEMBER_TABLE."`.*,`Besetzungen`.`Unkostenbeitrag` AS 'amount' FROM ".self::MEMBER_TABLE."
-  JOIN (SELECT * FROM Besetzungen WHERE ProjektId = ".$projectId.") AS Besetzungen
-  ON `Besetzungen`.`MusikerId` = `".self::MEMBER_TABLE."`.`musicianId`
-  LEFT JOIN `Musiker` ON `Musiker`.`Id` = `".self::MEMBER_TABLE."`.`musicianId`
-  LEFT JOIN `Projekte` ON `Projekte`.`Id` = `".self::MEMBER_TABLE."`.`projectId`
-  WHERE ".$where;
-
-      $result = mySQL::query($query, $handle);
       $table = array();
-      while ($row = mySQL::fetch($result)) {
-        $row['projectName'] = $projectName;
-        $row['purpose'] = array($row['projectName'],
-                                L::t('Project Fees'),
-                                '', '');
-        $table[$row['id']] = $row;
+      foreach($financeData as $row) {
+        $paid = (float)$row['AmountPaid'];
+        $amountMax = (float)($row['RegularFee'] + $row['SurchargeFees']);
+        $amountRem = $amountMax - $paid;
+        switch ($debitJob) {
+        case 'deposit':
+          if ($paid > 0.0) {
+            $line = L::t('Remaining Project Deposit');
+          } else {
+            $line = L::t('Project Deposit');
+          }
+          $subject[1] = substr(Finance::sepaTranslit($line), 0, Finance::$sepaPurposeLength);
+          $targetAmount = $row['Deposit'];
+          break;
+        case 'remaining':
+          if ((float)$row['AmountPaid'] > 0.0) {
+            $line = L::t('Remaining Project Fees');
+          } else {
+            $line = L::t('Project Fees');
+          }
+          $subject[1] = substr(Finance::sepaTranslit($line), 0, Finance::$sepaPurposeLength);
+          $targetAmount = $amountMax;
+          break;
+        case 'amount':
+          // $targetAmount given
+        }
+        $amount = $targetAmount - $paid;
+        if ($amount > $amountRem) {
+          $amount = $amountRem;
+        }
+        if ($amount <= 0) {
+          continue; // skip empty amounts
+        }
+        $row['amount'] = $amount;
+        $row['purpose'] = $subject;
+        $table[] = $row;
       }
-
-      if ($ownConnection) {
-        mySQL::close($handle);
-      }
-
       return $table;
     }
 
@@ -746,6 +828,10 @@ received so far'),
      * @param $debitTable As returned by
      * SepaDebitMandates::projectTableExport() or by
      * SepaDebitMandates::insuranceTableExport()
+     *
+     * amount to draw is taken from 'amount' field, currently need
+     * Name and Vorname for names, rest take from SepaDebitMandats
+     * table.
      *
      * @param $timeStamp Execution time. Unix time stamp.
      */
@@ -780,7 +866,7 @@ received so far'),
           'creditorSchemeId' => Config::getValue('bankAccountCreditorIdentifier'),
           'mandateId' => $row['mandateReference'],
           'mandateDate/dateString' => date('Ymd', strtotime($row['mandateDate'])),
-          'mandateDebitorName' => $row['Name'].', '.$row['Vorname'],
+          'mandateDebitorName' => Finance::sepaTranslit($row['SurName'].', '.$row['FirstName']),
           'sequenceType' => $sequenceType,
           'purpose[0]' => $row['purpose'][0],
           'purpose[1]' => $row['purpose'][1],

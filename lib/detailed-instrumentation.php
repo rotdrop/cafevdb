@@ -388,10 +388,16 @@ class DetailedInstrumentation
 
     if (Projects::needDebitMandates($projectId)) {
 
+      $memberTableId = Config::getValue('memberTableId');
       $monetary = ProjectExtra::monetaryFields($userExtraFields, $fieldTypes);
 
       $amountPaidIdx = count($opts['fdd']);
       $opts['fdd']['AmountPaid'] = array(
+        'input' => 'HR',
+        );
+
+      $paidCurrentYearIdx = count($opts['fdd']);
+      $opts['fdd']['PaidCurrentYear'] = array(
         'input' => 'HR',
         );
 
@@ -404,9 +410,8 @@ class DetailedInstrumentation
         'input' => 'VR',
         'sql' => '`PMEtable0`.`Unkostenbeitrag`',
         'php' => function($amount, $op, $field, $fds, $fdd, $row, $recordId)
-        use ($monetary, $amountPaidIdx)
+        use ($monetary, $amountPaidIdx, $paidCurrentYearIdx, $projectId, $memberTableId, $musIdIdx)
         {
-          $paid = $row['qf'.$amountPaidIdx];
           foreach($fds as $key => $label) {
             if (!isset($monetary[$label])) {
               continue;
@@ -420,6 +425,14 @@ class DetailedInstrumentation
             $type    = $field['Type'];
             $amount += self::extraFieldSurcharge($value, $allowed, $type['Multiplicity']);
           }
+
+          if ($projectId === $memberTableId) {
+            $amount += InstrumentInsurance::annualFee($row['qf'.$musIdIdx]);
+            $paid = $row['qf'.$paidCurrentYearIdx];
+          } else {
+            $paid = $row['qf'.$amountPaidIdx];
+          }
+
           // display as TOTAL/PAID/REMAINDER
           $rest = $amount - $paid;
 
@@ -451,7 +464,6 @@ class DetailedInstrumentation
         'display|LF' => array('popup' => 'tooltip'),
         );
 
-      $memberTableId = Config::getValue('memberTableId');
       $debitJoinCondition =
         '('.
         '$join_table.projectId = '.$projectId.
@@ -820,11 +832,11 @@ class DetailedInstrumentation
       'select'  => 'T',
       'options' => 'ACPDV',
       'sql'     => '`PMEtable0`.`MusikerId`',
-      'php'     => array(
-        'type' => 'function',
-        'function' => 'CAFEVDB\Musicians::portraitImageLinkPME',
-        'parameters' => array()
-        ),
+      'php' => function($musicianId, $action, $k, $fds, $fdd, $row, $recordId) {
+        $stampIdx = array_search('Aktualisiert', $fds);
+        $stamp = strtotime($row['qf'.$stampIdx]);
+        return Musicians::portraitImageLink($musicianId, $action, $stamp);
+      },
       'css' => array('postfix' => ' photo'),
       'default' => '',
       'css' => array('postfix' => ' photo'),
