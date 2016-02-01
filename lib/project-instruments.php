@@ -472,7 +472,7 @@ class ProjectInstruments
       return false;
     }
     $result = mySQL::query($query, $handle);
-    if ($result !== false && mysql_num_rows($result) == 1) {
+    if ($result !== false && mySQL::numRows($result) == 1) {
       $row = mySQL::fetch($result);
       if (isset($row['Id']) && isset($row['ProjektId'])) {
         $result = array('projectId' => $row['ProjektId'],

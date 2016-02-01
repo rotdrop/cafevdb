@@ -321,7 +321,7 @@ class Instrumentation
     //throw new \Exception($query);
 
     $result = mySQL::query($query, $handle);
-    if ($result !== false && mysql_num_rows($result) == 1) {
+    if ($result !== false && mySQL::numRows($result) == 1) {
       $row = mySQL::fetch($result);
     } else {
       $row = false;

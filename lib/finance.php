@@ -186,7 +186,7 @@ namespace CAFEVDB
       $query = "SELECT * FROM `".self::$dataBaseInfo['table']."` WHERE ".
         "`projectId` = $projectId AND `musicianId` = $musicianId";
       $result = mySQL::query($query, $handle);
-      if ($result !== false && mysql_num_rows($result) == 1) {
+      if ($result !== false && mySQL::numRows($result) == 1) {
         $row = mySQL::fetch($result);
         if ($row['mandateReference']) {
           $mandate = $row;

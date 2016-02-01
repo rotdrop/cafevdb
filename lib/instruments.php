@@ -270,7 +270,7 @@ class Instruments
  `Instrumente` SET('" . implode("','", $instruments) . "')";
     if (!$pme->myquery($sqlquery)) {
       Util::error(L::t("Could not execute the query\n%s\nSQL-Error: %s",
-                       array($sqlquery, mysql_error())), true);
+                       array($sqlquery, mySQL::error())), true);
     }
 
     // Now do the same with the Besetzungen-table
@@ -281,7 +281,7 @@ class Instruments
     $sqlquery = "ALTER TABLE `Besetzungen` CHANGE `Instrument`
  `Instrument` ENUM('" . implode("','", $instruments) . "')";
     if (!$pme->myquery($sqlquery)) {
-      Util::error("Could not execute the query\n".$sqlquery."\nSQL-Error: ".mysql_error(), true);
+      Util::error("Could not execute the query\n".$sqlquery."\nSQL-Error: ".mySQL::error(), true);
     }
 
     // Now do the same with the Projekte-table
@@ -292,13 +292,13 @@ class Instruments
     $sqlquery = "ALTER TABLE `Projekte` CHANGE `Besetzung`
  `Besetzung` SET('" . implode("','", $instruments) . "') COMMENT 'Benötigte Instrumente'";
     if (!$pme->myquery($sqlquery)) {
-      Util::error("Could not execute the query\n".$sqlquery."\nSQL-Error: ".mysql_error(), true);
+      Util::error("Could not execute the query\n".$sqlquery."\nSQL-Error: ".mySQL::error(), true);
     }
 
     // Now insert also another column into BesetzungsZahlen
     $sqlquery = "ALTER TABLE `BesetzungsZahlen` ADD COLUMN `".$newvals['Instrument']."` TINYINT NOT NULL DEFAULT '0'";
     if (!$pme->myquery($sqlquery)) {
-      Util::error("Could not execute the query\n".$sqlquery."\nSQL-Error: ".mysql_error(), true);
+      Util::error("Could not execute the query\n".$sqlquery."\nSQL-Error: ".mySQL::error(), true);
     }
 
     return true;
@@ -381,7 +381,7 @@ class Instruments
 
         if (!$pme->myquery($sqlQuery)) {
           Util::error(L::t("SQL-Error ``%s''. Could not execute the query ``%s''",
-                           array(mysql_error(), $sqlQuery)), true);
+                           array(mySQL::error(), $sqlQuery)), true);
           return false;
         }
 
@@ -398,7 +398,7 @@ class Instruments
 
         if (!$pme->myquery($sqlQuery)) {
           Util::error(L::t("SQL-Error ``%s''. Could not execute the query `` %s ''",
-                           array(mysql_error(), $sqlQuery)), true);
+                           array(mySQL::error(), $sqlQuery)), true);
           return false;
         }
 
@@ -411,7 +411,7 @@ class Instruments
 
         if (!$pme->myquery($sqlQuery)) {
           Util::error(L::t("SQL-Error ``%s''. Could not execute the query ``%s''",
-                           array(mysql_error(), $sqlQuery)), true);
+                           array(mySQL::error(), $sqlQuery)), true);
           return false;
         }
       }
@@ -421,7 +421,7 @@ class Instruments
   TINYINT NOT NULL DEFAULT '0'";
       if (!$pme->myquery($sqlQuery)) {
         Util::error(L::t("SQL-Error ``%s''. Could not execute the query ``%s''",
-                         array(mysql_error(), $sqlQuery)), true);
+                         array(mySQL::error(), $sqlQuery)), true);
         return false;
       }
 

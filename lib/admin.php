@@ -135,7 +135,7 @@ WHERE  TABLE_SCHEMA = '".Config::$dbopts['db']."'";
       $handle = mySQL::connect(Config::$dbopts);
 
       $result = mySQL::query($tzquery, $handle);
-      $numrows = mysql_num_rows($result);
+      $numrows = mySQL::numRows($result);
       if ($numrows === 1) {
         foreach (mySQL::fetch($result) as $key => $value) {
           $tz = $value;
@@ -143,7 +143,7 @@ WHERE  TABLE_SCHEMA = '".Config::$dbopts['db']."'";
       }
 
       $result = mySQL::query($query, $handle);
-      $numrows = mysql_num_rows($result);
+      $numrows = mySQL::numRows($result);
 
       $stamp = -1;
       if ($numrows !== 1) {

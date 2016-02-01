@@ -516,11 +516,9 @@ make sure that the musicians are also automatically added to the
       'escape' => false,
       'nowrap' => true,
       'sort' =>false,
-      'php' => array(
-        'type' => 'function',
-        'function' => 'CAFEVDB\Musicians::instrumentInsurancePME',
-        'parameters' => array()
-        )
+      'php' => function($musicianId, $action, $k, $fds, $fdd, $row, $recordId) {
+        return self::instrumentInsurance($musicianId);
+      }
       );
 
     $opts['fdd']['Portrait'] = array(
@@ -530,11 +528,11 @@ make sure that the musicians are also automatically added to the
       'select' => 'T',
       'options' => 'ACPDV',
       'sql' => '`PMEtable0`.`Id`',
-      'php' => array(
-        'type' => 'function',
-        'function' => 'CAFEVDB\Musicians::portraitImageLinkPME',
-        'parameters' => array()
-        ),
+      'php' => function($musicianId, $action, $k, $fds, $fdd, $row, $recordId) {
+        $stampIdx = array_search('Aktualisiert', $fds);
+        $stamp = strtotime($row['qf'.$stampIdx]);
+        return self::portraitImageLink($musicianId, $action, $stamp);
+      },
       'css' => array('postfix' => ' photo'),
       'default' => '',
       'sort' => false);
@@ -548,37 +546,33 @@ make sure that the musicians are also automatically added to the
       'select' => 'T',
       'options' => 'ACPDV',
       'sql' => '`PMEtable0`.`Id`',
-      'php' => array(
-        'type' => 'function',
-        'function' => function($musicianId, $opts, $action, $k, $fds, $fdd, $row) {
-          switch($action) {
-          case 'change':
-          case 'display':
-            //$data = self::fetchMusicianPersonalData($musicianId);
-            //return nl2br(print_r($fds, true).print_r($row, true));
-            $data = array();
-            foreach($fds as $idx => $label) {
-              $data[$label] = $row['qf'.$idx];
-            }
-            //return nl2br(print_r($data, true));
-            $vcard = VCard::export($data);
-            if (true) {
-              unset($vcard->PHOTO);
-              ob_start();
-              \QRcode::png($vcard->serialize());
-              $image = ob_get_contents();
-              ob_end_clean();
-              return '<img height="231" width="231" src="data:image/png;base64,'."\n".base64_encode($image).'"></img>';
-//                '<pre style="font-family:monospace;">'.$vcard->serialize().'</pre>';
-            } else {
-              return '<pre style="font-family:monospace;">'.$vcard->serialize().'</pre>';
-            }
-          default:
-            return '';
+      'php' => function($musicianId, $action, $k, $fds, $fdd, $row, $recordId) {
+        switch($action) {
+        case 'change':
+        case 'display':
+          //$data = self::fetchMusicianPersonalData($musicianId);
+          //return nl2br(print_r($fds, true).print_r($row, true));
+          $data = array();
+          foreach($fds as $idx => $label) {
+            $data[$label] = $row['qf'.$idx];
           }
-        },
-        'parameters' => array()
-        ),
+          //return nl2br(print_r($data, true));
+          $vcard = VCard::export($data);
+          if (true) {
+            unset($vcard->PHOTO);
+            ob_start();
+            \QRcode::png($vcard->serialize());
+            $image = ob_get_contents();
+            ob_end_clean();
+            return '<img height="231" width="231" src="data:image/png;base64,'."\n".base64_encode($image).'"></img>';
+//                '<pre style="font-family:monospace;">'.$vcard->serialize().'</pre>';
+          } else {
+            return '<pre style="font-family:monospace;">'.$vcard->serialize().'</pre>';
+          }
+        default:
+          return '';
+        }
+      },
       'default' => '',
       'sort' => false
       );
@@ -592,7 +586,7 @@ make sure that the musicians are also automatically added to the
       'css'      => array('postfix' => ' musician-uuid'.' '.$addCSS),
       'select'   => 'T',
       'maxlen'   => 32,
-      'sort'     => false
+      'sort'     => false,
       );
 
     $opts['fdd']['Aktualisiert'] =
@@ -722,12 +716,7 @@ make sure that the musicians are also automatically added to the
     return $uuid;
   }
 
-  public static function instrumentInsurancePME($musicianId, $opts, $action, $k, $fds, $fdd, $row)
-  {
-    return self::instrumentInsurance($musicianId, $opts);
-  }
-
-  public static function instrumentInsurance($musicianId, $opts)
+  public static function instrumentInsurance($musicianId)
   {
     $amount = InstrumentInsurance::insuranceAmount($musicianId);
     $fee    = InstrumentInsurance::annualFee($musicianId);
@@ -744,13 +733,6 @@ make sure that the musicians are also automatically added to the
       ."class=\"musician-instrument-insurance\" />"
       ."</div>";
     return $button;
-  }
-
-  public static function portraitImageLinkPME($musicianId, $opts, $action, $k, $fds, $fdd, $row)
-  {
-    $stampIdx = array_search('Aktualisiert', $fds);
-    $stamp = strtotime($row['qf'.$stampIdx]);
-    return self::portraitImageLink($musicianId, $action, $stamp);
   }
 
   public static function portraitImageLink($musicianId, $action = 'display', $timeStamp = '')
@@ -800,7 +782,7 @@ make sure that the musicians are also automatically added to the
     $query = "SELECT * FROM `".self::TABLE."` WHERE `Id` = $musicianId";
 
     $result = mySQL::query($query, $handle);
-    if ($result !== false && mysql_num_rows($result) == 1) {
+    if ($result !== false && mySQL::numRows($result) == 1) {
       $row = mySQL::fetch($result);
     } else {
       $row = false;
@@ -826,7 +808,7 @@ make sure that the musicians are also automatically added to the
     $query = "SELECT * FROM `".self::TABLE."` WHERE `UUID` = '$musicianUUID'";
 
     $result = mySQL::query($query, $handle);
-    if ($result !== false && mysql_num_rows($result) == 1) {
+    if ($result !== false && mySQL::numRows($result) == 1) {
       $row = mySQL::fetch($result);
     } else {
       $row = false;
@@ -919,7 +901,7 @@ make sure that the musicians are also automatically added to the
       $result = mySQL::query($query, $handle);
 
     $row = false;
-    if ($result !== false && mysql_num_rows($result) == 1) {
+    if ($result !== false && mySQL::numRows($result) == 1) {
       $row = mySQL::fetch($result);
     }
 
@@ -944,7 +926,7 @@ make sure that the musicians are also automatically added to the
     $result = mySQL::query($query, $handle);
 
     $row = false;
-    if ($result !== false && mysql_num_rows($result) == 1) {
+    if ($result !== false && mySQL::numRows($result) == 1) {
       $row = mySQL::fetch($result);
     }
 
