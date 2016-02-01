@@ -137,6 +137,17 @@ input.pme-debit-note[type=submit] {
   margin-top:0;
 }
 
+/******************************************************************************
+ *
+ * debit-note table
+ *
+ */
+
+table.pme-main li.nav.inline-block > a.nav {
+  min-height:unset;
+  line-height:unset;
+}
+
 /*
  * Local Variables: ***
  * css-indent-offset: 2 ***

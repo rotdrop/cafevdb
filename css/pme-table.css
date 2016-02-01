@@ -1011,8 +1011,21 @@ table.pme-main a:not(.ui-tabs-anchor, .chosen-single):hover {
   font-weight:bold;
 }
 
-table.pme-main li.nav > a.nav:visited,
-table.pme-main li.nav > a.nav:link {
+table.pme-main li.nav {
+  list-style:none;
+}
+
+table.pme-main li.nav.inline-block {
+  display:inline-block;
+  vertical-align:middle;
+}
+
+table.pme-main li.nav.inline-block > a.nav {
+  min-height:unset;
+  line-height:unset;
+}
+
+table.pme-main li.nav > a.nav {
   color:#000;
   text-decoration:none;
   font-weight:inherit;

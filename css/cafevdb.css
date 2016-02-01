@@ -329,6 +329,11 @@ body.snapjs-left #old-personalsettings {
   background-color:SteelBlue;
 }
 
+#app-navigation li.finance {
+  background-color:lightyellow;
+}
+
+
 #app-settings {
   /*position:relative;*/
   z-index:auto;
