@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -36,14 +36,14 @@ namespace CAFEVDB
     private $user;
     private $sessionKey;
     private $data;
-    
+
     public function __construct() {
       // Keep a reference to the underlying session handler
       $this->session = \OC::$server->getSession();
 
       // Fetch the current user
       $this->user  = \OCP\USER::getUser();
-      
+
       // Fetch our data
       $this->sessionKey = strtoupper(Config::APP_NAME);
 
@@ -61,12 +61,18 @@ namespace CAFEVDB
       }
     }
 
+    public function close()
+    {
+      $this->session->close();
+      $this->session = null;
+    }
+
     /**Remove all session variables for the current user. */
     public function clearValues()
     {
       $this->data = array('user' => $this->user);
       $this->session->set($this->sessionKey, $this->data);
-    }    
+    }
 
     /**Store something in the session-data. It is completely left open
      * how this is done.
@@ -97,7 +103,7 @@ namespace CAFEVDB
     {
       return $this->data;
     }
-    
+
   }
 
 } // namespace CAFEVDB
