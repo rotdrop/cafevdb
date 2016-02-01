@@ -213,6 +213,21 @@ var CAFEVDB = CAFEVDB || {};
     $('#focusstealer').focus();
   };
 
+  CAFEVDB.makeId = function(length) {
+    if (typeof length === 'undefined') {
+      length = 8;
+    }
+
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for(var i = 0; i < length; i++) {
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+
+    return text;
+  };
+
   /**Display a transparent modal dialog which blocks the UI.
    */
   CAFEVDB.modalWaitNotification = function(message) {
@@ -681,6 +696,32 @@ var CAFEVDB = CAFEVDB || {};
     form.submit();
   };
 
+  CAFEVDB.objectToHiddenInput = function(value, namePrefix)
+  {
+    if (typeof namePrefix === 'undefined') {
+      namePrefix = '';
+    }
+    if (typeof value !== 'object') {
+      return '<input type="hidden" name="'+namePrefix+'" value="'+value+'"/>'+"\n";
+    }
+    var result = '';
+    if (value.constructor === Array) {
+      var idx;
+      for (idx = 0; idx < value.length; ++idx) {
+        result += this.objectToHiddenInput(value[idx], namePrefix+'['+idx+']');
+      }
+    } else {
+      for (var property in value) {
+        if (value.hasOwnProperty(property)) {
+          result += this.objectToHiddenInput(
+            value[property], namePrefix === '' ? property : namePrefix+'['+property+']');
+        }
+      }
+    }
+    return result;
+  }
+
+
   /**Generate a form with given values, inject action (URL) and target
    * (iframe, ..), add to document, submit, remove from document.
    *
@@ -688,20 +729,28 @@ var CAFEVDB = CAFEVDB || {};
    *
    * @param target IFRAME
    *
-   * @param values Format see jQuery serializeArray
+   * @param values An object, either like created by serializeArray()
+   * orby serialize().
    *
    */
   CAFEVDB.iframeFormSubmit = function(action, target, values)
   {
     var idx;
     var form = $('<form method="post" action="'+action+'" target="'+target+'"></form>');
-    for(idx = 0; idx < values.length; ++idx) {
-      form.append('<input type="hidden" name="'+values[idx].name+'" value="'+values[idx].value+'"/>');
+    if (values.constructor === Array) {
+      // serializeArray() stuff
+      for(idx = 0; idx < values.length; ++idx) {
+        form.append('<input type="hidden" name="'+values[idx].name+'" value="'+values[idx].value+'"/>');
+      }
+    } else {
+      // object with { name: value }
+      form.append(this.objectToHiddenInput(values));
     }
     $('body').append(form);
     form.submit().remove();
   };
 
+  /**Handle the export menu actions.*/
   CAFEVDB.tableExportMenu = function(select) {
     // determine the export format
     var selected = select.find('option:selected').val();
