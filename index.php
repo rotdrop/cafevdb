@@ -99,6 +99,7 @@ namespace CAFEVDB
     \OCP\Util::addScript('cafevdb', 'project-extra');
     \OCP\Util::addScript('cafevdb', 'project-instruments');
     \OCP\Util::addScript('cafevdb', 'sepa-debit-mandate');
+    \OCP\Util::addScript('cafevdb', 'debit-notes');
     \OCP\Util::addScript('cafevdb', 'instrumentation');
     \OCP\Util::addScript('cafevdb', 'musicians');
     \OCP\Util::addScript('cafevdb', 'insurance');
@@ -133,6 +134,9 @@ namespace CAFEVDB
 
     // QRcode generation, maybe JS is not needed, but isn't large anyway
     \OCP\UTIL::addscript('cafevdb', '../3rdparty/phpqrcode/js/qrcanvas.packed');
+
+    // Download trough iframe
+    \OCP\UTIL::addscript('cafevdb', '../3rdparty/js/jquery.fileDownload/jquery.fileDownload');
 
     // dual-select list-box for email recipient selection
     //\OCP\Util::addstyle("cafevdb/3rdparty/bootstrap", "bootstrap.min");

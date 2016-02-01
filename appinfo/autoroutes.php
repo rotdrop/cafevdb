@@ -20,6 +20,9 @@ $this->create("cafevdb_ajax_email_emailform.php", "ajax/email/emailform.php")
 $this->create("cafevdb_ajax_email_exporter.php", "ajax/email/exporter.php")
   ->actionInclude("cafevdb/ajax/email/exporter.php");
 
+$this->create("cafevdb_ajax_email_preview.php", "ajax/email/preview.php")
+  ->actionInclude("cafevdb/ajax/email/preview.php");
+
 $this->create("cafevdb_ajax_email_owncloudattachment.php", "ajax/email/owncloudattachment.php")
   ->actionInclude("cafevdb/ajax/email/owncloudattachment.php");
 
@@ -106,6 +109,9 @@ $this->create("cafevdb_ajax_finance_sepa-debit-delete.php", "ajax/finance/sepa-d
 
 $this->create("cafevdb_ajax_finance_sepa-debit-export.php", "ajax/finance/sepa-debit-export.php")
   ->actionInclude("cafevdb/ajax/finance/sepa-debit-export.php");
+
+$this->create("cafevdb_ajax_finance_debit-note-download.php", "ajax/finance/debit-note-download.php")
+  ->actionInclude("cafevdb/ajax/finance/debit-note-download.php");
 
 $this->create("cafevdb_ajax_finance_sepa-debit-mandate.php", "ajax/finance/sepa-debit-mandate.php")
   ->actionInclude("cafevdb/ajax/finance/sepa-debit-mandate.php");
