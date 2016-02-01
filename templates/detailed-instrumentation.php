@@ -26,25 +26,27 @@ namespace CAFEVDB {
   $css_pfx = DetailedInstrumentation::CSS_PREFIX;
   $css_class = DetailedInstrumentation::CSS_CLASS;
 
-  $missing = Projects::missingInstrumentationTable($table->projectId);
+  $projectName = $table->projectName;
+  $projectId = $table->projectId;
+
+  $missing = Projects::missingInstrumentationTable($projectId);
 
   $nav = '';
-  $nav .= Navigation::pageControlElement('projectlabel', $table->projectName, $table->projectId);
-  //$nav .= Navigation::pageControlElement('detailed', $table->projectName, $table->projectId);
-  $nav .= Navigation::pageControlElement('project-extra', $table->projectName, $table->projectId);
-  $nav .= Navigation::pageControlElement('projectinstruments', $table->projectName, $table->projectId);
+  $nav .= Navigation::pageControlElement('projectlabel', $projectName, $projectId);
+  $nav .= Navigation::pageControlElement('detailed', $projectName, $projectId);
+  $nav .= Navigation::pageControlElement('project-extra', $projectName, $projectId);
+  $nav .= Navigation::pageControlElement('projectinstruments', $projectName, $projectId);
   if (Config::isTreasurer()) {
-    $nav .= Navigation::pageControlElement('project-payments', $table->projectName, $table->projectId);
-    $nav .= Navigation::pageControlElement('debitmandates', $table->projectName, $table->projectId);
-  }
-  if ($table->projectName === Config::getValue('memberTable', false)) {
-    if (Config::isTreasurer()) {
+    $nav .= Navigation::pageControlElement('project-payments', $projectName, $projectId);
+    $nav .= Navigation::pageControlElement('debit-mandates', $projectName, $projectId);
+    $nav .= Navigation::pageControlElement('debit-notes', $projectName, $projectId);
+    if ($projectName === Config::getValue('memberTable', false)) {
       $nav .= Navigation::pageControlElement('insurances');
     }
   }
   $nav .= Navigation::pageControlElement('projects');
   $nav .= Navigation::pageControlElement('all');
-  $nav .= Navigation::pageControlElement('instruments', $table->projectName, $table->projectId);
+  $nav .= Navigation::pageControlElement('instruments', $projectName, $projectId);
 
   $nav = '<ul id="navigation-list">'.$nav.'</ul>';
 

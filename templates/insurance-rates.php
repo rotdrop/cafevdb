@@ -31,7 +31,7 @@ namespace CAFEVDB
   $nav .= Navigation::pageControlElement('all');
   $nav .= Navigation::pageControlElement('insurances');
   $nav .= Navigation::pageControlElement('insurancebrokers');
-  $nav .= Navigation::pageControlElement('debitmandates');
+  $nav .= Navigation::pageControlElement('debit-mandates');
 
   $nav = '<ul id="navigation-list">'.$nav.'</ul>';
 

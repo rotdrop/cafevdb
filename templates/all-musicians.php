@@ -32,7 +32,7 @@ namespace CAFEVDB {
   $nav .= Navigation::pageControlElement('instruments');
   if (Config::isTreasurer()) {
     $nav .= Navigation::pageControlElement('insurances');
-    $nav .= Navigation::pageControlElement('debitmandates');
+    $nav .= Navigation::pageControlElement('debit-mandates');
   }
   $nav = '<ul id="navigation-list">'.$nav.'</ul>';
 
