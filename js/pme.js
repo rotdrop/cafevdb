@@ -1289,8 +1289,6 @@ var PHPMYEDIT = PHPMYEDIT || {};
       container.off('click', rowSelector).
         on('click', rowSelector, function(event) {
 
-        console.log('row click');
-
         if (event.target != this) {
           var target = $(event.target);
           // divs and spans which make it up to here will be ignored,
@@ -1306,6 +1304,9 @@ var PHPMYEDIT = PHPMYEDIT || {};
           }
           if (target.is('.graphic-links')) {
             return false;
+          }
+          if (target.hasClass('nav')) {
+            return true;
           }
           if (!target.is('span') && !target.is('div')) {
             return true;
