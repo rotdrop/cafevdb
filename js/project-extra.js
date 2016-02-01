@@ -26,7 +26,6 @@ var CAFEVDB = CAFEVDB || {};
   var ProjectExtra = function() {};
 
   ProjectExtra.ready = function(selector, resizeCB) {
-console.log('project extra');
     var container = $(selector);
 
     var tableTab = container.find('select.tab');
@@ -413,7 +412,7 @@ console.log('project extra');
                 return false;
             });
 
-            resizeCB();
+    resizeCB();
   };
 
   CAFEVDB.ProjectExtra = ProjectExtra;
