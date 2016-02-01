@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2013 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2013, 2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -172,6 +172,38 @@ CAFEVDB.Insurances = CAFEVDB.Insurances || {};
             });
 
         }
+
+        container.
+            off('click', '.instrument-insurance-bill a.bill').
+            on('click', '.instrument-insurance-bill a.bill', function(event) {
+            var self = $(this);
+            var post = self.data('post');
+            var action = OC.filePath('cafevdb', 'ajax/insurance', 'instrument-insurance-export.php');
+            post['DownloadCookie'] = CAFEVDB.makeId();
+
+            CAFEVDB.Page.busyIcon(true);
+
+            $.fileDownload(action, {
+                httpMethod: 'POST',
+                data: post,
+                cookieName: 'insurance_invoice_download',
+                cookieValue: post['DownloadCookie'],
+                cookiePath: oc_webroot,
+                successCallback: function() {
+                    console.log('ready');
+                    CAFEVDB.Page.busyIcon(false);
+                },
+                failCallback: function(responseHtml, url, error) {
+                    OC.dialogs.alert(t('cafevdb', 'Unable to export insurance overview:')+
+                                     ' '+
+                                     responseHtml,
+                                     t('cafevdb', 'Error'),
+                                     function() { CAFEVDB.Page.busyIcon(false); },
+                                     true, true);
+                }
+            });
+            return false;
+        });
     };
 
 })(window, jQuery, CAFEVDB.Insurances);

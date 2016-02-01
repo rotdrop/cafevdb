@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -170,14 +170,30 @@ namespace CAFEVDB
       $opts['buttons'] = Navigation::prependTableButton($export, true);
 
       // Display special page elements
-      $opts['display'] =  array_merge($opts['display'],
-                                      array(
-                                        'form'  => true,
-                                        //'query' => true,
-                                        'sort'  => true,
-                                        'time'  => true,
-                                        'tabs'  => false
-                                        ));
+      $opts['display'] =  array_merge(
+        $opts['display'],
+        array(
+          'form'  => true,
+          //'query' => true,
+          'sort'  => true,
+          'time'  => true,
+          'tabs'  => array(
+            array('id' => 'overview',
+                  'default' => true,
+                  'tooltip' => L::t('Insurance brief, item, musician, broker'),
+                  'name' => L::t('Overview')),
+            array('id' => 'item',
+                  'tooltip' => L::t('Details about the insured item'),
+                  'name' => L::t('Insured Object')),
+            array('id' => 'finance',
+                  'tooltip' => L::t('Insurance rate and total sum of insurance police'),
+                  'name' => L::t('Insurance Amount')),
+            array('id' => 'tab-all',
+                  'tooltip' => Config::toolTips('pme-showall-tab'),
+                  'name' => L::t('Display all columns'))
+            )
+          )
+        );
 
       // Set default prefixes for variables
       $opts['js']['prefix']               = 'PME_js_';
@@ -204,45 +220,8 @@ namespace CAFEVDB
         $opts['filters'] = "`PMEtable0`.`MusicianId` = ".$musicianId;
       }
 
-      /* Field definitions
-
-         Fields will be displayed left to right on the screen in the order in which they
-         appear in generated list. Here are some most used field options documented.
-
-         ['name'] is the title used for column headings, etc.;
-         ['maxlen'] maximum length to display add/edit/search input boxes
-         ['trimlen'] maximum length of string content to display in row listing
-         ['width'] is an optional display width specification for the column
-         e.g.  ['width'] = '100px';
-         ['mask'] a string that is used by sprintf() to format field output
-         ['sort'] true or false; means the users may sort the display on this column
-         ['strip_tags'] true or false; whether to strip tags from content
-         ['nowrap'] true or false; whether this field should get a NOWRAP
-         ['select'] T - text, N - numeric, D - drop-down, M - multiple selection
-         ['options'] optional parameter to control whether a field is displayed
-         L - list, F - filter, A - add, C - change, P - copy, D - delete, V - view
-         Another flags are:
-         R - indicates that a field is read only
-         W - indicates that a field is a password field
-         H - indicates that a field is to be hidden and marked as hidden
-         ['URL'] is used to make a field 'clickable' in the display
-         e.g.: 'mailto:$value', 'http://$value' or '$page?stuff';
-         ['URLtarget']  HTML target link specification (for example: _blank)
-         ['textarea']['rows'] and/or ['textarea']['cols']
-         specifies a textarea is to be used to give multi-line input
-         e.g. ['textarea']['rows'] = 5; ['textarea']['cols'] = 10
-         ['values'] restricts user input to the specified constants,
-         e.g. ['values'] = array('A','B','C') or ['values'] = range(1,99)
-         ['values']['table'] and ['values']['column'] restricts user input
-         to the values found in the specified column of another table
-         ['values']['description'] = 'desc_column'
-         The optional ['values']['description'] field allows the value(s) displayed
-         to the user to be different to those in the ['values']['column'] field.
-         This is useful for giving more meaning to column values. Multiple
-         descriptions fields are also possible. Check documentation for this.
-      */
-
       $opts['fdd']['Id'] = array(
+        'tab'      => array('id' => 'tab-all'),
         'name'     => 'Id',
         'select'   => 'T',
         'options'  => 'AVCPDR', // auto increment
@@ -252,7 +231,9 @@ namespace CAFEVDB
         'sort'     => true
         );
 
+      $musIdIdx = count($opts['fdd']);
       $opts['fdd']['MusicianId'] = array(
+        'tab'      => array('id' => 'tab-all'),
         'name'     => strval(L::t('Musician')),
         'css'      => array('postfix' => ' musician-id'),
         'select'   => 'T',
@@ -266,7 +247,10 @@ namespace CAFEVDB
                                                  'divs' => array(', ')
                             ))
         );
+
+      $billToIdx = count($opts['fdd']);
       $opts['fdd']['BillToParty'] = array(
+        'tab'      => array('id' => 'finance'),
         'name'     => strval(L::t('Bill-to Party')),
         'css'      => array('postfix' => ' bill-to-party allow-empty'),
         'select'   => 'T',
@@ -274,15 +258,18 @@ namespace CAFEVDB
         'sort'     => true,
         'default'  => 0,
         //'options'  => 'LFADV', // no change allowed
-        'values' => array('table' => 'Musiker',
-                          'column' => 'Id',
-                          'description' => array('columns' => array('Name', 'Vorname'),
-                                                 'divs' => array(', ')
-                            ))
+        'values' => array(
+          'table' => 'Musiker',
+          'column' => 'Id',
+          'description' => array('columns' => array('Name', 'Vorname'),
+                                 'ifnull' => array('NULL', 'NULL'),
+                                 'divs' => array(', ')
+            ))
         );
 
       $opts['fdd']['Broker'] = array(
-        'name' => strval(L::t('Insurance Broker')),
+        'tab'      => array('id' => 'overview'),
+        'name'     => strval(L::t('Insurance Broker')),
         'css'      => array('postfix' => ' broker-select'),
         'select'   => 'D',
         'maxlen'   => 384,
@@ -291,7 +278,8 @@ namespace CAFEVDB
         'values2'  => $this->brokerNames);
 
       $opts['fdd']['GeographicalScope'] = array(
-        'name' => strval(L::t('Geographical Scope')),
+        'tab'      => array('id' => 'overview'),
+        'name'     => strval(L::t('Geographical Scope')),
         'css'      => array('postfix' => ' scope-select'),
         'select'   => 'D',
         'maxlen'   => 384,
@@ -300,6 +288,7 @@ namespace CAFEVDB
         'values2'  => $this->scopeNames);
 
       $opts['fdd']['Object'] = array(
+        'tab'      => array('id' => array('item', 'overview')),
         'name'     => strval(L::t('Insured Object')),
         'css'      => array('postfix' => ' insured-item'),
         'select'   => 'T',
@@ -307,6 +296,7 @@ namespace CAFEVDB
         'sort'     => true);
 
       $opts['fdd']['Accessory'] = array(
+        'tab'      => array('id' => 'item'),
         'name' => strval(L::t('Accessory')),
         'css'      => array('postfix' => ' accessory'),
         'select'   => 'D',
@@ -316,6 +306,7 @@ namespace CAFEVDB
         'values2'  => $this->accessoryNames);
 
       $opts['fdd']['Manufacturer'] = array(
+        'tab'      => array('id' => 'item'),
         'name'     => strval(L::t('Manufacturer')),
         'css'      => array('postfix' => ' manufacturer'),
         'select'   => 'T',
@@ -323,34 +314,32 @@ namespace CAFEVDB
         'sort'     => true);
 
       $opts['fdd']['YearOfConstruction'] = array(
+        'tab'      => array('id' => 'item'),
         'name'     => strval(L::t('Year of Construction')),
         'css'      => array('postfix' => ' construction-year'),
         'select'   => 'T',
         'maxlen'   => 20,
         'sort'     => true);
 
-      $opts['fdd']['InsuranceAmount'] = Config::$opts['money'];
-      $opts['fdd']['InsuranceAmount']['name'] = strval(L::t('Insurance Amount'));
-      $opts['fdd']['InsuranceAmount']['css'] = array('postfix' => ' amount align-right');
-      $opts['fdd']['InsuranceAmount']['php|LFPDV'] = array(
-        'type' => 'function',
-        'function' => 'CAFEVDB\InstrumentInsurance::displayMoneyValuePME',
-        'parameters' => array()
+      $opts['fdd']['InsuranceAmount'] = array_merge(
+        Config::$opts['money'],
+        array(
+          'tab'  => array('id' => 'finance'),
+          'name' => strval(L::t('Insurance Amount')),
+          'css'  => array('postfix' => ' amount align-right'),
+          'php|LFPDV' => 'CAFEVDB\InstrumentInsurance::displayMoneyValuePME',
+          )
         );
 
       $rateIdx = count($opts['fdd']);
       $opts['fdd']['InsuranceRate'] = array(
+        'tab'  => array('id' => 'finance'),
         'input' => 'V',
         'css' => array('postfix' => ' align-right'),
         'name' => L::t('Insurance Rate'),
         'options' => 'LFACPDV',
         'sql' => '`PMEjoin'.$rateIdx.'`.`Rate`',
-        'sqlw' => '`PMEjoin'.$rateIdx.'`.`Rate`',
-        'php' => array(
-          'type' => 'function',
-          'function' => 'CAFEVDB\InstrumentInsurance::displayPercentageValuePME',
-          'parameters' => array()
-          ),
+        'php' => 'CAFEVDB\InstrumentInsurance::displayPercentageValuePME',
         'values' => array(
           'table' => 'InsuranceRates',
           'column' => 'Rate',
@@ -361,20 +350,17 @@ namespace CAFEVDB
         );
 
       $opts['fdd']['InsuranceFee'] = array(
+        'tab'  => array('id' => 'finance'),
         'input' => 'V',
         'css' => array('postfix' => ' align-right'),
         'name' => L::t('Insurance Fee')."<br/>".L::t('including taxes'),
         'options' => 'LFACPDV',
-        'sql' => 'ROUND(`PMEtable0`.`InsuranceAmount` * `PMEjoin'.$rateIdx.'`.`Rate` * (1+'.(float)self::TAXES.'), 2)',
-        'sqlw' => '`PMEjoin'.$rateIdx.'`.`Rate`',
-        'php' => array(
-          'type' => 'function',
-          'function' => 'CAFEVDB\InstrumentInsurance::displayMoneyValuePME',
-          'parameters' => array()
-          ),
+        'sql' => 'ROUND(`PMEtable0`.`InsuranceAmount` * `PMEjoin'.$rateIdx.'`.`Rate` * (1+'.floatval(self::TAXES).'), 2)',
+        'php' => 'CAFEVDB\InstrumentInsurance::displayMoneyValuePME',
         );
 
       $opts['fdd']['InsuranceTotal'] = array(
+        'tab'  => array('id' => 'finance'),
         'input' => 'V',
         'name' => L::t('Total Insurance'),
         'select' => 'T',
@@ -383,15 +369,62 @@ namespace CAFEVDB
         'escape' => false,
         'nowrap' => true,
         'sort' =>false,
-        'php' => array(
-          'type' => 'function',
-          'function' => 'CAFEVDB\InstrumentInsurance::instrumentInsurancePME',
-          'parameters' => array()
+        'php' => function($musicianId, $action, $k, $fds, $fdd, $row, $recordId) {
+          return Musicians::instrumentInsurance($musicianId);
+        }
+        );
+
+      $opts['fdd']['StartOfInsurance'] = array_merge(
+        Config::$opts['date'],
+        array(
+          'tab'  => array('id' => 'overview'),
+          'name' => strval(L::t('Start of Insurance'))
           )
         );
 
-      $opts['fdd']['StartOfInsurance'] = Config::$opts['birthday'];
-      $opts['fdd']['StartOfInsurance']['name'] = strval(L::t('Start of Insurance'));
+      $opts['fdd']['Bill'] = array(
+        'tab'   => array('id' => 'tab-all'),
+        'name'  => L::t('Bill'),
+        'css'   => array('postfix' => ' instrument-insurance-bill'),
+        'input' => 'VR',
+        'sql'   => '`PMEtable0`.`MusicianId`',
+        'sort'  => false,
+        'php' => function($musicianId, $op, $field, $fds, $fdd, $row, $recordId)
+        use ($billToIdx)
+        {
+          $billTo = $row['qf'.$billToIdx.'_idx'];
+          if ($billTo > 0) {
+            $musicianId = $billTo;
+          }
+          $post = array(
+            'MusicianId' => $musicianId,
+            'InsuranceId' => $recordId,
+            'requesttoken' => \OC_Util::callRegister(),
+            );
+          $actions = array(
+            'bill' => array(
+              'label' => L::t('bill'),
+              'post'  => json_encode($post),
+              'title' => Config::toolTips('instrument-insurance-bill'),
+              ),
+            );
+          $html = '';
+          foreach($actions as $key => $action) {
+            $html .=<<<__EOT__
+<li class="nav tooltip-left inline-block ">
+  <a class="nav {$key}"
+     href="#"
+     data-post='{$action['post']}'
+     {$action['properties']}
+     title="{$action['title']}">
+{$action['label']}
+  </a>
+</li>
+__EOT__;
+          }
+          return $html;
+        }
+        );
 
       $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
       $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
@@ -428,7 +461,7 @@ namespace CAFEVDB
     } // display()
 
     //!Just display the given value
-    public static function displayPercentageValuePME($insuranceId, $opts, $action, $k, $fds, $fdd, $row)
+    public static function displayPercentageValuePME($insuranceId, $action, $k, $fds, $fdd, $row, $recordId)
     {
       $value = floatval($row['qf'.$k]) * 100;
       $oldlocale = setlocale(LC_ALL, '0');
@@ -440,7 +473,7 @@ namespace CAFEVDB
     }
 
     //!Just display the given value
-    public static function displayMoneyValuePME($insuranceId, $opts, $action, $k, $fds, $fdd, $row)
+    public static function displayMoneyValuePME($insuranceId, $action, $k, $fds, $fdd, $row, $recordId)
     {
       $oldlocale = setlocale(LC_ALL, '0');
       setlocale(LC_ALL, Util::getLocale());
@@ -448,12 +481,6 @@ namespace CAFEVDB
       setlocale(LC_ALL, $oldlocale);
 
       return $result;
-    }
-
-    //!Button redirect
-    public static function instrumentInsurancePME($insuranceId, $opts, $action, $k, $fds, $fdd, $row)
-    {
-      return Musicians::instrumentInsurance($row['qf1_idx'], $opts);
     }
 
     /**Fetch the total insurance amount for one musician.
@@ -516,7 +543,7 @@ namespace CAFEVDB
       // Fetch the result (or die) and remap the Ids
       $result = mySQL::query($query, $handle);
       $map = array();
-      while ($line = mysql_fetch_assoc($result)) {
+      while ($line = mySQL::fetch($result)) {
         $map[$line['OrigId']] = $line['DebitId'];
       }
 
@@ -536,7 +563,7 @@ namespace CAFEVDB
     }
 
     /**Convert an array of insurance ids to a (smaller) array of the
-     * related musician ids. Each insurance entry has one exactly one
+     * related musician ids. Each insurance entry has exactly one
      * musician-in-charge, so this should work in principle.
      */
     public static function remapToMusicianIds($insuranceIds, $handle = false)
@@ -574,7 +601,7 @@ namespace CAFEVDB
       // Fetch the result (or die) and remap the Ids
       $result = mySQL::query($query, $handle);
       $map = array();
-      while ($line = mysql_fetch_assoc($result)) {
+      while ($line = mySQL::fetch($result)) {
         $map[$line['OrigId']] = $line['OtherId'];
       }
 

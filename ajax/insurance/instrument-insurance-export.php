@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -51,14 +51,19 @@ namespace CAFEVDB {
     $pmepfx      = Config::$pmeopts['cgi']['prefix']['sys'];
     $recordsKey  = $pmepfx.'mrecs';
 
-    $projectId   = Util::cgiValue('ProjectId', -1);
-    $projectName = Util::cgiValue('ProjectName', 'X');
+    $downloadCookie = Util::cgiValue('DownloadCookie', false);
+
     $table       = Util::cgiValue('Table', '');
     $insuranceItems = array_unique(Util::cgiValue($recordsKey, array()));
 
     $handle = mySQL::connect(Config::$pmeopts);
 
-    $selectedMusicians = InstrumentInsurance::remapToMusicianIds($insuranceItems, $handle);
+    $selectedMusicians = array();
+    if (!empty($insuranceItems)) {
+      $selectedMusicians = InstrumentInsurance::remapToMusicianIds($insuranceItems, $handle);
+    } else if (($musician = Util::cgiValue('MusicianId', false)) > 0) {
+      $selectedMusicians[] = $musician;
+    }
 
     $insurances = array();
     foreach($selectedMusicians as $idx => $musicianId) {
@@ -72,7 +77,7 @@ namespace CAFEVDB {
     }
 
     if (count($insurances) == 1) {
-      // export a single PFF
+      // export a single PDF
       $firstName = $insurances[0]['payer']['firstName'];
       $surName = $insurances[0]['payer']['surName'];
       $id =  $insurances[0]['payerId'];
@@ -88,6 +93,7 @@ namespace CAFEVDB {
       header('Cache-Control: no-cache, no-store, must-revalidate'); // HTTP 1.1.
       header('Pragma: no-cache'); // HTTP 1.0.
       header('Expires: 0'); // Proxies.
+      Util::setCookie('insurance_invoice_download', $downloadCookie, false);
 
       @ob_end_clean();
 
@@ -134,11 +140,14 @@ namespace CAFEVDB {
 
       $name = strftime('%Y%m%d-%H%M%S').'-'.strtolower(L::t('instrument-insurance')).'.zip';
 
+      Config::sessionClose();
+
       header('Content-type: application/zip');
       header('Content-disposition: attachment;filename='.$name);
       header('Cache-Control: no-cache, no-store, must-revalidate'); // HTTP 1.1.
       header('Pragma: no-cache'); // HTTP 1.0.
       header('Expires: 0'); // Proxies.
+      Util::setCookie('insurance_invoice_download', $downloadCookie, false);
 
       @ob_end_clean();
 

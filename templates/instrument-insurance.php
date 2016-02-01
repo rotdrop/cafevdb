@@ -25,11 +25,20 @@ namespace CAFEVDB {
   $table = new InstrumentInsurance();
   $css_pfx = InstrumentInsurance::CSS_PREFIX;
 
+  $projectName = Config::getValue('memberTable', false);
+  $projectId = Config::getValue('memberTableId', false);
+
   $nav = '';
-  $nav .= Navigation::pageControlElement('projects');
-  $nav .= Navigation::pageControlElement('all');
+  $nav .= Navigation::pageControlElement('projectlabel', $projectName, $projectId);
+  $nav .= Navigation::pageControlElement('detailed', $projectName, $projectId);
+  $nav .= Navigation::pageControlElement('insurances');
   $nav .= Navigation::pageControlElement('insurancerates');
   $nav .= Navigation::pageControlElement('insurancebrokers');
+  $nav .= Navigation::pageControlElement('project-payments', $projectName, $projectId);
+  $nav .= Navigation::pageControlElement('debit-mandates', $projectName, $projectId);
+  $nav .= Navigation::pageControlElement('debit-notes', $projectName, $projectId);
+  $nav .= Navigation::pageControlElement('projects');
+  $nav .= Navigation::pageControlElement('all');
 
   $nav = '<ul id="navigation-list">'.$nav.'</ul>';
 
