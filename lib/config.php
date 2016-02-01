@@ -138,7 +138,7 @@ redaxoRehearsalsModule
                                  'emailform' => false);
     private static $initialized = false;
     private static $toolTipsArray = array();
-    public static $session = false;
+    public static $session = null;
 
     /**List of data-base entries that need to be encrypted. We should
      * invent some "registration" infrastructre for this AND first do a
@@ -385,6 +385,17 @@ redaxoRehearsalsModule
       return true;
     }
 
+    /**Close the active session, if any. */
+    static public function sessionClose()
+    {
+      if (empty(self::$session)) {
+        return;
+      }
+      self::$session->close();
+      self::$session = null;
+    }
+
+
     /**Store something in the session-data. It is completely left open
      * how this is done.
      *
@@ -393,7 +404,7 @@ redaxoRehearsalsModule
      */
     static public function sessionStoreValue($key, $value)
     {
-      if (self::$session === false) {
+      if (empty(self::$session)) {
         self::$session = new Session();
       }
       self::$session->storeValue($key, $value);
@@ -412,7 +423,7 @@ redaxoRehearsalsModule
      */
     static public function sessionRetrieveValue($key, $default = false)
     {
-      if (self::$session === false) {
+      if (empty(self::$session)) {
         self::$session = new Session();
       }
       return self::$session->retrieveValue($key, $default);
@@ -889,7 +900,7 @@ redaxoRehearsalsModule
       }
       self::$initialized = true;
 
-      if (self::$session === false) {
+      if (empty(self::$session)) {
         self::$session = new Session();
       }
 
