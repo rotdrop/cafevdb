@@ -55,7 +55,9 @@ var CAFEVDB = CAFEVDB || {};
       }
       CAFEVDB.snapperClose();
       $.fn.dialog.call(this, argument);
-      $.fn.dialog.call(this, 'widget').draggable('option', 'containment', '#content');
+      if (this.dialog('option', 'draggable')) {
+        $.fn.dialog.call(this, 'widget').draggable('option', 'containment', '#content');
+      }
     } else {
       return $.fn.dialog.apply(this, arguments);
     }
