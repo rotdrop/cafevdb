@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -90,10 +90,12 @@ namespace CAFEVDB {
     $defaultData = array('Request' => 'update',
                          'FormElement' => 'everything',
                          'ProjectId' => Util::cgiValue('ProjectId', -1),
-                         'ProjectName' => Util::cgiValue('ProjectName', ''));
+                         'ProjectName' => Util::cgiValue('ProjectName', ''),
+                         'DebitNoteId' => Util::cgiValue('DebitNoteId', -1));
     $requestData = array_merge($defaultData, Util::cgiValue('emailComposer', array()));
     $projectId   = $requestData['ProjectId'];
     $projectName = $requestData['ProjectName'];
+    $debitNoteId = $requestData['DebitNoteId'];
 
     $composer = false;
     if (isset($requestData['SingleItem'])) {
@@ -183,6 +185,7 @@ namespace CAFEVDB {
     case 'setTemplate':
       $requestData['templateName'] = $composer->currentEmailTemplate();
       $requestData['message'] = $composer->messageText();
+      $requestData['subject'] = $composer->subject();
       if ($request == 'setTemplate') {
         break;
       }
@@ -219,6 +222,7 @@ namespace CAFEVDB {
       // Update project name and id
       $projectId = $requestData['ProjectId'] = $_POST['ProjectId'];
       $projectName = $requestData['ProjectName'] = $_POST['ProjectName'];
+      $debitNoteId = $requestData['DebitNoteId'] = $_POST['DebitNoteId'];
       $requestData['messageDraftId'] = $composer->messageDraftId();
 
       $recipientsFilter = new EmailRecipientsFilter();
@@ -263,6 +267,7 @@ namespace CAFEVDB {
       $rcptTmpl->assign('InstrumentsFilter', $recipientsFilter->instrumentsFilter());
       $rcptTmpl->assign('EmailRecipientsChoices', $recipientsFilter->emailRecipientsChoices());
       $rcptTmpl->assign('MissingEmailAddresses', $recipientsFilter->missingEmailAddresses());
+      $rcptTmpl->assign('FrozenRecipients', $recipientsFilter->frozenRecipients());
 
       $rcptData = $rcptTmpl->fetchPage();
 

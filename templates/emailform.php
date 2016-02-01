@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -35,10 +35,10 @@ CAFEVDB\Error::exceptions(true);
       <a href="#emailformrecipients"><?php echo L::t('Recipients'); ?></a>
     </li>
     <li id="emailformcomposer-tab">
-      <a href="#emailformcomposer"><?php echo L::t('Message'); ?></a>
+      <a href="#emailformcomposer"><?php echo L::t('Message Composition'); ?></a>
     </li>
     <li id="emailformdebug-tab">
-      <a href="#emailformdebug"><?php echo L::t('Status'); ?></a>
+      <a href="#emailformdebug"><?php echo L::t('Status and Preview'); ?></a>
     </li>
   </ul>
   <form method="post"

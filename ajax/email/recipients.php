@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2015 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -51,6 +51,7 @@ namespace CAFEVDB {
 
     $projectId      = Util::cgiValue('ProjectId', -1);
     $projectName    = Util::cgiValue('ProjectName', ''); // the name
+    $debitNoteId   = Util::cgiValue('DebitNoteId', -1);
 
     // TODO: check recipientsData
 
@@ -68,7 +69,8 @@ namespace CAFEVDB {
       $tmpl = new \OCP\Template('cafevdb', 'part.emailform.recipients');
       $tmpl->assign('ProjectName', $projectName);
       $tmpl->assign('ProjectId', $projectId);
-    
+      $tmpl->assign('DebitNoteId', $debitNoteId);
+
       // Needed for the recipient selection
       $tmpl->assign('RecipientsFormData', $recipientsFilter->formData());
       $filterHistory = $recipientsFilter->filterHistory();
@@ -78,6 +80,7 @@ namespace CAFEVDB {
       $tmpl->assign('InstrumentsFilter', $recipientsFilter->instrumentsFilter());
       $tmpl->assign('EmailRecipientsChoices', $recipientsFilter->emailRecipientsChoices());
       $tmpl->assign('MissingEmailAddresses', $recipientsFilter->missingEmailAddresses());
+      $tmpl->assign('FrozenRecipients', $recipientsFilter->frozenRecipients());
 
       $contents = $tmpl->fetchPage();
     } else if ($recipientsFilter->snapshotState()) {
@@ -100,12 +103,12 @@ namespace CAFEVDB {
       $filterHistory = $recipientsFilter->filterHistory();
       $contents = '';
     }
-  
+
     unset($recipientsFilter);
 
     $debugText .= ob_get_contents();
     @ob_end_clean();
-    
+
     \OCP\JSON::success(
       array('data' => array('projectName' => $projectName,
                             'projectId' => $projectId,

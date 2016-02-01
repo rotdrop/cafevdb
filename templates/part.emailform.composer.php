@@ -88,7 +88,6 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
         <span class="inner vmiddle container save-as-template">
           <input type="checkbox"
                  id="check-save-as-template"
-                 title="<?php echo Config::toolTips('save-as-template'); ?>"
                  class="save-as-template tooltip-wide tooltip-bottomo"
                  name="emailComposer[SaveAsTemplate]"/>
           <label for="check-save-as-template"
@@ -272,7 +271,7 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
         <input title="<?php echo Config::toolTips('email-message-export'); ?>"
                class="email-composer submit message-export"
                type="submit" name="emailComposer[MessageExport]"
-               value="<?php echo L::t('Export Message'); ?>"/>
+               value="<?php echo L::t('Message Preview'); ?>"/>
       </td>
       <td class="cancel">
         <input title="<?php echo Config::tooltips('cancel-email-composition'); ?>"

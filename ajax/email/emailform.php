@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -50,10 +50,16 @@ namespace CAFEVDB {
     // recipients and the sender class.
     $projectId   = Util::cgiValue('ProjectId', -1);
     $projectName = Util::cgiValue('ProjectName', '');
+    $debitNoteId = Util::cgiValue('DebitNoteId', -1);
+    $templateName = Util::cgiValue('EmailTemplate', false);
+
+    if ($projectName === '' && $projectId > 0) {
+      $projectName = Projects::fetchName($projectid);
+    }
 
     $recipientsFilter = new EmailRecipientsFilter();
     $recipients = $recipientsFilter->selectedRecipients();
-    $composer = new EmailComposer($recipients);
+    $composer = new EmailComposer($recipients, $templateName);
 
     $tmpl = new \OCP\Template('cafevdb', 'emailform');
 
@@ -64,6 +70,7 @@ namespace CAFEVDB {
 
     $tmpl->assign('ProjectName', $projectName);
     $tmpl->assign('ProjectId', $projectId);
+    $tmpl->assign('DebitNoteId', $debitNoteId);
 
     // Provide enough data s.t. a form-reload will bump the user to the
     // form the email-dialog was opened from. Ideally, we intercept the
@@ -75,6 +82,7 @@ namespace CAFEVDB {
                                     'ProjectId' => $projectId,
                                     'Template' => Util::cgiValue('Template', ''),
                                     'DisplayClass' => Util::cgiValue('DisplayClass', ''),
+                                    'DebitNoteId' => $debitNoteId,
                                     'requesttoken' => \OCP\Util::callRegister(),
                                     $emailKey => Util::cgiValue($emailKey, array()))
       );
@@ -103,6 +111,7 @@ namespace CAFEVDB {
     $tmpl->assign('InstrumentsFilter', $recipientsFilter->instrumentsFilter());
     $tmpl->assign('EmailRecipientsChoices', $recipientsFilter->emailRecipientsChoices());
     $tmpl->assign('MissingEmailAddresses', $recipientsFilter->missingEmailAddresses());
+    $tmpl->assign('FrozenRecipients', $recipientsFilter->frozenRecipients());
 
     $html = $tmpl->fetchPage();
 

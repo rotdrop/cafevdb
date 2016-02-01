@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -63,56 +63,64 @@ if (count($_['MissingEmailAddresses']) > 0) {
 $noMissingText = L::t('No Musician without or obviously broken email-address found :)');
 $missingText = L::t('Musicians without or obviously broken email-address');
 
+$frozen = $_['FrozenRecipients'];
+
 ?>
 
 <fieldset id="cafevdb-email-recipients-fieldset" class="email-recipients page">
   <?php echo Navigation::persistentCGI('emailRecipients', $_['RecipientsFormData']); ?>
   <?php if ($projectId >= 0) { ?>
-    <div class="cafevdb-email-form row">
-      <span id="basic-recipient-set-wrapper" class="basic-recipients-set container outer left">
-        <span class="label vmiddle">
-          <label class="basic-recipients-set"
-                 title="<?php echo Config::tooltips('email-recipients-basic-set'); ?>">
-            <?php echo L::t('Basic Recipients Set'); ?>
-          </label>
-        </span>
-        <span class="basic-recipients-set from-project inner vmiddle container">
-          <input type="checkbox"
-                 id="basic-recipients-set-from-project"
-                 class="basic-recipients-set from-project tip"
-                 title="<?php echo Config::tooltips('email-recipients-from-project'); ?>"
-                 name="emailRecipients[BasicRecipientsSet][FromProject]"
-                 value="1"
-          <?php echo $_['BasicRecipientsSet']['FromProject'] ? 'checked="checked"' : ''; ?>
-                 />
-          <span class="label right">
-            <label for="basic-recipients-set-from-project"
-                   class="tip"
-                   title="<?php echo Config::tooltips('email-recipients-from-project'); ?>">
-              <span class="basic-recipients-set from-project button">&isin; <?php echo $projectName; ?></span>
+    <?php if ($frozen) { ?>
+      <input type="hidden"
+             name="emailRecipients[BasicRecipientsSet][FromProject]"
+             value="1"/>
+    <?php } else { ?>
+      <div class="cafevdb-email-form row">
+        <span id="basic-recipient-set-wrapper" class="basic-recipients-set container outer left">
+          <span class="label vmiddle">
+            <label class="basic-recipients-set"
+                   title="<?php echo Config::tooltips('email-recipients-basic-set'); ?>">
+              <?php echo L::t('Basic Recipients Set'); ?>
             </label>
           </span>
-        </span>
-        <span class="basic-recipients-set except-project inner vmiddle container">
-          <input type="checkbox"
-                 id="basic-recipients-set-except-project"
-                 class="basic-recipients-set except-project tip"
-                 title="<?php echo Config::tooltips('email-recipients-except-project'); ?>"
-                 name="emailRecipients[BasicRecipientsSet][ExceptProject]"
-                 value="1"
-          <?php echo $_['BasicRecipientsSet']['ExceptProject'] ? 'checked="checked"' : ''; ?>
-                 />
-          <span class="label right">
-            <label for="basic-recipients-set-except-project"
-                   class="tip"
-                   title="<?php echo Config::tooltips('email-recipients-except-project'); ?>">
-              <span class="basic-recipients-set except-project button">&notin; <?php echo $projectName; ?></span>
-            </label>
+          <span class="basic-recipients-set from-project inner vmiddle container">
+            <input type="checkbox"
+                   id="basic-recipients-set-from-project"
+                   class="basic-recipients-set from-project tip"
+                   title="<?php echo Config::tooltips('email-recipients-from-project'); ?>"
+                   name="emailRecipients[BasicRecipientsSet][FromProject]"
+                   value="1"
+            <?php echo $_['BasicRecipientsSet']['FromProject'] ? 'checked="checked"' : ''; ?>
+                   />
+            <span class="label right">
+              <label for="basic-recipients-set-from-project"
+                     class="tip"
+                     title="<?php echo Config::tooltips('email-recipients-from-project'); ?>">
+                <span class="basic-recipients-set from-project button">&isin; <?php echo $projectName; ?></span>
+              </label>
+            </span>
+          </span>
+          <span class="basic-recipients-set except-project inner vmiddle container">
+            <input type="checkbox"
+                   id="basic-recipients-set-except-project"
+                   class="basic-recipients-set except-project tip"
+                   title="<?php echo Config::tooltips('email-recipients-except-project'); ?>"
+                   name="emailRecipients[BasicRecipientsSet][ExceptProject]"
+                   value="1"
+            <?php echo $_['BasicRecipientsSet']['ExceptProject'] ? 'checked="checked"' : ''; ?>
+                   />
+            <span class="label right">
+              <label for="basic-recipients-set-except-project"
+                     class="tip"
+                     title="<?php echo Config::tooltips('email-recipients-except-project'); ?>">
+                <span class="basic-recipients-set except-project button">&notin; <?php echo $projectName; ?></span>
+              </label>
+            </span>
           </span>
         </span>
-      </span>
-    </div>
-    <div class="spacer"></div>
+      </div>
+      <div class="spacer"></div>
+    <?php } /* $projectId > = 0 */ ?>
   <?php } /* $projectId > = 0 */ ?>
   <div class="cafevdb-email-form row">
     <span class="member-status-filter container left vmiddle">

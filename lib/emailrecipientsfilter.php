@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -44,6 +44,8 @@ namespace CAFEVDB
     private $memberFilter;// passive, regular, soloist, conductor, temporary
     private $EmailsRecs;  // Copy of email records from CGI env
     private $emailKey;    // Key for EmailsRecs into _POST or _GET
+
+    private $debitNoteId;
 
     private $instruments; // List of instruments for filtering
     private $instrumentGroups; // mapping of instruments to groups.
@@ -101,6 +103,7 @@ namespace CAFEVDB
       $this->projectId = Util::cgiValue('ProjectId', -1);
       $this->projectName   = Util::cgiValue('ProjectName',
                                             Util::cgiValue('ProjectName', ''));
+      $this->debitNoteId = Util::cgiValue('DebitNoteId', -1);
 
       // See wether we were passed specific variables ...
       $pmepfx          = $this->opts['cgi']['prefix']['sys'];
@@ -126,7 +129,7 @@ namespace CAFEVDB
     {
       // Maybe should also check something else. If submitted is true,
       // then we use the form data, otherwise the defaults.
-      $this->submitted = $this->cgiValue('FormStatus', '') == 'submitted';
+      $this->submitted = $this->cgiValue('FormStatus', '') === 'submitted';
 
       // "sane" default setttings
       $this->EmailRecs = Util::cgiValue($this->emailKey, array());
@@ -353,84 +356,42 @@ namespace CAFEVDB
       }
     }
 
-    /**This function is called at the very start. If in project-mode
-     * ids from other tables are remapped to the ids for the
-     * respective project vie.w
+    /**This function is called at the very start. For special purpose
+     * emails this function forms the list of recipients.
      */
     private function remapEmailRecords($dbh)
     {
-      $oldTable = Util::cgiValue($this->mtabKey,'');
-      $remap = false;
+      if ($this->debitNoteId > 0) {
+        $debitNoteId = $this->debitNoteId;
+        $debitNote = DebitNotes::debitNote($debitNoteId, $dbh);
+        if ($debitNote === false) {
+          throw new \RuntimeException(L::t('Unable to fetch debit note for id %d.', array($debitNoteId)));
+        }
+        if ($this->projectId > 0 && $debitNote['ProjectId'] !== $this->projectId) {
+          throw new \Exception(print_r($debitNote, true).' '.$this->projectId);
+          throw new \InvalidArgumentException(L::t('Debit note does not belong to the given project (%d <-> %d)',
+                                                   array($this->projectId, $debitNote['ProjectId'])));
+        }
+        $this->projectId = $debitNote['ProjectId'];
+        if (empty($this->projectName)) {
+          $this->projectName = Projects::fetchName($this->projectId, $dbh);
+        }
 
-      if ($oldTable == 'InstrumentInsurance') {
-        $this->projectName = Config::getValue('memberTable');
-        $this->projectId = Config::getValue('memberTableId');
+        $payments = ProjectPayments::debitNotePayments($debitNoteId, $dbh);
+        if ($payments === false) {
+          throw new \RuntimeException(L::t('Unable to fetch payments for debit-note id %d.', array($debitNoteId)));
+        }
+        if (empty($payments)) {
+          throw new \RuntimeException(L::t('No payments for debit-note id %d.', array($debitNoteId)));
+        }
+        $this->EmailRecs = array();
+        foreach($payments as $payment) {
+          $this->EmailRecs[] = $payment['InstrumentationId'];
+        }
 
         $this->frozen = true; // restrict to initial set of recipients
 
-        $table = $this->projectName.'View';
-
-                // Remap all email records to the ids from the project view.
-        $query = 'SELECT `'.$oldTable.'`.`Id` AS \'OrigId\',
-  `'.$table.'`.`Id` AS \'BesetzungsId\'
-  FROM `'.$table.'` RIGHT JOIN `'.$oldTable.'`
-  ON (
-       `'.$oldTable.'`.`BillToParty` <= 0
-       AND
-       `'.$table.'`.`MusikerId` = `'.$oldTable.'`.`MusicianId`
-    ) OR (
-       `'.$oldTable.'`.`BillToParty` > 0
-       AND
-       `'.$table.'`.`MusikerId` = `'.$oldTable.'`.`BillToParty`
-    )
-    WHERE 1';
-
-        $remap = true;
-      }
-
-      if ($this->projectId >= 0 && $oldTable == 'SepaDebitMandates') {
-        $this->frozen = true; // restrict to initial set of recipients
-
-        $table = $this->projectName.'View';
-
-        // Remap all email records to the ids from the project view.
-        $query = 'SELECT `'.$oldTable.'`.`id` AS \'OrigId\',
-  `'.$table.'`.`Id` AS \'BesetzungsId\'
-  FROM `'.$table.'` LEFT JOIN `'.$oldTable.'`
-  ON `'.$table.'`.`MusikerId` = `'.$oldTable.'`.`musicianId`
-  WHERE (`'.$oldTable.'`.`projectId` = '.$this->projectId.
-          ' OR '.
-          '`'.$oldTable.'`.`projectId` = '.Config::getValue('memberTableId').
-          ')';
-
-        // $_POST['QUERY'] = $query;
-        $remap = true;
-      }
-
-      if ($remap) {
-        // Fetch the result (or die) and remap the Ids
-        $result = mySQL::query($query, $dbh);
-        $map = array();
-        while ($line = mysql_fetch_assoc($result)) {
-          $map[$line['OrigId']] = $line['BesetzungsId'];
-        }
-        $newEmailRecs = array();
-        foreach ($this->EmailRecs as $key) {
-          if (!isset($map[$key])) {
-            if (false) {
-              // can happen after deleting records
-              // TODO: sanitize this.
-              Util::error(L::t('Musician %d in Table, but has no Id as Musician. '.
-                               'POST: %s'.
-                               'Map: %s'.
-                               'SQL-Query: %s',
-                               array($key, print_r($_POST, true), print_r($map, true), $query)));
-            }
-            continue;
-          }
-          $newEmailRecs[] = $map[$key];
-        }
-        $this->EmailRecs = $newEmailRecs;
+        return;
       }
     }
 
@@ -482,21 +443,51 @@ namespace CAFEVDB
         $origId.$comma.$btk.$id.$btk.' AS '.$btk.'musicianId'.$btk.$comma.
         $btk.implode($sep, $columnNames).$btk;
 
-      $table .= ' AS MainTable';
+      $table .= ' MainTable';
+
       if ($projectId > 0) { // Add the project fee
-        $fields .= ',`Unkostenbeitrag`,`mandateReference`';
+        $fields .=
+          ',`Unkostenbeitrag`'.
+          ',`Anzahlung`'.
+          ',`AmountPaid`'.
+          ',`PaidCurrentYear`'.
+          ',m.`MandateReference` AS `ProjectMandateReference`';
         // join table with the SEPA mandate reference table
         $memberTableId = Config::getValue('memberTableId');
         $joinCond =
           '('.
-          'projectId = '.$projectId.
+          'm.projectId = '.$projectId.
           ' OR '.
-          'projectId = '.$memberTableId.
+          'm.projectId = '.$memberTableId.
           ')'.
           ' AND musicianId = MusikerId';
 
-        $table .= " LEFT JOIN `SepaDebitMandates` ON "
+        $table .= " LEFT JOIN `SepaDebitMandates` m ON "
           ."( ".$joinCond." ) ";
+
+        // Add also any extra charges
+        $monetary = ProjectExtra::monetaryFields($projectId, $dbh);
+
+        foreach(array_keys($monetary) AS $extraLabel) {
+          $fields .= ', `'.$extraLabel.'`';
+        }
+      }
+
+      // Add the relevant payment information (except the global
+      // attached to the debit note)
+      if ($this->debitNoteId > 0 && $projectId > 0) {
+        $fields .=
+          ',p.`Id` AS `PaymentId`'.
+          ',p.`Amount` AS `DebitNoteAmount`'.
+          ',p.`Subject` AS `DebitNotePurpose`'.
+          ',p.`MandateReference` AS `DebitNoteMandateReference`';
+        $joinCond =
+          'p.InstrumentationId = MainTable.Id'.
+          ' AND '.
+          'p.DebitNoteId = '.$this->debitNoteId;
+
+        $table .= " LEFT JOIN `ProjectPayments` p ON "
+          ."( ".$joinCond." )";
       }
 
       $query = "SELECT $fields FROM ($table) WHERE
@@ -511,6 +502,10 @@ namespace CAFEVDB
         }
         $query .= ' 0)
         ';
+      }
+
+      if ($this->frozen && $projectId > 0) {
+        $query .= " AND MainTable.Id IN (".implode(',', $this->EmailRecs).") ";
       }
 
       /* Don't bother any conductor etc. with mass-email. */
@@ -531,21 +526,52 @@ namespace CAFEVDB
       // Fetch the result or die
       $result = mySQL::query($query, $dbh, true); // here we want to bail out on error
 
-      /* Stuff all emails into one array for later usage, remember the Id in
-       * order to combine any selection from the new "multi-select"
-       * check-boxes.
+      /* Stuff all emails into one array for later usage, remember the
+       * Id in order to combine any selection from the new
+       * "multi-select" check-boxes. Data is only needed for persons
+       * with emails
        */
-      while ($line = mysql_fetch_assoc($result)) {
+      while ($line = mySQL::fetch($result)) {
         $name = $line['Vorname'].' '.$line['Name'];
         $rec = $line['OrigId'];
         if ($line['Email'] != '') {
           // We allow comma separated multiple addresses
           $musmail = explode(',',$line['Email']);
-          if ($projectId < 0) {
-            $line['Unkostenbeitrag'] = '';
-            $line['mandateReference'] = '';
+          if ($this->debitNoteId <= 0) {
+            $line['PaymentId'] = '';
+            $line['DebitNoteAmount'] = '';
+            $line['DebitNotePurpose'] = '';
           }
-          $line['insuranceFee'] = '0,00';
+          if ($projectId <= 0) {
+            $line['Unkostenbeitrag'] = '';
+            $line['Anzahlung'] = '';
+            $line['SurchargeFees'] = '';
+            $line['TotalFees'] = '';
+            $line['MandateReference'] = '';
+          } else {
+            $line['MandateReference'] = $line['ProjectMandateReference'];
+            unset($line['ProjectMandateReference']);
+            if ($this->debitNoteId > 0 &&
+                $line['MandateReference'] !== $line['DebitNoteMandateReference']) {
+              throw new \RuntimeException(L::t('Inconsistent debit-note mandates: "%s" vs. "%s"',
+                                               array($line['MandateReference'],
+                                                     $line['DebitNoteMandateReference'])));
+            }
+            $extra = 0.0;
+            foreach($monetary as $label => $fieldInfo) {
+              $value = $line[$label];
+              unset($line[$label]);
+              if (empty($value)) {
+                continue;
+              }
+              $allowed  = $fieldInfo['AllowedValues'];
+              $type     = $fieldInfo['Type']['Multiplicity'];
+              $exta    += DetailedInstrumentation::extraFieldSurcharge($value, $allowed, $type);
+            }
+            $line['SurchargeFees'] = $extra;
+            $line['TotalFees'] = $extra + $line['Unkostenbeitrag'];
+          }
+          $line['InsuranceFee'] = InstrumentInsurance::annualFee($line['musicianId'], $dbh);
           foreach ($musmail as $emailval) {
             if (!$mailer->validateAddress($emailval)) {
               $bad = htmlspecialchars($name.' <'.$emailval.'>');
@@ -569,13 +595,24 @@ namespace CAFEVDB
           $this->brokenEMail[$rec] = htmlspecialchars($name);
         }
       }
+
+      $moneyKeys = [
+        'InsuranceFee',
+        'SurchargeFees',
+        'TotalFees',
+        'Anzahlung',
+        'Unkostenbeitrag',
+        'DebitNoteAmount'
+        ];
+
+      // do this later when constructing the message
       foreach($this->EMails as $key => $record) {
         $dbdata = $record['dbdata'];
         setlocale(LC_MONETARY, Util::getLocale());
-        $fee = money_format('%n', InstrumentInsurance::annualFee($dbdata['musicianId'], $dbh));
-        $dbdata['insuranceFee'] = $fee;
-        $fee = money_format('%n', intval($dbdata['Unkostenbeitrag']));
-        $dbdata['Unkostenbeitrag'] = $fee;
+        foreach($moneyKeys as $moneyKey) {
+          $fee = money_format('%n', floatval($dbdata[$moneyKey]));
+          $dbdata[$moneyKey] = $fee;
+        }
         $this->EMails[$key]['dbdata'] = $dbdata;
       }
     }
@@ -601,8 +638,8 @@ namespace CAFEVDB
         // and/or not from the project
         if ($this->userBase['ExceptProject']) {
           $table =
-            '(SELECT a.* FROM Musiker as a
-    LEFT JOIN `'.$this->projectName.'View'.'` as b
+            '(SELECT a.* FROM Musiker a
+    LEFT JOIN `'.$this->projectName.'View'.'` b
       ON a.Id = b.MusikerId
       WHERE b.MusikerId IS NULL)';
           self::fetchMusicians($dbh, $table, 'Id', 'Instrumente', -1, true);
@@ -812,6 +849,7 @@ namespace CAFEVDB
                           'name' => $email,
                           'flags' => isset($selectedRecipients[$key]) ? Navigation::SELECTED : 0);
       }
+
       return $result;
     }
 

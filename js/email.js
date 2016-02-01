@@ -535,6 +535,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                  dataItem.val(-1);
                  currentTemplate.val(requestData.templateName);
                  CAFEVDB.updateEditor(messageText, requestData.message);
+                 fieldset.find('input.email-subject').val(requestData.subject);
                  CAFEVDB.selectMenuReset(storedEmailsSelector);
                  break;
                }
@@ -592,6 +593,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                    var formData = form.find('fieldset.form-data');
                    formData.find('input[name="ProjectId"]').val(requestData.ProjectId);
                    formData.find('input[name="ProjectName"]').val(requestData.ProjectName)
+                   formData.find('input[name="DebitNoteId"]').val(requestData.DebitNoteId)
                  }
 
                  // Make the debug output less verbose
@@ -762,48 +764,72 @@ CAFEVDB.Email = CAFEVDB.Email || {};
      *
      * Message export to html.
      */
-    fieldset.find('input.submit.message-export').off('click').
+    fieldset.find('input.submit.message-export').
+      off('click').
       on('click', function(event) {
 
-      var downloadName = 'emailformdownloadframe';
+      var formPost = form.serialize();
+      var post = {};
+      post[$(this).attr('name')] = "whatever";
+      formPost += '&'+$.param(post);
 
-      // empty the iframe contents in order to reset the error status
-      var downloadFrame = $('iframe#'+downloadName);
-      downloadFrame.contents().find('body').html('');
+      CAFEVDB.Page.busyIcon(true);
 
-      downloadFrame.off('load').on('load', function() {
-        var frameBody = downloadFrame.contents().find('body').html();
-        if (frameBody != '') {
-          OC.dialogs.alert(t('cafevdb', 'Unable to export message(s):')+
-                           ' '+
-                           frameBody,
-                           t('cafevdb', 'Error'),
-                           undefined, true, true);
-        }
-      });
+      $.post(OC.filePath('cafevdb', 'ajax/email', 'preview.php'),
+             formPost,
+             function(data) {
+               if (!CAFEVDB.ajaxErrorHandler(
+                 data, [ 'contents' ], function() {
+                                         CAFEVDB.Page.busyIcon(false);
+                                       })) {
+                 return false;
+               }
 
-      var oldAction = form.attr('action');
-      var oldTarget = form.attr('target');
-      form.attr('action', OC.filePath('cafevdb', 'ajax/email', 'exporter.php'));
-      form.attr('target', downloadName);
+               debugOutput.html(data.data.contents);
 
-      var $fakeSubmit = $('<input type="hidden" name="'+$(this).attr('name')+'" value="whatever"/>');
-      form.append($fakeSubmit);
-      form.submit();
-      $fakeSubmit.remove();
-      if (!oldAction) {
-        form.removeAttr('action');
-      } else {
-        form.attr('action', oldAction);
-      }
-      if (!oldTarget) {
-        form.removeAttr('target');
-      } else {
-        form.attr('target', oldTarget);
-      }
+               CAFEVDB.Page.busyIcon(false);
 
+               dialogHolder.tabs('option', 'active', 2);
+
+               $.fn.cafevTooltip.remove();
+
+               return true;
+             });
       return false;
     });
+
+    // fieldset.find('input.submit.message-blah-export').
+    //   off('click').
+    //   on('click', function(event) {
+
+    //   CAFEVDB.Page.busyIcon(true);
+
+    //   var action = OC.filePath('cafevdb', 'ajax/email', 'exporter.php');
+    //   var formPost = form.serialize();
+    //   var post = {};
+    //   post[$(this).attr('name')] = "whatever";
+    //   post['DownloadCookie'] = CAFEVDB.makeId();
+    //   formPost += '&'+$.param(post);
+    //   $.fileDownload(action, {
+    //     httpMethod: 'POST',
+    //     data: formPost,
+    //     cookieName: 'email_preview_download',
+    //     cookieValue: post['DownloadCookie'],
+    //     cookiePath: oc_webroot,
+    //     successCallback: function() {
+    //       CAFEVDB.Page.busyIcon(false);
+    //     },
+    //     failCallback: function(responseHtml, url, error) {
+    //       OC.dialogs.alert(t('cafevdb', 'Unable to export message(s):')+
+    //                        ' '+
+    //                        responseHtml,
+    //                        t('cafevdb', 'Error'),
+    //                        function() { CAFEVDB.Page.busyIcon(false); },
+    //                        true, true);
+    //     }
+    //   });
+    //   return false;
+    // });
 
 
     /*************************************************************************
@@ -1276,16 +1302,18 @@ CAFEVDB.Email = CAFEVDB.Email || {};
    * - EventSelect: array of ids of events to attach.
    */
   Email.emailFormPopup = function(post, modal, single, afterInit) {
+    var self = this;
+
     if (this.active === true) {
       return;
     }
 
     this.active = true;
 
-    if (typeof modal == 'undefined' || modal == undefined) {
+    if (typeof modal === 'undefined' || modal === undefined) {
       modal = true;
     }
-    if (typeof single == 'undefined' || single == undefined) {
+    if (typeof single === 'undefined' || single === undefined) {
       single = false;
     }
     if (typeof afterInit != 'function') {
@@ -1298,11 +1326,15 @@ CAFEVDB.Email = CAFEVDB.Email || {};
              var containerId = 'emailformdialog';
              var dialogHolder;
 
-             if (!CAFEVDB.ajaxErrorHandler(data, ['contents'])) {
+             if (!CAFEVDB.ajaxErrorHandler(
+               data, ['contents'], function() {
+                                     self.active = false;
+                                     afterInit(false);
+                                   })) {
                return false;
              }
 
-             afterInit();
+             afterInit(true);
 
              dialogHolder = $('<div id="'+containerId+'"></div>');
              dialogHolder.html(data.data.contents);
@@ -1456,7 +1488,7 @@ CAFEVDB.Email = CAFEVDB.Email || {};
 
                  // Also close all other open dialogs.
                  CAFEVDB.modalizer(false);
-                 Email.active = false;
+                 self.active = false;
                }
              });
              return false;

@@ -56,8 +56,13 @@ STADT
 LAND
 GEBURTSTAG
 UNKOSTENBEITRAG
-SEPAMANDATSREFERENZ
+ANZAHLUNG
+GESAMTBEITRAG
+ZUSATZKOSTEN
 VERSICHERUNGSBEITRAG
+SEPAMANDATSREFERENZ
+LASTSCHRIFTBETRAG
+LASTSCHRIFTZWECK
 ';
     const MEMBERCOLUMNS = '
 Vorname
@@ -71,8 +76,13 @@ Stadt
 Land
 Geburtstag
 Unkostenbeitrag
-mandateReference
-insuranceFee
+Anzahlung
+TotalFees
+SurchargeFees
+InsuranceFee
+MandateReference
+DebitNoteAmount
+DebitNotePurpose
 ';
     const POST_TAG = 'emailComposer';
 
@@ -88,6 +98,7 @@ insuranceFee
 
     private $projectId;
     private $projectName;
+    private $debitNoteId;
 
     private $constructionMode;
 
@@ -109,7 +120,7 @@ insuranceFee
     /*
      * constructor
      */
-    public function __construct($recipients = array())
+    public function __construct($recipients = array(), $template = null)
     {
       Config::init();
 
@@ -123,12 +134,18 @@ insuranceFee
 
       $this->cgiData = Util::cgiValue(self::POST_TAG, array());
 
+      if (!empty($template)) {
+        $this->cgiData['StoredMessagesSelector'] = $template;
+      }
+
       $this->recipients = $recipients;
 
       $this->projectId   = $this->cgiValue('ProjectId', Util::cgiValue('ProjectId', -1));
       $this->projectName = $this->cgiValue('ProjectName',
                                            Util::cgiValue('ProjectName',
                                                           Util::cgiValue('ProjectName', '')));
+      $this->debitNoteId = $this->cgiValue('DebitNoteId', Util::cgiValue('DebitNoteId', -1));
+
       $this->setSubjectTag();
 
       // First initialize defaults, will be overriden based on
@@ -214,7 +231,9 @@ insuranceFee
       } else if (($value = $this->cgiValue('SaveMessage', false))) {
         if (($value = $this->cgiValue('SaveAsTemplate', false))) {
           if ($this->validateTemplate($this->messageContents)) {
-            $this->storeTemplate($this->cgiValue('TemplateName'), $this->messageContents);
+            $this->storeTemplate($this->cgiValue('TemplateName'),
+                                 $this->subject(),
+                                 $this->messageContents);
           } else {
             $this->executionStatus = false;
           }
@@ -273,7 +292,7 @@ insuranceFee
      */
     private function isMemberTemplateEmail($message)
     {
-      return preg_match('![$]{MEMBER::[^{]+}!', $message);
+      return preg_match('!([^$]|^)[$]{MEMBER::[^{]+}!', $message);
     }
 
     /**Substitute any global variables into
@@ -285,14 +304,14 @@ insuranceFee
     {
       $message = $this->messageContents;
 
-      if (preg_match('![$]{GLOBAL::[^{]+}!', $message)) {
+      if (preg_match('!([^$]|^)[$]{GLOBAL::[^{]+}!', $message)) {
         $vars = $this->emailGlobalVariables();
 
         // TODO: one call to preg_replace would be enough, but does
         // not really matter as long as there is only one global
         // variable.
         foreach ($vars as $key => $value) {
-          $message = preg_replace('/[$]{GLOBAL::'.$key.'}/', $value, $message);
+          $message = preg_replace('/([^$]|^)[$]{GLOBAL::'.$key.'}/', '${1}'.$value, $message);
         }
 
         // Support date substitutions. Format is
@@ -302,11 +321,16 @@ insuranceFee
         $oldLocale = setlocale(LC_TIME, '0');
         setlocale(LC_TIME, Util::getLocale());
         $message = preg_replace_callback(
-          '/[$]{GLOBAL::DATE:([^!]*)!([^}]*)}/',
-          function($matches) {
-            $dateFormat = $matches[1];
-            $timeString = $matches[2];
-            return strftime($dateFormat, strtotime($timeString));
+          '/([^$]|^)[$]{GLOBAL::DATE:([^!]*)!([^}]*)}/',
+          function($matches) use ($vars) {
+            $dateFormat = $matches[2];
+            $timeString = $matches[3];
+            // if one of the other global variables translates to a
+            // date, then it is also allowed as date-string.
+            if (array_key_exists($timeString, $vars)) {
+              $timeString = $vars[$timeString];
+            }
+            return $matches[1].strftime($dateFormat, strtotime($timeString));
           },
           $message
           );
@@ -356,15 +380,22 @@ insuranceFee
             $dbdata['Geburtstag'] = date('d.m.Y', strtotime($dbdata['Geburtstag']));
           }
           foreach ($variables as $placeholder => $column) {
-            $strMessage = preg_replace('/[$]{MEMBER::'.$placeholder.'}/',
-                                       htmlspecialchars($dbdata[$column]),
+            $strMessage = preg_replace('/([^$]|^)[$]{MEMBER::'.$placeholder.'}/',
+                                       '${1}'.htmlspecialchars($dbdata[$column]),
                                        $strMessage);
           }
           ++$this->diagnostics['TotalCount'];
           $msg = $this->composeAndSend($strMessage, array($recipient), false);
-	  if ($msg !== false) {
-            $this->copyToSentFolder($msg);
-            // Don't remember the individual emails
+	  if (!empty($msg['message'])) {
+            $this->copyToSentFolder($msg['message']);
+            // Don't remember the individual emails, but for
+            // debit-mandates record the message id, ignore errors.
+            if ($this->debitNoteId > 0 && $dbdata['PaymentId'] > 0) {
+              error_log('HERE');
+              $messageId = $msg['messageId'];
+              $where =  '`Id` = '.$dbdata['PaymentId'].' AND `DebitNoteId` = '.$this->debitNoteId;
+              mySQL::update('ProjectPayments', $where, array('DebitMessageId' => $messageId), $this->dbh);
+            }
 	  } else {
             ++$this->diagnostics['FailedCount'];
           }
@@ -376,9 +407,9 @@ insuranceFee
         // on the imap server.
         ++$this->diagnostics['TotalCount'];
         $mimeMsg = $this->composeAndSend($templateMessage, array(), true);
-        if ($mimeMsg !== false) {
-          $this->copyToSentFolder($mimeMsg);
-          $this->recordMessageDiagnostics($mimeMsg);
+        if (!empty($mimeMsg['message'])) {
+          $this->copyToSentFolder($mimeMsg['message']);
+          $this->recordMessageDiagnostics($mimeMsg['message']);
         } else {
           ++$this->diagnostics['FailedCount'];
         }
@@ -386,9 +417,9 @@ insuranceFee
         $this->diagnostics['TotalPayload'] = 1;
         ++$this->diagnostics['TotalCount']; // this is ONE then ...
         $mimeMsg = $this->composeAndSend($message, $this->recipients);
-        if ($mimeMsg !== false) {
-          $this->copyToSentFolder($mimeMsg);
-          $this->recordMessageDiagnostics($mimeMsg);
+        if (!empty($mimeMsg['message'])) {
+          $this->copyToSentFolder($mimeMsg['message']);
+          $this->recordMessageDiagnostics($mimeMsg['message']);
         } else {
           ++$this->diagnostics['FailedCount'];
         }
@@ -634,7 +665,8 @@ insuranceFee
         return false;
       }
 
-      return $phpMailer->GetSentMIMEMessage();
+      return array('messageId' => $phpMailer->getLastMessageID(),
+                   'message' => $phpMailer->GetSentMIMEMessage());
     }
 
     /**Record diagnostic output from the actual message composition for the status page.
@@ -855,7 +887,7 @@ insuranceFee
       return $logQuery;
     }
 
-    /**Compose and export one message to PDF.
+    /**Compose and export one message to HTML.
      *
      * @param[in] $strMessage The message to send.
      *
@@ -1010,8 +1042,7 @@ insuranceFee
           $this->diagnostics['MailerErrors'][] = $phpMailer->ErrorInfo;
           return false;
         } else {
-          // success, log the message to our data-base
-          $handle = $this->dataBaseConnect();
+          // success, would log success if we really were sending
         }
       } catch (\Exception $exception) {
         $this->executionStatus = false;
@@ -1024,16 +1055,16 @@ insuranceFee
         return false;
       }
 
-      echo '<div style="font-weight:bold;font-size:120%;color:red;"><pre>'.htmlspecialchars($phpMailer->getMailHeaders()).'</pre></div>';
-
+      echo '<div class="email-header"><pre>'.htmlspecialchars($phpMailer->getMailHeaders()).'</pre></div>';
+      echo '<div class="email-body">';
       echo $strMessage;
-
+      echo '</div>';
       echo '<hr style="page-break-after:always;"/>';
 
       return true;
     }
 
-    /**Generate a PDF-export with all variables substituted. This is
+    /**Generate a HTML-export with all variables substituted. This is
      *primarily meant in order to debug actual variable substitutions,
      *or to have hardcopies from debit note notifications and other
      *important emails.
@@ -1057,10 +1088,11 @@ insuranceFee
             $dbdata['Geburtstag'] = date('d.m.Y', strtotime($dbdata['Geburtstag']));
           }
           foreach ($variables as $placeholder => $column) {
-            $strMessage = preg_replace('/[$]{MEMBER::'.$placeholder.'}/',
-                                       htmlspecialchars($dbdata[$column]),
+            $strMessage = preg_replace('/([^$]|^)[$]{MEMBER::'.$placeholder.'}/',
+                                       '${1}'.htmlspecialchars($dbdata[$column]),
                                        $strMessage);
           }
+          $strMessage = preg_replace('/[$]{2}{/', '${', $strMessage);
           ++$this->diagnostics['TotalCount'];
           if (!$this->composeAndExport($strMessage, array($recipient), false)) {
             ++$this->diagnostics['FailedCount'];
@@ -1243,7 +1275,7 @@ insuranceFee
 
       $dummy = $template;
 
-      if (preg_match('![$]{MEMBER::[^}]+}!', $dummy)) {
+      if (preg_match('!([^$]|^)[$]{MEMBER::[^}]+}!', $dummy)) {
         // Fine, we have substitutions. We should now verify that we
         // only have _legal_ substitutions. There are probably more
         // clever ways to do this, but at this point we simply
@@ -1252,10 +1284,10 @@ insuranceFee
 
         $variables = $this->emailMemberVariables();
         foreach ($variables as $placeholder => $column) {
-          $dummy = preg_replace('/[$]{MEMBER::'.$placeholder.'}/', $column, $dummy);
+          $dummy = preg_replace('/([^$]|^)[$]{MEMBER::'.$placeholder.'}/', '${1}'.$column, $dummy);
         }
 
-        if (preg_match('![$]{MEMBER::[^}]+}?!', $dummy, $leftOver)) {
+        if (preg_match('!([^$]|^)[$]{MEMBER::[^}]+}?!', $dummy, $leftOver)) {
           $templateError[] = 'member';
           $this->diagnostics['TemplateValidation']['MemberErrors'] = $leftOver;
         }
@@ -1266,37 +1298,37 @@ insuranceFee
 
       // Now check for global substitutions
       $globalTemplateLeftOver = array();
-      if (preg_match('![$]{GLOBAL::[^}]+}!', $dummy)) {
+      if (preg_match('!([^$]|^)[$]{GLOBAL::[^}]+}!', $dummy)) {
         $variables = $this->emailGlobalVariables();
 
         // dummy replace all "ordinary" global variables
         foreach ($variables as $key => $value) {
-          $dummy = preg_replace('/[$]{GLOBAL::'.$key.'}/', $value, $dummy);
+          $dummy = preg_replace('/([^$]|^)[$]{GLOBAL::'.$key.'}/', '${1}'.$value, $dummy);
         }
 
         // replace all date-strings, but give a damn on valid results. Grin 8-)
         $dummy = preg_replace_callback(
-          '/[$]{GLOBAL::DATE:([^!]*)!([^}]*)}/',
+          '/([^$]|^)[$]{GLOBAL::DATE:([^!]*)!([^}]*)}/',
           function($matches) {
-            $dateFormat = $matches[1];
-            $timeString = $matches[2];
-            return strftime($dateFormat, strtotime($timeString));
+            $dateFormat = $matches[2];
+            $timeString = $matches[3];
+            return $matches[1].strftime($dateFormat, strtotime($timeString));
           },
           $dummy
           );
 
-        if (preg_match('![$]{GLOBAL::[^}]+}?!', $dummy, $leftOver)) {
+        if (preg_match('!([^$]|^)[$]{GLOBAL::[^}]+}?!', $dummy, $leftOver)) {
           $templateError[] = 'global';
           $this->diagnostics['TemplateValidation']['GlobalErrors'] = $leftOver;
         }
 
         // Now remove all global variables, known or not
-        $dummy = preg_replace('/[$]{GLOBAL::[^}]*}/', '', $dummy);
+        $dummy = preg_replace('/([^$]|^)[$]{GLOBAL::[^}]*}/', '', $dummy);
       }
 
       $spuriousTemplateLeftOver = array();
       // No substitutions should remain. Check for that.
-      if (preg_match('![$]{[^}]+}?!', $dummy, $leftOver)) {
+      if (preg_match('!([^$]|^)[$]{[^}]+}?!', $dummy, $leftOver)) {
         $templateError[] = 'spurious';
         $this->diagnostics['TemplateValidation']['SpuriousErrors'] = $leftOver;
       }
@@ -1318,7 +1350,7 @@ insuranceFee
 
       $dbTemplate = $this->fetchTemplate('Default');
       if ($dbTemplate === false) {
-        $this->storeTemplate('Default', $this->initialTemplate);
+        $this->storeTemplate('Default', '', $this->initialTemplate);
       } else {
         $this->initialTemplate = $dbTemplate;
       }
@@ -1350,14 +1382,48 @@ insuranceFee
      */
     private function emailGlobalVariables()
     {
-      $globalVars = array(
-        'ORGANIZER' => $this->fetchExecutiveBoard(),
-        'CREDITORIDENTIFIER' => Config::getValue('bankAccountCreditorIdentifier'),
-        'ADDRESS' => $this->streetAddress(),
-        'BANKACCOUNT' => $this->bankAccount(),
-        'PROJECT' => $this->projectName != '' ? $this->projectName : L::t('no project involved'),
-        );
+      static $globalVars = false;
+      if ($globalVars === false) {
+        $globalVars = array(
+          'ORGANIZER' => $this->fetchExecutiveBoard(),
+          'CREDITORIDENTIFIER' => Config::getValue('bankAccountCreditorIdentifier'),
+          'ADDRESS' => $this->streetAddress(),
+          'BANKACCOUNT' => $this->bankAccount(),
+          'PROJECT' => $this->projectName != '' ? $this->projectName : L::t('no project involved'),
+          'DEBITNOTEDUEDATE' => '',
+          'DEBITNOTEDUEDAYS' => '',
+          'DEBITNOTESUBMITDATE' => '',
+          'DEBITNOTESUBMITDAYS' => '',
+          'DEBITNOTEJOB' => '',
+          );
 
+        if ($this->debitNoteId > 0) {
+          $debitNote = DebitNotes::debitNote($this->debitNoteId, $this->dbh);
+
+          $globalVars['DEBITNOTEJOB'] = L::t($debitNote['Job']);
+
+          $oldLocale = setlocale(LC_TIME, '0');
+          setlocale(LC_TIME, Util::getLocale());
+
+          $oldTZ = date_default_timezone_get();
+          $tz = Util::getTimezone();
+          date_default_timezone_set($tz);
+
+          $nowDate = new \DateTime(strftime('%Y-%m-%d'));
+          $dueDate = new \DateTime($debitNote['DueDate']);
+          $subDate = new \DateTime($debitNote['SubmissionDeadline']);
+
+          $globalVars['DEBITNOTEDUEDAYS'] = $nowDate->diff($dueDate)->format('%r%a');
+          $globalVars['DEBITNOTESUBMITDAYS'] =  $nowDate->diff($subDate)->format('%r%a');
+
+          $globalVars['DEBITNOTEDUEDATE'] = strftime('%x', strtotime($debitNote['DueDate']));
+          $globalVars['DEBITNOTESUBMITDATE'] = strftime('%x', strtotime($debitNote['SubmissionDeadline']));
+
+          date_default_timezone_set($oldTZ);
+
+          setlocale(LC_TIME, $oldLocale);
+        }
+      }
       return $globalVars;
     }
 
@@ -1399,7 +1465,7 @@ insuranceFee
       }
 
       $vorstand = array();
-      while ($line = mysql_fetch_assoc($result)) {
+      while ($line = mySQL::fetch($result)) {
         $vorstand[] = $line['Vorname'];
       }
 
@@ -1433,14 +1499,14 @@ insuranceFee
      * EmailTemplates table with tag $templateName. An existing template with the
      * same tag will be replaced.
      */
-    private function storeTemplate($templateName, $contents)
+    private function storeTemplate($templateName, $subject, $contents)
     {
       $handle = $this->dataBaseConnect();
 
       $contents = mySQL::escape($contents, $handle);
 
-      $query = "REPLACE INTO `EmailTemplates` (`Tag`,`Contents`)
-  VALUES ('".$templateName."','".$contents."')";
+      $query = "REPLACE INTO `EmailTemplates` (`Tag`,`Subject`,`Contents`)
+  VALUES ('".$templateName."','".$subject."','".$contents."')";
 
       // Ignore the result at this point.
       mySQL::query($query, $handle);
@@ -1466,10 +1532,18 @@ insuranceFee
 
       $query   = "SELECT * FROM `EmailTemplates` WHERE `Tag` LIKE '".$templateName."'";
       $result  = mySQL::query($query, $handle);
-      $line    = mysql_fetch_assoc($result);
-      $numrows = mysql_num_rows($result);
+      $line    = mySQL::fetch($result);
+      $numrows = mySQL::numRows($result);
 
-      return $numrows == 1 ? $line['Contents'] : false;
+      if ($numrows !== 1) {
+        return false;
+      }
+
+      if ($templateName !== 'Default' && !empty($line['Subject'])) {
+        $this->cgiData['Subject'] = $line['Subject'];
+      }
+
+      return $line['Contents'];
     }
 
     /**Return a flat array with all known template names.
@@ -1531,6 +1605,7 @@ insuranceFee
 
       $draftData = array('ProjectId' => $_POST['ProjectId'],
                          'ProjectName' => $_POST['ProjectName'],
+                         'DebitNoteId' => $_POST['DebitNoteId'],
                          self::POST_TAG => $_POST[self::POST_TAG],
                          EmailRecipientsFilter::POST_TAG => $_POST[EmailRecipientsFilter::POST_TAG]);
 
@@ -1589,6 +1664,10 @@ insuranceFee
           unset($draftData[self::POST_TAG]['Request']);
           unset($draftData[self::POST_TAG]['SubmitAll']);
           unset($draftData[self::POST_TAG]['SaveMessage']);
+
+          if (empty($draftData['DebitNoteId'])) {
+            $draftData['DebitNoteId'] = -1;
+          }
 
           return $draftData;
         }
