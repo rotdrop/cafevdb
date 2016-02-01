@@ -115,6 +115,7 @@ namespace CAFEVDB
         if (!self::$exceptionsActive) {
           \set_error_handler('CAFEVDB\Error::exceptions_error_handler');
           // \register_shutdown_function('CAFEVDB\Error::fatal_error_handler');
+          \register_shutdown_function('CAFEVDB\Error::unregister_on_shutdown');
           self::$exceptionsActive = true;
         }
         return true;
@@ -130,6 +131,12 @@ namespace CAFEVDB
         throw new \InvalidArgumentException(L::t('Invalid argument value: `%s\'', array($on)));
       }
     }
+
+    static public function unregister_on_shutdown()
+    {
+      self::exceptions(false);
+    }
+
 
     /**Try to catch fatal errors as well. */
     static public function fatal_error_handler()
@@ -291,6 +298,15 @@ namespace CAFEVDB
       }
 
       return $matches;
+    }
+
+    /**Send a cookie using secure and our web server path. */
+    static public function setCookie($name, $value, $httpOnly = true, $expires = null)
+    {
+      if (empty($expires)) {
+        $expires = time() + 60*60; // 1 hour
+      }
+      setcookie($name, $value, $expires, \OC::$WEBROOT, '', true, $httpOnly);
     }
 
     /**Take an array of strings and join it into some sort of CSV like
@@ -1414,11 +1430,8 @@ __EOT__;
                                               $projectName = '',
                                               $projectId = -1)
     {
-      if (is_array($id)) {
-        return self::buttonsFromArray($id);
-      }
-
       $controlid = $id.'control';
+      $controlclass = '';
       $form = '';
       $value = '';
       $title = '';
@@ -1450,8 +1463,19 @@ __EOT__;
       case 'project-payments':
         $value = L::t("Received Payments");
         $title = L::t("A table holding the various payments of participants.");
+        $controlclass = 'finance';
         $post = array('ProjectPayments' => $value,
                       'Template' => 'project-payments',
+                      'ProjectName' => $projectName,
+                      'ProjectId' => $projectId);
+        break;
+
+      case 'debit-notes':
+        $value = L::t("Debit Notes");
+        $title = L::t("A table holding all debit notes issued from the orchestra-software.");
+        $controlclass = 'finance';
+        $post = array('DebitNotes' => $value,
+                      'Template' => 'debit-notes',
                       'ProjectName' => $projectName,
                       'ProjectId' => $projectId);
         break;
@@ -1516,9 +1540,10 @@ and even edit the public web-pages for the project and other things.");
                       'ProjectId' => $projectId);
         break;
 
-      case 'debitmandates':
+      case 'debit-mandates':
         $value = L::t('Debit Mandates');
         $title = L::t('Display a table with the SEPA debit mandates related to the project.');
+        $controlclass = 'finance';
         $post = array('Template' => 'sepa-debit-mandates',
                       'ProjectName' => $projectName,
                       'ProjectId' => $projectId);
@@ -1527,18 +1552,21 @@ and even edit the public web-pages for the project and other things.");
       case 'insurances':
         $value = L::t("Insurances");
         $title = L::t("Display a table with an overview about the current state of the member's instrument insurances.");
+        $controlclass = 'finance';
         $post = array('Template' => 'instrument-insurance');
         break;
 
       case 'insurancerates':
         $value = L::t("Insurance Rates");
         $title = L::t("Display a table with the insurance rates for the individual instrument insurances.");
+        $controlclass = 'finance';
         $post = array('Template' => 'insurance-rates');
         break;
 
       case 'insurancebrokers':
         $value = L::t("Insurance Brokers");
         $title = L::t("Display a table with the insurance brokers.");
+        $controlclass = 'finance';
         $post = array('Template' => 'insurance-brokers');
         break;
       }
@@ -1546,16 +1574,15 @@ and even edit the public web-pages for the project and other things.");
       $post = http_build_query($post, '', '&');
       $json = htmlspecialchars(json_encode($json));
       $html =<<<__EOT__
-<li class="nav-$controlid tooltip-right" title="$title">
+<li class="nav-{$controlid} {$controlclass} tooltip-right" title="$title">
   <a href="#"
-     data-id="$controlid"
-     data-post="$post"
-     data-json="$json">
+     data-id="{$controlid}"
+     data-post="{$post}"
+     data-json='{$json}'>
 $value
   </a>
 </li>
 __EOT__;
-      }
 
       return $html;
     }
