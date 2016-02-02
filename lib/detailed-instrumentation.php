@@ -1208,7 +1208,7 @@ class DetailedInstrumentation
         \OCP\Util::writeLog(Config::APP_NAME,
                             __METHOD__.': '.
                             'Stored value "'.$value.'" unequal to stored key "'.$key.'"',
-                            \OCP\Util::WARNING);
+                            \OCP\Util::WARN);
       }
       return (float)$allowedValues[0]['data'];
     case 'multiple':
