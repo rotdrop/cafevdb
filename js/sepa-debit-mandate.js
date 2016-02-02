@@ -423,6 +423,8 @@ var CAFEVDB = CAFEVDB || {};
   SepaDebitMandate.validatePME = function(event, validateLockCB) {
     var $element = $(this);
 
+
+
     if ($element.prop('readonly')) {
       return false;
     }
@@ -756,11 +758,15 @@ var CAFEVDB = CAFEVDB || {};
       off('click', submitSel).
       on('click', submitSel, function(event) {
       var button = $(this);
-
       if (submitActive) {
         button.blur();
         return false;
       }
+      // allow delete button, validation makes no sense here
+      if (button.attr('name') === PHPMYEDIT.pmeSys('savedelete')) {
+        return true;
+      }
+
       submitActive = true;
 
       var inputs = table.find('input[type="text"]');
