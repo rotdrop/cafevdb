@@ -338,6 +338,13 @@ var CAFEVDB = CAFEVDB || {};
                }
                dflt.trigger('chosen:updated');
                allowed.prop('readonly', false);
+
+               if (CAFEVDB.toolTipsEnabled) {
+                 $.fn.cafevTooltip.enable();
+               } else {
+                 $.fn.cafevTooltip.disable();
+               }
+
                submitDefer.resolve();
              });
       return false;
