@@ -31,15 +31,7 @@ namespace CAFEVDB
     extends Instrumentation
   {
     const CSS_PREFIX = 'cafevdb-page';
-    const RATE_TABLE = 'InsuranceRates';
     const MEMBER_TABLE = 'SepaDebitMandates';
-    const TAXES = 0.19;
-    protected $broker;
-    protected $brokerNames;
-    protected $scope;
-    protected $scopeNames;
-    protected $accessory;
-    protected $accessoryNames;
 
     function __construct($execute = true) {
       parent::__construct($execute);
@@ -113,7 +105,7 @@ namespace CAFEVDB
       $opts['key_type'] = 'int';
 
       // Sorting field(s)
-      $opts['sort_field'] = array('Broker','GeographicalScope','MusicianId','Accessory');
+      $opts['sort_field'] = array('musicianId');
 
       // Options you wish to give the users
       // A - add,  C - change, P - copy, V - view, D - delete,
@@ -259,29 +251,6 @@ received so far'),
          $opts['filters'] = "section_id = 9";
          $opts['filters'] = "PMEtable0.sessions_count > 200";
       */
-
-      $junctor = '';
-      if ($musicianId > 0) {
-        $opts['filters'] = $junctor."`PMEtable0`.`musicianId` = ".$musicianId;
-        $junctor = " AND ";
-      }
-      if ($projectMode) {
-        $opts['filters'] =
-          $junctor.
-          "(".
-          "`PMEtable0`.`projectId` = ".$projectId.
-          " OR ".
-          "(".
-          "`PMEtable0`.`projectId` = ".Config::getValue('memberTableId').
-          " AND ".
-          "(".
-          "SELECT COUNT(*) FROM `Besetzungen` ".
-          "  WHERE `MusikerId` = `PMEtable0`.`musicianId` AND `ProjektId` = ".$projectId.
-          ")".
-          ")".
-          ")";
-        $junctor = " AND ";
-      }
 
       $opts['fdd']['id'] = array(
         'name'     => 'Id',
@@ -570,6 +539,32 @@ received so far'),
           'decrypt' => '\CAFEVDB\Config::decrypt',
           ));
 
+      $junctor = '';
+      if ($musicianId > 0) {
+        $opts['filters'] = $junctor."`PMEtable0`.`musicianId` = ".$musicianId;
+        $junctor = " AND ";
+      }
+      if ($projectMode) {
+        $opts['filters'] =
+          $junctor.
+          "(".
+          "`PMEtable0`.`projectId` = ".$projectId.
+          " OR ".
+          "`PMEtable0`.`projectId` = ".Config::getValue('memberTableId').
+          ")".
+          " AND ".
+          "`".$projectAlias."`.`Id` IS NOT NULL";
+        $junctor = " AND ";
+      }
+
+      // GROUP BY clause, if needed.
+      if (false) {
+        if (!$projectMode) {
+          $opts['groupby_fields'] = 'musicianId';
+        } else {
+          $opts['groupby_fields'] = 'InstrumentationId';
+        }
+      }
 
       if ($this->pme_bare) {
         // disable all navigation buttons, probably for html export
@@ -596,13 +591,6 @@ received so far'),
       $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
       $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeUpdateRemoveUnchanged';
       $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
-
-      // GROUP BY clause, if needed.
-      if (!$projectMode) {
-        $opts['groupby_fields'] = 'musicianId';
-      } else {
-        $opts['groupby_fields'] = 'InstrumentationId';
-      }
 
       $this->pme = new \phpMyEdit($opts);
 
