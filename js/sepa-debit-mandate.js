@@ -94,7 +94,7 @@ var CAFEVDB = CAFEVDB || {};
             $(this).dialog("widget").find('button.apply').attr("disabled", !self.instantValidation);
             $(this).dialog("widget").find('button.delete').attr("disabled", false);
             $(this).dialog("widget").find('button.change').attr("disabled", true);
-            mandateForm.find('input[class^="bankAccount"]').attr("disabled", false);
+            mandateForm.find('input.bankAccount').attr("disabled", false);
             mandateForm.find('input.mandateDate').attr("disabled", false);
             mandateForm.find('input.lastUsedDate').attr("disabled", false);
             $.fn.cafevTooltip.remove(); // clean up left-over balloons
@@ -130,7 +130,7 @@ var CAFEVDB = CAFEVDB || {};
               $(dlg).dialog("widget").find('button.apply').attr("disabled", true);
               $(dlg).dialog("widget").find('button.delete').attr("disabled", true);
               $(dlg).dialog("widget").find('button.change').attr("disabled", false);
-              mandateForm.find('input[class^="bankAccount"]').attr("disabled", true);
+              mandateForm.find('input.bankAccount').attr("disabled", true);
               mandateForm.find('input.mandateDate').attr("disabled", true);
               mandateForm.find('input.lastUsedDate').attr("disabled", true);
               $.fn.cafevTooltip.remove(); // clean up left-over balloons
@@ -181,7 +181,7 @@ var CAFEVDB = CAFEVDB || {};
           buttons.save.attr("disabled", true);
           buttons.apply.attr("disabled", true);
           buttons['delete'].attr("disabled", true);
-          mandateForm.find('input[class^="bankAccount"]').attr("disabled", true);
+          mandateForm.find('input.bankAccount').attr("disabled", true);
           mandateForm.find('input.mandateDate').attr("disabled", true);
           mandateForm.find('input.lastUsedDate').attr("disabled", true);
         } else {
@@ -258,6 +258,11 @@ var CAFEVDB = CAFEVDB || {};
 
           return false;
         });
+
+        mandateForm.find('#debit-mandate-orchestra-member').
+          off('change').
+          on('change', validateInput);
+
       },
       close: function(event, ui) {
         $.fn.cafevTooltip.remove();
@@ -344,9 +349,10 @@ var CAFEVDB = CAFEVDB || {};
 
     // we "submit" the entire form in order to do some automatic
     // fill-in in checks for the bank accounts.
+    var changed = $(this).attr('name');
     var post;
     post = $('#sepa-debit-mandate-form').serialize();
-    post += "&"+$.param( { 'changed': $(this).attr('name') } );
+    post += "&"+$.param( { 'changed': changed } );
 
     // until end of validation
     validateLock();
@@ -380,7 +386,12 @@ var CAFEVDB = CAFEVDB || {};
                }
                return false;
              }
-
+             if (changed === 'orchestraMember') {
+               $('input[name="MandateProjectId"]').val(data.data.mandateProjectId);
+               $('input[name="MandateProjectName"]').val(data.data.mandateProjectName);
+               $('input[name="mandateReference"]').val(data.data.reference);
+               $('legend.mandateCaption .reference').html(data.data.reference);
+             }
              if (data.data.value) {
                $(element).val(data.data.value);
              }

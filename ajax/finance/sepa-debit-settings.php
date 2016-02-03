@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -38,7 +38,7 @@ namespace CAFEVDB {
       $debugText .= '$_POST[] = '.print_r($_POST, true);
     }
 
-    $requiredKeys = array('ProjectId', 'MusicianId', 'mandateReference');
+    $requiredKeys = array('MandateProjectId', 'ProjectId', 'MusicianId', 'mandateReference');
     foreach ($requiredKeys as $required) {
       if (!Util::cgiValue($required, null, false)) {
         $debugText .= ob_get_contents();
@@ -56,10 +56,17 @@ namespace CAFEVDB {
     $projectId  = Util::cgiValue('ProjectId');
     $musicianId = Util::cgiValue('MusicianId');
     $reference  = Util::cgiValue('mandateReference');
+    $mandateProjectId  = Util::cgiValue('MandateProjectId');
 
     $projectName = Projects::fetchName($projectId);
-    $members = Config::getSetting('memberTable', L::t('ClubMembers'));
-    $sequenceType = $projectName !== $members ? 'once' : 'permanent';
+    if ($projectId != $mandateProjectId) {
+      $mandateProjectName = Projects::fetchName($mandateProjectId);
+    } else {
+      $mandateProjectName = $projectName;
+    }
+    $members = Config::getSetting('memberTableId', L::t('ClubMembers'));
+
+    $sequenceType = 'permanent'; // $projectName !== $members ? 'once' : 'permanent';
 
     $IBAN = Util::cgiValue('bankAccountIBAN');
     $BLZ  = Util::cgiValue('bankAccountBLZ', '');
@@ -67,14 +74,26 @@ namespace CAFEVDB {
 
     $changed = Util::cgiValue('changed');
     $value = Util::cgiValue($changed);
-    
+
     switch ($changed) {
+    case 'orchestraMember':
+      // tricky, for now just generate a new reference
+      if ($value === 'member') {
+        $reference = Finance::generateSepaMandateReference($members, $musicianId);
+        $mandateProjectId = $members;
+        $mandateProjectName = Projects::fetchName($members);
+      } else {
+        $reference = Finance::generateSepaMandateReference($projectId, $musicianId);
+        $mandateProjectId = $projectId;
+        $mandateProjectName = $projectName;
+      }
+      break;
     case 'lastUsedDate':
       // Store the lastUsedDate immediately, if other fields are disabled
       if (Util::cgiValue('mandateDate', false) === false) {
         $mandate = array('mandateReference' => $reference,
                          'musicianId' => $musicianId,
-                         'projectId' => $projectId,
+                         'projectId' => $mandateProjectId,
                          'lastUsedDate' => $value);
         if (!Finance::storeSepaMandate($mandate)) {
           $debugText .= ob_get_contents();
@@ -104,7 +123,7 @@ namespace CAFEVDB {
       if (!Finance::validateSepaString($value)) {
         $debugText .= ob_get_contents();
         @ob_end_clean();
-        
+
         \OC_JSON::error(
           array("data" => array(
                   'message' => L::t("Account owner contains invalid characters: %s",
@@ -159,10 +178,10 @@ namespace CAFEVDB {
                             array($blz));
             $suggestions = implode(', ', $suggestions);
           }
-          
+
           $debugText .= ob_get_contents();
           @ob_end_clean();
-          
+
           \OC_JSON::error(
             array("data" => array('message' => $message,
                                   'suggestions' => $suggestions,
@@ -243,10 +262,10 @@ namespace CAFEVDB {
             return false;
           }
         }
-      
+
         $value = $iban->MachineFormat();
         $IBAN = $value;
-    
+
         // Compute as well the BLZ and the BIC
         $blz = $iban->Bank();
         $bav = new \malkusch\bav\BAV;
@@ -265,7 +284,7 @@ namespace CAFEVDB {
           }
         }
         $suggestions = implode(', ', $suggestions);
-        
+
         $debugText .= ob_get_contents();
         @ob_end_clean();
 
@@ -358,26 +377,41 @@ namespace CAFEVDB {
       array("data" => array(
               'message' => L::t('Value for `%s\' set to `%s\'.', array($changed, $value)),
               'suggestions' => '',
+              'mandateProjectId' => $mandateProjectId,
+              'mandateProjectName' => $mandateProjectName, // needed?
+              'reference' => $reference,
               'value' => $value,
               'iban' => $IBAN,
               'blz' => $BLZ,
               'bic' => $BIC)));
-    return true;  
+    return true;
 
   } catch (\Exception $e) {
     $debugText .= ob_get_contents();
     @ob_end_clean();
 
+    $exceptionText = $e->getFile().'('.$e->getLine().'): '.$e->getMessage();
+    $trace = $e->getTraceAsString();
+
+    $admin = Config::adminContact();
+
+    $mailto = $admin['email'].
+      '?subject='.rawurlencode('[CAFEVDB-Exception] Exceptions from Email-Form').
+      '&body='.rawurlencode($exceptionText."\r\n".$trace);
+    $mailto = '<span class="error email"><a href="mailto:'.$mailto.'">'.$admin['name'].'</a></span>';
+
     \OCP\JSON::error(
       array(
         'data' => array(
+          'caption' => L::t('PHP Exception Caught'),
           'error' => 'exception',
-          'message' => L::t('Error, caught an exception'),
-          'debug' => $debugText,
-          'exception' => $e->getFile().'('.$e->getLine().'): '.$e->getMessage(),
-          'trace' => $e->getTraceAsString(),
-          'debug' => $debugText)));
-    
+          'exception' => $exceptionText,
+          'trace' => $trace,
+          'message' => L::t('Error, caught an exception. '.
+                            'Please copy the displayed text and send it by email to %s.',
+                            array($mailto)),
+          'debug' => htmlspecialchars($debugText))));
+
     return false;
   }
 

@@ -39,10 +39,12 @@ namespace CAFEVDB {
       $debugText .= '$_POST = '.print_r($_POST, true);
     }
 
-    $projectId   = Util::cgiValue('ProjectId', -1);
-    $projectName = Util::cgiValue('ProjectName', '');
-    $musicianId   = Util::cgiValue('MusicianId', -1);
-    $musicianName = Util::cgiValue('MusicianName', '');
+    $projectId          = Util::cgiValue('ProjectId', -1);
+    $mandateProjectId   = Util::cgiValue('MandateProjectId', -1);
+    $projectName        = Util::cgiValue('ProjectName', '');
+    $mandateProjectName = Util::cgiValue('MandateProjectName', '');
+    $musicianId         = Util::cgiValue('MusicianId', -1);
+    $musicianName       = Util::cgiValue('MusicianName', '');
 
     if ($projectId < 0 ||
         ($projectName == '' &&
@@ -55,6 +57,21 @@ namespace CAFEVDB {
         array(
           'data' => array('error' => 'arguments',
                           'message' => L::t('Project-id and/or name not set'),
+                          'debug' => $debugText)));
+      return false;
+    }
+
+    if ($mandateProjectId < 0 ||
+        ($mandateProjectName == '' &&
+         ($mandateProjectName = MandateProjects::fetchName($mandateProjectId)) == '')) {
+
+      $debugText .= ob_get_contents();
+      @ob_end_clean();
+
+      \OCP\JSON::error(
+        array(
+          'data' => array('error' => 'arguments',
+                          'message' => L::t('Mandate project-id and/or name not set'),
                           'debug' => $debugText)));
       return false;
     }
@@ -78,7 +95,7 @@ namespace CAFEVDB {
     }
 
     // check for an existing mandate, otherwise generate a new Id.
-    $mandate = Finance::fetchSepaMandate($projectId, $musicianId);
+    $mandate = Finance::fetchSepaMandate($mandateProjectId, $musicianId);
     if ($mandate === false) {
       $ref = Finance::generateSepaMandateReference($projectId, $musicianId);
       $members = Config::getSetting('memberTable', L::t('ClubMembers'));
@@ -88,7 +105,7 @@ namespace CAFEVDB {
                        'mandateDate' => '01-'.date('m-Y'),
                        'lastUsedDate' =>'',
                        'musicianId' => $musicianId,
-                       'projectId' => $projectId,
+                       'projectId' => $mandateProjectId,
                        'sequenceType' => $sequenceType,
                        'IBAN' => '',
                        'BIC' => '',
@@ -100,8 +117,10 @@ namespace CAFEVDB {
 
     $tmpl->assign('ProjectName', $projectName);
     $tmpl->assign('ProjectId', $projectId);
+    $tmpl->assign('MandateProjectId', $mandateProjectId);
     $tmpl->assign('MusicianName', $musicianName);
     $tmpl->assign('MusicianId', $musicianId);
+
     $tmpl->assign('CSSClass', 'sepadebitmandate');
 
     $tmpl->assign('mandateId', $mandate['id']);
@@ -148,18 +167,31 @@ namespace CAFEVDB {
     return true;
 
   } catch (\Exception $e) {
-
     $debugText .= ob_get_contents();
     @ob_end_clean();
+
+    $exceptionText = $e->getFile().'('.$e->getLine().'): '.$e->getMessage();
+    $trace = $e->getTraceAsString();
+
+    $admin = Config::adminContact();
+
+    $mailto = $admin['email'].
+      '?subject='.rawurlencode('[CAFEVDB-Exception] Exceptions from Email-Form').
+      '&body='.rawurlencode($exceptionText."\r\n".$trace);
+    $mailto = '<span class="error email"><a href="mailto:'.$mailto.'">'.$admin['name'].'</a></span>';
 
     \OCP\JSON::error(
       array(
         'data' => array(
+          'caption' => L::t('PHP Exception Caught'),
           'error' => 'exception',
-          'exception' => $e->getFile().'('.$e->getLine().'): '.$e->getMessage(),
-          'trace' => $e->getTraceAsString(),
-          'message' => L::t('Error, caught an exception'),
-          'debug' => $debugText)));
+          'exception' => $exceptionText,
+          'trace' => $trace,
+          'message' => L::t('Error, caught an exception. '.
+                            'Please copy the displayed text and send it by email to %s.',
+                            array($mailto)),
+          'debug' => htmlspecialchars($debugText))));
+
     return false;
   }
 

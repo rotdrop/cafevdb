@@ -476,12 +476,11 @@ class DetailedInstrumentation
       $mandateIdx = count($opts['fdd']);
       $opts['fdd']['SepaDebitMandate'] = array(
         'name' => L::t('SEPA Debit Mandate'),
-        'input' => 'V',
+        'input' => 'VR',
         'tab' => array('id' => $financeTab),
         'select' => 'T',
         'options' => 'LFACPDV',
         'sql' => '`PMEjoin'.$mandateIdx.'`.`mandateReference`', // dummy, make the SQL data base happy
-//        'sqlw' => '`PMEjoin'.$mandateIdx.'`.`mandateReference`', // dummy, make the SQL data base happy
         'values' => array(
           'table' => 'SepaDebitMandates',
           'column' => 'id',
@@ -502,11 +501,11 @@ class DetailedInstrumentation
           )
         );
 
+      $mandateProjectIdx = count($opts['fdd']);
       $opts['fdd']['DebitMandateProject'] = array(
-        'input' => 'V',
+        'input' => 'VHR',
         'name' => 'internal data',
         'options' => 'H',
-        //'input'    => 'H',
         'select' => 'T',
         'sql' => '`PMEjoin'.$mandateIdx.'`.`projectId`', // dummy, make the SQL data base happy
         'sqlw' => '`PMEjoin'.$mandateIdx.'`.`projectId`' // dummy, make the SQL data base happy
@@ -1082,26 +1081,36 @@ class DetailedInstrumentation
     if ($row['qf'.$k] != '') {
       $value = $row['qf'.$k];
       if ($row['qf'.($k+1)] != $projectId) {
-        $projectId = $row['qf'.($k+1)];
-        $projectName = Projects::fetchName($projectId);
+        $mandateProjectId = $row['qf'.($k+1)];
+        $mandateProjectName = Projects::fetchName($mandateProjectId);
+      } else {
+        $mandateProjectId = $projectId;
+        $mandateProjectName = $projectName;
       }
     } else {
       $value = L::t("SEPA Debit Mandate");
     }
 
-    return self::sepaDebitMandateButton($value, $musicianId, $musician, $projectId, $projectName);
+    return self::sepaDebitMandateButton($value,
+                                        $musicianId, $musician,
+                                        $projectId, $projectName,
+                                        $mandateProjectId, $mandateProjectName);
   }
 
   /**Generate a clickable form element which finally will display the
    * debit-mandate dialog, i.e. load some template stuff by means of
    * some java-script and ajax blah.
    */
-  public static function sepaDebitMandateButton($value, $musicianId, $musician, $projectId, $projectName)
+  public static function sepaDebitMandateButton($value, $musicianId, $musician,
+                                                $projectId, $projectName,
+                                                $mandateProjectId, $mandateProjectName)
   {
     $data = array('MusicianId' => $musicianId,
                   'MusicianName' => $musician,
                   'ProjectId' => $projectId,
-                  'ProjectName' => $projectName);
+                  'ProjectName' => $projectName,
+                  'MandateProjectId' => $mandateProjectId,
+                  'MandateProjectName' => $mandateProjectName);
     $data = htmlspecialchars(json_encode($data));
 
     $css= ($value == (L::t("SEPA Debit Mandate")) ? "missing-data " : "")."sepa-debit-mandate";

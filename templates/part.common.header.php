@@ -119,7 +119,7 @@ namespace CAFEVDB {
     <div id="cafevdb-navigation-info"><?php echo $_['navBarInfo']; ?></div>
     <div id="app-settings-header"
          class="tooltip-<?php echo $sideBarToolTipPos; ?>"
-         title="<?php echo Config::tooltips('settings-button'); ?>">
+         title="<?php echo Config::toolTips('settings-button'); ?>">
       <button class="settings-button" tabindex="0"></button>
     </div>
     <div id="app-settings-content">
@@ -129,10 +129,10 @@ namespace CAFEVDB {
                  type="checkbox"
                  name="tooltips" <?php echo $_['tooltips'] == 'on' ? 'checked="checked"' : ''; ?>
                  class="checkbox tooltip-<?php echo $sideBarToolTipPos; ?>"
-                 title="<?php echo Config::tooltips('show-tool-tips'); ?>"/>
+                 title="<?php echo Config::toolTips('show-tool-tips'); ?>"/>
           <label for="app-settings-tooltips"
                  class="tooltip-<?php echo $sideBarToolTipPos; ?>"
-                 title="<?php echo Config::tooltips('show-tool-tips'); ?>">
+                 title="<?php echo Config::toolTips('show-tool-tips'); ?>">
             <?php echo L::t('Tool-Tips'); ?>
           </label>
         </li>
@@ -141,10 +141,10 @@ namespace CAFEVDB {
                  type="checkbox"
                  name="filtervisibility" <?php echo $_['filtervisibility'] == 'on' ? 'checked="checked"' : ''; ?>
                  class="checkbox tooltip-<?php echo $sideBarToolTipPos; ?>"
-                 title="<?php echo Config::tooltips('filter-visibility'); ?>"/>
+                 title="<?php echo Config::toolTips('filter-visibility'); ?>"/>
           <label for="app-settings-filtervisibility"
                  class="tooltip-<?php echo $sideBarToolTipPos; ?>"
-                 title="<?php echo Config::tooltips('filter-visibility'); ?>">
+                 title="<?php echo Config::toolTips('filter-visibility'); ?>">
             <?php echo L::t('Filter-Controls'); ?>
           </label>
         </li>
@@ -153,10 +153,10 @@ namespace CAFEVDB {
                  type="checkbox"
                  name="directchange" <?php echo $_['directchange'] == 'on' ? 'checked="checked"' : ''; ?>
                  class="checkbox tooltip-<?php echo $sideBarToolTipPos; ?>"
-                 title="<?php echo Config::tooltips('direct-change'); ?>"/>
+                 title="<?php echo Config::toolTips('direct-change'); ?>"/>
           <label for="app-settings-directchange"
                  class="tooltip-<?php echo $sideBarToolTipPos; ?>"
-                 title="<?php echo Config::tooltips('direct-change'); ?>">
+                 title="<?php echo Config::toolTips('direct-change'); ?>">
             <?php echo L::t('Quick Change-Dialog'); ?>
           </label>
         </li>
@@ -165,10 +165,10 @@ namespace CAFEVDB {
                  type="checkbox"
                  name="expertmode" <?php echo $_['expertmode'] == 'on' ? 'checked="checked"' : ''; ?>
                  class="checkbox tooltip-<?php echo $sideBarToolTipPos; ?>"
-                 title="<?php echo Config::tooltips('expert-mode'); ?>"/>
+                 title="<?php echo Config::toolTips('expert-mode'); ?>"/>
           <label for="app-settings-expertmode"
                  class="tooltip-<?php echo $sideBarToolTipPos; ?>"
-                 title="<?php echo Config::tooltips('expert-mode'); ?>">
+                 title="<?php echo Config::toolTips('expert-mode'); ?>">
             <?php echo L::t('Expert-Mode'); ?>
           </label>
         </li>
@@ -177,7 +177,7 @@ namespace CAFEVDB {
                   data-placeholder="<?php echo L::t('#Rows'); ?>"
                   class="table-pagerows chosen-dropup tooltip-<?php echo $sideBarToolTipPos; ?>"
                   id="app-settings-table-pagerows"
-                  title="<?php echo Config::tooltips('table-rows-per-page'); ?>">
+                  title="<?php echo Config::toolTips('table-rows-per-page'); ?>">
             <?php
             foreach($pageRowsOptions as $value => $text) {
               $selected = $value == $pageRows ? ' selected="selected"' : '';
@@ -187,14 +187,14 @@ namespace CAFEVDB {
           </select>
           <label for="app-settings-table-pagerows"
                  class="tooltip-<?php echo $sideBarToolTipPos; ?>"
-                 title="<?php echo Config::tooltips('table-rows-per-page'); ?>">
+                 title="<?php echo Config::toolTips('table-rows-per-page'); ?>">
             <?php echo L::t('#Rows/Page in Tables'); ?>
           </label>
         </li>
         <li>
           <a id="app-settings-further-settings"
              class="settings generalsettings tooltip-<?php echo $sideBarToolTipPos; ?>"
-             title="<?php echo Config::tooltips('further-settings'); ?>"
+             title="<?php echo Config::toolTips('further-settings'); ?>"
              href="#">
             <?php echo L::t('Further Settings'); ?>
           </a>
@@ -202,7 +202,7 @@ namespace CAFEVDB {
         <li class="<?php echo $expertClass; ?>">
           <a id="app-settings-expert-operations"
              class="settings expertoperations tooltip-<?php echo $sideBarToolTipPos; ?>"
-             title="<?php echo Config::tooltips('expert-operations'); ?>"
+             title="<?php echo Config::toolTips('expert-operations'); ?>"
              href="#">
             <?php echo L::t('Expert Operations'); ?>
           </a>
@@ -214,7 +214,7 @@ namespace CAFEVDB {
             name="debugmode"
             data-placeholder="<?php echo L::t('Enable Debug Mode'); ?>"
             class="debug-mode chosen-dropup tooltip-<?php echo $sideBarToolTipPos; ?>"
-            title="<?php echo Config::tooltips('debug-mode'); ?>">
+            title="<?php echo Config::toolTips('debug-mode'); ?>">
             <?php
             foreach ($debugModes as $key => $value) {
               echo '<option value="'.$key.'" '.(Config::$debug[$key] ? 'selected="selected"' : '').'>'.$value.'</option>'."\n";
