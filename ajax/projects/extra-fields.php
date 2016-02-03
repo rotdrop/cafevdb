@@ -175,7 +175,7 @@ namespace CAFEVDB {
     $admin = Config::adminContact();
 
     $mailto = $admin['email'].
-      '?subject='.rawurlencode('[CAFEVDB-Exception] Exceptions from Email-Form').
+      '?subject='.rawurlencode('[CAFEVDB-Exception] Exceptions from extra-fields form').
       '&body='.rawurlencode($exceptionText."\r\n".$trace);
     $mailto = '<span class="error email"><a href="mailto:'.$mailto.'">'.$admin['name'].'</a></span>';
 
