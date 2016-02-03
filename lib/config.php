@@ -765,34 +765,37 @@ redaxoRehearsalsModule
     /**Return true if the logged in user is the treasurer.*/
     static public function isTreasurer($uid = null)
     {
+      empty($uid) && $uid = \OCP\USER::getUser();
       $musicianId = Config::getSetting('treasurerId', -1);
       if ($musicianId == -1) {
         return false;
       }
       $userId = Config::getSetting('treasurerUserId', null);
-      return self::inGroup($userId);
+      return self::inGroup($userId) && $userId === $uid;
     }
 
     /**Return true if the logged in user is the secretary.*/
     static public function isSecretary($uid = null)
     {
+      empty($uid) && $uid = \OCP\USER::getUser();
       $musicianId = Config::getSetting('secretaryId', -1);
       if ($musicianId == -1) {
         return false;
       }
       $userId = Config::getSetting('secretaryUserId', null);
-      return self::inGroup($userId);
+      return self::inGroup($userId) && $userId === $uid;
     }
 
     /**Return true if the logged in user is the president.*/
     static public function isPresident($uid = null)
     {
+      empty($uid) && $uid = \OCP\USER::getUser();
       $musicianId = Config::getSetting('presidentId', -1);
       if ($musicianId == -1) {
         return false;
       }
       $userId = Config::getSetting('presidentUserId', null);
-      return self::inGroup($userId);
+      return self::inGroup($userId) && $userId === $uid;
     }
 
     /**Return true if the logged in user is in the treasurer group. */
