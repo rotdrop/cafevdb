@@ -602,6 +602,46 @@ received so far'),
 
     } // display()
 
+    /**Compute usage data for the given mandate reference*/
+    static public function mandateReferenceUsage($reference, $handle = false)
+    {
+      $result = false;
+
+      $ownConnection = $handle === false;
+
+      if ($ownConnection) {
+        Config::init();
+        $handle = mySQL::connect(Config::$pmeopts);
+      }
+
+      $query = "SELECT
+  m.mandateReference AS MandateReference, m.Active,
+  MAX(d.DateIssued) AS LastIssued,
+  MAX(d.SubmitDate) AS LastSubmitted,
+  MAX(d.DueDate) AS LastDue,
+  IF(p.DateOfReceipt = MAX(d.DueDate), p.DebitMessageId, NULL) AS LastNotified
+FROM SepaDebitMandates m
+LEFT JOIN ProjectPayments p
+  ON p.MandateReference = m.mandateReference
+LEFT JOIN DebitNotes d
+  ON d.Id = p.DebitNoteId";
+      $query .= " WHERE m.mandateReference = '".$reference."'
+GROUP BY m.mandateReference";
+
+      $result = mySQL::query($query, $handle);
+      if ($result === false || mySQL::numRows($result) !== 1) {
+        return false;
+      }
+
+      $result = mySQL::fetch($result);
+
+      if ($ownConnection) {
+        mySQL::close($handle);
+      }
+
+      return $result;
+    }
+
     /**Provide a very primitive direct matrix representation,
      * optionally only for the given musician.
      */
