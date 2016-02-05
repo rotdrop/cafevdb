@@ -307,14 +307,15 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
         //alert('max: '+projectActions.maxOuterWidth(true));
         //alert('max: '+projectActions.maxWidth());
         projectActions.chosen(chosenOptions);
-        projectActions.find('option:first').html('');
-        projectActions.trigger("chosen:updated");
+        if (CAFEVDB.chosenActive(projectActions)) {
+            projectActions.find('option:first').html('');
+            projectActions.trigger("chosen:updated");
+        }
 
         projectActions.
             off('change').
             on('change', function(event) {
             event.preventDefault();
-
             return Projects.actions($(this), containerSel);
         });
         projectActions.
