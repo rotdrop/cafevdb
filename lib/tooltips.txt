@@ -84,6 +84,7 @@ blog-reader-clear
 cancel-email-composition
 club-member-project
 configrecheck
+debit-mandate-orchestra-member
 debug-mode
 delete-all-event-attachments
 delete-all-file-attachments

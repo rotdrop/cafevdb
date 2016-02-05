@@ -75,6 +75,9 @@ same effect as clicking the close button on top of the dialog-window. No email w
 
         'configrecheck' => L::t('Perform the configuration checks again. If all checks have been passed then you are led on to the ordinary entry page of the application.'),
 
+        'debit-mandate-orchestra-member' => L::t('Please check this box if this musician is a club-member. Otherwise
+please leave it unchecked.'),
+
         'debit-note-creation-time' => L::t('The time when the debit note data was created.'),
 
         'debit-note-date-of-submission' => L::t('The date when the debit note records were actually transferred to the
