@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -35,7 +35,7 @@ $css_pfx = $_['css-prefix'];
 <div id="dialog_holder" class="popup topleft hidden"></div>
 <div id="appsettings" class="popup bottomleft hidden"></div>
 <!-- fuck auto-focus attempts -->
-<form class="focusstealer"><input type="text" id="focusstealer" class="focusstealer"/></form>
+<form class="focusstealer"><input type="checkbox" id="focusstealer" class="focusstealer"/></form>
 
 <!-- iframes to trigger proper download action in web browser -->
 <iframe name="pmeformdownloadframe"
