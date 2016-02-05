@@ -763,7 +763,7 @@ redaxoRehearsalsModule
     }
 
     /**Return true if the logged in user is the treasurer.*/
-    static public function isTreasurer($uid = null)
+    static public function isTreasurer($uid = null, $strict = false)
     {
       empty($uid) && $uid = \OCP\USER::getUser();
       $musicianId = Config::getSetting('treasurerId', -1);
@@ -771,7 +771,15 @@ redaxoRehearsalsModule
         return false;
       }
       $userId = Config::getSetting('treasurerUserId', null);
-      return self::inGroup($userId) && $userId === $uid;
+      if (self::inGroup($userId) && $userId === $uid) {
+        return true;
+      }
+      if ($strict) {
+        return false;
+      }
+      // check for group-membership
+      $group = Config::getSetting('treasurerUserGroupId', null);
+      return !empty($group) && \OC_Group::inGroup($uid, $group);
     }
 
     /**Return true if the logged in user is the secretary.*/
