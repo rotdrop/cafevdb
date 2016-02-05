@@ -1420,6 +1420,7 @@ $(document).ready(function(){
   content.on('click keydown', '#personalsettings .tooltips',
              function(event) {
                event.preventDefault();
+               $('body').removeClass('dialog-titlebar-clicked');
                var self = $(this);
                CAFEVDB.toolTipsOnOff(self.hasClass('tooltips-disabled'));
                $.post(OC.filePath('cafevdb', 'ajax/settings', 'tooltips.php'),

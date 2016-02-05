@@ -47,6 +47,7 @@ var CAFEVDB = CAFEVDB || {};
       container.find('select').prop('disabled', true);
       container.find('select').trigger('chosen:updated');
     }
+    $('body').removeClass('dialog-titlebar-clicked');
     CAFEVDB.modalizer(true),
     Page.busyIcon(true);
     $.post(OC.filePath('cafevdb', 'ajax', 'page-loader.php'),
@@ -128,6 +129,19 @@ $(document).ready(function(){
 
   var content = $('#content');
 
+  content.on('click', '.ui-dialog-titlebar', function(event) {
+    $('body').toggleClass('dialog-titlebar-clicked');
+    return false;
+  });
+
+  $('#app-navigation-toggle').on('snapjs:close', function() {
+    $('body').removeClass('dialog-titlebar-clicked');
+  });
+
+  $('#app-navigation-toggle').on('click', function() {
+    $('body').removeClass('dialog-titlebar-clicked');
+  });
+
   content.on('click keydown',
              '#personalsettings .navigation.reload',
              function(event) {
@@ -137,6 +151,7 @@ $(document).ready(function(){
                  // remove left-over notifications
                  OC.Notification.hide();
                  pmeReload.trigger('click');
+                 $('body').removeClass('dialog-titlebar-clicked');
                } else {
                  CAFEVDB.Page.loadPage({
                    'HistoryOffset': 0
