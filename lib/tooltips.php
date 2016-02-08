@@ -732,7 +732,15 @@ recipients. Please think thrice about it. In case of an error
 additional diagnostic messages may (or may not ...) be available in
 the `Debug\' tab'),
 
+        'sepa-debit-mandate-active' => L::t('Used SEPA mandates are not deleted from the DB, but just flagged as
+"inactive" if they expire or are manually pseudo-deleted.'),
+
         'sepa-instant-validation' => L::t('Toggle instant validation and automatic computation of derived bank account data. If instant validation is disabled, the final values will still be validated and an error message will appear if an error is detected. It is only possible to save of store the debit-mandate if instant validation is enabled.'),
+
+        'sepa-mandate-expired' => L::t('This debit-mandate has not been used for more than %d month and
+therefore is expired and cannot be used any longer. Pleae delete it
+and contact the treasurer for further instructions.',
+                                       array(Finance::SEPA_MANDATE_EXPIRE_MONTHS)),
 
         'settings-button' => L::t('Personal application settings.'),
 

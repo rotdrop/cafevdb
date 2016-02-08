@@ -67,6 +67,7 @@ project-total-fee-summary
 register-musician
 registration-mark
 section-leader-mark
+sepa-debit-mandate-active
 transfer-instruments
 address-book-emails
 blog-acceptentry
@@ -148,6 +149,7 @@ save-email-message
 select-stored-messages
 send-mass-email
 sepa-instant-validation
+sepa-mandate-expired
 settings-button
 sharedfolder-force
 shareowner-force

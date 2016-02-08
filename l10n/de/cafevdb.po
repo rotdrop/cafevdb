@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-05 01:29+0100\n"
-"PO-Revision-Date: 2016-02-05 01:30+0100\n"
+"POT-Creation-Date: 2016-02-08 13:27+0100\n"
+"PO-Revision-Date: 2016-02-08 13:28+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -130,10 +130,10 @@ msgstr "Em@il Adresse(n) ungültig"
 #: ajax/email/composer.php:367 ajax/email/emailform.php:154
 #: ajax/email/exporter.php:97 ajax/email/preview.php:107
 #: ajax/email/recipients.php:143 ajax/finance/debit-note-download.php:194
-#: ajax/finance/sepa-debit-export.php:366
-#: ajax/finance/sepa-debit-mandate.php:186
-#: ajax/finance/sepa-debit-settings.php:406
-#: ajax/finance/sepa-debit-store.php:112
+#: ajax/finance/sepa-debit-delete.php:80 ajax/finance/sepa-debit-export.php:366
+#: ajax/finance/sepa-debit-mandate.php:200
+#: ajax/finance/sepa-debit-settings.php:409
+#: ajax/finance/sepa-debit-store.php:116
 #: ajax/instrumentation/add-musicians.php:159
 #: ajax/insurance/instrument-insurance-export.php:197
 #: ajax/insurance/validate.php:326 ajax/musicians/validate.php:99
@@ -146,10 +146,11 @@ msgstr "PHP `Ausnahme' `gefangen'"
 
 #: ajax/email/composer.php:371 ajax/email/emailform.php:158
 #: ajax/email/exporter.php:98 ajax/email/preview.php:111
-#: ajax/email/recipients.php:147 ajax/finance/sepa-debit-export.php:370
-#: ajax/finance/sepa-debit-mandate.php:190
-#: ajax/finance/sepa-debit-settings.php:410
-#: ajax/finance/sepa-debit-store.php:116
+#: ajax/email/recipients.php:147 ajax/finance/sepa-debit-delete.php:84
+#: ajax/finance/sepa-debit-export.php:370
+#: ajax/finance/sepa-debit-mandate.php:204
+#: ajax/finance/sepa-debit-settings.php:413
+#: ajax/finance/sepa-debit-store.php:120
 #: ajax/instrumentation/add-musicians.php:163 ajax/insurance/validate.php:330
 #: ajax/musicians/validate.php:103 ajax/musicians/validateaddress.php:165
 #: ajax/musicians/validateemail.php:111 ajax/musicians/validatephone.php:131
@@ -248,7 +249,7 @@ msgstr "Konnte folgende Datei nicht zwischen-speichern: %s"
 
 #: ajax/events/events.php:54 ajax/events/execute.php:58
 #: ajax/events/new.form.php:63 ajax/events/sendmail.php:56
-#: ajax/finance/sepa-debit-mandate.php:59
+#: ajax/finance/sepa-debit-mandate.php:62
 msgid "Project-id and/or name not set"
 msgstr "Projekt-Name und/oder Id nicht übermittelt."
 
@@ -265,7 +266,7 @@ msgstr "Auf den Kalender kann nicht zugegriffen werden: `%s'"
 msgid "Linked all matching web-pages to the respective projects."
 msgstr "Alle passenden Web-Seiten wurden mit ihren Projekten verknüpft."
 
-#: ajax/expertmode/clearoutput.php:11 lib/emailcomposer.php:1587
+#: ajax/expertmode/clearoutput.php:11 lib/emailcomposer.php:1594
 #: templates/expertmode.php:108
 msgid "empty"
 msgstr "leer"
@@ -322,7 +323,7 @@ msgid "Missing Musicians"
 msgstr "Fehlende Musiker"
 
 #: ajax/export/excel.php:285 ajax/export/insurance-export.php:157
-#: lib/detailed-instrumentation.php:254 lib/projects.php:1839
+#: lib/detailed-instrumentation.php:257 lib/projects.php:1839
 msgid "Instrument"
 msgstr "Instrument"
 
@@ -335,7 +336,7 @@ msgid "Total Insurance Amount: "
 msgstr "Gesamtversicherungssumme: "
 
 #: ajax/export/insurance-export.php:156 lib/instrument-insurance.php:237
-#: lib/project-payments.php:175 lib/sepa-debit-mandates.php:267
+#: lib/project-payments.php:175 lib/sepa-debit-mandates.php:274
 msgid "Musician"
 msgstr "Musiker"
 
@@ -379,7 +380,7 @@ msgstr "Geltungsbereich"
 msgid "Date"
 msgstr "Datum"
 
-#: ajax/export/insurance-export.php:246 lib/detailed-instrumentation.php:603
+#: ajax/export/insurance-export.php:246 lib/detailed-instrumentation.php:659
 #: lib/instrument-insurance.php:76 lib/php-excel-functions.php:102
 #: lib/project-extra.php:392 lib/project-extra.php:504
 #: lib/project-extra.php:604
@@ -437,17 +438,17 @@ msgstr "Konnte das fertige Zip-Archiv nicht einlesen."
 msgid "Please copy the displayed text and send it by email to %s."
 msgstr "Bitte den angezeigten Text kopieren und per Email an %s senden."
 
-#: ajax/finance/sepa-debit-delete.php:40
-#: ajax/finance/sepa-debit-settings.php:49 ajax/finance/sepa-debit-store.php:46
+#: ajax/finance/sepa-debit-delete.php:43
+#: ajax/finance/sepa-debit-settings.php:49 ajax/finance/sepa-debit-store.php:50
 #, php-format
 msgid "Required information `%s' not provided."
 msgstr "Informationen zu `%s' fehlen."
 
-#: ajax/finance/sepa-debit-delete.php:51
+#: ajax/finance/sepa-debit-delete.php:55
 msgid "SEPA debit mandate deleted from data-base."
 msgstr "SEPA-Lastschriftmandat aus der Datenbank gelöscht."
 
-#: ajax/finance/sepa-debit-delete.php:56
+#: ajax/finance/sepa-debit-delete.php:60
 msgid "Unable to delete SEPA debit mandate from data-base."
 msgstr "Kann das SEPA-Lastschriftmandat nicht löschen."
 
@@ -527,27 +528,27 @@ msgstr "Kann die Lastschrift-Bankdaten nicht speichern."
 msgid "Unable to store debit note payments."
 msgstr "Kann die Lastschriftumsätze nicht speichern."
 
-#: ajax/finance/sepa-debit-mandate.php:74
+#: ajax/finance/sepa-debit-mandate.php:77
 msgid "Mandate project-id and/or name not set"
 msgstr "Projekt Id und/order Name des Mandats wurde nicht übermittelt."
 
-#: ajax/finance/sepa-debit-mandate.php:89
+#: ajax/finance/sepa-debit-mandate.php:95
 msgid "Musician-id and/or name not set"
 msgstr "Musiker-Name und/oder Id unbekannt."
 
-#: ajax/finance/sepa-debit-mandate.php:101
+#: ajax/finance/sepa-debit-mandate.php:108
 #: ajax/finance/sepa-debit-settings.php:67 settings.php:95
 msgid "ClubMembers"
 msgstr "Vereinsmitglieder"
 
-#: ajax/finance/sepa-debit-settings.php:104
+#: ajax/finance/sepa-debit-settings.php:107
 #, php-format
 msgid "Failed setting `%s' to `%s'."
 msgstr "Konnte den Wert für `%s' nicht als `%s' speichern."
 
-#: ajax/finance/sepa-debit-settings.php:116
-#: ajax/finance/sepa-debit-settings.php:137
-#: ajax/finance/sepa-debit-settings.php:378 ajax/settings/app-settings.php:893
+#: ajax/finance/sepa-debit-settings.php:119
+#: ajax/finance/sepa-debit-settings.php:140
+#: ajax/finance/sepa-debit-settings.php:381 ajax/settings/app-settings.php:893
 #: ajax/settings/app-settings.php:916 ajax/settings/app-settings.php:992
 #: ajax/settings/app-settings.php:1007 ajax/settings/app-settings.php:1042
 #: ajax/settings/app-settings.php:1081 ajax/settings/app-settings.php:1105
@@ -556,57 +557,57 @@ msgstr "Konnte den Wert für `%s' nicht als `%s' speichern."
 msgid "Value for `%s' set to `%s'."
 msgstr "Wert für `%s' auf `%s' gesetzt."
 
-#: ajax/finance/sepa-debit-settings.php:129
+#: ajax/finance/sepa-debit-settings.php:132
 #, php-format
 msgid "Account owner contains invalid characters: %s"
 msgstr "Kontoinhaber enthält ungültige Buchstaben: %s"
 
-#: ajax/finance/sepa-debit-settings.php:170
+#: ajax/finance/sepa-debit-settings.php:173
 #, php-format
 msgid "A German bank id consists of exactly 8 digits: %s."
 msgstr "Eine Deutsche Bankleitzahl besteht aus genau 8 Ziffern: %s."
 
-#: ajax/finance/sepa-debit-settings.php:177
-#: ajax/finance/sepa-debit-settings.php:230
+#: ajax/finance/sepa-debit-settings.php:180
+#: ajax/finance/sepa-debit-settings.php:233
 #, php-format
 msgid "Invalid German(?) bank id %s."
 msgstr "Ungültige Deutsche(?) Bankleitzahl %s."
 
-#: ajax/finance/sepa-debit-settings.php:198
-#: ajax/finance/sepa-debit-settings.php:247
+#: ajax/finance/sepa-debit-settings.php:201
+#: ajax/finance/sepa-debit-settings.php:250
 #, php-format
 msgid "Invalid German(?) bank account number %s @ %s."
 msgstr "Ungültige Deutsche(?) Kontonummer %s @ %s."
 
-#: ajax/finance/sepa-debit-settings.php:277 ajax/settings/app-settings.php:1050
+#: ajax/finance/sepa-debit-settings.php:280 ajax/settings/app-settings.php:1050
 #, php-format
 msgid "Invalid IBAN: `%s'."
 msgstr "Ungültige IBAN: `%s'."
 
-#: ajax/finance/sepa-debit-settings.php:321
-#: ajax/finance/sepa-debit-settings.php:353 ajax/settings/app-settings.php:1128
+#: ajax/finance/sepa-debit-settings.php:324
+#: ajax/finance/sepa-debit-settings.php:356 ajax/settings/app-settings.php:1128
 #, php-format
 msgid "Value for `%s' invalid: `%s'."
 msgstr "Der Wert für `%s' ist ungültig: `%s'."
 
-#: ajax/finance/sepa-debit-settings.php:367 ajax/projects/extra-fields.php:163
+#: ajax/finance/sepa-debit-settings.php:370 ajax/projects/extra-fields.php:163
 #: ajax/settings/app-settings.php:1188 ajax/settings/redaxo-settings.php:72
 msgid "Unhandled request:"
 msgstr "Unbekannte Anfrage:"
 
-#: ajax/finance/sepa-debit-store.php:69
+#: ajax/finance/sepa-debit-store.php:73
 msgid "SEPA debit mandate stored in data-base."
 msgstr "SEPA-Lastschriftmandat gespeichert."
 
-#: ajax/finance/sepa-debit-store.php:74
+#: ajax/finance/sepa-debit-store.php:78
 msgid "Unable to store SEPA debit mandate in data-base."
 msgstr "Kann das SEPA-Lastschriftmandata nicht sichern."
 
-#: ajax/finance/sepa-debit-store.php:87
+#: ajax/finance/sepa-debit-store.php:91
 msgid "Invalid Argument Exception"
 msgstr "Ausnahme: unsinniger Paramter-Wert."
 
-#: ajax/finance/sepa-debit-store.php:91
+#: ajax/finance/sepa-debit-store.php:95
 msgid "Invalid arguments"
 msgstr "Unsinnige Paramter-Werte"
 
@@ -1589,8 +1590,8 @@ msgstr "Unbekannter WYSIWYG-Edtior: `%s'"
 #: js/inlineimage.js:92 js/inlineimage.js:102 js/inlineimage.js:131
 #: js/inlineimage.js:155 js/inlineimage.js:184 js/inlineimage.js:207
 #: js/inlineimage.js:331 js/inlineimage.js:420 js/inlineimage.js:429
-#: js/inlineimage.js:432 js/insurance.js:200 js/sepa-debit-mandate.js:670
-#: js/sepa-debit-mandate.js:684
+#: js/inlineimage.js:432 js/insurance.js:200 js/sepa-debit-mandate.js:699
+#: js/sepa-debit-mandate.js:713
 msgid "Error"
 msgstr "Fehler"
 
@@ -1637,7 +1638,7 @@ msgstr "Den Beitrag wirklich löschen?"
 msgid "Choose some Options"
 msgstr "Wähle aus den Optionen"
 
-#: js/cafevdb.js:578 js/project-instruments.js:157 js/sepa-debit-mandate.js:106
+#: js/cafevdb.js:578 js/project-instruments.js:157 js/sepa-debit-mandate.js:109
 msgid "Save"
 msgstr "Speichern"
 
@@ -2240,11 +2241,11 @@ msgstr "Web-Seite mit Id {ArticleId} löschen?"
 msgid "No values match"
 msgstr "Kein Wert passt."
 
-#: js/sepa-debit-mandate.js:89 templates/share-settings.php:48
+#: js/sepa-debit-mandate.js:90 templates/share-settings.php:48
 msgid "Change"
 msgstr "Ändern"
 
-#: js/sepa-debit-mandate.js:90
+#: js/sepa-debit-mandate.js:91
 msgid ""
 "Change the SEPA mandate. Note that the SEPA mandate-reference is "
 "automatically computed and cannot be changed."
@@ -2252,23 +2253,23 @@ msgstr ""
 "Das SEPA-Lastschriftmandat ändern. Die Mandatsreferenz wird\n"
 "automatisch vergeben und kann nicht geändert werden."
 
-#: js/sepa-debit-mandate.js:107
+#: js/sepa-debit-mandate.js:110
 msgid "Close the form and save the data in the underlying data-base storage."
 msgstr "Schließt das Formular und speichert die Daten in der Datenbank."
 
-#: js/sepa-debit-mandate.js:119
+#: js/sepa-debit-mandate.js:122
 msgid "Apply"
 msgstr "Anwenden"
 
-#: js/sepa-debit-mandate.js:120
+#: js/sepa-debit-mandate.js:123
 msgid "Save the data in the underlying data-base storage. Keep the form open."
 msgstr "Speichert die Daten in der Datenbank. Das Formular bleibt offen."
 
-#: js/sepa-debit-mandate.js:143 templates/blogthreads.php:98
+#: js/sepa-debit-mandate.js:146 templates/blogthreads.php:98
 msgid "Delete"
 msgstr "Löschen"
 
-#: js/sepa-debit-mandate.js:144
+#: js/sepa-debit-mandate.js:147
 msgid ""
 "Delete this mandate from the data-base. Normally, this should only be done "
 "in case of desinformation or misunderstanding. Use with care."
@@ -2277,16 +2278,16 @@ msgstr ""
 "sollte das aufgrund falscher Eintragungen oder Mißverständnissen mit\n"
 "den Musikern nötig sein."
 
-#: js/sepa-debit-mandate.js:148 lib/detailed-instrumentation.php:478
-#: lib/detailed-instrumentation.php:1091 lib/detailed-instrumentation.php:1116
+#: js/sepa-debit-mandate.js:151 lib/detailed-instrumentation.php:487
+#: lib/detailed-instrumentation.php:552 lib/detailed-instrumentation.php:1138
 msgid "SEPA Debit Mandate"
 msgstr "SEPA Lastschriftmandat"
 
-#: js/sepa-debit-mandate.js:156
+#: js/sepa-debit-mandate.js:159
 msgid "Close"
 msgstr "Schließen"
 
-#: js/sepa-debit-mandate.js:157
+#: js/sepa-debit-mandate.js:160
 msgid ""
 "Discard all filled-in data and close the form. Note that this will not undo "
 "any changes previously stored in the data-base by pressing the `Apply' "
@@ -2296,21 +2297,25 @@ msgstr ""
 "Änderungen, die vorher über den `Anwenden'-Knopf gespeichert wurden,\n"
 "nicht rückgängig gemacht."
 
-#: js/sepa-debit-mandate.js:367 js/sepa-debit-mandate.js:410
-#: js/sepa-debit-mandate.js:515
+#: js/sepa-debit-mandate.js:214
+msgid "Debit Mandate Expired"
+msgstr "Lastschriftmandat abgelaufen"
+
+#: js/sepa-debit-mandate.js:389 js/sepa-debit-mandate.js:432
+#: js/sepa-debit-mandate.js:543
 msgid "Suggested alternatives based on common human mis-transcriptions:"
 msgstr "Mögliche Alternativen ausgehend von den üblichen Übertragungsfehlern:"
 
-#: js/sepa-debit-mandate.js:371 js/sepa-debit-mandate.js:414
-#: js/sepa-debit-mandate.js:519
+#: js/sepa-debit-mandate.js:393 js/sepa-debit-mandate.js:436
+#: js/sepa-debit-mandate.js:547
 msgid "Please do not accept these alternatives lightly!"
 msgstr "Bitte die Alternativen nicht leichtsinnig übernehmen!"
 
-#: js/sepa-debit-mandate.js:667
+#: js/sepa-debit-mandate.js:696
 msgid "Unable to export insurance overviews:"
 msgstr "Kann die Versicherungs-Übersichten nicht exportieren:"
 
-#: js/sepa-debit-mandate.js:681
+#: js/sepa-debit-mandate.js:710
 msgid "Unable to export debit notes:"
 msgstr "Kann die Lastschrifteinzüge nicht exportieren:"
 
@@ -2346,60 +2351,60 @@ msgstr "Verschlüsselung von `%s' @ `%s' fehlgeschlagen"
 msgid "Unable to update table data at index %s"
 msgstr "Kann die Tabellenzeile mit Index %s nicht ändern"
 
-#: lib/config.php:1003
+#: lib/config.php:1025
 msgid "birthday"
 msgstr "Geburtstag"
 
-#: lib/config.php:1013
+#: lib/config.php:1035
 msgid "no preference"
 msgstr "Keine Präferenz"
 
-#: lib/config.php:1014
+#: lib/config.php:1036
 msgid "German"
 msgstr "Deutsch"
 
-#: lib/config.php:1015
+#: lib/config.php:1037
 msgid "English"
 msgstr "Englisch"
 
-#: lib/config.php:1016
+#: lib/config.php:1038
 msgid "French"
 msgstr "Französisch"
 
-#: lib/config.php:1017
+#: lib/config.php:1039
 msgid "Spanish"
 msgstr "Spanisch"
 
-#: lib/config.php:1018
+#: lib/config.php:1040
 msgid "Portuguese"
 msgstr "Portugiesisch"
 
-#: lib/config.php:1019
+#: lib/config.php:1041
 msgid "Polish"
 msgstr "Polnisch"
 
-#: lib/config.php:1020
+#: lib/config.php:1042
 msgid "Russian"
 msgstr "Russisch"
 
-#: lib/config.php:1021
+#: lib/config.php:1043
 msgid "Chinese"
 msgstr "Chinesisch"
 
-#: lib/config.php:1022
+#: lib/config.php:1044
 msgid "Japaneese"
 msgstr "Japanisch"
 
-#: lib/config.php:1023
+#: lib/config.php:1045
 msgid "Korean"
 msgstr "Koreanisch"
 
-#: lib/config.php:1060
+#: lib/config.php:1082
 #, php-format
 msgid "Unknown Tooltip for key \"%s-%s\" requested."
 msgstr "Unbekannter Tooltip \"%s-%s\" angefordert."
 
-#: lib/config.php:1063
+#: lib/config.php:1085
 #, php-format
 msgid "Unknown Tooltip for key \"%s\" requested."
 msgstr "Unbekannter Tooltip \"%s\" angefordert."
@@ -2413,8 +2418,8 @@ msgstr "Lastschriften für das Projekt \"%s\""
 msgid "Id"
 msgstr "Id"
 
-#: lib/debit-notes.php:176 lib/sepa-debit-mandates.php:222
-#: lib/sepa-debit-mandates.php:486
+#: lib/debit-notes.php:176 lib/sepa-debit-mandates.php:229
+#: lib/sepa-debit-mandates.php:528
 msgid "Project"
 msgstr "Projekt"
 
@@ -2446,7 +2451,7 @@ msgstr "Anzahlung"
 msgid "remaining"
 msgstr "Rest"
 
-#: lib/debit-notes.php:235 lib/sepa-debit-mandates.php:180
+#: lib/debit-notes.php:235 lib/sepa-debit-mandates.php:187
 msgid "amount"
 msgstr "Betrag"
 
@@ -2513,28 +2518,28 @@ msgstr "Bearbeiten der Daten des angezeigten Musikers."
 msgid "Instrumentation for Project `%s'"
 msgstr "Besetzung für das Projekt `%s'"
 
-#: lib/detailed-instrumentation.php:212 lib/sepa-debit-mandates.php:298
+#: lib/detailed-instrumentation.php:215 lib/sepa-debit-mandates.php:305
 msgid "Instrumentation Id"
 msgstr "Besetzungs-Id"
 
-#: lib/detailed-instrumentation.php:225
+#: lib/detailed-instrumentation.php:228
 msgid "Musician Id"
 msgstr "Musiker-Id"
 
-#: lib/detailed-instrumentation.php:294
+#: lib/detailed-instrumentation.php:297
 msgid "Section Leader"
 msgstr "Stimmführer"
 
-#: lib/detailed-instrumentation.php:303
+#: lib/detailed-instrumentation.php:306
 #, php-format
 msgid "Set to `%s' in order to mark the section leader"
 msgstr "Auf `%s' setzen um als Stimmführer zu markieren"
 
-#: lib/detailed-instrumentation.php:313
+#: lib/detailed-instrumentation.php:316
 msgid "Registration"
 msgstr "Anmeldung"
 
-#: lib/detailed-instrumentation.php:322
+#: lib/detailed-instrumentation.php:325
 #, php-format
 msgid ""
 "Set to `%s' in order to mark participants who passed a personally signed "
@@ -2543,134 +2548,148 @@ msgstr ""
 "Auf `%s' setzen um offiziell angemeldete Teilnehmer zu markieren "
 "(unterschriebene Anmeldung liegt vor)"
 
-#: lib/detailed-instrumentation.php:331
+#: lib/detailed-instrumentation.php:334
 msgid "All Instruments"
 msgstr "Alle Instrumente"
 
-#: lib/detailed-instrumentation.php:353 lib/musicians.php:334
+#: lib/detailed-instrumentation.php:356 lib/musicians.php:334
 msgid "Member Status"
 msgstr "Status"
 
-#: lib/detailed-instrumentation.php:406 lib/sepa-debit-mandates.php:445
+#: lib/detailed-instrumentation.php:409 lib/sepa-debit-mandates.php:487
 msgid "Total Charges"
 msgstr "Gesamtkosten"
 
-#: lib/detailed-instrumentation.php:452
+#: lib/detailed-instrumentation.php:455
 msgid "Direct Debit"
 msgstr "Lastschrift"
 
-#: lib/detailed-instrumentation.php:604 lib/instrument-insurance.php:77
+#: lib/detailed-instrumentation.php:516
+#, php-format
+msgid "Data inconsistency, mandates: \"%s\", projects: \"%s\""
+msgstr "Inkonsistente Daten, Mandate: \"%s\", Projekte: \"%s\""
+
+#: lib/detailed-instrumentation.php:660 lib/instrument-insurance.php:77
 #: lib/php-excel-functions.php:98 lib/project-extra.php:391
 #: lib/project-extra.php:505 lib/project-extra.php:603
 msgid "true"
 msgstr "wahr"
 
-#: lib/detailed-instrumentation.php:682 lib/musicians.php:489
+#: lib/detailed-instrumentation.php:738 lib/musicians.php:489
 msgid "Remarks"
 msgstr "Bemerkungen"
 
-#: lib/detailed-instrumentation.php:699 lib/musicians.php:347
+#: lib/detailed-instrumentation.php:755 lib/musicians.php:347
 #: lib/project-extra.php:313
 msgid "no projects yet"
 msgstr "Ohne Projekt"
 
-#: lib/detailed-instrumentation.php:709 lib/musicians.php:391
+#: lib/detailed-instrumentation.php:765 lib/musicians.php:391
 msgid "Projects"
 msgstr "Projekte"
 
-#: lib/detailed-instrumentation.php:726 lib/musicians.php:410
+#: lib/detailed-instrumentation.php:782 lib/musicians.php:410
 msgid "Mobile Phone"
 msgstr "Mobilfunk"
 
-#: lib/detailed-instrumentation.php:743 lib/musicians.php:426
+#: lib/detailed-instrumentation.php:799 lib/musicians.php:426
 msgid "Fixed Line Phone"
 msgstr "Festnetz"
 
-#: lib/detailed-instrumentation.php:760 lib/musicians.php:445
+#: lib/detailed-instrumentation.php:816 lib/musicians.php:445
 msgid "Street"
 msgstr "Straße"
 
-#: lib/detailed-instrumentation.php:770 lib/musicians.php:454
+#: lib/detailed-instrumentation.php:826 lib/musicians.php:454
 msgid "Postal Code"
 msgstr "Postleitzahl"
 
-#: lib/detailed-instrumentation.php:779 lib/musicians.php:463
+#: lib/detailed-instrumentation.php:835 lib/musicians.php:463
 msgid "City"
 msgstr "Stadt"
 
-#: lib/detailed-instrumentation.php:791 lib/musicians.php:475
+#: lib/detailed-instrumentation.php:847 lib/musicians.php:475
 msgid "Country"
 msgstr "Land"
 
-#: lib/detailed-instrumentation.php:806
+#: lib/detailed-instrumentation.php:862
 msgid "General Remarks"
 msgstr "Allgemeine Bemerkungen"
 
-#: lib/detailed-instrumentation.php:819
+#: lib/detailed-instrumentation.php:875
 msgid "Preferred Language"
 msgstr "Sprachpräferenz"
 
-#: lib/detailed-instrumentation.php:828 lib/musicians.php:527
+#: lib/detailed-instrumentation.php:884 lib/musicians.php:527
 msgid "Photo"
 msgstr "Foto"
 
-#: lib/detailed-instrumentation.php:856 lib/musicians.php:597
+#: lib/detailed-instrumentation.php:912 lib/musicians.php:597
 #: lib/projects.php:439
 msgid "Last Updated"
 msgstr "Letzte Aktualisierung"
 
-#: lib/detailed-instrumentation.php:1122
+#: lib/detailed-instrumentation.php:1144
 msgid "Click to enter details of a potential SEPA debit mandate"
 msgstr ""
 "Anklicken um ggf. Informationen über ein SEPA-Lastschriftmandat einzutragen"
 
-#: lib/detailed-instrumentation.php:1149
+#: lib/detailed-instrumentation.php:1171
 msgid "Instrumentation related data"
 msgstr "Besetzung"
 
-#: lib/detailed-instrumentation.php:1152
+#: lib/detailed-instrumentation.php:1174
 msgid "Project related data"
 msgstr "Projekt-Daten"
 
-#: lib/detailed-instrumentation.php:1157
+#: lib/detailed-instrumentation.php:1179
 msgid "Finance related data"
 msgstr "Finanz-Daten"
 
-#: lib/detailed-instrumentation.php:1162
+#: lib/detailed-instrumentation.php:1184
 msgid "Personal data"
 msgstr "Persönliche Daten"
 
-#: lib/detailed-instrumentation.php:1165 lib/instrument-insurance.php:193
+#: lib/detailed-instrumentation.php:1187 lib/instrument-insurance.php:193
 #: lib/musicians.php:187 lib/project-extra.php:253
-#: lib/sepa-debit-mandates.php:226
+#: lib/sepa-debit-mandates.php:233
 msgid "Display all columns"
 msgstr "Alles anzeigen"
 
-#: lib/emailcomposer.php:256
+#: lib/emailcomposer.php:210
+#, php-format
+msgid "Unknown Template \"%s\""
+msgstr "Unbekannte Email-Vorlage \"%s\""
+
+#: lib/emailcomposer.php:211
+msgid "ExampleFormletter"
+msgstr "BeispielSerienBrief"
+
+#: lib/emailcomposer.php:264
 msgid "Message(s) sent out successfully!"
 msgstr "Die Nachricht(en) wurde erfolgreich gesendet!"
 
-#: lib/emailcomposer.php:270
+#: lib/emailcomposer.php:278
 msgid "Message(s) exported successfully!"
 msgstr "Die Nachricht(en) wurde erfolgreich gesendet!"
 
-#: lib/emailcomposer.php:1185
+#: lib/emailcomposer.php:1192
 msgid "Pre-composition validation has failed!"
 msgstr "Em@il Vorab-Check ist fehlgeschlagen!"
 
-#: lib/emailcomposer.php:1392
+#: lib/emailcomposer.php:1399
 msgid "no project involved"
 msgstr "Kein Projekt zugeordnet"
 
-#: lib/emailcomposer.php:1464
+#: lib/emailcomposer.php:1471
 msgid "Unable to fetch executive board contents from data-base."
 msgstr "Kann die Vorstands-Mitglieder nicht aus der Datenbank extrahieren."
 
-#: lib/emailcomposer.php:1477
+#: lib/emailcomposer.php:1484
 msgid "and"
 msgstr "und"
 
-#: lib/emailcomposer.php:1994
+#: lib/emailcomposer.php:2001
 msgid "Local Filesystem"
 msgstr "Lokale Dateien"
 
@@ -2699,7 +2718,7 @@ msgstr "Kann die Umsätze zur Lastschrift mit Id %d nicht finden."
 msgid "No payments for debit-note id %d."
 msgstr "Umsätze zur Lastschrift mit der Id %d liegen nicht vor."
 
-#: lib/emailrecipientsfilter.php:556
+#: lib/emailrecipientsfilter.php:563
 #, php-format
 msgid "Inconsistent debit-note mandates: \"%s\" vs. \"%s\""
 msgstr "Inkonsistente Mandatsreferenzen: \"%s\" <-> \"%s\""
@@ -2722,119 +2741,110 @@ msgstr "Unbekannter Kalender."
 msgid "Miscellaneous Calendars"
 msgstr "Weitere Kalender"
 
-#: lib/finance.php:56 lib/finance.php:92 settings.php:130
+#: lib/finance.php:58 lib/finance.php:94 settings.php:130
 msgid "finance"
 msgstr "Kasse"
 
-#: lib/finance.php:347
-#, php-format
-msgid "Unable to update the last-used date to %s"
-msgstr "Kann das Datum der letzten Verwendung nicht auf %s setzen."
-
-#: lib/finance.php:349
-msgid "Data-base query:"
-msgstr "Datenbank-Abfrage:"
-
-#: lib/finance.php:489
+#: lib/finance.php:603
 msgid "mandate reference"
 msgstr "Mandatsreferenz"
 
-#: lib/finance.php:490
+#: lib/finance.php:604
 msgid "date of issue"
 msgstr "Ausstellungsdatum:"
 
-#: lib/finance.php:491
+#: lib/finance.php:605
 msgid "date of last usage"
 msgstr "Letztes Einzugsdatum:"
 
-#: lib/finance.php:492
+#: lib/finance.php:606
 msgid "musician id"
 msgstr "Musiker-Id"
 
-#: lib/finance.php:493
+#: lib/finance.php:607
 msgid "project id"
 msgstr "Projekt-Id"
 
-#: lib/finance.php:494
+#: lib/finance.php:608
 msgid "sequence type"
 msgstr "Wiederholungsart"
 
-#: lib/finance.php:496
+#: lib/finance.php:610
 msgid "bank code"
 msgstr "BLZ"
 
-#: lib/finance.php:497
+#: lib/finance.php:611
 msgid "bank account owner"
 msgstr "Kontoinhaber"
 
-#: lib/finance.php:514
+#: lib/finance.php:628
 #, php-format
 msgid "Missing fields in debit mandate: %s (%s)."
 msgstr "Fehlende Felder im Lastschrifteinzug: %s (%s)."
 
-#: lib/finance.php:516 lib/finance.php:528 lib/finance.php:542
-#: lib/finance.php:564 lib/finance.php:576 lib/finance.php:590
-#: lib/finance.php:607 lib/finance.php:622 lib/finance.php:634
-#: lib/finance.php:644 lib/finance.php:655
+#: lib/finance.php:630 lib/finance.php:642 lib/finance.php:656
+#: lib/finance.php:678 lib/finance.php:690 lib/finance.php:704
+#: lib/finance.php:721 lib/finance.php:736 lib/finance.php:748
+#: lib/finance.php:758 lib/finance.php:769
 msgid "Full data record:"
 msgstr "Betroffener Datensatz:"
 
-#: lib/finance.php:526
+#: lib/finance.php:640
 #, php-format
 msgid "Empty fields in debit mandate: %s (%s)."
 msgstr "Leere Felder im Lastschrifteinzug: %s %s)."
 
-#: lib/finance.php:540
+#: lib/finance.php:654
 msgid "Illegal characters in bank account owner field"
 msgstr "Ungültige Buchstaben im Kontoinhaberfeld."
 
-#: lib/finance.php:562
+#: lib/finance.php:676
 #, php-format
 msgid "Mandate issued in the future: %s????"
 msgstr "Lastschriftmandat in der Zukunft ausgestellt: %s????."
 
-#: lib/finance.php:573
+#: lib/finance.php:687
 msgid "Missing mandate date"
 msgstr "Fehlendes Mandatsdatum"
 
-#: lib/finance.php:586
+#: lib/finance.php:700
 #, php-format
 msgid "Invalid sequence type `%s', should be one of %s"
 msgstr "Ungültige Wiederholungsart `%s', zulässig sind %s"
 
-#: lib/finance.php:605
+#: lib/finance.php:719
 #, php-format
 msgid "Invalid IBAN: %s"
 msgstr "Ungültige IBAN: %s."
 
-#: lib/finance.php:620
+#: lib/finance.php:734
 #, php-format
 msgid "BLZ and IBAN do not match: %s != %s"
 msgstr "BLZ und IBAN passen nicht zusammen: %s != %s."
 
-#: lib/finance.php:632
+#: lib/finance.php:746
 #, php-format
 msgid "Invalid German BLZ: %s."
 msgstr "Ungültige Deutsche(?) Bankleitzahl %s."
 
-#: lib/finance.php:642
+#: lib/finance.php:756
 #, php-format
 msgid "Invalid German bank account: %s @ %s."
 msgstr "Ungültige Deutsche(?) Kontonummer %s @ %s."
 
-#: lib/finance.php:653
+#: lib/finance.php:767
 #, php-format
 msgid "Probably invalid BIC: %s. Computed: %s. "
 msgstr "Vermutlich falsche BIC: %s. Automatisch ermittelt: %s."
 
-#: lib/finance.php:760
+#: lib/finance.php:874
 #, php-format
 msgid "Cannot parse `%s' Only plain number, € and $ currencies are supported."
 msgstr ""
 "Kann `%s' nicht interpretieren. Lediglich bloße Zahlen oder Währungen in € "
 "und $ erlaubt."
 
-#: lib/finance.php:783 lib/finance.php:798
+#: lib/finance.php:897 lib/finance.php:912
 #, php-format
 msgid "Cannot parse number string `%s'"
 msgstr "Kann die Zahlangabe `%s' nicht interpretieren."
@@ -3060,7 +3070,7 @@ msgstr "Welt"
 msgid "Overview over the Bulk Instrument Insurances"
 msgstr "Übersicht über die Instrumentensammelversicherungen"
 
-#: lib/instrument-insurance.php:160 lib/sepa-debit-mandates.php:119
+#: lib/instrument-insurance.php:160 lib/sepa-debit-mandates.php:126
 msgid "Debit"
 msgstr "Einziehen"
 
@@ -3192,8 +3202,8 @@ msgstr "Gegenstand"
 
 #: lib/instrument-insurance.php:880 lib/instrument-insurance.php:962
 #: lib/project-extra.php:1483 lib/project-payments.php:194
-#: lib/sepa-debit-mandates.php:153 lib/sepa-debit-mandates.php:168
-#: lib/sepa-debit-mandates.php:217
+#: lib/sepa-debit-mandates.php:160 lib/sepa-debit-mandates.php:175
+#: lib/sepa-debit-mandates.php:224
 msgid "Amount"
 msgstr "Betrag"
 
@@ -3567,7 +3577,7 @@ msgstr "Instrumente"
 msgid "Language"
 msgstr "Sprache"
 
-#: lib/musicians.php:512 lib/sepa-debit-mandates.php:702
+#: lib/musicians.php:512 lib/sepa-debit-mandates.php:760
 msgid "Instrument Insurance"
 msgstr "Instrumentenversicherung"
 
@@ -3712,11 +3722,11 @@ msgstr "Zeitzone: %s"
 msgid "Provider: %s"
 msgstr "Anbieter: %s"
 
-#: lib/php-excel-functions.php:97 lib/sepa-debit-mandates.php:336
+#: lib/php-excel-functions.php:97
 msgid "yes"
 msgstr "ja"
 
-#: lib/php-excel-functions.php:101 lib/sepa-debit-mandates.php:335
+#: lib/php-excel-functions.php:101
 msgid "no"
 msgstr "nein"
 
@@ -4010,7 +4020,7 @@ msgstr "Betreff"
 msgid "Direct Debit Date"
 msgstr "Lastschrift-Datum"
 
-#: lib/project-payments.php:232 lib/sepa-debit-mandates.php:323
+#: lib/project-payments.php:232 lib/sepa-debit-mandates.php:330
 msgid "Mandate Reference"
 msgstr "Mandatsreferenz"
 
@@ -4047,7 +4057,7 @@ msgstr "%s Projekt %s"
 msgid "%s Projects"
 msgstr "%s Projekte"
 
-#: lib/projects.php:283 templates/sepa-debit-mandate.php:38
+#: lib/projects.php:283 templates/sepa-debit-mandate.php:41
 msgid "permanent"
 msgstr "permanent"
 
@@ -4055,7 +4065,7 @@ msgstr "permanent"
 msgid "Toolbox"
 msgstr "Werkzeuge"
 
-#: lib/projects.php:345 lib/sepa-debit-mandates.php:377
+#: lib/projects.php:345 lib/sepa-debit-mandates.php:419
 msgid "Project Fee"
 msgstr "Unkostenbeitrag"
 
@@ -4069,7 +4079,7 @@ msgstr ""
 "Rabatte enthalten. Der hier angezeigt Betrag wird auch als\n"
 "Voreinstellung bei neuen Projekt-Mitspielern eingetragen."
 
-#: lib/projects.php:352 lib/sepa-debit-mandates.php:160
+#: lib/projects.php:352 lib/sepa-debit-mandates.php:167
 msgid "Deposit"
 msgstr "Anzahlung"
 
@@ -4226,69 +4236,69 @@ msgstr ""
 "===== Location =====\n"
 "Was auch immer.\n"
 
-#: lib/sepa-debit-mandates.php:43
+#: lib/sepa-debit-mandates.php:47
 msgid "Remove this Debit-Mandate?"
 msgstr "Lastschriftmandat löschen?"
 
-#: lib/sepa-debit-mandates.php:46
+#: lib/sepa-debit-mandates.php:50
 #, php-format
 msgid "Debit-Mandate for %s"
 msgstr "Lastschriftmandat für %s"
 
-#: lib/sepa-debit-mandates.php:48
+#: lib/sepa-debit-mandates.php:52
 msgid "Debit-Mandate"
 msgstr "Lastschriftmandat"
 
-#: lib/sepa-debit-mandates.php:51
+#: lib/sepa-debit-mandates.php:55
 msgid "Change this Debit-Mandate"
 msgstr "Lastschriftmandat ändern"
 
-#: lib/sepa-debit-mandates.php:54
+#: lib/sepa-debit-mandates.php:58
 #, php-format
 msgid "Overview over all SEPA Debit Mandates for %s"
 msgstr "Übersicht über alle SEPA-Lastschriftmandate für %s"
 
-#: lib/sepa-debit-mandates.php:57
+#: lib/sepa-debit-mandates.php:61
 msgid "Overview over all SEPA Debit Mandates"
 msgstr "Übersicht über alle SEPA Lastschriftmandate"
 
-#: lib/sepa-debit-mandates.php:136
+#: lib/sepa-debit-mandates.php:143
 msgid "Debit Job"
 msgstr "Umsatz-Art"
 
-#: lib/sepa-debit-mandates.php:145
+#: lib/sepa-debit-mandates.php:152
 msgid "Membership Fee"
 msgstr "Mitgliedsbeitrag"
 
-#: lib/sepa-debit-mandates.php:149
+#: lib/sepa-debit-mandates.php:156
 msgid "Insurance"
 msgstr "Versicherung"
 
-#: lib/sepa-debit-mandates.php:164
+#: lib/sepa-debit-mandates.php:171
 msgid "Remaining"
 msgstr "Rest"
 
-#: lib/sepa-debit-mandates.php:185
+#: lib/sepa-debit-mandates.php:192
 msgid "subject"
 msgstr "Betreff"
 
-#: lib/sepa-debit-mandates.php:203
+#: lib/sepa-debit-mandates.php:210
 msgid "Debit mandate, mandate-id, last used date, recurrence"
 msgstr "Lastschrift-Mandate, Mandats-Referenz, Datum, Art des Mandats."
 
-#: lib/sepa-debit-mandates.php:204
+#: lib/sepa-debit-mandates.php:211
 msgid "Mandate"
 msgstr "Mandat"
 
-#: lib/sepa-debit-mandates.php:207
+#: lib/sepa-debit-mandates.php:214
 msgid "Bank account associated to this debit mandate."
 msgstr "Bankverbindung, die zu diesem Mandat gehört."
 
-#: lib/sepa-debit-mandates.php:208 templates/orchestra-settings.php:92
+#: lib/sepa-debit-mandates.php:215 templates/orchestra-settings.php:92
 msgid "Bank Account"
 msgstr "Bankverbindung"
 
-#: lib/sepa-debit-mandates.php:215
+#: lib/sepa-debit-mandates.php:222
 msgid ""
 "Show the amounts to draw by debit transfer, including sum of payments\n"
 "received so far"
@@ -4296,65 +4306,65 @@ msgstr ""
 "Zeigt die Beträge, der eingezogen werden könnten, sowie die bereits\n"
 "eingegangenen Zahlungen."
 
-#: lib/sepa-debit-mandates.php:221
+#: lib/sepa-debit-mandates.php:228
 msgid "Show project specific data"
 msgstr "Projekt-spezifische Informationen"
 
-#: lib/sepa-debit-mandates.php:307
+#: lib/sepa-debit-mandates.php:314
 msgid "Debit Allowed"
 msgstr "Lastschrift zulässig"
 
-#: lib/sepa-debit-mandates.php:330
-msgid "One Time"
-msgstr "Einmalig"
+#: lib/sepa-debit-mandates.php:346
+msgid "active"
+msgstr "Aktiv"
 
-#: lib/sepa-debit-mandates.php:339
+#: lib/sepa-debit-mandates.php:359
 msgid "Date Issued"
 msgstr "Ausstellungsdatum"
 
-#: lib/sepa-debit-mandates.php:347
+#: lib/sepa-debit-mandates.php:367 lib/sepa-debit-mandates.php:378
 msgid "Last-Used Date"
 msgstr "Letzte Verwendung"
 
-#: lib/sepa-debit-mandates.php:387
+#: lib/sepa-debit-mandates.php:429
 msgid "Extra Charges"
 msgstr "Extra-Posten"
 
-#: lib/sepa-debit-mandates.php:425 lib/sepa-debit-mandates.php:820
+#: lib/sepa-debit-mandates.php:467 lib/sepa-debit-mandates.php:904
 msgid "Project Deposit"
 msgstr "Anzahlung"
 
-#: lib/sepa-debit-mandates.php:435
+#: lib/sepa-debit-mandates.php:477
 msgid "Amount Paid"
 msgstr "Bezahlt"
 
-#: lib/sepa-debit-mandates.php:525
+#: lib/sepa-debit-mandates.php:580
 msgid "Bank Code"
 msgstr "BLZ"
 
-#: lib/sepa-debit-mandates.php:534
+#: lib/sepa-debit-mandates.php:589
 msgid "Bank Account Owner"
 msgstr "Kontoinhaber"
 
-#: lib/sepa-debit-mandates.php:692
+#: lib/sepa-debit-mandates.php:750
 #, php-format
 msgid "Remaining Amount Year %s"
 msgstr "Restbetrag für das Jahr %s"
 
-#: lib/sepa-debit-mandates.php:695
+#: lib/sepa-debit-mandates.php:753
 #, php-format
 msgid "Annual Fee Year %s"
 msgstr "Jahresbeitrag fuer %s"
 
-#: lib/sepa-debit-mandates.php:818
+#: lib/sepa-debit-mandates.php:902
 msgid "Remaining Project Deposit"
 msgstr "Restbetrag der Projekt-Anzahlung"
 
-#: lib/sepa-debit-mandates.php:827
+#: lib/sepa-debit-mandates.php:911
 msgid "Remaining Project Fees"
 msgstr "Restbetrag der Projekt-Gebühren"
 
-#: lib/sepa-debit-mandates.php:829
+#: lib/sepa-debit-mandates.php:913
 msgid "Project Fees"
 msgstr "Unkostenbeitrag"
 
@@ -6118,6 +6128,15 @@ msgstr ""
 
 #: lib/tooltips.php:735
 msgid ""
+"Used SEPA mandates are not deleted from the DB, but just flagged as\n"
+"\"inactive\" if they expire or are manually pseudo-deleted."
+msgstr ""
+"SEPA-Mandate, die bereits verwendet wurden, können nicht gelöscht\n"
+"werden. Stattdessen werden sie als \"inaktiv\" markiert, wenn sie\n"
+"auslaufen oder aber explizit quasi-gelöscht werden."
+
+#: lib/tooltips.php:738
+msgid ""
 "Toggle instant validation and automatic computation of derived bank account "
 "data. If instant validation is disabled, the final values will still be "
 "validated and an error message will appear if an error is detected. It is "
@@ -6133,31 +6152,42 @@ msgstr ""
 "muss der Haken zunächst wieder gesetzt werden, dann wird die IBAN auf\n"
 "Korrektheit überprüft und man kann dann anschließend speichern."
 
-#: lib/tooltips.php:737
+#: lib/tooltips.php:740
+#, php-format
+msgid ""
+"This debit-mandate has not been used for more than %d month and\n"
+"therefore is expired and cannot be used any longer. Pleae delete it\n"
+"and contact the treasurer for further instructions."
+msgstr ""
+"Dieses Lastschriftmandat wurde länger als %d Monate nicht mehr\n"
+"verwendet und ist deshalb abgelaufen und kann nicht weiter verwendet\n"
+"werden. Bitte löschen und den Schatzmeister informieren, vielen Dank!"
+
+#: lib/tooltips.php:745
 msgid "Personal application settings."
 msgstr "Persönliche Einstellung für die Musiker-DB Anwendung."
 
-#: lib/tooltips.php:739
+#: lib/tooltips.php:747
 msgid "Force the re-creation of the root of the shared-folder hierarchy."
 msgstr "Erzwinge die Neuerstellung des gemeinsamen Ordners."
 
-#: lib/tooltips.php:741
+#: lib/tooltips.php:749
 msgid "Re-create the share-owner."
 msgstr "Erzeuge eine neue Share-Strohpuppe."
 
-#: lib/tooltips.php:743 templates/part.common.header.php:99
+#: lib/tooltips.php:751 templates/part.common.header.php:99
 msgid "Toggle Tooltips"
 msgstr "Ballon-Hilfe ein- und ausschalten"
 
-#: lib/tooltips.php:745
+#: lib/tooltips.php:753
 msgid "Link to the source-code archives for the DB app."
 msgstr "Web-Verweis zur Quell-Code-Dokumentation. "
 
-#: lib/tooltips.php:747
+#: lib/tooltips.php:755
 msgid "Link to the source-code documentation for the DB app."
 msgstr "Web-Verweis zur Quell-Code-Dokumentation. "
 
-#: lib/tooltips.php:749
+#: lib/tooltips.php:757
 msgid ""
 "Recompute the link between projects and events, using the event-categories "
 "as primary key."
@@ -6165,7 +6195,7 @@ msgstr ""
 "Zuordnung der Termine zu den Projekten neu berechnen. Dabei dienen die "
 "Projekt-Kategorien als Kriterium."
 
-#: lib/tooltips.php:751
+#: lib/tooltips.php:759
 msgid ""
 "The initial number of rows per page when displaying data-base\n"
 "tables. The actual number of rows per page can also changed later in\n"
@@ -6174,11 +6204,11 @@ msgstr ""
 "Anfängliche Anzahl von Tabellenzeilen pro Seite. Kann bei den\n"
 "indivuduellen Tabellen später noch einzeln angepasst werden."
 
-#: lib/tooltips.php:755
+#: lib/tooltips.php:763
 msgid "Test data-base passphrase."
 msgstr "Datenbank-Passwort testen"
 
-#: lib/tooltips.php:757
+#: lib/tooltips.php:765
 msgid ""
 "Check whether the data-base can be accessed with the given account\n"
 "information and password. The password will only be stored in the\n"
@@ -6188,7 +6218,7 @@ msgstr ""
 "Zugriffsinformationen. Das neue Passwort wird nur dann gespeichert, wenn der "
 "Test erfolgreich absolviert wurde."
 
-#: lib/tooltips.php:761
+#: lib/tooltips.php:769
 msgid ""
 "Try to connect to the specified web-address, will open the web-address in "
 "another window or tab, depending your local browser preferences."
@@ -6196,7 +6226,7 @@ msgstr ""
 "Versuche, die eingestellte Web-Adresse in einen anderen Fenster oder Tab zu "
 "öffnen (abhängig von den Einstellungen des Web-Browsers)."
 
-#: lib/tooltips.php:763
+#: lib/tooltips.php:771
 msgid ""
 "Total amount the participant has to pay, perhaps followed by total amount "
 "paid, followed by the outstanding amount."
@@ -6204,7 +6234,7 @@ msgstr ""
 "Gesamtsumme, die der Teilnehmer zahlen muss.. Ggf. wird außerdem noch\n"
 "die Höhe der Außenstände angegeben."
 
-#: lib/tooltips.php:765
+#: lib/tooltips.php:773
 msgid ""
 "Add the instruments of the actually registered musicians to the instrument-"
 "table for the project."
@@ -6212,7 +6242,7 @@ msgstr ""
 "Die Instrumente der bereits registrierten Musiker in die Besetzungstabelle "
 "eintragen; die Soll-Besetzungszahlen werden allerdings nicht angepasst."
 
-#: lib/tooltips.php:767
+#: lib/tooltips.php:775
 msgid ""
 "Upload a file from your local computer as attachment. The file will be "
 "removed from the remote-system after the message has been sent."
@@ -6220,7 +6250,7 @@ msgstr ""
 "Eine Datei als Attachment hochladen. Die Datei wird vom Server gelöscht, "
 "sobald die Nachricht versendet wurde."
 
-#: lib/tooltips.php:769
+#: lib/tooltips.php:777
 msgid "Change to another WYSIWYG editor."
 msgstr "Einen alternativen WYSIWYG-Editor auswählen."
 
@@ -7129,7 +7159,7 @@ msgstr "Rufnummer"
 msgid "owner of the orchestra's bank account"
 msgstr "Kontoinhaber der Orchester-Bankverbindung"
 
-#: templates/orchestra-settings.php:98 templates/sepa-debit-mandate.php:78
+#: templates/orchestra-settings.php:98 templates/sepa-debit-mandate.php:90
 msgid "owner of bank account"
 msgstr "Kontoinhaber"
 
@@ -7137,7 +7167,7 @@ msgstr "Kontoinhaber"
 msgid "Optional BLZ of the orchestra's bank account"
 msgstr "Optionale Bankleitzahl des Orchesterkontos"
 
-#: templates/orchestra-settings.php:104 templates/sepa-debit-mandate.php:84
+#: templates/orchestra-settings.php:104 templates/sepa-debit-mandate.php:96
 msgid "BLZ of bank account"
 msgstr "Bankleitzahl"
 
@@ -7149,7 +7179,7 @@ msgstr ""
 "IBAN oder Kontonummer des Orchesterkontos. Falls eine Kontonummer\n"
 "angegeben wird, muss die Bankleitzahl zuerst angegeben werden"
 
-#: templates/orchestra-settings.php:110 templates/sepa-debit-mandate.php:90
+#: templates/orchestra-settings.php:110 templates/sepa-debit-mandate.php:102
 msgid "IBAN or no. of bank account"
 msgstr "IBAN oder Kontonummer"
 
@@ -7157,7 +7187,7 @@ msgstr "IBAN oder Kontonummer"
 msgid "Optional BIC of the orchestra's bank account"
 msgstr "Optional die BIC der Bankverbindung"
 
-#: templates/orchestra-settings.php:116 templates/sepa-debit-mandate.php:96
+#: templates/orchestra-settings.php:116 templates/sepa-debit-mandate.php:108
 msgid "BIC of bank account"
 msgstr "BIC der Bankverbindung"
 
@@ -7831,31 +7861,35 @@ msgstr "Lösche diese öffentliche Web-Seite."
 msgid "SEPA Debit Mandate of %s"
 msgstr "SEPA-Lastschriftmandat von %s"
 
-#: templates/sepa-debit-mandate.php:38
+#: templates/sepa-debit-mandate.php:41
 msgid "Type: "
 msgstr "Art: "
 
-#: templates/sepa-debit-mandate.php:38
+#: templates/sepa-debit-mandate.php:41
 msgid "once"
 msgstr "einmalig"
 
-#: templates/sepa-debit-mandate.php:44
+#: templates/sepa-debit-mandate.php:50
+msgid "expired"
+msgstr "abgelaufen"
+
+#: templates/sepa-debit-mandate.php:55
 msgid "Mandate-Reference: "
 msgstr "Mandatsreferenz: "
 
-#: templates/sepa-debit-mandate.php:68
+#: templates/sepa-debit-mandate.php:80
 msgid "Club Member"
 msgstr "Vereinsmitglied"
 
-#: templates/sepa-debit-mandate.php:77
+#: templates/sepa-debit-mandate.php:89
 msgid "owner of the bank account, probably same as musician"
 msgstr "Kontoinhaber, in der Regel identisch mit dem Musiker"
 
-#: templates/sepa-debit-mandate.php:83
+#: templates/sepa-debit-mandate.php:95
 msgid "Optional BLZ of the musician's bank account"
 msgstr "Optionale Bankleitzahl des Kontos"
 
-#: templates/sepa-debit-mandate.php:89
+#: templates/sepa-debit-mandate.php:101
 msgid ""
 "IBAN or number of the bank account. If this is a account number, then please "
 "first enter the BLZ"
@@ -7863,7 +7897,7 @@ msgstr ""
 "IBAN oder Kontonummer des Kontos. Falls eine Kontonummer\n"
 "angegeben wird, muss die Bankleitzahl zuerst angegeben werden"
 
-#: templates/sepa-debit-mandate.php:95
+#: templates/sepa-debit-mandate.php:107
 msgid ""
 "Optionally the BIC of the account; will be computed automatically if left "
 "blank."
@@ -7872,31 +7906,31 @@ msgstr ""
 "bzw. BLZ auch automatisch errechnet, man kann das Feld auch leer\n"
 "lassen."
 
-#: templates/sepa-debit-mandate.php:97
+#: templates/sepa-debit-mandate.php:109
 msgid "Date issued:"
 msgstr "Ausstellungsdatum:"
 
-#: templates/sepa-debit-mandate.php:102
+#: templates/sepa-debit-mandate.php:114
 msgid "Date of mandate grant"
 msgstr "Datum der Mandatserteilung"
 
-#: templates/sepa-debit-mandate.php:103
+#: templates/sepa-debit-mandate.php:115
 msgid "mandate date"
 msgstr "Mandatsdatum"
 
-#: templates/sepa-debit-mandate.php:107
+#: templates/sepa-debit-mandate.php:119
 msgid "Date of last usage:"
 msgstr "Letztes Einzugsdatum:"
 
-#: templates/sepa-debit-mandate.php:113
+#: templates/sepa-debit-mandate.php:125
 msgid "Date of last usage of debit-mandate"
 msgstr "Datum des letzten Bankeinzugs zu diesem Mandat"
 
-#: templates/sepa-debit-mandate.php:114
+#: templates/sepa-debit-mandate.php:126
 msgid "last used date"
 msgstr "letzte Verwendung"
 
-#: templates/sepa-debit-mandate.php:121
+#: templates/sepa-debit-mandate.php:133
 msgid "Instant IBAN Validation:"
 msgstr "IBAN Überprüfung:"
 
@@ -8063,6 +8097,15 @@ msgstr "PROJEKT"
 #: templates/share-settings.php:124
 msgid "Financial balance folder"
 msgstr "Finanz-Ordner"
+
+#~ msgid "Unable to update the last-used date to %s"
+#~ msgstr "Kann das Datum der letzten Verwendung nicht auf %s setzen."
+
+#~ msgid "Data-base query:"
+#~ msgstr "Datenbank-Abfrage:"
+
+#~ msgid "One Time"
+#~ msgstr "Einmalig"
 
 #~ msgid "Status"
 #~ msgstr "Status"
