@@ -782,6 +782,20 @@ redaxoRehearsalsModule
       return !empty($group) && \OC_Group::inGroup($uid, $group);
     }
 
+    /**Return email and display name of the treasurer user for error
+     * feedback messages.
+     */
+    static public function treasurerContact()
+    {
+      $treasurer = Config::getSetting('treasurerUserId', null);
+      if (!empty($treasurer)) {
+        $name = \OCP\User::getDisplayName($treasurer);
+        $email = \OCP\Config::getUserValue($treasurer, 'settings', 'email');
+        return array('name' => $name,
+                     'email' => $email);
+      }
+    }
+
     /**Return true if the logged in user is the secretary.*/
     static public function isSecretary($uid = null)
     {
