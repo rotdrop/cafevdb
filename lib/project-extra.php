@@ -39,7 +39,7 @@ namespace CAFEVDB
     public $projectId;
     public $projectName;
     public $recordId;
-    public $showDisabledField;
+    public $showDisabledFields;
 
     public function __construct($recordId = -1, $execute = true)
     {
