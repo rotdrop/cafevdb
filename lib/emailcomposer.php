@@ -200,10 +200,18 @@ DebitNotePurpose
         // initial template and subject
         $initialTemplate = $this->cgiValue('StoredMessagesSelector', false);
         if ($initialTemplate !== false) {
+          $this->templateName = $initialTemplate;
           $template = $this->fetchTemplate($initialTemplate);
           if ($template !== false) {
-            $this->templateName = $initialTemplate;
             $this->messageContents = $template;
+          } else {
+            // still leave the name as default in order to signal what was missing
+            $this->cgiData['Subject'] =
+              L::t('Unknown Template "%s"', array($initialTemplate));
+            $template = $this->fetchTemplate(L::t('ExampleFormletter'));
+            if ($template !== false) {
+              $this->messageContents = $template;
+            }
           }
         }
         return;
@@ -391,7 +399,6 @@ DebitNotePurpose
             // Don't remember the individual emails, but for
             // debit-mandates record the message id, ignore errors.
             if ($this->debitNoteId > 0 && $dbdata['PaymentId'] > 0) {
-              error_log('HERE');
               $messageId = $msg['messageId'];
               $where =  '`Id` = '.$dbdata['PaymentId'].' AND `DebitNoteId` = '.$this->debitNoteId;
               mySQL::update('ProjectPayments', $where, array('DebitMessageId' => $messageId), $this->dbh);

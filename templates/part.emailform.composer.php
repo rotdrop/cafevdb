@@ -162,7 +162,7 @@ $attachmentData = json_encode($_['fileAttachments'], 0); // JSON_FORCE_OBJECT);
         <div class="subject container">
           <span class="subject tag"><?php echo htmlspecialchars($_['mailTag']); ?></span>
           <span class="subject input">
-            <input value="<?php echo $_['subject']; ?>"
+            <input value="<?php echo htmlspecialchars($_['subject']); ?>"
                    size="40" name="emailComposer[Subject]"
                    type="text"
                    class="email-subject"
