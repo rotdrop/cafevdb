@@ -446,6 +446,24 @@ namespace CAFEVDB
       $table .= ' MainTable';
 
       if ($projectId > 0) { // Add the project fee
+
+        // Add the relevant payment information (except the global
+        // information attached to the debit note)
+        if ($this->debitNoteId > 0) {
+          $fields .=
+            ',p.`Id` AS `PaymentId`'.
+            ',p.`Amount` AS `DebitNoteAmount`'.
+            ',p.`Subject` AS `DebitNotePurpose`'.
+            ',p.`MandateReference` AS `DebitNoteMandateReference`';
+          $joinCond =
+            'p.InstrumentationId = MainTable.Id'.
+            ' AND '.
+            'p.DebitNoteId = '.$this->debitNoteId;
+
+          $table .= " LEFT JOIN `ProjectPayments` p ON "
+            ."( ".$joinCond." )";
+        }
+
         $fields .=
           ',`Unkostenbeitrag`'.
           ',`Anzahlung`'.
@@ -460,7 +478,13 @@ namespace CAFEVDB
           ' OR '.
           'm.projectId = '.$memberTableId.
           ')'.
-          ' AND musicianId = MusikerId';
+          ' AND m.musicianId = MusikerId'.
+          ' AND m.active = 1';
+
+        // if debit-note payment is given use its payment information.
+        if ($this->debitNoteId > 0) {
+          $joinCond .= ' AND m.mandateReference = p.MandateReference';
+        }
 
         $table .= " LEFT JOIN `SepaDebitMandates` m ON "
           ."( ".$joinCond." ) ";
@@ -471,24 +495,7 @@ namespace CAFEVDB
         foreach(array_keys($monetary) AS $extraLabel) {
           $fields .= ', `'.$extraLabel.'`';
         }
-      }
-
-      // Add the relevant payment information (except the global
-      // attached to the debit note)
-      if ($this->debitNoteId > 0 && $projectId > 0) {
-        $fields .=
-          ',p.`Id` AS `PaymentId`'.
-          ',p.`Amount` AS `DebitNoteAmount`'.
-          ',p.`Subject` AS `DebitNotePurpose`'.
-          ',p.`MandateReference` AS `DebitNoteMandateReference`';
-        $joinCond =
-          'p.InstrumentationId = MainTable.Id'.
-          ' AND '.
-          'p.DebitNoteId = '.$this->debitNoteId;
-
-        $table .= " LEFT JOIN `ProjectPayments` p ON "
-          ."( ".$joinCond." )";
-      }
+      } // $projectId > 0
 
       $query = "SELECT $fields FROM ($table) WHERE
         ";
@@ -566,7 +573,7 @@ namespace CAFEVDB
               }
               $allowed  = $fieldInfo['AllowedValues'];
               $type     = $fieldInfo['Type']['Multiplicity'];
-              $exta    += DetailedInstrumentation::extraFieldSurcharge($value, $allowed, $type);
+              $extra   += DetailedInstrumentation::extraFieldSurcharge($value, $allowed, $type);
             }
             $line['SurchargeFees'] = $extra;
             $line['TotalFees'] = $extra + $line['Unkostenbeitrag'];

@@ -39,6 +39,9 @@ namespace CAFEVDB {
       $debugText .= '$_POST = '.print_r($_POST, true);
     }
 
+    $reference          = Util::cgiValue('MandateReference', false);
+    $expired            = (bool)Util::cgiValue('MandateExpired', false);
+    //throw new \Exception('expired: '.' '.(int)$expired.' '.(bool)$expired.' '.(string)$expired);
     $projectId          = Util::cgiValue('ProjectId', -1);
     $mandateProjectId   = Util::cgiValue('MandateProjectId', -1);
     $projectName        = Util::cgiValue('ProjectName', '');
@@ -63,7 +66,7 @@ namespace CAFEVDB {
 
     if ($mandateProjectId < 0 ||
         ($mandateProjectName == '' &&
-         ($mandateProjectName = MandateProjects::fetchName($mandateProjectId)) == '')) {
+         ($mandateProjectName = Projects::fetchName($mandateProjectId)) == '')) {
 
       $debugText .= ob_get_contents();
       @ob_end_clean();
@@ -76,9 +79,12 @@ namespace CAFEVDB {
       return false;
     }
 
+    Config::init();
+    $handle = mySQL::connect(Config::$pmeopts);
+
     if ($musicianId < 0 ||
         ($musicianName == '' &&
-         ($musicianName = Musicians::fetchName($musicianId)) === false)) {
+         ($musicianName = Musicians::fetchName($musicianId, $handle)) === false)) {
 
       $debugText .= ob_get_contents();
       @ob_end_clean();
@@ -88,6 +94,7 @@ namespace CAFEVDB {
           'data' => array('error' => 'arguments',
                           'message' => L::t('Musician-id and/or name not set'),
                           'debug' => $debugText)));
+      mySQL::close($handle);
       return false;
     }
     if (is_array($musicianName)) {
@@ -95,9 +102,9 @@ namespace CAFEVDB {
     }
 
     // check for an existing mandate, otherwise generate a new Id.
-    $mandate = Finance::fetchSepaMandate($mandateProjectId, $musicianId);
+    $mandate = Finance::fetchSepaMandate($mandateProjectId, $musicianId, $handle, true, $expired);
     if ($mandate === false) {
-      $ref = Finance::generateSepaMandateReference($projectId, $musicianId);
+      $ref = Finance::generateSepaMandateReference($projectId, $musicianId, false, $handle);
       $members = Config::getSetting('memberTable', L::t('ClubMembers'));
       $sequenceType = 'permanent'; //$projectName !== $members ? 'once' : 'permanent';
       $mandate = array('id' => -1,
@@ -111,7 +118,13 @@ namespace CAFEVDB {
                        'BIC' => '',
                        'BLZ' => '',
                        'bankAccountOwner' => Finance::sepaTranslit($musicianName));
+    } else {
+      $usage = Finance::mandateReferenceUsage($mandate['mandateReference'], true, $handle);
+      !empty($usage['LastUsed']) && $mandate['lastUsedDate'] = $usage['LastUsed'];
+      //error_log(print_r($usage, true));
     }
+
+    mySQL::close($handle);
 
     $tmpl = new \OCP\Template('cafevdb', 'sepa-debit-mandate');
 
@@ -125,6 +138,7 @@ namespace CAFEVDB {
 
     $tmpl->assign('mandateId', $mandate['id']);
     $tmpl->assign('mandateReference', $mandate['mandateReference']);
+    $tmpl->assign('mandateExpired', $expired);
     $tmpl->assign('mandateDate', date('d.m.Y', strtotime($mandate['mandateDate'])));
     if ($mandate['lastUsedDate']) {
       $tmpl->assign('lastUsedDate', date('d.m.Y', strtotime($mandate['lastUsedDate'])));

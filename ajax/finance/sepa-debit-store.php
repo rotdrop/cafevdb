@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -19,7 +19,11 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+/**@file
+ *
+ * AJAX backend for storing a SEPA mandate and the associated bank
+ * account information.
+ */
 namespace CAFEVDB {
 
   \OCP\JSON::checkLoggedIn();
@@ -38,7 +42,7 @@ namespace CAFEVDB {
 
     $_GET = array(); // disable GET
 
-    $requiredKeys = array('ProjectId', 'MusicianId', 'mandateReference');
+    $requiredKeys = array('MandateProjectId', 'ProjectId', 'MusicianId', 'mandateReference');
     foreach ($requiredKeys as $required) {
       if (!Util::cgiValue($required, null, false)) {
         \OC_JSON::error(
@@ -52,7 +56,7 @@ namespace CAFEVDB {
     $mandate = array('mandateReference' => Util::cgiValue('mandateReference'),
                      'sequenceType' => Util::cgiValue('sequenceType'),
                      'musicianId' => Util::cgiValue('MusicianId'),
-                     'projectId' => Util::cgiValue('ProjectId'),
+                     'projectId' => Util::cgiValue('MandateProjectId'),
                      'mandateDate' => Util::cgiValue('mandateDate'),
                      'lastUsedDate' => Util::cgiValue('lastUsedDate'),
                      'IBAN' => Util::cgiValue('bankAccountIBAN'),

@@ -71,6 +71,7 @@ var CAFEVDB = CAFEVDB || {};
     var popup = $(data.data.contents)
     var mandateForm = popup.find('#sepa-debit-mandate-form');
     self.instantValidation = mandateForm.find('#sepa-validation-toggle').prop('checked');
+    var lastUsedDate = mandateForm.find('input.lastUsedDate');
 
     popup.cafevDialog({
       position: { my: "middle top+50%",
@@ -94,9 +95,11 @@ var CAFEVDB = CAFEVDB || {};
             $(this).dialog("widget").find('button.apply').attr("disabled", !self.instantValidation);
             $(this).dialog("widget").find('button.delete').attr("disabled", false);
             $(this).dialog("widget").find('button.change').attr("disabled", true);
-            mandateForm.find('input.bankAccount').attr("disabled", false);
-            mandateForm.find('input.mandateDate').attr("disabled", false);
-            mandateForm.find('input.lastUsedDate').attr("disabled", false);
+            if (lastUsedDate.val().trim() == '') {
+              mandateForm.find('input.bankAccount').attr("disabled", false);
+              mandateForm.find('input.mandateDate').attr("disabled", false);
+              lastUsedDate.attr("disabled", false);
+            }
             $.fn.cafevTooltip.remove(); // clean up left-over balloons
           }
         },
@@ -190,12 +193,28 @@ var CAFEVDB = CAFEVDB || {};
           buttons.change.attr("disabled", true);
         }
 
-        widget.find('button, input, label').cafevTooltip({placement:'auto bottom'});
+        widget.find('button, input, label, [class*="tooltip"]').cafevTooltip({placement:'auto bottom'});
 
         if (CAFEVDB.toolTipsEnabled) {
           $.fn.cafevTooltip.enable();
         } else {
           $.fn.cafevTooltip.disable();
+        }
+
+        var expiredDiv = dlg.find('#mandate-expired-notice.active');
+        if (expiredDiv.length > 0) {
+          var notice = expiredDiv.attr('title');
+          if (!notice) {
+            notice = expiredDiv.attr('data-original-title');
+          }
+          if (notice) {
+            OC.dialogs.alert('<div class="sepa-mandate-expire-notice">'+
+                             notice+
+                             '</div>',
+                             t('cafevdb', 'Debit Mandate Expired'),
+                             undefined,
+                             true, true);
+          }
         }
 
         $('#sepa-debit-mandate-form input[class$="Date"]').datepicker({
@@ -314,6 +333,9 @@ var CAFEVDB = CAFEVDB || {};
     $.post(OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-delete.php'),
            post,
            function (data) {
+             if (!CAFEVDB.ajaxErrorHandler(data, [ 'message' ])) {
+               return false;
+             }
 	     $(dialogId+' #msg').html(data.data.message);
 	     $(dialogId+' #msg').show();
              if (data.status == "success") {
@@ -434,8 +456,6 @@ var CAFEVDB = CAFEVDB || {};
   SepaDebitMandate.validatePME = function(event, validateLockCB) {
     var $element = $(this);
 
-
-
     if ($element.prop('readonly')) {
       return false;
     }
@@ -489,13 +509,21 @@ var CAFEVDB = CAFEVDB || {};
     var changed = $element.attr('name');
     changed = inputMapping[changed];
 
+    var projectElem = $('[name="PME_data_projectId"]');
+    var projectId;
+    if (!projectElem.is('input')) {
+      projectElem = projectElem.find('option[selected="selected"]');
+    }
+    projectId = projectElem.val();
+
     var mandateData = {
       mandateReference: $('input[name="PME_data_mandateReference"]').val(),
       mandateDate: $('input[name="PME_data_mandateDate"]').val(),
       bankAccountOwner: $('input[name="PME_data_bankAccountOwner"]').val(),
       lastUsedDate: $('input[name="PME_data_lastUsedDate"]').val(),
       MusicianId:  $('select[name="PME_data_musicianId"] option[selected="selected"]').val(),
-      ProjectId:  $('select[name="PME_data_projectId"] option[selected="selected"]').val(),
+      ProjectId:  projectId,
+      MandateProjectId:  projectId,
       bankAccountIBAN: $('input[name="PME_data_IBAN"]').val(),
       bankAccountBIC: $('input[name="PME_data_BIC"]').val(),
       bankAccountBLZ: $('input[name="PME_data_BLZ"]').val(),
@@ -566,6 +594,7 @@ var CAFEVDB = CAFEVDB || {};
         // We store the values in the data attribute.
         var values = $(this).data('debitMandate');
         //alert('data: ' + CAFEVDB.print_r(values, true));
+        //alert('data: '+(typeof values.MandateExpired));
         $.post(OC.filePath('cafevdb', 'ajax/finance', 'sepa-debit-mandate.php'),
                values, function(data) {
                          self.init(data, function() {
@@ -773,6 +802,7 @@ var CAFEVDB = CAFEVDB || {};
         button.blur();
         return false;
       }
+
       // allow delete button, validation makes no sense here
       if (button.attr('name') === PHPMYEDIT.pmeSys('savedelete')) {
         return true;

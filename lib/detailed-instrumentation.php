@@ -105,6 +105,9 @@ class DetailedInstrumentation
     // Sorting field(s)
     $opts['sort_field'] = array('Sortierung','Reihung','-Stimmführer','Name','Vorname');
 
+    // GROUP BY clause, if needed.
+    $opts['groupby_fields'] = 'Id';
+
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
     // F - filter, I - initial sort suppressed
@@ -470,17 +473,24 @@ class DetailedInstrumentation
         ' OR '.
         '$join_table.projectId = '.$memberTableId.
         ')'.
-        ' AND $join_table.musicianId = $main_table.MusikerId';
+        ' AND $join_table.musicianId = $main_table.MusikerId'.
+        ' AND $join_table.active = 1';
 
-      // One virtual field in order to be able to manage SEPA debit mandates
+      // One virtual field in order to be able to manage SEPA debit
+      // mandates. Note that in rare circumstances there may be two
+      // debit mandates: one for general and one for the project. We
+      // fetch both with the same ordering and leave it to the calling
+      // code to do THE RIGHT THING (tm).
       $mandateIdx = count($opts['fdd']);
+      $mandateAlias = "`PMEjoin".$mandateIdx."`";
       $opts['fdd']['SepaDebitMandate'] = array(
         'name' => L::t('SEPA Debit Mandate'),
         'input' => 'VR',
         'tab' => array('id' => $financeTab),
         'select' => 'T',
         'options' => 'LFACPDV',
-        'sql' => '`PMEjoin'.$mandateIdx.'`.`mandateReference`', // dummy, make the SQL data base happy
+        'sql' => "GROUP_CONCAT(".$mandateAlias.".`mandateReference`
+  ORDER BY ".$mandateAlias.".`projectId` DESC)",
         'values' => array(
           'table' => 'SepaDebitMandates',
           'column' => 'id',
@@ -489,16 +499,62 @@ class DetailedInstrumentation
           ),
         'nowrap' => true,
         'sort' => true,
-        'php' => array(
-          'type' => 'function',
-          'function' => 'CAFEVDB\DetailedInstrumentation::sepaDebitMandatePME',
-          'parameters' => array('projectName' => $projectName,
-                                'projectId' => $projectId,
-                                'musicianIdIdx' => $musIdIdx,
-                                'musicianFirstNameIdx' => $musFirstNameIdx,
-                                'musicianLastNameIdx' => $musLastNameIdx,
-                                'naked' => $this->pme_bare)
-          )
+        'php' => function($mandates, $action, $k, $fds, $fdd, $row, $recordId)
+        use ($musIdIdx, $musFirstNameIdx, $musLastNameIdx)
+        {
+          if ($this->pme_bare) {
+            return $mandates;
+          }
+          $projectId = $this->projectId;
+          $projectName = $this->projectName;
+          // can be multi-valued (i.e.: 2 for member table and project table)
+          $mandateProjects = $row['qf'.($k+1)];
+          $mandates = explode(',', $mandates);
+          $mandateProjects = explode(',', $mandateProjects);
+          if (count($mandates) !== count($mandateProjects)) {
+            throw new \RuntimeException(
+              L::t('Data inconsistency, mandates: "%s", projects: "%s"',
+                   array(implode(',', $mandates),
+                         implode(',', $mandateProjects)))
+              );
+          }
+
+          // Careful: this changes when rearranging the ordering of the display
+          $musicianId        = $row['qf'.$musIdIdx];
+          $musicianFirstName = $row['qf'.$musFirstNameIdx];
+          $musicianLastName  = $row['qf'.$musLastNameIdx];
+          $musician = $musicianLastName.', '.$musicianFirstName;
+
+          $html = array();
+          foreach($mandates as $key => $mandate) {
+            if (empty($mandate)) {
+              continue;
+            }
+            $expired = Finance::mandateIsExpired($mandate);
+            $mandateProject = $mandateProjects[$key];
+            if ($mandateProject === $projectId) {
+              $html[] = self::sepaDebitMandateButton(
+                $mandate, $expired,
+                $musicianId, $musician,
+                $projectId, $projectName);
+            } else {
+              $mandateProjectName = Projects::fetchName($mandateProject);
+              $html[] = self::sepaDebitMandateButton(
+                $mandate, $expired,
+                $musicianId, $musician,
+                $projectId, $projectName,
+                $mandateProject, $mandateProjectName);
+            }
+          }
+          if (empty($html)) {
+            // Empty default knob
+            $html = array(self::sepaDebitMandateButton(
+                            L::t("SEPA Debit Mandate"), false,
+                            $musicianId, $musician,
+                            $projectId, $projectName));
+          }
+          return implode("\n", $html);
+        },
         );
 
       $mandateProjectIdx = count($opts['fdd']);
@@ -507,8 +563,8 @@ class DetailedInstrumentation
         'name' => 'internal data',
         'options' => 'H',
         'select' => 'T',
-        'sql' => '`PMEjoin'.$mandateIdx.'`.`projectId`', // dummy, make the SQL data base happy
-        'sqlw' => '`PMEjoin'.$mandateIdx.'`.`projectId`' // dummy, make the SQL data base happy
+        'sql' => "GROUP_CONCAT(".$mandateAlias.".`projectId`
+  ORDER BY ".$mandateAlias.".`projectId` DESC)",
         );
     }
 
@@ -1058,67 +1114,33 @@ class DetailedInstrumentation
     return false;
   }
 
-  public static function sepaDebitMandatePME($referenceId, $opts, $action, $k, $fds, $fdd, $row)
-  {
-    if ($opts['naked']) {
-      return $row['qf'.$k];
-    }
-
-    // Fetch the options ...
-    $projectId        = $opts['projectId'];
-    $projectName      = $opts['projectName'];
-    $musIdIdx         = $opts['musicianIdIdx'];
-    $musFirstNameIdx  = $opts['musicianFirstNameIdx'];
-    $musLastNameIdx   = $opts['musicianLastNameIdx'];
-
-    // Careful: this changes when rearranging the ordering of the display
-    $musicianId        = $row['qf'.$musIdIdx];
-    $musicianFirstName = $row['qf'.$musFirstNameIdx];
-    $musicianLastName  = $row['qf'.$musLastNameIdx];
-
-    $musician = $musicianLastName.', '.$musicianFirstName;
-
-    if ($row['qf'.$k] != '') {
-      $value = $row['qf'.$k];
-      if ($row['qf'.($k+1)] != $projectId) {
-        $mandateProjectId = $row['qf'.($k+1)];
-        $mandateProjectName = Projects::fetchName($mandateProjectId);
-      } else {
-        $mandateProjectId = $projectId;
-        $mandateProjectName = $projectName;
-      }
-    } else {
-      $value = L::t("SEPA Debit Mandate");
-    }
-
-    return self::sepaDebitMandateButton($value,
-                                        $musicianId, $musician,
-                                        $projectId, $projectName,
-                                        $mandateProjectId, $mandateProjectName);
-  }
-
   /**Generate a clickable form element which finally will display the
    * debit-mandate dialog, i.e. load some template stuff by means of
    * some java-script and ajax blah.
    */
-  public static function sepaDebitMandateButton($value, $musicianId, $musician,
+  public static function sepaDebitMandateButton($reference, $expired,
+                                                $musicianId, $musician,
                                                 $projectId, $projectName,
-                                                $mandateProjectId, $mandateProjectName)
+                                                $mandateProjectId = null, $mandateProjectName = null)
   {
-    $data = array('MusicianId' => $musicianId,
+    empty($mandateProjectId) && $mandateProjectId = $projectId;
+    empty($mandateProjectName) && $mandateProjectName = $projectName;
+    $data = array('MandateReference' => $reference,
+                  'MandateExpired' => $expired,
+                  'MusicianId' => $musicianId,
                   'MusicianName' => $musician,
                   'ProjectId' => $projectId,
                   'ProjectName' => $projectName,
                   'MandateProjectId' => $mandateProjectId,
                   'MandateProjectName' => $mandateProjectName);
-    $data = htmlspecialchars(json_encode($data));
+    $data = htmlspecialchars(json_encode($data, JSON_NUMERIC_CHECK));
 
-    $css= ($value == (L::t("SEPA Debit Mandate")) ? "missing-data " : "")."sepa-debit-mandate";
+    $css= ($reference == (L::t("SEPA Debit Mandate")) ? "missing-data " : "")."sepa-debit-mandate";
     $button = '<div class="sepa-debit-mandate tooltip-left">'
       .'<input type="button" '
       .'       id="sepa-debit-mandate-'.$musicianId.'-'.$projectId.'"'
       .'       class="'.$css.' tooltip-left" '
-      .'       value="'.$value.'" '
+      .'       value="'.$reference.'" '
       .'       title="'.L::t("Click to enter details of a potential SEPA debit mandate").' " '
       .'       name="SepaDebitMandate" '
       .'       data-debit-mandate="'.$data.'" '

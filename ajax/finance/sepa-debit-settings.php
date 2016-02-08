@@ -78,15 +78,18 @@ namespace CAFEVDB {
     switch ($changed) {
     case 'orchestraMember':
       // tricky, for now just generate a new reference
-      if ($value === 'member') {
-        $reference = Finance::generateSepaMandateReference($members, $musicianId);
-        $mandateProjectId = $members;
-        $mandateProjectName = Projects::fetchName($members);
+      $newProject = ($value === 'member') ? $members : $projectId;
+      $mandate = Finance::fetchSepaMandate($newProject, $musicianId);
+      if (!empty($mandate)) {
+        $reference = $mandate['mandateReference'];
+        $IBAN = $mandate['IBAN'];
+        $BLZ = $mandate['BLZ'];
+        $BIC = $mandate['BIC'];
       } else {
-        $reference = Finance::generateSepaMandateReference($projectId, $musicianId);
-        $mandateProjectId = $projectId;
-        $mandateProjectName = $projectName;
+        $reference = Finance::generateSepaMandateReference($newProject, $musicianId);
       }
+      $mandateProjectId = $newProject;
+      $mandateProjectName = Projects::fetchName($newProject);
       break;
     case 'lastUsedDate':
       // Store the lastUsedDate immediately, if other fields are disabled
@@ -396,7 +399,7 @@ namespace CAFEVDB {
     $admin = Config::adminContact();
 
     $mailto = $admin['email'].
-      '?subject='.rawurlencode('[CAFEVDB-Exception] Exceptions from Email-Form').
+      '?subject='.rawurlencode('[CAFEVDB-Exception] Exceptions from SEPA mandate settings').
       '&body='.rawurlencode($exceptionText."\r\n".$trace);
     $mailto = '<span class="error email"><a href="mailto:'.$mailto.'">'.$admin['name'].'</a></span>';
 

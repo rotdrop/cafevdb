@@ -116,6 +116,44 @@ input.pme-debit-note[type=submit] {
 
 /******************************************************************************
  *
+ * expired notice.
+ *
+ */
+#sepa-debit-mandate-dialog #mandate-expired-notice:not(.active) {
+  display:none!important;
+}
+
+#sepa-debit-mandate-dialog #mandate-expired-notice.active {
+  display:block!important;
+  position:absolute;
+  left:0px;
+  right:0px;
+  top:0px;
+  bottom:0px;
+  width:80%;
+  height:60%;
+  text-align:center;
+  font-size:700%;
+  line-height:100%;
+  margin:auto;
+  color:red;
+  font-weight:bold;
+  font-style:italic;
+  overflow:visible;
+}
+
+#sepa-debit-mandate-dialog #mandate-expired-notice.active div,
+#sepa-debit-mandate-dialog #mandate-expired-notice.active span {
+  display:inline-block;
+  text-align:center;
+}
+
+.oc-dialog div.sepa-mandate-expire-notice {
+  max-width:30em;
+}
+
+/******************************************************************************
+ *
  * debit job choices.
  *
  */

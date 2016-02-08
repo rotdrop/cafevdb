@@ -32,6 +32,10 @@ namespace CAFEVDB
   {
     const CSS_PREFIX = 'cafevdb-page';
     const MEMBER_TABLE = 'SepaDebitMandates';
+    /**Prefer a project specific mandate over a general when actually
+     * generating the debit-note data-sets.
+     */
+    const PREFER_PROJECT_MANDATE = true;
 
     function __construct($execute = true) {
       parent::__construct($execute);
@@ -106,6 +110,9 @@ namespace CAFEVDB
 
       // Sorting field(s)
       $opts['sort_field'] = array('musicianId');
+
+      // GROUP BY clause, if needed.
+      $opts['groupby_fields'] = 'id';
 
       // Options you wish to give the users
       // A - add,  C - change, P - copy, V - view, D - delete,
@@ -326,14 +333,27 @@ received so far'),
         'maxlen' => 35,
         'sort'   => true);
 
-      $opts['fdd']['nonrecurring'] = array(
-        'name'   => L::t('One Time'),
+      /* $opts['fdd']['nonrecurring'] = array( */
+      /*   'name'   => L::t('One Time'), */
+      /*   'input'  => 'R', */
+      /*   'select' => 'T', */
+      /*   'maxlen' => 35, */
+      /*   'sort'   => true, */
+      /*   'values2' => array('0' => L::t('no'), */
+      /*                      '1' => L::t('yes'))); */
+
+      $opts['fdd']['active'] = array(
+        'name'   => L::t('active'),
         //'input'  => 'R',
-        'select' => 'T',
+        'select' => 'O',
         'maxlen' => 35,
         'sort'   => true,
-        'values2' => array('0' => L::t('no'),
-                           '1' => L::t('yes')));
+        'values2|CAP' => array('1' => '&nbsp;&nbsp;&nbsp;&nbsp;' /*'&#10004;'*/),
+        'values2|LVDF' => array('0' => '&nbsp;',
+                                '1' => '&#10004;'),
+        'escape' => false,
+        'tooltip' => Config::toolTips('sepa-debit-mandate-active'),
+        );
 
       $opts['fdd']['mandateDate'] = array(
         'name'     => L::t('Date Issued'),
@@ -345,12 +365,34 @@ received so far'),
 
       $opts['fdd']['lastUsedDate'] = array(
         'name'     => L::t('Last-Used Date'),
+        'input'    => 'HR',
         'select'   => 'T',
         'maxlen'   => 10,
         'sort'     => true,
         'css'      => array('postfix' => ' sepadate'),
-        'datemask' => 'd.m.Y');
+        'datemask' => 'd.m.Y'
+        );
 
+      $lastUsedIdx = count($opts['fdd']);
+      $opts['fdd']['LastUsed'] = array(
+        'name'     => L::t('Last-Used Date'),
+        'input'    => 'VR',
+        'sql'      => "GREATEST(
+  COALESCE(MAX(`DateOfReceipt`), ''),
+  COALESCE(`lastUsedDate`, '')
+)",
+        'values'    => array(
+          'table'  => 'ProjectPayments',
+          'column' => 'DateOfReceipt',
+          'description' => 'DateOfReceipt',
+          'join'   => '$join_table.MandateReference = $main_table.mandateReference'
+          ),
+        'select'   => 'T',
+        'maxlen'   => 10,
+        'sort'     => true,
+        'css'      => array('postfix' => ' last-used-date'),
+        'datemask' => 'd.m.Y'
+        );
 
       if ($projectMode) {
         // Add the amount to debit
@@ -500,6 +542,19 @@ received so far'),
             )
           )
         );
+      if ($projectMode) {
+        $opts['fdd']['projectId']['values']['filters'] =
+          '$table.Id in ('.$projectId.','.$memberProjectId.')';
+        if ($projectId === $memberProjectId) {
+          $opts['fdd']['projectId'] = array_merge(
+            $opts['fdd']['projectId'],
+            array('select' => 'T',
+                  'sort' => false,
+                  'maxlen' => 40,
+                  'options' => 'VPCDL')
+            );
+        }
+      }
 
       $opts['fdd']['IBAN'] = array(
         'tab' => array('id' => 'account'),
@@ -592,6 +647,22 @@ received so far'),
       $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeUpdateRemoveUnchanged';
       $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
 
+      $opts['triggers']['delete']['before'][]  = 'CAFEVDB\SepaDebitMandates::beforeDeleteTrigger';
+
+      $opts['triggers']['select']['data'][] =
+        function(&$pme, $op, $step, &$row) use ($projectMode, $lastUsedIdx, $opts)  {
+        if (!empty($row['qf'.$lastUsedIdx])) {
+          // used mandates must not be deleted
+          $pme->options = 'LCFV';
+          if ($projectMode) {
+            $pme->options .= 'M';
+          }
+        } else {
+          $pme->options = $opts['options'];
+        }
+        return true;
+      };
+
       $this->pme = new \phpMyEdit($opts);
 
       if (Util::debugMode('request')) {
@@ -602,44 +673,31 @@ received so far'),
 
     } // display()
 
-    /**Compute usage data for the given mandate reference*/
-    static public function mandateReferenceUsage($reference, $handle = false)
+    /** phpMyEdit calls the trigger (callback) with the following arguments:
+     *
+     * @param[in] $pme The phpMyEdit instance
+     *
+     * @param[in] $op The operation, 'insert', 'update' etc.
+     *
+     * @param[in] $step 'before' or 'after'
+     *
+     * @param[in] $oldvals Self-explanatory.
+     *
+     * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
+     *
+     * @param[in,out] &$newvals Set of new values, which may also be modified.
+     *
+     * @return boolean. If returning @c false the operation will be terminated
+     */
+    public static function beforeDeleteTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
     {
-      $result = false;
+      $usage = Finance::mandateReferenceUsage($oldvals['mandateReference'], true, $pme->dbh);
 
-      $ownConnection = $handle === false;
-
-      if ($ownConnection) {
-        Config::init();
-        $handle = mySQL::connect(Config::$pmeopts);
-      }
-
-      $query = "SELECT
-  m.mandateReference AS MandateReference, m.Active,
-  MAX(d.DateIssued) AS LastIssued,
-  MAX(d.SubmitDate) AS LastSubmitted,
-  MAX(d.DueDate) AS LastDue,
-  IF(p.DateOfReceipt = MAX(d.DueDate), p.DebitMessageId, NULL) AS LastNotified
-FROM SepaDebitMandates m
-LEFT JOIN ProjectPayments p
-  ON p.MandateReference = m.mandateReference
-LEFT JOIN DebitNotes d
-  ON d.Id = p.DebitNoteId";
-      $query .= " WHERE m.mandateReference = '".$reference."'
-GROUP BY m.mandateReference";
-
-      $result = mySQL::query($query, $handle);
-      if ($result === false || mySQL::numRows($result) !== 1) {
+      if (!empty($usage['LastUsed'])) {
+        $result = Finance::deactivateSepaMandate($oldvals['mandateReference'], $pme->dbh);
         return false;
       }
-
-      $result = mySQL::fetch($result);
-
-      if ($ownConnection) {
-        mySQL::close($handle);
-      }
-
-      return $result;
+      return true;
     }
 
     /**Provide a very primitive direct matrix representation,
@@ -713,8 +771,9 @@ GROUP BY m.mandateReference";
       return $result;
     }
 
-    /**Fetch all relevant finance information from the given
-     * project.
+    /**Fetch all relevant finance information from the given project
+     * in order to initiate a debit note. Only musician with active
+     * debit note mandate are taken into account.
      */
     static protected function projectFinanceExport($projectId, $projectName = null, $handle = false)
     {
@@ -750,14 +809,36 @@ GROUP BY m.mandateReference";
         $query .= ', `'.$extraLabel.'`';
       }
       $query .= ', `m`.*';
+      $query .= ' FROM '.$projectTable.' p'."\n";
 
-      $query .= ' FROM '.$projectTable.' p
- LEFT JOIN `'.self::MEMBER_TABLE.'` m
-   ON m.musicianId = p.MusikerId
-   WHERE
-     (m.projectId = '.$projectId.' OR m.projectId = '.$memberProjectId.')
-     AND
-     (p.Lastschrift = 1)';
+      // if we have a mandate for the project and a mandate as club
+      // member, the project mandate takes precedence. This covers
+      // non-frequent cases, but it can happen ...
+      if ($projectId === $memberProjectId) {
+        $projectSelector = 'm.projectId  = '.$projectId;
+      } else {
+        $fct = self::PREFER_PROJECT_MANDATE ? 'MAX' : 'MIN';
+        $subQuery = "SELECT m2.musicianId, ".$fct."(m2.projectId) AS ProjectId
+  FROM `".self::MEMBER_TABLE."` m2
+  WHERE
+    (m2.projectId = ".$projectId." OR m2.projectId = ".$memberProjectId.")
+    AND
+    m2.active
+  GROUP BY m2.musicianId";
+        $query .= "LEFT JOIN (".$subQuery.") MandateSelector
+  ON MandateSelector.musicianId = p.MusikerId
+";
+        $projectSelector = "m.projectId = MandateSelector.Projectid";
+      }
+
+      $query .= 'LEFT JOIN `'.self::MEMBER_TABLE.'` m
+    ON m.musicianId = p.MusikerId
+       AND '.$projectSelector.'
+       AND m.active = 1
+    WHERE
+      p.Lastschrift = 1
+      AND
+      m.mandateReference IS NOT NULL';
 
       $result = mySQL::query($query, $handle);
       $table = array();
@@ -767,6 +848,9 @@ GROUP BY m.mandateReference";
       }
 
       while ($row = mySQL::fetch($result)) {
+        if (Finance::mandateIsExpired($row['mandateReference'], $handle)) {
+          continue;
+        }
         $amount = 0.0;
         foreach($monetary as $label => $fieldInfo) {
           $value = $row[$label];

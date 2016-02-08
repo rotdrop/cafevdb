@@ -35,6 +35,8 @@ namespace CAFEVDB
             'encryptedColumns' => array('IBAN', 'BIC', 'BLZ', 'bankAccountOwner'));
     public static $sepaCharset = "a-zA-Z0-9 \/?:().,'+-";
     public static $sepaPurposeLength = 35;
+    public static $sepaMandateLength = 35; ///< Maximum length of mandate reference.
+    const SEPA_MANDATE_EXPIRE_MONTHS = 36; ///< Unused mandates expire after this time.
 
     /**Add an event to the finance calendar, possibly including a
      * reminder.
@@ -132,17 +134,56 @@ namespace CAFEVDB
      * more or less of alpha-numeric characters and has a maximum length
      * of 35 characters. We choose the format
      *
-     * XXXX-YYYY-IN-PROJ-YEAR
+     * XXXX-YYYY-IN-PROJECTYEAR
      *
-     * where XXXX is the project Id, YYYY the musician ID, NAME and PROJ
-     * each are the first four letters of the respective name in order
-     * to make the reference a little bit more readable. YEAR is only
-     * added if the project name carries a year.
+     * where XXXX is the project Id, YYYY the musician ID, PROJECT and
+     * YEAR are the project name and the year. The project name will
+     * be shortened s.t. the entire reference fits into 35 characters.
+     *
+     * Mandates expired after 36 months if not used, and if the bank
+     * account information changes then we also need a new mandate
+     * reference. If this should happen for the same project (i.e. the
+     * club-member pseudo-project) then we attach a sequence number at
+     * the end. If necessary, the project name will shortened further
+     * for this purpose. Sequence numbers are only present if necessary:
+     *
+     * XXXX-YYYY-IN-PROJECTYEAR+SEQ
      */
-    public static function generateSepaMandateReference($projectId, $musicianId, $handle = false)
+    public static function generateSepaMandateReference($projectId,
+                                                        $musicianId,
+                                                        $sequence = false,
+                                                        $handle = false)
     {
+      $ownConnection = $handle === false;
+      if ($ownConnection) {
+        Config::init();
+        $handle = mySQL::connect(Config::$pmeopts);
+      }
+
+      // fetch latest relevant mandate and possibly increase the sequence.
+      $query = "SELECT mandateReference FROM `SepaDebitMandates`
+  WHERE `projectId` = $projectId AND `musicianId` = $musicianId
+  ORDER BY id DESC
+  LIMIT 0,1";
+      $result = mySQL::query($query, $handle);
+      if ($result !== false && mySQL::numRows($result) === 1) {
+        $row = mySQL::fetch($result);
+        if ($row['mandateReference']) {
+          $seq = substr($row['mandateReference'], -3);
+          if ($seq[0] === '+') {
+            $sequence = intval($seq)+1;
+          } else {
+            $sequence = 1;
+          }
+        }
+      }
+
       $musicianName = Musicians::fetchName($musicianId, $handle);
       $projectName = Projects::fetchName($projectId, $handle);
+
+      if ($ownConnection) {
+        mySQL::close($handle);
+      }
 
       $projectName = self::sepaTranslit($projectName);
       $firstName = self::sepaTranslit($musicianName['firstName']);
@@ -157,13 +198,20 @@ namespace CAFEVDB
 
       $ref = $prjId.'-'.$musId.'-'.$initials.'-';
 
+      if (is_numeric($sequence) && $sequence > 0) {
+        $tail = '+'.sprintf("%02d", intval($sequence));
+      } else {
+        $tail = '';
+      }
+
       $year = substr($projectName, -4);
       if (is_numeric($year)) {
         $projectName = substr($projectName, 0, -4);
-        $ref = substr($ref.$projectName, 0, 30).$year;
-      } else {
-        $ref = substr($ref.$projectName, 0, 34);
+        $tail = $year.$tail;
       }
+      $tailLength = strlen($tail);
+      $trimLength = self::$sepaMandateLength - strlen($tail);
+      $ref = substr($ref.$projectName, 0, $trimLength).$tail;
 
       $ref = preg_replace('/\s+/', 'X', $ref); // replace space by X
 
@@ -171,9 +219,11 @@ namespace CAFEVDB
     }
 
     /**Fetch an exisiting reference given project and musician. This
-     * fetch the entire db-row, i.e. everything known about the mandate.
+     * fetch the entire db-row, i.e. everything known about the
+     * mandate. Expired and inactive mandates are ignored, i.e. false
+     * is returned in this case.
      */
-    public static function fetchSepaMandate($projectId, $musicianId, $handle = false, $cooked = true)
+    public static function fetchSepaMandate($projectId, $musicianId, $handle = false, $cooked = true, $expired = false)
     {
       $mandate = false;
 
@@ -183,14 +233,27 @@ namespace CAFEVDB
         $handle = mySQL::connect(Config::$pmeopts);
       }
 
-      $query = "SELECT * FROM `".self::$dataBaseInfo['table']."` WHERE ".
-        "`projectId` = $projectId AND `musicianId` = $musicianId";
+      $query = "SELECT * FROM `".self::$dataBaseInfo['table']."`
+WHERE
+  `projectId` = $projectId
+  AND
+  `musicianId` = $musicianId
+  AND
+  `active` = 1";
+
       $result = mySQL::query($query, $handle);
       if ($result !== false && mySQL::numRows($result) == 1) {
         $row = mySQL::fetch($result);
         if ($row['mandateReference']) {
           $mandate = $row;
         }
+      }
+
+      if (!$expired && self::mandateIsExpired($mandate['mandateReference'], $handle)) {
+        if ($ownConnection) {
+          mySQL::close($handle);
+        }
+        return false;
       }
 
       if ($cooked) {
@@ -220,17 +283,10 @@ namespace CAFEVDB
      */
     public static function sepaMandateSequenceType($mandate)
     {
-      if (!isset($mandate['lastUsedDate'])) {
-        // Need the date to decide about the type
-        if (isset($mandate['nonrecurring'])) {
-          return $mandate['nonrecurring'] ? 'once' : 'permanent';
-        } else if (isset($mandate['sequenceType'])) {
-          return $mandate['sequenceType'];
-        }
-      } else if (isset($mandate['nonrecurring'])) {
+      if (isset($mandate['nonrecurring'])) {
         if ($mandate['nonrecurring']) {
           return 'once';
-        } else if ($mandate['lastUsedDate'] == '0000-00-00') {
+        } else if (empty($mandate['lastUsedDate']) || $mandate['lastUsedDate'] == '0000-00-00') {
           return 'first';
         } else {
           return 'following';
@@ -239,7 +295,7 @@ namespace CAFEVDB
         $mandate['sequenceType'] = $sequenceType;
       } else if (isset($mandate['sequenceType'])) {
         if ($mandate['sequenceType'] == 'permanent') {
-          return ($mandate['lastUsedDate'] == '0000-00-00') ? 'first' : 'following';
+          return (empty($mandate['lastUsedDate']) || $mandate['lastUsedDate'] == '0000-00-00') ? 'first' : 'following';
         } else {
           return $mandate['sequenceType'];
         }
@@ -283,78 +339,6 @@ namespace CAFEVDB
       return true;
     }
 
-    /**Update the last used time-stamp for the given array if ids
-     *
-     * @param mixed $ids Either one specific id, or an array of ids or
-     * an array of debit-notees as returned by
-     * SepaDebitMandates::insuranceTableExport() or
-     * SepaDebitMandates::projectTableExport()
-     *
-     * @param int $timeStamp Unix time stamp. Default to now + 14 days if unset.
-     *
-     * @param $handle Data-base handle. Will be aquired if unset.
-     */
-    public static function stampSepaMandates($ids, $timeStamp = false, $handle = false)
-    {
-      // convert to flat id array for all supported cases
-      if (is_int($ids)) {
-        $ids = array($ids);
-      } else if (is_array($ids)) {
-        if (count($ids) == 0) {
-          return true;
-        }
-        if (is_array($ids[0])) {
-          $notes = $ids;
-          $ids = array();
-          foreach ($notes as $debitNote) {
-            $ids[] = $debitNote['id'];
-          }
-        }
-      }
-
-      if ($timeStamp === false) {
-        date_default_timezone_set(Util::getTimezone());
-        $timeStamp = strtotime('+ 14 days');
-      }
-
-      $dateIssued = date('Y-m-d', $timeStamp);
-
-      $ownConnection = $handle === false;
-      if ($ownConnection) {
-        Config::init();
-        $handle = mySQL::connect(Config::$pmeopts);
-      }
-
-      $table = Finance::$dataBaseInfo['table'];
-      $where = "`id` IN (".implode(',', $ids).")";
-      $newValues = array('lastUsedDate' => $dateIssued);
-      $result = mySQL::update($table, $where, $newValues, $handle);
-      if ($result !== false) {
-        // log the change, but give a danm on the old time-stamp
-        foreach($ids as $id) {
-          $oldValues = array('id' => $id);
-          mySQL::logUpdate($table, 'id', $oldValues, $newValues, $handle);
-        }
-      }
-
-      if ($ownConnection) {
-        mySQL::close($handle);
-      }
-
-      if (!$result) {
-        throw new \RuntimeException(
-          "\n".
-          L::t('Unable to update the last-used date to %s', array($dateIssued)).
-          "\n".
-          L::t('Data-base query:').
-          "\n".
-          $query);
-      }
-
-      return $result;
-    }
-
-
     /**Store a SEPA-mandate, possibly with only partial
      * information. mandateReference, musicianId and projectId are
      * required.
@@ -383,13 +367,15 @@ namespace CAFEVDB
       // Convert to a date format understood by mySQL.
       $dateFields = array('lastUsedDate', 'mandateDate');
       foreach ($dateFields as $date) {
-        if (isset($mandate[$date]) && $mandate[$date] != '') {
+        if (!empty($mandate[$date])) {
           $stamp = strtotime($mandate[$date]);
           $value = date('Y-m-d', $stamp);
           if ($stamp != strtotime($value)) {
             return false;
           }
           $mandate[$date] = $value;
+        } else {
+          unset($mandate[$date]);
         }
       }
 
@@ -418,7 +404,7 @@ namespace CAFEVDB
         }
         // passed: issue an update query
         foreach ($mandate as $key => $value) {
-          if ($value == '' && $key != 'lastUsedDate') {
+          if (empty($value) && $key != 'lastUsedDate') {
             unset($mandate[$key]);
           }
         }
@@ -433,6 +419,7 @@ namespace CAFEVDB
         if ($result !== false) {
           mySQL::logInsert($table, mySQL::newestIndex($handle), $mandate, $handle);
         }
+
       }
 
       if ($ownConnection) {
@@ -442,8 +429,92 @@ namespace CAFEVDB
       return $result;
     }
 
-    /**Erase a SEPA-mandate. */
-    public static function deleteSepaMandate($projectId, $musicianId, $handle = false)
+    /**Compute usage data for the given mandate reference*/
+    static public function mandateReferenceUsage($reference, $brief = false, $handle = false)
+    {
+      $result = false;
+
+      $ownConnection = $handle === false;
+
+      if ($ownConnection) {
+        Config::init();
+        $handle = mySQL::connect(Config::$pmeopts);
+      }
+
+      $query = "SELECT
+  m.mandateReference AS MandateReference,
+  m.Active,
+  GREATEST(COALESCE(MAX(d.DueDate), ''), COALESCE(m.lastUsedDate, '')) AS LastUsed,
+  m.mandateDate AS MandateIssued";
+      if ($brief !== false) {
+        $query .= ",
+  m.lastUsedDate AS MandateLastUsed,
+  MAX(d.DateIssued) AS DebitNoteLastIssued,
+  MAX(d.SubmitDate) AS DebitNoteLastSubmitted,
+  MAX(d.DueDate) AS DebitNoteLastDue,
+  IF(p.DateOfReceipt = MAX(d.DueDate), p.DebitMessageId, NULL) AS DebitNoteLastNotified";
+      }
+      $query .= "
+FROM SepaDebitMandates m
+LEFT JOIN ProjectPayments p
+  ON p.MandateReference = m.mandateReference
+LEFT JOIN DebitNotes d
+  ON d.Id = p.DebitNoteId";
+      $query .= "
+WHERE m.mandateReference = '".$reference."'
+GROUP BY m.mandateReference";
+
+      $result = mySQL::query($query, $handle);
+      if ($result === false || mySQL::numRows($result) !== 1) {
+        return false;
+      }
+      $result = mySQL::fetch($result);
+
+      if ($ownConnection) {
+        mySQL::close($handle);
+      }
+
+      return $result;
+    }
+
+    public static function mandateIsExpired($usageInfo, $handle = false)
+    {
+      $mandate = $usageInfo;
+      if (empty($usageInfo['LastUsed'])) {
+        $usageInfo = self::mandateReferenceUsage($usageInfo, true, $handle);
+      }
+      if (empty($usageInfo['LastUsed'])) {
+        $usageInfo['LastUsed'] = $usageInfo['MandateIssued'];
+      }
+      $oldLocale = setlocale(LC_TIME, '0');
+      setlocale(LC_TIME, Util::getLocale());
+
+      $oldTZ = date_default_timezone_get();
+      $tz = Util::getTimezone();
+      date_default_timezone_set($tz);
+
+      $nowDate  = new \DateTime(strftime('%Y-%m-%d'));
+      $usedDate = new \DateTime($usageInfo['LastUsed']);
+
+      $diff = $usedDate->diff($nowDate);
+      $months = $diff->format('%y') * 12 + $diff->format('%m');
+
+      date_default_timezone_set($oldTZ);
+      setlocale(LC_TIME, $oldLocale);
+
+      return $months >= self::SEPA_MANDATE_EXPIRE_MONTHS;
+    }
+
+    /**Deactivate a SEPA-mandate (timeout, withdrawn, erroneous data
+     * etc.). This flags the mandate as deleted, but we have to keep
+     * the data for the book-keeping.
+     *
+     * @param[in] string $mandateReference The mandate reference string.
+     *
+     * @param[in] mixed $handle Optional data-base handle.
+     *
+     */
+    public static function deactivateSepaMandate($mandateReference, $handle = false)
     {
       $ownConnection = $handle === false;
       if ($ownConnection) {
@@ -452,14 +523,16 @@ namespace CAFEVDB
       }
 
       $table = 'SepaDebitMandates';
-      $where = "`projectId` = $projectId AND `musicianId` = $musicianId";
+      $where = "`mandateReference` = '$mandateReference'";
       $oldValues = mySQL::fetchRows($table, $where, null, $handle);
 
-      $query = "DELETE FROM `".$table."` WHERE ".$where;
-      $result = mySQL::query($query, $handle);
+      $newValues = array('active' => 0);
+      $result = mySQL::update($table, $where, $newValues, $handle);
 
-      if ($result !== false && count($oldValues) > 0) {
-        mySQL::logDelete($table, 'id', $oldValues[0], $handle);
+      if ($result !== false) {
+        mySQL::logUpdate($table, 'mandateReference',
+                         array('mandateReference' => $mandateReference),
+                         $newValues, $handle);
       }
 
       if ($ownConnection) {
@@ -467,6 +540,47 @@ namespace CAFEVDB
       }
 
       return true; // hopefully
+    }
+
+    /**Erase a SEPA-mandate. This is important data, so we require the
+     * project and musician as well as the mandate reference.
+     *
+     * @param[in] string $mandateReference The mandate reference string.
+     *
+     * @param[in] mixed $handle Optional data-base handle.
+     *
+     */
+    public static function deleteSepaMandate($mandateReference, $handle = false)
+    {
+      $ownConnection = $handle === false;
+      if ($ownConnection) {
+        Config::init();
+        $handle = mySQL::connect(Config::$pmeopts);
+      }
+
+      $usage = self::mandateReferenceUsage($mandateReference, true, $handle);
+
+      if (!empty($usage['LastUsed'])) {
+        $result = self::deactivateSepaMandate($mandateReference, $handle);
+      } else {
+
+        $table = 'SepaDebitMandates';
+        $where = "`mandateReference` = '$mandateReference'";
+        $oldValues = mySQL::fetchRows($table, $where, null, $handle);
+
+        $query = "DELETE FROM `".$table."` WHERE ".$where;
+        $result = mySQL::query($query, $handle);
+
+        if ($result !== false && count($oldValues) > 0) {
+          mySQL::logDelete($table, 'id', $oldValues[0], $handle);
+        }
+      }
+
+      if ($ownConnection) {
+        mySQL::close($handle);
+      }
+
+      return $result !== false; // hopefully
     }
 
     /**Verify the given mandate, throw an
@@ -479,7 +593,7 @@ namespace CAFEVDB
       $nl = "\n";
       $keys = array('mandateReference',
                     'mandateDate',
-                    'lastUsedDate',
+                    /*'lastUsedDate', may be null */
                     'musicianId',
                     'projectId',
                     'sequenceType',

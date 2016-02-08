@@ -25,6 +25,9 @@ use CAFEVDB\Config;
 
 $title = L::t("SEPA Debit Mandate of %s", array($_['MusicianName']));
 
+$reference  = $_['mandateReference'];
+$expired    = $_['mandateExpired'];
+$expiredTip = Config::toolTips('sepa-mandate-expired');
 $mandateId  = $_['mandateId'];
 $prjId      = $_['ProjectId'];
 $mdtPrjId   = $_['MandateProjectId'];
@@ -39,11 +42,19 @@ $recurring = L::t('Type: ').($_['sequenceType'] == 'once' ? L::t('once') : L::t(
 
 ?>
 <div id="sepa-debit-mandate-dialog" title="<?php echo $title;?>">
+  <div style="display:none;"
+       id="mandate-expired-notice"
+       class="<?php echo ($expired ? 'active' : ''); ?> mandate-expired-notice tooltip-bottom"
+       title="<?php echo $expiredTip; ?>">
+    <div>
+      <?php echo ($expired ? L::t('expired') : ''); ?>
+    </div>
+  </div>
   <form id="sepa-debit-mandate-form" class="<?php echo $class; ?>" >
     <legend class="mandateCaption">
       <?php echo L::t('Mandate-Reference: '); ?>
       <span class="reference">
-        <?php echo $_['mandateReference']; ?>
+        <?php echo $reference; ?>
       </span>
     </legend>
     <input type="hidden" autofocus="autofocus" />
@@ -52,7 +63,8 @@ $recurring = L::t('Type: ').($_['sequenceType'] == 'once' ? L::t('once') : L::t(
     <input type="hidden" name="ProjectName" value="<?php echo $prjName; ?>" />
     <input type="hidden" name="MusicianId" value="<?php echo $musId; ?>" />
     <input type="hidden" name="MusicianName" value="<?php echo $musName; ?>" />
-    <input type="hidden" name="mandateReference" value="<?php echo $_['mandateReference']; ?>" />
+    <input type="hidden" name="expired" value="<?php echo $expired ? '1' : '0'; ?>" />
+    <input type="hidden" name="mandateReference" value="<?php echo $reference; ?>" />
     <input type="hidden" name="sequenceType" value="<?php echo $_['sequenceType']; ?>" />
     <?php if ($prjId !== $membersTableId) { ?>
     <input id="debit-mandate-orchestra-member"
