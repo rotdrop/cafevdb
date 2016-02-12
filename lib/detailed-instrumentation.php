@@ -374,7 +374,6 @@ class DetailedInstrumentation
       // only include if configured in project
       $opts['fdd']['Anzahlung'] = Config::$opts['money'];
       $opts['fdd']['Anzahlung']['name'] = "Anzahlung";
-      $opts['fdd']['Anzahlung']['maxlen'] = 6; // 3 digits, no sign
       $opts['fdd']['Anzahlung']['default'] = $project['Anzahlung'];
       $opts['fdd']['Anzahlung']['css']['postfix'] .= ' deposit';
       $opts['fdd']['Anzahlung']['tab'] = array('id' => $financeTab);
@@ -493,7 +492,7 @@ class DetailedInstrumentation
   ORDER BY ".$mandateAlias.".`projectId` DESC)",
         'values' => array(
           'table' => 'SepaDebitMandates',
-          'column' => 'id',
+          'column' => 'mandateReference',
           'join' => $debitJoinCondition,
           'description' => 'mandateReference'
           ),
