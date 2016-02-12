@@ -40,8 +40,15 @@ namespace CAFEVDB {
     }
 
     $reference          = Util::cgiValue('MandateReference', false);
-    $expired            = (bool)Util::cgiValue('MandateExpired', false);
+    $expired            = Util::cgiValue('MandateExpired', false);
     //throw new \Exception('expired: '.' '.(int)$expired.' '.(bool)$expired.' '.(string)$expired);
+    if ((string)$expired === 'false') {
+      $expired = false;
+    } else if ((string)$expired === 'true') {
+      $expired = true;
+    } else {
+      $expired = (bool)(int)$expired;
+    }
     $projectId          = Util::cgiValue('ProjectId', -1);
     $mandateProjectId   = Util::cgiValue('MandateProjectId', -1);
     $projectName        = Util::cgiValue('ProjectName', '');
