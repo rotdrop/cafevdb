@@ -52,19 +52,22 @@ namespace CAFEVDB {
     $projectId   = Util::cgiValue('ProjectId', -1);
     $projectName = Util::cgiValue('ProjectName', 'X');
     $table       = Util::cgiValue('Table', '');
+    $debitJob    = Util::cgiValue('debit-job', '');
     $selectedMandates = Util::cgiValue($recordsKey, array());
 
-    switch ($table) {
-    case 'InstrumentInsurance':
+    if ($table === 'InstrumentInsurance') {
       $debitJob = 'insurance';
       $selectedMandates = InstrumentInsurance::remapToDebitIds($selectedMandates);
+    }
+
+    switch ($debitJob) {
+    case 'insurance':
       $debitTable = SepaDebitMandates::insuranceTableExport();
       $fileName = $date.'-aqbanking-debit-notes-insurance';
       $calendarProject = Config::getValue('memberTable');
       $calendarTitlePart = L::t('instrument insurances');
       break;
     default:
-      $debitJob = trim(Util::cgiValue('debit-job', ''));
       $debitAmountMax = Util::cgiValue('debit-note-amount', 1e12); // infinity
       $debitNoteSubject = Util::cgiValue('debit-note-subject', false);
 
