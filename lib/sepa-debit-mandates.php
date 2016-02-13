@@ -838,6 +838,8 @@ received so far'),
     WHERE
       p.Lastschrift = 1
       AND
+      p.Anmeldung = 1
+      AND
       m.mandateReference IS NOT NULL';
 
       $result = mySQL::query($query, $handle);
