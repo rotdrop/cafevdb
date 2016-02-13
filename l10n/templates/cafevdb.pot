@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-08 13:29+0100\n"
+"POT-Creation-Date: 2016-02-13 18:03+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -127,8 +127,8 @@ msgstr ""
 #: ajax/email/composer.php:367 ajax/email/emailform.php:154
 #: ajax/email/exporter.php:97 ajax/email/preview.php:107
 #: ajax/email/recipients.php:143 ajax/finance/debit-note-download.php:194
-#: ajax/finance/sepa-debit-delete.php:80 ajax/finance/sepa-debit-export.php:366
-#: ajax/finance/sepa-debit-mandate.php:200
+#: ajax/finance/sepa-debit-delete.php:80 ajax/finance/sepa-debit-export.php:369
+#: ajax/finance/sepa-debit-mandate.php:207
 #: ajax/finance/sepa-debit-settings.php:409
 #: ajax/finance/sepa-debit-store.php:116
 #: ajax/instrumentation/add-musicians.php:159
@@ -144,8 +144,8 @@ msgstr ""
 #: ajax/email/composer.php:371 ajax/email/emailform.php:158
 #: ajax/email/exporter.php:98 ajax/email/preview.php:111
 #: ajax/email/recipients.php:147 ajax/finance/sepa-debit-delete.php:84
-#: ajax/finance/sepa-debit-export.php:370
-#: ajax/finance/sepa-debit-mandate.php:204
+#: ajax/finance/sepa-debit-export.php:373
+#: ajax/finance/sepa-debit-mandate.php:211
 #: ajax/finance/sepa-debit-settings.php:413
 #: ajax/finance/sepa-debit-store.php:120
 #: ajax/instrumentation/add-musicians.php:163 ajax/insurance/validate.php:330
@@ -179,7 +179,7 @@ msgstr ""
 msgid "Inconsistency:"
 msgstr ""
 
-#: ajax/email/preview.php:81 ajax/finance/sepa-debit-export.php:336
+#: ajax/email/preview.php:81 ajax/finance/sepa-debit-export.php:339
 msgid "Request successful"
 msgstr ""
 
@@ -240,7 +240,7 @@ msgstr ""
 
 #: ajax/events/events.php:54 ajax/events/execute.php:58
 #: ajax/events/new.form.php:63 ajax/events/sendmail.php:56
-#: ajax/finance/sepa-debit-mandate.php:62
+#: ajax/finance/sepa-debit-mandate.php:69
 msgid "Project-id and/or name not set"
 msgstr ""
 
@@ -281,7 +281,7 @@ msgid "Done. %d events synchronized, %d new."
 msgstr ""
 
 #: ajax/export/csv.php:32 ajax/export/excel.php:49 ajax/export/html.php:32
-#: ajax/export/insurance-export.php:105 ajax/finance/sepa-debit-export.php:64
+#: ajax/export/insurance-export.php:105 ajax/finance/sepa-debit-export.php:68
 msgid "instrument insurances"
 msgstr ""
 
@@ -369,7 +369,7 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: ajax/export/insurance-export.php:246 lib/detailed-instrumentation.php:659
+#: ajax/export/insurance-export.php:246 lib/detailed-instrumentation.php:658
 #: lib/instrument-insurance.php:76 lib/php-excel-functions.php:102
 #: lib/project-extra.php:392 lib/project-extra.php:504
 #: lib/project-extra.php:604
@@ -397,25 +397,25 @@ msgid "Unable to fetch debit-note for id %d"
 msgstr ""
 
 #: ajax/finance/debit-note-download.php:112
-#: ajax/finance/sepa-debit-export.php:217
+#: ajax/finance/sepa-debit-export.php:220
 #: ajax/insurance/instrument-insurance-export.php:111
 msgid "Unable to create temporay file for zip-archive."
 msgstr ""
 
 #: ajax/finance/debit-note-download.php:118
-#: ajax/finance/sepa-debit-export.php:223
+#: ajax/finance/sepa-debit-export.php:226
 #: ajax/insurance/instrument-insurance-export.php:117
 msgid "Unable to open temporary file for zip-archive."
 msgstr ""
 
 #: ajax/finance/debit-note-download.php:126
-#: ajax/finance/sepa-debit-export.php:248
+#: ajax/finance/sepa-debit-export.php:251
 #: ajax/insurance/instrument-insurance-export.php:131
 msgid "Unable to close temporary file for zip-archive."
 msgstr ""
 
 #: ajax/finance/debit-note-download.php:131
-#: ajax/finance/sepa-debit-export.php:253
+#: ajax/finance/sepa-debit-export.php:256
 #: ajax/insurance/instrument-insurance-export.php:136
 msgid "Unable to read zip archive from disk."
 msgstr ""
@@ -440,91 +440,91 @@ msgstr ""
 msgid "Unable to delete SEPA debit mandate from data-base."
 msgstr ""
 
-#: ajax/finance/sepa-debit-export.php:74
+#: ajax/finance/sepa-debit-export.php:77
 msgid "You did not tell what kind of debit-note you would like to draw."
 msgstr ""
 
-#: ajax/finance/sepa-debit-export.php:78
+#: ajax/finance/sepa-debit-export.php:81
 msgid "Please specify a subject for this debit note."
 msgstr ""
 
-#: ajax/finance/sepa-debit-export.php:83
+#: ajax/finance/sepa-debit-export.php:86
 msgid "Please tell me about the amount you would like to draw."
 msgstr ""
 
-#: ajax/finance/sepa-debit-export.php:105
+#: ajax/finance/sepa-debit-export.php:108
 msgid "Unable to decrypt debit mandate."
 msgstr ""
 
-#: ajax/finance/sepa-debit-export.php:107
-#: ajax/finance/sepa-debit-export.php:118
-#: ajax/finance/sepa-debit-export.php:129
-#: ajax/finance/sepa-debit-export.php:139
+#: ajax/finance/sepa-debit-export.php:110
+#: ajax/finance/sepa-debit-export.php:121
+#: ajax/finance/sepa-debit-export.php:132
+#: ajax/finance/sepa-debit-export.php:142
 msgid "Full debit record:"
 msgstr ""
 
-#: ajax/finance/sepa-debit-export.php:116
+#: ajax/finance/sepa-debit-export.php:119
 #, php-format
 msgid "Refusing to debit %s."
 msgstr ""
 
-#: ajax/finance/sepa-debit-export.php:127
+#: ajax/finance/sepa-debit-export.php:130
 #, php-format
 msgid "Illegal characters in debit purpose: %s. "
 msgstr ""
 
-#: ajax/finance/sepa-debit-export.php:136
+#: ajax/finance/sepa-debit-export.php:139
 #, php-format
 msgid "Purpose field has %d characters, allowed are %d."
 msgstr ""
 
-#: ajax/finance/sepa-debit-export.php:168
+#: ajax/finance/sepa-debit-export.php:171
 #: ajax/insurance/instrument-insurance-export.php:76
 msgid "No Debit-Mandates to export?"
 msgstr ""
 
-#: ajax/finance/sepa-debit-export.php:265
-#: ajax/finance/sepa-debit-export.php:278
+#: ajax/finance/sepa-debit-export.php:268
+#: ajax/finance/sepa-debit-export.php:281
 msgid "Debit notes submission deadline"
 msgstr ""
 
-#: ajax/finance/sepa-debit-export.php:268
-#: ajax/finance/sepa-debit-export.php:281
-#: ajax/finance/sepa-debit-export.php:294
+#: ajax/finance/sepa-debit-export.php:271
+#: ajax/finance/sepa-debit-export.php:284
+#: ajax/finance/sepa-debit-export.php:297
 msgid "Exported CSV file name:"
 msgstr ""
 
-#: ajax/finance/sepa-debit-export.php:272
-#: ajax/finance/sepa-debit-export.php:285
-#: ajax/finance/sepa-debit-export.php:298
+#: ajax/finance/sepa-debit-export.php:275
+#: ajax/finance/sepa-debit-export.php:288
+#: ajax/finance/sepa-debit-export.php:301
 msgid "Due date:"
 msgstr ""
 
-#: ajax/finance/sepa-debit-export.php:291
+#: ajax/finance/sepa-debit-export.php:294
 msgid "Debit notes due"
 msgstr ""
 
-#: ajax/finance/sepa-debit-export.php:317
+#: ajax/finance/sepa-debit-export.php:320
 msgid "Unable to store debit notes."
 msgstr ""
 
-#: ajax/finance/sepa-debit-export.php:322
+#: ajax/finance/sepa-debit-export.php:325
 msgid "Unable to store debit note data."
 msgstr ""
 
-#: ajax/finance/sepa-debit-export.php:327
+#: ajax/finance/sepa-debit-export.php:330
 msgid "Unable to store debit note payments."
 msgstr ""
 
-#: ajax/finance/sepa-debit-mandate.php:77
+#: ajax/finance/sepa-debit-mandate.php:84
 msgid "Mandate project-id and/or name not set"
 msgstr ""
 
-#: ajax/finance/sepa-debit-mandate.php:95
+#: ajax/finance/sepa-debit-mandate.php:102
 msgid "Musician-id and/or name not set"
 msgstr ""
 
-#: ajax/finance/sepa-debit-mandate.php:108
+#: ajax/finance/sepa-debit-mandate.php:115
 #: ajax/finance/sepa-debit-settings.php:67 settings.php:95
 msgid "ClubMembers"
 msgstr ""
@@ -2132,8 +2132,8 @@ msgid ""
 "in case of desinformation or misunderstanding. Use with care."
 msgstr ""
 
-#: js/sepa-debit-mandate.js:151 lib/detailed-instrumentation.php:487
-#: lib/detailed-instrumentation.php:552 lib/detailed-instrumentation.php:1138
+#: js/sepa-debit-mandate.js:151 lib/detailed-instrumentation.php:486
+#: lib/detailed-instrumentation.php:551 lib/detailed-instrumentation.php:1137
 msgid "SEPA Debit Mandate"
 msgstr ""
 
@@ -2405,100 +2405,100 @@ msgstr ""
 msgid "Member Status"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:409 lib/sepa-debit-mandates.php:487
+#: lib/detailed-instrumentation.php:408 lib/sepa-debit-mandates.php:487
 msgid "Total Charges"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:455
+#: lib/detailed-instrumentation.php:454
 msgid "Direct Debit"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:516
+#: lib/detailed-instrumentation.php:515
 #, php-format
 msgid "Data inconsistency, mandates: \"%s\", projects: \"%s\""
 msgstr ""
 
-#: lib/detailed-instrumentation.php:660 lib/instrument-insurance.php:77
+#: lib/detailed-instrumentation.php:659 lib/instrument-insurance.php:77
 #: lib/php-excel-functions.php:98 lib/project-extra.php:391
 #: lib/project-extra.php:505 lib/project-extra.php:603
 msgid "true"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:738 lib/musicians.php:489
+#: lib/detailed-instrumentation.php:737 lib/musicians.php:489
 msgid "Remarks"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:755 lib/musicians.php:347
+#: lib/detailed-instrumentation.php:754 lib/musicians.php:347
 #: lib/project-extra.php:313
 msgid "no projects yet"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:765 lib/musicians.php:391
+#: lib/detailed-instrumentation.php:764 lib/musicians.php:391
 msgid "Projects"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:782 lib/musicians.php:410
+#: lib/detailed-instrumentation.php:781 lib/musicians.php:410
 msgid "Mobile Phone"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:799 lib/musicians.php:426
+#: lib/detailed-instrumentation.php:798 lib/musicians.php:426
 msgid "Fixed Line Phone"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:816 lib/musicians.php:445
+#: lib/detailed-instrumentation.php:815 lib/musicians.php:445
 msgid "Street"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:826 lib/musicians.php:454
+#: lib/detailed-instrumentation.php:825 lib/musicians.php:454
 msgid "Postal Code"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:835 lib/musicians.php:463
+#: lib/detailed-instrumentation.php:834 lib/musicians.php:463
 msgid "City"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:847 lib/musicians.php:475
+#: lib/detailed-instrumentation.php:846 lib/musicians.php:475
 msgid "Country"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:862
+#: lib/detailed-instrumentation.php:861
 msgid "General Remarks"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:875
+#: lib/detailed-instrumentation.php:874
 msgid "Preferred Language"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:884 lib/musicians.php:527
+#: lib/detailed-instrumentation.php:883 lib/musicians.php:527
 msgid "Photo"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:912 lib/musicians.php:597
+#: lib/detailed-instrumentation.php:911 lib/musicians.php:597
 #: lib/projects.php:439
 msgid "Last Updated"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:1144
+#: lib/detailed-instrumentation.php:1143
 msgid "Click to enter details of a potential SEPA debit mandate"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:1171
+#: lib/detailed-instrumentation.php:1170
 msgid "Instrumentation related data"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:1174
+#: lib/detailed-instrumentation.php:1173
 msgid "Project related data"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:1179
+#: lib/detailed-instrumentation.php:1178
 msgid "Finance related data"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:1184
+#: lib/detailed-instrumentation.php:1183
 msgid "Personal data"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:1187 lib/instrument-insurance.php:193
+#: lib/detailed-instrumentation.php:1186 lib/instrument-insurance.php:193
 #: lib/musicians.php:187 lib/project-extra.php:253
 #: lib/sepa-debit-mandates.php:233
 msgid "Display all columns"
@@ -4040,7 +4040,7 @@ msgstr ""
 msgid "Extra Charges"
 msgstr ""
 
-#: lib/sepa-debit-mandates.php:467 lib/sepa-debit-mandates.php:904
+#: lib/sepa-debit-mandates.php:467 lib/sepa-debit-mandates.php:906
 msgid "Project Deposit"
 msgstr ""
 
@@ -4066,15 +4066,15 @@ msgstr ""
 msgid "Annual Fee Year %s"
 msgstr ""
 
-#: lib/sepa-debit-mandates.php:902
+#: lib/sepa-debit-mandates.php:904
 msgid "Remaining Project Deposit"
 msgstr ""
 
-#: lib/sepa-debit-mandates.php:911
+#: lib/sepa-debit-mandates.php:913
 msgid "Remaining Project Fees"
 msgstr ""
 
-#: lib/sepa-debit-mandates.php:913
+#: lib/sepa-debit-mandates.php:915
 msgid "Project Fees"
 msgstr ""
 
