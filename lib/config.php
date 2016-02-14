@@ -707,7 +707,7 @@ redaxoRehearsalsModule
         }
       } catch (\Exception $exception) {
         // Unlock again
-        mySQL::query("UNLOCK TABLES");
+        mySQL::query("UNLOCK TABLES", $handle);
         if ($ownConnection) {
           mySQL::close($handle);
         }
@@ -716,7 +716,7 @@ redaxoRehearsalsModule
       }
 
       // Unlock again
-      mySQL::query("UNLOCK TABLES");
+      mySQL::query("UNLOCK TABLES", $handle);
       if ($ownConnection) {
         mySQL::close($handle);
       }

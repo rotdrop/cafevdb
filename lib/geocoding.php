@@ -716,14 +716,14 @@ namespace CAFEVDB
   CHARACTER SET utf8
   COLLATE utf8_general_ci
   NULL";
-      mySQL::query($query);
+      mySQL::query($query, $handle);
 
       $query = "ALTER TABLE `".self::CONTINENT_TABLE."` ADD `".$language."`
   VARCHAR(180)
   CHARACTER SET utf8
   COLLATE utf8_general_ci
   NULL";
-      mySQL::query($query);
+      mySQL::query($query, $handle);
 
       $query = "ALTER TABLE `".self::POSTAL_CODES_TABLE."` ADD `".$language."`
   VARCHAR(180)
@@ -731,7 +731,7 @@ namespace CAFEVDB
   COLLATE utf8_general_ci
   NULL
   AFTER `Name`";
-      mySQL::query($query);
+      mySQL::query($query, $handle);
 
       self::languages(true /* force update */, $handle);
 
@@ -760,7 +760,7 @@ namespace CAFEVDB
       // get all languages
       self::$languages = array();
       $query = "SHOW COLUMNS FROM `".self::CONTINENT_TABLE."`";
-      $result = mySQL::query($query);
+      $result = mySQL::query($query, $handle);
       while ($line = mySQL::fetch($result)) {
         if ($line['Field'] == 'Code') {
           continue;

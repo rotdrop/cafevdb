@@ -268,7 +268,7 @@ class Instruments
     // Now inject the new chain of instruments into Musiker table
     $sqlquery = "ALTER TABLE `Musiker` CHANGE `Instrumente`
  `Instrumente` SET('" . implode("','", $instruments) . "')";
-    if (!$pme->myquery($sqlquery)) {
+    if (!mySQL::query($sqlquery, $pme->dbh)) {
       Util::error(L::t("Could not execute the query\n%s\nSQL-Error: %s",
                        array($sqlquery, mySQL::error())), true);
     }
@@ -280,8 +280,8 @@ class Instruments
 
     $sqlquery = "ALTER TABLE `Besetzungen` CHANGE `Instrument`
  `Instrument` ENUM('" . implode("','", $instruments) . "')";
-    if (!$pme->myquery($sqlquery)) {
-      Util::error("Could not execute the query\n".$sqlquery."\nSQL-Error: ".mySQL::error(), true);
+    if (!mySQL::query($sqlquery, $pme->dbh)) {
+      Util::error("Could not execute the query\n".$sqlquery."\nSQL-Error: ".mySQL::error($pme->dbh), true);
     }
 
     // Now do the same with the Projekte-table
@@ -291,13 +291,13 @@ class Instruments
 
     $sqlquery = "ALTER TABLE `Projekte` CHANGE `Besetzung`
  `Besetzung` SET('" . implode("','", $instruments) . "') COMMENT 'Benötigte Instrumente'";
-    if (!$pme->myquery($sqlquery)) {
+    if (!mySQL::query($sqlquery, $pme->dbh)) {
       Util::error("Could not execute the query\n".$sqlquery."\nSQL-Error: ".mySQL::error(), true);
     }
 
     // Now insert also another column into BesetzungsZahlen
     $sqlquery = "ALTER TABLE `BesetzungsZahlen` ADD COLUMN `".$newvals['Instrument']."` TINYINT NOT NULL DEFAULT '0'";
-    if (!$pme->myquery($sqlquery)) {
+    if (!mySQL::query($sqlquery, $pme->dbh)) {
       Util::error("Could not execute the query\n".$sqlquery."\nSQL-Error: ".mySQL::error(), true);
     }
 
@@ -379,7 +379,7 @@ class Instruments
         $sqlQuery = "ALTER TABLE `".$table['name']."` CHANGE `".$table['field']."`
  `".$table['field']."` ".$table['type']."('".implode("','", $instruments)."')";
 
-        if (!$pme->myquery($sqlQuery)) {
+        if (!mySQL::query($sqlQuery, $pme->dbh)) {
           Util::error(L::t("SQL-Error ``%s''. Could not execute the query ``%s''",
                            array(mySQL::error(), $sqlQuery)), true);
           return false;
@@ -396,7 +396,7 @@ class Instruments
  WHERE `".$table['field']."` LIKE '%".$oldInstrument."%'";
         }
 
-        if (!$pme->myquery($sqlQuery)) {
+        if (!mySQL::query($sqlQuery, $pme->dbh)) {
           Util::error(L::t("SQL-Error ``%s''. Could not execute the query `` %s ''",
                            array(mySQL::error(), $sqlQuery)), true);
           return false;
@@ -409,7 +409,7 @@ class Instruments
         $sqlQuery = "ALTER TABLE `".$table['name']."` CHANGE `".$table['field']."`
  `".$table['field']."` ".$table['type']."('".implode("','", $instruments)."')";
 
-        if (!$pme->myquery($sqlQuery)) {
+        if (!mySQL::query($sqlQuery, $pme->dbh)) {
           Util::error(L::t("SQL-Error ``%s''. Could not execute the query ``%s''",
                            array(mySQL::error(), $sqlQuery)), true);
           return false;
@@ -419,7 +419,7 @@ class Instruments
       // Finally change the column name in "BesetzungsZahlen"
       $sqlQuery = "ALTER TABLE `BesetzungsZahlen` CHANGE `".$oldInstrument."` `".$instrument."`
   TINYINT NOT NULL DEFAULT '0'";
-      if (!$pme->myquery($sqlQuery)) {
+      if (!mySQL::query($sqlQuery, $pme->dbh)) {
         Util::error(L::t("SQL-Error ``%s''. Could not execute the query ``%s''",
                          array(mySQL::error(), $sqlQuery)), true);
         return false;
@@ -453,7 +453,7 @@ class Instruments
   public static function fetchProjectInstruments($projectId, $handle) {
 
     $query = 'SELECT `Besetzung` FROM `Projekte` WHERE `Id` = '.$projectId;
-    $result = mySQL::query($query);
+    $result = mySQL::query($query, $handle);
 
     // Ok there should be only one row
     if (!($line = mySQL::fetch($result))) {
@@ -471,7 +471,7 @@ class Instruments
   public static function fetchProjectMusiciansInstruments($projectId, $handle)
   {
     $query = 'SELECT DISTINCT `Instrument` FROM `Besetzungen` WHERE `ProjektId` = '.$projectId;
-    $result = mySQL::query($query);
+    $result = mySQL::query($query, $handle);
 
 
     $instruments = array();
@@ -660,7 +660,7 @@ class Instruments
       $query = "SELECT `Instrument` FROM `Instrumente` WHERE 1";
 
       // Fetch the result or die
-      $result = mySQL::query($query, $query);
+      $result = mySQL::query($query, $handle);
 
       $dropList = array();
       while ($line = mySQL::fetch($result)) {
@@ -669,10 +669,11 @@ class Instruments
           $dropList[$tblInst] = true;
         }
       }
+      mySQL::freeResult($result);
 
       foreach ($dropList as $key => $value) {
         $query = "DELETE FROM `Instrumente` WHERE `Instrument` = '$key'";
-        $result = mySQL::query($query);
+        $result = mySQL::query($query, $handle);
       }
     }
   }

@@ -270,7 +270,7 @@ namespace CAFEVDB
       if ((string)$addressBookId === (string)self::MAIN_ADDRESS_BOOK_ID) {
         Config::init();
         $handle = mySQL::connect(Config::$pmeopts);
-        $numRows = mySQL::queryNumRows("FROM `Musiker` WHERE 1");
+        $numRows = mySQL::queryNumRows("FROM `Musiker` WHERE 1", $handle);
         mySQL::close($handle);
 
         \OCP\Util::writeLog(Config::APP_NAME, __METHOD__.': '.$numRows, \OCP\Util::DEBUG);
@@ -289,7 +289,7 @@ namespace CAFEVDB
 
         Config::init();
         $handle = mySQL::connect(Config::$pmeopts);
-        $numRows = mySQL::queryNumRows("FROM `".$projectName."View` WHERE 1");
+        $numRows = mySQL::queryNumRows("FROM `".$projectName."View` WHERE 1", $handle);
         mySQL::close($handle);
 
         \OCP\Util::writeLog(Config::APP_NAME, __METHOD__.': '.$numRows, \OCP\Util::DEBUG);

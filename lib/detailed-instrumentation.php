@@ -1249,7 +1249,7 @@ class DetailedInstrumentation
       }
       \OCP\Util::writeLog(Config::APP_NAME,
                           __METHOD__.': '.
-                          'No data item for key "'.$value.'"',
+                          'No data item for multiple choice key "'.$value.'"',
                           \OCP\Util::ERROR);
       return 0.0;
     case 'parallel':
@@ -1262,10 +1262,12 @@ class DetailedInstrumentation
           $found = true;
         }
       }
-      \OCP\Util::writeLog(Config::APP_NAME,
-                          __METHOD__.': '.
-                          'No data item for keys "'.$value.'"',
-                          \OCP\Util::ERROR);
+      if (!$found) {
+        \OCP\Util::writeLog(Config::APP_NAME,
+                            __METHOD__.': '.
+                            'No data item for parallel choice key "'.$value.'"',
+                            \OCP\Util::ERROR);
+      }
       return $amount;
     }
     return 0.0;

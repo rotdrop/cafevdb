@@ -53,30 +53,19 @@ namespace CAFEVDB
      * handle.
      * @callgraph
      * @callergraph
-     *
-     * @bug The entire MySQL misery needs to be converted to the new PDO stuff.
      */
     public static function connect($opts, $die = true, $silent = false)
     {
       // Open a new connection to the given data-base.
-      $handle = @mysql_connect($opts['hn'], $opts['un'], $opts['pw'], true);
-      if ($handle === false) {
+      $handle = new \mysqli($opts['hn'], $opts['un'], $opts['pw'], $opts['db']);
+      if ($handle->connect_error) {
         Util::error(L::t("Could not connect to data-base server `%s': %s",
-                         array($opts['hn'], @mysql_error())), $die, $silent);
+                         array($opts['hn'], self::error($handle))), $die, $silent);
         return false;
       }
 
-      // Fucking shit
-      $query = "SET NAMES 'utf8'";
-      self::query($query, $handle, $die, $silent);
+      $handle->set_charset('utf8');
 
-      //specify database
-      $dbres = @mysql_select_db($opts['db'], $handle);
-
-      if (!$dbres) {
-        Util::error(L::t('Unable to select %s', array($opts['db'])), $die, $silent);
-        return false;
-      }
       return $handle;
     }
 
@@ -87,44 +76,35 @@ namespace CAFEVDB
      *
      * @return @c true, always.
      */
-    public static function close($handle = false)
+    public static function close($handle)
     {
-      if ($handle) {
-        @mysql_close($handle);
-      }
-      // give a damn on errors
+      $handle->close();
       return true;
     }
 
-    public static function error($handle = false)
+    public static function error($handle)
     {
-      if ($handle !== false) {
-        return @mysql_error($handle);
-
-      } else {
-        return @mysql_error();
-      }
+      return $handle->error;
     }
 
-    public static function query($query, $handle = false, $die = false, $silent = false)
+    public static function query($query, $handle, $die = false, $silent = false)
     {
-      if ($handle) {
-        if (($result = @mysql_query($query, $handle)) === false) {
-          $err = @mysql_error($handle);
-        }
-      } else {
-        if (($result = @mysql_query($query)) === false) {
-          $err = @mysql_error();
-        }
-      }
-      if ($result === false) {
-        Util::error('mysql_query() failed: "'.$err.'", query: "'.$query.'"', $die, $silent);
+      if (($result = $handle->query($query, MYSQLI_STORE_RESULT)) === false) {
+        $err = self::error($handle);
+        Util::error('mySQL query failed: "'.$err.'", query: "'.$query.'"', $die, $silent);
       }
       return $result;
     }
 
+    public static function freeResult($result)
+    {
+      if ($result instanceof mysqli_result) {
+        $result->free();
+      }
+    }
+
     /**Return a flat array with the column names for the given table.*/
-    public static function columns($table, $handle = false, $die = false, $silent = false)
+    public static function columns($table, $handle, $die = false, $silent = false)
     {
       // Build SQL Query
       $query = "SHOW COLUMNS FROM `".$table."`";
@@ -141,47 +121,41 @@ namespace CAFEVDB
     /**Query the number of rows in a table. */
     public static function queryNumRows($querypart, $handle = false, $die = true, $silent = false)
     {
+      $numRows = 0;
       $query = 'SELECT COUNT(*) '.$querypart;
       $result = self::query($query, $handle, $die, $silent);
-      $result = self::fetch($result, MYSQL_NUM);
-      if (isset($result[0])) {
-        return $result[0];
-      } else {
-        return 0;
-      }
+      $row = self::fetch($result, MYSQLI_NUM);
+      (isset($row[0]) && $numRows = $row[0]) || $numRows = 0;
+      return $numRows;
     }
 
-    public static function changedRows($handle = false, $die = true, $silent = false)
+    public static function changedRows($handle, $die = true, $silent = false)
     {
-      return mysql_affected_rows($handle);
+      return $handle->affected_rows;
     }
 
-    public static function newestIndex($handle = false, $die = true, $silent = false)
+    public static function newestIndex($handle, $die = true, $silent = false)
     {
-      return mysql_insert_id($handle);
+      return $handle->insert_id;
     }
 
     public static function numRows($res)
     {
-      return mysql_num_rows($res);
+      return $res->num_rows;
     }
 
-    public static function fetch(&$res, $type = MYSQL_ASSOC)
+    public static function fetch(&$res, $type = MYSQLI_ASSOC)
     {
-      $result = @mysql_fetch_array($res, $type);
-      if (Util::debugMode('query')) {
+      $result = @$res->fetch_array($type);
+      //if (Util::debugMode('query')) {
         //print_r($result);
-      }
+      //}
       return $result;
     }
 
-    public static function escape($string, $handle = false)
+    public static function escape($string, $handle)
     {
-      if ($handle) {
-        return @mysql_real_escape_string($string, $handle);
-      } else {
-        return @mysql_real_escape_string($string);
-      }
+      return @$handle->real_escape_string($string);
     }
 
     // Extract keys from table, splitting "multi-value" fields
@@ -199,7 +173,6 @@ namespace CAFEVDB
 
       // Fetch all values
       $result = self::query($query, $handle);
-      $result = self::query($query, $handle) or die("Couldn't execute query");
       $values = array();
       while ($line = self::fetch($result)) {
         $values = array_merge($values, explode($sep, $line[$column]));
@@ -228,6 +201,7 @@ namespace CAFEVDB
       // Fetch the result or die
       $result = self::query($query, $handle) or die("Couldn't execute query");
       $line = self::fetch($result);
+      self::freeResult($result);
 
       $set = $line['Type'];
 
@@ -691,7 +665,7 @@ namespace CAFEVDB
       $row = array();
       if ($queryRes !== false &&
           self::numRows($queryRes) == 1 &&
-          ($row = self::fetch($queryRes, MYSQL_NUM)) &&
+          ($row = self::fetch($queryRes, MYSQLI_NUM)) &&
           count($row) == 1) {
         $result = $row[0];
 
@@ -762,7 +736,7 @@ namespace CAFEVDB
       $row = array();
       if ($queryRes !== false &&
           self::numRows($queryRes) == 1 &&
-          ($row = self::fetch($queryRes, MYSQL_NUM)) &&
+          ($row = self::fetch($queryRes, MYSQLI_NUM)) &&
           count($row) == 1) {
         $result = $row[0];
 

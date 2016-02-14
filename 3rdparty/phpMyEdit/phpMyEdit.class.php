@@ -445,47 +445,53 @@ class phpMyEdit
 	function sql_connect() /* {{{ */
 	{
 		//echo htmlspecialchars($this->uh.$this->un.$this->pw);
-		$this->dbh = @ini_get('allow_persistent')
-			? @mysql_pconnect($this->hn, $this->un, $this->pw)
-			: @mysql_connect($this->hn, $this->un, $this->pw);
+		$persistent = @ini_get('mysqli.allow_persistent') ? 'p:' : '';
+		$this->dbh = new mysqli($persistent.$this->hn, $this->un, $this->pw, $this->db);
+		if ($this->dbh->connect_error) {
+			$this->dbh = null;
+		}
 		// Gnah.
-		$this->myquery("SET NAMES 'utf8'", $this->dbh);
+		$this->dbh->set_charset('utf8');
 	} /* }}} */
 
 
 	function sql_disconnect() /* {{{ */
 	{
 		if ($this->close_dbh) {
-			@mysql_close($this->dbh);
+			@$this->dbh->close();
 			$this->dbh = null;
 		}
 	} /* }}} */
 
 	function sql_fetch(&$res, $type = 'a') /* {{{ */
 	{
-		if($type == 'n') $type = MYSQL_NUM;
-		else $type = MYSQL_ASSOC;
-		return @mysql_fetch_array($res, $type);
+		$type = $type === 'n' ? MYSQLI_NUM : MYSQLI_ASSOC;
+		return @$res->fetch_array($type);
 	} /* }}} */
 
 	function sql_free_result(&$res) /* {{{ */
 	{
-		return @mysql_free_result($res);
+		if ($res instanceof mysqli_result) {
+			return @$res->free();
+		} else {
+			return false;
+		}
 	} /* }}} */
 
 	function sql_affected_rows(&$dbh) /* {{{ */
 	{
-		return @mysql_affected_rows($dbh);
+		return @$dbh->affected_rows;
 	} /* }}} */
 
-	function sql_field_len(&$res,$field) /* {{{ */
+	function sql_field_len(&$res, $field) /* {{{ */
 	{
-		return @mysql_field_len($res, $field);
+		$meta = @$res->fetch_field_direct($field);
+		return @$meta['length'];
 	} /* }}} */
 
 	function sql_insert_id() /* {{{ */
 	{
-		return mysql_insert_id($this->dbh);
+		return $this->dbh->insert_id;
 	} /* }}} */
 
 	function sql_limit($start, $more = null) /* {{{ */
@@ -514,14 +520,10 @@ class phpMyEdit
 			$line = intval($line);
 			echo '<h4>MySQL query at line ',$line,'</h4>',htmlspecialchars($qry),'<hr size="1" />',"\n";
 		}
-		if (isset($this->db)) {
-			$ret = @mysql_db_query($this->db, $qry, $this->dbh);
-		} else {
-			$ret = @mysql_query($qry, $this->dbh);
-		}
-		if (! $ret) {
-			echo '<h4>MySQL error ',mysql_errno($this->dbh),'</h4>';
-			echo htmlspecialchars(mysql_error($this->dbh)),'<hr size="1" />',"\n";
+		$ret = @$this->dbh->query($qry, MYSQLI_STORE_RESULT); //  USE_RESULT needs free().
+		if ($ret === false) {
+			echo '<h4>MySQL error ', $this->dbh->errno,'</h4>';
+			echo htmlspecialchars($this->dbh->error),'<hr size="1" />',"\n";
 			//error_log($qry);
 		}
 		return $ret;

@@ -521,7 +521,7 @@ class Instrumentation
         $failed[] = array('id' => $musicianId,
                           'notice' => L::t('Adding %s (id = %d) failed.',
                                            array($fullName, $musicianId)),
-                          'sqlerror' => mySQL::error());
+                          'sqlerror' => mySQL::error($handle));
         continue;
       }
       $instrumentationId = mySQL::newestIndex($handle);
@@ -529,7 +529,7 @@ class Instrumentation
         $failed[] = array('id' => $musicianId,
                           'notice' => L::t('Unable to get the new id for %s (id = %d)',
                                            array($fullName, $musicianId)),
-                          'sqlerror' => mySQL::error());
+                          'sqlerror' => mySQL::error($handle));
         continue;
       }
 
