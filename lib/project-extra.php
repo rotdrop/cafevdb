@@ -690,7 +690,7 @@ namespace CAFEVDB
       if ($result === false) {
         \OCP\Util::writeLog(Config::APP_NAME,
                             __METHOD__.
-                            ': mySQL error: '.mySQL::error().' query '.$query,
+                            ': mySQL error: '.mySQL::error($handle).' query '.$query,
                             \OCP\Util::ERROR);
       }
 
@@ -699,7 +699,7 @@ namespace CAFEVDB
       if ($result === false) {
         \OCP\Util::writeLog(Config::APP_NAME,
                             __METHOD__.
-                            ': mySQL error: '.mySQL::error().' query '.$query,
+                            ': mySQL error: '.mySQL::error($handle).' query '.$query,
                             \OCP\Util::ERROR);
       }
 
@@ -1687,7 +1687,7 @@ __EOT__;
           if ($result === false) {
             \OCP\Util::writeLog(Config::APP_NAME,
                                 __METHOD__.
-                                ': mySQL error: '.mySQL::error(),
+                                ': mySQL error: '.mySQL::error($handle),
                                 \OCP\Util::ERROR);
           }
         }
@@ -1734,7 +1734,7 @@ __EOT__;
           if ($result === false) {
             \OCP\Util::writeLog(Config::APP_NAME,
                                 __METHOD__.
-                                ': mySQL error: '.mySQL::error().' query '.$query,
+                                ': mySQL error: '.mySQL::error($handle).' query '.$query,
                                 \OCP\Util::ERROR);
           }
         }
