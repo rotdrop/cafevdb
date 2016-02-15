@@ -265,6 +265,15 @@ namespace CAFEVDB
       return $result;
     }
 
+    static public function explode($delim, $string, $omitEmpty = true)
+    {
+      if ($omitEmpty === false) {
+        return explode($delim, $string);
+      } else {
+        return preg_split('/'.preg_quote($delim, '/').'/', $string, -1, PREG_SPLIT_NO_EMPTY);
+      }
+    }
+
     /**Split and sanitize a quasi-CSV string.
      *
      * @param[in] string $values The string to split
