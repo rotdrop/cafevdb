@@ -178,14 +178,6 @@ WHERE  TABLE_SCHEMA = '".Config::$dbopts['db']."'";
       mySQL::close($handle);
     }
 
-    /**Move the old set-based instrument column to a separate
-     * pivot-table called "MusicianInstruments" in order to have a
-     * cleaner data-base structure.
-     */
-    public static function migrateMusicianInstruments()
-    {}
-
-
     /**TBD*/
     public static function checkInstrumentsTable()
     {
