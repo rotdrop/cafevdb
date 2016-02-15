@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -39,18 +39,18 @@ namespace CAFEVDB {
   \OCP\JSON::checkLoggedIn();
   \OCP\JSON::checkAppEnabled('cafevdb');
   \OCP\JSON::callCheck();
-  
+
   $handle = false;
+
+  Error::exceptions(true);
 
   try {
 
     ob_start();
-  
-    Error::exceptions(true);
-  
+
     Config::init();
     $handle = mySQL::connect(Config::$pmeopts);
-  
+
     $_GET = array();
 
     $debugText = '';
@@ -60,7 +60,7 @@ namespace CAFEVDB {
     $recordId = Util::cgiValue('recordId', -1); // Index into Besetzungen
     $projectId = Util::cgiValue('projectId', -1);
     $musicianInstruments = Util::cgiValue('instrumentValues', false);
-  
+
     if ($musicianInstruments === '') {
       $musicianInstruments = array(); // this is legal.
     }
@@ -104,21 +104,21 @@ namespace CAFEVDB {
 
     $musicianId = $musRow['Id'];
     $oldMusicianInstruments = explode(',', $musRow['Instrumente']);
-    $projectInstrument = $musRow['ProjektInstrument'];
-    $haveOld = array_search($projectInstrument, $oldMusicianInstruments) !== false;
-    $haveNew = array_search($projectInstrument, $musicianInstruments) !== false;  
+    $projectInstruments = explode(',', $musRow['ProjectInstruments']);
+    $haveOld = count(array_intersect($projectInstruments, $oldMusicianInstruments)) > 0;
+    $haveNew = count(array_intersect($projectInstruments, $musicianInstruments)) > 0;
 
-    if ($projectInstrument) {
+    if (!empty($projectInstruments)) {
 
       if ($haveOld && !$haveNew) {
         /* We disallow removing the current project instrument. Does not
          * seem to make much sense ...
          */
-      
+
         mySQL::close($handle);
         $debugText .= ob_get_contents();
         @ob_end_clean();
-      
+
         \OCP\JSON::error(
           array(
             'data' => array('error' => L::t('invalid arguments'),
@@ -127,21 +127,22 @@ namespace CAFEVDB {
                             'debug' => $debugText)));
         return false;
       }
-  
-    
+
+
       if (!$haveNew) {
         // Auto-add?
         $notice = L::t("Please consider to add the registered project instrument `%s' to %s's ".
                        "list of instruments (or possibly change the project instrument). Please note ".
                        "that ",
-                       array($projectInstrument, $musRow['Vorname']));
-      }  
+                       array(implode(',',$projectInstruments), $musRow['Vorname']));
+      }
     }
-  
-    // ok, we have a valid musician-id, a valid intrument list, let it go    
-    $query = "UPDATE `Musiker` SET `Instrumente`='".implode(',',$musicianInstruments)."' WHERE `Id` = $musicianId";
 
-    //throw new \Exception($query);  
+    // ok, we have a valid musician-id, a valid intrument list, let it go
+    $query = "UPDATE `Musiker` SET `Instrumente`='".implode(',',$musicianInstruments)."'
+ WHERE `Id` = $musicianId";
+
+    //throw new \Exception($query);
 
     if (mySQL::query($query, $handle) === false) {
       mySQL::close($handle);
@@ -163,7 +164,7 @@ namespace CAFEVDB {
       \OCP\JSON::success(
         array(
           'data' => array(
-            'instruments' => $musicianInstruments,              
+            'instruments' => $musicianInstruments,
             'message' => ($notice == ''
                           ? '' // don't annoy the user with success messages.
                           : L::t("Changing the instrument list for the musician `%s' was probably successful.",
@@ -196,7 +197,7 @@ namespace CAFEVDB {
     return false;
 
   }
-  
+
 } // namespace
 
 ?>

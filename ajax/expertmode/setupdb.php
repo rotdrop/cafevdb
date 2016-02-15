@@ -33,6 +33,10 @@ namespace CAFEVDB
 
   $result3 = ProjectExtra::moveExtraFieldData();
 
+  $result4 = Instruments::migrateMusicianInstruments();
+
+  $result5 = Instruments::migrateProjectInstruments();
+
   // ideally, we would alse update the table structure ...
 
   \OCP\JSON::success(array(

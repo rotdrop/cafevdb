@@ -35,6 +35,7 @@ class Instrumentation
   public $template;
   protected $operation;
   protected $recordsPerPage;
+  protected $instrumentInfo;
   protected $instruments;
   protected $instrumentFamilies;
   protected $memberStatus;
@@ -241,9 +242,10 @@ class Instrumentation
     $handle = mySQL::connect($this->opts);
 
     // List of instruments
-    $this->instruments = Instruments::fetch($handle);
-    $this->groupedInstruments = Instruments::fetchGrouped($handle);
-    $this->instrumentFamilies = mySQL::multiKeys('Instrumente', 'Familie', $handle);
+    $this->instrumentInfo = Instruments::fetchInfo($handle);
+    $this->instruments = $this->instrumentInfo['byId'];
+    $this->groupedInstruments = $this->instrumentInfo['nameGroups'];
+    $this->instrumentFamilies = $this->instrumentInfo['families'];
     $this->memberStatus = mySQL::multiKeys('Musiker', 'MemberStatus', $handle);
     $this->memberStatusNames = array(
       'regular' => strval(L::t('regular musician')),
@@ -296,7 +298,7 @@ class Instrumentation
    * the musician in order to be inefficient ;) and in particular the
    * project-instrument from the Besetzungen table.
    */
-  public static function fetchMusicianData($recordId, $projectId, $handle = false)
+  protected static function fetchMusician($where, $projectId, $handle = false)
   {
     $ownConnection = $handle === false;
 
@@ -305,60 +307,26 @@ class Instrumentation
       $handle = mySQL::connect(Config::$pmeopts);
     }
 
-    $query = " SELECT `Musiker`.*,
- `Besetzungen`.`ProjektId`,`Besetzungen`.`Instrument` as 'ProjektInstrument',
- `Projekte`.`Name` AS `Projekt`,`Projekte`.`Jahr`,`Projekte`.`Besetzung`
- FROM `Musiker`
-   LEFT JOIN `Besetzungen`
-     ON `Musiker`.`Id` = `Besetzungen`.`MusikerId`
-   LEFT JOIN `Projekte`
-     ON `Besetzungen`.`ProjektId` = `Projekte`.`Id`
-     WHERE `Besetzungen`.`Id` = $recordId";
-    if ($projectId >= 0) {
-      $query .= " AND `Besetzungen`.`ProjektId` = $projectId";
-    }
+    $where .= " AND b.`ProjektId` = $projectId";
 
-    //throw new \Exception($query);
+    $query = " SELECT
+ m.*, b.`ProjektId` AS ProjectId, b.`Id` AS InstrumentationId,
+ GROUP_CONCAT(i.`Instrument` ORDER BY i.`Id`) AS ProjectInstruments,
+ p.`Name` AS `ProjectName`, p.`Jahr` AS ProjectYear, p.`Besetzung` AS Instrumentation
+ FROM `Musiker` m
+ LEFT JOIN `Besetzungen` b
+   ON m.`Id` = b.`MusikerId`
+ LEFT JOIN `Projekte` p
+   ON b.`ProjektId` = p.`Id`
+ LEFT JOIN `ProjectInstruments` pi
+   ON pi.`InstrumentationId` = b.`Id`
+ LEFT JOIN `Instrumente` i
+   ON i.`Id` = pi.`InstrumentId`
+ ";
+    $query .= " WHERE $where";
+    $query .= " GROUP BY b.`Id`";
 
-    $result = mySQL::query($query, $handle);
-    if ($result !== false && mySQL::numRows($result) == 1) {
-      $row = mySQL::fetch($result);
-    } else {
-      $row = false;
-    }
-
-    if ($ownConnection) {
-      mySQL::close($handle);
-    }
-
-    return $row;
-  }
-
-  /**Fetch all entries for the given musician-id (may be more than one or none)
-   */
-  public static function fetchByMusicianId($musicianId, $projectId, $handle = false)
-  {
-    $ownConnection = $handle === false;
-
-    if ($ownConnection) {
-      Config::init();
-      $handle = mySQL::connect(Config::$pmeopts);
-    }
-
-    $query = " SELECT `Musiker`.*,
- `Besetzungen`.`ProjektId`,`Besetzungen`.`Instrument` as 'ProjektInstrument',
- `Projekte`.`Name` AS `Projekt`,`Projekte`.`Jahr`,`Projekte`.`Besetzung`
- FROM `Musiker`
-   LEFT JOIN `Besetzungen`
-     ON `Musiker`.`Id` = `Besetzungen`.`MusikerId`
-   LEFT JOIN `Projekte`
-     ON `Besetzungen`.`ProjektId` = `Projekte`.`Id`
-     WHERE `Musiker`.`Id` = $musicianId";
-    if ($projectId >= 0) {
-      $query .= " AND `Besetzungen`.`ProjektId` = $projectId";
-    }
-
-    //throw new \Exception($query);
+    // throw new \Exception($query);
 
     $result = mySQL::query($query, $handle);
     if ($result !== false) {
@@ -375,6 +343,30 @@ class Instrumentation
     }
 
     return $data;
+  }
+
+  public static function fetchMusicianData($recordId, $projectId, $handle = false)
+  {
+    $where = "b.`Id` = $recordId";
+
+    $data = self::fetchMusician($where, $projectId, $handle);
+
+    if (!empty($data) && count($data) === 1) {
+      return $data[0];
+    }
+
+    return false;
+  }
+
+  /**Fetch all entries for the given musician-id (may be more than one or none)
+   */
+  public static function fetchByMusicianId($musicianId, $projectId, $handle = false)
+  {
+    $where = "m.`Id` = $musicianId";
+
+    $data = self::fetchMusician($where, $projectId, $handle);
+
+    return false;
   }
 
   /**Add musicians to a given project. The functions tries to make
@@ -454,7 +446,7 @@ class Instrumentation
           'id' => $ident,
           'notice' => L::t('Unable to fetch musician\'s personal information for id %d',
                            array($ident)),
-          'sqlerror' => mySQL::error());
+          'sqlerror' => mySQL::error($handle));
         continue;
       }
 
@@ -468,7 +460,7 @@ class Instrumentation
           'id' => $musicianId,
           'notice' => L::t('Unable to fetch musician\'s project information for id %d.',
                            array($musicianId)),
-          'sqlerror' => mySQL::error());
+          'sqlerror' => mySQL::error($handle));
         continue;
       }
 
@@ -476,7 +468,8 @@ class Instrumentation
       $musicianProjectInstruments = array();
       if (count($musProjectData) > 0) {
         foreach($musProjectData as $row) {
-          $musicianProjectInstruments[] = $row['ProjektInstrument'];
+          $musicianProjectInstruments = array_merge($musicianProjectInstruments,
+                                                    explode(',', $row['ProjectInstruments']));
         }
         $notice .= L::t("The musician %s is already registered for the project with the ".
                         "instruments %s.",
@@ -486,7 +479,7 @@ class Instrumentation
       $both = array_values(array_intersect($projectInstruments, $musInstruments));
 
       if (!empty($both)) {
-        $leftOver = array_values( array_diff($both, $musicianProjectInstruments));
+        $leftOver = array_values(array_diff($both, $musicianProjectInstruments));
         if (!empty($leftOver)) {
           $musInstrument = $leftOver[0];
         } else {

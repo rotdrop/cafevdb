@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -34,13 +34,13 @@ namespace CAFEVDB {
   \OCP\JSON::checkLoggedIn();
   \OCP\JSON::checkAppEnabled('cafevdb');
   \OCP\JSON::callCheck();
-  
+
+  Error::exceptions(true);
+
   try {
 
     ob_start();
-  
-    Error::exceptions(true);
-  
+
     $_GET = array();
 
     $debugText = '';
@@ -49,8 +49,8 @@ namespace CAFEVDB {
 
     $recordId = Util::cgiValue('recordId', -1); // Index into Besetzungen
     $projectId = Util::cgiValue('projectId', -1);
-    $projectInstrument = Util::cgiValue('instrumentValues', false);
-  
+    $projectInstruments = Util::cgiValue('instrumentValues', false);
+
     if (Util::debugMode('request')) {
       $debugText .= '$_POST[] = '.print_r($_POST, true);
     }
@@ -70,17 +70,19 @@ namespace CAFEVDB {
 
     $musicianId = $musRow['Id'];
     $musicianInstruments = explode(',', $musRow['Instrumente']);
-    $oldProjectInstrument = $musRow['ProjektInstrument'];
-    $haveOld = array_search($oldProjectInstrument, $musicianInstruments) !== false;
-    $haveNew = array_search($projectInstrument, $musicianInstruments) !== false;  
+    $oldProjectInstruments = explode(',', $musRow['ProjectInstruments']);
+
+
+    $haveOld = count(array_intersect($oldProjectInstruments, $musicianInstruments)) > 0;
+    $haveNew = count(array_intersect($projectInstruments, $musicianInstruments)) > 0;
 
     if (!$haveNew) {
       // Auto-add?
       $notice = L::t("Please consider to add the registered project instrument `%s' to %s's ".
                      "list of instruments (or possibly change the project instrument).",
-                     array($projectInstrument, $musRow['Vorname']));
+                     array(implode(',',$projectInstruments), $musRow['Vorname']));
     }
-  
+
     $debugText .= ob_get_contents();
     @ob_end_clean();
 
@@ -91,12 +93,12 @@ namespace CAFEVDB {
                             array($musRow['Vorname'].' '.$musRow['Name'])),
           'notice' => $notice,
           'debug' => $debugText)));
-  
+
     return true;
 
   } catch (\Exception $e) {
 
-    if ($handle !== false) {
+    if (!empty($handle)) {
       mySQL::close($handle);
     }
     $debugText .= ob_get_contents();
@@ -116,7 +118,7 @@ namespace CAFEVDB {
     return false;
 
   }
-  
+
 } // namespace
 
 ?>

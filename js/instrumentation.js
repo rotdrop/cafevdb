@@ -138,43 +138,29 @@ var CAFEVDB = CAFEVDB || {};
                instrumentValues: selectMusicianInstrument.val()
              },
              function (data) {
+               if (!CAFEVDB.ajaxErrorHandler(data, [ 'message' ], function() {
+                      if (typeof errorCB == 'function' &&
+                          typeof data.data != 'undefined' &&
+                          typeof data.data.instruments != 'undefined') {
+                        errorCB(data.data.instruments);
+                      }
+                    })) {
+                 return false;
+               }
                var rqData;
-               var timeout = 3000;
-               if (data.status == 'success') {
-                 // Oops. Perhaps only submit on success.
-                 finalizeCB();
+               var timeout = 5000;
 
-                 rqData = data.data;
-                 if (rqData.notice != '') {
-                   timeout = 10000;
-                 }
-                 var info = rqData.message + ' ' + rqData.notice;
-                 info = info.trim();
-                 if (info != '') {
-                   OC.Notification.show(info);
-                   setTimeout(function() {
-                     OC.Notification.hide();
-                   }, timeout);
-                 }
-               } else if (data.status == 'error') {
-                 rqData = data.data;
-                 timeout = 6000;
-                 if (rqData.error != 'exception') {
-                   if (rqData.message == '') {
-                     rqData.message = t('cafevdb', 'Unkown Error');
-                   }
-                   OC.Notification.show(rqData.message);
-                 } else {
-                   OC.dialogs.alert(rqData.exception+rqData.trace,
-                                    t('cafevdb', 'Caught a PHP Exception'),
-                                    null, true);
-                 }
-                 if (rqData.debug != '') {
-                   OC.dialogs.alert(rqData.debug, t('cafevdb', 'Debug Information'), undefined, true);
-                 }
-                 if (typeof errorCB == 'function' && typeof rqData.instruments != 'undefined') {
-                   errorCB(rqData.instruments);
-                 }
+               // Oops. Perhaps only submit on success.
+               finalizeCB();
+
+               rqData = data.data;
+               if (rqData.notice != '') {
+                 timeout = 10000;
+               }
+               var info = rqData.message + ' ' + rqData.notice;
+               info = info.trim();
+               if (info != '') {
+                 OC.Notification.show(info);
                  setTimeout(function() {
                    OC.Notification.hide();
                  }, timeout);
@@ -353,9 +339,7 @@ var CAFEVDB = CAFEVDB || {};
     // Enable the controls, in order not to bloat SQL queries these PME
     // fields are flagged virtual which disables all controls initially.
     var selectMusicianInstruments = container.find('select.musician-instruments');
-    var selectProjectInstrument = container.find('select.pme-input-0.project-instrument'+
-                                                 ','+
-                                                 'select.pme-input-1.project-instrument');
+    var selectProjectInstrument = container.find('select.pme-input.project-instrument');
 
     $('#add-instruments-button').hide();
     $('#add-instruments-block div.chosen-container').show();

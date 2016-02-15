@@ -270,7 +270,7 @@ class Instruments
  `Instrumente` SET('" . implode("','", $instruments) . "')";
     if (!mySQL::query($sqlquery, $pme->dbh)) {
       Util::error(L::t("Could not execute the query\n%s\nSQL-Error: %s",
-                       array($sqlquery, mySQL::error())), true);
+                       array($sqlquery, mySQL::error($handle))), true);
     }
 
     // Now do the same with the Besetzungen-table
@@ -292,13 +292,13 @@ class Instruments
     $sqlquery = "ALTER TABLE `Projekte` CHANGE `Besetzung`
  `Besetzung` SET('" . implode("','", $instruments) . "') COMMENT 'Benötigte Instrumente'";
     if (!mySQL::query($sqlquery, $pme->dbh)) {
-      Util::error("Could not execute the query\n".$sqlquery."\nSQL-Error: ".mySQL::error(), true);
+      Util::error("Could not execute the query\n".$sqlquery."\nSQL-Error: ".mySQL::error($handel), true);
     }
 
     // Now insert also another column into BesetzungsZahlen
     $sqlquery = "ALTER TABLE `BesetzungsZahlen` ADD COLUMN `".$newvals['Instrument']."` TINYINT NOT NULL DEFAULT '0'";
     if (!mySQL::query($sqlquery, $pme->dbh)) {
-      Util::error("Could not execute the query\n".$sqlquery."\nSQL-Error: ".mySQL::error(), true);
+      Util::error("Could not execute the query\n".$sqlquery."\nSQL-Error: ".mySQL::error($handle), true);
     }
 
     return true;
@@ -381,7 +381,7 @@ class Instruments
 
         if (!mySQL::query($sqlQuery, $pme->dbh)) {
           Util::error(L::t("SQL-Error ``%s''. Could not execute the query ``%s''",
-                           array(mySQL::error(), $sqlQuery)), true);
+                           array(mySQL::error($handle), $sqlQuery)), true);
           return false;
         }
 
@@ -398,7 +398,7 @@ class Instruments
 
         if (!mySQL::query($sqlQuery, $pme->dbh)) {
           Util::error(L::t("SQL-Error ``%s''. Could not execute the query `` %s ''",
-                           array(mySQL::error(), $sqlQuery)), true);
+                           array(mySQL::error($handle), $sqlQuery)), true);
           return false;
         }
 
@@ -411,7 +411,7 @@ class Instruments
 
         if (!mySQL::query($sqlQuery, $pme->dbh)) {
           Util::error(L::t("SQL-Error ``%s''. Could not execute the query ``%s''",
-                           array(mySQL::error(), $sqlQuery)), true);
+                           array(mySQL::error($handle), $sqlQuery)), true);
           return false;
         }
       }
@@ -421,7 +421,7 @@ class Instruments
   TINYINT NOT NULL DEFAULT '0'";
       if (!mySQL::query($sqlQuery, $pme->dbh)) {
         Util::error(L::t("SQL-Error ``%s''. Could not execute the query ``%s''",
-                         array(mySQL::error(), $sqlQuery)), true);
+                         array(mySQL::error($handle), $sqlQuery)), true);
         return false;
       }
 
@@ -470,9 +470,12 @@ class Instruments
   // to add all instruments to the projects instrumentation list.
   public static function fetchProjectMusiciansInstruments($projectId, $handle)
   {
-    $query = 'SELECT DISTINCT `Instrument` FROM `Besetzungen` WHERE `ProjektId` = '.$projectId;
+    $query = "SELECT DISTINCT i.`Instrument`
+ FROM `ProjectInstruments` pi
+ LEFT JOIN `Instrumente` i
+ ON i.`Id` = pi.`InstrumentId`
+ WHERE pi.`ProjectId` = $projectId";
     $result = mySQL::query($query, $handle);
-
 
     $instruments = array();
     while ($line = mySQL::fetch($result)) {
@@ -524,17 +527,18 @@ class Instruments
 
     $Instruments = mySQL::multiKeys('Musiker', 'Instrumente', $handle);
 
-    $query = 'SELECT `Instrument` FROM `Instrumente` WHERE  1 ORDER BY `Sortierung` ASC';
+    $query = 'SELECT `Id`,`Instrument` FROM `Instrumente` WHERE  1 ORDER BY `Sortierung`,`Instrument` ASC';
     $result = mySQL::query($query, $handle);
 
     $final = array();
     while ($line = mySQL::fetch($result)) {
       //CAFEVerror("huh".$line['Instrument'],false);
+      $tblId   = $line['Id'];
       $tblInst = $line['Instrument'];
       if (array_search($tblInst, $Instruments) === false) {
         Util::error('"'.$tblInst.'" not found in '.implode(',',$Instruments), true);
       }
-      $final[] = $tblInst;
+      $final[$tblId] = $tblInst;
     }
 
     if ($ownConnection) {
@@ -544,7 +548,64 @@ class Instruments
     return $final;
   }
 
-  // Fetch all instruments, group by instrument family.
+  /**Prepare for grouping select options by instrument family.
+   *
+   * @return array('families' => array(FAMILIES),
+   *               'byId' => array(ID => NAME),
+   *               'byName' => array(NAME => NAME),
+   *               'nameGroups' => array(NAME => FAMILY),
+   *               'idGroups' => array(IDE => FAMILY))
+   */
+  public static function fetchInfo($handle)
+  {
+    $ownConnection = $handle === false;
+
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
+    $Instruments = mySQL::multiKeys('Musiker', 'Instrumente', $handle);
+
+    $query = 'SELECT * FROM `Instrumente` WHERE  1 ORDER BY `Sortierung` ASC';
+    $result = mySQL::query($query, $handle);
+
+    $byId = $byName = $nameGroups = $idGroups = $families = array();
+    while ($line = mySQL::fetch($result)) {
+      //CAFEVerror("huh".$line['Instrument'],false);
+      $id         = $line['Id'];
+      $instrument = $line['Instrument'];
+      $family     = $line['Familie'];
+      if (array_search($instrument, $Instruments) === false) {
+        Util::error('"'.$instrument.'" not found in '.implode(',',$Instruments), true);
+      }
+      $byName[$instrument] = $byId[$id] = $instrument;
+      $nameGroups[$instrument] = $idGroups[$id] = L::t($family);
+      $families[$family] = true;
+    }
+    if (false) {
+      // Dummy, in order to generate translation entries
+      L::t("Streich,Saiten");
+      L::t("Streich,Zupf");
+      L::t("Blas,Holz");
+      L::t("Blas,Blech");
+      L::t("Schlag");
+      L::t("Sonstiges");
+    }
+
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return array('families' => array_keys($families),
+                 'byId' => $byId,
+                 'byName' => $byName,
+                 'idGroups' => $idGroups,
+                 'nameGroups' => $nameGroups);
+  }
+
+  /**Prepare for grouping select options by instrument family.
+   */
   public static function fetchGrouped($handle)
   {
     $ownConnection = $handle === false;
@@ -562,6 +623,7 @@ class Instruments
     $resultTable = array();
     while ($line = mySQL::fetch($result)) {
       //CAFEVerror("huh".$line['Instrument'],false);
+      $id         = $line['Id'];
       $instrument = $line['Instrument'];
       $family     = $line['Familie'];
       if (array_search($instrument, $Instruments) === false) {
@@ -676,7 +738,64 @@ class Instruments
         $result = mySQL::query($query, $handle);
       }
     }
+
   }
+
+    /**Move the old set-based instrument column to a separate
+     * pivot-table called "MusicianInstruments" in order to have a
+     * cleaner data-base structure.
+     */
+    public static function migrateMusicianInstruments()
+    {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+
+      $query = "INSERT IGNORE INTO MusicianInstruments (MusicianId, InstrumentId)
+SELECT mi.Id AS MusicianId, i.Id AS InstrumentId
+FROM (SELECT sm.Id, Name, Vorname, splitString(Instrumente, ',', N) AS MusicianInstrument
+FROM Musiker sm
+JOIN numbers
+ON tokenCount(sm.Instrumente, ',') >= numbers.N) mi
+LEFT JOIN Instrumente i
+ON i.Instrument = mi.MusicianInstrument
+WHERE i.Id IS NOT NULL AND mi.Id != 0";
+
+      $result = mySQL::query($query, $handle);
+
+      mySQL::close($handle);
+
+      return $result;
+    }
+
+    /**Move the old set-based instrument column to a separate
+     * pivot-table called "MusicianInstruments" in order to have a
+     * cleaner data-base structure.
+     */
+    public static function migrateProjectInstruments()
+    {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+
+      $query = "INSERT IGNORE INTO ProjectInstruments
+(ProjectId, MusicianId, InstrumentationId, InstrumentId)
+SELECT b.ProjektId AS ProjectId,
+ b.MusikerId AS MusicianId,
+ b.Id AS InstrumentationId,
+ i.Id AS InstrumentId
+FROM Besetzungen b
+LEFT JOIN Instrumente i
+ON b.Instrument = i.Instrument
+WHERE i.Id IS NOT NULL AND b.ProjektId != 0 AND b.MusikerId != 0";
+
+      $result = mySQL::query($query, $handle);
+
+      mySQL::close($handle);
+
+      return $result;
+    }
+
+
+
 
 }; // class
 

@@ -2138,6 +2138,33 @@ __EOT__;
                               'column' => true,
                               'join' => array('type' => 'INNER')),
 
+        'ProjectInstrumentKey' => array(
+          'table' => 'ProjectInstruments',
+          'tablename' => 'pi',
+          'key' => true,
+          'column' => 'Id',
+          'join' => array(
+            'type' =>'LEFT',
+            'condition' => 'pi.`InstrumentationId` = b.`Id`'
+            )
+          ),
+
+        'ProjectInstrumentId' => array(
+          'table' => 'pi',
+          'column' => 'InstrumentId',
+          'join' => array('type' =>'LEFT'),
+          ),
+
+        'ProjectInstrument' => array(
+          'table' => 'Instrumente',
+          'tablename' => 'i',
+          'column' => 'Instrument',
+          'join' => array(
+            'type' =>'LEFT',
+            'condition' => 'pi.`InstrumentId` = i.`Id`'
+            )
+          ),
+
         'Reihung' => array('table' => 'b',
                            'column' => true,
                            'join' => array('type' => 'INNER')),
@@ -2150,10 +2177,10 @@ __EOT__;
           'table' => 'Instrumente',
           'tablename' => 'i',
           'column' => true,
-          'join' => array(
-            'type' => 'LEFT',
-            'condition' => ('b.`Instrument` = i.`Instrument`')
-            )
+          /* 'join' => array( */
+          /*   'type' => 'LEFT', */
+          /*   'condition' => ('b.`Instrument` = i.`Instrument`') */
+          /*   ) */
           ),
         'Sortierung' => array('table' => 'i',
                               'column' => true,
@@ -2349,7 +2376,7 @@ __EOT__;
       $structure = self::viewStructure($projectId, $extra);
       $sqlSelect = mySQL::generateJoinSelect($structure);
 
-      $groupBy = 'GROUP BY b.`Id`
+      $groupBy = 'GROUP BY b.`Id`, pi.`InstrumentId`
 ';
 
       // Force a sensible default sorting:
@@ -2368,13 +2395,12 @@ __EOT__;
         .$groupBy
         .$sqlSort;
 
-      //\OCP\Util::writeLog(Config::APP_NAME, __METHOD__.": ".$sqlQuery, \OCP\Util::DEBUG);
-
+      \OCP\Util::writeLog(Config::APP_NAME, __METHOD__.": ".$sqlQuery, \OCP\Util::DEBUG);
       $result = mySQL::query($sqlQuery, $handle);
       if ($result === false) {
         \OCP\Util::writeLog(Config::APP_NAME,
                             __METHOD__.
-                            ': mySQL error: '.mySQL::error().' query '.$sqlQuery,
+                            ': mySQL error: '.mySQL::error($handle).' query '.$sqlQuery,
                             \OCP\Util::ERROR);
       }
 

@@ -106,7 +106,7 @@ class DetailedInstrumentation
     $opts['sort_field'] = array('Sortierung','Reihung','-Stimmführer','Name','Vorname');
 
     // GROUP BY clause, if needed.
-    $opts['groupby_fields'] = 'Id';
+    $opts['groupby_fields'] = array('Id', 'ProjectInstrumentId');
 
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
@@ -253,25 +253,34 @@ class DetailedInstrumentation
       'tab'      => array('id' => 'tab-all')
       );
 
-    $opts['fdd']['Instrument'] = array(
-      'name'     => L::t('Instrument'),
-      'select'   => 'D',
-      'maxlen'   => 36,
-      'css'      => array('postfix' => ' project-instrument'),
-      'sort'     => true,
-      'values' => array(
-        'table'   => 'Instrumente',
-        'column'  => 'Instrument',
-        'orderby' => '$table.Sortierung',
+    $opts['fdd']['ProjectInstrumentKey'] = array(
+      'name'   => L::t('Project Instrument'),
+      'sql'    => 'GROUP_CONCAT(ProjectInstrumentKey ORDER BY ProjectInstrumentId ASC)',
+      'select' => 'N',
+      'input'  => 'HR'
+      );
+
+    $opts['fdd']['ProjectInstrumentId'] = array(
+      'name'        => L::t('Project Instrument'),
+      'select'      => 'M',
+      'sql'         => 'GROUP_CONCAT(ProjectInstrumentId ORDER BY ProjectInstrumentId ASC)',
+      'maxlen'      => 36,
+      'css'         => array('postfix' => ' project-instrument'),
+      'sort'        => true,
+      'values|VDPC' => array(
+        'table'       => 'Instrumente',
+        'column'      => 'Id',
+        'orderby'     => '$table.Sortierung',
         'description' => array('columns' => array('Instrument')),
         /* This rather fancy fillter masks out all instruments
          * currently not registerd with the given musician, but allows
          * for the currently active instrument.
          */
         'filters' => ("FIND_IN_SET(`Instrument`,
-  CONCAT_WS(',',(SELECT `Instrument` FROM `\$main_table` WHERE \$record_id = `\$main_table`.`Id`),
-                (SELECT `Instrumente` FROM `\$main_table`
+  CONCAT_WS(',',(SELECT GROUP_CONCAT(`ProjectInstrument`) FROM `\$main_table` WHERE \$record_id = `\$main_table`.`Id` GROUP BY \$main_table.Id),
+                (SELECT DISTINCT `Instrumente` FROM `\$main_table`
                           WHERE \$record_id = `\$main_table`.`Id`)))"),
+        'join' => '$join_table.Id = $main_table.ProjectInstrumentId'
         ),
       'values|LF' => array(
         'table'   => 'Instrumente',
@@ -279,10 +288,18 @@ class DetailedInstrumentation
         'orderby' => '$table.Sortierung',
         'description' => array('columns' => array('Instrument')),
         'filters' => ("`Instrument` IN ".
-                      "(SELECT `Instrument` FROM `\$main_table` WHERE 1)"),
+                      "(SELECT `ProjectInstrument` FROM `\$main_table` WHERE 1)"),
+        'join' => '$join_table.Id = $main_table.ProjectInstrumentId'
         ),
-      'valueGroups' => $this->groupedInstruments,
+      'values2|VD' => $this->instruments,
+      'valueGroups' => $this->instrumentInfo['idGroups'],
       'tab' => array('id' => array('instrumentation', 'project'))
+      );
+
+    $opts['fdd']['ProjectInstrument'] = array(
+      'name'     => L::t('Project Instrument'),
+      'sql'      => 'GROUP_CONCAT(ProjectInstrument ORDER BY ProjectInstrumentId ASC)',
+      'input'    => 'HR',
       );
 
     $opts['fdd']['Reihung'] = array(
@@ -486,9 +503,9 @@ class DetailedInstrumentation
         'name' => L::t('SEPA Debit Mandate'),
         'input' => 'VR',
         'tab' => array('id' => $financeTab),
-        'select' => 'T',
+        'select' => 'M',
         'options' => 'LFACPDV',
-        'sql' => "GROUP_CONCAT(".$mandateAlias.".`mandateReference`
+        'sql' => "GROUP_CONCAT(DISTINCT ".$mandateAlias.".`mandateReference`
   ORDER BY ".$mandateAlias.".`projectId` DESC)",
         'values' => array(
           'table' => 'SepaDebitMandates',
@@ -562,7 +579,7 @@ class DetailedInstrumentation
         'name' => 'internal data',
         'options' => 'H',
         'select' => 'T',
-        'sql' => "GROUP_CONCAT(".$mandateAlias.".`projectId`
+        'sql' => "GROUP_CONCAT(DISTINCT ".$mandateAlias.".`projectId`
   ORDER BY ".$mandateAlias.".`projectId` DESC)",
         );
     }
@@ -1008,6 +1025,53 @@ class DetailedInstrumentation
     $projectId = Util::cgiValue('ProjectId', false);
     if ($projectId === false) {
       return true;
+    }
+
+    /* don't bother with changed ordering of instruments */
+    $oldInstr = explode(',', $oldvals['Instrumente']);
+    $newInstr = explode(',', $newvals['Instrumente']);
+    if (empty(array_diff($oldInstr, $newInstr))) {
+      $key = array_search('Instrumente', $changed);
+      if ($key !== false) {
+        unset($changed[$key]);
+      }
+      unset($newvals['Instrumente']);
+    }
+
+    /* project-instruments are handled by a pivot-table and have to be updated out of order. */
+    $key = array_search('ProjectInstrumentId', $changed);
+    if ($key !== false) {
+      $table = 'ProjectInstruments';
+      $values = array(
+        'ProjectId' => $projectId,
+        'MusicianId' => $oldvals['MusikerId'],
+        'InstrumentationId' => $oldvals['Id']
+        );
+
+      $newIds  = explode(',', $newvals['ProjectInstrumentId']);
+      $oldIds  = explode(',', $oldvals['ProjectInstrumentId']);
+      $oldKeys = explode(',', $oldvals['ProjectInstrumentKey']);
+      $oldRecords = array_combine($oldIds, $oldKeys);
+      foreach(array_diff($oldIds, $newIds) as $id) {
+        $query = "DELETE FROM $table WHERE Id = ".$oldRecords[$id];
+        if (mySQL::query($query, $pme->dbh) !== false) {
+          $old = $values;
+          $old['InstrumentId'] = $id;
+          $old['Id'] = $oldRecords[$id];
+          mySQL::logDelete($table, 'Id', $values, $pme->dbh);
+        }
+      }
+      foreach(array_diff($newIds, $oldIds) as $id) {
+        $values['InstrumentId'] = $id;
+        error_log('insert: '.print_r($values, true));
+        $result = mySQL::insert('ProjectInstruments', $values, $pme->dbh);
+        $rec = mySQL::newestIndex($pme->dbh);
+        if($result !== false && $rec > 0) {
+          mySQL::logInsert('ProjectInstruments', $rec, $new, $pme->dbh);
+        }
+      }
+      unset($changed[$key]);
+      unset($newvals['ProjectInstrumentId']);
     }
 
     $types = ProjectExtra::fieldTypes($pme->dbh);

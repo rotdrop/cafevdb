@@ -530,6 +530,8 @@ namespace CAFEVDB
       // addresses to the "brokenEMail" list.
       $mailer = new \PHPMailer(true);
 
+      $query .= " GROUP BY MainTable.Id";
+
       // Fetch the result or die
       $result = mySQL::query($query, $dbh, true); // here we want to bail out on error
 
@@ -638,7 +640,7 @@ namespace CAFEVDB
         // Possibly add musicians from the project
         if ($this->userBase['FromProject']) {
           self::fetchMusicians($dbh,
-                               $this->projectName.'View', 'MusikerId', 'Instrument',
+                               $this->projectName.'View', 'MusikerId', 'ProjectInstrument',
                                $this->projectId, true);
         }
 
