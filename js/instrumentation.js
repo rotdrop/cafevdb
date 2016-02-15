@@ -148,14 +148,14 @@ var CAFEVDB = CAFEVDB || {};
                  return false;
                }
                var rqData;
-               var timeout = 5000;
+               var timeout = 10000;
 
                // Oops. Perhaps only submit on success.
                finalizeCB();
 
                rqData = data.data;
                if (rqData.notice != '') {
-                 timeout = 10000;
+                 timeout = 15000;
                }
                var info = rqData.message + ' ' + rqData.notice;
                info = info.trim();
