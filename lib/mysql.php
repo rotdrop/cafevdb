@@ -325,7 +325,12 @@ namespace CAFEVDB
           $cond = $joinedColumn['join']['condition'];
           $join .=
             $ind.$ind.
-            $type.' JOIN '.$bt.$table.$bt;
+            $type.' JOIN ';
+          if (!$joinedColumn['verbatim']) {
+            $join .= $bt.$table.$bt;
+          } else {
+            $join .= $table;
+          }
           if ($tablename != $table) {
             $join .= ' '.$tablename.' ';
           }
@@ -392,7 +397,7 @@ namespace CAFEVDB
       $result = self::query($query, $handle);
 
       /* if ($result === false) { */
-      /*   error_log('Error: '.$query.' '.mySQL::error()); */
+      /*   error_log('Error: '.$query.' '.mySQL::error($handle)); */
       /* } */
 
       if ($ownConnection) {
