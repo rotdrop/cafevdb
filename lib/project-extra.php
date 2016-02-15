@@ -966,7 +966,7 @@ namespace CAFEVDB
       if ($types[$newvals['Type']]['Multiplicity'] === 'single') {
         $newvals['AllowedValues'] = $newvals['AllowedValuesSingle'];
         if ($key !== false) {
-          $changed[] = 'AllowedValuesSingle';
+          $changed[] = 'AllowedValues';
         }
       }
       unset($newvals['AllowedValuesSingle']);
@@ -1682,7 +1682,7 @@ __EOT__;
           $newVals['Name'] = $extraField['name'];
           $newVals['ToolTip'] = $extraField['tooltip'];
           $newVals['Tab'] = 'project';
-          $result = mySQL::insert(self::TABLE_NAME, $newVals, $handle, mySQL::UPDATE);
+          $result = mySQL::insert(self::TABLE_NAME, $newVals, $handle, mySQL::IGNORE);
 
           if ($result === false) {
             \OCP\Util::writeLog(Config::APP_NAME,

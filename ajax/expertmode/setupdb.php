@@ -29,9 +29,9 @@ namespace CAFEVDB
 
   $result = Admin::recreateDataBaseRoutines();
 
-  $result2 = ProjectExtra::moveExtraFieldDefinitions();
+//  $result2 = ProjectExtra::moveExtraFieldDefinitions();
 
-  $result3 = ProjectExtra::moveExtraFieldData();
+//  $result3 = ProjectExtra::moveExtraFieldData();
 
   $result4 = Instruments::migrateMusicianInstruments();
 
