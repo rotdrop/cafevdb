@@ -327,7 +327,6 @@ class Instrumentation
     $query .= " GROUP BY b.`Id`";
 
     // throw new \Exception($query);
-
     $result = mySQL::query($query, $handle);
     if ($result !== false) {
       $data = array();
@@ -366,7 +365,7 @@ class Instrumentation
 
     $data = self::fetchMusician($where, $projectId, $handle);
 
-    return false;
+    return $data;
   }
 
   /**Add musicians to a given project. The functions tries to make
