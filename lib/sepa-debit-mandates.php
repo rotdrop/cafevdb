@@ -832,15 +832,18 @@ received so far'),
       }
 
       $query .= 'LEFT JOIN `'.self::MEMBER_TABLE.'` m
-    ON m.musicianId = p.MusikerId
-       AND '.$projectSelector.'
-       AND m.active = 1
-    WHERE
-      p.Lastschrift = 1
-      AND
-      p.Anmeldung = 1
-      AND
-      m.mandateReference IS NOT NULL';
+  ON m.musicianId = p.MusikerId
+     AND '.$projectSelector.'
+     AND m.active = 1
+  WHERE
+    p.Lastschrift = 1
+    AND
+    p.Anmeldung = 1
+    AND
+    m.mandateReference IS NOT NULL
+';
+
+      $query .= "  GROUP BY p.Id";
 
       $result = mySQL::query($query, $handle);
       $table = array();
