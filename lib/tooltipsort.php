@@ -22,6 +22,10 @@
 
 namespace CAFEVDB {
 
+  class Finance {
+    const SEPA_MANDATE_EXPIRE_MONTHS = 0;
+  };
+
   // Header part
   $currentYear = date('Y');
   $header = "<?php
