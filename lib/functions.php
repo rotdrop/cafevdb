@@ -840,11 +840,11 @@ __EOT__;
     public static function beforeUpdateRemoveUnchanged($pme, $op, $step, $oldvals, &$changed, &$newvals)
     {
       // TODO: can be handle more efficiently with the PHP array_...() functions.
-      foreach ($newvals as $key => $value) {
-        if (array_search($key, $changed) === false) {
-          unset($newvals["$key"]);
-        }
+      $newNewVals = array();
+      foreach($changed as $key) {
+        $newNewVals[$key] = $newvals[$key];
       }
+      $newvals = $newNewVals;
 
       return count($newvals) > 0;
     }
