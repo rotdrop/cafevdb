@@ -1787,7 +1787,19 @@ class phpMyEdit
 		 */
 
 		if ($this->col_has_php($k)) {
-			$value = !empty($vals) ? $vals[$row["qf$k"]] : $row["qf$k"];
+			if (!empty($vals)) {
+				if ($this->col_has_multiple($k)) {
+					$value = array();
+					foreach(explode(',', $row["qf$k"]) as $key) {
+						$value[] = $vals[$key];
+					}
+					$value = implode(',', $value);
+				} else {
+					$value = $vals[$row["qf$k"]];
+				}
+			} else {
+				$value = $row["qf$k"];
+			}
 			$php = $this->fdd[$k]['php'];
 			if (is_callable($php)) {
 				echo call_user_func($php, $value,
