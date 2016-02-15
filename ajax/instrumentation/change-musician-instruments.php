@@ -103,14 +103,13 @@ namespace CAFEVDB {
     }
 
     $musicianId = $musRow['Id'];
-    $oldMusicianInstruments = explode(',', $musRow['Instrumente']);
-    $projectInstruments = explode(',', $musRow['ProjectInstruments']);
-    $haveOld = count(array_intersect($projectInstruments, $oldMusicianInstruments)) > 0;
-    $haveNew = count(array_intersect($projectInstruments, $musicianInstruments)) > 0;
+    $oldMusicianInstruments = Util::explode(',', $musRow['Instrumente']);
+    $projectInstruments = Util::explode(',', $musRow['ProjectInstruments']);
+    $numOld = count(array_intersect($projectInstruments, $oldMusicianInstruments));
+    $numNew = count(array_intersect($projectInstruments, $musicianInstruments));
 
     if (!empty($projectInstruments)) {
-
-      if ($haveOld && !$haveNew) {
+      if ($numOld > $numNew) {
         /* We disallow removing the current project instrument. Does not
          * seem to make much sense ...
          */
@@ -129,11 +128,10 @@ namespace CAFEVDB {
       }
 
 
-      if (!$haveNew) {
+      if ($numNew === 0) {
         // Auto-add?
         $notice = L::t("Please consider to add the registered project instrument `%s' to %s's ".
-                       "list of instruments (or possibly change the project instrument). Please note ".
-                       "that ",
+                       "list of instruments (or possibly change the project instrument).",
                        array(implode(',',$projectInstruments), $musRow['Vorname']));
       }
     }

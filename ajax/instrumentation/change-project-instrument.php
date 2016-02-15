@@ -49,7 +49,7 @@ namespace CAFEVDB {
 
     $recordId = Util::cgiValue('recordId', -1); // Index into Besetzungen
     $projectId = Util::cgiValue('projectId', -1);
-    $projectInstruments = Util::cgiValue('instrumentValues', false);
+    $projectInstrumentIds = Util::cgiValue('instrumentValues', false);
 
     if (Util::debugMode('request')) {
       $debugText .= '$_POST[] = '.print_r($_POST, true);
@@ -69,14 +69,19 @@ namespace CAFEVDB {
     }
 
     $musicianId = $musRow['Id'];
-    $musicianInstruments = explode(',', $musRow['Instrumente']);
-    $oldProjectInstruments = explode(',', $musRow['ProjectInstruments']);
+    $musicianInstruments = Util::explode(',', $musRow['Instrumente']);
+    $oldProjectInstruments = Util::explode(',', $musRow['ProjectInstruments']);
+    $instruments = Instruments::fetch();
 
+    $projectInstruments = array();
+    if (!empty($projectInstrumentIds)) foreach($projectInstrumentIds as $id) {
+        $projectInstruments[] = $instruments[$id];
+      }
 
-    $haveOld = count(array_intersect($oldProjectInstruments, $musicianInstruments)) > 0;
+    //$haveOld = count(array_intersect($oldProjectInstruments, $musicianInstruments)) > 0;
     $haveNew = count(array_intersect($projectInstruments, $musicianInstruments)) > 0;
 
-    if (!$haveNew) {
+    if (!$haveNew && !empty($projectInstruments)) {
       // Auto-add?
       $notice = L::t("Please consider to add the registered project instrument `%s' to %s's ".
                      "list of instruments (or possibly change the project instrument).",
