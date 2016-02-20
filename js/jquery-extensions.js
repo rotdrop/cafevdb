@@ -135,7 +135,7 @@ var CAFEVDB = CAFEVDB || {};
         placement:'auto top',
         cssclass:[]
       }
-      argument = $.extend({}, options, argument);
+      argument = $.extend(true, {}, options, argument);
       if (typeof argument.placement == 'string' && !argument.placement.match(/auto/)) {
         argument.placement = 'auto '+argument.placement;
       }
@@ -147,7 +147,7 @@ var CAFEVDB = CAFEVDB || {};
       // correct class-arguments.
       this.each(function(index) {
         var self = $(this);
-        var selfOptions = $.extend({}, argument);
+        var selfOptions = $.extend(true, {}, argument);
         var classAttr = self.attr('class');
         if (classAttr) {
           if (classAttr.match(/tooltip-off/) !== null) {
