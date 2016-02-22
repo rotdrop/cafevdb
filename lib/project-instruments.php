@@ -345,45 +345,6 @@ $join_table.InstrumentId = $main_table.InstrumentId',
     $pme = new \phpMyEdit($opts);
   }
 
-  /**Another multi-select which adds a pull-down menu to the
-   * project-instrumentation table.
-   */
-  public static function projectInstrumentsActions($transposed, $disableTranspose, $adjustOperation = false)
-  {
-    $data = ''
-      .'<span id="pme-instrumentation-actions-block" class="pme-instrumentation-actions-block">
-  <label>
-    <select
-      data-placeholder="'.L::t('Actions').'"
-      class="pme-instrumentation-actions-choice"
-      id="pme-instrumentation-actions-choice"
-      title="'.Config::toolTips('pme-instrumentation-actions').'"
-      name="actions" >
-      <option value=""></option>
-      <option
-        '.($disableTranspose ? 'disabled="disabled"' : '').'
-        title="'.Config::toolTips('pme-transpose').'"
-        id="pme-transpose"
-        class="pme-transpose '.$transposed.'"
-        value="transpose" >
-        '.L::t('Transpose').'
-      </option>
-      <option '.($adjustOperation === false ? 'disabled ' : '').'
-        title="'.Config::toolTips('transfer-instruments').'"
-        id="pme-transfer-instruments"
-        class="pme-transfer-instruments"
-        value="transfer-instruments?'.$adjustOperation.'" >
-        '.L::t('Adjust Instruments').'
-      </option>
-    </select>
-  </label>
-</span>';
-
-    $button = array('code' => $data);
-
-    return $button;
-  }
-
 }; // class InstrumentationInstruments
 
 }
