@@ -37,6 +37,9 @@ var CAFEVDB = CAFEVDB || {};
     });
 
     var handleFieldType = function(data) {
+      if (!data) {
+        return;
+      }
       //
       var simpleClass = 'simple-value-field';
       var singleClass = 'single-value-field';

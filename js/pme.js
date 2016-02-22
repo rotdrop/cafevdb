@@ -382,10 +382,6 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
     pme.cancelDeferredReload(container);
 
-    PHPMYEDIT.installTabHandler(container, function() {
-      callback( { reason: 'tabChange' } );
-    });
-
     /* form.
      * pme-list
      * pme-change
@@ -414,6 +410,10 @@ var PHPMYEDIT = PHPMYEDIT || {};
     }
 
     container.off('click', '**');
+
+    PHPMYEDIT.installTabHandler(container, function() {
+      callback( { reason: 'tabChange' } );
+    });
 
     // The easy one, but for changed contents
     var cancelButton = $(container).find(pme.pmeClassSelector('input', 'cancel'));
