@@ -90,22 +90,6 @@ $(document).ready(function() {
     return false;
   });
 
-  $('#checkinstruments').click(function() {
-    var post  = $('#checkinstruments').serialize();
-    $.post(OC.filePath('cafevdb', 'ajax/expertmode', 'checkinstruments.php'), post, function(data) {
-      $('#expertmode .msg').html(data);
-    });
-    return false;
-  });
-
-  $('#adjustinstruments').click(function() {
-    var post = $('#adjustinstruments').serialize();
-    $.post(OC.filePath('cafevdb', 'ajax/expertmode', 'adjustinstruments.php'), post, function(data) {
-      $('#expertmode .msg').html(data);
-    });
-    return false;
-  });
-
   $('#sanitizephones').click(function() {
     var post = $(this).serialize();
     $.post(OC.filePath('cafevdb', 'ajax/expertmode', 'sanitizephones.php'), post, function(data) {

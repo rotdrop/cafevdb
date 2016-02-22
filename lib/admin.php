@@ -159,55 +159,6 @@ WHERE  TABLE_SCHEMA = '".Config::$dbopts['db']."'";
     }
 
     /**TBD*/
-    public static function fillInstrumentationNumbers()
-    {
-      Config::init();
-
-      // Fetch the actual list of instruments, we will need it anyway
-      $handle = mySQL::connect(Config::$dbopts);
-
-      $instruments = mySQL::multiKeys('Musiker', 'Instrumente', $handle);
-
-      // Current mysql versions do not seem to support "IF NOT EXISTS", so
-      // we simply try to do our best and add one column in each request.
-
-      foreach ($instruments as $instr) {
-        $query = 'ALTER TABLE `BesetzungsZahl` ADD COLUMN `'.$instr."` TINYINT NOT NULL DEFAULT '0'";
-        $result = mySQL::query($query, $handle); // simply ignore any error
-      }
-      mySQL::close($handle);
-    }
-
-    /**TBD*/
-    public static function checkInstrumentsTable()
-    {
-      Config::init();
-
-      $handle = mySQL::connect(Config::$pmeopts);
-      if (Instruments::check($handle)) {
-        print '<H4>Instruments are consistent.</H4>';
-      } else {
-        print '<H4>Instruments are inconsistent.</H4>';
-      }
-      mySQL::close($handle);
-    }
-
-    /**TBD*/
-    public static function sanitizeInstrumentsTable()
-    {
-      Config::init();
-
-      $handle = mySQL::connect(Config::$pmeopts);
-      if (!Instruments::check($handle)) {
-        Instruments::sanitizeTable($handle, false);
-        Instruments::check($handle);
-      } else {
-        print '<H4>Not needed, instruments are consistent.</H4>';
-      }
-      mySQL::close($handle);
-    }
-
-    /**TBD*/
     public static function recreateAllViews()
     {
       Config::init();

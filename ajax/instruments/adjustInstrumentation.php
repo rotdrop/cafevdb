@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -31,18 +31,16 @@ namespace CAFEVDB {
   try {
 
     Error::exceptions(true);
-  
+
     Config::init();
 
     $debugText = '$_POST[] = '.print_r($_POST, true);
 
+    //throw new \Exception(print_r($_POST, true));
+
     // We only need the project-id
-    $recordId  = Util::cgiValue(Config::$pmeopts['cgi']['prefix']['sys']."rec", -1);
-    $projectId = Util::cgiValue('ProjektId', -1);
-    $idPair = ProjectInstruments::fetchIdPair($recordId, $projectId);
-    $recordId = $idPair['recordId'];
-    $projectId = $idPair['projectId'];  
-  
+    $projectId = Util::cgiValue('ProjectId', -1);
+
     // Is it there?
     if ($projectId < 0) {
       \OCP\JSON::error(
@@ -70,9 +68,8 @@ namespace CAFEVDB {
     }
 
     // Got it. Now adjust the instruments
-    $instruments =
-      Instruments::updateProjectInstrumentationFromMusicians($projectId, $handle, false);
-    if (!is_array($instruments)) {
+    $result = Instruments::updateProjectInstrumentationFromMusicians($projectId, false, $handle);
+    if ($result === false) {
       mySQL::close($handle);
       \OCP\JSON::error(
         array(

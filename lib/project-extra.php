@@ -163,8 +163,9 @@ namespace CAFEVDB
       $opts['cgi']['persist'] = array(
         'Template' => 'project-extra',
         'DisplayClass' => 'ProjectExtra',
+        'ClassArguments' => array(),
         'ShowDisabledFields' => $this->showDisabledFields,
-        'ClassArguments' => array());
+        );
 
       if ($projectMode || true) {
         $opts['cgi']['persist']['ProjectName'] = $projectName;
@@ -184,16 +185,6 @@ namespace CAFEVDB
         'ProjectId',
         'DisplayOrder',
         'Name');
-
-      // GROUP BY clause, if needed.
-      $opts['groupby_fields'] = 'Id';
-
-      if (!$showDisabled) {
-        $opts['filters'] = array('NOT Disabled = 1');
-      }
-      if ($projectMode !== false) {
-        $opts['filters'][] = 'ProjectId = '.$this->projectId;
-      }
 
       // Number of records to display on the screen
       // Value of -1 lists all records in a table
@@ -319,6 +310,7 @@ namespace CAFEVDB
         $groupedProjects[$id] = $proj['Jahr'];
       }
 
+      $projectIdx = 0; // just the start here count($opts['fdd']);
       $opts['fdd']['ProjectId'] = array(
         'tab'      => array('id' => 'tab-all'),
         'name'      => L::t('Project-Name'),
@@ -633,6 +625,20 @@ namespace CAFEVDB
           );
       }
 
+      // GROUP BY clause, if needed.
+      $opts['groupby_fields'] = 'Id';
+
+      $opts['filters'] = [];
+      if (!$showDisabled) {
+        $opts['filters'][] = 'NOT `PMEtable0`.`Disabled` = 1';
+        if ($projectMode === false) {
+          $opts['filters'][] = 'NOT `PMEjoin'.$projectIdx.'`.`Disabled` = 1';
+        }
+      }
+      if ($projectMode !== false) {
+        $opts['filters'][] = 'ProjectId = '.$this->projectId;
+      }
+
       $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
       $opts['triggers']['update']['before'][]  = 'CAFEVDB\ProjectExtra::beforeUpdateOrInsertTrigger';
       $opts['triggers']['update']['before'][] =  'CAFEVDB\Util::beforeUpdateRemoveUnchanged';
@@ -693,6 +699,7 @@ namespace CAFEVDB
                             ': mySQL error: '.mySQL::error($handle).' query '.$query,
                             \OCP\Util::ERROR);
       }
+      mySQL::freeResult($result);
 
       $query = 'CALL generateNumbers(@max)';
       $result = mySQL::query($query, $handle);
@@ -833,7 +840,7 @@ namespace CAFEVDB
     {
       $used = self::fieldsFromDB(-1, $pme->rec, $pme->dbh);
 
-      if (is_array($used) && $used[0] == $pme->rec) {
+      if (count($used) === 1 && $used[0] == $pme->rec) {
         // Already used. Just mark the beast as inactive
         mySQL::update(self::TABLE_NAME, '`Id` = '.$pme->rec,
                       array('Disabled' => 1), $pme->dbh);
@@ -1071,6 +1078,15 @@ namespace CAFEVDB
 
     /**Fetch the field definitions in order to generate SQL code to do
      * all the joining and linking.
+     *
+     * @param[in] int $projectId The project Id.
+     *
+     * @param[in] bool $full If false, only Id, ProjectId, FieldIndex
+     * and DisplayOrder are returned.
+     *
+     * @return Flat array with the data-base rows. The function will
+     * return an empty array in case of error, or if there are no
+     * extra fields defined yet.
      */
     public static function projectExtraFields($projectId, $full = false, $handle = false)
     {
@@ -1093,16 +1109,16 @@ namespace CAFEVDB
      NOT `Disabled` = 1
   ORDER BY `DisplayOrder` ASC";
 
-      $result = false;
+      $result = array();
       $qResult = mySQL::query($query, $handle);
       if ($qResult !== false) {
-        $result = array();
         while ($row = mySQL::fetch($qResult)) {
           if ($full && empty($row['Name'])) {
             $row['Name'] = sprintf('Extra%04d', $row['Id']);
           }
           $result[] = $row;
         }
+        mySQL::freeResult($qResult);
       }
 
       if ($ownConnection) {
@@ -1159,12 +1175,70 @@ argument must be an array of type descriptions.');
     public static function fetch($recordId, $handle = false)
     {
       $data = mySQL::fetchRows(self::TABLE_NAME, '`Id` = '.$recordId, null, $handle);
-      if (is_array($data) && count($data) == 1) {
+      if (is_array($data) && count($data) === 1) {
         return $data[0];
       } else {
         return false;
       }
     }
+
+    /**Delete the given extra field and associated data.
+     *
+     * @param[in] int $fieldId The field-id to remove.
+     *
+     * @param[in] int $projectId The project the field is associated
+     * to. For security reasons both, $fieldId and $projectId have to
+     * be specified.
+     *
+     * @param[in] bool $force If @c false, only remove the field if it
+     * has no data attached. If @c true, just remove it and all
+     * associated data.
+     *
+     * @param[in] $handle Data-base handle.
+     *
+     * @return @c true if the field has been removed (and all data),
+     * false otherwise. @c false may mean SQL error, or with $force
+     * === false that the field has already data associated to it.
+     */
+    public static function deleteExtraField($fieldId, $projectId, $force = false, $handle = false)
+    {
+      $result = false;
+
+      $ownConnection = $handle === false;
+      if ($ownConnection) {
+        Config::init();
+        $handle = mySQL::connect(Config::$pmeopts);
+      }
+
+      if ($force === true) {
+        $query = "DELETE FROM ".self::DATA_TABLE." WHERE FieldId = $fieldId";
+        $qResult = mySQL::query($query, $handle);
+        if ($qResult !== false && mySQL::changedRows($handle) >= 0) {
+          $query = "DELETE FROM ".self::TABLE." WHERE Id = $fieldId AND ProjectId = $projectId";
+          $qResult = mySQL::query($query, $handle);
+          if ($qResult !== false && mySQL::changedRows($handle) > 0) {
+            $result = true;
+          }
+        }
+      } else {
+        $dataField = self::fieldsFromDB($projectId, $fieldId, $handle);
+        if (empty($dataField)) {
+          $result = self::deleteExtraField($fieldId, $projectId, true, $handle);
+        } else {
+          mySQL::update(self::TABLE_NAME,
+                        "`Id` = $fieldId AND `ProjectId` = $projectId",
+                        array('Disabled' => 1));
+          $result = false;
+        }
+      }
+
+      if ($ownConnection) {
+        mySQL::close($handle);
+      }
+
+      return $result;
+    }
+
 
     /**Fetch all values stored for the given extra-field, e.g. in
      * order to recover or generate select boxes.
@@ -1176,8 +1250,9 @@ argument must be an array of type descriptions.');
       return $values;
     }
 
-    /**Fetch all fields with associated data (and this data) from the
-     * DB.
+    /**Fetch all fields which already have data associated to it.
+     *
+     * @return Flat array of field-ids.
      */
     public static function fieldsFromDB($projectId = -1, $fieldId = -1, $handle = false)
     {
@@ -1202,13 +1277,13 @@ argument must be an array of type descriptions.');
 
       //error_log($query);
 
-      $result = false;
+      $result = array();
       $qResult = mySQL::query($query, $handle);
       if ($qResult !== false) {
-        $result = array();
         while ($row = mySQL::fetch($qResult)) {
           $result[] = $row['FieldId'];
         }
+        mySQL::freeResult($qResult);
       }
 
       if ($ownConnection) {

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -25,18 +25,18 @@ namespace CAFEVDB {
   \OCP\JSON::checkLoggedIn();
   \OCP\JSON::checkAppEnabled('cafevdb');
   \OCP\JSON::callCheck();
-  
+
   $handle = false;
 
   try {
 
     ob_start();
-  
+
     Error::exceptions(true);
-  
+
     Config::init();
     $handle = mySQL::connect(Config::$pmeopts);
-  
+
     $_GET = array();
 
     $debugText = '';
@@ -82,8 +82,8 @@ namespace CAFEVDB {
                                  array($projectId))),
                           'debug' => $debugText)));
       return false;
-    }  
-  
+    }
+
     // instrument list should be an array
     if ($projectInstruments === false || !is_array($projectInstruments)) {
       mySQL::close($handle);
@@ -100,23 +100,25 @@ namespace CAFEVDB {
 
     // fetch all known instruments to check for valid instrument names
     // and verify the new project instruments against the known names
-    $allInstruments = Instruments::fetch($handle);
+    $instrumentInfo = Instruments::fetchInfo($handle);
+    $allInstruments = array_keys($instrumentInfo['byId']);
     $instrumentDiff = array_diff($projectInstruments, $allInstruments);
     if (count($instrumentDiff) != 0) {
       mySQL::close($handle);
       $debugText .= ob_get_contents();
       @ob_end_clean();
 
+      $clearText = Instruments::instrumentNames($instrumentDiff);
       \OCP\JSON::error(
         array(
           'data' => array('error' => L::t('invalid arguments'),
                           'message' => L::t('Unknown instruments in list: %s',
-                                            array(explode(', ', $instrumentDiff))),
+                                            array(implode(', ', $clearText))),
                           'debug' => $debugText)));
       return false;
     }
-  
-    // ok, we have a valid project, a valid intrument list, let it go    
+
+    // ok, we have a valid project, a valid intrument list, let it go
     $query = "UPDATE `Projekte` SET `Besetzung`='".implode(',',$projectInstruments)."' WHERE `Id` = $projectId";
     if (mySQL::query($query, $handle) === false) {
       mySQL::close($handle);

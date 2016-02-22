@@ -32,6 +32,8 @@ class DetailedInstrumentation
 {
   const CSS_PREFIX = 'cafevdb-page';
   const CSS_CLASS = 'instrumentation';
+  const PROJECT_INSTRUMENTS = 'ProjectInstruments';
+  const MUSICIAN_INSTRUMENTS = 'MusicianInstruments';
 
   function __construct($execute = true) {
     parent::__construct($execute);
@@ -145,7 +147,8 @@ class DetailedInstrumentation
         //'query' => true,
         'sort'  => true,
         'time'  => true,
-        'tabs' => self::tableTabs($userExtraFields, $useFinanceTab)
+        'tabs' => self::tableTabs($userExtraFields, $useFinanceTab),
+        'navigation' => 'VCD'
         ));
 
     // Set default prefixes for variables
@@ -277,8 +280,8 @@ class DetailedInstrumentation
          * for the currently active instrument.
          */
         'filters' => ("FIND_IN_SET(`Instrument`,
-  CONCAT_WS(',',(SELECT GROUP_CONCAT(`ProjectInstrument`) FROM `\$main_table` WHERE \$record_id = `\$main_table`.`Id` GROUP BY \$main_table.Id),
-                (SELECT DISTINCT `Instrumente` FROM `\$main_table`
+  CONCAT_WS(',',(SELECT GROUP_CONCAT(DISTINCT `ProjectInstrument`) FROM `\$main_table` WHERE \$record_id = `\$main_table`.`Id` GROUP BY \$main_table.Id),
+                (SELECT DISTINCT `MusicianInstrument` FROM `\$main_table`
                           WHERE \$record_id = `\$main_table`.`Id`)))"),
         'join' => '$join_table.Id = $main_table.ProjectInstrumentId'
         ),
@@ -347,17 +350,39 @@ class DetailedInstrumentation
       'css'      => array('postfix' => ' registration tooltip-top'),
       );
 
-    $opts['fdd']['Instrumente'] = array(
-      'name'     => L::t('All Instruments'),
-      'css'      => array('postfix' => ' musician-instruments tooltip-top'),
+    if (false) {
+      $opts['fdd']['Instrumente'] = array(
+        'name'     => L::t('All Instruments'),
+        'css'      => array('postfix' => ' musician-instruments tooltip-top'),
+        'display|LF'  => array('popup' => 'data'),
+        //'options'  => 'AVCPD',
+        'select'   => 'M',
+        'maxlen'   => 136,
+        'sort'     => true,
+        'values'   => $this->instruments,
+        'valueGroups' => $this->groupedInstruments,
+        'tab'      => array('id' => array('musician', 'instrumentation'))
+        );
+    }
+
+    $opts['fdd']['MusicianInstrumentKey'] = array(
+      'name'   => L::t('Musican Instrument'),
+      'select' => 'T',
+      'input'  => 'HR'
+      );
+
+    $opts['fdd']['MusicianInstrumentId'] = array(
+      'name'        => L::t('All Instruments'),
+      'css'         => array('postfix' => ' musician-instruments tooltip-top'),
       'display|LF'  => array('popup' => 'data'),
-      //'options'  => 'AVCPD',
-      'select'   => 'M',
-      'maxlen'   => 136,
-      'sort'     => true,
-      'values'   => $this->instruments,
-      'valueGroups' => $this->groupedInstruments,
-      'tab'      => array('id' => array('musician', 'instrumentation'))
+      'input'       => 'S', // needs to be handled separately
+      //'options'   => 'AVCPD',
+      'select'      => 'M',
+      'maxlen'      => 136,
+      'sort'        => true,
+      'values2'     => $this->instrumentInfo['byId'],
+      'valueGroups' => $this->instrumentInfo['idGroups'],
+      'tab'         => array('id' => array('musician', 'instrumentation'))
       );
 
     $opts['fdd']['Sortierung'] = array(
@@ -1009,15 +1034,15 @@ class DetailedInstrumentation
    *
    * @param[in] $step 'before' or 'after'
    *
-   * @param[in] $oldvals Self-explanatory.
+   * @param[in] $oldValues Self-explanatory.
    *
    * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
    *
-   * @param[in,out] &$newvals Set of new values, which may also be modified.
+   * @param[in,out] &$newValues Set of new values, which may also be modified.
    *
    * @return boolean. If returning @c false the operation will be terminated
    */
-  public static function beforeUpdateTrigger(&$pme, $op, $step, &$oldvals, &$changed, &$newvals)
+  public static function beforeUpdateTrigger(&$pme, $op, $step, &$oldValues, &$changed, &$newValues)
   {
     // Perform a lazy create-on-write philosophy: if the field does
     // not yet exist, inject a new one.
@@ -1028,59 +1053,113 @@ class DetailedInstrumentation
     }
 
     /* don't bother with changed ordering of instruments */
-    $oldInstr = explode(',', $oldvals['Instrumente']);
-    $newInstr = explode(',', $newvals['Instrumente']);
+    $oldInstr = explode(',', $oldValues['Instrumente']);
+    $newInstr = explode(',', $newValues['Instrumente']);
     if (empty(array_diff($oldInstr, $newInstr))) {
       $key = array_search('Instrumente', $changed);
       if ($key !== false) {
         unset($changed[$key]);
       }
-      unset($newvals['Instrumente']);
+      unset($newValues['Instrumente']);
     }
 
-    /* project-instruments are handled by a pivot-table and have to be updated out of order. */
+    /**************************************************************************
+     *
+     * project-instruments are handled by a pivot-table and have to be
+     * updated out of order.
+     *
+     */
+
     $key = array_search('ProjectInstrumentId', $changed);
     if ($key !== false) {
-      $table = 'ProjectInstruments';
       $values = array(
         'ProjectId' => $projectId,
-        'MusicianId' => $oldvals['MusikerId'],
-        'InstrumentationId' => $oldvals['Id']
+        'MusicianId' => $oldValues['MusikerId'],
+        'InstrumentationId' => $oldValues['Id']
         );
 
-      $newIds  = explode(',', $newvals['ProjectInstrumentId']);
-      $oldIds  = explode(',', $oldvals['ProjectInstrumentId']);
-      $oldKeys = explode(',', $oldvals['ProjectInstrumentKey']);
+      $table    = self::PROJECT_INSTRUMENTS;
+      $field    = 'ProjectInstrumentId';
+      $keyField = 'ProjectInstrumentKey';
+      $newIds  = explode(',', $newValues[$field]);
+      $oldIds  = explode(',', $oldValues[$field]);
+      $oldKeys = explode(',', $oldValues[$keyField]);
       $oldRecords = array_combine($oldIds, $oldKeys);
       foreach(array_diff($oldIds, $newIds) as $id) {
         $query = "DELETE FROM $table WHERE Id = ".$oldRecords[$id];
         if (mySQL::query($query, $pme->dbh) !== false) {
-          $old = $values;
-          $old['InstrumentId'] = $id;
-          $old['Id'] = $oldRecords[$id];
-          mySQL::logDelete($table, 'Id', $values, $pme->dbh);
+          $old = array_merge($values,
+                             array('InstrumentId' => $id,
+                                   'Id' => $oldRecords[$id]));
+          mySQL::logDelete($table, 'Id', $old, $pme->dbh);
         }
       }
       foreach(array_diff($newIds, $oldIds) as $id) {
-        $values['InstrumentId'] = $id;
-        error_log('insert: '.print_r($values, true));
-        $result = mySQL::insert('ProjectInstruments', $values, $pme->dbh);
+        $new = array_merge($values, array('InstrumentId' => $id));
+        $result = mySQL::insert('ProjectInstruments', $new, $pme->dbh);
         $rec = mySQL::newestIndex($pme->dbh);
         if($result !== false && $rec > 0) {
-          mySQL::logInsert('ProjectInstruments', $rec, $new, $pme->dbh);
+          mySQL::logInsert($table, $rec, $new, $pme->dbh);
         }
       }
       unset($changed[$key]);
-      unset($newvals['ProjectInstrumentId']);
+      unset($newValues['ProjectInstrumentId']);
     }
+
+    /*
+     *
+     * Now do the same with the musician's instrument.
+     *
+     *************************************************************************
+     *
+     * musician-instruments are handled by a pivot-table and have to be
+     * updated out of order.
+     *
+     */
+
+    $key = array_search('MusicianInstrumentId', $changed);
+    if ($key !== false) {
+      $field    = 'MusicianInstrumentId';
+      $keyField = 'MusicianInstrumentKey';
+      $table    = self::MUSICIAN_INSTRUMENTS;
+      $musicianId = $oldValues['MusikerId'];
+      $newIds  = explode(',', $newValues[$field]);
+      $oldIds  = explode(',', $oldValues[$field]);
+      $oldKeys = explode(',', $oldValues[$keyField]);
+      $oldRecords = array_combine($oldIds, $oldKeys);
+      foreach(array_diff($oldIds, $newIds) as $id) {
+        $query = "DELETE FROM $table WHERE Id = ".$oldRecords[$id];
+        if (mySQL::query($query, $pme->dbh) !== false) {
+          $old = array('Id' => $oldRecords[$id],
+                       'MusicianId' => $musicianId,
+                       'InstrumentId' => $id);
+          mySQL::logDelete($table, 'Id', $old, $pme->dbh);
+        }
+      }
+      foreach(array_diff($newIds, $oldIds) as $id) {
+        $new = array('MusicianId' => $musicianId, 'InstrumentId' => $id);
+        $result = mySQL::insert($table, $new, $pme->dbh);
+        $rec = mySQL::newestIndex($pme->dbh);
+        if($result !== false && $rec > 0) {
+          mySQL::logInsert($table, $rec, $new, $pme->dbh);
+        }
+      }
+      unset($changed[$key]);
+      unset($newValues[$field]);
+      unset($newValues[$keyField]);
+    }
+
+    /*
+     *
+     *************************************************************************/
 
     $types = ProjectExtra::fieldTypes($pme->dbh);
     $extraFields = ProjectExtra::projectExtraFields($projectId, true, $pme->dbh);
     foreach ($extraFields as $field) {
       $name = $field['Name'];
       $nameId = $name.'Id';
-      if (empty($oldvals[$nameId])) {
-        $values = array('BesetzungenId' => $oldvals['Id'],
+      if (empty($oldValues[$nameId])) {
+        $values = array('BesetzungenId' => $oldValues['Id'],
                         'FieldId' => $field['Id']);
         $result = mySQL::insert(ProjectExtra::DATA_TABLE,
                                 $values,
@@ -1093,7 +1172,7 @@ class DetailedInstrumentation
         if ($idx === false) {
           $idData = mySQL::fetchColumn(ProjectExtra::DATA_TABLE,
                                        'Id',
-                                       '`BesetzungenId` = '.$oldvals['Id'].
+                                       '`BesetzungenId` = '.$oldValues['Id'].
                                        ' AND '.
                                        '`FieldId` = '.$field['Id'],
                                        $pme->handle);
@@ -1104,31 +1183,31 @@ class DetailedInstrumentation
         if ($idx === false) {
           return false;
         }
-        $oldvals[$nameId] = $idx;
+        $oldValues[$nameId] = $idx;
       }
       if ($types[$field['Type']]['Name'] === 'Integer') {
         // as we only store texts internally, force to int now ...
-        if (isset($newvals[$name])) {
-          $newvals[$name] = (string)intval($newvals[$name]);
-          if ($newvals[$name] !== $oldvals[$name]) {
+        if (isset($newValues[$name])) {
+          $newValues[$name] = (string)intval($newValues[$name]);
+          if ($newValues[$name] !== $oldValues[$name]) {
             $changed[] = $name;
           }
         }
       }
       if ($types[$field['Type']]['Name'] === 'Float') {
         // as we only store texts internally, force to float now ...
-        if (isset($newvals[$name])) {
-          $newvals[$name] = (string)floatval($newvals[$name]);
-          if ($newvals[$name] !== $oldvals[$name]) {
+        if (isset($newValues[$name])) {
+          $newValues[$name] = (string)floatval($newValues[$name]);
+          if ($newValues[$name] !== $oldValues[$name]) {
             $changed[] = $name;
           }
         }
       }
       if ($types[$field['Type']]['Name'] === 'Boolean') {
         // as we only store texts internally, force to float now ...
-        if (isset($newvals[$name])) {
-          $newvals[$name] = (string)(int)!!$newvals[$name];
-          if ($newvals[$name] !== $oldvals[$name]) {
+        if (isset($newValues[$name])) {
+          $newValues[$name] = (string)(int)!!$newValues[$name];
+          if ($newValues[$name] !== $oldValues[$name]) {
             $changed[] = $name;
           }
         }
@@ -1136,8 +1215,8 @@ class DetailedInstrumentation
     }
 
     /* error_log('******* after ******************'); */
-    /* error_log(print_r($oldvals, true)); */
-    /* error_log(print_r($newvals, true)); */
+    /* error_log(print_r($oldValues, true)); */
+    /* error_log(print_r($newValues, true)); */
     /* error_log(print_r($changed, true)); */
 
     return true;
@@ -1156,17 +1235,17 @@ class DetailedInstrumentation
    *
    * @param[in] $step 'before' or 'after'
    *
-   * @param[in] $oldvals Self-explanatory.
+   * @param[in] $oldValues Self-explanatory.
    *
    * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
    *
-   * @param[in,out] &$newvals Set of new values, which may also be modified.
+   * @param[in,out] &$newValues Set of new values, which may also be modified.
    *
    * @return boolean. If returning @c false the operation will be terminated
    */
-  public static function beforeDeleteTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
+  public static function beforeDeleteTrigger(&$pme, $op, $step, $oldValues, &$changed, &$newValues)
   {//DELETE FROM Spielwiese2013View WHERE (Id = 146)
-    $id = $oldvals['Id'];
+    $id = $oldValues['Id'];
     $where = "`Id` = ".$id;
     $realOldVals = mySQL::fetchRows('Besetzungen', $where, null, $pme->dbh);
     $query = "DELETE FROM `Besetzungen` WHERE ".$where;

@@ -101,7 +101,6 @@ namespace CAFEVDB
     $tmpl->assign('recordId', Util::getCGIRecordId());
 
     $html = $tmpl->fetchPage();
-
     // Search for MySQL error messages echoes by phpMyEdit, sometimes
     // the contents of the template will be discarded, but we still want
     //

@@ -29,13 +29,15 @@ namespace CAFEVDB
 
   $result = Admin::recreateDataBaseRoutines();
 
-//  $result2 = ProjectExtra::moveExtraFieldDefinitions();
+  // double-mirgration of extra-field data is not safe
+  //  $result2 = ProjectExtra::moveExtraFieldDefinitions();
+  //  $result3 = ProjectExtra::moveExtraFieldData();
 
-//  $result3 = ProjectExtra::moveExtraFieldData();
-
+  // multiple mirgration of instruments is more or less un-safe
   $result4 = Instruments::migrateMusicianInstruments();
-
   $result5 = Instruments::migrateProjectInstruments();
+  $result6 = Instruments::migrateProjectInstrumentation();
+  $result7 = Instruments::migrateInstrumentationNumbers();
 
   // ideally, we would alse update the table structure ...
 

@@ -607,18 +607,6 @@ __EOT__;
       }
     }
 
-    public static function alert($text, $title, $cssid = false)
-    {
-      //$text = htmlspecialchars($text, ENT_QUOTES, 'UTF-8', false);
-      //$title = htmlspecialchars($title, ENT_QUOTES, 'UTF-8', false);
-      //$text  = addslashes($text);
-      //$title = addslashes($title);
-      $class = $cssid === false ? '' : ' '.$cssid;
-      echo '<input type="hidden" class="alertdata'.$class.
-        '" name="'.Util::htmlEscape($title).'" value="'.Util::htmlEscape($text).'">'."\n";
-      echo '<div class="alertblock'.$class.' cafevdb-error"><span class="title">'.$title.'</span><div class="text">'.$text.'</div></div>';
-    }
-
     public static function redirect($page, $proto = null, $host = null, $port = null, $uri = null) {
 
       /* Redirect auf eine andere Seite im aktuell angeforderten Verzeichnis */
@@ -888,6 +876,7 @@ __EOT__;
         }
         // Convert unicode space to ordinary space
         $value = str_replace("\xc2\xa0", "\x20", $value);
+        $vlaue = preg_replace('/\s+/', ' ', $value);
 
         // Then trim away ...
         $value = trim($value);

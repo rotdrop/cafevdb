@@ -311,22 +311,29 @@ class Instrumentation
 
     $query = " SELECT
  m.*, b.`ProjektId` AS ProjectId, b.`Id` AS InstrumentationId,
- GROUP_CONCAT(i.`Instrument` ORDER BY i.`Id`) AS ProjectInstruments,
+ GROUP_CONCAT(DISTINCT im.`Id` ORDER BY im.`Id`) AS MusicianInstrumentIds,
+ GROUP_CONCAT(DISTINCT im.`Instrument` ORDER BY im.`Id`) AS MusicianInstruments,
+ GROUP_CONCAT(DISTINCT ip.`Id` ORDER BY ip.`Id`) AS ProjectInstrumentIds,
+ GROUP_CONCAT(DISTINCT ip.`Instrument` ORDER BY ip.`Id`) AS ProjectInstruments,
  p.`Name` AS `ProjectName`, p.`Jahr` AS ProjectYear, p.`Besetzung` AS Instrumentation
  FROM `Musiker` m
+ LEFT JOIN `MusicianInstruments` mi
+   ON m.`Id` = mi.`MusicianId`
  LEFT JOIN `Besetzungen` b
    ON m.`Id` = b.`MusikerId`
  LEFT JOIN `Projekte` p
    ON b.`ProjektId` = p.`Id`
  LEFT JOIN `ProjectInstruments` pi
    ON pi.`InstrumentationId` = b.`Id`
- LEFT JOIN `Instrumente` i
-   ON i.`Id` = pi.`InstrumentId`
+ LEFT JOIN `Instrumente` im
+   ON im.`Id` = mi.`InstrumentId`
+ LEFT JOIN `Instrumente` ip
+   ON ip.`Id` = pi.`InstrumentId`
  ";
     $query .= " WHERE $where";
     $query .= " GROUP BY b.`Id`";
 
-    // throw new \Exception($query);
+    //throw new \Exception($query);
     $result = mySQL::query($query, $handle);
     if ($result !== false) {
       $data = array();
@@ -353,6 +360,8 @@ class Instrumentation
     if (!empty($data) && count($data) === 1) {
       return $data[0];
     }
+
+    //error_log(__METHOD__.' ups '.print_r($data, true));
 
     return false;
   }

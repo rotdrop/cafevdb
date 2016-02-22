@@ -770,7 +770,7 @@ configuration storage if the test can be performed successfully.'),
 
         'total-fee-summary' => L::t('Total amount the participant has to pay, perhaps followed by total amount paid, followed by the outstanding amount.'),
 
-        'transfer-instruments' => L::t('Add the instruments of the actually registered musicians to the instrument-table for the project.'),
+        'transfer-registered-instruments' => L::t('Add the instruments of the actually registered musicians to the instrument-table for the project.'),
 
         'upload-attachment' => L::t('Upload a file from your local computer as attachment. The file will be removed from the remote-system after the message has been sent.'),
 

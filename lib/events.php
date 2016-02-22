@@ -73,7 +73,7 @@ namespace CAFEVDB
      * projects and events is triggered by the Projekte::Name field
      * through the categories tag of the event. Any event with a
      * category equal to the project's name is considered as belonging
-     * to the project, it it addtionally belongs to one of the three
+     * to the project, if it addtionally belongs to one of the three
      * shared calendars (conerts, rehearsals, other, management, finance).
      *
      * @param[in] $eventId The OwnCloud-Id of the event.
@@ -404,6 +404,45 @@ END:VALARM
       $eventId = \OC_Calendar_Object::add($calendarId, $vcalendar->serialize());
 
       return $eventId;
+    }
+
+    /**Really delete all traces of the event from CAFEVDB and the
+     * calendars. Events attached to more than one project are not
+     * remove, however.
+     *
+     * @return @c true iff the event could be handled successfully,
+     * i.e. only SQL-errors result in a return value @c false.
+     *
+     */
+    static public function deleteEvent($eventId, $handle = false)
+    {
+      $ownConnection = $handle === false;
+      if ($ownConnection) {
+        Config::init();
+        $handle = mySQL::connect(Config::$pmeopts);
+      }
+
+      $result = true;
+      if (count(self::eventProjects($eventId, $handle)) === 1) {
+        // delete it :)
+        $query = "DELETE FROM ProjectEvents WHERE EventId = $eventId";
+        $result = mySQL::query($query);
+
+        if ($result === true) {
+          // remove it also from the calendar
+          try {
+            \OC_Calendar_Object::delete($eventId);
+          } catch (\Exception $e) {
+            $result = false;
+          }
+        }
+      }
+
+      if ($ownConnection) {
+        mySQL::close($handle);
+      }
+
+      return $result;
     }
 
     /**Return the OC calendar-id
@@ -1196,17 +1235,20 @@ SELECT `Id`,`EventId`,`CalendarId`
 __EOT__;
 
       $result = mySQL::query($query, $handle);
-      while ($line = mySQL::fetch($result)) {
-        $event = array('Id' => $line['Id'],
-                       'EventId' => $line['EventId'],
-                       'CalendarId' => $line['CalendarId'],
-                       'object'     => \OC_Calendar_App::getEventObject($line['EventId'], false, false));
+      if ($result !== false) {
+        while ($line = mySQL::fetch($result)) {
+          $event = array('Id' => $line['Id'],
+                         'EventId' => $line['EventId'],
+                         'CalendarId' => $line['CalendarId'],
+                         'object'     => \OC_Calendar_App::getEventObject($line['EventId'], false, false));
 
-        if ($event['object'] !== false) {
-          $event['object']['startdate'] = new \DateTime($event['object']['startdate'], $utc);
-          $event['object']['enddate'] = new \DateTime($event['object']['enddate'], $utc);
-          $events[] = $event;
+          if ($event['object'] !== false) {
+            $event['object']['startdate'] = new \DateTime($event['object']['startdate'], $utc);
+            $event['object']['enddate'] = new \DateTime($event['object']['enddate'], $utc);
+            $events[] = $event;
+          }
         }
+        mySQL::freeResult($result);
       }
 
       if ($ownConnection) {
@@ -1220,6 +1262,9 @@ __EOT__;
 
     /**Fetch the related rows from the pivot-table (without calendar
      * data).
+     *
+     * @return A flat array with the associated event-ids. Note that
+     * even in case of an error an (empty) array is returned.
      */
     protected static function projectEvents($projectId, $handle = false)
     {
@@ -1239,8 +1284,11 @@ SELECT `CalendarId`,`EventId`
 __EOT__;
 
       $result = mySQL::query($query, $handle);
-      while ($line = mySQL::fetch($result)) {
-        $events[] = $line['EventId'];
+      if ($result !== false) {
+        while ($line = mySQL::fetch($result)) {
+          $events[] = $line['EventId'];
+        }
+        mySQL::freeResult($result);
       }
 
       if ($ownConnection) {
@@ -1267,8 +1315,11 @@ SELECT `ProjectId`
 __EOT__;
 
       $result = mySQL::query($query, $handle);
-      while ($line = mySQL::fetch($result)) {
-        $projects[] = $line['ProjectId'];
+      if ($result !== false) {
+        while ($line = mySQL::fetch($result)) {
+          $projects[] = $line['ProjectId'];
+        }
+        mySQL::freeResult($result);
       }
 
       if ($ownConnection) {

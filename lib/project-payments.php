@@ -279,6 +279,38 @@ namespace CAFEVDB
 
     }
 
+    /**Just return all associated payments. */
+    public static function payments($projectId, $full = true, $handle = false)
+    {
+      $ownConnection = $handle === false;
+      if ($ownConnection) {
+        Config::init();
+        $handle = mySQL::connect(Config::$pmeopts);
+      }
+
+      $query = "SELECT ".($full ? "*" : `Id`)."
+  FROM ".self::TABLE." p
+  LEFT JOIN Besetzungen b
+    ON b.Id = p.InstrumentationId
+  WHERE b.ProjektId = $projectId";
+
+      $result = false;
+      $qResult = mySQL::query($query, $handle);
+      if ($qResult !== false) {
+        $result = array();
+        while ($row = mySQL::fetch($qResult)) {
+          $result[] = $row;
+        }
+        mySQL::freeResult($qResult);
+      }
+
+      if ($ownConnection) {
+        mySQL::close($handle);
+      }
+
+      return $result;
+    }
+
     /**Fetch the debit-note payments for the given time interval and
      * sum them up, grouped by instrumentation id.
      *

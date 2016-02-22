@@ -439,84 +439,25 @@ class Instruments
     $result = mySQL::query($query, $handle);
 
     $final = array();
-    while ($line = mySQL::fetch($result)) {
-      $tblInst = $line['Instrument'];
-      if (array_search($tblInst, $list) !== false) {
-        $final[] = $tblInst;
+    if ($result !== false) {
+      while ($line = mySQL::fetch($result)) {
+        $tblInst = $line['Instrument'];
+        if (array_search($tblInst, $list) !== false) {
+          $final[] = $tblInst;
+        }
       }
+      mySQL::freeResult($result);
     }
 
     return $final;
   }
 
-  // Fetch the instruments required for a specific project
-  public static function fetchProjectInstruments($projectId, $handle) {
-
-    $query = 'SELECT `Besetzung` FROM `Projekte` WHERE `Id` = '.$projectId;
-    $result = mySQL::query($query, $handle);
-
-    // Ok there should be only one row
-    if (!($line = mySQL::fetch($result))) {
-      Util::error(L::t("Could not fetch instruments for project-id %s", array($projectId)), true);
-    }
-    $ProjInsts = explode(',',$line['Besetzung']);
-
-    // Now sort it in "natural" order
-    return self::sortOrchestral($ProjInsts, $handle);
-  }
-
-  // Fetch the project-instruments of the project musicians, possibly to
-  // do some sanity checks with the project's instrumentation, or simply
-  // to add all instruments to the projects instrumentation list.
-  public static function fetchProjectMusiciansInstruments($projectId, $handle)
-  {
-    $query = "SELECT DISTINCT i.`Instrument`
- FROM `ProjectInstruments` pi
- LEFT JOIN `Instrumente` i
- ON i.`Id` = pi.`InstrumentId`
- WHERE pi.`ProjectId` = $projectId";
-    $result = mySQL::query($query, $handle);
-
-    $instruments = array();
-    while ($line = mySQL::fetch($result)) {
-      $instruments[] = $line['Instrument'];
-    }
-
-    // Now sort it in "natural" order
-    return self::sortOrchestral($instruments, $handle);
-  }
-
-  // Fetch all instruments of the musicians subscribed to the project
-  // and add them to the instrumentation. If $replace is true, then
-  // remove the old instrumentation, otherwise the new instrumentation
-  // is the union of the old instrumentation and the instruments
-  // actually subscribed to the project.
-  public static function updateProjectInstrumentationFromMusicians($projectId, $handle, $replace = false)
-  {
-    // Make sure the instrumentation numbers exist
-    $query = 'INSERT IGNORE INTO `BesetzungsZahlen` (`ProjektId`) VALUES ('.$projectId.')';
-    mySQL::query($query, $handle);
-
-    $musinst = self::fetchProjectMusiciansInstruments($projectId, $handle);
-
-    if ($replace) {
-      $prjinst = $musinst;
-    } else {
-      $prjinst = self::fetchProjectInstruments($projectId, $handle);
-    }
-
-    $prjinst = array_unique(array_merge($musinst, $prjinst));
-    $prjinst = self::sortOrchestral($prjinst, $handle);
-
-
-    $query = "UPDATE `Projekte` SET `Besetzung`='".implode(',',$prjinst)."' WHERE `Id` = $projectId";
-    mySQL::query($query, $handle);
-
-    return $prjinst;
-  }
-
-  // Fetch the instruments and sort them according to Instruments.Sortierung
-  public static function fetch($handle = false)
+  /**Fetch the list of instruments required for this project, sorted
+   * by the "natural" orchestra-ordering.
+   *
+   * @return array(ID => NAME)
+   */
+  public static function fetchProjectInstruments($projectId, $handle = false)
   {
     $ownConnection = $handle === false;
 
@@ -525,27 +466,121 @@ class Instruments
       $handle = mySQL::connect(Config::$pmeopts);
     }
 
-    $Instruments = mySQL::multiKeys('Musiker', 'Instrumente', $handle);
+    $query = "SELECT DISTINCT pi.`InstrumentId`, i.`Instrument`
+  FROM `ProjectInstrumentation` pi
+  LEFT JOIN `Instrumente` i
+    ON pi.`InstrumentId` = i.`Id`
+  WHERE pi.`ProjectId` = $projectId
+  ORDER BY i.`Sortierung`";
 
-    $query = 'SELECT `Id`,`Instrument` FROM `Instrumente` WHERE  1 ORDER BY `Sortierung`,`Instrument` ASC';
-    $result = mySQL::query($query, $handle);
-
-    $final = array();
-    while ($line = mySQL::fetch($result)) {
-      //CAFEVerror("huh".$line['Instrument'],false);
-      $tblId   = $line['Id'];
-      $tblInst = $line['Instrument'];
-      if (array_search($tblInst, $Instruments) === false) {
-        Util::error('"'.$tblInst.'" not found in '.implode(',',$Instruments), true);
+    $result = array();
+    $qResult = mySQL::query($query, $handle);
+    if ($qResult !== false) {
+      while($line = mySQL::fetch($qResult)) {
+        $result[$line['InstrumentId']] = $line['Instrument'];
       }
-      $final[$tblId] = $tblInst;
+      mySQL::freeResult($qResult);
     }
 
     if ($ownConnection) {
       mySQL::close($handle);
     }
 
-    return $final;
+    return $result;
+  }
+
+  /**Fetch all instruments already registered with participants of the
+   * given project.
+   *
+   * @return array(ID => NAME)
+   */
+  public static function fetchProjectMusiciansInstruments($projectId, $handle = false)
+  {
+    $ownConnection = $handle === false;
+
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
+    $query = "SELECT DISTINCT i.`Id`, i.`Instrument`
+ FROM `ProjectInstruments` pi
+ LEFT JOIN `Instrumente` i
+   ON i.`Id` = pi.`InstrumentId`
+ WHERE pi.`ProjectId` = $projectId
+ ORDER BY i.`Sortierung` ASC";
+
+    $result = mySQL::query($query, $handle);
+
+    $instruments = array();
+    if ($result !== false) {
+      while ($line = mySQL::fetch($result)) {
+        $instruments[$line['Id']] = $line['Instrument'];
+      }
+      mySQL::freeResult($result);
+    }
+
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $instruments;
+  }
+
+  /* Fetch all instruments of the musicians subscribed to the project
+   * and add them to the instrumentation. If $replace is true, then
+   * remove the old instrumentation, otherwise the new instrumentation
+   * is the union of the old instrumentation and the instruments
+   * actually subscribed to the project.
+   */
+  public static function updateProjectInstrumentationFromMusicians($projectId, $replace = false, $handle = false)
+  {
+    $ownConnection = $handle === false;
+
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
+    $instruments = array_keys(self::fetchProjectMusiciansInstruments($projectId, $handle));
+    $projectInstruments = array_keys(self::fetchProjectInstruments($projectId, $handle));
+    if (!$replace) {
+      $instruments = array_replace($instruments, $projectInstruments);
+      $deletions = [];
+    } else {
+      $deletions = array_intersect($projectOInstruments, $instruments);
+    }
+
+    $table = "ProjectInstrumentation";
+
+    if (!empty($deletions)) {
+      //error_log(print_r($deletions, true));
+      $deletions = implode(',', $deletions);
+      $query = "DELETE FROM `$table` pi
+  WHERE
+     pi.`ProjectId` = $projectId
+     AND
+     FIND_IN_SET(`InstrumentId`, '$deletions')";
+      $result = mySQL::query($query, $handle);
+      if ($result !== false) {
+        mySQL::logDelete($table, 'InstumentId', ['InstruimentId' => $deletions], $handle);
+      }
+    }
+
+    $insertValues = array();
+    foreach($instruments as $instrument) {
+      $insertValues[] =
+        array('InstrumentId' => $instrument, 'ProjectId' => $projectId);
+    }
+
+    // use IGNORE, the items should be unique anyway.
+    $result = mySQL::insert($table, $insertValues, $handle, mySQL::IGNORE);
+
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $result;
   }
 
   /**Prepare for grouping select options by instrument family.
@@ -556,7 +591,7 @@ class Instruments
    *               'nameGroups' => array(NAME => FAMILY),
    *               'idGroups' => array(IDE => FAMILY))
    */
-  public static function fetchInfo($handle)
+  public static function fetchInfo($handle = false)
   {
     $ownConnection = $handle === false;
 
@@ -604,103 +639,11 @@ class Instruments
                  'nameGroups' => $nameGroups);
   }
 
-  /**Prepare for grouping select options by instrument family.
-   */
-  public static function fetchGrouped($handle)
+  /**Convert an array of ids to an array of names.*/
+  public static function instrumentNames($instrumentIds, $instrumentInfo)
   {
-    $ownConnection = $handle === false;
-
-    if ($ownConnection) {
-      Config::init();
-      $handle = mySQL::connect(Config::$pmeopts);
-    }
-
-    $Instruments = mySQL::multiKeys('Musiker', 'Instrumente', $handle);
-
-    $query = 'SELECT * FROM `Instrumente` WHERE  1 ORDER BY `Sortierung` ASC';
-    $result = mySQL::query($query, $handle);
-
-    $resultTable = array();
-    while ($line = mySQL::fetch($result)) {
-      //CAFEVerror("huh".$line['Instrument'],false);
-      $id         = $line['Id'];
-      $instrument = $line['Instrument'];
-      $family     = $line['Familie'];
-      if (array_search($instrument, $Instruments) === false) {
-        Util::error('"'.$instrument.'" not found in '.implode(',',$Instruments), true);
-      }
-      $resultTable[$instrument] = L::t($family);
-    }
-    if (false) {
-      // Dummy, in order to generate translation entries
-      L::t("Streich,Saiten");
-      L::t("Streich,Zupf");
-      L::t("Blas,Holz");
-      L::t("Blas,Blech");
-      L::t("Schlag");
-      L::t("Sonstiges");
-    }
-
-    if ($ownConnection) {
-      mySQL::close($handle);
-    }
-
-    return $resultTable;
-  }
-
-  // Check for consistency
-  public static function check($handle, $silent = false) {
-
-    $checkers = array('Musicians','Projects','Instrumentation Numbers','Instruments');
-
-    $instruments = array();
-    $instruments[$checkers[0]] = mySQL::multiKeys('Musiker', 'Instrumente', $handle);
-    $instruments[$checkers[1]]  =  mySQL::multiKeys('Besetzungen', 'Instrument', $handle);
-
-    $query = "SHOW COLUMNS FROM BesetzungsZahlen WHERE NOT FIELD IN ('Id','ProjektId')";
-    $result = mySQL::query($query, $handle) or die("Couldn't execute query");
-
-    $instruments[$checkers[2]] = array();
-    while ($line = mySQL::fetch($result)) {
-      $instruments[$checkers[2]][] = $line['Field'];
-    }
-
-    $query = "SELECT Instrument FROM Instrumente WHERE 1";
-    $result = mySQL::query($query, $handle) or die("Couldn't execute query");
-    $instruments[$checkers[3]] = array();
-    while ($line = mySQL::fetch($result)) {
-      $instruments[$checkers[3]][] = $line['Instrument'];
-    }
-
-    // Diff everything with every other
-    $diff = array();
-    foreach($checkers as $key1) {
-      $diff[$key1] = array();
-      foreach($checkers as $key2) {
-        $diff[$key1][$key2] = array_diff($instruments[$key1], $instruments[$key2]);
-      }
-    }
-
+    // could do some  checking, but in principle ...
     $result = true;
-    foreach ($checkers as $key1) {
-      foreach($checkers as $key2) {
-        if (count($diff[$key1][$key2]) > 0) {
-          $result = false;
-          if (!$silent) {
-            echo "<P><HR/>
-<H4>Instruments in ``$key1''-table which are not in ``$key2''-table:</H4>
-<UL>\n";
-            foreach ($diff[$key1][$key2] as $instrument) {
-              echo "<LI>".$instrument."\n";
-            }
-            echo "</UL>\n";
-          }
-        }
-      }
-    }
-    if (!$silent && !$result) {
-      echo "<HR/><P>\n";
-    }
     return $result;
   }
 
@@ -708,36 +651,6 @@ class Instruments
   // table. Delete everything else.
   public static function sanitizeTable($handle, $deleteexcess = false) {
 
-    $Instrumente = mySQL::multiKeys('Musiker', 'Instrumente', $handle);
-
-    foreach ($Instrumente as $value) {
-      $query = "INSERT IGNORE INTO `Instrumente` (`Instrument`) VALUES ('$value')";
-      $result = mySQL::query($query, $handle);
-    }
-
-    // Now the table contains at least all instruments, now remove excess elements.
-
-    if ($deleteexcess) {
-      // Build SQL Query
-      $query = "SELECT `Instrument` FROM `Instrumente` WHERE 1";
-
-      // Fetch the result or die
-      $result = mySQL::query($query, $handle);
-
-      $dropList = array();
-      while ($line = mySQL::fetch($result)) {
-        $tblInst = $line['Instrument'];
-        if (array_search($tblInst, $Instrumente) === false) {
-          $dropList[$tblInst] = true;
-        }
-      }
-      mySQL::freeResult($result);
-
-      foreach ($dropList as $key => $value) {
-        $query = "DELETE FROM `Instrumente` WHERE `Instrument` = '$key'";
-        $result = mySQL::query($query, $handle);
-      }
-    }
 
   }
 
@@ -753,9 +666,9 @@ class Instruments
       $query = "INSERT IGNORE INTO MusicianInstruments (MusicianId, InstrumentId)
 SELECT mi.Id AS MusicianId, i.Id AS InstrumentId
 FROM (SELECT sm.Id, Name, Vorname, splitString(Instrumente, ',', N) AS MusicianInstrument
-FROM Musiker sm
-JOIN numbers
-ON tokenCount(sm.Instrumente, ',') >= numbers.N) mi
+      FROM Musiker sm
+      JOIN numbers
+      ON tokenCount(sm.Instrumente, ',') >= numbers.N) mi
 LEFT JOIN Instrumente i
 ON i.Instrument = mi.MusicianInstrument
 WHERE i.Id IS NOT NULL AND mi.Id != 0";
@@ -794,8 +707,73 @@ WHERE i.Id IS NOT NULL AND b.ProjektId != 0 AND b.MusikerId != 0";
       return $result;
     }
 
+    /**Move the old set-based instrumentation column to a separate
+     * pivot-table called "ProjectInstrumentation" in order to have a
+     * cleaner data-base structure.
+     */
+    public static function migrateProjectInstrumentation()
+    {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
 
+      $query = "INSERT IGNORE INTO ProjectInstrumentation (ProjectId, InstrumentId)
+  SELECT pi.Id AS ProjectId, i.Id AS InstrumentId
+  FROM (SELECT pm.Id, splitString(Besetzung, ',', N) AS ProjectInstrument
+        FROM Projekte pm
+        JOIN numbers
+          ON tokenCount(pm.Besetzung, ',') >= numbers.N) pi
+  LEFT JOIN Instrumente i
+    ON i.Instrument = pi.ProjectInstrument
+  WHERE i.Id IS NOT NULL AND pi.Id != 0";
 
+      //error_log($query);
+
+      $result = mySQL::query($query, $handle);
+
+      mySQL::close($handle);
+
+      return $result;
+    }
+
+    /**Migrate the old instrumentation-numbers into the new
+     * pivot-table "ProjectInstrumentation"
+     */
+    public static function migrateInstrumentationNumbers()
+    {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+
+      $oldTable = 'BesetzungsZahlen';
+      $oldNumbers = mySQL::fetchRows($oldTable, '1', null, $handle);
+
+      if ($oldNumbers === false) {
+        return false;
+      }
+
+      $instrumentInfo = self::fetchInfo($handle);
+      $nameIds = array_flip($instrumentInfo['byId']);
+      $result = true;
+      foreach($oldNumbers as $data) {
+        array_shift($data);
+        $projectId = array_shift($data);
+        foreach($data as $instrument => $number) {
+          if ($number > 0 && !empty($nameIds[$instrument])) {
+            $values = [ 'ProjectId' => $projectId,
+                        'InstrumentId' => $nameIds[$instrument],
+                        'Quantity' => $number ];
+            $table = 'ProjectInstrumentation';
+            $res = mySQL::insert($table, $values, $handle, mySQL::UPDATE);
+            if ($res !== false) {
+              mySQL::logInsert($table, mySQL::newestIndex($handle), $values, $handle);
+            }
+          }
+        }
+      }
+
+      mySQL::close($handle);
+
+      return $result;
+    }
 
 }; // class
 

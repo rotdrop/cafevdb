@@ -155,11 +155,11 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
             ProjectName: post.ProjectName, // this is the name
             // Now special options for the dialog popup
             InitialViewOperation: true,
-            InitialName: 'PME_sys_operation',
-            InitialValue: 'View',
-            ReloadName: 'PME_sys_operation',
-            ReloadValue: 'View',
-            PME_sys_operation: 'View',
+            InitialName: false, // 'PME_sys_operation',
+            InitialValue: false, // 'View',
+            ReloadName: false, // 'PME_sys_operation',
+            ReloadValue: false, // 'View',
+            PME_sys_operation: false, //'View',
             ModalDialog: false,
             modified: false
         };
@@ -295,6 +295,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
         var projectActions = container.find('select.project-actions');
 
         var chosenOptions = {
+            placeholder_text_single:t('cafevdb', 'Select an Action'),
             inherit_select_classes:true,
             disable_search:true
         };
@@ -1003,11 +1004,22 @@ $(document).ready(function(){
     });
 
     CAFEVDB.addReadyCallback(function() {
-        CAFEVDB.Projects.actionMenu();
-        var dpyClass = $(PHPMYEDIT.defaultSelector).find('form.pme-form input[name="DisplayClass"]');
-        if (dpyClass.length > 0 && dpyClass.val() === 'Projects') {
-            CAFEVDB.Projects.pmeFormInit(PHPMYEDIT.defaultSelector);
+        var container = $(PHPMYEDIT.defaultSelector+'.projects');
+        if (container.length <= 0) {
+            return;
         }
+        CAFEVDB.Projects.actionMenu();
+        CAFEVDB.Projects.pmeFormInit(PHPMYEDIT.defaultSelector);
+
+        var pmeForm = container.find(PHPMYEDIT.pmeClassSelector('form', 'form'));
+        console.log('inner container', pmeForm.length);
+        pmeForm.
+            off('click', 'input.show-disabled').
+            on('click', 'input.show-disabled', function(event) {
+            event.preventDefault();
+            console.log('hide/show disabled projects');
+            return PHPMYEDIT.pseudoSubmit($(this.form), $(this), container, false);
+        });
     });
 });
 

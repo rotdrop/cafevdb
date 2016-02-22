@@ -214,7 +214,8 @@ namespace CAFEVDB
                   'tooltip' => L::t('Bank account associated to this debit mandate.'),
                   'name' => L::t('Bank Account')
               ),
-            )
+            ),
+          'navigation' => 'VCD', // 'VCPD',
           )
         );
       $amountTab = array(

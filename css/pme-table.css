@@ -45,6 +45,18 @@ html:not(.ie8) input[type="checkbox"].pme-input:checked + span.pme-label::before
 
 /*******************************************************************************
  *
+ * list view within jQuery dialogs, let them look like the ones
+ * outside ... copied from OC, will have to be changed when OC changes.
+ *
+ */
+.ui-widget form.pme-form.pme-list input {
+  font-family: 'Open Sans', Frutiger, Calibri, 'Myriad Pro', Myriad, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/*******************************************************************************
+ *
  * no padding
  *
  */
@@ -55,7 +67,7 @@ html:not(.ie8) input[type="checkbox"].pme-input:checked + span.pme-label::before
 
 /*******************************************************************************
  *
- * no padding
+ * play with animation
  *
  */
 
@@ -219,7 +231,7 @@ form.pme-form table.pme-main.tab-9 td.tab-9 {
    */
   overflow-y: auto;
   overflow-x: hidden;
-  //overflow: auto;
+  /*overflow: auto;*/
 }
 
 /* Hide the dialog behind the modal layer during loading of slow
@@ -297,6 +309,14 @@ tr.pme-navigation .listall {
   color:#555;
 }
 
+.ui-widget.ui-dialog form.pme-form.pme-list tr.pme-navigation input.pme-reload {
+  width: 30px!important;
+  height: 30px!important;
+}
+
+.ui-widget form.pme-form.pme-list .pme-menu-block a.chosen-default span:hover,
+.ui-widget form.pme-form.pme-list .pme-menu-block a.chosen-default span:focus,
+.ui-widget form.pme-form.pme-list .pme-menu-block a.chosen-default span:active,
 .pme-menu-block a.chosen-default span:hover,
 .pme-menu-block a.chosen-default span:focus,
 .pme-menu-block a.chosen-default span:active,
@@ -310,9 +330,13 @@ tr.pme-navigation .listall {
 .pme-goto a.chosen-single,
 .pme-pagerows a.chosen-single,
 .pme-menu-block a.chosen-single,
-.pme-export-block a.chosen-single {
+.pme-export-block a.chosen-single,
+.ui-widget form.pme-form.pme-list .pme-goto a.chosen-single,
+.ui-widget form.pme-form.pme-list .pme-pagerows a.chosen-single,
+.ui-widget form.pme-form.pme-list .pme-menu-block a.chosen-single {
   height: auto;
   background: transparent;
+  background-repeat:no-repeat;
   box-shadow: none;
   outline: medium, none;
   margin: 0px 0px 3px 0px !important;
@@ -322,6 +346,12 @@ tr.pme-navigation .listall {
   padding: 4px 4px 5px 4px;
   line-height: 19px;
   font-size: 13px;
+}
+
+.ui-widget form.pme-form.pme-list .pme-goto a.chosen-single,
+.ui-widget form.pme-form.pme-list .pme-pagerows a.chosen-single,
+.ui-widget form.pme-form.pme-list .pme-menu-block a.chosen-single {
+  margin: 3px 0px 3px 0px !important;
 }
 
 .pme-goto a.chosen-single:hover, .pme-goto a.chosen-single:focus,
@@ -337,6 +367,8 @@ tr.pme-navigation .listall {
   border-radius: 3px;
 }
 
+.ui-widget form.pme-form.pme-list .pme-goto a.chosen-single,
+.ui-widget form.pme-form.pme-list .pme-pagerows a.chosen-single,
 .pme-goto a.chosen-single,
 .pme-pagerows a.chosen-single {
   border-top-right-radius: 3px;
@@ -351,6 +383,14 @@ tr.pme-navigation .listall {
 }
 
 
+.ui-widget form.pme-form.pme-list span.pme-goto input.pme-goto:focus,
+/*span.pme-goto input.pme-goto:hover,*/
+.ui-widget form.pme-form.pme-list span.pme-goto input.pme-goto:active,
+.ui-widget form.pme-form.pme-list span.pme-goto input.pme-goto,
+.ui-widget form.pme-form.pme-list span.pme-pagerows input.pme-pagerows:focus,
+/*span.pme-pagerows input.pme-pagerows:hover,*/
+.ui-widget form.pme-form.pme-list span.pme-pagerows input.pme-pagerows:active,
+.ui-widget form.pme-form.pme-list span.pme-pagerows input.pme-pagerows,
 span.pme-goto input.pme-goto:focus,
 /*span.pme-goto input.pme-goto:hover,*/
 span.pme-goto input.pme-goto:active,
@@ -1085,6 +1125,10 @@ table.pme-main tr.pme-header th.pme-nosort {
 table.pme-main tbody td.pme-cell:not(.control),
 table.pme-main tbody td.pme-navigation {
   cursor:pointer;
+}
+
+table.pme-main tbody td.pme-navigation div.graphic-links input.hide-disabled:disabled {
+  display:none;
 }
 
 /*

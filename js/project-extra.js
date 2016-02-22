@@ -429,11 +429,17 @@ var CAFEVDB = CAFEVDB || {};
 $(document).ready(function(){
 
   CAFEVDB.addReadyCallback(function() {
+    var container = $(PHPMYEDIT.defaultSelector+'.project-extra');
+    if (container.length <= 0) {
+      return; // not for us
+    }
 
-    var container = PHPMYEDIT.container();
-    container.
+    var pmeForm = container.find(PHPMYEDIT.pmeClassSelector('form', 'form'));
+    pmeForm.
       off('click', 'input.show-disabled').
       on('click', 'input.show-disabled', function(event) {
+      event.preventDefault();
+      console.log('hide/show disabled fields');
       return PHPMYEDIT.pseudoSubmit($(this.form), $(this), container, true);
     });
 

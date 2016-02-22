@@ -86,25 +86,31 @@ namespace CAFEVDB {
     /* fetch all known instruments to check for valid instrument names
      * and verify the new project instruments against the known names
      */
-    $allInstruments = Instruments::fetch($handle);
-    $instrumentDiff = array_diff($musicianInstruments, $allInstruments);
+    $allInstruments = Instruments::fetchInfo($handle);
+    $allInstrumentIds = array_keys($allInstruments['byId']);
+    $instrumentDiff = array_diff($musicianInstruments, $allInstrumentIds);
     if (count($instrumentDiff) != 0) {
       mySQL::close($handle);
       $debugText .= ob_get_contents();
       @ob_end_clean();
 
+      $clearText = array();
+      foreach($instrumentDiff as $id) {
+        $clearText[] = $allInstruments['byId'][$id];
+      }
+
       \OCP\JSON::error(
         array(
           'data' => array('error' => L::t('invalid arguments'),
                           'message' => L::t('Unknown instruments in list: %s',
-                                            array(explode(', ', $instrumentDiff))),
+                                            array(implode(', ', $clearText))),
                           'debug' => $debugText)));
       return false;
     }
 
     $musicianId = $musRow['Id'];
-    $oldMusicianInstruments = Util::explode(',', $musRow['Instrumente']);
-    $projectInstruments = Util::explode(',', $musRow['ProjectInstruments']);
+    $oldMusicianInstruments = Util::explode(',', $musRow['MusicianInstrumentIds']);
+    $projectInstruments = Util::explode(',', $musRow['ProjectInstrumentIds']);
     $numOld = count(array_intersect($projectInstruments, $oldMusicianInstruments));
     $numNew = count(array_intersect($projectInstruments, $musicianInstruments));
 
@@ -129,49 +135,33 @@ namespace CAFEVDB {
 
 
       if ($numNew === 0) {
+        $clearText = array();
+        foreach($projectInstruments as $id) {
+          $clearText[] = $allInstruments['byId'][$id];
+        }
         // Auto-add?
         $notice = L::t("Please consider to add the registered project instrument `%s' to %s's ".
                        "list of instruments (or possibly change the project instrument).",
-                       array(implode(',',$projectInstruments), $musRow['Vorname']));
+                       array(implode(',', $clearText), $musRow['Vorname']));
       }
     }
 
-    // ok, we have a valid musician-id, a valid intrument list, let it go
-    $query = "UPDATE `Musiker` SET `Instrumente`='".implode(',',$musicianInstruments)."'
- WHERE `Id` = $musicianId";
+    mySQL::close($handle);
+    $debugText .= ob_get_contents();
+    @ob_end_clean();
 
-    //throw new \Exception($query);
+    \OCP\JSON::success(
+      array(
+        'data' => array(
+          'instruments' => $musicianInstruments,
+          'message' => ($notice == ''
+                        ? '' // don't annoy the user with success messages.
+                        : L::t("Changing the instrument list for the musician `%s' was probably successful.",
+                               array($musRow['Vorname'].' '.$musRow['Name']))),
+          'notice' => $notice,
+          'debug' => $debugText)));
 
-    if (mySQL::query($query, $handle) === false) {
-      mySQL::close($handle);
-      $debugText .= ob_get_contents();
-      @ob_end_clean();
-
-      \OCP\JSON::error(
-        array(
-          'data' => array('error' => L::t('data base error'),
-                          'instruments' => $oldMusicianInstruments,
-                          'message' => L::t('Failed to update the musician\'s instrument list.'),
-                          'debug' => $debugText)));
-      return false;
-    } else {
-      mySQL::close($handle);
-      $debugText .= ob_get_contents();
-      @ob_end_clean();
-
-      \OCP\JSON::success(
-        array(
-          'data' => array(
-            'instruments' => $musicianInstruments,
-            'message' => ($notice == ''
-                          ? '' // don't annoy the user with success messages.
-                          : L::t("Changing the instrument list for the musician `%s' was probably successful.",
-                                 array($musRow['Vorname'].' '.$musRow['Name']))),
-            'notice' => $notice,
-            'debug' => $debugText)));
-
-      return true;
-    }
+    return true;
 
   } catch (\Exception $e) {
 

@@ -668,12 +668,13 @@ namespace CAFEVDB
     private function getInstrumentsFromDb($dbh)
     {
       // Get the current list of instruments for the filter
+      $instrumentInfo = Instruments::fetchInfo($dbh);
       if ($this->projectId >= 0 && !$this->userBase['ExceptProject']) {
         $this->instruments = Instruments::fetchProjectMusiciansInstruments($this->projectId, $dbh);
       } else {
-        $this->instruments = Instruments::fetch($dbh);
+        $this->instruments = $instrumentInfo['byId'];
       }
-      $this->instrumentGroups = Instruments::fetchGrouped($dbh);
+      $this->instrumentGroups = $instrumentInfo['nameGroups'];
 
       array_unshift($this->instruments, '*');
     }
