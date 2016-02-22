@@ -245,7 +245,7 @@ class Instrumentation
     $this->instrumentInfo = Instruments::fetchInfo($handle);
     $this->instruments = $this->instrumentInfo['byId'];
     $this->groupedInstruments = $this->instrumentInfo['nameGroups'];
-    $this->instrumentFamilies = $this->instrumentInfo['families'];
+    $this->instrumentFamilies = mySQL::multiKeys('Instrumente', 'Familie', $handle);
     $this->memberStatus = mySQL::multiKeys('Musiker', 'MemberStatus', $handle);
     $this->memberStatusNames = array(
       'regular' => strval(L::t('regular musician')),
