@@ -1001,7 +1001,7 @@ var CAFEVDB = CAFEVDB || {};
       minDate: '01.01.1990'
     });
 
-    container.find('td.money').filter(function() {
+    container.find('td.money, td.signed-number').filter(function() {
       return $.trim($(this).text()).indexOf("-") == 0;
     }).addClass("negative");
 
