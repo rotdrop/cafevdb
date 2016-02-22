@@ -293,9 +293,8 @@ namespace CAFEVDB
 
       if ($this->showDisabled) {
         $opts['fdd']['Disabled'] = array(
-          'tab'      => array('id' => 'definition'),
           'name'     => L::t('Disabled'),
-          'css'      => array('postfix' => ' extra-field-disabled'),
+          'css'      => array('postfix' => ' project-disabled'),
           'values2|CAP' => array(1 => ''),
           'values2|LVFD' => array(1 => L::t('true'),
                                   0 => L::t('false')),
