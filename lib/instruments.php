@@ -31,15 +31,38 @@ class Instruments
   extends Instrumentation
 {
   const CSS_PREFIX = 'cafevdb-page';
+  private $showDisabled;
+  private $showButtons;
 
-  public function __construct($execute = true)
+  public function __construct($execute = true, $showButtons = false)
   {
     parent::__construct($execute);
+
+    $this->showDisabled = Util::cgiValue('ShowDisabled', false);
+    $pmeSysPfx = Config::$pmeopts['cgi']['prefix']['sys'];
+    if (Util::cgiValue($pmeSysPfx.'showdisabled', false) !== false) {
+      $this->showDisabled = true;
+    } else if (Util::cgiValue($pmeSysPfx.'hidedisabled', false) !== false) {
+      $this->showDisabled = false;
+    }
+
+    $this->showButtons = $showButtons;
   }
 
   public function shortTitle()
   {
-    return L::t("Add new Instruments");
+    if ($this->deleteOperation()) {
+      return L::t('Delete Instrument');
+    } else if ($this->viewOperation()) {
+      return L::t('View Instrument');
+    } else if ($this->changeOperation()) {
+      return L::t('Change Instrument');
+    } else if ($this->addOperation()) {
+      return L::t('Add Instrument');
+    } else if ($this->copyOperation()) {
+      return L::t('Copy Instrument');
+    }
+    return L::t("Instruments and Instrument Sort-Order");
   }
 
   public function headerText()
@@ -62,6 +85,8 @@ class Instruments
     $opts            = $this->opts;
     $instruments     = $this->instruments;
     $recordsPerPage  = $this->recordsPerPage;
+
+    $opts['css']['postfix'] = 'direct-change';
 
     /*
      * IMPORTANT NOTE: This generated file contains only a subset of huge amount
@@ -86,7 +111,10 @@ class Instruments
       'ProjectId' => $projectId,
       'Template' => 'instruments',
       'DisplayClass' => 'Instruments',
-      'RecordsPerPage' => $recordsPerPage);
+      'ClassArguments' => [ $this->execute, $this->showButtons ],
+      'ShowDisabled' => $this->showDisabled,
+      'RecordsPerPage' => $recordsPerPage,
+      );
 
     // Name of field which is the unique key
     $opts['key'] = 'Id';
@@ -104,24 +132,44 @@ class Instruments
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
     // F - filter, I - initial sort suppressed
-    $opts['options'] = 'APVC';
+    $opts['options'] = 'ACDPF';
 
     // Number of lines to display on multiple selection filters
     $opts['multiple'] = '4';
+
+    if ($this->showButtons) {
+      $showButton = array(
+        'name' => 'showdisabled',
+        'value' => L::t('Show Disabled'),
+        'css' => 'show-disabled'
+        );
+      $hideButton = array(
+        'name' => 'hidedisabled',
+        'value' => L::t('Hide Disabled'),
+        'css' => 'show-disabled'
+        );
+      if ($this->showDisabled) {
+        $opts['buttons'] = Navigation::prependTableButton($hideButton, false, false);
+      } else {
+        $opts['buttons'] = Navigation::prependTableButton($showButton, false, false);
+      }
+    }
 
     // Navigation style: B - buttons (default), T - text links, G - graphic links
     // Buttons position: U - up, D - down (default)
     //$opts['navigation'] = 'DB';
 
     // Display special page elements
-    $opts['display'] =  array_merge($opts['display'],
-                                    array(
-                                      'form'  => true,
-                                      //'query' => true,
-                                      'sort'  => true,
-                                      'time'  => true,
-                                      'tabs'  => false
-                                      ));
+    $opts['display'] =  array_merge(
+      $opts['display'],
+      array(
+        'form'  => true,
+        //'query' => true,
+        'sort'  => true,
+        'time'  => true,
+        'tabs'  => false,
+        'navigation' => 'CPD'
+        ));
 
     // Set default prefixes for variables
     $opts['js']['prefix']               = 'PME_js_';
@@ -184,42 +232,101 @@ class Instruments
 
     $opts['fdd']['Id'] = array(
       'name'     => 'Id',
-      'select'   => 'T',
-      'options'  => '', // auto increment
+      'select'   => 'N',
+      'input'    => 'RH',
+      'input|D'  => 'R',
       'maxlen'   => 11,
-      'default'  => '0',
+      'size'     => 5,
+      'default'  => '0',  // auto increment
+      'align'    => 'right',
       'sort'     => true,
       );
 
     $opts['fdd']['Instrument'] = array(
       'name'     => 'Instrument',
       'select'   => 'T',
-      'options'  => 'ACLFPV',
       'maxlen'   => 64,
       'sort'     => true
       );
+
     $opts['fdd']['Familie'] = array(
       'name' => 'Familie',
       'nowrap' => true,
       'select'   => 'M',
       'maxlen'   => 12,
-      'sort'     => true
+      'sort'     => true,
+      'values'   => $this->instrumentFamilies,
       );
-    $opts['fdd']['Familie']['values'] = $this->instrumentFamilies;
-    // Provide a link to Wikipedia for fun ...
 
     $opts['fdd']['Sortierung'] = array(
       'name'     => L::t('sort order'),
-      'select'   => 'T',
-      'maxlen'   => 8,
-      'sort'     => true
-                                       );
+      'select'   => 'N',
+      'maxlen'   => 9,
+      'size'     => 6,
+      'sort'     => true,
+      'align'    => 'right',
+      );
+
+    if ($this->showDisabled) {
+      $opts['fdd']['Disabled'] = array(
+        'name'     => L::t('Disabled'),
+        'css'      => array('postfix' => ' instrument-disabled'),
+        'values2|CAP' => array(1 => ''),
+        'values2|LVFD' => array(1 => L::t('true'),
+                                0 => L::t('false')),
+        'default'  => '',
+        'select'   => 'O',
+        'sort'     => true,
+        'tooltip'  => Config::toolTips('extra-fields-disabled')
+        );
+    }
+
+    // Provide joins with MusicianInstruments, ProjectInstruments,
+    // ProjectInstrumentation in order to flag used instruments as
+    // undeletable, while allowing deletion for unused ones (more
+    // practical after adding new instruments)
+    $instrumentTables = [
+      'MusicianInstruments',
+      'ProjectInstruments',
+      'ProjectInstrumentation'
+      ];
+    $usageIdx = count($opts['fdd']);
+    foreach($instrumentTables as $table) {
+      $opts['fdd'][$table] = array(
+        'input' => 'VRH',
+        'sql' => 'PMEtable0.Id',
+        'values' => [
+          'table' => $table,
+          'column' => 'InstrumentId',
+          'description' => 'InstrumentId',
+          'join' => '$main_table.Id = $join_table.InstrumentId',
+          ],
+        );
+    }
+    $usageSQL = [];
+    for($i = 0; $i < count($instrumentTables); ++$i) {
+      $usageSQL[] = 'COUNT(DISTINCT PMEjoin'.($usageIdx+$i).'.Id)';
+    }
+    $usageSQL = implode('+', $usageSQL);
+    $usageIdx = count($opts['fdd']);
+    $opts['fdd']['Usage'] = array(
+      'name'    => L::t('Usage'),
+      'input'   => 'VRH',
+      'input|D' => 'VR',
+      'sql'     => '('.$usageSQL.')',
+      'sort'    => true,
+      'size'    => 5,
+      'select'  => 'N',
+      'align'   => 'right',
+      );
+
+    // Provide a link to Wikipedia for fun ...
     $opts['fdd']['Lexikon'] = array(
-      'name' => 'Wikipedia',
-      'select' => 'T',
-      'options' => 'VLRF',
-      'input' => 'V',
-      'sql' => "REPLACE('"
+      'name'    => 'Wikipedia',
+      'select'  => 'T',
+      'input'   => 'VR',
+      'options' => 'LF',
+      'sql'     => "REPLACE('"
 ."<a "
 ."href=\"http://de.wikipedia.org/wiki/@@key@@\" "
 ."target=\"Wikipedia\" "
@@ -232,203 +339,25 @@ class Instruments
 //$opts['fdd']['Lexikon']['URL'] = "http://de.wikipedia.org/wiki/\$key\" target=\"_blank";
 //$opts['fdd']['Lexikon']['URLdisp'] = "\$key@Wikipedia.DE";
 
-    $opts['triggers']['update']['before']  = 'CAFEVDB\Instruments::beforeUpdateTrigger';
-    $opts['triggers']['insert']['before']  = 'CAFEVDB\Instruments::beforeInsertTrigger';
+    $opts['groupby_fields'] = [ 'Id' ];
+
+    //$opts['triggers']['update']['before']  = 'CAFEVDB\Instruments::beforeUpdateTrigger';
+    //$opts['triggers']['insert']['before']  = 'CAFEVDB\Instruments::beforeInsertTrigger';
+
+    $opts['triggers']['select']['data'][] =
+      function(&$pme, $op, $step, &$row) use ($opts, $usageIdx)  {
+      $pme->options = $opts['options'];
+      if (!empty($row['qf'.$usageIdx])) {
+        $pme->options = str_replace('D', '', $pme->options);
+      } else {
+        $pme->options = $opts['options'];
+      }
+      return true;
+    };
 
     $opts['execute'] = $this->execute;
 
     $this->pme = new \phpMyEdit($opts);
-  }
-
-  /** phpMyEdit calls the trigger (callback) with the following arguments:
-   *
-   * @param[in] $pme The phpMyEdit instance
-   *
-   * @param[in] $op The operation, 'insert', 'update' etc.
-   *
-   * @param[in] $step 'before' or 'after'
-   *
-   * @param[in] $oldvals Self-explanatory.
-   *
-   * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
-   *
-   * @param[in,out] &$newvals Set of new values, which may also be modified.
-   *
-   * @return boolean. If returning @c false the operation will be terminated
-   */
-  public static function beforeInsertTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
-  {
-    // $newvals contains the new values
-
-    // Fetch the current list of instruments
-    $instruments = mySQL::multiKeys('Musiker', 'Instrumente', $pme->dbh);
-    array_push($instruments, $newvals['Instrument']);
-    sort($instruments, SORT_FLAG_CASE|SORT_STRING);
-
-    // Now inject the new chain of instruments into Musiker table
-    $sqlquery = "ALTER TABLE `Musiker` CHANGE `Instrumente`
- `Instrumente` SET('" . implode("','", $instruments) . "')";
-    if (!mySQL::query($sqlquery, $pme->dbh)) {
-      Util::error(L::t("Could not execute the query\n%s\nSQL-Error: %s",
-                       array($sqlquery, mySQL::error($handle))), true);
-    }
-
-    // Now do the same with the Besetzungen-table
-    $instruments = mySQL::multiKeys('Besetzungen', 'Instrument', $pme->dbh);
-    array_push($instruments, $newvals['Instrument']);
-    sort($instruments, SORT_FLAG_CASE|SORT_STRING);
-
-    $sqlquery = "ALTER TABLE `Besetzungen` CHANGE `Instrument`
- `Instrument` ENUM('" . implode("','", $instruments) . "')";
-    if (!mySQL::query($sqlquery, $pme->dbh)) {
-      Util::error("Could not execute the query\n".$sqlquery."\nSQL-Error: ".mySQL::error($pme->dbh), true);
-    }
-
-    // Now do the same with the Projekte-table
-    $instruments = mySQL::multiKeys('Projekte', 'Besetzung', $pme->dbh);
-    array_push($instruments, $newvals['Instrument']);
-    sort($instruments, SORT_FLAG_CASE|SORT_STRING);
-
-    $sqlquery = "ALTER TABLE `Projekte` CHANGE `Besetzung`
- `Besetzung` SET('" . implode("','", $instruments) . "') COMMENT 'Benötigte Instrumente'";
-    if (!mySQL::query($sqlquery, $pme->dbh)) {
-      Util::error("Could not execute the query\n".$sqlquery."\nSQL-Error: ".mySQL::error($handel), true);
-    }
-
-    // Now insert also another column into BesetzungsZahlen
-    $sqlquery = "ALTER TABLE `BesetzungsZahlen` ADD COLUMN `".$newvals['Instrument']."` TINYINT NOT NULL DEFAULT '0'";
-    if (!mySQL::query($sqlquery, $pme->dbh)) {
-      Util::error("Could not execute the query\n".$sqlquery."\nSQL-Error: ".mySQL::error($handle), true);
-    }
-
-    return true;
-  }
-
-  /** phpMyEdit calls the trigger (callback) with the following arguments:
-   *
-   * @param[in] $pme The phpMyEdit instance
-   *
-   * @param[in] $op The operation, 'insert', 'update' etc.
-   *
-   * @param[in] $step 'before' or 'after'
-   *
-   * @param[in] $oldvals Self-explanatory.
-   *
-   * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
-   *
-   * @param[in,out] &$newvals Set of new values, which may also be modified.
-   *
-   * @return boolean. If returning @c false the operation will be terminated
-   *
-   * @bug Convert this to a function triggering a "user-friendly" error message.
-   */
-  public static function beforeUpdateTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
-  {
-    // $newvals contains the new values
-
-    //print_r($changed);
-
-    if (array_search('Instrument', $changed) === false) {
-      return true;
-    } else {
-      // This is a nightmare. later
-
-      /* Ok. Attempt to rename. Fetch all multi-keys from all tables,
-       * check that the old value is already present and replace it
-       * with the new value ..
-       */
-      $oldInstrument = $oldvals['Instrument'];
-      $instrument = $newvals['Instrument'];
-
-      $tables = array();
-      $tables[] = array('name' => 'Musiker',
-                        'field' => 'Instrumente',
-                        'type' =>  'SET',
-                        'comment' => '');
-      $tables[] = array('name' => 'Besetzungen',
-                        'field' => 'Instrument',
-                        'type' => 'ENUM',
-                        'comment' => '');
-      $tables[] = array('name' => 'Projekte',
-                        'field' => 'Besetzung',
-                        'type' => 'SET',
-                        'comment' => L::t('Needed Instruments'));
-
-      foreach ($tables as $table) {
-        $instruments = mySQL::multiKeys($table['name'], $table['field'], $pme->dbh);
-        if (!array_search($oldInstrument, $instruments)) {
-          trigger_error(L::t("Instrument `%s' does not yet exist in table `%s', cannot change its name to `%s'",
-                             array($oldInstrument, $table['name'], $instrument)), E_USER_ERROR);
-        }
-        if (array_search($instrument, $instruments)) {
-          trigger_error(L::t("Instrument `%s' already exists in table `%s', cannot change its name from `%s'",
-                             array($instrument, $table['name'], $oldInstrument)), E_USER_ERROR);
-        }
-      }
-
-      // Fine, loop again and exchange it
-      foreach ($tables as $table) {
-        $instruments = mySQL::multiKeys($table['name'], $table['field'], $pme->dbh);
-
-        $comment = $table['comment'] != '' ? " COMMENT '".$table['comment']."'" : "";
-
-        // 1st step: inject new enum value
-        $instruments[] = $instrument;
-        sort($instruments, SORT_FLAG_CASE|SORT_STRING);
-
-        $sqlQuery = "ALTER TABLE `".$table['name']."` CHANGE `".$table['field']."`
- `".$table['field']."` ".$table['type']."('".implode("','", $instruments)."')";
-
-        if (!mySQL::query($sqlQuery, $pme->dbh)) {
-          Util::error(L::t("SQL-Error ``%s''. Could not execute the query ``%s''",
-                           array(mySQL::error($handle), $sqlQuery)), true);
-          return false;
-        }
-
-        // 2nd step: alter all rows to use the new enum value
-        if ($table['type'] == 'ENUM') {
-          $sqlQuery = "UPDATE `".$table['name']."`
- SET `".$table['field']."` = '".$instrument."'
- WHERE `".$table['field']."` = '".$oldInstrument."'";
-        } else {
-          $sqlQuery = "UPDATE `".$table['name']."`
- SET `".$table['field']."` = TRIM(',' FROM CONCAT(`".$table['field']."`,',','".$instrument."'))
- WHERE `".$table['field']."` LIKE '%".$oldInstrument."%'";
-        }
-
-        if (!mySQL::query($sqlQuery, $pme->dbh)) {
-          Util::error(L::t("SQL-Error ``%s''. Could not execute the query `` %s ''",
-                           array(mySQL::error($handle), $sqlQuery)), true);
-          return false;
-        }
-
-        // 3rd step: drop old enum value
-        $key = array_search($oldInstrument, $instruments);
-        unset($instruments[$key]);
-        sort($instruments, SORT_FLAG_CASE|SORT_STRING);
-        $sqlQuery = "ALTER TABLE `".$table['name']."` CHANGE `".$table['field']."`
- `".$table['field']."` ".$table['type']."('".implode("','", $instruments)."')";
-
-        if (!mySQL::query($sqlQuery, $pme->dbh)) {
-          Util::error(L::t("SQL-Error ``%s''. Could not execute the query ``%s''",
-                           array(mySQL::error($handle), $sqlQuery)), true);
-          return false;
-        }
-      }
-
-      // Finally change the column name in "BesetzungsZahlen"
-      $sqlQuery = "ALTER TABLE `BesetzungsZahlen` CHANGE `".$oldInstrument."` `".$instrument."`
-  TINYINT NOT NULL DEFAULT '0'";
-      if (!mySQL::query($sqlQuery, $pme->dbh)) {
-        Util::error(L::t("SQL-Error ``%s''. Could not execute the query ``%s''",
-                         array(mySQL::error($handle), $sqlQuery)), true);
-        return false;
-      }
-
-      // And in principle, if anything goes wrong, we should clean up ...
-
-      return true;
-    }
   }
 
   // Sort the given list of instruments according to orchestral ordering
@@ -600,8 +529,6 @@ class Instruments
       $handle = mySQL::connect(Config::$pmeopts);
     }
 
-    $Instruments = mySQL::multiKeys('Musiker', 'Instrumente', $handle);
-
     $query = 'SELECT * FROM `Instrumente` WHERE  1 ORDER BY `Sortierung` ASC';
     $result = mySQL::query($query, $handle);
 
@@ -611,9 +538,6 @@ class Instruments
       $id         = $line['Id'];
       $instrument = $line['Instrument'];
       $family     = $line['Familie'];
-      if (array_search($instrument, $Instruments) === false) {
-        Util::error('"'.$instrument.'" not found in '.implode(',',$Instruments), true);
-      }
       $byName[$instrument] = $byId[$id] = $instrument;
       $nameGroups[$instrument] = $idGroups[$id] = L::t($family);
       $families[$family] = true;
@@ -642,28 +566,32 @@ class Instruments
   /**Convert an array of ids to an array of names.*/
   public static function instrumentNames($instrumentIds, $instrumentInfo)
   {
-    // could do some  checking, but in principle ...
-    $result = true;
+    $byId = $instrumentInfo['byId'];
+    $result = array();
+    foreach($instrumentIds as $id) {
+      $result[$id] = empty($byId[$id]) ? L::t('unknown') : $byId[$id];
+    }
     return $result;
   }
 
   // Make sure the Instrumente table has all instruments used in the Musiker
   // table. Delete everything else.
   public static function sanitizeTable($handle, $deleteexcess = false) {
-
-
+    // could do some  checking, but in principle ...
+    $result = true;
+    return $result;
   }
 
-    /**Move the old set-based instrument column to a separate
-     * pivot-table called "MusicianInstruments" in order to have a
-     * cleaner data-base structure.
-     */
-    public static function migrateMusicianInstruments()
-    {
-      Config::init();
-      $handle = mySQL::connect(Config::$pmeopts);
+  /**Move the old set-based instrument column to a separate
+   * pivot-table called "MusicianInstruments" in order to have a
+   * cleaner data-base structure.
+   */
+  public static function migrateMusicianInstruments()
+  {
+    Config::init();
+    $handle = mySQL::connect(Config::$pmeopts);
 
-      $query = "INSERT IGNORE INTO MusicianInstruments (MusicianId, InstrumentId)
+    $query = "INSERT IGNORE INTO MusicianInstruments (MusicianId, InstrumentId)
 SELECT mi.Id AS MusicianId, i.Id AS InstrumentId
 FROM (SELECT sm.Id, Name, Vorname, splitString(Instrumente, ',', N) AS MusicianInstrument
       FROM Musiker sm
@@ -673,23 +601,23 @@ LEFT JOIN Instrumente i
 ON i.Instrument = mi.MusicianInstrument
 WHERE i.Id IS NOT NULL AND mi.Id != 0";
 
-      $result = mySQL::query($query, $handle);
+    $result = mySQL::query($query, $handle);
 
-      mySQL::close($handle);
+    mySQL::close($handle);
 
-      return $result;
-    }
+    return $result;
+  }
 
-    /**Move the old set-based instrument column to a separate
-     * pivot-table called "MusicianInstruments" in order to have a
-     * cleaner data-base structure.
-     */
-    public static function migrateProjectInstruments()
-    {
-      Config::init();
-      $handle = mySQL::connect(Config::$pmeopts);
+  /**Move the old set-based instrument column to a separate
+   * pivot-table called "MusicianInstruments" in order to have a
+   * cleaner data-base structure.
+   */
+  public static function migrateProjectInstruments()
+  {
+    Config::init();
+    $handle = mySQL::connect(Config::$pmeopts);
 
-      $query = "INSERT IGNORE INTO ProjectInstruments
+    $query = "INSERT IGNORE INTO ProjectInstruments
 (ProjectId, MusicianId, InstrumentationId, InstrumentId)
 SELECT b.ProjektId AS ProjectId,
  b.MusikerId AS MusicianId,
@@ -700,23 +628,23 @@ LEFT JOIN Instrumente i
 ON b.Instrument = i.Instrument
 WHERE i.Id IS NOT NULL AND b.ProjektId != 0 AND b.MusikerId != 0";
 
-      $result = mySQL::query($query, $handle);
+    $result = mySQL::query($query, $handle);
 
-      mySQL::close($handle);
+    mySQL::close($handle);
 
-      return $result;
-    }
+    return $result;
+  }
 
-    /**Move the old set-based instrumentation column to a separate
-     * pivot-table called "ProjectInstrumentation" in order to have a
-     * cleaner data-base structure.
-     */
-    public static function migrateProjectInstrumentation()
-    {
-      Config::init();
-      $handle = mySQL::connect(Config::$pmeopts);
+  /**Move the old set-based instrumentation column to a separate
+   * pivot-table called "ProjectInstrumentation" in order to have a
+   * cleaner data-base structure.
+   */
+  public static function migrateProjectInstrumentation()
+  {
+    Config::init();
+    $handle = mySQL::connect(Config::$pmeopts);
 
-      $query = "INSERT IGNORE INTO ProjectInstrumentation (ProjectId, InstrumentId)
+    $query = "INSERT IGNORE INTO ProjectInstrumentation (ProjectId, InstrumentId)
   SELECT pi.Id AS ProjectId, i.Id AS InstrumentId
   FROM (SELECT pm.Id, splitString(Besetzung, ',', N) AS ProjectInstrument
         FROM Projekte pm
@@ -726,54 +654,54 @@ WHERE i.Id IS NOT NULL AND b.ProjektId != 0 AND b.MusikerId != 0";
     ON i.Instrument = pi.ProjectInstrument
   WHERE i.Id IS NOT NULL AND pi.Id != 0";
 
-      //error_log($query);
+    //error_log($query);
 
-      $result = mySQL::query($query, $handle);
+    $result = mySQL::query($query, $handle);
 
-      mySQL::close($handle);
+    mySQL::close($handle);
 
-      return $result;
+    return $result;
+  }
+
+  /**Migrate the old instrumentation-numbers into the new
+   * pivot-table "ProjectInstrumentation"
+   */
+  public static function migrateInstrumentationNumbers()
+  {
+    Config::init();
+    $handle = mySQL::connect(Config::$pmeopts);
+
+    $oldTable = 'BesetzungsZahlen';
+    $oldNumbers = mySQL::fetchRows($oldTable, '1', null, $handle);
+
+    if ($oldNumbers === false) {
+      return false;
     }
 
-    /**Migrate the old instrumentation-numbers into the new
-     * pivot-table "ProjectInstrumentation"
-     */
-    public static function migrateInstrumentationNumbers()
-    {
-      Config::init();
-      $handle = mySQL::connect(Config::$pmeopts);
-
-      $oldTable = 'BesetzungsZahlen';
-      $oldNumbers = mySQL::fetchRows($oldTable, '1', null, $handle);
-
-      if ($oldNumbers === false) {
-        return false;
-      }
-
-      $instrumentInfo = self::fetchInfo($handle);
-      $nameIds = array_flip($instrumentInfo['byId']);
-      $result = true;
-      foreach($oldNumbers as $data) {
-        array_shift($data);
-        $projectId = array_shift($data);
-        foreach($data as $instrument => $number) {
-          if ($number > 0 && !empty($nameIds[$instrument])) {
-            $values = [ 'ProjectId' => $projectId,
-                        'InstrumentId' => $nameIds[$instrument],
-                        'Quantity' => $number ];
-            $table = 'ProjectInstrumentation';
-            $res = mySQL::insert($table, $values, $handle, mySQL::UPDATE);
-            if ($res !== false) {
-              mySQL::logInsert($table, mySQL::newestIndex($handle), $values, $handle);
-            }
+    $instrumentInfo = self::fetchInfo($handle);
+    $nameIds = array_flip($instrumentInfo['byId']);
+    $result = true;
+    foreach($oldNumbers as $data) {
+      array_shift($data);
+      $projectId = array_shift($data);
+      foreach($data as $instrument => $number) {
+        if ($number > 0 && !empty($nameIds[$instrument])) {
+          $values = [ 'ProjectId' => $projectId,
+                      'InstrumentId' => $nameIds[$instrument],
+                      'Quantity' => $number ];
+          $table = 'ProjectInstrumentation';
+          $res = mySQL::insert($table, $values, $handle, mySQL::UPDATE);
+          if ($res !== false) {
+            mySQL::logInsert($table, mySQL::newestIndex($handle), $values, $handle);
           }
         }
       }
-
-      mySQL::close($handle);
-
-      return $result;
     }
+
+    mySQL::close($handle);
+
+    return $result;
+  }
 
 }; // class
 
