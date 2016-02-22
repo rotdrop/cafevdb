@@ -42,9 +42,7 @@ pme-export-csv
 pme-export-excel
 pme-export-html
 pme-export-htmlexcel
-pme-instrumentation-actions
 pme-showall-tab
-pme-transpose
 project-action-debit-mandates
 project-action-detailed-instrumentation
 project-action-email
@@ -68,7 +66,6 @@ register-musician
 registration-mark
 section-leader-mark
 sepa-debit-mandate-active
-transfer-instruments
 address-book-emails
 blog-acceptentry
 blog-cancelentry
