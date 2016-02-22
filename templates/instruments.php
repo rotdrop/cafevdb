@@ -15,7 +15,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
- *
+1 *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -30,13 +30,24 @@ namespace CAFEVDB {
   $nav = '';
   if ($projectId >= 0) {
     $nav .= Navigation::pageControlElement('projectlabel', $project, $projectId);
-    $nav .= Navigation::pageControlElement('projects');
-    $nav .= Navigation::pageControlElement('projectinstruments', $project, $projectId);
     $nav .= Navigation::pageControlElement('detailed', $project, $projectId);
+    $nav .= Navigation::pageControlElement('project-extra', $project, $projectId);
+    $nav .= Navigation::pageControlElement('projectinstruments', $project, $projectId);
+    if (Config::isTreasurer()) {
+      $nav .= Navigation::pageControlElement('project-payments', $project, $projectId);
+      $nav .= Navigation::pageControlElement('debit-mandates', $project, $projectId);
+      $nav .= Navigation::pageControlElement('debit-notes', $project, $projectId);
+      if ($project === Config::getValue('memberTable', false)) {
+        $nav .= Navigation::pageControlElement('insurances');
+      }
+    }
+    $nav .= Navigation::pageControlElement('projects');
+    $nav .= Navigation::pageControlElement('all');
+    $nav .= Navigation::pageControlElement('instruments', $project, $projectId);
   } else {
     $nav .= Navigation::pageControlElement('projects');
-    //  $nav .= Navigation::pageControlElement('projectinstruments');
     $nav .= Navigation::pageControlElement('all');
+    $nav .= Navigation::pageControlElement('instruments');
   }
 
   $nav = '<ul id="navigation-list">'.$nav.'</ul>';

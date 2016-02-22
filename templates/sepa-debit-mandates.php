@@ -41,6 +41,8 @@ namespace CAFEVDB {
       $nav .= Navigation::pageControlElement('insurances');
     }
     $nav .= Navigation::pageControlElement('projects');
+    $nav .= Navigation::pageControlElement('all');
+    $nav .= Navigation::pageControlElement('instruments', $projectName, $projectId);
   } else {
     $nav .= Navigation::pageControlElement('projects');
     $nav .= Navigation::pageControlElement('all');
