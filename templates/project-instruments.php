@@ -22,7 +22,7 @@
 
 namespace CAFEVDB {
 
-  $table = new ProjectInstruments($_['recordId']);
+  $table = new ProjectInstruments();
   $css_pfx = ProjectInstruments::CSS_PREFIX;
   $project = $table->projectName;
   $projectId = $table->projectId;
@@ -30,10 +30,9 @@ namespace CAFEVDB {
   $nav = '';
   if ($project != '') {
     $nav .= Navigation::pageControlElement('projectlabel', $project, $projectId);
+    $nav .= Navigation::pageControlElement('detailed', $project, $projectId);
     $nav .= Navigation::pageControlElement('projects');
     $nav .= Navigation::pageControlElement('instruments', $project, $projectId);
-    $nav .= Navigation::pageControlElement('add', $project, $projectId);
-    $nav .= Navigation::pageControlElement('detailed', $project, $projectId);
   } else {
     $nav .= Navigation::pageControlElement('projects');
     $nav .= Navigation::pageControlElement('instruments');

@@ -22,7 +22,8 @@
 
 namespace CAFEVDB {
 
-  $table   = new Projects();
+  $showButtons = Config::isTreasurer();
+  $table   = new Projects(true, $showButtons);
   $css_pfx = Projects::CSS_PREFIX;
 
   $nav = '';
