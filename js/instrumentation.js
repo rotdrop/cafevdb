@@ -361,8 +361,7 @@ var CAFEVDB = CAFEVDB || {};
           selectMusicianInstruments.prop('disabled', false);
           selectMusicianInstruments.trigger('chosen:updated');
 
-          //No need to submit, the validation-script does not alter DB
-          //data.
+          // Mmmh.
           PHPMYEDIT.submitOuterForm(selector);
         });
 
