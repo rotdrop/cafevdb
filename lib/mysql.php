@@ -78,13 +78,19 @@ namespace CAFEVDB
      */
     public static function close($handle)
     {
-      $handle->close();
+      if ($handle instanceof mysqli) {
+        $handle->close();
+      }
       return true;
     }
 
     public static function error($handle)
     {
-      return $handle->error;
+      if ($handle instanceof mysqli) {
+        return $handle->error;
+      } else {
+        return false;
+      }
     }
 
     public static function query($query, $handle, $die = false, $silent = false)
@@ -361,8 +367,16 @@ namespace CAFEVDB
       if (empty($newValues)) {
         return true; // don't care
       }
-      $keys = array_keys($newValues);
-      $values = array_values($newValues);
+
+      $nl = "\n";
+      is_array(reset($newValues)) || $newValues = [ $newValues ];
+      $keys = array_keys(current($newValues));
+      $queryValues = [];
+      foreach($newValues as $newValue) {
+        $values = array_values($newValue);
+        $queryValues[] = "('".implode("','", $values)."')".$nl;
+      }
+      $queryValues = implode(",\n", $queryValues);
 
       // build the query ...
       switch ($flags) {
@@ -370,12 +384,12 @@ namespace CAFEVDB
       case self::REGULAR:
         $query = "INSERT INTO `".$table."`
   (`".implode("`,`", $keys)."`)
-  VALUES ('".implode("','", $values)."')";
+  VALUES $queryValues";
         break;
       case self::IGNORE:
         $query = "INSERT IGNORE INTO `".$table."`
   (`".implode("`,`", $keys)."`)
-  VALUES ('".implode("','", $values)."')";
+  VALUES $queryValues";
         break;
       case self::UPDATE:
         $updates = array_map(function($key) {
@@ -383,7 +397,7 @@ namespace CAFEVDB
           }, $keys);
         $query = "INSERT INTO `".$table."`
   (`".implode("`,`", $keys)."`)
-  VALUES ('".implode("','", $values)."')
+  VALUES $queryValues
   ON DUPLICATE KEY UPDATE ".implode(",", $updates);
         break;
       }
@@ -393,6 +407,8 @@ namespace CAFEVDB
         Config::init();
         $handle = self::connect(Config::$pmeopts);
       }
+
+      //throw new \Exception($query);
 
       $result = self::query($query, $handle);
 
@@ -487,6 +503,7 @@ namespace CAFEVDB
         while ($row = self::fetch($qResult)) {
           $result[] = $row;
         }
+        self::freeResult($qResult);
       } else {
         $result = false;
       }

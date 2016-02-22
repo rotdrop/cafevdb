@@ -104,6 +104,7 @@ class phpMyEdit
 	var $dbp;		// database with point and delimiters
 	var $dbh;		// database handle
 	var $close_dbh;	// if database handle should be closed
+	var $error_list;// list of latest sql errors
 
 	// Record manipulation
 	var $key;		// name of field which is the unique key
@@ -286,6 +287,16 @@ class phpMyEdit
 		return true;
 	}
 
+	function dbhValid()
+	{
+		return $this->dbh instanceof mysqli;
+	}
+
+	static function resultValid(&$res)
+	{
+		return $res instanceof mysqli_result;
+	}
+
 	/*
 	 * functions for indicating whether operations are enabled
 	 */
@@ -297,7 +308,7 @@ class phpMyEdit
 
 	function default_sort() { return !isset($this->sfn) || count($this->sfn) == 0; }
 
-	function listall()		  { return $this->inc < 0; }
+	function listall()		  { return $this->inc < 0 || $this->inc > $this->total_recs; }
 	function add_enabled()	  { return stristr($this->options, 'A'); }
 	function change_enabled() { return stristr($this->options, 'C'); }
 	function delete_enabled() { return stristr($this->options, 'D'); }
@@ -309,6 +320,7 @@ class phpMyEdit
 	function copy_enabled()	  { return stristr($this->options, 'P') && $this->add_enabled(); }
 	function tabs_enabled()	  { return $this->display['tabs'] && count($this->tabs) > 0; }
 	function hidden($k)		  { return stristr(@$this->fdd[$k]['input'],'H'); }
+	function skipped($k)	  { return stristr(@$this->fdd[$k]['input'],'S'); }
 	function password($k)	  { return stristr(@$this->fdd[$k]['input'],'W'); }
 	function readonly($k)	  { return stristr(@$this->fdd[$k]['input'],'R'); }
 	function disabled($k)	  { return stristr(@$this->fdd[$k]['input'],'D') || $this->readonly($k) || $this->virtual($k);		}
@@ -337,7 +349,25 @@ class phpMyEdit
 	function copy_canceled()   { return $this->label_cmp($this->cancelcopy	, 'Cancel'); }
 	function delete_canceled() { return $this->label_cmp($this->canceldelete, 'Cancel'); }
 
+	function view_nav_displayed() { return stristr($this->display['navigation'], 'V'); }
+	function change_nav_displayed() { return stristr($this->display['navigation'], 'C'); }
+	function copy_nav_displayed() { return stristr($this->display['navigation'], 'P'); }
+	function delete_nav_displayed() { return stristr($this->display['navigation'], 'D'); }
+
+
 	function view_reloaded()   { return $this->label_cmp($this->reloadview	, 'Reload'); }
+
+	/**Return a normalized english name ... */
+	public function operationName()
+	{
+		foreach(['add', 'change', 'copy', 'delete', 'misc', 'view', 'list'] as $op) {
+			$method = $op.'_operation';
+			if ($this->$method()) {
+				return $op;
+			}
+		}
+		return '';
+	}
 
 	/**Wrapper around core htmlspecialchars; avoid double encoding,
 	 * standard options.
@@ -447,50 +477,67 @@ class phpMyEdit
 		//echo htmlspecialchars($this->uh.$this->un.$this->pw);
 		$persistent = @ini_get('mysqli.allow_persistent') ? 'p:' : '';
 		$this->dbh = new mysqli($persistent.$this->hn, $this->un, $this->pw, $this->db);
-		if ($this->dbh->connect_error) {
+		if ($this->dbh->connect_errno) {
+			$this->error_list[] = array(
+				'errno' => $this->dbh->connect_errno,
+				'error' => $this->dbh->connect_error,
+				'query' => 'connect '.$this->db.'@'.$persistent.$this->hn
+				);
 			$this->dbh = null;
+		} else {
+			// Gnah.
+			$this->dbh->set_charset('utf8');
 		}
-		// Gnah.
-		$this->dbh->set_charset('utf8');
 	} /* }}} */
 
 
 	function sql_disconnect() /* {{{ */
 	{
-		if ($this->close_dbh) {
-			@$this->dbh->close();
+		if ($this->dbhValid() && $this->close_dbh) {
+			$this->dbh->close();
 			$this->dbh = null;
 		}
 	} /* }}} */
 
 	function sql_fetch(&$res, $type = 'a') /* {{{ */
 	{
+		if (!self::resultValid($res)) {
+			return false;
+		}
 		$type = $type === 'n' ? MYSQLI_NUM : MYSQLI_ASSOC;
 		return @$res->fetch_array($type);
 	} /* }}} */
 
 	function sql_free_result(&$res) /* {{{ */
 	{
-		if ($res instanceof mysqli_result) {
-			return @$res->free();
-		} else {
+		if (!self::resultValid($res)) {
 			return false;
 		}
+		return $res->free();
 	} /* }}} */
 
-	function sql_affected_rows(&$dbh) /* {{{ */
+	function sql_affected_rows() /* {{{ */
 	{
-		return @$dbh->affected_rows;
+		if (!$this->dbhValid()) {
+			return 0;
+		}
+		return $this->dbh->affected_rows;
 	} /* }}} */
 
 	function sql_field_len(&$res, $field) /* {{{ */
 	{
+		if (!self::resultValid($res)) {
+			return 0;
+		}
 		$meta = @$res->fetch_field_direct($field);
 		return @$meta['length'];
 	} /* }}} */
 
 	function sql_insert_id() /* {{{ */
 	{
+		if (!$this->dbhValid()) {
+			return 0;
+		}
 		return $this->dbh->insert_id;
 	} /* }}} */
 
@@ -520,8 +567,16 @@ class phpMyEdit
 			$line = intval($line);
 			echo '<h4>MySQL query at line ',$line,'</h4>',htmlspecialchars($qry),'<hr size="1" />',"\n";
 		}
-		$ret = @$this->dbh->query($qry, MYSQLI_STORE_RESULT); //  USE_RESULT needs free().
+		if (!$this->dbhValid()) {
+			return false;
+		}
+		$ret = $this->dbh->query($qry, MYSQLI_STORE_RESULT); //  USE_RESULT needs free().
 		if ($ret === false) {
+			$this->error_list[] = array(
+				'errno' => $this->dbh->errno,
+				'error' => $this->dbh_error,
+				'query' => $qry
+				);
 			echo '<h4>MySQL error ', $this->dbh->errno,'</h4>';
 			echo htmlspecialchars($this->dbh->error),'<hr size="1" />',"\n";
 			//error_log($qry);
@@ -1557,13 +1612,19 @@ class phpMyEdit
 			if (isset($this->fdd[$k]['tooltip']) && $this->fdd[$k]['tooltip'] != '') {
 				$helptip = $this->fdd[$k]['tooltip'];
 			}
-			if ($this->hidden($k)) {
-				echo $this->htmlHiddenData($this->fds[$k], $this->fdd[$k]['default']);
-				continue;
-			}
+			$escape			= isset($this->fdd[$k]['escape']) ? $this->fdd[$k]['escape'] : true;
 			$css_postfix	= @$this->fdd[$k]['css']['postfix'];
 			$css_class_name = $this->getCSSclass('input', null, 'next', $css_postfix);
-			$escape			= isset($this->fdd[$k]['escape']) ? $this->fdd[$k]['escape'] : true;
+			$value          = $this->get_data_cgi_var($this->fds[$k]);
+			$defaulted = $value === null;
+			if ($defaulted) {
+				$value  = @$this->fdd[$k]['default'];
+				$escape && $value = htmlspecialchars($value);
+			}
+			if ($this->hidden($k)) {
+				echo $this->htmlHiddenData($this->fds[$k], $value);
+				continue;
+			}
 			echo '<tr class="',$this->getCSSclass('row', null, true, $css_postfix),'">',"\n";
 			echo '<td class="',$this->getCSSclass('key', null, true, $css_postfix),'">';
 			echo $this->fdd[$k]['name'],'</td>',"\n";
@@ -1591,7 +1652,7 @@ class phpMyEdit
 				$groups     = $valgrp['groups'];
 				$data       = $valgrp['data'];
 				$titles     = $valgrp['titles'];
-				$selected	= @$this->fdd[$k]['default'];
+				$selected	= $value;
 				$multiple	= $this->col_has_multiple($k);
 				$readonly	= $this->disabledTag($k);
 				$strip_tags = true;
@@ -1611,7 +1672,7 @@ class phpMyEdit
 			} elseif (isset ($this->fdd[$k]['textarea'])) {
 				echo $this->htmlTextarea($this->cgi['prefix']['data'].$this->fds[$k],
 										 $css_class_name,
-										 $k, $this->fdd[$k]['default'], $escape, $helptip);
+										 $k, $value, $escape, $helptip);
 			} else {
 				// Simple edit box required
 				$len_props = '';
@@ -1631,8 +1692,7 @@ class phpMyEdit
 				echo ($this->disabled($k) ? ' disabled' : '');
 				echo ' name="',$this->cgi['prefix']['data'].$this->fds[$k],'"';
 				echo $len_props,' value="';
-				if($escape) echo htmlspecialchars($this->fdd[$k]['default']);
-				else echo $this->fdd[$k]['default'];
+				echo $value;
 				echo '" />';
 			}
 			if (isset($this->fdd[$k]['display']['postfix'])) {
@@ -1834,7 +1894,7 @@ class phpMyEdit
 				echo $this->htmlSelect($this->cgi['prefix']['data'].$this->fds[$k],
 									   $css_class_name, $vals, $groups, $titles, $data,
 									   $selected, $multiple, $readonly,
-										 $strip_tags, $escape, NULL, $help);
+									   $strip_tags, $escape, NULL, $help);
 			}
 		} elseif (!$vals && isset($this->fdd[$k]['textarea'])) {
 			echo $this->htmlTextarea($this->cgi['prefix']['data'].$this->fds[$k],
@@ -3029,19 +3089,19 @@ class phpMyEdit
 			$kv_array = array();
 			$nummax = min($this->total_recs, 100);
 			$kv_array[-1] = '&infin;';
-			for ($i = 1; $i < min(5,$nummax); ++$i) {
+			for ($i = 1; $i <= min(5,$nummax); ++$i) {
 				$kv_array[$i] = $i;
 				if ($this->inc == $i) {
 					$selected = (string)$i;
 				}
 			}
-			for ($i = 5; $i < $nummax; $i += 5) {
+			for ($i = min(10, $nummax); $i <= $nummax; $i += 5) {
 				$kv_array[$i] = $i;
 				if ($this->inc == $i) {
 					$selected = (string)$i;
 				}
 			}
-			if (!isset($selected) && $this->inc >= 0) {
+			if (!isset($selected) && $this->inc >= 0 && $nummax < $this->total_recs) {
 				$kv_array[$this->inc] = $this->inc;
 				$selected = (string)$this->inc;
 			} else if ($this->inc < 0) {
@@ -3082,13 +3142,18 @@ class phpMyEdit
 
 	function number_of_recs() /* {{{ */
 	{
+		$groupBy = @$this->get_SQL_groupby_query_opts();
 		$count_parts = array(
 			'type'	 => 'SELECT',
 			'select' => 'COUNT(*)',
 			'from'	 => @$this->get_SQL_join_clause(),
-			//'groupby' => @$this->get_SQL_groupby_query_opts(), NOPE, wrong here
+			'groupby' => $groupBy,
 			'where'	 => @$this->get_SQL_where_from_query_opts());
-		$res = $this->myquery($this->get_SQL_main_list_query($count_parts), __LINE__);
+		$query = $this->get_SQL_main_list_query($count_parts);
+		if (!empty($groupBy)) {
+			$query = "SELECT COUNT(*) FROM (".$query.") PMEcount0";
+		}
+		$res = $this->myquery($query, __LINE__);
 		$row = $this->sql_fetch($res, 'n');
 		$this->total_recs = $row[0];
 	} /* }}} */
@@ -3269,7 +3334,7 @@ class phpMyEdit
 			//title="'.$htmlQuery.'"
 			echo '<td class="',$css_class_name,'" colspan="',$this->num_fields_displayed,'">';
 			echo '<span class="',$css_class_name,' label">',$this->labels['Current Query'],': </span>';
-			echo '<span class="',$css_class_name,' info">',$htmlQuery,'</span>';
+			echo '<span class="',$css_class_name,' info" title="',$htmlQuery,'">',$htmlQuery,'</span>';
 			echo '</td></tr>',"\n";
 		}
 	} /* }}} */
@@ -3413,7 +3478,8 @@ class phpMyEdit
 		/*
 		 * Display the SQL table in an HTML table
 		 */
-		$this->form_begin();
+		$formCssClass = $this->getCSSclass('list', null, null, $this->css['postfix']);
+		$this->form_begin($formCssClass);
 		if ($this->display['form']) {
 			//echo $this->get_origvars_html($this->get_sfn_cgi_vars());
 			// Display buttons at top and/or bottom of page.
@@ -3561,23 +3627,6 @@ class phpMyEdit
 		}
 		echo '</tr></thead><tbody>',"\n";
 
-		/*
-		 * Main list_table() query
-		 *
-		 * Each row of the HTML table is one record from the SQL query. We must
-		 * perform this query before filter printing, because we want to use
-		 * $this->sql_field_len() function. We will also fetch the first row to get
-		 * the field names.
-		 */
-		$qparts = $this->get_SQL_main_list_query_parts();
-		$query = $this->get_SQL_main_list_query($qparts);
-		$res   = $this->myquery($query, __LINE__);
-		if ($res == false) {
-			$this->error('invalid SQL query', $query);
-			return false;
-		}
-		$row = $this->sql_fetch($res);
-
 		// filter
 		if ($this->filter_operation() || $this->display['query'] === 'always') $this->filter_heading();
 		// Display sorting sequence
@@ -3609,6 +3658,23 @@ class phpMyEdit
 			$qpchangeStr = htmlspecialchars($this->page_name.'?'.join('&',$qpchange).$this->qfn);
 			$qpdeleteStr = htmlspecialchars($this->page_name.'?'.join('&',$qpdelete).$this->qfn);
 		}
+
+		/*
+		 * Main list_table() query
+		 *
+		 * Each row of the HTML table is one record from the SQL query. We must
+		 * perform this query before filter printing, because we want to use
+		 * $this->sql_field_len() function. We will also fetch the first row to get
+		 * the field names.
+		 */
+		$qparts = $this->get_SQL_main_list_query_parts();
+		$query = $this->get_SQL_main_list_query($qparts);
+		$res   = $this->myquery($query, __LINE__);
+		if ($res == false) {
+			$this->error('invalid SQL query', $query);
+			return false;
+		}
+		$row = $this->sql_fetch($res);
 
 		$fetched  = true;
 		$first	  = true;
@@ -3655,34 +3721,41 @@ class phpMyEdit
 						 */
 						$record = $this->cgi['prefix']['sys'].'rec'.'='.$key_rec;
 						echo '<div class="'.$css_class_name.' graphic-links">';
-						echo $this->htmlSubmit(
-							'operation',
-							$viewTitle.'?'.$record,
-							$this->getCSSclass('view-navigation'),
-							$this->view_enabled() == false,
-							sprintf($imgstyle, 'pme-view.png'));
-						print('&nbsp;');
-						echo $this->htmlSubmit(
-							'operation',
-							$changeTitle.'?'.$record,
-							$this->getCSSclass('change-navigation'),
-							$this->change_enabled() == false,
-							sprintf($imgstyle, 'pme-change.png'));
-						print('&nbsp;');
-						echo $this->htmlSubmit(
-							'operation',
-							$copyTitle.'?'.$record,
-							$this->getCSSclass('copy-navigation'),
-							$this->copy_enabled() == false,
-							sprintf($imgstyle, 'pme-copy.png'));
-						print('&nbsp;');
+						$navButtons = array();
+						if ($this->view_nav_displayed()) {
+							$navButtons[] = $this->htmlSubmit(
+								'operation',
+								$viewTitle.'?'.$record,
+								$this->getCSSclass('view-navigation'),
+								$this->view_enabled() == false,
+								sprintf($imgstyle, 'pme-view.png'));
+						}
+						if ($this->change_nav_displayed()) {
+							$navButtons[] = $this->htmlSubmit(
+								'operation',
+								$changeTitle.'?'.$record,
+								$this->getCSSclass('change-navigation'),
+								$this->change_enabled() == false,
+								sprintf($imgstyle, 'pme-change.png'));
+						}
+						if ($this->copy_nav_displayed()) {
+							$navButtons[] = $this->htmlSubmit(
+								'operation',
+								$copyTitle.'?'.$record,
+								$this->getCSSclass('copy-navigation'),
+								$this->copy_enabled() == false,
+								sprintf($imgstyle, 'pme-copy.png'));
+						}
+						if ($this->delete_nav_displayed()) {
+							$navButtons[] =$this->htmlSubmit(
+								'operation',
+								$deleteTitle.'?'.$record,
+								$this->getCSSclass('delete-navigation'),
+								$this->delete_enabled() == false,
+								sprintf($imgstyle, 'pme-delete.png'));
+						}
+						echo implode('&nbsp;', $navButtons);
 						$printed = true;
-						echo $this->htmlSubmit(
-							'operation',
-							$deleteTitle.'?'.$record,
-							$this->getCSSclass('delete-navigation'),
-							$this->delete_enabled() == false,
-							sprintf($imgstyle, 'pme-delete.png'));
 						echo '</div>';
 					}
 					if ($this->nav_text_links()) {
@@ -3862,28 +3935,29 @@ class phpMyEdit
 
 	function display_record() /* {{{ */
 	{
-		$formCssClass = $this->getCSSclass('list');
+		$postfix = $this->css['postfix'];
+		$formCssClass = $this->getCSSclass('list', null, null, $postfix);
 
 		// PRE Triggers
 		$trigger = '';
 		if ($this->change_operation()) {
 			$trigger = 'update';
-			$formCssClass = $this->getCSSclass('change');
+			$formCssClass = $this->getCSSclass('change', null, null, $postfix);
 			if (!$this->exec_triggers_simple($trigger, 'pre')) {
 				// if PRE update fails, then back to view operation
 				$this->operation = $this->labels['View'];
 			}
 		}
 		if ($this->add_operation() || $this->copy_operation()) {
-			$formCssClass = $this->getCSSclass('copyadd');
+			$formCssClass = $this->getCSSclass('copyadd', null, null, $postfix);
 			$trigger = 'insert';
 		}
 		if ($this->view_operation()) {
-			$formCssClass = $this->getCSSclass('view');
+			$formCssClass = $this->getCSSclass('view', null, null, $postfix);
 			$trigger = 'select';
 		}
 		if ($this->delete_operation()) {
-			$formCssClass = $this->getCSSclass('delete');
+			$formCssClass = $this->getCSSclass('delete', null, null, $postfix);
 			$trigger = 'delete';
 		}
 		$ret = $this->exec_triggers_simple($trigger, 'pre');
@@ -3952,6 +4026,7 @@ class phpMyEdit
 		echo $this->htmlHiddenSys('np', $this->inc);
 		echo $this->htmlHiddenSys('translations', $this->translations);
 		echo $this->htmlHiddenSys('fl', $this->fl);
+		echo $this->htmlHiddenSys('op_name', $this->operationName());
 		$this->display_record_buttons('up');
 
 		if ($this->tabs_enabled()) {
@@ -4018,12 +4093,15 @@ class phpMyEdit
 		// Real query (no additional query in this method)
 		foreach ($newvals as $fd => $val) {
 			if ($fd == '') continue;
+			$fdn = $this->fdn[$fd];
+			$fdd = $this->fdd[$fdn];
+			if ($this->skipped($fdn)) {
+				continue;
+			}
 			if (is_array($val)) {
 				// if the triggers still left the stuff as array, try to do something useful.
 				$val = self::is_flat($val) ? join(',', $val) : json_encode($val);
 			}
-			$fdn = $this->fdn[$fd];
-			$fdd = $this->fdd[$fdn];
 			if (false) {
 				// query_groups not supported, would be difficult
 				if (isset($fdd['querygroup'])) {
@@ -4064,7 +4142,7 @@ class phpMyEdit
 		}
 		$query .= $query2.')';
 		$res	= $this->myquery($query, __LINE__);
-		$this->message = $this->sql_affected_rows($this->dbh).' '.$this->labels['record added'];
+		$this->message = $this->sql_affected_rows().' '.$this->labels['record added'];
 		if (! $res) {
 			return false;
 		}
@@ -4096,7 +4174,11 @@ class phpMyEdit
 	function do_change_record() /* {{{ */
 	{
 		// Preparing queries
-		$where_part = " WHERE (".$this->sd.$this->key.$this->ed.'='.$this->key_delim.$this->rec.$this->key_delim.')';
+		$where_part = " WHERE (".
+			$this->sd.'PMEtable0'.$this->ed.'.'.$this->sd.$this->key.$this->ed.
+			'='.
+			$this->key_delim.$this->rec.$this->key_delim.
+			')';
 		$query_groups = array($this->tb => '');
 		$where_groups = array($this->tb => $where_part);
 		$query_oldrec = '';
@@ -4132,7 +4214,7 @@ class phpMyEdit
 				if ($this->col_has_sql($k)) {
 					$query_part = $this->fdd[$k]['sql']." AS '".$fd."'";
 				} else {
-					$query_part = $this->sd.$fd.$this->ed;
+					$query_part = $this->sd.'PMEtable0'.$this->ed.'.'.$this->sd.$fd.$this->ed;
 				}
 				if ($query_oldrec == '') {
 					$query_oldrec = 'SELECT '.$query_part;
@@ -4144,10 +4226,13 @@ class phpMyEdit
 				}
 			}
 		}
-		$query_newrec  = $query_oldrec.' FROM ' . $this->tb;
-		$query_oldrec .= ' FROM ' . $this->sd.$this->tb.$this->ed . $where_part;
+		//$query_newrec  = $query_oldrec.' FROM ' . $this->tb;
+		$joinTables = $this->get_SQL_join_clause();
+		$query_newrec  = $query_oldrec.' FROM ' . $joinTables;
+		//$query_oldrec .= ' FROM ' . $this->sd.$this->tb.$this->ed . $where_part;
+		$query_oldrec .= ' FROM ' . $joinTables . $where_part;
 		// Additional query (must go before real query)
-		// error_log('old query '.$query_oldrec);
+		//error_log('old query '.$query_oldrec);
 		$res	 = $this->myquery($query_oldrec, __LINE__);
 		$oldvals = $this->sql_fetch($res);
 		$this->sql_free_result($res);
@@ -4169,13 +4254,14 @@ class phpMyEdit
 					sort($tmpval2);
 					if ($tmpval1 != $tmpval2) {
 						$changed[] = $fd;
+					} else {
+						$newvals[$fd] = $oldvals[$fd]; // fake
 					}
 				} else {
 					$changed[] = $fd;
 				}
 			}
 		}
-		//error_log('changed: '.print_r($changed, true));
 
 		// Before trigger
 		if ($this->exec_triggers('update', 'before', $oldvals, $changed, $newvals) === false) {
@@ -4185,6 +4271,7 @@ class phpMyEdit
 		// Creatinng WHERE part for query groups, after the trigger as
 		// it may even have added things.
 		foreach($oldvals as $fd => $value) {
+			error_log('new '.$fd.' '.$value.' '.print_r($newvals, true));
 			$fdn = $this->fdn[$fd]; // $fdn == field number
 			$fdd = $this->fdd[$fdn];
 			if (isset($fdd['querygroup'])) {
@@ -4195,7 +4282,7 @@ class phpMyEdit
 					$key = $queryGroup['column'];
 					$rec = $value;
 					$where_groups[$tablename] =
-						' WHERE ('.$this->sd.$key.$this->ed.'='.$this->key_delim.$rec.$this->key_delim.')';
+						' WHERE (PMEtable0.'.$this->sd.$key.$this->ed.'='.$this->key_delim.$rec.$this->key_delim.')';
 				}
 			}
 		}
@@ -4244,37 +4331,44 @@ class phpMyEdit
 				$value = "'".addslashes($val)."'";
 			}
 			if ($query_real == '') {
-				$query_real	  = 'UPDATE '.$this->sd.$table.$this->ed.' SET '.$this->sd.$column.$this->ed.'='.$value;
+				$query_real	  = 'UPDATE '.$this->sd.$table.$this->ed.' AS '.$this->sd.'PMEtable0'.$this->ed.'
+  SET '.$this->sd.$column.$this->ed.'='.$value;
 			} else {
 				$query_real	  .= ','.$this->sd.$column.$this->ed.'='.$value;
 			}
 		}
 		$affected_rows = 0;
+		$upddateResult;
 		foreach ($query_groups as $tablename => $query) {
-			if ($query == '') {
+			if ($query === '') {
 				continue;
 			}
 			//error_log('name: '.$tablename.' query '.$query);
 			$query .= $where_groups[$tablename];
 			// Real query
-			$res = $this->myquery($query, __LINE__) && $res;
-			$num_rows = $this->sql_affected_rows($this->dbh);
-			$affected_rows = max($num_rows, $affected_rows);
+			$res = $this->myquery($query, __LINE__);
+			if ($res !== false) {
+				$num_rows = $this->sql_affected_rows();
+				$affected_rows = max($num_rows, $affected_rows);
+			}
+			$updateResult = $updateRestult && $res;
 		}
 		if ($affected_rows == 1) {
 			$this->message = $affected_rows.' '.$this->labels['record changed'];
 		} else {
 			$this->message = $affected_rows.' '.$this->labels['records changed'];
 		}
-		if (! $res) {
-			return false;
-		}
-		// Another additional query (must go after real query)
+		// Another additional query (must go after real query). This
+		// also really determines the changed records, in case only
+		// some of the query-groups have failed.
 		if (in_array($this->key, $changed)) {
 			$this->rec = $newvals[$this->key]; // key has changed
 		}
-		$query_newrec .= ' WHERE ('.$this->key.'='.$this->key_delim.$this->rec.$this->key_delim.')';
+		$query_newrec .= ' WHERE (PMEtable0.'.$this->key.'='.$this->key_delim.$this->rec.$this->key_delim.')';
 		$res	 = $this->myquery($query_newrec, __LINE__);
+		if ($res === false) {
+			return false;
+		}
 		$newvals = $this->sql_fetch($res);
 		$this->sql_free_result($res);
 		// Creating array of changed keys ($changed)
@@ -4306,7 +4400,7 @@ class phpMyEdit
 		if ($this->exec_triggers('update', 'after', $oldvals, $changed, $newvals) == false) {
 			return false;
 		}
-		return true;
+		return $updateResult; // return error or success status of the update query
 	} /* }}} */
 
 	function do_delete_record() /* {{{ */
@@ -4329,7 +4423,7 @@ class phpMyEdit
 		$query = 'DELETE FROM '.$this->tb.' WHERE ('.$this->key.' = '
 			.$this->key_delim.$this->rec.$this->key_delim.')'; // )
 		$res = $this->myquery($query, __LINE__);
-		$this->message = $this->sql_affected_rows($this->dbh).' '.$this->labels['record deleted'];
+		$this->message = $this->sql_affected_rows().' '.$this->labels['record deleted'];
 		if (! $res) {
 			return false;
 		}
@@ -4727,7 +4821,7 @@ class phpMyEdit
 	 */
 	function connect() /* {{{ */
 	{
-		if (isset($this->dbh)) {
+		if ($this->dbhValid()) {
 			return true;
 		}
 		if (!isset($this->db)) {
@@ -4739,7 +4833,7 @@ class phpMyEdit
 			return false;
 		}
 		$this->sql_connect();
-		if (!$this->dbh) {
+		if (!$this->dbhValid()) {
 			$this->error('could not connect to SQL');
 			return false;
 		}
@@ -4809,25 +4903,35 @@ class phpMyEdit
 		if ($this->label_cmp($this->saveadd, 'Save')
 			|| $this->label_cmp($this->savecopy, 'Save')) {
 			$this->add_enabled() && $this->do_add_record();
-			$this->saveadd	= null; // unset($this->saveadd)
-			$this->savecopy = null; // unset($this->savecopy)
+			if ($this->rec <= 0) {
+				$this->operation = $this->labels['Add']; // to force add operation
+			} else {
+				$this->saveadd	= null; // unset($this->saveadd)
+				$this->savecopy = null; // unset($this->savecopy)
+			}
 			$this->recreate_fdd();
 		}
 		elseif ($this->label_cmp($this->applyadd, 'Apply')
 				|| $this->label_cmp($this->applycopy, 'Apply')) {
 			$this->add_enabled() && $this->do_add_record();
-			$this->saveadd	 = null; // unset($this->saveadd)
-			$this->savecopy  = null; // unset($this->savecopy)
-			$this->applyadd  = null; // unset($this->applyadd)
-			$this->applycopy = null; // unset($this->applycopy)
-			$this->operation = $this->labels['Change']; // to force change operation
+			if ($this->rec <= 0) {
+				$this->operation = $this->labels['Add']; // to force add operation
+			} else {
+				$this->saveadd	 = null; // unset($this->saveadd)
+				$this->savecopy  = null; // unset($this->savecopy)
+				$this->applyadd  = null; // unset($this->applyadd)
+				$this->applycopy = null; // unset($this->applycopy)
+				$this->operation = $this->labels['Change']; // to force change operation
+			}
 			$this->recreate_fdd();
 			$this->backward_compatibility();
 			$this->recreate_displayed();
 		}
 		elseif ($this->label_cmp($this->moreadd, 'More')) {
 			$this->add_enabled() && $this->do_add_record();
-			$this->operation = $this->labels['Add']; // to force add operation
+			if ($this->rec <= 0) {
+				$this->operation = $this->labels['Add']; // to force add operation
+			}
 			$this->recreate_fdd();
 			$this->backward_compatibility();
 			$this->recreate_displayed();
@@ -4957,6 +5061,9 @@ class phpMyEdit
 				$filters['OR'] = false;
 			}
 			foreach ($filters as $junctor => $filter) {
+				if (empty($filter)) {
+					continue;
+				}
 				if (is_array($filter)) {
 					$this->filters[$junctor] = join(' '.$junctor.' ', $filter);
 				} else {
@@ -4997,6 +5104,8 @@ class phpMyEdit
 			? $opts['display']['num_records'] : true;
 		$this->display['num_pages'] = isset($opts['display']['num_pages'])
 			? $opts['display']['num_pages'] : true;
+		$this->display['navigation'] = isset($opts['display']['navigation'])
+			? $opts['display']['navigation'] : 'VCPD'; // default: all
 
 		$this->display['readonly'] =
 			isset($opts['display']['readonly'])
@@ -5019,6 +5128,7 @@ class phpMyEdit
 		!isset($this->css['textarea'])  && $this->css['textarea'] = '';
 		!isset($this->css['separator']) && $this->css['separator'] = '-';
 		!isset($this->css['prefix'])	&& $this->css['prefix']	   = 'pme';
+		!isset($this->css['postfix'])	&& $this->css['postfix']   = '';
 		!isset($this->css['page_type']) && $this->css['page_type'] = false;
 		!isset($this->css['position'])	&& $this->css['position']  = false;
 		!isset($this->css['divider'])	&& $this->css['divider']   = 2;
