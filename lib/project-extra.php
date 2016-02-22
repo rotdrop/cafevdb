@@ -113,6 +113,8 @@ namespace CAFEVDB
       L::t('SurchargeOption');
       L::t('SurchargeEnum');
       L::t('SurchargeSet');
+      L::t('SimpleGroup');
+      L::t('PredefinedGroup');
 
       L::t('single');
       L::t('simple');
@@ -121,8 +123,9 @@ namespace CAFEVDB
       L::t('parallel');
 
       L::t('choices');
-      L::t('general');
       L::t('surcharge');
+      L::t('group');
+      L::t('general');
     }
 
 
