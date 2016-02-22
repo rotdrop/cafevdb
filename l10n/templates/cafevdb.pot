@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-22 18:02+0100\n"
+"POT-Creation-Date: 2016-02-22 20:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -371,8 +371,8 @@ msgstr ""
 
 #: ajax/export/insurance-export.php:246 lib/detailed-instrumentation.php:700
 #: lib/instrument-insurance.php:76 lib/instruments.php:276
-#: lib/php-excel-functions.php:102 lib/project-extra.php:384
-#: lib/project-extra.php:496 lib/project-extra.php:596 lib/projects.php:300
+#: lib/php-excel-functions.php:102 lib/project-extra.php:387
+#: lib/project-extra.php:499 lib/project-extra.php:599 lib/projects.php:300
 msgid "false"
 msgstr ""
 
@@ -2397,8 +2397,8 @@ msgstr ""
 
 #: lib/detailed-instrumentation.php:701 lib/instrument-insurance.php:77
 #: lib/instruments.php:275 lib/php-excel-functions.php:98
-#: lib/project-extra.php:383 lib/project-extra.php:497
-#: lib/project-extra.php:595 lib/projects.php:299
+#: lib/project-extra.php:386 lib/project-extra.php:500
+#: lib/project-extra.php:598 lib/projects.php:299
 msgid "true"
 msgstr ""
 
@@ -2407,7 +2407,7 @@ msgid "Remarks"
 msgstr ""
 
 #: lib/detailed-instrumentation.php:796 lib/musicians.php:378
-#: lib/project-extra.php:304
+#: lib/project-extra.php:307
 msgid "no projects yet"
 msgstr ""
 
@@ -2477,7 +2477,7 @@ msgid "Personal data"
 msgstr ""
 
 #: lib/detailed-instrumentation.php:1329 lib/instrument-insurance.php:193
-#: lib/musicians.php:172 lib/project-extra.php:244
+#: lib/musicians.php:172 lib/project-extra.php:247
 #: lib/sepa-debit-mandates.php:234
 msgid "Display all columns"
 msgstr ""
@@ -2940,7 +2940,7 @@ msgstr ""
 
 #: lib/instrument-insurance.php:827 templates/debit-notes.php:62
 #: templates/instrument-insurance.php:56 templates/project-payments.php:62
-#: templates/sepa-debit-mandates.php:62
+#: templates/sepa-debit-mandates.php:64
 msgid "treasurer"
 msgstr ""
 
@@ -2985,7 +2985,7 @@ msgid "Object"
 msgstr ""
 
 #: lib/instrument-insurance.php:880 lib/instrument-insurance.php:962
-#: lib/project-extra.php:1558 lib/project-payments.php:194
+#: lib/project-extra.php:1561 lib/project-payments.php:194
 #: lib/sepa-debit-mandates.php:160 lib/sepa-debit-mandates.php:175
 #: lib/sepa-debit-mandates.php:225
 msgid "Amount"
@@ -3185,11 +3185,11 @@ msgstr ""
 msgid "Instruments and Instrument Sort-Order"
 msgstr ""
 
-#: lib/instruments.php:143 lib/project-extra.php:203 lib/projects.php:170
+#: lib/instruments.php:143 lib/project-extra.php:206 lib/projects.php:170
 msgid "Show Disabled"
 msgstr ""
 
-#: lib/instruments.php:148 lib/project-extra.php:208 lib/projects.php:175
+#: lib/instruments.php:148 lib/project-extra.php:211 lib/projects.php:175
 msgid "Hide Disabled"
 msgstr ""
 
@@ -3197,7 +3197,7 @@ msgstr ""
 msgid "sort order"
 msgstr ""
 
-#: lib/instruments.php:272 lib/project-extra.php:380 lib/projects.php:296
+#: lib/instruments.php:272 lib/project-extra.php:383 lib/projects.php:296
 msgid "Disabled"
 msgstr ""
 
@@ -3529,140 +3529,152 @@ msgstr ""
 msgid "SurchargeSet"
 msgstr ""
 
-#: lib/project-extra.php:117
-msgid "single"
+#: lib/project-extra.php:116
+msgid "SimpleGroup"
 msgstr ""
 
-#: lib/project-extra.php:118
-msgid "simple"
+#: lib/project-extra.php:117
+msgid "PredefinedGroup"
 msgstr ""
 
 #: lib/project-extra.php:119
-msgid "special"
+msgid "single"
 msgstr ""
 
 #: lib/project-extra.php:120
-msgid "multiple"
+msgid "simple"
 msgstr ""
 
 #: lib/project-extra.php:121
-msgid "parallel"
+msgid "special"
+msgstr ""
+
+#: lib/project-extra.php:122
+msgid "multiple"
 msgstr ""
 
 #: lib/project-extra.php:123
-msgid "choices"
-msgstr ""
-
-#: lib/project-extra.php:124
-msgid "general"
+msgid "parallel"
 msgstr ""
 
 #: lib/project-extra.php:125
+msgid "choices"
+msgstr ""
+
+#: lib/project-extra.php:126
 msgid "surcharge"
 msgstr ""
 
-#: lib/project-extra.php:232
-msgid "Definition of name, type, allowed values, default values."
+#: lib/project-extra.php:127
+msgid "group"
 msgstr ""
 
-#: lib/project-extra.php:233
-msgid "Defintion"
+#: lib/project-extra.php:128
+msgid "general"
 msgstr ""
 
 #: lib/project-extra.php:235
+msgid "Definition of name, type, allowed values, default values."
+msgstr ""
+
+#: lib/project-extra.php:236
+msgid "Defintion"
+msgstr ""
+
+#: lib/project-extra.php:238
 msgid ""
 "Ordering, linking to and defining newe tabs, definition of tooltips (help "
 "text)."
 msgstr ""
 
-#: lib/project-extra.php:237
+#: lib/project-extra.php:240
 msgid "Display"
 msgstr ""
 
-#: lib/project-extra.php:239
+#: lib/project-extra.php:242
 msgid ""
 "Advanced settings and information, restricted access, encryption, "
 "information about internal indexing."
 msgstr ""
 
-#: lib/project-extra.php:241
+#: lib/project-extra.php:244
 msgid "Advanced"
 msgstr ""
 
-#: lib/project-extra.php:316 lib/project-instruments.php:211
+#: lib/project-extra.php:319 lib/project-instruments.php:211
 msgid "Project-Name"
 msgstr ""
 
-#: lib/project-extra.php:348
+#: lib/project-extra.php:351
 msgid "Field-Name"
 msgstr ""
 
-#: lib/project-extra.php:394
+#: lib/project-extra.php:397
 msgid "Type"
 msgstr ""
 
-#: lib/project-extra.php:411
+#: lib/project-extra.php:414
 msgid "Allowed Values"
 msgstr ""
 
-#: lib/project-extra.php:427 lib/project-extra.php:1479
+#: lib/project-extra.php:430 lib/project-extra.php:1482
 msgid "Data"
 msgstr ""
 
-#: lib/project-extra.php:451 lib/project-extra.php:462
-#: lib/project-extra.php:490
+#: lib/project-extra.php:454 lib/project-extra.php:465
+#: lib/project-extra.php:493
 msgid "Default Value"
 msgstr ""
 
-#: lib/project-extra.php:508 lib/project-extra.php:1480
+#: lib/project-extra.php:511 lib/project-extra.php:1483
 msgid "Tooltip"
 msgstr ""
 
-#: lib/project-extra.php:522
+#: lib/project-extra.php:525
 msgid "Display-Order"
 msgstr ""
 
-#: lib/project-extra.php:532
+#: lib/project-extra.php:535
 msgid "Table Tab"
 msgstr ""
 
-#: lib/project-extra.php:551
+#: lib/project-extra.php:554
 msgid "New Tab Name"
 msgstr ""
 
-#: lib/project-extra.php:580
+#: lib/project-extra.php:583
 msgid "Field-Index"
 msgstr ""
 
-#: lib/project-extra.php:592
+#: lib/project-extra.php:595
 msgid "Encrypted"
 msgstr ""
 
-#: lib/project-extra.php:606
+#: lib/project-extra.php:609
 msgid "Readers"
 msgstr ""
 
-#: lib/project-extra.php:617
+#: lib/project-extra.php:620
 msgid "Writers"
 msgstr ""
 
-#: lib/project-extra.php:1351
+#: lib/project-extra.php:1354
 msgid "new option"
 msgstr ""
 
-#: lib/project-extra.php:1435
+#: lib/project-extra.php:1438
 msgid "Show deleted items."
 msgstr ""
 
-#: lib/project-extra.php:1437
+#: lib/project-extra.php:1440
 msgid "Show data-fields."
 msgstr ""
 
-#: lib/project-extra.php:1477
+#: lib/project-extra.php:1480
 msgid "Key"
 msgstr ""
 
-#: lib/project-extra.php:1478
+#: lib/project-extra.php:1481
 msgid "Label"
 msgstr ""
 
@@ -5777,7 +5789,7 @@ msgid "is not set"
 msgstr ""
 
 #: templates/debit-notes.php:61 templates/instrument-insurance.php:55
-#: templates/project-payments.php:61 templates/sepa-debit-mandates.php:61
+#: templates/project-payments.php:61 templates/sepa-debit-mandates.php:63
 #, php-format
 msgid "Sorry, this view is only available to the %s."
 msgstr ""
