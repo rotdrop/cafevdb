@@ -948,7 +948,7 @@ redaxoRehearsalsModule
       }
 
       self::$expertmode = self::getUserValue('expertmode', 'off') === 'on';
-      $debug = explode(',', self::getUserValue('debug', ''));
+      $debug = Util::explode(',', self::getUserValue('debug', ''));
       foreach ($debug as $key) {
         self::$debug[$key] = true;
       }
@@ -1568,7 +1568,7 @@ redaxoRehearsalsModule
       $fileView = \OC\Files\Filesystem::getView();
 
       $projectsFolder = trim(preg_replace('|[/]+|', '/', $projectsFolder), "/");
-      $projectsFolder = explode('/', $projectsFolder);
+      $projectsFolder = Util::explode('/', $projectsFolder);
 
       $path = '/'.$sharedFolder;
 

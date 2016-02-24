@@ -181,7 +181,7 @@ namespace CAFEVDB
       $result = self::query($query, $handle);
       $values = array();
       while ($line = self::fetch($result)) {
-        $values = array_merge($values, explode($sep, $line[$column]));
+        $values = array_merge($values, Util::explode($sep, $line[$column]));
       }
       $values = array_unique($values);
 

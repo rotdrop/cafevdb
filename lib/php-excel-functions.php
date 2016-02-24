@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -27,6 +27,7 @@ namespace CAFEVDB\PHPExcel
 
   use CAFEVDB\L;
   use CAFEVDB\Finance;
+  use CAFEVDB\Util;
 
   /**Special value-binder class with tweaks the standard
    * implementation from PHPExcel a little bit. In particular: EURO,
@@ -44,7 +45,7 @@ namespace CAFEVDB\PHPExcel
      * @return boolean
      */
     public function bindValue(\PHPExcel_Cell $cell, $value = null)
-    {		
+    {
       // sanitize UTF-8 strings
       if (is_string($value)) {
         $value = \PHPExcel_Shared_String::SanitizeUTF8($value);
@@ -143,7 +144,7 @@ namespace CAFEVDB\PHPExcel
             return true;
           }
         }
-                        
+
         // Check for percentage
         if (preg_match('/^\-?[0-9]*\.?[0-9]*\s?\%$/', $value)) {
           // Convert value to number
@@ -158,7 +159,7 @@ namespace CAFEVDB\PHPExcel
         // Check for time without seconds e.g. '9:45', '09:45'
         if (preg_match('/^(\d|[0-1]\d|2[0-3]):[0-5]\d$/', $value)) {
           // Convert value to number
-          list($h, $m) = explode(':', $value);
+          list($h, $m) = Util::explode(':', $value);
           $days = $h / 24 + $m / 1440;
           $cell->setValueExplicit($days, \PHPExcel_Cell_DataType::TYPE_NUMERIC);
           // Set style
@@ -170,7 +171,7 @@ namespace CAFEVDB\PHPExcel
         // Check for time with seconds '9:45:59', '09:45:59'
         if (preg_match('/^(\d|[0-1]\d|2[0-3]):[0-5]\d:[0-5]\d$/', $value)) {
           // Convert value to number
-          list($h, $m, $s) = explode(':', $value);
+          list($h, $m, $s) = Util::explode(':', $value);
           $days = $h / 24 + $m / 1440 + $s / 86400;
           // Convert value to number
           $cell->setValueExplicit($days, \PHPExcel_Cell_DataType::TYPE_NUMERIC);
@@ -209,7 +210,7 @@ namespace CAFEVDB\PHPExcel
 
       // Not bound yet? Use parent...
       return parent::bindValue($cell, $value);
-    
+
     }
   }
 

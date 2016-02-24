@@ -96,7 +96,7 @@ namespace CAFEVDB
      */
     static private function parseContactId($contactId)
     {
-      $split = explode(';', $contactId);
+      $split = Util::explode(';', $contactId);
       if (count($split) != 2) {
         return null;
       }

@@ -267,10 +267,10 @@ namespace CAFEVDB {
       $uuid = isset($musician['UUID']) ? $musician['UUID'] : Util::generateUUID();
       $categories = array('cafevdb');
       if ($musician['Instrumente']) {
-        $categories =  array_merge($categories, explode(',', $musician['Instrumente']));
+        $categories =  array_merge($categories, Util::explode(',', $musician['Instrumente']));
       }
       if (isset($musician['Projekte'])) {
-        $categories =  array_merge($categories, explode(',', $musician['Projekte']));
+        $categories =  array_merge($categories, Util::explode(',', $musician['Projekte']));
       }
       $categories = array_map('trim', $categories);
       $appinfo = \OCP\App::getAppInfo('cafevdb');
@@ -344,7 +344,7 @@ namespace CAFEVDB {
           // the OC Sabre version seeming does not auto-escape stuff ...
           $vcard->add('PHOTO', 'data:'.$mimeType.';base64\,'.$photo['Data']);
         } else {
-          $type = explode('/', $mimeType);
+          $type = Util::explode('/', $mimeType);
           $type = strtoupper(array_pop($type));
           $imageData = base64_decode($photo['Data']);
           $vcard->add('PHOTO', $imageData, ['ENCODING' => 'b', 'TYPE' => $type ]);

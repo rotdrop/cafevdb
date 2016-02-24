@@ -392,6 +392,7 @@ namespace CAFEVDB
         'css'         => ['postfix' => ' projectinstrumentation tooltip-top'],
         'sql'         => 'GROUP_CONCAT(DISTINCT PMEjoin'.$instIdx.'.Id ORDER BY PMEjoin'.$instIdx.'.Id ASC)',
         //'input' => 'V', not virtual, tweaked by triggers
+        'filter'      => 'having',
         'select'      => 'M',
         'maxlen'      => 11,
         'values' => array(
@@ -618,9 +619,9 @@ __EOT__;
         //error_log('key: '.$key.' value: '.$changed[$key]);
         $table      = self::INSTRUMENTATION;
         $projectId  = $pme->rec;
-        $oldIds     = explode(',', $oldValues[$field]);
-        $newIds     = explode(',', $newValues[$field]);
-        $oldKeys    = explode(',', $oldValues[$keyField]);
+        $oldIds     = Util::explode(',', $oldValues[$field]);
+        $newIds     = Util::explode(',', $newValues[$field]);
+        $oldKeys    = Util::explode(',', $oldValues[$keyField]);
         $oldRecords = array_combine($oldIds, $oldKeys);
 
         // we have to delete any removed instruments and to add any new instruments
@@ -976,7 +977,7 @@ __EOT__;
       }
 
       // Build an array of name - size pairs
-      $tmpfields = explode(',',$line['ExtraFelder']);
+      $tmpfields = Util::explode(',',$line['ExtraFelder']);
       if (Util::debugMode()) {
         print_r($tmpfields);
       }
@@ -984,7 +985,7 @@ __EOT__;
       $numbers = array();
       foreach ($tmpfields as $value) {
         $value = trim($value);
-        $value = explode(':',$value);
+        $value = Util::explode(':',$value);
         $fields[] = array('name' => $value[0],
                           'pos' => isset($value[1]) ? $value[1] : false,
                           'tooltip' =>  isset($value[2]) ? $value[2] : false);
@@ -2013,7 +2014,7 @@ ORDER BY i.Sortierung ASC";
       $row = false;
       if ($result !== false && mySQL::numRows($result) == 1) {
         $row = mySQL::fetch($result);
-        $instrumentation = explode(',', $row['Besetzung']);
+        $instrumentation = Util::explode(',', $row['Besetzung']);
       }
 
       if ($ownConnection) {

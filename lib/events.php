@@ -135,7 +135,7 @@ namespace CAFEVDB
       mySQL::close($handle);
 
       // And remove the calendar from our config space.
-      foreach (explode(',',Config::DFLT_CALS) as $key) {
+      foreach (Util::explode(',',Config::DFLT_CALS) as $key) {
         $id = Config::getValue($key.'calendars'.'id');
         if ($id === $calendarId) {
           $id = Config::setValue($key.'calendars'.'id','');
@@ -153,7 +153,7 @@ namespace CAFEVDB
       // We simply should update our idea of the name of the calender if
       // it is one of our four calendars, rename the calendar back to
       // what we want it to be
-      foreach (explode(',',Config::DFLT_CALS) as $key) {
+      foreach (Util::explode(',',Config::DFLT_CALS) as $key) {
         $id = Config::getValue($key.'calendar'.'id');
         if ($id === $calendarId) {
           $name    = Config::getValue($key.'calendar');
@@ -956,7 +956,7 @@ __EOT__;
      */
     public static function defaultCalendars($public = false)
     {
-      $cals = explode(',',Config::DFLT_CALS);
+      $cals = Util::explode(',',Config::DFLT_CALS);
       $result = array();
       foreach ($cals as $cal) {
         if ($public && ($cal == 'management' || $cal == 'finance')) {
@@ -1357,7 +1357,7 @@ __EOT__;
         $text = \OC_Calendar_Export::export($id, \OC_Calendar_Export::EVENT);
         // Well, not elegant, but for me the easiest way to strip the
         // BEGIN/END VCALENDAR tags
-        $data = explode($eol, $text);
+        $data = Util::explode($eol, $text);
         $silent = true;
         foreach ($data as $line) {
           if (strncmp($line, "BEGIN:VEVENT", strlen("BEGIN:VEVENT")) == 0) {

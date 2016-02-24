@@ -646,6 +646,7 @@ received so far'),
       $opts['triggers']['update']['before'] = array();
       $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
       $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeUpdateRemoveUnchanged';
+
       $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
 
       $opts['triggers']['delete']['before'][]  = 'CAFEVDB\SepaDebitMandates::beforeDeleteTrigger';
@@ -891,7 +892,7 @@ received so far'),
       $translitProjectName = substr(Finance::sepaTranslit($projectName), 0, Finance::$sepaPurposeLength);
       if ($debitJob === 'amount') {
         $purpose = Finance::sepaTranslit($purpose);
-        $subject = explode("\n", wordwrap($purpose, Finance::$sepaPurposeLength, "\n", true));
+        $subject = Util::explode("\n", wordwrap($purpose, Finance::$sepaPurposeLength, "\n", true));
         array_unshift($subject, $translitProjectName);
       } else {
         $subject = array($translitProjectName, '', '', '');

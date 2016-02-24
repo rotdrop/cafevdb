@@ -300,20 +300,6 @@ make sure that the musicians are also automatically added to the
       'sort'     => true
       );
 
-    if (false) {
-      $opts['fdd']['Instrumente'] = array(
-        'tab'         => array('id' => 'orchestra'),
-        'name'        => L::t('Instruments'),
-        'css'         => array('postfix' => ' musician-instruments tooltip-top'),
-        'display|LF'  => array('popup' => 'data'),
-        'select'      => 'M',
-        'maxlen'      => 137,
-        'sort'        => true,
-        'values'      => $this->instruments,
-        'valueGroups' => $this->groupedInstruments,
-        );
-    }
-
     $musInstIdx = count($opts['fdd']);
     $opts['fdd']['MusicianInstrumentsJoin'] = array(
       'name'   => L::t('Instrument Join Pseudo Field'),
@@ -634,10 +620,9 @@ make sure that the musicians are also automatically added to the
 
     $opts['triggers']['update']['before'] = array();
     $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
-    $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeUpdateRemoveUnchanged';
     $opts['triggers']['update']['before'][]  = 'CAFEVDB\Musicians::addOrChangeInstruments';
+    $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeUpdateRemoveUnchanged';
     $opts['triggers']['update']['before'][]  = 'CAFEVDB\Musicians::beforeTriggerSetTimestamp';
-
 
     $opts['triggers']['insert']['before'] = array();
     $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
@@ -724,9 +709,9 @@ make sure that the musicians are also automatically added to the
       //error_log('key: '.$key.' value: '.$changed[$key]);
       $table          = self::INSTRUMENTS;
       $musicianId     = $pme->rec;
-      $oldIds  = explode(',', $oldValues[$field]);
-      $newIds  = explode(',', $newValues[$field]);
-      $oldKeys = explode(',', $oldValues[$keyField]);
+      $oldIds  = Util::explode(',', $oldValues[$field]);
+      $newIds  = Util::explode(',', $newValues[$field]);
+      $oldKeys = Util::explode(',', $oldValues[$keyField]);
       $oldRecords = array_combine($oldIds, $oldKeys);
 
       // we have to delete any removed instruments and to add any new instruments

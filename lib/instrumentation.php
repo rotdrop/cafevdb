@@ -459,7 +459,7 @@ class Instrumentation
       }
 
       $musicianId = $musRow['Id'];
-      $musInstruments = explode(',', $musRow['Instrumente']);
+      $musInstruments = Util::explode(',', $musRow['Instrumente']);
       $fullName = $musRow['Vorname']." ".$musRow['Name'];
 
       $musProjectData = Instrumentation::fetchByMusicianId($musicianId, $projectId, $handle);
@@ -477,7 +477,7 @@ class Instrumentation
       if (count($musProjectData) > 0) {
         foreach($musProjectData as $row) {
           $musicianProjectInstruments = array_merge($musicianProjectInstruments,
-                                                    explode(',', $row['ProjectInstruments']));
+                                                    Util::explode(',', $row['ProjectInstruments']));
         }
         $notice .= L::t("The musician %s is already registered for the project with the ".
                         "instruments %s.",

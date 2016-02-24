@@ -265,6 +265,9 @@ namespace CAFEVDB
       return $result;
     }
 
+    /**Explode, but omit empty array members, i.e. return empty array
+     * for empty string.
+     */
     static public function explode($delim, $string, $omitEmpty = true)
     {
       if ($omitEmpty === false) {
