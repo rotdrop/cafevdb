@@ -694,8 +694,18 @@ class phpMyEdit
 		return $ret;
 	} /* }}} */
 
+    /**Compute meta-data to translate data-base values etc. to display
+	 * values, compute groups for select boxes, tooltips and the
+	 * like. Remember the results in $this->fdd[$k]['set_values'] as
+	 * the values that have been set (i.e. computed or feched from the
+	 * db).
+	 */
 	function set_values($field_num, $prepend = null, $append = null, $strict = false) /* {{{ */
 	{
+		if (!empty($this->fdd[$field_num]['setvalues'])) {
+			return $this->fdd[$field_num]['setvalues']; // use cache.
+		}
+
 		$values = array();
 		$groups = null;
 		$data = null;
@@ -721,12 +731,8 @@ class phpMyEdit
 			$values = $this->fdd[$field_num]['values']['queryValues'];
 		} else if (isset($this->fdd[$field_num]['values']['table']) || $strict) {
 			$value_group_data = $this->set_values_from_table($field_num, $strict);
-			if (empty($groups)) {
-				$groups = $value_group_data['groups'];
-			}
-			if (empty($data)) {
-				$data = $value_group_data['data'];
-			}
+			$groups = (array)$groups + (array)$value_group_data['groups'];
+			$data = (array)$data + (array)$value_group_data['data'];
 			$values = (array)$this->fdd[$field_num]['values2'] + (array)$value_group_data['values'];
 		} else {
 			$values = (array)$this->fdd[$field_num]['values2'];
@@ -738,10 +744,18 @@ class phpMyEdit
 		//error_log('data: '.print_r($data, true));
 		//error_log('values: '.print_r($values, true));
 
-		return array('values' => $values,
-					 'groups' => $groups,
-					 'titles' => $titles,
-					 'data' => $data);
+		$this->fdd[$field_num]['values2'] = $values;
+
+		$this->fdd[$field_num]['setvalues'] = [
+			'values' => $values,
+			'groups' => $groups,
+			'titles' => $titles,
+			'data' => $data
+			];
+
+		//error_log(__METHOD__.' '.print_r($this->fdd[$field_num]['setvalues'], true));
+
+		return $this->fdd[$field_num]['setvalues'];
 	} /* }}} */
 
 	function set_values_from_table($field_num, $strict = false) /* {{{ */
@@ -811,38 +825,23 @@ class phpMyEdit
 		if (!empty($filters)) {
 			$qparts['where'] = $this->substituteVars($filters, $subs);
 		}
+		!empty($groups) && $groups = $this->substituteVars($groups, $subs);
 		if (!empty($orderby)) {
 			$qparts['orderby'] = $this->substituteVars($orderby, $subs);
 		} else if (!empty($groups)) {
-			$qparts['orderby'] = $table_name.'.'.$this->sd.$groups.$this->ed.' ASC';
+			$qparts['orderby'] = $groups.' ASC';
 		}
 		if (!empty($groups)) {
-			$qparts['select'] .= ','.$table_name.'.'.$this->sd.$groups.$this->ed;
+			$qparts['select'] .= ', '.$groups;
 		}
-		/* if (!empty($data)) { */
-		/* 	if ($desc && is_array($data) && is_array($data['columns'])) { */
-		/* 		$qparts['select'] .= ",CONCAT('{',"; */
-		/* 		$num_cols = sizeof($data['columns']); */
-		/* 		foreach ($data['columns'] as $key => $val) { */
-		/* 			if ($val) { */
-		/* 				$qparts['select'] .= "'\"".addslashes($key)."\":\"',"; */
-		/* 				$qparts['select'] .= "'\"',"; */
-		/* 				$qparts['select'] .= 'IFNULL(CAST('.$this->sd.$val.$this->ed.' AS CHAR),"")'; */
-		/* 				$qparts['select'] .= "'\"',"; */
-		/* 			} */
-		/* 		} */
-		/* 		$qparts['select'] .= '})'; */
-		/* 		$qparts['select'] .= ' AS '.$this->sd.'PMEdata'.$field_num.$this->ed; */
-		/* 	} else if ($data && is_array($data)) { */
-		/* 		// nope */
-		/* 	} else if ($data) { */
-		/* 		$qparts['select'] .= ','.$table_name.'.'.$this->sd.$data.$this->ed; */
-		/* 	} */
-		/* } */
+		if (!empty($data)) {
+			$data = $this->substituteVars($data, $subs);
+			$qparts['select'] .= ', '.$data;
+		}
 		$res	= $this->myquery($this->get_SQL_query($qparts), __LINE__);
 		$values = array();
 		$grps   = array();
-		$data   = array();
+		$dt     = array();
 		$titles = array();
 		$idx    = $desc ? 1 : 0;
 		while ($row = $this->sql_fetch($res, 'n')) {
@@ -851,17 +850,17 @@ class phpMyEdit
 				$grps[$row[0]] = $row[$idx+1];
 			}
 			if (!empty($data)) {
-				$data[$row[0]] = $row[$idx+2];
+				$dt[$row[0]] = $row[$idx+2];
 			}
 		}
-		return array('values' => $values, 'groups' => $grps, 'data' => $data, 'titles' => $titles);
+		return array('values' => $values, 'groups' => $grps, 'data' => $dt, 'titles' => $titles);
 	} /* }}} */
 
 	function fqn($field, $dont_desc = false, $dont_cols = false) /* {{{ */
 	{
 		is_numeric($field) || $field = array_search($field, $this->fds);
 		// if read SQL expression exists use it
-		if ($this->col_has_sql($field) && !$this->col_has_values($field)) {
+		if ($this->col_has_sql($field) && (!$this->col_has_values($field) || $dont_desc)) {
 			return $this->fdd[$field]['sql'];
 		}
 		// on copy/change always use simple key retrieving, or given sql descriptor
@@ -901,6 +900,9 @@ class phpMyEdit
 				} else {
 					$ret = $this->sd.$join_table.$this->ed.'.'.$this->sd.$this->fdd[$this->fds[$field]]['values']['description'].$this->ed;
 				}
+			} else if (isset($this->fdd[$this->fds[$field]]['values']['column']) && ! $dont_cols) {
+				$join_table = 'PMEjoin'.$field;
+				$ret = $this->sd.$join_table.$this->ed.'.'.$this->sd.$this->fdd[$this->fds[$field]]['values']['column'].$this->ed;
 			} else {
 				$ret = $this->sd.'PMEtable0'.$this->ed.'.'.$this->sd.$this->fds[$field].$this->ed;
 			}
@@ -1211,7 +1213,7 @@ class phpMyEdit
 		for ($k = 0; $k < $this->num_fds; $k++) {
 			$l	  = 'qf'.$k;
 			$lc	  = 'qf'.$k.'_comp';
-			$li	  = 'qf'.$k.'_id';
+			$li	  = 'qf'.$k.'_idx';
 			$m	  = $this->get_sys_cgi_var($l);
 			$mc	  = $this->get_sys_cgi_var($lc);
 			$mi	  = $this->get_sys_cgi_var($li);
@@ -1226,7 +1228,9 @@ class phpMyEdit
 			}
 
 			if (is_array($m) || is_array($mi)) {
+				$dont_desc = false;
 				if (is_array($mi)) {
+					$dont_desc = true;
 					$m = $mi;
 					$l = $li;
 				}
@@ -1244,10 +1248,12 @@ class phpMyEdit
 					foreach (array_keys($m) as $key) {
 						$m[$key] = addslashes($m[$key]);
 					}
-					$qo[$this->fqn($k)] = array('value' => $m);
+					$fqn = $this->fqn($k, $dont_desc);
+					$qo[$fqn] = array('value' => $m);
 					if ($not) {
-						$qo[$this->fqn($k)]['oper'] = 'NOT';
+						$qo[$fqn]['oper'] = 'NOT';
 					}
+					error_log(print_r($qo, true));
 				} else {
 					$qf_op = '';
 					foreach (array_keys($m) as $key) {
@@ -1620,6 +1626,7 @@ class phpMyEdit
 			if ($defaulted) {
 				$value  = @$this->fdd[$k]['default'];
 				$escape && $value = htmlspecialchars($value);
+				error_log('default: '.$this->fdd[$k]['name'].': '.$value);
 			}
 			if ($this->hidden($k)) {
 				echo $this->htmlHiddenData($this->fds[$k], $value);
@@ -2183,6 +2190,7 @@ class phpMyEdit
 		} else {
 			$key_rec = $row['qf'.$this->key_num];
 		}
+		$this->col_has_values($k) && $this->set_values($k);
 		if ($this->col_has_datemask($k)) {
 			$value = $this->makeTimeString($k, $row);
 		} else if (isset($this->fdd[$k]['values2'])) {
@@ -2427,16 +2435,18 @@ class phpMyEdit
 		}
 		is_array($kd_array) || $kd_array = array();
 		$found = false;
+		$dfltGroup = empty($kg_array[-1]) ? null : $kg_array[-1];
 		$lastGroup = null;
 		$groupId = 0;
 		$ret .= $multiple ? '' : '<option value=""></option>'."\n";
 		foreach ($kv_array as $key => $value) {
-			if (is_array($kg_array) && $kg_array[$key] != $lastGroup) {
+			$group = !empty($kg_array[$key]) ? $kg_array[$key] : $dfltGroup;
+			if (!empty($group) && $group != $lastGroup) {
 				if (isset($lastGroup)) {
 					$ret .= "</optgroup>\n";
 					$groupId++;
 				}
-				$lastGroup = $kg_array[$key];
+				$lastGroup = $group;
 				$ret .= '<optgroup data-group-id="'.$groupId.'" label="'.$lastGroup.'">'."\n";
 			}
 			$ret .= '<option value="'.htmlspecialchars($key).'"';
@@ -3209,7 +3219,7 @@ class phpMyEdit
 			$this->field	  = $this->fdd[$fd];
 			$l	= 'qf'.$k;
 			$lc = 'qf'.$k.'_comp';
-			$li = 'qf'.$k.'_id';
+			$li = 'qf'.$k.'_idx';
 			if ($this->clear_operation()) {
 				$m	= null;
 				$mc = null;
@@ -3249,7 +3259,7 @@ class phpMyEdit
 										   $negate,
 										   true /* checkbox */);
 				echo '</div><div class="'.$css_class_name.'">';
-				echo $this->htmlSelect($this->cgi['prefix']['sys'].$l.'_id', $css_class_name,
+				echo $this->htmlSelect($this->cgi['prefix']['sys'].$l.'_idx', $css_class_name,
 									   $vals, $groups, $titles, $data,
 									   $selected, $multiple || true, $readonly, $strip_tags, $escape);
 				echo '</div>';
@@ -4004,7 +4014,7 @@ class phpMyEdit
 		}
 		// Also transport the query options ...
 		for ($k = 0; $k < $this->num_fds; $k++) {
-			foreach (array('','_id','_comp') as $suf) {
+			foreach (array('','_idx','_comp') as $suf) {
 				$qf = $this->get_sys_cgi_var('qf'.$k.$suf);
 				if (isset($qf) && $qf != '') {
 					if (is_array($qf) ) {
@@ -4271,7 +4281,7 @@ class phpMyEdit
 		// Creatinng WHERE part for query groups, after the trigger as
 		// it may even have added things.
 		foreach($oldvals as $fd => $value) {
-			error_log('new '.$fd.' '.$value.' '.print_r($newvals, true));
+			//error_log('new '.$fd.' '.$value.' '.print_r($newvals, true));
 			$fdn = $this->fdn[$fd]; // $fdn == field number
 			$fdd = $this->fdd[$fdn];
 			if (isset($fdd['querygroup'])) {
@@ -4289,8 +4299,10 @@ class phpMyEdit
 
 		echo '<!-- '.print_r($newvals, true).'-->';
 		// Build the real query respecting changes to the newvals array
-		foreach ($newvals as $fd => $val) {
+		//foreach ($newvals as $fd => $val) {
+		foreach($changed as $fd) {
 			if ($fd == '') continue;
+			$val = $newvals[$fd];
 			if (is_array($val)) {
 				// if the triggers still left the stuff as array, try to do something useful.
 				$val = self::is_flat($val) ? join(',', $val) : json_encode($val);
