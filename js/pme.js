@@ -1099,7 +1099,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
     container.find("select."+pmeCompFilter).chosen({
       width:"auto",
       inherit_select_classes:true,
-      disable_search_threshold: 10
+      disable_search_threshold: 10,
+      single_backstroke_delete: false
     });
 
     // Provide a data-placeholder and also remove the match-all
@@ -1112,7 +1113,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
     container.find("select."+pmeFilter).chosen({
       width:'100%', // This needs margin:0 and box-sizing:border-box to be useful.
       inherit_select_classes:true,
-      no_results_text:noRes
+      no_results_text:noRes,
+      single_backstroke_delete: false
     });
 
     var dblClickSel =
@@ -1164,7 +1166,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
         inherit_select_classes:true,
         disable_search_threshold: 10,
         no_results_text: noRes,
-        allow_single_deselect: self.hasClass('allow-empty')
+        allow_single_deselect: self.hasClass('allow-empty'),
+        single_backstroke_delete: false
       };
       if (self.hasClass('chosen-width-auto')) {
         chosenOptions.width = 'auto';
