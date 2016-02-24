@@ -4212,8 +4212,8 @@ class phpMyEdit
 					}
 				}
 				// Don't include disabled fields into newvals, but
-				// keep for reference in oldvals
-				if (!$this->disabled($k)) {
+				// keep for reference in oldvals. Keep readonly-fields in newvals
+				if (!$this->disabled($k) || $this->readonly($k)) {
 					// leave complictated arrays to the trigger hooks.
 					if (is_array($fn) && self::is_flat($fn)) {
 						$newvals[$fd] = join(',',$fn);
@@ -4302,15 +4302,18 @@ class phpMyEdit
 		//foreach ($newvals as $fd => $val) {
 		foreach($changed as $fd) {
 			if ($fd == '') continue;
+			$fdn = $this->fdn[$fd];
+			if ($this->skipped($fdn) || $this->readonly($fdn)) {
+				continue;
+			}
+			$fdd = $this->fdd[$fdn];
+			$table = '';
+			$tablename = '';
 			$val = $newvals[$fd];
 			if (is_array($val)) {
 				// if the triggers still left the stuff as array, try to do something useful.
 				$val = self::is_flat($val) ? join(',', $val) : json_encode($val);
 			}
-			$fdn = $this->fdn[$fd];
-			$fdd = $this->fdd[$fdn];
-			$table = '';
-			$tablename = '';
 			if (isset($fdd['querygroup'])) {
 				// Split update query if requested by calling app
 				$table = $fdd['querygroup']['table'];
