@@ -755,6 +755,7 @@ class DetailedInstrumentation
           $fdd, [
             'select' => 'M',
             'sql' => 'GROUP_CONCAT(DISTINCT PMEjoin'.$curColIdx.'.InstrumentationId)',
+            'display' => [ 'popup' => 'data' ],
             'filter' => 'having',
             'values' => [
               'table' => "SELECT
@@ -771,12 +772,13 @@ WHERE b.ProjektId = $projectId",
               'column' => 'InstrumentationId',
               'description' => 'Name',
               'groups' => "CONCAT('".$fieldName." ',\$table.GroupId)",
-              'data' => "CONCAT('{\"GroupId\":\"',\$table.GroupId,'\"}')",
+              'data' => "CONCAT('{\"GroupId\":\"',IFNULL(\$table.GroupId,-1),'\"}')",
               'orderby' => '$table.GroupId ASC, $table.LastName ASC, $table.FirstName ASC',
               'join' => '$main_table.'.$fieldName.' = $join_table.GroupId',
               ],
             'valueGroups' => [ -1 => L::t('without group') ],
             ]);
+        $fdd['css']['postfix'] .= ' groupofpeople clip-long-text';
 
         // in filter mode mask out all non-group-members
         $fdd['values|LF'] = array_merge(
@@ -785,8 +787,11 @@ WHERE b.ProjektId = $projectId",
 
         // after all this tweaking, we still need the real group id
         $opts['fdd'][$fieldName.'GroupId'] = [
-          'input' => 'SH',
-          'sql' => $fieldName
+          'name'     => L::t('%s Group Id', array($name)),
+          'input'    => 'SH',
+          'input|AC' => 'R',
+          'select'   => 'T',
+          'sql'      => $fieldName
           ];
 
         break;

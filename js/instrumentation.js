@@ -340,6 +340,8 @@ var CAFEVDB = CAFEVDB || {};
     // fields are flagged virtual which disables all controls initially.
     var selectMusicianInstruments = container.find('select.musician-instruments');
     var selectProjectInstrument = container.find('select.pme-input.project-instrument');
+    var selectGroupOfPeople = container.find('select.pme-input.groupofpeople');
+    var form = container.find(PHPMYEDIT.pmeClassSelector('form', 'form'));
 
     $('#add-instruments-button').hide();
     $('#add-instruments-block div.chosen-container').show();
@@ -411,6 +413,97 @@ var CAFEVDB = CAFEVDB || {};
           selectMusicianInstruments.trigger('chosen:updated');
         });
 
+      return false;
+    });
+
+    selectGroupOfPeople.each(function(idx) {
+      var self = $(this);
+      var curSelected = self.val();
+      self.data('selected', curSelected ? curSelected : []);
+      var name =self.attr('name');
+      var groupFieldName = name.slice(0, -2)+'GroupId';
+      self.data('groupField', form.find('input[name="'+groupFieldName+'"]'));
+    });
+
+    selectGroupOfPeople.off('change').on('change', function(event) {
+      var self = $(this); // just the current one
+      var recKey = form.find(PHPMYEDIT.pmeSysNameSelector('input', 'rec'));
+      recKey = recKey.length === 1 ? recKey.val() : -1;
+
+      var selected = self.val();
+      if (!selected) {
+        selected = [];
+      }
+      var prevSelected = self.data('selected');
+      var recPrev = prevSelected.indexOf(recKey) >= 0;
+      var recCur  = selected.indexOf(recKey) >= 0;
+
+      var changed = false;
+
+      console.log('prevSelected', prevSelected);
+      console.log('selected', selected);
+
+      if (recPrev && !recCur) {
+        // just removed the current key from the group, undefine group
+        // and empty select-box
+        self.find('option:selected').prop('selected', false);
+        self.data('groupField').val(null);
+        changed = true;
+      } else {
+        if (!recPrev && !recCur && selected.length > 0) {
+          // add current record
+          self.find('option[value="'+recKey+'"]').prop('selected', true);
+          selected.push(recKey);
+          changed = true;
+        }
+        if (selected.length >= prevSelected.length &&
+            selected.length == 1+(recCur === recPrev)) {
+          // single new item which is not the current one, potentially
+          // add the entire group.
+          var option;
+          self.find('option:selected').each(function(idx) {
+            var self = $(this);
+            if (self.val() != recKey) {
+              option = self;
+            }
+          });
+          var data = option.data('data');
+          if (data.GroupId > 0) {
+            console.log('group: ', data.GroupId);
+            option.parent().find('option').prop('selected', true);
+            self.data('groupField').val(data.GroupId);
+            changed = true;
+          }
+        }
+      }
+      // console.log('record', recKey);
+      // var prevEmpty = !prevSelected || (prevSelected.length === 1 && prevSelected[0] === recKey);
+      // var changed = false;
+      // if (selected && prevEmpty) {
+      //   // find the option
+      //   var option = self.find('option:selected');
+      //   if (option.lenght <= 0) { // cannot happen ...
+      //     return false;
+      //   }
+      //   if (recKey > 0) { // should always be true here
+      //     var recKeyOption = self.find('option[value="'+recKey+'"]');
+      //     if (!recKeyOption.prop('selected')) {
+      //       recKeyOption.prop('selected', true);
+      //       changed = true;
+      //     }
+      //   }
+      //   var data = option.data('data');
+      //   if (data.GroupId > 0) {
+      //     console.log('group: ', data.GroupId);
+      //     option.parent().find('option').prop('selected', true);
+      //     changed = true;
+      //   }
+      // }
+      if (changed) {
+        self.trigger('chosen:updated');
+      }
+      var curSelected = self.val();
+      self.data('selected', curSelected ? curSelected : []);
       return false;
     });
 
