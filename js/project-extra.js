@@ -47,6 +47,7 @@ var CAFEVDB = CAFEVDB || {};
       var parallelClass = 'parallel-value-field';
       var surchargeClass = 'surcharge-field';
       var generalClass = 'general-field';
+      var groupClass = 'group-field';
       //
       var row = container.find('tr.field-type');
       //
@@ -58,6 +59,9 @@ var CAFEVDB = CAFEVDB || {};
       row.removeClass(generalClass);
       //
       switch(data.Multiplicity) {
+      case 'groupofpeople':
+        row.addClass(groupClass);
+        break;
       case 'parallel':
         row.addClass(parallelClass);
       case 'multiple':

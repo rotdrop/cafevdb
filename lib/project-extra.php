@@ -116,16 +116,16 @@ namespace CAFEVDB
       L::t('SimpleGroup');
       L::t('PredefinedGroup');
 
-      L::t('single');
       L::t('simple');
-      L::t('special');
+      L::t('single');
       L::t('multiple');
       L::t('parallel');
+      L::t('groupofpeople');
 
       L::t('choices');
       L::t('surcharge');
-      L::t('group');
       L::t('general');
+      L::t('special');
     }
 
 
@@ -429,7 +429,7 @@ namespace CAFEVDB
       $opts['fdd']['AllowedValuesSingle'] = array(
         'name' => self::currencyLabel(L::t('Data')),
         'css' => array('postfix' => ' allowed-values-single'),
-        'sql' => 'AllowedValues',
+        'sql' => 'PMEtable0.AllowedValues',
         'php' => function($value, $op, $field, $fds, $fdd, $row, $recordId) use ($nameIdx, $tooltipIdx)
         {
           // provide defaults
@@ -450,6 +450,33 @@ namespace CAFEVDB
         'tooltip' => Config::toolTips('extra-fields-allowed-values-single'),
         );
 
+      // Provide "cooked" valus for up to 20 members. Perhaps the
+      // max. number should somehow be adjusted ...
+      $values2 = array();
+      $dpy = 0;
+      $values2['max:max:'.$dpy.'::active'] = $dpy;
+      for($dpy = 2; $dpy < 10; ++$dpy) {
+        $values2['max:max:'.$dpy.'::active'] = $dpy;
+      }
+      for(; $dpy <= 30; $dpy += 5) {
+        $values2['max:max:'.$dpy.'::active'] = $dpy;
+      }
+      $opts['fdd']['MaximumGroupSize'] = array(
+        'name' => L::t('Maximum Size'),
+        'css' => array('postfix' => ' maximum-group-size'),
+        'sql' => 'PMEtable0.AllowedValues',
+        'input' => 'S',
+        'input|DV' => 'V',
+        'options' => 'ACDPV',
+        'select' => 'D',
+        'maxlen' => 29,
+        'size' => 30,
+        'sort' => true,
+        'default' => key($values2),
+        'values2' => $values2,
+        'tooltip' => Config::toolTips('extra-fields-maximum-group-size'),
+        );
+
       $opts['fdd']['DefaultValue'] = array(
         'name' => L::t('Default Value'),
         'css' => array('postfix' => ' default-value'),
@@ -465,7 +492,7 @@ namespace CAFEVDB
         'name' => L::t('Default Value'),
         // 'input' => 'V', // not virtual, update handled by trigger
         'options' => 'CPA',
-        'sql' => '`DefaultValue`',
+        'sql' => 'PMEtable0.`DefaultValue`',
         'css' => array('postfix' => ' default-multi-value allow-empty'),
         'select' => 'D',
         'values' => array(
@@ -493,7 +520,7 @@ namespace CAFEVDB
         'name' => L::t('Default Value'),
         // 'input' => 'V', // not virtual, update handled by trigger
         'options' => 'CPA',
-        'sql' => '`DefaultValue`',
+        'sql' => 'PMEtable0.`DefaultValue`',
         'css' => array('postfix' => ' default-single-value'),
         'select' => 'O',
         'values2' => array('0' => L::t('false'),
@@ -538,6 +565,7 @@ namespace CAFEVDB
         'values' => array(
           'table' => self::TABLE_NAME,
           'column' => 'Tab',
+          'description' => 'Tab',
           ),
         'values2' => $tableTabValues2,
         'default' => -1,
@@ -639,7 +667,7 @@ namespace CAFEVDB
         }
       }
       if ($projectMode !== false) {
-        $opts['filters'][] = 'ProjectId = '.$this->projectId;
+        $opts['filters'][] = 'PMEtable0.ProjectId = '.$this->projectId;
       }
 
       $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
@@ -727,6 +755,27 @@ namespace CAFEVDB
       /*                     \OCP\Util::DEBUG); */
 
       return $result;
+    }
+
+    /**Obtain a new unique group id; this is just a "soft"
+     * auto-increment column.
+     */
+    public static function maxFieldValue($fieldId, $handle = false)
+    {
+      $ownConnection = $handle === false;
+      if ($ownConnection) {
+        Config::init();
+        $handle = mySQL::connect(Config::$pmeopts);
+      }
+
+      $max = mySQL::selectSingleFromTable(
+        'MAX(FieldValue)', self::DATA_TABLE, "WHERE FieldId = $fieldId", $handle);
+
+      if ($ownConnection) {
+        mySQL::close($handle);
+      }
+
+      return $max;
     }
 
     /**Make keys unique for multi-choice fields.
@@ -968,6 +1017,26 @@ namespace CAFEVDB
 
       /************************************************************************
        *
+       * Move the data from MaximumGroupSize to
+       * AllowedValues. Plural is "misleading" here, of course ;)
+       *
+       */
+      $tag = "MaximumGroupSize";
+      $key = array_search($tag, $changed);
+      if ($types[$newvals['Type']]['Multiplicity'] === 'groupofpeople') {
+        $newvals['AllowedValues'] = $newvals[$tag];
+        if ($key !== false) {
+          $changed[] = 'AllowedValues';
+        }
+      }
+      unset($newvals[$tag]);
+      unset($oldvals[$tag]);
+      if ($key !== false) {
+        unset($changed[$key]);
+      }
+
+      /************************************************************************
+       *
        * Move the data from AllowedValuesSingle to
        * AllowedValues. Plural is "misleading" here, of course ;)
        *
@@ -997,7 +1066,6 @@ namespace CAFEVDB
       } else {
         $allowed = $newvals['AllowedValues'];
       }
-
       // make unused keys unique
       self::allowedValuesUniqueKeys($allowed, $pme->rec);
 
@@ -1241,7 +1309,6 @@ argument must be an array of type descriptions.');
 
       return $result;
     }
-
 
     /**Fetch all values stored for the given extra-field, e.g. in
      * order to recover or generate select boxes.
@@ -1633,9 +1700,10 @@ __EOT__;
     }
 
     /**Sanitize and explode allowed values. Multiple choice items are
-     * internally stored as text, items separated by \n, each line may consist of a triple
+     * internally stored as text, items separated by \n, each line may
+     * consist of CSV-like data
      *
-     * key:display:data:descsription
+     * key:label:data:tooltip:flags[:FURTHER_DATA[:FURTHER...]]
      *
      * key and display are initiallly just identical. DATA is the
      * amount to pay for "surcharge" fields. The per-user data stored
@@ -1650,7 +1718,7 @@ __EOT__;
                      'data' => false,
                      'tooltip' => false,
                      'flags' => 'active');
-      $values = explode("\n", $values);
+      $values = Util::explode("\n", $values);
       $allowed = array();
       foreach($values as $value) {
         if (empty($value)) {

@@ -258,7 +258,7 @@ class DetailedInstrumentation
 
     $opts['fdd']['ProjectInstrumentKey'] = array(
       'name'   => L::t('Project Instrument'),
-      'sql'    => 'GROUP_CONCAT(ProjectInstrumentKey ORDER BY ProjectInstrumentId ASC)',
+      'sql'    => 'GROUP_CONCAT(DISTINCT ProjectInstrumentKey ORDER BY ProjectInstrumentId ASC)',
       'select' => 'N',
       'input'  => 'HR'
       );
@@ -266,7 +266,7 @@ class DetailedInstrumentation
     $opts['fdd']['ProjectInstrumentId'] = array(
       'name'        => L::t('Project Instrument'),
       'select'      => 'M',
-      'sql'         => 'GROUP_CONCAT(ProjectInstrumentId ORDER BY ProjectInstrumentId ASC)',
+      'sql'         => 'GROUP_CONCAT(DISTINCT ProjectInstrumentId ORDER BY ProjectInstrumentId ASC)',
       'maxlen'      => 36,
       'css'         => array('postfix' => ' project-instrument'),
       'sort'        => true,
@@ -287,7 +287,7 @@ class DetailedInstrumentation
         ),
       'values|LF' => array(
         'table'   => 'Instrumente',
-        'column'  => 'Instrument',
+        'column'  => 'Id',
         'orderby' => '$table.Sortierung',
         'description' => array('columns' => array('Instrument')),
         'filters' => ("`Instrument` IN ".
@@ -301,7 +301,7 @@ class DetailedInstrumentation
 
     $opts['fdd']['ProjectInstrument'] = array(
       'name'     => L::t('Project Instrument'),
-      'sql'      => 'GROUP_CONCAT(ProjectInstrument ORDER BY ProjectInstrumentId ASC)',
+      'sql'      => 'GROUP_CONCAT(DISTINCT ProjectInstrument ORDER BY ProjectInstrumentId ASC)',
       'input'    => 'HR',
       );
 
@@ -349,21 +349,6 @@ class DetailedInstrumentation
         }),
       'css'      => array('postfix' => ' registration tooltip-top'),
       );
-
-    if (false) {
-      $opts['fdd']['Instrumente'] = array(
-        'name'     => L::t('All Instruments'),
-        'css'      => array('postfix' => ' musician-instruments tooltip-top'),
-        'display|LF'  => array('popup' => 'data'),
-        //'options'  => 'AVCPD',
-        'select'   => 'M',
-        'maxlen'   => 136,
-        'sort'     => true,
-        'values'   => $this->instruments,
-        'valueGroups' => $this->groupedInstruments,
-        'tab'      => array('id' => array('musician', 'instrumentation'))
-        );
-    }
 
     $opts['fdd']['MusicianInstrumentKey'] = array(
       'name'   => L::t('Musican Instrument'),
@@ -550,8 +535,8 @@ class DetailedInstrumentation
           $projectName = $this->projectName;
           // can be multi-valued (i.e.: 2 for member table and project table)
           $mandateProjects = $row['qf'.($k+1)];
-          $mandates = explode(',', $mandates);
-          $mandateProjects = explode(',', $mandateProjects);
+          $mandates = Util::explode(',', $mandates);
+          $mandateProjects = Util::explode(',', $mandateProjects);
           if (count($mandates) !== count($mandateProjects)) {
             throw new \RuntimeException(
               L::t('Data inconsistency, mandates: "%s", projects: "%s"',
@@ -611,7 +596,9 @@ class DetailedInstrumentation
 
     // Generate input fields for the extra columns
     foreach ($userExtraFields as $field) {
-      $name = $field['Name'];
+      $fieldName = $name = $field['Name'];
+      $fieldId   = $field['Id'];
+
       $type = $fieldTypes[$field['Type']];
 
       if ($type['Kind'] === 'surcharge') {
@@ -624,6 +611,7 @@ class DetailedInstrumentation
         $tab = array('id' => $tabId);
       }
 
+      $curColIdx = count($opts['fdd']); // current column
       $opts['fdd'][$name] = array(
         'name'     => $name, // ."\n(".$projectName.")",
         'css'      => array('postfix' => ' extra-field'),
@@ -760,6 +748,47 @@ class DetailedInstrumentation
           $fdd['css']['postfix'] .= ' surcharge enum money allow-empty';
           $fdd['select'] = 'D';
         }
+        break;
+      case 'SimpleGroup':
+      case 'PredefinedGroup':
+        $fdd = array_merge(
+          $fdd, [
+            'select' => 'M',
+            'sql' => 'GROUP_CONCAT(DISTINCT PMEjoin'.$curColIdx.'.InstrumentationId)',
+            'filter' => 'having',
+            'values' => [
+              'table' => "SELECT
+  b.Id AS InstrumentationId,
+  CONCAT_WS(' ', m.Vorname, m.Name) AS Name,
+  m.Name AS LastName, m.Vorname AS FirstName,
+  fd.FieldValue AS GroupId
+FROM Besetzungen b
+LEFT JOIN Musiker AS m
+  ON b.MusikerId = m.Id
+LEFT JOIN ProjectExtraFieldsData fd
+  ON b.Id = fd.BesetzungenId AND fd.FieldId = $fieldId
+WHERE b.ProjektId = $projectId",
+              'column' => 'InstrumentationId',
+              'description' => 'Name',
+              'groups' => "CONCAT('".$fieldName." ',\$table.GroupId)",
+              'data' => "CONCAT('{\"GroupId\":\"',\$table.GroupId,'\"}')",
+              'orderby' => '$table.GroupId ASC, $table.LastName ASC, $table.FirstName ASC',
+              'join' => '$main_table.'.$fieldName.' = $join_table.GroupId',
+              ],
+            'valueGroups' => [ -1 => L::t('without group') ],
+            ]);
+
+        // in filter mode mask out all non-group-members
+        $fdd['values|LF'] = array_merge(
+          $fdd['values'],
+          [ 'filters' => '$table.GroupId IS NOT NULL' ]);
+
+        // after all this tweaking, we still need the real group id
+        $opts['fdd'][$fieldName.'GroupId'] = [
+          'input' => 'SH',
+          'sql' => $fieldName
+          ];
+
         break;
       default:
         break;
@@ -957,12 +986,14 @@ class DetailedInstrumentation
             "options" => 'LFAVCPDR' // Set by update trigger.
         ));
 
-    $opts['triggers']['update']['before'] = array();
-    $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
-    $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeUpdateRemoveUnchanged';
-    $opts['triggers']['update']['before'][]  = 'CAFEVDB\Musicians::beforeTriggerSetTimestamp';
-    $opts['triggers']['update']['before'][]  = 'CAFEVDB\DetailedInstrumentation::beforeUpdateTrigger';
-    $opts['triggers']['delete']['before'][]  = 'CAFEVDB\DetailedInstrumentation::beforeDeleteTrigger';
+    $opts['triggers']['update']['before'] = [];
+    $opts['triggers']['update']['before'][] = 'CAFEVDB\Util::beforeAnythingTrimAnything';
+    $opts['triggers']['update']['before'][] = 'CAFEVDB\Musicians::beforeTriggerSetTimestamp';
+    $opts['triggers']['update']['before'][] = 'CAFEVDB\DetailedInstrumentation::beforeUpdateTrigger';
+    $opts['triggers']['update']['before'][] = 'CAFEVDB\Util::beforeUpdateRemoveUnchanged';
+
+    // that one has to be adjusted further ...
+    $opts['triggers']['delete']['before'][] = 'CAFEVDB\DetailedInstrumentation::beforeDeleteTrigger';
 
     // fill the numbers table
     $opts['triggers']['filter']['pre'][]  =
@@ -1041,6 +1072,8 @@ class DetailedInstrumentation
    * @param[in,out] &$newValues Set of new values, which may also be modified.
    *
    * @return boolean. If returning @c false the operation will be terminated
+   *
+   * @bug Too long, just split into multiple "triggers" or call subroutines.
    */
   public static function beforeUpdateTrigger(&$pme, $op, $step, &$oldValues, &$changed, &$newValues)
   {
@@ -1049,19 +1082,13 @@ class DetailedInstrumentation
 
     $projectId = Util::cgiValue('ProjectId', false);
     if ($projectId === false) {
-      return true;
+      return false;
     }
 
-    /* don't bother with changed ordering of instruments */
-    $oldInstr = explode(',', $oldValues['Instrumente']);
-    $newInstr = explode(',', $newValues['Instrumente']);
-    if (empty(array_diff($oldInstr, $newInstr))) {
-      $key = array_search('Instrumente', $changed);
-      if ($key !== false) {
-        unset($changed[$key]);
-      }
-      unset($newValues['Instrumente']);
-    }
+    /* error_log('******* before ******************'); */
+    /* error_log('old '.print_r($oldValues, true)); */
+    /* error_log('new '.print_r($newValues, true)); */
+    /* error_log('chg '.print_r($changed, true)); */
 
     /**************************************************************************
      *
@@ -1081,9 +1108,9 @@ class DetailedInstrumentation
       $table    = self::PROJECT_INSTRUMENTS;
       $field    = 'ProjectInstrumentId';
       $keyField = 'ProjectInstrumentKey';
-      $newIds  = explode(',', $newValues[$field]);
-      $oldIds  = explode(',', $oldValues[$field]);
-      $oldKeys = explode(',', $oldValues[$keyField]);
+      $newIds  = Util::explode(',', $newValues[$field]);
+      $oldIds  = Util::explode(',', $oldValues[$field]);
+      $oldKeys = Util::explode(',', $oldValues[$keyField]);
       $oldRecords = array_combine($oldIds, $oldKeys);
       foreach(array_diff($oldIds, $newIds) as $id) {
         $query = "DELETE FROM $table WHERE Id = ".$oldRecords[$id];
@@ -1096,7 +1123,7 @@ class DetailedInstrumentation
       }
       foreach(array_diff($newIds, $oldIds) as $id) {
         $new = array_merge($values, array('InstrumentId' => $id));
-        $result = mySQL::insert('ProjectInstruments', $new, $pme->dbh);
+        $result = mySQL::insert($table, $new, $pme->dbh);
         $rec = mySQL::newestIndex($pme->dbh);
         if($result !== false && $rec > 0) {
           mySQL::logInsert($table, $rec, $new, $pme->dbh);
@@ -1123,9 +1150,9 @@ class DetailedInstrumentation
       $keyField = 'MusicianInstrumentKey';
       $table    = self::MUSICIAN_INSTRUMENTS;
       $musicianId = $oldValues['MusikerId'];
-      $newIds  = explode(',', $newValues[$field]);
-      $oldIds  = explode(',', $oldValues[$field]);
-      $oldKeys = explode(',', $oldValues[$keyField]);
+      $newIds  = Util::explode(',', $newValues[$field]);
+      $oldIds  = Util::explode(',', $oldValues[$field]);
+      $oldKeys = Util::explode(',', $oldValues[$keyField]);
       $oldRecords = array_combine($oldIds, $oldKeys);
       foreach(array_diff($oldIds, $newIds) as $id) {
         $query = "DELETE FROM $table WHERE Id = ".$oldRecords[$id];
@@ -1156,11 +1183,22 @@ class DetailedInstrumentation
     $types = ProjectExtra::fieldTypes($pme->dbh);
     $extraFields = ProjectExtra::projectExtraFields($projectId, true, $pme->dbh);
     foreach ($extraFields as $field) {
-      $name = $field['Name'];
-      $nameId = $name.'Id';
-      if (empty($oldValues[$nameId])) {
+      $fieldName = $field['Name'];
+      $fieldId   = $field['Id'];
+      $idName    = $fieldName.'Id';
+
+      if (($extraKey = array_search($fieldName, $changed)) === false) {
+        // don't bother if fields are anchanged ...
+        //error_log('unchanged');
+        continue;
+      }
+
+      // These lines make sure a data item exists for this
+      // musician. Is this really necessary? In principle not ...
+      if (empty($oldValues[$idName])) {
+
         $values = array('BesetzungenId' => $oldValues['Id'],
-                        'FieldId' => $field['Id']);
+                        'FieldId' => $fieldId);
         $result = mySQL::insert(ProjectExtra::DATA_TABLE,
                                 $values,
                                 $pme->dbh,
@@ -1174,7 +1212,7 @@ class DetailedInstrumentation
                                        'Id',
                                        '`BesetzungenId` = '.$oldValues['Id'].
                                        ' AND '.
-                                       '`FieldId` = '.$field['Id'],
+                                       '`FieldId` = '.$fieldId,
                                        $pme->handle);
           if ($idData !== false && count($idData) == 1) {
             $idx = $idData[0];
@@ -1183,41 +1221,155 @@ class DetailedInstrumentation
         if ($idx === false) {
           return false;
         }
-        $oldValues[$nameId] = $idx;
+        $oldValues[$idName] = $idx;
       }
-      if ($types[$field['Type']]['Name'] === 'Integer') {
+
+      // Tweaks for individual fields
+      switch($types[$field['Type']]['Name']) {
+      case 'Integer':
         // as we only store texts internally, force to int now ...
-        if (isset($newValues[$name])) {
-          $newValues[$name] = (string)intval($newValues[$name]);
-          if ($newValues[$name] !== $oldValues[$name]) {
-            $changed[] = $name;
+        if (isset($newValues[$fieldName])) {
+          $newValues[$fieldName] = (string)intval($newValues[$fieldName]);
+          if ($newValues[$fieldName] !== $oldValues[$fieldName]) {
+            $changed[] = $fieldName;
           }
         }
-      }
-      if ($types[$field['Type']]['Name'] === 'Float') {
+        break;
+      case 'Float':
         // as we only store texts internally, force to float now ...
-        if (isset($newValues[$name])) {
-          $newValues[$name] = (string)floatval($newValues[$name]);
-          if ($newValues[$name] !== $oldValues[$name]) {
-            $changed[] = $name;
+        if (isset($newValues[$fieldName])) {
+          $newValues[$fieldName] = (string)floatval($newValues[$fieldName]);
+          if ($newValues[$fieldName] !== $oldValues[$fieldName]) {
+            $changed[] = $fieldName;
           }
         }
-      }
-      if ($types[$field['Type']]['Name'] === 'Boolean') {
-        // as we only store texts internally, force to float now ...
-        if (isset($newValues[$name])) {
-          $newValues[$name] = (string)(int)!!$newValues[$name];
-          if ($newValues[$name] !== $oldValues[$name]) {
-            $changed[] = $name;
+        break;
+      case 'Boolean':
+        // as we only store texts internally, force to int now ...
+        if (isset($newValues[$fieldName])) {
+          $newValues[$fieldName] = (string)(int)!!$newValues[$fieldName];
+          if ($newValues[$fieldName] !== $oldValues[$fieldName]) {
+            $changed[] = $fieldName;
           }
         }
+        break;
+      case 'SimpleGroup':
+        //error_log('************ simple group');
+        // Here the group update logic has to go. Oops.
+        $allowed = ProjectExtra::explodeAllowedValues($field['AllowedValues']);
+        $max = $allowed[0]['data']; // ATM, may change
+
+        //error_log('************* values: '.print_r($allowed, true));
+
+        // $changed almost always contains the group because the
+        // values submitted by the form are the group participants,
+        // while the value stored in the DB is the group id.
+        $newIds = Util::explode(',', $newValues[$fieldName]);
+        $oldIds = Util::explode(',', $oldValues[$fieldName]);
+        if (count($newIds) > $max) {
+          //error_log('************ too many');
+          return false;
+        }
+        $oldGroupId = $oldValues[$fieldName.'GroupId'];
+        $newGroupId = $newValues[$fieldName.'GroupId'];
+
+        //error_log('********* old new group: '.$newGroupId);
+        if (empty($newGroupId)) {
+          // generate a new one ...
+          $newGroupId = ProjectExtra::maxFieldValue($fieldId, $pme->dbh);
+          ++$newGroupId;
+        }
+        //error_log('********* old group: '.$oldGroupId);
+        //error_log('********* new group: '.$newGroupId);
+
+        /* TODO: fix the update rules.
+         *
+         * old group-id same as new group-id: just update member list
+         *
+         * old group-id differs from new group-id: just add given
+         * member list to new group, leave old group untouched.
+         *
+         */
+
+        $table = 'ProjectExtraFieldsData';
+        if ($oldGroupId === $newGroupId) {
+          // just update list of members
+
+          // record removed ids
+          foreach(array_diff($oldIds, $newIds) as $id) {
+            $query = "DELETE FROM $table WHERE
+  BesetzungenId = $id AND FieldId = $fieldId";
+            if (mySQL::query($query, $pme->dbh) !== false) {
+              $old = [ 'BesetzungenId' => $id,
+                       'FieldId' => $fieldId,
+                       'FieldValue' => $oldGroupId ];
+              mySQL::logDelete($table, 'Id', $old, $pme->dbh);
+            }
+          }
+
+          // record new ids
+          foreach(array_diff($newIds, $oldIds) as $id) {
+            $new = [
+              'BesetzungenId' => $id,
+              'FieldId' => $fieldId,
+              'FieldValue' => $newGroupId
+              ];
+            // just update on duplicate key
+            //error_log('insert values: '.print_r($new, true));
+            $result = mySQL::insert($table, $new, $pme->dbh, mySQL::UPDATE);
+            $rec = mySQL::newestIndex($pme->dbh);
+            if($result !== false) {
+              mySQL::logInsert($table, $rec, $new, $pme->dbh);
+            }
+          }
+        } else {
+          // Group ids differ. Just remove ourselfs from the old group
+          // and add all members to new group id
+          if (!empty($oldGroupId)) {
+            $query = "DELETE FROM $table WHERE
+  BesetzungenId = ".$pme->rec." AND FieldId = $fieldId";
+            if (mySQL::query($query, $pme->dbh) !== false) {
+              $old = [ 'BesetzungenId' => $pme->rec,
+                       'FieldId' => $fieldId,
+                       'FieldValue' => $oldGroupId ];
+              mySQL::logDelete($table, 'Id', $old, $pme->dbh);
+            }
+          }
+          if (!empty($newIds)) {
+            if (empty($oldGroupId)) {
+              // interprete this case as a "lazy" group definition; we
+              // want to add the current record to the new group!
+              if (array_search($pme->rec, $newIds) === false) {
+                $newIds[] = $pme->rec;
+              }
+            }
+            // record new ids
+            foreach($newIds as $id) {
+              $new = [
+                'BesetzungenId' => $id,
+                'FieldId' => $fieldId,
+                'FieldValue' => $newGroupId
+                ];
+              //error_log('insert values: '.print_r($new, true));
+              // just update on duplicate key
+              $result = mySQL::insert($table, $new, $pme->dbh, mySQL::UPDATE);
+              $rec = mySQL::newestIndex($pme->dbh);
+              if($result !== false) {
+                mySQL::logInsert($table, $rec, $new, $pme->dbh);
+              }
+            }
+          }
+        }
+        unset($changed[$extraKey]);
+        unset($newValues[$fieldName]);
+        break;
       }
     }
 
     /* error_log('******* after ******************'); */
-    /* error_log(print_r($oldValues, true)); */
-    /* error_log(print_r($newValues, true)); */
-    /* error_log(print_r($changed, true)); */
+    /* error_log('old '.print_r($oldValues, true)); */
+    /* error_log('new '.print_r($newValues, true)); */
+    /* error_log('chg '.print_r($changed, true)); */
 
     return true;
   }
@@ -1242,6 +1394,9 @@ class DetailedInstrumentation
    * @param[in,out] &$newValues Set of new values, which may also be modified.
    *
    * @return boolean. If returning @c false the operation will be terminated
+   *
+   * @todo: This trigger does not yet delete all possible
+   * "side-effects" -- extra fields, monetary stuff etc.
    */
   public static function beforeDeleteTrigger(&$pme, $op, $step, $oldValues, &$changed, &$newValues)
   {//DELETE FROM Spielwiese2013View WHERE (Id = 146)
@@ -1396,7 +1551,7 @@ class DetailedInstrumentation
                           \OCP\Util::ERROR);
       return 0.0;
     case 'parallel':
-      $keys = explode(',',$value);
+      $keys = Util::explode(',', $value);
       $found = false;
       $amount = 0.0;
       foreach($allowedValues as $item) {
