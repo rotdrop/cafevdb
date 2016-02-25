@@ -827,10 +827,15 @@ var CAFEVDB = CAFEVDB || {};
 
     // Emulate a pull-down menu with export options via the chosen
     // plugin.
-    container.find('select.pme-export-choice').chosen({
+    var exportSelect = container.find('select.pme-export-choice');
+    exportSelect.chosen({
       disable_search:true,
       inherit_select_classes:true
     });
+
+    // install placeholder as first item if chosen is not active
+    CAFEVDB.fixupNoChosenMenu(exportSelect);
+
     container.find('select.pme-export-choice').
       off('change').
       on('change', function (event) {

@@ -274,9 +274,9 @@ namespace CAFEVDB
           //error_log('project-id: '.$recordId);
           $projectId = $recordId;
           $projectName = $value;
-          $placeholder = false;
+          $placeHolder = false;
           $overview = true;
-          return self::projectActions($projectId, $projectName, $placeholder, $overview);
+          return self::projectActions($projectId, $projectName, $placeHolder, $overview);
         },
         'select'   => 'D',
         'maxlen'   => self::NAME_LENGTH_MAX + 6,
@@ -326,7 +326,7 @@ namespace CAFEVDB
           $projectId = $recordId;
           $projectName = $value;
           $overview = false;
-          $placeholder = L::t("Actions");
+          $placeHolder = L::t("Actions");
           return self::projectActions($projectId, $projectName, $placeHolder, $overview);
         },
         'select'   => 'T',
@@ -1080,6 +1080,8 @@ __EOT__;
         // $placeHolder = preg_replace("/^(.*\D)(\d{4})$/", "$1", $projectName);
         $placeHolder = $projectName; // or maybe don't strip.
       }
+
+      error_log('placeholder '.$placeHolder);
 
       $control = '
 <span class="project-actions-block">
