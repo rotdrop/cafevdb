@@ -317,11 +317,11 @@ class DetailedInstrumentation
       'name|CAPVD' => L::t("Section Leader"),
       'tab' => array('id' => 'instrumentation'),
       'options'  => 'LAVCPDF',
-      'select' => 'O',
+      'select' => 'C',
       'maxlen' => '1',
       'sort' => true,
       'escape' => false,
-      'values2|CAP' => array('1' => '&nbsp;&nbsp;&nbsp;&nbsp;' /* '&alpha;' */),
+      'values2|CAP' => array('1' => '&nbsp;&nbsp;&nbsp;&nbsp;'),
       'values2|LVDF' => array('0' => '&nbsp;', '1' => '&alpha;'),
       'tooltip' => L::t("Set to `%s' in order to mark the section leader",
                         array("&alpha;")),
@@ -336,7 +336,7 @@ class DetailedInstrumentation
       'name|CAPDV' => L::t("Registration"),
       'tab' => array('id' => array('project', 'instrumentation')),
       'options'  => 'LAVCPDF',
-      'select' => 'O',
+      'select' => 'C',
       'maxlen' => '1',
       'sort' => true,
       'escape' => false,
@@ -991,17 +991,18 @@ WHERE b.ProjektId = $projectId",
     $opts['fdd']['Aktualisiert'] = array_merge(
       Config::$opts['datetime'],
       array("name" => L::t("Last Updated"),
-            'tab'     => array('id' => array('project', 'musician', 'instrumentation')),
+            'tab'     => array('id' => array('tab-all')),
             "default" => date(Config::$opts['datetime']['datemask']),
             "nowrap"  => true,
-            "options" => 'LFAVCPDR' // Set by update trigger.
+            'input'   => 'R',
+            "options" => 'LFAVCPD' // Set by update trigger.
         ));
 
     $opts['triggers']['update']['before'] = [];
     $opts['triggers']['update']['before'][] = 'CAFEVDB\Util::beforeAnythingTrimAnything';
-    $opts['triggers']['update']['before'][] = 'CAFEVDB\Musicians::beforeTriggerSetTimestamp';
     $opts['triggers']['update']['before'][] = 'CAFEVDB\DetailedInstrumentation::beforeUpdateTrigger';
     $opts['triggers']['update']['before'][] = 'CAFEVDB\Util::beforeUpdateRemoveUnchanged';
+    $opts['triggers']['update']['before'][] = 'CAFEVDB\Musicians::beforeTriggerSetTimestamp';
 
     // that one has to be adjusted further ...
     $opts['triggers']['delete']['before'][] = 'CAFEVDB\DetailedInstrumentation::beforeDeleteTrigger';
@@ -1203,6 +1204,8 @@ WHERE b.ProjektId = $projectId",
         //error_log('unchanged');
         continue;
       }
+
+      $changed[] = 'Aktualisiert';
 
       // These lines make sure a data item exists for this
       // musician. Is this really necessary? In principle not ...

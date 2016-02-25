@@ -683,10 +683,15 @@ make sure that the musicians are also automatically added to the
    */
   public static function beforeTriggerSetTimestamp($pme, $op, $step, &$oldvals, &$changed, &$newvals)
   {
+    $key = 'Aktualisiert';
+    $k = array_search($key, $changed);
     if (count($changed) > 0) {
-      $key = 'Aktualisiert';
-      $changed[] = $key;
+      $k === false && $changed[] = $key;
       $newvals[$key] = date(\CAFEVDB\mySQL::DATEMASK);
+    } else {
+      if ($k !== false) {
+        unset($changed[$k]);
+      }
     }
     echo '<!-- '.print_r($newvals, true).'-->';
     return true;
