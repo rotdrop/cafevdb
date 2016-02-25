@@ -328,7 +328,7 @@ var CAFEVDB = CAFEVDB || {};
     Instrumentation.loadPMETableFiltered(form, inputTweak, ids, afterLoadCallback);
   };
 
-  Instrumentation.ready = function(selector) {
+  Instrumentation.ready = function(selector, resizeCB) {
     selector = PHPMYEDIT.selector(selector);
     var container = PHPMYEDIT.container(selector);
 
@@ -476,34 +476,28 @@ var CAFEVDB = CAFEVDB || {};
           }
         }
       }
-      // console.log('record', recKey);
-      // var prevEmpty = !prevSelected || (prevSelected.length === 1 && prevSelected[0] === recKey);
-      // var changed = false;
-      // if (selected && prevEmpty) {
-      //   // find the option
-      //   var option = self.find('option:selected');
-      //   if (option.lenght <= 0) { // cannot happen ...
-      //     return false;
-      //   }
-      //   if (recKey > 0) { // should always be true here
-      //     var recKeyOption = self.find('option[value="'+recKey+'"]');
-      //     if (!recKeyOption.prop('selected')) {
-      //       recKeyOption.prop('selected', true);
-      //       changed = true;
-      //     }
-      //   }
-      //   var data = option.data('data');
-      //   if (data.GroupId > 0) {
-      //     console.log('group: ', data.GroupId);
-      //     option.parent().find('option').prop('selected', true);
-      //     changed = true;
-      //   }
-      // }
+      var curSelected = self.val();
+      curSelected = curSelected ? curSelected : [];
+      self.data('selected', curSelected);
+
+      // emit a warning if the limit is exhausted.
+      var limit = self.closest('td').data('groups');
+      limit = limit.Limit;
+
+      if (curSelected.length > limit) {
+        OC.Notification.showTemporary(t('cafevdb',
+                                        'Too many group members, allowed are {limit}, you specified {count}.'
+                                                  + 'You will not be able to save this configuration.',
+                                        { limit: limit, count: curSelected.length }),
+                                      { isHTML: true, timeout: 30 }
+                                     );
+      } else {
+        OC.Notification.hide();
+      }
+
       if (changed) {
         self.trigger('chosen:updated');
       }
-      var curSelected = self.val();
-      self.data('selected', curSelected ? curSelected : []);
       return false;
     });
 
@@ -515,6 +509,13 @@ var CAFEVDB = CAFEVDB || {};
 
       return false;
     });
+
+    if (typeof resizeCB === 'function') {
+      container.on('chosen:update', 'select', function(event) {
+        resizeCB();
+        return false;
+      });
+    }
   };
 
   CAFEVDB.Instrumentation = Instrumentation;
@@ -534,7 +535,8 @@ $(document).ready(function(){
       var container = $(selector);
       CAFEVDB.exportMenu(selector);
       CAFEVDB.SepaDebitMandate.popupInit(selector);
-      this.ready(selector);
+
+      this.ready(selector, resizeCB);
 
       container.find('div.photo, #cafevdb_inline_image_wrapper').
         off('click', 'img.zoomable').
