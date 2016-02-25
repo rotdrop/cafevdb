@@ -283,7 +283,7 @@ var CAFEVDB = CAFEVDB || {};
           keys.push(key);
         }
       });
-      console.log('keys', keys);
+      console.log('keys', keys, typeof keys);
 
       var allowed = row.find('input[type="text"], input[type="hidden"], textarea');
 
@@ -293,9 +293,9 @@ var CAFEVDB = CAFEVDB || {};
       var postData = {
         request: 'AllowedValuesOption',
         value: {
-          selected: oldDflt,
+          selected: oldDflt ? oldDflt : '',
           data: data,
-          keys: keys
+          keys: keys.length > 0 ? keys : 0
         }
       };
 
