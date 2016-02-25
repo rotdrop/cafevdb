@@ -91,7 +91,7 @@ namespace CAFEVDB {
         }
         $selected = $value['selected'];
         $data  = $value['data'];
-        $keys  = $value['keys'];
+        $keys  = $value['keys'] ? $value['keys'] : [];
         $index = $data['index'];
         $used  = $data['used'] === 'used';
 
@@ -160,7 +160,8 @@ namespace CAFEVDB {
 
     \OC_JSON::error(
       array("data" => array(
-              "message" => L::t("Unhandled request:")." ".print_r($_POST, true))));
+              "message" => L::t("Unhandled request:")." ".print_r($_POST, true),
+              "debug" => htmlspecialchars($debugText))));
 
     return false;
 
