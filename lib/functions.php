@@ -251,6 +251,9 @@ namespace CAFEVDB
    */
   class Util
   {
+    const DEFAULT_BEHAVIOUR = 0;
+    const OMIT_EMPTY_FIELDS = 1;
+
     private static $inlineScripts = array();
     private static $externalScripts = array();
 
@@ -268,12 +271,12 @@ namespace CAFEVDB
     /**Explode, but omit empty array members, i.e. return empty array
      * for empty string.
      */
-    static public function explode($delim, $string, $omitEmpty = true)
+    static public function explode($delim, $string, $flags = self::OMIT_EMPTY_FIELDS)
     {
-      if ($omitEmpty === false) {
-        return explode($delim, $string);
-      } else {
+      if ($flags === self::OMIT_EMPTY_FIELDS) {
         return preg_split('/'.preg_quote($delim, '/').'/', $string, -1, PREG_SPLIT_NO_EMPTY);
+      } else {
+        return explode($delim, $string);
       }
     }
 
@@ -291,9 +294,9 @@ namespace CAFEVDB
      * removed, this function is not suitable for data-base
      * manipulation.
      */
-    static public function quasiCSVSplit($values, $delimiters = ':,;', $omitEmptyFields = false)
+    static public function quasiCSVSplit($values, $delimiters = ':,;', $flags = self::DEFAULT_BEHAVIOUR)
     {
-      $emptyGroup = $omitEmptyFields ? '' : '|';
+      $emptyGroup = ($flags === self::OMIT_EMPTY_FIELDS) ? '' : '|';
       $re = '/(?<=^|['.$delimiters.'])'.
         '\s*(?|'.
         '("|\')\s*((?!\s)(?:(?!\g{-2})(?:\\\\.|[^\\\\]))+(?<!\s)'.$emptyGroup.')\s*\g{-2}'.
