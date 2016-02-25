@@ -1626,7 +1626,7 @@ class phpMyEdit
 			if ($defaulted) {
 				$value  = @$this->fdd[$k]['default'];
 				$escape && $value = htmlspecialchars($value);
-				error_log('default: '.$this->fdd[$k]['name'].': '.$value);
+				//error_log('default: '.$this->fdd[$k]['name'].': '.$value);
 			}
 			if ($this->hidden($k)) {
 				echo $this->htmlHiddenData($this->fds[$k], $value);
@@ -2038,8 +2038,15 @@ class phpMyEdit
 	{
 		$colattrs = '';
 		if (isset($this->fdd[$k]['colattrs'])) {
-			$colattrs .= ' ';
-			$colattrs .= trim($this->fdd[$k]['colattrs']);
+			if (is_array($this->fdd[$k]['colattrs'])) {
+				foreach($this->fdd[$k]['colattrs'] as $name => $value) {
+					$colattrs .= ' ';
+					$colattrs .= $name.'="'.htmlspecialchars($value).'"';
+				}
+			} else {
+				$colattrs .= ' ';
+				$colattrs .= trim($this->fdd[$k]['colattrs']);
+			}
 		}
 		if (isset($this->fdd[$k]['nowrap'])) {
 			$colattrs .= ' nowrap';
@@ -2436,6 +2443,7 @@ class phpMyEdit
 		is_array($kd_array) || $kd_array = array();
 		$found = false;
 		$dfltGroup = empty($kg_array[-1]) ? null : $kg_array[-1];
+		$dfltData = empty($kd_array[-1]) ? null : htmlspecialchars($kd_array[-1]);
 		$lastGroup = null;
 		$groupId = 0;
 		$ret .= $multiple ? '' : '<option value=""></option>'."\n";
@@ -2462,6 +2470,8 @@ class phpMyEdit
 			if (!empty($kd_array[$key])) {
 				$data = htmlspecialchars($kd_array[$key]);
 				$ret .= " data-data='".$data."'";
+			} else if (!empty($dfltData)) {
+				$ret .= " data-data='".$dfltData."'";
 			}
 			if ($lastGroup) {
 				$ret .= ' data-group-id="'.$groupId.'"';
