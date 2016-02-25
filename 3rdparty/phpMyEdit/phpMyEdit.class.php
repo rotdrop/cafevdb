@@ -1253,7 +1253,7 @@ class phpMyEdit
 					if ($not) {
 						$qo[$fqn]['oper'] = 'NOT';
 					}
-					error_log(print_r($qo, true));
+					//error_log(print_r($qo, true));
 				} else {
 					$qf_op = '';
 					foreach (array_keys($m) as $key) {
@@ -1783,6 +1783,12 @@ class phpMyEdit
 				   In all cases particular readonly field will NOT be saved. */
 				if ($this->disabled($k) && ($this->col_has_datemask($k) || $this->col_has_URL($k))) {
 					echo $this->display_delete_field($row, $k, $helptip);
+					if ($this->col_has_datemask($k)) {
+						$value = $this->makeTimeString($k, $row);
+					} else {
+						$value = htmlspecialchars($row["qf$k"]);
+					}
+					echo $this->htmlHiddenData($this->fds[$k], $value);
 				} elseif ($this->password($k)) {
 					echo $this->display_password_field($row, $k, $helptip);
 				} else {
@@ -4206,6 +4212,7 @@ class phpMyEdit
 		$oldvals	  = array();
 		$changed	  = array();
 		$stamps		  = array();
+		$checks       = array();
 		// Prepare query to retrieve oldvals
 		for ($k = 0; $k < $this->num_fds; $k++) {
 			if ($this->processed($k)) {
@@ -4220,6 +4227,10 @@ class phpMyEdit
 						$fn = date('Y-m-d H:i:s', $stamps[$fd]);
 						echo "<!-- ".$fn." -->\n";
 					}
+				}
+				if ($this->col_has_checkboxes($k) ||
+					($this->col_has_radio_buttons($k) && $this->col_has_multiple_select($k))) {
+					$checks[$fd] = true;
 				}
 				// Don't include disabled fields into newvals, but
 				// keep for reference in oldvals. Keep readonly-fields in newvals
@@ -4266,7 +4277,15 @@ class phpMyEdit
 				if ($oldstamp != $stamps[$fd]) {
 					$changed[] = $fd;
 				}
+				$oldvals[$fd] = date('Y-m-d H:i:s', $oldstamp); // normalize
+			} else if (!empty($checks[$fd]) && empty($value)) {
+				if (intval($value) !== intval($oldvals[$fd])) {
+					// checkboxes, empty means unchecked, but the DB
+					// may as well store nothing or 0.
+					$changed[] = $fd;
+				}
 			} else if ($value != $oldvals[$fd]) {
+				//error_log($fd.' old: '.$oldvals[$fd].' '.$value);
 				if ($multiple[$fd]) {
 					$tmpval1 = explode(',',$value);
 					sort($tmpval1);
@@ -4313,9 +4332,13 @@ class phpMyEdit
 		foreach($changed as $fd) {
 			if ($fd == '') continue;
 			$fdn = $this->fdn[$fd];
-			if ($this->skipped($fdn) || $this->readonly($fdn)) {
+			if ($this->skipped($fdn) ||
+				(!$this->col_has_datemask($fdn) && $this->readonly($fdn))) {
+				// we allow update of read-only timestamps. RO here
+				// just means: not settable by the user.
 				continue;
 			}
+			//error_log($fd.' old: '.$oldvals[$fd].' new: '.$newvals[$fd]);
 			$fdd = $this->fdd[$fdn];
 			$table = '';
 			$tablename = '';
