@@ -35,6 +35,7 @@ table.pme-main tr.field-type ~ tr.pme-row.default-multi-value {
 }
 
 table.pme-main tr.field-type.group-field ~ tr.pme-row.maximum-group-size,
+table.pme-main tr.field-type.group-field.surcharge-field ~ tr.pme-row.allowed-values-single,
 table.pme-main tr.field-type.simple-value-field:not(.group-field) ~ tr.pme-row.default-value,
 table.pme-main tr.field-type.single-value-field ~ tr.pme-row.default-single-value,
 table.pme-main tr.field-type.single-value-field.surcharge-field ~ tr.pme-row.allowed-values-single,

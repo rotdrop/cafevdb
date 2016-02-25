@@ -750,12 +750,14 @@ class DetailedInstrumentation
         }
         break;
       case 'SimpleGroup':
-      case 'PredefinedGroup':
+      case 'SurchargeGroup':
+        $max = $allowed[0]['column5']; // ATM, may change
         $fdd = array_merge(
           $fdd, [
             'select' => 'M',
             'sql' => 'GROUP_CONCAT(DISTINCT PMEjoin'.$curColIdx.'.InstrumentationId)',
             'display' => [ 'popup' => 'data' ],
+            'colattrs' => [ 'data-groups' => json_encode([ 'Limit' => $max ]), ],
             'filter' => 'having',
             'values' => [
               'table' => "SELECT
@@ -772,13 +774,18 @@ WHERE b.ProjektId = $projectId",
               'column' => 'InstrumentationId',
               'description' => 'Name',
               'groups' => "CONCAT('".$fieldName." ',\$table.GroupId)",
-              'data' => "CONCAT('{\"GroupId\":\"',IFNULL(\$table.GroupId,-1),'\"}')",
+              'data' => "CONCAT('{\"Limit\":".$max.",\"GroupId\":\"',IFNULL(\$table.GroupId,-1),'\"}')",
               'orderby' => '$table.GroupId ASC, $table.LastName ASC, $table.FirstName ASC',
               'join' => '$main_table.'.$fieldName.' = $join_table.GroupId',
               ],
             'valueGroups' => [ -1 => L::t('without group') ],
             ]);
         $fdd['css']['postfix'] .= ' groupofpeople clip-long-text';
+
+        if ($type['Name'] === 'SurchargeGroup') {
+          $money = Util::moneyValue(reset($valueData));
+          $fdd['display']['prefix'] = $money.' - ';
+        }
 
         // in filter mode mask out all non-group-members
         $fdd['values|LF'] = array_merge(
@@ -789,11 +796,10 @@ WHERE b.ProjektId = $projectId",
         $opts['fdd'][$fieldName.'GroupId'] = [
           'name'     => L::t('%s Group Id', array($name)),
           'input'    => 'SH',
-          'input|AC' => 'R',
+          //          'input|AC' => 'R',
           'select'   => 'T',
           'sql'      => $fieldName
           ];
-
         break;
       default:
         break;
@@ -1258,11 +1264,12 @@ WHERE b.ProjektId = $projectId",
           }
         }
         break;
+      case 'SurchargeGroup':
       case 'SimpleGroup':
         //error_log('************ simple group');
         // Here the group update logic has to go. Oops.
         $allowed = ProjectExtra::explodeAllowedValues($field['AllowedValues']);
-        $max = $allowed[0]['data']; // ATM, may change
+        $max = $allowed[0]['column5']; // ATM, may change
 
         //error_log('************* values: '.print_r($allowed, true));
 
@@ -1534,6 +1541,7 @@ WHERE b.ProjektId = $projectId",
   public static function extraFieldSurcharge($value, $allowedValues, $multiplicity)
   {
     switch ($multiplicity) {
+    case 'groupofpeople':
     case 'single':
       // Non empty value means "yes".
       $key = $allowedValues[0]['key'];

@@ -109,12 +109,13 @@ namespace CAFEVDB
       L::t('Money');
       L::t('Set');
       L::t('Enum');
+      L::t('Enumeration');
+      L::t('SimpleGroup');
       L::t('Date');
       L::t('SurchargeOption');
       L::t('SurchargeEnum');
       L::t('SurchargeSet');
-      L::t('SimpleGroup');
-      L::t('PredefinedGroup');
+      L::t('SurchargeGroup');
 
       L::t('simple');
       L::t('single');
@@ -361,6 +362,7 @@ namespace CAFEVDB
       $typeValues = array();
       $typeGroups = array();
       $typeData = array();
+      $typeTitles = array();
       $types = self::fieldTypes();
       if (!empty($types)) {
         foreach($types as $id => $typeInfo) {
@@ -374,6 +376,7 @@ namespace CAFEVDB
               'Multiplicity' => $multiplicity,
               'Group' => $group)
             );
+          $typeTitles[$id] = Config::toolTips('extra-field-'.$group.'-'.$multiplicity);
         }
       }
 
@@ -408,6 +411,7 @@ namespace CAFEVDB
         'values2' => $typeValues,
         'valueGroups' => $typeGroups,
         'valueData' => $typeData,
+        'valueTitles' => $typeTitles,
         );
 
       $opts['fdd']['AllowedValues'] = array(
@@ -454,17 +458,17 @@ namespace CAFEVDB
       // max. number should somehow be adjusted ...
       $values2 = array();
       $dpy = 0;
-      $values2['max:max:'.$dpy.'::active'] = $dpy;
+      $values2[$dpy] = $dpy;
       for($dpy = 2; $dpy < 10; ++$dpy) {
-        $values2['max:max:'.$dpy.'::active'] = $dpy;
+        $values2[$dpy] = $dpy;
       }
       for(; $dpy <= 30; $dpy += 5) {
-        $values2['max:max:'.$dpy.'::active'] = $dpy;
+        $values2[$dpy] = $dpy;
       }
       $opts['fdd']['MaximumGroupSize'] = array(
         'name' => L::t('Maximum Size'),
         'css' => array('postfix' => ' maximum-group-size'),
-        'sql' => 'PMEtable0.AllowedValues',
+        'sql' => "SUBSTRING_INDEX(PMEtable0.AllowedValues, ':', -1)",
         'input' => 'S',
         'input|DV' => 'V',
         'options' => 'ACDPV',
@@ -1023,8 +1027,16 @@ namespace CAFEVDB
        */
       $tag = "MaximumGroupSize";
       $key = array_search($tag, $changed);
-      if ($types[$newvals['Type']]['Multiplicity'] === 'groupofpeople') {
-        $newvals['AllowedValues'] = $newvals[$tag];
+      if ($types[$newvals['Type']]['Multiplicity'] === 'groupofpeople')
+      {
+        $max = $newvals[$tag];
+        if (!empty($newvals['AllowedValuesSingle'][0])) {
+          $maxdata = $newvals['AllowedValuesSingle'];
+          $maxdata[0]['column5'] = $max;
+        } else {
+          $maxdata = 'max:group:::active:'.$max;
+        }
+        $newvals['AllowedValues'] = $maxdata;
         if ($key !== false) {
           $changed[] = 'AllowedValues';
         }
@@ -1063,6 +1075,7 @@ namespace CAFEVDB
       if (!is_array($newvals['AllowedValues'])) {
         // textfield
         $allowed = self::explodeAllowedValues($newvals['AllowedValues']);
+
       } else {
         $allowed = $newvals['AllowedValues'];
       }
@@ -1678,6 +1691,17 @@ __EOT__;
 />
 __EOT__;
       }
+      for($i = 5; $i < count($entry); ++$i) {
+        $field = 'column'.$i;
+        $value = htmlspecialchars($entry[$field]);
+        $html .=<<<__EOT__
+<input class="pme-input allowed-values-single"
+       type="hidden"
+       value="{$value}"
+       name="{$name}[0][{$field}]"
+/>
+__EOT__;
+      }
       $html .= '</div>';
       $html .= '<div class="inactive-values">';
       // Now emit all left-over values. Flag all items as deleted.
@@ -1724,12 +1748,11 @@ __EOT__;
         if (empty($value)) {
           continue;
         }
-        $parts = Util::quasiCSVSplit($value, ':', false /* keep empty fields*/);
+        $parts = Util::quasiCSVSplit($value, ':');
         //error_log('parts: '.print_r($parts, true));
-        $parts[] = '';
-        $parts[] = '';
-        $parts[] = '';
-        $parts[] = '';
+        for($i = count($parts); $i < 5; ++$i) {
+          $parts[] = '';
+        }
         foreach($parts as &$part) {
           $part = trim($part);
         }
@@ -1753,6 +1776,10 @@ __EOT__;
                            'data' => $parts[2],
                            'tooltip' => $parts[3],
                            'flags' => $parts[4]);
+        $last = count($allowed) - 1;
+        for($i = 5; $i < count($parts); $i++) {
+          $allowed[$last]['column'.$i] = $parts[$i];
+        }
       }
       if ($addProto) {
         $allowed[] = $proto;
@@ -1789,8 +1816,14 @@ __EOT__;
         $data  = trim($value['data']);
         $tip   = trim($value['tooltip']);
         $flags = trim($value['flags']);
-        $text = Util::quasiCSVJoin(array($key, $label, $data, $tip, $flags), ':');
-        if ($text === '::::') {
+        $csvData = [ $key, $label, $data, $tip, $flags ];
+        for($i = 5; $i < count(array_values($value)); $i++) {
+          if (isset($value['column'.$i])) {
+            $csvData[] = $value['column'.$i];
+          }
+        }
+        $text = Util::quasiCSVJoin($csvData, ':');
+        if (preg_match('/^:+$/', $text)) {
           continue;
         }
         $result .= "\n".$text;
