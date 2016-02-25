@@ -618,17 +618,33 @@ WHERE i.Id IS NOT NULL AND mi.Id != 0";
     $handle = mySQL::connect(Config::$pmeopts);
 
     $query = "INSERT IGNORE INTO ProjectInstruments
-(ProjectId, MusicianId, InstrumentationId, InstrumentId)
+(ProjectId, MusicianId, InstrumentationId, InstrumentId, Voice, SectionLeader)
 SELECT b.ProjektId AS ProjectId,
  b.MusikerId AS MusicianId,
  b.Id AS InstrumentationId,
- i.Id AS InstrumentId
+ i.Id AS InstrumentId,
+ b.Reihung AS Voice,
+ b.Stimmführer AS SectionLeader
 FROM Besetzungen b
 LEFT JOIN Instrumente i
 ON b.Instrument = i.Instrument
 WHERE i.Id IS NOT NULL AND b.ProjektId != 0 AND b.MusikerId != 0";
 
     $result = mySQL::query($query, $handle);
+
+    $query = "UPDATE
+ProjectInstruments
+INNER JOIN Besetzungen
+ON ProjectInstruments.InstrumentationId = Besetzungen.Id
+SET ProjectInstruments.Voice = IF(Besetzungen.Reihung = 0, NULL, Besetzungen.Reihung),
+    ProjectInstruments.SectionLeader = Besetzungen.Stimmführer
+WHERE Besetzungen.ProjektId != 0
+      AND
+      Besetzungen.MusikerId != 0";
+
+    error_log($query);
+
+    $result = $result && mySQL::query($query, $handle);
 
     mySQL::close($handle);
 

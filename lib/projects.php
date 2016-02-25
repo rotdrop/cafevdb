@@ -2326,6 +2326,18 @@ ORDER BY i.Sortierung ASC";
           'join' => array('type' =>'LEFT'),
           ),
 
+        'Voice' => [
+          'table' => 'pi',
+          'column' => true,
+          'join' => array('type' => 'LEFT'),
+          ],
+
+        'SectionLeader' => [
+          'table' => 'pi',
+          'column' => true,
+          'join' => array('type' => 'LEFT'),
+          ],
+
         'ProjectInstrument' => array(
           'table' => 'Instrumente',
           'tablename' => 'i',

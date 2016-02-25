@@ -305,6 +305,37 @@ class DetailedInstrumentation
       'input'    => 'HR',
       );
 
+    $voices = array_combine(range(0, 8), range(0, 8));
+    $voices[0] = '&nbsp;';
+    $opts['fdd']['Voice'] = array(
+      'name'    => L::t('Voice'),
+//      'sql'   => "IF(PMEtable0.Voice = 0, '', PMEtable0.Voice)",
+      'select'  => 'D',
+      'values2' => $voices,
+      'maxlen'  => '3',
+      'sort'    => true,
+      'escape'  => false,
+      'tab'     => array('id' => 'instrumentation'));
+
+    $opts['fdd']['SectionLeader'] = array(
+      'name|LF' => ' &alpha;',
+      'name|CAPVD' => L::t("Section Leader"),
+      'tab' => array('id' => 'instrumentation'),
+      'options'  => 'LAVCPDF',
+      'select' => 'C',
+      'maxlen' => '1',
+      'sort' => true,
+      'escape' => false,
+      'values2|CAP' => array('1' => '&nbsp;&nbsp;&nbsp;&nbsp;'),
+      'values2|LVDF' => array('0' => '&nbsp;', '1' => '&alpha;'),
+      'tooltip' => L::t("Set to `%s' in order to mark the section leader",
+                        array("&alpha;")),
+      'display|LF' => array('popup' => function($data) {
+          return Config::ToolTips('section-leader-mark');
+        }),
+      'css'      => array('postfix' => ' section-leader tooltip-top'),
+      );
+
     $opts['fdd']['Reihung'] = array(
       'name' => 'Stimme',
       'select' => 'N',

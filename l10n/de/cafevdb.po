@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-02-25 11:58+0100\n"
-"PO-Revision-Date: 2016-02-25 12:05+0100\n"
+"PO-Revision-Date: 2016-02-25 12:55+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -3863,7 +3863,7 @@ msgstr "Daten"
 
 #: lib/project-extra.php:469
 msgid "Maximum Size"
-msgstr "Maximale Anzahle"
+msgstr "Maximale Anzahl"
 
 #: lib/project-extra.php:485 lib/project-extra.php:496
 #: lib/project-extra.php:524
