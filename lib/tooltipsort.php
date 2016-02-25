@@ -22,8 +22,12 @@
 
 namespace CAFEVDB {
 
+  $symbols = [
+    'Finance::SEPA_MANDATE_EXPIRE_MONTHS',
+    ];
+
   class Finance {
-    const SEPA_MANDATE_EXPIRE_MONTHS = 0;
+    const SEPA_MANDATE_EXPIRE_MONTHS = 'Finance::SEPA_MANDATE_EXPIRE_MONTHS';
   };
 
   // Header part
@@ -164,6 +168,9 @@ namespace CAFEVDB
         $value = "''";
       }
       $strValue = $value.",\n";
+    }
+    foreach($symbols as $symbol) {
+      str_replace("'".$symbol."'", $symbol, $strValue);
     }
     $output .= $indent."'$key' => $strValue\n";
   }

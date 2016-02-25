@@ -11,6 +11,7 @@ debit-note-job-option-remaining
 debit-notes-announce
 debit-notes-download
 debit-note-submission-deadline
+extra-field-
 extra-fields-allowed-values
 extra-fields-allowed-values-single
 extra-fields-default-multi-value
@@ -23,6 +24,7 @@ extra-fields-encrypted
 extra-fields-extra-tab
 extra-fields-field-index
 extra-fields-field-name
+extra-fields-maximum-group-size
 extra-fields-new-tab
 extra-fields-readers
 extra-fields-show-data

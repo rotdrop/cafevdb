@@ -190,6 +190,19 @@ invited to have a look, but please do not change anything unless you know what y
 
         'expert-operations' => L::t('For those who know what they are doing, which essentially means: don\'t.'),
 
+        'extra-field-' => 'placeholder',
+        'extra-field-choices-single' => L::t('Simple yes-no choice.'),
+        'extra-field-choices-multiple' => L::t('Multiple choices, excluding each other.'),
+        'extra-field-choices-parallel' => L::t('Multiple choices where, more than one option can be selected.'),
+        'extra-field-choices-groupofpeople' => L::t('Group of peopel, e.g. to define room-mates.'),
+
+        'extra-field-surcharge-single' => L::t('Simple yes-no choice which increases the project fees. Please fill also the "amount" field.'),
+        'extra-field-surcharge-multiple' => L::t('Multiple choices, excluding each other. For the individual choices a potentially different amount of money may be charged.'),
+        'extra-field-surcharge-parallel' => L::t('Multiple choice where more than one option can be selected. For the individual choices a potentially different amount of money may be charged.'),
+        'extra-field-surcharge-groupofpeople' => L::t('E.g. to define double-room surcharges.'),
+
+        'extra-field-general-simple' => L::t('General date field with the respective meaning.'),
+
         'extra-fields-allowed-values' => array(
           'default' => L::t('Table with all admissible values for this multiple choice option.'),
           'placeholder' => L::t('In order to add a new option just enter its name here and hit enter or
@@ -241,6 +254,8 @@ projects.'),
 possible, but try to be descriptive. If further explanations are
 needed, then please enter those in the <strong>Tooltip</strong> field in the
 <strong>Display</strong> tab.'),
+
+        'extra-fields-maximum-group-size' => L::t('The maximum number of peopel allowed in the group.'),
 
         'extra-fields-new-tab' => L::t('Define a new table-tab. In order to do so, first deselect any
 predefined tab in the select box above, then enter the new name. The
@@ -740,7 +755,8 @@ the `Debug\' tab'),
         'sepa-mandate-expired' => L::t('This debit-mandate has not been used for more than %d month and
 therefore is expired and cannot be used any longer. Pleae delete it
 and contact the treasurer for further instructions.',
-                                       array(Finance::SEPA_MANDATE_EXPIRE_MONTHS)),
+            array('Finance::SEPA_MANDATE_EXPIRE_MONTHS')
+          ),
 
         'settings-button' => L::t('Personal application settings.'),
 
