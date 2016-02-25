@@ -40,7 +40,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
   PHPMYEDIT.pmePrefix               = 'pme';
   PHPMYEDIT.PMEPrefix               = PHPMYEDIT.pmePrefix.toUpperCase();
 
-  PHPMYEDIT.defaultSelector         = '#cafevdb-page-body';
+  PHPMYEDIT.defaultSelector         = '#cafevdb-page-body'; ///< for delegate handlers, survives pseudo-submit
+  PHPMYEDIT.defaultInnerSelector    = 'inner'; ///< to override delegate handlers, survices pseudo-submit
   PHPMYEDIT.dialogCSSId             = PHPMYEDIT.pmePrefix+'-table-dialog';
   PHPMYEDIT.tableLoadCallbacks      = [];
 
@@ -120,7 +121,11 @@ var PHPMYEDIT = PHPMYEDIT || {};
     return 'table.'+this.pmeToken('main');
   };
 
-  /**Genereate the default selector. */
+  /**Genereate the default selector.
+   *
+   * @param[in] selector The selector to construct the final selector
+   * from. Maybe a jQuery object.
+   */
   PHPMYEDIT.selector = function(selector) {
     if (typeof selector === 'undefined') {
       selector = this.defaultSelector;
@@ -141,6 +146,21 @@ var PHPMYEDIT = PHPMYEDIT || {};
       container = $(selector);
     }
     return container;
+  };
+
+  /**Generate the jQuery object corresponding to the inner container
+   * of the ambient container. If the given argument is already a
+   * jQuery object, then just return its first div child.
+   */
+  PHPMYEDIT.inner = function(selector) {
+    var container;
+    if (selector instanceof jQuery) {
+      container = selector;
+    } else {
+      selector = this.selector(selector);
+      container = $(selector);
+    }
+    return container.children('div:first');
   };
 
   /**Notify the spectator about SQL errors.*/
@@ -910,7 +930,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
              $.fn.cafevTooltip.remove();
 
              CAFEVDB.removeEditor(container.find('textarea.wysiwygeditor'));
-             container.html(data.data.contents);
+             pme.inner(container).html(data.data.contents);
              pme.init(selector);
              CAFEVDB.addEditor(container.find('textarea.wysiwygeditor'), function() {
                pme.transposeReady(selector);

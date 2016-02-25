@@ -1004,16 +1004,14 @@ $(document).ready(function(){
     });
 
     CAFEVDB.addReadyCallback(function() {
-        var container = $(PHPMYEDIT.defaultSelector+'.projects');
-        if (container.length <= 0) {
+        var container = PHPMYEDIT.container();
+        if (!container.hasClass('projects')) {
             return;
         }
         CAFEVDB.Projects.actionMenu();
         CAFEVDB.Projects.pmeFormInit(PHPMYEDIT.defaultSelector);
 
-        var pmeForm = container.find(PHPMYEDIT.pmeClassSelector('form', 'form'));
-        console.log('inner container', pmeForm.length);
-        pmeForm.
+        PHPMYEDIT.inner(container).
             off('click', 'input.show-disabled').
             on('click', 'input.show-disabled', function(event) {
             event.preventDefault();

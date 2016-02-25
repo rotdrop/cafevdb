@@ -253,5 +253,6 @@ namespace CAFEVDB {
   <?php echo isset($_['headerblock']) ? $_['headerblock'] : ''; ?>
   <div id="<?php echo $css_pfx; ?>-container" class="<?php echo $css_pfx; ?>-container <?php echo $css_class; ?>"> <!-- used to have something with 100 height for scrollbars -->
     <div id="<?php echo $css_pfx; ?>-body" class="<?php echo $css_pfx; ?>-body <?php echo $css_class; ?>">
+      <div id="<?php echo $css_pfx; ?>-body-inner" class="<?php echo $css_pfx; ?>-body-inner <?php echo $css_class; ?>">
 
 <?php } // namespace CAFEVDB ?>

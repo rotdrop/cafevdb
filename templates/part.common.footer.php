@@ -24,6 +24,7 @@ use CAFEVDB\L;
 $css_pfx = $_['css-prefix'];
 ?>
 
+      </div> <!-- page-body-inner -->
     </div> <!-- page-body -->
   </div> <!-- page-container -->
   <?php echo isset($_['footer']) ? $_['footer'] : ''; ?>

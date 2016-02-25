@@ -436,13 +436,12 @@ var CAFEVDB = CAFEVDB || {};
 $(document).ready(function(){
 
   CAFEVDB.addReadyCallback(function() {
-    var container = $(PHPMYEDIT.defaultSelector+'.project-extra');
-    if (container.length <= 0) {
+    var container = PHPMYEDIT.container();
+    if (!container.hasClass('project-extra')) {
       return; // not for us
     }
 
-    var pmeForm = container.find(PHPMYEDIT.pmeClassSelector('form', 'form'));
-    pmeForm.
+    PHPMYEDIT.inner(container).
       off('click', 'input.show-disabled').
       on('click', 'input.show-disabled', function(event) {
       event.preventDefault();
