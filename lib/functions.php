@@ -840,7 +840,7 @@ __EOT__;
      *
      * This trigger simply removes all unchanged fields.
      */
-    public static function beforeUpdateRemoveUnchanged($pme, $op, $step, $oldvals, &$changed, &$newvals)
+    public static function beforeUpdateRemoveUnchanged($pme, $op, $step, &$oldvals, &$changed, &$newvals)
     {
       // TODO: can be handle more efficiently with the PHP array_...() functions.
       $newNewVals = array();
@@ -848,6 +848,8 @@ __EOT__;
         $newNewVals[$key] = $newvals[$key];
       }
       $newvals = $newNewVals;
+
+      //error_log(__METHOD__." changed ".print_r($changed, true));
 
       return count($newvals) > 0;
     }
@@ -874,7 +876,7 @@ __EOT__;
      * self::beforeUpdateRemoveUnchanged() would silently ignore the
      * sanitized values.
      */
-    public static function beforeAnythingTrimAnything($pme, $op, $step, $oldvals, &$changed, &$newvals)
+    public static function beforeAnythingTrimAnything($pme, $op, $step, &$oldvals, &$changed, &$newvals)
     {
       foreach ($newvals as $key => &$value) {
         if (!is_scalar($value)) {
@@ -887,9 +889,13 @@ __EOT__;
         // Then trim away ...
         $value = trim($value);
         if (array_search($key, $changed) === false && $oldvals[$key] != $value) {
+          //error_log(__METHOD__." old '".$oldvals[$key]."' new '".$valueu."'");
           $changed[] = $key;
         }
       }
+
+      //error_log(__METHOD__." changed ".print_r($changed, true));
+
       return true;
     }
 
