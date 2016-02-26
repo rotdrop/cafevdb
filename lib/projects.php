@@ -2287,7 +2287,7 @@ WHERE pi.`ProjectId` = $projectId";
           'table' => 'MusicianInstruments',
           'tablename' => 'mi',
           'key' => true,
-          'column' => "GROUP_CONCAT(DISTINCT mi.`Id` ORDER BY mi.`InstrumentId` ASC SEPARATOR ',')",
+          'column' => "GROUP_CONCAT(DISTINCT mi.`Id` ORDER BY i2.`Sortierung` ASC SEPARATOR ',')",
           'verbatim' => true,
           'join' => array(
             'type' => 'LEFT',
@@ -2298,7 +2298,7 @@ WHERE pi.`ProjectId` = $projectId";
         'MusicianInstrumentId' => array(
           'table' => 'Instrumente',
           'tablename' => 'i2',
-          'column' => "GROUP_CONCAT(DISTINCT i2.`Id` ORDER BY i2.`Id` ASC SEPARATOR ',')",
+          'column' => "GROUP_CONCAT(DISTINCT i2.`Id` ORDER BY i2.`Sortierung` ASC SEPARATOR ',')",
           'verbatim' => true,
           'join' => array(
             'type' => 'LEFT',
@@ -2308,7 +2308,7 @@ WHERE pi.`ProjectId` = $projectId";
 
         'MusicianInstrument' => array(
           'table' => 'i2',
-          'column' => "GROUP_CONCAT(DISTINCT i2.`Instrument` ORDER BY i2.`Id` ASC SEPARATOR ',')",
+          'column' => "GROUP_CONCAT(DISTINCT i2.`Instrument` ORDER BY i2.`Sortierung` ASC SEPARATOR ',')",
           'verbatim' => true,
           'join' => array('type' => 'LEFT'),
           ),
