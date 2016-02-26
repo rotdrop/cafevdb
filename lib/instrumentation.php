@@ -310,7 +310,8 @@ class Instrumentation
     $where .= " AND b.`ProjektId` = $projectId";
 
     $query = " SELECT
- m.*, b.`ProjektId` AS ProjectId, b.`Id` AS InstrumentationId,
+ m.*, b.`ProjektId` AS ProjectId,
+ b.`Id` AS InstrumentationId,
  GROUP_CONCAT(DISTINCT im.`Id` ORDER BY im.`Id`) AS MusicianInstrumentIds,
  GROUP_CONCAT(DISTINCT im.`Instrument` ORDER BY im.`Id`) AS MusicianInstruments,
  GROUP_CONCAT(DISTINCT ip.`Id` ORDER BY ip.`Id`) AS ProjectInstrumentIds,
@@ -449,8 +450,9 @@ class Instrumentation
       } else {
         $musRow = Musicians::fetchMusicianByUUID($ident, $handle);
       }
+
       if ($musRow === false) {
-        $failed = array(
+        $failed[] = array(
           'id' => $ident,
           'notice' => L::t('Unable to fetch musician\'s personal information for id %d',
                            array($ident)),
@@ -459,42 +461,23 @@ class Instrumentation
       }
 
       $musicianId = $musRow['Id'];
-      $musInstruments = Util::explode(',', $musRow['Instrumente']);
+      $musInstrumentIds = Util::explode(',', $musRow['InstrumentIds']);
+      $musInstruments   = Util::explode(',', $musRow['Instruments']);
       $fullName = $musRow['Vorname']." ".$musRow['Name'];
 
-      $musProjectData = Instrumentation::fetchByMusicianId($musicianId, $projectId, $handle);
-      if ($musProjectData === false) {
-        $failed[] = array(
-          'id' => $musicianId,
-          'notice' => L::t('Unable to fetch musician\'s project information for id %d.',
-                           array($musicianId)),
-          'sqlerror' => mySQL::error($handle));
-        continue;
-      }
-
       // Try to make likely default choice for the project instrument
-      $musicianProjectInstruments = array();
-      if (count($musProjectData) > 0) {
-        foreach($musProjectData as $row) {
-          $musicianProjectInstruments = array_merge($musicianProjectInstruments,
-                                                    Util::explode(',', $row['ProjectInstruments']));
-        }
-        $notice .= L::t("The musician %s is already registered for the project with the ".
-                        "instruments %s.",
-                        array($fullName, implode(',', $musicianProjectInstruments)));
-      }
+      $musInstrument   = null;
+      $musInstrumentId = null;
 
-      $both = array_values(array_intersect($projectInstruments, $musInstruments));
+      $both = array_intersect($projectInstruments['InstrumentIds'], $musInstrumentIds);
 
       if (!empty($both)) {
-        $leftOver = array_values(array_diff($both, $musicianProjectInstruments));
-        if (!empty($leftOver)) {
-          $musInstrument = $leftOver[0];
-        } else {
-          $musInstrument = null;
-        }
+        $musInstrumentId = reset($both);
+        $key = array_search($musInstrumentId, $musInstrumentIds);
+        $musInstrument   = $musInstruments[$key];
       } else if (!empty($musInstruments)) {
-        $musInstrument = $musInstruments[0];
+        $musInstrument   = $musInstruments[0];
+        $musInstrumentId = $musInstrumentIds[0];
         $notice .= L::t("None of the instruments known by %s are mentioned in the "
                         ."instrumentation-list for the project. "
                         ."The musician is added nevertheless to the project with the instrument `%s'",
@@ -511,10 +494,8 @@ class Instrumentation
       // Values to insert
       $values = array('MusikerId' => $musicianId,
                       'ProjektId' => $projectId,
-                      'Instrument' => $musInstrument,
                       'Unkostenbeitrag' => $fees['fee'],
-                      'Anzahlung' => $fees['deposit'],
-                      'BezahlStatus' => 'outstanding');
+                      'Anzahlung' => $fees['deposit']);
 
       // do it ...
       $instrumentationId = -1;
@@ -536,13 +517,45 @@ class Instrumentation
 
       // update the log
       mySQL::logInsert('Besetzungen', $instrumentationId, $values, $handle);
-      mySQL::storeModified($projectId, 'Projekte', $handle);
 
+      // record quasi success
       $added[] = array(
         'musicianId' => $musicianId, // keep for debugging
         'instrumentationId' => $instrumentationId, // <- required
         'notice' => $notice
         );
+
+      mySQL::storeModified($projectId, 'Projekte', $handle);
+      mySQL::storeModified($musicianId, 'Musiker', $handle);
+
+      // instruments are now stored in a separate pivot-table
+      $values = [ 'ProjectId' => $projectId,
+                  'MusicianId' => $musicianId,
+                  'InstrumentationId' => $instrumentationId,
+                  'InstrumentId' => $musInstrumentId ];
+      if (mySQL::insert('ProjectInstruments', $values, $handle) === false) {
+        $failed[] = array('id' => $musicianId,
+                          'notice' => L::t('Adding instrument %s for %s (id = %d) failed.',
+                                           array($musInstrument, $fullName, $musicianId)),
+                          'sqlerror' => mySQL::error($handle));
+        continue;
+      }
+      $projectInstrumentId = mySQL::newestIndex($handle);
+      if ($projectInstrumentId === false || $projectInstrumentId === 0) {
+        $failed[] = array(
+          'id' => $musicianId,
+          'notice' => L::t('Unable to get the new id for %s\'s project instrument %s (id = %d)',
+                           array($fullName, $musInstrument, $musicianId)),
+          'sqlerror' => mySQL::error($handle));
+        continue;
+      }
+
+      // update the log
+      mySQL::logInsert('ProjectInstruments', $projectInstrumentId, $values, $handle);
+
+      mySQL::storeModified($projectId, 'Projekte', $handle);
+      mySQL::storeModified($musicianId, 'Musiker', $handle);
+
     }
 
     if ($ownConnection) {

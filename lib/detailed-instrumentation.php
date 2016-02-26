@@ -105,7 +105,7 @@ class DetailedInstrumentation
     $opts['key_type'] = 'int';
 
     // Sorting field(s)
-    $opts['sort_field'] = array('Sortierung','Reihung','-Stimmführer','Name','Vorname');
+    $opts['sort_field'] = array('Sortierung','Voice','-SectionLeader','Name','Vorname');
 
     // GROUP BY clause, if needed.
     $opts['groupby_fields'] = array('Id', 'ProjectInstrumentId');
@@ -839,12 +839,9 @@ WHERE b.ProjektId = $projectId",
     // fetch the list of all projects in order to provide a somewhat
     // cooked filter list
     $allProjects = Projects::fetchProjects(false /* no db handle */, true /* include years */);
-    $projectQueryValues = array('*' => '*'); // catch-all filter
-    $projectQueryValues[''] = L::t('no projects yet');
     $projects = array();
     $groupedProjects = array();
     foreach ($allProjects as $proj) {
-      $projectQueryValues[$proj['Name']] = $proj['Jahr'].': '.$proj['Name'];
       $projects[$proj['Name']] = $proj['Name'];
       $groupedProjects[$proj['Name']] = $proj['Jahr'];
     }
@@ -858,7 +855,6 @@ WHERE b.ProjektId = $projectId",
       'display|LF'  => array('popup' => 'data'),
       'css'      => array('postfix' => ' projects'),
       'sort' => true,
-      'values' => array('queryValues' => $projectQueryValues),
       'values2' => $projects,
       'valueGroups' => $groupedProjects
       );

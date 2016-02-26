@@ -114,11 +114,6 @@ make sure that the musicians are also automatically added to the
       'DisplayClass' => 'Musicians',
       'ClassArguments' => array($this->projectMode));
 
-    if ($this->projectMode) {
-      $opts['cgi']['append'][Config::$pmeopts['cgi']['prefix']['sys'].'fl'] = 1;
-      $opts['cgi']['overwrite'][Config::$pmeopts['cgi']['prefix']['sys'].'fl'] = 1;
-    }
-
     // Name of field which is the unique key
     $opts['key'] = 'Id';
 
@@ -194,12 +189,6 @@ make sure that the musicians are also automatically added to the
        $opts['filters'] = "section_id = 9";
        $opts['filters'] = "PMEtable0.sessions_count > 200";
     */
-
-    if ($this->projectMode) {
-//      $opts['filters'] = "(SELECT COUNT(*) FROM `Besetzungen` WHERE MusikerId = PMEtable0.Id AND ProjektId = $projectId) = 0";
-      $opts['misc']['css']['major']   = 'bulkcommit';
-      $opts['labels']['Misc'] = strval(L::t('Add all to %s', array($projectName)));
-    }
 
     /* Field definitions
 
@@ -360,12 +349,9 @@ make sure that the musicians are also automatically added to the
     // fetch the list of all projects in order to provide a somewhat
     // cooked filter list
     $allProjects = Projects::fetchProjects(false /* no db handle */, true /* include years */);
-    $projectQueryValues = array('*' => '*'); // catch-all filter
-    $projectQueryValues[''] = L::t('no projects yet');
     $projects = array();
     $groupedProjects = array();
     foreach ($allProjects as $proj) {
-      $projectQueryValues[$proj['Name']] = $proj['Jahr'].': '.$proj['Name'];
       $projects[$proj['Name']] = $proj['Name'];
       $groupedProjects[$proj['Name']] = $proj['Jahr'];
     }
@@ -387,17 +373,6 @@ make sure that the musicians are also automatically added to the
       );
 
     $projectsIdx = count($opts['fdd']);
-    if ($this->projectMode) {
-      $opts['cgi']['persist']['ProjectMode'] = true;
-      if (!Util::cgiValue('ProjectMode', false)) {
-        // start initially filtered, but let the user choose other things.
-        $pfx = Config::$pmeopts['cgi']['prefix']['sys'];
-        $key = 'qf'.$projectsIdx;
-        $opts['cgi']['append'][$pfx.$key.'_id'] = array($projectName);
-        $opts['cgi']['append'][$pfx.$key.'_comp'] = array('not');
-      }
-    }
-
     $idx = count($opts['fdd']);
     $join_table = 'PMEjoin'.$idx;
     $opts['fdd']['Projects'] = array(
@@ -416,7 +391,6 @@ make sure that the musicians are also automatically added to the
         'column' => 'Name',
         'description' => 'Name',
         'join' => '`PMEjoin'.($idx-1).'`.`ProjektId` = $join_table.`Id`',
-        'queryValues' => $projectQueryValues,
         ),
       'values2' => $projects,
       'valueGroups' => $groupedProjects
@@ -617,6 +591,13 @@ make sure that the musicians are also automatically added to the
           "options" => 'LFAVCPDR' // Set by update trigger.
           )
         );
+
+    if ($this->projectMode) {
+      $key = 'qf'.$projectsIdx;
+      $opts['having']['AND'] = "($key IS NULL OR NOT FIND_IN_SET('$projectName', $key))";
+      $opts['misc']['css']['major']   = 'bulkcommit';
+      $opts['labels']['Misc'] = strval(L::t('Add all to %s', array($projectName)));
+    }
 
     $opts['triggers']['update']['before'] = array();
     $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
@@ -856,7 +837,20 @@ make sure that the musicians are also automatically added to the
       $handle = mySQL::connect(Config::$pmeopts);
     }
 
-    $query = "SELECT * FROM `".self::TABLE."` WHERE `Id` = $musicianId";
+    $query = "SELECT
+ m.*,
+ GROUP_CONCAT(DISTINCT mi.`InstrumentId` ORDER BY i.`Sortierung`) AS InstrumentIds,
+ GROUP_CONCAT(DISTINCT i.`Instrument` ORDER BY i.`Sortierung`) AS Instruments
+FROM `".self::TABLE."` AS m
+LEFT JOIN `MusicianInstruments` mi
+  ON m.`Id` = mi.`MusicianId`
+LEFT JOIN Instrumente i
+  ON i.`Id` = mi.`InstrumentId`
+WHERE m.`Id` = $musicianId
+GROUP BY m.`Id`
+";
+
+    //throw new \Exception($query);
 
     $result = mySQL::query($query, $handle);
     if ($result !== false && mySQL::numRows($result) == 1) {
@@ -882,7 +876,17 @@ make sure that the musicians are also automatically added to the
       $handle = mySQL::connect(Config::$pmeopts);
     }
 
-    $query = "SELECT * FROM `".self::TABLE."` WHERE `UUID` = '$musicianUUID'";
+    $query = "SELECT
+ GROUP_CONCAT(DISTINCT mi.`InstrumentId` ORDER BY i.`Sortierung`) AS InstrumentIds,
+ GROUP_CONCAT(DISTINCT i.`Instrument` ORDER BY i.`Sortierung`) AS Instruments
+FROM `".self::TABLE."` AS m
+LEFT JOIN `MusicianInstruments` mi
+  ON m.`Id` = mi.`MusicianId`
+LEFT JOIN Instrumente i
+  ON i.`Id` = mi.`InstrumentId`
+WHERE `UUID` = '$musicianUUID'
+GROUP BY m.`Id`
+";
 
     $result = mySQL::query($query, $handle);
     if ($result !== false && mySQL::numRows($result) == 1) {

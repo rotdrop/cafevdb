@@ -738,10 +738,6 @@ __EOT__;
       // Besetzungen table
       self::createView($projectId, $projectName, $pme->dbh);
 
-      // Add also a new line to the BesetzungsZahlen table
-      $sqlquery = 'INSERT IGNORE INTO `BesetzungsZahlen` (`ProjektId`) VALUES ('.$projectId.')';
-      mySQL::query($sqlquery, $pme->dbh);
-
       // Also create the project folders.
       $projectPaths = self::maybeCreateProjectFolder($projectId, $projectName);
 
@@ -900,7 +896,6 @@ __EOT__;
 
       $deleteTables = [
         [ 'table' => 'Besetzungen', 'column' => 'ProjektId' ],
-        [ 'table' => 'BesetzungsZahlen', 'column' => 'ProjektId' ],
         [ 'table' => 'ProjectInstruments', 'column' => 'ProjectId' ],
         [ 'table' => 'ProjectWebPages', 'column' => 'ProjectId' ],
         // [ 'table' => 'ProjectExtraFields', 'column' => 'ProjectId' ], handled above
@@ -1080,8 +1075,6 @@ __EOT__;
         // $placeHolder = preg_replace("/^(.*\D)(\d{4})$/", "$1", $projectName);
         $placeHolder = $projectName; // or maybe don't strip.
       }
-
-      error_log('placeholder '.$placeHolder);
 
       $control = '
 <span class="project-actions-block">
@@ -2009,14 +2002,27 @@ ORDER BY i.Sortierung ASC";
         $handle = mySQL::connect(Config::$pmeopts);
       }
 
-      $query = "SELECT `Besetzung` FROM `Projekte` WHERE `Id` = $projectId";
+      $query = "SELECT
+ GROUP_CONCAT(pi.InstrumentId ORDER BY i.Sortierung ASC) AS InstrumentIds,
+ GROUP_CONCAT(i.Instrument ORDER BY i.Sortierung ASC) AS Instruments,
+ GROUP_CONCAT(pi.Quantity ORDER BY i.Sortierung ASC) AS Quantity
+FROM ".self::INSTRUMENTATION." pi
+LEFT JOIN Instrumente i
+  ON pi.InstrumentId = i.Id
+WHERE pi.`ProjectId` = $projectId";
       $result = mySQL::query($query, $handle);
+
+      //throw new \Exception($query);
 
       $instrumentation = false;
       $row = false;
       if ($result !== false && mySQL::numRows($result) == 1) {
         $row = mySQL::fetch($result);
-        $instrumentation = Util::explode(',', $row['Besetzung']);
+        $instrumentation = [
+          'InstrumentIds' => explode(',', $row['InstrumentIds']),
+          'Instruments' => explode(',', $row['Instruments']),
+          'Quantity' => explode(',', $row['Quantity']),
+          ];
       }
 
       if ($ownConnection) {
@@ -2277,10 +2283,6 @@ ORDER BY i.Sortierung ASC";
           'column' => 'COUNT(DISTINCT p.Id)',
           'verbatim' => true),
 
-        'Instrument' => array('table' => 'b',
-                              'column' => true,
-                              'join' => array('type' => 'INNER')),
-
         'MusicianInstrumentKey' => array(
           'table' => 'MusicianInstruments',
           'tablename' => 'mi',
@@ -2349,14 +2351,6 @@ ORDER BY i.Sortierung ASC";
             'condition' => 'pi.`InstrumentId` = i.`Id`'
             )
           ),
-
-        'Reihung' => array('table' => 'b',
-                           'column' => true,
-                           'join' => array('type' => 'INNER')),
-
-        'Stimmführer' => array('table' => 'b',
-                               'column' => true,
-                               'join' => array('type' => 'INNER')),
 
         'Familie' => array(
           'table' => 'Instrumente',
@@ -2427,9 +2421,6 @@ ORDER BY i.Sortierung ASC";
         'Lastschrift' => array('table' => 'b',
                                'column' => true,
                                'join' => array('type' => 'INNER')),
-        'PaymentStatus' => array('table' => 'b',
-                                 'column' => 'BezahlStatus',
-                                 'join' => array('type' => 'INNER')),
         'ProjectRemarks' => array('table' => 'b',
                                   'column' => 'Bemerkungen',
                                   'join' => array('type' => 'INNER'))
@@ -2463,9 +2454,6 @@ ORDER BY i.Sortierung ASC";
       }
 
       $viewStructure2 = array(
-        'Instrumente' => array('table' => 'm',
-                                  'column' => 'Instrumente',
-                                  'join' => array('type' => 'INNER')),
         'Sprachpräferenz' => array('table' => 'm',
                                    'column' => true,
                                    'join' => array('type' => 'INNER')),
@@ -2570,8 +2558,8 @@ ORDER BY i.Sortierung ASC";
       // 3: sort on the sur-name
       // 4: sort on the pre-name
       $sqlSort = 'ORDER BY i.`Sortierung` ASC,
- b.`Reihung` ASC,
- b.`Stimmführer` DESC,
+ pi.`Voice` ASC,
+ pi.`SectionLeader` DESC,
  m.`Name` ASC,
  m.`Vorname` ASC';
 
