@@ -2405,7 +2405,7 @@ WHERE pi.`ProjectId` = $projectId";
                              'join' => array('type' => 'INNER')),
         'AmountPaid' => array('table' => 'ProjectPayments',
                               'tablename' => 'f',
-                              'column' => 'IFNULL(SUM(IF(b.Id = b2.Id, f.Amount, 0)),0)',
+                              'column' => 'IFNULL(SUM(IF(b.Id = b2.Id AND i.Id = i2.Id, f.Amount, 0)),0)',
                               //'column' => 'GROUP_CONCAT(IF(b.Id = b2.Id, f.Amount, NULL) SEPARATOR \',\')',
                               'verbatim' => true,
                               'join' => array(
@@ -2414,7 +2414,7 @@ WHERE pi.`ProjectId` = $projectId";
                                 )),
         'PaidCurrentYear' => array(
           'tablename' => 'f',
-          'column' => 'IFNULL(SUM(IF(b.Id = b2.Id AND YEAR(NOW()) = YEAR(f.DateOfReceipt), f.Amount, 0)),0)',
+          'column' => 'IFNULL(SUM(IF(b.Id = b2.Id AND i.Id = i2.Id AND YEAR(NOW()) = YEAR(f.DateOfReceipt), f.Amount, 0)),0)',
           'verbatim' => true,
           'join' => array('type' => 'INNER')
           ),
