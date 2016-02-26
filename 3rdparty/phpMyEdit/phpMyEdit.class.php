@@ -1185,15 +1185,26 @@ class phpMyEdit
 			}
 		}
 
-		/* Join HAVING parts by AND */
-		if (count($having) > 0) {
-			if ($text) {
-				return str_replace('%', '*', join(' AND ',$having));
-			} else {
-				return join(' AND ',$having);
-			}
+		// Add any coder specified 'AND' filters
+		if (!$text && ($filter = $this->having['AND'])) {
+			$having[] = $filter;
 		}
-		return ''; /* empty string */
+
+		$having = join(' AND ', $having);
+
+		if ($text) {
+			return str_replace('%', '*', $having);
+		}
+
+		/* Add any coder specified 'OR' filters. If where is still
+		 * empty at this point, then it is implicitly "true", hence
+		 * adding further "OR" filters does not make sense.
+		 */
+		if ($having !== '' && ($filter = $this->having['OR'])) {
+			$having = '('.$having.') OR ('.$filter.')';
+		}
+
+		return $having;
 	} /* }}} */
 
 	function gather_query_opts() /* {{{ */
@@ -5093,6 +5104,8 @@ class phpMyEdit
 		$this->fdd		 = $opts['fdd'];
 		$this->multiple	 = intval($opts['multiple']);
 		$this->multiple <= 0 && $this->multiple = 2;
+
+		// WHERE filters
 		$this->filters   = array('AND' => false, 'OR' => false);
 		if (isset($opts['filters'])) {
 			$filters = $opts['filters'];
@@ -5120,6 +5133,35 @@ class phpMyEdit
 			}
 		}
 		// at this point $this->filters is a normalized array
+
+		// HAVING filters
+		$this->having   = array('AND' => false, 'OR' => false);
+		if (isset($opts['having'])) {
+			$filters = $opts['having'];
+			if (!is_array($filters)) {
+				$filters = array('AND' => array($filters), 'OR' => false);
+			}
+			if (!isset($filters['AND']) && !isset($filters['OR'])) {
+				$filters = array('AND' => $filters, 'OR' => false);
+			}
+			if (!isset($filters['AND'])) {
+				$filters['AND'] = false;
+			}
+			if (!isset($filters['OR'])) {
+				$filters['OR'] = false;
+			}
+			foreach ($filters as $junctor => $filter) {
+				if (empty($filter)) {
+					continue;
+				}
+				if (is_array($filter)) {
+					$this->having[$junctor] = join(' '.$junctor.' ', $filter);
+				} else {
+					$this->having[$junctor] = $filter;
+				}
+			}
+		}
+		// at this point $this->having is a normalized array
 
 		$this->triggers	 = @$opts['triggers'];
 		$this->notify	 = @$opts['notify'];
