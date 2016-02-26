@@ -216,6 +216,7 @@ the option. For other multi-choice items this is just one arbitrary
 string. Please entry the surcharge amount for surcharge items here.'),
           'tooltip' => L::t('An extra-tooltip which can be associated to this specific option. A
 help text in order to inform others what this option is about.'),
+          'limit' => L::t('The maximum allowed number of people in a "group of people" field'),
           ),
 
         'extra-fields-allowed-values-single' => L::t('For a surcharge option, please enter here the surcharge amount
