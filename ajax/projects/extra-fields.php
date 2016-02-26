@@ -46,15 +46,6 @@ namespace CAFEVDB {
 
     if ($value !== '') {
       switch ($request) {
-      case 'TypeInfo':
-        $types = self::fieldTypes($pme->dbh);
-        $multi = $types[$value]['Multiplicity'] === 'multiple';
-        \OC_JSON::success(
-          array('data' => array(
-                  'message' => L::t("Request \"%s\" successful", array($request)),
-                  'TypeInfo' => $multi ? 'multiple' : 'single'
-                  )));
-        return true;
       case 'ValidateAmount':
         if (!isset($value['amount'])) {
           break;
@@ -97,7 +88,9 @@ namespace CAFEVDB {
 
         $pfx = Config::$pmeopts['cgi']['prefix']['data'];
         $allowed = Util::cgiValue($pfx.'AllowedValues');
+        error_log('allowed: '.print_r($allowed, true));
         $allowed = ProjectExtra::explodeAllowedValues(ProjectExtra::implodeAllowedValues($allowed), false);
+        error_log('allowed: '.print_r($allowed, true));
         if (count($allowed) !== 1) {
           throw new \InvalidArgumentException(L::t('No or too many items available: ').print_r($allowed, true));
         }

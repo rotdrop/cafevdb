@@ -111,17 +111,20 @@ namespace CAFEVDB
       L::t('Enum');
       L::t('Enumeration');
       L::t('SimpleGroup');
+      L::t('PredefinedGroups');
       L::t('Date');
       L::t('SurchargeOption');
       L::t('SurchargeEnum');
       L::t('SurchargeSet');
       L::t('SurchargeGroup');
+      L::t('SurchargeGroups');
 
       L::t('simple');
       L::t('single');
       L::t('multiple');
       L::t('parallel');
       L::t('groupofpeople');
+      L::t('groupsofpeople');
 
       L::t('choices');
       L::t('surcharge');
@@ -437,13 +440,11 @@ namespace CAFEVDB
         'php' => function($value, $op, $field, $fds, $fdd, $row, $recordId) use ($nameIdx, $tooltipIdx)
         {
           // provide defaults
-          $protoRecord = array(
-            'key' => $recordId,
-            'label' => $row['qf'.$nameIdx],
-            'data' => false,
-            'tooltip' => $row['qf'.$tooltipIdx],
-            'flags' => 'active'
-            );
+          $protoRecord = array_merge(
+            self::allowedValuesPrototype(),
+            [ 'key' => $recordId,
+              'label' => $row['qf'.$nameIdx],
+              'tooltip' => $row['qf'.$tooltipIdx] ]);
           return self::showAllowedSingleValue($value, $op, $fdd[$field]['tooltip'], $protoRecord);
         },
         'options' => 'ACDPV',
@@ -794,6 +795,7 @@ namespace CAFEVDB
      */
     public static function allowedValuesUniqueKey($key, $keys)
     {
+      $key = Util::translitToASCII($key);
       $key = ucwords($key);
       $key = lcfirst($key);
       $key = preg_replace("/[^[:alnum:]]?[[:space:]]?/u", '', $key);
@@ -1030,7 +1032,7 @@ namespace CAFEVDB
       if ($types[$newvals['Type']]['Multiplicity'] === 'groupofpeople')
       {
         $max = $newvals[$tag];
-        if (!empty($newvals['AllowedValuesSingle'][0])) {
+        if ($op === 'update' && !empty($newvals['AllowedValuesSingle'][0])) {
           $maxdata = $newvals['AllowedValuesSingle'];
           $maxdata[0]['column5'] = $max;
         } else {
@@ -1459,6 +1461,18 @@ argument must be an array of type descriptions.');
         // label
         $prop = 'label';
         $html .= '<td class="field-'.$prop.'">'.$label.'</td>';
+        // limit
+        $prop = 'limit';
+        $html .= '<td class="field-'.$prop.'"><input'
+          .($deleted ? ' readonly="readonly"' : '')
+          .' class="field-'.$prop.'"'
+          .' type="text"'
+          .' name="'.$pfx.'['.$index.']['.$prop.']"'
+          .' value="'.$value[$prop].'"'
+          .' title="'.Config::toolTips('extra-fields-allowed-values', $prop).'"'
+          .' maxlength="8"'
+          .' size="9"'
+          .'/></td>';
         // data
         $prop = 'data';
         $html .= '<td class="field-'.$prop.'"><input'
@@ -1471,7 +1485,7 @@ argument must be an array of type descriptions.');
           .' maxlength="8"'
           .' size="9"'
           .'/></td>';
-        // data
+        // tooltip
         $prop = 'tooltip';
         $html .= '<td class="field-'.$prop.'">'
           .'<textarea'
@@ -1485,10 +1499,26 @@ argument must be an array of type descriptions.');
           .$value[$prop]
           .'</textarea>'
           .'</td>';
+
+        // general further fields
+        for($i = 6; $i < count($value); ++$i) {
+          $prop = 'column'.$i;
+          $html .= '<td class="field-'.$prop.'"><input'
+            .($deleted ? ' readonly="readonly"' : '')
+            .' class="field-'.$prop.'"'
+            .' type="text"'
+            .' name="'.$pfx.'['.$index.']['.$prop.']"'
+            .' value="'.$value[$prop].'"'
+            .' title="'.Config::toolTips('extra-fields-allowed-values', $prop).'"'
+            .' maxlength="8"'
+            .' size="9"'
+            .'/></td>';
+        }
+
       } else {
-        $html .= '<td class="placeholder" colspan="5">'
+        $html .= '<td class="placeholder" colspan="6">'
           .$label;
-        foreach(['key', 'data', 'tooltip'] as $prop) {
+        foreach(['key', 'limit', 'data', 'tooltip'] as $prop) {
           $html .= '<input'
             .' class="field-'.$prop.'"'
             .' type="hidden"'
@@ -1510,8 +1540,13 @@ argument must be an array of type descriptions.');
     static private function showAllowedValues($value, $op, $recordId)
     {
       $allowed = self::explodeAllowedValues($value);
+      $protoCount = count(self::allowedValuesPrototype());
       if ($op === 'display' && count($allowed) == 1) {
         return '';
+      }
+      $maxColumns = 0;
+      foreach($allowed as $value) {
+        $maxColumns = max(count($value), $maxColumns);
       }
       $html = '<div class="pme-cell-wrapper quarter-sized">';
       if ($op === 'add' || $op === 'change') {
@@ -1559,10 +1594,21 @@ __EOT__;
         $html .= '<th class="operations"></th>';
         $headers = array('key' => L::t('Key'),
                          'label' => L::t('Label'),
+                         'limit' => L::t('Limit'),
                          'data' => self::currencyLabel(L::t('Data')),
                          'tooltip' => L::t('Tooltip'));
-
         foreach($headers as $key => $value) {
+          $html .=
+            '<th'
+            .' class="field-'.$key.'"'
+            .' title="'.Config::toolTips('extra-fields-allowed-values', $key).'"'
+            .'>'
+            .$value
+            .'</th>';
+        }
+        for($i = $protoCount; $i < $maxColumns; ++$i) {
+          $key = 'column'.$i;
+          $value = L::t('%dth column', array($i));
           $html .=
             '<th'
             .' class="field-'.$key.'"'
@@ -1584,14 +1630,20 @@ __EOT__;
               $html .= '
     <tr>
       <td class="operations"></td>';
-                foreach(['key', 'label', 'data', 'tooltip'] as $field) {
-                  $html .= '<td class="field-'.$field.'">'
-                    .($field === 'data'
-                      ? self::currencyValue($value[$field])
-                      : $value[$field])
-                    .'</td>';
-                }
-                $html .= '
+              foreach(['key', 'label', 'limit', 'data', 'tooltip'] as $field) {
+                $html .= '<td class="field-'.$field.'">'
+                  .($field === 'data'
+                    ? self::currencyValue($value[$field])
+                    : $value[$field])
+                  .'</td>';
+              }
+              for($i = $protoCount; $i < count($value); ++$i) {
+                $field = 'column'.$i;
+                $html .= '<td class="field-'.$field.'">'
+                  .$value[$field]
+                  .'</td>';
+              }
+              $html .= '
     </tr>';
             }
             break;
@@ -1666,6 +1718,7 @@ __EOT__;
         return self::currencyValue($value);
       }
       empty($entry) && $entry = $protoRecord;
+      $protoCount = count($protoRecord);
       $name  = Config::$pmeopts['cgi']['prefix']['data'];
       $name .= 'AllowedValuesSingle';
       $value = htmlspecialchars($entry['data']);
@@ -1681,7 +1734,7 @@ __EOT__;
        title="{$tip}"
 />
 __EOT__;
-      foreach(['key', 'label', 'tooltip', 'flags'] as $field) {
+      foreach(['key', 'label', 'limit', 'tooltip', 'flags'] as $field) {
         $value = htmlspecialchars($entry[$field]);
         $html .=<<<__EOT__
 <input class="pme-input allowed-values-single"
@@ -1691,7 +1744,7 @@ __EOT__;
 />
 __EOT__;
       }
-      for($i = 5; $i < count($entry); ++$i) {
+      for($i = $protoCount; $i < count($entry); ++$i) {
         $field = 'column'.$i;
         $value = htmlspecialchars($entry[$field]);
         $html .=<<<__EOT__
@@ -1708,7 +1761,18 @@ __EOT__;
       foreach($allowed as $idx => $item) {
         ++$idx; // shift ...
         $item['flags'] = 'deleted';
-        foreach(['key', 'label', 'data', 'tooltip', 'flags'] as $field) {
+        foreach(['key', 'label', 'limit', 'data', 'tooltip', 'flags'] as $field) {
+          $value = htmlspecialchars($item[$field]);
+          $html .=<<<__EOT__
+<input class="pme-input allowed-values-single"
+       type="hidden"
+       value="{$value}"
+       name="{$name}[{$idx}][{$field}]"
+/>
+__EOT__;
+        }
+        for($i = $protoCOunt; $i < count($item); ++$i) {
+          $field = 'column'.$i;
           $value = htmlspecialchars($item[$field]);
           $html .=<<<__EOT__
 <input class="pme-input allowed-values-single"
@@ -1721,6 +1785,16 @@ __EOT__;
       }
       $html .= '</div>';
       return $html;
+    }
+
+    private static function allowedValuesPrototype()
+    {
+      return [ 'key' => false,
+               'label' => false,
+               'data' => false,
+               'tooltip' => false,
+               'flags' => 'active',
+               'limit' => false ];
     }
 
     /**Sanitize and explode allowed values. Multiple choice items are
@@ -1737,11 +1811,8 @@ __EOT__;
     public static function explodeAllowedValues($values, $addProto = true, $trimInactive = false)
     {
       //error_log('explode: '.$values);
-      $proto = array('key' => false,
-                     'label' => false,
-                     'data' => false,
-                     'tooltip' => false,
-                     'flags' => 'active');
+      $proto = self::allowedValuesPrototype();
+      $protoCount = count($proto);
       $values = Util::explode("\n", $values);
       $allowed = array();
       foreach($values as $value) {
@@ -1750,7 +1821,7 @@ __EOT__;
         }
         $parts = Util::quasiCSVSplit($value, ':');
         //error_log('parts: '.print_r($parts, true));
-        for($i = count($parts); $i < 5; ++$i) {
+        for($i = count($parts); $i < $protoCount; ++$i) {
           $parts[] = '';
         }
         foreach($parts as &$part) {
@@ -1775,9 +1846,10 @@ __EOT__;
                            'label' => $parts[1],
                            'data' => $parts[2],
                            'tooltip' => $parts[3],
-                           'flags' => $parts[4]);
+                           'flags' => $parts[4],
+                           'limit' => $parts[5]);
         $last = count($allowed) - 1;
-        for($i = 5; $i < count($parts); $i++) {
+        for($i = $protoCount; $i < count($parts); $i++) {
           $allowed[$last]['column'.$i] = $parts[$i];
         }
       }
@@ -1795,11 +1867,8 @@ __EOT__;
      */
     public static function implodeAllowedValues($values)
     {
-      $proto = array('key' => false,
-                     'label' => false,
-                     'data' => false,
-                     'tooltip' => false,
-                     'flags' => 'active');
+      $proto = self::allowedValuesPrototype();
+      $protoCount = count($proto);
       $result = '';
       foreach ($values as $value) {
         $value = array_merge($proto, $value);
@@ -1813,11 +1882,12 @@ __EOT__;
         }
 
         $label = empty($value['label']) ? $key : trim($value['label']);
+        $limit = trim($value['limit']);
         $data  = trim($value['data']);
         $tip   = trim($value['tooltip']);
         $flags = trim($value['flags']);
-        $csvData = [ $key, $label, $data, $tip, $flags ];
-        for($i = 5; $i < count(array_values($value)); $i++) {
+        $csvData = [ $key, $label, $data, $tip, $flags, $limit ];
+        for($i = $protoCount; $i < count(array_values($value)); $i++) {
           if (isset($value['column'.$i])) {
             $csvData[] = $value['column'.$i];
           }

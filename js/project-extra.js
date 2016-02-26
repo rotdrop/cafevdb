@@ -48,6 +48,7 @@ var CAFEVDB = CAFEVDB || {};
       var surchargeClass = 'surcharge-field';
       var generalClass = 'general-field';
       var groupClass = 'group-field';
+      var groupsClass = 'groups-field';
       //
       var row = container.find('tr.field-type');
       //
@@ -57,8 +58,13 @@ var CAFEVDB = CAFEVDB || {};
       row.removeClass(parallelClass);
       row.removeClass(surchargeClass);
       row.removeClass(generalClass);
+      row.removeClass(groupClass);
+      row.removeClass(groupsClass);
       //
       switch(data.Multiplicity) {
+      case 'groupsofpeople':
+        row.addClass(groupsClass);
+        break;
       case 'groupofpeople':
         row.addClass(groupClass);
         break;
@@ -120,6 +126,7 @@ var CAFEVDB = CAFEVDB || {};
     // Field-Type Selector
     container.on('change', 'select.field-type', function(event) {
       handleFieldType(fieldTypeData($(this).find(':selected')));
+      allowedHeaderVisibility();
       resizeCB();
       return false;
     });

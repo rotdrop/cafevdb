@@ -39,6 +39,7 @@ table.pme-main tr.field-type.group-field.surcharge-field ~ tr.pme-row.allowed-va
 table.pme-main tr.field-type.simple-value-field:not(.group-field) ~ tr.pme-row.default-value,
 table.pme-main tr.field-type.single-value-field ~ tr.pme-row.default-single-value,
 table.pme-main tr.field-type.single-value-field.surcharge-field ~ tr.pme-row.allowed-values-single,
+table.pme-main tr.field-type.groups-field ~ tr.pme-row.allowed-values,
 table.pme-main tr.field-type.multi-value-field ~ tr.pme-row.allowed-values,
 table.pme-main tr.field-type.multi-value-field ~ tr.pme-row.default-multi-value,
 table.pme-main tr.field-type.parallel-value-field ~ tr.pme-row.allowed-values,
@@ -69,6 +70,10 @@ table.pme-main tr.field-type.parallel-value-field ~ tr.pme-row.default-multi-val
     background-image:url('../img/history.svg');
 }
 
+form.pme-form.pme-copyadd .show-deleted {
+    display:none;
+}
+
 tr.allowed-values.deleted {
     display:none;
 }
@@ -77,22 +82,36 @@ table.allowed-values.show-deleted tr.allowed-values.deleted {
     display:table-row;
 }
 
-/* Field-data is normally only useful for surcharge fields. */
+/* Data currently only useful for surcharge-fields, limit only for
+ * group definitions.
+ */
 td.field-data,
-th.field-data {
+th.field-data,
+td.field-limit,
+th.field-limit {
     display:none!important;
 }
 
 table.allowed-values.operation-display td.field-data,
 table.allowed-values.operation-display th.field-data,
 table.allowed-values.show-data td.field-data,
-table.allowed-values.show-data th.field-data {
+table.allowed-values.show-data th.field-data,
+table.allowed-values.operation-display td.field-limit,
+table.allowed-values.operation-display th.field-limit,
+table.allowed-values.show-data td.field-limit,
+table.allowed-values.show-data th.field-limit {
     display:table-cell!important;
 }
 
 /* Show field-data for surcharge fields, because it holds the amount to pay. */
 table.pme-main tr.field-type.surcharge-field ~ tr.pme-row td.pme-value td.field-data,
 table.pme-main tr.field-type.surcharge-field ~ tr.pme-row td.pme-value th.field-data {
+    display:table-cell!important;
+}
+
+/* Show field-limt for group-fields */
+table.pme-main tr.field-type.groups-field ~ tr.pme-row td.pme-value td.field-limit,
+table.pme-main tr.field-type.groups-field ~ tr.pme-row td.pme-value th.field-limit {
     display:table-cell!important;
 }
 
