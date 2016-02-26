@@ -336,32 +336,6 @@ class DetailedInstrumentation
       'css'      => array('postfix' => ' section-leader tooltip-top'),
       );
 
-    $opts['fdd']['Reihung'] = array(
-      'name' => 'Stimme',
-      'select' => 'N',
-      'maxlen' => '3',
-      'sort' => true,
-      'tab' => array('id' => 'instrumentation'));
-
-    $opts['fdd']['Stimmführer'] = array(
-      'name|LF' => ' &alpha;',
-      'name|CAPVD' => L::t("Section Leader"),
-      'tab' => array('id' => 'instrumentation'),
-      'options'  => 'LAVCPDF',
-      'select' => 'C',
-      'maxlen' => '1',
-      'sort' => true,
-      'escape' => false,
-      'values2|CAP' => array('1' => '&nbsp;&nbsp;&nbsp;&nbsp;'),
-      'values2|LVDF' => array('0' => '&nbsp;', '1' => '&alpha;'),
-      'tooltip' => L::t("Set to `%s' in order to mark the section leader",
-                        array("&alpha;")),
-      'display|LF' => array('popup' => function($data) {
-          return Config::ToolTips('section-leader-mark');
-        }),
-      'css'      => array('postfix' => ' section-leader tooltip-top'),
-      );
-
     $opts['fdd']['Anmeldung'] = array(
       'name|LF' => ' &#10004;',
       'name|CAPDV' => L::t("Registration"),
@@ -782,11 +756,11 @@ class DetailedInstrumentation
         break;
       case 'SimpleGroup':
       case 'SurchargeGroup':
-        $max = $allowed[0]['column5']; // ATM, may change
+        $max = $allowed[0]['limit']; // ATM, may change
         $fdd = array_merge(
           $fdd, [
             'select' => 'M',
-            'sql' => 'GROUP_CONCAT(DISTINCT PMEjoin'.$curColIdx.'.InstrumentationId)',
+            'sql' => "GROUP_CONCAT(DISTINCT PMEjoin$curColIdx.InstrumentationId)",
             'display' => [ 'popup' => 'data' ],
             'colattrs' => [ 'data-groups' => json_encode([ 'Limit' => $max ]), ],
             'filter' => 'having',
@@ -815,7 +789,9 @@ WHERE b.ProjektId = $projectId",
 
         if ($type['Name'] === 'SurchargeGroup') {
           $money = Util::moneyValue(reset($valueData));
-          $fdd['display']['prefix'] = $money.' - ';
+          $sql = $fdd['sql'];
+          $fdd['values2|LFVD'][-1] = $money;
+          $fdd['sql|LFVD'] = "IF($sql IS NULL, NULL, CONCAT('-1,', $sql))";
         }
 
         // in filter mode mask out all non-group-members
@@ -1303,7 +1279,7 @@ WHERE b.ProjektId = $projectId",
         //error_log('************ simple group');
         // Here the group update logic has to go. Oops.
         $allowed = ProjectExtra::explodeAllowedValues($field['AllowedValues']);
-        $max = $allowed[0]['column5']; // ATM, may change
+        $max = $allowed[0]['limit']; // ATM, may change
 
         //error_log('************* values: '.print_r($allowed, true));
 
