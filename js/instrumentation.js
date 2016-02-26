@@ -236,7 +236,7 @@ var CAFEVDB = CAFEVDB || {};
     var pmeSys = PHPMYEDIT.pmeSys('');
     var filterData = {};
     for (var idx = 0; idx < ids.length; ++idx) {
-      var name = pmeSys+'qf0_id['+idx+']';
+      var name = pmeSys+'qf0_idx['+idx+']';
       var value = ids[idx];
       if (value == -1) {
         filterData = {};
