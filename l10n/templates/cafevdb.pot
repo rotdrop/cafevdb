@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-26 01:35+0100\n"
+"POT-Creation-Date: 2016-02-26 03:37+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -136,7 +136,7 @@ msgstr ""
 #: ajax/insurance/validate.php:326 ajax/musicians/validate.php:99
 #: ajax/musicians/validateaddress.php:161 ajax/musicians/validateemail.php:107
 #: ajax/musicians/validatephone.php:127 ajax/page-loader.php:111
-#: ajax/projects/extra-fields.php:186 ajax/projects/web-articles.php:201
+#: ajax/projects/extra-fields.php:179 ajax/projects/web-articles.php:201
 #: ajax/settings/app-settings.php:1210
 msgid "PHP Exception Caught"
 msgstr ""
@@ -151,7 +151,7 @@ msgstr ""
 #: ajax/instrumentation/add-musicians.php:163 ajax/insurance/validate.php:330
 #: ajax/musicians/validate.php:103 ajax/musicians/validateaddress.php:165
 #: ajax/musicians/validateemail.php:111 ajax/musicians/validatephone.php:131
-#: ajax/page-loader.php:115 ajax/projects/extra-fields.php:190
+#: ajax/page-loader.php:115 ajax/projects/extra-fields.php:183
 #: ajax/projects/web-articles.php:205 ajax/settings/app-settings.php:1214
 #, php-format
 msgid ""
@@ -365,14 +365,14 @@ msgid "Geographical Scope"
 msgstr ""
 
 #: ajax/export/insurance-export.php:211 ajax/export/insurance-export.php:241
-#: lib/project-extra.php:114
+#: lib/project-extra.php:115
 msgid "Date"
 msgstr ""
 
 #: ajax/export/insurance-export.php:246 lib/detailed-instrumentation.php:719
 #: lib/instrument-insurance.php:76 lib/instruments.php:276
-#: lib/php-excel-functions.php:103 lib/project-extra.php:390
-#: lib/project-extra.php:530 lib/project-extra.php:631 lib/projects.php:300
+#: lib/php-excel-functions.php:103 lib/project-extra.php:393
+#: lib/project-extra.php:531 lib/project-extra.php:632 lib/projects.php:300
 msgid "false"
 msgstr ""
 
@@ -579,7 +579,7 @@ msgstr ""
 msgid "Value for `%s' invalid: `%s'."
 msgstr ""
 
-#: ajax/finance/sepa-debit-settings.php:370 ajax/projects/extra-fields.php:163
+#: ajax/finance/sepa-debit-settings.php:370 ajax/projects/extra-fields.php:156
 #: ajax/settings/app-settings.php:1188 ajax/settings/redaxo-settings.php:72
 msgid "Unhandled request:"
 msgstr ""
@@ -944,18 +944,17 @@ msgid ""
 "make sense here."
 msgstr ""
 
-#: ajax/projects/extra-fields.php:54 ajax/projects/extra-fields.php:81
-#: ajax/projects/extra-fields.php:152
-#, php-format
-msgid "Request \"%s\" successful"
-msgstr ""
-
-#: ajax/projects/extra-fields.php:70 ajax/projects/extra-fields.php:124
+#: ajax/projects/extra-fields.php:61 ajax/projects/extra-fields.php:117
 #, php-format
 msgid "Could not parse number: \"%s\""
 msgstr ""
 
-#: ajax/projects/extra-fields.php:102
+#: ajax/projects/extra-fields.php:72 ajax/projects/extra-fields.php:145
+#, php-format
+msgid "Request \"%s\" successful"
+msgstr ""
+
+#: ajax/projects/extra-fields.php:95
 msgid "No or too many items available: "
 msgstr ""
 
@@ -2408,8 +2407,8 @@ msgstr ""
 
 #: lib/detailed-instrumentation.php:720 lib/instrument-insurance.php:77
 #: lib/instruments.php:275 lib/php-excel-functions.php:99
-#: lib/project-extra.php:389 lib/project-extra.php:531
-#: lib/project-extra.php:630 lib/projects.php:299
+#: lib/project-extra.php:392 lib/project-extra.php:532
+#: lib/project-extra.php:631 lib/projects.php:299
 msgid "true"
 msgstr ""
 
@@ -2427,7 +2426,7 @@ msgid "Remarks"
 msgstr ""
 
 #: lib/detailed-instrumentation.php:867 lib/musicians.php:364
-#: lib/project-extra.php:308
+#: lib/project-extra.php:311
 msgid "no projects yet"
 msgstr ""
 
@@ -2497,7 +2496,7 @@ msgid "Personal data"
 msgstr ""
 
 #: lib/detailed-instrumentation.php:1530 lib/instrument-insurance.php:193
-#: lib/musicians.php:172 lib/project-extra.php:248
+#: lib/musicians.php:172 lib/project-extra.php:251
 #: lib/sepa-debit-mandates.php:234
 msgid "Display all columns"
 msgstr ""
@@ -2827,7 +2826,7 @@ msgstr ""
 msgid "Instrumentation Numbers"
 msgstr ""
 
-#: lib/functions.php:1541 lib/tooltips.php:591
+#: lib/functions.php:1541 lib/tooltips.php:592
 msgid ""
 "Display the desired instrumentaion numbers, i.e. how many musicians are "
 "already registered for each instrument group and how many are finally needed."
@@ -3005,7 +3004,7 @@ msgid "Object"
 msgstr ""
 
 #: lib/instrument-insurance.php:880 lib/instrument-insurance.php:962
-#: lib/project-extra.php:1653 lib/project-payments.php:194
+#: lib/project-extra.php:1693 lib/project-payments.php:194
 #: lib/sepa-debit-mandates.php:160 lib/sepa-debit-mandates.php:175
 #: lib/sepa-debit-mandates.php:225
 msgid "Amount"
@@ -3205,11 +3204,11 @@ msgstr ""
 msgid "Instruments and Instrument Sort-Order"
 msgstr ""
 
-#: lib/instruments.php:143 lib/project-extra.php:207 lib/projects.php:170
+#: lib/instruments.php:143 lib/project-extra.php:210 lib/projects.php:170
 msgid "Show Disabled"
 msgstr ""
 
-#: lib/instruments.php:148 lib/project-extra.php:212 lib/projects.php:175
+#: lib/instruments.php:148 lib/project-extra.php:215 lib/projects.php:175
 msgid "Hide Disabled"
 msgstr ""
 
@@ -3217,7 +3216,7 @@ msgstr ""
 msgid "sort order"
 msgstr ""
 
-#: lib/instruments.php:272 lib/project-extra.php:386 lib/projects.php:296
+#: lib/instruments.php:272 lib/project-extra.php:389 lib/projects.php:296
 msgid "Disabled"
 msgstr ""
 
@@ -3545,165 +3544,186 @@ msgstr ""
 msgid "SimpleGroup"
 msgstr ""
 
-#: lib/project-extra.php:115
-msgid "SurchargeOption"
+#: lib/project-extra.php:114
+msgid "PredefinedGroups"
 msgstr ""
 
 #: lib/project-extra.php:116
-msgid "SurchargeEnum"
+msgid "SurchargeOption"
 msgstr ""
 
 #: lib/project-extra.php:117
-msgid "SurchargeSet"
+msgid "SurchargeEnum"
 msgstr ""
 
 #: lib/project-extra.php:118
+msgid "SurchargeSet"
+msgstr ""
+
+#: lib/project-extra.php:119
 msgid "SurchargeGroup"
 msgstr ""
 
 #: lib/project-extra.php:120
-msgid "simple"
-msgstr ""
-
-#: lib/project-extra.php:121
-msgid "single"
+msgid "SurchargeGroups"
 msgstr ""
 
 #: lib/project-extra.php:122
-msgid "multiple"
+msgid "simple"
 msgstr ""
 
 #: lib/project-extra.php:123
-msgid "parallel"
+msgid "single"
 msgstr ""
 
 #: lib/project-extra.php:124
-msgid "groupofpeople"
+msgid "multiple"
+msgstr ""
+
+#: lib/project-extra.php:125
+msgid "parallel"
 msgstr ""
 
 #: lib/project-extra.php:126
-msgid "choices"
+msgid "groupofpeople"
 msgstr ""
 
 #: lib/project-extra.php:127
-msgid "surcharge"
-msgstr ""
-
-#: lib/project-extra.php:128
-msgid "general"
+msgid "groupsofpeople"
 msgstr ""
 
 #: lib/project-extra.php:129
+msgid "choices"
+msgstr ""
+
+#: lib/project-extra.php:130
+msgid "surcharge"
+msgstr ""
+
+#: lib/project-extra.php:131
+msgid "general"
+msgstr ""
+
+#: lib/project-extra.php:132
 msgid "special"
 msgstr ""
 
-#: lib/project-extra.php:236
+#: lib/project-extra.php:239
 msgid "Definition of name, type, allowed values, default values."
 msgstr ""
 
-#: lib/project-extra.php:237
+#: lib/project-extra.php:240
 msgid "Defintion"
 msgstr ""
 
-#: lib/project-extra.php:239
+#: lib/project-extra.php:242
 msgid ""
 "Ordering, linking to and defining newe tabs, definition of tooltips (help "
 "text)."
 msgstr ""
 
-#: lib/project-extra.php:241
+#: lib/project-extra.php:244
 msgid "Display"
 msgstr ""
 
-#: lib/project-extra.php:243
+#: lib/project-extra.php:246
 msgid ""
 "Advanced settings and information, restricted access, encryption, "
 "information about internal indexing."
 msgstr ""
 
-#: lib/project-extra.php:245
+#: lib/project-extra.php:248
 msgid "Advanced"
 msgstr ""
 
-#: lib/project-extra.php:320 lib/project-instruments.php:211
+#: lib/project-extra.php:323 lib/project-instruments.php:211
 msgid "Project-Name"
 msgstr ""
 
-#: lib/project-extra.php:352
+#: lib/project-extra.php:355
 msgid "Field-Name"
 msgstr ""
 
-#: lib/project-extra.php:400
+#: lib/project-extra.php:403
 msgid "Type"
 msgstr ""
 
-#: lib/project-extra.php:418
+#: lib/project-extra.php:421
 msgid "Allowed Values"
 msgstr ""
 
-#: lib/project-extra.php:434 lib/project-extra.php:1567
+#: lib/project-extra.php:437 lib/project-extra.php:1598
 msgid "Data"
 msgstr ""
 
-#: lib/project-extra.php:469
+#: lib/project-extra.php:470
 msgid "Maximum Size"
 msgstr ""
 
-#: lib/project-extra.php:485 lib/project-extra.php:496
-#: lib/project-extra.php:524
+#: lib/project-extra.php:486 lib/project-extra.php:497
+#: lib/project-extra.php:525
 msgid "Default Value"
 msgstr ""
 
-#: lib/project-extra.php:542 lib/project-extra.php:1568
+#: lib/project-extra.php:543 lib/project-extra.php:1599
 msgid "Tooltip"
 msgstr ""
 
-#: lib/project-extra.php:556
+#: lib/project-extra.php:557
 msgid "Display-Order"
 msgstr ""
 
-#: lib/project-extra.php:566
+#: lib/project-extra.php:567
 msgid "Table Tab"
 msgstr ""
 
-#: lib/project-extra.php:586
+#: lib/project-extra.php:587
 msgid "New Tab Name"
 msgstr ""
 
-#: lib/project-extra.php:615
+#: lib/project-extra.php:616
 msgid "Field-Index"
 msgstr ""
 
-#: lib/project-extra.php:627
+#: lib/project-extra.php:628
 msgid "Encrypted"
 msgstr ""
 
-#: lib/project-extra.php:641
+#: lib/project-extra.php:642
 msgid "Readers"
 msgstr ""
 
-#: lib/project-extra.php:652
+#: lib/project-extra.php:653
 msgid "Writers"
 msgstr ""
 
-#: lib/project-extra.php:1434
+#: lib/project-extra.php:1436
 msgid "new option"
 msgstr ""
 
-#: lib/project-extra.php:1523
+#: lib/project-extra.php:1553
 msgid "Show deleted items."
 msgstr ""
 
-#: lib/project-extra.php:1525
+#: lib/project-extra.php:1555
 msgid "Show data-fields."
 msgstr ""
 
-#: lib/project-extra.php:1565
+#: lib/project-extra.php:1595
 msgid "Key"
 msgstr ""
 
-#: lib/project-extra.php:1566
+#: lib/project-extra.php:1596
 msgid "Label"
+msgstr ""
+
+#: lib/project-extra.php:1597
+msgid "Limit"
+msgstr ""
+
+#: lib/project-extra.php:1611
+#, php-format
+msgid "%dth column"
 msgstr ""
 
 #: lib/project-instruments.php:44
@@ -4488,18 +4508,22 @@ msgid ""
 "help text in order to inform others what this option is about."
 msgstr ""
 
-#: lib/tooltips.php:221
+#: lib/tooltips.php:219
+msgid "The maximum allowed number of people in a \"group of people\" field"
+msgstr ""
+
+#: lib/tooltips.php:222
 msgid ""
 "For a surcharge option, please enter here the surcharge amount\n"
 "associated with this option."
 msgstr ""
 
-#: lib/tooltips.php:224 lib/tooltips.php:226 lib/tooltips.php:228
+#: lib/tooltips.php:225 lib/tooltips.php:227 lib/tooltips.php:229
 msgid ""
 "Specify a default value for the custom field here. Leave blank if unsure."
 msgstr ""
 
-#: lib/tooltips.php:230
+#: lib/tooltips.php:231
 msgid ""
 "Hit this button to delete or undelete each item. Note that items that\n"
 "already have been associated with musicians in the data-base can no\n"
@@ -4511,37 +4535,37 @@ msgid ""
 "but clicking this button again."
 msgstr ""
 
-#: lib/tooltips.php:239
+#: lib/tooltips.php:240
 msgid ""
 "Disable this extra field. This will not erase any data in the\n"
 "data-base, but simply mark the field as unused and hide it from sight."
 msgstr ""
 
-#: lib/tooltips.php:242
+#: lib/tooltips.php:243
 msgid ""
 "Define the display priority. Larger values will move the item more to\n"
 "the left or the top inside its table-tab."
 msgstr ""
 
-#: lib/tooltips.php:245
+#: lib/tooltips.php:246
 msgid ""
 "Expert use: store encrypted values in the data-base. If unsure: <em>DON'T</"
 "em>"
 msgstr ""
 
-#: lib/tooltips.php:247
+#: lib/tooltips.php:248
 msgid ""
 "Extra-tab to group project-specific data which just didn't fit\n"
 "somewhere else."
 msgstr ""
 
-#: lib/tooltips.php:250
+#: lib/tooltips.php:251
 msgid ""
 "Backwards-compatibility link into extra-data stored together with old\n"
 "projects."
 msgstr ""
 
-#: lib/tooltips.php:253
+#: lib/tooltips.php:254
 msgid ""
 "Just the name for this option. Please keep the name as <em>short</em> as\n"
 "possible, but try to be descriptive. If further explanations are\n"
@@ -4550,25 +4574,25 @@ msgid ""
 "<strong>Display</strong> tab."
 msgstr ""
 
-#: lib/tooltips.php:258
+#: lib/tooltips.php:259
 msgid "The maximum number of peopel allowed in the group."
 msgstr ""
 
-#: lib/tooltips.php:260
+#: lib/tooltips.php:261
 msgid ""
 "Define a new table-tab. In order to do so, first deselect any\n"
 "predefined tab in the select box above, then enter the new name. The\n"
 "new tab-name will also be available as tab-option for other fields."
 msgstr ""
 
-#: lib/tooltips.php:264
+#: lib/tooltips.php:265
 msgid ""
 "Members of these OwnCloud user-groups are allowed to view the\n"
 "field. If left blank, every logged in user is allowed to view the\n"
 "field."
 msgstr ""
 
-#: lib/tooltips.php:268
+#: lib/tooltips.php:269
 msgid ""
 "Each option has an optional data-entry attached to it. Normally, this\n"
 "is only useful for surcharge options, where the \"data-entry\" just is\n"
@@ -4577,7 +4601,7 @@ msgid ""
 "click here."
 msgstr ""
 
-#: lib/tooltips.php:274
+#: lib/tooltips.php:275
 msgid ""
 "Options already attached to musicians can no longer be deleted in\n"
 "order to prevent data-loss in the underlying data-base. It is even\n"
@@ -4586,7 +4610,7 @@ msgid ""
 "clicking the \"recover\" button to the left of each deleted entry."
 msgstr ""
 
-#: lib/tooltips.php:279
+#: lib/tooltips.php:280
 msgid ""
 "Define the table-tab this entry should be grouped with. It is also\n"
 "possible to define new table-tabs. In order to do so, first deselect\n"
@@ -4594,32 +4618,32 @@ msgid ""
 "input box below."
 msgstr ""
 
-#: lib/tooltips.php:284
+#: lib/tooltips.php:285
 msgid ""
 "Optionally define a tool-tip (context-help) for the field. The tooltip\n"
 "may contain HTML formatting."
 msgstr ""
 
-#: lib/tooltips.php:287
+#: lib/tooltips.php:288
 msgid ""
 "Data-type for the custom field. The most practical types are probably\n"
 "yes-no and multiple-choice options. Extra-charge options can also be\n"
 "defined, with the respective extra-charge amount tied to the option."
 msgstr ""
 
-#: lib/tooltips.php:291
+#: lib/tooltips.php:292
 msgid ""
 "Members of these OwnCloud user-groups are allowed to change the\n"
 "field. If left blank, every logged in user is allowed to change this field."
 msgstr ""
 
-#: lib/tooltips.php:294
+#: lib/tooltips.php:295
 msgid ""
 "Select-box with all currently uploaded attachments. Note that a file will "
 "only be attached to a message if it is also checked in this select box."
 msgstr ""
 
-#: lib/tooltips.php:296
+#: lib/tooltips.php:297
 msgid ""
 "Toggle the initial display of the search-filters for data-base tables\n"
 "in order to make the table view a little less crowded. Search-filters\n"
@@ -4627,17 +4651,17 @@ msgid ""
 "each individual table view."
 msgstr ""
 
-#: lib/tooltips.php:301
+#: lib/tooltips.php:302
 msgid "Further personal settings, normally not needed use with care."
 msgstr ""
 
-#: lib/tooltips.php:303
+#: lib/tooltips.php:304
 msgid ""
 "Generate a PDF with detailed records of the insured items and the\n"
 "resulting insurance fee."
 msgstr ""
 
-#: lib/tooltips.php:306
+#: lib/tooltips.php:307
 msgid ""
 "A flag which indicates not so much social or functional status, but\n"
 "default behaviour for mass-emails as follows\n"
@@ -4663,29 +4687,29 @@ msgid ""
 "in the email form."
 msgstr ""
 
-#: lib/tooltips.php:325
+#: lib/tooltips.php:326
 msgid "Display name, pre-name, phone number, email, street-address."
 msgstr ""
 
-#: lib/tooltips.php:327
+#: lib/tooltips.php:328
 msgid ""
 "Opens a new table view with the insured items for the respective musician."
 msgstr ""
 
-#: lib/tooltips.php:329
+#: lib/tooltips.php:330
 msgid "Further information like birthday, a photo, date of last change."
 msgstr ""
 
-#: lib/tooltips.php:331
+#: lib/tooltips.php:332
 msgid "Display name, pre-name, instruments, status, general remarks."
 msgstr ""
 
-#: lib/tooltips.php:333
+#: lib/tooltips.php:334
 msgid ""
 "Enter a short, no-nonsense name for the new template. Please omit spaces."
 msgstr ""
 
-#: lib/tooltips.php:335
+#: lib/tooltips.php:336
 msgid ""
 "Add a new event for the project. The event is added to the respective\n"
 "calendar and will also be visible and editable through the calendar\n"
@@ -4696,21 +4720,21 @@ msgid ""
 "the event."
 msgstr ""
 
-#: lib/tooltips.php:343 templates/project-web-articles.php:77
+#: lib/tooltips.php:344 templates/project-web-articles.php:77
 msgid "nothing"
 msgstr ""
 
-#: lib/tooltips.php:345
+#: lib/tooltips.php:346
 msgid ""
 "Choose a file to attach from the files stored remotely on in the OwnCloud "
 "storage area."
 msgstr ""
 
-#: lib/tooltips.php:347
+#: lib/tooltips.php:348
 msgid "Web-link to the current OwnCloud developer documentation."
 msgstr ""
 
-#: lib/tooltips.php:349
+#: lib/tooltips.php:350
 #, php-format
 msgid ""
 "Status of outstanding project fees:\n"
@@ -4728,34 +4752,34 @@ msgid ""
 "</dl>"
 msgstr ""
 
-#: lib/tooltips.php:365
+#: lib/tooltips.php:366
 msgid ""
 "Link to the data-base administration tool for the underlying data-base. "
 "Swiss-army-knife-like."
 msgstr ""
 
-#: lib/tooltips.php:367
+#: lib/tooltips.php:368
 msgid "Link to the documentation for the database-management tool."
 msgstr ""
 
-#: lib/tooltips.php:369
+#: lib/tooltips.php:370
 msgid ""
 "  Click me to add a new\n"
 "row to the current table."
 msgstr ""
 
-#: lib/tooltips.php:372 lib/tooltips.php:528
+#: lib/tooltips.php:373 lib/tooltips.php:529
 msgid "Saves the current values; the current input form will remain active."
 msgstr ""
 
-#: lib/tooltips.php:374
+#: lib/tooltips.php:375
 msgid ""
 "  Click me to add all selected musicians\n"
 "to the selected project. All selected\n"
 "musicians on all pages will be added."
 msgstr ""
 
-#: lib/tooltips.php:378
+#: lib/tooltips.php:379
 msgid ""
 "  Click me to pre-select\n"
 "all musicians on all pages\n"
@@ -4764,7 +4788,7 @@ msgid ""
 "actually add them."
 msgstr ""
 
-#: lib/tooltips.php:384
+#: lib/tooltips.php:385
 msgid ""
 "  Click me to remove\n"
 "all musicians on all pages\n"
@@ -4772,7 +4796,7 @@ msgid ""
 "the current project."
 msgstr ""
 
-#: lib/tooltips.php:389
+#: lib/tooltips.php:390
 msgid ""
 "  Check me to pre-select\n"
 "this musician for the current\n"
@@ -4782,24 +4806,24 @@ msgid ""
 "musicians."
 msgstr ""
 
-#: lib/tooltips.php:397
+#: lib/tooltips.php:398
 msgid ""
 "Stop the current operation. Settings which already have been stored by\n"
 "hitting an \"Apply\" button are maintained, though. You will be returned\n"
 "to the previous view."
 msgstr ""
 
-#: lib/tooltips.php:400
+#: lib/tooltips.php:401
 msgid "Stop the current operation. You will be returned to the previous view."
 msgstr ""
 
-#: lib/tooltips.php:403
+#: lib/tooltips.php:404
 msgid ""
 "Directs you to a form with input fields. From there you can return to\n"
 "this form by means of the \"Save\" or \"Back\" resp. \"Cancel\" buttons."
 msgstr ""
 
-#: lib/tooltips.php:407
+#: lib/tooltips.php:408
 msgid ""
 "Einzelnen Datensatz anzeigen,\n"
 "zeigt ein neues Formular mit\n"
@@ -4807,20 +4831,20 @@ msgid ""
 "und Abbruchmöglichkeit."
 msgstr ""
 
-#: lib/tooltips.php:414
+#: lib/tooltips.php:415
 msgid ""
 "  Klick mich, um die\n"
 "Sortierreihenfolge auf die\n"
 "Voreinstellung zurückzusetzen."
 msgstr ""
 
-#: lib/tooltips.php:417
+#: lib/tooltips.php:418
 msgid ""
 "  Klick mich, um den\n"
 "aktuellen Filter zu löschen."
 msgstr ""
 
-#: lib/tooltips.php:422
+#: lib/tooltips.php:423
 msgid ""
 "Einzelnen Datensatz kopieren,\n"
 "zeigt ein neues Formular mit\n"
@@ -4828,7 +4852,7 @@ msgid ""
 "und Abbruchmöglichkeit."
 msgstr ""
 
-#: lib/tooltips.php:428
+#: lib/tooltips.php:429
 msgid ""
 "Click me to export a CSV-table with the selected debit notes suitable for "
 "use with AQBanking command-line tool `aqbanking-cli'. Please refer to the "
@@ -4837,21 +4861,21 @@ msgid ""
 "debiting their bank account."
 msgstr ""
 
-#: lib/tooltips.php:430
+#: lib/tooltips.php:431
 msgid "Select all displayed debit-notes for export."
 msgstr ""
 
-#: lib/tooltips.php:432
+#: lib/tooltips.php:433
 msgid "Deselect all displayed debit-notes from export selection."
 msgstr ""
 
-#: lib/tooltips.php:434
+#: lib/tooltips.php:435
 msgid ""
 "Select this debit note for debiting the project fees. In order to actually "
 "export the debit-note you have to hit the `Debit' button above."
 msgstr ""
 
-#: lib/tooltips.php:437
+#: lib/tooltips.php:438
 msgid ""
 "Einzelnen Datensatz löschen,\n"
 "zeigt den aktuellen Datensatz zunächst an.\n"
@@ -4860,7 +4884,7 @@ msgid ""
 "VORSICHT!."
 msgstr ""
 
-#: lib/tooltips.php:444
+#: lib/tooltips.php:445
 msgid ""
 "  Klick mich, um eine Em@il an die ausgewählten\n"
 "Musiker zu versenden. Auf der folgenden Seite kann\n"
@@ -4872,7 +4896,7 @@ msgid ""
 "entsprechen."
 msgstr ""
 
-#: lib/tooltips.php:453
+#: lib/tooltips.php:454
 msgid ""
 "  Klick mich, um alle gerade\n"
 "angezeigten Musiker zu der\n"
@@ -4884,14 +4908,14 @@ msgid ""
 "entsprechen."
 msgstr ""
 
-#: lib/tooltips.php:462
+#: lib/tooltips.php:463
 msgid ""
 "  Klick mich, um alle gerade\n"
 "angezeigten Musiker von der\n"
 "Em@il-Auswahl zu entfernen"
 msgstr ""
 
-#: lib/tooltips.php:466
+#: lib/tooltips.php:467
 msgid ""
 "  Adressaten in potentielle\n"
 "Massenmail Adressliste aufnehmen.\n"
@@ -4900,7 +4924,7 @@ msgid ""
 "korrigieren."
 msgstr ""
 
-#: lib/tooltips.php:472
+#: lib/tooltips.php:473
 msgid ""
 "Export the visible part of the data-base to an office-format. The `Excel'-"
 "export should produce useful input for either Libre- or OpenOffice or for "
@@ -4908,27 +4932,27 @@ msgid ""
 "USA."
 msgstr ""
 
-#: lib/tooltips.php:474
+#: lib/tooltips.php:475
 msgid "Export in CSV-format using a semicolon as delimiter (Excel convention)"
 msgstr ""
 
-#: lib/tooltips.php:476
+#: lib/tooltips.php:477
 msgid "Export as `full-featured' Excel-2007 table, `.xslx'."
 msgstr ""
 
-#: lib/tooltips.php:478
+#: lib/tooltips.php:479
 msgid ""
 "Export as HTML page without navigation elements; can also be loaded into "
 "your office-programs."
 msgstr ""
 
-#: lib/tooltips.php:480
+#: lib/tooltips.php:481
 msgid ""
 "Export as HTML page, but set the file type to `spread-sheed'. Should also be "
 "readable by standard office-programs as `Excel'-table."
 msgstr ""
 
-#: lib/tooltips.php:482
+#: lib/tooltips.php:483
 #, php-format
 msgid ""
 "Field for filter/search criteria.\n"
@@ -4964,43 +4988,43 @@ msgid ""
 "</dl>"
 msgstr ""
 
-#: lib/tooltips.php:514
+#: lib/tooltips.php:515
 msgid ""
 "Negate the filter, i.e. search for anything not matching the selected "
 "options."
 msgstr ""
 
-#: lib/tooltips.php:516
+#: lib/tooltips.php:517
 msgid "Jumps directly to the given page"
 msgstr ""
 
-#: lib/tooltips.php:519
+#: lib/tooltips.php:520
 msgid ""
 "  Klick mich, um die\n"
 "Suchkriterien zu verstecken."
 msgstr ""
 
-#: lib/tooltips.php:523
+#: lib/tooltips.php:524
 msgid "Some usefull convenience actions (click me for details!)"
 msgstr ""
 
-#: lib/tooltips.php:526
+#: lib/tooltips.php:527
 msgid "Saves the current values and start to generate another new data-set."
 msgstr ""
 
-#: lib/tooltips.php:527
+#: lib/tooltips.php:528
 msgid ""
 "Saves the current values and continues to make yet another copy of the "
 "source data-set."
 msgstr ""
 
-#: lib/tooltips.php:531
+#: lib/tooltips.php:532
 msgid ""
 "Limits the number of rows per page to the given value. A \"*\" means to "
 "display all records on one large page."
 msgstr ""
 
-#: lib/tooltips.php:533
+#: lib/tooltips.php:534
 #, php-format
 msgid ""
 "  Klick mich, um die\n"
@@ -5009,74 +5033,74 @@ msgid ""
 "Als Platzhalter verwendet man `%%'."
 msgstr ""
 
-#: lib/tooltips.php:539
+#: lib/tooltips.php:540
 msgid "Refreshes the current view by reloading all data from the data-base."
 msgstr ""
 
-#: lib/tooltips.php:540
+#: lib/tooltips.php:541
 msgid ""
 "Discards all unsaved data and reloads all fields form the\n"
 "data-base. Settings which already have been stored by hitting an\n"
 "\"Apply\" button are maintained, though."
 msgstr ""
 
-#: lib/tooltips.php:546
+#: lib/tooltips.php:547
 msgid "Saves the current values and returns to the previous view."
 msgstr ""
 
-#: lib/tooltips.php:547
+#: lib/tooltips.php:548
 msgid "Deletes the current record and returns to the previous view."
 msgstr ""
 
-#: lib/tooltips.php:551
+#: lib/tooltips.php:552
 msgid ""
 "  Klick mich, um die\n"
 "Suchkriterien anzuzeigen."
 msgstr ""
 
-#: lib/tooltips.php:555
+#: lib/tooltips.php:556
 msgid ""
 "Simply blends in all the columns of the table as if all the tabs would be "
 "activated at the same time."
 msgstr ""
 
-#: lib/tooltips.php:557
+#: lib/tooltips.php:558
 msgid ""
 "  Klick mich, um das Sortieren\n"
 "nach diesem Feld ein-\n"
 "oder auszuschalten!"
 msgstr ""
 
-#: lib/tooltips.php:561
+#: lib/tooltips.php:562
 msgid "  Klick mich, um die Sortierreihenfolge umzukehren!"
 msgstr ""
 
-#: lib/tooltips.php:563
+#: lib/tooltips.php:564
 msgid ""
 "Transpose the displayed table; may be beneficial for tables with only a few "
 "rows but many columns!"
 msgstr ""
 
-#: lib/tooltips.php:566
+#: lib/tooltips.php:567
 msgid "Einzelnen Datensatz anzeigen"
 msgstr ""
 
-#: lib/tooltips.php:569
+#: lib/tooltips.php:570
 msgid "Load a new page with all debit-mandates for project-fees"
 msgstr ""
 
-#: lib/tooltips.php:571
+#: lib/tooltips.php:572
 msgid ""
 "Display all registered musicians for the selected project. The table\n"
 "        shows project related details as well as all stored personal\n"
 "        \"information about the respective musician"
 msgstr ""
 
-#: lib/tooltips.php:575
+#: lib/tooltips.php:576
 msgid "Opens the email-form for the project inside a dialog window."
 msgstr ""
 
-#: lib/tooltips.php:577 lib/tooltips.php:646
+#: lib/tooltips.php:578 lib/tooltips.php:647
 msgid ""
 "Open a dialog with all known\n"
 "events associated to the project.\n"
@@ -5084,61 +5108,61 @@ msgid ""
 "as needed."
 msgstr ""
 
-#: lib/tooltips.php:582
+#: lib/tooltips.php:583
 msgid ""
 "Define extra-fields for the instrumentation table. E.g.: surcharge\n"
 "fields for double-/single-room preference, room-mates and such."
 msgstr ""
 
-#: lib/tooltips.php:585
+#: lib/tooltips.php:586
 msgid "Change to the folder with project related files."
 msgstr ""
 
-#: lib/tooltips.php:587
+#: lib/tooltips.php:588
 msgid ""
 "Change to the folder with the financial balance\n"
 "sheets for the project (only available after the project\n"
 "has been ``closed''."
 msgstr ""
 
-#: lib/tooltips.php:593
+#: lib/tooltips.php:594
 msgid "Change to the DokuWiki-page for this project (if there is one)"
 msgstr ""
 
-#: lib/tooltips.php:595
+#: lib/tooltips.php:596
 msgid ""
 "Pull-down menu with entries to move on\n"
 "to pages with the instrumentation, events, instrumentation numbers etc."
 msgstr ""
 
-#: lib/tooltips.php:598
+#: lib/tooltips.php:599
 msgid ""
 "Some people gave us debit mandates but still want to pay by bank-transfer. "
 "Uncheck in order to exclude the person from direct debits transfers."
 msgstr ""
 
-#: lib/tooltips.php:600
+#: lib/tooltips.php:601
 msgid "Sum of the fees for all booked etra items."
 msgstr ""
 
-#: lib/tooltips.php:602
+#: lib/tooltips.php:603
 msgid ""
 "Everything related to project fees, surcharges, bank transfers, debit\n"
 "mandates."
 msgstr ""
 
-#: lib/tooltips.php:605
+#: lib/tooltips.php:606
 msgid ""
 "Opens a dialog-window which gives access to all stored informations for the "
 "project."
 msgstr ""
 
-#: lib/tooltips.php:607
+#: lib/tooltips.php:608
 msgid ""
 "Displays the columns directly related to the instrumentation for the project."
 msgstr ""
 
-#: lib/tooltips.php:609
+#: lib/tooltips.php:610
 msgid ""
 "Either \"temporary\" -- the regular case -- or \"permanent\" -- the\n"
 "exceptional case for \"virtual pseudo projects\". The latter in\n"
@@ -5148,13 +5172,13 @@ msgid ""
 "permanent \"pseudo-projects\" don't, as it does not make any sense."
 msgstr ""
 
-#: lib/tooltips.php:616
+#: lib/tooltips.php:617
 msgid ""
 "Displays `meta-data' like project fees, single/double room preferences, "
 "debit-mandates and the like."
 msgstr ""
 
-#: lib/tooltips.php:618
+#: lib/tooltips.php:619
 msgid ""
 "Please enter here a <b>SHORT</b> project name, rather a project tag. The "
 "software will try very hard to confine you to the following rules:\n"
@@ -5169,7 +5193,7 @@ msgid ""
 "Thanks."
 msgstr ""
 
-#: lib/tooltips.php:627
+#: lib/tooltips.php:628
 msgid ""
 "Append the year to the name if checked.\n"
 "Regardless of this checkbox any decimal digit will first be stripped from "
@@ -5177,30 +5201,30 @@ msgid ""
 "of the project name before the year is added."
 msgstr ""
 
-#: lib/tooltips.php:631
+#: lib/tooltips.php:632
 msgid ""
 "Displays the personal data of the respective musicians, like address, email, "
 "date of birth if known, phone numbers."
 msgstr ""
 
-#: lib/tooltips.php:633
+#: lib/tooltips.php:634
 msgid "The accumulated total of all charges the participant has to pay."
 msgstr ""
 
-#: lib/tooltips.php:635
+#: lib/tooltips.php:636
 msgid ""
 "Add a new public web-page to the project by generating a new, empty concert "
 "announcement."
 msgstr ""
 
-#: lib/tooltips.php:637
+#: lib/tooltips.php:638
 msgid ""
 "Delete the currently displayed web-page fromthe project. The web page will "
 "be \"detached\" from the project and moved to the trash-bin\n"
 "\"category\" (folger) inside the CMS."
 msgstr ""
 
-#: lib/tooltips.php:640
+#: lib/tooltips.php:641
 msgid ""
 "Link existing pages to the project. This can be used, for instance, in order "
 "to add a page to the project which has not been created by hitting the `+'-"
@@ -5210,32 +5234,32 @@ msgid ""
 "z"
 msgstr ""
 
-#: lib/tooltips.php:642
+#: lib/tooltips.php:643
 msgid ""
 "Please select articles to link to the current project. The articles will be "
 "immediately added to the project if you select them. In order to remove the "
 "article, please use the `-' button above."
 msgstr ""
 
-#: lib/tooltips.php:644
+#: lib/tooltips.php:645
 msgid ""
 "Detach the currently displayed event announcement from the project. "
 "Primarily meant to provide means to undo erroneous linking of articles."
 msgstr ""
 
-#: lib/tooltips.php:651
+#: lib/tooltips.php:652
 msgid ""
 "Delete the event from the system\n"
 "(no undo possible)."
 msgstr ""
 
-#: lib/tooltips.php:654
+#: lib/tooltips.php:655
 msgid ""
 "Exclude all events from\n"
 "email-submission"
 msgstr ""
 
-#: lib/tooltips.php:657
+#: lib/tooltips.php:658
 msgid ""
 "Detach the respective event\n"
 "from the project, but do not\n"
@@ -5245,41 +5269,41 @@ msgid ""
 "categories."
 msgstr ""
 
-#: lib/tooltips.php:664
+#: lib/tooltips.php:665
 msgid ""
 "Download the events as ICS file. In principle it is possible to import\n"
 "the ICS file into the respective calendar apps of your smartphone,\n"
 "tablet or desktop computer."
 msgstr ""
 
-#: lib/tooltips.php:668
+#: lib/tooltips.php:669
 msgid "Modify the event."
 msgstr ""
 
-#: lib/tooltips.php:670
+#: lib/tooltips.php:671
 msgid "Add a new concert-event to the project."
 msgstr ""
 
-#: lib/tooltips.php:672
+#: lib/tooltips.php:673
 msgid ""
 "Add a private management event which is not exposed to the rest of the world."
 msgstr ""
 
-#: lib/tooltips.php:674
+#: lib/tooltips.php:675
 msgid "Add some other event to the project."
 msgstr ""
 
-#: lib/tooltips.php:676
+#: lib/tooltips.php:677
 msgid "Add a new rehearsal-event to the project."
 msgstr ""
 
-#: lib/tooltips.php:678
+#: lib/tooltips.php:679
 msgid ""
 "Select all events for\n"
 "email-submission"
 msgstr ""
 
-#: lib/tooltips.php:681
+#: lib/tooltips.php:682
 msgid ""
 "Mark the respective event for being\n"
 "sent by email as ICS-attachment per email.\n"
@@ -5289,58 +5313,58 @@ msgid ""
 "recipients."
 msgstr ""
 
-#: lib/tooltips.php:688
+#: lib/tooltips.php:689
 msgid ""
 "Click to open an email-form\n"
 "and send the selected events to\n"
 "selected recipients."
 msgstr ""
 
-#: lib/tooltips.php:692
+#: lib/tooltips.php:693
 msgid ""
 "Force the re-creation of the folder where project balanaces are\n"
 "stored."
 msgstr ""
 
-#: lib/tooltips.php:695
+#: lib/tooltips.php:696
 msgid "Force the re-creation of the folder where project data is stored."
 msgstr ""
 
-#: lib/tooltips.php:697
+#: lib/tooltips.php:698
 msgid "Article category of the concert-archive inside the Redaxo CMS."
 msgstr ""
 
-#: lib/tooltips.php:699
+#: lib/tooltips.php:700
 msgid "Article category of the concert-previews inside the Redaxo CMS."
 msgstr ""
 
-#: lib/tooltips.php:701
+#: lib/tooltips.php:702
 msgid "Article category of the rehearsals inside the Redaxo CMS."
 msgstr ""
 
-#: lib/tooltips.php:703
+#: lib/tooltips.php:704
 msgid "Article category for templates inside the Redaxo CMS."
 msgstr ""
 
-#: lib/tooltips.php:705
+#: lib/tooltips.php:706
 msgid ""
 "Trashbin pseudo-category, articles deleted from within the\n"
 "project-views are moved here."
 msgstr ""
 
-#: lib/tooltips.php:708
+#: lib/tooltips.php:709
 msgid ""
 "Add the musician to the project. A new form will open were details like the "
 "instrument etc. can be adjustetd."
 msgstr ""
 
-#: lib/tooltips.php:710
+#: lib/tooltips.php:711
 msgid ""
 "This is checked for officially registered musicians, those, who have\n"
 "sent us a signed registration form. It is left blannk otherwise."
 msgstr ""
 
-#: lib/tooltips.php:713
+#: lib/tooltips.php:714
 msgid ""
 "Activate this checkbox in order to save the current email message as\n"
 "message template. If you leave this check-box unchecked, then messages\n"
@@ -5354,7 +5378,7 @@ msgid ""
 "recipient list, as should be."
 msgstr ""
 
-#: lib/tooltips.php:723
+#: lib/tooltips.php:724
 msgid ""
 "Save the currently active email message either as draft\n"
 "(i.e. including recipients and attachments) or as message template\n"
@@ -5367,7 +5391,7 @@ msgid ""
 "of this button."
 msgstr ""
 
-#: lib/tooltips.php:733
+#: lib/tooltips.php:734
 msgid ""
 "Save the current email for later re-usal in the data-base.\n"
 "An email template can contain per-member substitutions with the syntax "
@@ -5379,20 +5403,20 @@ msgid ""
 "by the pre-names of the organizing committe in order to compose  greetings."
 msgstr ""
 
-#: lib/tooltips.php:739
+#: lib/tooltips.php:740
 msgid "This is checked for section-leaders and left blank otherwise."
 msgstr ""
 
-#: lib/tooltips.php:741
+#: lib/tooltips.php:742
 msgid "Select one of the email templates previously stored in the data-base."
 msgstr ""
 
-#: lib/tooltips.php:743
+#: lib/tooltips.php:744
 msgid ""
 "Select either a message draft or template as base for the current message."
 msgstr ""
 
-#: lib/tooltips.php:745
+#: lib/tooltips.php:746
 msgid ""
 "Attempt to send the stuff you have composed out to your selection of\n"
 "recipients. Please think thrice about it. In case of an error\n"
@@ -5400,13 +5424,13 @@ msgid ""
 "the `Debug' tab"
 msgstr ""
 
-#: lib/tooltips.php:750
+#: lib/tooltips.php:751
 msgid ""
 "Used SEPA mandates are not deleted from the DB, but just flagged as\n"
 "\"inactive\" if they expire or are manually pseudo-deleted."
 msgstr ""
 
-#: lib/tooltips.php:753
+#: lib/tooltips.php:754
 msgid ""
 "Toggle instant validation and automatic computation of derived bank account "
 "data. If instant validation is disabled, the final values will still be "
@@ -5415,7 +5439,7 @@ msgid ""
 "enabled."
 msgstr ""
 
-#: lib/tooltips.php:755
+#: lib/tooltips.php:756
 #, php-format
 msgid ""
 "This debit-mandate has not been used for more than %d month and\n"
@@ -5423,79 +5447,79 @@ msgid ""
 "and contact the treasurer for further instructions."
 msgstr ""
 
-#: lib/tooltips.php:761
+#: lib/tooltips.php:762
 msgid "Personal application settings."
 msgstr ""
 
-#: lib/tooltips.php:763
+#: lib/tooltips.php:764
 msgid "Force the re-creation of the root of the shared-folder hierarchy."
 msgstr ""
 
-#: lib/tooltips.php:765
+#: lib/tooltips.php:766
 msgid "Re-create the share-owner."
 msgstr ""
 
-#: lib/tooltips.php:767 templates/part.common.header.php:99
+#: lib/tooltips.php:768 templates/part.common.header.php:99
 msgid "Toggle Tooltips"
 msgstr ""
 
-#: lib/tooltips.php:769
+#: lib/tooltips.php:770
 msgid "Link to the source-code archives for the DB app."
 msgstr ""
 
-#: lib/tooltips.php:771
+#: lib/tooltips.php:772
 msgid "Link to the source-code documentation for the DB app."
 msgstr ""
 
-#: lib/tooltips.php:773
+#: lib/tooltips.php:774
 msgid ""
 "Recompute the link between projects and events, using the event-categories "
 "as primary key."
 msgstr ""
 
-#: lib/tooltips.php:775
+#: lib/tooltips.php:776
 msgid ""
 "The initial number of rows per page when displaying data-base\n"
 "tables. The actual number of rows per page can also changed later in\n"
 "the individual table views."
 msgstr ""
 
-#: lib/tooltips.php:779
+#: lib/tooltips.php:780
 msgid "Test data-base passphrase."
 msgstr ""
 
-#: lib/tooltips.php:781
+#: lib/tooltips.php:782
 msgid ""
 "Check whether the data-base can be accessed with the given account\n"
 "information and password. The password will only be stored in the\n"
 "configuration storage if the test can be performed successfully."
 msgstr ""
 
-#: lib/tooltips.php:785
+#: lib/tooltips.php:786
 msgid ""
 "Try to connect to the specified web-address, will open the web-address in "
 "another window or tab, depending your local browser preferences."
 msgstr ""
 
-#: lib/tooltips.php:787
+#: lib/tooltips.php:788
 msgid ""
 "Total amount the participant has to pay, perhaps followed by total amount "
 "paid, followed by the outstanding amount."
 msgstr ""
 
-#: lib/tooltips.php:789
+#: lib/tooltips.php:790
 msgid ""
 "Add the instruments of the actually registered musicians to the instrument-"
 "table for the project."
 msgstr ""
 
-#: lib/tooltips.php:791
+#: lib/tooltips.php:792
 msgid ""
 "Upload a file from your local computer as attachment. The file will be "
 "removed from the remote-system after the message has been sent."
 msgstr ""
 
-#: lib/tooltips.php:793
+#: lib/tooltips.php:794
 msgid "Change to another WYSIWYG editor."
 msgstr ""
 
