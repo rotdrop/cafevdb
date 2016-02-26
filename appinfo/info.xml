@@ -4,7 +4,7 @@
 	<name>CAFeV DB</name>
 	<description>Orchestra Management Application.</description>
         <codename>Creeping Featurism</codename>
-	<version>5.00</version>
+	<version>5.01</version>
 	<licence>AGPL</licence>
 	<author>Claus-Justus Heine &amp;lt;himself@claus-justus-heine.de&amp;gt;</author>
 	<rememberlogin>false</rememberlogin>
