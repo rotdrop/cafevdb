@@ -194,12 +194,16 @@ invited to have a look, but please do not change anything unless you know what y
         'extra-field-choices-single' => L::t('Simple yes-no choice.'),
         'extra-field-choices-multiple' => L::t('Multiple choices, excluding each other.'),
         'extra-field-choices-parallel' => L::t('Multiple choices where, more than one option can be selected.'),
-        'extra-field-choices-groupofpeople' => L::t('Group of peopel, e.g. to define room-mates.'),
+        'extra-field-choices-groupofpeople' => L::t('Group of people, e.g. to define room-mates.'),
+        'extra-field-choices-groupsofpeople' => L::t('Group of people with predefined group-names and a potentially
+different maximal number of people fitting in the group. For example to define room-mates.'),
 
         'extra-field-surcharge-single' => L::t('Simple yes-no choice which increases the project fees. Please fill also the "amount" field.'),
         'extra-field-surcharge-multiple' => L::t('Multiple choices, excluding each other. For the individual choices a potentially different amount of money may be charged.'),
         'extra-field-surcharge-parallel' => L::t('Multiple choice where more than one option can be selected. For the individual choices a potentially different amount of money may be charged.'),
         'extra-field-surcharge-groupofpeople' => L::t('E.g. to define double-room surcharges.'),
+        'extra-field-surcharge-groupsofpeople' => L::t('Surcharge-group of people with predefined group-names and a potentially
+different maximal number of people fitting in the group. Maybe this is completely useless ...'),
 
         'extra-field-general-simple' => L::t('General date field with the respective meaning.'),
 
