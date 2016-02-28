@@ -445,7 +445,8 @@ namespace CAFEVDB
       $query = "UPDATE `".$table."` SET ";
       $setter = array();
       foreach ($newValues as $key => $value) {
-        $setter[] = "`".$key."`='".$value."'";
+        $value = $value === null ? 'NULL' : "'".$value."'";
+        $setter[] = "`".$key."` = ".$value;
       }
       $query .= implode(", ", $setter);
       $query .= " WHERE (".$where.")";
@@ -455,8 +456,9 @@ namespace CAFEVDB
         Config::init();
         $handle = self::connect(Config::$pmeopts);
       }
-
+      //throw new \Exception($query);
       $result = self::query($query, $handle);
+      //if ($result === false) throw new \Exception($query);
 
       if ($ownConnection) {
         self::close($handle);
