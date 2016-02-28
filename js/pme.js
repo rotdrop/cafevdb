@@ -1184,11 +1184,16 @@ var PHPMYEDIT = PHPMYEDIT || {};
       var chosenOptions = {
         //width:'100%',
         inherit_select_classes:true,
-        disable_search_threshold: 10,
+        disable_search: self.hasClass('no-search'),
+        disable_search_threshold: self.hasClass('no-search') ? 999999 : 10,
         no_results_text: noRes,
         allow_single_deselect: self.hasClass('allow-empty'),
         single_backstroke_delete: false
       };
+      if (self.hasClass('allow-empty')) {
+        chosenOptions.width = (this.offsetWidth + 18) + 'px';
+console.log('width', this.offsetWidth, self.outerWidth(), self.outerWidth(true));
+      }
       if (self.hasClass('chosen-width-auto')) {
         chosenOptions.width = 'auto';
       }
@@ -1488,27 +1493,52 @@ var PHPMYEDIT = PHPMYEDIT || {};
     pme.installFilterChosen(container);
     pme.installInputChosen(container);
 
+    /* The next two handlers allow the chosen-dropdown to extend the
+     * current dialog. This can happen for small dialog windows and/or
+     * if the select box is close to the bottom of the page.
+     *
+     */
     var tableContainerId = PHPMYEDIT.pmeIdSelector('table-container');
-    container.on('chosen:showing_dropdown', tableContainerId+' select', function(event) {
-      console.log('chosen:showing_dropdown');
+
+    container.on('chosen:before_showing_dropdown', tableContainerId+' select', function(event) {
       if (!container.hasClass('ui-widget-content')) {
       	return true;
       }
+      if (container.hasVerticalScrollbar()) {
+        return true;
+      }
       var widget = container.cafevDialog('widget');
       var tableContainer = container.find(tableContainerId);
+      if (widget.hasVerticalScrollbar() || tableContainer.hasVerticalScrollbar()) {
+        return true;
+      }
       widget.css('overflow', 'visible');
       container.css('overflow', 'visible');
       tableContainer.css('overflow', 'visible');
       return true;
     });
 
+    // container.on('chosen:before_hiding_dropdown', tableContainerId+' select', function(event) {
+    //   return true;
+    // });
+
+    // container.on('chosen:showing_dropdown', tableContainerId+' select', function(event) {
+    //   console.log('chosen:showing_dropdown');
+    //   return true;
+    // });
+
     container.on('chosen:hiding_dropdown', tableContainerId+' select', function(event) {
-      console.log('chosen:hiding_dropdown');
       if (!container.hasClass('ui-widget-content')) {
       	return true;
       }
+      if (container.hasVerticalScrollbar()) {
+        return true;
+      }
       var widget = container.cafevDialog('widget');
       var tableContainer = container.find(tableContainerId);
+      if (widget.hasVerticalScrollbar() || tableContainer.hasVerticalScrollbar()) {
+        return true;
+      }
       tableContainer.css('overflow', '');
       container.css('overflow', '');
       widget.css('overflow', '');
