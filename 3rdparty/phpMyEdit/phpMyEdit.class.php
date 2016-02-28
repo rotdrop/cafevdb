@@ -1061,6 +1061,11 @@ class phpMyEdit
 
 			$join_column = $this->sd.$this->fdd[$main_column]['values']['column'].$this->ed;
 			$join_desc	 = $this->sd.$this->fdd[$main_column]['values']['description'].$this->ed;
+			$join        = $this->fdd[$main_column]['values']['join'];
+			if ($join === false) {
+				// use this just for values definitions
+				continue;
+			}
 			if ($join_desc != $this->sd.$this->ed && $join_column != $this->sd.$this->ed) {
 
 				$table = trim($this->fdd[$main_column]['values']['table']);
@@ -1079,8 +1084,8 @@ class phpMyEdit
 					'join_column'	   => $join_column,
 					'join_description' => $join_desc);
 				$join_clause .= " LEFT OUTER JOIN ".$table." AS $join_table ON (";
-				$join_clause .= isset($this->fdd[$main_column]['values']['join'])
-					? $this->substituteVars($this->fdd[$main_column]['values']['join'], $ar)
+				$join_clause .= !empty($join)
+					? $this->substituteVars($join, $ar)
 					: "$join_table.$join_column = $main_table.".$this->sd.$main_column.$this->ed;
 				$join_clause .= ')';
 			}
@@ -2218,12 +2223,13 @@ class phpMyEdit
 		if ($this->col_has_datemask($k)) {
 			$value = $this->makeTimeString($k, $row);
 		} else if (isset($this->fdd[$k]['values2'])) {
+			//error_log(print_r($this->fdd[$k]['values2'], true));
 			if (isset($row['qf'.$k.'_idx'])) {
 				$value = $row['qf'.$k.'_idx'];
 			} else {
 				$value = $row["qf$k"];
 			}
-			if ($this->fdd[$k]['select'] == 'M') {
+			if ($this->col_has_multiple($k)) {
 				$value_ar  = explode(',', $value);
 				$value_ar2 = array();
 				foreach ($value_ar as $value_key) {
@@ -2475,8 +2481,8 @@ class phpMyEdit
 				$ret .= '<optgroup data-group-id="'.$groupId.'" label="'.$lastGroup.'">'."\n";
 			}
 			$ret .= '<option value="'.htmlspecialchars($key).'"';
-			if ((! $found || $multiple) && in_array((string)$key, $selected, 1)
-				|| (count($selected) == 0 && ! $found && ! $multiple)) {
+			if ((! $found || $multiple) && in_array((string)$key, $selected, 1)) {
+				//|| (count($selected) == 0 && ! $found && ! $multiple)) {
 				$ret  .= ' selected="selected"';
 				$found = true;
 			}
@@ -4284,18 +4290,22 @@ class phpMyEdit
 			echo "<!-- ".$value." ".$oldvals[$fd]." -->\n";
 			if (isset($stamps[$fd])) {
 				$oldstamp = $oldvals[$fd] != "" ? strtotime($oldvals[$fd]) : false;
-				echo "<!-- Stamp: ".$stamps[$fd]." old Stamp: ".$oldstamp." oldvals: ".$oldvals[$fd]." -->\n";
+				//error_log($fd." Stamp: '".$stamps[$fd]."' old Stamp: '".$oldstamp."' oldvals: '".$oldvals[$fd]."' value '".$value."'");
 				if ($oldstamp != $stamps[$fd]) {
+					//error_log('Changed '.$fd.' "'.$oldstamps.'" "'.$stamps[$fd].'"');
 					$changed[] = $fd;
+				} else {
+					$oldvals[$fd] = $value; // force equal, no reason to change.
 				}
-				$oldvals[$fd] = date('Y-m-d H:i:s', $oldstamp); // normalize
 			} else if (!empty($checks[$fd]) && empty($value)) {
 				if (intval($value) !== intval($oldvals[$fd])) {
 					// checkboxes, empty means unchecked, but the DB
 					// may as well store nothing or 0.
+					//error_log('Changed check '.$fd.' "'.intval($oldvals[$fd]).'" "'.intval($value));
 					$changed[] = $fd;
 				}
 			} else if ($value != $oldvals[$fd]) {
+				//error_log('Changed '.$fd.' "'.$oldvals[$fd].'" "'.$value.'"');
 				//error_log($fd.' old: '.$oldvals[$fd].' '.$value);
 				if ($multiple[$fd]) {
 					$tmpval1 = explode(',',$value);
@@ -4313,10 +4323,12 @@ class phpMyEdit
 			}
 		}
 
+		//error_log("changed ".print_r($changed, true));
 		// Before trigger
 		if ($this->exec_triggers('update', 'before', $oldvals, $changed, $newvals) === false) {
 			return false;
 		}
+		//error_log("changed ".print_r($changed, true));
 
 		// Creatinng WHERE part for query groups, after the trigger as
 		// it may even have added things.
@@ -4337,7 +4349,6 @@ class phpMyEdit
 			}
 		}
 
-		echo '<!-- '.print_r($newvals, true).'-->';
 		// Build the real query respecting changes to the newvals array
 		//foreach ($newvals as $fd => $val) {
 		foreach($changed as $fd) {
@@ -4384,6 +4395,7 @@ class phpMyEdit
 						'val_as'  => $val_as,
 						'val'	  => $val
 						));
+				error_log($fdd['sqlw']);
 			} else if (isset($stamps[$fd]) && $val == '') {
 				$value = 'NULL';
 			} else {
