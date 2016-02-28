@@ -341,12 +341,70 @@ var CAFEVDB = CAFEVDB || {};
     var selectMusicianInstruments = container.find('select.musician-instruments');
     var selectProjectInstrument = container.find('select.pme-input.project-instrument');
     var selectGroupOfPeople = container.find('select.pme-input.groupofpeople');
+    var selectVoices = container.find('select.pme-input.instrument-voice');
     var form = container.find(PHPMYEDIT.pmeClassSelector('form', 'form'));
 
-    $('#add-instruments-button').hide();
-    $('#add-instruments-block div.chosen-container').show();
-    selectMusicianInstruments.removeProp('disabled');
-    selectMusicianInstruments.trigger('chosen:updated');
+    var selectedVoices = selectVoices.val();
+    selectVoices.data('selected', selectVoices ? selectedVoices : []);
+
+    // This overly complicated piece of code turns a multi-select into
+    // a per-group single select for the unlikely case that a musician
+    // has multiple instruments for the project.
+    selectVoices.off('change').on('change', function(event) {
+      var self = $(this);
+      if (!self.prop('multiple')) {
+        return true;
+      }
+
+      var selected = self.val();
+      if (!selected) {
+        selected = [];
+      }
+      var prevSelected = self.data('selected');
+      var instruments = selectProjectInstrument.val();
+
+      var prevVoices = {};
+      var voices = {};
+      for(i = 0; i < instruments.length; ++i) {
+        voices[instruments[i]] = [];
+        prevVoices[instruments[i]] = [];
+      }
+
+      var i;
+      for(i = 0; i < selected.length; ++i) {
+        var item = selected[i].split(':');
+        voices[item[0]].push(item[1]);
+      }
+
+      for(i = 0; i < prevSelected.length; ++i) {
+        var item = prevSelected[i].split(':');
+        prevVoices[item[0]].push(item[1]);
+      }
+
+      // Now loop over old values. Unset multiple selections.
+      var changed = false;
+      var instrument;
+      for(instrument in voices) {
+        var values     = voices[instrument];
+        var prevValues = prevVoices[instrument];
+        if (values.length < 2) {
+          continue;
+        }
+        for (i = 0; i < prevValues.length; ++i) {
+          console.log('option: '+'option[value="'+instrument+':'+i+'"]');
+          self.find('option[value="'+instrument+':'+prevValues[i]+'"]').prop('selected', false);
+          changed = true;
+        }
+      }
+
+      self.data('selected', self.val());
+
+      if (changed) {
+        self.trigger('chosen:updated');
+      }
+
+      return false;
+    });
 
     selectProjectInstrument.on('change', function(event) {
       event.preventDefault();
@@ -416,6 +474,8 @@ var CAFEVDB = CAFEVDB || {};
       return false;
     });
 
+    // foreach group remember the current selection of people and the
+    // group
     selectGroupOfPeople.each(function(idx) {
       var self = $(this);
       var curSelected = self.val();

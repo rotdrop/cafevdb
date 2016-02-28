@@ -89,7 +89,8 @@ class DetailedInstrumentation
 
     $opts['inc'] = $recordsPerPage;
 
-    $opts['tb'] = $projectName . 'View';
+    $mainTable = $projectName . 'View';
+    $opts['tb'] = $mainTable;
 
     $opts['cgi']['persist'] = array(
       'ProjectName' => $projectName,
@@ -258,15 +259,17 @@ class DetailedInstrumentation
 
     $opts['fdd']['ProjectInstrumentKey'] = array(
       'name'   => L::t('Project Instrument'),
-      'sql'    => 'GROUP_CONCAT(DISTINCT ProjectInstrumentKey ORDER BY ProjectInstrumentId ASC)',
+      'sql'    => 'GROUP_CONCAT(DISTINCT ProjectInstrumentKey ORDER BY PMEtable0.Sortierung ASC)',
       'select' => 'N',
       'input'  => 'HR'
       );
 
+    $prInstIdx = count($opts['fdd']);
     $opts['fdd']['ProjectInstrumentId'] = array(
       'name'        => L::t('Project Instrument'),
       'select'      => 'M',
-      'sql'         => 'GROUP_CONCAT(DISTINCT ProjectInstrumentId ORDER BY ProjectInstrumentId ASC)',
+      'sql'         => 'GROUP_CONCAT(DISTINCT ProjectInstrumentId ORDER BY PMEtable0.Sortierung ASC)',
+      'filter' => 'having',
       'maxlen'      => 36,
       'css'         => array('postfix' => ' project-instrument'),
       'sort'        => true,
@@ -279,9 +282,9 @@ class DetailedInstrumentation
          * currently not registerd with the given musician, but allows
          * for the currently active instrument.
          */
-        'filters' => ("FIND_IN_SET(`Instrument`,
-  CONCAT_WS(',',(SELECT GROUP_CONCAT(DISTINCT `ProjectInstrument`) FROM `\$main_table` WHERE \$record_id = `\$main_table`.`Id` GROUP BY \$main_table.Id),
-                (SELECT DISTINCT `MusicianInstrument` FROM `\$main_table`
+        'filters' => ("FIND_IN_SET(`Id`,
+  CONCAT_WS(',',(SELECT GROUP_CONCAT(DISTINCT `ProjectInstrumentId`) FROM `\$main_table` WHERE \$record_id = `\$main_table`.`Id` GROUP BY \$main_table.Id),
+                (SELECT DISTINCT `MusicianInstrumentId` FROM `\$main_table`
                           WHERE \$record_id = `\$main_table`.`Id`)))"),
         'join' => '$join_table.Id = $main_table.ProjectInstrumentId'
         ),
@@ -290,8 +293,8 @@ class DetailedInstrumentation
         'column'  => 'Id',
         'orderby' => '$table.Sortierung',
         'description' => array('columns' => array('Instrument')),
-        'filters' => ("`Instrument` IN ".
-                      "(SELECT `ProjectInstrument` FROM `\$main_table` WHERE 1)"),
+        'filters' => ("`Id` IN ".
+                      "(SELECT DISTINCT `ProjectInstrumentId` FROM `\$main_table` WHERE 1)"),
         'join' => '$join_table.Id = $main_table.ProjectInstrumentId'
         ),
       'values2|VD' => $this->instruments,
@@ -301,33 +304,76 @@ class DetailedInstrumentation
 
     $opts['fdd']['ProjectInstrument'] = array(
       'name'     => L::t('Project Instrument'),
-      'sql'      => 'GROUP_CONCAT(DISTINCT ProjectInstrument ORDER BY ProjectInstrumentId ASC)',
+      'sql'      => 'GROUP_CONCAT(DISTINCT PMEtable0.`ProjectInstrument` ORDER BY PMEtable0.`Sortierung` ASC)',
       'input'    => 'HR',
       );
 
-    $voices = array_combine(range(0, 8), range(0, 8));
-    $voices[0] = '&nbsp;';
+    $voices = [ '' => '&nbsp;' ] + array_combine(range(1, 8), range(1, 8));
     $opts['fdd']['Voice'] = array(
-      'name'    => L::t('Voice'),
-//      'sql'   => "IF(PMEtable0.Voice = 0, '', PMEtable0.Voice)",
-      'select'  => 'D',
-      'values2' => $voices,
-      'maxlen'  => '3',
+      'name'     => L::t('Voice'),
+      'css'      => [ 'postfix' => ' allow-empty no-search instrument-voice' ],
+      'sql|VD' => "GROUP_CONCAT(DISTINCT CONCAT(ProjectInstrument,' ', Voice) ORDER BY PMEtable0.Sortierung ASC)",
+      'sql|CP' => "GROUP_CONCAT(DISTINCT CONCAT(ProjectInstrumentId,':', Voice) ORDER BY PMEtable0.Sortierung ASC)",
+      'select'  => 'M',
+      'values|CP' => [
+        'table' => "SELECT
+  pi.InstrumentationId,
+  pi.InstrumentId,
+  i.Instrument,
+  i.Sortierung,
+  n.N,
+  CONCAT(pi.InstrumentId,':', n.N) AS Value
+FROM ".self::PROJECT_INSTRUMENTS." pi
+LEFT JOIN Instrumente i
+  ON i.Id = pi.InstrumentId
+JOIN numbers n
+  ON n.N <= 8 AND n.N >= 1
+WHERE
+  pi.Projectid = $projectId
+ORDER BY
+  i.Sortierung ASC, n.N ASC",
+        'column' => 'Value',
+        'description' => [
+          'columns' => [ 'Instrument', 'N' ],
+          'divs' => ' '
+          ],
+
+        'orderby' => '$table.Sortierung, $table.N',
+        'groups'  => '$table.Instrument',
+        'filters' => 'InstrumentationId = $record_id',
+        'join' => false, //'$join_table.InstrumentationId = $main_table.Id',
+        ],
+      'values2|LF' => $voices,
+      'maxlen'  => '8',
       'sort'    => true,
       'escape'  => false,
-      'tab'     => array('id' => 'instrumentation'));
+      'tab'     => array('id' => 'instrumentation')
+      );
 
     $opts['fdd']['SectionLeader'] = array(
       'name|LF' => ' &alpha;',
       'name|CAPVD' => L::t("Section Leader"),
       'tab' => array('id' => 'instrumentation'),
+      'sql|CAPDV' => "GROUP_CONCAT(
+  IF(PMEtable0.`SectionLeader` = 1, PMEtable0.`ProjectInstrumentId`, 0) ORDER BY PMEtable0.`Sortierung` ASC)",
+      'values|CAPDV' => [
+        'table' => "SELECT
+  `Id` AS `InstrumentationId`,
+  `ProjectInstrumentId` AS `InstrumentId`,
+  `ProjectInstrument` AS `Instrument`,
+  `Sortierung`
+FROM $mainTable",
+        'column' => "InstrumentId",
+        'description' => "Instrument",
+        'filters' => '$table.InstrumentationId = $record_id AND $table.InstrumentId IS NOT NULL',
+        'orderby' => '$table.Sortierung',
+        ],
       'options'  => 'LAVCPDF',
       'select' => 'C',
       'maxlen' => '1',
       'sort' => true,
       'escape' => false,
-      'values2|CAP' => array('1' => '&nbsp;&nbsp;&nbsp;&nbsp;'),
-      'values2|LVDF' => array('0' => '&nbsp;', '1' => '&alpha;'),
+      'values2|LF' => array('0' => '&nbsp;', '1' => '&alpha;'),
       'tooltip' => L::t("Set to `%s' in order to mark the section leader",
                         array("&alpha;")),
       'display|LF' => array('popup' => function($data) {
@@ -935,7 +981,7 @@ WHERE b.ProjektId = $projectId",
       'default'  => Config::getValue('streetAddressCountry'),
       'values2'     => $countries,
       'valueGroups' => $countryGroups,
-      'css'      => array('postfix' => ' musician-address country chosen-dropup tooltip-top'),
+      'css'      => array('postfix' => ' musician-address country tooltip-top'),
       'sort'     => true,
       );
 
@@ -1014,6 +1060,30 @@ WHERE b.ProjektId = $projectId",
     $opts['triggers']['filter']['pre'][]  =
       $opts['triggers']['update']['pre'][]  =
       $opts['triggers']['insert']['pre'][]  = 'CAFEVDB\ProjectExtra::preTrigger';
+
+    //$opts['triggers']['select']['data'][] =
+    $opts['triggers']['update']['data'][] =
+      function(&$pme, $op, $step, &$row) {
+      $prInstIdx        = $pme->fdn['ProjectInstrumentId'];
+      $voiceIdx         = $pme->fdn['Voice'];
+      $sectionLeaderIdx = $pme->fdn['SectionLeader'];
+      $instruments = Util::explode(',', $row["qf{$prInstIdx}_idx"]);
+      //error_log('data '.print_r($row, true));
+      switch (count($instruments)) {
+      case 0:
+        $pme->fdd[$voiceIdx]['input'] = 'R';
+        $pme->fdd[$sectionLeaderIdx]['input'] = 'R';
+        break;
+      case 1:
+        unset($pme->fdd[$voiceIdx]['values']['groups']);
+        //error_log('data '.print_r($pme->fdd[$voiceIdx], true));
+        $pme->fdd[$voiceIdx]['select'] = 'D';
+        break;
+      default:
+        break;
+      }
+      return true;
+    };
 
     if ($this->pme_bare) {
       // disable all navigation buttons, probably for html export
@@ -1104,6 +1174,78 @@ WHERE b.ProjektId = $projectId",
     /* error_log('old '.print_r($oldValues, true)); */
     /* error_log('new '.print_r($newValues, true)); */
     /* error_log('chg '.print_r($changed, true)); */
+
+    /**************************************************************************
+     *
+     * Section leader and Voice are stored in a pivot table and have
+     * to be updated out of order.
+     *
+     */
+    $tag = 'SectionLeader';
+    $key = array_search($tag, $changed);
+    if ($key !== false)  {
+      /* SectionLeader is a list of instrument ids. Given that the
+       * project-id and the instrumentation-id is fixed this is a
+       * unique identifier.
+       */
+      $table = self::PROJECT_INSTRUMENTS;
+      $field = 'SectionLeader';
+      $instrumentationId = $oldValues['Id'];
+      $where = "ProjectId = $projectId
+  AND InstrumentationId = $instrumentationId
+  AND NOT FIND_IN_SET(InstrumentId, '$newValues[$tag]')";
+      mySQL::update($table, $where, [ $tag => 0 ], $pme->dbh);
+
+      $where = "ProjectId = $projectId
+  AND InstrumentationId = $instrumentationId
+  AND FIND_IN_SET(InstrumentId, '$newValues[$tag]')";
+      mySQL::update($table, $where, [ $tag => 1 ], $pme->dbh);
+
+      $changed[] = 'Aktualisiert';
+      unset($changed[$key]);
+    }
+
+    /**************************************************************************
+     *
+     * Section leader and Voice are stored in a pivot table and have
+     * to be updated out of order.
+     *
+     */
+    $tag = 'Voice';
+    $key = array_search($tag, $changed);
+    if ($key !== false)  {
+      // the voice comes as "tuple" INSTRUMENTID:VOICENR.
+      //
+      // given project-id and instrumentation-id the instruemnt-id is
+      // a unique identifer for injection into ProjectInstruments.
+
+      $values = Util::explode(',', $newValues[$tag]);
+      $instrumentVoices = [];
+      foreach($values as $value) {
+        $item = Util::explode(':', $value);
+        $instrumentVoices[$item[0]] = $item[1];
+      }
+      $table = self::PROJECT_INSTRUMENTS;
+      $filed = 'Voice';
+      $instrumentationId = $oldValues['Id'];
+
+      // unset empty voices
+      $where = "ProjectId = $projectId
+  AND InstrumentationId = $instrumentationId
+  AND NOT FIND_IN_SET(InstrumentId, '".implode(',', array_keys($instrumentVoices))."')";
+      mySQL::update($table, $where, [ $tag => null ], $pme->dbh);
+
+      // inject non-empty voices
+      foreach($instrumentVoices as $instrument => $voice) {
+        $where = "ProjectId = $projectId
+  AND InstrumentationId = $instrumentationId
+  AND InstrumentId = $instrument";
+        mySQL::update($table, $where, [ $tag => $voice ], $pme->dbh);
+      }
+
+      $changed[] = 'Aktualisiert';
+      unset($changed[$key]);
+    }
 
     /**************************************************************************
      *
