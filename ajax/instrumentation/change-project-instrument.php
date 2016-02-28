@@ -50,6 +50,7 @@ namespace CAFEVDB {
     $recordId = Util::cgiValue('recordId', -1); // Index into Besetzungen
     $projectId = Util::cgiValue('projectId', -1);
     $projectInstrumentIds = Util::cgiValue('instrumentValues', false);
+    empty($projectInstrumentIds) && $projectInstrumentIds = [];
 
     if (Util::debugMode('request')) {
       $debugText .= '$_POST[] = '.print_r($_POST, true);
