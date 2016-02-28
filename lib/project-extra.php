@@ -468,7 +468,7 @@ namespace CAFEVDB
       }
       $opts['fdd']['MaximumGroupSize'] = array(
         'name' => L::t('Maximum Size'),
-        'css' => array('postfix' => ' maximum-group-size'),
+        'css' => array('postfix' => ' no-search maximum-group-size'),
         'sql' => "SUBSTRING_INDEX(PMEtable0.AllowedValues, ':', -1)",
         'input' => 'S',
         'input|DV' => 'V',
