@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-28 13:17+0100\n"
+"POT-Creation-Date: 2016-02-28 14:52+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2108,7 +2108,7 @@ msgid ""
 msgstr ""
 
 #: js/sepa-debit-mandate.js:151 lib/detailed-instrumentation.php:564
-#: lib/detailed-instrumentation.php:629 lib/detailed-instrumentation.php:1595
+#: lib/detailed-instrumentation.php:629 lib/detailed-instrumentation.php:1603
 msgid "SEPA Debit Mandate"
 msgstr ""
 
@@ -2470,27 +2470,27 @@ msgstr ""
 msgid "Last Updated"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:1601
+#: lib/detailed-instrumentation.php:1609
 msgid "Click to enter details of a potential SEPA debit mandate"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:1628
+#: lib/detailed-instrumentation.php:1636
 msgid "Instrumentation related data"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:1631
+#: lib/detailed-instrumentation.php:1639
 msgid "Project related data"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:1636
+#: lib/detailed-instrumentation.php:1644
 msgid "Finance related data"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:1641
+#: lib/detailed-instrumentation.php:1649
 msgid "Personal data"
 msgstr ""
 
-#: lib/detailed-instrumentation.php:1644 lib/instrument-insurance.php:193
+#: lib/detailed-instrumentation.php:1652 lib/instrument-insurance.php:193
 #: lib/musicians.php:167 lib/project-extra.php:251
 #: lib/sepa-debit-mandates.php:234
 msgid "Display all columns"
@@ -3899,40 +3899,40 @@ msgstr ""
 msgid "Profit and Loss Account"
 msgstr ""
 
-#: lib/projects.php:2591
+#: lib/projects.php:2518
 msgid ""
 "Flyers can only be added to existing projects, please add the new\n"
 "project without a flyer first."
 msgstr ""
 
-#: lib/projects.php:2604
+#: lib/projects.php:2531
 #, php-format
 msgid "Drop image to upload (max %s)"
 msgstr ""
 
-#: lib/projects.php:2607
+#: lib/projects.php:2534
 msgid "Delete current flyer"
 msgstr ""
 
-#: lib/projects.php:2608
+#: lib/projects.php:2535
 msgid "Edit current flyer"
 msgstr ""
 
-#: lib/projects.php:2609
+#: lib/projects.php:2536
 msgid "Upload new flyer"
 msgstr ""
 
-#: lib/projects.php:2610
+#: lib/projects.php:2537
 msgid "Select image from ownCloud"
 msgstr ""
 
-#: lib/projects.php:2618
+#: lib/projects.php:2545
 msgid ""
 "Internal error, don't know what to do concerning project-flyers in the given "
 "context."
 msgstr ""
 
-#: lib/projects.php:2704
+#: lib/projects.php:2631
 #, php-format
 msgid ""
 "====== Project %s ======\n"

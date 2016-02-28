@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-28 13:11+0100\n"
+"POT-Creation-Date: 2016-02-28 14:52+0100\n"
 "PO-Revision-Date: 2016-02-28 13:16+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
@@ -2250,7 +2250,7 @@ msgstr ""
 "den Musikern nötig sein."
 
 #: js/sepa-debit-mandate.js:151 lib/detailed-instrumentation.php:564
-#: lib/detailed-instrumentation.php:629 lib/detailed-instrumentation.php:1595
+#: lib/detailed-instrumentation.php:629 lib/detailed-instrumentation.php:1603
 msgid "SEPA Debit Mandate"
 msgstr "SEPA Lastschriftmandat"
 
@@ -2617,28 +2617,28 @@ msgstr "Foto"
 msgid "Last Updated"
 msgstr "Letzte Aktualisierung"
 
-#: lib/detailed-instrumentation.php:1601
+#: lib/detailed-instrumentation.php:1609
 msgid "Click to enter details of a potential SEPA debit mandate"
 msgstr ""
 "Anklicken um ggf. Informationen über ein SEPA-Lastschriftmandat einzutragen"
 
-#: lib/detailed-instrumentation.php:1628
+#: lib/detailed-instrumentation.php:1636
 msgid "Instrumentation related data"
 msgstr "Besetzung"
 
-#: lib/detailed-instrumentation.php:1631
+#: lib/detailed-instrumentation.php:1639
 msgid "Project related data"
 msgstr "Projekt-Daten"
 
-#: lib/detailed-instrumentation.php:1636
+#: lib/detailed-instrumentation.php:1644
 msgid "Finance related data"
 msgstr "Finanz-Daten"
 
-#: lib/detailed-instrumentation.php:1641
+#: lib/detailed-instrumentation.php:1649
 msgid "Personal data"
 msgstr "Persönliche Daten"
 
-#: lib/detailed-instrumentation.php:1644 lib/instrument-insurance.php:193
+#: lib/detailed-instrumentation.php:1652 lib/instrument-insurance.php:193
 #: lib/musicians.php:167 lib/project-extra.php:251
 #: lib/sepa-debit-mandates.php:234
 msgid "Display all columns"
@@ -4136,7 +4136,7 @@ msgstr "Em@il"
 msgid "Profit and Loss Account"
 msgstr "Verlustrechnung"
 
-#: lib/projects.php:2591
+#: lib/projects.php:2518
 msgid ""
 "Flyers can only be added to existing projects, please add the new\n"
 "project without a flyer first."
@@ -4144,28 +4144,28 @@ msgstr ""
 "Flyer könner leider nur zu existierenden Projekten hinzugefügt werden; bitte "
 "zuerst das Projekt ohne Flyer anlegen."
 
-#: lib/projects.php:2604
+#: lib/projects.php:2531
 #, php-format
 msgid "Drop image to upload (max %s)"
 msgstr "Bild ablegen zum Hochladen (max %s)"
 
-#: lib/projects.php:2607
+#: lib/projects.php:2534
 msgid "Delete current flyer"
 msgstr "Aktuellen Flyer löschen"
 
-#: lib/projects.php:2608
+#: lib/projects.php:2535
 msgid "Edit current flyer"
 msgstr "Aktuellen Flyer zuschneiden"
 
-#: lib/projects.php:2609
+#: lib/projects.php:2536
 msgid "Upload new flyer"
 msgstr "Neuen Flyer hochladen"
 
-#: lib/projects.php:2610
+#: lib/projects.php:2537
 msgid "Select image from ownCloud"
 msgstr "Bild aus der `Cloud' auswählen"
 
-#: lib/projects.php:2618
+#: lib/projects.php:2545
 msgid ""
 "Internal error, don't know what to do concerning project-flyers in the given "
 "context."
@@ -4173,7 +4173,7 @@ msgstr ""
 "Interner Fehler; keine Ahnung, wie in diesem Kontext mit Projekt-Flyern "
 "umgegangen werden sollte."
 
-#: lib/projects.php:2704
+#: lib/projects.php:2631
 #, php-format
 msgid ""
 "====== Project %s ======\n"
