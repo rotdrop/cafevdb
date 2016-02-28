@@ -1286,6 +1286,8 @@ WHERE b.ProjektId = $projectId",
           mySQL::logInsert($table, $rec, $new, $pme->dbh);
         }
       }
+
+      $changed[] = 'Aktualisiert';
       unset($changed[$key]);
       unset($newValues['ProjectInstrumentId']);
     }
@@ -1323,11 +1325,13 @@ WHERE b.ProjektId = $projectId",
       foreach(array_diff($newIds, $oldIds) as $id) {
         $new = array('MusicianId' => $musicianId, 'InstrumentId' => $id);
         $result = mySQL::insert($table, $new, $pme->dbh);
-        $rec = mySQL::newestIndex($pme->dbh);
+        $rec = mySQL::newestIndex($pme->dbh, mySQL::UPDATE);
         if($result !== false && $rec > 0) {
           mySQL::logInsert($table, $rec, $new, $pme->dbh);
         }
       }
+
+      $changed[] = 'Aktualisiert';
       unset($changed[$key]);
       unset($newValues[$field]);
       unset($newValues[$keyField]);
@@ -1559,7 +1563,7 @@ WHERE b.ProjektId = $projectId",
    * "side-effects" -- extra fields, monetary stuff etc.
    */
   public static function beforeDeleteTrigger(&$pme, $op, $step, $oldValues, &$changed, &$newValues)
-  {//DELETE FROM Spielwiese2013View WHERE (Id = 146)
+  {
     $id = $oldValues['Id'];
     $where = "`Id` = ".$id;
     $realOldVals = mySQL::fetchRows('Besetzungen', $where, null, $pme->dbh);
@@ -1568,6 +1572,10 @@ WHERE b.ProjektId = $projectId",
     if ($result !== false && count($realOldVals) == 1) {
       mySQL::logDelete('Besetzungen', 'Id', $realOldVals[0], $pme->dbh);
     }
+    $where = "`InstrumentationId` = $id";
+    $query = "DELETE FROM ".self::PROJECT_INSTRUMENTS." WHERE ".$where;
+    mySQL::query($query, $pme->dbh);
+    // don't log, no interesting information
     return false;
   }
 
