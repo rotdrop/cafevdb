@@ -566,7 +566,7 @@ __EOT__;
       $opts['triggers']['insert']['after'][]   = 'CAFEVDB\Projects::addOrChangeInstrumentation';
       $opts['triggers']['insert']['after'][]   = 'CAFEVDB\Projects::afterInsertTrigger';
 
-      $opts['triggers']['delete']['after'][] = 'CAFEVDB\Projects::afterDeleteTrigger';
+      $opts['triggers']['delete']['before'][] = 'CAFEVDB\Projects::beforeDeleteTrigger';
 
       $opts['execute'] = $this->execute;
       $this->pme = new \phpMyEdit($opts);
@@ -835,7 +835,7 @@ __EOT__;
      * "side-effects" the existance of the project had. However, there
      * is some data which must not be removed automatically
      */
-    public static function afterDeleteTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
+    public static function beforeDeleteTrigger(&$pme, $op, $step, &$oldvals, &$changed, &$newvals)
     {
       $projectId   = $pme->rec;
       $projectName = $oldvals['Name'];
@@ -876,7 +876,7 @@ __EOT__;
       }
 
       if ($safeMode) {
-        mySQL::update(self::TABLE_NAME, "`Id` = $projectId", ['Disabled' => 1]);
+        mySQL::update(self::TABLE_NAME, "`Id` = $projectId", ['Disabled' => 1], $pme->dbh);
         return false; // clean-up has to be done manually later
       }
 
@@ -2156,76 +2156,6 @@ WHERE pi.`ProjectId` = $projectId";
       return $row && isset($row['Id']) ? $row['Id'] : false;
     }
 
-    /**Make sure the "Besetzungen"-table has enough extra fields. All
-     * extra-fields are text-fields.
-     *
-     */
-    public static function createExtraFields($projectId, $handle = false)
-    {
-      Util::debugMsg(">>>> ProjektCreateExtraFelder");
-
-      $ownConnection = $handle === false;
-      if ($ownConnection) {
-        Config::init();
-        $handle = mySQL::connect(Config::$pmeopts);
-      }
-
-      // Fetch the extra-fields.
-      $extra = self::extraFields($projectId, $handle);
-      if (Util::debugMode()) {
-        print_r($extra);
-      }
-
-      /* Then walk the table and simply execute one "ALTER TABLE"
-       * statement for each field, ignoring the result, but we check later
-       * for a possible error.
-       */
-
-      foreach ($extra as $field) {
-        // forget about $name, not an issue here.
-
-        $query = sprintf(
-          'ALTER TABLE `Besetzungen`
-   ADD `ExtraFeld%02d` TEXT
-   CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL',
-          $field['pos']);
-        $result = @mySQL::query($query, $handle, false, true); // ignore the result, be silent
-      }
-
-      // Now make sure we have it ...
-      $query = "SHOW COLUMNS FROM `Besetzungen` LIKE 'ExtraFeld%'";
-      $result = mySQL::query($query, $handle);
-
-      // See what we got ...
-      $fields = array();
-      while ($row = mySQL::fetch($result)) {
-        if (Util::debugMode()) {
-          print_r($row);
-        }
-        $fields[] = $row['Field'];
-      }
-
-      if ($ownConnection) {
-        mySQL::close($handle);
-      }
-
-      if (Util::debugMode()) {
-        print_r($fields);
-      }
-
-      foreach ($extra as $field) {
-        $name = sprintf('ExtraFeld%02d', $field['pos']);
-        Util::debugMsg("Check ".$name);
-        if (array_search($name, $fields) === false) {
-          Util::error('Extra-Field '.$field['pos'].' not Found in Table Besetzungen');
-        }
-      }
-
-      Util::debugMsg("<<<< ProjektCreateExtraFelder");
-
-      return true; // if someone cares
-    }
-
     /**Returns an associative array which describes the project view:
      * columns names, alias names, underlying table, type of join. The
      * ordering of the columns here is the ordering of the columns in
@@ -2536,9 +2466,6 @@ WHERE pi.`ProjectId` = $projectId";
         // Get the name
         $projectName = self::fetchName($projectId, $handle);
       }
-
-      // Make sure all extra-fields exist
-      self::createExtraFields($projectId, $handle);
 
       // Fetch the extra-fields
       //$extra = self::extraFields($projectId, $handle);

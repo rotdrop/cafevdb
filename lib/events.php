@@ -1266,7 +1266,7 @@ __EOT__;
      * @return A flat array with the associated event-ids. Note that
      * even in case of an error an (empty) array is returned.
      */
-    protected static function projectEvents($projectId, $handle = false)
+    public static function projectEvents($projectId, $handle = false)
     {
       $events = array();
 
