@@ -78,12 +78,14 @@ var CAFEVDB = CAFEVDB || {};
     };
   }
 
-  /**Determine whether scrollbars are actually present. */
+  /**Determine whether scrollbars are actually present.
+   *
+   */
   $.fn.hasScrollbars = function() {
     var node = this.get(0);
     return {
-      vertical: node.scrollHeight > node.clientHeight,
-      horizontal: node.scrollWidth > node.clientWidth
+      vertical: node.scrollHeight > node.clientHeight + 1,
+      horizontal: node.scrollWidth > node.clientWidth + 1
     };
   };
 
@@ -91,21 +93,21 @@ var CAFEVDB = CAFEVDB || {};
   $.fn.scrollbarDimensions = function() {
     var node = this.get(0);
     return {
-      height: node.offsetHeight - node.clientHeight,
-      width: node.offsetWidth - node.clientWidth
+      height: node.offsetHeight - node.clientHeight + 1,
+      width: node.offsetWidth - node.clientWidth + 1
     };
   };
 
   /**Determine whether we have a horizontal scrollbar. */
   $.fn.hasHorizontalScrollbar = function() {
     var node = this.get(0);
-    return node.scrollWidth > node.clientWidth;
+    return node.scrollWidth > node.clientWidth + 1;
   };
 
   /**Determine whether we have a vertical scrollbar. */
   $.fn.hasVerticalScrollbar = function() {
     var node = this.get(0);
-    return node.scrollHeight > node.clientHeight;
+    return node.scrollHeight > node.clientHeight + 1;
   };
 
   /**Determine vertical scrollbar width. */
