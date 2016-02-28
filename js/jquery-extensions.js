@@ -80,6 +80,14 @@ var CAFEVDB = CAFEVDB || {};
 
   /**Determine whether scrollbars are actually present.
    *
+   * We have here the problem that
+   *
+   * - node.boundingClientRect() does not return the scrollHeight/Width
+   * - scrollHeight/Width is rounded
+   * - clientHeight/Width is rounded
+   *
+   * Hence the +1 is an ugly tweak which seems to work a little bit.
+   *
    */
   $.fn.hasScrollbars = function() {
     var node = this.get(0);
