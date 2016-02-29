@@ -35,8 +35,6 @@ namespace CAFEVDB {
   $nav .= Navigation::pageControlElement('instruments', $table->projectName, $table->projectId);
   //$nav .= Navigation::pageControlElement('detailed', $table->projectName, $table->projectId);
 
-  $nav = '<ul id="navigation-list">'.$nav.'</ul>';
-
   echo $this->inc('part.common.header',
                   array('css-prefix' => $css_pfx,
                         'css-class' => $css_class,

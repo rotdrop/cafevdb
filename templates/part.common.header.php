@@ -114,7 +114,14 @@ namespace CAFEVDB {
 ?>
 
 <div id="app-navigation" class="app-navigation snapper-enabled">
-  <?php echo $_['navigationcontrols']; ?>
+  <ul id="navigation-list">
+    <li class="nav-heading">
+      <a href="#">
+        <?php echo L::t('Side-Bar Menu'); ?>
+      </a>
+    </li>
+    <?php echo $_['navigationcontrols']; ?>
+  </ul>
   <div id="app-settings">
     <div id="cafevdb-navigation-info"><?php echo $_['navBarInfo']; ?></div>
     <div id="app-settings-header"

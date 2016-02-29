@@ -32,8 +32,6 @@ namespace CAFEVDB {
 //$nav .= Navigation::pageControlElement('projectinstruments');
   $nav .= Navigation::pageControlElement('instruments');
 
-  $nav = '<ul id="navigation-list">'.$nav.'</ul>';
-
   $header = ''
     .'<div class="'.$css_pfx.'-blog" id="'.$css_pfx.'-blog-header">
 '.L::t('Camerata DB start page - the data-base operations can be accessed

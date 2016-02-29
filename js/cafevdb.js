@@ -1449,6 +1449,14 @@ $(document).ready(function(){
                return false;
              });
 
+  // Close the snapper when clicking on the top-most item
+  content.on('click', 'ul#navigation-list li.nav-heading a',
+             function(event) {
+               event.stopImmediatePropagation();
+               CAFEVDB.snapperClose();
+               return false;
+             });
+
   // Display the overview-page for the given project.
   content.on('click', 'ul#navigation-list li.nav-projectlabelcontrol a',
              function(event) {
