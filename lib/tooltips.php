@@ -191,21 +191,30 @@ invited to have a look, but please do not change anything unless you know what y
         'expert-operations' => L::t('For those who know what they are doing, which essentially means: don\'t.'),
 
         'extra-field-' => 'placeholder',
-        'extra-field-choices-single' => L::t('Simple yes-no choice.'),
-        'extra-field-choices-multiple' => L::t('Multiple choices, excluding each other.'),
-        'extra-field-choices-parallel' => L::t('Multiple choices where, more than one option can be selected.'),
+
         'extra-field-choices-groupofpeople' => L::t('Group of people, e.g. to define room-mates.'),
+
         'extra-field-choices-groupsofpeople' => L::t('Group of people with predefined group-names and a potentially
 different maximal number of people fitting in the group. For example to define room-mates.'),
 
-        'extra-field-surcharge-single' => L::t('Simple yes-no choice which increases the project fees. Please fill also the "amount" field.'),
-        'extra-field-surcharge-multiple' => L::t('Multiple choices, excluding each other. For the individual choices a potentially different amount of money may be charged.'),
-        'extra-field-surcharge-parallel' => L::t('Multiple choice where more than one option can be selected. For the individual choices a potentially different amount of money may be charged.'),
+        'extra-field-choices-multiple' => L::t('Multiple choices, excluding each other.'),
+
+        'extra-field-choices-parallel' => L::t('Multiple choices where, more than one option can be selected.'),
+
+        'extra-field-choices-single' => L::t('Simple yes-no choice.'),
+
+        'extra-field-general-simple' => L::t('General date field with the respective meaning.'),
+
         'extra-field-surcharge-groupofpeople' => L::t('E.g. to define double-room surcharges.'),
+
         'extra-field-surcharge-groupsofpeople' => L::t('Surcharge-group of people with predefined group-names and a potentially
 different maximal number of people fitting in the group. Maybe this is completely useless ...'),
 
-        'extra-field-general-simple' => L::t('General date field with the respective meaning.'),
+        'extra-field-surcharge-multiple' => L::t('Multiple choices, excluding each other. For the individual choices a potentially different amount of money may be charged.'),
+
+        'extra-field-surcharge-parallel' => L::t('Multiple choice where more than one option can be selected. For the individual choices a potentially different amount of money may be charged.'),
+
+        'extra-field-surcharge-single' => L::t('Simple yes-no choice which increases the project fees. Please fill also the "amount" field.'),
 
         'extra-fields-allowed-values' => array(
           'default' => L::t('Table with all admissible values for this multiple choice option.'),
@@ -768,6 +777,12 @@ and contact the treasurer for further instructions.',
         'sharedfolder-force' => L::t('Force the re-creation of the root of the shared-folder hierarchy.'),
 
         'shareowner-force' => L::t('Re-create the share-owner.'),
+
+        'show-disabled' => L::t('Some data-sets should better not be deleted because they have attached
+important - e.g. financial - data attached to it. In this case a
+"delete" simply marks the data-set as "disabled". Normally these
+data-sets are hidden from the spectator. Checking this option unhides
+these data-items.'),
 
         'show-tool-tips' => L::t('Toggle Tooltips'),
 

@@ -43,6 +43,7 @@ class Instrumentation
   protected $opts;
   protected $pme;
   protected $execute;
+  protected $showDisabled;
   protected $pme_bare;
   protected $pmeSysPfx;
   protected $pmeTranslations;
@@ -190,11 +191,12 @@ class Instrumentation
 
   protected function __construct($_execute = true)
   {
+    Config::init();
+
     $this->execute = $_execute;
+    $this->showDisabled = Config::getUserValue('showdisabled', false) === 'on';
     $this->pme = null;
     $this->pme_bare = false;
-
-    Config::init();
 
     global $debug_query;
     $debug_query = Util::debugMode('query');

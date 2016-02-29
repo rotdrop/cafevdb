@@ -161,6 +161,18 @@ namespace CAFEVDB {
           </label>
         </li>
         <li>
+          <input id="app-settings-showdisabled"
+                 type="checkbox"
+                 name="showdisabled" <?php echo $_['showdisabled'] == 'on' ? 'checked="checked"' : ''; ?>
+                 class="checkbox tooltip-<?php echo $sideBarToolTipPos; ?>"
+                 title="<?php echo Config::toolTips('show-disabled'); ?>"/>
+          <label for="app-settings-showdisabled"
+                 class="tooltip-<?php echo $sideBarToolTipPos; ?>"
+                 title="<?php echo Config::toolTips('show-disabled'); ?>">
+            <?php echo L::t('Show Disabled Data-Sets'); ?>
+          </label>
+        </li>
+        <li>
           <input id="app-settings-expertmode"
                  type="checkbox"
                  name="expertmode" <?php echo $_['expertmode'] == 'on' ? 'checked="checked"' : ''; ?>

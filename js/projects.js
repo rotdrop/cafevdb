@@ -1011,13 +1011,6 @@ $(document).ready(function(){
         CAFEVDB.Projects.actionMenu();
         CAFEVDB.Projects.pmeFormInit(PHPMYEDIT.defaultSelector);
 
-        PHPMYEDIT.inner(container).
-            off('click', 'input.show-disabled').
-            on('click', 'input.show-disabled', function(event) {
-            event.preventDefault();
-            console.log('hide/show disabled projects');
-            return PHPMYEDIT.pseudoSubmit($(this.form), $(this), container, false);
-        });
     });
 });
 

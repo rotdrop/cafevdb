@@ -29,6 +29,7 @@ namespace CAFEVDB
   $tooltipstitle  = Config::tooltips('show-tool-tips');
   $filtervistitle = Config::tooltips('filter-visibility');
   $directchgtitle = Config::tooltips('direct-change');
+  $showdistitle   = Config::tooltips('show-disabled');
   $pagerowstitle  = Config::tooltips('table-rows-per-page');
   $experttitle    = Config::tooltips('expert-operations');
   $debugtitle     = Config::tooltips('debug-mode');
@@ -103,6 +104,16 @@ namespace CAFEVDB
              />
       <label for="directchange" title="<?php echo $directchgtitle; ?>">
         <?php echo L::t('Quick Change-Dialog') ?>
+      </label>
+      <br />
+      <input id="showdisabled"
+             type="checkbox"
+             class="checkbox"
+             name="showdisabled" <?php echo $_['showdisabled'] == 'on' ? 'checked="checked"' : ''; ?>
+             title="<?php echo $showdistitle ?>"
+             />
+      <label for="showdisabled" title="<?php echo $showdistitle; ?>">
+        <?php echo L::t('Show Disabled Data-Sets'); ?>
       </label>
       <br />
       <div class="table-pagerows settings-control">

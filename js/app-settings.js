@@ -95,6 +95,34 @@ $(document).ready(function() {
     return false;
   });
 
+  appNav.on('change', '#app-settings-showdisabled', function(event) {
+    event.preventDefault();
+    var self = $(this);
+    var post = self.serialize();
+    $.post(OC.filePath('cafevdb', 'ajax/settings', 'showdisabled.php'),
+           post,
+           function(data) {
+             var pme = PHPMYEDIT;
+             var pmeForm = $('#content '+pme.formSelector()+'.show-hide-disabled');
+             console.log('form',pmeForm);
+             pmeForm.each(function(index) {
+                       var form = $(this);
+                       var reload = form.find(pme.pmeClassSelector('input', 'reload')).first();
+                       if (reload.length > 0) {
+                         form.append('<input type="hidden"'
+                                    + ' name="'+pme.pmeSys('sw')+'"'
+                                    + ' value="Clear"/>');
+                         reload.trigger('click');
+                       }
+                     });
+             return;
+           });
+    var checked = self.prop('checked')
+    PHPMYEDIT.showdisabled = checked;
+    $('#showdisabled').prop('checked', checked);
+    return false;
+  });
+
   appNav.on('change', '#app-settings-expertmode', function(event) {
     event.preventDefault();
     var self = $(this);

@@ -31,22 +31,10 @@ class Instruments
   extends Instrumentation
 {
   const CSS_PREFIX = 'cafevdb-page';
-  private $showDisabled;
-  private $showButtons;
 
-  public function __construct($execute = true, $showButtons = false)
+  public function __construct($execute = true)
   {
     parent::__construct($execute);
-
-    $this->showDisabled = Util::cgiValue('ShowDisabled', false);
-    $pmeSysPfx = Config::$pmeopts['cgi']['prefix']['sys'];
-    if (Util::cgiValue($pmeSysPfx.'showdisabled', false) !== false) {
-      $this->showDisabled = true;
-    } else if (Util::cgiValue($pmeSysPfx.'hidedisabled', false) !== false) {
-      $this->showDisabled = false;
-    }
-
-    $this->showButtons = $showButtons;
   }
 
   public function shortTitle()
@@ -86,7 +74,7 @@ class Instruments
     $instruments     = $this->instruments;
     $recordsPerPage  = $this->recordsPerPage;
 
-    $opts['css']['postfix'] = 'direct-change';
+    $opts['css']['postfix'] = 'direct-change show-hide-disabled';
 
     /*
      * IMPORTANT NOTE: This generated file contains only a subset of huge amount
@@ -111,8 +99,6 @@ class Instruments
       'ProjectId' => $projectId,
       'Template' => 'instruments',
       'DisplayClass' => 'Instruments',
-      'ClassArguments' => [ $this->execute, $this->showButtons ],
-      'ShowDisabled' => $this->showDisabled,
       'RecordsPerPage' => $recordsPerPage,
       );
 
@@ -136,24 +122,6 @@ class Instruments
 
     // Number of lines to display on multiple selection filters
     $opts['multiple'] = '4';
-
-    if ($this->showButtons) {
-      $showButton = array(
-        'name' => 'showdisabled',
-        'value' => L::t('Show Disabled'),
-        'css' => 'show-disabled'
-        );
-      $hideButton = array(
-        'name' => 'hidedisabled',
-        'value' => L::t('Hide Disabled'),
-        'css' => 'show-disabled'
-        );
-      if ($this->showDisabled) {
-        $opts['buttons'] = Navigation::prependTableButton($hideButton, false, false);
-      } else {
-        $opts['buttons'] = Navigation::prependTableButton($showButton, false, false);
-      }
-    }
 
     // Navigation style: B - buttons (default), T - text links, G - graphic links
     // Buttons position: U - up, D - down (default)

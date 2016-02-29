@@ -106,6 +106,34 @@ $(document).ready(function() {
     return false;
   });
 
+  $('#showdisabled').change(function(event) {
+    event.preventDefault();
+    var self = $(this);
+    var post = self.serialize();
+    console.log('blah');
+    $.post(OC.filePath('cafevdb', 'ajax/settings', 'showdisabled.php'),
+           post,
+           function(data) {
+             var pme = PHPMYEDIT;
+             var pmeForm = $('#content '+pme.formSelector()+'.show-hide-disabled');
+             console.log('form',pmeForm);
+             pmeForm.each(function(index) {
+                       var form = $(this);
+                       var reload = form.find(pme.pmeClassSelector('input', 'reload')).first();
+                       if (reload.length > 0) {
+                         form.append('<input type="hidden"'
+                                    + ' name="'+pme.pmeSys('sw')+'"'
+                                    + ' value="Clear"/>');
+                         reload.trigger('click');
+                       }
+                     });
+             return;
+           });
+    var checked = self.prop('checked');
+    $('#app-settings-showdisabled').prop('checked', checked);
+    return false;
+  });
+
   $('select.table-pagerows').chosen({
     disable_search:true,
     inherit_select_classes:true,

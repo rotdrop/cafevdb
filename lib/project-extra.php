@@ -39,7 +39,7 @@ namespace CAFEVDB
     public $projectId;
     public $projectName;
     public $recordId;
-    public $showDisabledFields;
+    public $showDisabled;
 
     public function __construct($recordId = -1, $execute = true)
     {
@@ -51,15 +51,8 @@ namespace CAFEVDB
       $this->projectName = Util::cgiValue('ProjectName', false);
       $this->recordId = $recordId > 0 ? $recordId : Util::getCGIRecordId();
 
-      $this->showDisabledFields = Util::cgiValue('ShowDisabledFields', false);
-      $pmeSysPfx = Config::$pmeopts['cgi']['prefix']['sys'];
-      if (Util::cgiValue($pmeSysPfx.'showdisabled', false) !== false) {
-        $this->showDisabledFields = true;
-      } else if (Util::cgiValue($pmeSysPfx.'hidedisabled', false) !== false) {
-        $this->showDisabledFields = false;
-      }
-
       Config::init();
+      $this->showDisabled = Config::getUserValue('showdisabled', false) === 'on';
     }
 
     public function deactivate()
@@ -156,7 +149,6 @@ namespace CAFEVDB
       $projectId    = $this->projectId;
       $projectName  = $this->projectName;
       $projectMode  = $projectId > 0;
-      $showDisabled = $this->showDisabledFields;
 
       $tableTabs   = DetailedInstrumentation::tableTabs(null, true);
       $tableTabValues2 = array();
@@ -167,11 +159,12 @@ namespace CAFEVDB
       // Inherit a bunch of default options
       $opts = Config::$pmeopts;
 
+      $opts['css']['postfix'] = ' show-hide-disabled';
+
       $opts['cgi']['persist'] = array(
         'Template' => 'project-extra',
         'DisplayClass' => 'ProjectExtra',
         'ClassArguments' => array(),
-        'ShowDisabledFields' => $this->showDisabledFields,
         );
 
       if ($projectMode || true) {
@@ -204,22 +197,6 @@ namespace CAFEVDB
 
       // Number of lines to display on multiple selection filters
       $opts['multiple'] = '6';
-
-      $showButton = array(
-        'name' => 'showdisabled',
-        'value' => L::t('Show Disabled'),
-        'css' => 'show-disabled'
-        );
-      $hideButton = array(
-        'name' => 'hidedisabled',
-        'value' => L::t('Hide Disabled'),
-        'css' => 'show-disabled'
-        );
-      if ($this->showDisabledFields) {
-        $opts['buttons'] = Navigation::prependTableButton($hideButton, false, false);
-      } else {
-        $opts['buttons'] = Navigation::prependTableButton($showButton, false, false);
-      }
 
       // Navigation style: B - buttons (default), T - text links, G - graphic links
       // Buttons position: U - up, D - down (default)
@@ -383,7 +360,7 @@ namespace CAFEVDB
         }
       }
 
-      if ($showDisabled) {
+      if ($this->showDisabled) {
         $opts['fdd']['Disabled'] = array(
           'tab'      => array('id' => 'definition'),
           'name'     => L::t('Disabled'),
@@ -665,7 +642,7 @@ namespace CAFEVDB
       $opts['groupby_fields'] = 'Id';
 
       $opts['filters'] = [];
-      if (!$showDisabled) {
+      if (!$this->showDisabled) {
         $opts['filters'][] = 'NOT `PMEtable0`.`Disabled` = 1';
         if ($projectMode === false) {
           $opts['filters'][] = 'NOT `PMEjoin'.$projectIdx.'`.`Disabled` = 1';

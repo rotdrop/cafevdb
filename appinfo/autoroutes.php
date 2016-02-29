@@ -197,6 +197,9 @@ $this->create("cafevdb_ajax_settings_debugmode.php", "ajax/settings/debugmode.ph
 $this->create("cafevdb_ajax_settings_directchange.php", "ajax/settings/directchange.php")
   ->actionInclude("cafevdb/ajax/settings/directchange.php");
 
+$this->create("cafevdb_ajax_settings_showdisabled.php", "ajax/settings/showdisabled.php")
+  ->actionInclude("cafevdb/ajax/settings/showdisabled.php");
+
 $this->create("cafevdb_ajax_settings_encryptionkey.php", "ajax/settings/encryptionkey.php")
   ->actionInclude("cafevdb/ajax/settings/encryptionkey.php");
 

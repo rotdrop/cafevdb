@@ -152,6 +152,7 @@ sepa-mandate-expired
 settings-button
 sharedfolder-force
 shareowner-force
+show-disabled
 show-tool-tips
 sourcecode-link
 sourcedocs-link

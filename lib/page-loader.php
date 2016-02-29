@@ -100,10 +100,11 @@ namespace CAFEVDB {
       // Are we a group-admin?
       $admin = \OC_SubAdmin::isGroupAccessible($user, $group);
 
-      $tooltips   = Config::getUserValue('tooltips', 'on', $user);
-      $usrFiltVis = Config::getUserValue('filtervisibility', 'off', $user);
-      $directChg  = Config::getUserValue('directchange', 'off', $user);
-      $pageRows   = Config::getUserValue('pagerows', 20, $user);
+      $tooltips     = Config::getUserValue('tooltips', 'on', $user);
+      $usrFiltVis   = Config::getUserValue('filtervisibility', 'off', $user);
+      $directChg    = Config::getUserValue('directchange', 'off', $user);
+      $showDisabled = Config::getUserValue('showdisabled', 'off', $user);
+      $pageRows     = Config::getUserValue('pagerows', 20, $user);
 
       // Filter visibility is stored here:
       $pmeSysPfx = Config::$pmeopts['cgi']['prefix']['sys'];
@@ -150,6 +151,7 @@ namespace CAFEVDB {
       $tmpl->assign('requesttoken', \OCP\Util::callRegister());
       $tmpl->assign('filtervisibility', $usrFiltVis);
       $tmpl->assign('directchange', $directChg);
+      $tmpl->assign('showdisabled', $showDisabled);
       $tmpl->assign('pagerows', $pageRows);
 
       return $tmpl;

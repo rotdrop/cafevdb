@@ -448,14 +448,6 @@ $(document).ready(function(){
       return; // not for us
     }
 
-    PHPMYEDIT.inner(container).
-      off('click', 'input.show-disabled').
-      on('click', 'input.show-disabled', function(event) {
-      event.preventDefault();
-      console.log('hide/show disabled fields');
-      return PHPMYEDIT.pseudoSubmit($(this.form), $(this), container, true);
-    });
-
   });
 
 });
