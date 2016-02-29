@@ -1784,7 +1784,7 @@ class phpMyEdit
 			}
 			if ($this->copy_operation() || $this->change_operation()) {
 				if ($this->hidden($k)) {
-					if ($k != $this->key_num) {
+					if ($k != $this->key_num || $this->change_operation()) {
 						echo $this->htmlHiddenData($this->fds[$k], $row["qf$k"]);
 					}
 					continue;
@@ -4395,7 +4395,7 @@ class phpMyEdit
 						'val_as'  => $val_as,
 						'val'	  => $val
 						));
-				error_log($fdd['sqlw']);
+				//error_log($fdd['sqlw']);
 			} else if (isset($stamps[$fd]) && $val == '') {
 				$value = 'NULL';
 			} else {
@@ -4434,6 +4434,7 @@ class phpMyEdit
 		// some of the query-groups have failed.
 		if (in_array($this->key, $changed)) {
 			$this->rec = $newvals[$this->key]; // key has changed
+			//error_log('changed '.print_r($changed, true));
 		}
 		$query_newrec .= ' WHERE (PMEtable0.'.$this->key.'='.$this->key_delim.$this->rec.$this->key_delim.')';
 		$res	 = $this->myquery($query_newrec, __LINE__);
