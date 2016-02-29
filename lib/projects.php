@@ -1921,7 +1921,7 @@ LEFT JOIN `".self::REGISTERED."` mi
   ON mi.ProjectId = pi.ProjectId AND mi.InstrumentId = pi.InstrumentId
 LEFT JOIN `".self::INSTRUMENTS."` i
   ON i.Id = pi.InstrumentId
-WHERE pi.ProjectId = 93
+WHERE pi.ProjectId = $projectId
 GROUP BY pi.ProjectId, pi.InstrumentId
 ORDER BY i.Sortierung ASC";
 
