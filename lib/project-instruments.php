@@ -199,7 +199,7 @@ class ProjectInstruments
 
     $opts['fdd']['Id'] = array(
       'name'     => 'Id',
-      'input'    => 'HRO',
+      'input'    => 'HR',
       'select'   => 'T',
       'maxlen'   => 11,
       'default'  => 0, // 0 normally triggers auto-increment.
