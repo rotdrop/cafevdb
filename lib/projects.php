@@ -42,9 +42,8 @@ namespace CAFEVDB
     private $projectId;
     private $projectName;
     private $showDisabled;
-    private $showButtons;
 
-    public function __construct($execute = true, $showButtons = false)
+    public function __construct($execute = true)
     {
       $this->execute = $execute;
       $this->pme = false;
@@ -65,17 +64,8 @@ namespace CAFEVDB
       $this->projectId = $projectId;
       $this->projectName = $projectName;
 
-      $this->showDisabled = Util::cgiValue('ShowDisabled', false);
-      $pmeSysPfx = Config::$pmeopts['cgi']['prefix']['sys'];
-      if (Util::cgiValue($pmeSysPfx.'showdisabled', false) !== false) {
-        $this->showDisabled = true;
-      } else if (Util::cgiValue($pmeSysPfx.'hidedisabled', false) !== false) {
-        $this->showDisabled = false;
-      }
-
-      $this->showButtons = $showButtons;
-
       Config::init();
+      $this->showDisabled = Config::getUserValue('showdisabled', false) === 'on';
     }
 
     public function deactivate()
@@ -131,11 +121,11 @@ namespace CAFEVDB
       // Inherit a bunch of default options
       $opts = Config::$pmeopts;
 
+      $opts['css']['postfix'] = ' show-hide-disabled';
+
       $opts['cgi']['persist'] = array(
         'Template' => 'projects',
         'DisplayClass' => 'Projects',
-        'ClassArguments' => [ $this->execute, $this->showButtons ],
-        'ShowDisabled' => $this->showDisabled,
         );
 
       $opts['tb'] = 'Projekte';
@@ -163,24 +153,6 @@ namespace CAFEVDB
 
       // Number of lines to display on multiple selection filters
       $opts['multiple'] = '6';
-
-      if ($this->showButtons) {
-        $showButton = array(
-          'name' => 'showdisabled',
-          'value' => L::t('Show Disabled'),
-          'css' => 'show-disabled'
-          );
-        $hideButton = array(
-          'name' => 'hidedisabled',
-          'value' => L::t('Hide Disabled'),
-          'css' => 'show-disabled'
-          );
-        if ($this->showDisabled) {
-          $opts['buttons'] = Navigation::prependTableButton($hideButton, false, false);
-        } else {
-          $opts['buttons'] = Navigation::prependTableButton($showButton, false, false);
-        }
-      }
 
       // Navigation style: B - buttons (default), T - text links, G - graphic links
       // Buttons position: U - up, D - down (default)
@@ -566,7 +538,8 @@ __EOT__;
       $opts['triggers']['insert']['after'][]   = 'CAFEVDB\Projects::addOrChangeInstrumentation';
       $opts['triggers']['insert']['after'][]   = 'CAFEVDB\Projects::afterInsertTrigger';
 
-      $opts['triggers']['delete']['before'][] = 'CAFEVDB\Projects::beforeDeleteTrigger';
+      $opts['triggers']['delete']['before'][] = 'CAFEVDB\Projects::deleteTrigger';
+      $opts['triggers']['delete']['after'][] = 'CAFEVDB\Projects::deleteTrigger';
 
       $opts['execute'] = $this->execute;
       $this->pme = new \phpMyEdit($opts);
@@ -835,7 +808,7 @@ __EOT__;
      * "side-effects" the existance of the project had. However, there
      * is some data which must not be removed automatically
      */
-    public static function beforeDeleteTrigger(&$pme, $op, $step, &$oldvals, &$changed, &$newvals)
+    public static function deleteTrigger(&$pme, $op, $step, &$oldvals, &$changed, &$newvals)
     {
       $projectId   = $pme->rec;
       $projectName = $oldvals['Name'];
@@ -844,35 +817,40 @@ __EOT__;
         $oldvals['Name'] = $projectName;
       }
 
-      $payments = ProjectPayments::payments($projectId, $pme->dbh);
-      if ($payments === false) {
-        return false; // play safe, don't try to remove anything if we
-                      // catch an error early
+      $safeMode = false;
+      if ($step === 'before') {
+        $payments = ProjectPayments::payments($projectId, $pme->dbh);
+        if ($payments === false) {
+          return false; // play safe, don't try to remove anything if we
+                        // catch an error early
+        }
+
+        $safeMode = !empty($payments); // don't really remove if we have finance data
       }
 
-      $safeMode = !empty($payments); // don't really remove if we have finance data
+      if ($step === 'after' || $safeMode) {
+        // And now remove the project folder ... OC has undelete
+        // functionality and we have a long-ranging backup.
+        self::removeProjectFolder($oldvals);
 
-      // And now remove the project folder ... OC has undelete
-      // functionality and we have a long-ranging backup.
-      self::removeProjectFolder($oldvals);
+        // Regenerate the TOC page in the wiki.
+        self::generateWikiOverview();
 
-      // Regenerate the TOC page in the wiki.
-      self::generateWikiOverview();
+        // Delete the page template from the public web-space. However,
+        // here we only move it to the trashbin.
+        $webPages = self::fetchProjectWebPages($projectId, $pme->dbh);
+        foreach ($webPages as $page) {
+          // ignore errors
+          \OCP\Util::writeLog(Config::APP_NAME, "Attempt to delete for ".$projectId.": ".$page['ArticleId']." all ".print_r($page, true), \OCP\Util::DEBUG);
 
-      // Delete the page template from the public web-space. However,
-      // here we only move it to the trashbin.
-      $webPages = self::fetchProjectWebPages($projectId, $pme->dbh);
-      foreach ($webPages as $page) {
-        // ignore errors
-        \OCP\Util::writeLog(Config::APP_NAME, "Attempt to delete for ".$projectId.": ".$page['ArticleId']." all ".print_r($page, true), \OCP\Util::DEBUG);
+          self::deleteProjectWebPage($projectId, $page['ArticleId'], $handle);
+        }
 
-        self::deleteProjectWebPage($projectId, $page['ArticleId'], $handle);
-      }
-
-      // Remove all attached events
-      $projectEvents = Events::projectEvents($projectId, $pme->dbh);
-      foreach($projectEvents AS $event) {
-        Events::deleteEvents($event, $pme->dbh);
+        // Remove all attached events. This really deletes stuff.
+        $projectEvents = Events::projectEvents($projectId, $pme->dbh);
+        foreach($projectEvents AS $event) {
+          Events::deleteEvents($event, $pme->dbh);
+        }
       }
 
       if ($safeMode) {
@@ -880,7 +858,9 @@ __EOT__;
         return false; // clean-up has to be done manually later
       }
 
-      // Remove all attached extra fields (dangerous, finance?)
+      // remaining part cannot be reached if project-payments need to be maintained, as in this case the 'before' trigger already has aborted the deletion. Only events, web-pages and wiki are deleted, and in the case of the wiki and the web-pages the respective underlying "external" services make a backup-copy of their own (respectively CAFEVDB just moves web-pages to the Redaxo "trash" category).
+
+      // delete all extra fields and associated data.
       $projectExtra = ProjectExtra::projectExtraFields($projectId, false, $pme->dbh);
       foreach($projectExtra as $fieldInfo) {
         $fieldId = $fieldInfo['Id'];
