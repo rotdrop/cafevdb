@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-29 03:09+0100\n"
+"POT-Creation-Date: 2016-02-29 23:06+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -307,16 +307,16 @@ msgstr ""
 msgid "%s-detailed"
 msgstr ""
 
-#: ajax/export/excel.php:260 lib/projects.php:1957 lib/projects.php:1958
+#: ajax/export/excel.php:260 lib/projects.php:1967 lib/projects.php:1968
 msgid "Missing Musicians"
 msgstr ""
 
 #: ajax/export/excel.php:285 ajax/export/insurance-export.php:157
-#: lib/project-instruments.php:267 lib/projects.php:1960
+#: lib/project-instruments.php:267 lib/projects.php:1971
 msgid "Instrument"
 msgstr ""
 
-#: ajax/export/excel.php:286 lib/projects.php:1960
+#: ajax/export/excel.php:286
 msgid "Missing"
 msgstr ""
 
@@ -2952,9 +2952,9 @@ msgstr ""
 msgid "Overview over insured instruments and insurance fee details and summary"
 msgstr ""
 
-#: lib/instrument-insurance.php:827 templates/debit-notes.php:62
-#: templates/instrument-insurance.php:56 templates/project-payments.php:62
-#: templates/sepa-debit-mandates.php:64
+#: lib/instrument-insurance.php:827 templates/debit-notes.php:60
+#: templates/instrument-insurance.php:54 templates/project-payments.php:60
+#: templates/sepa-debit-mandates.php:62
 msgid "treasurer"
 msgstr ""
 
@@ -3744,11 +3744,17 @@ msgstr ""
 msgid "Required"
 msgstr ""
 
-#: lib/project-instruments.php:296 lib/project-instruments.php:311
+#: lib/project-instruments.php:297 lib/project-instruments.php:311
+#: lib/projects.php:1972
 msgid "Registered"
 msgstr ""
 
-#: lib/project-instruments.php:321
+#: lib/project-instruments.php:323 lib/project-instruments.php:337
+#: lib/projects.php:1973
+msgid "Confirmed"
+msgstr ""
+
+#: lib/project-instruments.php:348
 msgid "Balance"
 msgstr ""
 
@@ -3891,40 +3897,40 @@ msgstr ""
 msgid "Profit and Loss Account"
 msgstr ""
 
-#: lib/projects.php:2498
+#: lib/projects.php:2512
 msgid ""
 "Flyers can only be added to existing projects, please add the new\n"
 "project without a flyer first."
 msgstr ""
 
-#: lib/projects.php:2511
+#: lib/projects.php:2525
 #, php-format
 msgid "Drop image to upload (max %s)"
 msgstr ""
 
-#: lib/projects.php:2514
+#: lib/projects.php:2528
 msgid "Delete current flyer"
 msgstr ""
 
-#: lib/projects.php:2515
+#: lib/projects.php:2529
 msgid "Edit current flyer"
 msgstr ""
 
-#: lib/projects.php:2516
+#: lib/projects.php:2530
 msgid "Upload new flyer"
 msgstr ""
 
-#: lib/projects.php:2517
+#: lib/projects.php:2531
 msgid "Select image from ownCloud"
 msgstr ""
 
-#: lib/projects.php:2525
+#: lib/projects.php:2539
 msgid ""
 "Internal error, don't know what to do concerning project-flyers in the given "
 "context."
 msgstr ""
 
-#: lib/projects.php:2611
+#: lib/projects.php:2625
 #, php-format
 msgid ""
 "====== Project %s ======\n"
@@ -5678,7 +5684,7 @@ msgstr ""
 msgid "Test Database Password"
 msgstr ""
 
-#: templates/blog.php:39
+#: templates/blog.php:37
 #, php-format
 msgid ""
 "Camerata DB start page - the data-base operations can be accessed\n"
@@ -5687,7 +5693,7 @@ msgid ""
 "cloud-icon (top left) to reach the app-menu."
 msgstr ""
 
-#: templates/blog.php:62
+#: templates/blog.php:60
 msgid "New note"
 msgstr ""
 
@@ -5898,8 +5904,8 @@ msgstr ""
 msgid "is not set"
 msgstr ""
 
-#: templates/debit-notes.php:61 templates/instrument-insurance.php:55
-#: templates/project-payments.php:61 templates/sepa-debit-mandates.php:63
+#: templates/debit-notes.php:59 templates/instrument-insurance.php:53
+#: templates/project-payments.php:59 templates/sepa-debit-mandates.php:61
 #, php-format
 msgid "Sorry, this view is only available to the %s."
 msgstr ""
@@ -6517,43 +6523,47 @@ msgstr ""
 msgid "Tooltip Button"
 msgstr ""
 
-#: templates/part.common.header.php:136 templates/settings.php:86
+#: templates/part.common.header.php:120
+msgid "Side-Bar Menu"
+msgstr ""
+
+#: templates/part.common.header.php:143 templates/settings.php:86
 msgid "Tool-Tips"
 msgstr ""
 
-#: templates/part.common.header.php:148 templates/settings.php:96
+#: templates/part.common.header.php:155 templates/settings.php:96
 msgid "Filter-Controls"
 msgstr ""
 
-#: templates/part.common.header.php:160 templates/settings.php:106
+#: templates/part.common.header.php:167 templates/settings.php:106
 msgid "Quick Change-Dialog"
 msgstr ""
 
-#: templates/part.common.header.php:172 templates/settings.php:116
+#: templates/part.common.header.php:179 templates/settings.php:116
 msgid "Show Disabled Data-Sets"
 msgstr ""
 
-#: templates/part.common.header.php:184 templates/settings.php:156
+#: templates/part.common.header.php:191 templates/settings.php:156
 msgid "Expert-Mode"
 msgstr ""
 
-#: templates/part.common.header.php:189 templates/settings.php:121
+#: templates/part.common.header.php:196 templates/settings.php:121
 msgid "#Rows"
 msgstr ""
 
-#: templates/part.common.header.php:203
+#: templates/part.common.header.php:210
 msgid "#Rows/Page in Tables"
 msgstr ""
 
-#: templates/part.common.header.php:211
+#: templates/part.common.header.php:218
 msgid "Further Settings"
 msgstr ""
 
-#: templates/part.common.header.php:219
+#: templates/part.common.header.php:226
 msgid "Expert Operations"
 msgstr ""
 
-#: templates/part.common.header.php:227 templates/settings.php:162
+#: templates/part.common.header.php:234 templates/settings.php:162
 msgid "Enable Debug Mode"
 msgstr ""
 

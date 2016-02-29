@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-29 03:05+0100\n"
-"PO-Revision-Date: 2016-02-29 03:09+0100\n"
+"POT-Creation-Date: 2016-02-29 23:04+0100\n"
+"PO-Revision-Date: 2016-02-29 23:05+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -318,16 +318,16 @@ msgstr "%s-uebersicht"
 msgid "%s-detailed"
 msgstr "%s-detailliert"
 
-#: ajax/export/excel.php:260 lib/projects.php:1957 lib/projects.php:1958
+#: ajax/export/excel.php:260 lib/projects.php:1967 lib/projects.php:1968
 msgid "Missing Musicians"
 msgstr "Fehlende Musiker"
 
 #: ajax/export/excel.php:285 ajax/export/insurance-export.php:157
-#: lib/project-instruments.php:267 lib/projects.php:1960
+#: lib/project-instruments.php:267 lib/projects.php:1971
 msgid "Instrument"
 msgstr "Instrument"
 
-#: ajax/export/excel.php:286 lib/projects.php:1960
+#: ajax/export/excel.php:286
 msgid "Missing"
 msgstr "Defizit"
 
@@ -3131,9 +3131,9 @@ msgstr "Versicherungs-Jahresbeitrag für %s, %d. %s"
 msgid "Overview over insured instruments and insurance fee details and summary"
 msgstr "Übersicht über die versicherten Instrumente und Versicherungsbeiträge"
 
-#: lib/instrument-insurance.php:827 templates/debit-notes.php:62
-#: templates/instrument-insurance.php:56 templates/project-payments.php:62
-#: templates/sepa-debit-mandates.php:64
+#: lib/instrument-insurance.php:827 templates/debit-notes.php:60
+#: templates/instrument-insurance.php:54 templates/project-payments.php:60
+#: templates/sepa-debit-mandates.php:62
 msgid "treasurer"
 msgstr "Schatzmeister"
 
@@ -3971,11 +3971,17 @@ msgstr "Orchestersortierung"
 msgid "Required"
 msgstr "Benötigt"
 
-#: lib/project-instruments.php:296 lib/project-instruments.php:311
+#: lib/project-instruments.php:297 lib/project-instruments.php:311
+#: lib/projects.php:1972
 msgid "Registered"
 msgstr "Registriert"
 
-#: lib/project-instruments.php:321
+#: lib/project-instruments.php:323 lib/project-instruments.php:337
+#: lib/projects.php:1973
+msgid "Confirmed"
+msgstr "Bestätigt"
+
+#: lib/project-instruments.php:348
 msgid "Balance"
 msgstr "Bilanz"
 
@@ -4128,7 +4134,7 @@ msgstr "Em@il"
 msgid "Profit and Loss Account"
 msgstr "Verlustrechnung"
 
-#: lib/projects.php:2498
+#: lib/projects.php:2512
 msgid ""
 "Flyers can only be added to existing projects, please add the new\n"
 "project without a flyer first."
@@ -4136,28 +4142,28 @@ msgstr ""
 "Flyer könner leider nur zu existierenden Projekten hinzugefügt werden; bitte "
 "zuerst das Projekt ohne Flyer anlegen."
 
-#: lib/projects.php:2511
+#: lib/projects.php:2525
 #, php-format
 msgid "Drop image to upload (max %s)"
 msgstr "Bild ablegen zum Hochladen (max %s)"
 
-#: lib/projects.php:2514
+#: lib/projects.php:2528
 msgid "Delete current flyer"
 msgstr "Aktuellen Flyer löschen"
 
-#: lib/projects.php:2515
+#: lib/projects.php:2529
 msgid "Edit current flyer"
 msgstr "Aktuellen Flyer zuschneiden"
 
-#: lib/projects.php:2516
+#: lib/projects.php:2530
 msgid "Upload new flyer"
 msgstr "Neuen Flyer hochladen"
 
-#: lib/projects.php:2517
+#: lib/projects.php:2531
 msgid "Select image from ownCloud"
 msgstr "Bild aus der `Cloud' auswählen"
 
-#: lib/projects.php:2525
+#: lib/projects.php:2539
 msgid ""
 "Internal error, don't know what to do concerning project-flyers in the given "
 "context."
@@ -4165,7 +4171,7 @@ msgstr ""
 "Interner Fehler; keine Ahnung, wie in diesem Kontext mit Projekt-Flyern "
 "umgegangen werden sollte."
 
-#: lib/projects.php:2611
+#: lib/projects.php:2625
 #, php-format
 msgid ""
 "====== Project %s ======\n"
@@ -6479,7 +6485,7 @@ msgstr "Neues Passwort"
 msgid "Test Database Password"
 msgstr "Datenbank-Passwort testen"
 
-#: templates/blog.php:39
+#: templates/blog.php:37
 #, php-format
 msgid ""
 "Camerata DB start page - the data-base operations can be accessed\n"
@@ -6493,7 +6499,7 @@ msgstr ""
 "(rechts oben). Anwendungen verbergen sich unter dem Namen der\n"
 "aktuellen Anwendung neben der \"Wolke\" (links oben)."
 
-#: templates/blog.php:62
+#: templates/blog.php:60
 msgid "New note"
 msgstr "Neue Notiz"
 
@@ -6743,8 +6749,8 @@ msgstr "ist eingestellt, kann aber nicht darauf zugreifen"
 msgid "is not set"
 msgstr "ist nicht eingestellt"
 
-#: templates/debit-notes.php:61 templates/instrument-insurance.php:55
-#: templates/project-payments.php:61 templates/sepa-debit-mandates.php:63
+#: templates/debit-notes.php:59 templates/instrument-insurance.php:53
+#: templates/project-payments.php:59 templates/sepa-debit-mandates.php:61
 #, php-format
 msgid "Sorry, this view is only available to the %s."
 msgstr "Tut mir leid, aber diese Ansicht steht nur dem %s zur Verfügung."
@@ -7405,43 +7411,47 @@ msgstr "Führt zurück zur Start-Seite der `App'."
 msgid "Tooltip Button"
 msgstr "Tooltip Button"
 
-#: templates/part.common.header.php:136 templates/settings.php:86
+#: templates/part.common.header.php:120
+msgid "Side-Bar Menu"
+msgstr "Seitenmenü"
+
+#: templates/part.common.header.php:143 templates/settings.php:86
 msgid "Tool-Tips"
 msgstr "Ballon-Hilfe"
 
-#: templates/part.common.header.php:148 templates/settings.php:96
+#: templates/part.common.header.php:155 templates/settings.php:96
 msgid "Filter-Controls"
 msgstr "Such-Filter"
 
-#: templates/part.common.header.php:160 templates/settings.php:106
+#: templates/part.common.header.php:167 templates/settings.php:106
 msgid "Quick Change-Dialog"
 msgstr "Ändern-Dialog bei Mausklick"
 
-#: templates/part.common.header.php:172 templates/settings.php:116
+#: templates/part.common.header.php:179 templates/settings.php:116
 msgid "Show Disabled Data-Sets"
 msgstr "Zeige inaktive Datensätze"
 
-#: templates/part.common.header.php:184 templates/settings.php:156
+#: templates/part.common.header.php:191 templates/settings.php:156
 msgid "Expert-Mode"
 msgstr "Experten-Modus"
 
-#: templates/part.common.header.php:189 templates/settings.php:121
+#: templates/part.common.header.php:196 templates/settings.php:121
 msgid "#Rows"
 msgstr "#Zeilen"
 
-#: templates/part.common.header.php:203
+#: templates/part.common.header.php:210
 msgid "#Rows/Page in Tables"
 msgstr "#Zeilen/Seite für Tabellen"
 
-#: templates/part.common.header.php:211
+#: templates/part.common.header.php:218
 msgid "Further Settings"
 msgstr "Weitere Einstellungen"
 
-#: templates/part.common.header.php:219
+#: templates/part.common.header.php:226
 msgid "Expert Operations"
 msgstr "Experten Werkzeuge"
 
-#: templates/part.common.header.php:227 templates/settings.php:162
+#: templates/part.common.header.php:234 templates/settings.php:162
 msgid "Enable Debug Mode"
 msgstr "Debug-Modus einschalten"
 
