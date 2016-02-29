@@ -314,6 +314,11 @@ body.snapjs-left #old-personalsettings {
   min-width: 800px;
 }
 
+#app-navigation li.nav-heading > a {
+  background-color:#888;
+  font-weight:bold;
+}
+
 #projectlabelcontrol>input[type=submit] {
   font-weight:bold;
   font-style:italic;
