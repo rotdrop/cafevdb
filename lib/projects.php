@@ -1915,10 +1915,16 @@ __EOT__;
         $handle = mySQL::connect(Config::$pmeopts);
       }
 
-      $query = "SELECT i.Instrument, pi.Quantity AS Required, COUNT(mi.Id) AS Registered
+      $query = "SELECT
+  i.Instrument,
+  pi.Quantity AS Required,
+  COUNT(mi.Id) AS Registered,
+  COUNT(b.Id) AS Confirmed
   FROM `".self::INSTRUMENTATION."` pi
 LEFT JOIN `".self::REGISTERED."` mi
   ON mi.ProjectId = pi.ProjectId AND mi.InstrumentId = pi.InstrumentId
+LEFT JOIN `Besetzungen` b
+  ON b.Id = mi.InstrumentationId AND b.Anmeldung = 1
 LEFT JOIN `".self::INSTRUMENTS."` i
   ON i.Id = pi.InstrumentId
 WHERE pi.ProjectId = $projectId
@@ -1929,7 +1935,10 @@ ORDER BY i.Sortierung ASC";
       $qResult = mySQL::query($query, $handle);
       if ($qResult !== false) {
         while ($row = mySQL::fetch($qResult)) {
-          $missing[$row['Instrument']] = $row['Required'] - $row['Registered'];
+          $missing[$row['Instrument']] = [
+            'Registered' => $row['Required'] - $row['Registered'],
+            'Confirmed' => $row['Required'] - $row['Confirmed']
+            ];
         }
         mySQL::freeResult($qResult);
       }
@@ -1937,6 +1946,7 @@ ORDER BY i.Sortierung ASC";
       if ($ownConnection) {
         mySQL::close($handle);
       }
+
 
       return $missing;
     }
@@ -1957,14 +1967,18 @@ ORDER BY i.Sortierung ASC";
      title="'.L::t("Missing Musicians").'">
   <span class="missing-musicians-title">'.L::t("Missing Musicians").'</span>
   <table class="missing-musicians">
-    <tr><th>'.L::t("Instrument").'</th><th>'.L::t("Missing").'</th></tr>
+    <tr>
+      <th>'.L::t("Instrument").'</th>
+      <th>'.L::t("Registered").'</th>
+      <th>'.L::t("Confirmed").'</th>
+    </tr>
 ';
         $cnt = 0;
-        foreach ($missing as $instrument => $number) {
-          if ($number <= 0) {
+        foreach ($missing as $instrument => $deficit) {
+          if ($deficit['Confirmed'] <= 0) {
             continue;
           }
-          $output .= '    <tr class="row-'.($cnt%2).'"><td class="instrument">'.$instrument.'</td><td class="deficit">'.$number.'</td></tr>'."\n";
+          $output .= '    <tr class="row-'.($cnt%2).'"><td class="instrument">'.$instrument.'</td><td class="deficit registered">'.$deficit['Registered'].'</td><td class="deficit confirmed">'.$deficit['Confirmed'].'</td></tr>'."\n";
           $cnt++;
         }
         $output .= '  </table>

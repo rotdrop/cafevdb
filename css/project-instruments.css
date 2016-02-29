@@ -30,7 +30,7 @@ table.pme-main td.instrumentation-required {
     font-weight:bold;
 }
 
-table.pme-main td.instrumentation-balance.negative {
+table.pme-main td.instrumentation-balance .negative {
     font-weight:bold;
     color:red;
     font-size:140%;

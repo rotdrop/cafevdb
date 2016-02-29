@@ -290,7 +290,8 @@ class ProjectInstruments
       'align' => 'right',
       );
 
-    // quantity registered
+    // Quantity registerd. The "duplicate fields are here in order to
+    // have a "non-values" display in change mode.
     $haveIdx = count($opts['fdd']);
     $opts['fdd']['RegisteredJoin'] = array(
       'name'   => L::t('Registered'),
@@ -306,7 +307,6 @@ $join_table.InstrumentId = $main_table.InstrumentId',
         ),
       );
 
-    $registeredIdx = count($opts['fdd']);
     $opts['fdd']['Registered'] = array(
       'name'   => L::t('Registered'),
       'input'  => 'VR',
@@ -317,13 +317,53 @@ $join_table.InstrumentId = $main_table.InstrumentId',
       'align'  => 'right',
       );
 
+    // similar display for number of "confirmed" musicians
+    $confirmedIdx = count($opts['fdd']);
+    $opts['fdd']['ConfirmedJoin'] = array(
+      'name'   => L::t('Confirmed'),
+      'input'  => 'VHR',
+      'sql'    => 'COUNT(PMEjoin'.$confirmedIdx.'.Id)',
+      'values' => array(
+        'table'       => 'Besetzungen',
+        'column'      => 'Id',
+        'description' => ['columns' => 'Id'],
+        'join'        => '$join_table.Id = PMEjoin'.$haveIdx.'.InstrumentationId
+AND
+$join_table.Anmeldung = 1',
+        ),
+      );
+
+    $opts['fdd']['Confirmed'] = array(
+      'name'   => L::t('Confirmed'),
+      'input'  => 'VR',
+      'sort'   => $sort,
+      'select' => 'N',
+      'sql'    => 'COUNT(PMEjoin'.$confirmedIdx.'.Id)',
+      'css'    => [ 'postfix' => ' instrumentation-confirmed' ],
+      'align'  => 'right',
+      );
+
+    // summary
     $opts['fdd']['Missing'] = array(
       'name'   => L::t('Balance'),
       'input'  => 'VR',
       'sort'   => $sort,
       'select' => 'N',
-      'sql'    => 'COUNT(PMEjoin'.$haveIdx.'.Id) - PMEtable0.Quantity',
-      'css'    => [ 'postfix' => ' signed-number instrumentation-balance' ],
+      'sql'    => "CONCAT(
+  COUNT(PMEjoin{$haveIdx}.Id) - PMEtable0.Quantity,
+  ':',
+  COUNT(PMEjoin{$confirmedIdx}.Id) - PMEtable0.Quantity
+)",
+      'php' => function($balance, $op, $field, $fds, $fdd, $row, $recordId) {
+        $values = Util::explode(':', $balance);
+        $html = '';
+        $html .= '<span'.($values[0] < 0 ? ' class="negative"' : '').'>'.$values[0].'</span>';
+        $html .= ' / ';
+        $html .= '<span'.($values[1] < 0 ? ' class="negative"' : '').'>'.$values[1].'</span>';
+        return $html;
+      },
+      'escape' => false,
+      'css'    => [ 'postfix' => ' instrumentation-balance' ],
       'align'  => 'right',
       );
 
