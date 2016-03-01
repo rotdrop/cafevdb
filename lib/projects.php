@@ -2237,6 +2237,13 @@ WHERE pi.`ProjectId` = $projectId";
           'join' => array('type' => 'LEFT'),
           ),
 
+        'MusicianInstrumentCount' => array(
+          'table' => 'i2',
+          'column' => "COUNT(DISTINCT i2.`Id`)",
+          'verbatim' => true,
+          'join' => array('type' => 'LEFT'),
+          ),
+
         'ProjectInstrumentKey' => array(
           'table' => 'ProjectInstruments',
           'tablename' => 'pi',
@@ -2293,6 +2300,10 @@ WHERE pi.`ProjectId` = $projectId";
                              'column' => true,
                              'join' => array('type' => 'INNER')),
 
+        'Disabled' => array('table' => 'b',
+                            'column' => true,
+                             'join' => array('type' => 'INNER')),
+
         'Name' => array('table' => 'm',
                         'column' => true,
                         'join' => array('type' => 'INNER')),
@@ -2329,8 +2340,9 @@ WHERE pi.`ProjectId` = $projectId";
                              'join' => array('type' => 'INNER')),
         'AmountPaid' => array('table' => 'ProjectPayments',
                               'tablename' => 'f',
-                              'column' => 'IFNULL(SUM(IF(b.Id = b2.Id AND i.Id = i2.Id, f.Amount, 0)),0)',
-                              //'column' => 'GROUP_CONCAT(IF(b.Id = b2.Id, f.Amount, NULL) SEPARATOR \',\')',
+                              'column' => 'IFNULL(SUM(IF(b.Id = b2.Id, f.Amount, 0)), 0)
+/
+IF(i2.Id IS NULL, 1, COUNT(DISTINCT i2.Id))',
                               'verbatim' => true,
                               'join' => array(
                                 'type' =>'LEFT',
@@ -2338,7 +2350,9 @@ WHERE pi.`ProjectId` = $projectId";
                                 )),
         'PaidCurrentYear' => array(
           'tablename' => 'f',
-          'column' => 'IFNULL(SUM(IF(b.Id = b2.Id AND i.Id = i2.Id AND YEAR(NOW()) = YEAR(f.DateOfReceipt), f.Amount, 0)),0)',
+          'column' => 'IFNULL(SUM(IF(b.Id = b2.Id AND YEAR(NOW()) = YEAR(f.DateOfReceipt), f.Amount, 0)), 0)
+/
+IF(i2.Id IS NULL, 1, COUNT(DISTINCT i2.Id))',
           'verbatim' => true,
           'join' => array('type' => 'INNER')
           ),
