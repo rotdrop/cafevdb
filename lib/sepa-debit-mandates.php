@@ -842,6 +842,8 @@ received so far'),
     AND
     p.Anmeldung = 1
     AND
+    p.Disabled = 0
+    AND
     m.mandateReference IS NOT NULL
 ';
 
