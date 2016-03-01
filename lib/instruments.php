@@ -245,7 +245,7 @@ class Instruments
         'default'  => '',
         'select'   => 'O',
         'sort'     => true,
-        'tooltip'  => Config::toolTips('extra-fields-disabled')
+        'tooltip'  => Config::toolTips('instruments-disabled')
         );
     }
 
