@@ -288,11 +288,75 @@ namespace CAFEVDB
         $handle = mySQL::connect(Config::$pmeopts);
       }
 
-      $query = "SELECT ".($full ? "*" : `Id`)."
+      $query = "SELECT ".($full ? "*" : "`Id`")."
   FROM ".self::TABLE." p
   LEFT JOIN Besetzungen b
     ON b.Id = p.InstrumentationId
   WHERE b.ProjektId = $projectId";
+
+      $result = false;
+      $qResult = mySQL::query($query, $handle);
+      if ($qResult !== false) {
+        $result = array();
+        while ($row = mySQL::fetch($qResult)) {
+          $result[] = $row;
+        }
+        mySQL::freeResult($qResult);
+      }
+
+      if ($ownConnection) {
+        mySQL::close($handle);
+      }
+
+      return $result;
+    }
+
+    /**Just return all associated payments. */
+    public static function participantPayments($instrumentationId, $full = true, $handle = false)
+    {
+      $ownConnection = $handle === false;
+      if ($ownConnection) {
+        Config::init();
+        $handle = mySQL::connect(Config::$pmeopts);
+      }
+
+      $query = "SELECT ".($full ? "*" : "`Id`")."
+  FROM ".self::TABLE." p
+  WHERE p.InstrumentationId = $instrumentationId";
+
+      error_log($query);
+
+      $result = false;
+      $qResult = mySQL::query($query, $handle);
+      if ($qResult !== false) {
+        $result = array();
+        while ($row = mySQL::fetch($qResult)) {
+          $result[] = $row;
+        }
+        mySQL::freeResult($qResult);
+      }
+
+      if ($ownConnection) {
+        mySQL::close($handle);
+      }
+
+      return $result;
+    }
+
+    /**Just return all associated payments. */
+    public static function musicianPayments($musicianId, $full = true, $handle = false)
+    {
+      $ownConnection = $handle === false;
+      if ($ownConnection) {
+        Config::init();
+        $handle = mySQL::connect(Config::$pmeopts);
+      }
+
+      $query = "SELECT ".($full ? "*" : `Id`)."
+  FROM ".self::TABLE." p
+  LEFT JOIN Besetzungen b
+    ON b.Id = p.InstrumentationId
+  WHERE b.MusikerId = $musicianId";
 
       $result = false;
       $qResult = mySQL::query($query, $handle);

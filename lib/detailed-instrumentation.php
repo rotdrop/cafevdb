@@ -71,6 +71,8 @@ class DetailedInstrumentation
 
     $project = Projects::fetchById($projectId);
 
+    $opts['css']['postfix'] = ' show-hide-disabled';
+
     /*
      * IMPORTANT NOTE: This generated file contains only a subset of huge amount
      * of options that can be used with phpMyEdit. To get information about all
@@ -256,6 +258,20 @@ class DetailedInstrumentation
       'sort'     => true,
       'tab'      => array('id' => 'tab-all')
       );
+
+    if ($this->showDisabled) {
+      $opts['fdd']['Disabled'] = array(
+        'name'     => L::t('Disabled'),
+        'css'      => array('postfix' => ' musician-disabled'),
+        'values2|CAP' => array(1 => ''),
+        'values2|LVFD' => array(1 => L::t('true'),
+                                0 => L::t('false')),
+        'default'  => '',
+        'select'   => 'O',
+        'sort'     => true,
+        'tooltip'  => Config::toolTips('musician-disabled')
+        );
+    }
 
     $opts['fdd']['ProjectInstrumentKey'] = array(
       'name'   => L::t('Project Instrument'),
@@ -1564,18 +1580,31 @@ WHERE b.ProjektId = $projectId",
    */
   public static function beforeDeleteTrigger(&$pme, $op, $step, $oldValues, &$changed, &$newValues)
   {
-    $id = $oldValues['Id'];
+    $id = $oldValues['Id']; // should be $pme->rec here
+
+    $payments = ProjectPayments::participantPayments($id, false, $pme->dbh);
+
+    $where = "`InstrumentationId` = $id";
+    $query = "DELETE FROM ".self::PROJECT_INSTRUMENTS." WHERE ".$where;
+    mySQL::query($query, $pme->dbh);
+    // don't log, no interesting information
+
     $where = "`Id` = ".$id;
     $realOldVals = mySQL::fetchRows('Besetzungen', $where, null, $pme->dbh);
+
+    if (!empty($payments)) {
+      $result = mySQL::update('Besetzungen', $where, [ 'Disabled' => 1 ], $pme->dbh);
+      if ($result !== false) {
+        mySQL::logUpdate('Besetzungen', 'Id', $realOldVals, [ 'Disabled' => 1 ], $pme->dbh);
+      }
+      return false;
+    }
+
     $query = "DELETE FROM `Besetzungen` WHERE ".$where;
     $result = mySQL::query($query, $pme->dbh);
     if ($result !== false && count($realOldVals) == 1) {
       mySQL::logDelete('Besetzungen', 'Id', $realOldVals[0], $pme->dbh);
     }
-    $where = "`InstrumentationId` = $id";
-    $query = "DELETE FROM ".self::PROJECT_INSTRUMENTS." WHERE ".$where;
-    mySQL::query($query, $pme->dbh);
-    // don't log, no interesting information
     return false;
   }
 
