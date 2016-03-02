@@ -199,15 +199,15 @@ class Instruments
     */
 
     $opts['fdd']['Id'] = array(
-      'name'     => 'Id',
-      'select'   => 'N',
-      'input'    => 'RH',
-      'input|D'  => 'R',
-      'maxlen'   => 11,
-      'size'     => 5,
-      'default'  => '0',  // auto increment
-      'align'    => 'right',
-      'sort'     => true,
+      'name'      => 'Id',
+      'select'    => 'N',
+      'input'     => 'RH',
+      'input|CVD' => 'R',
+      'maxlen'    => 11,
+      'size'      => 5,
+      'default'   => '0',  // auto increment
+      'align'     => 'right',
+      'sort'      => true,
       );
 
     $opts['fdd']['Instrument'] = array(
@@ -307,15 +307,19 @@ class Instruments
 //$opts['fdd']['Lexikon']['URL'] = "http://de.wikipedia.org/wiki/\$key\" target=\"_blank";
 //$opts['fdd']['Lexikon']['URLdisp'] = "\$key@Wikipedia.DE";
 
+    $opts['filters'] = "PMEtable0.Disabled <= ".intval($this->showDisabled);
+
     $opts['groupby_fields'] = [ 'Id' ];
 
     //$opts['triggers']['update']['before']  = 'CAFEVDB\Instruments::beforeUpdateTrigger';
     //$opts['triggers']['insert']['before']  = 'CAFEVDB\Instruments::beforeInsertTrigger';
 
+    $opts['triggers']['delete']['before']  = 'CAFEVDB\Instruments::beforeDeleteTrigger';
+
     $opts['triggers']['select']['data'][] =
       function(&$pme, $op, $step, &$row) use ($opts, $usageIdx)  {
       $pme->options = $opts['options'];
-      if (!empty($row['qf'.$usageIdx])) {
+      if (!Config::$expertmode && !empty($row['qf'.$usageIdx])) {
         $pme->options = str_replace('D', '', $pme->options);
       } else {
         $pme->options = $opts['options'];
@@ -326,6 +330,98 @@ class Instruments
     $opts['execute'] = $this->execute;
 
     $this->pme = new \phpMyEdit($opts);
+  }
+
+  /**This is the phpMyEdit before-delete trigger. We cannot delete
+   * lines from the view directly, we have to resort to the underlying
+   * 'Besetzungen' table (which obviously is also what we want here!).
+   *
+   * phpMyEdit calls the trigger (callback) with
+   * the following arguments:
+   *
+   * @param[in] $pme The phpMyEdit instance
+   *
+   * @param[in] $op The operation, 'insert', 'update' etc.
+   *
+   * @param[in] $step 'before' or 'after'
+   *
+   * @param[in] $oldValues Self-explanatory.
+   *
+   * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
+   *
+   * @param[in,out] &$newValues Set of new values, which may also be modified.
+   *
+   * @return boolean. If returning @c false the operation will be terminated
+   *
+   * @todo: This trigger does not yet delete all possible
+   * "side-effects" -- extra fields, monetary stuff etc.
+   */
+  public static function beforeDeleteTrigger(&$pme, $op, $step, $oldValues, &$changed, &$newValues)
+  {
+    $count = self::usage($pme->rec, $pme->dbh);
+
+    if ($count > 0) {
+      $result = mySQL::update('Instrumente', "Id = {$pme->rec}", [ 'Disabled' => 1 ], $pme->dbh);
+      return false;
+    }
+
+    return true;
+  }
+
+
+  public static function usage($instrumentId, $handle = false)
+  {
+    $instrumentTables = [
+      'mi'  => 'MusicianInstruments',
+      'pmi' => 'ProjectInstruments',
+      'pi'  => 'ProjectInstrumentation'
+      ];
+
+    $select = '';
+    $join   = '';
+
+    $main = '';
+    foreach($instrumentTables as $abbr => $table) {
+      if ($select === '') {
+        $select = "SELECT COUNT(DISTINCT $abbr.Id)";
+      } else {
+        $select .= "+COUNT(DISTINCT $abbr.Id)";
+      }
+      if ($join === '') {
+        $join = "$table $abbr";
+        $main = $abbr;
+      } else {
+        $join .= " JOIN $table $abbr
+  ON $main.InstrumentId = $abbr.InstrumentId";
+      }
+    }
+    $query = $select." AS `Usage` FROM ".$join."
+  WHERE $main.InstrumentId = $instrumentId";
+
+    $ownConnection = $handle === false;
+
+    if ($ownConnection) {
+      Config::init();
+      $handle = mySQL::connect(Config::$pmeopts);
+    }
+
+    error_log(__METHOD__.' '.$query);
+
+    $result = array();
+    $qResult = mySQL::query($query, $handle);
+    if ($qResult !== false) {
+      if (mySQL::numRows($qResult) === 1 &&
+          ($line = mySQL::fetch($qResult)) !== false) {
+        $result = $line['Usage'];
+      }
+      mySQL::freeResult($qResult);
+    }
+
+    if ($ownConnection) {
+      mySQL::close($handle);
+    }
+
+    return $result;
   }
 
   // Sort the given list of instruments according to orchestral ordering
@@ -497,7 +593,7 @@ class Instruments
       $handle = mySQL::connect(Config::$pmeopts);
     }
 
-    $query = 'SELECT * FROM `Instrumente` WHERE  1 ORDER BY `Sortierung` ASC';
+    $query = 'SELECT * FROM `Instrumente` WHERE Disabled = 0 ORDER BY `Sortierung` ASC';
     $result = mySQL::query($query, $handle);
 
     $byId = $byName = $nameGroups = $idGroups = $families = array();

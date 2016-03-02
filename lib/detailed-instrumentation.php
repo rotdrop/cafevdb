@@ -113,6 +113,8 @@ class DetailedInstrumentation
     // GROUP BY clause, if needed.
     $opts['groupby_fields'] = array('Id', 'ProjectInstrumentId');
 
+    $opts['filters'] = "PMEtable0.Disabled <= ".intval($this->showDisabled);
+
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
     // F - filter, I - initial sort suppressed

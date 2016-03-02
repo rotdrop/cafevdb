@@ -101,6 +101,8 @@ make sure that the musicians are also automatically added to the
 
     $opts['tb'] = self::TABLE;
 
+    $opts['css']['postfix'] = ' show-hide-disabled';
+
     // Number of records to display on the screen
     // Value of -1 lists all records in a table
     $opts['inc'] = $recordsPerPage;
@@ -125,6 +127,8 @@ make sure that the musicians are also automatically added to the
 
     // GROUP BY clause, if needed.
     $opts['groupby_fields'] = 'Id';
+
+    $opts['filters'] = "PMEtable0.Disabled <= ".intval($this->showDisabled);
 
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
@@ -289,6 +293,20 @@ make sure that the musicians are also automatically added to the
       'sort'     => true
       );
 
+    if ($this->showDisabled) {
+      $opts['fdd']['Disabled'] = array(
+        'name'     => L::t('Disabled'),
+        'css'      => array('postfix' => ' musician-disabled'),
+        'values2|CAP' => array(1 => ''),
+        'values2|LVFD' => array(1 => L::t('true'),
+                                0 => L::t('false')),
+        'default'  => '',
+        'select'   => 'O',
+        'sort'     => true,
+        'tooltip'  => Config::toolTips('musician-disabled')
+        );
+    }
+
     $musInstIdx = count($opts['fdd']);
     $opts['fdd']['MusicianInstrumentsJoin'] = array(
       'name'   => L::t('Instrument Join Pseudo Field'),
@@ -325,13 +343,17 @@ make sure that the musicians are also automatically added to the
       'values' => array(
         'table'       => 'Instrumente',
         'column'      => 'Id',
-        'description' => 'Id',
+        'description' => 'Instrument',
         'orderby'     => 'Sortierung',
+        'groups'      => 'Familie',
         'join'        => '$join_table.Id = PMEjoin'.$musInstIdx.'.InstrumentId'
         ),
-      'values2' => $this->instrumentInfo['byId'],
-      'valueGroups' => $this->instrumentInfo['idGroups'],
+      //    'values2' => $this->instrumentInfo['byId'],
+      //'valueGroups' => $this->instrumentInfo['idGroups'],
       );
+    $opts['fdd']['Instruments']['values|ACP'] = array_merge(
+      $opts['fdd']['Instruments']['values'],
+      [ 'filters' => '$table.Disabled = 0' ]);
 
     /* Make "Status" a set, 'soloist','conductor','noemail', where in
      * general the first two imply the last.
@@ -611,9 +633,7 @@ make sure that the musicians are also automatically added to the
     $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Musicians::beforeTriggerSetTimestamp';
     $opts['triggers']['insert']['after'][]  = 'CAFEVDB\Musicians::addOrChangeInstruments';
 
-    // We never delete any instrument-relatins from the
-    //MusicianInstruments table as this might ruine old projects.
-    //$opts['triggers']['delete']['after'][] = 'CAFEVDB\Musicians::deleteInstruments';
+    $opts['triggers']['delete']['before'][]  = 'CAFEVDB\Musicians::beforeDeleteTrigger';
 
     if ($this->pme_bare) {
       // disable all navigation buttons, probably for html export
@@ -645,6 +665,66 @@ make sure that the musicians are also automatically added to the
     }
 
   } // display()
+
+  /** phpMyEdit calls the trigger (callback) with the following arguments:
+   *
+   * @param[in] $pme The phpMyEdit instance
+   *
+   * @param[in] $op The operation, 'insert', 'update' etc.
+   *
+   * @param[in] $step 'before' or 'after'
+   *
+   * @param[in] $oldvals Self-explanatory.
+   *
+   * @param[in,out] &$changed Set of changed fields, may be modified by the callback.
+   *
+   * @param[in,out] &$newvals Set of new values, which may also be modified.
+   *
+   * @return boolean. If returning @c false the operation will be terminated
+   */
+  public static function beforeDeleteTrigger($pme, $op, $step, &$oldvals, &$changed, &$newvals)
+  {
+    // When not to delete musicians?
+    //
+    // Musicians are preliminary kept in the data-base if any relevant
+    // finace-related stuff is associated with them:
+    //
+    // used debit mandates
+    // any payments
+    // members of the association
+    //
+    // "used debit mandate" implies there are "registered payments",
+    // so only look at the payments and the membership stuff
+
+    Config::init();
+    $memberTableId = Config::getValue('memberTableId');
+
+    $musicianId = $pme->rec;
+
+    $count = mySQL::selectSingleFromTable(
+      "COUNT(*)", "Besetzungen",
+      "WHERE `MusikerId` = {$musicianId} AND `ProjektId` = {$memberTableId}", $pme->dbh);
+
+    // This is a "hard" issue. One just cannot be a member of the
+    // association and request at the same time to be removed from our
+    // data base. Any operator first has to cancel membership in the
+    // association.
+    if ($count > 0) {
+      return false;
+    }
+
+    $payments = ProjectPayments::musicianPayments($musicianId, false, $pme->dbh);
+
+    if (!empty($payments)) {
+      // just mark as dead
+      $result = mySQL::update("Musiker", "Id = {$pme->rec}", [ 'Disabled' => 1 ], $pme->dbh);
+      if ($result !== false) {
+        mySQL::logUpdate('Musiker', 'Id', [ 'Id' => $pme->rec ], [ 'Disabled' => 1 ], $pme->dbh);
+      }
+    }
+
+    return true;
+  }
 
   /** phpMyEdit calls the trigger (callback) with the following arguments:
    *
@@ -900,43 +980,6 @@ GROUP BY m.`Id`
     }
 
     return $row;
-  }
-
-  /**In principle a musician can have multiple entries per
-   * project. Unique is only the combination
-   * project-musician-instrument-position. In principle, if a musician
-   * plays more than one instrument in different pieces in a project,
-   * he or she could be listed twice.
-   */
-  public static function fetchMusicianProjectData($musicianId, $projectId, $handle = false)
-  {
-    $ownConnection = $handle === false;
-
-    if ($ownConnection) {
-      Config::init();
-      $handle = mySQL::connect(Config::$pmeopts);
-    }
-
-    $query = " SELECT *
- FROM `Besetzungen`
-     WHERE `Besetzungen`.`MusikerId` = $musicianId
-       AND `Besetzungen`.`ProjektId` = $projectId";
-
-    $result = mySQL::query($query, $handle);
-    if ($result !== false) {
-      $rows = array();
-      while ($row = mySQL::fetch($result)) {
-        $rows[] = $row;
-      }
-    } else {
-      $rows = false;
-    }
-
-    if ($ownConnection) {
-      mySQL::close($handle);
-    }
-
-    return $rows;
   }
 
   /**Fetch the street address of the respected musician. Needed in

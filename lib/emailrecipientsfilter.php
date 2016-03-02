@@ -518,6 +518,8 @@ namespace CAFEVDB
       /* Don't bother any conductor etc. with mass-email. */
       $query .= $this->memberStatusSQLFilter();
 
+      $query .= " AND MainTable.Disabled = 0";
+
       if (false) {
         echo '<PRE>';
         echo $query;

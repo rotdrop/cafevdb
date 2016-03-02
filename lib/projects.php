@@ -519,9 +519,7 @@ __EOT__;
       } else {
         $opts['filters']['OR'][] = "`PMEtable0`.`Art` = 'permanent'";
       }
-      if (!$this->showDisabled) {
-        $opts['filters']['AND'][] = 'NOT `PMEtable0`.`Disabled` = 1';
-      }
+      $opts['filters']['AND'][] = '`PMEtable0`.`Disabled` <= '.intval($this->showDisabled);
 
       // We could try to use 'before' triggers in order to verify the
       // data. However, at the moment the stuff does not work without JS
