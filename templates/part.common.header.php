@@ -167,7 +167,7 @@ namespace CAFEVDB {
             <?php echo L::t('Quick Change-Dialog'); ?>
           </label>
         </li>
-        <li>
+        <li class="<?php echo $expertClass; ?>">
           <input id="app-settings-showdisabled"
                  type="checkbox"
                  name="showdisabled" <?php echo $_['showdisabled'] == 'on' ? 'checked="checked"' : ''; ?>
