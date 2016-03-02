@@ -352,11 +352,13 @@ namespace CAFEVDB
         $handle = mySQL::connect(Config::$pmeopts);
       }
 
-      $query = "SELECT ".($full ? "*" : `Id`)."
+      $query = "SELECT ".($full ? "*" : "p.`Id`")."
   FROM ".self::TABLE." p
   LEFT JOIN Besetzungen b
     ON b.Id = p.InstrumentationId
   WHERE b.MusikerId = $musicianId";
+
+      //error_log($query);
 
       $result = false;
       $qResult = mySQL::query($query, $handle);
