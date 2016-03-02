@@ -128,7 +128,15 @@ $(document).ready(function() {
     var self = $(this);
     var post = self.serialize();
     $.post(OC.filePath('cafevdb', 'ajax/settings', 'expertmode.php'),
-           post, function(data) {});
+           post,
+           function(data) {
+             var pme = PHPMYEDIT;
+             var pmeForm = $('#content '+pme.formSelector());
+             pmeForm.each(function(index) {
+               var reload = $(this).find(pme.pmeClassSelector('input', 'reload')).first();
+               reload.trigger('click');
+             });
+           });
     var checked = self.prop('checked');
     if (checked) {
       $('#app-settings-content li.expertmode').removeClass('hidden');
