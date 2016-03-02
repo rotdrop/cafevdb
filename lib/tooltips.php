@@ -190,7 +190,7 @@ invited to have a look, but please do not change anything unless you know what y
 
         'expert-operations' => L::t('For those who know what they are doing, which essentially means: don\'t.'),
 
-        'extra-field-' => 'placeholder',
+        'extra-field-' => L::t('placeholder'),
 
         'extra-field-choices-groupofpeople' => L::t('Group of people, e.g. to define room-mates.'),
 
@@ -317,6 +317,9 @@ each individual table view.'),
         'instrument-insurance-bill' => L::t('Generate a PDF with detailed records of the insured items and the
 resulting insurance fee.'),
 
+        'instruments-disabled' => L::t('Instruments which are already used by musicians or
+projects cannot be deleted; instead "deleting" them flags them as "Disabled".'),
+
         'member-status' => L::t('A flag which indicates not so much social or functional status, but
 default behaviour for mass-emails as follows
 <br/>
@@ -337,6 +340,10 @@ All classes of members can be explicitly added to a specific mass-emails through
 in the email form.'),
 
         'musican-contact-tab' => L::t('Display name, pre-name, phone number, email, street-address.'),
+
+        'musician-disabled' => L::t('Musicians which already paid something for the project cannot be
+deleted in order not to loose track of the payments. Instead, they are
+simply marked as "disabled" and normally are hidden from sight.'),
 
         'musician-instrument-insurance' => L::t('Opens a new table view with the insured items for the respective musician.'),
 

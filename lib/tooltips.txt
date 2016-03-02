@@ -34,8 +34,10 @@ extra-fields-tooltip
 extra-fields-type
 extra-fields-writers
 instrument-insurance-bill
+instruments-disabled
 member-status
 musican-contact-tab
+musician-disabled
 musician-instrument-insurance
 musician-miscinfo-tab
 musician-orchestra-tab
