@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2015 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -33,19 +33,20 @@ namespace CAFEVDB {
 
   try {
     $class = $_['DisplayClass'];
-    $args = $_['ClassArguments'];
-    
+    $args  = $_['ClassArguments'];
+    $css   = $class.' '.$_['template'];
+
     if (isset($args['_'])) {
       foreach($args['_'] as $key) {
         $args[$key] = $_[$key];
       }
       unset($args['_']);
     }
-    
+
     $reflect = new \ReflectionClass('\\CAFEVDB\\'.$class);
     $instance = $reflect->newInstanceArgs($args);
 
-    echo '<div id="pme-table-container" class="pme-table-container '.$class.'" style="height:auto;">';
+    echo '<div id="pme-table-container" class="pme-table-container '.$css.'" style="height:auto;">';
     $instance->display();
     echo '</div>';
 
