@@ -804,30 +804,17 @@ FROM $mainTable",
         $fdd['default'] = (string)!!(int)$field['DefaultValue'];
         $fdd['css']['postfix'] .= ' boolean money surcharge single-valued';
         $fdd['name|LFVD'] = $fdd['name'];
-        $fdd['name'] = '<span class="allowed-option-name money">'.$fdd['name'].'</span><span class="allowed-option-value money">'.$money.'</span>';
+        $fdd['name'] = '<span class="allowed-option-name money">'.Util::htmlEscape($fdd['name']).'</span><span class="allowed-option-value money">'.$money.'</span>';
         unset($fdd['textarea']);
         break;
       case 'SurchargeEnum':
       case 'SurchargeSet':
         foreach($values2 as $key => $value) {
           $money = Util::moneyValue($valueData[$key], Config::$locale);
-          if (false) {
-            $mlen = mb_strlen($money);
-            $vlen = mb_strlen($value);
-            $padr = 10;
-            $padl = 10;
-            while ($vlen++ < $padr) {
-              $value .= '&nbsp;';
-            }
-            while ($mlen++ < $padl) {
-              $money = '&nbsp;'.$money;
-            }
-            $values2[$key] = $value.$money;
-          } else {
-            $value = '<span class="allowed-option-name money multiple-choice">'.$value.'</span>';
-            $money = '<span class="allowed-option-value money">'.'&nbsp;'.$money.'</span>';
-            $values2[$key] = $value.$money;
-          }
+          $value = Util::htmlEscape($value);
+          $value = '<span class="allowed-option-name money multiple-choice">'.$value.'</span>';
+          $money = '<span class="allowed-option-value money">'.'&nbsp;'.$money.'</span>';
+          $values2[$key] = $value.$money;
         }
         $fdd['values2'] = $values2;
         $fdd['values2glue'] = "<br/>";
@@ -889,7 +876,7 @@ WHERE b.ProjektId = $projectId",
           $fdd['css']['postfix'] .= ' surcharge';
           $money = Util::moneyValue(reset($valueData));
           $fdd['name|LFVD'] = $fdd['name'];
-          $fdd['name'] = '<span class="allowed-option-name money">'.$fdd['name'].'</span><span class="allowed-option-value money">'.$money.'</span>';
+          $fdd['name'] = '<span class="allowed-option-name money">'.Util::htmlEscape($fdd['name']).'</span><span class="allowed-option-value money">'.$money.'</span>';
           $fdd['display|LFVD'] = array_merge(
             $fdd['display'],
             [
@@ -985,6 +972,7 @@ WHERE b.ProjektId = $projectId",
           foreach($groupValues2 as $key => $value) {
             $money = Util::moneyValue($groupValueData[$key], Config::$locale);
             $groupValues2ACP[$key] = $value.':&nbsp;'.$money;
+            $value = Util::htmlEscape($value);
             $value = '<span class="allowed-option-name group clip-long-text">'.$value.'</span>';
             $money = '<span class="allowed-option-value money">'.'&nbsp;'.$money.'</span>';
             $groupValues2[$key] = $value.$money;
