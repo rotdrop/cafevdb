@@ -1714,6 +1714,7 @@ class phpMyEdit
 				}
 				echo ($this->password($k) ? 'type="password"' : 'type="text"');
 				echo ($this->disabled($k) ? ' disabled' : '');
+				echo ($this->readonly($k) ? ' readonly' : '');
 				echo ' name="',$this->cgi['prefix']['data'].$this->fds[$k],'"';
 				echo $len_props,' value="';
 				echo $value;
