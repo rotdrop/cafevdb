@@ -348,8 +348,6 @@ make sure that the musicians are also automatically added to the
         'groups'      => 'Familie',
         'join'        => '$join_table.Id = PMEjoin'.$musInstIdx.'.InstrumentId'
         ),
-      //    'values2' => $this->instrumentInfo['byId'],
-      //'valueGroups' => $this->instrumentInfo['idGroups'],
       );
     $opts['fdd']['Instruments']['values|ACP'] = array_merge(
       $opts['fdd']['Instruments']['values'],
