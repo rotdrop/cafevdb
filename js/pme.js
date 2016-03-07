@@ -39,7 +39,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
   PHPMYEDIT.chosenPixelWidth        = [];
   PHPMYEDIT.pmePrefix               = 'pme';
   PHPMYEDIT.PMEPrefix               = PHPMYEDIT.pmePrefix.toUpperCase();
-
+  PHPMYEDIT.singleDeselectOffset    = 18;
   PHPMYEDIT.defaultSelector         = '#cafevdb-page-body'; ///< for delegate handlers, survives pseudo-submit
   PHPMYEDIT.defaultInnerSelector    = 'inner'; ///< to override delegate handlers, survices pseudo-submit
   PHPMYEDIT.dialogCSSId             = PHPMYEDIT.pmePrefix+'-table-dialog';
@@ -1191,7 +1191,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
         single_backstroke_delete: false
       };
       if (self.hasClass('allow-empty')) {
-        chosenOptions.width = (this.offsetWidth + 18) + 'px';
+        chosenOptions.width = (this.offsetWidth + pme.singleDeselectOffset) + 'px';
 console.log('width', this.offsetWidth, self.outerWidth(), self.outerWidth(true));
       }
       if (self.hasClass('chosen-width-auto')) {
@@ -1252,7 +1252,7 @@ console.log('width', this.offsetWidth, self.outerWidth(), self.outerWidth(true))
                                            [ 'input', 'filter', 'comp-filter' ]);
       //alert('selector: '+selector);
       form.find(selector).each(function(idx) {
-        if ($(this).width() == 0) {
+        if ($(this).width() <= pme.singleDeselectOffset) {
           $(this).prev().chosen('destroy');
           reattachChosen = true;
         }
