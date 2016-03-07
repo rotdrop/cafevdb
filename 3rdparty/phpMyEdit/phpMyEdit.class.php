@@ -323,7 +323,8 @@ class phpMyEdit
 	function skipped($k)	  { return stristr(@$this->fdd[$k]['input'],'S'); }
 	function password($k)	  { return stristr(@$this->fdd[$k]['input'],'W'); }
 	function readonly($k)	  { return stristr(@$this->fdd[$k]['input'],'R'); }
-	function disabled($k)	  { return stristr(@$this->fdd[$k]['input'],'D') || $this->readonly($k) || $this->virtual($k);		}
+	function annotation($k)	  { return stristr(@$this->fdd[$k]['input'],'A'); }
+	function disabled($k)	  { return stristr(@$this->fdd[$k]['input'],'D') || $this->virtual($k);		}
 	function virtual($k)	  { return stristr(@$this->fdd[$k]['input'],'V') && $this->col_has_sql($k); }
 
 	function add_operation()	{ return $this->label_cmp($this->operation, 'Add')	  && $this->add_enabled();	  }
@@ -1660,12 +1661,12 @@ class phpMyEdit
 				$php = $this->fdd[$k]['php'];
 				if (is_callable($php)) {
 					echo call_user_func($php, false, 'add', // action to be performed
-										$k, $this->fds, $this->fdd, false, -1);
+										$k, $this->fds, $this->fdd, false, -1, $this);
 				} else if (is_array($php)) {
 					$opts = isset($php['parameters']) ? $php['parameters'] : '';
 					echo call_user_func($php['function'], false, $opts,
 										'add', // action to be performed
-										$k, $this->fds, $this->fdd, false, -1);
+										$k, $this->fds, $this->fdd, false, -1, $this);
 				} else if (file_exists($php)) {
 					echo include($php);
 				}
@@ -1799,12 +1800,6 @@ class phpMyEdit
 				   In all cases particular readonly field will NOT be saved. */
 				if ($this->disabled($k) && ($this->col_has_datemask($k) || $this->col_has_URL($k))) {
 					echo $this->display_delete_field($row, $k, $helptip);
-					if ($this->col_has_datemask($k)) {
-						$value = $this->makeTimeString($k, $row);
-					} else {
-						$value = htmlspecialchars($row["qf$k"]);
-					}
-					echo $this->htmlHiddenData($this->fds[$k], $value);
 				} elseif ($this->password($k)) {
 					echo $this->display_password_field($row, $k, $helptip);
 				} else {
@@ -1876,6 +1871,7 @@ class phpMyEdit
 		 */
 
 		if ($this->col_has_php($k)) {
+			// ok, this stuff is just left completely to the caller
 			if (!empty($vals)) {
 				if ($this->col_has_multiple($k)) {
 					$value = array();
@@ -1894,26 +1890,45 @@ class phpMyEdit
 				echo call_user_func($php, $value,
 									'change', // action to be performed
 									$k, $this->fds, $this->fdd, $row,
-									$this->rec);
+									$this->rec, $this);
 			} else if (is_array($php)) {
 				$opts = isset($php['parameters']) ? $php['parameters'] : '';
 				echo call_user_func($php['function'], $value, $opts,
 									'change', // action to be performed
 									$k, $this->fds, $this->fdd, $row,
-									$this->rec);
+									$this->rec, $this);
 			} else if (file_exists($php)) {
 				echo include($php);
 			}
 		} elseif ($vals !== false &&
 			(stristr("MCOD", $this->fdd[$k]['select']) !== false || $multiValues)) {
-			$multiple	= $this->col_has_multiple($k);
-			$readonly	= $this->disabledTag($k) || count($vals) == 0;
+			$multiple = $this->col_has_multiple($k);
+			$readonly = $this->disabledTag($k) || count($vals) == 0;
 			$selected = @$row["qf$k"];
 			if ($selected === null) {
 				$selected = @$this->fdd[$k]['default'];
 			}
 			$strip_tags = true;
-			//$escape	    = true;
+			// "readonly" is not possible for selects, radio stuff and
+			// check-boxes. Display is "disbled", if read-only is
+			// requested we emit a hidden input (or hidden inputs, if
+			// multiple) with all the selected values.
+			if ($this->readonly($k)) {
+				$hiddenValues = $selected;
+				if (!is_array($hiddenValues) && !empty($hiddenValues)) {
+					$hiddenValues = explode(',', $hiddenValues);
+				}
+				if (!is_array($hiddenValues)) {
+					$hiddenValues = empty($hiddenValues) ? array() : array($hiddenValues);
+				}
+				$array = $multiple ? '[]' : '';
+				if (empty($hiddenValues)) {
+					$hiddenValues[] = '';
+				}
+				foreach($hiddenValues as $hidden) {
+					echo $this->htmlHiddenData($this->fds[$k].$array, $hidden);
+				}
+			}
 			if ($this->col_has_checkboxes($k) || $this->col_has_radio_buttons($k)) {
 				echo $this->htmlRadioCheck($this->cgi['prefix']['data'].$this->fds[$k],
 										   $css_class_name, $vals, $groups, $titles, $data,
@@ -2284,13 +2299,13 @@ class phpMyEdit
 			if (is_callable($php)) {
 				return call_user_func($php, $value, 'display', // action to be performed
 									  $k, $this->fds, $this->fdd,
-									  $row, $key_rec);
+									  $row, $key_rec, $this);
 			} else if (is_array($php)) {
 				$opts = isset($php['parameters']) ? $php['parameters'] : '';
 				return call_user_func($php['function'], $value, $opts,
 									  'display', // action to be performed
 									  $k, $this->fds, $this->fdd,
-									  $row, $key_rec);
+									  $row, $key_rec, $this);
 			} else if (file_exists($php)) {
 				return include($php);
 			}
@@ -2435,7 +2450,7 @@ class phpMyEdit
 						$kg_array = null,
 						$kt_array = null,
 						$kd_array = null,
-						$selected = null, /* ...) {{{ */
+						$selected = null,
 						/* booleans: */
 						$multiple = false,
 						$readonly = false,
@@ -2768,9 +2783,17 @@ class phpMyEdit
 		if ($magic_quotes_gpc === null) {
 			$magic_quotes_gpc = get_magic_quotes_gpc();
 		}
-		$var = @$_GET[$name];
+
+		/* Due to compatiblity "crap" inside PHP spaces, dots, open
+		 * square brackets and everything in between ASCII(128) and
+		 * ASCII(159) is converted to underscores internally. Cope
+		 * with this crappy shit. The code below ignores ASCII >=
+		 * 128. Give a damn on it.
+		 */
+		$cookedName = preg_replace('/[[:space:].[\x80-\x9f]/', '_', $name);
+		$var = @$_GET[$cookedName];
 		if (! isset($var)) {
-			$var = @$_POST[$name];
+			$var = @$_POST[$cookedName];
 		}
 		if (isset($var)) {
 			if ($magic_quotes_gpc) {
@@ -4235,6 +4258,7 @@ class phpMyEdit
 			if ($this->processed($k)) {
 				$fd = $this->fds[$k];
 				$fn = $this->get_data_cgi_var($fd);
+				//error_log(__METHOD__.' got value for '.$fd.': '.print_r($fn, true).' post '.print_r($_POST[$fd], true));
 				if ($this->col_has_datemask($k)) {
 					if ($fn == '') {
 						$stamps[$fd] = false;
@@ -4248,16 +4272,22 @@ class phpMyEdit
 				if ($this->col_has_checkboxes($k) ||
 					($this->col_has_radio_buttons($k) && $this->col_has_multiple_select($k))) {
 					$checks[$fd] = true;
+					//error_log('checkbox: '.$fd.' value '.$fn);
 				}
 				// Don't include disabled fields into newvals, but
 				// keep for reference in oldvals. Keep readonly-fields in newvals
 				if (!$this->disabled($k) || $this->readonly($k)) {
 					// leave complictated arrays to the trigger hooks.
 					if (is_array($fn) && self::is_flat($fn)) {
-						$newvals[$fd] = join(',',$fn);
+						//error_log($fd.' flat array '.print_r($fn, true));
+						$newvals[$fd] = join(',', $fn);
 					} else {
+						//error_log($fd.' unflat or no array '.print_r($fn, true));
 						$newvals[$fd] = $fn;
 					}
+					//error_log('new '.$fd.' value "'.$newvals[$fd].'"');
+				} else {
+					//error_log('skipping '.$fd.' value '.$fn);
 				}
 				if ($this->col_has_sql($k)) {
 					$query_part = $this->fdd[$k]['sql']." AS '".$fd."'";
