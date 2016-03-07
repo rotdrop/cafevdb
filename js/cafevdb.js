@@ -1364,6 +1364,50 @@ var CAFEVDB = CAFEVDB || {};
     }
   };
 
+  /**Get or set the option value(s) of a select box.
+   *
+   * @param[in] select The select element. If it is an ordinary input
+   * element, then in "set" mode its value is set to optionValues.
+   *
+   * @param[in] optionValues Single option value or array of option
+   * values to set.
+   */
+  CAFEVDB.selectValues = function(select, optionValues) {
+    select = $(select);
+    var multiple = select.prop('multiple');
+    if (typeof optionValues === 'undefined') {
+      console.log('selectValues read = ', select.val());
+      var result = select.val();
+      if (multiple && !result) {
+        result = [];
+      }
+      return select.val();
+    }
+    if (!(optionValues instanceof Array)) {
+      optionValues = [ optionValues ];
+    }
+    if (!multiple && optionValues.length > 1) {
+      optionValues = [ optionValues[0] ];
+    }
+    // setter has to use foreach
+    select.each(function(idx) {
+      var self = $(this);
+      if (!self.is('select')) {
+        // graceful degrade for non selects
+        self.val(optionValues[0] ? optionValues[0] : '');
+        return true;
+      }
+      self.find('option').each(function(idx) {
+        var option = $(this);
+        option.prop('selected', optionValues.indexOf(option.val()) >= 0);
+      });
+      console.log('selectValues', 'update chosen');
+      self.trigger('chosen:updated'); // in case ...
+      return true;
+    });
+    return true;
+  };
+
 })(window, jQuery, CAFEVDB);
 
 $(document).ready(function(){
