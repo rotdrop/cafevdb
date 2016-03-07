@@ -54,6 +54,7 @@ namespace CAFEVDB
 
     $displayClass = Util::cgiValue('DisplayClass', false);
     $classArguments = Util::cgiValue('ClassArguments', array());
+    $template = Util::cgiValue('Template', false);
     $dialogMode = Util::cgiValue('AmbientContainerSelector', false) != false;
     $reloadAction = false;
     $reloadAction = Util::cgiValue('PME_sys_reloadlist', $reloadAction) != false;
@@ -97,6 +98,7 @@ namespace CAFEVDB
     $tmpl = new \OCP\Template('cafevdb', 'pme-table');
     $tmpl->assign('DisplayClass', $displayClass);
     $tmpl->assign('ClassArguments', $classArguments);
+    $tmpl->assign('template', $template);
 
     $tmpl->assign('recordId', Util::getCGIRecordId());
 
