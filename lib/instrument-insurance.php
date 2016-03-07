@@ -224,9 +224,11 @@ namespace CAFEVDB
         'tab'      => array('id' => 'tab-all'),
         'name'     => 'Id',
         'select'   => 'T',
-        'options'  => 'AVCPDR', // auto increment
+        'input'    => 'R',
+        'input|AP' => 'RH',
+        'options'  => 'AVCPD',
         'maxlen'   => 5,
-        'align'    => 'right',
+        'align'    => 'right', // auto increment
         'default'  => '0',
         'sort'     => true
         );
@@ -364,7 +366,7 @@ namespace CAFEVDB
         'input' => 'V',
         'name' => L::t('Total Insurance'),
         'select' => 'T',
-        'options' => 'ACPDV',
+        'options' => 'CDV',
         'sql' => "MusicianId",
         'escape' => false,
         'nowrap' => true,

@@ -201,8 +201,8 @@ class Instruments
     $opts['fdd']['Id'] = array(
       'name'      => 'Id',
       'select'    => 'N',
-      'input'     => 'RH',
-      'input|CVD' => 'R',
+      'input|AP'  => 'RH',
+      'input'     => 'R',
       'maxlen'    => 11,
       'size'      => 5,
       'default'   => '0',  // auto increment

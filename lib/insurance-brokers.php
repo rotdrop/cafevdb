@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -31,7 +31,7 @@ namespace CAFEVDB
   {
     const CSS_PREFIX = 'cafevdb-page';
     const TABLE = 'InsuranceBrokers';
-    private $scope;    
+    private $scope;
     private $pme;
     private $pme_bare;
     private $execute;
@@ -45,12 +45,12 @@ namespace CAFEVDB
       Config::init();
     }
 
-    public function deactivate() 
+    public function deactivate()
     {
       $this->execute = false;
     }
 
-    public function activate() 
+    public function activate()
     {
       $this->execute = true;
     }
@@ -134,7 +134,7 @@ namespace CAFEVDB
       // F - filter, I - initial sort suppressed
       $opts['options'] = 'ACPVD';
       $sort = false;
-      
+
       // Number of lines to display on multiple selection filters
       $opts['multiple'] = '6';
 
@@ -167,7 +167,7 @@ namespace CAFEVDB
       */
 
       /* Field definitions
-   
+
          Fields will be displayed left to right on the screen in the order in which they
          appear in generated list. Here are some most used field options documented.
 
@@ -208,7 +208,9 @@ namespace CAFEVDB
       $opts['fdd']['Id'] = array(
         'name'     => 'Id',
         'select'   => 'T',
-        'options'  => 'AVCPDR', // auto increment
+        'input'    => 'R',
+        'input|AP' => 'RH',
+        'options'  => 'AVCPD', // auto increment
         'maxlen'   => 11,
         'default'  => '0',
         'sort'     => $sort,
@@ -221,7 +223,7 @@ namespace CAFEVDB
         'maxlen'   => 40,
         'sort'     => $sort,
         );
-      
+
       $opts['fdd']['LongName'] = array(
         'name'     => L::t('Name'),
         'css'      => array('postfix' => ' brokername'),
@@ -240,7 +242,7 @@ namespace CAFEVDB
                             'cols' => 50),
         'sort'     => $sort,
         );
-      
+
       $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
       $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
 

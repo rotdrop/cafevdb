@@ -236,10 +236,12 @@ make sure that the musicians are also automatically added to the
       'tab'      => array('id' => 'miscinfo'),
       'name'     => 'Id',
       'select'   => 'T',
-      'options'  => 'AVCPDR', // auto increment
+      'input'    => 'R',
+      'input|AP' => 'RH', // new id, no sense to display
+      'options'  => 'AVCPD',
       'maxlen'   => 5,
       'align'    => 'right',
-      'default'  => '0',
+      'default'  => '0',  // auto increment
       'sort'     => true
       );
 
@@ -522,7 +524,7 @@ make sure that the musicians are also automatically added to the
       'input' => 'V',
       'name' => L::t('Instrument Insurance'),
       'select' => 'T',
-      'options' => 'CPDV',
+      'options' => 'CDV',
       'sql' => "`PMEtable0`.`Id`",
       'escape' => false,
       'nowrap' => true,

@@ -573,15 +573,17 @@ namespace CAFEVDB
           );
       }
 
-      // outside the expermode "if", this is the index!
+      // outside the expertmode "if", this is the index!
       $opts['fdd']['Id'] = array(
         'tab'      => array('id' => 'advanced'),
         'name'     => 'Id',
         'select'   => 'T',
-        'options'  => 'LFAVCPDR', // auto increment
+        'input'    => 'R',
+        'input|AP' => 'RH',
+        'options'  => 'LFAVCPD',
         'maxlen'   => 11,
         'align'    => 'right',
-        'default'  => '0',
+        'default'  => '0', // auto increment
         'sort'     => true,
         );
 

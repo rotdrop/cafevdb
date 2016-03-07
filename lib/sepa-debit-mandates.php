@@ -263,7 +263,9 @@ received so far'),
       $opts['fdd']['id'] = array(
         'name'     => 'Id',
         'select'   => 'T',
-        'options'  => 'AVCPDR', // auto increment
+        'input'    => 'R',
+        'input|AP' => 'RH',
+        'options'  => 'AVCPD', // auto increment
         'maxlen'   => 5,
         'align'    => 'right',
         'default'  => '0',

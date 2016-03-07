@@ -215,9 +215,11 @@ namespace CAFEVDB
       $opts['fdd']['Id'] = array(
         'name'     => 'Id',
         'select'   => 'T',
-        'options'  => 'AVCPDR', // auto increment
+        'input'    => 'R',
+        'input|AP' => 'RH', // always auto-increment
+        'options'  => 'AVCPD',
         'maxlen'   => 11,
-        'default'  => '0',
+        'default'  => '0', // auto increment
         'sort'     => true,
         );
 

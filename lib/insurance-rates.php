@@ -32,9 +32,9 @@ namespace CAFEVDB
     const CSS_PREFIX = 'cafevdb-page';
     const TABLE = 'InsuranceRates';
     const BROKER = 'InsuranceBrokers';
-    
+
     private $broker;
-    private $scope;    
+    private $scope;
     private $pme;
     private $pme_bare;
     private $execute;
@@ -46,19 +46,19 @@ namespace CAFEVDB
       $this->pme_bare = false;
 
       Config::init();
-      
+
       $handle = mySQL::connect(Config::$pmeopts);
       $this->scope  = mySQL::multiKeys(self::TABLE, 'GeographicalScope', $handle);
       $this->broker = mySQL::multiKeys(self::BROKER, 'ShortName', $handle);
       mySQL::close($handle);
     }
 
-    public function deactivate() 
+    public function deactivate()
     {
       $this->execute = false;
     }
 
-    public function activate() 
+    public function activate()
     {
       $this->execute = true;
     }
@@ -142,7 +142,7 @@ namespace CAFEVDB
       // F - filter, I - initial sort suppressed
       $opts['options'] = 'ACPVD';
       $sort = false;
-      
+
       // Number of lines to display on multiple selection filters
       $opts['multiple'] = '6';
 
@@ -175,7 +175,7 @@ namespace CAFEVDB
       */
 
       /* Field definitions
-   
+
          Fields will be displayed left to right on the screen in the order in which they
          appear in generated list. Here are some most used field options documented.
 
@@ -216,7 +216,9 @@ namespace CAFEVDB
       $opts['fdd']['Id'] = array(
         'name'     => 'Id',
         'select'   => 'T',
-        'options'  => 'AVCPDR', // auto increment
+        'input'    => 'R',
+        'input|AP' => 'RH',
+        'options'  => 'AVCPD', // auto increment
         'maxlen'   => 11,
         'default'  => '0',
         'sort'     => $sort,
@@ -230,7 +232,7 @@ namespace CAFEVDB
         'sort'     => $sort,
         'values'   => $this->broker,
         );
-      
+
       $opts['fdd']['GeographicalScope'] = array(
         'name'        => L::t('Scope'),
         'css'         => array('postfix' => ' scope'),
@@ -260,7 +262,7 @@ namespace CAFEVDB
         'maxlen' => 127,
         'sort' => $sort
         );
-      
+
       $opts['triggers']['update']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
       $opts['triggers']['insert']['before'][]  = 'CAFEVDB\Util::beforeAnythingTrimAnything';
 

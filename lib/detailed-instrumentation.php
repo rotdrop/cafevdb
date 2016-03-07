@@ -222,7 +222,8 @@ class DetailedInstrumentation
     $opts['fdd']['Id'] = array(
       'name'     => L::t('Instrumentation Id'),
       'select'   => 'T',
-      'options'  => 'AVCPDR', // auto increment
+      'input'    => 'R',
+      'options'  => 'AVCPD', // auto increment
       'maxlen'   => 5,
       'align'    => 'right',
       'default'  => '0',
