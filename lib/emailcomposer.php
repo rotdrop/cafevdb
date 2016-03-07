@@ -1463,12 +1463,12 @@ DebitNotePurpose
 
       $handle = $this->dataBaseConnect();
 
-      $query = "SELECT `Vorname` FROM `".$executiveBoard."View` ORDER BY `Reihung`,`Stimmführer`,`Vorname`";
+      $query = "SELECT `Vorname` FROM `".$executiveBoard."View` ORDER BY `Sortierung`,`Voice`,`SectionLeader` DESC,`Vorname`";
 
       $result = mySQL::query($query, $handle);
 
       if ($result === false) {
-        throw new \RuntimeException("\n".L::t('Unable to fetch executive board contents from data-base.'));
+        throw new \RuntimeException("\n".L::t('Unable to fetch executive board contents from data-base.'.$query));
       }
 
       $vorstand = array();
