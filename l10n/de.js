@@ -512,6 +512,8 @@ OC.L10N.register(
     "Data inconsistency, mandates: \"%s\", projects: \"%s\"" : "Inkonsistente Daten, Mandate: \"%s\", Projekte: \"%s\"",
     "without group" : "Ohne Gruppe",
     "%s Group Id" : "%s Gruppen-Id",
+    "add to this group" : "hinzufügen (diese Gruppe)",
+    "%s Group" : "%s Gruppe",
     "Remarks" : "Bemerkungen",
     "Projects" : "Projekte",
     "Mobile Phone" : "Mobilfunk",

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-02 04:48+0100\n"
-"PO-Revision-Date: 2016-03-01 08:01+0100\n"
+"POT-Creation-Date: 2016-03-07 01:52+0100\n"
+"PO-Revision-Date: 2016-03-07 02:22+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -51,7 +51,7 @@ msgstr "Die Notiz mit Id `%s' konnte nicht geladen werden."
 #: ajax/instrumentation/change-musician-instruments.php:179
 #: ajax/instrumentation/change-project-instrument.php:118
 #: ajax/instruments/adjustInstrumentation.php:101
-#: ajax/instruments/changeInstrumentation.php:161 ajax/pme/pme-table.php:169
+#: ajax/instruments/changeInstrumentation.php:161 ajax/pme/pme-table.php:171
 #: ajax/projects/verifyName.php:170 ajax/settings/creditslist.php:68
 msgid "Error, caught an exception"
 msgstr "Interner Fehler, Ausnahme ``aufgefangen''"
@@ -381,7 +381,7 @@ msgid "Date"
 msgstr "Datum"
 
 #: ajax/export/insurance-export.php:246 lib/detailed-instrumentation.php:270
-#: lib/detailed-instrumentation.php:757 lib/instrument-insurance.php:76
+#: lib/detailed-instrumentation.php:775 lib/instrument-insurance.php:76
 #: lib/instruments.php:244 lib/musicians.php:302
 #: lib/php-excel-functions.php:103 lib/project-extra.php:370
 #: lib/project-extra.php:508 lib/project-extra.php:609 lib/projects.php:272
@@ -745,7 +745,7 @@ msgstr "Konnte die Daten des Musikers nicht ermitteln"
 #: ajax/instrumentation/change-musician-instruments.php:104
 #: ajax/instrumentation/change-musician-instruments.php:129
 #: ajax/instruments/changeInstrumentation.php:95
-#: ajax/instruments/changeInstrumentation.php:114 ajax/pme/pme-table.php:91
+#: ajax/instruments/changeInstrumentation.php:114 ajax/pme/pme-table.php:92
 msgid "invalid arguments"
 msgstr "unsinniger Paramter-Wert"
 
@@ -784,7 +784,7 @@ msgid "Instrument choice for %s seems ok."
 msgstr "Die Instrumenten-Auswahl für %s ist wohl in Ordnung."
 
 #: ajax/instruments/adjustInstrumentation.php:48
-#: ajax/instruments/changeInstrumentation.php:64 ajax/pme/pme-table.php:79
+#: ajax/instruments/changeInstrumentation.php:64 ajax/pme/pme-table.php:80
 #: ajax/projects/verifyName.php:124
 msgid "missing arguments"
 msgstr "fehlende Parameter"
@@ -968,15 +968,15 @@ msgstr ""
 msgid "The phone number %s does not appear to be a mobile phone number. "
 msgstr "Die Rufnummer %s scheint keine Mobilfunknummer zu sein."
 
-#: ajax/pme/pme-table.php:80
+#: ajax/pme/pme-table.php:81
 msgid "No class name submitted."
 msgstr "Es wurde keine Klassenname übermittelt."
 
-#: ajax/pme/pme-table.php:92
+#: ajax/pme/pme-table.php:93
 msgid "Class arguments are not an array"
 msgstr "Die Konstruktor Argumente sind kein Feld."
 
-#: ajax/pme/pme-table.php:142
+#: ajax/pme/pme-table.php:144
 msgid ""
 "The operation would attempt to modify the data which just does not\n"
 "make sense here."
@@ -2117,7 +2117,7 @@ msgstr ""
 msgid "Photo Zoom"
 msgstr "Großes Foto"
 
-#: js/instrumentation.js:549
+#: js/instrumentation.js:629
 #, python-brace-format
 msgid ""
 "Too many group members, allowed are {limit}, you specified {count}.You will "
@@ -2250,8 +2250,8 @@ msgstr ""
 "sollte das aufgrund falscher Eintragungen oder Mißverständnissen mit\n"
 "den Musikern nötig sein."
 
-#: js/sepa-debit-mandate.js:151 lib/detailed-instrumentation.php:582
-#: lib/detailed-instrumentation.php:647 lib/detailed-instrumentation.php:1634
+#: js/sepa-debit-mandate.js:151 lib/detailed-instrumentation.php:600
+#: lib/detailed-instrumentation.php:665 lib/detailed-instrumentation.php:1811
 msgid "SEPA Debit Mandate"
 msgstr "SEPA Lastschriftmandat"
 
@@ -2502,7 +2502,7 @@ msgstr "Musiker-Id"
 msgid "Disabled"
 msgstr "Inaktiv"
 
-#: lib/detailed-instrumentation.php:269 lib/detailed-instrumentation.php:758
+#: lib/detailed-instrumentation.php:269 lib/detailed-instrumentation.php:776
 #: lib/instrument-insurance.php:77 lib/instruments.php:243
 #: lib/musicians.php:301 lib/php-excel-functions.php:99
 #: lib/project-extra.php:369 lib/project-extra.php:509
@@ -2510,7 +2510,7 @@ msgstr "Inaktiv"
 msgid "true"
 msgstr "wahr"
 
-#: lib/detailed-instrumentation.php:279 lib/detailed-instrumentation.php:287
+#: lib/detailed-instrumentation.php:279 lib/detailed-instrumentation.php:288
 #: lib/detailed-instrumentation.php:324
 msgid "Project Instrument"
 msgstr "Instrument"
@@ -2545,107 +2545,116 @@ msgstr ""
 msgid "Musican Instrument"
 msgstr "Instrument"
 
-#: lib/detailed-instrumentation.php:429
+#: lib/detailed-instrumentation.php:430
 msgid "All Instruments"
 msgstr "Alle Instrumente"
 
-#: lib/detailed-instrumentation.php:452 lib/musicians.php:362
+#: lib/detailed-instrumentation.php:464 lib/musicians.php:360
 msgid "Member Status"
 msgstr "Status"
 
-#: lib/detailed-instrumentation.php:504 lib/sepa-debit-mandates.php:488
+#: lib/detailed-instrumentation.php:516 lib/sepa-debit-mandates.php:488
 msgid "Total Charges"
 msgstr "Gesamtkosten"
 
-#: lib/detailed-instrumentation.php:550
+#: lib/detailed-instrumentation.php:568
 msgid "Direct Debit"
 msgstr "Lastschrift"
 
-#: lib/detailed-instrumentation.php:611
+#: lib/detailed-instrumentation.php:629
 #, php-format
 msgid "Data inconsistency, mandates: \"%s\", projects: \"%s\""
 msgstr "Inkonsistente Daten, Mandate: \"%s\", Projekte: \"%s\""
 
-#: lib/detailed-instrumentation.php:850
+#: lib/detailed-instrumentation.php:884 lib/detailed-instrumentation.php:931
 msgid "without group"
 msgstr "Ohne Gruppe"
 
-#: lib/detailed-instrumentation.php:868
+#: lib/detailed-instrumentation.php:910
 #, php-format
 msgid "%s Group Id"
 msgstr "%s Gruppen-Id"
 
-#: lib/detailed-instrumentation.php:890 lib/musicians.php:502
+#: lib/detailed-instrumentation.php:935
+msgid "add to this group"
+msgstr "hinzufügen (diese Gruppe)"
+
+#: lib/detailed-instrumentation.php:996
+#, php-format
+msgid "%s Group"
+msgstr "%s Gruppe"
+
+#: lib/detailed-instrumentation.php:1024 lib/musicians.php:500
 msgid "Remarks"
 msgstr "Bemerkungen"
 
-#: lib/detailed-instrumentation.php:914 lib/musicians.php:405
+#: lib/detailed-instrumentation.php:1048 lib/musicians.php:403
 msgid "Projects"
 msgstr "Projekte"
 
-#: lib/detailed-instrumentation.php:930 lib/musicians.php:423
+#: lib/detailed-instrumentation.php:1064 lib/musicians.php:421
 msgid "Mobile Phone"
 msgstr "Mobilfunk"
 
-#: lib/detailed-instrumentation.php:947 lib/musicians.php:439
+#: lib/detailed-instrumentation.php:1081 lib/musicians.php:437
 msgid "Fixed Line Phone"
 msgstr "Festnetz"
 
-#: lib/detailed-instrumentation.php:964 lib/musicians.php:458
+#: lib/detailed-instrumentation.php:1098 lib/musicians.php:456
 msgid "Street"
 msgstr "Straße"
 
-#: lib/detailed-instrumentation.php:974 lib/musicians.php:467
+#: lib/detailed-instrumentation.php:1108 lib/musicians.php:465
 msgid "Postal Code"
 msgstr "Postleitzahl"
 
-#: lib/detailed-instrumentation.php:983 lib/musicians.php:476
+#: lib/detailed-instrumentation.php:1117 lib/musicians.php:474
 msgid "City"
 msgstr "Stadt"
 
-#: lib/detailed-instrumentation.php:995 lib/musicians.php:488
+#: lib/detailed-instrumentation.php:1129 lib/musicians.php:486
 msgid "Country"
 msgstr "Land"
 
-#: lib/detailed-instrumentation.php:1010
+#: lib/detailed-instrumentation.php:1144
 msgid "General Remarks"
 msgstr "Allgemeine Bemerkungen"
 
-#: lib/detailed-instrumentation.php:1023
+#: lib/detailed-instrumentation.php:1157
 msgid "Preferred Language"
 msgstr "Sprachpräferenz"
 
-#: lib/detailed-instrumentation.php:1032 lib/musicians.php:540
+#: lib/detailed-instrumentation.php:1166 lib/musicians.php:538
 msgid "Photo"
 msgstr "Foto"
 
-#: lib/detailed-instrumentation.php:1060 lib/musicians.php:610
+#: lib/detailed-instrumentation.php:1194 lib/musicians.php:608
 #: lib/projects.php:493
 msgid "Last Updated"
 msgstr "Letzte Aktualisierung"
 
-#: lib/detailed-instrumentation.php:1640
+#: lib/detailed-instrumentation.php:1817
 msgid "Click to enter details of a potential SEPA debit mandate"
 msgstr ""
 "Anklicken um ggf. Informationen über ein SEPA-Lastschriftmandat einzutragen"
 
-#: lib/detailed-instrumentation.php:1667
+#: lib/detailed-instrumentation.php:1844
 msgid "Instrumentation related data"
 msgstr "Besetzung"
 
-#: lib/detailed-instrumentation.php:1670
+#: lib/detailed-instrumentation.php:1847
 msgid "Project related data"
 msgstr "Projekt-Daten"
 
-#: lib/detailed-instrumentation.php:1675
+#: lib/detailed-instrumentation.php:1852
 msgid "Finance related data"
 msgstr "Finanz-Daten"
 
-#: lib/detailed-instrumentation.php:1680
+#: lib/detailed-instrumentation.php:1857
 msgid "Personal data"
 msgstr "Persönliche Daten"
 
-#: lib/detailed-instrumentation.php:1683 lib/instrument-insurance.php:193
+#: lib/detailed-instrumentation.php:1860 lib/instrument-insurance.php:193
 #: lib/musicians.php:171 lib/project-extra.php:228
 #: lib/sepa-debit-mandates.php:234
 msgid "Display all columns"
@@ -3541,25 +3550,25 @@ msgstr "Instrument Schlüssel"
 msgid "Instruments"
 msgstr "Instrumente"
 
-#: lib/musicians.php:515
+#: lib/musicians.php:513
 msgid "Language"
 msgstr "Sprache"
 
-#: lib/musicians.php:525 lib/sepa-debit-mandates.php:762
+#: lib/musicians.php:523 lib/sepa-debit-mandates.php:762
 msgid "Instrument Insurance"
 msgstr "Instrumentenversicherung"
 
-#: lib/musicians.php:621
+#: lib/musicians.php:619
 #, php-format
 msgid "Add all to %s"
 msgstr "Alle zu %s"
 
-#: lib/musicians.php:861
+#: lib/musicians.php:859
 #, php-format
 msgid "Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;"
 msgstr "Gesamtsumme %02.02f &euro;, Jahresbeitrag %02.02f &euro;"
 
-#: lib/musicians.php:880
+#: lib/musicians.php:878
 msgid ""
 "Portraits or Avatars can only be added to an existing musician's profile; "
 "please add the new musician without protrait image first."
@@ -3567,32 +3576,32 @@ msgstr ""
 "Portraits oder Avatar-Bilder können nur zu existierenden Musiker-Daten "
 "hinzugefügt werden; bitte zuerst den Musiker ohne Bild hinzufügen."
 
-#: lib/musicians.php:886
+#: lib/musicians.php:884
 msgid "Photo, if available"
 msgstr "Ein Foto, falls vorhanden."
 
-#: lib/musicians.php:892
+#: lib/musicians.php:890
 #, php-format
 msgid "Drop photo to upload (max %s)"
 msgstr "Foto ablegen zum Hochladen (max %s)"
 
-#: lib/musicians.php:895
+#: lib/musicians.php:893
 msgid "Delete current photo"
 msgstr "Aktuelles Foto löschen"
 
-#: lib/musicians.php:896
+#: lib/musicians.php:894
 msgid "Edit current photo"
 msgstr "Aktuelles Foto editieren"
 
-#: lib/musicians.php:897
+#: lib/musicians.php:895
 msgid "Upload new photo"
 msgstr "Neues Foto hochladen"
 
-#: lib/musicians.php:898
+#: lib/musicians.php:896
 msgid "Select photo from ownCloud"
 msgstr "Foto aus der `Cloud' auswählen"
 
-#: lib/musicians.php:906
+#: lib/musicians.php:904
 msgid ""
 "Internal error, don't know what to do concerning portrait images in the "
 "given context."
