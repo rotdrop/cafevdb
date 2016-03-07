@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-07 02:22+0100\n"
+"POT-Creation-Date: 2016-03-07 08:29+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -280,16 +280,16 @@ msgstr ""
 msgid "Done. %d events synchronized, %d new."
 msgstr ""
 
-#: ajax/export/csv.php:32 ajax/export/excel.php:49 ajax/export/html.php:32
+#: ajax/export/csv.php:28 ajax/export/excel.php:42 ajax/export/html.php:32
 #: ajax/export/insurance-export.php:105 ajax/finance/sepa-debit-export.php:68
 msgid "instrument insurances"
 msgstr ""
 
-#: ajax/export/csv.php:36 ajax/export/excel.php:56 ajax/export/html.php:36
+#: ajax/export/csv.php:32 ajax/export/excel.php:49 ajax/export/html.php:36
 msgid "SEPA debit mandates"
 msgstr ""
 
-#: ajax/export/csv.php:77 ajax/export/excel.php:427 ajax/export/html.php:92
+#: ajax/export/csv.php:73 ajax/export/excel.php:426 ajax/export/html.php:92
 msgid "The export function for this table is not implemented, sorry."
 msgstr ""
 
@@ -299,25 +299,26 @@ msgstr ""
 
 #: ajax/export/excel.php:36
 #, php-format
-msgid "%s-brief"
-msgstr ""
-
-#: ajax/export/excel.php:43
-#, php-format
 msgid "%s-detailed"
 msgstr ""
 
-#: ajax/export/excel.php:260 lib/projects.php:1965 lib/projects.php:1966
+#: ajax/export/excel.php:257 lib/projects.php:1967 lib/projects.php:1968
 msgid "Missing Musicians"
 msgstr ""
 
-#: ajax/export/excel.php:285 ajax/export/insurance-export.php:157
-#: lib/project-instruments.php:267 lib/projects.php:1969
+#: ajax/export/excel.php:282 ajax/export/insurance-export.php:157
+#: lib/project-instruments.php:267 lib/projects.php:1971
 msgid "Instrument"
 msgstr ""
 
-#: ajax/export/excel.php:286
-msgid "Missing"
+#: ajax/export/excel.php:283 lib/project-instruments.php:297
+#: lib/project-instruments.php:311 lib/projects.php:1972
+msgid "Registered"
+msgstr ""
+
+#: ajax/export/excel.php:284 lib/project-instruments.php:323
+#: lib/project-instruments.php:337 lib/projects.php:1973
+msgid "Confirmed"
 msgstr ""
 
 #: ajax/export/insurance-export.php:68
@@ -3756,16 +3757,6 @@ msgstr ""
 msgid "Required"
 msgstr ""
 
-#: lib/project-instruments.php:297 lib/project-instruments.php:311
-#: lib/projects.php:1970
-msgid "Registered"
-msgstr ""
-
-#: lib/project-instruments.php:323 lib/project-instruments.php:337
-#: lib/projects.php:1971
-msgid "Confirmed"
-msgstr ""
-
 #: lib/project-instruments.php:348
 msgid "Balance"
 msgstr ""
@@ -3909,40 +3900,40 @@ msgstr ""
 msgid "Profit and Loss Account"
 msgstr ""
 
-#: lib/projects.php:2524
+#: lib/projects.php:2526
 msgid ""
 "Flyers can only be added to existing projects, please add the new\n"
 "project without a flyer first."
 msgstr ""
 
-#: lib/projects.php:2537
+#: lib/projects.php:2539
 #, php-format
 msgid "Drop image to upload (max %s)"
 msgstr ""
 
-#: lib/projects.php:2540
+#: lib/projects.php:2542
 msgid "Delete current flyer"
 msgstr ""
 
-#: lib/projects.php:2541
+#: lib/projects.php:2543
 msgid "Edit current flyer"
 msgstr ""
 
-#: lib/projects.php:2542
+#: lib/projects.php:2544
 msgid "Upload new flyer"
 msgstr ""
 
-#: lib/projects.php:2543
+#: lib/projects.php:2545
 msgid "Select image from ownCloud"
 msgstr ""
 
-#: lib/projects.php:2551
+#: lib/projects.php:2553
 msgid ""
 "Internal error, don't know what to do concerning project-flyers in the given "
 "context."
 msgstr ""
 
-#: lib/projects.php:2637
+#: lib/projects.php:2639
 #, php-format
 msgid ""
 "====== Project %s ======\n"
