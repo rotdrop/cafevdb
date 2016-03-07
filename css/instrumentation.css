@@ -21,58 +21,72 @@
 
 /*******************************************************************************
  *
- * project instruments dialog
+ * detailed instrumentation table
  *
  */
 
-/* make popups scrollable in smaller viewports */
-.ui-dialog.cafevdb-musician-instruments {
-  max-height: 75% !important;
-  /*top: 15% !important;*/
-  /* At least firefox has problems with overflow-x and
-     * overflow-y. Also konqueror (webkit) */
-  /* overflow-x: hidden; */
-  /* overflow-y: visible; */
-  overflow: visible;
-  padding: 0;
+div.detailed-instrumentation form.pme-form:not(.pme-change) span.allowed-option-name:empty,
+div.detailed-instrumentation form.pme-form:not(.pme-change) span.allowed-option-name:empty + span.allowed-option-value {
+    display:none;
 }
 
-#add-instruments-block {
-  padding: 0;
+div.detailed-instrumentation form.pme-form:not(.pme-change) td.groupofpeople,
+div.detailed-instrumentation form.pme-form:not(.pme-change) td.groupofpeople-id,
+div.detailed-instrumentation form.pme-form:not(.pme-change) td.surcharge.set,
+div.detailed-instrumentation form.pme-form:not(.pme-change) td.surcharge.enum {
+    min-width:10em;
 }
 
-/* Make the dialog somewhat smaller, otherwise the select 'family' box
-yields scrollbars and will be hidden */
-div.pme-table-container.Instruments {
-    height:25em !important;
-    background-color: #F2F8FF;
+div.detailed-instrumentation form.pme-form:not(.pme-change) td.surcharge.enum {
+    font-family:inherit;
 }
 
-#add-instruments-block select.musician-instruments {
-  width: 20em;
+div.detailed-instrumentation form.pme-form:not(.pme-change) span.allowed-option-name {
+    max-width:5em;
+    float:left;
 }
 
-.ui-dialog.cafevdb-musician-instruments .ui-dialog-buttonpane {
-  margin-top: 0;
+div.detailed-instrumentation form.pme-form:not(.pme-change) span.allowed-option-value.money {
+    float:right;
 }
 
-.ui-dialog.cafevdb-musician-instruments .ui-dialog-buttonpane {
-  padding: 0;
+div.detailed-instrumentation form.pme-form.pme-view span.allowed-option-name,
+div.detailed-instrumentation form.pme-form.pme-delete span.allowed-option-name,
+div.detailed-instrumentation form.pme-form.pme-view span.allowed-option-value.money,
+div.detailed-instrumentation form.pme-form.pme-delete span.allowed-option-value.money {
+    float:unset;
 }
 
-.ui-dialog.cafevdb-musician-instruments .ui-dialog-buttonpane .ui-dialog-buttonset {
-  width: 100%;
+div.detailed-instrumentation form.pme-form.pme-view td.surcharge span.allowed-option-name:after,
+div.detailed-instrumentation form.pme-form.pme-delete td.surcharge span.allowed-option-name:after {
+    content: ": ";
 }
 
-.ui-dialog.cafevdb-musician-instruments button {
-  margin-left: 0.4em;
-  margin-right: 0.4em;
+div.detailed-instrumentation form.pme-form.pme-add td.pme-key.surcharge.single-valued,
+div.detailed-instrumentation form.pme-form.pme-change td.pme-key.surcharge.single-valued,
+div.detailed-instrumentation form.pme-form.pme-copy td.pme-key.surcharge.single-valued,
+div.detailed-instrumentation form.pme-form.pme-view td.surcharge.set,
+div.detailed-instrumentation form.pme-form.pme-delete td.surcharge.set {
+    position:relative;
 }
 
-.ui-dialog.cafevdb-musician-instruments button.save {
-  float: left;
+div.detailed-instrumentation form.pme-form.pme-change td.pme-key.surcharge.single-valued span.allowed-option-name.money,
+div.detailed-instrumentation form.pme-form.pme-add td.pme-key.surcharge.single-valued span.allowed-option-name.money,
+div.detailed-instrumentation form.pme-form.pme-delete td.pme-key.surcharge.single-valued span.allowed-option-name.money {
+    margin-right:6em; /* leave room for absolute positioned money value */
 }
 
-.ui-dialog.cafevdb-musician-instruments button.cancel {
-  float: right;
+div.detailed-instrumentation form.pme-form.pme-change td.pme-key.surcharge.single-valued span.allowed-option-value.money,
+div.detailed-instrumentation form.pme-form.pme-add td.pme-key.surcharge.single-valued span.allowed-option-value.money,
+div.detailed-instrumentation form.pme-form.pme-delete td.pme-key.surcharge.single-valued span.allowed-option-value.money {
+    position:absolute;
+    right:1em;
+}
+
+div.detailed-instrumentation form.pme-form.pme-view td.surcharge.set span.allowed-option-value.money,
+div.detailed-instrumentation form.pme-form.pme-delete td.surcharge.set span.allowed-option-value.money {
+    font-family:monospace;
+    font-size:120%;
+    position:absolute;
+    left:12em;
 }

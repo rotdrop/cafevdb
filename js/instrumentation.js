@@ -344,6 +344,9 @@ var CAFEVDB = CAFEVDB || {};
     var selectVoices = container.find('select.pme-input.instrument-voice');
     var form = container.find(PHPMYEDIT.pmeClassSelector('form', 'form'));
 
+    var recKey = form.find(PHPMYEDIT.pmeSysNameSelector('input', 'rec'));
+    recKey = recKey.length === 1 ? recKey.val() : -1;
+
     var selectedVoices = selectVoices.val();
     selectVoices.data('selected', selectVoices ? selectedVoices : []);
 
@@ -474,21 +477,54 @@ var CAFEVDB = CAFEVDB || {};
       return false;
     });
 
+    // enable or disable ungrouped items
+    var maskUngrouped = function(select, disable) {
+      select.find('option').each(function(index) {
+        var option = $(this);
+        var data = option.data('data');
+//console.log('option', option);
+        if (data.GroupId == -1) {
+          option.prop('disabled', disable);
+        }
+      });
+    };
+
+    var selectGroup = function(select, group, doSelect) {
+      if (typeof doSelect === 'undefined') {
+        doSelect = true;
+      }
+      select.find('option').each(function(index) {
+        var option = $(this);
+        var data = option.data('data');
+        if (data.GroupId === group) {
+          option.prop('selected', doSelect);
+        }
+      });
+    };
+
     // foreach group remember the current selection of people and the
     // group
     selectGroupOfPeople.each(function(idx) {
       var self = $(this);
       var curSelected = self.val();
       self.data('selected', curSelected ? curSelected : []);
-      var name =self.attr('name');
-      var groupFieldName = name.slice(0, -2)+'GroupId';
-      self.data('groupField', form.find('input[name="'+groupFieldName+'"]'));
+      var name = self.attr('name');
+      console.log('group df name', name);
+      var groupFieldName = name.slice(0, -2)+'Id';
+      console.log('group id name', name);
+      self.data('groupField', form.find('[name="'+groupFieldName+'"]'));
+      console.log('#groupIdFields', self.data('groupField').length);
+      //console.log('groupField', self.data('groupField'));
+
+      if (self.hasClass('predefined') && recKey > 0 &&
+          (!curSelected || curSelected.indexOf(recKey) < 0)) {
+        maskUngrouped(self, true);
+        self.trigger('chosen:updated');
+      }
     });
 
     selectGroupOfPeople.off('change').on('change', function(event) {
       var self = $(this); // just the current one
-      var recKey = form.find(PHPMYEDIT.pmeSysNameSelector('input', 'rec'));
-      recKey = recKey.length === 1 ? recKey.val() : -1;
 
       var selected = self.val();
       if (!selected) {
@@ -503,54 +539,100 @@ var CAFEVDB = CAFEVDB || {};
       console.log('prevSelected', prevSelected);
       console.log('selected', selected);
 
+      var groupOption = null;
+      self.find('option:selected').each(function(index) {
+        var option = $(this);
+        if (option.val() < 0) {
+          groupOption = option;
+          return false;
+        }
+        return true;
+      });
+
       if (recPrev && !recCur) {
         // just removed the current key from the group, undefine group
         // and empty select-box
         self.find('option:selected').prop('selected', false);
-        self.data('groupField').val(null);
+        CAFEVDB.selectValues(self.data('groupField'), false);
+        maskUngrouped(self, true);
         changed = true;
       } else {
         if (!recPrev && !recCur && selected.length > 0) {
           // add current record
+          console.log('add record', recKey);
           self.find('option[value="'+recKey+'"]').prop('selected', true);
           selected.push(recKey);
           changed = true;
         }
         if (selected.length >= prevSelected.length &&
-            selected.length == 1+(recCur === recPrev)) {
+            (selected.length == 1+(recCur === recPrev) || groupOption)) {
           // single new item which is not the current one, potentially
           // add the entire group.
-          var option;
+          console.log('single new item');
+          var singleNewOption = null;
           self.find('option:selected').each(function(idx) {
             var self = $(this);
             if (self.val() != recKey) {
-              option = self;
+              singleNewOption = self;
+              return false;
             }
+            return true;
           });
-          var data = option.data('data');
-          if (data.GroupId > 0) {
+console.log('other people group option', singleNewOption.length);
+console.log('key', recKey);
+          var data = singleNewOption.data('data');
+          if (data.GroupId != -1) {
             console.log('group: ', data.GroupId);
-            option.parent().find('option').prop('selected', true);
-            self.data('groupField').val(data.GroupId);
+            selectGroup(self, data.GroupId);
+            CAFEVDB.selectValues(self.data('groupField'), data.GroupId);
+            maskUngrouped(self, false);
             changed = true;
           }
         }
       }
+
+      self.find('option:selected').each(function(index) {
+        var option = $(this);
+        if (option.val() < 0) {
+console.log('deselect', option.val());
+          option.prop('selected', false);
+          changed = true;
+        }
+      });
+
       var curSelected = self.val();
       curSelected = curSelected ? curSelected : [];
       self.data('selected', curSelected);
 
-      // emit a warning if the limit is exhausted.
-      var limit = self.closest('td').data('groups');
-      limit = limit.Limit;
+      var limit = -1;
+      var groupData =  self.closest('td').data('groups');
+      if (typeof groupData.Limit !== 'undefined') {
+        // emit a warning if the limit is exhausted.
+        limit = self.closest('td').data('groups');
+        limit = limit.Limit;
+      } else {
+        var groupId = CAFEVDB.selectValues(self.data('groupField'));
+        console.log('Id', groupId);
+        for (var i = 0; i < groupData.length; ++i) {
+          console.log('data', groupData[i]);
+          if (groupData[i].key === groupId) {
+            console.log('limit', limit);
+            limit = groupData[i].limit;
+          }
+        }
+      }
 
-      if (curSelected.length > limit) {
+      console.log('group limit', limit);
+
+      if (limit > 0 && curSelected.length > limit) {
         OC.Notification.showTemporary(t('cafevdb',
                                         'Too many group members, allowed are {limit}, you specified {count}.'
                                                   + 'You will not be able to save this configuration.',
                                         { limit: limit, count: curSelected.length }),
                                       { isHTML: true, timeout: 30 }
                                      );
+        console.log('exceeding limit');
+        CAFEVDB.selectValues(self, prevSelected);
       } else {
         OC.Notification.hide();
       }

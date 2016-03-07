@@ -284,6 +284,7 @@ class DetailedInstrumentation
 
     $prInstIdx = count($opts['fdd']);
     $opts['fdd']['ProjectInstrumentId'] = array(
+      'tab'         => array('id' => array('instrumentation', 'project')),
       'name'        => L::t('Project Instrument'),
       'select'      => 'M',
       'sql'         => 'GROUP_CONCAT(DISTINCT ProjectInstrumentId ORDER BY PMEtable0.Sortierung ASC)',
@@ -295,7 +296,8 @@ class DetailedInstrumentation
         'table'       => 'Instrumente',
         'column'      => 'Id',
         'orderby'     => '$table.Sortierung',
-        'description' => array('columns' => array('Instrument')),
+        'description' => 'Instrument',
+        'groups'      => 'Familie',
         /* This rather fancy fillter masks out all instruments
          * currently not registerd with the given musician, but allows
          * for the currently active instrument.
@@ -307,17 +309,15 @@ class DetailedInstrumentation
         'join' => '$join_table.Id = $main_table.ProjectInstrumentId'
         ),
       'values|LF' => array(
-        'table'   => 'Instrumente',
-        'column'  => 'Id',
-        'orderby' => '$table.Sortierung',
-        'description' => array('columns' => array('Instrument')),
-        'filters' => ("`Id` IN ".
-                      "(SELECT DISTINCT `ProjectInstrumentId` FROM `\$main_table` WHERE 1)"),
-        'join' => '$join_table.Id = $main_table.ProjectInstrumentId'
+        'table'       => 'Instrumente',
+        'column'      => 'Id',
+        'orderby'     => '$table.Sortierung',
+        'description' => 'Instrument',
+        'groups'      => 'Familie',
+        'filters'     => ("`Id` IN ".
+                          "(SELECT DISTINCT `ProjectInstrumentId` FROM `\$main_table` WHERE 1)"),
+        'join'        => '$join_table.Id = $main_table.ProjectInstrumentId'
         ),
-      'values2|VD' => $this->instruments,
-      'valueGroups' => $this->instrumentInfo['idGroups'],
-      'tab' => array('id' => array('instrumentation', 'project'))
       );
 
     $opts['fdd']['ProjectInstrument'] = array(
@@ -426,6 +426,7 @@ FROM $mainTable",
       );
 
     $opts['fdd']['MusicianInstrumentId'] = array(
+      'tab'         => array('id' => array('musician', 'instrumentation')),
       'name'        => L::t('All Instruments'),
       'css'         => array('postfix' => ' musician-instruments tooltip-top'),
       'display|LF'  => array('popup' => 'data'),
@@ -434,10 +435,21 @@ FROM $mainTable",
       'select'      => 'M',
       'maxlen'      => 136,
       'sort'        => true,
-      'values2'     => $this->instrumentInfo['byId'],
-      'valueGroups' => $this->instrumentInfo['idGroups'],
-      'tab'         => array('id' => array('musician', 'instrumentation'))
+      'values'      => [
+        'table'       => 'Instrumente',
+        'column'      => 'Id',
+        'description' => 'Instrument',
+        'orderby'     => 'Sortierung',
+        'groups'      => 'Familie',
+        ],
       );
+    $opts['fdd']['MusicianInstrumentId']['values|CP'] = array_merge(
+      $opts['fdd']['MusicianInstrumentId']['values'],
+      [ 'filters' => '$table.Disabled = 0' ]);
+    $opts['fdd']['MusicianInstrumentId']['values|LF'] = array_merge(
+      $opts['fdd']['MusicianInstrumentId']['values'],
+      [ 'filters' =>
+        "`Id` IN (SELECT DISTINCT `MusicianInstrumentId` FROM `\$main_table` WHERE 1)" ]);
 
     $opts['fdd']['Sortierung'] = array(
       'name'     => 'Orchester Sortierung',
@@ -514,7 +526,13 @@ FROM $mainTable",
             if (!isset($monetary[$label])) {
               continue;
             }
-            $value = $row['qf'.$key];
+            $qf    = "qf{$key}";
+            $qfidx = $qf.'_idx';
+            if (isset($row[$qfidx])) {
+              $value = $row[$qfidx];
+            } else {
+              $value = $row[$qf];
+            }
             if (empty($value)) {
               continue;
             }
@@ -696,7 +714,7 @@ FROM $mainTable",
         'sort'     => true
         );
 
-      $fdd = &$opts['fdd'][$name];
+      $fdd = &$opts['fdd'][$fieldName];
       if (!empty($field['ToolTip'])) {
         $opts['fdd'][$name]['tooltip'] = $field['ToolTip'];
       }
@@ -758,7 +776,7 @@ FROM $mainTable",
                                      $key => L::t('true'));
         $fdd['select'] = 'O';
         $fdd['default'] = (string)!!(int)$field['DefaultValue'];
-        $fdd['css']['postfix'] .= ' boolean';
+        $fdd['css']['postfix'] .= ' boolean single-valued';
         unset($fdd['textarea']);
         break;
       case 'Enum':
@@ -779,29 +797,37 @@ FROM $mainTable",
         // just use the amount to pay as label
         reset($values2); $key = key($values2);
         $money = Util::moneyValue(reset($valueData));
-        $fdd['values2|CAP'] = array($key => $money); // empty label for simple checkbox
+        $fdd['values2|CAP'] = array($key => ''); // empty label for simple checkbox
         $fdd['values2|LVDF'] = array(0 => '-,--',
                                      $key => $money);
-        $fdd['select'] = 'O';
+        $fdd['select'] = 'C';
         $fdd['default'] = (string)!!(int)$field['DefaultValue'];
-        $fdd['css']['postfix'] .= ' boolean money surcharge';
+        $fdd['css']['postfix'] .= ' boolean money surcharge single-valued';
+        $fdd['name|LFVD'] = $fdd['name'];
+        $fdd['name'] = '<span class="allowed-option-name money">'.$fdd['name'].'</span><span class="allowed-option-value money">'.$money.'</span>';
         unset($fdd['textarea']);
         break;
       case 'SurchargeEnum':
       case 'SurchargeSet':
         foreach($values2 as $key => $value) {
           $money = Util::moneyValue($valueData[$key], Config::$locale);
-          $mlen = mb_strlen($money);
-          $vlen = mb_strlen($value);
-          $padr = 10;
-          $padl = 10;
-          while ($vlen++ < $padr) {
-            $value .= '&nbsp;';
+          if (false) {
+            $mlen = mb_strlen($money);
+            $vlen = mb_strlen($value);
+            $padr = 10;
+            $padl = 10;
+            while ($vlen++ < $padr) {
+              $value .= '&nbsp;';
+            }
+            while ($mlen++ < $padl) {
+              $money = '&nbsp;'.$money;
+            }
+            $values2[$key] = $value.$money;
+          } else {
+            $value = '<span class="allowed-option-name money multiple-choice">'.$value.'</span>';
+            $money = '<span class="allowed-option-value money">'.'&nbsp;'.$money.'</span>';
+            $values2[$key] = $value.$money;
           }
-          while ($mlen++ < $padl) {
-            $money = '&nbsp;'.$money;
-          }
-          $values2[$key] = $value.'&nbsp;&nbsp;&nbsp;'.$money;
         }
         $fdd['values2'] = $values2;
         $fdd['values2glue'] = "<br/>";
@@ -820,11 +846,19 @@ FROM $mainTable",
         break;
       case 'SimpleGroup':
       case 'SurchargeGroup':
+        // keep the original value as hidden input field and generate
+        // a new group-definition field as yet another column
+        $opts['fdd'][$fieldName.'Group'] = $fdd;
+        $fdd['input'] = 'H';
+        $fdd = &$opts['fdd'][$fieldName.'Group'];
+        $curColIdx++;
+
+        // define the group stuff
         $max = $allowed[0]['limit']; // ATM, may change
         $fdd = array_merge(
           $fdd, [
             'select' => 'M',
-            'sql' => "GROUP_CONCAT(DISTINCT PMEjoin$curColIdx.InstrumentationId)",
+            'sql' => "GROUP_CONCAT(DISTINCT PMEjoin{$curColIdx}.InstrumentationId)",
             'display' => [ 'popup' => 'data' ],
             'colattrs' => [ 'data-groups' => json_encode([ 'Limit' => $max ]), ],
             'filter' => 'having',
@@ -845,17 +879,25 @@ WHERE b.ProjektId = $projectId",
               'groups' => "CONCAT('".$fieldName." ',\$table.GroupId)",
               'data' => "CONCAT('{\"Limit\":".$max.",\"GroupId\":\"',IFNULL(\$table.GroupId,-1),'\"}')",
               'orderby' => '$table.GroupId ASC, $table.LastName ASC, $table.FirstName ASC',
-              'join' => '$main_table.'.$fieldName.' = $join_table.GroupId',
+              'join' => '$main_table.`'.$fieldName.'` = $join_table.GroupId',
               ],
             'valueGroups' => [ -1 => L::t('without group') ],
             ]);
-        $fdd['css']['postfix'] .= ' groupofpeople clip-long-text';
+        $fdd['css']['postfix'] .= ' groupofpeople single-valued';
 
         if ($type['Name'] === 'SurchargeGroup') {
+          $fdd['css']['postfix'] .= ' surcharge';
           $money = Util::moneyValue(reset($valueData));
-          $sql = $fdd['sql'];
-          $fdd['values2|LFVD'][-1] = $money;
-          $fdd['sql|LFVD'] = "IF($sql IS NULL, NULL, CONCAT('-1,', $sql))";
+          $fdd['name|LFVD'] = $fdd['name'];
+          $fdd['name'] = '<span class="allowed-option-name money">'.$fdd['name'].'</span><span class="allowed-option-value money">'.$money.'</span>';
+          $fdd['display|LFVD'] = array_merge(
+            $fdd['display'],
+            [
+              'prefix' => '<span class="allowed-option-name clip-long-text group">',
+              'postfix' => ('</span><span class="allowed-option-value money">'.
+                            $money.
+                            '</span>'),
+              ]);
         }
 
         // in filter mode mask out all non-group-members
@@ -866,10 +908,102 @@ WHERE b.ProjektId = $projectId",
         // after all this tweaking, we still need the real group id
         $opts['fdd'][$fieldName.'GroupId'] = [
           'name'     => L::t('%s Group Id', array($name)),
-          'input'    => 'SH',
-          //          'input|AC' => 'R',
+          'css'      => [ 'postfix' => ' groupofpeople-id' ],
+          'input|LFVD' => 'VRH',
+          'input'      => 'SRH',
           'select'   => 'T',
-          'sql'      => $fieldName
+          'sql'      => 'PMEtable0.`'.$fieldName.'`',
+          ];
+        break;
+      case 'PredefinedGroups':
+      case 'SurchargeGroups':
+        // keep the original value as hidden input field and generate
+        // a new group-definition field as yet another column
+        $opts['fdd'][$fieldName.'Group'] = $fdd;
+        $fdd['input'] = 'H';
+        $fdd = &$opts['fdd'][$fieldName.'Group'];
+        $curColIdx++;
+
+        // define the group stuff
+        $groupValues2   = $values2;
+        $groupValueData = $valueData;
+        $values2 = [];
+        $valueGroups = [ -1 => L::t('without group') ];
+        $idx = -1;
+        foreach($allowed as $value) {
+          $valueGroups[--$idx] = $value['key'];
+          $values2[$idx] = L::t('add to this group');
+          $valueData[$idx] = json_encode([ 'GroupId' => $value['key'] ]);
+        }
+        // TODO:
+        //
+        // group names wrong
+        // group id is displayed as select.
+        // finance: value is description.
+        //
+        $fdd = array_merge(
+          $fdd, [
+            'select' => 'M',
+            'sql' => "GROUP_CONCAT(DISTINCT PMEjoin{$curColIdx}.InstrumentationId)",
+            'display' => [ 'popup' => 'data' ],
+            'colattrs' => [ 'data-groups' => json_encode($allowed), ],
+            'filter' => 'having',
+            'values' => [
+              'table' => "SELECT
+  b.Id AS InstrumentationId,
+  CONCAT_WS(' ', m.Vorname, m.Name) AS Name,
+  m.Name AS LastName, m.Vorname AS FirstName,
+  fd.FieldValue AS GroupId
+FROM Besetzungen b
+LEFT JOIN Musiker AS m
+  ON b.MusikerId = m.Id
+LEFT JOIN ProjectExtraFieldsData fd
+  ON b.Id = fd.BesetzungenId AND fd.FieldId = $fieldId
+WHERE b.ProjektId = $projectId",
+              'column' => 'InstrumentationId',
+              'description' => 'Name',
+              'groups' => "\$table.GroupId",
+              'data' => "CONCAT('{\"GroupId\":\"',IFNULL(\$table.GroupId, -1),'\"}')",
+              'orderby' => '$table.GroupId ASC, $table.LastName ASC, $table.FirstName ASC',
+              'join' => '$main_table.'.$fieldName.' = $join_table.GroupId',
+              ],
+            'valueGroups' => $valueGroups,
+            'valueData' => $valueData,
+            'values2' => $values2,
+            ]);
+        $fdd['css']['postfix'] .= ' groupofpeople predefined clip-long-text';
+        $fdd['css|LFVD']['postfix'] = $fdd['css']['postfix'].' view';
+
+        // in filter mode mask out all non-group-members
+        $fdd['values|LF'] = array_merge(
+          $fdd['values'],
+          [ 'filters' => '$table.GroupId IS NOT NULL' ]);
+
+        $css = ' groupofpeople-id predefined';
+        if ($type['Name'] === 'SurchargeGroups') {
+          $css .= ' surcharge';
+          foreach($groupValues2 as $key => $value) {
+            $money = Util::moneyValue($groupValueData[$key], Config::$locale);
+            $groupValues2ACP[$key] = $value.':&nbsp;'.$money;
+            $value = '<span class="allowed-option-name group clip-long-text">'.$value.'</span>';
+            $money = '<span class="allowed-option-value money">'.'&nbsp;'.$money.'</span>';
+            $groupValues2[$key] = $value.$money;
+          }
+        }
+
+        // after all this tweaking, we still need the real group id
+        $opts['fdd'][$fieldName.'GroupId'] = [
+          'name'        => L::t('%s Group', array($name)),
+          'css'         => [ 'postfix' => $css ],
+          'input|LFVD'  => 'VR',
+          'input'       => 'SR',
+          'select'      => 'D',
+          'sql'         => $fieldName,
+          'values2'     => $groupValues2,
+          'values2|ACP' => $groupValues2ACP,
+          'display'     => [ 'popup' => 'data' ],
+          'sort'        => true,
+          'escape'      => false,
           ];
         break;
       default:
@@ -1064,6 +1198,7 @@ WHERE b.ProjektId = $projectId",
             'input'   => 'R',
             "options" => 'LFAVCPD' // Set by update trigger.
         ));
+
 
     $opts['triggers']['update']['before'] = [];
     $opts['triggers']['update']['before'][] = 'CAFEVDB\Util::beforeAnythingTrimAnything';
@@ -1358,7 +1493,6 @@ WHERE b.ProjektId = $projectId",
     /*
      *
      *************************************************************************/
-
     $types = ProjectExtra::fieldTypes($pme->dbh);
     $extraFields = ProjectExtra::projectExtraFields($projectId, true, $pme->dbh);
     foreach ($extraFields as $field) {
@@ -1366,11 +1500,17 @@ WHERE b.ProjektId = $projectId",
       $fieldId   = $field['Id'];
       $idName    = $fieldName.'Id';
 
-      if (($extraKey = array_search($fieldName, $changed)) === false) {
-        // don't bother if fields are anchanged ...
-        //error_log('unchanged');
+      if (($extraKey = array_search($fieldName, $changed)) === false &&
+          ($extraKeyGroup= array_search($fieldName.'Group', $changed)) === false &&
+          ($extraKeyGroupId = array_search($fieldName.'GroupId', $changed)) === false) {
+        // don't bother if fields are unchanged ...
+        //error_log('unchanged: '.$fieldName);
         continue;
       }
+
+      /* error_log('Key '.$extraKey); */
+      /* error_log('KeyGroup '.$extraKeyGroup); */
+      /* error_log('KeyGroupId '.$extraKeyGroupId); */
 
       $changed[] = 'Aktualisiert';
 
@@ -1405,6 +1545,10 @@ WHERE b.ProjektId = $projectId",
         $oldValues[$idName] = $idx;
       }
 
+      //error_log('type'.print_r($types[$field['Type']], true));
+
+      $handled = false;
+
       // Tweaks for individual fields
       switch($types[$field['Type']]['Name']) {
       case 'Integer':
@@ -1415,6 +1559,7 @@ WHERE b.ProjektId = $projectId",
             $changed[] = $fieldName;
           }
         }
+        $handled = true;
         break;
       case 'Float':
         // as we only store texts internally, force to float now ...
@@ -1424,6 +1569,7 @@ WHERE b.ProjektId = $projectId",
             $changed[] = $fieldName;
           }
         }
+        $handled = true;
         break;
       case 'Boolean':
         // as we only store texts internally, force to int now ...
@@ -1433,36 +1579,55 @@ WHERE b.ProjektId = $projectId",
             $changed[] = $fieldName;
           }
         }
+        $handled = true;
         break;
       case 'SurchargeGroup':
       case 'SimpleGroup':
-        //error_log('************ simple group');
+      case 'PredefinedGroups':
+      case 'SurchargeGroups':
+        //error_log('************ groups');
         // Here the group update logic has to go. Oops.
         $allowed = ProjectExtra::explodeAllowedValues($field['AllowedValues']);
-        $max = $allowed[0]['limit']; // ATM, may change
-
         //error_log('************* values: '.print_r($allowed, true));
 
         // $changed almost always contains the group because the
         // values submitted by the form are the group participants,
         // while the value stored in the DB is the group id.
-        $newIds = Util::explode(',', $newValues[$fieldName]);
-        $oldIds = Util::explode(',', $oldValues[$fieldName]);
-        if (count($newIds) > $max) {
-          //error_log('************ too many');
-          return false;
-        }
+        $newIds = Util::explode(',', $newValues[$fieldName.'Group']);
+        $oldIds = Util::explode(',', $oldValues[$fieldName.'Group']);
+
         $oldGroupId = $oldValues[$fieldName.'GroupId'];
         $newGroupId = $newValues[$fieldName.'GroupId'];
 
-        //error_log('********* old new group: '.$newGroupId);
-        if (empty($newGroupId)) {
-          // generate a new one ...
-          $newGroupId = ProjectExtra::maxFieldValue($fieldId, $pme->dbh);
-          ++$newGroupId;
+        /* error_log('********* old ids: '.print_r($oldIds, true)); */
+        /* error_log('********* new ids: '.print_r($newIds, true)); */
+        /* error_log('********* old group: '.$oldGroupId); */
+        /* error_log('********* new group: '.$newGroupId); */
+
+        $max = -1;
+        if ($types[$field['Type']]['Multiplicity'] === 'groupofpeople') {
+          $max = $allowed[0]['limit']; // ATM, may change
+
+          //error_log('********* old new group: '.$newGroupId);
+          if (empty($newGroupId)) {
+            // generate a new one ...
+            $newGroupId = ProjectExtra::maxFieldValue($fieldId, $pme->dbh);
+            ++$newGroupId;
+          }
+          //error_log('********* new new group: '.$newGroupId);
+        } else {
+          // predefined groups
+          foreach($allowed as $value) {
+            if ($value['key'] === $newGroupId) {
+              $max = $value['limit'];
+            }
+          }
         }
-        //error_log('********* old group: '.$oldGroupId);
-        //error_log('********* new group: '.$newGroupId);
+
+        if ($max > 0 && count($newIds) > $max) {
+          //error_log('************ too many');
+          return false;
+        }
 
         /* TODO: fix the update rules.
          *
@@ -1476,7 +1641,7 @@ WHERE b.ProjektId = $projectId",
         $table = 'ProjectExtraFieldsData';
         if ($oldGroupId === $newGroupId) {
           // just update list of members
-
+          //error_log('update group '.$newGroupId);
           // record removed ids
           foreach(array_diff($oldIds, $newIds) as $id) {
             $query = "DELETE FROM $table WHERE
@@ -1542,9 +1707,21 @@ WHERE b.ProjektId = $projectId",
             }
           }
         }
-        unset($changed[$extraKey]);
-        unset($newValues[$fieldName]);
+        $handled = true;
         break;
+      }
+
+      if ($handled) {
+        //error_log('I am here!');
+        if ($extraKey !== false) {
+          unset($changed[$extraKey]);
+        }
+        if ($extraKeyGroup !== false) {
+          unset($changed[$extraKeyGroup]);
+        }
+        if ($extraKeyGroupId !== false) {
+          unset($changed[$extraKeyGroupId]);
+        }
       }
     }
 
@@ -1727,6 +1904,7 @@ WHERE b.ProjektId = $projectId",
    */
   public static function extraFieldSurcharge($value, $allowedValues, $multiplicity)
   {
+    //error_log('value '.$value);
     switch ($multiplicity) {
     case 'groupofpeople':
     case 'single':
@@ -1739,6 +1917,7 @@ WHERE b.ProjektId = $projectId",
                             \OCP\Util::WARN);
       }
       return (float)$allowedValues[0]['data'];
+    case 'groupsofpeople':
     case 'multiple':
       foreach($allowedValues as $item) {
         if ($item['key'] === $value) {

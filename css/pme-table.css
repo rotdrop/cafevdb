@@ -836,6 +836,7 @@ div#project_flyer_upload {
 }
 
 td.pme-cell.clip-long-text,
+td.pme-cell .clip-long-text,
 td.pme-cell.musician-instruments {
   width:12em;
   max-width:12em;
@@ -843,6 +844,12 @@ td.pme-cell.musician-instruments {
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
+}
+
+td.pme-cell span.clip-long-text {
+  max-height:unset;
+  display:inline-block;
+  vertical-align:top;
 }
 
 td.pme-cell.projects {
@@ -913,10 +920,10 @@ table.pme-main td.pme-cell.hide-subsequent-lines {
 }
 
 /* Make all remarks shorter */
-table.pme-main td.pme-cell.remarks:first-line,
-table.pme-main td.pme-cell.remarks p:nth-child(1):first-line,
-table.pme-main td.pme-cell.hide-subsequent-lines:first-line,
-table.pme-main td.pme-cell.hide-subsequent-lines p:nth-child(1):first-line {
+table.pme-main td.pme-cell.remarks::first-line,
+table.pme-main td.pme-cell.remarks p:nth-child(1)::first-line,
+table.pme-main td.pme-cell.hide-subsequent-lines::first-line,
+table.pme-main td.pme-cell.hide-subsequent-lines p:nth-child(1)::first-line {
   font-size:400%; /* seems to be relative to !first-line */
   line-height:100%;
   max-width:20em;
