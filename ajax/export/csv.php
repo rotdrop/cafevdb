@@ -19,10 +19,6 @@ case 'all-musicians':
   $table = new CAFEVDB\Musicians(false, false);
   $name  = 'musicians';
   break;
-case 'brief-instrumentation':
-  $table = new CAFEVDB\BriefInstrumentation(false);
-  $name = Util::cgiValue('ProjectName').'-brief';
-  break;
 case 'detailed-instrumentation':
   $table = new CAFEVDB\DetailedInstrumentation(false);
   $name = Util::cgiValue('ProjectName').'-detailed';

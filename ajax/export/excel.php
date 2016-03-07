@@ -29,19 +29,12 @@ case 'all-musicians':
   $table = new CAFEVDB\Musicians(false, false);
   $name  = L::t('musicians');
   break;
-case 'brief-instrumentation':
-  $table = new CAFEVDB\BriefInstrumentation(false);
-  $projectId   = $table->projectId;
-  $projectName = $table->projectName;
-  $name = L::t("%s-brief", array($projectName));
-  $instrumentCol = 2;
-  break;
 case 'detailed-instrumentation':
   $table = new CAFEVDB\DetailedInstrumentation(false);
   $projectId = $table->projectId;
   $projectName = $table->projectName;
   $name = L::t("%s-detailed", array($projectName));
-  $instrumentCol = 0;
+  $instrumentCol = 2;
   break;
 case 'instrument-insurance':
   if (false) {
@@ -78,7 +71,9 @@ if ($table) {
     $missingInfo["instruments"] = array_keys($numbers);
     $missingInfo["lastKeyword"] = false;
     $missingInfo["column"]      = $instrumentCol;
-    $missing = array_filter($numbers, function ($val) { return $val > 0; });
+    $missing = array_filter($numbers, function ($val) {
+        return $val['Registered'] > 0 || $val['Confirmed'] > 0;
+      });
   }
 
   $creator   = Config::getValue('emailfromname', 'Bilbo Baggins');
@@ -129,11 +124,13 @@ if ($table) {
     // Dump-row callback
     function ($i, $lineData) use ($sheet, &$offset, &$rowCnt, &$missingInfo) {
       if ($i >= 2 && !empty($missingInfo)) {
+        //error_log(print_r($lineData, true));
+        //error_log(print_r($missingInfo, true));
         $col = $missingInfo["column"];
         while (!empty($missingInfo["instruments"]) &&
                $missingInfo["instruments"][0] != $lineData[$col]) {
           $instrument = array_shift($missingInfo["instruments"]);
-          for ($k = 0; $k < $missingInfo["missing"][$instrument]; ++$k) {
+          for ($k = 0; $k < $missingInfo["missing"][$instrument]['Registered']; ++$k) {
             $sheet->setCellValue(chr(ord("A")+$col).($i+$k+$offset), $instrument);
             ++$rowCnt;
             $sheet->getStyle('A'.($i+$k+$offset).':'.$sheet->getHighestColumn().($i+$k+$offset))->applyFromArray(
@@ -180,7 +177,7 @@ if ($table) {
     $col = $missingInfo["column"];
     while (!empty($missingInfo["instruments"])) {
       $instrument = array_shift($missingInfo["instruments"]);
-      for ($k = 0; $k < $missingInfo["missing"][$instrument]; ++$k) {
+      for ($k = 0; $k < $missingInfo["missing"][$instrument]['Registered']; ++$k) {
         $sheet->setCellValue(chr(ord("A")+$col).($i+$k+$offset), $instrument);
         ++$rowCnt;
         $sheet->getStyle('A'.($i+$k+$offset).':'.$sheet->getHighestColumn().($i+$k+$offset))->applyFromArray(
@@ -258,7 +255,7 @@ if ($table) {
       $missingStart = $rowNumber = $sheet->getHighestRow() + 4;
 
       $sheet->setCellValue("A$rowNumber", L::t("Missing Musicians"));
-      $sheet->mergeCells("A$rowNumber:B$rowNumber");
+      $sheet->mergeCells("A$rowNumber:C$rowNumber");
       $sheet->getRowDimension($rowNumber)->setRowHeight($pt_height+$pt_height/4);
 
       // Format the mess a little bit
@@ -283,11 +280,12 @@ if ($table) {
       ++$rowNumber;
 
       $sheet->setCellValue("A$rowNumber", L::t("Instrument"));
-      $sheet->setCellValue("B$rowNumber", L::t("Missing"));
+      $sheet->setCellValue("B$rowNumber", L::t("Registered"));
+      $sheet->setCellValue("C$rowNumber", L::t("Confirmed"));
       $sheet->getRowDimension($rowNumber)->setRowHeight($pt_height+$pt_height/4);
 
       // Format the mess a little bit
-      $sheet->getStyle("A$rowNumber:B$rowNumber")->applyFromArray(
+      $sheet->getStyle("A$rowNumber:C$rowNumber")->applyFromArray(
         array(
           'font'    => array(
             'bold'      => true
@@ -307,15 +305,16 @@ if ($table) {
 
       $cnt = 0;
       foreach ($missing as $instrument => $number) {
-        if ($number <= 0) {
+        if ($number['Registered'] <= 0 && $number['Confirmed'] <= 0) {
           continue;
         }
         ++$rowNumber;
         ++$cnt;
         $sheet->setCellValue("A$rowNumber", $instrument);
-        $sheet->setCellValue("B$rowNumber", $number);
+        $sheet->setCellValue("B$rowNumber", $number['Registered']);
+        $sheet->setCellValue("C$rowNumber", $number['Confirmed']);
 
-        $sheet->getStyle("A$rowNumber:B$rowNumber")->applyFromArray(
+        $sheet->getStyle("A$rowNumber:C$rowNumber")->applyFromArray(
           array(
             'fill' => array(
               'type'  => PHPExcel_Style_Fill::FILL_SOLID,
@@ -325,7 +324,7 @@ if ($table) {
           );
       }
 
-      $sheet->getStyle("A".($missingStart).":B$rowNumber")->applyFromArray(
+      $sheet->getStyle("A".($missingStart).":C$rowNumber")->applyFromArray(
         array(
           'borders' => array(
             'allborders'     => array('style' => PHPExcel_Style_Border::BORDER_THIN),

@@ -1957,7 +1957,9 @@ ORDER BY i.Sortierung ASC";
 
       //error_log(print_r($numbers, true));
 
-      $missing = array_filter($numbers, function ($val) { return $val > 0; });
+      $missing = array_filter($numbers, function ($val) {
+          return $val['Registered'] > 0 || $val['Confirmed'] > 0;
+        });
       if (count($missing) > 0) {
         $output .= '
 <div class="missing-musicians"
