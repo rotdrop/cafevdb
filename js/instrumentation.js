@@ -338,10 +338,10 @@ var CAFEVDB = CAFEVDB || {};
 
     // Enable the controls, in order not to bloat SQL queries these PME
     // fields are flagged virtual which disables all controls initially.
-    var selectMusicianInstruments = container.find('select.musician-instruments');
-    var selectProjectInstrument = container.find('select.pme-input.project-instrument');
-    var selectGroupOfPeople = container.find('select.pme-input.groupofpeople');
-    var selectVoices = container.find('select.pme-input.instrument-voice');
+    var selectMusicianInstruments = container.find('.pme-value select.musician-instruments');
+    var selectProjectInstrument = container.find('.pme-value select.pme-input.project-instrument');
+    var selectGroupOfPeople = container.find('.pme-value select.pme-input.groupofpeople');
+    var selectVoices = container.find('.pme-value select.pme-input.instrument-voice');
     var form = container.find(PHPMYEDIT.pmeClassSelector('form', 'form'));
 
     var recKey = form.find(PHPMYEDIT.pmeSysNameSelector('input', 'rec'));
