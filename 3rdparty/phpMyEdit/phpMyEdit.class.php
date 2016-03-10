@@ -3215,7 +3215,9 @@ class phpMyEdit
 			'select' => 'COUNT(*)',
 			'from'	 => @$this->get_SQL_join_clause(),
 			'groupby' => $groupBy,
-			'where'	 => @$this->get_SQL_where_from_query_opts());
+			'where'	 => @$this->get_SQL_where_from_query_opts(),
+			'having' => $this->get_SQL_having_query_opts()
+			);
 		$query = $this->get_SQL_main_list_query($count_parts);
 		if (!empty($groupBy)) {
 			$query = "SELECT COUNT(*) FROM (".$query.") PMEcount0";
