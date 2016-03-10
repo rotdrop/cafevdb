@@ -923,12 +923,6 @@ WHERE b.ProjektId = $projectId",
           $values2[$idx] = L::t('add to this group');
           $valueData[$idx] = json_encode([ 'GroupId' => $value['key'] ]);
         }
-        // TODO:
-        //
-        // group names wrong
-        // group id is displayed as select.
-        // finance: value is description.
-        //
         $fdd = array_merge(
           $fdd, [
             'select' => 'M',
