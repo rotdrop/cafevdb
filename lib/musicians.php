@@ -341,7 +341,7 @@ make sure that the musicians are also automatically added to the
       'sql'         => 'GROUP_CONCAT(DISTINCT PMEjoin'.$instIdx.'.Id ORDER BY PMEjoin'.$instIdx.'.Id ASC)',
       //'input' => 'V', not virtual, tweaked by triggers
       'select'      => 'M',
-      //'filter'      => 'having', // need "HAVING" for group by stuff
+      'filter'      => 'having', // need "HAVING" for group by stuff
       'values' => array(
         'table'       => 'Instrumente',
         'column'      => 'Id',
