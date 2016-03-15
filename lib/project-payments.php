@@ -154,7 +154,7 @@ namespace CAFEVDB
       $opts['display'] =  array_merge($opts['display'],
                                       array(
                                         'form'  => true,
-                                        'query' => true,
+                                        //'query' => true,
                                         'sort'  => true,
                                         'time'  => true,
                                         'tabs'  => false
