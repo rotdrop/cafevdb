@@ -615,8 +615,9 @@ make sure that the musicians are also automatically added to the
         );
 
     if ($this->projectMode) {
-      $key = 'qf'.$projectsIdx;
-      $opts['having']['AND'] = "($key IS NULL OR NOT FIND_IN_SET('$projectName', $key))";
+      //$key = 'qf'.$projectsIdx;
+      $projects = "GROUP_CONCAT(DISTINCT `PMEjoin{$projectsIdx}`.`Name`)";
+      $opts['having']['AND'] = "($projects IS NULL OR NOT FIND_IN_SET('$projectName', $projects))";
       $opts['misc']['css']['major']   = 'bulkcommit';
       $opts['labels']['Misc'] = strval(L::t('Add all to %s', array($projectName)));
     }
