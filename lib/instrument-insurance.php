@@ -266,7 +266,8 @@ namespace CAFEVDB
           'description' => array('columns' => array('Name', 'Vorname'),
                                  'ifnull' => array('NULL', 'NULL'),
                                  'divs' => array(', ')
-            ))
+            )),
+        'values2' => [ '0' => '' ], // rather remove 0 from data-base
         );
 
       $opts['fdd']['Broker'] = array(
