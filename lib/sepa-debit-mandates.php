@@ -407,7 +407,7 @@ received so far'),
           $idx = count($opts['fdd']);
           $opts['fdd'][$field] = array(
             'input' => 'VHR',
-            'sql' => $projectAlias.'.'.$field,
+            'sql' => $projectAlias.'.`'.$field.'`',
             );
         }
 
