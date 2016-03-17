@@ -321,7 +321,8 @@ namespace CAFEVDB
       if (empty($expires)) {
         $expires = time() + 60*60; // 1 hour
       }
-      setcookie($name, $value, $expires, \OC::$WEBROOT, '', true, $httpOnly);
+      $path = empty(\OC::$WEBROOT) ? '/' : \OC::$WEBROOT;
+      setcookie($name, $value, $expires, $path, '', true, $httpOnly);
     }
 
     /**Take an array of strings and join it into some sort of CSV like
