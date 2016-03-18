@@ -367,7 +367,7 @@ DebitNotePurpose
      * - each single email is copied to the Sent-folder; this is how it should be.
      *
      * - after variable substitution we need to reencode some
-     * - special characters.
+     *   special characters.
      */
     private function sendMessages()
     {
@@ -468,10 +468,15 @@ DebitNotePurpose
      * @param[in] $addCC If @c false, then additional CC and BCC recipients will
      *                   not be added.
      *
+     * @param[in] $allowDuplicates Whether n ot to check for
+     * duplicates. This is currently only set to true when
+     * sending a copy of a form-email with per-recipient substitutions
+     * to the orchestra account.
+     *
      * @return The sent Mime-message which then may be stored in the
      * Sent-Folder on the imap server (for example).
      */
-    private function composeAndSend($strMessage, $EMails, $addCC = true)
+    private function composeAndSend($strMessage, $EMails, $addCC = true, $allowDuplicates = false)
     {
       // If we are sending to a single address (i.e. if $strMessage has
       // been constructed with per-member variable substitution), then
@@ -768,8 +773,16 @@ DebitNotePurpose
      * false if this is a duplicate, return the data-base query string
      * to be executed after successful sending of the message in cas
      * of success.
+     *
+     * @param[in] $logMessage The email-message to record in the DB.
+     *
+     * @param[in] $allowDuplicates Whether n ot to check for
+     * duplicates. This is currently only set to true when
+     * sending a copy of a form-email with per-recipient substitutions
+     * to the orchestra account.
+     *
      */
-    private function messageLogQuery($logMessage)
+    private function messageLogQuery($logMessage, $allowDuplicates = false)
     {
       // Construct the query to store the email in the data-base
       // log-table.
@@ -860,35 +873,37 @@ DebitNotePurpose
       // should write a comment on that. Still the test is flaky
       // enough.
 
-      // Check for duplicates
-      $loggedQuery = "SELECT * FROM `SentEmail` WHERE";
-      $loggedQuery .= " `MD5Text` LIKE '$textMD5'";
-      $loggedQuery .= " AND `MD5BulkRecipients` LIKE '$bulkMD5'";
-      $result = mySQL::query($loggedQuery, $handle);
+      if ($allowDuplicates !== true) {
+        // Check for duplicates
+        $loggedQuery = "SELECT * FROM `SentEmail` WHERE";
+        $loggedQuery .= " `MD5Text` LIKE '$textMD5'";
+        $loggedQuery .= " AND `MD5BulkRecipients` LIKE '$bulkMD5'";
+        $result = mySQL::query($loggedQuery, $handle);
 
-      $cnt = 0;
-      $loggedDates = '';
-      if ($line = mySQL::fetch($result)) {
-        $loggedDates .= ', '.$line['Date'];
-        ++$cnt;
-      }
-      $loggedDates = trim($loggedDates,', ');
-
-      if ($loggedDates != '') {
-        $this->executionStatus = false;
-        $shortRecipients = array();
-        foreach($logMessage->recipients as $recipient) {
-          $shortRecipients[] = $recipient['name'].' <'.$recipient['email'].'>';
+        $cnt = 0;
+        $loggedDates = '';
+        if ($line = mySQL::fetch($result)) {
+          $loggedDates .= ', '.$line['Date'];
+          ++$cnt;
         }
-        $this->diagnostics['Duplicates'][] = array(
-          'dates' => $loggedDates,
-          'recipients' => $shortRecipients,
-          'text' => $logMessage->message,
-          'textMD5' => $textMD5,
-          'bulkMD5' => $bulkMD5,
-          'bulkRecipients' => $bulkRecipients
-          );
-        return false;
+        $loggedDates = trim($loggedDates,', ');
+
+        if ($loggedDates != '') {
+          $this->executionStatus = false;
+          $shortRecipients = array();
+          foreach($logMessage->recipients as $recipient) {
+            $shortRecipients[] = $recipient['name'].' <'.$recipient['email'].'>';
+          }
+          $this->diagnostics['Duplicates'][] = array(
+            'dates' => $loggedDates,
+            'recipients' => $shortRecipients,
+            'text' => $logMessage->message,
+            'textMD5' => $textMD5,
+            'bulkMD5' => $bulkMD5,
+            'bulkRecipients' => $bulkRecipients
+            );
+          return false;
+        }
       }
 
       return $logQuery;
