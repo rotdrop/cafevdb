@@ -117,7 +117,7 @@ namespace CAFEVDB {
   <ul id="navigation-list">
     <li class="nav-heading">
       <a href="#">
-        <?php echo L::t('Side-Bar Menu'); ?>
+        <?php echo L::t('Close Side-Bar Menu'); ?>
       </a>
     </li>
     <?php echo $_['navigationcontrols']; ?>

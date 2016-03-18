@@ -1336,7 +1336,7 @@ OC.L10N.register(
     "Startpage" : "Startseite",
     "Navigate back to the start-page." : "Führt zurück zur Start-Seite der `App'.",
     "Tooltip Button" : "Tooltip Button",
-    "Side-Bar Menu" : "Seitenmenü",
+    "Close Side-Bar Menu" : "Seitenmenü schließen",
     "Tool-Tips" : "Ballon-Hilfe",
     "Filter-Controls" : "Such-Filter",
     "Quick Change-Dialog" : "Ändern-Dialog bei Mausklick",
@@ -1484,11 +1484,6 @@ OC.L10N.register(
     "Project folder" : "Projekt-Dateien",
     "YEAR" : "JAHR",
     "PROJECT" : "PROJEKT",
-    "Financial balance folder" : "Finanz-Ordner",
-    "%s-brief" : "%s-uebersicht",
-    "Missing" : "Defizit",
-    "Hide Disabled" : "Verstecke Inaktive",
-    "Unable to fetch musician's project information for id %d." : "Kann die Projekt-bezogenen Daten des Musikers zur Id %d nicht ermitteln.",
-    "The musician %s is already registered for the project with the instruments %s." : "Der Musiker %s ist bereits mit Instrument %s für das Projekt registriert."
+    "Financial balance folder" : "Finanz-Ordner"
 },
 "nplurals=2; plural=(n != 1)");
