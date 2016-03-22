@@ -34,8 +34,8 @@ namespace CAFEVDB {
 
     /**Import the given vCard into the musician data-base. This is
      * somewhat problematic: the CAFeV DB data-base does not support
-     * fancy fields. Being a layman-orchestra, we prefer private
-     * entries for everything and just choose the first stuff
+     * fancy fields. Other things: being a layman-orchestra, we prefer
+     * private entries for everything and just choose the first stuff
      * available if no personal data is found.
      *
      * We import the following properties
@@ -220,7 +220,7 @@ namespace CAFEVDB {
               $musicianInstruments[] = $instrument;
             }
           }
-          $row['Instrumente'] = implode(',', $musicianInstruments);
+          $row['Instruments'] = implode(',', $musicianInstruments);
         }
 
         if (isset($obj->PHOTO)) {
@@ -266,8 +266,8 @@ namespace CAFEVDB {
       $textProperties = array('FN', 'N', 'CATEGORIES', 'ADR', 'NOTE');
       $uuid = isset($musician['UUID']) ? $musician['UUID'] : Util::generateUUID();
       $categories = array('cafevdb');
-      if ($musician['Instrumente']) {
-        $categories =  array_merge($categories, Util::explode(',', $musician['Instrumente']));
+      if ($musician['Instruments']) {
+        $categories =  array_merge($categories, Util::explode(',', $musician['Instruments']));
       }
       if (isset($musician['Projekte'])) {
         $categories =  array_merge($categories, Util::explode(',', $musician['Projekte']));

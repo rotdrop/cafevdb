@@ -356,17 +356,25 @@ namespace CAFEVDB
       } else {
         $query = "SELECT `".$table."`.*,
  GROUP_CONCAT(DISTINCT `Projects`.`Name` ORDER BY `Projects`.`Name` ASC SEPARATOR ',') AS `Projects`,
- CONCAT('data:',`ImageData`.`MimeType`,';base64,',`ImageData`.`Data`) AS `Portrait`
- FROM `".$table."`
+ CONCAT('data:',`ImageData`.`MimeType`,';base64,',`ImageData`.`Data`) AS `Portrait`,
+ GROUP_CONCAT(DISTINCT i.Instrument ORDER BY i.Sortierung ASC SEPARATOR ',') AS Instruments
+ FROM
+   `".$table."`
  LEFT JOIN
- `ImageData`
- ON `".$table."`.`Id` = `ImageData`.`ItemId` AND `ImageData`.`ItemTable` = 'Musiker'
+   `ImageData`
+   ON `".$table."`.`Id` = `ImageData`.`ItemId` AND `ImageData`.`ItemTable` = 'Musiker'
  LEFT JOIN
- `Besetzungen` AS `ProjectsInstrumentation`
- ON `".$table."`.`Id` = `ProjectsInstrumentation`.`MusikerId`
+   `Besetzungen` AS `ProjectsInstrumentation`
+   ON `".$table."`.`Id` = `ProjectsInstrumentation`.`MusikerId`
  LEFT JOIN
- `Projekte` AS `Projects`
- ON `ProjectsInstrumentation`.`ProjektId` = `Projects`.`Id`
+   `Projekte` AS `Projects`
+   ON `ProjectsInstrumentation`.`ProjektId` = `Projects`.`Id`
+ LEFT JOIN
+   `MusicianInstruments` AS mi
+   ON `{$table}`.`Id` = mi.MusicianId
+ LEFT JOIN
+  `Instrumente` AS i
+  ON mi.InstrumentId = i.Id
  WHERE 1
  GROUP BY `".$table."`.`Id`
  LIMIT ".$options['offset'].", ".$options['limit'];
@@ -443,7 +451,7 @@ namespace CAFEVDB
           $contacts[] = $row;
         }
       } else {
-        $query = "SELECT * FROM `".$mainTable."`
+        $query = "SELECT * FROM `".$mainTable."`, ProjectInstruments AS Instruments
  WHERE 1
  GROUP BY `".$mainTable."`.`MusikerId`
  LIMIT ".$options['offset'].", ".$options['limit'];
@@ -691,25 +699,35 @@ namespace CAFEVDB
         // generate the data-line
         $row = VCard::import($contact->serialize());
 
-        if (isset($row['Portrait'])) {
-          $img = new InlineImage(self::MAIN_CONTACTS_TABLE);
-          if (!$img->store($me['Id'], $row['Portrait'], $handle)) {
-            mySQL::close($handle);
-            return false;
-          }
-          unset($row['Portrait']);
-        }
-
-        unset($row['Projects']);
-
         // the remaining part should contain valid fields for the Musiker table
-
+        $data = $row;
+        unset($data['Portrait']);
+        unset($data['Instruments']);
+        unset($data['Projects']);
         if (!mySQL::insert(self::MAIN_CONTACTS_TABLE, $row, $handle)) {
           mySQL::close($handle);
           return false;
         }
         $id = mySQL::newestIndex($handle);
         mySQL::logInsert(self::MAIN_CONTACTS_TABLE, $id, $row, $handle);
+
+        // portrait if present is stored in a separate table
+        if (isset($row['Portrait'])) {
+          $img = new InlineImage(self::MAIN_CONTACTS_TABLE);
+          if (!$img->store($id, $row['Portrait'], $handle)) {
+            mySQL::close($handle);
+            return false;
+          }
+          unset($row['Portrait']);
+        }
+
+        // instruments are also stored in a separate table
+        if (isset($row['Instruments'])) {
+          $instruments = Util::explode($row['Instruments']);
+          // translate names to ids, then insert in MusicianInstruments ...
+          // @@TODO
+        }
+
       } else if ((string)$addressBookId == (string)self::MAIN_ADDRESS_BOOK_ID) {
         // don't add duplicates
         mySQL::close($handle);
