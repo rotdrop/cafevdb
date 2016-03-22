@@ -266,7 +266,7 @@ namespace CAFEVDB {
       $textProperties = array('FN', 'N', 'CATEGORIES', 'ADR', 'NOTE');
       $uuid = isset($musician['UUID']) ? $musician['UUID'] : Util::generateUUID();
       $categories = array('cafevdb');
-      if ($musician['Instruments']) {
+      if (isset($musician['Instruments'])) {
         $categories =  array_merge($categories, Util::explode(',', $musician['Instruments']));
       }
       if (isset($musician['Projekte'])) {

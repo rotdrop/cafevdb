@@ -577,7 +577,7 @@ namespace CAFEVDB
 
     /**We simply can fetch the respective vCard from the global
      * Musiker table as all project tables are simply views into
-     * this table. In principle, is never necessary to honour the
+     * this table. In principle, it is never necessary to honour the
      * $addressBookId.
      *
      * This beast fetches one row from the Musiker table.
@@ -599,17 +599,25 @@ namespace CAFEVDB
 
       $query = "SELECT `".$table."`.*,
        GROUP_CONCAT(DISTINCT `Projects`.`Name` ORDER BY `Projects`.`Name` ASC SEPARATOR ',') AS `Projects`,
-       CONCAT('data:',`ImageData`.`MimeType`,';base64,',`ImageData`.`Data`) AS `Portrait`
- FROM `".$table."`
+       CONCAT('data:',`ImageData`.`MimeType`,';base64,',`ImageData`.`Data`) AS `Portrait`,
+       GROUP_CONCAT(DISTINCT i.Instrument ORDER BY i.Sortierung ASC SEPARATOR ',') AS Instruments
+ FROM
+   `".$table."`
  LEFT JOIN
- `ImageData`
- ON `".$table."`.`Id` = `ImageData`.`ItemId` AND `ImageData`.`ItemTable` = 'Musiker'
+   `ImageData`
+   ON `".$table."`.`Id` = `ImageData`.`ItemId` AND `ImageData`.`ItemTable` = 'Musiker'
  LEFT JOIN
- `Besetzungen` AS `ProjectsInstrumentation`
- ON `".$table."`.`Id` = `ProjectsInstrumentation`.`MusikerId`
+   `Besetzungen` AS `ProjectsInstrumentation`
+   ON `".$table."`.`Id` = `ProjectsInstrumentation`.`MusikerId`
  LEFT JOIN
- `Projekte` AS `Projects`
- ON `ProjectsInstrumentation`.`ProjektId` = `Projects`.`Id`
+   `Projekte` AS `Projects`
+   ON `ProjectsInstrumentation`.`ProjektId` = `Projects`.`Id`
+ LEFT JOIN
+   `MusicianInstruments` AS mi
+   ON `{$table}`.`Id` = mi.MusicianId
+ LEFT JOIN
+  `Instrumente` AS i
+  ON mi.InstrumentId = i.Id
  WHERE `".$table."`.`UUID` LIKE '".$uuid."'
  GROUP BY `".$table."`.`Id`";
 
