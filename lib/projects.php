@@ -252,11 +252,12 @@ namespace CAFEVDB
           $overview = true;
           return self::projectActions($projectId, $projectName, $placeHolder, $overview);
         },
-        'select'   => 'D',
+        'select'   => 'T',
+        'select|LF' => 'D',
         'maxlen'   => self::NAME_LENGTH_MAX + 6,
         'css'      => array('postfix' => ' projectname control'),
         'sort'     => true,
-        'values'   => array(
+        'values|LF'   => array(
           'table' => 'Projekte',
           'column' => 'Name',
           'description' => 'Name',
