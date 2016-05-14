@@ -1558,9 +1558,11 @@ WHERE b.ProjektId = $projectId",
         // as we only store texts internally, force to int now ...
         if (isset($newValues[$fieldName])) {
           $newValues[$fieldName] = (string)(int)!!$newValues[$fieldName];
-          if ($newValues[$fieldName] !== $oldValues[$fieldName]) {
-            $changed[] = $fieldName;
-          }
+        } else {
+          $newValues[$fieldName] = false;
+        }
+        if ($newValues[$fieldName] !== $oldValues[$fieldName]) {
+          $changed[] = $fieldName;
         }
         $handled = true;
         break;
