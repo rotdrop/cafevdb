@@ -1677,7 +1677,7 @@ DebitNotePurpose
       if ($this->draftId >= 0) {
         $handle = $this->dataBaseConnect();
 
-        $data = mySQL::fetchRows('EmailDrafts', "`Id` = ".$this->draftId, null, null, $handle);
+        $data = mySQL::fetchRows('EmailDrafts', "`Id` = ".$this->draftId, null, $handle, null, null);
 
         if (count($data) == 1) {
           $draftData = json_decode($data[0]['Data'], true, 512, JSON_BIGINT_AS_STRING);
