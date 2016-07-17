@@ -759,21 +759,25 @@ var CAFEVDB = CAFEVDB || {};
       return false;
     });
 
-    container.find('#pme-debit-note-job-up input[type="text"]').
-      off('blur').
-      on('blur', function(event) {
-      var self = $(this);
-      container.find('#pme-debit-note-job-down input.'+self.attr('class')).val(self.val());
-      return false;
-    });
+    $.each(["debit-note-amount", "debit-note-subject"],
+           function(index, classValue) {
 
-    container.find('#pme-debit-note-job-down input[type="text"]').
-      off('blur').
-      on('blur', function(event) {
-      var self = $(this);
-      container.find('#pme-debit-note-job-up input.'+self.attr('class')).val(self.val());
-      return false;
-    });
+             container.find('#pme-debit-note-job-up input.'+classValue).
+               off('blur').
+               on('blur', function(event) {
+                 var self = $(this);
+                 container.find('#pme-debit-note-job-down input.'+classValue).val(self.val());
+                 return false;
+               });
+
+             container.find('#pme-debit-note-job-down input.'+classValue).
+               off('blur').
+               on('blur', function(event) {
+                 var self = $(this);
+                 container.find('#pme-debit-note-job-up input.'+classValue).val(self.val());
+                 return false;
+               });
+           });
 
     dbTable = form.find('input[value="SepaDebitMandates"]');
     if (dbTable.length == 0) {
