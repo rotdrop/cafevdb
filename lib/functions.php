@@ -1242,7 +1242,7 @@ __EOT__;
                 $buttonUp = preg_replace('/id="([^"]*)"/', 'id="$1-up"', $button);
                 $buttonDown = preg_replace('/id="([^"]*)"/', 'id="$1-down"', $button);
                 $buttonUp = preg_replace('/class="([^"]*)"/', 'class="$1 top"', $buttonUp);
-                $buttonDown = preg_replace('/clas="([^"]*)"/', 'class="$1 botom"', $buttonDown);
+                $buttonDown = preg_replace('/class="([^"]*)"/', 'class="$1 bottom"', $buttonDown);
                 $upValue[] = $buttonUp;
                 $downValue[] = $buttonDown;
               } else {
