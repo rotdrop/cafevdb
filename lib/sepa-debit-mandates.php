@@ -36,6 +36,13 @@ namespace CAFEVDB
      * generating the debit-note data-sets.
      */
     const PREFER_PROJECT_MANDATE = true;
+    /**Announce the debit transfer this many days in advance.
+     */
+    const GRACE_PERIOD = 11;
+    /**Submit the debit transfer that many days in advance to the
+     * bank.
+     */
+    const SUBMIT_LIMIT = 6;
 
     function __construct($execute = true) {
       parent::__construct($execute);
@@ -812,7 +819,18 @@ received so far'),
       foreach(array_keys($monetary) AS $extraLabel) {
         $query .= ', `'.$extraLabel.'`';
       }
-      $query .= ', `m`.*';
+      $query .= ',
+  `m`.*';
+
+      // cope with last used dates stored in mandate table
+      // vs. determined from payments table
+      $query .= ",
+  GREATEST(
+    COALESCE(MAX(pp.`DateOfReceipt`), ''),
+    COALESCE(m.`lastUsedDate`, '')
+  ) AS RecordedLastUse";
+
+      // build FROM and JOIN
       $query .= ' FROM '.$projectTable.' p'."\n";
 
       // if we have a mandate for the project and a mandate as club
@@ -839,7 +857,9 @@ received so far'),
   ON m.musicianId = p.MusikerId
      AND '.$projectSelector.'
      AND m.active = 1
-  WHERE
+LEFT JOIN `ProjectPayments` pp
+  ON m.`mandateReference` = pp.`MandateReference`
+WHERE
     p.Lastschrift = 1
     AND
     p.Anmeldung = 1
@@ -849,8 +869,7 @@ received so far'),
     m.mandateReference IS NOT NULL
 ';
 
-      $query .= "  GROUP BY p.Id";
-
+      $query .= "GROUP BY p.Id";
       $result = mySQL::query($query, $handle);
       $table = array();
 
@@ -862,6 +881,10 @@ received so far'),
         if (Finance::mandateIsExpired($row['mandateReference'], $handle)) {
           continue;
         }
+        // use max of explicit last-use and value deduced from
+        // ProjectPayments table.
+        $row['lastUsedDate'] = $row['RecordedLastUse'];
+        unset($row['RecordedLastUse']);
         $amount = 0.0;
         foreach($monetary as $label => $fieldInfo) {
           $value = $row[$label];
@@ -898,10 +921,15 @@ received so far'),
         $purpose = Finance::sepaTranslit($purpose);
         $subject = Util::explode("\n", wordwrap($purpose, Finance::$sepaPurposeLength, "\n", true));
         array_unshift($subject, $translitProjectName);
+        for($i = 1; $i < 4; ++$i) {
+          if (!isset($subject[$i])) {
+            $subject[$i] = '';
+          }
+        }
       } else {
         $subject = array($translitProjectName, '', '', '');
       }
-
+      error_log('count: '.count($financeData));
       $table = array();
       foreach($financeData as $row) {
         $paid = (float)$row['AmountPaid'];
@@ -961,7 +989,7 @@ received so far'),
     static public function aqBankingDebitNotes($debitTable, $timeStamp = false)
     {
       if ($timeStamp === false) {
-        $timeStamp = strtotime('+ 17 days');
+        $timeStamp = strtotime('+ '.self::GRACE_PERIOD.' days');
       }
 
       $iban  = new \IBAN(Config::getValue('bankAccountIBAN'));

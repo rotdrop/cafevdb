@@ -95,7 +95,6 @@ namespace CAFEVDB {
     }
 
     $encKey = Config::getEncryptionKey();
-
     $filteredTable = array();
     foreach($debitTable as $row) {
       $id = $row['id'];
@@ -152,7 +151,7 @@ namespace CAFEVDB {
     // the debit notes up to 6 "working days" in advance. Worst case
     // would be Saturday to Monday which is then "hacked" by the 10
     // day limit
-    $dueStamp = strtotime('+ 17 days');
+    $dueStamp = strtotime('+ '.SepaDebitMandates::GRACE_PERIOD.' days');
     $aqDebitTable = SepaDebitMandates::aqBankingDebitNotes($filteredTable, $dueStamp);
 
     // We must not mix once, first, following debit notes. So extract
@@ -262,7 +261,7 @@ namespace CAFEVDB {
     // It worked out until now. Update the "last issued" stamp and
     // inject proper events into the finance calendar.
 
-    $submissionStamp = strtotime('+ 7 days');
+    $submissionStamp = strtotime('+ '.((int)SepaDebitMandates::GRACE_PERIOD-(int)SepaDebitMandates::SUBMIT_LIMIT).' days');
     $calObjIds = array();
     $calObjIds[] =
       Finance::financeEvent(L::t('Debit notes submission deadline').
