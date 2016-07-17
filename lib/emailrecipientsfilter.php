@@ -559,6 +559,7 @@ namespace CAFEVDB
             $line['SurchargeFees'] = '';
             $line['TotalFees'] = '';
             $line['MandateReference'] = '';
+            $line['AmountPaid'] = '';
           } else {
             $line['MandateReference'] = $line['ProjectMandateReference'];
             unset($line['ProjectMandateReference']);
@@ -613,6 +614,7 @@ namespace CAFEVDB
         'TotalFees',
         'Anzahlung',
         'Unkostenbeitrag',
+        'AmountPaid',
         'DebitNoteAmount'
         ];
 
