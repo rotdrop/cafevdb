@@ -477,6 +477,14 @@ GROUP BY m.mandateReference";
       return $result;
     }
 
+    /**Determine if the given mandate is expired, in which case we
+     * would need a new mandate.
+     *
+     * @param[in] mixed $usageInfo Either a mandate-reference or a
+     * previously fetched result from self::mandateReferenceUsage()
+     *
+     * @return @c true iff the mandate is expired, @c false otherwise.
+     */
     public static function mandateIsExpired($usageInfo, $handle = false)
     {
       $mandate = $usageInfo;
