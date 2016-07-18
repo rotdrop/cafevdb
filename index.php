@@ -151,6 +151,7 @@ namespace CAFEVDB
     \OCP\Util::addStyle('calendar', '../3rdparty/jquery.multiselect/css/jquery.multiselect');
     \OCP\Util::addscript('contacts', 'jquery.multi-autocomplete');
     \OCP\Util::addscript('','tags');
+    \OCP\Util::addScript('cafevdb', 'location');
     \OCP\Util::addScript('cafevdb', 'calendar');
     \OCP\Util::addScript('calendar', 'on-event');
 
