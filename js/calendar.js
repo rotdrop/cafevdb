@@ -344,14 +344,14 @@ Calendar={
 			if ($('#event_googlemap').dialog('isOpen') == true){
 				$('#event_googlemap').dialog('close').remove();
 			}
-			$('#event_map').html('<div id="event_googlemap"></div>');
+                        var event_map = $('<div id="event_googlemap"></div>');
 			var mapOptions = {
 				zoom: 15,
 				center: latlng,
 				mapTypeId: google.maps.MapTypeId.ROADMAP
 			};
-			var map = new google.maps.Map(document.getElementById("event_googlemap"), mapOptions);
-			$('#event_googlemap').cafevDialog({
+			var map = new google.maps.Map(event_map[0], mapOptions);
+			event_map.cafevDialog({
 				title : 'Google Maps',
                                 dialogClass: 'google-popup',
 				position : { my: "left top",
