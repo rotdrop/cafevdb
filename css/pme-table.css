@@ -710,6 +710,10 @@ td.pme-buttons > .pme-pagerows {
  *
  */
 
+form.pme-form.pme-view table.pme-main {
+  white-space: normal;
+}
+
 table.pme-main {
   background-color:#f2f8ff;
   border:#004d9c 1px solid;
