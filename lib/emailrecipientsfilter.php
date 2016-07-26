@@ -421,7 +421,7 @@ namespace CAFEVDB
      * - status (MemberStatus)
      * - dbdata (data as returned from the DB for variable substitution)
      */
-    private function fetchMusicians($dbh, $table, $id, $restrict, $projectId)
+    private function fetchMusicians($dbh, $table, $id, $projectId)
     {
       $columnNames = array('Vorname',
                            'Name',
@@ -439,13 +439,29 @@ namespace CAFEVDB
       $sep = $btk.$comma.$btk;
       $dot = '.';
       $origId = $btk.'MainTable'.$btk.$dot.$btk.'Id'.$btk.' AS '.$btk.'OrigId'.$btk;
+      $realId = $btk.'MainTable'.$btk.$dot.$btk.$id.$btk.' AS '.$btk.'musicianId'.$btk;
       $fields =
-        $origId.$comma.$btk.$id.$btk.' AS '.$btk.'musicianId'.$btk.$comma.
+        $origId.$comma.
+        $realId.$comma.
         $btk.implode($sep, $columnNames).$btk;
 
       $table .= ' MainTable';
 
+      $instrument = $projectId > 0 ? 'ProjectInstrument' : 'Instruments';
+      $instrumentFilter = [];
+      foreach ($this->instrumentsFilter as $value) {
+        $instrumentFilter[] = $btk.$instrument.$btk." LIKE '%".$value."%'";
+      }
+      $instrumentFilter = implode("\n  OR\n", $instrumentFilter);
+      $where = '1 ';
+
       if ($projectId > 0) { // Add the project fee
+
+        if (!empty($instrumentFilter)) {
+          $where .= "
+  AND (".$instrumentFilter.")";
+        }
+        $having = '';
 
         // Add the relevant payment information (except the global
         // information attached to the debit note)
@@ -495,30 +511,35 @@ namespace CAFEVDB
         foreach(array_keys($monetary) AS $extraLabel) {
           $fields .= ', `'.$extraLabel.'`';
         }
-      } // $projectId > 0
-
-      $query = "SELECT $fields FROM ($table) WHERE
-        ";
-      if (count($this->instrumentsFilter) == 0) {
-        $query .= '1
-        ';
-      } else {
-        $query .= '(';
-        foreach ($this->instrumentsFilter as $value) {
-          $query .= "`".$restrict."` LIKE '%".$value."%' OR\n";
-        }
-        $query .= ' 0)
-        ';
+      } else { // $projectId > 0
+        $fields .= ',
+  GROUP_CONCAT(i.Instrument) AS Instruments';
+        $table .= "
+  LEFT JOIN `MusicianInstruments` mi
+    ON mi.MusicianId = MainTable.Id
+  LEFT JOIN `Instrumente` i
+    ON i.Id = mi.InstrumentId
+";
+        $having = empty($instrumentFilter) ? '' : 'HAVING '.$instrumentFilter;
       }
 
+      $query = "SELECT $fields
+FROM  $table
+WHERE";
+      $query .= "
+  $where";
+
       if ($this->frozen && $projectId > 0) {
-        $query .= " AND MainTable.Id IN (".implode(',', $this->EmailRecs).") ";
+        $query .= "
+  AND MainTable.Id IN (".implode(',', $this->EmailRecs).") ";
       }
 
       /* Don't bother any conductor etc. with mass-email. */
-      $query .= $this->memberStatusSQLFilter();
+      $query .= "
+  ".$this->memberStatusSQLFilter();
 
-      $query .= " AND MainTable.Disabled = 0";
+      $query .= "
+  AND MainTable.Disabled = 0";
 
       if (false) {
         echo '<PRE>';
@@ -527,12 +548,15 @@ namespace CAFEVDB
       }
       //$_POST['QUERY'] = $query;
 
+      $query .= "
+  GROUP BY MainTable.Id";
+      $query .= "
+  $having";
+
       // use the mailer-class we are using later anyway in order to
       // validate email addresses syntactically now. Add broken
       // addresses to the "brokenEMail" list.
       $mailer = new \PHPMailer(true);
-
-      $query .= " GROUP BY MainTable.Id";
 
       // Fetch the result or die
       $result = mySQL::query($query, $dbh, true); // here we want to bail out on error
@@ -639,13 +663,12 @@ namespace CAFEVDB
       $this->EMailsDpy = array(); // display records
 
       if ($this->projectId < 0) {
-        self::fetchMusicians($dbh, 'Musiker', 'Id', 'Instrumente', -1, true);
+        self::fetchMusicians($dbh, 'Musiker', 'Id', -1);
       } else {
         // Possibly add musicians from the project
         if ($this->userBase['FromProject']) {
           self::fetchMusicians($dbh,
-                               $this->projectName.'View', 'MusikerId', 'ProjectInstrument',
-                               $this->projectId, true);
+                               $this->projectName.'View', 'MusikerId', $this->projectId);
         }
 
         // and/or not from the project
@@ -655,7 +678,7 @@ namespace CAFEVDB
     LEFT JOIN `'.$this->projectName.'View'.'` b
       ON a.Id = b.MusikerId
       WHERE b.MusikerId IS NULL)';
-          self::fetchMusicians($dbh, $table, 'Id', 'Instrumente', -1, true);
+          self::fetchMusicians($dbh, $table, 'Id', -1);
         }
 
         // And otherwise leave it empty ;)
