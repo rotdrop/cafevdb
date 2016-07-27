@@ -1253,7 +1253,13 @@ WHERE b.ProjektId = $projectId",
         $table = $joinField['table'];
         $tablename = $joinField['tablename'];
         $key = isset($joinField['key']) ? $joinField['key'] : false;
-        $column = $joinField['column'] === true ? $name : $joinField['column'];
+        if (isset($joinField['update'])) {
+          $column = $joinField['update'];
+        } else if ($joinField['column'] === true) {
+          $column = $name;
+        } else {
+          $column = $joinField['column'];
+        }
         $data['querygroup'] = array(
           'table' => $table,
           'tablename' => $tablename,
