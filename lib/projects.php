@@ -2377,10 +2377,14 @@ IF(i2.Id IS NULL, 1, COUNT(DISTINCT i2.Id))',
                                           'key' => true,
                                           'join' => array('type' => 'INNER'));
         $short = 'fd'.$idx;
+        $default = $field['DefaultValue'];
+        $column  = 'FieldValue';
         $extraColumns[$name] = array(
           'table' => 'ProjectExtraFieldsData',
           'tablename' => $short,
-          'column' => 'FieldValue',
+          'column' => $column, empty($default) ?  "{$short}.{$column}" : "IFNULL({$short}.{$column}, $default)",
+          'update' => $column,
+          'verbatim' => true,
           'join' => array(
             'type' => 'LEFT',
             'condition' =>
