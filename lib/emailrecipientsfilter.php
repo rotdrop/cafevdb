@@ -581,9 +581,11 @@ WHERE";
             $line['Unkostenbeitrag'] = '';
             $line['Anzahlung'] = '';
             $line['SurchargeFees'] = '';
+            $line['Extras'] = '';
             $line['TotalFees'] = '';
             $line['MandateReference'] = '';
             $line['AmountPaid'] = '';
+            $line['AmountMissing'] = '';
           } else {
             $line['MandateReference'] = $line['ProjectMandateReference'];
             unset($line['ProjectMandateReference']);
@@ -593,6 +595,8 @@ WHERE";
                                                array($line['MandateReference'],
                                                      $line['DebitNoteMandateReference'])));
             }
+            $line['Extras'] = [];
+            setlocale(LC_MONETARY, Util::getLocale());
             $extra = 0.0;
             foreach($monetary as $label => $fieldInfo) {
               $value = $line[$label];
@@ -600,12 +604,17 @@ WHERE";
               if (empty($value)) {
                 continue;
               }
-              $allowed  = $fieldInfo['AllowedValues'];
-              $type     = $fieldInfo['Type']['Multiplicity'];
-              $extra   += DetailedInstrumentation::extraFieldSurcharge($value, $allowed, $type);
+              $allowed   = $fieldInfo['AllowedValues'];
+              $type      = $fieldInfo['Type']['Multiplicity'];
+              $surcharge = DetailedInstrumentation::extraFieldSurcharge($value, $allowed, $type);
+              $extra    += $surcharge;
+              $surcharge = money_format('%n', floatval($surcharge));
+              $line['Extras'][] = $label.': '.$surcharge;
             }
             $line['SurchargeFees'] = $extra;
+            $line['Extras'] = implode("\n", $line['Extras']);
             $line['TotalFees'] = $extra + $line['Unkostenbeitrag'];
+            $line['AmountMissing'] = $line['TotalFees'] - $line['AmountPaid'];
           }
           $line['InsuranceFee'] = InstrumentInsurance::annualFee($line['musicianId'], $dbh);
           foreach ($musmail as $emailval) {
@@ -639,6 +648,7 @@ WHERE";
         'Anzahlung',
         'Unkostenbeitrag',
         'AmountPaid',
+        'AmountMissing',
         'DebitNoteAmount'
         ];
 
