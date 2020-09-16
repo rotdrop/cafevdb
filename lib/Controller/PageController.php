@@ -18,6 +18,8 @@ use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Controller;
 use OCP\IL10N;
 
+use OCA\CAFEVDB\Common\Config;
+
 class PageController extends Controller {
     /** @var IL10N */
     private $l;
@@ -42,7 +44,9 @@ class PageController extends Controller {
         return $this->pageloader();
     }
 
-    public function pageloader($template = 'blog', $projectName = '', $projectId = -1, $musicianId = -1) {
+    public function pageloader($template = 'blog', $projectName = '', $projectId = -1, $musicianId = -1)
+    {
+        Config::init();
         return new JSONResponse(['POST' => $_POST,
                                  'GET' => $_GET,
                                  'SERVER' => $_SERVER]);
