@@ -135,6 +135,7 @@ redaxoRehearsalsModule
   private static $initialized = false;
   private static $toolTipsArray = array();
   public static $session = null;
+  private static $containerConfig = null;
 
   /**List of data-base entries that need to be encrypted. We should
    * invent some "registration" infrastructre for this AND first do a
@@ -150,10 +151,15 @@ redaxoRehearsalsModule
     return preg_split('/\s+/', trim(self::CFG_KEYS));
   }
 
+  public static function getUser()
+  {
+    return \OC::$server->getUserSession()->getUser()->getUID();
+  }
+
   public static function inGroup($user = null, $group = null)
   {
     if (!$user) {
-      $user = \OC_User::getUser();
+      $user = self::getUser();
     }
     if (empty($group)) {
       $group = self::getAppValue('usergroup', '');
@@ -216,13 +222,20 @@ redaxoRehearsalsModule
                  'email' => $email);
   }
 
+  static private function containerConfig($force = false) {
+    if (self::$containerConfig === null || $force) {
+      self::$containerConfig = \OC::$server->getConfig();
+    }
+    return self::$containerConfig;
+  }
+
   /**A short-cut, redirecting to the stock functions for the
    * logged-in user.
    */
   static public function getUserValue($key, $default = false, $user = false)
   {
-    ($user === false) && ($user = \OCP\USER::getUser());
-    return \OCP\Config::getUserValue($user, self::APP_NAME, $key, $default);
+    ($user === false) && ($user = self::getUser());
+    return self::containerConfig()->getUserValue($user, self::APP_NAME, $key, $default);
   }
 
   /**A short-cut, redirecting to the stock functions for the
@@ -230,29 +243,29 @@ redaxoRehearsalsModule
    */
   static public function setUserValue($key, $value, $user = false)
   {
-    ($user === false) && ($user = \OCP\USER::getUser());
-    return \OCP\Config::setUserValue($user, self::APP_NAME, $key, $value);
+    ($user === false) && ($user = self::getUser());
+    return self::containerConfig()->setUserValue($user, self::APP_NAME, $key, $value);
   }
 
   /**A short-cut, redirecting to the stock functions for the app.
    */
   static public function getAppValue($key, $default = false)
   {
-    return \OC::$server->getAppConfig()->getValue(self::APP_NAME, $key, $default);
+    return self::containerConfig()->getAppValue(self::APP_NAME, $key, $default);
   }
 
   /**A short-cut, redirecting to the stock functions for the app.
    */
   static public function setAppValue($key, $value)
   {
-    return \OC::$server->getAppConfig()->setValue(self::APP_NAME, $key, $value);
+    return self::containerConfig()->setAppValue(self::APP_NAME, $key, $value);
   }
 
   /**A short-cut, redirecting to the stock functions for the app.
    */
   static public function deleteAppKey($key)
   {
-    return \OC::$server->getAppConfig()->deleteKey(self::APP_NAME, $key);
+    return self::containerConfig()->deleteAppValue(self::APP_NAME, $key);
   }
 
   static public function initPrivateKey($login, $password)
@@ -726,7 +739,7 @@ redaxoRehearsalsModule
   /**Return true if the logged in user is the treasurer.*/
   static public function isTreasurer($uid = null, $strict = false)
   {
-    empty($uid) && $uid = \OCP\USER::getUser();
+    empty($uid) && $uid = self::getUser();
     $musicianId = Config::getSetting('treasurerId', -1);
     if ($musicianId == -1) {
       return false;
@@ -760,7 +773,7 @@ redaxoRehearsalsModule
   /**Return true if the logged in user is the secretary.*/
   static public function isSecretary($uid = null)
   {
-    empty($uid) && $uid = \OCP\USER::getUser();
+    empty($uid) && $uid = self::getUser();
     $musicianId = Config::getSetting('secretaryId', -1);
     if ($musicianId == -1) {
       return false;
@@ -772,7 +785,7 @@ redaxoRehearsalsModule
   /**Return true if the logged in user is the president.*/
   static public function isPresident($uid = null)
   {
-    empty($uid) && $uid = \OCP\USER::getUser();
+    empty($uid) && $uid = self::getUser();
     $musicianId = Config::getSetting('presidentId', -1);
     if ($musicianId == -1) {
       return false;
@@ -840,7 +853,7 @@ redaxoRehearsalsModule
    */
   static public function userCacheDirectory($path = '', $user = null)
   {
-    empty($user) && $user = \OCP\USER::getUser();
+    empty($user) && $user = self::getUser();
     if (empty($user)) {
       return false;
     }
@@ -890,14 +903,15 @@ redaxoRehearsalsModule
       self::$session = new Session();
     }
 
-    date_default_timezone_set(Util::getTimezone());
+    //@@TODO: still necessasry??? This does not work ATM
+    //date_default_timezone_set(Util::getTimezone());
 
     // Fetch possibly encrypted config values from the OC data-base
     self::decryptConfigValues();
 
     // Oh well. This is just a hack to pass the OC-user to the
     // changelog table of PME.
-    $_SERVER['REMOTE_USER'] = \OC_User::getUser();
+    $_SERVER['REMOTE_USER'] = self::getUser();
 
     self::$dbopts['hn'] = @self::$opts['dbserver'];
     self::$dbopts['un'] = @self::$opts['dbuser'];
@@ -923,8 +937,7 @@ redaxoRehearsalsModule
     self::$currency = Util::currencySymbol(self::$locale);
 
     self::$pmeopts['url']['images'] = self::APP_BASE . 'img/';
-    global $HTTP_SERVER_VARS;
-    self::$pmeopts['page_name'] = $HTTP_SERVER_VARS['PHP_SELF'].'?app=cafevdb';
+    self::$pmeopts['page_name'] = $_SERVER['PHP_SELF'].'?app=cafevdb';
 
     self::$pmeopts['logtable'] = 'changelog';
     //self::$pmeopts['language'] = 'DE-UTF8';
@@ -1370,7 +1383,7 @@ class ConfigCheck
 
     $sharegroup   = Config::getAppValue('usergroup');
     $shareowner   = Config::getValue('shareowner');
-    $groupadmin   = \OCP\USER::getUser();
+    $groupadmin   = self::getUser();
 
     $sharedfolder == '' && $sharedfolder = Config::getSetting('sharedfolder', '');
 
@@ -1381,7 +1394,7 @@ class ConfigCheck
 
     //$id = \OC\Files\Cache\Cache::getId($sharedfolder, $vfsroot);
     $result = self::sudo($shareowner, function() use ($sharedfolder, $sharegroup) {
-      $user         = \OCP\USER::getUser();
+      $user         = self::getUser();
       $vfsroot = '/'.$user.'/files';
 
       if ($sharedfolder[0] != '/') {
@@ -1429,7 +1442,7 @@ class ConfigCheck
 
     $sharegroup = Config::getAppValue('usergroup');
     $shareowner = Config::getValue('shareowner');
-    $groupadmin = \OCP\USER::getUser();
+    $groupadmin = self::getUser();
 
     if (!\OC_SubAdmin::isSubAdminofGroup($groupadmin, $sharegroup)) {
       \OCP\Util::write(Config::APP_NAME,
@@ -1440,7 +1453,7 @@ class ConfigCheck
 
     // try to create the folder and share it with the group
     $result = self::sudo($shareowner, function() use ($sharedfolder, $sharegroup, $user) {
-      $user    = \OCP\USER::getUser();
+      $user    = self::getUser();
       $vfsroot = '/'.$user.'/files';
 
       // Create the user data-directory, if necessary
@@ -1515,7 +1528,7 @@ class ConfigCheck
 
     $sharegroup = Config::getAppValue('usergroup');
     $shareowner = Config::getValue('shareowner');
-    $user       = \OCP\USER::getUser();
+    $user       = self::getUser();
 
     if (!\OC_SubAdmin::isSubAdminofGroup($user, $sharegroup)) {
       \OCP\Util::write(Config::APP_NAME,

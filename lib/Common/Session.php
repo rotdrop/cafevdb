@@ -41,7 +41,7 @@ class Session
     $this->session = \OC::$server->getSession();
 
     // Fetch the current user
-    $this->user  = \OCP\USER::getUser();
+    $this->user  = \OC::$server->getUserSession()->getUser()->getUID();
 
     // Fetch our data
     $this->sessionKey = strtoupper(Config::APP_NAME);
