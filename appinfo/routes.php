@@ -20,11 +20,6 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-if (true) {
-return [
-    'routes' => []
-];
-} else {
 /**
  * Create your routes in here. The name is the lowercase name of the controller
  * without the controller part, the stuff after the hash is the method.
@@ -36,12 +31,19 @@ return [
 
 return [
     'routes' => [
-        ['name' => 'page#index', 'url' => '/', 'verb' => 'GET'],
-        ['name' => 'page#dialog', 'url' => '/bav', 'verb' => 'POST'],
-        ['name' => 'page#validate', 'url' => '/validate', 'verb' => 'POST'],
+        [
+            'name' => 'page#index',
+            'url' => '/',
+            'verb' => 'GET'
+        ],
+        [
+            'name' => 'page#loader',
+            'url' => '/pageloader/{template}',
+            'verb' => 'POST',
+            'defaults' => [ 'template' => 'blog' ]
+        ],
     ]
 ];
-}
 
 return;
 
