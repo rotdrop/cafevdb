@@ -3,5 +3,7 @@
 lib/tooltips.php.new
 \#*\#
 .#*
+vendor
+composer.lock
 
 
