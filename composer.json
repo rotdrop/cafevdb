@@ -11,7 +11,8 @@
     "require": {
         "rotdrop/bav": "dev-master",
         "globalcitizen/php-iban": "^4.0",
-        "phpmailer/phpmailer": "dev-master"
+        "phpmailer/phpmailer": "dev-master",
+        "ioncube/php-openssl-cryptor": "dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.4"
@@ -28,6 +29,10 @@
         {
             "type": "path",
             "url": "3rdparty/PHPMailer"
+        },
+        {
+            "type": "path",
+            "url": "3rdparty/php-openssl-cryptor"
         }
     ],
     "minimum-stability": "dev",
