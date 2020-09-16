@@ -42,7 +42,7 @@ namespace CAFEVDB
     private $userBase;    // Select from either project members and/or
     // all musicians w/o project-members
     private $memberFilter;// passive, regular, soloist, conductor, temporary
-    private $EmailsRecs;  // Copy of email records from CGI env
+    private $EmailRecs;   // Copy of email records from CGI env
     private $emailKey;    // Key for EmailsRecs into _POST or _GET
 
     private $debitNoteId;
@@ -109,6 +109,7 @@ namespace CAFEVDB
       $pmepfx          = $this->opts['cgi']['prefix']['sys'];
       $this->emailKey  = $pmepfx.'mrecs';
       $this->mtabKey   = $pmepfx.'mtable';
+      $this->EmailRecs = array(); // avoid null
 
       $this->frozen = $this->cgiValue('FrozenRecipients', false);
 
@@ -480,12 +481,15 @@ namespace CAFEVDB
             ."( ".$joinCond." )";
         }
 
-        $fields .=
-          ',`Unkostenbeitrag`'.
-          ',`Anzahlung`'.
-          ',`AmountPaid`'.
-          ',`PaidCurrentYear`'.
-          ',m.`MandateReference` AS `ProjectMandateReference`';
+        $fields .= ''
+          .',`Unkostenbeitrag`'
+          .',`Anzahlung`'
+          .',`AmountPaid`'
+          .',`PaidCurrentYear`'
+          .',m.`mandateReference` AS `ProjectMandateReference`'
+          .',m.`IBAN` AS `MandateIBAN`'
+          .',m.`BIC` AS `MandateBIC`'
+          .',m.`bankAccountOwner` AS `MandateAccountOwner`';
         // join table with the SEPA mandate reference table
         $memberTableId = Config::getValue('memberTableId');
         $joinCond =
@@ -609,11 +613,13 @@ WHERE";
               $surcharge = DetailedInstrumentation::extraFieldSurcharge($value, $allowed, $type);
               $extra    += $surcharge;
               $surcharge = money_format('%n', floatval($surcharge));
-              $line['Extras'][] = $label.': '.$surcharge;
+              $line['Extras'][] = array('label' => $label, 'surcharge' => $surcharge);
             }
             $line['SurchargeFees'] = $extra;
-            $line['Extras'] = implode("\n", $line['Extras']);
             $line['TotalFees'] = $extra + $line['Unkostenbeitrag'];
+            if ($this->debitNoteId > 0) {
+              $line['AmountPaid'] -=  $line['DebitNoteAmount']; // compensate for current payment
+            }
             $line['AmountMissing'] = $line['TotalFees'] - $line['AmountPaid'];
           }
           $line['InsuranceFee'] = InstrumentInsurance::annualFee($line['musicianId'], $dbh);

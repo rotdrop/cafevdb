@@ -42,7 +42,7 @@ namespace CAFEVDB
     /**Submit the debit transfer that many days in advance to the
      * bank.
      */
-    const SUBMIT_LIMIT = 6;
+    const SUBMIT_LIMIT = 2;
 
     function __construct($execute = true) {
       parent::__construct($execute);
@@ -729,7 +729,7 @@ received so far'),
 
       // As limiting amount we use the total sum of debit note
       // payments for instrumentation insurances from the current year
-      $paidAlready = ProjectPayments::totalsByDebitType('insurance', strftime('%Y').'-01-01', null, $handle);
+      $paidAlready = ProjectPayments::totalsByDebitType('insurance', strftime('%Y').'-06-30', null, $handle);
 
       $limit = Finance::$sepaPurposeLength;
       // We want to debit the annual insurance fees. Hence replace the
@@ -737,14 +737,19 @@ received so far'),
       $result = array();
       foreach($table as $key => $record) {
         $musicianId = $record['MusicianId'];
-        $fee = InstrumentInsurance::annualFee($musicianId, $handle);
+	$fee = InstrumentInsurance::annualFee($musicianId, $handle);
+	if ($musicianId == 743) {
+		error_log("@@@@ ".print_r($record, true));
+		error_log("@@@@ fee: ".$fee);
+	}
 
         $instrumentationId = $record['InstrumentationId'];
         if (!empty($paidAlready[$instrumentationId])) {
           $insurancePaid = $paidAlready[$instrumentationId]['TotalAmountPaid'];
-        } else {
+          //error_log("@@@@ already: ".$insurancePaid);
+	} else {
           $insurancePaid = 0.0;
-        }
+	}
 
         // Do not draw more than the registered total obligations, and
         // no more that the insurance fees.
@@ -756,13 +761,14 @@ received so far'),
         if ($amountRem > $amountMax - $paidTotal) {
           $amountRem = $amountMax - $paidTotal;
         }
+	//error_log("@@@@ musician: ".$musicianId." fee ".$fee." remaining ".$amountRem);
 
         if ($fee > $amountRem) {
           $subject = L::t('Remaining Amount Year %s', array(date('Y', time())));
           $fee = $amountRem;
         } else {
           $subject = L::t('Annual Fee Year %s', array(date('Y', time())));
-        }
+	}
         if ($fee <= 0) {
           continue; // skip empty amounts
         }
@@ -870,6 +876,7 @@ WHERE
 ';
 
       $query .= "GROUP BY p.Id";
+      error_log("@@@@ query: ".$query);
       $result = mySQL::query($query, $handle);
       $table = array();
 
@@ -879,6 +886,7 @@ WHERE
 
       while ($row = mySQL::fetch($result)) {
         if (Finance::mandateIsExpired($row['mandateReference'], $handle)) {
+          error_log("@@@@ expired for ".$row['MusicianId']);
           continue;
         }
         // use max of explicit last-use and value deduced from

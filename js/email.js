@@ -1356,6 +1356,14 @@ CAFEVDB.Email = CAFEVDB.Email || {};
                CAFEVDB.modalizer(true);
              }
 
+	     var recipientsAlertText;
+	     if (data.data.projectId >= 0) {
+	       recipientsAlertText = t('cafevdb', 'Email will be sent with an open recipients list!');
+	     } else {
+	       recipientsAlertText = t('cafevdb', 'Email will be sent with a hidden recipients list!');
+	     }
+	     OC.dialogs.alert(recipientsAlertText, t('cafevdb', 'Notice'), undefined, true);
+
              var popup = dialogHolder.cafevDialog({
                title: dlgTitle,
                position: { my: "middle top",

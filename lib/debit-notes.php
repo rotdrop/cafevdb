@@ -424,7 +424,7 @@ __EOT__;
         return L::t('DebitNoteAnnouncementProjectDeposit');
       case 'insurance':
         return L::t('DebitNoteAnnouncementInsurance');
-      case 'membershipt-fee':
+      case 'membership-fee':
         return L::t('DebitNoteAnnouncementMembershipFee');
       default:
         return L::t('DebitNoteAnnouncementUnknown');

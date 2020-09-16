@@ -712,7 +712,7 @@ namespace CAFEVDB
         unset($data['Portrait']);
         unset($data['Instruments']);
         unset($data['Projects']);
-        if (!mySQL::insert(self::MAIN_CONTACTS_TABLE, $data, $handle)) {
+        if (!mySQL::insert(self::MAIN_CONTACTS_TABLE, $row, $handle)) {
           mySQL::close($handle);
           return false;
         }
@@ -734,13 +734,6 @@ namespace CAFEVDB
           $instruments = Util::explode($row['Instruments']);
           // translate names to ids, then insert in MusicianInstruments ...
           // @@TODO
-          $info = Instruments::fetchInfo($handle);
-          $ids = array_flip($info['byId']);
-          $data = array();
-          foreach($instruments as $instrument) {
-            $data[] = [ 'MusicianId' => $id, 'InstrumentId' => $ids[$instrument] ];
-          }
-          mySQL::insert('MusicianInstruments', $data, $handle);
         }
 
       } else if ((string)$addressBookId == (string)self::MAIN_ADDRESS_BOOK_ID) {

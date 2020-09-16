@@ -947,7 +947,7 @@ WHERE b.ProjektId = $projectId",
               'groups' => "\$table.GroupId",
               'data' => "CONCAT('{\"GroupId\":\"',IFNULL(\$table.GroupId, -1),'\"}')",
               'orderby' => '$table.GroupId ASC, $table.LastName ASC, $table.FirstName ASC',
-              'join' => '$main_table.'.$fieldName.' = $join_table.GroupId',
+              'join' => '$main_table.`'.$fieldName.'` = $join_table.GroupId',
               ],
             'valueGroups' => $valueGroups,
             'valueData' => $valueData,
@@ -983,11 +983,14 @@ WHERE b.ProjektId = $projectId",
           'select'      => 'D',
           'sql'         => $fieldName,
           'values2'     => $groupValues2,
-          'values2|ACP' => $groupValues2ACP,
+//          'values2|ACP' => $groupValues2ACP,
           'display'     => [ 'popup' => 'data' ],
           'sort'        => true,
           'escape'      => false,
           ];
+        if (!empty($groupValues2ACP)) {
+          $opts['fdd'][$fieldName.'GroupId']['values2|ACP'] = $groupValues2ACP;
+        }
         break;
       default:
         break;

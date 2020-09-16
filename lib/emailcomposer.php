@@ -59,9 +59,14 @@ UNKOSTENBEITRAG
 ANZAHLUNG
 GESAMTBEITRAG
 ZUSATZKOSTEN
+EXTRAS
 VERSICHERUNGSBEITRAG
 ZAHLUNGSEINGANG
+FEHLBETRAG
 SEPAMANDATSREFERENZ
+SEPAMANDATSIBAN
+SEPAMANDATSBIC
+SEPAMANDATSINHABER
 LASTSCHRIFTBETRAG
 LASTSCHRIFTZWECK
 ';
@@ -80,9 +85,14 @@ Unkostenbeitrag
 Anzahlung
 TotalFees
 SurchargeFees
+Extras
 InsuranceFee
 AmountPaid
+AmountMissing
 MandateReference
+MandateIBAN
+MandateBIC
+MandateAccountOwner
 DebitNoteAmount
 DebitNotePurpose
 ';
@@ -118,6 +128,8 @@ DebitNotePurpose
 
     private $executionStatus; // false on error
     private $diagnostics; // mixed, depends on operation
+
+    private $memberVariables; // VARIABLENAME => column name
 
     /*
      * constructor
@@ -157,6 +169,9 @@ DebitNotePurpose
       $this->templateName = 'Default';
 
       $this->messageContents = $this->initialTemplate;
+
+      // cache the list of per-recipient variables
+      $this->memberVariables = $this->emailMemberVariables();
 
       $this->draftId = $this->cgiValue('MessageDraftId', -1);
 
@@ -305,6 +320,73 @@ DebitNotePurpose
       return preg_match('!([^$]|^)[$]{MEMBER::[^{]+}!', $message);
     }
 
+    /**Substitute any per-recipient variables into $templateMessage
+     *
+     * @param $templateMessage The email message without substitutions.
+     *
+     * @param $dbdata The data from the musician data-base which
+     * contains the substitutions.
+     *
+     * @return HTML message with variable substitutions.
+     */
+    private function replaceMemberVariables($templateMessage, $dbdata)
+    {
+      $enckey = Config::getEncryptionKey();      
+      if ($dbdata['Geburtstag'] && $dbdata['Geburtstag'] != '') {
+        $dbdata['Geburtstag'] = date('d.m.Y', strtotime($dbdata['Geburtstag']));
+      }
+      $strMessage = $templateMessage;
+      foreach ($this->memberVariables as $placeholder => $column) {
+        if ($placeholder === 'EXTRAS') {
+          // EXTRAS is a multi-field stuff. In order to allow stuff
+          // like forming tables we allow lead-in, lead-out and separator.
+          if ($this->projectId <= 0) {
+            $extras = [ [ 'label' => L::t("nothing"), 'surcharge' => 0 ] ];
+          } else {
+            $extras = $dbdata[$column];
+          }
+          $strMessage = preg_replace_callback(
+            '/([^$]|^)[$]{MEMBER::EXTRAS(:([^!}]+)!([^!}]+)!([^}]+))?}/',
+            function($matches) use ($extras) {
+              if (count($matches) === 6) {
+                $pre  = $matches[3];
+                $sep  = $matches[4];
+                $post = $matches[5];
+              } else {
+                $pre  = '';
+                $sep  = ': ';
+                $post = "\n";
+              }
+              $result = $matches[1];
+              foreach($extras as $records) {
+                $result .=
+                  $pre.
+                  $records['label'].
+                  $sep.
+                  $records['surcharge'].
+                  $post;
+              }
+              return $result;
+            },
+            $strMessage);
+          continue;
+        } else if ($placeholder === 'SEPAMANDATSIBAN' ||
+                   $placeholder === 'SEPAMANDATSBIC' ||
+                   $placeholder === 'SEPAMANDATSINHABER') {
+          $dbdata[$column] = Config::decrypt($dbdata[$column], $enckey);
+          if ($placeholder === 'SEPAMANDATSIBAN') {
+            $dbdata[$column] = substr($dbdata[$column], 0, 6).'...'.substr($dbdata[$column], -4, 4);
+          }
+        }
+        // replace all remaining stuff
+        $strMessage = preg_replace('/([^$]|^)[$]{MEMBER::'.$placeholder.'}/',
+                                   '${1}'.htmlspecialchars($dbdata[$column]),
+                                   $strMessage);
+      }
+      $strMessage = preg_replace('/[$]{2}{/', '${', $strMessage);
+      return $strMessage;
+    }
+
     /**Substitute any global variables into
      * $this->messageContents.
      *
@@ -378,22 +460,12 @@ DebitNotePurpose
       $message = $this->replaceGlobals();
 
       if ($this->isMemberTemplateEmail($message)) {
-        $templateMessage = $message;
-        $variables = $this->emailMemberVariables();
 
         $this->diagnostics['TotalPayload'] = count($this->recipients)+1;
 
         foreach ($this->recipients as $recipient) {
           $dbdata = $recipient['dbdata'];
-          $strMessage = $templateMessage;
-          if ($dbdata['Geburtstag'] && $dbdata['Geburtstag'] != '') {
-            $dbdata['Geburtstag'] = date('d.m.Y', strtotime($dbdata['Geburtstag']));
-          }
-          foreach ($variables as $placeholder => $column) {
-            $strMessage = preg_replace('/([^$]|^)[$]{MEMBER::'.$placeholder.'}/',
-                                       '${1}'.htmlspecialchars($dbdata[$column]),
-                                       $strMessage);
-          }
+          $strMessage = $this->replaceMemberVariables($message, $dbdata);
           ++$this->diagnostics['TotalCount'];
           $msg = $this->composeAndSend($strMessage, array($recipient), false);
 	  if (!empty($msg['message'])) {
@@ -415,7 +487,7 @@ DebitNotePurpose
         // catch-all. This Message also gets copied to the Sent-folder
         // on the imap server.
         ++$this->diagnostics['TotalCount'];
-        $mimeMsg = $this->composeAndSend($templateMessage, array(), true);
+        $mimeMsg = $this->composeAndSend($message, array(), true);
         if (!empty($mimeMsg['message'])) {
           $this->copyToSentFolder($mimeMsg['message']);
           $this->recordMessageDiagnostics($mimeMsg['message']);
@@ -613,10 +685,15 @@ DebitNotePurpose
         foreach ($attachments as $attachment) {
           if ($attachment['status'] != 'selected') {
             continue;
-          }
+	  }
+	  if ($attachment['type'] == 'message/rfc822') {
+            $encoding = '8bit';
+	  } else {
+            $encoding = 'base64';
+	  }
           $phpMailer->AddAttachment($attachment['tmp_name'],
                                     basename($attachment['name']),
-                                    'base64',
+                                    $encoding,
                                     $attachment['type']);
         }
 
@@ -1100,23 +1177,11 @@ DebitNotePurpose
       $message = $this->replaceGlobals();
 
       if ($this->isMemberTemplateEmail($message)) {
-        $templateMessage = $message;
-        $variables = $this->emailMemberVariables();
 
         $this->diagnostics['TotalPayload'] = count($this->recipients)+1;
 
         foreach ($this->recipients as $recipient) {
-          $dbdata = $recipient['dbdata'];
-          $strMessage = $templateMessage;
-          if ($dbdata['Geburtstag'] && $dbdata['Geburtstag'] != '') {
-            $dbdata['Geburtstag'] = date('d.m.Y', strtotime($dbdata['Geburtstag']));
-          }
-          foreach ($variables as $placeholder => $column) {
-            $strMessage = preg_replace('/([^$]|^)[$]{MEMBER::'.$placeholder.'}/',
-                                       '${1}'.htmlspecialchars($dbdata[$column]),
-                                       $strMessage);
-          }
-          $strMessage = preg_replace('/[$]{2}{/', '${', $strMessage);
+          $strMessage = $this->replaceMemberVariables($message, $recipient['dbdata']);
           ++$this->diagnostics['TotalCount'];
           if (!$this->composeAndExport($strMessage, array($recipient), false)) {
             ++$this->diagnostics['FailedCount'];
@@ -1128,7 +1193,7 @@ DebitNotePurpose
         // catch-all. This Message also gets copied to the Sent-folder
         // on the imap server.
         ++$this->diagnostics['TotalCount'];
-        if (!$this->composeAndExport($templateMessage, array(), true)) {
+        if (!$this->composeAndExport($message, array(), true)) {
           ++$this->diagnostics['FailedCount'];
         }
       } else {
@@ -1306,9 +1371,15 @@ DebitNotePurpose
         // substitute any legal variable by DUMMY and check that no
         // unknown ${...} substitution tag remains. Mmmh.
 
-        $variables = $this->emailMemberVariables();
+        $variables = $this->memberVariables;
         foreach ($variables as $placeholder => $column) {
-          $dummy = preg_replace('/([^$]|^)[$]{MEMBER::'.$placeholder.'}/', '${1}'.$column, $dummy);
+          if ($placeholder === 'EXTRAS') {
+            $dummy = preg_replace(
+              '/([^$]|^)[$]{MEMBER::EXTRAS(:([^!}]+)!([^!}]+)!([^}]+))?}/',
+              '${1}'.$column, $dummy);
+            continue;
+          }
+          $dummy = preg_replace('/([^$]|^)[$]{MEMBER::'.$placeholder.'[^}]*}/', '${1}'.$column, $dummy);
         }
 
         if (preg_match('!([^$]|^)[$]{MEMBER::[^}]+}?!', $dummy, $leftOver)) {

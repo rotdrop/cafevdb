@@ -2785,17 +2785,25 @@ class phpMyEdit
 			$magic_quotes_gpc = get_magic_quotes_gpc();
 		}
 
-		/* Due to compatiblity "crap" inside PHP spaces, dots, open
-		 * square brackets and everything in between ASCII(128) and
-		 * ASCII(159) is converted to underscores internally. Cope
-		 * with this crappy shit. The code below ignores ASCII >=
-		 * 128. Give a damn on it.
-		 */
-		$cookedName = preg_replace('/[[:space:].[\x80-\x9f]/', '_', $name);
-		$var = @$_GET[$cookedName];
+		$var = @$_GET[$name];
 		if (! isset($var)) {
-			$var = @$_POST[$cookedName];
+			$var = @$_POST[$name];
 		}
+		if (! isset($var)) {
+			/* Due to compatiblity "crap" inside PHP spaces, dots, open
+			 * square brackets and everything in between ASCII(128) and
+			 * ASCII(159) is converted to underscores internally. Cope
+			 * with this crappy shit. The code below ignores ASCII >=
+			 * 128. Give a damn on it.
+			 */
+
+			$cookedName = preg_replace('/[[:space:].[\x80-\x9f]/', '_', $name);
+			$var = @$_GET[$cookedName];
+			if (! isset($var)) {
+				$var = @$_POST[$cookedName];
+			}
+		}
+		
 		if (isset($var)) {
 			if ($magic_quotes_gpc) {
 				if (is_array($var)) {

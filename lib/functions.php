@@ -885,7 +885,7 @@ __EOT__;
         }
         // Convert unicode space to ordinary space
         $value = str_replace("\xc2\xa0", "\x20", $value);
-        $vlaue = preg_replace('/\s+/', ' ', $value);
+        $value = preg_replace('/\s+/', ' ', $value);
 
         // Then trim away ...
         $value = trim($value);

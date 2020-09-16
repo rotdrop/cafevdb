@@ -46,7 +46,11 @@ $(document).ready(function() {
 
     content.on('chosen:showing_dropdown', 'select', function(event, params)   {
         var results = params.chosen.search_results;
-        results.find('li').cafevTooltip({placement:'right'});
+        var menuItems = results.find('li');
+	menuItems.cafevTooltip({placement:'right'});
+	if (!CAFEVDB.toolTipsEnabled) {
+	    menuItems.cafevTooltip('disable');
+	}
         return true;
     });
 

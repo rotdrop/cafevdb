@@ -132,7 +132,7 @@ namespace CAFEVDB
       $opts['key_type'] = 'int';
 
       // Sorting field(s)
-      $opts['sort_field'] = array('Id');
+      $opts['sort_field'] = array('-DateOfReceipt', 'DebitNoteId', 'InstrumentationId');
 
       // Number of records to display on the screen
       // Value of -1 lists all records in a table

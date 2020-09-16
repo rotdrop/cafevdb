@@ -813,7 +813,6 @@ var CAFEVDB = CAFEVDB || {};
     $.fn.cafevTooltip.remove();
 
     $('div.chosen-container').cafevTooltip({placement:'auto top'});
-    $('li.active-result').cafevTooltip({placement:'auto right'});
 
     return false;
 
@@ -844,9 +843,6 @@ var CAFEVDB = CAFEVDB || {};
       return CAFEVDB.tableExportMenu($(this));
     });
 
-    container.find('select.pme-export-choice').on('chosen:showing_dropdown', function (chosen) {
-      container.find('ul.chosen-results li.active-result').cafevTooltip({placement:'auto right'});
-    });
   }
 
   /**Open one invisible modal dialog in order to have a persistent

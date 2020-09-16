@@ -477,7 +477,7 @@ __EOT__;
         'input' => 'V',
         'name' => L::t('Flyer'),
         'select' => 'T',
-        'options' => 'CPDV',
+        'options' => 'VCD',
         'sql'      => '`PMEtable0`.`Aktualisiert`',
         'php' => function($value, $op, $field, $fds, $fdd, $row, $recordId) {
           $projectId = $recordId;
@@ -1955,6 +1955,7 @@ ORDER BY i.Sortierung ASC";
     /**Create a HTML table with the missing musicians. */
     public static function missingInstrumentationTable($projectId, $handle = false)
     {
+      return ""; 
       $output = '';
       $numbers = self::fetchMissingInstrumentation($projectId, $handle);
 
@@ -2382,7 +2383,7 @@ IF(i2.Id IS NULL, 1, COUNT(DISTINCT i2.Id))',
         $extraColumns[$name] = array(
           'table' => 'ProjectExtraFieldsData',
           'tablename' => $short,
-          'column' => $column, empty($default) ?  "{$short}.{$column}" : "IFNULL({$short}.{$column}, $default)",
+          'column' => empty($default) ?  "{$short}.{$column}" : "IFNULL({$short}.{$column}, $default)",
           'update' => $column,
           'verbatim' => true,
           'join' => array(
