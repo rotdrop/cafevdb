@@ -24,14 +24,14 @@
  */
 namespace OCA\CAFEVDB\Common;
 
+use \ioncube\phpOpensslCryptor\Cryptor;
+
 /**Class for handling configuration values.
  */
 class Config
 {
   const APP_NAME  = 'cafevdb';
   const DISPLAY_NAME = 'Camerata DB';
-  const MCRYPT_CIPHER = MCRYPT_RIJNDAEL_128;
-  const MCRYPT_MODE = MCRYPT_MODE_ECB;
   /**Configuration keys. In order for encryption/decryption to work
    * properly, every config setting has to be listed here.
    */
@@ -471,36 +471,7 @@ redaxoRehearsalsModule
   /**Pad the given key to a supprted length. */
   static private function padEncryptionKey($key)
   {
-    if ($key == '') {
-      return $key;
-    }
-
-    $keySize  = mcrypt_module_get_algo_key_size(self::MCRYPT_CIPHER);
-    $keySizes = mcrypt_module_get_supported_key_sizes(self::MCRYPT_CIPHER);
-    if (count($keySizes) == 0) {
-      $keySizes = array($keySize);
-    }
-    sort($keySizes);
-    $maxSize = $keySizes[count($keySizes) - 1];
-    $klen = strlen($key);
-    if ($klen > $maxSize) {
-      $key = substr($key, 0, $maxSize);
-    } else {
-      foreach($keySizes as $size) {
-        if ($size >= $klen) {
-          $key = str_pad($key, $size, "\0");
-          break;
-        }
-      }
-    }
     return $key;
-  }
-
-  /**Generate a random key of the maximum supported size */
-  static public function generateEncryptionKey()
-  {
-    $size = mcrypt_module_get_algo_key_size(self::MCRYPT_CIPHER);
-    return Util::generateRandomBytes($size);
   }
 
   /**Store the encryption key in the session data. This cannot (i.e.:
@@ -605,10 +576,7 @@ redaxoRehearsalsModule
       $md5   = md5($value);
       $cnt   = sprintf('%04x', strlen($value));
       $src   = $cnt.$md5.$value; // 4 Bytes + 32 Bytes + X bytes of data
-      $value = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_128,
-                                            $enckey,
-                                            $src,
-                                            MCRYPT_MODE_ECB));
+      $value = Cryptor::Encrypt($src, $enckey, Cryptor::FORMAT_B64);
     }
     return $value;
   }
@@ -631,10 +599,7 @@ redaxoRehearsalsModule
     }
 
     if ($enckey != '' && $value != '') {
-      $value = mcrypt_decrypt(MCRYPT_RIJNDAEL_128,
-                              $enckey,
-                              base64_decode($value),
-                              MCRYPT_MODE_ECB);
+      $value = Cryptor::Decrypt($value, $enckey, Cryptor::FORMAT_B64);
       $cnt = intval(substr($value, 0, 4), 16);
       $md5 = substr($value, 4, 32);
       $value = substr($value, 36, $cnt);
