@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -19,6 +19,12 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+if ((@include_once __DIR__ . '/../vendor/autoload.php')===false) {
+        throw new Exception('Cannot include autoload. Did you run install dependencies using composer?');
+}
+
+if (false) {
 
 OC::$CLASSPATH['CAFEVDB\Admin'] = 'cafevdb/lib/admin.php';
 OC::$CLASSPATH['CAFEVDB\Config'] = 'cafevdb/lib/config.php';
@@ -119,3 +125,5 @@ OCP\App::addNavigationEntry( array(
 	'icon' => OCP\Util::imagePath( 'cafevdb', 'logo-greyf-icon.svg' ),
 	'name' => 'Camerata DB'
 ));
+
+} // if false

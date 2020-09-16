@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -19,6 +19,31 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+if (true) {
+return [
+    'routes' => []
+];
+} else {
+/**
+ * Create your routes in here. The name is the lowercase name of the controller
+ * without the controller part, the stuff after the hash is the method.
+ * e.g. page#index -> OCA\Bav\Controller\PageController->index()
+ *
+ * The controller class has to be registered in the application.php file since
+ * it's instantiated in there
+ */
+
+return [
+    'routes' => [
+        ['name' => 'page#index', 'url' => '/', 'verb' => 'GET'],
+        ['name' => 'page#dialog', 'url' => '/bav', 'verb' => 'POST'],
+        ['name' => 'page#validate', 'url' => '/validate', 'verb' => 'POST'],
+    ]
+];
+}
+
+return;
 
 OC::$CLASSPATH['CAFEVDB\Config'] = OC_App::getAppPath('cafevdb').'/lib/config.php';
 OC::$CLASSPATH['CAFEVDB\Projects'] = OC_App::getAppPath('cafevdb').'/lib/projects.php';
