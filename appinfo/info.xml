@@ -2,6 +2,7 @@
 <info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
     <id>cafevdb</id>
+    <namespace>CAFEVDB</namespace>
     <name>CAFeV DB</name>
     <description>Orchestra Management Application.</description>
     <codename>Creeping Featurism</codename>
