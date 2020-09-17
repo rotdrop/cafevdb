@@ -29,6 +29,9 @@ use OCP\IGroupManager;
 use OCP\IUserSession;
 use OCP\IConfig;
 
+// @@TODO: many of these function should go into the Util class. Also:
+// Config should be rather dynamic than static.
+
 /**Class for handling configuration values.
  */
 class Config
@@ -177,50 +180,6 @@ redaxoRehearsalsModule
       $group = self::getAppValue('usergroup', '');
     }
     return !empty($group) && \OC_Group::inGroup($user, $group);
-  }
-
-  public static function loginListener($params)
-  {
-    //self::init();
-    $group = self::getAppValue('usergroup', '');
-    $user = $params['uid'];
-    if ($group != '' && \OC_Group::inGroup($user, $group)) {
-      // Fetch the encryption key and store in the session data
-      self::initPrivateKey($user, $params['password']);
-      self::initEncryptionKey($user);
-    }
-  }
-
-  public static function logoutListener($params)
-  {
-    self::init();
-
-    // OC does not destroy the session on logout, additionally, there
-    // is not alway a logout event. But if there is one, we destroy
-    // our session data.
-    self::$session->clearValues();
-  }
-
-  public static function changePasswordListener($params) {
-    self::init();
-    $group = self::getAppValue('usergroup', '');
-    $user = $params['uid'];
-    if ($group != '' && \OC_Group::inGroup($user, $group)) {
-      self::recryptEncryptionKey($params['uid'], $params['password']);
-    }
-  }
-
-  /**Configuration hook. The array can be filled with arbitrary
-   * variable-value pairs (global scope). Additionally it is possible
-   * to emit any other java-script code here, although this is
-   * probably not the intended usage.
-   *
-   * We do not use this but instead stick to our own config.php which
-   * is loader AFTER all JS structures have been initialized, this is
-   * simply much easier.
-   */
-  public static function jsLoadHook($params) {
-    //$jsAssign = &$params['array'];
   }
 
   /**Return email and display name of the admin user for error
