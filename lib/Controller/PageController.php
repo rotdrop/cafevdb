@@ -102,7 +102,7 @@ class PageController extends Controller {
    * @NoCSRFRequired
    */
   public function index() {
-    if (empty($this->request->getParam('template')) && !$this->historyService->historyEmpty()) {
+    if (empty($this->request->getParam('template')) && !$this->historyService->empty()) {
       return $this->history(1);
     } else {
       return $this->history(0);
@@ -118,14 +118,14 @@ class PageController extends Controller {
     if ($level > 0) {
       try {
         $originalParams = $this->parameterService->getParams();
-        $this->parameterService->setParams($this->historyService->fetchHistory($level-1));
+        $this->parameterService->setParams($this->historyService->fetch($level-1));
         $this->parameterService['originalRequestParameters'] = $originalParams;
         $_POST = $this->parameterService->getParams(); // oh oh
       } catch(\OutOfBoundsException $e) {
         return new DataResponse(['msg' => $e->getMessage()], Http::STATUS_NOT_FOUND);
       }
     } else {
-      $this->historyService->pushHistory($this->parameterService->getParams());
+      $this->historyService->push($this->parameterService->getParams());
     }
     return $this->loader(
       $this->parameterService['template'],
@@ -184,17 +184,16 @@ class PageController extends Controller {
       'expertmode' => Config::$expertmode,
       'tooltips' => $tooltips,
       'encryptionkey' => $encrkey,
-      'uploadMaxFilesize' => Util::maxUploadSize(), false,
-      'uploadMaxHumanFilesize',
-                    \OCP\Util::humanFileSize(Util::maxUploadSize()), false,
+      'uploadMaxFilesize' => Util::maxUploadSize(),
+      'uploadMaxHumanFilesize' => \OCP\Util::humanFileSize(Util::maxUploadSize()),
       'projectName' => $projectName,
       'projectId' => $projectId,
       'musicianId' => $musicianId,
       'recordId' => $recordId,
       'locale' => Util::getLocale(),
       'timezone' => Util::getTimezone(),
-      //      'historySize' => $this->historySize(),
-      //'historyPosition' => $this->historyPosition(),
+      'historySize' => $this->historyService->size(),
+      'historyPosition' => $this->historyService->position(),
       'requesttoken' => \OCP\Util::callRegister(),
       'filtervisibility' => $usrFiltVis,
       'directchange' => $directChg,
@@ -202,7 +201,7 @@ class PageController extends Controller {
       'pagerows' => $pageRows,
     ];
 
-    return new JSONResponse($this->parameterService->getParams());
+    return new TemplateResponse($this->appName, $tmplname, $templateParameters);
   }
 
   private function getUserValue($key, $default = null)

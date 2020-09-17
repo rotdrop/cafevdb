@@ -39,7 +39,7 @@ return [
         [
             'name' => 'page#loader',
             'url' => '/loader/{template}',
-            'verb' => 'POST',
+            'verb' => 'GET',
             'defaults' => [ 'template' => 'blog' ]
         ],
         [

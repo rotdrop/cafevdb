@@ -39,11 +39,11 @@ class HistoryService
   public function __construct(SessionService $session, IL10N $l) {
     $this->session = $session;
     $this->l = $l;
-    $this->loadHistory();
+    $this->load();
   }
 
   /**Initialize a sane do-nothing record. */
-  private function defaultHistory()
+  private function default()
   {
     $this->historySize = 1;
     $this->historyPosition = 0;
@@ -52,7 +52,7 @@ class HistoryService
   }
 
   /**Add a history snapshot. */
-  public function pushHistory($data)
+  public function push($data)
   {
     ksort($data);
     $md5 = md5(serialize($data));
@@ -71,10 +71,10 @@ class HistoryService
     }
   }
 
-  /**Fetch the history record at $offset. The function will through
+  /**Fetch the history record at $offset. The function will throw
    * an exception if offset is out of bounds.
    */
-  public function fetchHistory($offset)
+  public function fetch($offset)
   {
     $newPosition = $this->historyPosition + $offset;
     if ($newPosition >= $this->historySize || $newPosition < 0) {
@@ -90,20 +90,20 @@ class HistoryService
   }
 
   /**Return the current position into the history. */
-  public function historyPosition()
+  public function position()
   {
     return $this->historyPosition;
   }
 
   /**Return the current position into the history. */
-  public function historySize()
+  public function size()
   {
     return $this->historySize;
   }
 
   /**Return true if the recorded history is essentially empty.
    */
-  public function historyEmpty()
+  public function empty()
   {
     return $this->historySize <= 1 && count($this->historyRecords[0]['data']) == 0;
   }
@@ -111,7 +111,7 @@ class HistoryService
   /**Store the current state whereever. Currently the PHP session
    * data, but this is not guaranteed.
    */
-  public function storeHistory()
+  public function store()
   {
     $storageValue = array('size' => $this->historySize,
                           'position' => $this->historyPosition,
@@ -122,11 +122,11 @@ class HistoryService
   /**Load the history state. Initialize to default state in case of
    * errors.
    */
-  private function loadHistory()
+  private function load()
   {
     $loadValue = $this->session->retrieveValue(self::SESSION_HISTORY_KEY);
-    if (!$this->validateHistory($loadValue)) {
-      $this->defaultHistory();
+    if (!$this->validate($loadValue)) {
+      $this->default();
       return false;
     }
     $this->historySize = $loadValue['size'];
@@ -137,20 +137,20 @@ class HistoryService
 
   /**Validate the given history records, return false on error.
    */
-  private function validateHistory($history)
+  private function validate($history)
   {
     if ($history === false ||
         !isset($history['size']) ||
         !isset($history['position']) ||
         !isset($history['records']) ||
-        !$this->validateHistoryRecords($history)) {
+        !$this->validateRecords($history)) {
       return false;
     }
     return true;
   }
 
   /**Validate one history entry */
-  private function validateHistoryRecord($record) {
+  private function validateRecord($record) {
     if (!is_array($record)) {
       return false;
     }
@@ -161,9 +161,9 @@ class HistoryService
   }
 
   /**Validate all history records. */
-  private function validateHistoryRecords($history) {
+  private function validateRecords($history) {
     foreach($history['records'] as $record) {
-      if (!$this->validateHistoryRecord($record)) {
+      if (!$this->validateRecord($record)) {
         return false;
       }
     }
