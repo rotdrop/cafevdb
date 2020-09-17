@@ -82,6 +82,47 @@ class Util
     return $result;
   }
 
+  /**Decode the record idea from the CGI data, return -1 if none
+   * found.
+   *
+   * @param getParam callable(key, default = null)
+   *
+   * @@TODO This is totally ugly. Is it really needed?
+   */
+  public static function getCGIRecordId($getParam, $prefix = null)
+  {
+    if (!isset($prefix)) {
+      Config::init();
+      $prefix = Config::$pmeopts['cgi']['prefix']['sys'];
+    }
+    $recordKey = $prefix.'rec';
+    $recordId  = $getParam($recordKey, -1);
+    $opreq     = $getParam($prefix.'operation');
+    $op        = parse_url($opreq, PHP_URL_PATH);
+    $opargs    = array();
+    parse_str(parse_url($opreq, PHP_URL_QUERY), $opargs);
+    if ($recordId < 0 && isset($opargs[$recordKey]) && $opargs[$recordKey] > 0) {
+      $recordId = $opargs[$recordKey];
+    }
+
+    return $recordId > 0 ? $recordId : -1;
+  }
+
+  /**Return the maximum upload file size.*/
+  public static function maxUploadSize($target = 'temporary')
+  {
+    $upload_max_filesize = \OCP\Util::computerFileSize(ini_get('upload_max_filesize'));
+    $post_max_size = \OCP\Util::computerFileSize(ini_get('post_max_size'));
+    $maxUploadFilesize = min($upload_max_filesize, $post_max_size);
+
+    if ($target == 'cloud') {
+      $freeSpace = \OC_Filesystem::free_space('/');
+      $freeSpace = max($freeSpace, 0);
+      $maxUploadFilesize = min($maxUploadFilesize, $freeSpace);
+    }
+    return $maxUploadFilesize;
+  }
+
 }
 
 // Local Variables: ***

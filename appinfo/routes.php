@@ -38,9 +38,15 @@ return [
         ],
         [
             'name' => 'page#loader',
-            'url' => '/pageloader/{template}',
+            'url' => '/loader/{template}',
             'verb' => 'POST',
             'defaults' => [ 'template' => 'blog' ]
+        ],
+        [
+            'name' => 'page#history',
+            'url' => '/history/{level}',
+            'verb' => 'GET',
+            'defaults' => [ 'level' => 0 ]
         ],
     ]
 ];

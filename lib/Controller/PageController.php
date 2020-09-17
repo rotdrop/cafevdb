@@ -15,17 +15,22 @@ use OCP\IRequest;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Controller;
 use OCP\IUserManager;
 use OCP\IGroupManager;
 use OCP\Group\ISubAdmin;
 use OCP\IUserSession;
+use OCP\ISession;
 use OCP\IConfig;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Common\Config;
 use OCA\CAFEVDB\Common\ConfigCheck;
 use OCA\CAFEVDB\Common\Util;
+
+use OCA\CAFEVDB\Service\HistoryService;
+use OCA\CAFEVDB\Service\RequestParameterService;
 
 class PageController extends Controller {
   /** @var IL10N */
@@ -52,15 +57,31 @@ class PageController extends Controller {
   /** @var int */
   private $userId;
 
+  /** @var HistoryService */
+  private $historyService;
+
+  /** @var RequestParameterSerice */
+  private $parameterService;
+
   //@@TODO inject config via constructor
-  public function __construct($appName, IRequest $request, IL10N $l, IUserManager $userManager, IGroupManager $groupManager, IConfig $containerConfig, IUserSession $userSession, ISubAdmin $groupSubAdmin) {
+  public function __construct(
+    $appName, IRequest $request,
+    IL10N $l,
+    IUserManager $userManager, IGroupManager $groupManager, ISubAdmin $groupSubAdmin,
+    IConfig $containerConfig, IUserSession $userSession,
+    HistoryService $historyService,
+    RequestParameterService $parameterService) {
+
     parent::__construct($appName, $request);
+
     $this->l = $l;
     $this->userManager = $userManager;
     $this->groupManager = $groupManager;
     $this->groupSubAdmin = $groupSubAdmin;
     $this->containerConfig = $containerConfig;
     $this->userSession = $userSession;
+    $this->historyService = $historyService;
+    $this->parameterService = $parameterService;
 
     //@@TODO: make non static ?
     //Config::init($this->userSession, $this->$containerConfig, $this->groupManager);
@@ -81,21 +102,54 @@ class PageController extends Controller {
    * @NoCSRFRequired
    */
   public function index() {
-    //return new TemplateResponse('cafevdb', 'main');  // templates/main.php
-    return $this->pageloader();
+    if (empty($this->request->getParam('template')) && !$this->historyService->historyEmpty()) {
+      return $this->history(1);
+    } else {
+      return $this->history(0);
+    }
   }
 
-  public function pageloader($template = 'blog', $projectName = '', $projectId = -1, $musicianId = -1)
+  /**
+   * @NoAdminRequired
+   * @NoCSRFRequired
+   */
+  public function history($level = 0)
   {
+    if ($level > 0) {
+      try {
+        $originalParams = $this->parameterService->getParams();
+        $this->parameterService->setParams($this->historyService->fetchHistory($level-1));
+        $this->parameterService['originalRequestParameters'] = $originalParams;
+        $_POST = $this->parameterService->getParams(); // oh oh
+      } catch(\OutOfBoundsException $e) {
+        return new DataResponse(['msg' => $e->getMessage()], Http::STATUS_NOT_FOUND);
+      }
+    } else {
+      $this->historyService->pushHistory($this->parameterService->getParams());
+    }
+    return $this->loader(
+      $this->parameterService['template'],
+      $this->parameterService['projectName'],
+      $this->parameterService['projectId'],
+      $this->parameterService['musicianId']
+    );
+  }
+
+  public function loader($template = 'blog', $projectName = '', $projectId = -1, $musicianId = -1)
+  {
+    if (empty($template)) {
+      $template = 'blog';
+    }
+
     // The most important ...
     $encrkey = Config::getEncryptionKey();
 
     // Get user and group
-    $group = Config::getAppValue('usergroup', '');
+    $groupId = Config::getAppValue('usergroup', '');
 
     // Are we a group-admin?
     //@@TODO needed in more than one location
-    $admin = !empty($group) && $this->groupSubAdmin->isSubAdminofGroup($this->user, $this->groupManager->get($group));
+    $isGroupAdmin = !empty($groupId) && $this->groupSubAdmin->isSubAdminofGroup($this->user, $this->groupManager->get($groupId));
 
     $tooltips     = $this->getUserValue('tooltips', 'on');
     $usrFiltVis   = $this->getUserValue('filtervisibility', 'off');
@@ -107,15 +161,11 @@ class PageController extends Controller {
     $pmeSysPfx = Config::$pmeopts['cgi']['prefix']['sys'];
     Config::$pmeopts['cgi']['append'][$pmeSysPfx.'fl'] = $usrFiltVis == 'off' ? 0 : 1;
 
+    // @@TODO this should not go here, I think
+    $recordId = Util::getCGIRecordId([$this->request, 'getParam']);
+
     // See if we are configured
     $config = (new ConfigCheck($this->userManager, $this->groupManager))->configured();
-
-    if (false) {
-    // following three may or may not be set
-    // $projectName = Util::cgiValue('ProjectName', '');
-    // $projectId   = Util::cgiValue('ProjectId', -1);
-    // $musicianId  = Util::cgiValue('MusicianId', -1);
-    $recordId    = Util::getCGIRecordId();
 
     if (!$config['summary']) {
       $tmplname = 'configcheck';
@@ -123,11 +173,36 @@ class PageController extends Controller {
       $tmplname = $template;
     }
 
-    }
+    $templateParameters = [
+      'template' => $tmplname,
 
-    return new JSONResponse(['POST' => $_POST,
-                             'GET' => $_GET,
-                             'SERVER' => $_SERVER]);
+      'configcheck' => $config,
+      'orchestra' => Config::getValue('orchestra'),
+      'groupadmin' => $isGroupAdmin,
+      'usergroup' => $groupId,
+      'user' => $this->userId,
+      'expertmode' => Config::$expertmode,
+      'tooltips' => $tooltips,
+      'encryptionkey' => $encrkey,
+      'uploadMaxFilesize' => Util::maxUploadSize(), false,
+      'uploadMaxHumanFilesize',
+                    \OCP\Util::humanFileSize(Util::maxUploadSize()), false,
+      'projectName' => $projectName,
+      'projectId' => $projectId,
+      'musicianId' => $musicianId,
+      'recordId' => $recordId,
+      'locale' => Util::getLocale(),
+      'timezone' => Util::getTimezone(),
+      //      'historySize' => $this->historySize(),
+      //'historyPosition' => $this->historyPosition(),
+      'requesttoken' => \OCP\Util::callRegister(),
+      'filtervisibility' => $usrFiltVis,
+      'directchange' => $directChg,
+      'showdisabled' => $showDisabled,
+      'pagerows' => $pageRows,
+    ];
+
+    return new JSONResponse($this->parameterService->getParams());
   }
 
   private function getUserValue($key, $default = null)

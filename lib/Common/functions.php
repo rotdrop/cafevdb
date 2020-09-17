@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -743,28 +743,6 @@ __EOT__;
       }
 
       return $result;
-    }
-
-    /**Decode the record idea from the CGI data, return -1 if none
-     * found.
-     */
-    public static function getCGIRecordId($prefix = null)
-    {
-      if (!isset($prefix)) {
-        Config::init();
-        $prefix = Config::$pmeopts['cgi']['prefix']['sys'];
-      }
-      $recordKey = $prefix.'rec';
-      $recordId  = self::cgiValue($recordKey, -1);
-      $opreq     = self::cgiValue($prefix.'operation');
-      $op        = parse_url($opreq, PHP_URL_PATH);
-      $opargs    = array();
-      parse_str(parse_url($opreq, PHP_URL_QUERY), $opargs);
-      if ($recordId < 0 && isset($opargs[$recordKey]) && $opargs[$recordKey] > 0) {
-        $recordId = $opargs[$recordKey];
-      }
-
-      return $recordId > 0 ? $recordId : -1;
     }
 
     public static function composeURL($location)
