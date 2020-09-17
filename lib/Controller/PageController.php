@@ -24,6 +24,7 @@ use OCP\IUserSession;
 use OCP\ISession;
 use OCP\IConfig;
 use OCP\IL10N;
+use OCP\IInitialStateService;
 
 use OCA\CAFEVDB\Common\Config;
 use OCA\CAFEVDB\Common\ConfigCheck;
@@ -33,6 +34,8 @@ use OCA\CAFEVDB\Service\HistoryService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 
 class PageController extends Controller {
+  use \OCA\CAFEVDB\Traits\InitialStateTrait;
+
   /** @var IL10N */
   private $l;
 
@@ -65,12 +68,18 @@ class PageController extends Controller {
 
   //@@TODO inject config via constructor
   public function __construct(
-    $appName, IRequest $request,
+    $appName,
+    IRequest $request,
     IL10N $l,
-    IUserManager $userManager, IGroupManager $groupManager, ISubAdmin $groupSubAdmin,
-    IConfig $containerConfig, IUserSession $userSession,
+    IUserManager $userManager,
+    IGroupManager $groupManager,
+    ISubAdmin $groupSubAdmin,
+    IConfig $containerConfig,
+    IUserSession $userSession,
     HistoryService $historyService,
-    RequestParameterService $parameterService) {
+    RequestParameterService $parameterService,
+    IInitialStateService $initialStateService
+  ) {
 
     parent::__construct($appName, $request);
 
@@ -82,6 +91,7 @@ class PageController extends Controller {
     $this->userSession = $userSession;
     $this->historyService = $historyService;
     $this->parameterService = $parameterService;
+    $this->initialStateService = $initialStateService;
 
     //@@TODO: make non static ?
     //Config::init($this->userSession, $this->$containerConfig, $this->groupManager);
@@ -144,11 +154,13 @@ class PageController extends Controller {
     );
   }
 
-  public function loader($template = 'blog', $projectName = '', $projectId = -1, $musicianId = -1)
-  {
+  public function loader($template = 'blog', $projectName = '', $projectId = -1, $musicianId = -1) {
     if (empty($template)) {
       $template = 'blog';
     }
+
+    // Initial state injecton for JS
+    $this->publishInitialStateForUser($this->user);
 
     // The most important ...
     $encrkey = Config::getEncryptionKey();
@@ -186,6 +198,8 @@ class PageController extends Controller {
       'template' => $tmplname,
 
       'l' => $this->l,
+      'appName' => $this->appName,
+
       'configcheck' => $config,
       'orchestra' => Config::getValue('orchestra'),
       'groupadmin' => $isGroupAdmin,
