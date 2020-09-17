@@ -24,10 +24,24 @@
  */
 namespace OCA\CAFEVDB\Common;
 
+use OCP\IUserManager;
+use OCP\IGroupManager;
+
 /**Check for a usable configuration.
  */
 class ConfigCheck
 {
+  /** @var IGroupManager */
+  private $groupManager;
+
+  /** @var IUserManager */
+  private $userManager;
+
+  public function __construct(IUserManager $userManager, IGroupManager $groupManager) {
+    $this->userManager = $userManager;
+    $this->groupManager = $groupManager;
+  }
+
   /**Return an array with necessary configuration items, being either
    * true or false, depending the checks performed. The summary
    * component is just the logic and of all other items.
@@ -39,7 +53,7 @@ class ConfigCheck
    * array('status','message') where 'message' should be empty if
    * status is true.
    */
-  public static function configured()
+  public function configured()
   {
     $result = array();
 
@@ -63,28 +77,28 @@ class ConfigCheck
 
     $key = 'database';
     try {
-      $result[$key]['status'] = $result['orchestra']['status'] && self::databaseAccessible();
+      $result[$key]['status'] = $result['orchestra']['status'] && $this->databaseAccessible();
     } catch (\Exception $e) {
       $result[$key]['message'] = $e->getMessage();
     }
 
     $key = 'usergroup';
     try {
-      $result[$key]['status'] = self::ShareGroupExists();
+      $result[$key]['status'] = $this->shareGroupExists();
     } catch (\Exception $e) {
       $result[$key]['message'] = $e->getMessage();
     }
 
     $key = 'shareowner';
     try {
-      $result[$key]['status'] = $result['usergroup']['status'] && self::shareOwnerExists();
+      $result[$key]['status'] = $result['usergroup']['status'] && $this->shareOwnerExists();
     } catch (\Exception $e) {
       $result[$key]['message'] = $e->getMessage();
     }
 
     $key = 'sharedfolder';
     try {
-      $result[$key]['status'] = $result['shareowner']['status'] && self::sharedFolderExists();
+      $result[$key]['status'] = $result['shareowner']['status'] && $this->sharedFolderExists();
     } catch (\Exception $e) {
       $result[$key]['message'] = $e->getMessage();
     }
@@ -98,7 +112,7 @@ class ConfigCheck
     return $result;
   }
 
-  public static function checkImapServer($host, $port, $secure, $user, $password)
+  public function checkImapServer($host, $port, $secure, $user, $password)
   {
     $oldReporting = ini_get('error_reporting');
     ini_set('error_reporting', $oldReporting & ~E_STRICT);
@@ -112,7 +126,7 @@ class ConfigCheck
     return $result;
   }
 
-  public static function checkSmtpServer($host, $port, $secure, $user, $password)
+  public function checkSmtpServer($host, $port, $secure, $user, $password)
   {
     $result = true;
 
@@ -156,7 +170,7 @@ class ConfigCheck
    *
    * @return @c true for success, @c false on error.
    */
-  public static function groupSharedExists($id, $group, $type)
+  public function groupSharedExists($id, $group, $type)
   {
     // First check whether the object is already shared.
     $shareType  = \OCP\Share::SHARE_TYPE_GROUP;
@@ -191,7 +205,7 @@ class ConfigCheck
    *
    * @return @c true for success, @c false on error.
    */
-  public static function groupShareObject($id, $group, $type = 'calendar')
+  public function groupShareObject($id, $group, $type = 'calendar')
   {
     $groupPerms = (\OCP\PERMISSION_CREATE|
                    \OCP\PERMISSION_READ|
@@ -222,7 +236,7 @@ class ConfigCheck
    * @return Whatever the callback-functoni returns.
    *
    */
-  public static function sudo($uid, $callback)
+  public function sudo($uid, $callback)
   {
     \OC_Util::setupFS(); // This must come before trying to sudo
 
@@ -243,11 +257,11 @@ class ConfigCheck
   /**Return @c true if the share-group is set as application
    * configuration option and exists.
    */
-  public static function shareGroupExists()
+  public function shareGroupExists()
   {
-    $group = Config::getAppValue('usergroup');
+    $groupId = Config::getAppValue('usergroup');
 
-    if (!\OC_Group::groupExists($group)) {
+    if (!$this->groupManager->groupExists($groupId)) {
       return false;
     }
 
@@ -262,7 +276,7 @@ class ConfigCheck
    *
    * @return bool, @c true on success.
    */
-  public static function shareOwnerExists($shareowner = '')
+  public function shareOwnerExists($shareowner = '')
   {
     $sharegroup = Config::getAppValue('usergroup');
     $shareowner === '' && $shareowner = Config::getValue('shareowner');
@@ -280,7 +294,7 @@ class ConfigCheck
      *
      * How paranoid should we be?
      */
-    $groups = \OC_Group::getUserGroups($shareowner);
+    $groups = $this->groupManager->getUserGroups($shareowner);
 
     // well, the share-owner should in turn only be owned by the
     // group.
@@ -304,7 +318,7 @@ class ConfigCheck
    *
    * @return bool, @c true on success.
    */
-  public static function checkShareOwner($shareowner)
+  public function checkShareOwner($shareowner)
   {
     if (!$sharegroup = Config::getAppValue('usergroup', false)) {
       return false; // need at least this group!
@@ -323,7 +337,7 @@ class ConfigCheck
       return false;
     }
 
-    return self::shareOwnerExists($shareowner);
+    return $this->shareOwnerExists($shareowner);
   }
 
   /**We require that the share-owner owns a directory shared with the
@@ -334,15 +348,15 @@ class ConfigCheck
    *
    * @return bool, @c true on success.
    */
-  public static function sharedFolderExists($sharedfolder = '')
+  public function sharedFolderExists($sharedfolder = '')
   {
-    if (!self::shareOwnerExists()) {
+    if (!$this->shareOwnerExists()) {
       return false;
     }
 
     $sharegroup   = Config::getAppValue('usergroup');
     $shareowner   = Config::getValue('shareowner');
-    $groupadmin   = self::getUserId();
+    $groupadmin   = $this->getUserId();
 
     $sharedfolder == '' && $sharedfolder = Config::getSetting('sharedfolder', '');
 
@@ -352,8 +366,8 @@ class ConfigCheck
     }
 
     //$id = \OC\Files\Cache\Cache::getId($sharedfolder, $vfsroot);
-    $result = self::sudo($shareowner, function() use ($sharedfolder, $sharegroup) {
-      $user         = self::getUserId();
+    $result = $this->sudo($shareowner, function() use ($sharedfolder, $sharegroup) {
+      $user         = $this->getUserId();
       $vfsroot = '/'.$user.'/files';
 
       if ($sharedfolder[0] != '/') {
@@ -384,7 +398,7 @@ class ConfigCheck
    *
    * @return bool, @c true on success.
    */
-  public static function checkSharedFolder($sharedfolder)
+  public function checkSharedFolder($sharedfolder)
   {
     if ($sharedfolder == '') {
       return false;
@@ -394,13 +408,13 @@ class ConfigCheck
       $sharedfolder = '/'.$sharedfolder;
     }
 
-    if (self::sharedFolderExists($sharedfolder)) {
+    if ($this->sharedFolderExists($sharedfolder)) {
       // no need to create
       return true;
     }
 
     $sharegroup = Config::getAppValue('usergroup');
-    $groupadmin = self::getUserId();
+    $groupadmin = $this->getUserId();
 
     if (!\OC_SubAdmin::isSubAdminofGroup($groupadmin, $sharegroup)) {
       \OCP\Util::write(Config::APP_NAME,
@@ -410,8 +424,8 @@ class ConfigCheck
     }
 
     // try to create the folder and share it with the group
-    $result = self::sudo($shareowner, function() use ($sharedfolder, $sharegroup, $user) {
-      $user    = self::getUserId();
+    $result = $this->sudo($shareowner, function() use ($sharedfolder, $sharegroup, $user) {
+      $user    = $this->getUserId();
       $vfsroot = '/'.$user.'/files';
 
       // Create the user data-directory, if necessary
@@ -465,7 +479,7 @@ class ConfigCheck
       return true; // seems to be ok ...
     });
 
-    return self::sharedFolderExists($sharedfolder);
+    return $this->sharedFolderExists($sharedfolder);
   }
 
   /**Check for existence of the project folder and create it when not
@@ -476,17 +490,17 @@ class ConfigCheck
    *
    * @return bool, @c true on success.
    */
-  public static function checkProjectsFolder($projectsFolder)
+  public function checkProjectsFolder($projectsFolder)
   {
     $sharedFolder = Config::getValue('sharedfolder');
 
-    if (!self::sharedFolderExists($sharedFolder)) {
+    if (!$this->sharedFolderExists($sharedFolder)) {
       return false;
     }
 
     $sharegroup = Config::getAppValue('usergroup');
     $shareowner = Config::getValue('shareowner');
-    $user       = self::getUserId();
+    $user       = $this->getUserId();
 
     if (!\OC_SubAdmin::isSubAdminofGroup($user, $sharegroup)) {
       \OCP\Util::write(Config::APP_NAME,
@@ -528,10 +542,10 @@ class ConfigCheck
    *
    * @return bool, @c true on success.
    */
-  public static function databaseAccessible($opts = array())
+  public function databaseAccessible($opts = array())
   {
     try {
-      self::init();
+      Config::init();
       if (empty($opts)) {
         $opts = Config::$dbopts;
       }

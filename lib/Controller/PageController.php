@@ -16,6 +16,7 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Controller;
+use OCP\IUserManager;
 use OCP\IGroupManager;
 use OCP\Group\ISubAdmin;
 use OCP\IUserSession;
@@ -29,6 +30,9 @@ use OCA\CAFEVDB\Common\Util;
 class PageController extends Controller {
   /** @var IL10N */
   private $l;
+
+  /** @var IUserManager */
+  private $userManager;
 
   /** @var IGroupManager */
   private $groupManager;
@@ -49,9 +53,10 @@ class PageController extends Controller {
   private $userId;
 
   //@@TODO inject config via constructor
-  public function __construct($appName, IRequest $request, IL10N $l, IGroupManager $groupManager, IConfig $containerConfig, IUserSession $userSession, ISubAdmin $groupSubAdmin) {
+  public function __construct($appName, IRequest $request, IL10N $l, IUserManager $userManager, IGroupManager $groupManager, IConfig $containerConfig, IUserSession $userSession, ISubAdmin $groupSubAdmin) {
     parent::__construct($appName, $request);
     $this->l = $l;
+    $this->userManager = $userManager;
     $this->groupManager = $groupManager;
     $this->groupSubAdmin = $groupSubAdmin;
     $this->containerConfig = $containerConfig;
@@ -103,7 +108,7 @@ class PageController extends Controller {
     Config::$pmeopts['cgi']['append'][$pmeSysPfx.'fl'] = $usrFiltVis == 'off' ? 0 : 1;
 
     // See if we are configured
-    //$config = ConfigCheck::configured();
+    $config = (new ConfigCheck($this->userManager, $this->groupManager))->configured();
 
     if (false) {
     // following three may or may not be set
