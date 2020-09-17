@@ -40,7 +40,7 @@ class UserLoggedInEventListener implements IEventListener
   }
 
   public function handle(Event $event): void {
-    if (!($event instanceOf UserLoggedInEvent) && !($event instanceOf UserLoggedInWithCookieEvent) {
+    if (!($event instanceOf UserLoggedInEvent) && !($event instanceOf UserLoggedInWithCookieEvent)) {
       return;
     }
     $groupId = Config::getAppValue('usergroup', '');

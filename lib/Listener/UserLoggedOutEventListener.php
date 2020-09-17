@@ -29,7 +29,7 @@ use OCP\IGroupManager;
 
 use OCA\CAFEVDB\Common\Config;
 
-class PostLoginEventListener implements IEventListener
+class UserLoggedOutEventListener implements IEventListener
 {
   /** @var ISubAdmin */
   private $groupManager;
@@ -39,7 +39,7 @@ class PostLoginEventListener implements IEventListener
   }
 
   public function handle(Event $event): void {
-    if (!($event instanceOf PostLoggedOutEvent)) {
+    if (!($event instanceOf UserLoggedOutEvent)) {
       return;
     }
     // @@TODO check if we want this.
