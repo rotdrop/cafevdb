@@ -109,10 +109,6 @@ class PageController extends Controller {
     }
   }
 
-  /**
-   * @NoAdminRequired
-   * @NoCSRFRequired
-   */
   public function history($level = 0)
   {
     if ($level > 0) {
@@ -129,6 +125,19 @@ class PageController extends Controller {
     }
     return $this->loader(
       $this->parameterService['template'],
+      $this->parameterService['projectName'],
+      $this->parameterService['projectId'],
+      $this->parameterService['musicianId']
+    );
+  }
+
+  /**
+   * @NoAdminRequired
+   * @NoCSRFRequired
+   */
+  public function debug() {
+    return $this->loader(
+      'debug', // template
       $this->parameterService['projectName'],
       $this->parameterService['projectId'],
       $this->parameterService['musicianId']
@@ -167,7 +176,7 @@ class PageController extends Controller {
     // See if we are configured
     $config = (new ConfigCheck($this->userManager, $this->groupManager))->configured();
 
-    if (!$config['summary']) {
+    if ($template != 'debug' && !$config['summary']) {
       $tmplname = 'configcheck';
     } else {
       $tmplname = $template;
@@ -176,6 +185,7 @@ class PageController extends Controller {
     $templateParameters = [
       'template' => $tmplname,
 
+      'l' => $this->l,
       'configcheck' => $config,
       'orchestra' => Config::getValue('orchestra'),
       'groupadmin' => $isGroupAdmin,

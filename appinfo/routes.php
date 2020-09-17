@@ -39,14 +39,19 @@ return [
         [
             'name' => 'page#loader',
             'url' => '/loader/{template}',
-            'verb' => 'GET',
+            'verb' => 'POST',
             'defaults' => [ 'template' => 'blog' ]
         ],
         [
             'name' => 'page#history',
             'url' => '/history/{level}',
-            'verb' => 'GET',
+            'verb' => 'POST',
             'defaults' => [ 'level' => 0 ]
+        ],
+        [
+            'name' => 'page#debug',
+            'url' => '/debug',
+            'verb' => 'GET',
         ],
     ]
 ];
