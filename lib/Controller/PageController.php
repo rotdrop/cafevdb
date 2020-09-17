@@ -21,39 +21,39 @@ use OCP\IL10N;
 use OCA\CAFEVDB\Common\Config;
 
 class PageController extends Controller {
-    /** @var IL10N */
-    private $l;
+  /** @var IL10N */
+  private $l;
 
-	public function __construct($AppName, IRequest $request, IL10N $l){
-		parent::__construct($AppName, $request);
-        $this->l = $l;
-	}
+  public function __construct($AppName, IRequest $request, IL10N $l){
+    parent::__construct($AppName, $request);
+    $this->l = $l;
+  }
 
-    /**
-     * CAUTION: the @Stuff turn off security checks, for this page no admin is
-     *          required and no CSRF check. If you don't know what CSRF is, read
-     *          it up in the docs or you might create a security hole. This is
-     *          basically the only required method to add this exemption, don't
-     *          add it to any other method if you don't exactly know what it does
-     *
-     * @NoAdminRequired
-     * @NoCSRFRequired
-     */
-    public function index() {
-        //return new TemplateResponse('cafevdb', 'main');  // templates/main.php
-        return $this->pageloader();
-    }
+  /**
+   * CAUTION: the @Stuff turn off security checks, for this page no admin is
+   *          required and no CSRF check. If you don't know what CSRF is, read
+   *          it up in the docs or you might create a security hole. This is
+   *          basically the only required method to add this exemption, don't
+   *          add it to any other method if you don't exactly know what it does
+   *
+   * @NoAdminRequired
+   * @NoCSRFRequired
+   */
+  public function index() {
+    //return new TemplateResponse('cafevdb', 'main');  // templates/main.php
+    return $this->pageloader();
+  }
 
-    public function pageloader($template = 'blog', $projectName = '', $projectId = -1, $musicianId = -1)
-    {
-        Config::init();
-        return new JSONResponse(['POST' => $_POST,
-                                 'GET' => $_GET,
-                                 'SERVER' => $_SERVER]);
-    }
+  public function pageloader($template = 'blog', $projectName = '', $projectId = -1, $musicianId = -1)
+  {
+    Config::init();
+    return new JSONResponse(['POST' => $_POST,
+                             'GET' => $_GET,
+                             'SERVER' => $_SERVER]);
+  }
 }
 
 // Local Variables: ***
-// c-basic-offset: 4 ***
+// c-basic-offset: 2 ***
 // indent-tabs-mode: nil ***
 // End: ***
