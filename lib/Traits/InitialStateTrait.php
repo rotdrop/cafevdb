@@ -23,30 +23,80 @@
 namespace OCA\CAFEVDB\Traits;
 
 use OCP\IInitialStateService;
+use OCP\IL10N;
 use OCP\IUser;
+use OCP\IConfig;
 
 use OCA\CAFEVDB\Common\Config;
+use OCA\CAFEVDB\Service\HistoryService;
 
 trait InitialStateTrait {
 
-    /** @var IInitialStateService */
-    protected $initialStateService;
+    /** @var string */
+    protected $appName;
 
-    protected function publishInitialStateForUser(IUser $user) {
+    /** @var IL10N */
+    private $l;
+
+    /** @var IInitialStateService */
+    private $initialStateService;
+
+    /** @var HistoryService */
+    private $historyService;
+
+    /** @var IConfig */
+    private $containerConfig;
+
+    protected function publishInitialStateForUser() {
+        $l = $this->l;
+
+        $tooltips  = $this->getUserValue('tooltips', '');
+        $directChg = $this->getUserValue('directchange', '');
+        $language  = $this->getUserValue('lang', 'en');
+        $editor    = $this->getUserValue('wysiwygEditor', 'tinymce');
+
+        $admin = Config::adminContact();
+        $adminEmail = $admin['email'];
+        $adminName = $admin['name'];
+
         $this->initialStateService->provideInitialState(
             Config::APP_NAME,
             'CAFEVDB',
             [
-                'blah' => 'blub',
-                'foo' => [ 'bar' => 13 ],
+                'toolTipsEnabled' => ($tooltips == 'off' ? false : true),
+                'wysiwygEditor' => $editor,
+                'language' => $language,
+                'adminEmail' => $adminEmail,
+                'adminName' => $adminName,
+                'phpUserAgent' => $_SERVER['HTTP_USER_AGENT'], // @@TODO get from request
+                'Page' => [
+                    'historySize' => $this->historyService->size(),
+                    'historyPosition' => $this->historyService->position(),
+                ]
             ]);
         $this->initialStateService->provideInitialState(
             Config::APP_NAME,
             'PHPMYEDIT',
             [
-                'blah' => 'blub',
-                'foo' => [ 'bar' => 13 ],
+                'directChange' => ($directChg == "on" ? true : false),
+                'selectChosen' => true,
+                'filterSelectPlaceholder' => $l->t("Select a filter option."),
+                'filterSelectNoResult' => $l->t("No values match."),
+                'filterSelectChosenTitle' => $l->t("Select from the pull-down menu. ".
+                                                   "Double-click will submit the form. ".
+                                                   "The pull-down can be closed by clicking ".
+                                                   "anywhere outside the menu."),
+                'inputSelectPlaceholder' => $l->t("Select an option."),
+                'inputSelectNoResult' => $l->t("No values match.")."'",
+                'inputSelectChosenTitle' => $l->t("Select from the pull-down menu. ".
+                                                  "The pull-down can be closed by clicking ".
+                                                  "anywhere outside the menu."),
             ]);
+    }
+
+    private function getUserValue($key, $default = null)
+    {
+        return $this->containerConfig->getuserValue($this->userId, $this->appName, $key, $default);
     }
 }
 

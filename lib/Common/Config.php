@@ -185,8 +185,9 @@ redaxoRehearsalsModule
    */
   static public function adminContact()
   {
-    $name = \OCP\User::getDisplayName('admin');
-    $email = \OCP\Config::getUserValue('admin', 'settings', 'email');
+    // @@TODO fix this, get just some admin user, or all in the admin group
+    $name = "BOfH"; // \OCP\User::getDisplayName('admin');
+    $email = "bastard.operator@from.hell";  // \OCP\Config::getUserValue('admin', 'settings', 'email');
     return array('name' => $name,
                  'email' => $email);
   }

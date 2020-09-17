@@ -33,5 +33,5 @@ PHPMYEDIT = {
   ...OCP.InitialState.loadState('cafevdb', 'PHPMYEDIT')
 };
 
-console.log("CAFEVDB STATE", CAFEVDB);
-console.log("CAFEVDB STATE", PHPMYEDIT);
+console.log("CAFEVDB INITIAL STATE", CAFEVDB);
+console.log("PHPMYEDIT INITIAL STATE", PHPMYEDIT);
