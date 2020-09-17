@@ -28,6 +28,22 @@ class Util
 {
   const OMIT_EMPTY_FIELDS = 1;
 
+  private static $externalScripts = [];
+
+  /**Wrapper around htmlspecialchars(); avoid double encoding, standard
+   * options, UTF-8 for stone-age PHP versions.
+   */
+  public static function htmlEscape($string, $ent = null, $double_encode = false)
+  {
+    if (!$ent) {
+      $ent = ENT_COMPAT;
+      if (defined('ENT_HTML401')) {
+          $ent |= ENT_HTML401;
+      }
+    }
+    return htmlspecialchars($string, $ent, 'UTF-8', $double_encode);
+  }
+
   /**Return the timezone, from the calendar app.
    * @@TODO: this does not work anymore
    */
@@ -45,7 +61,7 @@ class Util
   static public function explode($delim, $string, $flags = self::OMIT_EMPTY_FIELDS)
   {
     if ($flags === self::OMIT_EMPTY_FIELDS) {
-        return preg_split('/'.preg_quote($delim, '/').'/', $string, -1, PREG_SPLIT_NO_EMPTY);
+      return preg_split('/'.preg_quote($delim, '/').'/', $string, -1, PREG_SPLIT_NO_EMPTY);
     } else {
       return explode($delim, $string);
     }
@@ -123,6 +139,31 @@ class Util
     return $maxUploadFilesize;
   }
 
+  /**Add some java-script external code (e.g. Google maps). Emit it
+   * with emitExternalScripts().
+   */
+  public static function addExternalScript($script = '')
+  {
+    self::$externalScripts[] = $script;
+  }
+
+  /**Dump all external java-script scripts previously added with
+   * addExternalScript(). Each inline-script is wrapped into a separate
+   * @<script@>@</script@> element to make debugging easier.
+   */
+  public static function emitExternalScripts()
+  {
+    $scripts = '';
+    foreach(self::$externalScripts as $script) {
+      $scripts .=<<<__EOT__
+<script type="text/javascript" src="$script"></script>
+
+__EOT__;
+    }
+    self::$externalScripts = array(); // don't dump twice.
+
+    return $scripts;
+  }
 }
 
 // Local Variables: ***

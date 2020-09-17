@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -20,104 +20,107 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace CAFEVDB {
+namespace OCA\CAFEVDB;
 
-  // control buttons could live outside control bar and thus overlay
-  // the modal overlay. Would be nice, especially when including
-  // restoration of dialogs into the history management.
+use OCA\CAFEVDB\Common\Navigation;
+use OCA\CAFEVDB\Common\Config;
 
-  echo Util::emitExternalScripts();
-  echo Util::emitInlineScripts();
+// control buttons could live outside control bar and thus overlay
+// the modal overlay. Would be nice, especially when including
+// restoration of dialogs into the history management.
 
-  $template  = $_['template'];
-  $css_pfx   = $_['css-prefix'];
-  $css_class = $template;
-  if (isset($_['css-class'])) {
+// @@TODO check for "standard" way to do this.
+echo Common\Util::emitExternalScripts();
+
+$template  = $_['template'];
+$css_pfx   = $_['css-prefix'];
+$css_class = $template;
+if (isset($_['css-class'])) {
     $css_class .= ' '.$_['css-class'];
-  }
+}
 
-  $redoDisabled = $_['historyPosition'] == 0;
-  $undoDisabled = $_['historySize'] - $_['historyPosition'] <= 1;
-  if (!isset($_['navBarInfo'])) {
+$redoDisabled = $_['historyPosition'] == 0;
+$undoDisabled = $_['historySize'] - $_['historyPosition'] <= 1;
+if (!isset($_['navBarInfo'])) {
     $_['navBarInfo'] = '';
-  }
+}
 
-  $pageRows = floor($_['pagerows'] / 10) * 10;
-  $pageRowsOptions = array(-1 => '&infin;');
-  $maxRows = 100;
-  for ($i = 10; $i <= $maxRows; $i += 10) {
+$pageRows = floor($_['pagerows'] / 10) * 10;
+$pageRowsOptions = array(-1 => '&infin;');
+$maxRows = 100;
+for ($i = 10; $i <= $maxRows; $i += 10) {
     $pageRowsOptions[$i] = $i;
-  }
-  if ($pageRows > $maxRows) {
+}
+if ($pageRows > $maxRows) {
     $pageRows = 0;
-  }
+}
 
-  $debugModes = array('general' => L::t('General Information'),
-                      'query' => L::t('SQL Queries'),
-                      'request' => L::t('HTTP Request'),
-                      'tooltips' => L::t('Missing Context Help'),
-                      'emailform' => L::t('Mass Email Form'));
+$debugModes = array('general' => $l->t('General Information'),
+                    'query' => $l->t('SQL Queries'),
+                    'request' => $l->t('HTTP Request'),
+                    'tooltips' => $l->t('Missing Context Help'),
+                    'emailform' => $l->t('Mass Email Form'));
 
-  $navigationControls = Navigation::buttonsFromArray(
+$navigationControls = Navigation::buttonsFromArray(
     array(
-      'undo' => array(
-        'name' => L::t('Back'),
-        'title' => L::t('Navigate back to the previous view in the recorded history.'),
-        'image' => \OCP\Util::imagePath('cafevdb', 'undo-solid.svg'),
-        'class' => 'undo navigation history',
-        'id' => 'undobutton',
-        'disabled' => $undoDisabled,
-        'type' => 'submitbutton'),
-      'reload' => array(
-        'name' => L::t('Reload'),
-        'title' => L::t('Reload the current view.'),
-        'image' => array(\OCP\Util::imagePath('cafevdb', 'reload-solid.svg'),
-                         \OCP\Util::imagePath('core', 'loading.gif')),
-        'class' => 'reload navigation history',
-        'id' => 'reloadbutton',
-        'type' => 'submitbutton'),
-      'redo' => array(
-        'name' => L::t('Next'),
-        'title' => L::t('Navigate to the next view in the recorded history.'),
-        'image' => \OCP\Util::imagePath('cafevdb', 'redo-solid.svg'),
-        'class' => 'redo navigation history',
-        'id' => 'redobutton',
-        'disabled' => $redoDisabled,
-        'type' => 'submitbutton'),
-      'home' => array(
-        'name' => L::t('Startpage'),
-        'title' => L::t('Navigate back to the start-page.'),
-        'image' => \OCP\Util::imagePath('cafevdb', 'home-solid.svg'),
-        'class' => 'settings navigation home',
-        'id' => 'homebutton',
-        'type' => 'submitbutton')));
+        'undo' => array(
+            'name' => $l->t('Back'),
+            'title' => $l->t('Navigate back to the previous view in the recorded history.'),
+            'image' => image_path('cafevdb', 'undo-solid.svg'),
+            'class' => 'undo navigation history',
+            'id' => 'undobutton',
+            'disabled' => $undoDisabled,
+            'type' => 'submitbutton'),
+        'reload' => array(
+            'name' => $l->t('Reload'),
+            'title' => $l->t('Reload the current view.'),
+            'image' => array(image_path('cafevdb', 'reload-solid.svg'),
+                             image_path('core', 'loading.gif')),
+            'class' => 'reload navigation history',
+            'id' => 'reloadbutton',
+            'type' => 'submitbutton'),
+        'redo' => array(
+            'name' => $l->t('Next'),
+            'title' => $l->t('Navigate to the next view in the recorded history.'),
+            'image' => image_path('cafevdb', 'redo-solid.svg'),
+            'class' => 'redo navigation history',
+            'id' => 'redobutton',
+            'disabled' => $redoDisabled,
+            'type' => 'submitbutton'),
+        'home' => array(
+            'name' => $l->t('Startpage'),
+            'title' => $l->t('Navigate back to the start-page.'),
+            'image' => image_path('cafevdb', 'home-solid.svg'),
+            'class' => 'settings navigation home',
+            'id' => 'homebutton',
+            'type' => 'submitbutton')));
 
-  $settingsControls = Navigation::buttonsFromArray(
+$settingsControls = Navigation::buttonsFromArray(
     array(
-      'tooltips' => array(
-        'name' => L::t('Tooltip Button'),
-        'title' => L::t('Toggle Tooltips'),
-        'image' => \OCP\Util::imagePath('cafevdb', 'info-solid.svg'),
-        'class' => 'help tooltips tooltip-bottom tooltips-'.($_['tooltips'] == 'on' ? 'en' : 'dis').'abled',
-        'id' => 'tooltipbutton')
-      ));
+        'tooltips' => array(
+            'name' => $l->t('Tooltip Button'),
+            'title' => $l->t('Toggle Tooltips'),
+            'image' => image_path('cafevdb', 'info-solid.svg'),
+            'class' => 'help tooltips tooltip-bottom tooltips-'.($_['tooltips'] == 'on' ? 'en' : 'dis').'abled',
+            'id' => 'tooltipbutton')
+    ));
 
-  if (!isset($_['headerblock']) && isset($_['header'])) {
+if (!isset($_['headerblock']) && isset($_['header'])) {
     $header = $_['header'];
-  } else {
+} else {
     $header = '';
-  }
+}
 
-  $expertClass = 'expertmode'.($_['expertmode'] != 'on' ? ' hidden' : '');
+$expertClass = 'expertmode'.($_['expertmode'] != 'on' ? ' hidden' : '');
 
-  $sideBarToolTipPos = 'right';
+$sideBarToolTipPos = 'right';
 ?>
 
 <div id="app-navigation" class="app-navigation snapper-enabled">
   <ul id="navigation-list">
     <li class="nav-heading">
       <a href="#">
-        <?php echo L::t('Close Side-Bar Menu'); ?>
+        <?php echo $l->t('Close Side-Bar Menu'); ?>
       </a>
     </li>
     <?php echo $_['navigationcontrols']; ?>
@@ -140,7 +143,7 @@ namespace CAFEVDB {
           <label for="app-settings-tooltips"
                  class="tooltip-<?php echo $sideBarToolTipPos; ?>"
                  title="<?php echo Config::toolTips('show-tool-tips'); ?>">
-            <?php echo L::t('Tool-Tips'); ?>
+            <?php echo $l->t('Tool-Tips'); ?>
           </label>
         </li>
         <li>
@@ -152,7 +155,7 @@ namespace CAFEVDB {
           <label for="app-settings-filtervisibility"
                  class="tooltip-<?php echo $sideBarToolTipPos; ?>"
                  title="<?php echo Config::toolTips('filter-visibility'); ?>">
-            <?php echo L::t('Filter-Controls'); ?>
+            <?php echo $l->t('Filter-Controls'); ?>
           </label>
         </li>
         <li>
@@ -164,7 +167,7 @@ namespace CAFEVDB {
           <label for="app-settings-directchange"
                  class="tooltip-<?php echo $sideBarToolTipPos; ?>"
                  title="<?php echo Config::toolTips('direct-change'); ?>">
-            <?php echo L::t('Quick Change-Dialog'); ?>
+            <?php echo $l->t('Quick Change-Dialog'); ?>
           </label>
         </li>
         <li class="<?php echo $expertClass; ?>">
@@ -176,7 +179,7 @@ namespace CAFEVDB {
           <label for="app-settings-showdisabled"
                  class="tooltip-<?php echo $sideBarToolTipPos; ?>"
                  title="<?php echo Config::toolTips('show-disabled'); ?>">
-            <?php echo L::t('Show Disabled Data-Sets'); ?>
+            <?php echo $l->t('Show Disabled Data-Sets'); ?>
           </label>
         </li>
         <li>
@@ -188,12 +191,12 @@ namespace CAFEVDB {
           <label for="app-settings-expertmode"
                  class="tooltip-<?php echo $sideBarToolTipPos; ?>"
                  title="<?php echo Config::toolTips('expert-mode'); ?>">
-            <?php echo L::t('Expert-Mode'); ?>
+            <?php echo $l->t('Expert-Mode'); ?>
           </label>
         </li>
         <li class="chosen-dropup">
           <select name="pagerows"
-                  data-placeholder="<?php echo L::t('#Rows'); ?>"
+                  data-placeholder="<?php echo $l->t('#Rows'); ?>"
                   class="table-pagerows chosen-dropup tooltip-<?php echo $sideBarToolTipPos; ?>"
                   id="app-settings-table-pagerows"
                   title="<?php echo Config::toolTips('table-rows-per-page'); ?>">
@@ -207,7 +210,7 @@ namespace CAFEVDB {
           <label for="app-settings-table-pagerows"
                  class="tooltip-<?php echo $sideBarToolTipPos; ?>"
                  title="<?php echo Config::toolTips('table-rows-per-page'); ?>">
-            <?php echo L::t('#Rows/Page in Tables'); ?>
+            <?php echo $l->t('#Rows/Page in Tables'); ?>
           </label>
         </li>
         <li>
@@ -215,7 +218,7 @@ namespace CAFEVDB {
              class="settings generalsettings tooltip-<?php echo $sideBarToolTipPos; ?>"
              title="<?php echo Config::toolTips('further-settings'); ?>"
              href="#">
-            <?php echo L::t('Further Settings'); ?>
+            <?php echo $l->t('Further Settings'); ?>
           </a>
         </li>
         <li class="<?php echo $expertClass; ?>">
@@ -223,7 +226,7 @@ namespace CAFEVDB {
              class="settings expertoperations tooltip-<?php echo $sideBarToolTipPos; ?>"
              title="<?php echo Config::toolTips('expert-operations'); ?>"
              href="#">
-            <?php echo L::t('Expert Operations'); ?>
+            <?php echo $l->t('Expert Operations'); ?>
           </a>
         </li>
         <li class="<?php echo $expertClass; ?> chosen-dropup">
@@ -231,7 +234,7 @@ namespace CAFEVDB {
             id="app-settings-debugmode"
             multiple
             name="debugmode"
-            data-placeholder="<?php echo L::t('Enable Debug Mode'); ?>"
+            data-placeholder="<?php echo $l->t('Enable Debug Mode'); ?>"
             class="debug-mode chosen-dropup tooltip-<?php echo $sideBarToolTipPos; ?>"
             title="<?php echo Config::toolTips('debug-mode'); ?>">
             <?php
@@ -247,14 +250,14 @@ namespace CAFEVDB {
   </div>
 </div>
 <div id="app-content">
-  <form id="personalsettings" class="visible" method="post" action="?app=<?php echo Config::APP_NAME; ?>">
+  <form id="personalsettings" class="visible" method="post" action="?app=<?php echo $_['appName']; ?>">
     <input type="hidden" name="requesttoken" value="<?php echo $_['requesttoken']; ?>" />
     <?php echo $navigationControls; ?>
     <div class="buttonseparator"></div>
     <?php echo $settingsControls; ?>
   </form>
   <div id="controls">
-<form id="old-personalsettings" class="invisible" method="post" action="?app=<?php echo Config::APP_NAME; ?>">
+<form id="old-personalsettings" class="invisible" method="post" action="?app=<?php echo $_['appName']; ?>">
     <input type="hidden" name="requesttoken" value="<?php echo $_['requesttoken']; ?>" />
     <?php echo $navigationControls; ?>
     <div class="buttonseparator"></div>
@@ -273,5 +276,3 @@ namespace CAFEVDB {
   <div id="<?php echo $css_pfx; ?>-container" class="<?php echo $css_pfx; ?>-container <?php echo $css_class; ?>"> <!-- used to have something with 100 height for scrollbars -->
     <div id="<?php echo $css_pfx; ?>-body" class="<?php echo $css_pfx; ?>-body <?php echo $css_class; ?>">
       <div id="<?php echo $css_pfx; ?>-body-inner" class="<?php echo $css_pfx; ?>-body-inner <?php echo $css_class; ?>">
-
-<?php } // namespace CAFEVDB ?>

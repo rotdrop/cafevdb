@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -20,8 +20,10 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use CAFEVDB\L;
+namespace OCA\CAFEVDB;
+
 $css_pfx = $_['css-prefix'];
+
 ?>
 
       </div> <!-- page-body-inner -->
@@ -53,7 +55,7 @@ $css_pfx = $_['css-prefix'];
 <!-- image file upload support with drag'n drop -->
 <form class="float"
       id="file_upload_form"
-      action="<?php echo \OCP\Util::linkTo('cafevdb', 'ajax/inlineimage/uploadimage.php'); ?>"
+      action="<?php echo \OCP\Util::linkToAbsolute('cafevdb', 'ajax/inlineimage/uploadimage.php'); ?>"
       method="post"
       enctype="multipart/form-data"
       target="file_upload_target">
@@ -79,7 +81,7 @@ $css_pfx = $_['css-prefix'];
 		method="post"
 		enctype="multipart/form-data"
 		target="crop_target"
-		action="<?php print_unescaped(OCP\Util::linkToAbsolute('cafevdb', 'ajax/inlineimage/savecrop.php')); ?>">
+		action="<?php print_unescaped(\OCP\Util::linkToAbsolute('cafevdb', 'ajax/inlineimage/savecrop.php')); ?>">
 		<input type="hidden" id="ItemId" name="ItemId" value="{ItemId}" />
 		<input type="hidden" id="ImageItemTable" name="ImageItemTable" value="{ImageItemTable}" />
 		<input type="hidden" id="ImageSize" name="ImageSize" value="{ImageSize}" />

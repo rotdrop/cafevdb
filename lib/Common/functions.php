@@ -399,60 +399,6 @@ namespace CAFEVDB
       return \OCP\Util::generateRandomBytes($length);
     }
 
-    /**Add some java-script external code (e.g. Google maps). Emit it
-     * with emitExternalScripts().
-     */
-    public static function addExternalScript($script = '')
-    {
-      self::$externalScripts[] = $script;
-    }
-
-    /**Dump all external java-script scripts previously added with
-     * addExternalScript(). Each inline-script is wrapped into a separate
-     * @<script@>@</script@> element to make debugging easier.
-     */
-    public static function emitExternalScripts()
-    {
-      $scripts = '';
-      foreach(self::$externalScripts as $script) {
-        $scripts .=<<<__EOT__
-<script type="text/javascript" src="$script"></script>
-
-__EOT__;
-      }
-      self::$externalScripts = array(); // don't dump twice.
-
-      return $scripts;
-    }
-
-
-    /**Add some java-script inline-code. Emit it with emitInlineScripts().
-     */
-    public static function addInlineScript($script = '')
-    {
-      self::$inlineScripts[] = $script;
-    }
-
-    /**Dump all inline java-script scripts previously add with
-     * addInlineScript(). Each inline-script is wrapped into a separate
-     * @<script@>@</script@> element to make debugging easier.
-     */
-    public static function emitInlineScripts()
-    {
-      $scripts = '';
-      foreach(self::$inlineScripts as $script) {
-        $scripts .=<<<__EOT__
-
-<script type="text/javascript">
-$script
-</script>
-
-__EOT__;
-      }
-      self::$inlineScripts = array(); // don't dump twice.
-
-      return $scripts;
-    }
 
     /**Format the right way (tm). */
     public static function strftime($format, $timestamp = null, $tz = null, $locale = null)
