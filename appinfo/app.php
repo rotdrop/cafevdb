@@ -24,78 +24,16 @@ if ((@include_once __DIR__ . '/../vendor/autoload.php')===false) {
         throw new Exception('Cannot include autoload. Did you run install dependencies using composer?');
 }
 
+$dispatcher = \OC::$server->getEventDispatcher();
+
+$dispatcher->addListener(
+    OCP\AppFramework\Http\TemplateResponse::EVENT_LOAD_ADDITIONAL_SCRIPTS_LOGGEDIN,
+    function() {
+        OCA\CAFEVDB\Common\Util::addExternalScript("https://maps.google.com/maps/api/js?sensor=false");
+    }
+);
+
 if (false) {
-
-OC::$CLASSPATH['CAFEVDB\Admin'] = 'cafevdb/lib/admin.php';
-OC::$CLASSPATH['CAFEVDB\Config'] = 'cafevdb/lib/config.php';
-OC::$CLASSPATH['CAFEVDB\ConfigCheck'] = 'cafevdb/lib/config.php';
-OC::$CLASSPATH['CAFEVDB\Events'] = 'cafevdb/lib/events.php';
-OC::$CLASSPATH['CAFEVDB\Contacts'] = 'cafevdb/lib/contacts.php';
-OC::$CLASSPATH['CAFEVDB\Blog'] = 'cafevdb/lib/blog.php';
-OC::$CLASSPATH['CAFEVDB\ToolTips'] = 'cafevdb/lib/tooltips.php';
-OC::$CLASSPATH['CAFEVDB\L'] = 'cafevdb/lib/functions.php';
-OC::$CLASSPATH['CAFEVDB\Util'] = 'cafevdb/lib/functions.php';
-OC::$CLASSPATH['CAFEVDB\Error'] = 'cafevdb/lib/functions.php';
-OC::$CLASSPATH['CAFEVDB\FileCache'] = 'cafevdb/lib/functions.php';
-OC::$CLASSPATH['CAFEVDB\Ajax'] = 'cafevdb/lib/functions.php';
-OC::$CLASSPATH['CAFEVDB\Navigation'] = 'cafevdb/lib/functions.php';
-OC::$CLASSPATH['CAFEVDB\mySQL'] = 'cafevdb/lib/mysql.php';
-OC::$CLASSPATH['CAFEVDB\Projects'] = 'cafevdb/lib/projects.php';
-OC::$CLASSPATH['CAFEVDB\ProjectExtra'] = 'cafevdb/lib/project-extra.php';
-OC::$CLASSPATH['CAFEVDB\ProjectPayments'] = 'cafevdb/lib/project-payments.php';
-OC::$CLASSPATH['CAFEVDB\DebitNotes'] = 'cafevdb/lib/debit-notes.php';
-OC::$CLASSPATH['CAFEVDB\Instruments'] = 'cafevdb/lib/instruments.php';
-OC::$CLASSPATH['CAFEVDB\Musicians'] = 'cafevdb/lib/musicians.php';
-OC::$CLASSPATH['CAFEVDB\BulkAddMusicians'] = 'cafevdb/lib/musicians.php';
-OC::$CLASSPATH['CAFEVDB\Instrumentation'] = 'cafevdb/lib/instrumentation.php';
-OC::$CLASSPATH['CAFEVDB\DetailedInstrumentation'] = 'cafevdb/lib/detailed-instrumentation.php';
-OC::$CLASSPATH['CAFEVDB\ProjectInstruments'] = 'cafevdb/lib/project-instruments.php';
-OC::$CLASSPATH['CAFEVDB\EmailRecipientsFilter'] = 'cafevdb/lib/emailrecipientsfilter.php';
-OC::$CLASSPATH['CAFEVDB\EmailComposer'] = 'cafevdb/lib/emailcomposer.php';
-OC::$CLASSPATH['CAFEVDB\InstrumentInsurance'] = 'cafevdb/lib/instrument-insurance.php';
-OC::$CLASSPATH['CAFEVDB\InsuranceRates'] = 'cafevdb/lib/insurance-rates.php';
-OC::$CLASSPATH['CAFEVDB\InsuranceBrokers'] = 'cafevdb/lib/insurance-brokers.php';
-OC::$CLASSPATH['CAFEVDB\PHPExcel\ValueBinder'] = 'cafevdb/lib/php-excel-functions.php';
-OC::$CLASSPATH['CAFEVDB\Finance'] = 'cafevdb/lib/finance.php';
-OC::$CLASSPATH['CAFEVDB\FuzzyInput'] = 'cafevdb/lib/functions.php';
-OC::$CLASSPATH['CAFEVDB\SepaDebitMandates'] = 'cafevdb/lib/sepa-debit-mandates.php';
-OC::$CLASSPATH['CAFEVDB\ProgressStatus'] = 'cafevdb/lib/progress-status.php';
-OC::$CLASSPATH['CAFEVDB\PageLoader'] = 'cafevdb/lib/page-loader.php';
-OC::$CLASSPATH['CAFEVDB\Session'] = 'cafevdb/lib/session.php';
-OC::$CLASSPATH['CAFEVDB\PDFLetter'] = 'cafevdb/lib/pdfletter.php';
-OC::$CLASSPATH['CAFEVDB\PhoneNumbers'] = 'cafevdb/lib/phonenumbers.php';
-OC::$CLASSPATH['CAFEVDB\GeoCoding'] = 'cafevdb/lib/geocoding.php';
-OC::$CLASSPATH['CAFEVDB\Cron'] = 'cafevdb/lib/cron.php';
-OC::$CLASSPATH['CAFEVDB\VCard'] = 'cafevdb/lib/vcard.php';
-OC::$CLASSPATH['CAFEVDB\InlineImage'] = 'cafevdb/lib/inlineimage.php';
-OC::$CLASSPATH['CAFEVDB\AddressbookBackend'] = 'cafevdb/lib/addressbookbackend.php';
-
-OC::$CLASSPATH['DWEMBED\App'] = 'dokuwikiembed/lib/dokuwikiembed.php';
-OC::$CLASSPATH['DWEMBED\L'] = 'dokuwikiembed/lib/util.php';
-OC::$CLASSPATH['DWEMBED\Util'] = 'dokuwikiembed/lib/util.php';
-
-OC::$CLASSPATH['OC_RoundCube_App'] = 'roundcube/lib/RoundCubeApp.php'; // <<<=== why
-
-/* 3rd party classes */
-OC::$CLASSPATH['phpMyEdit'] = 'cafevdb/3rdparty/phpMyEdit/phpMyEdit.class.php';
-OC::$CLASSPATH['html2text'] = 'cafevdb/3rdparty/PHPMailer/extras/class.html2text.php';
-OC::$CLASSPATH['IBAN'] = 'cafevdb/3rdparty/php-iban/oophp-iban.php';
-OC::$CLASSPATH['malkusch\bav\BAV'] = 'cafevdb/3rdparty/bav/autoloader/autoloader.php';
-OC::$CLASSPATH['libphonenumber\PhoneNumberUtil'] = 'cafevdb/3rdparty/libphonenumber/autoloader/autoloader.php';
-require_once 'cafevdb/3rdparty/htmlpurifier/library/HTMLPurifier.auto.php';
-require_once 'cafevdb/3rdparty/PHPMailer/PHPMailerAutoload.php';
-OC::$CLASSPATH['PEAR'] = '3rdparty/PEAR.php';
-OC::$CLASSPATH['Mail_RFC822'] = 'cafevdb/3rdparty/pear/php/Mail/RFC822.php';
-OC::$CLASSPATH['Net_IMAP'] = 'cafevdb/3rdparty/pear/php/Net/IMAP.php';
-OC::$CLASSPATH['TCPDF'] = 'cafevdb/3rdparty/tcpdf/tcpdf.php';
-OC::$CLASSPATH['QRcode'] = 'cafevdb/3rdparty/phpqrcode/merged/phpqrcode.php';
-
-/* Script etc. used by everyone */
-OC_App::registerAdmin( 'cafevdb', 'admin-settings' );
-//OCP\App::registerPersonal( 'cafevdb', 'settings' );
-
-// use exceptions for error reporting by default.
-CAFEVDB\Error::exceptions(true);
 
 OCP\Util::connectHook('OC_User','post_login','CAFEVDB\Config','loginListener');
 OCP\Util::connectHook('OC_User','post_setPassword','CAFEVDB\Config','changePasswordListener');
