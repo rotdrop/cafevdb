@@ -228,10 +228,6 @@ class PageController extends Controller {
     return new TemplateResponse($this->appName, $tmplname, $templateParameters);
   }
 
-  private function getUserValue($key, $default = null)
-  {
-    return $this->containerConfig->getuserValue($this->userId, $this->appName, $key, $default);
-  }
 }
 
 // Local Variables: ***

@@ -53,6 +53,12 @@ return [
             'url' => '/debug',
             'verb' => 'GET',
         ],
+        // internal "ajax" routes
+        [
+            'name' => 'admin_settings#save',
+            'url' => '/settings/admin/save',
+            'verb' => 'POST',
+        ],
     ]
 ];
 

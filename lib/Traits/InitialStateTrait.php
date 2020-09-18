@@ -32,72 +32,75 @@ use OCA\CAFEVDB\Service\HistoryService;
 
 trait InitialStateTrait {
 
-    /** @var string */
-    protected $appName;
+  /** @var string */
+  protected $appName;
 
-    /** @var IL10N */
-    private $l;
+  /** @var IL10N */
+  private $l;
 
-    /** @var IInitialStateService */
-    private $initialStateService;
+  /** @var IInitialStateService */
+  private $initialStateService;
 
-    /** @var HistoryService */
-    private $historyService;
+  /** @var HistoryService */
+  private $historyService;
 
-    /** @var IConfig */
-    private $containerConfig;
+  /** @var IConfig */
+  private $containerConfig;
 
-    protected function publishInitialStateForUser() {
-        $l = $this->l;
+  /** @var string */
+  private $userId;
 
-        $tooltips  = $this->getUserValue('tooltips', '');
-        $directChg = $this->getUserValue('directchange', '');
-        $language  = $this->getUserValue('lang', 'en');
-        $editor    = $this->getUserValue('wysiwygEditor', 'tinymce');
+  protected function publishInitialStateForUser() {
+    $l = $this->l;
 
-        $admin = Config::adminContact();
-        $adminEmail = $admin['email'];
-        $adminName = $admin['name'];
+    $tooltips  = $this->getUserValue('tooltips', '');
+    $directChg = $this->getUserValue('directchange', '');
+    $language  = $this->getUserValue('lang', 'en');
+    $editor    = $this->getUserValue('wysiwygEditor', 'tinymce');
 
-        $this->initialStateService->provideInitialState(
-            Config::APP_NAME,
-            'CAFEVDB',
-            [
-                'toolTipsEnabled' => ($tooltips == 'off' ? false : true),
-                'wysiwygEditor' => $editor,
-                'language' => $language,
-                'adminEmail' => $adminEmail,
-                'adminName' => $adminName,
-                'phpUserAgent' => $_SERVER['HTTP_USER_AGENT'], // @@TODO get from request
-                'Page' => [
-                    'historySize' => $this->historyService->size(),
-                    'historyPosition' => $this->historyService->position(),
-                ]
-            ]);
-        $this->initialStateService->provideInitialState(
-            Config::APP_NAME,
-            'PHPMYEDIT',
-            [
-                'directChange' => ($directChg == "on" ? true : false),
-                'selectChosen' => true,
-                'filterSelectPlaceholder' => $l->t("Select a filter option."),
-                'filterSelectNoResult' => $l->t("No values match."),
-                'filterSelectChosenTitle' => $l->t("Select from the pull-down menu. ".
-                                                   "Double-click will submit the form. ".
-                                                   "The pull-down can be closed by clicking ".
-                                                   "anywhere outside the menu."),
-                'inputSelectPlaceholder' => $l->t("Select an option."),
-                'inputSelectNoResult' => $l->t("No values match.")."'",
-                'inputSelectChosenTitle' => $l->t("Select from the pull-down menu. ".
-                                                  "The pull-down can be closed by clicking ".
-                                                  "anywhere outside the menu."),
-            ]);
-    }
+    $admin = Config::adminContact();
+    $adminEmail = $admin['email'];
+    $adminName = $admin['name'];
 
-    private function getUserValue($key, $default = null)
-    {
-        return $this->containerConfig->getuserValue($this->userId, $this->appName, $key, $default);
-    }
+    $this->initialStateService->provideInitialState(
+      $this->appName,
+      'CAFEVDB',
+      [
+        'toolTipsEnabled' => ($tooltips == 'off' ? false : true),
+        'wysiwygEditor' => $editor,
+        'language' => $language,
+        'adminEmail' => $adminEmail,
+        'adminName' => $adminName,
+        'phpUserAgent' => $_SERVER['HTTP_USER_AGENT'], // @@TODO get from request
+        'Page' => [
+          'historySize' => $this->historyService->size(),
+          'historyPosition' => $this->historyService->position(),
+        ]
+      ]);
+    $this->initialStateService->provideInitialState(
+      $this->appName,
+      'PHPMYEDIT',
+      [
+        'directChange' => ($directChg == "on" ? true : false),
+        'selectChosen' => true,
+        'filterSelectPlaceholder' => $l->t("Select a filter option."),
+        'filterSelectNoResult' => $l->t("No values match."),
+        'filterSelectChosenTitle' => $l->t("Select from the pull-down menu. ".
+                                           "Double-click will submit the form. ".
+                                           "The pull-down can be closed by clicking ".
+                                           "anywhere outside the menu."),
+        'inputSelectPlaceholder' => $l->t("Select an option."),
+        'inputSelectNoResult' => $l->t("No values match.")."'",
+        'inputSelectChosenTitle' => $l->t("Select from the pull-down menu. ".
+                                          "The pull-down can be closed by clicking ".
+                                          "anywhere outside the menu."),
+      ]);
+  }
+
+  private function getUserValue($key, $default = null)
+  {
+    return $this->containerConfig->getuserValue($this->userId, $this->appName, $key, $default);
+  }
 }
 
 // Local Variables: ***

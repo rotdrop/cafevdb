@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -20,17 +20,16 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use CAFEVDB\L;
-use CAFEVDB\Config;
+script($_['appName'], 'admin-settings');
+style($_['appName'], 'admin-settings');
+
 ?>
+
 <div class="section">
   <h2>Camerata DB</h2>
-  <form id="cafevdbadmin">
-    <!--
-    <img class="svg cafevdblogo" src="<?php echo OCP\Util::imagePath(Config::APP_NAME, 'logo-greyf.svg'); ?>" >
-    -->
-    <input type="text" name="CAFEVgroup" id="CAFEVgroup" value="<?php echo $_['usergroup']; ?>" placeholder="<?php echo L::t('Group');?>" />
-    <label for="CAFEVgroup"><?php echo L::t('User Group');?></label>
+  <form id="cafevdb-admin-settings">
+    <input type="text" name="orchestraUserGroup" id="orchestraUserGroup" value="<?php echo $_['usergroup']; ?>" placeholder="<?php echo $l->t('Group');?>" />
+    <label for="orchestraUserGroup"><?php echo $l->t('User Group');?></label>
     <br/>
     <span class="msg"></span>
   </form>

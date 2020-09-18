@@ -1,19 +1,21 @@
 $(document).ready(function(){
 
-    $('#CAFEVgroup').blur(function(event){
+    $('#orchestraUserGroup').blur(function(event){
 	event.preventDefault();
-        $('#cafevdbadmin .msg').hide();
-	var post = $( "#CAFEVgroup" ).serialize();
-	$.post(OC.filePath('cafevdb', 'ajax', 'admin-settings.php'),
-               post,
-               function(data){
-                   if (data.status == 'success') {
-	               $('#cafevdbadmin .msg').html(data.data.message);
-                   } else {
-	               $('#cafevdbadmin .msg').html(data.data.message);
-                   }
-                   $('#cafevdbadmin .msg').show();
-	       }, 'json');
-    });
 
+        $('#cafevdb-admin-settings .msg').hide();
+	var post = $("#cafevdb-admin-settings").serialize();
+	$.post(
+          OC.generateUrl('/apps/cafevdb/settings/admin/save'),
+          post).done(function(data) {
+          console.log(data);
+	  $('#cafevdb-admin-settings .msg').html(data.message);
+          $('#cafevdb-admin-settings .msg').show();
+        })
+        .fail(function(jqXHR) {
+          console.log(JSON.parse(jqXHR.responseText));
+	  $('#cafevdb-admin-settings .msg').html(JSON.parse(jqXHR.responseText).message);
+          $('#cafevdb-admin-settings .msg').show();
+        });
+    });
 });

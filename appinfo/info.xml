@@ -19,4 +19,8 @@
             <route>cafevdb.page.index</route>
         </navigation>
     </navigations>
+    <settings>
+      <admin>OCA\CAFEVDB\Settings\Admin</admin>
+      <admin-section>OCA\CAFEVDB\Settings\AdminSection</admin-section>
+    </settings>
 </info>
