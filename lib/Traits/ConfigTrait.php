@@ -23,7 +23,6 @@
 //WIP
 namespace OCA\CAFEVDB\Traits;
 
-use OCP\IL10N;
 use OCP\IUser;
 use OCP\IConfig;
 
@@ -35,13 +34,13 @@ trait ConfigTrait {
   protected $appName;
 
   /** @var IConfig */
-  protected $containerConfig;
+  private $containerConfig;
 
   /** @var IUser */
-  protected $user;
+  private $user;
 
   /** @var string */
-  protected $userId;
+  private $userId;
 
   protected function getUserValue($key, $default = null, $userId = null)
   {

@@ -15,3 +15,6 @@
 [submodule "3rdparty/php-openssl-cryptor"]
 	path = 3rdparty/php-openssl-cryptor
 	url = https://github.com/ioncube/php-openssl-cryptor.git
+[submodule "3rdparty/Snap.js"]
+	path = 3rdparty/Snap.js
+	url = https://github.com/jakiestfu/Snap.js.git

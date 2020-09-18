@@ -34,7 +34,7 @@ class Admin implements ISettings {
   const TEMPLATE = "admin-settings";
 
   /** @var IConfig */
-  protected $containerConfig;
+  private $containerConfig;
 
   public function __construct(
     $appName,

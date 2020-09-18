@@ -26,20 +26,40 @@ namespace OCA\CAFEVDB\Common;
 
 use OCP\IUserManager;
 use OCP\IGroupManager;
+use OCP\IUserSession;
+use OCP\IUser;
+use OCP\IConfig;
 
 /**Check for a usable configuration.
  */
 class ConfigCheck
 {
+  use \OCA\CAFEVDB\Traits\ConfigTrait;  
+  
   /** @var IGroupManager */
   private $groupManager;
 
   /** @var IUserManager */
   private $userManager;
 
-  public function __construct(IUserManager $userManager, IGroupManager $groupManager) {
+  /** @var IUserSession */
+  private $userSession;
+
+  public function __construct(
+    $appName,
+    IUserSession $userSession,
+    IConfig $containerConfig,
+    IUserManager $userManager,
+    IGroupManager $groupManager) {
+
+    $this->appName = $appName;
+    $this->userSession = $userSession;
+    $this->user = $userSession->getUser();
+    $this->userId = $this->user->getUID();
+    $this->containerConfig = $containerConfig;
     $this->userManager = $userManager;
     $this->groupManager = $groupManager;
+    
   }
 
   /**Return an array with necessary configuration items, being either
@@ -259,7 +279,7 @@ class ConfigCheck
    */
   public function shareGroupExists()
   {
-    $groupId = Config::getAppValue('usergroup');
+    $groupId = $this->getAppValue('usergroup');
 
     if (!$this->groupManager->groupExists($groupId)) {
       return false;
@@ -278,10 +298,10 @@ class ConfigCheck
    */
   public function shareOwnerExists($shareowner = '')
   {
-    $sharegroup = Config::getAppValue('usergroup');
+    $sharegroup = $this->getAppValue('usergroup');
     $shareowner === '' && $shareowner = Config::getValue('shareowner');
 
-    if ($shareowner === false) {
+    if (empty($shareowner)) {
       return false;
     }
 
@@ -320,7 +340,7 @@ class ConfigCheck
    */
   public function checkShareOwner($shareowner)
   {
-    if (!$sharegroup = Config::getAppValue('usergroup', false)) {
+    if (!$sharegroup = $this->getAppValue('usergroup', false)) {
       return false; // need at least this group!
     }
 
@@ -354,9 +374,9 @@ class ConfigCheck
       return false;
     }
 
-    $sharegroup   = Config::getAppValue('usergroup');
+    $sharegroup   = $this->getAppValue('usergroup');
     $shareowner   = Config::getValue('shareowner');
-    $groupadmin   = $this->getUserId();
+    $groupadmin   = $this->userId;
 
     $sharedfolder == '' && $sharedfolder = Config::getSetting('sharedfolder', '');
 
@@ -367,7 +387,7 @@ class ConfigCheck
 
     //$id = \OC\Files\Cache\Cache::getId($sharedfolder, $vfsroot);
     $result = $this->sudo($shareowner, function() use ($sharedfolder, $sharegroup) {
-      $user         = $this->getUserId();
+      $user         = $this->userId;
       $vfsroot = '/'.$user.'/files';
 
       if ($sharedfolder[0] != '/') {
@@ -413,11 +433,11 @@ class ConfigCheck
       return true;
     }
 
-    $sharegroup = Config::getAppValue('usergroup');
-    $groupadmin = $this->getUserId();
+    $sharegroup = $this->getAppValue('usergroup');
+    $groupadmin = $this->userId;
 
     if (!\OC_SubAdmin::isSubAdminofGroup($groupadmin, $sharegroup)) {
-      \OCP\Util::write(Config::APP_NAME,
+      \OCP\Util::write($this->appName,
                        "Permission denied: ".$groupadmin." is not a group admin of ".$sharegroup.".",
                        \OCP\Util::ERROR);
       return false;
@@ -425,7 +445,7 @@ class ConfigCheck
 
     // try to create the folder and share it with the group
     $result = $this->sudo($shareowner, function() use ($sharedfolder, $sharegroup, $user) {
-      $user    = $this->getUserId();
+      $user    = $this->userId;
       $vfsroot = '/'.$user.'/files';
 
       // Create the user data-directory, if necessary
@@ -500,7 +520,7 @@ class ConfigCheck
 
     $sharegroup = Config::getAppValue('usergroup');
     $shareowner = Config::getValue('shareowner');
-    $user       = $this->getUserId();
+    $user       = $this->userId;
 
     if (!\OC_SubAdmin::isSubAdminofGroup($user, $sharegroup)) {
       \OCP\Util::write(Config::APP_NAME,

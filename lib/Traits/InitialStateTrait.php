@@ -31,7 +31,8 @@ use OCA\CAFEVDB\Common\Config;
 use OCA\CAFEVDB\Service\HistoryService;
 
 trait InitialStateTrait {
-
+  use ConfigTrait;
+  
   /** @var string */
   protected $appName;
 
@@ -95,11 +96,6 @@ trait InitialStateTrait {
                                           "The pull-down can be closed by clicking ".
                                           "anywhere outside the menu."),
       ]);
-  }
-
-  private function getUserValue($key, $default = null)
-  {
-    return $this->containerConfig->getuserValue($this->userId, $this->appName, $key, $default);
   }
 }
 

@@ -66,6 +66,9 @@ class PageController extends Controller {
   /** @var RequestParameterSerice */
   private $parameterService;
 
+  /** @var ConfigCheck */
+  private $configCheck;
+
   //@@TODO inject config via constructor
   public function __construct(
     $appName,
@@ -78,7 +81,8 @@ class PageController extends Controller {
     IUserSession $userSession,
     HistoryService $historyService,
     RequestParameterService $parameterService,
-    IInitialStateService $initialStateService
+    IInitialStateService $initialStateService,
+    ConfigCheck $configCheck
   ) {
 
     parent::__construct($appName, $request);
@@ -92,6 +96,7 @@ class PageController extends Controller {
     $this->historyService = $historyService;
     $this->parameterService = $parameterService;
     $this->initialStateService = $initialStateService;
+    $this->configCheck = $configCheck;
 
     //@@TODO: make non static ?
     //Config::init($this->userSession, $this->$containerConfig, $this->groupManager);
@@ -166,7 +171,7 @@ class PageController extends Controller {
     $encrkey = Config::getEncryptionKey();
 
     // Get user and group
-    $groupId = Config::getAppValue('usergroup', '');
+    $groupId = $this->getAppValue('usergroup', '');
 
     // Are we a group-admin?
     //@@TODO needed in more than one location
@@ -186,14 +191,14 @@ class PageController extends Controller {
     $recordId = Util::getCGIRecordId([$this->request, 'getParam']);
 
     // See if we are configured
-    $config = (new ConfigCheck($this->userManager, $this->groupManager))->configured();
+    $config = $this->configCheck->configured();
 
     if ($template != 'debug' && !$config['summary']) {
       $tmplname = 'configcheck';
     } else {
       $tmplname = $template;
     }
-
+    
     $templateParameters = [
       'template' => $tmplname,
 
@@ -225,7 +230,9 @@ class PageController extends Controller {
       'pagerows' => $pageRows,
     ];
 
-    return new TemplateResponse($this->appName, $tmplname, $templateParameters);
+    // renderAs = admin, user, blank
+    $renderAs = 'user';
+    return new TemplateResponse($this->appName, $tmplname, $templateParameters, $renderAs);
   }
 
 }
