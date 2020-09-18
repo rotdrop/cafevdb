@@ -226,7 +226,7 @@ input[type=checkbox],input[type=submit],input[type=radio],input[type=button] {
   background-origin:padding-box;
   background-position:left middle;
   background-size:contain;
-  max-width:50em;
+  max-width:57em;
   height:13ex;
   padding-left:15ex;
   margin-top:2ex;
@@ -355,7 +355,7 @@ body.snapjs-left #old-personalsettings {
 
 div.cafevdb-general {
   position:relative;
-  padding-top:44px; /* like controls, OC preset */
+  /* padding-top:44px; *//* like controls, OC preset */
   box-sizing:border-box;
   background-color:#f2f8ff;
   min-height:100%;

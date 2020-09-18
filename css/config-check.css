@@ -1,10 +1,9 @@
-<?php
-/* Orchestra member, musician and project management application.
+/**Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2015 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -20,24 +19,13 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace CAFEVDB {
+div.cafevdb-page-header-box.config-check {
+  height:21ex;
+}
+div.cafevdb-page-header.config-check {
+  height:20ex;
+}
+div.cafevdb-page-container.config-check {
+  padding-top:22ex;
+}
 
-  \OCP\User::checkAdminUser();
-
-  //OCP\Util::addStyle('cafevdb', 'cafevdb');
-  //OCP\Util::addStyle('cafevdb', 'tooltips');
-  \OCP\Util::addStyle( "cafevdb", "admin-settings" );
-  \OCP\Util::addScript( "cafevdb", "admin-settings" );
-
-  $tmpl = new \OCP\Template( 'cafevdb', 'admin-settings');
-
-  Config::init();
-  $strict = !Config::encryptionKeyValid();
-
-  $tmpl->assign('usergroup', Config::getAppValue('usergroup', ''));
-
-  return $tmpl->fetchPage();
-
-} // namespace CAFEVDB
-
-?>

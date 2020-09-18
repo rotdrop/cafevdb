@@ -25,6 +25,9 @@ namespace OCA\CAFEVDB;
 use OCA\CAFEVDB\Common\Config;
 
 $css_pfx = 'cafevdb-page'; //@@TODO ???
+$css_class = 'config-check';
+
+style($appName, 'config-check');
 
 $nav = '';
 
@@ -43,8 +46,10 @@ so. You may want to configure your language preferences.')
 
 echo $this->inc('part.common.header',
                 array('css-prefix' => $css_pfx,
+                      'css-class' => $css_class,
                       'navigationcontrols' => $nav,
                       'header' => $header));
+
 ?>
 
 <div id="<?php echo $css_pfx; ?>-body-config-check">

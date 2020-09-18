@@ -6,7 +6,7 @@
     <name>CAFeV DB</name>
     <description>Orchestra Management Application.</description>
     <codename>Creeping Featurism</codename>
-    <version>5.04</version>
+    <version>6.0.0</version>
     <licence>AGPL</licence>
     <author mail="himself@claus-justus-heine.de" homepage="https://gitlab.claus-justus-heine.de/nextcloud/apps/cafevdb.git">Claus-Justus Heine</author>
     <dependencies>

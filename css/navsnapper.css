@@ -22,84 +22,67 @@
 /* Navigation snapper settings, stolen from core/css/mobile.css */
 
 @media only screen {
+    
+    #app-navigation {
+        transform: translateX(-#{$navigation-width});
+    }
+    .snapjs-left {
+        #app-navigation {
+            transform: translateX(0);
+        }
+    }
+    
+    #app-navigation:not(.hidden) + #app-content {
+        margin-left: 0;
+    }
+    
+    .skip-navigation.skip-content {
+        left: 3px;
+        margin-left: 0;
+    }
+    
+    /* Show app details page */
+    #app-content.showdetails {
+        #app-navigation-toggle {
+            transform: translateX(-44px);
+        }
+        #app-navigation-toggle-back {
+            position: fixed;
+            display: inline-block !important;
+            top: $header-height;
+            left: 0;
+            width: 44px;
+            height: 44px;
+            z-index: 1050;
+            background-color: rgba(255, 255, 255, .7);
+            cursor: pointer;
+            opacity: .6;
+            transform: rotate(90deg);
+        }
+        .app-content-list {
+            transform: translateX(-100%);
+        }	
+    }
 
-/* APP SIDEBAR TOGGLE and SWIPE ----------------------------------------------*/
+    #app-navigation-toggle {
+        position: fixed;
+        display: inline-block !important;
+        left: 0;
+        width: 44px;
+        height: 44px;
+        z-index: 1050;
+        cursor: pointer;
+        opacity: 0.6;
+    }
+    
+    #app-navigation-toggle:hover, #app-navigation-toggle:focus {
+        opacity: 1;
+    }
 
-#app-navigation,
-#app-content {
-	position: absolute !important;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-}
-
-#app-navigation {
-	width: 250px !important;
-}
-
-#app-content {
-	width: 100% !important;
-	left: 0 !important;
-	background-color: #fff;
-	overflow-x: hidden !important;
-	/*z-index: 50;*/
-}
-
-.popup {
-  z-index:110;
-}
-
-/* allow horizontal scrollbar in settings
-	otherwise user management is not usable on mobile */
-#body-settings #app-content {
-	overflow-x: auto !important;
-}
-
-#app-navigation-toggle {
-	position: absolute;
-	display: inline-block !important;
-	top: 0px;
-	left: 0px;
-	width: 44px;
-	height: 44px;
-	z-index: 200;
-	background-color: rgba(255, 255, 255, .7);
-	cursor: pointer;
-	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)";
-	filter: alpha(opacity=60);
-	opacity: .6;
-}
-#app-navigation-toggle:hover,
-#app-navigation-toggle:focus {
-	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
-	filter: alpha(opacity=100);
-	opacity: 1;
-}
-
-/* controls bar for mobile */
-#controls {
-	position: absolute;
-	top: 0px;
-	min-width: initial !important;
-	width: auto !important;
-	left: 0 !important;
-	padding-left: 0;
-        z-index: 90;
-}
-/* position controls for apps with app-navigation */
-#app-navigation+#app-content #controls {
-    padding-left: 44px;
-}
-
-/* fix controls bar jumping when navigation is slid out */
-.snapjs-left #app-navigation-toggle,
-.snapjs-left #controls {
-	top: 0;
-}
-.snapjs-left table.multiselect thead {
-	top: 44px;
-}
+    /* position controls for apps with app-navigation */
+    #app-navigation + #app-content #controls {
+        padding-left: 44px;
+    }
 
 /* end of media query */
 }

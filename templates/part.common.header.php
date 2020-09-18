@@ -25,12 +25,30 @@ namespace OCA\CAFEVDB;
 use OCA\CAFEVDB\Common\Navigation;
 use OCA\CAFEVDB\Common\Config;
 
-// control buttons could live outside control bar and thus overlay
-// the modal overlay. Would be nice, especially when including
-// restoration of dialogs into the history management.
+/******************************************************************************
+ *
+ * Emit all script. $renderAs == 'blank' will avoid scripts and styles.
+ *
+ */
+style($appName, 'cafevdb');
+style($appName, 'settings');
+style($appName, 'tooltips');
+style($appName, 'dialogs');
+style($appName, 'inlineimage');
+style($appName, 'navsnapper');
 
-// @@TODO check for "standard" way to do this.
+//script($appName, '../3rdparty/Snap.js/snap.min');
+script($appName, 'config');
+script($appName, 'cafevdb');
+script($appName, 'page');
+script($appName, 'app-settings');
+script($appName, 'jquery-extensions');
+
 echo Common\Util::emitExternalScripts();
+
+/*
+ *
+ *****************************************************************************/
 
 $template  = $_['template'];
 $css_pfx   = $_['css-prefix'];
