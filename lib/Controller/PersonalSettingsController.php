@@ -29,7 +29,7 @@ use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IL10N;
 
-class AdminSettingsController extends Controller {
+class PersonalSettingsController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
   /** @var IL10N */
@@ -43,19 +43,12 @@ class AdminSettingsController extends Controller {
     $this->l = $l;
   }
 
-  public function set($orchestraUserGroup) {
-    if (!empty($orchestraUserGroup)) {
-      $this->setAppValue('usergroup', $orchestraUserGroup);
-      return new DataResponse(
-        ['message' => $this->l->t('Setting orchestra group to `%s\'. Please login as group administrator and configure the Camerata DB application.', [$orchestraUserGroup])]
-      );
-    } else {
-      return new DataResponse(
-        ['message' => $this->l->t('Refusing to set the orchestra group to an empty string')],
-        Http::STATUS_BAD_REQUEST
-      );
+  public function set($parameter, $value) {
+    switch ($parameter) {
+    default:
+      // generate error response
+      return new DataResponse(['message' => $this->l->t("Unknown Error)], Http::STATUS_BAD_REQUEST);
     }
-    return true;
   }
 }
 

@@ -55,9 +55,15 @@ return [
         ],
         // internal "ajax" routes
         [
-            'name' => 'admin_settings#save',
-            'url' => '/settings/admin/save',
+            'name' => 'admin_settings#set',
+            'url' => '/settings/admin/set',
             'verb' => 'POST',
+        ],
+        // personal settings
+        [
+            'name' => 'personal_settings#set',
+            'url' => '/settings/personal/set/{parameter}',
+            'verb' => 'POST'
         ],
     ]
 ];

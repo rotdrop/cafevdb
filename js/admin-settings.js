@@ -6,7 +6,7 @@ $(document).ready(function(){
         $('#cafevdb-admin-settings .msg').hide();
 	var post = $("#cafevdb-admin-settings").serialize();
 	$.post(
-          OC.generateUrl('/apps/cafevdb/settings/admin/save'),
+          OC.generateUrl('/apps/cafevdb/settings/admin/set'),
           post).done(function(data) {
           console.log(data);
 	  $('#cafevdb-admin-settings .msg').html(data.message);
