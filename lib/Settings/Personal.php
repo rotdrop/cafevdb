@@ -22,43 +22,52 @@
 
 namespace OCA\CAFEVDB\Settings;
 
-use OCP\Settings\IIconSection;
+use OCP\AppFramework\Http\TemplateResponse;
+use OCP\Settings\ISettings;
 
 use OCA\CAFEVDB\Service\ConfigService;
 
-class AdminSection implements IIconSection {
+class Personal implements ISettings {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
+
+  const ERROR_TEMPLATE = "errorpage";
+  const TEMPLATE = "settings";
 
   public function __construct(ConfigService $configService) {
     $this->configService = $configService;
   }
 
+  public function getForm() {
+
+    if (true || !$this->inGroup()) {
+      return new TemplateResponse(
+        $this->appName(),
+        self::ERROR_TEMPLATE,
+        [
+          'error' => 'notamember',
+          'userId' => $this->userId()
+        ]);
+    }
+  }
+
   /**
-   * returns the ID of the section. It is supposed to be a lower case string
-   *
-   * @returns string
+   * @return stribng the section ID, e.g. 'sharing'
+   * @since 9.1
    */
-  public function getID() {
+  public function getSection() {
     return $this->appName();
   }
 
   /**
-   * returns the translated name as it should be displayed, e.g. 'LDAP / AD
-   * integration'. Use the L10N service to translate it.
-   *
-   * @return string
-   */
-  public function getName() {
-    // @@TODO make this configurable
-    return 'Camerata DB';
-  }
-
-  /**
    * @return int whether the form should be rather on the top or bottom of
-   * the settings navigation. The sections are arranged in ascending order of
-   * the priority values. It is required to return a value between 0 and 99.
+   * the admin section. The forms are arranged in ascending order of the
+   * priority values. It is required to return a value between 0 and 100.
+   *
+   * E.g.: 70
+   * @since 9.1
    */
   public function getPriority() {
+    // @@TODO could be made a configure option.
     return 50;
   }
 }

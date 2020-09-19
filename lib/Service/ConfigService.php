@@ -29,8 +29,7 @@ use OCP\IL10N;
 use OCP\IUserManager;
 use OCP\IGroupManager;
 use OCP\Group\ISubAdmin;
-
-use OCA\CAFEVDB\Common\Config;
+use OCP\IURLGenerator;
 
 class ConfigService {
   const DEBUG_GENERAL   = (1 << 0);
@@ -68,6 +67,9 @@ class ConfigService {
   /** @var IL10N */
   private $l;
 
+  /** @var IURLGenerator */
+  private $urlGenerator;
+
   public function __construct(
     $appName,
     IConfig $containerConfig,
@@ -75,6 +77,7 @@ class ConfigService {
     IUserManager $userManager,
     IGroupManager $groupManager,
     ISubAdmin $groupSubAdmin,
+    IURLGenerator $urlGenerator,
     IL10N $l
   ) {
 
@@ -84,6 +87,7 @@ class ConfigService {
     $this->userManager = $userManager;
     $this->groupManager = $groupManager;
     $this->groupSubAdmin = $groupSubAdmin;
+    $this->urlGenerator = $urlGenerator;
     $this->l = $l;
 
     $this->user = $this->userSession->getUser();
@@ -100,6 +104,10 @@ class ConfigService {
 
   public function getGroupManager() {
     return $this->groupManager;
+  }
+
+  public function getUrlGenerator() {
+    return $this->urlGenerator;
   }
 
   public function getUser($userId = null) {
@@ -167,6 +175,11 @@ class ConfigService {
   public function setAppValue($key, $value)
   {
     return $this->containerConfig->setAppValue($this->appName, $key, $value);
+  }
+
+  public function getIcon() {
+    // @@TODO make it configurable
+    return $this->urlGenerator->imagePath($this->appName, 'logo-greyf.svg');
   }
 }
 

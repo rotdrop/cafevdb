@@ -105,6 +105,10 @@ trait ConfigTrait {
   {
     return $this->configService->getL10N();
   }
+
+  public function getIcon() {
+    return $this->configService->getIcon();
+  }
 }
 
 // Local Variables: ***

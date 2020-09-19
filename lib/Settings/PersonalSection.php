@@ -26,7 +26,7 @@ use OCP\Settings\IIconSection;
 
 use OCA\CAFEVDB\Service\ConfigService;
 
-class AdminSection implements IIconSection {
+class PersonalSection implements IIconSection {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
   public function __construct(ConfigService $configService) {
