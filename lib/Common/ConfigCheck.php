@@ -30,36 +30,18 @@ use OCP\IUserSession;
 use OCP\IUser;
 use OCP\IConfig;
 
+use OCA\CAFEVDB\Service\ConfigService;
+
 /**Check for a usable configuration.
  */
 class ConfigCheck
 {
-  use \OCA\CAFEVDB\Traits\ConfigTrait;  
-  
-  /** @var IGroupManager */
-  private $groupManager;
-
-  /** @var IUserManager */
-  private $userManager;
-
-  /** @var IUserSession */
-  private $userSession;
+  use \OCA\CAFEVDB\Traits\ConfigTrait;
 
   public function __construct(
-    $appName,
-    IUserSession $userSession,
-    IConfig $containerConfig,
-    IUserManager $userManager,
-    IGroupManager $groupManager) {
-
-    $this->appName = $appName;
-    $this->userSession = $userSession;
-    $this->user = $userSession->getUser();
-    $this->userId = $this->user->getUID();
-    $this->containerConfig = $containerConfig;
-    $this->userManager = $userManager;
-    $this->groupManager = $groupManager;
-    
+    ConfigService $configService
+  ) {
+    $this->configService = $configService;
   }
 
   /**Return an array with necessary configuration items, being either
@@ -178,8 +160,8 @@ class ConfigCheck
   }
 
   /**Check whether the shared object exists. Note: this function has
-   *to be executed under the uid of the user the object belongs
-   *to. See ConfigCheck::sudo().
+   * to be executed under the uid of the user the object belongs
+   * to. See ConfigCheck::sudo().
    *
    * @param[in] $id The @b numeric id of the object (not the name).
    *
@@ -279,13 +261,7 @@ class ConfigCheck
    */
   public function shareGroupExists()
   {
-    $groupId = $this->getAppValue('usergroup');
-
-    if (!$this->groupManager->groupExists($groupId)) {
-      return false;
-    }
-
-    return true;
+    return $this->groupExists();
   }
 
   /**Return @c true if the share-owner exists and belongs to the
@@ -314,7 +290,7 @@ class ConfigCheck
      *
      * How paranoid should we be?
      */
-    $groups = $this->groupManager->getUserGroups($shareowner);
+    $groups = $this->groupManager()->getUserGroups($shareowner);
 
     // well, the share-owner should in turn only be owned by the
     // group.
@@ -437,7 +413,7 @@ class ConfigCheck
     $groupadmin = $this->userId;
 
     if (!\OC_SubAdmin::isSubAdminofGroup($groupadmin, $sharegroup)) {
-      \OCP\Util::write($this->appName,
+      \OCP\Util::write($this->appName(),
                        "Permission denied: ".$groupadmin." is not a group admin of ".$sharegroup.".",
                        \OCP\Util::ERROR);
       return false;

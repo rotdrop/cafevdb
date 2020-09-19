@@ -32,7 +32,7 @@ use OCA\CAFEVDB\Service\HistoryService;
 
 trait InitialStateTrait {
   use ConfigTrait;
-  
+
   /** @var string */
   protected $appName;
 
@@ -45,14 +45,8 @@ trait InitialStateTrait {
   /** @var HistoryService */
   private $historyService;
 
-  /** @var IConfig */
-  private $containerConfig;
-
-  /** @var string */
-  private $userId;
-
   protected function publishInitialStateForUser() {
-    $l = $this->l;
+    $l = $this->l10N();
 
     $tooltips  = $this->getUserValue('tooltips', '');
     $directChg = $this->getUserValue('directchange', '');

@@ -35,7 +35,6 @@ class AdminSettingsController extends Controller {
   /** @var IL10N */
   private $l;
 
-  //@@TODO inject config via constructor
   public function __construct($appName, IRequest $request, IConfig $containerConfig, IL10N $l) {
     parent::__construct($appName, $request);
 

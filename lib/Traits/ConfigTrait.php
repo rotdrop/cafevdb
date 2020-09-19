@@ -31,44 +31,80 @@ use OCA\CAFEVDB\Common\Config;
 trait ConfigTrait {
 
   /** @var string */
-  protected $appName;
+  private $configService;
 
-  /** @var IConfig */
-  private $containerConfig;
+  protected function appName()
+  {
+    return $this->configService->getAppName();
+  }
 
-  /** @var IUser */
-  private $user;
+  protected function userManager()
+  {
+    return $this->configService->getUserManager();
+  }
 
-  /** @var string */
-  private $userId;
+  protected function groupManager()
+  {
+    return $this->configService->getGroupManager();
+  }
 
   protected function getUserValue($key, $default = null, $userId = null)
   {
-    empty($userId) && ($userId = $this->userId);
-    return $this->containerConfig->getUserValue($userId, $this->appName, $key, $default);
+    return $this->configService->getUserValue($key, $default, $userId);
   }
 
   protected function setUserValue($key, $value, $userId = null)
   {
-    empty($userId) && ($userId = $this->userId);
-    return $this->containerConfig->setUserValue($userId, $this->appName, $key, $value);
+    return $this->configService->setUserValue($key, $value, $userId);
   }
 
   /**A short-cut, redirecting to the stock functions for the app.
    */
   protected function getAppValue($key, $default = null)
   {
-    return $this->containerConfig->getAppValue($this->appName, $key, $default);
+    return $this->configService->getAppValue($key, $default);
   }
 
   /**A short-cut, redirecting to the stock functions for the app.
    */
   protected function setAppValue($key, $value)
   {
-    return $this->containerConfig->setAppValue($this->appName, $key, $value);
+    return $this->configService->setAppValue($key, $value);
   }
 
+  protected function user($userId = null)
+  {
+    return $this->configService->getUser($userId);
+  }
 
+  protected function userId()
+  {
+    return $this->configService->getUserId();
+  }
+
+  protected function groupId()
+  {
+    return $this->configService->getGroupId();
+  }
+
+  protected function group($groupId = null)
+  {
+    return $this->configService->getGroup($groupId);
+  }
+
+  protected function groupExists($groupId = null)
+  {
+    return $this->configService->groupExists($groupId);
+  }
+
+  protected function isSubAdminOfGroup($userId = null, $groupId = null) {
+    return $this->configService->isSubAdminOfGroup($userId, $groupId);
+  }
+
+  protected function l10N()
+  {
+    return $this->configService->getL10N();
+  }
 }
 
 // Local Variables: ***

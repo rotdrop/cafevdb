@@ -17,12 +17,7 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Controller;
-use OCP\IUserManager;
-use OCP\IGroupManager;
-use OCP\Group\ISubAdmin;
-use OCP\IUserSession;
 use OCP\ISession;
-use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IInitialStateService;
 
@@ -31,6 +26,7 @@ use OCA\CAFEVDB\Common\ConfigCheck;
 use OCA\CAFEVDB\Common\Util;
 
 use OCA\CAFEVDB\Service\HistoryService;
+use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 
 class PageController extends Controller {
@@ -39,32 +35,14 @@ class PageController extends Controller {
   /** @var IL10N */
   private $l;
 
-  /** @var IUserManager */
-  private $userManager;
-
-  /** @var IGroupManager */
-  private $groupManager;
-
-  /** @var IConfig */
-  private $containerConfig;
-
-  /** @var IUserSession */
-  private $userSession;
-
-  /** @var ISubAdmin */
-  private $groupSubAdmin;
-
-  /** @var IUser */
-  private $user;
-
-  /** @var int */
-  private $userId;
-
   /** @var HistoryService */
   private $historyService;
 
   /** @var RequestParameterSerice */
   private $parameterService;
+
+  /** @var ConfigService */
+  private $configService;
 
   /** @var ConfigCheck */
   private $configCheck;
@@ -73,12 +51,7 @@ class PageController extends Controller {
   public function __construct(
     $appName,
     IRequest $request,
-    IL10N $l,
-    IUserManager $userManager,
-    IGroupManager $groupManager,
-    ISubAdmin $groupSubAdmin,
-    IConfig $containerConfig,
-    IUserSession $userSession,
+    ConfigService $configService,
     HistoryService $historyService,
     RequestParameterService $parameterService,
     IInitialStateService $initialStateService,
@@ -87,23 +60,15 @@ class PageController extends Controller {
 
     parent::__construct($appName, $request);
 
-    $this->l = $l;
-    $this->userManager = $userManager;
-    $this->groupManager = $groupManager;
-    $this->groupSubAdmin = $groupSubAdmin;
-    $this->containerConfig = $containerConfig;
-    $this->userSession = $userSession;
+    $this->configService = $configService;
     $this->historyService = $historyService;
     $this->parameterService = $parameterService;
     $this->initialStateService = $initialStateService;
     $this->configCheck = $configCheck;
+    $this->l = $this->l10N();
 
     //@@TODO: make non static ?
-    //Config::init($this->userSession, $this->$containerConfig, $this->groupManager);
     Config::init();
-
-    $this->user = $this->userSession->getUser();
-    $this->userId = $this->user->getUID();
   }
 
   /**
@@ -165,17 +130,13 @@ class PageController extends Controller {
     }
 
     // Initial state injecton for JS
-    $this->publishInitialStateForUser($this->user);
+    $this->publishInitialStateForUser($this->user());
 
     // The most important ...
     $encrkey = Config::getEncryptionKey();
 
-    // Get user and group
-    $groupId = $this->getAppValue('usergroup', '');
-
     // Are we a group-admin?
-    //@@TODO needed in more than one location
-    $isGroupAdmin = !empty($groupId) && $this->groupSubAdmin->isSubAdminofGroup($this->user, $this->groupManager->get($groupId));
+    $isGroupAdmin = $this->isSubAdminofGroup();
 
     $tooltips     = $this->getUserValue('tooltips', 'on');
     $usrFiltVis   = $this->getUserValue('filtervisibility', 'off');
@@ -198,7 +159,7 @@ class PageController extends Controller {
     } else {
       $tmplname = $template;
     }
-    
+
     $templateParameters = [
       'template' => $tmplname,
 
@@ -207,10 +168,10 @@ class PageController extends Controller {
 
       'configcheck' => $config,
       'orchestra' => Config::getValue('orchestra'),
-      'groupadmin' => $isGroupAdmin,
-      'usergroup' => $groupId,
-      'user' => $this->userId,
-      'expertmode' => Config::$expertmode,
+      'groupadmin' => $this->isSubAdminOfGroup(),
+      'usergroup' => $this->groupId(),
+      'user' => $this->userId(),
+      'expertmode' => $this->getUserValue('expertmode', false),
       'tooltips' => $tooltips,
       'encryptionkey' => $encrkey,
       'uploadMaxFilesize' => Util::maxUploadSize(),
@@ -223,7 +184,7 @@ class PageController extends Controller {
       'timezone' => Util::getTimezone(),
       'historySize' => $this->historyService->size(),
       'historyPosition' => $this->historyService->position(),
-      'requesttoken' => \OCP\Util::callRegister(),
+      'requesttoken' => \OCP\Util::callRegister(), // @TODO: check
       'filtervisibility' => $usrFiltVis,
       'directchange' => $directChg,
       'showdisabled' => $showDisabled,
