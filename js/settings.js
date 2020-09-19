@@ -300,14 +300,14 @@ $(document).ready(function() {
       $('#systemkey #standby').show();
 
       // Ajax foo
-      OC.Notification.show(t('cafevdb', 'Please standby, the operation will take some time!'));
+      CAFEVDB.Notification.show(t('cafevdb', 'Please standby, the operation will take some time!'));
       $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'), post, function(data) {
         // re-enable all forms
         $('#appsettings_popup fieldset').removeAttr('disabled');
         $("#appsettings_popup").tabs("enable");
         $('#systemkey #standby').hide();
 
-        OC.Notification.hide();
+        CAFEVDB.Notification.hide();
 
         if (data.status == "success") {
           $('#systemkey #changed').show();

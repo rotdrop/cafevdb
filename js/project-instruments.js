@@ -40,17 +40,17 @@ var CAFEVDB = CAFEVDB || {};
     transferButton.off('click').on('click', function(event) {
       var post = $(this.form).serialize();
 
-      OC.Notification.hide(function() {
+      CAFEVDB.Notification.hide(function() {
         $.post(OC.filePath('cafevdb', 'ajax/instruments', 'adjustInstrumentation.php'),
                post,
                function (data) {
                  if (!CAFEVDB.ajaxErrorHandler(data, [])) {
                    // do nothing
                  } else if (data.data.message != '') {
-                   OC.Notification.show(data.data.message);
+                   CAFEVDB.Notification.show(data.data.message);
                  }
                  setTimeout(function() {
-                   OC.Notification.hide(function() {
+                   CAFEVDB.Notification.hide(function() {
                      // Anyhow, reload and see what happens. Hit
                      // either the save and continue or the reload
                      // button.

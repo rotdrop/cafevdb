@@ -95,7 +95,7 @@ CAFEVDB.Insurances = CAFEVDB.Insurances || {};
                 // until end of validation
                 validateLock(true);
 
-                OC.Notification.hide(function() {
+                CAFEVDB.Notification.hide(function() {
                     $.post(OC.filePath('cafevdb', 'ajax/insurance', 'validate.php'),
                            post,
                            function(data) {
@@ -108,9 +108,9 @@ CAFEVDB.Insurances = CAFEVDB.Insurances || {};
                                    }
                                } else {
                                    if (data.data.message != '') {
-                                       OC.Notification.show(data.data.message);
+                                       CAFEVDB.Notification.show(data.data.message);
                                        setTimeout(function() {
-                                           OC.Notification.hide();
+                                           CAFEVDB.Notification.hide();
                                        }, 5000);
                                    }
                                    //alert('data: '+CAFEVDB.print_r(data.data, true));

@@ -130,7 +130,7 @@ var CAFEVDB = CAFEVDB || {};
     var projectId = container.find('input[name="ProjectId"]').val();
     var recordId = container.find('input[name="PME_sys_rec"]').val();
 
-    OC.Notification.hide(function () {
+    CAFEVDB.Notification.hide(function () {
       $.post(ajaxScript,
              {
                projectId: projectId,
@@ -160,9 +160,9 @@ var CAFEVDB = CAFEVDB || {};
                var info = rqData.message + ' ' + rqData.notice;
                info = info.trim();
                if (info != '') {
-                 OC.Notification.show(info);
+                 CAFEVDB.Notification.show(info);
                  setTimeout(function() {
-                   OC.Notification.hide();
+                   CAFEVDB.Notification.hide();
                  }, timeout);
                }
 
@@ -625,7 +625,7 @@ console.log('deselect', option.val());
       console.log('group limit', limit);
 
       if (limit > 0 && curSelected.length > limit) {
-        OC.Notification.showTemporary(t('cafevdb',
+        CAFEVDB.Notification.showTemporary(t('cafevdb',
                                         'Too many group members, allowed are {limit}, you specified {count}.'
                                                   + 'You will not be able to save this configuration.',
                                         { limit: limit, count: curSelected.length }),
@@ -634,7 +634,7 @@ console.log('deselect', option.val());
         console.log('exceeding limit');
         CAFEVDB.selectValues(self, prevSelected);
       } else {
-        OC.Notification.hide();
+        CAFEVDB.Notification.hide();
       }
 
       if (changed) {

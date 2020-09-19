@@ -361,7 +361,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
                 var post = form.serialize();
                 post += '&control='+postAddOn;
 
-                OC.Notification.hide(function () {
+                CAFEVDB.Notification.hide(function () {
                     $.post(OC.filePath('cafevdb', 'ajax/projects', 'verifyName.php'),
                            post,
                            function (data) {
@@ -378,7 +378,7 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
                                } else {
                                    var rqData = data.data;
                                    if (rqData.message != '') {
-                                       OC.Notification.showTemporary(
+                                       CAFEVDB.Notification.showTemporary(
                                            rqData.message,
                                            {
                                                'isHTML': true,
@@ -475,20 +475,20 @@ CAFEVDB.Projects = CAFEVDB.Projects || {};
     ///
     Projects.projectWebPageRequest = function(post, container) {
 
-        OC.Notification.hide(function() {
+        CAFEVDB.Notification.hide(function() {
             $.post(OC.filePath('cafevdb', 'ajax/projects', 'web-articles.php'),
                 post,
                 function (data) {
                     if (!CAFEVDB.ajaxErrorHandler(data, [])) {
                         // do nothing
                     } else if (data.data.message != '') {
-                        OC.Notification.showHtml(data.data.message);
+                        CAFEVDB.Notification.showHtml(data.data.message);
                     }
                     var form = container.find('table.pme-navigation');
                     var submit = form.find('input.pme-more, input.pme-reload, input.pme-apply');
                     submit.first().trigger('click');
                     setTimeout(function() {
-                        OC.Notification.hide();
+                        CAFEVDB.Notification.hide();
                     }, 5000);
 
                 });

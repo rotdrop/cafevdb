@@ -552,7 +552,7 @@ var PHPMYEDIT = PHPMYEDIT || {};
 
           //alert(post);
 
-          OC.Notification.hide(function() {
+          CAFEVDB.Notification.hide(function() {
             var dialogWidget = container.dialog('widget');
 
             dialogWidget.addClass(pme.pmeToken('table-dialog-blocked'));
