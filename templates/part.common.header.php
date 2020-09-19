@@ -39,6 +39,7 @@ style($appName, 'navsnapper');
 
 script($appName, 'config');
 script($appName, 'cafevdb');
+script($appName, 'notification');
 script($appName, 'page');
 script($appName, 'app-settings');
 script($appName, 'jquery-extensions');
@@ -135,7 +136,7 @@ if (!isset($_['headerblock']) && isset($_['header'])) {
 
 $expertClass = 'expertmode'.($_['expertmode'] != 'on' ? ' hidden' : '');
 
-$sideBarToolTipPos = 'right';
+$sideBarToolTipPos = 'auto';
 ?>
 
 <div id="app-navigation" class="app-navigation snapper-enabled">
