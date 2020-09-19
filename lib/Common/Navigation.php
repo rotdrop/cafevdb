@@ -354,7 +354,7 @@ class Navigation
                             if ($count > 0) {
                                 $id .= '-'.$count;
                             }
-                            $id = ' id="'.$id.'"';
+                            $id = ' id="'.$id.'" ';
                         } else {
                             $id = '';
                         }
