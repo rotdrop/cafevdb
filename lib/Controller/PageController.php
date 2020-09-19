@@ -152,6 +152,7 @@ class PageController extends Controller {
     $showDisabled = $this->getUserValue('showdisabled', 'off');
     $expertMode   = $this->getUserValue('expertmode', false);
     $pageRows     = $this->getUserValue('pagerows', 20);
+    $debugMode    = $this->getUserValue('debug', 0);
 
     // Filter visibility is stored here:
     $pmeSysPfx = Config::$pmeopts['cgi']['prefix']['sys'];
@@ -182,6 +183,7 @@ class PageController extends Controller {
       'user' => $this->userId(),
       'expertmode' => $expertMode,
       'tooltips' => $tooltips,
+      'debugMode' => $debugMode,
       'encryptionkey' => $encrkey,
       'uploadMaxFilesize' => Util::maxUploadSize(),
       'uploadMaxHumanFilesize' => \OCP\Util::humanFileSize(Util::maxUploadSize()),

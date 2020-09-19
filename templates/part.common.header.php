@@ -263,7 +263,7 @@ $sideBarToolTipPos = 'top';
             title="<?php echo Config::toolTips('debug-mode'); ?>">
             <?php
             foreach ($debugModes as $key => $value) {
-              echo '<option value="'.$key.'" '.(Config::$debug[$key] ? 'selected="selected"' : '').'>'.$value.'</option>'."\n";
+              echo '<option value="'.$key.'" '.(($debugMode & $key) != 0 ? 'selected="selected"' : '').'>'.$value.'</option>'."\n";
             }
             ?>
           </select>
