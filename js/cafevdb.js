@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -1290,7 +1290,7 @@ var CAFEVDB = CAFEVDB || {};
   };
 
   CAFEVDB.snapperClose = function() {
-    $('#app-navigation-toggle').trigger('snapjs:close');
+    $('#app-navigation-toggle').trigger('snapjs:close').cafevTooltip('hide');
   };
 
   /**Initialize our tipsy stuff. Only exchange for our own thingies, of course.
@@ -1350,6 +1350,8 @@ var CAFEVDB = CAFEVDB || {};
     container.find('[class*="tooltip-"]').each(function(indx) {
       $(this).cafevTooltip({});
     });
+
+    container.find('#app-navigation-toggle').cafevTooltip();
 
     // Tipsy greedily enables itself when attaching it to elements, so
     // ...

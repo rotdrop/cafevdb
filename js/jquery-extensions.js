@@ -28,6 +28,8 @@ var CAFEVDB = CAFEVDB || {};
 
 (function(window, $, CAFEVDB, undefined) {
 
+  console.log("jquery-extensions");
+
   /**We leave it to the z-index-plane to disallow interaction. Every
    * input element above any modal dialog is allowed to interact with
    * the user.
@@ -140,14 +142,15 @@ var CAFEVDB = CAFEVDB || {};
     }
     if (typeof argument == 'object' && argument != null) {
       var options = {
-        container:'body',
-        html:true,
-        placement:'auto top',
-        cssclass:[]
+        container: 'body',
+        html: true,
+        placement: 'auto',
+        cssclass: [],
+        fallbackPlacement: 'flip'
       }
       argument = $.extend(true, {}, options, argument);
       if (typeof argument.placement == 'string' && !argument.placement.match(/auto/)) {
-        argument.placement = 'auto '+argument.placement;
+        argument.placement = argument.placement;
       }
       if (argument.cssclass && typeof argument.cssclass == 'string') {
         argument.cssclass = [ argument.cssclass ];
@@ -171,14 +174,14 @@ var CAFEVDB = CAFEVDB || {};
               var tooltipClass = tooltipClasses[idx];
               var placement = tooltipClass.match(/^tooltip-(bottom|top|right|left)$/);
               if (placement && placement.length == 2 && placement[1].length > 0) {
-                selfOptions.placement = 'auto '+placement[1];
+                selfOptions.placement = placement[1];
                 continue;
               }
               selfOptions.cssclass.push(tooltipClass);
             }
           }
         }
-        $.fn.tooltip.call(self, 'destroy');
+        $.fn.tooltip.call(self, 'dispose');
         var originalTitle = self.data('original-title');
         if (originalTitle && !self.attr('title')) {
           self.attr('title', originalTitle);
@@ -202,6 +205,9 @@ var CAFEVDB = CAFEVDB || {};
         $.fn.tooltip.call(self, selfOptions);
       });
     } else {
+      if (argument === 'destroy') {
+        argument = 'dispose';
+      }
       $.fn.tooltip.apply(this, arguments);
     }
     return this;
@@ -304,13 +310,5 @@ var CAFEVDB = CAFEVDB || {};
     scopeTest.remove();
     return Math.round(that * scopeVal) + 'px';
   };
-
-  jQuery.fn.tipsy.enable = function() {
-    jQuery('[data-original-title]').tooltip('enable');
-  }
-
-  jQuery.fn.tipsy.disable = function() {
-    jQuery('[data-original-title]').tooltip('disable');
-  }
 
 })(window, jQuery, CAFEVDB);

@@ -60,8 +60,10 @@ $(document).ready(function() {
     $.post(OC.generateUrl('/apps/cafevdb/settings/personal/set/tooltips'),
            { 'value': CAFEVDB.toolTipsEnabled })
     .done(function(data) {
+      console.log(data);
     })
     .fail(function(data) {
+      console.log(data);
     });
     return false;
   });

@@ -37,12 +37,16 @@ style($appName, 'dialogs');
 style($appName, 'inlineimage');
 style($appName, 'navsnapper');
 
-//script($appName, '../3rdparty/Snap.js/snap.min');
 script($appName, 'config');
 script($appName, 'cafevdb');
 script($appName, 'page');
 script($appName, 'app-settings');
 script($appName, 'jquery-extensions');
+script($appName, 'pme');
+script($appName, 'document-ready');
+
+script($appName, '../3rdparty/chosen/js/chosen.jquery.min');
+style($appName, '../3rdparty/chosen/css/chosen.min');
 
 echo Common\Util::emitExternalScripts();
 
@@ -119,7 +123,7 @@ $settingsControls = Navigation::buttonsFromArray(
             'name' => $l->t('Tooltip Button'),
             'title' => $l->t('Toggle Tooltips'),
             'image' => image_path('cafevdb', 'info-solid.svg'),
-            'class' => 'help tooltips tooltip-bottom tooltips-'.($_['tooltips'] == 'on' ? 'en' : 'dis').'abled',
+            'class' => 'help tooltips tooltips-'.($_['tooltips'] == 'on' ? 'en' : 'dis').'abled',
             'id' => 'tooltipbutton')
     ));
 
@@ -274,23 +278,16 @@ $sideBarToolTipPos = 'right';
     <div class="buttonseparator"></div>
     <?php echo $settingsControls; ?>
   </form>
-  <div id="controls">
-<form id="old-personalsettings" class="invisible" method="post" action="?app=<?php echo $_['appName']; ?>">
-    <input type="hidden" name="requesttoken" value="<?php echo $_['requesttoken']; ?>" />
-    <?php echo $navigationControls; ?>
-    <div class="buttonseparator"></div>
-    <?php echo $settingsControls; ?>
-  </form>
-  </div>
-<div class="cafevdb-general" data-snap-ignore="true" id="cafevdb-general"> <!-- used to eliminate the pixel-size of the control bar -->
-  <?php echo isset($_['headerblock']) ? '<!-- ' : ''; ?>
-  <div id="<?php echo $css_pfx; ?>-header-box" class="<?php echo $css_pfx; ?>-header-box <?php echo $css_class; ?>">
-    <div id="<?php echo $css_pfx; ?>-header" class="<?php echo $css_pfx; ?>-header <?php echo $css_class; ?>">
-      <?php echo $header; ?>
+  <div id="controls"></div> <!-- needed to have space for navigation buttons -->
+  <div class="cafevdb-general" data-snap-ignore="true" id="cafevdb-general"> <!-- used to eliminate the pixel-size of the control bar -->
+    <?php echo isset($_['headerblock']) ? '<!-- ' : ''; ?>
+    <div id="<?php echo $css_pfx; ?>-header-box" class="<?php echo $css_pfx; ?>-header-box <?php echo $css_class; ?>">
+      <div id="<?php echo $css_pfx; ?>-header" class="<?php echo $css_pfx; ?>-header <?php echo $css_class; ?>">
+        <?php echo $header; ?>
+      </div>
     </div>
-  </div>
-  <?php echo isset($_['headerblock']) ? ' -->' : ''; ?>
-  <?php echo isset($_['headerblock']) ? $_['headerblock'] : ''; ?>
-  <div id="<?php echo $css_pfx; ?>-container" class="<?php echo $css_pfx; ?>-container <?php echo $css_class; ?>"> <!-- used to have something with 100 height for scrollbars -->
-    <div id="<?php echo $css_pfx; ?>-body" class="<?php echo $css_pfx; ?>-body <?php echo $css_class; ?>">
-      <div id="<?php echo $css_pfx; ?>-body-inner" class="<?php echo $css_pfx; ?>-body-inner <?php echo $css_class; ?>">
+    <?php echo isset($_['headerblock']) ? ' -->' : ''; ?>
+    <?php echo isset($_['headerblock']) ? $_['headerblock'] : ''; ?>
+    <div id="<?php echo $css_pfx; ?>-container" class="<?php echo $css_pfx; ?>-container <?php echo $css_class; ?>"> <!-- used to have something with 100 height for scrollbars -->
+      <div id="<?php echo $css_pfx; ?>-body" class="<?php echo $css_pfx; ?>-body <?php echo $css_class; ?>">
+        <div id="<?php echo $css_pfx; ?>-body-inner" class="<?php echo $css_pfx; ?>-body-inner <?php echo $css_class; ?>">
