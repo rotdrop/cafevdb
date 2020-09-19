@@ -104,6 +104,7 @@ class PageController extends Controller {
       $this->historyService->push($this->parameterService->getParams());
     }
     return $this->loader(
+      $this->parameterService['renderAs'],
       $this->parameterService['template'],
       $this->parameterService['projectName'],
       $this->parameterService['projectId'],
@@ -117,6 +118,7 @@ class PageController extends Controller {
    */
   public function debug() {
     return $this->loader(
+      'user',
       'debug', // template
       $this->parameterService['projectName'],
       $this->parameterService['projectId'],
@@ -124,7 +126,13 @@ class PageController extends Controller {
     );
   }
 
-  public function loader($template = 'blog', $projectName = '', $projectId = -1, $musicianId = -1) {
+  public function loader(
+    $renderAs = 'user',
+    $template = 'blog',
+    $projectName = '',
+    $projectId = -1,
+    $musicianId = -1) {
+
     if (empty($template)) {
       $template = 'blog';
     }
@@ -192,9 +200,18 @@ class PageController extends Controller {
     ];
 
     // renderAs = admin, user, blank
-    $renderAs = 'user';
-    return new TemplateResponse($this->appName, $tmplname, $templateParameters, $renderAs);
+    // $renderAs = 'user';
+    $response = new TemplateResponse($this->appName, $tmplname, $templateParameters, $renderAs);
+    if($renderAs == 'blank') {
+      $response = new JSONResponse([
+        'contents' => $response->render(),
+        'history' => ['size' => $this->historyService->size(),
+                      'position' => $this->historyService->position()]
+      ]);
+    }
+    return $response;
   }
+
 
 }
 

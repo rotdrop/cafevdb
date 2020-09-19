@@ -23,7 +23,12 @@ class RequestParameterService implements \ArrayAccess, \Countable
 
   public function __construct(IRequest $request) {
     $this->request = $request;
-    $this->parameters = $this->request->getParams();
+    $this->parameters = array_merge([ 'renderAs' => 'user',
+                                      'template' => 'blog',
+                                      'projectName' => '',
+                                      'projectId' => -1,
+                                      'musicianId' => -1 ],
+                                    $this->request->getParams());
   }
 
   public function reset() {
@@ -49,7 +54,12 @@ class RequestParameterService implements \ArrayAccess, \Countable
 
   public function setParams($parameters): array {
     $old = $this->parameters;
-    $this->parameters = $paramers;
+    $this->parameters = array_merge([ 'renderAs' => 'user',
+                                      'template' => 'blog',
+                                      'projectName' => '',
+                                      'projectId' => -1,
+                                      'musicianId' => -1 ],
+                                    $paramers);
     return $old;
   }
 

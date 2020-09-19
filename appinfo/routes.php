@@ -34,23 +34,23 @@ return [
         [
             'name' => 'page#index',
             'url' => '/',
-            'verb' => 'GET'
+            'verb' => 'GET',
         ],
         [
             'name' => 'page#loader',
-            'url' => '/loader/{template}',
+            'url' => '/page/loader/{renderAs}',
             'verb' => 'POST',
-            'defaults' => [ 'template' => 'blog' ]
+            'defaults' => [ 'renderAs' => 'user' ],
         ],
         [
             'name' => 'page#history',
-            'url' => '/history/{level}',
+            'url' => '/page/history/{level}',
             'verb' => 'POST',
             'defaults' => [ 'level' => 0 ]
         ],
         [
             'name' => 'page#debug',
-            'url' => '/debug',
+            'url' => '/page/debug',
             'verb' => 'GET',
         ],
         // internal "ajax" routes
