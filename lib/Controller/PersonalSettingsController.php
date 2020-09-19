@@ -29,6 +29,8 @@ use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IL10N;
 
+use OCA\CAFEVDB\Service\ConfigService;
+
 class PersonalSettingsController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
@@ -36,19 +38,35 @@ class PersonalSettingsController extends Controller {
   private $l;
 
   //@@TODO inject config via constructor
-  public function __construct($appName, IRequest $request, IConfig $containerConfig, IL10N $l) {
+  public function __construct($appName, IRequest $request, ConfigService $configService) {
     parent::__construct($appName, $request);
 
-    $this->containerConfig = $containerConfig;
-    $this->l = $l;
+    $this->configService = $configService;
+    $this->l = $this->l10N();
   }
 
   public function set($parameter, $value) {
+    $status = Http::STATUS_OK;
     switch ($parameter) {
+    case 'tooltips':
+      $tooltips = filter_var($value, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
+      if ($tooltips === null) {
+        return self::grumble($this->l->t('Value "%1$s" for set tooltips is not convertible to boolean', [$value]));
+      }
+      return self::response($this->l->t('Switching tooltips %1$s', [$tooltips ? 'on' : 'off']));
     default:
-      // generate error response
-      return new DataResponse(['message' => $this->l->t("Unknown Error)], Http::STATUS_BAD_REQUEST);
     }
+    return self::grumble($this->l->t('Unknown Request'));
+  }
+
+  static private function response($message, $status = Http::STATUS_OK)
+  {
+    return new DataResponse(['message' => $message], $status);
+  }
+
+  static private function grumble($message)
+  {
+    return self::response($message, Http::STATUS_BAD_REQUEST);
   }
 }
 
