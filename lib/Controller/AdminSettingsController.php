@@ -25,9 +25,10 @@ namespace OCA\CAFEVDB\Controller;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
-use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IL10N;
+
+use OCA\CAFEVDB\Service\ConfigService;
 
 class AdminSettingsController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -35,11 +36,11 @@ class AdminSettingsController extends Controller {
   /** @var IL10N */
   private $l;
 
-  public function __construct($appName, IRequest $request, IConfig $containerConfig, IL10N $l) {
+  public function __construct($appName, IRequest $request, ConfigService $configService) {
     parent::__construct($appName, $request);
 
-    $this->containerConfig = $containerConfig;
-    $this->l = $l;
+    $this->configService = $configService;
+    $this->l = $this->l10N();
   }
 
   public function set($orchestraUserGroup) {

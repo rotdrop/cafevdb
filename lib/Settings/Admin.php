@@ -24,34 +24,24 @@ namespace OCA\CAFEVDB\Settings;
 
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Settings\ISettings;
-use OCP\IConfig;
-use OCP\IURLGenerator;
-use OCP\IL10N;
+
+use OCA\CAFEVDB\Service\ConfigService;
 
 class Admin implements ISettings {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
   const TEMPLATE = "admin-settings";
 
-  /** @var IConfig */
-  private $containerConfig;
-
-  public function __construct(
-    $appName,
-    IConfig $containerConfig,
-    IL10N $l,
-    IURLGenerator $urlGenerator
-  ) {
-    $this->appName = $appName;
-    $this->containerConfig = $containerConfig;
+  public function __construct(ConfigService $configService) {
+    $this->configService = $configService;
   }
 
   public function getForm() {
     return new TemplateResponse(
-      $this->appName,
+      $this->appName(),
       self::TEMPLATE,
       [
-        'appName' => $this->appName,
+        'appName' => $this->appName(),
         'usergroup' => $this->getAppValue('usergroup'),
       ]);
   }
@@ -61,7 +51,7 @@ class Admin implements ISettings {
    * @since 9.1
    */
   public function getSection() {
-    return $this->appName;
+    return $this->appName();
   }
 
   /**
