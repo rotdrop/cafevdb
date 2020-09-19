@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -18,6 +18,8 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+// @@TODO these are rather personal settings
 
 $(document).ready(function() {
 
@@ -53,11 +55,14 @@ $(document).ready(function() {
   appNav.on('change', '#app-settings-tooltips', function(event) {
     event.preventDefault();
     var self = $(this);
-    var post = self.serialize();
     CAFEVDB.toolTipsOnOff(self.prop('checked'));
     $('#tooltips').prop('checked', CAFEVDB.toolTipsEnabled);
-    $.post(OC.filePath('cafevdb', 'ajax/settings', 'tooltips.php'),
-           post, function(data) {});
+    $.post(OC.generateUrl('/apps/cafevdb/settings/personal/set/tooltips'),
+           { 'value': CAFEVDB.toolTipsEnabled })
+    .done(function(data) {
+    })
+    .fail(function(data) {
+    });
     return false;
   });
 
