@@ -7,15 +7,19 @@ $(document).ready(function(){
 	var post = $("#cafevdb-admin-settings").serialize();
 	$.post(
           OC.generateUrl('/apps/cafevdb/settings/admin/set'),
-          post).done(function(data) {
+          post)
+        .done(function(data) {
           console.log(data);
 	  $('#cafevdb-admin-settings .msg').html(data.message);
           $('#cafevdb-admin-settings .msg').show();
         })
         .fail(function(jqXHR) {
-          console.log(JSON.parse(jqXHR.responseText));
-	  $('#cafevdb-admin-settings .msg').html(JSON.parse(jqXHR.responseText).message);
-          $('#cafevdb-admin-settings .msg').show();
+          const response = JSON.parse(jqXHR.responseText);
+          console.log(response);
+          if (response.message) {
+	    $('#cafevdb-admin-settings .msg').html(response.message);
+            $('#cafevdb-admin-settings .msg').show();
+          }
         });
     });
 });
