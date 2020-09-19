@@ -50,66 +50,77 @@ var CAFEVDB = CAFEVDB || {};
     $('body').removeClass('dialog-titlebar-clicked');
     CAFEVDB.modalizer(true),
     Page.busyIcon(true);
-    $.post(OC.filePath('cafevdb', 'ajax', 'page-loader.php'),
-           post,
-           function(data) {
-             if (!CAFEVDB.ajaxErrorHandler(data, [
-               'contents',
-               'history' ])) {
-               // re-enable inputs on error
-               if (false) {
-                 container.find('input').prop('disabled', false);
-                 container.find('select').prop('disabled', false);
-                 container.find('select').trigger('chosen:updated');
-               }
-               CAFEVDB.modalizer(false),
-               Page.busyIcon(false);
-               return false;
-             }
+    $.post(OC.generateUrl('/apps/cafevdb/page/loader/blank'), post)
+    .fail(function(jqXHR) {
+      const response = JSON.parse(jqXHR.responseText);
+      console.log(response);
+      if (response.message) {
+	$('#cafevdb-admin-settings .msg').html(response.message);
+            $('#cafevdb-admin-settings .msg').show();
+      }
+    })
+    .done(function(data) {
+      console.log(data);
+      if (!CAFEVDB.ajaxErrorHandler(
+        { 'data': data,
+          'status': 'success'
+        }, [ 'contents',
+             'history' ])
+         ) {
+        // re-enable inputs on error
+        if (false) {
+          container.find('input').prop('disabled', false);
+          container.find('select').prop('disabled', false);
+          container.find('select').trigger('chosen:updated');
+        }
+        CAFEVDB.modalizer(false),
+        Page.busyIcon(false);
+        return false;
+      }
 
-             // Remove pending dialog when moving away from the page
-             $('.ui-dialog-content').dialog('destroy').remove();
+      // Remove pending dialog when moving away from the page
+      $('.ui-dialog-content').dialog('destroy').remove();
 
-             CAFEVDB.Page.historyPosition = data.data.history.position;
-             CAFEVDB.Page.historySize = data.data.history.size;
+      CAFEVDB.Page.historyPosition = data.history.position;
+      CAFEVDB.Page.historySize = data.history.size;
 
-             // remove left-over notifications
-             OC.Notification.hide();
+      // remove left-over notifications
+      CAFEVDB.Notification.hide();
 
-             // remove left-over tool-tips
-             $.fn.cafevTooltip.remove();
+      // remove left-over tool-tips
+      $.fn.cafevTooltip.remove();
 
-             // This is a "complete" page reload, so inject the
-             // contents into #contents.
-             //
-             // avoid overriding event handler, although this should
-             // be somewhat slower than replacing everything in one run.
+      // This is a "complete" page reload, so inject the
+      // contents into #contents.
+      //
+      // avoid overriding event handler, although this should
+      // be somewhat slower than replacing everything in one run.
 
-             var newContent = $('<div>'+data.data.contents+'</div>');
-             var newAppContent = newContent.find('#app-content').children();
-             var newAppNavigation = newContent.find('#app-navigation').children();
+      var newContent = $('<div>'+data.contents+'</div>');
+      var newAppContent = newContent.find('#app-content').children();
+      var newAppNavigation = newContent.find('#app-navigation').children();
 
-             // remember the navigation toggle
-             var navToggle = $('#app-navigation-toggle').detach();
-             navToggle.addClass('tooltip-right');
+      // remember the navigation toggle
+      var navToggle = $('#app-navigation-toggle').detach();
+      navToggle.addClass('tooltip-auto');
 
-             $('#app-navigation').empty().prepend(newAppNavigation);
-             $('#app-content').empty().prepend(newAppContent);
-             $('#app-content').prepend(navToggle);
+      $('#app-navigation').empty().prepend(newAppNavigation);
+      $('#app-content').empty().prepend(newAppContent);
+      $('#app-content').prepend(navToggle);
 
-             CAFEVDB.snapperClose();
-             CAFEVDB.modalizer(false),
-             Page.busyIcon(false);
+      CAFEVDB.snapperClose();
+      CAFEVDB.modalizer(false),
+      Page.busyIcon(false);
 
-             console.log('after snapper clone.');
+      console.log('after snapper clone.');
 
-             CAFEVDB.runReadyCallbacks();
-             if (typeof afterLoadCallback == 'function') {
-               afterLoadCallback();
-             }
+      CAFEVDB.runReadyCallbacks();
+      if (typeof afterLoadCallback == 'function') {
+        afterLoadCallback();
+      }
 
-             return false;
-           });
+      return false;
+    });
   };
 
   Page.updateHistoryControls = function() {
@@ -151,7 +162,7 @@ $(document).ready(function(){
                var pmeReload = content.find('form.pme-form input.pme-reload').first();
                if (pmeReload.length > 0) {
                  // remove left-over notifications
-                 OC.Notification.hide();
+                 CAFEVDB.Notification.hide();
                  pmeReload.trigger('click');
                  $('body').removeClass('dialog-titlebar-clicked');
                } else {
