@@ -150,6 +150,7 @@ class PageController extends Controller {
     $usrFiltVis   = $this->getUserValue('filtervisibility', 'off');
     $directChg    = $this->getUserValue('directchange', 'off');
     $showDisabled = $this->getUserValue('showdisabled', 'off');
+    $expertMode   = $this->getUserValue('expertmode', false);
     $pageRows     = $this->getUserValue('pagerows', 20);
 
     // Filter visibility is stored here:
@@ -179,7 +180,7 @@ class PageController extends Controller {
       'groupadmin' => $this->isSubAdminOfGroup(),
       'usergroup' => $this->groupId(),
       'user' => $this->userId(),
-      'expertmode' => $this->getUserValue('expertmode', false),
+      'expertmode' => $expertMode,
       'tooltips' => $tooltips,
       'encryptionkey' => $encrkey,
       'uploadMaxFilesize' => Util::maxUploadSize(),

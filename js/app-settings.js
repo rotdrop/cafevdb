@@ -56,7 +56,6 @@ $(document).ready(function() {
     event.preventDefault();
     var self = $(this);
     CAFEVDB.toolTipsOnOff(self.prop('checked'));
-    $('#tooltips').prop('checked', CAFEVDB.toolTipsEnabled);
     $.post(OC.generateUrl('/apps/cafevdb/settings/personal/set/tooltips'),
            { 'value': CAFEVDB.toolTipsEnabled })
     .done(function(data) {
@@ -65,19 +64,22 @@ $(document).ready(function() {
     .fail(function(data) {
       console.log(data);
     });
+    $('#tooltips').prop('checked', CAFEVDB.toolTipsEnabled);
     return false;
   });
 
   appNav.on('change', '#app-settings-filtervisibility', function(event) {
     event.preventDefault();
-    var self = $(this);
-    var post = self.serialize();
-    $.post(OC.filePath('cafevdb', 'ajax/settings', 'filtervisibility.php'),
-           post,
-           function(data) {
-             return;
-           });
-    var checked = self.prop('checked');
+    const self = $(this);
+    const checked = self.prop('checked');
+    $.post(OC.generateUrl('/apps/cafevdb/settings/personal/set/filtervisibility'),
+           { 'value': checked })
+    .done(function(data) {
+      console.log(data);
+    })
+    .fail(function(data) {
+      console.log(data);
+    });
     if (checked) {
       $('input.pme-search').trigger('click');
     } else {
@@ -90,13 +92,15 @@ $(document).ready(function() {
   appNav.on('change', '#app-settings-directchange', function(event) {
     event.preventDefault();
     var self = $(this);
-    var post = self.serialize();
-    $.post(OC.filePath('cafevdb', 'ajax/settings', 'directchange.php'),
-           post,
-           function(data) {
-             return;
-           });
     var checked = self.prop('checked')
+    $.post(OC.generateUrl('/apps/cafevdb/settings/personal/set/directchange'),
+           { 'value': checked })
+    .done(function(data) {
+      console.log(data);
+    })
+    .fail(function(data) {
+      console.log(data);
+    });
     PHPMYEDIT.directChange = checked;
     $('#directchange').prop('checked', checked);
     return false;
@@ -105,26 +109,30 @@ $(document).ready(function() {
   appNav.on('change', '#app-settings-showdisabled', function(event) {
     event.preventDefault();
     var self = $(this);
-    var post = self.serialize();
-    $.post(OC.filePath('cafevdb', 'ajax/settings', 'showdisabled.php'),
-           post,
-           function(data) {
-             var pme = PHPMYEDIT;
-             var pmeForm = $('#content '+pme.formSelector()+'.show-hide-disabled');
-             console.log('form',pmeForm);
-             pmeForm.each(function(index) {
-                       var form = $(this);
-                       var reload = form.find(pme.pmeClassSelector('input', 'reload')).first();
-                       if (reload.length > 0) {
-                         form.append('<input type="hidden"'
-                                    + ' name="'+pme.pmeSys('sw')+'"'
-                                    + ' value="Clear"/>');
-                         reload.trigger('click');
-                       }
-                     });
-             return;
-           });
     var checked = self.prop('checked')
+    var post = self.serialize();
+    $.post(OC.generateUrl('/apps/cafevdb/settings/personal/set/showdisabled'),
+           { 'value': checked })
+    .done(function(data) {
+      console.log(data);
+      var pme = PHPMYEDIT;
+      var pmeForm = $('#content '+pme.formSelector()+'.show-hide-disabled');
+      console.log('form',pmeForm);
+      pmeForm.each(function(index) {
+        var form = $(this);
+        var reload = form.find(pme.pmeClassSelector('input', 'reload')).first();
+        if (reload.length > 0) {
+          form.append('<input type="hidden"'
+                     + ' name="'+pme.pmeSys('sw')+'"'
+                     + ' value="Clear"/>');
+          reload.trigger('click');
+        }
+      });
+      return;
+    })
+    .fail(function(data) {
+      console.log(data);
+    });
     PHPMYEDIT.showdisabled = checked;
     $('#showdisabled').prop('checked', checked);
     return false;
@@ -133,18 +141,21 @@ $(document).ready(function() {
   appNav.on('change', '#app-settings-expertmode', function(event) {
     event.preventDefault();
     var self = $(this);
-    var post = self.serialize();
-    $.post(OC.filePath('cafevdb', 'ajax/settings', 'expertmode.php'),
-           post,
-           function(data) {
-             var pme = PHPMYEDIT;
-             var pmeForm = $('#content '+pme.formSelector());
-             pmeForm.each(function(index) {
-               var reload = $(this).find(pme.pmeClassSelector('input', 'reload')).first();
-               reload.trigger('click');
-             });
-           });
     var checked = self.prop('checked');
+    $.post(OC.generateUrl('/apps/cafevdb/settings/personal/set/expertmode'),
+           { 'value': checked })
+    .done(function(data) {
+      console.log(data);
+      var pme = PHPMYEDIT;
+      var pmeForm = $('#content '+pme.formSelector());
+      pmeForm.each(function(index) {
+        var reload = $(this).find(pme.pmeClassSelector('input', 'reload')).first();
+        reload.trigger('click');
+      });
+    })
+    .fail(function(data) {
+      console.log(data);
+    });
     if (checked) {
       $('#app-settings-content li.expertmode').removeClass('hidden');
       $('#app-settings-content select.debug-mode').trigger('chosen:updated');
@@ -159,10 +170,14 @@ $(document).ready(function() {
   appNav.on('change', '#app-settings-table-pagerows', function(event) {
     event.preventDefault();
     var self = $(this);
-    var post = self.serialize();
-    $.post(OC.filePath('cafevdb', 'ajax/settings', 'pagerows.php'),
-           post, function (data) {});
-
+    $.post(OC.generateUrl('/apps/cafevdb/settings/personal/set/pagerows'),
+           { 'value': self.val() })
+    .done(function(data) {
+      console.log(data);
+    })
+    .fail(function(data) {
+      console.log(data);
+    });
     return false;
   });
 
@@ -194,16 +209,18 @@ $(document).ready(function() {
 
   appNav.on('change', 'select#app-settings-debugmode', function(event) {
     event.preventDefault();
-    var select = $(this);
-    $.post(OC.filePath('cafevdb', 'ajax/settings', 'debugmode.php'),
-           { debugModes: select.val() },
-           function(data) {
-             if (data.status == 'success') {
-               CAFEVDB.debugModes = data.data.value;
-             }
-             return false;
-           }, 'json');
-
+    const self = $(this);
+    var post = self.serializeArray();
+    console.log(post);
+    $.post(OC.generateUrl('/apps/cafevdb/settings/personal/set/debugmode'),
+           { 'value': post })
+    .done(function(data) {
+      console.log(data);
+      CAFEVDB.debugModes = data.value;
+    })
+    .fail(function(data) {
+      console.log(data);
+    });
     return false;
   });
 

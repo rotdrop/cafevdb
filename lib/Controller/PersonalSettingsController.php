@@ -49,11 +49,43 @@ class PersonalSettingsController extends Controller {
     $status = Http::STATUS_OK;
     switch ($parameter) {
     case 'tooltips':
-      $tooltips = filter_var($value, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
-      if ($tooltips === null) {
-        return self::grumble($this->l->t('Value "%1$s" for set tooltips is not convertible to boolean', [$value]));
+    case 'filtervisibility':
+    case 'directchange':
+    case 'showdisabled':
+    case 'expertmode':
+      $realValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
+      if ($realValue === null) {
+        return self::grumble($this->l->t('Value "%1$s" for set "%2$s" is not convertible to boolean', [$value, $parameter]));
       }
-      return self::response($this->l->t('Switching tooltips %1$s', [$tooltips ? 'on' : 'off']));
+      $stringValue = $realValue ? 'on' : 'off';
+      $this->setUserValue($parameter, $stringValue);
+      return self::response($this->l->t('Switching %2$s %1$s', [$stringValue, $parameter]));
+    case 'pagerows':
+      $realValue = filter_var($value, FILTER_VALIDATE_INT, ['min_range' => -1]);
+      if ($realValue === false) {
+        return self::grumble($this->l->t('Value "%1$s" for set "%2$s" is not in the allowed range', [$value, $parameter]));
+      }
+      $this->setUserValue($parameter, $realValue);
+      return self::response($this->l->t('Setting %2$s to %1$s', [$realValue, $parameter]));
+    case 'debugmode':
+      if (!is_array($value)) {
+        $debugModes = [];
+      } else {
+        $debugModes = $value;
+      }
+      trigger_error(print_r($debugModes, true));
+      $debug = 0;
+      foreach ($debugModes as $item) {
+        $debug |= $item['value'];
+      }
+      if ($debug > ConfigService::DEBUG_ALL) {
+        return grumble($this->l->t('Unknown debug modes in request: %s$s', [print_r($debugModes, true)]));
+      }
+      $this->setUserValue('debug', $debug);
+      return new DataResponse([
+        'message' => $this->l->t('Setting %2$s to %1$s', [$debug, 'debug']),
+        'value' => $debug
+        ]);
     default:
     }
     return self::grumble($this->l->t('Unknown Request'));

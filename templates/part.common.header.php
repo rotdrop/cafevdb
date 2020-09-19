@@ -24,6 +24,7 @@ namespace OCA\CAFEVDB;
 
 use OCA\CAFEVDB\Common\Navigation;
 use OCA\CAFEVDB\Common\Config;
+use OCA\CAFEVDB\Service\ConfigService;
 
 /******************************************************************************
  *
@@ -78,11 +79,11 @@ if ($pageRows > $maxRows) {
     $pageRows = 0;
 }
 
-$debugModes = array('general' => $l->t('General Information'),
-                    'query' => $l->t('SQL Queries'),
-                    'request' => $l->t('HTTP Request'),
-                    'tooltips' => $l->t('Missing Context Help'),
-                    'emailform' => $l->t('Mass Email Form'));
+$debugModes = array(ConfigService::DEBUG_GENERAL => $l->t('General Information'),
+                    ConfigService::DEBUG_QUERY => $l->t('SQL Queries'),
+                    ConfigService::DEBUG_REQUEST => $l->t('HTTP Request'),
+                    ConfigService::DEBUG_TOOLTIPS => $l->t('Missing Context Help'),
+                    ConfigService::DEBUG_EMAILFORM => $l->t('Mass Email Form'));
 
 $navigationControls = Navigation::buttonsFromArray(
     array(
@@ -136,7 +137,7 @@ if (!isset($_['headerblock']) && isset($_['header'])) {
 
 $expertClass = 'expertmode'.($_['expertmode'] != 'on' ? ' hidden' : '');
 
-$sideBarToolTipPos = 'auto';
+$sideBarToolTipPos = 'top';
 ?>
 
 <div id="app-navigation" class="app-navigation snapper-enabled">
