@@ -1290,7 +1290,7 @@ var CAFEVDB = CAFEVDB || {};
   };
 
   CAFEVDB.snapperClose = function() {
-    $('#app-navigation-toggle').trigger('snapjs:close').cafevTooltip('hide');
+    $('#app-navigation-toggle').trigger('snapjs:close');
   };
 
   /**Initialize our tipsy stuff. Only exchange for our own thingies, of course.
