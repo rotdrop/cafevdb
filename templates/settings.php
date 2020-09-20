@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -20,57 +20,55 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace CAFEVDB
-{
+namespace OCA\CAFEVDB;
 
-  echo Util::emitExternalScripts();
-  echo Util::emitInlineScripts();
+use OCA\CAFEVDB\Common\Config;
 
-  $tooltipstitle  = Config::tooltips('show-tool-tips');
-  $filtervistitle = Config::tooltips('filter-visibility');
-  $directchgtitle = Config::tooltips('direct-change');
-  $showdistitle   = Config::tooltips('show-disabled');
-  $pagerowstitle  = Config::tooltips('table-rows-per-page');
-  $experttitle    = Config::tooltips('expert-operations');
-  $debugtitle     = Config::tooltips('debug-mode');
+$tooltipstitle  = Config::tooltips('show-tool-tips');
+$filtervistitle = Config::tooltips('filter-visibility');
+$directchgtitle = Config::tooltips('direct-change');
+$showdistitle   = Config::tooltips('show-disabled');
+$pagerowstitle  = Config::tooltips('table-rows-per-page');
+$experttitle    = Config::tooltips('expert-operations');
+$debugtitle     = Config::tooltips('debug-mode');
 
-  $debugModes = array('general' => L::t('General Information'),
-                      'query' => L::t('SQL Queries'),
-                      'request' => L::t('HTTP Request'),
-                      'tooltips' => L::t('Missing Context Help'),
-                      'emailform' => L::t('Mass Email Form'));
+$debugModes = array(ConfigService::DEBUG_GENERAL => $l->t('General Information'),
+                    ConfigService::DEBUG_QUERY => $l->t('SQL Queries'),
+                    ConfigService::DEBUG_REQUEST => $l->t('HTTP Request'),
+                    ConfigService::DEBUG_TOOLTIPS => $l->t('Missing Context Help'),
+                    ConfigService::DEBUG_EMAILFORM => $l->t('Mass Email Form'));
 
-  $pageRows = floor($_['pagerows'] / 10) * 10;
-  $pageRowsOptions = array(-1 => '&infin;');
-  $maxRows = 100;
-  for ($i = 10; $i <= $maxRows; $i += 10) {
+$pageRows = floor($_['pagerows'] / 10) * 10;
+$pageRowsOptions = array(-1 => '&infin;');
+$maxRows = 100;
+for ($i = 10; $i <= $maxRows; $i += 10) {
     $pageRowsOptions[$i] = $i;
-  }
-  if ($pageRows > $maxRows) {
+}
+if ($pageRows > $maxRows) {
     $pageRows = 0;
-  }
+}
 
-  Config::init();
-  $timezone = Util::getTimezone();
-  $locale = Util::getLocale();
-  date_default_timezone_set($timezone);
-  $timestamp = strftime('%Y%m%d-%H%M%S');
-  $oldlocale = setlocale(LC_TIME, $locale);
-  $time = strftime('%x %X');
-  setlocale(LC_TIME, $oldlocale);
+//$timezone = Util::getTimezone(); set from template
+//$locale = Util::getLocale(); set from tmplate
+
+date_default_timezone_set($timezone);
+$timestamp = strftime('%Y%m%d-%H%M%S');
+$oldlocale = setlocale(LC_TIME, $locale);
+$time = strftime('%x %X');
+setlocale(LC_TIME, $oldlocale);
 
 ?>
   <ul id="adminsettingstabs">
-    <li><a href="#tabs-1"><?php echo L::t('Personal'); ?></a></li>
+    <li><a href="#tabs-1"><?php echo $l->t('Personal'); ?></a></li>
     <?php $tabNo = 2; if ($_['adminsettings']) { ?>
-      <li><a href="#tabs-<?php echo $tabNo++; ?>"><?php echo L::t('Orchestra'); ?></a></li>
-      <li><a href="#tabs-<?php echo $tabNo++; ?>"><?php echo L::t('Data-Base'); ?></a></li>
-      <li><a href="#tabs-<?php echo $tabNo++; ?>"><?php echo L::t('Sharing'); ?></a></li>
-      <li><a href="#tabs-<?php echo $tabNo++; ?>"><?php echo L::t('Email'); ?></a></li>
-      <li><a href="#tabs-<?php echo $tabNo++; ?>"><?php echo L::t('Development'); ?></a></li>
-      <li><a href="#tabs-<?php echo $tabNo++; ?>"><?php echo L::t('CMS'); ?></a></li>
+      <li><a href="#tabs-<?php echo $tabNo++; ?>"><?php echo $l->t('Orchestra'); ?></a></li>
+      <li><a href="#tabs-<?php echo $tabNo++; ?>"><?php echo $l->t('Data-Base'); ?></a></li>
+      <li><a href="#tabs-<?php echo $tabNo++; ?>"><?php echo $l->t('Sharing'); ?></a></li>
+      <li><a href="#tabs-<?php echo $tabNo++; ?>"><?php echo $l->t('Email'); ?></a></li>
+      <li><a href="#tabs-<?php echo $tabNo++; ?>"><?php echo $l->t('Development'); ?></a></li>
+      <li><a href="#tabs-<?php echo $tabNo++; ?>"><?php echo $l->t('CMS'); ?></a></li>
     <?php } ?>
-    <li><a href="#tabs-<?php echo $tabNo++; ?>"><?php echo L::t('?'); ?></a></li>
+    <li><a href="#tabs-<?php echo $tabNo++; ?>"><?php echo $l->t('?'); ?></a></li>
   </ul>
 
   <div id="tabs-1" class="personalblock <?php if ($_['adminsettings']) echo 'admin'; ?>">
@@ -83,7 +81,7 @@ namespace CAFEVDB
              title="<?php echo Config::tooltips('show-tool-tips'); ?>"
              />
       <label for="tooltips" title="<?php echo $tooltipstitle; ?>">
-        <?php echo L::t('Tool-Tips') ?>
+        <?php echo $l->t('Tool-Tips') ?>
       </label>
       <br />
       <input id="filtervisibility"
@@ -93,7 +91,7 @@ namespace CAFEVDB
              title="<?php echo $filtervistitle ?>"
              />
       <label for="filtervisibility" title="<?php echo $filtervistitle; ?>">
-        <?php echo L::t('Filter-Controls') ?>
+        <?php echo $l->t('Filter-Controls') ?>
       </label>
       <br />
       <input id="directchange"
@@ -103,7 +101,7 @@ namespace CAFEVDB
              title="<?php echo $directchgtitle ?>"
              />
       <label for="directchange" title="<?php echo $directchgtitle; ?>">
-        <?php echo L::t('Quick Change-Dialog') ?>
+        <?php echo $l->t('Quick Change-Dialog') ?>
       </label>
       <br />
       <input id="showdisabled"
@@ -113,12 +111,12 @@ namespace CAFEVDB
              title="<?php echo $showdistitle ?>"
              />
       <label for="showdisabled" title="<?php echo $showdistitle; ?>">
-        <?php echo L::t('Show Disabled Data-Sets'); ?>
+        <?php echo $l->t('Show Disabled Data-Sets'); ?>
       </label>
       <br />
       <div class="table-pagerows settings-control">
         <select name="pagerows"
-                data-placeholder="<?php echo L::t('#Rows'); ?>"
+                data-placeholder="<?php echo $l->t('#Rows'); ?>"
                 class="table-pagerows"
                 id="table-pagerows"
                 title="<?php echo $pagerowstitle; ?>">
@@ -130,12 +128,12 @@ namespace CAFEVDB
           ?>
         </select>
         <label for="table-pagerows" title="<?php echo $pagerowstitle; ?>">
-          <?php echo L::t('Display #Rows/Page in Tables'); ?>
+          <?php echo $l->t('Display #Rows/Page in Tables'); ?>
         </label>
       </div>
       <div class="wysiwygeditor settings-control">
         <select name="wysiwygEditor"
-                data-placeholder="<?php echo L::t('WYSIWYG Editor'); ?>"
+                data-placeholder="<?php echo $l->t('WYSIWYG Editor'); ?>"
                 class="wysiwyg-editor"
                 title="<?php echo Config::toolTips('wysiwyg-edtior'); ?>">
           <?php
@@ -153,13 +151,13 @@ namespace CAFEVDB
              id="expertmode" title="<?php echo $experttitle ?>"
              />
       <label for="expertmode" title="<?php echo $experttitle; ?>">
-        <?php echo L::t('Expert-Mode') ?>
+        <?php echo $l->t('Expert-Mode') ?>
       </label>
       <br />
       <select <?php echo ($_['expertmode'] != 'on' ? 'disabled="disabled"' : '') ?>
         multiple
         name="debugmode"
-        data-placeholder="<?php echo L::t('Enable Debug Mode'); ?>"
+        data-placeholder="<?php echo $l->t('Enable Debug Mode'); ?>"
         class="debug-mode"
         title="<?php echo $debugtitle; ?>">
         <?php
@@ -169,22 +167,22 @@ namespace CAFEVDB
         ?>
       </select>
       <br />
-      <input type="text" style="display:none;width:0%;float: left;" name="dummy" id="dummy" value="dummy" placeholder="dummy" title="<?php echo L::t('Dummy'); ?>" />
+      <input type="text" style="display:none;width:0%;float: left;" name="dummy" id="dummy" value="dummy" placeholder="dummy" title="<?php echo $l->t('Dummy'); ?>" />
       <span class="statusmessage" id="msg"></span>
     </form>
     <form id="userkey">
-      <input class="cafevdb-password" type="password" id="password" name="password" placeholder="<?php echo L::t('Own Password');?>" data-typetoggle="#password-show" />
+      <input class="cafevdb-password" type="password" id="password" name="password" placeholder="<?php echo $l->t('Own Password');?>" data-typetoggle="#password-show" />
       <input class="cafevdb-password-show" type="checkbox" id="password-show" name="password-show" />
-      <label class="cafevdb-password-show" for="password-show"><?php echo L::t('show');?></label>
-      <input class="cafevdb-password" type="password" id="encryptionkey" name="encryptionkey" value="<?php echo (true ? '' : $_['encryptionkey']); ?>" placeholder="<?php echo L::t('DB Encryption Key');?>" data-typetoggle="#userkey-show" />
+      <label class="cafevdb-password-show" for="password-show"><?php echo $l->t('show');?></label>
+      <input class="cafevdb-password" type="password" id="encryptionkey" name="encryptionkey" value="<?php echo (true ? '' : $_['encryptionkey']); ?>" placeholder="<?php echo $l->t('DB Encryption Key');?>" data-typetoggle="#userkey-show" />
       <input class="cafevdb-password-show" type="checkbox" id="userkey-show" name="userkey-show" />
-      <label class="cafevdb-password-show" for="userkey-show"><?php echo L::t('show');?></label>
-      <input id="button" type="button" value="<?php echo L::t('Set Encryption Key');?>" />
-      <div class="statusmessage" id="changed"><?php echo L::t('The encryption key has been set successfully.');?></div>
-      <div class="statusmessage" id="error"><?php echo L::t('Unable to set the encryption key.');?></div>
+      <label class="cafevdb-password-show" for="userkey-show"><?php echo $l->t('show');?></label>
+      <input id="button" type="button" value="<?php echo $l->t('Set Encryption Key');?>" />
+      <div class="statusmessage" id="changed"><?php echo $l->t('The encryption key has been set successfully.');?></div>
+      <div class="statusmessage" id="error"><?php echo $l->t('Unable to set the encryption key.');?></div>
     </form>
     <div class="locale information">
-      <span class="locale heading"><?php echo L::t('Locale Information:'); ?></span>
+      <span class="locale heading"><?php echo $l->t('Locale Information:'); ?></span>
       <span class="locale timestamp"><?php echo $timestamp; ?></span>
       <span class="locale time"><?php echo $time; ?></span>
       <span class="locale timezone"><?php echo $timezone; ?></span>
