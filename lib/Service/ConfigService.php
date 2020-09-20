@@ -30,6 +30,8 @@ use OCP\IUserManager;
 use OCP\IGroupManager;
 use OCP\Group\ISubAdmin;
 use OCP\IURLGenerator;
+use OCP\L10N\IFactory;
+use OCP\IDateTimeZone;
 
 class ConfigService {
   const DEBUG_GENERAL   = (1 << 0);
@@ -67,8 +69,14 @@ class ConfigService {
   /** @var IL10N */
   private $l;
 
+  /** @var IFactory */
+  private $iFactory;
+
   /** @var IURLGenerator */
   private $urlGenerator;
+
+  /** @var IDateTimeZone */
+  private $dateTimeZone;
 
   public function __construct(
     $appName,
@@ -78,6 +86,8 @@ class ConfigService {
     IGroupManager $groupManager,
     ISubAdmin $groupSubAdmin,
     IURLGenerator $urlGenerator,
+    IFactory $iFactory,
+    IDateTimeZone $dateTimeZone,
     IL10N $l
   ) {
 
@@ -88,6 +98,8 @@ class ConfigService {
     $this->groupManager = $groupManager;
     $this->groupSubAdmin = $groupSubAdmin;
     $this->urlGenerator = $urlGenerator;
+    $this->iFactoy = $iFactory;
+    $this->dateTimeZone = $dateTimeZone;
     $this->l = $l;
 
     $this->user = $this->userSession->getUser();
@@ -180,6 +192,41 @@ class ConfigService {
   public function getIcon() {
     // @@TODO make it configurable
     return $this->urlGenerator->imagePath($this->appName, 'logo-greyf.svg');
+  }
+
+  public function getDateTimeZone($timeStamp = null) {
+    $this->dateTimeZone->getTimeZone($timeStamp);
+  }
+
+  /**Return the locale. */
+  public function getLocale($lang = null)
+  {
+    if (empty($lang)) {
+      $lang = $this->iFactory->findLanguage($this->appName);
+    }
+    $locale = $lang.'_'.strtoupper($lang).'.UTF-8';
+    return $locale;
+  }
+
+  /**Return the currency symbol for the locale. */
+  public function currencySymbol($locale = null)
+  {
+    if (empty($locale)) {
+      $locale = self::getLocale();
+    }
+    $fmt = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
+    return $fmt->getSymbol(\NumberFormatter::CURRENCY_SYMBOL);
+  }
+
+  //!Just display the given value
+  public function moneyValue($value, $locale = null)
+  {
+    $oldlocale = setlocale(LC_MONETARY, '0');
+    empty($locale) && $locale = $this->getLocale();
+    setlocale(LC_MONETARY, $locale);
+    $result = money_format('%n', (float)$value);
+    setlocale(LC_MONETARY, $oldlocale);
+    return $result;
   }
 }
 
