@@ -95,16 +95,11 @@ var CAFEVDB = CAFEVDB || {};
       // be somewhat slower than replacing everything in one run.
 
       var newContent = $('<div>'+data.contents+'</div>');
-      var newAppContent = newContent.find('#app-content').children();
+      var newAppContent = newContent.find('#app-inner-content').children();
       var newAppNavigation = newContent.find('#app-navigation').children();
 
-      // remember the navigation toggle
-      var navToggle = $('#app-navigation-toggle').detach();
-      navToggle.addClass('tooltip-auto');
-
       $('#app-navigation').empty().prepend(newAppNavigation);
-      $('#app-content').empty().prepend(newAppContent);
-      $('#app-content').prepend(navToggle);
+      $('#app-inner-content').empty().prepend(newAppContent);
 
       CAFEVDB.snapperClose();
       CAFEVDB.modalizer(false),
@@ -134,9 +129,9 @@ var CAFEVDB = CAFEVDB || {};
 
 $(document).ready(function(){
 
-  var content = $('#content');
+  var appInnerContent = $('#app-inner-content');
 
-  content.on('click', '.ui-dialog-titlebar', function(event) {
+  appInnerContent.on('click', '.ui-dialog-titlebar', function(event) {
     $('body').toggleClass('dialog-titlebar-clicked');
     return false;
   });
@@ -146,11 +141,11 @@ $(document).ready(function(){
     $(this).cafevTooltip('hide')
   });
 
-  content.on('click keydown',
+  appInnerContent.on('click keydown',
              '#personalsettings .navigation.reload',
              function(event) {
                event.stopImmediatePropagation();
-               var pmeReload = content.find('form.pme-form input.pme-reload').first();
+               var pmeReload = appInnerContent.find('form.pme-form input.pme-reload').first();
                if (pmeReload.length > 0) {
                  // remove left-over notifications
                  CAFEVDB.Notification.hide();
@@ -164,7 +159,7 @@ $(document).ready(function(){
                return false;
              });
 
-  content.on('click keydown',
+  appInnerContent.on('click keydown',
              '#personalsettings .navigation.undo',
              function(event) {
                event.stopImmediatePropagation();
@@ -174,7 +169,7 @@ $(document).ready(function(){
                return false;
              });
 
-  content.on('click keydown',
+  appInnerContent.on('click keydown',
              '#personalsettings .navigation.redo',
              function(event) {
                event.stopImmediatePropagation();
@@ -189,7 +184,7 @@ $(document).ready(function(){
     $('#app-navigation-toggle').
       attr('title', t('cafevdb', 'Display the application menu and settings side-bar')).
       cafevTooltip({
-        placement: 'bottom auto',
+        placement: 'auto',
         container: '#app-content'
       });
     CAFEVDB.Page.updateHistoryControls();

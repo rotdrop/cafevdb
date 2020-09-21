@@ -815,7 +815,7 @@ var CAFEVDB = CAFEVDB || {};
     CAFEVDB.selectMenuReset(select);
     $.fn.cafevTooltip.remove();
 
-    $('div.chosen-container').cafevTooltip({placement:'auto top'});
+    $('div.chosen-container').cafevTooltip({placement:'auto'});
 
     return false;
 
@@ -924,7 +924,7 @@ var CAFEVDB = CAFEVDB || {};
                          icons: { primary: 'ui-icon-minusthick', secondary: null },
                          text: false});
     dialogWidget.find('.ui-dialog-titlebar').append(toBackButton);
-    toBackButton.cafevTooltip({placement:'auto bottom' });
+    toBackButton.cafevTooltip({placement:'auto' });
 
     toBackButton.off('click');
     toBackButton.on('click', function() {
@@ -975,7 +975,7 @@ var CAFEVDB = CAFEVDB || {};
                               icons: { primary: 'ui-icon-closethick', secondary: null },
                               text: false});
     dialogWidget.find('.ui-dialog-titlebar').append(customCloseButton);
-    customCloseButton.cafevTooltip({placement:'auto bottom' });
+    customCloseButton.cafevTooltip({placement:'auto' });
 
     customCloseButton.off('click');
     customCloseButton.on('click', function(event) {
@@ -1200,11 +1200,11 @@ var CAFEVDB = CAFEVDB || {};
     var defaultOptions = {
         container:'body',
         html:true,
-        placement:'auto top'
+        placement:'auto'
     };
     options = $.extend({}, defaultOptions, options);
-    if (typeof options.placement == 'string' && !options.placement.match(/auto/)) {
-      options.placement = 'auto '+options.placement;
+    if (typeof options.placement == 'string') {
+      options.placement = options.placement;
     }
     return $(selector).cafevTooltip(options);
   };
@@ -1235,7 +1235,7 @@ var CAFEVDB = CAFEVDB || {};
     $.fn.cafevTooltip.remove();
 
     // fetch suitable options from the elements class attribute
-    var classOptions = { placement:'auto top',
+    var classOptions = { placement:'auto',
                          html: true };
     var classAttr = element.attr('class');
     var extraClass = false;
@@ -1254,7 +1254,7 @@ var CAFEVDB = CAFEVDB || {};
           var tooltipClass = tooltipClasses[idx];
           var placement = tooltipClass.match(/^tooltip-(bottom|top|right|left)$/);
           if (placement && placement.length == 2 && placement[1].length > 0) {
-            classOptions.placement = 'auto '+placement[1];
+            classOptions.placement = placement[1];
             continue;
           }
           extraClass = tooltipClass;
@@ -1440,49 +1440,35 @@ $(document).ready(function(){
     return false;
   });
 
-  // install delegate handlers ...
+  /****************************************************************************
+   *
+   * Add handlers as delegates. Note however that the snapper is
+   * attached to #app-content below #content, so it is not possible to
+   * prevent the snapper events. If we want to change this we have to
+   * insert another div-container inside #app-content.
+   *
+   */
   var content = $('#content');
+  var appInnerContent = $('#app-inner-content');
 
-  content.on('click keydown', '#personalsettings .generalsettings',
+  appInnerContent.on('click keydown', '#personalsettings .tooltips',
              function(event) {
-               event.preventDefault();
-
-               $("#appsettings").tabs({ selected: 0});
-
-               OC.appSettings({
-                 appid:'cafevdb',
-                 loadJS:true,
-                 cache:false,
-                 scriptName:'settings.php'
-               });
-             });
-
-  content.on('click keydown', '#personalsettings .expert',
-             function(event) {
-               event.preventDefault();
-               OC.appSettings({
-                 appid:'cafevdb',
-                 loadJS:'expertmode.js',
-                 cache:false,
-                 scriptName:'expert.php'
-               });
-             });
-
-  content.on('click keydown', '#personalsettings .tooltips',
-             function(event) {
-               event.preventDefault();
                $('body').removeClass('dialog-titlebar-clicked');
                var self = $(this);
                CAFEVDB.toolTipsOnOff(self.hasClass('tooltips-disabled'));
-               $.post(OC.filePath('cafevdb', 'ajax/settings', 'tooltips.php'),
-                      self.hasClass('tooltips-disabled') ? { tooltips: 'off' } : { tooltips: 'on' },
-                      function(data) {});
+	       $.post(OC.generateUrl('/apps/cafevdb/settings/personal/set/tooltips'),
+		      { 'value': CAFEVDB.toolTipsEnabled })
+		 .done(function(data) {
+		   console.log(data);
+		 })
+		 .fail(function(data) {
+		   console.log(data);
+		 });
                return false;
              });
 
   content.on('click', ':button.events',
              function(event) {
-               event.preventDefault();
                if ($('#events').dialog('isOpen') == true) {
                  $('#events').dialog('close').remove();
                } else {
@@ -1509,8 +1495,6 @@ $(document).ready(function(){
   // Display the instrumentation numbers in a dialog widget
   content.on('click', 'ul#navigation-list li.nav-projectinstrumentscontrol a',
              function(event) {
-               event.stopImmediatePropagation();
-
                var data = $(this).data('json');
                CAFEVDB.Projects.instrumentationNumbersPopup(PHPMYEDIT.defaultSelector, data);
                return false;

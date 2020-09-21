@@ -286,23 +286,24 @@ $sideBarToolTipPos = 'top';
   </div>
 </div>
 <div id="app-content">
-  <form id="personalsettings" class="visible" method="post" action="?app=<?php echo $_['appName']; ?>">
-    <input type="hidden" name="requesttoken" value="<?php p($_['requesttoken']); ?>" />
-    <input type="hidden" name="template" value="<?php p($template); ?>" />
-    <?php echo $navigationControls; ?>
-    <div class="buttonseparator"></div>
-    <?php echo $settingsControls; ?>
-  </form>
-  <div id="controls"></div> <!-- needed to have space for navigation buttons -->
-  <div class="cafevdb-general" data-snap-ignore="true" id="cafevdb-general"> <!-- used to eliminate the pixel-size of the control bar -->
-    <?php echo isset($_['headerblock']) ? '<!-- ' : ''; ?>
-    <div id="<?php echo $css_pfx; ?>-header-box" class="<?php echo $css_pfx; ?>-header-box <?php echo $css_class; ?>">
-      <div id="<?php echo $css_pfx; ?>-header" class="<?php echo $css_pfx; ?>-header <?php echo $css_class; ?>">
-        <?php echo $header; ?>
+  <div id="app-inner-content">
+    <form id="personalsettings" class="visible" method="post" action="?app=<?php echo $_['appName']; ?>">
+      <input type="hidden" name="requesttoken" value="<?php p($_['requesttoken']); ?>" />
+      <input type="hidden" name="template" value="<?php p($template); ?>" />
+      <?php echo $navigationControls; ?>
+      <div class="buttonseparator"></div>
+      <?php echo $settingsControls; ?>
+    </form>
+    <div id="controls"></div> <!-- needed to have space for navigation buttons -->
+    <div class="cafevdb-general" data-snap-ignore="true" id="cafevdb-general"> <!-- used to eliminate the pixel-size of the control bar -->
+      <?php echo isset($_['headerblock']) ? '<!-- ' : ''; ?>
+      <div id="<?php echo $css_pfx; ?>-header-box" class="<?php echo $css_pfx; ?>-header-box <?php echo $css_class; ?>">
+        <div id="<?php echo $css_pfx; ?>-header" class="<?php echo $css_pfx; ?>-header <?php echo $css_class; ?>">
+          <?php echo $header; ?>
+        </div>
       </div>
-    </div>
-    <?php echo isset($_['headerblock']) ? ' -->' : ''; ?>
-    <?php echo isset($_['headerblock']) ? $_['headerblock'] : ''; ?>
-    <div id="<?php echo $css_pfx; ?>-container" class="<?php echo $css_pfx; ?>-container <?php echo $css_class; ?>"> <!-- used to have something with 100 height for scrollbars -->
-      <div id="<?php echo $css_pfx; ?>-body" class="<?php echo $css_pfx; ?>-body <?php echo $css_class; ?>">
-        <div id="<?php echo $css_pfx; ?>-body-inner" class="<?php echo $css_pfx; ?>-body-inner <?php echo $css_class; ?>">
+      <?php echo isset($_['headerblock']) ? ' -->' : ''; ?>
+      <?php echo isset($_['headerblock']) ? $_['headerblock'] : ''; ?>
+      <div id="<?php echo $css_pfx; ?>-container" class="<?php echo $css_pfx; ?>-container <?php echo $css_class; ?>"> <!-- used to have something with 100 height for scrollbars -->
+        <div id="<?php echo $css_pfx; ?>-body" class="<?php echo $css_pfx; ?>-body <?php echo $css_class; ?>">
+          <div id="<?php echo $css_pfx; ?>-body-inner" class="<?php echo $css_pfx; ?>-body-inner <?php echo $css_class; ?>">
