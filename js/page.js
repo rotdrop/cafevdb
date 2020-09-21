@@ -44,7 +44,6 @@ var CAFEVDB = CAFEVDB || {};
 
   /**Load a page through the history-aware AJAX page loader. */
   Page.loadPage = function(post, afterLoadCallback) {
-    alert('loadPage');
     var container = $('div#content');
     $('body').removeClass('dialog-titlebar-clicked');
     CAFEVDB.modalizer(true),
@@ -150,7 +149,6 @@ $(document).ready(function(){
   content.on('click keydown',
              '#personalsettings .navigation.reload',
              function(event) {
-	       alert('reload');
                event.stopImmediatePropagation();
                var pmeReload = content.find('form.pme-form input.pme-reload').first();
                if (pmeReload.length > 0) {
@@ -169,7 +167,6 @@ $(document).ready(function(){
   content.on('click keydown',
              '#personalsettings .navigation.undo',
              function(event) {
-	       alert('undo');
                event.stopImmediatePropagation();
                CAFEVDB.Page.loadPage({
                  'HistoryOffset': 1
@@ -180,7 +177,6 @@ $(document).ready(function(){
   content.on('click keydown',
              '#personalsettings .navigation.redo',
              function(event) {
-	       alert('redo');
                event.stopImmediatePropagation();
                CAFEVDB.Page.loadPage({
                  'HistoryOffset': -1
