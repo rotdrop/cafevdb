@@ -29,6 +29,9 @@ var CAFEVDB = CAFEVDB || {};
   Page.historyPosition = 0;
   Page.historySize = 1;
 
+  // overrides from PHP, see config.js
+  $.extend(Page, CAFEVDB.initialState.Page);
+
   Page.busyIcon = function(on) {
     if (on) {
       $('#reloadbutton img.number-0').hide();
@@ -41,12 +44,8 @@ var CAFEVDB = CAFEVDB || {};
 
   /**Load a page through the history-aware AJAX page loader. */
   Page.loadPage = function(post, afterLoadCallback) {
+    alert('loadPage');
     var container = $('div#content');
-    if (false) {
-      container.find('input').prop('disabled', true);
-      container.find('select').prop('disabled', true);
-      container.find('select').trigger('chosen:updated');
-    }
     $('body').removeClass('dialog-titlebar-clicked');
     CAFEVDB.modalizer(true),
     Page.busyIcon(true);
@@ -112,8 +111,6 @@ var CAFEVDB = CAFEVDB || {};
       CAFEVDB.modalizer(false),
       Page.busyIcon(false);
 
-      console.log('after snapper clone.');
-
       CAFEVDB.runReadyCallbacks();
       if (typeof afterLoadCallback == 'function') {
         afterLoadCallback();
@@ -145,11 +142,6 @@ $(document).ready(function(){
     return false;
   });
 
-  $('#app-navigation-toggle').on('snapjs:close', function() {
-    $('body').removeClass('dialog-titlebar-clicked');
-    $(this).cafevTooltip('hide')
-  });
-
   $('#app-navigation-toggle').on('click', function() {
     $('body').removeClass('dialog-titlebar-clicked');
     $(this).cafevTooltip('hide')
@@ -158,6 +150,7 @@ $(document).ready(function(){
   content.on('click keydown',
              '#personalsettings .navigation.reload',
              function(event) {
+	       alert('reload');
                event.stopImmediatePropagation();
                var pmeReload = content.find('form.pme-form input.pme-reload').first();
                if (pmeReload.length > 0) {
@@ -176,6 +169,7 @@ $(document).ready(function(){
   content.on('click keydown',
              '#personalsettings .navigation.undo',
              function(event) {
+	       alert('undo');
                event.stopImmediatePropagation();
                CAFEVDB.Page.loadPage({
                  'HistoryOffset': 1
@@ -186,6 +180,7 @@ $(document).ready(function(){
   content.on('click keydown',
              '#personalsettings .navigation.redo',
              function(event) {
+	       alert('redo');
                event.stopImmediatePropagation();
                CAFEVDB.Page.loadPage({
                  'HistoryOffset': -1

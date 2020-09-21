@@ -43,6 +43,21 @@ var PHPMYEDIT = PHPMYEDIT || {};
   PHPMYEDIT.defaultSelector         = '#cafevdb-page-body'; ///< for delegate handlers, survives pseudo-submit
   PHPMYEDIT.defaultInnerSelector    = 'inner'; ///< to override delegate handlers, survices pseudo-submit
   PHPMYEDIT.dialogCSSId             = PHPMYEDIT.pmePrefix+'-table-dialog';
+
+  /****************************************************************************
+   *
+   * Mix-in PHP setup parameters.
+   *
+   */
+
+  $.extend(PHPMYEDIT, PHPMYEDIT.initialState);
+
+  /****************************************************************************
+   *
+   * Only non-configurable data below this point.
+   *
+   */
+
   PHPMYEDIT.tableLoadCallbacks      = [];
 
   // PHPMYEDIT.popupPosition           = { my: "middle top",
@@ -55,6 +70,8 @@ var PHPMYEDIT = PHPMYEDIT || {};
                                         of: '#app-content'
                                       };
   PHPMYEDIT.dialogOpen              = {};
+
+
 
   /**Generate a string with PME_sys_.... prefix.*/
   PHPMYEDIT.pmeSys = function(token) {

@@ -32,6 +32,9 @@ var CAFEVDB = CAFEVDB || {};
   CAFEVDB.adminName        = t('cafevdb', 'unknown');
   CAFEVDB.phpUserAgent     = t('cafevdb', 'unknown');
 
+  // overrides from PHP, see config.js
+  $.extend(CAFEVDB, CAFEVDB.initialState);
+
   /**Register callbacks which are run after partial page reload in
    * order to "fake" document-ready. An alternate possibility would
    * have been to attach handlers to a custom signal and trigger that
@@ -1290,7 +1293,8 @@ var CAFEVDB = CAFEVDB || {};
   };
 
   CAFEVDB.snapperClose = function() {
-    $('#app-navigation-toggle').trigger('snapjs:close');
+    // snapper will close on clicking navigation entries
+    $('#navigation-list li.nav-heading a').trigger('click');
   };
 
   /**Initialize our tipsy stuff. Only exchange for our own thingies, of course.
@@ -1488,14 +1492,6 @@ $(document).ready(function(){
                  $.post(OC.filePath('cafevdb', 'ajax/events', 'events.php'),
                         values, CAFEVDB.Events.UI.init, 'json');
                }
-               return false;
-             });
-
-  // Close the snapper when clicking on the top-most item
-  content.on('click', 'ul#navigation-list li.nav-heading a',
-             function(event) {
-               event.stopImmediatePropagation();
-               CAFEVDB.snapperClose();
                return false;
              });
 

@@ -19,19 +19,11 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 var CAFEVDB = CAFEVDB || {};
-CAFEVDB.Projects = CAFEVDB.Projects || {};
-CAFEVDB.Page = CAFEVDB.Page || {};
 var PHPMYEDIT = PHPMYEDIT || {} ;
 
-CAFEVDB = {
-  ...CAFEVDB,
-  ...OCP.InitialState.loadState('cafevdb', 'CAFEVDB')
-};
+CAFEVDB.initialState = OCP.InitialState.loadState('cafevdb', 'CAFEVDB');
+PHPMYEDIT.initialState = OCP.InitialState.loadState('cafevdb', 'PHPMYEDIT');
 
-PHPMYEDIT = {
-  ...PHPMYEDIT,
-  ...OCP.InitialState.loadState('cafevdb', 'PHPMYEDIT')
-};
+console.log("CAFEVDB INITIAL STATE", CAFEVDB.initialState);
+console.log("PHPMYEDIT INITIAL STATE", PHPMYEDIT.initialState);
 
-console.log("CAFEVDB INITIAL STATE", CAFEVDB);
-console.log("PHPMYEDIT INITIAL STATE", PHPMYEDIT);

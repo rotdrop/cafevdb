@@ -90,6 +90,11 @@ $(document).ready(function() {
     // Intercept app-navigation events here and redirect to the page
     // loader
     content.on('click', 'ul#navigation-list li a', function(event) {
+	const target = $(event.target);
+	if (target.is('.nav-heading a')) {
+	    // don't recurse on nav-heading which just should close the sidebar.
+	    return;
+	}
         var post = $(this).data('post');
         CAFEVDB.Page.loadPage(post);
         //alert('post: '+post);

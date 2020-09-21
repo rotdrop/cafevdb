@@ -31,6 +31,17 @@ use OCA\CAFEVDB\Service\ConfigService;
  * Emit all script. $renderAs == 'blank' will avoid scripts and styles.
  *
  */
+
+/******************************************************************************
+ *
+ * Config must be loaded first as it prodiveds initial state from PHP.
+ *
+ */
+
+script($appName, 'config');
+
+/*****************************************************************************/
+
 style($appName, 'cafevdb');
 style($appName, 'settings');
 style($appName, 'tooltips');
@@ -38,19 +49,20 @@ style($appName, 'dialogs');
 style($appName, 'inlineimage');
 style($appName, 'navsnapper');
 
-script($appName, 'config');
 script($appName, 'cafevdb');
 script($appName, 'notification');
 script($appName, 'page');
+script($appName, 'pme');
 script($appName, 'app-settings');
 script($appName, 'jquery-extensions');
-script($appName, 'pme');
 script($appName, 'document-ready');
 
 script($appName, '../3rdparty/chosen/js/chosen.jquery.min');
 style($appName, '../3rdparty/chosen/css/chosen.min');
+//script($appName, '../vendor/harvesthq/chosen/chosen.jquery.min');
+//style($appName, '../vendor/harvesthq/chosen/css/chosen.min');
 
-echo Common\Util::emitExternalScripts();
+echo Common\Util::emitExternalScripts(); // @@TODO rework
 
 /*
  *
@@ -143,7 +155,7 @@ $sideBarToolTipPos = 'top';
 <div id="app-navigation" class="app-navigation snapper-enabled">
   <ul id="navigation-list">
     <li class="nav-heading">
-      <a href="#">
+      <a class="nav-heading" href="#">
         <?php echo $l->t('Close Side-Bar Menu'); ?>
       </a>
     </li>
@@ -275,7 +287,8 @@ $sideBarToolTipPos = 'top';
 </div>
 <div id="app-content">
   <form id="personalsettings" class="visible" method="post" action="?app=<?php echo $_['appName']; ?>">
-    <input type="hidden" name="requesttoken" value="<?php echo $_['requesttoken']; ?>" />
+    <input type="hidden" name="requesttoken" value="<?php p($_['requesttoken']); ?>" />
+    <input type="hidden" name="template" value="<?php p($template); ?>" />
     <?php echo $navigationControls; ?>
     <div class="buttonseparator"></div>
     <?php echo $settingsControls; ?>
