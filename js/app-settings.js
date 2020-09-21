@@ -158,12 +158,11 @@ $(document).ready(function() {
     });
     if (checked) {
       $('#app-settings-content li.expertmode').removeClass('hidden');
-      $('#app-settings-content select.debug-mode').trigger('chosen:updated');
     } else {
       $('#app-settings-content li.expertmode').addClass('hidden');
     }
     $('#expertmode').prop('checked', checked);
-    $('select.debug-mode').trigger('chosen:updated');
+    $('select.debug-mode').prop('disabled', false).trigger('chosen:updated');
     return false;
   });
 
