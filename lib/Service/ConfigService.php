@@ -78,6 +78,15 @@ class ConfigService {
   /** @var IDateTimeZone */
   private $dateTimeZone;
 
+  /** @var ToolTipsService */
+  private $toolTipsService;
+  
+  public static $wysiwygOptions = [
+    'tinymce' => [ 'name' => 'TinyMCE', 'enabled' => true],
+    // @@TODO: is inline script really so evil?
+    'ckeditor' => [ 'name' => 'CKEditor', 'enabled' => false],
+  ];
+  
   public function __construct(
     $appName,
     IConfig $containerConfig,
@@ -103,6 +112,7 @@ class ConfigService {
     $this->l = $l;
 
     $this->user = $this->userSession->getUser();
+    trigger_error('user: ' . (empty($this->user) ? 'empty' : 'defined'));
     $this->userId = $this->user->getUID();
   }
 

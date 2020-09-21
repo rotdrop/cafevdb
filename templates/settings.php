@@ -22,15 +22,15 @@
 
 namespace OCA\CAFEVDB;
 
-use OCA\CAFEVDB\Common\Config;
+style($appName, 'settings');
 
-$tooltipstitle  = Config::tooltips('show-tool-tips');
-$filtervistitle = Config::tooltips('filter-visibility');
-$directchgtitle = Config::tooltips('direct-change');
-$showdistitle   = Config::tooltips('show-disabled');
-$pagerowstitle  = Config::tooltips('table-rows-per-page');
-$experttitle    = Config::tooltips('expert-operations');
-$debugtitle     = Config::tooltips('debug-mode');
+$tooltipstitle  = $toolTipsData['show-tool-tips'];
+$filtervistitle = $toolTipsData['filter-visibility'];
+$directchgtitle = $toolTipsData['direct-change'];
+$showdistitle   = $toolTipsData['show-disabled'];
+$pagerowstitle  = $toolTipsData['table-rows-per-page'];
+$experttitle    = $toolTipsData['expert-operations'];
+$debugtitle     = $toolTipsData['debug-mode'];
 
 $debugModes = array(ConfigService::DEBUG_GENERAL => $l->t('General Information'),
                     ConfigService::DEBUG_QUERY => $l->t('SQL Queries'),
@@ -47,9 +47,6 @@ for ($i = 10; $i <= $maxRows; $i += 10) {
 if ($pageRows > $maxRows) {
     $pageRows = 0;
 }
-
-//$timezone = Util::getTimezone(); set from template
-//$locale = Util::getLocale(); set from tmplate
 
 date_default_timezone_set($timezone);
 $timestamp = strftime('%Y%m%d-%H%M%S');
@@ -78,7 +75,7 @@ setlocale(LC_TIME, $oldlocale);
              class="checkbox"
              name="tooltips" <?php echo $_['tooltips'] == 'on' ? 'checked="checked"' : ''; ?>
              id="tooltips"
-             title="<?php echo Config::tooltips('show-tool-tips'); ?>"
+             title="<?php echo $toolTipsData['show-tool-tips']; ?>"
              />
       <label for="tooltips" title="<?php echo $tooltipstitle; ?>">
         <?php echo $l->t('Tool-Tips') ?>
@@ -135,9 +132,9 @@ setlocale(LC_TIME, $oldlocale);
         <select name="wysiwygEditor"
                 data-placeholder="<?php echo $l->t('WYSIWYG Editor'); ?>"
                 class="wysiwyg-editor"
-                title="<?php echo Config::toolTips('wysiwyg-edtior'); ?>">
+                title="<?php echo $toolTipsData['wysiwyg-edtior']; ?>">
           <?php
-          foreach (Config::$wysiwygEditors as $key => $value) {
+          foreach ($wysiwygOptions as $key => $value) {
             $disabled = $value['enabled'] ? '' : ' disabled="disabled" ';
             echo '<option value="'.$key.'" '.$disabled.($_['editor'] == $key ? 'selected="selected"' : '').'>'.$value['name'].'</option>'."\n";
           }
@@ -162,7 +159,7 @@ setlocale(LC_TIME, $oldlocale);
         title="<?php echo $debugtitle; ?>">
         <?php
         foreach ($debugModes as $key => $value) {
-          echo '<option value="'.$key.'" '.(Config::$debug[$key] ? 'selected="selected"' : '').'>'.$value.'</option>'."\n";
+          echo '<option value="'.$key.'" '.(($debugMode & $key) != 0 ? 'selected="selected"' : '').'>'.$value.'</option>'."\n";
         }
         ?>
       </select>

@@ -33,6 +33,8 @@ $dispatcher->addListener(
     }
 );
 
+\OCP\Util::addStyle('cafevdb', 'settings');
+
 if (false) {
 
 OCP\Util::connectHook('OC_User','post_login','CAFEVDB\Config','loginListener');

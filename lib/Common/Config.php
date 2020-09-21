@@ -997,7 +997,7 @@ redaxoRehearsalsModule
                            'ProjectId' => -1,
                            'ProjectName' => false,
                            'RecordsPerPage' => self::getUserValue('pagerows', 20));
-    self::$toolTipsArray = ToolTips::toolTips();
+    self::$toolTipsArray = []; //ToolTips::toolTips();
     self::$pmeopts['tooltips'] = self::$toolTipsArray;
     self::$pmeopts['inc'] = self::$cgiVars['RecordsPerPage'];
   }

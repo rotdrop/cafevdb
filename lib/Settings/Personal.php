@@ -26,15 +26,21 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Settings\ISettings;
 
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\ToolTipsService;
 
 class Personal implements ISettings {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Traits\WysiwygTrait;
 
   const ERROR_TEMPLATE = "errorpage";
   const TEMPLATE = "settings";
 
-  public function __construct(ConfigService $configService) {
+  /** @var ToolTipsService */
+  private $toolTipsService;
+  
+  public function __construct(ConfigService $configService, ToolTipsService $toolTipsService) {
     $this->configService = $configService;
+    $this->toolTipsService = $toolTipsService;
   }
 
   public function getForm() {
@@ -45,7 +51,8 @@ class Personal implements ISettings {
         self::ERROR_TEMPLATE,
         [
           'error' => 'notamember',
-          'userId' => $this->userId()
+          'userId' => $this->userId(),
+          'wysiwygOptions' => $this->wysiwygOptions,
         ]);
     }
   }

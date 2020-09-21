@@ -25,8 +25,6 @@ namespace OCA\CAFEVDB\Service;
 use OCP\IUserSession;
 use OCP\ISession;
 
-use OCA\CAFEVDB\Common\Config;
-
 /**Yet another session wrapper. We store per-user data in an
  * array. As there is not in all cases a logout-procedure, we
  * remember the user and erase the data if the current user does not
@@ -39,7 +37,7 @@ class SessionService
   private $sessionKey;
   private $data;
 
-  public function __construct(ISession $session, IUserSession $userSession) {
+  public function __construct($appName, ISession $session, IUserSession $userSession) {
     // Keep a reference to the underlying session handler
     $this->session = $session;
 
@@ -47,7 +45,7 @@ class SessionService
     $this->userId  = $userSession->getUser()->getUID();
 
     // Fetch our data
-    $this->sessionKey = strtoupper(Config::APP_NAME);
+    $this->sessionKey = strtoupper($appName);
 
     $clean = true;
     if ($this->session->exists($this->sessionKey)) {

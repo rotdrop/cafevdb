@@ -28,6 +28,7 @@ use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Service\HistoryService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
+use OCA\CAFEVDB\Service\ToolTipsService;
 
 class PageController extends Controller {
   use \OCA\CAFEVDB\Traits\InitialStateTrait;
@@ -38,8 +39,11 @@ class PageController extends Controller {
   /** @var HistoryService */
   private $historyService;
 
-  /** @var RequestParameterSerice */
+  /** @var RequestParameterService */
   private $parameterService;
+
+  /** @var ToolTipsService */
+  private $toolTipsService;
 
   /** @var ConfigService */
   private $configService;
@@ -54,6 +58,7 @@ class PageController extends Controller {
     ConfigService $configService,
     HistoryService $historyService,
     RequestParameterService $parameterService,
+    ToolTipsService $toolTipsService,
     IInitialStateService $initialStateService,
     ConfigCheck $configCheck
   ) {
@@ -63,6 +68,7 @@ class PageController extends Controller {
     $this->configService = $configService;
     $this->historyService = $historyService;
     $this->parameterService = $parameterService;
+    $this->toolTipsService = $toolsTipsService;
     $this->initialStateService = $initialStateService;
     $this->configCheck = $configCheck;
     $this->l = $this->l10N();
@@ -189,6 +195,7 @@ class PageController extends Controller {
       'user' => $this->userId(),
       'expertmode' => $expertMode,
       'tooltips' => $tooltips,
+      'toolTipsData' => $this->toolTipsService,
       'debugMode' => $debugMode,
       'encryptionkey' => $encrkey,
       'uploadMaxFilesize' => Util::maxUploadSize(),

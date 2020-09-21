@@ -19,6 +19,21 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/*******************************************************************************
+ *
+ * Be noisy on configuration errors.
+ *
+ */
+
+div.cfgerror {
+  padding-left:2ex;
+  padding-top:8ex;
+  min-width:60ex;
+  width:80%;
+  color:red;
+  font-weight:bold;
+}
+
 div.statusmessage, span.statusmessage {
   font-style:italic;
   color:red;

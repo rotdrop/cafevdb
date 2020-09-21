@@ -23,7 +23,6 @@
 namespace OCA\CAFEVDB;
 
 use OCA\CAFEVDB\Common\Navigation;
-use OCA\CAFEVDB\Common\Config;
 use OCA\CAFEVDB\Service\ConfigService;
 
 /******************************************************************************
@@ -165,7 +164,7 @@ $sideBarToolTipPos = 'top';
     <div id="cafevdb-navigation-info"><?php echo $_['navBarInfo']; ?></div>
     <div id="app-settings-header"
          class="tooltip-<?php echo $sideBarToolTipPos; ?>"
-         title="<?php echo Config::toolTips('settings-button'); ?>">
+         title="<?php echo $toolTipsData['settings-button']; ?>">
       <button class="settings-button" tabindex="0"></button>
     </div>
     <div id="app-settings-content">
@@ -175,10 +174,10 @@ $sideBarToolTipPos = 'top';
                  type="checkbox"
                  name="tooltips" <?php echo $_['tooltips'] == 'on' ? 'checked="checked"' : ''; ?>
                  class="checkbox tooltip-<?php echo $sideBarToolTipPos; ?>"
-                 title="<?php echo Config::toolTips('show-tool-tips'); ?>"/>
+                 title="<?php echo $toolTipsData['show-tool-tips']; ?>"/>
           <label for="app-settings-tooltips"
                  class="tooltip-<?php echo $sideBarToolTipPos; ?>"
-                 title="<?php echo Config::toolTips('show-tool-tips'); ?>">
+                 title="<?php echo $toolTipsData['show-tool-tips']; ?>">
             <?php echo $l->t('Tool-Tips'); ?>
           </label>
         </li>
@@ -187,10 +186,10 @@ $sideBarToolTipPos = 'top';
                  type="checkbox"
                  name="filtervisibility" <?php echo $_['filtervisibility'] == 'on' ? 'checked="checked"' : ''; ?>
                  class="checkbox tooltip-<?php echo $sideBarToolTipPos; ?>"
-                 title="<?php echo Config::toolTips('filter-visibility'); ?>"/>
+                 title="<?php echo $toolTipsData['filter-visibility']; ?>"/>
           <label for="app-settings-filtervisibility"
                  class="tooltip-<?php echo $sideBarToolTipPos; ?>"
-                 title="<?php echo Config::toolTips('filter-visibility'); ?>">
+                 title="<?php echo $toolTipsData['filter-visibility']; ?>">
             <?php echo $l->t('Filter-Controls'); ?>
           </label>
         </li>
@@ -199,10 +198,10 @@ $sideBarToolTipPos = 'top';
                  type="checkbox"
                  name="directchange" <?php echo $_['directchange'] == 'on' ? 'checked="checked"' : ''; ?>
                  class="checkbox tooltip-<?php echo $sideBarToolTipPos; ?>"
-                 title="<?php echo Config::toolTips('direct-change'); ?>"/>
+                 title="<?php echo $toolTipsData['direct-change']; ?>"/>
           <label for="app-settings-directchange"
                  class="tooltip-<?php echo $sideBarToolTipPos; ?>"
-                 title="<?php echo Config::toolTips('direct-change'); ?>">
+                 title="<?php echo $toolTipsData['direct-change']; ?>">
             <?php echo $l->t('Quick Change-Dialog'); ?>
           </label>
         </li>
@@ -211,10 +210,10 @@ $sideBarToolTipPos = 'top';
                  type="checkbox"
                  name="showdisabled" <?php echo $_['showdisabled'] == 'on' ? 'checked="checked"' : ''; ?>
                  class="checkbox tooltip-<?php echo $sideBarToolTipPos; ?>"
-                 title="<?php echo Config::toolTips('show-disabled'); ?>"/>
+                 title="<?php echo $toolTipsData['show-disabled']; ?>"/>
           <label for="app-settings-showdisabled"
                  class="tooltip-<?php echo $sideBarToolTipPos; ?>"
-                 title="<?php echo Config::toolTips('show-disabled'); ?>">
+                 title="<?php echo $toolTipsData['show-disabled']; ?>">
             <?php echo $l->t('Show Disabled Data-Sets'); ?>
           </label>
         </li>
@@ -223,10 +222,10 @@ $sideBarToolTipPos = 'top';
                  type="checkbox"
                  name="expertmode" <?php echo $_['expertmode'] == 'on' ? 'checked="checked"' : ''; ?>
                  class="checkbox tooltip-<?php echo $sideBarToolTipPos; ?>"
-                 title="<?php echo Config::toolTips('expert-mode'); ?>"/>
+                 title="<?php echo $toolTipsData['expert-mode']; ?>"/>
           <label for="app-settings-expertmode"
                  class="tooltip-<?php echo $sideBarToolTipPos; ?>"
-                 title="<?php echo Config::toolTips('expert-mode'); ?>">
+                 title="<?php echo $toolTipsData['expert-mode']; ?>">
             <?php echo $l->t('Expert-Mode'); ?>
           </label>
         </li>
@@ -235,7 +234,7 @@ $sideBarToolTipPos = 'top';
                   data-placeholder="<?php echo $l->t('#Rows'); ?>"
                   class="table-pagerows chosen-dropup tooltip-<?php echo $sideBarToolTipPos; ?>"
                   id="app-settings-table-pagerows"
-                  title="<?php echo Config::toolTips('table-rows-per-page'); ?>">
+                  title="<?php echo $toolTipsData['table-rows-per-page']; ?>">
             <?php
             foreach($pageRowsOptions as $value => $text) {
               $selected = $value == $pageRows ? ' selected="selected"' : '';
@@ -245,14 +244,14 @@ $sideBarToolTipPos = 'top';
           </select>
           <label for="app-settings-table-pagerows"
                  class="tooltip-<?php echo $sideBarToolTipPos; ?>"
-                 title="<?php echo Config::toolTips('table-rows-per-page'); ?>">
+                 title="<?php echo $toolTipsData['table-rows-per-page']; ?>">
             <?php echo $l->t('#Rows/Page in Tables'); ?>
           </label>
         </li>
         <li>
           <a id="app-settings-further-settings"
              class="settings generalsettings tooltip-<?php echo $sideBarToolTipPos; ?>"
-             title="<?php echo Config::toolTips('further-settings'); ?>"
+             title="<?php echo $toolTipsData['further-settings']; ?>"
              href="#">
             <?php echo $l->t('Further Settings'); ?>
           </a>
@@ -260,7 +259,7 @@ $sideBarToolTipPos = 'top';
         <li class="<?php echo $expertClass; ?>">
           <a id="app-settings-expert-operations"
              class="settings expertoperations tooltip-<?php echo $sideBarToolTipPos; ?>"
-             title="<?php echo Config::toolTips('expert-operations'); ?>"
+             title="<?php echo $toolTipsData['expert-operations']; ?>"
              href="#">
             <?php echo $l->t('Expert Operations'); ?>
           </a>
@@ -272,7 +271,7 @@ $sideBarToolTipPos = 'top';
             name="debugmode"
             data-placeholder="<?php echo $l->t('Enable Debug Mode'); ?>"
             class="debug-mode chosen-dropup tooltip-<?php echo $sideBarToolTipPos; ?>"
-            title="<?php echo Config::toolTips('debug-mode'); ?>">
+            title="<?php echo $toolTipsData['debug-mode']; ?>">
             <?php
             foreach ($debugModes as $key => $value) {
               echo '<option value="'.$key.'" '.(($debugMode & $key) != 0 ? 'selected="selected"' : '').'>'.$value.'</option>'."\n";
