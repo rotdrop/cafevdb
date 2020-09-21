@@ -45,6 +45,11 @@ class PersonalSettingsController extends Controller {
     $this->l = $this->l10N();
   }
 
+  /**
+   * Store user settings.
+   *
+   * @NoAdminRequired
+   */
   public function set($parameter, $value) {
     $status = Http::STATUS_OK;
     switch ($parameter) {

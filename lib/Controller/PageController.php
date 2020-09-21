@@ -72,11 +72,7 @@ class PageController extends Controller {
   }
 
   /**
-   * CAUTION: the @Stuff turn off security checks, for this page no admin is
-   *          required and no CSRF check. If you don't know what CSRF is, read
-   *          it up in the docs or you might create a security hole. This is
-   *          basically the only required method to add this exemption, don't
-   *          add it to any other method if you don't exactly know what it does
+   * Load the main page of the App.
    *
    * @NoAdminRequired
    * @NoCSRFRequired
@@ -89,6 +85,11 @@ class PageController extends Controller {
     }
   }
 
+  /**
+   * Go back in the history.
+   *
+   * @NoAdminRequired
+   */
   public function history($level = 0)
   {
     if ($level > 0) {
@@ -126,6 +127,11 @@ class PageController extends Controller {
     );
   }
 
+  /**
+   * Load a specific page, also used to dynamically replace html content.
+   *
+   * @NoAdminRequired
+   */
   public function loader(
     $renderAs = 'user',
     $template = 'blog',
