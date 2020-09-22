@@ -20,23 +20,21 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace CAFEVDB {
+namespace OCA\CAFEVDB;
 
-  Config::init();
+$appInfo = \OCP\App::getAppInfo($appName);
 
-  $appInfo = \OCP\App::getAppInfo(Config::APP_NAME);
+$codeName = trim($appInfo['codename']);
+$licence = trim($appInfo['licence']);
 
-  $codeName = trim($appInfo['codename']);
-  $licence = trim($appInfo['licence']);
-  
-  $wikiCodeName = str_replace(' ', '_', ucfirst(strtolower($codeName)));
-  $codeLink = '<a target="_wikipedia" href="http://www.wikipedia.org/w/index.php?title='.$wikiCodeName.'">'.$codeName.'</a>';
+$wikiCodeName = str_replace(' ', '_', ucfirst(strtolower($codeName)));
+$codeLink = '<a target="_wikipedia" href="http://www.wikipedia.org/w/index.php?title='.$wikiCodeName.'">'.$codeName.'</a>';
 
-  $wikiLicence = str_replace(' ', '_', ucfirst(strtolower($licence)));
-  $licenceLink = '<a target="_wikipedia" href="http://www.wikipedia.org/w/index.php?title='.$wikiLicence.'">'.$licence.'</a>';
+$wikiLicence = str_replace(' ', '_', ucfirst(strtolower($licence)));
+$licenceLink = '<a target="_wikipedia" href="http://www.wikipedia.org/w/index.php?title='.$wikiLicence.'">'.$licence.'</a>';
 
 ?>
-  <div id="tabs-<?php echo $_['tabNr']; ?>" class="cafevdb about personalblock <?php if ($_['adminsettings']) echo 'admin'; ?>">
+<div id="tabs-<?php echo $_['tabNr']; ?>" class="cafevdb about personalblock <?php if ($_['adminsettings']) echo 'admin'; ?>">
 
   <div class="product name">
   <?php echo $appInfo['name'].' v'.$appInfo['version'].' AKA "'.$codeLink.'"'; ?>
@@ -63,8 +61,4 @@ namespace CAFEVDB {
       <?php echo $this->inc('creditslist', array('credits' => $appInfo['credits']['item'])); ?>
     </div>
   </div>
-  </div>
-
-<?php 
-} // namespace
-?>
+</div>

@@ -22,15 +22,17 @@
 
 namespace OCA\CAFEVDB;
 
+use OCA\CAFEVDB\Service\ConfigService;
+
 style($appName, 'settings');
 
-$tooltipstitle  = $toolTipsData['show-tool-tips'];
-$filtervistitle = $toolTipsData['filter-visibility'];
-$directchgtitle = $toolTipsData['direct-change'];
-$showdistitle   = $toolTipsData['show-disabled'];
-$pagerowstitle  = $toolTipsData['table-rows-per-page'];
-$experttitle    = $toolTipsData['expert-operations'];
-$debugtitle     = $toolTipsData['debug-mode'];
+$tooltipstitle  = $toolTips['show-tool-tips'];
+$filtervistitle = $toolTips['filter-visibility'];
+$directchgtitle = $toolTips['direct-change'];
+$showdistitle   = $toolTips['show-disabled'];
+$pagerowstitle  = $toolTips['table-rows-per-page'];
+$experttitle    = $toolTips['expert-operations'];
+$debugtitle     = $toolTips['debug-mode'];
 
 $debugModes = array(ConfigService::DEBUG_GENERAL => $l->t('General Information'),
                     ConfigService::DEBUG_QUERY => $l->t('SQL Queries'),
@@ -73,9 +75,9 @@ setlocale(LC_TIME, $oldlocale);
       <input id="tooltips"
              type="checkbox"
              class="checkbox"
-             name="tooltips" <?php echo $_['tooltips'] == 'on' ? 'checked="checked"' : ''; ?>
+             name="tooltips" <?php echo $showToolTips == 'on' ? 'checked="checked"' : ''; ?>
              id="tooltips"
-             title="<?php echo $toolTipsData['show-tool-tips']; ?>"
+             title="<?php echo $toolTips['show-tool-tips']; ?>"
              />
       <label for="tooltips" title="<?php echo $tooltipstitle; ?>">
         <?php echo $l->t('Tool-Tips') ?>
@@ -132,7 +134,7 @@ setlocale(LC_TIME, $oldlocale);
         <select name="wysiwygEditor"
                 data-placeholder="<?php echo $l->t('WYSIWYG Editor'); ?>"
                 class="wysiwyg-editor"
-                title="<?php echo $toolTipsData['wysiwyg-edtior']; ?>">
+                title="<?php echo $toolTips['wysiwyg-edtior']; ?>">
           <?php
           foreach ($wysiwygOptions as $key => $value) {
             $disabled = $value['enabled'] ? '' : ' disabled="disabled" ';
@@ -197,6 +199,3 @@ setlocale(LC_TIME, $oldlocale);
     echo $this->inc("cms-settings", array('tabNr' => $tabNo++));
   }
   echo $this->inc("about", array('tabNr' => $tabNo++));
-
-} // namespace CAFEVDB
-?>
