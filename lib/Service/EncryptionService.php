@@ -268,12 +268,17 @@ class EncryptionService
    * @param[in] $key Configuration key.
    * @param[in] $value Configuration value.
    */
-  public function setValue($key, $value)
+  public function setValue($key, $value, bool $strict = false)
   {
+    if ($strict && !$this->encryptionKeyValid()) {
+      return false;
+    }
+
     $enckey = $this->getEncryptionKey();
 
     $value = self::encrypt($value, $enckey);
     $this->setAppValue($key, $value);
+    return true;
   }
   
   /**Encrypt the given value with the given encryption
