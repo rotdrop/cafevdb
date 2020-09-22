@@ -34,6 +34,13 @@ use OCP\L10N\IFactory;
 use OCP\IDateTimeZone;
 
 class ConfigService {
+  use \OCA\CAFEVDB\Traits\SessionTrait;
+
+  /****************************************************************************
+   *
+   * Class constants.
+   *
+   */
   const DEBUG_GENERAL   = (1 << 0);
   const DEBUG_QUERY     = (1 << 1);
   const DEBUG_REQUEST   = (1 << 2);
@@ -41,6 +48,96 @@ class ConfigService {
   const DEBUG_EMAILFORM = (1 << 4);
   const DEBUG_ALL       = self::DEBUG_GENERAL|self::DEBUG_QUERY|self::DEBUG_REQUEST|self::DEBUG_TOOLTIPS|self::DEBUG_EMAILFORM;
   const DEBUG_NONE      = 0;
+
+  /*
+   ****************************************************************************
+   *
+   * Keys for encrypted configuration values. In order for
+   * encryption/decryption to work properly, every config setting has
+   * to be listed here.
+   *
+   */
+  const CFG_KEYS = [
+    'orchestra',
+    'dbserver',
+    'dbuser',
+    'dbpassword',
+    'dbname',
+    'shareowner',
+    'sharedfolder',
+    'concertscalendar',
+    'concertscalendarid',
+    'rehearsalscalendar',
+    'rehearsalscalendarid',
+    'othercalendar',
+    'othercalendarid',
+    'managementcalendar',
+    'managementcalendarid',
+    'financecalendar',
+    'financecalendarid',
+    'eventduration',
+    'sharedaddressbook',
+    'sharedaddressbookid',
+    'emailuser',
+    'emailpassword',
+    'emailfromname',
+    'emailfromaddress',
+    'smtpserver',
+    'smtpport',
+    'smtpsecure',
+    'imapserver',
+    'imapport',
+    'imapsecure',
+    'emailtestaddress',
+    'emailtestmode',
+    'phpmyadmin',
+    'phpmyadminoc',
+    'sourcecode',
+    'sourcedocs',
+    'ownclouddev',
+    'presidentId',
+    'presidentUserId',
+    'presidentUserGroup',
+    'secretaryId',
+    'secretaryUserId',
+    'secretaryUserGroup',
+    'treasurerId',
+    'treasurerUserId',
+    'treasurerUserGroup',
+    'streetAddressName01',
+    'streetAddressName02',
+    'streetAddressStreet',
+    'streetAddressHouseNumber',
+    'streetAddressCity',
+    'streetAddressZIP',
+    'streetAddressCountry',
+    'phoneNumber',
+    'bankAccountOwner',
+    'bankAccountIBAN',
+    'bankAccountBLZ',
+    'bankAccountBIC',
+    'bankAccountCreditorIdentifier',
+    'projectsbalancefolder',
+    'projectsfolder',
+    'executiveBoardTable',
+    'executiveBoardTableId',
+    'memberTable',
+    'memberTableId',
+    'redaxoPreview',
+    'redaxoArchive',
+    'redaxoRehearsals',
+    'redaxoTrashbin',
+    'redaxoTemplate',
+    'redaxoConcertModule',
+    'redaxoRehearsalsModule',
+  ];
+
+  /*
+   ****************************************************************************
+   *
+   * Private and protected internal data
+   *
+   */
 
   /** @var string */
   protected $appName;
@@ -78,15 +175,9 @@ class ConfigService {
   /** @var IDateTimeZone */
   private $dateTimeZone;
 
-  /** @var ToolTipsService */
-  private $toolTipsService;
-  
-  public static $wysiwygOptions = [
-    'tinymce' => [ 'name' => 'TinyMCE', 'enabled' => true],
-    // @@TODO: is inline script really so evil?
-    'ckeditor' => [ 'name' => 'CKEditor', 'enabled' => false],
-  ];
-  
+  /** @var EncryptionService */
+  private $encryptionService;
+
   public function __construct(
     $appName,
     IConfig $containerConfig,
@@ -94,6 +185,7 @@ class ConfigService {
     IUserManager $userManager,
     IGroupManager $groupManager,
     ISubAdmin $groupSubAdmin,
+    EncryptionService $encryptionService,
     IURLGenerator $urlGenerator,
     IFactory $iFactory,
     IDateTimeZone $dateTimeZone,
@@ -106,6 +198,7 @@ class ConfigService {
     $this->userManager = $userManager;
     $this->groupManager = $groupManager;
     $this->groupSubAdmin = $groupSubAdmin;
+    $this->encryptionService = $encryptionService;
     $this->urlGenerator = $urlGenerator;
     $this->iFactoy = $iFactory;
     $this->dateTimeZone = $dateTimeZone;
@@ -118,6 +211,11 @@ class ConfigService {
 
   public function getAppName() {
     return $this->appName;
+  }
+
+  public function getIcon() {
+    // @@TODO make it configurable
+    return $this->urlGenerator->imagePath($this->appName, 'logo-greyf.svg');
   }
 
   public function getUserManager() {
@@ -152,10 +250,14 @@ class ConfigService {
   }
 
   public function groupExists($groupId = null) {
-    if (empty($groupId)) {
-      $groupId = $this->getGroupId();
-    }
+    empty($groupId) && ($groupId = $this->getGroupId());
     return !empty($groupId) && $this->groupManager->groupExists($groupId);
+  }
+
+  public function inGroup($userId = null, $groupId = null) {
+    empty($userId) && ($userId = $this->getUserId());
+    empty($groupId) && ($groupId = $this->getGroupId());
+    return $this->groupManager->isInGroup($userId, $groupId);
   }
 
   public function getGroup($groupId = null) {
@@ -172,6 +274,13 @@ class ConfigService {
     }
     return $this->groupSubAdmin->isSubAdminofGroup($user, $group);
   }
+
+  /*
+   ****************************************************************************
+   *
+   * unencrypted cloud config space
+   *
+   */
 
   public function getUserValue($key, $default = null, $userId = null)
   {
@@ -199,10 +308,19 @@ class ConfigService {
     return $this->containerConfig->setAppValue($this->appName, $key, $value);
   }
 
-  public function getIcon() {
-    // @@TODO make it configurable
-    return $this->urlGenerator->imagePath($this->appName, 'logo-greyf.svg');
-  }
+  /*
+   ****************************************************************************
+   *
+   * encrypted config space
+   *
+   */
+
+  /*
+   ****************************************************************************
+   *
+   * date time timezone locale
+   *
+   */
 
   public function getDateTimeZone($timeStamp = null) {
     $this->dateTimeZone->getTimeZone($timeStamp);

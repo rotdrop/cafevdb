@@ -26,11 +26,11 @@ namespace OCA\CAFEVDB\Traits;
 use OCP\IUser;
 use OCP\IConfig;
 
-use OCA\CAFEVDB\Common\Config;
+use OCA\CAFEVDB\Service\ConfigService;
 
 trait ConfigTrait {
 
-  /** @var string */
+  /** @var ConfigService */
   private $configService;
 
   protected function appName()
@@ -95,6 +95,10 @@ trait ConfigTrait {
   protected function groupExists($groupId = null)
   {
     return $this->configService->groupExists($groupId);
+  }
+
+  protected function inGroup($userId = null, $groupId = null) {
+    return $this->configService->inGroup($userId, $groupId);
   }
 
   protected function isSubAdminOfGroup($userId = null, $groupId = null) {

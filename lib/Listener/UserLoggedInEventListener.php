@@ -27,23 +27,37 @@ use OCP\User\Events\UserLoggedInWithCookieEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\IGroupManager;
+use OCP\IConfig;
 
-use OCA\CAFEVDB\Common\Config;
+use OCA\CAFEVDB\Service\EncryptionService;
 
 class UserLoggedInEventListener implements IEventListener
 {
-  /** @var ISubAdmin */
+  /** @var string */
+  private $appName;
+
+  /** @var IGroupManager */
   private $groupManager;
 
-  public function __construct(IGroupManager $groupManager) {
+  /** @var EncryptionService */
+  private $encryptionService;
+
+  public function __construct(
+    $appName,
+    IGroupManager $groupManager,
+    IConfig $containerConfig,
+    EncryptionService $encryptionService
+  ) {
+    $this->appName = $appName; // can this work?
     $this->groupManager = $groupManager;
+    $this->encryptionService = $encryptionService;
   }
 
   public function handle(Event $event): void {
     if (!($event instanceOf UserLoggedInEvent) && !($event instanceOf UserLoggedInWithCookieEvent)) {
       return;
     }
-    $groupId = Config::getAppValue('usergroup', '');
+    $groupId = $this->encryptionService->getAppValue('usergroup');
     $user = $event->getUser();
     $userId = $user->getUID();
     $password = $event->getPassword();
@@ -51,8 +65,8 @@ class UserLoggedInEventListener implements IEventListener
 
     if (!empty($groupId) && $this->groupManager->isInGroup($userId, $groupId)) {
       // Fetch the encryption key and store in the session data
-      Config::initPrivateKey($userId, $password);
-      Config::initEncryptionKey($userId);
+      $encryptionService->initPrivateKey($userId, $password);
+      $encryptionService->initEncryptionKey($userId);
     }
   }
 }
