@@ -72,18 +72,28 @@ trait ConfigTrait {
     return $this->configService->setAppValue($key, $value);
   }
 
+  protected function getAppEncryptionKey()
+  {
+    return $this->configService->getAppEncryptionKey();
+  }
+
+  protected function encryptionKeyValid()
+  {
+    return $this->configService->encryptionKeyValid();
+  }
+
   /**Get a possibly encrypted app-config value. */
   public function getConfigValue($key, $default = null)
   {
     return $this->configService->getValue($key, $default);
   }
-  
+
   /**Get a possibly encrypted app-config value. */
   public function setConfigValue($key, $value)
   {
     return $this->configService->setValue($key, $value);
   }
-  
+
   protected function user($userId = null)
   {
     return $this->configService->getUser($userId);
@@ -124,6 +134,24 @@ trait ConfigTrait {
 
   public function getIcon() {
     return $this->configService->getIcon();
+  }
+
+  protected function getDateTimeZone() {
+    return $this->configService->getDateTimeZone();
+  }
+
+  protected function getTimezone($timeStamp = null) {
+    $timeZone = $this->getDateTimeZone()->getTimeZone($timeStamp);
+    if (empty($timeZone)) {
+      return 'UTC';
+    }
+    $zoneName = $timeZone->getName();
+    return empty($zoneName) ? 'UTC' : $zoneName;
+  }
+
+  /**Return the locale. */
+  protected function getLocale($lang = null) {
+    return $this->configService->getLocale($lang);
   }
 }
 
