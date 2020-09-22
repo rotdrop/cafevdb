@@ -38,13 +38,13 @@ class EncryptionService
 
   /** @var string */
   private $cryptor;
-  
+
   /** @var string */
   private $userPrivateKey = null;
-  
+
   /** @var string */
   private $appEncryptionKey = null;
-  
+
   public function __construct($appName, IConfig $containerConfig, SessionService $sessionService) {
     $this->appName = $appName;
     $this->containerConfig = $containerConfig;
@@ -81,7 +81,7 @@ class EncryptionService
     }
     return $this->userPrivateKey;
   }
-  
+
   // To distribute the encryption key for the data base and
   // application configuration values we use a public/private key pair
   // for each user. Then the admin-user can distribute the global
@@ -115,7 +115,7 @@ class EncryptionService
     $this->setUserValue($login, 'publicSSLKey', $pubKey);
     $this->setUserValue($login, 'privateSSLKey', $privKey);
   }
-  
+
   /**Set the private key used to decode some sensible data like the
    * general shared encryption key and so forth.
    *
@@ -200,7 +200,7 @@ class EncryptionService
    *
    * @return @c false in case of error, otherwise the encryption key.
    */
-  private function getAppEncryptionKey() {
+  public function getAppEncryptionKey() {
     if (empty($this->appEncryptionKey)) {
       $this->appEncryptionKey = $this->sessionRetrieveValue('encryptionkey');
     }
@@ -215,9 +215,9 @@ class EncryptionService
    * @bug This scheme of storing a key which is encrypted with itself
    * is a security issue. Think about it. It really is.
    */
-  private function encryptionKeyValid($sesdbkey = null)
+  public function encryptionKeyValid($sesdbkey = null)
   {
-    empty($sesdbkey) && ($sesdbkey = $this->getEncryptionKey());
+    empty($sesdbkey) && ($sesdbkey = $this->getAppEncryptionKey());
 
     // Fetch the encrypted "system" key from the app-config table
     $sysdbkey = $this->getAppValue('encryptionkey');
@@ -226,8 +226,8 @@ class EncryptionService
     $sysdbkey = $this->decrypt($sysdbkey, $sesdbkey);
 
     return $sysdbkey !== false && $sysdbkey == $sesdbkey;
-  }  
-  
+  }
+
   function getAppValue($key, $default = null)
   {
     return $this->containerConfig->getAppValue($this->appName, $key, $default);
@@ -237,7 +237,7 @@ class EncryptionService
   {
     return $this->containerConfig->setAppValue($this->appName, $key, $value);
   }
-  
+
   function getUserValue($userId, $key, $default = null)
   {
     return $this->containerConfig->getUserValue($userId, $this->appName, $key, $default);
@@ -254,7 +254,7 @@ class EncryptionService
       return false;
     }
 
-    $enckey = $this->getEncryptionKey();
+    $enckey = $this->getAppEncryptionKey();
     $value  = $this->getAppValue($key, $default);
 
     $value  = self::decrypt($value, $enckey);
@@ -274,13 +274,13 @@ class EncryptionService
       return false;
     }
 
-    $enckey = $this->getEncryptionKey();
+    $enckey = $this->getAppEncryptionKey();
 
     $value = self::encrypt($value, $enckey);
     $this->setAppValue($key, $value);
     return true;
   }
-  
+
   /**Encrypt the given value with the given encryption
    * key. Internally, the first 4 bytes contain the length of $value
    * as string in hexadecimal notation, the following 32 bytes contain

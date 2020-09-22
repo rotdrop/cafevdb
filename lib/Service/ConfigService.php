@@ -200,7 +200,7 @@ class ConfigService {
     $this->groupSubAdmin = $groupSubAdmin;
     $this->encryptionService = $encryptionService;
     $this->urlGenerator = $urlGenerator;
-    $this->iFactoy = $iFactory;
+    $this->iFactory = $iFactory;
     $this->dateTimeZone = $dateTimeZone;
     $this->l = $l;
 
@@ -317,6 +317,16 @@ class ConfigService {
    * encrypted config space
    *
    */
+  public function getAppEncryptionKey()
+  {
+    return $this->encryptionService->getAppEncryptionKey();
+  }
+
+  public function encryptionKeyValid()
+  {
+    return $this->encryptionService->encryptionKeyValid();
+  }
+
   public function getValue($key, $default = null)
   {
     return $this->encryptionService->getValue($key, $default);
@@ -335,12 +345,13 @@ class ConfigService {
    */
 
   public function getDateTimeZone($timeStamp = null) {
-    $this->dateTimeZone->getTimeZone($timeStamp);
+    return $this->dateTimeZone;
   }
 
   /**Return the locale. */
   public function getLocale($lang = null)
   {
+    // @@TODO base this on l10n?
     if (empty($lang)) {
       $lang = $this->iFactory->findLanguage($this->appName);
     }
