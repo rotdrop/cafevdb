@@ -72,6 +72,18 @@ trait ConfigTrait {
     return $this->configService->setAppValue($key, $value);
   }
 
+  /**Get a possibly encrypted app-config value. */
+  public function getConfigValue($key, $default = null)
+  {
+    return $this->configService->getValue($key, $default);
+  }
+  
+  /**Get a possibly encrypted app-config value. */
+  public function setConfigValue($key, $value)
+  {
+    return $this->configService->setValue($key, $value);
+  }
+  
   protected function user($userId = null)
   {
     return $this->configService->getUser($userId);

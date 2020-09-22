@@ -207,6 +207,9 @@ class ConfigService {
     $this->user = $this->userSession->getUser();
     trigger_error('user: ' . (empty($this->user) ? 'empty' : 'defined'));
     $this->userId = $this->user->getUID();
+
+    // Initialize the encryption service.
+    $this->encryptionService->initEncryptionKey($this->userId);
   }
 
   public function getAppName() {
@@ -314,6 +317,15 @@ class ConfigService {
    * encrypted config space
    *
    */
+  public function getValue($key, $default = null)
+  {
+    return $this->encryptionService->getValue($key, $default);
+  }
+
+  public function setValue($key, $value)
+  {
+    return $this->encryptionService->setValue($key, $value);
+  }
 
   /*
    ****************************************************************************
