@@ -33,9 +33,19 @@ class ToolTipsService implements \ArrayAccess, \Countable
   /** @var array */
   private $toolTipsData;
 
+  /** @var bool */
+  private $debug = false;
+
   public function __construct(IL10N $l) {
     $this->l = $l;
     $this->toolTipsData = [];
+  }
+
+  public function debug($debug = null) {
+    if ($debug === true || $debug === false) {
+      $this->debug = $debug;
+    }
+    return $this->debug;
   }
 
   public function toolTips() {
@@ -61,8 +71,7 @@ class ToolTipsService implements \ArrayAccess, \Countable
    * @return boolean
    */
   public function offsetExists($offset): bool {
-    $this->makeToolTips();
-    return isset($this->toolTipsData[$offset]);
+    return $this->fetch($offset) !== null;
   }
 
   /**
@@ -71,10 +80,7 @@ class ToolTipsService implements \ArrayAccess, \Countable
    * @return mixed
    */
   public function offsetGet($offset) {
-    $this->makeToolTips();
-    return isset($this->toolTipsData[$offset])
-      ? $this->toolTipsData[$offset]
-      : null;
+    return $this->fetch($offset);
   }
 
   /**
@@ -83,8 +89,7 @@ class ToolTipsService implements \ArrayAccess, \Countable
    * @param mixed $value
    */
   public function offsetSet($offset, $value) {
-    $this->makeToolTips();
-    $this->toolTipsData[$offset] = $value;
+    throw new \RuntimeException($l->t("Unimplemented, tooltips cannot be altered at runtime yet"));
   }
 
   /**
@@ -92,10 +97,54 @@ class ToolTipsService implements \ArrayAccess, \Countable
    * @param string $offset
    */
   public function offsetUnset($offset) {
-    $this->makeToolTips();
-    unset($this->toolTipsData[$offset]);
+    throw new \RuntimeException($l->t("Unimplemented, tooltips cannot be altered at runtime yet"));
   }
-  
+
+  /**Return a translated tool-tip for the given key.
+   */
+  private function fetch($key)
+  {
+    $this->makeToolTips();
+
+    $keys = explode(':', $key);
+    if (count($keys) == 2) {
+      $key = $keys[0];
+      $subKey = $keys[1];
+    } else {
+      $subKey = null;
+    }
+
+    $tip = '';
+    if (!empty($subKey)) {
+      if (isset(self::$toolTipsArray[$key][$subKey])) {
+        $tip = $this->toolTipsArray[$key][$subKey];
+      } else if (isset($this->toolTipsArray[$key]['default'])) {
+        $tip = $this->toolTipsArray[$key]['default'];
+      } else if (is_scalar($this->toolTipsArray[$key])) {
+        $tip = $this->toolTipsArray[$key];
+      }
+    } else if (isset($this->toolTipsArray[$key])) {
+      $tip = $this->toolTipsArray[$key];
+      !empty($tip['default']) && $tip = $tip['default'];
+    }
+
+    if (!is_scalar($tip)) {
+      $tip = '';
+    }
+
+    if ($this->debug && empty($tip)) {
+      if (!empty($subKey)) {
+        $tip = $this->l->t('Unknown Tooltip for key "%s-%s" requested.',
+                           [$key, $subKey]);
+      } else {
+        $tip = $this->l->t('Unknown Tooltip for key "%s" requested.',
+                    [$key]);
+      }
+    }
+
+    return empty($tip) ? null : htmlspecialchars($tip);
+  }
+
   private function makeToolTips()
   {
     return [

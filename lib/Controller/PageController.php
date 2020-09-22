@@ -68,7 +68,7 @@ class PageController extends Controller {
     $this->configService = $configService;
     $this->historyService = $historyService;
     $this->parameterService = $parameterService;
-    $this->toolTipsService = $toolsTipsService;
+    $this->toolTipsService = $toolTipsService;
     $this->initialStateService = $initialStateService;
     $this->configCheck = $configCheck;
     $this->l = $this->l10N();
@@ -158,7 +158,7 @@ class PageController extends Controller {
     // Are we a group-admin?
     $isGroupAdmin = $this->isSubAdminofGroup();
 
-    $tooltips     = $this->getUserValue('tooltips', 'on');
+    $showToolTips = $this->getUserValue('tooltips', 'on');
     $usrFiltVis   = $this->getUserValue('filtervisibility', 'off');
     $directChg    = $this->getUserValue('directchange', 'off');
     $showDisabled = $this->getUserValue('showdisabled', 'off');
@@ -194,8 +194,8 @@ class PageController extends Controller {
       'usergroup' => $this->groupId(),
       'user' => $this->userId(),
       'expertmode' => $expertMode,
-      'tooltips' => $tooltips,
-      'toolTipsData' => $this->toolTipsService,
+      'showToolTips' => $showToolTips,
+      'toolTips' => $this->toolTipsService,
       'debugMode' => $debugMode,
       'encryptionkey' => $encrkey,
       'uploadMaxFilesize' => Util::maxUploadSize(),
