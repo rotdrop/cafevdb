@@ -204,8 +204,8 @@ class PageController extends Controller {
       'projectId' => $projectId,
       'musicianId' => $musicianId,
       'recordId' => $recordId,
-      'locale' => Util::getLocale(),
-      'timezone' => Util::getTimezone(),
+      'locale' => $this->getLocale(),
+      'timezone' => $this->getTimezone(),
       'historySize' => $this->historyService->size(),
       'historyPosition' => $this->historyService->position(),
       'requesttoken' => \OCP\Util::callRegister(), // @TODO: check
