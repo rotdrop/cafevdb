@@ -223,9 +223,9 @@ class EncryptionService
     $sysdbkey = $this->getAppValue('encryptionkey');
 
     // Now try to decrypt the data-base encryption key
-    $sysdbkey = $this->decrypt($sysdbkey, $sesdbkey);
+    $sysdbkey = self::decrypt($sysdbkey, $sesdbkey);
 
-    return $sysdbkey !== false && $sysdbkey == $sesdbkey;
+    return $sysdbkey !== false && !empty($sesdbkey) && !empty($sysdbkey) && $sysdbkey == $sesdbkey;
   }
 
   function getAppValue($key, $default = null)
