@@ -42,13 +42,20 @@ class Navigation
      * groupClass => optional css, only taken into account on group-change
      *
      * Optional fields need not be present.
+     *
+     * @param $selectedValues Optional. Set Navigation::SELECTED for the
+     * given values. $selectedValues may be a single value of an array of
+     * values.
      */
-    public static function selectOptions($options)
+    public static function selectOptions($options, $selectedValues = [])
     {
         $result = '';
         $indent = '';
         if (!is_array($options) || count($options) == 0) {
             return $result;
+        }
+        if (!is_array($selected)) {
+            $selectedValues = [];
         }
         $oldGroup = isset($options[0]['group']) ? Util::htmlEscape($options[0]['group']) : false;
         if ($oldGroup) {
@@ -58,9 +65,14 @@ class Navigation
             $indent = '  ';
         }
         foreach($options as $option) {
+            $value = $option['value'];
             $flags = isset($option['flags']) ? $option['flags'] : 0;
             $disabled = $flags & self::DISABLED ? ' disabled="disabled"' : '';
-            $selected = $flags & self::SELECTED ? ' selected="selected"' : '';
+            if (($flags & self::SELECTED) || in_array($value, $selectedValues)) {
+                $selected = ' selected="selected"';
+            } else {
+                $selected = '';
+            }
             $label    = isset($option['label']) ? ' label="'.Util::htmlEscape($option['label']).'"' : '';
             $title    = isset($option['title']) ? ' title="'.Util::htmlEscape($option['title']).'"' : '';
             $group = isset($option['group']) ? Util::htmlEscape($option['group']) : false;
@@ -76,7 +88,7 @@ class Navigation
                     $indent = '  ';
                 }
             }
-            $result .= $indent.'<option value="'.Util::htmlEscape($option['value']).'"'.
+            $result .= $indent.'<option value="'.Util::htmlEscape($value).'"'.
                     $disabled.$selected.$label.$title.
                     '>'.
                     Util::htmlEscape($option['name']).
@@ -689,6 +701,6 @@ class FuzzyInput
 
 };
 // Local Variables: ***
-// c-basic-offset: 2 ***
+// c-basic-offset: 4 ***
 // indent-tabs-mode: nil ***
 // End: ***
