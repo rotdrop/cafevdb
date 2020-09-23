@@ -132,6 +132,9 @@ class ConfigService {
     'redaxoRehearsalsModule',
   ];
 
+  /** @var array */
+  protected $encryptionCache;
+
   /*
    ****************************************************************************
    *
@@ -210,6 +213,8 @@ class ConfigService {
 
     // Initialize the encryption service.
     $this->encryptionService->initEncryptionKey($this->userId);
+
+    $this->encryptionCache = [];
   }
 
   public function getAppName() {
@@ -329,12 +334,19 @@ class ConfigService {
 
   public function getValue($key, $default = null)
   {
-    return $this->encryptionService->getValue($key, $default);
+    if (!isset($this->encryptionCache[$key])) {
+      $this->enryptionCache[$key] = $this->encryptionService->getValue($key, $default);
+    }
+    return $this->encryptionCache[$key];
   }
 
   public function setValue($key, $value)
   {
-    return $this->encryptionService->setValue($key, $value);
+    if ($this->encryptionService->setValue($key, $value)) {
+      $this->encryptionCache[$key] = $value;
+      return true;
+    }
+    return false;
   }
 
   /*
@@ -357,6 +369,25 @@ class ConfigService {
     }
     $locale = $lang.'_'.strtoupper($lang).'.UTF-8';
     return $locale;
+  }
+
+  /**Return an array of supported country-codes and names*/
+  public function localeCountryNames($locale = null)
+  {
+    if (!$locale) {
+      $locale = $this->getLocale();
+    }
+    $language = locale_get_primary_language($locale);
+    $locales = resourcebundle_locales('');
+    $countryCodes = array();
+    foreach ($locales as $locale) {
+      $country = locale_get_region($locale);
+      if ($country) {
+        $countryCodes[$country] = locale_get_display_region($locale, $language);
+      }
+    }
+    asort($countryCodes);
+    return $countryCodes;
   }
 
   /**Return the currency symbol for the locale. */

@@ -62,6 +62,7 @@ class Personal implements ISettings {
         'appName' => $this->appName(),
         'userId' => $this->userId(),
         'locale' => $this->getLocale(),
+        'localeCountryNames' => $this->localeCountryNames(),
         'timezone' => $this->getTimezone(),
         'adminsettings' => $isGroupAdmin,
         'encryptionkey' => $this->getAppEncryptionKey(),

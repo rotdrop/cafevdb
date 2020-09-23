@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -22,11 +22,13 @@
 
 namespace OCA\CAFEVDB;
 
-$off = $_['orchestra'] == '' ? 'disabled="disabled"' : '';
-$countries = array();
-foreach (Util::countryNames() as $country => $name) {
-  $option = array('name' => $name, 'value' => $country);
-  if ($country === $_['streetAddressCountry']) {
+use \OCA\CAFEVDB\Common\Navigation;
+
+$off = $orchestra == '' ? 'disabled="disabled"' : '';
+$countries = [];
+foreach ($localeCountryNames as $country => $name) {
+  $option = ['name' => $name, 'value' => $country];
+  if ($country === $streetAddressCountry) {
     $option['flags'] = Navigation::SELECTED;
   }
   $countries[] = $option;
@@ -249,4 +251,3 @@ foreach (Util::countryNames() as $country => $name) {
     </div>
   </form>
 </div>
-

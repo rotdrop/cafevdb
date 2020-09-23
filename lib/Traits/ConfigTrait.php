@@ -153,6 +153,10 @@ trait ConfigTrait {
   protected function getLocale($lang = null) {
     return $this->configService->getLocale($lang);
   }
+
+  protected function localeCountryNames($locale = null) {
+    return $this->configService->localeCountryNames($locale);
+  }
 }
 
 // Local Variables: ***
