@@ -72,9 +72,6 @@ class PageController extends Controller {
     $this->initialStateService = $initialStateService;
     $this->configCheck = $configCheck;
     $this->l = $this->l10N();
-
-    //@@TODO: make non static ?
-    Config::init();
   }
 
   /**
@@ -167,8 +164,8 @@ class PageController extends Controller {
     $debugMode    = $this->getUserValue('debug', 0);
 
     // Filter visibility is stored here:
-    $pmeSysPfx = Config::$pmeopts['cgi']['prefix']['sys'];
-    Config::$pmeopts['cgi']['append'][$pmeSysPfx.'fl'] = $usrFiltVis == 'off' ? 0 : 1;
+    //$pmeSysPfx = Config::$pmeopts['cgi']['prefix']['sys'];
+    //Config::$pmeopts['cgi']['append'][$pmeSysPfx.'fl'] = $usrFiltVis == 'off' ? 0 : 1;
 
     // @@TODO this should not go here, I think
     $recordId = Util::getCGIRecordId([$this->request, 'getParam']);
