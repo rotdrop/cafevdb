@@ -153,10 +153,7 @@ foreach ($localeCountryNames as $country => $name) {
               name="presidentId"
               class="executive-board-ids tooltip-left">
         <option></option>
-        <?php
-         echo Navigation::selectOptions(
-         Projects::participantOptions($_['executiveBoardTableId'], $_['executiveBoardTable'], $_['presidentId']));
-         ?>
+        <?php echo Navigation::selectOptions($executiveBoardMembers, $presidentId); ?>
       </select>
       <select id="secretarySelect"
               data-placeholder="<?php echo $l->t('Select the Secretary'); ?>"
@@ -164,10 +161,7 @@ foreach ($localeCountryNames as $country => $name) {
               name="secretaryId"
               class="executive-board-ids tooltip-left">
         <option></option>
-        <?php
-         echo Navigation::selectOptions(
-         Projects::participantOptions($_['executiveBoardTableId'], $_['executiveBoardTable'], $_['secretaryId']));
-         ?>
+        <?php echo Navigation::selectOptions($executiveBoardMembers, $secretaryId); ?>
       </select>
       <select id="treasurerSelect"
               data-placeholder="<?php echo $l->t('Select the Treasurer'); ?>"
@@ -175,10 +169,7 @@ foreach ($localeCountryNames as $country => $name) {
               name="treasurerId"
               class="executive-board-ids tooltip-left">
         <option></option>
-        <?php
-         echo Navigation::selectOptions(
-         Projects::participantOptions($_['executiveBoardTableId'], $_['executiveBoardTable'], $_['treasurerId']));
-         ?>
+        <?php echo Navigation::selectOptions($executiveBoardMembers, $treasurerId); ?>
       </select>
       <br/>
       <select id="presidentUserSelect"

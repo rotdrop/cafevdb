@@ -26,6 +26,8 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Settings\ISettings;
 
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\DatabaseService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
 class Personal implements ISettings {
@@ -36,10 +38,16 @@ class Personal implements ISettings {
   const TEMPLATE = "settings";
   const DEFAULT_EDITOR = 'tinymce';
 
+  /** @var ProjectService */
+  private $projectService;
+
   /** @var ToolTipsService */
   private $toolTipsService;
 
-  public function __construct(ConfigService $configService, ToolTipsService $toolTipsService) {
+  public function __construct(
+    ConfigService $configService,
+    //ProjectService $projectService,
+    ToolTipsService $toolTipsService) {
     $this->configService = $configService;
     $this->toolTipsService = $toolTipsService;
     $this->l = $this->l10N();
@@ -79,6 +87,10 @@ class Personal implements ISettings {
       ];
 
       if ($isGroupAdmin) {
+        $this->projectService = new ProjectService($this->configService, new DatabaseService($this->configService));
+
+        $executiveBoardTable = $this->getConfigValue('executiveBoardTable', $this->l->t('ExecutiveBoardMembers'));
+        $executiveBoardTableId = $this->getConfigValue('executiveBoardTableId', -1);
         $templateParameters = array_merge(
           $templateParameters,
           [
@@ -99,9 +111,10 @@ class Personal implements ISettings {
             'bankAccountCreditorIdentifier' => $this->getConfigValue('bankAccountCreditorIdentifier'),
 
             'memberTable' => $this->getConfigValue('memberTable', $this->l->t('ClubMembers')),
-            'executiveBoardTable' => $this->getConfigValue('executiveBoardTable', $this->l->t('ExecutiveBoardMembers')),
             'memberTableId' => $this->getConfigValue('memberTableId', -1),
-            'executiveBoardTableId' => $this->getConfigValue('executiveBoardTableId', -1),
+            'executiveBoardTable' => $executiveBoardTable,
+            'executiveBoardTableId' => $execitiveBoardTableId,
+            'executiveBoardMembers' => $this->projectService->participantOptions($executiveBoardTableId, $executiveBoardTable),
             'userGroupMembers' => array_map(function($user) { return $user->getUID(); }, $this->group()->getUsers()),
             'userGroups' => array_map(function($group) { return $group->getGID(); }, $this->groupManager()->search('')),
             'orchestra' => $this->getConfigValue('orchestra'),

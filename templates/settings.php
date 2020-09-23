@@ -190,7 +190,7 @@ setlocale(LC_TIME, $oldlocale);
   </div>
 <?php
   $tabNo = 2;
-  if ($_['adminsettings']) {
+  if ($adminsettings === true) {
     echo $this->inc("orchestra-settings", array('tabNr' => $tabNo++));
     echo $this->inc("app-settings", array('tabNr' => $tabNo++));
     echo $this->inc("share-settings", array('tabNr' => $tabNo++));
