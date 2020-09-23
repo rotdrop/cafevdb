@@ -26,8 +26,9 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Settings\ISettings;
 
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\DatabaseFactory;
 use OCA\CAFEVDB\Service\DatabaseService;
+use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
 class Personal implements ISettings {
@@ -47,8 +48,11 @@ class Personal implements ISettings {
   public function __construct(
     ConfigService $configService,
     //ProjectService $projectService,
-    ToolTipsService $toolTipsService) {
+    ToolTipsService $toolTipsService
+  ) {
     $this->configService = $configService;
+    $databaseService = (new DatabaseFactory($configService))->getService();
+    $this->projectService = new ProjectService($configService, $databaseService);
     $this->toolTipsService = $toolTipsService;
     $this->l = $this->l10N();
   }
@@ -87,10 +91,9 @@ class Personal implements ISettings {
       ];
 
       if ($isGroupAdmin) {
-        $this->projectService = new ProjectService($this->configService, new DatabaseService($this->configService));
-
         $executiveBoardTable = $this->getConfigValue('executiveBoardTable', $this->l->t('ExecutiveBoardMembers'));
         $executiveBoardTableId = $this->getConfigValue('executiveBoardTableId', -1);
+        $executiveBoardMembers = $this->projectService->participantOptions($executiveBoardTableId, $executiveBoardTable);
         $templateParameters = array_merge(
           $templateParameters,
           [
@@ -114,7 +117,7 @@ class Personal implements ISettings {
             'memberTableId' => $this->getConfigValue('memberTableId', -1),
             'executiveBoardTable' => $executiveBoardTable,
             'executiveBoardTableId' => $execitiveBoardTableId,
-            'executiveBoardMembers' => $this->projectService->participantOptions($executiveBoardTableId, $executiveBoardTable),
+            'executiveBoardMembers' => $executiveBoardMember,
             'userGroupMembers' => array_map(function($user) { return $user->getUID(); }, $this->group()->getUsers()),
             'userGroups' => array_map(function($group) { return $group->getGID(); }, $this->groupManager()->search('')),
             'orchestra' => $this->getConfigValue('orchestra'),

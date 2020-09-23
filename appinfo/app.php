@@ -33,37 +33,8 @@ $dispatcher->addListener(
     }
 );
 
+\OCP\Util::addScript('cafevdb', 'settings');
 \OCP\Util::addStyle('cafevdb', 'settings');
 
-if (false) {
-
-OCP\Util::connectHook('OC_User','post_login','CAFEVDB\Config','loginListener');
-OCP\Util::connectHook('OC_User','post_setPassword','CAFEVDB\Config','changePasswordListener');
-OCP\Util::connectHook('OC_User', 'logout', 'CAFEVDB\Config', 'logoutListener');
-
-OCP\Util::connectHook('OC_Calendar','addEvent','CAFEVDB\Events','newEventListener');
-OCP\Util::connectHook('OC_Calendar','editEvent','CAFEVDB\Events','changeEventListener');
-OCP\Util::connectHook('OC_Calendar','deleteEvent','CAFEVDB\Events','killEventListener');
-OCP\Util::connectHook('OC_Calendar','moveEvent','CAFEVDB\Events','moveEventListener');
-
-OCP\Util::connectHook('OC_Calendar', 'deleteCalendar', 'CAFEVDB\Events', 'killCalendarListener');
-OCP\Util::connectHook('OC_Calendar', 'editCalendar', 'CAFEVDB\Events', 'editCalendarListener');
-
-/* Hurray! There is a config hook! */
-//OCP\Util::connectHook('\OCP\Config', 'js', 'CAFEVDB\Config', 'jsLoadHook');
-
-//\OCP\Backgroundjob::addRegularTask('CAFEVDB\Cron', 'run');
-OCP\Util::addScript('cafevdb', 'backgroundjobs');
-
-// Hook our address-book backend into the contacts app. Does this work???
-CAFEVDB\AddressbookBackend::register();
-
-OCP\App::addNavigationEntry( array(
-	'id' => 'cafevdb',
-	'order' => 74,
-        'href' => OCP\Util::linkToRoute('cafevdb_root'),
-	'icon' => OCP\Util::imagePath( 'cafevdb', 'logo-greyf-icon.svg' ),
-	'name' => 'Camerata DB'
-));
-
-} // if false
+\OCP\Util::addScript('cafevdb', '../3rdparty/chosen/js/chosen.jquery.min');
+\OCP\Util::addStyle('cafevd', '../3rdparty/chosen/css/chosen.min');

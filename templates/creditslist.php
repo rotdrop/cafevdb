@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -20,33 +20,28 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace CAFEVDB {
+namespace OCA\CAFEVDB;
 
-  Config::init();
+$credits = $_['credits'];
 
-  $credits = $_['credits'];
-
-  $numItems = 5;
-  $items = array();
-  for ($cnt = 0; $cnt < $numItems; ++$cnt) {
+$numItems = 5;
+$items = array();
+for ($cnt = 0; $cnt < $numItems; ++$cnt) {
     $idx = mt_rand(0, count($credits)-1);
     $items[] = $credits[$idx];
     unset($credits[$idx]);
     $credits = array_values($credits);
-  }
+}
 
-  //echo '<pre>'.print_r($credits,true).'</pre>';
-  echo '<ul>
+//echo '<pre>'.print_r($credits,true).'</pre>';
+echo '<ul>
 ';
-  foreach($items as $item) {
+foreach($items as $item) {
 ?>
-    <li>
-      <a target="_creditlink" href="<?php echo $item['link']; ?>"><?php echo $item['title']; ?></a>
-    </li>
-<?php 
+  <li>
+    <a target="_creditlink" href="<?php echo $item['link']; ?>"><?php echo $item['title']; ?></a>
+  </li>
+<?php
   } // foreach
   echo '</ul>
 ';
-
-} // namespace
-?>

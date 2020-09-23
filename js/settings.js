@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -25,13 +25,15 @@ $(document).ready(function() {
 
   if (adminSettings) {
 
-    $("#appsettings_popup").tabs({ selected: 0});
-    $("#appsettings_popup").on("tabsselect", function (event, ui) {
+    const container = $('#personal-settings-container');
+
+    container.tabs({ selected: 0});
+    container.on("tabsselect", function (event, ui) {
       $('div.statusmessage').hide();
       $('span.statusmessage').hide();
     });
 
-    $("#appsettings_popup").on("tabsshow", function (event, ui) {
+    container.on("tabsshow", function (event, ui) {
       if (ui.index == 3) {
         $('#smtpsecure').chosen({ disable_search_threshold: 10 });
         $('#imapsecure').chosen({ disable_search_threshold: 10 });
@@ -295,16 +297,16 @@ $(document).ready(function() {
       var post = $("#systemkey").serialize();
 
       // disable form elements until we got an answer
-      $('#appsettings_popup fieldset').attr('disabled', 'disabled');
-      $("#appsettings_popup").tabs("disable");
+      $('#personal-settings-container fieldset').attr('disabled', 'disabled');
+      $("#personal-settings-container").tabs("disable");
       $('#systemkey #standby').show();
 
       // Ajax foo
       CAFEVDB.Notification.show(t('cafevdb', 'Please standby, the operation will take some time!'));
       $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'), post, function(data) {
         // re-enable all forms
-        $('#appsettings_popup fieldset').removeAttr('disabled');
-        $("#appsettings_popup").tabs("enable");
+        $('#personal-settings-container fieldset').removeAttr('disabled');
+        $("#personal-settings-container").tabs("enable");
         $('#systemkey #standby').hide();
 
         CAFEVDB.Notification.hide();
@@ -1344,7 +1346,7 @@ $(document).ready(function() {
   //
   ///////////////////////////////////////////////////////////////////////////
 
-  CAFEVDB.toolTipsInit('#appsettings_popup');
+  CAFEVDB.toolTipsInit('#personal-settings-container');
 
 });
 

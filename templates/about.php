@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -43,7 +43,7 @@ $licenceLink = '<a target="_wikipedia" href="http://www.wikipedia.org/w/index.ph
     <?php echo $appInfo['description']; ?>
   </div>
   <div class="product author">
-    &copy; 2012-2014 <?php echo $appInfo['author']; ?>
+            &copy; 2012-2020 <?php echo $appInfo['author']['@value']; ?> &langle;<?php echo $appInfo['author']['@attributes']['mail']; ?>&rangle;
   </div>
   <div class="product licence">
     Licensed under the <?php echo $licenceLink; ?>

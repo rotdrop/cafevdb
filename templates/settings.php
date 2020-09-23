@@ -24,6 +24,7 @@ namespace OCA\CAFEVDB;
 
 use OCA\CAFEVDB\Service\ConfigService;
 
+script($appName, 'settings');
 style($appName, 'settings');
 
 $tooltipstitle  = $toolTips['show-tool-tips'];
@@ -57,6 +58,7 @@ $time = strftime('%x %X');
 setlocale(LC_TIME, $oldlocale);
 
 ?>
+<div id="personal-settings-container">
   <ul id="adminsettingstabs">
     <li><a href="#tabs-1"><?php echo $l->t('Personal'); ?></a></li>
     <?php $tabNo = 2; if ($_['adminsettings']) { ?>
@@ -199,3 +201,5 @@ setlocale(LC_TIME, $oldlocale);
     echo $this->inc("cms-settings", array('tabNr' => $tabNo++));
   }
   echo $this->inc("about", array('tabNr' => $tabNo++));
+?>
+</div>
