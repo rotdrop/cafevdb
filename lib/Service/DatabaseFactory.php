@@ -27,15 +27,26 @@ use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Driver;
 
-class DatabaseService extends \Doctrine\DBAL\Connection
+class DatabaseFactory
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
-  protected $connection;
+  public function __construct(ConfigService $configService)
+  {
+    $this->configService = $configService;
+  }
 
-  public function __construct(array $params, Driver $driver, Configuration $config = null, EventManager $eventManager = null) {
-    parent::__construct($params, $driver, $config, $eventManager);
-    $this->configService = $params['configService'];
+  public function getService() {
+    $connectionParams = [
+      'dbname' => $this->getConfigValue('dbname'),
+      'user' => $this->getConfigValue('dbuser'),
+      'password' => $this->getConfigValue('dbpassword'),
+      'host' => $this->getConfigValue('dbserver'),
+      'driver' => 'pdo_mysql',
+      'wrapperClass' => DatabaseService::class,
+      'configService' => $this->configService,
+    ];
+    return DriverManager::getConnection($connectionParams);
   }
 }
 

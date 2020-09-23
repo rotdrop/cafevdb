@@ -23,6 +23,9 @@ use OCA\CAFEVDB\Listener\UserLoggedInEventListener;
 use OCA\CAFEVDB\Listener\UserLoggedOutEventListener;
 use OCA\CAFEVDB\Listener\PasswordUpdatedEventListener;
 
+use OCA\CAFEVDB\Service\DatabaseService;
+use OCA\CAFEVDB\Service\DatabaseFactory;
+
 class Application extends App {
 
     public function __construct (array $urlParams=array()) {
@@ -36,16 +39,11 @@ class Application extends App {
         $dispatcher->addServiceListener(UserLoggedOutEvent::class, UserLoggedOutEventListener::class);
         $dispatcher->addServiceListener(PasswordUpdatedEvent::class, PasswordUpdatedEventListener::class);
 
-        // /**
-        //  * Controllers
-        //  */
-        // $container->registerService('PageController', function($c) {
-        //     return new PageController(
-        //         $c->query('AppName'),
-        //         $c->query('Request'),
-        //         $c->query('L10N')
-        //     );
-        // });
+        $container->registerService(DatabaseService::class, function($c) {
+            return null;
+            $factory = $c->query('DatabaseFactory');
+            return $factory->getService();
+        });
     }
 
 }

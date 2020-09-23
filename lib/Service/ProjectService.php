@@ -52,7 +52,7 @@ class ProjectService
     if (empty($projectName)) {
       $projectName = $this->fetchName($projectId);
     }
-f
+
     $table = $projectName.'View';
 
     $options = [];
