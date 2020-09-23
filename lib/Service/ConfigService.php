@@ -335,7 +335,12 @@ class ConfigService {
   public function getValue($key, $default = null)
   {
     if (!isset($this->encryptionCache[$key])) {
-      $this->enryptionCache[$key] = $this->encryptionService->getValue($key, $default);
+      $value = $this->encryptionService->getValue($key, $default);
+      if (is_string($value)) {
+        $this->enryptionCache[$key] = $value;
+      } else {
+        return null;
+      }
     }
     return $this->encryptionCache[$key];
   }
