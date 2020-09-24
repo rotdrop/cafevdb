@@ -30,6 +30,7 @@ use OCP\IRequest;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Settings\Personal;
 
 class PersonalSettingsController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -37,12 +38,25 @@ class PersonalSettingsController extends Controller {
   /** @var IL10N */
   private $l;
 
+  /** @var Personal */
+  private $personalSettings;
+
   //@@TODO inject config via constructor
-  public function __construct($appName, IRequest $request, ConfigService $configService) {
+  public function __construct($appName, IRequest $request, ConfigService $configService, Personal $personalSettings) {
     parent::__construct($appName, $request);
 
     $this->configService = $configService;
+    $this->personalSettiungs = $personalSettings;
     $this->l = $this->l10N();
+  }
+
+  /**
+   * Return settings form
+   *
+   * @NoAdminRequired
+   */
+  public function form() {
+    return $this->personalSettings->getForm();
   }
 
   /**

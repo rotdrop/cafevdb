@@ -183,6 +183,7 @@ class Personal implements ISettings {
         $this->appName(),
         self::TEMPLATE,
         $templateParameters,
+        'blank',
       );
     }
   }

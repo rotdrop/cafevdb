@@ -63,7 +63,12 @@ return [
         [
             'name' => 'personal_settings#set',
             'url' => '/settings/personal/set/{parameter}',
-            'verb' => 'POST'
+            'verb' => 'POST',
+        ],
+        [
+            'name' => 'personal_settings#form',
+            'url' => '/settings/personal/form',
+            'verb' => 'GET',
         ],
     ]
 ];

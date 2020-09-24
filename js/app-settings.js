@@ -187,7 +187,7 @@ $(document).ready(function() {
       appid:'cafevdb',
       loadJS:true,
       cache:false,
-      scriptName:'../../settings/user/cafevdb'
+      scriptName:'settings/personal/form'
     });
 
     $("#personal-settngs-container").tabs({ selected: 0});
