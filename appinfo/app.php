@@ -37,4 +37,4 @@ $dispatcher->addListener(
 \OCP\Util::addStyle('cafevdb', 'settings');
 
 \OCP\Util::addScript('cafevdb', '../3rdparty/chosen/js/chosen.jquery.min');
-\OCP\Util::addStyle('cafevd', '../3rdparty/chosen/css/chosen.min');
+\OCP\Util::addStyle('cafevdb', '../3rdparty/chosen/css/chosen.min');
