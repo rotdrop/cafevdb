@@ -212,7 +212,7 @@ class ConfigService {
     $this->userId = $this->user->getUID();
 
     // Initialize the encryption service.
-    $this->encryptionService->initEncryptionKey($this->userId);
+    $this->encryptionService->initAppEncryptionKey($this->userId);
 
     $this->encryptionCache = [];
   }

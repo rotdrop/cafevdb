@@ -65,8 +65,8 @@ class UserLoggedInEventListener implements IEventListener
 
     if (!empty($groupId) && $this->groupManager->isInGroup($userId, $groupId)) {
       // Fetch the encryption key and store in the session data
-      $encryptionService->initPrivateKey($userId, $password);
-      $encryptionService->initEncryptionKey($userId);
+      $this->encryptionService->initUserPrivateKey($userId, $password);
+      $this->encryptionService->initAppEncryptionKey($userId);
     }
   }
 }

@@ -141,14 +141,14 @@ class EncryptionService
         return false;
       }
     }
-    $this->$userPrivateKey = $key;
+    $this->userPrivateKey = $key;
     if ($permanent) {
       $this->sessionStoreValue('privatekey', $key);
     }
     return true;
   }
 
-  public function initEncryptionKey($login)
+  public function initAppEncryptionKey($login)
   {
     // Fetch the encrypted "user" key from the preferences table
     $usrdbkey = $this->getUserValue($login, 'encryptionkey');
