@@ -95,11 +95,11 @@ var CAFEVDB = CAFEVDB || {};
       // be somewhat slower than replacing everything in one run.
 
       var newContent = $('<div>'+data.contents+'</div>');
-      var newAppContent = newContent.find('#app-inner-content').children();
+      var newAppContent = newContent.find('#cafevdb-general').children();
       var newAppNavigation = newContent.find('#app-navigation').children();
 
       $('#app-navigation').empty().prepend(newAppNavigation);
-      $('#app-inner-content').empty().prepend(newAppContent);
+      $('#cafevdb-general').empty().prepend(newAppContent);
 
       CAFEVDB.snapperClose();
       CAFEVDB.modalizer(false),

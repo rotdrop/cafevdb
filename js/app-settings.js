@@ -52,22 +52,6 @@ $(document).ready(function() {
     return false;
   });
 
-  appNav.on('change', '#app-settings-tooltips', function(event) {
-    event.preventDefault();
-    var self = $(this);
-    CAFEVDB.toolTipsOnOff(self.prop('checked'));
-    $.post(OC.generateUrl('/apps/cafevdb/settings/personal/set/tooltips'),
-           { 'value': CAFEVDB.toolTipsEnabled })
-    .done(function(data) {
-      console.log(data);
-    })
-    .fail(function(data) {
-      console.log(data);
-    });
-    $('#tooltips').prop('checked', CAFEVDB.toolTipsEnabled);
-    return false;
-  });
-
   appNav.on('change', '#app-settings-filtervisibility', function(event) {
     event.preventDefault();
     const self = $(this);
@@ -139,7 +123,6 @@ $(document).ready(function() {
   });
 
   appNav.on('change', '#app-settings-expertmode', function(event) {
-    event.preventDefault();
     var self = $(this);
     var checked = self.prop('checked');
     $.post(OC.generateUrl('/apps/cafevdb/settings/personal/set/expertmode'),

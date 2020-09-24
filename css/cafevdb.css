@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -465,6 +465,11 @@ form#personalsettings input[type="submit"] {
   background-color: rga(255,255,255,0.7);
 }
 
+form#personalsettings .table-cell.centered * {
+  display: block !important;
+  margin: auto !important;
+}
+
 form#personalsettings .button:hover,
 form#personalsettings button:hover,
 form#personalsettings input[type="submit"]:hover {
@@ -497,10 +502,6 @@ form#personalsettings div.buttonseparator {
 }
 
 /*************************************/
-
-#tooltipbutton {
-  margin-right:0.3em;
-}
 
 #tooltipbutton.tooltips-enabled {
   box-shadow:2px 2px 2px #080808 inset; /*, 1px 1px 1px #cfc inset;*/
@@ -962,6 +963,18 @@ input[type=checkbox].cafevdb-password-show + label.cafevdb-password-show {
 
 #content-wrapper {
   top:0px;
+}
+
+.app-cafevdb .table-cell.centered {
+  display: table-cell !important;
+  vertical-align: middle !important;
+  width: inherit !important;
+  height: inherit !important;
+}
+
+.app-cafevdb .left-infinity-shift {
+  position: absolute !important;
+  left: -100000px !important;
 }
 
 /*

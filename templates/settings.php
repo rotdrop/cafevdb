@@ -24,8 +24,18 @@ namespace OCA\CAFEVDB;
 
 use OCA\CAFEVDB\Service\ConfigService;
 
-script($appName, 'settings');
+style($appName, 'cafevdb');
 style($appName, 'settings');
+style($appName, 'tooltips');
+style($appName, 'dialogs');
+
+script($appName, 'cafevdb');
+script($appName, 'jquery-extensions');
+script($appName, 'settings');
+script($appName, 'personal-settings');
+
+script($appName, '../3rdparty/chosen/js/chosen.jquery.min');
+style($appName, '../3rdparty/chosen/css/chosen.min');
 
 $tooltipstitle  = $toolTips['show-tool-tips'];
 $filtervistitle = $toolTips['filter-visibility'];
@@ -73,10 +83,10 @@ setlocale(LC_TIME, $oldlocale);
   </ul>
 
   <div id="tabs-1" class="personalblock <?php if ($_['adminsettings']) echo 'admin'; ?>">
-    <form id="cafevdb">
+    <form id="cafevdb" class="personal-settings">
       <input id="tooltips"
              type="checkbox"
-             class="checkbox"
+             class="checkbox tooltips"
              name="tooltips" <?php echo $showToolTips == 'on' ? 'checked="checked"' : ''; ?>
              id="tooltips"
              title="<?php echo $toolTips['show-tool-tips']; ?>"
@@ -87,7 +97,7 @@ setlocale(LC_TIME, $oldlocale);
       <br />
       <input id="filtervisibility"
              type="checkbox"
-             class="checkbox"
+             class="checkbox filtervisibility"
              name="filtervisibility" <?php echo $_['filtervisibility'] == 'on' ? 'checked="checked"' : ''; ?>
              title="<?php echo $filtervistitle ?>"
              />
@@ -97,7 +107,7 @@ setlocale(LC_TIME, $oldlocale);
       <br />
       <input id="directchange"
              type="checkbox"
-             class="checkbox"
+             class="checkbox directchange"
              name="directchange" <?php echo $_['directchange'] == 'on' ? 'checked="checked"' : ''; ?>
              title="<?php echo $directchgtitle ?>"
              />
@@ -107,7 +117,7 @@ setlocale(LC_TIME, $oldlocale);
       <br />
       <input id="showdisabled"
              type="checkbox"
-             class="checkbox"
+             class="checkbox showdisabled"
              name="showdisabled" <?php echo $_['showdisabled'] == 'on' ? 'checked="checked"' : ''; ?>
              title="<?php echo $showdistitle ?>"
              />
@@ -118,7 +128,7 @@ setlocale(LC_TIME, $oldlocale);
       <div class="table-pagerows settings-control">
         <select name="pagerows"
                 data-placeholder="<?php echo $l->t('#Rows'); ?>"
-                class="table-pagerows"
+                class="table-pagerows pagerows"
                 id="table-pagerows"
                 title="<?php echo $pagerowstitle; ?>">
           <?php
@@ -135,7 +145,7 @@ setlocale(LC_TIME, $oldlocale);
       <div class="wysiwygeditor settings-control">
         <select name="wysiwygEditor"
                 data-placeholder="<?php echo $l->t('WYSIWYG Editor'); ?>"
-                class="wysiwyg-editor"
+                class="wysiwyg-editor wysiwyg-editor"
                 title="<?php echo $toolTips['wysiwyg-edtior']; ?>">
           <?php
           foreach ($wysiwygOptions as $key => $value) {
@@ -147,7 +157,7 @@ setlocale(LC_TIME, $oldlocale);
       </div>
       <input id="expertmode"
              type="checkbox"
-             class="checkbox"
+             class="checkbox expertmode"
              name="expertmode" <?php echo $_['expertmode'] == 'on' ? 'checked="checked"' : ''; ?>
              id="expertmode" title="<?php echo $experttitle ?>"
              />
@@ -159,7 +169,7 @@ setlocale(LC_TIME, $oldlocale);
         multiple
         name="debugmode"
         data-placeholder="<?php echo $l->t('Enable Debug Mode'); ?>"
-        class="debug-mode"
+        class="debug-mode debugmode"
         title="<?php echo $debugtitle; ?>">
         <?php
         foreach ($debugModes as $key => $value) {

@@ -215,4 +215,6 @@ input.randomkey {
     bottom:1em;
     left:250px;
     margin-left:1em;
+    position: fixed !important;
+    z-index: 1050;
 }

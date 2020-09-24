@@ -19,6 +19,8 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+console.log("CAFEVDB: here I am");
+
 var CAFEVDB = CAFEVDB || {};
 
 (function(window, $, CAFEVDB, undefined) {
@@ -1284,10 +1286,8 @@ var CAFEVDB = CAFEVDB || {};
     CAFEVDB.toolTipsEnabled = !!onOff;
     if (CAFEVDB.toolTipsEnabled) {
       $.fn.cafevTooltip.enable();
-      $('#tooltipbutton').removeClass('tooltips-disabled').addClass('tooltips-enabled');
     } else {
       $.fn.cafevTooltip.disable();
-      $('#tooltipbutton').removeClass('tooltips-enabled').addClass('tooltips-disabled');
       $.fn.cafevTooltip.remove(); // remove any left-over items.
     }
   };
@@ -1451,6 +1451,7 @@ $(document).ready(function(){
   var content = $('#content');
   var appInnerContent = $('#app-inner-content');
 
+  if (false) {
   appInnerContent.on('click keydown', '#personalsettings .tooltips',
              function(event) {
                $('body').removeClass('dialog-titlebar-clicked');
@@ -1466,6 +1467,7 @@ $(document).ready(function(){
 		 });
                return false;
              });
+  }
 
   content.on('click', ':button.events',
              function(event) {
@@ -1509,6 +1511,9 @@ $(document).ready(function(){
 
   });
 
+  // fire an event when this have been finished
+  console.log("trigger loaded");
+  $(document).trigger("cafevdb:donecafevdbjs")
 });
 
 // Local Variables: ***

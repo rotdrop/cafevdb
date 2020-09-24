@@ -52,14 +52,13 @@ script($appName, 'cafevdb');
 script($appName, 'notification');
 script($appName, 'page');
 script($appName, 'pme');
+script($appName, 'personal-settings');
 script($appName, 'app-settings');
 script($appName, 'jquery-extensions');
 script($appName, 'document-ready');
 
 script($appName, '../3rdparty/chosen/js/chosen.jquery.min');
 style($appName, '../3rdparty/chosen/css/chosen.min');
-//script($appName, '../vendor/harvesthq/chosen/chosen.jquery.min');
-//style($appName, '../vendor/harvesthq/chosen/css/chosen.min');
 
 echo Common\Util::emitExternalScripts(); // @@TODO rework
 
@@ -102,7 +101,7 @@ $navigationControls = Navigation::buttonsFromArray(
             'name' => $l->t('Back'),
             'title' => $l->t('Navigate back to the previous view in the recorded history.'),
             'image' => image_path('cafevdb', 'undo-solid.svg'),
-            'class' => 'undo navigation history',
+            'class' => 'undo navigation history tooltip-auto',
             'id' => 'undobutton',
             'disabled' => $undoDisabled,
             'type' => 'submitbutton'),
@@ -111,14 +110,14 @@ $navigationControls = Navigation::buttonsFromArray(
             'title' => $l->t('Reload the current view.'),
             'image' => array(image_path('cafevdb', 'reload-solid.svg'),
                              image_path('core', 'loading.gif')),
-            'class' => 'reload navigation history',
+            'class' => 'reload navigation history tooltip-auto',
             'id' => 'reloadbutton',
             'type' => 'submitbutton'),
         'redo' => array(
             'name' => $l->t('Next'),
             'title' => $l->t('Navigate to the next view in the recorded history.'),
             'image' => image_path('cafevdb', 'redo-solid.svg'),
-            'class' => 'redo navigation history',
+            'class' => 'redo navigation history tooltip-auto',
             'id' => 'redobutton',
             'disabled' => $redoDisabled,
             'type' => 'submitbutton'),
@@ -126,19 +125,24 @@ $navigationControls = Navigation::buttonsFromArray(
             'name' => $l->t('Startpage'),
             'title' => $l->t('Navigate back to the start-page.'),
             'image' => image_path('cafevdb', 'home-solid.svg'),
-            'class' => 'settings navigation home',
+            'class' => 'settings navigation home tooltip-auto',
             'id' => 'homebutton',
             'type' => 'submitbutton')));
 
-$settingsControls = Navigation::buttonsFromArray(
-    array(
-        'tooltips' => array(
-            'name' => $l->t('Tooltip Button'),
-            'title' => $l->t('Toggle Tooltips'),
-            'image' => image_path('cafevdb', 'info-solid.svg'),
-            'class' => 'help tooltips tooltips-'.($showToolTips == 'on' ? 'en' : 'dis').'abled',
-            'id' => 'tooltipbutton')
-    ));
+$settingsControls = '
+<input id="tooltipbutton-checkbox"
+       type="checkbox"
+       class="tooltips left-infinity-shift"
+       '.($showToolTips == 'on' ? 'checked="checked"' :'').'>
+  <div id="tooltipbutton"
+       class="button tooltips-'.($showToolTips == 'on' ? 'en' : 'dis').'abled">
+    <label id="tooltipbutton-label"
+           for="tooltipbutton-checkbox"
+           title="'.$l->t('Toggle Tooltips').'"
+           class="table-cell centered tooltip-auto">
+    <img src="'.image_path('cafevdb', 'info-solid.svg').'" class="svg">
+  </div>
+</label>';
 
 if (!isset($_['headerblock']) && isset($_['header'])) {
     $header = $_['header'];
@@ -148,7 +152,7 @@ if (!isset($_['headerblock']) && isset($_['header'])) {
 
 $expertClass = 'expertmode'.($_['expertmode'] != 'on' ? ' hidden' : '');
 
-$sideBarToolTipPos = 'top';
+$sideBarToolTipPos = 'auto';
 ?>
 
 <div id="app-navigation" class="app-navigation snapper-enabled">
@@ -168,12 +172,12 @@ $sideBarToolTipPos = 'top';
       <button class="settings-button" tabindex="0"></button>
     </div>
     <div id="app-settings-content">
-      <ul>
+      <ul class="personal-settings">
         <li>
           <input id="app-settings-tooltips"
                  type="checkbox"
                  name="tooltips" <?php echo $showToolTips == 'on' ? 'checked="checked"' : ''; ?>
-                 class="checkbox tooltip-<?php echo $sideBarToolTipPos; ?>"
+                 class="checkbox tooltips tooltip-<?php echo $sideBarToolTipPos; ?>"
                  title="<?php echo $toolTips['show-tool-tips']; ?>"/>
           <label for="app-settings-tooltips"
                  class="tooltip-<?php echo $sideBarToolTipPos; ?>"
@@ -185,7 +189,7 @@ $sideBarToolTipPos = 'top';
           <input id="app-settings-filtervisibility"
                  type="checkbox"
                  name="filtervisibility" <?php echo $_['filtervisibility'] == 'on' ? 'checked="checked"' : ''; ?>
-                 class="checkbox tooltip-<?php echo $sideBarToolTipPos; ?>"
+                 class="checkbox filtervisibility tooltip-<?php echo $sideBarToolTipPos; ?>"
                  title="<?php echo $toolTips['filter-visibility']; ?>"/>
           <label for="app-settings-filtervisibility"
                  class="tooltip-<?php echo $sideBarToolTipPos; ?>"
@@ -197,7 +201,7 @@ $sideBarToolTipPos = 'top';
           <input id="app-settings-directchange"
                  type="checkbox"
                  name="directchange" <?php echo $_['directchange'] == 'on' ? 'checked="checked"' : ''; ?>
-                 class="checkbox tooltip-<?php echo $sideBarToolTipPos; ?>"
+                 class="checkbox directchange tooltip-<?php echo $sideBarToolTipPos; ?>"
                  title="<?php echo $toolTips['direct-change']; ?>"/>
           <label for="app-settings-directchange"
                  class="tooltip-<?php echo $sideBarToolTipPos; ?>"
@@ -209,7 +213,7 @@ $sideBarToolTipPos = 'top';
           <input id="app-settings-showdisabled"
                  type="checkbox"
                  name="showdisabled" <?php echo $_['showdisabled'] == 'on' ? 'checked="checked"' : ''; ?>
-                 class="checkbox tooltip-<?php echo $sideBarToolTipPos; ?>"
+                 class="checkbox showdisabled tooltip-<?php echo $sideBarToolTipPos; ?>"
                  title="<?php echo $toolTips['show-disabled']; ?>"/>
           <label for="app-settings-showdisabled"
                  class="tooltip-<?php echo $sideBarToolTipPos; ?>"
@@ -221,7 +225,7 @@ $sideBarToolTipPos = 'top';
           <input id="app-settings-expertmode"
                  type="checkbox"
                  name="expertmode" <?php echo $_['expertmode'] == 'on' ? 'checked="checked"' : ''; ?>
-                 class="checkbox tooltip-<?php echo $sideBarToolTipPos; ?>"
+                 class="checkbox expertmode tooltip-<?php echo $sideBarToolTipPos; ?>"
                  title="<?php echo $toolTips['expert-mode']; ?>"/>
           <label for="app-settings-expertmode"
                  class="tooltip-<?php echo $sideBarToolTipPos; ?>"
@@ -232,7 +236,7 @@ $sideBarToolTipPos = 'top';
         <li class="chosen-dropup">
           <select name="pagerows"
                   data-placeholder="<?php echo $l->t('#Rows'); ?>"
-                  class="table-pagerows chosen-dropup tooltip-<?php echo $sideBarToolTipPos; ?>"
+                  class="table-pagerows pagerows chosen-dropup tooltip-<?php echo $sideBarToolTipPos; ?>"
                   id="app-settings-table-pagerows"
                   title="<?php echo $toolTips['table-rows-per-page']; ?>">
             <?php
@@ -270,7 +274,7 @@ $sideBarToolTipPos = 'top';
             multiple
             name="debugmode"
             data-placeholder="<?php echo $l->t('Enable Debug Mode'); ?>"
-            class="debug-mode chosen-dropup tooltip-<?php echo $sideBarToolTipPos; ?>"
+            class="debug-mode debugmode chosen-dropup tooltip-<?php echo $sideBarToolTipPos; ?>"
             title="<?php echo $toolTips['debug-mode']; ?>">
             <?php
             foreach ($debugModes as $key => $value) {
@@ -286,7 +290,7 @@ $sideBarToolTipPos = 'top';
 </div>
 <div id="app-content">
   <div id="app-inner-content">
-    <form id="personalsettings" class="visible" method="post" action="?app=<?php echo $_['appName']; ?>">
+    <form id="personalsettings" class="visible personal-settings" method="post" action="?app=<?php echo $_['appName']; ?>">
       <input type="hidden" name="requesttoken" value="<?php p($_['requesttoken']); ?>" />
       <input type="hidden" name="template" value="<?php p($template); ?>" />
       <?php echo $navigationControls; ?>

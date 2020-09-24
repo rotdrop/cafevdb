@@ -32,9 +32,3 @@ $dispatcher->addListener(
         OCA\CAFEVDB\Common\Util::addExternalScript("https://maps.google.com/maps/api/js?sensor=false");
     }
 );
-
-\OCP\Util::addScript('cafevdb', 'settings');
-\OCP\Util::addStyle('cafevdb', 'settings');
-
-\OCP\Util::addScript('cafevdb', '../3rdparty/chosen/js/chosen.jquery.min');
-\OCP\Util::addStyle('cafevdb', '../3rdparty/chosen/css/chosen.min');

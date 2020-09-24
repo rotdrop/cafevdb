@@ -45,7 +45,6 @@ $(document).ready(function() {
   }
 
   $('#expertmode').change(function(event) {
-    event.preventDefault();
     var self = $(this);
     var post = self.serialize();
     $.post(OC.filePath('cafevdb', 'ajax/settings', 'expertmode.php'),
@@ -69,17 +68,6 @@ $(document).ready(function() {
     }
     $('#app-settings-expertmode').prop('checked', checked);
     $('select.debug-mode').trigger('chosen:updated');
-    return false;
-  });
-
-  $('#tooltips').change(function(event) {
-    event.preventDefault();
-    var self = $(this);
-    var post = self.serialize();
-    CAFEVDB.toolTipsOnOff(self.prop('checked'));
-    $('#app-settings-tooltips').prop('checked', CAFEVDB.toolTipsEnabled);
-    $.post(OC.filePath('cafevdb', 'ajax/settings', 'tooltips.php'),
-           post, function(data) {});
     return false;
   });
 
@@ -1352,4 +1340,5 @@ $(document).ready(function() {
 
 // Local Variables: ***
 // js3-indent-level: 2 ***
+// js-indent-level: 2 ***
 // End: ***

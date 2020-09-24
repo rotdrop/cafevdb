@@ -46,7 +46,7 @@ class PersonalSettingsController extends Controller {
     parent::__construct($appName, $request);
 
     $this->configService = $configService;
-    $this->personalSettiungs = $personalSettings;
+    $this->personalSettings = $personalSettings;
     $this->l = $this->l10N();
   }
 
