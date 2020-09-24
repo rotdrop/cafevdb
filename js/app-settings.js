@@ -183,14 +183,14 @@ $(document).ready(function() {
   appNav.on('click', '#app-settings-further-settings', function(event) {
     event.stopImmediatePropagation();
 
-    $("#appsettings").tabs({ selected: 0});
-
     OC.appSettings({
       appid:'cafevdb',
       loadJS:true,
       cache:false,
-      scriptName:'settings.php'
+      scriptName:'../../settings/user/cafevdb'
     });
+
+    $("#personal-settngs-container").tabs({ selected: 0});
 
     return false;
   });
