@@ -161,7 +161,7 @@ $expertClass = 'expertmode'.($_['expertmode'] != 'on' ? ' hidden' : '');
 $sideBarToolTipPos = 'auto';
 ?>
 
-<div id="app-navigation" class="app-navigation snapper-enabled">
+<div id="app-navigation" class="personal-settings app-navigation snapper-enabled">
   <ul id="navigation-list">
     <li class="nav-heading">
       <a class="nav-heading" href="#">
@@ -178,7 +178,7 @@ $sideBarToolTipPos = 'auto';
       <button class="settings-button" tabindex="0"></button>
     </div>
     <div id="app-settings-content">
-      <ul class="personal-settings">
+      <ul class="">
         <li>
           <input id="app-settings-tooltips"
                  type="checkbox"

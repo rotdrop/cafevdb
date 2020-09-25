@@ -24,8 +24,9 @@ $(document).ready(function() {
   const container = $('.personal-settings');
 
   const chosenInit = function(container) {
-    container.find('.pagerows').each(function(index) {
+    container.find('select.pagerows').each(function(index) {
       const self = $(this);
+      //console.log("chosen pagerows", self);
       if (CAFEVDB.chosenActive(self)) {
 	self.chosen('destroy');
       }
@@ -36,8 +37,9 @@ $(document).ready(function() {
       });
     });
 
-    container.find('.wysiwyg-editor').each(function(index) {
+    container.find('select.wysiwyg-editor').each(function(index) {
       const self = $(this);
+      //console.log("chosen wysiwyg", self);
       if (CAFEVDB.chosenActive(self)) {
 	self.chosen('destroy');
       }
@@ -47,8 +49,9 @@ $(document).ready(function() {
       });
     });
 
-    container.find('.debugmode').each(function(index) {
+    container.find('select.debugmode').each(function(index) {
       const self = $(this);
+      //console.log("chosen debugmode", self);
       if (CAFEVDB.chosenActive(self)) {
 	self.chosen('destroy');
       }
@@ -64,9 +67,11 @@ $(document).ready(function() {
     chosenInit($(this));
   });
 
-  chosenInit(container);
+  //chosenInit(container);
 
-  //CAFEVDB.addReadyCallback(chosenInit);
+  CAFEVDB.addReadyCallback(function() {
+    chosenInit(container);
+  });
 
   container.on('change', '.tooltips', function(event) {
     var self = $(this);
