@@ -23,7 +23,9 @@
 namespace OCA\CAFEVDB\Controller;
 
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\AppFramework\Http\DataResponse;
 use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IL10N;
@@ -73,6 +75,8 @@ class ExpertModeController extends Controller {
       'blank');
     };
 
+    // may restrict this to the group admins
+
     $templateParameters = [
       'appName' => $this->appName(),
       'expertmode' => $this->getUserValue('expertmode', 'off'),
@@ -94,6 +98,32 @@ class ExpertModeController extends Controller {
       $templateParameters,
       'blank',
     );
+  }
+
+  /**
+   * Return settings form
+   *
+   * @NoAdminRequired
+   */
+  public function action($operation, $data) {
+    switch ($operation) {
+    case 'setupdb':
+    case 'makeviews':
+    case 'syncevents':
+    case 'wikiprojecttoc':
+    case 'attachwebpages':
+    case 'sanitizephones':
+    case 'geodata':
+    case 'uuid':
+    case 'imagemeta':
+      return self::grumble($this->l->t('TO BE IMPLEMENTED'));
+    case 'example':
+      return self::response($this->l->t('Hello World!'));
+    case 'clearoutput':
+      return self::response($this->l->t('empty'));
+    default:
+    }
+    return self::grumble($this->l->t('Unknown Request'));
   }
 
   static private function response($message, $status = Http::STATUS_OK)

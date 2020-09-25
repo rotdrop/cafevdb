@@ -75,6 +75,11 @@ return [
             'url' => '/expertmode/form',
             'verb' => 'GET',
         ],
+        [
+            'name' => 'expert_mode#action',
+            'url' => '/expertmode/action/{operation}',
+            'verb' => 'POST',
+        ],
     ]
 ];
 
