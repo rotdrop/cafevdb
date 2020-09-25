@@ -44,6 +44,7 @@ $(document).ready(function() {
         container.trigger('cafevdb:content-update');
         $.fn.cafevTooltip.remove(); // remove any left-over items
         CAFEVDB.toolTipsInit(container);
+        OCP.Loader.loadScript('cafevdb', 'settings.js');
       });
 
     return false;
