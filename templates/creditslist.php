@@ -22,24 +22,38 @@
 
 namespace OCA\CAFEVDB;
 
-$credits = $_['credits'];
-
-$numItems = 5;
 $items = array();
-for ($cnt = 0; $cnt < $numItems; ++$cnt) {
-    $idx = mt_rand(0, count($credits)-1);
-    $items[] = $credits[$idx];
-    unset($credits[$idx]);
-    $credits = array_values($credits);
+for ($cnt = 0; $cnt < count($credits); ++$cnt) {
+    $items[] = [
+        'data' => $credits[$cnt],
+        'visible' => false,
+    ];
 }
 
-//echo '<pre>'.print_r($credits,true).'</pre>';
+$numItems = 5;
+for ($cnt = 0; $cnt < $numItems; ++$cnt) {
+    $idx = mt_rand(0, count($credits)-1);
+    if (!$items[$idx]['visible']) {
+        $items[$idx]['visible'] = true;
+    } else {
+        // work around "random" values occurring twice
+        foreach ($items as &$item) {
+            if (!$item['visible']) {
+                $items[$idx]['visible'] = true;
+                break;
+            }
+        }
+    }
+}
+
 echo '<ul>
 ';
 foreach($items as $item) {
 ?>
-  <li>
-    <a target="_creditlink" href="<?php echo $item['link']; ?>"><?php echo $item['title']; ?></a>
+  <li<?php p($item['visible'] ? '' : ' class=hidden'); ?>>
+    <a target="_creditlink" href="<?php echo $item['data']['link']; ?>">
+      <?php p($item['data']['title']); ?>
+    </a>
   </li>
 <?php
   } // foreach

@@ -41,6 +41,10 @@ script($appName, 'config');
 
 /*****************************************************************************/
 
+//script($appName, 'jquery-noconflict');
+//script($appName, '../vendor/components/jquery/jquery.min');
+//script($appName, '../vendor/components/jquery-migrate/jquery-migrate.min');
+
 style($appName, 'cafevdb');
 style($appName, 'settings');
 style($appName, 'tooltips');
@@ -152,7 +156,7 @@ if (!isset($_['headerblock']) && isset($_['header'])) {
 
 $expertClass = 'expertmode'.($_['expertmode'] != 'on' ? ' hidden' : '');
 
-$sideBarToolTipPos = 'auto';
+$sideBarToolTipPos = 'top';
 ?>
 
 <div id="app-navigation" class="app-navigation snapper-enabled">
@@ -209,7 +213,7 @@ $sideBarToolTipPos = 'auto';
             <?php echo $l->t('Quick Change-Dialog'); ?>
           </label>
         </li>
-        <li class="<?php echo $expertClass; ?>">
+        <li class="<?php echo $expertClass; ?> expertmode-container">
           <input id="app-settings-showdisabled"
                  type="checkbox"
                  name="showdisabled" <?php echo $_['showdisabled'] == 'on' ? 'checked="checked"' : ''; ?>
@@ -260,7 +264,7 @@ $sideBarToolTipPos = 'auto';
             <?php echo $l->t('Further Settings'); ?>
           </a>
         </li>
-        <li class="<?php echo $expertClass; ?>">
+        <li class="expertmode-container">
           <a id="app-settings-expert-operations"
              class="settings expertoperations tooltip-<?php echo $sideBarToolTipPos; ?>"
              title="<?php echo $toolTips['expert-operations']; ?>"
@@ -268,7 +272,7 @@ $sideBarToolTipPos = 'auto';
             <?php echo $l->t('Expert Operations'); ?>
           </a>
         </li>
-        <li class="<?php echo $expertClass; ?> chosen-dropup">
+        <li class="expertmode-container chosen-dropup">
           <select <?php echo ($_['expertmode'] != 'on' ? 'disabled="disabled"' : '') ?>
             id="app-settings-debugmode"
             multiple

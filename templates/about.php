@@ -58,7 +58,7 @@ $licenceLink = '<a target="_wikipedia" href="http://www.wikipedia.org/w/index.ph
       "itself" every 30 seconds.
     </div>
     <div class="product credits list">
-      <?php echo $this->inc('creditslist', array('credits' => $appInfo['credits']['item'])); ?>
+      <?php echo $this->inc('creditslist', ['credits' => $appInfo['credits']['item']]); ?>
     </div>
   </div>
 </div>

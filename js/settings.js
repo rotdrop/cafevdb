@@ -19,6 +19,9 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+OCP.Loader.loadScript('cafevdb', 'personal-settings.js');
+OCP.Loader.loadStyle('cafevdb', 'settings.css');
+
 $(document).ready(function() {
 
   var adminSettings = $('#adminsettingstabs').length > 0;
@@ -43,167 +46,6 @@ $(document).ready(function() {
       }
     });
   }
-
-  $('#expertmode').change(function(event) {
-    var self = $(this);
-    var post = self.serialize();
-    $.post(OC.filePath('cafevdb', 'ajax/settings', 'expertmode.php'),
-           post,
-           function(data) {
-             var pme = PHPMYEDIT;
-             var pmeForm = $('#content '+pme.formSelector());
-             pmeForm.each(function(index) {
-               var reload = $(this).find(pme.pmeClassSelector('input', 'reload')).first();
-               reload.trigger('click');
-             });
-           });
-    var checked = self.prop('checked');
-    if (checked) {
-      $('#expertbutton').show();
-      $('#expertbutton').css('float', 'left');
-      $('select.debug-mode').prop('disabled', false);
-    } else {
-      $('#expertbutton').hide();
-      $('select.debug-mode').prop('disabled', true);
-    }
-    $('#app-settings-expertmode').prop('checked', checked);
-    $('select.debug-mode').trigger('chosen:updated');
-    return false;
-  });
-
-  $('#filtervisibility').change(function(event) {
-    event.preventDefault();
-    var self = $(this);
-    var post = self.serialize();
-    $.post(OC.filePath('cafevdb', 'ajax/settings', 'filtervisibility.php'),
-           post,
-           function(data) {
-             return;
-           });
-    var checked = self.prop('checked');
-    if (checked) {
-      $('input.pme-search').trigger('click');
-    } else {
-      $('input.pme-hide').trigger('click');
-    }
-    $('#app-settings-filtervisibility').prop('checked', checked);
-    return false;
-  });
-
-  $('#directchange').change(function(event) {
-    event.preventDefault();
-    var self = $(this);
-    var post = self.serialize();
-    $.post(OC.filePath('cafevdb', 'ajax/settings', 'directchange.php'),
-           post,
-           function(data) {
-             return;
-           });
-    var checked = self.prop('checked');
-    PHPMYEDIT.directChange = checked;
-    $('#app-settings-directchange').prop('checked', checked);
-    return false;
-  });
-
-  $('#showdisabled').change(function(event) {
-    event.preventDefault();
-    var self = $(this);
-    var post = self.serialize();
-    console.log('blah');
-    $.post(OC.filePath('cafevdb', 'ajax/settings', 'showdisabled.php'),
-           post,
-           function(data) {
-             var pme = PHPMYEDIT;
-             var pmeForm = $('#content '+pme.formSelector()+'.show-hide-disabled');
-             console.log('form',pmeForm);
-             pmeForm.each(function(index) {
-                       var form = $(this);
-                       var reload = form.find(pme.pmeClassSelector('input', 'reload')).first();
-                       if (reload.length > 0) {
-                         form.append('<input type="hidden"'
-                                    + ' name="'+pme.pmeSys('sw')+'"'
-                                    + ' value="Clear"/>');
-                         reload.trigger('click');
-                       }
-                     });
-             return;
-           });
-    var checked = self.prop('checked');
-    $('#app-settings-showdisabled').prop('checked', checked);
-    return false;
-  });
-
-  $('select.table-pagerows').chosen({
-    disable_search:true,
-    inherit_select_classes:true,
-    width:'10ex'
-  });
-  $('select.table-pagerows').change(function(event) {
-    event.preventDefault();
-    var select = $(this);
-    $('#cafevdb #msg').hide();
-
-    $.post(OC.filePath('cafevdb', 'ajax/settings', 'pagerows.php'),
-           select.serialize(),
-           function (data) {
-             if (data.status == 'success') {
-               $('#cafevdb #msg').html(data.data.message);
-             } else {
-               $('#cafevdb #msg').html(t('cafevdb','Error:')+' '+data.data.message);
-             }
-             $('#cafevdb #msg').show();
-             return false;
-           }, 'json');
-
-    return false;
-  });
-
-  $('select.debug-mode').chosen({
-    inherit_select_classes:true,
-    disable_search:true
-  });
-  $('select.debug-mode').change(function(event) {
-    event.preventDefault();
-    var select = $(this);
-    $('#cafevdb #msg').hide();
-
-    $.post(OC.filePath('cafevdb', 'ajax/settings', 'debugmode.php'),
-           { debugModes: $('select.debug-mode').val() },
-           function(data) {
-             if (data.status == 'success') {
-               $('#cafevdb #msg').html(data.data.message);
-               CAFEVDB.debugModes = data.data.value;
-             } else {
-               $('#cafevdb #msg').html(t('cafevdb','Error:')+' '+data.data.message);
-             }
-             $('#cafevdb #msg').show();
-             return false;
-           }, 'json');
-
-    return false;
-  });
-
-  $('select.wysiwyg-editor').chosen({ disable_search:true });
-  $('select.wysiwyg-editor').change(function (event) {
-    event.preventDefault();
-    var select = $(this);
-    $('#cafevdb #msg').hide();
-
-    $.post(OC.filePath('cafevdb', 'ajax/settings', 'wysiwyg-editor.php'),
-           select.serialize(),
-           function (data) {
-             if (data.status == 'success') {
-               $('#cafevdb #msg').html(data.data.message);
-               CAFEVDB.wysiwygEditor = data.data.value;
-             } else {
-               $('#cafevdb #msg').html(t('cafevdb','Error:')+' '+data.data.message);
-             }
-             $('#cafevdb #msg').show();
-             return false;
-           }, 'json');
-
-    return false;
-  });
 
   // 'show password' checkbox
   var tmp = $('#userkey #encryptionkey').val();
@@ -1298,35 +1140,6 @@ $(document).ready(function() {
 	   }, 'json');
     return false;
   })
-
-  ///////////////////////////////////////////////////////////////////////////
-  //
-  // Credits list
-  //
-  ///////////////////////////////////////////////////////////////////////////
-
-  var loadCredits = function() {
-    $.post(OC.filePath('cafevdb', 'ajax/settings', 'creditslist.php'),
-           {},
-           function(data) {
-             if (!CAFEVDB.ajaxErrorHandler(data, [ 'contents' ])) {
-               return false;
-             }
-             $('div.cafevdb.about div.product.credits.list').html(data.data.contents);
-             return false;
-           });
-  };
-  if (CAFEVDB.creditsTimer > 0) {
-    clearInterval(CAFEVDB.creditsTimer);
-  }
-  CAFEVDB.creditsTimer = setInterval(function() {
-                           if ($('div.cafevdb.about div.product.credits.list').length > 0) {
-                             loadCredits()
-                           } else {
-                             clearInterval(CAFEVDB.creditsTimer);
-                           }
-                         }, 30000);
-
 
   ///////////////////////////////////////////////////////////////////////////
   //

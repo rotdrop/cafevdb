@@ -1,5 +1,4 @@
-<?php
-/* Orchestra member, musician and project management application.
+/* Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
@@ -19,18 +18,16 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-namespace OCA\CAFEVDB\Traits;
-
-trait WysiwygTrait {
-  protected $wysiwygOptions = [
-    'tinymce' => [ 'name' => 'TinyMCE', 'enabled' => true],
-    // @@TODO: is inline script really so evil?
-    'ckeditor' => [ 'name' => 'CKEditor', 'enabled' => false],
-  ];
-}
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
+console.log("Try to remove $");
+jQuery.noConflict(true);
+var noGlobal = true;
+window.jQuery = undefined;
+window.$ = undefined;
+delete window.jQuery;
+delete window.$;
+delete window['jQuery'];
+delete window['$'];
+console.log(window['$']);
+Object.defineProperty(window, '$', {
+  get: () =>
+});

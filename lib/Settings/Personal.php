@@ -33,7 +33,6 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 
 class Personal implements ISettings {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
-  use \OCA\CAFEVDB\Traits\WysiwygTrait;
 
   const ERROR_TEMPLATE = "errorpage";
   const TEMPLATE = "settings";
@@ -85,9 +84,9 @@ class Personal implements ISettings {
         'filtervisibility' => $this->getUserValue('filtervisibility', 'off'),
         'directchange' => $this->getUserValue('directchange', 'off'),
         'showdisabled' => $this->getUserValue('showdisabled', 'off'),
-        'expertmode' => $this->getUserValue('expertmode', false),
+        'expertmode' => $this->getUserValue('expertmode', 'off'),
         'editor' => $this->getUserValue('editor', self::DEFAULT_EDITOR),
-        'wysiwygOptions' => $this->wysiwygOptions,
+        'wysiwygOptions' => ConfigService::WYSIWYG_EDITORS,
       ];
 
       if ($isGroupAdmin) {

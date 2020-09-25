@@ -1305,6 +1305,8 @@ var CAFEVDB = CAFEVDB || {};
     }
     var container = $(containerSel);
 
+    console.log("tooltips container", containerSel, container.length);
+
     // container.find('button.settings').cafevTooltip({placement:'bottom'});
     container.find('select').cafevTooltip({placement:'right'});
     container.find('option').cafevTooltip({placement:'right'});
@@ -1351,7 +1353,8 @@ var CAFEVDB = CAFEVDB || {};
       { placement:'bottom', cssclass:'tooltip-wide' }
     );
 
-    container.find('[class*="tooltip-"]').each(function(indx) {
+    container.find('[class*="tooltip-"]').each(function(index) {
+      //console.log("tooltip autoclass", $(this), $(this).attr('title'));
       $(this).cafevTooltip({});
     });
 
@@ -1414,6 +1417,10 @@ var CAFEVDB = CAFEVDB || {};
 
 $(document).ready(function(){
 
+
+$.getScript(OC.filePath('cafevdb', 'js', 'test.js'));
+//OCP.Loader.loadScript('cafevdb', 'test.js');
+
   document.onkeypress = CAFEVDB.stopRKey;
 
   var resizeCount = 0;
@@ -1450,24 +1457,6 @@ $(document).ready(function(){
    */
   var content = $('#content');
   var appInnerContent = $('#app-inner-content');
-
-  if (false) {
-  appInnerContent.on('click keydown', '#personalsettings .tooltips',
-             function(event) {
-               $('body').removeClass('dialog-titlebar-clicked');
-               var self = $(this);
-               CAFEVDB.toolTipsOnOff(self.hasClass('tooltips-disabled'));
-	       $.post(OC.generateUrl('/apps/cafevdb/settings/personal/set/tooltips'),
-		      { 'value': CAFEVDB.toolTipsEnabled })
-		 .done(function(data) {
-		   console.log(data);
-		 })
-		 .fail(function(data) {
-		   console.log(data);
-		 });
-               return false;
-             });
-  }
 
   content.on('click', ':button.events',
              function(event) {

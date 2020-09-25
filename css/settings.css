@@ -137,31 +137,31 @@ input.randomkey {
   width: 18em;
 }
 
-#appsettings_popup div.settings-control {
+#personal-settings-container div.settings-control {
   margin:0.2ex 0 0.2ex 0;
 }
 
-#appsettings_popup div.locale.information {
+#personal-settings-container div.locale.information {
   margin-top:1ex;
 }
 
-#appsettings_popup span.locale.heading {
+#personal-settings-container span.locale.heading {
   font-weight:bold;
 }
 
-#appsettings_popup span.locale.timestamp {
+#personal-settings-container span.locale.timestamp {
   color:red;
 }
 
-#appsettings_popup span.locale.time {
+#personal-settings-container span.locale.time {
   color:blue;
 }
 
-#appsettings_popup span.locale.timezone {
+#personal-settings-container span.locale.timezone {
   color:red;
 }
 
-#appsettings_popup span.locale.thelocale {
+#personal-settings-container span.locale.thelocale {
   color:blue;
 }
 
@@ -217,4 +217,8 @@ input.randomkey {
     margin-left:1em;
     position: fixed !important;
     z-index: 1050;
+}
+
+.personal-settings .debugmode-container {
+  max-width: 40ex;
 }

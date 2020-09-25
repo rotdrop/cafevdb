@@ -916,7 +916,7 @@ input[type=checkbox].cafevdb-password-show + label.cafevdb-password-show {
   margin-left: -36px;
   height: 14px;
   width: 24px;
-  background-image: url("../../../core/img/actions/toggle.png");
+  background-image: url("../../../core/img/actions/toggle.svg");
   background-repeat: no-repeat;
   background-position: center;
   ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";

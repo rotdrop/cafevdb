@@ -27,6 +27,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 style($appName, 'cafevdb');
 style($appName, 'settings');
 style($appName, 'tooltips');
+style($appName, 'about');
 style($appName, 'dialogs');
 
 script($appName, 'cafevdb');
@@ -67,6 +68,9 @@ $oldlocale = setlocale(LC_TIME, $locale);
 $time = strftime('%x %X');
 setlocale(LC_TIME, $oldlocale);
 
+$expertClass = $expertmode == 'on' ? '' : ' hidden';
+$toolTipClass = "tooltip-right";
+
 ?>
 <div id="personal-settings-container">
   <ul id="adminsettingstabs">
@@ -86,49 +90,55 @@ setlocale(LC_TIME, $oldlocale);
     <form id="cafevdb" class="personal-settings">
       <input id="tooltips"
              type="checkbox"
-             class="checkbox tooltips"
+             class="checkbox tooltips <?php p($toolTipClass); ?>"
              name="tooltips" <?php echo $showToolTips == 'on' ? 'checked="checked"' : ''; ?>
-             id="tooltips"
              title="<?php echo $toolTips['show-tool-tips']; ?>"
              />
-      <label for="tooltips" title="<?php echo $tooltipstitle; ?>">
+      <label for="tooltips" class="<?php p($toolTipClass); ?>" title="<?php echo $tooltipstitle; ?>">
         <?php echo $l->t('Tool-Tips') ?>
       </label>
       <br />
       <input id="filtervisibility"
              type="checkbox"
-             class="checkbox filtervisibility"
+             class="checkbox filtervisibility <?php p($toolTipClass); ?>"
              name="filtervisibility" <?php echo $_['filtervisibility'] == 'on' ? 'checked="checked"' : ''; ?>
              title="<?php echo $filtervistitle ?>"
              />
-      <label for="filtervisibility" title="<?php echo $filtervistitle; ?>">
+      <label for="filtervisibility"
+             class="<?php p($toolTipClass); ?>"
+             title="<?php echo $filtervistitle; ?>">
         <?php echo $l->t('Filter-Controls') ?>
       </label>
       <br />
       <input id="directchange"
              type="checkbox"
-             class="checkbox directchange"
+             class="checkbox directchange <?php p($toolTipClass); ?>"
              name="directchange" <?php echo $_['directchange'] == 'on' ? 'checked="checked"' : ''; ?>
              title="<?php echo $directchgtitle ?>"
              />
-      <label for="directchange" title="<?php echo $directchgtitle; ?>">
+      <label for="directchange"
+             class="<?php p($toolTipClass); ?>"
+             title="<?php echo $directchgtitle; ?>">
         <?php echo $l->t('Quick Change-Dialog') ?>
       </label>
       <br />
-      <input id="showdisabled"
-             type="checkbox"
-             class="checkbox showdisabled"
-             name="showdisabled" <?php echo $_['showdisabled'] == 'on' ? 'checked="checked"' : ''; ?>
-             title="<?php echo $showdistitle ?>"
-             />
-      <label for="showdisabled" title="<?php echo $showdistitle; ?>">
-        <?php echo $l->t('Show Disabled Data-Sets'); ?>
-      </label>
-      <br />
+      <div class="expertmode-container<?php p($expertClass); ?>">
+        <input id="showdisabled"
+               type="checkbox"
+               class="checkbox showdisabled <?php p($toolTipClass); ?>"
+               name="showdisabled" <?php echo $_['showdisabled'] == 'on' ? 'checked="checked"' : ''; ?>
+               title="<?php echo $showdistitle ?>"
+               />
+        <label for="showdisabled"
+               class="<?php p($toolTipClass); ?>"
+               title="<?php echo $showdistitle; ?>">
+          <?php echo $l->t('Show Disabled Data-Sets'); ?>
+        </label>
+      </div>
       <div class="table-pagerows settings-control">
         <select name="pagerows"
                 data-placeholder="<?php echo $l->t('#Rows'); ?>"
-                class="table-pagerows pagerows"
+                class="table-pagerows pagerows <?php p($toolTipClass); ?>"
                 id="table-pagerows"
                 title="<?php echo $pagerowstitle; ?>">
           <?php
@@ -138,14 +148,16 @@ setlocale(LC_TIME, $oldlocale);
           }
           ?>
         </select>
-        <label for="table-pagerows" title="<?php echo $pagerowstitle; ?>">
+        <label for="table-pagerows"
+               class="<?php p($toolTipClass); ?>"
+               title="<?php echo $pagerowstitle; ?>">
           <?php echo $l->t('Display #Rows/Page in Tables'); ?>
         </label>
       </div>
       <div class="wysiwygeditor settings-control">
         <select name="wysiwygEditor"
                 data-placeholder="<?php echo $l->t('WYSIWYG Editor'); ?>"
-                class="wysiwyg-editor wysiwyg-editor"
+                class="wysiwyg wysiwyg-editor <?php p($toolTipClass); ?>"
                 title="<?php echo $toolTips['wysiwyg-edtior']; ?>">
           <?php
           foreach ($wysiwygOptions as $key => $value) {
@@ -157,26 +169,30 @@ setlocale(LC_TIME, $oldlocale);
       </div>
       <input id="expertmode"
              type="checkbox"
-             class="checkbox expertmode"
-             name="expertmode" <?php echo $_['expertmode'] == 'on' ? 'checked="checked"' : ''; ?>
+             class="checkbox expertmode <?php p($toolTipClass); ?>"
+             name="expertmode" <?php echo $expertmode == 'on' ? 'checked="checked"' : ''; ?>
              id="expertmode" title="<?php echo $experttitle ?>"
              />
-      <label for="expertmode" title="<?php echo $experttitle; ?>">
-        <?php echo $l->t('Expert-Mode') ?>
-      </label>
+      <label for="expertmode"
+             class="<?php p($toolTipClass); ?>"
+             title="<?php echo $experttitle; ?>">
+          <?php echo $l->t('Expert-Mode') ?>
+        </label>
       <br />
-      <select <?php echo ($_['expertmode'] != 'on' ? 'disabled="disabled"' : '') ?>
-        multiple
-        name="debugmode"
-        data-placeholder="<?php echo $l->t('Enable Debug Mode'); ?>"
-        class="debug-mode debugmode"
-        title="<?php echo $debugtitle; ?>">
-        <?php
-        foreach ($debugModes as $key => $value) {
-          echo '<option value="'.$key.'" '.(($debugMode & $key) != 0 ? 'selected="selected"' : '').'>'.$value.'</option>'."\n";
-        }
-        ?>
-      </select>
+      <div class="debugmode-container expertmode-container<?php p($expertClass); ?>">
+        <select
+          multiple
+          name="debugmode"
+          data-placeholder="<?php echo $l->t('Enable Debug Mode'); ?>"
+          class="debug-mode debugmode <?php p($toolTipClass); ?>"
+          title="<?php echo $debugtitle; ?>">
+          <?php
+          foreach ($debugModes as $key => $value) {
+            echo '<option value="'.$key.'" '.(($debugMode & $key) != 0 ? 'selected="selected"' : '').'>'.$value.'</option>'."\n";
+          }
+          ?>
+        </select>
+      </div>
       <br />
       <input type="text" style="display:none;width:0%;float: left;" name="dummy" id="dummy" value="dummy" placeholder="dummy" title="<?php echo $l->t('Dummy'); ?>" />
       <span class="statusmessage" id="msg"></span>

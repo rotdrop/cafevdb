@@ -92,7 +92,6 @@ class PersonalSettingsController extends Controller {
       } else {
         $debugModes = $value;
       }
-      trigger_error(print_r($debugModes, true));
       $debug = 0;
       foreach ($debugModes as $item) {
         $debug |= $item['value'];
@@ -104,7 +103,13 @@ class PersonalSettingsController extends Controller {
       return new DataResponse([
         'message' => $this->l->t('Setting %2$s to %1$s', [$debug, 'debug']),
         'value' => $debug
-        ]);
+      ]);
+    case 'wysiwyg':
+      if (!isset(ConfigService::WYSIWYG_EDITORS[$value])) {
+        return grumble($this->l->t('Unknown WYSIWYG-editor: %s$s', [ $value ]));
+      }
+      $this->setUserValue($parameter, $value);
+      return self::response($this->l->t('Setting %2$s to %1$s', [$value, $parameter]));
     default:
     }
     return self::grumble($this->l->t('Unknown Request'));

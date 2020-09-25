@@ -131,6 +131,11 @@ class ConfigService {
     'redaxoConcertModule',
     'redaxoRehearsalsModule',
   ];
+  const WYSIWYG_EDITORS = [
+    'tinymce' => [ 'name' => 'TinyMCE', 'enabled' => true],
+    // ckeditor still uses excessive inline js-code. So what?
+    'ckeditor' => [ 'name' => 'CKEditor', 'enabled' => true],
+  ];
 
   /** @var array */
   protected $encryptionCache;

@@ -12,7 +12,9 @@
         "rotdrop/bav": "dev-master",
         "globalcitizen/php-iban": "^4.0",
         "phpmailer/phpmailer": "dev-master",
-        "ioncube/php-openssl-cryptor": "dev-master"
+        "ioncube/php-openssl-cryptor": "dev-master",
+        "components/jquery": "^3.5.0",
+        "components/jquery-migrate": "^3.0.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.4"
