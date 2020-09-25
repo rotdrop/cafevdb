@@ -49,9 +49,7 @@ class ToolTipsService implements \ArrayAccess, \Countable
   }
 
   public function toolTips() {
-    if (empty($this->toolTipsData)) {
-      $this->toolTipsData = $this->makeToolTips();
-    }
+    $this->makeToolTips();
     return $this->$toolTipsData;
   }
 
@@ -116,15 +114,15 @@ class ToolTipsService implements \ArrayAccess, \Countable
 
     $tip = '';
     if (!empty($subKey)) {
-      if (isset(self::$toolTipsArray[$key][$subKey])) {
-        $tip = $this->toolTipsArray[$key][$subKey];
-      } else if (isset($this->toolTipsArray[$key]['default'])) {
-        $tip = $this->toolTipsArray[$key]['default'];
-      } else if (is_scalar($this->toolTipsArray[$key])) {
-        $tip = $this->toolTipsArray[$key];
+      if (isset(self::$toolTipsData[$key][$subKey])) {
+        $tip = $this->toolTipsData[$key][$subKey];
+      } else if (isset($this->toolTipsData[$key]['default'])) {
+        $tip = $this->toolTipsData[$key]['default'];
+      } else if (is_scalar($this->toolTipsData[$key])) {
+        $tip = $this->toolTipsData[$key];
       }
-    } else if (isset($this->toolTipsArray[$key])) {
-      $tip = $this->toolTipsArray[$key];
+    } else if (isset($this->toolTipsData[$key])) {
+      $tip = $this->toolTipsData[$key];
       !empty($tip['default']) && $tip = $tip['default'];
     }
 
@@ -147,7 +145,10 @@ class ToolTipsService implements \ArrayAccess, \Countable
 
   private function makeToolTips()
   {
-    return [
+    if (!empty($this->toolTipsData)) {
+      return;
+    }
+    $this->toolTipsData = [
       'address-book-emails' => $this->l->t('Opens a select-box with choices from the shared Owncloud-addressbook. You can also add new em@il-addresses to the address-book for later reusal. The addresses can also be added in the Owncloud `Contacts\'-App.'),
 
       'blog-acceptentry' => $this->l->t('Save the changes for this blog-entry.'),
