@@ -51,7 +51,6 @@ class PageController extends Controller {
   /** @var ConfigCheck */
   private $configCheck;
 
-  //@@TODO inject config via constructor
   public function __construct(
     $appName,
     IRequest $request,

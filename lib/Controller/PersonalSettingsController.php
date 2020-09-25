@@ -41,7 +41,6 @@ class PersonalSettingsController extends Controller {
   /** @var Personal */
   private $personalSettings;
 
-  //@@TODO inject config via constructor
   public function __construct($appName, IRequest $request, ConfigService $configService, Personal $personalSettings) {
     parent::__construct($appName, $request);
 
