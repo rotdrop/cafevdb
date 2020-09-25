@@ -146,7 +146,8 @@ var CAFEVDB = CAFEVDB || {};
         html: true,
         placement: 'auto',
         cssclass: [],
-        fallbackPlacement: 'flip'
+        fallbackPlacement: 'flip',
+        boundary: 'viewport'
       }
       argument = $.extend(true, {}, options, argument);
       if (typeof argument.placement == 'string' && !argument.placement.match(/auto/)) {
