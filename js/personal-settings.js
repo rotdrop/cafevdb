@@ -21,22 +21,34 @@
 
 $(document).ready(function() {
 
-  CAFEVDB.addReadyCallback(function() {
-    $('.personal-settings select.debugmode').chosen({
-      disable_search:true,
-      inherit_select_classes:true,
-      width:'100%'
-    });
+  const container = $('.personal-settings');
 
-    $('.personal-settings select.pagerows').chosen({
+  const chosenInit = function() {
+    container.find('.pagerows').chosen({
       disable_search:true,
       inherit_select_classes:true,
       width:'10ex'
     });
 
+    container.find('.wysiwyg-editor').chosen({
+      inherit_select_classes:true,
+      disable_search:true
+    });
+
+    container.find('.debugmode').chosen({
+      inherit_select_classes:true,
+      disable_search:true,
+      width:'100%'
+    });
+  };
+
+  container.on('cafevdb:content-update', function(event) {
+    chosenInit();
   });
 
-  $('.personal-settings .tooltips').on('change', function(event) {
+  CAFEVDB.addReadyCallback(chosenInit);
+
+  container.on('change', '.tooltips', function(event) {
     var self = $(this);
     CAFEVDB.toolTipsOnOff(self.prop('checked'));
     $.post(OC.generateUrl('/apps/cafevdb/settings/personal/set/tooltips'),
@@ -56,7 +68,7 @@ $(document).ready(function() {
     return false;
   });
 
-  $('.personal-settings .filtervisibility').on('change', function(event) {
+  container.on('change', '.filtervisibility', function(event) {
     const self = $(this);
     const checked = self.prop('checked');
     $.post(OC.generateUrl('/apps/cafevdb/settings/personal/set/filtervisibility'),
@@ -76,7 +88,7 @@ $(document).ready(function() {
     return false;
   });
 
-  $('.personal-settings .directchange').on('change', function(event) {
+  container.on('change', '.directchange', function(event) {
     var self = $(this);
     var checked = self.prop('checked')
     $.post(OC.generateUrl('/apps/cafevdb/settings/personal/set/directchange'),
@@ -94,7 +106,7 @@ $(document).ready(function() {
     return false;
   });
 
-  $('.personal-settings .showdisabled').on('change', function(event) {
+  container.on('change', '.showdisabled', function(event) {
     var self = $(this);
     var checked = self.prop('checked')
     $.post(OC.generateUrl('/apps/cafevdb/settings/personal/set/showdisabled'),
@@ -128,7 +140,7 @@ $(document).ready(function() {
     return false;
   });
 
-  $('.personal-settings .expertmode').on('change', function(event) {
+  container.on('change', '.expertmode', function(event) {
     var self = $(this);
     var checked = self.prop('checked');
     $.post(OC.generateUrl('/apps/cafevdb/settings/personal/set/expertmode'),
@@ -158,7 +170,7 @@ $(document).ready(function() {
     return false;
   });
 
-  $('.personal-settings .pagerows').on('change', function(event) {
+  container.on('change', '.pagerows', function(event) {
     const self = $(this);
     const value = self.val();
     $.post(OC.generateUrl('/apps/cafevdb/settings/personal/set/pagerows'),
@@ -173,7 +185,7 @@ $(document).ready(function() {
     return false;
   });
 
-  $('.personal-settings .debugmode').on('change', function(event) {
+  container.on('change', '.debugmode', function(event) {
     const self = $(this);
     const post = self.serializeArray();
     console.log(post);
@@ -190,7 +202,7 @@ $(document).ready(function() {
     return false;
   });
 
-  $('.personal-settings .wysiwyg').on('change', function(event) {
+  container.on('change', '.wysiwyg', function(event) {
     const self = $(this);
     const value = self.val();
     $.post(OC.generateUrl('/apps/cafevdb/settings/personal/set/wysiwyg'),
@@ -210,18 +222,18 @@ $(document).ready(function() {
   // chosen stuff
   //
 
-  $('.personal-settings .pagerows').chosen({
+  container.find('.pagerows').chosen({
     disable_search:true,
     inherit_select_classes:true,
     width:'10ex'
   });
 
-  $('.personal-settings .wysiwyg-editor').chosen({
+  container.find('.wysiwyg-editor').chosen({
     inherit_select_classes:true,
     disable_search:true
   });
 
-  $('.personal-settings .debugmode').chosen({
+  container.find('.debugmode').chosen({
     inherit_select_classes:true,
     disable_search:true,
     width:'100%'
