@@ -19,32 +19,33 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-OCP.Loader.loadScript('cafevdb', 'personal-settings.js');
-OCP.Loader.loadStyle('cafevdb', 'settings.css');
+//OCP.Loader.loadScript('cafevdb', 'personal-settings.js');
+//OCP.Loader.loadStyle('cafevdb', 'settings.css');
 
 $(document).ready(function() {
 
-  var adminSettings = $('#adminsettingstabs').length > 0;
+  const appSettingsContainer = $('.app-admin-settings');
+
+  appSettingsContainer.on("tabsselect", '#personal-settings-container', function (event, ui) {
+    $('div.statusmessage').hide();
+      $('span.statusmessage').hide();
+  });
+
+  appSettingsContainer.on("tabsshow", '#personal-settings-container', function (event, ui) {
+    if (ui.index == 3) {
+      $('#smtpsecure').chosen({ disable_search_threshold: 10 });
+      $('#imapsecure').chosen({ disable_search_threshold: 10 });
+    } else {
+      //$('#smtpsecure').chosen().remove();
+      //$('#imapsecure').chosen().remove();
+    }
+  });
+
+  const adminSettings = $('#adminsettingstabs').length > 0;
 
   if (adminSettings) {
-
     const container = $('#personal-settings-container');
-
     container.tabs({ selected: 0});
-    container.on("tabsselect", function (event, ui) {
-      $('div.statusmessage').hide();
-      $('span.statusmessage').hide();
-    });
-
-    container.on("tabsshow", function (event, ui) {
-      if (ui.index == 3) {
-        $('#smtpsecure').chosen({ disable_search_threshold: 10 });
-        $('#imapsecure').chosen({ disable_search_threshold: 10 });
-      } else {
-        //$('#smtpsecure').chosen().remove();
-        //$('#imapsecure').chosen().remove();
-      }
-    });
   }
 
   // 'show password' checkbox
@@ -1150,7 +1151,6 @@ $(document).ready(function() {
   CAFEVDB.toolTipsInit('#personal-settings-container');
 
 });
-
 // Local Variables: ***
 // js3-indent-level: 2 ***
 // js-indent-level: 2 ***

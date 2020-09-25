@@ -72,7 +72,7 @@ $expertClass = $expertmode == 'on' ? '' : ' hidden';
 $toolTipClass = "tooltip-right";
 
 ?>
-<div id="personal-settings-container">
+<div id="personal-settings-container" class="app-admin-settings">
   <ul id="adminsettingstabs">
     <li><a href="#tabs-1"><?php echo $l->t('Personal'); ?></a></li>
     <?php $tabNo = 2; if ($_['adminsettings']) { ?>

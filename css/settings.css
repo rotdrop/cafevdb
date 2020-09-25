@@ -165,6 +165,10 @@ input.randomkey {
   color:blue;
 }
 
+#app-settings-content input[type="checkbox"].checkbox + label {
+  width:auto;
+}
+
 #app-settings-content a.settings {
     background-color: transparent;
     background-repeat: no-repeat;
@@ -211,9 +215,32 @@ input.randomkey {
     min-height:inherit;
 }
 
+.popup {
+    background-color: #fff;
+    border-radius: 3px;
+    box-shadow: 0 0 10px #aaa;
+    color: #333;
+    /* padding: 10px; */
+    position: fixed !important;
+    z-index: 100;
+}
+
+.popup > div:first-child {
+    padding: 10px;
+}
+
+.popup .close {
+    position: absolute;
+    top: 0.2em;
+    right: 0.2em;
+    height: 20px;
+    width: 20px;
+    background: url('../../../core/img/actions/close.svg') no-repeat center;
+}
+
 #appsettings_popup.popup.bottomleft {
     bottom:1em;
-    left:250px;
+    left:300px;
     margin-left:1em;
     position: fixed !important;
     z-index: 1050;

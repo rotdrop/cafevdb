@@ -70,6 +70,11 @@ return [
             'url' => '/settings/personal/form',
             'verb' => 'GET',
         ],
+        [
+            'name' => 'expert_mode#form',
+            'url' => '/expertmode/form',
+            'verb' => 'GET',
+        ],
     ]
 ];
 

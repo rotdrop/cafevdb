@@ -39,7 +39,7 @@ for ($cnt = 0; $cnt < $numItems; ++$cnt) {
         // work around "random" values occurring twice
         foreach ($items as &$item) {
             if (!$item['visible']) {
-                $items[$idx]['visible'] = true;
+                $item['visible'] = true;
                 break;
             }
         }

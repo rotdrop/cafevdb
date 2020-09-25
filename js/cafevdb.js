@@ -726,6 +726,33 @@ var CAFEVDB = CAFEVDB || {};
     return result;
   }
 
+  /**A variant of the old fashioned appsettings with a callback
+   * instead of script loading
+   */
+  CAFEVDB.appSettings = function(route, callback) {
+    var popup = $('#appsettings_popup');
+    if (popup.is(':visible')) {
+      popup.hide().html('');
+    } else {
+      const arrowclass = popup.hasClass('topright') ? 'up' : 'left';
+      $.get(OC.generateUrl('/apps/cafevdb/' + route))
+	.done(function(data) {
+	  popup.html(data).ready(function() {
+	    // assume the first element is a container div
+	    popup.find(">:first-child").prepend('<span class="arrow ' + arrowclass + '"></span><h2>' + t('core', 'Settings') + '</h2><a class="close"></a>').show();
+	    popup.find('.close').bind('click', function() {
+	      popup.hide().html('');
+	    });
+	    popup.removeClass('hidden');
+	    callback(popup);
+	  }).show();
+	})
+	.fail(function(data) {
+	  console.log(data);
+	});
+    }
+  };
+
 
   /**Generate a form with given values, inject action (URL) and target
    * (iframe, ..), add to document, submit, remove from document.

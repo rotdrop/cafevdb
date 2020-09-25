@@ -157,7 +157,7 @@ if (!isset($_['headerblock']) && isset($_['header'])) {
 
 $expertClass = 'expertmode'.($_['expertmode'] != 'on' ? ' hidden' : '');
 
-$sideBarToolTipPos = 'top';
+$sideBarToolTipPos = 'auto';
 ?>
 
 <div id="app-navigation" class="app-navigation snapper-enabled">

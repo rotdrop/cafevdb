@@ -23,30 +23,50 @@ $(document).ready(function() {
 
   const container = $('.personal-settings');
 
-  const chosenInit = function() {
-    container.find('.pagerows').chosen({
-      disable_search:true,
-      inherit_select_classes:true,
-      width:'10ex'
+  const chosenInit = function(container) {
+    container.find('.pagerows').each(function(index) {
+      const self = $(this);
+      if (CAFEVDB.chosenActive(self)) {
+	self.chosen('destroy');
+      }
+      self.chosen({
+	disable_search:true,
+	inherit_select_classes:true,
+	width:'10ex'
+      });
     });
 
-    container.find('.wysiwyg-editor').chosen({
-      inherit_select_classes:true,
-      disable_search:true
+    container.find('.wysiwyg-editor').each(function(index) {
+      const self = $(this);
+      if (CAFEVDB.chosenActive(self)) {
+	self.chosen('destroy');
+      }
+      self.chosen({
+	inherit_select_classes:true,
+	disable_search:true
+      });
     });
 
-    container.find('.debugmode').chosen({
-      inherit_select_classes:true,
-      disable_search:true,
-      width:'100%'
+    container.find('.debugmode').each(function(index) {
+      const self = $(this);
+      if (CAFEVDB.chosenActive(self)) {
+	self.chosen('destroy');
+      }
+      self.chosen({
+	inherit_select_classes:true,
+	disable_search:true,
+	width:'100%'
+      });
     });
   };
 
   container.on('cafevdb:content-update', function(event) {
-    chosenInit();
+    chosenInit($(this));
   });
 
-  CAFEVDB.addReadyCallback(chosenInit);
+  chosenInit(container);
+
+  //CAFEVDB.addReadyCallback(chosenInit);
 
   container.on('change', '.tooltips', function(event) {
     var self = $(this);
@@ -217,28 +237,6 @@ $(document).ready(function() {
     return false;
   });
 
-  ///////////////////////////////////////////////////////////////////////
-  //
-  // chosen stuff
-  //
-
-  container.find('.pagerows').chosen({
-    disable_search:true,
-    inherit_select_classes:true,
-    width:'10ex'
-  });
-
-  container.find('.wysiwyg-editor').chosen({
-    inherit_select_classes:true,
-    disable_search:true
-  });
-
-  container.find('.debugmode').chosen({
-    inherit_select_classes:true,
-    disable_search:true,
-    width:'100%'
-  });
-
   ///////////////////////////////////////////////////////////////////////////
   //
   // Credits list
@@ -282,7 +280,6 @@ $(document).ready(function() {
   //
   ///////////////////////////////////////////////////////////////////////////
 
-  console.log('PS', $('#personal-settings-container').length);
   CAFEVDB.toolTipsInit('#personal-settings-container');
 
 });

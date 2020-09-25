@@ -36,31 +36,32 @@ $(document).ready(function() {
     return false;
   });
 
-
   appNav.on('click', '#app-settings-further-settings', function(event) {
-    event.stopImmediatePropagation();
-
-    OC.appSettings({
-      appid:'cafevdb',
-      loadJS:'test.js',
-      cache:false,
-      scriptName:'settings/personal/form'
-    });
-
-    $("#personal-settngs-container").tabs({ selected: 0});
+    CAFEVDB.appSettings(
+      'settings/personal/form',
+      function(container) {
+        $('#personal-settings-container').tabs({ selected: 0});
+        container.trigger('cafevdb:content-update');
+        $.fn.cafevTooltip.remove(); // remove any left-over items
+        CAFEVDB.toolTipsInit(container);
+      });
 
     return false;
   });
 
   appNav.on('click', '#app-settings-expert-operations', function(event) {
-    event.stopImmediatePropagation();
-
-    OC.appSettings({
-      appid:'cafevdb',
-      loadJS:'expertmode.js',
-      cache:false,
-      scriptName:'expert.php'
-    });
+    CAFEVDB.appSettings(
+      'expertmode/form',
+      function(container) {
+        $.fn.cafevTooltip.remove(); // remove any left-over items
+        CAFEVDB.toolTipsInit(container);
+      });
+    return false;
   });
 
 });
+
+// Local Variables: ***
+// js3-indent-level: 2 ***
+// js-indent-level: 2 ***
+// End: ***
