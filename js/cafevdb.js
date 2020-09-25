@@ -739,7 +739,11 @@ var CAFEVDB = CAFEVDB || {};
 	.done(function(data) {
 	  popup.html(data).ready(function() {
 	    // assume the first element is a container div
-	    popup.find(">:first-child").prepend('<span class="arrow ' + arrowclass + '"></span><h2>' + t('core', 'Settings') + '</h2><a class="close"></a>').show();
+	    if (popup.find('.popup-title').length > 0) {
+	      popup.find(">:first-child").prepend('<a class="close"></a>').show();
+	    } else {
+	      popup.find(">:first-child").prepend('<h2>' + t('core', 'Settings') + '</h2><a class="close"></a>').show();
+	    }
 	    popup.find('.close').bind('click', function() {
 	      popup.hide().html('');
 	    });
