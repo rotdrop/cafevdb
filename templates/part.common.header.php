@@ -47,6 +47,7 @@ script($appName, 'config');
 
 style($appName, 'cafevdb');
 style($appName, 'settings');
+style($appName, 'about');
 style($appName, 'tooltips');
 style($appName, 'dialogs');
 style($appName, 'inlineimage');
