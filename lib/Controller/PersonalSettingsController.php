@@ -64,7 +64,6 @@ class PersonalSettingsController extends Controller {
    * @NoAdminRequired
    */
   public function set($parameter, $value) {
-    $status = Http::STATUS_OK;
     switch ($parameter) {
     case 'tooltips':
     case 'filtervisibility':
