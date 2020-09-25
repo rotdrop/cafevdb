@@ -353,6 +353,18 @@ body.snapjs-left #old-personalsettings {
   border:0 !important;
 }
 
+#app-inner-content {
+  position:relative;
+  /* padding-top:44px; *//* like controls, OC preset */
+  box-sizing:border-box;
+  /* background-color:#f2f8ff; */
+  min-height:100%;
+  min-width:100%;
+  height:100%;
+  max-height:100%;
+  overflow:hidden;
+}
+
 div.cafevdb-general {
   position:relative;
   /* padding-top:44px; *//* like controls, OC preset */
@@ -516,6 +528,7 @@ form#personalsettings div.buttonseparator {
 div#controls {
   background-color: #F2F8FF;
   width:auto;
+  top:0px;
 }
 
 div.cafevdb-page-header-text {
