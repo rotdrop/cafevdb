@@ -51,7 +51,7 @@ $(document).ready(function() {
 	if (!CAFEVDB.toolTipsEnabled) {
 	    menuItems.cafevTooltip('disable');
 	}
-        return true;
+	$.fn.cafevTooltip.remove(); // remove any left-over items.
     });
 
     // Any pending form-submit which has not been caught otherwise is
@@ -209,9 +209,6 @@ $(document).ready(function() {
         }, false);
 
     });
-
-    // The final callback stuff ...
-    CAFEVDB.runReadyCallbacks();
 
 });
 
