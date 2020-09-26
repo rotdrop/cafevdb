@@ -34,6 +34,7 @@ script($appName, 'cafevdb');
 script($appName, 'jquery-extensions');
 script($appName, 'settings');
 script($appName, 'personal-settings');
+script($appName, 'ready');
 
 script($appName, '../3rdparty/chosen/js/chosen.jquery.min');
 style($appName, '../3rdparty/chosen/css/chosen.min');

@@ -1447,11 +1447,7 @@ var CAFEVDB = CAFEVDB || {};
 })(window, jQuery, CAFEVDB);
 
 $(document).ready(function(){
-
-
-$.getScript(OC.filePath('cafevdb', 'js', 'test.js'));
-//OCP.Loader.loadScript('cafevdb', 'test.js');
-
+  // @@TODO perhaps collects these things in before-ready.js
   document.onkeypress = CAFEVDB.stopRKey;
 
   var resizeCount = 0;

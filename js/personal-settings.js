@@ -64,7 +64,9 @@ $(document).ready(function() {
   };
 
   container.on('cafevdb:content-update', function(event) {
-    chosenInit($(this));
+    if (event.target == this) {
+      chosenInit($(this));
+    }
   });
 
   //chosenInit(container);

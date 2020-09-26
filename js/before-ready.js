@@ -44,6 +44,10 @@ $(document).ready(function() {
 
     var content = $('#content');
 
+    content.on('cafevdb:content-update', function(event) {
+	$.fn.cafevTooltip.remove(); // remove any left-over items.
+    });
+
     content.on('chosen:showing_dropdown', 'select', function(event, params)   {
         var results = params.chosen.search_results;
         var menuItems = results.find('li');

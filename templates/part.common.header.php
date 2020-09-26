@@ -58,10 +58,12 @@ script($appName, 'notification');
 script($appName, 'page');
 script($appName, 'pme');
 script($appName, 'personal-settings');
+script($appName, 'settings');
 script($appName, 'expertmode');
 script($appName, 'app-settings');
 script($appName, 'jquery-extensions');
-script($appName, 'document-ready');
+script($appName, 'before-ready');
+script($appName, 'ready');
 
 script($appName, '../3rdparty/chosen/js/chosen.jquery.min');
 style($appName, '../3rdparty/chosen/css/chosen.min');

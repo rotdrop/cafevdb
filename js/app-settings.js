@@ -40,11 +40,7 @@ $(document).ready(function() {
     CAFEVDB.appSettings(
       'settings/personal/form',
       function(container) {
-        $('#personal-settings-container').tabs({ selected: 0});
-        container.trigger('cafevdb:content-update');
-        $.fn.cafevTooltip.remove(); // remove any left-over items
-        CAFEVDB.toolTipsInit(container);
-        OCP.Loader.loadScript('cafevdb', 'settings.js');
+        container.trigger('cafevdb:content-update'); // perhaps remove this
       });
 
     return false;
@@ -63,6 +59,5 @@ $(document).ready(function() {
 });
 
 // Local Variables: ***
-// js3-indent-level: 2 ***
 // js-indent-level: 2 ***
 // End: ***
