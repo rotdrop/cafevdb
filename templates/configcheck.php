@@ -68,7 +68,7 @@ echo $this->inc('part.common.header',
 
 $cfgchk = $_['configcheck'];
 
-$missingtext = array('orchestra' => $l->t('You need to specify a name for the orchestra.  Please click as
+$missingtext = ['orchestra' => $l->t('You need to specify a name for the orchestra.  Please click as
 group-administrator on the gear-symbol in the top-right corner and
 specify a short-hand name for the orchestra in the
 `Administration\'-tab. This is just a tag to provide defaults for
@@ -83,7 +83,7 @@ orchestra user group `%s\' to do so. You can create the share-owner
 uid by setting the respective field in the application settings menu
 (click as group-admin on the gear-symbol in the top-right corner and
 choose the `Sharing\'-tab).',
-                          array($_['usergroup'])),
+                           [$_['usergroup']]),
                      'sharedfolder' =>
                      $l->t('You need to create a dedicated shared folder shared among the
 user-group `%s\'. You can do so through the respective web-form in the
@@ -91,7 +91,7 @@ application settings windows accessible through the gear-symbol in the
 top-right corner. Click on the symbol and choose the `Sharing\'-tab in
 the settings-window. You need to be a group-admin, otherwise the
 application settings are not visible for you.',
-                          array($_['usergroup'])),
+                           [$_['usergroup']]),
                      'database' =>
                      $l->t('You need to configure the database access. You can do so through the
 respective web-form in the application settings windows accessible
@@ -99,7 +99,7 @@ through the gear-symbol in the upper left corner. Click on the
 gear-symbol and choose the `Administration\'-tab.You need to be a
 group-admin, otherwise the application settings are not visible for
 you.',
-                          array($_['usergroup'])),
+                           [$_['usergroup']]),
                      'encryptionkey' =>
                      $l->t('You may want to set an encryption key for encrypting configuration
 values and (in the future) sensitive data in the members- and project
@@ -109,8 +109,8 @@ upper left corner. You need to be a group-admin, otherwise the
 application settings are not visible for you. Note also that after
 installing a non-empty encryption key each user has to log-out and
 log-in again in order to be able to access the encrypted values.',
-                          array($_['usergroup'])),
-  );
+                           [$_['usergroup']]),
+  ];
 
 $ok    = $_['groupadmin'] ? 'set' : 'missing';
 $key   = 'groupadmin';
@@ -130,11 +130,11 @@ echo '    <li class="'.$css_pfx.'-config-check '.$ok.'">
       <div class="'.$css_pfx.'-config-check comment"> '.$text.'</div>
     </li>';
 
-foreach (array('orchestra',
-               'usergroup',
-               'shareowner',
-               'sharedfolder',
-               'database') as $key) {
+foreach (['orchestra',
+          'usergroup',
+          'shareowner',
+          'sharedfolder',
+          'database'] as $key) {
   $status = $cfgchk[$key]['status'];
   $ok     = $status ? 'set' : 'missing';
   $tok    = $status ? $l->t('is set') : $l->t('is missing');
