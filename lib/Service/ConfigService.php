@@ -213,7 +213,7 @@ class ConfigService {
     $this->l = $l;
 
     $this->user = $this->userSession->getUser();
-    trigger_error('user: ' . (empty($this->user) ? 'empty' : 'defined'));
+    //trigger_error('user: ' . (empty($this->user) ? 'empty' : 'defined'));
     $this->userId = $this->user->getUID();
 
     // Initialize the encryption service.
@@ -352,7 +352,7 @@ class ConfigService {
     if (!isset($this->encryptionCache[$key])) {
       $value = $this->encryptionService->getValue($key, $default);
       if (is_string($value)) {
-        $this->enryptionCache[$key] = $value;
+        $this->encryptionCache[$key] = $value;
       } else {
         return null;
       }
