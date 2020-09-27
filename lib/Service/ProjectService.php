@@ -58,9 +58,8 @@ class ProjectService
     $options = [];
 
     // simply fetch all participants
-    $query = "SELECT Name,Vorname,MusikerId FROM ? WHERE 1";
-
-    $stmt = $this->databaseService->executeQuery($query, [$table]);
+    $query = "SELECT Name,Vorname,MusikerId FROM ".$table." WHERE 1";
+    $stmt = $this->databaseService->query($query);
     while($row = $stmt->fetch()) {
       $key = $row['MusikerId'];
       $name = $row['Vorname'].' '.$row['Name'];
