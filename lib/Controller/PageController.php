@@ -22,12 +22,12 @@ use OCP\IL10N;
 use OCP\IInitialStateService;
 
 use OCA\CAFEVDB\Common\Config;
-use OCA\CAFEVDB\Common\ConfigCheck;
 use OCA\CAFEVDB\Common\Util;
 
 use OCA\CAFEVDB\Service\HistoryService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
+use OCA\CAFEVDB\Service\ConfigCheckService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
 class PageController extends Controller {
@@ -48,8 +48,8 @@ class PageController extends Controller {
   /** @var ConfigService */
   private $configService;
 
-  /** @var ConfigCheck */
-  private $configCheck;
+  /** @var ConfigCheckService */
+  private $configCheckService;
 
   public function __construct(
     $appName,
@@ -59,7 +59,7 @@ class PageController extends Controller {
     RequestParameterService $parameterService,
     ToolTipsService $toolTipsService,
     IInitialStateService $initialStateService,
-    ConfigCheck $configCheck
+    ConfigCheckService $configCheckService
   ) {
 
     parent::__construct($appName, $request);
@@ -69,7 +69,7 @@ class PageController extends Controller {
     $this->parameterService = $parameterService;
     $this->toolTipsService = $toolTipsService;
     $this->initialStateService = $initialStateService;
-    $this->configCheck = $configCheck;
+    $this->configCheckService = $configCheckService;
     $this->l = $this->l10N();
   }
 
@@ -104,6 +104,7 @@ class PageController extends Controller {
         return new DataResponse(['msg' => $e->getMessage()], Http::STATUS_NOT_FOUND);
       }
     } else {
+      trigger_error('try push history');
       $this->historyService->push($this->parameterService->getParams());
     }
     return $this->loader(
@@ -149,10 +150,10 @@ class PageController extends Controller {
     $this->publishInitialStateForUser($this->user());
 
     // The most important ...
-    $encrkey = Config::getEncryptionKey();
+    $encrkey = $this->getAppEncryptionKey();
 
     // Are we a group-admin?
-    $isGroupAdmin = $this->isSubAdminofGroup();
+    $isGroupAdmin = $this->isSubAdminOfGroup();
 
     $showToolTips = $this->getUserValue('tooltips', 'on');
     $usrFiltVis   = $this->getUserValue('filtervisibility', 'off');
@@ -170,7 +171,7 @@ class PageController extends Controller {
     $recordId = Util::getCGIRecordId([$this->request, 'getParam']);
 
     // See if we are configured
-    $config = $this->configCheck->configured();
+    $config = $this->configCheckService->configured();
 
     if ($template != 'debug' && !$config['summary']) {
       $tmplname = 'configcheck';

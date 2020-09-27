@@ -42,14 +42,17 @@ class DatabaseFactory
       'user' => $this->getConfigValue('dbuser'),
       'password' => $this->getConfigValue('dbpassword'),
       'host' => $this->getConfigValue('dbserver'),
+    ];
+    $driverParams = [
       'driver' => 'pdo_mysql',
       'wrapperClass' => DatabaseService::class,
       'configService' => $this->configService,
     ];
     if (!empty($params)) {
-      $connectionParams = array_merge($conectionParams, $params);
+      $connectionParams = array_merge($connectionParams, $params);
     }
-    return DriverManager::getConnection($connectionParams);
+    trigger_error(print_r($connectionParams, true));
+    return DriverManager::getConnection(array_merge($driverParams, $connectionParams));
   }
 }
 

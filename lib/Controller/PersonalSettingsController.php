@@ -30,6 +30,7 @@ use OCP\IRequest;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\ConfigCheckService;
 use OCA\CAFEVDB\Settings\Personal;
 
 class PersonalSettingsController extends Controller {
@@ -41,10 +42,18 @@ class PersonalSettingsController extends Controller {
   /** @var Personal */
   private $personalSettings;
 
-  public function __construct($appName, IRequest $request, ConfigService $configService, Personal $personalSettings) {
+  public function __construct(
+    $appName,
+    IRequest $request,
+    ConfigService $configService,
+    ConfigCheckService $configCheckService,
+    Personal $personalSettings
+  ) {
+
     parent::__construct($appName, $request);
 
     $this->configService = $configService;
+    $this->configCheckService = $configCheckService;
     $this->personalSettings = $personalSettings;
     $this->l = $this->l10N();
   }
@@ -147,9 +156,32 @@ class PersonalSettingsController extends Controller {
   public function setApp($parameter, $value) {
     switch ($parameter) {
     case 'orchestra':
+    case 'dbserver': // could check for valid hostname
+    case 'dbname':
+    case 'dbuser':
       $realValue = trim($value);
       $this->setConfigValue($parameter, $realValue);
-      return self::valueResponse($realValue, $this->l->t('Name of orchestra set to `%s\'', [$realValue]));
+      return self::valueResponse($realValue, $this->l->t('`%s\' set to `%s\'', [$parameter,$realValue]));
+    case 'dbpassword':
+      try {
+        if (!empty($value)) {
+          if ($this->configCheckService->databaseAccessible(['password' => $value])) {
+            $this->setConfigValue('dbpassword', $value);
+            return self::response($this->l->t('DB-test passed and DB-password set.'));
+          } else {
+            return self::grumble($this->l->t('DB-test failed. Check the account settings. Check was performed with the new password.'));
+          }
+        } else {
+          // Check with the stored password
+          if ($this->configCheckService->databaseAccessible()) {
+            return self::response($this->l->t('DB-test passed with stored password (empty input ignored).'));
+          } else {
+            return self::grumble($this->l->t('DB-test failed with stored password (empty input ignored).'));
+          }
+        }
+      } catch(\Exception $e) {
+        return self::grumble($this->l->t('DB-test failed with exception `%s\'', [$e->getMessage()]));
+      }
     default:
     }
     return self::grumble($this->l->t('Unknown Request'));

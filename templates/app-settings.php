@@ -76,10 +76,10 @@ $off = $_['orchestra'] == '' ? 'disabled="disabled"' : '';
     </fieldset>
 <!-- DATA-BASE password -->
     <fieldset class="cafevdb_dbpassword">
-      <input class="cafevdb-password" type="password" id="cafevdb_dbpassword" name="cafevdb_dbpassword" placeholder="<?php echo $l->t('New Password');?>" data-typetoggle="#cafevdb_dbpassword-show" />
-      <input class="cafevdb-password-show" type="checkbox" id="cafevdb_dbpassword-show" name="cafevdb_dbpassword-show" />
-      <label class="cafevdb-password-show" for="cafevdb_dbpassword-show"><?php echo $l->t('show');?></label>
-      <input id="button" type="button" title="<?php echo $toolTips['test-cafevdb_dbpassword']; ?>" value="<?php echo $l->t('Test Database Password');?>" />
+      <input class="cafevdb-password" type="password" id="cafevdb-dbpassword" name="dbpassword" placeholder="<?php echo $l->t('New Password');?>" data-typetoggle="#cafevdb-dbpassword-show" />
+      <input class="cafevdb-password-show" type="checkbox" id="cafevdb-dbpassword-show" name="dbpassword-show" />
+      <label class="cafevdb-password-show" for="cafevdb-dbpassword-show"><?php echo $l->t('show');?></label>
+      <input id="button" type="button" title="<?php echo $toolTips['test-dbpassword']; ?>" value="<?php echo $l->t('Test Database Password');?>" />
       <div class="statusmessage" id="dbteststatus"></div>
     </fieldset>
     <fieldset id="dbtesting">

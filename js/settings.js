@@ -176,7 +176,7 @@ var CAFEVDB = CAFEVDB || {};
           msg.show();
         });
       return false;
-    });
+   });
 
     // Encryption-key
     // 'show password' checkbox
@@ -229,18 +229,16 @@ var CAFEVDB = CAFEVDB || {};
             $('#systemkey #error').show();
           }
 	});
-	return false;
       } else {
 	$('#systemkey #equal').show();
 	if ($('#systemkey #oldkey').val() == '') {
           $('#systemkey #insecure').show();
 	}
-	return false;
       }
+      return false;
     });
 
     $('form#systemkey #keygenerate').click(function(event) {
-      event.preventDefault();
 
       $('div.statusmessage').hide();
       $('span.statusmessage').hide();
@@ -284,46 +282,47 @@ var CAFEVDB = CAFEVDB || {};
     ///////////////////////////////////////////////////////////////////////////
 
     $('#dbgeneral :input').blur(function(event) {
-      event.preventDefault();
-      $('div.statusmessage').hide();
-      $('span.statusmessage').hide();
-      $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
-             $(this),
-             function(data) {
-               if (data.status == "success") {
-		 $('#dbsettings #msg').html(data.data.message);
-		 $('#dbsettings #msg').show();
-               }
-               return false;
-	     }, 'json');
+      const msg = $('#dbsettings #msg');
+      msg.hide();
+      const name = $(this).attr('name');
+      const value = $(this).val();
+      $.post(
+	OC.generateUrl('/apps/cafevdb/settings/app/set/' + name),
+        { 'value': value })
+	.fail(function(xhr, status, errorThrown) {
+          msg.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown));
+          msg.show();
+        })
+        .done(function(data) {
+          msg.html(data.message).show();
+        });
+      return false;
     });
 
     // DB-Password
     // 'show password' checkbox
-    var tmp = $('fieldset.cafevdb_dbpassword #cafevdb_dbpassword').val();
-    $('fieldset.cafevdb_dbpassword #cafevdb_dbpassword').showPassword();
-    $('fieldset.cafevdb_dbpassword #cafevdb_dbpassword').val(tmp);
+    const dbPassword = $('fieldset.cafevdb_dbpassword #cafevdb-dbpassword')
+    var tmp = dbPassword.val();
+    dbPassword.showPassword();
+    dbPassword.val(tmp);
+
+    // test password
     $("fieldset.cafevdb_dbpassword #button").click(function() {
-      $('div.statusmessage').hide();
-      $('span.statusmessage').hide();
-      if ($('fieldset.cafevdb_dbpassword #password').val() != '') {
-	// Serialize the data
-	var post = $("fieldset.cafevdb_dbpassword").serialize();
-	// Ajax foo
-	$.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
-               post, function(data) {
-		 if(data.status == "success") {
-                   //$('#cafevdb_dbpassword input[name="dbpass1"]').val('');
-                   $('fieldset.cafevdb_dbpassword input[name="password"]').val('');
-                   $('fieldset.cafevdb_dbpassword input[name="password-clone"]').val('');
-		 }
-		 $('fieldset.cafevdb_dbpassword #dbteststatus').html(data.data.message);
-		 $('fieldset.cafevdb_dbpassword #dbteststatus').show();
-               });
-	return false;
-      } else {
-	$('fieldset.cafevdb_dbpassword #error').show();
-	return false;
+      const msg = $('fieldset.cafevdb_dbpassword .statusmessage');
+      msg.hide();
+      const value = dbPassword.val();
+      if (value != '') {
+        $.post(
+	  OC.generateUrl('/apps/cafevdb/settings/app/set/dbpassword'),
+          { 'value': value })
+	  .fail(function(xhr, status, errorThrown) {
+            msg.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+          })
+          .done(function(data) {
+            //$('fieldset.cafevdb_dbpassword input[name="dbpassword"]').val('');
+            //$('fieldset.cafevdb_dbpassword input[name="dbpassword-clone"]').val('');
+            msg.html(data.message).show();
+          });
       }
     });
 

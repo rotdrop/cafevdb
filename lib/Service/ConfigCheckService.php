@@ -20,7 +20,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Common;
+namespace OCA\CAFEVDB\Service;
 
 use OCP\IUserManager;
 use OCP\IGroupManager;
@@ -33,7 +33,7 @@ use OCA\CAFEVDB\Service\DatabaseFactory;
 
 /**Check for a usable configuration.
  */
-class ConfigCheck
+class ConfigCheckService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
@@ -548,35 +548,31 @@ class ConfigCheck
   public function databaseAccessible($connectionParams = null)
   {
     $connection = null;
-    try {
-      $connection = $this->databaseFactory->getService($connectionParams);
 
-      if (empty($connection)) {
-        return false;
-      }
+    $connection = $this->databaseFactory->getService($connectionParams);
 
-      if (!$connection->connect()) {
-        return false;
-      }
-
-      if (!$connection->ping()) {
-        return false;
-      }
-      // if (Events::configureDatabase($handle) === false) {
-      //   mySQL::close($handle);
-      //   return false;
-      // }
-
-      $connection->close();
-
-      return true;
-
-    } catch(\Exception $e) {
-      //mySQL::close($handle);
-      //throw $e;
+    if (empty($connection)) {
+      trigger_error('db connection empty');
+      return false;
     }
 
-    return false;
+    if (!$connection->connect()) {
+      trigger_error('db cannot connect');
+      return false;
+    }
+
+    if (!$connection->ping()) {
+      trigger_error('db cannot ping');
+      return false;
+    }
+    // if (Events::configureDatabase($handle) === false) {
+    //   mySQL::close($handle);
+    //   return false;
+    // }
+
+    $connection->close();
+
+    return true;
   }
 
 }
