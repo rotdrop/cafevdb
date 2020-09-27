@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -19,9 +19,6 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-use CAFEVDB\L;
-use CAFEVDB\Config;
 ?>
 <div id="tabs-<?php echo $_['tabNr']; ?>" class="personalblock admin email">
   <form id="emailsettings">
@@ -101,7 +98,7 @@ foreach (array('smtp', 'imap') as $proto) {
                type="button"
                name="emaildistribute"
                value="<?php echo $l->t('Distribute Email Account');?>"
-               title="<?php echo  Config::toolTips('email-account-distribute');?>"
+               title="<?php echo  $toolTips['email-account-distribute'];?>"
                />
         <span class="statusmessage" id="email-account-distribute-message"></span>
       </fieldset>
@@ -129,7 +126,7 @@ foreach (array('smtp', 'imap') as $proto) {
              name="emailtest"
              id="emailtestbutton"
              value="<?php echo $l->t('Test Email Setup'); ?>"
-             title="<?php echo Config::toolTips('emailtest'); ?>"
+             title="<?php echo $toolTips['emailtest']; ?>"
              />
       <input id="emailtestmode"
              type="checkbox"

@@ -77,8 +77,8 @@ $toolTipClass = "tooltip-right";
   <ul id="adminsettingstabs">
     <li><a href="#tabs-1"><?php echo $l->t('Personal'); ?></a></li>
     <?php $tabNo = 2; if ($_['adminsettings']) { ?>
+      <li><a href="#tabs-<?php echo $tabNo++; ?>"><?php echo $l->t('General'); ?></a></li>
       <li><a href="#tabs-<?php echo $tabNo++; ?>"><?php echo $l->t('Orchestra'); ?></a></li>
-      <li><a href="#tabs-<?php echo $tabNo++; ?>"><?php echo $l->t('Data-Base'); ?></a></li>
       <li><a href="#tabs-<?php echo $tabNo++; ?>"><?php echo $l->t('Sharing'); ?></a></li>
       <li><a href="#tabs-<?php echo $tabNo++; ?>"><?php echo $l->t('Email'); ?></a></li>
       <li><a href="#tabs-<?php echo $tabNo++; ?>"><?php echo $l->t('Development'); ?></a></li>
@@ -221,8 +221,8 @@ $toolTipClass = "tooltip-right";
 <?php
   $tabNo = 2;
   if ($adminsettings === true) {
-    echo $this->inc("orchestra-settings", array('tabNr' => $tabNo++));
     echo $this->inc("app-settings", array('tabNr' => $tabNo++));
+    echo $this->inc("orchestra-settings", array('tabNr' => $tabNo++));
     echo $this->inc("share-settings", array('tabNr' => $tabNo++));
     echo $this->inc("email-settings", array('tabNr' => $tabNo++));
     echo $this->inc("devel-settings", array('tabNr' => $tabNo++));

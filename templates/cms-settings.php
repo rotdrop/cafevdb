@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -19,10 +19,6 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-use CAFEVDB\L;
-use CAFEVDB\Config;
-Config::init();
 ?>
 <div id="tabs-<?php echo $_['tabNr']; ?>" class="personalblock admin cms">
   <form id="cmssettings">
@@ -33,7 +29,7 @@ Config::init();
              name="redaxoPreview"
              placeholder="<?php $l->t('preview'); ?>"
              value="<?php echo $_['redaxoPreview']; ?>"
-             title="<?php echo Config::toolTips('redaxo-preview'); ?>" />
+             title="<?php echo $toolTips['redaxo-preview']; ?>" />
       <label for="redaxoPreview"><?php echo $l->t('Id of Redaxo Preview Category'); ?></label>
       <br/>
       <input type="text"
@@ -42,7 +38,7 @@ Config::init();
              name="redaxoArchive"
              placeholder="<?php $l->t('archive'); ?>"
              value="<?php echo $_['redaxoArchive']; ?>"
-             title="<?php echo Config::toolTips('redaxo-archive'); ?>" />
+             title="<?php echo $toolTips['redaxo-archive']; ?>" />
       <label for="redaxoArchive"><?php echo $l->t('Id of Redaxo Archive Category'); ?></label>
       <br/>
       <input type="text"
@@ -51,7 +47,7 @@ Config::init();
              name="redaxoRehearsals"
              placeholder="<?php $l->t('rehearsals'); ?>"
              value="<?php echo $_['redaxoRehearsals']; ?>"
-             title="<?php echo Config::toolTips('redaxo-rehearsals'); ?>" />
+             title="<?php echo $toolTips['redaxo-rehearsals']; ?>" />
       <label for="redaxoArchive"><?php echo $l->t('Id of Redaxo Rehearsals Category'); ?></label>
       <br/>
       <input type="text"
@@ -60,7 +56,7 @@ Config::init();
              name="redaxoTrashbin"
              placeholder="<?php $l->t('trashbin'); ?>"
              value="<?php echo $_['redaxoTrashbin']; ?>"
-             title="<?php echo Config::toolTips('redaxo-trashbin'); ?>" />
+             title="<?php echo $toolTips['redaxo-trashbin']; ?>" />
       <label for="redaxoTrashbin"><?php echo $l->t('Id of Redaxo Trashbin Category'); ?></label>
       <br/>
       <input type="text"
@@ -69,7 +65,7 @@ Config::init();
              name="redaxoTemplate"
              placeholder="<?php $l->t('template'); ?>"
              value="<?php echo $_['redaxoTemplate']; ?>"
-             title="<?php echo Config::toolTips('redaxo-template'); ?>" />
+             title="<?php echo $toolTips['redaxo-template']; ?>" />
       <label for="redaxoTemplate"><?php echo $l->t('Id of Redaxo Default-Template'); ?></label>
       <br/>
       <input type="text"
@@ -78,7 +74,7 @@ Config::init();
              name="redaxoConcertModule"
              placeholder="<?php $l->t('template'); ?>"
              value="<?php echo $_['redaxoConcertModule']; ?>"
-             title="<?php echo Config::toolTips('redaxo-template'); ?>" />
+             title="<?php echo $toolTips['redaxo-template']; ?>" />
       <label for="redaxoConcertModule"><?php echo $l->t('Id of Redaxo Concert-Module'); ?></label>
       <br/>
       <input type="text"
@@ -87,9 +83,9 @@ Config::init();
              name="redaxoRehearsalsModule"
              placeholder="<?php $l->t('template'); ?>"
              value="<?php echo $_['redaxoRehearsalsModule']; ?>"
-             title="<?php echo Config::toolTips('redaxo-template'); ?>" />
+             title="<?php echo $toolTips['redaxo-template']; ?>" />
       <label for="redaxoRehearsalsModule"><?php echo $l->t('Id of Redaxo Rehearsals-Module'); ?></label>
     </fieldset>
-    <span class="statusmessage" id="msg"></span>  
+    <span class="statusmessage" id="msg"></span>
   </form>
 </div>

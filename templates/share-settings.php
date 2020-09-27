@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2014 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -20,9 +20,6 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use CAFEVDB\L;
-use CAFEVDB\Config;
-
 $alloff = $_['orchestra'] == '' ? $alloff = 'disabled="disabled"' : '';
 $off = $_['shareowner'] == '' ? 'disabled="disabled"' : $alloff;
 
@@ -35,7 +32,7 @@ $off = $_['shareowner'] == '' ? 'disabled="disabled"' : $alloff;
       <fieldset id="shareowner" <?php echo $alloff; ?> >
         <input type="hidden" id="user-saved" name="shareowner-saved" value="<?php echo $_['shareowner']; ?>" />
         <input <?php echo $_['shareowner'] != '' ? 'disabled="disabled"' : ''; ?> type="text" id="user" name="shareowner" placeholder="<?php echo $l->t('shareowner');?>" value="<?php echo $_['shareowner']; ?>" />
-        <label for="shareowner-force" title="<?php echo Config::toolTips('shareowner-force'); ?>" >
+        <label for="shareowner-force" title="<?php echo $toolTips['shareowner-force']; ?>" >
         <input type="checkbox" id="shareowner-force" name="shareowner-force" /><?php echo $l->t('force');?></label>
         <input name="shareownercheck" id="check" type="button" value="<?php echo $l->t('Check');?>" />
       </fieldset>
@@ -82,13 +79,13 @@ $off = $_['shareowner'] == '' ? 'disabled="disabled"' : $alloff;
     <form id="sharedfolderform">
       <fieldset <?php echo $off; ?> ><legend><?php echo $l->t('Shared folder'); ?></legend>
         <input type="hidden" id="sharedfolder-saved" name="sharedfolder-saved" value="<?php echo $_['sharedfolder']; ?>" />
-        <input <?php echo $_['sharedfolder'] != '' ? 'disabled="disabled"' : ''; ?> 
-          type="text" 
+        <input <?php echo $_['sharedfolder'] != '' ? 'disabled="disabled"' : ''; ?>
+          type="text"
           id="sharedfolder"
           name="sharedfolder"
           placeholder="<?php echo $l->t('shared folder'); ?>"
           value="<?php echo $_['sharedfolder']; ?>" />
-        <label for="sharedfolder-force" title="<?php echo Config::toolTips('sharedfolder-force'); ?>" >
+        <label for="sharedfolder-force" title="<?php echo $toolTips['sharedfolder-force']; ?>" >
           <input type="checkbox" id="sharedfolder-force" name="sharedfolder-force" />
           <?php echo $l->t('force');?>
         </label>
@@ -99,14 +96,14 @@ $off = $_['shareowner'] == '' ? 'disabled="disabled"' : $alloff;
       <fieldset <?php echo $off; ?> >
         <span id="project-folder-prefix"><b>.../</b><?php echo $_['sharedfolder']; ?><b>/</b></span>
         <input type="hidden" id="projectsfoldersaved" name="projectsfoldersaved" value="<?php echo $_['projectsfolder']; ?>" />
-        <input <?php echo $_['projectsfolder'] != '' ? 'disabled="disabled"' : ''; ?> 
-          type="text" 
+        <input <?php echo $_['projectsfolder'] != '' ? 'disabled="disabled"' : ''; ?>
+          type="text"
           id="projectsfolder"
           name="projectsfolder"
           placeholder="<?php echo $l->t('Project folder'); ?>"
           value="<?php echo $_['projectsfolder']; ?>" />
         <span id="project-folder-suffix"><b>/</b><?php echo $l->t('YEAR').'<b>/</b>'.$l->t('PROJECT').'<b>/</b>'; ?></span>
-        <label for="projectsfolder-force" title="<?php echo Config::toolTips('projectsfolder-force'); ?>" >
+        <label for="projectsfolder-force" title="<?php echo $toolTips['projectsfolder-force']; ?>" >
           <input type="checkbox" id="projectsfolder-force" name="projectsfolder-force" />
           <?php echo $l->t('force');?>
         </label>
@@ -117,14 +114,14 @@ $off = $_['shareowner'] == '' ? 'disabled="disabled"' : $alloff;
         <fieldset <?php echo $_['projectsfolder'] != '' ? $off : 'disabled'; ?> >
         <span id="project-folder-prefix"><b>.../</b><?php echo $_['sharedfolder']; ?><b>/</b></span>
         <input type="hidden" id="projectsbalancefoldersaved" name="projectsbalancefoldersaved" value="<?php echo $_['projectsbalancefolder']; ?>" />
-        <input <?php echo $_['projectsbalancefolder'] != '' ? 'disabled="disabled"' : ''; ?> 
-          type="text" 
+        <input <?php echo $_['projectsbalancefolder'] != '' ? 'disabled="disabled"' : ''; ?>
+          type="text"
           id="projectsbalancefolder"
           name="projectsbalancefolder"
           placeholder="<?php echo $l->t('Financial balance folder'); ?>"
           value="<?php echo $_['projectsbalancefolder']; ?>" />
         <span id="project-folder-suffix"><b>/</b><span id="projectsbalanceprojectsfolder"><?php echo $_['projectsfolder'];?></span><b>/</b><?php echo $l->t('YEAR').'<b>/</b>'.$l->t('PROJECT').'<b>/</b>'; ?></span>
-        <label for="projectsbalancefolder-force" title="<?php echo Config::toolTips('projectsbalancefolder-force'); ?>" >
+        <label for="projectsbalancefolder-force" title="<?php echo $toolTips['projectsbalancefolder-force']; ?>" >
           <input type="checkbox" id="projectsbalancefolder-force" name="projectsbalancefolder-force" />
           <?php echo $l->t('force');?>
         </label>
@@ -134,4 +131,3 @@ $off = $_['shareowner'] == '' ? 'disabled="disabled"' : $alloff;
     <span class="statusmessage" id="msg"></span>
   </div>
 </div>
-
