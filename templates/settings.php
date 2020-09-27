@@ -199,7 +199,7 @@ $toolTipClass = "tooltip-right";
       <span class="statusmessage" id="msg"></span>
     </form>
     <form id="userkey">
-      <input class="cafevdb-password" type="password" id="password" name="password" placeholder="<?php echo $l->t('Own Password');?>" data-typetoggle="#password-show" />
+      <input class="cafevdb-password" type="password" required="required" id="password" name="password" placeholder="<?php echo $l->t('Own Password');?>" data-typetoggle="#password-show" />
       <input class="cafevdb-password-show" type="checkbox" id="password-show" name="password-show" />
       <label class="cafevdb-password-show" for="password-show"><?php echo $l->t('show');?></label>
       <input class="cafevdb-password" type="password" id="encryptionkey" name="encryptionkey" value="<?php echo (true ? '' : $_['encryptionkey']); ?>" placeholder="<?php echo $l->t('DB Encryption Key');?>" data-typetoggle="#userkey-show" />
