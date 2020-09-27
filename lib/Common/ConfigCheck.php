@@ -29,6 +29,7 @@ use OCP\IUser;
 use OCP\IConfig;
 
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\DatabaseFactory;
 
 /**Check for a usable configuration.
  */
@@ -36,10 +37,15 @@ class ConfigCheck
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
+  /** @var DatabaseFactory */
+  private $databaseFactory;
+
   public function __construct(
-    ConfigService $configService
+    ConfigService $configService,
+    DatabaseFactory $databaseFactory
   ) {
     $this->configService = $configService;
+    $this->databaseFactory = $databaseFactory;
   }
 
   /**Return an array with necessary configuration items, being either
@@ -57,20 +63,20 @@ class ConfigCheck
   {
     $result = array();
 
-    foreach (array('orchestra','usergroup','shareowner','sharedfolder','database','encryptionkey') as $key) {
-      $result[$key] = array('status' => false, 'message' => '');
+    foreach (['orchestra','usergroup','shareowner','sharedfolder','database','encryptionkey'] as $key) {
+      $result[$key] = ['status' => false, 'message' => ''];
     }
 
     $key ='orchestra';
     try {
-      $result[$key]['status'] = Config::encryptionKeyValid() && Config::getValue('orchestra');
+      $result[$key]['status'] = $this->encryptionKeyValid() && $this->getConfigValue('orchestra');
     } catch (\Exception $e) {
       $result[$key]['message'] = $e->getMessage();
     }
 
     $key = 'encryptionkey';
     try {
-      $result[$key]['status'] = $result['orchestra']['status'] && Config::encryptionKeyValid();
+      $result[$key]['status'] = $result['orchestra']['status'] &&$this->encryptionKeyValid();
     } catch (\Exception $e) {
         $result[$key]['message'] = $e->getMessage();
     }
@@ -273,7 +279,7 @@ class ConfigCheck
   public function shareOwnerExists($shareowner = '')
   {
     $sharegroup = $this->getAppValue('usergroup');
-    $shareowner === '' && $shareowner = Config::getValue('shareowner');
+    $shareowner === '' && $shareowner = $this->getConfigValue('shareowner');
 
     if (empty($shareowner)) {
       return false;
@@ -349,10 +355,10 @@ class ConfigCheck
     }
 
     $sharegroup   = $this->getAppValue('usergroup');
-    $shareowner   = Config::getValue('shareowner');
+    $shareowner   = $this->getConfigValue('shareowner');
     $groupadmin   = $this->userId;
 
-    $sharedfolder == '' && $sharedfolder = Config::getSetting('sharedfolder', '');
+    $sharedfolder == '' && $sharedfolder = $this->getConfigValue('sharedfolder', '');
 
     if ($sharedfolder == '') {
       // not configured
@@ -486,18 +492,18 @@ class ConfigCheck
    */
   public function checkProjectsFolder($projectsFolder)
   {
-    $sharedFolder = Config::getValue('sharedfolder');
+    $sharedFolder = $this->getConfigValue('sharedfolder');
 
     if (!$this->sharedFolderExists($sharedFolder)) {
       return false;
     }
 
-    $sharegroup = Config::getAppValue('usergroup');
-    $shareowner = Config::getValue('shareowner');
+    $sharegroup = $this->getAppValue('usergroup');
+    $shareowner = $this->getConfigValue('shareowner');
     $user       = $this->userId;
 
     if (!\OC_SubAdmin::isSubAdminofGroup($user, $sharegroup)) {
-      \OCP\Util::write(Config::APP_NAME,
+      \OCP\Util::write($this->appName(),
                        "Permission denied: ".$user." is not a group admin of ".$sharegroup.".",
                        \OCP\Util::ERROR);
       return false;
@@ -534,32 +540,40 @@ class ConfigCheck
   /**Check whether we have data-base access by connecting to the
    * data-base server and selecting the configured data-base.
    *
+   * @para, $connectionParams Array with keys 'dbname', 'user',
+   * 'password', 'host' or null for default options.
+   *
    * @return bool, @c true on success.
    */
-  public function databaseAccessible($opts = array())
+  public function databaseAccessible($connectionParams = null)
   {
+    $connection = null;
     try {
-      Config::init();
-      if (empty($opts)) {
-        $opts = Config::$dbopts;
-      }
+      $connection = $this->databaseFactory->getService($connectionParams);
 
-      $handle = mySQL::connect($opts, false /* don't die */, true);
-      if ($handle === false) {
+      if (empty($connection)) {
         return false;
       }
 
-      if (Events::configureDatabase($handle) === false) {
-        mySQL::close($handle);
+      if (!$connection->connect()) {
         return false;
       }
 
-      mySQL::close($handle);
+      if (!$connection->ping()) {
+        return false;
+      }
+      // if (Events::configureDatabase($handle) === false) {
+      //   mySQL::close($handle);
+      //   return false;
+      // }
+
+      $connection->close();
+
       return true;
 
     } catch(\Exception $e) {
-      mySQL::close($handle);
-      throw $e;
+      //mySQL::close($handle);
+      //throw $e;
     }
 
     return false;

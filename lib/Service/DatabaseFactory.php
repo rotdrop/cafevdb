@@ -36,7 +36,7 @@ class DatabaseFactory
     $this->configService = $configService;
   }
 
-  public function getService() {
+  public function getService($params = null) {
     $connectionParams = [
       'dbname' => $this->getConfigValue('dbname'),
       'user' => $this->getConfigValue('dbuser'),
@@ -46,6 +46,9 @@ class DatabaseFactory
       'wrapperClass' => DatabaseService::class,
       'configService' => $this->configService,
     ];
+    if (!empty($params)) {
+      $connectionParams = array_merge($conectionParams, $params);
+    }
     return DriverManager::getConnection($connectionParams);
   }
 }

@@ -45,7 +45,7 @@ class ProjectService
    * @param $projectName Optional project name, will be queried from
    * DB if not specified.
    *
-   * @param $musicianId A pre-selected musician, defaults to none.
+   * @param $musicianId A pre-selected musician, defaults to null.
    */
   public function participantOptions($projectId, $projectName = null, $musicianId = -1)
   {

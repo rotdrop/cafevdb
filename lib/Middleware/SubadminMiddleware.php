@@ -47,14 +47,14 @@ class SubadminMiddleware extends Middleware {
   /**
    * @param ControllerMethodReflector $reflector
    * @param ConfigService $configService
-   * @param IL10N $l10n
+   * @param IL10N $l
    */
   public function __construct(IControllerMethodReflector $reflector,
                               ConfigService $configService,
                               IL10N $l) {
     $this->reflector = $reflector;
     $this->configService = $configService;
-    $this->l = $l10n;
+    $this->l = $l;
   }
 
   /**
