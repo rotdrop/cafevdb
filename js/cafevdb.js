@@ -1254,6 +1254,9 @@ var CAFEVDB = CAFEVDB || {};
       const response = JSON.parse(xhr.responseText);
       if (response.message) {
         message = response.message;
+      } else {
+	message = t('cafevdb', 'Unknown JSON error response to AJAX call: {status} / {error}',
+                    {'status': status, 'error': errorThrown});
       }
     } else {
       console.log('unknown response');

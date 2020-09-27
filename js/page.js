@@ -49,14 +49,11 @@ var CAFEVDB = CAFEVDB || {};
     CAFEVDB.modalizer(true),
     Page.busyIcon(true);
     $.post(OC.generateUrl('/apps/cafevdb/page/loader/blank'), post)
-    .fail(function(jqXHR) {
-      const response = JSON.parse(jqXHR.responseText);
-      console.log(response);
-      if (response.message) {
-	$('#cafevdb-admin-settings .msg').html(response.message);
-            $('#cafevdb-admin-settings .msg').show();
-      }
-    })
+      .fail(function(xhr, status, errorThrown) {
+	$('#cafevdb-admin-settings .msg')
+	  .html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown))
+	  .show();
+      })
     .done(function(data) {
       console.log(data);
       if (!CAFEVDB.ajaxErrorHandler(
