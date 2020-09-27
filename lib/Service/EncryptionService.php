@@ -58,7 +58,7 @@ class EncryptionService
     if ($privKey == '') {
       // Ok, generate one. But this also means that we have not yet
       // access to the data-base encryption key.
-      $this->generateKeyPair($login, $password);
+      $this->generateUserKeyPair($login, $password);
       $privKey = $this->getUserValue($login, 'privateSSLKey');
     }
 
@@ -170,19 +170,54 @@ class EncryptionService
     }
 
     // Now try to decrypt the data-base encryption key
-    $this->setEncryptionKey($usrdbkey);
+    $this->setAppEncryptionKey($usrdbkey);
     $sysdbkey = $this->getValue('encryptionkey');
 
     if ($sysdbkey != $usrdbkey) {
       // Failed
-      $this->setEncryptionKey('');
+      $this->setAppEncryptionKey('');
       \OCP\Util::writeLog($this->appName, "EncryptionKeys do not match", \OCP\Util::DEBUG);
       return false;
     }
 
     // Otherwise store the key in the session data
-    $this->setEncryptionKey($sysdbkey);
+    $this->setAppEncryptionKey($sysdbkey);
     return true;
+  }
+
+  public function setUserEncryptionKey($userId, $enckey = null)
+  {
+    if (empty($enckey)) {
+      $enckey = $this->getAppEncryptionKey();
+    }
+
+    if ($enckey != '') {
+      $pubKey = $this->getUserValue($userId, 'publicSSLKey', '');
+      $usrdbkey = '';
+      if ($pubKey == '' ||
+          openssl_public_encrypt($enckey, $usrdbkey, $pubKey) === false) {
+        return false;
+      }
+      $usrdbkey = base64_encode($usrdbkey);
+    } else {
+      $usrdbkey = '';
+    }
+
+    $pubKey = $this->setUserValue($userId,'encryptionkey', $usrdbkey);
+
+    return true;
+  }
+
+  public function recryptAppEncryptionKey($login, $password, $enckey = null)
+  {
+    // ok, new password, generate a new key-pair. Then re-encrypt the
+    // global encryption key with the new key.
+
+    // new key pair
+    $this->generateKeyUserPair($login, $password);
+
+    // store the re-encrypted key in the configuration space
+    return $this->setUserEncryptionKey($login, $enckey);
   }
 
   /**Store the encryption key in the session data. This cannot (i.e.:
@@ -190,7 +225,7 @@ class EncryptionService
    *
    * @param $key The encryption key to store.
    */
-  private function setAppEncryptionKey($key) {
+  public function setAppEncryptionKey($key) {
     //\OCP\Util::writeLog(Config::APP_NAME, "Storing encryption key: ".$key, \OCP\Util::DEBUG);
     $this->appEncryptionKey = $key;
     $this->sessionStoreValue('encryptionkey', $key);

@@ -77,9 +77,18 @@ trait ConfigTrait {
     return $this->configService->getAppEncryptionKey();
   }
 
-  protected function encryptionKeyValid()
+  protected function setAppEncryptionKey($key)
   {
-    return $this->configService->encryptionKeyValid();
+    return $this->configService->setAppEncryptionKey($key);
+  }
+
+  protected function encryptionKeyValid($encryptionKey = null)
+  {
+    return $this->configService->encryptionKeyValid($encryptionKey);
+  }
+
+  protected function recryptAppEncryptionKey($login, $password, $enckey = null) {
+    return $this->configService->recryptAppEncryptionKey($login, $password, $enckey);
   }
 
   /**Get a possibly encrypted app-config value. */

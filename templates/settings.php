@@ -206,8 +206,9 @@ $toolTipClass = "tooltip-right";
       <input class="cafevdb-password-show" type="checkbox" id="userkey-show" name="userkey-show" />
       <label class="cafevdb-password-show" for="userkey-show"><?php echo $l->t('show');?></label>
       <input id="button" type="button" value="<?php echo $l->t('Set Encryption Key');?>" />
-      <div class="statusmessage" id="changed"><?php echo $l->t('The encryption key has been set successfully.');?></div>
-      <div class="statusmessage" id="error"><?php echo $l->t('Unable to set the encryption key.');?></div>
+      <div class="statusmessage changed"><?php echo $l->t('The encryption key has been set successfully.');?></div>
+      <div class="statusmessage error"><?php echo $l->t('Unable to set the encryption key.');?></div>
+      <div class="statusmessage info"></div>
     </form>
     <div class="locale information">
       <span class="locale heading"><?php echo $l->t('Locale Information:'); ?></span>

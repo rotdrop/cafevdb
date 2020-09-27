@@ -327,14 +327,24 @@ class ConfigService {
    * encrypted config space
    *
    */
+  public function setAppEncryptionKey($key)
+  {
+    return $this->encryptionService->setAppEncryptionKey($key);
+  }
+
   public function getAppEncryptionKey()
   {
     return $this->encryptionService->getAppEncryptionKey();
   }
 
-  public function encryptionKeyValid()
+  public function recryptAppEncryptionKey($login, $password, $enckey = null)
   {
-    return $this->encryptionService->encryptionKeyValid();
+    return $this->encryptionService->recryptAppEncryptionkey($login, $password, $enckey);
+  }
+
+  public function encryptionKeyValid($encryptionKey = null)
+  {
+    return $this->encryptionService->encryptionKeyValid($encryptionKey);
   }
 
   public function getValue($key, $default = null)

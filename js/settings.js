@@ -57,11 +57,15 @@ var CAFEVDB = CAFEVDB || {};
     });
 
     container.on('cafevdb:content-update', function(event) {
+      console.log('S content-update');
       if (event.target == this) {
+        console.log('S trigger PS content-update');
 	if (!container.hasClass('personal-settings')) {
 	  $('.personal-settings').trigger('cafevdb:content-update');
 	}
 	Settings.afterLoad($(this));
+      } else {
+        console.log('S ignore update on ', $(this));
       }
     });
 
@@ -84,40 +88,64 @@ var CAFEVDB = CAFEVDB || {};
     tabsHolder.tabs({ selected: 0});
 
     // 'show password' checkbox
-    var tmp = $('#userkey #encryptionkey').val();
-    $('#userkey #encryptionkey').showPassword();
-    $('#userkey #encryptionkey').val(tmp);
+    const encryptionKey = $('#userkey #encryptionkey');
+    const loginPassword = $('#userkey #password');
+    var tmp = encryptionKey.val();
+    encryptionKey.showPassword();
+    encryptionKey.val(tmp);
 
-    tmp = $('#userkey #password').val();
-    $('#userkey #password').showPassword();
-    $('#userkey #password').val(tmp);
+    tmp = loginPassword.val();
+    loginPassword.showPassword();
+    loginPassword.val(tmp);
 
     $("#userkey #button").click(function() {
       // We allow empty keys, meaning no encryption
       $('div.statusmessage').hide();
       $('span.statusmessage').hide();
-      if ($('#userkey #password').val() != '' && (true || $('#userkey #encryptionkey').val() != '')) {
-	// Serialize the data
-	var post = $("#userkey").serialize();
-	// Ajax foo
-	$.post(OC.filePath('cafevdb', 'ajax/settings', 'encryptionkey.php'),
-               post, function(data) {
-		 if(data.status == "success") {
-                   $('#userkey input[name="dbkey1"]').val('');
-                   $('#userkey input[name="userkey"]').val('');
-                   $('#userkey input[name="userkey-clone"]').val('');
-                   $('#userkey #changed').show();
-		 } else{
-                   $('#userkey #error').html(data.data.message);
-                   $('#userkey #error').show();
-		 }
-               },'json');
-	return false;
-      } else {
-	$('#userkey #error').show();
-	return false;
+      if (loginPassword.val() != '' && (true || encryptionKey.val() != '')) {
+	const post = $("#userkey").serializeArray();
+        console.log(post);
+	$.post(
+	  OC.generateUrl('/apps/cafevdb/settings/personal/set/encryptionkey'),
+          { 'value': {'encryptionkey': encryptionKey.val(),
+                      'loginpassword': loginPassword.val()
+                     }
+          })
+	  .done(function(data) {
+	    console.log(data);
+            $('#userkey input[name="dbkey1"]').val('');
+            $('#userkey input[name="userkey"]').val('');
+            $('#userkey input[name="userkey-clone"]').val('');
+            $('#userkey .info').html(data.message);
+            $('#userkey .info').show();
+            $('#userkey .changed').show();
+	  })
+	  .fail(function(xhr, status, errorThrown) {
+            //@@TODO this is rather a general error handler
+            const ct = xhr.getResponseHeader("content-type") || "";
+            var message = '';
+            if (ct.indexOf('html') > -1) {
+              console.log('html response', xhr, status, errorThrown);
+              console.log(xhr.status);
+              message = t('cafevdb', 'HTTP error response to AJAX call: {code} / {error}',
+                          {'code': xhr.status, 'error': errorThrown});
+            } else if (ct.indexOf('json') > -1) {
+              console.log('json response');
+              const response = JSON.parse(xhr.responseText);
+              if (response.message) {
+                message = response.message;
+              }
+            } else {
+              console.log('unknown response');
+              message = t('cafevdb', 'Unknwon failure of AJAX call: {status} / {error}',
+                          {'status': status, 'error': errorThrown});
+            }
+            $('#userkey .info').html(message);
+            $('#userkey .info').show();
+            $('#userkey .error').show();
+	  });
       }
-
+      return false;
     });
 
     $('#exampletext').blur(function(event) {
@@ -1198,4 +1226,5 @@ $(document).ready(function() {
 
 // Local Variables: ***
 // js-indent-level: 2 ***
+// indent-tabs-mode: nil ***
 // End: ***

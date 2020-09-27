@@ -108,6 +108,31 @@ class PersonalSettingsController extends Controller {
       }
       $this->setUserValue($parameter, $value);
       return self::response($this->l->t('Setting %2$s to %1$s', [$value, $parameter]));
+    case 'encryptionkey':
+      // Get data
+      if (!is_array($value) || !isset($value['encryptionkey']) || !isset($value['loginpassword'])) {
+        return self::grumble($this->l->t('Invalid request data: `%s\'',[print_r($value, true)]));
+      }
+      $password = $value['loginpassword'];
+      $encryptionkey = $value['encryptionkey'];
+
+      // Re-validate the user
+      if ($this->userManager()->checkPassword($this->userId(), $password) === false) {
+        return self::grumble($this->l->t('Invalid password for `%s\'', [$this->userId()]));
+      }
+
+      // Then check whether the key is correct
+      if (!$this->encryptionKeyValid($encryptionkey)) {
+        return self::grumble($this->l->t('Invalid encryption key.'));
+      }
+
+      // So generate a new key-pair and store the key.
+      $this->recryptEncryptionKey($user, $password, $encryptionkey);
+
+      // Then store the key in the session as it is the valid key
+      $this->setAppEncryptionKey($encryptionkey);
+
+      return self::response($this->l->t('Encryption key stored.'));
     default:
     }
     return self::grumble($this->l->t('Unknown Request'));
