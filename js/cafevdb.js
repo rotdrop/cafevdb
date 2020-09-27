@@ -1229,6 +1229,40 @@ var CAFEVDB = CAFEVDB || {};
     return true;
   };
 
+  /**Generate some diagnostic output, mostly needed during application
+   * development.
+   *
+   * @param xhr jqXHR, see fail() method of jQuery ajax.
+   *
+   * @param status from jQuery, see fail() method of jQuery ajax.
+   *
+   * @param errorThrown, see fail() method of jQuery ajax.
+   *
+   * @param required List of required fields in data.data.
+   *
+   */
+  CAFEVDB.ajaxFailMessage = function(xhr, status, errorThrown) {
+    const ct = xhr.getResponseHeader("content-type") || "";
+    var message = '';
+    if (ct.indexOf('html') > -1) {
+      console.log('html response', xhr, status, errorThrown);
+      console.log(xhr.status);
+      message = t('cafevdb', 'HTTP error response to AJAX call: {code} / {error}',
+                  {'code': xhr.status, 'error': errorThrown});
+    } else if (ct.indexOf('json') > -1) {
+      console.log('json response');
+      const response = JSON.parse(xhr.responseText);
+      if (response.message) {
+        message = response.message;
+      }
+    } else {
+      console.log('unknown response');
+      message = t('cafevdb', 'Unknwon failure of AJAX call: {status} / {error}',
+                  {'status': status, 'error': errorThrown});
+    }
+    return message;
+  };
+
   CAFEVDB.attachToolTip = function(selector, options) {
     var defaultOptions = {
         container:'body',

@@ -102,67 +102,32 @@ var CAFEVDB = CAFEVDB || {};
       // We allow empty keys, meaning no encryption
       $('div.statusmessage').hide();
       $('span.statusmessage').hide();
-      if (loginPassword.val() != '' && (true || encryptionKey.val() != '')) {
-	const post = $("#userkey").serializeArray();
-        console.log(post);
-	$.post(
-	  OC.generateUrl('/apps/cafevdb/settings/personal/set/encryptionkey'),
-          { 'value': {'encryptionkey': encryptionKey.val(),
-                      'loginpassword': loginPassword.val()
-                     }
-          })
-	  .done(function(data) {
-	    console.log(data);
-            $('#userkey input[name="dbkey1"]').val('');
-            $('#userkey input[name="userkey"]').val('');
-            $('#userkey input[name="userkey-clone"]').val('');
-            $('#userkey .info').html(data.message);
-            $('#userkey .info').show();
-            $('#userkey .changed').show();
-	  })
-	  .fail(function(xhr, status, errorThrown) {
-            //@@TODO this is rather a general error handler
-            const ct = xhr.getResponseHeader("content-type") || "";
-            var message = '';
-            if (ct.indexOf('html') > -1) {
-              console.log('html response', xhr, status, errorThrown);
-              console.log(xhr.status);
-              message = t('cafevdb', 'HTTP error response to AJAX call: {code} / {error}',
-                          {'code': xhr.status, 'error': errorThrown});
-            } else if (ct.indexOf('json') > -1) {
-              console.log('json response');
-              const response = JSON.parse(xhr.responseText);
-              if (response.message) {
-                message = response.message;
-              }
-            } else {
-              console.log('unknown response');
-              message = t('cafevdb', 'Unknwon failure of AJAX call: {status} / {error}',
-                          {'status': status, 'error': errorThrown});
-            }
-            $('#userkey .info').html(message);
-            $('#userkey .info').show();
-            $('#userkey .error').show();
-	  });
+      if (loginPassword.val() == '') {
+        $('#userkey .info').html(t('cafevdb', 'You must type in your login password.'));
+        $('#userkey .info').show();
+        $('#userkey .error').show();
+        return false;
       }
-      return false;
-    });
-
-    $('#exampletext').blur(function(event) {
-      event.preventDefault();
-      var post = $("#exampletext").serialize();
-      $('#cafevdb #msg').hide();
-      $.post(OC.filePath('cafevdb', 'ajax/settings', 'exampletext.php'),
-             post,
-             function(data) {
-               if (data.status == 'success') {
-		 $('#cafevdb #msg').html(data.data.message);
-               } else {
-		 $('#cafevdb #msg').html(t('cafevdb','Error:')+' '+data.data.message);
-               }
-               $('#cafevdb #msg').show();
-               return;
-             });
+      $.post(
+	OC.generateUrl('/apps/cafevdb/settings/personal/set/encryptionkey'),
+        { 'value': {'encryptionkey': encryptionKey.val(),
+                    'loginpassword': loginPassword.val()
+                   }
+        })
+	.done(function(data) {
+	  console.log(data);
+          $('#userkey input[name="dbkey1"]').val('');
+          $('#userkey input[name="userkey"]').val('');
+          $('#userkey input[name="userkey-clone"]').val('');
+          $('#userkey .info').html(data.message);
+          $('#userkey .info').show();
+          $('#userkey .changed').show();
+	})
+	.fail(function(xhr, status, errorThrown) {
+          $('#userkey .info').html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown));
+          $('#userkey .info').show();
+          $('#userkey .error').show();
+        });
       return false;
     });
 
@@ -171,6 +136,47 @@ var CAFEVDB = CAFEVDB || {};
     // Application settings stuff
     //
     ///////////////////////////////////////////////////////////////////////////
+
+    // name of orchestra
+
+    const adminGeneral = $('#admingeneral');
+    adminGeneral.submit(function () { return false; });
+
+    adminGeneral.find(':input').blur(function(event) {
+      const msg = adminGeneral.find('.msg');
+      msg.hide();
+      const value = $(this).val();
+      $.post(
+	OC.generateUrl('/apps/cafevdb/settings/app/set/orchestra'),
+        { 'value': value })
+	.done(function(data) {
+          msg.html(data.message);
+          msg.show();
+	  if (value == '') {
+            $('div.personalblock.admin,div.personalblock.sharing').find('fieldset').each(function(i, elm) {
+              $(elm).attr('disabled','disabled');
+            });
+	  } else {
+            $('div.personalblock.admin').find('fieldset').each(function(i, elm) {
+              $(elm).removeAttr('disabled');
+            });
+            if ($('#shareowner #user-saved').val() != '') {
+              $('div.personalblock.sharing').find('fieldset').each(function(i, elm) {
+                $(elm).removeAttr('disabled');
+              });
+            } else {
+              $('#shareownerform').find('fieldset').each(function(i, elm) {
+                $(elm).removeAttr('disabled');
+              });
+            }
+	  }
+	})
+	.fail(function(xhr, status, errorThrown) {
+          msg.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown));
+          msg.show();
+        });
+      return false;
+    });
 
     // Encryption-key
     // 'show password' checkbox
@@ -269,48 +275,6 @@ var CAFEVDB = CAFEVDB || {};
                $('#keydistribute #msg').html(data.data.message);
                $('#keydistribute #msg').show();
              });
-    });
-
-    ///////////////////////////////////////////////////////////////////////////
-    //
-    // name of orchestra
-    //
-    ///////////////////////////////////////////////////////////////////////////
-
-    $('#admingeneral').submit(function () { return false; });
-
-    $('#admingeneral :input').blur(function(event) {
-      event.preventDefault();
-      $('div.statusmessage').hide();
-      $('span.statusmessage').hide();
-      $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
-             $(this),
-             function(data) {
-               if (data.status == "success") {
-		 $('#admingeneral #msg').html(data.data.message);
-		 $('#admingeneral #msg').show();
-
-		 if (data.data.value == '') {
-                   $('div.personalblock.admin,div.personalblock.sharing').find('fieldset').each(function(i, elm) {
-                     $(elm).attr('disabled','disabled');
-                   });
-		 } else {
-                   $('div.personalblock.admin').find('fieldset').each(function(i, elm) {
-                     $(elm).removeAttr('disabled');
-                   });
-                   if ($('#shareowner #user-saved').val() != '') {
-                     $('div.personalblock.sharing').find('fieldset').each(function(i, elm) {
-                       $(elm).removeAttr('disabled');
-                     });
-                   } else {
-                     $('#shareownerform').find('fieldset').each(function(i, elm) {
-                       $(elm).removeAttr('disabled');
-                     });
-                   }
-		 }
-               }
-               return false;
-	     }, 'json');
     });
 
     ///////////////////////////////////////////////////////////////////////////
