@@ -60,7 +60,7 @@ class ProjectService
     // simply fetch all participants
     $query = "SELECT Name,Vorname,MusikerId FROM ? WHERE 1";
 
-    $stmt = $this->databaseConnection->executeQuery($query, [$table]);
+    $stmt = $this->databaseService->executeQuery($query, [$table]);
     while($row = $stmt->fetch()) {
       $key = $row['MusikerId'];
       $name = $row['Vorname'].' '.$row['Name'];
@@ -73,20 +73,20 @@ class ProjectService
     return $options;
   }
 
-    /** Fetch the project-name name corresponding to $projectId.
-     */
-    public function fetchName($projectId)
-    {
-      $result = $this->databaseService->fetchAll(
-        'SELECT Name FROM Projekte WHERE Id = ?',
-        [$projectId]);
+  /** Fetch the project-name name corresponding to $projectId.
+   */
+  public function fetchName($projectId)
+  {
+    $result = $this->databaseService->fetchAll(
+      'SELECT Name FROM Projekte WHERE Id = ?',
+      [$projectId]);
 
-      if (count($result) == 1 && !empty($result[0]['Name'])) {
-        return $result[0]['Name'];
-      }
-
-      return null;
+    if (count($result) == 1 && !empty($result[0]['Name'])) {
+      return $result[0]['Name'];
     }
+
+    return null;
+  }
 
 }
 

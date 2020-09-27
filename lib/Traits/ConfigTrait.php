@@ -166,6 +166,19 @@ trait ConfigTrait {
   protected function localeCountryNames($locale = null) {
     return $this->configService->localeCountryNames($locale);
   }
+
+  /****************************************************************************
+   *
+   * short-cuts
+   *
+   */
+  public function databaseConfigured() {
+    return !(empty($this->getConfigValue('dbname'))
+             || empty($this->getConfigValue('dbuser'))
+             || empty($this->getConfigValue('dbpassword'))
+             || empty($this->getConfigValue('dbserver')));
+  }
+
 }
 
 // Local Variables: ***

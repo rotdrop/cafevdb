@@ -40,8 +40,7 @@ class Application extends App {
         $dispatcher->addServiceListener(PasswordUpdatedEvent::class, PasswordUpdatedEventListener::class);
 
         $container->registerService(DatabaseService::class, function($c) {
-            return null;
-            $factory = $c->query('DatabaseFactory');
+            $factory = $c->query('\OCA\CAFEVDB\Service\DatabaseFactory');
             return $factory->getService();
         });
     }
