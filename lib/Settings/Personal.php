@@ -98,9 +98,13 @@ class Personal implements ISettings {
       if ($isGroupAdmin) {
         $executiveBoardTable = $this->getConfigValue('executiveBoardTable', $this->l->t('ExecutiveBoardMembers'));
         $executiveBoardTableId = $this->getConfigValue('executiveBoardTableId', -1);
-        if ($this->databaseConfigured()) {
+        if ($this->databaseConfigured() && $executiveBoardTableId > 0) {
           // this can throw if there is no datadase configured yet.
-          $executiveBoardMembers = $this->projectService->participantOptions($executiveBoardTableId, $executiveBoardTable);
+          try {
+            $executiveBoardMembers = $this->projectService->participantOptions($executiveBoardTableId, $executiveBoardTable);
+          } catch(\Exception $e) {
+            $executiveBoardMembers = [];
+          }
         } else {
           $executiveBoardMembers = [];
         }
