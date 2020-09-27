@@ -26,12 +26,18 @@ use OCA\CAFEVDB\Listener\PasswordUpdatedEventListener;
 use OCA\CAFEVDB\Service\DatabaseService;
 use OCA\CAFEVDB\Service\DatabaseFactory;
 
+use OCA\CAFEVDB\Middleware\SubadminMiddleware;
+
 class Application extends App {
 
     public function __construct (array $urlParams=array()) {
         parent::__construct('cafevdb', $urlParams);
 
         $container = $this->getContainer();
+
+        // Register Middleware
+        $container->registerAlias('SubadminMiddleware', SubadminMiddleware::class);
+        $container->registerMiddleWare('SubadminMiddleware');
 
         /* @var IEventDispatcher $eventDispatcher */
         $dispatcher = $container->query(IEventDispatcher::class);
