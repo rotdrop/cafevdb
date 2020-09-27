@@ -258,9 +258,12 @@ class EncryptionService
     $sysdbkey = $this->getAppValue('encryptionkey');
 
     // Now try to decrypt the data-base encryption key
-    $sysdbkey = self::decrypt($sysdbkey, $sesdbkey);
+    $sysdbkey = $this->decrypt($sysdbkey, $sesdbkey);
 
-    return $sysdbkey !== false && !empty($sesdbkey) && !empty($sysdbkey) && $sysdbkey == $sesdbkey;
+    //trigger_error('sysdbkey ' . print_r($sysdbkey, true) . ' sesdbkey ' . print_r($sesdbkey, true));
+
+    // an empty key is ok, !== false catches decryption errors.
+    return $sysdbkey !== false && $sysdbkey == $sesdbkey;
   }
 
   function getAppValue($key, $default = null)
@@ -292,7 +295,7 @@ class EncryptionService
     $enckey = $this->getAppEncryptionKey();
     $value  = $this->getAppValue($key, $default);
 
-    $value  = self::decrypt($value, $enckey);
+    $value  = $this->decrypt($value, $enckey);
 
     return $value;
   }
@@ -311,7 +314,9 @@ class EncryptionService
 
     $enckey = $this->getAppEncryptionKey();
 
-    $value = self::encrypt($value, $enckey);
+    if (!empty($enckey)) {
+      $value = $this->encrypt($value, $enckey);
+    }
     $this->setAppValue($key, $value);
     return true;
   }
@@ -329,7 +334,8 @@ class EncryptionService
    *
    * @return The encrypted and encoded data.
    */
-  static private function encrypt($value, $enckey)
+  //@@TODO catch exceptions
+  private function encrypt($value, $enckey)
   {
     // Store the size in the first 4 bytes in order not to have to
     // rely on padding. We store the value in hexadecimal notation
@@ -351,9 +357,12 @@ class EncryptionService
    * @param[in] $enckey The encryption key or an empty string or
    * nothing.
    *
-   * @return The decrypted data in case of success, or false otherwise.
+   * @return The decrypted data in case of success, or false
+   * otherwise. If either @c $value or @c enckey is empty the return
+   * value is just passed argument @c value.
    */
-  static public function decrypt($value, $enckey)
+  //@@TODO catch exceptions
+  private function decrypt($value, $enckey)
   {
     if (!empty($enckey) && !empty($value)) {
       $value = $this->cryptor->decrypt($value, $enckey, Cryptor::FORMAT_B64);

@@ -138,6 +138,28 @@ class PersonalSettingsController extends Controller {
     return self::grumble($this->l->t('Unknown Request'));
   }
 
+  /**
+   * Store user settings.
+   *
+   * @NoAdminRequired
+   * @SubAdminRequired
+   */
+  public function setApp($parameter, $value) {
+    switch ($parameter) {
+    case 'orchestra':
+      $realValue = trim($value);
+      $this->setConfigValue($parameter, $realValue);
+      return self::valueResponse($realValue, $this->l->t('Name of orchestra set to `%s\'', [$realValue]));
+    default:
+    }
+    return self::grumble($this->l->t('Unknown Request'));
+  }
+
+  static private function valueResponse($value, $message = '', $status = Http::STATUS_OK)
+  {
+    return new DataResponse(['message' => $message, 'value' => $value], $status);
+  }
+
   static private function response($message, $status = Http::STATUS_OK)
   {
     return new DataResponse(['message' => $message], $status);
