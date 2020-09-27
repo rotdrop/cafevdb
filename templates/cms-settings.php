@@ -26,69 +26,69 @@ Config::init();
 ?>
 <div id="tabs-<?php echo $_['tabNr']; ?>" class="personalblock admin cms">
   <form id="cmssettings">
-    <fieldset id="redaxocategories"><legend><?php echo L::t('Redaxo Categories');?></legend>
+    <fieldset id="redaxocategories"><legend><?php echo $l->t('Redaxo Categories');?></legend>
       <input type="text"
              class="redaxo"
              id="redaxoPreview"
              name="redaxoPreview"
-             placeholder="<?php L::t('preview'); ?>"
+             placeholder="<?php $l->t('preview'); ?>"
              value="<?php echo $_['redaxoPreview']; ?>"
              title="<?php echo Config::toolTips('redaxo-preview'); ?>" />
-      <label for="redaxoPreview"><?php echo L::t('Id of Redaxo Preview Category'); ?></label>
+      <label for="redaxoPreview"><?php echo $l->t('Id of Redaxo Preview Category'); ?></label>
       <br/>
       <input type="text"
              class="redaxo"
              id="redaxoArchive"
              name="redaxoArchive"
-             placeholder="<?php L::t('archive'); ?>"
+             placeholder="<?php $l->t('archive'); ?>"
              value="<?php echo $_['redaxoArchive']; ?>"
              title="<?php echo Config::toolTips('redaxo-archive'); ?>" />
-      <label for="redaxoArchive"><?php echo L::t('Id of Redaxo Archive Category'); ?></label>
+      <label for="redaxoArchive"><?php echo $l->t('Id of Redaxo Archive Category'); ?></label>
       <br/>
       <input type="text"
              class="redaxo"
              id="redaxoRehearsals"
              name="redaxoRehearsals"
-             placeholder="<?php L::t('rehearsals'); ?>"
+             placeholder="<?php $l->t('rehearsals'); ?>"
              value="<?php echo $_['redaxoRehearsals']; ?>"
              title="<?php echo Config::toolTips('redaxo-rehearsals'); ?>" />
-      <label for="redaxoArchive"><?php echo L::t('Id of Redaxo Rehearsals Category'); ?></label>
+      <label for="redaxoArchive"><?php echo $l->t('Id of Redaxo Rehearsals Category'); ?></label>
       <br/>
       <input type="text"
              class="redaxo"
              id="redaxoTrashbin"
              name="redaxoTrashbin"
-             placeholder="<?php L::t('trashbin'); ?>"
+             placeholder="<?php $l->t('trashbin'); ?>"
              value="<?php echo $_['redaxoTrashbin']; ?>"
              title="<?php echo Config::toolTips('redaxo-trashbin'); ?>" />
-      <label for="redaxoTrashbin"><?php echo L::t('Id of Redaxo Trashbin Category'); ?></label>
+      <label for="redaxoTrashbin"><?php echo $l->t('Id of Redaxo Trashbin Category'); ?></label>
       <br/>
       <input type="text"
              class="redaxo"
              id="redaxoTemplate"
              name="redaxoTemplate"
-             placeholder="<?php L::t('template'); ?>"
+             placeholder="<?php $l->t('template'); ?>"
              value="<?php echo $_['redaxoTemplate']; ?>"
              title="<?php echo Config::toolTips('redaxo-template'); ?>" />
-      <label for="redaxoTemplate"><?php echo L::t('Id of Redaxo Default-Template'); ?></label>
+      <label for="redaxoTemplate"><?php echo $l->t('Id of Redaxo Default-Template'); ?></label>
       <br/>
       <input type="text"
              class="redaxo"
              id="redaxoConcertModule"
              name="redaxoConcertModule"
-             placeholder="<?php L::t('template'); ?>"
+             placeholder="<?php $l->t('template'); ?>"
              value="<?php echo $_['redaxoConcertModule']; ?>"
              title="<?php echo Config::toolTips('redaxo-template'); ?>" />
-      <label for="redaxoConcertModule"><?php echo L::t('Id of Redaxo Concert-Module'); ?></label>
+      <label for="redaxoConcertModule"><?php echo $l->t('Id of Redaxo Concert-Module'); ?></label>
       <br/>
       <input type="text"
              class="redaxo"
              id="redaxoRehearsalsModule"
              name="redaxoRehearsalsModule"
-             placeholder="<?php L::t('template'); ?>"
+             placeholder="<?php $l->t('template'); ?>"
              value="<?php echo $_['redaxoRehearsalsModule']; ?>"
              title="<?php echo Config::toolTips('redaxo-template'); ?>" />
-      <label for="redaxoRehearsalsModule"><?php echo L::t('Id of Redaxo Rehearsals-Module'); ?></label>
+      <label for="redaxoRehearsalsModule"><?php echo $l->t('Id of Redaxo Rehearsals-Module'); ?></label>
     </fieldset>
     <span class="statusmessage" id="msg"></span>  
   </form>

@@ -23,7 +23,7 @@
 use CAFEVDB\L;
 use CAFEVDB\Config;
 
-$title = L::t("SEPA Debit Mandate of %s", array($_['MusicianName']));
+$title = $l->t("SEPA Debit Mandate of %s", array($_['MusicianName']));
 
 $reference  = $_['mandateReference'];
 $expired    = $_['mandateExpired'];
@@ -38,7 +38,7 @@ $class      = $_['CSSClass'];
 
 $membersTableId = Config::getSetting('memberTableId', -1);
 
-$recurring = L::t('Type: ').($_['sequenceType'] == 'once' ? L::t('once') : L::t('permanent'));
+$recurring = $l->t('Type: ').($_['sequenceType'] == 'once' ? $l->t('once') : $l->t('permanent'));
 
 ?>
 <div id="sepa-debit-mandate-dialog" title="<?php echo $title;?>">
@@ -47,12 +47,12 @@ $recurring = L::t('Type: ').($_['sequenceType'] == 'once' ? L::t('once') : L::t(
        class="<?php echo ($expired ? 'active' : ''); ?> mandate-expired-notice tooltip-bottom"
        title="<?php echo $expiredTip; ?>">
     <div>
-      <?php echo ($expired ? L::t('expired') : ''); ?>
+      <?php echo ($expired ? $l->t('expired') : ''); ?>
     </div>
   </div>
   <form id="sepa-debit-mandate-form" class="<?php echo $class; ?>" >
     <legend class="mandateCaption">
-      <?php echo L::t('Mandate-Reference: '); ?>
+      <?php echo $l->t('Mandate-Reference: '); ?>
       <span class="reference">
         <?php echo $reference; ?>
       </span>
@@ -77,7 +77,7 @@ $recurring = L::t('Type: ').($_['sequenceType'] == 'once' ? L::t('once') : L::t(
     <label for="debit-mandate-orchestra-member"
            title="<?php echo  Config::toolTips('debit-mandate-orchestra-member'); ?>"
            class="tooltip-right">
-      <?php echo L::t('Club Member'); ?>
+      <?php echo $l->t('Club Member'); ?>
     </label>
     <?php } else { ?>
       <input type="hidden" name="orchestraMember" value="member" />
@@ -86,51 +86,51 @@ $recurring = L::t('Type: ').($_['sequenceType'] == 'once' ? L::t('once') : L::t(
            id="bankAccountOwner"
            name="bankAccountOwner"
            value="<?php echo $_['bankAccountOwner']; ?>"
-           title="<?php echo L::t('owner of the bank account, probably same as musician'); ?>"
-           placeholder="<?php echo L::t('owner of bank account'); ?>"/><br/>
+           title="<?php echo $l->t('owner of the bank account, probably same as musician'); ?>"
+           placeholder="<?php echo $l->t('owner of bank account'); ?>"/><br/>
     <input class="bankAccount bankAccountBLZ" type="text"
            id="bankAccountBLZ"
            name="bankAccountBLZ"
            value="<?php echo $_['bankAccountBLZ']; ?>"
-           title="<?php echo L::t('Optional BLZ of the musician\'s bank account'); ?>"
-           placeholder="<?php echo L::t('BLZ of bank account'); ?>"/>
+           title="<?php echo $l->t('Optional BLZ of the musician\'s bank account'); ?>"
+           placeholder="<?php echo $l->t('BLZ of bank account'); ?>"/>
     <input class="bankAccount bankAccountIBAN" type="text"
            id="bankAccountIBAN"
            name="bankAccountIBAN"
            value="<?php echo $_['bankAccountIBAN']; ?>"
-           title="<?php echo L::t('IBAN or number of the bank account. If this is a account number, then please first enter the BLZ'); ?>"
-           placeholder="<?php echo L::t('IBAN or no. of bank account'); ?>"/>
+           title="<?php echo $l->t('IBAN or number of the bank account. If this is a account number, then please first enter the BLZ'); ?>"
+           placeholder="<?php echo $l->t('IBAN or no. of bank account'); ?>"/>
     <input class="bankAccount bankAccountBIC" type="text"
            id="bankAccountBIC"
            name="bankAccountBIC"
            value="<?php echo $_['bankAccountBIC']; ?>"
-           title="<?php echo L::t('Optionally the BIC of the account; will be computed automatically if left blank.'); ?>"
-           placeholder="<?php echo L::t('BIC of bank account'); ?>"/><br/>
-    <label for="mandateDate"><?php echo L::t("Date issued:"); ?></label>
+           title="<?php echo $l->t('Optionally the BIC of the account; will be computed automatically if left blank.'); ?>"
+           placeholder="<?php echo $l->t('BIC of bank account'); ?>"/><br/>
+    <label for="mandateDate"><?php echo $l->t("Date issued:"); ?></label>
     <input class="mandateDate" type="text"
            id="mandateDate"
            name="mandateDate"
            value="<?php echo $_['mandateDate']; ?>"
-           title="<?php echo L::t('Date of mandate grant'); ?>"
-           placeholder="<?php echo L::t('mandate date'); ?>"/>
+           title="<?php echo $l->t('Date of mandate grant'); ?>"
+           placeholder="<?php echo $l->t('mandate date'); ?>"/>
 <?php if ($_['sequenceType'] == 'once') { ?>
     <input type="hidden" name="lastUsedDate" value="<?php echo $_['lastUsedDate']; ?>"/>
 <?php } else { ?>
-    <label for="lastUsedDate"><?php echo L::t("Date of last usage:"); ?>
+    <label for="lastUsedDate"><?php echo $l->t("Date of last usage:"); ?>
       <input class="lastUsedDate" type="text"
              id="lastUsedDate"
              <?php echo $_['sequenceType'] == 'once' ? 'disabled' : '' ?>
              name="lastUsedDate"
              value="<?php echo $_['lastUsedDate']; ?>"
-             title="<?php echo L::t('Date of last usage of debit-mandate'); ?>"
-             placeholder="<?php echo L::t('last used date'); ?>"/>
+             title="<?php echo $l->t('Date of last usage of debit-mandate'); ?>"
+             placeholder="<?php echo $l->t('last used date'); ?>"/>
     </label>
 <?php } ?><br/>
     <span id="debitRecurringInfo"><?php echo $recurring; ?></span>
     <label class="sepa-validation-toggle"
            for="sepa-validation-toggle"
            title="<?php echo Config::toolTips('sepa-instant-validation'); ?>">
-      <?php echo L::t('Instant IBAN Validation:'); ?>
+      <?php echo $l->t('Instant IBAN Validation:'); ?>
       <input type="checkbox"
              checked="checked"
              class="sepa-validation-toggle"

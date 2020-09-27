@@ -74,7 +74,7 @@ namespace CAFEVDB {
 ';
       }
     } else {
-      echo '    <li id="cmsarticle-tab-nopage"><a href="#projectArticle-nopage">'.L::t('nothing').'</a></li>
+      echo '    <li id="cmsarticle-tab-nopage"><a href="#projectArticle-nopage">'.$l->t('nothing').'</a></li>
 ';
     }
     echo '    <li id="cmsarticle-tab-newpage" class="tip" title="'.Config::toolTips('project-web-article-add').'"><a href="#projectArticle-newpage" class="compact">'.'<span class="ui-icon ui-icon-plusthick">+</span>'.'</a></li>
@@ -115,7 +115,7 @@ namespace CAFEVDB {
        class="cmsarticlecontainer cafev"
        data-article-id="-1"
        data-project-id="'.$projectId.'">
-    <div id="cmsarticle-nopage" class="cmsarticleframe '.$_['action'].'">'.L::t("No public web pages registered for this project").'</div>
+    <div id="cmsarticle-nopage" class="cmsarticleframe '.$_['action'].'">'.$l->t("No public web pages registered for this project").'</div>
   </div>
 ';    
     }
@@ -123,7 +123,7 @@ namespace CAFEVDB {
        class="cmsarticlecontainer cafev"
        data-article-id="-1"
        data-project-id="'.$projectId.'">
-    <div id="cmsarticle-newpage" class="cmsarticleframe '.$_['action'].'">'.L::t("Create new public web page for this project.").'</div>
+    <div id="cmsarticle-newpage" class="cmsarticleframe '.$_['action'].'">'.$l->t("Create new public web page for this project.").'</div>
   </div>
 ';    
     echo '  <div id="projectArticle-linkpage" class="cmsarticlecontainer cafev">
@@ -133,7 +133,7 @@ namespace CAFEVDB {
         name="cmsarticleselect"
         id="cmsarticleselect"
         class="cmsarticleselect"
-        data-placeholder="'.L::t('Attach existing Pages').'"
+        data-placeholder="'.$l->t('Attach existing Pages').'"
         title="'.Config::toolTips('project-web-article-linkpage-select').'"
         data-project-id="'.$projectId.'">
   <option></option>';
@@ -180,11 +180,11 @@ namespace CAFEVDB {
 ';    
         if ($cnt > 0) {
           echo '  <div id="projectArticle-unlinkpage" class="cmsarticlecontainer cafev">
-    <div id="cmsarticle-unlinkpage" class="cmsarticleframe '.$_['action'].'">'.L::t("Unlink a web-article.").'</div>
+    <div id="cmsarticle-unlinkpage" class="cmsarticleframe '.$_['action'].'">'.$l->t("Unlink a web-article.").'</div>
   </div>
 ';
           echo '  <div id="projectArticle-deletepage" class="cmsarticlecontainer cafev">
-    <div id="cmsarticle-deletepage" class="cmsarticleframe '.$_['action'].'">'.L::t("Delete a web article.").'</div>
+    <div id="cmsarticle-deletepage" class="cmsarticleframe '.$_['action'].'">'.$l->t("Delete a web article.").'</div>
   </div>
 ';
         }

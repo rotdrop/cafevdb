@@ -31,13 +31,13 @@ use CAFEVDB\Config;
       <input
       type="button"
       title="<?php echo Config::toolTips('blog-acceptentry'); ?>"
-      value="<?php echo L::t('Submit'); ?>"
+      value="<?php echo $l->t('Submit'); ?>"
       id="blogsubmit"
       />
       <input
       type="button"
       title="<?php echo Config::toolTips('blog-cancelentry'); ?>"
-      value="<?php echo L::t('Cancel'); ?>"
+      value="<?php echo $l->t('Cancel'); ?>"
       id="blogcancel"
       />
       <?php if ($_['priority'] !== false) { ?>
@@ -56,7 +56,7 @@ use CAFEVDB\Config;
                  name="popupset"
                  title="<?php echo Config::toolTips('blog-popup-set'); ?>"
                  id="blogpopupset"/>
-          <?php echo L::t('Set Blog Popup') ?>
+          <?php echo $l->t('Set Blog Popup') ?>
         </label>
       <?php } else { ?>
         <label for="blogpopupclear"
@@ -65,7 +65,7 @@ use CAFEVDB\Config;
                  name="popupclear"
                  title="<?php echo Config::toolTips('blog-popup-clear'); ?>"
                  id="blogpopupclear"/>
-          <?php echo L::t('Clear Blog Popup') ?>
+          <?php echo $l->t('Clear Blog Popup') ?>
         </label>
       <?php } ?>
       <label for="blogreaderclear"
@@ -74,7 +74,7 @@ use CAFEVDB\Config;
                name="readerclear"
                title="<?php echo Config::toolTips('blog-reader-clear'); ?>"
                id="blogreaderclear"/>
-        <?php echo L::t('Clear Reader List') ?>
+        <?php echo $l->t('Clear Reader List') ?>
       </label>
     </form>
   </div>

@@ -46,7 +46,7 @@ foreach ($_['EventMatrix'] as $key => $eventGroup) {
   if (!empty($events)) {
     echo "<tr><th colspan=\"4\">$dpyName</th></tr>";
   } else if ($key >= 0) {
-    $noEvents = empty($events) ? L::t('no events') : '';
+    $noEvents = empty($events) ? $l->t('no events') : '';
     echo "<tr><th colspan=\"4\">$dpyName ($noEvents)</th></tr>";
   }
   foreach ($eventGroup['events'] as $event) {

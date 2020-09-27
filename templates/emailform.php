@@ -32,13 +32,13 @@ CAFEVDB\Error::exceptions(true);
 <div id="emailformwrapper">
   <ul id="emailformtabs">
     <li id="emailformrecipients-tab">
-      <a href="#emailformrecipients"><?php echo L::t('Recipients'); ?></a>
+      <a href="#emailformrecipients"><?php echo $l->t('Recipients'); ?></a>
     </li>
     <li id="emailformcomposer-tab">
-      <a href="#emailformcomposer"><?php echo L::t('Message Composition'); ?></a>
+      <a href="#emailformcomposer"><?php echo $l->t('Message Composition'); ?></a>
     </li>
     <li id="emailformdebug-tab">
-      <a href="#emailformdebug"><?php echo L::t('Status and Preview'); ?></a>
+      <a href="#emailformdebug"><?php echo $l->t('Status and Preview'); ?></a>
     </li>
   </ul>
   <form method="post"
@@ -85,11 +85,11 @@ CAFEVDB\Error::exceptions(true);
   <div id="sendingprogresswrapper">
     <div class="messagecount"></div>
     <div class="progress row smtp">
-      <span class="title"><?php echo L::t('Message Delivery'); ?></span>
+      <span class="title"><?php echo $l->t('Message Delivery'); ?></span>
       <span class="progressbar"></span>
     </div>
     <div class="progress row imap">
-      <span class="title"><?php echo L::t('Copy to Sent'); ?></span>
+      <span class="title"><?php echo $l->t('Copy to Sent'); ?></span>
       <span class="progressbar"></span>
     </div>
   </div>

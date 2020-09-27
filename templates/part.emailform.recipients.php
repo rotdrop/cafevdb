@@ -60,8 +60,8 @@ if (count($_['MissingEmailAddresses']) > 0) {
 } else {
   $missingClass = ' reallyhidden';
 }
-$noMissingText = L::t('No Musician without or obviously broken email-address found :)');
-$missingText = L::t('Musicians without or obviously broken email-address');
+$noMissingText = $l->t('No Musician without or obviously broken email-address found :)');
+$missingText = $l->t('Musicians without or obviously broken email-address');
 
 $frozen = $_['FrozenRecipients'];
 
@@ -80,7 +80,7 @@ $frozen = $_['FrozenRecipients'];
           <span class="label vmiddle">
             <label class="basic-recipients-set"
                    title="<?php echo Config::tooltips('email-recipients-basic-set'); ?>">
-              <?php echo L::t('Basic Recipients Set'); ?>
+              <?php echo $l->t('Basic Recipients Set'); ?>
             </label>
           </span>
           <span class="basic-recipients-set from-project inner vmiddle container">
@@ -128,7 +128,7 @@ $frozen = $_['FrozenRecipients'];
         <label for="member-status-filter"
                title="<?php echo Config::tooltips('email-recipients-member-status-filter'); ?>"
                >
-          <?php echo L::t('Member-Status'); ?>
+          <?php echo $l->t('Member-Status'); ?>
         </label>
       </span>
       <select id="member-status-filter"
@@ -136,7 +136,7 @@ $frozen = $_['FrozenRecipients'];
               size="<?php echo count($_['MemberStatusFilter']); ?>"
               class="member-status-filter"
               title="<?php echo Config::tooltips('email-recipients-member-status-filter'); ?>"
-              data-placeholder="<?php echo L::t('Select Members by Status'); ?>"
+              data-placeholder="<?php echo $l->t('Select Members by Status'); ?>"
               name="emailRecipients[MemberStatusFilter][]">
         <?php echo Navigation::selectOptions($_['MemberStatusFilter']); ?>
       </select>
@@ -148,7 +148,7 @@ $frozen = $_['FrozenRecipients'];
   <div class="cafevdb-email-form row">
     <span class="recipients-select container left">
       <span class="label top">
-        <label for="recipients-select"><?php echo  L::t('Email Recipients'); ?></label>
+        <label for="recipients-select"><?php echo  $l->t('Email Recipients'); ?></label>
       </span>
       <select id="recipients-select"
               multiple="multiple"
@@ -164,7 +164,7 @@ $frozen = $_['FrozenRecipients'];
         <label for="instruments-filter"
                class="tooltip-off"
                title="<?php echo Config::tooltips('email-recipients-instruments-filter-label'); ?>">
-          <?php echo L::t('Instruments Filter'); ?>
+          <?php echo $l->t('Instruments Filter'); ?>
         </label>
       </span>
       <span id="instruments-filter-wrapper">
@@ -173,7 +173,7 @@ $frozen = $_['FrozenRecipients'];
                 size="18"
                 class="instruments-filter"
                 title="<?php echo Config::tooltips('email-recipients-instruments-filter'); ?>"
-                data-placeholder="<?php echo L::t('Select Instruments'); ?>"
+                data-placeholder="<?php echo $l->t('Select Instruments'); ?>"
                 name="emailRecipients[InstrumentsFilter][]">
           <?php echo Navigation::selectOptions($_['InstrumentsFilter']); ?>
         </select>
@@ -206,27 +206,27 @@ $frozen = $_['FrozenRecipients'];
     <span class="container right filter-controls">
       <input type="button"
              id="instruments-filter-apply"
-             value="<?php echo L::t('Apply Filter'); ?>"
+             value="<?php echo $l->t('Apply Filter'); ?>"
              class="instruments-filter-controls apply"
              title="<?php echo Config::tooltips('email-recipients-filter-apply'); ?>"
              name="emailRecipients[ApplyInstrumentsFilter]" />
       <input type="button"
              id="instruments-filter-undo"
-             value="<?php echo L::t('Undo Filter'); ?>"
+             value="<?php echo $l->t('Undo Filter'); ?>"
              class="instruments-filter-controls undo"
              title="<?php echo Config::tooltips('email-recipients-filter-undo'); ?>"
              disabled="disabled"
              name="emailRecipients[UndoInstrumentsFilter]" />
       <input type="button"
              id="instruments-filter-redo"
-             value="<?php echo L::t('Redo Filter'); ?>"
+             value="<?php echo $l->t('Redo Filter'); ?>"
              class="instruments-filter-controls redo"
              title="<?php echo Config::tooltips('email-recipients-filter-redo'); ?>"
              disabled="disabled"
              name="emailRecipients[RedoInstrumentsFilter]" />
       <input type="button"
              id="instruments-filter-reset"
-             value="<?php echo L::t('Reset Filter'); ?>"
+             value="<?php echo $l->t('Reset Filter'); ?>"
              class="instruments-filter-controls reset"
              title="<?php echo Config::tooltips('email-recipients-filter-reset'); ?>"
              name="emailRecipients[ResetInstrumentsFilter]" />

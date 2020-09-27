@@ -70,18 +70,18 @@ namespace CAFEVDB {
       echo '
 <div class="emailform error group messagecount">
   <span class="error caption messagecount">
-    '.L::t('The mailing software did not signal an error.').
+    '.$l->t('The mailing software did not signal an error.').
     ' '.
-    L::t('The message was propably sent out successfully.').'
+    $l->t('The message was propably sent out successfully.').'
   </span>
 </div>';
     } else {
       echo '
 <div class="emailform error group messagecount">
   <span class="error caption messagecount">
-    '.L::t('The mailing software did not signal an error. ').
+    '.$l->t('The mailing software did not signal an error. ').
         ' '.
-        L::t('%d messages were propably sent out successfully.',
+        $l->t('%d messages were propably sent out successfully.',
              array($numTotal)).'
   </span>
 </div>';
@@ -91,24 +91,24 @@ namespace CAFEVDB {
     echo '
 <div class="emailform error group messagecount">
   <span class="error caption messagecount">
-    '.L::t('The mailing software encountered errors.');
+    '.$l->t('The mailing software encountered errors.');
     if ($numTotal > 1) {
       if ($numFailed == $numTotal) {
         echo '
-    '.L::t('Sending of all %d messages has failed, propably no message has been sent.',
+    '.$l->t('Sending of all %d messages has failed, propably no message has been sent.',
            array($numTotal));
       } else if ($numFailed == 1) {
         echo '
-    '.L::t('One (out of %d) message has probably not been sent.',
+    '.$l->t('One (out of %d) message has probably not been sent.',
            array($numTotal));
       } else {
         echo '
-    '.L::t('%d (out of %d) messages have probably not been sent.',
+    '.$l->t('%d (out of %d) messages have probably not been sent.',
            array($numFailed, $numTotal));
       }
     } else {
       echo '
-    '.L::t('The message has probably not been sent.',
+    '.$l->t('The message has probably not been sent.',
            array($numTotal));
     }
     echo '
@@ -125,13 +125,13 @@ namespace CAFEVDB {
   $templateDiag = $diagnostics['TemplateValidation'];
   if (!empty($templateDiag)) {
     $output = true;
-    $leadIns = array('MemberErrors' => L::t('Failed individual substitutions'),
-                     'GlobalErrors' => L::t('Failed global substitutions'),
-                     'SpuriousErrors' => L::t('Other failed substitutions'));
+    $leadIns = array('MemberErrors' => $l->t('Failed individual substitutions'),
+                     'GlobalErrors' => $l->t('Failed global substitutions'),
+                     'SpuriousErrors' => $l->t('Other failed substitutions'));
     echo '
 <div class="emailform error group substitutions">
   <span class="error caption substitutions">
-    '.L::t('The operation failed due to template validation errors. '.
+    '.$l->t('The operation failed due to template validation errors. '.
     'The following template substitutions could not be resolved:').'
   </span>';
     foreach($templateDiag as $key => $failed) {
@@ -149,7 +149,7 @@ namespace CAFEVDB {
   </div>';
     }
     $explanations =
-    L::t("Please understand that the software is really `picky'; ".
+    $l->t("Please understand that the software is really `picky'; ".
 "names have to match exactly. ".
 "Please use only capital letters for variable names. ".
 "Please do not use spaces. Vaiable substitutions have to start with ".
@@ -186,7 +186,7 @@ namespace CAFEVDB {
 <div class="emailform error group addresses">
   <div class="error contents addresses">
     <span class="error caption addresses">
-      '.L::t('The following email addresses appear to be syntactically incorrect, '.
+      '.$l->t('The following email addresses appear to be syntactically incorrect, '.
       'meaning that they have not the form of an email address:').'
     </span>
   </div>';
@@ -197,7 +197,7 @@ namespace CAFEVDB {
         echo '
   <div class="error contents addresses '.$lcHeader.'">
     <span class="error heading">
-      '.L::t("Broken `%s' addresses", array(ucfirst($lcHeader).':')).'
+      '.$l->t("Broken `%s' addresses", array(ucfirst($lcHeader).':')).'
     </span>
     <ul>';
         foreach($addresses as $address) {
@@ -211,7 +211,7 @@ namespace CAFEVDB {
     }
     $explanations =
     Util::htmlEncode(
-      L::t('No email will be sent out unless these errors are corrected. '.
+      $l->t('No email will be sent out unless these errors are corrected. '.
 'Please separate individual emails by commas. '.
 'Please use standard-address notation '.
 '(see RFC5322, if your want to know ...), '.
@@ -226,7 +226,7 @@ namespace CAFEVDB {
     </ul>';
     echo '
   <div class="error contents explanations">
-  <div class="error heading">'.L::t('Explanations').'</div>
+  <div class="error heading">'.$l->t('Explanations').'</div>
     '.$explanations.'
   </div>';
     echo '
@@ -246,8 +246,8 @@ namespace CAFEVDB {
     echo '
 <div class="emailform error group emptysubject">
   <div class="error contents emptysubject">
-    <div class="error caption emptysubject">'.L::t('Empty Subject').'</div>
-    '.L::t('The subject must not consist of `%s\' as only part. '.
+    <div class="error caption emptysubject">'.$l->t('Empty Subject').'</div>
+    '.$l->t('The subject must not consist of `%s\' as only part. '.
     'Please correct that before trying send the message out, and also before trying to save the message as draft. Thanks.',
            array($subjectTag)).'
   </div>
@@ -261,8 +261,8 @@ namespace CAFEVDB {
     echo '
 <div class="emailform error group emptyfrom">
   <div class="error contents emptyfrom">
-    <div class="error caption emptyfrom">'.L::t('Empty Sender Name').'</div>
-    '.L::t('The sender name should not be empty. '.
+    <div class="error caption emptyfrom">'.$l->t('Empty Sender Name').'</div>
+    '.$l->t('The sender name should not be empty. '.
     'Originally, it used to be %s, but seemingly this did not suite your needs. '.
     'Please fill in a non-empty sender name before hitting the `Send\'-button again.',
            array($defaultSender)).'
@@ -276,8 +276,8 @@ namespace CAFEVDB {
     echo '
 <div class="emailform error group norecipients">
   <div class="error contents norecipients">
-    <div class="error caption norecipients">'.L::t('No Recipients').'</div>
-    '.L::t('You did not specify any recipients (Cc: and Bcc: does not count here!).'.
+    <div class="error caption norecipients">'.$l->t('No Recipients').'</div>
+    '.$l->t('You did not specify any recipients (Cc: and Bcc: does not count here!).'.
     'Please got to the `Em@il Recipients\' panel and select some before '.
     'hitting the `Send\'-button again. Please possibly take care of the list '.
     'of musicians without email address at the bottom of the `Em@il Recipients\' panel.').'
@@ -306,7 +306,7 @@ namespace CAFEVDB {
 <div class="emailform error group attachments events">
   <div class="error contents attachments events">
     <span class="error caption attachments events">
-      '.L::t('The event(s) with the following id(s) could not be attached; '.
+      '.$l->t('The event(s) with the following id(s) could not be attached; '.
       'they do not seem to exists:').'
     </span>
     <ul>';
@@ -320,13 +320,13 @@ namespace CAFEVDB {
     $mailto = $admin['email'].
               '?subject='.rawurlencode('[CAFEVDB-InternalError] Event Attachments Do not Exist');
     $mailto = '<span class="error email"><a href="mailto:'.$mailto.'">'.$admin['name'].'</a></span>';
-    $explanations = L::t('This is probably an internal error. Please contact %s. '.
+    $explanations = $l->t('This is probably an internal error. Please contact %s. '.
                     'It may be possible to simply click on the red, underlined text '.
                     'in order to compose a usefull message.',
                          array($mailto));
     echo '
   <div class="error contents explanations">
-    <div class="error heading">'.L::t('Explanations').'</div>
+    <div class="error heading">'.$l->t('Explanations').'</div>
     '.$explanations.'
   </div>';
     echo '
@@ -348,7 +348,7 @@ namespace CAFEVDB {
 <div class="emailform error group attachments events">
   <div class="error contents attachments events">
     <span class="error caption attachments events">
-      '.L::t('While trying to send the message(s), the following exception(s) were caught:').'
+      '.$l->t('While trying to send the message(s), the following exception(s) were caught:').'
     </span>
     <ul>';
     foreach($exceptions as $exception) {
@@ -361,7 +361,7 @@ namespace CAFEVDB {
     $mailto = $admin['email'].
               '?subject='.rawurlencode('[CAFEVDB-Exception] Exceptions from Email-Form').
               '&body='.rawurlencode(implode("\r\n", $exceptions));
-    $explanations = L::t('This is an internal error. '.
+    $explanations = $l->t('This is an internal error. '.
                     'Please copy this page and send it via email to %s.'.
                     'It may be possible to simply click on the red, underlined text '.
                     'in order to compose a usefull message.',
@@ -372,7 +372,7 @@ namespace CAFEVDB {
                     '</span>'));
     echo '
   <div class="error contents explanations">
-  <div class="error heading">'.L::t('Explanations').'</div>
+  <div class="error heading">'.$l->t('Explanations').'</div>
     '.$explanations.'
   </div>';
     echo '
@@ -396,7 +396,7 @@ namespace CAFEVDB {
 <div class="emailform error group attachments events">
   <div class="error contents attachments events">
     <span class="error caption attachments events">
-      '.L::t('While trying to send the message(s), the following error(s) have been encountered:').'
+      '.$l->t('While trying to send the message(s), the following error(s) have been encountered:').'
     </span>
     <ul>';
     foreach($errors as $error) {
@@ -409,7 +409,7 @@ namespace CAFEVDB {
     $mailto = $admin['email'].
               '?subject='.rawurlencode('[CAFEVDB-ImpossibleMailerErrors] Errors from Email-Form').
               '&body='.rawurlencode(implode("\r\n", $errors));
-    $explanations = L::t('This is an internal error. '.
+    $explanations = $l->t('This is an internal error. '.
                     'Please copy this page and send it via email to %s. '.
                     'It may be possible to simply click on the red, underlined text '.
                     'in order to compose a usefull message.',
@@ -420,7 +420,7 @@ namespace CAFEVDB {
                     '</span>'));
     echo '
   <div class="error contents explanations">
-  <div class="error heading">'.L::t('Explanations').'</div>
+  <div class="error heading">'.$l->t('Explanations').'</div>
     '.$explanations.'
   </div>';
     echo '
@@ -441,7 +441,7 @@ namespace CAFEVDB {
 <div class="emailform error group duplicates">
   <div class="error contents duplicates">
     <span class="error caption duplicates">
-      '.L::t('Message Duplicates Detected!').'
+      '.$l->t('Message Duplicates Detected!').'
     </span>
   </div>';
     foreach($duplicates as $duplicate) {
@@ -453,7 +453,7 @@ namespace CAFEVDB {
       echo '
   <div class="error contents duplicates>
     <span class="error heading">
-      '.L::t('Message already sent at time %s to the following recipient(s):',
+      '.$l->t('Message already sent at time %s to the following recipient(s):',
              array($dates)).'
     </span>
     <ul>';
@@ -480,7 +480,7 @@ namespace CAFEVDB {
               '&body='.rawurlencode($errorBody);
     $mailto = '<span class="error email"><a href="mailto:'.$mailto.'">'.$admin['name'].'</a></span>';
     $explanations =
-    L::t('The email-form refuses to send email twice to the same recipients. '.
+    $l->t('The email-form refuses to send email twice to the same recipients. '.
 'In order to send out your email you have either to change the subject '.
 'or the message body. If your message has been constructed from a pre-defined '.
 'message-template (like the one for the yearly adress-validation) then '.
@@ -490,7 +490,7 @@ namespace CAFEVDB {
          array($mailto));
     echo '
   <div class="error contents explanations">
-    <div class="error heading">'.L::t('Explanations').'</div>
+    <div class="error heading">'.$l->t('Explanations').'</div>
     '.$explanations.'
   </div>';
     echo '
@@ -511,7 +511,7 @@ namespace CAFEVDB {
     echo '
 <div class="emailform error group copytosent">
   <span class="error caption copytosent">
-    '.L::t('Copy to Sent-Folder has Failed').'
+    '.$l->t('Copy to Sent-Folder has Failed').'
   </span>';
     $errorBody = "\n";
     $loginError = '';
@@ -520,7 +520,7 @@ namespace CAFEVDB {
       $errorBody .= "Authentication Error:\n".$loginError."\n";
       echo '
   <div class="error contents copytosent">'.
-           L::t('Could not authenticate with IMAP-server: %s',
+           $l->t('Could not authenticate with IMAP-server: %s',
                 array($loginError)).'
   </div>';
     }
@@ -530,7 +530,7 @@ namespace CAFEVDB {
         $errorBody .= "Folder Error:\n".$folder." -- ".$error."\n";
         echo '
   <div class="error contents copytosent">'.
-             L::t('Copy to folder %s has failed: %s',
+             $l->t('Copy to folder %s has failed: %s',
                   array($folder, $error)).'
   </div>';
       }
@@ -540,7 +540,7 @@ namespace CAFEVDB {
               '&body='.rawurlencode($errorBody);
     $mailto = '<span class="error email"><a href="mailto:'.$mailto.'">'.$admin['name'].'</a></span>';
     $explanations =
-    L::t('If no other error messages are echoed on this page, then '.
+    $l->t('If no other error messages are echoed on this page, then '.
 'the emails have probably been sent successfully. However, copying '.
 'the sent-out message to the sent-folder on the email-server has failed. '.
 'This is nothing you can solve on your own, please contact %s. '.
@@ -549,7 +549,7 @@ namespace CAFEVDB {
          array($mailto));
     echo '
   <div class="error contents explanations">
-    <div class="error heading">'.L::t('Explanations').'</div>
+    <div class="error heading">'.$l->t('Explanations').'</div>
     '.$explanations.'
   </div>';
     echo '
@@ -570,7 +570,7 @@ namespace CAFEVDB {
     echo '
 <div class="emailform error group message events">
   <span class="error caption message events">
-    '.L::t('The Following Events have been attached to the Message:').'
+    '.$l->t('The Following Events have been attached to the Message:').'
   </span>
   <div class="error contents message events">
     <ul>';
@@ -598,7 +598,7 @@ namespace CAFEVDB {
     echo '
 <div class="emailform error group message files">
   <span class="error caption message files">
-    '.L::t('The following files have been attached to the message:').'
+    '.$l->t('The following files have been attached to the message:').'
   </span>
   <div class="error contents message files">
     <ul>';
@@ -626,7 +626,7 @@ namespace CAFEVDB {
     $text = $diagnostics['Message']['Text'];
     echo '
 <div class="emailform error group message text">
-  <div class="error caption message text">'.L::t('First Few Lines of Sent Message').'</div>
+  <div class="error caption message text">'.$l->t('First Few Lines of Sent Message').'</div>
   <div class="error contents message text">
     <pre>'.Util::htmlEncode($text).'</pre>
   </div>
@@ -642,7 +642,7 @@ namespace CAFEVDB {
     echo '
 <div class="spacer"><div class="ruler"></div></div>
 <div class="emailform error group">
-  <div class="emailform error heading">'.L::t('The most recent status messages are always saved to the status panel. Please see there for detailed diagnostics.').'</div>
+  <div class="emailform error heading">'.$l->t('The most recent status messages are always saved to the status panel. Please see there for detailed diagnostics.').'</div>
 </div>
 <div class="spacer"><div class="ruler"></div></div>';
   }

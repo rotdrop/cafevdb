@@ -34,7 +34,7 @@ namespace CAFEVDB {
 
   $header = ''
     .'<div class="'.$css_pfx.'-blog" id="'.$css_pfx.'-blog-header">
-'.L::t('Camerata DB start page - the data-base operations can be accessed
+'.$l->t('Camerata DB start page - the data-base operations can be accessed
 through the menu-button %s (left top). Please click on the login-name
 (top right) for logout and configuration options. Click right of the
 cloud-icon (top left) to reach the app-menu.',
@@ -57,7 +57,7 @@ cloud-icon (top left) to reach the app-menu.',
   <input
   type="submit"
     title="<?php echo Config::toolTips('blog-newentry');?>"
-    value="<?php echo L::t('New note'); ?>"
+    value="<?php echo $l->t('New note'); ?>"
     id="blognewentry"
     />
     </form>

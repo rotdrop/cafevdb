@@ -56,8 +56,8 @@ namespace CAFEVDB {
     $table->display();
   } else {
     echo '<div class="specialrole error">'.
-      L::t("Sorry, this view is only available to the %s.",
-           array(L::t('treasurer'))).
+      $l->t("Sorry, this view is only available to the %s.",
+           array($l->t('treasurer'))).
       '</div>';
   }
 

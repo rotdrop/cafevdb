@@ -28,20 +28,20 @@ namespace CAFEVDB {
 
 ?>
 <div id="events" class="cafev fixed-container"
-     title="<?php echo L::t('Events for').' '.$_['ProjectName'];?>">
+     title="<?php echo $l->t('Events for').' '.$_['ProjectName'];?>">
   <form id="eventlistform" class="<?php echo $class; ?> fixed-container" >
     <input type="hidden" name="ProjectId"   value="<?php echo $prjId; ?>" />
     <input type="hidden" name="ProjectName" value="<?php echo $prjName; ?>" />
     <div class="eventcontrols content-controls">
       <select class="event-menu cafevdb-menu tooltip-right"
-              data-placeholder="<?php echo L::t('New Event'); ?>"
+              data-placeholder="<?php echo $l->t('New Event'); ?>"
               title="<?php echo Config::toolTips('new-project-event'); ?>">
         <option value=""></option>
-        <option value="concerts"><?php echo L::t('Concert'); ?></option>
-        <option value="rehearsals"><?php echo L::t('Rehearsal'); ?></option>
-        <option value="other"><?php echo L::t('Miscellaneous'); ?></option>
-        <option value="management"><?php echo L::t('Management'); ?></option>
-        <option value="finance"><?php echo L::t('Finance'); ?></option>
+        <option value="concerts"><?php echo $l->t('Concert'); ?></option>
+        <option value="rehearsals"><?php echo $l->t('Rehearsal'); ?></option>
+        <option value="other"><?php echo $l->t('Miscellaneous'); ?></option>
+        <option value="management"><?php echo $l->t('Management'); ?></option>
+        <option value="finance"><?php echo $l->t('Finance'); ?></option>
       </select>
       <span class="<?php echo $class; ?>-email">
         <input type="button"
@@ -68,7 +68,7 @@ namespace CAFEVDB {
                class="projectevents-download tooltip-bottom"
                type="button"
                name="download"
-               value="<?php echo L::t('Download'); ?>"
+               value="<?php echo $l->t('Download'); ?>"
                title="<?php echo Config::toolTips('projectevents-download'); ?>"/>
       </span>
     </div>

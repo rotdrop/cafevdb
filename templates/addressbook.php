@@ -31,7 +31,7 @@ CAFEVDB\Error::exceptions(true);
 
 <select class="address-book-emails"
         name="adressBookEmails[]"
-        data-placeholder="<?php echo L::t('Select Em@il Recipients'); ?>"
+        data-placeholder="<?php echo $l->t('Select Em@il Recipients'); ?>"
         multiple="multiple">
   <?php echo Navigation::selectOptions($_['EmailOptions']); ?>
 </select>
