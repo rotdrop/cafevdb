@@ -114,6 +114,8 @@ class EncryptionService
 
     $this->setUserValue($login, 'publicSSLKey', $pubKey);
     $this->setUserValue($login, 'privateSSLKey', $privKey);
+
+    return true;
   }
 
   /**Set the private key used to decode some sensible data like the
@@ -203,7 +205,7 @@ class EncryptionService
       $usrdbkey = '';
     }
 
-    $pubKey = $this->setUserValue($userId,'encryptionkey', $usrdbkey);
+    $this->setUserValue($userId, 'encryptionkey', $usrdbkey);
 
     return true;
   }

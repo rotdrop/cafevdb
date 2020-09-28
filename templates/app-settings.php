@@ -39,7 +39,7 @@ $off = $_['orchestra'] == '' ? 'disabled="disabled"' : '';
   </form>
 <!-- ENCRYPTION-KEY -->
   <form id="systemkey">
-    <fieldset <?php echo $off; ?> ><legend><?php echo $l->t('Encryption settings'); ?></legend>
+    <fieldset class="systemkey" <?php echo $off; ?> ><legend><?php echo $l->t('Encryption settings'); ?></legend>
       <input class="cafevdb-password" type="password" id="oldkey" name="oldkey" placeholder="<?php echo $l->t('Current Key');?>" data-typetoggle="#oldkey-show" />
       <input class="cafevdb-password-show" type="checkbox" id="oldkey-show" name="show" />
       <label class="cafevdb-password-show" for="oldkey-show"><?php echo $l->t('show');?></label>
@@ -49,16 +49,17 @@ $off = $_['orchestra'] == '' ? 'disabled="disabled"' : '';
       <input name="keygenerate" id="keygenerate" type="button" value="<?php echo $l->t('Generate'); ?>" title="<?php echo $l->t('Generate a random encryption key');?>" />
       <input id="keychangebutton" type="button" value="<?php echo $l->t('Change Encryption Key');?>" />
       <!-- <span><?php echo $_['encryptionkey']; ?></span> -->
-      <div class="statusmessage" id="changed"><?php echo $l->t('The encryption key was changed');?></div>
-      <div class="statusmessage" id="error"><?php echo $l->t('Unable to change the encryption key');?></div>
-      <div class="statusmessage" id="insecure"><?php echo $l->t('Data will be stored unencrypted');?></div>
-      <div class="statusmessage" id="equal"><?php echo $l->t('The keys are the same and remain unchanged.');?></div>
-      <div class="statusmessage" id="standby"><?php echo $l->t('Please standby, this action needs some seconds.');?></div>
+      <div class="statusmessage changed"><?php echo $l->t('The encryption key was changed');?></div>
+      <div class="statusmessage error"><?php echo $l->t('Unable to change the encryption key');?></div>
+      <div class="statusmessage insecure"><?php echo $l->t('Data will be stored unencrypted');?></div>
+      <div class="statusmessage equal"><?php echo $l->t('The keys are the same and remain unchanged.');?></div>
+      <div class="statusmessage standby"><?php echo $l->t('Please standby, this action needs some seconds.');?></div>
+      <div class="statusmessage general"></div>
     </fieldset>
     <!-- DISTRIBUTE ENCRYPTION-KEY -->
-    <fieldset id="keydistribute" <?php echo $off; ?> >
+    <fieldset class="keydistribute" <?php echo $off; ?> >
       <input id="keydistributebutton" type="button" name="keydistribute" value="<?php echo $l->t('Distribute Encryption Key');?>" title="<?php echo $l->t('Insert the data-base encryption key into the user preferences of all users belonging to the user group. The data-base key will be encrypted by the respective user\'s public key.') ?>" />
-      <span class="statusmessage" id="msg"></span>
+      <span class="statusmessage"></span>
     </fieldset>
   </form>
   <!-- GENERAL DATA-BASE STUFF -->

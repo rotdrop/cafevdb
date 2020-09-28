@@ -31,6 +31,7 @@ style($appName, 'about');
 style($appName, 'dialogs');
 
 script($appName, 'cafevdb');
+script($appName, 'notification');
 script($appName, 'jquery-extensions');
 script($appName, 'settings');
 script($appName, 'personal-settings');

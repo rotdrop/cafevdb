@@ -223,99 +223,119 @@ var CAFEVDB = CAFEVDB || {};
 	});
     }
 
-    // @@TODO
-    // Encryption-key
-    // 'show password' checkbox
-    showPassword($('#systemkey #key'));
-    showPassword($('#systemkey #oldkey'))
+    {
+      const form = $('#systemkey');
+      const container = form.find('fieldset.systemkey');
+      const msg = container.find('.statusmessage.general');
 
-    $("#keychangebutton").click(function() {
-      // We allow empty keys, meaning no encryption
-      $('div.statusmessage').hide();
-      $('span.statusmessage').hide();
-      if ($('#systemkey #oldkey').val() != $('#systemkey #key').val()) {
-	// Serialize the data
-	var post = $("#systemkey").serialize();
+      // Encryption-key
+      const keyInput = container.find('#key');
+      const oldKeyInput = container.find('#oldkey');
 
-	// disable form elements until we got an answer
-	$(Settings.tabsSelector + ' fieldset').attr('disabled', 'disabled');
-	$(Settings.tabsSelector).tabs("disable");
-	$('#systemkey #standby').show();
+      const keyInputClone = showPassword(keyInput);
+      const oldKeyInputClone = showPassword(oldKeyInput)
 
-	// Ajax foo
-	CAFEVDB.Notification.show(t('cafevdb', 'Please standby, the operation will take some time!'));
-	$.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'), post, function(data) {
-          // re-enable all forms
-          $(Settings.tabsSelector + ' fieldset').removeAttr('disabled');
-          $(Settings.tabsSelector).tabs("enable");
-          $('#systemkey #standby').hide();
+      $("#keychangebutton").on('click', function() {
+        // We allow empty keys, meaning no encryption
+        form.find('.statusmessage').hide();
+        if (oldKeyInput.val() != keyInput.val()) {
 
-          CAFEVDB.Notification.hide();
+	  // disable form elements until we got an answer
+	  $(Settings.tabsSelector + ' fieldset').prop('disabled', true);
+	  $(Settings.tabsSelector).tabs("disable");
+	  container.find('.statusmessage.standby').show();
 
-          if (data.status == "success") {
-            $('#systemkey #changed').show();
-            if ($('#systemkey #key').val() == '') {
-              $('#systemkey #insecure').show();
+	  CAFEVDB.Notification.show(t('cafevdb', 'Please standby, the operation will take some time!'));
+
+	  $.post(
+	    OC.generateUrl('/apps/cafevdb/settings/personal/set/systemkey'),
+            { 'value': { 'systemkey': keyInput.val(),
+                         'oldkey': oldKeyInput.val() }
+            })
+          .done(function(data) {
+            // re-enable all forms
+            $(Settings.tabsSelector + ' fieldset').prop('disabled', false);
+            $(Settings.tabsSelector).tabs("enable");
+            container.find('.statusmessage.standby').hide();
+
+            CAFEVDB.Notification.hide();
+
+            if (keyInput.val() == '') {
+              container.find('.statusmessage.insecure').show();
             }
-            $('#systemkey input[name="oldkey"]').val('');
-            $('#systemkey input[name="systemkey"]').val('');
-            $('#systemkey input[name="systemkey-clone"]').val('');
-            if ($('#systemkey input[name="systemkey-clone"]').is(':visible')) {
-              $('#systemkey-show').removeAttr('checked');
-              $('#systemkey-show').click();
-              $('#systemkey-show').removeAttr('checked');
+            keyInput.val('');
+            keyInputClone.val('');
+            oldKeyInput.val('');
+            oldKeyInputClone.val('');
+            if (keyInputClone.is(':visible')) {
+              $('#systemkey-show').trigger('change');
             }
-          } else {
-            $('#systemkey #error').html(data.data.message);
-            $('#systemkey #error').show();
+            $('.statusmessage.changed').show();
+            if (data.message) {
+              container.find('.statusmessage.general').html(data.message).show();
+            }
+	  })
+          .fail(function(xhr, status, errorThrown) {
+            $(Settings.tabsSelector + ' fieldset').prop('disabled', false);
+            $(Settings.tabsSelector).tabs("enable");
+            container.find('.statusmessage.standby').hide();
+
+            CAFEVDB.Notification.hide();
+
+            $('.statusmessage.error').show();
+            const msg = CAFEVDB.ajaxFailMessage(xhr, status, errorThrown);
+            if (msg) {
+              container.find('.statusmessage.general').html(msg).show();
+            }
+          });
+        } else {
+          container.find('.statusmessage.equal').show();
+	  if (oldKeyInput.val() == '') {
+            container.find('.statusmessage.insecure').show();
+	  }
+        }
+        return false;
+      });
+
+      $('form#systemkey #keygenerate').on('click', function(event) {
+        $('.statusmessage').hide();
+
+        // show the visible password text input
+        if ($('form#systemkey #key').is(':visible')) {
+	  $('#systemkey-show').click();
+        }
+
+        $.post(
+	  OC.generateUrl('/apps/cafevdb/settings/get/passwordgenerate'))
+        .fail(function(xhr, status, errorThrown) {
+          msg.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+        })
+        .done(function(data) {
+	  // Make sure both inputs have the same value
+          keyInput.val(data.value);
+	  keyInputClone.val(data.value);
+          if (data.message != '') {
+            msg.html(data.message).show();
           }
-	});
-      } else {
-	$('#systemkey #equal').show();
-	if ($('#systemkey #oldkey').val() == '') {
-          $('#systemkey #insecure').show();
-	}
-      }
-      return false;
-    });
+        });
+        return false;
+      });
 
-    //@@TODO
-    $('form#systemkey #keygenerate').click(function(event) {
-
-      $('div.statusmessage').hide();
-      $('span.statusmessage').hide();
-      $('#eventsettings #msg').empty();
-      if ($('form#systemkey #key').is(':visible')) {
-	$('#systemkey-show').click();
-      }
-      // Ajax foo
-      $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
-             $(this),
-             function(data) {
-               if (data.status == "success") {
-		 // Make sure both inputs have the same value
-		 $('form#systemkey input[name="systemkey-clone"]').val(data.data.message);
-		 $('form#systemkey input[name="systemkey"]').val(data.data.message);
-               } else {
-		 $('#eventsettings #msg').html(data.data.message);
-		 $('#eventsettings #msg').show();
-               }
-               return false;
-             });
-
-      return false;
-    });
-
-    $('#keydistributebutton').click(function() {
-      $('div.statusmessage').hide();
-      $('span.statusmessage').hide();
-      $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
-             $(this),
-             function(data) {
-               $('#keydistribute #msg').html(data.data.message);
-               $('#keydistribute #msg').show();
-             });
-    });
+      $('#keydistributebutton').on('click', function(even) {
+        const msg = form.find('fieldset.keydistribute .statusmessage');
+        form.find('.statusmessage').hide();
+        const name = $(this).attr('name');
+        $.post(
+	  OC.generateUrl('/apps/cafevdb/settings/app/set/' + name))
+	.fail(function(xhr, status, errorThrown) {
+          msg.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+        })
+        .done(function(data) {
+          msg.html(data.message).show();
+        });
+        return false;
+      });
+    }
 
     ///////////////////////////////////////////////////////////////////////////
     //
