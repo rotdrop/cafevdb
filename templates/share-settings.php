@@ -32,18 +32,21 @@ $off = $_['shareowner'] == '' ? 'disabled="disabled"' : $alloff;
       <fieldset id="shareowner" <?php echo $alloff; ?> >
         <input type="hidden" id="user-saved" name="shareowner-saved" value="<?php echo $_['shareowner']; ?>" />
         <input <?php echo $_['shareowner'] != '' ? 'disabled="disabled"' : ''; ?> type="text" id="user" name="shareowner" placeholder="<?php echo $l->t('shareowner');?>" value="<?php echo $_['shareowner']; ?>" />
-        <label for="shareowner-force" title="<?php echo $toolTips['shareowner-force']; ?>" >
-        <input type="checkbox" id="shareowner-force" name="shareowner-force" /><?php echo $l->t('force');?></label>
-        <input name="shareownercheck" id="check" type="button" value="<?php echo $l->t('Check');?>" />
+        <input type="checkbox" id="shareowner-force" name="shareowner-force" class="checkbox"/>
+           <label for="shareowner-force" title="<?php echo $toolTips['shareowner-force']; ?>"  class="tooltip-auto">
+             <?php echo $l->t('force');?>
+           </label>
+        <input name="shareownercheck" id="check" type="button" value="<?php echo $l->t('Check');?>" <?php echo $off; ?> />
       </fieldset>
 <!-- CHANGE ITS PASSWORD -->
-      <fieldset class="sharingpassword" <?php echo $alloff; ?> >
+      <fieldset class="sharingpassword" <?php echo $off; ?> >
         <input type="password" id="sharingpassword" class="randompassword" name="sharingpassword" placeholder="<?php echo $l->t('Share-Password');?>" data-typetoggle="#sharingpassword-show" />
         <input class="cafevdb-password-show" type="checkbox" id="sharingpassword-show" name="sharingpassword-show" />
         <label class="cafevdb-password-show" for="sharingpassword-show"><?php echo $l->t('show');?></label>
         <input name="passwordgenerate" id="generate" type="button" value="<?php echo $l->t('Generate');?>" />
         <input name="passwordchange" id="change" type="button" value="<?php echo $l->t('Change');?>" />
       </fieldset>
+      <span class="statusmessage"></span>
     </form>
 <!-- CALENDARS -->
     <form id="calendars">
@@ -76,7 +79,7 @@ $off = $_['shareowner'] == '' ? 'disabled="disabled"' : $alloff;
       </fieldset>
     </form>
 <!-- Shared folders -->
-    <form id="sharedfolderform">
+    <form id="sharedfolder-form">
       <fieldset <?php echo $off; ?> ><legend><?php echo $l->t('Shared folder'); ?></legend>
         <input type="hidden" id="sharedfolder-saved" name="sharedfolder-saved" value="<?php echo $_['sharedfolder']; ?>" />
         <input <?php echo $_['sharedfolder'] != '' ? 'disabled="disabled"' : ''; ?>
@@ -86,16 +89,16 @@ $off = $_['shareowner'] == '' ? 'disabled="disabled"' : $alloff;
           placeholder="<?php echo $l->t('shared folder'); ?>"
           value="<?php echo $_['sharedfolder']; ?>" />
         <label for="sharedfolder-force" title="<?php echo $toolTips['sharedfolder-force']; ?>" >
-          <input type="checkbox" id="sharedfolder-force" name="sharedfolder-force" />
+          <input type="checkbox" id="sharedfolder-force" name="sharedfolder-force" class="checkbox"/>
           <?php echo $l->t('force');?>
         </label>
         <input name="sharedfoldercheck" id="sharedfoldercheck" type="button" value="<?php echo $l->t('Check');?>" />
       </fieldset>
     </form>
-    <form id="projectsfolderform">
+    <form id="projectsfolder-form">
       <fieldset <?php echo $off; ?> >
         <span id="project-folder-prefix"><b>.../</b><?php echo $_['sharedfolder']; ?><b>/</b></span>
-        <input type="hidden" id="projectsfoldersaved" name="projectsfoldersaved" value="<?php echo $_['projectsfolder']; ?>" />
+        <input type="hidden" id="projectsfolder-saved" name="projectsfolder-saved" value="<?php echo $_['projectsfolder']; ?>" />
         <input <?php echo $_['projectsfolder'] != '' ? 'disabled="disabled"' : ''; ?>
           type="text"
           id="projectsfolder"
@@ -103,17 +106,17 @@ $off = $_['shareowner'] == '' ? 'disabled="disabled"' : $alloff;
           placeholder="<?php echo $l->t('Project folder'); ?>"
           value="<?php echo $_['projectsfolder']; ?>" />
         <span id="project-folder-suffix"><b>/</b><?php echo $l->t('YEAR').'<b>/</b>'.$l->t('PROJECT').'<b>/</b>'; ?></span>
+        <input type="checkbox" id="projectsfolder-force" name="projectsfolder-force" class="checkbox"/>
         <label for="projectsfolder-force" title="<?php echo $toolTips['projectsfolder-force']; ?>" >
-          <input type="checkbox" id="projectsfolder-force" name="projectsfolder-force" />
           <?php echo $l->t('force');?>
         </label>
         <input name="projectsfoldercheck" id="projectsfoldercheck" type="button" value="<?php echo $l->t('Check');?>" />
       </fieldset>
     </form>
-    <form id="projectsbalancefolderform">
+    <form id="projectsbalancefolder-form">
         <fieldset <?php echo $_['projectsfolder'] != '' ? $off : 'disabled'; ?> >
         <span id="project-folder-prefix"><b>.../</b><?php echo $_['sharedfolder']; ?><b>/</b></span>
-        <input type="hidden" id="projectsbalancefoldersaved" name="projectsbalancefoldersaved" value="<?php echo $_['projectsbalancefolder']; ?>" />
+        <input type="hidden" id="projectsbalancefolder-saved" name="projectsbalancefolder-saved" value="<?php echo $_['projectsbalancefolder']; ?>" />
         <input <?php echo $_['projectsbalancefolder'] != '' ? 'disabled="disabled"' : ''; ?>
           type="text"
           id="projectsbalancefolder"
@@ -121,13 +124,13 @@ $off = $_['shareowner'] == '' ? 'disabled="disabled"' : $alloff;
           placeholder="<?php echo $l->t('Financial balance folder'); ?>"
           value="<?php echo $_['projectsbalancefolder']; ?>" />
         <span id="project-folder-suffix"><b>/</b><span id="projectsbalanceprojectsfolder"><?php echo $_['projectsfolder'];?></span><b>/</b><?php echo $l->t('YEAR').'<b>/</b>'.$l->t('PROJECT').'<b>/</b>'; ?></span>
+        <input type="checkbox" id="projectsbalancefolder-force" name="projectsbalancefolder-force" class="checkbox"/>
         <label for="projectsbalancefolder-force" title="<?php echo $toolTips['projectsbalancefolder-force']; ?>" >
-          <input type="checkbox" id="projectsbalancefolder-force" name="projectsbalancefolder-force" />
           <?php echo $l->t('force');?>
         </label>
         <input name="projectsbalancefoldercheck" id="projectsbalancefoldercheck" type="button" value="<?php echo $l->t('Check');?>" />
       </fieldset>
     </form>
-    <span class="statusmessage" id="msg"></span>
+    <span class="statusmessage"></span>
   </div>
 </div>

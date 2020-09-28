@@ -32,6 +32,7 @@ use OCP\Group\ISubAdmin;
 use OCP\IURLGenerator;
 use OCP\L10N\IFactory;
 use OCP\IDateTimeZone;
+use OCP\Security\ISecureRandom;
 
 class ConfigService {
   use \OCA\CAFEVDB\Traits\SessionTrait;
@@ -186,6 +187,9 @@ class ConfigService {
   /** @var EncryptionService */
   private $encryptionService;
 
+  /** @var ISecureRandom */
+  private $secureRandom;
+
   public function __construct(
     $appName,
     IConfig $containerConfig,
@@ -194,6 +198,7 @@ class ConfigService {
     IGroupManager $groupManager,
     ISubAdmin $groupSubAdmin,
     EncryptionService $encryptionService,
+    ISecureRandom $secureRandom,
     IURLGenerator $urlGenerator,
     IFactory $iFactory,
     IDateTimeZone $dateTimeZone,
@@ -207,6 +212,7 @@ class ConfigService {
     $this->groupManager = $groupManager;
     $this->groupSubAdmin = $groupSubAdmin;
     $this->encryptionService = $encryptionService;
+    $this->secureRandom = $secureRandom;
     $this->urlGenerator = $urlGenerator;
     $this->iFactory = $iFactory;
     $this->dateTimeZone = $dateTimeZone;
@@ -245,7 +251,7 @@ class ConfigService {
 
   public function getUser($userId = null) {
     if (!empty($userId)) {
-      return $this->userManager->getUser($userId);
+      return $this->userManager->get($userId);
     }
     return $this->user;
   }
@@ -367,6 +373,11 @@ class ConfigService {
       return true;
     }
     return false;
+  }
+
+  public function generateRandomBytes($length = 30)
+  {
+    return $this->secureRandom->generate($length);
   }
 
   /*

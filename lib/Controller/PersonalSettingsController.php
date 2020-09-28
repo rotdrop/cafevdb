@@ -136,7 +136,9 @@ class PersonalSettingsController extends Controller {
       }
 
       // So generate a new key-pair and store the key.
-      $this->recryptEncryptionKey($user, $password, $encryptionkey);
+      if (!$this->recryptAppEncryptionKey($this->userId(), $password, $encryptionkey)) {
+        return self::grumble($this->l->t('Unable to store encrypted encryption key in user-data.'));
+      }
 
       // Then store the key in the session as it is the valid key
       $this->setAppEncryptionKey($encryptionkey);
@@ -148,7 +150,7 @@ class PersonalSettingsController extends Controller {
   }
 
   /**
-   * Store user settings.
+   * Store app settings.
    *
    * @NoAdminRequired
    * @SubAdminRequired
@@ -182,6 +184,70 @@ class PersonalSettingsController extends Controller {
       } catch(\Exception $e) {
         return self::grumble($this->l->t('DB-test failed with exception `%s\'', [$e->getMessage()]));
       }
+    case 'shareowner':
+      if (!isset($value['shareowner'])
+          || !isset($value['shareowner-saved'])
+          || !isset($value['shareowner-force'])) {
+        return self::grumble($this->l->t('Invalid request parameters: ') . print_r($value, true));
+      }
+      $uid = $value['shareowner'];
+      $savedUid = $value['shareowner-saved'];
+      $force = $value['shareowner-force'];
+
+      // first check consistency of $savedUid with stored UID.
+      $confUid = $this->getConfigValue('shareowner', '');
+      if ($confUid != $savedUid) {
+        return self::grumble($this->l->t('Submitted `%s\' != `%s\' (stored)',
+                                         [$savedUid, $confUid]));
+      }
+      if (empty($uid)) {
+        return self::grumble($this->l->t('Share-owner user id must not be empty.'));
+      }
+      if (empty($savedUid) || $force) {
+        if ($this->configCheckService->checkShareOwner($uid)) {
+          $this->setConfigValue($parameter, $uid);
+          return self::valueResponse($uid, $this->l->t('New share-owner `%s\'', [$uid]));
+        } else {
+          return self::grumble($this->l->t('Failure creating account for user-id `%s\'', [$uid]));
+        }
+      } else if ($savedUid != $uid) {
+        return self::grumble($savedUid . ' != ' . $uid);
+      }
+    case 'sharingpassword':
+      $shareOwnerUid = $this->getConfigValue('shareowner');
+      if (empty($shareOwnerUid)) {
+        return self::grumble($this->l->t('Please create the share-owner user first.'));
+      }
+      $shareOwner = $this->user($shareOwnerUid);
+      if (empty($shareOwner)) {
+        return self::grumble($this->l->t('Share-owner does not seem to exist, please recreate.'));
+      }
+      if (!$shareOwner->canChangePassword()) {
+        return self::grumble($this->l->t('Authentication backend does not support changing passwords.'));
+      }
+      $realValue = trim($value); // @@TODO: check for valid password chars.
+      if (empty($realValue)) {
+        return self::grumble($this->l->t('Password must not be empty'));
+      }
+      if (!$shareOwner->setPassword($realValue)) {
+        return self::grumble($this->l->t('Unable to set password for `%s\'', [$shareOwnerUid]));
+      }
+      return self::response($this->l->t('Successfully changed passsword for `%s\'', [$shareOwnerUid]));
+    default:
+    }
+    return self::grumble($this->l->t('Unknown Request'));
+  }
+
+  /**
+   * Get some stuff
+   *
+   * @NoAdminRequired
+   */
+  public function get($parameter) {
+    switch ($parameter) {
+    case 'passwordgenerate':
+    case 'generatepassword':
+      return self::valueResponse($this->generateRandomBytes(32));
     default:
     }
     return self::grumble($this->l->t('Unknown Request'));

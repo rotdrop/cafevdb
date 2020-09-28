@@ -73,7 +73,7 @@ class Personal implements ISettings {
     }
     try {
       // Are we a group-admin?
-      $isGroupAdmin = $this->isSubAdminofGroup() && $this->encryptionKeyValid();
+      $isGroupAdmin = $this->isSubAdminOfGroup() && $this->encryptionKeyValid();
 
       $templateParameters = [
         'appName' => $this->appName(),
@@ -130,8 +130,8 @@ class Personal implements ISettings {
             'memberTable' => $this->getConfigValue('memberTable', $this->l->t('ClubMembers')),
             'memberTableId' => $this->getConfigValue('memberTableId', -1),
             'executiveBoardTable' => $executiveBoardTable,
-            'executiveBoardTableId' => $execitiveBoardTableId,
-            'executiveBoardMembers' => $executiveBoardMember,
+            'executiveBoardTableId' => $executiveBoardTableId,
+            'executiveBoardMembers' => $executiveBoardMembers,
             'userGroupMembers' => array_map(function($user) { return $user->getUID(); }, $this->group()->getUsers()),
             'userGroups' => array_map(function($group) { return $group->getGID(); }, $this->groupManager()->search('')),
             'orchestra' => $this->getConfigValue('orchestra'),
@@ -142,19 +142,19 @@ class Personal implements ISettings {
             'dbpassword' => $this->getConfigValue('dbpassword'),
             'encryptionkey' => $this->getConfigValue('encryptionkey'),
 
-            'shareowner', $this->getConfigValue('shareowner', ''),
-            'concertscalendar', $this->getConfigValue('concertscalendar', $this->l->t('concerts')),
-            'rehearsalscalendar', $this->getConfigValue('rehearsalscalendar', $this->l->t('rehearsals')),
-            'othercalendar', $this->getConfigValue('othercalendar', $this->l->t('other')),
-            'managementcalendar', $this->getConfigValue('managementcalendar', $this->l->t('management')),
-            'financecalendar', $this->getConfigValue('financecalendar', $this->l->t('finance')),
-            'eventduration', $this->getConfigValue('eventduration', '180'),
+            'shareowner' => $this->getConfigValue('shareowner', ''),
+            'concertscalendar' => $this->getConfigValue('concertscalendar', $this->l->t('concerts')),
+            'rehearsalscalendar' => $this->getConfigValue('rehearsalscalendar', $this->l->t('rehearsals')),
+            'othercalendar' => $this->getConfigValue('othercalendar', $this->l->t('other')),
+            'managementcalendar' => $this->getConfigValue('managementcalendar', $this->l->t('management')),
+            'financecalendar' => $this->getConfigValue('financecalendar', $this->l->t('finance')),
+            'eventduration' => $this->getConfigValue('eventduration', '180'),
 
-            'sharedaddressbook', $this->getConfigValue('sharedaddressbook', $this->l->t('contacts')),
+            'sharedaddressbook' => $this->getConfigValue('sharedaddressbook', $this->l->t('contacts')),
 
-            'sharedfolder', $this->getConfigValue('sharedfolder',''),
-            'projectsfolder', $this->getConfigValue('projectsfolder',''),
-            'projectsbalancefolder', $this->getConfigValue('projectsbalancefolder',''),
+            'sharedfolder' => $this->getConfigValue('sharedfolder',''),
+            'projectsfolder' => $this->getConfigValue('projectsfolder',''),
+            'projectsbalancefolder' => $this->getConfigValue('projectsbalancefolder',''),
           ]);
 
         // musician ids of the officials
@@ -185,11 +185,11 @@ class Personal implements ISettings {
         }
 
         foreach (['phpmyadmin',
-                  'phpmyadminoc',
+                  'phpmyadmincloud',
                   'sourcecode',
                   'sourcedocs',
                   'ownclouddev'] as $link) {
-          $templateParamerers[$link] = $this->getConfigValue($link);
+          $templateParameters[$link] = $this->getConfigValue($link);
         }
       }
 

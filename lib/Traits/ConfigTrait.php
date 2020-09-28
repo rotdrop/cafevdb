@@ -103,6 +103,11 @@ trait ConfigTrait {
     return $this->configService->setValue($key, $value);
   }
 
+  public function generateRandomBytes($length = 30)
+  {
+    return $this->configService->generateRandomBytes($length);
+  }
+
   protected function user($userId = null)
   {
     return $this->configService->getUser($userId);

@@ -51,7 +51,7 @@ class DatabaseFactory
     if (!empty($params)) {
       $connectionParams = array_merge($connectionParams, $params);
     }
-    trigger_error(print_r($connectionParams, true));
+    //trigger_error(print_r($connectionParams, true));
     return DriverManager::getConnection(array_merge($driverParams, $connectionParams));
   }
 }

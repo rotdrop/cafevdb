@@ -27,9 +27,9 @@
       <input type="text" class="devlink" id="phpmyadmin" name="phpmyadmin" placeholder="<?php echo $appName.'@phpmyadmin'; ?>" value="<?php echo $_['phpmyadmin']; ?>" title="<?php echo $toolTips['phpmyadmin-link']; ?>" />
       <label for="phpmyadmin"><?php echo $l->t('Link to %s', array('phpMyAdmin')); ?></label>
       <br/>
-      <input type="button" class="devlinktest" id="testphpmyadminoc" name="testphpmyadminoc" value="<?php echo $l->t('Test Link'); ?>" title="<?php echo $toolTips['test-linktarget']; ?>"  />
-      <input type="text" class="devlink" id="phpmyadminoc" name="phpmyadminoc" placeholder="Owncloud@phpMyAdmin" value="<?php echo $_['phpmyadminoc']; ?>" title="<?php echo $toolTips['phpmyadminoc-link']; ?>" />
-      <label for="phpmyadminoc"><?php echo $l->t('Link to Owncloud@%s', array('phpMyAdmin')); ?></label>
+      <input type="button" class="devlinktest" id="testphpmyadmincloud" name="testphpmyadmincloud" value="<?php echo $l->t('Test Link'); ?>" title="<?php echo $toolTips['test-linktarget']; ?>"  />
+      <input type="text" class="devlink" id="phpmyadmincloud" name="phpmyadmincloud" placeholder="Owncloud@phpMyAdmin" value="<?php echo $_['phpmyadmincloud']; ?>" title="<?php echo $toolTips['phpmyadmincloud-link']; ?>" />
+      <label for="phpmyadmincloud"><?php echo $l->t('Link to Owncloud@%s', array('phpMyAdmin')); ?></label>
       <br/>
       <input type="button" class="devlinktest" id="testsourcecode" name="testsourcecode" value="<?php echo $l->t('Test Link'); ?>" title="<?php echo $toolTips['test-linktarget']; ?>"  />
   <input type="text" class="devlink" id="sourcecode" name="sourcecode" placeholder="<?php echo $l->t('Link to the source-code'); ?>" value="<?php echo $_['sourcecode']; ?>" title="<?php echo $toolTips['sourcecode-link']; ?>" />

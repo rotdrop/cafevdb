@@ -214,7 +214,9 @@ class EncryptionService
     // global encryption key with the new key.
 
     // new key pair
-    $this->generateKeyUserPair($login, $password);
+    if (!$this->generateUserKeyPair($login, $password)) {
+      return false;
+    }
 
     // store the re-encrypted key in the configuration space
     return $this->setUserEncryptionKey($login, $enckey);
@@ -281,7 +283,7 @@ class EncryptionService
     return $this->containerConfig->getUserValue($userId, $this->appName, $key, $default);
   }
 
-  function setUserValue($uesrId, $key, $value)
+  function setUserValue($userId, $key, $value)
   {
     return $this->containerConfig->setUserValue($userId, $this->appName, $key, $value);
   }

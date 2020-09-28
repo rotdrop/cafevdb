@@ -76,6 +76,12 @@ return [
             'verb' => 'POST',
         ],
         [
+            'name' => 'personal_settings#get',
+            'url' => '/settings/get/{parameter}',
+            'verb' => 'POST',
+        ],
+        // expert mode operations
+        [
             'name' => 'expert_mode#form',
             'url' => '/expertmode/form',
             'verb' => 'GET',

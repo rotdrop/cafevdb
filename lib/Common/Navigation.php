@@ -54,7 +54,7 @@ class Navigation
         if (!is_array($options) || count($options) == 0) {
             return $result;
         }
-        if (!is_array($selected)) {
+        if (!is_array($selectedValues)) {
             $selectedValues = [];
         }
         $oldGroup = isset($options[0]['group']) ? Util::htmlEscape($options[0]['group']) : false;

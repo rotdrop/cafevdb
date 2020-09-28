@@ -87,16 +87,72 @@ var CAFEVDB = CAFEVDB || {};
 
     tabsHolder.tabs({ selected: 0});
 
+    // Work around showPassword erasing the value and returns the
+    // text input clone.
+    const showPassword = function(element) {
+      const tmp = element.val();
+      var showElement;
+      element.showPassword(function(args) {
+        showElement = args.clone;
+      });
+      element.val(tmp);
+      return showElement;
+    };
+
+    // AJAX call with a simple value
+    const simpleSetValueHandler = function(element, eventType, msgElement, callback, getValue) {
+      element.on(eventType, function(event) {
+        msgElement.hide();
+        const self = $(this);
+        var name;
+        var value;
+        if (getValue !== undefined && (value = getValue(element, msgElement)) !== undefined) {
+          name = value.name;
+          value = value.value;
+        } else {
+          name = self.attr('name');
+          value = element.is(':checkbox') ? element.is(':checked') : self.val();
+        }
+        if (value !== undefined) {
+          $.post(
+	    OC.generateUrl('/apps/cafevdb/settings/app/set/' + name),
+            { 'value': value })
+	  .fail(function(xhr, status, errorThrown) {
+            msgElement.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+          })
+          .done(function(data) {
+            if (callback !== undefined) {
+              callback(element, data, value, msgElement);
+            }
+            msgElement.html(data.message).show();
+          });
+        }
+        return false;
+      });
+    };
+
+    // AJAX call without a value
+    const simpleSetHandler = function(element, eventType, msgElement) {
+      element.on(eventType, function(event) {
+        msgElement.hide();
+        const name = $(this).attr('name');
+        $.post(
+	  OC.generateUrl('/apps/cafevdb/settings/app/set/' + name))
+	.fail(function(xhr, status, errorThrown) {
+          msgElement.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+        })
+        .done(function(data) {
+          msgElement.html(data.message).show();
+        });
+        return false;
+      });
+    };
+
     // 'show password' checkbox
     const encryptionKey = $('#userkey #encryptionkey');
     const loginPassword = $('#userkey #password');
-    var tmp = encryptionKey.val();
-    encryptionKey.showPassword();
-    encryptionKey.val(tmp);
-
-    tmp = loginPassword.val();
-    loginPassword.showPassword();
-    loginPassword.val(tmp);
+    showPassword(encryptionKey);
+    showPassword(loginPassword);
 
     $("#userkey #button").click(function() {
       // We allow empty keys, meaning no encryption
@@ -139,19 +195,13 @@ var CAFEVDB = CAFEVDB || {};
 
     // name of orchestra
 
-    const adminGeneral = $('#admingeneral');
-    adminGeneral.submit(function () { return false; });
-
-    adminGeneral.find(':input').blur(function(event) {
+    {
+      const adminGeneral = $('#admingeneral');
       const msg = adminGeneral.find('.msg');
-      msg.hide();
-      const value = $(this).val();
-      $.post(
-	OC.generateUrl('/apps/cafevdb/settings/app/set/orchestra'),
-        { 'value': value })
-	.done(function(data) {
-          msg.html(data.message);
-          msg.show();
+
+      simpleSetValueHandler(
+        adminGeneral.find(':input'), 'blur', msg,
+        function(element, data, value, msg) {
 	  if (value == '') {
             $('div.personalblock.admin,div.personalblock.sharing').find('fieldset').each(function(i, elm) {
               $(elm).attr('disabled','disabled');
@@ -170,23 +220,14 @@ var CAFEVDB = CAFEVDB || {};
               });
             }
 	  }
-	})
-	.fail(function(xhr, status, errorThrown) {
-          msg.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown));
-          msg.show();
-        });
-      return false;
-   });
+	});
+    }
 
+    // @@TODO
     // Encryption-key
     // 'show password' checkbox
-    var tmp =   $('#systemkey #key').val();
-    $('#systemkey #key').showPassword();
-    $('#systemkey #key').val(tmp);
-
-    tmp = $('#systemkey #oldkey').val();
-    $('#systemkey #oldkey').showPassword();
-    $('#systemkey #oldkey').val(tmp);
+    showPassword($('#systemkey #key'));
+    showPassword($('#systemkey #oldkey'))
 
     $("#keychangebutton").click(function() {
       // We allow empty keys, meaning no encryption
@@ -238,6 +279,7 @@ var CAFEVDB = CAFEVDB || {};
       return false;
     });
 
+    //@@TODO
     $('form#systemkey #keygenerate').click(function(event) {
 
       $('div.statusmessage').hide();
@@ -281,50 +323,28 @@ var CAFEVDB = CAFEVDB || {};
     //
     ///////////////////////////////////////////////////////////////////////////
 
-    $('#dbgeneral :input').blur(function(event) {
-      const msg = $('#dbsettings #msg');
-      msg.hide();
-      const name = $(this).attr('name');
-      const value = $(this).val();
-      $.post(
-	OC.generateUrl('/apps/cafevdb/settings/app/set/' + name),
-        { 'value': value })
-	.fail(function(xhr, status, errorThrown) {
-          msg.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown));
-          msg.show();
-        })
-        .done(function(data) {
-          msg.html(data.message).show();
-        });
-      return false;
-    });
+    simpleSetValueHandler($('#dbgeneral :input'), 'blur', $('#dbsettings #msg'));
 
     // DB-Password
     // 'show password' checkbox
     const dbPassword = $('fieldset.cafevdb_dbpassword #cafevdb-dbpassword')
-    var tmp = dbPassword.val();
-    dbPassword.showPassword();
-    dbPassword.val(tmp);
+    showPassword(dbPassword);
 
     // test password
-    $("fieldset.cafevdb_dbpassword #button").click(function() {
-      const msg = $('fieldset.cafevdb_dbpassword .statusmessage');
-      msg.hide();
-      const value = dbPassword.val();
-      if (value != '') {
-        $.post(
-	  OC.generateUrl('/apps/cafevdb/settings/app/set/dbpassword'),
-          { 'value': value })
-	  .fail(function(xhr, status, errorThrown) {
-            msg.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
-          })
-          .done(function(data) {
-            //$('fieldset.cafevdb_dbpassword input[name="dbpassword"]').val('');
-            //$('fieldset.cafevdb_dbpassword input[name="dbpassword-clone"]').val('');
-            msg.html(data.message).show();
-          });
-      }
-    });
+    simpleSetValueHandler(
+      $("fieldset.cafevdb_dbpassword #button"), 'click', $('fieldset.cafevdb_dbpassword .statusmessage'),
+      function(element, data, value) {
+        //$('fieldset.cafevdb_dbpassword input[name="dbpassword"]').val('');
+        //$('fieldset.cafevdb_dbpassword input[name="dbpassword-clone"]').val('');
+      },
+      function(element, msg) {
+        var val = { 'name': dbPassword.attr('name'), 'value': dbPassword.val() };
+        if (val.value == '') {
+          msg.html(t('cafevdb', 'Password field must not be empty')).show();
+          val = undefined;
+        }
+        return val;
+      });
 
     ///////////////////////////////////////////////////////////////////////////
     //
@@ -332,768 +352,401 @@ var CAFEVDB = CAFEVDB || {};
     //
     ///////////////////////////////////////////////////////////////////////////
 
-    $('#shareowner #shareowner-force').click(function(event) {
-      $('div.statusmessage').hide();
-      $('span.statusmessage').hide();
-      $('#eventsettings #msg').empty();
+    {
+      const container = $('#shareowner');
+      const msg = $('#shareownerform .statusmessage');
+      const shareOwner = container.find('#user');
+      const shareOwnerSaved = container.find('#user-saved');
+      const shareOwnerForce = container.find('#shareowner-force');
+      const shareOwnerCheck = container.find('#check');
 
-      if (!$(this).is(':checked') &&
-          $('#shareowner #user-saved').val() != '') {
-	$('#shareowner #user').val($('#shareowner #user-saved').val());
-	$('#shareowner #user').attr('disabled','disabled');
-      } else {
-	$('#shareowner #user').removeAttr('disabled');
-      }
-    })
+      shareOwnerForce.on('change', function(event) {
+        msg.hide();
+        if (!$(this).is(':checked') && shareOwnerSaved.val() != '') {
+	  shareOwner.val(shareOwnerSaved.val());
+	  shareOwner.prop('disabled', true);
+        } else {
+          shareOwner.prop('disabled', false);
+        }
+        return false;
+      })
 
-    $('#shareowner #check').click(function(event) {
-      event.preventDefault();
+      shareOwner.on('blur', function(event) {
+        shareOwnerCheck.prop("disabled", shareOwner.val() == '');
+        return false;
+      });
 
-      var post = $('#shareowner').serializeArray();
-
-      if ($('#shareowner #user').is(':disabled')) {
-	var type = new Object();
-	type['name']  = 'shareowner';
-	type['value'] = $('#shareowner #user-saved').val();
-	post.push(type);
-      }
-
-      $('div.statusmessage').hide();
-      $('span.statusmessage').hide();
-      $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
-             post,
-             function(data) {
-               if (data.status == 'success') {
-		 $('#shareowner #user').attr('disabled',true);
-		 $('#shareowner #user-saved').val($('#shareowner #user').val());
-		 if ($('#shareowner #user').val() != '') {
-                   $('div.personalblock.sharing').find('fieldset').each(function(i, elm) {
-                     $(elm).removeAttr('disabled');
-                   });
-		 } else {
-                   $('#calendars,#sharedfolderform').find('fieldset').each(function(i, elm) {
-                     $(elm).attr('disabled','disabled');
-                   });
-		 }
-               }
-	       $('#eventsettings #msg').html(data.data.message);
-	       $('#eventsettings #msg').show();
-	     });
-    })
-
+      simpleSetValueHandler(
+        shareOwnerCheck, 'click', msg,
+        function(element, data, value, msg) { // done
+	  shareOwner.attr('disabled', true);
+	  shareOwnerSaved.val(shareOwner.val());
+	  if (shareOwner.val() != '') {
+            $('div.personalblock.sharing').find('fieldset').each(function(i, elm) {
+              $(elm).removeAttr('disabled');
+            });
+	  } else {
+            $('#calendars,#sharedfolderform').find('fieldset').each(function(i, elm) {
+              $(elm).attr('disabled','disabled');
+            });
+	  }
+        },
+        function(element, msg) { // getValue
+          return { 'name': 'shareowner',
+                   'value': { 'shareowner': shareOwner.val(),
+                              'shareowner-saved': shareOwnerSaved.val(),
+                              'shareowner-force': shareOwnerForce.is(':checked') ? true : false }
+                 };
+        });
+    } // fieldset block
 
     // Share-owner´s password
-    // 'show password' checkbox
-    $('fieldset.sharingpassword #sharingpassword').showPassword();
-    $('fieldset.sharingpassword #change').click(function(event) {
-      event.preventDefault();
+    {
+      let container = $('fieldset.sharingpassword');
+      const password = container.find('#sharingpassword');
+      const change = container.find('#change');
+      const msg = $('#shareownerform .statusmessage');
 
-      // We allow empty keys, meaning no encryption
-      $('div.statusmessage').hide();
-      $('span.statusmessage').hide();
-      $('#eventsettings #msg').empty();
+      const passwordClone = showPassword(password);
 
-      // Generate the request by hand
-      var post = Array();
+      simpleSetValueHandler(
+        change, 'click', msg,
+        function(element, data, value, msg) { // done
+          // Why should we want to empty this except for security reasons?
+          //password.val('');
+          //passwordClone.val('');
+        },
+        function(element, msg) {
+          var val = { 'name': password.attr('name'), 'value': password.val() };
+          if (val.value == '') {
+            msg.html(t('cafevdb', 'Password field must not be empty')).show();
+            val = undefined;
+          }
+          return val;
+        });
 
-      var input1 = $('fieldset.sharingpassword input[name="sharingpassword-clone"]');
-      var input2 = $('fieldset.sharingpassword input[name="sharingpassword"]');
+      container.find('#generate').on('click', function(event) {
+        msg.hide();
 
-      // Check both inputs fors consistency, because we are fiddling
-      // with an auto-generated password below
-      var pass1 = input1.val();
-      var pass2 = input2.val();
+        // show the visible password input
+        if (password.is(':visible')) {
+	  $('#sharingpassword-show').click();
+        }
 
-      if (pass1 != pass2) {
-	var type = new Object();
-	type['name']  = 'error';
-	type['value'] = 'Visible and invisible passwords do not match.';
-	post.push(type);
-      } else if (pass1 == '') {
-	var type = new Object();
-	type['name']  = 'error';
-	type['value'] = 'Password is empty.';
-	post.push(type);
-      } else {
-	var type = new Object();
-	type['name']  = 'sharingpassword';
-	type['value'] = pass1;
-	post.push(type);
-      }
-      // Ajax foo
-      $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
-             post,
-             function(data) {
-               if (data.status == "success") {
-		 input1.val('');
-		 input2.val('');
-		 $('#sharingpassword-show').removeAttr('checked');
-		 $('#sharingpassword-show').click();
-		 $('#sharingpassword-show').removeAttr('checked');
-               }
-               $('#eventsettings #msg').html(data.data.message);
-               $('#eventsettings #msg').show();
-               return false;
-             });
-      return false;
-    });
+        $.post(
+	  OC.generateUrl('/apps/cafevdb/settings/get/passwordgenerate'))
+        .fail(function(xhr, status, errorThrown) {
+          msg.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+        })
+        .done(function(data) {
+          // TODO check integrity of return etc.
+          password.val(data.value);
+          passwordClone.val(data.value);
+          if (data.message != '') {
+            msg.html(data.message).show();
+          }
+        });
+        return false;
+      });
+    }
 
-    $('fieldset.sharingpassword #generate').click(function(event) {
-      event.preventDefault();
+    { // shared objects
+      const container = $('#eventsettings');
+      const msg = container.children('.statusmessage');
 
-      $('div.statusmessage').hide();
-      $('span.statusmessage').hide();
-      $('#eventsettings #msg').empty();
-      if ($('fieldset.sharingpassword #sharingpassword').is(':visible')) {
-	$('#sharingpassword-show').click();
-      }
-      // Ajax foo
-      $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
-             $(this),
-             function(data) {
-               if (data.status == "success") {
-		 // Make sure both inputs have the same value
-		 $('fieldset.sharingpassword input[name="sharingpassword-clone"]').val(data.data.message);
-		 $('fieldset.sharingpassword input[name="sharingpassword"]').val(data.data.message);
-               } else {
-		 $('#eventsettings #msg').html(data.data.message);
-		 $('#eventsettings #msg').show();
-               }
-               return false;
-             });
+      ///////////////////////////////////////////////////////////////////////////
+      //
+      // Events, calendars, contacts
+      //
+      ///////////////////////////////////////////////////////////////////////////
 
-      return false;
-    });
+      simpleSetValueHandler(container.find('#calendars :input, #contacts :input'), 'blur', msg);
 
-    ///////////////////////////////////////////////////////////////////////////
-    //
-    // Events, calendars
-    //
-    ///////////////////////////////////////////////////////////////////////////
+      ///////////////////////////////////////////
 
-    $('#eventsettings #calendars :input').blur(function(event) {
-      event.preventDefault();
-      $('div.statusmessage').hide();
-      $('span.statusmessage').hide();
-      $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
-             $(this),
-             function(data) {
-	       $('#eventsettings #msg').html(data.data.message);
-	       $('#eventsettings #msg').show();
-	     });
-    });
+      const sharedFolder = function(cssBase, callback) {
+        const form = container.find('#' + cssBase + '-form');
+        const css = cssBase;
+        const cssSaved = cssBase + '-saved';
+        const cssForce = cssBase + '-force';
+        const sharedObject = container.find('#' + css);
+        const sharedObjectSaved = container.find('#' + cssSaved);
+        const sharedObjectForce = container.find('#' + cssForce);
 
-    ///////////////////////////////////////////////////////////////////////////
-    //
-    // Contacts, addressbooks (actually only one ;)
-    //
-    ///////////////////////////////////////////////////////////////////////////
+        form.submit(function () { return false; }); // @@TODO ???
 
-    $('#eventsettings #contacts :input').blur(function(event) {
-      event.preventDefault();
-      $('div.statusmessage').hide();
-      $('span.statusmessage').hide();
-      $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
-             $(this),
-             function(data) {
-	       $('#eventsettings #msg').html(data.data.message);
-	       $('#eventsettings #msg').show();
-	     });
-    });
+        sharedObjectForce.blur(function(event) { //@@TODO ???
+          return false;
+        });
 
-    ///////////////////////////////////////////////////////////////////////////
-    //
-    // Sharing, share-folder
-    //
-    ///////////////////////////////////////////////////////////////////////////
+      sharedObjectForce.click(function(event) {
+        msg.hide();
+        if (!sharedObjectForce.is(':checked') && sharedObjectSaved.val() != '') {
+	  sharedObject.val(sharedObjectSaved.val());
+	  sharedObject.prop('disabled', true);
+        } else {
+	  sharedObject.prop('disabled', false);
+        }
+      });
 
-    $('#sharedfolderform').submit(function () { return false; });
+      simpleSetValueHandler(
+        $('#sharedfoldercheck'), 'click', msg,
+        function(element, data, value, msg) { // done
+	  sharedObject.val(value);
+	  sharedObjectSaved.val(value);
+          if (value != '') {
+	    sharedObject.prop('disabled', true);
+            sharedObjectForce.prop('checked', false);
+          }
+          if (callback !== undefined) {
+            callback(element, data, value, msg);
+          }
+        },
+        function(element, msg) { // getValue
+          return { 'name': css,
+                   'value': { css: sharedObject.val(),
+                              cssSaved: sharedObjectSaved.val(),
+                              cssForce: sharedObjectForce.is(':checked') ? true : false }
+                 };
+        });
 
-    $('#sharedfolder-force').blur(function(event) {
-      event.preventDefault();
-      return false;
-    });
+      };
 
-    $('#sharedfolder-force').click(function(event) {
-      $('div.statusmessage').hide();
-      $('span.statusmessage').hide();
-      $('#eventsettings #msg').empty();
+      ///////////////////////////////////////////////////////////////////////////
+      //
+      // Sharing, share-folder, projects-folder, projects balance folder
+      //
+      ///////////////////////////////////////////////////////////////////////////
 
-      if (!$(this).is(':checked') &&
-          $('#sharedfolder-saved').val() != '') {
-	$('#sharedfolder').val($('#sharedfolder-saved').val());
-	$('#sharedfolder').attr('disabled','disabled');
-      } else {
-	$('#sharedfolder').removeAttr('disabled');
-      }
-    });
+      sharedFolder('sharedfolder');
+      sharedFolder('projectsfolder', function(element, data, value, msg) {
+        $('#projectsbalancefolderform fieldset').prop('disabled', value == '');
+      });
+      sharedFolder('projectsbalancefolder');
 
-    $('#sharedfoldercheck').click(function(event) {
-      event.preventDefault();
-
-      var post = $('#sharedfolderform').serializeArray();
-
-      if ($('#sharedfolder').is(':disabled')) {
-	// Fake.
-	var type = new Object();
-	type['name']  = 'sharedfolder';
-	type['value'] = $('#sharedfolder-saved').val();
-	post.push(type);
-      }
-
-      $('div.statusmessage').hide();
-      $('span.statusmessage').hide();
-      $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
-             post,
-             function(data) {
-               if (data.status == 'success') {
-		 $('#sharedfolder').attr('disabled',true);
-		 $('#sharedfolder-saved').val($('#sharedfolder').val());
-               }
-	       $('#eventsettings #msg').html(data.data.message);
-	       $('#eventsettings #msg').show();
-	     });
-    });
-
-    ///////////////////////////////////////////////////////////////////////////
-    //
-    // Sharing, project-folder
-    //
-    ///////////////////////////////////////////////////////////////////////////
-
-    $('#projectsfolderform').submit(function () { return false; });
-
-    $('#projectsfolder-force').blur(function(event) {
-      event.preventDefault();
-      return false;
-    });
-
-    $('#projectsfolder-force').click(function(event) {
-      $('div.statusmessage').hide();
-      $('span.statusmessage').hide();
-      $('#eventsettings #msg').empty();
-
-      if (!$(this).is(':checked') &&
-          $('#projectsfoldersaved').val() != '') {
-	$('#projectsfolder').val($('#projectsfoldersaved').val());
-	$('#projectsfolder').attr('disabled','disabled');
-      } else {
-	$('#projectsfolder').removeAttr('disabled');
-      }
-    });
-
-    $('#projectsfoldercheck').click(function(event) {
-      event.preventDefault();
-
-      var post = $('#projectsfolderform').serializeArray();
-
-      if ($('#projectsfolder').is(':disabled')) {
-	// Fake.
-	var type = new Object();
-	type['name']  = 'projectsfolder';
-	type['value'] = $('#projectsfoldersaved').val();
-	post.push(type);
-      }
-
-      $('div.statusmessage').hide();
-      $('span.statusmessage').hide();
-      $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
-             post,
-             function(data) {
-               if (data.status == 'success') {
-		 $('#projectsfoldersaved').attr('value', data.data.data);
-		 $('#projectsfolder').attr('value', data.data.data);
-		 $('#projectsbalanceprojectsfolder').text(data.data.data);
-		 if (data.data.data != '') {
-                   $('#projectsfolder').attr('disabled', true);
-                   $('#projectsfolder-force').prop('checked', false);
-                   $('#projectsbalancefolderform fieldset').removeAttr('disabled');
-		 } else {
-                   $('#projectsbalancefolderform fieldset').attr('disabled',true);
-		 }
-               }
-	       $('#eventsettings #msg').html(data.data.message);
-	       $('#eventsettings #msg').show();
-	     });
-    });
-
-    ///////////////////////////////////////////////////////////////////////////
-    //
-    // Sharing, project balance folder (for financial balance sheets)
-    //
-    ///////////////////////////////////////////////////////////////////////////
-
-    $('#projectsbalancefolderform').submit(function () { return false; });
-
-    $('#projectsbalancefolder-force').blur(function(event) {
-      event.preventDefault();
-      return false;
-    });
-
-    $('#projectsbalancefolder-force').click(function(event) {
-      $('div.statusmessage').hide();
-      $('span.statusmessage').hide();
-      $('#eventsettings #msg').empty();
-
-      if (!$(this).is(':checked') &&
-          $('#projectsbalancefoldersaved').val() != '') {
-	$('#projectsbalancefolder').val($('#projectsbalancefoldersaved').val());
-	$('#projectsbalancefolder').attr('disabled','disabled');
-      } else {
-	$('#projectsbalancefolder').removeAttr('disabled');
-      }
-    });
-
-    $('#projectsbalancefoldercheck').click(function(event) {
-      event.preventDefault();
-
-      var post = $('#projectsbalancefolderform').serializeArray();
-
-      if ($('#projectsbalancefolder').is(':disabled')) {
-	// Fake.
-	var type = new Object();
-	type['name']  = 'projectsbalancefolder';
-	type['value'] = $('#projectsbalancefoldersaved').val();
-	post.push(type);
-      }
-
-      $('div.statusmessage').hide();
-      $('span.statusmessage').hide();
-      $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
-             post,
-             function(data) {
-               if (data.status == 'success') {
-		 $('#projectsbalancefoldersaved').attr('value', data.data.data);
-		 $('#projectsbalancefolder').attr('value', data.data.data);
-		 $('#projectsbalancefolder').attr('disabled', true);
-		 $('#projectsbalancefolder-force').prop('checked', false);
-               }
-	       $('#eventsettings #msg').html(data.data.message);
-	       $('#eventsettings #msg').show();
-	     });
-    });
+    } // shared objects
 
     ///////////////////////////////////////////////////////////////////////////
     //
     // email
     //
     ///////////////////////////////////////////////////////////////////////////
+    {
+      const form = $('#emailsettings');
+      const msg = form.find('.statusmessage');
 
-    $('#emailuser').blur(function(event) {
-      event.preventDefault();
-      $('div.statusmessage').hide();
-      $('span.statusmessage').hide();
-      $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
-             $(this),
-             function(data) {
-               if (data.status == "success") {
-		 $('#emailsettings #msg').html(data.data.message);
-		 $('#emailsettings #msg').show();
-		 return true;
-               } else {
-		 $('#emailsettings #msg').html(data.data.message);
-		 $('#emailsettings #msg').show();
-		 return false;
-               }
-	     }, 'json');
-      return false;
-    });
+      {
+        const container = form.find('fieldset.emailuser');
+        //const msg = container.find('.statusmessage');
 
-    // Email-Password
-    // 'show password' checkbox
-    var tmp = $('fieldset.emailpassword #emailpassword').val();
-    $('fieldset.emailpassword #emailpassword').showPassword();
-    $('fieldset.emailpassword #emailpassword').val(tmp);
-    $("fieldset.emailpassword #button").click(function() {
-      $('div.statusmessage').hide();
-      $('span.statusmessage').hide();
-      if ($('fieldset.emailpassword #emailpassword').val() != '') {
-	// Serialize the data
-	var post = $("fieldset.emailpassword").serialize();
-	// Ajax foo
-	$.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
-               post, function(data) {
-		 if(data.status == "success") {
-                   //$('fieldset.emailpassword input[name="emailpass1"]').val('');
-                   $('fieldset.emailpassword input[name="password"]').val('');
-                   $('fieldset.emailpassword input[name="password-clone"]').val('');
-	           $('#emailsettings #msg').html(data.data.message);
-	           $('#emailsettings #msg').show();
-		 } else {
-	           $('#emailsettings #msg').html(data.data.message);
-	           $('#emailsettings #msg').show();
-		 }
-               });
-	return false;
-      } else {
-	$('fieldset.emailpassword #error').show();
-	return false;
+        $('#emailuser').blur(function(event) {
+          msg.hide();
+          const name = $(this).attr('name');
+          const value = $(this).val();
+          $.post(
+	    OC.generateUrl('/apps/cafevdb/settings/app/set/' + name),
+            { 'value': value })
+	  .fail(function(xhr, status, errorThrown) {
+            msg.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+          })
+          .done(function(data) {
+            msg.html(data.message).show();
+          });
+          return false;
+        });
+
+        // Email-Password
+        // 'show password' checkbox
+        const password = container.find('#emailpassword');
+        const passwordClone = showPassword(password);
+        const passwordChange = container.find('#button');
+
+        passwordChange.on('click', function() {
+          msg.hide();
+          const value = password.val();
+          const name = password.attr('name');
+          if (value != '') {
+            $.post(
+	      OC.generateUrl('/apps/cafevdb/settings/app/set/' + name),
+              { 'value': value })
+	    .fail(function(xhr, status, errorThrown) {
+              msg.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+            })
+            .done(function(data) {
+              msg.html(data.message).show();
+            });
+          } else {
+            msg.html(t('cafevdb', 'Password field must not be empty')).show();
+          }
+          return false;
+        });
+      } // fieldset emailuser
+
+      {
+        const container = form.find('#emaildistribute');
+        //const msg = container.find('.statusmessage');
+
+        $('#emaildistributebutton').click(function() {
+          msg.hide();
+          const name = $(this).attr('name');
+          $.post(
+	    OC.generateUrl('/apps/cafevdb/settings/app/set/' + name))
+	  .fail(function(xhr, status, errorThrown) {
+            msg.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+          })
+          .done(function(data) {
+            msg.html(data.message).show();
+          });
+          return false;
+        });
       }
-    });
 
-    $('[id$=noauth]:checkbox').change(function(event) {
-      event.preventDefault();
-      $('div.statusmessage').hide();
-      $('span.statusmessage').hide();
-      var post = $(this);
-      if (!$(this).attr('checked')) {
-	post = new Array();
-	var tmp = new Object();
-	tmp['name']  = $(this).attr('name');
-	tmp['value'] = 0;
-	post.push(tmp);
+      {
+        const container = form.find('fieldset.serversettings');
+        //const msg = container.find('.statusmessage');
+
+        $('[id$=secure]:input').change(function(event) {
+          msg.hide();
+          const name = $(this).attr('name');
+          const value = $(this).val();
+          $.post(
+	    OC.generateUrl('/apps/cafevdb/settings/app/set/' + name),
+            { 'value': value })
+	  .fail(function(xhr, status, errorThrown) {
+            msg.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+          })
+          .done(function(data) {
+	    $('#'+data.proto+'port').val(data.port);
+            msg.html(data.message).show();
+          });
+          return false;
+        });
+
+        container.find('#smtpport,#imapport,#smtpserver,#imapserver').blur(function(event) {
+          msg.hide();
+          const name = $(this).attr('name');
+          const value = $(this).val();
+          $.post(
+	    OC.generateUrl('/apps/cafevdb/settings/app/set/' + name),
+            { 'value': value })
+	  .fail(function(xhr, status, errorThrown) {
+            msg.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+          })
+          .done(function(data) {
+            msg.html(data.message).show();
+          });
+          return false;
+        });
       }
-      $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
-             post,
-             function(data) {
-               if (data.status == "success") {
-		 $('#emailsettings #msg').html(data.data.message);
-		 $('#emailsettings #msg').show();
-               } else {
-		 $('#emailsettings #msg').html(data.data.message);
-		 $('#emailsettings #msg').show();
-               }
-               return false;
-	     }, 'json');
-      return false;
-    });
 
-    $('#emaildistributebutton').click(function() {
-      $('div.statusmessage').hide();
-      $('span.statusmessage').hide();
-      $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
-             $(this),
-             function(data) {
-               $('#emaildistribute span.statusmessage').html(data.data.message);
-               $('#emaildistribute span.statusmessage').show();
-             });
-    });
+      {
+        const container = form.find('fieldset.emailidentity');
+        console.log('************', container);
 
-    $('[id$=secure]:input').change(function(event) {
-      event.preventDefault();
-      $('div.statusmessage').hide();
-      $('span.statusmessage').hide();
-      $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
-             $(this),
-             function(data) {
-	       $('#emailsettings #msg').html(data.data.message);
-	       $('#emailsettings #msg').show();
-               if (data.status == "success") {
-		 var proto = data.data.proto;
-		 $('#'+proto+'port').val(data.data.port);
-		 return true;
-               }
-               return false;
-	     }, 'json');
-      return false;
-    });
-
-    $('#smtpport,#imapport').blur(function(event) {
-      event.preventDefault();
-      $('div.statusmessage').hide();
-      $('span.statusmessage').hide();
-      $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
-             $(this),
-             function(data) {
-               if (data.status == "success") {
-		 $('#emailsettings #msg').html(data.data.message);
-		 $('#emailsettings #msg').show();
-		 return true;
-               } else {
-		 $('#emailsettings #msg').html(data.data.message);
-		 $('#emailsettings #msg').show();
-		 return false;
-               }
-	     }, 'json');
-      return false;
-    });
-
-    $('#smtpserver,#imapserver').blur(function(event) {
-      event.preventDefault();
-      $('div.statusmessage').hide();
-      $('span.statusmessage').hide();
-      $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
-             $(this),
-             function(data) {
-               if (data.status == "success") {
-		 $('#emailsettings #msg').html(data.data.message);
-		 $('#emailsettings #msg').show();
-		 return true;
-               } else {
-		 $('#emailsettings #msg').html(data.data.message);
-		 $('#emailsettings #msg').show();
-		 return false;
-               }
-	     }, 'json');
-      return false;
-    });
-
-    $('#emailfromname').blur(function(event) {
-      event.preventDefault();
-      $('div.statusmessage').hide();
-      $('span.statusmessage').hide();
-      $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
-             $(this),
-             function(data) {
-               if (data.status == "success") {
-		 $('#emailsettings #msg').html(data.data.message);
-		 $('#emailsettings #msg').show();
-		 return true;
-               } else {
-		 $('#emailsettings #msg').html(data.data.message);
-		 $('#emailsettings #msg').show();
-		 return false;
-               }
-	     }, 'json');
-      return false;
-    });
-
-    $('#emailfromaddress').blur(function(event) {
-      event.preventDefault();
-      $('div.statusmessage').hide();
-      $('span.statusmessage').hide();
-      $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
-             $(this),
-             function(data) {
-               if (data.status == "success") {
-		 $('#emailsettings #msg').html(data.data.message);
-		 $('#emailsettings #msg').show();
-		 return true;
-               } else {
-		 $('#emailsettings #msg').html(data.data.message);
-		 $('#emailsettings #msg').show();
-		 return false;
-               }
-	     }, 'json');
-      return false;
-    });
-
-    $('#emailtestbutton').click(function(event) {
-      event.preventDefault();
-      $('div.statusmessage').hide();
-      $('span.statusmessage').hide();
-      $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
-             $(this),
-             function(data) {
-               if (data.status == "success") {
-		 $('#emailsettings #msg').html(data.data.message);
-		 $('#emailsettings #msg').show();
-		 return true;
-               } else {
-		 $('#emailsettings #msg').html(data.data.message);
-		 $('#emailsettings #msg').show();
-		 return false;
-               }
-	     }, 'json');
-      return false;
-    })
-
-    $('#emailtestmode').change(function(event) {
-      event.preventDefault();
-      var post = $(this);
-      if (!$(this).is(':checked')) {
-	post = new Array();
-	var tmp = new Object();
-	tmp['name']  = $(this).attr('name');
-	tmp['value'] = 'off';
-	post.push(tmp);
+        container.find('#emailfromname','#emailfromaddress').on('blur', function(event) {
+          msg.hide();
+          const name = $(this).attr('name');
+          const value = $(this).val();
+          $.post(
+	    OC.generateUrl('/apps/cafevdb/settings/app/set/' + name),
+            { 'value': value })
+	  .fail(function(xhr, status, errorThrown) {
+            msg.html(CAFEVDB.ajaxFailMessage(xhr, status, errorThrown)).show();
+          })
+          .done(function(data) {
+            msg.html(data.message).show();
+          });
+          return false;
+        });
       }
-      $('#emailsettings #msg').empty();
-      $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
-             post, function(data) {
-	       if (data.status == "success") {
-		 $('#emailsettings #msg').html(data.data.message);
-		 $('#emailsettings #msg').show();
-		 if ($('#emailtestmode').is(':checked')) {
-		   $('#emailtestaddress').removeAttr('disabled');
-		 } else {
-		   $('#emailtestaddress').attr('disabled',true);
-		 }
-		 return true;
-	       } else {
-		 $('#emailsettings #msg').html(data.data.message);
-	       }
-	       return false;
-	     });
-      return false;
-    });
 
-    $('#emailtestaddress').blur(function(event) {
-      event.preventDefault();
-      $('div.statusmessage').hide();
-      $('span.statusmessage').hide();
-      $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
-             $(this),
-             function(data) {
-               if (data.status == "success") {
-		 $('#emailsettings #msg').html(data.data.message);
-		 $('#emailsettings #msg').show();
-		 return true;
-               } else {
-		 $('#emailsettings #msg').html(data.data.message);
-		 $('#emailsettings #msg').show();
-		 return false;
-               }
-	     }, 'json');
-      return false;
-    });
+      {
+        const container = form.find('fieldset.emailtest');
+        const emailTestAddress = container.find('#emailtestaddress');
+        console.log('***************', emailTestAddress);
 
-    ///////////////////////////////////////////////////////////////////////////
-    //
-    // street address settings
-    //
-    ///////////////////////////////////////////////////////////////////////////
+        simpleSetHandler(container.find('#emailtestbutton'), 'click', msg);
+        simpleSetValueHandler(emailTestAddress, 'blur', msg);
+        simpleSetValueHandler(
+          container.find('#emailtestmode'), 'change', msg,
+          function(element, data) {
+	    if (element.is(':checked')) {
+	      emailTestAddress.prop('disabled', false);
+	    } else {
+	      emailTestAddress.prop('disabled',true);
+	    }
+          });
+      }
+    }
 
-    $('input[class^="streetAddress"], input.phoneNumber').blur(function(event) {
-      var self = $(this);
-      event.preventDefault();
-      $('div.statusmessage').hide();
-      $('span.statusmessage').hide();
-      $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
-             self,
-             function(data) {
-               if (data.status == "success") {
-		 self.val(data.data.value);
-		 $('#orchestra #msg').html(data.data.message);
-		 $('#orchestra #msg').show();
-		 return true;
-               } else {
-		 $('#orchestra #msg').html(data.data.message);
-		 $('#orchestra #msg').show();
-		 return false;
-               }
-	     }, 'json');
-      return false;
-    })
+    {
+      ///////////////////////////////////////////////////////////////////////////
+      //
+      // street address settings
+      //
+      ///////////////////////////////////////////////////////////////////////////
 
-    $('select.streetAddressCountry').
-      chosen({
+      const msg = $('#orchestra #msg');
+
+      simpleSetValueHandler(
+        $('input[class^="streetAddress"], input.phoneNumber'), 'blur', msg);
+
+      const streetAddressCountry = $('select.streetAddressCountry');
+      streetAddressCountry.chosen({
 	disable_search_threshold: 10,
 	allow_single_deselect: true,
 	width: '30%'
-      }).
-      on('change', function(event) {
-	var self = $(this);
-	event.preventDefault();
-	$('div.statusmessage').hide();
-	$('span.statusmessage').hide();
-	$.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
-               self,
-               function(data) {
-		 if (data.status == "success") {
-		   $('#orchestra #msg').html(data.data.message);
-		   $('#orchestra #msg').show();
-		   return true;
-		 } else {
-		   $('#orchestra #msg').html(data.data.message);
-		   $('#orchestra #msg').show();
-		   return false;
-		 }
-	       }, 'json');
-	return false;
       });
+      simpleSetValueHandler(streetAddressCountry, 'change', msg);
 
-    ///////////////////////////////////////////////////////////////////////////
-    //
-    // special members
-    //
-    ///////////////////////////////////////////////////////////////////////////
+      ///////////////////////////////////////////////////////////////////////////
+      //
+      // special members
+      //
+      ///////////////////////////////////////////////////////////////////////////
 
-    $('input.specialMemberTables').blur(function(event) {
-      event.preventDefault();
-      $('div.statusmessage').hide();
-      $('span.statusmessage').hide();
-      $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
-             $(this),
-             function(data) {
-               if (data.status == "success") {
-		 $('#orchestra #msg').html(data.data.message);
-		 $('#orchestra #msg').show();
-		 return true;
-               } else {
-		 $('#orchestra #msg').html(data.data.message);
-		 $('#orchestra #msg').show();
-		 return false;
-               }
-	     }, 'json');
-      return false;
-    })
+      simpleSetValueHandler($('input.specialMemberTables'), 'blur', msg);
 
-
-    $('select.executive-board-ids').
-      chosen({
+      const executiveBoardIds = $('select.executive-board-ids');
+      executiveBoardIds.chosen({
 	disable_search_threshold: 10,
 	allow_single_deselect: true,
 	inherit_select_classes:true,
 	width: '30%'
-      }).
-      on('change', function(event) {
-	event.preventDefault();
-	$('div.statusmessage').hide();
-	$('span.statusmessage').hide();
-	$.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
-               $(this),
-               function(data) {
-		 if (data.status == "success") {
-		   $('#orchestra #msg').html(data.data.message);
-		   $('#orchestra #msg').show();
-		   return true;
-		 } else {
-		   $('#orchestra #msg').html(data.data.message);
-		   $('#orchestra #msg').show();
-		   return false;
-		 }
-	       }, 'json');
-	return false;
       });
+      simpleSetValueHandler(executiveBoardIds, 'change', msg);
 
-    ///////////////////////////////////////////////////////////////////////////
-    //
-    // bank account settings
-    //
-    ///////////////////////////////////////////////////////////////////////////
+      ///////////////////////////////////////////////////////////////////////////
+      //
+      // bank account settings
+      //
+      ///////////////////////////////////////////////////////////////////////////
 
-    $('input[class^="bankAccount"]').blur(function(event) {
-      event.preventDefault();
-      var element = this;
-      $('div.statusmessage').hide();
-      $('span.statusmessage').hide();
-      $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
-             $(this),
-             function(data) {
-               if (data.status == "success") {
-		 if (data.data.value) {
-                   $(element).val(data.data.value);
-		 }
-		 if (data.data.iban) {
-                   $('input.bankAccountIBAN').val(data.data.iban);
-		 }
-		 if (data.data.blz) {
-                   $('input.bankAccountBLZ').val(data.data.blz);
-		 }
-		 if (data.data.bic) {
-                   $('input.bankAccountBIC').val(data.data.bic);
-		 }
-		 $('#orchestra #msg').html(data.data.message);
-		 $('#orchestra #msg').show();
-		 if ($('#orchestra #suggestion').html() !== '') {
-	           $('#orchestra #suggestion').show();
-		 }
-		 return true;
-               } else {
-		 if (data.data.suggestion !== '') {
-	           $('#orchestra #suggestion').html(data.data.suggestion);
-		 }
-		 $('#orchestra #msg').html(data.data.message);
-		 $('#orchestra #msg').show();
-		 if ($('#orchestra #suggestion').html() !== '') {
-	           $('#orchestra #suggestion').show();
-		 }
-		 return false;
-               }
-	     }, 'json');
-      return false;
-    })
+      simpleSetValueHandler(
+        $('input[class^="bankAccount"]'),
+        'blur',
+        msg,
+        function(element, data, value, msg) { // done
+          data = data.value;
+	  if (data.suggestion) {
+	    $('#orchestra #suggestion').html(data.suggestion).show();
+          } else {
+	    $('#orchestra #suggestion').empt().hide();
+          }
+          if (data.value) {
+            element.val(data.value);
+          }
+	  if (data.iban) {
+            $('input.bankAccountIBAN').val(data.iban);
+	  }
+	  if (data.blz) {
+            $('input.bankAccountBLZ').val(data.blz);
+	  }
+	  if (data.bic) {
+            $('input.bankAccountBIC').val(data.data.bic);
+	  }
+        });
+    }
 
     ///////////////////////////////////////////////////////////////////////////
     //
@@ -1101,46 +754,16 @@ var CAFEVDB = CAFEVDB || {};
     //
     ///////////////////////////////////////////////////////////////////////////
 
-    $('input.devlink').blur(function(event) {
-      event.preventDefault();
-      $('div.statusmessage').hide();
-      $('span.statusmessage').hide();
-      $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
-             $(this),
-             function(data) {
-               if (data.status == "success") {
-		 $('#develsettings #msg').html(data.data.message);
-		 $('#develsettings #msg').show();
-		 return true;
-               } else {
-		 $('#develsettings #msg').html(data.data.message);
-		 $('#develsettings #msg').show();
-		 return false;
-               }
-	     }, 'json');
-      return false;
-    });
+    {
+      const msg = $('#develsettings #msg');
 
-    $('input.devlinktest').click(function (event) {
-      event.preventDefault();
-      $('div.statusmessage').hide();
-      $('span.statusmessage').hide();
-      $.post(OC.filePath('cafevdb', 'ajax/settings', 'app-settings.php'),
-             $(this),
-             function(data) {
-               if (data.status == "success") {
-		 $('#develsettings #msg').html(data.data.message);
-		 $('#develsettings #msg').show();
-		 window.open(data.data.target, data.data.link);
-		 return true;
-               } else {
-		 $('#develsettings #msg').html(data.data.message);
-		 $('#develsettings #msg').show();
-		 return false;
-               }
-	     }, 'json');
-      return false;
-    });
+      simpleSetValueHandler($('input.devlink'), 'blur', msg);
+      simpleSetValueHandler(
+        $('input.devlinktest'), 'click', msg,
+        function (element, data, value, msg) {
+	  window.open(data.value.target, data.value.link);
+        });
+    }
 
     ///////////////////////////////////////////////////////////////////////////
     //
@@ -1148,25 +771,7 @@ var CAFEVDB = CAFEVDB || {};
     //
     ///////////////////////////////////////////////////////////////////////////
 
-    $('input.redaxo').blur(function(event) {
-      event.preventDefault();
-      $('div.statusmessage').hide();
-      $('span.statusmessage').hide();
-      $.post(OC.filePath('cafevdb', 'ajax/settings', 'redaxo-settings.php'),
-             $(this),
-             function(data) {
-               if (data.status == "success") {
-		 $('.statusmessage').html(data.data.message);
-		 $('.statusmessage').show();
-		 return true;
-               } else {
-		 $('.statusmessage').html(data.data.message);
-		 $('.statusmessage').show();
-		 return false;
-               }
-	     }, 'json');
-      return false;
-    })
+    simpleSetValueHandler($('input.redaxo'), 'blur', $('form#cmssettings .statusmessage'));
 
     ///////////////////////////////////////////////////////////////////////////
     //

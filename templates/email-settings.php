@@ -22,6 +22,7 @@
 ?>
 <div id="tabs-<?php echo $_['tabNr']; ?>" class="personalblock admin email">
   <form id="emailsettings">
+    <fieldset class="serversettings">
 <!-- SMTP and IMAP settings -->
 <?php
 foreach (array('smtp', 'imap') as $proto) {
@@ -34,9 +35,11 @@ foreach (array('smtp', 'imap') as $proto) {
     .'placeholder="'.$upproto.' Server" />
   <label for="'.$proto.'server">'.$upproto.' Server</label>
   <br/>
-  <input type="text" name="'.$proto.'port" id="'.$proto.'port" '
+  <input type="number" name="'.$proto.'port" id="'.$proto.'port" '
     .'value="'.$_[$proto.'port'].'" '
-    .'placeholder="'.$upproto.' Port" />
+    .'placeholder="'.$upproto.' Port"
+    min="1" max="65535"
+    />
   <label for="'.$proto.'port">'.$upproto.' Port</label>
   <br/>
   <label for="'.$proto.'secure" id="'.$proto.'securelabel">
@@ -57,41 +60,38 @@ foreach (array('smtp', 'imap') as $proto) {
   }
 }
 ?>
+      <!-- div class="statusmessage"></div -->
+    </fieldset><!-- server settings -->
 <!-- GENERAL EMAIL STUFF -->
-  <br/>
     <fieldset id="emailaccount"><legend><?php echo $l->t('Email Account'); ?></legend>
-      <input type="text" name="emailuser" id="emailuser" value="<?php echo $_['emailuser']; ?>" placeholder="<?php echo $l->t('Email-User');?>" />
-      <label for="emailuser"><?php echo $l->t('Login for email account.');?></label>
-      <br/>
-<!-- EMAIL password -->
-      <fieldset class="emailpassword">
-        <input class="cafevdb-password"
-               type="password"
-               value="<?php echo $_['emailpassword']; ?>"
-               id="emailpassword"
-               name="emailpassword"
-               placeholder="<?php echo $l->t('New Password');?>"
-               data-typetoggle="#emailpassword-show"
-               />
-        <input class="cafevdb-password-show"
-               type="checkbox"
-               id="emailpassword-show"
-               name="emailpassword-show"
-               />
-        <label class="cafevdb-password-show"
-               for="emailpassword-show">
-          <?php echo $l->t('show');?>
-        </label>
-        <input id="button"
-               type="button"
-               value="<?php echo $l->t('Change email password');?>"
-               />
-        <div class="statusmessage" id="changed">
-          <?php echo $l->t('The email password was changed');?>
-        </div>
-        <div class="statusmessage" id="error">
-          <?php echo $l->t('Unable to change the email password');?>
-        </div>
+      <fieldset class="emailuser">
+<!-- EMAIL user / password -->
+        <input type="text" name="emailuser" id="emailuser" value="<?php echo $_['emailuser']; ?>" placeholder="<?php echo $l->t('Email-User');?>" />
+        <label for="emailuser"><?php echo $l->t('Login for email account.');?></label>
+        <fieldset class="emailpassword">
+          <input class="cafevdb-password"
+                 type="password"
+                 value="<?php echo $_['emailpassword']; ?>"
+                 id="emailpassword"
+                 name="emailpassword"
+                 placeholder="<?php echo $l->t('New Password');?>"
+                 data-typetoggle="#emailpassword-show"
+                 />
+          <input class="cafevdb-password-show"
+                 type="checkbox"
+                 id="emailpassword-show"
+                 name="emailpassword-show"
+                 />
+          <label class="cafevdb-password-show"
+                 for="emailpassword-show">
+            <?php echo $l->t('show');?>
+          </label>
+          <input id="button"
+                 type="button"
+                 value="<?php echo $l->t('Change email password');?>"
+                 />
+          <!-- div class="statusmessage"></div -->
+        </fieldset>
       </fieldset>
       <fieldset id="emaildistribute">
         <input id="emaildistributebutton"
@@ -100,10 +100,10 @@ foreach (array('smtp', 'imap') as $proto) {
                value="<?php echo $l->t('Distribute Email Account');?>"
                title="<?php echo  $toolTips['email-account-distribute'];?>"
                />
-        <span class="statusmessage" id="email-account-distribute-message"></span>
+        <!-- span class="statusmessage" id="email-account-distribute-message"></span -->
       </fieldset>
     </fieldset>
-    <fieldset id="emailidentity">
+    <fieldset class="emailidentity">
       <legend><?php echo $l->t('Bulk Sender Identity'); ?></legend>
       <input type="text"
              name="emailfromname"
@@ -120,7 +120,7 @@ foreach (array('smtp', 'imap') as $proto) {
              />
       <label for="emailfromaddress"><?php echo $l->t('From: address');?></label>
     </fieldset>
-    <fieldset id="emailtest">
+    <fieldset class="emailtest">
       <legend><?php echo $l->t('Test Settings'); ?></legend>
       <input type="button"
              name="emailtest"
@@ -146,6 +146,9 @@ foreach (array('smtp', 'imap') as $proto) {
              />
       <label for="emailtestaddress"><?php echo $l->t('Test address');?></label>
     </fieldset>
-    <span class="statusmessage" id="msg"></span>
+    <br/>
+    <div>
+      <span class="statusmessage"></span><span>&nbsp;</span>
+    </div>
   </form>
 </div>

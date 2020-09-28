@@ -285,7 +285,9 @@ class ConfigCheckService
       return false;
     }
 
-    if (!\OC_user::isEnabled($shareowner)) {
+    $shareUser = $this->user($shareowner); // get the user object
+
+    if (!$shareUser->isEnabled()) {
       return false;
     }
 
@@ -294,16 +296,10 @@ class ConfigCheckService
      *
      * How paranoid should we be?
      */
-    $groups = $this->groupManager()->getUserGroups($shareowner);
-
-    // well, the share-owner should in turn only be owned by the
-    // group.
-    if (count($groups) != 1) {
-      return false;
-    }
+    $groups = $this->groupManager()->getUserGroups($shareUser);
 
     // The one and only group should be our's.
-    if ($groups[0] != $sharegroup) {
+    if (!isset($groups[$sharegroup])) {
       return false;
     }
 
@@ -320,20 +316,19 @@ class ConfigCheckService
    */
   public function checkShareOwner($shareowner)
   {
-    if (!$sharegroup = $this->getAppValue('usergroup', false)) {
+    if (!($sharegroup = $this->getAppValue('usergroup', false))) {
       return false; // need at least this group!
     }
 
     // Create the user if necessary
-    if (!\OC_User::userExists($shareowner) &&
-        !\OC_User::createUser($shareowner,
-                              \OC_User::generatePassword())) {
+    if (!$this->userManager()->userExists($shareowner) &&
+        !$this->userManager()->createUser($shareowner, $this->generateRandomBytes(30))) {
       return false;
     }
 
     // Sutff the user in its appropriate group
-    if (!\OC_Group::inGroup($shareowner, $sharegroup) &&
-        !\OC_Group::addToGroup($shareowner, $sharegroup)) {
+    if (!$this->inGroup($shareowner, $sharegroup) &&
+        !$this->group($sharegroup)->addUser($this->user($shareowner))) {
       return false;
     }
 
