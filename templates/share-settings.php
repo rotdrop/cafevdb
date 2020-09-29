@@ -26,7 +26,7 @@ $off = $_['shareowner'] == '' ? 'disabled="disabled"' : $alloff;
 ?>
 <div id="tabs-<?php echo $_['tabNr']; ?>" class="personalblock admin sharing">
 <!-- SHARED CALENDARS and stuff -->
-  <div id="eventsettings">
+  <div id="sharing-settings">
 <!-- VIRTUAL USER -->
     <form id="shareownerform"><legend><?php echo $l->t('Share owner') ; ?></legend>
       <fieldset id="shareowner" <?php echo $alloff; ?> >
@@ -46,7 +46,9 @@ $off = $_['shareowner'] == '' ? 'disabled="disabled"' : $alloff;
         <input name="passwordgenerate" id="generate" type="button" value="<?php echo $l->t('Generate');?>" />
         <input name="passwordchange" id="change" type="button" value="<?php echo $l->t('Change');?>" />
       </fieldset>
-      <span class="statusmessage"></span>
+      <div>
+        <span class="statusmessage"></span><span>&nbsp;</span>
+      </div>
     </form>
 <!-- CALENDARS -->
     <form id="calendars">
@@ -92,7 +94,7 @@ $off = $_['shareowner'] == '' ? 'disabled="disabled"' : $alloff;
           <input type="checkbox" id="sharedfolder-force" name="sharedfolder-force" class="checkbox"/>
           <?php echo $l->t('force');?>
         </label>
-        <input name="sharedfoldercheck" id="sharedfoldercheck" type="button" value="<?php echo $l->t('Check');?>" />
+        <input name="sharedfolder-check" id="sharedfolder-check" type="button" value="<?php echo $l->t('Check');?>" />
       </fieldset>
     </form>
     <form id="projectsfolder-form">
@@ -110,7 +112,7 @@ $off = $_['shareowner'] == '' ? 'disabled="disabled"' : $alloff;
         <label for="projectsfolder-force" title="<?php echo $toolTips['projectsfolder-force']; ?>" >
           <?php echo $l->t('force');?>
         </label>
-        <input name="projectsfoldercheck" id="projectsfoldercheck" type="button" value="<?php echo $l->t('Check');?>" />
+        <input name="projectsfolder-check" id="projectsfolder-check" type="button" value="<?php echo $l->t('Check');?>" />
       </fieldset>
     </form>
     <form id="projectsbalancefolder-form">
@@ -128,9 +130,9 @@ $off = $_['shareowner'] == '' ? 'disabled="disabled"' : $alloff;
         <label for="projectsbalancefolder-force" title="<?php echo $toolTips['projectsbalancefolder-force']; ?>" >
           <?php echo $l->t('force');?>
         </label>
-        <input name="projectsbalancefoldercheck" id="projectsbalancefoldercheck" type="button" value="<?php echo $l->t('Check');?>" />
+        <input name="projectsbalancefolder-check" id="projectsbalancefolder-check" type="button" value="<?php echo $l->t('Check');?>" />
       </fieldset>
     </form>
-    <span class="statusmessage"></span>
+    <span class="statusmessage sharing-settings"></span><span>&nbsp;</span>
   </div>
 </div>
