@@ -33,6 +33,7 @@ use \OCP\Files\FileInfo;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\DatabaseFactory;
+use OCA\CAFEVDB\Common\Util; // some static helpers
 
 /**Check for a usable configuration.
  */
@@ -285,8 +286,6 @@ class ConfigCheckService
    */
   public function sudo($uid, $callback)
   {
-    //\OC_Util::setupFS(); // This must come before trying to sudo
-
     $oldUserId = $this->userId();
     if (!$this->setUserId($uid)) {
       return false;
@@ -464,7 +463,7 @@ class ConfigCheckService
 
       if ($rootView->nodeExists($sharedFolder)
           && (($node = $rootView->get($sharedFolder))->getType() != FileInfo::TYPE_FOLDER
-              || !$node->isSharable())
+              || !$node->isShareable())
           && !$node->delete()) {
         return false;
       }
@@ -491,7 +490,7 @@ class ConfigCheckService
           return false;
         }
       } else {
-        trigger_error('No file info for ' . $sharedFolder, \OCP\Util::ERROR);
+        $this->logError('No file info for ' . $sharedFolder);
         return false;
       }
 
@@ -528,7 +527,7 @@ class ConfigCheckService
 
     /* Ok, then there should be a folder /$sharedFolder */
 
-    $fileView = $this->rootFolder->getUserFolder($groupAdmin);
+    $rootView = $this->rootFolder->getUserFolder($groupAdmin);
 
     $projectsFolder = trim(preg_replace('|[/]+|', '/', $projectsFolder), "/");
     $projectsFolder = Util::explode('/', $projectsFolder);
@@ -540,12 +539,26 @@ class ConfigCheckService
     foreach ($projectsFolder as $pathComponent) {
       $path .= '/'.$pathComponent;
       //trigger_error("Path: ".$path, E_USER_NOTICE);
-      if (($node = $fileView->get($path))->getType() != FileInfo::TYPE_FOLDER
-          || $node->isSharable()) {
-        if (!$node->delete || !($node = $rootView->newFolder($path))) {
+      try {
+        $node = $rootView->get($path);
+      } catch(\Exception $e) {
+        $node = null;
+      }
+      if (empty($node)
+          || $node->getType() != FileInfo::TYPE_FOLDER
+          || !$node->isShareable()) {
+        if ($node && !$node->delete()) {
+          $this->logError('Could not delete non-folder node ' . $path . ' type ' . $node->getType());
           return false;
         }
-        if (!$node->getType() != FileInfo::TYPE_FOLDER) {
+        try {
+          $node = $rootView->newFolder($path);
+        } catch(\Exception $e) {
+          $this->logError('Could not create ' . $path . ' ' . $e->getMessage() . ' ' . $e->getTraceAsString());
+          return false;
+        }
+        if ($node->getType() != FileInfo::TYPE_FOLDER) {
+          $this->logError($path . ' is not a folder!');
           return false;
         }
       }

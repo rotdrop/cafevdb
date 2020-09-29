@@ -261,6 +261,9 @@ class PersonalSettingsController extends Controller {
       $saved = $value[$parameter.'-saved'];
       $force = filter_var($value[$parameter.'-force'], FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
       $actual = $this->getConfigValue($parameter);
+      if (empty($real)) {
+        return self::grumble($this->l->t('Folder must not be empty.'));
+      }
       if ($actual != $saved) {
         return self::grumble($this->l->t('Submitted `%s\' != `%s\' (stored)', [$saved, $actual]));
       }
@@ -286,6 +289,56 @@ class PersonalSettingsController extends Controller {
                       [$real, $e->getMessage()]));
       }
       // return self::valueResponse('hello', print_r($value, true)); unreached
+    case 'projectsfolder':
+      $appGroup = $this->getConfigValue('usergroup');
+      if (empty($appGroup)) {
+        return self::grumble($this->l->t('App user-group is not set.'));
+      }
+      $shareOwner = $this->getConfigValue('shareowner');
+      if (empty($shareOwner)) {
+        return self::grumble($this->l->t('Share-owner is not set.'));
+      }
+      $sharedFolder = $this->getConfigValue('sharedfolder');
+      if (empty($sharedFolder)) {
+        return self::grumble($this->l->t('Shared folder is not set.'));
+      }
+      if (!isset($value[$parameter])
+          || !isset($value[$parameter.'-saved'])
+          || !isset($value[$parameter.'-force'])) {
+        return self::grumble($this->l->t('Invalid request parameters: ') . print_r($value, true));
+      }
+      $real = $value[$parameter];
+      $saved = $value[$parameter.'-saved'];
+      $force = filter_var($value[$parameter.'-force'], FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
+      $actual = $this->getConfigValue($parameter);
+      if (empty($real)) {
+        return self::grumble($this->l->t('Folder must not be empty.'));
+      }
+      if ($actual != $saved) {
+        return self::grumble($this->l->t('Submitted `%s\' != `%s\' (stored)', [$saved, $actual]));
+      }
+      try {
+        if (empty($saved) || $force) {
+
+          if ($this->configCheckService->checkProjectsFolder($real)) {
+            $this->setConfigValue($parameter, $real);
+            return self::valueResponse($real, $this->l->t('Created and shared new folder `%s\'', [$real]));
+          } else {
+            return self::grumble($this->l->t('Failed to create new shared folder`%s\'', [$real]));
+          }
+        } else if ($real != $saved) {
+          return self::grumble($saved . ' != ' . $real);
+        } else if ($this->configCheckService->checkSharedFolder($actual)) {
+          return self::valueResponse($actual, $this->l->t('`%s\' which is configured as `%s\' exists and is usable.', [$parameter, $actual]));
+        } else {
+          return self::grumble($this->l->t('`%s\' does not exist or is unaccessible.', [$actual]));
+        }
+      } catch(\Exception $e) {
+        $this->logError('Exception ' . $e->getMessage() . ' ' . $e->getTraceAsString());
+        return self::grumble(
+          $this->l->t('Failure checking folder `%s\', caught an exception `%s\'',
+                      [$real, $e->getMessage()]));
+      }
     default:
     }
     return self::grumble($this->l->t('Unknown Request'));
