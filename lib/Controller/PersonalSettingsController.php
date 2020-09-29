@@ -289,6 +289,7 @@ class PersonalSettingsController extends Controller {
                       [$real, $e->getMessage()]));
       }
       // return self::valueResponse('hello', print_r($value, true)); unreached
+    case 'projectsbalancefolder':
     case 'projectsfolder':
       $appGroup = $this->getConfigValue('usergroup');
       if (empty($appGroup)) {
@@ -322,9 +323,9 @@ class PersonalSettingsController extends Controller {
 
           if ($this->configCheckService->checkProjectsFolder($real)) {
             $this->setConfigValue($parameter, $real);
-            return self::valueResponse($real, $this->l->t('Created and shared new folder `%s\'', [$real]));
+            return self::valueResponse($real, $this->l->t('Created and shared new folder `%s\'.', [$real]));
           } else {
-            return self::grumble($this->l->t('Failed to create new shared folder`%s\'', [$real]));
+            return self::grumble($this->l->t('Failed to create new shared folder`%s\'.', [$real]));
           }
         } else if ($real != $saved) {
           return self::grumble($saved . ' != ' . $real);

@@ -312,23 +312,23 @@ class ConfigCheckService
   /**Return @c true if the share-owner exists and belongs to the
    * orchestra user group (and only to this group).
    *
-   * @param[in] $shareOwner Optional. If unset, then the uid is
+   * @param[in] $shareOwnerId Optional. If unset, then the uid is
    * fetched from the application configuration options.
    *
    * @return bool, @c true on success.
    */
-  public function shareOwnerExists($shareOwner = '')
+  public function shareOwnerExists($shareOwnerId = null)
   {
-    $shareGroup = $this->getAppValue('usergroup');
-    $shareOwner === '' && $shareOwner = $this->getConfigValue('shareowner');
+    $shareGroupId = $this->getAppValue('usergroup');
+    empty($shareOwnerId) && $shareOwnerId = $this->getConfigValue('shareowner');
 
-    if (empty($shareOwner)) {
+    if (empty($shareOwnerId)) {
       return false;
     }
 
-    $shareUser = $this->user($shareOwner); // get the user object
+    $shareOwner = $this->user($shareOwnerId); // get the user object
 
-    if (!$shareUser->isEnabled()) {
+    if (!$shareOwner->isEnabled()) {
       return false;
     }
 
@@ -337,10 +337,10 @@ class ConfigCheckService
      *
      * How paranoid should we be?
      */
-    $groups = $this->groupManager()->getUserGroups($shareUser);
+    $groups = $this->groupManager()->getUserGroups($shareOwner);
 
     // The one and only group should be our's.
-    if (!isset($groups[$shareGroup])) {
+    if (!isset($groups[$shareGroupId])) {
       return false;
     }
 
@@ -351,29 +351,61 @@ class ConfigCheckService
   /**Make sure the "sharing" user exists, create it when necessary.
    * May throw an exception.
    *
-   * @param[in] $shareOwner The account holding the shared resources.
+   * @param[in] $shareOwnerId The account id holding the shared resources.
    *
    * @return bool, @c true on success.
    */
-  public function checkShareOwner($shareOwner)
+  public function checkShareOwner($shareOwnerId)
   {
-    if (!($shareGroup = $this->getAppValue('usergroup', false))) {
+    if (!($shareGroupId = $this->getAppValue('usergroup', false))) {
       return false; // need at least this group!
     }
 
+    $created = false;
+    $shareOwner = null;
+
     // Create the user if necessary
-    if (!$this->userManager()->userExists($shareOwner) &&
-        !$this->userManager()->createUser($shareOwner, $this->generateRandomBytes(30))) {
-      return false;
+    if (!$this->userManager()->userExists($shareOwnerId)) {
+      $this->logError("User does not exist");
+      $shareOwner = $this->userManager()->createUser($shareOwnerId, $this->generateRandomBytes(30));
+      if (!empty($shareOwner)) {
+        $this->logError("User created");
+        $created = true;
+      } else {
+        $this->logError("User could not be created");
+        return false;
+      }
+    } else {
+      $shareOwner = $this->userManager()->get($shareOwnerId);
+    }
+
+    if (empty($shareOwner)) {
+      $this->logError("Share-owner " . $shareOwnerId . " could not be found or created.");
     }
 
     // Sutff the user in its appropriate group
-    if (!$this->inGroup($shareOwner, $shareGroup) &&
-        !$this->group($shareGroup)->addUser($this->user($shareOwner))) {
-      return false;
+    if (!$this->inGroup($shareOwnerId, $shareGroupId)) {
+      $this->logError("not in group");
+      $shareGroup = $this->group($shareGroupId);
+      if (empty($shareGroup)) {
+        $this->logError("Could not get group " . $shareGroupId . ".");
+      } else {
+        $shareGroup->addUser($shareOwner);
+      }
+      // check again, addUser() has no return value
+      if ($this->inGroup($shareOwnerId, $shareGroupId)) {
+        $this->logError("added to group");
+      } else {
+        $this->logError("Could not add " . $shareOwnerId . " to group " . $shareGroupId . ".");
+        if ($created) {
+          $this->logError("Deleting just created user " . $shareOwnerId  . ".");
+          $shareOwner->delete();
+        }
+        return false;
+      }
     }
 
-    return $this->shareOwnerExists($shareOwner);
+    return $this->shareOwnerExists($shareOwnerId);
   }
 
   /**We require that the share-owner owns a directory shared with the

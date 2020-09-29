@@ -107,13 +107,17 @@ var CAFEVDB = CAFEVDB || {};
         const self = $(this);
         var name;
         var value;
-        if (getValue !== undefined && (value = getValue(element, msgElement)) !== undefined) {
-          name = value.name;
-          value = value.value;
+        console.log('getValue', getValue);
+        if (getValue !== undefined) {
+          if ((value = getValue(element, msgElement)) !== undefined) {
+            name = value.name;
+            value = value.value;
+          }
         } else {
           name = self.attr('name');
           value = element.is(':checkbox') ? element.is(':checked') : self.val();
         }
+        console.log('value', value);
         if (value !== undefined) {
           $.post(
 	    OC.generateUrl('/apps/cafevdb/settings/app/set/' + name),
@@ -361,8 +365,7 @@ var CAFEVDB = CAFEVDB || {};
       function(element, msg) {
         var val = { 'name': dbPassword.attr('name'), 'value': dbPassword.val() };
         if (val.value == '') {
-          msg.html(t('cafevdb', 'Password field must not be empty')).show();
-          val = undefined;
+          msg.html(t('cafevdb', 'Empty password, trying to use configured credentials.')).show();
         }
         return val;
       });
