@@ -173,7 +173,7 @@ class PageController extends Controller {
     // See if we are configured
     $config = $this->configCheckService->configured();
 
-    if ($template != 'debug' && !$config['summary']) {
+    if (true || ($template != 'debug' && !$config['summary'])) {
       $tmplname = 'configcheck';
     } else {
       $tmplname = $template;
