@@ -50,16 +50,21 @@ class ConfigCheckService
   /** @var \OCP\Share\IManager */
   private $shareManager;
 
+  /** @var CalDavService */
+  private $calDavService;
+
   public function __construct(
     ConfigService $configService,
     DatabaseFactory $databaseFactory,
     IRootFolder $rootFolder,
-    \OCP\Share\IManager $shareManager
+    \OCP\Share\IManager $shareManager,
+    CalDavService $calDavService
   ) {
     $this->configService = $configService;
     $this->databaseFactory = $databaseFactory;
     $this->rootFolder = $rootFolder;
     $this->shareManager = $shareManager;
+    $this->calDavService = $calDavService;
   }
 
   /**Return an array with necessary configuration items, being either

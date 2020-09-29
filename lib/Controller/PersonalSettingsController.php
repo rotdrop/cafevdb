@@ -33,6 +33,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ConfigCheckService;
 use OCA\CAFEVDB\Service\DatabaseFactory;
 use OCA\CAFEVDB\Settings\Personal;
+use OCA\CAFEVDB\Service\CalDavService;
 
 class PersonalSettingsController extends Controller {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -43,13 +44,16 @@ class PersonalSettingsController extends Controller {
   /** @var Personal */
   private $personalSettings;
 
+  private $calDavService;
+
   public function __construct(
     $appName,
     IRequest $request,
     ConfigService $configService,
     Personal $personalSettings,
     DatabaseFactory $databaseFactory,
-    ConfigCheckService $configCheckService
+    ConfigCheckService $configCheckService,
+    CalDavService $calDavService
   ) {
 
     parent::__construct($appName, $request);
@@ -57,6 +61,7 @@ class PersonalSettingsController extends Controller {
     $this->configService = $configService;
     $this->configCheckService = $configCheckService;
     $this->personalSettings = $personalSettings;
+    $this->calDavService = $calDavService;
     $this->l = $this->l10N();
   }
 
@@ -244,6 +249,8 @@ class PersonalSettingsController extends Controller {
       return self::response($this->l->t('Successfully changed passsword for `%s\'.', [$shareOwnerUid]));
 
     case 'sharedfolder':
+      $this->calDavService->createCalendar('TestTestTest');
+
       $appGroup = $this->getConfigValue('usergroup');
       if (empty($appGroup)) {
         return self::grumble($this->l->t('App user-group is not set.'));
